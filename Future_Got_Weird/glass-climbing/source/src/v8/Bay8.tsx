@@ -111,6 +111,7 @@ export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
             <Loop id={`${id}-lRb`} top={topR} bar={footR.bar} k={k} part="back" far />
             {man && (
               <Man
+                sleeveCap
                 id={`${id}-man`}
                 pose={pose}
                 expr={st.expr}

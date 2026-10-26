@@ -306,9 +306,12 @@ type Props = {
   afterNearLeg?: React.ReactNode;
   /** Glass Climbing: in the hands-only pass, draw only this hand */
   handsOnlySide?: 'L' | 'R';
+  /** V8 (Glass Climbing): the near short sleeve drawn as a whole sleeve with a rounded, outlined crown over the shoulder,
+   *  and the near arm's skin starting under it (for views where the near arm hangs in front of the torso) */
+  sleeveCap?: boolean;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide, sleeveCap}) => {
   const j = manJoints(p);
   const s = p.s;
   const OUT = 7 * s * inkK; // crew contour
@@ -428,6 +431,27 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const sc = add(A.S, mul(u, 10 * s + scR));
     const inkFade = isFar ? [{c: add(top, mul(u, -hc * 0.5)), r: r0 * 1.25}] : [{c: add(top, mul(u, -24 * s)), r: r0 * 1.65}];
     const hR = DIM.headR * s + 7 * inkK * 0.36 + 1;
+    if (sleeveCap && !isFar) {
+      // V8: a whole short sleeve: a rounded crown over the shoulder joint, its sides down the upper arm to the hem, one
+      // ink contour, the tee's stripes not carried onto it (as the far sleeve and the bay's front views)
+      const capH = 30 * s;
+      const q1 = add(top, mul(n, r0)), q4 = add(top, mul(n, -r0));
+      const crownTop = add(top, mul(u, -capH));
+      const dCap = `M${P(q1)} L${P(p2)} Q${P(add(hem, mul(u, r1 * 0.36)))} ${P(p3)} L${P(q4)} C${P(add(q4, mul(u, -capH * 1.1)))} ${P(add(crownTop, mul(n, -r0 * 0.6)))} ${P(crownTop)} C${P(add(crownTop, mul(n, r0 * 0.6)))} ${P(add(q1, mul(u, -capH * 1.1)))} ${P(q1)} Z`;
+      return {
+        inner,
+        body: (
+          <g key="sl">
+            <Inked w={IN} id={`${id}-${k}si`}>
+              <Lin id={`${id}-${k}sg`} d={dCap} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
+            </Inked>
+            <Deco>
+              <path d={`M${P(add(add(A.S, mul(u, 30 * s)), mul(n, -r0 * 0.55)))} Q${P(add(A.S, mul(u, 44 * s)))} ${P(add(add(A.S, mul(u, 34 * s)), mul(n, r0 * 0.5)))}`} fill="none" stroke="#2E4A66" strokeOpacity={0.08} strokeWidth={fmt(4 * s)} strokeLinecap="round" />
+            </Deco>
+          </g>
+        ),
+      };
+    }
     const body = (
       <g key="sl">
         <defs>
@@ -539,7 +563,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
 
   // the near arm's skin starts a little down its own axis from the shoulder joint, so its rounded top (and its contour)
   // stays inside the tee's shoulder line, under the sleeve, which is now cut by that line
-  const nearArmTop = add(j.L.S, mul(norm(sub(j.L.E, j.L.S)), 5 * s));
+  const nearArmTop = add(j.L.S, mul(norm(sub(j.L.E, j.L.S)), (sleeveCap ? 32 : 5) * s));
   // V4: the flesh in the crook of a tightly folded arm. Where the upper arm and the forearm close to a narrow V (the
   // far arm's chest clutch), the two tubes alone leave a sliver between them through which the far knee showed as a
   // dark tick beside the tee; this fills the crook in a shaded skin tone, out to where the tee covers it.

@@ -103,7 +103,7 @@ const diagAnkle = (pad: Pad5, home: V) => {
 };
 /** the floor fins' phase: a fin top lies between the planted feet's heights (L and R sets, every S) at every level of
  *  the climb, so a shoe is never seen level with a fin; it projects FIN_D */
-export const LEDGE_Y = tautAnkle('L', rest('L', DY(0))).y + SOLE + 870;
+export const LEDGE_Y = tautAnkle('L', rest('L', DY(0))).y + SOLE + 1670; // (V8: phased so the stirrups hang clear of the floor lines and sill joints in the held shots)
 export const FIN_D = 50;
 
 // ------------------------------------------------------------------ the body
@@ -145,7 +145,7 @@ export const C = {
   // the brick: the near pad sideways onto the brick strip, pressed on, weight toward it, it slips
   bRel: 994, bM0: 998, bM1: 1018, bPlace: 1024, bPress1: 1036, bLoad0: 1040, bLoad1: 1092, fail: 1095,
   // the recovery: arrested and steady on the far pad; the deliberate reach back to the glass
-  arrest: 1108, reach0: 1138,
+  arrest: 1108, reach0: 1146,
   look0: -100, look1: -90,
 };
 export const MOVES: Move[] = CYCLES.flatMap((c) => [
@@ -182,10 +182,10 @@ const padClimb = (T: number, side: Side): Pad5 => {
     p.contact = T >= C.bPlace ? 0.22 : 1 - clamp(p.gap / 2);
     if (T >= C.bLoad0) {
       // under his shifting weight the few contacts skid: it creeps down, its lower edge starts to come away
-      const creep = keyN(T, [[C.bLoad0, 0], [1060, 3], [1082, 12], [C.fail, 30, (f, a, b) => clamp((f - a) / (b - a)) ** 2]]);
+      const creep = keyN(T, [[C.bLoad0, 0], [1060, 4], [1082, 18], [C.fail, 44, (f, a, b) => clamp((f - a) / (b - a)) ** 2]]);
       p.y = DY(NCY) + creep;
-      p.tilt = keyN(T, [[1050, 0], [1080, 3], [C.fail, 9]]);
-      p.gap = keyN(T, [[1074, 0], [C.fail, 4]]);
+      p.tilt = keyN(T, [[1050, 0], [1078, 4], [C.fail, 14]]);
+      p.gap = keyN(T, [[1072, 0], [C.fail, 9]]);
       p.contact = keyN(T, [[C.bLoad0, 0.22], [1060, 0.16], [C.fail, 0.04]]);
     }
   }
@@ -386,7 +386,7 @@ const SWING: KeyN = [
 ];
 /** the lurch: how far his hips drop as his weight comes onto the far stirrup alone (units; the far strap is already
  *  taut, so the drop is his far knee bending and the near foot losing its stirrup, not a fall) */
-const LURCH = 140;
+const LURCH = 220;
 
 const catchBody = (T: number): Body => {
   const swing = keyN(T, SWING);
@@ -407,9 +407,9 @@ const catchBody = (T: number): Body => {
     // one deliberate reach: it starts from rest and accelerates into the glass (it meets it moving, at frame 3), so on
     // the film's first frames the pad is still visibly arriving
     const x = clamp((T - C.reach0) / (tc - C.reach0));
-    const reach = x < 0.35 ? (x / 0.35) ** 2 * 0.35 * 0.5 : 0.175 + (x - 0.35) * (1 - 0.175) / 0.65;
+    const reach = x * x; // (accelerating all the way: it meets the glass at its fastest)
     // it arrives a little high (it then seats down onto its rest)
-    const target: V = {x: gC.x, y: gC.y - 7};
+    const target: V = {x: gC.x, y: gC.y - 9};
     const at = lerpV(lerpV(g0, low, drop), target, reach);
     const tilt = keyN(T, [[C.fail, 9], [C.fail + 10, 15], [C.reach0, 12], [FRAMES - 6, 4], [tc, 0]]);
     const zo = lerp(Z_BRICK, PZ.L, ss(T, C.fail + 4, C.reach0 + 10));
@@ -419,7 +419,7 @@ const catchBody = (T: number): Body => {
     padL.gap = Math.max(0, at.x - g.x);
   } else {
     // seated: it moves a few units down the glass as the wedges take the load, then holds
-    const seat = keyN(T, [[tc, -7], [FRAMES + C.seat, 0, easeOut]]);
+    const seat = keyN(T, [[tc, -9], [FRAMES + C.seat, 0, easeOut]]);
     padL = {...rest('L', DY(NCY)), y: DY(NCY) + seat, load: keyN(T, [[tc, 0.35], [FRAMES + C.seat, 1, easeOut]]), contact: keyN(T, [[tc, 0.3], [tc + 5, 1]])};
   }
   // hips: the lurch (fast, arrested by the far strap and his far knee, a small rebound), steady; during the reach he
@@ -427,7 +427,7 @@ const catchBody = (T: number): Body => {
   const top = atTop.H.y;
   const level = levelY(NCY);
   let hy = keyN(T, [[C.fail, top], [C.fail + 8, top + LURCH * 1.06, (f, a, b) => clamp((f - a) / (b - a)) ** 1.6], [C.fail + 13, top + LURCH * 0.95], [C.fail + 19, top + LURCH]]);
-  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 4, level + 64, easeOut], [FRAMES + C.settle1, level]]);
+  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 2, level + 92, easeOut], [FRAMES + C.settle1, level]]);
   const H: V = {x: HX - 12 * ss(T, C.reach0, FRAMES) * (1 - ss(T, FRAMES + C.seat, FRAMES + C.settle1)), y: hy};
   // feet: the far foot stays in its taut stirrup under the far pad (it, the far hand and the pad hold him); the near
   // foot loses its stirrup's anchor and drops, hanging in its loop below him; during the reach it comes forward under
