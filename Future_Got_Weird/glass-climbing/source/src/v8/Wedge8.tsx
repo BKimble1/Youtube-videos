@@ -663,7 +663,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         // jump from dark to pale
         const lz = Math.log(z);
         const mk = sm(Math.log(12), Math.log(40), lz);
-        const dk = sm(Math.log(70), Math.log(240), lz) * (1 - sm(Math.log(800), Math.log(9000), lz));
+        const dk = sm(Math.log(25), Math.log(240), lz) * (1 - sm(Math.log(800), Math.log(9000), lz));
         const fill = mix(mix(mix(fill0, WCOL.siliconeAtomic, dz), '#8FA3AC', 0.6 * mk), '#4C5F69', 0.85 * dk);
         const tipC = mix(mix(mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz), '#8FA3AC', 0.65 * mk), '#4C5F69', 0.85 * dk);
         return (
@@ -760,7 +760,20 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         const outline = `M${backRun.map(f.p).join(' L')} Q${f.p(capC)} ${gripRun.slice().reverse().map(f.p).join(' L')}`;
         return (
           <g key={`o${b.i}`}>
-            {rim.length > 1 && <path d={f.line(rim)} fill="none" stroke="#FFFFFF" strokeWidth={f.n((1.6 + 0.9 * foc) / z)} opacity={(0.4 + 0.5 * foc) * (1 - dz)} strokeLinecap="round" />}
+            {/* (V8 QA: the highlight fades out along its last third instead of stopping square mid-edge) */}
+            {rim.length > 1 && (
+              <>
+                <defs>
+                  <linearGradient id={`${id}-rim${b.i}`} gradientUnits="userSpaceOnUse" x1={f.n(rim[0].x - f.org.x)} y1={f.n(rim[0].y - f.org.y)} x2={f.n(rim[rim.length - 1].x - f.org.x)} y2={f.n(rim[rim.length - 1].y - f.org.y)}>
+                    <stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+                    <stop offset="0.25" stopColor="#FFFFFF" stopOpacity={1} />
+                    <stop offset="0.6" stopColor="#FFFFFF" stopOpacity={1} />
+                    <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <path d={f.line(rim)} fill="none" stroke={`url(#${id}-rim${b.i})`} strokeWidth={f.n((1.6 + 0.9 * foc) / z)} opacity={(0.4 + 0.5 * foc) * (1 - dz)} strokeLinecap="round" />
+              </>
+            )}
             <path d={outline} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="round" strokeLinecap="round" />
           </g>
         );

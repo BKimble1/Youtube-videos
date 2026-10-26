@@ -1166,7 +1166,10 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       <path d={`M${ringN.slice(2, 9).map((p) => P(p)).join(' L')}`} fill="none" stroke="#F2F6F8" strokeWidth={fmt(1.1 * ringN[0].s)} strokeLinecap="round" opacity={0.8} />
     </g>
   );
-  items.push({d: ringN[8].d + 0.6, g: grp, node: <g key={key++}>{ringNode}</g>});
+  // (V8 QA) the ring is always drawn over the lug it hangs from (its depth key at least that of the lug's nearest
+  // corner): keyed on its own top alone, it flipped behind the tab and back as the view and the load changed
+  const lugD = Math.max(...[12, 22].flatMap((u) => [PH / 2 - RW + 0.2, eyeV + 4.6].flatMap((v) => [-3, 3].map((w) => vw.world({u, v, w}).d))));
+  items.push({d: Math.max(ringN[8].d + 0.6, lugD + 0.05), g: grp, node: <g key={key++}>{ringNode}</g>});
   if ((st.strap ?? 0) > 0) {
     const Ls = st.strap ?? 0;
     const lean = st.strapLean ?? {u: 0.14, w: 0.03};
