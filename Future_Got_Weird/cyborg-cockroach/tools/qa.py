@@ -56,7 +56,7 @@ fz = sh(['ffmpeg', '-hide_banner', '-nostats', '-i', mp4, '-vf', 'freezedetect=n
 R['freezes_ge_0.7s'] = [l.split('freeze_start:')[1].strip() for l in fz.splitlines() if 'freeze_start' in l]
 # keyframes
 kf = sh(['ffprobe', '-v', 'error', '-select_streams', 'v:0', '-skip_frame', 'nokey', '-show_entries', 'frame=pts_time', '-of', 'csv=p=0', mp4]).stdout.split()
-kt = [float(x) for x in kf if x]
+kt = [float(x.split(',')[0]) for x in kf if x.split(',')[0]]  # ffprobe may append a field separator
 R['keyframes'] = {'count': len(kt), 'max_gap_s': round(max(np.diff(kt)) if len(kt) > 1 else 0, 3)}
 # sync against the mix
 if as_ and os.path.exists(mixp):

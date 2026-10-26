@@ -1,5 +1,5 @@
 // Caption placement per caption (by its first words): the centre height and block. Shows and hides fall on whole frames,
-// snapped to a cut when one is within a frame and a half. A caption never moves while it shows; one that spans a cut may
+// snapped to a cut when one is within two frames. A caption never moves while it shows; one that spans a cut may
 // take a new placement from the cut on. Heights are checked against each shot's protected regions (tools/cap_check.ts).
 import {CAPTIONS, FPS} from './timeline';
 import {CUTS} from './cuts';
@@ -33,10 +33,17 @@ export const CAP_PLACE: [string, Block, [number, Block][]?][] = [
 ];
 const snap = (s: number) => {
   const f = s * FPS;
-  const c = CUTS.find((k) => Math.abs(k - f) <= 1.5);
+  const c = CUTS.find((k) => Math.abs(k - f) <= 2);
   return c ?? Math.round(f);
 };
-export const capFrames = CAPTIONS.map((c, k) => ({show: k === 0 ? 0 : snap(c.show), hide: snap(c.hide)}));
+/** a caption whose words have finished does not run on into the next shot: if a cut falls after its last word (by at
+ *  least 2 frames) and before it would hide, it hides on the cut */
+const hideAt = (c: (typeof CAPTIONS)[number]) => {
+  const h = snap(c.hide);
+  const cut = CUTS.find((k) => k >= c.end * FPS + 2 && k < h);
+  return cut ?? h;
+};
+export const capFrames = CAPTIONS.map((c, k) => ({show: k === 0 ? 0 : snap(c.show), hide: hideAt(c)}));
 export const capAt = (f: number) => {
   const i = capFrames.findIndex((c) => f >= c.show && f < c.hide);
   if (i < 0) return null;

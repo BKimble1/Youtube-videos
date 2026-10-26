@@ -148,7 +148,9 @@ const OCC_LIGHTS: Lights = {amb: 0.8, beams: [], glows: []};
 /** the alcove's own pieces (Alcove.tsx), minus any that stand on the route before the gap (its 'beyond' block sits
  *  where the corridor runs) */
 export const s12AlcoveItems = (cam: Cam): RubbleItem[] =>
-  alcovePieces(cam, {sun: 0.6}).filter((it) => String((it.el as React.ReactElement | null)?.key ?? '') !== 'alc-beyond');
+  // (no 'beyond' block: it stood on the walk line; no near gap block: from the route it hid her forearm, so her near hand
+  //  read as a fist floating in the rubble)
+  alcovePieces(cam, {sun: 0.6}).filter((it) => !['alc-beyond', 'alc-gapL'].includes(String((it.el as React.ReactElement | null)?.key ?? '')));
 
 /** S12. `person` is the integrator's compositing slot: called with the shot's camera, drawn behind the alcove pieces
  *  that stand in front of her, the low ceiling, the rubble and the insect, and in front of the alcove's back pieces;

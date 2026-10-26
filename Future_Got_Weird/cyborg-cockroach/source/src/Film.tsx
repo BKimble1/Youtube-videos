@@ -12,7 +12,7 @@ const S12_FROM = SHOT_FRAMES.find(([k]) => k === 'S12')![1];
 export const CONCEPT_ON: [number, number] = [S12_FROM + 3, Math.round(24.7 * FPS)];
 const ConceptLabel: React.FC<{f: number}> = ({f}) =>
   f >= CONCEPT_ON[0] && f < CONCEPT_ON[1] ? (
-    <div style={{position: 'absolute', left: 84, top: 184, padding: '10px 20px 12px', borderRadius: 14, background: 'rgba(10,16,22,0.62)', color: '#F4F1EA',
+    <div style={{position: 'absolute', right: 84, top: 184, padding: '10px 20px 12px', borderRadius: 14, background: 'rgba(10,16,22,0.62)', color: '#F4F1EA',
       fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.01em'}}>
       Future rescue concept
     </div>
