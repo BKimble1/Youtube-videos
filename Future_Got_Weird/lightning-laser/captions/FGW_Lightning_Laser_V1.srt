@@ -1,0 +1,100 @@
+1
+00:00:00,000 --> 00:00:01,160
+They fired a laser
+
+2
+00:00:01,160 --> 00:00:02,520
+into a thunderstorm—
+
+3
+00:00:02,520 --> 00:00:04,310
+and the lightning followed it.
+
+4
+00:00:04,310 --> 00:00:06,310
+You see, air normally resists
+
+5
+00:00:06,310 --> 00:00:07,810
+the flow of electricity.
+
+6
+00:00:07,810 --> 00:00:08,950
+But this machine fired
+
+7
+00:00:08,950 --> 00:00:10,390
+a thousand laser pulses
+
+8
+00:00:10,390 --> 00:00:11,420
+every second,
+
+9
+00:00:11,420 --> 00:00:12,330
+stripping electrons
+
+10
+00:00:12,330 --> 00:00:13,330
+from air molecules
+
+11
+00:00:13,330 --> 00:00:14,640
+and heating a narrow channel
+
+12
+00:00:14,640 --> 00:00:15,830
+through the sky.
+
+13
+00:00:15,830 --> 00:00:16,920
+That gave electricity
+
+14
+00:00:16,920 --> 00:00:18,790
+an easier path to travel.
+
+15
+00:00:18,790 --> 00:00:20,310
+So when lightning erupted upward
+
+16
+00:00:20,310 --> 00:00:21,630
+from a nearby tower,
+
+17
+00:00:21,630 --> 00:00:22,270
+part of the bolt
+
+18
+00:00:22,270 --> 00:00:23,200
+followed that channel
+
+19
+00:00:23,200 --> 00:00:25,610
+for over 160 feet.
+
+20
+00:00:25,610 --> 00:00:26,600
+A normal lightning rod
+
+21
+00:00:26,600 --> 00:00:27,620
+only reaches as high
+
+22
+00:00:27,620 --> 00:00:28,940
+as its metal tip.
+
+23
+00:00:28,940 --> 00:00:30,740
+But these scientists extended one
+
+24
+00:00:30,740 --> 00:00:31,880
+into the sky—
+
+25
+00:00:31,880 --> 00:00:33,400
+using the air itself.
+

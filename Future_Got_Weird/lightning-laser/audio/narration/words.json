@@ -1,0 +1,499 @@
+{
+ "take": "audio/narration/takes/ll_t1_gUxd.mp3",
+ "edits": "none (zero padding after the take only)",
+ "duration_s": 33.5,
+ "frames": 1005,
+ "pocketsphinx_transcript": "they are really syringe with a thunderstorm and all lightning followed it easy they're normally resists the flow of electricity but this machine fired or that i was a laser pulses every second stripping allege run term air molecules and heating and narrow channel through this guy that intellectually an easier path to travel so when lightning rod did op board firm in your bike our part of the bold followed that channel for over one hundred sixty feet and normal lightning rod only reaches as high as it's melted but the scientists extended one in to this guy using the deer itself",
+ "words": [
+  {
+   "word": "they",
+   "start": 0.0,
+   "end": 0.16
+  },
+  {
+   "word": "fired",
+   "start": 0.16,
+   "end": 0.56
+  },
+  {
+   "word": "a",
+   "start": 0.56,
+   "end": 0.58
+  },
+  {
+   "word": "laser",
+   "start": 0.59,
+   "end": 1.2
+  },
+  {
+   "word": "into",
+   "start": 1.2,
+   "end": 1.41
+  },
+  {
+   "word": "a",
+   "start": 1.41,
+   "end": 1.45
+  },
+  {
+   "word": "thunderstorm",
+   "start": 1.45,
+   "end": 2.27
+  },
+  {
+   "word": "and",
+   "start": 2.56,
+   "end": 2.73
+  },
+  {
+   "word": "the",
+   "start": 2.73,
+   "end": 2.79
+  },
+  {
+   "word": "lightning",
+   "start": 2.79,
+   "end": 3.26
+  },
+  {
+   "word": "followed",
+   "start": 3.26,
+   "end": 3.77
+  },
+  {
+   "word": "it",
+   "start": 3.77,
+   "end": 3.94
+  },
+  {
+   "word": "you",
+   "start": 4.35,
+   "end": 4.45
+  },
+  {
+   "word": "see",
+   "start": 4.45,
+   "end": 4.82
+  },
+  {
+   "word": "air",
+   "start": 5.01,
+   "end": 5.23
+  },
+  {
+   "word": "normally",
+   "start": 5.23,
+   "end": 5.7
+  },
+  {
+   "word": "resists",
+   "start": 5.7,
+   "end": 6.33
+  },
+  {
+   "word": "the",
+   "start": 6.35,
+   "end": 6.43
+  },
+  {
+   "word": "flow",
+   "start": 6.43,
+   "end": 6.69
+  },
+  {
+   "word": "of",
+   "start": 6.69,
+   "end": 6.75
+  },
+  {
+   "word": "electricity",
+   "start": 6.75,
+   "end": 7.44
+  },
+  {
+   "word": "but",
+   "start": 7.85,
+   "end": 7.99
+  },
+  {
+   "word": "this",
+   "start": 8.0,
+   "end": 8.19
+  },
+  {
+   "word": "machine",
+   "start": 8.2,
+   "end": 8.6
+  },
+  {
+   "word": "fired",
+   "start": 8.61,
+   "end": 8.96
+  },
+  {
+   "word": "a",
+   "start": 8.99,
+   "end": 9.02
+  },
+  {
+   "word": "thousand",
+   "start": 9.03,
+   "end": 9.59
+  },
+  {
+   "word": "laser",
+   "start": 9.59,
+   "end": 9.97
+  },
+  {
+   "word": "pulses",
+   "start": 9.97,
+   "end": 10.37
+  },
+  {
+   "word": "every",
+   "start": 10.43,
+   "end": 10.75
+  },
+  {
+   "word": "second",
+   "start": 10.75,
+   "end": 11.19
+  },
+  {
+   "word": "stripping",
+   "start": 11.46,
+   "end": 11.83
+  },
+  {
+   "word": "electrons",
+   "start": 11.83,
+   "end": 12.37
+  },
+  {
+   "word": "from",
+   "start": 12.37,
+   "end": 12.5
+  },
+  {
+   "word": "air",
+   "start": 12.5,
+   "end": 12.72
+  },
+  {
+   "word": "molecules",
+   "start": 12.72,
+   "end": 13.36
+  },
+  {
+   "word": "and",
+   "start": 13.37,
+   "end": 13.49
+  },
+  {
+   "word": "heating",
+   "start": 13.49,
+   "end": 13.83
+  },
+  {
+   "word": "a",
+   "start": 13.83,
+   "end": 13.87
+  },
+  {
+   "word": "narrow",
+   "start": 13.87,
+   "end": 14.3
+  },
+  {
+   "word": "channel",
+   "start": 14.3,
+   "end": 14.68
+  },
+  {
+   "word": "through",
+   "start": 14.68,
+   "end": 14.85
+  },
+  {
+   "word": "the",
+   "start": 14.85,
+   "end": 14.91
+  },
+  {
+   "word": "sky",
+   "start": 14.91,
+   "end": 15.87
+  },
+  {
+   "word": "that",
+   "start": 15.87,
+   "end": 16.06
+  },
+  {
+   "word": "gave",
+   "start": 16.09,
+   "end": 16.27
+  },
+  {
+   "word": "electricity",
+   "start": 16.27,
+   "end": 16.96
+  },
+  {
+   "word": "an",
+   "start": 16.96,
+   "end": 17.05
+  },
+  {
+   "word": "easier",
+   "start": 17.06,
+   "end": 17.55
+  },
+  {
+   "word": "path",
+   "start": 17.55,
+   "end": 17.79
+  },
+  {
+   "word": "to",
+   "start": 17.81,
+   "end": 17.92
+  },
+  {
+   "word": "travel",
+   "start": 17.92,
+   "end": 18.37
+  },
+  {
+   "word": "so",
+   "start": 18.83,
+   "end": 18.98
+  },
+  {
+   "word": "when",
+   "start": 18.98,
+   "end": 19.12
+  },
+  {
+   "word": "lightning",
+   "start": 19.12,
+   "end": 19.48
+  },
+  {
+   "word": "erupted",
+   "start": 19.49,
+   "end": 19.92
+  },
+  {
+   "word": "upward",
+   "start": 19.99,
+   "end": 20.35
+  },
+  {
+   "word": "from",
+   "start": 20.35,
+   "end": 20.51
+  },
+  {
+   "word": "a",
+   "start": 20.51,
+   "end": 20.54
+  },
+  {
+   "word": "nearby",
+   "start": 20.54,
+   "end": 20.9
+  },
+  {
+   "word": "tower",
+   "start": 20.9,
+   "end": 21.36
+  },
+  {
+   "word": "part",
+   "start": 21.67,
+   "end": 21.85
+  },
+  {
+   "word": "of",
+   "start": 21.85,
+   "end": 21.93
+  },
+  {
+   "word": "the",
+   "start": 21.93,
+   "end": 22.01
+  },
+  {
+   "word": "bolt",
+   "start": 22.01,
+   "end": 22.3
+  },
+  {
+   "word": "followed",
+   "start": 22.31,
+   "end": 22.74
+  },
+  {
+   "word": "that",
+   "start": 22.74,
+   "end": 22.9
+  },
+  {
+   "word": "channel",
+   "start": 22.9,
+   "end": 23.24
+  },
+  {
+   "word": "for",
+   "start": 23.24,
+   "end": 23.4
+  },
+  {
+   "word": "over",
+   "start": 23.41,
+   "end": 23.64
+  },
+  {
+   "word": "one",
+   "start": 23.64,
+   "end": 23.96
+  },
+  {
+   "word": "hundred",
+   "start": 23.96,
+   "end": 24.33
+  },
+  {
+   "word": "sixty",
+   "start": 24.34,
+   "end": 24.75
+  },
+  {
+   "word": "feet",
+   "start": 24.75,
+   "end": 25.11
+  },
+  {
+   "word": "a",
+   "start": 25.65,
+   "end": 25.69
+  },
+  {
+   "word": "normal",
+   "start": 25.69,
+   "end": 26.05
+  },
+  {
+   "word": "lightning",
+   "start": 26.05,
+   "end": 26.35
+  },
+  {
+   "word": "rod",
+   "start": 26.35,
+   "end": 26.64
+  },
+  {
+   "word": "only",
+   "start": 26.64,
+   "end": 26.97
+  },
+  {
+   "word": "reaches",
+   "start": 26.97,
+   "end": 27.3
+  },
+  {
+   "word": "as",
+   "start": 27.3,
+   "end": 27.42
+  },
+  {
+   "word": "high",
+   "start": 27.42,
+   "end": 27.66
+  },
+  {
+   "word": "as",
+   "start": 27.66,
+   "end": 27.76
+  },
+  {
+   "word": "its",
+   "start": 27.76,
+   "end": 27.89
+  },
+  {
+   "word": "metal",
+   "start": 27.89,
+   "end": 28.15
+  },
+  {
+   "word": "tip",
+   "start": 28.15,
+   "end": 28.49
+  },
+  {
+   "word": "but",
+   "start": 28.98,
+   "end": 29.07
+  },
+  {
+   "word": "these",
+   "start": 29.11,
+   "end": 29.31
+  },
+  {
+   "word": "scientists",
+   "start": 29.31,
+   "end": 29.92
+  },
+  {
+   "word": "extended",
+   "start": 29.92,
+   "end": 30.41
+  },
+  {
+   "word": "one",
+   "start": 30.41,
+   "end": 30.78
+  },
+  {
+   "word": "into",
+   "start": 30.78,
+   "end": 31.02
+  },
+  {
+   "word": "the",
+   "start": 31.02,
+   "end": 31.1
+  },
+  {
+   "word": "sky",
+   "start": 31.1,
+   "end": 31.58
+  },
+  {
+   "word": "using",
+   "start": 31.92,
+   "end": 32.25
+  },
+  {
+   "word": "the",
+   "start": 32.26,
+   "end": 32.37
+  },
+  {
+   "word": "air",
+   "start": 32.44,
+   "end": 32.68
+  },
+  {
+   "word": "itself",
+   "start": 32.69,
+   "end": 33.15
+  }
+ ]
+}

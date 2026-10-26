@@ -1,0 +1,303 @@
+[
+ {
+  "name": "loop leader crackle (across the seam)",
+  "at": 31.973,
+  "frame": 959.2,
+  "dur": 2.614,
+  "gain_db": -28
+ },
+ {
+  "name": "connection crack (opening)",
+  "at": 1.087,
+  "frame": 32.6,
+  "dur": 0.5,
+  "gain_db": -18
+ },
+ {
+  "name": "thunder after the opening flash",
+  "at": 1.437,
+  "frame": 43.1,
+  "dur": 3.0,
+  "gain_db": -18
+ },
+ {
+  "name": "control knob detent",
+  "at": 2.82,
+  "frame": 84.6,
+  "dur": 0.05,
+  "gain_db": -30
+ },
+ {
+  "name": "console relay",
+  "at": 2.88,
+  "frame": 86.4,
+  "dur": 0.04,
+  "gain_db": -38
+ },
+ {
+  "name": "cartoon cloud rumble",
+  "at": 4.36,
+  "frame": 130.8,
+  "dur": 1.0,
+  "gain_db": -30
+ },
+ {
+  "name": "static fizz at his hair",
+  "at": 4.61,
+  "frame": 138.3,
+  "dur": 0.34,
+  "gain_db": -34
+ },
+ {
+  "name": "strike snap",
+  "at": 4.95,
+  "frame": 148.5,
+  "dur": 0.22,
+  "gain_db": -22
+ },
+ {
+  "name": "zap 1 (exposure)",
+  "at": 5.0,
+  "frame": 150.0,
+  "dur": 0.13,
+  "gain_db": -24
+ },
+ {
+  "name": "recoil whoomp",
+  "at": 4.99,
+  "frame": 149.7,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "zap 2 (exposure)",
+  "at": 5.47,
+  "frame": 164.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "singed hair sizzle",
+  "at": 5.65,
+  "frame": 169.5,
+  "dur": 0.9,
+  "gain_db": -36
+ },
+ {
+  "name": "into the air (texture swell)",
+  "at": 6.4,
+  "frame": 192.0,
+  "dur": 0.6,
+  "gain_db": -36
+ },
+ {
+  "name": "air: bound electrons tug and snap back",
+  "at": 6.8,
+  "frame": 204.0,
+  "dur": 0.9,
+  "gain_db": -40
+ },
+ {
+  "name": "pulse packet leaves the exit 0",
+  "at": 7.823,
+  "frame": 234.7,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "pulse packet leaves the exit 1",
+  "at": 8.443,
+  "frame": 253.3,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "pulse packet leaves the exit 2",
+  "at": 9.06,
+  "frame": 271.8,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "pulse packet leaves the exit 3",
+  "at": 9.68,
+  "frame": 290.4,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "pulse packet leaves the exit 4",
+  "at": 10.3,
+  "frame": 309.0,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "pulse packet leaves the exit 5",
+  "at": 10.92,
+  "frame": 327.6,
+  "dur": 0.09,
+  "gain_db": -33
+ },
+ {
+  "name": "laser hum",
+  "at": 7.81,
+  "frame": 234.3,
+  "dur": 3.94,
+  "gain_db": -38
+ },
+ {
+  "name": "pulse passes (micro) 0",
+  "at": 11.65,
+  "frame": 349.5,
+  "dur": 0.5,
+  "gain_db": -34
+ },
+ {
+  "name": "pulse passes (micro) 1",
+  "at": 13.793,
+  "frame": 413.8,
+  "dur": 0.5,
+  "gain_db": -34
+ },
+ {
+  "name": "pulse passes (micro) 2",
+  "at": 15.936,
+  "frame": 478.1,
+  "dur": 0.5,
+  "gain_db": -34
+ },
+ {
+  "name": "electron freed 0",
+  "at": 12.05,
+  "frame": 361.5,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 1",
+  "at": 12.18,
+  "frame": 365.4,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 2",
+  "at": 12.31,
+  "frame": 369.3,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 3",
+  "at": 12.44,
+  "frame": 373.2,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 4",
+  "at": 12.57,
+  "frame": 377.1,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 5",
+  "at": 12.7,
+  "frame": 381.0,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 6",
+  "at": 12.83,
+  "frame": 384.9,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 7",
+  "at": 12.96,
+  "frame": 388.8,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "electron freed 8",
+  "at": 13.09,
+  "frame": 392.7,
+  "dur": 0.12,
+  "gain_db": -42
+ },
+ {
+  "name": "heated channel shimmer",
+  "at": 13.4,
+  "frame": 402.0,
+  "dur": 2.0,
+  "gain_db": -38
+ },
+ {
+  "name": "front runs up the channel",
+  "at": 15.9,
+  "frame": 477.0,
+  "dur": 1.55,
+  "gain_db": -32
+ },
+ {
+  "name": "demo leader crackle",
+  "at": 19.5,
+  "frame": 585.0,
+  "dur": 2.25,
+  "gain_db": -27
+ },
+ {
+  "name": "demo connection (controlled discharge)",
+  "at": 21.75,
+  "frame": 652.5,
+  "dur": 0.6,
+  "gain_db": -16
+ },
+ {
+  "name": "thunder after the demo flash",
+  "at": 22.15,
+  "frame": 664.5,
+  "dur": 3.4,
+  "gain_db": -17
+ },
+ {
+  "name": "channel extends (shimmer)",
+  "at": 29.25,
+  "frame": 877.5,
+  "dur": 1.75,
+  "gain_db": -36
+ },
+ {
+  "name": "pulse tick (payoff) 0",
+  "at": 29.44,
+  "frame": 883.2,
+  "dur": 0.09,
+  "gain_db": -38
+ },
+ {
+  "name": "pulse tick (payoff) 1",
+  "at": 30.06,
+  "frame": 901.8,
+  "dur": 0.09,
+  "gain_db": -38
+ },
+ {
+  "name": "pulse tick (payoff) 2",
+  "at": 30.68,
+  "frame": 920.4,
+  "dur": 0.09,
+  "gain_db": -38
+ },
+ {
+  "name": "pulse tick (payoff) 3",
+  "at": 31.3,
+  "frame": 939.0,
+  "dur": 0.09,
+  "gain_db": -38
+ }
+]

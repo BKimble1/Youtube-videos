@@ -1,0 +1,11 @@
+{
+ "integrated_lufs_stereo": -14.0,
+ "sample_peak_dbfs": -1.68,
+ "voice_over_rest_phone_band_db": 24.2,
+ "duration_s": 33.5,
+ "voice_stem_vs_source_corr": 1.0,
+ "seam_sample_jump": 0.02699,
+ "seam_rms_last_10ms_vs_first_10ms_db": 0.66,
+ "effects": 43,
+ "limiter_max_gain_reduction_db": -3.32
+}

@@ -1,0 +1,56 @@
+{
+ "status": "Final narration: the channel narrator (ElevenLabs 'Test Voice'), take 1, used as generated (no cut, no time-stretch, no pitch change).",
+ "provider": "ElevenLabs (restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 26 Oct 2026 returned this id ('Test Voice For Youtube.'); the same id as glass-climbing, moth-silk-web-shooter and invisibility-shield voice_provenance.json"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags (not spoken)",
+ "prompt": "[energetic, conversational] They fired a laser into a thunderstorm\u2014 [excited] and the lightning followed it. [curious, clear] You see, air normally resists the flow of electricity. [explaining, brisk] But this machine fired a thousand laser pulses every second, stripping electrons from air molecules and heating a narrow channel through the sky. [clear] That gave electricity an easier path to travel. [building] So when lightning erupted upward from a nearby tower, part of the bolt followed that channel for over 160 feet. [matter-of-fact] A normal lightning rod only reaches as high as its metal tip. [knowing, building] But these scientists extended one into the sky\u2014 [satisfied] using the air itself.",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken). The spoken words are exactly production/NARRATION_APPROVED.txt; '160' is read as 'one hundred sixty'.",
+ "flow_id": "f719V93xQc8J958FZwnI",
+ "date": "2026-10-26",
+ "credits_reported": "2 x 705.9",
+ "takes": [
+  {
+   "file": "audio/narration/takes/ll_t1_gUxd.mp3",
+   "generation_id": "gUxdrqhEnQVOA7cz6XNk",
+   "sha256": "0b3e6f58a04ed8d6c1baa605d4276aa28b734cd953ee8eda701bf04c1288b705",
+   "duration_s": 33.44,
+   "asr": {
+    "whisper_base_en": "word-perfect",
+    "zipformer_en": "word-perfect except the spelling 'lazer'"
+   },
+   "chosen": true,
+   "why": "keeps the scripted beat before 'using the air itself' (0.34 s pause after 'sky'); otherwise equal to take 2"
+  },
+  {
+   "file": "audio/narration/takes/ll_t2_Ds29.mp3",
+   "generation_id": "Ds29L3sTF0gAWIZybxuq",
+   "sha256": "c7f4f10211bc832527680926a0b00a8f85b00cfd46d52a49e698332e3ac43979",
+   "duration_s": 33.68,
+   "asr": {
+    "whisper_base_en": "word-perfect",
+    "zipformer_en": "word-perfect except 'lazer'"
+   },
+   "chosen": false,
+   "why": "runs 'into the sky' straight into 'using the air itself' (no pause at the dash)"
+  }
+ ],
+ "final": {
+  "file": "audio/narration/FGW_Lightning_Laser_narration.wav",
+  "format": "48000 Hz, PCM_24, mono",
+  "measured_duration_s": 33.5,
+  "frames_at_30fps": 1005,
+  "speech_s": [
+   0.0,
+   33.15
+  ],
+  "edits": "none; zero padding after the take only (33.44 -> 33.50 s)",
+  "word_timing": "PocketSphinx forced alignment (tools/align.py) -> audio/narration/words.json -> source/src/data/timeline.json",
+  "sha256": "6add03600f5f2d8adc461166782126ec86599958691b6c99044ed805805e242f"
+ },
+ "loop_gap_s": 0.35
+}
