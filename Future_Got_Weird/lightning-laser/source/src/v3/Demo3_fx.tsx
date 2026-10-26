@@ -15,6 +15,7 @@ import {axis3, BOLT3, Cam3, projector, Proj, TIP3, V3} from '../v2/p3';
 import {G} from '../world/site';
 import {PAL} from './palette';
 import {P0_H, Z_HAND} from './cams3';
+import {BOLT3V} from './bolt3';
 
 type Pt = {x: number; y: number};
 const line = (pts: Pt[]) => (pts.length ? `M${pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')}` : '');
@@ -121,7 +122,7 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
     return GUIDED.filter((p) => p.s >= tail && p.s <= head);
   })() : [];
   // the storm lit where the bolt meets the cloud
-  const top = P(BOLT3.pts[BOLT3.pts.length - 1]);
+  const top = P(BOLT3V.pts[BOLT3V.pts.length - 1]);
   const rTop = clamp((f * 62) / Math.max(top.z, 1), 160, 230); // round, edge-free (the shaped cloud light is Scene3 Clouds)
   // the field at the rod tip: a violet glow and a few short streamers reaching up the prepared path
   const tip = P(TIP3), up = P(axis3(40));

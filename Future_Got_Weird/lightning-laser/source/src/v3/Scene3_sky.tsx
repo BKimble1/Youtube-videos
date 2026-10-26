@@ -17,6 +17,7 @@ import {mix} from '../dc/color';
 import {clamp, fmt, hash, noise1} from '../dc/math';
 import {axis3, BOLT3, Cam3, EXIT3, len3, Proj, sub3, v3, V3} from '../v2/p3';
 import {boltSamples, lightAt} from './Scene3_light';
+import {BOLT3V} from './bolt3';
 
 type Pt = {x: number; y: number};
 const poly = (pts: Pt[]) => (pts.length ? `M${pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')} Z` : '');
@@ -114,7 +115,7 @@ const DECK = [...CELL, ...field(300, -2400, 2400, -1500, 2900, 601, 110, 250, 0.
 const HIGH = field(460, -3200, 3200, -2400, 3800, 701, 220, 400, 0.66, 1.7, 2.2);
 
 /** where BOLT3 meets the base (horizontal position), and the side the main views (A, F, the end of H) look from */
-const ATT = {x: BOLT3.pts[BOLT3.pts.length - 1].x, z: BOLT3.pts[BOLT3.pts.length - 1].z};
+const ATT = {x: BOLT3V.pts[BOLT3V.pts.length - 1].x, z: BOLT3V.pts[BOLT3V.pts.length - 1].z};
 const SIDE = {x: -0.67, z: -0.74};
 /** the lowering under the cell where the bolt attaches (world x/z, drifting with CELL[0]): ragged dark lobes hanging
  *  8-14 m under the base (lv 3) with lumps hanging under them (lv 4), from just past the attachment back toward the

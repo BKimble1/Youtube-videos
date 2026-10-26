@@ -41,7 +41,7 @@ const fLight = (t: number) => {
   if (t < C0) return {core: 0.85, scene: 0.15}; // (the leader lights the mast head a little: "from a nearby TOWER")
   const dt = t - C0;
   const b = boltLight(dt, 1.5);
-  const hold = (0.4 + 0.5 * Math.exp(-dt / 0.55)) * (0.94 + 0.06 * noise1(t * 9, 171)) * (1 - 0.15 * ss(t, 23.5, 25.6));
+  const hold = (0.4 + 0.5 * Math.exp(-dt / 0.55)) * (0.86 + 0.14 * noise1(t * 5.5, 171)) * (1 - 0.15 * ss(t, 23.5, 25.6));
   return {core: Math.max(b.core, hold), scene: Math.max(b.scene, 0.1 + 0.12 * Math.exp(-dt / 1.0))};
 };
 /** F's state: demoSt (leader length, packets, corona) with F's own light, haze and bracket (drawn by Demo3_fx/_bracket) */
@@ -62,7 +62,7 @@ const fxAt = (t: number, st: St): Fx => {
   const dt = t - C0;
   const pre = 0.22 * ss(t, inc + 0.1, inc + 0.5);
   const conn = dt >= 0 ? clamp(0.35 + 0.4 * Math.min(1, boltLight(dt, 1.5).core)) : 0;
-  const hold = 0.95 * ss(t, W_FOLLOWED - 0.05, W_FOLLOWED + 0.35) * (1 - 0.18 * ss(t, 24.4, 25.6)) * (0.93 + 0.07 * noise1(t * 11, 173));
+  const hold = 0.95 * ss(t, W_FOLLOWED - 0.05, W_FOLLOWED + 0.35) * (1 - 0.18 * ss(t, 24.4, 25.6)) * (0.85 + 0.15 * noise1(t * 6, 173));
   const guided = Math.max(pre, conn, hold);
   // one surge up the guided section on "followed", a fainter one on "channel"
   const sg = (t0: number, a: number) => {

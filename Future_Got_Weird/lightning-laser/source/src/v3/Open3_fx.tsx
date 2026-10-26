@@ -13,6 +13,7 @@ import {add3, axis3, BEAM_DIR, BOLT3, Cam3, EXIT3, projector, Proj, TIP3, V3, v3
 import {PAL} from './palette';
 import {DUR, EV, LOOP0, openLight, openS, tau3} from './timeline3';
 import {exitOf3, LaserArt3} from './Open3_laser';
+import {BOLT3V} from './bolt3';
 
 type Pt = {x: number; y: number};
 const line = (pts: Pt[]) => (pts.length ? `M${pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')}` : '');
@@ -90,7 +91,7 @@ const WORD_AIR_H = 32.44;
 const BEAM_PTS: V3[] = Array.from({length: 61}, (_, i) => axis3(-520 + (1520 * i) / 60));
 /** the prepared air from the rod tip itself (axis3(-10) is level with TIP3, 0.15 m beside it) to channelTop */
 const CH_H0 = -10;
-const CH_PTS: V3[] = Array.from({length: 30}, (_, i) => axis3(CH_H0 + ((360 - CH_H0) * i) / 29));
+const CH_PTS: V3[] = Array.from({length: 36}, (_, i) => axis3(CH_H0 + ((520 - CH_H0) * i) / 35)); // past the guided top, where the bolt leaves the path
 
 export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number}> = ({cam, t, id, corona = 0}) => {
   const tau = tau3(t);
@@ -102,7 +103,8 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
   const glowW = runs(P, BEAM_PTS, 1.5, f, 6, 30, 3);
   const glowN = runs(P, BEAM_PTS, 0.55, f, 3, 12, 3);
   // the warm prepared air along the guided section and a little beyond (Beam3D's default channelTop, G + 60)
-  const ch = ribbon(CH_PTS.map(P), f, 3.6, 14, 240);
+  // a warm sheath wider than the bolt's violet halo, so the prepared air still shows outside the discharge (Q4)
+  const ch = ribbon(CH_PTS.map(P), f, 6.5, 24, 300);
   const chCore = ribbon(CH_PTS.map(P), f, 1.2, 5, 90);
   // on "using the AIR ITSELF" (32.44-33.15) the prepared air swells a little, back to its base level before the seam
   const airK = ss(tau, WORD_AIR_H - DUR - 0.05, WORD_AIR_H - DUR + 0.25) * (1 - ss(tau, -0.5, -0.15));
@@ -136,7 +138,7 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
   const gMid = runs(P, gPts, 2.2, f, 4, 30, 4);
   const gCore = runs(P, gPts, 0.85, f, 2.2, 12, 4);
   // the storm lit where the bolt meets the cloud (local, never the caption band)
-  const top = P(BOLT3.pts[BOLT3.pts.length - 1]);
+  const top = P(BOLT3V.pts[BOLT3V.pts.length - 1]);
   const lit = k * clamp(0.85 * pulseAt(tau, 0.14) + (tau >= EV.connect ? 0.18 * Math.exp(-(tau - EV.connect) / 0.9) : 0));
   const rTop = clamp((f * 95) / Math.max(top.z, 1), 160, 260); // round, edge-free (the shaped cloud light is Scene3 Clouds)
   // the field building at the rod tip before the leader incepts (openSt's tipCorona: 31.88-32.9, gone once the
@@ -189,7 +191,7 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
           </g>
         )}
         {lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop)} ry={fmt(rTop)} fill={`url(#${id}-lit)`} opacity={lit} />}
-        {ch && <path d={ch} fill={PAL.channel} fillOpacity={(0.22 + 0.16 * airK) * k} filter={`url(#${id}-chb)`} />}
+        {ch && <path d={ch} fill={PAL.channelMacro} fillOpacity={(0.24 + 0.14 * airK) * k} filter={`url(#${id}-chb)`} />}
         {chCore && <path d={chCore} fill={PAL.channelEdge} fillOpacity={(0.12 + 0.12 * airK) * k} filter={`url(#${id}-chb)`} />}
         {glowW.map((r, i) => <path key={`w${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={0.1 * k} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
         {glowN.map((r, i) => <path key={`n${i}`} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={0.16 * k} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}

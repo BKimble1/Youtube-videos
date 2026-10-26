@@ -8,6 +8,7 @@ import {G} from '../world/site';
 import {Apparatus3D, Beam3D, Discharge3D, FlashWash, Sky3D, Tower3D} from './Scene3';
 import {PAL} from './palette';
 import {tau3} from './timeline3';
+import {BOLT3V} from './bolt3';
 
 export type St = {
   s: number; // leader length along BOLT3 (m); <= 0: no discharge
@@ -89,7 +90,7 @@ export const TipCorona3 = ({cam, k, t}: {cam: Cam3; k: number; t: number}) => {
 /** dk fades the discharge (0..1, default 1); rain scales the rain (default 1). The flash wash is drawn under the
  *  discharge, so it can never wash out the bolt's core or the bracket label. */
 export const View3: React.FC<{cam: Cam3; st: St; t: number; tag: string; children?: React.ReactNode; dk?: number; rain?: number}> = ({cam, st, t, tag, children, dk = 1, rain = 1}) => {
-  const top = st.s > 0 ? BOLT3.pts[Math.max(0, BOLT3.pts.findIndex((p) => p.s >= Math.min(st.s, BOLT3.total)))] : undefined;
+  const top = st.s > 0 ? BOLT3V.pts[Math.max(0, BOLT3V.pts.findIndex((p) => p.s >= Math.min(st.s, BOLT3V.total)))] : undefined;
   const drift = tau3(t);
   const apFirst = len3(sub3(EXIT3, cam.pos)) > len3(sub3(v3(0, 60, 0), cam.pos));
   return (

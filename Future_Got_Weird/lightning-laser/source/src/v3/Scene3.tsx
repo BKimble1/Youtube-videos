@@ -13,6 +13,7 @@ import {mix} from '../dc/color';
 import {clamp, fmt, hash} from '../dc/math';
 import {add3, axis3, BOLT3, Br3, Cam3, dot3, EXIT3, lerp3, mul3, norm3, P3, projector, Proj, sub3, TW, v3, V3} from '../v2/p3';
 import {PAL} from './palette';
+import {BOLT3V} from './bolt3';
 import {G} from '../world/site';
 import {boltSamples, lightAt, LOW_BOLT, sOfTop} from './Scene3_light';
 import {Clouds, LOOP, Ranges, segDist, SkyGrad} from './Scene3_sky';
@@ -332,8 +333,8 @@ export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: stri
   if (s <= 0) return null;
   const P = projector(cam);
   const c = clamp(core, 0, 1.8);
-  const main = partial(BOLT3.pts, s);
-  const brs = BOLT3.branches.map((b: Br3) => ({b, l: Math.min(b.len, (s - b.s0) * 0.6)})).filter((x) => x.l > 0).map((x) => partial(x.b.pts, x.l));
+  const main = partial(BOLT3V.pts, s);
+  const brs = BOLT3V.branches.map((b: Br3) => ({b, l: Math.min(b.len, (s - b.s0) * 0.6)})).filter((x) => x.l > 0).map((x) => partial(x.b.pts, x.l));
   // stalled streamers: only a brief brush of short upward jabs right behind the climbing tip (each lights for ~9 m of
   // growth and is gone), so the young leader never reads as a comb; none once the bolt has connected
   const sts = STREAMS3

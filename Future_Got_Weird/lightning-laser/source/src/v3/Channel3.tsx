@@ -134,7 +134,8 @@ const ZK: HK[] = [
   [11.9, ln(1.43), 0],
   [12.56, ln(2.7), 0], // pushed in on the two molecules
   [13.45, ln(2.76), 0],
-  [14.2, ln(2.25), -0.5], // heating: still close while the molecules move out, the view starting to open
+  [13.9, ln(2.45), -1.0], // heating: close while the molecules move out, then opening so the channel reads narrow by 'channel' (14.30)
+  [14.4, ln(1.25), -0.9],
   [15.8, ln(Z_E0), -0.03], // one pull-back along the axis: the narrow channel through the sky
   [T_OUT, ln(Z_E1), -0.03], // E: steady, a gentle drift
   [B.F, ln(M_H), Z_V0], // the pull-out toward the sky; the hand-off
@@ -271,7 +272,7 @@ const FarAir: React.FC<{mc: MCam; t: number}> = ({mc, t}) => {
   const dots = molsLod(box, 77, lodKeep(mc.z), 170);
   const pk = pushK(t);
   const zk = mc.z * k;
-  const quiet = (1 - 0.45 * d1K(t)) * (0.2 + 0.8 * ss(t, B.D, B.D + 0.4)); // D1: the small group on the path is the thing to look at (and the air fades in under the packet's bloom)
+  const quiet = (1 - 0.45 * d1K(t)) * (0.05 + 0.95 * ss(t, B.D, B.D + 0.4)); // D1: the small group on the path is the thing to look at (and the air fades in under the packet's bloom)
   return (
     <g transform={camTr(mc, k)}>
       {dots.map(({m, lod}) => {
@@ -362,7 +363,7 @@ const MicroTex: React.FC<{t: number; mc: MCam}> = ({t, mc}) => {
   const px = (p: number) => p / z;
   const elZ = clamp((z - 1.0) / 0.3); // bound electrons are drawn only while we are close
   // the field comes up under the packet's bloom (C ends on a darkened sky), so the background never switches in one frame
-  const fadeIn = 0.2 + 0.8 * ss(t, B.D, B.D + 0.4);
+  const fadeIn = 0.05 + 0.95 * ss(t, B.D, B.D + 0.4); // C ends on D's own background, so the field can start from ~0
   // the molecules and the leader's afterglow stay over the macro view a little after the air has cross-faded
   const texA = 1 - ss(t, 18.62, 18.765);
   const mols = molsLod(box, SEED, lodKeep(z));

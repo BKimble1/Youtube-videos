@@ -3,12 +3,13 @@
 // instead of washing the whole frame.
 import {clamp} from '../dc/math';
 import {BOLT3, dot3, len3, mul3, norm3, sub3, v3, V3} from '../v2/p3';
+import {BOLT3V} from './bolt3';
 
 /** points along the bolt (every 12 m of leader length) that emit light once the leader has passed them */
 const SAMPLES: {p: V3; s: number}[] = (() => {
   const out: {p: V3; s: number}[] = [];
   for (let s = 4; s <= BOLT3.total; s += 12) {
-    const q = BOLT3.pts.find((p) => p.s >= s) ?? BOLT3.pts[BOLT3.pts.length - 1];
+    const q = BOLT3V.pts.find((p) => p.s >= s) ?? BOLT3V.pts[BOLT3V.pts.length - 1];
     out.push({p: v3(q.x, q.y, q.z), s});
   }
   return out;
@@ -17,7 +18,7 @@ const SAMPLES: {p: V3; s: number}[] = (() => {
 export const sOfTop = (top?: V3) => {
   if (!top) return 0;
   let best = 0, bd = 1e9;
-  for (const q of BOLT3.pts) {
+  for (const q of BOLT3V.pts) {
     const d = Math.abs(q.x - top.x) + Math.abs(q.y - top.y) + Math.abs(q.z - top.z);
     if (d < bd) { bd = d; best = q.s; }
   }
