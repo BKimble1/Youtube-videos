@@ -241,7 +241,7 @@ export const ARM_A: ArmSpec = {elbow: {u: 52, v: 226, w: 128}, shoulder: {u: 92,
 /** A (film 24-70): load 0..1 (the brief: about 0.6 at the cut, 1 by its 12th frame, then a small settle); drift 0..1
  *  slides the sheens a little over the shot (optional); grip 0..1 the fist's closure (default 0.86 + 0.14 load: it
  *  closes as the weight comes on); cam / view / arm override the framing. */
-export const ContactScene8: React.FC<{id: string; load: number; drift?: number; grip?: number; cam?: Cam; view?: ContactView; arm?: ArmSpec}> = ({id, load, drift = 0, grip, cam = CONTACT_CAM, view = CONTACT_VIEW, arm = ARM_A}) => {
+export const ContactScene8: React.FC<{id: string; load: number; drift?: number; grip?: number; cam?: Cam; view?: ContactView; arm?: ArmSpec; sleeve?: boolean}> = ({id, load, drift = 0, grip, cam = CONTACT_CAM, view = CONTACT_VIEW, arm = ARM_A, sleeve}) => {
   const l = clamp(load);
   const st: Pad3DState = {
     yaw: view.yaw,
@@ -264,6 +264,7 @@ export const ContactScene8: React.FC<{id: string; load: number; drift?: number; 
     shadowDir: {v: 12, w: -4},
     contactLine: 1,
     reflect: 0,
+    sleeve,
   };
   return (
     <Svg>
@@ -554,7 +555,7 @@ export const contactShot = (f: number) => {
   const u = clamp((f - 24) / 12);
   const settle = f > 36 ? Math.sin((f - 36) * 0.55) * Math.exp(-(f - 36) * 0.16) : 0;
   const load = clamp(0.6 + 0.4 * (1 - Math.pow(1 - u, 3)) - 0.03 * Math.abs(settle), 0, 1);
-  const cam = lerpCam({x: 78, y: 150, z: 3.4}, {x: 80, y: 146, z: 3.6}, ss5(f, 24, 70));
+  const cam = lerpCam({x: 78, y: 126, z: 3.4}, {x: 80, y: 122, z: 3.6}, ss5(f, 24, 70));
   return {load, drift: clamp((f - 24) / 46), cam};
 };
 /** B, film 894-930 (the rig's padR: carried up, it arrives a little high at 897, closes on the glass and touches at

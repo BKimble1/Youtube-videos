@@ -25,7 +25,7 @@ import {Cam3} from './Tower8';
 import {Exterior8} from './Exterior8';
 import {Pad3D as Pad3D8, Pad3DState as Pad3DState8, allTiles as allTiles8, ARM_BAY, tileVW as tileVW8} from './Pad8';
 import {ContactScene8, contactShot, SpringScene8, springShot, SurfaceScene8, surfaceShot, SPRING_BAY_CAM} from './PadScenes8';
-import {FOCUS, FOCUS_P, viewOf as wedgeViewOf, WEDGE_CAM, WedgeContent, WedgeSplit, WedgeState, WedgeView} from './Wedge8';
+import {camAt as wedgeCamAt, FOCUS, FOCUS_P, viewOf as wedgeViewOf, WEDGE_CAM, WEDGE_Z, WedgeContent, WedgeSplit, WedgeState, WedgeView} from './Wedge8';
 import {MolView, WedgeToMol} from './Mol8';
 
 const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (
@@ -72,7 +72,9 @@ const ext = (id: string, f: number, cam: Cam3, top = false, brickAt: number | nu
   const camOnly = React.useContext(CamOnly);
   // brickAt: a fixed frame whose state places the brick pier (so it never moves during the shot)
   const bm = brickAt == null ? null : top ? climbTop(brickAt) : climbAt(brickAt);
-  return <Exterior8 id={id} f={f} cam={cam} st={camOnly ? null : top ? climbTop(f) : climbAt(f)} brickMatch={bm} />;
+  // the street and sky keep running across the loop: the frames before the catch ends follow the last frame
+  const tf = top && f < CATCH_END ? f + FRAMES : f;
+  return <Exterior8 id={id} f={tf} cam={cam} st={camOnly ? null : top ? climbTop(f) : climbAt(f)} brickMatch={bm} />;
 };
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 type P3 = {x: number; y: number; z: number};
@@ -104,7 +106,7 @@ const HIP = (f: number) => climbAt(f).pose;
 /** the hero three-quarter exterior (top coordinates): outside, a little above him, looking along the facade and down,
  *  close enough to read him, both pads and both straps, with the street far below on the right. The opening and the
  *  ending share it (the loop). (Also the camera of the Runway hero plate's composition reference.) */
-export const CAM_A: Cam3 = {eye: p3(1.6, 33.3, 2.4), target: p3(0.22, 31.2, -1.6), f: 1500};
+export const CAM_A: Cam3 = {eye: p3(1.5, 33.6, 1.6), target: p3(0.12, 30.7, -1.5), f: 1200};
 /** the height reveal (opening coordinates): from above him, looking down the facade to the street (the camera of the
  *  Runway street plate's composition reference at its widest) */
 export const CAM_B: Cam3 = {eye: p3(1.4, 31.4, 2.2), target: p3(0.45, 27.0, -1.6), f: 950};
@@ -300,16 +302,20 @@ const H2: React.FC<{f: number}> = ({f}) => <PadScene6 id={`h2${f}`} st={padH2(f)
  *  stirrup and taking his weight as he shifts onto it; his far knee begins to lift with its stirrup (one tilt down,
  *  then held) */
 const H3_PAD = climbAt(70).padL;
-const camH3 = (f: number) => cam1(f, [[70, 80, H3_PAD.y + 60, 1.75], [100, 165, climbAt(96).footL.ankle.y - 10, 1.75, inOut]]);
+// (V8 QA) one slow push down the strap: it opens on the pads, straps and stirrups together (his head above the frame)
+// and closes in on the seated stirrup; the feet stay above the caption throughout
+const H3_ANK = climbAt(96).footL.ankle.y;
+const camH3 = (f: number) => cam1(f, [[70, 130, H3_PAD.y + (960 - 300) / 1.25, 1.25], [100, 155, H3_ANK - (1120 - 960) / 1.65, 1.65, inOut]]);
 const H3: React.FC<{f: number}> = ({f}) => bay(`h3${f}`, f, camH3(f));
 /** H4 (105-171) "and climb it like Spider-Man.": from above him, one move: the view tilts down past him and widens to
  *  the street far below, the onlookers, the traffic; then holds as he climbs (the far pad seats, he rises onto it,
  *  the near pad follows) */
+// (V8 QA) a pure zoom out: the eye and the aim stay fixed and only the focal length changes, so the 3D tower and the
+// drawn climber over it scale together about the frame's centre and stay registered (no facade sliding behind him)
+const H4_TARGET = p3(0.3, 28.5, -1.2);
 const camH4 = (f: number): Cam3 => {
-  const u = sm5(clamp((f - 105) / 34));
-  const him = climbAt(105).pose;
-  const tHim = {x: 0.45, y: -him.y / 620 - 0.15, z: -0.4};
-  return {eye: CAM_B.eye, target: lerp3(tHim, CAM_B.target, u), f: lerp(1750, CAM_B.f, u)};
+  const u = sm5(clamp((f - 105) / 38));
+  return {eye: CAM_B.eye, target: H4_TARGET, f: Math.exp(lerp(Math.log(1750), Math.log(CAM_B.f), u))};
 };
 const H4: React.FC<{f: number}> = ({f}) => ext(`h4${f}`, f, camH4(f));
 
@@ -367,7 +373,7 @@ const G3: React.FC<{f: number}> = ({f}) => {
 const M5a: React.FC<{f: number}> = ({f}) => <M4 f={Math.min(f, 472)} />;
 /** M5b (490-528) "your entire weight.": him, on both loaded pads, held: he settles a little into the loaded stirrups
  *  (their straps take it) and holds */
-const CAM_M5B: Cam = {x: 175, y: HIP(500).y + 60, z: 1.12};
+const CAM_M5B: Cam = {x: 175, y: HIP(503).y + 100, z: 1.0};
 const M5b: React.FC<{f: number}> = ({f}) => bay(`m5b${f}`, f, CAM_M5B);
 /** S0 (528-556) "Special springs": from the far stirrup, loaded under his foot, up its strap to the far pad on the
  *  glass (one tilt, following the load path upward) */
@@ -412,6 +418,8 @@ const M1v8: React.FC<{f: number}> = ({f}) => {
   const zu = cam.z / 1000; // px per um
   if (zu >= 1.6) return <Svg><WedgeView id={`m1w${f}`} st={microState(f)} cam={{x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu}} /></Svg>;
   const op = clamp((Math.log(zu) - Math.log(0.25)) / (Math.log(1.6) - Math.log(0.25)));
+  const g0 = clamp((Math.log(zu) - Math.log(0.7)) / (Math.log(1.6) - Math.log(0.7)));
+  const gb = g0 * g0 * (3 - 2 * g0);
   const camU = {x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu};
   const vw = wedgeViewOf(camU, 40);
   return (
@@ -426,6 +434,13 @@ const M1v8: React.FC<{f: number}> = ({f}) => {
             <WedgeContent id={`m1n${f}`} st={microState(f)} z={zu} view={vw} bg={false} />
           </g>
         )}
+        {/* (V8 QA) the section's own ground (the air between the wedges) fades in over the last part of the zoom, so
+            the hand-over to the section view at zu 1.6 has nothing left to change */}
+        {gb > 0.001 && (
+          <g opacity={gb} transform={`translate(0 ${M1_V0}) scale(0.001)`}>
+            <WedgeContent id={`m1b${f}`} st={microState(f)} z={zu} view={vw} />
+          </g>
+        )}
       </Layer>
     </Svg>
   );
@@ -435,13 +450,18 @@ const M1v8: React.FC<{f: number}> = ({f}) => {
  *  the tips settle onto the glass, the backing is pulled down and the wedges bend over and lie flat (the contact grows
  *  from points to strips); one wedge's contact is singled out and one continuous zoom goes into it, to the molecules:
  *  the gap closes and short-range attraction marks come up; then the same zoom back out to the loaded section */
-const MOL_U = (f: number) => (f < 473 ? keyN(f, [[380, 0], [424, 1]]) : keyN(f, [[473, 1], [500, 0]]));
+const MOL_U = (f: number) => (f < 473 ? keyN(f, [[380, 0], [424, 1]]) : keyN(f, [[473, 1], [503, 0]]));
+/** (V8 QA) the held section creeps in (zoom 6.8 -> 7.6 px/um about the focus strip, the glass face line fixed) through
+ *  the settling and the shear, so the holds are never frozen; the molecular move starts and ends at that framing */
+const M_Z1 = 7.6;
+const camSec8 = (f: number) => wedgeCamAt(FOCUS_P, Math.exp(lerp(Math.log(WEDGE_Z), Math.log(M_Z1), sm5(clamp((f - 234) / (378 - 234))))));
 const Mv8: React.FC<{f: number}> = ({f}) => {
   const u = MOL_U(f);
   const close = f < 473 ? keyS(f, [[424, 0], [450, 1]]) : 1;
   const t = Math.max(0, (f - 380) / 30);
-  if (f >= 380 && u > 0) return <Svg>{u >= 1 ? <MolView id={`mv${f}`} close={close} t={t} /> : <WedgeToMol id={`mv${f}`} u={u} close={close} t={t} />}</Svg>;
-  return <Svg><WedgeView id={`mw${f}`} st={microState(f)} cam={WEDGE_CAM} /></Svg>;
+  const cam0 = camSec8(f);
+  if (f >= 380 && u > 0) return <Svg>{u >= 1 ? <MolView id={`mv${f}`} close={close} t={t} /> : <WedgeToMol id={`mv${f}`} u={u} close={close} t={t} cam0={cam0} />}</Svg>;
+  return <Svg><WedgeView id={`mw${f}`} st={microState(f)} cam={cam0} /></Svg>;
 };
 
 // ------------------------------------------------------------------ V8: the contact close-up, the springs, the contact test
@@ -450,7 +470,7 @@ const Mv8: React.FC<{f: number}> = ({f}) => {
  *  straight; it settles under the load (a slow push in) */
 const H2v8: React.FC<{f: number}> = ({f}) => {
   const p = contactShot(f);
-  return <ContactScene8 id={`h2${f}`} load={p.load} drift={p.drift} cam={p.cam} />;
+  return <ContactScene8 id={`h2${f}`} load={p.load} drift={p.drift} cam={p.cam} arm={ARM_BAY} sleeve={false} />;
 };
 /** S0v8 (528-548) "Special": down at the near stirrup under his foot, loaded, then up its strap toward the pad (the
  *  load path from the foot support) */
@@ -518,8 +538,8 @@ export const SHOTS8: {from: number; to: number; name: string; C: React.FC<{f: nu
   {from: 70, to: 105, name: 'H3', C: H3},
   {from: 105, to: 171, name: 'H4', C: H4},
   {from: 171, to: 232, name: 'M1', C: M1v8},
-  {from: 232, to: 500, name: 'M', C: Mv8},
-  {from: 500, to: 528, name: 'M5b', C: M5b},
+  {from: 232, to: 503, name: 'M', C: Mv8},
+  {from: 503, to: 528, name: 'M5b', C: M5b},
   {from: 528, to: 548, name: 'S0', C: S0v8},
   {from: 548, to: 642, name: 'S1', C: S1v8},
   {from: 642, to: 664, name: 'S2', C: S2v8},

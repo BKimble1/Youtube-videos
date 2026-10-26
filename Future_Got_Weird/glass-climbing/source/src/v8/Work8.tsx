@@ -27,11 +27,12 @@ export const BaySheet8: React.FC<{fs: number[]; cx: number; cy: number; z: numbe
 import {Exterior8} from './Exterior8';
 import {Cam3} from './Tower8';
 /** one exterior view: the 2D climber over the perspective tower (eye, target in metres) */
-export const ExtTest8: React.FC<{f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean}> = ({f, eye, target, fl, top}) => {
+export const ExtTest8: React.FC<{f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean; brick?: number; noMan?: boolean}> = ({f, eye, target, fl, top, brick, noMan}) => {
   const cam: Cam3 = {eye: {x: eye[0], y: eye[1], z: eye[2]}, target: {x: target[0], y: target[1], z: target[2]}, f: fl};
+  const at = (t: number) => (top ? climbTop(t) : climbAt(t));
   return (
     <AbsoluteFill style={{backgroundColor: '#111'}}>
-      <Exterior8 id="ext" f={f} cam={cam} st={top ? climbTop(f) : climbAt(f)} />
+      <Exterior8 id="ext" f={f} cam={cam} st={noMan ? null : at(f)} brickMatch={brick == null ? null : at(brick)} />
     </AbsoluteFill>
   );
 };

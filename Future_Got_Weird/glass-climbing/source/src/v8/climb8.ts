@@ -66,7 +66,7 @@ export const G = 134, NCY = 8, S = FLOOR_H7 / NCY;
 /** the pads' depths on the receding glass: near (L) screen-right of far (R), as their feet; the brick pier begins at
  *  PIER_Z (a vertical aluminium channel), and the near pad goes onto the brick at Z_BRICK */
 export const PZ = {L: -180, R: 180};
-export const PIER_Z = 240, Z_BRICK = 400;
+export const PIER_Z = 240, Z_BRICK = 600;
 /** the near pad at the catch (frame 0) and the climb's pad heights */
 export const L_C = -18400;
 export const DY = (k: number) => L_C - k * S;
@@ -334,7 +334,7 @@ const climbBody = (T: number): Body => {
   padL.load = moving('L') ? 0 : T >= C.bRel ? (T >= C.bPress1 ? brickLoad : 0) : clamp(0.12 + 0.88 * wl);
   padR.load = moving('R') ? 0 : clamp(0.12 + 0.88 * wr);
   // ("can hold your entire weight": he settles a little into the loaded stirrups, then holds)
-  const hy = keyN(T, HIP_KEYS) + 16 * bump(T, 502, 510, 6, 14);
+  const hy = keyN(T, HIP_KEYS) + 16 * bump(T, 505, 513, 6, 14);
   const shiftX = Math.max(...CYCLES.map((c) => ss(T, c.sh[0], c.sh[1]) * (1 - ss(T, c.rise[0], c.rise[1]))));
   // (reaching across to the pier he leans toward it, hips in a little)
   const pier = ss(T, C.bRel - 6, C.bM1) * (1 - ss(T, C.fail - 4, C.fail + 8));

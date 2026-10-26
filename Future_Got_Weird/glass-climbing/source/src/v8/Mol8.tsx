@@ -118,7 +118,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
   const jMax = explicit ? Math.min(Math.ceil(band / MOL.colX), Math.max(1, Math.ceil((-view.x0 - MOL.R) / MOL.colX) + 1)) : 0;
   const Jx = jMax + (jMax % 2); // even, so the pattern's column parity matches
   const glass: React.ReactNode[] = [];
-  const surfG: {x: number; y: number; rad: number; r: number}[] = [];
+  const surfG: {x: number; y: number; rad: number; r: number}[] = []; // (V8 QA) at rest: the marks pair atoms without the jiggle
   const gFill = (si: boolean, j: number) => mix(si ? MC.glassDeepSi : MC.glassDeep, si ? MC.glassSi : MC.glassO, depthK(j) * surfK);
   if (explicit && view.x0 < 0.2)
     for (let j = 0; j < Jx; j++)
@@ -126,7 +126,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
         const a = gAtom(j, r);
         const d = jig(a.key, tt, amp);
         const x = a.x + d.x, y = a.y + d.y;
-        if (j === 0) surfG.push({x, y, rad: a.rad, r});
+        if (j === 0) surfG.push({x: a.x, y: a.y, rad: a.rad, r});
         const dk = depthK(j);
         glass.push(<circle key={`g${j}_${r}`} cx={f.x(x)} cy={f.y(y)} r={f.n(a.rad)} fill={gFill(a.si, j)} stroke={INK} strokeWidth={f.n(ink * (j === 0 ? 1.2 : 1))} strokeOpacity={det * (0.12 + 0.68 * dk)} />);
         if (!a.si && dk > 0.3 && det > 0.01) glass.push(<circle key={`gh${j}_${r}`} cx={f.x(x - a.rad * 0.33)} cy={f.y(y - a.rad * 0.33)} r={f.n(a.rad * 0.28)} fill="#F2FFFD" opacity={det * 0.7 * dk} />);
@@ -160,7 +160,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
         const d = jig(key, tt, amp);
         const p = {x: q.x + d.x, y: q.y + d.y};
         pts.push(p);
-        if (c === 0) surfP.push({x: p.x, y: p.y, rad: q.rad, key});
+        if (c === 0) surfP.push({x: q.x, y: q.y, rad: q.rad, key});
         beads.push(<circle key={`p${c}_${b}`} cx={f.x(p.x)} cy={f.y(p.y)} r={f.n(q.rad)} fill={pFill(q.o, c)} stroke={INK} strokeWidth={f.n(ink * (c === 0 ? 1.2 : 1))} strokeOpacity={det * (0.1 + 0.65 * dk)} />);
         if (!q.o && dk > 0.3 && det > 0.01) beads.push(<circle key={`ph${c}_${b}`} cx={f.x(p.x - q.rad * 0.33)} cy={f.y(p.y - q.rad * 0.33)} r={f.n(q.rad * 0.28)} fill="#FFFFFF" opacity={det * 0.75 * dk} />);
       }
@@ -182,10 +182,11 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
   }
   // the pattern's left edge: when nothing is explicit, chain 0 starts the pattern (its own tile column)
   const pxStart = Cx === 0 ? gap + MOL.Rp - MOL.chainX / 2 : px0;
-  // attraction marks: one per mutually nearest pair of surface atoms (glass atom, silicone bead), only when the two
+  // attraction marks: one per mutually nearest pair of surface atoms (glass atom, silicone bead; paired at rest, so a
+  // mark never blinks on and off with the jiggle), only when the two
   // faces are within reach; drawn straight across the gap (horizontal), as two short pale dashes
   const marks: React.ReactNode[] = [];
-  const mw = 4.8 / z;
+  const mw = 7 / z; // (V8 QA) bolder, to read at phone size
   const zK = sm(26, 60, z);
   if (explicit && zK > 0.01) {
     const nearG = (b: {x: number; y: number; rad: number}) => {
@@ -225,10 +226,10 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
       // weak per pair and steeply distance dependent: the closest pairs read strongest, so the marks vary
       const k = sm(MOL.reach, MOL.gap1 + 0.08, g.d) ** 2 * (0.5 + 0.5 * sm(0.62, 0.32, g.d));
       const flick = t === undefined ? 1 : 0.92 + 0.08 * Math.sin(tt * 6 + 6.28 * hash(b.key, 31));
-      const o = 0.82 * k * flick * zK;
+      const o = Math.min(1, 0.95 * k * flick * zK);
       if (o < 0.02) return;
       const seg = (s0: number, s1: number) => `M${f.x(lerp(xa, xb, s0))},${f.y(y)} L${f.x(lerp(xa, xb, s1))},${f.y(y)}`;
-      marks.push(<path key={`m${i}`} d={`${seg(0.16, 0.4)} ${seg(0.6, 0.84)}`} stroke={MC.mark} strokeWidth={f.n(mw)} strokeLinecap="round" opacity={o} />);
+      marks.push(<path key={`m${i}`} d={`${seg(0.12, 0.4)} ${seg(0.6, 0.88)}`} stroke={MC.mark} strokeWidth={f.n(mw)} strokeLinecap="round" opacity={o} />);
     });
   }
   const yA = view.y0 - 1, yB = view.y1 + 1;

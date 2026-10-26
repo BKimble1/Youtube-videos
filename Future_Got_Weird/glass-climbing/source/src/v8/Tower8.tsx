@@ -119,6 +119,24 @@ export const TowerScene: React.FC<{id: string; cam: Cam3; f: number; st?: ClimbS
       poly(pts, k > 0 ? lit(col, 0.18 * k) : shade(col, 0.25 * -k + 0.05), layer, {stroke: o.stroke, cull: n});
     }
   };
+  /** (V8) a tall box drawn in storey-high segments, so each part sorts against the glass beside it at its own depth (a
+   *  single street-to-roof face sorts at its average distance, and the near glass was drawn over it); only the last
+   *  segment has a top */
+  const tallBox = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, col: string, layer: number, seg = 3.6) => {
+    for (let ya = y0; ya < y1 - 1e-6; ya += seg) {
+      const yb = Math.min(y1, ya + seg);
+      const faces: [P3[], P3][] = [
+        [[v3(x1, ya, z0), v3(x1, yb, z0), v3(x1, yb, z1), v3(x1, ya, z1)], v3(1, 0, 0)],
+        [[v3(x0, ya, z1), v3(x1, ya, z1), v3(x1, yb, z1), v3(x0, yb, z1)], v3(0, 0, 1)],
+        [[v3(x0, ya, z0), v3(x0, yb, z0), v3(x1, yb, z0), v3(x1, ya, z0)], v3(0, 0, -1)],
+      ];
+      if (yb >= y1 - 1e-6) faces.push([[v3(x0, yb, z0), v3(x0, yb, z1), v3(x1, yb, z1), v3(x1, yb, z0)], v3(0, 1, 0)]);
+      for (const [pts, n] of faces) {
+        const k = dot3(n, SUN);
+        poly(pts, k > 0 ? lit(col, 0.18 * k) : shade(col, 0.25 * -k + 0.05), layer, {cull: n});
+      }
+    }
+  };
   /** a cast shadow on the street of a vertical extent (an object's footprint raised by its height) */
   const shadowOf = (pts: P3[], op = 0.22) => {
     const g = pts.map((p) => add3(v3(p.x, 0.01, p.z), mul3(SHADOW_DIR, p.y)));
@@ -212,13 +230,30 @@ export const TowerScene: React.FC<{id: string; cam: Cam3; f: number; st?: ClimbS
       box(0, 0.04, 1.8, roof, z - 0.025, z + 0.025, '#B6C1C9', LAYER.building);
     }
   for (const [a, b] of T.piers) {
-    box(-0.0, 0.06, 1.8, roof, a, b, '#A9573D', LAYER.building);
+    tallBox(-0.0, 0.06, 1.8, roof, a, b, '#A9573D', LAYER.building);
     const c = near(v3(0.06, 30, (a + b) / 2));
     if (detail > 0.5 && c < 40) {
-      for (let y = 2; y < roof; y += 0.15) quadZ(0.061, y, y + 0.012, a, b, '#D9C3A6', LAYER.building, {d: near(v3(0.06, y, (a + b) / 2)) - 0.01, op: 0.55});
+      // (V8) a pier close to the camera gets real brickwork around eye level: 75 mm courses with staggered head joints,
+      // inset from the pier's edges; elsewhere the plain coursing
+      const close = near(v3(0.06, C.eye.y, (a + b) / 2)) < 9;
+      const yLo = close ? C.eye.y - 7 : Infinity, yHi = close ? C.eye.y + 2.5 : -Infinity;
+      // the joints sort just in front of the pier segment they lie on (the same depth measure as its face), and stay
+      // inside the metal edge strips
+      const segD = (y: number) => {
+        const ya = 1.8 + Math.floor((y - 1.8) / 3.6) * 3.6, yb = Math.min(roof, ya + 3.6);
+        return [v3(0.06, ya, a), v3(0.06, yb, a), v3(0.06, yb, b), v3(0.06, ya, b)].reduce((s, q) => s + C.pr(q).d, 0) / 4 - 0.002;
+      };
+      const za = a + 0.03, zb = b - 0.03;
+      for (let y = 2; y < roof; y += 0.15) if (y + 0.15 < yLo || y > yHi) quadZ(0.061, y, y + 0.012, za, zb, '#D9C3A6', LAYER.building, {d: segD(y), op: 0.55});
+      if (close)
+        for (let y = yLo, n = 0; y < yHi; y += 0.075, n++) {
+          const d = segD(y);
+          quadZ(0.061, y, y + 0.01, za, zb, '#D9C3A6', LAYER.building, {d, op: 0.6});
+          for (let z = a + (n % 2 ? 0.1125 : 0.225); z < zb; z += 0.225) if (z > za) quadZ(0.061, y + 0.01, y + 0.075, z, z + 0.01, '#D9C3A6', LAYER.building, {d, op: 0.5});
+        }
     }
-    box(0, 0.08, 1.8, roof, a - 0.03, a + 0.03, '#C3CDD4', LAYER.building);
-    box(0, 0.08, 1.8, roof, b - 0.03, b + 0.03, '#C3CDD4', LAYER.building);
+    tallBox(0, 0.08, 1.8, roof, a - 0.03, a + 0.03, '#C3CDD4', LAYER.building);
+    tallBox(0, 0.08, 1.8, roof, b - 0.03, b + 0.03, '#C3CDD4', LAYER.building);
   }
   // the corner's side face (the building's thickness): brick with tall windows, toward +z
   {

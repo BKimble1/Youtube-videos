@@ -630,7 +630,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           <path
             key={`c${b.i}`}
             d={(() => {
-              const bw = Math.min(2.6, 14 / z);
+              const bw = Math.min(3.4, 22 / z); // (V8 QA) wide enough to read at phone size
               return `M${f.p({x: 0, y: b.contact.y0})} L${f.p({x: 0, y: b.contact.y1})} L${f.p({x: -bw, y: b.contact.y1 - bw * 0.3})} L${f.p({x: -bw, y: b.contact.y0 + bw * 0.3})} Z`;
             })()}
             fill={st.surface === 'glass' ? WCOL.contact : '#5A2618'}
