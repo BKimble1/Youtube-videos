@@ -15,10 +15,10 @@ This environment has no audio or video playback.
 | | Review | Master |
 |---|---|---|
 | File | `exports/FGW_Robot_Faces_V1_REVIEW_1920x1080.mp4` | `exports/FGW_Robot_Faces_V1_MASTER_3840x2160.mp4` |
-| Video | H.264 High, 1920×1080, 30/1 fps, yuv420p, bt709, 6,440 frames | see `qa/master/master_qa.json` (filled in after the master's render) |
-| Audio | AAC, 48 kHz, stereo, 320 kb/s target | same mix |
-| Duration | 214.667 s (the narration master is 214.667 s) | |
-| SHA-256 | `cc3e0157fb98b0b46a181640a6ba0ab89bca3287c25ca2cd8e2082a36df95a86` | |
+| Video | H.264 High, 1920×1080, 30/1 fps, yuv420p, bt709, 6,440 frames | H.264 High, 3840×2160 (rendered at 2× from the vectors, not upscaled), 30/1 fps, yuv420p, bt709, 6,440 frames |
+| Audio | AAC, 48 kHz, stereo, 320 kb/s target | the same mix: −14.2 LUFS, −1.5 dBTP, 0 ms offset from the narration |
+| Duration | 214.667 s (the narration master is 214.667 s) | 214.667 s; no black frames; the same single 2.6 s low-motion stretch at 32.3 s |
+| SHA-256 | `cc3e0157fb98b0b46a181640a6ba0ab89bca3287c25ca2cd8e2082a36df95a86` | `2597024b29a71e16e8fa51e26b170079b4b819f039e75f9ce0f119405d3b3829` (118.6 MB) |
 
 ## Audio (measured)
 
