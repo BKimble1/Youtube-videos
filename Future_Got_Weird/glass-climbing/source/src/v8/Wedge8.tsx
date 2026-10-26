@@ -632,11 +632,11 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
             d={(() => {
               // (V8 QA) a straight band ON the surface line (straddling it, the wedge's strip covering its outer half):
               // the contact reads on the face, never as a mark inside the glass
-              const bw = Math.min(1.6, 12 / z);
+              const bw = 1.6; // (in um: it scales with the zoom, and fades out as the zoom goes deep; below)
               return `M${f.p({x: 0.45 * bw, y: b.contact.y0})} L${f.p({x: 0.45 * bw, y: b.contact.y1})} L${f.p({x: -0.55 * bw, y: b.contact.y1})} L${f.p({x: -0.55 * bw, y: b.contact.y0})} Z`;
             })()}
             fill={st.surface === 'glass' ? WCOL.contact : '#5A2618'}
-            opacity={b.contact.k * (1 - sm(300, 3000, z)) * (b.i === fi ? 1 : 1 - 0.15 * fk)}
+            opacity={b.contact.k * (1 - sm(10, 30, z)) * (b.i === fi ? 1 : 1 - 0.15 * fk)}
           />
         ) : null,
       )}
@@ -656,8 +656,11 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         // the selected wedge a touch lighter, the others a touch quieter (no outline, no callout)
         const fill0 = foc > 0 ? mix(WCOL.wedge, '#FFFFFF', 0.5 * foc) : mix(WCOL.wedge, WCOL.sheet, 0.22 * fk);
         const hold = roots[blades.indexOf(b)]?.hold ?? 0;
-        const fill = mix(fill0, WCOL.siliconeAtomic, dz);
-        const tipC = mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz);
+        // (V8 QA) in the middle of the deep zoom the pale tip fills the frame: it is taken down to a mid tone there,
+        // so the zoom does not flash white (no change at the section's own scale)
+        const mk = sm(Math.log(12), Math.log(40), Math.log(z));
+        const fill = mix(mix(fill0, WCOL.siliconeAtomic, dz), '#8FA3AC', 0.6 * mk);
+        const tipC = mix(mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz), '#8FA3AC', 0.65 * mk);
         return (
           <g key={b.i}>
             <defs>

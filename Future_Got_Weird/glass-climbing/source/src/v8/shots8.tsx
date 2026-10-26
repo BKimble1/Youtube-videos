@@ -490,26 +490,23 @@ const S0v8_B = (() => {
   const s = climbAt(548);
   return {x: s.ringL.x + 30, y: s.ringL.y - 40};
 })();
-// (V8 QA) a cut in on the stirrup (z 1.5), then a short tilt up the strap toward its ring: the feet stay above the
-// caption, his head stays above the frame
-const S0_ANK = climbAt(528).footL.ankle.y, S0_RING = climbAt(548).ringL.y;
-const camS0v8 = (f: number) => cam1(f, [[528, S0v8_A.x + 40, S0_ANK - (1100 - 960) / 1.5, 1.5], [548, S0v8_B.x, S0_RING - (480 - 960) / 1.5, 1.5, inOut]]);
+// (V8 QA) a cut in on the stirrups (z 2.6): his weight on the steps, the straps running up out of the top of the frame
+// (his hands and pads are above it); a short tilt up the near strap (the feet go from y 1220 to 1370; the caption sits
+// at the top, over his thighs)
+const S0_ANK = climbAt(528).footL.ankle.y;
+const camS0v8 = (f: number) => cam1(f, [[528, S0v8_A.x - 30, S0_ANK - (1220 - 960) / 2.6, 2.6], [548, S0v8_A.x - 40, S0_ANK - (1370 - 960) / 2.6, 2.6, inOut]]);
 const S0v8: React.FC<{f: number}> = ({f}) => bay(`s0${f}`, f, camS0v8(f));
 /** S1v8 (548-642) "springs spread the load, so one little patch doesn't have to hold you up alone.": match cut into the
  *  same pad: the cover is cut away; the strap pulls straight, the lug and spine travel and every spring stretches
  *  together while the tiles stay put; one patch lets go (its spring slackens, its neighbours stretch further, the
  *  rest keep their share); it comes back and the load evens out; the cover is restored and the view returns to the
  *  bay's view of his hand (the spring builder's shot, retimed to the narration) */
-// (V8 QA) the builder's time remapped to the narration: the cover comes off on "Special springs" (553-566), the
-// springs stretch together on "spread the load" (566-588), the patch lets go on "so one little patch" (588-600), holds,
-// comes back and evens out (616-628) and the cover is back on by the cut (642)
-const SPRING_T = (f: number) => keyN(f, [[548, 536], [566, 551], [588, 578], [600, 598], [616, 616], [628, 632], [642, 644]]);
 const SPRING_HAND = (() => {
   const p = climbAt(640).padL;
   return {x: KX * p.zo + 30, y: p.y + KY * p.zo, z: SPRING_BAY_CAM.z / MM};
 })();
 const S1v8: React.FC<{f: number}> = ({f}) => {
-  const q = springShotFilm(SPRING_T(f), f);
+  const q = springShotFilm(f);
   return <SpringScene8 id={`s1${f}`} load={q.load} cover={q.cover} lost={q.lost} view={q.view} cam={q.cam} />;
 };
 /** S2v8 (642-664): from his hand in the bay, out to the climb's medium framing */
@@ -549,8 +546,8 @@ export const SHOTS8: {from: number; to: number; name: string; C: React.FC<{f: nu
   {from: 232, to: 503, name: 'M', C: Mv8},
   {from: 503, to: 528, name: 'M5b', C: M5b},
   {from: 528, to: 548, name: 'S0', C: S0v8},
-  {from: 548, to: 642, name: 'S1', C: S1v8},
-  {from: 642, to: 857, name: 'C', C: CC},
+  {from: 548, to: 664, name: 'S1', C: S1v8},
+  {from: 664, to: 857, name: 'C', C: CC},
   {from: 857, to: 894, name: 'E1', C: E1},
   {from: 894, to: 930, name: 'G1', C: G1v8},
   {from: 930, to: 954, name: 'G1b', C: G1bv8},

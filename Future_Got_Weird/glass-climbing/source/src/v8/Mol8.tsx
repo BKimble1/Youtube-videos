@@ -268,7 +268,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
 /** the molecular view's camera: the glass face (x = 0) at screen x MOL_FACE_SX and the contact point (0, 0) at
  *  FOCUS_SY. The move from the section glides the contact point from (FACE_SX, FOCUS_SY) to here. */
 export const MOL_Z = 160; // px per nm
-export const MOL_FACE_SX = 400;
+export const MOL_FACE_SX = 250; // (V8 QA: 400 put the closing gap under the top-right captions)
 export const MOL_CAM: Cam = {x: -(MOL_FACE_SX - W / 2) / MOL_Z, y: -(FOCUS_SY - H / 2) / MOL_Z, z: MOL_Z};
 const viewOfNm = (cam: Cam, m = 60): View => ({x0: cam.x - (W / 2 + m) / cam.z, x1: cam.x + (W / 2 + m) / cam.z, y0: cam.y - (H / 2 + m) / cam.z, y1: cam.y + (H / 2 + m) / cam.z});
 

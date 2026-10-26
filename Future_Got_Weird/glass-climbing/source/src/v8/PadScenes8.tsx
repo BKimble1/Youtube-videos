@@ -527,15 +527,11 @@ export const SpringScene8: React.FC<{id: string; load: number; cover: number; lo
   return (
     <Svg>
       <Layer cam={cam} depth={1}>
-        <defs>
-          {/* the change in emphasis: the world behind knocked back a little while the mechanism is open */}
-          <filter id={`${id}-kb`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
-            <feColorMatrix type="matrix" values={muteMatrix(0.24 * em, '#8C9EA8')} />
-          </filter>
-        </defs>
-        <g filter={em > 0.01 ? `url(#${id}-kb)` : undefined}>
-          <Facade id={`${id}-f`} st={st} o={{mullions: [-600, 1450], transom: 900, z: cam.z, reflect: 0, room: 'flat', sheenW: -420}} />
-        </g>
+        <Facade id={`${id}-f`} st={st} o={{mullions: [-600, 1450], transom: 900, z: cam.z, reflect: 0, room: 'flat', sheenW: -420}} />
+        {/* the change in emphasis: the world behind knocked back a little while the mechanism is open (V8 QA: an even
+            veil over the whole frame; a filter sized to the facade's bounds left a hard edge sweeping across the
+            background as the view turned) */}
+        {em > 0.005 && <rect x={-100000} y={-100000} width={200000} height={200000} fill="#8C9EA8" opacity={0.24 * em} />}
         <Pad3D id={`${id}-p`} st={st} z={cam.z} />
       </Layer>
     </Svg>
@@ -578,17 +574,21 @@ export const surfaceShot = (f: number) => {
  *  patch lets go (584-598; the camera leans in, 580-596) and holds there while its neighbours take its share; "doesn't
  *  have to hold you up alone.": its contact returns and the load evens out (616-632); the cover is restored (632-644)
  *  and the camera returns to the bay's view and the bay's hand-over framing (640-664). */
-/** (V8 QA) the spring shot driven in film frames: `T` is the builder's time (above) remapped to the narration, `f` the
- *  film frame. The camera takes one path and never turns back: it comes round and in onto the springs, closest as the
- *  patch lets go (548-612), and holds there; the view never returns to the bay's (the film cuts from this close-up
- *  straight to the climb at 642) */
-export const springShotFilm = (T: number, f: number) => {
-  const q = springShot(T);
-  const o = ss5(T, 530, 552);
+/** (V8 QA) the spring shot in film frames (548-664), timed to the narration and staged so that one thing changes at a
+ *  time: the view comes round onto the pad with the cover on (548-574) while he eases off and back onto it; the cover is
+ *  cut away once the view has settled (560-574); "spread the load": every spring stretches together (574-590); "so one
+ *  little patch": one patch lets go (590-602) and is held; it returns and the load evens out (616-630); the cover goes
+ *  back on (638-652). The camera takes one path that never stops or turns back: in onto the springs, fastest at the
+ *  start, still creeping at the cut (664) */
+export const springShotFilm = (f: number) => {
+  const o = ss5(f, 548, 574);
   const view: SpringView = {yaw: lerp(SPRING_BAY_VIEW.yaw, SPRING_VIEW.yaw, o), pitch: lerp(SPRING_BAY_VIEW.pitch, SPRING_VIEW.pitch, o), persp: lerpPersp(SPRING_BAY_VIEW.persp, SPRING_VIEW.persp, o)};
-  // (one ease from the opening framing to the closest, passing near SPRING_CAM; no stop on the way)
-  const cam = lerpCam(SPRING_OPEN_CAM, {x: 18, y: 25, z: 5.2}, ss5(f, 548, 612));
-  return {...q, view, cam};
+  const cover = 1 - ss5(f, 560, 574) + ss5(f, 638, 652);
+  const load = 1 - 0.75 * ss5(f, 548, 560) + 0.75 * ss5(f, 574, 590);
+  const lost = ss5(f, 590, 602) * (1 - ss5(f, 616, 630));
+  const x = clamp((f - 548) / (664 - 548));
+  const cam = lerpCam(SPRING_OPEN_CAM, {x: 18, y: 21, z: 5.5}, 1 - Math.pow(1 - x, 2.5));
+  return {load, cover, lost, view, cam};
 };
 export const springShot = (f: number) => {
   const o = ss5(f, 530, 552) * (1 - ss5(f, 640, 662));

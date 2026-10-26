@@ -154,9 +154,9 @@ def glass_slip(d=0.5):
     n = int(d * SR); tt = np.arange(n) / SR
     f = np.geomspace(700, 1100, n)
     return (0.35 * np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.6 + 0.4 * np.sin(2 * np.pi * 37 * tt)) + 0.4 * bp(noise(n), 1200, 5000)) * env(n, 0.02, 0.12)
-# the climber is seen at 0-171, 503-548, 642-894, 954-1041 and 1082-FRAMES; the cycles keep going, unheard, behind
+# the climber is seen at 0-171, 503-548, 664-894, 954-1041 and 1082-FRAMES; the cycles keep going, unheard, behind
 # the micro views and the springs
-ON = [(0, 171), (503, 548), (642, 894), (954, 1041), (1082, 1171)]
+ON = [(0, 171), (503, 548), (664, 894), (954, 1041), (1082, 1171)]
 seen = lambda fr: any(a <= fr < b for a, b in ON)
 def pad_move(side, rel, m0, m1, place, gain=0):
     name = 'near' if side == 'L' else 'far'
@@ -199,12 +199,12 @@ add('back out (air, very soft)', air(0.8, 2400, 400, False), F(476), -47)
 add('the loaded stirrups settle (step creak)', barstep(0.2) * 0.8, F(505), -36)
 # 3. the springs
 add('up the tether from the stirrup (air, faint)', air(0.5, 400, 900), F(530), -48)
-add('the cover is cut away (air, faint)', air(0.5, 500, 1800), F(554), -48)
-add('the strap pulls straight; the springs stretch together', spring(0.8, 560, 420) + 0.5 * taut(0.8, 90), F(567), -35)
-add('one patch lets go: its spring slackens', spring(0.4, 380, 300) * 0.7, F(592), -37)
-add('its neighbours take up its share', spring(0.5, 470, 520), F(597), -38)
+add('the cover is cut away (air, faint)', air(0.5, 500, 1800), F(561), -48)
+add('the strap pulls straight; the springs stretch together', spring(0.8, 560, 420) + 0.5 * taut(0.8, 90), F(575), -35)
+add('one patch lets go: its spring slackens', spring(0.4, 380, 300) * 0.7, F(591), -37)
+add('its neighbours take up its share', spring(0.5, 470, 520), F(598), -38)
 add('the load evens out again', spring(0.5, 520, 500) * 0.7, F(617), -40)
-add('the cover goes back on (air, faint)', air(0.4, 1800, 500, False), F(630), -49)
+add('the cover goes back on (air, faint)', air(0.4, 1800, 500, False), F(639), -49)
 # 4. the climb (cycle 6 on screen, above); nearing the brick, outside
 add('wind: outside, nearing the brick', wind(1.2), F(860), -40)
 # 5. the method's limit: the contact test on glass, then the brick
