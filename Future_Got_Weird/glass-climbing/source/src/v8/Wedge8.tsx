@@ -725,8 +725,10 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           </g>
         );
       })()}
-      {roots.map((r, k) => (r ? <path key={`fb${k}`} d={r.fillB} fill={ROOT} /> : null))}
-      {roots.map((r, k) => (r ? <path key={`fg${k}`} d={r.fillG} fill={ROOT} /> : null))}
+      {/* (V8 QA: a hairline stroke in the same tone closes the anti-aliasing seam where a fillet meets the sheet and
+          the blade, which otherwise traces the square corner as a faint grey line) */}
+      {roots.map((r, k) => (r ? <path key={`fb${k}`} d={r.fillB} fill={ROOT} stroke={ROOT} strokeWidth={f.n(1.2 / z)} strokeLinejoin="round" /> : null))}
+      {roots.map((r, k) => (r ? <path key={`fg${k}`} d={r.fillG} fill={ROOT} stroke={ROOT} strokeWidth={f.n(1.2 / z)} strokeLinejoin="round" /> : null))}
       {/* the lit upper (back) face, as a thin inner edge; then each blade's ink outline from fillet to fillet */}
       {ord.map((b) => {
         const k = blades.indexOf(b);

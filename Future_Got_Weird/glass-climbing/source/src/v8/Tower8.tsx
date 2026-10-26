@@ -74,7 +74,7 @@ type Item = {d: number; layer: number; n: React.ReactNode};
 const LAYER = {ground: 0, marks: 1, shadow: 2, building: 3, front: 4};
 
 /** the scene */
-export const TowerScene: React.FC<{id: string; cam: Cam3; f: number; st?: ClimbState | null; detail?: number; haze?: number; climberScale?: number; nearPier?: [number, number] | null}> = ({id, cam, f, st, detail = 1, haze = 0.25, climberScale = 1, nearPier = null}) => {
+export const TowerScene: React.FC<{id: string; cam: Cam3; f: number; st?: ClimbState | null; detail?: number; haze?: number; climberScale?: number; nearPier?: [number, number] | null; floorShift?: number}> = ({id, cam, f, st, detail = 1, haze = 0.25, climberScale = 1, nearPier = null, floorShift = 0}) => {
   const C = makeCam(cam);
   const items: Item[] = [];
   let key = 0;
@@ -176,7 +176,10 @@ export const TowerScene: React.FC<{id: string; cam: Cam3; f: number; st?: ClimbS
 
   // ------------------------------------------------------------------ the tower
   // (V8) the brick pier beside his bay can be placed where the 2D climber's drawing puts brick (see Exterior8)
-  const T = nearPier ? {...TOWER, piers: TOWER.piers.map((p) => (Math.abs(p[0] - m(PIER_Z)) < 1e-6 ? nearPier : p))} : TOWER;
+  const T0 = nearPier ? {...TOWER, piers: TOWER.piers.map((p) => (Math.abs(p[0] - m(PIER_Z)) < 1e-6 ? nearPier : p))} : TOWER;
+  // (V8) the storeys can be phased for the views from above, where parallax puts a different part of the facade behind
+  // his stirrups than the side views do (m, + up)
+  const T = floorShift ? {...T0, ledge: T0.ledge + floorShift} : T0;
   const roof = T.roof;
   const bays: [number, number][] = [];
   {

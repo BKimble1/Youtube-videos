@@ -53,6 +53,10 @@ export const PlateImg: React.FC<{pl: Plate; cam: Cam3}> = ({pl, cam}) => {
 /** (V8) where the brick pier beside his bay must sit in the 3D scene (metres along the facade) for this camera, so that
  *  its perspective position matches where the 2D drawing (the bay's flat oblique projection, x + KX z) puts brick: the
  *  pad that goes onto the brick then lands on brick in the exterior views too */
+/** the storeys' phase in the views from above (m, + up). Seen from above, the facade behind his stirrups is lower than
+ *  beside them (parallax). With the V8 hero camera the catch's soles already sit about 0.5 m from any floor fin or
+ *  spandrel joint (checked by casting the view ray through each sole), so no shift is needed */
+export const EXT_FLOOR_SHIFT = 0;
 export const matchedPier = (cam: Cam3, st: ClimbState): [number, number] => {
   const bc = bayCamFor(cam, st);
   const C = makeCam(cam);
@@ -72,12 +76,12 @@ export const matchedPier = (cam: Cam3, st: ClimbState): [number, number] => {
   return [solve(PIER_Z), solve(PIER_Z + PIER_W)];
 };
 
-export const Exterior8: React.FC<{id: string; f: number; cam: Cam3; st: ClimbState | null; detail?: number; plate?: Plate | null; brickMatch?: ClimbState | null}> = ({id, f, cam, st, detail = 1, plate, brickMatch}) => {
+export const Exterior8: React.FC<{id: string; f: number; cam: Cam3; st: ClimbState | null; detail?: number; plate?: Plate | null; brickMatch?: ClimbState | null; floorShift?: number}> = ({id, f, cam, st, detail = 1, plate, brickMatch, floorShift = EXT_FLOOR_SHIFT}) => {
   const bc = st ? bayCamFor(cam, st) : null;
   const up = st ? uprightFor(cam, st) : null;
   return (
     <>
-      {plate ? <PlateImg pl={plate} cam={cam} /> : <TowerScene id={`${id}-t`} cam={cam} f={f} st={null} detail={detail} nearPier={brickMatch ? matchedPier(cam, brickMatch) : null} />}
+      {plate ? <PlateImg pl={plate} cam={cam} /> : <TowerScene id={`${id}-t`} cam={cam} f={f} st={null} detail={detail} nearPier={brickMatch ? matchedPier(cam, brickMatch) : null} floorShift={floorShift} />}
       {st && bc && (
         <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
           <g transform={`rotate(${up ? up.deg.toFixed(3) : 0} ${up ? up.x.toFixed(2) : 0} ${up ? up.y.toFixed(2) : 0})`}>
