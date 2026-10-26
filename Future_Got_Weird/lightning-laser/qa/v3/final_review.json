@@ -1,0 +1,751 @@
+[
+ {
+  "key": "A",
+  "review": {
+   "findings": [
+    {
+     "id": "A-1",
+     "frames": "132-137 (4.40-4.57 s), B's first frames",
+     "severity": "minor",
+     "what": "At the start of B a flat lavender disc with a hard edge appears on the channel before the side streamer jabs out. It reads as a circular marker or sprite rather than corona light, which goes against the locked rule of no circular callouts. In the next frame, the streamer's tip glow sits off the tip.",
+     "evidence": "Full-res crops (qa_A/bdisc.png, bdisc2.png): from 132 to 136 there is a uniform lavender circle about 70 px across, centred near (505,1200), with a crisp rim and a few tiny white squiggles inside (the 4.36 fizz). At 136 it is still sitting at the streamer root. At 137 the disc is gone, but a soft separate halo floats about 70 px up and to the right of the streamer tip (around 645,1075) instead of on it. At 138 the glow is back on the tip. At phone scale it is a small purple dot for about 0.17 s.",
+     "suggestedFix": "Make the fizz a feathered radial falloff, or a few short corona strokes, with no visible disc edge. Keep the tip glow attached to the streamer tip on the frame where it steps (137)."
+    },
+    {
+     "id": "A-2",
+     "frames": "0-25 clear; faint to ~37; absent 40-129 (1.33-4.30 s)",
+     "severity": "minor",
+     "what": "The warm band for prepared air only shows in roughly the first second. Once the leader passes, the violet glow covers it, so during 'and the lightning FOLLOWED it' A shows just two colours: the cyan path and the white-violet discharge. There is no visible warm sheath round the guided section, although V3_SHOTS_AND_TRANSITIONS says there is one.",
+     "evidence": "Frames 0-20 show a clear orange band on the cyan line ahead of the leader tip, reaching R-B 40 at frame 0 (it is also clear at the loop seam, 996-1004). I measured the maximum R-B within \u00b160 px of the channel: 38 at frame 10, 25 at 20, 21 at 25-30, then 5-8 from frame 40 to 129 and -1 at 129. That last stretch is a taupe tone that does not read as warm. At 60-100 there is only a faint brownish smear to the right of the upper guided section (about x 600-640, y 830-1000). The warm sheath then shows again once B dims the glow (136-144).",
+     "suggestedFix": "Let a low-opacity warm edge extend past the violet halo along the guided section (or narrow the violet halo slightly), so a thin warm rim stays readable through 1.3-4.3 s without tinting the core."
+    },
+    {
+     "id": "A-3",
+     "frames": "75-105 (2.50-3.50 s)",
+     "severity": "minor",
+     "what": "Between the last continuing-current flicker (74) and the first restrike (106), the upper unguided branches and the lit cloud look the same in every frame for about 1 s. Only the soft fronts on the guided section, the cyan packets and the rain move. On a phone the top half of the bolt reads as a still graphic just before 'FOLLOWED' starts at 3.26.",
+     "evidence": "Mean luminance of the cloud region (x 350-850, y 350-700) stays at 35.4-36.6 from frame 75 to 105. In the every-2-frames strip (qa_A/hold.png) the branch skeleton keeps the same shape and brightness. The guided section does change: in an 80 px band its luminance swings from about 120 to 165 as fronts climb (bottom peaks at 72, 88 and 100, top peaks at 82, 97 and 105). The event is not frozen, but its upper half looks held.",
+     "suggestedFix": "Give the upper branches a low-amplitude brightness flicker driven by noise1, and give the cloud underside a faint breathing synced to the guided-section fronts. Keep the amplitude well below the restrike flashes."
+    },
+    {
+     "id": "A-4",
+     "frames": "53-55, 106-107, 110, 115",
+     "severity": "nit",
+     "what": "On each connection or restrike flash, the lowest ~120 px of the guided core above the rod tip blooms into a smooth white bar about 50 px wide for 2-3 frames. The jagged core is lost there.",
+     "evidence": "In the tip crops (qa_A/tipglow.png, x 380-640, y 1050-1500), frames 53, 106 and 110 show a saturated white bulb at (470,1260-1385) with no visible core edge. The rest of the channel keeps its core, and the rod tip stays visible below.",
+     "suggestedFix": "Clamp the bloom intensity near the attachment point, or draw the core above the bloom on flash frames."
+    },
+    {
+     "id": "A-5",
+     "frames": "0-129",
+     "severity": "nit",
+     "what": "The tower's top section and beacon (y about 1515-1590) and its lattice sit in or under the caption band for the whole beat, so the 'nearby tower' is partly behind the caption text. The rod tip and the leader's origin (y about 1385-1430) stay about 130 px clear of the band, so no key action is covered.",
+     "evidence": "In f0000, 'They fired a LASER' crosses the tower's red and white top at y about 1630-1690. In f0053 and f0090, the two-line captions cover the lattice from about 1600 to 1720."
+    },
+    {
+     "id": "A-6",
+     "frames": "130-135 (4.33-4.50 s), B's first frames",
+     "severity": "nit",
+     "what": "As B begins, the upper bolt fades out in about 4 frames. Coming straight after the caption change, it reads close to the bolt switching off rather than cooling.",
+     "evidence": "In qa_A/follow3.png the branches are at full brightness at 130-131, ghosted at 133, faint at 134 and gone at 135, while the push-in starts (the tower top moves 1520, 1522, 1528, 1538, 1556, 1582 over frames 130-135).",
+     "suggestedFix": "Stretch the upper-bolt cool-down to about 8-10 frames."
+    },
+    {
+     "id": "A-7",
+     "frames": "0-129",
+     "severity": "nit",
+     "what": "Behind the bolt, the lower cloud layer (y about 1000-1500) is a field of similar flat ellipses, which reads slightly like bubble wrap. The contrast is low and it does not compete with the bolt.",
+     "evidence": "f0000: similar ovals at about (180,1100), (340,1260), (230,1380), (690,1230) and (900,1250)."
+    }
+   ],
+   "works": "The hook works from frame 0. The white-violet leader is attached at the rod tip (~463,1425) and runs up the thin cyan line, with its tip near (550,1095). Cyan packets and a clear warm band lie ahead of it. The leader climbs in readable slow motion, about 10 px per frame along the line (frames 0-25). Above the guided part it leaves the line to the left (frames 25-30, about y 900) while the cyan line carries on straight, so the difference between the guided and unguided parts is obvious. The branches grow smoothly frame by frame, with no pops (22-53, every frame checked).\n\nThe connection lands on the crack at frame 53 (1.77 s). The light is local: cloud luminance goes from 40 to 105 while the corners and the right-hand sky barely change, and the tower top brightens slightly. After the connection, the guided section is clearly the strongest part. Continuing-current flickers come at 58, 64 and 74, and soft fronts climb the guided section about every 0.5 s. The restrikes at 106, 110 and 115 (3.53, 3.67 and 3.83 s) are each within one frame of the cue. Each starts bright at the tip and climbs, and the cloud flashes each time.\n\nThere is one camera move: a pull-back and tilt over frames ~14-54. It eases in and out, stops at the connection and does not overshoot. Afterwards there is only a residual drift of about 10 px over 2.5 s, which is invisible on a phone. There is no character and no extra text, and the captions stay clean and readable.\n\nThe loop seam 1002 \u2192 1004 \u2192 0 \u2192 2 continues the leader's climb smoothly. The A \u2192 B contract holds: frame 130 differs from frame 129 only in the caption band (y 1560-1800), and B's push-in starts from rest.",
+   "acceptance": "Q1: YES. In frames 0-25 the leader climbs the visible cyan line from the rod tip, with packets and the warm band ahead of it. In 25-53 it branches off the line above the guided section while the cyan line continues straight. All of this reads at phone scale (checked at 1/3 scale, qa_A/phone.png). Q2: YES. In frames 76-129 the same bolt stays on screen, dominant and in the same place. Restrikes at 106, 110 and 115 fall around 'FOLLOWED' (frames 98-113). It only dims from about 120, and B removes the upper bolt at 131-135. The one caveat is that the upper branches and the cloud look static over 75-105 (A-3). Q4: PARTLY. The cyan line and packets stay distinct from the white-violet discharge throughout. The warm prepared air is clear only in frames 0-25 (and at the loop seam), is faint to about 37, and is effectively gone from 40 to 129 (maximum R-B 5-8 along the channel), so on 'FOLLOWED' the viewer sees only two of the three colours (A-2)."
+  },
+  "verified": [
+   {
+    "id": "A-1",
+    "frames": "132-137 (4.40-4.57 s), B's first frames",
+    "severity": "minor",
+    "what": "At the start of B a flat lavender disc with a hard edge appears on the channel before the side streamer jabs out. It reads as a circular marker or sprite rather than corona light, which goes against the locked rule of no circular callouts. In the next frame, the streamer's tip glow sits off the tip.",
+    "evidence": "Full-res crops (qa_A/bdisc.png, bdisc2.png): from 132 to 136 there is a uniform lavender circle about 70 px across, centred near (505,1200), with a crisp rim and a few tiny white squiggles inside (the 4.36 fizz). At 136 it is still sitting at the streamer root. At 137 the disc is gone, but a soft separate halo floats about 70 px up and to the right of the streamer tip (around 645,1075) instead of on it. At 138 the glow is back on the tip. At phone scale it is a small purple dot for about 0.17 s.",
+    "suggestedFix": "Make the fizz a feathered radial falloff, or a few short corona strokes, with no visible disc edge. Keep the tip glow attached to the streamer tip on the frame where it steps (137).",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I pulled frames 128, 130-138 and 140 at full resolution into /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VA/ and built crop montages there: crops.png covers region (340,950)-(740,1350) and crops2.png is a closer zoom.\n\nThe disc is real. f128 and f130 show only the channel, the laser-path cyan capsules and rain, with no disc. In f131 the tiny white fizz squiggles are starting at about (505,1200) but there is no disc. From f132 to f135 a flat, translucent lavender disc about 65-70 px across sits centred on the channel at about (505,1200). It has a uniform fill and a clearly hard circular rim, and the 4.36 fizz squiggles are drawn inside it (f133 and f135 at 2x zoom show this plainly). In f136 the side streamer has jabbed out from that point, and the disc is still visible at its root, but fainter and softer. It is gone by f137. So it reads as a flat circle sprite, not soft corona light, for about 4-5 frames (about 0.15 s).\n\nThe tip-glow claim is only partly true. In f137 a soft, faint blue halo sits about 70 px up and to the right of the streamer tip, separate from it. But the tip also has its own bright glow in that frame, so it is not a case of the glow being missing from the tip. It is an extra stray halo for one frame, and by f138 everything is on the tip again. At normal speed that single faint frame is close to invisible.\n\nSeverity: the disc is lavender on a lavender, bloomed channel and is translucent, so its contrast is low. At phone width it is about 6% of the frame, a small soft-edged purple dot for about 0.15 s, right at the cut into B while the eye is on the bright channel. Most first-time viewers will not notice it. Those who do will see a brief sprite-like blob rather than a UI callout: it has no outline ring and no pointer, so it is only a loose match for the \"no circular callouts\" rule rather than a clear break of it. The finding is accurate as described, and I rate it minor (leaning nit). The f137 halo on its own would be a nit."
+    }
+   },
+   {
+    "id": "A-2",
+    "frames": "0-25 clear; faint to ~37; absent 40-129 (1.33-4.30 s)",
+    "severity": "minor",
+    "what": "The warm band for prepared air only shows in roughly the first second. Once the leader passes, the violet glow covers it, so during 'and the lightning FOLLOWED it' A shows just two colours: the cyan path and the white-violet discharge. There is no visible warm sheath round the guided section, although V3_SHOTS_AND_TRANSITIONS says there is one.",
+    "evidence": "Frames 0-20 show a clear orange band on the cyan line ahead of the leader tip, reaching R-B 40 at frame 0 (it is also clear at the loop seam, 996-1004). I measured the maximum R-B within \u00b160 px of the channel: 38 at frame 10, 25 at 20, 21 at 25-30, then 5-8 from frame 40 to 129 and -1 at 129. That last stretch is a taupe tone that does not read as warm. At 60-100 there is only a faint brownish smear to the right of the upper guided section (about x 600-640, y 830-1000). The warm sheath then shows again once B dims the glow (136-144).",
+    "suggestedFix": "Let a low-opacity warm edge extend past the violet halo along the guided section (or narrow the violet halo slightly), so a thin warm rim stays readable through 1.3-4.3 s without tinting the core.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I pulled frames 0, 10, 20, 30, 40, 55, 70, 85, 100, 115, 128 and 129 at full resolution and looked at a contact grid plus a 400x850 crop around the channel (x 380-780, y 500-1350) for f010, f040, f070, f100 and f128.\n\nf000-f020: a clear orange #FF8A3A-type band lies on the cyan path ahead of the leader tip. It is easy to see in the f010 crop, where the orange column sits above the tip around y 670-900.\n\nf030: the band is still faintly visible above the tip at the cloud base.\n\nf040, f070, f100: once the leader reaches the cloud base, the guided section from the rod up to the branch point shows only a white core inside a broad lavender/violet glow. I see no warm tint either side of it. The only warm trace is a faint brownish smear just right of the upper guided section, near the branch junction (about x 600-700, y 760-1000 full-frame). It is dim, it sits off to one side and it does not read as a sheath.\n\nf128: the glow has dimmed to a thin white-violet core with cyan packets. Again, nothing warm.\n\nSo during \"into a THUNDERSTORM\" and \"and the lightning FOLLOWED it\" (about 1.3-4.3 s), A shows cyan plus white-violet only. V3_SHOTS_AND_TRANSITIONS row A asks for \"a warm prepared-air sheath round the guided section\", so the finding holds as described.\n\nSeverity: a first-time phone viewer does see the warm band in the first second, ahead of the leader. They would not miss a sheath they were never told to expect, and the event still reads clearly. The cost is colour-key continuity: warm means prepared air in D and H, and A drops it for most of the beat. That is a spec deviation, not a locked-requirement break, so I rate it minor, perhaps toward nit, and not major."
+    }
+   },
+   {
+    "id": "A-3",
+    "frames": "75-105 (2.50-3.50 s)",
+    "severity": "minor",
+    "what": "Between the last continuing-current flicker (74) and the first restrike (106), the upper unguided branches and the lit cloud look the same in every frame for about 1 s. Only the soft fronts on the guided section, the cyan packets and the rain move. On a phone the top half of the bolt reads as a still graphic just before 'FOLLOWED' starts at 3.26.",
+    "evidence": "Mean luminance of the cloud region (x 350-850, y 350-700) stays at 35.4-36.6 from frame 75 to 105. In the every-2-frames strip (qa_A/hold.png) the branch skeleton keeps the same shape and brightness. The guided section does change: in an 80 px band its luminance swings from about 120 to 165 as fronts climb (bottom peaks at 72, 88 and 100, top peaks at 82, 97 and 105). The event is not frozen, but its upper half looks held.",
+    "suggestedFix": "Give the upper branches a low-amplitude brightness flicker driven by noise1, and give the cloud underside a faint breathing synced to the guided-section fronts. Keep the amplitude well below the restrike flashes.",
+    "verdict": {
+     "real": true,
+     "severity": "nit",
+     "reading": "I pulled full-resolution frames 74, 76, 80, 84, 88, 92, 96, 100, 104 and 106, plus a crop of the branch region (x 460-720, y 590-920) for every frame from 70 to 108, and looked at them with Read.\n\n**What the finding gets right.** From 75 to 105 the upper unguided branches keep exactly the same shape. Their brightness barely moves: pixels above 150 average 211.4-213.7, and the count of those pixels drifts slowly between about 4,075 and 4,627 (about \u00b16%) with no visible pulse. The lit cloud patch around the branch tops also looks the same in every top-half montage frame (76/84/92/100/104). Between consecutive frames the top half (y<900) changes by only about 0.9 mean absolute difference, and nearly all of that is rain streaks and the cyan packets. So the upper half is effectively held for about 1 s, as described.\n\n**Why it hardly matters at normal speed.** The held area is never the only thing moving.\n- Cyan packets travel up the laser line right through the branch area in every frame of the crop strip (/tmp/claude-0/-home-user-Youtube-videos/e9cf2999-ee74-59c9-a03c-f06d582b64e7/scratchpad/va/branches.png).\n- Rain moves across the whole frame.\n- The guided section below the branches is the brightest and largest part of the bolt, and its soft fronts climb continuously. That is where the eye sits.\n\nA steady glow is also what continuing current physically looks like, and a short calm before the restrike at 106 makes that restrike hit harder. At frame 106 the branch region lights up hugely (about 74.6k pixels change by more than 15 in that crop).\n\n**One detail is wrong.** In frame 88 (2.93 s), 'FOLLOWED' is already shown highlighted in yellow. So the hold falls during 'FOLLOWED', not just before it starts at 3.26.\n\n**Verdict.** Real on a paused or measured basis, but a first-time phone viewer is unlikely to notice. No locked requirement is broken: the spec only asks for a slow flicker and soft fronts climbing the guided section, and those are present."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "A-4",
+    "frames": "53-55, 106-107, 110, 115",
+    "severity": "nit",
+    "what": "On each connection or restrike flash, the lowest ~120 px of the guided core above the rod tip blooms into a smooth white bar about 50 px wide for 2-3 frames. The jagged core is lost there.",
+    "evidence": "In the tip crops (qa_A/tipglow.png, x 380-640, y 1050-1500), frames 53, 106 and 110 show a saturated white bulb at (470,1260-1385) with no visible core edge. The rest of the channel keeps its core, and the rod tip stays visible below.",
+    "suggestedFix": "Clamp the bloom intensity near the attachment point, or draw the core above the bloom on flash frames."
+   },
+   {
+    "id": "A-5",
+    "frames": "0-129",
+    "severity": "nit",
+    "what": "The tower's top section and beacon (y about 1515-1590) and its lattice sit in or under the caption band for the whole beat, so the 'nearby tower' is partly behind the caption text. The rod tip and the leader's origin (y about 1385-1430) stay about 130 px clear of the band, so no key action is covered.",
+    "evidence": "In f0000, 'They fired a LASER' crosses the tower's red and white top at y about 1630-1690. In f0053 and f0090, the two-line captions cover the lattice from about 1600 to 1720."
+   },
+   {
+    "id": "A-6",
+    "frames": "130-135 (4.33-4.50 s), B's first frames",
+    "severity": "nit",
+    "what": "As B begins, the upper bolt fades out in about 4 frames. Coming straight after the caption change, it reads close to the bolt switching off rather than cooling.",
+    "evidence": "In qa_A/follow3.png the branches are at full brightness at 130-131, ghosted at 133, faint at 134 and gone at 135, while the push-in starts (the tower top moves 1520, 1522, 1528, 1538, 1556, 1582 over frames 130-135).",
+    "suggestedFix": "Stretch the upper-bolt cool-down to about 8-10 frames."
+   },
+   {
+    "id": "A-7",
+    "frames": "0-129",
+    "severity": "nit",
+    "what": "Behind the bolt, the lower cloud layer (y about 1000-1500) is a field of similar flat ellipses, which reads slightly like bubble wrap. The contrast is low and it does not compete with the bolt.",
+    "evidence": "f0000: similar ovals at about (180,1100), (340,1260), (230,1380), (690,1230) and (900,1250)."
+   }
+  ]
+ },
+ {
+  "key": "B",
+  "review": {
+   "findings": [
+    {
+     "id": "B-1",
+     "frames": "160-167 (uneven settle); pops at 175>176, 179>180, 183>184, 190>191, 197>198, 205>206, 209>210, 213>214, 224>225 (about 5.85-7.50 s)",
+     "severity": "minor",
+     "what": "The foreground molecule layer zooms in steps instead of smoothly. Between pops it drifts evenly; every 4-11 frames the whole layer jumps outward by about 1% in a single frame, around a point near the leader tip, while the leader itself does not move. The result is a periodic twitch of the molecule field all through the three attempts. It is borderline major: hardest to see near the tip, where the eye is, and clearest at the top and sides of the frame.",
+     "evidence": "I patch-tracked 17 foreground molecules on full-resolution frames from the MP4 and fitted translation plus scale. Between pops the motion is pure translation of about (-0.9, +2.0) px per frame with scale 0.0000. At 183>184, 197>198, 205>206, 213>214 and 224>225 the fitted scale is +0.0095 to +0.0098, centred about (520, 920). Example, 197>198: molecules at the top edge, near (510,70) and (880,135), jump (0,-8) and (3,-8). A molecule low in the frame near (480,1475) jumps (0,+6). In the frames either side, everything moves (-1,+2). A red/cyan overlay of 196/197 against 197/198 shows clear fringing on the molecules at the pop but none on the leader stem. The settle just after the dissolve is uneven in the same way: per-frame zoom is 2.5%, 1.1%, 1.9%, 0.5%, 0, 0.5%, 0, 0 over 160-167, so the field freezes at 164, jumps at 165 and freezes again for 166-167. The pops are not encoder artefacts: only 165, 180, 195, 210 and 225 are I-frames, and most pops land on B- or P-frames. Overlays are in qa_B/anaglyph_197_198.png and qa_B/anaglyph_low.png.",
+     "suggestedFix": "Make the molecule layer's scale a continuous eased function of t, the same way the translation already is. Look for a quantised time, a stepped LOD, or a spring that is only re-evaluated at intervals in the molecule field's zoom. Ease the 5.33-5.5 s settle into a single sm5/ss curve that ends at zero velocity."
+    },
+    {
+     "id": "B-2",
+     "frames": "136-137, 142-146",
+     "severity": "nit",
+     "what": "A soft round glow sits ahead of the side streamer's tip, separate from the tip's own halo. It can read as a faint orb floating in the air rather than as part of the discharge.",
+     "evidence": "137: tip at about (696,1131), with a separate soft blob at about (723,1078). 142: tip at about (671,1092), with a larger detached glow about 85 px up-right at about (697,1010). It is low contrast and fades by the stall at 146.",
+     "suggestedFix": "Centre the field glow on the tip, or fade it in only once it touches the tip glow."
+    },
+    {
+     "id": "B-3",
+     "frames": "171-184, 195-205, 215-223 (snaps at 184>185, 205>206, 222>223)",
+     "severity": "nit",
+     "what": "The electron tug is readable but small for a phone. The tethers stretch only about 40-60 px before the electrons snap back, and the snap itself is a one-frame return.",
+     "evidence": "Frame 200: the N2 at (410,665) has its electron pulled to (463,738), and the N2 at (785,825) has its electron pulled to (697,832). Each tether is about 45-50 px from the atom's edge. In the 0.2-scale strip the tethers show only as tiny white ticks. The snap-back reads correctly: the O2 electron returns in 184>185 and the N2 electrons in 185>186, 205>206 and 222>223.",
+     "suggestedFix": "Stretch the nearest one or two electrons further toward the tip, about 1.5-2 times, and add a one-frame overshoot or squash on the snap so it reads as elastic."
+    },
+    {
+     "id": "B-4",
+     "frames": "147-150; 210-234",
+     "severity": "nit",
+     "what": "Low-contrast clutter next to the caption text. While the macro streamer stalls, its lower body runs through the caption band just left of 'normally'. Later, a mid-ground N2 drifts in right after 'electricity.' and reads like a stray dot after the full stop.",
+     "evidence": "150: at y=1660 the streamer is at x of about 190, while the 'n' of 'normally' starts at x of about 225. The tip stays well clear at about (493,1069). Frames 215, 226 and 234: a dim N2 sits at about (975-990, 1650-1670), touching the end of 'electricity.'.",
+     "suggestedFix": "Dim or cull mid-ground molecules inside y 1560-1760 near the caption's text box. Optionally fade the streamer's lower tail faster once it enters the band."
+    }
+   ],
+   "works": "Seam A>B (128>129): the frames are continuous on openCam (tower x about 468 unchanged), the push eases in from about 131, and the caption changes over at 130. Fizz, jab, steps and stall are all on cue. A small violet fizz ball forms on the lit channel at about (497,1205) from 131-135 (fizz 4.36). The streamer jabs out of the lit channel at 136 (snap 4.52), lengthens with a small fork at 137 (4.55), kinks upward at 142-143 (4.73) and goes still with a brush tip from 146 (stall 4.85). The upper bolt cools away over 132-135. Throughout the push the three colours stay distinct: a thin cyan line with packets, a restrained warm band on the upper channel, and a white-core, violet-edged discharge. The push keeps the beam angle, about 15 degrees from vertical at both 129 and 143, with no roll. The tower leaves frame by 142, and from 146 the frame holds only the streamer on air. The zoom-dissolve over 150-155 happens about the stalled tip, at about (495,1065), then about (470,1045) at 152-153, then about (450,1065) through 165. There is one leader in every frame, no doubled tower and no doubled streamer. The direction carries from the macro streamer's last segment (about 35 degrees from vertical) into the micro leader (about 20-25 degrees), up and to the right. The molecular view is a readable group of about ten foreground N2 (blue) and O2 (red) pairs with bound electrons, a dimmer mid layer and a low-contrast blurred background, with no lab, plates or person. The leader is easy to find at the centre. Each attempt (168 at 5.6, 191 at 6.35, 212 at 7.05) re-brightens the stem, pushes the tip a step up and to the right (about (450,1065), then (525,920), (560,800) and (590,760)), and grows a brush. Nearby electrons stretch toward the tip on tethers and snap back as it gives up. The glow never washes out the core. By 232-234 the leader has faded short of crossing the region. The hard cut to the shelter at 234|235 is clean.",
+   "acceptance": "Q3: Yes. The jab out of the lit channel stalls in ordinary air (136-146), and the micro view shows why: three failed attempts (168, 191, 212) with electrons tugging and snapping back (173-185, 195-206, 215-223), then the leader fades by 232-234. That sets up 'But this MACHINE' and keeps the up-and-right axis that D's channel uses. Q4: Yes. In 129-145 the thin cyan line with packets, the warm band and the white/violet discharge are clearly separate. The molecular view (150-234) correctly shows no cyan and no warm accent, because this is ordinary air: only the white/violet leader, neutral molecules and pale ink-rimmed electrons. Q5: Yes. 128>129 is continuous, the push keeps the beam angle (about 15 degrees at 129 and 143), and the zoom-dissolve holds the tip at about (470-495, 1045-1070) across 147-156 with no doubled tower. The direction stays up and to the right from the streamer into the micro leader. B>C at 235 is a hard cut motivated by the new location. One caveat inside the micro view: the molecule layer's stepped zoom pops (B-1)."
+  },
+  "verified": [
+   {
+    "id": "B-1",
+    "frames": "160-167 (uneven settle); pops at 175>176, 179>180, 183>184, 190>191, 197>198, 205>206, 209>210, 213>214, 224>225 (about 5.85-7.50 s)",
+    "severity": "minor",
+    "what": "The foreground molecule layer zooms in steps instead of smoothly. Between pops it drifts evenly; every 4-11 frames the whole layer jumps outward by about 1% in a single frame, around a point near the leader tip, while the leader itself does not move. The result is a periodic twitch of the molecule field all through the three attempts. It is borderline major: hardest to see near the tip, where the eye is, and clearest at the top and sides of the frame.",
+    "evidence": "I patch-tracked 17 foreground molecules on full-resolution frames from the MP4 and fitted translation plus scale. Between pops the motion is pure translation of about (-0.9, +2.0) px per frame with scale 0.0000. At 183>184, 197>198, 205>206, 213>214 and 224>225 the fitted scale is +0.0095 to +0.0098, centred about (520, 920). Example, 197>198: molecules at the top edge, near (510,70) and (880,135), jump (0,-8) and (3,-8). A molecule low in the frame near (480,1475) jumps (0,+6). In the frames either side, everything moves (-1,+2). A red/cyan overlay of 196/197 against 197/198 shows clear fringing on the molecules at the pop but none on the leader stem. The settle just after the dissolve is uneven in the same way: per-frame zoom is 2.5%, 1.1%, 1.9%, 0.5%, 0, 0.5%, 0, 0 over 160-167, so the field freezes at 164, jumps at 165 and freezes again for 166-167. The pops are not encoder artefacts: only 165, 180, 195, 210 and 225 are I-frames, and most pops land on B- or P-frames. Overlays are in qa_B/anaglyph_197_198.png and qa_B/anaglyph_low.png.",
+    "suggestedFix": "Make the molecule layer's scale a continuous eased function of t, the same way the translation already is. Look for a quantised time, a stepped LOD, or a spring that is only re-evaluated at intervals in the molecule field's zoom. Ease the 5.33-5.5 s settle into a single sm5/ss curve that ends at zero velocity.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I could not refute this. I decoded frames 150-234 of the MP4 to grayscale at full resolution. I then measured frame-to-frame shift by phase correlation in five fixed patches: top (y40-300), bottom (y1400-1700), left edge, right edge, and a mid patch beside the leader tip (x400-650, y800-1050).\n\nBetween pops, the left, right and mid patches move a steady (-1,+2) px per frame, and the top patch moves (0..-1, +1..+2). At 175>176, 183>184, 190>191, 197>198, 205>206, 213>214 and 224>225 the motion breaks in a single frame: the top patch jumps (0,-8) to (+1,-9), the left patch (-2..-3, 0..+1) and the right patch (+3, -1..+1). At 190>191 the bottom patch jumps (0,+6). This is an outward radial jump of about 10 px relative to the drift, about 750 px from a centre near the tip, so roughly a 1-1.3% scale step. The mid patch by the tip keeps its normal (-1,+2) or (0,+1) through every pop. This matches the finding that the zoom is centred near the tip and the leader does not move.\n\nMy measurements do not show the cited pops at 179>180 and 209>210, but the other seven are clear. The settle after the dissolve is also uneven, as described. The top patch moves -20, -20, -10, 0, -10, 0, 0 px over 160>161 to 166>167, so it freezes at 163>164, jumps at 164>165 and freezes again.\n\nIn frame f197.png the sharp foreground N2/O2 molecules are spread over the whole frame, including the top and sides. The reviewer's anaglyph (qa_B/anaglyph_197_198.png) shows clear red/cyan fringing on the molecules at the pop that is absent in the reference pair.\n\nThe pops are not tied to the three scripted attempts (5.6, 6.35, 7.05 s). They come every 7-11 frames, about 3-4 times a second, which points to a stepped zoom rather than an intended punch-in.\n\nSeverity is minor, not major. The jump is about 10 px on a 1080-wide frame, under 1 mm on a phone. It is largest at the edges and almost nothing at the tip, where the viewer is looking along with the caption. Peripheral motion sensitivity could make it register as a faint shimmer at normal speed, but it does not break any locked requirement in V3_SHOTS_AND_TRANSITIONS.md."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "B-2",
+    "frames": "136-137, 142-146",
+    "severity": "nit",
+    "what": "A soft round glow sits ahead of the side streamer's tip, separate from the tip's own halo. It can read as a faint orb floating in the air rather than as part of the discharge.",
+    "evidence": "137: tip at about (696,1131), with a separate soft blob at about (723,1078). 142: tip at about (671,1092), with a larger detached glow about 85 px up-right at about (697,1010). It is low contrast and fades by the stall at 146.",
+    "suggestedFix": "Centre the field glow on the tip, or fade it in only once it touches the tip glow."
+   },
+   {
+    "id": "B-3",
+    "frames": "171-184, 195-205, 215-223 (snaps at 184>185, 205>206, 222>223)",
+    "severity": "nit",
+    "what": "The electron tug is readable but small for a phone. The tethers stretch only about 40-60 px before the electrons snap back, and the snap itself is a one-frame return.",
+    "evidence": "Frame 200: the N2 at (410,665) has its electron pulled to (463,738), and the N2 at (785,825) has its electron pulled to (697,832). Each tether is about 45-50 px from the atom's edge. In the 0.2-scale strip the tethers show only as tiny white ticks. The snap-back reads correctly: the O2 electron returns in 184>185 and the N2 electrons in 185>186, 205>206 and 222>223.",
+    "suggestedFix": "Stretch the nearest one or two electrons further toward the tip, about 1.5-2 times, and add a one-frame overshoot or squash on the snap so it reads as elastic."
+   },
+   {
+    "id": "B-4",
+    "frames": "147-150; 210-234",
+    "severity": "nit",
+    "what": "Low-contrast clutter next to the caption text. While the macro streamer stalls, its lower body runs through the caption band just left of 'normally'. Later, a mid-ground N2 drifts in right after 'electricity.' and reads like a stray dot after the full stop.",
+    "evidence": "150: at y=1660 the streamer is at x of about 190, while the 'n' of 'normally' starts at x of about 225. The tip stays well clear at about (493,1069). Frames 215, 226 and 234: a dim N2 sits at about (975-990, 1650-1670), touching the end of 'electricity.'.",
+    "suggestedFix": "Dim or cull mid-ground molecules inside y 1560-1760 near the caption's text box. Optionally fade the streamer's lower tail faster once it enters the band."
+   }
+  ]
+ },
+ {
+  "key": "C",
+  "review": {
+   "findings": [
+    {
+     "id": "C-R4-1",
+     "frames": "260-268 (8.67-8.93 s), worst 262-266",
+     "severity": "minor",
+     "what": "The far (viewer-right) shoulder and upper arm show 3-4 stacked, offset copies of the sleeve contour while she settles back after the release. It reads as an accordion or ribbed shoulder rather than one sleeve, so it looks like a rig or limb draw error.",
+     "evidence": "Native-res crops at x 250-550, y 950-1400 (qa_C/farshoulder.png, fig264.png). At 255-258 the far side is one dark sleeve shape (farshoulder2.png). From 260 a second contour appears, and by 262-268 there are 3-4 parallel outlined panels running from the collar down to the elbow at about (380-470, 1050-1330). It sits next to the face in the last 0.25 s before the 268|269 cut, the one calm moment in C1, so a careful viewer will see it. It is a fair way from the main action, so I rate it minor, not major.",
+     "suggestedFix": "Check the far-arm or jacket layers in the turn-back pose (Machine3_shelter / opAt after release). They look like several sleeve segments drawn with a pose offset instead of one. Show a single sleeve, or keep the far arm hidden behind the torso as in 245-258."
+    },
+    {
+     "id": "C-R4-2",
+     "frames": "256-259 (8.53-8.63 s)",
+     "severity": "nit",
+     "what": "The cap springs back up while the fingertips are still drawn over its face. The cap is depressed at 255, rising at 256 and fully up at 257, but the fingers still overlap the lower-left of the raised cap at 257-258 and only clear it at 259. The visible lift-off is about 3 frames after 8.50.",
+     "evidence": "qa_C/release.png (crop x 680-1000, y 1000-1300). At 257 the cap is full size and bright with its highlight back, and the four fingertips are still on its lower-left quarter. At 259 the hand is clear of the cap.",
+     "suggestedFix": "Start the cap's return 2-3 frames later, or move the hand's lift-off earlier, so the finger leaves first and the cap follows."
+    },
+    {
+     "id": "C-R4-3",
+     "frames": "241-268",
+     "severity": "nit",
+     "what": "The 'cap lit' cue is weak. The halo round the FIRE cap is a large, dull maroon-brown disc about 140 px in radius that greys the panel more than it glows. The cap face itself brightens only a little. The pulse lamp, LED sweep, trace and window beam carry the activation instead.",
+     "evidence": "qa_C/contact_zoom.png at 241/244/250: the cap gets a brighter radial centre, but the surrounding disc is a desaturated brown at about the panel's value. From 241 it also tints the grey guard pink.",
+     "suggestedFix": "Optional: a smaller, more saturated red-orange rim glow on the cap, and less spread."
+    }
+   ],
+   "works": "I measured C on full-resolution frames from the MP4 (copies in /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_C/). Most of it holds up.\n\n- **C1 press:**\n  - The hand is already moving at 235: hand y goes 1138 to 1098 over 235-240.\n  - The top fingertip lands on the lower-left of the FIRE cap at 240 (8.00 s), and the cap visibly sinks at 241.\n  - The machine comes up in order:\n    - pulse trace jumps at 243;\n    - beam head grows up the window, left of the tower, at 243-244;\n    - cyan pulse lamp strobes from 244, about every 3 frames;\n    - LED bar sweeps from 3 to 12 lit by 252, ending amber.\n  - The press is held with no hover and no reset, then there is a single lift-off at 256-259.\n  - Wrist, elbow and shoulder stay connected through the press. The desk occludes her lower torso, and no limb passes through the desk.\n  - Face layers are correct at 236/250/266 (glasses, brows over the hairline, bun).\n  - The room camera drifts once, monotonically, with no bounce: the dial goes from (989,1092) to (1017,1126), easing out by 263. The fingertip stays on the cap throughout.\n  - In the window the beam passes cleanly behind the mullion (no draw-order error) and runs left of the tower, as in C3.\n- **C2 optics:**\n  - Readable cyan packets go laser head, amplifier, lens pair, mirror, duct.\n  - The truck and roll are smooth and settle without overshoot: roll 0 at 274, then 0.9, 1.7, 2.7 \u2026 12.7\u00b0 at 285, flat by 289-290.\n- **290|291 cut:** an exact screen match. At 290 and 291 the cyan line is at x=779/726/672/619/566/539 at y=100/300/500/700/900/1000, about 15\u00b0 in both. The eye stays on the train.\n- **C3 reveal:** one continuous crane up the beam past the plinth, tower and rod tip, then a push into one packet. The other packets and the rain fade smoothly over 332-336, with no pop.\n- **C->D seam:** the packet centroid moves smoothly, y = 999, 994, 981, 964, 949, 936 over 339-344, with x 528 to 547. The beam angle is 14.9\u00b0 on both sides, matching MICRO_ANG. There is no brightness pop (frame mean 22.3 to 22.1), and D's molecules fade in around the same packet.\n- **Colour language:** cyan only, with no warm or discharge colour anywhere in C, so there is no confusion.\n- **Accepted minors:** C-5 (the exit glow and telescope body sit behind the caption at about 304-312) is no worse than accepted.",
+   "acceptance": "Q5 (adjacent views preserve position and direction): yes.\n- 290|291 is an exact on-axis match: the cyan line is at identical screen x for every row from y=100 to 1200, at about 15\u00b0.\n- 342|343 is continuous: the packet is at (539,964) at 342 and (543,949) at 343, and the angle stays 14.9\u00b0.\n- 268|269 changes direction from up-right in the window to horizontal in the optics. That is motivated, because it is a cut inside the machine and the beam then turns up at the mirror and is rolled to the beam angle by 289.\n\nQ6 (hand contact and visible consequence): yes.\n- Fingertip contact at 240 (8.00 s) and the cap depresses at 241.\n- The consequences follow: trace at 243, beam in the window at 243-244, lamp strobe from 244, LED sweep 241-252.\n- There is one clean release (cap returns at 256-257, finger clear at 259), with no hover and no reset.\n- Small blemishes: the finger is still over the raised cap at 257-258 (nit), and the far shoulder shows stacked sleeve contours at 260-268 (minor). Neither breaks contact or continuity.\n\nQ8 (every retained cut adds enough information): yes.\n- 234|235 brings a new location (molecular view to the shelter, with the hand already moving).\n- 268|269 goes inside the machine to show the press causing a pulse train through the optics.\n- 290|291 shows the pulses leaving the telescope into the storm, matched on the beam axis.\n- 342|343 is not a cut but a continuous change of scale."
+  },
+  "verified": [
+   {
+    "id": "C-R4-1",
+    "frames": "260-268 (8.67-8.93 s), worst 262-266",
+    "severity": "minor",
+    "what": "The far (viewer-right) shoulder and upper arm show 3-4 stacked, offset copies of the sleeve contour while she settles back after the release. It reads as an accordion or ribbed shoulder rather than one sleeve, so it looks like a rig or limb draw error.",
+    "evidence": "Native-res crops at x 250-550, y 950-1400 (qa_C/farshoulder.png, fig264.png). At 255-258 the far side is one dark sleeve shape (farshoulder2.png). From 260 a second contour appears, and by 262-268 there are 3-4 parallel outlined panels running from the collar down to the elbow at about (380-470, 1050-1330). It sits next to the face in the last 0.25 s before the 268|269 cut, the one calm moment in C1, so a careful viewer will see it. It is a fair way from the main action, so I rate it minor, not major.",
+    "suggestedFix": "Check the far-arm or jacket layers in the turn-back pose (Machine3_shelter / opAt after release). They look like several sleeve segments drawn with a pose offset instead of one. Show a single sleeve, or keep the far arm hidden behind the torso as in 245-258.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I extracted frames 255, 258, 260, 262, 264, 266 and 268 at full resolution and cropped x 200-600, y 900-1450 (files in /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VC/, montages m1.png and m2.png, half-scale full frame s264.png).\n\nAt f255 and f258 the far (viewer-right) shoulder is one clean sleeve, with a single outline from the collar down to the extended arm. At f260 a second, lighter blue panel with its own dark outline appears behind the shoulder. By f262 there are two or three outlined panels, and at f264, f266 and f268 there are clearly 3-4 parallel, offset copies of the shoulder and sleeve contour. They run from beside the collar down past the elbow, at roughly x 370-470, y 1050-1330. Frames 264-268 look almost identical, so this is a held drawing, not motion blur or a one-frame smear. On the half-scale full frame (s264) it reads as a ribbed or layered jacket back right next to her face. That is visible, but it looks fairly plausible as cloth folds in this flat style.\n\nIt lasts about 8 frames (around 0.27 s) before the 268|269 cut. It sits beside the face during a calm moment, but it is away from the button, laser and caption action. A careful viewer may sense something odd about the shoulder, but most first-time phone viewers will not register it as a draw error at normal speed. The finding is real as described, and minor is the right severity."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "C-R4-2",
+    "frames": "256-259 (8.53-8.63 s)",
+    "severity": "nit",
+    "what": "The cap springs back up while the fingertips are still drawn over its face. The cap is depressed at 255, rising at 256 and fully up at 257, but the fingers still overlap the lower-left of the raised cap at 257-258 and only clear it at 259. The visible lift-off is about 3 frames after 8.50.",
+    "evidence": "qa_C/release.png (crop x 680-1000, y 1000-1300). At 257 the cap is full size and bright with its highlight back, and the four fingertips are still on its lower-left quarter. At 259 the hand is clear of the cap.",
+    "suggestedFix": "Start the cap's return 2-3 frames later, or move the hand's lift-off earlier, so the finger leaves first and the cap follows."
+   },
+   {
+    "id": "C-R4-3",
+    "frames": "241-268",
+    "severity": "nit",
+    "what": "The 'cap lit' cue is weak. The halo round the FIRE cap is a large, dull maroon-brown disc about 140 px in radius that greys the panel more than it glows. The cap face itself brightens only a little. The pulse lamp, LED sweep, trace and window beam carry the activation instead.",
+    "evidence": "qa_C/contact_zoom.png at 241/244/250: the cap gets a brighter radial centre, but the surrounding disc is a desaturated brown at about the panel's value. From 241 it also tints the grey guard pink.",
+    "suggestedFix": "Optional: a smaller, more saturated red-orange rim glow on the cap, and less spread."
+   }
+  ]
+ },
+ {
+  "key": "DE",
+  "review": {
+   "findings": [
+    {
+     "id": "DE-F1",
+     "frames": "553-580 (peak 562-568)",
+     "severity": "minor",
+     "what": "Brightness lift and drop across the E->F hand-off. The frame's background goes from E's dark navy up to a flat, noticeably lighter slate-teal, holds there, then sinks into F's darker storm. On a phone this reads as a brief fade through grey, not as one continuous pull-out. It overlaps the accepted ED-1 window but is a separate problem: ED-1 covers the lack of features, this is a tonal pump.",
+     "evidence": "Median background RGB in the region x 20-300, y 300-700 of the full-res frames: 548-553 = (18,27,41); 557 = (24,38,53); 560 = (27,48,64); 562-568 = (29,50,66); 572 = (23,42,59); 576 = (15,27,40); 580+ = (14,23,35). Whole-frame mean luma: 553 = 47.8, 562 = 57.7, 576 = 38.0. Visible in the EF_seam strip as lighter tiles 558-571 between darker 545-555 and 576+.",
+     "suggestedFix": "Grade E's background toward F's sky value monotonically, for example a straight navy-to-storm ease across 553-576 with no overshoot above both endpoints, or keep E's navy until F's sky is drawn."
+    },
+    {
+     "id": "DE-F2",
+     "frames": "548-580",
+     "severity": "minor",
+     "what": "The pull-out works as two separate scale changes, not one zoom. From 548 to 562 the molecules shrink to about half their diameter while the warm band and cyan line keep the same screen width. Then, with the molecules gone, the band alone shrinks about 4x over 564-580. Between the two, at 562-564, the picture is almost frozen. A careful viewer sees the air particles recede against a band that is not moving, then a second, separate zoom.",
+     "evidence": "Warm-band width at y=960 (full res): 540 = 277 px, 558 = 267, 562 = 271, 564 = 259, 566 = 211, 570 = 131, 574 = 85, 580 = 67. Molecule diameter in the crop x 0-540, y 200-700 drops from about 17 px at 548 to about 10 px at 561. The frame-to-frame difference outside the caption band falls to 0.42 at 563 and 564 (against 5-7 at 550-558 and 4-4.5 at 576-580).",
+     "suggestedFix": "Drive the molecular layer and the macro band from the same zoom value so they shrink together through 553-580, and cross-fade the molecules during that shared move."
+    },
+    {
+     "id": "DE-F3",
+     "frames": "555-563",
+     "severity": "minor",
+     "what": "The leader that has just run the easier path does not carry into the macro view. As the pull-out starts, its white-violet core flares at the top edge (555), then softens into a blurred lavender smear lying partly off the cyan line (559 and 561), and is gone by 563. For about 0.15 s it reads like a defocused ghost of the bolt over the taupe band, and the payoff image of the path is dissolved, not kept.",
+     "evidence": "Full-res 559: a broad soft lavender streak from about (330,230) to (180,1500) at half scale, to the right of the cyan line in the upper half. 561: a faint violet haze. 563: only the band and line. EF_seam tiles 557-560.",
+     "suggestedFix": "Fade the discharge as a whole (opacity on a crisp core) or keep a thin cooling afterglow along the cyan line, not a widening blur. Finish the fade before the background shift starts, or lock the two together."
+    },
+    {
+     "id": "D-F4",
+     "frames": "374-376",
+     "severity": "minor",
+     "what": "The second (representative) packet appears in the middle of the frame instead of travelling in. In one or two frames it goes from a faint ghost to a full bright glow at about y 1400-1500, just above the caption band, with its halo reaching into the band. The first packet had left through the top of the frame at about 368, so the new one reads as popping in.",
+     "evidence": "Full-res 373: no packet. 374: a faint ellipse centred at about (475,1510). 375: a bright core at about (500,1425) with the halo down to about y 1650. Whole-frame luma jumps 38.7 -> 41.4 at 375. D_pushin tiles 372-376.",
+     "suggestedFix": "Bring the packet in from below the frame edge along the cyan line (start it about 300 px lower and 2-3 frames earlier), or ramp its opacity over 4-6 frames while it is already moving."
+    },
+    {
+     "id": "D-F5",
+     "frames": "376-394",
+     "severity": "nit",
+     "what": "Some competition for focus during the two key tears. The packet's large bright cyan-white glow (about 120 x 400 px core plus a wide halo) is the brightest object on screen, about 250-300 px right of the molecules whose electrons tear away at 379 and 388. The white sparks still read, but the eye is pulled to the packet first.",
+     "evidence": "g_tear crops 379-390: the spark at about (370,990) full res at 379 and about (380,660) at 388; the packet core at about (630,990) at 379 and about (690,710) at 388.",
+     "suggestedFix": "Lower the packet's halo by about 25% during 377-392, or briefly brighten the spark and the electron streak."
+    },
+    {
+     "id": "D-F6",
+     "frames": "412-440",
+     "severity": "nit",
+     "what": "The heated region is still wider than 'narrow' when the word 'channel' arrives. Warm halos first cover the whole zoomed frame (416-420). At 428-430 the band fills about 60% of the frame width, and it reads clearly as a narrow band only from about 436-444.",
+     "evidence": "Warm-band extent at y=960: 420 = 117-989; 428 = 226-901 (675 px, 62% of 1080); 436 = 368-872 (47%); 448 = 386-749 (34%).",
+     "suggestedFix": "Start the pull-back about 4-6 frames earlier, or narrow the warm falloff slightly during 418-430."
+    },
+    {
+     "id": "E-F7",
+     "frames": "541-553",
+     "severity": "nit",
+     "what": "While the camera holds, the leader tip leaves the top of the frame at about 541. For about 0.4 s the viewer sees the finished path with no advancing tip, until the pull-out brings the tip glow back at the top edge (554-556). This works as a readable result, but the 'gently track the tip' option was not used.",
+     "evidence": "E_all: the tip is at about local y 20 at 538 and out of frame at 541-553. The cyan line stays at x 572-573 at y=960 from 475 to 553, so the camera is static.",
+     "suggestedFix": "Optional: add a slight upward track of about 100-150 px over 525-545 so the tip is still in frame when the path completes."
+    }
+   ],
+   "works": "D reads as one connected process on one axis. The packet arrives exactly where C left it: the glow is at about (500,870) in both 342 and 343. Molecules fade in around it, and white freed electrons with streaks pop off while bound electrons stay small ink-rimmed dots on intact pairs (343-368). The push-in is monotonic: median molecule blob area goes 1422 -> 6000 px over 350-398, holds, then falls steadily from about 407 to 479, so there is no alternating zoom. The two tears land exactly with the packet passing at the molecule's height: at 379 on the O2 pair, at 388 on the N2 pair. The spark and the electron fly off to the left while the molecule stays intact (g_tear). From about 406 molecules visibly move outward from the axis, and the warm halos then merge into a soft-edged band with fewer molecules inside: a region within air, not a tube or wall. The cyan line stays centred in the band (448: band 386-749, line at 572). E: the violet-white stepped leader with a soft tip glow climbs inside the warm band beside the cyan line (481-541). Side probes at 502-520 and 532-541 stall in ordinary air. The background stays quiet, and the bolt core is not washed out by its glow. Position and direction contract: the cyan line sits at x 572-573 at y=960 from 436 through 598, at about 15 degrees from vertical throughout, which matches P0_SCREEN (about 554,1029) and MICRO_ANG. F's band and line land on exactly that axis above the tower tip (574-590). Frame-difference spikes at 440, 475, 508 and 563-564 are caption changes only; outside the caption band the motion is smooth. Molecules are never fragmented. The accepted minors DE-7 (leader born in the caption band, 481-490), ED-1 and DE-3 (taupe band 562-570) look no worse than described, except as noted in DE-F1 and DE-F2.",
+   "acceptance": "3: Yes. Each step visibly sets up the next: packet -> electrons freed (343-368) -> two tears (379, 388) -> warming and outward motion (403-420) -> narrow, less dense warm band (424-475) -> leader runs that band (481-541) -> the same band and line carried into F above the tower tip (564-590). 4: Mostly yes (partly at 557-561). The cyan line stays visible inside the warm band through D and E, and the leader is clearly white-violet. Only at 557-561 does the fading discharge turn into a lavender haze over the greyish band, so for about 0.15 s the discharge and the changed air blur together (DE-F3). 5: Yes. The cyan line stays at x 572-573 at y=960 and at about 15 degrees from 436 to 598, across D->E (475) and E->F (563|564), with no axis jump. The only weakness is in scale, not position: the two-stage scale change and the brightness pump at 553-580 (DE-F1, DE-F2)."
+  },
+  "verified": [
+   {
+    "id": "DE-F1",
+    "frames": "553-580 (peak 562-568)",
+    "severity": "minor",
+    "what": "Brightness lift and drop across the E->F hand-off. The frame's background goes from E's dark navy up to a flat, noticeably lighter slate-teal, holds there, then sinks into F's darker storm. On a phone this reads as a brief fade through grey, not as one continuous pull-out. It overlaps the accepted ED-1 window but is a separate problem: ED-1 covers the lack of features, this is a tonal pump.",
+    "evidence": "Median background RGB in the region x 20-300, y 300-700 of the full-res frames: 548-553 = (18,27,41); 557 = (24,38,53); 560 = (27,48,64); 562-568 = (29,50,66); 572 = (23,42,59); 576 = (15,27,40); 580+ = (14,23,35). Whole-frame mean luma: 553 = 47.8, 562 = 57.7, 576 = 38.0. Visible in the EF_seam strip as lighter tiles 558-571 between darker 545-555 and 576+.",
+    "suggestedFix": "Grade E's background toward F's sky value monotonically, for example a straight navy-to-storm ease across 553-576 with no overshoot above both endpoints, or keep E's navy until F's sky is drawn.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "The brightness pump is real, and minor is the right rating. I could not refute it.\n\n**Measurements match.** I extracted full-res frames 545, 550, 553, 557, 560, 562, 565, 568, 572, 576, 580 and 590 to /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VDE/. The median background RGB in x 20-300, y 300-700 matches the finding exactly:\n- 545-553: (18,27,41)\n- 557: (24,38,53)\n- 560: (27,48,64)\n- 562/565/568: (29,50,66), the same value on all three\n- 572: (23,42,59)\n- 576: (15,27,40)\n- 580: (14,23,35)\n- 590: (9,17,27)\n\nThe whole-frame median luma follows the same curve: 26 at 553, 46.5 at 562-568, 31 at 576-580, 24 at 590.\n\n**Per-frame curve.** The ffmpeg signalstats YAVG curve shows one smooth hump rather than noise:\n- flat at about 57-58 through 548-554\n- rising steadily to a peak of 66.7 at 562\n- holding at about 65-66 through 563-567\n- falling through 568-575 to about 49 at 576\n- settling at about 46 from 584 on\n\nSo it lifts for about 0.3 s, holds for about 0.2 s, then drops for about 0.3 s, all crossing the 563|564 E->F cut.\n\n**What the frames show.** I viewed a montage of 545, 553, 557, 562, 568, 572, 576 and 590.\n- 545 and 553: dark navy with a dense particle field, the violet bolt and the orange channel band.\n- 557: the particles thin out, the bolt narrows to the cyan line, and the ground lightens.\n- 562 and 568: an almost featureless flat slate-teal field with only the orange band, the cyan line and faint rain. These are clearly the lightest frames in the run. 568 shows faint cloud shapes starting to appear.\n- 572: storm clouds coming in.\n- 576: a darker storm with cloud outlines, with the tower top and red mast at the bottom.\n- 590: darker still.\n\nThe lighter, flat middle tiles between darker neighbours are plain to see.\n\n**Severity.** The lift is gradual, not a flash, and it lands while the scene's content changes completely. At normal speed it reads as a brief, soft wash to a lighter grey-teal in the middle of the pull-out, not a hard pump. A phone viewer may sense the hand-off as a dip through grey rather than one continuous move, which works against the \"one move\" intent for the 18.79 hand-off in V3_SHOTS_AND_TRANSITIONS.md. It does not break readability, the captions or any locked timing, so it is minor, not major. It is tonally distinct from ED-1's missing features, though both come from the same flat interstitial frames 558-571."
+    }
+   },
+   {
+    "id": "DE-F2",
+    "frames": "548-580",
+    "severity": "minor",
+    "what": "The pull-out works as two separate scale changes, not one zoom. From 548 to 562 the molecules shrink to about half their diameter while the warm band and cyan line keep the same screen width. Then, with the molecules gone, the band alone shrinks about 4x over 564-580. Between the two, at 562-564, the picture is almost frozen. A careful viewer sees the air particles recede against a band that is not moving, then a second, separate zoom.",
+    "evidence": "Warm-band width at y=960 (full res): 540 = 277 px, 558 = 267, 562 = 271, 564 = 259, 566 = 211, 570 = 131, 574 = 85, 580 = 67. Molecule diameter in the crop x 0-540, y 200-700 drops from about 17 px at 548 to about 10 px at 561. The frame-to-frame difference outside the caption band falls to 0.42 at 563 and 564 (against 5-7 at 550-558 and 4-4.5 at 576-580).",
+    "suggestedFix": "Drive the molecular layer and the macro band from the same zoom value so they shrink together through 553-580, and cross-fade the molecules during that shared move.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I extracted frames 540-580 at full resolution: 540, 545, 548, 550, 552, 554, 556, 558-570 one by one, then 572-580. I looked at an 8-up montage (548, 556, 561, 562, 564, 566, 570, 580) and at same-position crops of the molecule field (x 100-460, y 250-650) for 548, 554, 558 and 561. I measured the warm band as the half-maximum width of a smoothed R-B profile averaged over y 900-1020.\n\n**Band width holds while the molecules shrink.** The band width in px:\n- 540: 283\n- 545: 280\n- 548: 290\n- 550: 285\n- 552: 279\n- 556: 260\n- 558: 267\n- 560: 268\n- 561 to 563: 269 to 270\n\nIts edges sit at about x 437-707 the whole time, and the cyan line keeps its slope and position (montage tiles 556, 561 and 562 match). Over the same frames the molecules clearly shrink. In the crops, the diatomic atoms go from about 18 px in 548 to about 9 px in 561, and they fade as the background lifts from navy to teal. So the air does recede against a band that is not changing scale, as claimed.\n\n**The band zoom only starts after that.** Band width in px:\n- 564: 261\n- 565: 237\n- 566: 213\n- 568: 172\n- 570: 136\n- 572: 113\n- 574: 95\n- 576: 88\n- 580: 81\n\nThat is about 3.3x, starting at frame 564 and fastest over 564-570, by which point the molecules are gone. Mean absolute difference over y 0-1500, which leaves out the captions, falls to 1.94 at 562, 0.41 at 563 and 0.44 at 564, against 5-10 over 550-559 and 6-7 over 572-576. So the picture is effectively still for about 2 frames at the hand-off. That matches the finding, with my numbers within a few px of the reviewer's.\n\n**Against the intent.** The doc says E->F is \"one move, continuous in log-zoom\" with position and direction held. Position and direction do hold. The scale change, though, happens in two phases:\n- Phase 1, 548-561: molecules only, about 0.053 per frame in log scale, with the band fixed.\n- A short hold at 562-564.\n- Phase 2, 564-580: the band only, about 0.11 per frame at the start.\n\n**Severity for a first-time phone viewer.** The 2-frame hold (about 67 ms) is too short to read as a freeze by itself. The band is soft and low-contrast, and the molecules are fading as they shrink, so phase 1 can pass as depth (air dropping away behind the channel). What a careful viewer may feel is a small hitch: the scale stops changing, then a second pull-out starts on the band just as the caption switches to \"So when lightning erupted UPWARD\". It is real and it breaks the stated one-move intent, but at normal speed it is a subtle rhythm problem rather than a visible break. I rate it minor."
+    }
+   },
+   {
+    "id": "DE-F3",
+    "frames": "555-563",
+    "severity": "minor",
+    "what": "The leader that has just run the easier path does not carry into the macro view. As the pull-out starts, its white-violet core flares at the top edge (555), then softens into a blurred lavender smear lying partly off the cyan line (559 and 561), and is gone by 563. For about 0.15 s it reads like a defocused ghost of the bolt over the taupe band, and the payoff image of the path is dissolved, not kept.",
+    "evidence": "Full-res 559: a broad soft lavender streak from about (330,230) to (180,1500) at half scale, to the right of the cyan line in the upper half. 561: a faint violet haze. 563: only the band and line. EF_seam tiles 557-560.",
+    "suggestedFix": "Fade the discharge as a whole (opacity on a crisp core) or keep a thin cooling afterglow along the cyan line, not a widening blur. Finish the fade before the background shift starts, or lock the two together.",
+    "verdict": {
+     "real": true,
+     "severity": "nit",
+     "reading": "The frames match the description, but it looks like a normal cross-fade, not a defect. I pulled frames 550, 553, 555, 557, 559, 561, 563 and 566, plus a full-resolution crop of 559 (x 200-900, y 0-1200). They are in /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VDE2/ (grid.png and f559crop.png).\n\nWhat the frames show:\n- 550 and 553: a crisp white-violet leader runs up inside the taupe band, with one stalled side probe.\n- 555: the leader head flares as a bright spot at the top edge while the pull-out begins.\n- 557: the bolt is thinner and softer, and the cyan line starts to show through.\n- 559 (full-res crop): the bolt is now a soft lavender glow that keeps the old jagged bolt shape and is 30-60 px wide. It sits off the straight cyan line on both sides: to the right of the line in the upper part (about x 520-600 in the crop at y 230-600) and to the left lower down (about y 800-1150). So the claim that it lies partly off the line is accurate. Both reviewers saw the same thing, and the side difference is only how we described it.\n- 561: a faint violet haze.\n- 563: only the band and the cyan line. 566 is the same, with the \"So when lightning erupted UPWARD\" caption.\n\nWhy this is a nit, not minor:\n1. The visible ghost lasts about 4 frames (557-561, about 0.13 s), and it happens during a fast pull-out while the molecules also fade. At phone speed it reads as the bolt dissolving with the molecular layer. It does not read as a separate defocused object.\n2. V3_SHOTS_AND_TRANSITIONS.md, Beat E, says the molecular layer cross-fades into the macro channel, with position and direction held. Seam 563|564 is listed as a continuous pull-out with position and direction held. The bolt drawn at molecular scale belongs to that layer, so its fade is what the doc intends. It does not require the leader itself to carry into the macro view. F starts a new leader at the rod tip (incepting at 19.55).\n3. The path itself is kept: the band and the cyan line stay in the same place and direction in every frame from 555 to 566, so the payoff image of the path is still there.\n4. No locked requirement is broken.\n\nThe one real cosmetic point: in 559, the glow keeps the zig-zag of the molecular-scale bolt beside the straight macro line, so the two scales are briefly out of register. Swapping the soft fade for a quicker fade, or collapsing the glow onto the line, would tidy it up. A first-time viewer would hardly notice it."
+    }
+   },
+   {
+    "id": "D-F4",
+    "frames": "374-376",
+    "severity": "minor",
+    "what": "The second (representative) packet appears in the middle of the frame instead of travelling in. In one or two frames it goes from a faint ghost to a full bright glow at about y 1400-1500, just above the caption band, with its halo reaching into the band. The first packet had left through the top of the frame at about 368, so the new one reads as popping in.",
+    "evidence": "Full-res 373: no packet. 374: a faint ellipse centred at about (475,1510). 375: a bright core at about (500,1425) with the halo down to about y 1650. Whole-frame luma jumps 38.7 -> 41.4 at 375. D_pushin tiles 372-376.",
+    "suggestedFix": "Bring the packet in from below the frame edge along the cyan line (start it about 300 px lower and 2-3 frames earlier), or ramp its opacity over 4-6 frames while it is already moving.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I extracted frames 364, 368, 370 and 372-378 plus 382 at full resolution (source/out/qa_VDE/fNNN.png), viewed them as a montage, and looked closely at the lower part (y 1020-1920) of 373-375. In 368 the first packet is at the top edge (about y 0-200) on its way out, with a spark beside it. In 372 and 373 there is no packet anywhere: just the thin cyan beam line, the molecules, and the caption \"from air MOLECULES\" at about y 1650. In 374 a faint, large, low-opacity elliptical ghost appears on the beam line at about y 1350-1600, just above and touching the caption. In 375 that same spot holds a full-brightness cyan-white core at about y 1270-1580, and its soft halo runs down past the caption baseline. So the packet goes from nothing to full brightness in about two frames, in the lower-middle of the frame, rather than coming in from the bottom edge.\n\nRow-band luma agrees. The 1280-1600 bands jump from about 28-40 in 374 to about 41-52 in 375. In 376-382 the bright region climbs (the peak band moves from y 1440 to 1120 to 960-800), so after it appears the packet does travel up the beam. By 382 it is near the representative pair, and a spark fires there.\n\nThe finding is accurate as described. For a phone viewer it is a quick fade-in that is immediately followed by motion in the expected direction, and the caption stays readable in 375 under the halo. At normal speed it reads as \"a packet arrives\" rather than a glaring glitch, though an attentive viewer may notice it materialising mid-frame instead of entering. It is a small continuity blemish, not a break of a locked requirement, so minor."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "D-F5",
+    "frames": "376-394",
+    "severity": "nit",
+    "what": "Some competition for focus during the two key tears. The packet's large bright cyan-white glow (about 120 x 400 px core plus a wide halo) is the brightest object on screen, about 250-300 px right of the molecules whose electrons tear away at 379 and 388. The white sparks still read, but the eye is pulled to the packet first.",
+    "evidence": "g_tear crops 379-390: the spark at about (370,990) full res at 379 and about (380,660) at 388; the packet core at about (630,990) at 379 and about (690,710) at 388.",
+    "suggestedFix": "Lower the packet's halo by about 25% during 377-392, or briefly brighten the spark and the electron streak."
+   },
+   {
+    "id": "D-F6",
+    "frames": "412-440",
+    "severity": "nit",
+    "what": "The heated region is still wider than 'narrow' when the word 'channel' arrives. Warm halos first cover the whole zoomed frame (416-420). At 428-430 the band fills about 60% of the frame width, and it reads clearly as a narrow band only from about 436-444.",
+    "evidence": "Warm-band extent at y=960: 420 = 117-989; 428 = 226-901 (675 px, 62% of 1080); 436 = 368-872 (47%); 448 = 386-749 (34%).",
+    "suggestedFix": "Start the pull-back about 4-6 frames earlier, or narrow the warm falloff slightly during 418-430."
+   },
+   {
+    "id": "E-F7",
+    "frames": "541-553",
+    "severity": "nit",
+    "what": "While the camera holds, the leader tip leaves the top of the frame at about 541. For about 0.4 s the viewer sees the finished path with no advancing tip, until the pull-out brings the tip glow back at the top edge (554-556). This works as a readable result, but the 'gently track the tip' option was not used.",
+    "evidence": "E_all: the tip is at about local y 20 at 538 and out of frame at 541-553. The cyan line stays at x 572-573 at y=960 from 475 to 553, so the camera is static.",
+    "suggestedFix": "Optional: add a slight upward track of about 100-150 px over 525-545 so the tip is still in frame when the path completes."
+   }
+  ]
+ },
+ {
+  "key": "F",
+  "review": {
+   "findings": [
+    {
+     "id": "F-1",
+     "frames": "712-768 (clearest 745, 767)",
+     "severity": "minor",
+     "what": "The tower base has draw-order and transparency errors. It is revealed during the widening at the bottom edge of the frame, about x 410-640, y 1790-1920, below the caption band.",
+     "evidence": "Full-res crop of f745 at (380-660, 1740-1920). (a) The top-cap ellipse of the grey support column is drawn over the platform's side band. The platform should overhang the column and hide that rim from this low angle. (b) The lowest red lattice panel looks translucent: the platform's front railing posts and deck line show through the red. The bottom of the lattice also overlaps the front railing instead of sitting behind it. The same thing shows in f712 and f767. The region is small and at the bottom edge, and it is on screen for only about 1.8 s.",
+     "suggestedFix": "Draw the column before the platform disc, or clip it to the area under the disc's underside. Make the lattice panels opaque, and draw the front railing after the lattice."
+    },
+    {
+     "id": "F-2",
+     "frames": "656-768 (e.g. 656, 690, 745)",
+     "severity": "minor",
+     "what": "Above the guided section, the unguided bolt stays very close to the cyan line and its right-hand branch stubs cross the line. Cyan packets also ride over the branches. This slightly blurs where the guidance ends.",
+     "evidence": "f656 and f690: branch stubs at about (640-690, 610) and (630-670, 690) cross the cyan line. A packet sits on the upper channel at about (655, 655) in f690 and (650, 680) in f745. The main upper path wanders within about 40-60 px of the line between y 480 and 780. The guided section still reads as different because it is the thick, straight, brightest segment, and the warm band ended exactly at the departure point (about y 780, visible in f620 and f656). So the relationship is readable, just less crisp than it could be.",
+     "suggestedFix": "Mirror or trim the two right-hand stubs so that nothing above the departure point crosses the cyan line. Optionally fade the packets where they overlap the unguided bolt."
+    },
+    {
+     "id": "F-3",
+     "frames": "700-768 (e.g. 745)",
+     "severity": "nit",
+     "what": "Cyan packets passing beneath the guided core show through as teal blobs inside the white core. For a moment the discharge reads slightly cyan, which mixes the laser and discharge colours.",
+     "evidence": "In a 2x crop of f745 there are pale teal patches inside the core at about (590, 860) and (540, 1110). In f620, before connection, the edges are clearly violet.",
+     "suggestedFix": "Hide packets where they lie under the bolt core mask, or draw the core over them at full opacity."
+    },
+    {
+     "id": "F-4",
+     "frames": "703-730",
+     "severity": "nit",
+     "what": "The single widening is very small, about 10-11% scale. It reads more like a gentle settle than a distance reveal, and the measured segment was already fully in frame before it.",
+     "evidence": "The tower's top edge moves from about y 1342 to 1318. The guided-bolt length on screen is about 460 px at f690 and about 410 px at f745. The motion is monotonic with no overshoot, and it uncovers the tower plinth. It is acceptable as it stands.",
+     "suggestedFix": "Optional: push the widening slightly further, keeping it held about the rod tip."
+    },
+    {
+     "id": "F-5",
+     "frames": "576-768",
+     "severity": "nit",
+     "what": "The high-contrast red and white tower lattice sits directly behind the caption keywords (UPWARD, TOWER, CHANNEL, 160 FEET) for the whole beat.",
+     "evidence": "f600, f670 and f745: the tower runs through x 470-580 in y 1560-1760. The caption stroke keeps the words legible, but the striped tower is the busiest area behind the text.",
+     "suggestedFix": "Optional: add a slight darkening of the tower inside the caption band only."
+    }
+   ],
+   "works": "The beat delivers its story clearly. Geography matches the opening (A): the tower sits low and central and the cyan beam runs from lower left to upper right through the rod tip. The bolt is the same one as in the hook.\n\n- **E->F scale change:** E's pull-out lands with the same channel angle. The zoom settles monotonically by about 589, with the tower top going from y 775 to 666 at half scale and no bounce.\n- **Field build and leader origin:** the field glows at the tip from about 580. Streamers leave the rod tip at 585-587, and the leader then visibly climbs the cyan line from the tip: tip at about y 1090 at f600, at the departure point by about 640 (f587, f600, f620).\n- **Colour language:** the warm band covers exactly the section the leader then follows and ends at the departure point. That makes \"prepared air\" causal and readable.\n- **Connection (656):** the core stays legible against a local cloud-underside glow, and the light stays local rather than spreading across the frame.\n- **\"followed that CHANNEL\" (668-696):** the guided section is the brightest, thickest and straightest part. It is aligned with the cyan line both above and below the bolt, and the restrained branches start only above the departure point. Restrike pulses (656-694) keep it alive with no hard pops.\n- **Bracket:** it grows once, bottom to top, from 710 to about 729, starting on \"one hundred\" (23.67). It runs parallel to the guided section, from the rod tip (about y 1236) to just below the departure point (about y 866). Its bottom endpoint stays fixed within a few px while the camera widens about the rod tip.\n- **Label:** \"160+ ft\" fades in from 731 to 736, on \"sixty\", at about (630-820, 1050). It is bold, readable and well clear of the caption band.\n- **Hold and cut:** the result holds with a gently varying afterglow for about 1.1 s. The F->G hard cut (768|769) to the house is clean and keeps the eye near screen centre. Nothing reads as a zone around the rod.",
+   "acceptance": "Q4 (laser, changed air and discharge distinguishable): yes. At 587-640 all three are clearly separate: the cyan line with packets, the warm band ahead of the leader, and the white core with violet edges (f600, f620). After connection the cyan line stays visible above and below the guided bolt (f690, f745). Minor blemishes: packets tint the core teal at about 745 (F-3), and branch stubs cross the line above the guided section (F-2).\n\nQ5 (adjacent views preserve position and direction, or motivate the change): yes. At E->F (563|564) the channel keeps the same diagonal and screen region, and the zoom settles monotonically by about 589. The widening at 703-730 is held about the rod tip, with the bracket's bottom end steady at y 1230-1236. F->G (768|769) is a motivated hard cut to a new location, with the eye kept near centre.\n\nQ7 (distance attached to the guided section; rod comparison clear): yes. The bracket runs from the rod tip (y about 1236) to just below where the bolt leaves the cyan line (y about 866, departure about 825). It is parallel to the guided section and offset about 40 px to the right. It grows once over 710-729, and the label is complete by 736 (f745, f767). No protection zone is drawn round the rod in F, and the cut to G at 769 shows none."
+  },
+  "verified": [
+   {
+    "id": "F-1",
+    "frames": "712-768 (clearest 745, 767)",
+    "severity": "minor",
+    "what": "The tower base has draw-order and transparency errors. It is revealed during the widening at the bottom edge of the frame, about x 410-640, y 1790-1920, below the caption band.",
+    "evidence": "Full-res crop of f745 at (380-660, 1740-1920). (a) The top-cap ellipse of the grey support column is drawn over the platform's side band. The platform should overhang the column and hide that rim from this low angle. (b) The lowest red lattice panel looks translucent: the platform's front railing posts and deck line show through the red. The bottom of the lattice also overlaps the front railing instead of sitting behind it. The same thing shows in f712 and f767. The region is small and at the bottom edge, and it is on screen for only about 1.8 s.",
+    "suggestedFix": "Draw the column before the platform disc, or clip it to the area under the disc's underside. Make the lattice panels opaque, and draw the front railing after the lattice.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I extracted f700, f712, f730, f745, f760, f767, f768 and f769 at full resolution to /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VF/. I made 3x crops of x 340-700, y 1700-1920 for f712, f745 and f767 in the scratchpad (c712.png, c745.png, c767.png).\n\n(a) In f745 and f767 the grey support column's top-cap ellipse is drawn with a dark outline over the lower part of the platform's grey side band. It sits about y 1845-1860 in frame coordinates, so the rim shows through where the platform should hide it. This is a draw-order error.\n\n(b) In f745, f767 and f712 the lowest red lattice panel is clearly translucent. Its bottom third is a lighter pinkish red, and the platform's front railing line, posts and deck rim show through it. The lattice bottom also crosses over the front railing instead of being hidden behind it. The panels above are opaque, so the effect is visible.\n\nIn the full f745 frame the base is small: about 210 px wide at the very bottom edge, below the \"for over 160 FEET.\" caption. The viewer's eye is on the beam and the 160+ ft bracket higher up. The errors only appear during the widening at the end of Beat F, about 1.8 s.\n\nThe finding is accurate as described. At normal phone speed it reads as a slightly odd base, not an obvious break, so it is minor and close to a nit. It breaks no locked requirement."
+    }
+   },
+   {
+    "id": "F-2",
+    "frames": "656-768 (e.g. 656, 690, 745)",
+    "severity": "minor",
+    "what": "Above the guided section, the unguided bolt stays very close to the cyan line and its right-hand branch stubs cross the line. Cyan packets also ride over the branches. This slightly blurs where the guidance ends.",
+    "evidence": "f656 and f690: branch stubs at about (640-690, 610) and (630-670, 690) cross the cyan line. A packet sits on the upper channel at about (655, 655) in f690 and (650, 680) in f745. The main upper path wanders within about 40-60 px of the line between y 480 and 780. The guided section still reads as different because it is the thick, straight, brightest segment, and the warm band ended exactly at the departure point (about y 780, visible in f620 and f656). So the relationship is readable, just less crisp than it could be.",
+    "suggestedFix": "Mirror or trim the two right-hand stubs so that nothing above the departure point crosses the cyan line. Optionally fade the packets where they overlap the unguided bolt.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I extracted f620, f656, f690, f745 and f768 at full resolution and made 2x crops of the 460-820 x 420-900 region for f656 and f745. The frames show the finding as described. In f656 the guided section is thick, straight and bright, and runs from the rod tip at about (500,1215) to about (620,775). There the bolt leaves the line, and the thin unguided channel above it runs only about 20-60 px left of the cyan line up to about (655,470). Two short right-hand stubs cross the cyan line: one at about (640-690,610) and one at about (630-670,690). The f656 crop shows both clearly passing over the line. In f690 the same geometry holds, and a cyan packet sits on the line right where the upper stub meets it, at about (652,660). In f745, during the wider framing with the 160+ ft bracket, the f745 crop shows a short horizontal link at about y 690 that joins the unguided bolt to the cyan line. A packet sits on that junction at about (648,680), and a second stub crosses near y 610. So the unguided part visibly touches and overlaps the laser line in several places across the 656-768 hold, rather than clearly pulling away from it. It is still readable. The guided segment is several times thicker and brighter than the thin upper channel. The warm sheath and glow stop at the departure point (about y 780 in f656 and f690, about y 820 in f745). The yellow bracket in f745 marks exactly the guided length. A phone viewer will get \"this part followed the line\". But because the upper bolt hugs the line and its stubs cross it, it can loosely read as \"still sort of following\", which softens the \"part of the bolt\" point the narration makes. It does not break a locked requirement. Most viewers would not notice it at normal speed, so minor is right, close to a nit."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "F-3",
+    "frames": "700-768 (e.g. 745)",
+    "severity": "nit",
+    "what": "Cyan packets passing beneath the guided core show through as teal blobs inside the white core. For a moment the discharge reads slightly cyan, which mixes the laser and discharge colours.",
+    "evidence": "In a 2x crop of f745 there are pale teal patches inside the core at about (590, 860) and (540, 1110). In f620, before connection, the edges are clearly violet.",
+    "suggestedFix": "Hide packets where they lie under the bolt core mask, or draw the core over them at full opacity."
+   },
+   {
+    "id": "F-4",
+    "frames": "703-730",
+    "severity": "nit",
+    "what": "The single widening is very small, about 10-11% scale. It reads more like a gentle settle than a distance reveal, and the measured segment was already fully in frame before it.",
+    "evidence": "The tower's top edge moves from about y 1342 to 1318. The guided-bolt length on screen is about 460 px at f690 and about 410 px at f745. The motion is monotonic with no overshoot, and it uncovers the tower plinth. It is acceptable as it stands.",
+    "suggestedFix": "Optional: push the widening slightly further, keeping it held about the rod tip."
+   },
+   {
+    "id": "F-5",
+    "frames": "576-768",
+    "severity": "nit",
+    "what": "The high-contrast red and white tower lattice sits directly behind the caption keywords (UPWARD, TOWER, CHANNEL, 160 FEET) for the whole beat.",
+    "evidence": "f600, f670 and f745: the tower runs through x 470-580 in y 1560-1760. The caption stroke keeps the words legible, but the striped tower is the busiest area behind the text.",
+    "suggestedFix": "Optional: add a slight darkening of the tower inside the caption band only."
+   }
+  ]
+ },
+ {
+  "key": "GH",
+  "review": {
+   "findings": [
+    {
+     "id": "GH-1",
+     "frames": "877-884 (29.23-29.47 s)",
+     "severity": "minor",
+     "what": "The prepared-air channel in H starts with a pop and a round blob instead of growing from the tip along the axis.",
+     "evidence": "In full-res crops (source/out/qa_GH/blob2.png, blob.png), frames 877-879 show a faint, nearly horizontal warm smudge about 40-60 px above the rod tip (540,820), offset to the RIGHT of the cyan line and not lying along it. At 880 it jumps to a much brighter, roughly round soft ball about 120 px across, centred on the beam just above the tip (about 540,770). For about 4 frames (880-883) it reads as a glowing ball sitting on the rod tip. It only elongates up the beam from 884. It does not read as a protection zone, but the off-axis smudge and the brightness step between 879 and 880 are visible at full size, and the ball shape breaks the 'thin band grows up from the tip' idea for a moment.",
+     "suggestedFix": "Start the warm band as a thin sliver on the beam axis whose lower end sits at the tip, and ramp its opacity from 877 with no off-axis component. Let it lengthen upward rather than appear as a round glow first."
+    },
+    {
+     "id": "GH-2",
+     "frames": "772-784 (25.73-26.13 s)",
+     "severity": "nit",
+     "what": "The distant strike in G is far away in depth but sits close to the house on screen.",
+     "evidence": "f773: the bolt runs down at x\u2248960-1000, y\u22481020-1200 and lands on the far ridge line with a glow there. That is about 100-140 px right of the down-conductor (x\u2248862) and at the height of the upper storey. The depth cues hold: it is small, behind the ridge and lights the ridge, not the house. Even so, on a phone the bolt sits right beside the house corner for about 0.4 s.",
+     "suggestedFix": "Optional: make the strike smaller or place it higher and further right (nearer the frame edge), so the gap to the house is clearer."
+    },
+    {
+     "id": "GH-3",
+     "frames": "847-853 (28.23-28.43 s)",
+     "severity": "nit",
+     "what": "The far-flicker glint on the house rod tip has a horizontal lens streak, so it can read for a moment as a spark or corona on the ordinary rod.",
+     "evidence": "g_tip.png middle panel (f850): a soft star about 70 px across, with a thin horizontal streak about 70 px wide, centred on the tip at (540,820) during 'metal TIP'. It lasts about 6 frames and is faint, and it does draw the eye to the endpoint as intended. Without the streak it would read more clearly as a reflection.",
+     "suggestedFix": "Optional: drop the horizontal streak and keep only the soft sheen on the metal."
+    },
+    {
+     "id": "GH-4",
+     "frames": "958-975 (31.93-32.50 s)",
+     "severity": "nit",
+     "what": "During the crane, the tower's grey concrete shaft and gallery discs pass behind the caption, much like the telescope crossing already accepted as R3-N1.",
+     "evidence": "f965: the light grey shaft and the gallery disc (about 460-680, 1550-1610) sit directly behind 'AIR ITSELF.' The dark outline keeps the caption legible, and no key action is in the band: the tip and channel are at y\u2248985-1050.",
+     "suggestedFix": "None required."
+    },
+    {
+     "id": "GH-5",
+     "frames": "769-868 vs 869-920",
+     "severity": "nit",
+     "what": "The house's copper down-conductor is drawn in the same orange as the prepared-air colour.",
+     "evidence": "In G the conductor along the roof edge is a solid orange stroke (g_tip.png, all panels). At the match cut, the next warm element is the prepared-air band (from 877). The conductor has ink outlines and reads as metal, so this is not confusing in practice. It is only a small overlap in the colour language.",
+     "suggestedFix": "None required. A slightly browner copper would separate it further."
+    }
+   ],
+   "works": "G: the hard cut (768|769) lands on a clear house and rod. The distant strike at 772 (25.73) is behind the far ridge, and its flash lights the whole conductor at once, from the earth clamp up the downpipe and roof edge to the rod (772-776). There is no travelling spark, bracket or zone. Tracking the rod tip shows one smooth, steady push with no reversal: the tip moves from y\u2248668 to y\u2248856 between frames 785 and 846, eases out, finishes about 843-846 (28.1-28.2 s, inside 'metal TIP' 27.89-28.49) and then holds still from 846 to 868 (0.7 s), with rain and clouds still moving. Match cut 868|869: in full-res crops the house rod tip is at (540,817) and the tower rod tip at (540,815), both vertical, with spires of the same scale. The cut adds the cyan beam passing through the tip. H: the camera is still for 869-876, then tilts up smoothly with the growing channel. The tower top descends steadily, about 10 px per frame, from 882 to 898. The channel's lower end stays on the tip, packets climb the line, and the shot holds briefly at 914-922 before the cut. Cut 922|923: the beam keeps its lower-left to upper-right direction. The reveal shows the telescope low-left firing past the left side of the tower, just grazing the tip, with the warm band starting at the tip. The muzzle flashes land at frames 925, 934, 943 and 952 (30.83/31.13/31.43/31.73 s), on the payoff ticks. The wide holds still for about 0.8 s, then cranes up continuously, with no jumps from frame to frame (the tower top moves from y\u2248710 to y\u22481524 between frames 950 and 979, easing out). Global motion measures zero from frame 985, so the camera is on the opening view by 987 (32.9). The tip corona and filaments appear at 987, and the white-core, violet-edge leader climbs the cyan line through the warm band from 989, with the core never washed out (f1000). Loop seam: frames 984-1004 and 0-11 show zero camera shift. The mean absolute difference from 1004 to 0 is 1.08, against 0.78-0.89 for neighbouring frame pairs. Leader length, warm band, packets and the cloud and rain phase all carry over (pair_1004_0.png), so the loop does not visibly reset. All three colours stay distinct throughout H.",
+   "acceptance": "7: Yes, within G and H. G draws no bracket and no zone. The flash catches the whole metal run at once (772-776), and the push settles on the metal tip (846-868), so the comparison is about the physical length of the metal. The only bracket visible near my range is F's, on the guided section above the tip (766-768). The H channel starts at the tower tip; there is a small onset blemish, GH-1, at 877-883. 8: Yes. 868|869 is a precise match cut (tip at 540,817 to 540,815) that adds the laser path and the tower, which is 'the same idea, extended'. 922|923 is the single reveal: it adds the telescope, the summit and how the whole system fits together, with packets leaving on the ticks (925/934/943/952). Both cuts justify the interruption. 9: Yes. The camera is still from 985 onward and through frames 0-11. Frame differences across 1004 to 0 (1.08) are close to ordinary consecutive frames (0.8-0.9). The leader, which incepted at 987, continues into frame 0 with matching length, warm band and cloud and rain phase. The picture shows no reset; I did not inspect the audio."
+  },
+  "verified": [
+   {
+    "id": "GH-1",
+    "frames": "877-884 (29.23-29.47 s)",
+    "severity": "minor",
+    "what": "The prepared-air channel in H starts with a pop and a round blob instead of growing from the tip along the axis.",
+    "evidence": "In full-res crops (source/out/qa_GH/blob2.png, blob.png), frames 877-879 show a faint, nearly horizontal warm smudge about 40-60 px above the rod tip (540,820), offset to the RIGHT of the cyan line and not lying along it. At 880 it jumps to a much brighter, roughly round soft ball about 120 px across, centred on the beam just above the tip (about 540,770). For about 4 frames (880-883) it reads as a glowing ball sitting on the rod tip. It only elongates up the beam from 884. It does not read as a protection zone, but the off-axis smudge and the brightness step between 879 and 880 are visible at full size, and the ball shape breaks the 'thin band grows up from the tip' idea for a moment.",
+    "suggestedFix": "Start the warm band as a thin sliver on the beam axis whose lower end sits at the tip, and ramp its opacity from 877 with no off-axis component. Let it lengthen upward rather than appear as a round glow first.",
+    "verdict": {
+     "real": true,
+     "severity": "minor",
+     "reading": "I pulled frames 874, 876-884, 886 and 890 at full resolution and cut a 360x480 window round the rod tip (x 360-720, y 460-940). I looked at it at native brightness (source/out/qa_VGH/crops.png) and at 2.5x (crops_b.png), and also at the whole of f880.png. Frames 874 and 876 show only the cyan line and the rod tip, with no warm glow. In 877 a very faint warm smudge appears about 40-60 px above the tip, and it is easy to miss at native brightness. In 878-879 it is a little stronger: a flat ellipse about 170 px wide that lies close to horizontal, tilted slightly down to the right. It sits across the beam rather than along it and reaches a bit further to the right of the line. So the \"off-axis, not along the line\" part of the finding is correct. At 880 there is a clear jump: a much brighter, roughly round warm ball about 120-150 px across, centred on the beam just above the tip (about 555,770 in the full frame), with a faint halo above it. In 881-883 it stays a round-to-oval ball sitting on the tip and only starts to lean along the beam. From 884 it stretches up the beam, and by 886 and 890 it is the intended thin warm band along the cyan line. The finding is accurate as described: a faint smudge lying across the beam, a brightness pop between 879 and 880, then about 4 frames (about 0.13 s) of a ball on the tip before it grows along the axis. At normal speed the faint smudge is barely visible. What a phone viewer would mainly notice is a warm puff blooming at the tip and then stretching upward within about 0.25 s, during the camera tilt and on \"EXTENDED\". That mostly still reads as \"the glow starts at the tip and grows\". The pop and the moment of roundness are noticeable, but they are brief and break no locked requirement, so this is minor."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "GH-2",
+    "frames": "772-784 (25.73-26.13 s)",
+    "severity": "nit",
+    "what": "The distant strike in G is far away in depth but sits close to the house on screen.",
+    "evidence": "f773: the bolt runs down at x\u2248960-1000, y\u22481020-1200 and lands on the far ridge line with a glow there. That is about 100-140 px right of the down-conductor (x\u2248862) and at the height of the upper storey. The depth cues hold: it is small, behind the ridge and lights the ridge, not the house. Even so, on a phone the bolt sits right beside the house corner for about 0.4 s.",
+    "suggestedFix": "Optional: make the strike smaller or place it higher and further right (nearer the frame edge), so the gap to the house is clearer."
+   },
+   {
+    "id": "GH-3",
+    "frames": "847-853 (28.23-28.43 s)",
+    "severity": "nit",
+    "what": "The far-flicker glint on the house rod tip has a horizontal lens streak, so it can read for a moment as a spark or corona on the ordinary rod.",
+    "evidence": "g_tip.png middle panel (f850): a soft star about 70 px across, with a thin horizontal streak about 70 px wide, centred on the tip at (540,820) during 'metal TIP'. It lasts about 6 frames and is faint, and it does draw the eye to the endpoint as intended. Without the streak it would read more clearly as a reflection.",
+    "suggestedFix": "Optional: drop the horizontal streak and keep only the soft sheen on the metal."
+   },
+   {
+    "id": "GH-4",
+    "frames": "958-975 (31.93-32.50 s)",
+    "severity": "nit",
+    "what": "During the crane, the tower's grey concrete shaft and gallery discs pass behind the caption, much like the telescope crossing already accepted as R3-N1.",
+    "evidence": "f965: the light grey shaft and the gallery disc (about 460-680, 1550-1610) sit directly behind 'AIR ITSELF.' The dark outline keeps the caption legible, and no key action is in the band: the tip and channel are at y\u2248985-1050.",
+    "suggestedFix": "None required."
+   },
+   {
+    "id": "GH-5",
+    "frames": "769-868 vs 869-920",
+    "severity": "nit",
+    "what": "The house's copper down-conductor is drawn in the same orange as the prepared-air colour.",
+    "evidence": "In G the conductor along the roof edge is a solid orange stroke (g_tip.png, all panels). At the match cut, the next warm element is the prepared-air band (from 877). The conductor has ink outlines and reads as metal, so this is not confusing in practice. It is only a small overlap in the colour language.",
+    "suggestedFix": "None required. A slightly browner copper would separate it further."
+   }
+  ]
+ },
+ {
+  "key": "ALL",
+  "review": {
+   "findings": [
+    {
+     "id": "W-1",
+     "frames": "421-436 (14.03-14.53 s), esp. 429; reads narrow only from ~445 (14.83)",
+     "severity": "minor",
+     "what": "On \"HEATING a narrow channel\" the warm region is still wide and the cyan line sits off-centre in it, so the word \"narrow\" lands before the picture shows a narrow channel.",
+     "evidence": "Full-res f429 (14.30 s, the word \"channel\"): the warm band covers about 55-60% of the frame width (x \u2248 400 to beyond 1000). The cyan line crosses it at about x 560 at mid-height, in the left third of the band, not along its axis. At f415 the whole right two-thirds of the frame is a diffuse warm-brown haze. The band only becomes a clearly narrow strip with the cyan line inside it during the pull-back (f445-475). The brief asks for the channel to read as narrow by 14.30.",
+     "suggestedFix": "Contract the warm band about the cyan axis earlier (by ~14.2), or start the pull-back a few frames sooner so the band's width relative to the frame is under ~30% at the word \"channel\"."
+    },
+    {
+     "id": "W-2",
+     "frames": "878-899 (29.27-29.97 s), esp. 881-890",
+     "severity": "minor",
+     "what": "In H's tilt-up the extending channel first appears as a soft, blurred warm blob that is wider and fuzzier than the restrained band used in A, E and F. It sits a little left of the cyan line, so for about 0.4 s it reads more like a glow or haze than \"the same prepared channel\".",
+     "evidence": "Half-res f890: the warm shape is a feathered oval about 60 px wide (half-res) that starts at the rod tip. Its centre is about 15 half-res px left of the cyan line at mid-length. By f902-922 it has sharpened into the familiar thin band with cyan packets inside, and from then on it matches the opening's colour language.",
+     "suggestedFix": "Grow the band with the same edge softness and width as openSt's band, centred on the beam axis, from the first frame it appears."
+    },
+    {
+     "id": "W-3",
+     "frames": "956-972 (31.87-32.40 s)",
+     "severity": "nit",
+     "what": "The final crane goes from the wide flank reveal to openCam in about 0.5 s. The tower shaft and platforms sweep through the lower frame quickly. It is continuous, with no bounce or reversal, but it is the fastest camera move in the film. This is separate from the known R3-N1 caption crossing.",
+     "evidence": "hcrane strip (950-980, step 2): between f958 and f966 the tower grows from about a third of the frame height to filling it, and the telescope leaves the bottom-left corner within ~4 frames. The motion stays smooth and the camera settles on openCam by ~f976. No jump was found.",
+     "suggestedFix": "Optional: start the crane a few frames earlier (e.g. right after the 31.74 tick) to lower peak speed. Keep the 32.9 openCam lock."
+    },
+    {
+     "id": "W-4",
+     "frames": "772-868 (G), then 869-920 (H)",
+     "severity": "nit",
+     "what": "The house's copper down-conductor is drawn as a saturated orange line along the roof eave, the same hue family as the warm prepared-air accent. The very next shot grows a warm band from a rod tip. Most viewers will read it as metal (it is solid and thin, and the flash lights it at 25.74), but it is the only non-air use of that warm hue in the film.",
+     "evidence": "G_all frames 799-868: an orange diagonal runs from the rod base down to the right along the roof edge and stays visible through the settle on the tip. In H (881+), the warm band appears above the tower's rod tip in a very similar orange.",
+     "suggestedFix": "Shift the conductor toward a duller copper-brown or grey-copper, so warm orange stays reserved for prepared air."
+    },
+    {
+     "id": "W-5",
+     "frames": "144-150 (4.80-5.00 s)",
+     "severity": "nit",
+     "what": "During B's push the side streamer's trailing base runs into the bottom-left corner through the caption band. The active tip that the eye follows is well clear of the band (y \u2248 1000-1070).",
+     "evidence": "Half-res f147: the streamer runs from about (0, 1640 full-res) at the left edge, under \"You see, air / normally RESISTS\", up to the tip at about (500, 980). Only the inactive tail crosses the caption.",
+     "suggestedFix": "None needed. Optionally fade the streamer tail below y \u2248 1550."
+    },
+    {
+     "id": "W-6",
+     "frames": "54-128 (1.80-4.27 s)",
+     "severity": "nit",
+     "what": "After the connection the warm prepared-air sheath around the guided section is largely swamped by the white-violet core. During \"FOLLOWED it\" the image is cyan plus white-violet, with almost no warm accent. The three colours stay distinct; warm simply drops out of the hook after 1.75.",
+     "evidence": "Full-res f0: a clear warm band ahead of the leader (y 700-1090) with the cyan line inside. Full-res f54 and f110: guided core from the tip (470,1380) to (600,900), with only a faint warm tint near (620,800). It reappears in B (f135-141) as the bolt cools.",
+     "suggestedFix": "None required. Optionally let a thin warm rim stay visible just outside the violet edge on the guided section during the restrikes."
+    }
+   ],
+   "works": "I watched it muted from my own whole-film strip (film.png, every 12 frames), read every QA strip in film order, and checked full-res stills at frames 0, 54, 110, 233, 241, 588, 750, 1004 and half-res frames at 141, 147, 415, 429, 523, 547, 890 and 950. Overall the film holds together as one piece. No blocker or major issue survived.\n\n- **A (hook):** reads on a phone from frame 0. The cyan line runs through the rod tip (~465, 1420). The white-violet leader climbs it with a warm band ahead of it, connects at f54 with local cloud-base light and visible branching only past the guided section. The restrikes keep the same event dominant through \"FOLLOWED it\". The rod tip stays just above the caption band.\n- **B:** starts on A's view. The side streamer jabs right from the lit channel (f138-141), the push isolates it (f147-150), and the zoom-dissolve about the tip lands on the same screen point (f150 to f153, tip at about (495, 1070)). No doubled tower. The molecular resistance (tethered electrons tugging and snapping back, attempts at 5.6, 6.35 and 7.05) is legible.\n- **C1:** the hard cut adds a new location. The fingertip lands on the FIRE cap at f240-241 with an anatomically connected arm. The consequences are clear: LED bar sweep, cyan lamp, trace jump at f243, beam in the window from f244. Then one clean release (f259-262).\n- **C2 to C3:** packets run left to right through the optics and turn up the duct. The cut at f290|291 keeps the beam's angle and roughly its screen x. C3 is one continuous crane up the beam past the tower into one packet.\n- **C to D:** the packet sits at screen centre on both sides of f342|343, with the same direction. The D push-in (f362-377) is continuous. The two \"torn away\" sparks land on intact molecules.\n- **D to E:** the warm band with the cyan line inside reads clearly. E's leader runs inside the band while its side probes into ordinary air stall.\n- **E to F:** the pull-out keeps the line's position and direction. F stays in the hook's geography: inception at the tip (f588), climb along the cyan line, connection at 21.85. The 160+ ft bracket runs from the rod tip (500, 1220) to just below the branch point (~620, 870), on the guided section only, and does not compete with the caption.\n- **G:** a single push settles on the tip with rain and the far-flicker glint. There is no zone or bracket.\n- **G to H:** the match cut lands rod tip on rod tip at about (540, 815-860), with the cyan line passing through the tower tip. The 30.74 reveal shows the telescope, tower and extended channel in one view.\n- **Loop:** frames 1000-1004 to 0-4 continue with no reset. The mean absolute luma difference between f1004 and f0 is 2.4/255, and the leader length and position match.\n- **Audio:** I checked these myself.\n  - Audio packet sha256 is 4c3f0b74...9dd6 and decoded PCM sha256 is 6a353e72...ffd0, both identical to the V2 lock (1573 packets).\n  - mix_v2.wav, timeline.json and the narration wav match the hashes in V3_AUDIO_LOCK.md.\n  - ffprobe: 1080x1920, 30/1, nb_read_frames 1005, 33.500 s.\n  - audio_identity.json agrees: lag 0, correlation 0.99986 against the mix.\n\nThe known accepted minors (C-5, DE-7, ED-1, DE-3, R2-N2, R3-N1, the ARM click and muffled bed) look no worse than described. Scratch output is in /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_ALL/ (film.png, film_p0-3.png, dpush.png, hcrane.png, seam_raw.png, q4.png, q5.png and the full-res stills).",
+   "acceptance": "1. **Yes.** From f0 the cyan line runs through the rod tip and the white-violet leader is already climbing it with a warm band ahead (f0, full-res). It aligns and connects by f54 (1.80 s) at a phone-readable scale.\n\n2. **Yes.** During \"and the lightning FOLLOWED it\" (f78-128) the same bolt stays on screen with the guided section brightest, re-brightening on the restrikes (f105-117). There is no cutaway and no character.\n\n3. **Partly, mostly yes.** Each step prepares the next:\n   - B's stalled streamer sets up \"resists\" (f138-234).\n   - The C1 press visibly starts the beam (f240-244).\n   - C2 and C3 carry the packets to the packet that opens D (f342|343).\n   - D's electrons and heating leave the warm band that E's leader runs (f475-553).\n   - E carries into F's guided strike (f564-660).\n   - G's tip match-cuts to H's extension (f868|869).\n\n   The weak point is D's \"narrow channel\" (f421-436), where the band is still wide and off-axis (W-1), and the E-to-F hand-off is briefly empty (accepted ED-1).\n\n4. **Yes, with small caveats.** Cyan line, warm band and white-violet discharge stay separable in A, B, D, E, F and H (e.g. f0, f588, f750, f523, f984). Caveats: warm mostly drops out of the hook after connection (W-6), H's first warm blob is soft (W-2), and G's orange conductor borrows the warm hue (W-4).\n\n5. **Yes.**\n   - 4.31 is continuous.\n   - At f150 to f153 the dissolve lands on the same tip point.\n   - At f290|291 the beam angle is held.\n   - At f342|343 the packet is at screen centre on both sides, same direction.\n   - The E-to-F pull-out holds the line's position and direction (f553-576).\n   - At f868|869 the match cut lands rod tip on rod tip at about (540, 815-860).\n   - The f922|923 reveal is motivated by \"into the SKY\", and the beam still runs up past the tower from low-left.\n\n6. **Yes.** The fingertip is on the cap at f240-241 with wrist, elbow and shoulder connected. The consequences are visible: lamp lights, LED bar sweeps, trace jumps at f243, beam in the window from f244. She releases cleanly at about f259-262.\n\n7. **Yes.** The bracket runs from the rod tip (500, 1220) to about (620, 870) at f750, just below the branch point, so it sits on the guided section only. The label comes in around f732 on \"sixty\". G shows only the metal run and tip, with no zone or bracket (f772-868).\n\n8. **Yes.** The six hard cuts plus the match cut each bring something new:\n   - shelter (f235): new location;\n   - optics (f269): inside the machine;\n   - telescope (f291): the pulses leave the machine;\n   - house (f769): new location;\n   - match to tower (f869): the same idea, extended;\n   - reveal (f923): the whole system.\n\n   There are no near-duplicate angles.\n\n9. **Yes.** f1000-1004 run into f0-4 with the same camera, leader and phase (mean luma difference f1004 vs f0 is 2.4/255). The leader incepts around f986-989 and continues into f0. The audio is the untouched locked stream, with no edit at the seam.\n\n10. **Yes.** I recomputed the hashes:\n    - packets 4c3f0b74...9dd6 and PCM 6a353e72...ffd0, both equal to V2;\n    - mix_v2.wav ed86c578...60d8;\n    - timeline.json 1eb007a4...cac;\n    - narration 6add0360...242f.\n\n    ffprobe gives 1080x1920, 30/1, 1005 frames, 33.500 s video and 33.515 s AAC (with encoder padding), all as locked."
+  },
+  "verified": [
+   {
+    "id": "W-1",
+    "frames": "421-436 (14.03-14.53 s), esp. 429; reads narrow only from ~445 (14.83)",
+    "severity": "minor",
+    "what": "On \"HEATING a narrow channel\" the warm region is still wide and the cyan line sits off-centre in it, so the word \"narrow\" lands before the picture shows a narrow channel.",
+    "evidence": "Full-res f429 (14.30 s, the word \"channel\"): the warm band covers about 55-60% of the frame width (x \u2248 400 to beyond 1000). The cyan line crosses it at about x 560 at mid-height, in the left third of the band, not along its axis. At f415 the whole right two-thirds of the frame is a diffuse warm-brown haze. The band only becomes a clearly narrow strip with the cyan line inside it during the pull-back (f445-475). The brief asks for the channel to read as narrow by 14.30.",
+    "suggestedFix": "Contract the warm band about the cyan axis earlier (by ~14.2), or start the pull-back a few frames sooner so the band's width relative to the frame is under ~30% at the word \"channel\".",
+    "verdict": {
+     "real": true,
+     "severity": "nit",
+     "reading": "File check: ffprobe gives 1080x1920, 30/1, 1005 frames. qa/v3/audio_identity.json shows the REVIEW file's audio packets and PCM are identical to V2 (sha256 4c3f0b74... / 6a353e72..., lag 0), which matches V3_AUDIO_LOCK.md. I extracted f421, f429, f436, f445, f460 and f475 at full resolution, looked at f421, f429, f436 and f445, and measured the red-minus-blue warm profile across rows y=500 and y=960.\n\nOne part of the finding holds. At f429 (14.30 s, caption \"and HEATING a narrow channel\") the warm region is a broad, soft-edged diagonal swath. At y=960 its half-max extent runs from about x 293 to 963, so it fills about 62% of the frame width. At y=500 it runs off the right edge. With molecules this large on screen, it does not yet look like a thin channel. f421 is worse: the whole frame is a brownish haze with no clear band edges. So the brief's \"readable as narrow by 'channel' (14.30)\" is softly missed on that exact frame.\n\nTwo parts of the finding are wrong:\n1. The cyan line is not in the left third of the band. At f429 it sits at x 586 on y=960, about 44% across the band. On y=500 it sits at x 708, about 52% across. That is close to the band's axis.\n2. The band reads as narrow well before ~445. By f436 (14.53 s, the same caption still on screen) it is a clearly bounded diagonal strip, roughly x 450-960 at y=500. Its edges stand out against dark molecule-filled air, and the cyan line runs inside it. It keeps tightening through f445 (about x 380-870), f460 (about 410-736) and f475 (about 430-716).\n\nThe narrowing is one continuous pull-back that resolves within about 0.2 s of the word \"channel\", while the caption is still up. At normal speed on a phone, a first-time viewer sees a warm band tighten around the cyan line as they hear \"narrow channel\". They would not notice a contradiction. This is a nit against the shot brief, not something a viewer would flag."
+    }
+   },
+   {
+    "id": "W-2",
+    "frames": "878-899 (29.27-29.97 s), esp. 881-890",
+    "severity": "minor",
+    "what": "In H's tilt-up the extending channel first appears as a soft, blurred warm blob that is wider and fuzzier than the restrained band used in A, E and F. It sits a little left of the cyan line, so for about 0.4 s it reads more like a glow or haze than \"the same prepared channel\".",
+    "evidence": "Half-res f890: the warm shape is a feathered oval about 60 px wide (half-res) that starts at the rod tip. Its centre is about 15 half-res px left of the cyan line at mid-length. By f902-922 it has sharpened into the familiar thin band with cyan packets inside, and from then on it matches the opening's colour language.",
+    "suggestedFix": "Grow the band with the same edge softness and width as openSt's band, centred on the beam axis, from the first frame it appears.",
+    "verdict": {
+     "real": true,
+     "severity": "nit",
+     "reading": "The file checks out with ffprobe: 1080x1920, 30/1, 1005 frames. qa/v3/audio_identity.json is present and lists the same video stats.\n\nI extracted full-resolution frames 878, 881, 884, 887, 890, 893, 896, 899, 902 and 910 to /home/user/Youtube-videos/Future_Got_Weird/lightning-laser/source/out/qa_VALL/ and viewed f878, f884, f890 and f910.\n\nPart of the finding holds up. In f878 the warm element is only a faint smudge just above the rod tip. In f884 and f890 it is clearly a soft, feathered oval glow hugging the cyan line above the tip. It is visibly fuzzier and wider than the thin, defined band with cyan packets inside it in f910.\n\nI measured the warm extent (R minus B above 15) along rows y = 600 to 900:\n- f881 to f890: about 100 to 125 px wide at full resolution.\n- f893 to f899: about 80 to 90 px.\n- f902: about 70 px.\n- f910: about 57 to 60 px.\n\nSo the band does start wider and softer and narrows steadily over about 0.6 s, which supports the \"wider and fuzzier\" part.\n\nThe \"sits left of the cyan line\" part does not hold. At every measured row from f884 to f910, the warm-weighted centroid lies within 0 to 2 px of the cyan line. Examples:\n- f890: centroid 607 vs cyan 606 at y = 700, and 578 vs 576 at y = 800.\n- f887: centroid 599 vs 596 at y = 700.\n\nThe only offsets are at the extreme lower end of the shape. In f881 at y = 800 the centroid is 12 px right of the line, not left. In f887 at y = 900 it is 14 px right, also not left. No frame shows the shape displaced left of the beam.\n\nAt normal speed, during the tilt-up on \"EXTENDED one\", the shape reads as warm light growing along and centred on the beam and tightening into the familiar band within about half a second. That fits a channel forming and extending. A first-time phone viewer is unlikely to read it as unrelated haze or notice that the band style differs briefly.\n\nOverall this is a real but cosmetic softness and width difference for about 0.4 to 0.6 s, the claimed off-axis placement is refuted, and no locked requirement is broken. Severity: nit."
+    }
+   }
+  ],
+  "nits": [
+   {
+    "id": "W-3",
+    "frames": "956-972 (31.87-32.40 s)",
+    "severity": "nit",
+    "what": "The final crane goes from the wide flank reveal to openCam in about 0.5 s. The tower shaft and platforms sweep through the lower frame quickly. It is continuous, with no bounce or reversal, but it is the fastest camera move in the film. This is separate from the known R3-N1 caption crossing.",
+    "evidence": "hcrane strip (950-980, step 2): between f958 and f966 the tower grows from about a third of the frame height to filling it, and the telescope leaves the bottom-left corner within ~4 frames. The motion stays smooth and the camera settles on openCam by ~f976. No jump was found.",
+    "suggestedFix": "Optional: start the crane a few frames earlier (e.g. right after the 31.74 tick) to lower peak speed. Keep the 32.9 openCam lock."
+   },
+   {
+    "id": "W-4",
+    "frames": "772-868 (G), then 869-920 (H)",
+    "severity": "nit",
+    "what": "The house's copper down-conductor is drawn as a saturated orange line along the roof eave, the same hue family as the warm prepared-air accent. The very next shot grows a warm band from a rod tip. Most viewers will read it as metal (it is solid and thin, and the flash lights it at 25.74), but it is the only non-air use of that warm hue in the film.",
+    "evidence": "G_all frames 799-868: an orange diagonal runs from the rod base down to the right along the roof edge and stays visible through the settle on the tip. In H (881+), the warm band appears above the tower's rod tip in a very similar orange.",
+    "suggestedFix": "Shift the conductor toward a duller copper-brown or grey-copper, so warm orange stays reserved for prepared air."
+   },
+   {
+    "id": "W-5",
+    "frames": "144-150 (4.80-5.00 s)",
+    "severity": "nit",
+    "what": "During B's push the side streamer's trailing base runs into the bottom-left corner through the caption band. The active tip that the eye follows is well clear of the band (y \u2248 1000-1070).",
+    "evidence": "Half-res f147: the streamer runs from about (0, 1640 full-res) at the left edge, under \"You see, air / normally RESISTS\", up to the tip at about (500, 980). Only the inactive tail crosses the caption.",
+    "suggestedFix": "None needed. Optionally fade the streamer tail below y \u2248 1550."
+   },
+   {
+    "id": "W-6",
+    "frames": "54-128 (1.80-4.27 s)",
+    "severity": "nit",
+    "what": "After the connection the warm prepared-air sheath around the guided section is largely swamped by the white-violet core. During \"FOLLOWED it\" the image is cyan plus white-violet, with almost no warm accent. The three colours stay distinct; warm simply drops out of the hook after 1.75.",
+    "evidence": "Full-res f0: a clear warm band ahead of the leader (y 700-1090) with the cyan line inside. Full-res f54 and f110: guided core from the tip (470,1380) to (600,900), with only a faint warm tint near (620,800). It reappears in B (f135-141) as the bolt cools.",
+    "suggestedFix": "None required. Optionally let a thin warm rim stay visible just outside the violet edge on the guided section during the restrikes."
+   }
+  ]
+ }
+]
