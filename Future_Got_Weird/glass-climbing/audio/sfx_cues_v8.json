@@ -320,6 +320,14 @@
   "hero": true
  },
  {
+  "name": "CATCH: a crisp high knock on top, so the contact reads over the first word",
+  "at": 0.08,
+  "frame": 2.4,
+  "dur": 0.05,
+  "gain_db": -18,
+  "hero": true
+ },
+ {
   "name": "the pad seats under the downward load (fine ticks)",
   "at": 0.15,
   "frame": 4.5,
@@ -492,7 +500,15 @@
   "at": 19.7,
   "frame": 591.0,
   "dur": 0.4,
-  "gain_db": -37,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "one patch lets go: a small dry release tick",
+  "at": 19.667,
+  "frame": 590.0,
+  "dur": 0.06,
+  "gain_db": -27,
   "hero": false
  },
  {
@@ -601,10 +617,10 @@
  },
  {
   "name": "section: the brick wedges peel and skid",
-  "at": 35.733,
-  "frame": 1072.0,
+  "at": 35.533,
+  "frame": 1066.0,
   "dur": 0.5,
-  "gain_db": -37,
+  "gain_db": -28,
   "hero": false
  },
  {
@@ -641,8 +657,8 @@
  },
  {
   "name": "the far tether snaps taut and arrests the lurch (cable tension)",
-  "at": 36.75,
-  "frame": 1102.5,
+  "at": 36.79,
+  "frame": 1103.7,
   "dur": 0.32,
   "gain_db": -18,
   "hero": true
