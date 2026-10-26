@@ -51,25 +51,26 @@ export const RodG5: React.FC<{t: number}> = ({t}) => {
   const deckLit = wide ? clamp(1.1 * sk + 0.35 * hold + (t < JUNCTION ? 0.25 : 0)) : 0;
   return (
     <g>
-      <SkyGrad cam={cam} flash={0.45 * fl + 0.15 * fk} id={`${id}-sky`} />
-      <Clouds cam={cam} P={P} flash={0.5 * fl + 0.15 * fk} s={0} drift={drift5(t)} id={`${id}-cl`} />
+      <SkyGrad cam={cam} flash={0.24 * fl + 0.22 * fk} id={`${id}-sky`} />
+      <Clouds cam={cam} P={P} flash={0.28 * fl + 0.24 * fk} s={0} drift={drift5(t)} id={`${id}-cl`} />
       <FarGlow cam={cam} k={deckLit} id={`${id}-sg`} at={STRIKE_TOP_W} size={0.8} />
-      <FarGlow cam={cam} k={1.4 * fk} id={`${id}-fl`} at={FLICK_AT} size={0.55} />
-      <Ranges cam={cam} P={P} flash={0.5 * fl} />
+      <FarGlow cam={cam} k={2.1 * fk} id={`${id}-fl`} at={FLICK_AT} size={0.7} />
+      <Ranges cam={cam} P={P} flash={0.36 * fl} />
       <RodRain cam={cam} rainT={t + 40} front={false} flash={fl} quiet={quiet} />
       <House
         cam={cam}
         light={{flash: clamp(0.75 * fl + 0.2 * groundK(t)), glare: 0, catch: wide ? 0 : 0.5 * flickSheen5(t), tip: clamp((wide ? 0.6 * sk : 0) + 1.6 * fk + 0.3 * flickSheen5(t))}}
         id={`${id}h`}
       />
-      {/* the stroke lights the whole night for a moment (a lift, never a white-out) */}
+      {/* the stroke lights the night a little for a moment (a lift, never a white-out; V5 review END-9: about half V5's
+          first pass, so the picture stays as distant as the quiet crack) */}
       {wide && sk > 0.02 && (
         <g style={{mixBlendMode: 'screen'}}>
           <defs>
             <radialGradient id={`${id}-lift`} gradientUnits="userSpaceOnUse" cx={fmt(tipS.x + 40)} cy={fmt(tipS.y - 380)} r={1250}>
-              <stop offset="0" stopColor="#7A86D8" stopOpacity={clamp(0.36 * sk)} />
-              <stop offset="0.55" stopColor="#5A66B4" stopOpacity={clamp(0.2 * sk)} />
-              <stop offset="1" stopColor="#4A5498" stopOpacity={clamp(0.1 * sk)} />
+              <stop offset="0" stopColor="#7A86D8" stopOpacity={clamp(0.2 * sk)} />
+              <stop offset="0.55" stopColor="#5A66B4" stopOpacity={clamp(0.1 * sk)} />
+              <stop offset="1" stopColor="#4A5498" stopOpacity={clamp(0.04 * sk)} />
             </radialGradient>
             <filter id={`${id}-wb`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
               <feGaussianBlur stdDeviation={22} />

@@ -24,7 +24,9 @@ import {OpenFx, openFxK, PulseBloom} from '../v3/Open3_fx';
 import {extCam5, HAND5} from './cams5_hook';
 
 // ------------------------------------------------------------------ the leader (re-timed V4 states)
-export const INC5 = 2.82; // inception at the rod tip (the rocket has settled into the wide)
+// V5 fix (HOOK-4): the leader incepts earlier, as the in-cloud flashes end (by frame 80), so it is the one bright
+// thing on screen and its climb is longer (2.66 -> the connection at 3.52, 0.86 s)
+export const INC5 = 2.66; // inception at the rod tip (the rocket has nearly settled into the wide)
 export const GUIDED5 = 3.26; // the leader at the top of the guided section ("FOLLOWED")
 export const CONNECT5 = 3.52; // connection to the cloud (the quiet crack)
 export const RESTRIKES5 = [3.64, 3.83];
@@ -293,12 +295,14 @@ type Flash = {p: V3; t0: number; a: number};
 /** the thunder flash (2.02, thunder 2.1): seen through the control-room window, its afterglow carries across the cut
  *  into the exterior (the same place in the deck, upper left in both) */
 export const T_THUNDER = 2.02;
+// V5 fix (HOOK-4): the deck flickers while the camera rockets up (2.36, 2.5) and goes dark by frame 80 (FLASH_END),
+// before the leader incepts: nothing competes with the leader's climb
 const FLASHES: Flash[] = [
   {p: v3(-80, 234, 22), t0: T_THUNDER, a: 0.95},
-  {p: v3(-42, 226, 2), t0: 2.4, a: 1},
-  {p: v3(-90, 236, -38), t0: 2.64, a: 0.85},
-  {p: v3(26, 238, -96), t0: 2.8, a: 0.55},
+  {p: v3(-42, 226, 2), t0: 2.36, a: 1},
+  {p: v3(-90, 236, -38), t0: 2.5, a: 0.7},
 ];
+const FLASH_END = [2.56, 2.66];
 const REACH = 110;
 const nearOf = (F: V3) => {
   const out: (Lobe & {mx: number; mz: number; drift: number; k: number})[] = [];
@@ -353,7 +357,7 @@ export const StormFlash5: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, 
   return (
     <g style={{mixBlendMode: 'screen'}} opacity={fmt(1 - mk)}>
       {FLASHES.map((F, fi) => {
-        const k = F.a * flashK(t, F.t0);
+        const k = F.a * flashK(t, F.t0) * (1 - ss(t, FLASH_END[0], FLASH_END[1]));
         if (k <= 0.01) return null;
         const g = P(F.p);
         if (!g.ok) return null;

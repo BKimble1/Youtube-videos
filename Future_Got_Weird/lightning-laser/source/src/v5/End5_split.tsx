@@ -1,11 +1,12 @@
 // V5 beat H1 (28.94-30.78): the comparison, one split frame (cameras End5_cam.ts).
-//   left   the ordinary rod (G's house, G's end camera): from 29.3 a stepped leader comes down out of the storm, all
-//          the way to the rod; a short streamer leaps from the metal tip and meets it just above the tip (29.86): the
-//          only place this rod reaches. Its glow fades by ~30.35, leaving the plain tip under the rain.
+//   left   the ordinary rod (G's house, G's end camera): on "But these scientists" a stepped leader comes down out of
+//          the storm (visible from ~29.25 as the views draw back), all the way to the rod; a short streamer leaps from the
+//          metal tip and meets it just above the tip (29.5): the only place this rod reaches. Its glow fades by ~29.82,
+//          leaving the plain tip under the rain, and the panel steps back a little (dimmed ~16%) under EXTENDED.
 //   right  the tower's rod tip at the same height and size, the same storm and horizon: the warm channel extends from
 //          the tip along the cyan line (the shimmer, 29.19-30.6), and from 29.95 the guided leader runs up it, high
 //          into the sky, leaving the line above the guided section and branching toward the deck.
-//   Both views draw back together about their tips (29.28-30.62); the divider slides in from the right edge at the
+//   Both views draw back together about their tips (29.06-29.72); the divider slides in from the right edge at the
 //   start (28.94-29.33), pushing G's frame into the left half.
 import React from 'react';
 import {clamp, fmt, hash, noise1} from '../dc/math';
@@ -31,8 +32,10 @@ type Pt = {x: number; y: number};
 const line = (pts: Pt[]) => (pts.length ? `M${pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')}` : '');
 
 // ------------------------------------------------------------------ left: the leader coming down to the house rod
-/** timing: the front leaves the top of the panel at LL0 and meets the tip's streamer at LJ */
-export const LL0 = 29.3, LJ = 29.9;
+/** timing: the front leaves the top of the path at LL0 and meets the tip's streamer at LJ (V5 review END-1: on "But these
+ *  scientists", while the views draw back, so the ordinary strike is over before EXTENDED, 29.92, and the right panel's
+ *  extension and guided leader are the only action under that word) */
+export const LL0 = 29.0, LJ = 29.5;
 /** px per metre on the facade plane at the drawn-back framing (houseSplitCam dollied back to 10.2 x DOLLY_R m) */
 const PXM_REF = 2750 / (10.2 * DOLLY_R);
 /** the path on the facade plane (house-local metres), from well above the panel's top down to the junction */
@@ -81,7 +84,9 @@ const Layers: React.FC<{d: string; w: number; a: number; core: number}> = ({d, w
   </g>
 );
 /** the left leader's light after the junction (a modest brightening, then the channel fades) */
-const leftHold = (t: number) => (t < LJ ? 0 : (0.5 + 0.9 * Math.exp(-(t - LJ) / 0.1)) * (1 - ss(t, 30.08, 30.4)));
+const leftHold = (t: number) => (t < LJ ? 0 : (0.5 + 0.9 * Math.exp(-(t - LJ) / 0.1)) * (1 - ss(t, LJ + 0.1, LJ + 0.34)));
+/** the left panel steps back a little once its strike is over (one focus at a time: the extension on the right) */
+const LEFT_DIM = (t: number) => 0.16 * ss(t, LJ + 0.3, LJ + 0.55);
 const LeftLeader: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, t, id}) => {
   if (t < LL0) return null;
   const joined = t >= LJ;
@@ -199,7 +204,7 @@ const partial3 = (pts: P3s[], s: number): V3[] => {
   }
   return out;
 };
-export const GuidedLeader5: React.FC<{cam: Cam3; s: number; t: number; id: string; tipGlow?: boolean}> = ({cam, s, t, id, tipGlow = true}) => {
+export const GuidedLeader5: React.FC<{cam: Cam3; s: number; t: number; id: string; tipGlow?: boolean; gain?: number}> = ({cam, s, t, id, tipGlow = true, gain = 1}) => {
   if (s <= 0.2) return null;
   const P = projector(cam);
   const main = partial3(BOLT3V.pts, s).map(P).filter((p) => p.ok);
@@ -223,11 +228,11 @@ export const GuidedLeader5: React.FC<{cam: Cam3; s: number; t: number; id: strin
           <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
         </radialGradient>
       </defs>
-      <g filter={`url(#${id}-bl)`} opacity={0.4}>
-        <path d={line(main)} fill="none" stroke="#8C96FF" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" />
+      <g filter={`url(#${id}-bl)`} opacity={fmt(clamp(0.4 * gain))}>
+        <path d={line(main)} fill="none" stroke="#8C96FF" strokeWidth={fmt(22 * Math.sqrt(gain))} strokeLinecap="round" strokeLinejoin="round" />
       </g>
-      {brs.map((b, i) => <Layers key={i} d={line(b)} w={1.2} a={0.85} core={0.4} />)}
-      <Layers d={line(main)} w={2.3} a={1} core={0.8} />
+      {brs.map((b, i) => <Layers key={i} d={line(b)} w={1.2 * (0.7 + 0.3 * gain)} a={0.85} core={0.4 * gain} />)}
+      <Layers d={line(main)} w={2.3 * (0.75 + 0.25 * gain)} a={1} core={0.8 * gain} />
       {tipGlow && <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(30 + 10 * step)} fill={`url(#${id}-tip)`} opacity={0.9} />}
     </g>
   );
@@ -310,6 +315,7 @@ export const SplitH5: React.FC<{t: number}> = ({t}) => {
       <Backdrop t={t} id={`${id}-bd`} fl={0.25 * clamp(leftHold(t))} />
       <g clipPath={`url(#${id}-cl)`}>
         <HouseHalf t={t} id={`${id}-h`} />
+        {LEFT_DIM(t) > 0.002 && <rect x={-20} y={-20} width={fmt(X + 20)} height={1960} fill={INK} opacity={fmt(LEFT_DIM(t))} />}
       </g>
       {X < 1079 && (
         <g>

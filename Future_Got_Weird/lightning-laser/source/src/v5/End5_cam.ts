@@ -6,11 +6,11 @@
 //                   back from their tips together (29.06-29.72, the same move on both sides), so the two rods shrink
 //                   alike, their tips settle at y 1235, and the sky above them opens: above the house rod only rain and
 //                   cloud, above the tower the channel extending along the cyan line high into the sky.
-//   H2 30.78-31.88  "into the SKY—": one cut to the payoff, the hero view of the whole tower from out on the opening
-//                   side at the height of its lower shaft, the warm channel running on from the rod tip along the cyan
-//                   line into the deck. A slow crane up beside the tower as the view tilts up (in motion from cut to
-//                   cut). Its packet train passes the rod tip on each payoff tick. The cut at 31.88 hands over to the
-//                   loop shot (Loop5, inside the control room).
+//   H2 30.78-31.88  "into the SKY—": one cut to the payoff, a long-lens view level with the rod tip from out on the
+//                   opening side: the whole channel large in frame from the tip up into the deck. The camera rises and
+//                   closes in a little as the view tilts up with the packet train toward the deck (in motion from cut
+//                   to cut). A packet passes the rod tip on each payoff tick and enters the cloud base. The cut at
+//                   31.88 hands over to the loop shot (Loop5, inside the control room).
 import {sm5} from '../camera';
 import {clamp} from '../dc/math';
 import {axis3, Cam3, projector, TIP3, v3, V3} from '../v2/p3';
@@ -73,16 +73,17 @@ export const towerSplitCam = (t: number): Cam3 => {
 };
 
 // ------------------------------------------------------------------ H2: the payoff wide
-/** the hero view: out on the opening side at the height of the tower's lower shaft, the whole tower rising from its
- *  summit, and above the rod tip the warm channel running on along the cyan line up into the storm deck. It cranes up
- *  slowly beside the tower as the view tilts up into the sky (linear: in motion from the cut to the cut) */
-export const PAY = {pos: v3(-62, 50, -84), at: 240, sx: 520, sy: 680, f: 660};
-const PAY_RISE = 12, PAY_IN = 5, PAY_TILT = 90;
+/** the payoff (V5 review END-2 / WF-2): a long lens from out on the opening side, level with the rod tip ~200 m off,
+ *  so the whole extended channel is large in frame, running from the rod tip (low left, clear of the caption text) up
+ *  into the storm deck, whose base fills the top of the frame. In motion from the cut to the cut (linear): the camera
+ *  rises 16 m and closes ~30 m on the channel as the view tilts up with the packets, from the tip toward the deck where
+ *  the discharge spreads (End5_cloud). One lens throughout (no zoom). */
+export const PAY0 = {pos: v3(-60, 124, -200), h: 380, sx: 420, sy: 840, f: 2000};
+export const PAY1 = {pos: v3(-48, 140, -172), h: 640, sx: 480, sy: 560, f: 2000};
 export const payCam = (t: number): Cam3 => {
   const k = u(t, H_PAY, B5.H3);
-  // (in toward the tower along the line of sight, horizontally)
-  const d = Math.hypot(PAY.pos.x, PAY.pos.z);
-  return lookAtScreen(v3(PAY.pos.x * (1 - (PAY_IN * k) / d), PAY.pos.y + PAY_RISE * k, PAY.pos.z * (1 - (PAY_IN * k) / d)), axis3(PAY.at), PAY.f, PAY.sx, PAY.sy + PAY_TILT * k, 0);
+  const a = PAY0, b = PAY1, l = (x: number, y: number) => x + (y - x) * k;
+  return lookAtScreen(v3(l(a.pos.x, b.pos.x), l(a.pos.y, b.pos.y), l(a.pos.z, b.pos.z)), axis3(l(a.h, b.h)), l(a.f, b.f), l(a.sx, b.sx), l(a.sy, b.sy), 0);
 };
 /** the warm channel's top in the payoff and at the end of the split (site px along the axis: at the cloud base,
  *  ~230 m up) */
@@ -93,5 +94,6 @@ const P_V = PULSE.SPEED * PULSE.R_FAST, TIP_H = -1;
 export const payPulses = (t: number) => {
   const out: number[] = [];
   for (let j = -8; j <= 8; j++) out.push(TIP_H + (t - (EV.payoffTicks[0] + 0.3 * j)) * P_V);
-  return out.filter((h) => h > -880 && h < 1200);
+  // (each enters the cloud base and is gone inside it)
+  return out.filter((h) => h > -880 && h < PAY_TOP + 50);
 };

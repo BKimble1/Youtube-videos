@@ -3,13 +3,16 @@
 // The pulse train passes again and again (one packet every 0.2 s, illustrative slow motion). Each packet:
 //   - ionizes the air it passes: the molecules on the path glitter white-cyan and a white-cyan sheath trails it,
 //     fading in about 0.15 s;
-//   - heats it: a V-shaped pressure wake spreads out from the path behind the packet, and where it passes the
-//     molecules are pushed outward (their displacement accumulates pulse by pulse, so the air on the path thins);
+//   - heats it: the hot air shoves outward. Behind the packet, soft pressure ripples (small crescents) run out
+//     sideways from the path and die away at the band's edge, and as each passes, the molecules there are pushed
+//     outward (their displacement accumulates pulse by pulse, so the air on the path thins);
 //   - adds warmth: the restrained warm band along the path brightens and widens a step with every packet, the new
 //     warmth following the packet up the frame.
-// By "channel" (14.30) the band is a narrow warm channel of lower density (a few molecules stay inside), the cyan line
-// solid within it. The camera rides slowly up the axis with the pulses (one direction, constant speed; no zoom). The
-// axis runs up and to the right at MICRO_ANG through (AX, AY), where D2's and E2's do (cut-to-cut eye position).
+// By "channel" (14.30) the band is a narrow warm channel of lower density (a few molecules stay inside, as many on
+// each side), centred on the cyan line. The camera rides slowly up the axis with the pulses (one direction, constant
+// speed; no zoom), and the dark base of the storm cloud slides in at the top of the frame: this stretch of air lies
+// under the storm (D4 then shows it at storm scale). The axis runs up and to the right at MICRO_ANG through (AX, AY),
+// where D2's and E2's do (cut-to-cut eye position).
 import React from 'react';
 import {mix} from '../dc/color';
 import {clamp, fmt, hash, noise1} from '../dc/math';
@@ -34,7 +37,7 @@ const N_HEAT = 7; // the pulses that heat the slab during the shot
 const tauK = (k: number, y: number) => PULSES[k] - y / V_P;
 /** packet head (slab y) */
 const headY = (k: number, t: number) => -V_P * (t - PULSES[k]);
-/** the pressure wake's outward speed (px/s): its front trails each packet as a V */
+/** the pressure wake's outward speed (px/s) */
 const C_W = 820;
 /** heating per pulse: a smooth step over T_H after the packet passes */
 const T_H = 0.22;
@@ -50,9 +53,12 @@ const SPD = 56;
 type Air = {x: number; y: number; o2: boolean; th: number; ph: number; id: number; keep: boolean; r1: number};
 const airCell = (i: number, j: number): Air => {
   const id = (i * 7919 + j * 104729 + 977) | 0;
+  // the molecules that stay in the channel are chosen in pairs of cells mirrored about the path (i, -1 - i), so as
+  // many stay on each side and the thinned channel is centred on the line (their own positions stay independent)
+  const kid = ((i >= 0 ? i : -1 - i) * 7919 + j * 104729 + 977) | 0;
   return {
     x: (i + 0.15 + 0.7 * hash(id, 3)) * SPD, y: (j + 0.15 + 0.7 * hash(id, 5)) * SPD, o2: hash(id, 7) < 0.21,
-    th: 360 * hash(id, 9), ph: 6.283 * hash(id, 11), id, keep: hash(id, 13) < 0.2, r1: hash(id, 15),
+    th: 360 * hash(id, 9), ph: 6.283 * hash(id, 11), id, keep: hash(kid, 13) < 0.16, r1: hash(id, 15),
   };
 };
 /** a molecule's push: when the pulse's wake front reaches it (|x|/C_W after the packet), it is pushed outward a step;
@@ -110,6 +116,51 @@ const Backdrop: React.FC<{mc: MCam; t: number}> = ({mc, t}) => {
     </g>
   );
 };
+/** the storm cloud's base sliding in at the top of the frame as the camera rides up the path: a dark, lobed underside
+ *  level across the frame, behind the slab: a back row of big lobes, a front row of smaller ones hanging lower, each
+ *  with a soft lighter rim on its underside (thinner cloud at the edge) */
+const BASE_LOBES = [
+  ...Array.from({length: 7}, (_, i) => ({x: -80 + i * 190 + 60 * (hash(i, 331) - 0.5), r: 150 + 90 * hash(i, 333), dy: -40 * hash(i, 335), row: 0})),
+  ...Array.from({length: 9}, (_, i) => ({x: -40 + i * 140 + 50 * (hash(i, 341) - 0.5), r: 70 + 60 * hash(i, 343), dy: 20 + 50 * hash(i, 345), row: 1})),
+];
+const CloudBase: React.FC<{t: number; front?: boolean}> = ({t, front = false}) => {
+  const u = clamp((t - T0) / (T1 - T0));
+  const yE = 10 + 300 * u; // the lowest lobes' edge on screen: it slides down as the camera rises toward it
+  const rows = [0, 1].map((row) => BASE_LOBES.filter((l) => l.row === row).map((l) => ({cx: l.x + 8 * noise1(t * 0.4, l.x), cy: yE - l.r + l.dy - (row ? 0 : 50), r: l.r})));
+  const circ = (l: {cx: number; cy: number; r: number}) => `M${fmt(l.cx + l.r)},${fmt(l.cy)} a${fmt(l.r)},${fmt(l.r)} 0 1,0 ${fmt(-2 * l.r)},0 a${fmt(l.r)},${fmt(l.r)} 0 1,0 ${fmt(2 * l.r)},0`;
+  const rim = (l: {cx: number; cy: number; r: number}) => `M${fmt(l.cx - l.r * 0.9)},${fmt(l.cy + l.r * 0.42)} A${fmt(l.r)},${fmt(l.r)} 0 0,0 ${fmt(l.cx + l.r * 0.9)},${fmt(l.cy + l.r * 0.42)}`;
+  const top = Math.min(...rows.flat().map((l) => l.cy));
+  // in front of the slab: the same masses as a haze, so the molecules and the warm band fade into the cloud
+  if (front)
+    return (
+      <g filter="url(#d3-cbb)" opacity={0.6}>
+        <rect x={-60} y={-800} width={1200} height={fmt(top + 800)} fill="#0D1622" />
+        <path d={rows[0].map(circ).join(' ')} fill="#0D1622" />
+        <path d={rows[1].map(circ).join(' ')} fill="#0B131D" />
+      </g>
+    );
+  return (
+    <g>
+      <defs>
+        <filter id="d3-cbb" filterUnits="userSpaceOnUse" x={-300} y={-800} width={1680} height={1700}>
+          <feGaussianBlur stdDeviation={5} />
+        </filter>
+        <filter id="d3-cbr" filterUnits="userSpaceOnUse" x={-300} y={-800} width={1680} height={1700}>
+          <feGaussianBlur stdDeviation={7} />
+        </filter>
+      </defs>
+      <g filter="url(#d3-cbb)">
+        <rect x={-60} y={-800} width={1200} height={fmt(top + 800)} fill="#0D1622" />
+        <path d={rows[0].map(circ).join(' ')} fill="#0D1622" />
+      </g>
+      <path d={rows[0].map(rim).join(' ')} fill="none" stroke="#2E4260" strokeWidth={14} strokeOpacity={0.45} filter="url(#d3-cbr)" />
+      <g filter="url(#d3-cbb)">
+        <path d={rows[1].map(circ).join(' ')} fill="#09111A" />
+      </g>
+      <path d={rows[1].map(rim).join(' ')} fill="none" stroke="#2A3D58" strokeWidth={10} strokeOpacity={0.55} filter="url(#d3-cbr)" />
+    </g>
+  );
+};
 /** rain: thin falling streaks over everything (screen space, wind-slanted), held back in the caption band */
 const RAIN = Array.from({length: 64}, (_, i) => ({x: 1140 * hash(i, 401) - 30, ph: hash(i, 403), L: 46 + 40 * hash(i, 405), sp: 0.85 + 0.3 * hash(i, 407), a: 0.1 + 0.12 * hash(i, 409)}));
 const Rain: React.FC<{t: number}> = ({t}) => {
@@ -164,7 +215,26 @@ const Band: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) =>
   );
 };
 
-// ------------------------------------------------------------------ the pulses: packet, ionized sheath, pressure wake
+// ------------------------------------------------------------------ the pulses: packet, ionized sheath, pressure ripples
+/** the ripples: at fixed heights along the path (every ARC_SP px of the slab, so the marks do not slide with the
+ *  packet) a pair of soft crescents runs out from the axis as the wake front passes, fading out by the band's edge */
+const ARC_SP = 150, ARC_AGE = (CLEAR + 10) / C_W;
+const Ripples: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) => {
+  const els: React.ReactNode[] = [];
+  for (let j = Math.floor(box.y0 / ARC_SP); j <= Math.ceil(box.y1 / ARC_SP); j++) {
+    const y = j * ARC_SP + 30 * (hash(j, 821) - 0.5);
+    for (let k = 0; k < PULSES.length; k++) {
+      const age = t - tauK(k, y);
+      if (age <= 0 || age >= ARC_AGE) continue;
+      const u = age / ARC_AGE;
+      const a = 0.62 * Math.pow(1 - u, 1.3) * ss(age, 0, 0.03);
+      const xw = 16 + C_W * age, h = 34 + 34 * u, b = 9 + 8 * u;
+      const d = [1, -1].map((sg) => `M${fmt(sg * (xw - b))},${fmt(y - h)} Q${fmt(sg * (xw + b))},${fmt(y)} ${fmt(sg * (xw - b))},${fmt(y + h)}`).join(' ');
+      els.push(<path key={`${j}-${k}`} d={d} fill="none" stroke="#E2F4FF" strokeOpacity={fmt(a)} strokeWidth={fmt(5 - 2 * u)} strokeLinecap="round" />);
+    }
+  }
+  return <g style={{mixBlendMode: 'screen'}} filter="url(#d3-wb)">{els}</g>;
+};
 const Pulses: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) => {
   const els: React.ReactNode[] = [];
   PULSES.forEach((_, k) => {
@@ -174,9 +244,6 @@ const Pulses: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) 
     // the ionized sheath trailing the packet: white-cyan, fading over ~0.12 s of its passage
     const tail = V_P * 0.16;
     const y0 = Math.max(hy, box.y0), y1 = Math.min(hy + tail, box.y1);
-    // the V-shaped pressure wake: front at |x| = C_W * (age) behind the head, fading over 0.42 s
-    const wakeL = Math.min(V_P * 0.26, box.y1 - hy);
-    const wx = (C_W * wakeL) / V_P;
     els.push(
       <g key={k} style={{mixBlendMode: 'screen'}}>
         <defs>
@@ -185,12 +252,6 @@ const Pulses: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) 
             <stop offset="0.2" stopColor="#CFF6FF" stopOpacity={0.45} />
             <stop offset="0.55" stopColor="#9FE6F5" stopOpacity={0.14} />
             <stop offset="1" stopColor="#7FD8EC" stopOpacity={0} />
-          </linearGradient>
-          <linearGradient id={`${id}-w`} gradientUnits="userSpaceOnUse" x1={0} y1={fmt(hy)} x2={0} y2={fmt(hy + V_P * 0.26)}>
-            <stop offset="0" stopColor="#DDF4FF" stopOpacity={0} />
-            <stop offset="0.05" stopColor="#DDF4FF" stopOpacity={0.5} />
-            <stop offset="0.45" stopColor="#C8E4F5" stopOpacity={0.22} />
-            <stop offset="1" stopColor="#C8E4F5" stopOpacity={0} />
           </linearGradient>
           <radialGradient id={`${id}-b`}>
             <stop offset="0" stopColor={PAL.packet} stopOpacity={0.75} />
@@ -208,9 +269,6 @@ const Pulses: React.FC<{box: {y0: number; y1: number}; t: number}> = ({box, t}) 
             <rect x={-40} y={fmt(y0)} width={80} height={fmt(y1 - y0)} fill={`url(#${id}-s)`} opacity={0.3} filter="url(#d3-sb)" />
             <rect x={-3.5} y={fmt(y0)} width={7} height={fmt(y1 - y0)} fill={`url(#${id}-s)`} opacity={0.45} />
           </g>
-        )}
-        {wakeL > 0 && (
-          <path d={`M${fmt(-wx)},${fmt(hy + wakeL)} L0,${fmt(hy)} L${fmt(wx)},${fmt(hy + wakeL)}`} fill="none" stroke={`url(#${id}-w)`} strokeWidth={9} strokeLinejoin="round" filter="url(#d3-wb)" />
         )}
         <ellipse cx={0} cy={fmt(hy + 70)} rx={90} ry={280} fill={`url(#${id}-b)`} />
         <path d={`M-10,${fmt(hy + 6)} Q-9,${fmt(hy - 26)} 0,${fmt(hy - 36)} Q9,${fmt(hy - 26)} 10,${fmt(hy + 6)} L2.5,${fmt(hy + 260)} L-2.5,${fmt(hy + 260)} Z`} fill={`url(#${id}-c)`} />
@@ -340,11 +398,16 @@ export const CrossD3: React.FC<{t: number}> = ({t}) => {
         </linearGradient>
       </defs>
       <Backdrop mc={mc} t={t} />
+      <CloudBase t={t} />
       <FarDots mc={mc} t={t} />
       <g transform={camTr(mc)}>
         <Band box={box} t={t} />
         <Line box={box} />
         <Air mc={mc} t={t} />
+      </g>
+      <CloudBase t={t} front />
+      <g transform={camTr(mc)}>
+        <Ripples box={box} t={t} />
         <Pulses box={box} t={t} />
       </g>
       <Rain t={t} />

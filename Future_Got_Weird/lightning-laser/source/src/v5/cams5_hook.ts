@@ -57,9 +57,11 @@ export const CUT_X = 2.25; // the cut to the exterior (between frames 67 and 68)
 /** the stage camera keys on the loop clock: [tau, centre x, centre y, ln z]. H3 opens wider on her and the window,
  *  pushes in slowly, gathers pace as her hand goes to the control, peaks round the press, eases through "LASER", and
  *  creeps in toward her face through the surge */
-const KX: K1[] = [[-1.65, 668], [-0.6, 652], [0.0, 640], [0.3, 638], [1.2, 628], [1.8, 622]];
-const KY: K1[] = [[-1.65, 842], [-0.6, 880], [0.0, 930], [0.3, 958], [1.2, 970], [1.8, 966]];
-const KZ: K1[] = [[-1.65, Math.log(1.24)], [-0.6, Math.log(1.4)], [0.0, Math.log(1.72)], [0.3, Math.log(1.98)], [1.2, Math.log(2.1)], [1.8, Math.log(2.2)]];
+// V5 fix (HOOK-1): framed for the control further along the panel (her face at the left, the cap and its hazard ring
+// at the right, the elbow above the caption band); every key sequence is monotone (no reversal anywhere)
+const KX: K1[] = [[-1.65, 668], [-0.6, 662], [0.0, 658], [0.3, 656], [1.2, 653], [1.8, 650]];
+const KY: K1[] = [[-1.65, 842], [-0.6, 882], [0.0, 940], [0.3, 974], [1.2, 988], [1.8, 992]];
+const KZ: K1[] = [[-1.65, Math.log(1.24)], [-0.6, Math.log(1.4)], [0.0, Math.log(1.7)], [0.3, Math.log(1.9)], [1.2, Math.log(1.98)], [1.8, Math.log(2.06)]];
 const fx = pchip(KX), fy = pchip(KY), fz = pchip(KZ);
 /** a constant Dutch angle for the whole room set (deg, + clockwise): the window side is the high side */
 export const ROOM_ROLL = -3.5;
@@ -73,11 +75,19 @@ const WHIP_Y = (tau: number) => {
  *  one way only), then holds */
 const headX = (t: number) => 1080 - manJoints(op5(t).pose).head.x;
 const HX0 = headX(T_REC);
+/** V5 fix (HOOK-6): the track follows her head back only (a running minimum: as she then looks up, her head comes a
+ *  little forward again inside a frame that holds), so the move never reverses before the whip */
+const trackX = (tau: number) => {
+  const t1 = Math.min(tau, T_REC1 + 0.2);
+  let m = HX0;
+  for (let u = T_REC; u <= t1 + 1e-9; u += 1 / 120) m = Math.min(m, headX(u));
+  return 0.85 * (Math.min(m, headX(t1)) - HX0);
+};
 export const roomCam5 = (t: number): RoomCam5 => {
   const tau = tau3(t);
   const k = Math.min(tau, 1.8);
   const whip = tau > WHIP0 ? WHIP_Y(tau) : 0;
-  const track = tau > T_REC ? 0.85 * (headX(Math.min(tau, T_REC1 + 0.2)) - HX0) : 0;
+  const track = tau > T_REC ? trackX(tau) : 0;
   return {x: fx(k) + track, y: fy(k) - whip, z: Math.exp(fz(k) + (tau > 1.8 ? 0.05 * Math.min(tau - 1.8, 0.4) : 0)), roll: ROOM_ROLL, whip};
 };
 /** the room's screen transform (stage -> screen) */
@@ -128,6 +138,7 @@ export const ROCK1 = 3.05;
 /** after the connection, one push in onto openCam (sm5, zero relative velocity at HAND5): into the channel, as B's
  *  push into the air beside it continues */
 export const PUSH0 = 3.58;
+const CREEP = [2.62, 3.62];
 const W_DRIFT = v3(0.5, 0.6, 0.3); // m/s: the wide drifts on up slowly (never dead still)
 const rockW = (t: number) => {
   const u = clamp((t - CUT_X) / (ROCK1 - CUT_X));
@@ -150,6 +161,9 @@ export const extCam5 = (t: number): Cam3 => {
   // the rise: position and view together (the lens lengthens a little later, so the deck stays wide on the way up)
   let k = lerpKey(KA, kW(t), w);
   k = {...k, f: Math.exp(Math.log(KA.f) + (Math.log(KW0.f) - Math.log(KA.f)) * ss(w, 0.25, 1))};
+  // V5 fix (HOOK-4): while the leader climbs the lens creeps in (10 %), so the climb reads larger; the push onto
+  // openCam after the connection carries the same zoom on (one direction from the wide to 4.2)
+  k = {...k, f: k.f * Math.exp(Math.log(1.1) * ss(t, CREEP[0], CREEP[1]))};
   if (t > PUSH0) {
     const p = ss(t, PUSH0, HAND5);
     const q = p * p * p * (p * (p * 6 - 15) + 10);

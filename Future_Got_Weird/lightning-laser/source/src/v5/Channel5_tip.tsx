@@ -1,14 +1,16 @@
 // V5 E1 (15.83-16.92) "That gave electricity": from the rod tip, looking up the channel into the storm.
 //   15.83-15.98  the camera hangs beside the rod, 4 m below its tip and 9 m out, looking up past it: the rod rises
 //                from the bottom of the frame to its tip, the cyan line and the warm channel climb from just beside the
-//                tip up into the storm deck overhead, packets racing up it. The field builds at the tip: violet corona
-//                sparks crackle and reach toward the channel.
+//                tip up into the storm deck overhead, packets racing up it. The field builds at the tip: it glows from
+//                the cut, and violet corona sparks crackle and reach toward the channel, brighter frame by frame.
 //   15.98        (E's leader crackle starts) the upward leader leaps from the tip into the channel: a flash at the tip,
 //                then a stepped leader (white core, violet edges) climbs the channel step by step, stalled side jabs
 //                brushing out behind its tip.
-//   15.98-16.92  the view tilts up with the leader (one eased move, a slight rise), so its tip climbs to where E2's
-//                molecular leader tip is in E2's first frame (about (605, 925)) with the channel running up and to the
-//                right at about MICRO_ANG: the cut to E2 reads as "closer, into the channel".
+//   15.98-16.92  the camera rises with the leader to the rod tip's height and tilts up after it (one eased move),
+//                which carries the tip quickly down through the caption band and out of the frame (by about 16.4),
+//                then settles while the leader climbs on up the frame to where E2's molecular leader tip is in E2's
+//                first frame (about (605, 925)), with the channel running up and to the right at about MICRO_ANG: the
+//                cut to E2 reads as "closer, into the channel".
 import React from 'react';
 import {mix} from '../dc/color';
 import {clamp, fmt, hash, noise1} from '../dc/math';
@@ -75,17 +77,21 @@ const camChannel = (pos: V3, at: V3, sx: number, sy: number, f: number, h: numbe
   for (let i = 0; i < 10; i++) r -= (A(r) - ang) / ((A(r + 0.01) - A(r - 0.01)) / 0.02);
   return mk(r);
 };
-/** beside the rod, 4 m below its tip and 9 m out (toward the main views' side); a slight rise during the tilt */
-const POS0 = v3(-5, 120, -8.4), POS1 = v3(-4.4, 121.6, -8.0);
+/** beside the rod, 4 m below its tip and 9 m out (toward the main views' side); the camera then rises with the leader
+ *  to the tip's own height, so the tip drops out of the bottom of the frame (it never parks behind the caption) */
+const POS0 = v3(-5, 120, -8.4), POS1 = v3(-5, 124.6, -8.4);
 /** start: the rod tip low centre, the channel climbing up-right through the frame toward the storm deck */
 const K0 = camChannel(POS0, TIP3, 470, 1300, 760, 60, 19);
 /** end: the leader tip where E2's starts (about (604, 926)), the channel there at MICRO_ANG as in E2 */
 const S_END = leaderS(E1_T1);
-const K1 = camChannel(POS1, ptAtS(S_END), 604, 926, 860, (ptAtS(S_END).y - 125.7) / 0.1615, MICRO_ANG);
-/** the tilt: held (a slow creep) while the field builds, then up with the leader; still moving a little at the cut */
+const K1 = camChannel(POS1, ptAtS(S_END), 604, 926, 820, (ptAtS(S_END).y - 125.7) / 0.1615, MICRO_ANG);
+/** the move: held (a slow creep) while the field builds, then up with the leader as it leaps off the tip, carrying
+ *  the tip through the caption band and out of the frame by about 16.4; it settles as the leader climbs on up the
+ *  frame into E2's start (still moving a little at the cut) */
 const tiltK = (t: number) => {
-  const u = clamp((t - 15.9) / (17.0 - 15.9));
-  return u * u * (3 - 2 * u);
+  const u = clamp((t - 15.93) / (17.0 - 15.93));
+  const w = u * u * (3 - 2 * u);
+  return 1 - (1 - w) ** 3;
 };
 export const tipCam = (t: number): Cam3 => {
   const k = tiltK(t);
@@ -99,7 +105,8 @@ export const tipCam = (t: number): Cam3 => {
 };
 
 // ------------------------------------------------------------------ the field at the tip (close view corona)
-/** violet-white corona filaments from the rod tip (flickering, reaching up toward the channel), and a soft glow */
+/** violet-white corona filaments from the rod tip (flickering, reaching up toward the channel), and a soft glow; k is
+ *  the field (0..1). From the cut the tip already glows and crackles, and both build until the leader leaps */
 const Corona: React.FC<{cam: Cam3; t: number; k: number; id: string}> = ({cam, t, k, id}) => {
   if (k <= 0.01) return null;
   const P = projector(cam);
@@ -107,17 +114,17 @@ const Corona: React.FC<{cam: Cam3; t: number; k: number; id: string}> = ({cam, t
   if (!tp.ok) return null;
   const sc = clamp(cam.f / tp.z, 20, 260); // screen px per metre at the tip
   const fl: string[] = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 9; i++) {
     // each filament lives ~2-3 frames, re-seeded on its own clock (deterministic)
     const ph = t * (14 + 5 * hash(i, 751)) + hash(i, 753);
     const gen = Math.floor(ph);
     const life = ph - gen;
-    if (life > 0.7 || hash(gen * 13 + i, 755) > 0.35 + 0.5 * k) continue;
-    const ang = (-75 + 150 * hash(gen * 17 + i, 757)) * (Math.PI / 180); // from straight up
-    const L = sc * (0.6 + 1.2 * hash(gen * 19 + i, 759)) * (0.6 + 0.4 * k);
+    if (life > 0.72 || hash(gen * 13 + i, 755) > 0.4 + 0.5 * k) continue;
+    const ang = (-80 + 160 * hash(gen * 17 + i, 757)) * (Math.PI / 180); // from straight up
+    const L = sc * (0.8 + 1.5 * hash(gen * 19 + i, 759)) * (0.55 + 0.45 * k);
     let x = tp.x, y = tp.y, a = ang;
     let d = `M${fmt(x)},${fmt(y)}`;
-    const n = 4;
+    const n = 5;
     for (let j = 0; j < n; j++) {
       a += (hash(gen * 23 + i * 7 + j, 761) - 0.5) * 0.9;
       x += Math.sin(a) * (L / n);
@@ -126,19 +133,20 @@ const Corona: React.FC<{cam: Cam3; t: number; k: number; id: string}> = ({cam, t
     }
     fl.push(d);
   }
-  const r = sc * (0.9 + 0.4 * k) * (1 + 0.15 * noise1(t * 30, 763));
+  const fk = 0.75 + 0.25 * Math.abs(noise1(t * 24, 765));
+  const r = sc * (1.0 + 0.7 * k) * (1 + 0.15 * noise1(t * 30, 763));
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
         <radialGradient id={`${id}-cg`}>
-          <stop offset="0" stopColor="#F2F0FF" stopOpacity={0.75} />
-          <stop offset="0.25" stopColor={PAL.mid} stopOpacity={0.35} />
+          <stop offset="0" stopColor="#F4F2FF" stopOpacity={0.85} />
+          <stop offset="0.22" stopColor={PAL.mid} stopOpacity={0.42} />
           <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
         </radialGradient>
       </defs>
-      <circle cx={fmt(tp.x)} cy={fmt(tp.y)} r={fmt(r)} fill={`url(#${id}-cg)`} opacity={fmt(clamp(0.5 * k + 0.3 * k * Math.abs(noise1(t * 24, 765))))} />
-      <path d={fl.join(' ')} fill="none" stroke={PAL.halo} strokeOpacity={0.42 * k} strokeWidth={fmt(clamp(sc * 0.07, 5, 12))} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={fl.join(' ')} fill="none" stroke="#F0EEFF" strokeOpacity={0.95 * k} strokeWidth={fmt(clamp(sc * 0.02, 1.8, 3.6))} strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={fmt(tp.x)} cy={fmt(tp.y)} r={fmt(r)} fill={`url(#${id}-cg)`} opacity={fmt(clamp((0.45 + 0.4 * k) * fk))} />
+      <path d={fl.join(' ')} fill="none" stroke={PAL.halo} strokeOpacity={0.5 * k} strokeWidth={fmt(clamp(sc * 0.1, 7, 16))} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={fl.join(' ')} fill="none" stroke="#F0EEFF" strokeOpacity={clamp(0.6 + 0.4 * k)} strokeWidth={fmt(clamp(sc * 0.032, 2.4, 4.5))} strokeLinecap="round" strokeLinejoin="round" />
     </g>
   );
 };
@@ -258,13 +266,14 @@ export const TipE1: React.FC<{t: number}> = ({t}) => {
   const s = leaderS(t);
   const pulses = stormPulses(t);
   const tag = `e1-${Math.round(t * 30)}`;
-  const field = ss(t, E1_T0 - 0.1, INC_E1) * (s > 0 ? clamp(1 - (s - 1) / 4) : 1);
+  // the field at the tip: glowing from the cut, building to the leap; a little corona stays under the climbing leader
+  const field = s > 0 ? 0.3 + 0.7 * clamp(1 - (s - 1) / 3) : 0.5 + 0.5 * ss(t, E1_T0, INC_E1 - 0.02);
   const sf = stepFlash(t);
   const st = {s, core: s > 0 ? 0.9 + 0.25 * sf : 0, flash: s > 0 ? 0.16 + 0.3 * sf : 0, beam: 0.9, pulses, channel: 0, tipCorona: 0};
   return (
     <View3 cam={cam} st={st} t={t} tag={tag}>
       <Tube cam={cam} t={t} id={`${tag}-tu`} />
-      <Rod cam={cam} lit={clamp(0.25 * sf + (s > 0 ? 0.15 : 0))} id={`${tag}-rod`} />
+      <Rod cam={cam} lit={clamp(0.25 * sf + (s > 0 ? 0.15 : 0.12 * field))} id={`${tag}-rod`} />
       <PulseBloom cam={cam} pulses={pulses} k={0.8} id={`${tag}-pb`} />
       <Corona cam={cam} t={t} k={field} id={`${tag}-co`} />
       <StepFlash cam={cam} s={s} a={sf} id={`${tag}-sf`} />

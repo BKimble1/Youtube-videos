@@ -14,12 +14,14 @@
 // The x-ray frames (the crack) swap the figure for its own outline turned x-ray with the glowing skeleton inside.
 import React from 'react';
 import {mix, shade} from '../dc/color';
-import {Man} from '../dc/Man';
+import {manJoints} from '../dc/Man';
+import {Man5} from './Room5_man';
 import {clamp, fmt, hash} from '../dc/math';
 import {H_REST, OPERATOR} from '../cast';
 import {ss} from '../lib';
-import {Skeleton, XRayFilter} from '../art/Skeleton';
-import {Cam3} from '../v2/p3';
+import {XRayFilter} from '../art/Skeleton';
+import {Skeleton5} from './Room5_skel';
+import {axis3, Cam3, projector} from '../v2/p3';
 import {EXIT_H} from '../world/site';
 import {stream} from '../v2/shots3d';
 import {View3, St} from '../v3/view3';
@@ -36,10 +38,12 @@ import {flashK, StormFlash5, T_THUNDER} from './Hook5_ext';
 import {capAt, CAP_R, DESK_Y, FIRE, MIRROR, op5, PANEL, T_CHARGE, T_CRACK, T_RELAY, T_SURGE0, T_TOUCH, WIN, xrayOn} from './Room5_op';
 
 /** the x-ray frames' look: the first on a white-violet flash, the second with the room dropped to dark violet, the
- *  last (after one normal frame) on a weaker flash */
+ *  last (after one normal frame) on the dark room again */
 const xrayLook = (t: number): {bg: 'white' | 'dark'; k: number} => {
   const f = Math.round(t * 30);
-  return f === 53 ? {bg: 'white', k: 0.78} : f === 54 ? {bg: 'dark', k: 0.75} : {bg: 'white', k: 0.5};
+  // (V5 fix HOOK-8: the last x-ray frame is on the dark room too, not a second white flash: one frame-wide flash,
+  // more margin under the flash limit, and the on-off-on flicker still reads)
+  return f === 53 ? {bg: 'white', k: 0.78} : f === 54 ? {bg: 'dark', k: 0.75} : {bg: 'dark', k: 0.55};
 };
 
 const INK = '#0B151C';
@@ -91,49 +95,87 @@ export const stutter = (t: number) => {
 const chargeK = (tau: number) => (tau >= T_CHARGE && tau < T_TOUCH + 0.1 ? ss(tau, T_CHARGE, T_CHARGE + 0.3) : 0);
 
 // ------------------------------------------------------------------ the window view
+/** the beam's packets (as Beam3D draws them: a cyan glow and a cyan-white core along the axis), with their own
+ *  opacity, so the train can fade independently of the line */
+const Packets5: React.FC<{cam: Cam3; pulses: number[]; a: number; hTop: number}> = ({cam, pulses, a, hTop}) => {
+  if (a <= 0.01 || !pulses.length) return null;
+  const P = projector(cam);
+  const f = cam.f;
+  return (
+    <g style={{mixBlendMode: 'screen'}} opacity={fmt(clamp(a))}>
+      {pulses.map((h, i) => {
+        if (h < -880 || h > hTop) return null;
+        const p0 = P(axis3(Math.max(-880, h - 26))), p1 = P(axis3(h));
+        if (!p0.ok || !p1.ok) return null;
+        const w = clamp((f * 1.4) / p1.z, 3, 12);
+        return (
+          <g key={i}>
+            <line x1={fmt(p0.x)} y1={fmt(p0.y)} x2={fmt(p1.x)} y2={fmt(p1.y)} stroke={PAL.laserGlow} strokeOpacity={0.45} strokeWidth={fmt(w * 2.4)} strokeLinecap="round" />
+            <line x1={fmt(p0.x)} y1={fmt(p0.y)} x2={fmt(p1.x)} y2={fmt(p1.y)} stroke={PAL.packet} strokeWidth={fmt(w * 0.7)} strokeLinecap="round" />
+          </g>
+        );
+      })}
+    </g>
+  );
+};
+/** V5 fix (HOOK-2, HOOK-3, END-5), the beam through the window on the loop clock:
+ *   H3          firing: the thin cyan line, the packet stream, the extended warm channel
+ *   32.9 (T_CHARGE)  the machine stops firing to charge: no new packets leave; the train already in flight climbs on
+ *               and fades out (gone by frame 1001), the line drops to a dim standby (aiming) line and the warm channel
+ *               cools to a trace, so the loop seam carries nothing that could pop, and frames 0-8 show a laser that is
+ *               plainly in standby before she fires it
+ *   the relay   it fires: a bright front races up past the tower, then a steady thin cyan line with a dense packet
+ *               train and a restrained warm band (no white column: white-violet is the discharge's alone), matching
+ *               the beam outside after the whip */
 const WindowView5: React.FC<{t: number; rc: RoomCam5; tag: string}> = ({t, rc, tag}) => {
   const tau = tau3(t);
   const cam: Cam3 = winCam5(t, rc);
   const sb = standbyK(tau);
   const fired = tau >= T_RELAY;
   const front = fired ? frontH(tau) : 1500;
-  // H3's train (the steady stream; after 32.9 no new packets leave: only those already above the cut climb on)
   const cut = EXIT_H - 30 + 520 * Math.max(0, tau - T_CHARGE);
-  const pulses = tau < 0 ? stream(tau).filter((h) => h > cut) : fired ? firedPulses(tau).filter((h) => h < front - 20) : [];
-  // the prepared channel: extended in H3, cooling to faint with the standby, building again once fired
-  const chK = tau < 0 ? 1 - 0.65 * sb : fired ? 0.35 + 0.65 * ss(tau, T_RELAY + 0.1, 1.3) : 0.35;
-  const beamA = 0.92 - (tau < T_RELAY ? 0.6 * sb : 0);
+  const leftK = tau < T_CHARGE ? 1 : 1 - ss(tau, T_CHARGE + 0.12, -0.12);
+  const left = tau < T_RELAY && leftK > 0.01 ? stream(tau).filter((h) => h > cut) : [];
+  const firedP = fired ? firedPulses(tau).filter((h) => h < front - 20) : [];
+  // the prepared channel: extended in H3, cooling to a trace in standby, warming again (restrained) once fired
+  const chK = tau < 0 ? 1 - 0.9 * sb : fired ? 0.1 + 0.32 * ss(tau, T_RELAY + 0.15, 1.6) : 0.1;
+  const lineA = 0.92 - 0.78 * (tau < T_RELAY ? sb : 0);
   const fieldB = tau < 0 ? ss(tau, 31.88 - 33.5, 32.5 - 33.5) : 1 - ss(tau, 2.0, 2.3);
   const corona = 0.6 * fieldB * (0.5 + 0.5 * Math.abs(Math.sin(tau * 23)));
-  // (the extended channel stays as long as it was: it cools to faint and warms again, so the seam is continuous)
+  // (the extended channel stays as long as it was: it cools to a trace and warms again, so the seam is continuous)
   const top = CH_TOP;
-  const st: St = {s: -1, core: 0, flash: 0, beam: fired ? 0 : beamA, pulses, channel: 0.8 * chK, channelTop: top, tipCorona: corona};
+  const st: St = {s: -1, core: 0, flash: 0, beam: fired ? 0 : lineA, pulses: [], channel: 0.8 * chK, channelTop: top, tipCorona: corona};
   const lead = fired ? 1 - ss(tau, T_RELAY + FRONT_T, T_RELAY + FRONT_T + 0.12) : 0;
-  const blaze = fired ? 1.2 + 1.4 * Math.exp(-(tau - T_RELAY) / 0.15) : 0;
+  // the ignition burst (the front's race up and a few frames after it), then the steady beam
+  const burst = fired ? Math.exp(-(tau - T_RELAY) / 0.12) : 0;
+  const blaze = fired ? 0.45 + 1.1 * burst : 0;
   return (
     <SiteExtras.Provider value={null}>
       <View3 cam={cam} st={st} t={t} tag={`${tag}-v`}>
-        <ChannelGrow4 cam={cam} t={31.5} top={top} k={chK} wS={3.4} gain={2.8} id={`${tag}-cg`} />
-        {/* the standby / H3 beam (View3 draws it); fired: the blazing beam up to its front with the dense train */}
+        <ChannelGrow4 cam={cam} t={31.5} top={top} k={chK} wS={3.4} gain={tau < 0 ? 2.8 : 2.0} id={`${tag}-cg`} />
+        {/* the standby / H3 line (View3 draws it); fired: the beam up to its front with the dense train */}
         {fired && (
           <g>
-            <BlazeGlow cam={cam} h1={front} k={blaze} id={`${tag}-bz`} />
-            <BeamGlow cam={cam} h0={EXIT_H} h1={front} k={blaze} wide={3} narrow={1} />
-            <Beam3D cam={cam} alpha={0.98} pulses={pulses} channel={0} hTop={front} id={`${tag}-bm`} />
+            <BlazeGlow cam={cam} h1={front} k={blaze} burst={burst} id={`${tag}-bz`} />
+            <BeamGlow cam={cam} h0={EXIT_H} h1={front} k={0.7 + 0.8 * burst} wide={2.2} narrow={0.75} />
+            <Beam3D cam={cam} alpha={0.95} pulses={[]} channel={0} hTop={front} id={`${tag}-bm`} />
             <HeadFlare cam={cam} h={front} k={lead} id={`${tag}-hf`} r={2.4} />
           </g>
         )}
-        {!fired && <BeamGlow cam={cam} h0={EXIT_H} h1={1500} k={0.9 * (1 - sb) + 0.25 * sb} wide={2} narrow={0.7} />}
-        <PulseBloom cam={cam} pulses={pulses} k={0.9} size={1.4} id={`${tag}-pb`} />
+        {!fired && <BeamGlow cam={cam} h0={EXIT_H} h1={1500} k={0.9 * (1 - sb) + 0.05 * sb} wide={2} narrow={0.7} />}
+        <Packets5 cam={cam} pulses={left} a={0.92 * leftK} hTop={1500} />
+        <Packets5 cam={cam} pulses={firedP} a={0.95} hTop={front} />
+        <PulseBloom cam={cam} pulses={left} k={0.9 * leftK} size={1.4} id={`${tag}-pb`} />
+        <PulseBloom cam={cam} pulses={firedP} k={0.75} size={1.2} id={`${tag}-pf`} />
         {tau > 1.9 && tau < 2.6 && <StormFlash5 cam={cam} t={tau} id={`${tag}-sf`} />}
       </View3>
     </SiteExtras.Provider>
   );
 };
 
-/** the fired beam's blaze in the window: a wide soft cyan bloom along it and a bright core (screen-blended), so the
- *  beam reads as a shaft of light, not a thread, while the machine fires */
-const BlazeGlow: React.FC<{cam: Cam3; h1: number; k: number; id: string}> = ({cam, h1, k, id}) => {
+/** the fired beam's light in the window: a soft cyan bloom along it (screen-blended), strongest in the ignition burst;
+ *  a white-cyan core only while the front races up (the steady beam is the thin cyan line) */
+const BlazeGlow: React.FC<{cam: Cam3; h1: number; k: number; burst: number; id: string}> = ({cam, h1, k, burst, id}) => {
   if (k <= 0.01) return null;
   const runs = axisRuns(cam, EXIT_H, h1, 1, 1, 1, 30);
   if (!runs.length) return null;
@@ -142,12 +184,12 @@ const BlazeGlow: React.FC<{cam: Cam3; h1: number; k: number; id: string}> = ({ca
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
         <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
-          <feGaussianBlur stdDeviation={18} />
+          <feGaussianBlur stdDeviation={16} />
         </filter>
       </defs>
-      <path d={d} fill="none" stroke={PAL.laserGlow} strokeWidth={70} strokeOpacity={fmt(clamp(0.28 * k))} strokeLinecap="round" filter={`url(#${id}-b)`} />
-      <path d={d} fill="none" stroke={PAL.laser} strokeWidth={14} strokeOpacity={fmt(clamp(0.35 * k))} strokeLinecap="round" />
-      <path d={d} fill="none" stroke={PAL.packet} strokeWidth={4.5} strokeOpacity={fmt(clamp(0.6 * k))} strokeLinecap="round" />
+      <path d={d} fill="none" stroke={PAL.laserGlow} strokeWidth={56} strokeOpacity={fmt(clamp(0.22 * k))} strokeLinecap="round" filter={`url(#${id}-b)`} />
+      <path d={d} fill="none" stroke={PAL.laser} strokeWidth={8} strokeOpacity={fmt(clamp(0.3 * k))} strokeLinecap="round" />
+      {burst > 0.02 && <path d={d} fill="none" stroke={PAL.packet} strokeWidth={4} strokeOpacity={fmt(clamp(0.6 * burst))} strokeLinecap="round" />}
     </g>
   );
 };
@@ -272,8 +314,8 @@ const Panel5: React.FC<{t: number; tag: string; press: number}> = ({t, tag, pres
       })}
       <line x1={1010} y1={1100} x2={fmt(1010 + Math.cos(((gauge - 90) * Math.PI) / 180) * 36)} y2={fmt(1100 + Math.sin(((gauge - 90) * Math.PI) / 180) * 36)} stroke="#D23B2E" strokeWidth={5} strokeLinecap="round" />
       <circle cx={1010} cy={1100} r={7} fill={INK} />
-      <rect x={880} y={1200} width={190} height={118} rx={10} fill="#0E1A20" stroke={INK} strokeWidth={4} />
-      <path d={Array.from({length: 18}, (_, i) => `${i ? 'L' : 'M'}${fmt(892 + i * 9.6)},${fmt(1268 - 38 * (tau >= T_RELAY ? 1 : 0.15 + 0.3 * charge) * Math.abs(Math.sin(i * 1.3 + tau * 12)) * (i % 3 === 0 ? 1 : 0.35) - 5 * Math.sin(i * 0.5 + tau * 4))}`).join(' ')} fill="none" stroke="#5BF08A" strokeWidth={3} />
+      <rect x={904} y={1222} width={176} height={104} rx={10} fill="#0E1A20" stroke={INK} strokeWidth={4} />
+      <path d={Array.from({length: 18}, (_, i) => `${i ? 'L' : 'M'}${fmt(914 + i * 8.9)},${fmt(1284 - 38 * (tau >= T_RELAY ? 1 : 0.15 + 0.3 * charge) * Math.abs(Math.sin(i * 1.3 + tau * 12)) * (i % 3 === 0 ? 1 : 0.35) - 5 * Math.sin(i * 0.5 + tau * 4))}`).join(' ')} fill="none" stroke="#5BF08A" strokeWidth={3} />
     </g>
   );
 };
@@ -326,7 +368,7 @@ const Arcs5: React.FC<{t: number; k: number; tag: string; hand: Pt; wrist: Pt}> 
 /** sparks spitting from the panel's seams while the machine charges (the crackle) and through the surge: real
  *  particles (each launched at a fixed time with its own velocity, falling under gravity, drawn as a short motion
  *  streak), so they fly in arcs from frame to frame instead of flashing at random */
-const SPARK_SRC: Pt[] = [{x: FIRE.x + 74, y: FIRE.y - 36}, {x: 892, y: 1192}, {x: FIRE.x + 40, y: FIRE.y + 78}];
+const SPARK_SRC: Pt[] = [{x: FIRE.x + 74, y: FIRE.y - 36}, {x: 940, y: 1190}, {x: FIRE.x + 40, y: FIRE.y + 78}];
 const SPARKS = (() => {
   const out: {t0: number; o: Pt; vx: number; vy: number; life: number}[] = [];
   for (let k = 0; k < 260; k++) {
@@ -364,8 +406,10 @@ const Sparks5: React.FC<{tau: number}> = ({tau}) => {
     </g>
   );
 };
-/** the press: a ring of light and sparks off the cap's rim at contact (a few frames) */
-const Impact5: React.FC<{t: number}> = ({t}) => {
+/** the press: a ring of light and sparks off the cap's rim at contact (a few frames). V5 fix (HOOK-5): the ring is
+ *  the cap's rim lighting up, drawn on the panel behind her hand (no ghost circle over the hand); only the sparks
+ *  fly in front */
+const Impact5: React.FC<{t: number; part: 'ring' | 'sparks'}> = ({t, part}) => {
   const tau = tau3(t);
   const u = (tau - T_TOUCH) / 0.22;
   if (u < 0 || u > 1) return null;
@@ -376,10 +420,13 @@ const Impact5: React.FC<{t: number}> = ({t}) => {
     const L = 30 * (1 - u) + 4;
     return `M${fmt(FIRE.x + Math.cos(a) * d0)},${fmt(FIRE.y + Math.sin(a) * d0 + 60 * u * u)} l${fmt(Math.cos(a) * L)},${fmt(Math.sin(a) * L + 6)}`;
   });
-  return (
+  return part === 'ring' ? (
     <g style={{mixBlendMode: 'screen'}}>
       <circle cx={FIRE.x} cy={FIRE.y} r={fmt(r)} fill="none" stroke="#FFD2B8" strokeOpacity={fmt(0.45 * (1 - u) * (1 - u))} strokeWidth={fmt(9 * (1 - u) + 2)} />
       <circle cx={FIRE.x} cy={FIRE.y} r={fmt(r * 0.75)} fill="#FF6A50" opacity={fmt(0.3 * (1 - u))} />
+    </g>
+  ) : (
+    <g style={{mixBlendMode: 'screen'}}>
       <path d={sparks.join(' ')} stroke="#FFE6A0" strokeWidth={4} strokeLinecap="round" opacity={fmt(1 - u)} fill="none" />
     </g>
   );
@@ -401,9 +448,12 @@ export const Room5: React.FC<{t: number; rc: RoomCam5; tag: string}> = ({t, rc, 
   const wall = '#132228';
   // her fingertip and wrist on stage (the arcs reach them)
   const capC = capAt(FIRE, op.press);
+  const jw = manJoints(op.pose).L.W;
   const handPt = {x: capC.x - 30, y: capC.y - 6};
-  const wristPt = {x: capC.x - 120, y: capC.y - 2};
-  const man = <Man id={`${tag}-man`} pose={op.pose} expr={op.expr} lHand={op.hand} rHand={H_REST} outfit={OPERATOR} />;
+  const wristPt = {x: 2 * MIRROR - jw.x, y: jw.y};
+  // the far arm hangs behind her body and the desk (not drawn); the near sleeve runs clean to a cuff at the wrist,
+  // and the reaching arm shades the jacket it crosses
+  const man = <Man5 id={`${tag}-man`} pose={op.pose} expr={op.expr} lHand={op.hand} rHand={H_REST} outfit={OPERATOR} farArm={false} seamSleeve nearShadow={0.34} />;
   const fig = <g transform={`translate(${2 * MIRROR} 0) scale(-1 1)`}>{man}</g>;
   const full = <rect x={-600} y={-600} width={2300} height={3000} fill="#FFF" />;
   return (
@@ -490,6 +540,7 @@ export const Room5: React.FC<{t: number; rc: RoomCam5; tag: string}> = ({t, rc, 
         <path d={`M${WIN.x0 - 50},${WIN.y1 + 6} L${WIN.x1 + 60},${WIN.y1 + 6} L${WIN.x1 + 60},${WIN.y1 + 30} L${WIN.x0 - 60},${WIN.y1 + 30} Z`} fill="#34444C" stroke={INK} strokeWidth={3} />
         <path d={`M${WIN.x0 - 50},${WIN.y1 + 6} L${WIN.x1 + 60},${WIN.y1 + 6}`} stroke="#8EE6F0" strokeOpacity={fmt(0.1 + 0.5 * bl)} strokeWidth={4} />
         <Panel5 t={t} tag={`${tag}-p`} press={op.press} />
+        <Impact5 t={t} part="ring" />
         {/* the operator: lit by the window (cool), the fired beam (cyan) and the lit cap below her face (red) */}
         {xr ? (
           <g>
@@ -506,9 +557,9 @@ export const Room5: React.FC<{t: number; rc: RoomCam5; tag: string}> = ({t, rc, 
             <g filter={`url(#${tag}-xr)`}>{fig}</g>
             <g transform={`translate(${2 * MIRROR} 0) scale(-1 1)`}>
               <g filter={`url(#${tag}-skg)`} style={{mixBlendMode: 'screen'}}>
-                <Skeleton pose={op.pose} spreadL={0.3} spreadR={0.9} />
+                <Skeleton5 pose={op.pose} spread={op.hand.spread} curl={op.hand.curl} />
               </g>
-              <Skeleton pose={op.pose} spreadL={0.3} spreadR={0.9} />
+              <Skeleton5 pose={op.pose} spread={op.hand.spread} curl={op.hand.curl} />
             </g>
           </g>
         ) : (
@@ -531,7 +582,7 @@ export const Room5: React.FC<{t: number; rc: RoomCam5; tag: string}> = ({t, rc, 
             </Lit>
           </g>
         )}
-        <Impact5 t={t} />
+        <Impact5 t={t} part="sparks" />
         <Sparks5 tau={tau} />
         <Arcs5 t={t} k={sk} tag={`${tag}-ar`} hand={handPt} wrist={wristPt} />
         {/* the desk in front of her */}

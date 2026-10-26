@@ -8,6 +8,7 @@
 import React from 'react';
 import {mix} from '../dc/color';
 import {clamp, fmt} from '../dc/math';
+import {ss} from '../lib';
 import {MICRO_ANG} from '../v3/cams3';
 import {PAL} from '../v3/palette';
 import {EV} from '../v3/timeline3';
@@ -73,8 +74,9 @@ export const tickC1 = (t: number) => {
 export const C2_OPEN = {x: 430, y: 1060, z: 1.6};
 
 /** the bench at time t. `xf` is the stage transform (C2's camera form); `pw` the power state: lit (bench lighting,
- *  1 = C2's), hum (0..1, the pump modules coming up), flash (the relay's pump flash, 0..~1.3) */
-export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: number; hum: number; flash: number}}> = ({t, xf, tag, pw}) => {
+ *  1 = C2's), hum (0..1, the pump modules coming up), flash (the relay's pump flash, 0..~1.3), strobe (the pump lamps:
+ *  a double strobe on the relay, then a pulse per packet; it has died away by the cut, where the lamps are C2's) */
+export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: number; hum: number; flash: number; strobe: number}}> = ({t, xf, tag, pw}) => {
   const ps = packets(t);
   const steel = '#4E5C66', steelL = '#7E8C96';
   const pumpL = passLight(ps, 270, 48);
@@ -86,6 +88,8 @@ export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: nu
   const beamLine = front <= 0 ? '' : front < RUN ? `M${AP_X},${BEAM_Y} L${fmt(AP_X + front)},${BEAM_Y}` : `M${AP_X},${BEAM_Y} L${MIRROR_X},${BEAM_Y} L${MIRROR_X},${fmt(BEAM_Y - (front - RUN))}`;
   const pumpBase = 0.3 * pw.hum;
   const fl = clamp(pw.flash, 0, 1.4);
+  // the pump lamps strobe: full on the relay, a pulse with each early packet, gone (C2's grey) well before the cut
+  const st = clamp(pw.strobe) * (1 - ss(t, 8.5, 8.75));
   return (
     <g>
       <defs>
@@ -105,6 +109,12 @@ export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: nu
         <radialGradient id={`${tag}-pk`}>
           <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
           <stop offset="0.3" stopColor={PAL.packet} stopOpacity={0.75} />
+          <stop offset="1" stopColor={PAL.laserGlow} stopOpacity={0} />
+        </radialGradient>
+        {/* the relay's flash over the bench: saturated cyan, white only at the lamps */}
+        <radialGradient id={`${tag}-wash`}>
+          <stop offset="0" stopColor={PAL.laser} stopOpacity={0.55} />
+          <stop offset="0.45" stopColor={PAL.laserGlow} stopOpacity={0.25} />
           <stop offset="1" stopColor={PAL.laserGlow} stopOpacity={0} />
         </radialGradient>
         <radialGradient id={`${tag}-fl`}>
@@ -148,8 +158,8 @@ export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: nu
         <rect x={444} y={BEAM_Y - 26} width={152} height={52} rx={6} fill="#0E1E24" stroke={INK} strokeWidth={3} />
         <ellipse cx={520} cy={BEAM_Y} rx={100 + 40 * Math.max(pumpL, fl * 0.8)} ry={46 + 20 * Math.max(pumpL, fl * 0.8)} fill={`url(#${tag}-pump)`} opacity={fmt(clamp(pumpBase + 0.7 * pumpL + 0.7 * fl))} style={{mixBlendMode: 'screen'}} />
         {/* the pump lamps on the amplifier: they flash on the relay (C2's grey once it has passed) */}
-        {[0, 1, 2, 3].map((i) => <rect key={i} x={452 + i * 38} y={BEAM_Y - 82} width={22} height={30} rx={3} fill={mix('#5E6C74', '#F2FEFF', clamp(fl * 1.2))} stroke={INK} strokeWidth={2} />)}
-        {fl > 0.02 && <ellipse cx={520} cy={BEAM_Y - 67} rx={110} ry={40} fill={`url(#${tag}-fl)`} opacity={fmt(clamp(fl))} style={{mixBlendMode: 'screen'}} />}
+        {[0, 1, 2, 3].map((i) => <rect key={i} x={452 + i * 38} y={BEAM_Y - 82} width={22} height={30} rx={3} fill={mix('#5E6C74', '#F2FEFF', clamp(Math.max(fl * 1.2, st * (0.75 + 0.25 * ((i + Math.round(t * 30)) % 2)))))} stroke={INK} strokeWidth={2} />)}
+        {Math.max(fl, st) > 0.02 && <ellipse cx={520} cy={BEAM_Y - 67} rx={110 + 30 * st} ry={40 + 10 * st} fill={`url(#${tag}-fl)`} opacity={fmt(clamp(Math.max(fl, 0.8 * st)))} style={{mixBlendMode: 'screen'}} />}
         {[700, 760].map((x, i) => (
           <g key={x}>
             <rect x={x - 14} y={BEAM_Y + 44} width={28} height={BENCH_Y - BEAM_Y - 44} fill={steel} stroke={INK} strokeWidth={3} />
@@ -184,7 +194,7 @@ export const BenchC1: React.FC<{t: number; xf: string; tag: string; pw: {lit: nu
             );
           })}
           {/* the relay's pump flash: the amplifier and the head blaze for a moment, lighting the bench */}
-          {fl > 0.02 && <ellipse cx={460} cy={BEAM_Y} rx={420} ry={240} fill={`url(#${tag}-pump)`} opacity={fmt(clamp(fl * 0.55))} />}
+          {fl > 0.02 && <ellipse cx={460} cy={BEAM_Y} rx={360} ry={200} fill={`url(#${tag}-wash)`} opacity={fmt(clamp(fl * 0.85))} />}
           {fl > 0.02 && <ellipse cx={520} cy={BEAM_Y} rx={150} ry={70} fill={`url(#${tag}-fl)`} opacity={fmt(clamp(fl))} />}
           {fl > 0.02 && <ellipse cx={AP_X} cy={BEAM_Y} rx={90} ry={60} fill={`url(#${tag}-fl)`} opacity={fmt(clamp(fl * 0.8))} />}
         </g>

@@ -1,16 +1,19 @@
-// V5 beat H2 (30.78-31.88), "into the SKY—": the payoff. The hero view of the whole tower from out on the opening
-// side (End5_cam.ts payCam, a slow crane up with the view tilting up): the cyan line rising past the tower's rod tip
-// and the warm channel running on along it all the way up into the storm deck. The guided leader that ran up the
-// channel in the split has reached the deck at the cut: its channel glows on (an upward flash's continuing current,
-// with a slight flicker) and lights the cloud base where it enters, then dies away by ~31.6, leaving the warm channel
-// and the line glowing into the deck. The packet train (H's pace, a gap per 0.3 s) passes the rod tip on each payoff
-// tick (30.84, 31.14, 31.44, 31.74), each packet leaving the channel a little brighter behind it (it keeps the air
-// heated). The field crackles faintly at the tip toward the cut. The site's own pieces (View3's, without its
-// discharge), so the deck is lit by this leader rather than V3's bolt.
+// V5 beat H2 (30.78-31.88), "into the SKY—": the payoff. A long-lens view level with the rod tip from out on the
+// opening side (End5_cam.ts payCam): the cyan line rising past the tower's rod tip and the warm channel running on along
+// it, large in frame, all the way up into the storm deck that fills the top of the frame; the view tilts up with the
+// packet train toward the deck as the camera rises (in motion from cut to cut). The guided leader that ran up the
+// channel in the split reaches the base at the cut: from there the discharge spreads through the base of the cell
+// (End5_cloud.tsx: in-cloud channels crawling outward, the lobes they pass lit from within, local light only); on the
+// payoff tick that starts "SKY" (31.14) the current surges through the channel and its branches (the brightest moment,
+// ~31.15-31.35), then the branches die away by ~31.7 and the leader by ~31.8, leaving the warm channel, the line and a
+// dim glow in the deck. The packet train (H's pace, a gap per 0.3 s) passes the rod tip on each payoff tick (30.84,
+// 31.14, 31.44, 31.74) and enters the cloud base, each packet leaving the channel a little brighter behind it (it keeps
+// the air heated). The site's own pieces (View3's, without its discharge), so the deck is lit by this discharge rather
+// than V3's bolt.
 import React from 'react';
 import {clamp, fmt, noise1} from '../dc/math';
 import {ss} from '../lib';
-import {axis3, BOLT3, Cam3, projector} from '../v2/p3';
+import {axis3, BOLT3, Cam3, projector, TIP3} from '../v2/p3';
 import {BOLT3V} from '../v3/bolt3';
 import {GuidedLeader5} from './End5_split';
 import {TipCorona3} from '../v3/view3';
@@ -22,6 +25,7 @@ import {tau3} from '../v3/timeline3';
 import {PAL} from '../v3/palette';
 import {ChannelGrow4} from '../v4/End4_fx';
 import {PAY_TOP, payCam, payPulses} from './End5_cam';
+import {deckK, InCloud5, SURGE} from './End5_cloud';
 
 const BOLT_TOP = BOLT3V.pts[BOLT3V.pts.length - 1];
 
@@ -86,14 +90,19 @@ export const PayoffH5: React.FC<{t: number}> = ({t}) => {
   const pulses = payPulses(t);
   const drift = tau3(t);
   const Extra = React.useContext(SiteExtras);
-  // the guided leader has reached the deck at the cut (End5_split): its channel glows on, fading into the cloud
-  // (the continuing current of an upward flash: a steady glow with a slight flicker, then it dies away)
-  const lk = (0.88 + 0.12 * noise1(t * 24, 9501)) * (1 - ss(t, 31.12, 31.6));
-  const corona = 0.35 * ss(t, 31.3, 31.88) * (0.5 + 0.5 * Math.abs(Math.sin(t * 23)));
+  // the guided leader has reached the deck at the cut (End5_split): its channel glows on (the continuing current of an
+  // upward flash, a steady glow with a slight flicker), surges with the in-cloud spread on SKY, then dies away by ~31.8
+  const surge = t < SURGE - 0.02 ? 0 : 0.6 * Math.exp(-Math.max(0, t - SURGE) / 0.18) * clamp((t - SURGE + 0.02) / 0.02);
+  const lk = (0.86 + 0.14 * noise1(t * 24, 9501) + surge) * (1 - ss(t, 31.4, 31.8));
+  const dk = deckK(t);
+  const tip = projector(cam)(TIP3);
+  // the field crackles faintly at the tip toward the cut (only while the tip is clear of the caption band)
+  const corona = 0.3 * ss(t, 31.3, 31.88) * (0.5 + 0.5 * Math.abs(Math.sin(t * 23))) * (1 - ss(tip.y, 1440, 1530));
   return (
     <g>
-      <Sky3D cam={cam} flash={0.3 * lk} boltTop={lk > 0.02 ? BOLT_TOP : undefined} drift={drift} rainT={drift + 40} />
+      <Sky3D cam={cam} flash={clamp(0.3 * Math.min(lk, 1.1))} boltTop={lk > 0.02 ? BOLT_TOP : undefined} drift={drift} rainT={drift + 40} />
       <EntryGlow cam={cam} id={`${tag}-en`} k={0.85 + 0.15 * Math.sin(t * 9)} />
+      <InCloud5 cam={cam} t={t} id={`${tag}-ic`} />
       {Extra && <Extra cam={cam} flash={0} t={t} layer="back" id={`${tag}-xb`} />}
       <Tower3D cam={cam} flash={0} aviation={0.5 + 0.5 * Math.sin((2 * Math.PI * 17 * drift) / 33.5)} id={`${tag}-tw`} />
       {Extra && <Extra cam={cam} flash={0} t={t} layer="front" id={`${tag}-xf`} />}
@@ -102,8 +111,8 @@ export const PayoffH5: React.FC<{t: number}> = ({t}) => {
       <Reheat cam={cam} pulses={pulses} id={`${tag}-rh`} />
       <TipCorona3 cam={cam} k={corona} t={t} />
       {lk > 0.01 && (
-        <g opacity={clamp(lk)}>
-          <GuidedLeader5 cam={cam} s={BOLT3.total} t={t} id={`${tag}-gl`} tipGlow={false} />
+        <g opacity={fmt(clamp(lk))}>
+          <GuidedLeader5 cam={cam} s={BOLT3.total} t={t} id={`${tag}-gl`} tipGlow={false} gain={Math.max(1, lk)} />
         </g>
       )}
       <PulseBloom cam={cam} pulses={pulses} k={0.85} size={1.2} id={`${tag}-pb`} />

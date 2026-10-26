@@ -1,8 +1,9 @@
-// V5 D4: lightning flickering inside the storm deck, anywhere over the site (V4's CloudFlash4 generalised: V4 lights
-// only the flat summit deck round one fixed point at the opening's crack). The deck's lobes near the flash catch its
-// light from within, lobe by lobe (the same deterministic lobes Scene3_sky draws, re-derived here because Scene3_sky
-// keeps them private), and a short in-cloud channel is glimpsed through the base at the peaks. Local light on the
-// cloud only: no frame-wide flash.
+// V5 D4: light on the storm deck's underside, lobe by lobe (the same deterministic lobes Scene3_sky draws, re-derived
+// here because Scene3_sky keeps them private), so the lit region's outline follows the cloud:
+//   makeDeckFlash  lightning flickering inside the deck anywhere over the site (V4's CloudFlash4 generalised: V4 lights
+//                  only the flat summit deck round one fixed point at the opening's crack); a short in-cloud channel is
+//                  glimpsed through the base at the peaks. Local light on the cloud only: no frame-wide flash.
+//   makeDeckGlow   the warm glow of the prepared channel where it runs into the base (steady, breathing a little)
 import React from 'react';
 import {clamp, fmt, hash, noise1} from '../dc/math';
 import {Cam3, projector, Proj, v3, V3} from '../v2/p3';
@@ -54,7 +55,7 @@ const ragK = (l: {rag: number; ph: number}, a: number) => (l.rag ? 1 + l.rag * (
 const poly = (pts: {x: number; y: number}[]) => `M${pts.map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')} Z`;
 
 // ------------------------------------------------------------------ one flash
-export type DeckFlashSpec = {at: V3; reach: number; t0: number; gain: number; seed: number; len: number; dir: number};
+export type DeckFlashSpec = {at: V3; reach: number; t0: number; gain: number; seed: number; len: number; dir: number; jag?: number};
 /** the brightness on film time: the stroke, a flicker, a dim afterglow */
 export const deckFlashK = (s: DeckFlashSpec, t: number) => {
   const p = (t0: number, a: number, d: number) => (t >= t0 - 0.015 ? a * Math.exp(-Math.max(0, t - t0) / d) * clamp((t - t0 + 0.015) / 0.015) : 0);
@@ -74,23 +75,50 @@ const nearLobes = (s: DeckFlashSpec) => {
   });
   return out.sort((a, b) => a.lv - b.lv);
 };
+/** a jagged run from a to b: each point displaced across the run (in the base plane) and a little up and down, by
+ *  two independent noises, so the jags read from any view */
 const jagRun = (a: V3, b: V3, n: number, amp: number, seed: number) => {
   const pts: V3[] = [];
+  const hx = b.x - a.x, hz = b.z - a.z, hl = Math.hypot(hx, hz) || 1;
+  const px = -hz / hl, pz = hx / hl;
   for (let i = 0; i <= n; i++) {
     const u = i / n;
-    const j = i === 0 || i === n ? 0 : amp * noise1(i * 0.9 + seed, 1311);
-    pts.push(v3(a.x + (b.x - a.x) * u + 0.4 * j, a.y + (b.y - a.y) * u + 0.5 * j, a.z + (b.z - a.z) * u - 0.8 * j));
+    const e = i === 0 || i === n ? 0 : 1;
+    const j = e * amp * (noise1(i * 0.9 + seed, 1311) + 0.5 * noise1(i * 2.3 + seed, 1313));
+    const jy = e * amp * 0.35 * noise1(i * 1.7 + seed, 1317);
+    pts.push(v3(a.x + (b.x - a.x) * u + px * j, a.y + (b.y - a.y) * u + jy, a.z + (b.z - a.z) * u + pz * j));
   }
   return pts;
+};
+
+/** the near lobes as screen rings (lobes reaching behind the camera are left out), with their light weights */
+const ringsOf = (NEAR: ReturnType<typeof nearLobes>, P: (p: V3) => Proj, t: number) => {
+  const drift = (LOOP / (2 * Math.PI)) * Math.sin((2 * Math.PI * tau3(t)) / LOOP);
+  const rings: {d: string; a: number}[] = [];
+  for (const l of NEAR) {
+    const x = l.mx + drift * l.drift;
+    const y = l.flat ? CB - l.hang : deckY(Math.hypot(x, l.mz));
+    const cc = v3(x + l.dx, y, l.mz + l.dz);
+    const pts: Proj[] = [];
+    for (let i = 0; i < 40; i++) {
+      const a = (i / 40) * 6.2832;
+      const r = l.r * ragK(l, a);
+      pts.push(P(v3(cc.x + r * Math.cos(a), cc.y, cc.z + r * Math.sin(a))));
+    }
+    if (!pts.every((q) => q.ok && q.z > 20)) continue;
+    rings.push({d: poly(pts), a: l.k});
+  }
+  return rings;
 };
 
 export const makeDeckFlash = (s: DeckFlashSpec) => {
   const NEAR = nearLobes(s);
   const c = Math.cos(s.dir), sn = Math.sin(s.dir);
   const A = v3(s.at.x - c * s.len * 0.5, s.at.y + 1, s.at.z - sn * s.len * 0.5), Bp = v3(s.at.x + c * s.len * 0.5, s.at.y + 4, s.at.z + sn * s.len * 0.5);
-  const CH = jagRun(A, Bp, 16, s.len * 0.09, s.seed);
+  const jg = s.jag ?? 1;
+  const CH = jagRun(A, Bp, 16, s.len * 0.09 * jg, s.seed);
   const forkEnd = v3(CH[7].x - sn * s.len * 0.3, CH[7].y + 2, CH[7].z + c * s.len * 0.3);
-  const FORK = jagRun(CH[7], forkEnd, 7, s.len * 0.05, s.seed + 17);
+  const FORK = jagRun(CH[7], forkEnd, 7, s.len * 0.05 * jg, s.seed + 17);
   const Comp: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, t, id}) => {
     const k = deckFlashK(s, t);
     if (k <= 0.01 || cam.pos.y > CB - 4) return null;
@@ -99,22 +127,8 @@ export const makeDeckFlash = (s: DeckFlashSpec) => {
     const P = projector(cam);
     const g = P(s.at);
     if (!g.ok) return null;
-    const drift = (LOOP / (2 * Math.PI)) * Math.sin((2 * Math.PI * tau3(t)) / LOOP);
     const rG = clamp((cam.f * 1.1 * s.reach) / Math.max(g.z, 1), 120, 1600);
-    const rings: {d: string; a: number}[] = [];
-    for (const l of NEAR) {
-      const x = l.mx + drift * l.drift;
-      const y = l.flat ? CB - l.hang : deckY(Math.hypot(x, l.mz));
-      const cc = v3(x + l.dx, y, l.mz + l.dz);
-      const pts: Proj[] = [];
-      for (let i = 0; i < 40; i++) {
-        const a = (i / 40) * 6.2832;
-        const r = l.r * ragK(l, a);
-        pts.push(P(v3(cc.x + r * Math.cos(a), cc.y, cc.z + r * Math.sin(a))));
-      }
-      if (!pts.every((q) => q.ok && q.z > 20)) continue;
-      rings.push({d: poly(pts), a: l.k});
-    }
+    const rings = ringsOf(NEAR, P, t);
     const ch = CH.map(P), fk = FORK.map(P);
     const chOk = ch.every((q) => q.ok) && fk.every((q) => q.ok);
     const pieces = (pp: Proj[], a0: number) => pp.slice(0, -1).map((q, i) => {
@@ -162,6 +176,45 @@ export const makeDeckFlash = (s: DeckFlashSpec) => {
             {segs.map((p, i) => <path key={`k${i}`} d={p.d} fill="none" stroke="#FFFFFF" strokeOpacity={fmt(clamp(1.2 * p.a))} strokeWidth={fmt(wK * 0.7)} strokeLinecap="round" strokeLinejoin="round" />)}
           </g>
         )}
+      </g>
+    );
+  };
+  return Comp;
+};
+
+// ------------------------------------------------------------------ the channel's warm glow on the base
+export type DeckGlowSpec = {at: V3; reach: number; seed: number};
+export const makeDeckGlow = (s: DeckGlowSpec) => {
+  const NEAR = nearLobes({...s, t0: 0, gain: 1, len: 0, dir: 0});
+  const Comp: React.FC<{cam: Cam3; t: number; k: number; id: string}> = ({cam, t, k, id}) => {
+    if (k <= 0.01 || cam.pos.y > CB - 4) return null;
+    const mk = magFade(cam.f);
+    if (mk >= 0.999) return null;
+    const P = projector(cam);
+    const g = P(s.at);
+    if (!g.ok) return null;
+    // the light spreads along the base: an ellipse foreshortened by the view's elevation of the base
+    const rG = clamp((cam.f * 1.15 * s.reach) / Math.max(g.z, 1), 120, 1800);
+    const sinE = clamp((s.at.y - cam.pos.y) / Math.max(Math.hypot(s.at.x - cam.pos.x, s.at.y - cam.pos.y, s.at.z - cam.pos.z), 1), 0.2, 1);
+    const rings = ringsOf(NEAR, P, t);
+    const tr = `translate(${fmt(g.x)},${fmt(g.y)}) scale(1,${fmt(sinE)}) translate(${fmt(-g.x)},${fmt(-g.y)})`;
+    return (
+      <g style={{mixBlendMode: 'screen'}} opacity={fmt(clamp(k) * (1 - mk))}>
+        <defs>
+          <radialGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" cx={fmt(g.x)} cy={fmt(g.y)} r={fmt(rG)} gradientTransform={tr}>
+            <stop offset="0" stopColor="#FFC891" stopOpacity={0.7} />
+            <stop offset="0.12" stopColor="#FFA862" stopOpacity={0.45} />
+            <stop offset="0.32" stopColor="#E07F45" stopOpacity={0.17} />
+            <stop offset="0.6" stopColor="#B0603A" stopOpacity={0.04} />
+            <stop offset="1" stopColor="#8A4A30" stopOpacity={0} />
+          </radialGradient>
+          <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={1680} height={2520}>
+            <feGaussianBlur stdDeviation={5} />
+          </filter>
+        </defs>
+        <g filter={`url(#${id}-b)`}>
+          {rings.map((r, i) => <path key={i} d={r.d} fill={`url(#${id}-g)`} opacity={fmt(clamp(r.a))} />)}
+        </g>
       </g>
     );
   };

@@ -20,7 +20,10 @@ import {tau3} from '../v3/timeline3';
 export const MIRROR = 540;
 const mx = (p: V): V => ({x: 2 * MIRROR - p.x, y: p.y});
 /** the stage: the FIRE control (under its raised guard, in a hazard ring), the ARM key, the panel, desk, window */
-export const FIRE: V = {x: 756, y: 1122};
+/** V5 fix (HOOK-1): the control sits further out along the panel (as V3's, 826), so the reaching arm opens to about
+ *  105 deg: the upper arm runs from the shoulder down across her chest, the elbow comes out past the jacket's front
+ *  edge (silhouetted against the panel, above the caption band) and the forearm angles up to the cap */
+export const FIRE: V = {x: 830, y: 1136};
 export const PANEL = {x0: 606, y0: 938, x1: 1100, y1: 1345};
 export const DESK_Y = 1342;
 export const WIN = {x0: 486, y0: 70, x1: 1180, y1: 900};
@@ -77,7 +80,7 @@ export const tipOf = (p: ManPose): V => {
 /** the fingertip's rest on the desk edge (H3), its approach path and the recoil's end (stage) */
 const REST: V = {x: 596, y: 1302};
 const REST_ANG = 26;
-const APP1: V = {x: 730, y: 1240}; // the approach rises from below the button row into the cap (quadratic)
+const APP1: V = {x: 800, y: 1252}; // the approach rises from below the cap into it (quadratic)
 const GUARD: V = {x: 600, y: 1150}; // the recoil ends with the hand up in front of her chest, fingers spread
 const GUARD_ANG = -58;
 const bez2 = (a: V, b: V, c: V, k: number): V => {
@@ -129,7 +132,8 @@ export const op5 = (t: number): Op5 => {
   // the recoil path: back off the cap and up toward her chest (it never crosses her face)
   const recCtl = {x: held.x - 40, y: held.y - 60};
   const tip = tau > T_REC ? bez2(held, recCtl, GUARD, recE) : held;
-  const angApp = REST_ANG + (-6 - REST_ANG) * ss(reach, 0, 1) + 8 * down;
+  // the hand ends nearly in line with the forearm (wrist bend about 15 deg), the index finger slightly up into the cap
+  const angApp = REST_ANG + (-14 - REST_ANG) * ss(reach, 0, 1) + 6 * down;
   const ang = tau > T_REC ? angApp + (GUARD_ANG - angApp) * recE : angApp;
   // the body: still in H3 (breathing), leaning in with the reach, back with the recoil; the head lifts to look up
   const lean = ss(tau, T_APP0, T_TOUCH + 0.05) * (1 - rec);
