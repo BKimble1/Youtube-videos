@@ -792,6 +792,606 @@
   "hero": false
  },
  {
+  "name": "S09 operator presses fire",
+  "at": 16.21,
+  "frame": 486.3,
+  "dur": 0.06,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "S09 pulse to the coil",
+  "at": 16.27,
+  "frame": 488.1,
+  "dur": 0.03,
+  "gain_db": -29,
+  "hero": false
+ },
+ {
+  "name": "S09 coil heats",
+  "at": 16.43,
+  "frame": 492.9,
+  "dur": 0.17,
+  "gain_db": -29,
+  "hero": false
+ },
+ {
+  "name": "S09 LINE PARTS (mechanism, accent 2)",
+  "at": 16.6,
+  "frame": 498.0,
+  "dur": 0.07,
+  "gain_db": -13,
+  "hero": true
+ },
+ {
+  "name": "S09 spring drives the injector",
+  "at": 16.605,
+  "frame": 498.2,
+  "dur": 0.22,
+  "gain_db": -21,
+  "hero": true
+ },
+ {
+  "name": "S09 flight",
+  "at": 16.67,
+  "frame": 500.1,
+  "dur": 0.08,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "S09 IMPACT into silicone",
+  "at": 16.833,
+  "frame": 505.0,
+  "dur": 0.22,
+  "gain_db": -17,
+  "hero": true
+ },
+ {
+  "name": "S10 seal opens",
+  "at": 18.14,
+  "frame": 544.2,
+  "dur": 0.04,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "S10 gas behind the plunger",
+  "at": 18.18,
+  "frame": 545.4,
+  "dur": 1.45,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 20.792,
+  "frame": 623.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 20.792,
+  "frame": 623.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 20.792,
+  "frame": 623.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.042,
+  "frame": 631.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.042,
+  "frame": 631.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.042,
+  "frame": 631.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.292,
+  "frame": 638.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.292,
+  "frame": 638.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.292,
+  "frame": 638.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.542,
+  "frame": 646.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.542,
+  "frame": 646.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.542,
+  "frame": 646.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.792,
+  "frame": 653.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.792,
+  "frame": 653.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11 foot",
+  "at": 21.792,
+  "frame": 653.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S11/S12 occlusion bridge air pass",
+  "at": 21.367,
+  "frame": 641.0,
+  "dur": 0.767,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 21.942,
+  "frame": 658.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 21.942,
+  "frame": 658.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 21.942,
+  "frame": 658.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.158,
+  "frame": 664.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.158,
+  "frame": 664.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.158,
+  "frame": 664.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.375,
+  "frame": 671.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.375,
+  "frame": 671.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.375,
+  "frame": 671.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.592,
+  "frame": 677.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.592,
+  "frame": 677.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.592,
+  "frame": 677.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.808,
+  "frame": 684.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.808,
+  "frame": 684.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 22.808,
+  "frame": 684.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.025,
+  "frame": 690.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.025,
+  "frame": 690.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.025,
+  "frame": 690.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.242,
+  "frame": 697.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.242,
+  "frame": 697.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.242,
+  "frame": 697.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.458,
+  "frame": 703.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.458,
+  "frame": 703.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.458,
+  "frame": 703.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.675,
+  "frame": 710.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.675,
+  "frame": 710.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.675,
+  "frame": 710.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.892,
+  "frame": 716.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.892,
+  "frame": 716.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 23.892,
+  "frame": 716.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.108,
+  "frame": 723.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.108,
+  "frame": 723.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.108,
+  "frame": 723.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.325,
+  "frame": 729.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.325,
+  "frame": 729.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.325,
+  "frame": 729.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.542,
+  "frame": 736.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.542,
+  "frame": 736.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.542,
+  "frame": 736.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.758,
+  "frame": 742.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.758,
+  "frame": 742.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.758,
+  "frame": 742.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.975,
+  "frame": 749.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.975,
+  "frame": 749.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 24.975,
+  "frame": 749.2,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 25.192,
+  "frame": 755.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 25.192,
+  "frame": 755.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 foot",
+  "at": 25.192,
+  "frame": 755.8,
+  "dur": 0.025,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "S12 grit trickle",
+  "at": 22.233,
+  "frame": 667.0,
+  "dur": 1.6,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "S12 rubble creaks",
+  "at": 23.133,
+  "frame": 694.0,
+  "dur": 0.9,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
   "name": "S13 rubble settles",
   "at": 25.617,
   "frame": 768.5,

@@ -1,7 +1,8 @@
 // Cutaway drawing for the mechanism shots (S09 launch, S10 delivery): the medic's launch tube cut open along its
 // length (far half kept, clean hatched cut faces) with the spring, the injector, the latch line through the holes at the
 // mouth, the nichrome coil on the line and the fine wire from the board to the coil; the injector cut along its axis
-// (activator chamber in the plunger, gas, dose, needle bore); the silicone target block and its cradle cut at z = 0.
+// (activator chamber in the plunger, gas, dose, needle bore); the silicone target block and its cradle cut by a plane
+// z = zc that can sweep out to close the cut (FixtureCut); the tube from outside with the parted line (TubeExterior).
 // Everything is drawn through the shot camera from the body frame of the insect (or the injector / world frame), in the
 // Weird Crew finish: ink #172B3A contours, gradient fills from the fixed upper-left key light.
 //
@@ -10,7 +11,7 @@
 // parts behind and in front of the tube's cut plane.
 import React from 'react';
 import {Cam, proj, scaleAt, depth} from '../lib/cam';
-import {V3, V2, Frame, toW, add, sub, mul, dot, norm, cross, lerp3, len} from '../lib/v3';
+import {V3, V2, Frame, toW, add, sub, mul, dot, norm, cross, lerp3} from '../lib/v3';
 import {fmt, polyPath, openPath, convexHull} from '../lib/g3';
 import {Solid, LAB, TARGET} from '../sets/Lab';
 import {INK} from '../lib/ink';
@@ -19,7 +20,7 @@ import {PACK, INJ, wiresOn, WirePt} from './gear';
 import {GEAR_COL, BoxSolid, CylSolid, Spring, alongPolyline} from './Gear';
 import {loftSilhouette} from '../lib/loft';
 import {PRONOTUM} from './roach';
-import {clamp, easeOut, smoother} from '../lib/ease';
+import {clamp, easeOut, smoother, sr as sr01} from '../lib/ease';
 
 // ---------------------------------------------------------------------------------------------------------------
 // Geometry of the cutaway (body frame, mm). The tube is PACK.tube; the line holes sit just inside the mouth, in the
@@ -83,7 +84,7 @@ export const Hatch: React.FC<{id: string; at: V2; sp: number; color: string; ink
 );
 
 /** a helix along a -> b (back half darker, front half inked), any colour: Gear's Spring with colours */
-export const Helix: React.FC<{cam: Cam; a: V3; b: V3; r: number; turns: number; wire: number; color: string; back?: string; inkW?: number; glow?: string}> = ({cam, a, b, r, turns, wire, color, back, inkW = 1.4}) => {
+export const Helix: React.FC<{cam: Cam; a: V3; b: V3; r: number; turns: number; wire: number; color: string; back?: string; inkW?: number}> = ({cam, a, b, r, turns, wire, color, back, inkW = 1.4}) => {
   const ax = norm(sub(b, a));
   const u = norm(Math.abs(ax[1]) < 0.9 ? cross(ax, [0, 1, 0]) : cross(ax, [1, 0, 0]));
   const w = cross(ax, u);
@@ -343,12 +344,13 @@ export const LatchLine: React.FC<{cam: Cam; f: Frame; s: LineState; sc: number}>
 export const Coil: React.FC<{id: string; cam: Cam; f: Frame; heat: number; sc: number}> = ({id, cam, f, heat, sc}) => {
   const a = toW(f, [SEC.coil[0], SEC.lineLift, 0]), b = toW(f, [SEC.coil[1], SEC.lineLift, 0]);
   const h = clamp(heat);
-  const col = mix(GEAR_COL.nichrome, h < 0.5 ? mix('#D2552E', GEAR_COL.hot, 0) : GEAR_COL.hot, h < 0.5 ? h * 1.4 : 0.7 + 0.6 * (h - 0.5));
+  // dull nichrome -> red-orange -> warm yellow as it heats
+  const col = h < 0.5 ? mix(GEAR_COL.nichrome, '#D2552E', h * 2) : mix('#D2552E', GEAR_COL.hot, (h - 0.5) * 2);
   const c = proj(cam, lerp3(a, b, 0.5));
   const L = (SEC.coil[1] - SEC.coil[0]) * sc;
   return (
     <g>
-      <SoftGlow id={`${id}-g1`} at={c} r={L * 2.4} ry={L * 1.8} color={GEAR_COL.hot} alpha={0.55 * h * h} />
+      <SoftGlow id={`${id}-g1`} at={c} r={L * 2.9} ry={L * 2.2} color={GEAR_COL.hot} alpha={0.62 * h * h} />
       <Helix cam={cam} a={a} b={b} r={SEC.coilR} turns={SEC.coilTurns} wire={0.17} color={mix(col, '#FFF4C8', Math.max(0, h - 0.75) * 1.6)} back={shade(col, 0.35 - 0.25 * h)} inkW={Math.max(1, 0.1 * sc)} />
       <SoftGlow id={`${id}-g2`} at={c} r={L * 0.7} ry={L * 0.45} color="#FFE7A0" alpha={0.55 * Math.max(0, h - 0.45) * 1.8} />
     </g>
@@ -624,15 +626,16 @@ export const DoseCloud: React.FC<{id: string; cam: Cam; f: Frame; c: number; alp
   if (c <= 0.001) return null;
   const sc = scaleAt(cam, toW(f, [NEEDLE_LEN, 0, 0]));
   const g = smoother(clamp(c));
-  const R = 0.35 + 3.6 * g;
+  const R = 0.3 + 3.3 * g; // mm
+  // a small soft cloud round the needle tip (a little ahead of it), a few lobes so it reads as liquid spreading
   const lobes: [number, number, number, number][] = [
-    // [dx along the needle (into the block), dy, radius factor, alpha]
-    [0.35, 0, 0.55, 0.9],
-    [0.9, 0.35, 0.8, 0.55],
-    [1.0, -0.4, 0.75, 0.55],
-    [1.5, 0.15, 0.7, 0.45],
-    [0.3, 0.55, 0.5, 0.4],
-    [0.4, -0.6, 0.5, 0.4],
+    // [dx along the needle, dy, radius factor, alpha]
+    [0.25, 0, 0.62, 0.95],
+    [0.55, 0.32, 0.7, 0.5],
+    [0.6, -0.36, 0.68, 0.5],
+    [-0.05, 0.42, 0.55, 0.4],
+    [0.0, -0.45, 0.55, 0.4],
+    [0.85, 0.05, 0.55, 0.35],
   ];
   return (
     <g clipPath={clip}>
@@ -673,11 +676,16 @@ export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, ca
   const ink = Math.max(1.2, Math.min(4, sc * 0.3));
   const parts: {z: number; el: React.ReactNode}[] = [];
   let silHull: V2[] = [];
+  // as the cut plane sweeps out, its faces turn from cut faces into the plain sides of the parts
+  const cutA = 1 - sr01(zc, 2.5, 13);
   for (const b of FIX) {
     const z0 = b.c[2] - b.h[2], z1 = b.c[2] + b.h[2];
     if (z0 >= zc) continue;
     const zt = Math.min(z1, zc);
     const cut = zt < z1;
+    // a part wholly in front of the section plane (the near cheek) fades in over the rest of the sweep, so it does not
+    // appear at full size the moment the plane reaches it
+    const grow = z0 > 0 ? sr01(zc, z0, FIXTURE_CLOSED - 1) : 1;
     const c: V3 = cut ? [b.c[0], b.c[1], (z0 + zt) / 2] : b.c;
     const h: V3 = cut ? [b.h[0], b.h[1], (zt - z0) / 2] : b.h;
     const face = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => proj(cam, [c[0] + sx * h[0], c[1] + sy * h[1], zt + 0.01]));
@@ -690,10 +698,10 @@ export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, ca
     parts.push({
       z: depth(cam, c),
       el: (
-        <g key={b.key}>
+        <g key={b.key} opacity={grow < 1 ? fmt(grow) : undefined}>
           <Solid cam={cam} c={c} h={h} color={b.color} ink={ink} />
-          {cut && cam.eye[2] > zt && (b.sil ? (
-            <g>
+          {cut && cam.eye[2] > zt && cutA > 0.002 && (b.sil ? (
+            <g opacity={cutA < 1 ? fmt(cutA) : undefined}>
               <defs>
                 <linearGradient id={`${id}-sil`} gradientUnits="userSpaceOnUse" x1={fmt(a0[0])} y1={fmt(a0[1])} x2={fmt(a1[0])} y2={fmt(a1[1])}>
                   <stop offset="0" stopColor={lit(LAB.silicone, 0.42)} />
@@ -701,10 +709,12 @@ export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, ca
                   <stop offset="1" stopColor={lit(LAB.silicone, 0.04)} />
                 </linearGradient>
               </defs>
-              <path d={polyPath(face)} fill={`url(#${id}-sil)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+              <path d={polyPath(face)} fill={`url(#${id}-sil)`} />
+              <path d={polyPath(face)} fill={`url(#${id}-hs)`} />
+              <path d={polyPath(face)} fill="none" stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
             </g>
           ) : (
-            <path d={polyPath(face)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+            <path d={polyPath(face)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" opacity={cutA < 1 ? fmt(cutA) : undefined} />
           ))}
         </g>
       ),
@@ -714,10 +724,16 @@ export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, ca
   // TargetFixture's face sheen and screws, wherever that part of the fixture is present
   const screws: V3[] = [[-4, 14, 23.4], [-4, 46, 23.4], [-16, 14, 23.4], [-16, 46, 23.4], [-4, 14, -23.4], [-4, 46, -23.4], [-16, 14, -23.4], [-16, 46, -23.4]];
   const faceVis = (z: number) => (z > 0 ? cam.eye[2] > 23.3 && zc >= 23.3 : cam.eye[2] < -23.3);
+  const screwA = sr01(zc, 19.7, FIXTURE_CLOSED - 1);
   const zq = Math.min(17.5, zc);
   return (
     <g>
       <Hatch id={`${id}-ha`} at={proj(cam, [-38, 0, 0])} sp={Math.max(4, 0.55 * sc)} color={ALU_CUT} ink={Math.max(0.9, 0.06 * sc)} alpha={0.5} />
+      <defs>
+        <pattern id={`${id}-hs`} patternUnits="userSpaceOnUse" width={fmt(Math.max(5, 1.1 * sc))} height={fmt(Math.max(5, 1.1 * sc))} patternTransform={`translate(${fmt(proj(cam, [-16, 13, 0])[0])} ${fmt(proj(cam, [-16, 13, 0])[1])}) rotate(45)`}>
+          <line x1={0} y1={0} x2={0} y2={fmt(Math.max(5, 1.1 * sc))} stroke="#FFFFFF" strokeWidth={fmt(Math.max(0.8, 0.07 * sc))} opacity={0.3} />
+        </pattern>
+      </defs>
       <defs>
         <clipPath id={`${id}-silclip`}>
           <path d={polyPath(silHull)} />
@@ -738,7 +754,7 @@ export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, ca
         const c = proj(cam, p);
         const r = 1.6 * scaleAt(cam, p);
         return (
-          <g key={i}>
+          <g key={i} opacity={p[2] > 0 && screwA < 1 ? fmt(screwA) : undefined}>
             <circle cx={fmt(c[0])} cy={fmt(c[1])} r={fmt(r)} fill="#8C97A2" stroke={INK} strokeWidth={ink * 0.6} />
             <path d={`M${fmt(c[0] - r * 0.6)} ${fmt(c[1])} L${fmt(c[0] + r * 0.6)} ${fmt(c[1])}`} stroke={INK} strokeWidth={ink * 0.5} />
           </g>

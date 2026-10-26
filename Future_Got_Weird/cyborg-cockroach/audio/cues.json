@@ -1168,6 +1168,483 @@
    "name": "S08 feed foot"
   },
   {
+   "kind": "button",
+   "t": 16.210000000000004,
+   "gain": -27,
+   "name": "S09 operator presses fire",
+   "args": {
+    "f": 1700
+   }
+  },
+  {
+   "kind": "pulse",
+   "t": 16.270000000000003,
+   "gain": -29,
+   "name": "S09 pulse to the coil"
+  },
+  {
+   "kind": "sizzle",
+   "t": 16.430000000000003,
+   "gain": -29,
+   "name": "S09 coil heats",
+   "args": {
+    "d": 0.17
+   }
+  },
+  {
+   "kind": "click",
+   "t": 16.6,
+   "gain": -13,
+   "hero": true,
+   "name": "S09 LINE PARTS (mechanism, accent 2)"
+  },
+  {
+   "kind": "spring",
+   "t": 16.605,
+   "gain": -21,
+   "hero": true,
+   "name": "S09 spring drives the injector"
+  },
+  {
+   "kind": "zing",
+   "t": 16.67,
+   "gain": -30,
+   "name": "S09 flight"
+  },
+  {
+   "kind": "thock",
+   "t": 16.833333333333332,
+   "gain": -17,
+   "hero": true,
+   "name": "S09 IMPACT into silicone"
+  },
+  {
+   "kind": "click",
+   "t": 18.14,
+   "gain": -33,
+   "name": "S10 seal opens",
+   "args": {
+    "f": 3200,
+    "d": 0.04,
+    "bright": 0.6
+   }
+  },
+  {
+   "kind": "fizz",
+   "t": 18.18,
+   "gain": -31,
+   "name": "S10 gas behind the plunger",
+   "args": {
+    "d": 1.45
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 20.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 20.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 20.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.041666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.041666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.041666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.291666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.291666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.291666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.541666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.541666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.541666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.791666666666668,
+   "gain": -38,
+   "name": "S11 foot"
+  },
+  {
+   "kind": "air",
+   "t": 21.366666666666667,
+   "gain": -27,
+   "name": "S11/S12 occlusion bridge air pass",
+   "args": {
+    "d": 0.7666666666666667,
+    "lo": 250,
+    "hi": 2600,
+    "rise": true
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 21.941666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.941666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.941666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.158333333333335,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.158333333333335,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.158333333333335,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.375,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.375,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.375,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.591666666666665,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.591666666666665,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.591666666666665,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.808333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.808333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 22.808333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.025,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.025,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.025,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.241666666666667,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.241666666666667,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.241666666666667,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.458333333333332,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.458333333333332,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.458333333333332,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.675,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.675,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.675,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.891666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.891666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 23.891666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.108333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.108333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.108333333333334,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.325,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.325,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.325,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.541666666666668,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.541666666666668,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.541666666666668,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.758333333333333,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.758333333333333,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.758333333333333,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.975,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.975,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 24.975,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 25.191666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 25.191666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 25.191666666666666,
+   "gain": -38,
+   "name": "S12 foot"
+  },
+  {
+   "kind": "grit",
+   "t": 22.23333333333333,
+   "gain": -40,
+   "name": "S12 grit trickle",
+   "args": {
+    "d": 1.6,
+    "rate": 22
+   }
+  },
+  {
+   "kind": "creak",
+   "t": 23.133333333333333,
+   "gain": -38,
+   "name": "S12 rubble creaks"
+  },
+  {
    "kind": "creak",
    "t": 25.616666666666667,
    "gain": -36,

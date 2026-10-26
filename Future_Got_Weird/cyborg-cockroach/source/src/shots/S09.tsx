@@ -8,21 +8,20 @@
 // parts on "fire" (the two cut ends spring apart), the spring drives the injector out, it crosses the few centimetres and
 // the needle embeds; the body takes a small recoil through its planted legs. Locked camera.
 import React from 'react';
-import {lookAt, depth, proj, scaleAt, Cam} from '../lib/cam';
+import {lookAt, proj, scaleAt, Cam} from '../lib/cam';
 import {V3, Frame, add, mul, toW} from '../lib/v3';
 import {clamp, easeIn, easeOut, keys, ramp, sr} from '../lib/ease';
 import {poseRoach, straightPath, plantedStop, RoachPose} from '../rig/roach';
 import {Roach} from '../rig/Roach';
 import {Injector} from '../rig/Gear';
-import {INJ} from '../rig/gear';
 import {NEEDLE_TIP, EMBED} from '../rig/launch';
-import {LabBackdrop, ArenaFloor, TargetFixture} from '../sets/Lab';
+import {LabBackdrop, ArenaFloor, TargetFixture, TARGET} from '../sets/Lab';
 import {arenaWalls} from '../sets/LabRoom';
 import {FixtureShadow, S01_BODY_X} from './S01';
 import {PackBase, SectionTube, SEC} from '../rig/Section';
 import {fmt} from '../lib/g3';
 import {ShotProps} from './index';
-import {FPS, word, wordIn} from '../timeline';
+import {FPS, wordIn} from '../timeline';
 
 const DEG = Math.PI / 180;
 
@@ -41,7 +40,6 @@ const FLIGHT = 7 / FPS;
 /** the frame the needle embeds in the silicone (the impact) */
 export const S09_IMPACT_F = S09_CUT_F + 7;
 const T_P0 = S09_T_CUT - 0.33, T_P1 = S09_T_CUT - 0.15; // pulse along the coil wire
-const T_INJ = word('injector', 0).start;
 
 // ---------------------------------------------------------------------------------------------------------------
 // The medic: firing stance (S01's), the last few degrees of turn and a levelling on its planted feet, the recoil
@@ -73,7 +71,8 @@ export const s09Pose = (t: number): RoachPose => {
     pitch: -1.6 * DEG * (1 - u) + 0.016 * rec,
     offset: [-1.1 * (1 - u) - 1.0 * rec, -SETTLE - 0.3 * rec, 0],
     // antennae held up and forward toward the target (clear of the cradle's base plate), flicking back at the release
-    antL: {yaw: 0.66 - 0.1 * u + 0.3 * rec + 0.12 * after, pitch: 0.3 + 0.18 * rec, curl: 0.72},
+    // (the near antenna stays out to the side after the flick, so S10's close-up of the target is clear of it)
+    antL: {yaw: 0.66 - 0.1 * u + 0.3 * rec + 0.95 * after, pitch: 0.3 + 0.18 * rec + 0.1 * after, curl: 0.72},
     antR: {yaw: 0.72 - 0.1 * u + 0.3 * rec + 0.12 * after, pitch: 0.32 + 0.18 * rec, curl: 0.72},
   });
 };
@@ -97,7 +96,7 @@ export const s09Launch = (t: number): S09Launch => {
   const heat = sr(t, T_P1 - 0.02, S09_T_CUT - 0.01) * (1 - sr(t, S09_T_CUT + 0.08, S09_T_CUT + 0.65));
   const pulse = t >= T_P0 && t <= T_P1 ? ramp(t, T_P0, T_P1) : null;
   if (dt < 0) return {rear: SEC.loadedRear, inTube: true, flying: false, embedded: false, impact: -1, springFront: SEC.loadedRear, cutT: null, heat, pulse};
-  const u = clamp(dt / FLIGHT);
+  const u = clamp(dt / FLIGHT + 1e-9);
   // fast out of the tube on the spring, then steady through the air (almost no slowing over a few cm)
   const prog = u < 0.3 ? 0.3 * easeIn(u / 0.3, 1.6) : 0.3 + 0.7 * ((u - 0.3) / 0.7);
   const rear = SEC.loadedRear + TRAVEL * prog;
@@ -149,11 +148,9 @@ export const S09: React.FC<ShotProps> = ({f}) => {
       <PackBase cam={cam} f={pose.frame} part="front" />
     </g>
   );
-  const items: {z: number; el: React.ReactNode}[] = [];
-  items.push({z: depth(cam, [-8, 30, 0]), el: <TargetFixture key="tgt" id="s09t" cam={cam} />});
-  items.push({z: depth(cam, pose.frame.o), el: <Roach key="roach" pose={pose} cam={cam} o={{id: 's09r', gear}} />});
-  items.push(...arenaWalls(cam, {skip: ['s', 'e', 'w']}).map((w) => ({z: w.z, el: w.el})));
-  items.sort((a, b) => b.z - a.z);
+  // drawing order: the far wall, the target, the insect (from this side the insect is never behind any part of the
+  // fixture; a depth sort by centres would put the fixture over the antenna tips)
+  const walls = arenaWalls(cam, {skip: ['s', 'e', 'w']}).sort((a, b) => b.z - a.z);
   const out = !L.inTube;
   const inj = out ? injFrame(L.rear) : null;
   // short motion trail while it flies
@@ -165,15 +162,18 @@ export const S09: React.FC<ShotProps> = ({f}) => {
       <LabBackdrop id="s09b" cam={cam} blur={16} />
       <ArenaFloor id="s09f" cam={cam} />
       <FixtureShadow cam={cam} />
-      {items.map((it) => it.el)}
+      {walls.map((w) => w.el)}
+      <TargetFixture id="s09t" cam={cam} />
+      <Roach pose={pose} cam={cam} o={{id: 's09r', gear}} />
       {trail.map((tr, k) => (
         <g key={k} opacity={tr.a}>
-          <Injector id={`s09tr${k}`} cam={cam} s={{f: {...inj!, o: tr.o}, plunger: 0}} />
+          <Injector id={`s09tr${k}`} cam={cam} s={{f: {...inj!, o: tr.o}, plunger: 0, needleEnd: Math.min(NEEDLE_TIP, tr.o[0] - TARGET.face)}} />
         </g>
       ))}
       {inj && (
         <g transform={jig ? `translate(${fmt(-jig * 2)} 0)` : undefined}>
-          <Injector id="s09inj" cam={cam} s={{f: inj, plunger: 0, needleEnd: L.embedded ? NEEDLE_TIP - EMBED : undefined}} />
+          {/* the needle is hidden where it has gone into the silicone (face plane x = 0) */}
+          <Injector id="s09inj" cam={cam} s={{f: inj, plunger: 0, needleEnd: L.embedded ? NEEDLE_TIP - EMBED : Math.min(NEEDLE_TIP, inj.o[0] - TARGET.face)}} />
           {L.embedded && (() => {
             const p = proj(cam, [0.1, inj.o[1], inj.o[2]]);
             const r = 1.1 * scaleAt(cam, [0, inj.o[1], 0]);
@@ -184,4 +184,3 @@ export const S09: React.FC<ShotProps> = ({f}) => {
     </svg>
   );
 };
-export const S09_T_INJ = T_INJ;

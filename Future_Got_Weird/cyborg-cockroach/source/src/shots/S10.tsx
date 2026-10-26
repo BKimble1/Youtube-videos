@@ -5,16 +5,17 @@
 // opens, fine gas bubbles form behind the plunger, the plunger advances, the amber dose runs through the needle's bore and
 // blooms into the translucent silicone as a soft cloud. On "laboratory" one eased pull-back (rising and swinging round to
 // the front-left) shows the artificial set-up: the aluminium cradle with its screws and base plate on the grid mat, the
-// injector in the silicone and the medic insect waiting a few centimetres away; early in the move the cutaway dissolves
-// into the normal exterior (a full-frame crossfade of two renders of the same camera, so nothing pops).
+// injector in the silicone and the medic insect waiting a few centimetres away. Early in the move the cutaway closes: the
+// cut plane sweeps out toward the camera (the cut faces turning into the parts' plain sides, the near cheek fading in as
+// the plane passes it) and the injector's own section dissolves into its exterior, so nothing pops.
 import React from 'react';
-import {lookAt, proj, scaleAt, Cam} from '../lib/cam';
-import {V3, V2, add, lerp3, toW} from '../lib/v3';
-import {clamp, lerp, ramp, sr} from '../lib/ease';
+import {lookAt, proj, Cam} from '../lib/cam';
+import {V3, V2, add} from '../lib/v3';
+import {lerp, ramp, sr} from '../lib/ease';
 import {Roach} from '../rig/Roach';
 import {Injector} from '../rig/Gear';
 import {NEEDLE_TIP, EMBED} from '../rig/launch';
-import {LabBackdrop, ArenaFloor, TargetFixture} from '../sets/Lab';
+import {LabBackdrop, ArenaFloor} from '../sets/Lab';
 import {arenaWalls} from '../sets/LabRoom';
 import {FixtureShadow} from './S01';
 import {s09Pose, S09_EMBED_FRAME, S09_T_CUT} from './S09';
@@ -38,7 +39,7 @@ export const s10Delivery = (t: number): Delivery => ({
   fizz: ramp(t, T_SEAL + 0.04, T_SEAL + 0.16) * (1 - 0.7 * sr(t, 19.1, 19.6)),
   gas: sr(t, T_SEAL + 0.1, 19.08),
   plunger: 0.95 * sr(t, T_SEAL + 0.16, 19.1),
-  flow: ramp(t, T_SEAL + 0.24, T_SEAL + 0.34) * (1 - 0.0),
+  flow: ramp(t, T_SEAL + 0.24, T_SEAL + 0.34),
   cloud: 0.9 * sr(t, T_SEAL + 0.3, 19.2) + 0.1 * sr(t, 19.2, 20.4),
   t,
 });
@@ -50,8 +51,8 @@ export const s10Delivery = (t: number): Delivery => ({
 const F = 3200;
 const PIVOT: V3 = [0.5, 28, 0]; // on the silicone's face, just above the needle
 const SCREEN = {x: 385, y: 805}; // where the pivot sits in the frame throughout
-const A = {phi: -5 * DEG, el: 24 * DEG, R: 98.5};
-const B = {phi: 32 * DEG, el: 20 * DEG, R: 470};
+const A = {phi: -5 * DEG, el: 6 * DEG, R: 98.5};
+const B = {phi: 32 * DEG, el: 20 * DEG, R: 500};
 export const s10Cam = (t: number): Cam => {
   const k = sr(t, T_PULL0, T_PULL1);
   const phi = lerp(A.phi, B.phi, k), el = lerp(A.el, B.el, k), R = A.R * Math.pow(B.R / A.R, k);
@@ -60,12 +61,13 @@ export const s10Cam = (t: number): Cam => {
 };
 /** the cut plane (z, mm): at the section (0) until the pull-back is under way, then it sweeps out past the near cheek and
  *  the fixture closes into its plain exterior */
-const cutPlane = (t: number) => FIXTURE_CLOSED * sr(t, T_PULL0 + 0.1, T_PULL0 + 0.72);
+const cutPlane = (t: number) => FIXTURE_CLOSED * sr(t, T_PULL0 + 0.08, T_PULL0 + 0.88);
+/** the injector's own cut closes a little more slowly than the plane passes it (a short dissolve) */
+const injCut = (t: number) => 1 - sr(t, T_PULL0 + 0.1, T_PULL0 + 0.48);
 
 /** the target, the dose seen in it, and the injector (cut or whole) for a cut plane zc */
-const Target: React.FC<{id: string; cam: Cam; d: Delivery; zc: number}> = ({id, cam, d, zc}) => {
+const Target: React.FC<{id: string; cam: Cam; d: Delivery; zc: number; secInj: number}> = ({id, cam, d, zc, secInj}) => {
   const inj = S09_EMBED_FRAME;
-  const secInj = 1 - sr(zc, 0.3, 3.2);
   // the dose: on the cut face in section, then seen through the translucent silicone
   const cloudA = 1 - 0.58 * sr(zc, 0, 7);
   const entry: V2[] = Array.from({length: 24}, (_, i) => {
@@ -102,11 +104,13 @@ export const S10: React.FC<ShotProps> = ({f}) => {
   );
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <LabBackdrop id="s10b" cam={cam} blur={16} />
+      {/* LabBackdrop pans by the view azimuth atan2(fwd.x, fwd.z), which wraps (+-pi) where the view direction crosses -z
+          during this orbit; it is handed the view turned half round, which pans it the same way without the wrap */}
+      <LabBackdrop id="s10b" cam={{...cam, fwd: [-cam.fwd[0], cam.fwd[1], -cam.fwd[2]]}} blur={16} />
       <ArenaFloor id="s10f" cam={cam} />
       <FixtureShadow cam={cam} />
       {arenaWalls(cam, {skip: ['s', 'e']}).sort((a, b) => b.z - a.z).map((w) => w.el)}
-      <Target id="s10t" cam={cam} d={d} zc={cutPlane(t)} />
+      <Target id="s10t" cam={cam} d={d} zc={cutPlane(t)} secInj={injCut(t)} />
       <Roach pose={pose} cam={cam} o={{id: 's10r', gear}} />
     </svg>
   );

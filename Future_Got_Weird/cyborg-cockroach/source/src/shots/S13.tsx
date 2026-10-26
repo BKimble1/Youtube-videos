@@ -24,11 +24,28 @@ export const ALARM = NOTICE + 0.18;
 /** a low camera on the floor just beyond the gap, looking past it at her: eye, target, focal length, centre y */
 export type S13Co = {eye: V3; tgt: V3; f: number; cy: number};
 export const S13_CO: S13Co = {eye: [368, 110, 560], tgt: [125, 320, 20], f: 600, cy: 1020};
+/** S13 opens tight on her face (a cut-in from S12's medium shot of her) and eases back once, turning down to the gap
+ *  and her hand as the insect comes into view: the close-up's focal length, and when the move runs */
+const CLOSE_F = 900, MOVE: [number, number] = [25.85, 27.3];
+/** where the close-up aims, relative to the layout's head point in the base composition (px): her face, not the
+ *  back of the hair, centred */
+const AIM_OFF = {x: 70, y: 10};
+/** the world point the close-up aims at: on the ray through her face centre in the base composition */
+const faceTgt = (co: S13Co): V3 => {
+  const cam = lookAt(co.eye, co.tgt, co.f, 540, co.cy);
+  const yaw = yawFor(cam);
+  const place = survivorAt(cam, 25.27, {id: 'aim', yaw});
+  const h = survivorLayout({...place, yaw, t: 25.27}).head;
+  const dx = (h.x + AIM_OFF.x - cam.cx) / cam.f, dy = -(h.y + AIM_OFF.y - cam.cy) / cam.f;
+  const d: V3 = [cam.fwd[0] + cam.right[0] * dx + cam.up[0] * dy, cam.fwd[1] + cam.right[1] * dx + cam.up[1] * dy, cam.fwd[2] + cam.right[2] * dx + cam.up[2] * dy];
+  const l = Math.hypot(d[0], d[1], d[2]);
+  return [co.eye[0] + (d[0] / l) * 500, co.eye[1] + (d[1] / l) * 500, co.eye[2] + (d[2] / l) * 500];
+};
+let FACE_TGT: V3 | null = null; // computed on first use (the helpers it calls are declared below)
 export const s13Cam = (T: number, co: S13Co = S13_CO): Cam => {
-  const u = sr(T, 25.27, 28.53);
-  // one slow eased push toward her along the line of sight
-  const e = lerp3(co.eye, lerp3(co.eye, co.tgt, 0.06), u);
-  return lookAt(e, co.tgt, co.f, 540, co.cy);
+  const u = sr(T, MOVE[0], MOVE[1]);
+  const ft = co === S13_CO ? (FACE_TGT ??= faceTgt(S13_CO)) : faceTgt(co);
+  return lookAt(co.eye, lerp3(ft, co.tgt, u), CLOSE_F + (co.f - CLOSE_F) * u, 540, 960 + (co.cy - 960) * u);
 };
 /** her card yaw follows the camera's bearing from her (90 = profile; lower = turned toward the camera) */
 export const yawFor = (cam: Cam) => 90 - (Math.atan2(cam.eye[0] - ALCOVE.anchor[0], cam.eye[2] - ALCOVE.anchor[2]) * 180) / Math.PI;

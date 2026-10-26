@@ -15,13 +15,14 @@ import {PERSON} from './cast';
 type Part = {name: string; c: V3; r: V3; yaw?: number; pitch?: number; base?: V3; color?: string};
 const SKIN = PERSON.skin;
 const NAIL = '#FBE4D8';
-/** the hand at rest: fingers arched (knuckles up, fingertips on the floor), a little apart (mm, hand frame) */
-const parts = (t: number, relax: number): Part[] => {
+/** the hand at rest: fingers arched (knuckles up, fingertips on the floor), a little apart (mm, hand frame); curl 0..1
+ *  draws the fingers in (tense), the fingertips tucking back under the knuckles */
+const parts = (t: number, relax: number, curl = 0): Part[] => {
   const tw = (k: number) => 0.03 * noise1(t * 0.7 + k * 3.1); // tiny living drift of the fingers
   const out: Part[] = [
     {name: 'forearm', c: [-330, 31, 10], r: [175, 31, 40], yaw: 0.04},
     {name: 'palm', c: [-122, 19, 0], r: [58, 19, 46]},
-    {name: 'thumb', c: [-100, 13, -52], r: [36, 12, 13], yaw: 0.5 + 0.1 * relax, pitch: -0.12},
+    {name: 'thumb', c: [-100, 13, -52], r: [36, 12, 13], yaw: 0.5 + 0.1 * relax - 0.25 * curl, pitch: -0.12},
   ];
   // [name, knuckle z, proximal length, distal length, radius, yaw]
   const F: [string, number, number, number, number, number][] = [
@@ -30,12 +31,13 @@ const parts = (t: number, relax: number): Part[] => {
     ['ring', 10, 38, 30, 9.8, -0.05 * relax],
     ['pinky', 29, 30, 24, 8.4, -0.12 * relax],
   ];
-  const P1 = -0.2, P2 = -0.46;
+  const P1 = -0.2 - 0.3 * curl, P2 = -0.46 - 0.85 * curl;
+  const KX = -(41 * Math.cos(-0.2) + 32 * Math.cos(-0.46)) - 2; // knuckle line (fixed: curling pulls the tips back)
   F.forEach(([name, kz, Lp, Ld, r, yaw], i) => {
     const y = yaw + tw(i);
     const dx = Math.cos(y), dz = -Math.sin(y);
     // knuckle so the middle fingertip lands at the origin (others by their lengths, from the same knuckle line)
-    const K: V3 = [-(41 * Math.cos(P1) + 32 * Math.cos(P2)) - 2 + (name === 'pinky' ? -10 : 0), 30, kz];
+    const K: V3 = [KX + (name === 'pinky' ? -10 : 0), 30 + 4 * curl, kz];
     const pip: V3 = [K[0] + dx * Lp * Math.cos(P1), K[1] + Lp * Math.sin(P1), K[2] + dz * Lp * Math.cos(P1)];
     out.push({name: `${name}1`, base: K, c: [Lp / 2 + 3, 0, 0], r: [Lp / 2 + 5, r, r * 1.05], yaw: y, pitch: P1});
     out.push({name: `${name}2`, base: pip, c: [Ld / 2, 0, 0], r: [Ld / 2 + 3, r * 0.86, r * 0.92], yaw: y, pitch: P2});
@@ -52,8 +54,11 @@ const ellOf = (hf: Frame, p: Part): EllW => {
   return {f: ypr(toW(hf, base), hy + yaw, p.pitch ?? 0), c: [p.r[0], 0, 0], r: p.r};
 };
 
-export const Hand3D: React.FC<{id: string; cam: Cam; frame: Frame; t: number; relax?: number}> = ({id, cam, frame, t, relax = 1}) => {
-  const ps = parts(t, relax).map((p) => {
+/** mirror a part across the hand's x-y plane (a left hand from the right-hand layout) */
+const mirrorPart = (p: Part): Part => ({...p, c: [p.c[0], p.c[1], -p.c[2]], base: p.base ? [p.base[0], p.base[1], -p.base[2]] : undefined, yaw: -(p.yaw ?? 0)});
+export const Hand3D: React.FC<{id: string; cam: Cam; frame: Frame; t: number; relax?: number; curl?: number; left?: boolean; forearm?: boolean}> = ({id, cam, frame, t, relax = 1, curl = 0, left = false, forearm = true}) => {
+  const ps = parts(t, relax, curl).filter((p) => forearm || p.name !== 'forearm').map((p0) => {
+    const p = left ? mirrorPart(p0) : p0;
     const e = ellOf(frame, p);
     const pts = ellContour(e, cam);
     const c = toW(e.f, e.c);

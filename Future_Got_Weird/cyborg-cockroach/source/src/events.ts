@@ -9,6 +9,9 @@ import {medicPose as s04Medic, PULSE1, PULSE2} from './shots/S04';
 import {obsPose} from './shots/S07';
 import {medicPose as s08Medic} from './shots/S08';
 import {alcovePose} from './shots/alcoveWorld';
+import {s09Pose, S09_T_CUT, S09_IMPACT_F} from './shots/S09';
+import {s11Medic} from './shots/S11';
+import {s12Medic} from './shots/S12';
 
 export type Cue = {kind: string; t: number; gain?: number; hero?: boolean; name?: string; lead?: number; args?: Record<string, number | boolean>};
 const shot = (id: string) => {
@@ -65,6 +68,27 @@ export const buildCues = () => {
   // S08: the medic in the feed (heard faintly, as through the room)
   const s8 = shot('S08');
   for (const td of touchdownsP((ff) => s08Medic(ff / FPS), s8.from, s8.to)) ev.push({kind: 'tick', t: td, gain: -44, name: 'S08 feed foot'});
+  // S09: the operator's press, the pulse, the coil, the line parts (MECHANISM, accent 2), spring, flight, impact
+  const s9 = shot('S09'), s10 = shot('S10'), s11 = shot('S11'), s12 = shot('S12');
+  for (const td of touchdownsP((ff) => s09Pose(ff / FPS), s9.from, s9.to)) ev.push({kind: 'tick', t: td, gain: -37, name: 'S09 foot (lining up)'});
+  const tP0 = S09_T_CUT - 0.33, tP1 = S09_T_CUT - 0.15;
+  ev.push({kind: 'button', t: tP0 - 0.06, gain: -27, name: 'S09 operator presses fire', args: {f: 1700}});
+  ev.push({kind: 'pulse', t: tP0, gain: -29, name: 'S09 pulse to the coil'});
+  ev.push({kind: 'sizzle', t: tP1 - 0.02, gain: -29, name: 'S09 coil heats', args: {d: 0.17}});
+  ev.push({kind: 'click', t: S09_T_CUT, gain: -13, hero: true, name: 'S09 LINE PARTS (mechanism, accent 2)'});
+  ev.push({kind: 'spring', t: S09_T_CUT + 0.005, gain: -21, hero: true, name: 'S09 spring drives the injector'});
+  ev.push({kind: 'zing', t: S09_T_CUT + 0.07, gain: -30, name: 'S09 flight'});
+  ev.push({kind: 'thock', t: S09_IMPACT_F / FPS, gain: -17, hero: true, name: 'S09 IMPACT into silicone'});
+  // S10: the activator seal opens and gas pushes the plunger (time-compressed): a small click, then fizz
+  const tSeal = word("they've", 0).start;
+  ev.push({kind: 'click', t: tSeal, gain: -33, name: 'S10 seal opens', args: {f: 3200, d: 0.04, bright: 0.6}});
+  ev.push({kind: 'fizz', t: tSeal + 0.04, gain: -31, name: 'S10 gas behind the plunger', args: {d: 1.45}});
+  // S11 -> S12: the medic's feet, and the one air pass for the occlusion bridge (the foam panel, then the slab)
+  for (const td of touchdownsP((ff) => s11Medic(ff), s11.from, s11.to)) ev.push({kind: 'tick', t: td, gain: -38, name: 'S11 foot'});
+  ev.push({kind: 'air', t: 641 / FPS, gain: -27, name: 'S11/S12 occlusion bridge air pass', args: {d: (664 - 641) / FPS, lo: 250, hi: 2600, rise: true}});
+  for (const td of touchdownsP((ff) => s12Medic(ff / FPS).pose, s12.from, s12.to)) ev.push({kind: 'tick', t: td, gain: -38, name: 'S12 foot'});
+  ev.push({kind: 'grit', t: s12.from / FPS + 0.4, gain: -40, name: 'S12 grit trickle', args: {d: 1.6, rate: 22}});
+  ev.push({kind: 'creak', t: s12.from / FPS + 1.3, gain: -38, name: 'S12 rubble creaks'});
   // S13-S15: the walk to her hand; it grows closer, the last steps are the final-approach accent
   const s13 = shot('S13'), s14 = shot('S14'), s15 = shot('S15');
   ev.push({kind: 'creak', t: s13.from / FPS + 0.35, gain: -36, name: 'S13 rubble settles'});

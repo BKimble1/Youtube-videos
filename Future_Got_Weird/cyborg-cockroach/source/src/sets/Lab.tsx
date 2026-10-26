@@ -35,7 +35,7 @@ export const LabBackdrop: React.FC<{id: string; cam: Cam; blur?: number; dim?: n
   const base = Math.floor((-ox - 600) / bay) - 1;
   for (let k = base; k < base + 5; k++) {
     const x = k * bay + ox;
-    const s = (k * 37) % 5;
+    const s = (((k * 37) % 5) + 5) % 5; // non-negative for bays left of 0 (else the jar colours index out of range)
     items.push(
       <g key={`b${k}`} transform={`translate(${fmt(x)} ${fmt(oy)})`}>
         <rect x={40} y={260} width={620} height={16} fill="#9FB0BA" />

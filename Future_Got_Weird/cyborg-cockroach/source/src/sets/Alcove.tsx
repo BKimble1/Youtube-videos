@@ -273,9 +273,8 @@ export const alcovePieces = (cam: Cam, opts: {sun?: number} = {}): Item[] => {
     // a high slab resting on the back wall, well above her (the space is low but she can raise her head)
     C('ceil', {c: [60, 980, -260], h: [760, 26, 300], roll: 0.22, tilt: 0.05, seed: 7, color: ALC.concreteDeep}),
     // the gap the insect comes through: two blocks either side of its path, set back from her, and rubble beyond
-    C('gapL', {c: [335 - 0.97 * 125 + 0.25 * 40, 70, 360 + 0.25 * 125 + 0.97 * 40], h: [70, 70, 85], yaw: 0.25, seed: 8}),
+    C('gapL', {c: [335 - 0.97 * 125 + 0.25 * 40, 50, 360 + 0.25 * 125 + 0.97 * 40], h: [70, 50, 85], yaw: 0.25, seed: 8}),
     C('gapR', {c: [335 + 0.97 * 130 + 0.25 * 40, 85, 360 - 0.25 * 130 + 0.97 * 40], h: [80, 85, 90], yaw: 0.3, seed: 9, color: ALC.concreteLight}),
-    C('beyond', {c: [470, 150, 560], h: [180, 150, 70], yaw: 0.25, seed: 15, color: ALC.concreteDeep}),
     // debris on the floor
     C('deb1', {c: [420, 14, -150], h: [26, 14, 20], yaw: 0.7, seed: 11, chip: 0.3}),
     C('deb2', {c: [80, 10, 200], h: [18, 10, 15], yaw: 0.3, seed: 12, chip: 0.3}),
