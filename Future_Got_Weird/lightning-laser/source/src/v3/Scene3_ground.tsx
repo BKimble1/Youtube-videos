@@ -74,31 +74,50 @@ export const Summit3D: React.FC<{cam: Cam3; flash: number}> = ({cam, flash}) => 
   const PV = MESH.V.map(P);
   const items: {z: number; el: React.ReactNode}[] = [];
   const front = MESH.tris.map((t) => dot3(t.n, sub3(cam.pos, t.m)) > 0);
-  const vis = MESH.tris.map((t) => {
-    const pa = PV[t.a], pb = PV[t.b], pc = PV[t.c];
-    if (!pa.ok || !pb.ok || !pc.ok) return false;
-    const xs = [pa.x, pb.x, pc.x], ys = [pa.y, pb.y, pc.y];
+  // a facet reaching behind the camera is clipped at a near plane (not dropped: a camera low over the terrace has
+  // big facets beside it, and dropping one opened a hole to the sky in a single frame, V4 W-6)
+  const ZN = 0.31; // (the projector's own limit: every facet drawn before is drawn exactly as before)
+  const clipped = (ids: number[]) => {
+    if (ids.every((i) => PV[i].z >= ZN)) return ids.map((i) => PV[i]);
+    const out: {x: number; y: number}[] = [];
+    for (let i = 0; i < ids.length; i++) {
+      const a = ids[i], b = ids[(i + 1) % ids.length];
+      const za = PV[a].z, zb = PV[b].z;
+      if (za >= ZN) out.push(PV[a]);
+      if ((za - ZN) * (zb - ZN) < 0) {
+        const u = (ZN - za) / (zb - za), A = MESH.V[a], B = MESH.V[b];
+        out.push(P(v3(A.x + (B.x - A.x) * u, A.y + (B.y - A.y) * u, A.z + (B.z - A.z) * u)));
+      }
+    }
+    return out;
+  };
+  const polys = MESH.tris.map((t) => clipped([t.a, t.b, t.c]));
+  const vis = polys.map((q) => {
+    if (q.length < 3) return false;
+    const xs = q.map((p) => p.x), ys = q.map((p) => p.y);
     return !(Math.max(...xs) < -50 || Math.min(...xs) > 1130 || Math.max(...ys) < -50 || Math.min(...ys) > 1970);
   });
   // every camera is above the rock surface (a height field), so a facet turned away from it is always hidden behind
   // one turned toward it: skip those (no painter's-order overdraw at the platform rim, half the paths)
   MESH.tris.forEach((t, k) => {
     if (!vis[k] || !front[k]) return;
-    const pa = PV[t.a], pb = PV[t.b], pc = PV[t.c];
+    const q = polys[k];
     const lam = clamp(dot3(t.n, LIGHT3) * 0.8 + 0.2);
     const base = mix('#111A22', '#4A5862', lam * lam);
     // the discharge lights the rock near the tower (falls off with distance; faces turned to the bolt catch most)
     const k2 = flash * lightAt(t.m, LOW_BOLT, 115, t.n);
     const haze = clamp((len3(sub3(t.m, cam.pos)) - 220) / 1400) * 0.55;
     const col = mix(mix(base, '#A3ADE6', 0.85 * k2), skyAt(elevOf(cam, t.m), flash), haze);
-    const d = `M${fmt(pa.x)},${fmt(pa.y)} L${fmt(pb.x)},${fmt(pb.y)} L${fmt(pc.x)},${fmt(pc.y)} Z`;
-    items.push({z: (pa.z + pb.z + pc.z) / 3, el: <path key={`t${k}`} d={d} fill={col} stroke={col} strokeWidth={1.2} strokeLinejoin="round" />});
+    const d = `M${q.map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L')} Z`;
+    // (depth from the facet's own vertices, as before, so the painter's order of whole facets is unchanged)
+    items.push({z: (PV[t.a].z + PV[t.b].z + PV[t.c].z) / 3, el: <path key={`t${k}`} d={d} fill={col} stroke={col} strokeWidth={1.2} strokeLinejoin="round" />});
   });
   // ink: the silhouette (an edge between a facet turned to the camera and one turned away) and the sharper creases
   MESH.edges.forEach((e, k) => {
     if (e.outer) return;
-    const pu = PV[e.u], pw = PV[e.w];
-    if (!pu.ok || !pw.ok) return;
+    const ce = clipped([e.u, e.w]);
+    if (ce.length < 2) return;
+    const pu = {...ce[0], z: PV[e.u].z}, pw = {...ce[1], z: PV[e.w].z};
     const anyVis = e.t.some((ti) => vis[ti]);
     if (!anyVis) return;
     const fr = e.t.map((ti) => front[ti]);

@@ -7,6 +7,7 @@
 //   ExitGlow4     the telescope's exit in a wide view, where the (physically sized) telescope is small: a local cyan
 //                 glow with a minimum screen size, brightening as each packet leaves (V3 palette, no flash)
 import React from 'react';
+import {mix} from '../dc/color';
 import {clamp, fmt} from '../dc/math';
 import {ss} from '../lib';
 import {axis3, Cam3, EXIT3, projector, Proj, V3} from '../v2/p3';
@@ -56,6 +57,10 @@ export const ChannelGrow4: React.FC<{cam: Cam3; t: number; top: number; id: stri
   const growing = clamp(1 - ss(t, 30.6, 31.0));
   // a young channel is a little stronger (so the first metres read as a band leaving the tip)
   const young = 1 + 0.6 * (1 - ss(len, 150, 500));
+  // (V4 review H-7) a young band is the saturated warm of the prepared air, not its pale highlight: screened over the
+  // cyan line the pale core and front read as grey mist for the first ~12 frames
+  const ripe = ss(len, 150, 500);
+  const cBody = mix(PAL.channelMacro, PAL.channel, ripe), cCore = mix(PAL.channel, PAL.channelEdge, ripe);
   const lead = ribbon(pp.slice(Math.floor(pp.length * 0.62)), (p) => Math.min(wFull(p) * 0.72, cap * 0.72) / 2);
   // the leading end feathered along the axis (a linear fade over its last ~22%), so the front is soft without a cap
   const fx0 = base.x + (end.x - base.x) * 0.78, fy0 = base.y + (end.y - base.y) * 0.78;
@@ -81,9 +86,9 @@ export const ChannelGrow4: React.FC<{cam: Cam3; t: number; top: number; id: stri
         </radialGradient>
       </defs>
       <g mask={`url(#${id}-m)`}>
-        <path d={body} fill={PAL.channel} fillOpacity={clamp(0.2 * gain * young)} filter={`url(#${id}-b)`} />
-        <path d={core} fill={PAL.channelEdge} fillOpacity={clamp(0.14 * gain)} filter={`url(#${id}-b)`} />
-        {lead && growing > 0.02 && <path d={lead} fill={PAL.channelEdge} fillOpacity={0.16 * growing * Math.min(1, gain)} filter={`url(#${id}-b)`} />}
+        <path d={body} fill={cBody} fillOpacity={clamp(0.2 * gain * young)} filter={`url(#${id}-b)`} />
+        <path d={core} fill={cCore} fillOpacity={clamp(0.14 * gain * (0.6 + 0.4 * ripe))} filter={`url(#${id}-b)`} />
+        {lead && growing > 0.02 && <path d={lead} fill={cCore} fillOpacity={0.16 * growing * Math.min(1, gain) * (0.6 + 0.4 * ripe)} filter={`url(#${id}-b)`} />}
       </g>
       {base.ok && baseK > 0.01 && <circle cx={fmt(base.x)} cy={fmt(base.y)} r={fmt(rB)} fill={`url(#${id}-fr)`} opacity={0.5 * baseK} />}
     </g>
@@ -91,11 +96,11 @@ export const ChannelGrow4: React.FC<{cam: Cam3; t: number; top: number; id: stri
 };
 
 /** the exit window's glow with a minimum screen radius (wide views), brightening on each packet's departure */
-export const ExitGlow4: React.FC<{cam: Cam3; k: number; tick: number; id: string}> = ({cam, k, tick, id}) => {
+export const ExitGlow4: React.FC<{cam: Cam3; k: number; tick: number; id: string; rMin?: number}> = ({cam, k, tick, id, rMin = 46}) => {
   if (k <= 0.01) return null;
   const e = projector(cam)(EXIT3);
   if (!e.ok) return null;
-  const r = Math.max(46, (cam.f * 1.6) / Math.max(e.z, 1)) * (1 + 0.35 * clamp(tick));
+  const r = Math.max(rMin, (cam.f * 1.6) / Math.max(e.z, 1)) * (1 + 0.35 * clamp(tick));
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
@@ -106,6 +111,34 @@ export const ExitGlow4: React.FC<{cam: Cam3; k: number; tick: number; id: string
         </radialGradient>
       </defs>
       <circle cx={fmt(e.x)} cy={fmt(e.y)} r={fmt(r)} fill={`url(#${id}-eg)`} opacity={fmt(clamp(k * (0.55 + 0.45 * clamp(tick))))} />
+    </g>
+  );
+};
+
+/** the exit's cyan light on the terrace: a soft pool on the pad round the telescope's foot (in the pad's plane, so it
+ *  lies on the ground at any angle), brightening as each packet leaves. Local: a few metres, never a wash. */
+const POOL_C = {x: EXIT3.x + 0.5, y: -19.12, z: EXIT3.z};
+const POOL = Array.from({length: 28}, (_, i) => {
+  const a = (i / 28) * 6.2832;
+  return {x: POOL_C.x + 3.4 * Math.cos(a), y: POOL_C.y, z: POOL_C.z + 3.4 * Math.sin(a)};
+});
+export const LaunchLight4: React.FC<{cam: Cam3; k: number; tick: number; id: string}> = ({cam, k, tick, id}) => {
+  if (k <= 0.01 || cam.pos.y <= POOL_C.y + 0.05) return null;
+  const P = projector(cam);
+  const q = POOL.map(P);
+  if (q.some((p) => !p.ok)) return null;
+  const xs = q.map((p) => p.x), ys = q.map((p) => p.y);
+  if (Math.max(...xs) < 0 || Math.min(...xs) > 1080 || Math.max(...ys) < 0 || Math.min(...ys) > 1920) return null;
+  return (
+    <g style={{mixBlendMode: 'screen'}}>
+      <defs>
+        <radialGradient id={`${id}-pl`}>
+          <stop offset="0" stopColor={PAL.laser} stopOpacity={0.55} />
+          <stop offset="0.45" stopColor={PAL.laserGlow} stopOpacity={0.22} />
+          <stop offset="1" stopColor={PAL.laserGlow} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <path d={`${line(q)} Z`} fill={`url(#${id}-pl)`} opacity={fmt(clamp(k * (0.6 + 0.4 * clamp(tick))))} />
     </g>
   );
 };

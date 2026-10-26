@@ -73,10 +73,13 @@ export const OpenFx4: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, t: t
   // the cyan path's glow
   const glowW = runs(P, BEAM_PTS, 1.5, f, 6, 30, 3);
   const glowN = runs(P, BEAM_PTS, 0.55, f, 3, 12, 3);
-  // the warm prepared air: a sheath wider than the discharge's violet halo once the bolt has connected
-  const wide = ss(t, CONNECT4 - 0.1, CONNECT4 + 0.25);
+  // the warm prepared air: a sheath wider than the discharge's violet halo once the bolt has connected (it widens as
+  // the leader nears the cloud, so the connection's glow never covers its orange edges), and it hands over to V3's
+  // own (narrower, fading) band over 12 frames, 3.8-4.2 (V4 review A4-7: it went in about 3 frames)
+  const wide = ss(t, CONNECT4 - 0.2, CONNECT4 + 0.15);
+  const kAir = tau3(t0) < 0 ? 1 : 1 - ss(t, 3.8, HAND4);
   const chPP = CH_PTS.map(P);
-  const ch = ribbon(chPP, f, 6.5 + 7 * wide, 24, 420);
+  const ch = ribbon(chPP, f, 6.5 + 9 * wide, 24, 460);
   const chCore = ribbon(chPP, f, 1.2, 5, 90);
   // the guided section: lifts while the leader rides it, strengthens at the connection, re-strokes
   const pulse = strokePulse(t0);
@@ -145,11 +148,11 @@ export const OpenFx4: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, t: t
             <path d={streamers.join(' ')} fill="none" stroke="#E6E0FF" strokeOpacity={clamp(0.9 * env)} strokeWidth={fmt(clamp((f * 0.15) / Math.max(tip.z, 1), 1.4, 5))} strokeLinecap="round" strokeLinejoin="round" />
           </g>
         )}
-        {k > 0.002 && (
+        {(k > 0.002 || kAir > 0.002) && (
           <g>
             {lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop)} ry={fmt(rTop)} fill={`url(#${id}-lit)`} opacity={lit} />}
-            {ch && <path d={ch} fill={PAL.channelMacro} fillOpacity={(0.24 + 0.1 * wide) * k} filter={`url(#${id}-chb)`} />}
-            {chCore && <path d={chCore} fill={PAL.channelEdge} fillOpacity={0.12 * k} filter={`url(#${id}-chb)`} />}
+            {ch && <path d={ch} fill={PAL.channelMacro} fillOpacity={(0.24 + 0.12 * wide) * kAir} filter={`url(#${id}-chb)`} />}
+            {chCore && <path d={chCore} fill={PAL.channelEdge} fillOpacity={0.12 * kAir} filter={`url(#${id}-chb)`} />}
             {glowW.map((r, i) => <path key={`w${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={0.1 * k} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
             {glowN.map((r, i) => <path key={`n${i}`} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={0.16 * k} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
             {gk > 0.01 && gPts.length > 1 && (

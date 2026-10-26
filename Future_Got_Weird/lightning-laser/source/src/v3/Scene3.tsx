@@ -227,6 +227,7 @@ export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: 
   // shaftTop, 1 m lower, its foot poked through the deck and was painted over it, so seen from above the ring the
   // mast seemed to stand on the deck's front rim, the deck showing through its lowest panels)
   const MAST_FOOT = Math.max(TW.shaftTop, TW.ring2.y + TW.ring2.h);
+  const mastFrom = pieces.length;
   for (let b = 0; b < TW.bays; b++) {
     const y0 = b === 0 ? MAST_FOOT : TW.shaftTop + ((TW.mastTop - TW.shaftTop) * b) / TW.bays, y1 = TW.shaftTop + ((TW.mastTop - TW.shaftTop) * (b + 1)) / TW.bays;
     for (let f = 0; f < 4; f++) {
@@ -273,6 +274,18 @@ export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: 
         </g>
       ),
     });
+  }
+  // the mast (and its rod) stands on the upper ring's deck. Seen from below the deck, the ring's drum hides the mast's
+  // foot, so the whole mast is painted before the ring; seen from above, after it. (Sorting each lattice face by its
+  // own centre against the ring's centre put the lowest bay's near faces in front of the drum from a low camera, so
+  // the lattice showed through the concrete, and the order flipped face by face as the camera turned: V4 A4-2.) The
+  // mast keeps its own internal order; only its place relative to the ring is fixed.
+  const mast = pieces.slice(mastFrom);
+  if (mast.length) {
+    const zR2 = P(v3(0, TW.ring2.y + TW.ring2.h / 2, 0)).z;
+    const zs = mast.map((p) => p.z);
+    const off = cam.pos.y < MAST_FOOT ? Math.max(0, zR2 + 0.01 - Math.min(...zs)) : Math.min(0, zR2 - 0.01 - Math.max(...zs));
+    mast.forEach((p) => (p.z += off));
   }
   pieces.sort((a, b) => b.z - a.z);
   return <g>{pieces.map((p) => p.el)}</g>;

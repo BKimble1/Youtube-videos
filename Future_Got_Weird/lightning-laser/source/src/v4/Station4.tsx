@@ -75,7 +75,9 @@ const W_W = 1.5, W_H = 1.25, W_SILL = SILL; // window width, height, sill above 
 const D_W = 1.1, D_H = 2.3;
 /** the storm key light's horizontal direction (as the tower's), so the station is shaded like everything else */
 const KEY = {x: -0.75, z: -0.66};
-const WARM = ['#FFE2A0', '#FFD585', '#F8C86E', '#FFDC92'];
+/** the windows' light: pale sodium, kept a step below the launch (V4 review ST-5/W-3: the facade's lit windows were the
+ *  brightest mass in the opening frame and competed with the beam; about a third dimmer now, and more rooms dark) */
+const WARM = ['#D9BC82', '#D6B06C', '#CFA55A', '#DAB878'];
 
 const along = (w: Wall, u: number, y: number): V3 => {
   const k = u / w.L;
@@ -157,7 +159,7 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
   const lit = (c: string, k = 1) => mix(c, '#E2E7FF', clamp(kB * k));
   const faceCol = (n: V3) => {
     const key = clamp(n.x * KEY.x + n.z * KEY.z);
-    return lit(mix('#3E4A52', '#8F9BA3', 0.22 + 0.78 * key));
+    return lit(mix('#36424A', '#7C8890', 0.22 + 0.78 * key));
   };
   const vis = (w: Wall) => {
     const m = along(w, w.L / 2, F + 3);
@@ -194,7 +196,8 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
     }
     return out;
   };
-  if (!camAbove) els.push(...hutEls());
+  // (seen from below the parapet the roof kit is hidden behind the walls wherever they cover it: drawn before them)
+  const hutBelow = camAbove ? [] : hutEls();
   // the walls turned to the camera (a convex box: no overlaps among them)
   for (const w of WALLS) {
     if (!vis(w)) continue;
@@ -234,14 +237,14 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
       }
       const q = rectOn(w, wn.u - W_W / 2, wn.u + W_W / 2, y0 + W_SILL, y0 + W_SILL + W_H).map(P);
       if (q.some((p) => !p.ok)) return;
-      const on = hk > 0.16; // most rooms are lit; a few are dark
+      const on = hk > 0.34; // about two rooms in three are lit; the rest are dark
       const warm = WARM[Math.floor(hash(i * 5 + w.key.length, 1203) * WARM.length)];
       els.push(<path key={`${id}-${w.key}-w${i}`} d={poly(q)} fill={on ? warm : '#24313A'} stroke={INK} strokeWidth={fmt(iw * 0.8)} strokeLinejoin="round" />);
       if (on) {
         // a blind or the room's back wall: the upper third a little deeper
         const bl = rectOn(w, wn.u - W_W / 2, wn.u + W_W / 2, y0 + W_SILL + W_H * (0.62 + 0.2 * hash(i, 1205)), y0 + W_SILL + W_H, 0.03).map(P);
         els.push(<path key={`${id}-${w.key}-b${i}`} d={poly(bl)} fill={mix(warm, '#C98E3E', 0.45)} />);
-        glow.push(<path key={`${id}-${w.key}-g${i}`} d={poly(rectOn(w, wn.u - W_W * 0.85, wn.u + W_W * 0.85, y0 + W_SILL - 0.45, y0 + W_SILL + W_H + 0.45, 0.05).map(P))} fill="#FFD27A" opacity={0.13} />);
+        glow.push(<path key={`${id}-${w.key}-g${i}`} d={poly(rectOn(w, wn.u - W_W * 0.85, wn.u + W_W * 0.85, y0 + W_SILL - 0.45, y0 + W_SILL + W_H + 0.45, 0.05).map(P))} fill="#FFD27A" opacity={0.08} />);
       } else {
         const rf = rectOn(w, wn.u - W_W / 2, wn.u - W_W * 0.1, y0 + W_SILL + W_H * 0.45, y0 + W_SILL + W_H, 0.03).map(P);
         els.push(<path key={`${id}-${w.key}-r${i}`} d={poly(rf)} fill="#5A6E80" opacity={0.35} />);
@@ -262,28 +265,30 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
       els.push(<path key={`${id}-ro`} d={poly(outer)} fill={lit('#9AA5AC')} stroke={INK} strokeWidth={fmt(iw)} strokeLinejoin="round" />);
       els.push(<path key={`${id}-ri`} d={poly(inner)} fill={lit('#3E4A52')} stroke={INK} strokeOpacity={0.5} strokeWidth={fmt(iw * 0.5)} strokeLinejoin="round" />);
     }
-    els.push(...hutEls());
   }
   // the railing on the parapet: posts every ~1.6 m and a top rail (see-through, thin)
-  const rails: string[] = [];
-  const posts: string[] = [];
+  // (per side: from above the roof the sides beyond the roof hut are drawn before it, the near ones after it)
+  const zHut = P(v3((HUT.x0 + HUT.x1) / 2, ROOF + HUT.h / 2, (HUT.z0 + HUT.z1) / 2)).z;
+  const rails: string[] = [], posts: string[] = [], railsFar: string[] = [], postsFar: string[] = [];
   const rc = [v3(ST4.x0 + 0.15, TOP, ST4.z0 + 0.15), v3(ST4.x1 - 0.15, TOP, ST4.z0 + 0.15), v3(ST4.x1 - 0.15, TOP, ST4.z1 - 0.15), v3(ST4.x0 + 0.15, TOP, ST4.z1 - 0.15)];
   for (let s = 0; s < 4; s++) {
     const a = rc[s], b = rc[(s + 1) % 4];
     const L = len3(sub3(b, a));
     const n = Math.max(2, Math.round(L / 1.6));
     const top: Proj[] = [], mid: Proj[] = [];
+    const far = camAbove && P(v3((a.x + b.x) / 2, TOP + 0.5, (a.z + b.z) / 2)).z > zHut;
+    const rs = far ? railsFar : rails, ps = far ? postsFar : posts;
     for (let i = 0; i <= n; i++) {
       const u = i / n;
       const p = v3(a.x + (b.x - a.x) * u, TOP, a.z + (b.z - a.z) * u);
       const p0 = P(p), p1 = P(v3(p.x, TOP + ST4.rail, p.z)), pm = P(v3(p.x, TOP + ST4.rail * 0.5, p.z));
       if (!p0.ok || !p1.ok) continue;
-      if (i < n) posts.push(`M${fmt(p0.x)},${fmt(p0.y)} L${fmt(p1.x)},${fmt(p1.y)}`);
+      if (i < n) ps.push(`M${fmt(p0.x)},${fmt(p0.y)} L${fmt(p1.x)},${fmt(p1.y)}`);
       top.push(p1);
       mid.push(pm);
     }
-    if (top.length > 1) rails.push(line(top));
-    if (mid.length > 1) rails.push(line(mid));
+    if (top.length > 1) rs.push(line(top));
+    if (mid.length > 1) rs.push(line(mid));
   }
   // the instrument mast on the roof's tower-side corner: a thin pole, a cross-arm with a cup anemometer and a vane
   const m0 = P(v3(MAST.x, ROOF, MAST.z)), m1 = P(v3(MAST.x, ROOF + MAST.h, MAST.z));
@@ -291,17 +296,18 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
   const spin = (2 * Math.PI * 48 * t) / 33.5; // ~9 rad/s, a whole number of turns per loop (seamless at 33.5 -> 0)
   const cups = [0, 1, 2].map((k) => P(v3(MAST.x + 0.9 + 0.35 * Math.cos(spin + k * 2.09), ROOF + MAST.h - 0.25, MAST.z + 0.35 * Math.sin(spin + k * 2.09))));
   const mastOk = m0.ok && m1.ok && arm.every((q) => q.ok);
-  return (
+  // the railing and the instrument mast. From above the roof they stand on it (drawn last). From below the parapet
+  // (the opening's low camera) they are drawn before the walls, so the facade hides the far and side rails and the
+  // mast's foot, and only what rises above the parapet's edge shows (V4 review A4-1/ST-1: they were painted across the
+  // facade and into a window)
+  const kitFar = postsFar.length + railsFar.length > 0 && (
     <g>
-      <defs>
-        <radialGradient id={`${id}-lg`}>
-          <stop offset="0" stopColor="#FFE2A0" stopOpacity={0.5} />
-          <stop offset="0.4" stopColor="#FFD27A" stopOpacity={0.14} />
-          <stop offset="1" stopColor="#FFD27A" stopOpacity={0} />
-        </radialGradient>
-      </defs>
-      {els}
-      <g style={{mixBlendMode: 'screen'}}>{glow}</g>
+      <path d={postsFar.join(' ')} stroke={INK} strokeWidth={fmt(iw * 0.55)} fill="none" strokeLinecap="round" />
+      <path d={railsFar.join(' ')} stroke={INK} strokeWidth={fmt(iw * 0.6)} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+    </g>
+  );
+  const roofKit = (
+    <g>
       <path d={posts.join(' ')} stroke={INK} strokeWidth={fmt(iw * 0.55)} fill="none" strokeLinecap="round" />
       <path d={rails.join(' ')} stroke={INK} strokeWidth={fmt(iw * 0.6)} fill="none" strokeLinejoin="round" strokeLinecap="round" />
       {mastOk && (
@@ -312,6 +318,24 @@ const Building: SiteExtra = ({cam, flash, t, layer, id}) => {
           <path d={line([arm[0], P(v3(MAST.x - 1.3, ROOF + MAST.h - 0.35, MAST.z + 0.2))])} strokeWidth={fmt(iw * 0.6)} />
         </g>
       )}
+    </g>
+  );
+  return (
+    <g>
+      <defs>
+        <radialGradient id={`${id}-lg`}>
+          <stop offset="0" stopColor="#FFE2A0" stopOpacity={0.5} />
+          <stop offset="0.4" stopColor="#FFD27A" stopOpacity={0.14} />
+          <stop offset="1" stopColor="#FFD27A" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      {hutBelow}
+      {!camAbove && roofKit}
+      {els}
+      <g style={{mixBlendMode: 'screen'}}>{glow}</g>
+      {camAbove && kitFar}
+      {camAbove && hutEls()}
+      {camAbove && roofKit}
     </g>
   );
 };

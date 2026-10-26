@@ -54,9 +54,10 @@ const CELL = [mkMass(40, 30, 175, 1, 901, 1.25, 1.2), mkMass(-130, -70, 130, 2, 
 const DECK = [...CELL, ...field(300, -2400, 2400, -1500, 2900, 601, 110, 250, 0.8, 1.35, 4, {x: 20, z: 40, r: 280})];
 
 // ------------------------------------------------------------------ the flash
-/** where the lightning runs inside the deck: over the summit's west flank, 75 m from where the opening's bolt will
- *  attach and far off the beam's line in the crane's frame */
-export const CLOUD_FLASH = v3(-35, 237, 5);
+/** where the lightning runs inside the deck: over the summit's far (north-west) side, 70 m from where the opening's
+ *  bolt will attach and 75 m from the beam; in the crane's frame at the crack it sits in the upper left, well inside
+ *  the frame (about (315, 390) at 1.75 and (280, 450) at 1.85), far from the beam and the tower top */
+export const CLOUD_FLASH = v3(-26, 237, 44);
 const REACH = 105; // m: lobes whose centre lies within this of the flash catch its light
 /** the lobes near the flash (flat summit deck only, undrifted centres) */
 const NEAR = (() => {
@@ -130,6 +131,10 @@ export const CloudFlash4: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, 
   });
   const segs = [...pieces(ch, 1), ...pieces(fk, 0.7).map((p, i, arr) => ({...p, a: p.a * (1 - i / arr.length)}))];
   const peak = clamp((k - 0.35) / 0.65);
+  // the strike's own frames (the crack and its first flicker, 2-3 frames each): the lobes nearest the channel lit
+  // clearly from within, and the channel's thin white core seen through the base
+  const strike = clamp((k - 0.55) / 0.45);
+  const nearest = rings.map((r, i) => ({i, a: r.a})).sort((p, q) => q.a - p.a).slice(0, 2).map((r) => r.i);
   return (
     <g style={{mixBlendMode: 'screen'}} opacity={fmt(1 - mk)}>
       <defs>
@@ -139,17 +144,32 @@ export const CloudFlash4: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, 
           <stop offset="0.42" stopColor="#7C86D2" stopOpacity={0.28} />
           <stop offset="1" stopColor="#5A64B0" stopOpacity={0} />
         </radialGradient>
+        <radialGradient id={`${id}-gs`} gradientUnits="userSpaceOnUse" cx={fmt(g.x)} cy={fmt(g.y)} r={fmt(rG * 0.55)}>
+          <stop offset="0" stopColor="#F4F5FF" stopOpacity={0.9} />
+          <stop offset="0.35" stopColor="#C4C9FA" stopOpacity={0.5} />
+          <stop offset="1" stopColor="#8C95DC" stopOpacity={0} />
+        </radialGradient>
         <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
           <feGaussianBlur stdDeviation={fmt(clamp(cam.f / 220, 3, 7))} />
         </filter>
+        <filter id={`${id}-b2`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
+          <feGaussianBlur stdDeviation={1.2} />
+        </filter>
       </defs>
       {/* the lobes catch the light from within: each by its own amount, so the lit region breaks up along them */}
-      {rings.map((r, i) => <path key={i} d={r.d} fill={`url(#${id}-g)`} opacity={fmt(clamp(k * r.a))} />)}
+      {rings.map((r, i) => <path key={i} d={r.d} fill={`url(#${id}-g)`} opacity={fmt(clamp(k * r.a * (nearest.includes(i) ? 1 + 0.6 * strike : 1)))} />)}
+      {strike > 0.02 && nearest.map((i) => <path key={`n${i}`} d={rings[i].d} fill={`url(#${id}-gs)`} opacity={fmt(0.75 * strike)} />)}
       {/* the channel itself, seen through the thinner base at the peaks: blurred, white with violet edges */}
       {chOk && peak > 0.02 && (
         <g opacity={fmt(0.75 * peak)} filter={`url(#${id}-b)`}>
           {segs.map((p, i) => <path key={`h${i}`} d={p.d} fill="none" stroke="#C9CEFF" strokeOpacity={fmt(0.5 * p.a)} strokeWidth={fmt(clamp((cam.f * 2.6) / g.z, 5, 30))} strokeLinecap="round" />)}
           {segs.map((p, i) => <path key={`c${i}`} d={p.d} fill="none" stroke="#F4F5FF" strokeOpacity={fmt(0.85 * p.a)} strokeWidth={fmt(clamp((cam.f * 0.45) / g.z, 1.2, 5))} strokeLinecap="round" />)}
+        </g>
+      )}
+      {/* the thin white core itself (barely softened), on the strike's frames only */}
+      {chOk && strike > 0.02 && (
+        <g opacity={fmt(strike)} filter={`url(#${id}-b2)`}>
+          {segs.map((p, i) => <path key={`k${i}`} d={p.d} fill="none" stroke="#FFFFFF" strokeOpacity={fmt(clamp(1.2 * p.a))} strokeWidth={fmt(clamp((cam.f * 0.22) / g.z, 1.4, 3.2))} strokeLinecap="round" strokeLinejoin="round" />)}
         </g>
       )}
     </g>

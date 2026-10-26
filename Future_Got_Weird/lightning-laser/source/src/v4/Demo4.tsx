@@ -1,20 +1,22 @@
 // V4 beat F (18.79-25.61): the demonstration in three connected beats on one camera path (cams4_demo.ts):
 //   F1 18.79-20.45  E's pull-out carries straight on and settles on a closer view of the rod tip; the field builds at
 //                   the tip (19.1-19.55), the leader incepts there (19.55) and emerges upward along the line ("UPWARD")
-//   F2 20.45-23.0   one move up the channel with the leader's tip through the guided section to where it leaves the
-//                   line and branches to the cloud; connection 21.85 with local light; on "followed that CHANNEL" the
-//                   guided section is the brightest part, hugging the cyan line, the branching above it
-//   F3 23.0-25.61   one pull-back, farther and lower, to the whole tower from its base (the summit station's lit
-//                   windows and the telescope on the terrace for scale) with the guided section and the bolt to the
-//                   cloud; the 160+ ft bracket grows on "one hundred", the label on "sixty"; then a living afterglow:
-//                   the unguided bolt cools while the guided section stays hot, until the hard cut to G (25.61)
+//   F2 20.45-22.2   one crane up the channel with the leader's tip through the guided section (the tower drops out of
+//                   frame below) to a closer, higher view where the bolt leaves the line and branches to the cloud:
+//                   the guided section running down out of frame, the branching above it (V4 review W-4); connection
+//                   21.85 with local light; on "followed that CHANNEL" the guided section is the brightest part,
+//                   hugging the cyan line
+//   F3 22.2-25.61   one pull-back, down and back, to the whole tower from its base (the summit station's lit windows and
+//                   the telescope's exit glow on the terrace for scale) with the guided section and the bolt to the
+//                   cloud, landed by 23.75; the 160+ ft bracket grows on "one hundred", the label on "sixty"; then a
+//                   living afterglow: the unguided bolt cools while the guided section stays hot, until the cut to G
 // The bolt is F's (Demo4_discharge.tsx BOLT_F: V3's, leaving the line decisively where the guidance ends, V3 finding
 // F-2), drawn as View3's child with dk = 0 so View3's bolt-lit sky and FlashWash still follow the leader; the light
 // over the scene is Demo4_fx.tsx (V3's Demo3_fx retuned for the closer and wider views).
 import React from 'react';
 import {clamp, hash, noise1} from '../dc/math';
 import {ss} from '../lib';
-import {boltLight} from '../world/site';
+import {boltLight, G} from '../world/site';
 import {BOLT3} from '../v2/p3';
 import {EV} from '../v3/timeline3';
 import {St, View3} from '../v3/view3';
@@ -24,6 +26,8 @@ import {DischargeF4} from './Demo4_discharge';
 import {fCam, fZoom} from './cams4_demo';
 import {fSt4} from './states4_demo';
 import {PlacedLaser4} from './Open4_laser';
+import {Packets4} from './Demo4_packets';
+import {ExitGlow4} from './End4_fx';
 
 const C0 = EV.demoConnect;
 const W_FOLLOWED = 22.31, W_CHANNEL = EV.wordChannelF;
@@ -65,14 +69,24 @@ export const DemoF4: React.FC<{t: number}> = ({t}) => {
   const st = fSt4(t);
   const fx = fxAt(t, st);
   const rain = 1 - 0.4 * ss(t, 18.95, 19.6);
+  // the packets (drawn here, not by View3's Beam3D): sized to the telescope near it (the wide sees the terrace, V4
+  // review ST-8), and dimmed where they would slide through the lit bolt, from just below the rod tip up the part of
+  // the guided section the leader has covered (V4 review F4-7: no swollen capsule at the bolt's foot)
+  const hG = G * clamp(fx.sG / BOLT3.guidedS);
+  const dimK = st.s > 0 ? 0.88 * clamp(st.core / 0.4) : 0;
+  const dim = (h: number) => 1 - dimK * ss(h, -48, -16) * (1 - ss(h, hG + 4, hG + 34));
   return (
-    <View3 cam={cam} st={st} t={t} tag="f" rain={rain} dk={0}>
+    <View3 cam={cam} st={{...st, pulses: []}} t={t} tag="f" rain={rain} dk={0}>
+      <Packets4 cam={cam} pulses={st.pulses} alpha={st.beam} dim={dim} id="fpk" />
       <DemoHaze4 cam={cam} Z={Z} a={0.85} macro={ss(t, 19.2, 19.7) * (1 + 0.7 * ss(t, W_CHANNEL - 0.1, W_CHANNEL + 0.25) * (1 - ss(t, 23.5, 24.3)))} id="fhz" />
       <DischargeF4 cam={cam} s={st.s} core={st.core} id="fdc" streamerK={0.35} branchK={0.85} tipK={crackle(t)} upperK={1 - 0.4 * ss(t, 24.35, 25.5)} />
       <DemoFx4 cam={cam} t={t} fx={fx} id="ffx" />
       {/* the telescope on the laser terrace, in front of the summit station (the A+H views' own placement, at its
           physical size): only the wide can see it */}
       {t > 23.4 && <PlacedLaser4 cam={cam} flash={st.flash} fire={1} tick={0} t={t} id="ftel" />}
+      {/* at the wide's distance the telescope is a few pixels: a soft glow at its exit window marks where the beam
+          leaves the machine (as H2's wide does) */}
+      {t > 23.4 && <ExitGlow4 cam={cam} k={0.45 * ss(t, 23.45, 23.9)} tick={0} id="feg" />}
       <Bracket160 cam={cam} k={bracketK(t)} label={labelK(t)} />
     </View3>
   );

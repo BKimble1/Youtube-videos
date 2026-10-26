@@ -15,7 +15,7 @@
 //             it on "followed", and from then on the cyan path showing as a soft cyan edge on both sides of its
 //             white core (it hugs the line); the cloud base lit locally where the bolt meets it.
 import React from 'react';
-import {clamp, fmt, noise1} from '../dc/math';
+import {clamp, fmt, hash, noise1} from '../dc/math';
 import {ss} from '../lib';
 import {axis3, BOLT3, Cam3, projector, Proj, TIP3, V3} from '../v2/p3';
 import {G} from '../world/site';
@@ -82,6 +82,9 @@ export const DemoHaze4: React.FC<{cam: Cam3; Z: number; a: number; macro: number
   // a wider soft ribbon and a narrow warmer core, in only once the zoom-out has resolved (macro: 0..1)
   const body = mk > 0.01 ? ribbon(pp, (p) => clamp((cam.f * 3.6) / Math.max(p.z, 0.5), 14, 240) / 2) : '';
   const core = mk > 0.01 ? ribbon(pp, (p) => clamp((cam.f * 1.2) / Math.max(p.z, 0.5), 5, 90) / 2) : '';
+  // the band's top end tapers away softly round the point where the guidance ends (G), under the bolt's glow, instead of
+  // ending in a round blur beside the bolt's departure, which read as a stray orange spot (V4 review F4-6)
+  const tA = P(axis3(G - 40)), tB = P(axis3(G + 18));
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
@@ -91,10 +94,24 @@ export const DemoHaze4: React.FC<{cam: Cam3; Z: number; a: number; macro: number
         <filter id={`${id}-mb`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
           <feGaussianBlur stdDeviation={fmt(clamp(cam.f / 85, 4, 20))} />
         </filter>
+        {tA.ok && tB.ok && (
+          <linearGradient id={`${id}-tg`} gradientUnits="userSpaceOnUse" x1={fmt(tA.x)} y1={fmt(tA.y)} x2={fmt(tB.x)} y2={fmt(tB.y)}>
+            <stop offset="0" stopColor="#FFFFFF" />
+            <stop offset="0.5" stopColor="#FFFFFF" stopOpacity={0.55} />
+            <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+          </linearGradient>
+        )}
+        {tA.ok && tB.ok && (
+          <mask id={`${id}-tm`} maskUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
+            <rect x={-200} y={-200} width={1480} height={2320} fill={`url(#${id}-tg)`} />
+          </mask>
+        )}
       </defs>
-      <path d={d} fill={PAL.channelMacro} fillOpacity={0.34 * a} filter={`url(#${id}-cb)`} />
-      {body && <path d={body} fill={PAL.channelMacro} fillOpacity={fmt(0.34 * mk)} filter={`url(#${id}-mb)`} />}
-      {core && <path d={core} fill={PAL.channelEdge} fillOpacity={fmt(0.12 * mk)} filter={`url(#${id}-mb)`} />}
+      <g mask={tA.ok && tB.ok ? `url(#${id}-tm)` : undefined}>
+        <path d={d} fill={PAL.channelMacro} fillOpacity={0.34 * a} filter={`url(#${id}-cb)`} />
+        {body && <path d={body} fill={PAL.channelMacro} fillOpacity={fmt(0.34 * mk)} filter={`url(#${id}-mb)`} />}
+        {core && <path d={core} fill={PAL.channelEdge} fillOpacity={fmt(0.12 * mk)} filter={`url(#${id}-mb)`} />}
+      </g>
     </g>
   );
 };
@@ -145,13 +162,20 @@ export const DemoFx4: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({c
   const rC = clamp((f * 6.5) / Math.max(tip.z, 1), 28, 95);
   const aUp = Math.atan2(up.y - tip.y, up.x - tip.x);
   const cK = fx.corona;
+  // each streamer grows out along one fixed jagged path and retracts (a cycle of about 0.3-0.4 s, a new path and lean
+  // each cycle, the four out of step, now and then one skipped), so the corona builds rather than being redrawn as a
+  // new claw of strokes every frame (V4 review F4-5)
   const streamers = cK > 0.02 && fx.coronaFlick > 0.02 ? [0, 1, 2, 3].map((i) => {
-    if (noise1(t * 21 + i * 7.3, 163) < -0.15) return '';
-    const a = aUp + ((i - 1.5) * 0.42 + 0.25 * noise1(t * 7 + i * 3.1, 161));
-    const L = rC * (0.6 + 0.8 * cK) * (0.8 + 0.3 * noise1(t * 11 + i, 165));
+    const c = t * (2.6 + 0.25 * i) + hash(i, 171);
+    const n = Math.floor(c), ph = c - n, key = n * 7 + i;
+    if (hash(key, 163) < 0.18) return '';
+    const life = Math.pow(Math.sin(Math.PI * ph), 0.8);
+    if (life < 0.06) return '';
+    const a = aUp + (i - 1.5) * 0.26 + 0.24 * (hash(key, 161) - 0.5);
+    const L = rC * (0.6 + 0.8 * cK) * (0.8 + 0.35 * hash(key, 165)) * life;
     const pts: Pt[] = [{x: tip.x, y: tip.y}];
     for (let m = 1; m <= 4; m++) {
-      const d = (L * m) / 4, j = 0.16 * L * noise1(t * 30 + i * 5 + m * 1.7, 167);
+      const d = (L * m) / 4, j = 0.24 * L * (hash(key * 5 + m, 167) - 0.5);
       pts.push({x: tip.x + Math.cos(a) * d - Math.sin(a) * j, y: tip.y + Math.sin(a) * d + Math.cos(a) * j});
     }
     return line(pts);
@@ -183,7 +207,12 @@ export const DemoFx4: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({c
       {cK > 0.02 && tip.ok && (
         <g>
           <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(rC)} fill={`url(#${id}-cor)`} opacity={fmt(clamp((0.35 + 0.65 * cK) * cK * flick))} />
-          {streamers.length > 0 && <path d={streamers.join(' ')} fill="none" stroke="#E6E0FF" strokeOpacity={fmt(clamp(0.9 * cK * fx.coronaFlick))} strokeWidth={fmt(clamp((f * 0.15) / Math.max(tip.z, 1), 1.6, 5))} strokeLinecap="round" strokeLinejoin="round" />}
+          {streamers.length > 0 && (
+            <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+              <path d={streamers.join(' ')} stroke={PAL.mid} strokeOpacity={fmt(clamp(0.3 * cK * fx.coronaFlick))} strokeWidth={fmt(3 * clamp((f * 0.12) / Math.max(tip.z, 1), 1.4, 3.6))} />
+              <path d={streamers.join(' ')} stroke="#E6E0FF" strokeOpacity={fmt(clamp(0.8 * cK * fx.coronaFlick))} strokeWidth={fmt(clamp((f * 0.12) / Math.max(tip.z, 1), 1.4, 3.6))} />
+            </g>
+          )}
         </g>
       )}
       {fx.guided > 0.01 && gPts.length > 1 && (
