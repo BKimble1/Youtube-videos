@@ -121,12 +121,12 @@ const FarAir: React.FC<{cam: MCam; a: number; chan: number; id: string}> = ({cam
 };
 
 // ------------------------------------------------------------------------------------------------- M2: the race
-const M2_V = 1700; // packet speed (micro units/s, drawn)
+const M2_V = 1350; // packet speed (micro units/s, drawn)
 const xpM2 = (t: number) => M2_V * (t - S.M2) - 200;
 const BEAM_W = 150;
 export const M2Race: React.FC<{t: number}> = ({t}) => {
   const xp = xpM2(t);
-  const cam: MCam = {x: 900 * (t - S.M2), y: 40 - 30 * ss(t, S.M2, S.M3), z: 1.15};
+  const cam: MCam = {x: 450 * (t - S.M2), y: 40 - 30 * ss(t, S.M2, S.M3), z: 1.15};
   const mols = visible(cam, 1);
   const free: React.ReactNode[] = [];
   const nodes = mols.map((m) => {
@@ -285,7 +285,7 @@ export const M5Leader: React.FC<{t: number}> = ({t}) => {
   // tracking alongside: the channel sits left of centre, the camera holds the tip a little above centre
   // at the end it rolls to the real beam's on-screen lean and turns to the 3D channel's colour, for the cut to M6
   const hand = ss(t, 18.15, S.M6);
-  const cam: MCam = {x: 330 * (1 - pb), y: Math.min(900, yl + 260) - 1200 * pb, z, roll: 22 * sm5(hand)};
+  const cam: MCam = {x: 330 * (1 - pb), y: Math.min(900, 450 + 0.5 * (yl + 260)) - 1200 * pb, z, roll: 22 * sm5(hand)};
   const mols = visible(cam, 2, 1, 1.05);
   const ystart = 2600;
   const ys: number[] = [];
