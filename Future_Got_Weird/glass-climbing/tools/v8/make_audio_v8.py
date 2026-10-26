@@ -163,7 +163,9 @@ def pad_move(side, rel, m0, m1, place, gain=0):
     name = 'near' if side == 'L' else 'far'
     if seen(rel): add(f'{name} pad releases: peels and stands off the glass (dry)', peel(0.3), F(rel), -30 + gain)
     if seen(m0): add(f'{name} pad carried (air, faint)', air(0.4, 400, 1300), F(m0), -47 + gain)
-    if seen(place): add(f'{name} pad seats on the glass', tock(1850 if side == 'R' else 1900), F(place) - 0.1, -25 + gain)  # (it reaches the glass a few frames before its seat key)
+    # (the far pad, with its shorter stand-off, reaches the glass about three frames before its seat key; the near one
+    # about one)
+    if seen(place): add(f'{name} pad seats on the glass', tock(1850 if side == 'R' else 1900), F(place) - (0.1 if side == 'R' else 0.03), -25 + gain)
     if seen(place): add(f'{name} pad takes its load (fine ticks)', ticks(0.3, 40, 4600), F(place) + 0.04, -43 + gain)
 for c in CY:
     if seen(c['sh'][0]):
@@ -178,7 +180,7 @@ for c in CY:
     if c['settle'] and seen(c['settle'][0]):
         add('near tether takes its share again', taut(0.2, 92) * 0.8, F(c['settle'][1] - 4), -33)
 # 1. the hook: the catch (frame 3, the end of the recovery), the seat, the tether, the stirrup, the settle
-add('CATCH: the near pad meets the glass (crisp contact)', tock(1800, 0.2) + 0.5 * thunk(0.2), F(C['contact']) - 0.02, -19, True)
+add('CATCH: the near pad meets the glass (crisp contact)', tock(1800, 0.2) + 0.5 * thunk(0.2), F(C['contact']) - 0.02, -13, True)  # (over the first syllable: the narration is untouched, so the contact is lifted instead)
 add('the pad seats under the downward load (fine ticks)', ticks(0.25, 60, 4600), F(C['contact']) + 0.05, -40)
 add('the near tether snaps taut as it takes him', taut(0.26, 84), F(C['contact']) + 0.12, -26)
 add('the near stirrup takes his foot (step knock)', barstep(0.18), F(C['seat']) - 0.04, -31)

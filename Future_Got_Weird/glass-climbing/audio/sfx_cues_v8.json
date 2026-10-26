@@ -89,8 +89,8 @@
  },
  {
   "name": "near pad seats on the glass",
-  "at": 5.367,
-  "frame": 161.0,
+  "at": 5.437,
+  "frame": 163.1,
   "dur": 0.12,
   "gain_db": -25,
   "hero": false
@@ -201,8 +201,8 @@
  },
  {
   "name": "near pad seats on the glass",
-  "at": 28.433,
-  "frame": 853.0,
+  "at": 28.503,
+  "frame": 855.1,
   "dur": 0.12,
   "gain_db": -25,
   "hero": false
@@ -316,7 +316,7 @@
   "at": 0.08,
   "frame": 2.4,
   "dur": 0.2,
-  "gain_db": -19,
+  "gain_db": -13,
   "hero": true
  },
  {
