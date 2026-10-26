@@ -24,7 +24,7 @@ import {C, CATCH_END, climbAt, climbTop, CYCLES, DY, FRAMES, keyN, MM, PZ, ss, U
 import {Cam3} from './Tower8';
 import {Exterior8} from './Exterior8';
 import {Pad3D as Pad3D8, Pad3DState as Pad3DState8, allTiles as allTiles8, ARM_BAY, tileVW as tileVW8} from './Pad8';
-import {ContactScene8, contactShot, SpringScene8, springShot, SurfaceScene8, surfaceShot, SPRING_BAY_CAM} from './PadScenes8';
+import {ContactScene8, contactShot, SpringScene8, springShotFilm, SurfaceScene8, surfaceShot, SPRING_BAY_CAM} from './PadScenes8';
 import {camAt as wedgeCamAt, FOCUS, FOCUS_P, viewOf as wedgeViewOf, WEDGE_CAM, WEDGE_Z, WedgeContent, WedgeSplit, WedgeState, WedgeView} from './Wedge8';
 import {MolView, WedgeToMol} from './Mol8';
 
@@ -342,8 +342,16 @@ const G1b: React.FC<{f: number}> = ({f}) => <Svg><MicroView id={`g1b${f}`} st={{
 /** G2 (954-1041) "So you can climb glass— but switch to rough brick,": along the facade to the brick strip: he climbs
  *  once more on the glass, then takes the near pad (the one just seen seating) across onto the brick while the far pad
  *  on the glass carries him; he presses it on, pleased, and doubts it as he leans on it (one track and push) */
-const G2_END = {x: -10, y: climbAt(1036).padL.y - 2, z: 1.85};
-const camG2 = (f: number) => cam1(f, [[954, 330, HIP(954).y + 66, 1.0], [962, 330, HIP(954).y + 66, 1.0], [1036, G2_END.x, G2_END.y, G2_END.z, inOut]]);
+// (V8 QA) a medium view that follows him up the glass as he rises (the feet stay clear of the caption, nothing under
+// the action column), then at the cut on "but switch to rough brick" (1000) a closer, held view of his upper body, both
+// pads and the brick strip beside him (the feet below the frame), creeping in a little as he leans on the brick pad
+const G2_A = {x: 200, y: HIP(954).y + 90, z: 0.98};
+const G2_B = {x: 200, y: HIP(996).y + 90, z: 0.98};
+const G2_C = {x: 150, y: climbAt(1024).padL.y - 107, z: 1.5};
+const camG2 = (f: number) =>
+  f < 1000
+    ? cam1(f, [[954, G2_A.x, G2_A.y, G2_A.z], [974, G2_A.x, G2_A.y, G2_A.z], [996, G2_B.x, G2_B.y, G2_B.z, inOut]])
+    : cam1(f, [[1000, G2_C.x, G2_C.y, G2_C.z], [1041, G2_C.x + 10, G2_C.y, G2_C.z * 1.06, (x) => x]]);
 const G2: React.FC<{f: number}> = ({f}) => bay(`g2${f}`, f, camG2(f));
 /** G3 (1041-1082) "and those microscopic wedges": the same pad's wedges at the brick, then beside the glass in the same
  *  orientation and scale (placeholder until the V8 wedge section) */
@@ -482,29 +490,27 @@ const S0v8_B = (() => {
   const s = climbAt(548);
   return {x: s.ringL.x + 30, y: s.ringL.y - 40};
 })();
-const camS0v8 = (f: number) => cam1(f, [[528, S0v8_A.x, S0v8_A.y, 1.3], [548, S0v8_B.x, S0v8_B.y, 1.3, inOut]]);
+// (V8 QA) a cut in on the stirrup (z 1.5), then a short tilt up the strap toward its ring: the feet stay above the
+// caption, his head stays above the frame
+const S0_ANK = climbAt(528).footL.ankle.y, S0_RING = climbAt(548).ringL.y;
+const camS0v8 = (f: number) => cam1(f, [[528, S0v8_A.x + 40, S0_ANK - (1100 - 960) / 1.5, 1.5], [548, S0v8_B.x, S0_RING - (480 - 960) / 1.5, 1.5, inOut]]);
 const S0v8: React.FC<{f: number}> = ({f}) => bay(`s0${f}`, f, camS0v8(f));
 /** S1v8 (548-642) "springs spread the load, so one little patch doesn't have to hold you up alone.": match cut into the
  *  same pad: the cover is cut away; the strap pulls straight, the lug and spine travel and every spring stretches
  *  together while the tiles stay put; one patch lets go (its spring slackens, its neighbours stretch further, the
  *  rest keep their share); it comes back and the load evens out; the cover is restored and the view returns to the
  *  bay's view of his hand (the spring builder's shot, retimed to the narration) */
-const SPRING_T = (f: number) => keyN(f, [[548, 536], [640, 664]]);
+// (V8 QA) the builder's time remapped to the narration: the cover comes off on "Special springs" (553-566), the
+// springs stretch together on "spread the load" (566-588), the patch lets go on "so one little patch" (588-600), holds,
+// comes back and evens out (616-628) and the cover is back on by the cut (642)
+const SPRING_T = (f: number) => keyN(f, [[548, 536], [566, 551], [588, 578], [600, 598], [616, 616], [628, 632], [642, 644]]);
 const SPRING_HAND = (() => {
   const p = climbAt(640).padL;
   return {x: KX * p.zo + 30, y: p.y + KY * p.zo, z: SPRING_BAY_CAM.z / MM};
 })();
 const S1v8: React.FC<{f: number}> = ({f}) => {
-  const q = springShot(SPRING_T(Math.min(f, 640)));
-  const hand = ss(f, 630, 642);
-  const sc = <SpringScene8 id={`s1${f}`} load={q.load} cover={q.cover} lost={q.lost} view={q.view} cam={q.cam} />;
-  if (hand < 0.001) return sc;
-  return (
-    <>
-      {hand < 0.999 && sc}
-      <div style={{position: 'absolute', inset: 0, opacity: hand}}>{bay(`s1b${f}`, f, SPRING_HAND)}</div>
-    </>
-  );
+  const q = springShotFilm(SPRING_T(f), f);
+  return <SpringScene8 id={`s1${f}`} load={q.load} cover={q.cover} lost={q.lost} view={q.view} cam={q.cam} />;
 };
 /** S2v8 (642-664): from his hand in the bay, out to the climb's medium framing */
 const camS2v8 = (f: number) => cam1(f, [[642, SPRING_HAND.x, SPRING_HAND.y, SPRING_HAND.z], [664, CAM_CLIMB.x, CAM_CLIMB.y, CAM_CLIMB.z, inOut]]);
@@ -520,9 +526,11 @@ const G1bv8: React.FC<{f: number}> = ({f}) => <Svg><WedgeView id={`g1b${f}`} st=
 /** G3v8 (1041-1082) "and those microscopic wedges": the same wedges, same orientation and scale: on the glass (above)
  *  they bend and lie flat; on the brick (below) only a few tips reach its high points, the rest hang over gaps; as the
  *  load comes on they are dragged off and skid (rigid brick: nothing penetrates) */
+// (V8 QA) the brick panel is framed on wedges 4 and 6, the two in it whose tips land on apexes (y 1030 and 1550,
+// above the bottom UI band); the slip is paced so the touching tips' release takes several frames (1069-1076), not one
 const G3v8: React.FC<{f: number}> = ({f}) => (
   <Svg>
-    <WedgeSplit id={`g3${f}`} glass={{surface: 'glass', approach: 1, shear: keyS(f, [[1041, 0], [1058, 1]])}} brick={{surface: 'brick', approach: keyS(f, [[1041, 0.4], [1050, 1]]), shear: keyS(f, [[1050, 0], [1062, 1]]), slip: keyS(f, [[1064, 0], [1082, 1]])}} />
+    <WedgeSplit id={`g3${f}`} glass={{surface: 'glass', approach: 1, shear: keyS(f, [[1041, 0], [1058, 1]])}} brick={{surface: 'brick', approach: keyS(f, [[1041, 0.4], [1050, 1]]), shear: keyS(f, [[1050, 0], [1062, 1]]), slip: keyN(f, [[1064, 0], [1069, 0.14], [1076, 0.38], [1082, 0.62]])}} brickY={4 * 50} brickSY={1030} />
   </Svg>
 );
 
@@ -542,8 +550,7 @@ export const SHOTS8: {from: number; to: number; name: string; C: React.FC<{f: nu
   {from: 503, to: 528, name: 'M5b', C: M5b},
   {from: 528, to: 548, name: 'S0', C: S0v8},
   {from: 548, to: 642, name: 'S1', C: S1v8},
-  {from: 642, to: 664, name: 'S2', C: S2v8},
-  {from: 664, to: 857, name: 'C', C: CC},
+  {from: 642, to: 857, name: 'C', C: CC},
   {from: 857, to: 894, name: 'E1', C: E1},
   {from: 894, to: 930, name: 'G1', C: G1v8},
   {from: 930, to: 954, name: 'G1b', C: G1bv8},

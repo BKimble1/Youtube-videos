@@ -61,7 +61,16 @@ export const PadOnFacade: React.FC<{id: string; s: Pad5; z: number; k: number}> 
       if (op < 0.01 || s.surface === 'brick') return null;
       const o = 3 + g * 0.35, hw = PW / 2, hh = PH / 2;
       const q = (v: number, w: number) => `${fmt(KX * w + 0.5)},${fmt(v + KY * w + o)}`;
-      return <path d={`M${q(-hh + 2, -hw)} L${q(-hh + 2, hw)} L${q(hh + 2, hw)} L${q(hh + 2, -hw)} Z`} fill="#0B1A20" opacity={op} />;
+      // (V8 QA) and the shadow it casts on the pane under the daylight from above: the body's outline dropped down
+      // the glass by its depth, soft and faint, so in the grazing views the pad reads as standing on the glass
+      const c = 0.2 * Math.exp(-g / 30), dv = 30 + g * 0.8;
+      const qc = (v: number, w: number) => `${fmt(KX * w + 0.5)},${fmt(v + dv + KY * w)}`;
+      return (
+        <>
+          {c > 0.01 && <path d={`M${qc(-hh + 6, -hw)} L${qc(-hh + 6, hw)} L${qc(hh + 10, hw)} L${qc(hh + 10, -hw)} Z`} fill="#0B1A20" opacity={c} />}
+          <path d={`M${q(-hh + 2, -hw)} L${q(-hh + 2, hw)} L${q(hh + 2, hw)} L${q(hh + 2, -hw)} Z`} fill="#0B1A20" opacity={op} />
+        </>
+      );
     })()}
     <Pad3D id={id} z={z * MM} k={k} st={{yaw: 0, pitch: 0, obl: {kx: KX, ky: KY}, load: s.load, contact: contactTiles(s), cover: 1, gap: s.gap / MM, tilt: s.tilt, slide: 0, surface: 'none', hand: null, bar: false, strap: 0}} />
   </g>

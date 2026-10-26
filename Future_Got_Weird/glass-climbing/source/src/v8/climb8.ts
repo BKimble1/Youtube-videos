@@ -120,7 +120,10 @@ export const RISE_A = 84, SINK = 34;
 // ------------------------------------------------------------------ the schedule
 /** a pad move: release (peel), carry (m0-m1, just off the glass), seat (slide down onto it) */
 export type Move = {side: Side; to: number; rel: number; m0: number; m1: number; place: number};
-type Cycle = {k: number; sh: [number, number]; R: [number, number, number, number]; rise: [number, number]; L: [number, number, number, number] | null; settle: [number, number] | null};
+type Cycle = {k: number; sh: [number, number]; R: [number, number, number, number]; rise: [number, number]; L: [number, number, number, number] | null; settle: [number, number] | null;
+  /** (V8) the shift's size: hips across toward the near stirrup (units), down into it (units); when the far loop
+   *  unweights (default: during the shift); how high the light far foot comes up in its loop (units) */
+  amp?: number; sink?: number; unw?: [number, number]; lift?: number};
 export const CYCLES: Cycle[] = [
   // "you could lift your feet off the ground— and climb it like Spider-Man": weight onto the near stirrup, the far
   // pad (and with it the far stirrup and knee) up, the rise, the near pad up
@@ -130,14 +133,17 @@ export const CYCLES: Cycle[] = [
   {k: 2, sh: [230, 236], R: [236, 241, 252, 258], rise: [258, 274], L: [276, 281, 292, 298], settle: [298, 308]},
   {k: 3, sh: [312, 318], R: [318, 323, 334, 340], rise: [340, 356], L: [358, 363, 374, 380], settle: [380, 390]},
   {k: 4, sh: [394, 400], R: [400, 405, 416, 422], rise: [422, 438], L: [440, 445, 456, 462], settle: [462, 474]},
-  {k: 5, sh: [560, 566], R: [566, 571, 582, 588], rise: [590, 606], L: [610, 615, 628, 634], settle: [634, 648]},
+  {k: 5, sh: [552, 558], R: [558, 563, 574, 580], rise: [580, 596], L: [598, 603, 614, 620], settle: [620, 632]},
   // "Then, you shift your weight onto the other pad. The first releases, letting you reach higher and repeat.": one
   // whole cycle in one medium view; the next side begins on "repeat"
-  {k: 6, sh: [672, 700], R: [750, 766, 800, 812], rise: [813, 834], L: [836, 841, 856, 862], settle: [862, 872]},
+  // (V8 QA: shown whole in the medium view, so slower and bigger: the hips go across and down onto the near stirrup on
+  // "Then, you shift your weight", the far stirrup unweights and its foot comes up on "onto the other pad", and the
+  // far pad releases on "The first releases")
+  {k: 6, sh: [664, 704], unw: [704, 744], amp: 50, sink: 56, lift: 100, R: [746, 758, 792, 806], rise: [808, 830], L: [834, 839, 851, 856], settle: [856, 866]},
   // nearing the brick ("But there's a catch."); the near pad seats on the glass in the contact test ("They need a
   // smooth surface"); up the glass once more ("So you can climb glass—")
   {k: 7, sh: [872, 878], R: [878, 883, 897, 902], rise: [902, 920], L: [922, 927, 940, 945], settle: [945, 952]},
-  {k: 8, sh: [952, 956], R: [956, 960, 972, 977], rise: [977, 990], L: null, settle: null},
+  {k: 8, sh: [952, 964], unw: [952, 959], R: [960, 964, 974, 979], rise: [979, 990], L: null, settle: null},
 ];
 export const C = {
   // the catch and the opening: contact, the seat (a small downward load), the settle, steady
@@ -167,7 +173,13 @@ const padClimb = (T: number, side: Side): Pad5 => {
   if (m) {
     const from = m.to + S;
     p.tilt = keyN(T, [[m.rel, 0], [m.m0, 9], [m.m1 - 3, 5], [m.place - 2, 0]]);
-    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0, 30], [(m.m0 + m.m1) / 2, 42], [m.m1, 20], [m.place, 0, easeOut]]); // (a visible stand-off: it never slides on the glass while attached)
+    // (a visible stand-off: it never slides on the glass while attached; the stand-off eases in and on, with no dead
+    // stop where the carry begins)
+    const sm = (t: number, a: number, b: number) => {
+      const x = clamp((t - a) / (b - a));
+      return x * x * (3 - 2 * x);
+    };
+    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0 + 2, 34, sm], [m.m1, 22, sm], [m.place, 0, easeOut]]);
     p.y = keyN(T, [[m.m0, from], [m.m1, m.to - 6], [m.place, m.to]]);
     p.contact = 1 - clamp(p.gap / 2);
   }
@@ -196,7 +208,7 @@ const padClimb = (T: number, side: Side): Pad5 => {
 const HIP_KEYS: KeyN = (() => {
   const k: KeyN = [[CATCH_END, levelY(0)]];
   for (const c of CYCLES) {
-    k.push([c.sh[0], levelY(c.k - 1)], [c.sh[1], nearY(c.k - 1) + SINK], [c.rise[0], nearY(c.k - 1) + SINK], [c.rise[1], nearY(c.k - 1) - RISE_A]);
+    k.push([c.sh[0], levelY(c.k - 1)], [c.sh[1], nearY(c.k - 1) + (c.sink ?? SINK)], [c.rise[0], nearY(c.k - 1) + (c.sink ?? SINK)], [c.rise[1], nearY(c.k - 1) - RISE_A]);
     if (c.settle) k.push([c.settle[0], nearY(c.k - 1) - RISE_A], [c.settle[1], levelY(c.k)]);
   }
   // the brick: standing on the far stirrup as the near pad goes across, then down toward it as he weights it
@@ -207,7 +219,7 @@ const HIP_KEYS: KeyN = (() => {
 const LOOP_W: Record<Side, KeyN> = (() => {
   const L: KeyN = [[CATCH_END, 1]], R: KeyN = [[CATCH_END, 1]];
   for (const c of CYCLES) {
-    R.push([c.sh[0], 1], [c.sh[1], 0], [c.rise[0], 0], [c.rise[1], 1]);
+    R.push([(c.unw ?? c.sh)[0], 1], [(c.unw ?? c.sh)[1], 0], [c.rise[0], 0], [c.rise[1], 1]);
     L.push([c.rise[0], 1], [c.rise[1], 0]);
     if (c.settle) L.push([c.settle[0], 0], [c.settle[1], 1]);
   }
@@ -303,7 +315,7 @@ const build = (b: Body): ClimbState => {
   const barR = lerpV(hangR, barForAnkle(ankR, 1), b.loopR ?? (b.inR ? 1 : 0));
   const sagOf = (ring: V, bar: V, side: Side) => Math.max(0, (LEN[side] - len(sub(bar, ring))) * 0.45);
   // a raised leg turns its knee out instead of pushing it into the straps
-  const fsOf = (A: V, side: Side) => 1 - 0.45 * ss(len(sub(A, add(H, HIP[side]))), 0.92 * LEGF, 0.55 * LEGF);
+  const fsOf = (A: V, side: Side) => 1 - 0.3 * ss(len(sub(A, add(H, HIP[side]))), 0.92 * LEGF, 0.55 * LEGF); // (V8 QA: 0.45 turned a high shoe sole-on)
   const lean = b.lean + b.swing;
   let pose: ManPose = Pose({x: H.x, y: H.y, s: 1, torso: lean, chest: b.chest, neck: b.head - lean - b.chest, turn: 0.78, pelvis: 0,
     lFs: fsOf(ankL, 'L'), rFs: fsOf(ankR, 'R'),
@@ -336,9 +348,15 @@ const climbBody = (T: number): Body => {
   // ("can hold your entire weight": he settles a little into the loaded stirrups, then holds)
   const hy = keyN(T, HIP_KEYS) + 16 * bump(T, 505, 513, 6, 14);
   const shiftX = Math.max(...CYCLES.map((c) => ss(T, c.sh[0], c.sh[1]) * (1 - ss(T, c.rise[0], c.rise[1]))));
+  const shiftU = Math.max(...CYCLES.map((c) => (c.amp ?? 16) * ss(T, c.sh[0], c.sh[1]) * (1 - ss(T, c.rise[0], c.rise[1]))));
+  // the light far foot's lift in its loop: the cycle's own, through its shift and carry until the rise
+  // (a big lift shows the unweighting; it eases back to the usual height while the loop is carried up with its pad, so
+  // the knee never comes up so high that the shoe turns sole-on)
+  const cyc = CYCLES.find((c) => T >= c.sh[0] - 1 && T <= c.rise[1] + 1);
+  const liftR = cyc?.lift ? lerp(cyc.lift, 46, ss(T, cyc.R[0], cyc.R[2])) : 46;
   // (reaching across to the pier he leans toward it, hips in a little)
   const pier = ss(T, C.bRel - 6, C.bM1) * (1 - ss(T, C.fail - 4, C.fail + 8));
-  const H: V = {x: HX + 16 * shiftX - 10 * pier, y: hy};
+  const H: V = {x: HX + shiftU - 10 * pier, y: hy};
   // feet: planted in a taut loop, or light in it (carried with the loop as its pad moves)
   const foot = (side: Side, w: number) => {
     const pad = side === 'L' ? padL : padR;
@@ -349,7 +367,7 @@ const climbBody = (T: number): Body => {
     const taut = lerpV(tautAnkleX(side, pad, EXTRA), diagAnkle(pad, seated), onPier);
     // (the far foot comes up a little out from the glass, clear of the fin's edge)
     const nearFin = 0;
-    const free = add(seated, {x: side === 'R' ? -4 + 44 * nearFin : -4 + 10 * onPier, y: side === 'R' ? -46 : -20 + 14 * onPier});
+    const free = add(seated, {x: side === 'R' ? -4 + 44 * nearFin : -4 + 10 * onPier, y: side === 'R' ? -liftR : -20 + 14 * onPier});
     return lerpV(free, taut, ss(w, 0, 0.85));
   };
   const rMoves = MOVES.filter((m) => m.side === 'R');

@@ -559,12 +559,14 @@ export const contactShot = (f: number) => {
   return {load, drift: clamp((f - 24) / 46), cam};
 };
 /** B, film 894-930 (the rig's padR: carried up, it arrives a little high at 897, closes on the glass and touches at
- *  902, then loads 902-920 as he rises onto it): slide 70 -> -8 mm (894-898, the pad comes up into place), gap 45 ->
+ *  902, then loads 902-920 as he rises onto it): slide 70 -> 0 mm (894-899, the pad comes into place before it touches), gap 45 ->
  *  0 mm (easing out onto the glass, 894-902), load 0 -> 1 (902-922); a slow push in */
 export const surfaceShot = (f: number) => {
   const a = clamp((f - 894) / 8);
   const gap = 45 * Math.pow(1 - a, 2.2);
-  const slide = f < 898 ? lerp(70, -8, 1 - Math.pow(1 - clamp((f - 894) / 4), 2)) : lerp(-8, 0, ss5(f, 898, 903));
+  // (V8 QA) it comes down into place and stops before it touches (899); then straight in onto the glass (no slide
+  // after first contact)
+  const slide = lerp(70, 0, 1 - Math.pow(1 - clamp((f - 894) / 5), 2));
   const load = clamp(0.13 * ss5(f, 902, 904) + 0.87 * ss5(f, 903, 920));
   const cam = lerpCam({x: -16, y: 44, z: 3.45}, {x: -12, y: 38, z: 3.7}, ss5(f, 894, 930));
   return {gap, slide, load, cam};
@@ -576,6 +578,18 @@ export const surfaceShot = (f: number) => {
  *  patch lets go (584-598; the camera leans in, 580-596) and holds there while its neighbours take its share; "doesn't
  *  have to hold you up alone.": its contact returns and the load evens out (616-632); the cover is restored (632-644)
  *  and the camera returns to the bay's view and the bay's hand-over framing (640-664). */
+/** (V8 QA) the spring shot driven in film frames: `T` is the builder's time (above) remapped to the narration, `f` the
+ *  film frame. The camera takes one path and never turns back: it comes round and in onto the springs, closest as the
+ *  patch lets go (548-612), and holds there; the view never returns to the bay's (the film cuts from this close-up
+ *  straight to the climb at 642) */
+export const springShotFilm = (T: number, f: number) => {
+  const q = springShot(T);
+  const o = ss5(T, 530, 552);
+  const view: SpringView = {yaw: lerp(SPRING_BAY_VIEW.yaw, SPRING_VIEW.yaw, o), pitch: lerp(SPRING_BAY_VIEW.pitch, SPRING_VIEW.pitch, o), persp: lerpPersp(SPRING_BAY_VIEW.persp, SPRING_VIEW.persp, o)};
+  // (one ease from the opening framing to the closest, passing near SPRING_CAM; no stop on the way)
+  const cam = lerpCam(SPRING_OPEN_CAM, {x: 18, y: 25, z: 5.2}, ss5(f, 548, 612));
+  return {...q, view, cam};
+};
 export const springShot = (f: number) => {
   const o = ss5(f, 530, 552) * (1 - ss5(f, 640, 662));
   const view: SpringView = {yaw: lerp(SPRING_BAY_VIEW.yaw, SPRING_VIEW.yaw, o), pitch: lerp(SPRING_BAY_VIEW.pitch, SPRING_VIEW.pitch, o), persp: lerpPersp(SPRING_BAY_VIEW.persp, SPRING_VIEW.persp, o)};

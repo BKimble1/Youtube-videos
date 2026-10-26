@@ -345,8 +345,9 @@ export const Head: React.FC<Props> = ({id, c, R, roll, turn: t, expr: e, blink =
         </g>
       )}
 
-      {/* worry lines above the brows */}
-      {e.browIn > 0.5 && (
+      {/* worry lines above the brows (Glass Climbing V8: only where there is bare forehead under the hairline; on a low
+          fringe they would be drawn on the hair) */}
+      {e.browIn > 0.5 && -86 > hairlineY(xf) + 4 && (
         <g opacity={clamp((e.browIn - 0.5) * 2)}>
           <InkLine d={Q({x: xf - 14, y: -86}, {x: xf, y: -91}, {x: xf + 14, y: -86})} w={fw * 0.7} />
           <InkLine d={Q({x: xf - 9, y: -76}, {x: xf, y: -80}, {x: xf + 9, y: -76})} w={fw * 0.6} />
