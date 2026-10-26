@@ -99,99 +99,99 @@
  },
  {
   "name": "weight onto the near stirrup (cloth)",
-  "at": 22.4,
-  "frame": 672.0,
+  "at": 22.133,
+  "frame": 664.0,
   "dur": 0.5,
   "gain_db": -41
  },
  {
   "name": "near tether takes the load (creak)",
-  "at": 22.867,
-  "frame": 686.0,
+  "at": 22.8,
+  "frame": 684.0,
   "dur": 0.22,
   "gain_db": -31
  },
  {
   "name": "the near stirrup takes the foot (step knock)",
-  "at": 23.283,
-  "frame": 698.5,
+  "at": 23.417,
+  "frame": 702.5,
   "dur": 0.16,
   "gain_db": -36
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
-  "at": 25.0,
-  "frame": 750.0,
+  "at": 24.867,
+  "frame": 746.0,
   "dur": 0.3,
   "gain_db": -30
  },
  {
   "name": "far pad carried (air, faint)",
-  "at": 25.533,
-  "frame": 766.0,
+  "at": 25.267,
+  "frame": 758.0,
   "dur": 0.4,
   "gain_db": -47
  },
  {
   "name": "far pad seats on the glass",
-  "at": 27.037,
-  "frame": 811.1,
+  "at": 26.837,
+  "frame": 805.1,
   "dur": 0.12,
   "gain_db": -25
  },
  {
   "name": "far pad takes its load (fine ticks)",
-  "at": 27.107,
-  "frame": 813.2,
+  "at": 26.907,
+  "frame": 807.2,
   "dur": 0.3,
   "gain_db": -43
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
-  "at": 27.1,
-  "frame": 813.0,
+  "at": 26.933,
+  "frame": 808.0,
   "dur": 0.7,
   "gain_db": -38
  },
  {
   "name": "far tether takes his weight",
-  "at": 27.52,
-  "frame": 825.6,
+  "at": 27.373,
+  "frame": 821.2,
   "dur": 0.24,
   "gain_db": -28
  },
  {
   "name": "near pad releases: peels and stands off the glass (dry)",
-  "at": 27.867,
-  "frame": 836.0,
+  "at": 27.8,
+  "frame": 834.0,
   "dur": 0.3,
   "gain_db": -30
  },
  {
   "name": "near pad carried (air, faint)",
-  "at": 28.033,
-  "frame": 841.0,
+  "at": 27.967,
+  "frame": 839.0,
   "dur": 0.4,
   "gain_db": -47
  },
  {
   "name": "near pad seats on the glass",
-  "at": 28.703,
-  "frame": 861.1,
+  "at": 28.503,
+  "frame": 855.1,
   "dur": 0.12,
   "gain_db": -25
  },
  {
   "name": "near pad takes its load (fine ticks)",
-  "at": 28.773,
-  "frame": 863.2,
+  "at": 28.573,
+  "frame": 857.2,
   "dur": 0.3,
   "gain_db": -43
  },
  {
   "name": "near tether takes its share again",
-  "at": 28.933,
-  "frame": 868.0,
+  "at": 28.733,
+  "frame": 862.0,
   "dur": 0.2,
   "gain_db": -33
  },
@@ -232,43 +232,43 @@
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
-  "at": 31.867,
-  "frame": 956.0,
+  "at": 32.0,
+  "frame": 960.0,
   "dur": 0.3,
   "gain_db": -30
  },
  {
   "name": "far pad carried (air, faint)",
-  "at": 32.0,
-  "frame": 960.0,
+  "at": 32.133,
+  "frame": 964.0,
   "dur": 0.4,
   "gain_db": -47
  },
  {
   "name": "far pad seats on the glass",
-  "at": 32.537,
-  "frame": 976.1,
+  "at": 32.603,
+  "frame": 978.1,
   "dur": 0.12,
   "gain_db": -25
  },
  {
   "name": "far pad takes its load (fine ticks)",
-  "at": 32.607,
-  "frame": 978.2,
+  "at": 32.673,
+  "frame": 980.2,
   "dur": 0.3,
   "gain_db": -43
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
-  "at": 32.567,
-  "frame": 977.0,
+  "at": 32.633,
+  "frame": 979.0,
   "dur": 0.7,
   "gain_db": -38
  },
  {
   "name": "far tether takes his weight",
-  "at": 32.827,
-  "frame": 984.8,
+  "at": 32.853,
+  "frame": 985.6,
   "dur": 0.24,
   "gain_db": -28
  },
@@ -400,8 +400,8 @@
  },
  {
   "name": "the loaded stirrups settle (step creak)",
-  "at": 16.733,
-  "frame": 502.0,
+  "at": 16.833,
+  "frame": 505.0,
   "dur": 0.2,
   "gain_db": -36
  },
@@ -414,38 +414,45 @@
  },
  {
   "name": "the cover is cut away (air, faint)",
-  "at": 18.367,
-  "frame": 551.0,
+  "at": 18.467,
+  "frame": 554.0,
   "dur": 0.5,
   "gain_db": -48
  },
  {
   "name": "the strap pulls straight; the springs stretch together",
-  "at": 18.633,
-  "frame": 559.0,
+  "at": 18.9,
+  "frame": 567.0,
   "dur": 0.8,
   "gain_db": -35
  },
  {
   "name": "one patch lets go: its spring slackens",
-  "at": 19.4,
-  "frame": 582.0,
+  "at": 19.733,
+  "frame": 592.0,
   "dur": 0.4,
   "gain_db": -37
  },
  {
   "name": "its neighbours take up its share",
-  "at": 19.6,
-  "frame": 588.0,
+  "at": 19.9,
+  "frame": 597.0,
   "dur": 0.5,
   "gain_db": -38
  },
  {
   "name": "the load evens out again",
-  "at": 20.2,
-  "frame": 606.0,
+  "at": 20.567,
+  "frame": 617.0,
   "dur": 0.5,
   "gain_db": -40
+ },
+ {
+  "name": "the cover goes back on (air, faint)",
+  "at": 21.0,
+  "frame": 630.0,
+  "dur": 0.4,
+  "gain_db": -49
  },
  {
   "name": "wind: outside, nearing the brick",
@@ -582,8 +589,8 @@
  },
  {
   "name": "the deliberate reach back to the glass (air, faint)",
-  "at": 37.933,
-  "frame": 1138.0,
+  "at": 38.2,
+  "frame": 1146.0,
   "dur": 0.6,
   "gain_db": -44
  },
