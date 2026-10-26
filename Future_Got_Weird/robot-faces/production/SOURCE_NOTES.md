@@ -110,3 +110,29 @@ Living Skin face is a different machine (living tissue) and was not reused.
 
 **Historical branches.** `claude/new-session-96c7w8` and `claude/new-session-h21vtg` were not needed: current
 source exists on this branch.
+
+## V2 addendum (26 Oct 2026)
+
+**Claims and limits.** V2 makes the same claims under the same limits. The on-screen identifiers are listed below;
+each is supported by the ledger above.
+
+| On-screen | Basis |
+|---|---|
+| "Columbia University"; "Illustration, not lab footage"; "Illustration" (mirror) | Columbia release; this film's own status |
+| "26 motors in the face · four shown" | Columbia release (26 motors); the section shows four representative servos |
+| "Lip-sync study · Science Robotics · January 2026" | Hu et al. 2026 |
+| Fast-forward footage bar labelled "hours" (no number) | Lip-sync release: "hours" of YouTube video; no figure is given on screen |
+| "its own face (its self-model): the matching shape" | Release: the self-model learned at the mirror is linked to the audio; illustration only |
+| "Silent illustration: lips follow a speech recording"; "a language it was not trained on" | Release: speech, song, several languages; no demo audio is played |
+| Empty "meaning" slot: "not needed for the lip movements" | Script's inference; no comprehension test is shown |
+| "Illustration of the reported difficulty" (B, W) | TechXplore quote (see the conflict note above) |
+| "Earlier study · Science Robotics · 2024"; "≈ 0.84 s" bracket, marked "schematic" | 2024 release (about 840 ms before the smile appears) |
+| "Possible use: a tutor / an assistant" | Hypothetical, as the script says |
+
+**Runway (V2).**
+- **Attempted:** the brief requested Runway environment plates.
+- **Blocked:** the Runway output and API hosts return a proxy 403 from this container.
+- **Relay refused:** a relay through ElevenLabs storage was refused by the session's safety check.
+- **Result:** no Runway asset is used and no credits were spent for this episode. The settings are vector
+  illustrations (`source/src/v2/env.tsx`).
+- **Details:** `production/V2_CHANGE_QA.md`.

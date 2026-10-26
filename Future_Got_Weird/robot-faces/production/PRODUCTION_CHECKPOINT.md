@@ -1,5 +1,44 @@
 # Production checkpoint: Robots Are Learning to Copy Our Faces
 
+## V2 (26 Oct 2026): current
+
+**State.**
+- V2 is rendered: the review (1080p), a native 4K master and a 540p draft.
+- V2 is a full visual rebuild on the same narration: 80 shots, three new settings and physical mechanism sections.
+- Report: `production/V2_CHANGE_QA.md`. Map: `production/V2_TRANSITIONS.md`. Not published; not watched or heard in
+  real time.
+
+**Where V2 is.**
+- **Source.** `source/src/v2/`:
+  - `env.tsx`: settings A/B/C and the help desk, as layered vector planes;
+  - `sets.tsx`: the lab two-shot, close-ups, profile, over-shoulder and mirror;
+  - `mech.tsx`: the cheek section with solved servo horns, and the skin section;
+  - `props.tsx`;
+  - `state2.ts`: the V2 states, which wrap V1's `robotAt` / `visitorAt` and replace the opening, callback and new
+    beats;
+  - the shots: `shots2.tsx` (opening and callback), `shotsA.tsx`, `shotsB.tsx`, `shotsC.tsx`;
+  - `Film2.tsx`: the shot table with transition types.
+- **Compositions.** `RobotFacesV2` (6,400 frames), `Still2`, `Sheet2` and `ShotSheet` (the mid-frame of every shot,
+  16 per page); `Dev2` is a pose test.
+- **Narration.** `audio/narration/FGW_Robot_Faces_narration_V2.wav` is V1 trimmed to 6,400 frames, with the same
+  word timings, so `T('phrase')` is unchanged.
+- **Sound.** `tools/export_cues_v2.ts` → `audio/cues_v2.json` → `tools/make_audio_v2.py`.
+- **QA.**
+  - `tools/qa.py <file> <prefix> V2`;
+  - `tools/strips_v2.py` (edit pages);
+  - `tools/state_continuity_v2.ts`;
+  - `tools/nan_scan_v2.tsx` (bundle with `NODE_PATH=source/node_modules`);
+  - `tools/v2_transitions.py` (regenerates the map).
+
+**Open items.**
+1. Watch and listen at normal speed.
+2. Runway plates are blocked: the output host returns a proxy 403. Allowing it in the network policy would let the
+   `Back` planes be swapped for generated plates.
+3. The robot's profile mouth compression.
+
+## V1 (archived below)
+
+
 Checkpoint: 26 Oct 2026, end of V1. This is for a V2 session to resume without rereading the history. Do not publish;
 publishing is the owner's step.
 

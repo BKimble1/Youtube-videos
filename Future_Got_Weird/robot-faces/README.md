@@ -28,6 +28,36 @@ or video playback. `production/QA_REPORT.md` lists exactly what was checked and 
 | Checkpoint for V2 | `production/PRODUCTION_CHECKPOINT.md` |
 | Interaction still (film frame at 4.6 s, no text) | `cover/FGW_Robot_Faces_V1_interaction_still_4.6s_1920x1080.png` |
 
+## V2 (current)
+
+V2 rebuilds every shot on the same narration. It has 80 shots, the recording alcove and study nook settings,
+physical mechanism sections, and a matched return to the opening. Runtime 3:33.333 (6,400 frames).
+
+| Deliverable | File |
+|---|---|
+| Review 1920×1080 | `exports/FGW_Robot_Faces_V2_REVIEW_1920x1080.mp4` (Git-ignored; parts in `backup/`) |
+| Master 3840×2160 (native 2×) | `exports/FGW_Robot_Faces_V2_MASTER_3840x2160.mp4` (Git-ignored; reproducible) |
+| Captions | `captions/FGW_Robot_Faces_V2.srt` (the verified V1 SRT; timings unchanged) |
+| Narration / mix | `audio/narration/FGW_Robot_Faces_narration_V2.wav`, `audio/mix/FGW_Robot_Faces_V2_mix.wav` |
+| Change and QA report | `production/V2_CHANGE_QA.md` |
+| Action / shot / transition map | `production/V2_TRANSITIONS.md` |
+
+**Rebuild V2.**
+
+    cd Future_Got_Weird/robot-faces
+    source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.css=empty --outfile=/tmp/ec2.cjs && node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/make_audio_v2.py            # writes source/public/audio/mix_v2.wav
+    python3 tools/v2_transitions.py
+    (cd source && npx remotion render src/index.ts RobotFacesV2 /tmp/v2_review.mp4 --props='{"audio":false}' --muted --crf=16 --x264-preset=medium --color-space=bt709 --pixel-format=yuv420p)
+    ffmpeg -i /tmp/v2_review.mp4 -i audio/mix/FGW_Robot_Faces_V2_mix.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/FGW_Robot_Faces_V2_REVIEW_1920x1080.mp4
+    (cd source && npx remotion render src/index.ts RobotFacesV2 /tmp/v2_master.mp4 --props='{"audio":false}' --muted --scale=2 --crf=17 --x264-preset=medium --color-space=bt709 --pixel-format=yuv420p)
+    ffmpeg -i /tmp/v2_master.mp4 -i audio/mix/FGW_Robot_Faces_V2_mix.wav -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/FGW_Robot_Faces_V2_MASTER_3840x2160.mp4
+    python3 tools/qa.py exports/FGW_Robot_Faces_V2_REVIEW_1920x1080.mp4 qa/v2/review/review V2
+    python3 tools/strips_v2.py exports/FGW_Robot_Faces_V2_REVIEW_1920x1080.mp4 audio/cues_v2.json qa/v2/strips 2 300
+    (cd source && ./shots2.sh /tmp/shots 0.5)  # mid-frame of every shot, 16 per page
+
+The V1 description below still applies to the rigs, the shared state and the timing.
+
 ## How it is built
 
 **Cast.** The Weird Crew's guesser is the visitor, on his existing rig (`source/src/dc/`). It is copied unchanged
