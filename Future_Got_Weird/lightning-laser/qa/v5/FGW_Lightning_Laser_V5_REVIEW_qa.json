@@ -20,7 +20,7 @@
   "duration": "33.515000"
  },
  "duration_s": 33.515,
- "size_MB": 32.0,
+ "size_MB": 32.3,
  "loudness": {
   "I_LUFS": -14.0,
   "LRA": 2.8,
@@ -34,20 +34,20 @@
   1608000
  ],
  "seam": {
-  "last_to_first_change": 6.03,
+  "last_to_first_change": 6.16,
   "changes_last_5": [
-   4.78,
-   4.76,
-   6.04,
-   4.85,
-   4.72
+   4.82,
+   4.8,
+   6.14,
+   4.84,
+   4.73
   ],
   "changes_first_5": [
-   5.04,
-   5.53,
-   6.0,
-   6.23,
-   6.43
+   5.24,
+   5.78,
+   6.27,
+   6.46,
+   6.63
   ],
   "last_equals_first": false
  }
