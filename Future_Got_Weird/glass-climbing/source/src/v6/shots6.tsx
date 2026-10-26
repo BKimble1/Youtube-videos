@@ -14,7 +14,8 @@ import {H_BAR, H_BAR_OPEN} from '../world/rig';
 import {KX, KY} from '../world/geo';
 import {Lin} from '../dc/shade';
 import {MicroContent, MicroState, MicroView, MW, UM} from '../v5/Micro5';
-import {FieldState, FieldView5} from '../v5/Field5';
+import {FieldState} from '../v5/Field5';
+import {FieldView6} from './Field6';
 import {MolecularContent5} from '../v5/Molecular5';
 import {allTiles, Pad3D, Pad3DState, tileVW, viewOf} from './Pad6';
 import {BayWorld5 as BayWorld6} from './Bay6';
@@ -27,6 +28,8 @@ const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (
   </svg>
 );
 const quadIn = (x: number) => x * x;
+/** a one-argument ease (0..1) as keyN's segment ease, which is called with (t, a, b) */
+const E = (e: (x: number) => number) => (t: number, a: number, b: number) => e(clamp((t - a) / (b - a)));
 const quadOut = (x: number) => 1 - (1 - x) * (1 - x);
 export const CamOnly = React.createContext(false);
 const BayShot: React.FC<{id: string; f: number; cam: Cam; nest?: React.ReactNode}> = ({id, f, cam, nest}) => {
@@ -107,7 +110,7 @@ const O2: React.FC<{f: number}> = ({f}) => bay(`o2${f}`, f, camO2(f));
 const EYE_O3a = {x: 2.7, y: 30.2, z: 3.1}, TGT_O3a = {x: 0.4, y: 29.75, z: 0};
 const EYE_O3b = {x: 23, y: 21.5, z: 44}, TGT_O3b = {x: 0, y: 25.5, z: 0};
 const camO3 = (f: number): Cam3 => {
-  const u = inOut(clamp((f - 104) / (171 - 104)) ** 1.25);
+  const u = inOut(clamp((f - 104) / (171 - 104)) ** 1.9);
   return {eye: lerp3(EYE_O3a, EYE_O3b, u), target: lerp3(TGT_O3a, TGT_O3b, u), f: 1300};
 };
 const O3: React.FC<{f: number}> = ({f}) => tower(`o3${f}`, f, camO3(f));
@@ -129,20 +132,20 @@ const M1: React.FC<{f: number}> = ({f}) => <PadScene6 id={`m1${f}`} st={padM1(f)
 const MICRO_Y0 = -80;
 const STRIP = {x: 4, y: MICRO_Y0 + 8 * MW.pitch + MW.shear + 30};
 const CP = {x: 0, y: STRIP.y + 6};
-const FIELD: FieldState = {alpha: 0.45, beta: 20, lam: 0, surface: 'none', gx: 0, slip: 0, back: 0, y0: MICRO_Y0 - 29 * MW.pitch, count: 64, zF: -700, zN: 140, fog: 1};
+const FIELD: FieldState = {alpha: 0.62, beta: 30, lam: 0, surface: 'none', gx: 0, slip: 0, back: 0, y0: MICRO_Y0 - 29 * MW.pitch, count: 64, zF: -300, zN: 140, fog: 1};
 const fieldAt = (f: number): FieldState => ({
   ...FIELD,
-  alpha: keyN(f, [[226, 0.55], [262, 0.8], [300, 1, inOut]]),
-  beta: keyN(f, [[226, 30], [262, 34], [300, 0, inOut]]),
+  alpha: keyN(f, [[226, 0.62], [262, 0.66], [300, 1, E(inOut)]]),
+  beta: keyN(f, [[226, 30], [262, 28], [300, 0, E(inOut)]]),
   surface: f < 238 ? 'none' : 'glass',
-  gx: keyN(f, [[238, -1500], [278, 0, (x) => 1 - (1 - x) ** 2]]),
+  gx: keyN(f, [[238, -1500], [278, 0, E((x) => 1 - (1 - x) ** 2)]]),
   lam: keyN(f, [[280, 0], [310, 0.32]]),
   fog: keyN(f, [[226, 0.2], [244, 1], [290, 1], [300, 0]]),
 });
 const secAt = (f: number): MicroState => ({surface: 'glass', lam: keyN(f, [[280, 0], [310, 0.32], [350, 0.88], [376, 0.94], [420, 1]]), gx: 0, back: 0, glow: keyN(f, [[350, 0], [376, 0.6]]), slip: 0, y0: MICRO_Y0, count: 26});
 // (the bridge to the molecules leaves z 40 with this speed in ln z per frame)
 const BRIDGE_V = (2 * Math.log(520 / 40)) / 47;
-const MICRO_KEYS: [number, number, number, number][] = [[226, -380, 40, 2.08], [300, -8, 250, 3.9], [379, -1, 300, 11], [423, CP.x + 1, CP.y, 40]];
+const MICRO_KEYS: [number, number, number, number][] = [[226, 40, 40, 2.4], [300, 20, 250, 3.9], [379, 8, 300, 11], [423, CP.x + 1, CP.y, 40]];
 const camMicro = (f: number) => pathCam(f, MICRO_KEYS, [0, 0, BRIDGE_V]);
 const M23: React.FC<{f: number}> = ({f}) => {
   const cam = camMicro(f);
@@ -150,7 +153,7 @@ const M23: React.FC<{f: number}> = ({f}) => {
   const tint = keyN(f, [[226, 0.5], [236, 0]]);
   return (
     <Svg>
-      {sec < 0.999 && <FieldView5 id={`m2${f}`} st={fieldAt(f)} cam={cam} />}
+      {sec < 0.999 && <FieldView6 id={`m2${f}`} st={fieldAt(f)} cam={cam} />}
       {sec > 0.001 && <g opacity={sec}><MicroView id={`m3${f}`} st={secAt(f)} cam={cam} /></g>}
       {tint > 0.001 && <rect x={0} y={0} width={W} height={H} fill="#24404A" opacity={tint} />}
     </Svg>
@@ -333,11 +336,11 @@ const G3: React.FC<{f: number}> = ({f}) => {
 // ------------------------------------------------------------------ 6. the fall and the catch (1082-FRAMES)
 /** F1 (1082-1098) "can't make the same": side, wide enough for the drop: the brick pad tears off; the jolt swings him
  *  out on the far pad, which peels off the glass too (static) */
-const F1_CAM: Cam = {x: 300, y: -19160, z: 0.9};
+const F1_CAM: Cam = {x: 200, y: -19300, z: 1.3};
 const F1: React.FC<{f: number}> = ({f}) => bay(`f1${f}`, f, F1_CAM);
 /** F2 (1098-1113) "same contact.": from above and to the side: he falls past the spandrels beside the facade, both pads
  *  in his hands, the stirrups on his feet, the street and its traffic far below (static) */
-const F2: React.FC<{f: number}> = ({f}) => tower(`f2${f}`, f, {eye: {x: 4.2, y: 35, z: -3.2}, target: {x: 0.2, y: 24, z: 0.3}, f: 1300});
+const F2: React.FC<{f: number}> = ({f}) => tower(`f2${f}`, f, {eye: {x: 4.5, y: 33.5, z: -4.2}, target: {x: 0.3, y: 25, z: 0.4}, f: 1050});
 /** F3 (1113-FRAMES) the catch: his near hand slaps its pad flat on the glass; it loads and slides a hand's width as it
  *  takes him; his feet land on the fin, knees bending; he places the far pad (the push that runs on into frame 0) */
 const F3: React.FC<{f: number}> = ({f}) => bay(`f3${f}`, f, camCatch(f));

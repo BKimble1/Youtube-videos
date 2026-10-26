@@ -1,50 +1,50 @@
 [
  {
   "name": "weight onto the near stirrup (cloth)",
-  "at": 3.733,
-  "frame": 112.0,
+  "at": 3.6,
+  "frame": 108.0,
   "dur": 0.5,
   "gain_db": -41
  },
  {
   "name": "near strap takes the load (creak)",
-  "at": 3.867,
-  "frame": 116.0,
+  "at": 3.7,
+  "frame": 111.0,
   "dur": 0.22,
   "gain_db": -32
  },
  {
   "name": "far pad peels off (dry)",
-  "at": 4.0,
-  "frame": 120.0,
+  "at": 3.8,
+  "frame": 114.0,
   "dur": 0.3,
   "gain_db": -31
  },
  {
   "name": "far pad carried (air, faint)",
-  "at": 4.167,
-  "frame": 125.0,
+  "at": 3.933,
+  "frame": 118.0,
   "dur": 0.4,
   "gain_db": -48
  },
  {
   "name": "far pad seats",
-  "at": 4.903,
-  "frame": 147.1,
+  "at": 4.57,
+  "frame": 137.1,
   "dur": 0.12,
   "gain_db": -26
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
-  "at": 5.0,
-  "frame": 150.0,
+  "at": 4.667,
+  "frame": 140.0,
   "dur": 0.7,
   "gain_db": -38
  },
  {
   "name": "far strap takes his weight",
-  "at": 5.48,
-  "frame": 164.4,
+  "at": 5.067,
+  "frame": 152.0,
   "dur": 0.24,
   "gain_db": -28
  },

@@ -113,7 +113,7 @@ export type Move = {side: Side; to: number; rel: number; m0: number; m1: number;
 type Cycle = {k: number; sh: [number, number]; R: [number, number, number, number]; rise: [number, number]; L: [number, number, number, number]; settle: [number, number]};
 export const CYCLES: Cycle[] = [
   // "and climb it like Spider-Man": the far pad up, one confident rise (on screen)
-  {k: 1, sh: [112, 120], R: [120, 125, 142, 148], rise: [150, 174], L: [184, 189, 202, 208], settle: [208, 222]},
+  {k: 1, sh: [108, 114], R: [114, 118, 132, 138], rise: [140, 160], L: [184, 189, 202, 208], settle: [208, 222]},
   // through the micro views (unseen) and back on screen at "can hold your entire weight" (the near pad's move)
   {k: 2, sh: [236, 244], R: [244, 249, 262, 268], rise: [270, 290], L: [296, 301, 314, 320], settle: [320, 334]},
   {k: 3, sh: [350, 358], R: [358, 363, 376, 382], rise: [384, 404], L: [410, 415, 428, 434], settle: [434, 448]},
@@ -125,7 +125,7 @@ export const CYCLES: Cycle[] = [
 ];
 export const C = {
   // the opening: the far pad (placed at the end of the catch) loads; he lifts his feet off the fin into the stirrups
-  rLoad1: 20, lift0: 72, lift1: 86, drop1: 96, steady: 108,
+  rLoad1: 20, lift0: 72, lift1: 86, drop1: 96, steady: 106,
   // the brick: up onto the far stirrup (the far pad loading on the glass), the near pad sideways onto the pier, pressed
   // on, weight toward it, it fails
   bUp0: 896, bUp1: 920, bRel: 958, bM0: 964, bM1: 994, bPlace: 1000, bPress1: 1016,
@@ -142,7 +142,7 @@ const kOf = (f: number, side: Side) => MOVES.filter((m) => m.side === side && f 
 const moveAt = (f: number, side: Side) => MOVES.find((m) => m.side === side && f >= m.rel - 1 && f <= m.place + 1);
 
 /** the fall and catch run on across the loop: T is film time, with frames 0-101 counted after the last frame */
-export const CATCH_END = 112;
+export const CATCH_END = 106;
 const T_OF = (f: number) => (f < CATCH_END ? f + FRAMES : f);
 
 // ------------------------------------------------------------------ pads through the climb

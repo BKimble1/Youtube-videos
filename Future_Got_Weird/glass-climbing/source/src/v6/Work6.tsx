@@ -56,6 +56,7 @@ export const TowerTest6: React.FC<{f: number; eye: number[]; target: number[]; f
 };
 
 import {FieldView5} from '../v5/Field5';
+import {FieldView6} from './Field6';
 import {MicroView} from '../v5/Micro5';
 /** the 3D wedge field side-on and the section, same camera: left, right and a 50% overlay */
 export const MatchTest6: React.FC<{lam: number; cx: number; cy: number; z: number; alpha: number; beta: number; y0: number}> = ({lam, cx, cy, z, alpha, beta, y0}) => {
@@ -75,3 +76,17 @@ export const MatchTest6: React.FC<{lam: number; cx: number; cy: number; z: numbe
     </AbsoluteFill>
   );
 };
+
+/** the wedge field at several turns (alpha, beta, zF, camera), 4 across at quarter size */
+export const FieldTurn6: React.FC<{v: number[][]}> = ({v}) => (
+  <AbsoluteFill style={{backgroundColor: '#111'}}>
+    {v.map(([alpha, beta, zF, cx, cy, z, lam, gx], i) => (
+      <div key={i} style={{position: 'absolute', left: (i % 4) * 270, top: Math.floor(i / 4) * 480, width: 1080, height: 1920, transform: 'scale(0.25)', transformOrigin: '0 0', overflow: 'hidden'}}>
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+          <FieldView6 id={`ft${i}`} st={{alpha, beta, lam, surface: 'glass', gx, slip: 0, back: 0, y0: -80 - 29 * 42, count: 64, zF, zN: 140, fog: 1}} cam={{x: cx, y: cy, z}} />
+        </svg>
+        <div style={{position: 'absolute', left: 20, top: 20, fontSize: 60, color: '#FF0', fontFamily: 'monospace'}}>{`a${alpha} b${beta} z${zF}`}</div>
+      </div>
+    ))}
+  </AbsoluteFill>
+);
