@@ -28,7 +28,7 @@ export const CAP_PLACE: [string, Block, [number, Block][]?][] = [
   ['So if', {y: 270}],
   ['and something', {y: 270}],
   ['crawling', {y: 270}],
-  ['you might', {y: 1500}],
+  ['you might', {y: 270}],
   ['to get', {y: 1500}],
 ];
 const snap = (s: number) => {

@@ -31,7 +31,7 @@ export const s13Cam = (T: number, co: S13Co = S13_CO): Cam => {
   return lookAt(e, co.tgt, co.f, 540, co.cy);
 };
 /** her card yaw follows the camera's bearing from her (90 = profile; lower = turned toward the camera) */
-const yawFor = (cam: Cam) => 90 - (Math.atan2(cam.eye[0] - ALCOVE.anchor[0], cam.eye[2] - ALCOVE.anchor[2]) * 180) / Math.PI;
+export const yawFor = (cam: Cam) => 90 - (Math.atan2(cam.eye[0] - ALCOVE.anchor[0], cam.eye[2] - ALCOVE.anchor[2]) * 180) / Math.PI;
 
 /** her acting through S13 (and the start of S14) */
 export const s13Acting = (T: number) => {
@@ -47,11 +47,11 @@ export const s13Acting = (T: number) => {
 };
 
 /** the survivor placed in the alcove: her near fingertips land on ALCOVE.tips */
-export const survivorAt = (cam: Cam, T: number, props: Partial<React.ComponentProps<typeof Survivor>> & {id: string}) => {
-  const scale = scaleAt(cam, ALCOVE.anchor) * MM_PER_U;
+export const survivorAt = (cam: Cam, T: number, props: Partial<React.ComponentProps<typeof Survivor>> & {id: string}, scaleRef: V3 = ALCOVE.anchor) => {
+  const scale = scaleAt(cam, scaleRef) * MM_PER_U;
   const a = proj(cam, ALCOVE.anchor);
   // where the rig puts her fingertips for this anchor, then shift so they sit on the world fingertip point
-  const L0 = survivorLayout({x: a[0], y: a[1], scale, t: T, yaw: props.yaw});
+  const L0 = survivorLayout({x: a[0], y: a[1], scale, t: T, yaw: props.yaw, elev: props.elev});
   const want = proj(cam, ALCOVE.tips);
   const x = a[0] + (want[0] - L0.nearTip.x), y = a[1] + (want[1] - L0.nearTip.y);
   return {x, y, scale};
@@ -64,37 +64,43 @@ const nearestDepth = (cam: Cam, pose: RoachPose) => {
   return Math.min(...pts.map((p) => depth(cam, p)));
 };
 
-export const S13: React.FC<ShotProps & {co?: S13Co}> = ({f, co}) => {
-  const T = f / FPS;
-  const cam = s13Cam(T, co);
+export type AlcoveActing = {recog: number; recoil: number; handOpen: number; handSlide?: number; exhale?: number; blink: number; look: number};
+/** the alcove at film time T through camera `cam`: rubble, the insect on its walk, and her (acting A) */
+export const AlcoveScene: React.FC<{id: string; T: number; cam: Cam; A: AlcoveActing; scaleRef?: V3; elev?: number; legslab?: boolean; motes?: boolean; shaft?: number; survivor?: boolean; extra?: Item[]}> = ({id, T, cam, A, scaleRef, elev, legslab = true, motes = true, shaft = 0.28, survivor = true, extra = []}) => {
   const pose = alcovePose(T);
-  const A = s13Acting(T);
   const yaw = yawFor(cam);
-  const place = survivorAt(cam, T, {id: 's13s', yaw});
+  const place = survivorAt(cam, T, {id: `${id}s`, yaw, elev}, scaleRef);
   const head = proj(cam, insectHead(T));
   const gapPt = proj(cam, [ALCOVE.gap[0], 25, ALCOVE.gap[2]]);
   const gaze = {x: gapPt[0] + (head[0] - gapPt[0]) * A.look, y: gapPt[1] + (head[1] - gapPt[1]) * A.look};
-  const L = survivorLayout({...place, yaw, t: T, recog: A.recog, recoil: A.recoil, handOpen: A.handOpen});
+  const L = survivorLayout({...place, yaw, elev, t: T, recog: A.recog, recoil: A.recoil, handOpen: A.handOpen});
   const cut = L.cutAt(-70);
   const items: Item[] = [
     ...alcovePieces(cam, {sun: 0.6}).filter((it) => it !== null),
+    ...extra,
     // while the insect is still under/behind the lens (before it walks into the bottom of frame) it is not drawn: parts
     // behind the camera would project wrapped round
-    ...(nearestDepth(cam, pose) < 4 ? [] : [{z: depth(cam, pose.frame.o), el: <Roach key="r" pose={pose} cam={cam} o={{id: 's13r', shadowColor: '#1A1612', gear: <Gear id="s13g" cam={cam} f={pose.frame} g={{kind: 'injector', loaded: true, latched: true}} />}} />}]),
+    ...(nearestDepth(cam, pose) < 4 ? [] : [{z: depth(cam, pose.frame.o), el: <Roach key="r" pose={pose} cam={cam} o={{id: `${id}r`, shadowColor: '#1A1612', gear: <Gear id={`${id}g`} cam={cam} f={pose.frame} g={{kind: 'injector', loaded: true, latched: true}} />}} />}]),
   ];
   // the slab across her legs is drawn over her (in front), its right edge just past the body cut
-  const legslab = chunk('s13-legslab', cam, {c: [-430, 115, 40], h: [250, 30, 300], tilt: -0.36, yaw: 0.06, seed: 3, color: ALC.concreteDeep}, {sun: 0.4});
+  const slab = legslab ? chunk(`${id}-legslab`, cam, {c: [-430, 115, 40], h: [250, 30, 300], tilt: -0.36, yaw: 0.06, seed: 3, color: ALC.concreteDeep}, {sun: 0.4}) : null;
   const shaftTo = proj(cam, [260, 0, 30]);
+  const dA = depth(cam, ALCOVE.anchor);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <RubbleBack id="s13bk" glow={[980, 120]} />
-      <DustFloor id="s13fl" cam={cam} pool={[230, 0, 30]} poolR={260} />
-      <Sorted items={items.filter((it) => depth(cam, [0, 0, 0]) < it.z)} />
-      <Survivor id="s13s" yaw={yaw} {...place} t={T} recog={A.recog} recoil={A.recoil} handOpen={A.handOpen} blink={A.blink} gaze={gaze} dust={0.7} hideLeftOf={cut.x} />
-      <Sorted items={items.filter((it) => depth(cam, [0, 0, 0]) >= it.z)} />
-      {legslab.el}
-      <LightShaft id="s13sh" from={[980, -60]} to={[shaftTo[0], shaftTo[1]]} w0={90} w1={260} alpha={0.28} />
-      <DustMotes cam={cam} t={T} box={[[60, 0, -200], [520, 520, 200]]} n={70} seed={3} />
+      <RubbleBack id={`${id}bk`} glow={[980, 120]} />
+      <DustFloor id={`${id}fl`} cam={cam} pool={[230, 0, 30]} poolR={260} />
+      <Sorted items={items.filter((it) => dA < it.z)} />
+      {survivor && <Survivor id={`${id}s`} yaw={yaw} elev={elev} {...place} t={T} recog={A.recog} recoil={A.recoil} handOpen={A.handOpen} handSlide={A.handSlide} exhale={A.exhale} blink={A.blink} gaze={gaze} dust={0.7} hideLeftOf={cut.x} />}
+      <Sorted items={items.filter((it) => dA >= it.z)} />
+      {slab?.el}
+      {shaft > 0 && <LightShaft id={`${id}sh`} from={[980, -60]} to={[shaftTo[0], shaftTo[1]]} w0={90} w1={260} alpha={shaft} />}
+      {motes && <DustMotes cam={cam} t={T} box={[[60, 0, -200], [520, 520, 200]]} n={70} seed={3} />}
     </svg>
   );
+};
+
+export const S13: React.FC<ShotProps & {co?: S13Co}> = ({f, co}) => {
+  const T = f / FPS;
+  return <AlcoveScene id="s13" T={T} cam={s13Cam(T, co)} A={s13Acting(T)} />;
 };

@@ -40,9 +40,18 @@ export const alcoveInsect = (T: number) => {
   const path = straightPath(start, Math.atan2(WALK_DIR[2], -WALK_DIR[0]));
   return {path, s: S_REF - walkDist(T), t};
 };
+/** the pose, with the opening's antenna and search settings (so the S15 -> S01 loop matches exactly) */
 export const alcovePose = (T: number, extra: {search?: number} = {}): RoachPose => {
   const m = alcoveInsect(T);
-  return poseRoach({...m, search: extra.search ?? 0.8});
+  return poseRoach({...m, search: extra.search ?? 0.9, antL: {yaw: 0.55}, antR: {yaw: 0.6}});
+};
+/** the rigid map from the opening's lab coordinates (target face at x = 0, the walk along +x) to the alcove (her
+ *  fingertips at the lab origin, the walk along WALK_DIR): a turn about +y, so a lab camera maps to an alcove camera
+ *  that sees the walk exactly as S01 does */
+const PHI = Math.atan2(WALK_DIR[2], -WALK_DIR[0]) - Math.PI;
+export const labToAlc = (p: V3): V3 => {
+  const c = Math.cos(PHI), s = Math.sin(PHI);
+  return [ALCOVE.tips[0] + p[0] * c + p[2] * s, p[1], ALCOVE.tips[2] - p[0] * s + p[2] * c];
 };
 /** insect head position in the alcove (for gazes) */
 export const insectHead = (T: number): V3 => {

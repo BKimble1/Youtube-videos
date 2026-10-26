@@ -4,7 +4,7 @@
 // is blocked in this environment; see production/ASSET_LOG.md).
 import React from 'react';
 import {Cam, proj, depth, scaleAt} from '../lib/cam';
-import {V3, V2, add, sub, mul, norm, dot, cross, rotAxis} from '../lib/v3';
+import {V3, V2, add, sub, mul, norm, dot, cross, rotAxis, lerp3} from '../lib/v3';
 import {projPoly, projSeg, polyPath, openPath, fmt, centroid} from '../lib/g3';
 import {INK} from '../lib/ink';
 import {lit, shade, mix} from '../lib/color';
@@ -117,16 +117,33 @@ export const chunk = (id: string, cam: Cam, d: ChunkDef, opts: {sun?: number; ha
 
 /** bent reinforcing bar: a rusty round bar along a 3D polyline */
 export const rebar = (id: string, cam: Cam, pts: V3[], r = 3.2): Item => {
-  const sp = pts.map((p) => proj(cam, p));
-  const w = r * 2 * scaleAt(cam, pts[Math.floor(pts.length / 2)]);
+  // densify, then keep only the runs in front of a near plane (a bar passing beside the lens would wrap round)
+  const dense: V3[] = [];
+  for (let i = 0; i + 1 < pts.length; i++) for (let k = 0; k < 12; k++) dense.push(lerp3(pts[i], pts[i + 1], k / 12));
+  dense.push(pts[pts.length - 1]);
+  const runs: V3[][] = [];
+  let cur: V3[] = [];
+  for (const p of dense) {
+    if (depth(cam, p) >= 60) cur.push(p);
+    else if (cur.length) (runs.push(cur), (cur = []));
+  }
+  if (cur.length) runs.push(cur);
   const mid = pts[Math.floor(pts.length / 2)];
   return {
     z: depth(cam, mid),
     el: (
       <g key={id}>
-        <path d={openPath(sp)} fill="none" stroke={INK} strokeWidth={w + 2.4} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={openPath(sp)} fill="none" stroke={ALC.rebar} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={openPath(sp)} fill="none" stroke={lit(ALC.rebar, 0.35)} strokeWidth={w * 0.3} strokeLinecap="round" strokeDasharray={`${fmt(w * 0.6)} ${fmt(w * 0.9)}`} transform={`translate(${fmt(-w * 0.18)} ${fmt(-w * 0.18)})`} />
+        {runs.filter((run) => run.length > 1).map((run, j) => {
+          const sp = run.map((p) => proj(cam, p));
+          const w = r * 2 * scaleAt(cam, run[Math.floor(run.length / 2)]);
+          return (
+            <g key={j}>
+              <path d={openPath(sp)} fill="none" stroke={INK} strokeWidth={w + 2.4} strokeLinecap="round" strokeLinejoin="round" />
+              <path d={openPath(sp)} fill="none" stroke={ALC.rebar} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
+              <path d={openPath(sp)} fill="none" stroke={lit(ALC.rebar, 0.35)} strokeWidth={w * 0.3} strokeLinecap="round" strokeDasharray={`${fmt(w * 0.6)} ${fmt(w * 0.9)}`} transform={`translate(${fmt(-w * 0.18)} ${fmt(-w * 0.18)})`} />
+            </g>
+          );
+        })}
       </g>
     ),
   };

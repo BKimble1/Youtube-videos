@@ -40,8 +40,8 @@ export const s01Motion = (t: number) => {
   return {path, s, L, settle};
 };
 
-const S01_TGT: V3 = [49, 17, 0];
-const S01_EYE: V3 = ((az: number, el: number, R: number): V3 => [S01_TGT[0] + R * Math.cos(el) * Math.cos(az), S01_TGT[1] + R * Math.sin(el), S01_TGT[2] + R * Math.cos(el) * Math.sin(az)])((50 * Math.PI) / 180, (8 * Math.PI) / 180, 270);
+export const S01_TGT: V3 = [49, 17, 0];
+export const S01_EYE: V3 = ((az: number, el: number, R: number): V3 => [S01_TGT[0] + R * Math.cos(el) * Math.cos(az), S01_TGT[1] + R * Math.sin(el), S01_TGT[2] + R * Math.cos(el) * Math.sin(az)])((50 * Math.PI) / 180, (8 * Math.PI) / 180, 270);
 export const S01_CAM = lookAt(S01_EYE, S01_TGT, 2250, 540, 1130);
 export type CamOverride = {eye: V3; tgt: V3; f: number; cy?: number};
 export const S01: React.FC<ShotProps & {co?: CamOverride}> = ({f, co}) => {

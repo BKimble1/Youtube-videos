@@ -301,19 +301,22 @@ export const LatchLine: React.FC<{cam: Cam; f: Frame; s: LineState; sc: number}>
   // bottom: through the wall to the knot below the hole
   const bottom = [P(SEC.hole, SEC.y - SEC.rIn), P(SEC.hole, SEC.y - SEC.rOut - 0.35)];
   // stub: tie bead -> along the coil to the cut point (after the cut its end lifts and draws back a little)
-  const c = s.cutT === null ? 0 : easeOut(clamp(s.cutT / 0.1), 2);
+  // the parting shows on its own frame: the ends are already apart on the first frame after the cut
+  const dtc = s.cutT === null ? -1 : s.cutT + 0.012;
+  const c = dtc < 0 ? 0 : easeOut(clamp(dtc / 0.05), 2);
   const stub: V2[] = [P(SEC.tie[0], SEC.tie[1]), P(SEC.tie[0] + 0.6, SEC.lineLift - 0.05), P(SEC.coil[0] - 0.2, SEC.lineLift), P(CUT_X - 0.35 * c, SEC.lineLift + 0.28 * c)];
   let strand: V2[];
   if (s.cutT === null) strand = STRAND0.map(([x, y]) => P(x, y));
   else {
     // the free strand: angles blend from the taut shape to hanging (rotating forward about the bottom hole), the far end
     // lagging, then a small damped swing
-    const dt = s.cutT;
+    // (fast enough that it is out of the collar's way before the collar reaches it)
+    const dt = dtc;
     const swing = 0.22 * Math.exp(-dt / 0.18) * Math.sin(dt * 26);
+    const w = easeOut(clamp(dt / 0.06), 1.6);
     let x = STRAND0[0][0], y = STRAND0[0][1];
     strand = [P(x, y)];
     for (let k = 0; k < NCH; k++) {
-      const w = easeOut(clamp((dt - 0.004 * k) / 0.11), 2.2);
       let a1 = hangAng(k, swing);
       while (a1 > CH0.ang[k]) a1 -= 2 * Math.PI; // always rotate forward (clockwise in the side view)
       const a = CH0.ang[k] + (a1 - CH0.ang[k]) * w;
@@ -443,3 +446,260 @@ export const SectionTube: React.FC<{id: string; cam: Cam; f: Frame; s: TubeState
     </g>
   );
 };
+
+// ---------------------------------------------------------------------------------------------------------------
+// The launch tube from outside after the launch (S10's wide view): Gear's clear tube, the spring at its free length,
+// and this file's coil, coil wire and parted line, so the hardware matches the S09 cutaway.
+// ---------------------------------------------------------------------------------------------------------------
+export const TubeExterior: React.FC<{id: string; cam: Cam; f: Frame; cutT: number}> = ({id, cam, f, cutT}) => {
+  const L = (p: V3) => toW(f, p);
+  const sc = scaleAt(cam, L([6, SEC.y, 0]));
+  return (
+    <g>
+      {PACK.clamps.map((x, i) => (
+        <BoxSolid key={i} cam={cam} f={f} c={[x, 25.4, 0]} h={[1.6, 1.8, 3.9]} color={GEAR_COL.clamp} ink={1.2} />
+      ))}
+      <Spring cam={cam} a={L([SEC.xPlug, SEC.y, 0])} b={L([SEC.springFree, SEC.y, 0])} r={PACK.tube.r * 0.72} turns={9} wire={0.42} />
+      <LatchLine cam={cam} f={f} s={{cutT}} sc={sc} />
+      <CylSolid id={`${id}-tube`} cam={cam} a={L(PACK.tube.a)} b={L(PACK.tube.b)} r={PACK.tube.r} color={GEAR_COL.tube} ink={1.4} alpha={0.42} cap="rgba(255,255,255,0.15)" />
+      <CoilWire cam={cam} f={f} pulse={null} sc={sc} />
+      <Coil id={`${id}-coil`} cam={cam} f={f} heat={0} sc={sc} />
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------------------
+// The injector cut along its axis (S10): barrel walls, the plunger with its activator chamber and seal, gas behind the
+// plunger, the dose, the collar and the needle with its bore. Drawn in the injector's frame (x along the needle,
+// origin at the barrel rear); the far half (local z >= 0) is kept.
+// ---------------------------------------------------------------------------------------------------------------
+export type Delivery = {
+  /** 0 closed .. 1 the seal's two halves folded back */
+  seal: number;
+  /** activity in the chamber (bubbling) 0..1 */
+  fizz: number;
+  /** gas formed behind the plunger 0..1 */
+  gas: number;
+  /** plunger travel 0..1 (as rig/Gear.tsx Injector) */
+  plunger: number;
+  /** dose in the needle bore 0..1 (front of the flow along the needle) */
+  flow: number;
+  /** cloud growth in the silicone 0..1 */
+  cloud: number;
+  /** seconds (for bubble and flow motion) */
+  t: number;
+};
+const IN = {rO: INJ.barrelR, rI: INJ.barrelR - 0.4, rear: 0.4, frontIn: INJ.barrelLen - 0.4, L: INJ.barrelLen};
+/** plunger rear / front (injector x), the same mapping as rig/Gear.tsx Injector */
+export const plungerAt = (pl: number) => {
+  const r = 0.4 + clamp(pl) * (INJ.barrelLen - INJ.plungerLen - 1.2);
+  return [r, r + INJ.plungerLen] as [number, number];
+};
+const hash01 = (i: number, s: number) => {
+  const v = Math.sin(i * 127.1 + s * 311.7) * 43758.5453;
+  return v - Math.floor(v);
+};
+const BUBBLES = Array.from({length: 46}, (_, i) => ({u: hash01(i, 1), v: hash01(i, 2) * 2 - 1, r: 0.05 + 0.15 * Math.pow(hash01(i, 3), 1.6), tb: hash01(i, 4) * 0.9, ph: hash01(i, 5) * 6.28}));
+const FIZZ = Array.from({length: 12}, (_, i) => ({ph: hash01(i, 7), v: hash01(i, 8) * 2 - 1, r: 0.05 + 0.08 * hash01(i, 9)}));
+export const NEEDLE_LEN = INJ.barrelLen + 1.2 + INJ.needleLen;
+
+export const SectionInjector: React.FC<{id: string; cam: Cam; f: Frame; d: Delivery}> = ({id, cam, f, d}) => {
+  const P = (x: number, y: number, z = 0) => proj(cam, toW(f, [x, y, z]));
+  const sc = scaleAt(cam, toW(f, [8, 0, 0]));
+  const ink = Math.max(1.3, 0.09 * sc);
+  const {rO, rI, rear, frontIn, L} = IN;
+  const quad = (x0: number, y0: number, x1: number, y1: number) => [P(x0, y0), P(x1, y0), P(x1, y1), P(x0, y1)];
+  const [plR, plF] = plungerAt(d.plunger);
+  const top = P(0, rI), bot = P(0, -rI);
+  const anchor = P(0, -rO);
+  // plunger outline with two sealing ribs
+  const rb = rI - 0.12;
+  const pl: [number, number][] = [
+    [plR, -rb], [plR + 0.35, -rb], [plR + 0.5, -rI], [plR + 0.85, -rI], [plR + 1.0, -rb], [plF - 1.0, -rb], [plF - 0.85, -rI], [plF - 0.5, -rI], [plF - 0.35, -rb], [plF, -rb],
+    [plF, rb], [plF - 0.35, rb], [plF - 0.5, rI], [plF - 0.85, rI], [plF - 1.0, rb], [plR + 1.0, rb], [plR + 0.85, rI], [plR + 0.5, rI], [plR + 0.35, rb], [plR, rb],
+  ];
+  // the activator chamber inside the plunger, open to the rear through the seal
+  const cav = {x0: plR + 0.32, x1: plR + 2.3, r: 1.05};
+  const gasLen = plR - rear;
+  const sealOpen = clamp(d.seal);
+  const flap = sealOpen * 1.25; // radians each half folds back
+  const half = cav.r;
+  const flapPts = (sd: 1 | -1): V2[] => [P(cav.x0, sd * half), P(cav.x0 - Math.sin(flap) * half * 0.92, sd * half * (1 - (1 - Math.cos(flap)) * 0.95) * (1 - 0.0))];
+  const bubble = (x: number, y: number, r: number, k: string, a = 1) => {
+    const c = P(x, y);
+    const rr = Math.max(1.1, r * sc);
+    return (
+      <g key={k} opacity={a}>
+        <circle cx={fmt(c[0])} cy={fmt(c[1])} r={fmt(rr)} fill="#F4FBFF" fillOpacity={0.55} stroke={mix(INK, '#9FC3D3', 0.4)} strokeWidth={fmt(Math.max(0.7, rr * 0.22))} />
+        <circle cx={fmt(c[0] - rr * 0.35)} cy={fmt(c[1] - rr * 0.35)} r={fmt(rr * 0.3)} fill="#FFFFFF" />
+      </g>
+    );
+  };
+  const liqTop = P(plF, rI), liqBot = P(plF, -rI);
+  const nR = INJ.needleR, nB = 0.09;
+  const tipX = NEEDLE_LEN;
+  // needle (cut along its axis): outer wall with a bevelled tip, the bore inside
+  const needleOuter: V2[] = [P(L - 0.05, nR), P(tipX - 0.55, nR), P(tipX, -nR * 0.2), P(tipX - 0.08, -nR), P(L - 0.05, -nR)];
+  const flowX = L + (tipX - 0.2 - L) * clamp(d.flow);
+  const coll0 = INJ.collarAt - 0.9, coll1 = INJ.collarAt + 0.3, cR = INJ.collarR;
+  const collarTop = [P(coll0, rO), P(L, rO), P(L, nR), P(coll1, nR), P(coll1, cR), P(coll0, cR)];
+  const collarBot = [P(coll0, -rO), P(L, -rO), P(L, -nR), P(coll1, -nR), P(coll1, -cR), P(coll0, -cR)];
+  return (
+    <g>
+      <Hatch id={`${id}-h`} at={anchor} sp={Math.max(3.5, 0.32 * sc)} color={TUBE_CUT_COL} ink={Math.max(0.8, 0.05 * sc)} alpha={0.5} />
+      <Hatch id={`${id}-hc`} at={anchor} sp={Math.max(3.5, 0.32 * sc)} color={mix(GEAR_COL.collar, '#C9C2AE', 0.45)} ink={Math.max(0.8, 0.05 * sc)} alpha={0.45} angle={-45} />
+      <defs>
+        <linearGradient id={`${id}-in`} gradientUnits="userSpaceOnUse" x1={fmt(top[0])} y1={fmt(top[1])} x2={fmt(bot[0])} y2={fmt(bot[1])}>
+          <stop offset="0" stopColor={shade(GEAR_COL.barrel, 0.3)} />
+          <stop offset="0.35" stopColor={shade(GEAR_COL.barrel, 0.1)} />
+          <stop offset="0.75" stopColor={lit(GEAR_COL.barrel, 0.2)} />
+          <stop offset="1" stopColor={GEAR_COL.barrel} />
+        </linearGradient>
+        <linearGradient id={`${id}-lq`} gradientUnits="userSpaceOnUse" x1={fmt(liqTop[0])} y1={fmt(liqTop[1])} x2={fmt(liqBot[0])} y2={fmt(liqBot[1])}>
+          <stop offset="0" stopColor={lit(GEAR_COL.liquid, 0.32)} />
+          <stop offset="0.45" stopColor={GEAR_COL.liquid} />
+          <stop offset="1" stopColor={shade(GEAR_COL.liquid, 0.22)} />
+        </linearGradient>
+        <linearGradient id={`${id}-pl`} gradientUnits="userSpaceOnUse" x1={fmt(liqTop[0])} y1={fmt(liqTop[1])} x2={fmt(liqBot[0])} y2={fmt(liqBot[1])}>
+          <stop offset="0" stopColor={lit(GEAR_COL.plunger, 0.22)} />
+          <stop offset="1" stopColor={shade(GEAR_COL.plunger, 0.2)} />
+        </linearGradient>
+      </defs>
+      {/* the far half's inner surface */}
+      <path d={polyPath(quad(rear, -rI, frontIn, rI))} fill={`url(#${id}-in)`} opacity={0.85} />
+      {/* gas behind the plunger */}
+      {gasLen > 0.02 && <path d={polyPath(quad(rear, -rI, plR, rI))} fill="#FFFFFF" opacity={0.35 * clamp(d.gas * 3)} />}
+      {BUBBLES.filter((b) => d.gas > b.tb && gasLen > 0.1).map((b, i) => {
+        const age = clamp((d.gas - b.tb) / 0.12);
+        const r = b.r * (0.4 + 0.6 * age);
+        const x = rear + r + 0.04 + b.u * Math.max(0, gasLen - 2 * r - 0.08);
+        const y = b.v * (rI - r - 0.05) + 0.06 * Math.sin(d.t * 9 + b.ph);
+        return bubble(x, y, r, `b${i}`, age);
+      })}
+      {/* the dose */}
+      {frontIn - plF > 0.02 && <path d={polyPath(quad(plF, -rI, frontIn, rI))} fill={`url(#${id}-lq)`} />}
+      {/* plunger (rubber, cut) with the activator chamber and its seal */}
+      <path d={polyPath(pl.map(([x, y]) => P(x, y)))} fill={`url(#${id}-pl)`} stroke={INK} strokeWidth={fmt(ink * 0.8)} strokeLinejoin="round" />
+      <path d={polyPath(quad(cav.x0, -cav.r, cav.x1, cav.r))} fill={mix('#BFE7F4', '#E9F7FB', d.fizz * 0.4)} stroke={INK} strokeWidth={fmt(ink * 0.6)} strokeLinejoin="round" />
+      {d.fizz > 0 && FIZZ.map((b, i) => {
+        // bubbles stream from the chamber out through the open seal
+        const ph = (b.ph + d.t * 1.7) % 1;
+        const x = cav.x1 - 0.15 - ph * (cav.x1 - cav.x0 + 0.5);
+        const y = b.v * (cav.r - 0.18) * (1 - 0.5 * Math.max(0, (cav.x0 + 0.3 - x) / 0.8));
+        return bubble(x, y, b.r, `z${i}`, d.fizz * (x < cav.x0 ? clamp(1 - (cav.x0 - x) / 0.5) : 1));
+      })}
+      {/* the seal: a foil across the chamber's rear opening; it splits and its halves fold back */}
+      {[1, -1].map((sd) => {
+        const pts = sealOpen <= 0 ? [P(cav.x0, 0), P(cav.x0, sd * half)] : flapPts(sd as 1 | -1).reverse();
+        return (
+          <g key={`s${sd}`}>
+            <path d={line(pts)} stroke={INK} strokeWidth={fmt(Math.max(2.4, 0.16 * sc))} strokeLinecap="round" />
+            <path d={line(pts)} stroke="#E4E9EE" strokeWidth={fmt(Math.max(1.4, 0.1 * sc))} strokeLinecap="round" />
+          </g>
+        );
+      })}
+      {/* cut faces: barrel walls (rear wall, top, bottom, front wall round the needle) and the collar */}
+      {[quad(0, rI, L, rO), quad(0, -rO, L, -rI), quad(0, -rI, rear, rI), quad(frontIn, nR, L, rI), quad(frontIn, -rI, L, -nR)].map((q, i) => (
+        <path key={`w${i}`} d={polyPath(q)} fill={`url(#${id}-h)`} stroke={INK} strokeWidth={fmt(ink * 0.5)} strokeLinejoin="round" />
+      ))}
+      {[collarTop, collarBot].map((q, i) => <path key={`c${i}`} d={polyPath(q)} fill={`url(#${id}-hc)`} stroke={INK} strokeWidth={fmt(ink * 0.7)} strokeLinejoin="round" />)}
+      {/* needle */}
+      <path d={polyPath(needleOuter)} fill={GEAR_COL.needle} stroke={INK} strokeWidth={fmt(Math.max(1, ink * 0.55))} strokeLinejoin="round" />
+      <path d={line([P(L, 0), P(tipX - 0.3, 0)])} stroke="#EEF3F6" strokeWidth={fmt(Math.max(1.2, 2 * nB * sc))} strokeLinecap="round" />
+      {d.flow > 0 && (
+        <g>
+          <path d={line([P(L - 0.05, 0), P(flowX, 0)])} stroke={GEAR_COL.liquid} strokeWidth={fmt(Math.max(1.2, 2 * nB * sc))} strokeLinecap="round" />
+          <path d={line([P(L - 0.05, 0), P(flowX, 0)])} stroke={lit(GEAR_COL.liquid, 0.5)} strokeWidth={fmt(Math.max(0.6, nB * sc * 0.7))} strokeDasharray={`${fmt(0.35 * sc)} ${fmt(0.55 * sc)}`} strokeDashoffset={fmt(-d.t * 9 * sc)} strokeLinecap="round" opacity={0.8} />
+        </g>
+      )}
+      {/* outer contour of the barrel */}
+      <path d={polyPath([P(L, rO), P(0, rO), P(0, -rO), P(L, -rO)], false)} fill="none" stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+    </g>
+  );
+};
+
+/** the dose spreading into the silicone from the needle tip: a soft, lobed cloud (world frame of the injector) */
+export const DoseCloud: React.FC<{id: string; cam: Cam; f: Frame; c: number; alpha?: number; clip?: string}> = ({id, cam, f, c, alpha = 1, clip}) => {
+  if (c <= 0.001) return null;
+  const sc = scaleAt(cam, toW(f, [NEEDLE_LEN, 0, 0]));
+  const g = smoother(clamp(c));
+  const R = 0.35 + 3.6 * g;
+  const lobes: [number, number, number, number][] = [
+    // [dx along the needle (into the block), dy, radius factor, alpha]
+    [0.35, 0, 0.55, 0.9],
+    [0.9, 0.35, 0.8, 0.55],
+    [1.0, -0.4, 0.75, 0.55],
+    [1.5, 0.15, 0.7, 0.45],
+    [0.3, 0.55, 0.5, 0.4],
+    [0.4, -0.6, 0.5, 0.4],
+  ];
+  return (
+    <g clipPath={clip}>
+      <defs>
+        <radialGradient id={`${id}-g`}>
+          <stop offset="0" stopColor="#F0A040" stopOpacity={0.85} />
+          <stop offset="0.45" stopColor="#F2A93B" stopOpacity={0.5} />
+          <stop offset="1" stopColor="#F2B060" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      {lobes.map(([dx, dy, rf, a], i) => {
+        const q = proj(cam, toW(f, [NEEDLE_LEN + dx * R * 0.8, dy * R * 0.8, 0]));
+        const r = rf * R * sc * (0.85 + 0.15 * Math.sin(i * 2.1 + c * 3));
+        return <ellipse key={i} cx={fmt(q[0])} cy={fmt(q[1])} rx={fmt(r * 1.15)} ry={fmt(r)} fill={`url(#${id}-g)`} opacity={a * alpha * (0.6 + 0.4 * g)} />;
+      })}
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------------------
+// The target fixture cut at z = 0 (the near half removed): far halves of the base plate, back plate and silicone, the
+// far cheek whole; hatched aluminium cut faces and the silicone's translucent cut face. (sets/Lab.tsx TargetFixture's
+// geometry; for a camera on the +z side.)
+// ---------------------------------------------------------------------------------------------------------------
+import {Solid, LAB, TARGET} from '../sets/Lab';
+import {depth} from '../lib/cam';
+export const ALU_CUT = '#A9B4BE';
+export const FixtureSection: React.FC<{id: string; cam: Cam}> = ({id, cam}) => {
+  const sc = scaleAt(cam, [0, 30, 0]);
+  const ink = Math.max(1.2, Math.min(4, sc * 0.3));
+  const parts: {z: number; el: React.ReactNode}[] = [];
+  const box = (key: string, c: V3, h: V3, color: string) => parts.push({z: depth(cam, c), el: <Solid key={key} cam={cam} c={c} h={h} color={color} ink={ink} />});
+  // far halves (z <= 0)
+  box('base', [-14, 2.2, -15], [24, 2.2, 15], LAB.alu);
+  box('back', [-21.5, 30, -11.5], [2.5, 26, 11.5], shade(LAB.alu, 0.08));
+  box('cheekL', [-10, 30, -21.5], [10.5, 21, 1.8], LAB.alu);
+  box('sil', [-TARGET.depth / 2, TARGET.cy, -TARGET.hz / 2], [TARGET.depth / 2, TARGET.hy, TARGET.hz / 2], LAB.silicone);
+  parts.sort((a, b) => b.z - a.z);
+  const Pq = (pts: [number, number][]) => pts.map(([x, y]) => proj(cam, [x, y, 0.02]));
+  const baseCut = Pq([[-38, 0], [10, 0], [10, 4.4], [-38, 4.4]]);
+  const backCut = Pq([[-24, 4.4], [-19, 4.4], [-19, 56], [-24, 56]]);
+  const sil = Pq([[-16, 13], [0, 13], [0, 47], [-16, 47]]);
+  const a0 = proj(cam, [-16, 47, 0]), a1 = proj(cam, [0, 13, 0]);
+  return (
+    <g>
+      <Hatch id={`${id}-ha`} at={proj(cam, [-38, 0, 0])} sp={Math.max(4, 0.55 * sc)} color={ALU_CUT} ink={Math.max(0.9, 0.06 * sc)} alpha={0.5} />
+      <defs>
+        <linearGradient id={`${id}-sil`} gradientUnits="userSpaceOnUse" x1={fmt(a0[0])} y1={fmt(a0[1])} x2={fmt(a1[0])} y2={fmt(a1[1])}>
+          <stop offset="0" stopColor={lit(LAB.silicone, 0.4)} />
+          <stop offset="0.5" stopColor={lit(LAB.silicone, 0.18)} />
+          <stop offset="1" stopColor={LAB.silicone} />
+        </linearGradient>
+        <clipPath id={`${id}-silclip`}>
+          <path d={polyPath(sil)} />
+        </clipPath>
+      </defs>
+      {parts.map((p) => p.el)}
+      <path d={polyPath(baseCut)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+      <path d={polyPath(backCut)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+      {/* the silicone's cut face: translucent, a little lighter than its skin, a soft inner glow */}
+      <path d={polyPath(sil)} fill={`url(#${id}-sil)`} />
+      <g clipPath={`url(#${id}-silclip)`}>
+        <path d={polyPath(Pq([[-16, 13], [0, 13], [0, 14.2], [-16, 14.2]]))} fill={shade(LAB.silicone, 0.15)} opacity={0.35} />
+        <path d={polyPath(Pq([[-1.2, 13], [0, 13], [0, 47], [-1.2, 47]]))} fill="#FFFFFF" opacity={0.18} />
+      </g>
+      <path d={polyPath(sil)} fill="none" stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+    </g>
+  );
+};
+/** clip path id helper for the silicone cut face (drawn by FixtureSection) */
+export const silClipId = (id: string) => `url(#${id}-silclip)`;
