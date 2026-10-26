@@ -1,0 +1,96 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 26 Oct 2026 returned this id ('Test Voice For Youtube.'); same id as the earlier FGW episodes (Real Web Fluid, Glass Climbing V6+, Robot Faces)"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (this connector's tts node exposes no speed/stability controls); delivery directed only by inline bracket tags, which are not spoken",
+ "prompt": "[brisk, curious, slightly unsettling, crisp consonants] They stuck a needle into the dead spider—and its legs opened. [clear, explaining, brisk, flowing] You see, spiders use pressure inside their bodies to extend their legs. When they die, that pressure drops, causing the legs to curl inward. [confident] But researchers found they could push air through the needle to spread them open again. And when they released the pressure, the legs snapped shut around an object. This turned the spider’s body into a claw that could lift more than its own weight. [building] They even made it reach down… and pick up another spider.",
+ "spoken_text": "production/NARRATION_APPROVED.txt, verbatim (91 words)",
+ "flow_id": "qo2YUxVdj5RUvCx24PVQ",
+ "date": "2026-10-26",
+ "credits_reported": "2 x 623.9",
+ "generated_once": "One run of two variations (the connector default). No take was regenerated, patched or edited.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_hQ76.mp3",
+   "generation_id": "hQ76w8vMLfNFVPe9oRWL",
+   "sha256": "6116293ef6a156144cdf123197159860bd4a01eee688cfbf12518c788af35355",
+   "duration_s": 27.794,
+   "asr": {
+    "zipformer": {
+     "wer": 0.011,
+     "diffs": [
+      [
+       "replace",
+       "needle",
+       "needles"
+      ]
+     ]
+    },
+    "whisper_base_en": {
+     "wer": 0.022,
+     "diffs": [
+      [
+       "replace",
+       "released",
+       "release"
+      ],
+      [
+       "replace",
+       "snapped",
+       "snap"
+      ]
+     ]
+    }
+   },
+   "chosen": false,
+   "why": "zipformer hears 'needles' for 'needle' in 'through the needle'"
+  },
+  {
+   "file": "audio/narration/takes/t2_Z71H.mp3",
+   "generation_id": "Z71H69yldz3lGbAWr3Qe",
+   "sha256": "a2f487dbab0ebf7ae3f325c7f0554330e0ebd80f3b50e0843c412d3388861ea8",
+   "duration_s": 27.246,
+   "asr": {
+    "zipformer": {
+     "wer": 0.0,
+     "diffs": []
+    },
+    "whisper_base_en": {
+     "wer": 0.022,
+     "diffs": [
+      [
+       "replace",
+       "released",
+       "release"
+      ],
+      [
+       "replace",
+       "snapped",
+       "snap"
+      ]
+     ]
+    }
+   },
+   "chosen": true,
+   "why": "zipformer transcribes it word-perfect; whisper base.en's only differences are 'release'/'snap' for 'released'/'snapped' (it does the same on take 1, where zipformer hears the -ed endings). Pauses 0.14-0.50 s; 'reach down… and' pause 0.33 s."
+  }
+ ],
+ "alignment": "ElevenLabs Scribe (eleven_scribe_v1) word timings on the chosen take (audio/narration/takes/t2_Z71H_scribe.json). Scribe in this connector returns the prompt's text, so it is a timing source, not an independent wording check; wording was checked with the two local sherpa-onnx models above. 'spider—and' is split at the measured pause; onsets after pauses snapped to the waveform (tools/make_narration.py).",
+ "final": {
+  "file": "audio/narration/FGW_Dead_Spider_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono",
+  "measured_take_s": 27.246,
+  "speech_s": [
+   0.08,
+   27.07
+  ],
+  "padded_to_s": 30.0,
+  "edits": "none inside the take; silence appended to 30.0 s",
+  "wpm": "200.7 over the spoken span (91 words in 27.2 s)"
+ },
+ "listening": "Not listened to: this environment has no audio playback. Selection was by two ASR models, pause measurement and level."
+}

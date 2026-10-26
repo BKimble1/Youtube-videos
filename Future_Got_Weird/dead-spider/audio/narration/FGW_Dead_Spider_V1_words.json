@@ -1,0 +1,460 @@
+{
+ "take": "audio/narration/takes/t2_Z71H.mp3",
+ "words": [
+  {
+   "word": "They",
+   "start": 0.087,
+   "end": 0.247
+  },
+  {
+   "word": "stuck",
+   "start": 0.287,
+   "end": 0.487
+  },
+  {
+   "word": "a",
+   "start": 0.527,
+   "end": 0.567
+  },
+  {
+   "word": "needle",
+   "start": 0.727,
+   "end": 0.967
+  },
+  {
+   "word": "into",
+   "start": 1.087,
+   "end": 1.207
+  },
+  {
+   "word": "the",
+   "start": 1.247,
+   "end": 1.287
+  },
+  {
+   "word": "dead",
+   "start": 1.367,
+   "end": 1.527
+  },
+  {
+   "word": "spider\u2014",
+   "start": 1.607,
+   "end": 2.07
+  },
+  {
+   "word": "and",
+   "start": 2.41,
+   "end": 2.487
+  },
+  {
+   "word": "its",
+   "start": 2.567,
+   "end": 2.647
+  },
+  {
+   "word": "legs",
+   "start": 2.727,
+   "end": 3.047
+  },
+  {
+   "word": "opened.",
+   "start": 3.207,
+   "end": 3.767
+  },
+  {
+   "word": "You",
+   "start": 4.158,
+   "end": 4.167
+  },
+  {
+   "word": "see,",
+   "start": 4.247,
+   "end": 4.487
+  },
+  {
+   "word": "spiders",
+   "start": 4.647,
+   "end": 5.047
+  },
+  {
+   "word": "use",
+   "start": 5.127,
+   "end": 5.287
+  },
+  {
+   "word": "pressure",
+   "start": 5.487,
+   "end": 5.687
+  },
+  {
+   "word": "inside",
+   "start": 5.847,
+   "end": 6.007
+  },
+  {
+   "word": "their",
+   "start": 6.087,
+   "end": 6.167
+  },
+  {
+   "word": "bodies",
+   "start": 6.207,
+   "end": 6.567
+  },
+  {
+   "word": "to",
+   "start": 6.607,
+   "end": 6.647
+  },
+  {
+   "word": "extend",
+   "start": 6.727,
+   "end": 7.047
+  },
+  {
+   "word": "their",
+   "start": 7.127,
+   "end": 7.207
+  },
+  {
+   "word": "legs.",
+   "start": 7.607,
+   "end": 8.06
+  },
+  {
+   "word": "When",
+   "start": 8.114,
+   "end": 8.167
+  },
+  {
+   "word": "they",
+   "start": 8.247,
+   "end": 8.327
+  },
+  {
+   "word": "die,",
+   "start": 8.607,
+   "end": 8.94
+  },
+  {
+   "word": "that",
+   "start": 8.994,
+   "end": 9.047
+  },
+  {
+   "word": "pressure",
+   "start": 9.247,
+   "end": 9.447
+  },
+  {
+   "word": "drops,",
+   "start": 9.727,
+   "end": 10.047
+  },
+  {
+   "word": "causing",
+   "start": 10.07,
+   "end": 10.327
+  },
+  {
+   "word": "the",
+   "start": 10.407,
+   "end": 10.487
+  },
+  {
+   "word": "legs",
+   "start": 10.607,
+   "end": 10.727
+  },
+  {
+   "word": "to",
+   "start": 10.807,
+   "end": 10.887
+  },
+  {
+   "word": "curl",
+   "start": 10.967,
+   "end": 11.207
+  },
+  {
+   "word": "inward.",
+   "start": 11.287,
+   "end": 11.847
+  },
+  {
+   "word": "But",
+   "start": 12.22,
+   "end": 12.247
+  },
+  {
+   "word": "researchers",
+   "start": 12.407,
+   "end": 12.807
+  },
+  {
+   "word": "found",
+   "start": 12.887,
+   "end": 12.967
+  },
+  {
+   "word": "they",
+   "start": 13.047,
+   "end": 13.127
+  },
+  {
+   "word": "could",
+   "start": 13.207,
+   "end": 13.287
+  },
+  {
+   "word": "push",
+   "start": 13.367,
+   "end": 13.607
+  },
+  {
+   "word": "air",
+   "start": 13.687,
+   "end": 13.847
+  },
+  {
+   "word": "through",
+   "start": 13.927,
+   "end": 14.007
+  },
+  {
+   "word": "the",
+   "start": 14.047,
+   "end": 14.087
+  },
+  {
+   "word": "needle",
+   "start": 14.167,
+   "end": 14.407
+  },
+  {
+   "word": "to",
+   "start": 14.487,
+   "end": 14.567
+  },
+  {
+   "word": "spread",
+   "start": 14.647,
+   "end": 14.807
+  },
+  {
+   "word": "them",
+   "start": 14.887,
+   "end": 14.967
+  },
+  {
+   "word": "open",
+   "start": 15.047,
+   "end": 15.207
+  },
+  {
+   "word": "again.",
+   "start": 15.287,
+   "end": 15.98
+  },
+  {
+   "word": "And",
+   "start": 16.034,
+   "end": 16.087
+  },
+  {
+   "word": "when",
+   "start": 16.127,
+   "end": 16.167
+  },
+  {
+   "word": "they",
+   "start": 16.247,
+   "end": 16.327
+  },
+  {
+   "word": "released",
+   "start": 16.487,
+   "end": 16.647
+  },
+  {
+   "word": "the",
+   "start": 16.727,
+   "end": 16.807
+  },
+  {
+   "word": "pressure,",
+   "start": 17.127,
+   "end": 17.474
+  },
+  {
+   "word": "the",
+   "start": 17.5,
+   "end": 17.527
+  },
+  {
+   "word": "legs",
+   "start": 17.607,
+   "end": 17.847
+  },
+  {
+   "word": "snapped",
+   "start": 17.927,
+   "end": 18.247
+  },
+  {
+   "word": "shut",
+   "start": 18.327,
+   "end": 18.487
+  },
+  {
+   "word": "around",
+   "start": 18.567,
+   "end": 18.727
+  },
+  {
+   "word": "an",
+   "start": 18.807,
+   "end": 18.887
+  },
+  {
+   "word": "object.",
+   "start": 18.967,
+   "end": 19.807
+  },
+  {
+   "word": "This",
+   "start": 19.847,
+   "end": 20.007
+  },
+  {
+   "word": "turned",
+   "start": 20.087,
+   "end": 20.167
+  },
+  {
+   "word": "the",
+   "start": 20.247,
+   "end": 20.327
+  },
+  {
+   "word": "spider\u2019s",
+   "start": 20.407,
+   "end": 20.727
+  },
+  {
+   "word": "body",
+   "start": 20.887,
+   "end": 21.047
+  },
+  {
+   "word": "into",
+   "start": 21.167,
+   "end": 21.287
+  },
+  {
+   "word": "a",
+   "start": 21.367,
+   "end": 21.407
+  },
+  {
+   "word": "claw",
+   "start": 21.447,
+   "end": 21.767
+  },
+  {
+   "word": "that",
+   "start": 21.847,
+   "end": 21.927
+  },
+  {
+   "word": "could",
+   "start": 22.007,
+   "end": 22.087
+  },
+  {
+   "word": "lift",
+   "start": 22.207,
+   "end": 22.327
+  },
+  {
+   "word": "more",
+   "start": 22.407,
+   "end": 22.567
+  },
+  {
+   "word": "than",
+   "start": 22.647,
+   "end": 22.727
+  },
+  {
+   "word": "its",
+   "start": 22.807,
+   "end": 22.887
+  },
+  {
+   "word": "own",
+   "start": 23.007,
+   "end": 23.127
+  },
+  {
+   "word": "weight.",
+   "start": 23.487,
+   "end": 23.86
+  },
+  {
+   "word": "They",
+   "start": 23.9,
+   "end": 24.087
+  },
+  {
+   "word": "even",
+   "start": 24.167,
+   "end": 24.407
+  },
+  {
+   "word": "made",
+   "start": 24.447,
+   "end": 24.487
+  },
+  {
+   "word": "it",
+   "start": 24.567,
+   "end": 24.727
+  },
+  {
+   "word": "reach",
+   "start": 24.847,
+   "end": 24.967
+  },
+  {
+   "word": "down\u2026",
+   "start": 25.047,
+   "end": 25.74
+  },
+  {
+   "word": "and",
+   "start": 25.794,
+   "end": 25.847
+  },
+  {
+   "word": "pick",
+   "start": 25.927,
+   "end": 26.007
+  },
+  {
+   "word": "up",
+   "start": 26.047,
+   "end": 26.087
+  },
+  {
+   "word": "another",
+   "start": 26.167,
+   "end": 26.567
+  },
+  {
+   "word": "spider.",
+   "start": 26.647,
+   "end": 27.287
+  }
+ ]
+}

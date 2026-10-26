@@ -1,0 +1,266 @@
+[
+ {
+  "name": "needle touches the carapace (tick)",
+  "at": 0.42,
+  "dur": 0.05,
+  "gain_db": -30
+ },
+ {
+  "name": "needle in (faint crunch)",
+  "at": 0.46,
+  "dur": 0.06,
+  "gain_db": -38
+ },
+ {
+  "name": "support raises the specimen (servo)",
+  "at": 1.1,
+  "dur": 0.95,
+  "gain_db": -44
+ },
+ {
+  "name": "plunger slides (stopper squeak)",
+  "at": 1.417,
+  "dur": 1.983,
+  "gain_db": -40
+ },
+ {
+  "name": "air through the needle (soft)",
+  "at": 1.95,
+  "dur": 1.75,
+  "gain_db": -42
+ },
+ {
+  "name": "legs unfold (dry rustle)",
+  "at": 2.2,
+  "dur": 1.35,
+  "gain_db": -41
+ },
+ {
+  "name": "the body squeezes (low swell)",
+  "at": 5.387,
+  "dur": 0.8,
+  "gain_db": -38
+ },
+ {
+  "name": "fluid runs out along the legs",
+  "at": 5.587,
+  "dur": 1.9,
+  "gain_db": -41
+ },
+ {
+  "name": "the joint straightens (soft push)",
+  "at": 6.677,
+  "dur": 0.5,
+  "gain_db": -39
+ },
+ {
+  "name": "the flow stops",
+  "at": 8.707,
+  "dur": 0.6,
+  "gain_db": -44
+ },
+ {
+  "name": "pressure drops (falling tone)",
+  "at": 9.627,
+  "dur": 0.9,
+  "gain_db": -38
+ },
+ {
+  "name": "legs curl (soft creak)",
+  "at": 10.667,
+  "dur": 1.2,
+  "gain_db": -42
+ },
+ {
+  "name": "plunger pushed (stopper squeak)",
+  "at": 13.317,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "air into the specimen",
+  "at": 14.347,
+  "dur": 1.583,
+  "gain_db": -42
+ },
+ {
+  "name": "legs spread (dry rustle)",
+  "at": 14.547,
+  "dur": 1.183,
+  "gain_db": -41
+ },
+ {
+  "name": "support lowers (servo)",
+  "at": 15.83,
+  "dur": 0.85,
+  "gain_db": -42
+ },
+ {
+  "name": "finger off, plunger springs back",
+  "at": 16.83,
+  "dur": 0.3,
+  "gain_db": -36
+ },
+ {
+  "name": "air out (short hiss)",
+  "at": 16.86,
+  "dur": 0.45,
+  "gain_db": -38
+ },
+ {
+  "name": "foot meets the block (leg 0)",
+  "at": 17.742,
+  "dur": 0.03,
+  "gain_db": -36
+ },
+ {
+  "name": "foot meets the block (leg 1)",
+  "at": 17.783,
+  "dur": 0.03,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the block (leg 2)",
+  "at": 17.817,
+  "dur": 0.03,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the block (leg 3)",
+  "at": 17.808,
+  "dur": 0.03,
+  "gain_db": -36
+ },
+ {
+  "name": "foot meets the block (leg 4)",
+  "at": 17.783,
+  "dur": 0.03,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the block (leg 5)",
+  "at": 17.767,
+  "dur": 0.03,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the block (leg 6)",
+  "at": 17.817,
+  "dur": 0.03,
+  "gain_db": -36
+ },
+ {
+  "name": "foot meets the block (leg 7)",
+  "at": 17.825,
+  "dur": 0.03,
+  "gain_db": -35
+ },
+ {
+  "name": "support lifts (servo)",
+  "at": 18.667,
+  "dur": 1.363,
+  "gain_db": -40
+ },
+ {
+  "name": "block leaves the bench (tick)",
+  "at": 18.875,
+  "dur": 0.05,
+  "gain_db": -40
+ },
+ {
+  "name": "support lifts the load (servo)",
+  "at": 21.787,
+  "dur": 2.193,
+  "gain_db": -40
+ },
+ {
+  "name": "weight leaves the pan (tick)",
+  "at": 22.157,
+  "dur": 0.05,
+  "gain_db": -36
+ },
+ {
+  "name": "balance settles (beep)",
+  "at": 22.407,
+  "dur": 0.1,
+  "gain_db": -46
+ },
+ {
+  "name": "support lowers into the tray (servo)",
+  "at": 23.927,
+  "dur": 2.89,
+  "gain_db": -41
+ },
+ {
+  "name": "air in, legs open",
+  "at": 24.077,
+  "dur": 1.37,
+  "gain_db": -42
+ },
+ {
+  "name": "air out",
+  "at": 26.687,
+  "dur": 0.45,
+  "gain_db": -39
+ },
+ {
+  "name": "foot meets the second spider (leg 0)",
+  "at": 26.945,
+  "dur": 0.025,
+  "gain_db": -37
+ },
+ {
+  "name": "foot meets the second spider (leg 1)",
+  "at": 26.937,
+  "dur": 0.025,
+  "gain_db": -36
+ },
+ {
+  "name": "foot meets the second spider (leg 2)",
+  "at": 26.945,
+  "dur": 0.025,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the second spider (leg 3)",
+  "at": 26.97,
+  "dur": 0.025,
+  "gain_db": -37
+ },
+ {
+  "name": "foot meets the second spider (leg 4)",
+  "at": 26.987,
+  "dur": 0.025,
+  "gain_db": -36
+ },
+ {
+  "name": "foot meets the second spider (leg 5)",
+  "at": 26.929,
+  "dur": 0.025,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the second spider (leg 6)",
+  "at": 26.97,
+  "dur": 0.025,
+  "gain_db": -37
+ },
+ {
+  "name": "foot meets the second spider (leg 7)",
+  "at": 27.004,
+  "dur": 0.025,
+  "gain_db": -36
+ },
+ {
+  "name": "support lifts both (servo)",
+  "at": 27.537,
+  "dur": 1.663,
+  "gain_db": -39
+ },
+ {
+  "name": "second spider leaves the tray (soft tick)",
+  "at": 27.787,
+  "dur": 0.05,
+  "gain_db": -40
+ }
+]

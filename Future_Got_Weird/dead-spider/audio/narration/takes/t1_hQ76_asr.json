@@ -1,0 +1,29 @@
+{
+ "zipformer": {
+  "transcript": "THEY STUCK A NEEDLE INTO THE DEAD SPIDER AND ITS LEGS OPENED YOU SEE SPIDERS USE PRESSURE INSIDE THEIR BODIES TO EXTEND THEIR LEGS WHEN THEY DIE THAT PRESSURE DROPS CAUSING THE LEGS TO CURL INWARD BUT RESEARCHERS FOUND THEY COULD PUSH AIR THROUGH THE NEEDLES TO SPREAD THEM OPEN AGAIN AND WHEN THEY RELEASED THE PRESSURE THE LEGS SNAPPED SHUT AROUND AN OBJECT THIS TURNED THE SPIDER'S BODY INTO A CLAW THAT COULD LIFT MORE THAN ITS OWN WEIGHT THEY EVEN MADE IT REACH DOWN AND PICK UP ANOTHER SPIDER",
+  "wer": 0.011,
+  "diffs": [
+   [
+    "replace",
+    "needle",
+    "needles"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "They stuck a needle into the dead spider. and its legs opened. You see, spiders use pressure inside their bodies to extend their legs. When they die, that pressure drops, causing the legs to curl inward. // But researchers found they could push air through the needle to spread them open again. And when they release the pressure, the legs snap shut around an object. This turned the spider's body into a claw that could lift more than its own weight. They even made it reach down. and pick up another spider.",
+  "wer": 0.022,
+  "diffs": [
+   [
+    "replace",
+    "released",
+    "release"
+   ],
+   [
+    "replace",
+    "snapped",
+    "snap"
+   ]
+  ]
+ }
+}
