@@ -16,7 +16,7 @@ V7 is a surgical pass on V6, made from the V7 brief. Frames are at 30 fps: 1170 
 | File | What it is |
 | --- | --- |
 | `exports/FGW_Glass_Climbing_V7_FINAL_REVIEW_1080x1920.mp4` | Review render from source (see *Checks*). |
-| `exports/FGW_Glass_Climbing_V7_MASTER_2160x3840.mp4` | Master at 2×, rendered from vector source (see *Checks*). |
+| `exports/FGW_Glass_Climbing_V7_MASTER_2160x3840.mp4` | Master rendered at 2× from vector source. ffprobe: H.264 yuv420p bt709, 2160×3840, 30 fps, 1170 frames, 39.0 s, 12.9 Mb/s; AAC 320 kb/s. |
 | `audio/mix/FGW_Glass_Climbing_V7_mix.wav` | The V7 mix. |
 
 ## What changed
