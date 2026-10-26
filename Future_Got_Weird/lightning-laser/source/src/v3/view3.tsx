@@ -9,6 +9,7 @@ import {Apparatus3D, Beam3D, Discharge3D, FlashWash, Sky3D, Tower3D} from './Sce
 import {PAL} from './palette';
 import {tau3} from './timeline3';
 import {BOLT3V} from './bolt3';
+import {SiteExtras} from './features3';
 
 export type St = {
   s: number; // leader length along BOLT3 (m); <= 0: no discharge
@@ -93,12 +94,15 @@ export const View3: React.FC<{cam: Cam3; st: St; t: number; tag: string; childre
   const top = st.s > 0 ? BOLT3V.pts[Math.max(0, BOLT3V.pts.findIndex((p) => p.s >= Math.min(st.s, BOLT3V.total)))] : undefined;
   const drift = tau3(t);
   const apFirst = len3(sub3(EXIT3, cam.pos)) > len3(sub3(v3(0, 60, 0), cam.pos));
+  const Extra = React.useContext(SiteExtras);
   return (
     <g>
       <Sky3D cam={cam} flash={st.flash} boltTop={top} drift={drift} rainT={drift + 40} rain={rain} />
+      {Extra && <Extra cam={cam} flash={st.flash} t={t} layer="back" id={`${tag}-xb`} />}
       {apFirst && st.apparatus && <Apparatus3D cam={cam} flash={st.flash} fire={1} id={`${tag}-ap`} />}
       <Tower3D cam={cam} flash={st.flash} aviation={0.5 + 0.5 * Math.sin((2 * Math.PI * 17 * drift) / 33.5)} id={`${tag}-tw`} />
       {!apFirst && st.apparatus && <Apparatus3D cam={cam} flash={st.flash} fire={1} id={`${tag}-ap`} />}
+      {Extra && <Extra cam={cam} flash={st.flash} t={t} layer="front" id={`${tag}-xf`} />}
       <Beam3D cam={cam} alpha={st.beam} pulses={st.pulses} channel={st.channel} channelTop={st.channelTop} id={`${tag}-bm`} />
       <TipCorona3 cam={cam} k={st.tipCorona} t={t} />
       {top && <FlashWash cam={cam} at={top} flash={st.flash} id={`${tag}-fw`} />}

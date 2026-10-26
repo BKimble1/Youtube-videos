@@ -12,6 +12,7 @@ import {FilmStillV2, FilmV2, SheetV2} from './v2/Film2';
 import {CamTest3} from './v3/Test3';
 import {CamSeq3} from './v3/CamSeq3';
 import {FilmStillV3, FilmV3, QuadV3, SheetV3} from './v3/Film3';
+import {FilmStillV4, FilmV4, QuadV4, SheetV4} from './v4/Film4';
 import {BOLT, CAM0, loopS} from './world/site';
 import {BASE, E_FOCUS, E_FRAZZLED, E_JOLT, E_TRACK, E_WARY, H_REST, LEAD, OPERATOR, P} from './cast';
 
@@ -75,6 +76,10 @@ export const RemotionRoot: React.FC = () => (
     <Still id="FilmStillV3" component={FilmStillV3} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV3" component={SheetV3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Still id="QuadV3" component={QuadV3} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: true}} />
+    <Composition id="LightningLaserV4" component={FilmV4} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
+    <Still id="FilmStillV4" component={FilmStillV4} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV4" component={SheetV4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="QuadV4" component={QuadV4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: true}} />
     <Still id="CamTest3" component={CamTest3} width={W} height={1920} defaultProps={{items: [{cam: [-22, 108, -22, 14, 168, 0, 640, -8], st: 'open', t: 0}]}} />
     <Still id="CamSeq3" component={CamSeq3} width={W} height={1920} defaultProps={{items: [{which: 'open', t: 0}]}} />
     <Still id="CastSheet" component={CastSheet} width={W} height={1920} />
