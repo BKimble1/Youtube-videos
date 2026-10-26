@@ -52,9 +52,10 @@ const Loop: React.FC<{id: string; top: V; bar: V; k: number; part: 'back' | 'fro
  *  sagged along its own line, which on a near-vertical strap only shortened it: it read as an elastic cord.) */
 const Strap8: React.FC<{id: string; a: V; b: V; sag: number; k: number; far?: boolean}> = ({a, b, sag, k, far}) => {
   const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
-  // the side normal pointing out from the glass (+x)
+  // the side normal: the near strap bows out from the glass (+x), the far one the other way, so the two never bow
+  // into each other (or behind the near pad's ring)
   let nx = -dy / l, ny = dx / l;
-  if (nx < 0) [nx, ny] = [-nx, -ny];
+  if ((nx < 0) !== !!far) [nx, ny] = [-nx, -ny];
   const bow = 1.5 * sag;
   const c = {x: (a.x + b.x) / 2 + nx * bow, y: (a.y + b.y) / 2 + ny * bow + 0.25 * sag};
   const d = `M${fmt(a.x)},${fmt(a.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(b.x)},${fmt(b.y)}`;

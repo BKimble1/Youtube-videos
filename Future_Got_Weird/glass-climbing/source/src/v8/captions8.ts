@@ -11,7 +11,7 @@ export const CAP_Y8: [string, number, Side, [number, number, Side][]?][] = [
   ['If you', 1480, false], ['against', 1480, false], ['you could', 1480, false], ['off the', 1480, false], ['and climb', 1480, false, [[171, 300, [450, 570]]]],
   ['Their', 300, [450, 570]], ['in microscopic', 300, [450, 570]],
   ['As you', 300, [450, 570]], ['the wedges', 300, [450, 570]], ['against the', 300, [450, 570]],
-  ['This brings', 300, [590, 430]], ['that tiny', 300, [590, 430]], ['can hold', 300, [590, 430], [[503, 1480, false]]],
+  ['This brings', 300, [450, 570]], ['that tiny', 300, [450, 570]], ['can hold', 300, [450, 570], [[503, 1480, false]]],
   ['Special', 260, false], ['so one', 250, false], ['doesn', 250, false],
   ['Then,', 1480, false], ['onto the', 1480, false], ['The first', 1480, false], ['letting', 1480, false], ['higher', 1480, false],
   ['But there', 1480, false], ['They need', 1480, false], ['to grip', 1480, false], ['So you', 1480, false], ['but switch', 300, false],

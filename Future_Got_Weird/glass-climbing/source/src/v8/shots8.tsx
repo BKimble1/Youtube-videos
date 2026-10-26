@@ -429,7 +429,7 @@ const M1v8: React.FC<{f: number}> = ({f}) => {
   const zu = cam.z / 1000; // px per um
   if (zu >= 1.6) return <Svg><WedgeView id={`m1w${f}`} st={microState(f)} cam={{x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu}} /></Svg>;
   const op = clamp((Math.log(zu) - Math.log(0.25)) / (Math.log(1.6) - Math.log(0.25)));
-  const g0 = clamp((Math.log(zu) - Math.log(0.7)) / (Math.log(1.6) - Math.log(0.7)));
+  const g0 = clamp((Math.log(zu) - Math.log(0.3)) / (Math.log(1.6) - Math.log(0.3))); // (V8 QA: from earlier in the zoom, so it never sits on a bare pale tile face)
   const gb = g0 * g0 * (3 - 2 * g0);
   const camU = {x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu};
   const vw = wedgeViewOf(camU, 40);
