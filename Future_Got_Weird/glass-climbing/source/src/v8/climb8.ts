@@ -145,7 +145,7 @@ export const C = {
   // the brick: the near pad sideways onto the brick strip, pressed on, weight toward it, it slips
   bRel: 994, bM0: 998, bM1: 1018, bPlace: 1024, bPress1: 1036, bLoad0: 1040, bLoad1: 1092, fail: 1095,
   // the recovery: arrested and steady on the far pad; the deliberate reach back to the glass
-  arrest: 1108, reach0: 1132,
+  arrest: 1108, reach0: 1138,
   look0: -100, look1: -90,
 };
 export const MOVES: Move[] = CYCLES.flatMap((c) => [
@@ -167,7 +167,7 @@ const padClimb = (T: number, side: Side): Pad5 => {
   if (m) {
     const from = m.to + S;
     p.tilt = keyN(T, [[m.rel, 0], [m.m0, 9], [m.m1 - 3, 5], [m.place - 2, 0]]);
-    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 2], [m.m0, 16], [(m.m0 + m.m1) / 2, 28], [m.m1, 12], [m.place, 0, easeOut]]); // (a visible stand-off: it never slides on the glass while attached)
+    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0, 30], [(m.m0 + m.m1) / 2, 42], [m.m1, 20], [m.place, 0, easeOut]]); // (a visible stand-off: it never slides on the glass while attached)
     p.y = keyN(T, [[m.m0, from], [m.m1, m.to - 6], [m.place, m.to]]);
     p.contact = 1 - clamp(p.gap / 2);
   }
@@ -404,17 +404,19 @@ const catchBody = (T: number): Body => {
     const g0 = grip5({...rest('L', DY(NCY) + 30), zo: Z_BRICK, gap: 4, tilt: 9});
     const low: V = add(hangHip, {x: -175, y: -135});
     const drop = ss(T, C.fail, C.fail + 12);
-    const reach = ss(T, C.reach0, FRAMES - 1);
-    // the reach arrives just off the glass and a little high (it then seats down onto its rest)
-    const target: V = {x: gC.x + 10, y: gC.y - 7};
+    // one deliberate reach: it starts from rest and accelerates into the glass (it meets it moving, at frame 3), so on
+    // the film's first frames the pad is still visibly arriving
+    const x = clamp((T - C.reach0) / (tc - C.reach0));
+    const reach = x < 0.35 ? (x / 0.35) ** 2 * 0.35 * 0.5 : 0.175 + (x - 0.35) * (1 - 0.175) / 0.65;
+    // it arrives a little high (it then seats down onto its rest)
+    const target: V = {x: gC.x, y: gC.y - 7};
     const at = lerpV(lerpV(g0, low, drop), target, reach);
-    const tilt = keyN(T, [[C.fail, 9], [C.fail + 10, 15], [C.reach0, 12], [FRAMES - 8, 3], [tc, 0]]);
+    const tilt = keyN(T, [[C.fail, 9], [C.fail + 10, 15], [C.reach0, 12], [FRAMES - 6, 4], [tc, 0]]);
     const zo = lerp(Z_BRICK, PZ.L, ss(T, C.fail + 4, C.reach0 + 10));
     padL = {y: 0, zo, gap: 0, tilt, load: 0, contact: 0, surface: 'glass'};
     const g = grip5(padL);
     padL.y = at.y - g.y;
     padL.gap = Math.max(0, at.x - g.x);
-    if (T >= FRAMES - 1) padL.gap = keyN(T, [[FRAMES - 1, padL.gap], [tc, 0, (f, a, b) => clamp((f - a) / (b - a)) ** 1.5]]);
   } else {
     // seated: it moves a few units down the glass as the wedges take the load, then holds
     const seat = keyN(T, [[tc, -7], [FRAMES + C.seat, 0, easeOut]]);
@@ -425,7 +427,7 @@ const catchBody = (T: number): Body => {
   const top = atTop.H.y;
   const level = levelY(NCY);
   let hy = keyN(T, [[C.fail, top], [C.fail + 8, top + LURCH * 1.06, (f, a, b) => clamp((f - a) / (b - a)) ** 1.6], [C.fail + 13, top + LURCH * 0.95], [C.fail + 19, top + LURCH]]);
-  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 6, level + 48, easeOut], [FRAMES + C.settle1, level]]);
+  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 4, level + 64, easeOut], [FRAMES + C.settle1, level]]);
   const H: V = {x: HX - 12 * ss(T, C.reach0, FRAMES) * (1 - ss(T, FRAMES + C.seat, FRAMES + C.settle1)), y: hy};
   // feet: the far foot stays in its taut stirrup under the far pad (it, the far hand and the pad hold him); the near
   // foot loses its stirrup's anchor and drops, hanging in its loop below him; during the reach it comes forward under
