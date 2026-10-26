@@ -655,7 +655,10 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
     if ((opts.cull ?? true) && vw.facing(normal, c, moving) <= 1e-4) return;
     const n = vw.dir(normal, moving);
     const sp = pts.map((p) => (moving ? vw.world(p) : vw.fixed(p)));
-    const d = sp.reduce((s, p) => s + p.d, 0) / sp.length + (opts.bias ?? 0);
+    // (V8 QA) the depth key comes from the whole (unclipped) face: a face being cut away keeps its place in the stack
+    // (its clipped outline's centroid moved, and the cover plate sorted over its own backplate, slots and screws)
+    const sp0 = opts.clip ? pts0.map((p) => (moving ? vw.world(p) : vw.fixed(p))) : sp;
+    const d = sp0.reduce((s, p) => s + p.d, 0) / sp0.length + (opts.bias ?? 0);
     items.push({
       d,
       g: grp,

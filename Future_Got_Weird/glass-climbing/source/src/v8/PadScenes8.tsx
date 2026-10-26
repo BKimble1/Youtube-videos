@@ -577,19 +577,19 @@ export const surfaceShot = (f: number) => {
  *  have to hold you up alone.": its contact returns and the load evens out (616-632); the cover is restored (632-644)
  *  and the camera returns to the bay's view and the bay's hand-over framing (640-664). */
 /** (V8 QA) the spring shot in film frames (548-664), timed to the narration and staged so that one thing changes at a
- *  time: the view comes round onto the pad with the cover on (548-574) while he eases off and back onto it; the cover is
- *  cut away once the view has settled (560-574); "spread the load": every spring stretches together (574-590); "so one
+ *  time: the pad with the cover on while he eases off and back onto it (548-560); the cover is cut away (560-574); "spread the load": every spring stretches together (574-590); "so one
  *  little patch": one patch lets go (590-602) and is held; it returns and the load evens out (616-630); the cover goes
  *  back on (638-652). The camera takes one path that never stops or turns back: in onto the springs, fastest at the
  *  start, still creeping at the cut (664) */
 export const springShotFilm = (f: number) => {
-  const o = ss5(f, 548, 574);
-  const view: SpringView = {yaw: lerp(SPRING_BAY_VIEW.yaw, SPRING_VIEW.yaw, o), pitch: lerp(SPRING_BAY_VIEW.pitch, SPRING_VIEW.pitch, o), persp: lerpPersp(SPRING_BAY_VIEW.persp, SPRING_VIEW.persp, o)};
+  // (V8 QA) the view does not orbit: the shot opens on a cut from the stirrups, so it holds the spring view, and the
+  // big glass plane behind never sweeps its reflections across the frame
+  const view: SpringView = SPRING_VIEW;
   const cover = 1 - ss5(f, 560, 574) + ss5(f, 638, 652);
   const load = 1 - 0.75 * ss5(f, 548, 560) + 0.75 * ss5(f, 574, 590);
   const lost = ss5(f, 590, 602) * (1 - ss5(f, 616, 630));
   const x = clamp((f - 548) / (664 - 548));
-  const cam = lerpCam(SPRING_OPEN_CAM, {x: 18, y: 21, z: 5.5}, 1 - Math.pow(1 - x, 2.5));
+  const cam = lerpCam(SPRING_OPEN_CAM, {x: 18, y: 14, z: 5.3}, 1 - Math.pow(1 - x, 2.5));
   return {load, cover, lost, view, cam};
 };
 export const springShot = (f: number) => {
