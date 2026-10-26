@@ -1,0 +1,66 @@
+[
+ {
+  "name": "S01 foot",
+  "at": 0.042,
+  "frame": 1.2,
+  "dur": 0.025,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "S01 foot",
+  "at": 0.042,
+  "frame": 1.2,
+  "dur": 0.025,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "S01 foot",
+  "at": 0.042,
+  "frame": 1.2,
+  "dur": 0.025,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "S01 coil heats",
+  "at": 0.78,
+  "frame": 23.4,
+  "dur": 0.14,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "S01 RELEASE: latch line parts (accent 1)",
+  "at": 0.9,
+  "frame": 27.0,
+  "dur": 0.07,
+  "gain_db": -14,
+  "hero": true
+ },
+ {
+  "name": "S01 spring",
+  "at": 0.905,
+  "frame": 27.2,
+  "dur": 0.22,
+  "gain_db": -22,
+  "hero": true
+ },
+ {
+  "name": "S01 flight",
+  "at": 0.98,
+  "frame": 29.4,
+  "dur": 0.08,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "S01 IMPACT into silicone",
+  "at": 1.1,
+  "frame": 33.0,
+  "dur": 0.22,
+  "gain_db": -18,
+  "hero": true
+ }
+]

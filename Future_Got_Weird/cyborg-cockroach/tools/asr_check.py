@@ -15,7 +15,7 @@ import sherpa_onnx
 
 from script import locked_words, norm_words
 
-MODELS = sys.argv[2] if len(sys.argv) > 2 else '/home/user/asr_models'
+MODELS = sys.argv[2] if len(sys.argv) > 2 and __name__ == '__main__' else '/home/user/asr_models'
 
 
 def load16k(path):
@@ -38,11 +38,15 @@ def chunks(x, sr=16000, max_s=25.0):
     return out
 
 
-def whisper(x):
+def whisper_rec():
     d = f'{MODELS}/sherpa-onnx-whisper-base.en'
-    rec = sherpa_onnx.OfflineRecognizer.from_whisper(encoder=f'{d}/base.en-encoder.onnx',
-                                                     decoder=f'{d}/base.en-decoder.onnx',
-                                                     tokens=f'{d}/base.en-tokens.txt', num_threads=4)
+    return sherpa_onnx.OfflineRecognizer.from_whisper(encoder=f'{d}/base.en-encoder.onnx',
+                                                      decoder=f'{d}/base.en-decoder.onnx',
+                                                      tokens=f'{d}/base.en-tokens.txt', num_threads=4)
+
+
+def whisper(x):
+    rec = whisper_rec()
     text = []
     for c in chunks(x):
         s = rec.create_stream()

@@ -39,12 +39,12 @@ export type LegDef = {name: string; side: 1 | -1; coxa: V3; femur: number; tibia
 const leg = (name: string, side: 1 | -1, cx: number, cz: number, fe: number, ti: number, ta: number, fx: number, fz: number, rF: number, rT: number, phase: number, front = false): LegDef =>
   ({name, side, coxa: [cx, 4.8, cz * side], femur: fe, tibia: ti, tarsus: ta, foot: [fx, 0, fz * side], rFem: rF, rTib: rT, phase, front});
 export const LEGS: LegDef[] = [
-  leg('L1', -1, 22, 6.5, 10, 9.5, 5.5, 33, 21, 2.4, 2.1, 0, true),
-  leg('R1', 1, 22, 6.5, 10, 9.5, 5.5, 33, 21, 2.4, 2.1, 0.5, true),
-  leg('L2', -1, 4, 9.5, 11.5, 12.5, 7, 6, 28, 2.2, 1.6, 0.5),
-  leg('R2', 1, 4, 9.5, 11.5, 12.5, 7, 6, 28, 2.2, 1.6, 0),
-  leg('L3', -1, -8, 9.5, 13.5, 15.5, 8, -24, 27, 2.3, 1.7, 0),
-  leg('R3', 1, -8, 9.5, 13.5, 15.5, 8, -24, 27, 2.3, 1.7, 0.5),
+  leg('L1', -1, 22, 6.5, 11, 10.5, 5.5, 34, 25, 2.4, 2.1, 0, true),
+  leg('R1', 1, 22, 6.5, 11, 10.5, 5.5, 34, 25, 2.4, 2.1, 0.5, true),
+  leg('L2', -1, 4, 9.5, 13, 14, 7, 6, 32, 2.2, 1.6, 0.5),
+  leg('R2', 1, 4, 9.5, 13, 14, 7, 6, 32, 2.2, 1.6, 0),
+  leg('L3', -1, -8, 9.5, 15, 16.5, 8, -24, 31, 2.3, 1.7, 0),
+  leg('R3', 1, -8, 9.5, 15, 16.5, 8, -24, 31, 2.3, 1.7, 0.5),
 ];
 
 export type PathPose = {p: V3; yaw: number};

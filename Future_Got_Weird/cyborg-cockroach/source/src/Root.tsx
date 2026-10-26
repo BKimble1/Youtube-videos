@@ -3,6 +3,7 @@ import {Composition, Still} from 'remotion';
 import './fonts';
 import {RigSheet, WalkStrip} from './dev/RigSheet';
 import {CamTest} from './dev/CamTest';
+import {OpTest} from './dev/OpTest';
 import {Film, FilmStill, Sheet} from './Film';
 import {FPS, FRAMES, W, H} from './timeline';
 
@@ -12,6 +13,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="FilmStill" component={FilmStill} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="Sheet" component={Sheet} width={W} height={H} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
     <Still id="CamTest" component={CamTest} width={W} height={H} defaultProps={{f: 0, cams: []}} />
+    <Still id="OpTest" component={OpTest} width={W} height={H} defaultProps={{t: 3.5, cams: []}} />
     <Composition id="RigSheet" component={RigSheet} durationInFrames={90} fps={30} width={1080} height={1920} defaultProps={{}} />
     <Composition id="WalkStrip" component={WalkStrip} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{}} />
   </>

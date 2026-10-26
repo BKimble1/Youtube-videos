@@ -5,7 +5,9 @@ import {V3, V2, Frame, toW, dirW, add, sub, mul, dot, norm, len, cross, lerp3} f
 import {boxFaces, cylOutline, closedPath, openPath, polyPath, fmt, centroid} from '../lib/g3';
 import {INK, Inked, Deco} from '../lib/ink';
 import {lit, shade, mix} from '../lib/color';
-import {PACK, INJ, wires, WireKey} from './gear';
+import {PACK, INJ, wiresOn, WireKey, WirePt} from './gear';
+import {loftSilhouette} from '../lib/loft';
+import {PRONOTUM} from './roach';
 import {clamp} from '../lib/ease';
 
 /** world key light, consistent with the 2D rig's upper-left screen light */
@@ -182,20 +184,62 @@ export type GearState = {
   section?: boolean;
 };
 
-const Wire: React.FC<{cam: Cam; pts: V3[]; color: string; pulses?: number[]; zap?: number; id: string}> = ({cam, pts, color, pulses, zap, id}) => {
-  const sp = pts.map((p) => proj(cam, p));
-  const sc = scaleAt(cam, pts[Math.floor(pts.length / 2)]);
+/** point-in-polygon (screen) */
+const inPoly = (q: V2, poly: V2[]) => {
+  let c = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const a = poly[i], b = poly[j];
+    if (a[1] > q[1] !== b[1] > q[1] && q[0] < ((b[0] - a[0]) * (q[1] - a[1])) / (b[1] - a[1] + 1e-12) + a[0]) c = !c;
+  }
+  return c;
+};
+
+/** A stimulation wire lying on the shell: drawn only where its surface faces the camera and (for the cerci wires, which
+ *  lie on the plates behind the pronotum) where the pronotum does not hide it. */
+const Wire: React.FC<{cam: Cam; pts: WirePt[]; color: string; pulses?: number[]; zap?: number; id: string; proHull: V2[] | null; camFront: boolean}> = ({cam, pts, color, pulses, zap, id, proHull, camFront}) => {
+  // resample with interpolated normals
+  const P3 = pts.map((q) => q.p);
+  const S: {p: V3; vis: boolean}[] = [];
+  const nS = 36;
+  for (let i = 0; i <= nS; i++) {
+    const tt = i / nS;
+    const p = alongPolyline(P3, tt);
+    // nearest control points for the normal
+    const segs = pts.length - 1;
+    const k = Math.min(segs - 1, Math.floor(tt * segs));
+    const a = pts[k], b = pts[k + 1];
+    const na = a.n, nb = b.n;
+    const n = na && nb ? norm(lerp3(na, nb, tt * segs - k)) : na ?? nb;
+    let vis = !n || dot(n, sub(cam.eye, p)) > 0;
+    if (vis && proHull && camFront && (a.behindPro || b.behindPro) && inPoly(proj(cam, p), proHull)) vis = false;
+    S.push({p, vis});
+  }
+  const runs: V2[][] = [];
+  let cur: V2[] = [];
+  for (const q of S) {
+    if (q.vis) cur.push(proj(cam, q.p));
+    else if (cur.length) {
+      if (cur.length > 1) runs.push(cur);
+      cur = [];
+    }
+  }
+  if (cur.length > 1) runs.push(cur);
+  const sc = scaleAt(cam, P3[Math.floor(P3.length / 2)]);
   const w = Math.max(1.1, 0.42 * sc);
-  const end = sp[sp.length - 1];
-  const er = Math.max(1.6, 0.9 * scaleAt(cam, pts[pts.length - 1]));
+  const endVis = S[S.length - 1].vis;
+  const end = proj(cam, P3[P3.length - 1]);
+  const er = Math.max(1.6, 0.9 * scaleAt(cam, P3[P3.length - 1]));
   return (
     <g>
-      <path d={openPath(sp)} fill="none" stroke={INK} strokeWidth={w + 1.6} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={openPath(sp)} fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={fmt(end[0])} cy={fmt(end[1])} r={fmt(er + 0.8)} fill={INK} />
-      <circle cx={fmt(end[0])} cy={fmt(end[1])} r={fmt(er)} fill={GEAR_COL.electrode} />
+      {runs.map((r, i) => <path key={`i${i}`} d={openPath(r)} fill="none" stroke={INK} strokeWidth={w + 1.6} strokeLinecap="round" strokeLinejoin="round" />)}
+      {runs.map((r, i) => <path key={`c${i}`} d={openPath(r)} fill="none" stroke={color} strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />)}
+      {endVis && <circle cx={fmt(end[0])} cy={fmt(end[1])} r={fmt(er + 0.8)} fill={INK} />}
+      {endVis && <circle cx={fmt(end[0])} cy={fmt(end[1])} r={fmt(er)} fill={GEAR_COL.electrode} />}
       {(pulses ?? []).filter((t) => t >= 0 && t <= 1).map((t, i) => {
-        const q = proj(cam, alongPolyline(pts, t));
+        const p3 = alongPolyline(P3, t);
+        const si = Math.round(t * nS);
+        if (!S[Math.min(nS, Math.max(0, si))].vis) return null;
+        const q = proj(cam, p3);
         return (
           <g key={i}>
             <circle cx={fmt(q[0])} cy={fmt(q[1])} r={fmt(w * 3.2)} fill={GEAR_COL.pulse} opacity={0.35} />
@@ -203,7 +247,7 @@ const Wire: React.FC<{cam: Cam; pts: V3[]; color: string; pulses?: number[]; zap
           </g>
         );
       })}
-      {zap !== undefined && zap > 0 && (
+      {endVis && zap !== undefined && zap > 0 && (
         <g>
           <defs>
             <radialGradient id={`${id}-z`}>
@@ -220,7 +264,7 @@ const Wire: React.FC<{cam: Cam; pts: V3[]; color: string; pulses?: number[]; zap
 
 /** Everything mounted on the insect, drawn above the shell (pass the posed body frame). */
 export const Gear: React.FC<{id: string; cam: Cam; f: Frame; g: GearState}> = ({id, cam, f, g}) => {
-  const W = wires(f);
+  const W = wiresOn(f);
   const L = (p: V3) => toW(f, p);
   const tubeA = L(PACK.tube.a), tubeB = L(PACK.tube.b);
   const injRear = g.loaded ? INJ.loadedRear : PACK.tube.b[0] - 2;
@@ -228,14 +272,16 @@ export const Gear: React.FC<{id: string; cam: Cam; f: Frame; g: GearState}> = ({
   const injF: Frame = {o: L([injRear, PACK.tube.a[1], 0]), x: f.x, y: f.y, z: f.z};
   const mouth = PACK.tube.b[0];
   const heat = clamp(g.heat ?? 0);
-  const camAbove = dot(norm(sub(cam.eye, f.o)), f.y);
+  const proHull = loftSilhouette(f, PRONOTUM, cam, 14, 24);
+  const camFront = dot(sub(cam.eye, toW(f, [10, 15, 0])), f.x) > 0;
+  const wp = {cam, proHull, camFront};
   return (
     <g>
       {/* wires run under the board edge, over the shell */}
-      <Wire id={`${id}-wcl`} cam={cam} pts={W.cerL} color={GEAR_COL.wireB} pulses={g.pulses?.cerL} zap={g.zap?.cerL} />
-      <Wire id={`${id}-wcr`} cam={cam} pts={W.cerR} color={GEAR_COL.wireB} pulses={g.pulses?.cerR} zap={g.zap?.cerR} />
-      <Wire id={`${id}-wal`} cam={cam} pts={W.antL} color={GEAR_COL.wireA} pulses={g.pulses?.antL} zap={g.zap?.antL} />
-      <Wire id={`${id}-war`} cam={cam} pts={W.antR} color={GEAR_COL.wireA} pulses={g.pulses?.antR} zap={g.zap?.antR} />
+      <Wire id={`${id}-wcl`} {...wp} pts={W.cerL} color={GEAR_COL.wireB} pulses={g.pulses?.cerL} zap={g.zap?.cerL} />
+      <Wire id={`${id}-wcr`} {...wp} pts={W.cerR} color={GEAR_COL.wireB} pulses={g.pulses?.cerR} zap={g.zap?.cerR} />
+      <Wire id={`${id}-wal`} {...wp} pts={W.antL} color={GEAR_COL.wireA} pulses={g.pulses?.antL} zap={g.zap?.antL} />
+      <Wire id={`${id}-war`} {...wp} pts={W.antR} color={GEAR_COL.wireA} pulses={g.pulses?.antR} zap={g.zap?.antR} />
       <BoxSolid cam={cam} f={f} c={PACK.saddle.c} h={PACK.saddle.h} color={GEAR_COL.saddle} ink={1.4} />
       <BoxSolid cam={cam} f={f} c={PACK.board.c} h={PACK.board.h} color={GEAR_COL.board} ink={1.4} />
       <BoxSolid cam={cam} f={f} c={PACK.chipA.c} h={PACK.chipA.h} color={GEAR_COL.chip} ink={1.1} />

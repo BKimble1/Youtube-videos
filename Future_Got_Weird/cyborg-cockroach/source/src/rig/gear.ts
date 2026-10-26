@@ -28,27 +28,35 @@ export const INJ = {
 /** spring between the tube's rear plug (x = tube.a + 1.5) and the injector rear */
 export const springEnds = (injRearX: number): [number, number] => [PACK.tube.a[0] + 1.5, injRearX];
 
-const onShell = (d: typeof PLATES, f: Frame, u: number, th: number, lift = 0.7): V3 => {
+export type WirePt = {p: V3; n: V3 | null; behindPro: boolean};
+const onShell = (d: typeof PLATES, f: Frame, u: number, th: number, lift = 0.7): WirePt => {
   const p = loftPoint(f, d, u, th), n = loftNormal(f, d, u, th);
-  return add(p, mul(n, lift));
+  return {p: add(p, mul(n, lift)), n, behindPro: d === PLATES};
 };
 /** stimulation wires (world points), each ending at its electrode */
-export const wires = (f: Frame) => {
-  const local = (p: V3) => toW(f, p);
-  const ant = (sd: 1 | -1): V3[] => [
+/** wires as points on the shell with their surface normals (for occlusion-aware drawing) */
+export const wiresOn = (f: Frame) => {
+  const local = (p: V3, behindPro = false): WirePt => ({p: toW(f, p), n: null, behindPro});
+  const ant = (sd: 1 | -1): WirePt[] => [
     local([13.5, 23.2, 6.5 * sd]),
     onShell(PRONOTUM, f, 0.66, Math.PI / 2 - 0.5 * sd, 0.8),
     onShell(PRONOTUM, f, 0.9, Math.PI / 2 - 0.62 * sd, 0.8),
-    local([33.2, 12.2, 5.0 * sd]),
+    {p: toW(f, [33.2, 12.2, 5.0 * sd]), n: toW({...f, o: [0, 0, 0]}, [0.7, 0.2, 0.6 * sd]), behindPro: false},
   ];
-  const cer = (sd: 1 | -1): V3[] => [
-    local([-12.5, 23.0, 6.8 * sd]),
+  const cer = (sd: 1 | -1): WirePt[] => [
+    local([-12.5, 23.0, 6.8 * sd], true),
     onShell(PLATES, f, 0.5, Math.PI / 2 - 0.3 * sd),
     onShell(PLATES, f, 0.32, Math.PI / 2 - 0.35 * sd),
     onShell(PLATES, f, 0.15, Math.PI / 2 - 0.42 * sd),
     onShell(PLATES, f, 0.04, Math.PI / 2 - 0.6 * sd),
-    local([-43.2, 8.8, 3.8 * sd]),
+    {p: toW(f, [-43.2, 8.8, 3.8 * sd]), n: toW({...f, o: [0, 0, 0]}, [-0.8, 0.2, 0.5 * sd]), behindPro: true},
   ];
   return {antL: ant(-1), antR: ant(1), cerL: cer(-1), cerR: cer(1)};
 };
 export type WireKey = 'antL' | 'antR' | 'cerL' | 'cerR';
+/** stimulation wires as plain world polylines, each ending at its electrode */
+export const wires = (f: Frame) => {
+  const w = wiresOn(f);
+  const m = (a: WirePt[]) => a.map((q) => q.p);
+  return {antL: m(w.antL), antR: m(w.antR), cerL: m(w.cerL), cerR: m(w.cerR)};
+};

@@ -1,0 +1,57 @@
+{
+ "voice": {
+  "provider": "ElevenLabs (connected connector, restricted)",
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as glass-climbing, moth-silk-web-shooter and invisibility-shield voice_provenance.json); verified by creative_list_voices on 2026-10-26"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (eleven_v4 exposes no speed setting through this connector; pace directed with inline delivery tags, which are not spoken)",
+ "prompt": "[confident, quick] This cockroach can fire a needle. [conversational] And a person holding a remote decides when it shoots. [brisk, explaining] Scientists strapped a tiny launcher onto a living cockroach, then used electrical pulses to steer it. A second cockroach carries a camera, letting the operator watch as the first moves into position. Once it lines up, they fire the injector. They've demonstrated this on laboratory targets. [turning, intrigued] But the plan is to send them beneath collapsed buildings, carrying emergency medicine. [quieter, closer] So if you're trapped and something starts crawling toward you… [warm, knowing] you might actually want it to get closer.",
+ "spoken_text": "the locked narration (production/NARRATION_LOCKED.txt), 93 words, verbatim",
+ "flow_id": "4eumFcTQTnaSaLL6WzDE",
+ "session_id": "S0P9HwtNOVV4xxBsot2X",
+ "generation_id": "X8cc8MPserS5UfXYKLhF",
+ "credits": 680.93,
+ "date": "2026-10-26",
+ "takes_generated": 1,
+ "why_kept": "one coherent take; Whisper base.en transcribes it with no word errors and Zipformer differs only by spelling ('onto' -> 'on to'); no delivery tag is spoken; first line 1.88 s (target 1.7-2.0 s); sentence pauses 0.15-0.53 s; the pause before the last clause 0.40 s; first word at 0.00 s, last word ends 30.59 s. No reason to regenerate (delivery, pronunciation, missing words or timing).",
+ "format_note": "the restricted connector returns MP3 (44.1 kHz, 128 kb/s, mono); it does not offer a higher output format, so this is the highest available. The editing WAV is a single decode of it.",
+ "take": {
+  "file": "audio/narration/takes/t1_X8cc8MPserS5UfXYKLhF.mp3",
+  "sha256": "f19e3d1141bcf0ba8fbe563184684fa893dd0da6fe2bd66efa378897ef853da3",
+  "duration_s": 30.85
+ },
+ "asr": {
+  "whisper_base_en": {
+   "wer": 0.0,
+   "diffs": []
+  },
+  "zipformer_en": {
+   "wer": 0.0215,
+   "diffs": [
+    [
+     "replace",
+     "onto",
+     "on to"
+    ]
+   ]
+  }
+ },
+ "final": {
+  "file": "audio/narration/FGW_Cyborg_Cockroach_narration_V1.wav",
+  "sha256": "453dbf5af1f82a63b2265278b82ed29ec4558f624a9ac7024fc86c9018405d60",
+  "format": "48 kHz, 24-bit, mono",
+  "duration_s": 30.8,
+  "speech_s": [
+   0.0,
+   30.59
+  ],
+  "edits": "none: decoded once (ffmpeg) from the take; no cut, splice, time-stretch, pitch change or gain change"
+ },
+ "word_timing": {
+  "master": "PocketSphinx forced alignment of the locked words on the take (tools/align_sphinx.py), snapped to measured pause edges (RMS < -45 dBFS for >= 100 ms) (tools/make_narration.py)",
+  "cross_reference": "ElevenLabs Scribe (eleven_scribe_v1) alignment of the same take, kept per word in FGW_Cyborg_Cockroach_V1_words.json; it drifts up to 0.48 s on 'camera' and 'position' (contradicted by the measured pauses), so it is not the master",
+  "speech_with_timestamps_endpoint": "not exposed by the connected ElevenLabs connector; alignment was done locally as the brief allows"
+ }
+}

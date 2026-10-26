@@ -4,12 +4,26 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {Captions} from './Captions';
 import {shotAt} from './shots';
 import {FPS} from './timeline';
+import {SHOT_FRAMES} from './cuts';
+
+const S12_FROM = SHOT_FRAMES.find(([k]) => k === 'S12')![1];
+/** The plain identifier for the proposed future application (brief: "Future rescue concept"), screen space, shown whole
+ *  from just after the rubble is revealed until the end of "carrying emergency medicine". */
+export const CONCEPT_ON: [number, number] = [S12_FROM + 3, Math.round(24.7 * FPS)];
+const ConceptLabel: React.FC<{f: number}> = ({f}) =>
+  f >= CONCEPT_ON[0] && f < CONCEPT_ON[1] ? (
+    <div style={{position: 'absolute', left: 84, top: 184, padding: '10px 20px 12px', borderRadius: 14, background: 'rgba(10,16,22,0.62)', color: '#F4F1EA',
+      fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 800, fontSize: 36, letterSpacing: '0.01em'}}>
+      Future rescue concept
+    </div>
+  ) : null;
 
 export const Frame: React.FC<{f: number; captions: boolean}> = ({f, captions}) => {
   const s = shotAt(f);
   return (
     <AbsoluteFill style={{backgroundColor: '#14202A', overflow: 'hidden'}}>
       <s.C f={f} lf={f - s.from} n={s.to - s.from} />
+      <ConceptLabel f={f} />
       {captions && <Captions f={f} />}
     </AbsoluteFill>
   );

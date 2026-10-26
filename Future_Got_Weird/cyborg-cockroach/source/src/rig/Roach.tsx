@@ -233,6 +233,28 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
       </Inked>
       <Inked w={inkW} id={`${o.id}-hd`}>
         <Ellipsoid id={`${o.id}-head`} e={headE} cam={cam} color={haze(CHITIN.head)} gloss={0.3} />
+        {/* mouthparts: a paler clypeus plate and two segmented palps, read in front views */}
+        {dot(sub(cam.eye, toW(fr, [34, 6, 0])), fr.x) > 0 && (() => {
+          const cl = toW(fr, [35.2, 6.6, 0]);
+          const c = proj(cam, cl);
+          const r = scaleAt(cam, cl);
+          const palps = ([-1, 1] as const).map((sd) => [toW(fr, [33.8, 4.6, 2.6 * sd]), toW(fr, [36.6, 2.6, 3.8 * sd]), toW(fr, [37.6, 0.9, 5.0 * sd])]);
+          return (
+            <>
+              <Deco>
+                <ellipse cx={fmt(c[0])} cy={fmt(c[1])} rx={fmt(r * 3.2)} ry={fmt(r * 1.9)} fill={haze(lit(CHITIN.head, 0.22))} opacity={0.9} />
+              </Deco>
+              {palps.map((pp, i) => (
+                <g key={i}>
+                  {[0, 1].map((k) => {
+                    const a = proj(cam, pp[k]), b = proj(cam, pp[k + 1]);
+                    return <Capsule key={k} id={`${o.id}-pa${i}${k}`} a={{x: a[0], y: a[1]}} b={{x: b[0], y: b[1]}} ra={0.75 * scaleAt(cam, pp[k])} rb={0.55 * scaleAt(cam, pp[k + 1])} color={haze(CHITIN.legDeep)} />;
+                  })}
+                </g>
+              ))}
+            </>
+          );
+        })()}
         <Deco>
           {eyes.filter((e) => e.vis).map((e, i) => (
             <g key={i}>
