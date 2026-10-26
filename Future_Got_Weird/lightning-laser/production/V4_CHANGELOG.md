@@ -18,11 +18,10 @@ The delivered files carry the locked audio stream packet for packet (`qa/v4/audi
 
 | Time (s) | Narration | V3 | V4 |
 |---|---|---|---|
-| 0.00–0.30 | "They fired a LASER" | One distant tower view with a bolt already climbing and connecting at 1.75. | **A1:** a closer view of the launch. The telescope fires low-left, with pulses leaving its exit window. The thin cyan beam rises up and to the right past a new summit station (lit windows, door, railing; human scale) to the tower. The laser is active at frame 0. |
-| 0.30–2.40 | "…into a THUNDERSTORM—" | (same view) | **A2:** one crane up the same beam into the storm. It is slow while the station and telescope leave the frame, then rises over the summit, with the tower passing on the right. It lands on V3's opening framing. On the loud crack (1.75), lightning flashes inside the cloud deck: a local flash with a thin white core, away from the beam and the tower. |
+| 0.00–0.55 | "They fired a LASER" | One distant tower view with a bolt already climbing and connecting at 1.75. | **A1:** a closer view of the launch. The telescope fires low-left, with pulses leaving its exit window. The thin cyan beam rises up and to the right past a new summit station (lit windows, door, railing; human scale) to the tower. The laser is active at frame 0. |
+| 0.55–2.40 | "…into a THUNDERSTORM—" | (same view) | **A2:** one crane up the same beam into the storm. It is slow while the station and telescope leave the frame, then rises over the summit, with the tower passing on the right. It lands on V3's opening framing. On the loud crack (1.75), lightning flashes inside the cloud deck: a local flash with a thin white core, away from the beam and the tower. |
 | 2.40–4.31 | "and the lightning FOLLOWED it." | (same view; the completed bolt flickers) | **A3:** the field builds at the rod tip, and the upward leader incepts at 2.47. It climbs the cyan path through the guided section (to 3.26, on "FOLLOWED"), then leaves the line and branches to the cloud. It connects at 3.52, with re-strokes at 3.64 and 3.83 down the guided channel. A warm band shows round the guided section. From 4.2 the frame is V3's opening exactly (B's start). |
 | 4.31–9.67 | B, C1, C2 | — | Unchanged. The station is consistent in every view that can see it; it is out of frame in B and in C1's window. The fizz at B's start is now a feathered corona, not a flat disc (V3's A-1). |
-| 9.67–11.42 | "…every second," | C3 opens on a giant telescope (about 38 m) | C3 opens close on the telescope at its physical size (about 2.3 m), then cranes up the beam past the station and the tower and pushes into one packet. The hand-off to D is unchanged. |
 | 11.42–18.79 | D, E | — | Unchanged. |
 | 18.79–20.45 | "So when lightning erupted UPWARD" | E's pull-out returns to the wide demonstration view (the opening's composition). | **F1:** E's pull-out carries on and settles on a **closer view of the tower's rod tip**, with the cyan line and warm band leaving it. The field builds, and the leader incepts at the tip (19.55) and emerges upward along the line. |
 | 20.45–22.20 | "from a nearby TOWER, / part of the bolt" | (same wide view) | **F2:** one crane that rises with the advancing leader up the channel, through the guided section. The tower drops out of frame below. Where the guidance ends, the bolt turns decisively off the line, branches to the cloud and connects (21.85) with local light. The camera settles closer and higher than the opening, on where the route ends. |
@@ -50,3 +49,23 @@ unchanged.
 - The narration and the audio.
 - The machine interior and the operator.
 - The molecular explanation (B, D, E) and the house rod (G).
+
+## Unresolved (honest)
+
+These are minor findings from the second independent review of the rendered file, left in the delivered V4.
+
+| Area | Issue |
+|---|---|
+| A1, 0–0.5 s | The station is still the largest warm mass in frame 0. From this low angle the tower reads at first as standing on the station's roof; the real separation shows from about 0.6 s. |
+| A1 | The beam's visible end meets the rod tip for the first second. The beam continuing into the storm reads from about 1.6 s. |
+| A1 | The telescope's foot sits just above the caption band, and slides behind "They fired" as the crane starts. |
+| A3, 3.5–4.0 s | The warm band widens with the connection and the re-strokes before handing over to V3's opening state. |
+| F2, 21.6–22.9 s | The lower guided section and the rod tip pass through the caption band during the follow. |
+| H2 | The extended channel is about 150 px long at the top of the wide, and the telescope is a glow at the left edge. |
+| Loop | The seam is a hard cut (wide to close), and the warm band returns about 1.5 s into the replay. |
+| C3 | Uses V3's reveal: a large stylised telescope, drawn without the station. V4's physically sized version broke that shot's geography and was dropped. |
+
+## Not verified
+
+- **Playback.** Nobody has watched it in real time with sound: this environment has no display or speakers. The
+  rendered MP4 was inspected as frame strips, full-resolution stills, a motion scan, and audio packet and PCM hashes.

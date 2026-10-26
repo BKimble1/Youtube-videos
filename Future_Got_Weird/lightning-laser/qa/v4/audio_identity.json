@@ -36,6 +36,38 @@
    "mix_samples": 1608000,
    "lag_vs_mix_samples": 0,
    "corr_vs_mix": 0.999863
+  },
+  "exports/FGW_Lightning_Laser_V4_MASTER_2160x3840.mp4": {
+   "video": {
+    "codec_name": "h264",
+    "profile": "High",
+    "width": 2160,
+    "height": 3840,
+    "r_frame_rate": "30/1",
+    "avg_frame_rate": "30/1",
+    "nb_read_frames": "1005",
+    "duration": "33.500000",
+    "pix_fmt": "yuv420p",
+    "color_space": "bt709"
+   },
+   "audio": {
+    "codec_name": "aac",
+    "profile": "LC",
+    "sample_rate": "48000",
+    "channels": 2,
+    "duration": "33.515000",
+    "nb_read_frames": "1571",
+    "start_time": "0.000000"
+   },
+   "container_duration": 33.515,
+   "audio_packets_sha256": "4c3f0b740d307da4d9c7729f64db802a100ad03a88d18fe9e9bb00d92fba9dd6",
+   "audio_pcm_sha256": "6a353e720ce8128c5dee4de4fcde72ef42ab3fe70988b705161e3833d41fffd0",
+   "audio_packets_identical_to_v2": true,
+   "audio_pcm_identical_to_v2": true,
+   "decoded_samples": 1608704,
+   "mix_samples": 1608000,
+   "lag_vs_mix_samples": 0,
+   "corr_vs_mix": 0.999863
   }
  },
  "mix_v2_sha256_now": "ed86c578929288f4e10f1bf609f5296d9c3d5f0b9bb68975ecf33fb8a99260d8",
