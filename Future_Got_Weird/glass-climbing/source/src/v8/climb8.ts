@@ -172,14 +172,15 @@ const padClimb = (T: number, side: Side): Pad5 => {
   const m = moveAt(T, side);
   if (m) {
     const from = m.to + S;
-    p.tilt = keyN(T, [[m.rel, 0], [m.m0, 9], [m.m1 - 3, 5], [m.place - 2, 0]]);
+    p.tilt = keyN(T, [[m.rel, 0], [m.m0, 9], [m.m1 - 3, 5], [m.place, 0]]);
     // (a visible stand-off: it never slides on the glass while attached; the stand-off eases in and on, with no dead
     // stop where the carry begins)
     const sm = (t: number, a: number, b: number) => {
       const x = clamp((t - a) / (b - a));
       return x * x * (3 - 2 * x);
     };
-    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0 + 2, 34, sm], [m.m1, 22, sm], [m.place, 0, easeOut]]);
+    // (V8 QA: one smooth approach from the top of the stand-off to the seat, with no stall where the carry ends)
+    p.gap = keyN(T, [[m.rel, 0], [m.rel + 3, 4], [m.m0 + 2, 34, sm], [m.place, 0, sm]]);
     p.y = keyN(T, [[m.m0, from], [m.m1, m.to - 6], [m.place, m.to]]);
     p.contact = 1 - clamp(p.gap / 2);
   }
@@ -353,7 +354,10 @@ const climbBody = (T: number): Body => {
   // (a big lift shows the unweighting; it eases back to the usual height while the loop is carried up with its pad, so
   // the knee never comes up so high that the shoe turns sole-on)
   const cyc = CYCLES.find((c) => T >= c.sh[0] - 1 && T <= c.rise[1] + 1);
-  const liftR = cyc?.lift ? lerp(cyc.lift, 46, ss(T, cyc.R[0], cyc.R[2])) : 46;
+  // (V8 QA) once its pad is seated, the light foot settles down onto its step (the strap straightens) before he
+  // stands up on it, so the step he rises on does not sink under him as the load comes on
+  const settleR = cyc ? ss(T, cyc.R[3] - 6, cyc.rise[0] + 2) : 0;
+  const liftR = (cyc?.lift ? lerp(cyc.lift, 46, ss(T, cyc.R[0], cyc.R[2])) : 46) * (1 - settleR);
   // (reaching across to the pier he leans toward it, hips in a little)
   const pier = ss(T, C.bRel - 6, C.bM1) * (1 - ss(T, C.fail - 4, C.fail + 8));
   const H: V = {x: HX + shiftU - 10 * pier, y: hy};

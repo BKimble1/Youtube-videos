@@ -9,9 +9,9 @@ import {Man} from '../dc/Man';
 import {Cam, Layer} from '../dc/camera';
 import {add, fmt, V} from '../dc/math';
 import {INK, Inked} from '../dc/ink';
-import {shade} from '../dc/color';
+import {lit, shade} from '../dc/color';
 import {Capsule} from '../dc/shade';
-import {Strap, WEB} from '../art/Pad';
+import {WEB} from '../art/Pad';
 import {CM, KX, KY} from '../world/geo';
 import {HERO} from '../world/pose';
 import {City, Sky} from '../v3/Scenery3';
@@ -43,6 +43,28 @@ const Loop: React.FC<{id: string; top: V; bar: V; k: number; part: 'back' | 'fro
       {strand(mid, col)}
       {/* the strand's stitched end on the step */}
       <circle cx={fmt(mid.x)} cy={fmt(mid.y + 3)} r={fmt(2.6)} fill="#C7D0D6" stroke={INK} strokeWidth={fmt(1.2 * k)} />
+    </g>
+  );
+};
+
+/** (V8 QA) the webbing strap from its ring to its loop: straight when taut; when slack (`sag`: how much shorter the
+ *  span is than the strap, x0.45) it bows out sideways, away from the glass, and a little down. (The shared V5 strap
+ *  sagged along its own line, which on a near-vertical strap only shortened it: it read as an elastic cord.) */
+const Strap8: React.FC<{id: string; a: V; b: V; sag: number; k: number; far?: boolean}> = ({a, b, sag, k, far}) => {
+  const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
+  // the side normal pointing out from the glass (+x)
+  let nx = -dy / l, ny = dx / l;
+  if (nx < 0) [nx, ny] = [-nx, -ny];
+  const bow = 1.5 * sag;
+  const c = {x: (a.x + b.x) / 2 + nx * bow, y: (a.y + b.y) / 2 + ny * bow + 0.25 * sag};
+  const d = `M${fmt(a.x)},${fmt(a.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(b.x)},${fmt(b.y)}`;
+  const col = far ? shade(WEB, 0.18) : WEB;
+  const w = 2.4 * CM;
+  return (
+    <g>
+      <path d={d} fill="none" stroke={INK} strokeWidth={fmt(w + 2.6 * k)} strokeLinecap="round" />
+      <path d={d} fill="none" stroke={col} strokeWidth={fmt(w)} strokeLinecap="butt" />
+      <path d={d} fill="none" stroke={lit(col, 0.35)} strokeWidth={fmt(w * 0.22)} transform={`translate(${fmt(-w * 0.22)} 0)`} opacity={0.7} />
     </g>
   );
 };
@@ -116,7 +138,7 @@ export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
           <>
             {/* far side */}
             <PadOnFacade id={`${id}-pR`} s={padR} z={cam.z} k={k} />
-            <Strap id={`${id}-sR`} a={ringR} b={topR} sag={st.sagR} k={k} far />
+            <Strap8 id={`${id}-sR`} a={ringR} b={topR} sag={st.sagR} k={k} far />
             <Loop id={`${id}-lRb`} top={topR} bar={footR.bar} k={k} part="back" far />
             {man && (
               <Man
@@ -132,7 +154,7 @@ export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
                 afterFarLeg={
                   <>
                     <Loop id={`${id}-lRf`} top={topR} bar={footR.bar} k={k} part="front" far />
-                    <Strap id={`${id}-sL`} a={ringL} b={topL} sag={st.sagL} k={k} />
+                    <Strap8 id={`${id}-sL`} a={ringL} b={topL} sag={st.sagL} k={k} />
                     <Loop id={`${id}-lLb`} top={topL} bar={footL.bar} k={k} part="back" />
                   </>
                 }

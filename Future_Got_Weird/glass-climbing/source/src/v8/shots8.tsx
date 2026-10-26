@@ -410,7 +410,7 @@ const keyS = (f: number, ks: [number, number][]) => keyN(f, ks.map(([t, v], i) =
  *  zoom into the middle of its tile face, where it meets the glass: the tile layer's edge becomes the silicone sheet
  *  and its rows of wedges (nested at the exact scale), arriving at the section's own framing (WEDGE_CAM) */
 const M1_V0 = tileVW8(0, 2).v - FOCUS_P.y / 1000; // (the focus wedge sits on the middle of a tile in the third row)
-const M1_PAD: Pad3DState8 = {yaw: 0, pitch: 0, load: 1, contact: allTiles8(1), cover: 1, gap: 0, tilt: 0, slide: 0, surface: 'glass', hand: H_BAR, strap: 900, arm: ARM_BAY};
+const M1_PAD: Pad3DState8 = {yaw: 0, pitch: 0, load: 1, contact: allTiles8(1), cover: 1, gap: 0, tilt: 0, slide: 0, surface: 'glass', hand: H_BAR, strap: 900, arm: ARM_BAY, sleeve: false};
 /** the pad-view (mm) camera that equals WEDGE_CAM (um) at the nest */
 const M1_END: Cam = {x: WEDGE_CAM.x / 1000, y: M1_V0 + WEDGE_CAM.y / 1000, z: WEDGE_CAM.z * 1000};
 const camM1v8 = (f: number) => camZoom(f, 174, 232, {x: 40, y: 30}, 2.6, {x: M1_END.x, y: M1_END.y}, M1_END.z, (x) => x * x * x * (x * (x * 6 - 15) + 10));

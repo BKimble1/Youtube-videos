@@ -379,6 +379,7 @@ export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; sli
     handSide: -1,
     grip: 0.9 + 0.1 * l,
     arm: ARM_RISE,
+    sleeve: false, // (V8 QA: his tee has plain white sleeves)
     strap: 2400,
     tether: lerp(0.35, 1, sm(l * 1.4)),
     strapLean: {u: 0.12, w: -0.05},
@@ -522,6 +523,7 @@ export const SpringScene8: React.FC<{id: string; load: number; cover: number; lo
     shadowDir: {v: 9, w: -5},
     contactLine: 0.45,
     reflect: 0,
+    sleeve: false,
   };
   const em = st.emph ?? 0;
   return (
