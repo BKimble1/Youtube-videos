@@ -1,0 +1,19 @@
+{
+ "file": "../audio/narration/takes/t1_X8cc8MPserS5UfXYKLhF.mp3",
+ "whisper_base_en": {
+  "wer": 0.0,
+  "diffs": [],
+  "text": "This cockroach can fire a needle, and a person holding a remote decides when it shoots. Scientists strapped a tiny launcher onto a living cockroach, then used electrical pulses to steer it. A second cockroach carries a camera, letting the operator watch as the first moves into position. Once it lines up, they fire the injector. They've demonstrated this on laboratory targets. But the plan is to send them beneath collapsed buildings, carrying emergency medicine. So, if you're trapped and something starts crawling toward you, you might actually want it to get closer. //"
+ },
+ "zipformer_en": {
+  "wer": 0.0215,
+  "diffs": [
+   [
+    "replace",
+    "onto",
+    "on to"
+   ]
+  ],
+  "text": "THIS COCKROACH CAN FIRE A NEEDLE AND A PERSON HOLDING A REMOTE DECIDES WHEN IT SHOOTS SCIENTISTS STRAPPED A TINY LAUNCHER ON TO A LIVING COCKROACH THEN USED ELECTRICAL PULSES TO STEER IT A SECOND COCKROACH CARRIES A CAMERA LETTING THE OPERATOR WATCH AS THE FIRST MOVES INTO POSITION ONCE IT LINES UP THEY FIRE THE INJECTOR THEY'VE DEMONSTRATED THIS ON LABORATORY TARGETS BUT THE PLAN IS TO SEND THEM BENEATH COLLAPSED BUILDINGS CARRYING EMERGENCY MEDICINE SO IF YOU'RE TRAPPED AND SOMETHING STARTS CRAWLING TOWARD YOU YOU MIGHT ACTUALLY WANT IT TO GET CLOSER"
+ }
+}

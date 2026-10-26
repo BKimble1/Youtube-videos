@@ -1,0 +1,1482 @@
+{
+ "take": "audio/narration/takes/t1_X8cc8MPserS5UfXYKLhF.mp3",
+ "final_wav": "audio/narration/FGW_Cyborg_Cockroach_narration_V1.wav",
+ "sample_rate": 48000,
+ "duration_s": 30.8,
+ "speech_start_s": 0.0,
+ "speech_end_s": 30.59,
+ "word_count": 93,
+ "pauses": [
+  [
+   1.82,
+   2.205
+  ],
+  [
+   4.535,
+   4.985
+  ],
+  [
+   7.93,
+   8.09
+  ],
+  [
+   9.96,
+   10.49
+  ],
+  [
+   12.195,
+   12.425
+  ],
+  [
+   15.07,
+   15.535
+  ],
+  [
+   16.25,
+   16.515
+  ],
+  [
+   17.68,
+   18.14
+  ],
+  [
+   20.195,
+   20.64
+  ],
+  [
+   23.23,
+   23.375
+  ],
+  [
+   24.835,
+   25.27
+  ],
+  [
+   28.275,
+   28.675
+  ],
+  [
+   30.59,
+   30.8
+  ]
+ ],
+ "words": [
+  {
+   "i": 0,
+   "text": "This",
+   "scribe": [
+    0.08,
+    0.24
+   ],
+   "sphinx": [
+    0.0,
+    0.23
+   ],
+   "start": 0.0,
+   "end": 0.23
+  },
+  {
+   "i": 1,
+   "text": "cockroach",
+   "scribe": [
+    0.36,
+    0.72
+   ],
+   "sphinx": [
+    0.23,
+    0.72
+   ],
+   "start": 0.23,
+   "end": 0.72
+  },
+  {
+   "i": 2,
+   "text": "can",
+   "scribe": [
+    0.84,
+    0.96
+   ],
+   "sphinx": [
+    0.72,
+    0.89
+   ],
+   "start": 0.72,
+   "end": 0.89
+  },
+  {
+   "i": 3,
+   "text": "fire",
+   "scribe": [
+    1.08,
+    1.2
+   ],
+   "sphinx": [
+    0.89,
+    1.28
+   ],
+   "start": 0.89,
+   "end": 1.28
+  },
+  {
+   "i": 4,
+   "text": "a",
+   "scribe": [
+    1.28,
+    1.36
+   ],
+   "sphinx": [
+    1.28,
+    1.31
+   ],
+   "start": 1.28,
+   "end": 1.31
+  },
+  {
+   "i": 5,
+   "text": "needle.",
+   "scribe": [
+    1.44,
+    1.96
+   ],
+   "sphinx": [
+    1.31,
+    1.92
+   ],
+   "start": 1.31,
+   "end": 1.82
+  },
+  {
+   "i": 6,
+   "text": "And",
+   "scribe": [
+    2.229,
+    2.24
+   ],
+   "sphinx": [
+    2.17,
+    2.3
+   ],
+   "start": 2.205,
+   "end": 2.3
+  },
+  {
+   "i": 7,
+   "text": "a",
+   "scribe": [
+    2.32,
+    2.36
+   ],
+   "sphinx": [
+    2.3,
+    2.33
+   ],
+   "start": 2.205,
+   "end": 2.33
+  },
+  {
+   "i": 8,
+   "text": "person",
+   "scribe": [
+    2.4,
+    2.64
+   ],
+   "sphinx": [
+    2.33,
+    2.69
+   ],
+   "start": 2.33,
+   "end": 2.69
+  },
+  {
+   "i": 9,
+   "text": "holding",
+   "scribe": [
+    2.72,
+    2.96
+   ],
+   "sphinx": [
+    2.69,
+    2.98
+   ],
+   "start": 2.69,
+   "end": 2.98
+  },
+  {
+   "i": 10,
+   "text": "a",
+   "scribe": [
+    3.0,
+    3.04
+   ],
+   "sphinx": [
+    2.98,
+    3.01
+   ],
+   "start": 2.98,
+   "end": 3.01
+  },
+  {
+   "i": 11,
+   "text": "remote",
+   "scribe": [
+    3.24,
+    3.44
+   ],
+   "sphinx": [
+    3.01,
+    3.44
+   ],
+   "start": 3.01,
+   "end": 3.44
+  },
+  {
+   "i": 12,
+   "text": "decides",
+   "scribe": [
+    3.56,
+    3.84
+   ],
+   "sphinx": [
+    3.44,
+    3.86
+   ],
+   "start": 3.44,
+   "end": 3.86
+  },
+  {
+   "i": 13,
+   "text": "when",
+   "scribe": [
+    3.88,
+    3.92
+   ],
+   "sphinx": [
+    3.86,
+    3.97
+   ],
+   "start": 3.86,
+   "end": 3.97
+  },
+  {
+   "i": 14,
+   "text": "it",
+   "scribe": [
+    4.0,
+    4.08
+   ],
+   "sphinx": [
+    3.97,
+    4.05
+   ],
+   "start": 3.97,
+   "end": 4.05
+  },
+  {
+   "i": 15,
+   "text": "shoots.",
+   "scribe": [
+    4.16,
+    4.8
+   ],
+   "sphinx": [
+    4.05,
+    4.55
+   ],
+   "start": 4.05,
+   "end": 4.535
+  },
+  {
+   "i": 16,
+   "text": "Scientists",
+   "scribe": [
+    5.04,
+    5.52
+   ],
+   "sphinx": [
+    4.96,
+    5.47
+   ],
+   "start": 4.985,
+   "end": 5.47
+  },
+  {
+   "i": 17,
+   "text": "strapped",
+   "scribe": [
+    5.56,
+    5.76
+   ],
+   "sphinx": [
+    5.47,
+    5.79
+   ],
+   "start": 5.47,
+   "end": 5.79
+  },
+  {
+   "i": 18,
+   "text": "a",
+   "scribe": [
+    5.92,
+    6.027
+   ],
+   "sphinx": [
+    5.79,
+    5.86
+   ],
+   "start": 5.79,
+   "end": 5.86
+  },
+  {
+   "i": 19,
+   "text": "tiny",
+   "scribe": [
+    6.133,
+    6.24
+   ],
+   "sphinx": [
+    5.86,
+    6.25
+   ],
+   "start": 5.86,
+   "end": 6.25
+  },
+  {
+   "i": 20,
+   "text": "launcher",
+   "scribe": [
+    6.32,
+    6.64
+   ],
+   "sphinx": [
+    6.25,
+    6.66
+   ],
+   "start": 6.25,
+   "end": 6.66
+  },
+  {
+   "i": 21,
+   "text": "onto",
+   "scribe": [
+    6.72,
+    6.88
+   ],
+   "sphinx": [
+    6.66,
+    6.93
+   ],
+   "start": 6.66,
+   "end": 6.93
+  },
+  {
+   "i": 22,
+   "text": "a",
+   "scribe": [
+    7.04,
+    7.12
+   ],
+   "sphinx": [
+    6.93,
+    6.96
+   ],
+   "start": 6.93,
+   "end": 6.96
+  },
+  {
+   "i": 23,
+   "text": "living",
+   "scribe": [
+    7.2,
+    7.28
+   ],
+   "sphinx": [
+    6.96,
+    7.31
+   ],
+   "start": 6.96,
+   "end": 7.31
+  },
+  {
+   "i": 24,
+   "text": "cockroach,",
+   "scribe": [
+    7.36,
+    8.12
+   ],
+   "sphinx": [
+    7.31,
+    7.94
+   ],
+   "start": 7.31,
+   "end": 7.93
+  },
+  {
+   "i": 25,
+   "text": "then",
+   "scribe": [
+    8.16,
+    8.24
+   ],
+   "sphinx": [
+    8.07,
+    8.28
+   ],
+   "start": 8.09,
+   "end": 8.28
+  },
+  {
+   "i": 26,
+   "text": "used",
+   "scribe": [
+    8.32,
+    8.48
+   ],
+   "sphinx": [
+    8.28,
+    8.49
+   ],
+   "start": 8.28,
+   "end": 8.49
+  },
+  {
+   "i": 27,
+   "text": "electrical",
+   "scribe": [
+    8.56,
+    9.04
+   ],
+   "sphinx": [
+    8.49,
+    9.01
+   ],
+   "start": 8.49,
+   "end": 9.01
+  },
+  {
+   "i": 28,
+   "text": "pulses",
+   "scribe": [
+    9.08,
+    9.44
+   ],
+   "sphinx": [
+    9.01,
+    9.42
+   ],
+   "start": 9.01,
+   "end": 9.42
+  },
+  {
+   "i": 29,
+   "text": "to",
+   "scribe": [
+    9.52,
+    9.6
+   ],
+   "sphinx": [
+    9.42,
+    9.52
+   ],
+   "start": 9.42,
+   "end": 9.52
+  },
+  {
+   "i": 30,
+   "text": "steer",
+   "scribe": [
+    9.68,
+    9.84
+   ],
+   "sphinx": [
+    9.52,
+    9.91
+   ],
+   "start": 9.52,
+   "end": 9.96
+  },
+  {
+   "i": 31,
+   "text": "it.",
+   "scribe": [
+    9.92,
+    10.48
+   ],
+   "sphinx": [
+    9.91,
+    10.05
+   ],
+   "start": 9.91,
+   "end": 9.96
+  },
+  {
+   "i": 32,
+   "text": "A",
+   "scribe": [
+    10.56,
+    10.6
+   ],
+   "sphinx": [
+    10.47,
+    10.52
+   ],
+   "start": 10.49,
+   "end": 10.52
+  },
+  {
+   "i": 33,
+   "text": "second",
+   "scribe": [
+    10.64,
+    10.88
+   ],
+   "sphinx": [
+    10.52,
+    10.92
+   ],
+   "start": 10.49,
+   "end": 10.92
+  },
+  {
+   "i": 34,
+   "text": "cockroach",
+   "scribe": [
+    10.96,
+    11.36
+   ],
+   "sphinx": [
+    10.92,
+    11.37
+   ],
+   "start": 10.92,
+   "end": 11.37
+  },
+  {
+   "i": 35,
+   "text": "carries",
+   "scribe": [
+    11.44,
+    11.6
+   ],
+   "sphinx": [
+    11.37,
+    11.67
+   ],
+   "start": 11.37,
+   "end": 11.67
+  },
+  {
+   "i": 36,
+   "text": "a",
+   "scribe": [
+    11.76,
+    11.973
+   ],
+   "sphinx": [
+    11.67,
+    11.71
+   ],
+   "start": 11.67,
+   "end": 11.71
+  },
+  {
+   "i": 37,
+   "text": "camera,",
+   "scribe": [
+    12.187,
+    12.427
+   ],
+   "sphinx": [
+    11.71,
+    12.19
+   ],
+   "start": 11.71,
+   "end": 12.195
+  },
+  {
+   "i": 38,
+   "text": "letting",
+   "scribe": [
+    12.453,
+    12.64
+   ],
+   "sphinx": [
+    12.41,
+    12.61
+   ],
+   "start": 12.425,
+   "end": 12.61
+  },
+  {
+   "i": 39,
+   "text": "the",
+   "scribe": [
+    12.68,
+    12.72
+   ],
+   "sphinx": [
+    12.61,
+    12.74
+   ],
+   "start": 12.61,
+   "end": 12.74
+  },
+  {
+   "i": 40,
+   "text": "operator",
+   "scribe": [
+    12.8,
+    13.2
+   ],
+   "sphinx": [
+    12.74,
+    13.15
+   ],
+   "start": 12.74,
+   "end": 13.15
+  },
+  {
+   "i": 41,
+   "text": "watch",
+   "scribe": [
+    13.28,
+    13.52
+   ],
+   "sphinx": [
+    13.15,
+    13.56
+   ],
+   "start": 13.15,
+   "end": 13.56
+  },
+  {
+   "i": 42,
+   "text": "as",
+   "scribe": [
+    13.6,
+    13.68
+   ],
+   "sphinx": [
+    13.56,
+    13.7
+   ],
+   "start": 13.56,
+   "end": 13.7
+  },
+  {
+   "i": 43,
+   "text": "the",
+   "scribe": [
+    13.76,
+    13.84
+   ],
+   "sphinx": [
+    13.7,
+    13.77
+   ],
+   "start": 13.7,
+   "end": 13.77
+  },
+  {
+   "i": 44,
+   "text": "first",
+   "scribe": [
+    13.92,
+    14.16
+   ],
+   "sphinx": [
+    13.77,
+    14.17
+   ],
+   "start": 13.77,
+   "end": 14.17
+  },
+  {
+   "i": 45,
+   "text": "moves",
+   "scribe": [
+    14.28,
+    14.4
+   ],
+   "sphinx": [
+    14.17,
+    14.41
+   ],
+   "start": 14.17,
+   "end": 14.41
+  },
+  {
+   "i": 46,
+   "text": "into",
+   "scribe": [
+    14.48,
+    14.56
+   ],
+   "sphinx": [
+    14.41,
+    14.56
+   ],
+   "start": 14.41,
+   "end": 14.56
+  },
+  {
+   "i": 47,
+   "text": "position.",
+   "scribe": [
+    15.0,
+    15.48
+   ],
+   "sphinx": [
+    14.56,
+    15.12
+   ],
+   "start": 14.56,
+   "end": 15.07
+  },
+  {
+   "i": 48,
+   "text": "Once",
+   "scribe": [
+    15.52,
+    15.68
+   ],
+   "sphinx": [
+    15.52,
+    15.7
+   ],
+   "start": 15.535,
+   "end": 15.7
+  },
+  {
+   "i": 49,
+   "text": "it",
+   "scribe": [
+    15.72,
+    15.76
+   ],
+   "sphinx": [
+    15.7,
+    15.77
+   ],
+   "start": 15.7,
+   "end": 15.77
+  },
+  {
+   "i": 50,
+   "text": "lines",
+   "scribe": [
+    15.84,
+    16.0
+   ],
+   "sphinx": [
+    15.77,
+    16.06
+   ],
+   "start": 15.77,
+   "end": 16.06
+  },
+  {
+   "i": 51,
+   "text": "up,",
+   "scribe": [
+    16.08,
+    16.56
+   ],
+   "sphinx": [
+    16.06,
+    16.28
+   ],
+   "start": 16.06,
+   "end": 16.25
+  },
+  {
+   "i": 52,
+   "text": "they",
+   "scribe": [
+    16.64,
+    16.72
+   ],
+   "sphinx": [
+    16.47,
+    16.59
+   ],
+   "start": 16.515,
+   "end": 16.59
+  },
+  {
+   "i": 53,
+   "text": "fire",
+   "scribe": [
+    16.8,
+    17.04
+   ],
+   "sphinx": [
+    16.59,
+    17.03
+   ],
+   "start": 16.515,
+   "end": 17.03
+  },
+  {
+   "i": 54,
+   "text": "the",
+   "scribe": [
+    17.08,
+    17.12
+   ],
+   "sphinx": [
+    17.03,
+    17.16
+   ],
+   "start": 17.03,
+   "end": 17.16
+  },
+  {
+   "i": 55,
+   "text": "injector.",
+   "scribe": [
+    17.2,
+    18.107
+   ],
+   "sphinx": [
+    17.16,
+    17.76
+   ],
+   "start": 17.16,
+   "end": 17.68
+  },
+  {
+   "i": 56,
+   "text": "They’ve",
+   "scribe": [
+    18.133,
+    18.32
+   ],
+   "sphinx": [
+    18.1,
+    18.26
+   ],
+   "start": 18.14,
+   "end": 18.26
+  },
+  {
+   "i": 57,
+   "text": "demonstrated",
+   "scribe": [
+    18.36,
+    18.88
+   ],
+   "sphinx": [
+    18.26,
+    18.86
+   ],
+   "start": 18.26,
+   "end": 18.86
+  },
+  {
+   "i": 58,
+   "text": "this",
+   "scribe": [
+    18.96,
+    19.04
+   ],
+   "sphinx": [
+    18.86,
+    19.04
+   ],
+   "start": 18.86,
+   "end": 19.04
+  },
+  {
+   "i": 59,
+   "text": "on",
+   "scribe": [
+    19.12,
+    19.2
+   ],
+   "sphinx": [
+    19.04,
+    19.16
+   ],
+   "start": 19.04,
+   "end": 19.16
+  },
+  {
+   "i": 60,
+   "text": "laboratory",
+   "scribe": [
+    19.24,
+    19.68
+   ],
+   "sphinx": [
+    19.16,
+    19.69
+   ],
+   "start": 19.16,
+   "end": 19.69
+  },
+  {
+   "i": 61,
+   "text": "targets.",
+   "scribe": [
+    19.76,
+    20.56
+   ],
+   "sphinx": [
+    19.69,
+    20.2
+   ],
+   "start": 19.69,
+   "end": 20.195
+  },
+  {
+   "i": 62,
+   "text": "But",
+   "scribe": [
+    20.64,
+    20.72
+   ],
+   "sphinx": [
+    20.58,
+    20.72
+   ],
+   "start": 20.64,
+   "end": 20.72
+  },
+  {
+   "i": 63,
+   "text": "the",
+   "scribe": [
+    20.8,
+    20.88
+   ],
+   "sphinx": [
+    20.72,
+    20.79
+   ],
+   "start": 20.64,
+   "end": 20.79
+  },
+  {
+   "i": 64,
+   "text": "plan",
+   "scribe": [
+    21.04,
+    21.2
+   ],
+   "sphinx": [
+    20.79,
+    21.25
+   ],
+   "start": 20.79,
+   "end": 21.25
+  },
+  {
+   "i": 65,
+   "text": "is",
+   "scribe": [
+    21.28,
+    21.36
+   ],
+   "sphinx": [
+    21.25,
+    21.35
+   ],
+   "start": 21.25,
+   "end": 21.35
+  },
+  {
+   "i": 66,
+   "text": "to",
+   "scribe": [
+    21.44,
+    21.52
+   ],
+   "sphinx": [
+    21.35,
+    21.46
+   ],
+   "start": 21.35,
+   "end": 21.46
+  },
+  {
+   "i": 67,
+   "text": "send",
+   "scribe": [
+    21.6,
+    21.68
+   ],
+   "sphinx": [
+    21.46,
+    21.71
+   ],
+   "start": 21.46,
+   "end": 21.71
+  },
+  {
+   "i": 68,
+   "text": "them",
+   "scribe": [
+    21.76,
+    21.84
+   ],
+   "sphinx": [
+    21.71,
+    21.84
+   ],
+   "start": 21.71,
+   "end": 21.84
+  },
+  {
+   "i": 69,
+   "text": "beneath",
+   "scribe": [
+    21.88,
+    22.24
+   ],
+   "sphinx": [
+    21.84,
+    22.22
+   ],
+   "start": 21.84,
+   "end": 22.22
+  },
+  {
+   "i": 70,
+   "text": "collapsed",
+   "scribe": [
+    22.44,
+    22.64
+   ],
+   "sphinx": [
+    22.22,
+    22.65
+   ],
+   "start": 22.22,
+   "end": 22.65
+  },
+  {
+   "i": 71,
+   "text": "buildings,",
+   "scribe": [
+    22.72,
+    23.36
+   ],
+   "sphinx": [
+    22.65,
+    23.26
+   ],
+   "start": 22.65,
+   "end": 23.23
+  },
+  {
+   "i": 72,
+   "text": "carrying",
+   "scribe": [
+    23.44,
+    23.68
+   ],
+   "sphinx": [
+    23.26,
+    23.74
+   ],
+   "start": 23.375,
+   "end": 23.74
+  },
+  {
+   "i": 73,
+   "text": "emergency",
+   "scribe": [
+    23.76,
+    24.32
+   ],
+   "sphinx": [
+    23.74,
+    24.3
+   ],
+   "start": 23.74,
+   "end": 24.3
+  },
+  {
+   "i": 74,
+   "text": "medicine.",
+   "scribe": [
+    24.56,
+    25.28
+   ],
+   "sphinx": [
+    24.3,
+    24.89
+   ],
+   "start": 24.3,
+   "end": 24.835
+  },
+  {
+   "i": 75,
+   "text": "So",
+   "scribe": [
+    25.36,
+    25.6
+   ],
+   "sphinx": [
+    25.24,
+    25.64
+   ],
+   "start": 25.27,
+   "end": 25.64
+  },
+  {
+   "i": 76,
+   "text": "if",
+   "scribe": [
+    25.68,
+    25.76
+   ],
+   "sphinx": [
+    25.64,
+    25.77
+   ],
+   "start": 25.64,
+   "end": 25.77
+  },
+  {
+   "i": 77,
+   "text": "you’re",
+   "scribe": [
+    25.813,
+    25.92
+   ],
+   "sphinx": [
+    25.77,
+    25.87
+   ],
+   "start": 25.77,
+   "end": 25.87
+  },
+  {
+   "i": 78,
+   "text": "trapped",
+   "scribe": [
+    26.04,
+    26.4
+   ],
+   "sphinx": [
+    25.87,
+    26.43
+   ],
+   "start": 25.87,
+   "end": 26.43
+  },
+  {
+   "i": 79,
+   "text": "and",
+   "scribe": [
+    26.52,
+    26.64
+   ],
+   "sphinx": [
+    26.43,
+    26.6
+   ],
+   "start": 26.43,
+   "end": 26.6
+  },
+  {
+   "i": 80,
+   "text": "something",
+   "scribe": [
+    26.8,
+    26.96
+   ],
+   "sphinx": [
+    26.6,
+    26.97
+   ],
+   "start": 26.6,
+   "end": 26.97
+  },
+  {
+   "i": 81,
+   "text": "starts",
+   "scribe": [
+    27.04,
+    27.28
+   ],
+   "sphinx": [
+    26.97,
+    27.26
+   ],
+   "start": 26.97,
+   "end": 27.26
+  },
+  {
+   "i": 82,
+   "text": "crawling",
+   "scribe": [
+    27.36,
+    27.68
+   ],
+   "sphinx": [
+    27.26,
+    27.67
+   ],
+   "start": 27.26,
+   "end": 27.67
+  },
+  {
+   "i": 83,
+   "text": "toward",
+   "scribe": [
+    27.72,
+    28.0
+   ],
+   "sphinx": [
+    27.67,
+    28.0
+   ],
+   "start": 27.67,
+   "end": 28.0
+  },
+  {
+   "i": 84,
+   "text": "you…",
+   "scribe": [
+    28.08,
+    28.64
+   ],
+   "sphinx": [
+    28.0,
+    28.27
+   ],
+   "start": 28.0,
+   "end": 28.275
+  },
+  {
+   "i": 85,
+   "text": "you",
+   "scribe": [
+    28.72,
+    28.88
+   ],
+   "sphinx": [
+    28.65,
+    28.8
+   ],
+   "start": 28.675,
+   "end": 28.8
+  },
+  {
+   "i": 86,
+   "text": "might",
+   "scribe": [
+    29.0,
+    29.12
+   ],
+   "sphinx": [
+    28.8,
+    29.09
+   ],
+   "start": 28.8,
+   "end": 29.09
+  },
+  {
+   "i": 87,
+   "text": "actually",
+   "scribe": [
+    29.2,
+    29.52
+   ],
+   "sphinx": [
+    29.09,
+    29.49
+   ],
+   "start": 29.09,
+   "end": 29.49
+  },
+  {
+   "i": 88,
+   "text": "want",
+   "scribe": [
+    29.6,
+    29.68
+   ],
+   "sphinx": [
+    29.49,
+    29.73
+   ],
+   "start": 29.49,
+   "end": 29.73
+  },
+  {
+   "i": 89,
+   "text": "it",
+   "scribe": [
+    29.72,
+    29.76
+   ],
+   "sphinx": [
+    29.73,
+    29.79
+   ],
+   "start": 29.73,
+   "end": 29.79
+  },
+  {
+   "i": 90,
+   "text": "to",
+   "scribe": [
+    29.8,
+    29.84
+   ],
+   "sphinx": [
+    29.79,
+    29.86
+   ],
+   "start": 29.79,
+   "end": 29.86
+  },
+  {
+   "i": 91,
+   "text": "get",
+   "scribe": [
+    29.92,
+    30.08
+   ],
+   "sphinx": [
+    29.86,
+    30.03
+   ],
+   "start": 29.86,
+   "end": 30.03
+  },
+  {
+   "i": 92,
+   "text": "closer.",
+   "scribe": [
+    30.16,
+    30.88
+   ],
+   "sphinx": [
+    30.03,
+    30.6
+   ],
+   "start": 30.03,
+   "end": 30.59
+  }
+ ],
+ "phrases": [
+  {
+   "key": "fire_needle",
+   "first": 0,
+   "last": 5,
+   "start": 0.0,
+   "end": 1.82,
+   "text": "This cockroach can fire a needle."
+  },
+  {
+   "key": "person_remote",
+   "first": 6,
+   "last": 11,
+   "start": 2.205,
+   "end": 3.44,
+   "text": "And a person holding a remote"
+  },
+  {
+   "key": "decides_shoots",
+   "first": 12,
+   "last": 15,
+   "start": 3.44,
+   "end": 4.535,
+   "text": "decides when it shoots."
+  },
+  {
+   "key": "strapped_launcher",
+   "first": 16,
+   "last": 24,
+   "start": 4.985,
+   "end": 7.93,
+   "text": "Scientists strapped a tiny launcher onto a living cockroach,"
+  },
+  {
+   "key": "electrical_pulses",
+   "first": 25,
+   "last": 28,
+   "start": 8.09,
+   "end": 9.42,
+   "text": "then used electrical pulses"
+  },
+  {
+   "key": "steer_it",
+   "first": 29,
+   "last": 31,
+   "start": 9.42,
+   "end": 9.96,
+   "text": "to steer it."
+  },
+  {
+   "key": "second_camera",
+   "first": 32,
+   "last": 37,
+   "start": 10.49,
+   "end": 12.195,
+   "text": "A second cockroach carries a camera,"
+  },
+  {
+   "key": "operator_watch",
+   "first": 38,
+   "last": 47,
+   "start": 12.425,
+   "end": 15.07,
+   "text": "letting the operator watch as the first moves into position."
+  },
+  {
+   "key": "lines_up_fire",
+   "first": 48,
+   "last": 55,
+   "start": 15.535,
+   "end": 17.68,
+   "text": "Once it lines up, they fire the injector."
+  },
+  {
+   "key": "demonstrated",
+   "first": 56,
+   "last": 61,
+   "start": 18.14,
+   "end": 20.195,
+   "text": "They’ve demonstrated this on laboratory targets."
+  },
+  {
+   "key": "plan_send",
+   "first": 62,
+   "last": 68,
+   "start": 20.64,
+   "end": 21.84,
+   "text": "But the plan is to send them"
+  },
+  {
+   "key": "beneath_buildings",
+   "first": 69,
+   "last": 74,
+   "start": 21.84,
+   "end": 24.835,
+   "text": "beneath collapsed buildings, carrying emergency medicine."
+  },
+  {
+   "key": "trapped_crawling",
+   "first": 75,
+   "last": 84,
+   "start": 25.27,
+   "end": 28.275,
+   "text": "So if you’re trapped and something starts crawling toward you…"
+  },
+  {
+   "key": "closer",
+   "first": 85,
+   "last": 92,
+   "start": 28.675,
+   "end": 30.59,
+   "text": "you might actually want it to get closer."
+  }
+ ],
+ "timing_source": "PocketSphinx forced alignment of the locked words on the take, snapped to measured pause edges (RMS < -45 dBFS, >= 100 ms); ElevenLabs Scribe alignment kept per word as a cross-reference"
+}
