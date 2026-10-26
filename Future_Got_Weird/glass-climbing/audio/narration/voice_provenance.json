@@ -1,5 +1,5 @@
 {
- "status": "STAND-IN VOICE. The established FGW narrator could not be generated for this episode; the final narration is a Runway eleven_v4 preset voice. Replace before publishing if the channel voice is required.",
+ "status": "V6: the channel narrator (ElevenLabs 'Test Voice') is the final narration (audio/narration/FGW_Glass_Climbing_narration_v6.wav). The earlier stand-in (Runway preset 'Benjamin') is kept for V1-V5 only.",
  "established_voice_attempt": {
   "provider": "ElevenLabs (restricted connector)",
   "voice": {
@@ -118,5 +118,49 @@
   ],
   "word_timing": "PocketSphinx forced alignment of the edited file (tools/align.py) -> audio/narration/words_final.json -> source/src/data/timeline.json",
   "sha256": "da14cd85d2d7c4a70d452fd76c68e63f7c0d68f99f3c9abe9d28701fe02ec467"
+ },
+ "v6": {
+  "provider": "ElevenLabs (restricted connector)",
+  "voice": {
+   "name": "Test Voice",
+   "voice_id": "kk5XaSLo2XAw0sKM98zU",
+   "verified": "creative_list_voices search 'Test Voice' on 26 Oct 2026 returned this id (category generated, 'Test Voice For Youtube.'); same id as the earlier FGW episodes"
+  },
+  "model_id": "eleven_v4",
+  "settings": "connector defaults; delivery directed with inline tags (not spoken)",
+  "prompt": "[energetic, conversational] If you pressed these pads against a glass wall, you could lift your feet off the ground— [excited] and climb it like Spider-Man. [curious, clear] Their surfaces are covered in microscopic wedges. [explaining, brisk] As you pull downward, the wedges bend flat against the glass. This brings them so close that tiny molecular attractions can hold your entire weight. [brisk] Special springs spread the load, so one little patch doesn't have to hold you up alone. [building] Then, you shift your weight onto the other pad. The first releases, letting you reach higher and repeat. [short pause] [dry] But there's a catch. [matter-of-fact] They need a smooth surface to grip. [knowing] So you can climb glass— but switch to rough brick, and those microscopic wedges can't make the same contact.",
+  "flow_id": "t9vcp2v2BeMCyIwSUvu4",
+  "date": "2026-10-26",
+  "credits_reported": "2 x 816.9",
+  "takes": [
+   {
+    "file": "audio/narration/takes/v6_t1_WJBx.mp3",
+    "generation_id": "WJBx8xfvrCcZd7IZoXYC",
+    "sha256": "1ab20a4feb8cc91d77136816171b2c2ba655a4b2273f1c8f6f18c696649308e0",
+    "duration_s": 37.92,
+    "asr": {
+     "zipformer_wer": 0.05,
+     "whisper_wer": 0.017,
+     "whisper_diffs": "pressed->press; an inserted 'but' ('But, but there's a catch')"
+    },
+    "chosen": false,
+    "why": "whisper hears a doubled 'but' before 'there's a catch'"
+   },
+   {
+    "file": "audio/narration/takes/v6_t2_y6pd.mp3",
+    "generation_id": "y6pdvUnkxTmv65cq7auY",
+    "sha256": "f1da28d872cab240f490b7778162b0fdbd77cb61e48554018458f6f60c4fecde",
+    "duration_s": 37.68,
+    "asr": {
+     "zipformer_wer": 0.034,
+     "zipformer_diffs": "spider man->spidermen; onto->on to (spelling/segmentation)",
+     "whisper_wer": 0.008,
+     "whisper_diffs": "pressed->press (zipformer hears 'pressed')"
+    },
+    "chosen": true,
+    "why": "no word errors in either recogniser beyond spelling; pauses 0.3-0.5 s, speech 0.00-37.51 s"
+   }
+  ],
+  "used_as": "verbatim (no edits), 48 kHz mono, 1.5 s tail; 39.0 s total (1170 frames)"
  }
 }
