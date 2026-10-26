@@ -1,0 +1,54 @@
+{
+ "file": "exports/FGW_Lightning_Laser_V4_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_read_frames": "1005",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317371",
+  "duration": "33.515000"
+ },
+ "duration_s": 33.515,
+ "size_MB": 26.5,
+ "loudness": {
+  "I_LUFS": -14.0,
+  "LRA": 2.8,
+  "TP_dBFS": -1.6
+ },
+ "black_segments": [],
+ "freezes_ge_0.5s": [],
+ "audio_vs_mix_lag_ms": 0.0,
+ "audio_samples_vs_mix": [
+  1608704,
+  1608000
+ ],
+ "seam": {
+  "last_to_first_change": 2.47,
+  "changes_last_5": [
+   3.51,
+   2.66,
+   3.18,
+   1.35,
+   1.11
+  ],
+  "changes_first_5": [
+   1.26,
+   1.92,
+   1.63,
+   1.59,
+   1.51
+  ],
+  "last_equals_first": false
+ }
+}
