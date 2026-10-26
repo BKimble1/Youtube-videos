@@ -1,0 +1,337 @@
+[
+{
+"start": 0.54,
+"end": 3.92,
+"text": "This robot watches for a smile before it fully appears."
+},
+{
+"start": 3.92,
+"end": 7.589,
+"text": "Then it tries to smile at the same time as the person in front of it."
+},
+{
+"start": 7.61,
+"end": 9.74,
+"text": "That takes more than moving the corners of a mouth."
+},
+{
+"start": 10.41,
+"end": 14.22,
+"text": "Researchers have been teaching robotic faces to study their own movements,"
+},
+{
+"start": 14.22,
+"end": 17.06,
+"text": "copy human lips, and predict an expression as it begins."
+},
+{
+"start": 17.58,
+"end": 20.56,
+"text": "And the place to start was a mirror."
+},
+{
+"start": 20.562,
+"end": 22.8,
+"text": "At Columbia University, engineers built"
+},
+{
+"start": 22.802,
+"end": 25.61,
+"text": "a flexible robotic face with twenty-six motors."
+},
+{
+"start": 26.05,
+"end": 27.48,
+"text": "That gives the face ways to move."
+},
+{
+"start": 28.002,
+"end": 32.32,
+"text": "But the machine still has to learn which combinations create the shapes it needs."
+},
+{
+"start": 32.322,
+"end": 33.92,
+"text": "Think about saying \u201cbanana.\u201d"
+},
+{
+"start": 34.45,
+"end": 38.34,
+"text": "Your lips come together, open, stretch, and move toward the next sound."
+},
+{
+"start": 38.95,
+"end": 41.6,
+"text": "Now imagine trying to produce those movements by adjusting"
+},
+{
+"start": 41.602,
+"end": 44.4,
+"text": "a collection of motors underneath a rubber face."
+},
+{
+"start": 44.402,
+"end": 46.86,
+"text": "You could make its jaw flap whenever the speaker gets loud."
+},
+{
+"start": 47.41,
+"end": 49.61,
+"text": "It would look like a very expensive sock puppet."
+},
+{
+"start": 50.15,
+"end": 53.17,
+"text": "The researchers wanted the movements to follow the speech."
+},
+{
+"start": 53.175,
+"end": 57.28,
+"text": "So the robot practiced. It moved its face while watching its reflection,"
+},
+{
+"start": 57.282,
+"end": 61.12,
+"text": "building a relationship between motor commands and the appearance they produced."
+},
+{
+"start": 61.122,
+"end": 63.41,
+"text": "Move these motors, get this mouth shape."
+},
+{
+"start": 63.41,
+"end": 65.24,
+"text": "Change the combination, get another."
+},
+{
+"start": 65.75,
+"end": 69.99,
+"text": "That matters because flexible skin moves differently from a rigid metal part."
+},
+{
+"start": 70.002,
+"end": 73.322,
+"text": "Pull at one point, and the material around it stretches too."
+},
+{
+"start": 73.32,
+"end": 77.15,
+"text": "The controller has to work with the face it actually has."
+},
+{
+"start": 77.15,
+"end": 79.47,
+"text": "Once it had a way to control its own appearance,"
+},
+{
+"start": 79.47,
+"end": 82.2,
+"text": "researchers gave it something else to watch."
+},
+{
+"start": 82.203,
+"end": 82.3,
+"text": "People."
+},
+{
+"start": 82.91,
+"end": 87.07,
+"text": "In the lip-sync study published in January 2026, the system learned"
+},
+{
+"start": 87.07,
+"end": 91.31,
+"text": "from videos of humans talking and singing, including hours of YouTube footage."
+},
+{
+"start": 91.84,
+"end": 94.11,
+"text": "The important information was the relationship"
+},
+{
+"start": 94.11,
+"end": 95.86,
+"text": "between the sound and the moving mouth."
+},
+{
+"start": 96.36,
+"end": 99.48,
+"text": "The researchers linked that to the robot\u2019s model of its own face."
+},
+{
+"start": 100.0,
+"end": 103.49,
+"text": "Speech audio could then drive coordinated lip movements through the motors."
+},
+{
+"start": 104.03,
+"end": 107.96,
+"text": "The result was a physical face moving its lips along with speech and song."
+},
+{
+"start": 108.43,
+"end": 112.32,
+"text": "It could even synchronize with audio in languages it hadn\u2019t been trained on."
+},
+{
+"start": 112.327,
+"end": 115.07,
+"text": "The meaning of those words wasn\u2019t required for the lip movements."
+},
+{
+"start": 115.48,
+"end": 117.09,
+"text": "Which gives us a useful distinction:"
+},
+{
+"start": 117.61,
+"end": 119.95,
+"text": "looking as though you are speaking and understanding"
+},
+{
+"start": 119.95,
+"end": 121.98,
+"text": "what you are saying are different problems."
+},
+{
+"start": 122.51,
+"end": 124.53,
+"text": "The movements still had flaws."
+},
+{
+"start": 124.537,
+"end": 127.84,
+"text": "The team reported difficulties with sounds like \u201cB\u201d and \u201cW.\u201d"
+},
+{
+"start": 128.34,
+"end": 132.32,
+"text": "A small error is easy to notice when you\u2019re watching a mouth."
+},
+{
+"start": 132.32,
+"end": 135.56,
+"text": "But getting the mouth shape right leaves another problem."
+},
+{
+"start": 135.56,
+"end": 138.74,
+"text": "When should the face move? Imagine telling someone good news."
+},
+{
+"start": 139.14,
+"end": 141.19,
+"text": "They stare at you. You finish smiling."
+},
+{
+"start": 141.69,
+"end": 144.12,
+"text": "Then their smile switches on."
+},
+{
+"start": 144.126,
+"end": 147.17,
+"text": "Even a well-drawn expression can feel awkward when it arrives late."
+},
+{
+"start": 147.6,
+"end": 152.31,
+"text": "That timing problem was the focus of the team\u2019s earlier study, published in 2024."
+},
+{
+"start": 152.84,
+"end": 155.68,
+"text": "The robot watched videos of human expressions and learned"
+},
+{
+"start": 155.68,
+"end": 159.36,
+"text": "to recognize small changes as a smile began to develop."
+},
+{
+"start": 159.36,
+"end": 161.84,
+"text": "One model predicted the human expression."
+},
+{
+"start": 161.84,
+"end": 165.01,
+"text": "Another translated the expression into movements the robot could make."
+},
+{
+"start": 165.47,
+"end": 168.64,
+"text": "The team reported predicting an approaching smile about eight hundred"
+},
+{
+"start": 168.64,
+"end": 170.67,
+"text": "and forty milliseconds ahead of its appearance,"
+},
+{
+"start": 171.03,
+"end": 173.76,
+"text": "allowing the robot to try to smile alongside the person."
+},
+{
+"start": 174.29,
+"end": 176.72,
+"text": "Less than a second of anticipation."
+},
+{
+"start": 176.72,
+"end": 180.9,
+"text": "Enough to turn a delayed copy into a shared-looking moment."
+},
+{
+"start": 180.9,
+"end": 182.75,
+"text": "These were studies of facial movement."
+},
+{
+"start": 183.19,
+"end": 186.5,
+"text": "A successful smile doesn\u2019t tell us whether a machine feels happy."
+},
+{
+"start": 186.98,
+"end": 189.88,
+"text": "But picture the possible interaction. You\u2019re speaking."
+},
+{
+"start": 190.34,
+"end": 191.99,
+"text": "A machine looks toward you."
+},
+{
+"start": 191.99,
+"end": 195.73,
+"text": "Its mouth follows its voice, and its expression changes as yours does."
+},
+{
+"start": 196.18,
+"end": 198.91,
+"text": "Those movements could help make a tutor easier to follow,"
+},
+{
+"start": 198.91,
+"end": 200.94,
+"text": "or a robotic assistant more approachable."
+},
+{
+"start": 201.4,
+"end": 203.98,
+"text": "They also leave us with a question about how much meaning"
+},
+{
+"start": 203.98,
+"end": 208.06,
+"text": "we attach to a well-timed response. Watch the smile again."
+},
+{
+"start": 208.09,
+"end": 211.71,
+"text": "The robot has learned a movement. You\u2019re the one deciding what it means."
+}
+]

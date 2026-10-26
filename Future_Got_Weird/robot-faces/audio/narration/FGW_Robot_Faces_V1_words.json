@@ -1,0 +1,3704 @@
+[
+{
+"word": "This",
+"block": 0,
+"start": 0.54,
+"end": 0.9
+},
+{
+"word": "robot",
+"block": 0,
+"start": 0.9,
+"end": 1.18
+},
+{
+"word": "watches",
+"block": 0,
+"start": 1.18,
+"end": 1.58
+},
+{
+"word": "for",
+"block": 0,
+"start": 1.58,
+"end": 1.82
+},
+{
+"word": "a",
+"block": 0,
+"start": 1.82,
+"end": 1.98
+},
+{
+"word": "smile",
+"block": 0,
+"start": 1.98,
+"end": 2.42
+},
+{
+"word": "before",
+"block": 0,
+"start": 2.42,
+"end": 2.62
+},
+{
+"word": "it",
+"block": 0,
+"start": 2.62,
+"end": 2.82
+},
+{
+"word": "fully",
+"block": 0,
+"start": 2.82,
+"end": 3.04
+},
+{
+"word": "appears.",
+"block": 0,
+"start": 3.06,
+"end": 3.92
+},
+{
+"word": "Then",
+"block": 0,
+"start": 3.92,
+"end": 4.38
+},
+{
+"word": "it",
+"block": 0,
+"start": 4.38,
+"end": 4.58
+},
+{
+"word": "tries",
+"block": 0,
+"start": 4.58,
+"end": 4.78
+},
+{
+"word": "to",
+"block": 0,
+"start": 4.78,
+"end": 4.93
+},
+{
+"word": "smile",
+"block": 0,
+"start": 4.94,
+"end": 5.22
+},
+{
+"word": "at",
+"block": 0,
+"start": 5.22,
+"end": 5.34
+},
+{
+"word": "the",
+"block": 0,
+"start": 5.34,
+"end": 5.62
+},
+{
+"word": "same",
+"block": 0,
+"start": 5.62,
+"end": 5.82
+},
+{
+"word": "time",
+"block": 0,
+"start": 5.82,
+"end": 6.06
+},
+{
+"word": "as",
+"block": 0,
+"start": 6.06,
+"end": 6.18
+},
+{
+"word": "the",
+"block": 0,
+"start": 6.18,
+"end": 6.3
+},
+{
+"word": "person",
+"block": 0,
+"start": 6.3,
+"end": 6.62
+},
+{
+"word": "in",
+"block": 0,
+"start": 6.62,
+"end": 6.78
+},
+{
+"word": "front",
+"block": 0,
+"start": 6.78,
+"end": 6.94
+},
+{
+"word": "of",
+"block": 0,
+"start": 6.94,
+"end": 7.16
+},
+{
+"word": "it.",
+"block": 0,
+"start": 7.3,
+"end": 7.589
+},
+{
+"word": "That",
+"block": 0,
+"start": 7.61,
+"end": 7.82
+},
+{
+"word": "takes",
+"block": 0,
+"start": 7.82,
+"end": 8.14
+},
+{
+"word": "more",
+"block": 0,
+"start": 8.14,
+"end": 8.3
+},
+{
+"word": "than",
+"block": 0,
+"start": 8.3,
+"end": 8.5
+},
+{
+"word": "moving",
+"block": 0,
+"start": 8.5,
+"end": 8.69
+},
+{
+"word": "the",
+"block": 0,
+"start": 8.7,
+"end": 8.86
+},
+{
+"word": "corners",
+"block": 0,
+"start": 8.86,
+"end": 9.14
+},
+{
+"word": "of",
+"block": 0,
+"start": 9.14,
+"end": 9.34
+},
+{
+"word": "a",
+"block": 0,
+"start": 9.34,
+"end": 9.6
+},
+{
+"word": "mouth.",
+"block": 0,
+"start": 9.607,
+"end": 9.74
+},
+{
+"word": "Researchers",
+"block": 0,
+"start": 10.41,
+"end": 10.98
+},
+{
+"word": "have",
+"block": 0,
+"start": 10.98,
+"end": 11.1
+},
+{
+"word": "been",
+"block": 0,
+"start": 11.1,
+"end": 11.26
+},
+{
+"word": "teaching",
+"block": 0,
+"start": 11.26,
+"end": 11.58
+},
+{
+"word": "robotic",
+"block": 0,
+"start": 11.58,
+"end": 12.26
+},
+{
+"word": "faces",
+"block": 0,
+"start": 12.26,
+"end": 12.54
+},
+{
+"word": "to",
+"block": 0,
+"start": 12.54,
+"end": 12.66
+},
+{
+"word": "study",
+"block": 0,
+"start": 12.7,
+"end": 12.94
+},
+{
+"word": "their",
+"block": 0,
+"start": 12.94,
+"end": 13.18
+},
+{
+"word": "own",
+"block": 0,
+"start": 13.18,
+"end": 13.42
+},
+{
+"word": "movements,",
+"block": 0,
+"start": 13.42,
+"end": 14.22
+},
+{
+"word": "copy",
+"block": 0,
+"start": 14.22,
+"end": 14.38
+},
+{
+"word": "human",
+"block": 0,
+"start": 14.38,
+"end": 14.7
+},
+{
+"word": "lips,",
+"block": 0,
+"start": 14.7,
+"end": 15.2
+},
+{
+"word": "and",
+"block": 0,
+"start": 15.2,
+"end": 15.5
+},
+{
+"word": "predict",
+"block": 0,
+"start": 15.5,
+"end": 15.7
+},
+{
+"word": "an",
+"block": 0,
+"start": 15.7,
+"end": 16.02
+},
+{
+"word": "expression",
+"block": 0,
+"start": 16.02,
+"end": 16.34
+},
+{
+"word": "as",
+"block": 0,
+"start": 16.34,
+"end": 16.46
+},
+{
+"word": "it",
+"block": 0,
+"start": 16.46,
+"end": 16.66
+},
+{
+"word": "begins.",
+"block": 0,
+"start": 16.66,
+"end": 17.06
+},
+{
+"word": "And",
+"block": 0,
+"start": 17.58,
+"end": 17.73
+},
+{
+"word": "the",
+"block": 0,
+"start": 17.74,
+"end": 17.94
+},
+{
+"word": "place",
+"block": 0,
+"start": 17.94,
+"end": 18.14
+},
+{
+"word": "to",
+"block": 0,
+"start": 18.14,
+"end": 18.3
+},
+{
+"word": "start",
+"block": 0,
+"start": 18.3,
+"end": 18.86
+},
+{
+"word": "was",
+"block": 0,
+"start": 18.86,
+"end": 19.1
+},
+{
+"word": "a",
+"block": 0,
+"start": 19.1,
+"end": 19.36
+},
+{
+"word": "mirror.",
+"block": 0,
+"start": 19.367,
+"end": 20.56
+},
+{
+"word": "At",
+"block": 1,
+"start": 20.562,
+"end": 20.67
+},
+{
+"word": "Columbia",
+"block": 1,
+"start": 20.722,
+"end": 21.2
+},
+{
+"word": "University,",
+"block": 1,
+"start": 21.202,
+"end": 21.88
+},
+{
+"word": "engineers",
+"block": 1,
+"start": 22.08,
+"end": 22.56
+},
+{
+"word": "built",
+"block": 1,
+"start": 22.562,
+"end": 22.8
+},
+{
+"word": "a",
+"block": 1,
+"start": 22.802,
+"end": 22.96
+},
+{
+"word": "flexible",
+"block": 1,
+"start": 22.962,
+"end": 23.44
+},
+{
+"word": "robotic",
+"block": 1,
+"start": 23.442,
+"end": 23.92
+},
+{
+"word": "face",
+"block": 1,
+"start": 23.922,
+"end": 24.36
+},
+{
+"word": "with",
+"block": 1,
+"start": 24.362,
+"end": 24.55
+},
+{
+"word": "twenty-six",
+"block": 1,
+"start": 24.562,
+"end": 25.2
+},
+{
+"word": "motors.",
+"block": 1,
+"start": 25.202,
+"end": 25.61
+},
+{
+"word": "That",
+"block": 1,
+"start": 26.05,
+"end": 26.24
+},
+{
+"word": "gives",
+"block": 1,
+"start": 26.242,
+"end": 26.44
+},
+{
+"word": "the",
+"block": 1,
+"start": 26.442,
+"end": 26.55
+},
+{
+"word": "face",
+"block": 1,
+"start": 26.562,
+"end": 26.8
+},
+{
+"word": "ways",
+"block": 1,
+"start": 26.802,
+"end": 27.04
+},
+{
+"word": "to",
+"block": 1,
+"start": 27.042,
+"end": 27.2
+},
+{
+"word": "move.",
+"block": 1,
+"start": 27.202,
+"end": 27.48
+},
+{
+"word": "But",
+"block": 1,
+"start": 28.002,
+"end": 28.16
+},
+{
+"word": "the",
+"block": 1,
+"start": 28.162,
+"end": 28.24
+},
+{
+"word": "machine",
+"block": 1,
+"start": 28.242,
+"end": 28.69
+},
+{
+"word": "still",
+"block": 1,
+"start": 28.722,
+"end": 28.96
+},
+{
+"word": "has",
+"block": 1,
+"start": 28.962,
+"end": 29.16
+},
+{
+"word": "to",
+"block": 1,
+"start": 29.162,
+"end": 29.28
+},
+{
+"word": "learn",
+"block": 1,
+"start": 29.282,
+"end": 29.6
+},
+{
+"word": "which",
+"block": 1,
+"start": 29.602,
+"end": 29.84
+},
+{
+"word": "combinations",
+"block": 1,
+"start": 29.842,
+"end": 30.56
+},
+{
+"word": "create",
+"block": 1,
+"start": 30.562,
+"end": 30.88
+},
+{
+"word": "the",
+"block": 1,
+"start": 30.882,
+"end": 31.08
+},
+{
+"word": "shapes",
+"block": 1,
+"start": 31.082,
+"end": 31.28
+},
+{
+"word": "it",
+"block": 1,
+"start": 31.282,
+"end": 31.54
+},
+{
+"word": "needs.",
+"block": 1,
+"start": 31.562,
+"end": 32.32
+},
+{
+"word": "Think",
+"block": 1,
+"start": 32.322,
+"end": 32.48
+},
+{
+"word": "about",
+"block": 1,
+"start": 32.482,
+"end": 32.8
+},
+{
+"word": "saying",
+"block": 1,
+"start": 32.802,
+"end": 33.31
+},
+{
+"word": "\u201cbanana.\u201d",
+"block": 1,
+"start": 33.362,
+"end": 33.92
+},
+{
+"word": "Your",
+"block": 1,
+"start": 34.45,
+"end": 34.6
+},
+{
+"word": "lips",
+"block": 1,
+"start": 34.602,
+"end": 34.88
+},
+{
+"word": "come",
+"block": 1,
+"start": 34.882,
+"end": 35.04
+},
+{
+"word": "together,",
+"block": 1,
+"start": 35.042,
+"end": 35.84
+},
+{
+"word": "open,",
+"block": 1,
+"start": 35.842,
+"end": 36.64
+},
+{
+"word": "stretch,",
+"block": 1,
+"start": 36.642,
+"end": 37.12
+},
+{
+"word": "and",
+"block": 1,
+"start": 37.122,
+"end": 37.28
+},
+{
+"word": "move",
+"block": 1,
+"start": 37.282,
+"end": 37.48
+},
+{
+"word": "toward",
+"block": 1,
+"start": 37.482,
+"end": 37.72
+},
+{
+"word": "the",
+"block": 1,
+"start": 37.722,
+"end": 37.84
+},
+{
+"word": "next",
+"block": 1,
+"start": 37.842,
+"end": 38.16
+},
+{
+"word": "sound.",
+"block": 1,
+"start": 38.162,
+"end": 38.34
+},
+{
+"word": "Now",
+"block": 1,
+"start": 38.95,
+"end": 39.2
+},
+{
+"word": "imagine",
+"block": 1,
+"start": 39.202,
+"end": 39.64
+},
+{
+"word": "trying",
+"block": 1,
+"start": 39.642,
+"end": 39.8
+},
+{
+"word": "to",
+"block": 1,
+"start": 39.802,
+"end": 39.92
+},
+{
+"word": "produce",
+"block": 1,
+"start": 39.922,
+"end": 40.32
+},
+{
+"word": "those",
+"block": 1,
+"start": 40.322,
+"end": 40.56
+},
+{
+"word": "movements",
+"block": 1,
+"start": 40.562,
+"end": 40.96
+},
+{
+"word": "by",
+"block": 1,
+"start": 40.962,
+"end": 41.24
+},
+{
+"word": "adjusting",
+"block": 1,
+"start": 41.242,
+"end": 41.6
+},
+{
+"word": "a",
+"block": 1,
+"start": 41.602,
+"end": 41.88
+},
+{
+"word": "collection",
+"block": 1,
+"start": 41.882,
+"end": 42.16
+},
+{
+"word": "of",
+"block": 1,
+"start": 42.162,
+"end": 42.32
+},
+{
+"word": "motors",
+"block": 1,
+"start": 42.322,
+"end": 42.72
+},
+{
+"word": "underneath",
+"block": 1,
+"start": 42.722,
+"end": 43.08
+},
+{
+"word": "a",
+"block": 1,
+"start": 43.082,
+"end": 43.2
+},
+{
+"word": "rubber",
+"block": 1,
+"start": 43.202,
+"end": 43.64
+},
+{
+"word": "face.",
+"block": 1,
+"start": 43.642,
+"end": 44.4
+},
+{
+"word": "You",
+"block": 1,
+"start": 44.402,
+"end": 44.52
+},
+{
+"word": "could",
+"block": 1,
+"start": 44.522,
+"end": 44.64
+},
+{
+"word": "make",
+"block": 1,
+"start": 44.642,
+"end": 44.8
+},
+{
+"word": "its",
+"block": 1,
+"start": 44.802,
+"end": 45.04
+},
+{
+"word": "jaw",
+"block": 1,
+"start": 45.042,
+"end": 45.32
+},
+{
+"word": "flap",
+"block": 1,
+"start": 45.322,
+"end": 45.6
+},
+{
+"word": "whenever",
+"block": 1,
+"start": 45.602,
+"end": 45.88
+},
+{
+"word": "the",
+"block": 1,
+"start": 45.882,
+"end": 46.0
+},
+{
+"word": "speaker",
+"block": 1,
+"start": 46.002,
+"end": 46.44
+},
+{
+"word": "gets",
+"block": 1,
+"start": 46.442,
+"end": 46.72
+},
+{
+"word": "loud.",
+"block": 1,
+"start": 46.722,
+"end": 46.86
+},
+{
+"word": "It",
+"block": 1,
+"start": 47.41,
+"end": 47.6
+},
+{
+"word": "would",
+"block": 1,
+"start": 47.602,
+"end": 47.76
+},
+{
+"word": "look",
+"block": 1,
+"start": 47.762,
+"end": 47.88
+},
+{
+"word": "like",
+"block": 1,
+"start": 47.882,
+"end": 48.16
+},
+{
+"word": "a",
+"block": 1,
+"start": 48.162,
+"end": 48.24
+},
+{
+"word": "very",
+"block": 1,
+"start": 48.242,
+"end": 48.6
+},
+{
+"word": "expensive",
+"block": 1,
+"start": 48.602,
+"end": 49.16
+},
+{
+"word": "sock",
+"block": 1,
+"start": 49.162,
+"end": 49.36
+},
+{
+"word": "puppet.",
+"block": 1,
+"start": 49.362,
+"end": 49.61
+},
+{
+"word": "The",
+"block": 1,
+"start": 50.15,
+"end": 50.44
+},
+{
+"word": "researchers",
+"block": 1,
+"start": 50.442,
+"end": 50.88
+},
+{
+"word": "wanted",
+"block": 1,
+"start": 50.882,
+"end": 51.12
+},
+{
+"word": "the",
+"block": 1,
+"start": 51.122,
+"end": 51.28
+},
+{
+"word": "movements",
+"block": 1,
+"start": 51.282,
+"end": 51.6
+},
+{
+"word": "to",
+"block": 1,
+"start": 51.602,
+"end": 51.88
+},
+{
+"word": "follow",
+"block": 1,
+"start": 51.882,
+"end": 52.08
+},
+{
+"word": "the",
+"block": 1,
+"start": 52.082,
+"end": 52.56
+},
+{
+"word": "speech.",
+"block": 1,
+"start": 52.562,
+"end": 53.17
+},
+{
+"word": "So",
+"block": 1,
+"start": 53.175,
+"end": 53.36
+},
+{
+"word": "the",
+"block": 1,
+"start": 53.362,
+"end": 53.6
+},
+{
+"word": "robot",
+"block": 1,
+"start": 53.602,
+"end": 53.84
+},
+{
+"word": "practiced.",
+"block": 1,
+"start": 53.842,
+"end": 54.71
+},
+{
+"word": "It",
+"block": 1,
+"start": 54.71,
+"end": 54.96
+},
+{
+"word": "moved",
+"block": 1,
+"start": 54.962,
+"end": 55.12
+},
+{
+"word": "its",
+"block": 1,
+"start": 55.122,
+"end": 55.4
+},
+{
+"word": "face",
+"block": 1,
+"start": 55.402,
+"end": 55.6
+},
+{
+"word": "while",
+"block": 1,
+"start": 55.602,
+"end": 55.84
+},
+{
+"word": "watching",
+"block": 1,
+"start": 55.842,
+"end": 56.08
+},
+{
+"word": "its",
+"block": 1,
+"start": 56.082,
+"end": 56.24
+},
+{
+"word": "reflection,",
+"block": 1,
+"start": 56.242,
+"end": 57.28
+},
+{
+"word": "building",
+"block": 1,
+"start": 57.282,
+"end": 57.44
+},
+{
+"word": "a",
+"block": 1,
+"start": 57.442,
+"end": 57.86
+},
+{
+"word": "relationship",
+"block": 1,
+"start": 57.869,
+"end": 58.28
+},
+{
+"word": "between",
+"block": 1,
+"start": 58.282,
+"end": 58.6
+},
+{
+"word": "motor",
+"block": 1,
+"start": 58.602,
+"end": 58.96
+},
+{
+"word": "commands",
+"block": 1,
+"start": 58.962,
+"end": 59.24
+},
+{
+"word": "and",
+"block": 1,
+"start": 59.242,
+"end": 59.36
+},
+{
+"word": "the",
+"block": 1,
+"start": 59.362,
+"end": 59.44
+},
+{
+"word": "appearance",
+"block": 1,
+"start": 59.442,
+"end": 60.0
+},
+{
+"word": "they",
+"block": 1,
+"start": 60.002,
+"end": 60.2
+},
+{
+"word": "produced.",
+"block": 1,
+"start": 60.202,
+"end": 61.12
+},
+{
+"word": "Move",
+"block": 1,
+"start": 61.122,
+"end": 61.36
+},
+{
+"word": "these",
+"block": 1,
+"start": 61.362,
+"end": 61.52
+},
+{
+"word": "motors,",
+"block": 1,
+"start": 61.522,
+"end": 62.24
+},
+{
+"word": "get",
+"block": 1,
+"start": 62.242,
+"end": 62.4
+},
+{
+"word": "this",
+"block": 1,
+"start": 62.402,
+"end": 62.56
+},
+{
+"word": "mouth",
+"block": 1,
+"start": 62.562,
+"end": 62.8
+},
+{
+"word": "shape.",
+"block": 1,
+"start": 62.802,
+"end": 63.41
+},
+{
+"word": "Change",
+"block": 1,
+"start": 63.41,
+"end": 63.72
+},
+{
+"word": "the",
+"block": 1,
+"start": 63.722,
+"end": 64.08
+},
+{
+"word": "combination,",
+"block": 1,
+"start": 64.082,
+"end": 64.41
+},
+{
+"word": "get",
+"block": 1,
+"start": 64.72,
+"end": 64.88
+},
+{
+"word": "another.",
+"block": 1,
+"start": 64.882,
+"end": 65.24
+},
+{
+"word": "That",
+"block": 1,
+"start": 65.75,
+"end": 66.08
+},
+{
+"word": "matters",
+"block": 1,
+"start": 66.082,
+"end": 66.48
+},
+{
+"word": "because",
+"block": 1,
+"start": 66.482,
+"end": 66.8
+},
+{
+"word": "flexible",
+"block": 1,
+"start": 66.802,
+"end": 67.28
+},
+{
+"word": "skin",
+"block": 1,
+"start": 67.282,
+"end": 67.6
+},
+{
+"word": "moves",
+"block": 1,
+"start": 67.602,
+"end": 67.97
+},
+{
+"word": "differently",
+"block": 1,
+"start": 67.975,
+"end": 68.48
+},
+{
+"word": "from",
+"block": 1,
+"start": 68.482,
+"end": 68.6
+},
+{
+"word": "a",
+"block": 1,
+"start": 68.602,
+"end": 68.72
+},
+{
+"word": "rigid",
+"block": 1,
+"start": 68.722,
+"end": 69.04
+},
+{
+"word": "metal",
+"block": 1,
+"start": 69.042,
+"end": 69.53
+},
+{
+"word": "part.",
+"block": 1,
+"start": 69.602,
+"end": 69.99
+},
+{
+"word": "Pull",
+"block": 1,
+"start": 70.002,
+"end": 70.16
+},
+{
+"word": "at",
+"block": 1,
+"start": 70.162,
+"end": 70.4
+},
+{
+"word": "one",
+"block": 1,
+"start": 70.402,
+"end": 70.56
+},
+{
+"word": "point,",
+"block": 1,
+"start": 70.562,
+"end": 70.96
+},
+{
+"word": "and",
+"block": 1,
+"start": 70.96,
+"end": 71.08
+},
+{
+"word": "the",
+"block": 1,
+"start": 71.082,
+"end": 71.36
+},
+{
+"word": "material",
+"block": 1,
+"start": 71.362,
+"end": 71.68
+},
+{
+"word": "around",
+"block": 1,
+"start": 71.682,
+"end": 71.97
+},
+{
+"word": "it",
+"block": 1,
+"start": 72.002,
+"end": 72.16
+},
+{
+"word": "stretches",
+"block": 1,
+"start": 72.162,
+"end": 72.81
+},
+{
+"word": "too.",
+"block": 1,
+"start": 72.922,
+"end": 73.322
+},
+{
+"word": "The",
+"block": 1,
+"start": 73.32,
+"end": 73.44
+},
+{
+"word": "controller",
+"block": 1,
+"start": 73.442,
+"end": 74.0
+},
+{
+"word": "has",
+"block": 1,
+"start": 74.002,
+"end": 74.16
+},
+{
+"word": "to",
+"block": 1,
+"start": 74.162,
+"end": 74.32
+},
+{
+"word": "work",
+"block": 1,
+"start": 74.322,
+"end": 74.48
+},
+{
+"word": "with",
+"block": 1,
+"start": 74.482,
+"end": 74.64
+},
+{
+"word": "the",
+"block": 1,
+"start": 74.642,
+"end": 74.8
+},
+{
+"word": "face",
+"block": 1,
+"start": 74.802,
+"end": 75.04
+},
+{
+"word": "it",
+"block": 1,
+"start": 75.042,
+"end": 75.28
+},
+{
+"word": "actually",
+"block": 1,
+"start": 75.282,
+"end": 75.76
+},
+{
+"word": "has.",
+"block": 1,
+"start": 75.762,
+"end": 77.15
+},
+{
+"word": "Once",
+"block": 2,
+"start": 77.15,
+"end": 77.34
+},
+{
+"word": "it",
+"block": 2,
+"start": 77.35,
+"end": 77.47
+},
+{
+"word": "had",
+"block": 2,
+"start": 77.47,
+"end": 77.63
+},
+{
+"word": "a",
+"block": 2,
+"start": 77.63,
+"end": 77.73
+},
+{
+"word": "way",
+"block": 2,
+"start": 77.737,
+"end": 77.83
+},
+{
+"word": "to",
+"block": 2,
+"start": 77.83,
+"end": 78.06
+},
+{
+"word": "control",
+"block": 2,
+"start": 78.07,
+"end": 78.34
+},
+{
+"word": "its",
+"block": 2,
+"start": 78.35,
+"end": 78.47
+},
+{
+"word": "own",
+"block": 2,
+"start": 78.47,
+"end": 78.59
+},
+{
+"word": "appearance,",
+"block": 2,
+"start": 78.59,
+"end": 79.47
+},
+{
+"word": "researchers",
+"block": 2,
+"start": 79.47,
+"end": 80.03
+},
+{
+"word": "gave",
+"block": 2,
+"start": 80.03,
+"end": 80.19
+},
+{
+"word": "it",
+"block": 2,
+"start": 80.19,
+"end": 80.43
+},
+{
+"word": "something",
+"block": 2,
+"start": 80.43,
+"end": 80.67
+},
+{
+"word": "else",
+"block": 2,
+"start": 80.67,
+"end": 80.83
+},
+{
+"word": "to",
+"block": 2,
+"start": 80.83,
+"end": 81.1
+},
+{
+"word": "watch.",
+"block": 2,
+"start": 81.11,
+"end": 82.2
+},
+{
+"word": "People.",
+"block": 2,
+"start": 82.203,
+"end": 82.3
+},
+{
+"word": "In",
+"block": 2,
+"start": 82.91,
+"end": 83.03
+},
+{
+"word": "the",
+"block": 2,
+"start": 83.03,
+"end": 83.15
+},
+{
+"word": "lip-sync",
+"block": 2,
+"start": 83.15,
+"end": 83.55
+},
+{
+"word": "study",
+"block": 2,
+"start": 83.55,
+"end": 83.95
+},
+{
+"word": "published",
+"block": 2,
+"start": 83.95,
+"end": 84.35
+},
+{
+"word": "in",
+"block": 2,
+"start": 84.35,
+"end": 84.67
+},
+{
+"word": "January",
+"block": 2,
+"start": 84.67,
+"end": 84.99
+},
+{
+"word": "2026,",
+"block": 2,
+"start": 84.99,
+"end": 85.92
+},
+{
+"word": "the",
+"block": 2,
+"start": 86.26,
+"end": 86.51
+},
+{
+"word": "system",
+"block": 2,
+"start": 86.51,
+"end": 86.75
+},
+{
+"word": "learned",
+"block": 2,
+"start": 86.75,
+"end": 87.07
+},
+{
+"word": "from",
+"block": 2,
+"start": 87.07,
+"end": 87.35
+},
+{
+"word": "videos",
+"block": 2,
+"start": 87.35,
+"end": 87.63
+},
+{
+"word": "of",
+"block": 2,
+"start": 87.63,
+"end": 87.79
+},
+{
+"word": "humans",
+"block": 2,
+"start": 87.79,
+"end": 88.19
+},
+{
+"word": "talking",
+"block": 2,
+"start": 88.19,
+"end": 88.59
+},
+{
+"word": "and",
+"block": 2,
+"start": 88.59,
+"end": 88.79
+},
+{
+"word": "singing,",
+"block": 2,
+"start": 88.79,
+"end": 89.76
+},
+{
+"word": "including",
+"block": 2,
+"start": 89.763,
+"end": 90.15
+},
+{
+"word": "hours",
+"block": 2,
+"start": 90.15,
+"end": 90.43
+},
+{
+"word": "of",
+"block": 2,
+"start": 90.43,
+"end": 90.67
+},
+{
+"word": "YouTube",
+"block": 2,
+"start": 90.67,
+"end": 90.91
+},
+{
+"word": "footage.",
+"block": 2,
+"start": 90.91,
+"end": 91.31
+},
+{
+"word": "The",
+"block": 2,
+"start": 91.84,
+"end": 91.95
+},
+{
+"word": "important",
+"block": 2,
+"start": 91.95,
+"end": 92.43
+},
+{
+"word": "information",
+"block": 2,
+"start": 92.43,
+"end": 93.07
+},
+{
+"word": "was",
+"block": 2,
+"start": 93.07,
+"end": 93.23
+},
+{
+"word": "the",
+"block": 2,
+"start": 93.23,
+"end": 93.31
+},
+{
+"word": "relationship",
+"block": 2,
+"start": 93.31,
+"end": 94.11
+},
+{
+"word": "between",
+"block": 2,
+"start": 94.11,
+"end": 94.35
+},
+{
+"word": "the",
+"block": 2,
+"start": 94.35,
+"end": 94.67
+},
+{
+"word": "sound",
+"block": 2,
+"start": 94.67,
+"end": 94.99
+},
+{
+"word": "and",
+"block": 2,
+"start": 94.99,
+"end": 95.11
+},
+{
+"word": "the",
+"block": 2,
+"start": 95.11,
+"end": 95.23
+},
+{
+"word": "moving",
+"block": 2,
+"start": 95.23,
+"end": 95.55
+},
+{
+"word": "mouth.",
+"block": 2,
+"start": 95.55,
+"end": 95.86
+},
+{
+"word": "The",
+"block": 2,
+"start": 96.36,
+"end": 96.59
+},
+{
+"word": "researchers",
+"block": 2,
+"start": 96.59,
+"end": 96.99
+},
+{
+"word": "linked",
+"block": 2,
+"start": 96.99,
+"end": 97.31
+},
+{
+"word": "that",
+"block": 2,
+"start": 97.31,
+"end": 97.51
+},
+{
+"word": "to",
+"block": 2,
+"start": 97.51,
+"end": 97.63
+},
+{
+"word": "the",
+"block": 2,
+"start": 97.63,
+"end": 97.87
+},
+{
+"word": "robot\u2019s",
+"block": 2,
+"start": 97.87,
+"end": 98.19
+},
+{
+"word": "model",
+"block": 2,
+"start": 98.19,
+"end": 98.47
+},
+{
+"word": "of",
+"block": 2,
+"start": 98.47,
+"end": 98.62
+},
+{
+"word": "its",
+"block": 2,
+"start": 98.63,
+"end": 98.83
+},
+{
+"word": "own",
+"block": 2,
+"start": 98.83,
+"end": 99.07
+},
+{
+"word": "face.",
+"block": 2,
+"start": 99.07,
+"end": 99.48
+},
+{
+"word": "Speech",
+"block": 2,
+"start": 100.0,
+"end": 100.55
+},
+{
+"word": "audio",
+"block": 2,
+"start": 100.55,
+"end": 100.83
+},
+{
+"word": "could",
+"block": 2,
+"start": 100.83,
+"end": 100.99
+},
+{
+"word": "then",
+"block": 2,
+"start": 100.99,
+"end": 101.15
+},
+{
+"word": "drive",
+"block": 2,
+"start": 101.15,
+"end": 101.47
+},
+{
+"word": "coordinated",
+"block": 2,
+"start": 101.47,
+"end": 102.11
+},
+{
+"word": "lip",
+"block": 2,
+"start": 102.11,
+"end": 102.35
+},
+{
+"word": "movements",
+"block": 2,
+"start": 102.35,
+"end": 102.83
+},
+{
+"word": "through",
+"block": 2,
+"start": 102.83,
+"end": 102.95
+},
+{
+"word": "the",
+"block": 2,
+"start": 102.95,
+"end": 103.07
+},
+{
+"word": "motors.",
+"block": 2,
+"start": 103.07,
+"end": 103.49
+},
+{
+"word": "The",
+"block": 2,
+"start": 104.03,
+"end": 104.11
+},
+{
+"word": "result",
+"block": 2,
+"start": 104.11,
+"end": 104.59
+},
+{
+"word": "was",
+"block": 2,
+"start": 104.59,
+"end": 104.75
+},
+{
+"word": "a",
+"block": 2,
+"start": 104.75,
+"end": 105.03
+},
+{
+"word": "physical",
+"block": 2,
+"start": 105.03,
+"end": 105.29
+},
+{
+"word": "face",
+"block": 2,
+"start": 105.31,
+"end": 105.71
+},
+{
+"word": "moving",
+"block": 2,
+"start": 105.71,
+"end": 106.03
+},
+{
+"word": "its",
+"block": 2,
+"start": 106.03,
+"end": 106.19
+},
+{
+"word": "lips",
+"block": 2,
+"start": 106.19,
+"end": 106.59
+},
+{
+"word": "along",
+"block": 2,
+"start": 106.59,
+"end": 106.83
+},
+{
+"word": "with",
+"block": 2,
+"start": 106.83,
+"end": 106.99
+},
+{
+"word": "speech",
+"block": 2,
+"start": 106.99,
+"end": 107.43
+},
+{
+"word": "and",
+"block": 2,
+"start": 107.43,
+"end": 107.75
+},
+{
+"word": "song.",
+"block": 2,
+"start": 107.75,
+"end": 107.96
+},
+{
+"word": "It",
+"block": 2,
+"start": 108.43,
+"end": 108.55
+},
+{
+"word": "could",
+"block": 2,
+"start": 108.55,
+"end": 108.67
+},
+{
+"word": "even",
+"block": 2,
+"start": 108.67,
+"end": 109.07
+},
+{
+"word": "synchronize",
+"block": 2,
+"start": 109.07,
+"end": 109.47
+},
+{
+"word": "with",
+"block": 2,
+"start": 109.47,
+"end": 109.71
+},
+{
+"word": "audio",
+"block": 2,
+"start": 109.71,
+"end": 109.95
+},
+{
+"word": "in",
+"block": 2,
+"start": 109.95,
+"end": 110.27
+},
+{
+"word": "languages",
+"block": 2,
+"start": 110.27,
+"end": 110.59
+},
+{
+"word": "it",
+"block": 2,
+"start": 110.59,
+"end": 110.75
+},
+{
+"word": "hadn\u2019t",
+"block": 2,
+"start": 110.75,
+"end": 110.99
+},
+{
+"word": "been",
+"block": 2,
+"start": 110.99,
+"end": 111.23
+},
+{
+"word": "trained",
+"block": 2,
+"start": 111.23,
+"end": 111.47
+},
+{
+"word": "on.",
+"block": 2,
+"start": 111.47,
+"end": 112.32
+},
+{
+"word": "The",
+"block": 2,
+"start": 112.327,
+"end": 112.47
+},
+{
+"word": "meaning",
+"block": 2,
+"start": 112.47,
+"end": 112.63
+},
+{
+"word": "of",
+"block": 2,
+"start": 112.63,
+"end": 112.75
+},
+{
+"word": "those",
+"block": 2,
+"start": 112.75,
+"end": 112.99
+},
+{
+"word": "words",
+"block": 2,
+"start": 112.99,
+"end": 113.39
+},
+{
+"word": "wasn\u2019t",
+"block": 2,
+"start": 113.39,
+"end": 113.87
+},
+{
+"word": "required",
+"block": 2,
+"start": 113.87,
+"end": 114.19
+},
+{
+"word": "for",
+"block": 2,
+"start": 114.19,
+"end": 114.29
+},
+{
+"word": "the",
+"block": 2,
+"start": 114.297,
+"end": 114.35
+},
+{
+"word": "lip",
+"block": 2,
+"start": 114.35,
+"end": 114.59
+},
+{
+"word": "movements.",
+"block": 2,
+"start": 114.59,
+"end": 115.07
+},
+{
+"word": "Which",
+"block": 2,
+"start": 115.48,
+"end": 115.63
+},
+{
+"word": "gives",
+"block": 2,
+"start": 115.67,
+"end": 115.87
+},
+{
+"word": "us",
+"block": 2,
+"start": 115.87,
+"end": 116.03
+},
+{
+"word": "a",
+"block": 2,
+"start": 116.03,
+"end": 116.23
+},
+{
+"word": "useful",
+"block": 2,
+"start": 116.23,
+"end": 116.55
+},
+{
+"word": "distinction:",
+"block": 2,
+"start": 116.55,
+"end": 117.09
+},
+{
+"word": "looking",
+"block": 2,
+"start": 117.61,
+"end": 117.95
+},
+{
+"word": "as",
+"block": 2,
+"start": 117.95,
+"end": 118.11
+},
+{
+"word": "though",
+"block": 2,
+"start": 118.11,
+"end": 118.27
+},
+{
+"word": "you",
+"block": 2,
+"start": 118.27,
+"end": 118.43
+},
+{
+"word": "are",
+"block": 2,
+"start": 118.43,
+"end": 118.6
+},
+{
+"word": "speaking",
+"block": 2,
+"start": 118.63,
+"end": 119.15
+},
+{
+"word": "and",
+"block": 2,
+"start": 119.15,
+"end": 119.39
+},
+{
+"word": "understanding",
+"block": 2,
+"start": 119.39,
+"end": 119.95
+},
+{
+"word": "what",
+"block": 2,
+"start": 119.95,
+"end": 120.07
+},
+{
+"word": "you",
+"block": 2,
+"start": 120.07,
+"end": 120.19
+},
+{
+"word": "are",
+"block": 2,
+"start": 120.19,
+"end": 120.35
+},
+{
+"word": "saying",
+"block": 2,
+"start": 120.35,
+"end": 120.95
+},
+{
+"word": "are",
+"block": 2,
+"start": 120.95,
+"end": 121.23
+},
+{
+"word": "different",
+"block": 2,
+"start": 121.23,
+"end": 121.67
+},
+{
+"word": "problems.",
+"block": 2,
+"start": 121.67,
+"end": 121.98
+},
+{
+"word": "The",
+"block": 2,
+"start": 122.51,
+"end": 122.67
+},
+{
+"word": "movements",
+"block": 2,
+"start": 122.67,
+"end": 123.12
+},
+{
+"word": "still",
+"block": 2,
+"start": 123.15,
+"end": 123.39
+},
+{
+"word": "had",
+"block": 2,
+"start": 123.39,
+"end": 123.62
+},
+{
+"word": "flaws.",
+"block": 2,
+"start": 123.63,
+"end": 124.53
+},
+{
+"word": "The",
+"block": 2,
+"start": 124.537,
+"end": 124.67
+},
+{
+"word": "team",
+"block": 2,
+"start": 124.67,
+"end": 124.99
+},
+{
+"word": "reported",
+"block": 2,
+"start": 124.99,
+"end": 125.31
+},
+{
+"word": "difficulties",
+"block": 2,
+"start": 125.31,
+"end": 125.87
+},
+{
+"word": "with",
+"block": 2,
+"start": 125.87,
+"end": 126.03
+},
+{
+"word": "sounds",
+"block": 2,
+"start": 126.03,
+"end": 126.35
+},
+{
+"word": "like",
+"block": 2,
+"start": 126.35,
+"end": 126.79
+},
+{
+"word": "\u201cB\u201d",
+"block": 2,
+"start": 126.79,
+"end": 127.19
+},
+{
+"word": "and",
+"block": 2,
+"start": 127.19,
+"end": 127.31
+},
+{
+"word": "\u201cW.\u201d",
+"block": 2,
+"start": 127.31,
+"end": 127.84
+},
+{
+"word": "A",
+"block": 2,
+"start": 128.34,
+"end": 128.51
+},
+{
+"word": "small",
+"block": 2,
+"start": 128.51,
+"end": 128.83
+},
+{
+"word": "error",
+"block": 2,
+"start": 128.83,
+"end": 129.15
+},
+{
+"word": "is",
+"block": 2,
+"start": 129.15,
+"end": 129.38
+},
+{
+"word": "easy",
+"block": 2,
+"start": 129.39,
+"end": 129.71
+},
+{
+"word": "to",
+"block": 2,
+"start": 129.71,
+"end": 129.94
+},
+{
+"word": "notice",
+"block": 2,
+"start": 129.95,
+"end": 130.12
+},
+{
+"word": "when",
+"block": 2,
+"start": 130.15,
+"end": 130.27
+},
+{
+"word": "you\u2019re",
+"block": 2,
+"start": 130.27,
+"end": 130.47
+},
+{
+"word": "watching",
+"block": 2,
+"start": 130.47,
+"end": 130.71
+},
+{
+"word": "a",
+"block": 2,
+"start": 130.71,
+"end": 130.83
+},
+{
+"word": "mouth.",
+"block": 2,
+"start": 130.83,
+"end": 132.32
+},
+{
+"word": "But",
+"block": 3,
+"start": 132.32,
+"end": 132.63
+},
+{
+"word": "getting",
+"block": 3,
+"start": 132.64,
+"end": 132.93
+},
+{
+"word": "the",
+"block": 3,
+"start": 132.933,
+"end": 133.04
+},
+{
+"word": "mouth",
+"block": 3,
+"start": 133.04,
+"end": 133.28
+},
+{
+"word": "shape",
+"block": 3,
+"start": 133.28,
+"end": 133.68
+},
+{
+"word": "right",
+"block": 3,
+"start": 133.68,
+"end": 133.88
+},
+{
+"word": "leaves",
+"block": 3,
+"start": 133.88,
+"end": 134.24
+},
+{
+"word": "another",
+"block": 3,
+"start": 134.24,
+"end": 134.47
+},
+{
+"word": "problem.",
+"block": 3,
+"start": 134.48,
+"end": 135.56
+},
+{
+"word": "When",
+"block": 3,
+"start": 135.56,
+"end": 135.68
+},
+{
+"word": "should",
+"block": 3,
+"start": 135.68,
+"end": 135.84
+},
+{
+"word": "the",
+"block": 3,
+"start": 135.84,
+"end": 136.0
+},
+{
+"word": "face",
+"block": 3,
+"start": 136.0,
+"end": 136.32
+},
+{
+"word": "move?",
+"block": 3,
+"start": 136.32,
+"end": 137.12
+},
+{
+"word": "Imagine",
+"block": 3,
+"start": 137.12,
+"end": 137.56
+},
+{
+"word": "telling",
+"block": 3,
+"start": 137.56,
+"end": 137.84
+},
+{
+"word": "someone",
+"block": 3,
+"start": 137.84,
+"end": 138.16
+},
+{
+"word": "good",
+"block": 3,
+"start": 138.16,
+"end": 138.4
+},
+{
+"word": "news.",
+"block": 3,
+"start": 138.4,
+"end": 138.74
+},
+{
+"word": "They",
+"block": 3,
+"start": 139.14,
+"end": 139.36
+},
+{
+"word": "stare",
+"block": 3,
+"start": 139.36,
+"end": 139.6
+},
+{
+"word": "at",
+"block": 3,
+"start": 139.6,
+"end": 139.76
+},
+{
+"word": "you.",
+"block": 3,
+"start": 139.76,
+"end": 140.31
+},
+{
+"word": "You",
+"block": 3,
+"start": 140.31,
+"end": 140.6
+},
+{
+"word": "finish",
+"block": 3,
+"start": 140.6,
+"end": 140.8
+},
+{
+"word": "smiling.",
+"block": 3,
+"start": 140.8,
+"end": 141.19
+},
+{
+"word": "Then",
+"block": 3,
+"start": 141.69,
+"end": 142.24
+},
+{
+"word": "their",
+"block": 3,
+"start": 142.24,
+"end": 142.4
+},
+{
+"word": "smile",
+"block": 3,
+"start": 142.4,
+"end": 142.8
+},
+{
+"word": "switches",
+"block": 3,
+"start": 142.8,
+"end": 143.19
+},
+{
+"word": "on.",
+"block": 3,
+"start": 143.2,
+"end": 144.12
+},
+{
+"word": "Even",
+"block": 3,
+"start": 144.126,
+"end": 144.24
+},
+{
+"word": "a",
+"block": 3,
+"start": 144.24,
+"end": 144.4
+},
+{
+"word": "well-drawn",
+"block": 3,
+"start": 144.4,
+"end": 144.8
+},
+{
+"word": "expression",
+"block": 3,
+"start": 144.8,
+"end": 145.36
+},
+{
+"word": "can",
+"block": 3,
+"start": 145.36,
+"end": 145.63
+},
+{
+"word": "feel",
+"block": 3,
+"start": 145.64,
+"end": 145.84
+},
+{
+"word": "awkward",
+"block": 3,
+"start": 145.84,
+"end": 146.24
+},
+{
+"word": "when",
+"block": 3,
+"start": 146.24,
+"end": 146.36
+},
+{
+"word": "it",
+"block": 3,
+"start": 146.36,
+"end": 146.47
+},
+{
+"word": "arrives",
+"block": 3,
+"start": 146.48,
+"end": 146.88
+},
+{
+"word": "late.",
+"block": 3,
+"start": 146.88,
+"end": 147.17
+},
+{
+"word": "That",
+"block": 3,
+"start": 147.6,
+"end": 147.91
+},
+{
+"word": "timing",
+"block": 3,
+"start": 147.92,
+"end": 148.32
+},
+{
+"word": "problem",
+"block": 3,
+"start": 148.32,
+"end": 148.72
+},
+{
+"word": "was",
+"block": 3,
+"start": 148.72,
+"end": 148.88
+},
+{
+"word": "the",
+"block": 3,
+"start": 148.88,
+"end": 149.19
+},
+{
+"word": "focus",
+"block": 3,
+"start": 149.2,
+"end": 149.44
+},
+{
+"word": "of",
+"block": 3,
+"start": 149.44,
+"end": 149.52
+},
+{
+"word": "the",
+"block": 3,
+"start": 149.52,
+"end": 149.68
+},
+{
+"word": "team\u2019s",
+"block": 3,
+"start": 149.68,
+"end": 150.08
+},
+{
+"word": "earlier",
+"block": 3,
+"start": 150.08,
+"end": 150.47
+},
+{
+"word": "study,",
+"block": 3,
+"start": 150.48,
+"end": 151.12
+},
+{
+"word": "published",
+"block": 3,
+"start": 151.12,
+"end": 151.36
+},
+{
+"word": "in",
+"block": 3,
+"start": 151.36,
+"end": 151.51
+},
+{
+"word": "2024.",
+"block": 3,
+"start": 151.52,
+"end": 152.31
+},
+{
+"word": "The",
+"block": 3,
+"start": 152.84,
+"end": 152.96
+},
+{
+"word": "robot",
+"block": 3,
+"start": 152.96,
+"end": 153.4
+},
+{
+"word": "watched",
+"block": 3,
+"start": 153.4,
+"end": 153.68
+},
+{
+"word": "videos",
+"block": 3,
+"start": 153.68,
+"end": 154.04
+},
+{
+"word": "of",
+"block": 3,
+"start": 154.04,
+"end": 154.16
+},
+{
+"word": "human",
+"block": 3,
+"start": 154.16,
+"end": 154.57
+},
+{
+"word": "expressions",
+"block": 3,
+"start": 154.6,
+"end": 155.1
+},
+{
+"word": "and",
+"block": 3,
+"start": 155.2,
+"end": 155.44
+},
+{
+"word": "learned",
+"block": 3,
+"start": 155.44,
+"end": 155.68
+},
+{
+"word": "to",
+"block": 3,
+"start": 155.68,
+"end": 155.91
+},
+{
+"word": "recognize",
+"block": 3,
+"start": 155.92,
+"end": 156.32
+},
+{
+"word": "small",
+"block": 3,
+"start": 156.32,
+"end": 156.72
+},
+{
+"word": "changes",
+"block": 3,
+"start": 156.72,
+"end": 157.16
+},
+{
+"word": "as",
+"block": 3,
+"start": 157.2,
+"end": 157.36
+},
+{
+"word": "a",
+"block": 3,
+"start": 157.36,
+"end": 157.5
+},
+{
+"word": "smile",
+"block": 3,
+"start": 157.52,
+"end": 157.84
+},
+{
+"word": "began",
+"block": 3,
+"start": 157.84,
+"end": 158.16
+},
+{
+"word": "to",
+"block": 3,
+"start": 158.16,
+"end": 158.47
+},
+{
+"word": "develop.",
+"block": 3,
+"start": 158.48,
+"end": 159.36
+},
+{
+"word": "One",
+"block": 3,
+"start": 159.36,
+"end": 159.52
+},
+{
+"word": "model",
+"block": 3,
+"start": 159.52,
+"end": 159.84
+},
+{
+"word": "predicted",
+"block": 3,
+"start": 159.84,
+"end": 160.28
+},
+{
+"word": "the",
+"block": 3,
+"start": 160.28,
+"end": 160.44
+},
+{
+"word": "human",
+"block": 3,
+"start": 160.44,
+"end": 160.63
+},
+{
+"word": "expression.",
+"block": 3,
+"start": 160.64,
+"end": 161.84
+},
+{
+"word": "Another",
+"block": 3,
+"start": 161.84,
+"end": 162.36
+},
+{
+"word": "translated",
+"block": 3,
+"start": 162.36,
+"end": 162.68
+},
+{
+"word": "the",
+"block": 3,
+"start": 162.68,
+"end": 163.0
+},
+{
+"word": "expression",
+"block": 3,
+"start": 163.0,
+"end": 163.4
+},
+{
+"word": "into",
+"block": 3,
+"start": 163.4,
+"end": 163.6
+},
+{
+"word": "movements",
+"block": 3,
+"start": 163.6,
+"end": 164.05
+},
+{
+"word": "the",
+"block": 3,
+"start": 164.08,
+"end": 164.36
+},
+{
+"word": "robot",
+"block": 3,
+"start": 164.36,
+"end": 164.64
+},
+{
+"word": "could",
+"block": 3,
+"start": 164.64,
+"end": 164.8
+},
+{
+"word": "make.",
+"block": 3,
+"start": 164.8,
+"end": 165.01
+},
+{
+"word": "The",
+"block": 3,
+"start": 165.47,
+"end": 165.72
+},
+{
+"word": "team",
+"block": 3,
+"start": 165.72,
+"end": 166.08
+},
+{
+"word": "reported",
+"block": 3,
+"start": 166.08,
+"end": 166.48
+},
+{
+"word": "predicting",
+"block": 3,
+"start": 166.48,
+"end": 166.76
+},
+{
+"word": "an",
+"block": 3,
+"start": 166.76,
+"end": 166.88
+},
+{
+"word": "approaching",
+"block": 3,
+"start": 166.92,
+"end": 167.36
+},
+{
+"word": "smile",
+"block": 3,
+"start": 167.36,
+"end": 167.84
+},
+{
+"word": "about",
+"block": 3,
+"start": 167.84,
+"end": 168.16
+},
+{
+"word": "eight",
+"block": 3,
+"start": 168.16,
+"end": 168.4
+},
+{
+"word": "hundred",
+"block": 3,
+"start": 168.4,
+"end": 168.64
+},
+{
+"word": "and",
+"block": 3,
+"start": 168.64,
+"end": 168.92
+},
+{
+"word": "forty",
+"block": 3,
+"start": 168.92,
+"end": 169.12
+},
+{
+"word": "milliseconds",
+"block": 3,
+"start": 169.12,
+"end": 169.8
+},
+{
+"word": "ahead",
+"block": 3,
+"start": 169.8,
+"end": 169.96
+},
+{
+"word": "of",
+"block": 3,
+"start": 169.96,
+"end": 170.04
+},
+{
+"word": "its",
+"block": 3,
+"start": 170.04,
+"end": 170.16
+},
+{
+"word": "appearance,",
+"block": 3,
+"start": 170.16,
+"end": 170.67
+},
+{
+"word": "allowing",
+"block": 3,
+"start": 171.03,
+"end": 171.44
+},
+{
+"word": "the",
+"block": 3,
+"start": 171.44,
+"end": 171.68
+},
+{
+"word": "robot",
+"block": 3,
+"start": 171.68,
+"end": 171.92
+},
+{
+"word": "to",
+"block": 3,
+"start": 171.92,
+"end": 172.08
+},
+{
+"word": "try",
+"block": 3,
+"start": 172.08,
+"end": 172.24
+},
+{
+"word": "to",
+"block": 3,
+"start": 172.24,
+"end": 172.39
+},
+{
+"word": "smile",
+"block": 3,
+"start": 172.4,
+"end": 172.88
+},
+{
+"word": "alongside",
+"block": 3,
+"start": 172.88,
+"end": 173.28
+},
+{
+"word": "the",
+"block": 3,
+"start": 173.28,
+"end": 173.56
+},
+{
+"word": "person.",
+"block": 3,
+"start": 173.56,
+"end": 173.76
+},
+{
+"word": "Less",
+"block": 3,
+"start": 174.29,
+"end": 174.56
+},
+{
+"word": "than",
+"block": 3,
+"start": 174.56,
+"end": 174.76
+},
+{
+"word": "a",
+"block": 3,
+"start": 174.76,
+"end": 175.04
+},
+{
+"word": "second",
+"block": 3,
+"start": 175.04,
+"end": 175.28
+},
+{
+"word": "of",
+"block": 3,
+"start": 175.28,
+"end": 175.52
+},
+{
+"word": "anticipation.",
+"block": 3,
+"start": 175.52,
+"end": 176.72
+},
+{
+"word": "Enough",
+"block": 3,
+"start": 176.72,
+"end": 177.04
+},
+{
+"word": "to",
+"block": 3,
+"start": 177.04,
+"end": 177.2
+},
+{
+"word": "turn",
+"block": 3,
+"start": 177.2,
+"end": 177.32
+},
+{
+"word": "a",
+"block": 3,
+"start": 177.32,
+"end": 177.44
+},
+{
+"word": "delayed",
+"block": 3,
+"start": 177.44,
+"end": 177.84
+},
+{
+"word": "copy",
+"block": 3,
+"start": 177.84,
+"end": 178.36
+},
+{
+"word": "into",
+"block": 3,
+"start": 178.36,
+"end": 178.64
+},
+{
+"word": "a",
+"block": 3,
+"start": 178.64,
+"end": 178.72
+},
+{
+"word": "shared-looking",
+"block": 3,
+"start": 178.72,
+"end": 179.48
+},
+{
+"word": "moment.",
+"block": 3,
+"start": 179.48,
+"end": 180.9
+},
+{
+"word": "These",
+"block": 4,
+"start": 180.9,
+"end": 181.22
+},
+{
+"word": "were",
+"block": 4,
+"start": 181.22,
+"end": 181.38
+},
+{
+"word": "studies",
+"block": 4,
+"start": 181.38,
+"end": 181.78
+},
+{
+"word": "of",
+"block": 4,
+"start": 181.78,
+"end": 181.94
+},
+{
+"word": "facial",
+"block": 4,
+"start": 181.94,
+"end": 182.34
+},
+{
+"word": "movement.",
+"block": 4,
+"start": 182.34,
+"end": 182.75
+},
+{
+"word": "A",
+"block": 4,
+"start": 183.19,
+"end": 183.46
+},
+{
+"word": "successful",
+"block": 4,
+"start": 183.46,
+"end": 183.86
+},
+{
+"word": "smile",
+"block": 4,
+"start": 183.86,
+"end": 184.31
+},
+{
+"word": "doesn\u2019t",
+"block": 4,
+"start": 184.34,
+"end": 184.74
+},
+{
+"word": "tell",
+"block": 4,
+"start": 184.74,
+"end": 184.9
+},
+{
+"word": "us",
+"block": 4,
+"start": 184.9,
+"end": 185.06
+},
+{
+"word": "whether",
+"block": 4,
+"start": 185.06,
+"end": 185.26
+},
+{
+"word": "a",
+"block": 4,
+"start": 185.26,
+"end": 185.38
+},
+{
+"word": "machine",
+"block": 4,
+"start": 185.38,
+"end": 185.82
+},
+{
+"word": "feels",
+"block": 4,
+"start": 185.82,
+"end": 186.18
+},
+{
+"word": "happy.",
+"block": 4,
+"start": 186.18,
+"end": 186.5
+},
+{
+"word": "But",
+"block": 4,
+"start": 186.98,
+"end": 187.22
+},
+{
+"word": "picture",
+"block": 4,
+"start": 187.22,
+"end": 187.62
+},
+{
+"word": "the",
+"block": 4,
+"start": 187.62,
+"end": 187.9
+},
+{
+"word": "possible",
+"block": 4,
+"start": 187.9,
+"end": 188.18
+},
+{
+"word": "interaction.",
+"block": 4,
+"start": 188.18,
+"end": 188.81
+},
+{
+"word": "You\u2019re",
+"block": 4,
+"start": 189.25,
+"end": 189.46
+},
+{
+"word": "speaking.",
+"block": 4,
+"start": 189.46,
+"end": 189.88
+},
+{
+"word": "A",
+"block": 4,
+"start": 190.34,
+"end": 190.42
+},
+{
+"word": "machine",
+"block": 4,
+"start": 190.42,
+"end": 190.93
+},
+{
+"word": "looks",
+"block": 4,
+"start": 190.94,
+"end": 191.1
+},
+{
+"word": "toward",
+"block": 4,
+"start": 191.1,
+"end": 191.55
+},
+{
+"word": "you.",
+"block": 4,
+"start": 191.66,
+"end": 191.99
+},
+{
+"word": "Its",
+"block": 4,
+"start": 191.99,
+"end": 192.34
+},
+{
+"word": "mouth",
+"block": 4,
+"start": 192.34,
+"end": 192.62
+},
+{
+"word": "follows",
+"block": 4,
+"start": 192.62,
+"end": 192.9
+},
+{
+"word": "its",
+"block": 4,
+"start": 192.9,
+"end": 193.06
+},
+{
+"word": "voice,",
+"block": 4,
+"start": 193.06,
+"end": 193.67
+},
+{
+"word": "and",
+"block": 4,
+"start": 193.673,
+"end": 193.78
+},
+{
+"word": "its",
+"block": 4,
+"start": 193.78,
+"end": 194.14
+},
+{
+"word": "expression",
+"block": 4,
+"start": 194.14,
+"end": 194.66
+},
+{
+"word": "changes",
+"block": 4,
+"start": 194.66,
+"end": 194.98
+},
+{
+"word": "as",
+"block": 4,
+"start": 194.98,
+"end": 195.14
+},
+{
+"word": "yours",
+"block": 4,
+"start": 195.14,
+"end": 195.53
+},
+{
+"word": "does.",
+"block": 4,
+"start": 195.54,
+"end": 195.73
+},
+{
+"word": "Those",
+"block": 4,
+"start": 196.18,
+"end": 196.5
+},
+{
+"word": "movements",
+"block": 4,
+"start": 196.5,
+"end": 196.98
+},
+{
+"word": "could",
+"block": 4,
+"start": 196.98,
+"end": 197.14
+},
+{
+"word": "help",
+"block": 4,
+"start": 197.14,
+"end": 197.3
+},
+{
+"word": "make",
+"block": 4,
+"start": 197.3,
+"end": 197.42
+},
+{
+"word": "a",
+"block": 4,
+"start": 197.42,
+"end": 197.54
+},
+{
+"word": "tutor",
+"block": 4,
+"start": 197.54,
+"end": 197.86
+},
+{
+"word": "easier",
+"block": 4,
+"start": 197.86,
+"end": 198.18
+},
+{
+"word": "to",
+"block": 4,
+"start": 198.18,
+"end": 198.58
+},
+{
+"word": "follow,",
+"block": 4,
+"start": 198.58,
+"end": 198.91
+},
+{
+"word": "or",
+"block": 4,
+"start": 198.91,
+"end": 199.3
+},
+{
+"word": "a",
+"block": 4,
+"start": 199.3,
+"end": 199.51
+},
+{
+"word": "robotic",
+"block": 4,
+"start": 199.513,
+"end": 199.94
+},
+{
+"word": "assistant",
+"block": 4,
+"start": 199.94,
+"end": 200.26
+},
+{
+"word": "more",
+"block": 4,
+"start": 200.26,
+"end": 200.42
+},
+{
+"word": "approachable.",
+"block": 4,
+"start": 200.42,
+"end": 200.94
+},
+{
+"word": "They",
+"block": 4,
+"start": 201.4,
+"end": 201.62
+},
+{
+"word": "also",
+"block": 4,
+"start": 201.62,
+"end": 201.94
+},
+{
+"word": "leave",
+"block": 4,
+"start": 201.94,
+"end": 202.1
+},
+{
+"word": "us",
+"block": 4,
+"start": 202.1,
+"end": 202.26
+},
+{
+"word": "with",
+"block": 4,
+"start": 202.26,
+"end": 202.4
+},
+{
+"word": "a",
+"block": 4,
+"start": 202.42,
+"end": 202.49
+},
+{
+"word": "question",
+"block": 4,
+"start": 202.5,
+"end": 202.9
+},
+{
+"word": "about",
+"block": 4,
+"start": 202.9,
+"end": 203.22
+},
+{
+"word": "how",
+"block": 4,
+"start": 203.22,
+"end": 203.38
+},
+{
+"word": "much",
+"block": 4,
+"start": 203.38,
+"end": 203.62
+},
+{
+"word": "meaning",
+"block": 4,
+"start": 203.62,
+"end": 203.98
+},
+{
+"word": "we",
+"block": 4,
+"start": 203.98,
+"end": 204.1
+},
+{
+"word": "attach",
+"block": 4,
+"start": 204.1,
+"end": 204.54
+},
+{
+"word": "to",
+"block": 4,
+"start": 204.54,
+"end": 204.74
+},
+{
+"word": "a",
+"block": 4,
+"start": 204.74,
+"end": 204.82
+},
+{
+"word": "well-timed",
+"block": 4,
+"start": 204.82,
+"end": 205.82
+},
+{
+"word": "response.",
+"block": 4,
+"start": 205.82,
+"end": 206.5
+},
+{
+"word": "Watch",
+"block": 4,
+"start": 206.5,
+"end": 206.71
+},
+{
+"word": "the",
+"block": 4,
+"start": 206.74,
+"end": 206.9
+},
+{
+"word": "smile",
+"block": 4,
+"start": 206.9,
+"end": 207.55
+},
+{
+"word": "again.",
+"block": 4,
+"start": 207.62,
+"end": 208.06
+},
+{
+"word": "The",
+"block": 4,
+"start": 208.09,
+"end": 208.34
+},
+{
+"word": "robot",
+"block": 4,
+"start": 208.34,
+"end": 208.58
+},
+{
+"word": "has",
+"block": 4,
+"start": 208.58,
+"end": 208.74
+},
+{
+"word": "learned",
+"block": 4,
+"start": 208.74,
+"end": 209.06
+},
+{
+"word": "a",
+"block": 4,
+"start": 209.06,
+"end": 209.47
+},
+{
+"word": "movement.",
+"block": 4,
+"start": 209.647,
+"end": 209.95
+},
+{
+"word": "You\u2019re",
+"block": 4,
+"start": 209.98,
+"end": 210.34
+},
+{
+"word": "the",
+"block": 4,
+"start": 210.34,
+"end": 210.5
+},
+{
+"word": "one",
+"block": 4,
+"start": 210.5,
+"end": 210.7
+},
+{
+"word": "deciding",
+"block": 4,
+"start": 210.7,
+"end": 211.06
+},
+{
+"word": "what",
+"block": 4,
+"start": 211.06,
+"end": 211.18
+},
+{
+"word": "it",
+"block": 4,
+"start": 211.18,
+"end": 211.3
+},
+{
+"word": "means.",
+"block": 4,
+"start": 211.3,
+"end": 211.71
+}
+]

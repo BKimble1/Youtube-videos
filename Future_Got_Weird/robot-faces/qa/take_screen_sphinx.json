@@ -1,0 +1,714 @@
+{
+ "audio/narration/takes/hook2_t1_aixc.mp3": {
+  "block": 0,
+  "wer": 0.138,
+  "diffs": [
+   [
+    "delete",
+    "a",
+    ""
+   ],
+   [
+    "delete",
+    "it",
+    ""
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ],
+   [
+    "replace",
+    "lips and predict an",
+    "lives in predicting"
+   ],
+   [
+    "replace",
+    "begins",
+    "began its"
+   ]
+  ]
+ },
+ "audio/narration/takes/hook2_t2_khvE.mp3": {
+  "block": 0,
+  "wer": 0.092,
+  "diffs": [
+   [
+    "delete",
+    "a",
+    ""
+   ],
+   [
+    "delete",
+    "it",
+    ""
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ],
+   [
+    "replace",
+    "have been",
+    "and in"
+   ],
+   [
+    "replace",
+    "and",
+    "in"
+   ]
+  ]
+ },
+ "audio/narration/takes/hook_t1_8WLx.mp3": {
+  "block": 0,
+  "wer": 0.246,
+  "diffs": [
+   [
+    "delete",
+    "a",
+    ""
+   ],
+   [
+    "delete",
+    "it",
+    ""
+   ],
+   [
+    "replace",
+    "appears",
+    "up yours"
+   ],
+   [
+    "replace",
+    "corners",
+    "course"
+   ],
+   [
+    "replace",
+    "have",
+    "had"
+   ],
+   [
+    "replace",
+    "lips and predict an",
+    "lives in predicting"
+   ],
+   [
+    "replace",
+    "begins and the",
+    "began so in a"
+   ],
+   [
+    "replace",
+    "was a",
+    "with the"
+   ]
+  ]
+ },
+ "audio/narration/takes/hook_t2_XskJ.mp3": {
+  "block": 0,
+  "wer": 0.185,
+  "diffs": [
+   [
+    "replace",
+    "for a",
+    "her"
+   ],
+   [
+    "delete",
+    "it",
+    ""
+   ],
+   [
+    "replace",
+    "appears",
+    "up yours"
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ],
+   [
+    "replace",
+    "have",
+    "had"
+   ],
+   [
+    "replace",
+    "lips and predict an",
+    "lives in predicting"
+   ],
+   [
+    "replace",
+    "the",
+    "a"
+   ]
+  ]
+ },
+ "audio/narration/takes/b2_t1_Jy3b.mp3": {
+  "block": 1,
+  "wer": 0.127,
+  "diffs": [
+   [
+    "replace",
+    "built",
+    "build"
+   ],
+   [
+    "replace",
+    "that gives",
+    "and"
+   ],
+   [
+    "replace",
+    "face",
+    "base"
+   ],
+   [
+    "replace",
+    "the shapes",
+    "a shades"
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ],
+   [
+    "replace",
+    "flap",
+    "flat"
+   ],
+   [
+    "insert",
+    "",
+    "but"
+   ],
+   [
+    "replace",
+    "its",
+    "it"
+   ],
+   [
+    "replace",
+    "they produced",
+    "big reduced"
+   ],
+   [
+    "replace",
+    "this",
+    "his"
+   ],
+   [
+    "replace",
+    "get",
+    "yet"
+   ],
+   [
+    "replace",
+    "from a",
+    "for more"
+   ],
+   [
+    "replace",
+    "pull at",
+    "all in"
+   ],
+   [
+    "replace",
+    "and",
+    "in"
+   ],
+   [
+    "replace",
+    "too",
+    "to"
+   ],
+   [
+    "replace",
+    "has",
+    "happens"
+   ]
+  ]
+ },
+ "audio/narration/takes/b2_t2_LmKy.mp3": {
+  "block": 1,
+  "wer": 0.127,
+  "diffs": [
+   [
+    "replace",
+    "built",
+    "build"
+   ],
+   [
+    "replace",
+    "shapes",
+    "shades"
+   ],
+   [
+    "insert",
+    "",
+    "the"
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ],
+   [
+    "replace",
+    "flap",
+    "flat"
+   ],
+   [
+    "replace",
+    "a",
+    "i'm"
+   ],
+   [
+    "replace",
+    "wanted",
+    "what"
+   ],
+   [
+    "replace",
+    "its",
+    "it"
+   ],
+   [
+    "replace",
+    "they",
+    "be"
+   ],
+   [
+    "replace",
+    "move these",
+    "movies"
+   ],
+   [
+    "replace",
+    "this mouth shape change",
+    "the smell shit changed"
+   ],
+   [
+    "replace",
+    "from a",
+    "for more"
+   ],
+   [
+    "replace",
+    "pull at",
+    "polo"
+   ],
+   [
+    "replace",
+    "and",
+    "in"
+   ],
+   [
+    "replace",
+    "too",
+    "to"
+   ]
+  ]
+ },
+ "audio/narration/takes/b3_t1_uusj.mp3": {
+  "block": 2,
+  "wer": 0.184,
+  "diffs": [
+   [
+    "replace",
+    "a way to control",
+    "awakened troll"
+   ],
+   [
+    "insert",
+    "",
+    "twenty twenty six"
+   ],
+   [
+    "replace",
+    "learned",
+    "learn"
+   ],
+   [
+    "insert",
+    "",
+    "eight"
+   ],
+   [
+    "replace",
+    "the",
+    "i'm"
+   ],
+   [
+    "replace",
+    "linked",
+    "link"
+   ],
+   [
+    "replace",
+    "robot's",
+    "robots"
+   ],
+   [
+    "replace",
+    "audio could then",
+    "audi okay been"
+   ],
+   [
+    "replace",
+    "its lips",
+    "it slips"
+   ],
+   [
+    "replace",
+    "it",
+    "they"
+   ],
+   [
+    "replace",
+    "synchronize with audio in",
+    "synchronized on you when"
+   ],
+   [
+    "replace",
+    "wasn't",
+    "was a"
+   ],
+   [
+    "replace",
+    "are",
+    "were"
+   ],
+   [
+    "replace",
+    "you are",
+    "you're"
+   ],
+   [
+    "replace",
+    "movements",
+    "movement"
+   ],
+   [
+    "insert",
+    "",
+    "a"
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ]
+  ]
+ },
+ "audio/narration/takes/b3_t2_MId4.mp3": {
+  "block": 2,
+  "wer": 0.184,
+  "diffs": [
+   [
+    "replace",
+    "a way to control",
+    "awakened troll"
+   ],
+   [
+    "replace",
+    "lip sync",
+    "wet sing"
+   ],
+   [
+    "insert",
+    "",
+    "twenty twenty six"
+   ],
+   [
+    "replace",
+    "learned",
+    "learn"
+   ],
+   [
+    "insert",
+    "",
+    "eight"
+   ],
+   [
+    "replace",
+    "youtube",
+    "you tube"
+   ],
+   [
+    "replace",
+    "the",
+    "i'm"
+   ],
+   [
+    "replace",
+    "linked",
+    "link"
+   ],
+   [
+    "replace",
+    "robot's",
+    "robots"
+   ],
+   [
+    "replace",
+    "could then",
+    "couldn't"
+   ],
+   [
+    "replace",
+    "lips",
+    "lives"
+   ],
+   [
+    "replace",
+    "audio in languages",
+    "audi own language is"
+   ],
+   [
+    "replace",
+    "are",
+    "were"
+   ],
+   [
+    "replace",
+    "you are",
+    "you're"
+   ],
+   [
+    "replace",
+    "movements",
+    "movement"
+   ],
+   [
+    "replace",
+    "b",
+    "a baby"
+   ],
+   [
+    "replace",
+    "a",
+    "the"
+   ]
+  ]
+ },
+ "audio/narration/takes/b4_t1_Eotl.mp3": {
+  "block": 3,
+  "wer": 0.148,
+  "diffs": [
+   [
+    "replace",
+    "the mouth",
+    "them l"
+   ],
+   [
+    "replace",
+    "leaves",
+    "wing is"
+   ],
+   [
+    "replace",
+    "stare at",
+    "steer"
+   ],
+   [
+    "replace",
+    "smile switches",
+    "smiles which is"
+   ],
+   [
+    "replace",
+    "even a",
+    "you know"
+   ],
+   [
+    "replace",
+    "team's",
+    "teams"
+   ],
+   [
+    "insert",
+    "",
+    "twenty twenty for"
+   ],
+   [
+    "replace",
+    "learned",
+    "learn"
+   ],
+   [
+    "replace",
+    "recognize",
+    "recognise"
+   ],
+   [
+    "replace",
+    "eight",
+    "a"
+   ],
+   [
+    "replace",
+    "a shared",
+    "assured"
+   ]
+  ]
+ },
+ "audio/narration/takes/b4_t2_7a4J.mp3": {
+  "block": 3,
+  "wer": 0.148,
+  "diffs": [
+   [
+    "replace",
+    "right",
+    "rake"
+   ],
+   [
+    "replace",
+    "stare at",
+    "steer"
+   ],
+   [
+    "replace",
+    "smile switches",
+    "smiles which is"
+   ],
+   [
+    "replace",
+    "even a well drawn",
+    "the panel will draw an"
+   ],
+   [
+    "replace",
+    "team's",
+    "teams"
+   ],
+   [
+    "insert",
+    "",
+    "twenty twenty for"
+   ],
+   [
+    "replace",
+    "learned",
+    "learn"
+   ],
+   [
+    "replace",
+    "recognize",
+    "recognise"
+   ],
+   [
+    "replace",
+    "of its",
+    "and"
+   ],
+   [
+    "replace",
+    "copy",
+    "hobby"
+   ]
+  ]
+ },
+ "audio/narration/takes/b5_t1_DRPd.mp3": {
+  "block": 4,
+  "wer": 0.228,
+  "diffs": [
+   [
+    "delete",
+    "a",
+    ""
+   ],
+   [
+    "replace",
+    "its mouth",
+    "it smelled"
+   ],
+   [
+    "replace",
+    "its voice and its",
+    "it's boys it's"
+   ],
+   [
+    "replace",
+    "as",
+    "is"
+   ],
+   [
+    "replace",
+    "a tutor",
+    "it to your"
+   ],
+   [
+    "replace",
+    "assistant",
+    "assist in"
+   ],
+   [
+    "replace",
+    "attach to a",
+    "attached"
+   ],
+   [
+    "replace",
+    "timed response",
+    "time for spots"
+   ],
+   [
+    "replace",
+    "you're",
+    "you were"
+   ]
+  ]
+ },
+ "audio/narration/takes/b5_t2_OsaP.mp3": {
+  "block": 4,
+  "wer": 0.163,
+  "diffs": [
+   [
+    "replace",
+    "a",
+    "was"
+   ],
+   [
+    "delete",
+    "a",
+    ""
+   ],
+   [
+    "replace",
+    "its mouth",
+    "it smelled"
+   ],
+   [
+    "replace",
+    "its voice and",
+    "it's boys in"
+   ],
+   [
+    "replace",
+    "could",
+    "can"
+   ],
+   [
+    "replace",
+    "a tutor",
+    "it to your"
+   ],
+   [
+    "replace",
+    "assistant",
+    "assist in"
+   ],
+   [
+    "replace",
+    "you're",
+    "you were"
+   ]
+  ]
+ }
+}
