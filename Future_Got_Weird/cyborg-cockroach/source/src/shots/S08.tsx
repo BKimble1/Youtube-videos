@@ -1,18 +1,23 @@
 // S08 (12.40-15.40 s) "letting the operator watch as the first moves into position." The observer's onboard camera:
 // the eye sits at the lens of the camera module on the observer's posed body (rig/gear.ts PACK.cam), so the image carries
-// its slow walk (a small gait bob and roll) until it stops at ~14.45 s. Ahead, seen from behind and to the left, the medic
-// (loaded launch tube) walks on a gentle curve into line with the silicone target and settles into its firing stance at
-// body x = 58, heading -x (as in S01). The image has a camera-feed finish (cooler grade, soft vignette, a hint of sensor
-// softness). From 14.6 s the feed eases back (one zoom-out about a fixed point) and becomes the live image on the
-// operator's monitor on the lab bench; the lower-right foreground is left free for the operator's hand on the remote.
+// its slow walk (a small gait bob and roll) and a gentle left turn as it follows, until it stops at 14.4 s. Ahead, seen
+// from the left (tube in profile) and then from behind-left, the medic (loaded, latched launch tube) walks from the right
+// toward the silicone target, curves right into line with it and settles into its firing stance at body x = 58, z = 0,
+// heading -x (as in S01), all six feet down by 14.95 s. The image has a camera-feed finish (cooler grade, soft vignette,
+// a hint of sensor softness; no overlays). The feed is a wide image (the monitor's 420:250 picture) of which the full
+// frame shows the central 1080 px.
+// From 14.6 s it eases back (one zoom-out about a fixed point, 438-460) and becomes the live picture on the operator's
+// lab-room monitor (as in S03) on the bench; the lower-right foreground is left free for the operator's hand on the remote
+// (S08_HAND_SLOT / s08HandSlotAt).
 import React from 'react';
 import {Cam, lookAt, depth, proj, scaleAt} from '../lib/cam';
 import {V3, V2, add, sub, mul, toW, dirW, norm, dot, cross} from '../lib/v3';
-import {clamp, lerp, sr, smoother, noise1} from '../lib/ease';
+import {clamp, sr, smoother} from '../lib/ease';
 import {poseRoach, RoachPose} from '../rig/roach';
-import {Roach, CHITIN} from '../rig/Roach';
+import {Roach} from '../rig/Roach';
 import {Gear} from '../rig/Gear';
 import {ArenaFloor, TargetFixture, LAB, Solid} from '../sets/Lab';
+import {ROOM} from '../sets/LabRoom';
 import {FixtureShadow, S01_BODY_X} from './S01';
 import {headingPath, remaining, obsPose, LENS} from './S07';
 import {fmt, polyPath, openPath} from '../lib/g3';
@@ -45,9 +50,10 @@ export const medicPose = (t: number): RoachPose => {
 export const MEDIC_GEAR = {kind: 'injector' as const, loaded: true, latched: true};
 
 // ---------------------------------------------------------------------------------------------------------------
-// The feed: a 5:4 image (FW x 1920) from the observer's lens. The full frame shows its central 1080 px.
+// The feed: a wide image (FW x 1920, the room monitor's 420:250 picture) from the observer's lens; the full frame shows
+// its central 1080 px.
 // ---------------------------------------------------------------------------------------------------------------
-export const FW = 2400;
+export const FW = (1920 * ROOM.monitor.w) / ROOM.monitor.h; // the room monitor's picture shape (3225.6 px for 420 x 250)
 export const POV_F = 1100; // wide lens (S01 is 2250)
 const POV_CY = 900;
 const POV_PITCH = -4 * DEG;
@@ -130,7 +136,7 @@ export const Feed: React.FC<{t: number; id: string}> = ({t, id}) => {
           <feColorMatrix type="matrix" values="0.86 0.06 0.02 0 0.005  0.03 0.9 0.05 0 0.01  0.02 0.07 0.95 0 0.035  0 0 0 1 0" />
           <feGaussianBlur stdDeviation="0.9" />
         </filter>
-        <radialGradient id={`${id}-vig`} gradientUnits="userSpaceOnUse" cx={FW / 2} cy={960} r={1500} gradientTransform={`translate(${FW / 2} 960) scale(1 0.82) translate(${-FW / 2} -960)`}>
+        <radialGradient id={`${id}-vig`} gradientUnits="userSpaceOnUse" cx={FW / 2} cy={960} r={1900} gradientTransform={`translate(${FW / 2} 960) scale(1 0.66) translate(${-FW / 2} -960)`}>
           <stop offset="0.38" stopColor="#0B1620" stopOpacity={0} />
           <stop offset="0.75" stopColor="#0B1620" stopOpacity={0.18} />
           <stop offset="1" stopColor="#0B1620" stopOpacity={0.42} />
@@ -139,7 +145,7 @@ export const Feed: React.FC<{t: number; id: string}> = ({t, id}) => {
       <g clipPath={`url(#${id}-clip)`}>
         <g filter={`url(#${id}-cam)`}>
           <WideBackdrop id={`${id}b`} cam={cam} W={FW} blur={14} />
-          <ArenaFloor id={`${id}f`} cam={cam} x0={-420} x1={420} z0={-560} z1={380} fade={700} />
+          <ArenaFloor id={`${id}f`} cam={cam} x0={-480} x1={480} z0={-640} z1={440} fade={700} />
           <FixtureShadow cam={cam} />
           {items.map((it) => it.el)}
         </g>
@@ -151,14 +157,18 @@ export const Feed: React.FC<{t: number; id: string}> = ({t, id}) => {
 
 // ---------------------------------------------------------------------------------------------------------------
 // The operator's monitor on the bench (final-frame pixels), and the zoom-out that turns the feed into its picture.
+// It is the monitor of the lab room in S03 (sets/LabRoom.tsx ROOM.monitor: a 420 x 250 mm picture, 14 mm bezel, dark
+// stand and foot, on the white bench), seen square-on, so the feed maps onto its picture by scale and offset only.
 // ---------------------------------------------------------------------------------------------------------------
-export const SCREEN = {cx: 540, cy: 820, w: 920, h: 736}; // the screen's picture area at the end (5:4, like the feed)
-const K0 = 1920 / SCREEN.h; // zoom at which the screen picture fills the frame
+const MON = ROOM.monitor;
+export const SCREEN = {cx: 540, cy: 740, w: 960, h: (960 * MON.h) / MON.w}; // the picture area at the end (px)
+const K0 = 1920 / SCREEN.h; // zoom at which the picture fills the frame height
 const FIX: V2 = [(540 - K0 * SCREEN.cx) / (1 - K0), (960 - K0 * SCREEN.cy) / (1 - K0)]; // the zoom's fixed point
 export const PULL0 = 14.6, PULL1 = 15.32;
 export const pullK = (t: number) => Math.pow(K0, 1 - smoother(clamp((t - PULL0) / (PULL1 - PULL0))));
-/** where the hand + remote should sit at the end (centre, px), its scale (1 = a hand about 450 px wide) and the first
- *  frame at which any of it can be in view during the zoom-out; s08HandSlotAt(f) gives the per-frame position/scale */
+/** where the hand + remote should sit at the end (centre, px), its scale (1 = a hand about 450 px wide, as drawn for the
+ *  final frame) and the first frame at which any of it can be in view during the zoom-out. The zoom-out is a pure
+ *  scale about a fixed point, so a hand composited before the end follows s08HandSlotAt(f) (position and scale). */
 export const S08_HAND_SLOT = {x: 820, y: 1600, scale: 1, fromFrame: 0};
 export const s08HandSlotAt = (f: number) => {
   const k = pullK(f / FPS);
@@ -173,92 +183,81 @@ S08_HAND_SLOT.fromFrame = (() => {
   return 462;
 })();
 
-// desk world: a camera square to the screen (mm, screen centre at the origin, screen plane z = 0)
-const DESK_EYE: V3 = [0, 0, 600];
-const DESK_F = (SCREEN.w * DESK_EYE[2]) / 376; // a 376 x 301 mm picture area (19 inch, 5:4)
+// desk world: a camera square to the screen (mm, picture centre at the origin, screen plane z = 0, +z toward the camera)
+const DESK_EYE: V3 = [0, 0, 620];
+const DESK_F = (SCREEN.w * DESK_EYE[2]) / MON.w;
 const deskCam = lookAt(DESK_EYE, [0, 0, 0], DESK_F, SCREEN.cx, SCREEN.cy);
-const BENCH_Y = -292; // bench top below the screen centre (mm)
+const BENCH_Y = -(MON.h / 2 + MON.lift); // bench top below the picture centre (mm)
+const BZ = 14; // bezel (as LabRoom's Monitor)
 
 const Monitor: React.FC<{id: string}> = ({id}) => {
   const c = deskCam;
   const P = (p: V3) => proj(c, p);
-  const rect = (x0: number, y0: number, x1: number, y1: number, z: number) => [P([x0, y0, z]), P([x1, y0, z]), P([x1, y1, z]), P([x0, y1, z])];
-  // bezel outline (rounded): picture 376 x 301, 15 mm sides/top, 28 mm chin
-  const bz = {x0: -203, x1: 203, y0: -178.5, y1: 165.5};
-  const b0 = P([bz.x0, bz.y1, 0]), b1 = P([bz.x1, bz.y0, 0]);
-  const scr0 = P([-188, 150.5, 0]), scr1 = P([188, -150.5, 0]);
-  const rad = 9 * scaleAt(c, [0, 0, 0]);
-  // stand: neck behind the chin, foot on the bench
-  const nz = -60;
-  const neck = rect(-24, -150, 24, BENCH_Y + 5, nz);
-  const footC: V3 = [0, BENCH_Y, -40];
-  const fc = P(footC), fl = P([-85, BENCH_Y, -40]), ff = P([0, BENCH_Y, 25]), fb = P([0, BENCH_Y, -105]);
-  const frx = fc[0] - fl[0], fry = (ff[1] - fb[1]) / 2, fcy = (ff[1] + fb[1]) / 2;
-  const thick = 7 * scaleAt(c, [0, BENCH_Y, 25]);
+  const quad = (pts: V3[]) => polyPath(pts.map(P));
+  const hw = MON.w / 2, hh = MON.h / 2;
+  const b0 = P([-hw - BZ, hh + BZ, 0]), b1 = P([hw + BZ, -hh - BZ, 0]);
+  const scr0 = P([-hw, hh, 0]), scr1 = P([hw, -hh, 0]);
+  const rad = 4 * scaleAt(c, [0, 0, 0]);
+  // stand (32 mm wide, behind the picture) and the foot (140 x 80 mm) on the bench, as in LabRoom
+  const nz = -18;
+  const neck: V3[] = [[-16, -hh + 20, nz], [16, -hh + 20, nz], [16, BENCH_Y + 4, nz], [-16, BENCH_Y + 4, nz]];
+  const ft = (y: number): V3[] => [[-70, y, nz + 40], [70, y, nz + 40], [70, y, nz - 40], [-70, y, nz - 40]];
+  const footTop = ft(BENCH_Y + 4), footFront: V3[] = [[-70, BENCH_Y + 4, nz + 40], [70, BENCH_Y + 4, nz + 40], [70, BENCH_Y, nz + 40], [-70, BENCH_Y, nz + 40]];
+  const fsc = P([0, BENCH_Y, nz]);
   const ink = 2.6;
+  const col = ROOM.monitorCol;
   return (
     <g>
       <defs>
         <linearGradient id={`${id}-bz`} gradientUnits="userSpaceOnUse" x1={fmt(b0[0])} y1={fmt(b0[1])} x2={fmt(b1[0])} y2={fmt(b1[1])}>
-          <stop offset="0" stopColor={lit('#2E3E4B', 0.28)} />
-          <stop offset="0.35" stopColor="#34465A" />
-          <stop offset="1" stopColor={shade('#2E3E4B', 0.35)} />
+          <stop offset="0" stopColor={lit(col, 0.22)} />
+          <stop offset="0.4" stopColor={col} />
+          <stop offset="1" stopColor={shade(col, 0.3)} />
         </linearGradient>
         <linearGradient id={`${id}-nk`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={lit(LAB.alu, 0.2)} />
-          <stop offset="0.5" stopColor={LAB.alu} />
-          <stop offset="1" stopColor={shade(LAB.alu, 0.3)} />
-        </linearGradient>
-        <linearGradient id={`${id}-ft`} gradientUnits="userSpaceOnUse" x1={fmt(fl[0])} y1={fmt(fb[1])} x2={fmt(fc[0] + frx)} y2={fmt(ff[1])}>
-          <stop offset="0" stopColor={lit(LAB.alu, 0.3)} />
-          <stop offset="1" stopColor={shade(LAB.alu, 0.2)} />
+          <stop offset="0" stopColor={lit(col, 0.2)} />
+          <stop offset="0.5" stopColor={lit(col, 0.08)} />
+          <stop offset="1" stopColor={shade(col, 0.25)} />
         </linearGradient>
         <radialGradient id={`${id}-fsh`}>
-          <stop offset="0" stopColor="#1C2A33" stopOpacity={0.35} />
-          <stop offset="0.6" stopColor="#1C2A33" stopOpacity={0.18} />
+          <stop offset="0" stopColor="#1C2A33" stopOpacity={0.32} />
+          <stop offset="0.6" stopColor="#1C2A33" stopOpacity={0.15} />
           <stop offset="1" stopColor="#1C2A33" stopOpacity={0} />
         </radialGradient>
       </defs>
       {/* foot shadow, foot, neck */}
-      <ellipse cx={fmt(fc[0])} cy={fmt(fcy + thick * 0.6)} rx={fmt(frx * 1.25)} ry={fmt(fry * 1.5)} fill={`url(#${id}-fsh)`} />
-      <path d={`M${fmt(fc[0] - frx)} ${fmt(fcy)} L${fmt(fc[0] - frx)} ${fmt(fcy + thick)} A${fmt(frx)} ${fmt(fry)} 0 0 0 ${fmt(fc[0] + frx)} ${fmt(fcy + thick)} L${fmt(fc[0] + frx)} ${fmt(fcy)} Z`} fill={shade(LAB.alu, 0.32)} stroke={INK} strokeWidth={ink} strokeLinejoin="round" />
-      <ellipse cx={fmt(fc[0])} cy={fmt(fcy)} rx={fmt(frx)} ry={fmt(fry)} fill={`url(#${id}-ft)`} stroke={INK} strokeWidth={ink} />
-      <path d={polyPath(neck)} fill={`url(#${id}-nk)`} stroke={INK} strokeWidth={ink} strokeLinejoin="round" />
-      {/* bezel and the dark screen surround */}
+      <ellipse cx={fmt(fsc[0])} cy={fmt(fsc[1] + 4)} rx={fmt(95 * scaleAt(c, [0, BENCH_Y, nz]))} ry={fmt(30 * scaleAt(c, [0, BENCH_Y, nz]))} fill={`url(#${id}-fsh)`} />
+      <path d={quad(footFront)} fill={shade(col, 0.2)} stroke={INK} strokeWidth={ink} strokeLinejoin="round" />
+      <path d={quad(footTop)} fill={lit(col, 0.12)} stroke={INK} strokeWidth={ink} strokeLinejoin="round" />
+      <path d={quad(neck)} fill={`url(#${id}-nk)`} stroke={INK} strokeWidth={ink} strokeLinejoin="round" />
+      {/* bezel, its soft top-left edge light, and the dark screen surround */}
       <rect x={fmt(b0[0])} y={fmt(b0[1])} width={fmt(b1[0] - b0[0])} height={fmt(b1[1] - b0[1])} rx={fmt(rad)} fill={`url(#${id}-bz)`} stroke={INK} strokeWidth={ink * 1.2} />
-      <rect x={fmt(b0[0] + 5)} y={fmt(b0[1] + 4)} width={fmt(b1[0] - b0[0] - 10)} height={fmt(b1[1] - b0[1] - 9)} rx={fmt(rad * 0.8)} fill="none" stroke="#FFFFFF" strokeOpacity={0.12} strokeWidth={2} />
-      <rect x={fmt(scr0[0] - 4)} y={fmt(scr0[1] - 4)} width={fmt(scr1[0] - scr0[0] + 8)} height={fmt(scr1[1] - scr0[1] + 8)} fill="#0D161E" />
-      {/* power light on the chin: a small dim pill, not a glowing UI element */}
-      {(() => {
-        const q = P([176, -165, 0]);
-        return <rect x={fmt(q[0] - 7)} y={fmt(q[1] - 2.5)} width={14} height={5} rx={2.5} fill="#7FA9C2" opacity={0.7} />;
-      })()}
+      <rect x={fmt(b0[0] + 4)} y={fmt(b0[1] + 4)} width={fmt(b1[0] - b0[0] - 8)} height={fmt(b1[1] - b0[1] - 8)} rx={fmt(rad * 0.7)} fill="none" stroke="#FFFFFF" strokeOpacity={0.1} strokeWidth={2} />
+      <rect x={fmt(scr0[0] - 5)} y={fmt(scr0[1] - 5)} width={fmt(scr1[0] - scr0[0] + 10)} height={fmt(scr1[1] - scr0[1] + 10)} fill="#1B2A36" />
     </g>
   );
 };
 
-/** bench top and the wall behind it, in final-frame pixels */
+/** the bench top (LabRoom's white bench) and its far edge against the wall, in final-frame pixels */
 const Bench: React.FC<{id: string}> = ({id}) => {
   const c = deskCam;
-  const back = proj(c, [0, BENCH_Y, -420]);
-  const lip = proj(c, [0, BENCH_Y, 250]);
+  const back = proj(c, [0, BENCH_Y, -380]);
   return (
     <g>
       <defs>
         <linearGradient id={`${id}-top`} x1="0" y1={fmt(back[1])} x2="0" y2="1920" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor={shade('#CBD5DA', 0.12)} />
-          <stop offset="0.35" stopColor="#D2DBDF" />
-          <stop offset="1" stopColor={lit('#C6D0D5', 0.12)} />
+          <stop offset="0" stopColor={shade(ROOM.benchCol, 0.1)} />
+          <stop offset="0.3" stopColor={ROOM.benchCol} />
+          <stop offset="1" stopColor={lit(ROOM.benchCol, 0.3)} />
         </linearGradient>
         <linearGradient id={`${id}-sh`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#24333F" stopOpacity={0.22} />
+          <stop offset="0" stopColor="#24333F" stopOpacity={0.18} />
           <stop offset="1" stopColor="#24333F" stopOpacity={0} />
         </linearGradient>
       </defs>
       <rect x={-20} y={fmt(back[1])} width={1120} height={fmt(1960 - back[1])} fill={`url(#${id}-top)`} />
-      <rect x={-20} y={fmt(back[1])} width={1120} height={40} fill={`url(#${id}-sh)`} />
-      <path d={`M-20 ${fmt(back[1])} L1100 ${fmt(back[1])}`} stroke={INK} strokeWidth={2} opacity={0.5} />
-      {lip[1] < 1920 && <path d={`M-20 ${fmt(lip[1])} L1100 ${fmt(lip[1])}`} stroke={INK} strokeWidth={2} />}
+      <rect x={-20} y={fmt(back[1])} width={1120} height={36} fill={`url(#${id}-sh)`} />
+      <path d={`M-20 ${fmt(back[1])} L1100 ${fmt(back[1])}`} stroke={INK} strokeWidth={2} opacity={0.45} />
     </g>
   );
 };
@@ -267,10 +266,10 @@ const Bench: React.FC<{id: string}> = ({id}) => {
 const Receiver: React.FC<{id: string}> = ({id}) => {
   const c = deskCam;
   const B = BENCH_Y;
-  const box = {c: [-185, B + 10, -125] as V3, h: [30, 10, 20] as V3};
-  const cable: V3[] = [[-185, B + 6, -146], [-170, B + 1.5, -170], [-120, B + 1.5, -175], [-60, B + 1.5, -150], [-26, B + 1.5, -112], [-8, B + 20, -82], [-4, B + 70, -70]];
+  const box = {c: [-175, B + 10, -60] as V3, h: [30, 10, 20] as V3};
+  const cable: V3[] = [[-175, B + 6, -81], [-158, B + 1.5, -104], [-108, B + 1.5, -110], [-56, B + 1.5, -92], [-26, B + 1.5, -62], [-10, B + 18, -30], [-6, B + 60, -22]];
   const cp = cable.map((q) => proj(c, q));
-  const ant0 = proj(c, [-165, B + 20, -138]), ant1 = proj(c, [-150, B + 88, -150]);
+  const ant0 = proj(c, [-155, B + 20, -72]), ant1 = proj(c, [-140, B + 88, -84]);
   const sc = scaleAt(c, box.c);
   const sh = proj(c, [box.c[0] + 4, B, box.c[2] + 2]);
   return (
@@ -292,8 +291,8 @@ const Receiver: React.FC<{id: string}> = ({id}) => {
 };
 
 const DeskBackdrop: React.FC<{id: string}> = ({id}) => {
-  // the far side of the lab behind the bench: soft and dim (a defocused background), panned to a different bay
-  const cam = lookAt([0, 0, 0], [-0.35, -0.02, -1], 1000);
+  // the lab behind the monitor (the room's monitor faces +z turned 0.35 rad, so we look along -z turned the other way)
+  const cam = lookAt([0, 0, 0], [Math.sin(0.35), -0.02, -Math.cos(0.35)], 1000);
   return <WideBackdrop id={id} cam={cam} W={1080} blur={22} />;
 };
 

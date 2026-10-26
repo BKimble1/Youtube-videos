@@ -1,12 +1,13 @@
-// S07 (10.50-12.40 s) "A second cockroach carries a camera," Low front-side view at insect height introducing the
-// observer: the same species, size and finish as the medic, its backpack carrying the small Wi-Fi camera module (lens,
-// aerial; no launch tube). It walks toward the camera's left, three-quarter front; by "camera" the module and its lens
-// read clearly (the lens turns into the key light and catches a glint). From ~11.9 s the view eases in toward the lens
-// (one push, no reversal) so the cut into its own viewpoint (S08) is motivated.
+// S07 (10.50-12.40 s) "A second cockroach carries a camera," Low front-left three-quarter at insect height introducing
+// the observer: the same species, size and finish as the medic, its backpack carrying the small Wi-Fi camera module
+// (lens, aerial; no launch tube). The camera leads the walking insect (it travels with its line of walk, so the insect
+// holds its place and the mat slides by) and creeps in; on "camera" the module and lens read clearly and the lens catches
+// a glint (11.85 s). From 11.55 s the creep turns into one eased push toward the lens, still travelling at the cut, so the
+// cut into its own viewpoint (S08) is motivated. Also home of the observer's walk (shared with S08).
 import React from 'react';
 import {Cam, lookAt, depth, proj, scaleAt} from '../lib/cam';
 import {V3, V2, add, sub, mul, lerp3, toW, dirW, norm, dot, Frame} from '../lib/v3';
-import {clamp, lerp, sr, smoother, keys, noise1} from '../lib/ease';
+import {clamp, lerp, sr, smoother} from '../lib/ease';
 import {poseRoach, splinePath, plantedStop, Path, RoachPose} from '../rig/roach';
 import {Roach} from '../rig/Roach';
 import {Gear, GEAR_COL, lightW} from '../rig/Gear';
@@ -14,7 +15,6 @@ import {PACK} from '../rig/gear';
 import {LabBackdrop, ArenaFloor} from '../sets/Lab';
 import {fmt, polyPath} from '../lib/g3';
 import {INK} from '../lib/ink';
-import {lit, shade, mix} from '../lib/color';
 import {ShotProps} from './index';
 import {FPS, word} from '../timeline';
 
@@ -66,8 +66,9 @@ export const remaining = (t: number, v: number, tA: number, tB: number) => {
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-// The observer insect (S07 + S08): one straight-ish walk, a slight right curve, ending behind and to the left of the
-// medic's firing stance (S08), its camera aimed between the medic and the target.
+// The observer insect (S07 + S08): a straight walk at 38 mm/s (heading 45 deg right of -x), a gentle left turn to 30 deg
+// while it slows in S08 (keeping the medic in view), stopped at 14.4 s behind and to the left of the medic's firing
+// stance, its camera aimed between the medic and the target.
 // ---------------------------------------------------------------------------------------------------------------
 /** lens position on the observer's body (front face of the lens glass) */
 export const LENS: V3 = [PACK.cam.c[0] + PACK.cam.h[0] + 1.4, PACK.cam.c[1], 0];
@@ -188,9 +189,11 @@ export const s07Cam = (t: number, a: S07CamSet = S07_START, b: S07CamSet = S07_E
   const e = s07Prog(t);
   const fr = obsPose(t).bodyFrame0; // the path frame (no gait bob or roll)
   const az = lerp(a.az, b.az, e), el = lerp(a.el, b.el, e), R = a.R * Math.pow(b.R / a.R, e);
-  const aim = toW(fr, lerp3(a.aim, b.aim, e));
+  // the aim settles on the lens ahead of the distance, so the lens converges on its screen place without doubling back
+  const ea = 1 - Math.pow(1 - e, 2.5);
+  const aim = toW(fr, lerp3(a.aim, b.aim, ea));
   const dir = dirW(fr, [Math.cos(el) * Math.cos(az), Math.sin(el), -Math.cos(el) * Math.sin(az)]);
-  return lookAt(add(aim, mul(dir, R)), aim, lerp(a.f, b.f, e), 540, lerp(a.cy, b.cy, e));
+  return lookAt(add(aim, mul(dir, R)), aim, lerp(a.f, b.f, e), 540, lerp(a.cy, b.cy, ea));
 };
 
 /** trim a polyline where it comes closer than `near` mm to the camera plane (the close push passes over the antennae) */

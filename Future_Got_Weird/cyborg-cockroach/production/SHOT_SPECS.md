@@ -78,3 +78,18 @@ word timings in `source/src/data/timeline.json` (use `word('fire', 0)`, `wordIn(
 | S13 | 758-856 (25.27-28.53) | "So if you're trapped and something starts crawling toward you" | Survivor-level view: antennae appear through a gap, then the loaded backpack; she notices (alarm). |
 | S14 | 856-891 (28.53-29.70) | "you might actually" | Her face: alarm softens into cautious recognition; small breath out; near hand relaxes. |
 | S15 | 891-936 (29.70-31.20) | "want it to get closer." | Low-angle approach matching S01's camera and scale (her hand where the target was); ends mid-step = S01 frame 0 (loop). |
+
+## Rubble and the survivor's alcove (coordination note, read before building S11/S12)
+
+The integrator is building `src/sets/Alcove.tsx` (the sheltered space where the survivor lies, used by S13-S15). Make the
+rubble route in `src/sets/Rubble.tsx` / S12 lead INTO this alcove and share its look:
+
+- Palette `ALC` in `Alcove.tsx` (concrete `#9C9590` / `#7E7772` / `#B8B0A6`, crevice `#3A3633`, rebar `#8A4B2E`, dust
+  `#C9BFAF`, daylight `#FFE8B8`); reuse its primitives (`Chunk` concrete block with chipped edges and aggregate speckle,
+  `Rebar`, `DustMotes`, `LightShaft`, `DustFloor`) instead of a second style.
+- World layout (mm, floor y = 0): the survivor lies prone along world x with her head toward +x; the midpoint between her
+  elbows is the origin `ALCOVE.anchor = [0, 0, 0]`; her near hand rests near `ALCOVE.hand` (about [215, 0, 40]); the gap
+  the insect comes through is at `ALCOVE.gap` (about [470, 0, -60]), opening toward -x/+z. The route arrives at the gap
+  from beyond it (+x side). A daylight shaft falls from above-right onto her face and hands.
+- S12's last frames look along the route into the gap and see her (head, shoulders, forearms) beyond it, lit by the
+  shaft; export the camera function so the integrator can composite her rig there.

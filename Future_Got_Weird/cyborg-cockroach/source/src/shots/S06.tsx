@@ -5,19 +5,19 @@
 // (into S07). The camera, high and tilted a little, makes one small eased drift with the turn.
 import React from 'react';
 import {Cam, lookAt, proj, depth, scaleAt} from '../lib/cam';
-import {V3, V2, add, mul, toW} from '../lib/v3';
+import {V3, Frame, add, mul} from '../lib/v3';
 import {fmt, polyPath, projPoly} from '../lib/g3';
 import {sr, lerp} from '../lib/ease';
 import {Roach} from '../rig/Roach';
 import {Gear, GEAR_COL, alongPolyline} from '../rig/Gear';
 import {wires} from '../rig/gear';
-import {ArenaFloor, Foam, Solid, LAB} from '../sets/Lab';
+import {ArenaFloor, Foam, LAB} from '../sets/Lab';
 import {INK} from '../lib/ink';
 import {ShotProps} from './index';
 import {FPS} from '../timeline';
-import {medicPose, medicGear, PULSE1, PULSE2, pulseTrain, zapOf} from './S04';
+import {medicPose, medicGear, PULSE1, PULSE2, pulseTrain, zapOf, S04_T1, S06_T1} from './S04';
 
-const T0 = 273 / FPS, T1 = 315 / FPS;
+const T0 = S04_T1, T1 = S06_T1;
 /** the course: foam blocks (centre, half sizes, colour, yaw) and the clear acrylic course edge */
 export const S06_BLOCKS: {c: V3; h: V3; color: string; yaw?: number}[] = [
   {c: [-95, 13, -2], h: [23, 13, 43], color: LAB.foam}, // directly in the insect's path
@@ -26,12 +26,13 @@ export const S06_BLOCKS: {c: V3; h: V3; color: string; yaw?: number}[] = [
 ];
 const EDGE = {c: [-60, 18, 86] as V3, h: [320, 18, 1.6] as V3}; // acrylic course edge along the left of frame
 
-// camera: high above, tilted forward a little (eye behind the insect's start, +x) and turned a touch off the grid
+// camera: high above, tilted forward a little (eye behind the insect's start, +x) and turned a touch off the grid so
+// that the final heading (world -z) runs screen-right and slightly up
 const DEG = Math.PI / 180;
 const camAt = (t: number): Cam => {
   const u = sr(t, T0, T1);
   const tgt: V3 = [lerp(-26, -34, u), 0, lerp(-10, -26, u)];
-  const el = 70 * DEG, az = 8 * DEG, D = 420;
+  const el = 70 * DEG, az = -6 * DEG, D = 420;
   // eye direction: mostly up, leaning toward +x (behind the insect) and rotated about y by az
   const back: V3 = [Math.cos(az), 0, Math.sin(az)];
   const eye = add(tgt, add(mul(back, D * Math.cos(el)), [0, D * Math.sin(el), 0]));
@@ -77,7 +78,7 @@ const Acrylic: React.FC<{cam: Cam}> = ({cam}) => {
 };
 
 /** from above the wire pulses and the electrode glow are tiny at this scale: a readable (still subtle) version on top */
-export const PulseMarks: React.FC<{id: string; cam: Cam; f: ReturnType<typeof medicPose>['pose']['frame']; pulses: number[]; zap: number; k?: number}> = ({id, cam, f, pulses, zap, k = 1}) => {
+export const PulseMarks: React.FC<{id: string; cam: Cam; f: Frame; pulses: number[]; zap: number; k?: number}> = ({id, cam, f, pulses, zap, k = 1}) => {
   const W = wires(f).antL;
   const e = proj(cam, W[W.length - 1]);
   const sc = scaleAt(cam, W[W.length - 1]);

@@ -1,37 +1,44 @@
 // S04 (5.00-9.10 s) "Scientists strapped a tiny launcher onto a living cockroach, then used electrical pulses"
-// One continuous camera move at insect height. The medic insect (injector loaded and latched) walks slowly to screen-left
-// across the grid mat; the camera, on its LEFT flank, overtakes it a little so the view slides along the mounted
-// hardware from the rear of the backpack (coin cell, board, cerci wires) to its front (tube mouth, needle, collar), then
-// eases forward and down along the orange antenna wire to the left antenna-base electrode. On "electrical" a short train
-// of pulses leaves the board and runs down that wire; when it arrives the electrode glows briefly, the left antenna
-// twitches and, in the last frames, the body starts to veer RIGHT (left antenna stimulated -> right turn).
+// One continuous camera move at insect scale. The medic insect (injector loaded and latched) walks slowly (36 mm/s) to
+// screen-left across the grid mat; the camera, on its LEFT flank, travels a little faster than the insect, so the view
+// slides along the mounted hardware from the rear of the backpack (coin cell, board, blue cerci wires) to its front (tube
+// mouth, needle, collar, head), then eases forward and down along the orange antenna wire to the left antenna-base
+// electrode. On "electrical" a short train of pulses leaves the board and runs down that wire; as it arrives (~9.0 s) the
+// electrode glows briefly, the left antenna flicks up and, in the last frames, the body starts to veer RIGHT (left
+// antenna stimulated -> right turn). S06 continues the same walk (medicPose / medicGear are shared).
 import React from 'react';
-import {Cam, lookAt, depth, proj, scaleAt} from '../lib/cam';
+import {Cam, lookAt, proj, scaleAt} from '../lib/cam';
 import {fmt} from '../lib/g3';
 import {V3, V2, add, sub, mul, norm, dot, toW, toL, lerp3, len, Frame} from '../lib/v3';
-import {clamp, lerp, ramp, smoother, sr, noise1} from '../lib/ease';
+import {clamp, lerp, smoother, sr} from '../lib/ease';
 import {poseRoach, splinePath, straightPath, Path, LegPose, RoachPose, PLATES, PRONOTUM} from '../rig/roach';
 import {Roach, RoachDrawOpts, CHITIN} from '../rig/Roach';
 import {Inked, Deco} from '../lib/ink';
 import {Capsule} from '../lib/shade';
-import {shade, mix} from '../lib/color';
 import type {LoftDef} from '../lib/loft';
 import {Gear} from '../rig/Gear';
 import {LabBackdrop, ArenaFloor} from '../sets/Lab';
 import {ShotProps} from './index';
-import {FPS, word} from '../timeline';
+import {FPS, word, wordIn} from '../timeline';
+import {SHOT_FRAMES} from '../cuts';
 
 // ---------------------------------------------------------------------------------------------------------------
 // The medic's walk through S04 and S06 (one world, one path): straight along -x, then a right turn of 90 degrees
 // (toward world -z) that starts when the first pulse reaches the left antenna and tightens after the second.
 // ---------------------------------------------------------------------------------------------------------------
-export const RUN_T0 = 5.0; // S04 start (s)
+const cutAt = (id: string) => SHOT_FRAMES.find(([k]) => k === id)![1] / FPS;
+export const S04_T0 = cutAt('S04'), S04_T1 = cutAt('S06'), S06_T1 = cutAt('S07');
+export const RUN_T0 = S04_T0; // S04 start (s)
 export const RUN_X0 = 150; // body origin x at RUN_T0 (heading -x, z = 0)
 const S_OFF = 75; // the path starts this far behind (the gait never samples it near arc length 0); sets the gait phase:
 // the near front leg (L1) is in late stance, pulled back from the face, while the pulse arrives
 const V0 = 36; // mm/s, the slow walk of S04
 const V1 = 46; // mm/s after the stimulus (S06)
-const TV0 = 9.0, TV1 = 9.6; // speed-up window
+/** the stimulation times: pulse train 1 leaves the board on "electrical" and reaches the electrode by "pulses" (~9.0 s);
+ *  train 2 leaves as S06 opens and lands just before "to steer it" */
+export const PULSE1 = {leave: word('electrical').start, arrive: word('pulses').start - 0.04};
+export const PULSE2 = {leave: S04_T1, arrive: wordIn('to steer it').start - 0.13};
+const TV0 = PULSE1.arrive + 0.03, TV1 = TV0 + 0.6; // speed-up window after the first stimulus
 const intSm = (u: number) => u * u * u * u * (u * u - 3 * u + 2.5); // integral of smoother over [0, u]
 /** distance walked since RUN_T0 (mm) */
 export const runS = (t: number) => {
@@ -40,9 +47,6 @@ export const runS = (t: number) => {
   const extra = t <= TV0 ? 0 : t >= TV1 ? (V1 - V0) * (T * 0.5 + (t - TV1)) : (V1 - V0) * T * intSm((t - TV0) / T);
   return base + extra;
 };
-/** the stimulation times: pulse train 1 leaves the board on "electrical" and reaches the electrode by ~9.0 s */
-export const PULSE1 = {leave: word('electrical').start, arrive: word('pulses').start - 0.04};
-export const PULSE2 = {leave: 9.1, arrive: 9.29};
 const S_TURN1 = runS(PULSE1.arrive + 0.02); // the turn starts as the first pulse arrives
 const S_TURN2 = runS(PULSE2.arrive + 0.02);
 /** the body's heading change 0..1 (0 = heading -x, 1 = heading -z: a right turn of 90 degrees) by distance walked */
@@ -88,7 +92,7 @@ export const twitchOf = (t: number, p: {leave: number; arrive: number}) => blip(
 export const medicPose = (t: number) => {
   const s = runS(t);
   const tw = twitchOf(t, PULSE1) + twitchOf(t, PULSE2);
-  // breathing: the abdomen pumps slowly; a slight rise of the hind body (pitch about the thorax)
+  // breathing (0.9 Hz): pose.breath is set, plus a very slight body rock (rig/Roach.tsx does not yet draw breath)
   const br = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 0.9);
   const pose = poseRoach({
     path: RUN_PATH, s, t, seed: 3, search: 0.85,
@@ -199,7 +203,9 @@ export const RoachSplit: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}>
 // ---------------------------------------------------------------------------------------------------------------
 // Camera: one eased move. It rides with the insect's straight line of travel (no gait bob, and it does not turn with
 // the insect at the end) and slides forward relative to the body: rear of the backpack -> front of the tube -> the
-// left antenna electrode, lowering and swinging slightly round toward the front as it pushes in.
+// left antenna electrode, lowering, pushing in and swinging from a high rear quarter round to a near profile. The
+// relative progress m(t) is the integral of a smooth, always-positive speed profile, so the move never stops or reverses
+// until it settles on the head just before the pulse arrives; every key parameter is monotonic in m.
 // ---------------------------------------------------------------------------------------------------------------
 type CamKey = {tgt: V3; az: number; el: number; D: number; cy: number};
 const DEG = Math.PI / 180;
@@ -210,10 +216,12 @@ const KEYS: [number, CamKey][] = [
   [0.45, {tgt: [19, 20, -3], az: -12 * DEG, el: 24 * DEG, D: 80, cy: 640}],
   [1, {tgt: [33, 13, -6], az: -4 * DEG, el: 17 * DEG, D: 72, cy: 800}],
 ];
-// relative slide speed (arbitrary units): eases in, steady through phase A, rises for the push, eases out at the end
-const slideW = (t: number) => (0.55 * sr(t, 5.0, 5.8) + 1.5 * sr(t, 7.5, 8.3)) * (1 - sr(t, 8.55, 9.06));
+// relative slide speed (arbitrary units): eases in, steady through phase A, rises for the push (centred on the end of
+// "cockroach"), eases out and settles on the head just as the first pulse reaches the electrode
+const PUSH = wordIn('living cockroach', 1).end, SETTLE = PULSE1.arrive + 0.09;
+const slideW = (t: number) => (0.55 * sr(t, S04_T0, S04_T0 + 0.8) + 1.5 * sr(t, PUSH - 0.43, PUSH + 0.37)) * (1 - sr(t, SETTLE - 0.51, SETTLE));
 const M_TAB = (() => {
-  const n = 600, t0 = 5.0, t1 = 9.1, out: number[] = [0];
+  const n = 600, t0 = S04_T0, t1 = S04_T1, out: number[] = [0];
   let acc = 0;
   for (let i = 1; i <= n; i++) {
     const ta = t0 + ((i - 1) / n) * (t1 - t0), tb = t0 + (i / n) * (t1 - t0);
@@ -223,7 +231,7 @@ const M_TAB = (() => {
   return out.map((x) => x / acc);
 })();
 export const camM = (t: number) => {
-  const u = clamp((t - 5.0) / 4.1) * (M_TAB.length - 1);
+  const u = clamp((t - S04_T0) / (S04_T1 - S04_T0)) * (M_TAB.length - 1);
   const i = Math.min(M_TAB.length - 2, Math.floor(u));
   return lerp(M_TAB[i], M_TAB[i + 1], u - i);
 };

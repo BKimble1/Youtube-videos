@@ -80,6 +80,12 @@ export const splinePath = (pts: [number, number][], samples = 400): Path => {
     const e = 1.5;
     const [x0, z0] = at(s - e), [x1, z1] = at(s + e);
     let yaw = Math.atan2(-(z1 - z0), x1 - x0);
+    if (s < 0) {
+      // before the first waypoint: extrapolate the first segment (a walk may start "before" the path)
+      const [xa, za] = at(0), [xb, zb] = at(2 * e);
+      const yw = Math.atan2(-(zb - za), xb - xa);
+      return {p: [xa + Math.cos(yw) * s, 0, za - Math.sin(yw) * s], yaw: yw};
+    }
     if (s > total) {
       const [xa, za] = at(total - 2 * e), [xb, zb] = at(total);
       yaw = Math.atan2(-(zb - za), xb - xa);

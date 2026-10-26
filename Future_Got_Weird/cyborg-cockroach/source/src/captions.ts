@@ -25,9 +25,9 @@ export const CAP_PLACE: [string, Block, [number, Block][]?][] = [
   ['But the plan', {y: 1500}],
   ['beneath', {y: 1500}],
   ['carrying', {y: 1500}],
-  ['So if', {y: 1500}],
-  ['and something', {y: 1500}],
-  ['crawling', {y: 1500}],
+  ['So if', {y: 270}],
+  ['and something', {y: 270}],
+  ['crawling', {y: 270}],
   ['you might', {y: 1500}],
   ['to get', {y: 1500}],
 ];
