@@ -658,9 +658,14 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         const hold = roots[blades.indexOf(b)]?.hold ?? 0;
         // (V8 QA) in the middle of the deep zoom the pale tip fills the frame: it is taken down to a mid tone there,
         // so the zoom does not flash white (no change at the section's own scale)
-        const mk = sm(Math.log(12), Math.log(40), Math.log(z));
-        const fill = mix(mix(fill0, WCOL.siliconeAtomic, dz), '#8FA3AC', 0.6 * mk);
-        const tipC = mix(mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz), '#8FA3AC', 0.65 * mk);
+        // and where the zoom crosses from the dark gaps into the strip (about 300-600 px/um, a frame or two) the strip is
+        // a dark slate close to the gaps' tone, lightening over the next few frames, so the crossing is not a one-frame
+        // jump from dark to pale
+        const lz = Math.log(z);
+        const mk = sm(Math.log(12), Math.log(40), lz);
+        const dk = sm(Math.log(70), Math.log(240), lz) * (1 - sm(Math.log(800), Math.log(9000), lz));
+        const fill = mix(mix(mix(fill0, WCOL.siliconeAtomic, dz), '#8FA3AC', 0.6 * mk), '#4C5F69', 0.85 * dk);
+        const tipC = mix(mix(mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz), '#8FA3AC', 0.65 * mk), '#4C5F69', 0.85 * dk);
         return (
           <g key={b.i}>
             <defs>
