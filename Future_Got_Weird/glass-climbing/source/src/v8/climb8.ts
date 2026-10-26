@@ -445,7 +445,11 @@ const catchBody = (T: number): Body => {
   const top = atTop.H.y;
   const level = levelY(NCY);
   let hy = keyN(T, [[C.fail, top], [C.fail + 8, top + LURCH * 1.06, (f, a, b) => clamp((f - a) / (b - a)) ** 1.6], [C.fail + 13, top + LURCH * 0.95], [C.fail + 19, top + LURCH]]);
-  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 2, level + 92, easeOut], [FRAMES + C.settle1, level]]);
+  if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 4, level + 92, (f, a, b) => {
+    // (V8 QA: eased in as well as out, so the load comes on over a few frames instead of a one-frame drop at contact)
+    const x = clamp((f - a) / (b - a));
+    return x * x * (3 - 2 * x);
+  }], [FRAMES + C.settle1, level]]);
   const H: V = {x: HX - 12 * ss(T, C.reach0, FRAMES) * (1 - ss(T, FRAMES + C.seat, FRAMES + C.settle1)), y: hy};
   // feet: the far foot stays in its taut stirrup under the far pad (it, the far hand and the pad hold him); the near
   // foot loses its stirrup's anchor and drops, hanging in its loop below him; during the reach it comes forward under

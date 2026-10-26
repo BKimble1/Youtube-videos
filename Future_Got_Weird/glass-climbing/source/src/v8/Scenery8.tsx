@@ -130,6 +130,17 @@ export const Facade5: React.FC<{id: string; k: number; detail?: number}> = ({id,
           );
         }),
       )}
+      {/* the floor fins (ledges): a front face, FIN_D out from the glass, over the glass bays (V8 QA: drawn before the
+          piers, so a fin's end stops at the brick instead of showing as a grey block on it in the oblique view) */}
+      {FLOORS5.map((y, i) =>
+        BAYS.map(([z0, z1], j) => (
+          <Inked key={`fn${i}-${j}`} w={2.2 * k}>
+            <path d={quad(q(y, z0, FIN_D), q(y, z1, FIN_D), q(y + 34, z1, FIN_D), q(y + 34, z0, FIN_D))} fill="#C9D2D8" />
+            <path d={quad(q(y, z0, 0), q(y, z0, FIN_D), q(y + 34, z0, FIN_D), q(y + 34, z0, 0))} fill="#8E9BA3" />
+            <path d={`M${P(q(y, z0, FIN_D))} L${P(q(y, z1, FIN_D))}`} stroke="#F2F6F8" strokeWidth={fmt(3 * k)} opacity={0.9} />
+          </Inked>
+        )),
+      )}
       {/* the brick piers: coursing, a shadowed return on their far side, an aluminium channel where the glass meets them */}
       {PIERS.map((z0, i) => (
         <g key={`pr${i}`}>
@@ -148,16 +159,6 @@ export const Facade5: React.FC<{id: string; k: number; detail?: number}> = ({id,
           ))}
         </g>
       ))}
-      {/* the floor fins (ledges): a front face, FIN_D out from the glass, over the glass bays */}
-      {FLOORS5.map((y, i) =>
-        BAYS.map(([z0, z1], j) => (
-          <Inked key={`fn${i}-${j}`} w={2.2 * k}>
-            <path d={quad(q(y, z0, FIN_D), q(y, z1, FIN_D), q(y + 34, z1, FIN_D), q(y + 34, z0, FIN_D))} fill="#C9D2D8" />
-            <path d={quad(q(y, z0, 0), q(y, z0, FIN_D), q(y + 34, z0, FIN_D), q(y + 34, z0, 0))} fill="#8E9BA3" />
-            <path d={`M${P(q(y, z0, FIN_D))} L${P(q(y, z1, FIN_D))}`} stroke="#F2F6F8" strokeWidth={fmt(3 * k)} opacity={0.9} />
-          </Inked>
-        )),
-      )}
       {/* the parapet */}
       <Inked w={3 * k}>
         <path d={band(top - 420, top, zf, zn)} fill="#D7DDE1" />

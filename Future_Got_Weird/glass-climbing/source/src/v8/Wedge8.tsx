@@ -623,15 +623,17 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
     <g>
       {bg && <path d={`M${f.p({x: v.x0, y: v.y0})} L${f.p({x: x1, y: v.y0})} L${f.p({x: x1, y: v.y1})} L${f.p({x: v.x0, y: v.y1})} Z`} fill={WCOL.ground} />}
       {st.surface === 'glass' ? <GlassBody id={id} f={f} v={v} ink={ink} z={z} /> : <BrickBody id={id} f={f} v={v} ink={ink} z={z} />}
-      {/* where the silicone truly touches: an unobtrusive darker band in the surface along the flat strip (the bright
-          air-glass edge goes out there: optical contact) */}
+      {/* where the silicone truly touches: a darker band on the surface line along the flat strip (the bright air-glass
+          edge goes out there: optical contact) */}
       {blades.map((b) =>
         b.contact ? (
           <path
             key={`c${b.i}`}
             d={(() => {
-              const bw = Math.min(3.4, 22 / z); // (V8 QA) wide enough to read at phone size
-              return `M${f.p({x: 0, y: b.contact.y0})} L${f.p({x: 0, y: b.contact.y1})} L${f.p({x: -bw, y: b.contact.y1 - bw * 0.3})} L${f.p({x: -bw, y: b.contact.y0 + bw * 0.3})} Z`;
+              // (V8 QA) a straight band ON the surface line (straddling it, the wedge's strip covering its outer half):
+              // the contact reads on the face, never as a mark inside the glass
+              const bw = Math.min(1.6, 12 / z);
+              return `M${f.p({x: 0.45 * bw, y: b.contact.y0})} L${f.p({x: 0.45 * bw, y: b.contact.y1})} L${f.p({x: -0.55 * bw, y: b.contact.y1})} L${f.p({x: -0.55 * bw, y: b.contact.y0})} Z`;
             })()}
             fill={st.surface === 'glass' ? WCOL.contact : '#5A2618'}
             opacity={b.contact.k * (1 - sm(300, 3000, z)) * (b.i === fi ? 1 : 1 - 0.15 * fk)}
