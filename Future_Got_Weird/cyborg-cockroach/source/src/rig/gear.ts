@@ -41,7 +41,8 @@ export const wiresOn = (f: Frame) => {
     local([13.5, 23.2, 6.5 * sd]),
     onShell(PRONOTUM, f, 0.66, Math.PI / 2 - 0.5 * sd, 0.8),
     onShell(PRONOTUM, f, 0.9, Math.PI / 2 - 0.62 * sd, 0.8),
-    {p: toW(f, [33.2, 12.2, 5.0 * sd]), n: toW({...f, o: [0, 0, 0]}, [0.7, 0.2, 0.6 * sd]), behindPro: false},
+    {p: toW(f, [33.4, 11.4, 4.9 * sd]), n: toW({...f, o: [0, 0, 0]}, [0.7, 0.2, 0.6 * sd]), behindPro: false},
+    {p: toW(f, [34.0, 10.4, 4.5 * sd]), n: toW({...f, o: [0, 0, 0]}, [0.7, 0.2, 0.6 * sd]), behindPro: false},
   ];
   const cer = (sd: 1 | -1): WirePt[] => [
     local([-12.5, 23.0, 6.8 * sd], true),

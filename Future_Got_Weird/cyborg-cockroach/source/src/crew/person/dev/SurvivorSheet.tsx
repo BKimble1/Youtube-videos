@@ -9,7 +9,7 @@
 import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {Survivor, survivorLayout, SurvivorProps} from '../Survivor';
-import {SurvivorOpts} from '../survivor';
+import {SurvivorOpts} from '../survivorRig';
 
 const PAPER = '#EFE6D2', FLOOR = '#D8CDB8', FLOOR_LINE = '#C2B59D', TXT = '#3F5560', SLAB = '#9A9A96', SLAB_TOP = '#B4B3AE', INK = '#162A32';
 type Place = SurvivorOpts & {x: number; y: number; scale: number};
@@ -77,22 +77,23 @@ const placeAt = (p: Omit<Place, 'x' | 'y'>, key: 'head' | 'nearPalm' | 'eyeMid',
   return {...p, x: cx - q.x, y: cy - q.y};
 };
 
-/** placeholder rubble slab over her lower body: a concrete box resting on her lower back, its front edge across her
- *  at card-local z = edgeZ (behind the ribs), with a notch where her body passes under it. Built in her card-local u
- *  and projected with the layout's point(), so it sits in the same floor space. */
-const Slab: React.FC<{p: Place; edgeZ?: number}> = ({p, edgeZ = -78}) => {
-  const pt = survivorLayout(p).point;
-  const x0 = -230, x1 = 260, z0 = -520, top = 104, back = 64; // back: the top of her back under the edge
-  const P = (pts: [number, number, number][]) => pts.map(([x, y, z]) => pt(x, y, z)).map((q) => `${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' ');
-  const front = P([[x0, 0, edgeZ], [-74, 0, edgeZ], [-66, back, edgeZ], [66, back, edgeZ], [74, 0, edgeZ], [x1, 0, edgeZ], [x1, top, edgeZ], [x0, top, edgeZ]]);
-  const side = P([[x0, 0, z0], [x0, 0, edgeZ], [x0, top, edgeZ], [x0, top, z0]]);
-  const lid = P([[x0, top, z0], [x0, top, edgeZ], [x1, top, edgeZ], [x1, top, z0]]);
+/** placeholder rubble slab over her lower body, the recommended way: its leading edge is the vertical screen line
+ *  layout.cutAt(z).x (a slab face seen edge-on), it rests on her lower back and recedes along her body; drawn in the
+ *  `between` slot with cutX = that x. */
+const Slab: React.FC<{p: Place; z?: number}> = ({p, z = -70}) => {
+  const L = survivorLayout(p);
+  const c = L.cutAt(z), k = p.scale;
+  const g0 = L.ground(0, z), g1 = L.ground(0, z - 400);
+  const gl = Math.hypot(g1.x - g0.x, g1.y - g0.y) || 1;
+  const bk = {x: (g1.x - g0.x) / gl, y: (g1.y - g0.y) / gl}; // receding along her body, on screen
+  const far = 4000, topY = c.back - 34 * k, botY = Math.max(c.floor, c.belly) + 6 * k, lip = 22 * k;
+  const P = (pts: {x: number; y: number}[]) => pts.map((q) => `${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' ');
   const st = {stroke: INK, strokeWidth: 3, strokeLinejoin: 'round' as const};
+  const A = {x: c.x, y: topY}, B = {x: c.x, y: botY};
   return (
     <g>
-      <polygon points={lid} fill={SLAB_TOP} {...st} />
-      <polygon points={side} fill="#868682" {...st} />
-      <polygon points={front} fill={SLAB} {...st} />
+      <polygon points={P([A, B, {x: B.x + bk.x * far, y: B.y + bk.y * far}, {x: A.x + bk.x * far, y: A.y + bk.y * far}])} fill={SLAB} {...st} />
+      <polygon points={P([A, {x: A.x - lip * 0.6, y: A.y - lip}, {x: A.x - lip * 0.6 + bk.x * far, y: A.y - lip + bk.y * far}, {x: A.x + bk.x * far, y: A.y + bk.y * far}])} fill={SLAB_TOP} {...st} />
     </g>
   );
 };
@@ -128,24 +129,20 @@ export const SurvivorSheet: React.FC<{page: string; probe?: Partial<SurvivorProp
     });
   }
   if (page === 'face') {
-    // face strip, 2 x 6 panels framed on the head (scale 2.6 so a whole head fits; the true close-up is page frameC)
-    const W = 540, H = 320;
+    // face strip: 2 x 4 panels at scale 2.8, framed on the eyes (the full-frame close-up is page frameC)
+    const W = 540, H = 480;
     const cells: [string, SurvivorOpts][] = [
-      ['recog 0 (alarm)', {...act(0)}],
+      ['recog 0 (alarm, recoil 1)', {...act(0)}],
       ['recog 0.25', {...act(0.25)}],
       ['recog 0.5', {...act(0.5)}],
       ['recog 0.75', {...act(0.75)}],
-      ['recog 1', {...act(1)}],
-      ['recog 1 exhale 1', {...act(1), exhale: 1}],
-      ['alarm blink 0.5', {...act(0), blink: 0.5}],
-      ['alarm blink 1', {...act(0), blink: 1}],
-      ['recog blink 1', {...act(1), blink: 1}],
-      ['recog 0, recoil 0', {...act(0), recoil: 0}],
-      ['recog 1, gaze ahead', {...act(1), gx: 0.6, gy: 0}],
-      ['recog 1, dust 0', {...act(1), dust: 0}],
+      ['recog 1 (cautious recognition)', {...act(1)}],
+      ['recog 1 + exhale 1', {...act(1), exhale: 1}],
+      ['recog 0 + blink 0.5', {...act(0), blink: 0.5}],
+      ['recog 1 + blink 1', {...act(1), blink: 1}],
     ];
     cells.forEach(([s, o], i) => {
-      const p = placeAt({scale: 2.0, t: 0, ...o}, 'head', W / 2 - 40, H / 2 - 20);
+      const p = placeAt({scale: 2.8, t: 0, ...o}, 'eyeMid', W / 2 + 20, H / 2 + 10);
       out.push(<Panel key={i} x={(i % 2) * W} y={Math.floor(i / 2) * H} w={W} h={H} label={s}><Fig id={`f${i}`} p={p} /></Panel>);
     });
   }
@@ -166,12 +163,33 @@ export const SurvivorSheet: React.FC<{page: string; probe?: Partial<SurvivorProp
     const p = placeAt(base, 'head', 640, 190);
     const L = survivorLayout(p);
     out.push(<Panel key="a" x={0} y={0} w={1080} h={H} label="uncovered (legs drawn)"><Fig id="s0" p={p} /></Panel>);
-    out.push(<Panel key="b" x={0} y={H} w={1080} h={H} label="slab in `between` + cutZ -78 (far arm, chest, head over it)"><Fig id="s1" p={p} extra={{between: <Slab p={p} />, cutZ: -78}} /></Panel>);
-    const cut = L.point(0, 0, -78).x;
+    out.push(<Panel key="b" x={0} y={H} w={1080} h={H} label="slab in `between` + cutX = cutAt(-70).x (far arm, chest, head over it)"><Fig id="s1" p={p} extra={{between: <Slab p={p} z={-70} />, cutX: L.cutAt(-70).x}} /></Panel>);
+    const cut = L.cutAt(-70).x;
     out.push(<Panel key="c" x={0} y={2 * H} w={1080} h={H} label="hideLeftOf = slab edge x, hideLegs, no slab (shows the cut)">
       <Fig id="s2" p={p} extra={{hideLeftOf: cut, hideLegs: true}} />
       <line x1={cut} x2={cut} y1={0} y2={H} stroke="#E44" strokeWidth={2} strokeDasharray="8 6" />
     </Panel>);
+  }
+  if (page === 'handzoom') {
+    // the near hand at 2x close-up scale (outline check)
+    const H = 640;
+    [0, 0.5, 1].forEach((ho, i) => {
+      const p = {...placeAt({scale: 9, t: 0, recog: ho, recoil: 0}, 'nearPalm', 540, H / 2), handOpen: ho};
+      out.push(<Panel key={i} x={0} y={i * H} w={1080} h={H} label={`handOpen ${ho} at scale 9`}><Fig id={`z${i}`} p={p} bug={false} /></Panel>);
+    });
+  }
+  if (page === 'breath') {
+    // breathing over one cycle (3.4 s) at alarm and at recognition: the guide line is the t = 0 shoulder height
+    const W = 540, H = 480;
+    [0, 1].forEach((r, c) => [0, 0.85, 1.7, 2.55].forEach((t, i) => {
+      const p = {...placeAt({scale: 2.4, t: 0, ...act(r)}, 'head', 300, 170), t};
+      const p0 = survivorLayout({...p, t: 0}), L = survivorLayout(p);
+      out.push(<Panel key={`${c}${i}`} x={c * W} y={i * H} w={W} h={H} label={`recog ${r}  t ${t}  shoulders dy ${(L.shoulders.y - p0.shoulders.y).toFixed(1)} px`}>
+        <Fig id={`b${c}${i}`} p={p} />
+        <line x1={0} x2={W} y1={p0.shoulders.y} y2={p0.shoulders.y} stroke="#E44" strokeWidth={1.5} strokeDasharray="6 5" />
+        <line x1={0} x2={W} y1={p0.head.y} y2={p0.head.y} stroke="#E44" strokeWidth={1.5} strokeDasharray="6 5" />
+      </Panel>);
+    }));
   }
   if (page === 'frameM' || page === 'frameC') {
     const close = page === 'frameC';
@@ -181,7 +199,7 @@ export const SurvivorSheet: React.FC<{page: string; probe?: Partial<SurvivorProp
     out.push(<g key="fr">
       <rect width={1080} height={1920} fill="#2B2722" />
       <Floor p={p} x0={-1200} x1={1200} z0={-1500} z1={1500} />
-      <Fig id="fr" p={p} floor={false} extra={{between: <Slab p={p} />, cutZ: -78}} />
+      <Fig id="fr" p={p} floor={false} extra={{between: <Slab p={p} z={-70} />, cutX: L.cutAt(-70).x}} />
       <Lbl x={30} y={60} s={close ? 'close-up: scale 4.8, recog 1' : 'medium: scale 2.5, recog 0.5'} size={30} />
       <line x1={0} x2={1080} y1={L.anchor.y} y2={L.anchor.y} stroke="#E44" strokeWidth={1} strokeDasharray="6 6" />
       <circle cx={L.anchor.x} cy={L.anchor.y} r={6} fill="none" stroke="#E44" strokeWidth={2} />

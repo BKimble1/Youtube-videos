@@ -15,7 +15,9 @@ const Placeholder = (id: string): React.FC<ShotProps> => ({lf, n}) => (
 
 // built shots (the rest show a labelled placeholder until they exist)
 import {S01} from './S01';
-const REG: Record<string, React.FC<ShotProps>> = {S01};
+import {S02} from './S02';
+import {S03} from './S03';
+const REG: Record<string, React.FC<ShotProps>> = {S01, S02, S03};
 
 export const SHOTS: Shot[] = SHOT_FRAMES.map(([id, from], i) => ({id, from, to: i + 1 < SHOT_FRAMES.length ? SHOT_FRAMES[i + 1][1] : FRAMES, C: REG[id] ?? Placeholder(id)}));
 export const shotAt = (f: number) => SHOTS.find((s) => f >= s.from && f < s.to) ?? SHOTS[SHOTS.length - 1];

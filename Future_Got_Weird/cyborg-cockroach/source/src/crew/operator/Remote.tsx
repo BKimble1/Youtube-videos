@@ -6,7 +6,7 @@
 // z up out of the face) and drawn with a simple tilt projection, so one model serves the face-on close-up and the
 // steep view in the operator's hand. The fire button's cap travels down into its guard when pressed.
 import React from 'react';
-import {INK, Inked, InkLine, InkPath, Deco, useInk} from '../../lib/ink';
+import {Inked, InkLine, InkPath, Deco} from '../../lib/ink';
 import {lit, mix, shade} from '../../lib/color';
 import {add, clamp, fmt, mul, P, V, rad, sub, dot} from '../../lib/math';
 import {Glow, LIGHT, Lin} from '../../lib/shade';
@@ -19,7 +19,7 @@ export const REMOTE = {
   r: 9,
   dpad: {x: -17, y: 1.5, arm: 10, w: 3.7, h: 1.4, well: 13},
   btn: {x: 17, y: 1.5, cap: 7.4, hole: 8.6, ring: 10.6, ringH: 1.8, rest: 4.6, pressed: 0.5},
-  led: {x: 28.5, y: -11.5, r: 1.7},
+  led: {x: -5, y: -12.6, r: 1.7},
   ant: {x: -23, len: 11, r0: 2.9, r1: 2.3, lean: 22},
 };
 export const REMOTE_COL = {body: '#E9EDF1', side: '#9AA6B2', fire: '#E0393E', armed: '#3DDC84', fired: '#FFB347', dpad: '#5B6976', ring: '#C5CDD5', ant: '#33404B'};
@@ -95,6 +95,9 @@ const hull = (pts: V[]): V[] => {
   return [...lo.slice(0, -1), ...up.slice(0, -1)];
 };
 
+/** the face's outline on screen (closed SVG path), e.g. to clip a shadow cast onto the remote */
+export const remoteFacePath = (v: RemoteView) => poly(rrect(0, 0, REMOTE.L / 2, REMOTE.W / 2, REMOTE.r).map(([x, y]) => remotePt(v, x, y, 0)));
+
 type Props = {
   id: string;
   view: RemoteView;
@@ -102,7 +105,7 @@ type Props = {
   press?: number;
   /** status LED: 'armed' green, 'fired' amber, or 0..1 between them */
   led?: LedArg;
-  /** contour width (as an <Inked> w); default 0.9 k */
+  /** contour width (as an <Inked> w); default 3.5 k (the crew figure's hand contour for a remote in his hand) */
   ink?: number;
   /** LED glow strength multiplier */
   glow?: number;
@@ -111,11 +114,10 @@ type Props = {
 };
 
 export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow = 1, noAntenna}) => {
-  const pass = useInk().pass;
   const R = REMOTE;
   const C = REMOTE_COL;
   const k = v.k;
-  const w = ink ?? 0.9 * k;
+  const w = ink ?? 3.5 * k;
   const st = Math.sin(rad(v.tilt));
   const pr = (pts: M[], z: number) => pts.map(([x, y]) => remotePt(v, x, y, z));
   const sweep = (pts: M[], z0: number, z1: number) => hull([...pr(pts, z0), ...pr(pts, z1)]);
@@ -131,8 +133,7 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
   const leftEnd = remotePt(v, -R.L / 2, R.W / 2, -R.T / 2);
   const rightEnd = remotePt(v, R.L / 2, R.W / 2, -R.T / 2);
   const down = sub(remotePt(v, 0, 0, -R.T), ctr); // face -> bottom offset on screen
-  // the face's near edge (where it meets the side band): the lower half of its outline
-  const nearEdge = pr(face.filter(([, y]) => y > -R.r * 0.2), 0).sort((a, b) => dot(sub(a, b), {x: Math.cos(rad(v.rot)), y: Math.sin(rad(v.rot))}));
+  // the face's near edge (where it meets the side band): its outline from the right extreme round the near side
   const nearEdgeD = st > 0.02 ? (() => {
     const pts = pr(face, 0);
     // walk the outline from the left extreme to the right extreme along the near (+y) side
@@ -146,7 +147,6 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
     }
     return poly(out, false);
   })() : null;
-  void nearEdge;
 
   // antenna: from the middle of the top side, leaning up out of the face plane
   const la = rad(R.ant.lean);
@@ -159,8 +159,6 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
   const aR1 = R.ant.r1 * k;
   const aN = {x: -aU.y, y: aU.x};
   const antD = `M${P(add(aBase, mul(aN, aR0)))} L${P(add(aTip, mul(aN, aR1)))} A${fmt(aR1)} ${fmt(aR1)} 0 0 0 ${P(add(aTip, mul(aN, -aR1)))} L${P(add(aBase, mul(aN, -aR0)))} Z`;
-  const collar = sweep(circle(R.ant.x, -R.W / 2 + 0.5, R.ant.r0 + 1.1, 24), -R.T * 0.45 - 0.01, -R.T * 0.45 + 0.01);
-  void collar;
 
   // d-pad: two crossing bars in a shallow round well
   const D = R.dpad;
@@ -211,8 +209,8 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
     <g>
       {!noAntenna && (
         <Inked w={w * 0.9}>
-          <InkPath d={antD} fill="none" />
-          {pass !== 'ink' && (
+          <InkPath d={antD} fill={C.ant} />
+          <Deco>
             <g>
               <defs>
                 <linearGradient id={`${id}-an`} gradientUnits="userSpaceOnUse" x1={fmt(add(aBase, mul(aN, aR0)).x)} y1={fmt(add(aBase, mul(aN, aR0)).y)} x2={fmt(add(aBase, mul(aN, -aR0)).x)} y2={fmt(add(aBase, mul(aN, -aR0)).y)}>
@@ -224,7 +222,7 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
               <path d={antD} fill={`url(#${id}-an)`} />
               <path d={`M${P(add(add(aBase, mul(aU, 2 * k)), mul(aN, (dot(aN, LIGHT) > 0 ? 1 : -1) * aR0 * 0.45)))} L${P(add(add(aTip, mul(aU, -1 * k)), mul(aN, (dot(aN, LIGHT) > 0 ? 1 : -1) * aR1 * 0.45)))}`} stroke="#FFFFFF" strokeOpacity={0.45} strokeWidth={fmt(0.7 * k)} strokeLinecap="round" />
             </g>
-          )}
+          </Deco>
         </Inked>
       )}
       {/* the body: side band, then the face */}
@@ -315,7 +313,6 @@ export const Remote: React.FC<Props> = ({id, view: v, press = 0, led, ink, glow 
         <Glow id={`${id}-lg`} c={ledC} r={R.led.r * k * 3.2} color={ledCol} alpha={0.55 * glow} />
         <circle cx={fmt(ledC.x - 0.55 * k)} cy={fmt(ledC.y - 0.55 * k)} r={fmt(0.45 * k)} fill="#FFFFFF" opacity={0.9} />
       </Deco>
-      {void INK}
     </g>
   );
 };

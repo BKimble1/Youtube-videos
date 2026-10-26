@@ -13,7 +13,7 @@ import {add, clamp, fmt, lerp, mul, P, perp, rad, rot, V} from '../../lib/math';
 import {Hand, HandPose} from './dc/Hand';
 import {Limb} from './dc/limb';
 import {COAT, GLOVE, H_REMOTE_CU} from './cast';
-import {capTopAt, LedArg, Remote, REMOTE, remotePt, RemoteView} from './Remote';
+import {capTopAt, LedArg, Remote, REMOTE, remoteFacePath, remotePt, RemoteView} from './Remote';
 
 // layout at scale 1, in px relative to the anchor (the remote's face centre)
 /** px per mm of the remote at scale 1 (the remote is 560 px long) */
@@ -22,7 +22,7 @@ export const CU_K = 8;
 const HAND_MM = 82;
 const TILT = 35;
 const REMOTE_ROT = -8;
-/** the hand: wrist point and axis angle in the local frame */
+/** the hand: wrist point and axis angle in the local frame (palm toward the camera, fingers up-right) */
 const WRIST0: V = {x: 150, y: 295};
 const HAND_ANG = -84;
 /** the forearm's direction from the wrist (toward the elbow, out of frame lower right) */
@@ -152,7 +152,7 @@ export const RemoteCloseUp: React.FC<RemoteCloseUpProps> = (props) => {
   const IN = OUT * 0.72;
   const iw = IN * 0.9;
   const dir = {x: Math.cos(rad(ang)), y: Math.sin(rad(ang))};
-  // the forearm comes toward the camera from the lower right (wider toward the elbow); the glove's cuff covers the
+  // the forearm comes toward the camera from the lower left (wider toward the elbow); the glove's cuff covers the
   // wrist and runs a little way up the coat sleeve, so the palm's heel and the thumb's root read as glove, not sleeve
   const fdir = {x: Math.cos(rad(FORE_ANG + (props.rotation ?? 0))), y: Math.sin(rad(FORE_ANG + (props.rotation ?? 0)))};
   const wristBase = add(wrist, mul(dir, -0.02 * L));
@@ -184,19 +184,6 @@ export const RemoteCloseUp: React.FC<RemoteCloseUpProps> = (props) => {
     [chain.t2, chain.t3, chain.radii[4], chain.radii[5]],
   ];
   const edge = iw * 0.36 * 2 + 1;
-  const bodyClip = (() => {
-    // the remote's silhouette, for the thumb's shadow
-    const pts: V[] = [];
-    const R = REMOTE;
-    for (const z of [0, -R.T]) for (let i = 0; i < 48; i++) {
-      const a = (i / 48) * Math.PI * 2;
-      // a superellipse close to the rounded rectangle is enough for a soft shadow's clip
-      const cx = Math.sign(Math.cos(a)) * Math.pow(Math.abs(Math.cos(a)), 0.3) * (R.L / 2 - 0.5);
-      const cy = Math.sign(Math.sin(a)) * Math.pow(Math.abs(Math.sin(a)), 0.3) * (R.W / 2 - 0.5);
-      pts.push(remotePt(g.view, cx, cy, z));
-    }
-    return pts;
-  })();
   const sh = clamp(g.h / 24);
   const shR = chain.radii[5] * (1.25 + 0.9 * sh);
   return (
@@ -205,7 +192,7 @@ export const RemoteCloseUp: React.FC<RemoteCloseUpProps> = (props) => {
       <Remote id={`${id}-rm`} view={g.view} press={g.capPress} led={props.led} ink={iw} />
       <defs>
         <clipPath id={`${id}-bc`}>
-          <path d={`M${bodyClip.slice(0, 48).map((q) => `${fmt(q.x)},${fmt(q.y)}`).join(' L')} Z`} />
+          <path d={remoteFacePath(g.view)} />
         </clipPath>
         <mask id={`${id}-tm`}>
           {thumbCaps.map(([a, b, ra, rb], i) => (

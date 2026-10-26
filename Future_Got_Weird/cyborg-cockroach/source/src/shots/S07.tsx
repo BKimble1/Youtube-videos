@@ -9,7 +9,7 @@ import {V3, V2, add, sub, mul, lerp3, toW, dirW, norm, dot, Frame} from '../lib/
 import {clamp, lerp, sr, smoother, keys, noise1} from '../lib/ease';
 import {poseRoach, splinePath, plantedStop, Path, RoachPose} from '../rig/roach';
 import {Roach} from '../rig/Roach';
-import {Gear, GEAR_COL} from '../rig/Gear';
+import {Gear, GEAR_COL, lightW} from '../rig/Gear';
 import {PACK} from '../rig/gear';
 import {LabBackdrop, ArenaFloor} from '../sets/Lab';
 import {fmt, polyPath} from '../lib/g3';
@@ -71,32 +71,41 @@ export const remaining = (t: number, v: number, tA: number, tB: number) => {
 // ---------------------------------------------------------------------------------------------------------------
 /** lens position on the observer's body (front face of the lens glass) */
 export const LENS: V3 = [PACK.cam.c[0] + PACK.cam.h[0] + 1.4, PACK.cam.c[1], 0];
-export const OBS = {
-  v: 38, // mm/s
-  tA: 13.55, // starts to slow
-  tB: 14.45, // stopped (all six feet down)
-  endLens: [190, 62] as [number, number], // [x, z] of the lens at the stop
-  phiEnd: 21 * DEG, // heading at the stop (right of -x)
-  phiStart: 15 * DEG, // heading at the start of S07
+export type ObsParams = {
+  v: number; // walking speed (mm/s)
+  tA: number; // starts to slow
+  tB: number; // stopped (all six feet down)
+  endLens: [number, number]; // [x, z] of the lens at the stop
+  phiEnd: number; // heading at the stop (rad, right of -x)
+  phiStart: number; // heading through S07 (it turns left a little in S08, keeping the medic in view)
+  turn: [number, number]; // the turn happens over this distance before the stop (mm)
 };
-const OBS_TRAVEL = remaining(10.0, OBS.v, OBS.tA, OBS.tB) + 20; // path from (before) S07 start to the stop
-const obsPhi = (d: number) => lerp(OBS.phiEnd, OBS.phiStart, smoother(clamp(d / 150)));
-const OBS_END_BODY: [number, number] = [OBS.endLens[0] + Math.cos(OBS.phiEnd) * LENS[0], OBS.endLens[1] + Math.sin(OBS.phiEnd) * LENS[0]];
-export const OBS_PATH: HeadingPath = headingPath(OBS_END_BODY, obsPhi, OBS_TRAVEL + 80);
-export const obsS = (t: number) => OBS_PATH.sStop - remaining(t, OBS.v, OBS.tA, OBS.tB);
+export const OBS: ObsParams = {v: 38, tA: 13.4, tB: 14.4, endLens: [196, 80], phiEnd: 30 * DEG, phiStart: 45 * DEG, turn: [-4, 35]};
+/** the observer's walk for a parameter set: path, distance and pose as functions of time */
+export const observerRig = (P: ObsParams) => {
+  const travel = remaining(10.0, P.v, P.tA, P.tB) + 20; // path from (before) S07 start to the stop
+  const phi = (d: number) => lerp(P.phiEnd, P.phiStart, sr(d, P.turn[0], P.turn[1]));
+  const endBody: [number, number] = [P.endLens[0] + Math.cos(P.phiEnd) * LENS[0], P.endLens[1] + Math.sin(P.phiEnd) * LENS[0]];
+  const hp = headingPath(endBody, phi, travel + 80);
+  const sAt = (t: number) => hp.sStop - remaining(t, P.v, P.tA, P.tB);
+  const pose = (t: number): RoachPose => {
+    const br = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 0.85 + 1.3);
+    const stopped = sr(t, P.tB - 0.3, P.tB + 0.3);
+    return poseRoach({
+      path: hp.path, s: sAt(t), t, seed: 7, search: 0.75 + 0.2 * stopped,
+      offset: [0, -0.5 * stopped, 0],
+      pitch: -0.006 * (br - 0.5),
+      antL: {yaw: 0.6, pitch: 0.14}, antR: {yaw: 0.6, pitch: 0.14},
+      breathe: br,
+    });
+  };
+  return {path: hp, sAt, pose};
+};
+export const OBSERVER = observerRig(OBS);
+export const OBS_PATH: HeadingPath = OBSERVER.path;
+export const obsS = OBSERVER.sAt;
 /** the posed observer at time t (s) */
-export const obsPose = (t: number): RoachPose => {
-  const s = obsS(t);
-  const br = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 0.85 + 1.3);
-  const stopped = sr(t, OBS.tB - 0.3, OBS.tB + 0.3);
-  return poseRoach({
-    path: OBS_PATH.path, s, t, seed: 7, search: 0.75 + 0.2 * stopped,
-    offset: [0, -0.5 * stopped, 0],
-    pitch: -0.006 * (br - 0.5),
-    antL: {yaw: 0.6, pitch: 0.14}, antR: {yaw: 0.6, pitch: 0.14},
-    breathe: br,
-  });
-};
+export const obsPose = OBSERVER.pose;
 export const OBS_GEAR = {kind: 'camera' as const, loaded: false};
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -122,9 +131,11 @@ export const LensDetail: React.FC<{id: string; cam: Cam; f: Frame; glint: number
   const iris = ringPts(f, cx + 0.01, c, R * 0.52, cam);
   const pupil = ringPts(f, cx + 0.02, c, R * 0.26, cam);
   const gc = proj(cam, toW(f, c));
-  // bright arc on the upper-left of the glass (toward the key light) and a small hot spot
-  const hl = proj(cam, toW(f, [cx + 0.03, c[1] + R * 0.38, c[2] - R * 0.36]));
-  const hs = proj(cam, toW(f, [cx + 0.03, c[1] + R * 0.12, c[2] - R * 0.08]));
+  // highlights sit toward the fixed key light: the light direction laid into the plane of the glass
+  const Lw = lightW(cam);
+  const ly = dot(Lw, f.y), lz = dot(Lw, f.z), ll = Math.hypot(ly, lz) || 1;
+  const hl = proj(cam, toW(f, [cx + 0.03, c[1] + (R * 0.5 * ly) / ll, c[2] + (R * 0.5 * lz) / ll]));
+  const hs = proj(cam, toW(f, [cx + 0.03, c[1] + (R * 0.18 * ly) / ll, c[2] + (R * 0.18 * lz) / ll]));
   const w = Math.max(0.8, sc * 0.12);
   return (
     <g>
@@ -156,52 +167,62 @@ export const LensDetail: React.FC<{id: string; cam: Cam; f: Frame; glint: number
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-// Camera: locked off at a low front-left three-quarter, then one eased push toward the lens into the cut.
+// Camera: one move. It leads the walking insect at a low front-left three-quarter (travelling with its line of walk, so
+// the insect holds its place while the mat slides by), creeping in slowly; from "camera" it pushes in toward the lens and
+// is still travelling into it at the cut.
 // ---------------------------------------------------------------------------------------------------------------
 export const S07_T0 = 10.5, S07_T1 = 12.4;
 export const S07_CAMERA_T = word('camera', 0).start; // 11.71
-const PUSH0 = 11.88; // the push starts (eases in) and is still travelling at the cut
-export type S07CamSet = {az: number; el: number; R: number; f: number; tgt: V3; cy: number};
-/** the locked-off framing (world): around where the observer is at ~11.3 s */
-export const S07_LOCK: S07CamSet = {az: 50 * DEG, el: 5 * DEG, R: 250, f: 2200, tgt: [0, 0, 0], cy: 1040};
-const lockCam = (c: S07CamSet): Cam => {
-  // the aim point: the observer's body (mid-height) at 11.45 s; az measured from the observer's heading toward its left
-  const fr = obsPose(11.45).bodyFrame0;
-  const aim = add(toW(fr, [6, 14, 0]), c.tgt);
-  const h = fr.x, left = mul(fr.z, -1);
-  const dir = norm(add(mul(h, Math.cos(c.az)), mul(left, Math.sin(c.az))));
-  const eye = add(aim, add(mul(dir, c.R * Math.cos(c.el)), [0, c.R * Math.sin(c.el), 0]));
-  return lookAt(eye, aim, c.f, 540, c.cy);
+/** a framing relative to the observer's path frame: az from its heading toward its left, el up, R distance from aim */
+export type S07CamSet = {az: number; el: number; R: number; f: number; cy: number; aim: V3};
+export const S07_START: S07CamSet = {az: 32 * DEG, el: 8 * DEG, R: 175, f: 2000, cy: 1020, aim: [8, 13, 0]};
+export const S07_END: S07CamSet = {az: 12 * DEG, el: 26 * DEG, R: 21, f: 1300, cy: 900, aim: [LENS[0], LENS[1], 0]};
+const PUSH0 = S07_CAMERA_T - 0.16, PUSH1 = 12.9; // the push's eased curve, cut off at 12.4 while still moving
+/** camera progress 0..1: a slow creep through the shot plus the push (continuous velocity, no reversal) */
+export const s07Prog = (t: number) => {
+  const lin = clamp((t - S07_T0) / (S07_T1 - S07_T0));
+  const p = smoother(clamp((t - PUSH0) / (PUSH1 - PUSH0))) / smoother((S07_T1 - PUSH0) / (PUSH1 - PUSH0));
+  return 0.12 * lin + 0.88 * p;
 };
-/** the push: eye and aim move toward a point in front of the lens (following the walking insect), focal length grows */
-export const s07Cam = (t: number, c: S07CamSet = S07_LOCK): Cam => {
-  const L = lockCam(c);
-  const u = clamp((t - PUSH0) / (S07_T1 + 0.25 - PUSH0));
-  // ease in (smoother's first half): accelerating toward the cut, no stop and no reversal
-  const e = smoother(u * 0.62) / smoother(0.62);
-  if (e <= 0) return L;
-  const fr = obsPose(t).frame;
-  const lens = toW(fr, LENS);
-  // end view: in front of the lens, a little to its left and above, looking into it
-  const endDir = norm(dirW(fr, [Math.cos(22 * DEG), 0.16, -Math.sin(22 * DEG)]));
-  const endEye = add(lens, mul(endDir, 70));
-  const eye = lerp3(L.eye, endEye, e);
-  const aim0 = add(L.eye, mul(L.fwd, 250));
-  const aim = lerp3(aim0, add(lens, [0, -1.5, 0]), e);
-  return lookAt(eye, aim, lerp(c.f, 1500, e), 540, lerp(c.cy, 900, e));
+export const s07Cam = (t: number, a: S07CamSet = S07_START, b: S07CamSet = S07_END): Cam => {
+  const e = s07Prog(t);
+  const fr = obsPose(t).bodyFrame0; // the path frame (no gait bob or roll)
+  const az = lerp(a.az, b.az, e), el = lerp(a.el, b.el, e), R = a.R * Math.pow(b.R / a.R, e);
+  const aim = toW(fr, lerp3(a.aim, b.aim, e));
+  const dir = dirW(fr, [Math.cos(el) * Math.cos(az), Math.sin(el), -Math.cos(el) * Math.sin(az)]);
+  return lookAt(add(aim, mul(dir, R)), aim, lerp(a.f, b.f, e), 540, lerp(a.cy, b.cy, e));
+};
+
+/** trim a polyline where it comes closer than `near` mm to the camera plane (the close push passes over the antennae) */
+const nearTrim = (cam: Cam, pts: V3[], near = 7): V3[] => {
+  const out: V3[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const d = depth(cam, pts[i]);
+    if (d >= near) {
+      out.push(pts[i]);
+      continue;
+    }
+    if (i > 0) {
+      const d0 = depth(cam, pts[i - 1]);
+      out.push(lerp3(pts[i - 1], pts[i], (d0 - near) / (d0 - d)));
+    }
+    break;
+  }
+  return out.length >= 2 ? out : pts.slice(0, 1);
 };
 
 export const S07: React.FC<ShotProps & {k?: string; cam?: S07CamSet}> = ({f, k = '', cam: cs}) => {
   const t = f / FPS;
-  const cam = s07Cam(t, cs ?? S07_LOCK);
-  const pose = obsPose(t);
+  const cam = s07Cam(t, cs ?? S07_START);
+  const pose0 = obsPose(t);
+  const pose = {...pose0, antL: nearTrim(cam, pose0.antL), antR: nearTrim(cam, pose0.antR)};
   // the glint: the lens swings through the key light's reflection on "camera"
   const glint = Math.exp(-Math.pow((t - (S07_CAMERA_T + 0.14)) / 0.16, 2));
   const id = `s07${k}`;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <LabBackdrop id={`${id}b`} cam={cam} blur={16} />
-      <ArenaFloor id={`${id}f`} cam={cam} x0={-260} x1={620} z0={-240} z1={420} />
+      <ArenaFloor id={`${id}f`} cam={cam} x0={-200} x1={720} z0={-200} z1={560} />
       <Roach
         pose={pose}
         cam={cam}

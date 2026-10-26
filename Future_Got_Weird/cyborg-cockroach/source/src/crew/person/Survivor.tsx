@@ -1,5 +1,5 @@
 // <Survivor>: the Weird Crew "person" trapped prone in rubble, propped on her forearms, head raised, facing screen-right.
-// The skeleton, face and screen layout come from ./survivor.ts. The drawing is Crew4's own construction (./Crew.tsx,
+// The skeleton, face and screen layout come from ./survivorRig.ts. The drawing is Crew4's own construction (./Crew.tsx,
 // copied unchanged): the leg, pelvis, torso (flat trapezoid + one cel-shade tone), neck and stroke-limb code below is
 // Crew4's body code re-fed with the prone skeleton (only the parts the PERSON look uses: no coat, belt, pouch or badge);
 // the head is Crew4's Head4 itself (hair, face cap, eyes, brows, nose, mouth untouched) and the hands are its HandArt,
@@ -8,16 +8,19 @@
 // Draw order, fixed for a figure lying face-down and seen from her near (right) side:
 //   behind -> legs, pelvis -> far (left) arm -> torso (+ shirt dust) -> between -> neck -> near (right) arm -> head
 //   (+ face dust) -> front.
-// With cutZ (the card-local z of a slab's leading edge lying across her) the order becomes
-//   behind -> legs, pelvis, torso -> between (the slab) -> far arm -> the torso again, clipped to the part in front of
-//   cutZ -> neck -> near arm -> head -> front,
-// so a slab drawn in `between` covers her hips and lower back but never her far arm, chest, near arm or head.
+// With cutX (the screen x of a slab's leading edge lying across her) the order becomes
+//   behind -> legs, pelvis, torso -> between (the slab) -> far arm -> the torso again, clipped to x > cutX -> neck ->
+//   near arm -> head -> front,
+// so a slab drawn in `between` covers her hips and lower back but never her far arm, chest, near arm or head. The
+// slab's edge is a vertical screen line: in this orthographic card view that is a slab face seen edge-on (a plane
+// containing the view direction), so "in front of the slab" is exactly "x > cutX". The slab must not reach right of
+// cutX where it overlaps her torso (the redrawn torso would cut it with a straight line).
 // The legs, pelvis and torso can also be clipped (bodyClip / hideLeftOf); arms and head are never clipped.
 import React from 'react';
 import {BODY_P, Body4, INK, Look4, PERSON} from './cast';
 import {HandArt, Head4} from './Crew';
 import {add3, cardPt, inkW, mul3, pathOf, V3} from './geo';
-import {FlatHand, handMap, SurvivorOpts, survivorRig} from './survivor';
+import {FlatHand, handMap, SurvivorOpts, survivorRig} from './survivorRig';
 
 const RAD = Math.PI / 180;
 const clamp = (x: number, a = 0, b = 1) => Math.min(b, Math.max(a, x));
@@ -31,11 +34,13 @@ export type SurvivorProps = SurvivorOpts & {
   /** screen px of the anchor: the floor point midway between her elbow contacts */
   x: number;
   y: number;
-  /** px per rig unit (u). 1 u = 3.75 mm. Medium shot ~2.2-2.8, close-up ~4.5-5.5 */
+  /** px per rig unit (u); 1 u = 3.75 mm. Medium shot (head + shoulders + forearms = 45-60 % of 1080 px) ~2.7-3.6,
+   *  close-up (face + near hand ~70 %) ~4.5 */
   scale: number;
   look?: Look4;
   b?: Body4;
-  /** render slots: behind everything / after the torso, before neck, near arm and head / over everything */
+  /** render slots: behind everything / after the torso (before neck, near arm, head; with cutX also before the far arm
+   *  and the redrawn front of the torso) / over everything */
   behind?: React.ReactNode;
   between?: React.ReactNode;
   front?: React.ReactNode;
@@ -45,8 +50,9 @@ export type SurvivorProps = SurvivorOpts & {
   hideLeftOf?: number;
   /** skip the legs entirely (they are under the slab) */
   hideLegs?: boolean;
-  /** card-local z (u; 0 = elbow line, pelvis at -100, shoulders at -12) of a slab edge lying across her: see draw order */
-  cutZ?: number;
+  /** screen x of a slab's leading edge lying across her (see draw order); survivorLayout(...).cutAt(z).x gives it for a
+   *  body position z (use z <= -40: behind the shoulders, so both arms stay in front of the slab) */
+  cutX?: number;
 };
 
 export const Survivor: React.FC<SurvivorProps> = (props) => {
@@ -83,7 +89,7 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
     };
   };
 
-  // ---- a hand lying flat on the floor (the cheated top view, see handMap in ./survivor.ts)
+  // ---- a hand lying flat on the floor (the cheated top view, see handMap in ./survivorRig.ts)
   const flatHand = (h: FlatHand) => {
     const m = handMap(h, cd);
     return (
@@ -115,37 +121,25 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
     );
   };
 
-  // ---- torso (Crew4 torso: a flat trapezoid along the projected spine, one cel-shade tone on the side away from the key)
-  const wb = P(add3(j.P, mul3(j.u, -14))), tp = P(add3(j.S, mul3(j.u, 22)));
-  const ax = {x: wb.x - tp.x, y: wb.y - tp.y};
-  const alen = Math.hypot(ax.x, ax.y) || 1;
-  const ad = {x: ax.x / alen, y: ax.y / alen};
-  const n = {x: -ad.y, y: ad.x};
-  const half = (L: V3, F: V3, w: number, dd: number) => {
-    const ls = dirScr(L), fs = dirScr(F);
-    return w * Math.abs(ls.x * n.x + ls.y * n.y) + dd * Math.abs(fs.x * n.x + fs.y * n.y);
-  };
-  const wS = half(j.Lc, j.Fc, b.torsoW, b.torsoD) * k, wW = half(j.Lh, j.Fh, b.torsoWh, b.torsoD * 0.9) * k;
-  const T = (along: number, across: number) => ({x: tp.x + ad.x * along + n.x * across, y: tp.y + ad.y * along + n.y * across});
-  const L = alen, wH = wW;
+  // ---- torso (Crew4 torso: a flat trapezoid along the projected spine; frame from survivorRig)
+  const {T, alen: L, wS, wW, pW} = R.torso;
+  const wH = wW, n = R.torso.n;
   const torsoPts = [T(24 * k, -wS), T(2 * k, -wS - 4 * k), T(0, -wS + 26 * k), T(0, wS - 26 * k), T(2 * k, wS + 4 * k), T(24 * k, wS), T(L, wH), T(L + 12 * k, 0), T(L, -wH)];
   const q = (p: {x: number; y: number}) => `${f1(p.x)} ${f1(p.y)}`;
   const torsoD = `M ${q(torsoPts[0])} Q ${q(torsoPts[1])} ${q(torsoPts[2])} L ${q(torsoPts[3])} Q ${q(torsoPts[4])} ${q(torsoPts[5])} L ${q(torsoPts[6])} Q ${q(torsoPts[7])} ${q(torsoPts[8])} Z`;
-  // the cel-shade tone goes on the floor side (her chest faces the floor), not Crew4's away-from-key side
-  const shadeSide = Math.sign(n.y || 1);
+  // the cel-shade tone goes on the floor (belly) side, since her chest faces the floor, not Crew4's away-from-key side
   const shadeW = 0.34;
-  const shadePts = [T(-4 * k, shadeSide * wS * (1 - shadeW * 2)), T(-4 * k, shadeSide * (wS + 10 * k)), T(L + 14 * k, shadeSide * (wH + 10 * k)), T(L + 14 * k, shadeSide * wH * (1 - shadeW * 2))];
+  const shadePts = [T(-4 * k, wS * (1 - shadeW * 2)), T(-4 * k, wS + 10 * k), T(L + 14 * k, wH + 10 * k), T(L + 14 * k, wH * (1 - shadeW * 2))];
   const pelvisC = P(add3(j.P, mul3(j.u, 2)));
-  const pW = half(j.Lh, j.Fh, b.hipW + b.legW * 0.5, b.torsoD * 0.8) * k;
   const legs = props.hideLegs ? [] : [leg(1), leg(-1)].sort((a, c) => a.d - c.d);
   const neckA = P(add3(j.S, mul3(j.u, 4))), neckB = P(add3(j.Hc, mul3(j.hy, -30)));
   const rotN = (Math.atan2(n.y, n.x) * 180) / Math.PI;
   // shirt dust: a few soft smudges and specks, placed in torso coordinates (fraction along the spine, fraction across)
   const shirtDust = dust > 0 ? (
     <g>
-      {([[0.28, 0.35, 22, 9], [0.55, -0.25, 26, 10], [0.75, 0.5, 16, 7], [0.42, -0.62, 12, 6]] as const).map(([a, c, rx, ry], i) => {
+      {([[0.28, 0.35, 15, 5.5], [0.55, -0.25, 18, 6], [0.75, 0.5, 11, 4.5], [0.42, -0.62, 9, 4]] as const).map(([a, c, rx, ry], i) => {
         const p = T(L * a, c * wS);
-        return <ellipse key={i} cx={p.x} cy={p.y} rx={rx * k} ry={ry * k} fill={DUST} opacity={0.3 * dust} transform={`rotate(${f1(rotN + 90 + i * 17)} ${f1(p.x)} ${f1(p.y)})`} />;
+        return <ellipse key={i} cx={p.x} cy={p.y} rx={rx * k} ry={ry * k} fill={DUST} opacity={0.24 * dust} transform={`rotate(${f1(rotN + 90 + i * 17)} ${f1(p.x)} ${f1(p.y)})`} />;
       })}
       {([[0.2, 0.1], [0.34, 0.58], [0.5, 0.12], [0.63, -0.5], [0.83, 0.2], [0.66, 0.34]] as const).map(([a, c], i) => {
         const p = T(L * a, c * wS);
@@ -154,7 +148,7 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
     </g>
   ) : null;
 
-  // ---- face dust: a smudge on the near cheek and a small one at the temple, on Head4's own sphere mapping
+  // ---- face dust: two soft streaks and a speck on the near cheek, placed on Head4's own sphere mapping
   const hm = R.hm;
   const faceDust = dust > 0 ? (() => {
     const marks = ([[-40, -18, 11, 3.6, -14], [-30, -27, 6, 2.2, -8], [-50, -8, 1.8, 1.8, 0]] as const)
@@ -170,7 +164,7 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
     );
   })() : null;
 
-  // ---- the torso node (drawn once, or twice around a slab with cutZ)
+  // ---- the torso node (drawn once, or twice around a slab with cutX)
   const torso = (
     <g>
       <path d={torsoD} fill={look.shirt} />
@@ -181,13 +175,8 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
       <path d={torsoD} fill="none" stroke={INK} strokeWidth={ol} strokeLinejoin="round" />
     </g>
   );
-  // cutZ: the part of the torso in front of the slab edge = the trapezoid frame up to the spine point at that z
-  const cutClip = props.cutZ !== undefined ? (() => {
-    const c = P(R.spineAt(props.cutZ));
-    const along = (c.x - tp.x) * ad.x + (c.y - tp.y) * ad.y;
-    const big = 100000;
-    return `M ${q(T(-big, -big))} L ${q(T(along, -big))} L ${q(T(along, big))} L ${q(T(-big, big))} Z`;
-  })() : null;
+  // cutX: the part of the torso in front of the slab's edge-on leading face
+  const cutClip = props.cutX !== undefined ? `M ${f1(props.cutX)} -100000 L 100000 -100000 L 100000 100000 L ${f1(props.cutX)} 100000 Z` : null;
 
   // ---- body clip (legs, pelvis, torso only)
   const clipD = props.bodyClip ?? (props.hideLeftOf !== undefined ? `M ${f1(props.hideLeftOf)} -100000 L 100000 -100000 L 100000 100000 L ${f1(props.hideLeftOf)} 100000 Z` : null);
@@ -221,8 +210,9 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
 
 /** The survivor's screen layout (px) for the same props, without drawing: head, eyes, chin, mouth, elbows, wrists,
  *  near palm and fingertips, shoulders, pelvis/waist (for the slab edge), knees, feet, a floor spot for the insect,
- *  ground(x, z) to project any floor point and point(x, y, z) any point, both given in her card-local u. */
+ *  ground(x, z) to project any floor point and point(x, y, z) any point, both given in her card-local u, and
+ *  cutAt(z): {x, back, belly, floor} for a slab edge crossing her body at card-local z (pass x as cutX). */
 export const survivorLayout = (props: SurvivorOpts & {x: number; y: number; scale: number; b?: Body4}) => {
   const R = survivorRig(props, {x: props.x, y: props.y, scale: props.scale}, props.b ?? BODY_P);
-  return {...R.layout, ground: R.ground, point: R.point, face: R.face, upperErr: R.upperErr};
+  return {...R.layout, ground: R.ground, point: R.point, cutAt: R.cutAt, face: R.face, upperErr: R.upperErr};
 };

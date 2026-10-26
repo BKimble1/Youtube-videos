@@ -6,12 +6,16 @@
 // of pulses leaves the board and runs down that wire; when it arrives the electrode glows briefly, the left antenna
 // twitches and, in the last frames, the body starts to veer RIGHT (left antenna stimulated -> right turn).
 import React from 'react';
-import {Cam, lookAt, depth, proj} from '../lib/cam';
+import {Cam, lookAt, depth, proj, scaleAt} from '../lib/cam';
 import {fmt} from '../lib/g3';
-import {V3, add, mul, toW, Frame} from '../lib/v3';
+import {V3, V2, add, sub, mul, norm, dot, toW, toL, lerp3, len, Frame} from '../lib/v3';
 import {clamp, lerp, ramp, smoother, sr, noise1} from '../lib/ease';
-import {poseRoach, splinePath, straightPath, Path} from '../rig/roach';
-import {Roach} from '../rig/Roach';
+import {poseRoach, splinePath, straightPath, Path, LegPose, RoachPose, PLATES, PRONOTUM} from '../rig/roach';
+import {Roach, RoachDrawOpts, CHITIN} from '../rig/Roach';
+import {Inked, Deco} from '../lib/ink';
+import {Capsule} from '../lib/shade';
+import {shade, mix} from '../lib/color';
+import type {LoftDef} from '../lib/loft';
 import {Gear} from '../rig/Gear';
 import {LabBackdrop, ArenaFloor} from '../sets/Lab';
 import {ShotProps} from './index';
@@ -23,7 +27,8 @@ import {FPS, word} from '../timeline';
 // ---------------------------------------------------------------------------------------------------------------
 export const RUN_T0 = 5.0; // S04 start (s)
 export const RUN_X0 = 150; // body origin x at RUN_T0 (heading -x, z = 0)
-const S_OFF = 60; // the path starts this far behind, so the gait never samples it near arc length 0
+const S_OFF = 75; // the path starts this far behind (the gait never samples it near arc length 0); sets the gait phase:
+// the near front leg (L1) is in late stance, pulled back from the face, while the pulse arrives
 const V0 = 36; // mm/s, the slow walk of S04
 const V1 = 46; // mm/s after the stimulus (S06)
 const TV0 = 9.0, TV1 = 9.6; // speed-up window
@@ -37,22 +42,27 @@ export const runS = (t: number) => {
 };
 /** the stimulation times: pulse train 1 leaves the board on "electrical" and reaches the electrode by ~9.0 s */
 export const PULSE1 = {leave: word('electrical').start, arrive: word('pulses').start - 0.04};
-export const PULSE2 = {leave: 9.18, arrive: 9.36};
+export const PULSE2 = {leave: 9.1, arrive: 9.29};
 const S_TURN1 = runS(PULSE1.arrive + 0.02); // the turn starts as the first pulse arrives
 const S_TURN2 = runS(PULSE2.arrive + 0.02);
-/** heading change progress 0..1 (0 = heading -x, 1 = heading -z, a right turn) by distance */
-const turnH = (s: number) => 0.14 * sr(s, S_TURN1, S_TURN1 + 9) + 0.86 * sr(s, S_TURN2 - 4, S_TURN2 + 40);
+/** the body's heading change 0..1 (0 = heading -x, 1 = heading -z: a right turn of 90 degrees) by distance walked */
+const turnBody = (s: number) => 0.22 * sr(s, S_TURN1, S_TURN1 + 4.5) + 0.78 * sr(s, S_TURN2 - 4, S_TURN2 + 40);
+/** the path (and so the planted feet) follows the body's heading a few millimetres later: the body pivots over its
+ *  planted feet first, then the steps carry it round (both are monotonic, so the turn never reverses) */
+const TURN_LAG = 5;
+const turnPath = (s: number) => turnBody(s - TURN_LAG);
+export const bodyYawAdd = (s: number) => -(Math.PI / 2) * (turnBody(s) - turnPath(s));
 const RUN_PATH: Path = (() => {
   const pts: [number, number][] = [];
   let x = RUN_X0 + S_OFF, z = 0;
   const ds = 2;
   for (let s = 0; s <= 400; s += ds) {
     pts.push([x, z]);
-    const yaw = Math.PI - (Math.PI / 2) * turnH(s + ds / 2);
+    const yaw = Math.PI - (Math.PI / 2) * turnPath(s + ds / 2);
     x += Math.cos(yaw) * ds;
     z -= Math.sin(yaw) * ds;
   }
-  return splinePath(pts, 1400);
+  return splinePath(pts, 1600);
 })();
 export const RUN_STRAIGHT: Path = straightPath([RUN_X0 + S_OFF, 0, 0], Math.PI);
 export const runPath = RUN_PATH;
@@ -82,8 +92,8 @@ export const medicPose = (t: number) => {
   const br = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 0.9);
   const pose = poseRoach({
     path: RUN_PATH, s, t, seed: 3, search: 0.85,
-    pitch: -0.006 * (br - 0.5),
-    antL: {yaw: 0.58 + 0.22 * tw, pitch: 0.1 + 0.42 * tw, curl: 0.9 - 0.35 * tw},
+    pitch: -0.006 * (br - 0.5), yawAdd: bodyYawAdd(s),
+    antL: {yaw: 0.58 + 0.3 * tw, pitch: 0.1 + 0.55 * tw, curl: 0.9 - 0.45 * tw},
     antR: {yaw: 0.64},
     breathe: br,
   });
@@ -96,6 +106,97 @@ export const medicGear = (t: number) => {
 };
 
 // ---------------------------------------------------------------------------------------------------------------
+// Near legs at close range (local adaptation of rig/Roach.tsx's Leg). The shared Roach draws a near leg whole, on top
+// of the shell, which reads right from low cameras (S01) but, from above the margin, makes the femur look as if it grew
+// out of the side wall (and lets a front knee show through the pronotum). Here every leg is drawn behind the body
+// (legsBehind) and each near leg is drawn again on top only from where it leaves the body's plan footprint.
+// ---------------------------------------------------------------------------------------------------------------
+const loftW = (d: LoftDef, x: number) => {
+  const u = (x - d.x0) / (d.x1 - d.x0);
+  return u < 0 || u > 1 ? 0 : d.w(u);
+};
+const footW = (x: number) => Math.max(loftW(PLATES, x), loftW(PRONOTUM, x));
+const inFoot = (fr: Frame, p: V3, m = 0.4) => {
+  const q = toL(fr, p);
+  return Math.abs(q[2]) < footW(q[0]) + m;
+};
+const legOutward = (fr: Frame, p: LegPose): V3 => {
+  const fw = p.def.front ? 0.6 : p.def.coxa[0] < 0 ? -0.6 : 0;
+  return norm(add(mul(fr.z, p.def.side), mul(fr.x, fw)));
+};
+/** where along the leg chain (segment 0 femur, 1 tibia, 2 tarsus; fraction t) it leaves the footprint for good */
+const exitOf = (fr: Frame, p: LegPose): {seg: number; t: number} | null => {
+  const chain = [p.coxa, p.knee, p.ankle, p.foot];
+  const N = 24;
+  let last: {seg: number; i: number} | null = null;
+  for (let sg = 0; sg < 3; sg++) for (let i = 0; i <= N; i++) if (inFoot(fr, lerp3(chain[sg], chain[sg + 1], i / N))) last = {seg: sg, i};
+  if (!last) return {seg: 0, t: 0};
+  if (last.seg === 2 && last.i >= N) return null;
+  let seg = last.seg, lo = last.i / N, hi = (last.i + 1) / N;
+  if (last.i >= N) (seg += 1), (lo = 0), (hi = 1 / N);
+  // bisect the crossing so the redrawn part starts at a continuous place from frame to frame
+  for (let k = 0; k < 14; k++) {
+    const m = (lo + hi) / 2;
+    if (inFoot(fr, lerp3(chain[seg], chain[seg + 1], m))) lo = m;
+    else hi = m;
+  }
+  // step a little back under the margin so the redrawn part tucks under the shell edge
+  const segLen = len(sub(chain[seg + 1], chain[seg]));
+  return {seg, t: clamp(hi - 0.9 / Math.max(1, segLen))};
+};
+const LegOuter: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; from: {seg: number; t: number}}> = ({id, p, cam, inkW, from}) => {
+  const L = p.def;
+  const s = (q: V3) => scaleAt(cam, q);
+  const V = (q: V2) => ({x: q[0], y: q[1]});
+  const rF0 = L.rFem, rK0 = L.rFem * 0.78, rT0 = L.rTib * 0.8, rA0 = L.rTib * 0.55, rTa0 = 0.95, rFo0 = 0.55;
+  const tib = sub(p.ankle, p.knee);
+  const outw = norm(add(sub(p.knee, p.coxa), [0, -6, 0]));
+  const nSp = L.front ? 4 : 5;
+  const spines: [V2, V2][] = [];
+  for (let i = 1; i <= nSp; i++) {
+    const t = i / (nSp + 0.6);
+    if (from.seg > 1 || (from.seg === 1 && t < from.t + 0.04)) continue;
+    const base = add(p.knee, mul(tib, t));
+    const dir = norm(add(mul(norm(tib), 0.55), mul(outw, 0.8)));
+    spines.push([proj(cam, base), proj(cam, add(base, mul(dir, L.front ? 3.6 + 0.6 * i : 2.8)))]);
+  }
+  const parts: React.ReactNode[] = [];
+  const cap = (k: string, a: V3, b: V3, ra: number, rb: number, color: string, spec: number) =>
+    parts.push(<Capsule key={k} id={`${id}-${k}`} a={V(proj(cam, a))} b={V(proj(cam, b))} ra={ra * s(a)} rb={rb * s(b)} color={color} spec={spec} />);
+  if (from.seg === 0) cap('fe', lerp3(p.coxa, p.knee, from.t), p.knee, lerp(rF0, rK0, from.t), rK0, CHITIN.leg, 0.35);
+  if (from.seg <= 1) cap('ti', from.seg === 1 ? lerp3(p.knee, p.ankle, from.t) : p.knee, p.ankle, from.seg === 1 ? lerp(rT0, rA0, from.t) : rT0, rA0, CHITIN.legDeep, 0.25);
+  cap('ta', from.seg === 2 ? lerp3(p.ankle, p.foot, from.t) : p.ankle, p.foot, from.seg === 2 ? lerp(rTa0, rFo0, from.t) : rTa0, rFo0, CHITIN.legDeep, 0);
+  const rA = rA0 * s(p.ankle);
+  return (
+    <Inked w={inkW} id={id}>
+      {parts}
+      <Deco>
+        {spines.map(([b, t], i) => (
+          <path key={i} d={`M${fmt(b[0])} ${fmt(b[1])} L${fmt(t[0])} ${fmt(t[1])}`} stroke={CHITIN.spine} strokeWidth={Math.max(1.2, rA * (L.front ? 0.8 : 0.6))} strokeLinecap="round" />
+        ))}
+      </Deco>
+    </Inked>
+  );
+};
+/** the shared Roach with near legs split at the body footprint (see above) */
+export const RoachSplit: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({pose, cam, o}) => {
+  const fr = pose.frame;
+  const sc = scaleAt(cam, fr.o);
+  const inkW = o.ink ?? Math.max(2.4, Math.min(8, sc * 0.42));
+  const camAbove = dot(norm(sub(cam.eye, fr.o)), fr.y) > 0.76;
+  const near = camAbove ? [] : pose.legs.filter((p) => dot(sub(cam.eye, p.coxa), legOutward(fr, p)) > 0);
+  return (
+    <g>
+      <Roach pose={pose} cam={cam} o={{...o, legsBehind: true}} />
+      {near.map((p) => {
+        const e = exitOf(fr, p);
+        return e ? <LegOuter key={p.def.name} id={`${o.id}-n${p.def.name}`} p={p} cam={cam} inkW={inkW * 0.85} from={e} /> : null;
+      })}
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------------------------------------------------------
 // Camera: one eased move. It rides with the insect's straight line of travel (no gait bob, and it does not turn with
 // the insect at the end) and slides forward relative to the body: rear of the backpack -> front of the tube -> the
 // left antenna electrode, lowering and swinging slightly round toward the front as it pushes in.
@@ -103,10 +204,11 @@ export const medicGear = (t: number) => {
 type CamKey = {tgt: V3; az: number; el: number; D: number; cy: number};
 const DEG = Math.PI / 180;
 export const S04_F = 1700;
+// (azimuth stays negative-to-zero: the eye never passes in front of the head, so the view is a near profile at the end)
 const KEYS: [number, CamKey][] = [
-  [0, {tgt: [-8, 22, -2], az: -25 * DEG, el: 32 * DEG, D: 85, cy: 640}],
-  [0.45, {tgt: [14, 20, -3], az: 5 * DEG, el: 28 * DEG, D: 82, cy: 700}],
-  [1, {tgt: [35, 14, -7], az: 30 * DEG, el: 14 * DEG, D: 70, cy: 840}],
+  [0, {tgt: [-5, 22, -2], az: -25 * DEG, el: 28 * DEG, D: 85, cy: 580}],
+  [0.45, {tgt: [19, 20, -3], az: -12 * DEG, el: 24 * DEG, D: 80, cy: 640}],
+  [1, {tgt: [33, 13, -6], az: -4 * DEG, el: 17 * DEG, D: 72, cy: 800}],
 ];
 // relative slide speed (arbitrary units): eases in, steady through phase A, rises for the push, eases out at the end
 const slideW = (t: number) => (0.55 * sr(t, 5.0, 5.8) + 1.5 * sr(t, 7.5, 8.3)) * (1 - sr(t, 8.55, 9.06));
@@ -195,7 +297,7 @@ export const S04: React.FC<ShotProps & {k?: string; cam?: Cam}> = ({f, k = '', c
       <DofFloor id={`${id}d`} cam={cam} body={pose.frame} blur={7}>
         <ArenaFloor id={`${id}f`} cam={cam} x0={-400} x1={420} z0={-420} z1={200} fade={520} />
       </DofFloor>
-      <Roach pose={pose} cam={cam} o={{id: `${id}r`, gear: <Gear id={`${id}g`} cam={cam} f={pose.frame} g={g} />}} />
+      <RoachSplit pose={pose} cam={cam} o={{id: `${id}r`, gear: <Gear id={`${id}g`} cam={cam} f={pose.frame} g={g} />}} />
     </svg>
   );
 };

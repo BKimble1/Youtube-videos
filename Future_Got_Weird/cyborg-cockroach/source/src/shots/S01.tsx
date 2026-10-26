@@ -14,6 +14,7 @@ import {LabBackdrop, ArenaFloor, TargetFixture, TARGET} from '../sets/Lab';
 import {ShotProps} from './index';
 import {FPS, word} from '../timeline';
 import {fmt} from '../lib/g3';
+import {arenaWalls} from '../sets/LabRoom';
 
 /** soft contact shadow of the target fixture on the mat */
 export const FixtureShadow: React.FC<{cam: ReturnType<typeof lookAt>}> = ({cam}) => {
@@ -30,8 +31,10 @@ export const S01_FIRE = word('fire', 0).start + 0.01; // release on "fire"
 export const s01Motion = (t: number) => {
   const sStop = plantedStop(36);
   const path = straightPath([S01_BODY_X + sStop, 0, 0], Math.PI);
-  // the last step: still moving at frame 0, planted by 0.34 s
-  const s = sStop - 26 * (1 - easeOut(clamp((t + 0.75) / 1.09), 2.2));
+  // the last step: still moving at frame 0, planted by 0.34 s; before -0.75 s (the end of the film, S15) it walks at
+  // the speed the easing starts with, so S15's approach runs straight into this frame 0 (the loop)
+  const V0 = (26 * 2.2) / 1.09;
+  const s = t < -0.75 ? sStop - 26 + V0 * (t + 0.75) : sStop - 26 * (1 - easeOut(clamp((t + 0.75) / 1.09), 2.2));
   const L = launchAt(t, S01_FIRE, poseRoach({path, s: sStop, t}).frame, travelTo(S01_BODY_X));
   const settle = 0.8 * sr(t, 0.2, 0.6);
   return {path, s, L, settle};
@@ -58,6 +61,7 @@ export const S01: React.FC<ShotProps & {co?: CamOverride}> = ({f, co}) => {
     z: depth(cam, pose.frame.o),
     el: <Roach key="roach" pose={pose} cam={cam} o={{id: 's01r', gear: <Gear id="s01g" cam={cam} f={pose.frame} g={{kind: 'injector', loaded: L.loaded, latched: L.latched, heat: L.heat, springExt: L.loaded ? 0 : L.springExt}} />}} />,
   });
+  items.push(...arenaWalls(cam, {skip: ['s', 'e']}).map((w) => ({z: w.z, el: w.el})));
   items.sort((a, b) => b.z - a.z);
   // the flying / embedded injector, with a short motion trail while it flies
   const trail = inj && L.flying ? [0.5, 0.3, 0.15].map((a, k) => ({a, o: add(inj.o, mul(inj.x, -(k + 1) * 4.5))})) : [];

@@ -1,6 +1,6 @@
 // Dev root for S04 and S06: single frames (with or without captions) and quarter-size contact sheets.
 import React from 'react';
-import {AbsoluteFill, Still} from 'remotion';
+import {AbsoluteFill, Composition, Still, useCurrentFrame} from 'remotion';
 import '../../fonts';
 import {S04} from '../../shots/S04';
 import {S06} from '../../shots/S06';
@@ -58,6 +58,7 @@ export const LabActionRoot: React.FC = () => (
     <Still id="Sheet6" component={Sheet6} width={1080} height={1920} defaultProps={{fs: [150, 153, 156], captions: false}} />
     <LabActionRoot2 />
     <LabActionRoot3 />
+    <LabActionRoot4 />
   </>
 );
 
@@ -107,3 +108,10 @@ const LegDebug: React.FC<{f: number}> = ({f}) => {
   );
 };
 export const LabActionRoot3: React.FC = () => <Still id="LegDebug" component={LegDebug} width={1080} height={1920} defaultProps={{f: 150}} />;
+
+/** the two shots as one clip (film frames 150-314), for motion and pop checks */
+const Clip: React.FC<{captions?: boolean}> = ({captions}) => {
+  const f = 150 + useCurrentFrame();
+  return <One f={f} captions={captions} />;
+};
+export const LabActionRoot4: React.FC = () => <Composition id="Clip" component={Clip} durationInFrames={165} fps={30} width={1080} height={1920} defaultProps={{captions: false}} />;

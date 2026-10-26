@@ -4,6 +4,7 @@ import {FPS, FRAMES, WORDS, word} from './timeline';
 import {SHOT_FRAMES} from './cuts';
 import {poseRoach, RoachMotion} from './rig/roach';
 import {s01Motion, S01_FIRE} from './shots/S01';
+import {S02_RELEASE} from './shots/S02';
 
 export type Cue = {kind: string; t: number; gain?: number; hero?: boolean; name?: string; lead?: number; args?: Record<string, number | boolean>};
 const shot = (id: string) => {
@@ -44,6 +45,8 @@ export const buildCues = () => {
   ev.push({kind: 'spring', t: S01_FIRE + 0.005, gain: -22, hero: true, name: 'S01 spring'});
   ev.push({kind: 'zing', t: S01_FIRE + 0.08, gain: -32, name: 'S01 flight'});
   ev.push({kind: 'thock', t: S01_FIRE + 0.2, gain: -18, hero: true, name: 'S01 IMPACT into silicone'});
+  // S02: the thumb releases the button; the cap springs back up under it (a soft plastic click, echoing the latch)
+  ev.push({kind: 'button', t: S02_RELEASE + 0.07, gain: -24, name: 'S02 button springs back', args: {f: 1500}});
   return ev;
 };
 

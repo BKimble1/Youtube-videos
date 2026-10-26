@@ -34,7 +34,7 @@ const sm = (x: number) => {
  *  recog = cautious recognition: soft brows lifted in the middle, relaxed lids, closed almost-smile. */
 export const SURV_FACES = {
   alarm: face({brow: 0.2, browIn: 1, wide: 1, mw: 9, curve: -0.3, open: 0.42}),
-  recog: face({brow: 0.22, browIn: 0.6, lid: 0.14, wide: 0.05, mw: 11, curve: 0.42, open: 0}),
+  recog: face({brow: 0.28, browIn: 0.75, lid: 0.1, wide: 0.05, mw: 11, curve: 0.4, open: 0}),
 };
 
 // ------------------------------------------------------------------ inputs
@@ -89,7 +89,7 @@ const BREATH_T = 3.4; // s per breath (fixed so that changing state never jumps 
 
 /** A flat hand on the floor: wrist point, its forward direction (along the fingers) and lateral direction (toward her left),
  *  plus the HandArt shape parameters. All vectors already elevated (screen-ready via cardPt / dirScr). */
-export type FlatHand = {W: V3; fwd: V3; lat: V3; thumb: number; shape: 'open'; splay: number; curl: number[]};
+export type FlatHand = {W: V3; fwd: V3; lat: V3; thumb: number; shape: 'open'; splay: number; curl: number[]; flatW: number};
 
 /** How a flat hand is drawn: HandArt (hand-local +y along the fingers, +x across) through an affine map. A truly flat
  *  hand seen from a camera this low is a sliver whose width runs into depth, so the cartoon cheats it toward a top view:
@@ -97,7 +97,9 @@ export type FlatHand = {W: V3; fwd: V3; lat: V3; thumb: number; shape: 'open'; s
  *  that on screen, toward the side where the true floor-plane width points, at FLAT_W of full size. Origin = the wrist
  *  on the forearm's centre line, so the hand continues the forearm. Returns the SVG matrix, the mean scale (for the
  *  outline) and a hand-local -> screen mapper. */
-export const FLAT_W = 0.82, MIN_L = 0.95;
+// FLAT_W >= 0.92 keeps the palm (rx 18) wider than the forearm stroke (radius 15 + ink), as in Crew4. The far hand, which
+// lies behind the near forearm, keeps a truer (thinner) width so it never spills out below the near arm.
+export const FLAT_W = 0.94, FLAT_W_FAR = 0.55, MIN_L = 0.95;
 export const handMap = (h: FlatHand, cd: Card) => {
   const cp = Math.cos(cd.phi * RAD), sp = Math.sin(cd.phi * RAD);
   const scr2 = (v: V3) => ({x: v.x * cp + v.z * sp, y: -v.y});
@@ -108,7 +110,7 @@ export const handMap = (h: FlatHand, cd: Card) => {
   const Fx = (F.x / lF) * fl, Fy = (F.y / lF) * fl;
   let px = -F.y / lF, py = F.x / lF;
   if (px * Lt.x + py * Lt.y < 0) { px = -px; py = -py; }
-  const Lx = px * FLAT_W, Ly = py * FLAT_W, k = cd.k;
+  const Lx = px * h.flatW, Ly = py * h.flatW, k = cd.k;
   return {
     matrix: `matrix(${(Lx * k).toFixed(4)} ${(Ly * k).toFixed(4)} ${(Fx * k).toFixed(4)} ${(Fy * k).toFixed(4)} ${o.x.toFixed(1)} ${o.y.toFixed(1)})`,
     gm: Math.sqrt(Math.abs(Lx * Fy - Ly * Fx)) || 1,
@@ -173,16 +175,16 @@ export const survivorRig = (o: SurvivorOpts, place: SurvivorPlace, b: Body4 = BO
   const breathAmp = (o.breath ?? 1) * (1.0 + 0.8 * recog);
   const br = Math.sin((2 * Math.PI * t) / BREATH_T);
   const S0 = v3(0, FORE_Y + Math.sqrt(b.upper * b.upper - SHOULDER_BACK * SHOULDER_BACK - (b.shW - ELBOW_X) ** 2), -SHOULDER_BACK);
-  const S = add3(S0, v3(0, br * breathAmp + 3 * recoil - 2.2 * recog * (1 - recoil) - 3 * exhale, -3 * recoil));
+  const S = add3(S0, v3(0, br * breathAmp + 1 * recoil - 2.2 * recog * (1 - recoil) - 3 * exhale, -4 * recoil));
   const P = PELVIS;
   const u = norm3(sub3(S, P)); // spine (points forward and up)
   const Lc = v3(1, 0, 0);
   const Fc = cross3(Lc, u); // chest front: down and forward, toward the floor
   const Lh = v3(1, 0, 0), Fh = v3(0, 0, 1);
   // shoulders: a hunch in the flinch, a drop on the breath out
-  const hunch = 3.5 * recoil - 1.5 * recog * (1 - recoil) - 1.5 * exhale + 0.4 * br * breathAmp;
-  const SL = add3(add3(S, mul3(Lc, b.shW)), v3(0, hunch, 0));
-  const SR = add3(add3(S, mul3(Lc, -b.shW)), v3(0, hunch, 0));
+  const hunch = 2.5 * recoil - 1.5 * recog * (1 - recoil) - 1.5 * exhale + 0.4 * br * breathAmp;
+  const SL0 = add3(add3(S, mul3(Lc, b.shW)), v3(0, hunch, 0));
+  const SR0 = add3(add3(S, mul3(Lc, -b.shW)), v3(0, hunch, 0));
 
   // ---- forearms planted flat: elbows on the floor, wrists on the floor, angled in toward the midline
   const EL = v3(ELBOW_X, FORE_Y, 0);
@@ -197,6 +199,13 @@ export const survivorRig = (o: SurvivorOpts, place: SurvivorPlace, b: Body4 = BO
   const ER = add3(ER0, v3(0, 0, sv.z * 0.75));
   const dirR = norm3(sub3(add3(add3(WR0, mul3(dirR0, 20)), sv), ER)); // aim the palm (20 u past the wrist) at its slid spot
   const WR = add3(ER, mul3(dirR, b.fore));
+  // the elbows stay planted, so each shoulder point keeps (within 3 %) one upper-arm length from its elbow: the chest
+  // can breathe, settle and flinch, but an arm never visibly stretches
+  const fitArm = (Sh: V3, El: V3) => {
+    const d = sub3(Sh, El), l = len3(d) || 1;
+    return add3(El, mul3(d, clamp(l, b.upper * 0.97, b.upper * 1.03) / l));
+  };
+  const SL = fitArm(SL0, EL), SR = fitArm(SR0, ER);
 
   // ---- head: neck base on the spine, head frame from world up (nod, turn, tilt), not from the chest
   const nod = -8 - 7 * recoil + 8 * recog * (1 - recoil) + (o.nod ?? 0);
@@ -224,13 +233,13 @@ export const survivorRig = (o: SurvivorOpts, place: SurvivorPlace, b: Body4 = BO
   };
   const far = {splay: 0.35 + 0.1 * recog, curl: [0.3, 0.38, 0.4, 0.35].map((c) => c * (1 - 0.6 * recog) + 0.25 * (1 - recog))};
   const latOf = (d: V3) => v3(d.z, 0, -d.x); // in-floor perpendicular, toward her left
-  const handOf = (W: V3, d: V3, thumb: number, sp: number, curl: number[]): FlatHand => ({
-    W: E(W), fwd: E(d), lat: E(latOf(d)), thumb, shape: 'open', splay: sp, curl,
+  const handOf = (W: V3, d: V3, thumb: number, sp: number, curl: number[], flatW: number): FlatHand => ({
+    W: E(W), fwd: E(d), lat: E(latOf(d)), thumb, shape: 'open', splay: sp, curl, flatW,
   });
   // palm down: the thumb lies toward her midline (right hand: toward +X; left hand: toward -X). HandArt puts the thumb at
   // local x = -14 * side, and local +x maps to `lat` (+X side), so right hand side = -1, left hand side = +1.
-  const handR = handOf(WR, dirR, -1, near.splay, near.curl);
-  const handL = handOf(WL, dirL, 1, far.splay, far.curl);
+  const handR = handOf(WR, dirR, -1, near.splay, near.curl, FLAT_W);
+  const handL = handOf(WL, dirL, 1, far.splay, far.curl, FLAT_W_FAR);
 
   // ---- elevate everything and assemble a J4 for Head4
   const j: J4 = {
@@ -282,11 +291,55 @@ export const survivorRig = (o: SurvivorOpts, place: SurvivorPlace, b: Body4 = BO
     farTip: hL.at(0, 32),
     shoulders: scr(j.S), nearShoulder: scr(j.SR), pelvis: scr(j.P), waist: scr(E(add3(P, mul3(u, -14)))),
     knees: [scr(j.KL), scr(j.KR)], feet: [scr(j.AL), scr(j.AR)],
-    /** a floor spot ~12 cm ahead of the near fingertips: where the insect can stop */
+    /** a floor spot ~46 u (17 cm) ahead of the near fingertips, a little toward her right: where the insect can stop */
     insectSpot: ground(WR.x + dirR.x * 80 - 10, WR.z + dirR.z * 80),
   };
   const upperErr = Math.max(Math.abs(len3(sub3(SR, ER)) - b.upper), Math.abs(len3(sub3(SL, EL)) - b.upper));
-  /** the spine point (elevated card-local) where the body crosses the card-local plane z (for cutting the torso) */
+
+  // ---- the torso's screen frame (Crew4's torso construction: a flat trapezoid along the projected spine). T(along,
+  // across) is a screen point `along` px from the top of the shoulders toward the waist and `across` px off the axis;
+  // + across is the floor (belly) side.
+  const torso = (() => {
+    const cp = Math.cos(cd.phi * RAD), sp = Math.sin(cd.phi * RAD);
+    const dirScr = (v: V3) => ({x: v.x * cp + v.z * sp, y: -v.y});
+    const wb = scr(add3(j.P, mul3(j.u, -14))), tp = scr(add3(j.S, mul3(j.u, 22)));
+    const ax = {x: wb.x - tp.x, y: wb.y - tp.y};
+    const alen = Math.hypot(ax.x, ax.y) || 1;
+    const ad = {x: ax.x / alen, y: ax.y / alen};
+    const belly = Math.sign(ad.x || 1); // n = (-ad.y, ad.x) * belly points down the screen, toward the floor
+    const n = {x: -ad.y * belly, y: ad.x * belly};
+    const half = (L: V3, F: V3, w: number, dd: number) => {
+      const ls = dirScr(L), fs = dirScr(F);
+      return w * Math.abs(ls.x * n.x + ls.y * n.y) + dd * Math.abs(fs.x * n.x + fs.y * n.y);
+    };
+    const k = cd.k;
+    const wS = half(j.Lc, j.Fc, b.torsoW, b.torsoD) * k, wW = half(j.Lh, j.Fh, b.torsoWh, b.torsoD * 0.9) * k;
+    const pW = half(j.Lh, j.Fh, b.hipW + b.legW * 0.5, b.torsoD * 0.8) * k;
+    const T = (along: number, across: number): Pt => ({x: tp.x + ad.x * along + n.x * across, y: tp.y + ad.y * along + n.y * across});
+    return {tp, wb, ad, n, alen, wS, wW, pW, T};
+  })();
+  /** the spine point (elevated card-local) where the body crosses the card-local plane z */
   const spineAt = (z: number) => E(add3(P, mul3(sub3(S, P), clamp((z - P.z) / (S.z - P.z || 1)))));
-  return {cd, b, j, face: f, handR, handL, toeL, toeR, scr, ground, point, spineAt, E, layout, hm, upperErr};
+  /** A slab whose leading face is seen edge-on (a vertical screen line at x = cutX; in 3D the plane through the spine
+   *  point that contains the view direction). Returns cutX for a body position z, and the y range her torso and the
+   *  floor cover on that line: back = the top of her back, belly = her underside, floor = the floor just beside her near
+   *  side. Everything with screen x > cutX is in front of that face. */
+  const cutAt = (z: number) => {
+    const x = scr(spineAt(z)).x;
+    const ys: number[] = [];
+    const {T, alen, wS, wW} = torso;
+    for (const side of [-1, 1]) {
+      for (let i = 0; i < 64; i++) {
+        const a0 = 24 * cd.k + ((alen - 24 * cd.k) * i) / 64, a1 = 24 * cd.k + ((alen - 24 * cd.k) * (i + 1)) / 64;
+        const wAt = (a: number) => wS + ((wW - wS) * (a - 24 * cd.k)) / (alen - 24 * cd.k || 1); // the trapezoid's side edges
+        const p0 = T(a0, side * wAt(a0)), p1 = T(a1, side * wAt(a1));
+        if ((p0.x - x) * (p1.x - x) <= 0 && p0.x !== p1.x) ys.push(p0.y + ((p1.y - p0.y) * (x - p0.x)) / (p1.x - p0.x));
+      }
+    }
+    const cx = Math.cos(cd.phi * RAD), sx = Math.sin(cd.phi * RAD);
+    const nearX = -b.torsoW - 10; // a floor point beside her near side on the same screen vertical
+    const floor = ground(nearX, (x - cd.x) / cd.k / sx - (nearX * cx) / sx);
+    return {x, back: ys.length ? Math.min(...ys) : scr(spineAt(z)).y, belly: ys.length ? Math.max(...ys) : scr(spineAt(z)).y, floor: floor.y};
+  };
+  return {cd, b, j, face: f, handR, handL, toeL, toeR, scr, ground, point, spineAt, cutAt, torso, E, layout, hm, upperErr};
 };
