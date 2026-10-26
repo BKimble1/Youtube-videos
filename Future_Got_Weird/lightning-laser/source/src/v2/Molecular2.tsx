@@ -121,17 +121,17 @@ const FarAir: React.FC<{cam: MCam; a: number; chan: number; id: string}> = ({cam
 };
 
 // ------------------------------------------------------------------------------------------------- M2: the race
-const M2_V = 2250; // packet speed (micro units/s, drawn)
-const xpM2 = (t: number) => M2_V * (t - S.M2);
+const M2_V = 1700; // packet speed (micro units/s, drawn)
+const xpM2 = (t: number) => M2_V * (t - S.M2) - 200;
 const BEAM_W = 150;
 export const M2Race: React.FC<{t: number}> = ({t}) => {
   const xp = xpM2(t);
-  const cam: MCam = {x: 2000 * (t - S.M2) - 40, y: 40 - 30 * ss(t, S.M2, S.M3), z: 1.15};
+  const cam: MCam = {x: 900 * (t - S.M2), y: 40 - 30 * ss(t, S.M2, S.M3), z: 1.15};
   const mols = visible(cam, 1);
   const free: React.ReactNode[] = [];
   const nodes = mols.map((m) => {
     const inBeam = Math.abs(m.y) < BEAM_W && m.r1 < 0.75;
-    const tion = S.M2 + m.x / M2_V + 0.01;
+    const tion = S.M2 + (m.x + 200) / M2_V + 0.01;
     const ion = inBeam ? clamp((t - tion) / 0.04) : 0;
     if (inBeam && t > tion) {
       const age = t - tion;
@@ -275,7 +275,7 @@ export const M4Heat: React.FC<{t: number}> = ({t}) => {
 // ------------------------------------------------------------------------------------------- M5: the leader runs it
 const leaderY = (t: number) => {
   const u = t - (S.M5 + 0.15);
-  return 1400 - 1500 * u - 900 * u * u; // accelerating up the channel
+  return 1400 - 750 * u - 300 * u * u; // accelerating up the channel
 };
 const leaderX = (y: number) => 34 * noise1(y / 260, 5) + 14 * noise1(y / 70, 9);
 export const M5Leader: React.FC<{t: number}> = ({t}) => {

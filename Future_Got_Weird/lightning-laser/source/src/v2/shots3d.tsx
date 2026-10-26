@@ -81,11 +81,14 @@ export const cam3For = (id: ShotId, t: number): Cam3 => {
       const zk = sm5(u(S.M6, 19.4));
       const target = lerp3(axis3(150), add3(axis3(30), v3(0, ss(t, 19.6, S.T2) * 6, 0)), zk);
       const c = lookAt(v3(-16, 120, -24), target, 2200);
-      return {...c, f: Math.exp(Math.log(42000) + (Math.log(2200) - Math.log(42000)) * zk)};
+      const dz = {...c, f: Math.exp(Math.log(42000) + (Math.log(2200) - Math.log(42000)) * zk)};
+      // then keep pulling back to the wide establishing view as the leader incepts at the tip
+      const wk = sm5(u(19.42, 20.25));
+      return wk > 0 ? lerpCam(dz, lookAt(v3(-60, 70, -320), v3(0, 120, 0), 1300), wk) : dz;
     }
     case 'T2': {
       const k = sm5(u(S.T2, S.T3));
-      return {...lookAt(v3(-20 + 2 * k, -6, -28 + 1.5 * k), v3(0, 120, 0), 450), roll: 10 - 3 * k};
+      return {...lookAt(v3(-40 + 4 * k, 40 + 2 * k, -90 + 4 * k), v3(8, 165 + 8 * k, 0), 800), roll: 6 - 2 * k};
     }
     case 'T3': {
       const k = sm5(u(S.T3, S.T4));
