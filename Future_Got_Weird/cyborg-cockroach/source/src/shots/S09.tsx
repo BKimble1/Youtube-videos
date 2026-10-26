@@ -64,9 +64,8 @@ const lineUp = (t: number) => sr(t, T_LINES - 0.12, T_UP);
 export const s09Pose = (t: number): RoachPose => {
   const u = lineUp(t);
   const rec = recoilAt(t);
-  // after the release the antennae flick back and settle spread out to the sides (clear of the target), then by the
-  // end of S10 drift forward again, searching
-  const after = sr(t, S09_T_CUT + 0.12, S09_T_CUT + 0.9) - 0.45 * sr(t, 19.5, 20.6);
+  // after the release the antennae flick back and settle a little wider, still low and searching
+  const after = sr(t, S09_T_CUT + 0.12, S09_T_CUT + 0.9);
   return poseRoach({
     path: S09_PATH, s: S_STOP, t, seed: 3,
     search: keys(t, [[15.4, 0.75], [T_UP, 0.35], [S09_T_CUT, 0.3], [S09_T_CUT + 0.5, 0.8]]),
@@ -74,8 +73,8 @@ export const s09Pose = (t: number): RoachPose => {
     pitch: -1.6 * DEG * (1 - u) + 0.016 * rec,
     offset: [-1.1 * (1 - u) - 1.0 * rec, -SETTLE - 0.3 * rec, 0],
     // antennae held up and forward toward the target (clear of the cradle's base plate), flicking back at the release
-    antL: {yaw: 0.66 - 0.1 * u + 0.3 * rec + 0.8 * after, pitch: 0.3 + 0.18 * rec + 0.22 * after, curl: 0.72},
-    antR: {yaw: 0.72 - 0.1 * u + 0.3 * rec + 0.75 * after, pitch: 0.32 + 0.18 * rec + 0.22 * after, curl: 0.72},
+    antL: {yaw: 0.66 - 0.1 * u + 0.3 * rec + 0.12 * after, pitch: 0.3 + 0.18 * rec, curl: 0.72},
+    antR: {yaw: 0.72 - 0.1 * u + 0.3 * rec + 0.12 * after, pitch: 0.32 + 0.18 * rec, curl: 0.72},
   });
 };
 /** the body frame the launch follows: squared up, settled, no recoil (the tube axis at the release) */

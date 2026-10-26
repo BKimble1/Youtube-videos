@@ -50,7 +50,7 @@ export const s10Delivery = (t: number): Delivery => ({
 const F = 3200;
 const PIVOT: V3 = [0.5, 28, 0]; // on the silicone's face, just above the needle
 const SCREEN = {x: 385, y: 805}; // where the pivot sits in the frame throughout
-const A = {phi: -5 * DEG, el: 3 * DEG, R: 98.5};
+const A = {phi: -5 * DEG, el: 24 * DEG, R: 98.5};
 const B = {phi: 32 * DEG, el: 20 * DEG, R: 470};
 export const s10Cam = (t: number): Cam => {
   const k = sr(t, T_PULL0, T_PULL1);
