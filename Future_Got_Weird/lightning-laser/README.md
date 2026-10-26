@@ -2,7 +2,7 @@
 
 ## V2 (second pass)
 
-**Status (26 Oct 2026):** the V2 review is rendered from source at 1080×1920, 30 fps, and checked from the file
+**Status (26 Oct 2026):** the V2 review is rendered from source (measured 1080×1920, 30 fps, 1005 frames) and checked from the file
 (`production/V2_QA_REPORT.md`). **Not published.** The narration, its timing and the 33.50 s duration are V1's,
 unchanged (the same voice file, gain only).
 
