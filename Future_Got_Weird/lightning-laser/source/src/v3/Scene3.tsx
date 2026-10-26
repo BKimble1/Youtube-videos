@@ -430,7 +430,7 @@ export const FlashWash: React.FC<{cam: Cam3; at: V3; flash: number; id: string}>
   if (flash <= 0.02) return null;
   const p = projector(cam)(at);
   if (!p.ok) return null;
-  const r = clamp((cam.f * 150) / p.z, 260, 1000);
+  const r = clamp((cam.f * 110) / p.z, 240, 700); // local: it lights the storm round the bolt, not the frame
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>

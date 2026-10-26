@@ -11,14 +11,14 @@
 //                  quiet; side probes into ordinary air stall. The camera tracks gently, then (17.55-18.79) pulls out
 //                  toward the sky about P0_SCREEN; the leader fades as its crackle ends (18.58).
 //   E' 18.45-18.79 the macro View3 is drawn under the molecular layer at demoCam(t, Z(t)), Z(t) = Z_HAND * z / M_H
-//                  -> Z_HAND with zero velocity at 18.79; the band and beam line already have the macro look, and the
+//                  -> Z_HAND at 18.79 with log-velocity Z_V0 (F's zoom carries it on); the band and beam line already have the macro look, and the
 //                  molecules cross-fade out (18.5-18.765) once the channel's screen width matches the macro haze, so the
 //                  last frame is F's opening frame (E -> F contract).
 import React from 'react';
 import {clamp, fmt, noise1} from '../dc/math';
 import {ss} from '../lib';
 import {View3} from './view3';
-import {demoCam, P0_SCREEN, Z_HAND} from './cams3';
+import {demoCam, P0_SCREEN, Z_HAND, Z_V0} from './cams3';
 import {demoSt} from './states3';
 import {B, EV} from './timeline3';
 import {PAL} from './palette';
@@ -108,7 +108,7 @@ const ZK: HK[] = [
   [14.5, ln(1.0), -0.42], // pull back: the narrow channel
   [15.65, ln(0.86), 0], // through the sky
   [17.55, ln(0.835), -0.03], // E: steady, a gentle drift
-  [B.F, ln(M_H), -0.9], // pull-out toward the sky; the hand-off (log-velocity = cams3 Z_V0: F's zoom carries it on)
+  [B.F, ln(M_H), Z_V0], // pull-out toward the sky; the hand-off (log-velocity = cams3 Z_V0: F's zoom carries it on)
 ];
 const CY_END = -1500;
 const CY: HK[] = [
@@ -255,7 +255,8 @@ const Micro: React.FC<{t: number; mc: MCam}> = ({t, mc}) => {
   const hk = heatK(t), pk = pushK(t);
   const end = ss(t, 18.05, 18.5); // the last pull-out: the band and the line take on the macro channel's look
   const elZ = clamp((z - 1.0) / 0.3) * (1 - ss(t, 13.5, 13.9)); // bound electrons are drawn only while we are close
-  const fadeIn = 0.55 + 0.45 * ss(t, B.D, B.D + 0.25);
+  // the field comes up under the packet's bloom (C ends on a darkened sky), so the background never switches in one frame
+  const fadeIn = 0.2 + 0.8 * ss(t, B.D, B.D + 0.4);
   // the warm channel, restrained; a gentle shimmer while it is being heated
   const shimmer = 1 + 0.12 * noise1(t * 7, 91) * (ss(t, EV.heating, 13.7) - ss(t, 15.5, 15.75));
   // (close up, the warmth is carried by the molecules' glow; the band takes over as the view widens)

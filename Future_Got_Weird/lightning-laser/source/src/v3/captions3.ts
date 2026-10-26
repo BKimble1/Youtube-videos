@@ -5,7 +5,7 @@ import {CAPTIONS} from '../lib';
 export const CAP_Y3: [string, number][] = [
   ['They fired', 1660], ['into a', 1660], ['and the', 1660],
   ['You see', 1660], ['the flow', 1660],
-  ['But this', 1660], ['a thousand', 1660], ['every', 1660],
+  ['But this', 1660], ['a thousand', 1705], ['every', 1660],
   ['stripping', 1660], ['from air', 1660], ['and heating', 1660], ['through', 1660],
   ['That gave', 1660], ['an easier', 1660],
   ['So when', 1660], ['from a', 1660], ['part of', 1660], ['followed', 1660], ['for over', 1660],
