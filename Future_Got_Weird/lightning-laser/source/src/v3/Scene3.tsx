@@ -3,14 +3,20 @@
 // the discharge is white with violet edges, its glow held back so the core and branches stay legible.
 // Flat fills with ink contours and gradient shading, as
 // in the 2D art; positions come from the 3D model so views agree. Pieces are painter-sorted (far first), so platform
-// rings hide the shaft and mast behind them from below. The discharge lights the tower's facing side, the cloud deck
-// near the bolt, the rain and the ground.
+// rings hide the shaft and mast behind them from below.
+// Scenery (V3 scenery pass): the storm sky, layered clouds and ranges live in Scene3_sky.tsx, the summit rock in
+// Scene3_ground.tsx. The discharge is a local light (Scene3_light.ts): it lights the cloud undersides near the bolt,
+// the tower's facing side and top surfaces, the nearby rock and rain, falling off with distance; FlashWash only adds
+// a small, restrained bloom round the bolt top and never reaches the caption band.
 import React from 'react';
 import {mix} from '../dc/color';
-import {clamp, fmt, hash, noise1} from '../dc/math';
-import {add3, axis3, BOLT3, Br3, Cam3, cross3, dot3, EXIT3, len3, lerp3, mul3, norm3, P3, projector, Proj, sub3, TW, v3, V3} from '../v2/p3';
+import {clamp, fmt, hash} from '../dc/math';
+import {add3, axis3, BOLT3, Br3, Cam3, dot3, EXIT3, lerp3, mul3, norm3, P3, projector, Proj, sub3, TW, v3, V3} from '../v2/p3';
 import {PAL} from './palette';
 import {G} from '../world/site';
+import {boltSamples, lightAt, LOW_BOLT, sOfTop} from './Scene3_light';
+import {Clouds, LOOP, Ranges, segDist, SkyGrad} from './Scene3_sky';
+import {PLAT_R, PLAT_Y, Summit3D} from './Scene3_ground';
 
 const INK = '#0B151C';
 type Pt = {x: number; y: number};
@@ -28,195 +34,187 @@ const line = (pts: Pt[]) => (pts.length ? `M${pts.map((q) => `${fmt(q.x)},${fmt(
 const circle3 = (c: V3, r: number, n = 28): V3[] => Array.from({length: n}, (_, i) => v3(c.x + r * Math.cos((i / n) * 6.2832), c.y, c.z + r * Math.sin((i / n) * 6.2832)));
 
 // ------------------------------------------------------------------ sky, clouds, ranges, ground, rain
+/** a stable id for one camera/light state (Sky3D has no id prop; several views can share a document) */
+const camId = (cam: Cam3, flash: number) => `s3${Math.round(Math.abs(cam.pos.x * 131.7 + cam.pos.y * 71.3 + cam.pos.z * 37.1 + cam.yaw * 13.3 + cam.pitch * 7.7 + cam.f * 0.37 + (cam.cx ?? 0) * 0.11 + (cam.cy ?? 0) * 0.07 + flash * 977) * 100) % 1e9}`;
 export const Sky3D: React.FC<{cam: Cam3; flash: number; boltTop?: V3; drift: number; rainT: number; rain?: number; ground?: boolean}> = ({cam, flash, boltTop, drift, rainT, rain = 1, ground = true}) => {
   const P = projector(cam);
-  const fwdH = v3(Math.sin((cam.yaw * Math.PI) / 180), 0, Math.cos((cam.yaw * Math.PI) / 180));
-  const hz = P(add3(cam.pos, v3(fwdH.x * 1e5, 0, fwdH.z * 1e5))).y; // horizon line on screen
-  // the cloud deck (seen from below): large, irregular cells on a plane at about 232 m, far first, fading into haze
-  const CB = 232;
-  const puffs: {p: Proj; r: number; lit: number; k: number; fog: number}[] = [];
-  if (cam.pos.y < CB) {
-    for (let ix = -9; ix <= 9; ix++) for (let iz = -6; iz <= 16; iz++) {
-      const k = (ix + 20) * 100 + iz;
-      const w = v3(ix * 105 + 60 * (hash(k, 3) - 0.5) + drift * 4, CB + 26 * hash(k, 5), iz * 105 + 60 * (hash(k, 7) - 0.5));
-      const p = P(w);
-      if (!p.ok || p.z < 8) continue;
-      const r = (cam.f * (62 + 46 * hash(k, 9))) / p.z;
-      if (p.x < -r * 2 || p.x > 1080 + r * 2 || p.y < -r * 2 || p.y > 1920 + r * 2) continue;
-      const lit = boltTop ? Math.exp(-len3(sub3(w, boltTop)) / 190) : 0;
-      puffs.push({p, r, lit, k, fog: clamp((len3(sub3(w, cam.pos)) - 300) / 1300)});
-    }
-    puffs.sort((a, b) => b.p.z - a.p.z);
-  }
-  const range = (seed: number, amp: number, col: string, k: number) => {
-    const pts: Pt[] = [{x: -200, y: 2400}];
-    for (let x = -200; x <= 1280; x += 60) pts.push({x, y: hz - amp * (0.3 + 0.7 * Math.abs(noise1((x + cam.yaw * 18 * k) / 170, seed)))});
-    pts.push({x: 1280, y: 2400});
-    return <path d={poly(pts)} fill={col} />;
-  };
+  const uid = camId(cam, flash);
+  const s = boltTop ? sOfTop(boltTop) : 0;
+  const pts = s > 0 ? boltSamples(s) : [];
   // rain: drops in a volume round the camera (world-fixed cells, falling at ~9 m/s), each drawn as its projected fall
-  // streak, so every streak points along the projected vertical and density follows perspective naturally
-  const drops: string[] = [];
+  // streak, so every streak points along the projected vertical and density follows perspective naturally. Drops
+  // near the discharge catch its light; drops over the caption band and right on the beam are held back.
+  const bA = P(EXIT3), bB = P(axis3(1000));
+  const beamOk = bA.ok && bB.ok;
+  const drops: string[][] = [[], [], [], [], [], []]; // unlit by quiet level 0..2, then lit by quiet level 0..2
   const RC = 9; // cell size (m)
   const cxi = Math.floor(cam.pos.x / RC), cyi = Math.floor(cam.pos.y / RC), czi = Math.floor(cam.pos.z / RC);
-  for (let ix = -5; ix <= 5; ix++) for (let iy = -4; iy <= 5; iy++) for (let iz = -5; iz <= 5; iz++) {
-    const gx = cxi + ix, gy = cyi + iy, gz = czi + iz;
-    const k = ((gx * 73856093) ^ (gy * 19349663) ^ (gz * 83492791)) | 0;
-    for (let m = 0; m < 2; m++) {
-      const hx = hash(k + m * 7, 311), hz = hash(k + m * 7, 313), hy = hash(k + m * 7, 315);
-      const fall = (hy * RC + rainT * 9 * (0.85 + 0.3 * hash(k + m, 317))) % RC;
-      const w = v3((gx + hx) * RC, (gy + 1) * RC - fall, (gz + hz) * RC);
-      const p0 = P(w), p1 = P(v3(w.x - 0.25, w.y - 1.1, w.z));
-      if (!p0.ok || !p1.ok || p0.z < 1.2) continue;
-      if (p0.x < -40 || p0.x > 1120 || p0.y < -40 || p0.y > 1960) continue;
-      const L = Math.hypot(p1.x - p0.x, p1.y - p0.y);
-      if (L < 3 || L > 140) continue;
-      drops.push(`M${fmt(p0.x)},${fmt(p0.y)} L${fmt(p1.x)},${fmt(p1.y)}`);
+  if (rain > 0) {
+    for (let ix = -5; ix <= 5; ix++) for (let iy = -4; iy <= 5; iy++) for (let iz = -5; iz <= 5; iz++) {
+      const gx = cxi + ix, gy = cyi + iy, gz = czi + iz;
+      const k = ((gx * 73856093) ^ (gy * 19349663) ^ (gz * 83492791)) | 0;
+      for (let m = 0; m < 2; m++) {
+        const hx = hash(k + m * 7, 311), hzz = hash(k + m * 7, 313), hy = hash(k + m * 7, 315);
+        // fall speeds are whole cells per loop (n / LOOP, n = 28..38), so the rain is continuous both across the seam
+        // and where the loop clock steps by a whole loop at mid-film
+        const sp = (28 + Math.floor(hash(k + m, 317) * 11)) / LOOP;
+        const fall = (hy * RC + rainT * 9 * sp) % RC;
+        const w = v3((gx + hx) * RC, (gy + 1) * RC - fall, (gz + hzz) * RC);
+        const p0 = P(w), p1 = P(v3(w.x - 0.25, w.y - 1.1, w.z));
+        if (!p0.ok || !p1.ok || p0.z < 1.2) continue;
+        if (p0.x < -40 || p0.x > 1120 || p0.y < -40 || p0.y > 1960) continue;
+        const L = Math.hypot(p1.x - p0.x, p1.y - p0.y);
+        if (L < 6 || L > 140) continue; // end-on drops (specks) and smears right at the lens are left out
+        const my = (p0.y + p1.y) / 2;
+        // 0: normal, 1: at the edge of the caption band, 2: in the band or right on the beam
+        const band = my > 1530 && my < 1790 ? 2 : my > 1470 && my < 1850 ? 1 : 0;
+        const quiet = beamOk && segDist({x: (p0.x + p1.x) / 2, y: my}, bA, bB) < 30 ? 2 : band;
+        const lit = pts.length > 0 && flash > 0.15 && lightAt(w, pts, 45) * flash > 0.18;
+        drops[(lit ? 3 : 0) + quiet].push(`M${fmt(p0.x)},${fmt(p0.y)} L${fmt(p1.x)},${fmt(p1.y)}`);
+      }
     }
   }
-  const skyTop = mix('#081320', '#3A4878', flash * 0.35), skyLow = mix('#2C5464', '#7088B0', flash * 0.3);
+  const rainC = mix('#8FA6BC', '#C8D2F0', flash * 0.3);
+  const rainOp = [0.27, 0.18, 0.11, 0.4, 0.27, 0.16];
   return (
     <g>
       <defs>
-        <linearGradient id="s3-sky" gradientUnits="userSpaceOnUse" x1="0" y1={fmt(hz - 1600)} x2="0" y2={fmt(hz)}>
-          <stop offset="0" stopColor={skyTop} />
-          <stop offset="0.7" stopColor={mix('#14293A', '#4C5E8C', flash * 0.3)} />
-          <stop offset="1" stopColor={skyLow} />
+        <linearGradient id={`${uid}-cap`} gradientUnits="userSpaceOnUse" x1="0" y1="1530" x2="0" y2="1830">
+          <stop offset="0" stopColor="#0D1822" stopOpacity={0} />
+          <stop offset="0.25" stopColor="#0D1822" stopOpacity={0.26} />
+          <stop offset="0.75" stopColor="#0D1822" stopOpacity={0.26} />
+          <stop offset="1" stopColor="#0D1822" stopOpacity={0} />
         </linearGradient>
       </defs>
-      <rect x={0} y={0} width={1080} height={1920} fill="url(#s3-sky)" />
-      {hz < 2100 && hz > -400 && (
-        <g>
-          {range(31, 150, mix('#223F4E', '#4A5E84', flash * 0.3), 1)}
-          {range(37, 90, mix('#162A38', '#3A4C70', flash * 0.3), 1.6)}
+      <SkyGrad cam={cam} flash={flash} id={`${uid}-sky`} />
+      <Clouds cam={cam} P={P} flash={flash} s={s} boltTop={boltTop} drift={drift} id={uid} />
+      <Ranges cam={cam} P={P} flash={flash} />
+      {/* the far background behind the caption band (y about 1560-1760) is held a little darker and flatter */}
+      <rect x={-20} y={1530} width={1120} height={300} fill={`url(#${uid}-cap)`} />
+      {ground && <Summit3D cam={cam} flash={flash} />}
+      {rain > 0 && (
+        <g fill="none" strokeLinecap="round" strokeWidth={2}>
+          {drops.map((d, i) => (d.length > 0 ? <path key={i} d={d.join(' ')} stroke={i < 3 ? rainC : '#E2E7FF'} strokeOpacity={rainOp[i] * rain} /> : null))}
         </g>
       )}
-      <defs>
-        <filter id="s3-cb" filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
-          <feGaussianBlur stdDeviation="5" />
-        </filter>
-      </defs>
-      <g filter="url(#s3-cb)">
-      {puffs.map(({p, r, lit, k, fog}) => {
-        const base = mix(mix('#0F1924', '#1C2A3A', hash(k, 11)), mix('#26404E', '#56688F', flash * 0.3), fog * 0.85);
-        const c = mix(base, '#AEB8F0', clamp(flash * lit * 1.3));
-        const ry = r * 0.58;
-        return (
-          <g key={k}>
-            <ellipse cx={fmt(p.x)} cy={fmt(p.y)} rx={fmt(r)} ry={fmt(ry)} fill={c} />
-            <ellipse cx={fmt(p.x - r * 0.1)} cy={fmt(p.y + ry * 0.42)} rx={fmt(r * 0.7)} ry={fmt(ry * 0.36)} fill={mix(c, '#DDE3FF', 0.08 + 0.45 * flash * lit)} opacity={0.55} />
-          </g>
-        );
-      })}
-      </g>
-      {ground && <Summit3D cam={cam} flash={flash} />}
-      {rain > 0 && <path d={drops.join(' ')} stroke={mix('#8FA6BC', '#E2E8FF', flash * 0.6)} strokeOpacity={0.32 * rain} strokeWidth={2} strokeLinecap="round" fill="none" />}
     </g>
   );
 };
-
-/** the summit: a low-poly rock mesh on a polar grid round the tower (flat top for the tower, a ledge for the laser
- *  terrace on the -X side), facets flat-shaded from a cool storm light plus the discharge, thin ink edges */
-const MESH = (() => {
-  const R = [0, 14, 24, 38, 52, 70, 95, 130, 175, 230, 300];
-  const NA = 40;
-  const hAt = (r: number, a: number, i: number, j: number) => {
-    if (r <= 14) return 0;
-    let h = -Math.pow(r - 12, 1.12) * (0.5 + 0.28 * (0.5 + 0.5 * Math.sin(a * 3 + 1.3)) + 0.14 * Math.sin(a * 7)) - 9 * hash(i * 97 + j, 501) * (r > 20 ? 1 : 0);
-    // the laser terrace: a level ledge at -19 m round the -X direction (angle near pi)
-    const da = Math.abs(((a - Math.PI + 9.42) % 6.283) - 3.1416);
-    if (r >= 30 && r <= 66 && da < 0.42) h = -19.2 - (r > 60 ? (r - 60) * 1.2 : 0);
-    return h;
-  };
-  const pts: V3[][] = R.map((r, i) => Array.from({length: NA}, (_, j) => {
-    const a = (j / NA) * 6.2832 + (i % 2) * (3.1416 / NA);
-    const rr = r * (1 + 0.12 * (hash(i * 31 + j, 503) - 0.5) * (r > 30 ? 1 : 0));
-    return v3(Math.cos(a) * rr, hAt(rr, a, i, j), Math.sin(a) * rr);
-  }));
-  const tris: [V3, V3, V3][] = [];
-  for (let i = 0; i + 1 < R.length; i++) for (let j = 0; j < NA; j++) {
-    const a = pts[i][j], b = pts[i][(j + 1) % NA], c = pts[i + 1][j], d = pts[i + 1][(j + 1) % NA];
-    tris.push([a, c, d], [a, d, b]);
-  }
-  return tris;
-})();
-const LIGHT3 = norm3(v3(-0.4, 0.85, -0.35));
-export const Summit3D: React.FC<{cam: Cam3; flash: number}> = ({cam, flash}) => {
-  const P = projector(cam);
-  const items: {z: number; d: string; c: string}[] = [];
-  for (const [a, b, c] of MESH) {
-    const pa = P(a), pb = P(b), pc = P(c);
-    if (!pa.ok || !pb.ok || !pc.ok) continue;
-    const xs = [pa.x, pb.x, pc.x], ys = [pa.y, pb.y, pc.y];
-    if (Math.max(...xs) < -50 || Math.min(...xs) > 1130 || Math.max(...ys) < -50 || Math.min(...ys) > 1970) continue;
-    const n = norm3(cross3(sub3(b, a), sub3(c, a)));
-    const nn = n.y < 0 ? mul3(n, -1) : n;
-    const lam = clamp(dot3(nn, LIGHT3) * 0.8 + 0.2);
-    const up = clamp(nn.y);
-    const base = mix('#121A21', '#46555E', lam * lam);
-    const col = mix(base, '#A8B2E6', flash * 0.55 * up);
-    items.push({z: (pa.z + pb.z + pc.z) / 3, d: `M${fmt(pa.x)},${fmt(pa.y)} L${fmt(pb.x)},${fmt(pb.y)} L${fmt(pc.x)},${fmt(pc.y)} Z`, c: col});
-  }
-  items.sort((p, q) => q.z - p.z);
-  return (
-    <g>
-      {items.map((it, i) => <path key={i} d={it.d} fill={it.c} stroke={it.c} strokeWidth={1.2} strokeLinejoin="round" />)}
-      {items.map((it, i) => (i % 3 === 0 ? <path key={`e${i}`} d={it.d} fill="none" stroke="#0B151C" strokeOpacity={0.22} strokeWidth={1.4} strokeLinejoin="round" /> : null))}
-    </g>
-  );
-};
+export {Summit3D};
 
 // ------------------------------------------------------------------ the tower
 type Piece = {z: number; el: React.ReactNode};
+const KEY_H = norm3(v3(-0.4, 0, -0.35)); // the storm key light's horizontal direction (the rock uses the same key)
+const LIT = '#E2E7FF';
 export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: string}> = ({cam, flash, aviation, id}) => {
   const P = projector(cam);
   const iw = (z: number, k = 1) => clamp((cam.f * 0.16 * k) / Math.max(1, z), 0.7, 4.5);
   const pieces: Piece[] = [];
-  const conc = mix('#8A97A0', '#D4DAF8', flash * 0.4), concD = mix('#4A5862', '#8890C0', flash * 0.35);
-  const grad = (gid: string, pts: Pt[]) => {
-    const xs = pts.map((q) => q.x);
-    const x0 = Math.min(...xs), x1 = Math.max(...xs);
-    return (
-      <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={fmt(x0)} y1="0" x2={fmt(x1)} y2="0">
-        <stop offset="0" stopColor={concD} />
-        <stop offset="0.35" stopColor={conc} />
-        <stop offset="0.75" stopColor={mix(conc, concD, 0.55)} />
-        <stop offset="1" stopColor={mix(concD, '#EEF0FF', flash * 0.8)} />
-      </linearGradient>
-    );
+  /** the discharge's light on a tower part: strongest at the mast head, falling off down the tower */
+  const boltK = (c: V3) => flash * lightAt(c, LOW_BOLT, 72);
+  const toBoltH = (c: V3) => norm3(v3(LOW_BOLT[1].x - c.x, 0, LOW_BOLT[1].z - c.z));
+  /** a vertical cylinder's shading across its screen width: the storm key from the -X/-Z side, plus the discharge
+   *  on the side turned toward the bolt (+X) */
+  const shade = (c: V3, dark: string, light: string) => {
+    const vh = norm3(v3(c.x - cam.pos.x, 0, c.z - cam.pos.z));
+    let rh = v3(vh.z, 0, -vh.x);
+    if (P(add3(c, rh)).x < P(c).x) rh = mul3(rh, -1);
+    const kB = boltK(c), bh = toBoltH(c);
+    return [0, 0.16, 0.38, 0.62, 0.84, 1].map((u) => {
+      const sn = clamp(2 * u - 1, -0.995, 0.995), cs = Math.sqrt(1 - sn * sn);
+      const n = add3(mul3(vh, -cs), mul3(rh, sn));
+      const key = clamp(dot3(n, KEY_H));
+      const fb = clamp(0.3 + 0.7 * dot3(n, bh));
+      return {u, c: mix(mix(dark, light, 0.16 + 0.84 * key), LIT, clamp(kB * fb * 0.9))};
+    });
   };
-  const cyl = (key: string, y0: number, y1: number, r0: number, r1: number, ring = false) => {
-    const a = circle3(v3(0, y0, 0), r0).map(P), b = circle3(v3(0, y1, 0), r1).map(P);
+  type CylOpt = {ring?: boolean; cap?: string; dark?: string; light?: string; z?: number; n?: number; joints?: boolean; seat?: number};
+  // the face of a vertical (tapered) cylinder turned to the camera: each rim's arc between the tangent points seen
+  // from the camera's horizontal position, joined into a band
+  const Dh = Math.hypot(cam.pos.x, cam.pos.z), phi = Math.atan2(cam.pos.z, cam.pos.x);
+  const frontArc = (y: number, r: number, m: number) => {
+    const al = Math.acos(clamp(r / Dh, -1, 1));
+    return Array.from({length: m + 1}, (_, i) => {
+      const an = phi - al + (2 * al * i) / m;
+      return P(v3(r * Math.cos(an), y, r * Math.sin(an)));
+    });
+  };
+  const cyl = (key: string, y0: number, y1: number, r0: number, r1: number, o: CylOpt = {}) => {
+    const n = o.n ?? 28;
+    const a = circle3(v3(0, y0, 0), r0, n).map(P), b = circle3(v3(0, y1, 0), r1, n).map(P);
     if (a.some((p) => !p.ok) || b.some((p) => !p.ok)) return;
-    const h = hull([...a, ...b]);
-    const zc = P(v3(0, (y0 + y1) / 2, 0)).z;
+    // from below its foot, a part standing on something (everything but the overhanging rings) shows only its face:
+    // the hull of both rims would also show the underside, which is buried in the rock or the part beneath
+    const faceOnly = !o.ring && cam.pos.y < y0 && Dh > Math.max(r0, r1) * 1.02;
+    const h = faceOnly ? [...frontArc(y0, r0, 24), ...frontArc(y1, r1, 24).reverse()] : hull([...a, ...b]);
+    const c = v3(0, (y0 + y1) / 2, 0);
+    const zc = P(c).z;
     const w = iw(zc);
+    const xs = h.map((q) => q.x);
+    const st = shade(c, o.dark ?? '#46545E', o.light ?? '#9AA6AE');
+    const capVis = !!o.cap && cam.pos.y > y1 + 0.05;
+    const capCol = o.cap ? mix(o.cap, LIT, clamp(boltK(v3(0, y1, 0)) * 1.15)) : '';
+    // block joints on the face turned to the camera (the retaining wall)
+    const joints: string[] = [];
+    if (o.joints) {
+      for (let i = 0; i < 36; i++) {
+        const an = (i / 36) * 6.2832 + 0.05;
+        const q0 = v3(r0 * Math.cos(an), y0, r0 * Math.sin(an));
+        if (dot3(v3(Math.cos(an), 0, Math.sin(an)), sub3(cam.pos, q0)) <= 0) continue;
+        const p0 = P(q0), p1 = P(v3(q0.x, y1, q0.z)), pm = P(v3(q0.x, (y0 + y1) / 2, q0.z));
+        const q1 = v3(r0 * Math.cos(an + 6.2832 / 36), (y0 + y1) / 2, r0 * Math.sin(an + 6.2832 / 36));
+        const pn = P(q1);
+        if (!p0.ok || !p1.ok || !pm.ok || !pn.ok) continue;
+        // alternate the vertical joints between the two courses, and run the course line along the face
+        joints.push(i % 2 ? `M${fmt(pm.x)},${fmt(pm.y)} L${fmt(p1.x)},${fmt(p1.y)}` : `M${fmt(p0.x)},${fmt(p0.y)} L${fmt(pm.x)},${fmt(pm.y)}`);
+        joints.push(`M${fmt(pm.x)},${fmt(pm.y)} L${fmt(pn.x)},${fmt(pn.y)}`);
+      }
+    }
+    const seat = o.seat ? circle3(v3(0, y1 + 0.02, 0), o.seat, n).map(P) : null;
     pieces.push({
-      z: zc,
+      z: o.z ?? zc,
       el: (
         <g key={key}>
-          <defs>{grad(`${id}-${key}`, h)}</defs>
+          <defs>
+            <linearGradient id={`${id}-${key}`} gradientUnits="userSpaceOnUse" x1={fmt(Math.min(...xs))} y1="0" x2={fmt(Math.max(...xs))} y2="0">
+              {st.map((s) => <stop key={s.u} offset={s.u} stopColor={s.c} />)}
+            </linearGradient>
+          </defs>
           <path d={poly(h)} fill={`url(#${id}-${key})`} stroke={INK} strokeWidth={fmt(w)} strokeLinejoin="round" />
-          {ring && <path d={poly(b)} fill="none" stroke={INK} strokeWidth={fmt(w * 0.8)} />}
-          {ring && <path d={poly(a)} fill="none" stroke={INK} strokeOpacity={0.6} strokeWidth={fmt(w * 0.7)} />}
-          {ring &&
+          {capVis && <path d={poly(b)} fill={capCol} stroke={INK} strokeWidth={fmt(w * 0.8)} strokeLinejoin="round" />}
+          {joints.length > 0 && <path d={joints.join(' ')} fill="none" stroke={INK} strokeOpacity={0.32} strokeWidth={fmt(w * 0.55)} />}
+          {seat && capVis && seat.every((q) => q.ok) && <path d={poly(seat)} fill="#141C22" fillOpacity={0.45} />}
+          {o.ring && !capVis && <path d={poly(b)} fill="none" stroke={INK} strokeWidth={fmt(w * 0.8)} />}
+          {o.ring && <path d={poly(a)} fill="none" stroke={INK} strokeOpacity={0.6} strokeWidth={fmt(w * 0.7)} />}
+          {o.ring &&
             circle3(v3(0, y1, 0), r1, 16).map((q, i) => {
               const p0 = P(q), p1 = P(add3(q, v3(0, 1.1, 0)));
               return <line key={i} x1={fmt(p0.x)} y1={fmt(p0.y)} x2={fmt(p1.x)} y2={fmt(p1.y)} stroke={INK} strokeWidth={fmt(w * 0.6)} />;
             })}
-          {ring && <path d={poly(circle3(v3(0, y1 + 1.1, 0), r1).map(P))} fill="none" stroke={INK} strokeWidth={fmt(w * 0.6)} />}
+          {o.ring && <path d={poly(circle3(v3(0, y1 + 1.1, 0), r1).map(P))} fill="none" stroke={INK} strokeWidth={fmt(w * 0.6)} />}
         </g>
       ),
     });
   };
+  // footing: a stone retaining wall round the summit platform (it seats the tower on the rock), its paving, and a
+  // concrete apron step under the plinth. From below the summit top the wall is in front of the plinth's foot.
+  const zPl = P(v3(0, TW.plinthTop / 2, 0)).z;
+  const above = cam.pos.y > 0.45;
+  const WALL_TOP = 0.35, APRON_TOP = 0.85;
+  // seen from below the platform (the terrace), the wall's foot runs further into the rock lip so its face also hides
+  // the plinth's foot at the sides (the rock is drawn before the tower, so it cannot hide tower parts itself); the
+  // extension grows smoothly as the camera drops below the platform, so a crane past it never pops
+  const foot = PLAT_Y - 0.4 - 1.2 * clamp((0.45 - cam.pos.y) / 10);
+  cyl('fw', foot, WALL_TOP, PLAT_R - 0.3, PLAT_R - 0.3, {cap: '#56626A', dark: '#283238', light: '#66727A', n: 44, joints: true, z: above ? zPl + 6 : zPl - 0.05});
+  cyl('fa', WALL_TOP, APRON_TOP, TW.plinthR + 2.4, TW.plinthR + 2.2, {cap: '#7E8A92', dark: '#3E4A52', light: '#8C98A0', n: 36, z: zPl + 5, seat: TW.plinthR + 0.7});
   // plinth, shaft in three pieces (between the rings), rings
-  cyl('pl', 0, TW.plinthTop, TW.plinthR, TW.plinthR * 0.95);
+  cyl('pl', 0, TW.plinthTop, TW.plinthR, TW.plinthR * 0.95, {cap: '#808C94'});
   const rAt = (y: number) => TW.shaftR0 + (TW.shaftR1 - TW.shaftR0) * ((y - TW.plinthTop) / (TW.shaftTop - TW.plinthTop));
   cyl('s1', TW.plinthTop, TW.ring1.y, TW.shaftR0, rAt(TW.ring1.y));
   cyl('s2', TW.ring1.y + TW.ring1.h, TW.ring2.y, rAt(TW.ring1.y + TW.ring1.h), rAt(TW.ring2.y));
   cyl('s3', TW.ring2.y + TW.ring2.h, TW.shaftTop, rAt(TW.ring2.y + TW.ring2.h), TW.shaftR1);
-  cyl('r1', TW.ring1.y, TW.ring1.y + TW.ring1.h, TW.ring1.r, TW.ring1.r, true);
-  cyl('r2', TW.ring2.y, TW.ring2.y + TW.ring2.h, TW.ring2.r, TW.ring2.r, true);
+  cyl('r1', TW.ring1.y, TW.ring1.y + TW.ring1.h, TW.ring1.r, TW.ring1.r, {ring: true, cap: '#8A969E'});
+  cyl('r2', TW.ring2.y, TW.ring2.y + TW.ring2.h, TW.ring2.r, TW.ring2.r, {ring: true, cap: '#8A969E'});
   // lattice mast: four legs, nine bays, aviation bands on the faces turned to the camera
   const mw = (y: number) => TW.mastW0 + (TW.mastW1 - TW.mastW0) * ((y - TW.shaftTop) / (TW.mastTop - TW.shaftTop));
   const corner = (y: number, i: number) => {
@@ -237,8 +235,10 @@ export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: 
       const z = P(mid).z + (front ? -0.5 : 0.5);
       const w = iw(z, 0.7);
       const red = b % 2 === 0;
-      const facing = clamp(0.5 + 0.5 * (nrm.x / (Math.hypot(nrm.x, nrm.z) || 1)));
-      const col = red ? mix('#A8342D', '#FF8A80', flash * 0.4 * facing) : mix('#C9CED2', '#FFFFFF', flash * 0.5 * facing);
+      // the faces turned toward the bolt catch its light, most strongly at the mast head
+      const facing = clamp(0.3 + 0.7 * dot3(norm3(nrm), toBoltH(mid)));
+      const kB = boltK(mid) * facing;
+      const col = red ? mix('#A8342D', '#FFA49A', kB * 0.95) : mix('#C9CED2', '#FFFFFF', kB);
       pieces.push({
         z,
         el: (
@@ -262,7 +262,7 @@ export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: 
       z,
       el: (
         <g key="rod">
-          <path d={`M${fmt(capA.x - rw)},${fmt(capA.y)} L${fmt(rodT.x - rw * 0.15)},${fmt(rodT.y + rw * 1.5)} L${fmt(rodT.x)},${fmt(rodT.y)} L${fmt(rodT.x + rw * 0.15)},${fmt(rodT.y + rw * 1.5)} L${fmt(capA.x + rw)},${fmt(capA.y)} Z`} fill={mix('#9DA9B1', '#FFFFFF', flash * 0.8)} stroke={INK} strokeWidth={fmt(w * 0.8)} strokeLinejoin="round" />
+          <path d={`M${fmt(capA.x - rw)},${fmt(capA.y)} L${fmt(rodT.x - rw * 0.15)},${fmt(rodT.y + rw * 1.5)} L${fmt(rodT.x)},${fmt(rodT.y)} L${fmt(rodT.x + rw * 0.15)},${fmt(rodT.y + rw * 1.5)} L${fmt(capA.x + rw)},${fmt(capA.y)} Z`} fill={mix('#9DA9B1', '#FFFFFF', flash * 0.85)} stroke={INK} strokeWidth={fmt(w * 0.8)} strokeLinejoin="round" />
           <circle cx={fmt(av.x)} cy={fmt(av.y)} r={fmt(clamp((cam.f * 0.45) / z, 1.5, 22))} fill="#FF4A3C" opacity={0.4 + 0.6 * aviation} />
           <circle cx={fmt(av.x)} cy={fmt(av.y)} r={fmt(clamp((cam.f * 1.6) / z, 4, 70))} fill="#FF4A3C" opacity={0.2 * aviation} />
         </g>
@@ -419,19 +419,31 @@ export const Beam3D: React.FC<{cam: Cam3; alpha: number; pulses?: number[]; chan
   );
 };
 
-/** the light the discharge throws on things: a screen-blended wash centred on the bolt (for scene-wide coherence) */
+/** the air glow round the discharge: a small, restrained screen-blended bloom centred on the bolt top (the local light
+ *  on clouds, tower, rock and rain is done in those pieces). Its size follows the bolt's distance, its peak stays low
+ *  so the white core keeps its edge, and it is masked out of the caption band (y about 1560-1760). */
 export const FlashWash: React.FC<{cam: Cam3; at: V3; flash: number; id: string}> = ({cam, at, flash, id}) => {
-  if (flash <= 0.01) return null;
+  if (flash <= 0.02) return null;
   const p = projector(cam)(at);
+  if (!p.ok) return null;
+  const r = clamp((cam.f * 150) / p.z, 260, 1000);
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
-        <radialGradient id={`${id}-fw`} gradientUnits="userSpaceOnUse" cx={fmt(p.x)} cy={fmt(p.y)} r={1500}>
-          <stop offset="0" stopColor="#B9C4FF" stopOpacity={0.35 * flash} />
+        <radialGradient id={`${id}-fw`} gradientUnits="userSpaceOnUse" cx={fmt(p.x)} cy={fmt(p.y)} r={fmt(r)}>
+          <stop offset="0" stopColor="#B4BEFF" stopOpacity={0.2 * flash} />
+          <stop offset="0.4" stopColor="#8F9AE6" stopOpacity={0.09 * flash} />
           <stop offset="1" stopColor="#5A68B0" stopOpacity={0} />
         </radialGradient>
+        <linearGradient id={`${id}-fm`} gradientUnits="userSpaceOnUse" x1="0" y1="1300" x2="0" y2="1540">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#000000" />
+        </linearGradient>
+        <mask id={`${id}-fk`} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
+          <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id}-fm)`} />
+        </mask>
       </defs>
-      <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id}-fw)`} />
+      <circle cx={fmt(p.x)} cy={fmt(p.y)} r={fmt(r)} fill={`url(#${id}-fw)`} mask={`url(#${id}-fk)`} />
     </g>
   );
 };

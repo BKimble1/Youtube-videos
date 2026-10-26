@@ -20,8 +20,8 @@ import {tau3} from './timeline3';
 const u = (t: number, a: number, b: number) => clamp((t - a) / (b - a));
 
 // ------------------------------------------------------------------ A / H: the opening setup
-export const OPEN0 = {pos: v3(-52, 90, -86), target: v3(7, 158, 0), f: 1050, roll: -4}; // frame 0 (and the loop end)
-export const OPEN1 = {pos: v3(-56, 88, -93), target: v3(6, 170, 0), f: 880, roll: -4}; // after the reveal (A hold)
+export const OPEN0 = {pos: v3(-52, 90, -86), target: v3(9, 165, 0), f: 1500, roll: -4}; // frame 0 (and the loop end)
+export const OPEN1 = {pos: v3(-55, 89, -91), target: v3(9, 169, 0), f: 1300, roll: -4}; // after the reveal (A hold)
 const DRIFT = v3(0.5, -0.25, 0.4); // m/s, constant, runs across the seam
 const at = (c: {pos: V3; target: V3; f: number; roll: number}, tau: number): Cam3 => ({
   ...lookAt(add3(c.pos, v3(DRIFT.x * tau, DRIFT.y * tau, DRIFT.z * tau)), add3(c.target, v3(0.3 * tau, 0.2 * tau, 0)), c.f),
