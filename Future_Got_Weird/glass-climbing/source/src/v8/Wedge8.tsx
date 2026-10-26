@@ -1,14 +1,16 @@
 // Glass Climbing V8: the microscopic section, rebuilt (replaces v5/Micro5 for the wedge beats).
 // A side section through one tile's edge and the surface it is on, in the bay's own orientation: the surface on the
-// LEFT (a fixed vertical band: clear glass, or rough fired brick), the tile on the RIGHT (its darker silicone backing
-// sheet with the tile's rigid plate behind it), "down" is down. World units are microns, x = 0 is the glass face.
+// LEFT (a fixed vertical band: clear glass, or rough fired brick), the tile on the RIGHT (its silicone backing sheet,
+// keyed into the tile's rigid plate behind it), "down" is down. World units are microns, x = 0 is the glass face.
 // A small group of large silicone wedges (about 100 um long, as on the Stanford pads) is rooted in the backing.
 // Physics drawn (frictional adhesion, Hawkes/Cutkosky microwedges):
-//  - Each wedge leans UP toward the surface, so its tip TRAILS the downward pull. Unloaded, only the tips touch.
+//  - Each wedge's tip sits ABOVE its root (the blade leans up toward the surface), so the tip TRAILS the downward
+//    pull. Unloaded, only the tips touch. (A blade leaning the other way would be pushed upright by a downward pull
+//    and let go: that is the release direction.)
 //  - Shear: the backing slides DOWN. The tips that touch stay put (friction). Each blade is inextensible, so as its
 //    root is dragged down the blade swings over and the backing is drawn in toward the glass (the blades are in
-//    tension); the thin tip lies flat on the glass and the flat contact strip grows from the tip, from a point to a
-//    long strip. That close contact is what lets the short-range attractions add up (Mol8).
+//    tension: this is the adhesion); the thin tip end swings down onto the glass and the flat contact strip grows
+//    from the tip, from a point to a long strip. That close contact lets the short-range attractions add up (Mol8).
 //  - Unloading (shear back to 0) lets the blades spring back to their rest shape; only the tips touch again.
 //  - Brick: only the tips that land on the brick's highest points touch; they can bend only a little; the rest hang
 //    over the gaps. Slip: the backing drags on, the touching tips are pulled off their peaks, flick back and the pad
@@ -24,19 +26,21 @@ import {H, W} from '../lib';
 // ------------------------------------------------------------------ constants
 export const WG = {
   L: 100, // blade length (um), constant
-  pitch: 60, // wedge spacing along the surface (um)
-  lean: 32, // rest angle of the blade above the -x axis (deg): leaning up toward the surface
-  wRoot: 24, // blade thickness at the root (um)
-  wTip: 2.2, // blade thickness at the tip (um)
+  pitch: 50, // wedge spacing along the surface (um)
+  lean: 20, // rest angle of the blade above the -x axis (deg): the tip sits above the root
+  wRoot: 22, // blade thickness at the root (um)
+  wTip: 2.4, // blade thickness at the tip (um)
   gap: 16, // approach 0: how far every tip clears the surface (um)
-  slide: 26, // shear 1: how far the backing slides down (um)
-  strip: 32, // shear 1 on glass: the flat contact strip's length (um)
-  rootTurn: 10, // shear 1: the blade's root tilts this much toward the surface (deg; the backing is compliant too)
-  sheet: 30, // backing sheet thickness (um); the tile's plate is behind it
-  brickSlide: 10, // shear 1 on brick: backing slide while the few touching tips hold (um)
+  slide: 38, // shear 1: how far the backing slides down (um)
+  strip: 22, // shear 1 on glass: the flat contact strip's length (um)
+  tip0: 6, // the straight tip end at rest (um): it swings down onto the glass and grows into the strip
+  rootTurn: 6, // shear 1: the blade's root tilts this much toward the surface (deg; the backing is compliant too)
+  sheet: 32, // backing sheet thickness (um); the tile's plate is behind it
+  pegs: 90, // spacing of the sheet's keys into the plate (um)
+  brickSlide: 8, // shear 1 on brick: backing slide while the few touching tips hold (um)
   brickTurn: 0.3, // shear 1 on brick: fraction of the glass tip turn (they bend only a little)
-  slipSlide: 50, // slip 1 on brick: further backing slide (um)
-  peel: 16, // slip 1 on brick: the pad springs back off the brick (um)
+  slipSlide: 30, // slip 1 on brick: further backing slide (um)
+  peel: 14, // slip 1 on brick: the pad springs back off the brick (um)
 };
 export type WedgeSurface = 'glass' | 'brick';
 export type WedgeState = {
@@ -65,12 +69,16 @@ export const WCOL = {
   contact: '#3E7F88',
   wedge: '#DCE9EB',
   sheet: '#8CA6AE',
-  plate: '#4F5D68',
-  plateEdge: '#8E9CA6',
+  plate: '#56636F',
+  plateEdge: '#93A1AB',
   brick: '#A65A3E',
-  brickDeep: '#8C462F',
-  brickLit: '#D08B6C',
-  brickDark: '#6A3020',
+  brickLit: '#CF8A68',
+  brickDark: '#6E3322',
+  brickGrain: '#C98A6A',
+  brickPore: '#4A2016',
+  /** deep in the zoom the section's two sides blend to these: the mean tone of the molecular view's two sides (Mol8) */
+  glassAtomic: '#9FD0CE',
+  siliconeAtomic: '#D3E0E3',
 };
 
 /** the sheet's face tone: the blades' roots and the moulded fillets share it, so the joint has no seam */
@@ -88,44 +96,75 @@ const sm = (a: number, b: number, x: number) => {
 };
 
 // ------------------------------------------------------------------ the brick profile
-// x(y) <= 0 of the brick face. Its highest points (x = 0) sit exactly where every third wedge's tip lands
-// (wedge i = 1 mod 3); every other tip faces a recess, so it hangs over a gap. Angular, crisp facets.
-const BRICK_P = 3 * WG.pitch;
-const brickVerts = (m: number): [number, number][] => {
-  const yA = WG.pitch + m * BRICK_P; // the apex under wedge 3m+1
-  const h = (k: number) => hash(m * 17 + k, 911);
-  return [
-    [yA - 2.6, -1.2],
-    [yA, 0],
-    [yA + 2.4, -1.4],
-    [yA + 22 + 3 * h(1), -29 - 4 * h(2)],
-    [yA + 36 + 4 * h(3), -46 - 7 * h(4)],
-    [yA + 58 + 5 * h(5), -38 - 5 * h(6)],
-    [yA + 90 + 6 * h(7), -21 - 6 * h(8)],
-    [yA + 104 + 3 * h(9), -30 - 4 * h(10)],
-    [yA + 126 + 5 * h(11), -52 - 6 * h(12)],
-    [yA + 150 + 3 * h(13), -31 - 5 * h(14)],
-    [yA + 166, -13 - 2 * h(15)],
-  ];
+// x(y) <= 0 of the brick face. Its highest points (x = 0, crisp apexes) sit exactly where a touching wedge's tip
+// lands; every other tip faces a recess (at least 9 um deep), so it hangs over a gap. Which wedges touch is a fixed,
+// irregular pattern (blocks of 5 wedges with one or two apexes, at least 2 pitches apart); between apexes the face
+// runs through deep valleys and lower secondary ridges, with a long-wavelength variation, so it never reads as a
+// regular sawtooth when zoomed out.
+const BLOCK = 5;
+const APEX_SETS = [[1, 4], [2], [1, 3], [2, 4], [1], [3], [2, 4], [1, 3]];
+const blockSet = (b: number) => (b === 0 ? [1, 4] : b === -1 ? [3] : APEX_SETS[Math.floor(hash(b + 1000, 503) * APEX_SETS.length)]);
+/** does wedge i's tip land on a brick apex (and so touch)? */
+export const touchesBrick = (i: number) => {
+  const b = Math.floor(i / BLOCK);
+  return blockSet(b).includes(i - b * BLOCK);
+};
+const apexesNear = (y: number): number[] => {
+  const b = Math.floor(y / (WG.pitch * BLOCK));
+  const out: number[] = [];
+  for (let k = b - 2; k <= b + 2; k++) for (const o of blockSet(k)) out.push(k * BLOCK + o);
+  return out;
+};
+const longWave = (y: number) => 1 + 0.16 * Math.sin((2 * Math.PI * y) / 730 + 0.6) + 0.1 * Math.sin((2 * Math.PI * y) / 1930 + 2.1);
+/** the vertices [y, x] from apex wedge ia to the next apex wedge ib (both apexes included) */
+const stretchVerts = (ia: number, ib: number): [number, number][] => {
+  const P = WG.pitch;
+  const ya = ia * P, yb = ib * P, D = yb - ya;
+  const h = (k: number) => hash(ia * 37 + k, 911);
+  const v: [number, number][] = [[ya, 0], [ya + 2.4 + 0.8 * h(0), -1.8 - 0.8 * h(1)]];
+  const n = 2 + Math.floor(D / 42);
+  for (let k = 1; k <= n; k++) {
+    const t = (k - 0.5 + 0.45 * (h(k * 3) - 0.5)) / n;
+    const y = ya + 9 + (D - 18) * t;
+    // valleys and secondary ridges, mostly alternating (sometimes two valleys running into each other)
+    const valley = k % 2 === 1 || h(k * 3 + 2) < 0.3;
+    const x = valley ? -(13 + 14 * h(k * 3 + 1)) * longWave(y) : -(7 + 7 * h(k * 3 + 1));
+    v.push([y, x]);
+  }
+  v.push([yb - 2.4 - 0.8 * h(40), -1.8 - 0.8 * h(41)], [yb, 0]);
+  return v;
 };
 /** the brick face x at height y (um) */
 export const brickX = (y: number) => {
-  const m = Math.floor((y - WG.pitch + 2.6) / BRICK_P);
-  const vs = [...brickVerts(m), ...brickVerts(m + 1).slice(0, 2)];
-  for (let i = 0; i < vs.length - 1; i++) {
-    const [ya, xa] = vs[i], [yb, xb] = vs[i + 1];
-    if (y >= ya && y <= yb) return lerp(xa, xb, (y - ya) / (yb - ya || 1));
+  const ap = apexesNear(y);
+  for (let k = 0; k < ap.length - 1; k++) {
+    const ya = ap[k] * WG.pitch, yb = ap[k + 1] * WG.pitch;
+    if (y >= ya && y <= yb) {
+      const vs = stretchVerts(ap[k], ap[k + 1]);
+      for (let j = 0; j < vs.length - 1; j++) {
+        const [y0, x0] = vs[j], [y1, x1] = vs[j + 1];
+        if (y >= y0 && y <= y1) return lerp(x0, x1, (y - y0) / (y1 - y0 || 1));
+      }
+    }
   }
   return -30;
 };
+/** the brick face from y0 to y1 as a polyline (all vertices between) */
 const brickPoly = (y0: number, y1: number): V[] => {
   const out: V[] = [{x: brickX(y0), y: y0}];
-  const m0 = Math.floor((y0 - WG.pitch) / BRICK_P) - 1, m1 = Math.ceil((y1 - WG.pitch) / BRICK_P) + 1;
-  for (let m = m0; m <= m1; m++) for (const [y, x] of brickVerts(m)) if (y > y0 && y < y1) out.push({x, y});
+  const b0 = Math.floor(y0 / (WG.pitch * BLOCK)) - 1, b1 = Math.ceil(y1 / (WG.pitch * BLOCK)) + 1;
+  const ap: number[] = [];
+  for (let b = b0; b <= b1; b++) for (const o of blockSet(b)) ap.push(b * BLOCK + o);
+  for (let k = 0; k < ap.length - 1; k++) {
+    const vs = stretchVerts(ap[k], ap[k + 1]);
+    for (let j = 0; j < vs.length - 1; j++) {
+      const [y, x] = vs[j];
+      if (y > y0 && y < y1) out.push({x, y});
+    }
+  }
   out.push({x: brickX(y1), y: y1});
   return out;
 };
-const touchesBrick = (i: number) => ((i % 3) + 3) % 3 === 1;
 const surfX = (s: WedgeSurface, y: number) => (s === 'glass' ? 0 : brickX(y));
 
 // ------------------------------------------------------------------ blade geometry
@@ -140,24 +179,24 @@ const bez5 = (P: V[], t: number): V => {
   }
   return {x, y};
 };
-export const HK = {a: 0.42, b: 0.3}; // handle fractions of the chord (root, strip end)
+export const HK = {a: 0.42, b: 0.42}; // handle fractions of the chord (root, strip end)
 const NB = 40; // samples along the free (curved) part
-const NS = 10; // samples along the flat strip
+const NS = 10; // samples along the straight tip end / flat strip
 /** the gripping face (the face toward the surface) from the root R to the tip T: a curve leaving R along angle thR
- *  and arriving at Q = T - e c along e (angle thE), then the flat strip Q -> T (length c). The curve is a quintic
- *  whose end controls are collinear with the end tangents, so its curvature is zero at the root and where it meets
- *  the strip: the bend comes on smoothly (no corner on the thick back face) */
+ *  and arriving at Q = T - e c along e (angle thE), then the straight end Q -> T (length c; flat on the glass once
+ *  thE reaches 90 deg). The curve is a quintic whose end controls are collinear with the end tangents, so its
+ *  curvature is zero at the root and where it meets the end: the bend comes on smoothly */
 const gripLine = (R: V, thR: number, T: V, thE: number, c: number) => {
   const e = dirA(thE), dR = dirA(thR);
   const Q = {x: T.x - e.x * c, y: T.y - e.y * c};
   const ch = Math.hypot(Q.x - R.x, Q.y - R.y);
-  // stiff root (long handle), compliant tip (short handle); the root handle never reaches past the surface
-  const a = Math.min(HK.a * ch, (R.x - Q.x) * 0.9 / Math.max(0.05, Math.cos(thR))) / 2;
+  // stiff root (long handle); the root handle never reaches past the surface
+  const a = Math.min(HK.a * ch, ((R.x - Q.x) * 0.9) / Math.max(0.05, Math.cos(thR))) / 2;
   const b = (HK.b * ch) / 2;
   const P = [R, {x: R.x + dR.x * a, y: R.y + dR.y * a}, {x: R.x + dR.x * 2 * a, y: R.y + dR.y * 2 * a}, {x: Q.x - e.x * 2 * b, y: Q.y - e.y * 2 * b}, {x: Q.x - e.x * b, y: Q.y - e.y * b}, Q];
   const pts: V[] = [];
   for (let i = 0; i <= NB; i++) pts.push(bez5(P, i / NB));
-  for (let i = 1; i <= NS; i++) pts.push({x: Q.x + e.x * (c * i) / NS, y: Q.y + e.y * (c * i) / NS});
+  for (let i = 1; i <= NS; i++) pts.push({x: Q.x + (e.x * (c * i)) / NS, y: Q.y + (e.y * (c * i)) / NS});
   const s: number[] = [0];
   for (let i = 1; i < pts.length; i++) s.push(s[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
   return {pts, s, len: s[s.length - 1]};
@@ -174,22 +213,23 @@ const solveRootX = (T: V, p: Pose) => {
   }
   return (lo + hi) / 2;
 };
+/** glass, load k: the root is dragged down; the straight tip end swings down onto the glass (flat by k 0.7) while
+ *  it lengthens into the strip, so the tip never curls into a hook with a short strip behind it */
 const glassPose = (k: number): Pose => ({
   thR: PHI + WG.rootTurn * RAD * k,
-  thE: PHI + (HALF_PI - PHI) * sm(0, 0.42, k),
-  c: WG.strip * sm(0.05, 1, k),
+  thE: PHI + (HALF_PI - PHI) * sm(0, 0.7, k),
+  c: WG.tip0 + (WG.strip - WG.tip0) * sm(0.25, 1, k),
   dy: REST.y + WG.slide * k,
 });
 /** brick: k the load, `extra` the creep of the backing before the held tips let go (um), `strain` 0..1 of it */
 const brickPose = (k: number, extra: number, strain = 0): Pose => ({
   thR: PHI + WG.rootTurn * RAD * (0.4 + 0.5 * strain) * k,
   thE: PHI + (HALF_PI - PHI) * WG.brickTurn * (sm(0, 0.6, k) + 0.9 * strain),
-  c: 0,
+  c: WG.tip0,
   dy: REST.y + WG.brickSlide * k + extra,
 });
 /** the held tips' strain during the creep before release (0..1) */
 const strainOf = (slip: number) => sm(0, 0.2, slip);
-
 /** the release of the touching brick tips over slip (0: held, 1: free) */
 const relOf = (slip: number) => sm(0.16, 0.36, slip);
 /** the brick slip's backing slide (um): a short creep while the tips hold, then the skid */
@@ -203,16 +243,16 @@ export const backingAt = (st: WedgeState): Backing => {
   const lift = WG.gap * (1 - ap);
   const mg = st.molGap ?? 0;
   if (st.surface === 'glass') {
-    return {x: solveRootX({x: mg, y: 0}, glassPose(k)) + lift, y: WG.slide * sh, k};
+    return {x: solveRootX({x: mg, y: 0}, glassPose(k)) + lift, y: WG.slide * k, k};
   }
   const sy = slipY(slip);
   const held = solveRootX({x: 0, y: 0}, brickPose(k, sy * k, strainOf(slip) * k));
   const free = REST.x + WG.peel * sm(0.25, 0.95, slip);
   const r = relOf(slip);
-  return {x: lerp(held, free, r) + lift, y: WG.brickSlide * sh + sy * sh, k};
+  return {x: lerp(held, free, r) + lift, y: WG.brickSlide * k + sy * k, k};
 };
 
-type Blade = {
+export type Blade = {
   grip: V[];
   back: V[];
   root: V;
@@ -222,7 +262,7 @@ type Blade = {
   i: number;
 };
 
-/** a blade's outline (gripping face + back face) from its gripping-face polyline */
+/** a blade's back face from its gripping-face polyline (a tapering thickness on the side away from the surface) */
 const thick = (pts: V[], s: number[]) => {
   const n = pts.length;
   const back: V[] = [];
@@ -230,7 +270,6 @@ const thick = (pts: V[], s: number[]) => {
   for (let i = 0; i < n; i++) {
     const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
     const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy);
-    // (a strip of zero length has coincident points: keep the last real direction)
     if (l > 1e-6) {
       tx = dx / l;
       ty = dy / l;
@@ -242,6 +281,12 @@ const thick = (pts: V[], s: number[]) => {
   }
   return back;
 };
+/** the no-penetration guard for brick (inactive by design; it only ever nudges a point back to the face) */
+const guard = (pts: V[]) =>
+  pts.map((q) => {
+    const sx = brickX(q.y);
+    return q.x < sx ? {x: sx, y: q.y} : q;
+  });
 
 /** wedge i's blade for a state */
 export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): Blade => {
@@ -258,8 +303,8 @@ export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): 
     const pts = g.pts.map((q) => ({x: q.x + off.x, y: q.y + off.y}));
     const back = thick(pts, g.s);
     const touch = sm(0.97, 1, ap);
-    // contact: the strip that lies flat (within a hair of the face), plus the tip's point contact
-    const flat = p.c > 0 ? Math.min(p.c, 0.25 / Math.max(1e-3, Math.cos(p.thE))) : 0;
+    // contact: the part of the straight end that lies flat (within a hair of the face), at least the tip's point
+    const flat = Math.min(p.c, 0.5 / Math.max(1e-3, Math.cos(p.thE)));
     const tip = pts[pts.length - 1];
     return {grip: pts, back, root: pts[0], tip, i, contact: touch > 0.001 ? {x: mg, y0: tip.y - 0.4, y1: tip.y + Math.max(1.2, flat), k: touch} : null};
   }
@@ -267,7 +312,7 @@ export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): 
   const touching = touchesBrick(i);
   const restGrip = (thR: number, R: V) => {
     const T = {x: R.x - WG.L * Math.cos(thR), y: R.y - WG.L * Math.sin(thR)};
-    return gripLine(R, thR, T, thR, 0);
+    return gripLine(R, thR, T, thR, WG.tip0);
   };
   const R = {x: B.x, y: rootY};
   if (!touching || k < 1e-4) {
@@ -282,28 +327,25 @@ export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): 
   const p = brickPose(k, sy * k, strainOf(slip) * k);
   const apex = {x: 0, y: i * WG.pitch};
   const Rh = {x: solveRootX(apex, p), y: apex.y + p.dy};
-  const held = gripLine(Rh, p.thR, apex, p.thE, 0);
+  const held = gripLine(Rh, p.thR, apex, p.thE, p.c);
   const r = relOf(slip);
   // the flick: released, the blade springs back past its rest angle and settles (a damped swing over slip)
   const ds = Math.max(0, slip - 0.2);
-  const fl = 15 * RAD * k * Math.exp(-ds * 5.5) * Math.sin(ds * 21);
+  const fl = 12 * RAD * k * Math.exp(-ds * 5.5) * Math.sin(ds * 21);
   const free = restGrip(PHI - fl, R);
   const off = {x: R.x - Rh.x, y: R.y - Rh.y};
-  const pts = guard(held.pts.map((q, j) => {
-    const h = {x: q.x + off.x, y: q.y + off.y};
-    return {x: lerp(h.x, free.pts[j].x, r), y: lerp(h.y, free.pts[j].y, r)};
-  }));
+  const pts = guard(
+    held.pts.map((q, j) => {
+      const h = {x: q.x + off.x, y: q.y + off.y};
+      return {x: lerp(h.x, free.pts[j].x, r), y: lerp(h.y, free.pts[j].y, r)};
+    }),
+  );
   const sArr = held.s.map((v, j) => lerp(v, free.s[j], r));
   const back = guard(thick(pts, sArr));
   const tip = pts[pts.length - 1];
   const on = (1 - sm(0, 0.35, r)) * sm(0.97, 1, ap);
   return {grip: pts, back, root: pts[0], tip, i, contact: on > 0.001 ? {x: 0, y0: tip.y - 1.2, y1: tip.y + 1.2, k: on} : null};
 };
-/** the no-penetration guard for brick (inactive by design; it only ever nudges a point back to the face) */
-const guard = (pts: V[]) => pts.map((q) => {
-  const sx = brickX(q.y);
-  return q.x < sx ? {x: sx, y: q.y} : q;
-});
 
 /** world position (um) of wedge i's contact region: the strip on the face (top, bottom, mid). For a wedge not in
  *  contact it is where its tip is (or would land). Use it to zoom into one contact. */
@@ -317,21 +359,25 @@ export const contactRegion = (st: WedgeState, i: number) => {
 };
 
 // ------------------------------------------------------------------ cameras
-/** the standard screen point of the focus contact (the glass face stays at x = 340 through the whole sequence) */
-export const FACE_SX = 340;
-export const FOCUS_SY = 1000;
+/** the glass face's screen x through the whole sequence (section and the move into the molecules) */
+export const FACE_SX = 280;
+/** the focus strip's screen y: wedge 3's strip ends at y 1377 and wedge 4's tip lands at 1565, so the caption band
+ *  (y 1380-1560) holds no contact */
+export const FOCUS_SY = 960;
 export const FOCUS = 2;
+/** the section's zoom (screen px per um): about 5.6 wedges in frame */
+export const WEDGE_Z = 6.8;
 /** the focus wedge's strip mid when fully loaded on glass (um) */
 export const FOCUS_P: V = {x: 0, y: FOCUS * WG.pitch + WG.strip / 2};
 /** a cam (at zoom z, px per um) that puts world point p at screen point (sx, sy) */
 export const camAt = (p: V, z: number, sx = FACE_SX, sy = FOCUS_SY): Cam => ({x: p.x - (sx - W / 2) / z, y: p.y - (sy - H / 2) / z, z});
-/** the section's camera for the whole wedge beat (unloaded, approach, shear): glass face fixed at x = 340 */
-export const WEDGE_CAM: Cam = camAt(FOCUS_P, 5.2);
-/** a slightly closer framing of the same (same glass face line, same focus point), for a slow push during the shear */
-export const WEDGE_CAM_CLOSE: Cam = camAt(FOCUS_P, 6.0);
-/** a brick framing at the section's scale: the apexes under wedges 1 and 4 at screen y 420 and 1356 (above the
- *  caption band), the face at x = 340 */
-export const BRICK_CAM: Cam = camAt({x: 0, y: WG.pitch}, 5.2, FACE_SX, 420);
+/** the section's camera for the whole wedge beat (unloaded, approach, shear): glass face fixed at x = 280 */
+export const WEDGE_CAM: Cam = camAt(FOCUS_P, WEDGE_Z);
+/** a closer framing of the same (same glass face line, same focus point): about 4.9 wedges */
+export const WEDGE_CAM_CLOSE: Cam = camAt(FOCUS_P, 7.8);
+/** the brick at the section's scale and face line: the apexes under wedges 1 and 4 (the two touching tips in
+ *  frame) at screen y 335 and 1355, both clear of the caption band */
+export const BRICK_CAM: Cam = camAt({x: 0, y: WG.pitch}, WEDGE_Z, FACE_SX, 335);
 
 // ------------------------------------------------------------------ drawing
 /** number formatting with enough decimals for the zoom, relative to an origin (deep zooms stay exact) */
@@ -357,25 +403,40 @@ export const viewOf = (cam: Cam, marginPx = 60): View => ({
   y1: cam.y + (H / 2 + marginPx) / cam.z,
 });
 
-const fillet = (f: Fm, C: V, u1: V, u2: V, d: number) => {
-  const A = {x: C.x + u1.x * d, y: C.y + u1.y * d}, B = {x: C.x + u2.x * d, y: C.y + u2.y * d};
-  return {fill: `M${f.p(C)} L${f.p(A)} Q${f.p(C)} ${f.p(B)} Z`, edge: `M${f.p(A)} Q${f.p(C)} ${f.p(B)}`};
+/** walk distance d along a polyline from point index j0 (with a start point S on segment j0-1..j0): the point and its index */
+const along = (pts: V[], S: V, j0: number, d: number): {p: V; j: number} => {
+  let left = d, prev = S;
+  for (let j = j0; j < pts.length; j++) {
+    const l = Math.hypot(pts[j].x - prev.x, pts[j].y - prev.y);
+    if (l >= left) {
+      const t = left / (l || 1);
+      return {p: {x: lerp(prev.x, pts[j].x, t), y: lerp(prev.y, pts[j].y, t)}, j};
+    }
+    left -= l;
+    prev = pts[j];
+  }
+  return {p: pts[pts.length - 1], j: pts.length - 1};
 };
 const unit = (a: V, b: V): V => {
   const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
   return {x: dx / l, y: dy / l};
 };
 
+/** deep-zoom tone blend (0 at the section's scale, 1 by 30000 px/um): the section's flat fields take the molecular
+ *  view's mean tones, so the dissolve into the molecules changes texture, not tone */
+export const deepK = (z: number) => sm(Math.log(300), Math.log(30000), Math.log(Math.max(z, 1e-6)));
+
 const GlassBody: React.FC<{id: string; f: Fm; v: View; ink: number; z: number}> = ({id, f, v, ink, z}) => {
   const x0 = Math.min(v.x0, -1);
+  const dz = deepK(z);
   const streaks: React.ReactNode[] = [];
   const k0 = Math.floor((v.y0 - 200) / 170), k1 = Math.ceil((v.y1 + 200) / 170);
-  if (z < 400)
+  if (z < 400 && k1 - k0 < 400)
     for (let k = k0; k <= k1; k++) {
       const y = k * 170 + 40 * hash(k, 3);
       const w1 = 7 + 5 * hash(k, 5);
-      streaks.push(<path key={k} d={`M${f.p({x: -66, y})} L${f.p({x: -24, y: y - 74})} L${f.p({x: -24 + w1, y: y - 74})} L${f.p({x: -66 + w1, y})} Z`} fill="#FFFFFF" opacity={0.09} />);
-      streaks.push(<path key={`b${k}`} d={`M${f.p({x: -52, y: y + 26})} L${f.p({x: -14, y: y - 40})} L${f.p({x: -12, y: y - 40})} L${f.p({x: -50, y: y + 26})} Z`} fill="#FFFFFF" opacity={0.07} />);
+      streaks.push(<path key={k} d={`M${f.p({x: -66, y})} L${f.p({x: -24, y: y - 74})} L${f.p({x: -24 + w1, y: y - 74})} L${f.p({x: -66 + w1, y})} Z`} fill="#FFFFFF" opacity={0.08} />);
+      streaks.push(<path key={`b${k}`} d={`M${f.p({x: -52, y: y + 26})} L${f.p({x: -14, y: y - 40})} L${f.p({x: -12, y: y - 40})} L${f.p({x: -50, y: y + 26})} Z`} fill="#FFFFFF" opacity={0.06} />);
     }
   const edgeW = Math.min(0.9, 3.2 / z);
   return (
@@ -384,14 +445,14 @@ const GlassBody: React.FC<{id: string; f: Fm; v: View; ink: number; z: number}> 
         <linearGradient id={`${id}-gl`} gradientUnits="userSpaceOnUse" x1={f.n(-90 - f.org.x)} y1="0" x2={f.n(0 - f.org.x)} y2="0">
           <stop offset="0" stopColor={WCOL.glassDeep} />
           <stop offset="0.55" stopColor={WCOL.glassMid} />
-          <stop offset="0.93" stopColor={WCOL.glassFace} />
-          <stop offset="1" stopColor={lit(WCOL.glassFace, 0.18)} />
+          <stop offset="0.93" stopColor={mix(WCOL.glassFace, WCOL.glassAtomic, dz)} />
+          <stop offset="1" stopColor={mix(lit(WCOL.glassFace, 0.18), WCOL.glassAtomic, dz)} />
         </linearGradient>
       </defs>
       <path d={`M${f.p({x: x0, y: v.y0})} L${f.p({x: 0, y: v.y0})} L${f.p({x: 0, y: v.y1})} L${f.p({x: x0, y: v.y1})} Z`} fill={`url(#${id}-gl)`} />
       {streaks}
       {/* the lit face edge (the air-glass reflection) */}
-      <path d={`M${f.p({x: 0, y: v.y0})} L${f.p({x: 0, y: v.y1})} L${f.p({x: -edgeW, y: v.y1})} L${f.p({x: -edgeW, y: v.y0})} Z`} fill={WCOL.glassEdge} opacity={0.95} />
+      <path d={`M${f.p({x: 0, y: v.y0})} L${f.p({x: 0, y: v.y1})} L${f.p({x: -edgeW, y: v.y1})} L${f.p({x: -edgeW, y: v.y0})} Z`} fill={WCOL.glassEdge} opacity={0.95 - 0.55 * dz} />
       <path d={`M${f.p({x: 0, y: v.y0})} L${f.p({x: 0, y: v.y1})}`} stroke={INK} strokeWidth={f.n(ink * 0.8)} opacity={0.55} />
     </g>
   );
@@ -401,50 +462,74 @@ const BrickBody: React.FC<{id: string; f: Fm; v: View; ink: number; z: number}> 
   const x0 = Math.min(v.x0, -80);
   const prof = brickPoly(v.y0, v.y1);
   const body = `M${f.p({x: x0, y: v.y0})} L${prof.map(f.p).join(' L')} L${f.p({x: x0, y: v.y1})} Z`;
-  // the deeper clay a little inside the face (gives the solid its depth)
-  const inner = `M${f.p({x: x0, y: v.y0})} L${prof.map((q) => f.p({x: Math.min(q.x, brickX(q.y - 4), brickX(q.y + 4)) - 9, y: q.y})).join(' L')} L${f.p({x: x0, y: v.y1})} Z`;
-  // grains and pores of the fired clay, seeded by a fixed grid (fixed to the brick)
+  // fired clay: sparse small sand grains and pores, fixed to the brick (a fixed grid of cells)
   const bits: React.ReactNode[] = [];
-  const g0 = Math.floor(v.y0 / 7) - 1, g1 = Math.ceil(v.y1 / 7) + 1;
-  for (let g = g0; g <= g1; g++)
-    for (let c = 0; c < 9; c++) {
-      const h1 = hash(g * 31 + c, 77), h2 = hash(g * 31 + c, 78), h3 = hash(g * 31 + c, 79), h4 = hash(g * 31 + c, 80);
-      const y = g * 7 + h1 * 7;
-      const x = -4 - c * 9.5 - h2 * 8;
-      if (x > brickX(y) - 3.5 || x < x0) continue;
-      if (h3 < 0.5) {
-        // an angular grain
-        const r = 1.1 + h4 * 2.2;
-        const a = h1 * 6.28;
-        const pts = [0, 1, 2, 3].map((j) => ({x: x + Math.cos(a + j * 1.7 + h2) * r * (0.7 + 0.5 * hash(g * 7 + j, c)), y: y + Math.sin(a + j * 1.7 + h2) * r * (0.7 + 0.5 * hash(g * 5 + j, c + 3))}));
-        bits.push(<path key={`g${g}-${c}`} d={`M${pts.map(f.p).join(' L')} Z`} fill={h4 < 0.55 ? '#C27A5C' : '#7C3A27'} opacity={0.55} />);
-      } else if (h3 < 0.68) {
-        bits.push(<ellipse key={`p${g}-${c}`} cx={f.n(x - f.org.x)} cy={f.n(y - f.org.y)} rx={f.n(0.8 + h4 * 1.6)} ry={f.n(0.6 + h1 * 1.0)} fill="#4F2216" opacity={0.6} />);
+  const CELL = 11;
+  if (z > 1.5) {
+    const g0 = Math.floor(v.y0 / CELL) - 1, g1 = Math.ceil(v.y1 / CELL) + 1;
+    const cols = Math.min(14, Math.ceil((-x0 + 10) / CELL));
+    for (let g = g0; g <= g1; g++)
+      for (let c = 0; c < cols; c++) {
+        const key = g * 53 + c;
+        const h1 = hash(key, 77), h2 = hash(key, 78), h3 = hash(key, 79), h4 = hash(key, 80);
+        const y = g * CELL + h1 * CELL;
+        const x = -5 - c * CELL - h2 * CELL;
+        if (x > brickX(y) - 3 || x < x0) continue;
+        if (h3 < 0.38) {
+          // an angular sand grain
+          const r = 0.7 + h4 * 0.9;
+          const a = h1 * 6.28;
+          const pts = [0, 1, 2, 3].map((j) => ({x: x + Math.cos(a + j * 1.65 + h2) * r * (0.75 + 0.45 * hash(key * 7 + j, 5)), y: y + Math.sin(a + j * 1.65 + h2) * r * (0.75 + 0.45 * hash(key * 5 + j, 9))}));
+          bits.push(<path key={`g${key}`} d={`M${pts.map(f.p).join(' L')} Z`} fill={WCOL.brickGrain} opacity={0.75} />);
+        } else if (h3 < 0.5) {
+          bits.push(<ellipse key={`p${key}`} cx={f.n(x - f.org.x)} cy={f.n(y - f.org.y)} rx={f.n(0.6 + h4 * 0.8)} ry={f.n(0.45 + h1 * 0.5)} fill={WCOL.brickPore} opacity={0.6} />);
+        }
       }
-    }
-  // facet edges: the faces turned up catch the light, the faces turned down fall in shade
-  const edges: React.ReactNode[] = [];
-  const ew = Math.min(1.6, 4 / z);
+  }
+  // the facets: up-facing ones (rising toward x = 0 going down) catch the light along a crisp edge; down-facing ones
+  // fall in shade. Flat bands, constant on screen, no rim following the whole profile.
+  const facets: React.ReactNode[] = [];
+  const ew = Math.min(2.2, 6 / z);
   for (let j = 0; j < prof.length - 1; j++) {
     const a = prof[j], b = prof[j + 1];
-    const up = b.x > a.x; // the face rises toward x = 0 going down: it faces down (shade); else it faces up
-    const col = up ? WCOL.brickDark : WCOL.brickLit;
-    edges.push(<path key={j} d={`M${f.p(a)} L${f.p(b)} L${f.p({x: b.x - ew, y: b.y})} L${f.p({x: a.x - ew, y: a.y})} Z`} fill={col} opacity={up ? 0.55 : 0.8} />);
+    const dx = b.x - a.x, dy = b.y - a.y, l = Math.hypot(dx, dy) || 1;
+    // inward normal (into the brick)
+    const nx = -dy / l, ny = dx / l;
+    const inx = nx < 0 ? nx : -nx, iny = nx < 0 ? ny : -ny;
+    const up = b.x > a.x;
+    const w = ew * (up ? 1 : 1.3);
+    facets.push(<path key={j} d={`M${f.p(a)} L${f.p(b)} L${f.p({x: b.x + inx * w, y: b.y + iny * w})} L${f.p({x: a.x + inx * w, y: a.y + iny * w})} Z`} fill={up ? WCOL.brickLit : WCOL.brickDark} opacity={up ? 0.95 : 0.5} />);
   }
+  // one or two hard hairline fractures running in from a valley
+  const cracks: React.ReactNode[] = [];
+  if (z > 1.5)
+    for (let j = 1; j < prof.length - 1; j++) {
+      const q = prof[j];
+      if (q.x > -24) continue;
+      const key = Math.round(q.y * 10);
+      if (hash(key, 301) > 0.28) continue;
+      const pts: V[] = [q];
+      let p = q;
+      for (let s = 0; s < 3; s++) {
+        p = {x: p.x - 6 - 7 * hash(key + s, 302), y: p.y + (hash(key + s, 303) - 0.5) * 12};
+        pts.push(p);
+      }
+      cracks.push(<path key={`k${j}`} d={f.line(pts)} fill="none" stroke={WCOL.brickPore} strokeWidth={f.n(1.4 / z)} opacity={0.7} strokeLinejoin="miter" />);
+    }
   return (
     <g>
-      <path d={body} fill={WCOL.brick} />
-      <path d={inner} fill={WCOL.brickDeep} opacity={0.55} />
-      {z < 300 && bits}
-      {edges}
-      <path d={`M${prof.map(f.p).join(' L')}`} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="miter" />
       <defs>
-        <linearGradient id={`${id}-bk`} gradientUnits="userSpaceOnUse" x1={f.n(-60 - f.org.x)} y1="0" x2={f.n(0 - f.org.x)} y2="0">
-          <stop offset="0" stopColor="#000000" stopOpacity={0.18} />
-          <stop offset="1" stopColor="#000000" stopOpacity={0} />
+        <linearGradient id={`${id}-bk`} gradientUnits="userSpaceOnUse" x1={f.n(-90 - f.org.x)} y1="0" x2={f.n(0 - f.org.x)} y2="0">
+          <stop offset="0" stopColor={shade(WCOL.brick, 0.32)} />
+          <stop offset="0.7" stopColor={shade(WCOL.brick, 0.08)} />
+          <stop offset="1" stopColor={WCOL.brick} />
         </linearGradient>
       </defs>
       <path d={body} fill={`url(#${id}-bk)`} />
+      {bits}
+      {cracks}
+      {facets}
+      <path d={`M${prof.map(f.p).join(' L')}`} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="miter" strokeMiterlimit={6} />
     </g>
   );
 };
@@ -459,37 +544,80 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
   const B = backingAt(st);
   const fi = st.focus ?? -999;
   const fk = st.focus === undefined ? 0 : clamp(st.focusK ?? 1);
+  const dz = deepK(z);
   // the wedges whose blade can reach the view
-  const i0 = Math.floor((v.y0 - REST.y - B.y - 30) / WG.pitch), i1 = Math.ceil((v.y1 + 30) / WG.pitch);
+  const i0 = Math.floor((v.y0 - REST.y - B.y - WG.wRoot - 40) / WG.pitch), i1 = Math.ceil((v.y1 + 40) / WG.pitch);
   const blades: Blade[] = [];
   for (let i = i0; i <= i1; i++) blades.push(bladeOf(st, i, B));
   const xS = B.x, xP = B.x + WG.sheet;
   const x1 = Math.max(v.x1, xP + 10);
-  // the backing face with a fillet at each root (the wedges are moulded in one piece with the sheet)
-  const fillets: React.ReactNode[] = [];
-  const faceSegs: string[] = [];
-  let yFace = v.y0;
-  blades.forEach((b) => {
-    // where the back face leaves the sheet face
-    let top: V = b.back[0];
-    for (let j = 1; j < b.back.length; j++) {
+  // each blade meets the sheet face in a moulded fillet on both sides; the blade's ink line ends exactly where the
+  // fillet takes over, so every root is one clean curve into the sheet
+  const DB = 6, DG = 3.4; // fillet sizes (um): back face (upper), gripping face (lower)
+  type Root = {fillB: string; fillG: string; edgeB: string; edgeG: string; jB: number; pB: V; jG: number; pG: V; topY: number; botY: number; hold: number};
+  const roots: (Root | null)[] = blades.map((b) => {
+    let jx = -1;
+    for (let j = 1; j < b.back.length; j++)
       if (b.back[j].x <= xS) {
-        const a = b.back[j - 1], c = b.back[j];
-        const t = (a.x - xS) / (a.x - c.x || 1);
-        top = {x: xS, y: lerp(a.y, c.y, t)};
-        const ub = unit(top, b.back[Math.min(b.back.length - 1, j + 2)]);
-        const ft = fillet(f, top, {x: 0, y: -1}, ub, 5.5);
-        const ug = unit(b.grip[0], b.grip[3]);
-        const fb = fillet(f, b.grip[0], {x: 0, y: 1}, ug, 3.2);
-        fillets.push(<path key={`ft${b.i}`} d={ft.fill} fill={ROOT} />, <path key={`fb${b.i}`} d={fb.fill} fill={ROOT} />);
-        faceSegs.push(`M${f.p({x: xS, y: yFace})} L${f.p({x: xS, y: top.y - 5.5})} ${ft.edge.replace(/^M[^Q]*/, '')}`);
-        faceSegs.push(fb.edge);
-        yFace = b.grip[0].y + 3.2;
+        jx = j;
         break;
       }
-    }
+    if (jx < 0) return null;
+    const a = b.back[jx - 1], c = b.back[jx];
+    const t = (a.x - xS) / (a.x - c.x || 1);
+    const Cb = {x: xS, y: lerp(a.y, c.y, t)};
+    const tb = along(b.back, Cb, jx, DB);
+    const Ab = {x: xS, y: Cb.y - DB};
+    const Cg = b.grip[0];
+    const tg = along(b.grip, Cg, 1, DG);
+    const Ag = {x: xS, y: Cg.y + DG};
+    // the blade's tone holds the sheet's root tone over the whole root and its fillets (no seam where they meet)
+    const ax = b.tip.x - Cg.x, ay = b.tip.y - Cg.y, al = ax * ax + ay * ay || 1;
+    const pr = (q: V) => ((q.x - Cg.x) * ax + (q.y - Cg.y) * ay) / al;
+    const hold = clamp(Math.max(pr(Cb), pr(tb.p), pr(Ab), pr(tg.p), 0) + 0.03, 0, 0.5);
+    return {
+      hold,
+      fillB: `M${f.p(Cb)} L${f.p(Ab)} Q${f.p(Cb)} ${f.p(tb.p)} Z`,
+      fillG: `M${f.p(Cg)} L${f.p(Ag)} Q${f.p(Cg)} ${f.p(tg.p)} Z`,
+      edgeB: `Q${f.p(Cb)} ${f.p(tb.p)}`,
+      edgeG: `M${f.p(tg.p)} Q${f.p(Cg)} ${f.p(Ag)}`,
+      jB: tb.j,
+      pB: tb.p,
+      jG: tg.j,
+      pG: tg.p,
+      topY: Ab.y,
+      botY: Ag.y,
+    };
   });
-  faceSegs.push(`M${f.p({x: xS, y: yFace})} L${f.p({x: xS, y: v.y1})}`);
+  // the sheet face, top to bottom, in runs between the blades (each run ends in the fillet curves; each blade's own
+  // outline joins it at the fillet ends)
+  const faceRuns: string[] = [];
+  {
+    let y = v.y0 - 20;
+    blades.forEach((b, k) => {
+      const r = roots[k];
+      if (!r) return;
+      faceRuns.push(`M${f.p({x: xS, y})} L${f.p({x: xS, y: r.topY})} ${r.edgeB}`);
+      faceRuns.push(r.edgeG);
+      y = r.botY;
+    });
+    faceRuns.push(`M${f.p({x: xS, y})} L${f.p({x: xS, y: v.y1 + 20})}`);
+  }
+  // the sheet's keys into the plate (they ride with the backing, so the downward slide reads) and its inclusions
+  const PEG = WG.pegs, pegH = 12, pegD = 15, pegR = 3;
+  const pegs: number[] = [];
+  for (let n = Math.floor((v.y0 - B.y) / PEG) - 1; n <= Math.ceil((v.y1 - B.y) / PEG) + 1; n++) pegs.push(n * PEG + B.y + 20);
+  const sheetFar = shade(WCOL.sheet, 0.16);
+  const dots: React.ReactNode[] = [];
+  if (z > 1.2) {
+    const DS = 17;
+    for (let n = Math.floor((v.y0 - B.y) / DS) - 2; n <= Math.ceil((v.y1 - B.y) / DS) + 2; n++) {
+      const y = n * DS + B.y + 8 * hash(n, 41);
+      const x = xS + 6 + (WG.sheet - 11) * hash(n, 42);
+      const r = 1.3 + 2.0 * hash(n, 43);
+      dots.push(<circle key={`s${n}`} cx={f.n(x - f.org.x)} cy={f.n(y - f.org.y)} r={f.n(r)} fill={shade(WCOL.sheet, 0.5)} opacity={0.55} />);
+    }
+  }
   const ord = [...blades].sort((a, b) => b.i - a.i);
   return (
     <g>
@@ -502,7 +630,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           <path
             key={`c${b.i}`}
             d={(() => {
-              const bw = Math.min(2.6, 13 / z);
+              const bw = Math.min(2.6, 14 / z);
               return `M${f.p({x: 0, y: b.contact.y0})} L${f.p({x: 0, y: b.contact.y1})} L${f.p({x: -bw, y: b.contact.y1 - bw * 0.3})} L${f.p({x: -bw, y: b.contact.y0 + bw * 0.3})} Z`;
             })()}
             fill={st.surface === 'glass' ? WCOL.contact : '#5A2618'}
@@ -510,7 +638,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           />
         ) : null,
       )}
-      {/* the blades, the root shaded into the sheet's tone (one moulded material), a pale compliant tip */}
+      {/* the blades: the root shaded into the sheet's tone (one moulded material), a pale compliant tip */}
       {ord.map((b) => {
         const foc = b.i === fi ? fk : 0;
         const ext = (p: V, q: V): V => {
@@ -522,32 +650,24 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         const tipG = g[g.length - 1], tipB = bk[bk.length - 1];
         const te = unit(g[g.length - 2], tipG);
         const capC = {x: (tipG.x + tipB.x) / 2 + te.x * WG.wTip * 0.7, y: (tipG.y + tipB.y) / 2 + te.y * WG.wTip * 0.7};
-        const d = `M${g.map(f.p).join(' L')} Q${f.p(capC)} ${bk
-          .slice()
-          .reverse()
-          .map(f.p)
-          .join(' L')} Z`;
+        const d = `M${g.map(f.p).join(' L')} Q${f.p(capC)} ${bk.slice().reverse().map(f.p).join(' L')} Z`;
         // the selected wedge a touch lighter, the others a touch quieter (no outline, no callout)
-        const fill = foc > 0 ? mix(WCOL.wedge, '#FFFFFF', 0.5 * foc) : mix(WCOL.wedge, WCOL.sheet, 0.22 * fk);
-        // just inside the back face (toward the blade's interior)
-        const rim = b.back.filter((_, j) => j > 6 && j < b.back.length - 4).map((q, j, arr) => {
-          const u = unit(arr[Math.max(0, j - 1)], arr[Math.min(arr.length - 1, j + 1)]);
-          const dIn = 1.7 / z;
-          return {x: q.x + u.y * dIn, y: q.y - u.x * dIn};
-        });
+        const fill0 = foc > 0 ? mix(WCOL.wedge, '#FFFFFF', 0.5 * foc) : mix(WCOL.wedge, WCOL.sheet, 0.22 * fk);
+        const hold = roots[blades.indexOf(b)]?.hold ?? 0;
+        const fill = mix(fill0, WCOL.siliconeAtomic, dz);
+        const tipC = mix(lit(fill0, 0.25), WCOL.siliconeAtomic, dz);
         return (
           <g key={b.i}>
             <defs>
               <linearGradient id={`${id}-w${b.i}`} gradientUnits="userSpaceOnUse" x1={f.n(b.root.x - f.org.x)} y1={f.n(b.root.y - f.org.y)} x2={f.n(b.tip.x - f.org.x)} y2={f.n(b.tip.y - f.org.y)}>
                 <stop offset="0" stopColor={ROOT} />
-                <stop offset="0.3" stopColor={mix(ROOT, fill, 0.8)} />
-                <stop offset="0.6" stopColor={fill} />
-                <stop offset="1" stopColor={lit(fill, 0.25)} />
+                <stop offset={hold.toFixed(4)} stopColor={ROOT} />
+                <stop offset={(hold + 0.22).toFixed(4)} stopColor={mix(ROOT, fill, 0.8)} />
+                <stop offset={Math.max(0.6, hold + 0.4).toFixed(4)} stopColor={fill} />
+                <stop offset="1" stopColor={tipC} />
               </linearGradient>
             </defs>
-            <path d={d} fill={`url(#${id}-w${b.i})`} stroke={INK} strokeWidth={f.n(ink * (1 + 0.15 * foc))} strokeLinejoin="round" />
-            {/* the lit upper (back) face, as a thin inner edge */}
-            <path d={f.line(rim)} fill="none" stroke="#FFFFFF" strokeWidth={f.n((1.6 + 0.8 * foc) / z)} opacity={0.4 + 0.5 * foc} strokeLinecap="round" />
+            <path d={d} fill={`url(#${id}-w${b.i})`} />
           </g>
         );
       })}
@@ -556,33 +676,84 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         <linearGradient id={`${id}-sh`} gradientUnits="userSpaceOnUse" x1={f.n(xS - f.org.x)} y1="0" x2={f.n(xP - f.org.x)} y2="0">
           <stop offset="0" stopColor={ROOT} />
           <stop offset="0.3" stopColor={WCOL.sheet} />
-          <stop offset="1" stopColor={shade(WCOL.sheet, 0.18)} />
+          <stop offset="1" stopColor={sheetFar} />
         </linearGradient>
-        <linearGradient id={`${id}-pl`} gradientUnits="userSpaceOnUse" x1={f.n(xP - f.org.x)} y1="0" x2={f.n(xP + 120 - f.org.x)} y2="0">
-          <stop offset="0" stopColor={lit(WCOL.plate, 0.1)} />
-          <stop offset="0.25" stopColor={WCOL.plate} />
-          <stop offset="1" stopColor={shade(WCOL.plate, 0.2)} />
+        <linearGradient id={`${id}-pl`} gradientUnits="userSpaceOnUse" x1={f.n(xP - f.org.x)} y1="0" x2={f.n(xP + 110 - f.org.x)} y2="0">
+          <stop offset="0" stopColor={lit(WCOL.plate, 0.08)} />
+          <stop offset="0.3" stopColor={WCOL.plate} />
+          <stop offset="1" stopColor={shade(WCOL.plate, 0.25)} />
         </linearGradient>
       </defs>
-      <path d={`M${f.p({x: xS, y: v.y0})} L${f.p({x: xP, y: v.y0})} L${f.p({x: xP, y: v.y1})} L${f.p({x: xS, y: v.y1})} Z`} fill={`url(#${id}-sh)`} />
-      {/* specks in the sheet: they ride with it, so the slide reads */}
-      {Array.from({length: Math.ceil((v.y1 - v.y0) / 23) + 4}).map((_, j) => {
-        const n = Math.floor((v.y0 - B.y) / 23) - 2 + j;
-        const y = n * 23 + B.y + 9 * hash(n, 41);
-        const x = xS + 5 + (WG.sheet - 9) * hash(n, 42);
-        return <circle key={`s${j}`} cx={f.n(x - f.org.x)} cy={f.n(y - f.org.y)} r={f.n(0.6 + 0.9 * hash(n, 43))} fill="#FFFFFF" opacity={0.22} />;
+      <path d={`M${f.p({x: xS, y: v.y0 - 20})} L${f.p({x: xP + 1, y: v.y0 - 20})} L${f.p({x: xP + 1, y: v.y1 + 20})} L${f.p({x: xS, y: v.y1 + 20})} Z`} fill={`url(#${id}-sh)`} />
+      {dots}
+      <path d={`M${f.p({x: xP, y: v.y0 - 20})} L${f.p({x: x1, y: v.y0 - 20})} L${f.p({x: x1, y: v.y1 + 20})} L${f.p({x: xP, y: v.y1 + 20})} Z`} fill={`url(#${id}-pl)`} />
+      {/* the plate's lit edge and ink line, broken where the sheet's keys run into it */}
+      {(() => {
+        const runs: string[] = [];
+        const lip: string[] = [];
+        const lx = xP + Math.min(1.2, 3 / z);
+        let y = v.y0 - 20;
+        for (const py of pegs) {
+          if (py + pegH < v.y0 - 20 || py > v.y1 + 20) continue;
+          runs.push(`M${f.p({x: xP, y})} L${f.p({x: xP, y: py})}`);
+          lip.push(`M${f.p({x: lx, y: y})} L${f.p({x: lx, y: py})}`);
+          y = py + pegH;
+        }
+        runs.push(`M${f.p({x: xP, y})} L${f.p({x: xP, y: v.y1 + 20})}`);
+        lip.push(`M${f.p({x: lx, y})} L${f.p({x: lx, y: v.y1 + 20})}`);
+        return (
+          <g>
+            {pegs.map((py, n) => (
+              <path
+                key={`k${n}`}
+                d={`M${f.p({x: xP - 1, y: py})} L${f.p({x: xP + pegD - pegR, y: py})} Q${f.p({x: xP + pegD, y: py})} ${f.p({x: xP + pegD, y: py + pegR})} L${f.p({x: xP + pegD, y: py + pegH - pegR})} Q${f.p({x: xP + pegD, y: py + pegH})} ${f.p({x: xP + pegD - pegR, y: py + pegH})} L${f.p({x: xP - 1, y: py + pegH})} Z`}
+                fill={sheetFar}
+              />
+            ))}
+            {pegs.map((py, n) => (
+              <path
+                key={`ke${n}`}
+                d={`M${f.p({x: xP, y: py})} L${f.p({x: xP + pegD - pegR, y: py})} Q${f.p({x: xP + pegD, y: py})} ${f.p({x: xP + pegD, y: py + pegR})} L${f.p({x: xP + pegD, y: py + pegH - pegR})} Q${f.p({x: xP + pegD, y: py + pegH})} ${f.p({x: xP + pegD - pegR, y: py + pegH})} L${f.p({x: xP, y: py + pegH})}`}
+                fill="none"
+                stroke={INK}
+                strokeWidth={f.n(ink)}
+                strokeLinejoin="round"
+              />
+            ))}
+            <path d={lip.join(' ')} stroke={WCOL.plateEdge} strokeWidth={f.n(2.4 / z)} opacity={0.8} />
+            <path d={runs.join(' ')} stroke={INK} strokeWidth={f.n(ink)} />
+          </g>
+        );
+      })()}
+      {roots.map((r, k) => (r ? <path key={`fb${k}`} d={r.fillB} fill={ROOT} /> : null))}
+      {roots.map((r, k) => (r ? <path key={`fg${k}`} d={r.fillG} fill={ROOT} /> : null))}
+      {/* the lit upper (back) face, as a thin inner edge; then each blade's ink outline from fillet to fillet */}
+      {ord.map((b) => {
+        const k = blades.indexOf(b);
+        const r = roots[k];
+        const foc = b.i === fi ? fk : 0;
+        const jB = r ? r.jB : 1, jG = r ? r.jG : 1;
+        const rim = b.back
+          .filter((_, j) => j > jB + 3 && j < b.back.length - 4)
+          .map((q, j, arr) => {
+            const u = unit(arr[Math.max(0, j - 1)], arr[Math.min(arr.length - 1, j + 1)]);
+            const dIn = 1.7 / z;
+            return {x: q.x + u.y * dIn, y: q.y - u.x * dIn};
+          });
+        const backRun = [r ? r.pB : b.back[0], ...b.back.slice(jB)];
+        const gripRun = [r ? r.pG : b.grip[0], ...b.grip.slice(jG)];
+        const tipG = b.grip[b.grip.length - 1], tipB = b.back[b.back.length - 1];
+        const te = unit(b.grip[b.grip.length - 2], tipG);
+        const capC = {x: (tipG.x + tipB.x) / 2 + te.x * WG.wTip * 0.7, y: (tipG.y + tipB.y) / 2 + te.y * WG.wTip * 0.7};
+        const outline = `M${backRun.map(f.p).join(' L')} Q${f.p(capC)} ${gripRun.slice().reverse().map(f.p).join(' L')}`;
+        return (
+          <g key={`o${b.i}`}>
+            {rim.length > 1 && <path d={f.line(rim)} fill="none" stroke="#FFFFFF" strokeWidth={f.n((1.6 + 0.9 * foc) / z)} opacity={(0.4 + 0.5 * foc) * (1 - dz)} strokeLinecap="round" />}
+            <path d={outline} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="round" strokeLinecap="round" />
+          </g>
+        );
       })}
-      <path d={`M${f.p({x: xP, y: v.y0})} L${f.p({x: x1, y: v.y0})} L${f.p({x: x1, y: v.y1})} L${f.p({x: xP, y: v.y1})} Z`} fill={`url(#${id}-pl)`} />
-      {/* the plate's machined grooves ride with it too */}
-      {Array.from({length: Math.ceil((v.y1 - v.y0) / 90) + 3}).map((_, j) => {
-        const n = Math.floor((v.y0 - B.y) / 90) - 1 + j;
-        const y = n * 90 + B.y + 30;
-        return <path key={`g${j}`} d={`M${f.p({x: xP + 1.5, y})} L${f.p({x: x1, y})}`} stroke={shade(WCOL.plate, 0.35)} strokeWidth={f.n(1.6 / z)} opacity={0.6} />;
-      })}
-      <path d={`M${f.p({x: xP + 0.9 / Math.max(z / 3, 1), y: v.y0})} L${f.p({x: xP + 0.9 / Math.max(z / 3, 1), y: v.y1})}`} stroke={WCOL.plateEdge} strokeWidth={f.n(2.4 / z)} opacity={0.8} />
-      <path d={`M${f.p({x: xP, y: v.y0})} L${f.p({x: xP, y: v.y1})}`} stroke={INK} strokeWidth={f.n(ink)} />
-      {fillets}
-      <path d={faceSegs.join(' ')} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="round" />
+      <path d={faceRuns.join(' ')} fill="none" stroke={INK} strokeWidth={f.n(ink)} strokeLinejoin="round" strokeLinecap="round" />
     </g>
   );
 };
@@ -603,17 +774,18 @@ export const WedgeView: React.FC<{id: string; st: WedgeState; cam?: Cam; org?: V
 /** the comparison: the same section on glass (top panel) and on brick (bottom panel), same orientation and scale, the
  *  surface face at the same screen x (FACE_SX) in both. `z`: zoom (px/um) of both; `gapPx`: the divider between the
  *  panels; `glassY` / `brickY`: the world y (um) placed at each panel's anchor (`glassSY` / `brickSY`, screen px). The
- *  defaults put a glass strip mid-panel above, and the brick apex under wedge 4 at y 1240 (clear of the caption band). */
+ *  defaults put the glass strips of wedges 1-3 mid-panel above, and the brick apex under wedge 1 at y 1250 (above the
+ *  caption band) with wedge 0 and 2 hanging over gaps either side. */
 export const WedgeSplit: React.FC<{id: string; glass: WedgeState; brick: WedgeState; z?: number; gapPx?: number; glassY?: number; brickY?: number; glassSY?: number; brickSY?: number}> = ({
   id,
   glass,
   brick,
-  z = 4.6,
-  gapPx = 24,
-  glassY = 2 * WG.pitch + 16,
-  brickY = 4 * WG.pitch,
+  z = 5.2,
+  gapPx = 20,
+  glassY = 2 * WG.pitch + WG.strip / 2,
+  brickY = WG.pitch,
   glassSY = 470,
-  brickSY = 1240,
+  brickSY = 1250,
 }) => {
   const half = (H - gapPx) / 2;
   const camT: Cam = camAt({x: 0, y: glassY}, z, FACE_SX, glassSY);

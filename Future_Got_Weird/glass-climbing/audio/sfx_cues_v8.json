@@ -98,62 +98,6 @@
   "gain_db": -33
  },
  {
-  "name": "near pad releases: peels and stands off the glass (dry)",
-  "at": 16.933,
-  "frame": 508.0,
-  "dur": 0.3,
-  "gain_db": -30
- },
- {
-  "name": "near pad carried (air, faint)",
-  "at": 17.1,
-  "frame": 513.0,
-  "dur": 0.4,
-  "gain_db": -47
- },
- {
-  "name": "near pad seats on the glass",
-  "at": 17.703,
-  "frame": 531.1,
-  "dur": 0.12,
-  "gain_db": -25
- },
- {
-  "name": "near pad takes its load (fine ticks)",
-  "at": 17.773,
-  "frame": 533.2,
-  "dur": 0.3,
-  "gain_db": -43
- },
- {
-  "name": "near tether takes its share again",
-  "at": 18.067,
-  "frame": 542.0,
-  "dur": 0.2,
-  "gain_db": -33
- },
- {
-  "name": "weight onto the near stirrup (cloth)",
-  "at": 18.533,
-  "frame": 556.0,
-  "dur": 0.5,
-  "gain_db": -41
- },
- {
-  "name": "near tether takes the load (creak)",
-  "at": 18.667,
-  "frame": 560.0,
-  "dur": 0.22,
-  "gain_db": -31
- },
- {
-  "name": "the near stirrup takes the foot (step knock)",
-  "at": 18.75,
-  "frame": 562.5,
-  "dur": 0.16,
-  "gain_db": -36
- },
- {
   "name": "weight onto the near stirrup (cloth)",
   "at": 22.4,
   "frame": 672.0,
@@ -407,15 +351,15 @@
  },
  {
   "name": "into the tile edge (air, very soft)",
-  "at": 7.067,
-  "frame": 212.0,
-  "dur": 0.6,
+  "at": 6.0,
+  "frame": 180.0,
+  "dur": 1.4,
   "gain_db": -48
  },
  {
-  "name": "the wedges at the glass (soft tick)",
-  "at": 8.0,
-  "frame": 240.0,
+  "name": "the wedge tips settle on the glass (soft tick)",
+  "at": 8.2,
+  "frame": 246.0,
   "dur": 0.08,
   "gain_db": -38
  },
@@ -455,51 +399,51 @@
   "gain_db": -47
  },
  {
-  "name": "the loaded stirrup settles (step creak)",
-  "at": 16.667,
-  "frame": 500.0,
+  "name": "the loaded stirrups settle (step creak)",
+  "at": 16.733,
+  "frame": 502.0,
   "dur": 0.2,
   "gain_db": -36
  },
  {
-  "name": "up the tether (air, faint)",
-  "at": 17.867,
-  "frame": 536.0,
+  "name": "up the tether from the stirrup (air, faint)",
+  "at": 17.667,
+  "frame": 530.0,
   "dur": 0.5,
   "gain_db": -48
  },
  {
-  "name": "cover lifts off (air, faint)",
-  "at": 18.733,
-  "frame": 562.0,
+  "name": "the cover is cut away (air, faint)",
+  "at": 18.367,
+  "frame": 551.0,
   "dur": 0.5,
   "gain_db": -48
  },
  {
-  "name": "the springs stretch together",
-  "at": 19.133,
-  "frame": 574.0,
+  "name": "the strap pulls straight; the springs stretch together",
+  "at": 18.633,
+  "frame": 559.0,
   "dur": 0.8,
   "gain_db": -35
  },
  {
   "name": "one patch lets go: its spring slackens",
-  "at": 20.2,
-  "frame": 606.0,
+  "at": 19.4,
+  "frame": 582.0,
   "dur": 0.4,
   "gain_db": -37
  },
  {
   "name": "its neighbours take up its share",
-  "at": 20.4,
-  "frame": 612.0,
+  "at": 19.6,
+  "frame": 588.0,
   "dur": 0.5,
   "gain_db": -38
  },
  {
   "name": "the load evens out again",
-  "at": 21.333,
-  "frame": 640.0,
+  "at": 20.2,
+  "frame": 606.0,
   "dur": 0.5,
   "gain_db": -40
  },
@@ -512,15 +456,15 @@
  },
  {
   "name": "contact test: the pad seats on the glass",
-  "at": 30.2,
-  "frame": 906.0,
+  "at": 30.037,
+  "frame": 901.1,
   "dur": 0.12,
   "gain_db": -28
  },
  {
   "name": "contact test: broad, even contact spreads (dense, soft ticks)",
-  "at": 30.267,
-  "frame": 908.0,
+  "at": 30.133,
+  "frame": 904.0,
   "dur": 0.7,
   "gain_db": -41
  },
@@ -638,8 +582,8 @@
  },
  {
   "name": "the deliberate reach back to the glass (air, faint)",
-  "at": 37.733,
-  "frame": 1132.0,
+  "at": 37.933,
+  "frame": 1138.0,
   "dur": 0.6,
   "gain_db": -44
  },

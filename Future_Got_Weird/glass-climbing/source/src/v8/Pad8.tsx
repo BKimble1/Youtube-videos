@@ -1,8 +1,8 @@
 // Glass Climbing V8 (from V6's Pad6): the climbing pad as ONE 3D assembly, drawn from any angle in the Crew's flat
 // vector finish (flat faces with one key-light shade each, ink edges). Same device, same 4 x 6 tile layout and
 // proportions as V6, so every close-up matches the rest of the film:
-//   - a rigid frame: a front plate carrying the tiles, a rim round a rear bay, closed by a rear cover (which lifts
-//     off along the handle posts for the cutaway) carrying a raised backplate with two slots the posts ride in;
+//   - a rigid frame: a front plate carrying the tiles, a rim round a rear bay, closed by a rear cover (cut away by a
+//     section plane for the cutaway, never faded) carrying a raised backplate with two slots the posts ride in;
 //   - 24 adhesive tiles (4 x 6, 25 mm) on the front, the glass side;
 //   - behind each tile a tendon through the front plate (a grommet) to its own coil spring; the springs hook onto one
 //     rail per row; the rails hang from a central spine by clamps and ride in guide slots in the side walls;
@@ -12,12 +12,15 @@
 // Load path: the foot strap and the hand both pull the spine down; the spine pulls the rails; each rail stretches its
 // row's springs; each spring pulls its tile's tendon (shear along the glass), so every tile carries a share. The
 // tiles stay where they touch; the spine, rails, posts, bar and lug travel (a few mm, drawn exaggerated).
-// Pad-local axes (mm): u out of the glass toward the hand (the glass face is u = 0), v down, w across.
-// V8 additions: an optional perspective camera (persp), the pad's reflection in the glass (a mirrored pass), a solved
-// grip (a 3D hand closed round the bar, parented to it: fingers wrap the far side, the thumb comes round the near
-// side over the index finger, the palm on the bar, never through it) with the forearm, elbow, upper arm and the
-// striped tee's sleeve, the strap's tension (slack -> straight), per-tile slip, a sectioned near side wall for the
-// cutaway and an unobtrusive load emphasis (spring tension shown as warmth, the housing knocked back a little).
+// Pad-local axes (mm): u out of the glass toward the hand (the glass face is u = 0), v down, w across. With the climber
+// facing the glass, +w is HIS LEFT side: a camera at +w (yaw 0..90, as the bay sees him) looks at his left side, and the
+// default hand (handSide 1, the back of the hand toward +w) is his LEFT hand. handSide -1 is his right hand.
+// V8 additions: an optional perspective camera (persp), the pad's reflection in the glass (a mirrored pass of the
+// device only), a solved grip (a 3D hand closed round the bar, parented to it: fingers wrap the far side, the thumb
+// comes round the near side over the index finger, the palm on the bar, never through it; each part of the palm is
+// drawn on its own side of the bar) with the forearm, elbow, upper arm and the striped tee's sleeve, the strap's tension
+// (slack -> straight), per-tile slip, a section-plane cutaway of the rear cover and the near side wall, and an
+// unobtrusive load emphasis (spring tension shown as warmth, the housing knocked back a little).
 import React from 'react';
 import {lit, mix, shade} from '../dc/color';
 import {Deco, INK, Inked, OUTLINE_K, useInk} from '../dc/ink';
@@ -34,12 +37,26 @@ export const BAR_U = P3D.U_BACK + P3D.POST;
 export const tileVW = (c: number, r: number) => ({v: -PH / 2 + P3D.RIM + r * (P3D.TILE + P3D.GAP) + P3D.TILE / 2, w: -PW / 2 + P3D.RIM + c * (P3D.TILE + P3D.GAP) + P3D.TILE / 2});
 /** the spine's travel (mm) at a load 0..1 (as V6) */
 export const travelOf = (load: number) => 2 + 12 * load;
+/** the strap's tension (0 slack .. 1 straight) at a load 0..1: webbing carrying any real share of his weight is
+ *  straight (0.9 or more from a load of 0.3); only an unloaded strap hangs in a belly */
+export const tetherOf = (load: number) => {
+  const s = (x: number) => {
+    const t = clamp(x);
+    return t * t * (3 - 2 * t);
+  };
+  return 0.9 * s(load / 0.3) + 0.1 * s((load - 0.3) / 0.7);
+};
 
 export type P3 = {u: number; v: number; w: number};
 /** the arm: elbow as an offset from the wrist, shoulder as an offset from the elbow (mm, pad axes, for the hand whose
- *  back faces +w; mirrored with handSide -1). Without a shoulder only the forearm is drawn (make it long enough to
- *  leave the frame). */
+ *  back faces +w, his left hand; mirrored in w with handSide -1). Without a shoulder only the forearm is drawn (make it
+ *  long enough to leave the frame). The sleeve runs from just past the shoulder to a hem a little over halfway down the
+ *  upper arm; frame the shot so the shoulder end is outside the picture (there is no torso). */
 export type ArmSpec = {elbow: P3; shoulder?: P3};
+/** standing in the stirrups as the bay draws him (the rig's near arm at frames 24-70 and 664, climb8 manJoints): the
+ *  forearm runs back from the bar, a little up, to the elbow out at his side; the upper arm goes up to the shoulder.
+ *  Use it where a close-up hands over to the bay. */
+export const ARM_BAY: ArmSpec = {elbow: {u: 214, v: -60, w: 96}, shoulder: {u: 30, v: -262, w: -150}};
 /** hanging from the handle: the forearm drops from the wrist, the upper arm goes back up to his shoulder */
 export const ARM_HANG: ArmSpec = {elbow: {u: 95, v: 228, w: 46}, shoulder: {u: 235, v: -178, w: 22}};
 /** reaching up to a pad placed high: the arm nearly straight, down and out from the hand to his shoulder */
@@ -59,7 +76,7 @@ export type Pad3DState = {
   contact: number[];
   /** per-tile spring stretch multiplier (1 = its even share); brick: the few touching tiles take it all */
   share?: number[];
-  cover: number; // rear cover: 1 on, 0 off (cutaway)
+  cover: number; // rear cover: 1 on, 0 cut away (a section plane sweeps across it; it never fades)
   gap: number; // stand-off from the surface (mm)
   tilt: number; // deg: peel about the top edge of the face (+: bottom comes away)
   slide: number; // whole pad down (mm)
@@ -87,14 +104,24 @@ export type Pad3DState = {
   slip?: number[];
   /** the arm from the wrist on (default ARM_FOREARM: a forearm leaving the frame, as V6); null: hand only */
   arm?: ArmSpec | null;
-  /** +1: the back of the hand faces +w (his right hand as the bay sees it, default); -1: mirrored */
+  /** +1: the back of the hand faces +w (his LEFT hand, the near hand as the bay sees him, default); -1: his right hand */
   handSide?: 1 | -1;
   /** 0..1 grip closure; overrides the closure taken from `hand` */
   grip?: number;
   /** 0..1: the pad's (and hand's) reflection in the glass, drawn behind the pad (seen from outside) */
   reflect?: number;
-  /** 0..1: the contact shadow on the surface (default 1 with a surface, else 0) */
+  /** 0..1: the contact shadow on the surface and the dark contact line round the tiles' footprint (default 1 with a
+   *  surface, else 0) */
   shadow?: number;
+  /** the contact line's width (scale, default 0.5; the contact close-up uses 1) */
+  contactLine?: number;
+  /** where the shadow falls on the glass (mm offset in v and w; default {v: 9, w: -5}: down, away from +w) */
+  shadowDir?: {v: number; w: number};
+  /** the cover's cutting plane: its normal in (v, w) (default {v: -0.5, w: 0.866}: the cut opens from the top +w corner) */
+  cutDir?: {v: number; w: number};
+  /** true: the housing alone (tiles, plate, rim, cover), without the handle, hand, lug, D-ring and strap (the
+   *  reflection pass) */
+  bodyOnly?: boolean;
   /** false: a plain white sleeve (default true: the tee's saffron stripes on it) */
   sleeve?: boolean;
 };
@@ -215,7 +242,7 @@ export const COL = {
   post: '#AEBBC5',
   bar: '#2C3338',
   spring: '#DDE5EA',
-  springHot: '#F2C27E',
+  springHot: '#EFAE62',
   tendon: '#22282C',
   strap: '#D8663B',
   ring: '#C7D0D6',
@@ -308,6 +335,17 @@ const lerp3 = (a: P3, b: P3, t: number): P3 => ({u: lerp(a.u, b.u, t), v: lerp(a
 const len3 = (a: P3) => Math.hypot(a.u, a.v, a.w);
 const norm3 = (a: P3): P3 => mul3(a, 1 / (len3(a) || 1));
 const cross3 = (a: P3, b: P3): P3 => ({u: a.v * b.w - a.w * b.v, v: a.w * b.u - a.u * b.w, w: a.u * b.v - a.v * b.u});
+/** a polygon (pad axes) cut to the half-space f(p) <= 0 (f linear in p) */
+const clipPoly = (pts: P3[], f: (p: P3) => number): P3[] => {
+  const out: P3[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const fa = f(a), fb = f(b);
+    if (fa <= 0) out.push(a);
+    if (fa <= 0 !== fb <= 0) out.push(lerp3(a, b, fa / (fa - fb)));
+  }
+  return out;
+};
 
 /** convex hull (monotone chain) */
 const hull = (pts: V[]): V[] => {
@@ -379,13 +417,16 @@ const frontRun = (ring: {p: Proj; front: boolean}[]) => {
   }
   return out;
 };
-/** the hand on the bar, the bar itself between the fingers, and the arm: one node in a deliberate layer order
- *  (behind the bar: the digits on its far side; the bar; in front: the palm and back of the hand with the forearm,
- *  the digits on its near side, the thumb), with the sleeve and upper arm ordered by depth against the forearm */
+/** the hand on the bar, the bar itself between the fingers, and the arm: one node in a deliberate layer order. Every
+ *  part is placed on its own side of the bar, part by part: behind the bar the digits on its far side and the part of
+ *  the palm that lies beyond it; then the bar (with its collars); in front the part of the palm on the camera's side,
+ *  the digits on the near side, the thumb. The forearm (and the upper arm and sleeve) belong to the palm's heel, so
+ *  they go with whichever part holds the wrist; one outline runs round palm, wrist and arm (no line at the wrist). */
 const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 1 | -1; arm: ArmSpec | null; barNode: React.ReactNode; iw: number; stripes: boolean}> = ({id, vw, vb, g, side, arm, barNode, iw, stripes}) => {
   const geo = gripGeo(vb, g, side, arm);
   const skin = HERO.skin;
   const barD = (v: number) => vw.cs({u: BAR_U, v, w: 0}).D;
+  const inFront = (p: P3) => vw.cs(p).D > barD(p.v);
   const pj = (p: P3) => vw.world(p);
   type Piece = {d: number; front: boolean; node: React.ReactNode};
   const pieces: Piece[] = [];
@@ -431,60 +472,72 @@ const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 
   };
   geo.fingers.forEach((f, k) => digit(f, `f${k}`, (i) => (i === 0 ? skin : mix(skin, lit(skin, 0.2), 0.12 * i))));
   digit(geo.thumb, 't', (i) => (i === 0 ? skin : lit(skin, 0.04)));
-  // the palm: hull of its spheres
-  const hp: V[] = [];
-  for (const s of geo.palm) {
-    const c = pj(s.c);
-    const r = s.r * c.s;
-    for (let i = 0; i < 16; i++) {
-      const t = (i / 16) * Math.PI * 2;
-      hp.push({x: c.x + r * Math.cos(t), y: c.y + r * Math.sin(t)});
+  // the palm: one hull per side of the bar (each sphere goes with the side its centre is on); both parts share one
+  // shading centre, so they read as one hand
+  const hullPath = (sph: Sph[]) => {
+    if (!sph.length) return null;
+    const hp: V[] = [];
+    for (const s of sph) {
+      const c = pj(s.c);
+      const r = s.r * c.s;
+      for (let i = 0; i < 16; i++) {
+        const t = (i / 16) * Math.PI * 2;
+        hp.push({x: c.x + r * Math.cos(t), y: c.y + r * Math.sin(t)});
+      }
     }
-  }
-  const palmPath = smoothClosed(hull(hp), 1 / 14);
+    return smoothClosed(hull(hp), 1 / 14);
+  };
+  const HEEL = geo.palm.length - 1;
+  const heelFront = inFront(geo.palm[HEEL].c);
+  const palmF = hullPath(geo.palm.filter((s) => inFront(s.c)));
+  const palmB = hullPath(geo.palm.filter((s) => !inFront(s.c)));
   const pc = pj(geo.palmC);
-  const palmD = vw.cs(geo.palmC).D;
-  const palmFront = palmD > barD(geo.palmC.v);
-  // the forearm (wrist -> elbow) and upper arm (elbow -> shoulder), and the sleeve on the upper arm
-  let armBack: React.ReactNode = null, armFront: React.ReactNode = null;
+  const palmBlob = (d: string | null, key: string) => (d ? <Blob key={key} id={`${id}-${key}`} d={d} c={{x: pc.x, y: pc.y}} r={46 * pc.s} color={skin} k={0.9} /> : null);
+  // the arm's tubes share one shading: the same normal (across the wrist -> elbow line, toward the key light) and the
+  // same centre at the elbow, so there is no tonal seam where forearm and upper arm meet
   const W0 = geo.wrist;
   const forearm = geo.elbow ? {a: lerp3(geo.palmC, W0, 0.55), b: geo.elbow, ra: 21, rb: 28} : null;
-  const tube = (a: P3, b: P3, ra: number, rb: number, key: string, color: string) => {
-    const out = tubeOutline(pj, a, b, ra, rb);
-    const d = `M${out.map((q) => P(q)).join(' L')} Z`;
-    const A = pj(a), Bp = pj(b);
-    // a cylinder's shading: across the projected axis, toward the key light
-    const ax = {x: Bp.x - A.x, y: Bp.y - A.y};
+  const shared = (() => {
+    if (!geo.elbow) return null;
+    const A = pj(W0), E = pj(geo.elbow);
+    const ax = {x: E.x - A.x, y: E.y - A.y};
     const l = Math.hypot(ax.x, ax.y) || 1;
     let n = {x: -ax.y / l, y: ax.x / l};
     if (n.x * -0.62 + n.y * -0.78 < 0) n = {x: -n.x, y: -n.y};
-    const m = {x: (A.x + Bp.x) / 2, y: (A.y + Bp.y) / 2};
-    const r = ((ra * A.s + rb * Bp.s) / 2) * 1.05;
-    return (
-      <g key={key}>
-        <defs>
-          <linearGradient id={`${id}-${key}g`} gradientUnits="userSpaceOnUse" x1={fmt(m.x + n.x * r)} y1={fmt(m.y + n.y * r)} x2={fmt(m.x - n.x * r)} y2={fmt(m.y - n.y * r)}>
-            <stop offset="0" stopColor={lit(color, 0.26)} />
-            <stop offset="0.3" stopColor={lit(color, 0.08)} />
-            <stop offset="0.62" stopColor={color} />
-            <stop offset="0.9" stopColor={shade(color, 0.3)} />
-            <stop offset="1" stopColor={mix(shade(color, 0.3), color, 0.35)} />
-          </linearGradient>
-        </defs>
-        <InkFill d={d} fill={`url(#${id}-${key}g)`} />
-      </g>
-    );
+    return {n, m: {x: E.x, y: E.y}, r: 28 * E.s * 1.05};
+  })();
+  const gradId = `${id}-armg`;
+  const armGrad = shared && (
+    <defs>
+      <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1={fmt(shared.m.x + shared.n.x * shared.r)} y1={fmt(shared.m.y + shared.n.y * shared.r)} x2={fmt(shared.m.x - shared.n.x * shared.r)} y2={fmt(shared.m.y - shared.n.y * shared.r)}>
+        <stop offset="0" stopColor={lit(skin, 0.26)} />
+        <stop offset="0.3" stopColor={lit(skin, 0.08)} />
+        <stop offset="0.62" stopColor={skin} />
+        <stop offset="0.9" stopColor={shade(skin, 0.3)} />
+        <stop offset="1" stopColor={mix(shade(skin, 0.3), skin, 0.35)} />
+      </linearGradient>
+    </defs>
+  );
+  const tube = (a: P3, b: P3, ra: number, rb: number, key: string, fill: string) => {
+    const out = tubeOutline(pj, a, b, ra, rb);
+    const d = `M${out.map((q) => P(q)).join(' L')} Z`;
+    return <InkFill key={key} d={d} fill={fill} />;
   };
+  const skinFill = `url(#${gradId})`;
+  let armBody: React.ReactNode = null;
+  let sleeveNode: React.ReactNode = null;
+  let hemFacing = 0;
   if (forearm && geo.elbow && geo.shoulder) {
     const E = geo.elbow, S = geo.shoulder;
     const upper = {a: E, b: S, ra: 29, rb: 35};
     const foreD = vw.cs(lerp3(W0, E, 0.5)).D;
     const upD = vw.cs(lerp3(E, S, 0.5)).D;
-    // the sleeve: from just past the shoulder to the hem a little over halfway down the upper arm
+    // the sleeve: from past the shoulder (beyond the frame in every framing this is used with) to the hem a little
+    // over halfway down the upper arm
     const ax = sub3(E, S);
     const HEM = 0.56;
     const hem = add3(S, mul3(ax, HEM));
-    const top = add3(S, mul3(ax, -0.04));
+    const top = add3(S, mul3(ax, -0.14));
     const sleeveC = '#FFFFFF';
     const sv = norm3(ax);
     const band = (t0: number, t1: number) => {
@@ -496,64 +549,76 @@ const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 
       return `M${[...fa, ...fb.reverse()].map((q) => P(q)).join(' L')} Z`;
     };
     const hemRing = ringArc(vw, hem, sv, 43, 32, true).map((q) => ({x: q.p.x, y: q.p.y}));
-    const hemFacing = vw.facing(mul3(sv, 1), hem); // > 0: we look into the sleeve's opening
-    const sleeveNode = (
+    hemFacing = vw.facing(mul3(sv, 1), hem); // > 0: we look into the sleeve's opening
+    // the sleeve's own soft shading (white cotton: a cool shadow down the side away from the key light)
+    const T0 = pj(top), H0 = pj(hem);
+    const sax = {x: H0.x - T0.x, y: H0.y - T0.y};
+    const sl = Math.hypot(sax.x, sax.y) || 1;
+    let sn = {x: -sax.y / sl, y: sax.x / sl};
+    if (sn.x * -0.62 + sn.y * -0.78 < 0) sn = {x: -sn.x, y: -sn.y};
+    const sm = {x: (T0.x + H0.x) / 2, y: (T0.y + H0.y) / 2}, sr = 46 * ((T0.s + H0.s) / 2);
+    sleeveNode = (
       <g key="sl">
-        <Inked w={iw}>
-          {tube(top, hem, 46, 43, 'slv', sleeveC)}
-          {(() => {
-            // the shoulder end is rounded (a dome), so it sits on the torso without a cut end
-            const T0 = pj(top);
-            const r = 46 * T0.s;
-            return <Blob id={`${id}-sdome`} d={`M${fmt(T0.x - r)},${fmt(T0.y)} a${fmt(r)},${fmt(r)} 0 1 0 ${fmt(2 * r)},0 a${fmt(r)},${fmt(r)} 0 1 0 ${fmt(-2 * r)},0 Z`} c={{x: T0.x, y: T0.y}} r={r * 1.2} color={sleeveC} k={0.5} />;
-          })()}
-        </Inked>
+        <defs>
+          <linearGradient id={`${id}-slg`} gradientUnits="userSpaceOnUse" x1={fmt(sm.x + sn.x * sr)} y1={fmt(sm.y + sn.y * sr)} x2={fmt(sm.x - sn.x * sr)} y2={fmt(sm.y - sn.y * sr)}>
+            <stop offset="0" stopColor="#FFFFFF" />
+            <stop offset="0.55" stopColor="#F4F6F8" />
+            <stop offset="1" stopColor="#C9D3DC" />
+          </linearGradient>
+        </defs>
+        <Inked w={iw}>{tube(top, hem, 46, 43, 'slv', `url(#${id}-slg)`)}</Inked>
         <Deco>
-          {stripes && [band(0.02, 0.17), band(0.32, 0.47)].map((d, i) => d && <path key={i} d={d} fill="#FFC744" opacity={0.95} />)}
+          {stripes && [band(-0.12, 0.02), band(0.17, 0.32), band(0.45, HEM - 0.03)].map((d, i) => d && <path key={i} d={d} fill="#FFC744" opacity={0.95} />)}
           {/* the hem's opening: the inside of the sleeve, where we can see into it */}
           {hemFacing > 0 && <path d={`M${hemRing.map((q) => P(q)).join(' L')} Z`} fill={shade('#DCE3EA', 0.35)} opacity={clamp(hemFacing * 3)} />}
           <path d={`M${hemRing.map((q) => P(q)).join(' L')}`} fill="none" stroke="#B4C3D1" strokeWidth={fmt(iw * 0.35)} opacity={0.7} />
         </Deco>
       </g>
     );
-    // the arm is one outlined shape: upper arm, elbow, forearm and the palm (no line at the elbow or the wrist); the
-    // farther tube is painted first, the palm's heel last (it overlaps the wrist end of the forearm); the sleeve,
-    // with its own outline, goes over the upper arm
-    const palmBlob = <Blob key="pb" id={`${id}-palm`} d={palmPath} c={{x: pc.x, y: pc.y}} r={46 * pc.s} color={skin} k={0.9} />;
-    const foreTube = tube(forearm.a, forearm.b, forearm.ra, forearm.rb, 'fa', skin);
-    const upTube = tube(upper.a, lerp3(upper.a, upper.b, 1 - HEM + 0.02), upper.ra, lerp(upper.ra, upper.rb, 1 - HEM), 'ua', skin);
-    // where we look into the sleeve's opening, the arm comes out of it toward us (sleeve first); otherwise the sleeve
-    // covers the arm where it goes in
-    const armBody = (
-      <Inked key="ab" w={iw}>
+    const foreTube = tube(forearm.a, forearm.b, forearm.ra, forearm.rb, 'fa', skinFill);
+    const upTube = tube(upper.a, lerp3(upper.a, upper.b, 1 - HEM + 0.02), upper.ra, lerp(upper.ra, upper.rb, 1 - HEM), 'ua', skinFill);
+    // the elbow: a ball of the joint's radius in the same fill, so the two tubes meet without a step in the outline
+    const Ep = pj(E);
+    const er = 28.6 * Ep.s;
+    const elbowBall = <InkFill key="eb" d={`M${fmt(Ep.x - er)},${fmt(Ep.y)} a${fmt(er)},${fmt(er)} 0 1 0 ${fmt(2 * er)},0 a${fmt(er)},${fmt(er)} 0 1 0 ${fmt(-2 * er)},0 Z`} fill={skinFill} />;
+    armBody = (
+      <g key="ab">
         {upD < foreD ? upTube : foreTube}
+        {elbowBall}
         {upD < foreD ? foreTube : upTube}
-        {palmBlob}
-      </Inked>
+      </g>
     );
-    const armNode = hemFacing > 0 ? <g>{sleeveNode}{armBody}</g> : <g>{armBody}{sleeveNode}</g>;
-    if (palmFront) armFront = armNode;
-    else armBack = armNode;
-  } else {
-    // the hand alone, or the hand and a forearm leaving the frame
-    const palmNode = (
-      <Inked w={iw}>
-        {forearm && geo.elbow && tube(forearm.a, forearm.b, forearm.ra, 34, 'fa', skin)}
-        <Blob id={`${id}-palm`} d={palmPath} c={{x: pc.x, y: pc.y}} r={46 * pc.s} color={skin} k={0.9} />
-      </Inked>
-    );
-    if (palmFront) armFront = palmNode;
-    else armBack = palmNode;
+  } else if (forearm && geo.elbow) {
+    armBody = tube(forearm.a, forearm.b, forearm.ra, 34, 'fa', skinFill);
   }
+  // the part of the palm holding the wrist carries the arm (one outline); where we look into the sleeve's opening the
+  // arm comes out of it toward us (sleeve first), otherwise the sleeve covers the arm where it goes in
+  const heelPart = (
+    <g key="hp">
+      {armGrad}
+      {hemFacing > 0 && sleeveNode}
+      <Inked w={iw}>
+        {armBody}
+        {palmBlob(heelFront ? palmF : palmB, 'palmh')}
+      </Inked>
+      {!(hemFacing > 0) && sleeveNode}
+    </g>
+  );
+  const otherPart = <Inked key="op" w={iw}>{palmBlob(heelFront ? palmB : palmF, 'palmo')}</Inked>;
+  const armFront = heelFront ? heelPart : otherPart;
+  const armBack = heelFront ? otherPart : heelPart;
   const back = pieces.filter((p) => !p.front).sort((a, b) => a.d - b.d);
   const front = pieces.filter((p) => p.front).sort((a, b) => a.d - b.d);
-  // knuckle highlights on the back of the hand (when it faces us)
-  const knuckles = palmFront
-    ? geo.fingers.map((f, k) => {
-        const q = pj(lerp3(f[0].a, f[0].b, 0.12));
-        return <ellipse key={k} cx={fmt(q.x - 2.2 * q.s)} cy={fmt(q.y - 2 * q.s)} rx={fmt(3.6 * q.s)} ry={fmt(2 * q.s)} fill="#FFFFFF" opacity={0.28} />;
-      })
-    : null;
+  // knuckle highlights on the back of the hand: each only where its knuckle is on the camera's side of the bar and
+  // faces the camera
+  const nOut: P3 = {u: Math.cos(rad(PHI0)), v: 0, w: side * Math.sin(rad(PHI0))};
+  const knuckles = geo.fingers.map((f, k) => {
+    const kc = geo.palm[k].c;
+    const fc = vw.facing(nOut, kc);
+    if (!inFront(kc) || fc < 0.2) return null;
+    const q = pj(lerp3(f[0].a, f[0].b, 0.12));
+    return <ellipse key={k} cx={fmt(q.x - 2.2 * q.s)} cy={fmt(q.y - 2 * q.s)} rx={fmt(3.6 * q.s)} ry={fmt(2 * q.s)} fill="#FFFFFF" opacity={0.28 * clamp((fc - 0.2) * 4)} />;
+  });
   return (
     <g>
       {armBack}
@@ -582,8 +647,10 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   const travel = travelOf(st.load);
   const emph = clamp(st.emph ?? 0);
   const housing = (c: string) => (emph > 0 ? mix(c, '#C3CDD3', 0.22 * emph) : c);
-  const poly = (pts: P3[], normal: P3, color: string, opts: {moving?: boolean; stroke?: number; opacity?: number; cull?: boolean; bias?: number} = {}) => {
+  const poly = (pts0: P3[], normal: P3, color: string, opts: {moving?: boolean; stroke?: number; opacity?: number; cull?: boolean; bias?: number; clip?: (p: P3) => number} = {}) => {
     const moving = opts.moving ?? true;
+    const pts = opts.clip ? clipPoly(pts0, opts.clip) : pts0;
+    if (pts.length < 3) return;
     const c = pts.reduce((s, p) => ({u: s.u + p.u / pts.length, v: s.v + p.v / pts.length, w: s.w + p.w / pts.length}), {u: 0, v: 0, w: 0});
     if ((opts.cull ?? true) && vw.facing(normal, c, moving) <= 1e-4) return;
     const n = vw.dir(normal, moving);
@@ -595,7 +662,7 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       node: <path key={key++} d={`M${sp.map((p) => P(p)).join(' L')} Z`} fill={faceColor(color, n)} stroke={INK} strokeWidth={fmt(ink * (opts.stroke ?? 1))} strokeLinejoin="round" opacity={opts.opacity ?? 1} />,
     });
   };
-  const box = (u0: number, u1: number, v0: number, v1: number, w0: number, w1: number, color: string, opts: {stroke?: number; opacity?: number; skip?: string[]; bias?: number} = {}) => {
+  const box = (u0: number, u1: number, v0: number, v1: number, w0: number, w1: number, color: string, opts: {stroke?: number; opacity?: number; skip?: string[]; bias?: number; clip?: (p: P3) => number} = {}) => {
     const f: [string, P3[], P3][] = [
       ['u0', [{u: u0, v: v0, w: w0}, {u: u0, v: v1, w: w0}, {u: u0, v: v1, w: w1}, {u: u0, v: v0, w: w1}], {u: -1, v: 0, w: 0}],
       ['u1', [{u: u1, v: v0, w: w0}, {u: u1, v: v0, w: w1}, {u: u1, v: v1, w: w1}, {u: u1, v: v1, w: w0}], {u: 1, v: 0, w: 0}],
@@ -643,23 +710,22 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   };
 
   /** a short cylinder (collar, boss) between two pad-local points: its projected hull, its near end ring */
-  const cyl = (a: P3, b: P3, r: number, color: string, extra = 0) => {
+  const cylNode = (a: P3, b: P3, r: number, color: string, k0: string) => {
     const out = tubeOutline(vw.world, a, b, r, r, 24);
-    const A = vw.world(a), B = vw.world(b);
     const ax = sub3(b, a);
     const endA = vw.facing(mul3(ax, -1), a) > 0, endB = vw.facing(ax, b) > 0;
     const capOf = (c: P3) => ringArc(vw, c, ax, r, 24, true).map((q) => q.p);
     const cap = endA ? capOf(a) : endB ? capOf(b) : null;
-    items.push({
-      d: (A.d + B.d) / 2 + extra,
-      g: grp,
-      node: (
-        <g key={key++}>
-          <path d={`M${out.map((q) => P(q)).join(' L')} Z`} fill={color} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
-          {cap && <path d={`M${cap.map((q) => P(q)).join(' L')} Z`} fill={lit(color, 0.22)} stroke={INK} strokeWidth={fmt(ink * 0.8)} />}
-        </g>
-      ),
-    });
+    return (
+      <g key={k0}>
+        <path d={`M${out.map((q) => P(q)).join(' L')} Z`} fill={color} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+        {cap && <path d={`M${cap.map((q) => P(q)).join(' L')} Z`} fill={lit(color, 0.22)} stroke={INK} strokeWidth={fmt(ink * 0.8)} />}
+      </g>
+    );
+  };
+  const cyl = (a: P3, b: P3, r: number, color: string, extra = 0) => {
+    const A = vw.world(a), B = vw.world(b);
+    items.push({d: (A.d + B.d) / 2 + extra, g: grp, node: cylNode(a, b, r, color, `c${key++}`)});
   };
   const {TILE, GAP, RIM, COLS, ROWS, T_TILE, U_PLATE, U_BACK} = P3D;
   const slipOf = (i: number) => st.slip?.[i] ?? 0;
@@ -674,25 +740,6 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       // seen side-on the tile's edge darkens as it wets; its face (seen through the glass) carries a contact patch
       const col = faceSeen ? mix(COL.tileDry, COL.tileWet, 0.18 * ct) : mix('#CADDE2', '#93AFB8', 0.3 * ct);
       box(0, T_TILE, t.v - TILE / 2, t.v + TILE / 2, t.w - TILE / 2, t.w + TILE / 2, col, {stroke: 0.7});
-      if (!faceSeen && ct > 0.01) {
-        // the wet contact line: along the glass edge of each side of the tile we can see, darker as the contact grows
-        const edges: [P3, P3, P3][] = [
-          [{u: 0, v: -1, w: 0}, {u: 0.02, v: t.v - TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v - TILE / 2, w: t.w + TILE / 2}],
-          [{u: 0, v: 1, w: 0}, {u: 0.02, v: t.v + TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w + TILE / 2}],
-          [{u: 0, v: 0, w: -1}, {u: 0.02, v: t.v - TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w - TILE / 2}],
-          [{u: 0, v: 0, w: 1}, {u: 0.02, v: t.v - TILE / 2, w: t.w + TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w + TILE / 2}],
-        ];
-        const segs: string[] = [];
-        let dm = 0;
-        for (const [n, a, b] of edges) {
-          const mid = {u: 1.5, v: (a.v + b.v) / 2, w: (a.w + b.w) / 2};
-          if (vw.facing(n, mid) <= 0) continue;
-          const A = vw.world(a), B = vw.world(b);
-          segs.push(`M${P(A)} L${P(B)}`);
-          dm = A.d;
-        }
-        if (segs.length) items.push({d: dm + 0.05, g: grp, node: <path key={key++} d={segs.join(' ')} stroke={COL.tileWet} strokeWidth={fmt(ink * (0.8 + 1.8 * ct))} strokeLinecap="round" opacity={0.35 + 0.65 * ct} />});
-      }
       if (faceSeen) {
         const face = (v0: number, v1: number, w0: number, w1: number) => [{u: -0.02, v: v0, w: w0}, {u: -0.02, v: v0, w: w1}, {u: -0.02, v: v1, w: w1}, {u: -0.02, v: v1, w: w0}].map((p) => vw.world(p));
         const q0 = vw.world({u: 0, v: t.v, w: t.w});
@@ -848,10 +895,12 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   for (let r = 0; r < ROWS && open; r++) {
     const t0 = tileVW(0, r);
     const railV = t0.v - 3 + travel;
-    // the rail's local give at each column: it sags a little under a spring that carries more than its share
-    const ex = (c: number) => Math.max(0, shareOf(c, r) - 1);
-    // (a slack spring's own hook rides with its neighbours': the rail is one bar)
-    const sag = (c: number) => base * 0.9 * (shareOf(c, r) < 0.6 ? 0.8 * Math.max(ex(c - 1), ex(c + 1)) : ex(c));
+    // the rail's local give (only in a row where one spring has gone slack; the few per cent every other spring takes
+    // on is the spine's own extra travel): the springs pull the rail up toward their tiles, so where one lets go
+    // nothing holds the rail up there and it bows down most under the slack spring, pulling its neighbours' hooks
+    // down with it: they stretch further and take up its share
+    const ex = (c: number) => Math.max(0, shareOf(c, r) - 1.06);
+    const sag = (c: number) => base * 0.9 * (shareOf(c, r) < 0.6 ? 1.2 * Math.max(ex(c - 1), ex(c + 1)) : ex(c));
     const hookV = (c: number) => railV + 2 + sag(c);
     const pts: P3[] = [];
     const wL = -PW / 2 + RW + 0.6, wR = PW / 2 - RW - 0.6;
@@ -869,7 +918,7 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       if (uTop(sw) > 16) poly([{u: U_SP - 2.6, v: sv0, w: wf}, {u: U_SP + 2.6, v: sv0, w: wf}, {u: U_SP + 2.6, v: sv1, w: wf}, {u: U_SP - 2.6, v: sv1, w: wf}], {u: 0, v: 0, w: -sw}, '#262E33', {stroke: 0.4, bias: 0.3});
     }
     // the clamp where the rail hangs from the spine
-    box(U_SP - 2.4, 20.4, railV - 2.2, railV + 2.2, -7.2, 7.2, housing('#7F8B93'), {stroke: 0.7, bias: 0.6});
+    box(U_SP - 2.4, 17.6, railV - 2.2, railV + 2.2, -6.4, 6.4, housing('#7F8B93'), {stroke: 0.7, bias: 0.6});
     for (let c = 0; c < COLS; c++) {
       const t = tileVW(c, r), i = r * COLS + c;
       const share = shareOf(c, r);
@@ -907,7 +956,7 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       }
       hp.push({u: U_SP, v: hook, w: t.w});
       const tens = clamp(stretch / FULL);
-      const hot = emph * clamp(tens * 0.4 + Math.max(0, share - 1) * 2.4);
+      const hot = emph * clamp(tens * 0.26 + Math.max(0, share - 1.06) * 2.6);
       const cold = emph * clamp(1 - share * 1.3);
       const scol = mix(mix(COL.spring, COL.springHot, hot), '#8E9BA3', cold);
       wire(hp, 1.05, scol, 0, {outline: '#1E252A', core: 1});
@@ -932,33 +981,60 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   }
   // the spine (the load spreader the rails hang from)
   const spV0 = -PH / 2 + RW + 4 + travel, spV1 = PH / 2 - RW - 3 + travel;
-  if (open) box(14.5, 19.5, spV0, spV1, -4.5, 4.5, housing(COL.spine), {stroke: 0.8, bias: 0.3});
+  // (a flat bar in the springs' own layer, narrow, so from an oblique view it sits between two spring columns)
+  if (open) box(13.4, 17.4, spV0, spV1, -3.4, 3.4, housing(COL.spine), {stroke: 0.8, bias: 0.3});
   // the post feet on the spine (bosses) and the posts' inner part (hidden by the cover when it is on)
   for (const v of [-46, 46]) {
     if (!open) break;
-    box(19.5, 23.5, v + travel - 6, v + travel + 6, -6, 6, housing('#808D96'), {stroke: 0.7, bias: 0.5});
-    rod({u: 21, v: v + travel, w: 0}, {u: U_BACK + 2, v: v + travel, w: 0}, 4.6, COL.post, 0.4);
+    box(17.4, 21.4, v + travel - 6, v + travel + 6, -5.4, 5.4, housing('#808D96'), {stroke: 0.7, bias: 0.5});
+    rod({u: 19.4, v: v + travel, w: 0}, {u: U_BACK + 2, v: v + travel, w: 0}, 4.6, COL.post, 0.4);
   }
   // the lug: the spine's foot, a plate down through the bottom wall's slot, with the eye for the D-ring
   const eyeV = PH / 2 + 3 + travel;
   if (open) box(12, 22, spV1 - 2, PH / 2 - RW, -3, 3, housing(COL.lug), {stroke: 0.8, bias: 0.4});
-  // ---- the rear cover: on, or lifted straight off outward along the posts (it fades as it goes)
+  // ---- the rear cover: a plate (2.5 mm) with a raised backplate (4 mm) the posts ride in. The cutaway is a section
+  // plane sweeping across it (cover 1 -> 0): what lies beyond the plane is cut away, the cut faces show in the light
+  // section tone; nothing fades and nothing slides off the posts.
   grp = G.cover;
-  if (st.cover > 0.01) {
-    const lift = (1 - st.cover) * 38; // mm out along u (it slides off along the posts)
-    const op = clamp((st.cover - 0.2) / 0.55);
-    const U = U_BACK + lift;
+  if (st.cover > 0.002) {
+    const cd = st.cutDir ?? {v: -0.5, w: 0.866};
+    const cl = Math.hypot(cd.v, cd.w) || 1;
+    const cn = {v: cd.v / cl, w: cd.w / cl};
+    const ext = Math.abs(cn.v) * PH / 2 + Math.abs(cn.w) * PW / 2 + 3;
+    const cc = lerp(-ext, ext, clamp(st.cover));
+    const cutting = st.cover < 0.998;
+    const fCut = (p: P3) => cn.v * p.v + cn.w * p.w - cc;
+    const clip = cutting ? fCut : undefined;
+    const U = U_BACK;
+    const T_COV = 2.5;
     const ci = 2; // the cover sits inside the bevel
-    poly([{u: U, v: -PH / 2 + ci, w: -PW / 2 + ci}, {u: U, v: -PH / 2 + ci, w: PW / 2 - ci}, {u: U, v: PH / 2 - ci, w: PW / 2 - ci}, {u: U, v: PH / 2 - ci, w: -PW / 2 + ci}], {u: 1, v: 0, w: 0}, housing(COL.cover), {opacity: op});
+    const coverRect = (u: number): P3[] => [{u, v: -PH / 2 + ci, w: -PW / 2 + ci}, {u, v: -PH / 2 + ci, w: PW / 2 - ci}, {u, v: PH / 2 - ci, w: PW / 2 - ci}, {u, v: PH / 2 - ci, w: -PW / 2 + ci}];
+    poly(coverRect(U), {u: 1, v: 0, w: 0}, housing(COL.cover), {clip});
     // the raised backplate the handle posts pass through (a second, smaller layer)
     const bi = 16;
-    box(U, U + 4, -PH / 2 + bi, PH / 2 - bi, -PW / 2 + bi + 8, PW / 2 - bi - 8, housing(COL.backplate), {opacity: op, stroke: 0.8});
+    const bp = {v0: -PH / 2 + bi, v1: PH / 2 - bi, w0: -PW / 2 + bi + 8, w1: PW / 2 - bi - 8};
+    box(U, U + 4, bp.v0, bp.v1, bp.w0, bp.w1, housing(COL.backplate), {stroke: 0.8, clip, skip: ['u0']});
+    // the section faces where the plane cuts the plate and the backplate (light, so the cut reads as a cut)
+    if (cutting) {
+      const sectionOf = (rect: P3[], u0: number, u1: number, bias: number) => {
+        const cutR = clipPoly(rect, fCut);
+        const on = cutR.filter((p) => Math.abs(fCut(p)) < 1e-6);
+        if (on.length < 2) return;
+        const [a, b] = [on[0], on[on.length - 1]];
+        poly([{...a, u: u0}, {...b, u: u0}, {...b, u: u1}, {...a, u: u1}], {u: 0, v: cn.v, w: cn.w}, COL.section, {stroke: 0.7, bias});
+      };
+      sectionOf(coverRect(U), U - T_COV, U, 0.2);
+      sectionOf([{u: U + 4, v: bp.v0, w: bp.w0}, {u: U + 4, v: bp.v0, w: bp.w1}, {u: U + 4, v: bp.v1, w: bp.w1}, {u: U + 4, v: bp.v1, w: bp.w0}], U, U + 4, 0.25);
+    }
+    // the slots and the fasteners sit just in front of their faces (depth tied to the face, so they never sort
+    // behind it)
+    const dFace = (u: number) => vw.world({u, v: 0, w: 0}).d;
     const nb = vw.facing({u: 1, v: 0, w: 0}, {u: U + 4, v: 0, w: 0});
     if (nb > 0) {
-      // the slots the posts ride in (the travel reads against them) and the fasteners
+      // the slots the posts ride in (the travel reads against them)
       for (const v of [-46, 46]) {
         const s0 = v - 4, s1 = v + 20;
-        const corners: P3[] = [];
+        let corners: P3[] = [];
         const rr = 5.4;
         for (let j = 0; j <= 8; j++) {
           const a = (j / 8) * Math.PI;
@@ -968,17 +1044,20 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
           const a = (j / 8) * Math.PI;
           corners.push({u: U + 4.05, v: s1 - rr + rr * Math.sin(a), w: rr * Math.cos(a)});
         }
+        if (cutting) corners = clipPoly(corners, fCut);
+        if (corners.length < 3) continue;
         const sp = corners.map((p) => vw.world(p));
-        items.push({d: sp[0].d + 0.2, g: grp, node: <path key={key++} d={`M${sp.map((p) => P(p)).join(' L')} Z`} fill="#20282D" stroke={INK} strokeWidth={fmt(ink * 0.6)} opacity={op} />});
+        items.push({d: dFace(U + 4) + 0.6, g: grp, node: <path key={key++} d={`M${sp.map((p) => P(p)).join(' L')} Z`} fill="#20282D" stroke={INK} strokeWidth={fmt(ink * 0.6)} />});
       }
       const screws: [number, number, number][] = [];
-      for (const v of [-PH / 2 + 8, PH / 2 - 8]) for (const w of [-PW / 2 + 8, PW / 2 - 8]) screws.push([U + 0.3, v, w]);
-      for (const v of [-PH / 2 + bi + 6, PH / 2 - bi - 6]) for (const w of [-PW / 2 + bi + 14, PW / 2 - bi - 14]) screws.push([U + 4.3, v, w]);
+      for (const v of [-PH / 2 + 8, PH / 2 - 8]) for (const w of [-PW / 2 + 8, PW / 2 - 8]) screws.push([U + 0.05, v, w]);
+      for (const v of [-PH / 2 + bi + 6, PH / 2 - bi - 6]) for (const w of [-PW / 2 + bi + 14, PW / 2 - bi - 14]) screws.push([U + 4.05, v, w]);
       for (const [u, v, w] of screws) {
+        if (cutting && fCut({u, v, w}) > -3) continue;
         const ring = ringArc(vw, {u, v, w}, {u: 1, v: 0, w: 0}, 2.5, 14, true).map((q) => q.p);
         const a1 = vw.world({u, v: v - 1.6, w: w - 1.6}), a2 = vw.world({u, v: v + 1.6, w: w + 1.6});
-        items.push({d: ring[0].d + 0.3, g: grp, node: (
-          <g key={key++} opacity={op}>
+        items.push({d: dFace(u) + 0.7, g: grp, node: (
+          <g key={key++}>
             <path d={`M${ring.map((p) => P(p)).join(' L')} Z`} fill={COL.screw} stroke={INK} strokeWidth={fmt(ink * 0.6)} />
             <path d={`M${P(a1)} L${P(a2)}`} stroke="#3B454C" strokeWidth={fmt(ink * 0.7)} />
           </g>
@@ -986,23 +1065,26 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       }
     }
   }
-  // ---- the handle: the posts' outer part from the cover to the bar, collars at the slots, gussets under the bar
+  if (!st.bodyOnly) {
+  // ---- the handle: the posts' outer part from the cover to the bar, collars where they leave the backplate; the
+  // bar with its two brackets (collars clamped round it where the posts meet it) is one node, so the brackets always
+  // draw over the bar (and the bar's ends over the brackets where we look at a bracket's outer face)
   grp = G.handle;
   for (const v of [-46, 46]) {
     rod({u: U_BACK + 2, v: v + travel, w: 0}, {u: BAR_U, v: v + travel, w: 0}, 4.6, COL.post);
     cyl({u: U_BACK + 4.4, v: v + travel, w: 0}, {u: U_BACK + 9, v: v + travel, w: 0}, 6.6, '#98A6B0', 0.05);
-    // the bracket: a collar clamped round the bar where the post meets it
-    cyl({u: BAR_U, v: v + travel - 5.5, w: 0}, {u: BAR_U, v: v + travel + 5.5, w: 0}, P3D.BAR_R + 1.8, '#9AA8B2', 0.2);
   }
   const barA = {u: BAR_U, v: -P3D.BAR_H + travel, w: 0}, barB = {u: BAR_U, v: P3D.BAR_H + travel, w: 0};
   const BA = vw.world(barA), BB = vw.world(barB);
-  const barNode = (() => {
-    const out = tubeOutline(vw.world, barA, barB, P3D.BAR_R, P3D.BAR_R, 24);
+  /** a length of the rubber bar between v0 and v1 (its outline, its highlight, the rings that fall in it) */
+  const barSeg = (v0: number, v1: number, key: string) => {
+    const a = {u: BAR_U, v: v0, w: 0}, b = {u: BAR_U, v: v1, w: 0};
+    const out = tubeOutline(vw.world, a, b, P3D.BAR_R, P3D.BAR_R, 24);
     const d = `M${out.map((q) => P(q)).join(' L')} Z`;
-    // the rubber's rings (front arcs) and an end cap shading
     const rings = [-0.42, -0.25, 0.25, 0.42].map((t, i) => {
-      const c = {u: BAR_U, v: lerp(barA.v, barB.v, 0.5 + t), w: 0};
-      const arc = ringArc(vw, c, {u: 0, v: 1, w: 0}, P3D.BAR_R + 0.1, 24);
+      const rv = lerp(barA.v, barB.v, 0.5 + t);
+      if (rv < Math.min(v0, v1) + 0.5 || rv > Math.max(v0, v1) - 0.5) return null;
+      const arc = ringArc(vw, {u: BAR_U, v: rv, w: 0}, {u: 0, v: 1, w: 0}, P3D.BAR_R + 0.1, 24);
       const segs: string[] = [];
       let cur: string[] = [];
       for (const q of arc) {
@@ -1015,18 +1097,36 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       if (cur.length) segs.push(`M${cur.join(' L')}`);
       return <path key={i} d={segs.join(' ')} stroke="#4A555D" strokeWidth={fmt(1.3 * BA.s)} fill="none" />;
     });
+    const A = vw.world(a), B = vw.world(b);
     const dx = BB.x - BA.x, dy = BB.y - BA.y, L = Math.hypot(dx, dy) || 1;
     let nx = -dy / L, ny = dx / L;
     if (nx * -0.62 + ny * -0.78 < 0) {
       nx = -nx;
       ny = -ny;
     }
-    const r = P3D.BAR_R * (BA.s + BB.s) / 2;
+    const r = P3D.BAR_R * (A.s + B.s) / 2;
+    const e = Math.abs(v1 - v0) > P3D.BAR_H ? 0.06 : 0.12;
+    const ex = B.x - A.x, ey = B.y - A.y;
+    return (
+      <g key={key}>
+        <path d={d} fill={COL.bar} stroke={INK} strokeWidth={fmt(ink * 1.2)} />
+        <path d={`M${fmt(A.x + ex * e + nx * r * 0.45)},${fmt(A.y + ey * e + ny * r * 0.45)} L${fmt(B.x - ex * e + nx * r * 0.45)},${fmt(B.y - ey * e + ny * r * 0.45)}`} stroke="#66737C" strokeWidth={fmt(r * 0.28)} strokeLinecap="round" opacity={0.75} />
+        {rings}
+      </g>
+    );
+  };
+  const barNode = (() => {
+    const CH = 5.5; // the collars' half-height
+    const collars = [-46, 46].map((v) => cylNode({u: BAR_U, v: v + travel - CH, w: 0}, {u: BAR_U, v: v + travel + CH, w: 0}, P3D.BAR_R + 1.8, '#9AA8B2', `cl${v}`));
+    // a bar end over its collar where we look at that collar's outer face (the bar comes out of it toward us)
+    const topOut = vw.facing({u: 0, v: -1, w: 0}, {u: BAR_U, v: -46 + travel - CH, w: 0}) > 0;
+    const botOut = vw.facing({u: 0, v: 1, w: 0}, {u: BAR_U, v: 46 + travel + CH, w: 0}) > 0;
     return (
       <g>
-        <path d={d} fill={COL.bar} stroke={INK} strokeWidth={fmt(ink * 1.2)} />
-        <path d={`M${fmt(BA.x + dx * 0.06 + nx * r * 0.45)},${fmt(BA.y + dy * 0.06 + ny * r * 0.45)} L${fmt(BB.x - dx * 0.06 + nx * r * 0.45)},${fmt(BB.y - dy * 0.06 + ny * r * 0.45)}`} stroke="#66737C" strokeWidth={fmt(r * 0.28)} strokeLinecap="round" opacity={0.75} />
-        {rings}
+        {barSeg(barA.v, barB.v, 'bar')}
+        {collars}
+        {topOut && barSeg(barA.v, -46 + travel - CH, 'bt')}
+        {botOut && barSeg(46 + travel + CH, barB.v, 'bb')}
       </g>
     );
   })();
@@ -1034,10 +1134,11 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   if (st.hand || st.grip !== undefined) {
     const side = st.handSide ?? 1;
     const arm = st.arm === undefined ? ARM_FOREARM : st.arm;
+    // the hand centred between the brackets (about 2.5 mm clear of each)
     items.push({
       d: (BA.d + BB.d) / 2,
       g: grp,
-      node: <GripNode key={key++} id={`${id}-hd`} vw={vw} vb={travel + 3} g={g} side={side} arm={arm} barNode={st.bar === false ? null : barNode} iw={(4.6 / Math.max(0.3, z)) * k} stripes={st.sleeve !== false} />,
+      node: <GripNode key={key++} id={`${id}-hd`} vw={vw} vb={travel + 0.8} g={g} side={side} arm={arm} barNode={st.bar === false ? null : barNode} iw={(4.6 / Math.max(0.3, z)) * k} stripes={st.sleeve !== false} />,
     });
   } else if (st.bar !== false) items.push({d: (BA.d + BB.d) / 2, g: grp, node: <g key={key++}>{barNode}</g>});
   // ---- the lug's outer part, its eye, the D-ring and the strap
@@ -1087,19 +1188,22 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       sp.push(vw.world({u: p.u - sag - hang + bel, v: p.v - bel * 0.3, w: p.w + wav - lean.w * slack * Math.min(t * Ls, 600) * 0.8}));
     }
     // a flat webbing as a ribbon: its width at each point's depth
-    const L2: V[] = [], R2: V[] = [];
+    const L2: V[] = [], R2: V[] = [], L3: V[] = [], R3: V[] = [];
     for (let j = 0; j <= N; j++) {
       const p = sp[j], q = sp[Math.min(N, j + 1)], o = sp[Math.max(0, j - 1)];
       const tx = q.x - o.x, ty = q.y - o.y, tl = Math.hypot(tx, ty) || 1;
-      const hw = 8.5 * p.s;
+      const hw = 8.5 * p.s, he = 6.9 * p.s;
       L2.push({x: p.x - (ty / tl) * hw, y: p.y + (tx / tl) * hw});
       R2.push({x: p.x + (ty / tl) * hw, y: p.y - (tx / tl) * hw});
+      L3.push({x: p.x - (ty / tl) * he, y: p.y + (tx / tl) * he});
+      R3.push({x: p.x + (ty / tl) * he, y: p.y - (tx / tl) * he});
     }
-    const ribbon = `M${L2.map((q) => P(q)).join(' L')} L${R2.reverse().map((q) => P(q)).join(' L')} Z`;
-    const mid = `M${sp.map((q) => P(q)).join(' L')}`;
-    // the sewn loop round the D-ring's bar: a box-X stitch a little below it (on the ribbon's centre line)
-    const st0 = vw.world({u: a.u + 0.6, v: a.v + 9, w: 0}), st1 = vw.world({u: a.u + 1.2, v: a.v + 25, w: 0});
-    const hw0 = 5.6 * st0.s;
+    const ribbon = `M${L2.map((q) => P(q)).join(' L')} L${[...R2].reverse().map((q) => P(q)).join(' L')} Z`;
+    // flat webbing: its two woven edges as fine lines (no round-hose highlight)
+    const edges = `M${L3.map((q) => P(q)).join(' L')} M${R3.map((q) => P(q)).join(' L')}`;
+    // the sewn loop round the D-ring's bar: a small box-X bar-tack in a thread close to the webbing's colour
+    const st0 = vw.world({u: a.u + 0.6, v: a.v + 10, w: 0}), st1 = vw.world({u: a.u + 1.0, v: a.v + 22, w: 0});
+    const hw0 = 4.4 * st0.s;
     const tx = st1.x - st0.x, ty = st1.y - st0.y, tl = Math.hypot(tx, ty) || 1;
     const nx = -ty / tl, ny = tx / tl;
     const c1 = {x: st0.x + nx * hw0, y: st0.y + ny * hw0}, c2 = {x: st0.x - nx * hw0, y: st0.y - ny * hw0};
@@ -1110,11 +1214,12 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       node: (
         <g key={key++}>
           <path d={ribbon} fill={COL.strap} stroke={INK} strokeWidth={fmt(ink * 1.2)} strokeLinejoin="round" />
-          <path d={mid} stroke="#F09A70" strokeWidth={fmt(3 * sp[0].s)} fill="none" opacity={0.55} transform={`translate(${fmt(-3 * sp[0].s)} 0)`} />
-          <path d={`M${P(c1)} L${P(c2)} L${P(c3)} L${P(c4)} Z M${P(c1)} L${P(c3)} M${P(c2)} L${P(c4)}`} stroke="#FBE3D2" strokeWidth={fmt(1.0 * st0.s)} strokeDasharray={`${fmt(2 * st0.s)} ${fmt(1.5 * st0.s)}`} fill="none" />
+          <path d={edges} stroke={shade(COL.strap, 0.2)} strokeWidth={fmt(0.7 * sp[0].s)} fill="none" opacity={0.8} />
+          <path d={`M${P(c1)} L${P(c2)} L${P(c3)} L${P(c4)} Z M${P(c1)} L${P(c3)} M${P(c2)} L${P(c4)}`} stroke={shade(COL.strap, 0.32)} strokeWidth={fmt(0.75 * st0.s)} strokeDasharray={`${fmt(1.1 * st0.s)} ${fmt(0.7 * st0.s)}`} fill="none" opacity={0.85} />
         </g>
       ),
     });
+  }
   }
   // seen from behind (the handle side) the layers stack from the glass outward; seen through the glass, the reverse
   const back = vw.facing({u: 1, v: 0, w: 0}, {u: U_BACK, v: 0, w: 0}) >= 0;
@@ -1122,35 +1227,36 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
   return items.map((it) => it.node);
 };
 
-/** the contact shadow on the surface (soft, offset down-right from the key light; tightens and darkens with load) */
-const ContactShadow: React.FC<{id: string; st: Pad3DState; vw: PadView; z: number}> = ({id, st, vw, z}) => {
+/** the contact shadow on the glass (a crisp core and a narrow penumbra, offset along shadowDir; it grows, softens and
+ *  fades as the pad stands off) and the contact line: a continuous dark line on the glass hugging the housing's outline
+ *  (the shade under the 3 mm the tiles hold it off the glass), darker as the contact grows. Drawn behind the pad, so
+ *  the outer half of the line shows all round its glass edge from any outside view. */
+const ContactShadow: React.FC<{id: string; st: Pad3DState; vw: PadView; z: number}> = ({st, vw}) => {
   const k = st.shadow ?? (st.surface === 'none' ? 0 : 1);
   if (k <= 0.001) return null;
-  const off = 3 + st.gap * 0.6;
-  const blur = 4 + st.gap * 0.5;
-  // the sun is outside, above and to the +w side: the shadow falls down and toward -w
-  const sh = (o: number, grow: number) => [
-    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: -PW / 2 - o - grow}),
-    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: PW / 2 - o + grow}),
-    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: PW / 2 - o + grow}),
-    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: -PW / 2 - o - grow}),
-  ];
-  const a = clamp(0.2 + 0.12 * st.load - st.gap * 0.008) * k;
-  // the contact line: where the tiles' faces meet the glass (darkens with contact)
+  const dir = st.shadowDir ?? {v: 9, w: -5};
+  const g = Math.max(0, st.gap);
+  const sl = st.slide;
+  const spread = 1 + g * 0.06;
+  const rect = (hv: number, hw: number, dv: number, dw: number, grow: number) =>
+    [
+      {u: 0, v: -hv - grow + dv + sl, w: -hw - grow + dw},
+      {u: 0, v: -hv - grow + dv + sl, w: hw + grow + dw},
+      {u: 0, v: hv + grow + dv + sl, w: hw + grow + dw},
+      {u: 0, v: hv + grow + dv + sl, w: -hw - grow + dw},
+    ].map((p) => vw.fixed(p));
+  const pth = (pp: Proj[]) => `M${pp.map((q) => P(q)).join(' L')} Z`;
+  const a = clamp(0.3 + 0.16 * st.load) * Math.exp(-g / 26) * k;
   const ct = st.contact.reduce((s, x) => s + x, 0) / st.contact.length;
-  const foot = [
-    vw.fixed({u: 0, v: -PH / 2 + P3D.RIM - 0.5, w: -PW / 2 + P3D.RIM - 0.5}),
-    vw.fixed({u: 0, v: -PH / 2 + P3D.RIM - 0.5, w: PW / 2 - P3D.RIM + 0.5}),
-    vw.fixed({u: 0, v: PH / 2 - P3D.RIM + 0.5, w: PW / 2 - P3D.RIM + 0.5}),
-    vw.fixed({u: 0, v: PH / 2 - P3D.RIM + 0.5, w: -PW / 2 + P3D.RIM - 0.5}),
-  ];
-  const lineK = clamp(1 - st.gap * 0.5) * k;
+  const lineK = clamp(1 - g * 0.5) * k;
+  const c0 = vw.fixed({u: 0, v: sl, w: 0});
   return (
     <g>
-      {[1, 0.6, 0.3].map((f, i) => (
-        <path key={i} d={`M${sh(off, blur * (1 - f) * 1.6).map((q) => P(q)).join(' L')} Z`} fill="#0B1A20" opacity={a * 0.45} />
-      ))}
-      {lineK > 0.01 && <path d={`M${foot.map((q) => P(q)).join(' L')} Z`} fill="#0E1D24" opacity={lineK * (0.25 + 0.5 * ct)} stroke="#0B171D" strokeWidth={fmt((1.6 + 1.6 * ct) / z)} />}
+      <path d={pth(rect(PH / 2, PW / 2, dir.v * spread, dir.w * spread, 2.2 + g * 0.35))} fill="#0B1A20" opacity={a * 0.38} />
+      <path d={pth(rect(PH / 2, PW / 2, dir.v * spread, dir.w * spread, 0))} fill="#0B1A20" opacity={a} />
+      {lineK > 0.01 && (
+        <path d={pth(rect(PH / 2, PW / 2, 0, 0, 0))} fill="#0E1D24" fillOpacity={0.6 * lineK} stroke="#071116" strokeOpacity={lineK * (0.55 + 0.45 * ct)} strokeWidth={fmt((2.6 + 2.6 * ct) * c0.s * (st.contactLine ?? 0.5))} strokeLinejoin="round" />
+      )}
     </g>
   );
 };
@@ -1212,10 +1318,11 @@ export const Pad3D: React.FC<{id: string; st: Pad3DState; z: number; k?: number}
   );
 };
 
-/** the pad (and hand) seen in the glass: the assembly mirrored in the glass plane (u -> -u), faint; draw it behind the
- *  pad, under the glass's own tint, clipped to the pane */
+/** the pad seen in the glass: its housing mirrored in the glass plane (u -> -u), faint, meeting the pad at the contact
+ *  line; the handle, hand, arm, lug, D-ring and strap are left out (their reflections read as separate objects). Draw
+ *  it behind the pad, under the glass's own tint, clipped to the pane. */
 export const PadReflection: React.FC<{id: string; st: Pad3DState; z: number; k?: number; opacity: number}> = ({id, st, z, k = 1, opacity}) => {
   const vw = viewOf(st, true);
-  const nodes = buildItems(id, {...st, emph: 0}, vw, z, k);
+  const nodes = buildItems(id, {...st, emph: 0, hand: null, grip: undefined, arm: null, bodyOnly: true}, vw, z, k);
   return <g opacity={opacity}>{nodes}</g>;
 };

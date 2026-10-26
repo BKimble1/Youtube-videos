@@ -334,7 +334,7 @@ const climbBody = (T: number): Body => {
   padL.load = moving('L') ? 0 : T >= C.bRel ? (T >= C.bPress1 ? brickLoad : 0) : clamp(0.12 + 0.88 * wl);
   padR.load = moving('R') ? 0 : clamp(0.12 + 0.88 * wr);
   // ("can hold your entire weight": he settles a little into the loaded stirrups, then holds)
-  const hy = keyN(T, HIP_KEYS) + 16 * bump(T, 490, 500, 6, 14);
+  const hy = keyN(T, HIP_KEYS) + 16 * bump(T, 502, 510, 6, 14);
   const shiftX = Math.max(...CYCLES.map((c) => ss(T, c.sh[0], c.sh[1]) * (1 - ss(T, c.rise[0], c.rise[1]))));
   // (reaching across to the pier he leans toward it, hips in a little)
   const pier = ss(T, C.bRel - 6, C.bM1) * (1 - ss(T, C.fail - 4, C.fail + 8));

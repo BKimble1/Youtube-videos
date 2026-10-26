@@ -156,7 +156,7 @@ def glass_slip(d=0.5):
     return (0.35 * np.sin(2 * np.pi * np.cumsum(f) / SR) * (0.6 + 0.4 * np.sin(2 * np.pi * 37 * tt)) + 0.4 * bp(noise(n), 1200, 5000)) * env(n, 0.02, 0.12)
 # the climber is seen at 0-171, 490-560, 664-894, 954-1041 and 1082-FRAMES; the cycles keep going, unheard, behind
 # the micro views and the springs
-ON = [(0, 171), (490, 560), (664, 894), (954, 1041), (1082, 1171)]
+ON = [(0, 171), (500, 548), (642, 894), (954, 1041), (1082, 1171)]
 seen = lambda fr: any(a <= fr < b for a, b in ON)
 def pad_move(side, rel, m0, m1, place, gain=0):
     name = 'near' if side == 'L' else 'far'
@@ -189,26 +189,26 @@ add('wind: a brief lift as the view opens onto the drop', wind(1.8), F(110), -37
 add('wind: below him, the climb', wind(1.2), F(146), -41)
 # 2. the mechanism (soft scale changes only)
 add('the pad at the glass (fine ticks)', ticks(0.8, 26, 4600), F(186), -42)
-add('into the tile edge (air, very soft)', air(0.6, 400, 2400), F(212), -48)
-add('the wedges at the glass (soft tick)', tock(2600, 0.08) * 0.6, F(240), -38)
+add('into the tile edge (air, very soft)', air(1.4, 400, 2400), F(180), -48)
+add('the wedge tips settle on the glass (soft tick)', tock(2600, 0.08) * 0.6, F(246), -38)
 add('shear: the wedges begin to bend (fine ticks)', ticks(1.0, 30), F(282), -40)
 add('the wedges lie flat (dense ticks)', ticks(1.2, 55, 4400), F(318), -40)
 add('into the contact (very soft high tone)', shimmer(1.4, 2093.0), F(392), -47)
 add('molecular scale: the gap closes (very soft high tone)', shimmer(1.2, 2349.3), F(436), -48)
 add('back out (air, very soft)', air(0.8, 2400, 400, False), F(476), -47)
-add('the loaded stirrup settles (step creak)', barstep(0.2) * 0.8, F(500), -36)
+add('the loaded stirrups settle (step creak)', barstep(0.2) * 0.8, F(502), -36)
 # 3. the springs
-add('up the tether (air, faint)', air(0.5, 400, 900), F(536), -48)
-add('cover lifts off (air, faint)', air(0.5, 500, 1800), F(562), -48)
-add('the springs stretch together', spring(0.8, 560, 420), F(574), -35)
-add('one patch lets go: its spring slackens', spring(0.4, 380, 300) * 0.7, F(606), -37)
-add('its neighbours take up its share', spring(0.5, 470, 520), F(612), -38)
-add('the load evens out again', spring(0.5, 520, 500) * 0.7, F(640), -40)
+add('up the tether from the stirrup (air, faint)', air(0.5, 400, 900), F(530), -48)
+add('the cover is cut away (air, faint)', air(0.5, 500, 1800), F(551), -48)
+add('the strap pulls straight; the springs stretch together', spring(0.8, 560, 420) + 0.5 * taut(0.8, 90), F(559), -35)
+add('one patch lets go: its spring slackens', spring(0.4, 380, 300) * 0.7, F(582), -37)
+add('its neighbours take up its share', spring(0.5, 470, 520), F(588), -38)
+add('the load evens out again', spring(0.5, 520, 500) * 0.7, F(606), -40)
 # 4. the climb (cycle 6 on screen, above); nearing the brick, outside
 add('wind: outside, nearing the brick', wind(1.2), F(860), -40)
 # 5. the method's limit: the contact test on glass, then the brick
-add('contact test: the pad seats on the glass', tock(1900), F(906), -28)
-add('contact test: broad, even contact spreads (dense, soft ticks)', ticks(0.7, 50, 4600), F(908), -41)
+add('contact test: the pad seats on the glass', tock(1900), F(902) - 0.03, -28)
+add('contact test: broad, even contact spreads (dense, soft ticks)', ticks(0.7, 50, 4600), F(904), -41)
 add('section: every wedge flat on the glass (dense, soft ticks)', ticks(0.6, 50, 4400), F(932), -43)
 add('near pad peels off the glass', peel(0.28), F(C['bRel']), -31)
 add('near pad carried across to the brick (air, faint)', air(0.5, 500, 1400), F(C['bM0']) + 0.1, -47)

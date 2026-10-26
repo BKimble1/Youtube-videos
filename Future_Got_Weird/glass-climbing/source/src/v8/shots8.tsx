@@ -23,6 +23,10 @@ import {BayWorld5 as BayWorld8} from './Bay8';
 import {C, CATCH_END, climbAt, climbTop, CYCLES, DY, FRAMES, keyN, MM, PZ, ss, UY, Z_BRICK} from './climb8';
 import {Cam3} from './Tower8';
 import {Exterior8} from './Exterior8';
+import {Pad3D as Pad3D8, Pad3DState as Pad3DState8, allTiles as allTiles8, ARM_BAY, tileVW as tileVW8} from './Pad8';
+import {ContactScene8, contactShot, SpringScene8, springShot, SurfaceScene8, surfaceShot, SPRING_BAY_CAM} from './PadScenes8';
+import {FOCUS, FOCUS_P, viewOf as wedgeViewOf, WEDGE_CAM, WedgeContent, WedgeSplit, WedgeState, WedgeView} from './Wedge8';
+import {MolView, WedgeToMol} from './Mol8';
 
 const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
@@ -384,31 +388,147 @@ const S1p: React.FC<{f: number}> = ({f}) => (f < 600 ? <S1 f={f - 556 + 534} /> 
 /** S2 (652-664): back on the far pad and hand in the bay, pulling out to the climb's medium framing */
 const S2b: React.FC<{f: number}> = ({f}) => bay(`s2b${f}`, f, cam1(f, [[652, S0_B.x - 20, S0_B.y + 80, S0_Z], [664, CAM_CLIMB.x, CAM_CLIMB.y, CAM_CLIMB.z, (x) => 1 - (1 - x) ** 2]]));
 
+
+// ------------------------------------------------------------------ V8: the device, the wedges, the molecules (171-500)
+/** smootherstep keys (the component builders' easing) */
+const keyS = (f: number, ks: [number, number][]) => keyN(f, ks.map(([t, v], i) => (i ? [t, v, E((x) => x * x * x * (x * (x * 6 - 15) + 10))] : [t, v])) as any);
+/** M1 (171-232) "Their surfaces are covered in": the pad on the glass, side-on, his fist on the handle; one continuous
+ *  zoom into the middle of its tile face, where it meets the glass: the tile layer's edge becomes the silicone sheet
+ *  and its rows of wedges (nested at the exact scale), arriving at the section's own framing (WEDGE_CAM) */
+const M1_V0 = tileVW8(0, 2).v - FOCUS_P.y / 1000; // (the focus wedge sits on the middle of a tile in the third row)
+const M1_PAD: Pad3DState8 = {yaw: 0, pitch: 0, load: 1, contact: allTiles8(1), cover: 1, gap: 0, tilt: 0, slide: 0, surface: 'glass', hand: H_BAR, strap: 900, arm: ARM_BAY};
+/** the pad-view (mm) camera that equals WEDGE_CAM (um) at the nest */
+const M1_END: Cam = {x: WEDGE_CAM.x / 1000, y: M1_V0 + WEDGE_CAM.y / 1000, z: WEDGE_CAM.z * 1000};
+const camM1v8 = (f: number) => camZoom(f, 174, 232, {x: 40, y: 30}, 2.6, {x: M1_END.x, y: M1_END.y}, M1_END.z, (x) => x * x * x * (x * (x * 6 - 15) + 10));
+const microState = (f: number): WedgeState => ({
+  surface: 'glass',
+  approach: keyS(f, [[226, 0.55], [252, 1]]),
+  shear: keyS(f, [[274, 0], [350, 1]]),
+  focus: FOCUS,
+  focusK: keyS(f, [[352, 0], [378, 1]]),
+});
+const M1v8: React.FC<{f: number}> = ({f}) => {
+  const cam = camM1v8(f);
+  const zu = cam.z / 1000; // px per um
+  if (zu >= 1.6) return <Svg><WedgeView id={`m1w${f}`} st={microState(f)} cam={{x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu}} /></Svg>;
+  const op = clamp((Math.log(zu) - Math.log(0.25)) / (Math.log(1.6) - Math.log(0.25)));
+  const camU = {x: cam.x * 1000, y: (cam.y - M1_V0) * 1000, z: zu};
+  const vw = wedgeViewOf(camU, 40);
+  return (
+    <Svg>
+      <Layer cam={cam} depth={3}>
+        <Lin id={`m1g${f}`} d="M-3000,-3000 H3000 V3000 H-3000 Z" from={{x: 0, y: -1600}} to={{x: 0, y: 1600}} stops={[[0, '#9CC7D4'], [0.5, '#6A9DB0'], [1, '#3F6E82']]} />
+      </Layer>
+      <Layer cam={cam} depth={1}>
+        <Pad3D8 id={`m1p${f}`} st={M1_PAD} z={cam.z} />
+        {op > 0.001 && (
+          <g opacity={op} transform={`translate(0 ${M1_V0}) scale(0.001)`}>
+            <WedgeContent id={`m1n${f}`} st={microState(f)} z={zu} view={vw} bg={false} />
+          </g>
+        )}
+      </Layer>
+    </Svg>
+  );
+};
+/** M2-M5a (232-500) "microscopic wedges. As you pull downward, the wedges bend flat against the glass. This brings them
+ *  so close that tiny molecular attractions can hold your entire": the section holds still (WEDGE_CAM) while inside it
+ *  the tips settle onto the glass, the backing is pulled down and the wedges bend over and lie flat (the contact grows
+ *  from points to strips); one wedge's contact is singled out and one continuous zoom goes into it, to the molecules:
+ *  the gap closes and short-range attraction marks come up; then the same zoom back out to the loaded section */
+const MOL_U = (f: number) => (f < 473 ? keyN(f, [[380, 0], [424, 1]]) : keyN(f, [[473, 1], [500, 0]]));
+const Mv8: React.FC<{f: number}> = ({f}) => {
+  const u = MOL_U(f);
+  const close = f < 473 ? keyS(f, [[424, 0], [450, 1]]) : 1;
+  const t = Math.max(0, (f - 380) / 30);
+  if (f >= 380 && u > 0) return <Svg>{u >= 1 ? <MolView id={`mv${f}`} close={close} t={t} /> : <WedgeToMol id={`mv${f}`} u={u} close={close} t={t} />}</Svg>;
+  return <Svg><WedgeView id={`mw${f}`} st={microState(f)} cam={WEDGE_CAM} /></Svg>;
+};
+
+// ------------------------------------------------------------------ V8: the contact close-up, the springs, the contact test
+/** H2v8 (24-70) "pressed these pads against a glass wall,": matched on the contact: the near pad that has just caught
+ *  him, close and oblique from outside: his fist round the handle, the contact line and shadow on the pane, the strap
+ *  straight; it settles under the load (a slow push in) */
+const H2v8: React.FC<{f: number}> = ({f}) => {
+  const p = contactShot(f);
+  return <ContactScene8 id={`h2${f}`} load={p.load} drift={p.drift} cam={p.cam} />;
+};
+/** S0v8 (528-548) "Special": down at the near stirrup under his foot, loaded, then up its strap toward the pad (the
+ *  load path from the foot support) */
+const S0v8_A = (() => {
+  const s = climbAt(528);
+  return {x: s.footL.ankle.x - 40, y: s.footL.ankle.y - 60};
+})();
+const S0v8_B = (() => {
+  const s = climbAt(548);
+  return {x: s.ringL.x + 30, y: s.ringL.y - 40};
+})();
+const camS0v8 = (f: number) => cam1(f, [[528, S0v8_A.x, S0v8_A.y, 1.3], [548, S0v8_B.x, S0v8_B.y, 1.3, inOut]]);
+const S0v8: React.FC<{f: number}> = ({f}) => bay(`s0${f}`, f, camS0v8(f));
+/** S1v8 (548-642) "springs spread the load, so one little patch doesn't have to hold you up alone.": match cut into the
+ *  same pad: the cover is cut away; the strap pulls straight, the lug and spine travel and every spring stretches
+ *  together while the tiles stay put; one patch lets go (its spring slackens, its neighbours stretch further, the
+ *  rest keep their share); it comes back and the load evens out; the cover is restored and the view returns to the
+ *  bay's view of his hand (the spring builder's shot, retimed to the narration) */
+const SPRING_T = (f: number) => keyN(f, [[548, 536], [640, 664]]);
+const SPRING_HAND = (() => {
+  const p = climbAt(640).padL;
+  return {x: KX * p.zo + 30, y: p.y + KY * p.zo, z: SPRING_BAY_CAM.z / MM};
+})();
+const S1v8: React.FC<{f: number}> = ({f}) => {
+  const q = springShot(SPRING_T(Math.min(f, 640)));
+  const hand = ss(f, 630, 642);
+  const sc = <SpringScene8 id={`s1${f}`} load={q.load} cover={q.cover} lost={q.lost} view={q.view} cam={q.cam} />;
+  if (hand < 0.001) return sc;
+  return (
+    <>
+      {hand < 0.999 && sc}
+      <div style={{position: 'absolute', inset: 0, opacity: hand}}>{bay(`s1b${f}`, f, SPRING_HAND)}</div>
+    </>
+  );
+};
+/** S2v8 (642-664): from his hand in the bay, out to the climb's medium framing */
+const camS2v8 = (f: number) => cam1(f, [[642, SPRING_HAND.x, SPRING_HAND.y, SPRING_HAND.z], [664, CAM_CLIMB.x, CAM_CLIMB.y, CAM_CLIMB.z, inOut]]);
+const S2v8: React.FC<{f: number}> = ({f}) => bay(`s2${f}`, f, camS2v8(f));
+/** G1v8 (894-930) "They need a smooth surface": the contact test, from inside: the far pad arrives on the pane, touches
+ *  and, as he loads it, contact spreads evenly across all 24 tiles */
+const G1v8: React.FC<{f: number}> = ({f}) => {
+  const p = surfaceShot(f);
+  return <SurfaceScene8 id={`g1${f}`} gap={p.gap} slide={p.slide} load={p.load} cam={p.cam} />;
+};
+/** G1bv8 (930-954) "to grip.": the same contact in section: every wedge flat on the smooth glass, no gap anywhere */
+const G1bv8: React.FC<{f: number}> = ({f}) => <Svg><WedgeView id={`g1b${f}`} st={{surface: 'glass', approach: 1, shear: keyS(f, [[930, 0.8], [946, 1]])}} cam={WEDGE_CAM} /></Svg>;
+/** G3v8 (1041-1082) "and those microscopic wedges": the same wedges, same orientation and scale: on the glass (above)
+ *  they bend and lie flat; on the brick (below) only a few tips reach its high points, the rest hang over gaps; as the
+ *  load comes on they are dragged off and skid (rigid brick: nothing penetrates) */
+const G3v8: React.FC<{f: number}> = ({f}) => (
+  <Svg>
+    <WedgeSplit id={`g3${f}`} glass={{surface: 'glass', approach: 1, shear: keyS(f, [[1041, 0], [1058, 1]])}} brick={{surface: 'brick', approach: keyS(f, [[1041, 0.4], [1050, 1]]), shear: keyS(f, [[1050, 0], [1062, 1]]), slip: keyS(f, [[1064, 0], [1082, 1]])}} />
+  </Svg>
+);
+
 /** each shot's camera, for the camera-track QC (the exterior and micro shots have their own) */
 export const CAMS8: Record<string, (f: number) => Cam> = {
-  H3: camH3, M1: camM1, M23: camMicro, M5b: () => CAM_M5B, S0: camS0, C: () => CAM_CLIMB, G2: camG2,
+  H3: camH3, M5b: () => CAM_M5B, S0: camS0v8, S2: camS2v8, C: () => CAM_CLIMB, G2: camG2,
 };
 export const CAMS8_3D: Record<string, (f: number) => Cam3> = {H1: () => CAM_A, H4: camH4, E1: () => CAM_A, F1: () => CAM_A};
 
 export const SHOTS8: {from: number; to: number; name: string; C: React.FC<{f: number}>}[] = [
   {from: 0, to: 24, name: 'H1', C: H1},
-  {from: 24, to: 70, name: 'H2', C: H2},
+  {from: 24, to: 70, name: 'H2', C: H2v8},
   {from: 70, to: 105, name: 'H3', C: H3},
   {from: 105, to: 171, name: 'H4', C: H4},
-  {from: 171, to: 226, name: 'M1', C: M1},
-  {from: 226, to: 379, name: 'M23', C: M23},
-  {from: 379, to: 473, name: 'M4', C: M4},
-  {from: 473, to: 490, name: 'M5a', C: M5a},
-  {from: 490, to: 528, name: 'M5b', C: M5b},
-  {from: 528, to: 556, name: 'S0', C: S0},
-  {from: 556, to: 652, name: 'S1', C: S1p},
-  {from: 652, to: 664, name: 'S2', C: S2b},
+  {from: 171, to: 232, name: 'M1', C: M1v8},
+  {from: 232, to: 500, name: 'M', C: Mv8},
+  {from: 500, to: 528, name: 'M5b', C: M5b},
+  {from: 528, to: 548, name: 'S0', C: S0v8},
+  {from: 548, to: 642, name: 'S1', C: S1v8},
+  {from: 642, to: 664, name: 'S2', C: S2v8},
   {from: 664, to: 857, name: 'C', C: CC},
   {from: 857, to: 894, name: 'E1', C: E1},
-  {from: 894, to: 930, name: 'G1', C: G1},
-  {from: 930, to: 954, name: 'G1b', C: G1b},
+  {from: 894, to: 930, name: 'G1', C: G1v8},
+  {from: 930, to: 954, name: 'G1b', C: G1bv8},
   {from: 954, to: 1041, name: 'G2', C: G2},
-  {from: 1041, to: 1082, name: 'G3', C: G3},
+  {from: 1041, to: 1082, name: 'G3', C: G3v8},
   {from: 1082, to: FRAMES, name: 'F1', C: F1},
 ];
 
