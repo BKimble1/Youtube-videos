@@ -13,6 +13,9 @@ import {BaySheet3, PressTest} from './v3/Work3';
 import {BaySheet4} from './v4/Work4';
 import {BaySheet5, LookTest5, PadTest5} from './v5/Work5';
 import {Film5, FilmStill5, Sheet5} from './v5/Film5';
+import {BaySheet6, MatchTest6, PadTest6, TowerTest6} from './v6/Work6';
+import {Film6, FilmStill6, Sheet6} from './v6/Film6';
+import {FRAMES as FRAMES6} from './v6/tl6';
 import {Film4, FilmStill4, Sheet4} from './v4/Film4';
 import {FRAMES as FRAMES4} from './v4/set4';
 import {Film3, FilmStill3, Sheet3} from './v3/Film3';
@@ -82,6 +85,13 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="GlassClimbingV4" component={Film4} durationInFrames={FRAMES4} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v4' as string | false, captions: true}} />
     <Still id="FilmStillV4" component={FilmStill4} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV4" component={Sheet4} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="PadTest6" component={PadTest6} width={W} height={1920} defaultProps={{sts: [{}], z: 4}} />
+    <Composition id="GlassClimbingV6" component={Film6} durationInFrames={FRAMES6} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v6' as string | false, captions: true, camOnly: false}} />
+    <Still id="FilmStillV6" component={FilmStill6} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV6" component={Sheet6} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="TowerTest6" component={TowerTest6} width={W} height={H} defaultProps={{f: 150, eye: [26, 22, 52], target: [0, 26, 0], fl: 1400, climber: true}} />
+    <Still id="MatchTest6" component={MatchTest6} width={W} height={H} defaultProps={{lam: 0.3, cx: 40, cy: 250, z: 3.9, alpha: 1, beta: 0, y0: -1298}} />
+    <Still id="BaySheet6" component={BaySheet6} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true}} />
     <Composition id="GlassClimbingV5" component={Film5} durationInFrames={FRAMES4} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v5' as string | false, captions: true, camOnly: false}} />
     <Still id="FilmStillV5" component={FilmStill5} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV5" component={Sheet5} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />

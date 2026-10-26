@@ -1,0 +1,429 @@
+[
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 3.733,
+  "frame": 112.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near strap takes the load (creak)",
+  "at": 3.867,
+  "frame": 116.0,
+  "dur": 0.22,
+  "gain_db": -32
+ },
+ {
+  "name": "far pad peels off (dry)",
+  "at": 4.0,
+  "frame": 120.0,
+  "dur": 0.3,
+  "gain_db": -31
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 4.167,
+  "frame": 125.0,
+  "dur": 0.4,
+  "gain_db": -48
+ },
+ {
+  "name": "far pad seats",
+  "at": 4.903,
+  "frame": 147.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "he rises onto the far stirrup (cloth)",
+  "at": 5.0,
+  "frame": 150.0,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "far strap takes his weight",
+  "at": 5.48,
+  "frame": 164.4,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "near pad peels off (dry)",
+  "at": 16.933,
+  "frame": 508.0,
+  "dur": 0.3,
+  "gain_db": -31
+ },
+ {
+  "name": "near pad carried (air, faint)",
+  "at": 17.1,
+  "frame": 513.0,
+  "dur": 0.4,
+  "gain_db": -48
+ },
+ {
+  "name": "near pad seats",
+  "at": 17.703,
+  "frame": 531.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "near strap takes its share again",
+  "at": 18.067,
+  "frame": 542.0,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 22.4,
+  "frame": 672.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near strap takes the load (creak)",
+  "at": 22.867,
+  "frame": 686.0,
+  "dur": 0.22,
+  "gain_db": -32
+ },
+ {
+  "name": "far pad peels off (dry)",
+  "at": 25.0,
+  "frame": 750.0,
+  "dur": 0.3,
+  "gain_db": -31
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 25.533,
+  "frame": 766.0,
+  "dur": 0.4,
+  "gain_db": -48
+ },
+ {
+  "name": "far pad seats",
+  "at": 27.037,
+  "frame": 811.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "he rises onto the far stirrup (cloth)",
+  "at": 27.133,
+  "frame": 814.0,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "far strap takes his weight",
+  "at": 27.653,
+  "frame": 829.6,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "near pad peels off (dry)",
+  "at": 28.067,
+  "frame": 842.0,
+  "dur": 0.3,
+  "gain_db": -31
+ },
+ {
+  "name": "near pad carried (air, faint)",
+  "at": 28.233,
+  "frame": 847.0,
+  "dur": 0.4,
+  "gain_db": -48
+ },
+ {
+  "name": "near pad seats",
+  "at": 28.837,
+  "frame": 865.1,
+  "dur": 0.12,
+  "gain_db": -26
+ },
+ {
+  "name": "near strap takes its share again",
+  "at": 29.2,
+  "frame": 876.0,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "far pad takes its share (spring creak)",
+  "at": 0.133,
+  "frame": 4.0,
+  "dur": 0.5,
+  "gain_db": -36
+ },
+ {
+  "name": "pad close-up: the tiles hold the glass (fine ticks)",
+  "at": 1.133,
+  "frame": 34.0,
+  "dur": 0.6,
+  "gain_db": -42
+ },
+ {
+  "name": "shoes leave the fin",
+  "at": 2.45,
+  "frame": 73.5,
+  "dur": 0.12,
+  "gain_db": -35
+ },
+ {
+  "name": "the stirrups take his feet (bar knock)",
+  "at": 2.807,
+  "frame": 84.2,
+  "dur": 0.18,
+  "gain_db": -32
+ },
+ {
+  "name": "the straps take his whole weight (the dip)",
+  "at": 3.08,
+  "frame": 92.4,
+  "dur": 0.28,
+  "gain_db": -26
+ },
+ {
+  "name": "wind: outside, the reveal",
+  "at": 3.933,
+  "frame": 118.0,
+  "dur": 1.8,
+  "gain_db": -39
+ },
+ {
+  "name": "the pad face through the glass (tiles, fine ticks)",
+  "at": 6.2,
+  "frame": 186.0,
+  "dur": 0.8,
+  "gain_db": -42
+ },
+ {
+  "name": "into one tile (air, very soft)",
+  "at": 7.067,
+  "frame": 212.0,
+  "dur": 0.6,
+  "gain_db": -48
+ },
+ {
+  "name": "glass meets the tips",
+  "at": 9.2,
+  "frame": 276.0,
+  "dur": 0.08,
+  "gain_db": -36
+ },
+ {
+  "name": "wedges begin to bend (fine ticks)",
+  "at": 9.6,
+  "frame": 288.0,
+  "dur": 1.0,
+  "gain_db": -40
+ },
+ {
+  "name": "wedges lie flat (dense ticks)",
+  "at": 10.733,
+  "frame": 322.0,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "the last of the gap closes (very soft high tone)",
+  "at": 13.467,
+  "frame": 404.0,
+  "dur": 1.4,
+  "gain_db": -47
+ },
+ {
+  "name": "molecular scale (very soft high tone)",
+  "at": 14.667,
+  "frame": 440.0,
+  "dur": 1.2,
+  "gain_db": -48
+ },
+ {
+  "name": "back out to the climber (air, very soft)",
+  "at": 15.933,
+  "frame": 478.0,
+  "dur": 1.4,
+  "gain_db": -47
+ },
+ {
+  "name": "cover lifts off (air, faint)",
+  "at": 17.933,
+  "frame": 538.0,
+  "dur": 0.5,
+  "gain_db": -48
+ },
+ {
+  "name": "the springs stretch together",
+  "at": 18.667,
+  "frame": 560.0,
+  "dur": 0.8,
+  "gain_db": -35
+ },
+ {
+  "name": "one patch lets go: its spring slackens",
+  "at": 20.2,
+  "frame": 606.0,
+  "dur": 0.4,
+  "gain_db": -37
+ },
+ {
+  "name": "its neighbours take up its share",
+  "at": 20.4,
+  "frame": 612.0,
+  "dur": 0.5,
+  "gain_db": -38
+ },
+ {
+  "name": "the load evens out again",
+  "at": 21.333,
+  "frame": 640.0,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "he looks down (cloth)",
+  "at": 28.667,
+  "frame": 860.0,
+  "dur": 0.5,
+  "gain_db": -42
+ },
+ {
+  "name": "wind: the look down",
+  "at": 28.6,
+  "frame": 858.0,
+  "dur": 1.4,
+  "gain_db": -38
+ },
+ {
+  "name": "the far pad loads on the glass (fine ticks)",
+  "at": 29.933,
+  "frame": 898.0,
+  "dur": 0.7,
+  "gain_db": -40
+ },
+ {
+  "name": "far strap takes his weight",
+  "at": 30.467,
+  "frame": 914.0,
+  "dur": 0.24,
+  "gain_db": -29
+ },
+ {
+  "name": "near pad peels off the glass",
+  "at": 31.933,
+  "frame": 958.0,
+  "dur": 0.28,
+  "gain_db": -32
+ },
+ {
+  "name": "near pad carried across (air, faint)",
+  "at": 32.233,
+  "frame": 967.0,
+  "dur": 0.5,
+  "gain_db": -48
+ },
+ {
+  "name": "pad pressed onto the brick (gritty contact)",
+  "at": 33.313,
+  "frame": 999.4,
+  "dur": 0.12,
+  "gain_db": -31
+ },
+ {
+  "name": "he presses it on (strap creak)",
+  "at": 33.767,
+  "frame": 1013.0,
+  "dur": 0.2,
+  "gain_db": -35
+ },
+ {
+  "name": "section: the tips meet only the peaks (sparse grit)",
+  "at": 35.267,
+  "frame": 1058.0,
+  "dur": 0.5,
+  "gain_db": -37
+ },
+ {
+  "name": "section: the wedges peel and skid down the brick",
+  "at": 35.6,
+  "frame": 1068.0,
+  "dur": 0.6,
+  "gain_db": -37
+ },
+ {
+  "name": "the pad tears off the brick (sharper)",
+  "at": 36.313,
+  "frame": 1089.4,
+  "dur": 0.34,
+  "gain_db": -25
+ },
+ {
+  "name": "the jolt on the far strap",
+  "at": 36.393,
+  "frame": 1091.8,
+  "dur": 0.26,
+  "gain_db": -28
+ },
+ {
+  "name": "the far pad peels off the glass",
+  "at": 36.567,
+  "frame": 1097.0,
+  "dur": 0.22,
+  "gain_db": -31
+ },
+ {
+  "name": "the fall (a brief whoosh)",
+  "at": 36.597,
+  "frame": 1097.9,
+  "dur": 0.55,
+  "gain_db": -31
+ },
+ {
+  "name": "wind: the fall, from above",
+  "at": 36.6,
+  "frame": 1098.0,
+  "dur": 0.8,
+  "gain_db": -38
+ },
+ {
+  "name": "CATCH: the near pad slapped flat on the glass",
+  "at": 37.113,
+  "frame": 1113.4,
+  "dur": 0.2,
+  "gain_db": -21
+ },
+ {
+  "name": "the pad slides as it takes him (short dry rub)",
+  "at": 37.163,
+  "frame": 1114.9,
+  "dur": 0.32,
+  "gain_db": -34
+ },
+ {
+  "name": "feet land on the fin",
+  "at": 37.38,
+  "frame": 1121.4,
+  "dur": 0.25,
+  "gain_db": -27
+ },
+ {
+  "name": "the straps answer the landing",
+  "at": 37.45,
+  "frame": 1123.5,
+  "dur": 0.22,
+  "gain_db": -33
+ },
+ {
+  "name": "the far pad placed on the glass",
+  "at": 38.303,
+  "frame": 1149.1,
+  "dur": 0.12,
+  "gain_db": -26
+ }
+]
