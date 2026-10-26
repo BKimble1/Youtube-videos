@@ -24,7 +24,7 @@ import {H, W} from '../lib';
 import {H_BAR} from '../world/rig';
 import {Head} from '../dc/Head';
 import {EX} from '../world/pose';
-import {allTiles, ARM_REACH, ArmSpec, gripGeo, travelOf, P3, P3D, Pad3D, Pad3DState, PadReflection, PadView, PH, PW, Proj, tileVW, viewOf} from './Pad8';
+import {allTiles, ARM_DROP, ARM_REACH, ArmSpec, gripGeo, travelOf, P3, P3D, Pad3D, Pad3DState, PadReflection, PadView, PH, Proj, viewOf} from './Pad8';
 
 const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
@@ -86,7 +86,7 @@ const Facade: React.FC<{id: string; st: Pad3DState; o: FacadeOpts}> = ({id, st, 
   for (let r = 0; r < 4; r++)
     for (let c = -4; c <= 4; c++) {
       const u0 = -900 - r * 1600, w0 = c * 1800 - 300;
-      room.push(<path key={`lp${r}${c}`} d={quad(vw, [{u: u0, v: CE + 2, w: w0}, {u: u0, v: CE + 2, w: w0 + 600}, {u: u0 - 500, v: CE + 2, w: w0 + 600}, {u: u0 - 500, v: CE + 2, w: w0}])} fill="#B9CDD5" opacity={0.7} />);
+      room.push(<path key={`lp${r}${c}`} d={quad(vw, [{u: u0, v: CE + 2, w: w0}, {u: u0, v: CE + 2, w: w0 + 600}, {u: u0 - 500, v: CE + 2, w: w0 + 600}, {u: u0 - 500, v: CE + 2, w: w0}])} fill="#B9CDD5" opacity={0.5} />);
     }
   // columns and a low partition (desk-height shapes), back in the room
   for (const w of [-3400, 2200]) room.push(...boxFaces(vw, -3900, -3500, CE, FL, w, w + 400, '#53697A', 0, `col${w}`, {stroke: 'none'}));
@@ -237,7 +237,7 @@ export const ContactScene8: React.FC<{id: string; load: number; drift?: number; 
   return (
     <Svg>
       <Layer cam={cam} depth={1}>
-        <Facade id={`${id}-f`} st={st} o={{mullions: [420, -1250], transom: 760, z: cam.z, reflect: 0.15, drift}} />
+        <Facade id={`${id}-f`} st={st} o={{mullions: [420, -1250], transom: 760, z: cam.z, reflect: 0.11, drift}} />
         <Pad3D id={`${id}-p`} st={st} z={cam.z} />
       </Layer>
     </Svg>
@@ -246,13 +246,13 @@ export const ContactScene8: React.FC<{id: string; load: number; drift?: number; 
 
 // ------------------------------------------------------------------------------------------------ B: surface test
 const HAZE = '#A3C0CF';
-/** the city seen from about 40 m up through the window (pad axes: the street is at v = +40000, the outside is u > 0):
+/** the city seen from about 90 m up through the window (pad axes: the street is at v = +90000, the outside is u > 0):
  *  the sky, a far skyline, blocks and streets far below, all in aerial haze (farther = paler) */
 const CityOut: React.FC<{id: string; vw: PadView}> = ({id, vw}) => {
   const hz = vw.vanish({u: 1, v: 0, w: 0.15}) ?? {x: 0, y: -200};
-  const GND = 40000;
+  const GND = 90000;
   const items: {d: number; node: React.ReactNode}[] = [];
-  const hazeOf = (u: number) => clamp(0.12 + Math.log(Math.max(1, u / 30000)) * 0.3, 0, 0.86);
+  const hazeOf = (u: number) => clamp(0.1 + Math.log(Math.max(1, u / 40000)) * 0.3, 0, 0.86);
   const block = (u0: number, u1: number, w0: number, w1: number, top: number, base: string, key: string, windows = true) => {
     const k = hazeOf(u0);
     const col = mix(base, HAZE, k);
@@ -269,28 +269,28 @@ const CityOut: React.FC<{id: string; vw: PadView}> = ({id, vw}) => {
     items.push({d: -u0, node: <g key={key}>{nodes}</g>});
   };
   // the far skyline (hazy towers just over the horizon)
-  for (let i = 0; i < 30; i++) {
-    const u = 500000 + hash(i, 3) * 400000;
-    const w = -900000 + i * 60000 + hash(i, 4) * 30000;
-    const wd = 18000 + hash(i, 5) * 30000;
-    const h = 60000 + hash(i, 6) * 120000 * (hash(i, 7) > 0.75 ? 1.7 : 1);
-    block(u, u + wd, w, w + wd, GND - h, '#B4C9D4', `s${i}`, false);
+  for (let i = 0; i < 60; i++) {
+    const u = 1400000 + hash(i, 3) * 900000;
+    const w = -1800000 + i * 60000 + hash(i, 4) * 50000;
+    const wd = 16000 + hash(i, 5) * 22000;
+    const h = 40000 + hash(i, 6) * 110000 * (hash(i, 7) > 0.8 ? 1.6 : 0.8);
+    block(u, u + wd, w, w + wd, GND - h, '#B9CDD7', `s${i}`, false);
   }
   // the blocks below: rows of low and mid-rise buildings with streets between them, their roofs seen from above
-  for (let r = 0; r < 8; r++)
+  for (let r = 0; r < 9; r++)
     for (let c = -9; c <= 9; c++) {
       const i = r * 20 + c + 10;
-      const u0 = 30000 + r * 38000 + hash(i, 11) * 5000;
+      const u0 = 60000 + r * 38000 + hash(i, 11) * 5000;
       const w0 = c * 34000 + hash(i, 12) * 6000 - 14000;
-      const h = 9000 + hash(i, 13) * (14000 + r * 5000);
+      const h = 9000 + hash(i, 13) * (16000 + r * 4000);
       const wd = 20000 + hash(i, 14) * 7000;
       block(u0, u0 + 24000, w0, w0 + wd, GND - h, hash(i, 15) > 0.55 ? '#CDBBA6' : hash(i, 16) > 0.5 ? '#A7B7C1' : '#B9C2B3', `b${r}_${c}`);
     }
   items.sort((a, b) => a.d - b.d);
-  const ground = quad(vw, [{u: 15000, v: GND, w: -3e6}, {u: 15000, v: GND, w: 3e6}, {u: 3e6, v: GND, w: 3e6}, {u: 3e6, v: GND, w: -3e6}]);
+  const ground = quad(vw, [{u: 20000, v: GND, w: -3e6}, {u: 20000, v: GND, w: 3e6}, {u: 3e6, v: GND, w: 3e6}, {u: 3e6, v: GND, w: -3e6}]);
   const streets: React.ReactNode[] = [];
-  for (let r = 0; r < 9; r++) {
-    const u0 = 30000 + r * 38000 - 11000;
+  for (let r = 0; r < 10; r++) {
+    const u0 = 60000 + r * 38000 - 11000;
     streets.push(<path key={`sa${r}`} d={quad(vw, [{u: u0, v: GND - 10, w: -3e6}, {u: u0, v: GND - 10, w: 3e6}, {u: u0 + 9000, v: GND - 10, w: 3e6}, {u: u0 + 9000, v: GND - 10, w: -3e6}])} fill={mix('#DADFDD', HAZE, 0.3 + r * 0.05)} />);
   }
   return (
@@ -325,7 +325,7 @@ const Silhouette: React.FC<{id: string; vw: PadView; S: P3; z: number; effort: n
   const ink = (2.4 / z) * 1;
   const L: P3 = {u: S.u + 40, v: S.v + 10, w: S.w - 340};
   const neck: P3 = {u: S.u + 30, v: S.v - 50, w: S.w - 170};
-  const head: P3 = {u: S.u + 45, v: S.v - 235, w: S.w - 175};
+  const head: P3 = {u: S.u + 45, v: S.v - 235, w: S.w - 215};
   const hipV = S.v + 560;
   const pts = (arr: P3[]) => arr.map((q) => pj(q));
   const tor = pts([
@@ -375,7 +375,7 @@ const Silhouette: React.FC<{id: string; vw: PadView; S: P3; z: number; effort: n
         {/* the tee's form: shadow down its far side (the sky is behind him) */}
         <path d={torD} fill="#8FA4B2" opacity={0.25} />
       </g>
-      <Head id={`${id}-hd`} c={{x: Hc.x, y: Hc.y}} R={100 * Hc.s} roll={0} turn={0.12} expr={expr} inkW={(2.4 / z / (Hc.s || 1)) * 100 / 100 * 1.6} />
+      <Head id={`${id}-hd`} c={{x: Hc.x, y: Hc.y}} R={100 * Hc.s} roll={0} turn={0.12} expr={expr} inkW={3.8 / (z * Math.max(0.05, Hc.s))} />
     </g>
   );
 };
@@ -424,7 +424,7 @@ export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; con
   const S = {u: sh.u + gapM.u, v: sh.v, w: sh.w};
   // the window, from inside: the glass (inner face u = -24) between a mullion to the right and a transom above
   const BIG = 9000;
-  const MW = 290, TR = -430;
+  const MW = 168, TR = -222;
   const glass = quad(vw, [{u: -24, v: TR, w: -BIG}, {u: -24, v: TR, w: MW}, {u: -24, v: BIG, w: MW}, {u: -24, v: BIG, w: -BIG}]);
   const frameFaces = [
     ...boxFaces(vw, -210, -24, TR - 70, BIG, MW, MW + 64, '#CDD4D9', ink, 'im'),
@@ -433,6 +433,7 @@ export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; con
   const sheen0 = quad(vw, [{u: -24.5, v: -BIG, w: -300}, {u: -24.5, v: -BIG, w: -150}, {u: -24.5, v: BIG, w: -1100}, {u: -24.5, v: BIG, w: -1250}]);
   const sheen1 = quad(vw, [{u: -24.5, v: -BIG, w: 40}, {u: -24.5, v: -BIG, w: 95}, {u: -24.5, v: BIG, w: -810}, {u: -24.5, v: BIG, w: -865}]);
   const effort = clamp(l * 1.2);
+  const dof0 = vw.fixed({u: 0, v: PH / 2 + 70, w: 0}).y, dof1 = dof0 + 230;
   return (
     <Svg>
       <Layer cam={cam} depth={1}>
@@ -440,10 +441,23 @@ export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; con
           <clipPath id={`${id}-gl`}>
             <path d={glass} />
           </clipPath>
-          {/* the glass mutes what is behind it: a little toward its haze, a little less saturated */}
+          {/* he is 0.4 m behind the glass and out of focus: muted toward the sky's haze and softened */}
           <filter id={`${id}-mute`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
-            <feColorMatrix type="matrix" values={muteMatrix(0.36, '#8FA9B8')} />
+            <feColorMatrix type="matrix" values={muteMatrix(0.46, '#8FA9B8')} result="m" />
+            <feGaussianBlur in="m" stdDeviation={fmt(4.6)} />
           </filter>
+          <filter id={`${id}-dof`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values={muteMatrix(0.3, '#8FA9B8')} result="m" />
+            <feGaussianBlur in="m" stdDeviation={fmt(3.4)} />
+          </filter>
+          <linearGradient id={`${id}-dg`} gradientUnits="userSpaceOnUse" x1="0" y1={fmt(dof0)} x2="0" y2={fmt(dof1)}>
+            <stop offset="0" stopColor="#000" />
+            <stop offset="1" stopColor="#FFF" />
+          </linearGradient>
+          <mask id={`${id}-dm`} maskUnits="userSpaceOnUse" x={-8000} y={-8000} width={16000} height={16000}>
+            <rect x={-8000} y={-8000} width={16000} height={16000} fill={`url(#${id}-dg)`} />
+          </mask>
+          {/* the glass mutes what is behind it a little */}
           <filter id={`${id}-glass`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
             <feColorMatrix type="matrix" values={muteMatrix(0.1, '#7FA2B2')} />
           </filter>
@@ -457,8 +471,13 @@ export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; con
           <g filter={`url(#${id}-glass)`}>
             <Pad3D id={`${id}-p`} st={st} z={z} />
           </g>
-          <path d={sheen0} fill="#FFFFFF" opacity={0.08} />
-          <path d={sheen1} fill="#FFFFFF" opacity={0.05} />
+          {/* depth of field: the pad at the glass is sharp; his arm toward the shoulder and the strap toward his feet
+              fall out of focus (a blurred copy faded in below the pad) */}
+          <g mask={`url(#${id}-dm)`} filter={`url(#${id}-dof)`}>
+            <Pad3D id={`${id}-pb`} st={st} z={z} />
+          </g>
+          <path d={sheen0} fill="#FFFFFF" opacity={0.13} />
+          <path d={sheen1} fill="#FFFFFF" opacity={0.08} />
         </g>
         {frameFaces}
       </Layer>
@@ -473,4 +492,131 @@ const muteMatrix = (k: number, c: string) => {
   return `${a} 0 0 0 ${fmt(k * r)}  0 ${a} 0 0 ${fmt(k * g)}  0 0 ${a} 0 ${fmt(k * b)}  0 0 0 1 0`;
 };
 
-export {tileVW, PW, PH, P3D, lerp, mix};
+// ------------------------------------------------------------------------------------------------ C: springs cutaway
+/** the tile whose patch lets go (column 0, row 3: clear of the hand, the bar, the posts, the spine and its clamps in the
+ *  cutaway view) */
+export const LOST_TILE = 3 * P3D.COLS + 0;
+/** its neighbours (beside it, above, below) */
+export const LOST_NEIGH = [3 * P3D.COLS + 1, 2 * P3D.COLS + 0, 4 * P3D.COLS + 0];
+/** the load shares while one patch has let go (lost 0..1): its spring goes slack, its neighbours take up its share,
+ *  every other spring carries a hair more (23 instead of 24 share the same load) */
+export const shareLost = (lost: number) => allTiles(1).map((_, i) => (i === LOST_TILE ? 1 - 0.92 * lost : LOST_NEIGH.includes(i) ? 1 + 0.36 * lost : 1 + 0.03 * lost));
+export const contactLost = (lost: number, base = 1) => allTiles(base).map((x, i) => (i === LOST_TILE ? x * (1 - 0.88 * lost) : x));
+export const slipLost = (lost: number) => allTiles(0).map((_, i) => (i === LOST_TILE ? 3.2 * lost : 0));
+export type SpringView = {yaw: number; pitch: number; persp: number};
+/** the cutaway's view: from behind his hand's palm side, a little above (the hand is clear of the bay) */
+export const SPRING_VIEW: SpringView = {yaw: 124, pitch: 12, persp: 1150};
+export const SPRING_CAM: Cam = {x: -10, y: 24, z: 5.45};
+/** C (film 528-664): load 0..1 (the spine's travel; the strap straightens with it), cover 1 on .. 0 off (the cutaway;
+ *  the near wall is sectioned and the load emphasis comes up as it goes), lost 0..1 (one tile's patch lets go and comes
+ *  back), contact (base contact of the tiles, default 0.8 + 0.2 load); tether / emph / cut override the defaults;
+ *  yaw / pitch / persp (view) and cam override the framing. */
+export const SpringScene8: React.FC<{id: string; load: number; cover: number; lost?: number; contact?: number; tether?: number; emph?: number; cut?: number; grip?: number; cam?: Cam; view?: SpringView; arm?: ArmSpec}> = ({
+  id,
+  load,
+  cover,
+  lost = 0,
+  contact,
+  tether,
+  emph,
+  cut,
+  grip = 1,
+  cam = SPRING_CAM,
+  view = SPRING_VIEW,
+  arm = ARM_DROP,
+}) => {
+  const l = clamp(load), c = clamp(cover), ls = clamp(lost);
+  const open = 1 - c;
+  const st: Pad3DState = {
+    yaw: view.yaw,
+    pitch: view.pitch,
+    persp: view.persp,
+    load: l,
+    contact: contactLost(ls, contact ?? 0.8 + 0.2 * l),
+    share: shareLost(ls),
+    slip: slipLost(ls),
+    cover: c,
+    cut: cut ?? sm(open * 1.6),
+    emph: emph ?? sm(open * 1.4),
+    gap: 0,
+    tilt: 0,
+    slide: 0,
+    surface: 'none',
+    hand: H_BAR,
+    grip,
+    arm,
+    strap: 2400,
+    tether: tether ?? sm((l - 0.15) / 0.75),
+    shadow: 1,
+    reflect: 0,
+  };
+  const em = st.emph ?? 0;
+  return (
+    <Svg>
+      <Layer cam={cam} depth={1}>
+        <g filter={em > 0.01 ? `url(#${id}-kb)` : undefined}>
+          <Facade id={`${id}-f`} st={st} o={{mullions: [430, -1250], transom: 760, z: cam.z, reflect: 0.12 * (1 - em) + 0.03}} />
+        </g>
+        <defs>
+          {/* the change in emphasis: the world behind knocked back a little while the mechanism is open */}
+          <filter id={`${id}-kb`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values={kbMatrix(0.22 * em)} />
+          </filter>
+        </defs>
+        <Pad3D id={`${id}-p`} st={st} z={cam.z} />
+      </Layer>
+    </Svg>
+  );
+};
+/** an feColorMatrix that lowers contrast and saturation by k toward a mid blue-grey */
+const kbMatrix = (k: number) => {
+  const a = 1 - k;
+  const m = {r: 0.55, g: 0.62, b: 0.66};
+  return `${a} 0 0 0 ${fmt(k * m.r)}  0 ${a} 0 0 ${fmt(k * m.g)}  0 0 ${a} 0 ${fmt(k * m.b)}  0 0 0 1 0`;
+};
+
+// ------------------------------------------------------------------------------------------------ recommended curves
+// Pure functions of the FILM frame for each shot (the integrator may use them as they are or as a reference).
+const ss5 = (f: number, a: number, b: number) => {
+  const x = clamp((f - a) / (b - a));
+  return x * x * x * (x * (x * 6 - 15) + 10);
+};
+const lerpCam = (a: Cam, b: Cam, t: number): Cam => ({x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t), z: Math.exp(lerp(Math.log(a.z), Math.log(b.z), t))});
+/** A, film 24-70: the load comes on from 0.6 to 1 over the first 12 frames with a small settle; a slow push in */
+export const contactShot = (f: number) => {
+  const u = clamp((f - 24) / 12);
+  const settle = f > 36 ? Math.sin((f - 36) * 0.55) * Math.exp(-(f - 36) * 0.16) : 0;
+  const load = clamp(0.6 + 0.4 * (1 - Math.pow(1 - u, 3)) + 0.035 * settle, 0, 1.04);
+  const cam = lerpCam({x: 90, y: 92, z: 3.08}, {x: 95, y: 96, z: 3.32}, ss5(f, 24, 70));
+  return {load, drift: clamp((f - 24) / 46), cam};
+};
+/** B, film 894-930: the pad comes onto the glass (gap 30 -> 0 mm, 894-904), touches, and the load comes on (904-926):
+ *  every tile wets evenly from the middle out; a slow push in */
+export const surfaceShot = (f: number) => {
+  const a = clamp((f - 894) / 10);
+  const gap = 30 * (1 - a * a);
+  const load = ss5(f, 904, 926);
+  const cam = lerpCam({x: 0, y: 80, z: 2.72}, {x: 2, y: 78, z: 2.95}, ss5(f, 894, 930));
+  return {gap, load, cam};
+};
+/** C, film 528-664: on the hand from his side (as the bay sees it); the camera comes round behind as the cover lifts
+ *  (528-552); the load comes on (548-578: the strap straightens, the lug and spine travel, every spring stretches);
+ *  one patch lets go (584-598) and holds there (to 616) while its neighbours take its share; its contact returns and the
+ *  load evens out (616-632); the cover goes back on (632-648) and the camera comes back round to the hand (642-664). */
+export const SPRING_SIDE: SpringView = {yaw: 22, pitch: 3, persp: 1300};
+export const SPRING_SIDE_CAM: Cam = {x: 70, y: 18, z: 3.15};
+export const springShot = (f: number) => {
+  const orbitIn = ss5(f, 528, 552), orbitOut = ss5(f, 642, 664);
+  const o = orbitIn * (1 - orbitOut);
+  const view: SpringView = {yaw: lerp(SPRING_SIDE.yaw, SPRING_VIEW.yaw, o), pitch: lerp(SPRING_SIDE.pitch, SPRING_VIEW.pitch, o), persp: lerp(SPRING_SIDE.persp, SPRING_VIEW.persp, o)};
+  const cover = 1 - ss5(f, 532, 550) + ss5(f, 632, 648);
+  const load = 0.15 + 0.85 * ss5(f, 548, 578);
+  const lost = ss5(f, 584, 598) * (1 - ss5(f, 616, 632));
+  // the camera: wide on the hand, in to the bay, a little closer on the patch that lets go, back out to the hand
+  const lostCam: Cam = {x: 8, y: 26, z: 6.0};
+  let cam = lerpCam(SPRING_SIDE_CAM, SPRING_CAM, orbitIn);
+  cam = lerpCam(cam, lostCam, ss5(f, 580, 596) * (1 - ss5(f, 618, 636)));
+  cam = lerpCam(cam, SPRING_SIDE_CAM, orbitOut);
+  return {load, cover, lost, view, cam};
+};
+
