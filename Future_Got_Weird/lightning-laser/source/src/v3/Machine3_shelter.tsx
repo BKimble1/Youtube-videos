@@ -22,7 +22,6 @@ import {ss} from '../lib';
 import {sm5} from '../camera';
 import {Cam3, TIP3, v3} from '../v2/p3';
 import {camScreen} from '../v2/Composite';
-import {stream} from '../v2/shots3d';
 import {EXIT_H, G} from '../world/site';
 import {View3} from './view3';
 import {quietSt} from './states3';
@@ -31,6 +30,7 @@ import {B, EV} from './timeline3';
 import {Beam3D} from './Scene3';
 import {PulseBloom} from './Open3_fx';
 import {BeamGlow, HeadFlare} from './Machine3_fx';
+import {C3_GAP, c3Pulses} from './Machine3_reveal';
 
 const INK = '#0B151C';
 export const MIRROR = 540;
@@ -90,14 +90,43 @@ const bez = (a: V, b: V, c: V, d: V, k: number): V => {
 };
 
 export type Op = {pose: ManPose; expr: Expr; hand: HandPose; press: number; reach: number; lift: number};
+/** the approach starts this long before the cut (s): the hand is already well on its way at 7.81 */
+const APP_LEAD = 0.3;
+/** the approach's speed at contact as a fraction of its mean speed (it hits the cap still moving: no settling) */
+const APP_V1 = 1.15;
+/** the press: the fingertip carries on into the cap by PRESS_D (stage px, along the approach direction) and the cap
+ *  goes down with it; it stops in PRESS_T s, braking from the approach speed (an impact, not a glide) */
+const PRESS_D = 9;
+/** the approach's direction as it meets the cap (the quadratic path's end tangent) */
+const APP_DIR = (() => {
+  const dx = FIRE.x - APP[1].x, dy = FIRE.y - APP[1].y, n = Math.hypot(dx, dy);
+  return {x: dx / n, y: dy / n};
+})();
+const PRESS_T = (() => {
+  // the tip's speed at contact: |d tip / d reach| at reach 1 (2 |FIRE - APP[1]|) times the reach rate there
+  const v = 2 * Math.hypot(FIRE.x - APP[1].x, FIRE.y - APP[1].y) * (APP_V1 / (T_TOUCH - C1_T0 + APP_LEAD));
+  return (2 * PRESS_D) / v; // a constant braking from v to rest over PRESS_D
+})();
+/** the button cap (stage): pressed, it goes in with the fingertip (its centre carried along the approach, its radius
+ *  shrinking as it sinks, so its top edge stays under the socket's lip and the dark socket shows below it) */
+const CAP_R = 46, CAP_R_IN = 37;
+const capAt = (c: V, press: number) => ({x: c.x + APP_DIR.x * PRESS_D * press, y: c.y + APP_DIR.y * PRESS_D * press, r: CAP_R - (CAP_R - CAP_R_IN) * press});
+/** the press depth (0..1) at time t: braking from the contact speed to rest, then held */
+const pressIn = (t: number) => {
+  const y = clamp((t - T_TOUCH) / PRESS_T);
+  return 1 - (1 - y) * (1 - y);
+};
 /** her performance: approach (already travelling at the cut), touch at 8.01, press, hold, one release, look up */
 export const opC = (t: number): Op => {
   const u = t - C1_T0;
   const uT = T_TOUCH - C1_T0;
-  // the hand is already travelling when the shot starts; the fingertip touches at uT (contact, no hover)
-  const reach = ss(u, -0.18, uT);
-  // the cap goes down with the touch and springs back up as the finger leaves it
-  const down = ss(u, uT, uT + 0.08);
+  // the hand is already travelling when the shot starts. The reach accelerates out of her lap and is still moving at
+  // close to its top speed when the fingertip meets the cap at uT (8.01, the click): a cubic with zero start speed and
+  // end speed APP_V1 x the mean, so the touch lands decisively instead of settling onto the cap
+  const x = clamp((u + APP_LEAD) / (uT + APP_LEAD));
+  const reach = (3 - APP_V1) * x * x + (APP_V1 - 2) * x * x * x;
+  // the cap goes in with the finger and springs back up as the finger leaves it
+  const down = pressIn(t);
   const press = down * (1 - ss(t, T_LIFT, T_LIFT + 0.07));
   // the release: the fingertip backs off the cap, the hand drops below the button row (never back across ARM) and
   // comes to rest in front of her above the desk edge, relaxing, as she straightens to look up at the window
@@ -105,7 +134,8 @@ export const opC = (t: number): Op => {
   // the approach rises from below the button row into the FIRE cap (it never crosses the ARM button)
   const m = 1 - reach;
   const tip0 = {x: m * m * APP[0].x + 2 * m * reach * APP[1].x + reach * reach * FIRE.x, y: m * m * APP[0].y + 2 * m * reach * APP[1].y + reach * reach * FIRE.y};
-  const held = {x: tip0.x - 5 * down, y: tip0.y + 4 * down};
+  // pressed: the fingertip carries on along its approach into the cap, which goes down with it (capAt)
+  const held = {x: tip0.x + APP_DIR.x * PRESS_D * down, y: tip0.y + APP_DIR.y * PRESS_D * down};
   const tip = lift > 0 ? bez(held, REL[0], REL[1], REL[2], lift) : held;
   const settle = ss(t, T_LIFT - 0.05, T_BACK + 0.05);
   const base: ManPose = {...BASE, torso: BASE.torso + 3 - 7 * settle, chest: BASE.chest - 3 * settle, neck: -4 + 14 * settle, turn: 0.55 + 0.08 * settle, breath: 0.3 + 0.2 * Math.sin(t * 2.2)};
@@ -157,12 +187,13 @@ export const beamFront = (t: number) => {
   const u = clamp((t - T_RELAY) / FRONT_T);
   return EXIT_H + (G + 700 - EXIT_H) * (1 - (1 - u) * (1 - u));
 };
-/** the window: the site in the storm; nothing until the relay, then the beam and its packet train */
+/** the window: the site in the storm; nothing until the relay, then the beam and its packet train: the same train as
+ *  C2 and C3 (9 drawn packets a second at C3's speed, on C3's clock), there along the beam as its front climbs */
 const WindowView: React.FC<{t: number; tag: string}> = ({t, tag}) => {
   const cam = windowCam(t);
   const on = beamOn(t);
   const front = beamFront(t);
-  const pulses = on > 0 ? stream(t).filter((h) => h < front - 30) : [];
+  const pulses = on > 0 ? c3Pulses(t).filter((h) => h < front - 30) : [];
   const st = {...quietSt(t, 0), beam: 0, pulses: []};
   const lead = on * (1 - ss(t, T_RELAY + FRONT_T, T_RELAY + FRONT_T + 0.12));
   return (
@@ -208,7 +239,10 @@ export const ShelterC: React.FC<{t: number}> = ({t}) => {
   const gauge = -60 + 110 * ss(relT, 0.0, 0.35) + 6 * Math.sin(t * 13) * ss(relT, 0.2, 0.5);
   const armLit = 1;
   const fireLit = ss(fireT, 0, 0.05);
-  const strobe = ss(relT, 0, 0.02) * (Math.sin(t * 2 * Math.PI * 6) > 0 ? 1 : 0.25);
+  // the pulse lamp flashes on the laser head's ticks (EV.opticsPackets + k/9: the drawn train's rate), lit for about
+  // half of each 1/9 s
+  const tickPh = (((t - EV.opticsPackets) / C3_GAP) % 1 + 1) % 1;
+  const strobe = ss(relT, 0, 0.02) * (tickPh < 0.5 ? 1 : 0.25);
   const wall = '#1A2C33';
   const tr = `translate(540 960) scale(${fmt(cam.z)}) translate(${fmt(-cam.x)} ${fmt(-cam.y)})`;
   const j = manJoints(op.pose);
@@ -269,10 +303,23 @@ export const ShelterC: React.FC<{t: number}> = ({t}) => {
               </radialGradient>
             </defs>
             <circle cx={b.c.x} cy={b.c.y} r={64} fill="#2A3238" stroke={INK} strokeWidth={4} />
-            {b.guard && <path d={`M${b.c.x - 62},${b.c.y - 30} L${b.c.x - 40},${b.c.y - 112} L${b.c.x + 40},${b.c.y - 112} L${b.c.x + 62},${b.c.y - 30} Z`} fill="#C9D0D6" opacity={0.55} stroke={INK} strokeWidth={3} />}
+            {/* the raised flip guard (short enough to stay clear of the LED bar above it) */}
+            {b.guard && <path d={`M${b.c.x - 62},${b.c.y - 30} L${b.c.x - 44},${b.c.y - 86} L${b.c.x + 44},${b.c.y - 86} L${b.c.x + 62},${b.c.y - 30} Z`} fill="#C9D0D6" opacity={0.55} stroke={INK} strokeWidth={3} />}
             {b.lit > 0 && <circle cx={b.c.x} cy={b.c.y} r={110} fill={b.col[1]} opacity={0.18 * b.lit} />}
-            <circle cx={b.c.x} cy={b.c.y + 4 * b.press} r={46 - 3 * b.press} fill={`url(#${tag}-b${i})`} stroke={INK} strokeWidth={4} />
-            <ellipse cx={b.c.x - 14} cy={b.c.y - 16 + 4 * b.press} rx={16} ry={8} fill="#FFFFFF" opacity={0.35 - 0.2 * b.press} />
+            {/* the socket the cap sits in: it shows round the cap as the cap goes in */}
+            <circle cx={b.c.x} cy={b.c.y} r={48} fill="#0A1014" />
+            {(() => {
+              const c = capAt(b.c, b.press);
+              const s = c.r / CAP_R;
+              return (
+                <g>
+                  <circle cx={fmt(c.x)} cy={fmt(c.y)} r={fmt(c.r)} fill={`url(#${tag}-b${i})`} stroke={INK} strokeWidth={4} />
+                  {/* pressed in: the socket's lip shades the cap's rim */}
+                  {b.press > 0.01 && <circle cx={fmt(c.x)} cy={fmt(c.y)} r={fmt(c.r - 6)} fill="none" stroke="#000000" strokeOpacity={fmt(0.4 * b.press)} strokeWidth={8} />}
+                  <ellipse cx={fmt(c.x - 14 * s)} cy={fmt(c.y - 16 * s)} rx={fmt(16 * s)} ry={fmt(8 * s)} fill="#FFFFFF" opacity={fmt(0.35 - 0.22 * b.press)} />
+                </g>
+              );
+            })()}
           </g>
         ))}
         {/* pulse lamp (strobes cyan while firing), toggles, gauge, trace monitor */}
@@ -330,17 +377,18 @@ const DeskProps: React.FC<{fl: number; t: number}> = ({fl, t}) => {
         return <rect key={`${r}-${c}`} x={fmt(x - 10)} y={fmt(y - 5)} width={20} height={11} rx={3} fill={lit('#4A5862', 0.5)} stroke="#151E24" strokeWidth={1.5} />;
       }))}
       <path d={`M${kx0},${ky + 72} L${kx1 + 30},${ky + 66} L${kx1 + 30},${ky + 76} L${kx0},${ky + 82} Z`} fill="#141C21" />
-      {/* the logbook, open, with a pen */}
-      <g transform={`translate(640 ${fmt(top(640) + 60)}) rotate(-4)`}>
-        <path d="M0,0 L150,-8 L162,96 L4,108 Z" fill={lit('#E4E0D2', 0.45)} stroke={INK} strokeWidth={4} strokeLinejoin="round" />
-        <path d="M150,-8 L298,-2 L316,96 L162,96 Z" fill={lit('#ECE8DA', 0.45)} stroke={INK} strokeWidth={4} strokeLinejoin="round" />
-        <path d="M150,-8 L162,96" stroke="#8A8676" strokeWidth={3} />
-        {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M${18 + i},${18 + i * 17} L${128 + i * 2},${12 + i * 17}`} stroke="#7A8AA8" strokeWidth={2.5} opacity={0.8} />)}
-        {[0, 1, 2].map((i) => <path key={`r${i}`} d={`M${176 + i * 2},${16 + i * 18} L${270 + i * 3},${20 + i * 18}`} stroke="#7A8AA8" strokeWidth={2.5} opacity={0.8} />)}
-        <path d="M184,70 q14,-12 26,0 t26,0 t26,-4" fill="none" stroke="#3050A0" strokeWidth={3} />
+      {/* the logbook, open, with a pen: pushed back against the desk's far edge and in the panel's shadow, so it sits
+          above the caption and never makes a bright patch behind the words */}
+      <g transform={`translate(660 ${fmt(top(660) + 34)}) rotate(-3) scale(0.8 0.72)`}>
+        <path d="M0,0 L150,-8 L162,96 L4,108 Z" fill={lit('#7E858A', 0.45)} stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+        <path d="M150,-8 L298,-2 L316,96 L162,96 Z" fill={lit('#868D92', 0.45)} stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+        <path d="M150,-8 L162,96" stroke="#4E555A" strokeWidth={3} />
+        {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M${18 + i},${18 + i * 17} L${128 + i * 2},${12 + i * 17}`} stroke="#4E5E78" strokeWidth={2.5} opacity={0.8} />)}
+        {[0, 1, 2].map((i) => <path key={`r${i}`} d={`M${176 + i * 2},${16 + i * 18} L${270 + i * 3},${20 + i * 18}`} stroke="#4E5E78" strokeWidth={2.5} opacity={0.8} />)}
+        <path d="M184,70 q14,-12 26,0 t26,0 t26,-4" fill="none" stroke="#2A3E70" strokeWidth={3} />
         <g transform="translate(206 44) rotate(-28)">
-          <rect x={-70} y={-6} width={140} height={12} rx={6} fill="#C23B2E" stroke={INK} strokeWidth={3} />
-          <path d="M70,-6 L88,0 L70,6 Z" fill="#D8D2C0" stroke={INK} strokeWidth={2.5} />
+          <rect x={-70} y={-6} width={140} height={12} rx={6} fill="#7E2A22" stroke={INK} strokeWidth={3} />
+          <path d="M70,-6 L88,0 L70,6 Z" fill="#8A867A" stroke={INK} strokeWidth={2.5} />
         </g>
       </g>
       {/* mug, steam curling */}

@@ -218,15 +218,16 @@ export const Leader3: React.FC<{t: number; ac: AirCam}> = ({t, ac}) => {
     const r = runs[runs.length - 1];
     tipS = r ? r[r.length - 1] : root;
   }
-  // forks at the macro step points (they light with their step and die)
+  // forks at the macro step points: they light with their step and die quickly; the white core goes first, so a dying
+  // fork is a fading violet spark, never a grey hair
   const forkEls = STR.forks.map((f, i) => {
     const t0 = i === 0 ? 4.55 : 4.725;
     if (t < t0) return null;
-    const a = (1 - ss(t, t0 + 0.06, t0 + 0.2)) * (0.6 + 0.4 * hash(frame, 61 + i));
+    const a = (1 - ss(t, t0 + 0.05, t0 + 0.1)) * (0.6 + 0.4 * hash(frame, 61 + i));
     if (a <= 0.02) return null;
     const rr = screenRuns(cam, f, f[f.length - 1].s * grow(t, t0, 0.04));
-    return {d: rr.map(pathD).join(' '), a};
-  }).filter(Boolean) as {d: string; a: number}[];
+    return {d: rr.map(pathD).join(' '), a, core: 1 - ss(t, t0 + 0.045, t0 + 0.075)};
+  }).filter(Boolean) as {d: string; a: number; core: number}[];
   // stall sparks in the micro view: the tip feels for a path a short way and fails
   const stallEls: {d: string; a: number}[] = [];
   ATT.forEach((at, i) => {
@@ -283,8 +284,9 @@ export const Leader3: React.FC<{t: number; ac: AirCam}> = ({t, ac}) => {
         <path d={body} fill="none" stroke={PAL.core} strokeOpacity={clamp(lt.body * 1.1)} strokeWidth={fmt(wc)} strokeLinecap="round" strokeLinejoin="round" />
         {forkEls.map((f, i) => (
           <g key={`f${i}`} opacity={f.a}>
-            <path d={f.d} fill="none" stroke={PAL.mid} strokeOpacity={0.5} strokeWidth={fmt(wc * 1.8)} strokeLinecap="round" strokeLinejoin="round" />
-            <path d={f.d} fill="none" stroke={PAL.core} strokeWidth={fmt(wc * 0.55)} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={f.d} fill="none" stroke={PAL.halo} strokeOpacity={0.16} strokeWidth={fmt(wc * 6)} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={f.d} fill="none" stroke={PAL.mid} strokeOpacity={0.6} strokeWidth={fmt(wc * 1.8)} strokeLinecap="round" strokeLinejoin="round" />
+            {f.core > 0.02 && <path d={f.d} fill="none" stroke={PAL.core} strokeOpacity={f.core} strokeWidth={fmt(wc * 0.55)} strokeLinecap="round" strokeLinejoin="round" />}
           </g>
         ))}
       </g>

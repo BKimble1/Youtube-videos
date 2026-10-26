@@ -2,8 +2,8 @@
 // dimension line attached in 3D beside the guided section (in the beam's plane, 7 m to its right), with extension
 // ticks reaching back toward the channel at both ends: the rod tip's level (axis height 0) and the top of the guided
 // section (G, about 50 m). Its points are projected every frame, so its ends stay on the segment as the camera widens.
-// It grows from the tip upward while the narration counts "one hundred" (23.64-24.34); the far tick grows in as the
-// line arrives; the label fades in on "sixty" (24.34).
+// It grows from the tip upward while the narration counts "one hundred" (23.64-24.34); the far tick grows out of the
+// line's end as it arrives (drawn at the line's end, so it is never ahead of it); the label fades in on "sixty" (24.34).
 import React from 'react';
 import {clamp, fmt} from '../dc/math';
 import {add3, axis3, Cam3, projector, v3, V3} from '../v2/p3';
@@ -27,7 +27,8 @@ export const Bracket160: React.FC<{cam: Cam3; k: number; label: number}> = ({cam
     const p = P(off(h, O_B + (T_OUT - O_B) * g)), q = P(off(h, O_B - (O_B - T_IN) * g));
     return {x1: q.x, y1: q.y, x2: p.x, y2: p.y};
   };
-  const ta = tick(0, t0), tb = tick(G, t1);
+  // the far tick grows out of the line's end and rides it up to G (never ahead of the line)
+  const ta = tick(0, t0), tb = tick(G * k, t1);
   // the label: beside the middle of the line, horizontal, sliding in a little as it fades in
   const m = P(off(G / 2, O_B + 3.2));
   const slide = (1 - clamp(label)) * -14;

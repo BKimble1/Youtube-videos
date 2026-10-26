@@ -4,12 +4,14 @@
 // world (Rod3_cam.ts HOUSE), each point projected through the camera, with V3 line weights: ink grows a little with
 // the push and stops at the weight of H's tower rod, and the rod tip is drawn the way Tower3D draws the tower's rod
 // (a long taper to a fine point), so the match cut to H reads as the same kind of tip.
+// The light on the metal is reflected sky: a flash lights the whole run of metal at once (earth clamp, conductor, rod,
+// tip) and its sheen fades evenly along the full length; nothing travels along the metal, so it never reads as current.
 // The rod is shown as what it is (a grounded metal terminal); nothing marks or denies a protected zone.
 import React from 'react';
 import {mix} from '../dc/color';
 import {clamp, fmt, hash} from '../dc/math';
 import {Cam3, projector} from '../v2/p3';
-import {facadeScale, hw, hx, hy, ROD_BASE, ROD_L0, ROD_TOP, ROUTE_LEN, ROUTE_M, routeAt} from './Rod3_cam';
+import {facadeScale, hw, hx, hy, ROD_BASE, ROD_TOP, ROUTE_M} from './Rod3_cam';
 
 const INK = '#0B151C';
 type Pt = {x: number; y: number};
@@ -21,10 +23,9 @@ export const ROD_HW = 0.052;
 
 export type HouseLight = {
   flash: number; // the strike's light on the scene (0..1)
-  sheenL: number; // arc length (m) of the sliding sheen on the conductor
-  sheen: number; // its strength
+  glare: number; // the flash itself on the metal (brief: a soft bloom along the whole conductor and rod)
+  catch: number; // the sheen the metal holds from it, even along its whole length (earth clamp to tip), fading
   tip: number; // the glint on the metal tip
-  catch: number; // the strike's flash caught by the metal (conductor and rod, along their whole length)
 };
 
 export const House: React.FC<{cam: Cam3; light: HouseLight; id: string}> = ({cam, light, id}) => {
@@ -80,8 +81,8 @@ export const House: React.FC<{cam: Cam3; light: HouseLight; id: string}> = ({cam
   const cond = ROUTE_M.slice(0, -1).map((p) => Q(p.x, p.y, -0.06));
   const condD = line(cond);
   const cw = clamp(sc * 0.066, 5.5, 11); // the copper strip's width on screen
-  const ct = clamp(light.catch);
-  const cop = mix('#B8703C', '#F4C79C', ct * 0.85), copL = mix('#E59A62', '#FFF4E4', ct);
+  const ct = clamp(light.catch), gr = clamp(light.glare), lit = Math.max(ct, gr);
+  const cop = mix('#B8703C', '#F4C79C', Math.max(ct * 0.7, gr * 0.85)), copL = mix('#E59A62', '#FFF4E4', lit);
   const clips = [1700, 1560, 1420, 1290].map((y) => ({c: Q(ROUTE_M[0].x, hy(y), -0.08)}));
   const rakeA = ROUTE_M[2], rakeB = ROUTE_M[3];
   const rakeClips = [0.25, 0.5, 0.75].map((k) => Q(rakeA.x + (rakeB.x - rakeA.x) * k, rakeA.y + (rakeB.y - rakeA.y) * k, -0.08));
@@ -95,49 +96,8 @@ export const House: React.FC<{cam: Cam3; light: HouseLight; id: string}> = ({cam
   const pb = P(hw(ROD_BASE.x, ROD_BASE.y, -0.04)), pt = P(hw(ROD_TOP.x, ROD_TOP.y, -0.04));
   const rw = (cam.f * ROD_HW) / Math.max(0.5, pb.z);
   const rodD = `M${fmt(pb.x - rw)},${fmt(pb.y)} L${fmt(pt.x - rw * 0.15)},${fmt(pt.y + rw * 1.5)} L${fmt(pt.x)},${fmt(pt.y)} L${fmt(pt.x + rw * 0.15)},${fmt(pt.y + rw * 1.5)} L${fmt(pb.x + rw)},${fmt(pb.y)} Z`;
-  const rodFill = mix('#9DA9B1', '#FFFFFF', clamp(ct * 0.8 + light.tip * 0.25));
-  // ---------------------------------------------------------------- the sheen sliding up the metal
-  // short segments round the sheen's position, each as wide as the metal under it (the copper strip, or the rod's taper
-  // up to just below its point, so the sheen never spills past the tip)
-  const sheenPts: {a: Pt; b: Pt; w: number; soft: number; core: number}[] = [];
-  if (light.sheen > 0.01) {
-    const half = 0.9, n = 28, lMax = ROUTE_LEN - 0.1;
-    for (let i = 0; i < n; i++) {
-      const l0 = light.sheenL - half + (2 * half * i) / n, l1 = Math.min(lMax, l0 + (2 * half) / n);
-      if (l1 < 0 || l0 >= l1) continue;
-      const a = routeAt(l0), b = routeAt(l1);
-      const lm = (l0 + l1) / 2;
-      const w = Math.exp(-(((lm - light.sheenL) / 0.42) ** 2));
-      if (lm > ROD_L0) continue;
-      const za = -0.07;
-      sheenPts.push({a: Q(a.x, a.y, za), b: Q(b.x, b.y, za), w, soft: cw * 3.2, core: cw * 0.7});
-    }
-  }
+  const rodFill = mix('#9DA9B1', '#FFFFFF', clamp(lit * 0.8 + light.tip * 0.25));
   const tipP = {x: pt.x, y: pt.y};
-  // on the rod: a vertical highlight band (the camera is level, so the rod is exactly vertical on screen), a Gaussian
-  // along the rod centred on the sheen, drawn inside the rod's outline
-  const rodSheen = (() => {
-    const sig = 0.42;
-    if (light.sheen <= 0.01 || light.sheenL + 2.5 * sig < ROD_L0) return null;
-    const yAt = (L: number) => Q(0, ROD_BASE.y + (L - ROD_L0), -0.04).y;
-    const yc = yAt(light.sheenL), sp = Math.abs(yAt(light.sheenL + sig) - yc);
-    const y0 = yc - 2.5 * sp, y1 = yc + 2.5 * sp;
-    const stops = Array.from({length: 11}, (_, i) => {
-      const o = i / 10, y = y0 + (y1 - y0) * o;
-      return {o, a: Math.exp(-(((y - yc) / sp) ** 2))};
-    });
-    return {y0, y1, stops};
-  })();
-  const sheenC = (() => {
-    // it fades as it nears the point, where the tip's own glint takes over
-    const k = light.sheen * clamp((ROUTE_LEN - 0.1 - light.sheenL) / 0.35);
-    if (k <= 0.01) return null;
-    const r = routeAt(light.sheenL);
-    const onRod = light.sheenL > ROD_L0;
-    const c = Q(r.x - (onRod ? 0.01 : 0), r.y, -0.07);
-    const fr = onRod ? clamp((r.y - ROD_BASE.y) / (ROD_TOP.y - ROD_BASE.y)) : 0;
-    return {c, k, r: onRod ? rw * (1 - 0.88 * fr) * 5 + 12 : cw * 4.6};
-  })();
   const gl = clamp(light.tip);
   return (
     <g>
@@ -150,11 +110,6 @@ export const House: React.FC<{cam: Cam3; light: HouseLight; id: string}> = ({cam
           <stop offset="0" stopColor="#16222B" />
           <stop offset="1" stopColor="#1C2A33" />
         </linearGradient>
-        <radialGradient id={`${id}-sg`}>
-          <stop offset="0" stopColor="#FFF2E2" stopOpacity={0.75} />
-          <stop offset="0.4" stopColor="#F4B88A" stopOpacity={0.28} />
-          <stop offset="1" stopColor="#E09A6A" stopOpacity={0} />
-        </radialGradient>
         <radialGradient id={`${id}-tg`}>
           <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.9} />
           <stop offset="0.35" stopColor="#DDE3FF" stopOpacity={0.4} />
@@ -199,54 +154,27 @@ export const House: React.FC<{cam: Cam3; light: HouseLight; id: string}> = ({cam
       {/* the down-conductor: copper strip on stand-off clips, from the earth clamp to the mast base */}
       <path d={condD} fill="none" stroke={INK} strokeWidth={fmt(cw + 2 * ink)} strokeLinejoin="round" strokeLinecap="round" />
       <path d={condD} fill="none" stroke={cop} strokeWidth={fmt(cw)} strokeLinejoin="round" strokeLinecap="round" />
-      <path d={condD} fill="none" stroke={copL} strokeWidth={fmt(cw * 0.3)} strokeLinejoin="round" opacity={0.55 + 0.45 * ct} transform={`translate(${fmt(-cw * 0.22)} 0)`} />
+      <path d={condD} fill="none" stroke={copL} strokeWidth={fmt(cw * (0.3 + 0.12 * lit))} strokeLinejoin="round" opacity={0.55 + 0.45 * lit} transform={`translate(${fmt(-cw * 0.22)} 0)`} />
       {clips.map((c, i) => (
         <rect key={i} x={fmt(c.c.x - clipW / 2)} y={fmt(c.c.y - clipH / 2)} width={fmt(clipW)} height={fmt(clipH)} fill="#5A646A" stroke={INK} strokeWidth={fmt(ink * 0.7)} />
       ))}
       {rakeClips.map((c, i) => (
         <rect key={i} x={fmt(c.x - clipW / 2)} y={fmt(c.y - clipH / 2)} width={fmt(clipW)} height={fmt(clipH)} fill="#5A646A" stroke={INK} strokeWidth={fmt(ink * 0.7)} transform={`rotate(${fmt(rakeAng)} ${fmt(c.x)} ${fmt(c.y)})`} />
       ))}
-      <rect x={fmt(clamp0.x - clampW / 2)} y={fmt(clamp0.y - clampH / 2)} width={fmt(clampW)} height={fmt(clampH)} rx={fmt(clampH * 0.15)} fill={mix('#77808A', '#C8CEEA', fl * 0.6)} stroke={INK} strokeWidth={fmt(ink * 0.85)} />
+      <rect x={fmt(clamp0.x - clampW / 2)} y={fmt(clamp0.y - clampH / 2)} width={fmt(clampW)} height={fmt(clampH)} rx={fmt(clampH * 0.15)} fill={mix('#77808A', '#C8CEEA', Math.max(fl, lit) * 0.6)} stroke={INK} strokeWidth={fmt(ink * 0.85)} />
       {/* the mast bracket and the air terminal */}
       <path d={plate} fill="#4A535A" stroke={INK} strokeWidth={fmt(ink * 0.8)} strokeLinejoin="round" />
       <path d={brk} fill="#5A646A" stroke={INK} strokeWidth={fmt(ink * 0.8)} strokeLinejoin="round" />
       <path d={rodD} fill={rodFill} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
-      <path d={`M${fmt(pb.x - rw * 0.45)},${fmt(pb.y - 2)} L${fmt(pt.x - rw * 0.07)},${fmt(pt.y + rw * 2.2)}`} stroke="#FFFFFF" strokeOpacity={0.14 + 0.5 * ct} strokeWidth={fmt(clamp(rw * 0.22, 1, 3))} strokeLinecap="round" />
-      {/* the flash caught by the whole run of metal, earth clamp to tip */}
-      {ct > 0.02 && (
+      <path d={`M${fmt(pb.x - rw * 0.45)},${fmt(pb.y - 2)} L${fmt(pt.x - rw * 0.07)},${fmt(pt.y + rw * 2.2)}`} stroke="#FFFFFF" strokeOpacity={0.14 + 0.5 * lit} strokeWidth={fmt(clamp(rw * 0.22, 1, 3))} strokeLinecap="round" />
+      {/* the flash caught by the whole run of metal at once, earth clamp to tip (a bloom while the sky is lit, then the
+          even sheen alone, fading) */}
+      {lit > 0.02 && (
         <g style={{mixBlendMode: 'screen'}} fill="none" strokeLinejoin="round" strokeLinecap="round">
-          <path d={condD} stroke="#F6B98A" strokeOpacity={0.3 * ct} strokeWidth={fmt(cw * 2.6)} />
-          <path d={`M${fmt(pb.x)},${fmt(pb.y)} L${fmt(pt.x)},${fmt(pt.y + rw)}`} stroke="#DDE3FF" strokeOpacity={0.3 * ct} strokeWidth={fmt(rw * 3)} />
+          <path d={condD} stroke="#F6B98A" strokeOpacity={0.28 * gr + 0.1 * ct} strokeWidth={fmt(cw * 2.6)} />
+          <path d={`M${fmt(pb.x)},${fmt(pb.y)} L${fmt(pt.x)},${fmt(pt.y + rw)}`} stroke="#DDE3FF" strokeOpacity={0.3 * gr + 0.1 * ct} strokeWidth={fmt(rw * 3)} />
         </g>
       )}
-      {/* the sheen sliding up the metal (a reflection of the lit sky, not a current) */}
-      {sheenPts.length > 0 && (
-        <g style={{mixBlendMode: 'screen'}} strokeLinecap="butt" fill="none">
-          {sheenPts.map((s, i) => (
-            <path key={`w${i}`} d={`M${fmt(s.a.x)},${fmt(s.a.y)} L${fmt(s.b.x)},${fmt(s.b.y)}`} stroke="#F6B98A" strokeOpacity={0.35 * s.w * light.sheen} strokeWidth={fmt(s.soft)} />
-          ))}
-          {sheenPts.map((s, i) => (
-            <path key={`c${i}`} d={`M${fmt(s.a.x)},${fmt(s.a.y)} L${fmt(s.b.x)},${fmt(s.b.y)}`} stroke="#FFF4E6" strokeOpacity={0.9 * s.w * light.sheen} strokeWidth={fmt(s.core)} />
-          ))}
-        </g>
-      )}
-      {rodSheen && (
-        <g style={{mixBlendMode: 'screen'}}>
-          <defs>
-            <linearGradient id={`${id}-rs`} gradientUnits="userSpaceOnUse" x1="0" y1={fmt(rodSheen.y0)} x2="0" y2={fmt(rodSheen.y1)}>
-              {rodSheen.stops.map((s, i) => <stop key={i} offset={fmt(s.o)} stopColor="#FFF4E6" stopOpacity={fmt(s.a)} />)}
-            </linearGradient>
-            <clipPath id={`${id}-rc`}>
-              <path d={rodD} />
-            </clipPath>
-          </defs>
-          <g clipPath={`url(#${id}-rc)`} opacity={light.sheen}>
-            <rect x={fmt(pb.x - rw * 1.2)} y={fmt(pt.y)} width={fmt(rw * 2.4)} height={fmt(pb.y - pt.y)} fill={`url(#${id}-rs)`} opacity={0.45} />
-            <path d={`M${fmt(pb.x - rw * 0.75)},${fmt(pb.y)} L${fmt(pt.x - rw * 0.1)},${fmt(pt.y + rw * 1.5)} L${fmt(pt.x + rw * 0.05)},${fmt(pt.y + rw * 1.5)} L${fmt(pb.x + rw * 0.1)},${fmt(pb.y)} Z`} fill={`url(#${id}-rs)`} />
-          </g>
-        </g>
-      )}
-      {sheenC && <circle cx={fmt(sheenC.c.x)} cy={fmt(sheenC.c.y)} r={fmt(sheenC.r)} fill={`url(#${id}-sg)`} opacity={sheenC.k} style={{mixBlendMode: 'screen'}} />}
       {/* the glint on the metal tip */}
       {gl > 0.02 && (
         <g style={{mixBlendMode: 'screen'}}>

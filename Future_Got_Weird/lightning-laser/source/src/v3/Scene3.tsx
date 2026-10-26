@@ -447,20 +447,22 @@ export const Beam3D: React.FC<{cam: Cam3; alpha: number; pulses?: number[]; chan
   );
 };
 
-/** the air glow round the discharge: a small, restrained screen-blended bloom centred on the bolt top (the local light
- *  on clouds, tower, rock and rain is done in those pieces). Its size follows the bolt's distance, its peak stays low
- *  so the white core keeps its edge, and it is masked out of the caption band (y about 1560-1760). */
+/** the air glow round the discharge: a small, restrained screen-blended bloom centred on the bolt top (the light on
+ *  the cloud base is shaped by its lobes in Clouds; tower, rock and rain are lit in those pieces). Its size follows
+ *  the bolt's distance (about 45 m of air round the top, so it never reads as a disc of lit sky), its falloff has no
+ *  visible rim, its peak stays low so the white core keeps its edge, and it is masked out of the caption band. */
 export const FlashWash: React.FC<{cam: Cam3; at: V3; flash: number; id: string}> = ({cam, at, flash, id}) => {
   if (flash <= 0.02) return null;
   const p = projector(cam)(at);
   if (!p.ok) return null;
-  const r = clamp((cam.f * 110) / p.z, 240, 700); // local: it lights the storm round the bolt, not the frame
+  const r = clamp((cam.f * 45) / p.z, 140, 360); // local: the air round the bolt top, not the frame
   return (
     <g style={{mixBlendMode: 'screen'}}>
       <defs>
         <radialGradient id={`${id}-fw`} gradientUnits="userSpaceOnUse" cx={fmt(p.x)} cy={fmt(p.y)} r={fmt(r)}>
           <stop offset="0" stopColor="#B4BEFF" stopOpacity={0.2 * flash} />
-          <stop offset="0.4" stopColor="#8F9AE6" stopOpacity={0.09 * flash} />
+          <stop offset="0.3" stopColor="#98A2EA" stopOpacity={0.11 * flash} />
+          <stop offset="0.62" stopColor="#7681CC" stopOpacity={0.035 * flash} />
           <stop offset="1" stopColor="#5A68B0" stopOpacity={0} />
         </radialGradient>
         <linearGradient id={`${id}-fm`} gradientUnits="userSpaceOnUse" x1="0" y1="1300" x2="0" y2="1540">

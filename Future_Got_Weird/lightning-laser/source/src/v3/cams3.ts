@@ -13,7 +13,7 @@
 //                views agree; C3's push into the packet ends with the beam at this angle too.
 import {sm5} from '../camera';
 import {clamp} from '../dc/math';
-import {add3, axis3, Cam3, lerp3, lerpCam, lookAt, v3, V3} from '../v2/p3';
+import {add3, axis3, Cam3, lerp3, lerpCam, lookAt, projector, TIP3, v3, V3} from '../v2/p3';
 import {beamOnScreen} from './view3';
 import {tau3} from './timeline3';
 
@@ -40,8 +40,9 @@ export const openCam = (t: number): Cam3 => {
 /** the channel point the molecular views magnify (about 20 m above the rod tip, on the guided section) */
 export const P0_H = 120;
 const P0_3 = axis3(P0_H);
-/** F always looks at P0 and holds it on this screen point with the channel at this screen angle: the values the
- *  molecular views (B, D, E) and C's push were built on, so retuning F's framing never moves a hand-off */
+/** F always looks at P0 with the channel at this screen angle, and until the widening (23.3) holds P0 on this screen
+ *  point: the values the molecular views (B, D, E) and C's push were built on, so retuning F's framing never moves a
+ *  hand-off */
 const P0_AT = {x: 553.7417, y: 1029.2025, ang: 14.9125};
 /** a demonstration framing: the camera seen from P0 (distance D m, azimuth az and elevation el in degrees; the
  *  opening camera is at about az -146, el -27.5, D 123) and the focal length */
@@ -49,8 +50,11 @@ type DemoKey = {D: number; az: number; el: number; f: number};
 /** the main view (19.6-23.3): the opening's side and direction, a little farther back; rod tip, the guided section
  *  and the bolt to the cloud base all in the upper two thirds of the frame */
 export const DEMO0: DemoKey = {D: 135, az: -148, el: -25, f: 1300};
-/** after the widening (24.3-): dollied back along the same line of sight, so the guided section keeps its place */
-export const DEMO1: DemoKey = {D: 186, az: -148, el: -24, f: 1270};
+/** after the widening (24.3-): dollied straight back at the same height (el -25 -> -22 keeps the camera about 86 m up)
+ *  and only a little, so the measured segment stays large (about 10% shorter on screen) while the frame gains the
+ *  storm above the bolt top; held about the rod tip (demoBase), so the tower's concrete deck only reaches the bottom
+ *  edge (y > 1800), below the caption band */
+export const DEMO1: DemoKey = {D: 155, az: -148, el: -22, f: 1300};
 const DRIFT_F = v3(0.4, -0.2, 0.3); // m/s, a slow constant drift (P0 stays put; the tower parallaxes a little)
 const posOf = (k: DemoKey) => {
   const a = (k.az * Math.PI) / 180, e = (k.el * Math.PI) / 180;
@@ -66,23 +70,30 @@ const rollFor = (pos: V3, f: number) => {
 };
 const ROLL0 = rollFor(posOf(DEMO0), DEMO0.f), ROLL1 = rollFor(posOf(DEMO1), DEMO1.f);
 /** F's base camera: DEMO0 with the drift; one controlled widening to DEMO1 (sm5, 23.3-24.3) interpolated in the
- *  framing parameters, so P0 never leaves its screen point during the move */
+ *  framing parameters and held about the rod tip: a lens shift keeps the tip exactly where DEMO0 has it, so the
+ *  measured segment's foot (and the bracket's near tick) stays put while the segment's top and the bolt settle a little
+ *  toward it and the extra field opens above */
 export const demoBase = (t: number): Cam3 => {
   const dt = t - 18.79;
+  const drift = v3(DRIFT_F.x * dt, DRIFT_F.y * dt, DRIFT_F.z * dt);
   const k = sm5(u(t, 23.3, 24.3));
   const D = Math.exp(Math.log(DEMO0.D) + (Math.log(DEMO1.D) - Math.log(DEMO0.D)) * k);
   const f = Math.exp(Math.log(DEMO0.f) + (Math.log(DEMO1.f) - Math.log(DEMO0.f)) * k);
   const key = {D, az: DEMO0.az + (DEMO1.az - DEMO0.az) * k, el: DEMO0.el + (DEMO1.el - DEMO0.el) * k, f};
-  return camAt(add3(posOf(key), v3(DRIFT_F.x * dt, DRIFT_F.y * dt, DRIFT_F.z * dt)), f, ROLL0 + (ROLL1 - ROLL0) * k);
+  const cam = camAt(add3(posOf(key), drift), f, ROLL0 + (ROLL1 - ROLL0) * k);
+  if (k <= 0) return cam;
+  const a = projector(camAt(add3(posOf(DEMO0), drift), DEMO0.f, ROLL0))(TIP3), b = projector(cam)(TIP3);
+  return {...cam, cx: P0_AT.x + (a.x - b.x), cy: P0_AT.y + (a.y - b.y)};
 };
 /** F's zoom-out from the channel close-up (Z_HAND -> 1 about P0's screen point). It continues E's pull-out as one
- *  move: at 18.79 E's last zoom key (Channel3.tsx ZK) ends at Z_HAND with log-velocity Z_V0 and log-acceleration
- *  Z_A0, and F takes both over (a quintic in ln Z), then settles with zero velocity and acceleration by Z_END, just
- *  before the leader incepts at the rod tip (19.55). */
+ *  move: E's pull-out toward the sky (Channel3.tsx ZK, from 17.85) speeds up through the molecular view and reaches
+ *  Z_HAND at 18.79 with log-velocity Z_V0 and log-acceleration Z_A0; F takes both over (a quintic in ln Z), peaks at
+ *  about -4.7/s near 19.09 (the rod tip rises into frame) and decelerates to rest by Z_END (Z is within 2% of 1 when
+ *  the leader incepts at the rod tip, 19.55). One move, no stall before the seam and no snap after it. */
 export const Z_HAND = 14;
-export const Z_V0 = -0.9; // d ln Z / dt at 18.79 (= the end slope of E's last ZK key)
-const Z_A0 = -1.44; // d2 ln Z / dt2 at 18.79 (what E's last Hermite segment gives with that slope)
-export const Z_END = 19.6;
+export const Z_V0 = -3.2; // d ln Z / dt at 18.79 (= the end slope of E's last ZK key)
+const Z_A0 = -5.53; // d2 ln Z / dt2 at 18.79 (what E's last Hermite segment, 17.85-18.79 over ln 1.2, gives with that slope)
+export const Z_END = 19.65;
 export const demoZoom = (t: number) => {
   if (t >= Z_END) return 1;
   if (t <= 18.79) return Z_HAND;

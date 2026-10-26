@@ -1,9 +1,11 @@
 // V3 beat H (28.94-33.5): cameras, the channel's growth and the pulse clock. Pure functions of film time t.
 //   H1 28.94-30.74  the match from G's rod tip to the tower's rod tip (V2 R3 reference camera), held, then one
 //                   tilt-up/widening that follows the prepared channel as it grows from the tip (29.19-30.89)
-//   H2 30.74-32.90  the single cut: low beside the telescope (composited LaserArt) firing up past the tower; packets
-//                   leave on the payoff ticks; then one continuous crane up the beam with them, arriving exactly on
-//                   openCam(t) at 32.9 (eased weight, so the velocity matches the opening drift)
+//   H2 30.74-32.90  the single cut: low on the summit's flank, well out from the beam's plane (LOW2), the whole
+//                   system in one image: the composited telescope (LaserArt) low-left firing up past the tower, the rod
+//                   tip and the extended warm channel above it. Packets leave on the four payoff ticks while the camera
+//                   only creeps (the exit stays above the caption band); then one nearly straight crane up the beam
+//                   with them, onto openCam(t) exactly at 32.9 (eased weight: the velocity matches the opening drift)
 //   H3 32.90-33.50  openCam(t) exactly and openSt(t) (the loop clock): the next leader incepts at 32.9 (Open3.tsx
 //                   only eases openSt's inception light in over the leader's first 16 m; it is exact again by ~33.2)
 import {sm5} from '../camera';
@@ -45,31 +47,38 @@ export const h1Cam = (t: number): Cam3 => {
   return {pos: R3_POS, yaw: a.yaw + (b.yaw - a.yaw) * k, pitch: a.pitch + (b.pitch - a.pitch) * k, roll: 0, f: Math.exp(Math.log(a.f) + (Math.log(b.f) - Math.log(a.f)) * k)};
 };
 
-// ------------------------------------------------------------------ H2: low beside the telescope, then the crane
-/** the low view: just behind and beside the telescope, looking up the beam past the tower */
+// ------------------------------------------------------------------ H2: the whole system from low, then the crane
+/** the telescope's scale reference (LaserArt k0 1.4 at this camera's f / exit depth). C3 (Machine3_reveal.tsx) and
+ *  H2 both place the telescope with it, so it has one world size in every shot. It is no longer H2's framing. */
 export const LOW = {pos: v3(-72, -16, -38), target: v3(-24, 15, 0), f: 600, roll: -4};
-/** the crane's control point (quadratic path from LOW to the opening camera): it rises beside the beam, the tower
- *  passing on the right, then draws back and settles onto the opening camera */
-export const CRANE_C = v3(-48, 39, -2);
-/** a slight settle in the low view before the crane (no stop: it eases into the crane) */
-const lowAt = (t: number) => {
-  const k = sm5(u(t, B.H2, 31.3));
-  return {pos: lerp3(LOW.pos, add3(LOW.pos, v3(0.3, 0.4, -0.5)), k), target: lerp3(LOW.target, add3(LOW.target, v3(0.2, 1.2, 0)), k)};
-};
-/** the crane's normalised progress: a smooth ramp up to a cruise that rides with the packets, then a smooth stop
- *  exactly at 32.9 (zero velocity relative to openCam's drift) */
-export const CRANE0 = 31.1, CRANE1 = EV.loopInception;
-const RAMP_UP = 0.32, RAMP_DN = 0.42; // fractions of the crane
-const vel = (x: number) => ss(x, 0, RAMP_UP) * ss(1 - x, 0, RAMP_DN);
+/** H2's opening view ("into the SKY"): from low on the summit's flank, well out from the beam's plane, so the beam is
+ *  seen nearly side-on instead of end-on: the telescope's exit low-left (above the caption band), the beam rising
+ *  up-right past the tower, the rod tip and the whole extended warm channel above it, in one image */
+export const LOW2 = {pos: v3(-65, 25, -130), f: 650, tip: {x: 570, y: 620}, roll: -4};
+const LOW2_CAM = lookAtScreen(LOW2.pos, TIP3, LOW2.f, LOW2.tip.x, LOW2.tip.y, LOW2.roll);
+/** LOW2's view ray at the tip's distance (so the crane can blend toward openCam's own target in 3D) */
+const LOW2_TARGET = (() => {
+  const {f} = basis({...LOW2_CAM, roll: 0});
+  const D = len3(sub3(TIP3, LOW2.pos));
+  return add3(LOW2.pos, v3(f.x * D, f.y * D, f.z * D));
+})();
+/** the crane's control point: midway (a nearly straight rise toward the opening camera, never near the tower) */
+export const CRANE_C = v3(-58.6, 57.6, -108.1);
+/** the crane's normalised progress w. From the cut a slow creep up the beam (the exit stays above the caption band
+ *  for the payoff ticks, 30.84-31.74), then the ride up with the packets, then a smooth stop exactly at 32.9 (zero
+ *  velocity relative to openCam's drift). Tabulated from a velocity profile. */
+export const CRANE0 = B.H2, CRANE1 = EV.loopInception;
+const CREEP = 0.05, RIDE0 = 31.5, RIDE1 = 32.1, STOP0 = 32.25;
+const vel = (t: number) => (CREEP * ss(t, B.H2, 31.1) + ss(t, RIDE0, RIDE1)) * (1 - ss(t, STOP0, CRANE1));
+const CRANE_N = 600;
 const CRANE_TAB = (() => {
-  const N = 600;
   const acc = [0];
-  for (let i = 1; i <= N; i++) acc.push(acc[i - 1] + (vel((i - 0.5) / N) / N));
-  return acc.map((a) => a / acc[N]);
+  for (let i = 1; i <= CRANE_N; i++) acc.push(acc[i - 1] + vel(CRANE0 + ((i - 0.5) / CRANE_N) * (CRANE1 - CRANE0)));
+  return acc.map((a) => a / acc[CRANE_N]);
 })();
 export const craneW = (t: number) => {
-  const x = u(t, CRANE0, CRANE1) * 600;
-  const i = Math.min(599, Math.floor(x));
+  const x = u(t, CRANE0, CRANE1) * CRANE_N;
+  const i = Math.min(CRANE_N - 1, Math.floor(x));
   return CRANE_TAB[i] + (CRANE_TAB[i + 1] - CRANE_TAB[i]) * (x - i);
 };
 /** openCam's own target point (its view ray at the OPEN0 distance), so the crane can blend toward it in 3D */
@@ -81,12 +90,14 @@ const openTarget = (c: Cam3) => {
 export const h2Cam = (t: number): Cam3 => {
   if (t >= CRANE1) return openCam(t);
   const o = openCam(t);
-  const lo = lowAt(t);
   const w = craneW(t);
-  const pos = add3(add3(mul3(lo.pos, (1 - w) * (1 - w)), mul3(CRANE_C, 2 * (1 - w) * w)), mul3(o.pos, w * w));
-  const target = lerp3(lo.target, openTarget(o), w);
-  const f = Math.exp(Math.log(LOW.f) + (Math.log(o.f) - Math.log(LOW.f)) * w);
-  return {...lookAt(pos, target, f), roll: LOW.roll + ((o.roll ?? 0) - LOW.roll) * w};
+  const pos = add3(add3(mul3(LOW2.pos, (1 - w) * (1 - w)), mul3(CRANE_C, 2 * (1 - w) * w)), mul3(o.pos, w * w));
+  // the tilt leads and the zoom lags the rise a little, so the tip's screen travel (from LOW2's 700 to openCam's 1415)
+  // is spread over the ride instead of bunching at its end (peak ~30 px/frame); all three reach 1 together
+  const wt = w + w * (1 - w), wf = w - 0.5 * w * (1 - w);
+  const target = lerp3(LOW2_TARGET, openTarget(o), wt);
+  const f = Math.exp(Math.log(LOW2.f) + (Math.log(o.f) - Math.log(LOW2.f)) * wf);
+  return {...lookAt(pos, target, f), roll: LOW2.roll + ((o.roll ?? 0) - LOW2.roll) * w};
 };
 export const endCam = (t: number): Cam3 => (t < B.H2 ? h1Cam(t) : h2Cam(t));
 

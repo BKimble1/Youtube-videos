@@ -5,9 +5,10 @@
 //   are the same weather the other beats show.
 //   One push: from the wide (house, rod, the whole copper conductor and the earth clamp) the camera rises and closes
 //   in on the rod tip, finishing on "metal TIP" with the tip at screen (540, 820), pointing straight up (G -> H).
-//   The distant strike (25.74) is far beyond the ridges on the right; its flash catches the copper conductor along
-//   its whole length, and the sheen of the lit sky then slides up the conductor as the camera rises (earth clamp,
-//   wall, roof edge, mast, tip), so the eye follows the metal from the ground to where it ends.
+//   The distant strike (25.74) is far beyond the ridges on the right. In the wide its flash catches the whole run of
+//   metal at once, earth clamp to tip, and that even sheen fades as the camera starts to rise along the conductor:
+//   the extent of the metal, not something moving along it. On the settled end the far flicker (28.25) glints on the
+//   tip and gives the rod a faint sheen again, while rain and cloud keep moving.
 import {sm5} from '../camera';
 import {clamp} from '../dc/math';
 import {Cam3, v3, V3} from '../v2/p3';
@@ -67,7 +68,7 @@ export const pushK = (t: number) => sm5(u(t, PUSH0, PUSH1));
  *  and the rod stay truly vertical on screen throughout, like the illustration, and the tip is placed exactly. */
 export const rodCam = (t: number): Cam3 => {
   const k = pushK(t);
-  // the height leads the closing-in a little (the camera rises with the sheen on the wall, then closes on the rod)
+  // the height leads the closing-in a little (the camera rises along the conductor on the wall, then closes on the rod)
   const kh = sm5(u(t, PUSH0, PUSH1 - 0.25));
   const lg = (a: number, b: number, w: number) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * w);
   const d = lg(CAM0.d, CAM1.d, k);
@@ -93,27 +94,27 @@ const pulse = (t: number, t0: number, tau: number) => (t < t0 - 0.025 ? 0 : t < 
 export const strikeK = (t: number) => FLASHES.slice(0, 2).reduce((a, f) => a + f.k * pulse(t, f.t, f.tau), 0);
 /** the faint far flicker (beyond the frame by then): it glints on the tip */
 export const flickerK = (t: number) => FLASHES.slice(2).reduce((a, f) => a + f.k * pulse(t, f.t, f.tau), 0);
-/** the sliding sheen: arc length along the route (m). It leaves the earth clamp as the flash fades, climbs the wall
- *  and the roof edge as the camera rises, and slows up the rod to reach the tip on "metal TIP" */
-export const SHEEN0 = 25.84, SHEEN1 = 28.12;
-const SHEEN_TAB = (() => {
-  const N = 400;
-  // velocity profile: quick ease-in at the clamp, an even climb, a long ease-out up the rod
-  const vel = (x: number) => clamp(x / 0.12) ** 2 * (3 - 2 * clamp(x / 0.12)) * (x > 0.62 ? 1 - 0.78 * sm5(clamp((x - 0.62) / 0.38)) : 1);
-  const acc = [0];
-  for (let i = 1; i <= N; i++) acc.push(acc[i - 1] + vel((i - 0.5) / N) / N);
-  return acc.map((a) => a / acc[N]);
-})();
-export const sheenL = (t: number) => {
-  const x = u(t, SHEEN0, SHEEN1) * 400;
-  const i = Math.min(399, Math.floor(x));
-  return ROUTE_LEN * (SHEEN_TAB[i] + (SHEEN_TAB[i + 1] - SHEEN_TAB[i]) * (x - i));
+/** the cloud deck's drift clock (Clouds' drift argument): V3's slow drift, 2.5 times as quick once the push has settled
+ *  (27.95-28.45 on), so the sky keeps moving on screen after the camera stops moving it */
+export const cloudDrift = (t: number) => {
+  const a = 27.95, b = 28.45, x = u(t, a, b);
+  return (t - 27.3) * 1.6 + 2.4 * ((b - a) * (x ** 3 - x ** 4 / 2) + Math.max(0, t - b));
 };
-/** the sheen's strength: rises as the flash fades, steady on the climb, swells at the tip on "TIP" and the far
- *  flicker, then settles to a quiet highlight */
-export const sheenK = (t: number) => (t < SHEEN0 ? 0 : clamp(0.25 + 0.75 * u(t, 25.8, 26.05)) * (1 - u(t, SHEEN1 - 0.04, SHEEN1 + 0.22)));
-/** the tip's glint: the strike, the sheen arriving on "TIP" (it gathers there and fades), the far flicker */
-export const tipGlint = (t: number) => {
-  const arrive = t < EV.wordTip ? clamp(1 - (EV.wordTip - t) / 0.12) ** 2 : Math.exp(-(t - EV.wordTip) / 0.22);
-  return clamp(0.75 * arrive + 1.3 * flickerK(t) + 0.9 * strikeK(t));
+/** the sheen the metal holds from a flash. The whole run of metal (earth clamp, conductor, mast, rod and tip) catches
+ *  the sky's light at once, evenly along its full length, and the sheen fades evenly: it is reflected light, so it
+ *  never travels along the metal. The strike (25.74, re-stroke 25.86) lights it while the wide still shows the whole
+ *  conductor; it holds through the re-stroke, then fades (half by ~26.2, gone by ~26.8) as the camera rises. */
+export const catchK = (t: number) => {
+  const a = EV.distantStrike;
+  return t < a - 0.025 ? 0 : t < a ? (t - a + 0.025) / 0.025 : (1 - u(t, a + 0.12, a + 1.05)) ** 1.5;
 };
+/** the far flicker's light on the metal at the end (0..1): two quick pulses (28.25, 28.34), then a soft fade, gone
+ *  by ~28.82 so the match cut lands on a plain tip */
+export const flickSheen = (t: number) => {
+  const b = EV.farFlicker;
+  if (t < b - 0.025) return 0;
+  if (t < b) return (t - b + 0.025) / 0.025;
+  return (1 - sm5(u(t, b + 0.12, b + 0.57))) * (0.7 + 0.3 * clamp(flickerK(t) / 0.3));
+};
+/** the tip's glint: the strike, and the far flicker glinting on it during "TIP" (28.15-28.49), fading with it */
+export const tipGlint = (t: number) => clamp(0.9 * strikeK(t) + 1.6 * flickerK(t) + 0.3 * flickSheen(t));

@@ -73,7 +73,7 @@ const T0 = B.C3, T2 = B.D;
 const PX: HK[] = [[T0, -34, 0.5], [T_PUSH, -24, 14], [T2, -9, 8]];
 const PY: HK[] = [[T0, 2, 3], [T_PUSH, 104, 120], [T2, 140, 25]];
 const PZ: HK[] = [[T0, -92, 1], [T_PUSH, -62, 45], [T2, -40, 14]];
-/** scale at the aim point (screen px per metre): one push-in, never a pull-back; its log rate at 11.42 is D's */
+/** scale at the aim point (screen px per metre) through the push; its log rate at 11.42 is D's (it sets f from T_PUSH on: fAt) */
 const LZ: HK[] = [[T0, Math.log(8.5), 0.15], [T_PUSH, Math.log(24), 2.0], [T2, Math.log(100), 0.3]];
 /** E0: where the exit window sits on screen at the cut (C2's duct line runs through it at MICRO_ANG) */
 export const E0 = {x: 476, y: 1240};
@@ -81,10 +81,9 @@ const RAD = (MICRO_ANG * Math.PI) / 180;
 const UP = {x: Math.sin(RAD), y: -Math.cos(RAD)};
 /** packet F's screen speed at 11.42 (D opens with its packet moving up the axis at about this rate) */
 const V_END = 420;
-/** a camera at pos with axis3(h) at screen (sx, sy), scale Z there, and the roll that runs the beam at MICRO_ANG */
-const solveCam = (pos: V3, h: number, Z: number, sx: number, sy: number): Cam3 => {
+/** a camera at pos with axis3(h) at screen (sx, sy), focal length f, and the roll that runs the beam at MICRO_ANG */
+const solveCam = (pos: V3, h: number, f: number, sx: number, sy: number): Cam3 => {
   const aim = axis3(h);
-  const f = Z * len3(sub3(aim, pos));
   // (a roll turns the image about the screen centre, so it turns the beam's on-screen direction by the same angle)
   let roll = 0;
   let c = camScreen(pos, aim, f, sx, sy, roll);
@@ -97,13 +96,39 @@ const solveCam = (pos: V3, h: number, Z: number, sx: number, sy: number): Cam3 =
 };
 const posAt = (t: number) => v3(herm(t, PX), herm(t, PY), herm(t, PZ));
 const zAt = (t: number) => Math.exp(herm(Math.min(t, T2), LZ));
+/** the camera's distance to F's point on the axis */
+const distAt = (t: number) => len3(sub3(axis3(hF(t)), posAt(t)));
+/** the focal length: one push-in, it never decreases. From the push swell (T_PUSH) on it is the aim scale Z times the
+ *  distance (so the push lands on D's scale and rate at 11.42). Before it, Z alone is not enough: F climbs toward the
+ *  camera's height, so its distance shrinks faster than Z grows and f (everything on screen) would shrink for the first
+ *  third of a second (a pull-back). So from the cut ln f follows one accelerating curve (an exponential ease-in) that
+ *  meets that value and rate at T_PUSH: f grows from the cut on, slowly at first */
+const lnFNat = (t: number) => Math.log(zAt(t) * distAt(t));
+const F_IN = (() => {
+  const H = T_PUSH - T0;
+  const l0 = lnFNat(T0), l1 = lnFNat(T_PUSH);
+  const m1 = (lnFNat(T_PUSH + 1e-3) - l1) / 1e-3;
+  // ln f = l0 + A (e^{k (t - T0)} - 1): value l1 and slope m1 at T_PUSH  =>  y e^y / (e^y - 1) = m1 H / (l1 - l0), y = k H
+  const R = Math.max(1.0001, (m1 * H) / (l1 - l0));
+  let lo = 1e-6, hi = 60;
+  for (let i = 0; i < 80; i++) {
+    const y = (lo + hi) / 2;
+    if ((y * Math.exp(y)) / Math.expm1(y) < R) lo = y;
+    else hi = y;
+  }
+  const k = (lo + hi) / 2 / H;
+  return {l0, k, A: (l1 - l0) / Math.expm1(k * H)};
+})();
+const fAt = (t: number) => (t >= T_PUSH ? Math.exp(lnFNat(Math.min(t, T2))) : Math.exp(F_IN.l0 + F_IN.A * Math.expm1(F_IN.k * (t - T0))));
+/** the scale at F (screen px per metre): Z from the push on */
+const zAim = (t: number) => fAt(t) / distAt(t);
 /** F's screen path. The camera aims at F's point on the beam axis from the start (while F is still inside the
- *  telescope that point lies on the axis below the exit, so the exit window sits at E0 at the cut). F's screen point
- *  starts at a little less than its natural speed, so the camera is already tilting up with the train (the world only
- *  ever moves down the screen); F eases to a hold just below the centre while the camera rides with the train, then
- *  rises through the centre at V_END (every key monotonic: no bounce) */
+ *  telescope that point lies on the axis below the exit, so the exit window sits exactly at E0 at the cut). F's screen
+ *  point starts at a little less than its natural speed, so the camera is already tilting up with the train (the world
+ *  only ever moves down the screen); F eases to a hold just below the centre while the camera rides with the train,
+ *  then rises through the centre at V_END (every key monotonic: no bounce) */
 const NAT = (() => {
-  const c = solveCam(posAt(T0), EXIT_H, zAt(T0), E0.x, E0.y);
+  const c = solveCam(posAt(T0), EXIT_H, fAt(T0), E0.x, E0.y);
   const P = projector(c);
   const dt = 0.004;
   const a = P(axis3(hF(T0))), b = P(axis3(hF(T0 + dt)));
@@ -114,7 +139,7 @@ const FX: HK[] = [[T0, NAT.x, LEAD * NAT.vx], [10.36, 524, 0], [T_PUSH, 512, 0],
 const FY: HK[] = [[T0, NAT.y, LEAD * NAT.vy], [10.36, 1075, 0], [T_PUSH, 1050, -40], [T2, 960, V_END * UP.y]];
 export const c3Cam = (t: number): Cam3 => {
   const tt = Math.min(t, T2);
-  return solveCam(posAt(tt), hF(tt), zAt(tt), herm(tt, FX), herm(tt, FY));
+  return solveCam(posAt(tt), hF(tt), fAt(tt), herm(tt, FX), herm(tt, FY));
 };
 
 // ------------------------------------------------------------------ the pushed-into packet (screen space)
@@ -127,7 +152,7 @@ const FollowGlow: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, t, id}) 
   const p = P(axis3(hF(t)));
   if (!p.ok) return null;
   // the glow's size follows the push (the aim scale), reaching D's packet exactly at 11.42
-  const g = zAt(t) / 100;
+  const g = zAim(Math.min(t, T2)) / 100;
   const bloom = ss(t, 11.08, T2);
   const sc = (r: number) => fmt(r * g);
   return (
@@ -174,7 +199,8 @@ export const RevealC3: React.FC<{t: number}> = ({t}) => {
         <PulseBloom cam={cam} pulses={st.pulses} k={0.55} id={`${tag}-pb`} />
       </View3>
       <PlacedLaser cam={cam} k0={1.4} fz0={FZ0} flash={0} fire={clamp(0.62 + 0.38 * tick)} tick={tick} t={t} id={`${tag}-l`} />
-      {end > 0.01 && <rect x={0} y={0} width={1080} height={1920} fill="#131D2B" opacity={fmt(0.78 * end)} />}
+      {/* the sky darkens to D's air: in the last frames it closes to D's flat background (#131D2B) exactly */}
+      {end > 0.01 && <rect x={0} y={0} width={1080} height={1920} fill="#131D2B" opacity={fmt(end * (0.78 + 0.22 * end ** 3))} />}
       {end > 0.01 && <EndLine cam={cam} t={t} k={end} />}
       <FollowGlow cam={cam} t={t} id={`${tag}-fg`} />
     </g>

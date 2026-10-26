@@ -3,10 +3,13 @@
 //   A  one setup, openCam(t) with openSt(t) (the loop clock): the leader climbs the cyan path from the rod tip in slow
 //      motion, aligns with the prepared channel, connects at 1.75 (the guided section strengthens), restrikes on
 //      "FOLLOWED" (3.52, 3.64, 3.83). OpenFx adds local light only; it is gone by 4.28, so B starts on the plain view.
+//   A  on "and the lightning FOLLOWED it" the held channel lives: a slow continuing-current flicker (ccFlicker) and
+//      soft fronts climbing the guided section from the tip (2.3, 2.84, and 3.26 into the 3.52 restrike; Open3_fx).
 //   H  (Open3_end.ts) H1: the tower's rod tip where G left the house rod's tip, then a tilt up the prepared channel as
-//      it builds; one cut (30.74) low beside the composited telescope; packets leave on the payoff ticks; one crane up
-//      the beam with them onto openCam(t) by 32.9; openSt from 32.9 (the field builds, the next leader incepts) so the
-//      last frame runs into frame 0.
+//      it builds; one cut (30.74) to the whole system from low (telescope low-left, tower, the extended channel above
+//      the tip, widened here so it reads at that scale); packets leave on the payoff ticks; one crane up the beam with
+//      them onto openCam(t) by 32.9; openSt from 32.9 (the field builds, the next leader incepts) so the last frame
+//      runs into frame 0.
 import React from 'react';
 import {clamp} from '../dc/math';
 import {ss} from '../lib';
@@ -15,12 +18,14 @@ import {openSt} from './states3';
 import {B, tau3} from './timeline3';
 import {St, View3} from './view3';
 import {chTopH, CRANE1, endPulses, h1Cam, h2Cam, LOW, tickFlare} from './Open3_end';
-import {ChannelGrow, exitScreen, OpenFx, openFxK, PlacedLaser, PulseBloom} from './Open3_fx';
+import {ccFlicker, ChannelGrow, exitScreen, OpenFx, openFxK, PlacedLaser, PulseBloom} from './Open3_fx';
 import {lookAt} from '../v2/p3';
 
 export const OpenA: React.FC<{t: number}> = ({t}) => {
   const cam = openCam(t);
-  const st = openSt(t);
+  const o = openSt(t);
+  // the held channel's continuing current (2.0-3.5, 1 elsewhere: B's first frame is openSt exactly)
+  const st = {...o, core: o.core * ccFlicker(tau3(t))};
   return (
     <View3 cam={cam} st={st} t={t} tag="a">
       <OpenFx cam={cam} t={t} id="afx" corona={st.tipCorona} />
@@ -41,6 +46,7 @@ const h2St = (t: number): St => {
   if (t >= CRANE1) return o;
   return {...o, pulses: endPulses(t), channel: 0.8 + 0.1 * (1 - ss(t, 31.6, CRANE1)), channelTop: chTopH(t)};
 };
+/** the telescope's world scale: k0 1.4 at the LOW reference camera, as C3 (Machine3_reveal.tsx), so both shots agree */
 const LOW_CAM = lookAt(LOW.pos, LOW.target, LOW.f);
 const FZ0 = (() => {
   const e = exitScreen({...LOW_CAM, roll: LOW.roll});
@@ -63,7 +69,7 @@ export const EndH: React.FC<{t: number}> = ({t}) => {
   return (
     <g>
       <View3 cam={cam} st={st} t={t} tag="h2">
-        {t < CRANE1 && <ChannelGrow cam={cam} t={t} top={st.channelTop ?? 0} k={1 - ss(t, 31.6, CRANE1)} id="h2g" />}
+        {t < CRANE1 && <ChannelGrow cam={cam} t={t} top={st.channelTop ?? 0} k={1 - ss(t, 32.3, CRANE1)} wS={3 - 2 * ss(t, 31.9, 32.7)} gain={1.7 - 0.7 * ss(t, 31.9, 32.7)} id="h2g" />}
         <OpenFx cam={cam} t={t} id="hfx" corona={st.tipCorona} />
         <PulseBloom cam={cam} pulses={st.pulses} k={0.4 * openFxK(tau3(t)) + 0.5 * (1 - ss(t, 32.2, CRANE1))} size={1 + 0.2 * (1 - ss(t, 32.2, CRANE1))} id="hpb" />
       </View3>

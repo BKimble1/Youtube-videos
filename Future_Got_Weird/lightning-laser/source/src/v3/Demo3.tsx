@@ -9,8 +9,11 @@
 //   21.85       connection: the guided section strengthens, the cloud base is lit locally where the bolt meets it, the
 //               tower catches the light (Scene3); the wash stays local (FlashWash, under the bolt)
 //   22.3-23.3   "part of the bolt / followed that CHANNEL": the rest of the bolt settles to an afterglow while the
-//               guided section stays the brightest part, hugging the cyan line; a surge runs up it on "followed"
-//   23.3-24.3   one widening (dolly back about P0, cams3 DEMO0 -> DEMO1): the guided section keeps its place
+//               guided section stays the brightest part, hugging the cyan line (from "followed" the cyan path shows
+//               as a cyan edge on both sides of its white core, held to the end); a surge runs up it on "followed"
+//   23.3-24.3   one restrained widening (a short dolly straight back, held about the rod tip; cams3 DEMO0 -> DEMO1):
+//               the rod tip stays put, the measured segment stays large (about 10% shorter), a little more storm
+//               opens above, and the tower's concrete deck only reaches the bottom edge, below the caption band
 //   23.64-24.34 the 160+ ft bracket grows from the tip up the guided section ("one hundred"); label on "sixty"
 //   24.3-25.61  the result registers: bracket, label, the guided section bright in the afterglow, the cyan line
 //               running on into the cloud; hard cut to G at 25.61
@@ -70,9 +73,11 @@ const fxAt = (t: number, st: St): Fx => {
   // the cyan path: in once the view has resolved, a little stronger while the narration names the channel
   const glow = ss(t, 19.15, 19.6) * (0.85 + 0.35 * ss(t, W_FOLLOWED - 0.1, W_FOLLOWED + 0.3) * (1 - 0.6 * ss(t, 23.4, 24.2)));
   const lit = dt >= 0 ? clamp(0.8 * boltLight(dt, 1.5).scene + 0.15 * Math.exp(-dt / 0.9)) : 0;
+  // the cyan path showing on both sides of the guided section from "followed" on (it hugs the line), held to the end
+  const rim = ss(t, W_FOLLOWED - 0.15, W_FOLLOWED + 0.3) * (1 - 0.2 * ss(t, 23.4, 24.2));
   return {
     glow, corona, coronaFlick: corona, sG: Math.min(Math.max(s, 0), BOLT3.guidedS), guided,
-    surge: s1 ? s1.u : -1, surgeA: s1 ? s1.a : 0, lit,
+    surge: s1 ? s1.u : -1, surgeA: s1 ? s1.a : 0, lit, rim,
   };
 };
 

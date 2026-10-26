@@ -7,11 +7,12 @@ import {clamp, fmt, hash, noise1} from '../dc/math';
 import {PAL} from './palette';
 
 /** t0: the first step; y0: where the path starts (below the frame); entry: the first stroke's length (it runs in
- *  from below the frame in one go), then n regular steps */
-export type LeaderSpec = {t0: number; y0: number; chW: number; n: number; entry: number};
+ *  from below the frame in one go), then n regular steps; yBase: the path already laid below y0 (it comes up the
+ *  channel from far below, so neither end of it shows when the view widens) */
+export type LeaderSpec = {t0: number; y0: number; chW: number; n: number; entry: number; yBase?: number; stepL?: number};
 type Vtx = {x: number; y: number};
 type Probe = {k: number; side: number; pts: Vtx[]; t: number};
-export type Leader = {times: number[]; ys: number[]; durs: number[]; verts: Vtx[][]; probes: Probe[]; spec: LeaderSpec};
+export type Leader = {times: number[]; ys: number[]; durs: number[]; verts: Vtx[][]; tail: Vtx[]; probes: Probe[]; spec: LeaderSpec};
 
 /** the step schedule and the path (deterministic, built once) */
 export const buildLeader = (spec: LeaderSpec): Leader => {
@@ -20,7 +21,7 @@ export const buildLeader = (spec: LeaderSpec): Leader => {
   const ys: number[] = [y0];
   const durs: number[] = [];
   for (let k = 0; k < n; k++) {
-    const L = k === 0 ? entry : 100 + 52 * hash(k, 43);
+    const L = k === 0 ? entry : (100 + 52 * hash(k, 43)) * (spec.stepL ?? 1);
     const dur = 0.034 * Math.max(1, L / 140); // each step draws on in about a frame; the entry stroke a little longer
     durs.push(dur);
     times.push(times[k] + (k === 0 ? dur + 0.05 : 0.072 + 0.046 * hash(k, 41)));
@@ -63,7 +64,13 @@ export const buildLeader = (spec: LeaderSpec): Leader => {
     }
     probes.push({k, side, pts, t: times[k + 1]});
   });
-  return {times, ys, durs, verts, probes, spec};
+  // the part already laid below the first stroke (straight pieces about 120 long, wandering a little)
+  const tail: Vtx[] = [];
+  if (spec.yBase !== undefined && spec.yBase > y0) {
+    const m = Math.max(1, Math.round((spec.yBase - y0) / 120));
+    for (let i = m; i >= 1; i--) tail.push({x: chW * (0.28 * noise1(i * 0.37, 67) + 0.08 * (hash(i, 69) - 0.5)), y: y0 + ((spec.yBase - y0) * i) / m});
+  }
+  return {times, ys, durs, verts, tail, probes, spec};
 };
 
 const path = (pts: Vtx[]) => pts.map((p, i) => `${i ? 'L' : 'M'}${fmt(p.x)},${fmt(p.y)}`).join(' ');
@@ -83,22 +90,26 @@ const partial = (pts: Vtx[], u: number): Vtx[] => {
   return out;
 };
 
-/** the leader at film time t, drawn in micro units inside the camera group (z: screen px per unit); a = opacity */
-export const LeaderDraw: React.FC<{L: Leader; t: number; z: number; a: number; box: {x0: number; x1: number; y0: number; y1: number}; id: string}> = ({L, t, z, a, box, id}) => {
-  const yMin = box.y0;
+/** the leader at film time t, drawn in micro units inside the camera group (z: screen px per unit); a = opacity;
+ *  live (0..1): the growing tip (its glow, probing streamers and step flashes; 0 once the crackle has ended);
+ *  after (0..1): the afterglow, the white core and violet mid fading first while the soft violet glow lingers */
+/** tr: the camera transform (micro -> screen); the leader is drawn through it, and its blurred glow is filtered in
+ *  screen space (a filter region in micro units can exceed the renderer's filter size limit when the view is wide) */
+export const LeaderDraw: React.FC<{L: Leader; t: number; z: number; a: number; box: {x0: number; x1: number; y0: number; y1: number}; id: string; tr: string; live?: number; after?: number}> = ({L, t, z, a, box, id, tr, live = 1, after = 0}) => {
+  const yMin = box.y0, yMax = box.y1;
   if (a <= 0.01 || t < L.spec.t0) return null;
   const {times, verts, durs} = L;
   // completed steps and the step being drawn (each step draws on in about one frame)
   let k = 0;
   while (k + 1 < times.length && t >= times[k + 1]) k++;
-  const pts: Vtx[] = [verts[0][0]];
+  const pts: Vtx[] = [...L.tail, verts[0][0]];
   for (let i = 0; i < Math.min(k, verts.length); i++) pts.push(...verts[i].slice(1));
   const fresh = k < verts.length ? clamp((t - times[k]) / durs[k]) : 0;
   if (k < verts.length && fresh > 0) pts.push(...partial(verts[k], fresh).slice(1));
   // cull far below the frame (keep a few vertices so the path still leaves the frame)
   const tip = pts[pts.length - 1];
   const since = t - times[k];
-  const flash = Math.exp(-since / 0.06); // each new step flashes
+  const flash = Math.exp(-since / 0.06) * live; // each new step flashes
   const fr = Math.round(t * 30);
   const flick = 0.82 + 0.18 * noise1(t * 26, 71);
   const px = (p: number) => p / z;
@@ -116,22 +127,35 @@ export const LeaderDraw: React.FC<{L: Leader; t: number; z: number; a: number; b
     .filter((x): x is {pts: Vtx[]; fade: number; stalled: boolean} => !!x);
   // faint streamers probing ahead of the tip, a different few each frame
   const brush = Array.from({length: 4}, (_, i) => {
-    if (hash(fr * 4 + i, 73) < 0.35) return null;
+    if (live < 0.05 || hash(fr * 4 + i, 73) < 0.35) return null;
     const ang = ((hash(fr * 4 + i, 75) - 0.5) * 70 * Math.PI) / 180;
     const len = 40 + 55 * hash(fr * 4 + i, 77);
     const mid = {x: tip.x + Math.sin(ang) * len * 0.5 + 10 * (hash(fr * 4 + i, 79) - 0.5), y: tip.y - Math.cos(ang) * len * 0.5};
     return path([tip, mid, {x: tip.x + Math.sin(ang) * len, y: tip.y - Math.cos(ang) * len}]);
   }).filter(Boolean) as string[];
-  const d = path(pts.filter((p, i) => i === pts.length - 1 || p.y > yMin - 400));
+  // only the run of vertices near the frame (plus one either side, so the path still leaves it)
+  const inside = (p: Vtx) => p.y > yMin - 400 && p.y < yMax + 400;
+  const d = path(pts.filter((p, i) => i === pts.length - 1 || inside(p) || (i + 1 < pts.length && inside(pts[i + 1])) || (i > 0 && inside(pts[i - 1]))));
+  const cA = 1 - after, mA = 1 - 0.85 * after, hA = 1 - 0.45 * after;
   return (
     <g style={{mixBlendMode: 'screen'}} opacity={fmt(a)}>
       <defs>
+        <filter id={`${id}-bl`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
+          <feGaussianBlur stdDeviation={11} />
+        </filter>
         <radialGradient id={`${id}-tip`}>
           <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.9} />
           <stop offset="0.35" stopColor={PAL.mid} stopOpacity={0.45} />
           <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
         </radialGradient>
       </defs>
+      {/* the violet glow: a soft (blurred) halo round the path */}
+      <g filter={`url(#${id}-bl)`}>
+        <g transform={tr}>
+          <path d={d} fill="none" stroke={PAL.halo} strokeOpacity={fmt(0.85 * flick * hA)} strokeWidth={fmt(px(58))} strokeLinejoin="round" strokeLinecap="round" />
+        </g>
+      </g>
+      <g transform={tr}>
       {probes.map((p, i) => (
         <g key={`p${i}`} opacity={fmt(p.fade * (p.stalled ? 0.75 + 0.25 * noise1(t * 30 + i * 7, 81) : 1))}>
           <path d={path(p.pts)} fill="none" stroke={PAL.halo} strokeOpacity={0.34} strokeWidth={fmt(px(26))} strokeLinejoin="round" strokeLinecap="round" />
@@ -139,24 +163,18 @@ export const LeaderDraw: React.FC<{L: Leader; t: number; z: number; a: number; b
           <path d={path(p.pts)} fill="none" stroke="#FFFFFF" strokeOpacity={0.9} strokeWidth={fmt(px(2.6))} strokeLinejoin="round" strokeLinecap="round" />
         </g>
       ))}
-      {/* the violet glow: a soft (blurred) halo round the path */}
-      <defs>
-        <filter id={`${id}-bl`} filterUnits="userSpaceOnUse" x={fmt(box.x0)} y={fmt(box.y0)} width={fmt(box.x1 - box.x0)} height={fmt(box.y1 - box.y0)}>
-          <feGaussianBlur stdDeviation={fmt(px(11))} />
-        </filter>
-      </defs>
-      <path d={d} fill="none" stroke={PAL.halo} strokeOpacity={0.85 * flick} strokeWidth={fmt(px(58))} strokeLinejoin="round" strokeLinecap="round" filter={`url(#${id}-bl)`} />
-      <path d={d} fill="none" stroke={PAL.mid} strokeOpacity={0.66 * flick} strokeWidth={fmt(px(17))} strokeLinejoin="round" strokeLinecap="round" />
-      <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity={0.8 + 0.2 * flick} strokeWidth={fmt(px(6))} strokeLinejoin="round" strokeLinecap="round" />
+      {mA > 0.01 && <path d={d} fill="none" stroke={PAL.mid} strokeOpacity={fmt(0.66 * flick * mA)} strokeWidth={fmt(px(17))} strokeLinejoin="round" strokeLinecap="round" />}
+      {cA > 0.01 && <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity={fmt((0.8 + 0.2 * flick) * cA)} strokeWidth={fmt(px(6))} strokeLinejoin="round" strokeLinecap="round" />}
       {flash > 0.05 && (
         <g opacity={fmt(flash)}>
           <path d={path(newSeg)} fill="none" stroke={PAL.mid} strokeOpacity={0.7} strokeWidth={fmt(px(34))} strokeLinejoin="round" strokeLinecap="round" />
           <path d={path(newSeg)} fill="none" stroke="#FFFFFF" strokeWidth={fmt(px(9))} strokeLinejoin="round" strokeLinecap="round" />
         </g>
       )}
-      <path d={brush.join(' ')} fill="none" stroke={PAL.mid} strokeOpacity={0.6} strokeWidth={fmt(px(2.8))} strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(px(95 + 35 * flash))} fill={`url(#${id}-tip)`} />
-      <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(px(8))} fill="#FFFFFF" />
+      {brush.length > 0 && <path d={brush.join(' ')} fill="none" stroke={PAL.mid} strokeOpacity={fmt(0.6 * live)} strokeWidth={fmt(px(2.8))} strokeLinecap="round" strokeLinejoin="round" />}
+      {live > 0.01 && <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(px(95 + 35 * flash))} fill={`url(#${id}-tip)`} opacity={fmt(live)} />}
+      {live > 0.01 && <circle cx={fmt(tip.x)} cy={fmt(tip.y)} r={fmt(px(8))} fill="#FFFFFF" opacity={fmt(live)} />}
+      </g>
     </g>
   );
 };

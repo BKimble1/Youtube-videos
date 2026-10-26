@@ -1,16 +1,18 @@
 // V3 beat F: local light drawn over View3 (screen-blended, from the same 3D model, so it stays attached as the camera
 // moves). Nothing here is text, a badge or a diagram: it is light on the objects already in the shot.
-//   DemoHaze  the prepared air (replaces Beam3D's haze in F): the same ribbon, PAL.channel at 0.2 x 0.85, but its
+//   DemoHaze  the prepared air (replaces Beam3D's haze in F): the same ribbon, PAL.channelMacro at 0.34 x 0.85, but its
 //             width keeps shrinking through F's zoom-out from Z_HAND (Beam3D clamps it at 260 px, which would hold
 //             the channel's width still for the first frames of the pull-out); identical to Beam3D's at Z = 1.
 //   DemoFx    the cyan path made readable round the tip and the guided section; the field building at the rod tip
 //             before the leader incepts; the guided section strengthened once the bolt connects and held as the
 //             brightest part of the afterglow ("part of the bolt followed that CHANNEL"), with one surge running up
-//             it on "followed"; the cloud base lit locally where the bolt meets it.
+//             it on "followed", and from then on the cyan path showing as a soft cyan edge on both sides of its
+//             white core (it hugs the line); the cloud base lit locally where the bolt meets it.
 import React from 'react';
 import {clamp, fmt, noise1} from '../dc/math';
 import {ss} from '../lib';
 import {axis3, BOLT3, Cam3, projector, Proj, TIP3, V3} from '../v2/p3';
+import {G} from '../world/site';
 import {PAL} from './palette';
 import {P0_H, Z_HAND} from './cams3';
 
@@ -73,8 +75,8 @@ export const DemoHaze: React.FC<{cam: Cam3; Z: number; a: number; macro: number;
           <feGaussianBlur stdDeviation={fmt(clamp(cam.f / 85, 4, 20))} />
         </filter>
       </defs>
-      <path d={d} fill={PAL.channel} fillOpacity={0.2 * a} filter={`url(#${id}-cb)`} />
-      {body && <path d={body} fill={PAL.channel} fillOpacity={fmt(0.2 * macro)} filter={`url(#${id}-mb)`} />}
+      <path d={d} fill={PAL.channelMacro} fillOpacity={0.34 * a} filter={`url(#${id}-cb)`} />
+      {body && <path d={body} fill={PAL.channelMacro} fillOpacity={fmt(0.34 * macro)} filter={`url(#${id}-mb)`} />}
       {core && <path d={core} fill={PAL.channelEdge} fillOpacity={fmt(0.12 * macro)} filter={`url(#${id}-mb)`} />}
     </g>
   );
@@ -92,6 +94,7 @@ export type Fx = {
   surge: number; // the surge's head as a fraction of the guided section (<0 or >1.6: none)
   surgeA: number;
   lit: number; // the cloud base lit where the bolt meets it (0..1)
+  rim: number; // the cyan path showing alongside the guided section (0..1)
 };
 export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({cam, t, fx, id}) => {
   const P = projector(cam);
@@ -104,6 +107,14 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
   const gHalo = fx.guided > 0.01 ? runs(P, gPts, 6.5, f, 10, 90, 4) : [];
   const gMid = fx.guided > 0.01 ? runs(P, gPts, 2.2, f, 4, 30, 4) : [];
   const gCore = fx.guided > 0.01 ? runs(P, gPts, 0.85, f, 2.2, 12, 4) : [];
+  // the cyan path alongside the guided section: a soft cyan sheath on the straight beam axis, a little wider than the
+  // white core and its violet edge, so the line the bolt follows shows on both sides of it (drawn under the guided
+  // mid and core and screened onto the bolt, so the white core stays white and only its edge and the air beside it
+  // take the cyan)
+  const hG = G * clamp(fx.sG / BOLT3.guidedS);
+  const rimPts = fx.rim > 0.01 && hG > 4 ? Array.from({length: 31}, (_, i) => axis3(-2 + ((hG + 2) * i) / 30)) : [];
+  const rimW = rimPts.length ? runs(P, rimPts, 3.6, f, 8, 46, 3) : [];
+  const rimN = rimPts.length ? runs(P, rimPts, 2.6, f, 5, 34, 3) : [];
   // the surge: a bright band running up the guided section from the tip
   const sPts = fx.surgeA > 0.01 && fx.surge > -0.4 && fx.surge < 1.6 ? (() => {
     const head = Math.min(1, fx.surge) * BOLT3.guidedS, tail = head - 0.45 * BOLT3.guidedS;
@@ -111,7 +122,7 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
   })() : [];
   // the storm lit where the bolt meets the cloud
   const top = P(BOLT3.pts[BOLT3.pts.length - 1]);
-  const rTop = clamp((f * 62) / Math.max(top.z, 1), 160, 440);
+  const rTop = clamp((f * 62) / Math.max(top.z, 1), 160, 230); // round, edge-free (the shaped cloud light is Scene3 Clouds)
   // the field at the rod tip: a violet glow and a few short streamers reaching up the prepared path
   const tip = P(TIP3), up = P(axis3(40));
   const rC = clamp((f * 6.5) / Math.max(tip.z, 1), 28, 170);
@@ -135,6 +146,9 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
         <filter id={`${id}-gb`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
           <feGaussianBlur stdDeviation={fmt(clamp(f / 110, 4, 16))} />
         </filter>
+        <filter id={`${id}-rb`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
+          <feGaussianBlur stdDeviation={fmt(clamp(f / 320, 2, 8))} />
+        </filter>
         <radialGradient id={`${id}-cor`}>
           <stop offset="0" stopColor="#F2EEFF" stopOpacity={0.9} />
           <stop offset="0.3" stopColor={PAL.mid} stopOpacity={0.45} />
@@ -146,7 +160,7 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
           <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
         </radialGradient>
       </defs>
-      {fx.lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop * 1.25)} ry={fmt(rTop * 0.8)} fill={`url(#${id}-lit)`} opacity={fmt(fx.lit)} />}
+      {fx.lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop)} ry={fmt(rTop)} fill={`url(#${id}-lit)`} opacity={fmt(fx.lit)} />}
       {glowW.map((r, i) => <path key={`w${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={fmt(0.1 * fx.glow)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
       {glowN.map((r, i) => <path key={`n${i}`} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={fmt(0.16 * fx.glow)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
       {cK > 0.02 && tip.ok && (
@@ -160,6 +174,12 @@ export const DemoFx: React.FC<{cam: Cam3; t: number; fx: Fx; id: string}> = ({ca
           <g filter={`url(#${id}-gb)`} opacity={fmt(0.3 * Math.min(1, fx.guided))}>
             {gHalo.map((r, i) => <path key={`h${i}`} d={r.d} fill="none" stroke={PAL.halo} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
           </g>
+          {rimW.length > 0 && (
+            <g filter={`url(#${id}-rb)`}>
+              {rimW.map((r, i) => <path key={`rw${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={fmt(0.5 * fx.rim)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+              {rimN.map((r, i) => <path key={`rn${i}`} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={fmt(0.24 * fx.rim)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+            </g>
+          )}
           {gMid.map((r, i) => <path key={`m${i}`} d={r.d} fill="none" stroke={PAL.mid} strokeOpacity={fmt(0.45 * Math.min(1, fx.guided))} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
           {gCore.map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke={PAL.core} strokeOpacity={fmt(Math.min(1, 0.85 * fx.guided))} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
         </g>

@@ -20,7 +20,7 @@ export const T0 = 4.31, T1 = 7.81;
 
 // ------------------------------------------------------------------ the side streamer (metres, site model)
 /** where the streamer leaves the channel: the guided bolt point nearest to the beam axis 90 site px above the tip */
-const ROOT_H = 90;
+export const ROOT_H = 90;
 export const ROOT3: V3 = (() => {
   const a = axis3(ROOT_H);
   let best = BOLT3.pts[0], d = 1e9;
@@ -100,10 +100,11 @@ export const STR = (() => {
     pts.forEach((q, i) => { const e = len3(sub3(q, k)); if (e < d) { d = e; best = i; } });
     return pts[best].s;
   });
-  // two short forks at the step points (brush-like side sparks that light with the step and die)
+  // two short forks at the step points (brush-like side sparks that light with the step and die); both point up and to
+  // the right of the advancing streamer, like everything else in B (the first nearly straight up, the second ~70 deg)
   const forks = [1, 2].map((ki) => {
     const base = knots[ki];
-    const a = SEGS[ki - 1][1] + (ki === 1 ? -55 : 50);
+    const a = SEGS[ki - 1][1] + (ki === 1 ? -55 : 25);
     const end = add3(base, mul3(sdir(a, -0.2), 2.2 + 0.8 * ki));
     return withS(jag3(base, end, 700 + ki * 13, 0.18, 0.02));
   });

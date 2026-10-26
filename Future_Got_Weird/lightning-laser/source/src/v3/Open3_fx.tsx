@@ -50,10 +50,41 @@ export const openFxK = (tau: number) => ss(tau, -1.6, -0.6) * (1 - ss(tau, 3.95,
 const strokes = [EV.connect, ...EV.restrikes];
 const pulseAt = (tau: number, tc = 0.08) => strokes.reduce((a, r, i) => a + (tau >= r ? Math.exp(-(tau - r) / tc) * (i === 0 ? 1.15 : 1 - 0.12 * (i - 1)) : 0), 0);
 const GUIDED = BOLT3.pts.filter((p) => p.s <= BOLT3.guidedS);
-/** brightness surges running up the guided section from the tip, along the laser path: the connection and the three
- *  restrikes (sound-locked), plus two faint ones in the held channel so it is never a frozen image */
-const SURGES: [number, number][] = [[EV.connect, 1], [2.32, 0.4], [2.92, 0.45], [EV.restrikes[0], 1], [EV.restrikes[1], 0.85], [EV.restrikes[2], 0.8]];
-const SURGE_T = 0.15; // s to run the guided section
+/** brightness surges running up the guided section from the tip, along the laser path. The connection and the three
+ *  restrikes (sound-locked cracks) are fast strokes (0.15 s to run the section). In the held channel between them
+ *  (2.3-3.5, "and the lightning FOLLOWED it") the life is quiet: two slow, soft fronts of continuing current climb the
+ *  cyan path from the rod tip (no flash, no wash, sub-restrike: no sound is implied), and on "FOLLOWED" (3.26) a third
+ *  climbs it so its head reaches the top of the guided section just as the 3.52 restrike fires */
+type Surge = {t0: number; a: number; dur: number; soft?: boolean};
+const SURGES: Surge[] = [
+  {t0: EV.connect, a: 1, dur: 0.15},
+  {t0: 2.3, a: 0.6, dur: 0.42, soft: true},
+  {t0: 2.84, a: 0.66, dur: 0.4, soft: true},
+  {t0: EV.wordFollowed, a: 0.78, dur: EV.restrikes[0] - EV.wordFollowed, soft: true},
+  {t0: EV.restrikes[0], a: 1, dur: 0.15},
+  {t0: EV.restrikes[1], a: 0.85, dur: 0.15},
+  {t0: EV.restrikes[2], a: 0.8, dur: 0.15},
+];
+/** continuing current in the held channel (2.0-3.5): a slow luminous flicker of the whole bolt, about +-15% at
+ *  4-8 Hz (OpenA scales the discharge's core by it; OpenFx the guided section's glow). 1 outside the hold, so B's
+ *  first frame (openSt exactly) and the seam are untouched. */
+export const ccFlicker = (tau: number) => {
+  const w = ss(tau, 1.95, 2.3) * (1 - ss(tau, 3.4, 3.52));
+  if (w <= 0.001) return 1;
+  return 1 + 0.15 * w * clamp(0.75 * noise1(tau * 4.6, 83) + 0.45 * noise1(tau * 7.7 + 3.1, 89), -1, 1);
+};
+/** the projected guided section as short runs that keep their arc length (for fronts that light it progressively) */
+const runsS = (P: (p: V3) => Proj, pts: typeof GUIDED, wM: number, f: number, minW: number, maxW: number, step = 3) => {
+  const out: {d: string; w: number; s: number}[] = [];
+  for (let i = 0; i + 1 < pts.length; i += step) {
+    const sub = pts.slice(i, Math.min(pts.length, i + step + 1));
+    const seg = sub.map(P).filter((q) => q.ok);
+    if (seg.length < 2) continue;
+    const z = seg[Math.floor(seg.length / 2)].z;
+    out.push({d: line(seg), w: clamp((f * wM) / Math.max(z, 0.5), minW, maxW), s: sub[Math.floor(sub.length / 2)].s});
+  }
+  return out;
+};
 /** "air" in "using the AIR ITSELF" (src/data/timeline.json: 32.44-32.68; timeline3 EV has no entry for it) */
 const WORD_AIR_H = 32.44;
 const BEAM_PTS: V3[] = Array.from({length: 61}, (_, i) => axis3(-520 + (1520 * i) / 60));
@@ -79,14 +110,26 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
   const L = openLight(tau);
   const pre = 0.22 * ss(tau, 0.25, 0.9);
   const after = tau >= EV.connect ? clamp(0.3 + 0.25 * Math.min(1, L.core) + 0.75 * pulseAt(tau)) : 0;
-  const gk = k * Math.max(pre, after) * (tau >= EV.connect ? 0.9 + 0.1 * noise1(tau * 13, 71) : 1);
-  const surges = SURGES.map(([t0, a]) => {
-    const u = (tau - t0) / SURGE_T;
-    if (u < 0 || u > 1.5) return null;
-    const head = Math.min(1, u) * BOLT3.guidedS, tail = head - 0.4 * BOLT3.guidedS;
-    const pts = GUIDED.filter((p) => p.s >= tail && p.s <= head);
-    return pts.length > 1 ? {pts, a: k * a * (u < 1 ? 1 : 1 - (u - 1) / 0.5)} : null;
-  }).filter((x): x is {pts: typeof GUIDED; a: number} => !!x);
+  const cc = ccFlicker(tau);
+  const gk = k * Math.max(pre, after) * (tau >= EV.connect ? cc * (0.96 + 0.04 * noise1(tau * 13, 71)) : 1);
+  // fast strokes: a bright segment (0.4 of the section) runs up it. Soft fronts: the section lights from the tip up to
+  // the head, brightest just behind the head (a front climbing the path), then the whole lit section fades.
+  const surges = SURGES.map((sg) => {
+    const u = (tau - sg.t0) / sg.dur;
+    const fade = sg.soft ? 0.3 / sg.dur : 0.5; // in units of u
+    if (u < 0 || u > 1 + fade) return null;
+    const head = Math.min(1, u) * BOLT3.guidedS;
+    const a = k * sg.a * (u < 1 ? (sg.soft ? ss(u, 0, 0.18) : 1) : 1 - (u - 1) / fade);
+    if (!sg.soft) {
+      const tail = head - 0.4 * BOLT3.guidedS;
+      const pts = GUIDED.filter((p) => p.s >= tail && p.s <= head);
+      return pts.length > 1 ? {pts, a, soft: false, head} : null;
+    }
+    const pts = GUIDED.filter((p) => p.s <= head + 2);
+    return pts.length > 1 ? {pts, a, soft: true, head} : null;
+  }).filter((x): x is {pts: typeof GUIDED; a: number; soft: boolean; head: number} => !!x && x.a > 0.01);
+  // a soft front's light at arc length s: brightest just behind the head, a lit trail behind it, a short soft lead
+  const frontA = (s: number, head: number) => (s > head ? clamp(1 - (s - head) / 2) : 0.38 + 0.62 * ss(s, head - 0.45 * BOLT3.guidedS, head - 1));
   const sL = Math.min(openS(tau), BOLT3.guidedS);
   const gPts = sL > 2 ? GUIDED.filter((p) => p.s <= sL) : [];
   const gHalo = runs(P, gPts, 6.5, f, 10, 90, 4);
@@ -95,7 +138,7 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
   // the storm lit where the bolt meets the cloud (local, never the caption band)
   const top = P(BOLT3.pts[BOLT3.pts.length - 1]);
   const lit = k * clamp(0.85 * pulseAt(tau, 0.14) + (tau >= EV.connect ? 0.18 * Math.exp(-(tau - EV.connect) / 0.9) : 0));
-  const rTop = clamp((f * 95) / Math.max(top.z, 1), 180, 620);
+  const rTop = clamp((f * 95) / Math.max(top.z, 1), 160, 260); // round, edge-free (the shaped cloud light is Scene3 Clouds)
   // the field building at the rod tip before the leader incepts (openSt's tipCorona: 31.88-32.9, gone once the
   // leader is ~12 m long, so frame 0 has none): a violet glow and a few streamers reaching up the prepared path
   const tip = P(TIP3), up = P(axis3(40));
@@ -145,7 +188,7 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
             <path d={streamers.join(' ')} fill="none" stroke="#E6E0FF" strokeOpacity={clamp(0.9 * cK)} strokeWidth={fmt(clamp((f * 0.15) / Math.max(tip.z, 1), 1.6, 5))} strokeLinecap="round" strokeLinejoin="round" />
           </g>
         )}
-        {lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop * 1.25)} ry={fmt(rTop * 0.8)} fill={`url(#${id}-lit)`} opacity={lit} />}
+        {lit > 0.01 && top.ok && <ellipse cx={fmt(top.x)} cy={fmt(top.y)} rx={fmt(rTop)} ry={fmt(rTop)} fill={`url(#${id}-lit)`} opacity={lit} />}
         {ch && <path d={ch} fill={PAL.channel} fillOpacity={(0.22 + 0.16 * airK) * k} filter={`url(#${id}-chb)`} />}
         {chCore && <path d={chCore} fill={PAL.channelEdge} fillOpacity={(0.12 + 0.12 * airK) * k} filter={`url(#${id}-chb)`} />}
         {glowW.map((r, i) => <path key={`w${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={0.1 * k} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
@@ -159,14 +202,23 @@ export const OpenFx: React.FC<{cam: Cam3; t: number; id: string; corona?: number
             {gCore.map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke={PAL.core} strokeOpacity={Math.min(1, 0.85 * gk)} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
           </g>
         )}
-        {surges.map((sg, j) => (
-          <g key={`s${j}`} opacity={clamp(sg.a)}>
-            <g filter={`url(#${id}-gb)`} opacity={0.55}>
-              {runs(P, sg.pts, 7, f, 12, 110, 3).map((r, i) => <path key={i} d={r.d} fill="none" stroke={PAL.mid} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+        {surges.map((sg, j) =>
+          sg.soft ? (
+            <g key={`s${j}`} opacity={clamp(sg.a)}>
+              <g filter={`url(#${id}-gb)`} opacity={0.6}>
+                {runsS(P, sg.pts, 6, f, 11, 100).map((r, i) => <path key={i} d={r.d} fill="none" stroke={PAL.mid} strokeOpacity={fmt(frontA(r.s, sg.head))} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+              </g>
+              {runsS(P, sg.pts, 1.3, f, 3, 18).map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke={PAL.core} strokeOpacity={fmt(0.85 * frontA(r.s, sg.head))} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
             </g>
-            {runs(P, sg.pts, 1.6, f, 3.5, 22, 3).map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke={PAL.core} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
-          </g>
-        ))}
+          ) : (
+            <g key={`s${j}`} opacity={clamp(sg.a)}>
+              <g filter={`url(#${id}-gb)`} opacity={0.55}>
+                {runs(P, sg.pts, 7, f, 12, 110, 3).map((r, i) => <path key={i} d={r.d} fill="none" stroke={PAL.mid} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+              </g>
+              {runs(P, sg.pts, 1.6, f, 3.5, 22, 3).map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke={PAL.core} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
+            </g>
+          ),
+        )}
       </g>
     </g>
   );
@@ -204,15 +256,17 @@ export const PulseBloom: React.FC<{cam: Cam3; pulses: number[]; k: number; id: s
 };
 
 // ------------------------------------------------------------------ H1: the prepared air building up from the tip
-export const ChannelGrow: React.FC<{cam: Cam3; t: number; top: number; id: string; k?: number}> = ({cam, t, top, id, k = 1}) => {
+/** wS widens the haze and gain strengthens it (H2's wide view, where the channel is small on screen: there the
+ *  default would blur into a smudge) */
+export const ChannelGrow: React.FC<{cam: Cam3; t: number; top: number; id: string; k?: number; wS?: number; gain?: number}> = ({cam, t, top, id, k = 1, wS = 1, gain = 1}) => {
   if (top <= 0 || k <= 0.002) return null;
   const P = projector(cam);
   const f = cam.f;
   const n = 34;
   const pts: V3[] = Array.from({length: n}, (_, i) => axis3(CH_H0 + ((top - CH_H0) * i) / (n - 1)));
   const pp = pts.map(P);
-  const body = ribbon(pp, f, 2.2, 10, 220);
-  const core = ribbon(pp, f, 0.7, 3, 70);
+  const body = ribbon(pp, f, 2.2 * wS, 10 * wS, 220);
+  const core = ribbon(pp, f, 0.7 * wS, 3 * wS, 70);
   const fr = P(axis3(top)), fb = P(axis3(Math.max(CH_H0, top - 40)));
   const growing = clamp(1 - ss(t, 30.6, 31.0));
   const rF = clamp((f * 3.0) / Math.max(fr.z, 1), 22, 150);
@@ -234,8 +288,8 @@ export const ChannelGrow: React.FC<{cam: Cam3; t: number; top: number; id: strin
           <stop offset="1" stopColor={PAL.channel} stopOpacity={0} />
         </radialGradient>
       </defs>
-      <path d={body} fill={PAL.channel} fillOpacity={0.2} filter={`url(#${id}-b)`} />
-      <path d={core} fill={PAL.channelEdge} fillOpacity={0.14} filter={`url(#${id}-b)`} />
+      <path d={body} fill={PAL.channel} fillOpacity={clamp(0.2 * gain)} filter={`url(#${id}-b)`} />
+      <path d={core} fill={PAL.channelEdge} fillOpacity={clamp(0.14 * gain)} filter={`url(#${id}-b)`} />
       {lead && <path d={lead} fill={PAL.channelEdge} fillOpacity={0.16 * growing} filter={`url(#${id}-b)`} />}
       {base.ok && baseK > 0.01 && <circle cx={fmt(base.x)} cy={fmt(base.y)} r={fmt(rB)} fill={`url(#${id}-fr)`} opacity={0.55 * baseK} />}
       {fr.ok && growing > 0.02 && <ellipse cx={fmt(fr.x)} cy={fmt(fr.y)} rx={fmt(rF * 1.5)} ry={fmt(rF * 0.75)} transform={`rotate(${fmt(angF)} ${fmt(fr.x)} ${fmt(fr.y)})`} fill={`url(#${id}-fr)`} opacity={0.7 * growing} />}
