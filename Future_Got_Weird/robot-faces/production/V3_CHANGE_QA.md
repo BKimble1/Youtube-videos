@@ -123,6 +123,14 @@ done.** Everything below is from frames and measurements. That viewing is the ma
   - 67 captions on word onsets, with no overlaps.
   - SHA-256 `563091147518fa92d79670c3f207f920129ec590b955b62e335be5055499cab7`.
 
+- **Master** (ffprobe / ebur128 / blackdetect on `exports/FGW_Robot_Faces_V3_MASTER_3840x2160.mp4`):
+  - H.264 3840×2160, 30 fps, 6,400 frames, 213.333 s, 187.1 MB;
+  - −14.2 LUFS, peak −1.4 dBFS;
+  - no black frames;
+  - SHA-256 `bac293a0cee0e28684c655b890b55f7e2109d7534e3a27def6ead7af6681a8c3`.
+  - Native 4K frames read back and inspected: `qa/v3/master/` (frame 0, the cutaway, the skin, the station, the last
+    frame). The last frame matches frame 0's framing and mouth shape.
+
 ## Remaining limitations
 
 - **Not watched or heard in real time.**
