@@ -108,6 +108,21 @@ each `Back` plane for the plate.
 This environment has **no video or audio playback**. Nobody has watched the film in motion or listened to it. Every
 check below was made on rendered frames, measurements or the source.
 
+**Final files (ffprobe and `tools/qa.py`, both renders):**
+
+| | Review | Master |
+|---|---|---|
+| Video | H.264 High 1920×1080, 30/1, 6,400 frames, bt709 | H.264 High 3840×2160 (2× from the vectors), 30/1, 6,400 frames, bt709 |
+| Duration | 213.333 s | 213.333 s |
+| Loudness | −14.2 LUFS, LRA 3.3, −1.4 dBTP | the same mix |
+| Black / frozen | none / none | none / none |
+| Audio vs narration | 0 ms lag | 0 ms lag |
+| SHA-256 | `f6493dfeef6699fb326cb3e84b2d969aafd98e65d5b70c2ad5a1c21d8a05f055` | `2ac7410340e87f22927d90522f9228e6bf3488082ac48e6b7c977a3abbb62773` (140.8 MB) |
+
+Neither final render logged a browser error (the draft's 60 console errors were the negative radius, fixed).
+Native 4K frames read back from the master are in `qa/v2/master/frames/` (14 frames, plus a 1:1 crop of the cheek
+section) and were inspected.
+
 **Measured on the review render** (`tools/qa.py … V2`, `qa/v2/review/review_qa.json`):
 - **Format.** H.264 1920×1080, 30/1 fps, 6,400 frames, bt709; AAC 48 kHz stereo; duration 213.333 s, equal to the
   V2 narration master.
