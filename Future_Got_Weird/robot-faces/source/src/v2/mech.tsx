@@ -46,18 +46,18 @@ const Servo: React.FC<{S: V; ang: number; r: number; A: V; hot?: boolean; w?: nu
 
 /** cheek section beside the left (robot's right) mouth corner, in head-local coordinates (draw inside the head's
  *  transform). k: 0..1 opening. focus: highlight the corner chain. */
-export const CheekSection: React.FC<{id: string; st: RobotState; k: number; hot?: boolean; two?: boolean; side?: 1 | -1; r?: number}> = ({id, st, k, hot = true, two = true, side = -1, r = 1}) => {
+export const CheekSection: React.FC<{id: string; st: RobotState; k: number; hot?: boolean; two?: boolean; side?: 1 | -1; r?: number; u?: number}> = ({id, st, k, hot = true, two = true, side = -1, r = 1, u = 66}) => {
   if (k <= 0.001) return null;
   const A = lipAnchors(st);
   const sd = -side; // -1: the corner at negative face u (cornerL)
   const cor = A.find((a) => a.k === (side < 0 ? 'cornerL' : 'cornerR'))!.p;
   const upL = A.find((a) => a.k === (side < 0 ? 'upperL' : 'upperR'))!.p;
   // window centre: on the cheek, outside the corner (face units -> head coords)
-  const c = projFace(st, -66 * sd, -6, 1.0);
+  const c = projFace(st, -u * sd, -6, 1.0);
   const rx = 34 * k * r * Math.max(0.45, c.z), ry = 30 * k * r;
   // servos are fixed to the frame (they turn with the head): placed in face units, projected deeper
-  const S1 = projFace(st, -78 * sd, 4, 0.9);
-  const S2 = projFace(st, -70 * sd, -26, 0.9);
+  const S1 = projFace(st, -(u + 12) * sd, 4, 0.9);
+  const S2 = projFace(st, -(u + 4) * sd, -26, 0.9);
   // rest-pose rod lengths (from the neutral rig), so the horns rotate as the corner moves
   const L1 = 21, L2 = 22;
   const a1 = solveHorn(S1, cor, 11, L1, sd > 0 ? -0.3 : Math.PI + 0.3);

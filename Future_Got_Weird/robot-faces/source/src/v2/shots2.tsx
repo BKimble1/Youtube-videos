@@ -4,7 +4,7 @@
 import React from 'react';
 import {Notebook} from '../art/Lab';
 import {RobotState} from '../art/Robot';
-import {Tag} from '../art/Ui';
+import {Tag} from './text3';
 import {Cam, camPath} from '../lib/cam';
 import {pr, T} from '../lib/core';
 import {INT} from '../shots/IntSet';

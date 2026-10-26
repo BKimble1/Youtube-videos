@@ -6,7 +6,8 @@ import {INK} from '../dc/ink';
 import {clamp, fmt, lerp} from '../dc/math';
 import {Monitor, Notebook, Shadow} from '../art/Lab';
 import {Robot, RobotState, RobotSupport} from '../art/Robot';
-import {Tag, UI, Wave} from '../art/Ui';
+import {UI, Wave} from '../art/Ui';
+import {Tag} from './text3';
 import {Visitor, VX} from '../art/Visitor';
 import {Cam, camPath, Layer} from '../lib/cam';
 import {pr, T} from '../lib/core';
@@ -166,7 +167,7 @@ export const StudyScreen: React.FC<{f: number}> = ({f}) => <FaceInsert id="ss" f
 // "and learned to recognize small changes as a smile began to develop.": the corners and cheeks, very close
 export const StudyCue: React.FC<{f: number}> = ({f}) => (
   <g>
-    <FaceInsert id="sc" f={f} cam={drift(f, T('and learned to'), K.oneModel, {x: 984, y: 680, z: 2.3}, {x: 984, y: 684, z: 2.42})} marks={pr(f, T('recognize') - 0.1, T('recognize') + 0.3)} up={pr(f, T('smile began') - 0.2, T('smile began') + 0.3)} />
+    <FaceInsert id="sc" f={f} cam={drift(f, T('and learned to'), K.oneModel, {x: 984, y: 680, z: 2.3}, {x: 984, y: 684, z: 2.42})}  />
     <Tag x={960} y={1010} text="small changes" k={pr(f, T('small changes') - 0.1, T('small changes') + 0.3)} size={34} anchor="middle" tone="warm" />
   </g>
 );
@@ -210,29 +211,20 @@ const Compare24: React.FC<{f: number; a: number; b: number; emph?: number; id: s
         <Back id={`${id}-bk`} bg="lab" veil={0.5} dx={-300} dy={140} />
       </Layer>
       <Layer cam={cam} depth={1}>
-        <Panel id={`${id}-h`} x={70} y={190} w={880} h={850} bg="#D9E4E6">
+        <Panel id={`${id}-h`} x={70} y={190} w={880} h={850} bg="#D9E4E6" border={UI.coral}>
           <ScreenFace2 id={`${id}-sf`} x={510} y={630} w={880} h={850} e={screenFaceAt(f)} />
         </Panel>
-        <Panel id={`${id}-r`} x={970} y={190} w={880} h={850} bg="#E6E9E4">
+        <Panel id={`${id}-r`} x={970} y={190} w={880} h={850} bg="#E6E9E4" border={UI.blue}>
           <Robot id={`${id}-rr`} st={st} x={1410} y={600} s={3.2} />
         </Panel>
       </Layer>
-      <rect x={X0 - 230} y={Y - 62} width={XW + 270} height={118} rx={18} fill={UI.paper} opacity={0.94} stroke={INK} strokeWidth={2.5} />
-      <text x={X0 - 200} y={Y - 2} fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.ink}>
-        schematic
-      </text>
-      <line x1={X0} y1={Y} x2={X0 + XW} y2={Y} stroke="#C9C0AE" strokeWidth={4} />
-      <line x1={X0} y1={Y} x2={fmt(tx(ph))} y2={Y} stroke={UI.ink} strokeWidth={4} />
-      <circle cx={fmt(tx(ph))} cy={Y} r={9} fill={UI.ink} />
-      <g opacity={pk}>
-        <line x1={fmt(tx(CO24.predict))} y1={Y - 22} x2={fmt(tx(CO24.predict))} y2={Y + 22} stroke={UI.blue} strokeWidth={6} />
-        <text x={fmt(tx(CO24.predict) - 12)} y={Y + 46} textAnchor="end" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.blue}>robot starts</text>
-      </g>
-      <g opacity={vk}>
-        <line x1={fmt(tx(CO24.visible))} y1={Y - 22} x2={fmt(tx(CO24.visible))} y2={Y + 22} stroke={UI.coral} strokeWidth={6} />
-        <text x={fmt(tx(CO24.visible) + 12)} y={Y + 46} textAnchor="start" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.coral}>smile visible</text>
-      </g>
-      <Bracket x0={tx(CO24.predict)} x1={tx(CO24.visible)} y={Y - 30} label={emph > 0.5 ? 'less than a second' : '≈ 0.84 s'} k={vk} size={26 + 6 * emph} />
+      <line x1={X0} y1={Y} x2={X0 + XW} y2={Y} stroke="#FBF7EE" strokeWidth={5} opacity={0.7} />
+      <line x1={X0} y1={Y} x2={fmt(tx(ph))} y2={Y} stroke={UI.ink} strokeWidth={5} />
+      <circle cx={fmt(tx(ph))} cy={Y} r={10} fill={UI.ink} />
+      <line x1={fmt(tx(CO24.predict))} y1={Y - 20} x2={fmt(tx(CO24.predict))} y2={Y + 20} stroke={UI.blue} strokeWidth={7} opacity={pk} />
+      <line x1={fmt(tx(CO24.visible))} y1={Y - 20} x2={fmt(tx(CO24.visible))} y2={Y + 20} stroke={UI.coral} strokeWidth={7} opacity={vk} />
+      <text x={X0 + XW + 24} y={Y + 9} fontFamily="Nunito Variable" fontWeight={700} fontSize={24} fill={UI.ink} opacity={0.75}>schematic</text>
+      <Bracket x0={tx(CO24.predict)} x1={tx(CO24.visible)} y={Y - 30} label="≈ 0.84 s" k={vk} size={26 + 6 * emph} />
     </g>
   );
 };

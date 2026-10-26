@@ -2,68 +2,44 @@
  "end": 213.33333333333334,
  "shots": [
   {
-   "id": "a1-ecu",
+   "id": "v1-face",
    "a": 0,
-   "b": 1.98,
-   "tr": "start",
-   "what": "Extreme close-up: the robot’s face already moving, eyes on the camera; the camera draws back and it is a machine on a support",
-   "cont": ""
-  },
-  {
-   "id": "a2-pair",
-   "a": 1.98,
    "b": 3.92,
-   "tr": "cut",
-   "what": "Face to face, close: his cue forms; its eyes go to his mouth and back",
+   "tr": "start",
+   "what": "Frame 0 mid-speech, eyes on us; the camera eases back as the expression changes; the silicone turns translucent and the cheek opens onto the motor pulling the corner as the lips keep moving",
    "cont": ""
   },
   {
-   "id": "a3-under",
+   "id": "v2-reveal",
    "a": 3.92,
-   "b": 5.1,
-   "tr": "cut",
-   "what": "One push into its cheek: the skin opens onto the motor and linkage beneath",
-   "cont": ""
+   "b": 5.62,
+   "tr": "match",
+   "what": "From the open cheek, one pull back: the section closes and it is facing a person; its smile begins",
+   "cont": "the open cheek section matched across the cut"
   },
   {
-   "id": "a4-side",
-   "a": 5.1,
-   "b": 6.3999999999999995,
-   "tr": "cut-action",
-   "what": "The same smile in side section: the motor turns, the linkage pulls the skin, the lips change shape",
-   "cont": "smile continues across the cut"
-  },
-  {
-   "id": "a5-shared",
-   "a": 6.3999999999999995,
+   "id": "v3-pair",
+   "a": 5.62,
    "b": 7.61,
    "tr": "cut",
-   "what": "Both smiles arrive together",
+   "what": "Face to face: both smiles land together; his brows lift, pleasantly surprised",
    "cont": ""
   },
   {
-   "id": "a6-old",
+   "id": "v4-his",
    "a": 7.61,
-   "b": 8.75,
+   "b": 8.799999999999999,
    "tr": "cut",
-   "what": "Contrast: a stiffer robot face moves only its corners (illustration)",
+   "what": "His mouth, large: he says something to it",
    "cont": ""
   },
   {
-   "id": "a7-recoil",
-   "a": 8.75,
-   "b": 9.040000000000001,
-   "tr": "cut",
-   "what": "He flinches at the stiff grin",
-   "cont": ""
-  },
-  {
-   "id": "a8-soft",
-   "a": 9.040000000000001,
+   "id": "v5-copy",
+   "a": 8.799999999999999,
    "b": 10.41,
-   "tr": "cut",
-   "what": "The soft face: corners, cheeks, lips and skin move together",
-   "cont": ""
+   "tr": "match",
+   "what": "Its mouth in the same place makes the same shapes; the skin turns translucent and every lip motor works at once",
+   "cont": "mouth position and size matched; identity changes, no morph"
   },
   {
    "id": "a9-truck",
@@ -102,7 +78,7 @@
    "a": 15.55,
    "b": 17.58,
    "tr": "cut",
-   "what": "Two faces: his cue starts; its smile starts before his is plain",
+   "what": "Face to face: his cue starts; its smile starts before his is plain",
    "cont": ""
   },
   {
@@ -138,12 +114,12 @@
    "cont": ""
   },
   {
-   "id": "b5-side",
+   "id": "b5-actuator",
    "a": 26.862000000000002,
    "b": 28.002,
    "tr": "cut-action",
-   "what": "From the side: a motor turns and a linkage pushes the lips forward",
-   "cont": "the rounding continues across the cut"
+   "what": "The corner motor, very close: horn, rod and corner moving as one",
+   "cont": "the movement continues across the cut"
   },
   {
    "id": "b6-combos",
@@ -258,11 +234,11 @@
    "cont": ""
   },
   {
-   "id": "s1-section",
+   "id": "s1-skin",
    "a": 65.75,
    "b": 70.002,
    "tr": "match",
-   "what": "That skin in section beside a rigid link; the link turns and moves nothing else",
+   "what": "From skin filling the frame back to a 3/4 face: the cheek opens; the motor’s rigid horn turns while the skin it pulls bends",
    "cont": "skin fills the frame on both sides of the cut"
   },
   {
@@ -270,7 +246,7 @@
    "a": 70.002,
    "b": 73.32,
    "tr": "cut",
-   "what": "Closer: one anchor is pulled; the band, the material and the lip move",
+   "what": "Close on the pulled point: the surface around it moves with it, the lip corner follows",
    "cont": ""
   },
   {
@@ -350,7 +326,7 @@
    "a": 89.763,
    "b": 91.84,
    "tr": "cut",
-   "what": "The robot watching; the screen runs on through hours of video",
+   "what": "The robot watching footage run on fast: one person after another",
    "cont": ""
   },
   {
@@ -358,7 +334,7 @@
    "a": 91.84,
    "b": 96.36,
    "tr": "cut",
-   "what": "One training example: a mouth and its sound trace, linked",
+   "what": "One person, one sample: the sound runs beneath them; the camera closes on the mouth",
    "cont": ""
   },
   {
@@ -550,7 +526,7 @@
    "a": 144.126,
    "b": 147.6,
    "tr": "cut",
-   "what": "Compact comparison: both faces, both smile curves, the gap",
+   "what": "Over the robot’s shoulder: its late smile at the edge of frame; his awkward reaction",
    "cont": ""
   },
   {
@@ -622,7 +598,7 @@
    "a": 174.29,
    "b": 176.72,
    "tr": "cut",
-   "what": "The comparison again: less than a second",
+   "what": "The corner motor, very close, starting the smile",
    "cont": ""
   },
   {
@@ -863,8 +839,7 @@
   "firstBa": 125.36,
   "look": 190.34,
   "easier": 197.86,
-  "oldGrinOn": 7.930000000000001,
-  "oldGrinOff": 8.66,
+  "copy2": 8.86,
   "predRobot": 15.95,
   "copy": 14.84,
   "montage": [

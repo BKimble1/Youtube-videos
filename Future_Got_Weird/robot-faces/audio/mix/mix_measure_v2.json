@@ -4,6 +4,6 @@
  "duration_s": 213.3333,
  "narration_lufs_in_mix_before_final_norm": -16.0,
  "music_to_voice_rms_db_during_speech": -17.5,
- "sfx_cues": 62,
+ "sfx_cues": 63,
  "limiter_min_gain_db": -2.82
 }

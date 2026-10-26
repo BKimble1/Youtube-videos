@@ -13,7 +13,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="RobotFaces" component={Film} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix' as string | false}} />
     <Still id="FilmStill" component={FilmStill} width={W} height={H} defaultProps={{t: 0}} />
     <Still id="Sheet" component={Sheet} width={W} height={H} defaultProps={{ts: [0], cols: 4}} />
-    <Composition id="RobotFacesV2" component={Film2} durationInFrames={6400} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false}} />
+    <Composition id="RobotFacesV3" component={Film2} durationInFrames={6400} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false}} />
     <Still id="Still2" component={Still2} width={W} height={H} defaultProps={{t: 0}} />
     <Still id="Sheet2" component={Sheet2} width={W} height={H} defaultProps={{ts: [0], cols: 4}} />
     <Still id="ShotSheet" component={ShotSheet} width={W} height={H} defaultProps={{page: 0, at: 0.5}} />

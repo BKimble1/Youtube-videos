@@ -1,0 +1,1 @@
+3840 2160 6400 213.333333 {'integrated_lufs': -14.2, 'lra_lu': 3.3, 'true_peak_dbtp': -1.4} [] [] {'best_lag_ms': 0, 'corr': 0.9228}

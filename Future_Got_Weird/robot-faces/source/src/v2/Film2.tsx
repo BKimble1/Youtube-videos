@@ -11,31 +11,29 @@ import * as A from './shotsA';
 import * as B from './shotsB';
 import * as C from './shotsC';
 import * as D from './shotsD';
+import * as E from './shotsE';
 
 export type Tr = 'start' | 'cut' | 'cut-action' | 'match' | 'occlusion' | 'continuous';
 export type Shot2 = {id: string; a: number; b: number; C: React.FC<{f: number}>; tr: Tr; what: string; cont?: string};
 const D_ = D;
 export const SHOTS2: Shot2[] = [
   // ---- opening
-  {id: 'a1-ecu', a: 0, b: T('smile before'), C: D_.A1Ecu, tr: 'start', what: 'Extreme close-up: the robot\u2019s face already moving, eyes on the camera; the camera draws back and it is a machine on a support'},
-  {id: 'a2-pair', a: T('smile before'), b: T('Then it tries'), C: D_.A2Pair, tr: 'cut', what: 'Face to face, close: his cue forms; its eyes go to his mouth and back'},
-  {id: 'a3-under', a: T('Then it tries'), b: T('tries to smile') + 0.52, C: D_.A3Under, tr: 'cut', what: 'One push into its cheek: the skin opens onto the motor and linkage beneath'},
-  {id: 'a4-side', a: T('tries to smile') + 0.52, b: T('person in front') + 0.1, C: D_.A4Side, tr: 'cut-action', what: 'The same smile in side section: the motor turns, the linkage pulls the skin, the lips change shape', cont: 'smile continues across the cut'},
-  {id: 'a5-shared', a: T('person in front') + 0.1, b: K.corner, C: D_.A5Shared, tr: 'cut', what: 'Both smiles arrive together'},
-  {id: 'a6-old', a: K.corner, b: T('moving the') + 0.25, C: D_.A6Old, tr: 'cut', what: 'Contrast: a stiffer robot face moves only its corners (illustration)'},
-  {id: 'a7-recoil', a: T('moving the') + 0.25, b: T('of a mouth.') - 0.1, C: D_.A7Recoil, tr: 'cut', what: 'He flinches at the stiff grin'},
-  {id: 'a8-soft', a: T('of a mouth.') - 0.1, b: T('Researchers'), C: D_.A8Soft, tr: 'cut', what: 'The soft face: corners, cheeks, lips and skin move together'},
+  {id: 'v1-face', a: 0, b: T('Then it tries'), C: E.V1Face, tr: 'start', what: 'Frame 0 mid-speech, eyes on us; the camera eases back as the expression changes; the silicone turns translucent and the cheek opens onto the motor pulling the corner as the lips keep moving'},
+  {id: 'v2-reveal', a: T('Then it tries'), b: T('same time'), C: E.V2Reveal, tr: 'match', what: 'From the open cheek, one pull back: the section closes and it is facing a person; its smile begins', cont: 'the open cheek section matched across the cut'},
+  {id: 'v3-pair', a: T('same time'), b: K.corner, C: E.V3Pair, tr: 'cut', what: 'Face to face: both smiles land together; his brows lift, pleasantly surprised'},
+  {id: 'v4-his', a: K.corner, b: T('That takes more') + 0.05 + 1.2 - 0.06, C: E.V4His, tr: 'cut', what: 'His mouth, large: he says something to it'},
+  {id: 'v5-copy', a: T('That takes more') + 0.05 + 1.2 - 0.06, b: T('Researchers'), C: E.V5Copy, tr: 'match', what: 'Its mouth in the same place makes the same shapes; the skin turns translucent and every lip motor works at once', cont: 'mouth position and size matched; identity changes, no morph'},
   {id: 'a9-truck', a: T('Researchers'), b: K.mirrorCut, C: O.MirTruck, tr: 'cut', what: 'Across the lab: the mirror frame slides past and reveals the reflection'},
   {id: 'a10-tests', a: K.mirrorCut, b: T('copy human'), C: D_.A10Tests, tr: 'cut', what: 'The reflection: four different test expressions, the motors faintly visible'},
   {id: 'a11-lips', a: T('copy human'), b: T('copy human') + 0.62, C: D_.A11Lips, tr: 'cut', what: 'A person\u2019s lips, very close'},
   {id: 'a12-copy', a: T('copy human') + 0.62, b: T('predict an') + 0.05, C: D_.A12Copy, tr: 'match', what: 'The robot\u2019s lips (in the mirror) make the same shapes in the same place in the frame', cont: 'mouth position and size matched; identity changes, no morph'},
-  {id: 'a13-predict', a: T('predict an') + 0.05, b: T('And the place'), C: D_.A13Predict, tr: 'cut', what: 'Two faces: his cue starts; its smile starts before his is plain'},
+  {id: 'a13-predict', a: T('predict an') + 0.05, b: T('And the place'), C: D_.A13Predict, tr: 'cut', what: 'Face to face: his cue starts; its smile starts before his is plain'},
   {id: 'a14-mirror', a: T('And the place'), b: K.columbia, C: D_.A14Mirror, tr: 'cut', what: 'Back out of the reflection to the whole mirror setup'},
   // ---- mechanism
   {id: 'b1-orbit', a: K.columbia, b: T('flexible'), C: D_.B1Orbit, tr: 'cut', what: 'The camera circles from its profile to its face; Columbia tag'},
   {id: 'b2-flex', a: T('flexible'), b: T('with twenty-six'), C: D_.B2Flex, tr: 'cut', what: 'Close: the silicone stretches'},
   {id: 'b3-motors', a: T('with twenty-six'), b: T('face ways') + 0.3, C: D_.B3Motors, tr: 'cut', what: 'The skin turns translucent; motors switch on by group as brows, smile and lips move'},
-  {id: 'b5-side', a: T('face ways') + 0.3, b: K.combos, C: D_.B5Side, tr: 'cut-action', what: 'From the side: a motor turns and a linkage pushes the lips forward', cont: 'the rounding continues across the cut'},
+  {id: 'b5-actuator', a: T('face ways') + 0.3, b: K.combos, C: E.M1Actuator, tr: 'cut-action', what: 'The corner motor, very close: horn, rod and corner moving as one', cont: 'the movement continues across the cut'},
   {id: 'b6-combos', a: K.combos, b: T('create the'), C: A.MechCombos, tr: 'cut', what: 'Sliders jump to untried combinations; the face makes shapes nobody asked for'},
   {id: 'b7-shapes', a: T('create the'), b: K.banana, C: D_.B7Shapes, tr: 'cut', what: 'The sections close, the skin is whole, and it makes four distinct expressions'},
   // ---- mouths
@@ -53,8 +51,8 @@ export const SHOTS2: Shot2[] = [
   {id: 'p4-lips', a: K.moveThese, b: K.change, C: D_.P4Lips, tr: 'cut', what: 'The reflected mouth, very close: these motors, this mouth shape'},
   {id: 'p5-into', a: K.change, b: K.skin, C: D_.P5Into, tr: 'cut', what: 'A new combination; then the camera goes into the reflection\u2019s cheek until the skin fills the frame'},
   // ---- skin
-  {id: 's1-section', a: K.skin, b: K.pull, C: A.SkinPlate, tr: 'match', what: 'That skin in section beside a rigid link; the link turns and moves nothing else', cont: 'skin fills the frame on both sides of the cut'},
-  {id: 's2-pull', a: K.pull, b: K.controller, C: A.SkinPull, tr: 'cut', what: 'Closer: one anchor is pulled; the band, the material and the lip move'},
+  {id: 's1-skin', a: K.skin, b: K.pull, C: E.K1Skin, tr: 'match', what: 'From skin filling the frame back to a 3/4 face: the cheek opens; the motor\u2019s rigid horn turns while the skin it pulls bends', cont: 'skin fills the frame on both sides of the cut'},
+  {id: 's2-pull', a: K.pull, b: K.controller, C: E.K2Pull, tr: 'cut', what: 'Close on the pulled point: the surface around it moves with it, the lip corner follows'},
   {id: 's3-face', a: K.controller, b: K.once, C: A.SkinFace, tr: 'cut', what: 'The face, oblique: the pull releases, a smile forms from the same skin'},
   // ---- learning from people
   {id: 't1-turn', a: K.once, b: T('researchers gave'), C: B.TurnAway, tr: 'cut', what: 'At the mirror: it turns away from its reflection'},
@@ -65,8 +63,8 @@ export const SHOTS2: Shot2[] = [
   {id: 't5-profile', a: T('the system learned'), b: T('videos of humans'), C: D_.T5Profile, tr: 'cut', what: 'Another person in profile on a street, lips moving'},
   {id: 't6-talk', a: T('videos of humans'), b: T('singing,'), C: D_.T6Talk, tr: 'cut', what: 'Another, talking in a kitchen'},
   {id: 't8-sing', a: T('singing,'), b: K.youtube, C: D_.T8Sing, tr: 'cut', what: 'Someone singing on a small stage'},
-  {id: 't9-hours', a: K.youtube, b: K.important, C: B.HoursWatch, tr: 'cut', what: 'The robot watching; the screen runs on through hours of video'},
-  {id: 't10-one', a: K.important, b: K.linked, C: B.OneExample, tr: 'cut', what: 'One training example: a mouth and its sound trace, linked'},
+  {id: 't9-hours', a: K.youtube, b: K.important, C: E.P1Stream, tr: 'cut', what: 'The robot watching footage run on fast: one person after another'},
+  {id: 't10-one', a: K.important, b: K.linked, C: E.P2One, tr: 'cut', what: 'One person, one sample: the sound runs beneath them; the camera closes on the mouth'},
   {id: 't11-human', a: K.linked, b: T('robot’s model'), C: D_.T11Human, tr: 'cut', what: 'A person\u2019s lips, very close, saying that example'},
   {id: 't12-robot', a: T('robot’s model'), b: K.speechAudio, C: D_.T12Robot, tr: 'match', what: 'The robot\u2019s lips in the same place, making the same shapes', cont: 'mouth position matched'},
   {id: 'e1-path', a: K.speechAudio, b: T('through the motors.'), C: D_.E1Path, tr: 'cut', what: 'One move along the signal: speaker -> trace -> the learned map lights the matching shape -> cable -> motors -> lips'},
@@ -91,7 +89,7 @@ export const SHOTS2: Shot2[] = [
   {id: 'l4-stare', a: K.stare, b: K.finish, C: C.LateStare, tr: 'cut', what: 'The robot stares; slow push'},
   {id: 'l5-finish', a: K.finish, b: K.switchOn, C: C.LateFinish, tr: 'cut', what: 'His smile completes; the letter lowers'},
   {id: 'l6-switch', a: K.switchOn, b: K.awkward, C: C.LateSwitch, tr: 'cut', what: 'The robot\u2019s smile switches on, late and fast'},
-  {id: 'l7-compare', a: K.awkward, b: K.study24, C: C.LateCompare, tr: 'cut', what: 'Compact comparison: both faces, both smile curves, the gap'},
+  {id: 'l7-compare', a: K.awkward, b: K.study24, C: E.L7Reaction, tr: 'cut', what: 'Over the robot\u2019s shoulder: its late smile at the edge of frame; his awkward reaction'},
   {id: 'y1-study', a: K.study24, b: K.watched, C: C.StudyWide, tr: 'cut', what: 'Study set: robot facing a monitor that plays a face; push toward the screen'},
   {id: 'y2-screen', a: K.watched, b: T('and learned to'), C: C.StudyScreen, tr: 'cut', what: 'Screen insert: the face'},
   {id: 'y3-cue', a: T('and learned to'), b: K.oneModel, C: C.StudyCue, tr: 'cut', what: 'Corners and cheeks marked; the small changes begin'},
@@ -100,7 +98,7 @@ export const SHOTS2: Shot2[] = [
   {id: 'y6-motor', a: K.another2, b: K.ms840, C: C.StudyMotor, tr: 'cut', what: 'The corner motor carries out the translated movement'},
   {id: 'y7-timing', a: K.ms840, b: T('allowing the robot'), C: C.StudyTiming, tr: 'cut', what: 'Two faces large, a small schematic track: robot starts 0.84 s before the smile is visible'},
   {id: 'y8-together', a: T('allowing the robot'), b: K.less, C: C.StudyTogether, tr: 'cut', what: 'Study set: both smiling together'},
-  {id: 'y9-less', a: K.less, b: K.enough, C: C.StudyLess, tr: 'cut', what: 'The comparison again: less than a second'},
+  {id: 'y9-less', a: K.less, b: K.enough, C: E.M2Actuator, tr: 'cut', what: 'The corner motor, very close, starting the smile'},
   // ---- the final minute
   {id: 'g1-his', a: K.enough, b: T('copy into'), C: D_.G1Mouth, tr: 'cut', what: 'His smile, very close'},
   {id: 'g2-its', a: T('copy into'), b: T('shared-looking'), C: D_.G2Mouth, tr: 'match', what: 'Its smile in the same place in the frame', cont: 'mouth position matched; identity changes, no morph'},
@@ -131,6 +129,7 @@ export const Frame2: React.FC<{f: number}> = ({f}) => {
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
       <S.C f={f} />
+      <E.Grade f={f} />
     </svg>
   );
 };

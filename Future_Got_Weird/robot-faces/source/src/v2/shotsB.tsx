@@ -5,7 +5,8 @@ import {INK} from '../dc/ink';
 import {clamp, fmt, lerp} from '../dc/math';
 import {Monitor, Shadow} from '../art/Lab';
 import {Robot, RobotState, RobotSupport, ROBOT_NEUTRAL} from '../art/Robot';
-import {Tag, UI, Wave} from '../art/Ui';
+import {UI, Wave} from '../art/Ui';
+import {Tag} from './text3';
 import {VX} from '../art/Visitor';
 import {Cam, camPath, Layer} from '../lib/cam';
 import {pr, T} from '../lib/core';
@@ -303,8 +304,7 @@ export const ResultSpeech: React.FC<{f: number}> = ({f}) => {
           <g>
             <path d="M1380,920 C1200,960 1000,950 900,922" fill="none" stroke="#2B313A" strokeWidth={8} strokeLinecap="round" />
             <SpeakerBox x={1460} y={780} s={1.2} level={lv} />
-            <rect x={1250} y={470} width={440} height={120} rx={16} fill="#141B22" opacity={0.9} />
-            <Wave x={1270} y={530} w={400} h={44} t0={t - 2} t1={t} fn={tr1} color="#58B6AE" />
+            <Wave x={1300} y={560} w={320} h={34} t0={t - 2} t1={t} fn={tr1} color="#3E8F88" />
           </g>
         }
       />
@@ -320,8 +320,7 @@ export const ResultSong: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="rg" cam={drift(f, K.song, K.languages, {x: 900, y: 560, z: 1}, {x: 900, y: 560, z: 1.05})} st={st} x={820} y={450} s={3.6} veil={0.3} bgDx={600} bgDy={160} />
-      <rect x={1250} y={300} width={560} height={150} rx={18} fill="#141B22" opacity={0.9} />
-      <Wave x={1275} y={375} w={510} h={56} t0={t - 2.4} t1={t} fn={tr2} color={UI.amber} />
+      <Wave x={1275} y={420} w={510} h={46} t0={t - 2.4} t1={t} fn={tr2} color="#C9822B" />
       <Tag x={1530} y={520} text="song" k={1} size={34} anchor="middle" tone="warm" />
     </g>
   );
@@ -334,8 +333,7 @@ export const ResultLang: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="rl" cam={drift(f, K.languages, K.meaning, {x: 960, y: 520, z: 1}, {x: 960, y: 530, z: 1.06})} st={st} x={960} y={360} s={3.8} veil={0.35} bgDx={-900} bgDy={160} />
-      <rect x={260} y={860} width={1400} height={160} rx={20} fill="#141B22" opacity={0.9} />
-      <Wave x={300} y={940} w={1320} h={56} t0={t - 3} t1={t} fn={tr3} color="#B48FD9" />
+      <Wave x={300} y={980} w={1320} h={44} t0={t - 3} t1={t} fn={tr3} color="#8A6BB5" />
       <Tag x={960} y={820} text="a language it was not trained on" k={pr(f, T('in languages') - 0.2, T('in languages') + 0.2)} size={32} anchor="middle" tone="light" />
     </g>
   );
@@ -442,7 +440,6 @@ const MouthPanel: React.FC<{id: string; x: number; expr: any}> = ({id, x, expr})
 const RobotPanel: React.FC<{id: string; x: number; st: RobotState; ring?: number}> = ({id, x, st, ring = 0}) => (
   <Panel id={id} x={x} y={150} w={820} h={640} bg="#C9D3D2">
     <Robot id={`${id}-r`} st={st} x={x + 410} y={-10} s={6.6} />
-    {ring > 0.01 && <ellipse cx={x + 410} cy={470} rx={150} ry={70} fill="none" stroke={UI.coral} strokeWidth={8} opacity={ring} />}
   </Panel>
 );
 /** the B / W comparison: the person's lips (left) and the robot's attempt (right), large */
@@ -478,7 +475,7 @@ export const FlawGap: React.FC<{f: number}> = ({f}) => {
   const ring = pr(f, K.small + 0.6, K.small + 0.9);
   return (
     <g>
-      <RobotCU id="fg" cam={drift(f, K.small, T('when you’re watching'), {x: 960, y: 500, z: 1}, {x: 960, y: 500, z: 1.12})} st={st} x={960} y={-230} s={10.5} veil={0.45} bgDx={-600} over={<ellipse cx={960} cy={520} rx={230} ry={95} fill="none" stroke={UI.coral} strokeWidth={9} opacity={ring} />} />
+      <RobotCU id="fg" cam={drift(f, K.small, T('when you’re watching'), {x: 960, y: 500, z: 1}, {x: 960, y: 500, z: 1.12})} st={st} x={960} y={-230} s={10.5} veil={0.45} bgDx={-600}  />
     </g>
   );
 };

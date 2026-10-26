@@ -5,7 +5,7 @@ import {writeFileSync} from 'fs';
 import {SHOTS2} from '../source/src/v2/Film2';
 import {BABBLE, CO24, K, TRIALS} from '../source/src/state';
 import {T} from '../source/src/lib/core';
-import {END, FIRST_BA, MONTAGE, OLDBOT, PRED, COPY_DT} from '../source/src/v2/state2';
+import {END, FIRST_BA, MONTAGE, PRED, COPY_DT, VSPEAK_T0, COPY2} from '../source/src/v2/state2';
 
 const out = {
   end: END,
@@ -29,8 +29,7 @@ const out = {
     firstBa: FIRST_BA,
     look: T('A machine looks'),
     easier: T('easier to'),
-    oldGrinOn: OLDBOT.grinOn,
-    oldGrinOff: OLDBOT.grinOff,
+    copy2: VSPEAK_T0 + COPY2,
     predRobot: PRED.robot,
     copy: T('copy human') + COPY_DT,
     montage: MONTAGE.slice(0, 6).map(([d]) => T('building a relationship') + 0.15 + d),

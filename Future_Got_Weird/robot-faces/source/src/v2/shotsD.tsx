@@ -7,7 +7,8 @@ import {INK} from '../dc/ink';
 import {clamp, fmt, lerp} from '../dc/math';
 import {Bench, Shadow} from '../art/Lab';
 import {lipAnchors, Robot, ROBOT_NEUTRAL, RobotState, RobotSupport} from '../art/Robot';
-import {Tag, UI, Wave} from '../art/Ui';
+import {UI, Wave} from '../art/Ui';
+import {Tag} from './text3';
 import {VX} from '../art/Visitor';
 import {Cam, camPath, lerpCam, Layer} from '../lib/cam';
 import {pr, T} from '../lib/core';
@@ -163,7 +164,7 @@ const FacePair: React.FC<{id: string; f: number; cam: Cam; robotYaw?: number}> =
   );
 };
 // 15.55 - 17.58 "and predict an expression as it begins.": his cue starts; its smile starts before his is plain
-export const A13Predict: React.FC<{f: number}> = ({f}) => <FacePair id="a13" f={f} cam={drift(f, PRED.cue, T('And the place'), CAM0, {x: 960, y: 530, z: 1.04})} />;
+export const A13Predict: React.FC<{f: number}> = ({f}) => <ProfileTwo id="a13" cam={drift(f, PRED.cue, T('And the place'), {x: 995, y: 470, z: 1.62}, {x: 995, y: 464, z: 1.7})} robot={view(rob2(f), 64, 0.6, 0)} vis={vis2(f)} rTurn={64} />;
 // 17.58 - 20.56 "And the place to start was a mirror.": back out of the reflection to the whole setup
 export const A14Mirror: React.FC<{f: number}> = ({f}) => {
   const c0 = mirrorLayerCam({x: MIR.refl.x, y: MIR.refl.y + 30}, 3.3);
@@ -504,7 +505,6 @@ export const H1Station: React.FC<{f: number}> = ({f}) => {
   const st0 = rob2(f);
   const k1 = {...ROBOT_NEUTRAL, yaw: 30, gx: 0.6, smile: 0.2 + 0.7 * pr(f, T('possible') - 0.2, T('possible') + 0.4), blink: st0.blink};
   const k2 = {...ROBOT_NEUTRAL, yaw: -28, gx: -0.6, ...robotVis(t, SPEECH(K.picture, K.speaking + 1, 41), 0.06)};
-  const walk = (t - K.picture) * 60;
   return (
     <g>
       <Layer cam={cam} depth={2.2}>
@@ -513,8 +513,9 @@ export const H1Station: React.FC<{f: number}> = ({f}) => {
       <Layer cam={cam} depth={1}>
         <Kiosk id="h1-k1" x={520} y={430} s={1.3} st={k1} />
         <Kiosk id="h1-k2" x={1540} y={430} s={1.3} st={k2} />
-        <CrewChar id="h1-c1" look={CAST.clerkC} pose={{...POSE0, lookX: -0.6, armL: {a: 30, b: 70}}} frame={f} seed={21} x={820} y={1080} scale={1.35} />
-        <CrewChar id="h1-c2" look={CAST.checker} pose={{...POSE0, lookX: 0.7, mouth: 'talk'}} frame={f} seed={23} x={1250 - walk * 0.2} y={1080} scale={1.35} />
+        {/* one talks with the left kiosk, gesturing; the other asks the right kiosk, then turns, smiling, to her friend */}
+        <CrewChar id="h1-c1" look={CAST.clerkC} pose={{...POSE0, lookX: -0.6, brows: 0.3, armL: {a: 30 + 18 * Math.sin(t * 3.1), b: 60 + 25 * Math.sin(t * 3.1 + 0.8)}, mouth: 'talk'}} frame={f} seed={21} x={820} y={1080} scale={1.35} />
+        <CrewChar id="h1-c2" look={CAST.checker} pose={{...POSE0, lookX: lerp(0.7, -0.6, pr(f, K.picture + 1.2, K.picture + 1.6)), mouth: t < K.picture + 1.3 ? 'talk' : 'smile', tilt: -4 * pr(f, K.picture + 1.2, K.picture + 1.6), armR: {a: 8 + 40 * pr(f, K.picture + 0.2, K.picture + 0.6) * (1 - pr(f, K.picture + 1.1, K.picture + 1.5)), b: 10 + 70 * pr(f, K.picture + 0.2, K.picture + 0.6) * (1 - pr(f, K.picture + 1.1, K.picture + 1.5))}}} frame={f} seed={23} x={1250} y={1080} scale={1.35} />
       </Layer>
       <Tag x={90} y={110} text="Possible future · illustration" k={pr(f, K.picture + 0.2, K.picture + 0.6)} size={30} />
     </g>
@@ -533,8 +534,7 @@ export const H4Lips: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="h4" cam={glide(f, T('Its mouth follows'), T('and its expression'), [{x: 960, y: 420, z: 1.1}, {x: 960, y: 700, z: 1.1}])} st={st} x={960} y={300} s={6.2} veil={0.45} bg="home" bgDx={-200} bgDy={60} />
-      <rect x={1340} y={900} width={500} height={120} rx={18} fill="#141B22" opacity={0.9} />
-      <Wave x={1365} y={960} w={450} h={44} t0={t - 2} t1={t} fn={voiceTr} color="#58B6AE" />
+      <Wave x={1365} y={990} w={450} h={36} t0={t - 2} t1={t} fn={voiceTr} color="#3E8F88" />
     </g>
   );
 };

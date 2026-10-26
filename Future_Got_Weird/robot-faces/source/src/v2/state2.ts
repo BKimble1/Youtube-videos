@@ -9,7 +9,7 @@ import {RobotState} from '../art/Robot';
 import {mixExpr, VX} from '../art/Visitor';
 import {FPS, T} from '../lib/core';
 import {robotAt, visitorAt, K, SPEECH} from '../state';
-import {robotVis, Track} from '../lib/visemes';
+import {humanVis, robotVis, Track} from '../lib/visemes';
 
 const ss = (t: number, a: number, b: number) => smooth(clamp((t - a) / (b - a)));
 const blinkAt = (t: number, times: number[], dur = 0.2) => {
@@ -51,8 +51,13 @@ const applyMouth = (st: RobotState, v: Partial<RobotState>, k = 1) => {
   (['smile', 'open', 'round', 'press', 'wide', 'asym', 'brow'] as const).forEach((key) => ((st as any)[key] = (st as any)[key] * (1 - k) + ((v as any)[key] ?? 0) * k));
 };
 
-/** frame 0: the robot's mouth is already moving (silent shapes, not the narration), eyes on the camera */
-export const OPEN_TRACK: Track = [[-1, 'N'], [0, 'O'], [0.3, 'E'], [0.54, 'B'], [0.72, 'A'], [1.0, 'W'], [1.26, 'E'], [1.52, 'rest']];
+/** frame 0: the robot's mouth is already moving (silent shapes, not the narration), eyes on the camera; the shapes
+ *  run on into the cutaway (the motor is seen moving them) */
+export const OPEN_TRACK: Track = [[-1, 'N'], [0, 'O'], [0.26, 'E'], [0.5, 'B'], [0.64, 'A'], [0.92, 'W'], [1.16, 'E'], [1.42, 'N'], [1.6, 'A'], [1.86, 'rest'], [2.2, 'O'], [2.5, 'E'], [2.74, 'B'], [2.88, 'A'], [3.14, 'W'], [3.4, 'rest']];
+/** "That takes more than moving the corners of a mouth": he says something (silent); the robot copies the shapes */
+export const VSPEAK_T0 = T('That takes more') + 0.05;
+export const VSPEAK: Track = [[0, 'rest'], [VSPEAK_T0, 'N'], [VSPEAK_T0 + 0.15, 'O'], [VSPEAK_T0 + 0.34, 'B'], [VSPEAK_T0 + 0.46, 'A'], [VSPEAK_T0 + 0.66, 'E'], [VSPEAK_T0 + 0.84, 'W'], [VSPEAK_T0 + 1.0, 'rest']];
+export const COPY2 = 1.2;
 /** "copy human lips": the person's shapes, then the robot's copy of them 0.62 s later */
 export const LIPS_H: Track = [[0, 'rest'], [T('copy human') + 0.03, 'B'], [T('copy human') + 0.16, 'A'], [T('copy human') + 0.3, 'W'], [T('copy human') + 0.44, 'E'], [T('copy human') + 0.56, 'rest']];
 export const COPY_DT = 0.62;
@@ -79,26 +84,28 @@ export const rob2 = (f: number): RobotState => {
     const e = exchange2(t, 0);
     // the response smile, then (offscreen, during the stiff face) a relax, then the full lift in its close-up
     let smile = 0.04 + 0.92 * e.r;
-    smile -= 0.62 * (ss(t, K.corner + 0.3, K.corner + 1.4) - ss(t, K.corner + 2.05, K.corner + 2.65));
-    if (t < T('smile before')) {
-      // the opening shapes, eyes on the camera (until the cut to the pair)
-      st.smile = smile;
-      const v = robotVis(t, OPEN_TRACK, 0.08);
-      const k = 1 - ss(t, 1.45, 1.75);
-      applyMouth(st, v, k);
-      st.smile = Math.max(st.smile, 0.04);
+    if (t < T('Then it tries')) {
+      // V3: already mid-speech on frame 0 (silent shapes, not the narration); eyes make small coordinated shifts,
+      // the brows lift with a change of expression, then its gaze turns toward the person (screen-right)
+      st.smile = 0.06 + 0.14 * (ss(t, 1.05, 1.45) - ss(t, 1.95, 2.4));
+      const v = robotVis(t, OPEN_TRACK, 0.09);
+      const k = 1 - ss(t, 3.45, 3.8);
+      applyMouth(st, {...v, smile: Math.max(v.smile, st.smile)}, k);
+      st.brow = 0.55 * (ss(t, 0.95, 1.35) - ss(t, 1.9, 2.4));
       st.yaw = 0;
-      st.gx = 0;
-      st.gy = 0;
+      st.gx = 0.1 * (ss(t, 0.62, 0.7) - ss(t, 1.4, 1.48)) - 0.08 * (ss(t, 1.4, 1.48) - ss(t, 2.2, 2.28)) + 0.55 * ss(t, 2.3, 2.5);
+      st.gy = 0.06 * (ss(t, 0.62, 0.7) - ss(t, 1.4, 1.48));
       return st;
     }
     if (t < T('Researchers')) {
       st.yaw = 40;
       st.gx = 0.6;
-      // the gaze dips to his mouth as his cue forms, then back to his eyes
-      st.gy = -0.05 + 0.32 * (ss(t, 2.3, 2.6) - ss(t, 3.2, 3.5));
-      st.smile = smile;
+      st.gy = -0.05;
+      st.smile = smile * (1 - 0.65 * ss(t, K.corner - 0.1, K.corner + 0.4));
       st.open = 0.04 * e.r;
+      // "That takes more than moving the corners of a mouth.": it copies the shapes he just said
+      const ck = ss(t, VSPEAK_T0 + COPY2 - 0.08, VSPEAK_T0 + COPY2) * (1 - ss(t, T('Researchers') - 0.35, T('Researchers') - 0.1));
+      if (ck > 0) applyMouth(st, {...robotVis(t - COPY2, VSPEAK, 0.07), brow: 0.15}, ck);
       return st;
     }
     // at the mirror
@@ -141,6 +148,11 @@ export const rob2 = (f: number): RobotState => {
     const lk = ss(t, END - 1.3, END - 1.1);
     if (lk > 0) applyMouth(st, {...robotVis(t, END_TRACK, 0.1), brow: st.brow, smile: Math.max(0.2, st.smile * 0.6)}, lk);
     st.blink = blinkAt(t, [CB + 0.9, K.deciding + 0.45]);
+    return st;
+  }
+  // "That matters because flexible skin moves differently from a rigid metal part.": the corner motor pulls twice
+  if (t >= K.skin && t < K.pull) {
+    st.smile = 0.55 * (ss(t, T('flexible skin') - 0.1, T('flexible skin') + 0.35) - ss(t, T('differently') - 0.1, T('differently') + 0.3)) + 0.45 * (ss(t, T('metal part.') - 0.2, T('metal part.') + 0.2) - ss(t, K.pull - 0.4, K.pull - 0.05));
     return st;
   }
   // "create the shapes it needs.": the sections close and it makes distinct expressions, one after another
@@ -264,13 +276,20 @@ export const vis2 = (f: number): {expr: Expr; blink: number} => {
   if (t < OPEN_END) {
     const e = exchange2(t, 0);
     let x = mixExpr(mixExpr(VX.rest, VX.cue, e.vc), VX.smile, e.vs);
-    // the stiff face's grin: his smile drops into a wary recoil, then settles
-    x = mixExpr(x, VX.rest, ss(t, K.corner, K.corner + 0.6));
-    x = mixExpr(x, WARY, ss(t, OLDBOT.grinOn + 0.35, OLDBOT.grinOn + 0.6) * (1 - ss(t, K.corner + 2.1, K.corner + 2.6)));
+    // as its smile arrives with his: a small, pleased surprise (brows up, eyes open)
+    const sp = ss(t, 6.05, 6.5) * (1 - ss(t, 7.2, 7.7));
+    x = {...x, browIn: x.browIn + 0.5 * sp, lid: x.lid * (1 - 0.8 * sp), pupil: 1 - 0.12 * sp};
+    // he says something to it (silent); his smile settles to a small one
+    const sk = ss(t, K.corner - 0.15, K.corner + 0.05) * (1 - ss(t, VSPEAK_T0 + 1.0, VSPEAK_T0 + 1.3));
+    x = mixExpr(x, {...VX.rest, smile: 0.3, gx: -0.75}, ss(t, K.corner - 0.3, K.corner + 0.2) * (1 - ss(t, PRED.cue - 1.5, PRED.cue - 0.8)));
+    if (sk > 0) {
+      const hv = humanVis(t, VSPEAK, 0.06);
+      x = {...x, open: x.open * (1 - sk) + hv.open * sk, wide: x.wide + (hv.wide - 1) * sk * 0.7, teeth: x.teeth * (1 - sk) + hv.teeth * sk};
+    }
     // "predict an expression as it begins": a new cue, then the smile
     x = mixExpr(x, VX.cue, ss(t, PRED.cue, PRED.visible));
     x = mixExpr(x, VX.smile, ss(t, PRED.visible, PRED.full) * (1 - ss(t, K.mirrorWord, K.columbia)));
-    return {expr: x, blink: blinkAt(t, [0.75, 5.0, 9.6, 16.2])};
+    return {expr: x, blink: blinkAt(t, [0.75, 5.0, 9.9, 16.2])};
   }
   if (t >= CB) {
     const e = cbExchange(t);

@@ -6,7 +6,8 @@ import {INK} from '../dc/ink';
 import {clamp, fmt, lerp, smooth} from '../dc/math';
 import {Bench, ControlBox, Shadow} from '../art/Lab';
 import {Robot, RobotState, RobotSupport, RPAL} from '../art/Robot';
-import {Tag, UI, Wave} from '../art/Ui';
+import {UI, Wave} from '../art/Ui';
+import {Tag} from './text3';
 import {VX} from '../art/Visitor';
 import {Cam, camPath, Layer} from '../lib/cam';
 import {pr, T} from '../lib/core';
@@ -108,15 +109,6 @@ export const BananaHuman: React.FC<{f: number}> = ({f}) => {
       <Layer cam={still(f, K.banana, K.yourLips, 1.04)} depth={1}>
         <MouthHead id="bh" R={1150} turn={0.12} mx={960} my={560} expr={expr} />
       </Layer>
-      {SYL.map(([s, t0], i) => {
-        const on = pr(f, t0 - 0.05, t0 + 0.02);
-        const hot = t >= t0 - 0.03 && t < (SYL[i + 1]?.[1] ?? 34.02);
-        return on > 0.01 ? (
-          <text key={i} x={760 + i * 200} y={1010} textAnchor="middle" fontFamily="Fredoka Variable" fontWeight={600} fontSize={hot ? 74 : 62} fill={hot ? UI.coral : UI.ink} opacity={on}>
-            {s}
-          </text>
-        ) : null;
-      })}
     </g>
   );
 };
@@ -150,17 +142,8 @@ export const LipsMoves: React.FC<{f: number}> = ({f}) => {
         <Back id="lm-bk" bg="lab" veil={0.45} dx={-1600} dy={0} s={1.2} />
       </Layer>
       <Layer cam={cam} depth={1}>
-        <MouthHead id="lm" R={360} turn={0.5} mx={1000} my={600} expr={expr} />
+        <MouthHead id="lm" R={360 + 60 * pr(f, K.yourLips, K.imagine)} turn={0.2 + 0.65 * pr(f, K.yourLips, K.imagine)} mx={1000} my={600} expr={expr} />
       </Layer>
-      {words.map(([w, a, b, kind]) => {
-        const k = pr(f, a - 0.05, a + 0.15) * (1 - pr(f, b - 0.1, b + 0.05));
-        return (
-          <g key={w}>
-            <MoveArrows x={1000} y={600} kind={kind} k={k} />
-            <Tag x={1000} y={1000} text={w} k={k} size={40} anchor="middle" tone="light" />
-          </g>
-        );
-      })}
     </g>
   );
 };
@@ -177,11 +160,6 @@ export const RobotTry: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="rt" cam={drift(f, K.imagine, K.jaw, CAM0, {x: 1000, y: 590, z: 1.05})} st={st} x={1000} y={186} s={5.8} veil={0.45} bgDx={-500} cheek={{k, side: -1, r: 1.25}} over={<g transform={`translate(1000 186) scale(5.8)`}><CheekSection id="rt-ck2" st={st} k={k} side={1} r={1.25} hot={false} /></g>} />
-      {insetK > 0.01 && (
-        <Panel id="rt-in" x={1570} y={70} w={300} h={240} bg="#F3E4CC" k={insetK}>
-          <MouthHead id="rt-h" R={250} turn={0.1} mx={1720} my={200} expr={target} />
-        </Panel>
-      )}
       <Tag x={1720} y={350} text="the shape it needs" k={insetK} size={26} anchor="middle" tone="light" />
       <Tag x={90} y={110} text="Untrained: motors adjusted by guesswork" k={pr(f, T('by adjusting'), T('by adjusting') + 0.4)} size={26} tone="warm" />
     </g>
@@ -259,17 +237,7 @@ export const FollowSpeech: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="fs" cam={drift(f, K.follow, K.practiced, {x: 960, y: 500, z: 1}, {x: 960, y: 500, z: 1.04})} st={st} x={960} y={40} s={6.2} veil={0.45} bgDx={-800} />
-      <rect x={300} y={830} width={1320} height={190} rx={24} fill={UI.paper} opacity={0.94 * wk} stroke={INK} strokeWidth={3} strokeOpacity={wk} />
-      <Wave x={360} y={925} w={1200} h={60} t0={REPLAY.a} t1={REPLAY.b} cursor={rt} k={wk} />
-      {SYL.map(([s, t0], i) => {
-        const x = 360 + ((t0 - REPLAY.a) / (REPLAY.b - REPLAY.a)) * 1200 + 60;
-        const hot = rt >= t0 - 0.02 && rt < (SYL[i + 1]?.[1] ?? 34.02);
-        return (
-          <text key={i} x={fmt(x)} y={870} textAnchor="middle" fontFamily="Fredoka Variable" fontWeight={600} fontSize={34} fill={hot ? UI.coral : UI.ink} opacity={wk}>
-            {s}
-          </text>
-        );
-      })}
+      <Wave x={360} y={985} w={1200} h={42} t0={REPLAY.a} t1={REPLAY.b} cursor={rt} k={wk} color="#3E8F88" />
       <Tag x={90} y={110} text="Speech sample: “banana”, slowed" k={wk} size={26} />
     </g>
   );

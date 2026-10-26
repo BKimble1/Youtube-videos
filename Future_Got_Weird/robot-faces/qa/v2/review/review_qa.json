@@ -9,14 +9,14 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "nb_frames": "6400",
-  "bit_rate": "2448322"
+  "bit_rate": "2599401"
  },
  "audio": [
   {
    "codec_name": "aac",
    "sample_rate": "48000",
    "channels": 2,
-   "bit_rate": "270265",
+   "bit_rate": "270821",
    "duration": "213.333000"
   }
  ],
@@ -31,10 +31,10 @@
  "frozen_segments_over_2_5s": [],
  "audio_vs_narration": {
   "best_lag_ms": 0,
-  "corr": 0.9233
+  "corr": 0.9228
  },
  "asr_pocketsphinx": {
-  "wer_vs_locked_script": 0.21,
+  "wer_vs_locked_script": 0.227,
   "note": "free recognition with the bundled US model; noisy on this voice; supporting only"
  },
  "srt": {

@@ -52,9 +52,11 @@ export const LabTwo: React.FC<{
   overRobot?: React.ReactNode;
   overVisitor?: React.ReactNode;
   xray?: number;
+  xrayDark?: number;
+  cheek?: {k: number; side?: 1 | -1; r?: number};
   cut?: Cutaway;
   veil?: number;
-}> = ({id, cam, robot, vis, visPose, lHand = HAND_RELAXED, rHand = HAND_RELAXED, holdL, holdR, onBench, overRobot, overVisitor, xray, cut, veil = 0.08}) => (
+}> = ({id, cam, robot, vis, visPose, lHand = HAND_RELAXED, rHand = HAND_RELAXED, holdL, holdR, onBench, overRobot, overVisitor, xray, xrayDark, cheek, cut, veil = 0.08}) => (
   <g>
     <Layer cam={cam} depth={1.9}>
       <Back id={`${id}-bk`} bg="lab" veil={veil} dx={-60} dy={40} />
@@ -70,7 +72,12 @@ export const LabTwo: React.FC<{
       <path d={`M320,${INT.benchY + 40} C380,${INT.benchY + 60} 450,${INT.benchY + 58} ${INT.robot.x - 80},${INT.benchY + 44}`} fill="none" stroke="#2B313A" strokeWidth={7} strokeLinecap="round" />
       {onBench}
       <RobotSupport id={`${id}-sup`} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} yaw={robot.yaw} postLen={POST_INT} />
-      <Robot id={`${id}-rob`} st={robot} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} xray={xray} xrayHot={['corner', 'cheek', 'lip']} cut={cut} />
+      <Robot id={`${id}-rob`} st={robot} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} xray={xray} xrayDark={xrayDark} xrayHot={['corner', 'cheek', 'lip']} cut={cut} />
+      {cheek && cheek.k > 0.001 && (
+        <g transform={`translate(${INT.robot.x} ${INT.robot.y}) scale(${INT.robot.s})`}>
+          <CheekSection id={`${id}-ck`} st={robot} k={cheek.k} side={cheek.side ?? -1} r={cheek.r ?? 1} />
+        </g>
+      )}
       {overRobot}
     </Layer>
   </g>
@@ -93,7 +100,7 @@ export const VisitorCU: React.FC<{id: string; cam: Cam; vis: Vis; bg?: Bg; hx?: 
 );
 
 /** a robot single: head on its support at (x, y), scale s, seen at `yaw`; optional local cheek section */
-export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x?: number; y?: number; s?: number; veil?: number; bgDx?: number; bgDy?: number; bgS?: number; cheek?: {k: number; side?: 1 | -1; hot?: boolean; r?: number}; xray?: number; xrayHot?: string[]; xrayDark?: number; cut?: Cutaway; lensGlow?: number; grid?: number; gridAt?: {u: number; v: number; r: number}; fore?: React.ReactNode; over?: React.ReactNode; behind?: React.ReactNode; benchY?: number}> = ({
+export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x?: number; y?: number; s?: number; veil?: number; bgDx?: number; bgDy?: number; bgS?: number; cheek?: {k: number; side?: 1 | -1; hot?: boolean; r?: number; u?: number}; xray?: number; xrayHot?: string[]; xrayDark?: number; cut?: Cutaway; lensGlow?: number; grid?: number; gridAt?: {u: number; v: number; r: number}; fore?: React.ReactNode; over?: React.ReactNode; behind?: React.ReactNode; benchY?: number}> = ({
   id, cam, st, bg = 'lab', x = 860, y = 520, s = 3.1, veil = 0.3, bgDx = 700, bgDy = 120, bgS = 1.1, cheek, xray, xrayHot, xrayDark, cut, lensGlow, grid, gridAt, fore, over, behind, benchY,
 }) => {
   const post = benchY !== undefined ? Math.max(0, (benchY + 36 - y) / s - 206) : 600;
@@ -110,7 +117,7 @@ export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x
         <Robot id={`${id}-r`} st={st} x={x} y={y} s={s} xray={xray} xrayHot={xrayHot} xrayDark={xrayDark} cut={cut} lensGlow={lensGlow} grid={grid} gridAt={gridAt} />
         {cheek && cheek.k > 0.001 && (
           <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
-            <CheekSection id={`${id}-ck`} st={st} k={cheek.k} side={cheek.side ?? -1} hot={cheek.hot ?? true} r={cheek.r ?? 1} />
+            <CheekSection id={`${id}-ck`} st={st} k={cheek.k} side={cheek.side ?? -1} hot={cheek.hot ?? true} r={cheek.r ?? 1} u={cheek.u ?? 66} />
           </g>
         )}
         {over}
