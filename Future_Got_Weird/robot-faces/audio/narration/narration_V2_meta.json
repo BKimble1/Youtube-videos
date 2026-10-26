@@ -1,0 +1,7 @@
+{
+ "file": "audio/narration/FGW_Robot_Faces_narration_V2.wav",
+ "from": "FGW_Robot_Faces_narration_V1.wav, first 6400 frames (213.333 s): only trailing silence removed (max |sample| in the removed tail < 1e-4); word timings identical to V1",
+ "frames_30fps": 6400,
+ "duration_s": 213.33333333333334,
+ "sha256": "e2a9bc9b9d9ca7d3bcc34b47782f7f8578a8fb7763da9fc7ab258c05cf29ed97"
+}
