@@ -3,12 +3,13 @@
 (ffmpeg ebur128), black / freeze detection, audio sync against the mix, the loop seam (last frame vs first frame, and
 the seam's frame-to-frame change against its neighbours), and a 3x loop file for playback review.
 ASR of the MP4's own audio is tools/asr_sherpa.py (run separately).
-usage: python3 tools/qa.py <mp4> <out_prefix>"""
+usage: python3 tools/qa.py <mp4> <out_prefix> [mix name in source/public/audio, default mix]"""
 import json, os, re, subprocess, sys
 import numpy as np, soundfile as sf
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 mp4, pre = sys.argv[1], sys.argv[2]
+MIX = sys.argv[3] if len(sys.argv) > 3 else 'mix'
 R = {'file': os.path.relpath(mp4, EP)}
 run = lambda *a: subprocess.run(a, capture_output=True, text=True)
 pr = json.loads(run('ffprobe', '-v', 'error', '-count_frames', '-show_streams', '-show_format', '-of', 'json', mp4).stdout)
@@ -27,7 +28,7 @@ R['freezes_ge_0.5s'] = re.findall(r'freeze_start: \S+', fd)
 # sync: the MP4's audio against the mix
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-ac', '1', '-ar', '48000', '-f', 'f32le', '-'], capture_output=True).stdout
 a = np.frombuffer(raw, np.float32).astype(np.float64)
-m, _ = sf.read(os.path.join(EP, 'source/public/audio/mix.wav')); m = m.mean(1)
+m, _ = sf.read(os.path.join(EP, f'source/public/audio/{MIX}.wav')); m = m.mean(1)
 n = min(len(a), len(m), 48000 * 8)
 cc = np.fft.irfft(np.fft.rfft(a[:n], 2 * n) * np.conj(np.fft.rfft(m[:n], 2 * n)))
 lag = int(np.argmax(cc)); lag = lag - 2 * n if lag > n else lag

@@ -6,6 +6,9 @@ import {Composition} from 'remotion';
 import {Film, FilmStill, Sheet} from './Film';
 import {Man} from './dc/Man';
 import {SiteWorld} from './scenes/Site';
+import {Skeleton} from './art/Skeleton';
+import {ShotTest, Test3D} from './v2/Test3D';
+import {FilmStillV2, FilmV2, SheetV2} from './v2/Film2';
 import {BOLT, CAM0, loopS} from './world/site';
 import {BASE, E_FOCUS, E_FRAZZLED, E_JOLT, E_TRACK, E_WARY, H_REST, LEAD, OPERATOR, P} from './cast';
 
@@ -38,13 +41,14 @@ const SiteTest: React.FC<{cams: {x: number; y: number; z: number}[]; s: number; 
   </AbsoluteFill>
 );
 
-const PoseTest: React.FC<{ps: Record<string, number>[]; op: boolean}> = ({ps, op}) => (
+const PoseTest: React.FC<{ps: Record<string, number>[]; op: boolean; skel?: boolean}> = ({ps, op, skel}) => (
   <AbsoluteFill style={{backgroundColor: '#3A4E5C'}}>
     {ps.map((q, i) => (
       <div key={i} style={{position: 'absolute', left: (i % 2) * 540, top: Math.floor(i / 2) * 640, width: 1080, height: 1920, transform: 'scale(0.5)', transformOrigin: '0 0', overflow: 'hidden'}}>
         <svg width={1080} height={1920} viewBox="0 0 1080 1920">
           <g transform={op ? 'translate(1080 0) scale(-1 1)' : undefined}>
             <Man id={`pt${i}`} pose={P({x: 540, y: 820, s: 0.95, ...q})} expr={E_WARY} lHand={H_REST} rHand={H_REST} outfit={op ? OPERATOR : LEAD} />
+            {skel && <g opacity={0.75}><Skeleton pose={P({x: 540, y: 820, s: 0.95, ...q})} /></g>}
           </g>
           <text x={20} y={80} fontSize={60} fill="#FF0">{i}</text>
         </svg>
@@ -58,7 +62,12 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="LightningLaser" component={Film} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix' as string | false, captions: true}} />
     <Still id="FilmStill" component={FilmStill} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="Sheet" component={Sheet} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
-    <Still id="PoseTest" component={PoseTest} width={W} height={1920} defaultProps={{ps: [{}], op: false}} />
+    <Still id="PoseTest" component={PoseTest} width={W} height={1920} defaultProps={{ps: [{}], op: false, skel: false}} />
+    <Composition id="LightningLaserV2" component={FilmV2} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
+    <Still id="FilmStillV2" component={FilmStillV2} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV2" component={SheetV2} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="ShotTest" component={ShotTest} width={W} height={1280} defaultProps={{items: [{id: 'H1', t: 0}]}} />
+    <Still id="Test3D" component={Test3D} width={W} height={1280} defaultProps={{names: ['Hf', 'Hk', 'H2e', 'E1g', 'T2', 'W'], sFrac: 0.7, flash: 0.5}} />
     <Still id="CastSheet" component={CastSheet} width={W} height={1920} />
     <Still id="SiteTest" component={SiteTest} width={W} height={1920} defaultProps={{cams: [{x: 540, y: 960, z: 1}, {x: 400, y: 1640, z: 2.6}, {x: CAM0.x, y: CAM0.y, z: CAM0.z}, {x: 720, y: 640, z: 2.6}], s: 700, flash: 0.5}} />
   </>

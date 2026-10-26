@@ -1,5 +1,46 @@
 # Future Got Weird: Lightning Laser
 
+## V2 (second pass)
+
+**Status (26 Oct 2026):** the V2 review is rendered from source at 1080×1920, 30 fps, and checked from the file
+(`production/V2_QA_REPORT.md`). **Not published.** The narration, its timing and the 33.50 s duration are V1's,
+unchanged (the same voice file, gain only).
+
+What changed from V1:
+- 25 compositions instead of 14.
+- One 3D site model, so the tower, beam and bolt agree from every angle.
+- A stronger hook.
+- A firing sequence: activation, panel, optics cutaway, exit window, beam past the mast.
+- Four distinct molecular scenes.
+- A rebuilt vignette: balanced stance, skeleton inside the same outline, quick jolt, no badge.
+- A rebuilt operator: real fingertip contact, the panel responds, a restrike lights her face.
+- A house rod lit by a distant strike, matched to the tower tip.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920, 30 fps, 1005 frames, 33.50 s, captions burned in, seamless loop | `exports/FGW_Lightning_Laser_V2_REVIEW_1080x1920.mp4` |
+| Shots and transitions | `production/V2_SHOTS_AND_TRANSITIONS.md` |
+| QA report | `production/V2_QA_REPORT.md`, `qa/v2/` |
+| Mix (same narration; effects retimed to the V2 picture; −14.0 LUFS) | `audio/mix/FGW_Lightning_Laser_V2_mix.wav`, `audio/mix/mix_v2_measure.json`, `audio/sfx_cues_v2.json` |
+| Editable source | `source/src/v2/` (composition `LightningLaserV2`), registered in `source/src/Root.tsx` |
+
+V2 source (`source/src/v2/`):
+
+| File | What |
+|---|---|
+| `timeline2.ts` | shot boundaries, the loop and demonstration leader growth |
+| `p3.ts`, `Scene3D.tsx`, `shots3d.tsx` | the 3D site model (metres), projection, sky/summit/tower/discharge/beam, per-shot cameras and states |
+| `LaserArt.tsx`, `Composite.tsx` | the detailed 2D apparatus and the shots that place it on the 3D view (H2, F4, E1) |
+| `Console2.tsx` | the shelter: panel, reach-and-press solver, window view, lighting, desk props (C1, C2, F1) |
+| `Vignette2.tsx` | the imagined strike and the air above his head (V1, M1) |
+| `Firing2.tsx` | the enclosure cutaway and the exit window (F2, F3) |
+| `Molecular2.tsx` | the molecular scenes (M2–M5) |
+| `Rod2.tsx` | the house rod (R1, R2) |
+| `shots2.tsx`, `Film2.tsx`, `captions2.ts` | routing, the composition and stills (`FilmStillV2`, `SheetV2`), caption heights |
+
+Rebuild V2: `./tools/build_all_v2.sh` (mix → review render → file QA + motion scan; `master` adds a 2160×3840
+render). Contact sheets: `cd source && ./sheet2.sh out.png "f1,f2,..." [true]`.
+
 ## V1
 
 **Status (26 Oct 2026):** the V1 review (1080×1920) and a native 2160×3840 master were rendered from source and
@@ -55,4 +96,4 @@ python3 tools/strips.py exports/FGW_Lightning_Laser_V1_REVIEW_1080x1920.mp4 qa/s
 
 Contact sheets while working: `cd source && ./sheet.sh out.png "f1,f2,..." [true]`. Media are stored as plain git
 blobs (the episode `.gitattributes` turns LFS off, as in the other FGW episodes); `source/public/audio/*.wav`,
-`audio/mix/stems/` and the 3× loop review file (`qa/*_loop_x3.mp4`, about 90 MB) are regenerated and not committed.
+`audio/mix/stems/`, `audio/mix/stems_v2/` and the 3× loop review file (`qa/*_loop_x3.mp4`, about 90 MB) are regenerated and not committed.

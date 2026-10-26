@@ -6,3 +6,4 @@ tools/__pycache__/
 source/public/audio/*.wav
 audio/mix/stems/
 qa/*_loop_x3.mp4
+audio/mix/stems_v2/
