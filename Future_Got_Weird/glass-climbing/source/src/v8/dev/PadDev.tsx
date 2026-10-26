@@ -4,7 +4,9 @@ import {Still} from 'remotion';
 import {Layer} from '../../dc/camera';
 import {H, W} from '../../lib';
 import {allTiles, Pad3D, Pad3DState} from '../Pad8';
-import {ContactScene8} from '../PadScenes8';
+import {ContactScene8, ContactView, SurfaceScene8} from '../PadScenes8';
+import {ARM_HANG, ARM_REACH} from '../Pad8';
+import {Cam} from '../../dc/camera';
 import {H_BAR} from '../../world/rig';
 
 const Cell: React.FC<{x: number; y: number; s: number; children: React.ReactNode}> = ({x, y, s, children}) => (
@@ -73,11 +75,24 @@ export const SheetA: React.FC = () => (
   <Sheet cols={2} scale={0.5} cells={[0.6, 0.75, 0.9, 1].map((l, i) => <ContactScene8 key={i} id={`a${i}`} load={l} drift={i / 3} />)} />
 );
 
+type VA = {view: ContactView; cam: Cam; arm?: 'hang' | 'reach'; load?: number};
+export const ViewsA: React.FC<{v: VA[]}> = ({v}) => (
+  <Sheet cols={2} scale={0.5} cells={v.map((q, i) => <ContactScene8 key={i} id={`va${i}`} load={q.load ?? 1} view={q.view} cam={q.cam} arm={q.arm === 'hang' ? ARM_HANG : ARM_REACH} />)} />
+);
+
+export const SceneB: React.FC<{gap: number; load: number}> = ({gap, load}) => <SurfaceScene8 id="sb" gap={gap} load={load} />;
+export const SheetB: React.FC = () => (
+  <Sheet cols={2} scale={0.5} cells={[[30, 0], [0, 0], [0, 0.45], [0, 1]].map(([g, l], i) => <SurfaceScene8 key={i} id={`b${i}`} gap={g} load={l} />)} />
+);
+
 export const DevRoot: React.FC = () => (
   <>
     <Still id="PadViews" component={PadViews} width={1080} height={1920} />
     <Still id="SceneA" component={SceneA} width={1080} height={1920} defaultProps={{load: 1, drift: 0}} />
     <Still id="SheetA" component={SheetA} width={1080} height={1920} />
+    <Still id="SceneB" component={SceneB} width={1080} height={1920} defaultProps={{gap: 0, load: 0.5}} />
+    <Still id="SheetB" component={SheetB} width={1080} height={1920} />
+    <Still id="ViewsA" component={ViewsA} width={1080} height={1920} defaultProps={{v: []}} />
     <Still id="PadBig" component={PadBig} width={1080} height={1920} defaultProps={{z: 5}} />
   </>
 );

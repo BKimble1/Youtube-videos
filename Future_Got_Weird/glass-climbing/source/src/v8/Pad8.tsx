@@ -463,7 +463,7 @@ const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 
     const ax = sub3(E, S);
     const HEM = 0.56;
     const hem = add3(S, mul3(ax, HEM));
-    const top = add3(S, mul3(ax, -0.25));
+    const top = add3(S, mul3(ax, -0.04));
     const sleeveC = '#FFFFFF';
     const sv = norm3(ax);
     const band = (t0: number, t1: number) => {
@@ -478,9 +478,17 @@ const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 
     const hemFacing = vw.facing(mul3(sv, 1), hem); // > 0: we look into the sleeve's opening
     const sleeveNode = (
       <g key="sl">
-        <Inked w={iw}>{tube(top, hem, 46, 43, 'slv', sleeveC)}</Inked>
+        <Inked w={iw}>
+          {tube(top, hem, 46, 43, 'slv', sleeveC)}
+          {(() => {
+            // the shoulder end is rounded (a dome), so it sits on the torso without a cut end
+            const T0 = pj(top);
+            const r = 46 * T0.s;
+            return <Blob id={`${id}-sdome`} d={`M${fmt(T0.x - r)},${fmt(T0.y)} a${fmt(r)},${fmt(r)} 0 1 0 ${fmt(2 * r)},0 a${fmt(r)},${fmt(r)} 0 1 0 ${fmt(-2 * r)},0 Z`} c={{x: T0.x, y: T0.y}} r={r * 1.2} color={sleeveC} k={0.5} />;
+          })()}
+        </Inked>
         <Deco>
-          {stripes && [band(-0.24, -0.08), band(0.08, 0.24), band(0.4, 0.53)].map((d, i) => d && <path key={i} d={d} fill="#FFC744" opacity={0.95} />)}
+          {stripes && [band(0.02, 0.17), band(0.32, 0.47)].map((d, i) => d && <path key={i} d={d} fill="#FFC744" opacity={0.95} />)}
           {/* the hem's opening: the inside of the sleeve, where we can see into it */}
           {hemFacing > 0 && <path d={`M${hemRing.map((q) => P(q)).join(' L')} Z`} fill={shade('#DCE3EA', 0.35)} opacity={clamp(hemFacing * 3)} />}
           <path d={`M${hemRing.map((q) => P(q)).join(' L')}`} fill="none" stroke="#B4C3D1" strokeWidth={fmt(iw * 0.35)} opacity={0.7} />
@@ -492,20 +500,17 @@ const GripNode: React.FC<{id: string; vw: PadView; vb: number; g: number; side: 
     // with its own outline, goes over the upper arm
     const palmBlob = <Blob key="pb" id={`${id}-palm`} d={palmPath} c={{x: pc.x, y: pc.y}} r={46 * pc.s} color={skin} k={0.9} />;
     const foreTube = tube(forearm.a, forearm.b, forearm.ra, forearm.rb, 'fa', skin);
-    const upTube = tube(upper.a, upper.b, upper.ra, upper.rb, 'ua', skin);
-    const Ep = pj(E);
-    const elbowBall = <Blob key="eb" id={`${id}-eb`} d={`M${fmt(Ep.x - 28.5 * Ep.s)},${fmt(Ep.y)} a${fmt(28.5 * Ep.s)},${fmt(28.5 * Ep.s)} 0 1 0 ${fmt(57 * Ep.s)},0 a${fmt(28.5 * Ep.s)},${fmt(28.5 * Ep.s)} 0 1 0 ${fmt(-57 * Ep.s)},0 Z`} c={{x: Ep.x, y: Ep.y}} r={30 * Ep.s} color={skin} k={0.6} />;
-    const armNode = (
-      <g>
-        <Inked w={iw}>
-          {upD < foreD ? upTube : foreTube}
-          {elbowBall}
-          {upD < foreD ? foreTube : upTube}
-          {palmBlob}
-        </Inked>
-        {sleeveNode}
-      </g>
+    const upTube = tube(upper.a, lerp3(upper.a, upper.b, 1 - HEM + 0.02), upper.ra, lerp(upper.ra, upper.rb, 1 - HEM), 'ua', skin);
+    // where we look into the sleeve's opening, the arm comes out of it toward us (sleeve first); otherwise the sleeve
+    // covers the arm where it goes in
+    const armBody = (
+      <Inked key="ab" w={iw}>
+        {upD < foreD ? upTube : foreTube}
+        {upD < foreD ? foreTube : upTube}
+        {palmBlob}
+      </Inked>
     );
+    const armNode = hemFacing > 0 ? <g>{sleeveNode}{armBody}</g> : <g>{armBody}{sleeveNode}</g>;
     if (palmFront) armFront = armNode;
     else armBack = armNode;
   } else {
@@ -648,8 +653,27 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
       const t = {v: t0.v + slipOf(i), w: t0.w};
       const ct = clamp(st.contact[i] ?? 0);
       // seen side-on the tile's edge darkens as it wets; its face (seen through the glass) carries a contact patch
-      const col = faceSeen ? mix(COL.tileDry, COL.tileWet, 0.18 * ct) : mix(COL.tileDry, COL.tileWet, 0.82 * ct);
+      const col = faceSeen ? mix(COL.tileDry, COL.tileWet, 0.18 * ct) : mix('#CADDE2', '#93AFB8', 0.3 * ct);
       box(0, T_TILE, t.v - TILE / 2, t.v + TILE / 2, t.w - TILE / 2, t.w + TILE / 2, col, {stroke: 0.7});
+      if (!faceSeen && ct > 0.01) {
+        // the wet contact line: along the glass edge of each side of the tile we can see, darker as the contact grows
+        const edges: [P3, P3, P3][] = [
+          [{u: 0, v: -1, w: 0}, {u: 0.02, v: t.v - TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v - TILE / 2, w: t.w + TILE / 2}],
+          [{u: 0, v: 1, w: 0}, {u: 0.02, v: t.v + TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w + TILE / 2}],
+          [{u: 0, v: 0, w: -1}, {u: 0.02, v: t.v - TILE / 2, w: t.w - TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w - TILE / 2}],
+          [{u: 0, v: 0, w: 1}, {u: 0.02, v: t.v - TILE / 2, w: t.w + TILE / 2}, {u: 0.02, v: t.v + TILE / 2, w: t.w + TILE / 2}],
+        ];
+        const segs: string[] = [];
+        let dm = 0;
+        for (const [n, a, b] of edges) {
+          const mid = {u: 1.5, v: (a.v + b.v) / 2, w: (a.w + b.w) / 2};
+          if (vw.facing(n, mid) <= 0) continue;
+          const A = vw.world(a), B = vw.world(b);
+          segs.push(`M${P(A)} L${P(B)}`);
+          dm = A.d;
+        }
+        if (segs.length) items.push({d: dm + 0.05, g: grp, node: <path key={key++} d={segs.join(' ')} stroke={COL.tileWet} strokeWidth={fmt(ink * (0.8 + 1.8 * ct))} strokeLinecap="round" opacity={0.35 + 0.65 * ct} />});
+      }
       if (faceSeen) {
         const face = (v0: number, v1: number, w0: number, w1: number) => [{u: -0.02, v: v0, w: w0}, {u: -0.02, v: v0, w: w1}, {u: -0.02, v: v1, w: w1}, {u: -0.02, v: v1, w: w0}].map((p) => vw.world(p));
         const q0 = vw.world({u: 0, v: t.v, w: t.w});
@@ -695,7 +719,21 @@ const buildItems = (id: string, st: Pad3DState, vw: PadView, z: number, k: numbe
     }
   // ---- the frame: front plate, rim (each rim wall is near or far: does its outer face look toward the camera?)
   grp = G.plate;
-  box(T_TILE, U_PLATE, -PH / 2, PH / 2, -PW / 2, PW / 2, housing(COL.plate));
+  {
+    // the front plate: a slab chamfered on its glass side, so the tiles stand proud of it as their own thin layer
+    // (the contact edge) from any oblique view
+    const pc = housing(COL.plate);
+    const ci = 6;
+    const a = {v: PH / 2 - ci, w: PW / 2 - ci}, b = {v: PH / 2, w: PW / 2};
+    poly([{u: U_PLATE, v: -b.v, w: -b.w}, {u: U_PLATE, v: -b.v, w: b.w}, {u: U_PLATE, v: b.v, w: b.w}, {u: U_PLATE, v: b.v, w: -b.w}], {u: 1, v: 0, w: 0}, pc);
+    poly([{u: T_TILE, v: -a.v, w: -a.w}, {u: T_TILE, v: a.v, w: -a.w}, {u: T_TILE, v: a.v, w: a.w}, {u: T_TILE, v: -a.v, w: a.w}], {u: -1, v: 0, w: 0}, pc);
+    const k = Math.hypot(U_PLATE - T_TILE, ci);
+    const nu = -ci / k, nn = (U_PLATE - T_TILE) / k;
+    poly([{u: T_TILE, v: -a.v, w: a.w}, {u: T_TILE, v: a.v, w: a.w}, {u: U_PLATE, v: b.v, w: b.w}, {u: U_PLATE, v: -b.v, w: b.w}], {u: nu, v: 0, w: nn}, pc);
+    poly([{u: T_TILE, v: -a.v, w: -a.w}, {u: U_PLATE, v: -b.v, w: -b.w}, {u: U_PLATE, v: b.v, w: -b.w}, {u: T_TILE, v: a.v, w: -a.w}], {u: nu, v: 0, w: -nn}, pc);
+    poly([{u: T_TILE, v: a.v, w: -a.w}, {u: U_PLATE, v: b.v, w: -b.w}, {u: U_PLATE, v: b.v, w: b.w}, {u: T_TILE, v: a.v, w: a.w}], {u: nu, v: nn, w: 0}, pc);
+    poly([{u: T_TILE, v: -a.v, w: -a.w}, {u: T_TILE, v: -a.v, w: a.w}, {u: U_PLATE, v: -b.v, w: b.w}, {u: U_PLATE, v: -b.v, w: -b.w}], {u: nu, v: -nn, w: 0}, pc);
+  }
   const RW = 6;
   const near = (n: P3, p: P3) => vw.facing(n, p) > 0;
   const coverOff = st.cover < 0.999;
@@ -1026,11 +1064,12 @@ const ContactShadow: React.FC<{id: string; st: Pad3DState; vw: PadView; z: numbe
   if (k <= 0.001) return null;
   const off = 3 + st.gap * 0.6;
   const blur = 4 + st.gap * 0.5;
+  // the sun is outside, above and to the +w side: the shadow falls down and toward -w
   const sh = (o: number, grow: number) => [
-    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: -PW / 2 + o - grow}),
-    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: PW / 2 + o + grow}),
-    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: PW / 2 + o + grow}),
-    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: -PW / 2 + o - grow}),
+    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: -PW / 2 - o - grow}),
+    vw.fixed({u: 0, v: -PH / 2 + o * 1.4 - grow, w: PW / 2 - o + grow}),
+    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: PW / 2 - o + grow}),
+    vw.fixed({u: 0, v: PH / 2 + o * 1.8 + st.slide + grow, w: -PW / 2 - o - grow}),
   ];
   const a = clamp(0.2 + 0.12 * st.load - st.gap * 0.008) * k;
   // the contact line: where the tiles' faces meet the glass (darkens with contact)

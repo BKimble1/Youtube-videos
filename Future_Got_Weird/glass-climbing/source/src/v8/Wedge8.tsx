@@ -73,6 +73,8 @@ export const WCOL = {
   brickDark: '#6A3020',
 };
 
+/** the sheet's face tone: the blades' roots and the moulded fillets share it, so the joint has no seam */
+const ROOT = lit(WCOL.sheet, 0.1);
 const RAD = Math.PI / 180;
 const PHI = WG.lean * RAD;
 const HALF_PI = Math.PI / 2;
@@ -178,17 +180,20 @@ const glassPose = (k: number): Pose => ({
   c: WG.strip * sm(0.05, 1, k),
   dy: REST.y + WG.slide * k,
 });
-const brickPose = (k: number, extra: number): Pose => ({
-  thR: PHI + WG.rootTurn * RAD * 0.4 * k,
-  thE: PHI + (HALF_PI - PHI) * WG.brickTurn * sm(0, 0.6, k),
+/** brick: k the load, `extra` the creep of the backing before the held tips let go (um), `strain` 0..1 of it */
+const brickPose = (k: number, extra: number, strain = 0): Pose => ({
+  thR: PHI + WG.rootTurn * RAD * (0.4 + 0.5 * strain) * k,
+  thE: PHI + (HALF_PI - PHI) * WG.brickTurn * (sm(0, 0.6, k) + 0.9 * strain),
   c: 0,
   dy: REST.y + WG.brickSlide * k + extra,
 });
+/** the held tips' strain during the creep before release (0..1) */
+const strainOf = (slip: number) => sm(0, 0.2, slip);
 
 /** the release of the touching brick tips over slip (0: held, 1: free) */
 const relOf = (slip: number) => sm(0.16, 0.36, slip);
 /** the brick slip's backing slide (um): a short creep while the tips hold, then the skid */
-const slipY = (slip: number) => WG.slipSlide * (0.18 * sm(0, 0.3, slip) + 0.82 * sm(0.2, 1, slip) ** 1.15);
+const slipY = (slip: number) => WG.slipSlide * (0.24 * sm(0, 0.26, slip) + 0.76 * sm(0.2, 1, slip) ** 1.15);
 
 export type Backing = {x: number; y: number; k: number};
 /** where the backing face is: x of its face, y its downward slide from rest (um), k the effective load */
@@ -201,7 +206,7 @@ export const backingAt = (st: WedgeState): Backing => {
     return {x: solveRootX({x: mg, y: 0}, glassPose(k)) + lift, y: WG.slide * sh, k};
   }
   const sy = slipY(slip);
-  const held = solveRootX({x: 0, y: 0}, brickPose(k, sy * k));
+  const held = solveRootX({x: 0, y: 0}, brickPose(k, sy * k, strainOf(slip) * k));
   const free = REST.x + WG.peel * sm(0.25, 0.95, slip);
   const r = relOf(slip);
   return {x: lerp(held, free, r) + lift, y: WG.brickSlide * sh + sy * sh, k};
@@ -240,7 +245,7 @@ const thick = (pts: V[], s: number[]) => {
 
 /** wedge i's blade for a state */
 export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): Blade => {
-  const ap = clamp(st.approach), sh = clamp(st.shear), slip = clamp(st.slip ?? 0);
+  const ap = clamp(st.approach), slip = clamp(st.slip ?? 0);
   const mg = st.molGap ?? 0;
   const k = B.k;
   const rootY = i * WG.pitch + REST.y + B.y;
@@ -274,14 +279,14 @@ export const bladeOf = (st: WedgeState, i: number, B: Backing = backingAt(st)): 
     return {grip: pts, back, root: pts[0], tip, i, contact: on > 0.001 ? {x: 0, y0: tip.y - 1.2, y1: tip.y + 1.2, k: on} : null};
   }
   const sy = slipY(slip);
-  const p = brickPose(k, sy * k);
+  const p = brickPose(k, sy * k, strainOf(slip) * k);
   const apex = {x: 0, y: i * WG.pitch};
   const Rh = {x: solveRootX(apex, p), y: apex.y + p.dy};
   const held = gripLine(Rh, p.thR, apex, p.thE, 0);
   const r = relOf(slip);
   // the flick: released, the blade springs back past its rest angle and settles (a damped swing over slip)
   const ds = Math.max(0, slip - 0.2);
-  const fl = 9 * RAD * Math.exp(-ds * 7) * Math.sin(ds * 26);
+  const fl = 15 * RAD * k * Math.exp(-ds * 5.5) * Math.sin(ds * 21);
   const free = restGrip(PHI - fl, R);
   const off = {x: R.x - Rh.x, y: R.y - Rh.y};
   const pts = guard(held.pts.map((q, j) => {
@@ -324,6 +329,9 @@ export const camAt = (p: V, z: number, sx = FACE_SX, sy = FOCUS_SY): Cam => ({x:
 export const WEDGE_CAM: Cam = camAt(FOCUS_P, 5.2);
 /** a slightly closer framing of the same (same glass face line, same focus point), for a slow push during the shear */
 export const WEDGE_CAM_CLOSE: Cam = camAt(FOCUS_P, 6.0);
+/** a brick framing at the section's scale: the apexes under wedges 1 and 4 at screen y 420 and 1356 (above the
+ *  caption band), the face at x = 340 */
+export const BRICK_CAM: Cam = camAt({x: 0, y: WG.pitch}, 5.2, FACE_SX, 420);
 
 // ------------------------------------------------------------------ drawing
 /** number formatting with enough decimals for the zoom, relative to an origin (deep zooms stay exact) */
@@ -461,7 +469,6 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
   const fillets: React.ReactNode[] = [];
   const faceSegs: string[] = [];
   let yFace = v.y0;
-  const tops: number[] = [];
   blades.forEach((b) => {
     // where the back face leaves the sheet face
     let top: V = b.back[0];
@@ -474,17 +481,15 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
         const ft = fillet(f, top, {x: 0, y: -1}, ub, 5.5);
         const ug = unit(b.grip[0], b.grip[3]);
         const fb = fillet(f, b.grip[0], {x: 0, y: 1}, ug, 3.2);
-        fillets.push(<path key={`ft${b.i}`} d={ft.fill} fill={WCOL.sheet} />, <path key={`fb${b.i}`} d={fb.fill} fill={WCOL.sheet} />);
+        fillets.push(<path key={`ft${b.i}`} d={ft.fill} fill={ROOT} />, <path key={`fb${b.i}`} d={fb.fill} fill={ROOT} />);
         faceSegs.push(`M${f.p({x: xS, y: yFace})} L${f.p({x: xS, y: top.y - 5.5})} ${ft.edge.replace(/^M[^Q]*/, '')}`);
         faceSegs.push(fb.edge);
         yFace = b.grip[0].y + 3.2;
-        tops.push(top.y);
         break;
       }
     }
   });
   faceSegs.push(`M${f.p({x: xS, y: yFace})} L${f.p({x: xS, y: v.y1})}`);
-  // the bottom fillet edges run from the face below the root up to the gripping face: draw them as their own paths
   const ord = [...blades].sort((a, b) => b.i - a.i);
   return (
     <g>
@@ -498,8 +503,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
             key={`c${b.i}`}
             d={(() => {
               const bw = Math.min(2.6, 13 / z);
-              const sx = st.surface === 'glass' ? 0 : 0;
-              return `M${f.p({x: sx, y: b.contact.y0})} L${f.p({x: sx, y: b.contact.y1})} L${f.p({x: sx - bw, y: b.contact.y1 - bw * 0.3})} L${f.p({x: sx - bw, y: b.contact.y0 + bw * 0.3})} Z`;
+              return `M${f.p({x: 0, y: b.contact.y0})} L${f.p({x: 0, y: b.contact.y1})} L${f.p({x: -bw, y: b.contact.y1 - bw * 0.3})} L${f.p({x: -bw, y: b.contact.y0 + bw * 0.3})} Z`;
             })()}
             fill={st.surface === 'glass' ? WCOL.contact : '#5A2618'}
             opacity={b.contact.k * (1 - sm(300, 3000, z)) * (b.i === fi ? 1 : 1 - 0.15 * fk)}
@@ -523,7 +527,8 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           .reverse()
           .map(f.p)
           .join(' L')} Z`;
-        const fill = mix(WCOL.wedge, '#FFFFFF', 0.35 * foc);
+        // the selected wedge a touch lighter, the others a touch quieter (no outline, no callout)
+        const fill = foc > 0 ? mix(WCOL.wedge, '#FFFFFF', 0.5 * foc) : mix(WCOL.wedge, WCOL.sheet, 0.22 * fk);
         // just inside the back face (toward the blade's interior)
         const rim = b.back.filter((_, j) => j > 6 && j < b.back.length - 4).map((q, j, arr) => {
           const u = unit(arr[Math.max(0, j - 1)], arr[Math.min(arr.length - 1, j + 1)]);
@@ -534,14 +539,14 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
           <g key={b.i}>
             <defs>
               <linearGradient id={`${id}-w${b.i}`} gradientUnits="userSpaceOnUse" x1={f.n(b.root.x - f.org.x)} y1={f.n(b.root.y - f.org.y)} x2={f.n(b.tip.x - f.org.x)} y2={f.n(b.tip.y - f.org.y)}>
-                <stop offset="0" stopColor={WCOL.sheet} />
-                <stop offset="0.3" stopColor={mix(WCOL.sheet, fill, 0.8)} />
+                <stop offset="0" stopColor={ROOT} />
+                <stop offset="0.3" stopColor={mix(ROOT, fill, 0.8)} />
                 <stop offset="0.6" stopColor={fill} />
                 <stop offset="1" stopColor={lit(fill, 0.25)} />
               </linearGradient>
             </defs>
             <path d={d} fill={`url(#${id}-w${b.i})`} stroke={INK} strokeWidth={f.n(ink * (1 + 0.15 * foc))} strokeLinejoin="round" />
-            {/* the lit (upper) face and the shaded gripping face, as thin inner edges */}
+            {/* the lit upper (back) face, as a thin inner edge */}
             <path d={f.line(rim)} fill="none" stroke="#FFFFFF" strokeWidth={f.n((1.6 + 0.8 * foc) / z)} opacity={0.4 + 0.5 * foc} strokeLinecap="round" />
           </g>
         );
@@ -549,7 +554,7 @@ export const WedgeContent: React.FC<{id: string; st: WedgeState; z: number; view
       {/* the backing: the silicone sheet (moves with the pull) and the tile's rigid plate behind it */}
       <defs>
         <linearGradient id={`${id}-sh`} gradientUnits="userSpaceOnUse" x1={f.n(xS - f.org.x)} y1="0" x2={f.n(xP - f.org.x)} y2="0">
-          <stop offset="0" stopColor={lit(WCOL.sheet, 0.12)} />
+          <stop offset="0" stopColor={ROOT} />
           <stop offset="0.3" stopColor={WCOL.sheet} />
           <stop offset="1" stopColor={shade(WCOL.sheet, 0.18)} />
         </linearGradient>
@@ -596,20 +601,23 @@ export const WedgeView: React.FC<{id: string; st: WedgeState; cam?: Cam; org?: V
 };
 
 /** the comparison: the same section on glass (top panel) and on brick (bottom panel), same orientation and scale, the
- *  surface face at the same screen x in both. `z`: zoom (px/um) of both; `gapPx`: the divider between the panels. */
-export const WedgeSplit: React.FC<{id: string; glass: WedgeState; brick: WedgeState; z?: number; gapPx?: number; glassY?: number; brickY?: number}> = ({
+ *  surface face at the same screen x (FACE_SX) in both. `z`: zoom (px/um) of both; `gapPx`: the divider between the
+ *  panels; `glassY` / `brickY`: the world y (um) placed at each panel's anchor (`glassSY` / `brickSY`, screen px). The
+ *  defaults put a glass strip mid-panel above, and the brick apex under wedge 4 at y 1240 (clear of the caption band). */
+export const WedgeSplit: React.FC<{id: string; glass: WedgeState; brick: WedgeState; z?: number; gapPx?: number; glassY?: number; brickY?: number; glassSY?: number; brickSY?: number}> = ({
   id,
   glass,
   brick,
   z = 4.6,
   gapPx = 24,
-  glassY = 2 * WG.pitch + 14,
-  brickY = 4 * WG.pitch + 6,
+  glassY = 2 * WG.pitch + 16,
+  brickY = 4 * WG.pitch,
+  glassSY = 470,
+  brickSY = 1240,
 }) => {
   const half = (H - gapPx) / 2;
-  // each panel's cam centres its own world y on the panel centre, the face at x = FACE_SX
-  const camT: Cam = {x: (W / 2 - FACE_SX) / z, y: glassY + (H / 2 - half / 2) / z, z};
-  const camB: Cam = {x: (W / 2 - FACE_SX) / z, y: brickY - (H / 2 - half / 2) / z, z};
+  const camT: Cam = camAt({x: 0, y: glassY}, z, FACE_SX, glassSY);
+  const camB: Cam = camAt({x: 0, y: brickY}, z, FACE_SX, brickSY);
   return (
     <g>
       <rect x={0} y={0} width={W} height={H} fill="#0C1419" />

@@ -15,7 +15,7 @@ import {mix} from '../dc/color';
 import {clamp, hash, lerp, V} from '../dc/math';
 import {Cam} from '../dc/camera';
 import {H, W} from '../lib';
-import {camTransform, contactRegion, FACE_SX, FOCUS, FOCUS_SY, View, WCOL, WEDGE_CAM, WedgeContent, WedgeState} from './Wedge8';
+import {camTransform, contactRegion, FACE_SX, FOCUS, FOCUS_SY, View, WCOL, WEDGE_CAM, WedgeContent, WedgeSplit, WedgeState, WedgeView} from './Wedge8';
 
 export const MOL = {
   R: 0.17, // glass atom (O) radius, nm (as drawn)
@@ -45,8 +45,8 @@ const MC = {
 };
 /** the surface layer carries full contrast; deeper atoms sink toward the bulk tone (the surfaces stay the subject) */
 const depthK = (j: number) => (j <= 0 ? 1 : j === 1 ? 0.55 : 0.3);
-const gFill = (si: boolean, j: number) => mix(MC.glassBulk, si ? MC.glassSi : MC.glassO, 0.25 + 0.75 * depthK(j));
-const pFill = (o: boolean, c: number) => mix(MC.polyBulk, o ? MC.polyO : MC.poly, 0.25 + 0.75 * depthK(c));
+const gFill = (si: boolean, j: number) => mix(MC.glassBulk, si && j < 2 ? MC.glassSi : MC.glassO, 0.25 + 0.75 * depthK(j));
+const pFill = (o: boolean, c: number) => mix(MC.polyBulk, o && c < 2 ? MC.polyO : MC.poly, 0.25 + 0.75 * depthK(c));
 const sm = (a: number, b: number, x: number) => {
   const t = clamp((x - a) / (b - a));
   return t * t * (3 - 2 * t);
@@ -90,11 +90,13 @@ const jig = (key: number, t: number, amp: number) =>
 
 /** the molecular contact in nm (x = 0 the glass's outer atom faces). `z`: screen px per nm; `view`: the nm rect to
  *  cover; `org`: output origin; `t`: seconds (only for the tiny jiggle and the flicker of the marks). */
-export const MolContent: React.FC<{id: string; close: number; z: number; view: View; org?: V; t?: number; bg?: boolean}> = ({id, close, z, view, org = {x: 0, y: 0}, t = 0, bg = true}) => {
+export const MolContent: React.FC<{id: string; close: number; z: number; view: View; org?: V; t?: number; bg?: boolean}> = ({id, close, z, view, org = {x: 0, y: 0}, t, bg = true}) => {
   const f = mkF(z, org);
   const gap = molGapNm(close);
   const ink = 1.5 / z;
-  const amp = t === 0 ? 0 : 0.012;
+  // jiggle only when a time is given (so there is no jump at t = 0)
+  const amp = t === undefined ? 0 : 0.012;
+  const tt = t ?? 0;
   const detail = z >= 45; // highlights and outlines only once the atoms are big enough to carry them
   // the band of explicitly drawn atoms on each side of the gap; beyond it, the same lattice as a pattern
   const band = clamp((5.6 * z) / 160, 1.1, 5.6);
@@ -107,7 +109,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
     for (let j = 0; j < Jx; j++)
       for (let r = r0; r <= r1; r++) {
         const a = gAtom(j, r);
-        const d = jig(a.key, t, amp);
+        const d = jig(a.key, tt, amp);
         const x = a.x + d.x, y = a.y + d.y;
         if (j === 0) surfG.push({x, y, rad: a.rad});
         glass.push(
@@ -140,7 +142,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
       for (let b = b0; b <= b1; b++) {
         const q = bead(c, b, gap);
         const key = c * 1009 + b * 7 + 1;
-        const d = jig(key, t, amp);
+        const d = jig(key, tt, amp);
         const p = {x: q.x + d.x, y: q.y + d.y};
         pts.push(p);
         if (c === 0) surfP.push({x: p.x, y: p.y, rad: q.rad, key});
@@ -177,7 +179,7 @@ export const MolContent: React.FC<{id: string; close: number; z: number; view: V
     }
     if (!best || dBest > MOL.reach) return;
     const k = sm(MOL.reach, MOL.gap1 + 0.05, dBest);
-    const flick = 0.82 + 0.18 * Math.sin(t * 7 + 6.28 * hash(b.key, 31));
+    const flick = t === undefined ? 1 : 0.82 + 0.18 * Math.sin(tt * 7 + 6.28 * hash(b.key, 31));
     const o = 0.72 * k * flick;
     if (o < 0.02) return;
     const ux = b.x - best.x, uy = b.y - best.y, ul = Math.hypot(ux, uy) || 1;
@@ -222,7 +224,7 @@ export const MOL_CAM: Cam = {x: -(FACE_SX - W / 2) / MOL_Z, y: -(FOCUS_SY - H / 
 const viewOfNm = (cam: Cam, m = 60): View => ({x0: cam.x - (W / 2 + m) / cam.z, x1: cam.x + (W / 2 + m) / cam.z, y0: cam.y - (H / 2 + m) / cam.z, y1: cam.y + (H / 2 + m) / cam.z});
 
 /** full-frame molecular view (cam in nm; default MOL_CAM) */
-export const MolView: React.FC<{id: string; close: number; cam?: Cam; t?: number}> = ({id, close, cam = MOL_CAM, t = 0}) => (
+export const MolView: React.FC<{id: string; close: number; cam?: Cam; t?: number}> = ({id, close, cam = MOL_CAM, t}) => (
   <g>
     <rect x={0} y={0} width={W} height={H} fill={WCOL.ground} />
     <g transform={camTransform(cam)}>
@@ -257,7 +259,7 @@ export const wedgeToMolCams = (u: number, focus = FOCUS, cam0: Cam = WEDGE_CAM, 
 /** the purposeful move from the section into one contact region (u 0 -> 1) and back out (u 1 -> 0). u = 0 is exactly
  *  WedgeView({glass, approach 1, shear 1, focus}) through cam0; u = 1 is exactly MolView(close) through camMol.
  *  `close` is the molecular state carried through the move (0 on the way in, 1 for the pull-out after the attraction). */
-export const WedgeToMol: React.FC<{id: string; u: number; close?: number; focus?: number; t?: number; cam0?: Cam; camMol?: Cam}> = ({id, u, close = 0, focus = FOCUS, t = 0, cam0 = WEDGE_CAM, camMol = MOL_CAM}) => {
+export const WedgeToMol: React.FC<{id: string; u: number; close?: number; focus?: number; t?: number; cam0?: Cam; camMol?: Cam}> = ({id, u, close = 0, focus = FOCUS, t, cam0 = WEDGE_CAM, camMol = MOL_CAM}) => {
   const c = wedgeToMolCams(u, focus, cam0, camMol, close);
   const vSec: View = {x0: c.sec.x - (W / 2 + 60) / c.sec.z, x1: c.sec.x + (W / 2 + 60) / c.sec.z, y0: c.sec.y - (H / 2 + 60) / c.sec.z, y1: c.sec.y + (H / 2 + 60) / c.sec.z};
   // the focus emphasis is full at the start of the move and eases off as the strip fills the frame
@@ -279,3 +281,44 @@ export const WedgeToMol: React.FC<{id: string; u: number; close?: number; focus?
   );
 };
 
+
+// ------------------------------------------------------------------ the recommended timeline (reference driver)
+/** keyed scalar: [frame, value][] with smootherstep segments (holds before the first / after the last key) */
+const keyF = (f: number, keys: [number, number][]) => {
+  if (f <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++)
+    if (f <= keys[i][0]) {
+      const [f0, a] = keys[i - 1], [f1, b] = keys[i];
+      return lerp(a, b, sm5((f - f0) / (f1 - f0 || 1)));
+    }
+  return keys[keys.length - 1][1];
+};
+/** the beat's parameters at film frame f (30 fps): a reference the integrator can use as is or re-time.
+ *  222-273 section, unloaded, tips settle onto the glass; 273-350 the pull (shear 0 -> 1, the camera holds);
+ *  360-388 the focus wedge is singled out; 388-428 the move into its contact (u 0 -> 1); 432-466 the gap closes and
+ *  the attraction marks come up; 473-500 the pull back out (u 1 -> 0, close 1). Later: 930-954 the glass section at
+ *  full contact; 1041-1095 the split: glass loads; brick approaches, loads, then slips. */
+export const microBeat8 = (f: number) => {
+  const approach = keyF(f, [[222, 0.55], [248, 1]]);
+  const shear = keyF(f, [[273, 0], [352, 1]]);
+  const focusK = keyF(f, [[360, 0], [386, 1]]);
+  const u = f < 473 ? keyF(f, [[388, 0], [428, 1]]) : keyF(f, [[473, 1], [500, 0]]);
+  const close = f < 473 ? keyF(f, [[432, 0], [466, 1]]) : 1;
+  const t = Math.max(0, (f - 388) / 30);
+  return {approach, shear, focusK, u, close, t};
+};
+/** the whole wedge beat as drawn at film frame f (a full-frame <g>; wrap it in an <svg> W x H) */
+export const MicroBeat8: React.FC<{f: number; id?: string}> = ({f, id = `mb${f}`}) => {
+  if (f >= 1041) {
+    const glass: WedgeState = {surface: 'glass', approach: 1, shear: keyF(f, [[1041, 0], [1062, 1]])};
+    const brick: WedgeState = {surface: 'brick', approach: keyF(f, [[1041, 0.4], [1052, 1]]), shear: keyF(f, [[1052, 0], [1068, 1]]), slip: keyF(f, [[1072, 0], [1095, 1]])};
+    return <WedgeSplit id={id} glass={glass} brick={brick} />;
+  }
+  if (f >= 900) return <WedgeView id={id} st={{surface: 'glass', approach: 1, shear: keyF(f, [[930, 0.8], [946, 1]])}} cam={WEDGE_CAM} />;
+  const p = microBeat8(f);
+  if (p.u > 0 && f >= 388) {
+    if (p.u >= 1) return <MolView id={id} close={p.close} t={p.t} />;
+    return <WedgeToMol id={id} u={p.u} close={p.close} t={p.t} />;
+  }
+  return <WedgeView id={id} st={{surface: 'glass', approach: p.approach, shear: p.shear, focus: FOCUS, focusK: p.focusK}} cam={WEDGE_CAM} />;
+};

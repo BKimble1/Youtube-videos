@@ -19,10 +19,12 @@ import React from 'react';
 import {Cam, Layer} from '../dc/camera';
 import {lit, mix, shade} from '../dc/color';
 import {INK} from '../dc/ink';
-import {clamp, fmt, lerp, P} from '../dc/math';
+import {clamp, fmt, hash, lerp, P} from '../dc/math';
 import {H, W} from '../lib';
 import {H_BAR} from '../world/rig';
-import {allTiles, ARM_REACH, P3, P3D, Pad3D, Pad3DState, PadReflection, PadView, PH, PW, Proj, tileVW, viewOf} from './Pad8';
+import {Head} from '../dc/Head';
+import {EX} from '../world/pose';
+import {allTiles, ARM_REACH, ArmSpec, gripGeo, travelOf, P3, P3D, Pad3D, Pad3DState, PadReflection, PadView, PH, PW, Proj, tileVW, viewOf} from './Pad8';
 
 const Svg: React.FC<{children: React.ReactNode}> = ({children}) => (
   <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', inset: 0}}>
@@ -208,11 +210,11 @@ const Facade: React.FC<{id: string; st: Pad3DState; o: FacadeOpts}> = ({id, st, 
 
 // ------------------------------------------------------------------------------------------------ A: contact close-up
 export type ContactView = {yaw: number; pitch: number; persp: number};
-export const CONTACT_VIEW: ContactView = {yaw: 18, pitch: 6, persp: 1300};
-export const CONTACT_CAM: Cam = {x: 70, y: 150, z: 2.7};
+export const CONTACT_VIEW: ContactView = {yaw: 24, pitch: -20, persp: 1100};
+export const CONTACT_CAM: Cam = {x: 92, y: 92, z: 3.2};
 /** A (film 24-70): load 0..1 (the shot opens at about 0.6, reaches 1 by its 12th frame, then settles); drift 0..1 a
  *  slow slide of the sheens across the glass over the shot (optional); cam / view override the framing. */
-export const ContactScene8: React.FC<{id: string; load: number; drift?: number; cam?: Cam; view?: ContactView}> = ({id, load, drift = 0, cam = CONTACT_CAM, view = CONTACT_VIEW}) => {
+export const ContactScene8: React.FC<{id: string; load: number; drift?: number; cam?: Cam; view?: ContactView; arm?: ArmSpec}> = ({id, load, drift = 0, cam = CONTACT_CAM, view = CONTACT_VIEW, arm = ARM_REACH}) => {
   const l = clamp(load);
   const st: Pad3DState = {
     yaw: view.yaw,
@@ -226,7 +228,7 @@ export const ContactScene8: React.FC<{id: string; load: number; drift?: number; 
     slide: 0,
     surface: 'none',
     hand: H_BAR,
-    arm: ARM_REACH,
+    arm,
     strap: 2400,
     tether: sm((l - 0.5) / 0.42),
     shadow: 1,
@@ -235,11 +237,240 @@ export const ContactScene8: React.FC<{id: string; load: number; drift?: number; 
   return (
     <Svg>
       <Layer cam={cam} depth={1}>
-        <Facade id={`${id}-f`} st={st} o={{mullions: [420, -1250], transom: 760, z: cam.z, reflect: 0.2, drift}} />
+        <Facade id={`${id}-f`} st={st} o={{mullions: [420, -1250], transom: 760, z: cam.z, reflect: 0.15, drift}} />
         <Pad3D id={`${id}-p`} st={st} z={cam.z} />
       </Layer>
     </Svg>
   );
+};
+
+// ------------------------------------------------------------------------------------------------ B: surface test
+const HAZE = '#A3C0CF';
+/** the city seen from about 40 m up through the window (pad axes: the street is at v = +40000, the outside is u > 0):
+ *  the sky, a far skyline, blocks and streets far below, all in aerial haze (farther = paler) */
+const CityOut: React.FC<{id: string; vw: PadView}> = ({id, vw}) => {
+  const hz = vw.vanish({u: 1, v: 0, w: 0.15}) ?? {x: 0, y: -200};
+  const GND = 40000;
+  const items: {d: number; node: React.ReactNode}[] = [];
+  const hazeOf = (u: number) => clamp(0.12 + Math.log(Math.max(1, u / 30000)) * 0.3, 0, 0.86);
+  const block = (u0: number, u1: number, w0: number, w1: number, top: number, base: string, key: string, windows = true) => {
+    const k = hazeOf(u0);
+    const col = mix(base, HAZE, k);
+    const nodes: React.ReactNode[] = [...boxFaces(vw, u0, u1, top, GND, w0, w1, col, 0, key, {stroke: 'none'})];
+    if (windows && k < 0.7) {
+      for (let v = top + 1400; v < GND - 1500; v += 3300) {
+        const d = quad(vw, [{u: u0 - 1, v, w: w0 + 900}, {u: u0 - 1, v, w: w1 - 900}, {u: u0 - 1, v: v + 1200, w: w1 - 900}, {u: u0 - 1, v: v + 1200, w: w0 + 900}]);
+        if (d) nodes.push(<path key={`${key}w${v}`} d={d} fill={mix(col, '#55788A', 0.3 * (1 - k))} />);
+      }
+      // a rooftop plant box
+      const pw = w0 + (w1 - w0) * 0.3;
+      nodes.push(...boxFaces(vw, u0 + 6000, u0 + 11000, top - 2600, top, pw, pw + 5000, mix(col, '#FFFFFF', 0.12), 0, `${key}p`, {stroke: 'none'}));
+    }
+    items.push({d: -u0, node: <g key={key}>{nodes}</g>});
+  };
+  // the far skyline (hazy towers just over the horizon)
+  for (let i = 0; i < 30; i++) {
+    const u = 500000 + hash(i, 3) * 400000;
+    const w = -900000 + i * 60000 + hash(i, 4) * 30000;
+    const wd = 18000 + hash(i, 5) * 30000;
+    const h = 60000 + hash(i, 6) * 120000 * (hash(i, 7) > 0.75 ? 1.7 : 1);
+    block(u, u + wd, w, w + wd, GND - h, '#B4C9D4', `s${i}`, false);
+  }
+  // the blocks below: rows of low and mid-rise buildings with streets between them, their roofs seen from above
+  for (let r = 0; r < 8; r++)
+    for (let c = -9; c <= 9; c++) {
+      const i = r * 20 + c + 10;
+      const u0 = 30000 + r * 38000 + hash(i, 11) * 5000;
+      const w0 = c * 34000 + hash(i, 12) * 6000 - 14000;
+      const h = 9000 + hash(i, 13) * (14000 + r * 5000);
+      const wd = 20000 + hash(i, 14) * 7000;
+      block(u0, u0 + 24000, w0, w0 + wd, GND - h, hash(i, 15) > 0.55 ? '#CDBBA6' : hash(i, 16) > 0.5 ? '#A7B7C1' : '#B9C2B3', `b${r}_${c}`);
+    }
+  items.sort((a, b) => a.d - b.d);
+  const ground = quad(vw, [{u: 15000, v: GND, w: -3e6}, {u: 15000, v: GND, w: 3e6}, {u: 3e6, v: GND, w: 3e6}, {u: 3e6, v: GND, w: -3e6}]);
+  const streets: React.ReactNode[] = [];
+  for (let r = 0; r < 9; r++) {
+    const u0 = 30000 + r * 38000 - 11000;
+    streets.push(<path key={`sa${r}`} d={quad(vw, [{u: u0, v: GND - 10, w: -3e6}, {u: u0, v: GND - 10, w: 3e6}, {u: u0 + 9000, v: GND - 10, w: 3e6}, {u: u0 + 9000, v: GND - 10, w: -3e6}])} fill={mix('#DADFDD', HAZE, 0.3 + r * 0.05)} />);
+  }
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`${id}-sky`} gradientUnits="userSpaceOnUse" x1="0" y1={fmt(hz.y - 1000)} x2="0" y2={fmt(hz.y + 10)}>
+          <stop offset="0" stopColor="#78ADD0" />
+          <stop offset="0.6" stopColor="#B4D5E6" />
+          <stop offset="1" stopColor="#E4EFEF" />
+        </linearGradient>
+        <linearGradient id={`${id}-gnd`} gradientUnits="userSpaceOnUse" x1="0" y1={fmt(hz.y)} x2="0" y2={fmt(hz.y + 800)}>
+          <stop offset="0" stopColor={mix('#CBD6D6', HAZE, 0.5)} />
+          <stop offset="1" stopColor="#97A9A8" />
+        </linearGradient>
+      </defs>
+      <rect x={-8000} y={-8000} width={16000} height={16000} fill={`url(#${id}-sky)`} />
+      {[[-560, -620, 300, 34], [200, -820, 420, 46], [640, -560, 240, 28], [-80, -430, 180, 18]].map(([x, y, rx, ry], i) => (
+        <ellipse key={i} cx={fmt(hz.x + x)} cy={fmt(hz.y + y)} rx={fmt(rx)} ry={fmt(ry)} fill="#F4F8F8" opacity={0.6} />
+      ))}
+      <path d={ground} fill={`url(#${id}-gnd)`} />
+      {streets}
+      {items.map((it) => it.node)}
+    </g>
+  );
+};
+
+/** his body behind the pad (seen from inside, against the sky, muted by the glass): the striped tee's torso, the neck,
+ *  his head (the crew's Head, looking up at the pad, straining), and the far arm going up out of frame toward his
+ *  other pad; the near arm is the pad's own (Pad8). S = his right shoulder (pad axes). */
+const Silhouette: React.FC<{id: string; vw: PadView; S: P3; z: number; effort: number}> = ({id, vw, S, z, effort}) => {
+  const pj = (p: P3) => vw.fixed(p);
+  const ink = (2.4 / z) * 1;
+  const L: P3 = {u: S.u + 40, v: S.v + 10, w: S.w - 340};
+  const neck: P3 = {u: S.u + 30, v: S.v - 50, w: S.w - 170};
+  const head: P3 = {u: S.u + 45, v: S.v - 235, w: S.w - 175};
+  const hipV = S.v + 560;
+  const pts = (arr: P3[]) => arr.map((q) => pj(q));
+  const tor = pts([
+    {u: S.u + 5, v: S.v - 25, w: S.w + 30},
+    {u: S.u + 20, v: S.v + 160, w: S.w + 18},
+    {u: S.u + 60, v: hipV, w: S.w - 20},
+    {u: L.u + 30, v: hipV, w: L.w + 20},
+    {u: L.u, v: L.v + 160, w: L.w - 18},
+    {u: L.u - 5, v: L.v - 25, w: L.w - 30},
+    {u: neck.u, v: neck.v - 5, w: neck.w - 85},
+    {u: neck.u, v: neck.v - 5, w: neck.w + 85},
+  ]);
+  const torD = `M${tor.map((q) => P(q)).join(' L')} Z`;
+  const stripes: React.ReactNode[] = [];
+  for (let i = 0; i < 6; i++) {
+    const v0 = S.v + 30 + i * 112, v1 = v0 + 54;
+    stripes.push(<path key={i} d={quad(vw, [{u: S.u - 40, v: v0, w: S.w + 90}, {u: S.u - 40, v: v0, w: L.w - 90}, {u: S.u - 40, v: v1, w: L.w - 90}, {u: S.u - 40, v: v1, w: S.w + 90}])} fill="#FFC744" />);
+  }
+  const Hc = pj(head);
+  const N0 = pj({u: neck.u, v: neck.v + 30, w: neck.w}), N1 = pj({u: head.u, v: head.v + 80, w: head.w});
+  const fa0 = pj(L), fa1 = pj({u: L.u - 70, v: L.v - 430, w: L.w - 150}), fa2 = pj({u: L.u - 240, v: L.v - 800, w: L.w - 170});
+  const expr = {...EX.strain, gx: 0.55, gy: -0.95, browIn: 0.45 * effort + 0.2, browDown: 0.5 * effort, teeth: 0.7 * effort, smile: -0.25 * effort};
+  return (
+    <g>
+      <defs>
+        <clipPath id={`${id}-tc`}>
+          <path d={torD} />
+        </clipPath>
+      </defs>
+      {/* far arm (skin, his sleeve at the shoulder), behind the torso */}
+      <path d={`M${P(fa0)} L${P(fa1)} L${P(fa2)}`} stroke={INK} strokeWidth={fmt(64 * fa1.s + 2 * ink)} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d={`M${P(fa0)} L${P(fa1)} L${P(fa2)}`} stroke="#EBC2A2" strokeWidth={fmt(64 * fa1.s)} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {(() => {
+        const a = pj({u: L.u - 10, v: L.v - 10, w: L.w - 10}), b = pj({u: L.u - 30, v: L.v - 150, w: L.w - 55});
+        return (
+          <g>
+            <path d={`M${P(a)} L${P(b)}`} stroke={INK} strokeWidth={fmt(92 * a.s + 2 * ink)} strokeLinecap="round" />
+            <path d={`M${P(a)} L${P(b)}`} stroke="#F3F5F7" strokeWidth={fmt(92 * a.s)} strokeLinecap="round" />
+          </g>
+        );
+      })()}
+      <path d={`M${P(N0)} L${P(N1)}`} stroke={INK} strokeWidth={fmt(92 * N0.s + 2 * ink)} strokeLinecap="round" />
+      <path d={`M${P(N0)} L${P(N1)}`} stroke="#E2B595" strokeWidth={fmt(92 * N0.s)} strokeLinecap="round" />
+      <path d={torD} fill="#F3F5F7" stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+      <g clipPath={`url(#${id}-tc)`}>
+        {stripes}
+        {/* the tee's form: shadow down its far side (the sky is behind him) */}
+        <path d={torD} fill="#8FA4B2" opacity={0.25} />
+      </g>
+      <Head id={`${id}-hd`} c={{x: Hc.x, y: Hc.y}} R={100 * Hc.s} roll={0} turn={0.12} expr={expr} inkW={(2.4 / z / (Hc.s || 1)) * 100 / 100 * 1.6} />
+    </g>
+  );
+};
+
+export type SurfaceView = {yaw: number; pitch: number; persp: number};
+export const SURFACE_VIEW: SurfaceView = {yaw: -80, pitch: 8, persp: 1150};
+export const SURFACE_CAM: Cam = {x: 0, y: 80, z: 2.8};
+/** his arm for B: the hand on the bar, the arm down and in to his shoulder (he rises onto the pad; his head is to the
+ *  pad's left as we see it, clear of the strap) */
+export const ARM_RISE: ArmSpec = {elbow: {u: 70, v: 205, w: 10}, shoulder: {u: 130, v: 225, w: -95}};
+/** contact for B: nothing while the pad is off the glass; at the touch a first patch in every tile, spreading to the
+ *  whole tile as the load comes on (the same in all 24) */
+export const surfaceContact = (gap: number, load: number) => (gap > 0.4 ? 0 : clamp(0.14 + 0.86 * clamp(load)) * clamp(1 - gap / 0.4));
+/** B (film 894-930): gap (mm, about 30 -> 0: the pad arrives at the glass), load 0..1 (after the touch: the tiles wet
+ *  evenly from the middle out), contact (optional per-tile override, else surfaceContact(gap, load)); cam / view
+ *  override the framing. */
+export const SurfaceScene8: React.FC<{id: string; gap: number; load: number; contact?: number[]; cam?: Cam; view?: SurfaceView}> = ({id, gap, load, contact, cam = SURFACE_CAM, view = SURFACE_VIEW}) => {
+  const l = clamp(load);
+  const ct = contact ?? allTiles(surfaceContact(gap, l));
+  const st: Pad3DState = {
+    yaw: view.yaw,
+    pitch: view.pitch,
+    persp: view.persp,
+    load: l,
+    contact: ct,
+    cover: 1,
+    gap: Math.max(0, gap),
+    tilt: 0,
+    slide: 0,
+    surface: 'none',
+    hand: H_BAR,
+    arm: ARM_RISE,
+    strap: 2400,
+    tether: 0.35 + 0.65 * l,
+    strapLean: {u: 0.1, w: 0.05},
+    shadow: 0,
+    ridges: 0.6,
+  };
+  const vw = viewOf(st);
+  const z = cam.z;
+  const ink = (1.5 / z) * 1.4;
+  // his right shoulder: the arm's end (the grip's wrist + the arm), for the silhouette
+  const g = gripGeo(travelOf(l) + 3, 1, 1, ARM_RISE);
+  const sh = g.shoulder ?? {u: 400, v: 450, w: -60};
+  const gapM = {u: st.gap, v: 0, w: 0};
+  const S = {u: sh.u + gapM.u, v: sh.v, w: sh.w};
+  // the window, from inside: the glass (inner face u = -24) between a mullion to the right and a transom above
+  const BIG = 9000;
+  const MW = 290, TR = -430;
+  const glass = quad(vw, [{u: -24, v: TR, w: -BIG}, {u: -24, v: TR, w: MW}, {u: -24, v: BIG, w: MW}, {u: -24, v: BIG, w: -BIG}]);
+  const frameFaces = [
+    ...boxFaces(vw, -210, -24, TR - 70, BIG, MW, MW + 64, '#CDD4D9', ink, 'im'),
+    ...boxFaces(vw, -210, -24, -BIG, TR, -BIG, MW + 64, '#CDD4D9', ink, 'it'),
+  ];
+  const sheen0 = quad(vw, [{u: -24.5, v: -BIG, w: -300}, {u: -24.5, v: -BIG, w: -150}, {u: -24.5, v: BIG, w: -1100}, {u: -24.5, v: BIG, w: -1250}]);
+  const sheen1 = quad(vw, [{u: -24.5, v: -BIG, w: 40}, {u: -24.5, v: -BIG, w: 95}, {u: -24.5, v: BIG, w: -810}, {u: -24.5, v: BIG, w: -865}]);
+  const effort = clamp(l * 1.2);
+  return (
+    <Svg>
+      <Layer cam={cam} depth={1}>
+        <defs>
+          <clipPath id={`${id}-gl`}>
+            <path d={glass} />
+          </clipPath>
+          {/* the glass mutes what is behind it: a little toward its haze, a little less saturated */}
+          <filter id={`${id}-mute`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values={muteMatrix(0.36, '#8FA9B8')} />
+          </filter>
+          <filter id={`${id}-glass`} x="-50%" y="-50%" width="200%" height="200%" colorInterpolationFilters="sRGB">
+            <feColorMatrix type="matrix" values={muteMatrix(0.1, '#7FA2B2')} />
+          </filter>
+        </defs>
+        <rect x={-8000} y={-8000} width={16000} height={16000} fill="#3C4B55" />
+        <g clipPath={`url(#${id}-gl)`}>
+          <CityOut id={`${id}-c`} vw={vw} />
+          <g filter={`url(#${id}-mute)`}>
+            <Silhouette id={`${id}-s`} vw={vw} S={S} z={z} effort={effort} />
+          </g>
+          <g filter={`url(#${id}-glass)`}>
+            <Pad3D id={`${id}-p`} st={st} z={z} />
+          </g>
+          <path d={sheen0} fill="#FFFFFF" opacity={0.08} />
+          <path d={sheen1} fill="#FFFFFF" opacity={0.05} />
+        </g>
+        {frameFaces}
+      </Layer>
+    </Svg>
+  );
+};
+/** an feColorMatrix that blends every colour a fraction k toward c */
+const muteMatrix = (k: number, c: string) => {
+  const n = parseInt(c.slice(1), 16);
+  const r = ((n >> 16) & 255) / 255, g = ((n >> 8) & 255) / 255, b = (n & 255) / 255;
+  const a = 1 - k;
+  return `${a} 0 0 0 ${fmt(k * r)}  0 ${a} 0 0 ${fmt(k * g)}  0 0 ${a} 0 ${fmt(k * b)}  0 0 0 1 0`;
 };
 
 export {tileVW, PW, PH, P3D, lerp, mix};
