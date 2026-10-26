@@ -108,7 +108,7 @@ const ZK: HK[] = [
   [14.5, ln(1.0), -0.42], // pull back: the narrow channel
   [15.65, ln(0.86), 0], // through the sky
   [17.55, ln(0.835), -0.03], // E: steady, a gentle drift
-  [B.F, ln(M_H), 0], // pull-out toward the sky; the hand-off (zero velocity, as F's zoom starts from rest)
+  [B.F, ln(M_H), -0.9], // pull-out toward the sky; the hand-off (log-velocity = cams3 Z_V0: F's zoom carries it on)
 ];
 const CY_END = -1500;
 const CY: HK[] = [
