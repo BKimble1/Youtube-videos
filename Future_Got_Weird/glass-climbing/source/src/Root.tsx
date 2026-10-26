@@ -14,6 +14,8 @@ import {BaySheet4} from './v4/Work4';
 import {BaySheet5, LookTest5, PadTest5} from './v5/Work5';
 import {Film5, FilmStill5, Sheet5} from './v5/Film5';
 import {BaySheet7, ExtSheet7, ExtTest7} from './v7/Work7';
+import {BaySheet8, BayStyle8, ExtSheet8, ExtTest8, PlateRef8} from './v8/Work8';
+import {Film8, FilmStill8, Sheet8} from './v8/Film8';
 import {Film7, FilmStill7, Sheet7} from './v7/Film7';
 import {BaySheet6, FieldTurn6, MatchTest6, PadTest6, TowerTest6} from './v6/Work6';
 import {Film6, FilmStill6, Sheet6} from './v6/Film6';
@@ -97,6 +99,14 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="GlassClimbingV7" component={Film7} durationInFrames={FRAMES6} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v7' as string | false, captions: true, camOnly: false}} />
     <Still id="FilmStillV7" component={FilmStill7} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="SheetV7" component={Sheet7} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Composition id="GlassClimbingV8" component={Film8} durationInFrames={FRAMES6} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v8' as string | false, captions: true, camOnly: false}} />
+    <Still id="FilmStillV8" component={FilmStill8} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV8" component={Sheet8} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="BaySheet8" component={BaySheet8} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true, top: false}} />
+    <Still id="PlateRef8" component={PlateRef8} width={W} height={H} defaultProps={{f: 0, eye: [1.7, 32.7, 2.7] as [number, number, number], target: [0.4, 31.2, -1.5] as [number, number, number], fl: 1300}} />
+    <Still id="BayStyle8" component={BayStyle8} width={W} height={H} defaultProps={{cx: 100, cy: -19300, z: 0.8}} />
+    <Still id="ExtTest8" component={ExtTest8} width={W} height={H} defaultProps={{f: 0, eye: [1.2, 31, 4] as [number, number, number], target: [0.4, 30, 0] as [number, number, number], fl: 1300, top: false}} />
+    <Still id="ExtSheet8" component={ExtSheet8} width={W} height={1920} defaultProps={{vs: [] as {f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean}[]}} />
     <Still id="ExtTest7" component={ExtTest7} width={W} height={H} defaultProps={{f: 0, eye: [1.2, 31, 4] as [number, number, number], target: [0.4, 30, 0] as [number, number, number], fl: 1300, top: false}} />
     <Still id="ExtSheet7" component={ExtSheet7} width={W} height={1920} defaultProps={{vs: [] as {f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean}[]}} />
     <Still id="BaySheet7" component={BaySheet7} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true, top: false}} />

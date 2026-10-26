@@ -1,0 +1,653 @@
+[
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 2.4,
+  "frame": 72.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near tether takes the load (creak)",
+  "at": 2.6,
+  "frame": 78.0,
+  "dur": 0.22,
+  "gain_db": -31
+ },
+ {
+  "name": "the near stirrup takes the foot (step knock)",
+  "at": 2.75,
+  "frame": 82.5,
+  "dur": 0.16,
+  "gain_db": -36
+ },
+ {
+  "name": "far pad releases: peels and stands off the glass (dry)",
+  "at": 2.867,
+  "frame": 86.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 3.0,
+  "frame": 90.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "far pad seats on the glass",
+  "at": 3.77,
+  "frame": 113.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "far pad takes its load (fine ticks)",
+  "at": 3.84,
+  "frame": 115.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "he rises onto the far stirrup (cloth)",
+  "at": 3.867,
+  "frame": 116.0,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "far tether takes his weight",
+  "at": 4.267,
+  "frame": 128.0,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "near pad releases: peels and stands off the glass (dry)",
+  "at": 4.667,
+  "frame": 140.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "near pad carried (air, faint)",
+  "at": 4.833,
+  "frame": 145.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "near pad seats on the glass",
+  "at": 5.437,
+  "frame": 163.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "near pad takes its load (fine ticks)",
+  "at": 5.507,
+  "frame": 165.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "near tether takes its share again",
+  "at": 5.733,
+  "frame": 172.0,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "near pad releases: peels and stands off the glass (dry)",
+  "at": 16.933,
+  "frame": 508.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "near pad carried (air, faint)",
+  "at": 17.1,
+  "frame": 513.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "near pad seats on the glass",
+  "at": 17.703,
+  "frame": 531.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "near pad takes its load (fine ticks)",
+  "at": 17.773,
+  "frame": 533.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "near tether takes its share again",
+  "at": 18.067,
+  "frame": 542.0,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 18.533,
+  "frame": 556.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near tether takes the load (creak)",
+  "at": 18.667,
+  "frame": 560.0,
+  "dur": 0.22,
+  "gain_db": -31
+ },
+ {
+  "name": "the near stirrup takes the foot (step knock)",
+  "at": 18.75,
+  "frame": 562.5,
+  "dur": 0.16,
+  "gain_db": -36
+ },
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 22.4,
+  "frame": 672.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near tether takes the load (creak)",
+  "at": 22.867,
+  "frame": 686.0,
+  "dur": 0.22,
+  "gain_db": -31
+ },
+ {
+  "name": "the near stirrup takes the foot (step knock)",
+  "at": 23.283,
+  "frame": 698.5,
+  "dur": 0.16,
+  "gain_db": -36
+ },
+ {
+  "name": "far pad releases: peels and stands off the glass (dry)",
+  "at": 25.0,
+  "frame": 750.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 25.533,
+  "frame": 766.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "far pad seats on the glass",
+  "at": 27.037,
+  "frame": 811.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "far pad takes its load (fine ticks)",
+  "at": 27.107,
+  "frame": 813.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "he rises onto the far stirrup (cloth)",
+  "at": 27.1,
+  "frame": 813.0,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "far tether takes his weight",
+  "at": 27.52,
+  "frame": 825.6,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "near pad releases: peels and stands off the glass (dry)",
+  "at": 27.867,
+  "frame": 836.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "near pad carried (air, faint)",
+  "at": 28.033,
+  "frame": 841.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "near pad seats on the glass",
+  "at": 28.703,
+  "frame": 861.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "near pad takes its load (fine ticks)",
+  "at": 28.773,
+  "frame": 863.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "near tether takes its share again",
+  "at": 28.933,
+  "frame": 868.0,
+  "dur": 0.2,
+  "gain_db": -33
+ },
+ {
+  "name": "weight onto the near stirrup (cloth)",
+  "at": 29.067,
+  "frame": 872.0,
+  "dur": 0.5,
+  "gain_db": -41
+ },
+ {
+  "name": "near tether takes the load (creak)",
+  "at": 29.167,
+  "frame": 875.0,
+  "dur": 0.22,
+  "gain_db": -31
+ },
+ {
+  "name": "the near stirrup takes the foot (step knock)",
+  "at": 29.217,
+  "frame": 876.5,
+  "dur": 0.16,
+  "gain_db": -36
+ },
+ {
+  "name": "far pad releases: peels and stands off the glass (dry)",
+  "at": 29.267,
+  "frame": 878.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 29.433,
+  "frame": 883.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "far pad releases: peels and stands off the glass (dry)",
+  "at": 31.867,
+  "frame": 956.0,
+  "dur": 0.3,
+  "gain_db": -30
+ },
+ {
+  "name": "far pad carried (air, faint)",
+  "at": 32.0,
+  "frame": 960.0,
+  "dur": 0.4,
+  "gain_db": -47
+ },
+ {
+  "name": "far pad seats on the glass",
+  "at": 32.537,
+  "frame": 976.1,
+  "dur": 0.12,
+  "gain_db": -25
+ },
+ {
+  "name": "far pad takes its load (fine ticks)",
+  "at": 32.607,
+  "frame": 978.2,
+  "dur": 0.3,
+  "gain_db": -43
+ },
+ {
+  "name": "he rises onto the far stirrup (cloth)",
+  "at": 32.567,
+  "frame": 977.0,
+  "dur": 0.7,
+  "gain_db": -38
+ },
+ {
+  "name": "far tether takes his weight",
+  "at": 32.827,
+  "frame": 984.8,
+  "dur": 0.24,
+  "gain_db": -28
+ },
+ {
+  "name": "CATCH: the near pad meets the glass (crisp contact)",
+  "at": 0.08,
+  "frame": 2.4,
+  "dur": 0.2,
+  "gain_db": -20
+ },
+ {
+  "name": "the pad seats under the downward load (fine ticks)",
+  "at": 0.15,
+  "frame": 4.5,
+  "dur": 0.25,
+  "gain_db": -40
+ },
+ {
+  "name": "the near tether snaps taut as it takes him",
+  "at": 0.22,
+  "frame": 6.6,
+  "dur": 0.26,
+  "gain_db": -26
+ },
+ {
+  "name": "the near stirrup takes his foot (step knock)",
+  "at": 0.293,
+  "frame": 8.8,
+  "dur": 0.18,
+  "gain_db": -31
+ },
+ {
+  "name": "the far pad shares the load (spring creak)",
+  "at": 0.333,
+  "frame": 10.0,
+  "dur": 0.45,
+  "gain_db": -38
+ },
+ {
+  "name": "knees absorb the settle (cloth)",
+  "at": 0.267,
+  "frame": 8.0,
+  "dur": 0.45,
+  "gain_db": -42
+ },
+ {
+  "name": "contact close-up: the backing takes the load (fine ticks)",
+  "at": 0.933,
+  "frame": 28.0,
+  "dur": 0.6,
+  "gain_db": -42
+ },
+ {
+  "name": "contact close-up: the springs answer (soft)",
+  "at": 1.2,
+  "frame": 36.0,
+  "dur": 0.4,
+  "gain_db": -42
+ },
+ {
+  "name": "wind: a brief lift as the view opens onto the drop",
+  "at": 3.667,
+  "frame": 110.0,
+  "dur": 1.8,
+  "gain_db": -37
+ },
+ {
+  "name": "wind: below him, the climb",
+  "at": 4.867,
+  "frame": 146.0,
+  "dur": 1.2,
+  "gain_db": -41
+ },
+ {
+  "name": "the pad at the glass (fine ticks)",
+  "at": 6.2,
+  "frame": 186.0,
+  "dur": 0.8,
+  "gain_db": -42
+ },
+ {
+  "name": "into the tile edge (air, very soft)",
+  "at": 7.067,
+  "frame": 212.0,
+  "dur": 0.6,
+  "gain_db": -48
+ },
+ {
+  "name": "the wedges at the glass (soft tick)",
+  "at": 8.0,
+  "frame": 240.0,
+  "dur": 0.08,
+  "gain_db": -38
+ },
+ {
+  "name": "shear: the wedges begin to bend (fine ticks)",
+  "at": 9.4,
+  "frame": 282.0,
+  "dur": 1.0,
+  "gain_db": -40
+ },
+ {
+  "name": "the wedges lie flat (dense ticks)",
+  "at": 10.6,
+  "frame": 318.0,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "into the contact (very soft high tone)",
+  "at": 13.067,
+  "frame": 392.0,
+  "dur": 1.4,
+  "gain_db": -47
+ },
+ {
+  "name": "molecular scale: the gap closes (very soft high tone)",
+  "at": 14.533,
+  "frame": 436.0,
+  "dur": 1.2,
+  "gain_db": -48
+ },
+ {
+  "name": "back out (air, very soft)",
+  "at": 15.867,
+  "frame": 476.0,
+  "dur": 0.8,
+  "gain_db": -47
+ },
+ {
+  "name": "the loaded stirrup settles (step creak)",
+  "at": 16.667,
+  "frame": 500.0,
+  "dur": 0.2,
+  "gain_db": -36
+ },
+ {
+  "name": "up the tether (air, faint)",
+  "at": 17.867,
+  "frame": 536.0,
+  "dur": 0.5,
+  "gain_db": -48
+ },
+ {
+  "name": "cover lifts off (air, faint)",
+  "at": 18.733,
+  "frame": 562.0,
+  "dur": 0.5,
+  "gain_db": -48
+ },
+ {
+  "name": "the springs stretch together",
+  "at": 19.133,
+  "frame": 574.0,
+  "dur": 0.8,
+  "gain_db": -35
+ },
+ {
+  "name": "one patch lets go: its spring slackens",
+  "at": 20.2,
+  "frame": 606.0,
+  "dur": 0.4,
+  "gain_db": -37
+ },
+ {
+  "name": "its neighbours take up its share",
+  "at": 20.4,
+  "frame": 612.0,
+  "dur": 0.5,
+  "gain_db": -38
+ },
+ {
+  "name": "the load evens out again",
+  "at": 21.333,
+  "frame": 640.0,
+  "dur": 0.5,
+  "gain_db": -40
+ },
+ {
+  "name": "wind: outside, nearing the brick",
+  "at": 28.667,
+  "frame": 860.0,
+  "dur": 1.2,
+  "gain_db": -40
+ },
+ {
+  "name": "contact test: the pad seats on the glass",
+  "at": 30.2,
+  "frame": 906.0,
+  "dur": 0.12,
+  "gain_db": -28
+ },
+ {
+  "name": "contact test: broad, even contact spreads (dense, soft ticks)",
+  "at": 30.267,
+  "frame": 908.0,
+  "dur": 0.7,
+  "gain_db": -41
+ },
+ {
+  "name": "section: every wedge flat on the glass (dense, soft ticks)",
+  "at": 31.067,
+  "frame": 932.0,
+  "dur": 0.6,
+  "gain_db": -43
+ },
+ {
+  "name": "near pad peels off the glass",
+  "at": 33.133,
+  "frame": 994.0,
+  "dur": 0.28,
+  "gain_db": -31
+ },
+ {
+  "name": "near pad carried across to the brick (air, faint)",
+  "at": 33.367,
+  "frame": 1001.0,
+  "dur": 0.5,
+  "gain_db": -47
+ },
+ {
+  "name": "pad pressed onto the brick (gritty contact)",
+  "at": 34.113,
+  "frame": 1023.4,
+  "dur": 0.12,
+  "gain_db": -30
+ },
+ {
+  "name": "he presses it on (tether creak)",
+  "at": 34.433,
+  "frame": 1033.0,
+  "dur": 0.2,
+  "gain_db": -35
+ },
+ {
+  "name": "section: the brick tips meet only the peaks (sparse grit)",
+  "at": 35.0,
+  "frame": 1050.0,
+  "dur": 0.5,
+  "gain_db": -37
+ },
+ {
+  "name": "section: the glass wedges lie flat (dense ticks)",
+  "at": 35.4,
+  "frame": 1062.0,
+  "dur": 0.5,
+  "gain_db": -42
+ },
+ {
+  "name": "section: the brick wedges peel and skid",
+  "at": 35.733,
+  "frame": 1072.0,
+  "dur": 0.5,
+  "gain_db": -37
+ },
+ {
+  "name": "the brick pad creeps (fine grit)",
+  "at": 36.2,
+  "frame": 1086.0,
+  "dur": 0.4,
+  "gain_db": -40
+ },
+ {
+  "name": "the pad slips off the brick (dry crack and grit)",
+  "at": 36.48,
+  "frame": 1094.4,
+  "dur": 0.34,
+  "gain_db": -24
+ },
+ {
+  "name": "the near stirrup loses its anchor (webbing flap)",
+  "at": 36.6,
+  "frame": 1098.0,
+  "dur": 0.25,
+  "gain_db": -33
+ },
+ {
+  "name": "the lurch: air, short",
+  "at": 36.54,
+  "frame": 1096.2,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "the far tether snaps taut and arrests the lurch (cable tension)",
+  "at": 36.75,
+  "frame": 1102.5,
+  "dur": 0.32,
+  "gain_db": -23
+ },
+ {
+  "name": "the far pad holds on the glass (spring creak under the shock)",
+  "at": 36.82,
+  "frame": 1104.6,
+  "dur": 0.5,
+  "gain_db": -33
+ },
+ {
+  "name": "wind: outside, the drop below",
+  "at": 36.667,
+  "frame": 1100.0,
+  "dur": 1.4,
+  "gain_db": -38
+ },
+ {
+  "name": "he steadies on the far stirrup (cloth)",
+  "at": 36.933,
+  "frame": 1108.0,
+  "dur": 0.5,
+  "gain_db": -42
+ },
+ {
+  "name": "the deliberate reach back to the glass (air, faint)",
+  "at": 37.733,
+  "frame": 1132.0,
+  "dur": 0.6,
+  "gain_db": -44
+ },
+ {
+  "name": "the pad nears the glass (air, very soft)",
+  "at": 38.6,
+  "frame": 1158.0,
+  "dur": 0.35,
+  "gain_db": -46
+ }
+]
