@@ -86,22 +86,30 @@ export const TipCorona3 = ({cam, k, t}: {cam: Cam3; k: number; t: number}) => {
 };
 
 /** the site: sky and summit, tower, (crude 3D apparatus in wides), beam and prepared air, corona, discharge, bracket */
-export const View3: React.FC<{cam: Cam3; st: St; t: number; tag: string; children?: React.ReactNode}> = ({cam, st, t, tag, children}) => {
+/** dk fades the discharge (0..1, default 1); rain scales the rain (default 1). The flash wash is drawn under the
+ *  discharge, so it can never wash out the bolt's core or the bracket label. */
+export const View3: React.FC<{cam: Cam3; st: St; t: number; tag: string; children?: React.ReactNode; dk?: number; rain?: number}> = ({cam, st, t, tag, children, dk = 1, rain = 1}) => {
   const top = st.s > 0 ? BOLT3.pts[Math.max(0, BOLT3.pts.findIndex((p) => p.s >= Math.min(st.s, BOLT3.total)))] : undefined;
   const drift = tau3(t);
   const apFirst = len3(sub3(EXIT3, cam.pos)) > len3(sub3(v3(0, 60, 0), cam.pos));
   return (
     <g>
-      <Sky3D cam={cam} flash={st.flash} boltTop={top} drift={drift} rainT={drift + 40} />
+      <Sky3D cam={cam} flash={st.flash} boltTop={top} drift={drift} rainT={drift + 40} rain={rain} />
       {apFirst && st.apparatus && <Apparatus3D cam={cam} flash={st.flash} fire={1} id={`${tag}-ap`} />}
-      <Tower3D cam={cam} flash={st.flash} aviation={0.5 + 0.5 * Math.sin(drift * 3.4)} id={`${tag}-tw`} />
+      <Tower3D cam={cam} flash={st.flash} aviation={0.5 + 0.5 * Math.sin((2 * Math.PI * 17 * drift) / 33.5)} id={`${tag}-tw`} />
       {!apFirst && st.apparatus && <Apparatus3D cam={cam} flash={st.flash} fire={1} id={`${tag}-ap`} />}
       <Beam3D cam={cam} alpha={st.beam} pulses={st.pulses} channel={st.channel} channelTop={st.channelTop} id={`${tag}-bm`} />
       <TipCorona3 cam={cam} k={st.tipCorona} t={t} />
-      <Discharge3D cam={cam} s={st.s} core={st.core} id={`${tag}-dc`} />
+      {top && <FlashWash cam={cam} at={top} flash={st.flash} id={`${tag}-fw`} />}
+      {dk >= 1 ? (
+        <Discharge3D cam={cam} s={st.s} core={st.core} id={`${tag}-dc`} />
+      ) : dk > 0.003 ? (
+        <g opacity={dk} style={{mixBlendMode: 'screen'}}>
+          <Discharge3D cam={cam} s={st.s} core={st.core} id={`${tag}-dc`} />
+        </g>
+      ) : null}
       {children}
       <Bracket3 cam={cam} k={st.bracket ?? 0} label={st.label ?? 0} />
-      {top && <FlashWash cam={cam} at={top} flash={st.flash} id={`${tag}-fw`} />}
     </g>
   );
 };

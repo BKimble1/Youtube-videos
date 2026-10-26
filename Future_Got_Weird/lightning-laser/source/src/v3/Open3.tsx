@@ -37,9 +37,8 @@ const h1St = (t: number): St => ({
  *  clock and the haze finishing its growth; from 32.9 openSt itself (its inception light eased in, below) */
 const h2St = (t: number): St => {
   const o = openSt(t);
-  // openSt's scene light steps 0 -> 0.1 the frame the leader incepts (a whole-frame pop); let it come up with the
-  // leader's first 16 m instead (it equals openSt again by ~33.2, well before the seam)
-  if (t >= CRANE1) return o.s > 0 ? {...o, flash: o.flash * clamp(o.s / 16)} : o;
+  // (openSt eases its inception light in with the leader's first 16 m, so there is no whole-frame pop)
+  if (t >= CRANE1) return o;
   return {...o, pulses: endPulses(t), channel: 0.8 + 0.1 * (1 - ss(t, 31.6, CRANE1)), channelTop: chTopH(t)};
 };
 const LOW_CAM = lookAt(LOW.pos, LOW.target, LOW.f);

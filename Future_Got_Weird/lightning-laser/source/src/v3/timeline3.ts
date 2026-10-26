@@ -63,6 +63,7 @@ export const EV = {
   wordExtended: 29.92, wordSky2: 31.1,
   payoffTicks: [30.84, 31.14, 31.44, 31.74],
   fieldBuilds: 31.88, // crackle 31.88-32.9
+  wordAir2: 32.44, wordItself: 32.69,
 };
 
 // ------------------------------------------------------------------ the discharges

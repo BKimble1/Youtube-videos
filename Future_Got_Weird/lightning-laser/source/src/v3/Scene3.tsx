@@ -315,7 +315,9 @@ export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: stri
       if (age <= 0) return null;
       const grow = clamp(age * 3);
       const fade = clamp(1.25 - age) * 0.8 + 0.2 * clamp(c - 0.9);
-      return {pts: partial(st.pts, st.len * grow), a: fade};
+      // quieter and shorter near the rod tip, so a young leader does not read as a fishbone
+      const base = 0.45 + 0.55 * clamp((st.at - 8) / 30);
+      return {pts: partial(st.pts, st.len * grow * (0.6 + 0.4 * base)), a: fade * base};
     })
     .filter((x): x is {pts: V3[]; a: number} => !!x && x.a > 0.02);
   const f = cam.f;
@@ -327,7 +329,7 @@ export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: stri
       <g key={key} opacity={a}>
         {halo.map((r, i) => <path key={`h${i}`} d={r.d} fill="none" stroke="#6C78FF" strokeOpacity={0.14 * c} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
         {mid.map((r, i) => <path key={`m${i}`} d={r.d} fill="none" stroke="#B4C2FF" strokeOpacity={0.5 * Math.min(1, c)} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
-        {cor.map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke="#FFFFFF" strokeOpacity={Math.min(1, 0.6 + 0.4 * c)} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
+        {cor.map((r, i) => <path key={`c${i}`} d={r.d} fill="none" stroke="#FFFFFF" strokeOpacity={Math.min(1, 0.6 + 0.4 * c) * clamp(c / 0.25)} strokeWidth={fmt(r.w)} strokeLinecap="round" strokeLinejoin="round" />)}
       </g>
     );
   };
@@ -367,6 +369,8 @@ export const Beam3D: React.FC<{cam: Cam3; alpha: number; pulses?: number[]; chan
   const pts: V3[] = Array.from({length: 96}, (_, i) => axis3(-880 + ((hTop + 880) * i) / 95));
   const beamGlow = strokeRuns(P, pts, 0.7, f, 3, 16);
   const beamRuns = strokeRuns(P, pts, 0.16, f, 1.6, 5);
+  // the line ends inside the cloud base: runs fade out as the axis climbs from 205 m to 238 m (strokeRuns steps 4 points)
+  const runA = (r: number) => clamp((238 - pts[Math.min(pts.length - 1, r * 4 + 2)].y) / 33);
   // the prepared air as one continuous ribbon (width follows depth), so it never beads where stroke runs overlap
   const ch: V3[] = Array.from({length: 40}, (_, i) => axis3(-6 + ((channelTop + 6) * i) / 39));
   const chP = ch.map(P).filter((q) => q.ok);
@@ -396,8 +400,8 @@ export const Beam3D: React.FC<{cam: Cam3; alpha: number; pulses?: number[]; chan
       )}
       {alpha > 0 && (a.ok || b.ok) && (
         <g style={{mixBlendMode: 'screen'}}>
-          {beamGlow.map((r, i) => <path key={`g${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={alpha * 0.22} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
-          {beamRuns.map((r, i) => <path key={i} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={alpha * 0.9} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+          {beamGlow.map((r, i) => <path key={`g${i}`} d={r.d} fill="none" stroke={PAL.laserGlow} strokeOpacity={alpha * 0.22 * runA(i)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
+          {beamRuns.map((r, i) => <path key={i} d={r.d} fill="none" stroke={PAL.laser} strokeOpacity={alpha * 0.9 * runA(i)} strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
         </g>
       )}
       {pulses.map((h, i) => {
