@@ -177,8 +177,8 @@ export const Leader3: React.FC<{t: number; ac: AirCam}> = ({t, ac}) => {
     const k = (t < 4.515 ? ss(t, 4.355, 4.4) : 1 - ss(t, 4.515, 4.56));
     els.push(
       <g key="fizz" opacity={k}>
-        <circle cx={fmt(root.x)} cy={fmt(root.y)} r={fmt(wc * 13)} fill={PAL.halo} opacity={0.3} />
-        <circle cx={fmt(root.x)} cy={fmt(root.y)} r={fmt(wc * 3)} fill={PAL.mid} opacity={0.85} />
+        {/* (V4 fix A-1: a feathered falloff, no disc edge) */}
+        <circle cx={fmt(root.x)} cy={fmt(root.y)} r={fmt(wc * 13)} fill={`url(#b-lfizz-${frame})`} />
         <path d={corona(root, 68, wc * 11, 31, frame, 8)} fill="none" stroke="#E6E0FF" strokeWidth={fmt(wc * 0.6)} strokeLinecap="round" strokeLinejoin="round" />
       </g>,
     );
@@ -191,11 +191,20 @@ export const Leader3: React.FC<{t: number; ac: AirCam}> = ({t, ac}) => {
     els.push(<circle key={`bl${i}`} cx={fmt(c.x)} cy={fmt(c.y)} r={fmt(wc * 30)} fill={`url(#b-lbloom-${frame})`} opacity={0.75 * a} />);
   });
   const bloomDef = (
-    <radialGradient id={`b-lbloom-${frame}`}>
-      <stop offset="0" stopColor="#C9D0FF" stopOpacity={0.55} />
-      <stop offset="0.35" stopColor={PAL.halo} stopOpacity={0.22} />
-      <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
-    </radialGradient>
+    <>
+      <radialGradient id={`b-lbloom-${frame}`}>
+        <stop offset="0" stopColor="#C9D0FF" stopOpacity={0.55} />
+        <stop offset="0.35" stopColor={PAL.halo} stopOpacity={0.22} />
+        <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
+      </radialGradient>
+      <radialGradient id={`b-lfizz-${frame}`}>
+        <stop offset="0" stopColor="#E6E0FF" stopOpacity={0.9} />
+        <stop offset="0.1" stopColor={PAL.mid} stopOpacity={0.6} />
+        <stop offset="0.35" stopColor={PAL.halo} stopOpacity={0.24} />
+        <stop offset="0.68" stopColor={PAL.halo} stopOpacity={0.07} />
+        <stop offset="1" stopColor={PAL.halo} stopOpacity={0} />
+      </radialGradient>
+    </>
   );
   if (sM <= 0) return <g style={{mixBlendMode: 'screen'}}><defs>{bloomDef}</defs>{els}</g>;
 

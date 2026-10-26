@@ -223,8 +223,12 @@ export const Tower3D: React.FC<{cam: Cam3; flash: number; aviation: number; id: 
     const c = [[1, 1], [-1, 1], [-1, -1], [1, -1]][i];
     return v3(c[0] * w, y, c[1] * w);
   };
+  // the lattice stands on the upper ring's deck: the lowest bay starts at the deck's surface (V3 finding F-1: from
+  // shaftTop, 1 m lower, its foot poked through the deck and was painted over it, so seen from above the ring the
+  // mast seemed to stand on the deck's front rim, the deck showing through its lowest panels)
+  const MAST_FOOT = Math.max(TW.shaftTop, TW.ring2.y + TW.ring2.h);
   for (let b = 0; b < TW.bays; b++) {
-    const y0 = TW.shaftTop + ((TW.mastTop - TW.shaftTop) * b) / TW.bays, y1 = TW.shaftTop + ((TW.mastTop - TW.shaftTop) * (b + 1)) / TW.bays;
+    const y0 = b === 0 ? MAST_FOOT : TW.shaftTop + ((TW.mastTop - TW.shaftTop) * b) / TW.bays, y1 = TW.shaftTop + ((TW.mastTop - TW.shaftTop) * (b + 1)) / TW.bays;
     for (let f = 0; f < 4; f++) {
       const a0 = corner(y0, f), a1 = corner(y0, (f + 1) % 4), b0 = corner(y1, f), b1 = corner(y1, (f + 1) % 4);
       const mid = v3((a0.x + a1.x + b0.x + b1.x) / 4, (y0 + y1) / 2, (a0.z + a1.z + b0.z + b1.z) / 4);
