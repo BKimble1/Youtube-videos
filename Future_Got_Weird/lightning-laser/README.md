@@ -1,5 +1,55 @@
 # Future Got Weird: Lightning Laser
 
+## V3 (final visual pass)
+
+**Status (26 Oct 2026):** the V3 review and a native 2160×3840 master were rendered from source and checked from the
+files (`production/V3_QA_REPORT.md`). **Not published.**
+
+V3 changes the picture only:
+- **Audio:** the script, voice recording, complete V2 soundtrack and caption wording and timing are unchanged. Both
+  files carry V2's audio stream packet for packet, verified by hash (`production/V3_AUDIO_LOCK.md`,
+  `qa/v3/audio_identity.json`).
+- **Structure:** eight beats held together by continuous camera moves, with six hard cuts and one match cut (V2 had
+  24 cuts).
+- **Opening:** a single setup in which the leader climbs the laser path from the rod tip.
+- **Molecular explanations:** one for ordinary air, and one connected process for the channel.
+- **Machine:** the press and one continuous reveal of the pulses leaving it.
+- **Demonstration:** one view with the 160+ ft bracket on the guided section.
+- **Rod:** one push, with the whole conductor lit and no protection zone.
+- **Ending:** a reveal that returns exactly to the opening camera for the loop.
+- **Look:** a lobed storm base with local light, and a cyan / warm / white-violet colour language for laser, prepared
+  air and discharge.
+
+| Deliverable | File |
+|---|---|
+| Review: 1080×1920 measured, 30 fps, 1005 frames, 33.50 s, captions burned in, seamless loop | `exports/FGW_Lightning_Laser_V3_REVIEW_1080x1920.mp4` |
+| Master: 2160×3840 native (vectors and text rendered at 2×, not upscaled), the same cut and audio | `exports/FGW_Lightning_Laser_V3_MASTER_2160x3840.mp4` |
+| Beats, setups and transitions | `production/V3_SHOTS_AND_TRANSITIONS.md` |
+| QA report (audio identity, metadata, acceptance questions, review findings, open issues) | `production/V3_QA_REPORT.md`, `qa/v3/` |
+| Audio lock (asset hashes, remux method) | `production/V3_AUDIO_LOCK.md` |
+| Build plan and contracts between beats | `production/V3_PLAN.md` |
+| Editable source | `source/src/v3/` (composition `LightningLaserV3`), registered in `source/src/Root.tsx` |
+
+V3 source (`source/src/v3/`):
+
+| File | What |
+|---|---|
+| `timeline3.ts` | beat boundaries, sound-locked event times (`EV`), the loop clock, leader growth and discharge light |
+| `cams3.ts`, `states3.ts`, `view3.tsx` | the opening and demonstration cameras and the hand-off constants, site states, the site view (`View3`, `zoomAbout`) |
+| `Scene3*.tsx`, `bolt3.ts`, `palette.ts` | storm sky, terrain, tower, beam, discharge and local light; the V3 bolt; the colour language |
+| `Open3*.tsx`, `Open3_end.ts` | A (opening) and H (extension, reveal, return to the opening camera) |
+| `Air3*.tsx` | B (ordinary air resists) |
+| `Machine3*.tsx` | C (press, optics, continuous reveal) |
+| `Channel3*.tsx` | D + E (electrons, heating, the channel; the leader runs it; the pull-out) |
+| `Demo3*.tsx` | F (the demonstration and the 160+ ft bracket) |
+| `Rod3*.tsx` | G (the house rod) |
+| `shots3.tsx`, `Film3.tsx`, `captions3.ts` | routing, the composition and stills (`FilmStillV3`, `SheetV3`, `QuadV3`), caption heights |
+
+Rebuild V3 from the episode folder: `sh tools/build_all_v3.sh master`. It runs the muted render, the packet-copy remux
+of the locked audio, audio identity and metadata verification, file QA and the motion scan; `master` adds the
+2160×3840 render. Strips from the MP4: `python3 tools/strips_v3.py <mp4> <dir> name:f0:f1:step[:width]`. Contact
+sheets while working: `cd source && ./sheet3.sh out.png "f1,f2,..." [true]`.
+
 ## V2 (second pass)
 
 **Status (26 Oct 2026):** the V2 review is rendered from source (measured 1080×1920, 30 fps, 1005 frames) and checked from the file
