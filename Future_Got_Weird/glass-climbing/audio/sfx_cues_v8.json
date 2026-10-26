@@ -4,601 +4,687 @@
   "at": 2.4,
   "frame": 72.0,
   "dur": 0.5,
-  "gain_db": -41
+  "gain_db": -41,
+  "hero": false
  },
  {
   "name": "near tether takes the load (creak)",
   "at": 2.6,
   "frame": 78.0,
   "dur": 0.22,
-  "gain_db": -31
+  "gain_db": -31,
+  "hero": false
  },
  {
   "name": "the near stirrup takes the foot (step knock)",
   "at": 2.75,
   "frame": 82.5,
   "dur": 0.16,
-  "gain_db": -36
+  "gain_db": -36,
+  "hero": false
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
   "at": 2.867,
   "frame": 86.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "far pad carried (air, faint)",
   "at": 3.0,
   "frame": 90.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "far pad seats on the glass",
-  "at": 3.77,
-  "frame": 113.1,
+  "at": 3.7,
+  "frame": 111.0,
   "dur": 0.12,
-  "gain_db": -25
+  "gain_db": -25,
+  "hero": false
  },
  {
   "name": "far pad takes its load (fine ticks)",
   "at": 3.84,
   "frame": 115.2,
   "dur": 0.3,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
   "at": 3.867,
   "frame": 116.0,
   "dur": 0.7,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "far tether takes his weight",
   "at": 4.267,
   "frame": 128.0,
   "dur": 0.24,
-  "gain_db": -28
+  "gain_db": -28,
+  "hero": false
  },
  {
   "name": "near pad releases: peels and stands off the glass (dry)",
   "at": 4.667,
   "frame": 140.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "near pad carried (air, faint)",
   "at": 4.833,
   "frame": 145.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "near pad seats on the glass",
-  "at": 5.437,
-  "frame": 163.1,
+  "at": 5.367,
+  "frame": 161.0,
   "dur": 0.12,
-  "gain_db": -25
+  "gain_db": -25,
+  "hero": false
  },
  {
   "name": "near pad takes its load (fine ticks)",
   "at": 5.507,
   "frame": 165.2,
   "dur": 0.3,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "near tether takes its share again",
   "at": 5.733,
   "frame": 172.0,
   "dur": 0.2,
-  "gain_db": -33
+  "gain_db": -33,
+  "hero": false
  },
  {
   "name": "weight onto the near stirrup (cloth)",
   "at": 22.133,
   "frame": 664.0,
   "dur": 0.5,
-  "gain_db": -41
+  "gain_db": -41,
+  "hero": false
  },
  {
   "name": "near tether takes the load (creak)",
   "at": 22.8,
   "frame": 684.0,
   "dur": 0.22,
-  "gain_db": -31
+  "gain_db": -31,
+  "hero": false
  },
  {
   "name": "the near stirrup takes the foot (step knock)",
   "at": 23.417,
   "frame": 702.5,
   "dur": 0.16,
-  "gain_db": -36
+  "gain_db": -36,
+  "hero": false
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
   "at": 24.867,
   "frame": 746.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "far pad carried (air, faint)",
   "at": 25.267,
   "frame": 758.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "far pad seats on the glass",
-  "at": 26.837,
-  "frame": 805.1,
+  "at": 26.767,
+  "frame": 803.0,
   "dur": 0.12,
-  "gain_db": -25
+  "gain_db": -25,
+  "hero": false
  },
  {
   "name": "far pad takes its load (fine ticks)",
   "at": 26.907,
   "frame": 807.2,
   "dur": 0.3,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
   "at": 26.933,
   "frame": 808.0,
   "dur": 0.7,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "far tether takes his weight",
   "at": 27.373,
   "frame": 821.2,
   "dur": 0.24,
-  "gain_db": -28
+  "gain_db": -28,
+  "hero": false
  },
  {
   "name": "near pad releases: peels and stands off the glass (dry)",
   "at": 27.8,
   "frame": 834.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "near pad carried (air, faint)",
   "at": 27.967,
   "frame": 839.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "near pad seats on the glass",
-  "at": 28.503,
-  "frame": 855.1,
+  "at": 28.433,
+  "frame": 853.0,
   "dur": 0.12,
-  "gain_db": -25
+  "gain_db": -25,
+  "hero": false
  },
  {
   "name": "near pad takes its load (fine ticks)",
   "at": 28.573,
   "frame": 857.2,
   "dur": 0.3,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "near tether takes its share again",
   "at": 28.733,
   "frame": 862.0,
   "dur": 0.2,
-  "gain_db": -33
+  "gain_db": -33,
+  "hero": false
  },
  {
   "name": "weight onto the near stirrup (cloth)",
   "at": 29.067,
   "frame": 872.0,
   "dur": 0.5,
-  "gain_db": -41
+  "gain_db": -41,
+  "hero": false
  },
  {
   "name": "near tether takes the load (creak)",
   "at": 29.167,
   "frame": 875.0,
   "dur": 0.22,
-  "gain_db": -31
+  "gain_db": -31,
+  "hero": false
  },
  {
   "name": "the near stirrup takes the foot (step knock)",
   "at": 29.217,
   "frame": 876.5,
   "dur": 0.16,
-  "gain_db": -36
+  "gain_db": -36,
+  "hero": false
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
   "at": 29.267,
   "frame": 878.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "far pad carried (air, faint)",
   "at": 29.433,
   "frame": 883.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "far pad releases: peels and stands off the glass (dry)",
   "at": 32.0,
   "frame": 960.0,
   "dur": 0.3,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "far pad carried (air, faint)",
   "at": 32.133,
   "frame": 964.0,
   "dur": 0.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "far pad seats on the glass",
-  "at": 32.603,
-  "frame": 978.1,
+  "at": 32.533,
+  "frame": 976.0,
   "dur": 0.12,
-  "gain_db": -25
+  "gain_db": -25,
+  "hero": false
  },
  {
   "name": "far pad takes its load (fine ticks)",
   "at": 32.673,
   "frame": 980.2,
   "dur": 0.3,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "he rises onto the far stirrup (cloth)",
   "at": 32.633,
   "frame": 979.0,
   "dur": 0.7,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "far tether takes his weight",
   "at": 32.853,
   "frame": 985.6,
   "dur": 0.24,
-  "gain_db": -28
+  "gain_db": -28,
+  "hero": false
  },
  {
   "name": "CATCH: the near pad meets the glass (crisp contact)",
   "at": 0.08,
   "frame": 2.4,
   "dur": 0.2,
-  "gain_db": -20
+  "gain_db": -19,
+  "hero": true
  },
  {
   "name": "the pad seats under the downward load (fine ticks)",
   "at": 0.15,
   "frame": 4.5,
   "dur": 0.25,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "the near tether snaps taut as it takes him",
   "at": 0.22,
   "frame": 6.6,
   "dur": 0.26,
-  "gain_db": -26
+  "gain_db": -26,
+  "hero": false
  },
  {
   "name": "the near stirrup takes his foot (step knock)",
   "at": 0.293,
   "frame": 8.8,
   "dur": 0.18,
-  "gain_db": -31
+  "gain_db": -31,
+  "hero": false
  },
  {
   "name": "the far pad shares the load (spring creak)",
   "at": 0.333,
   "frame": 10.0,
   "dur": 0.45,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "knees absorb the settle (cloth)",
   "at": 0.267,
   "frame": 8.0,
   "dur": 0.45,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "contact close-up: the backing takes the load (fine ticks)",
   "at": 0.933,
   "frame": 28.0,
   "dur": 0.6,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "contact close-up: the springs answer (soft)",
   "at": 1.2,
   "frame": 36.0,
   "dur": 0.4,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "wind: a brief lift as the view opens onto the drop",
   "at": 3.667,
   "frame": 110.0,
   "dur": 1.8,
-  "gain_db": -37
+  "gain_db": -37,
+  "hero": false
  },
  {
   "name": "wind: below him, the climb",
   "at": 4.867,
   "frame": 146.0,
   "dur": 1.2,
-  "gain_db": -41
+  "gain_db": -41,
+  "hero": false
  },
  {
   "name": "the pad at the glass (fine ticks)",
   "at": 6.2,
   "frame": 186.0,
   "dur": 0.8,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "into the tile edge (air, very soft)",
   "at": 6.0,
   "frame": 180.0,
   "dur": 1.4,
-  "gain_db": -48
+  "gain_db": -48,
+  "hero": false
  },
  {
   "name": "the wedge tips settle on the glass (soft tick)",
   "at": 8.2,
   "frame": 246.0,
   "dur": 0.08,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "shear: the wedges begin to bend (fine ticks)",
   "at": 9.4,
   "frame": 282.0,
   "dur": 1.0,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "the wedges lie flat (dense ticks)",
   "at": 10.6,
   "frame": 318.0,
   "dur": 1.2,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "into the contact (very soft high tone)",
   "at": 13.067,
   "frame": 392.0,
   "dur": 1.4,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "molecular scale: the gap closes (very soft high tone)",
   "at": 14.533,
   "frame": 436.0,
   "dur": 1.2,
-  "gain_db": -48
+  "gain_db": -48,
+  "hero": false
  },
  {
   "name": "back out (air, very soft)",
   "at": 15.867,
   "frame": 476.0,
   "dur": 0.8,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "the loaded stirrups settle (step creak)",
   "at": 16.833,
   "frame": 505.0,
   "dur": 0.2,
-  "gain_db": -36
+  "gain_db": -36,
+  "hero": false
  },
  {
   "name": "up the tether from the stirrup (air, faint)",
   "at": 17.667,
   "frame": 530.0,
   "dur": 0.5,
-  "gain_db": -48
+  "gain_db": -48,
+  "hero": false
  },
  {
   "name": "the cover is cut away (air, faint)",
-  "at": 18.467,
-  "frame": 554.0,
+  "at": 18.7,
+  "frame": 561.0,
   "dur": 0.5,
-  "gain_db": -48
+  "gain_db": -48,
+  "hero": false
  },
  {
   "name": "the strap pulls straight; the springs stretch together",
-  "at": 18.9,
-  "frame": 567.0,
+  "at": 19.167,
+  "frame": 575.0,
   "dur": 0.8,
-  "gain_db": -35
+  "gain_db": -35,
+  "hero": false
  },
  {
   "name": "one patch lets go: its spring slackens",
-  "at": 19.733,
-  "frame": 592.0,
+  "at": 19.7,
+  "frame": 591.0,
   "dur": 0.4,
-  "gain_db": -37
+  "gain_db": -37,
+  "hero": false
  },
  {
   "name": "its neighbours take up its share",
-  "at": 19.9,
-  "frame": 597.0,
+  "at": 19.933,
+  "frame": 598.0,
   "dur": 0.5,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "the load evens out again",
   "at": 20.567,
   "frame": 617.0,
   "dur": 0.5,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "the cover goes back on (air, faint)",
-  "at": 21.0,
-  "frame": 630.0,
+  "at": 21.3,
+  "frame": 639.0,
   "dur": 0.4,
-  "gain_db": -49
+  "gain_db": -49,
+  "hero": false
  },
  {
   "name": "wind: outside, nearing the brick",
   "at": 28.667,
   "frame": 860.0,
   "dur": 1.2,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "contact test: the pad seats on the glass",
   "at": 30.037,
   "frame": 901.1,
   "dur": 0.12,
-  "gain_db": -28
+  "gain_db": -28,
+  "hero": false
  },
  {
   "name": "contact test: broad, even contact spreads (dense, soft ticks)",
   "at": 30.133,
   "frame": 904.0,
   "dur": 0.7,
-  "gain_db": -41
+  "gain_db": -41,
+  "hero": false
  },
  {
   "name": "section: every wedge flat on the glass (dense, soft ticks)",
   "at": 31.067,
   "frame": 932.0,
   "dur": 0.6,
-  "gain_db": -43
+  "gain_db": -43,
+  "hero": false
  },
  {
   "name": "near pad peels off the glass",
   "at": 33.133,
   "frame": 994.0,
   "dur": 0.28,
-  "gain_db": -31
+  "gain_db": -31,
+  "hero": false
  },
  {
   "name": "near pad carried across to the brick (air, faint)",
   "at": 33.367,
   "frame": 1001.0,
   "dur": 0.5,
-  "gain_db": -47
+  "gain_db": -47,
+  "hero": false
  },
  {
   "name": "pad pressed onto the brick (gritty contact)",
   "at": 34.113,
   "frame": 1023.4,
   "dur": 0.12,
-  "gain_db": -30
+  "gain_db": -30,
+  "hero": false
  },
  {
   "name": "he presses it on (tether creak)",
   "at": 34.433,
   "frame": 1033.0,
   "dur": 0.2,
-  "gain_db": -35
+  "gain_db": -35,
+  "hero": false
  },
  {
   "name": "section: the brick tips meet only the peaks (sparse grit)",
   "at": 35.0,
   "frame": 1050.0,
   "dur": 0.5,
-  "gain_db": -37
+  "gain_db": -37,
+  "hero": false
  },
  {
   "name": "section: the glass wedges lie flat (dense ticks)",
   "at": 35.4,
   "frame": 1062.0,
   "dur": 0.5,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "section: the brick wedges peel and skid",
   "at": 35.733,
   "frame": 1072.0,
   "dur": 0.5,
-  "gain_db": -37
+  "gain_db": -37,
+  "hero": false
  },
  {
   "name": "the brick pad creeps (fine grit)",
   "at": 36.2,
   "frame": 1086.0,
   "dur": 0.4,
-  "gain_db": -40
+  "gain_db": -40,
+  "hero": false
  },
  {
   "name": "the pad slips off the brick (dry crack and grit)",
-  "at": 36.48,
-  "frame": 1094.4,
+  "at": 36.56,
+  "frame": 1096.8,
   "dur": 0.34,
-  "gain_db": -24
+  "gain_db": -21,
+  "hero": true
  },
  {
   "name": "the near stirrup loses its anchor (webbing flap)",
   "at": 36.6,
   "frame": 1098.0,
   "dur": 0.25,
-  "gain_db": -33
+  "gain_db": -33,
+  "hero": false
  },
  {
   "name": "the lurch: air, short",
-  "at": 36.54,
-  "frame": 1096.2,
+  "at": 36.6,
+  "frame": 1098.0,
   "dur": 0.3,
-  "gain_db": -33
+  "gain_db": -33,
+  "hero": false
  },
  {
   "name": "the far tether snaps taut and arrests the lurch (cable tension)",
   "at": 36.75,
   "frame": 1102.5,
   "dur": 0.32,
-  "gain_db": -23
+  "gain_db": -18,
+  "hero": true
  },
  {
   "name": "the far pad holds on the glass (spring creak under the shock)",
   "at": 36.82,
   "frame": 1104.6,
   "dur": 0.5,
-  "gain_db": -33
+  "gain_db": -33,
+  "hero": false
  },
  {
   "name": "wind: outside, the drop below",
   "at": 36.667,
   "frame": 1100.0,
   "dur": 1.4,
-  "gain_db": -38
+  "gain_db": -38,
+  "hero": false
  },
  {
   "name": "he steadies on the far stirrup (cloth)",
   "at": 36.933,
   "frame": 1108.0,
   "dur": 0.5,
-  "gain_db": -42
+  "gain_db": -42,
+  "hero": false
  },
  {
   "name": "the deliberate reach back to the glass (air, faint)",
   "at": 38.2,
   "frame": 1146.0,
   "dur": 0.6,
-  "gain_db": -44
+  "gain_db": -44,
+  "hero": false
  },
  {
   "name": "the pad nears the glass (air, very soft)",
   "at": 38.6,
   "frame": 1158.0,
   "dur": 0.35,
-  "gain_db": -46
+  "gain_db": -46,
+  "hero": false
  }
 ]

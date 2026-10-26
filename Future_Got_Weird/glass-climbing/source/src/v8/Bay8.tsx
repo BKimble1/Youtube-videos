@@ -58,7 +58,8 @@ const Strap8: React.FC<{id: string; a: V; b: V; sag: number; k: number; far?: bo
   const bow = 1.5 * sag;
   const c = {x: (a.x + b.x) / 2 + nx * bow, y: (a.y + b.y) / 2 + ny * bow + 0.25 * sag};
   const d = `M${fmt(a.x)},${fmt(a.y)} Q${fmt(c.x)},${fmt(c.y)} ${fmt(b.x)},${fmt(b.y)}`;
-  const col = far ? shade(WEB, 0.18) : WEB;
+  // (the far strap a step darker, so where it passes behind the near pad the two read at different depths)
+  const col = far ? shade(WEB, 0.32) : WEB;
   const w = 2.4 * CM;
   return (
     <g>

@@ -399,7 +399,12 @@ const climbBody = (T: number): Body => {
  *  out, back by the time he reaches; none at the catch */
 const SWING: KeyN = [
   [C.fail, 0],
-  [C.fail + 9, 6, (f, a, b) => 1 - (1 - clamp((f - a) / (b - a))) ** 2],
+  // (V8 QA: eased in, so the swing (which lifts the feet a little as it turns them out) never outruns the drop and
+  // the lurch starts downward)
+  [C.fail + 10, 6, (f, a, b) => {
+    const x = clamp((f - a) / (b - a));
+    return x * x * x * (x * (x * 6 - 15) + 10);
+  }],
   [C.arrest + 6, 1.5, (f, a, b) => {
     const x = clamp((f - a) / (b - a));
     return x * x * (3 - 2 * x);
@@ -441,14 +446,14 @@ const catchBody = (T: number): Body => {
     padL.gap = Math.max(0, at.x - g.x);
   } else {
     // seated: it moves a few units down the glass as the wedges take the load, then holds
-    const seat = keyN(T, [[tc, -9], [FRAMES + C.seat, 0, easeOut]]);
+    const seat = keyN(T, [[tc, -3], [FRAMES + C.seat, 0, easeOut]]); // (V8 QA: a seat of a few mm, not a slide)
     padL = {...rest('L', DY(NCY)), y: DY(NCY) + seat, load: keyN(T, [[tc, 0.35], [FRAMES + C.seat, 1, easeOut]]), contact: keyN(T, [[tc, 0.3], [tc + 5, 1]])};
   }
   // hips: the lurch (fast, arrested by the far strap and his far knee, a small rebound), steady; during the reach he
   // stands up on the far stirrup; the catch: a short settle as the near stirrup takes him, then level
   const top = atTop.H.y;
   const level = levelY(NCY);
-  let hy = keyN(T, [[C.fail, top], [C.fail + 8, top + LURCH * 1.06, (f, a, b) => clamp((f - a) / (b - a)) ** 1.6], [C.fail + 13, top + LURCH * 0.95], [C.fail + 19, top + LURCH]]);
+  let hy = keyN(T, [[C.fail, top], [C.fail + 8, top + LURCH * 1.06, (f, a, b) => clamp((f - a) / (b - a)) ** 1.25], [C.fail + 13, top + LURCH * 0.95], [C.fail + 19, top + LURCH]]);
   if (T >= C.fail + 19) hy = keyN(T, [[C.fail + 19, top + LURCH], [C.reach0, top + LURCH], [FRAMES - 2, level + 34], [tc, level + 30], [FRAMES + C.settle0 + 4, level + 92, (f, a, b) => {
     // (V8 QA: eased in as well as out, so the load comes on over a few frames instead of a one-frame drop at contact)
     const x = clamp((f - a) / (b - a));

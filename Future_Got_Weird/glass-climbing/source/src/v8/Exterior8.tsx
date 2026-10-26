@@ -76,9 +76,12 @@ export const matchedPier = (cam: Cam3, st: ClimbState): [number, number] => {
   return [solve(PIER_Z), solve(PIER_Z + PIER_W)];
 };
 
-export const Exterior8: React.FC<{id: string; f: number; cam: Cam3; st: ClimbState | null; detail?: number; plate?: Plate | null; brickMatch?: ClimbState | null; floorShift?: number}> = ({id, f, cam, st, detail = 1, plate, brickMatch, floorShift = EXT_FLOOR_SHIFT}) => {
-  const bc = st ? bayCamFor(cam, st) : null;
-  const up = st ? uprightFor(cam, st) : null;
+export const Exterior8: React.FC<{id: string; f: number; cam: Cam3; st: ClimbState | null; detail?: number; plate?: Plate | null; brickMatch?: ClimbState | null; floorShift?: number; refSt?: ClimbState | null}> = ({id, f, cam, st, detail = 1, plate, brickMatch, floorShift = EXT_FLOOR_SHIFT, refSt}) => {
+  // (V8 QA) the bay drawing is placed from a fixed reference state for the whole shot when one is given: placed from
+  // the frame's own pads, its scale followed them and a seated pad crept on screen while the other one moved
+  const ref = refSt ?? st;
+  const bc = st && ref ? bayCamFor(cam, ref) : null;
+  const up = st && ref ? uprightFor(cam, ref) : null;
   return (
     <>
       {plate ? <PlateImg pl={plate} cam={cam} /> : <TowerScene id={`${id}-t`} cam={cam} f={f} st={null} detail={detail} nearPier={brickMatch ? matchedPier(cam, brickMatch) : null} floorShift={floorShift} />}

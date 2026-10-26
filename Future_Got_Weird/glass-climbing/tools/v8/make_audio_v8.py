@@ -67,9 +67,10 @@ catch_ = win(w('but', 1) - 0.05, DUR - 0.5, 0.2, 0.5)  # the catch: the pulse th
 music = pad_main * (0.9 - 0.25 * micro) + pad_air * (0.25 + 0.6 * micro) + pulse * (0.5 - 0.35 * micro) * (1 - 0.4 * catch_)
 
 # ---------------- effects ----------------
-sfx = np.zeros(N); log = []
-def add(name, sig, at, gain_db):
-    place(sfx, sig * db(gain_db), at); log.append({'name': name, 'at': round(at % DUR, 3), 'frame': round(at * 30, 1), 'dur': round(len(sig) / SR, 3), 'gain_db': round(gain_db, 1)})
+sfx = np.zeros(N); key = np.zeros(N); log = []
+def add(name, sig, at, gain_db, hero=False):
+    # hero: one of the story's key action sounds (the catch, the slip, the arrest): kept clear of the speech ducking
+    place(key if hero else sfx, sig * db(gain_db), at); log.append({'name': name, 'at': round(at % DUR, 3), 'frame': round(at * 30, 1), 'dur': round(len(sig) / SR, 3), 'gain_db': round(gain_db, 1), 'hero': hero})
 def tock(f=1900, d=0.12):
     # a plate seating on glass: a short, dry, slightly glassy knock
     n = int(d * SR); tt = np.arange(n) / SR
@@ -162,7 +163,7 @@ def pad_move(side, rel, m0, m1, place, gain=0):
     name = 'near' if side == 'L' else 'far'
     if seen(rel): add(f'{name} pad releases: peels and stands off the glass (dry)', peel(0.3), F(rel), -30 + gain)
     if seen(m0): add(f'{name} pad carried (air, faint)', air(0.4, 400, 1300), F(m0), -47 + gain)
-    if seen(place): add(f'{name} pad seats on the glass', tock(1850 if side == 'R' else 1900), F(place) - 0.03, -25 + gain)
+    if seen(place): add(f'{name} pad seats on the glass', tock(1850 if side == 'R' else 1900), F(place) - 0.1, -25 + gain)  # (it reaches the glass a few frames before its seat key)
     if seen(place): add(f'{name} pad takes its load (fine ticks)', ticks(0.3, 40, 4600), F(place) + 0.04, -43 + gain)
 for c in CY:
     if seen(c['sh'][0]):
@@ -177,7 +178,7 @@ for c in CY:
     if c['settle'] and seen(c['settle'][0]):
         add('near tether takes its share again', taut(0.2, 92) * 0.8, F(c['settle'][1] - 4), -33)
 # 1. the hook: the catch (frame 3, the end of the recovery), the seat, the tether, the stirrup, the settle
-add('CATCH: the near pad meets the glass (crisp contact)', tock(1800, 0.2) + 0.5 * thunk(0.2), F(C['contact']) - 0.02, -20)
+add('CATCH: the near pad meets the glass (crisp contact)', tock(1800, 0.2) + 0.5 * thunk(0.2), F(C['contact']) - 0.02, -19, True)
 add('the pad seats under the downward load (fine ticks)', ticks(0.25, 60, 4600), F(C['contact']) + 0.05, -40)
 add('the near tether snaps taut as it takes him', taut(0.26, 84), F(C['contact']) + 0.12, -26)
 add('the near stirrup takes his foot (step knock)', barstep(0.18), F(C['seat']) - 0.04, -31)
@@ -220,10 +221,10 @@ add('section: the glass wedges lie flat (dense ticks)', ticks(0.5, 50, 4400) * 0
 add('section: the brick wedges peel and skid', scrape(0.5) * 0.6, F(1072), -37)
 # 6. the slip, the lurch, the recovery (and, across the loop, the catch at frame 3 above)
 add('the brick pad creeps (fine grit)', scrape(0.4) * 0.35, F(1086), -40)
-add('the pad slips off the brick (dry crack and grit)', sharp_peel(), F(C['fail']) - 0.02, -24)
+add('the pad slips off the brick (dry crack and grit)', sharp_peel(), F(C['fail']) + 0.06, -21, True)
 add('the near stirrup loses its anchor (webbing flap)', rustle(0.25) + 0.3 * barstep(0.25), F(C['fail']) + 0.1, -33)
-add('the lurch: air, short', air(0.3, 300, 1200), F(C['fail']) + 0.04, -33)
-add('the far tether snaps taut and arrests the lurch (cable tension)', taut(0.32, 78) + 0.4 * thunk(0.32), F(C['fail']) + 0.25, -23)
+add('the lurch: air, short', air(0.3, 300, 1200), F(C['fail']) + 0.1, -33)
+add('the far tether snaps taut and arrests the lurch (cable tension)', taut(0.32, 78) + 0.4 * thunk(0.32), F(C['fail']) + 0.25, -18, True)
 add('the far pad holds on the glass (spring creak under the shock)', spring(0.5, 470, 400), F(C['fail']) + 0.32, -33)
 add('wind: outside, the drop below', wind(1.4), F(1100), -38)
 add('he steadies on the far stirrup (cloth)', rustle(0.5), F(C['arrest']), -42)
@@ -237,7 +238,8 @@ def lufs(x): return meter.integrated_loudness(x)
 voice_l = voice * db(-17 - lufs(voice))
 mus_l = music * duck * db(-17 - 15 - lufs(music * duck))
 sfx_l = sfx * db(3) * (1 - 0.35 * np.clip(ve * 6, 0, 1))
-mix = voice_l + mus_l + sfx_l
+key_l = key * db(3)
+mix = voice_l + mus_l + sfx_l + key_l
 g = -14 - lufs(np.stack([mix, mix], 1))
 mix *= db(g)
 lim = db(-1.5)
@@ -248,11 +250,11 @@ os.makedirs(os.path.join(EP, 'audio/mix/stems_v8'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 sf.write(os.path.join(EP, 'source/public/audio/mix_v8.wav'), stereo, SR, subtype='PCM_24')
 shutil.copy(os.path.join(EP, 'source/public/audio/mix_v8.wav'), os.path.join(EP, 'audio/mix/FGW_Glass_Climbing_V8_mix.wav'))
-for name, x in [('voice', voice_l * db(g)), ('music', mus_l * db(g)), ('sfx', sfx_l * db(g))]:
+for name, x in [('voice', voice_l * db(g)), ('music', mus_l * db(g)), ('sfx', (sfx_l + key_l) * db(g))]:
     sf.write(os.path.join(EP, f'audio/mix/stems_v8/{name}.wav'), x, SR, subtype='PCM_24')
 band = lambda x: bp(x, 400, 5000)
 spk = ve > 0.08
-vb, ob = band(voice_l * db(g)), band((mus_l + sfx_l) * db(g))
+vb, ob = band(voice_l * db(g)), band((mus_l + sfx_l + key_l) * db(g))
 r = lambda x: 10 * np.log10(np.mean(x[spk] ** 2) + 1e-12)
 corr = float(np.corrcoef(voice, voice_l)[0, 1])
 meas = {'integrated_lufs_stereo': round(lufs(stereo), 2), 'sample_peak_dbfs': round(20 * np.log10(np.abs(mix).max()), 2),

@@ -68,13 +68,16 @@ const PadScene6: React.FC<{id: string; st: Pad3DState; cam: Cam}> = ({id, st, ca
   );
 };
 /** an exterior view: the 2D climber over the perspective tower; top: the climb's top coordinates (across the seam) */
-const ext = (id: string, f: number, cam: Cam3, top = false, brickAt: number | null = null) => {
+const ext = (id: string, f: number, cam: Cam3, top = false, brickAt: number | null = null, refAt: number | null = null) => {
   const camOnly = React.useContext(CamOnly);
+  const at = (t: number) => (top ? climbTop(t) : climbAt(t));
   // brickAt: a fixed frame whose state places the brick pier (so it never moves during the shot)
-  const bm = brickAt == null ? null : top ? climbTop(brickAt) : climbAt(brickAt);
+  const bm = brickAt == null ? null : at(brickAt);
+  // refAt: a fixed frame whose state places the drawing of him for the whole shot (the brick frame by default)
+  const rf = refAt ?? brickAt;
   // the street and sky keep running across the loop: the frames before the catch ends follow the last frame
   const tf = top && f < CATCH_END ? f + FRAMES : f;
-  return <Exterior8 id={id} f={tf} cam={cam} st={camOnly ? null : top ? climbTop(f) : climbAt(f)} brickMatch={bm} />;
+  return <Exterior8 id={id} f={tf} cam={cam} st={camOnly ? null : at(f)} brickMatch={bm} refSt={rf == null ? null : at(rf)} />;
 };
 const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 type P3 = {x: number; y: number; z: number};
@@ -317,7 +320,7 @@ const camH4 = (f: number): Cam3 => {
   const u = sm5(clamp((f - 105) / 38));
   return {eye: CAM_B.eye, target: H4_TARGET, f: Math.exp(lerp(Math.log(1750), Math.log(CAM_B.f), u))};
 };
-const H4: React.FC<{f: number}> = ({f}) => ext(`h4${f}`, f, camH4(f));
+const H4: React.FC<{f: number}> = ({f}) => ext(`h4${f}`, f, camH4(f), false, null, 138);
 
 // ------------------------------------------------------------------ 4. the climb (664-857): one cycle in one medium view
 /** CC (664-857) "Then, you shift your weight onto the other pad. The first releases, letting you reach higher and
@@ -330,7 +333,7 @@ const CC: React.FC<{f: number}> = ({f}) => bay(`c${f}`, f, CAM_CLIMB);
 // ------------------------------------------------------------------ 5. the catch in the method (857-1082)
 /** E1 (857-894) "But there's a catch.": the hero view's camera, outside: he climbs on toward the brick strip beside
  *  his bay; smooth glass and rough brick side by side */
-const E1: React.FC<{f: number}> = ({f}) => ext(`e1${f}`, f, CAM_A);
+const E1: React.FC<{f: number}> = ({f}) => ext(`e1${f}`, f, CAM_A, false, null, 875);
 /** G1 (894-930) "They need a smooth surface": the contact test (placeholder until the V8 through-glass view) */
 const padG1 = (f: number): Pad3DState => {
   const load = keyN(f, [[896, 0.35], [922, 1]]);
