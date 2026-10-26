@@ -51,7 +51,7 @@ const SUN = norm3(v3(0.55, 1, -0.45)); // toward the sun
 const SHADOW_DIR = v3(-SUN.x / SUN.y, 0, -SUN.z / SUN.y); // ground offset per metre of height
 
 export type Cam3 = {eye: P3; target: P3; f: number; roll?: number};
-const makeCam = (c: Cam3) => {
+export const makeCam = (c: Cam3) => {
   const fw = norm3(sub3(c.target, c.eye));
   let rt = norm3(cross3(fw, v3(0, 1, 0)));
   let up = cross3(rt, fw);

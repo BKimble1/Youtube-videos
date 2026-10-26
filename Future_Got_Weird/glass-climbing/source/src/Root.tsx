@@ -13,7 +13,8 @@ import {BaySheet3, PressTest} from './v3/Work3';
 import {BaySheet4} from './v4/Work4';
 import {BaySheet5, LookTest5, PadTest5} from './v5/Work5';
 import {Film5, FilmStill5, Sheet5} from './v5/Film5';
-import {BaySheet7} from './v7/Work7';
+import {BaySheet7, ExtSheet7, ExtTest7} from './v7/Work7';
+import {Film7, FilmStill7, Sheet7} from './v7/Film7';
 import {BaySheet6, FieldTurn6, MatchTest6, PadTest6, TowerTest6} from './v6/Work6';
 import {Film6, FilmStill6, Sheet6} from './v6/Film6';
 import {FRAMES as FRAMES6} from './v6/tl6';
@@ -93,6 +94,11 @@ export const RemotionRoot: React.FC = () => (
     <Still id="TowerTest6" component={TowerTest6} width={W} height={H} defaultProps={{f: 150, eye: [26, 22, 52], target: [0, 26, 0], fl: 1400, climber: true}} />
     <Still id="MatchTest6" component={MatchTest6} width={W} height={H} defaultProps={{lam: 0.3, cx: 40, cy: 250, z: 3.9, alpha: 1, beta: 0, y0: -1298}} />
     <Still id="FieldTurn6" component={FieldTurn6} width={W} height={1920} defaultProps={{v: [[0.6, 30, -700, -380, 40, 2.08, 0, 0]]}} />
+    <Composition id="GlassClimbingV7" component={Film7} durationInFrames={FRAMES6} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v7' as string | false, captions: true, camOnly: false}} />
+    <Still id="FilmStillV7" component={FilmStill7} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV7" component={Sheet7} width={W} height={1920} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="ExtTest7" component={ExtTest7} width={W} height={H} defaultProps={{f: 0, eye: [1.2, 31, 4] as [number, number, number], target: [0.4, 30, 0] as [number, number, number], fl: 1300, top: false}} />
+    <Still id="ExtSheet7" component={ExtSheet7} width={W} height={1920} defaultProps={{vs: [] as {f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean}[]}} />
     <Still id="BaySheet7" component={BaySheet7} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true, top: false}} />
     <Still id="BaySheet6" component={BaySheet6} width={W} height={1920} defaultProps={{fs: [0, 60, 120, 180], cx: 0, cy: 0, z: 1.2, follow: true}} />
     <Composition id="GlassClimbingV5" component={Film5} durationInFrames={FRAMES4} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v5' as string | false, captions: true, camOnly: false}} />

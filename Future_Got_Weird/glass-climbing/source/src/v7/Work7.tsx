@@ -23,3 +23,28 @@ export const BaySheet7: React.FC<{fs: number[]; cx: number; cy: number; z: numbe
     })}
   </AbsoluteFill>
 );
+
+import {Exterior7} from './Exterior7';
+import {Cam3} from './Tower7';
+/** one exterior view: the 2D climber over the perspective tower (eye, target in metres) */
+export const ExtTest7: React.FC<{f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean}> = ({f, eye, target, fl, top}) => {
+  const cam: Cam3 = {eye: {x: eye[0], y: eye[1], z: eye[2]}, target: {x: target[0], y: target[1], z: target[2]}, f: fl};
+  return (
+    <AbsoluteFill style={{backgroundColor: '#111'}}>
+      <Exterior7 id="ext" f={f} cam={cam} st={top ? climbTop(f) : climbAt(f)} />
+    </AbsoluteFill>
+  );
+};
+
+type ExtV = {f: number; eye: [number, number, number]; target: [number, number, number]; fl: number; top?: boolean};
+/** several exterior views, 4 across at quarter size */
+export const ExtSheet7: React.FC<{vs: ExtV[]}> = ({vs}) => (
+  <AbsoluteFill style={{backgroundColor: '#111'}}>
+    {vs.map((v, i) => (
+      <div key={i} style={{position: 'absolute', left: (i % 4) * 270, top: Math.floor(i / 4) * 480, width: 1080, height: 1920, transform: 'scale(0.25)', transformOrigin: '0 0', overflow: 'hidden'}}>
+        <ExtTest7 {...v} />
+        <div style={{position: 'absolute', left: 20, top: 20, fontSize: 90, color: '#FF0', fontFamily: 'monospace', textShadow: '0 0 8px #000'}}>{v.f}</div>
+      </div>
+    ))}
+  </AbsoluteFill>
+);

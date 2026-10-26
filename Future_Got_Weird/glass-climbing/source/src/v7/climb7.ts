@@ -84,6 +84,14 @@ export const hangingBar = (ring: V, side: Side): V => {
 /** the loop's top, where the strap joins it: over the forefoot */
 export const loopApex = (bar: V): V => ({x: bar.x - 22, y: bar.y - 74});
 const tautAnkle = (side: Side, pad: Pad5) => ankleForBar(tautBar(ring5(pad), side), 1);
+/** a taut stirrup swung `extra` further out from the glass (its strap at a steeper angle): his shoes clear of it */
+const tautAnkleX = (side: Side, pad: Pad5, extra: number) => {
+  const r = ring5(pad), dx = DX[side] + extra;
+  return ankleForBar({x: r.x + dx, y: r.y + Math.sqrt(LEN[side] ** 2 - dx * dx)}, 1);
+};
+/** how far out his shoes hang after the lift-off: clear of the glass, easing back under the pads as the climb starts */
+const OUT = 100;
+const outAt = (T: number) => (T >= FRAMES ? OUT * ss(T, FRAMES + C.lift0, FRAMES + C.lift1) : OUT * (1 - ss(T, C.steady, C.steady + 24)));
 /** the near foot standing in its loop with the pad out on the pier: under him (x of `home`), the strap taut diagonally */
 const diagAnkle = (pad: Pad5, home: V) => {
   const r = ring5(pad), bx = barForAnkle(home, 1).x;
@@ -333,8 +341,9 @@ const climbBody = (T: number): Body => {
     // on the pier the near pad is out to the side: its foot stays under him and its strap runs diagonally to it
     const onPier = side === 'L' ? ss(T, C.bM0, C.bM1) : 0;
     const home = side === 'L' ? {...pad, zo: PZ.L} : pad;
-    const seated = tautAnkle(side, {...home, gap: 0, tilt: 0});
-    const taut = lerpV(tautAnkle(side, pad), diagAnkle(pad, seated), onPier);
+    const out = outAt(T);
+    const seated = tautAnkleX(side, {...home, gap: 0, tilt: 0}, out);
+    const taut = lerpV(tautAnkleX(side, pad, out), diagAnkle(pad, seated), onPier);
     // (the far foot comes up a little out from the glass, clear of the fin's edge)
     const nearFin = 0;
     const free = add(seated, {x: side === 'R' ? -4 + 44 * nearFin : -4 + 10 * onPier, y: side === 'R' ? -46 : -20 + 14 * onPier});
@@ -345,10 +354,10 @@ const climbBody = (T: number): Body => {
   const lookUp = Math.max(...rMoves.map((m) => bump(T, m.rel - 2, m.place + 4, 8, 10)));
   const lookSide = bump(T, C.bRel - 4, C.bLoad0 + 20, 10, 16); // he looks at the brick as he places the pad
   const lookDown = bump(T, C.look0, C.look1 + 6, 10, 8);
-  const doubt = ss(T, 1052, 1084);
+  const doubt = ss(T, C.bPlace + 4, C.bPress1 + 4); // (confident as it goes on; doubt as he leans on it)
   const riseNow = Math.max(...CYCLES.map((c) => bump(T, c.rise[0] - 4, c.rise[1], 6, 8)));
   const strain = Math.max(riseNow, bump(T, C.bLoad0, C.fail, 10, 2) * 0.7);
-  const pleased = Math.max(...rMoves.map((m) => bump(T, m.place - 2, m.place + 12, 6, 10)), bump(T, C.bPlace, C.bLoad0 + 10, 4, 10));
+  const pleased = Math.max(...rMoves.map((m) => bump(T, m.place - 2, m.place + 12, 6, 10)), bump(T, C.bPlace - 6, C.bPlace + 4, 4, 6));
   let expr = mixExpr(mixExpr(mixExpr(EX.focus, EX.strain, strain * 0.6), EX.pleased, pleased * 0.6), EX.doubt, doubt);
   expr = {...expr, gy: expr.gy - 0.5 * lookUp + 0.9 * lookDown + 0.5 * lookSide, gx: expr.gx + 0.12 * lookUp};
   return {
@@ -423,10 +432,11 @@ const catchBody = (T: number): Body => {
   ankL = lerpV(ankL, wallL, onWall);
   ankR = lerpV(ankR, wallR, onWall);
   if (T >= FRAMES + C.lift0) {
-    const nearT = tautAnkle('L', rest('L', DY(NCY))), farT = tautAnkle('R', padR);
+    const nearT = tautAnkleX('L', rest('L', DY(NCY)), OUT), farT = tautAnkleX('R', padR, OUT);
     const drop = ss(T, FRAMES + C.lift1, FRAMES + C.drop1);
-    // the shoes come away from the glass (out and a little up, knees bending), then settle into the taut stirrups
-    const off = (A: V, to: V): V => ({x: lerp(A.x, to.x + 50, lift) - 50 * ss(drop, 0.4, 1), y: lerp(A.y - 34 * lift, to.y, drop)});
+    // the shoes come away from the glass (out and a little up, knees bending), then settle into the taut stirrups,
+    // well clear of the glass
+    const off = (A: V, to: V): V => ({x: lerp(A.x, to.x, lift), y: lerp(A.y - 34 * lift, to.y, drop)});
     ankL = off(wallL, nearT);
     ankR = off(wallR, farT);
   }

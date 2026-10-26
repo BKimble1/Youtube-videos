@@ -63,10 +63,10 @@ export const PadBar5: React.FC<{id: string; s: Pad5; k: number}> = ({id, s, k}) 
   );
 };
 
-export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: number; f: number; nest?: React.ReactNode; over?: React.ReactNode; man?: boolean; gear?: boolean; detail?: number}> = ({id, st, cam, k, f, nest, over, man = true, gear = true, detail = 1}) => {
+export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: number; f: number; nest?: React.ReactNode; over?: React.ReactNode; man?: boolean; gear?: boolean; detail?: number; scenery?: boolean}> = ({id, st, cam, k, f, nest, over, man = true, gear = true, detail = 1, scenery = true}) => {
   const {pose, ringL, ringR, footL, footR, padL, padR} = st;
   const topL = loopApex(footL.bar), topR = loopApex(footR.bar);
-  const far = cam.z < 30;
+  const far = cam.z < 30 && scenery;
   return (
     <>
       {far && (
@@ -87,8 +87,8 @@ export const BayWorld5: React.FC<{id: string; st: ClimbState; cam: Cam; k: numbe
         </>
       )}
       <Layer cam={cam} depth={1}>
-        <Facade5 id={`${id}-fc`} k={k} detail={detail} />
-        {cam.z < 0.6 && <Street5 id={`${id}-st`} k={k} f={f} />}
+        {scenery && <Facade5 id={`${id}-fc`} k={k} detail={detail} />}
+        {scenery && cam.z < 0.6 && <Street5 id={`${id}-st`} k={k} f={f} />}
         {gear && (
           <>
             {/* far side */}
