@@ -1,0 +1,317 @@
+1
+00:00:00,540 --> 00:00:03,880
+This robot watches for a smile
+before it fully appears.
+
+2
+00:00:03,920 --> 00:00:07,570
+Then it tries to smile at the same
+time as the person in front of it.
+
+3
+00:00:07,610 --> 00:00:10,040
+That takes more than moving
+the corners of a mouth.
+
+4
+00:00:10,410 --> 00:00:14,180
+Researchers have been teaching robotic
+faces to study their own movements,
+
+5
+00:00:14,220 --> 00:00:17,360
+copy human lips, and predict
+an expression as it begins.
+
+6
+00:00:17,580 --> 00:00:20,522
+And the place to start was a mirror.
+
+7
+00:00:20,562 --> 00:00:22,762
+At Columbia University, engineers built
+
+8
+00:00:22,802 --> 00:00:25,910
+a flexible robotic face
+with twenty-six motors.
+
+9
+00:00:26,050 --> 00:00:27,780
+That gives the face ways to move.
+
+10
+00:00:28,002 --> 00:00:32,282
+But the machine still has to learn which
+combinations create the shapes it needs.
+
+11
+00:00:32,322 --> 00:00:34,220
+Think about saying “banana.”
+
+12
+00:00:34,450 --> 00:00:38,640
+Your lips come together, open, stretch,
+and move toward the next sound.
+
+13
+00:00:38,950 --> 00:00:41,562
+Now imagine trying to produce
+those movements by adjusting
+
+14
+00:00:41,602 --> 00:00:44,362
+a collection of motors
+underneath a rubber face.
+
+15
+00:00:44,402 --> 00:00:47,160
+You could make its jaw flap
+whenever the speaker gets loud.
+
+16
+00:00:47,410 --> 00:00:49,910
+It would look like a very
+expensive sock puppet.
+
+17
+00:00:50,150 --> 00:00:53,135
+The researchers wanted
+the movements to follow the speech.
+
+18
+00:00:53,175 --> 00:00:57,242
+So the robot practiced. It moved
+its face while watching its reflection,
+
+19
+00:00:57,282 --> 00:01:01,082
+building a relationship between motor
+commands and the appearance they produced.
+
+20
+00:01:01,122 --> 00:01:03,370
+Move these motors, get this mouth shape.
+
+21
+00:01:03,410 --> 00:01:05,540
+Change the combination, get another.
+
+22
+00:01:05,750 --> 00:01:09,962
+That matters because flexible skin moves
+differently from a rigid metal part.
+
+23
+00:01:10,002 --> 00:01:13,280
+Pull at one point, and the material
+around it stretches too.
+
+24
+00:01:13,320 --> 00:01:17,110
+The controller has to work
+with the face it actually has.
+
+25
+00:01:17,150 --> 00:01:19,430
+Once it had a way to control
+its own appearance,
+
+26
+00:01:19,470 --> 00:01:22,163
+researchers gave it
+something else to watch.
+
+27
+00:01:22,203 --> 00:01:22,870
+People.
+
+28
+00:01:22,910 --> 00:01:27,030
+In the lip-sync study published
+in January 2026, the system learned
+
+29
+00:01:27,070 --> 00:01:31,610
+from videos of humans talking and singing,
+including hours of YouTube footage.
+
+30
+00:01:31,840 --> 00:01:34,070
+The important information
+was the relationship
+
+31
+00:01:34,110 --> 00:01:36,160
+between the sound and the moving mouth.
+
+32
+00:01:36,360 --> 00:01:39,780
+The researchers linked that
+to the robot’s model of its own face.
+
+33
+00:01:40,000 --> 00:01:43,790
+Speech audio could then drive coordinated
+lip movements through the motors.
+
+34
+00:01:44,030 --> 00:01:48,260
+The result was a physical face moving
+its lips along with speech and song.
+
+35
+00:01:48,430 --> 00:01:52,287
+It could even synchronize with audio
+in languages it hadn’t been trained on.
+
+36
+00:01:52,327 --> 00:01:55,370
+The meaning of those words wasn’t
+required for the lip movements.
+
+37
+00:01:55,480 --> 00:01:57,390
+Which gives us a useful distinction:
+
+38
+00:01:57,610 --> 00:01:59,910
+looking as though you are
+speaking and understanding
+
+39
+00:01:59,950 --> 00:02:02,280
+what you are saying
+are different problems.
+
+40
+00:02:02,510 --> 00:02:04,497
+The movements still had flaws.
+
+41
+00:02:04,537 --> 00:02:08,140
+The team reported difficulties
+with sounds like “B” and “W.”
+
+42
+00:02:08,340 --> 00:02:12,280
+A small error is easy to notice
+when you’re watching a mouth.
+
+43
+00:02:12,320 --> 00:02:15,520
+But getting the mouth shape
+right leaves another problem.
+
+44
+00:02:15,560 --> 00:02:19,040
+When should the face move?
+Imagine telling someone good news.
+
+45
+00:02:19,140 --> 00:02:21,490
+They stare at you. You finish smiling.
+
+46
+00:02:21,690 --> 00:02:24,086
+Then their smile switches on.
+
+47
+00:02:24,126 --> 00:02:27,470
+Even a well-drawn expression can
+feel awkward when it arrives late.
+
+48
+00:02:27,600 --> 00:02:32,610
+That timing problem was the focus of the
+team’s earlier study, published in 2024.
+
+49
+00:02:32,840 --> 00:02:35,640
+The robot watched videos
+of human expressions and learned
+
+50
+00:02:35,680 --> 00:02:39,320
+to recognize small changes
+as a smile began to develop.
+
+51
+00:02:39,360 --> 00:02:41,800
+One model predicted the human expression.
+
+52
+00:02:41,840 --> 00:02:45,310
+Another translated the expression
+into movements the robot could make.
+
+53
+00:02:45,470 --> 00:02:48,600
+The team reported predicting
+an approaching smile about eight hundred
+
+54
+00:02:48,640 --> 00:02:50,970
+and forty milliseconds
+ahead of its appearance,
+
+55
+00:02:51,030 --> 00:02:54,060
+allowing the robot to try
+to smile alongside the person.
+
+56
+00:02:54,290 --> 00:02:56,680
+Less than a second of anticipation.
+
+57
+00:02:56,720 --> 00:03:00,860
+Enough to turn a delayed copy
+into a shared-looking moment.
+
+58
+00:03:00,900 --> 00:03:03,050
+These were studies of facial movement.
+
+59
+00:03:03,190 --> 00:03:06,800
+A successful smile doesn’t tell
+us whether a machine feels happy.
+
+60
+00:03:06,980 --> 00:03:10,180
+But picture the possible
+interaction. You’re speaking.
+
+61
+00:03:10,340 --> 00:03:11,950
+A machine looks toward you.
+
+62
+00:03:11,990 --> 00:03:16,030
+Its mouth follows its voice,
+and its expression changes as yours does.
+
+63
+00:03:16,180 --> 00:03:18,870
+Those movements could help
+make a tutor easier to follow,
+
+64
+00:03:18,910 --> 00:03:21,240
+or a robotic assistant more approachable.
+
+65
+00:03:21,400 --> 00:03:23,940
+They also leave us with a question
+about how much meaning
+
+66
+00:03:23,980 --> 00:03:28,050
+we attach to a well-timed
+response. Watch the smile again.
+
+67
+00:03:28,090 --> 00:03:32,010
+The robot has learned a movement.
+You’re the one deciding what it means.

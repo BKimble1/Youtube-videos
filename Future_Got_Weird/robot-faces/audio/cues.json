@@ -1,0 +1,152 @@
+{
+ "shots": [
+  {
+   "id": "hook",
+   "a": 0,
+   "b": 12.7
+  },
+  {
+   "id": "mirror",
+   "a": 12.7,
+   "b": 20.562
+  },
+  {
+   "id": "mech",
+   "a": 20.562,
+   "b": 32.322
+  },
+  {
+   "id": "mouths",
+   "a": 32.322,
+   "b": 53.175
+  },
+  {
+   "id": "practice",
+   "a": 53.175,
+   "b": 65.75
+  },
+  {
+   "id": "skin",
+   "a": 65.75,
+   "b": 77.15
+  },
+  {
+   "id": "watch",
+   "a": 77.15,
+   "b": 104.03
+  },
+  {
+   "id": "result",
+   "a": 104.03,
+   "b": 115.48
+  },
+  {
+   "id": "distinction",
+   "a": 115.48,
+   "b": 122.51
+  },
+  {
+   "id": "flaws",
+   "a": 122.51,
+   "b": 132.32
+  },
+  {
+   "id": "late",
+   "a": 132.32,
+   "b": 147.6
+  },
+  {
+   "id": "study24",
+   "a": 147.6,
+   "b": 176.72
+  },
+  {
+   "id": "together",
+   "a": 176.72,
+   "b": 206.5
+  },
+  {
+   "id": "callback",
+   "a": 206.5,
+   "b": 300
+  }
+ ],
+ "K": {
+  "rSmile0": 0.9,
+  "bothFull": 4.5,
+  "corner": 7.61,
+  "mirrorCut": 12.7,
+  "mirrorWord": 19.367,
+  "columbia": 20.562,
+  "motors": 24.562,
+  "combos": 28.002,
+  "banana": 32.322,
+  "bananaWord": 33.362,
+  "yourLips": 34.45,
+  "imagine": 38.95,
+  "jaw": 44.402,
+  "puppet": 47.41,
+  "follow": 50.15,
+  "practiced": 53.175,
+  "moveThese": 61.122,
+  "change": 63.41,
+  "skin": 65.75,
+  "pull": 70.002,
+  "controller": 73.32,
+  "once": 77.15,
+  "people": 82.203,
+  "study26": 82.91,
+  "youtube": 89.763,
+  "important": 91.84,
+  "linked": 96.36,
+  "speechAudio": 100,
+  "result": 104.03,
+  "song": 107.43,
+  "languages": 108.43,
+  "meaning": 112.327,
+  "distinction": 115.48,
+  "flaws": 122.51,
+  "bw": 126.79,
+  "small": 128.34,
+  "another": 132.32,
+  "when": 135.56,
+  "news": 137.12,
+  "stare": 139.14,
+  "finish": 140.31,
+  "switchOn": 141.69,
+  "awkward": 144.126,
+  "study24": 147.6,
+  "watched": 152.84,
+  "oneModel": 159.36,
+  "another2": 161.84,
+  "ms840": 165.47,
+  "less": 174.29,
+  "enough": 176.72,
+  "these": 180.9,
+  "picture": 186.98,
+  "speaking": 189.25,
+  "tutor": 196.18,
+  "question": 201.4,
+  "again": 206.5,
+  "learned": 208.09,
+  "deciding": 209.98,
+  "end": 211.71
+ },
+ "trials": [
+  54.71,
+  61.122,
+  63.41
+ ],
+ "babble": [
+  28.401999999999997,
+  29.382,
+  30.291999999999998,
+  30.982
+ ],
+ "co24": {
+  "cue": 166.07,
+  "visible": 168.37,
+  "predict": 167.53,
+  "full": 170.07
+ }
+}

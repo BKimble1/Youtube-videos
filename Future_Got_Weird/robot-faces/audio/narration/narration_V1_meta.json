@@ -1,0 +1,67 @@
+{
+ "file": "audio/narration/FGW_Robot_Faces_narration_V1.wav",
+ "sha256": "5df1c9d0a53e8e31129725640113e963368ae962c456ba036407c372095c070c",
+ "duration_s": 214.6667,
+ "frames_30fps": 6440,
+ "speech_s": [
+  0.54,
+  211.71
+ ],
+ "words": 617,
+ "lead_s": 0.4,
+ "gaps_s": [
+  0.85,
+  0.8,
+  0.9,
+  1.0
+ ],
+ "tail_s": 2.8,
+ "blocks": [
+  {
+   "block": 0,
+   "take": "audio/narration/takes/hook2_t2_khvE.mp3",
+   "generation_id": "khvEr0WgtHf6RKNSp5dP",
+   "src_in": 0.02,
+   "src_out": 19.28,
+   "offset": 0.38,
+   "start": 0.4
+  },
+  {
+   "block": 1,
+   "take": "audio/narration/takes/b2_t1_Jy3b.mp3",
+   "generation_id": "Jy3bCPg2jst4vdz6hjFN",
+   "src_in": 0.03,
+   "src_out": 55.76,
+   "offset": 20.48,
+   "start": 20.51
+  },
+  {
+   "block": 2,
+   "take": "audio/narration/takes/b3_t1_uusj.mp3",
+   "generation_id": "uusjstuhOPqWcYJQk5LE",
+   "src_in": 0.05,
+   "src_out": 54.32,
+   "offset": 76.99,
+   "start": 77.04
+  },
+  {
+   "block": 3,
+   "take": "audio/narration/takes/b4_t1_Eotl.mp3",
+   "generation_id": "EotlK5Lt4r3LJjQH1Owg",
+   "src_in": 0.05,
+   "src_out": 47.68,
+   "offset": 132.16,
+   "start": 132.21
+  },
+  {
+   "block": 4,
+   "take": "audio/narration/takes/b5_t2_OsaP.mp3",
+   "generation_id": "OsaPgifeMUoLBFXeY7gz",
+   "src_in": 0.02,
+   "src_out": 31.04,
+   "offset": 180.82,
+   "start": 180.84
+  }
+ ],
+ "wpm_over_speech_span": 175.3
+}

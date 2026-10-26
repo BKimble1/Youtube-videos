@@ -1,0 +1,165 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 26 Oct 2026 returned this id (category generated, 'Test Voice For Youtube.'); same id as the earlier FGW episodes"
+ },
+ "model_id": "eleven_v4 (the tts node exposes no speed or stability parameters in this connector; pace was directed with inline tags only)",
+ "flow_id": "T4qx0MK8nkNL5gpbce92",
+ "script": "script.md (617 words, locked, verbatim). Inline tags such as [conversational, relaxed pace] are delivery directions, not spoken.",
+ "hook_sample": {
+  "note": "internal check of pronunciation/energy/identity; first generation of block 1 with an engaged tag ran at about 203 wpm; superseded by the relaxed-pace retake",
+  "files": [
+   "hook_t1_8WLx.mp3",
+   "hook_t2_XskJ.mp3"
+  ],
+  "generation_ids": [
+   "8WLxCDQ8lLnrocXI1xUJ",
+   "XskJAqlE5GwcV2WqtaAW"
+  ]
+ },
+ "blocks": [
+  {
+   "block": 1,
+   "from": "This robot watches",
+   "to": "was a mirror.",
+   "takes": {
+    "hook2_t1_aixc.mp3": "aixcGURi0mLRpf7bAGx3",
+    "hook2_t2_khvE.mp3": "khvEr0WgtHf6RKNSp5dP"
+   },
+   "selected": "hook2_t2_khvE.mp3"
+  },
+  {
+   "block": 2,
+   "from": "At Columbia University",
+   "to": "it actually has.",
+   "takes": {
+    "b2_t1_Jy3b.mp3": "Jy3bCPg2jst4vdz6hjFN",
+    "b2_t2_LmKy.mp3": "LmKyZg225ECPgLoA0sAr"
+   },
+   "selected": "b2_t1_Jy3b.mp3"
+  },
+  {
+   "block": 3,
+   "from": "Once it had a way",
+   "to": "watching a mouth.",
+   "takes": {
+    "b3_t1_uusj.mp3": "uusjstuhOPqWcYJQk5LE",
+    "b3_t2_MId4.mp3": "MId4II7qaWFYDYJMj4jV"
+   },
+   "selected": "b3_t1_uusj.mp3"
+  },
+  {
+   "block": 4,
+   "from": "But getting the mouth",
+   "to": "shared-looking moment.",
+   "takes": {
+    "b4_t1_Eotl.mp3": "EotlK5Lt4r3LJjQH1Owg",
+    "b4_t2_7a4J.mp3": "7a4JyGYy0bochZb2Uw8D"
+   },
+   "selected": "b4_t1_Eotl.mp3"
+  },
+  {
+   "block": 5,
+   "from": "These were studies",
+   "to": "what it means.",
+   "takes": {
+    "b5_t1_DRPd.mp3": "DRPdtrH41FRYjHQnnZDK",
+    "b5_t2_OsaP.mp3": "OsaPgifeMUoLBFXeY7gz"
+   },
+   "selected": "b5_t2_OsaP.mp3"
+  }
+ ],
+ "selection": "By measurement only (this environment cannot play audio): PocketSphinx free-recognition WER against the block text (qa/take_screen_sphinx.json; noisy, no dropped or altered sentences found in any take), pace (tools/measure_take.py). Lower WER chosen where the takes differed; otherwise take 1. Nobody has listened to the takes.",
+ "pace": {
+  "hook_block_wpm": 202,
+  "other_blocks_wpm": "170-180",
+  "full_narration_wpm_over_speech_span": 175.3,
+  "note": "Faster than the brief's 150-160 target: with no speed control, relaxed-pace tags brought the body blocks from about 205 to about 175 wpm. No time-stretch was applied."
+ },
+ "word_timing": "ElevenLabs Scribe (eleven_scribe_v1) on each selected generation; its words match the locked text one for one (it appears to align to the generation's text, so it is a timing source, not an independent transcript check). Onsets after pauses snapped to the waveform (tools/make_narration.py).",
+ "stitch": "tools/make_narration.py: each take used whole (no internal edits), 0.40 s lead, block gaps 0.85/0.80/0.90/1.00 s, 2.80 s tail, 10 ms fades at the joins; no time-stretch or pitch change.",
+ "final": {
+  "file": "audio/narration/FGW_Robot_Faces_narration_V1.wav",
+  "sha256": "5df1c9d0a53e8e31129725640113e963368ae962c456ba036407c372095c070c",
+  "duration_s": 214.6667,
+  "frames_30fps": 6440,
+  "speech_s": [
+   0.54,
+   211.71
+  ],
+  "words": 617,
+  "lead_s": 0.4,
+  "gaps_s": [
+   0.85,
+   0.8,
+   0.9,
+   1.0
+  ],
+  "tail_s": 2.8,
+  "blocks": [
+   {
+    "block": 0,
+    "take": "audio/narration/takes/hook2_t2_khvE.mp3",
+    "generation_id": "khvEr0WgtHf6RKNSp5dP",
+    "src_in": 0.02,
+    "src_out": 19.28,
+    "offset": 0.38,
+    "start": 0.4
+   },
+   {
+    "block": 1,
+    "take": "audio/narration/takes/b2_t1_Jy3b.mp3",
+    "generation_id": "Jy3bCPg2jst4vdz6hjFN",
+    "src_in": 0.03,
+    "src_out": 55.76,
+    "offset": 20.48,
+    "start": 20.51
+   },
+   {
+    "block": 2,
+    "take": "audio/narration/takes/b3_t1_uusj.mp3",
+    "generation_id": "uusjstuhOPqWcYJQk5LE",
+    "src_in": 0.05,
+    "src_out": 54.32,
+    "offset": 76.99,
+    "start": 77.04
+   },
+   {
+    "block": 3,
+    "take": "audio/narration/takes/b4_t1_Eotl.mp3",
+    "generation_id": "EotlK5Lt4r3LJjQH1Owg",
+    "src_in": 0.05,
+    "src_out": 47.68,
+    "offset": 132.16,
+    "start": 132.21
+   },
+   {
+    "block": 4,
+    "take": "audio/narration/takes/b5_t2_OsaP.mp3",
+    "generation_id": "OsaPgifeMUoLBFXeY7gz",
+    "src_in": 0.02,
+    "src_out": 31.04,
+    "offset": 180.82,
+    "start": 180.84
+   }
+  ],
+  "wpm_over_speech_span": 175.3
+ },
+ "take_sha256": {
+  "b2_t1_Jy3b.mp3": "987b4a97cd9bc2e549e43e6e1b28425e9d945492b4dbacbe87ad6594685fcf52",
+  "b2_t2_LmKy.mp3": "6a0b002cf573c367dd134bdc0d5b3af8a51dd5b7e3a43d0d636ad38317fcdb83",
+  "b3_t1_uusj.mp3": "46637308a2961be741b92564ac1c356137ad953f82d5fc0f0642c29dd1f27cb6",
+  "b3_t2_MId4.mp3": "bac614c2695199e2132dcc7219a71609827ce58bff20b810cbb02effbe3f080e",
+  "b4_t1_Eotl.mp3": "b08f1eb023c81c724eb8768e78c952e9f661799cea4d3f631cd3b9d3b983c070",
+  "b4_t2_7a4J.mp3": "9ac3fb6e1cf1b0087f0994bdde206c1aa5dda6777f2eafa75e650dd16d0d7c87",
+  "b5_t1_DRPd.mp3": "6f878d1b8e83062d3a6bbe95201973387d74430dde0173202d339787f6107793",
+  "b5_t2_OsaP.mp3": "bfad7ce6974ce6824981dfbd472e01f3de7388e965c81d5ce01f66a6a9ec08bf",
+  "hook2_t1_aixc.mp3": "62d39e3161cff3039d3c02816663161c9bfb0f504a9fe1177e99814c1a89bef2",
+  "hook2_t2_khvE.mp3": "5584aa55d9b742c78c22bf289a498abdbb33c93156e863e818002c2c6b403bfa",
+  "hook_t1_8WLx.mp3": "9531580f84d426305a3981cdbe723759aeefe164438485000d60bcd0f9320762",
+  "hook_t2_XskJ.mp3": "5c601bf4befab32ed32c98d0e4b0c32887a01f0073fd3333a19fafa549c670a7"
+ },
+ "credits_reported": "hook sample 2x425; hook retake 2x473; block 2 2x1163; block 3 2x1172; block 4 2x1001; block 5 2x681; transcription 0"
+}

@@ -1,0 +1,9 @@
+{
+ "integrated_lufs": -14.21,
+ "true_peak_dbtp": -1.46,
+ "duration_s": 214.6667,
+ "narration_lufs_in_mix_before_final_norm": -16.0,
+ "music_to_voice_rms_db_during_speech": -17.5,
+ "sfx_cues": 36,
+ "limiter_min_gain_db": -2.85
+}
