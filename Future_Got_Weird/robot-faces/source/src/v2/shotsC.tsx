@@ -60,26 +60,14 @@ export const LateCompare: React.FC<{f: number}> = ({f}) => {
         <Back id="lc-bk" bg="lab" veil={0.5} dx={-300} dy={140} />
       </Layer>
       <Layer cam={cam} depth={1}>
-        <Panel id="lc-v" x={90} y={70} w={860} h={600} bg="#EDE4D0">
-          <Head id="lc-vh" c={{x: 520, y: 390}} R={230} roll={0} turn={0.3} expr={{...v.expr, gx: -0.7}} blink={v.blink} inkW={8} />
+        <Panel id="lc-v" x={90} y={80} w={860} h={860} bg="#EDE4D0">
+          <Head id="lc-vh" c={{x: 520, y: 520}} R={270} roll={0} turn={0.3} expr={{...v.expr, gx: -0.7}} blink={v.blink} inkW={8} />
         </Panel>
-        <Panel id="lc-r" x={970} y={70} w={860} h={600} bg="#E6E9E4">
-          <Robot id="lc-rr" st={st} x={1400} y={400} s={2.3} />
+        <Panel id="lc-r" x={970} y={80} w={860} h={860} bg="#E6E9E4">
+          <Robot id="lc-rr" st={st} x={1400} y={500} s={2.8} />
         </Panel>
       </Layer>
-      <SmilePlot
-        f={f}
-        t0={K.news - 0.2}
-        t1={K.awkward + 0.6}
-        k={pr(f, K.awkward + 0.1, K.awkward + 0.5)}
-        x={330}
-        y={1000}
-        w={1260}
-        h={70}
-        robotSmile={(ff) => rob2(ff).smile}
-        personSmile={(ff) => vis2(ff).expr.smile}
-        marks={[{t: K.finish + 0.4, label: 'person', color: UI.coral}, {t: K.switchOn + 0.6, label: 'robot: late', color: UI.blue}]}
-      />
+      <Tag x={1400} y={1010} text="late" k={pr(f, K.awkward + 0.2, K.awkward + 0.5)} size={34} anchor="middle" tone="warm" />
     </g>
   );
 };
@@ -211,7 +199,7 @@ const Compare24: React.FC<{f: number; a: number; b: number; emph?: number; id: s
   const st = view(rob2(f), 16, 0.5, 0.05);
   const cam = drift(f, a, b, CAM0, {x: 960, y: 520, z: 1.03});
   const t0 = CO24.cue - 0.5, t1 = CO24.full + 0.8;
-  const X0 = 420, XW = 1180, Y = 975;
+  const X0 = 520, XW = 1000, Y = 92;
   const tx = (tt: number) => X0 + (XW * (tt - t0)) / (t1 - t0);
   const ph = Math.min(t, t1);
   const pk = pr(f, CO24.predict - 0.05, CO24.predict + 0.15);
@@ -222,14 +210,14 @@ const Compare24: React.FC<{f: number; a: number; b: number; emph?: number; id: s
         <Back id={`${id}-bk`} bg="lab" veil={0.5} dx={-300} dy={140} />
       </Layer>
       <Layer cam={cam} depth={1}>
-        <Panel id={`${id}-h`} x={70} y={40} w={880} h={740} bg="#D9E4E6">
-          <ScreenFace2 id={`${id}-sf`} x={510} y={440} w={880} h={760} e={screenFaceAt(f)} />
+        <Panel id={`${id}-h`} x={70} y={190} w={880} h={850} bg="#D9E4E6">
+          <ScreenFace2 id={`${id}-sf`} x={510} y={630} w={880} h={850} e={screenFaceAt(f)} />
         </Panel>
-        <Panel id={`${id}-r`} x={970} y={40} w={880} h={740} bg="#E6E9E4">
-          <Robot id={`${id}-rr`} st={st} x={1410} y={420} s={2.9} />
+        <Panel id={`${id}-r`} x={970} y={190} w={880} h={850} bg="#E6E9E4">
+          <Robot id={`${id}-rr`} st={st} x={1410} y={600} s={3.2} />
         </Panel>
       </Layer>
-      <rect x={X0 - 250} y={Y - 85} width={XW + 290} height={125} rx={18} fill={UI.paper} opacity={0.94} stroke={INK} strokeWidth={2.5} />
+      <rect x={X0 - 230} y={Y - 62} width={XW + 270} height={118} rx={18} fill={UI.paper} opacity={0.94} stroke={INK} strokeWidth={2.5} />
       <text x={X0 - 200} y={Y - 2} fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.ink}>
         schematic
       </text>
@@ -238,11 +226,11 @@ const Compare24: React.FC<{f: number; a: number; b: number; emph?: number; id: s
       <circle cx={fmt(tx(ph))} cy={Y} r={9} fill={UI.ink} />
       <g opacity={pk}>
         <line x1={fmt(tx(CO24.predict))} y1={Y - 22} x2={fmt(tx(CO24.predict))} y2={Y + 22} stroke={UI.blue} strokeWidth={6} />
-        <text x={fmt(tx(CO24.predict))} y={Y + 34 + 14} textAnchor="middle" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.blue}>robot starts</text>
+        <text x={fmt(tx(CO24.predict) - 12)} y={Y + 46} textAnchor="end" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.blue}>robot starts</text>
       </g>
       <g opacity={vk}>
         <line x1={fmt(tx(CO24.visible))} y1={Y - 22} x2={fmt(tx(CO24.visible))} y2={Y + 22} stroke={UI.coral} strokeWidth={6} />
-        <text x={fmt(tx(CO24.visible))} y={Y + 34 + 14} textAnchor="middle" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.coral}>smile visible</text>
+        <text x={fmt(tx(CO24.visible) + 12)} y={Y + 46} textAnchor="start" fontFamily="Nunito Variable" fontWeight={800} fontSize={26} fill={UI.coral}>smile visible</text>
       </g>
       <Bracket x0={tx(CO24.predict)} x1={tx(CO24.visible)} y={Y - 30} label={emph > 0.5 ? 'less than a second' : '≈ 0.84 s'} k={vk} size={26 + 6 * emph} />
     </g>

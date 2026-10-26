@@ -2,91 +2,163 @@
  "end": 213.33333333333334,
  "shots": [
   {
-   "id": "o1-two",
+   "id": "a1-ecu",
    "a": 0,
    "b": 1.98,
    "tr": "start",
-   "what": "Lab two-shot: the visitor’s cue is already forming; the robot watches him",
+   "what": "Extreme close-up: the robot’s face already moving, eyes on the camera; the camera draws back and it is a machine on a support",
    "cont": ""
   },
   {
-   "id": "o2-viscu",
+   "id": "a2-pair",
    "a": 1.98,
    "b": 3.92,
-   "tr": "cut-action",
-   "what": "Visitor close-up: the cue grows (corners, cheeks) but the smile is not complete",
-   "cont": "same exchange phase across the cut"
-  },
-  {
-   "id": "o3-robcu",
-   "a": 3.92,
-   "b": 5.62,
    "tr": "cut",
-   "what": "Robot close-up: its smile begins and develops",
-   "cont": "robot state continuous; gaze screen-right toward him"
+   "what": "Face to face, close: his cue forms; its eyes go to his mouth and back",
+   "cont": ""
   },
   {
-   "id": "o4-profile",
-   "a": 5.62,
+   "id": "a3-under",
+   "a": 3.92,
+   "b": 5.1,
+   "tr": "cut",
+   "what": "One push into its cheek: the skin opens onto the motor and linkage beneath",
+   "cont": ""
+  },
+  {
+   "id": "a4-side",
+   "a": 5.1,
+   "b": 6.3999999999999995,
+   "tr": "cut-action",
+   "what": "The same smile in side section: the motor turns, the linkage pulls the skin, the lips change shape",
+   "cont": "smile continues across the cut"
+  },
+  {
+   "id": "a5-shared",
+   "a": 6.3999999999999995,
    "b": 7.61,
    "tr": "cut",
-   "what": "Profile two-shot: both smiles arrive together",
-   "cont": "both states continuous"
+   "what": "Both smiles arrive together",
+   "cont": ""
   },
   {
-   "id": "o5-cheek",
+   "id": "a6-old",
    "a": 7.61,
+   "b": 8.75,
+   "tr": "cut",
+   "what": "Contrast: a stiffer robot face moves only its corners (illustration)",
+   "cont": ""
+  },
+  {
+   "id": "a7-recoil",
+   "a": 8.75,
+   "b": 9.040000000000001,
+   "tr": "cut",
+   "what": "He flinches at the stiff grin",
+   "cont": ""
+  },
+  {
+   "id": "a8-soft",
+   "a": 9.040000000000001,
    "b": 10.41,
    "tr": "cut",
-   "what": "Robot close-up, the near corner opens into a local section: servo -> rod -> corner as the smile relaxes and lifts",
+   "what": "The soft face: corners, cheeks, lips and skin move together",
    "cont": ""
   },
   {
-   "id": "m1-truck",
+   "id": "a9-truck",
    "a": 10.41,
+   "b": 12.7,
+   "tr": "cut",
+   "what": "Across the lab: the mirror frame slides past and reveals the reflection",
+   "cont": ""
+  },
+  {
+   "id": "a10-tests",
+   "a": 12.7,
    "b": 14.22,
    "tr": "cut",
-   "what": "Behind the robot: the mirror frame slides past (parallax) and reveals the reflection; a lopsided test movement",
+   "what": "The reflection: four different test expressions, the motors faintly visible",
    "cont": ""
   },
   {
-   "id": "m2-refl",
+   "id": "a11-lips",
    "a": 14.22,
-   "b": 17.58,
+   "b": 14.84,
    "tr": "cut",
-   "what": "Reflection close-up: lips open/round on “copy human lips”, corners rise on “predict”",
-   "cont": "one rig state; reflection drawn mirrored"
+   "what": "A person’s lips, very close",
+   "cont": ""
   },
   {
-   "id": "m3-wide",
+   "id": "a12-copy",
+   "a": 14.84,
+   "b": 15.55,
+   "tr": "match",
+   "what": "The robot’s lips (in the mirror) make the same shapes in the same place in the frame",
+   "cont": "mouth position and size matched; identity changes, no morph"
+  },
+  {
+   "id": "a13-predict",
+   "a": 15.55,
+   "b": 17.58,
+   "tr": "cut",
+   "what": "Two faces: his cue starts; its smile starts before his is plain",
+   "cont": ""
+  },
+  {
+   "id": "a14-mirror",
    "a": 17.58,
    "b": 20.562,
    "tr": "cut",
-   "what": "The whole setup: mirror on its stand, bench, robot, room",
+   "what": "Back out of the reflection to the whole mirror setup",
    "cont": ""
   },
   {
-   "id": "k1-profile",
+   "id": "b1-orbit",
    "a": 20.562,
+   "b": 22.962,
+   "tr": "cut",
+   "what": "The camera circles from its profile to its face; Columbia tag",
+   "cont": ""
+  },
+  {
+   "id": "b2-flex",
+   "a": 22.962,
    "b": 24.362,
    "tr": "cut",
-   "what": "The head on its bench, three-quarter profile; the face flexes on “flexible”",
+   "what": "Close: the silicone stretches",
    "cont": ""
   },
   {
-   "id": "k2-motors",
+   "id": "b3-motors",
    "a": 24.362,
-   "b": 28.002,
+   "b": 26.862000000000002,
    "tr": "cut",
-   "what": "Lower face, both corners opened into sections: servos turn, rods pull, lips move; brows, smile, rounding",
+   "what": "The skin turns translucent; motors switch on by group as brows, smile and lips move",
    "cont": ""
   },
   {
-   "id": "k3-combos",
+   "id": "b5-side",
+   "a": 26.862000000000002,
+   "b": 28.002,
+   "tr": "cut-action",
+   "what": "From the side: a motor turns and a linkage pushes the lips forward",
+   "cont": "the rounding continues across the cut"
+  },
+  {
+   "id": "b6-combos",
    "a": 28.002,
-   "b": 32.322,
+   "b": 30.562,
    "tr": "cut",
    "what": "Sliders jump to untried combinations; the face makes shapes nobody asked for",
+   "cont": ""
+  },
+  {
+   "id": "b7-shapes",
+   "a": 30.562,
+   "b": 32.322,
+   "tr": "cut",
+   "what": "The sections close, the skin is whole, and it makes four distinct expressions",
    "cont": ""
   },
   {
@@ -102,16 +174,16 @@
    "a": 34.45,
    "b": 38.95,
    "tr": "cut",
-   "what": "Three-quarter mouth: together / open / stretch / toward, each marked as named",
-   "cont": "same mouth track continues"
+   "what": "His face: together / open / stretch / toward, each marked as named",
+   "cont": ""
   },
   {
    "id": "u3-try",
    "a": 38.95,
    "b": 44.402,
    "tr": "match",
-   "what": "Robot mouth at the same screen position and width as his: corners open into sections, motors miss the target shape in the inset",
-   "cont": "mouth position and width matched across the human-to-robot cut (identity changes, no morph)"
+   "what": "Robot mouth where his was: corners open into sections, motors miss the target shape",
+   "cont": "mouth position and width matched across the cut"
   },
   {
    "id": "u4-jaw",
@@ -124,10 +196,18 @@
   {
    "id": "u5-puppet",
    "a": 47.41,
-   "b": 50.15,
+   "b": 49.462,
    "tr": "cut-action",
    "what": "A sock puppet rises beside the robot, flapping in sync",
    "cont": "jaw flap continues across the cut"
+  },
+  {
+   "id": "u5b-look",
+   "a": 49.462,
+   "b": 50.15,
+   "tr": "cut",
+   "what": "His deadpan look at the pair",
+   "cont": ""
   },
   {
    "id": "u6-follow",
@@ -138,11 +218,11 @@
    "cont": ""
   },
   {
-   "id": "p1-wide",
+   "id": "p1-turn",
    "a": 53.175,
    "b": 54.71,
    "tr": "cut",
-   "what": "Back at the mirror; a laptop on the bench is recording",
+   "what": "The lab with the mirror: it turns to its reflection",
    "cont": ""
   },
   {
@@ -150,15 +230,15 @@
    "a": 54.71,
    "b": 57.282,
    "tr": "cut",
-   "what": "Reflection close: trial 1 (open, lopsided)",
+   "what": "The reflection, close: a trial, its motors showing through the skin",
    "cont": ""
   },
   {
-   "id": "p3-laptop",
+   "id": "p3-montage",
    "a": 57.282,
    "b": 61.122,
    "tr": "cut",
-   "what": "The laptop: live camera view, command bars, the record of pairs growing",
+   "what": "A run of trials: each face it makes is captured with the commands that made it",
    "cont": ""
   },
   {
@@ -166,31 +246,31 @@
    "a": 61.122,
    "b": 63.41,
    "tr": "cut",
-   "what": "Reflected mouth, very close: these motors -> this mouth shape (trial 2, wide smile)",
+   "what": "The reflected mouth, very close: these motors, this mouth shape",
    "cont": ""
   },
   {
-   "id": "p5-shared",
+   "id": "p5-into",
    "a": 63.41,
    "b": 65.75,
    "tr": "cut",
-   "what": "Shared mirror view: new combination, rounded lips; the record gains a row (trial 3)",
+   "what": "A new combination; then the camera goes into the reflection’s cheek until the skin fills the frame",
    "cont": ""
   },
   {
    "id": "s1-section",
    "a": 65.75,
    "b": 70.002,
-   "tr": "cut",
-   "what": "Skin in section: flexible band beside a rigid link; the link turns and moves nothing else",
-   "cont": ""
+   "tr": "match",
+   "what": "That skin in section beside a rigid link; the link turns and moves nothing else",
+   "cont": "skin fills the frame on both sides of the cut"
   },
   {
    "id": "s2-pull",
    "a": 70.002,
    "b": 73.32,
    "tr": "cut",
-   "what": "Closer on the section: one anchor is pulled; the band, the material inside it and the lip at its end all move",
+   "what": "Closer: one anchor is pulled; the band, the material and the lip move",
    "cont": ""
   },
   {
@@ -198,7 +278,7 @@
    "a": 73.32,
    "b": 77.15,
    "tr": "cut",
-   "what": "The face, oblique: the corner pull releases, a smile forms from the same skin",
+   "what": "The face, oblique: the pull releases, a smile forms from the same skin",
    "cont": ""
   },
   {
@@ -207,14 +287,14 @@
    "b": 79.47,
    "tr": "cut",
    "what": "At the mirror: it turns away from its reflection",
-   "cont": "reflection shares the turn"
+   "cont": ""
   },
   {
    "id": "t2-alcove",
    "a": 79.47,
    "b": 82.203,
    "tr": "cut",
-   "what": "Recording alcove (setting B): robot at the desk; the monitor comes on",
+   "what": "Its gaze lands in the recording alcove; the monitor comes on",
    "cont": ""
   },
   {
@@ -222,27 +302,51 @@
    "a": 82.203,
    "b": 82.91,
    "tr": "cut",
-   "what": "Screen insert: a person talking",
+   "what": "People: two cast members talking, one after the other",
    "cont": ""
   },
   {
-   "id": "t4-ots",
+   "id": "t4-into",
    "a": 82.91,
-   "b": 86.26,
+   "b": 84.37,
    "tr": "cut",
-   "what": "Over the robot’s shoulder to the screen; study tag",
+   "what": "Over the robot’s shoulder the camera goes into the screen",
    "cont": ""
   },
   {
-   "id": "t5-grid",
+   "id": "t4-full",
+   "a": 84.37,
+   "b": 86.26,
+   "tr": "match",
+   "what": "The screen’s scene becomes the frame: a person speaking close to the camera",
+   "cont": "the screen content is the same scene, framed identically"
+  },
+  {
+   "id": "t5-profile",
    "a": 86.26,
+   "b": 87.35,
+   "tr": "cut",
+   "what": "Another person in profile on a street, lips moving",
+   "cont": ""
+  },
+  {
+   "id": "t6-talk",
+   "a": 87.35,
+   "b": 88.79,
+   "tr": "cut",
+   "what": "Another, talking in a kitchen",
+   "cont": ""
+  },
+  {
+   "id": "t8-sing",
+   "a": 88.79,
    "b": 89.763,
    "tr": "cut",
-   "what": "Screen fills with talking and singing mouths",
+   "what": "Someone singing on a small stage",
    "cont": ""
   },
   {
-   "id": "t6-hours",
+   "id": "t9-hours",
    "a": 89.763,
    "b": 91.84,
    "tr": "cut",
@@ -250,28 +354,44 @@
    "cont": ""
   },
   {
-   "id": "t7-one",
+   "id": "t10-one",
    "a": 91.84,
    "b": 96.36,
    "tr": "cut",
-   "what": "One example: a mouth and its sound trace, linked",
+   "what": "One training example: a mouth and its sound trace, linked",
    "cont": ""
   },
   {
-   "id": "t8-linked",
+   "id": "t11-human",
    "a": 96.36,
-   "b": 100,
+   "b": 97.87,
    "tr": "cut",
-   "what": "Same mouth beside the robot’s own recorded image with the matching shape",
-   "cont": "same sample, same phase"
+   "what": "A person’s lips, very close, saying that example",
+   "cont": ""
   },
   {
-   "id": "t9-drive",
+   "id": "t12-robot",
+   "a": 97.87,
+   "b": 100,
+   "tr": "match",
+   "what": "The robot’s lips in the same place, making the same shapes",
+   "cont": "mouth position matched"
+  },
+  {
+   "id": "e1-path",
    "a": 100,
+   "b": 102.83,
+   "tr": "cut",
+   "what": "One move along the signal: speaker -> trace -> the learned map lights the matching shape -> cable -> motors -> lips",
+   "cont": ""
+  },
+  {
+   "id": "e2-robot",
+   "a": 102.83,
    "b": 104.03,
    "tr": "cut",
-   "what": "The same sound drives the corner motors; the robot’s lips follow it",
-   "cont": "same sample, same phase"
+   "what": "The robot, its lips moving with that speech",
+   "cont": ""
   },
   {
    "id": "r1-speech",
@@ -298,11 +418,11 @@
    "cont": ""
   },
   {
-   "id": "r4-path",
+   "id": "r4-puzzled",
    "a": 112.327,
    "b": 115.48,
    "tr": "cut",
-   "what": "Sound -> motors -> lips; the meaning slot stays empty",
+   "what": "Face to face: its lips keep time with a language neither of them speaks; he plainly doesn’t follow it",
    "cont": ""
   },
   {
@@ -310,7 +430,7 @@
    "a": 115.48,
    "b": 117.61,
    "tr": "cut",
-   "what": "Profile two-shot: the robot speaking (silent), the visitor listening",
+   "what": "The interaction bench: the robot speaking (silent), the visitor listening",
    "cont": ""
   },
   {
@@ -506,15 +626,31 @@
    "cont": ""
   },
   {
-   "id": "g1-two",
+   "id": "g1-his",
    "a": 176.72,
-   "b": 180.9,
+   "b": 177.84,
    "tr": "cut",
-   "what": "Lab two-shot: a shared-looking smile",
+   "what": "His smile, very close",
    "cont": ""
   },
   {
-   "id": "g2-motor",
+   "id": "g2-its",
+   "a": 177.84,
+   "b": 178.72,
+   "tr": "match",
+   "what": "Its smile in the same place in the frame",
+   "cont": "mouth position matched; identity changes, no morph"
+  },
+  {
+   "id": "g3-pair",
+   "a": 178.72,
+   "b": 180.9,
+   "tr": "cut",
+   "what": "Face to face: a shared-looking moment",
+   "cont": ""
+  },
+  {
+   "id": "g4-motor",
    "a": 180.9,
    "b": 183.19,
    "tr": "cut",
@@ -522,51 +658,59 @@
    "cont": ""
   },
   {
-   "id": "g3-ots",
+   "id": "g5-under",
    "a": 183.19,
    "b": 186.98,
    "tr": "cut",
-   "what": "Over the robot’s cabled shoulder: his smile facing us",
+   "what": "The smile; the camera draws back as the motors under it show through",
    "cont": ""
   },
   {
-   "id": "n1-nook",
+   "id": "h1-station",
    "a": 186.98,
    "b": 189.25,
    "tr": "cut",
-   "what": "Study nook (setting C): Possible use",
+   "what": "An imagined concourse where such faces are ordinary: kiosk heads talking with passers-by",
    "cont": ""
   },
   {
-   "id": "n2-speak",
+   "id": "h2-speak",
    "a": 189.25,
    "b": 190.34,
    "tr": "cut",
-   "what": "He speaks",
+   "what": "At home: he speaks",
    "cont": ""
   },
   {
-   "id": "n3-look",
+   "id": "h3-look",
    "a": 190.34,
    "b": 191.99,
    "tr": "cut-action",
-   "what": "It lifts its gaze from the book to him",
+   "what": "The companion head lifts its gaze to him",
    "cont": ""
   },
   {
-   "id": "n4-voice",
+   "id": "h4-lips",
    "a": 191.99,
    "b": 193.673,
    "tr": "cut",
-   "what": "It speaks (silent); its own voice as a trace",
+   "what": "Its eyes, then its lips, very close, following its own voice",
    "cont": ""
   },
   {
-   "id": "n5-together",
+   "id": "h5-his",
    "a": 193.673,
+   "b": 194.98,
+   "tr": "cut",
+   "what": "His smile",
+   "cont": ""
+  },
+  {
+   "id": "h6-its",
+   "a": 194.98,
    "b": 196.18,
    "tr": "cut",
-   "what": "Two-shot: smiles together",
+   "what": "Its smile, the same size in the frame",
    "cont": ""
   },
   {
@@ -574,7 +718,7 @@
    "a": 196.18,
    "b": 198.91,
    "tr": "cut",
-   "what": "Workbook: his hand turns the page; the robot watches across the table",
+   "what": "A tutor: a hand turns the workbook page; the head watches across the table",
    "cont": ""
   },
   {
@@ -582,63 +726,47 @@
    "a": 198.91,
    "b": 201.4,
    "tr": "cut",
-   "what": "Help desk: the robot turns to him, smiles, looks toward the door",
+   "what": "An assistant at a help desk: it turns to him, smiles, looks toward the door",
    "cont": ""
   },
   {
-   "id": "n8-thought",
+   "id": "h8-read",
    "a": 201.4,
    "b": 203.62,
    "tr": "cut",
-   "what": "He considers it",
+   "what": "He leans in to read a humanoid assistant’s face",
    "cont": ""
   },
   {
-   "id": "n9-robot",
+   "id": "h9-timed",
    "a": 203.62,
-   "b": 204.74,
-   "tr": "cut",
-   "what": "The robot’s small smile",
-   "cont": ""
-  },
-  {
-   "id": "n10-close",
-   "a": 204.74,
-   "b": 205.97,
-   "tr": "cut-action",
-   "what": "Insert: his hand closes the notebook",
-   "cont": ""
-  },
-  {
-   "id": "n11-nooktwo",
-   "a": 205.97,
    "b": 206.5,
    "tr": "cut",
-   "what": "The nook two-shot framed exactly like the opening: closed notebook, robot, visitor",
-   "cont": "framing identical to the lab callback"
+   "what": "Its well-timed smile; one push in to the opening’s framing",
+   "cont": ""
   },
   {
-   "id": "c1-two",
+   "id": "z1-smile",
    "a": 206.5,
    "b": 208.09,
    "tr": "match",
-   "what": "The opening two-shot in the lab again (same camera): the cue rises",
-   "cont": "composition match from the nook: robot, visitor and notebook on the same screen positions"
+   "what": "The research head, to the camera, in the opening’s framing: its smile forms",
+   "cont": "face framing matched from the humanoid"
   },
   {
-   "id": "c2-robcu",
+   "id": "z2-him",
    "a": 208.09,
    "b": 209.98,
    "tr": "cut",
-   "what": "Robot close-up: its smile forms",
+   "what": "The person it smiled with",
    "cont": ""
   },
   {
-   "id": "c3-viscu",
+   "id": "z3-loop",
    "a": 209.98,
    "b": 213.33333333333334,
    "tr": "cut",
-   "what": "Visitor close-up: the warm smile settles into a knowing one; end",
+   "what": "Back to it, looking at us: the smile softens, the brows lift, its lips part into frame 0’s shape as the camera arrives at frame 0’s framing",
    "cont": ""
   }
  ],
@@ -735,8 +863,23 @@
   "firstBa": 125.36,
   "look": 190.34,
   "easier": 197.86,
-  "closeIn": 204.74,
-  "closeCut": 205.97,
+  "oldGrinOn": 7.930000000000001,
+  "oldGrinOff": 8.66,
+  "predRobot": 15.95,
+  "copy": 14.84,
+  "montage": [
+   57.431999999999995,
+   58.032,
+   58.632,
+   59.23199999999999,
+   59.831999999999994,
+   60.431999999999995
+  ],
+  "createThe": 30.562,
+  "faceWays": 26.562,
+  "triesSmile": 3.92,
+  "humanoidSmile": 204.74,
+  "end": 213.33333333333334,
   "response": 205.82,
   "assistant": 198.91
  }

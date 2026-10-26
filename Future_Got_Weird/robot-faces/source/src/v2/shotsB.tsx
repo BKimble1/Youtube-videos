@@ -18,13 +18,14 @@ import {CheekSection} from './mech';
 import {Bracket, Panel, Plate, robotTrace, humanTrace, SpeakerBox} from './props';
 import {FIRST_BA, rob2, SAMPLE, sampleT, vis2} from './state2';
 import {drift, e2, e3, TWO_A} from './shots2';
+import {CrewTalk, glide, T4_CAM0, T4_IN, T4_TRACK} from './shotsD';
 
 const view = (st: RobotState, yaw: number, gx?: number, gy?: number): RobotState => ({...st, yaw, gx: gx ?? st.gx, gy: gy ?? st.gy});
 const CAM0: Cam = {x: 960, y: 540, z: 1};
 const pulseK = (f: number, a: number, b: number) => pr(f, a, a + 0.25) * (1 - pr(f, b - 0.25, b));
 
 // ------------------------------------------------------------------ the alcove (setting B)
-const AL = {robot: {x: 600, y: 440, s: 2.1}, deskY: 800, mon: {x: 1330, y: 470, w: 600, h: 380}};
+export const AL = {robot: {x: 600, y: 440, s: 2.1}, deskY: 800, mon: {x: 1330, y: 470, w: 600, h: 380}};
 const TONES = ['#F2C9A8', '#C98B5E', '#8D5A3B', '#E7B48F', '#5E3A25', '#F5D3B8'];
 /** the person on the alcove monitor: a recorded speaker (the visitor's head), talking */
 const ScreenPerson: React.FC<{id: string; x: number; y: number; w: number; h: number; f: number}> = ({id, x, y, w, h, f}) => {
@@ -89,7 +90,7 @@ export const AlcoveSet: React.FC<{id: string; cam: Cam; st: RobotState; f: numbe
         <Counter id={`${id}-desk`} x0={-900} x1={2900} y={AL.deskY} depth={90} face={700} top="#B98A5E" front="#8E6640" />
         <Shadow cx={AL.mon.x} cy={AL.deskY + 40} rx={170} ry={14} />
         <Monitor id={`${id}-mon`} x={AL.mon.x} y={AL.mon.y} w={AL.mon.w} h={AL.mon.h} on={monOn}>
-          {screen ?? <ScreenPerson id={`${id}-sp`} x={AL.mon.x} y={AL.mon.y} w={AL.mon.w} h={AL.mon.h} f={f} />}
+          {screen ?? <ScreenScene id={`${id}-sc`}><CrewTalk id={`${id}-cp`} f={f} look="clerkC" bg="kitchen" tr={SPEECH(K.people - 2, K.result, 7)} cam={{x: 960, y: 540, z: 1}} /></ScreenScene>}
         </Monitor>
         <path d={`M${AL.mon.x - 80},${AL.deskY + 40} C${AL.mon.x - 300},${AL.deskY + 70} 900,${AL.deskY + 66} ${AL.robot.x + 150},${AL.deskY + 50}`} fill="none" stroke="#2B313A" strokeWidth={7} strokeLinecap="round" />
         <Shadow cx={AL.robot.x} cy={AL.deskY + 46} rx={150} ry={14} />
@@ -129,7 +130,7 @@ export const TurnAway: React.FC<{f: number}> = ({f}) => {
 export const AlcoveWide: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 62, 0.55, 0.05);
   const on = pr(f, T('something else') - 0.2, T('something else') + 0.2);
-  return <AlcoveSet id="aw" cam={drift(f, T('researchers gave'), K.people, {x: 960, y: 520, z: 0.98}, {x: 990, y: 512, z: 1.05})} st={st} f={f} monOn={on} screen={<ScreenPerson id="aw-sp" x={AL.mon.x} y={AL.mon.y} w={AL.mon.w} h={AL.mon.h} f={f} />} />;
+  return <AlcoveSet id="aw" cam={drift(f, T('researchers gave'), K.people, {x: 960, y: 520, z: 0.98}, {x: 990, y: 512, z: 1.05})} st={st} f={f} monOn={on} />;
 };
 // "People.": the screen, close
 export const ScreenPeople: React.FC<{f: number}> = ({f}) => (
@@ -392,7 +393,7 @@ export const SignalPath: React.FC<{f: number}> = ({f}) => {
 
 // ------------------------------------------------------------------ the distinction (grounded in a mouth and a listener)
 // "Which gives us a useful distinction:": the profile two-shot, the robot "speaking" (silent), the visitor listening
-export const DistProfile: React.FC<{f: number}> = ({f}) => <ProfileTwo id="dp" cam={drift(f, K.distinction, T('looking as though'), {x: 990, y: 500, z: 1.3}, {x: 990, y: 496, z: 1.36})} robot={rob2(f)} vis={vis2(f)} rTurn={62} />;
+export const DistProfile: React.FC<{f: number}> = ({f}) => <LabTwo id="dp" cam={drift(f, K.distinction, T('looking as though'), {x: 990, y: 440, z: 1.5}, {x: 990, y: 432, z: 1.62})} robot={{...rob2(f), yaw: 42, gx: 0.6}} vis={vis2(f)} />;
 // "looking as though you are speaking": its mouth, close
 export const DistMouth: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 22, 0.6, 0);
@@ -484,3 +485,34 @@ export const FlawGap: React.FC<{f: number}> = ({f}) => {
 // "when you're watching a mouth.": the visitor's eyes narrow on it
 export const FlawNotice: React.FC<{f: number}> = ({f}) => <VisitorCU id="fn" cam={drift(f, T('when you’re watching'), K.another, {x: 1050, y: 420, z: 1.5}, {x: 1060, y: 420, z: 1.6})} vis={vis2(f)} turn={0.42} />;
 export {LabTwo, TWO_A, Bracket, camPath, e2, Monitor, Vis as _Vis};
+
+/** the screen showing a full-frame scene, scaled into the monitor (so a push into the screen arrives at that scene) */
+export const ScreenScene: React.FC<{id: string; children: React.ReactNode}> = ({id, children}) => {
+  const sc = AL.mon.w / 1920;
+  return (
+    <g>
+      <rect x={AL.mon.x - AL.mon.w / 2} y={AL.mon.y - AL.mon.h / 2} width={AL.mon.w} height={AL.mon.h} fill="#141B22" />
+      <g transform={`translate(${AL.mon.x - AL.mon.w / 2} ${AL.mon.y - (1080 * sc) / 2}) scale(${sc})`}>
+        <defs>
+          <clipPath id={`${id}-c`}>
+            <rect x={0} y={0} width={1920} height={1080} />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${id}-c)`}>{children}</g>
+      </g>
+    </g>
+  );
+};
+// 82.91 - 84.40 "In the lip-sync study published in": over the robot's shoulder, the camera goes into the screen; the
+// screen's scene becomes the frame
+export const T4Into: React.FC<{f: number}> = ({f}) => {
+  const st = view(rob2(f), 128, 0.55, 0.05);
+  const zEnd = 1920 / AL.mon.w;
+  const cam = glide(f, K.study26, T4_IN, [{x: 1060, y: 520, z: 1.5}, {x: 1200, y: 500, z: 1.9}, {x: AL.mon.x, y: AL.mon.y, z: zEnd}], (x) => x * x);
+  return (
+    <g>
+      <AlcoveSet id="t4i" cam={cam} st={st} f={f} screen={<ScreenScene id="t4i-sc"><CrewTalk id="t4i-p" f={f} look="honest" bg="office" tr={T4_TRACK} cam={T4_CAM0} scale={3.4} /></ScreenScene>} />
+      <Tag x={90} y={110} text="Lip-sync study · Science Robotics · January 2026" k={pr(f, K.study26 + 0.15, K.study26 + 0.5)} size={30} />
+    </g>
+  );
+};

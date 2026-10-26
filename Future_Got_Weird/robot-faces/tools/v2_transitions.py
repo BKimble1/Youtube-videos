@@ -25,21 +25,20 @@ for i, s in enumerate(S):
     rows.append(f"| {i + 1} | {mmss(s['a'])} | {s['b'] - s['a']:.2f} | {out} | **{s['id']}**: {s['what']} | {TYPES[s['tr']]} | {s['cont'] or 'states are functions of the frame: no reset'} | {word_at(s['a'])} |")
 lens = [s['b'] - s['a'] for s in S]
 REPL = [
-    ('0:00–0:08', 'one wide desk composition carries the hook', 'o1–o4: two-shot, visitor cue close-up, robot close-up, profile two-shot (four setups in 7.6 s)'),
-    ('0:08–0:20', 'long reframe into the mirror', 'o5 cheek section; m1 lateral reveal past the mirror frame; m2 reflection close-up; m3 the whole setup'),
-    ('0:21–0:32', 'front head with a small motor chart', 'k1 profile on the bench; k2 corners in section, servo -> rod -> lip; k3 control-desk sliders and untrained shapes'),
-    ('0:33–0:53', 'similar cards and panels', 'u1-u2 the visitor’s mouth, large, each movement marked; u3 robot mouth in section vs target; u4 speaker-driven jaw; u5 sock puppet; u6 speech sample'),
-    ('0:54–1:05', 'one mirror composition with thumbnails', 'p1 shared mirror view with a recording laptop; p2 reflection close-up; p3 the laptop record; p4 lip detail; p5 shared view'),
-    ('1:06–1:15', 'dots over the face', 's1 skin cross-section vs a rigid link; s2 one anchor pulled, the band and lip move; s3 the face, landmarks kept'),
-    ('1:18–1:43', 'repeated head-and-monitor staging', 't1-t9: turn from the mirror, alcove B, screen inserts, one example followed: source mouth -> trace -> robot’s own matching image -> motors -> lips'),
-    ('1:45–1:55', 'similar frontal views with waveforms', 'r1 speaker box + 3/4; r2 profile song; r3 front, another language; r4 physical path with an empty meaning slot'),
-    ('1:56–2:02', 'card-and-question-mark slide', 'd1-d4: profile two-shot, robot mouth, the listener, over the robot’s shoulder (movement / meaning)'),
-    ('2:03–2:12', 'repeated frontal mouth framing', 'f1 mouth; f2 B split (large); f3 W split; f4 the gap ringed; f5 the visitor notices'),
-    ('2:12–2:26', 'long wide desk example', 'l1-l7: two-shot, robot, the letter and news, the stare, his smile, the late switch-on, a compact comparison'),
-    ('2:27–2:44', 'head-and-monitor with model cards', 'y1-y6: study set, screen, cue marks, eye camera, dashed prediction, corner motor'),
-    ('2:45–2:54', 'small timing graph', 'y7-y9: two faces large with a small schematic bracket, both smiling together, “less than a second”'),
-    ('2:55–3:29', 'the same desk with labels', 'g1-g3 lab; n1-n11 study nook (setting C), the page turn, the help desk, the notebook closing and the matched return'),
-    ('3:30–end', 'a move to the human close-up', 'c1 the opening two-shot (match); c2 robot close-up; c3 his warm smile settling into a knowing one'),
+    ('0:00–0:08', 'a wide desk composition carries the hook', 'a1 the robot\u2019s face already moving at frame 0, eyes on us, pull-out; a2 face to face; a3 push under its skin; a4 motor -> linkage -> lips in section; a5 shared smile'),
+    ('0:08–0:20', 'long reframe into the mirror', 'a6 a stiffer robot face (contrast); a7 his flinch; a8 the soft face; a9 lateral reveal past the mirror frame; a10 four tests; a11-a12 a person\u2019s lips, copied; a13 prediction pair; a14 back out of the mirror'),
+    ('0:21–0:32', 'front head with a small motor chart', 'b1 orbit profile -> face; b2 silicone stretching; b3 skin turns translucent, motors switch on by group; b5 side linkage; b6 sliders; b7 sections close, four expressions'),
+    ('0:33–0:53', 'similar cards and panels', 'u1-u2 the visitor\u2019s mouth, large; u3 robot mouth in section vs target; u4 speaker-driven jaw; u5 sock puppet; u5b his deadpan look; u6 speech sample'),
+    ('0:54–1:05', 'one mirror composition with thumbnails', 'p1 it turns to its reflection; p2 reflection with motors; p3 run of trials captured with their commands; p4 lips with motors; p5 into the reflection\u2019s cheek'),
+    ('1:06–1:15', 'dots over the face', 's1 that skin in section vs a rigid link; s2 one anchor pulled; s3 the face, landmarks kept'),
+    ('1:18–1:43', 'repeated head-and-monitor staging', 't1-t12: turn from the mirror, alcove, cast members talking, push into the screen, profile, kitchen, singer, one example, lips matched; e1 one move along the signal (speaker -> trace -> learned map -> motors -> lips); e2 the robot speaking'),
+    ('1:45–1:55', 'similar frontal views with waveforms', 'r1 speaker box; r2 song in profile; r3 another language; r4 its lips keep time with a language neither of them follows'),
+    ('1:56–2:02', 'card-and-question-mark slide', 'd1-d4: the bench, the robot\u2019s mouth, the listener, over the robot\u2019s shoulder'),
+    ('2:03–2:12', 'repeated frontal mouth framing', 'f1-f5: mouth, B split, W split, the gap, his notice'),
+    ('2:12–2:26', 'long wide desk example', 'l1-l7: news, stare, late switch-on, both faces with a "late" mark'),
+    ('2:27–2:54', 'head-and-monitor with model cards; a small timing graph', 'y1-y9: study set, cue marks, eye camera, dashed prediction, corner motor, two large faces under a slim schematic bracket'),
+    ('2:55–3:29', 'the same desk with labels', 'g1-g5 smile match, face to face, the motors behind the smile; h1 an imagined concourse; h2-h6 a companion head at home; n6 tutor; n7 help desk; h8-h9 a humanoid assistant'),
+    ('3:30–end', 'a move to the human close-up', 'z1 the head to the camera in frame 0\u2019s framing; z2 him; z3 it settles and its lips part into frame 0\u2019s shape as the camera returns to frame 0 (a loop)'),
 ]
 repl = '\n'.join(f'| {a} | {b} | {c} |' for a, b, c in REPL)
 doc = f"""# V2 action / shot / transition map (generated)

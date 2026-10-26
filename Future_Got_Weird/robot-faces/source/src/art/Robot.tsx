@@ -246,13 +246,15 @@ type Props = {
   /** whole-head x-ray: representative motors behind the skin (0..1); one group can be highlighted */
   xray?: number;
   xrayHot?: string[];
+  /** V2: darkness of the skin under the x-ray (V1 0.55); lower reads as translucent silicone */
+  xrayDark?: number;
 };
 
 const inkW = 5.2;
 /** cranium and the frame behind the jaw: full width at the temples, tapering to the neck housing */
 const SHELL_D = `M0,${-RY} C${RX * 0.56},${-RY} ${RX},${-RY * 0.55} ${RX},-6 C${RX},${RY * 0.36} ${RX * 0.86},${RY * 0.62} ${RX * 0.6},${RY * 0.8} C${RX * 0.42},${RY * 0.9} ${-RX * 0.42},${RY * 0.9} ${-RX * 0.6},${RY * 0.8} C${-RX * 0.86},${RY * 0.62} ${-RX},${RY * 0.36} ${-RX},-6 C${-RX},${-RY * 0.55} ${-RX * 0.56},${-RY} 0,${-RY} Z`;
 
-export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, grid = 0, gridAt, anchors = 0, focusAnchor, cornerCue = 0, lensGlow = 0, xray = 0, xrayHot = []}) => {
+export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, grid = 0, gridAt, anchors = 0, focusAnchor, cornerCue = 0, lensGlow = 0, xray = 0, xrayHot = [], xrayDark = 0.55}) => {
   const pass = useInk().pass;
   const T = (c: string) => (tint && tintK > 0 ? mix(c, tint, tintK) : c);
   const skin = T(RPAL.skin);
@@ -625,7 +627,7 @@ export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, g
     ];
     return (
       <g opacity={xray}>
-        <path d={maskD} fill="#1C2340" opacity={0.55} />
+        <path d={maskD} fill="#1C2340" opacity={xrayDark} />
         {/* the frame under the skin */}
         {[-30, -10, 10, 30].map((az) => {
           const pts: P3[] = [];

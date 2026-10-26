@@ -136,3 +136,15 @@ each is supported by the ledger above.
 - **Result:** no Runway asset is used and no credits were spent for this episode. The settings are vector
   illustrations (`source/src/v2/env.tsx`).
 - **Details:** `production/V2_CHANGE_QA.md`.
+
+**Second V2 pass (26 Oct 2026).**
+- **Cast.** The approved Weird Crew cast (clerkB, clerkC, honest, host, person, checker) is drawn with the channel's
+  own cast rig, `source/src/v2/crew.tsx`. It is ported from `can-you-hurt-something-that-isnt-alive/source/src/
+  components/Character.tsx`, and the looks are copied from that episode's `cast.ts`. Two changes only: it draws as
+  an SVG group, and its mouth can follow a viseme shape.
+- **New drawings, all illustrative and labelled:**
+  - the stiff "traditional" robot face;
+  - the side section of the face (two of the 26 motors, not the real layout);
+  - the humanoid body;
+  - the station, home, kitchen, street, stage and office settings.
+- **Timing figure.** The 2024 anticipation stays "about 840 ms" (≈ 0.84 s) as narrated and as in the sources.

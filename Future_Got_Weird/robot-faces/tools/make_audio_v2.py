@@ -87,49 +87,60 @@ def fx(kind, p=1.0, dur=0.3):
 cues = []  # (time, kind, gain dB, pitch, dur, pan)
 def cue(t, kind, db=0.0, p=1.0, dur=0.3, pan=0.0): cues.append((t, kind, db, p, dur, pan))
 
-# opening: the robot's smile in its close-up; the cheek section (relax, lift)
-cue(K['corner'] - 3.65, 'servo', -9, 0.9, 1.1, -0.2)
-cue(K['corner'] + 0.7, 'servo', -8, 1.05, 0.6, -0.3)
-cue(K['corner'] + 1.6, 'servo', -8, 0.95, 0.8, -0.3)
-# the mirror: small test movements, seen in the reflection
-cue(K['mirrorCut'] + 0.1, 'servo', -11, 1.15, 0.35, 0.2)
-cue(A['copyHuman'] - 0.1, 'servo', -11, 1.0, 0.4, 0.2)
-cue(A['lips'] - 0.1, 'servo', -11, 0.9, 0.35, 0.2)
-cue(A['predict'] - 0.1, 'servo', -11, 1.05, 0.6, 0.2)
-# mechanism: the flex; the motors in section; the untrained combinations (sliders, then the face)
+# opening: its smile begins as the camera goes under its skin; the motor in section; the stiff face's corner bars
+# snap up and drop (a rigid tick); the soft face lifts
+cue(A['triesSmile'] + 0.1, 'servo', -9, 0.9, 1.1, -0.2)
+cue(A['triesSmile'] + 1.3, 'servo', -8, 1.0, 0.9, 0.0)
+cue(A['oldGrinOn'], 'tick', -7, pan=0.0)
+cue(A['oldGrinOff'], 'tick', -9, pan=0.0)
+cue(K['corner'] + 2.05, 'servo', -8, 0.95, 0.6, -0.2)
+# the mirror: four quick tests, the copied lip shapes, the predicted smile
+for d in (0.06, 0.42, 0.78, 1.12):
+    cue(K['mirrorCut'] + d - 0.05, 'servo', -11, 1.0 + 0.1 * (d > 0.5), 0.3, 0.2)
+cue(A['copy'], 'servo', -11, 1.1, 0.5, 0.2)
+cue(A['predRobot'], 'servo', -11, 0.95, 0.8, 0.2)
+# mechanism: the flex; the motors switch on; the three movements; the side linkage; the sliders and combinations;
+# the sections close and the four expressions
 cue(A['flexible'] - 0.1, 'servo', -9, 0.95, 0.6, 0.1)
-cue(K['motors'] - 0.2, 'servo', -8, 0.85, 1.4, 0.0)
+cue(K['motors'] + 0.1, 'servo', -8, 0.85, 1.2, 0.0)
 for k, d in enumerate((0.1, 0.45, 0.9)):
     cue(A['gives'] + d, 'servo', -10, 1.0 + 0.1 * k, 0.3, 0.0)
+cue(A['faceWays'] + 0.35, 'servo', -9, 0.8, 0.6, 0.1)
 for b in C['babble']:
     cue(b - 0.37, 'slider', -12, pan=-0.4)
     cue(b - 0.12, 'servo', -8, 0.8 + 0.1 * (b % 3), 0.32, 0.2)
+for d in (0.12, 0.55, 0.95, 1.35):
+    cue(A['createThe'] + d - 0.06, 'servo', -10, 1.05, 0.28, 0.0)
 # the untrained try (motors in section)
 for tt in (A['tryB'], A['tryA'], A['tryE']):
     cue(tt - 0.05, 'servo', -9, 1.1, 0.3, 0.0)
-# practice: commands -> servo, then the shutter as the pair is recorded
+# practice: the turn to the mirror; trials (servo, then the shutter as the pair is recorded)
+cue(K['practiced'] + 0.1, 'servo', -9, 0.75, 1.1, 0.1)
 for tr in C['trials']:
     cue(tr + 0.35, 'servo', -7, 1.0, 0.5, 0.0)
-    cue(tr + 1.0, 'shutter', -7, pan=0.3)
+for m in A['montage']:
+    cue(m - 0.05, 'servo', -10, 1.05, 0.3, 0.0)
+    cue(m + 0.38, 'shutter', -9, pan=0.3)
 # skin: the rigid link turns and stops; the pull
 cue(A['rigid'] + 0.6, 'tick', -10, pan=-0.2)
 cue(K['pull'] - 0.05, 'servo', -7, 0.75, 0.7, -0.2)
 # training: the robot turns from the mirror; the alcove monitor wakes; the motors driven by speech
 cue(K['once'] + 0.5, 'servo', -8, 0.7, 1.6, 0.1)
 cue(A['somethingElse'] - 0.2, 'monitor', -6, pan=0.4)
-cue(A['drive'] - 0.2, 'servo', -10, 1.0, 0.5, 0.0)
-# flaws: none (the comparison is visual); the late smile: the letter, the switch-on
+cue(A['drive'] + 0.4, 'servo', -10, 1.0, 0.5, 0.0)
+# the late smile: the letter, the switch-on
 cue(K['news'] - 0.15, 'paper', -11, pan=-0.3)
 cue(K['switchOn'] + 0.5, 'servo', -6, 1.25, 0.25, -0.2)
 # 2024 study: the translated movement (corner motor), the predicted start in the comparison
 cue(K['another2'] + 0.7, 'servo', -8, 0.95, 0.8, -0.2)
 cue(C['co24']['predict'], 'servo', -10, 0.95, 1.3, 0.3)
-# possible uses: it turns toward him; the page; the notebook closes
+# possible uses: the companion head turns toward him; the page; the humanoid's well-timed smile
 cue(A['look'] + 0.1, 'servo', -9, 0.8, 0.9, -0.2)
 cue(A['easier'] - 0.3, 'page', -9, pan=0.2)
-cue(A['response'] - 0.1, 'close', -8, pan=0.1)
-# callback: the robot's smile in its close-up
-cue(K['again'] + 1.5, 'servo', -9, 0.9, 1.0, -0.2)
+cue(A['humanoidSmile'] - 0.1, 'servo', -10, 0.9, 0.9, 0.0)
+# the ending: its smile forms; its last lip movement (frame 0's shape)
+cue(K['again'] + 1.5, 'servo', -9, 0.9, 1.0, 0.0)
+cue(A['end'] - 1.2, 'servo', -12, 1.1, 0.5, 0.0)
 
 # render effects (stereo by pan), each softened if it lands on speech
 sfxL = np.zeros(N); sfxR = np.zeros(N)

@@ -13,7 +13,8 @@
 | Subtitles | `captions/FGW_Robot_Faces_V2.srt`: the verified V1 SRT, unchanged (word timings did not change) |
 | Narration master | `audio/narration/FGW_Robot_Faces_narration_V2.wav`: V1's master, trailing silence trimmed (first 6,400 frames; removed tail < 1e-4) |
 | Mix | `audio/mix/FGW_Robot_Faces_V2_mix.wav`, `audio/mix/mix_measure_v2.json` |
-| Action / shot / transition map | `production/V2_TRANSITIONS.md` (generated from the shot table that renders the film) |
+| Action / shot / transition map | `production/V2_TRANSITIONS.md` (generated from the shot table that renders the film; 96 shots) |
+| Frame-by-frame check of the opening | `qa/v2/opening_frames/` (all 360 frames of 0–12 s, from the draft) |
 | Editable source | `source/src/v2/` (sets, environments, mechanism drawings, props, state, shots, film) |
 
 ## Runtime
@@ -22,66 +23,94 @@
 reaction. V1 was 3:34.667; the 1.33 s removed was silence after the reaction (no vacant tail). The voice was not
 re-recorded, edited or sped up.
 
-## What was rebuilt
+## What was rebuilt (second V2 pass, the "major visual rebuild" brief)
 
-Everything on screen. V1's shots are not reused; its rigs (robot, the guesser) and its timing source are.
-- **80 shots** instead of 14; median 2.5 s, longest 5.6 s (the 2024 timing comparison, which is one continuous
-  action). Every edit is a direct cut, a cut on action or a composition match. There are no dissolves and no swish
-  moves; inside a shot the camera makes one constant-speed push or, once, an eased lateral reveal.
-- **Opening (0-20.6 s).** The visitor's cue is already forming on frame 0. Four setups land within the first two
-  sentences:
-  - two-shot;
-  - his cue, close;
-  - the robot's response, close;
-  - a profile two-shot as the smiles arrive together.
+The second brief asked for a meaningful visual development about every second, a new opening that works without
+sound, physical mechanisms, a montage of people, the audio-to-motion path as one connected process, distinct
+future scenarios, and a looping ending. The first V2 pass is kept where it already did that. The rest was rebuilt
+(`source/src/v2/shotsD.tsx`, `crew.tsx`, `new.tsx`).
 
-  Then the near corner opens into a local section, servo → rod → corner, as the smile relaxes and lifts. The mirror
-  frame slides past (parallax) to reveal the reflection, followed by the reflection close and the whole setup.
-- **Mechanism.**
-  - Both mouth corners open into sections, with servo horns solved to the rig's real corner attachment.
-  - A control desk's sliders jump through untrained combinations.
-- **Mouths.** The visitor's mouth says the narrated "banana". Each named movement is marked, and the robot's mouth is
-  matched to his screen position. Then come:
-  - the untrained try against a target inset;
-  - a speaker box driving the jaw (labelled);
-  - the sock puppet;
-  - a slowed speech sample.
-- **Mirror practice.** A recording laptop in the shared mirror view, the reflection, the laptop's record of pairs,
-  lip detail with its commands, then the shared view again. There are three trials with different results.
-- **Skin.** A continuous silicone band in section beside a rigid link. One anchor is pulled; the band, the material
-  marks and the lip at its end move. Then the face, with landmarks.
-- **Training.** A new setting (the recording alcove). One example is followed throughout:
-  1. the source mouth and its sound trace;
-  2. the robot's own matching shape;
-  3. the same sound driving the corner motors and lips.
+**Count.** 96 shots, median 2.2 s. Inside the longer shots the action keeps changing: four test expressions in
+1.4 s, a run of six captured trials, motors switching on by group, a camera move along a signal path.
 
-  The traces are drawn from the same viseme track as the mouths, so they cannot disagree.
-- **Result.** Speech (speaker box), song (profile), an untrained language (front), and the physical path with an
-  empty "meaning" slot. All are silent illustrations.
-- **Distinction.** A profile two-shot, the robot's mouth, the listener, and over the robot's shoulder. There is no
-  card or test.
-- **Flaws.** Large B and W splits (the person's lips against the robot's attempt), the gap ringed, and the visitor
-  noticing.
-- **Late smile.** Two-shot, the robot waiting, the good-news letter, the stare, his completed smile, the late
-  switch-on, then a compact comparison of both faces with their smile curves.
-- **2024 study.** A study set (the robot facing a monitor), the cue marked on the face, the eye camera, a dashed
-  predicted smile, the corner motor, then two large faces with a small schematic 0.84 s bracket.
-- **Possible uses.** A study nook (new setting), the page turned by hand, and a help-desk vignette. His hand closes
-  the notebook; the nook two-shot is framed exactly like the lab, and the cut back to the lab is a composition match
-  (robot, visitor and notebook on the same screen positions).
-- **Ending.** The opening two-shot again. The robot's smile forms in its close-up, and his warm smile settles into
-  a knowing one on the last line.
-- **Sound.** Effects are restrained and tied to actions on screen:
-  - servos that move;
-  - the recording shutter;
-  - the monitor;
-  - the letter, the page and the notebook.
+**Opening, 0:00–0:20**
 
-  There are 42 cues, no whooshes and no label blips, and no demonstration audio under the voice.
+| Time | Shot |
+|---|---|
+| frame 0 | Extreme close-up of the robot's face, mouth already moving through distinct shapes (silent: not the narration), eyes on the camera. |
+| 1.0 s | One pull back shows it is a machine on a support. |
+| 2 s | Face to face with the visitor; his cue forms, its eyes go to his mouth. |
+| 3.9 s | One push into its cheek: the skin opens onto the motor and linkage. |
+| 5.1 s | The same smile in side section: motor → linkage → skin → lips (cut on action). |
+| 6.4 s | Both smiles arrive together. |
+| 7.6 s | "That takes more than moving the corners": a stiffer robot face (illustration) snaps only its corner bars up; the visitor flinches; then the soft face, where corners, cheeks and skin move together. |
+| 10.4 s | Lateral reveal past the mirror frame; four different test expressions in the reflection, motors faintly visible. |
+| "copy human lips" | A person's lips, then the robot's lips making the same shapes in the same place in the frame. |
+| "predict" | His cue and its earlier smile, side by side. |
+| "a mirror" | The camera backs out of the reflection to the whole setup. |
+
+**Mechanism, 0:20–0:32.**
+- The camera circles from the robot's profile to its face.
+- The silicone stretches.
+- The skin turns translucent and the motors switch on in groups as brows, smile and lips move ("26 motors · some of
+  them shown").
+- From the side, a motor turns and a linkage pushes the lips forward.
+- Sliders jump to untried combinations.
+- The sections close, the skin is whole, and it makes four distinct expressions.
+
+**Mirror learning.**
+- It turns to its reflection.
+- The reflection shows the motors through the skin.
+- A run of six trials: each face it makes is captured with the commands that made it, into a growing set.
+- The reflected lips with the motors working.
+- The camera goes into the reflection's cheek until the skin fills the frame. The next shot is that skin, in
+  section (a match).
+
+**Learning from people.** Different Weird Crew cast members talking, from the channel's approved cast rig
+(`crew.tsx`, ported from `can-you-hurt-something-that-isnt-alive`). In order:
+- The camera goes over the robot's shoulder into the alcove screen, and the screen's scene becomes the frame.
+- A person in profile on a street.
+- Another in a kitchen.
+- A singer on a stage.
+- One training example, then a person's lips with the robot's lips matched to them.
+- "Speech audio could then drive…" is one continuous camera move along the signal: the speaker → the sound as a
+  trace → the robot's learned map of its own mouth shapes, with the matching tile lighting → a cable → the motors →
+  the lips. It ends on the robot speaking.
+
+**Limits.** "The meaning … wasn't required" is now shown with the robot's lips keeping time with a language the
+visitor plainly doesn't follow, instead of a flowchart. The distinction, the flaws, the late smile and the 2024 study
+keep the first pass's staging, with two exceptions:
+- the comparison panels give the faces the frame;
+- the timing bracket is a slim strip at the top, and the late-smile plot is gone.
+
+**Final minute.**
+- His smile, very close, matched to its smile.
+- Face to face.
+- The motors behind the smile.
+- An imagined concourse where kiosk heads talk with passers-by, tagged "Possible future · illustration".
+- A companion head at home turns to him, speaks (eyes, then lips, very close) and smiles as he does.
+- The tutor's page turn.
+- The help-desk assistant.
+- He leans in to read a humanoid assistant's face; its well-timed smile.
+- One push in to the opening's framing.
+
+**Ending.** The research head, to the camera, in the opening's framing:
+1. Its smile forms.
+2. The visitor's reaction.
+3. Back to it. The smile softens, the brows lift a little, and its lips part into the exact shape and framing of
+   frame 0, so the end loops into the start.
+
+**Sound.** 62 cues, all on actions shown, including the stiff face's rigid tick, the trial shutters and the final
+lip movement. There are no whooshes on cuts.
+
+**First-pass work kept.** The mouths section (banana, the untrained try, jaw flap, puppet, plus his deadpan look),
+the skin section, the result demos, the distinction, the flaws, the late smile, the 2024 study, the tutor and the
+help desk.
 
 ## Runway: not used (blocked); what replaced it
 
-No Runway asset is in this film, and no Runway credits were spent for it. Access was checked:
+No Runway asset is in this film, and no Runway credits were spent for it. Access was checked (and checked again
+for the second pass, 26 Oct 2026: still `CONNECT tunnel failed, response 403`):
 - **Account.** `whoami` succeeded.
 - **Output hosts.** `list_recent` showed existing images, but their host `dnznrvs05pmza.cloudfront.net` returns a
   proxy 403 (CONNECT tunnel failed) from this container. So do `d1q70pf5vjeyhc.cloudfront.net`, `runwayml.com` and
@@ -133,44 +162,53 @@ section) and were inspected.
 - **Captions.** 67 cues, starts on measured word onsets (0 ms), no overlaps, last cue ends 212.01 s.
 - **ASR.** PocketSphinx WER 0.21 against the locked script (supporting only; same as V1).
 
-**Edits and frames:**
-- **Every edit frame-stepped.** For all 79 edits, two frames before and two after the boundary were read from the
-  low-resolution draft (`qa/v2/draft_strips/`). Defects found and fixed:
-  - two cuts opened on near-empty frames (the mouth grid, the signal path);
-  - two cuts were too-similar punch-ins (the mouth close-ups at 34.45 s, the skin section at 70.0 s);
-  - one "match" was not a real match (relabelled a cut);
-  - the human-to-robot mouth match was re-registered to the same screen position;
+**Edits and frames (second pass):**
+- **The first 12 seconds frame by frame.** All 360 frames were read from the draft as numbered tiles
+  (`qa/v2/opening_frames/`). Fixes:
+  - the opening close-up now holds through the first second before the pull-back;
+  - the side section was framed tighter and its skin made thicker.
+- **Every edit frame-stepped.** For all 95 edits, two frames before and two after each boundary were read from the
+  draft (`qa/v2/draft_strips/`). Fixes:
+  - the talking cast members were framed with their heads out of the top of the frame;
+  - the human-to-robot lip matches were re-registered to the same size and place;
+  - the motor reveal now starts on its cut;
+  - the robot's gaze snapped inside the opening shot;
+  - the humanoid's smile reset across a match cut, and the robot's smile reset on another cut;
   - a blink landed on a cut;
-  - the page turn was mistimed (an ambiguous phrase lookup) and is now fixed.
+  - a support post rendered inside the humanoid's chest;
+  - the 2024 panels sat under the timing strip.
 
-  The opening (0:00–0:20), the old 0:08 and 0:12–0:20 region, 1:56, 2:03–2:12 and the ending were rechecked after
-  the fixes.
-- **Frames of every new composition** were inspected while building. Some were at full resolution (visitor
-  close-up, cheek section) and the rest at one-third or one-quarter size in contact sheets of every shot
-  (`ShotSheet`). The full-resolution frames of the final master are listed below. The phone-size sheet is
-  `qa/v2/review/review_phone_sheet.png`.
+  The final review's edits were read again (`qa/v2/strips/`).
+- **Frames of every new composition** were inspected while building. Some were at full resolution (the opening,
+  the stiff face, the station, the 2024 comparison, the ending) and the rest in contact sheets of every shot. The
+  phone-size sheet is `qa/v2/review/review_phone_sheet.png`.
 
 **State and source checks:**
-- **State continuity** (`tools/state_continuity_v2.ts`, `qa/v2/state_continuity.txt`): every frame of the shared
-  states was scanned.
-  - 11 jumps fall on cuts, all at a change of place or moment.
-  - Inside shots, the jumps are only:
-    - the two-frame mouth closures of the silent speech demonstrations;
-    - the deliberate quick changes of the untrained combinations;
-    - the intentionally fast "switch-on" smile.
-  - No reset of smile, gaze or blink inside a shot.
-- **Invalid SVG values** (`tools/nan_scan_v2.tsx`): all 6,400 frames rendered to markup. No NaN or Infinity remains,
-  and no negative radius. One negative radius at the opening of the cheek sections was found from the draft's
-  browser log and fixed.
-- **Determinism.** Every animated value is a function of the frame (no randomness, no accumulated state), as in V1.
-- **Narrative order (science).**
+- **State continuity** (`tools/state_continuity_v2.ts`, `qa/v2/state_continuity.txt`): every frame was scanned.
+  - The jumps on cuts are changes of place, subject or moment. One is the cut from the help-desk head to a
+    different robot.
+  - Inside shots, the jumps are only the deliberate quick expression changes:
+    - the opening shapes;
+    - the four mirror tests;
+    - the trial run;
+    - the four expressions after the sections close;
+    - the untrained combinations;
+    - the speech-demo closures;
+    - the fast "switch-on" smile.
+- **Invalid SVG values** (`tools/nan_scan_v2.tsx`): all 6,400 frames rendered to markup. No NaN, Infinity or
+  negative size.
+- **Determinism.** Every animated value is a function of the frame. The ported cast rig's idle drift and blinks are
+  seeded functions of the frame.
+- **Science labels.**
   - The 2026 lip-sync and 2024 smile studies are tagged separately.
-  - "26 motors · four shown".
-  - The 0.84 s bracket is marked "schematic", from the robot's start to the visible smile.
-  - The demos are labelled silent illustrations.
-  - The meaning slot is empty, with no comprehension test.
-  - Possible uses are tagged "Possible use".
-  - The footage counter shows no number of hours (the source says only "hours").
+  - "26 motors · some of them shown".
+  - The ≈0.84 s bracket is marked "schematic". The narration and sources say about 840 ms; the brief's "839 ms" was
+    not put on screen.
+  - The stiff face is tagged "Illustration".
+  - The station, home and humanoid scenes are tagged "Possible future · illustration".
+  - The tutor and assistant are tagged "Possible use".
+  - The speech-to-lips path is tagged "Illustration".
+  - No generated or staged scene is presented as footage.
 
 ## Remaining limitations
 
@@ -184,4 +222,11 @@ section) and were inspected.
 - **Silent-demo mouths** use deterministic syllable tracks, not a real recording, and are labelled as illustrations.
 - **The help desk** is the simplest of the new settings: the visitor stands behind the same counter line as the
   robot.
+- **"About every second".** Most stretches change something within 0.75–1.5 s. Some first-pass shots kept in the
+  middle (the distinction, the flaws, parts of the 2024 study) develop every 1.5–3 s, as the first brief asked, not
+  every second.
+- **The cast rig's mouths** are the approved cast's simple ink mouths, driven by viseme shapes; they read as talking
+  and singing, but they are less detailed than the robot's lips.
+- **The humanoid body and the stiff robot face** are new drawings for this episode (no existing asset). The
+  humanoid uses the research head, so it is presented only as a possible future.
 - **Pre-existing** `tsc` errors in the copied `dc/` rig remain (unchanged upstream code); the V2 files typecheck.
