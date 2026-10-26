@@ -20,7 +20,12 @@ V8 is the final visual and animation pass on V7, made from the V8 brief. Frames 
 | `audio/mix/FGW_Glass_Climbing_V8_mix.wav` | The V8 mix. |
 | `production/v8_plates/` | Runway prompts and composition references (see *Runway*). |
 
-DIMENSIONS_PLACEHOLDER
+**Verified with ffprobe:**
+- **Review:** H.264 yuv420p bt709, 1080×1920, 30 fps, 1170 frames, 39.000 s, about 4.2 Mb/s.
+- **Master:** H.264 yuv420p bt709, 2160×3840, 30 fps, 1170 frames, 39.000 s, about 9.9 Mb/s, rendered at `--scale=2` from the same vector source.
+- **Audio (both):** AAC 48 kHz, 320 kb/s, encoded once from the PCM mix (`tools/v8/mux_loop_audio_v8.py`); the video is not re-encoded by the mux.
+
+**No raster plates are used.** Every exterior is the native vector tower.
 
 ## Hook (0–5.7 s)
 
@@ -94,14 +99,23 @@ Cycle 5 now runs behind the spring cutaway and is settled before the cut, so he 
 
 ## Runway
 
-RUNWAY_PLACEHOLDER
+- **Generated:** two images in the connected Runway workspace (nano-banana-pro, 9:16, 2K), 20 credits each:
+  - plate A, the facade hero;
+  - plate B, the downward street.
+  Their prompts and composition references are in `production/v8_plates/PLATES.md`.
+- **Not used:** neither plate could be downloaded, because this environment's network policy blocks Runway's image host (`dnznrvs05pmza.cloudfront.net`, HTTP 403 at the proxy). Neither plate is in any export.
+- **Not run:** image-to-video.
+- **How to integrate:** `Exterior8` already takes a `plate` (registered to the shot camera by `plateXform`). The steps once the host is reachable are in PLATES.md.
+- **Plate A camera:** the reference was made at an earlier hero camera. The final hero camera is eye (1.5, 33.6, 1.6), target (0.12, 30.7, -1.5), f 1200, so plate A would need a new reference and regeneration at that eye.
 
 ## Sound
 
 - The V8 mix is re-timed to the new picture: the spring cover, stretch, lost patch, neighbours, evening out and cover
   back; the settle at 505; the climb's seat, tension and release effects follow the new cycle times automatically.
 - A wind lift opens the height view. There are no electronic or magnetic sounds.
-- Measurements: MIX_PLACEHOLDER
+- Measurements: integrated −14.6 LUFS; peak −2.9 dBFS; voice 27 dB above everything else in the phone band; voice stem identical to the source recording (correlation 1.0).
+- **Key action sounds:** the catch, the slip and the arrest are on an unducked bus, so they read over the narration. The catch also has a crisp high knock.
+- **Loop:** the AAC padding tail crossfades back into the start of the mix, so a player that loops at the end of the file hears no gap or click.
 
 ## Facts
 
@@ -110,8 +124,28 @@ Nothing in the picture or captions claims that the cited research tested a climb
 
 ## Checks
 
-CHECKS_PLACEHOLDER
+- **Rig probe** (`tools/v8/rig_probe8.ts`):
+  - no hand, leg, toe-through-glass, knee-into-pad, face or trim faults;
+  - seated pads never slide;
+  - all 104 state values at the last frame equal frame 0.
+- **Every-frame inspection.** Three passes, each with ten inspectors over the whole film plus one for the seam, pacing and audio. Each extracted every frame of its range from the exported MP4 and checked it individually, with frame differences, tracking and caption bounding boxes.
+  - **Pass 1:** 35 findings.
+  - **Pass 2:** re-checked every pass-1 finding on a new render; 23 findings.
+  - **Pass 3:** re-checked on the next render.
+  - **Fixed:** every finding judged real and worth its cost, followed by a re-render.
+  - **Confirmed fixed:** the catch settle, seated pads fixed on screen, caption timing on cuts, the slip onset, the spring cover, the background flash, the tether routing and the loop seam.
+- **What I could not do:** I could not listen to the audio. Sync and levels were checked by waveform and stem analysis.
 
 ## Remaining issues
 
-REMAINING_PLACEHOLDER
+- **Side-view pads:** in the bay views (H3, M5b, C, G2) the facade is face-on but the pads are side-on (the V7 bay projection). The far pad's face sits near the brick pier's edge and the near pad's about 85 px to its right. Fixing this means re-staging every side view.
+- **Pale bloom:** about 0.3 s of pale tile face mid-zoom at 197–212, smooth with no pop.
+- **Molecular zoom:** it still brightens into the pale molecular field over two to three frames (403–404), after a gradual darkening.
+- **Caption over a wedge:** the wedge-section caption sits over the body of the top wedge for 222–308. The tips and contact line stay clear.
+- **Hairlines:** a hairline at the gap corners of the wedge section, 2–5 levels of contrast, visible only at 1:1 with contrast stretched.
+- **Captions moving on a cut:** a caption that spans a cut changes position on the cut (171, 503), then holds still for the rest of the shot.
+- **Edge line (S1):** a thin edge line at the right edge for frames 548–555.
+- **Far tether, briefly:** the far tether passes behind the near pad for about three frames at the fastest part of the lurch (1102–1104), and during part of the carries.
+- **Strap overstretch:** about 0.4 % (sub-pixel) at the slip (1095–1097).
+- **Seat sound:** the far pad's seat knock in G2 (976) is about two frames ahead of contact.
+- **Audio tail:** the AAC stream runs 18.7 ms past the picture. The crossfade keeps it continuous.
