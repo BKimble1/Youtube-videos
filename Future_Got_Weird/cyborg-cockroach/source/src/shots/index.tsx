@@ -19,10 +19,12 @@ import {S02} from './S02';
 import {S03} from './S03';
 import {S04} from './S04';
 import {S06} from './S06';
+import {S07} from './S07';
+import {S08} from './S08';
 import {S13} from './S13';
 import {S14} from './S14';
 import {S15} from './S15';
-const REG: Record<string, React.FC<ShotProps>> = {S01, S02, S03, S04, S06, S13, S14, S15};
+const REG: Record<string, React.FC<ShotProps>> = {S01, S02, S03, S04, S06, S07, S08, S13, S14, S15};
 
 export const SHOTS: Shot[] = SHOT_FRAMES.map(([id, from], i) => ({id, from, to: i + 1 < SHOT_FRAMES.length ? SHOT_FRAMES[i + 1][1] : FRAMES, C: REG[id] ?? Placeholder(id)}));
 export const shotAt = (f: number) => SHOTS.find((s) => f >= s.from && f < s.to) ?? SHOTS[SHOTS.length - 1];

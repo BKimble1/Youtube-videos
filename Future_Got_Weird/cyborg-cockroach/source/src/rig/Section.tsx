@@ -9,9 +9,10 @@
 // with colour and width parameters; PackBase is the top half of Gear (wires, saddle, board, chips, cell) split into the
 // parts behind and in front of the tube's cut plane.
 import React from 'react';
-import {Cam, proj, scaleAt} from '../lib/cam';
+import {Cam, proj, scaleAt, depth} from '../lib/cam';
 import {V3, V2, Frame, toW, add, sub, mul, dot, norm, cross, lerp3, len} from '../lib/v3';
-import {fmt, polyPath, openPath, closedPath} from '../lib/g3';
+import {fmt, polyPath, openPath, convexHull} from '../lib/g3';
+import {Solid, LAB, TARGET} from '../sets/Lab';
 import {INK} from '../lib/ink';
 import {lit, shade, mix} from '../lib/color';
 import {PACK, INJ, wiresOn, WirePt} from './gear';
@@ -652,54 +653,99 @@ export const DoseCloud: React.FC<{id: string; cam: Cam; f: Frame; c: number; alp
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-// The target fixture cut at z = 0 (the near half removed): far halves of the base plate, back plate and silicone, the
-// far cheek whole; hatched aluminium cut faces and the silicone's translucent cut face. (sets/Lab.tsx TargetFixture's
-// geometry; for a camera on the +z side.)
+// The target fixture (sets/Lab.tsx TargetFixture's geometry and finish) cut by the plane z = zc, keeping z <= zc, for a
+// camera on the +z side: zc = 0 is the half section through the needle; as zc sweeps out past the near cheek (zc >= 31)
+// the cut closes and the drawing is the plain exterior. Aluminium cut faces are hatched; the silicone's cut face is
+// translucent and lighter than its skin. Exposes a clip path `${id}-silclip` (the silicone part's outline on screen).
 // ---------------------------------------------------------------------------------------------------------------
-import {Solid, LAB, TARGET} from '../sets/Lab';
-import {depth} from '../lib/cam';
 export const ALU_CUT = '#A9B4BE';
-export const FixtureSection: React.FC<{id: string; cam: Cam}> = ({id, cam}) => {
+export const FIXTURE_CLOSED = 31;
+type FixBox = {key: string; c: V3; h: V3; color: string; sil?: boolean};
+const FIX: FixBox[] = [
+  {key: 'base', c: [-14, 2.2, 0], h: [24, 2.2, 30], color: LAB.alu},
+  {key: 'back', c: [-21.5, 30, 0], h: [2.5, 26, 23], color: shade(LAB.alu, 0.08)},
+  {key: 'cheekL', c: [-10, 30, -21.5], h: [10.5, 21, 1.8], color: LAB.alu},
+  {key: 'cheekR', c: [-10, 30, 21.5], h: [10.5, 21, 1.8], color: LAB.alu},
+  {key: 'sil', c: [-TARGET.depth / 2, TARGET.cy, 0], h: [TARGET.depth / 2, TARGET.hy, TARGET.hz], color: LAB.silicone, sil: true},
+];
+export const FixtureCut: React.FC<{id: string; cam: Cam; zc: number}> = ({id, cam, zc}) => {
   const sc = scaleAt(cam, [0, 30, 0]);
   const ink = Math.max(1.2, Math.min(4, sc * 0.3));
   const parts: {z: number; el: React.ReactNode}[] = [];
-  const box = (key: string, c: V3, h: V3, color: string) => parts.push({z: depth(cam, c), el: <Solid key={key} cam={cam} c={c} h={h} color={color} ink={ink} />});
-  // far halves (z <= 0)
-  box('base', [-14, 2.2, -15], [24, 2.2, 15], LAB.alu);
-  box('back', [-21.5, 30, -11.5], [2.5, 26, 11.5], shade(LAB.alu, 0.08));
-  box('cheekL', [-10, 30, -21.5], [10.5, 21, 1.8], LAB.alu);
-  box('sil', [-TARGET.depth / 2, TARGET.cy, -TARGET.hz / 2], [TARGET.depth / 2, TARGET.hy, TARGET.hz / 2], LAB.silicone);
+  let silHull: V2[] = [];
+  for (const b of FIX) {
+    const z0 = b.c[2] - b.h[2], z1 = b.c[2] + b.h[2];
+    if (z0 >= zc) continue;
+    const zt = Math.min(z1, zc);
+    const cut = zt < z1;
+    const c: V3 = cut ? [b.c[0], b.c[1], (z0 + zt) / 2] : b.c;
+    const h: V3 = cut ? [b.h[0], b.h[1], (zt - z0) / 2] : b.h;
+    const face = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([sx, sy]) => proj(cam, [c[0] + sx * h[0], c[1] + sy * h[1], zt + 0.01]));
+    if (b.sil) {
+      const corners: V2[] = [];
+      for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) corners.push(proj(cam, [c[0] + sx * h[0], c[1] + sy * h[1], c[2] + sz * h[2]]));
+      silHull = convexHull(corners);
+    }
+    const a0 = proj(cam, [c[0] - h[0], c[1] + h[1], zt]), a1 = proj(cam, [c[0] + h[0], c[1] - h[1], zt]);
+    parts.push({
+      z: depth(cam, c),
+      el: (
+        <g key={b.key}>
+          <Solid cam={cam} c={c} h={h} color={b.color} ink={ink} />
+          {cut && cam.eye[2] > zt && (b.sil ? (
+            <g>
+              <defs>
+                <linearGradient id={`${id}-sil`} gradientUnits="userSpaceOnUse" x1={fmt(a0[0])} y1={fmt(a0[1])} x2={fmt(a1[0])} y2={fmt(a1[1])}>
+                  <stop offset="0" stopColor={lit(LAB.silicone, 0.42)} />
+                  <stop offset="0.5" stopColor={lit(LAB.silicone, 0.2)} />
+                  <stop offset="1" stopColor={lit(LAB.silicone, 0.04)} />
+                </linearGradient>
+              </defs>
+              <path d={polyPath(face)} fill={`url(#${id}-sil)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+            </g>
+          ) : (
+            <path d={polyPath(face)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+          ))}
+        </g>
+      ),
+    });
+  }
   parts.sort((a, b) => b.z - a.z);
-  const Pq = (pts: [number, number][]) => pts.map(([x, y]) => proj(cam, [x, y, 0.02]));
-  const baseCut = Pq([[-38, 0], [10, 0], [10, 4.4], [-38, 4.4]]);
-  const backCut = Pq([[-24, 4.4], [-19, 4.4], [-19, 56], [-24, 56]]);
-  const sil = Pq([[-16, 13], [0, 13], [0, 47], [-16, 47]]);
-  const a0 = proj(cam, [-16, 47, 0]), a1 = proj(cam, [0, 13, 0]);
+  // TargetFixture's face sheen and screws, wherever that part of the fixture is present
+  const screws: V3[] = [[-4, 14, 23.4], [-4, 46, 23.4], [-16, 14, 23.4], [-16, 46, 23.4], [-4, 14, -23.4], [-4, 46, -23.4], [-16, 14, -23.4], [-16, 46, -23.4]];
+  const faceVis = (z: number) => (z > 0 ? cam.eye[2] > 23.3 && zc >= 23.3 : cam.eye[2] < -23.3);
+  const zq = Math.min(17.5, zc);
   return (
     <g>
       <Hatch id={`${id}-ha`} at={proj(cam, [-38, 0, 0])} sp={Math.max(4, 0.55 * sc)} color={ALU_CUT} ink={Math.max(0.9, 0.06 * sc)} alpha={0.5} />
       <defs>
-        <linearGradient id={`${id}-sil`} gradientUnits="userSpaceOnUse" x1={fmt(a0[0])} y1={fmt(a0[1])} x2={fmt(a1[0])} y2={fmt(a1[1])}>
-          <stop offset="0" stopColor={lit(LAB.silicone, 0.4)} />
-          <stop offset="0.5" stopColor={lit(LAB.silicone, 0.18)} />
-          <stop offset="1" stopColor={LAB.silicone} />
-        </linearGradient>
         <clipPath id={`${id}-silclip`}>
-          <path d={polyPath(sil)} />
+          <path d={polyPath(silHull)} />
         </clipPath>
       </defs>
       {parts.map((p) => p.el)}
-      <path d={polyPath(baseCut)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
-      <path d={polyPath(backCut)} fill={`url(#${id}-ha)`} stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
-      {/* the silicone's cut face: translucent, a little lighter than its skin, a soft inner glow */}
-      <path d={polyPath(sil)} fill={`url(#${id}-sil)`} />
-      <g clipPath={`url(#${id}-silclip)`}>
-        <path d={polyPath(Pq([[-16, 13], [0, 13], [0, 14.2], [-16, 14.2]]))} fill={shade(LAB.silicone, 0.15)} opacity={0.35} />
-        <path d={polyPath(Pq([[-1.2, 13], [0, 13], [0, 47], [-1.2, 47]]))} fill="#FFFFFF" opacity={0.18} />
-      </g>
-      <path d={polyPath(sil)} fill="none" stroke={INK} strokeWidth={fmt(ink)} strokeLinejoin="round" />
+      {cam.eye[0] > 0 && (() => {
+        const q = zq > -17.5 ? [[0.05, 15, -17.5], [0.05, 15, zq], [0.05, 45, zq], [0.05, 45, -17.5]].map((p) => proj(cam, p as V3)) : null;
+        const g = zc > -6 ? [[0.06, 36, -14], [0.06, 36, -6], [0.06, 43, -9], [0.06, 43, -15]].map((p) => proj(cam, p as V3)) : null;
+        return (
+          <g>
+            {q && <path d={polyPath(q)} fill="#FFFFFF" opacity={0.08} />}
+            {g && <path d={polyPath(g)} fill="#FFFFFF" opacity={0.35} />}
+          </g>
+        );
+      })()}
+      {screws.filter((p) => faceVis(p[2])).map((p, i) => {
+        const c = proj(cam, p);
+        const r = 1.6 * scaleAt(cam, p);
+        return (
+          <g key={i}>
+            <circle cx={fmt(c[0])} cy={fmt(c[1])} r={fmt(r)} fill="#8C97A2" stroke={INK} strokeWidth={ink * 0.6} />
+            <path d={`M${fmt(c[0] - r * 0.6)} ${fmt(c[1])} L${fmt(c[0] + r * 0.6)} ${fmt(c[1])}`} stroke={INK} strokeWidth={ink * 0.5} />
+          </g>
+        );
+      })}
     </g>
   );
 };
-/** clip path id helper for the silicone cut face (drawn by FixtureSection) */
+/** the clip path (silicone outline) exposed by FixtureCut */
 export const silClipId = (id: string) => `url(#${id}-silclip)`;

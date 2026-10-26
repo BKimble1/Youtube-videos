@@ -1,8 +1,8 @@
-// numeric checks for S09/S10 (run with: npx tsx src/dev/mechanism/probe.ts)
-import {s09Pose} from '../../shots/S09';
-for (let f = 462; f < 537; f += 6) {
-  const p = s09Pose(f / 30);
-  const tip = (a: number[][]) => a[a.length - 1].map((v) => v.toFixed(1)).join(',');
-  const minY = (a: number[][]) => Math.min(...a.filter((q) => q[0] < 12).map((q) => q[1])).toFixed(1);
-  console.log(f, 'L', tip(p.antL), 'R', tip(p.antR), 'minY(x<12)', minY(p.antL), minY(p.antR));
+// numeric checks for S09/S10 (bundle with the scratchpad build script and run with node)
+import {s10Cam} from '../../shots/S10';
+import {proj, scaleAt} from '../../lib/cam';
+const pts: [string, [number, number, number]][] = [['face', [0, 30, 0]], ['inj', [10, 26.5, 0]], ['body', [58, 12, 0]], ['rear', [105, 10, 0]], ['base', [-38, 0, 30]]];
+for (let f = 570; f <= 618; f += 3) {
+  const c = s10Cam(f / 30);
+  console.log(f, pts.map(([k, p]) => `${k} ${proj(c, p).map((v) => v.toFixed(0)).join(',')}`).join(' | '), 'sc', scaleAt(c, [10, 26.5, 0]).toFixed(1));
 }

@@ -18,7 +18,7 @@ import {LabBackdrop, ArenaFloor, TargetFixture} from '../sets/Lab';
 import {arenaWalls} from '../sets/LabRoom';
 import {FixtureShadow} from './S01';
 import {s09Pose, S09_EMBED_FRAME, S09_T_CUT} from './S09';
-import {PackBase, TubeExterior, SectionInjector, DoseCloud, FixtureSection, silClipId, Delivery} from '../rig/Section';
+import {PackBase, TubeExterior, SectionInjector, DoseCloud, FixtureCut, silClipId, Delivery, FIXTURE_CLOSED} from '../rig/Section';
 import {fmt, polyPath} from '../lib/g3';
 import {ShotProps} from './index';
 import {FPS, word} from '../timeline';
@@ -44,75 +44,54 @@ export const s10Delivery = (t: number): Delivery => ({
 });
 
 // ---------------------------------------------------------------------------------------------------------------
-// Camera: an orbit about a pivot; one eased move from the close side view to the front-left, higher and wider
+// Camera: one eased move, an orbit about the target's face (which holds its place on screen, so everything else
+// gathers toward it as the camera pulls back, rises and swings round to the front-left: no part of the picture reverses)
 // ---------------------------------------------------------------------------------------------------------------
 const F = 3200;
-const A = {piv: [2.5, 27, 0] as V3, phi: -5 * DEG, el: 3 * DEG, R: 118, cy: 870};
-const B = {piv: [27, 17, 0] as V3, phi: 30 * DEG, el: 19 * DEG, R: 470, cy: 900};
+const PIVOT: V3 = [0.5, 28, 0]; // on the silicone's face, just above the needle
+const SCREEN = {x: 385, y: 805}; // where the pivot sits in the frame throughout
+const A = {phi: -5 * DEG, el: 3 * DEG, R: 98.5};
+const B = {phi: 32 * DEG, el: 20 * DEG, R: 470};
 export const s10Cam = (t: number): Cam => {
   const k = sr(t, T_PULL0, T_PULL1);
-  const piv = lerp3(A.piv, B.piv, k);
   const phi = lerp(A.phi, B.phi, k), el = lerp(A.el, B.el, k), R = A.R * Math.pow(B.R / A.R, k);
-  const eye: V3 = add(piv, [R * Math.cos(el) * Math.sin(phi), R * Math.sin(el), R * Math.cos(el) * Math.cos(phi)]);
-  return lookAt(eye, piv, F, 540, lerp(A.cy, B.cy, k));
+  const eye: V3 = add(PIVOT, [R * Math.cos(el) * Math.sin(phi), R * Math.sin(el), R * Math.cos(el) * Math.cos(phi)]);
+  return lookAt(eye, PIVOT, F, SCREEN.x, SCREEN.y);
 };
-/** cutaway visibility: full until the pull-back is under way, then dissolved into the exterior */
-const sectionAt = (t: number) => 1 - sr(t, T_PULL0 + 0.14, T_PULL0 + 0.62);
+/** the cut plane (z, mm): at the section (0) until the pull-back is under way, then it sweeps out past the near cheek and
+ *  the fixture closes into its plain exterior */
+const cutPlane = (t: number) => FIXTURE_CLOSED * sr(t, T_PULL0 + 0.1, T_PULL0 + 0.72);
 
-// ---------------------------------------------------------------------------------------------------------------
-const Background: React.FC<{id: string; cam: Cam}> = ({id, cam}) => (
-  <g>
-    <LabBackdrop id={`${id}b`} cam={cam} blur={16} />
-    <ArenaFloor id={`${id}f`} cam={cam} />
-    <FixtureShadow cam={cam} />
-    {arenaWalls(cam, {skip: ['s', 'e']}).sort((a, b) => b.z - a.z).map((w) => w.el)}
-  </g>
-);
-
-/** the target and the injector from outside: the dose shows faintly through the translucent silicone */
-const Exterior: React.FC<{id: string; cam: Cam; d: Delivery}> = ({id, cam, d}) => {
+/** the target, the dose seen in it, and the injector (cut or whole) for a cut plane zc */
+const Target: React.FC<{id: string; cam: Cam; d: Delivery; zc: number}> = ({id, cam, d, zc}) => {
   const inj = S09_EMBED_FRAME;
-  const face = [[0.05, 13, -19.5], [0.05, 13, 19.5], [0.05, 47, 19.5], [0.05, 47, -19.5]].map((p) => proj(cam, p as V3));
-  const faceVis = cam.eye[0] > 0;
+  const secInj = 1 - sr(zc, 0.3, 3.2);
+  // the dose: on the cut face in section, then seen through the translucent silicone
+  const cloudA = 1 - 0.58 * sr(zc, 0, 7);
   const entry: V2[] = Array.from({length: 24}, (_, i) => {
     const a = (i / 24) * Math.PI * 2;
     return proj(cam, [0.08, inj.o[1] + 1.1 * Math.sin(a), inj.o[2] + 1.1 * Math.cos(a)]);
   });
+  const entryA = cam.eye[0] > 0 ? 0.55 * sr(zc, 0.5, 3) : 0;
   return (
     <g>
-      <Background id={id} cam={cam} />
-      <TargetFixture id={`${id}t`} cam={cam} />
-      {faceVis && (
-        <g>
-          <defs>
-            <clipPath id={`${id}-face`}>
-              <path d={polyPath(face)} />
-            </clipPath>
-          </defs>
-          <DoseCloud id={`${id}dc`} cam={cam} f={inj} c={d.cloud} alpha={0.42} clip={`url(#${id}-face)`} />
-          <path d={polyPath(entry)} fill="#B9705C" opacity={0.55} />
+      <FixtureCut id={`${id}x`} cam={cam} zc={zc} />
+      <DoseCloud id={`${id}dc`} cam={cam} f={inj} c={d.cloud} alpha={cloudA} clip={silClipId(`${id}x`)} />
+      {entryA > 0 && <path d={polyPath(entry)} fill="#B9705C" opacity={fmt(entryA)} />}
+      {secInj < 1 && <Injector id={`${id}i`} cam={cam} s={{f: inj, plunger: d.plunger, needleEnd: NEEDLE_TIP - EMBED}} />}
+      {secInj > 0 && (
+        <g opacity={secInj < 1 ? fmt(secInj) : undefined}>
+          <SectionInjector id={`${id}si`} cam={cam} f={inj} d={d} />
         </g>
       )}
-      <Injector id={`${id}i`} cam={cam} s={{f: inj, plunger: d.plunger, needleEnd: NEEDLE_TIP - EMBED}} />
     </g>
   );
 };
-
-/** the cutaway: the cradle, silicone and injector cut at z = 0 */
-const Cutaway: React.FC<{id: string; cam: Cam; d: Delivery}> = ({id, cam, d}) => (
-  <g>
-    <Background id={id} cam={cam} />
-    <FixtureSection id={`${id}x`} cam={cam} />
-    <DoseCloud id={`${id}dc`} cam={cam} f={S09_EMBED_FRAME} c={d.cloud} clip={silClipId(`${id}x`)} />
-    <SectionInjector id={`${id}si`} cam={cam} f={S09_EMBED_FRAME} d={d} />
-  </g>
-);
 
 export const S10: React.FC<ShotProps> = ({f}) => {
   const t = f / FPS;
   const cam = s10Cam(t);
   const d = s10Delivery(t);
-  const sec = sectionAt(t);
   const pose = s09Pose(t);
   const gear = (
     <g>
@@ -123,12 +102,11 @@ export const S10: React.FC<ShotProps> = ({f}) => {
   );
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      {sec < 1 && <Exterior id="s10e" cam={cam} d={d} />}
-      {sec > 0 && (
-        <g opacity={sec < 1 ? fmt(sec) : undefined}>
-          <Cutaway id="s10c" cam={cam} d={d} />
-        </g>
-      )}
+      <LabBackdrop id="s10b" cam={cam} blur={16} />
+      <ArenaFloor id="s10f" cam={cam} />
+      <FixtureShadow cam={cam} />
+      {arenaWalls(cam, {skip: ['s', 'e']}).sort((a, b) => b.z - a.z).map((w) => w.el)}
+      <Target id="s10t" cam={cam} d={d} zc={cutPlane(t)} />
       <Roach pose={pose} cam={cam} o={{id: 's10r', gear}} />
     </svg>
   );

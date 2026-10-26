@@ -24,6 +24,8 @@ import {fmt, polyPath, openPath} from '../lib/g3';
 import {INK} from '../lib/ink';
 import {lit, shade, mix} from '../lib/color';
 import {ShotProps} from './index';
+import {RemoteCloseUp} from '../crew/operator';
+import {noise1} from '../lib/ease';
 import {FPS} from '../timeline';
 
 const DEG = Math.PI / 180;
@@ -339,6 +341,13 @@ export const S08: React.FC<ShotProps & {k?: string}> = ({f, k = ''}) => {
         </g>
         <Glass id={`${id}gs`} a={glassA} />
       </g>
+      {/* the operator's hand on the remote in the foreground, thumb resting over the button (armed): it joins the zoom-out
+          from the slot, so it is part of the bench picture S08 lands on */}
+      {f >= S08_HAND_SLOT.fromFrame && (() => {
+        const h = s08HandSlotAt(f);
+        const sw = 6 * noise1(t * 0.6 + 4.2);
+        return <RemoteCloseUp id={`${id}rc`} press={0} lift={0.3 + 0.05 * noise1(t * 0.9)} led="armed" x={h.x + sw * h.scale} y={h.y} scale={0.69 * h.scale} rotation={-14 + 1.2 * noise1(t * 0.5 + 1.3)} />;
+      })()}
     </svg>
   );
 };

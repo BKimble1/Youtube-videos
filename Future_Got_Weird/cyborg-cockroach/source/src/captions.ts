@@ -17,7 +17,7 @@ export const CAP_PLACE: [string, Block, [number, Block][]?][] = [
   ['A second', {y: 1500}],
   ['carries', {y: 1500}],
   ['letting', {y: 1500}],
-  ['as the first', {y: 1500}],
+  ['as the first', {y: 270}],
   ['Once it', {y: 1500}],
   ['they fire', {y: 1500}],
   ['They’ve', {y: 1500}],

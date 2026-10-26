@@ -617,6 +617,1507 @@
    "gain": -18,
    "hero": true,
    "name": "S01 IMPACT into silicone"
+  },
+  {
+   "kind": "button",
+   "t": 2.04,
+   "gain": -24,
+   "name": "S02 button springs back",
+   "args": {
+    "f": 1500
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 5.083333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.083333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.083333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.441666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.441666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.441666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.8,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.8,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 5.8,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.166666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.166666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.166666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.525,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.525,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.525,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.883333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.883333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 6.883333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.25,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.25,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.25,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.608333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.608333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.608333333333333,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.966666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.966666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.966666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.333333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.333333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.333333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.691666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.691666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.691666666666666,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.05,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.05,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.05,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.391666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.391666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.391666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.675,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.675,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.675,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.958333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.958333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.958333333333334,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.241666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.241666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.241666666666667,
+   "gain": -38,
+   "name": "S04/S06 foot"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.49,
+   "gain": -33,
+   "name": "S04 pulse 1"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.5332,
+   "gain": -35,
+   "name": "S04 pulse 2"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.5764,
+   "gain": -37,
+   "name": "S04 pulse 3"
+  },
+  {
+   "kind": "pulse",
+   "t": 9.1,
+   "gain": -33,
+   "name": "S06 pulse 1"
+  },
+  {
+   "kind": "pulse",
+   "t": 9.117099999999999,
+   "gain": -35,
+   "name": "S06 pulse 2"
+  },
+  {
+   "kind": "pulse",
+   "t": 9.1342,
+   "gain": -37,
+   "name": "S06 pulse 3"
+  },
+  {
+   "kind": "tick",
+   "t": 10.783333333333333,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.783333333333333,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.783333333333333,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.125,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.125,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.125,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.466666666666667,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.466666666666667,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.466666666666667,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.808333333333334,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.808333333333334,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.808333333333334,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.15,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.15,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.15,
+   "gain": -35,
+   "name": "S07 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.466666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.466666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.466666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.791666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.791666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 12.791666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.116666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.116666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.116666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.441666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.441666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.441666666666666,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.766666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.766666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 13.766666666666667,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.1,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.1,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.1,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.683333333333334,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.683333333333334,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.683333333333334,
+   "gain": -44,
+   "name": "S08 feed foot"
+  },
+  {
+   "kind": "creak",
+   "t": 25.616666666666667,
+   "gain": -36,
+   "name": "S13 rubble settles"
+  },
+  {
+   "kind": "tick",
+   "t": 25.35,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.35,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.35,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.458333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.458333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.458333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.575,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.575,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.575,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.691666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.691666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.691666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.808333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.808333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.808333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.925,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.925,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 25.925,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.041666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.041666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.041666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.158333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.158333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.158333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.275,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.275,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.275,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.5,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.5,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.5,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.616666666666667,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.616666666666667,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.616666666666667,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.733333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.733333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.733333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.85,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.85,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.85,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.966666666666665,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.966666666666665,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 26.966666666666665,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.083333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.083333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.083333333333332,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.191666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.191666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.191666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.308333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.308333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.308333333333334,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.425,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.425,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.425,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.541666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.541666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.541666666666668,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.658333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.658333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.658333333333335,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.775,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.775,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.775,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.891666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.891666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 27.891666666666666,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.008333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.008333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.008333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.133333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.133333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.133333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.258333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.258333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.258333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.383333333333333,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.525,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.525,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.525,
+   "gain": -40,
+   "hero": false,
+   "name": "S13 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.675,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.675,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.675,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.833333333333332,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.833333333333332,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 28.833333333333332,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.016666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.016666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.016666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.216666666666665,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.216666666666665,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.216666666666665,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.441666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.441666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.441666666666666,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.683333333333334,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.683333333333334,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.683333333333334,
+   "gain": -35,
+   "hero": false,
+   "name": "S14 foot",
+   "args": {}
+  },
+  {
+   "kind": "tick",
+   "t": 29.933333333333334,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 29.933333333333334,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 29.933333333333334,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.175,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.175,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.175,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.425,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.425,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.425,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.708333333333332,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.708333333333332,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 30.708333333333332,
+   "gain": -27,
+   "hero": true,
+   "name": "S15 foot (FINAL APPROACH, accent 3)",
+   "args": {
+    "body": 0.5
+   }
+  },
+  {
+   "kind": "grit",
+   "t": 29.75,
+   "gain": -38,
+   "name": "S15 grit under the feet",
+   "args": {
+    "d": 1.2,
+    "rate": 18
+   }
   }
  ]
 }
