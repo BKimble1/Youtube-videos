@@ -302,22 +302,46 @@ const strokeRuns = (P: (p: V3) => Proj, pts: V3[], wM: number, f: number, minW: 
   return runs;
 };
 
-export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: string; branchK?: number; streamT?: number}> = ({cam, s, core, id, branchK = 1}) => {
+/** short side jabs off the guided section: every other stalled streamer of BOLT3 past the first 20 m, re-drawn as a
+ *  2-3 step jab angled 25-40 degrees off the channel (upward, alternating sides), in the discharge colours */
+const STREAMS3 = (() => {
+  const up = {x: 0.309, y: 0.951};
+  return BOLT3.streamers
+    .filter((st, k) => k % 2 === 0 && st.at > 20)
+    .map((st, k) => {
+      const side = k % 2 ? 1 : -1;
+      const ang = (side * (25 + 15 * hash(k, 611)) * Math.PI) / 180;
+      const dx = up.x * Math.cos(ang) - up.y * Math.sin(ang), dy = up.x * Math.sin(ang) + up.y * Math.cos(ang);
+      const L = 2.2 + 1.6 * hash(k, 613);
+      const b0 = st.pts[0];
+      const pts: P3[] = [{...b0, s: 0}];
+      let q = b0, acc = 0;
+      for (let m = 0; m < 3; m++) {
+        const j = (hash(k * 5 + m, 617) - 0.5) * 0.5;
+        const nq = {x: q.x + (dx + j * dy) * (L / 3), y: q.y + (dy - j * dx) * (L / 3), z: q.z + (hash(k * 7 + m, 619) - 0.5) * 0.4};
+        acc += L / 3;
+        pts.push({...nq, s: acc});
+        q = {...nq, s: acc};
+      }
+      return {pts, len: acc, at: st.at};
+    });
+})();
+/** branchK scales the branches past the guided section (width and, below 1, alpha); streamerK the brief side jabs;
+ *  tipK the climbing tip's glow (F uses all three to keep the guided section the brightest line) */
+export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: string; branchK?: number; streamerK?: number; tipK?: number}> = ({cam, s, core, id, branchK = 1, streamerK = 1, tipK = 1}) => {
   if (s <= 0) return null;
   const P = projector(cam);
   const c = clamp(core, 0, 1.8);
   const main = partial(BOLT3.pts, s);
   const brs = BOLT3.branches.map((b: Br3) => ({b, l: Math.min(b.len, (s - b.s0) * 0.6)})).filter((x) => x.l > 0).map((x) => partial(x.b.pts, x.l));
-  // stalled streamers light briefly as the tip passes them, then fade (but stay faintly while the channel is hot)
-  const sts = BOLT3.streamers
+  // stalled streamers: only a brief brush of short upward jabs right behind the climbing tip (each lights for ~9 m of
+  // growth and is gone), so the young leader never reads as a comb; none once the bolt has connected
+  const sts = STREAMS3
     .map((st) => {
-      const age = (s - st.at) / 30; // metres of leader growth since it passed
-      if (age <= 0) return null;
-      const grow = clamp(age * 3);
-      const fade = clamp(1.25 - age) * 0.8 + 0.2 * clamp(c - 0.9);
-      // quieter and shorter near the rod tip, so a young leader does not read as a fishbone
-      const base = 0.45 + 0.55 * clamp((st.at - 8) / 30);
-      return {pts: partial(st.pts, st.len * grow * (0.6 + 0.4 * base)), a: fade * base};
+      const age = (s - st.at) / 9;
+      if (age <= 0 || age >= 1 || s >= BOLT3.total - 0.5) return null;
+      const grow = clamp(age * 4);
+      return {pts: partial(st.pts, st.len * grow), a: clamp(1 - age) * 0.9 * streamerK};
     })
     .filter((x): x is {pts: V3[]; a: number} => !!x && x.a > 0.02);
   const f = cam.f;
@@ -352,10 +376,10 @@ export const Discharge3D: React.FC<{cam: Cam3; s: number; core: number; id: stri
       <g filter={`url(#${id}-bl)`} opacity={0.32 * Math.min(1.2, c)}>
         {strokeRuns(P, main, 7, f, 8, 130).map((r, i) => <path key={i} d={r.d} fill="none" stroke="#8C96FF" strokeWidth={fmt(r.w)} strokeLinecap="round" />)}
       </g>
-      {sts.map((st, i) => draw(st.pts, 0.45, `s${i}`, st.a))}
-      {brs.map((b, i) => draw(b, 0.6 * branchK, `b${i}`))}
+      {sts.map((st, i) => draw(st.pts, 0.55, `s${i}`, st.a))}
+      {brs.map((b, i) => draw(b, 0.6 * branchK, `b${i}`, Math.min(1, 0.55 + 0.45 * branchK)))}
       {draw(main, 1, 'm')}
-      {growing && tp.ok && <circle cx={fmt(tp.x)} cy={fmt(tp.y)} r={fmt(clamp((f * 4.5) / tp.z, 12, 80))} fill={`url(#${id}-tip)`} />}
+      {growing && tp.ok && <circle cx={fmt(tp.x)} cy={fmt(tp.y)} r={fmt(clamp((f * 4.5) / tp.z, 12, 80) * (0.75 + 0.25 * tipK))} fill={`url(#${id}-tip)`} opacity={fmt(clamp(0.6 + 0.4 * tipK))} />}
     </g>
   );
 };
@@ -395,7 +419,7 @@ export const Beam3D: React.FC<{cam: Cam3; alpha: number; pulses?: number[]; chan
               <feGaussianBlur stdDeviation={fmt(clamp(f / 70, 5, 22))} />
             </filter>
           </defs>
-          <path d={ribbon} fill={PAL.channel} fillOpacity={0.2 * channel} filter={`url(#${id}-cb)`} />
+          <path d={ribbon} fill={PAL.channelMacro} fillOpacity={0.34 * channel} filter={`url(#${id}-cb)`} />
         </g>
       )}
       {alpha > 0 && (a.ok || b.ok) && (
