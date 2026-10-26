@@ -115,7 +115,13 @@ done.** Everything below is from frames and measurements. That viewing is the ma
 - **Scans.**
   - Invalid SVG values: none in 6,400 frames.
   - State continuity: no reset inside a shot; the fast changes are speech shapes and eye saccades.
-- **Measured QA on the review.** Results are in `qa/v3/review/review_qa.json`, summarised below.
+- **Measured QA on the review** (`qa/v3/review/review_qa.json`):
+  - H.264 1920×1080, 30 fps, 6,400 frames, 213.333 s;
+  - −14.2 LUFS, LRA 3.3, −1.4 dBTP;
+  - no black frames; no frozen stretch of 2.5 s or more;
+  - audio against the narration at a 0 ms lag (r = 0.92);
+  - 67 captions on word onsets, with no overlaps.
+  - SHA-256 `563091147518fa92d79670c3f207f920129ec590b955b62e335be5055499cab7`.
 
 ## Remaining limitations
 
