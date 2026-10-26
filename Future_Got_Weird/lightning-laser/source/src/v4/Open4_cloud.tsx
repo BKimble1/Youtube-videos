@@ -152,13 +152,19 @@ export const CloudFlash4: React.FC<{cam: Cam3; t: number; id: string}> = ({cam, 
         <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
           <feGaussianBlur stdDeviation={fmt(clamp(cam.f / 220, 3, 7))} />
         </filter>
+        <filter id={`${id}-bl`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={1680} height={2520}>
+          <feGaussianBlur stdDeviation={16} />
+        </filter>
         <filter id={`${id}-b2`} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
           <feGaussianBlur stdDeviation={1.2} />
         </filter>
       </defs>
       {/* the lobes catch the light from within: each by its own amount, so the lit region breaks up along them */}
-      {rings.map((r, i) => <path key={i} d={r.d} fill={`url(#${id}-g)`} opacity={fmt(clamp(k * r.a * (nearest.includes(i) ? 1 + 0.6 * strike : 1)))} />)}
-      {strike > 0.02 && nearest.map((i) => <path key={`n${i}`} d={rings[i].d} fill={`url(#${id}-gs)`} opacity={fmt(0.75 * strike)} />)}
+      {/* (softened, so the lit lobes have no hard rim and the light never reads as a disc) */}
+      <g filter={`url(#${id}-bl)`}>
+        {rings.map((r, i) => <path key={i} d={r.d} fill={`url(#${id}-g)`} opacity={fmt(clamp(k * r.a * (nearest.includes(i) ? 1 + 0.6 * strike : 1)))} />)}
+        {strike > 0.02 && nearest.map((i) => <path key={`n${i}`} d={rings[i].d} fill={`url(#${id}-gs)`} opacity={fmt(0.75 * strike)} />)}
+      </g>
       {/* the channel itself, seen through the thinner base at the peaks: blurred, white with violet edges */}
       {chOk && peak > 0.02 && (
         <g opacity={fmt(0.75 * peak)} filter={`url(#${id}-b)`}>

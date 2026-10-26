@@ -103,7 +103,7 @@ const a1Key = (tau: number): Key => shift(A1_KEY, mul3(A1_V, tau), mul3(A1_VT, t
 export const a1Cam = (tau: number) => camOf(a1Key(tau));
 
 // ------------------------------------------------------------------ A2: the crane up the beam onto openCam
-export const CR0 = 0.3, CR1 = 2.4;
+export const CR0 = 0.55, CR1 = 2.4;
 /** a normalised progress through [a, b] from a velocity profile vel (cumulative, tabulated; 0 and 1 at the ends) */
 const progress = (a: number, b: number, vel: (t: number) => number, n = 400) => {
   const acc = [0];
@@ -121,7 +121,7 @@ const CR_C = v3(-70, 25, -75);
  *  slowly and stays slow (their windows move at most ~35 px a frame, so they leave the frame calmly, with the
  *  telescope still firing through "LASER"); once they are out, high over the summit with nothing near the lens, the
  *  rise speeds up (1.3-1.9) and then eases onto openCam's own drift (zero relative velocity at CR1) */
-const craneW = progress(CR0, CR1, (t) => (0.3 * ss(t, CR0, CR0 + 0.5) + 0.7 * ss(t, 1.3, 1.9)) * (1 - ss(t, 1.95, CR1)));
+const craneW = progress(CR0, CR1, (t) => (0.35 * ss(t, CR0, CR0 + 0.55) + 0.65 * ss(t, 1.0, 1.5)) * (1 - ss(t, 1.55, CR1)));
 const craneCam = (tau: number, t: number): Cam3 => {
   const a = a1Cam(tau), o = openCam(t);
   const w = craneW(tau);
