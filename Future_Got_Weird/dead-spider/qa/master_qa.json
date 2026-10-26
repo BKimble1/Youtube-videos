@@ -1,0 +1,150 @@
+{
+ "file": "FGW_Dead_Spider_V1_MASTER_2160x3840.mp4",
+ "size_mb": 38.9,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "w": 2160,
+  "h": 3840,
+  "fps": "30/1",
+  "frames": 900,
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "duration_s": 30.0
+ },
+ "audio": {
+  "codec": "aac",
+  "sr": 48000,
+  "channels": 2,
+  "bit_rate": 317374,
+  "duration_s": 30.016
+ },
+ "black_segments": [],
+ "loudness": {
+  "integrated_lufs": -15.04,
+  "true_peak_dbtp_4x": -3.25,
+  "first_speech_s": 0.02
+ },
+ "asr": {
+  "zipformer": {
+   "wer": 0.0,
+   "diffs": []
+  },
+  "whisper": {
+   "wer": 0.0,
+   "diffs": []
+  }
+ },
+ "frame_change": {
+  "median": 1.09,
+  "p99": 18.2,
+  "jumps_over_12": [
+   {
+    "frame": 123,
+    "mad": 45.6,
+    "on_cut": true
+   },
+   {
+    "frame": 366,
+    "mad": 97.5,
+    "on_cut": true
+   },
+   {
+    "frame": 390,
+    "mad": 50.0,
+    "on_cut": true
+   },
+   {
+    "frame": 424,
+    "mad": 15.3,
+    "on_cut": false
+   },
+   {
+    "frame": 425,
+    "mad": 18.2,
+    "on_cut": false
+   },
+   {
+    "frame": 426,
+    "mad": 19.0,
+    "on_cut": false
+   },
+   {
+    "frame": 427,
+    "mad": 19.6,
+    "on_cut": false
+   },
+   {
+    "frame": 428,
+    "mad": 15.8,
+    "on_cut": false
+   },
+   {
+    "frame": 446,
+    "mad": 13.7,
+    "on_cut": false
+   },
+   {
+    "frame": 447,
+    "mad": 13.5,
+    "on_cut": false
+   },
+   {
+    "frame": 448,
+    "mad": 12.2,
+    "on_cut": false
+   },
+   {
+    "frame": 502,
+    "mad": 48.3,
+    "on_cut": true
+   },
+   {
+    "frame": 522,
+    "mad": 51.9,
+    "on_cut": true
+   },
+   {
+    "frame": 595,
+    "mad": 64.6,
+    "on_cut": true
+   },
+   {
+    "frame": 716,
+    "mad": 34.9,
+    "on_cut": true
+   },
+   {
+    "frame": 779,
+    "mad": 13.1,
+    "on_cut": false
+   },
+   {
+    "frame": 780,
+    "mad": 13.7,
+    "on_cut": false
+   },
+   {
+    "frame": 781,
+    "mad": 14.1,
+    "on_cut": false
+   },
+   {
+    "frame": 782,
+    "mad": 13.9,
+    "on_cut": false
+   },
+   {
+    "frame": 783,
+    "mad": 13.4,
+    "on_cut": false
+   },
+   {
+    "frame": 784,
+    "mad": 12.0,
+    "on_cut": false
+   }
+  ],
+  "loop_seam_mad": 65.6
+ }
+}

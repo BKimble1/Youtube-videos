@@ -147,6 +147,7 @@ No excursion returns to an earlier subject without completing an explanation.
 
 Checked from the exported files.
 
+- **Master.** 2160×3840 at native 2× (38.9 MB): 900 frames, 30.000 s, the same loudness, ASR 0.000 / 0.000, no black frames (`qa/master_qa.json`, `qa/master_26.3s_2160x3840.png`).
 - **Streams (ffprobe).** H.264 High, yuv420p, bt709, 1080×1920, 30/1, 900 frames, 30.000 s. AAC 48 kHz stereo
   at 320 kb/s, 30.016 s (AAC padding).
 - **Black frames.** None (`blackdetect`).
