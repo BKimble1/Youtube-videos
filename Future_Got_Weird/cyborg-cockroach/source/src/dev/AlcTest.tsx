@@ -8,7 +8,7 @@ export const AlcTest: React.FC<{T: number; cos: (S13Co & {tips?: boolean})[]}> =
   <AbsoluteFill style={{backgroundColor: '#111'}}>
     {cos.map((co, i) => (
       <div key={i} style={{position: 'absolute', left: (i % 4) * 270, top: Math.floor(i / 4) * 480, width: 1080, height: 1920, transform: 'scale(0.25)', transformOrigin: '0 0', overflow: 'hidden'}}>
-        <AlcoveScene id={`t${i}`} T={T} cam={lookAt(co.eye, co.tgt, co.f, 540, co.cy)} A={{...s13Acting(T), recog: 0.6, recoil: 0.3}} scaleRef={co.tips ? ALCOVE.tips : undefined} />
+        <AlcoveScene id={`t${i}`} T={T} cam={lookAt(co.eye, co.tgt, co.f, co.cx ?? 540, co.cy)} A={{...s13Acting(T), recog: 0.6, recoil: 0.3}} scaleRef={co.tips ? ALCOVE.tips : undefined} legslab={false} skip={['alc-gapL', 'alc-gapR']} />
         <div style={{position: 'absolute', left: 20, top: 20, fontSize: 70, color: '#FF0', fontFamily: 'monospace'}}>{i}</div>
       </div>
     ))}

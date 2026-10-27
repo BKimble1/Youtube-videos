@@ -67,7 +67,7 @@ export const Hand3D: React.FC<{id: string; cam: Cam; frame: Frame; t: number; re
   ps.sort((a, b) => b.z - a.z);
   const sh = proj(cam, toW(frame, [-110, 0, 0]));
   const k = scaleAt(cam, toW(frame, [-60, 0, 0]));
-  const ink = Math.max(1.6, Math.min(9, 0.62 * k));
+  const ink = Math.max(2, Math.min(11, 0.9 * k)); // the crew's line weight at this size
   return (
     <g>
       <SoftShadow id={`${id}-sh`} c={{x: sh[0], y: sh[1] + 6 * k}} rx={150 * k} ry={22 * k} alpha={0.32} color="#1A1612" core={0.5} />

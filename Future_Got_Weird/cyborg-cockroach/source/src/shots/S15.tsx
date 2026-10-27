@@ -20,7 +20,7 @@ export const s15Acting = (T: number) => ({recog: 1, recoil: 0, handOpen: 1, exha
 
 /** her hand where the target stood in the opening: middle fingertip just behind the lab target face, fingers along the
  *  walk toward the insect */
-export const S15_HAND = ypr(labToAlc([-3, 0, -2]), Math.atan2(-WALK_DIR[2], WALK_DIR[0]));
+export const S15_HAND = ypr(labToAlc([-52, 0, -24]), Math.atan2(-WALK_DIR[2], WALK_DIR[0]));
 export const S15: React.FC<ShotProps> = ({f}) => {
   const T = f / FPS;
   const hand = {z: depth(S15_CAM, labToAlc([-90, 15, 0])), el: <Hand3D key="hand" id="s15h" cam={S15_CAM} frame={S15_HAND} t={T} />};

@@ -15,7 +15,7 @@ import {LabBackdrop, ArenaFloor, Foam, LAB} from '../sets/Lab';
 import {arenaWalls} from '../sets/LabRoom';
 import {fmt, polyPath, projPoly} from '../lib/g3';
 import {INK} from '../lib/ink';
-import {lit, shade} from '../lib/color';
+import {lit, shade, mix} from '../lib/color';
 import {ShotProps} from './index';
 import {FPS} from '../timeline';
 import {SHOT_FRAMES} from '../cuts';
@@ -95,8 +95,9 @@ const FoamOccluder: React.FC<{cam: Cam; id: string}> = ({cam, id}) => {
   if (!F && !S) return null;
   // in the shadow of its own face (the light is upper-left, the lens is right at it): a deep ochre mid-tone, close in
   // value to the concrete slab that continues the wipe in S12
-  const base = shade(LAB.foam, 0.6);
-  const sideCol = shade(LAB.foam, 0.75);
+  // (pulled toward S12's grey concrete so the wipe does not change colour at the hidden cut)
+  const base = mix(shade(LAB.foam, 0.6), '#8A847E', 0.6);
+  const sideCol = mix(shade(LAB.foam, 0.75), '#6E6964', 0.6);
   // pores: anchored on the front face, drawn where they land on screen
   const pores: React.ReactNode[] = [];
   for (let i = 0; i < 1400; i++) {

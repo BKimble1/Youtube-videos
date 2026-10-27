@@ -22,8 +22,8 @@ export const NOTICE = word('starts').start; // her eyes go to it as "starts craw
 export const ALARM = NOTICE + 0.18;
 
 /** a low camera on the floor just beyond the gap, looking past it at her: eye, target, focal length, centre y */
-export type S13Co = {eye: V3; tgt: V3; f: number; cy: number};
-export const S13_CO: S13Co = {eye: [368, 110, 560], tgt: [125, 320, 20], f: 600, cy: 1020};
+export type S13Co = {eye: V3; tgt: V3; f: number; cy: number; cx?: number};
+export const S13_CO: S13Co = {eye: [380, 220, 600], tgt: [150, 200, 40], f: 680, cy: 1000};
 /** S13 opens tight on her face (a cut-in from S12's medium shot of her) and eases back once, turning down to the gap
  *  and her hand as the insect comes into view: the close-up's focal length, and when the move runs */
 const CLOSE_F = 900, MOVE: [number, number] = [25.85, 27.3];
@@ -81,9 +81,9 @@ const nearestDepth = (cam: Cam, pose: RoachPose) => {
   return Math.min(...pts.map((p) => depth(cam, p)));
 };
 
-export type AlcoveActing = {recog: number; recoil: number; handOpen: number; handSlide?: number; exhale?: number; blink: number; look: number};
+export type AlcoveActing = {recog: number; recoil: number; handOpen: number; handSlide?: number; slideU?: number; slideDir?: number; exhale?: number; blink: number; look: number};
 /** the alcove at film time T through camera `cam`: rubble, the insect on its walk, and her (acting A) */
-export const AlcoveScene: React.FC<{id: string; T: number; cam: Cam; A: AlcoveActing; scaleRef?: V3; elev?: number; legslab?: boolean; motes?: boolean; shaft?: number; survivor?: boolean; extra?: Item[]}> = ({id, T, cam, A, scaleRef, elev, legslab = true, motes = true, shaft = 0.28, survivor = true, extra = []}) => {
+export const AlcoveScene: React.FC<{id: string; T: number; cam: Cam; A: AlcoveActing; scaleRef?: V3; elev?: number; legslab?: boolean; motes?: boolean; shaft?: number; survivor?: boolean; extra?: Item[]; skip?: string[]}> = ({id, T, cam, A, scaleRef, elev, legslab = true, motes = true, shaft = 0.28, survivor = true, extra = [], skip = []}) => {
   const pose = alcovePose(T);
   const yaw = yawFor(cam);
   const place = survivorAt(cam, T, {id: `${id}s`, yaw, elev}, scaleRef);
@@ -93,7 +93,8 @@ export const AlcoveScene: React.FC<{id: string; T: number; cam: Cam; A: AlcoveAc
   const L = survivorLayout({...place, yaw, elev, t: T, recog: A.recog, recoil: A.recoil, handOpen: A.handOpen});
   const cut = L.cutAt(-70);
   const items: Item[] = [
-    ...alcovePieces(cam, {sun: 0.6}).filter((it) => it !== null),
+    // (skip: set pieces a shot leaves out, by key, e.g. 'alc-gapL' when the camera stands at the gap)
+    ...alcovePieces(cam, {sun: 0.6}).filter((it) => it !== null && !skip.includes(String((it.el as React.ReactElement | null)?.key ?? ''))),
     ...extra,
     // while the insect is still under/behind the lens (before it walks into the bottom of frame) it is not drawn: parts
     // behind the camera would project wrapped round
@@ -106,9 +107,9 @@ export const AlcoveScene: React.FC<{id: string; T: number; cam: Cam; A: AlcoveAc
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <RubbleBack id={`${id}bk`} glow={[980, 120]} />
-      <DustFloor id={`${id}fl`} cam={cam} pool={[230, 0, 30]} poolR={260} />
+      <DustFloor id={`${id}fl`} cam={cam} pool={[250, 0, 110]} poolR={330} />
       <Sorted items={items.filter((it) => dA < it.z)} />
-      {survivor && <Survivor id={`${id}s`} yaw={yaw} elev={elev} {...place} t={T} recog={A.recog} recoil={A.recoil} handOpen={A.handOpen} handSlide={A.handSlide} exhale={A.exhale} blink={A.blink} gaze={gaze} dust={0.7} hideLeftOf={cut.x} />}
+      {survivor && <Survivor id={`${id}s`} yaw={yaw} elev={elev} {...place} t={T} recog={A.recog} recoil={A.recoil} handOpen={A.handOpen} handSlide={A.handSlide} slideU={A.slideU} slideDir={A.slideDir} exhale={A.exhale} blink={A.blink} gaze={gaze} dust={0.7} hideLeftOf={cut.x} />}
       <Sorted items={items.filter((it) => dA >= it.z)} />
       {slab?.el}
       {shaft > 0 && <LightShaft id={`${id}sh`} from={[980, -60]} to={[shaftTo[0], shaftTo[1]]} w0={90} w1={260} alpha={shaft} />}
