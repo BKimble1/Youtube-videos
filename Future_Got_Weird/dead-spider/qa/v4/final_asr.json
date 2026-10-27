@@ -1,0 +1,24 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU STUCK A NEEDLE INTO A DEAD SPIDER YOU COULD MAKE ITS LEGS MOVE AGAIN BECAUSE WHEN A SPIDER DIES ALL ITS LEGS CURL INWARD YOU SEE SPIDERS USE FLUID PRESSURE TO STRAIGHTEN THEIR LEGS AND WHEN THEY DIE THAT PRESSURE DISAPPEARS SO SCIENTISTS ATTACHED A SYRINGE TO A DEAD SPIDER AND PUMPED AIR INSIDE ITS LEGS SUDDENLY SPREAD OPEN BUT WHEN THEY RELEASED THE PRESSURE THE LEGS CLAMPED SHUT THEY TURNED A DEAD SPIDER INTO A WORKING CLAW AND THEY ACTUALLY USED IT TO PICK UP ANOTHER DEAD SPIDER",
+  "wer": 0.011,
+  "diffs": [
+   [
+    "replace",
+    "they'd",
+    "they"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you stuck a needle into a dead spider, you could make its legs move again. Because when a spider dies, all its legs curl inward. You see, spiders use fluid pressure to straighten their legs. And when they die, that pressure disappears. So scientists attached a syringe to a dead spider and pumped air inside. Its legs suddenly spread open. But when they released the pressure, the legs clamped shut. They turned a dead spider into a working claw. And they actually used it to pick up another dead spider.",
+  "wer": 0.011,
+  "diffs": [
+   [
+    "replace",
+    "they'd",
+    "they"
+   ]
+  ]
+ }
+}

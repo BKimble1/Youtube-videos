@@ -24,7 +24,8 @@ const nid = (p: string) => `${ns}${p}${uid++}`;
 /** a tapered round segment (leg, needle shaft) between world points a, b with radii ra, rb (mm) */
 /** a fluid channel inside a cut-away segment: colour, radius as a fraction of the segment's, and a flow phase (dashes
  *  travelling outward along the segment; undefined = still) */
-export type Core = {color: string; k: number; flow?: number; op?: number};
+/** soft: an organic look (translucent fluid, a travelling soft swell instead of dashes) */
+export type Core = {color: string; k: number; flow?: number; op?: number; soft?: boolean};
 export const capsuleItem = (B: Basis, a: V3, b: V3, ra: number, rb: number, color: string, o: {ink?: number; spec?: number; zBias?: number; opacity?: number; key?: string; band?: string; bandAt?: number; core?: Core} = {}): Item => {
   const A = proj(B, a), Bp = proj(B, b);
   const rA = ra * A.s, rB = rb * Bp.s;
@@ -61,8 +62,16 @@ export const capsuleItem = (B: Basis, a: V3, b: V3, ra: number, rb: number, colo
       )}
       {o.core && o.core.k > 0.01 && (
         <g opacity={o.core.op ?? 1}>
-          <path d={capsule2(A, Bp, rA * o.core.k, rB * o.core.k)} fill={o.core.color} />
-          {o.core.flow !== undefined && L > 2 * r && (
+          <path d={capsule2(A, Bp, rA * o.core.k, rB * o.core.k)} fill={o.core.color} opacity={o.core.soft ? 0.62 : 1} />
+          {o.core.soft && o.core.flow !== undefined && L > 2 * r && (() => {
+            // a soft swell of fluid travelling down the segment
+            const u = (((o.core.flow * 0.34) % 1) + 1) % 1;
+            const px = A.x + (Bp.x - A.x) * u, py = A.y + (Bp.y - A.y) * u;
+            const rr = (rA + (rB - rA) * u) * o.core.k;
+            const ang = (Math.atan2(Bp.y - A.y, Bp.x - A.x) * 180) / Math.PI;
+            return <ellipse cx={f2(px)} cy={f2(py)} rx={f2(rr * 2.2)} ry={f2(rr * 0.85)} transform={`rotate(${f2(ang)} ${f2(px)} ${f2(py)})`} fill="#E6F6FA" opacity={0.4 * Math.sin(Math.PI * u)} />;
+          })()}
+          {!o.core.soft && o.core.flow !== undefined && L > 2 * r && (
             <path d={`M${f2(A.x)},${f2(A.y)} L${f2(Bp.x)},${f2(Bp.y)}`} stroke="#FFFFFF" strokeWidth={f2(Math.min(rA, rB) * o.core.k * 0.7)} strokeLinecap="round" strokeDasharray={`${f2(Math.max(2, L * 0.12))} ${f2(Math.max(4, L * 0.22))}`} strokeDashoffset={f2(-o.core.flow * L * 0.34)} opacity={0.55} />
           )}
         </g>

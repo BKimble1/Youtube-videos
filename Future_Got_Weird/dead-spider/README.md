@@ -1,5 +1,26 @@
 # Future Got Weird: Scientists Turned Dead Spiders Into Robots (Dead Spider)
 
+## V4 FINAL (27 Oct 2026)
+
+**Status.** The final polish pass on V3, rendered from source and checked from the file. **It is not published.**
+
+**Unchanged:** the approved narration and caption timing.
+
+**Deliverable.** `exports/FGW_Dead_Spider_V4_FINAL_1080x1920.mp4`: 1080×1920, 30 fps, 30.2 s, H.264 High CRF 14,
+AAC 320 kb/s.
+
+**Notes.** `production/SOURCE_NOTES_V4.md`.
+
+**Source.** `source/src/v4/` (composition `DeadSpiderV4`).
+
+**QA.** `qa/v4/`.
+
+**Rebuild.** As for V3, with the `_v4` tools:
+- `tools/export_cues_v4.ts` writes `audio/cues_v4.json`;
+- `tools/make_audio_v4.py` writes `mix_v4`;
+- render `DeadSpiderV4`;
+- run `tools/cap_check_v4.ts`.
+
 ## V3 (27 Oct 2026)
 
 **Status.** A visual production pass on V2, rendered from source and checked from the files. **It is not published.**
