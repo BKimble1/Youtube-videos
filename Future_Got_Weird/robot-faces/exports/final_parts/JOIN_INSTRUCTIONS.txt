@@ -1,0 +1,13 @@
+FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4 is 1.32 GB, over the 400 MB attachment limit, so it was sent in four
+parts (part0 to part3). The parts are a straight byte split: joined in order they are the identical file.
+
+macOS / Linux (Terminal, in the folder with the four parts):
+  cat FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part0 FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part1 FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part2 FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part3 > FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4
+
+Windows (Command Prompt, in the folder with the four parts):
+  copy /b FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part0 + FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part1 + FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part2 + FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4.part3 FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4
+
+Optional check: the joined file's SHA-256 is
+  45fb0469eb645b217de43a68f16bee4c248fe1a48959cbc5909aa32359d89bda
+  macOS:   shasum -a 256 FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4
+  Windows: certutil -hashfile FGW_Robot_Faces_FINAL_MASTER_3840x2160.mp4 SHA256

@@ -8,3 +8,6 @@ audio/mix/stems/
 audio/mix/stems_v2/
 # large renders: kept as checksummed 20 MB parts in backup/ (tools/backup_parts.sh), not as single blobs
 exports/*.mp4
+
+# the final master split for delivery (1.3 GB; the master itself is in exports/, also ignored)
+exports/final_parts/*.part*
