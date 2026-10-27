@@ -9,10 +9,11 @@ import {A3} from './a/A3v3';
 import {A4_NOD} from './a/A4';
 import {A4} from './a/A4v3';
 import {C4} from './a/C4';
+import {A5} from './a/A5v3';
 import {A2_PRESS, A2_CONTACT, A2_LED, A3R, C4R, MATCH, MATCH_LED, matchRadius} from './a/timingA';
 import {feedMedicPose} from './c/course';
 
-export const SHOTS_A: Record<string, React.FC<ShotProps>> = {A2, A3, A4, C4};
+export const SHOTS_A: Record<string, React.FC<ShotProps>> = {A2, A3, A4, A5};
 
 /** caption centre y per shot: the top band everywhere (A2: above the fingertips curled over the remote's top edge;
  *  A3: the background above the board; A4: the wall above his hair, clear of the arena and the needle; C4: the wall

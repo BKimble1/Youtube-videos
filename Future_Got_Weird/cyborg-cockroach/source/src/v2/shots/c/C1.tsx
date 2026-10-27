@@ -2,7 +2,7 @@
 // at insect height on the tray). Nearest, lower left and big: the OBSERVER (lighter shell, dark camera module with its
 // round blue lens looking forward, a short aerial). Just behind it, to the right and a little ahead: the MEDIC (clear
 // launch tube with the spring, the amber dose and the needle, latch line and coil). Both walk slowly toward the
-// viewer's right in a tripod gait, antennae searching. 2.5D: each insect is drawn through its own view, the far one
+// viewer's right in a tripod gait, antennae searching, over out-of-focus course blocks. 2.5D: each insect is drawn through its own view, the far one
 // smaller and higher; the camera follows the pair a little (pan at part of their pace; the far one drifts less).
 import React from 'react';
 import {sr} from '../../../lib/ease';
@@ -10,7 +10,7 @@ import {poseRoach, straightPath, RoachPose} from '../../../rig/roach';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, f2} from '../../roach/ortho';
-import {Box2D, LAB2} from '../../sets/Lab2';
+import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {OBS_TINT} from './C2';
 import {Beyond2D} from './tray';
@@ -39,7 +39,7 @@ export const c1Views = (f: number): {near: View; far: View} => {
   };
 };
 
-/** out-of-focus course blocks far behind (scene px), and one curb piece passing close in front */
+/** out-of-focus course blocks far behind (scene px) */
 const FAR_BLOCKS: {x: number; y: number; w: number; h: number; c: string}[] = [
   {x: 60, y: 650, w: 150, h: 120, c: LAB2.foamB},
   {x: 840, y: 610, w: 210, h: 170, c: LAB2.foamY},
@@ -57,9 +57,6 @@ export const C1Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
       <defs>
         <filter id={`${id}-bl`} x="-20%" y="-20%" width="140%" height="140%">
           <feGaussianBlur stdDeviation="7" />
-        </filter>
-        <filter id={`${id}-bl2`} x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="16" />
         </filter>
         <linearGradient id={`${id}-fl`} x1="0" y1={lipY} x2="0" y2="1920" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#D3DEE3" />
@@ -81,10 +78,6 @@ export const C1Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
       </g>
       <Roach2D pose={med} v={far} o={{id: `${id}-m`, gear: <Gear2D id={`${id}-mg`} v={far} f={med.frame} g={{kind: 'injector'}} />}} />
       <Roach2D pose={obs} v={near} o={{id: `${id}-o`, tint: OBS_TINT, gear: <Gear2D id={`${id}-og`} v={near} f={obs.frame} g={{kind: 'camera'}} />}} />
-      {/* a curb piece of the course very close to the lens, out of focus, bottom left */}
-      <g filter={`url(#${id}-bl2)`}>
-        <Box2D id={`${id}-cb`} v={viewAt(C1_AZ, C1_EL, 18, [0, 0, 0], 60 + p * 1.6, 1880)} b={[-10, 10, 0, 7, -4, 4]} color={LAB2.foamR} />
-      </g>
     </svg>
   );
 };

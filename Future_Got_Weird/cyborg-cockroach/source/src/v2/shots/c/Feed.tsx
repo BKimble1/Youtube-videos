@@ -1,5 +1,5 @@
-// The observer's camera feed (C3, and group A's monitor in C4): a ground-level view from the camera module on the
-// observer's back, following the medic through the foam course on the lab tray toward the pink silicone target. Flat
+// The observer's camera feed (C3, and the operator's monitor in C4): a ground-level view from the camera module on the
+// observer's back, following the medic through the foam course on the lab tray toward the clear silicone target. Flat
 // layers placed by depth (course.ts): the blurred lab wall far off (pans as the lens turns), the tray, curb pieces and
 // foam blocks, the medic walking ahead with its loaded launch tube, and the observer's own antennae sweeping in the
 // bottom of the frame. A feed look: cooler grade, a soft vignette, one faint rolling scan band. No text or UI.
@@ -185,8 +185,8 @@ const FeedLook: React.FC<{f: number; w: number; h: number; id: string}> = ({f, w
   );
 };
 
-/** The observer's feed for film frame f (any frame from 345 on; C3 is 372-429, the medic's approach continues through
- *  C4, 430-465, and beyond), drawn into a w x h box. Reusable on group A's monitor. */
+/** The observer's feed for film frame f (any frame from 345 on; C3 is 372-401, C4's monitor 402-423, and the medic's
+ *  walk continues to the target through 465 and beyond), drawn into a w x h box. Reusable (E5 may borrow the look). */
 export const C3Feed: React.FC<{f: number; w: number; h: number; id?: string}> = ({f, w, h, id = 'c3f'}) => (
   <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{display: 'block', overflow: 'hidden'}}>
     <defs>

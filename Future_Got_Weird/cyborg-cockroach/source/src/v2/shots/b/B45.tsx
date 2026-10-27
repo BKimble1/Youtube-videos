@@ -7,8 +7,9 @@
 // the electrode; each arrival lights it and the left antenna flicks. A yellow block lines its right side, a blue block
 // stands across its way ahead.
 // B5: stimulating the left antenna makes it veer RIGHT: the body yaws right and it turns round the corner of the
-// yellow block, clear of the blue one; the camera rises and swings a little lower behind the turn (el 84 -> 70) to hold
-// the whole turn and the course (blocks, a red one beyond). It ends heading screen-down-ish (world +z), still walking.
+// yellow block, clear of the blue one; the camera rises and comes round to meet it as it turns toward the lens
+// (el 84 -> 45, s 12.5 -> 8) to hold the turn and the course (blocks, a red one beyond). It ends heading world +z
+// (screen-down, toward the camera) between the yellow and blue blocks, still walking.
 import React from 'react';
 import {poseRoach, RoachPose} from '../../../rig/roach';
 import {V3, toW, ypr} from '../../../lib/v3';
@@ -46,13 +47,12 @@ export const b45Pose = (t: number): RoachPose => {
   });
 };
 
-// the course (world mm, y up): the yellow block on the inside of the turn, the blue one across the way ahead, a red
-// one and a small blue one beyond
+// the course (world mm, y up): the yellow block on the inside of the turn (its corner is where the insect turns; it
+// hugs it, the right feet ~3 mm off the wall), the blue one across the way ahead, a red one beyond
 export const COURSE: {b: BoxB; c: string}[] = [
   {b: [-190, -6, 0, 40, 39, 160], c: LAB2.foamY},
   {b: [80, 142, 0, 30, -90, 30], c: LAB2.foamB},
   {b: [78, 130, 0, 26, 112, 162], c: LAB2.foamR},
-  {b: [-110, -56, 0, 24, -96, -60], c: LAB2.foamB},
 ];
 
 const AZ = 0;

@@ -7,14 +7,13 @@
 // for the middle of the target's face, its head about 30 mm from it (D1, a low side view, picks up the alignment).
 import React from 'react';
 import {V2, V3} from '../../../lib/v3';
-import {INK} from '../../../lib/ink';
 import {Roach2D, R2} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, P, D, f2, hull, polyD} from '../../roach/ortho';
 import {Box2D, Target2D, LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {rnd} from '../../../lib/ease';
-import {BLOCKS, curbs, CURB, centre, courseAt, feedMedicPose, feedObsPose, medicS, headOf, rightOf, TARGET_S, CRS} from './course';
+import {BLOCKS, curbs, CURB, centre, courseAt, feedMedicPose, feedObsPose, medicS, headOf, rightOf, TARGET_S} from './course';
 import {OBS_TINT} from './C2';
 
 export const C5_FROM = 424, C5_TO = 466;
@@ -27,7 +26,7 @@ const FOLLOW = 0.55;
 export const c5View = (f: number): View => {
   const m = centre(medicS(f / 30)).p;
   const c: V3 = [m[0] * FOLLOW + TGT_C[0] * (1 - FOLLOW), 0, m[2] * FOLLOW + TGT_C[2] * (1 - FOLLOW)];
-  return viewAt(C5_AZ, C5_EL, C5_S, c, 540, 800);
+  return viewAt(C5_AZ, C5_EL, C5_S, c, 540, 850);
 };
 /** a view in an object's own frame (origin o, heading yaw: local +x along headOf(yaw), local +z along rightOf(yaw)) */
 export const localView = (v: View, o: V3, yaw: number): View => {
@@ -121,10 +120,8 @@ export const C5Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
       {shadows}
       {items.map((it) => it.el)}
       <rect width={1080} height={1920} fill={`url(#${id}-lt)`} />
-      <rect width={1080} height={1920} fill="none" stroke={INK} strokeOpacity={0} />
     </svg>
   );
 };
 
 export const C5: React.FC<ShotProps> = ({f}) => <C5Scene f={f} id={`c5-${f}`} />;
-void CRS;

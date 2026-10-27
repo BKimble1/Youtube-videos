@@ -40,15 +40,20 @@ export const under = (x: number) => 372 - 0.4 * (x - 500);
  *  her +X = her left toward +Z = forward): straight at her near fingertips */
 /** the floor under her near fingertips (card u; her hand open), the walk's heading and the crack's distance from them */
 export const TIP = {X: -20, Z: 105};
-export const HEAD_DEG = 14;
-const CRACK_D = 90; // u (34 cm): F6's last stretch is what is left after F5
+export const HEAD_DEG = 6;
+const CRACK_D = 108; // u (40 cm)
+/** the crack set (block, ledge, crevice, the medic) is drawn SC times its true size in her pocket: the cartoon's usual
+ *  cheat for a small subject beside a person (the insect then reads at about two thirds of her hand's length, the
+ *  proportion F6 uses); distances along the walk are in these scaled millimetres */
+export const SC = 1.5;
 export const CRACK_AT = {X: TIP.X - CRACK_D * Math.cos((HEAD_DEG * Math.PI) / 180), Z: TIP.Z - CRACK_D * Math.sin((HEAD_DEG * Math.PI) / 180)};
 /** the ledge: from the hole's face to her floor, 70 mm wide; the crevice around it */
 export const LEDGE = {x1: 168, zN: -35, zF: 36, thick: 46};
-export const CREVICE = {z0: -112, z1: 260, deep: 520};
+export const CREVICE = {z0: -96, z1: 110, deep: 420};
 
 /** crack-frame mm -> her card-local u (before her camera elevation) */
-const cfToCard = (p: V3) => {
+const cfToCard = (p0: V3) => {
+  const p: V3 = [p0[0] * SC, p0[1] * SC, p0[2] * SC];
   const a = (HEAD_DEG * Math.PI) / 180, c = Math.cos(a), s = Math.sin(a);
   // crack x -> (cos a, 0, sin a); crack y -> up; crack z = x cross y -> (-sin a, 0, cos a)
   return v3(CRACK_AT.X + (p[0] * c - p[2] * s) / MM_U, p[1] / MM_U, CRACK_AT.Z + (p[0] * s + p[2] * c) / MM_U);
@@ -73,7 +78,7 @@ export const linView = (map: (p: V3) => [number, number], s: number): View => {
   return {R, U, F: cross(R, U), s, ox: o[0], oy: o[1]};
 };
 /** the crack frame in her projection (pocket-world px) */
-export const cfView = (): View => linView(cfPx, HER.scale / MM_U);
+export const cfView = (): View => linView(cfPx, (HER.scale / MM_U) * SC);
 /** any card-local floor point (u) -> pocket-world px */
 export const cardPx = (X: number, Y: number, Z: number): [number, number] => {
   const E = elevator(HER.yaw, HER.elev);

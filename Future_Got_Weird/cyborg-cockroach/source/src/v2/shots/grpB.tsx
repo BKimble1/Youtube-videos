@@ -9,8 +9,8 @@
 //  B3 (209-242) b/B3.tsx   low side tracking over a cork test board (textured; granules slide past), tripod gait
 //  B4 (243-282) b/B45.tsx  close from above on the electronics on the obstacle course: LED, three pulses along the
 //                          LEFT antenna wire (leave 8.52 s), the electrode glows, the left antenna flicks
-//  B5 (283-314) b/B45.tsx  continuous with B4: it veers RIGHT round the yellow block's corner (turn from 8.95 s); the
-//                          camera rises over the turn
+//  B5 (283-314) b/B45.tsx  continuous with B4: it veers RIGHT round the yellow block's corner (turn 9.12-10.21 s);
+//                          the camera rises and comes round to meet it (el 84 -> 45) as it turns toward the lens
 import React from 'react';
 import {ShotProps} from './index2';
 import {Cue, touchdownsP, steps} from '../../events';

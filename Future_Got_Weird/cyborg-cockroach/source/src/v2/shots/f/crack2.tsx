@@ -19,9 +19,9 @@ export const CK = {
   back: -210,
   zL: -125,
   zR: 118,
-  h: 66,
+  h: 54,
   /** the hole in the face x = 0, as (z, y) points, floor to floor */
-  hole: [[-45, 0], [-43, 10], [-36, 19], [-27, 24], [-19, 33], [-8, 38], [4, 36], [15, 39], [26, 32], [35, 24], [42, 12], [44, 0]] as [number, number][],
+  hole: [[-45, 0], [-43, 10], [-36, 18], [-27, 23], [-19, 31], [-8, 36], [4, 34], [15, 37], [26, 31], [35, 23], [42, 12], [44, 0]] as [number, number][],
 };
 
 const fp = (v: View, x: number, y: number, z: number): Pt => P(v, [x, y, z] as V3) as Pt;
@@ -69,9 +69,9 @@ export const Block: React.FC<{id: string; v: View; w?: number; dark?: number}> =
       <path d={poly(topJ)} fill={litC(c, 0.34)} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       <path d={`${poly(faceJ)} ${poly(hole)}`} fillRule="evenodd" fill={`url(#${id}-fg)`} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       <path d={poly(hole)} fill={`url(#${id}-hg)`} />
-      <path d={crk([[0, 42, -10], [0, 52, -22], [0, 66, -12]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.45 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d={crk([[0, 30, 40], [0, 44, 66], [0, 50, 100]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.4 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d={crk([[0, 24, -50], [0, 36, -84], [0, 33, -118]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.4 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={crk([[0, 40, -10], [0, 46, -22], [0, 54, -12]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.45 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={crk([[0, 28, 40], [0, 40, 66], [0, 46, 100]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.4 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={crk([[0, 22, -50], [0, 32, -84], [0, 30, -118]])} stroke={shadeC(c, 0.62)} strokeWidth={f2(Math.max(2, 0.4 * k))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       {/* daylight on the top edge (from the upper right) */}
       <path d={line([topJ[0], topJ[1]])} stroke={RB.day} strokeWidth={f2(w * 1.2)} strokeLinecap="round" opacity={0.55} />
     </g>

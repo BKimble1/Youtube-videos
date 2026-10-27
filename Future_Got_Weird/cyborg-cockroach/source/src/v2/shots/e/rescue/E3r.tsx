@@ -27,7 +27,7 @@ export const e3Pose = (lf: number): RoachPose => {
   return poseRoach({path: straightPath([0, 0, 0], 0), s: s0 + V_MM * t, t: t + 22.7, search: 0.7, antL: {yaw: 0.55, pitch: 0.18}, antR: {yaw: 0.5, pitch: 0.22}, seed: 5});
 };
 export const e3Cam = (lf: number): Cam => ({x: 540 + FOLLOW * S * V_MM * (lf / FPS), y: 960, z: 1});
-const D_BACK = 2.4, D_BEAM = 1.04, D_SUBJ = 1, D_FORE = 0.22;
+const D_BACK = 2.4, D_BEAM = 1.04, D_SUBJ = 1, D_FORE = 0.14;
 
 /** the beam, broken in two over the floor: each half a straight member sagging to the break at BX, where a crack
  *  lets the daylight through (subject-layer px). */
