@@ -35,7 +35,8 @@ const PROPS: {x: number; z: number; r: number; h: number; c: string; cap?: strin
   {x: 360, z: -262, r: 12, h: 80, c: '#7FC9C2', cap: '#3B444C', neck: 0.25},
 ];
 
-const Bottle: React.FC<{v: View; b: (typeof PROPS)[number]; ink: number}> = ({v, b, ink}) => {
+export type BottleSpec = (typeof PROPS)[number];
+export const Bottle: React.FC<{v: View; b: BottleSpec; ink: number}> = ({v, b, ink}) => {
   const s = v.s;
   const g = P(v, [b.x, 0, b.z]);
   const up = Pd(v, [0, 1, 0]);

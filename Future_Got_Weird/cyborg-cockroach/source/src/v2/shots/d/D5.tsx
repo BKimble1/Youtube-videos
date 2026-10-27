@@ -16,17 +16,30 @@ import {Target2D, LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {shotRange} from '../../cuts2';
 import {dPoseFull, dGear, dLaunch, dBloom, D_FACE, D_TUBE_Y} from './trial';
-import {LabRoomMM, ROOM} from './room';
+import {LabRoomMM, ROOM, Bottle} from './room';
+import {Motes} from '../e/art';
 import {InsideNeedle, NeedleClip, OldDose} from './inside';
 
 const R = shotRange('D5');
 export const D5_AZ = -28;
-/** the rise: 0 at the first frame, 1 at the last (eased; it is still moving gently as the light takes over) */
-export const d5Rise = (f: number) => sr(f, R.from - 2, R.to + 10);
+/** the rise: already under way on the first frame (it carries on from D3's follow; no settle-in from rest), easing
+ *  but still moving as the light takes over */
+export const d5Rise = (f: number) => {
+  const x = clamp((f - (R.from - 3)) / (R.to + 14 - (R.from - 3)));
+  return 0.32 * x + 0.68 * x * x * (3 - 2 * x);
+};
+/** the scale: an even pull-out (geometric), slower at first so the insect stays big and readable early in the move */
+const d5Scale = (u: number) => 7.4 * Math.pow(2.75 / 7.4, Math.pow(u, 1.25));
 export const d5View = (f: number): View => {
   const u = d5Rise(f);
-  return viewAt(D5_AZ, lerp(8, 36, u), lerp(7.4, 2.25, u), [lerp(22, 20, u), lerp(16, 0, u), lerp(0, -110, u)], 540, lerp(1150, 1430, u));
+  return viewAt(D5_AZ, lerp(8, 36, u), d5Scale(u), [lerp(22, 20, u), lerp(16, 0, u), lerp(0, -110, u)], 540, lerp(1150, 1400, u));
 };
+/** the near foreground (out of focus, between the lens and the insect): its parallax, relative to the look point */
+const NEAR_K = 2.1;
+const NEAR: {o: V3; kind: 'target' | 'beaker'}[] = [
+  {o: [-150, 0, 150], kind: 'target'},
+  {o: [125, 0, 175], kind: 'beaker'},
+];
 /** the wall plate: a little larger as the camera rises toward the window; the window centred over the bench */
 const plateK = (f: number) => lerp(1.05, 1.32, d5Rise(f));
 const PLATE_DX = (k: number) => 648 - 540 - k * (1475 - 540);
@@ -92,6 +105,7 @@ export const D5: React.FC<ShotProps> = ({f}) => {
   const win = {x0: 540 + dx + k * (1250 - 540), x1: 540 + dx + k * (1700 - 540), y1: yJ + k * (860 - 1080)};
   // far to near
   const olds = OLD.map((q, i) => ({...q, i, depth: q.o[0] * v.F[0] + q.o[2] * v.F[2]})).sort((a, b) => a.depth - b.depth);
+  const lookY = lerp(1150, 1400, d5Rise(f));
   const fillC = {x: (win.x0 + win.x1) / 2, y: win.y1 - 370 * k};
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
@@ -101,6 +115,9 @@ export const D5: React.FC<ShotProps> = ({f}) => {
           <stop offset="0" stopColor="#FFF6DE" stopOpacity={0.5} />
           <stop offset="1" stopColor="#FFF6DE" stopOpacity={0} />
         </linearGradient>
+        <filter id={`${id}-nb`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation={f2(lerp(11, 7, d5Rise(f)))} />
+        </filter>
         <radialGradient id={`${id}-fill`} gradientUnits="userSpaceOnUse" cx={f2(fillC.x)} cy={f2(fillC.y)} r={f2(lerp(500, 1900, fill))}>
           <stop offset="0" stopColor="#FFFDF6" stopOpacity={1} />
           <stop offset="0.55" stopColor="#FFF6E2" stopOpacity={0.95} />
@@ -123,9 +140,24 @@ export const D5: React.FC<ShotProps> = ({f}) => {
         );
       })}
       <Target2D id={`${id}t`} v={v} face={D_FACE} dir={1} dent={1} entryY={D_TUBE_Y} />
-      <InsideNeedle id={`${id}in`} v={v} inj={inj} injRear={d.injRear} face={D_FACE} bloom={dBloom(t)} />
+      <InsideNeedle id={`${id}in`} v={v} inj={inj} injRear={d.injRear} face={D_FACE} bloom={dBloom(t)} t={t} />
       <g clipPath={`url(#${id}-nc)`}>
         <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={g} />}} />
+      </g>
+      {/* dust drifting in the window's light */}
+      {light > 0.02 && <Motes id={`${id}mo`} t={t} n={14} x0={win.x0 - 120} y0={win.y1 - 200} x1={win.x1 + 260} y1={1500} r={3.2} seed={5} a={0.45 * light} color="#FFF6DE" />}
+      {/* the near foreground, out of focus: it slides down past the lens faster than the bench (the rise's parallax) */}
+      <g filter={`url(#${id}-nb)`}>
+        <g transform={`translate(540 ${f2(lookY)}) scale(${NEAR_K}) translate(-540 ${f2(-lookY)})`}>
+          {NEAR.map((q, i) => {
+            const vs = shifted(v, q.o);
+            return q.kind === 'target' ? (
+              <Target2D key={i} id={`${id}n${i}`} v={vs} face={D_FACE} dir={1} />
+            ) : (
+              <Bottle key={i} v={vs} b={{x: 0, z: 0, r: 16, h: 58, c: '#E3F1F6', fill: 0.45}} ink={Math.max(1.5, Math.min(4, 0.25 * v.s + 1))} />
+            );
+          })}
+        </g>
       </g>
       {/* the daylight takes the frame */}
       {fill > 0 && <rect width={1080} height={1920} fill={`url(#${id}-fill)`} opacity={0.7 * fill} />}
