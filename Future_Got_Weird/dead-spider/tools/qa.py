@@ -2,7 +2,8 @@
 """Checks read from an exported file: stream facts (ffprobe), black frames (blackdetect), loudness and true peak of the
 file's own audio, an independent transcript of the file's audio (sherpa-onnx zipformer + whisper base.en), and
 frame-to-frame picture change, listing every large jump with whether it falls on a planned cut (audio/cues.json).
-usage: python3 tools/qa.py <mp4> <asr_model_root> <out_prefix>"""
+usage: python3 tools/qa.py <mp4> <asr_model_root> <out_prefix> [cues.json]   (V2: FGW_SCRIPT=production/NARRATION_APPROVED_V2.txt
+       and audio/cues_v2.json)"""
 import json, subprocess, sys, os
 import numpy as np, pyloudnorm as pyln
 from scipy.signal import resample_poly
@@ -31,7 +32,7 @@ W, H = 135, 240
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-vf', f'scale={W}:{H}', '-f', 'rawvideo', '-pix_fmt', 'gray', '-'], capture_output=True).stdout
 fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W).astype(np.float32)
 d = np.abs(np.diff(fr, axis=0)).mean((1, 2))
-cuts = json.load(open(os.path.join(EP, 'audio/cues.json')))['CUT']
+cuts = json.load(open(sys.argv[4] if len(sys.argv) > 4 else os.path.join(EP, 'audio/cues.json')))['CUT']
 cut_frames = sorted({round(c * 30) for k, c in cuts.items() if k != 'end'})
 big = [(int(i + 1), round(float(x), 1)) for i, x in enumerate(d) if x > 12]
 res['frame_change'] = {'median': round(float(np.median(d)), 2), 'p99': round(float(np.percentile(d, 99)), 2),

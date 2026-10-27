@@ -27,6 +27,7 @@ const surf = (P: SpiderPose, c: V3, a: number, b: number, cc: number, x: number,
 
 export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: string; hideLegs?: number[]; opacity?: number; cut?: Cut; focusLeg?: number; focus?: number} = {id: 's'}): Item[] => {
   const items: Item[] = [];
+  const sk = P.s ?? 1;
   const W = (p: V3) => toWorld(P, p);
   const ax = (v: V3): V3 => sub3(W(v), W([0, 0, 0]));
   const sc = proj(B, W([0, 0, 0])).s;
@@ -44,7 +45,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
       const c = k === 0 ? shade(look.leg, 0.15) : k === 2 || k === 5 ? look.legBand : look.leg;
       const core: Core | undefined = o.cut ? {color: o.cut.fluid, k: o.cut.core * (k === 5 ? 0.5 : 0.62), flow: o.cut.flow !== undefined ? o.cut.flow - k * 0.6 : undefined} : undefined;
       const dimmed = o.focusLeg !== undefined && o.focusLeg !== i ? 1 - 0.8 * (o.focus ?? 0) : 1;
-      items.push(capsuleItem(B, L[k], L[k + 1], LEG_R[k], LEG_R[k + 1], c, {band: !o.cut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}));
+      items.push(capsuleItem(B, L[k], L[k + 1], LEG_R[k] * sk, LEG_R[k + 1] * sk, c, {band: !o.cut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}));
     }
     // a few spines on the tibia and metatarsus
     for (const k of o.cut ? [] : [3, 4]) {
@@ -64,7 +65,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
     const pp = palpLocal(s, P.e.reduce((a, b) => a + b, 0) / 8).map(W);
     const r = [0.3, 0.26, 0.22, 0.17];
     const dimP = (o.opacity ?? 1) * (o.focusLeg !== undefined ? 1 - 0.8 * (o.focus ?? 0) : 1);
-    for (let k = 0; k < 3; k++) items.push(capsuleItem(B, pp[k], pp[k + 1], r[k], r[k + 1], k === 2 ? look.legBand : look.leg, {spec: 0.3, opacity: dimP}));
+    for (let k = 0; k < 3; k++) items.push(capsuleItem(B, pp[k], pp[k + 1], r[k] * sk, r[k + 1] * sk, k === 2 ? look.legBand : look.leg, {spec: 0.3, opacity: dimP}));
     items.push(ellipsoidItem(B, W([PRO.a * 0.9, s * 0.42, -0.35]), [ax([0.55, 0, 0]), ax([0, 0.42, 0]), ax([0, 0, 0.6])], shade(look.cara, 0.25), {spec: 0.6, opacity: dimP}));
   }
 
@@ -76,13 +77,13 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
       <path d={smoothClosed([[-0.2, 0], [-1.0, 0.55], [-2.2, 0.42], [-3.0, 0], [-2.2, -0.42], [-1.0, -0.55]].map(([x, y]) => proj(B, surf(P, aC, ABD.a, ABD.b, ABD.c, x + 2.4, y))))} fill={look.heart} opacity={0.9} />
       {[-0.4, -1.2, -2.0].flatMap((x) => [1, -1].map((s) => {
         const q = proj(B, surf(P, aC, ABD.a, ABD.b, ABD.c, x - 0.2, s * (0.95 - 0.1 * x * 0)));
-        return <ellipse key={`${x}${s}`} cx={q.x.toFixed(1)} cy={q.y.toFixed(1)} rx={(0.26 * q.s).toFixed(1)} ry={(0.18 * q.s).toFixed(1)} fill={look.spot} opacity={0.75} />;
+        return <ellipse key={`${x}${s}`} cx={q.x.toFixed(1)} cy={q.y.toFixed(1)} rx={(0.26 * q.s * sk).toFixed(1)} ry={(0.18 * q.s * sk).toFixed(1)} fill={look.spot} opacity={0.75} />;
       }))}
     </g>
   ) : undefined;
   items.push(ellipsoidItem(B, W(aC), [ax([ABD.a, 0, 0]), ax([0, ABD.b, 0]), ax([0, 0, ABD.c])], look.abd, {deco: abdDeco, spec: 0.9, opacity: o.opacity}));
   // pedicel (the waist)
-  items.push(capsuleItem(B, W([-1.9, 0, 0.05]), W([-2.4, 0, 0.15]), 0.55, 0.6, shade(look.abd, 0.2), {spec: 0, opacity: o.opacity}));
+  items.push(capsuleItem(B, W([-1.9, 0, 0.05]), W([-2.4, 0, 0.15]), 0.55 * sk, 0.6 * sk, shade(look.abd, 0.2), {spec: 0, opacity: o.opacity}));
 
   // ---- prosoma with carapace pattern and eyes
   const pC: V3 = [0, 0, 0];
@@ -137,7 +138,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
     const toEye = sub3(B.eye, p);
     if (n[0] * toEye[0] + n[1] * toEye[1] + n[2] * toEye[2] <= 0) continue;
     const q = proj(B, p);
-    const R = r * q.s;
+    const R = r * q.s * sk;
     items.push({
       z: depth(B, W(pC)) - PRO.c - 0.06,
       el: (

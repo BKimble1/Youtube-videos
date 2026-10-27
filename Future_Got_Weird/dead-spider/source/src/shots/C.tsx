@@ -55,7 +55,7 @@ const camC = (t: number) => {
 
 /** the joint in close-up: the flexible joint membrane on the outer side of the bend (inflated by the pressure) and the
  *  flexor muscle on the inner side (pulls the joint closed once nothing opposes it) */
-const JointDetail: React.FC<{B: Basis; P: SpiderPose; pr: number; live: number; op: number}> = ({B, P, pr, live, op}) => {
+export const JointDetail: React.FC<{B: Basis; P: SpiderPose; pr: number; live: number; op: number}> = ({B, P, pr, live, op}) => {
   if (op < 0.01) return null;
   const L = legLocal(C_LEG, P.e[C_LEG]).map((q) => toWorld(P, q));
   const A = proj(B, L[1]), J = proj(B, L[2]), C = proj(B, L[3]);

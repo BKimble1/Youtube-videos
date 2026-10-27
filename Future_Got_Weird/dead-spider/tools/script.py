@@ -1,7 +1,7 @@
 """The locked narration (production/NARRATION_APPROVED.txt), its display words and a normalised word list."""
 import os, re
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TEXT = open(os.path.join(ROOT, 'production/NARRATION_APPROVED.txt')).read()
+TEXT = open(os.path.join(ROOT, os.environ.get('FGW_SCRIPT', 'production/NARRATION_APPROVED.txt'))).read()
 
 def display_words(text=TEXT):
     # "spider—and" is two words; the em dash stays on the first

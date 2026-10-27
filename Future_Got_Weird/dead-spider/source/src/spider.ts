@@ -41,12 +41,12 @@ const SWEEP = [
   [0, 0, 6, 11, 15, 18],
 ];
 
-export type SpiderPose = {pos: V3; yaw: number; pitch?: number; roll?: number; e: number[]};
+export type SpiderPose = {pos: V3; yaw: number; pitch?: number; roll?: number; e: number[]; s?: number};
 
 /** body-local -> world */
-export const toWorld = (P: SpiderPose, p: V3): V3 => add3(P.pos, rotZ(rotY(rotX(p, P.roll ?? 0), P.pitch ?? 0), P.yaw));
+export const toWorld = (P: SpiderPose, p: V3): V3 => add3(P.pos, rotZ(rotY(rotX(mul3(p, P.s ?? 1), P.roll ?? 0), P.pitch ?? 0), P.yaw));
 /** world -> body-local (inverse of toWorld) */
-export const toLocal = (P: SpiderPose, w: V3): V3 => rotX(rotY(rotZ(sub3(w, P.pos), -P.yaw), -(P.pitch ?? 0)), -(P.roll ?? 0));
+export const toLocal = (P: SpiderPose, w: V3): V3 => mul3(rotX(rotY(rotZ(sub3(w, P.pos), -P.yaw), -(P.pitch ?? 0)), -(P.roll ?? 0)), 1 / (P.s ?? 1));
 
 /** legs are indexed 0..7: 0-3 left I-IV, 4-7 right I-IV */
 export const legSide = (i: number) => (i < 4 ? 1 : -1);
@@ -123,7 +123,7 @@ const legClear = (P: SpiderPose, i: number, e: number, sdf: SDF) => {
   for (let k = 2; k < L.length - 1; k++) {
     for (const u of [0, 0.33, 0.66, 1]) {
       const p = lerp3(L[k], L[k + 1], u);
-      const r = LEG_R[k] + (LEG_R[k + 1] - LEG_R[k]) * u;
+      const r = (LEG_R[k] + (LEG_R[k + 1] - LEG_R[k]) * u) * (P.s ?? 1);
       m = Math.min(m, sdf(p) - r);
     }
   }

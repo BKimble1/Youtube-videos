@@ -1,5 +1,55 @@
 # Future Got Weird: Scientists Turned Dead Spiders Into Robots (Dead Spider)
 
+## V2 (27 Oct 2026)
+
+**Status.** A second review version, rebuilt for retention. It is rendered from source and checked from the files.
+**It is not published.** Nobody has watched it in real time or listened to it: this environment has no display or
+speakers.
+
+**Format.** Vertical 1080×1920, 30 fps, 906 frames, **30.200 s**. Captions are burned in.
+
+**What changed from V1.**
+- **Script.** The new V2 script, in the same ElevenLabs voice, one take used whole.
+- **Hook.** The legs spring open within the first second, then close and snap open again on "MOVE".
+- **Explanation.** An overhead death curl (Beat A), then a leg cutaway with its exact reverse (Beat B).
+- **One device.** A 1 mL syringe on the needle, carried by a swinging stand arm. The air is shown travelling down it.
+- **The claw at work.** A clamp on a block, a carry and a drop into a dish, then a spider-on-spider grab that ends in
+  mid-air.
+- **Motion.** Spring-driven leg motion throughout.
+
+| Deliverable | File |
+|---|---|
+| Review: H.264 High (CRF 16) and AAC 320 kb/s | `exports/FGW_Dead_Spider_V2_REVIEW_1080x1920.mp4` |
+| Narration (48 kHz, 24-bit, padded to 30.2 s), word timings | `audio/narration/FGW_Dead_Spider_narration_V2.wav`, `audio/narration/FGW_Dead_Spider_V2_words.json` |
+| Takes, Scribe timings, ASR checks | `audio/narration/takes/v2_*` |
+| Aligned SRT | `captions/FGW_Dead_Spider_V2.srt` |
+| Mix, measurements, effects list, picture cues | `audio/mix/FGW_Dead_Spider_V2_mix.wav`, `audio/mix/mix_measure_v2.json`, `audio/sfx_cues_v2.json`, `audio/cues_v2.json` |
+| Script | `production/NARRATION_APPROVED_V2.txt` |
+| Science, shot map, QA, remaining imperfections | `production/SOURCE_NOTES_V2.md` |
+| QA evidence | `qa/v2/` |
+| Source | `source/src/v2/` (composition `DeadSpiderV2`); shared rig, world and drawing code in `source/src/` |
+
+**V2 source.**
+- `v2/world2.ts`: every event as a function of the V2 word times.
+- `v2/spring.ts`: leg dynamics.
+- `v2/claw.tsx`: syringe, air and stand.
+- `v2/shots/`: `Hook`, `Overhead` (A), `Cutaway` (B), `Lab` (C1–R2).
+- `v2/Captions2.tsx`: caption heights.
+- `v2/Film2.tsx`: picks the shot for each time.
+
+**Rebuild V2.**
+
+    cd Future_Got_Weird/dead-spider
+    python3 tools/make_narration_v2.py
+    source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec2.cjs --external:remotion && NODE_PATH=source/node_modules node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/make_audio_v2.py
+    (cd source && npx remotion render src/index.ts DeadSpiderV2 ../exports/FGW_Dead_Spider_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    FGW_SCRIPT=production/NARRATION_APPROVED_V2.txt python3 tools/qa.py exports/FGW_Dead_Spider_V2_REVIEW_1080x1920.mp4 <asr_model_root> qa/v2/review audio/cues_v2.json
+    source/node_modules/.bin/esbuild tools/cap_check_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.css=empty --outfile=/tmp/cc2.cjs --external:remotion --external:@fontsource-variable/* && NODE_PATH=source/node_modules node /tmp/cc2.cjs qa/v2/caption_check.json
+    tools/frame_pages.sh exports/FGW_Dead_Spider_V2_REVIEW_1080x1920.mp4 0 96 qa/v2/first_96_frames.png
+
+Working sheets: `cd source && ./sheet2.sh out.png "f1,f2,..." [captions]`.
+
 ## V1 (26 Oct 2026)
 
 **Status.** The first review version is rendered from source and checked from the files. **It is not published.**

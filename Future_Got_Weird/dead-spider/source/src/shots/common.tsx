@@ -31,13 +31,13 @@ export const Scene: React.FC<{cam: Cam3; id: string; back?: (B: Basis) => React.
 /** the plunger pressed by the gloved index finger from above (the syringe is held in a stand clamp); the fingertip
  *  stays on the thumb rest as it moves. `rest` = top centre of the thumb rest on screen, `down` = the screen direction of
  *  the press, `L` = hand length in px */
-export const PressHand: React.FC<{id: string; rest: V2; down: V2; L: number; lift?: number}> = ({id, rest, down, L, lift = 0}) => {
+export const PressHand: React.FC<{id: string; rest: V2; down: V2; L: number; lift?: number; gap?: number}> = ({id, rest, down, L, lift = 0, gap = 0.02}) => {
   const d = norm(down);
   // the hand comes in from the upper right, pointing down and a little left
   const ang = (Math.atan2(d.y, d.x) * 180) / Math.PI + 32;
   const pose: HandPose = {curl: [0.08, 0.84, 0.9, 0.93], spread: 0.15, thumb: 26, thumbCurl: 0.55};
   const tip0 = digitTips({x: 0, y: 0}, ang, L, 1, pose).tips[0];
-  const target = {x: rest.x - d.x * L * 0.02 * (1 + 6 * lift), y: rest.y - d.y * L * 0.02 * (1 + 6 * lift)};
+  const target = {x: rest.x - d.x * L * (gap + 0.12 * lift), y: rest.y - d.y * L * (gap + 0.12 * lift)};
   const wrist = {x: target.x - tip0.x, y: target.y - tip0.y};
   const fd = {x: Math.cos((ang * Math.PI) / 180), y: Math.sin((ang * Math.PI) / 180)};
   const cw = {x: -fd.y, y: fd.x};
