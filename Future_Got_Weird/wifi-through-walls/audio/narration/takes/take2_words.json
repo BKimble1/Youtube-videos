@@ -1,0 +1,568 @@
+{
+ "source": "audio/narration/takes/take2.mp3",
+ "duration": 37.36,
+ "speech": [
+  0.02,
+  37.24
+ ],
+ "wpm": 178.9,
+ "pocketsphinx_transcript": "if you're handling this was all this machine could still watch you are scientists build a system that shoots invisible radio waves through walls and when they bounce off your body a high grades i'm moving skeleton of you raise your hand it raises hand but here is work it's creepy in a separate experiment scientists used ordinary wi-fi signals to identify people walking past even without their phones they tested one hundred ninety seven people and identified almost everyone correctly so imagine walking past a cafe near recognizes you without you doing anything now would you rather have a camera watching you or wi-fi the nose to you or",
+ "pocketsphinx_wer_vs_approved": 0.189,
+ "words": [
+  {
+   "word": "if",
+   "start": 0.0,
+   "end": 0.13
+  },
+  {
+   "word": "you",
+   "start": 0.13,
+   "end": 0.3
+  },
+  {
+   "word": "hid",
+   "start": 0.3,
+   "end": 0.48
+  },
+  {
+   "word": "behind",
+   "start": 0.48,
+   "end": 0.78
+  },
+  {
+   "word": "this",
+   "start": 0.78,
+   "end": 0.93
+  },
+  {
+   "word": "wall",
+   "start": 0.93,
+   "end": 1.31
+  },
+  {
+   "word": "this",
+   "start": 1.7,
+   "end": 1.82
+  },
+  {
+   "word": "machine",
+   "start": 1.82,
+   "end": 2.21
+  },
+  {
+   "word": "could",
+   "start": 2.21,
+   "end": 2.35
+  },
+  {
+   "word": "still",
+   "start": 2.36,
+   "end": 2.76
+  },
+  {
+   "word": "watch",
+   "start": 2.76,
+   "end": 3.16
+  },
+  {
+   "word": "you",
+   "start": 3.16,
+   "end": 3.4
+  },
+  {
+   "word": "scientists",
+   "start": 3.83,
+   "end": 4.34
+  },
+  {
+   "word": "built",
+   "start": 4.35,
+   "end": 4.53
+  },
+  {
+   "word": "a",
+   "start": 4.56,
+   "end": 4.61
+  },
+  {
+   "word": "system",
+   "start": 4.61,
+   "end": 5.05
+  },
+  {
+   "word": "that",
+   "start": 5.05,
+   "end": 5.17
+  },
+  {
+   "word": "shoots",
+   "start": 5.17,
+   "end": 5.42
+  },
+  {
+   "word": "invisible",
+   "start": 5.42,
+   "end": 5.94
+  },
+  {
+   "word": "radio",
+   "start": 5.94,
+   "end": 6.3
+  },
+  {
+   "word": "waves",
+   "start": 6.3,
+   "end": 6.58
+  },
+  {
+   "word": "through",
+   "start": 6.59,
+   "end": 6.79
+  },
+  {
+   "word": "walls",
+   "start": 6.79,
+   "end": 7.29
+  },
+  {
+   "word": "and",
+   "start": 7.63,
+   "end": 7.72
+  },
+  {
+   "word": "when",
+   "start": 7.72,
+   "end": 7.84
+  },
+  {
+   "word": "they",
+   "start": 7.84,
+   "end": 7.95
+  },
+  {
+   "word": "bounce",
+   "start": 7.95,
+   "end": 8.25
+  },
+  {
+   "word": "off",
+   "start": 8.25,
+   "end": 8.37
+  },
+  {
+   "word": "your",
+   "start": 8.41,
+   "end": 8.53
+  },
+  {
+   "word": "body",
+   "start": 8.54,
+   "end": 8.93
+  },
+  {
+   "word": "a",
+   "start": 9.19,
+   "end": 9.35
+  },
+  {
+   "word": "i",
+   "start": 9.35,
+   "end": 9.51
+  },
+  {
+   "word": "creates",
+   "start": 9.51,
+   "end": 9.86
+  },
+  {
+   "word": "a",
+   "start": 9.87,
+   "end": 9.92
+  },
+  {
+   "word": "moving",
+   "start": 9.92,
+   "end": 10.35
+  },
+  {
+   "word": "skeleton",
+   "start": 10.35,
+   "end": 10.94
+  },
+  {
+   "word": "of",
+   "start": 10.94,
+   "end": 11.03
+  },
+  {
+   "word": "you",
+   "start": 11.03,
+   "end": 11.26
+  },
+  {
+   "word": "raise",
+   "start": 11.65,
+   "end": 11.82
+  },
+  {
+   "word": "your",
+   "start": 11.82,
+   "end": 11.93
+  },
+  {
+   "word": "hand",
+   "start": 11.93,
+   "end": 12.21
+  },
+  {
+   "word": "it",
+   "start": 12.58,
+   "end": 12.68
+  },
+  {
+   "word": "raises",
+   "start": 12.68,
+   "end": 13.05
+  },
+  {
+   "word": "its",
+   "start": 13.05,
+   "end": 13.21
+  },
+  {
+   "word": "hand",
+   "start": 13.21,
+   "end": 13.54
+  },
+  {
+   "word": "but",
+   "start": 13.99,
+   "end": 14.07
+  },
+  {
+   "word": "here's",
+   "start": 14.07,
+   "end": 14.48
+  },
+  {
+   "word": "where",
+   "start": 14.48,
+   "end": 14.63
+  },
+  {
+   "word": "it",
+   "start": 14.63,
+   "end": 14.68
+  },
+  {
+   "word": "gets",
+   "start": 14.69,
+   "end": 14.89
+  },
+  {
+   "word": "creepy",
+   "start": 14.89,
+   "end": 15.48
+  },
+  {
+   "word": "in",
+   "start": 15.89,
+   "end": 15.97
+  },
+  {
+   "word": "a",
+   "start": 15.97,
+   "end": 16.01
+  },
+  {
+   "word": "separate",
+   "start": 16.01,
+   "end": 16.37
+  },
+  {
+   "word": "experiment",
+   "start": 16.38,
+   "end": 16.9
+  },
+  {
+   "word": "scientists",
+   "start": 17.14,
+   "end": 17.69
+  },
+  {
+   "word": "used",
+   "start": 17.69,
+   "end": 17.93
+  },
+  {
+   "word": "ordinary",
+   "start": 17.93,
+   "end": 18.44
+  },
+  {
+   "word": "wifi",
+   "start": 18.44,
+   "end": 18.92
+  },
+  {
+   "word": "signals",
+   "start": 18.92,
+   "end": 19.35
+  },
+  {
+   "word": "to",
+   "start": 19.35,
+   "end": 19.48
+  },
+  {
+   "word": "identify",
+   "start": 19.48,
+   "end": 19.98
+  },
+  {
+   "word": "people",
+   "start": 19.99,
+   "end": 20.3
+  },
+  {
+   "word": "walking",
+   "start": 20.3,
+   "end": 20.65
+  },
+  {
+   "word": "past",
+   "start": 20.65,
+   "end": 21.12
+  },
+  {
+   "word": "even",
+   "start": 21.46,
+   "end": 21.7
+  },
+  {
+   "word": "without",
+   "start": 21.7,
+   "end": 22.02
+  },
+  {
+   "word": "their",
+   "start": 22.04,
+   "end": 22.18
+  },
+  {
+   "word": "phones",
+   "start": 22.18,
+   "end": 22.78
+  },
+  {
+   "word": "they",
+   "start": 23.22,
+   "end": 23.31
+  },
+  {
+   "word": "tested",
+   "start": 23.31,
+   "end": 23.66
+  },
+  {
+   "word": "one",
+   "start": 23.66,
+   "end": 23.93
+  },
+  {
+   "word": "hundred",
+   "start": 23.93,
+   "end": 24.25
+  },
+  {
+   "word": "ninety",
+   "start": 24.25,
+   "end": 24.55
+  },
+  {
+   "word": "seven",
+   "start": 24.55,
+   "end": 24.85
+  },
+  {
+   "word": "people",
+   "start": 24.85,
+   "end": 25.24
+  },
+  {
+   "word": "and",
+   "start": 25.51,
+   "end": 25.62
+  },
+  {
+   "word": "identified",
+   "start": 25.62,
+   "end": 26.15
+  },
+  {
+   "word": "almost",
+   "start": 26.15,
+   "end": 26.49
+  },
+  {
+   "word": "everyone",
+   "start": 26.64,
+   "end": 27.1
+  },
+  {
+   "word": "correctly",
+   "start": 27.1,
+   "end": 27.59
+  },
+  {
+   "word": "so",
+   "start": 28.07,
+   "end": 28.25
+  },
+  {
+   "word": "imagine",
+   "start": 28.25,
+   "end": 28.66
+  },
+  {
+   "word": "walking",
+   "start": 28.66,
+   "end": 29.03
+  },
+  {
+   "word": "past",
+   "start": 29.03,
+   "end": 29.31
+  },
+  {
+   "word": "a",
+   "start": 29.31,
+   "end": 29.34
+  },
+  {
+   "word": "cafe",
+   "start": 29.34,
+   "end": 29.93
+  },
+  {
+   "word": "and",
+   "start": 30.28,
+   "end": 30.37
+  },
+  {
+   "word": "it",
+   "start": 30.37,
+   "end": 30.43
+  },
+  {
+   "word": "recognizes",
+   "start": 30.43,
+   "end": 31.15
+  },
+  {
+   "word": "you",
+   "start": 31.15,
+   "end": 31.26
+  },
+  {
+   "word": "without",
+   "start": 31.26,
+   "end": 31.55
+  },
+  {
+   "word": "you",
+   "start": 31.55,
+   "end": 31.69
+  },
+  {
+   "word": "doing",
+   "start": 31.69,
+   "end": 31.97
+  },
+  {
+   "word": "anything",
+   "start": 32.24,
+   "end": 33.32
+  },
+  {
+   "word": "now",
+   "start": 33.32,
+   "end": 33.56
+  },
+  {
+   "word": "would",
+   "start": 33.56,
+   "end": 33.74
+  },
+  {
+   "word": "you",
+   "start": 33.74,
+   "end": 33.84
+  },
+  {
+   "word": "rather",
+   "start": 33.84,
+   "end": 34.09
+  },
+  {
+   "word": "have",
+   "start": 34.09,
+   "end": 34.22
+  },
+  {
+   "word": "a",
+   "start": 34.22,
+   "end": 34.27
+  },
+  {
+   "word": "camera",
+   "start": 34.27,
+   "end": 34.72
+  },
+  {
+   "word": "watching",
+   "start": 34.72,
+   "end": 35.07
+  },
+  {
+   "word": "you",
+   "start": 35.08,
+   "end": 35.3
+  },
+  {
+   "word": "or",
+   "start": 35.73,
+   "end": 35.9
+  },
+  {
+   "word": "wifi",
+   "start": 35.91,
+   "end": 36.32
+  },
+  {
+   "word": "that",
+   "start": 36.33,
+   "end": 36.46
+  },
+  {
+   "word": "knows",
+   "start": 36.46,
+   "end": 36.7
+  },
+  {
+   "word": "who",
+   "start": 36.7,
+   "end": 36.78
+  },
+  {
+   "word": "you",
+   "start": 36.78,
+   "end": 36.97
+  },
+  {
+   "word": "are",
+   "start": 36.98,
+   "end": 37.19
+  }
+ ]
+}

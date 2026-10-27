@@ -1,0 +1,85 @@
+{
+ "audio/narration/takes/take1.mp3": {
+  "zipformer": {
+   "transcript": "IF YOU HID BEHIND THIS WALL THIS MACHINE COULD STILL WATCH YOU SCIENTISTS BUILT A SYSTEM THAT SHOOTS INVISIBLE RADIO WAVES THROUGH WALLS AND WHEN THEY BOUNCE OFF YOUR BODY A I CREATES A MOVING SKELETON OF YOU RAISE YOUR HAND IT RAISES ITS HAND BUT HERE'S WHERE IT GETS CREEPY IN A SEPARATE EXPERIMENT SCIENTISTS USED ORDINARY WYFIED SIGNALS TO IDENTIFY PEOPLE WALKING PAST EVEN WITHOUT THEIR PHONES THEY TESTED ONE HUNDRED NINETY SEVEN PEOPLE AND IDENTIFIED ALMOST EVERY ONE CORRECTLY SO IMAGINE WALKING PAST A CAFE AND IT RECOGNIZES YOU WITHOUT YOU DOING ANYTHING NOW WOULD YOU RATHER HAVE A CAMERA WATCHING YOU OR WHY FY THAT KNOWS WHO YOU ARE",
+   "wer": 0.045,
+   "diffs": [
+    [
+     "replace",
+     "wifi",
+     "wyfied"
+    ],
+    [
+     "replace",
+     "everyone",
+     "every one"
+    ],
+    [
+     "replace",
+     "wifi",
+     "why fy"
+    ]
+   ]
+  },
+  "whisper": {
+   "transcript": "If you hid behind this wall, this machine could still watch you! Scientists built a system that shoots invisible radio waves through walls. And when they bounce off your body, AI creates a moving skeleton of you. Raise your hand? It raises its hand. But here's where it gets creepy. In a separate experiment, scientists used ordinary Wi-Fi signals to identify people walking past. Even without their phones, they tested 197 people and identified almost everyone correctly. So, imagine walking past a cafe and it recognizes you without you doing anything. Now, would you rather have a camera watching you? or Wi-Fi that knows who you are.",
+   "wer": 0.036,
+   "diffs": [
+    [
+     "replace",
+     "wifi",
+     "wi fi"
+    ],
+    [
+     "replace",
+     "wifi",
+     "wi fi"
+    ]
+   ]
+  }
+ },
+ "audio/narration/takes/take2.mp3": {
+  "zipformer": {
+   "transcript": "YOU HID BEHIND THIS WALL THIS MACHINE COULD STILL WATCH YOU SCIENTISTS BUILT A SYSTEM THAT SHOOTS INVISIBLE RADIO WAVES THROUGH WALLS AND WHEN THEY BOUNCE OFF YOUR BODY A I CREATES A MOVING SKELETON OF YOU RAISE YOUR HAND IT RAISES ITS HAND BUT HERE'S WHERE IT GETS CREEPY IN A SEPARATE EXPERIMENT SCIENTISTS USED ORDINARY WYFIED SIGNALS TO IDENTIFY PEOPLE WALKING PAST EVEN WITHOUT THEIR PHONES THEY TESTED ONE HUNDRED NINETY SEVEN PEOPLE AND IDENTIFIED ALMOST EVERY ONE CORRECTLY SO IMAGINE WALKING PAST A CAFE AND IT RECOGNIZES YOU WITHOUT YOU DOING ANYTHING NOW WOULD YOU RATHER HAVE A CAMERA WATCHING YOU OR WHY FY THAT KNOWS WHO YOU ARE",
+   "wer": 0.054,
+   "diffs": [
+    [
+     "delete",
+     "if",
+     ""
+    ],
+    [
+     "replace",
+     "wifi",
+     "wyfied"
+    ],
+    [
+     "replace",
+     "everyone",
+     "every one"
+    ],
+    [
+     "replace",
+     "wifi",
+     "why fy"
+    ]
+   ]
+  },
+  "whisper": {
+   "transcript": "If you hid behind this wall, this machine could still watch you! Scientists built a system that shoots invisible radio waves through walls. And when they bounce off your body, AI creates a moving skeleton of you. Raise your hand? It raises its hand. But here's where it gets creepy. In a separate experiment, scientists used ordinary Wi-Fi signals to identify people walking past. Even without their phones, they tested 197 people and identified almost everyone correctly. So imagine walking past a cafe and it recognizes you without you doing anything. Now, would you rather have a camera watching you? or Wi-Fi that knows who you are.",
+   "wer": 0.036,
+   "diffs": [
+    [
+     "replace",
+     "wifi",
+     "wi fi"
+    ],
+    [
+     "replace",
+     "wifi",
+     "wi fi"
+    ]
+   ]
+  }
+ }
+}
