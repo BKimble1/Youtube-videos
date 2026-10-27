@@ -20,11 +20,11 @@ import {Streaks, Spark, Rings, squashT, InjectorRead} from './fx';
 import {InsideNeedle} from './inside';
 
 export const D2_AZ = 0, D2_EL = 3;
-export const D2_S = 24;
-/** the look point along the tube: framed on the mouth, the coil, the needle and the target's face together (the gap
- *  the needle has to cross in the middle), then carried with the injector as it launches, so the entry lands near the
- *  frame's centre with the block around it */
-export const d2LookX = (t: number) => 27.5 + 7 * sr(t, D_FIRE - 0.01, D_IMPACT + 0.14);
+export const D2_S = 22;
+/** the look point along the tube: one framing holds the coil at the mouth, the loaded needle at the centre, the gap,
+ *  the target's face and the block beyond it, so the injector visibly crosses the frame to the face (the spring
+ *  stretching out behind it at the left edge); after the launch the camera eases on a little with the injector */
+export const d2LookX = (t: number) => 31 + 1.5 * sr(t, D_FIRE, D_IMPACT + 0.3);
 export const d2View = (f: number): View => viewAt(D2_AZ, D2_EL, D2_S, [d2LookX(f / 30), D_TUBE_Y, 0], 540, 900);
 
 export const D2Scene: React.FC<{t: number; v: View; id: string}> = ({t, v, id}) => {

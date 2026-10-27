@@ -9,7 +9,7 @@ import * as GC from './shots/grpC';
 import * as GD from './shots/grpD';
 import * as GE from './shots/grpE';
 import * as GF from './shots/grpF';
-import {a1Pose, A1_REL, A1_IMPACT} from './shots/h/A1';
+import {a1Pose, A1_REL, A1_IMPACT, A1_PRESS} from './shots/h/A1';
 
 /** a close step (A1 and F5 share the camera and the scale, so the loop joins them): more body, less tick */
 const CLOSE_STEP = {body: 1.0, bright: 0.5};
@@ -19,8 +19,10 @@ export const cuesH = (): Cue[] => {
   const a1 = shotRange('A1'), f5 = shotRange('F6');
   // A1: the last step into the stance, the coil, the release (accent 1), the spring, the needle seating
   for (const {t, g} of steps(touchdownsP((ff) => a1Pose(ff / FPS), a1.from, a1.to))) ev.push({kind: 'tick', t, gain: -31 + g, name: 'A1 foot', args: CLOSE_STEP});
-  ev.push({kind: 'sizzle', t: 0, gain: -31, name: 'A1 coil glowing', args: {d: A1_REL}});
-  ev.push({kind: 'click', t: A1_REL, gain: -13, hero: true, name: 'A1 TRIGGER: latch line parts (accent 1)'});
+  ev.push({kind: 'sizzle', t: 0, gain: -33, name: 'A0 coil standby glow', args: {d: A1_PRESS}});
+  ev.push({kind: 'button', t: A1_PRESS, gain: -20, hero: true, name: 'AR FIRE button bottoms out (accent 1)', args: {f: 1500}});
+  ev.push({kind: 'sizzle', t: A1_PRESS + 0.01, gain: -28, name: 'A1 coil driven hot', args: {d: A1_REL - A1_PRESS}});
+  ev.push({kind: 'click', t: A1_REL, gain: -15, hero: true, name: 'A1 TRIGGER: latch line parts'});
   ev.push({kind: 'spring', t: A1_REL + 0.004, gain: -19, hero: true, name: 'A1 spring drives the injector'});
   ev.push({kind: 'zing', t: A1_REL + 0.02, gain: -27, name: 'A1 injector slides along the tube', args: {d: A1_IMPACT - A1_REL}});
   ev.push({kind: 'thock', t: A1_IMPACT, gain: -16, hero: true, name: 'A1 IMPACT: needle into the silicone'});
