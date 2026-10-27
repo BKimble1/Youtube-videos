@@ -61,6 +61,24 @@ move (or none). Transitions are built from shapes and actions:
 
 Not used. The Runway connector authenticates, but its asset download host refused requests (HTTP 403) from this environment, so no generated media could be retrieved. No Runway generation was run and no credits were spent. Everything in V2 is drawn in code.
 
+## QA (review render)
+
+`tools/qa.py` (`qa/FGW_Cyborg_Cockroach_V2_REVIEW_qa.json`, `_motion.json`, `_phone_sheet.png`):
+
+- 1080x1920 h264 yuv420p bt709, 30 fps, 936 frames, 31.2 s; keyframes every 0.5 s at most.
+- Audio: -14.2 LUFS integrated, true peak -1.5 dBTP, voice 22.8 dB over the rest in the phone band. The file's audio matches the mix (correlation 0.99998, offset 0 ms).
+- Whisper transcript of the file: word error rate 0 against the locked script.
+- Caption windows: 23/23 OK.
+- Motion: every non-cut motion spike is intentional (the D2 snap at frame 498). The first render had one 13-frame near-hold in B1 (5.8-6.2 s); it is fixed, because the push now runs through the cut.
+- Inspected frame by frame: 0-89 (hook, firing at frame 27, remote, LED match cut) and 876-935 (realization, final approach, loop into frame 0). The F5 caption was moved to the top band, off her fingertips.
+
 ## Known remaining issues
 
-See the end of this file (updated after the review render).
+- **C1 (two insects):** at that width the observer's camera reads as a small dark box with a blue lens. The difference between the two insects is made explicit only by C2's push to the lens.
+- **Scale cheats (forced perspective):**
+  - The insect is drawn larger than true scale in the wide human shots (A4, C4, E1, F3, F4) so it stays readable.
+  - In F5, her hand is at true scale relative to the macro insect, so only her fingertips are in frame.
+- **D6 -> E1:** the cut matches the gap's shape and position, not the insect's size. D6 ends with the insect large; E1 opens with it small inside the opening.
+- **Hands:** in B1/B2 the cartoon gloved fingers rest along the pack's edge, slightly onto the shell, while they hold it.
+- **Antennae in A1:** antennae that touch the silicone lie on its far face and show through the translucent target (by design), so they read faintly.
+- **Loop:** frame 935 (rubble) to frame 0 (lab) is a location change by design. The insect's pose, size and screen position carry across the cut.
