@@ -36,5 +36,5 @@ export const F5: React.FC<ShotProps> = ({f, lf}) => {
     face: faceTrack(lf, [[0, FF.disgust], [K.hope0, FF.disgust], [K.hope1, FF.hope]]),
     wrinkle: 1 - sr(lf, K.hope0, K.hope0 + 5),
   };
-  return <PocketFrame id="f5" cam={f5Cam()} T={T} a={a} medic={pose} glint={f5Glint(lf)} fan={0.8} vig={0.45} />;
+  return <PocketFrame id={`f5f${f}`} cam={f5Cam()} T={T} a={a} medic={pose} glint={f5Glint(lf)} fan={0.8} vig={0.45} />;
 };

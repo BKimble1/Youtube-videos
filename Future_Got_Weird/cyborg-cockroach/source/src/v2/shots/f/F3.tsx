@@ -48,7 +48,7 @@ export const F3: React.FC<ShotProps> = ({f, lf}) => {
   };
   const gy0 = edge[1] + 6;
   return (
-    <PocketFrame id="f3" cam={f3Cam(lf)} T={T} a={a} medic={pose} fan={0.8} vig={0.5}
+    <PocketFrame id={`f3f${f}`} cam={f3Cam(lf)} T={T} a={a} medic={pose} fan={0.8} vig={0.5}
       over={<Grit t={t} x={edge[0] + 8} y0={gy0} y1={gy0 + 130} t0={F3_GRIT.t0} dur={F3_GRIT.dur} n={9} g={2400} r={4} spread={14} seed={17} />} />
   );
 };

@@ -43,5 +43,5 @@ export const F1: React.FC<ShotProps> = ({f, lf}) => {
     tilt: keys(lf, [[0, -2], [K.head1, 2]]),
     face: faceTrack(lf, [[0, FF.tired], [K.eyes, FF.tired], [K.eyes + 6, FF.wary]]),
   };
-  return <PocketFrame id="f1" cam={f1Cam(lf)} T={T} a={a} shadow fan={1} vig={0.55} />;
+  return <PocketFrame id={`f1f${f}`} cam={f1Cam(lf)} T={T} a={a} shadow fan={1} vig={0.55} />;
 };

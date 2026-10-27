@@ -8,6 +8,7 @@ import * as GB from './shots/grpB';
 import * as GC from './shots/grpC';
 import * as GD from './shots/grpD';
 import * as GE from './shots/grpE';
+import * as GF from './shots/grpF';
 import {a1Pose, A1_REL, A1_IMPACT} from './shots/h/A1';
 
 /** a close step (A1 and F5 share the camera and the scale, so the loop joins them): more body, less tick */
@@ -41,6 +42,7 @@ export const buildCues2 = (): Cue[] => [
   ...groupCues(GC as Record<string, unknown>, 'cuesC'),
   ...groupCues(GD as Record<string, unknown>, 'cuesD'),
   ...groupCues(GE as Record<string, unknown>, 'cuesE'),
+  ...groupCues(GF as Record<string, unknown>, 'cuesF'),
 ].sort((a, b) => a.t - b.t);
 
 export const SECTIONS2 = {

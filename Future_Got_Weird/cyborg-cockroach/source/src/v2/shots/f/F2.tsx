@@ -26,6 +26,7 @@ export const F2_GRIT = {t0: 0.4, dur: 0.45};
 
 export const F2: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / FPS, t = lf / FPS;
+  const sid = `f2f${f}`; // SVG ids unique per shot and frame
   const v = f2View(lf);
   const pose = medicPose(T);
   const q = (x: number, y: number, z: number): Pt => P(v, [x, y, z]) as Pt;
@@ -39,41 +40,41 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
   const ink = inkFor(v);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <VGrad id="f2bg" x0={-100} y0={-100} x1={1180} y1={2100} stops={[[0, '#2E2C30'], [1, '#1A191C']]} />
+      <VGrad id={`${sid}bg`} x0={-100} y0={-100} x1={1180} y1={2100} stops={[[0, '#2E2C30'], [1, '#1A191C']]} />
       {/* rubble behind and above the slab, a rim of daylight along its edge */}
-      <Slab id="f2r1" face={jag([[-100, -100], [1180, -100], [1180, 260], [760, 330], [330, 300], [-100, 400]], 14, 3)} tone="#5E5B5F" w={5} dark={0.35} specks={24} rim={[[330, 300], [760, 330], [1180, 260]]} rimColor="#D9C9A6" cracks={[[[420, 60], [470, 160], [450, 260]]]} />
+      <Slab id={`${sid}r1`} face={jag([[-100, -100], [1180, -100], [1180, 260], [760, 330], [330, 300], [-100, 400]], 14, 3)} tone="#5E5B5F" w={5} dark={0.35} specks={24} rim={[[330, 300], [760, 330], [1180, 260]]} rimColor="#D9C9A6" cracks={[[[420, 60], [470, 160], [450, 260]]]} />
       <Rebar pts={[[880, 300], [850, 420], [900, 500]]} w={14} dark={0.4} />
       <path d={poly(floor)} fill="#6E6762" />
-      <Crevice id="f2cv" v={v} w={5} />
-      <Glow2 id="f2pool" cx={mouth[0] - 60} cy={mouth[1] + 30} rx={620} ry={260} color={RB.day} a={0.7} />
-      <Ledge id="f2le" v={v} w={5} />
+      <Crevice id={`${sid}cv`} v={v} w={5} />
+      <Glow2 id={`${sid}pool`} cx={mouth[0] - 60} cy={mouth[1] + 30} rx={620} ry={260} color={RB.day} a={0.7} />
+      <Ledge id={`${sid}le`} v={v} w={5} />
       {/* the slit's light on the floor beside the slab */}
       <path d={poly(fan)} fill={RB.day} opacity={0.35} />
-      <Block id="f2bl" v={v} w={5} dark={0.05} />
+      <Block id={`${sid}bl`} v={v} w={5} dark={0.05} />
       <path d={poly(slit)} fill={RB.dayHot} />
       <Grit t={t} x={gTop[0]} y0={gTop[1]} y1={q(0, 0, -6)[1] - 4} t0={F2_GRIT.t0} dur={F2_GRIT.dur} n={9} g={2600} r={4.5} spread={18} seed={12} />
-      <g clipPath="url(#f2-ic)">
+      <g clipPath={`url(#${sid}-ic)`}>
         <defs>
-          <clipPath id="f2-ic" clipRule="evenodd">
+          <clipPath id={`${sid}-ic`} clipRule="evenodd">
             <path d={blockClipD(v)} clipRule="evenodd" />
           </clipPath>
         </defs>
-        <Roach2D pose={pose} v={v} o={{id: 'f2r', gear: <Gear2D id="f2g" v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
-        <HoleShadow id="f2sh" v={v} a={0.62} />
+        <Roach2D pose={pose} v={v} o={{id: `${sid}r`, gear: <Gear2D id={`${sid}g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+        <HoleShadow id={`${sid}sh`} v={v} a={0.62} />
       </g>
       {/* the antennae out in the light (the parts in front of the hole's face), over the hole's shadow */}
       {[pose.antL, pose.antR].map((a, i) => {
         const out = a.filter((p) => p[0] > -1);
         return out.length > 1 ? <Antenna2D key={i} v={v} pts={out} ink={ink * 0.75} color="#B9825A" /> : null;
       })}
-      <Pebbles id="f2pb" a={q(150, 0, 90)} b={q(220, 0, 160)} n={4} size={26} seed={21} tone={RB.concLit} w={4} dark={0.2} />
-      <Pebbles id="f2pc" a={q(170, 0, -170)} b={q(240, 0, -120)} n={4} size={28} seed={22} tone={RB.concLit} w={4} dark={0.2} />
-      <Shaft id="f2shf" pts={[[700, -100], [1180, -100], [700, 1500], [160, 1400]]} from={[1000, -60]} to={[420, 1400]} a={0.3} />
-      <Motes id="f2m" t={t + 3} n={22} x0={0} y0={300} x1={1080} y1={1700} r={5} seed={14} a={0.5} />
+      <Pebbles id={`${sid}pb`} a={q(150, 0, 90)} b={q(220, 0, 160)} n={4} size={26} seed={21} tone={RB.concLit} w={4} dark={0.2} />
+      <Pebbles id={`${sid}pc`} a={q(170, 0, -170)} b={q(240, 0, -120)} n={4} size={28} seed={22} tone={RB.concLit} w={4} dark={0.2} />
+      <Shaft id={`${sid}shf`} pts={[[700, -100], [1180, -100], [700, 1500], [160, 1400]]} from={[1000, -60]} to={[420, 1400]} a={0.3} />
+      <Motes id={`${sid}m`} t={t + 3} n={22} x0={0} y0={300} x1={1080} y1={1700} r={5} seed={14} a={0.5} />
       {/* near rubble framing the bottom corners */}
-      <Slab id="f2f1" face={jag([[-100, 1600], [240, 1680], [360, 1820], [340, 2020], [-100, 2020]], 14, 31)} top={jag([[-100, 1600], [240, 1680], [360, 1820], [-100, 1740]], 8, 32)} tone="#5D5F66" w={6} dark={0.55} specks={10} />
-      <Slab id="f2f2" face={jag([[840, 1740], [1180, 1640], [1180, 2020], [780, 2020]], 14, 33)} top={jag([[840, 1740], [1180, 1640], [1180, 1720], [820, 1820]], 8, 34)} tone="#6A6B70" w={6} dark={0.55} specks={10} />
-      <Vignette id="f2vg" a={0.5} />
+      <Slab id={`${sid}f1`} face={jag([[-100, 1600], [240, 1680], [360, 1820], [340, 2020], [-100, 2020]], 14, 31)} top={jag([[-100, 1600], [240, 1680], [360, 1820], [-100, 1740]], 8, 32)} tone="#5D5F66" w={6} dark={0.55} specks={10} />
+      <Slab id={`${sid}f2`} face={jag([[840, 1740], [1180, 1640], [1180, 2020], [780, 2020]], 14, 33)} top={jag([[840, 1740], [1180, 1640], [1180, 1720], [820, 1820]], 8, 34)} tone="#6A6B70" w={6} dark={0.55} specks={10} />
+      <Vignette id={`${sid}vg`} a={0.5} />
     </svg>
   );
 };
