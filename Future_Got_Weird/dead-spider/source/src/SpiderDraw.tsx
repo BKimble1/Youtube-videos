@@ -8,6 +8,7 @@ import {INK} from './dc/ink';
 import {capsuleItem, Core, ellipsoidItem, Item} from './draw3';
 import {ABD, legsWorld, LEG_R, palpLocal, PRO, SpiderPose, toWorld} from './spider';
 import {add3, Basis, depth, mul3, proj, rotZ, smoothClosed, sub3, V3} from './three';
+import {Ell, limbDepth, spiderBodies} from './occlude';
 
 export type SpiderLook = {leg: string; legBand: string; cara: string; caraBand: string; abd: string; heart: string; spot: string; eye: string};
 /** the gripper specimen */
@@ -26,7 +27,7 @@ const surf = (P: SpiderPose, c: V3, a: number, b: number, cc: number, x: number,
   return toWorld(P, [c[0] + x, c[1] + y, c[2] + up * cc * Math.sqrt(Math.max(0, k))]);
 };
 
-export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: string; hideLegs?: number[]; opacity?: number; cut?: Cut; focusLeg?: number; focus?: number; cutLegs?: number[]; cutBody?: boolean} = {id: 's'}): Item[] => {
+export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: string; hideLegs?: number[]; opacity?: number; cut?: Cut; focusLeg?: number; focus?: number; cutLegs?: number[]; cutBody?: boolean; occlusion?: boolean; otherBodies?: Ell[]} = {id: 's'}): Item[] => {
   const items: Item[] = [];
   const sk = P.s ?? 1;
   const W = (p: V3) => toWorld(P, p);
@@ -38,16 +39,24 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
     return up[0] * toEye[0] + up[1] * toEye[1] + up[2] * toEye[2] > 0;
   })();
 
+  // explicit occlusion against this spider's body sections (and any other bodies in the scene)
+  const bodies: Ell[] = o.occlusion ? [...spiderBodies(P), ...(o.otherBodies ?? [])] : [];
+  const pushLimb = (it: Item, a: V3, b: V3) => {
+    const z = o.occlusion ? limbDepth(B, a, b, it.z, bodies) : it.z;
+    items.push({...it, z});
+    return z;
+  };
   // ---- legs (each segment its own part, so the segments read as an arthropod's jointed leg)
   const legs = legsWorld(P);
   legs.forEach((L, i) => {
     if (o.hideLegs?.includes(i)) return;
+    const segZ: number[] = [];
     for (let k = 0; k < 6; k++) {
       const c = k === 0 ? shade(look.leg, 0.15) : k === 2 || k === 5 ? look.legBand : look.leg;
       const legCut = o.cut && (!o.cutLegs || o.cutLegs.includes(i));
       const core: Core | undefined = o.cut && legCut ? {color: o.cut.fluid, k: o.cut.core * (k === 5 ? 0.5 : 0.62), flow: o.cut.flow !== undefined ? o.cut.flow - k * 0.6 : undefined, soft: o.cut.soft} : undefined;
       const dimmed = o.focusLeg !== undefined && o.focusLeg !== i ? 1 - 0.8 * (o.focus ?? 0) : 1;
-      items.push(capsuleItem(B, L[k], L[k + 1], LEG_R[k] * sk, LEG_R[k + 1] * sk, c, {band: !legCut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}));
+      segZ[k] = pushLimb(capsuleItem(B, L[k], L[k + 1], LEG_R[k] * sk, LEG_R[k + 1] * sk, c, {band: !legCut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}), L[k], L[k + 1]);
     }
     // a few spines on the tibia and metatarsus
     for (const k of o.cut && (!o.cutLegs || o.cutLegs.includes(i)) ? [] : [3, 4]) {
@@ -58,7 +67,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
         const dir = sub3(b, a);
         const out: V3 = [dir[1] * 0.12 - dir[2] * 0.02, -dir[0] * 0.12, 0.08];
         const q0 = proj(B, p0), q1 = proj(B, add3(add3(p0, out), mul3(dir, 0.06)));
-        items.push({z: q0.z - 0.01, el: <path key={`${o.id}sp${i}${k}${u}`} d={`M${q0.x.toFixed(1)},${q0.y.toFixed(1)} L${q1.x.toFixed(1)},${q1.y.toFixed(1)}`} stroke={INK} strokeWidth={Math.max(0.8, 0.05 * q0.s).toFixed(2)} strokeLinecap="round" opacity={0.8 * (o.opacity ?? 1)} />});
+        items.push({z: segZ[k] - 0.01, el: <path key={`${o.id}sp${i}${k}${u}`} d={`M${q0.x.toFixed(1)},${q0.y.toFixed(1)} L${q1.x.toFixed(1)},${q1.y.toFixed(1)}`} stroke={INK} strokeWidth={Math.max(0.8, 0.05 * q0.s).toFixed(2)} strokeLinecap="round" opacity={0.8 * (o.opacity ?? 1)} />});
       }
     }
   });
@@ -67,7 +76,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
     const pp = palpLocal(s, P.e.reduce((a, b) => a + b, 0) / 8).map(W);
     const r = [0.3, 0.26, 0.22, 0.17];
     const dimP = (o.opacity ?? 1) * (o.focusLeg !== undefined ? 1 - 0.8 * (o.focus ?? 0) : 1);
-    for (let k = 0; k < 3; k++) items.push(capsuleItem(B, pp[k], pp[k + 1], r[k] * sk, r[k + 1] * sk, k === 2 ? look.legBand : look.leg, {spec: 0.3, opacity: dimP}));
+    for (let k = 0; k < 3; k++) pushLimb(capsuleItem(B, pp[k], pp[k + 1], r[k] * sk, r[k + 1] * sk, k === 2 ? look.legBand : look.leg, {spec: 0.3, opacity: dimP}), pp[k], pp[k + 1]);
     items.push(ellipsoidItem(B, W([PRO.a * 0.9, s * 0.42, -0.35]), [ax([0.55, 0, 0]), ax([0, 0.42, 0]), ax([0, 0, 0.6])], shade(look.cara, 0.25), {spec: 0.6, opacity: dimP}));
   }
 

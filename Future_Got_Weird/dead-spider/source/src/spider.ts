@@ -33,6 +33,16 @@ const TH_CURL = [
   [-4, 68, -58, -130, -196, -228],
 ];
 
+/** V6: corrections to the curled pose (deg, added to TH_CURL; they fade out as the leg extends). Without them the
+ *  metatarsus and tarsus of the curled legs folded back into the prosoma. Found by search (tools probe): the smallest
+ *  changes that keep every segment, with its radius, outside both body sections at every extension. */
+const CURL_FIX = [
+  [0, 0, 0, 10, 70, 0],
+  [0, 0, -5, 15, 70, 0],
+  [0, 0, 0, 15, 70, 0],
+  [0, 0, -5, 0, 55, 0],
+];
+
 /** plan-view sweep of each segment (deg; - = toward the head) */
 const SWEEP = [
   [0, 0, -6, -12, -17, -20],
@@ -54,7 +64,7 @@ export const legSide = (i: number) => (i < 4 ? 1 : -1);
 export const legN = (i: number) => i % 4;
 
 /** a small fixed individuality per leg (so the eight are not a rigid radial pattern) */
-const JIT = [0.6, -1.2, 0.9, -0.4, -0.8, 1.1, -0.5, 0.7];
+const JIT = [0.6, -1.2, 0.9, -0.4, 0.6, 1.1, -0.5, 0.7];
 
 /** the seven joint points of leg i in body-local coordinates for extension e */
 export const legLocal = (i: number, e: number, dth = 0): V3[] => {
@@ -69,7 +79,8 @@ export const legLocal = (i: number, e: number, dth = 0): V3[] => {
     // the distal segments sweep forward (legs I, II) or back (III, IV) in plan, more as the leg extends
     const d = ((dirDeg + SWEEP[n][k] * (0.35 + 0.65 * e)) * Math.PI) / 180;
     const u: V3 = [Math.cos(d), s * Math.sin(d), 0];
-    const th = TH_CURL[n][k] + (TH_OPEN[n][k] - TH_CURL[n][k]) * e + (k > 0 ? JIT[(i + k) % 8] : 0) + dth;
+    const curl = TH_CURL[n][k] + CURL_FIX[n][k];
+    const th = curl + (TH_OPEN[n][k] - curl) * e + (k > 0 ? JIT[(i + k) % 8] : 0) + dth;
     const t = (th * Math.PI) / 180;
     const seg = L * FRAC[k];
     p = add3(p, add3(mul3(u, seg * Math.cos(t)), [0, 0, seg * Math.sin(t)]));

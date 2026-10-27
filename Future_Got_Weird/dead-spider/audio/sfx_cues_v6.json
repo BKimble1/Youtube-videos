@@ -1,0 +1,464 @@
+[
+ {
+  "name": "needle coming in (faint air)",
+  "at": 0.0,
+  "dur": 0.22,
+  "gain_db": -46
+ },
+ {
+  "name": "needle punctures the carapace (tick)",
+  "at": 0.221,
+  "dur": 0.05,
+  "gain_db": -28
+ },
+ {
+  "name": "puncture crunch",
+  "at": 0.261,
+  "dur": 0.06,
+  "gain_db": -35
+ },
+ {
+  "name": "puncture shudder",
+  "at": 0.241,
+  "dur": 0.25,
+  "gain_db": -40
+ },
+ {
+  "name": "stopper driven down (squeak)",
+  "at": 0.34,
+  "dur": 0.2,
+  "gain_db": -40
+ },
+ {
+  "name": "air pulse down the needle",
+  "at": 0.36,
+  "dur": 0.25,
+  "gain_db": -37
+ },
+ {
+  "name": "leg snaps open (0)",
+  "at": 0.371,
+  "dur": 0.12,
+  "gain_db": -31
+ },
+ {
+  "name": "leg snaps open (1)",
+  "at": 0.387,
+  "dur": 0.12,
+  "gain_db": -31
+ },
+ {
+  "name": "leg snaps open (2)",
+  "at": 0.392,
+  "dur": 0.12,
+  "gain_db": -31
+ },
+ {
+  "name": "leg snaps open (3)",
+  "at": 0.487,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "leg snaps open (4)",
+  "at": 0.533,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "leg snaps open (5)",
+  "at": 0.567,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "leg snaps open (6)",
+  "at": 0.567,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "leg snaps open (7)",
+  "at": 0.6,
+  "dur": 0.12,
+  "gain_db": -37
+ },
+ {
+  "name": "legs hook down (dry creak)",
+  "at": 1.05,
+  "dur": 0.4,
+  "gain_db": -40
+ },
+ {
+  "name": "camera cranes up the apparatus (soft air)",
+  "at": 2,
+  "dur": 0.6,
+  "gain_db": -48
+ },
+ {
+  "name": "plunger push (squeak)",
+  "at": 2.18,
+  "dur": 0.16,
+  "gain_db": -40
+ },
+ {
+  "name": "legs answer the push (crisp)",
+  "at": 2.3,
+  "dur": 0.14,
+  "gain_db": -36
+ },
+ {
+  "name": "push eased (soft hiss)",
+  "at": 2.66,
+  "dur": 0.2,
+  "gain_db": -44
+ },
+ {
+  "name": "full push (squeak)",
+  "at": 3.42,
+  "dur": 0.14,
+  "gain_db": -39
+ },
+ {
+  "name": "full push: every leg snaps open on MOVE",
+  "at": 3.478,
+  "dur": 0.24,
+  "gain_db": -27
+ },
+ {
+  "name": "life drains (low falling tone)",
+  "at": 5.37,
+  "dur": 0.9,
+  "gain_db": -42
+ },
+ {
+  "name": "legs fold at their joints (dry creak)",
+  "at": 6.6,
+  "dur": 0.7,
+  "gain_db": -40
+ },
+ {
+  "name": "body settles onto the stone",
+  "at": 7.467,
+  "dur": 0.2,
+  "gain_db": -40
+ },
+ {
+  "name": "the leg bends (soft creak)",
+  "at": 8.3,
+  "dur": 0.45,
+  "gain_db": -46
+ },
+ {
+  "name": "the body squeezes (low swell)",
+  "at": 9.1,
+  "dur": 0.7,
+  "gain_db": -39
+ },
+ {
+  "name": "fluid runs down the leg",
+  "at": 9.47,
+  "dur": 1.2,
+  "gain_db": -41
+ },
+ {
+  "name": "the joint straightens (soft push)",
+  "at": 9.917,
+  "dur": 0.45,
+  "gain_db": -38
+ },
+ {
+  "name": "the flow stops",
+  "at": 11.69,
+  "dur": 0.6,
+  "gain_db": -44
+ },
+ {
+  "name": "pressure disappears (falling tone)",
+  "at": 12.19,
+  "dur": 0.9,
+  "gain_db": -38
+ },
+ {
+  "name": "legs fold (soft creak)",
+  "at": 12.717,
+  "dur": 0.6,
+  "gain_db": -42
+ },
+ {
+  "name": "body settles onto the leaf",
+  "at": 13.208,
+  "dur": 0.18,
+  "gain_db": -42
+ },
+ {
+  "name": "forceps touch the specimen (tick)",
+  "at": 14.35,
+  "dur": 0.04,
+  "gain_db": -42
+ },
+ {
+  "name": "arm brings the needle down (servo)",
+  "at": 14.3,
+  "dur": 1.15,
+  "gain_db": -45
+ },
+ {
+  "name": "needle touches the carapace (tick)",
+  "at": 15.45,
+  "dur": 0.05,
+  "gain_db": -30
+ },
+ {
+  "name": "needle in (faint crunch)",
+  "at": 15.53,
+  "dur": 0.06,
+  "gain_db": -37
+ },
+ {
+  "name": "arm lifts the spider off the pad (servo)",
+  "at": 16.02,
+  "dur": 0.43,
+  "gain_db": -44
+ },
+ {
+  "name": "plunger pushed (stopper squeak)",
+  "at": 16.62,
+  "dur": 0.44,
+  "gain_db": -37
+ },
+ {
+  "name": "air travels down the needle",
+  "at": 16.72,
+  "dur": 1.1,
+  "gain_db": -41
+ },
+ {
+  "name": "legs stir (faint rustle)",
+  "at": 17.6,
+  "dur": 0.3,
+  "gain_db": -45
+ },
+ {
+  "name": "second push (squeak)",
+  "at": 18.5,
+  "dur": 0.24,
+  "gain_db": -37
+ },
+ {
+  "name": "legs spread OPEN (crisp)",
+  "at": 18.652,
+  "dur": 0.22,
+  "gain_db": -29
+ },
+ {
+  "name": "arm swings over the block (servo)",
+  "at": 16.5,
+  "dur": 1.15,
+  "gain_db": -45
+ },
+ {
+  "name": "lowered round the block (servo)",
+  "at": 19.05,
+  "dur": 0.9,
+  "gain_db": -44
+ },
+ {
+  "name": "finger off the plunger (tap)",
+  "at": 20.38,
+  "dur": 0.08,
+  "gain_db": -40
+ },
+ {
+  "name": "plunger rises (stopper squeak)",
+  "at": 20.5,
+  "dur": 0.7,
+  "gain_db": -41
+ },
+ {
+  "name": "pressure released: air back up the needle (hiss)",
+  "at": 20.85,
+  "dur": 0.7,
+  "gain_db": -39
+ },
+ {
+  "name": "foot meets the block (leg 0)",
+  "at": 21.737,
+  "dur": 0.03,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the block (leg 1)",
+  "at": 21.754,
+  "dur": 0.03,
+  "gain_db": -33
+ },
+ {
+  "name": "foot meets the block (leg 2)",
+  "at": 21.771,
+  "dur": 0.03,
+  "gain_db": -32
+ },
+ {
+  "name": "foot meets the block (leg 3)",
+  "at": 21.779,
+  "dur": 0.03,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the block (leg 4)",
+  "at": 21.754,
+  "dur": 0.03,
+  "gain_db": -33
+ },
+ {
+  "name": "foot meets the block (leg 5)",
+  "at": 21.762,
+  "dur": 0.03,
+  "gain_db": -32
+ },
+ {
+  "name": "foot meets the block (leg 6)",
+  "at": 21.779,
+  "dur": 0.03,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the block (leg 7)",
+  "at": 21.767,
+  "dur": 0.03,
+  "gain_db": -33
+ },
+ {
+  "name": "gentle squeeze (grasp)",
+  "at": 21.767,
+  "dur": 0.45,
+  "gain_db": -42
+ },
+ {
+  "name": "held block lifted a little (servo)",
+  "at": 22.3,
+  "dur": 0.55,
+  "gain_db": -42
+ },
+ {
+  "name": "block leaves the bench (tick)",
+  "at": 22.429,
+  "dur": 0.05,
+  "gain_db": -39
+ },
+ {
+  "name": "lifted clear (servo)",
+  "at": 23.35,
+  "dur": 0.65,
+  "gain_db": -42
+ },
+ {
+  "name": "arm carries it along the bench (servo)",
+  "at": 23.78,
+  "dur": 1.17,
+  "gain_db": -43
+ },
+ {
+  "name": "plunger pushed (squeak)",
+  "at": 25.18,
+  "dur": 0.28,
+  "gain_db": -39
+ },
+ {
+  "name": "legs open, letting go (crisp)",
+  "at": 25.47,
+  "dur": 0.16,
+  "gain_db": -33
+ },
+ {
+  "name": "block lands in the dish (0)",
+  "at": 25.531,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "block lands in the dish (1)",
+  "at": 25.566,
+  "dur": 0.3,
+  "gain_db": -33
+ },
+ {
+  "name": "arm travels to the platform (servo)",
+  "at": 25.7,
+  "dur": 1.65,
+  "gain_db": -43
+ },
+ {
+  "name": "comes down over the platform (servo)",
+  "at": 27.35,
+  "dur": 1.05,
+  "gain_db": -43
+ },
+ {
+  "name": "air let out (hiss)",
+  "at": 28.42,
+  "dur": 0.3,
+  "gain_db": -38
+ },
+ {
+  "name": "foot meets the second spider (leg 0)",
+  "at": 28.737,
+  "dur": 0.025,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the second spider (leg 1)",
+  "at": 28.75,
+  "dur": 0.025,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the second spider (leg 2)",
+  "at": 28.771,
+  "dur": 0.025,
+  "gain_db": -33
+ },
+ {
+  "name": "foot meets the second spider (leg 3)",
+  "at": 28.779,
+  "dur": 0.025,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the second spider (leg 4)",
+  "at": 28.758,
+  "dur": 0.025,
+  "gain_db": -34
+ },
+ {
+  "name": "foot meets the second spider (leg 5)",
+  "at": 28.754,
+  "dur": 0.025,
+  "gain_db": -33
+ },
+ {
+  "name": "foot meets the second spider (leg 6)",
+  "at": 28.771,
+  "dur": 0.025,
+  "gain_db": -35
+ },
+ {
+  "name": "foot meets the second spider (leg 7)",
+  "at": 28.783,
+  "dur": 0.025,
+  "gain_db": -34
+ },
+ {
+  "name": "both lifted (servo)",
+  "at": 28.9,
+  "dur": 0.65,
+  "gain_db": -39
+ },
+ {
+  "name": "second spider leaves the platform (soft tick)",
+  "at": 28.987,
+  "dur": 0.05,
+  "gain_db": -38
+ }
+]

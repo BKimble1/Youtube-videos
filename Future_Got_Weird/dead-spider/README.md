@@ -1,5 +1,25 @@
 # Future Got Weird: Scientists Turned Dead Spiders Into Robots (Dead Spider)
 
+## V6 FINAL (27 Oct 2026)
+
+**Status.** An anatomy and compositing repair pass on V5. **It is not published.**
+
+**What changed:**
+- the curled pose no longer folds legs into the body;
+- explicit line-of-sight occlusion between legs and bodies;
+- the second spider's legs are solid to the gripper;
+- the probes find zero leg/body and leg/leg intersections over the whole film.
+
+**Unchanged:** narration, caption timing and runtime.
+
+**Deliverable.** `exports/FGW_Dead_Spider_V6_FINAL_1080x1920.mp4`: native 1080×1920, 30 fps, 30.2 s.
+
+**Notes.** `production/SOURCE_NOTES_V6.md`.
+
+**Source.** `source/src/v6/` (composition `DeadSpiderV6`).
+
+**QA.** `qa/v6/`.
+
 ## V5 FINAL (27 Oct 2026)
 
 **Status.** A conservative finalization of V4. **It is not published.**

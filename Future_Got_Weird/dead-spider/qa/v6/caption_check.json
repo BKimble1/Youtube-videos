@@ -1,0 +1,597 @@
+[
+ {
+  "f": 21,
+  "caption": "If you stuck a needle",
+  "point": "leg tip 0",
+  "x": 652,
+  "y": 1523
+ },
+ {
+  "f": 22,
+  "caption": "If you stuck a needle",
+  "point": "leg tip 0",
+  "x": 659,
+  "y": 1481
+ },
+ {
+  "f": 385,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 278,
+  "y": 1557
+ },
+ {
+  "f": 386,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 307,
+  "y": 1524
+ },
+ {
+  "f": 387,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 654,
+  "y": 1544
+ },
+ {
+  "f": 387,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 338,
+  "y": 1489
+ },
+ {
+  "f": 388,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 629,
+  "y": 1498
+ },
+ {
+  "f": 388,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 372,
+  "y": 1449
+ },
+ {
+  "f": 389,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 611,
+  "y": 1446
+ },
+ {
+  "f": 389,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 409,
+  "y": 1404
+ },
+ {
+  "f": 389,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 6",
+  "x": 179,
+  "y": 1382
+ },
+ {
+  "f": 390,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 597,
+  "y": 1387
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 0",
+  "x": 541,
+  "y": 1463
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 1",
+  "x": 543,
+  "y": 1462
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 2",
+  "x": 552,
+  "y": 1457
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 3",
+  "x": 543,
+  "y": 1453
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 4",
+  "x": 535,
+  "y": 1462
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 5",
+  "x": 533,
+  "y": 1461
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 6",
+  "x": 528,
+  "y": 1454
+ },
+ {
+  "f": 487,
+  "caption": "to a dead spider…",
+  "point": "leg tip 7",
+  "x": 536,
+  "y": 1453
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "body",
+  "x": 540,
+  "y": 1529
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "abdomen",
+  "x": 547,
+  "y": 1477
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 2",
+  "x": 552,
+  "y": 1546
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 3",
+  "x": 543,
+  "y": 1542
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 5",
+  "x": 533,
+  "y": 1550
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 6",
+  "x": 528,
+  "y": 1543
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 7",
+  "x": 536,
+  "y": 1542
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1514
+ },
+ {
+  "f": 490,
+  "caption": "to a dead spider…",
+  "point": "hub",
+  "x": 540,
+  "y": 1526
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "abdomen",
+  "x": 515,
+  "y": 1532
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1557
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "body",
+  "x": 541,
+  "y": 1395
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 0",
+  "x": 549,
+  "y": 1414
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 1",
+  "x": 549,
+  "y": 1413
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 2",
+  "x": 552,
+  "y": 1408
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 3",
+  "x": 543,
+  "y": 1408
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 4",
+  "x": 544,
+  "y": 1415
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 5",
+  "x": 541,
+  "y": 1415
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 6",
+  "x": 532,
+  "y": 1412
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 7",
+  "x": 538,
+  "y": 1410
+ },
+ {
+  "f": 516,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 650,
+  "y": 1553
+ },
+ {
+  "f": 517,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 628,
+  "y": 1448
+ },
+ {
+  "f": 518,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 609,
+  "y": 1401
+ },
+ {
+  "f": 634,
+  "caption": "But when they released the pressure…",
+  "point": "hub",
+  "x": 540,
+  "y": 1499
+ },
+ {
+  "f": 635,
+  "caption": "But when they released the pressure…",
+  "point": "abdomen",
+  "x": 469,
+  "y": 1535
+ },
+ {
+  "f": 635,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 2",
+  "x": 583,
+  "y": 1528
+ },
+ {
+  "f": 635,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 3",
+  "x": 454,
+  "y": 1509
+ },
+ {
+  "f": 635,
+  "caption": "But when they released the pressure…",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1558
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "body",
+  "x": 545,
+  "y": 1436
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "abdomen",
+  "x": 449,
+  "y": 1397
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 0",
+  "x": 775,
+  "y": 1503
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 1",
+  "x": 701,
+  "y": 1428
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 2",
+  "x": 567,
+  "y": 1391
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 3",
+  "x": 414,
+  "y": 1383
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 7",
+  "x": 289,
+  "y": 1491
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1411
+ },
+ {
+  "f": 636,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 545,
+  "y": 1502
+ },
+ {
+  "f": 637,
+  "caption": "But when they released the pressure…",
+  "point": "body",
+  "x": 546,
+  "y": 1399
+ },
+ {
+  "f": 637,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 0",
+  "x": 807,
+  "y": 1455
+ },
+ {
+  "f": 637,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 1",
+  "x": 702,
+  "y": 1382
+ },
+ {
+  "f": 637,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 7",
+  "x": 242,
+  "y": 1491
+ },
+ {
+  "f": 637,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 546,
+  "y": 1477
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "body",
+  "x": 548,
+  "y": 1428
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "abdomen",
+  "x": 399,
+  "y": 1400
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 0",
+  "x": 832,
+  "y": 1468
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 1",
+  "x": 695,
+  "y": 1396
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 3",
+  "x": 301,
+  "y": 1404
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1395
+ },
+ {
+  "f": 638,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 548,
+  "y": 1518
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "body",
+  "x": 549,
+  "y": 1433
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "abdomen",
+  "x": 372,
+  "y": 1414
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 0",
+  "x": 850,
+  "y": 1456
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 1",
+  "x": 679,
+  "y": 1390
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 2",
+  "x": 464,
+  "y": 1388
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 3",
+  "x": 232,
+  "y": 1432
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "needle entry",
+  "x": 539,
+  "y": 1395
+ },
+ {
+  "f": 639,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 549,
+  "y": 1538
+ },
+ {
+  "f": 640,
+  "caption": "But when they released the pressure…",
+  "point": "body",
+  "x": 550,
+  "y": 1399
+ },
+ {
+  "f": 640,
+  "caption": "But when they released the pressure…",
+  "point": "abdomen",
+  "x": 344,
+  "y": 1391
+ },
+ {
+  "f": 640,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 0",
+  "x": 860,
+  "y": 1410
+ },
+ {
+  "f": 640,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 3",
+  "x": 158,
+  "y": 1431
+ },
+ {
+  "f": 640,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 549,
+  "y": 1521
+ },
+ {
+  "f": 641,
+  "caption": "But when they released the pressure…",
+  "point": "block",
+  "x": 550,
+  "y": 1465
+ },
+ {
+  "f": 643,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 6",
+  "x": 509,
+  "y": 1512
+ },
+ {
+  "f": 644,
+  "caption": "But when they released the pressure…",
+  "point": "leg tip 6",
+  "x": 519,
+  "y": 1418
+ }
+]
