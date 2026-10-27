@@ -24,7 +24,13 @@ import {d2View} from './D2';
 
 const R = shotRange('D3');
 /** D2's last framing, held */
-export const d3View = (_f: number): View => d2View(R.from - 1);
+/** D2's last framing, then a slow follow of the dose down the needle into the silicone (motivated by the flow) */
+export const d3View = (f: number): View => {
+  const v = d2View(R.from - 1);
+  const u = clamp((f - R.from) / (R.to - R.from));
+  const e = u * u * (3 - 2 * u);
+  return {...v, ox: v.ox - 7 * v.s * e};
+};
 
 /** delivered fraction of the dose (the bloom's volume follows it) */
 export const d3Bloom = dBloom;

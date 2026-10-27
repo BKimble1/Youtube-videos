@@ -175,9 +175,12 @@ export const E6: React.FC<ShotProps> = ({f}) => {
     x: OP.x, y: OP.y, scale: OP.scale, t, expr: 'focus', led: 'armed', blink: 0,
     gazeX: E6_SCREEN.x + 30, gazeY: E6_SCREEN.y + 60, benchTopY: TABLE, farHand: 'bench', farHandX: 150,
   };
+  // the camera drifts with his gaze toward the monitor (far layer slower: parallax)
+  const gz = smoother(clamp((f - 735) / 24));
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       {/* the collapsed building and the heap, far behind and out of focus */}
+      <g transform={`translate(${(18 * gz).toFixed(2)} 0)`}>
       <Blur id={`${id}-bk`} sd={5}>
         <g transform="translate(-120 -260) scale(1.25)">
           <Sky id={`${id}s`} />
@@ -189,13 +192,16 @@ export const E6: React.FC<ShotProps> = ({f}) => {
           <Heap id={`${id}h`} />
         </g>
       </Blur>
+      </g>
       <rect x={0} y={0} width={1080} height={1920} fill="#F4E4C6" opacity={0.12} />
       <Motes id={`${id}-m0`} t={t} n={20} x0={0} y0={200} x1={1080} y1={1300} r={4} seed={406} a={0.55} />
+      <g transform={`translate(${(56 * gz).toFixed(2)} ${(-10 * gz).toFixed(2)})`}>
       <Ground id={`${id}g`} />
       <OperatorField id={`${id}ob`} layer="body" {...opProps} press={press} />
       <Table id={`${id}t`} />
       <RuggedMonitor id={`${id}mn`} f={f} />
       <OperatorField id={`${id}oh`} layer="hands" {...opProps} press={press} />
+      </g>
       <Glow2 id={`${id}-sun`} cx={80} cy={120} rx={800} ry={600} color={RB.dayHot} a={0.28} />
     </svg>
   );
