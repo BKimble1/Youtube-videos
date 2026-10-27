@@ -17,7 +17,7 @@ const f1 = (n: number) => n.toFixed(1);
 export type HandShape = 'mitt' | 'grip' | 'open' | 'fist';
 export type Arm4 = {hand: V3; pole?: V3; shape?: HandShape; thumb?: number; splay?: number; curl?: number[]; wrist?: number; front?: boolean}; // front: force drawing over the torso (a hand at the hip pouch)
 export type Face4 = {
-  gx: number; gy: number; // pupils -1..1
+  gx: number; gy: number; // pupils: gx -1..1, gy -1.4..1.4 (+ = right / down)
   brow: number; browIn: number; asym: number; // brow raise, inner-end raise (+ worried, - cross), right brow extra
   lid: number; wide: number; squint: number; blink: number;
   mw: number; curve: number; open: number; teeth: number; smirk: number; // mouth half-width (u), corners, opening 0..1
@@ -390,7 +390,8 @@ export const Head4: React.FC<HeadProps> = ({id, look, b, j, cd, face, ol, sway =
             const lidY = -e.ry + 2 * e.ry * clamp(face.lid);
             const sqY = e.ry - 2 * e.ry * clamp(face.squint) * 0.5;
             const pr = 5.5 * (1 - 0.25 * face.wide);
-            const px = clamp(face.gx + (1 - e.fs) * facing * 0.6, -1, 1) * Math.max(1, e.rx - pr - 1.5), py = face.gy * 4;
+            // both offsets scale with the eye's open size, so a gaze down stays down when the eyes go wide (gy -1.4..1.4)
+            const px = clamp(face.gx + (1 - e.fs) * facing * 0.6, -1, 1) * Math.max(1, e.rx - pr - 1.5), py = (face.gy / 1.4) * Math.max(1, e.ry - pr - 1.5);
             return (
               <g key={e.side} opacity={e.vis} transform={`translate(${f1(e.p.x)} ${f1(e.p.y)}) rotate(${headRot})`}>
                 <defs><clipPath id={`${id}-e${e.side}`}><ellipse cx={0} cy={0} rx={e.rx} ry={e.ry} /></clipPath></defs>

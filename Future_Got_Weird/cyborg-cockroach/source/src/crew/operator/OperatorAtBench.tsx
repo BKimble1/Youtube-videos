@@ -1,9 +1,9 @@
 // The operator at the bench: the Weird Crew guesser in his lab outfit (dc/Man, HERO_LAB), standing behind a bench edge
 // in 3/4 view facing screen-left, the research remote in his near (LEFT) hand at lower-chest height with his thumb on
-// the fire button, the far hand at his side or resting on the bench, his head turned down-left toward a small target
-// on the bench. Built the way the Real Web Fluid lab draws him (Lab6.tsx): the body in one pass (clipped above the
-// bench line), the bench drawn by the shot, then a hands-only pass with the remote held between the rear and front
-// digits. Every hand contact is placed from the hand's own geometry (rig.ts placeHand; the thumb is aimed at the
+// (or lifted off) the fire button, the far hand at his side or resting on the bench, his head turned down-left toward a
+// small target on the bench. Built the way the Real Web Fluid lab draws him (Lab6.tsx): the body in one pass (clipped
+// above the bench line), the bench drawn by the shot, then a hands-only pass with the remote held between the rear and
+// front digits. Every hand contact is placed from the hand's own geometry (rig.ts placeHand; the thumb is aimed at the
 // button with the same solve as the close-up). A pure function of its props.
 import React from 'react';
 import {DIM, Man, manJoints, ManPose} from './dc/Man';

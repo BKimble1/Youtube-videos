@@ -116,17 +116,23 @@ const inLoft = (d: LoftDef, q: V3) => {
   const dy = q[1] - d.yc(u), h = Math.max(1e-3, dy >= 0 ? d.ht(u) : d.hb(u));
   return Math.pow(Math.abs(q[2]) / w, d.n ?? 2.2) + (dy / h) * (dy / h) < 1;
 };
-/** whether the pronotum shield lies on the sight line from body-local point q to the body-local eye e (sampled where the
- *  line crosses the shield's length) */
-const behindPro = (q: V3, e: V3, n = 32) => {
+/** whether a loft's solid lies on the sight line from body-local point q to the body-local eye e (sampled where the line
+ *  crosses the loft's length) */
+const behindLoft = (d: LoftDef, q: V3, e: V3, n = 32) => {
   const dx = e[0] - q[0];
   let lo = 0, hi = 1;
   if (Math.abs(dx) > 1e-6) {
-    const a = (PRONOTUM.x0 - q[0]) / dx, b = (PRONOTUM.x1 - q[0]) / dx;
+    const a = (d.x0 - q[0]) / dx, b = (d.x1 - q[0]) / dx;
     (lo = clamp(Math.min(a, b))), (hi = clamp(Math.max(a, b)));
-  } else if (q[0] < PRONOTUM.x0 || q[0] > PRONOTUM.x1) return false;
-  for (let k = 0; k < n && hi > lo; k++) if (inLoft(PRONOTUM, lerp3(q, e, lerp(lo, hi, (k + 0.5) / n)))) return true;
+  } else if (q[0] < d.x0 || q[0] > d.x1) return false;
+  for (let k = 0; k < n && hi > lo; k++) if (inLoft(d, lerp3(q, e, lerp(lo, hi, (k + 0.5) / n)))) return true;
   return false;
+};
+/** whether the shell (pronotum or plates) hides world point p from the eye: for parts that stand off the body, the
+ *  antennae and a stimulation wire's free span from the backpack down to the shell (rig/Gear.tsx) */
+export const shellHides = (fr: Frame, p: V3, eye: V3) => {
+  const q = toL(fr, p), e = toL(fr, eye);
+  return behindLoft(PRONOTUM, q, e) || behindLoft(PLATES, q, e);
 };
 
 export type LegFrom = {seg: number; t: number};
@@ -230,14 +236,13 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
   const camAbove = dot(norm(sub(cam.eye, fr.o)), fr.y) > 0.76;
   const near = (p: LegPose) => !o.legsBehind && !camAbove && dot(sub(cam.eye, p.coxa), legOutward(fr, p)) > 0;
   const legsNear = pose.legs.filter((p) => near(p));
-  // antenna layers: a segment draws before the head and pronotum where the shield lies between it and the camera (under
-  // the hood, body x < 33.5, or seen past the shield from behind, so only what clears its silhouette shows), after them
-  // otherwise (a far antenna seen from behind is no longer painted onto the shell)
-  const eyeL = toL(fr, cam.eye);
+  // antenna layers: a segment draws before the body, head and pronotum where the shell lies between it and the camera
+  // (under the hood, body x < 33.5, or seen past the shield from behind, so only what clears its silhouette shows), after
+  // them otherwise (a far antenna seen from behind is not painted onto the shell)
   const hidden = (pts: V3[]) =>
     pts.slice(1).map((b, i) => {
-      const m = toL(fr, lerp3(pts[i], b, 0.5));
-      return m[0] < 33.5 || behindPro(m, eyeL);
+      const m = lerp3(pts[i], b, 0.5);
+      return dot(sub(m, fr.o), fr.x) < 33.5 || shellHides(fr, m, cam.eye);
     });
   const hL = hidden(pose.antL), hR = hidden(pose.antR);
   // depth order for the two antennae and the near/far legs

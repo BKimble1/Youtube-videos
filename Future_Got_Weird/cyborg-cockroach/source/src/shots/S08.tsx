@@ -171,7 +171,7 @@ export const pullK = (t: number) => Math.pow(K0, 1 - smoother(clamp((t - PULL0) 
 /** where the hand + remote should sit at the end (centre, px), its scale (1 = a hand about 450 px wide, as drawn for the
  *  final frame) and the first frame at which any of it can be in view during the zoom-out. The zoom-out is a pure
  *  scale about a fixed point, so a hand composited before the end follows s08HandSlotAt(f) (position and scale). */
-export const S08_HAND_SLOT = {x: 695, y: 1440, scale: 1, fromFrame: 0};
+export const S08_HAND_SLOT = {x: 695, y: 1400, scale: 1, fromFrame: 0};
 export const s08HandSlotAt = (f: number) => {
   const k = pullK(f / FPS);
   return {x: FIX[0] + k * (S08_HAND_SLOT.x - FIX[0]), y: FIX[1] + k * (S08_HAND_SLOT.y - FIX[1]), scale: k * S08_HAND_SLOT.scale};

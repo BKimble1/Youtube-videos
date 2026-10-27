@@ -30,10 +30,11 @@ const sm = (x: number) => {
 // ------------------------------------------------------------------ faces
 /** The survivor's two acting poles (mixed by `recog`). Both are built on the rig's FACES:
  *  alarm = FACES.alarm with the inner brows pulled up harder (the outer ends stay lower, so in this slightly-from-above
- *          view the brows stay clear of the bob's hairline instead of merging into it) and a smaller mouth;
+ *          view the brows stay clear of the bob's hairline instead of merging into it: the whole brow at FACES.alarm's
+ *          0.8, or even 0.7, runs into it) and a smaller mouth;
  *  recog = cautious recognition: soft brows lifted in the middle, relaxed lids, closed almost-smile. */
 export const SURV_FACES = {
-  alarm: face({brow: 0.2, browIn: 1, wide: 1, mw: 9, curve: -0.3, open: 0.42}),
+  alarm: face({brow: 0.35, browIn: 1.4, wide: 1, mw: 9, curve: -0.3, open: 0.42}),
   recog: face({brow: 0.28, browIn: 0.75, lid: 0.1, wide: 0.05, mw: 11, curve: 0.4, open: 0}),
 };
 

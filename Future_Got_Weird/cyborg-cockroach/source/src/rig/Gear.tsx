@@ -8,6 +8,7 @@ import {lit, shade, mix} from '../lib/color';
 import {PACK, INJ, wiresOn, WireKey, WirePt} from './gear';
 import {loftSilhouette} from '../lib/loft';
 import {PRONOTUM} from './roach';
+import {shellHides} from './Roach';
 import {clamp} from '../lib/ease';
 
 /** world key light, consistent with the 2D rig's upper-left screen light */
@@ -195,34 +196,50 @@ const inPoly = (q: V2, poly: V2[]) => {
 };
 
 /** A stimulation wire lying on the shell: drawn only where its surface faces the camera and (for the cerci wires, which
- *  lie on the plates behind the pronotum) where the pronotum does not hide it. */
-const Wire: React.FC<{cam: Cam; pts: WirePt[]; color: string; pulses?: number[]; zap?: number; id: string; proHull: V2[] | null; camFront: boolean}> = ({cam, pts, color, pulses, zap, id, proHull, camFront}) => {
-  // resample with interpolated normals
+ *  lie on the plates behind the pronotum) where the pronotum does not hide it. Its free span, from the board edge down
+ *  to the shell (a span with no surface normal at one end), is drawn wherever the shell does not stand between it and the
+ *  camera, so it runs on until it passes behind the shell's outline instead of stopping in mid-air. */
+const Wire: React.FC<{cam: Cam; f: Frame; pts: WirePt[]; color: string; pulses?: number[]; zap?: number; id: string; proHull: V2[] | null; camFront: boolean}> = ({cam, f, pts, color, pulses, zap, id, proHull, camFront}) => {
+  // resample by arc length (as alongPolyline) with normals interpolated along the span each sample lies on
   const P3 = pts.map((q) => q.p);
-  const S: {p: V3; vis: boolean}[] = [];
   const nS = 36;
-  for (let i = 0; i <= nS; i++) {
-    const tt = i / nS;
+  const segL = P3.slice(1).map((q, i) => len(sub(q, P3[i])));
+  const total = segL.reduce((x, y) => x + y, 0);
+  const visAt = (tt: number) => {
     const p = alongPolyline(P3, tt);
-    // nearest control points for the normal
-    const segs = pts.length - 1;
-    const k = Math.min(segs - 1, Math.floor(tt * segs));
+    let k = 0, d = tt * total;
+    while (k < segL.length - 1 && d > segL[k]) d -= segL[k++];
     const a = pts[k], b = pts[k + 1];
     const na = a.n, nb = b.n;
-    const n = na && nb ? norm(lerp3(na, nb, tt * segs - k)) : na ?? nb;
-    let vis = !n || dot(n, sub(cam.eye, p)) > 0;
+    let vis = na && nb ? dot(norm(lerp3(na, nb, clamp(d / Math.max(1e-9, segL[k])))), sub(cam.eye, p)) > 0 : !shellHides(f, p, cam.eye);
     if (vis && proHull && camFront && (a.behindPro || b.behindPro) && inPoly(proj(cam, p), proHull)) vis = false;
-    S.push({p, vis});
-  }
+    return {p, vis};
+  };
+  const S = Array.from({length: nS + 1}, (_, i) => visAt(i / nS));
+  // visible runs, each ended where the visibility flips (bisected between the samples, so the wire meets the outline it
+  // passes behind)
+  const flip = (i: number): V2 => {
+    let lo = (i - 1) / nS, hi = i / nS;
+    for (let k = 0; k < 10; k++) {
+      const m = (lo + hi) / 2;
+      if (visAt(m).vis === S[i - 1].vis) lo = m;
+      else hi = m;
+    }
+    return proj(cam, alongPolyline(P3, S[i - 1].vis ? lo : hi));
+  };
   const runs: V2[][] = [];
   let cur: V2[] = [];
-  for (const q of S) {
-    if (q.vis) cur.push(proj(cam, q.p));
-    else if (cur.length) {
-      if (cur.length > 1) runs.push(cur);
-      cur = [];
+  S.forEach((q, i) => {
+    if (i > 0 && q.vis !== S[i - 1].vis) {
+      if (q.vis) cur = [flip(i)];
+      else {
+        cur.push(flip(i));
+        if (cur.length > 1) runs.push(cur);
+        cur = [];
+      }
     }
-  }
+    if (q.vis) cur.push(proj(cam, q.p));
+  });
   if (cur.length > 1) runs.push(cur);
   const sc = scaleAt(cam, P3[Math.floor(P3.length / 2)]);
   const w = Math.max(1.1, 0.42 * sc);
@@ -274,7 +291,7 @@ export const Gear: React.FC<{id: string; cam: Cam; f: Frame; g: GearState}> = ({
   const heat = clamp(g.heat ?? 0);
   const proHull = loftSilhouette(f, PRONOTUM, cam, 14, 24);
   const camFront = dot(sub(cam.eye, toW(f, [10, 15, 0])), f.x) > 0;
-  const wp = {cam, proHull, camFront};
+  const wp = {cam, f, proHull, camFront};
   return (
     <g>
       {/* wires run under the board edge, over the shell */}
