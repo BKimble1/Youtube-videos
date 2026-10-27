@@ -1,10 +1,10 @@
-// F5 (891-935, "want it to get closer."): the loop shot. A1's exact camera and the same walk, now in the rubble: the
+// F6 (892-935, "it to get closer."): the loop shot (V2's F5). A1's exact camera and the same walk, now in the rubble: the
 // cyborg cockroach walks screen-right toward her open, relaxed hand, which lies where the lab target stands in the
 // opening (a clear gap between the needle and her fingertips: no contact, no injection). Its walk continues straight
 // into A1's frame 0 (a1Walk / a1View run on loop time, film time minus the film's length).
 import React from 'react';
 import {Roach2D} from '../../roach/Roach2D';
-import {Gear2D, deployAt} from '../../roach/Gear2D';
+import {Gear2D} from '../../roach/Gear2D';
 import {P, f2} from '../../roach/ortho';
 import {toW} from '../../../lib/v3';
 import {Surface2D} from '../../sets/Lab2';
@@ -12,7 +12,7 @@ import {Hand, HAND_RELAXED, mixHand, HAND_LIMP} from '../../dc/Hand';
 import {Lin, SoftShadow} from '../../../lib/shade';
 import {noise1, sr} from '../../../lib/ease';
 import {RB, Shaft, Motes, Glow2, Vignette} from '../e/art';
-import {a1Pose, a1View, a1Walk, A1_FIRE, A1_TRAVEL} from './A1';
+import {a1Pose, a1Walk, a1Launch, a1ViewParams, viewOf, A1_FACE} from './A1';
 import {FRAMES2} from '../../cuts2';
 import {ShotProps} from '../index2';
 
@@ -74,38 +74,43 @@ export const F5Hand: React.FC<{id: string; t: number; tip: {x: number; y: number
   );
 };
 
-/** the camera pans with the insect at first (so it is in frame from the cut, already big) and settles onto A1's
- *  frame-0 view as the shot ends: the pan amount k fades to 0, so frame 935 hands over to A1 exactly */
-const f5View = (tau: number) => {
-  const k = 0.72 * (1 - sr(tau, -1.5, -0.04));
-  return a1View(tau, k * (a1Walk(tau) - a1Walk(0)));
+/** the camera: it opens more frontal and wider (the insect coming toward us), then arcs round and closes in with it as
+ *  it approaches her fingertips, settling with zero velocity exactly on A1's frame-0 view (the loop) */
+const f6View = (tau: number) => {
+  const u = sr(tau, -1.47, 0);
+  const q0 = a1ViewParams(0);
+  const head = a1Walk(tau) - a1Walk(0); // mm behind its loop-point position
+  const lerp = (a: number, b: number) => a + (b - a) * u;
+  return viewOf({
+    az: lerp(62, q0.az), el: lerp(24, q0.el), s: lerp(8.6, q0.s),
+    at: [lerp(q0.at[0] + 0.85 * head, q0.at[0]), lerp(14, q0.at[1]), lerp(4, q0.at[2])],
+    sx: lerp(560, q0.sx), sy: lerp(1000, q0.sy),
+  });
 };
+/** her fingertips on the floor ahead of and beside its path (world mm, A1's stance frame): never in the needle's line */
+const TIP_W: [number, number, number] = [A1_FACE - 2, 0, 26];
 export const F5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   const tau = t - FRAMES2 / 30; // loop time: A1's clock
-  const v = f5View(tau);
-  const v0 = a1View(tau);
+  const v = f6View(tau);
   const pose = a1Pose(tau, false);
-  const d = deployAt(tau, A1_FIRE, A1_TRAVEL);
-  // her fingertips lie in the near foreground, ahead of and below the insect's head where it stops at the loop point
-  // (placed on A1's frame-0 view, then carried with the pan: the hand is fixed in the world)
-  const head0 = P(a1View(0), toW(a1Pose(0, false).frame, [36, 4, 0]));
-  const o = P(v, [0, 0, 0]), o0 = P(v0, [0, 0, 0]);
-  const tip = {x: head0[0] - 120 + (o[0] - o0[0]), y: head0[1] + 205 + (o[1] - o0[1])};
+  const d = a1Launch(tau);
+  const tp = P(v, TIP_W);
+  const tip = {x: tp[0], y: tp[1]};
   const head = P(v, toW(pose.frame, [30, 2, 0]));
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <RubbleBack2 id={`${id}b`} t={t} />
-      <Surface2D v={v} x0={-600} x1={600} z0={-160} z1={140} color={RB.conc} />
+      <Surface2D v={v} x0={-900} x1={900} z0={-220} z1={400} color={RB.conc} />
       <Glow2 id={`${id}gl`} cx={head[0] + 80} cy={head[1] + 60} rx={620} ry={300} color={RB.day} a={0.34} />
       {[...Array(22)].map((_, i) => {
         const g = P(v, [-220 + ((i * 47.3) % 440), 0, -60 + ((i * 29.1) % 120)]);
         return <circle key={i} cx={f2(g[0])} cy={f2(g[1])} r={3 + (i % 4)} fill={i % 2 ? RB.concDark : RB.dust} opacity={0.8} />;
       })}
-      <F5Hand id={`${id}h`} t={t} tip={tip} L={118 * v.s} open={sr(t, 29.6, 30.4)} />
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'injector', injRear: d.injRear, latched: d.latched, heat: d.heat}} />}} />
+      <F5Hand id={`${id}h`} t={t} tip={tip} L={118 * v.s} open={sr(t, 29.6, 30.4)} />
       <Vignette id={`${id}vg`} a={0.45} />
     </svg>
   );
 };
 
-export const F5: React.FC<ShotProps> = ({f}) => <F5Scene t={f / 30} id="f5" />;
+export const F6: React.FC<ShotProps> = ({f}) => <F5Scene t={f / 30} id={`f6f${f}`} />;

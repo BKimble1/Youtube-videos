@@ -82,14 +82,17 @@ export const a1InjFrame = () => a1Pose(A1_REL).frame;
  *  on the needle in the silicone; then it tracks back along the launcher to the insect and rises a little.
  *  `dx` shifts the look point along x (F6 pans with the insect, settling onto this view). */
 export const A1_AZ = 24;
-export const a1View = (t: number, dx = 0): View => {
+export type ViewParams = {az: number; el: number; s: number; at: [number, number, number]; sx: number; sy: number};
+export const a1ViewParams = (t: number, dx = 0): ViewParams => {
   const go = sr(t, A1_REL, A1_IMPACT + 0.12); // follow the launch in
   const back = sr(t, 0.85, 1.45); // track back along the launcher
-  const s = 11.2 + 6.4 * go - 5.6 * back + 0.4 * sr(t, -0.2, 0.3);
-  const atX = 14 + 22 * go - 26 * back + dx;
-  const el = 17 + 9 * back;
-  return viewAt(A1_AZ - 6 * back, el, s, [atX, 17 - 3 * back, 0], 540 - 30 * go + 20 * back, 980);
+  const s = 12.4 + 8.2 * go - 9.2 * back + 0.4 * sr(t, -0.2, 0.3);
+  const atX = 15 + 25 * go - 34 * back + dx;
+  const atY = 17 + 9 * go - 11 * back;
+  return {az: A1_AZ - 6 * back, el: 17 + 9 * back, s, at: [atX, atY, 0], sx: 540 - 40 * go + 40 * back, sy: 1010 - 90 * go + 20 * back};
 };
+export const viewOf = (q: ViewParams): View => viewAt(q.az, q.el, q.s, q.at, q.sx, q.sy);
+export const a1View = (t: number, dx = 0): View => viewOf(a1ViewParams(t, dx));
 /** the board's receiver LED on screen at the last frame (A2 opens on the remote with its button here) */
 export const a1Led = (t: number) => {
   const p = a1Pose(t);
@@ -103,7 +106,7 @@ const Streaks: React.FC<{v: View; frame: ReturnType<typeof a1InjFrame>; rear: nu
   if (k <= 0.05) return null;
   const y = PACK.tube.a[1];
   return (
-    <g stroke="#FFFFFF" strokeLinecap="round" opacity={0.85 * k}>
+    <g stroke="#172B3A" strokeLinecap="round" opacity={0.55 * k}>
       {[-1.6, 0.2, 1.8].map((dy, i) => {
         const a = P(v, toW(frame, [rear - 2 - 9 * k - i * 2, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear + 8, y + dy, 0.5 * dy]));
         return <path key={i} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} strokeWidth={f2(Math.max(1.5, 0.28 * v.s))} />;

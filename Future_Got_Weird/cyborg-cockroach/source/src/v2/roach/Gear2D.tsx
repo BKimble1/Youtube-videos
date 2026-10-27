@@ -22,7 +22,7 @@ export const G2 = {
   dose: '#F2A93B',
   plunger: '#4A5560',
   collar: '#7C8B96',
-  needle: '#E4EBEF',
+  needle: '#AEBBC4', // steel (reads against clear silicone and the pale lab)
   line: '#2B2B2B',
   coil: '#C8643A',
   heat: '#FFC85A',
@@ -216,8 +216,9 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
           {!g.spent && (
             <g>
           {/* the injector: barrel, dose, plunger, collar, needle */}
-              <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.45 * s + 1.8)} strokeLinecap="round" />
-              <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.45 * s)} strokeLinecap="round" />
+              <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.6 * s + 2)} strokeLinecap="round" />
+              <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.6 * s)} strokeLinecap="round" />
+              <path d={lineD(nA, nB)} stroke="#FFFFFF" strokeWidth={f2(Math.max(1, 0.12 * s))} strokeLinecap="round" opacity={0.85} transform={`translate(0 ${f2(-0.1 * s)})`} />
               <Inked w={ink * 0.8}>
                 <Cel id={`${id}-br`} pts={barrel} color="#E8F1F4" hi={0.7} shadeK={0.16} />
               </Inked>
@@ -324,8 +325,9 @@ export const Injector2D: React.FC<{id: string; v: View; frame: Frame; rear: numb
   const nA = P(v, inj(rear + INJ.collarAt + 0.9)), nB = P(v, inj(rear + INJ.barrelLen + 1.2 + INJ.needleLen));
   return (
     <g>
-      <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.45 * s + 1.8)} strokeLinecap="round" />
-      <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.45 * s)} strokeLinecap="round" />
+      <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.6 * s + 2)} strokeLinecap="round" />
+      <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.6 * s)} strokeLinecap="round" />
+              <path d={lineD(nA, nB)} stroke="#FFFFFF" strokeWidth={f2(Math.max(1, 0.12 * s))} strokeLinecap="round" opacity={0.85} transform={`translate(0 ${f2(-0.1 * s)})`} />
       <Inked w={ink * 0.8}>
         <Cel id={`${id}-br`} pts={barrel} color="#E8F1F4" hi={0.7} shadeK={0.16} />
       </Inked>
