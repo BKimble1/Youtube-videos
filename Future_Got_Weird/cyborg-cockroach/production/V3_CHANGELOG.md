@@ -99,6 +99,36 @@ The same narration, the synthesized tonal bed, and 131 cues read from the animat
 
 Not used. This environment's network policy still denies Runway's asset host `dnznrvs05pmza.cloudfront.net` (proxy 403, re-tested in this session). Generations could not be downloaded, inspected or composited, so none was run and no credits were spent. To enable it, add that host under Allowed domains in the environment's network settings (https://code.claude.com/docs/en/cloud-environments#network-access).
 
-## QA and known issues
+## QA (final review render)
 
-See the end of this file (filled after the review render).
+`tools/qa.py` writes `qa/FGW_Cyborg_Cockroach_V3_REVIEW_qa.json`, `_motion.json` and `_phone_sheet.png`.
+
+- **Video:** 1080x1920 h264 yuv420p bt709, 30 fps, 936 frames, 31.2 s.
+- **Audio:**
+  - Loudness: -14.2 LUFS integrated, true peak -1.5 dBTP, voice 22.4 dB over the rest in the phone band.
+  - Match to the mix: correlation 0.99998, offset 0 ms.
+- **Narration:** Whisper's word error rate is 0 against the locked script.
+- **Captions:** 23/23 caption windows OK.
+- **Motion:**
+  - The only motion spike away from a cut is the thumb's press at frame 48 (intended).
+  - No low-motion holds remain. The first render had two, in D3 and E6; both now carry a motivated move (following the dose, following the operator's gaze).
+- **Inspected frame by frame:**
+  - frames 0-29 (approach, trigger at frame 9, launch at frames 9-15, impact at frame 15);
+  - frames 786-935 (shadow, emergence, disgust, ledge, hope, final approach);
+  - the 935 -> 0 loop cut, every transition and the whole timeline on sheets.
+- **Caption placement:** checked on the phone-UI overlay sheet: clear of needles, targets, insects and faces.
+
+## Known remaining issues
+
+- **F5 -> F6 screen direction:** in the two-shots the medic crawls screen-LEFT toward her hand. F6 is a reverse angle in which it walks screen-right, to match A1 for the loop. Her fingertips are in both shots, so the geography reads, but it is a line cross.
+- **Scale cheats:**
+  - The insect is drawn larger than true scale next to people (A3, A5, C4, E6 feed, F3-F5) so it stays readable.
+  - In F6 her hand is at true scale, so only her fingertips show.
+- **Small subjects:**
+  - E3 (under the beam) and F4 (the ledge) keep the insect small to sell the size of the obstacles. On a phone the insect is about 150-200 px long.
+  - In C5 (overhead) the observer's lens reads as a dot.
+- **Hands:**
+  - In B1 the gloved fingers lie over the shell while pressing the module home.
+  - In E6 the remote sits 2 cm further back in the operator's hand so his thumb reaches the D-pad.
+- **E4** is a high-angle macro of the legs, not ground level, because this rig's shell hides the legs in profile.
+- **Loop:** frame 935 (rubble) to frame 0 (lab) is a deliberate location change. The insect's pose, size, screen position and heading carry across.
