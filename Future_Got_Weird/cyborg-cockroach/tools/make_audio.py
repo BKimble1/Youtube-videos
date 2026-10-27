@@ -37,7 +37,11 @@ from scipy.signal import butter, resample_poly, sosfilt
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
+# V2: CUES / TAG select another cue file and output names (defaults: V1's)
+CUES = os.environ.get('CUES', 'audio/cues.json')
+TAG = os.environ.get('TAG', '')  # e.g. '_v2'
+VER = os.environ.get('VER', 'V1')
+cj = json.load(open(os.path.join(EP, CUES)))
 FPS = cj['fps']
 DUR = cj['frames'] / FPS
 N = int(round(DUR * SR))
@@ -343,13 +347,13 @@ for i in range(N):
 mix *= g
 stereo = np.stack([mix, mix], 1)
 
-os.makedirs(os.path.join(EP, 'audio/mix/stems'), exist_ok=True)
+os.makedirs(os.path.join(EP, f'audio/mix/stems{TAG}'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 for name, x in [('voice', voice_l), ('music', mus_l), ('ambience', amb_l), ('sfx', sfx_l), ('accents', key_l)]:
-    sf.write(os.path.join(EP, f'audio/mix/stems/{name}.wav'), np.stack([x, x], 1).astype(np.float32), SR, subtype='PCM_24')
-out = os.path.join(EP, 'source/public/audio/mix.wav')
+    sf.write(os.path.join(EP, f'audio/mix/stems{TAG}/{name}.wav'), np.stack([x, x], 1).astype(np.float32), SR, subtype='PCM_24')
+out = os.path.join(EP, f'source/public/audio/mix{TAG}.wav')
 sf.write(out, stereo.astype(np.float32), SR, subtype='PCM_24')
-shutil.copy(out, os.path.join(EP, 'audio/mix/FGW_Cyborg_Cockroach_V1_mix.wav'))
+shutil.copy(out, os.path.join(EP, f'audio/mix/FGW_Cyborg_Cockroach_{VER}_mix.wav'))
 
 band = lambda x: bp(x, 400, 5000)
 spk = ve > 0.08
@@ -369,6 +373,6 @@ meas = {
     'typical_step': round(float(np.median(np.abs(np.diff(mix)))), 5),
     'effects': len(log),
 }
-json.dump(meas, open(os.path.join(EP, 'audio/mix/mix_measure.json'), 'w'), indent=1)
-json.dump(log, open(os.path.join(EP, 'audio/sfx_log.json'), 'w'), indent=1)
+json.dump(meas, open(os.path.join(EP, f'audio/mix/mix_measure{TAG}.json'), 'w'), indent=1)
+json.dump(log, open(os.path.join(EP, f'audio/sfx_log{TAG}.json'), 'w'), indent=1)
 print(json.dumps(meas, indent=1))

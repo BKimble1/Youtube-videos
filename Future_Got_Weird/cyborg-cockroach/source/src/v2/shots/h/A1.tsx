@@ -33,16 +33,16 @@ export const a1Pose = (t: number): RoachPose => {
   return poseRoach({
     path: PATH, s: a1Walk(t), t, search: 0.7,
     offset: [-1.4 * d.recoil, -0.3 * d.recoil, 0],
-    antL: {yaw: 0.95, pitch: 0.45}, antR: {yaw: 0.95, pitch: 0.45},
+    antL: {yaw: 1.25, pitch: 0.85, curl: 0.7}, antR: {yaw: 1.25, pitch: 0.85, curl: 0.7},
   });
 };
 /** the view: three-quarter from the insect's left front, pushing in slowly toward the tube mouth / target */
 export const A1_AZ = 12, A1_EL = 16;
 export const a1View = (t: number): View => {
   const u = sr(t, -0.2, 1.9);
-  const s = 15.5 + 2.6 * u;
-  const at: [number, number, number] = [16 + 12 * u, 16, 0];
-  return viewAt(A1_AZ, A1_EL, s, at, 500 - 20 * u, 960);
+  const s = 14.6 + 3.2 * u;
+  const at: [number, number, number] = [17 + 9 * u, 16, 0];
+  return viewAt(A1_AZ, A1_EL, s, at, 530 - 10 * u, 960);
 };
 
 export const A1Scene: React.FC<{t: number; id: string; hand?: React.ReactNode; back?: React.ReactNode}> = ({t, id, back}) => {

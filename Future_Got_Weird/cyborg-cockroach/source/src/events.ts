@@ -39,7 +39,7 @@ export const touchdownsP = (poseAt: (ff: number) => RoachPose, f0: number, f1: n
 export const touchdowns = (motion: (f: number) => RoachMotion, f0: number, f1: number) => touchdownsP((ff) => poseRoach(motion(ff)), f0, f1);
 /** one step per contact instant: the legs of a tripod land on the same sub-frame and make one tick, their energies summed
  *  (g = +10·log10(legs) dB), not one tick per leg stacked on the same sample (which adds up like a single loud click) */
-const steps = (tds: number[]) => {
+export const steps = (tds: number[]) => {
   const legs = new Map<number, number>();
   for (const td of tds) legs.set(td, (legs.get(td) ?? 0) + 1);
   return [...legs].map(([t, n]) => ({t, g: 10 * Math.log10(n)}));

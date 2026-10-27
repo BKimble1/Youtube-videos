@@ -2,5 +2,6 @@
 import React from 'react';
 import {ShotProps} from './index2';
 import {A1} from './h/A1';
+import {F5} from './h/F5';
 
-export const SHOTS_H: Record<string, React.FC<ShotProps>> = {A1};
+export const SHOTS_H: Record<string, React.FC<ShotProps>> = {A1, F5};
