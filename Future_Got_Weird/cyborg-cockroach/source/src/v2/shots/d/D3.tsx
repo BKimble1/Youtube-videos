@@ -1,37 +1,33 @@
-// D3 (512-577, "the injector. They've demonstrated this"): a clean flat cutaway, opening on D2's last framing (a match
-// cut: the same view, now in section through the launch tube, the injector and the silicone along the needle's axis).
-// The cut faces are hatched (the clear tube's walls, the barrel, the collar, the aluminium cradle), the silicone is a
-// pale pink cut face, the spring shows as its wire sections. The needle sits 5 mm into the silicone, the barrel's rear
-// still in the tube. On "they've" (18.14 s) the foil seal on the plunger's activator capsule splits and gas forms
-// behind the plunger (bubbles, a faint fizz); the plunger runs forward along the barrel (18.26-19.14 s), the amber dose
-// goes down the needle's bore and blooms softly in the silicone ahead of the tip (small, round, soft-edged). The insect
-// is drawn whole (its near antenna is cut away with the near half). One slow push toward the barrel and the tip.
+// D3 (518-543, "injector."): a brief flat cutaway on D2's last framing (a match cut: the same view, now in section
+// through the launch tube, the injector and the clear silicone along the needle's axis). The cut faces are hatched (the
+// clear tube's walls, the barrel, the collar, the aluminium cradle), the silicone a pale clear-aqua cut face, the spring
+// its wire sections. The needle sits 5 mm into the silicone, the barrel's rear still in the tube. At 17.30 s the foil
+// seal on the plunger's activator capsule splits and gas forms behind the plunger (bubbles, a faint fizz); the plunger
+// runs forward along the barrel (17.35-17.92 s), the amber dose goes down the needle's bore and blooms softly in the
+// silicone ahead of the tip (complete by about 18.0 s, inside the shot). The insect is drawn whole (its near antenna is
+// cut away with the near half). Locked off.
 import React from 'react';
 import {V2, Frame, toW} from '../../../lib/v3';
 import {INK} from '../../../lib/ink';
-import {sr, clamp, rnd, noise1, lerp} from '../../../lib/ease';
+import {clamp, rnd, noise1, lerp} from '../../../lib/ease';
 import {shade as shadeC, lit as litC} from '../../../lib/color';
 import {INJ, PACK} from '../../../rig/gear';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D, G2} from '../../roach/Gear2D';
-import {viewAt, View, P, f2, polyD} from '../../roach/ortho';
+import {View, P, f2, polyD} from '../../roach/ortho';
 import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {shotRange} from '../../cuts2';
-import {dPoseFull, dDeploy, dPlunger, D_FACE, D_SEAL, D_PLUNGE0, D_PLUNGE1} from './trial';
+import {dPoseFull, dLaunch, dPlunger, dBloom, D_FACE, D_SEAL, D_PLUNGE0} from './trial';
 import {LabRoomMM} from './room';
-import {D2_AZ, D2_EL, d2Cam} from './D2';
+import {d2View} from './D2';
 
 const R = shotRange('D3');
-const C0 = d2Cam(R.from - 1);
-export const d3View = (f: number): View => {
-  const u = sr(f, R.from, R.to + 4);
-  // continue from D2's last framing (same scale and anchor), then push on to hold the whole barrel and the tip
-  return viewAt(D2_AZ, D2_EL, lerp(C0.s, 33, u), [lerp(C0.x, 35, u), lerp(C0.y, 26.2, u), 0], 540, 1000);
-};
+/** D2's last framing, held */
+export const d3View = (_f: number): View => d2View(R.from - 1);
 
 /** delivered fraction of the dose (the bloom's volume follows it) */
-export const d3Bloom = (t: number) => sr(t, D_PLUNGE0 + 0.06, D_PLUNGE1 + 0.12);
+export const d3Bloom = dBloom;
 
 const HATCH = (id: string, col: string, w = 9) => (
   <pattern id={id} patternUnits="userSpaceOnUse" width={w} height={w} patternTransform="rotate(45)">
@@ -44,13 +40,13 @@ export const D3: React.FC<ShotProps> = ({f}) => {
   const t = f / 30;
   const v = d3View(f);
   const s = v.s;
-  const id = 'd3';
+  const id = `d3f${f}`;
   const pose0 = dPoseFull(t);
   // the cutaway removes the near half: the near antenna (z > 0) goes with it
   const pose = {...pose0, antR: pose0.antL};
   const fr = pose0.frame;
   const inj: Frame = dPoseFull(t, false).frame;
-  const d = dDeploy(t);
+  const d = dLaunch(t);
   const pl = dPlunger(t);
   const T = PACK.tube;
   const ty = T.a[1];
@@ -64,7 +60,7 @@ export const D3: React.FC<ShotProps> = ({f}) => {
   // ---- timings
   const seal = clamp((t - D_SEAL) / 0.12); // the foil splits
   const gasOn = t >= D_SEAL;
-  const bloom = d3Bloom(t);
+  const bloom = dBloom(t);
   // ---- injector stations (injector x from the barrel's rear)
   const rr = INJ.barrelR, wall = 0.32, ri = rr - wall;
   const prR = 0.6 + (INJ.barrelLen - INJ.plungerLen - 1) * pl; // plunger rear
@@ -82,7 +78,7 @@ export const D3: React.FC<ShotProps> = ({f}) => {
   const bubbles: React.ReactNode[] = [];
   if (gasOn) {
     for (let k = 0; k < 26; k++) {
-      const born = D_SEAL + 0.03 + rnd(k, 5) * 0.9;
+      const born = D_SEAL + 0.03 + rnd(k, 5) * 0.55;
       if (t < born) continue;
       const age = t - born;
       const u = clamp(0.06 + rnd(k, 7) * 0.9 + 0.05 * noise1(t * 2 + k, 2));
@@ -156,7 +152,7 @@ export const D3: React.FC<ShotProps> = ({f}) => {
       <defs>
         {HATCH(`${id}-hg`, '#9FB7C4', hatchW)}
         {HATCH(`${id}-ha`, '#7E8C97', hatchW)}
-        {HATCH(`${id}-hs`, '#E7988B', hatchW * 1.6)}
+        {HATCH(`${id}-hs`, LAB2.siliconeDeep, hatchW * 1.6)}
         <radialGradient id={`${id}-bl`}>
           <stop offset="0" stopColor="#F2A93B" stopOpacity={0.95} />
           <stop offset="0.55" stopColor="#F2A93B" stopOpacity={0.75} />

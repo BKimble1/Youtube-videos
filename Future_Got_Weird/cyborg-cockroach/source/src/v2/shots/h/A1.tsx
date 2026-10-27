@@ -86,10 +86,10 @@ export type ViewParams = {az: number; el: number; s: number; at: [number, number
 export const a1ViewParams = (t: number, dx = 0): ViewParams => {
   const go = sr(t, A1_REL, A1_IMPACT + 0.12); // follow the launch in
   const back = sr(t, 0.85, 1.45); // track back along the launcher
-  const s = 12.4 + 8.2 * go - 9.2 * back + 0.4 * sr(t, -0.2, 0.3);
-  const atX = 15 + 25 * go - 34 * back + dx;
-  const atY = 17 + 9 * go - 11 * back;
-  return {az: A1_AZ - 6 * back, el: 17 + 9 * back, s, at: [atX, atY, 0], sx: 540 - 40 * go + 40 * back, sy: 1010 - 90 * go + 20 * back};
+  const s = 12.4 + 8.2 * go - 11.6 * back + 0.4 * sr(t, -0.2, 0.3);
+  const atX = 15 + 25 * go - 42 * back + dx;
+  const atY = 17 + 9 * go - 12 * back;
+  return {az: A1_AZ - 4 * back, el: 17 + 16 * back, s, at: [atX, atY, 0], sx: 540 - 40 * go + 60 * back, sy: 1010 - 90 * go + 40 * back};
 };
 export const viewOf = (q: ViewParams): View => viewAt(q.az, q.el, q.s, q.at, q.sx, q.sy);
 export const a1View = (t: number, dx = 0): View => viewOf(a1ViewParams(t, dx));
@@ -116,13 +116,14 @@ const Streaks: React.FC<{v: View; frame: ReturnType<typeof a1InjFrame>; rear: nu
 };
 /** the line parting: a small bright spark at the coil for a few frames */
 const Spark: React.FC<{v: View; frame: ReturnType<typeof a1InjFrame>; t: number}> = ({v, frame, t}) => {
-  const u = (t - A1_REL) / 0.1;
+  const u = (t - A1_REL + 0.02) / 0.14;
   if (u < 0 || u > 1) return null;
   const c = P(v, toW(frame, [PACK.tube.b[0] + 0.4, PACK.tube.a[1] + PACK.tube.r * 0.55, 0]));
-  const r = (1.2 + 2.8 * u) * v.s;
+  const r = (2.2 + 4.5 * u) * v.s;
   return (
-    <g opacity={1 - u}>
-      <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r)} fill="#FFE9A8" opacity={0.55} />
+    <g opacity={1 - u * u}>
+      <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r * 1.25)} fill="#FFD36B" opacity={0.35} />
+      <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r * 0.45)} fill="#FFF6DE" opacity={0.9} />
       {[0, 1, 2, 3, 4, 5].map((i) => {
         const a = (i / 6) * Math.PI * 2 + 0.3;
         return <path key={i} d={`M${f2(c[0] + Math.cos(a) * r * 0.35)},${f2(c[1] + Math.sin(a) * r * 0.35)} L${f2(c[0] + Math.cos(a) * r)},${f2(c[1] + Math.sin(a) * r)}`} stroke="#FFF6DE" strokeWidth={f2(Math.max(1.5, 0.25 * v.s))} strokeLinecap="round" />;
