@@ -24,8 +24,10 @@ export const LAB2 = {
   cabinetDeep: '#2C5560',
   surface: '#E9EEF0', // the white experiment tray / mat on the bench
   surfaceShade: '#CBD5DA',
-  silicone: '#F2A79A',
-  siliconeDeep: '#D9877A',
+  // V3: the targets are CLEAR silicone (pale aqua, translucent), so the needle reads inside them
+  silicone: '#CDEBEF',
+  siliconeDeep: '#8FC3CC',
+  siliconeHi: '#FFFFFF',
   alu: '#B9C7D2',
   aluDeep: '#8D9BA6',
   foamY: '#F2C46A',
@@ -117,15 +119,26 @@ export const Target2D: React.FC<{id: string; v: View; face: number; dir?: 1 | -1
   if (veil !== undefined) {
     // veilR: only a sleeve round the needle's line (so an antenna lying on the face stays in front of it)
     const q = veilR ? boxHull(v, dir > 0 ? xA + 0.6 : xA, dir > 0 ? xB : xB - 0.6, entryY - veilR, entryY + veilR, -veilR, veilR) : boxHull(v, xA, xB, 0, h, -half, half);
-    return <path d={polyD(q)} fill={LAB2.silicone} opacity={veil} />;
+    return <path d={polyD(q)} fill={LAB2.silicone} opacity={veil * 0.5} />;
   }
   return (
     <g>
       <Box2D id={`${id}-base`} v={v} b={[xA - 5, xB + 7, -3, 0, -half - 6, half + 6]} color={LAB2.alu} />
       <Box2D id={`${id}-back`} v={v} b={dir > 0 ? [xB, xB + 3.5, 0, h + 5, -half - 4, half + 4] : [xA - 3.5, xA, 0, h + 5, -half - 4, half + 4]} color={LAB2.aluDeep} />
-      <g opacity={0.93}>
+      <g opacity={0.62}>
         <Box2D id={`${id}-sil`} v={v} b={[xA, xB, 0, h, -half, half]} color={LAB2.silicone} hi={0.3} />
       </g>
+      {/* clear-silicone glints: two crisp highlight strokes on the top face and the near edge */}
+      {(() => {
+        const a = P(v, [xA + 0.18 * depth, h, half * 0.55]), b = P(v, [xA + 0.62 * depth, h, half * 0.55]);
+        const c = P(v, [xA + 0.06 * depth, h * 0.85, half]), e = P(v, [xA + 0.06 * depth, h * 0.35, half]);
+        return (
+          <g stroke={LAB2.siliconeHi} strokeLinecap="round" opacity={0.75}>
+            <path d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} strokeWidth={f2(Math.max(2, 0.5 * v.s))} />
+            <path d={`M${f2(c[0])},${f2(c[1])} L${f2(e[0])},${f2(e[1])}`} strokeWidth={f2(Math.max(1.5, 0.35 * v.s))} />
+          </g>
+        );
+      })()}
       {dent > 0 && (() => {
         const c = P(v, [face, entryY, 0]);
         return <ellipse cx={f2(c[0])} cy={f2(c[1])} rx={f2(0.9 * v.s * dent)} ry={f2(1.5 * v.s * dent)} fill={LAB2.siliconeDeep} opacity={0.7} />;

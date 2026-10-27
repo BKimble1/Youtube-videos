@@ -72,6 +72,8 @@ export type GearState = {
   zap?: {antL?: number; antR?: number};
   /** fraction of the dose delivered (plunger travel), 0..1 */
   plunger?: number;
+  /** the injector has been fired and left behind (in a target): draw the empty tube and the extended spring only */
+  spent?: boolean;
   /** hide the wires (top-down shots where they would clutter) */
   noWires?: boolean;
 };
@@ -211,17 +213,21 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
           <path d={smoothClosed(tube)} fill={G2.glass} opacity={0.42} />
           <path d={smoothOpen(springPts)} stroke={INK} strokeWidth={f2(0.55 * s + 1.4)} fill="none" strokeLinecap="round" />
           <path d={smoothOpen(springPts)} stroke={G2.spring} strokeWidth={f2(0.55 * s)} fill="none" strokeLinecap="round" />
+          {!g.spent && (
+            <g>
           {/* the injector: barrel, dose, plunger, collar, needle */}
-          <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.45 * s + 1.8)} strokeLinecap="round" />
-          <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.45 * s)} strokeLinecap="round" />
-          <Inked w={ink * 0.8}>
-            <Cel id={`${id}-br`} pts={barrel} color="#E8F1F4" hi={0.7} shadeK={0.16} />
-          </Inked>
-          {dose && <Cel id={`${id}-ds`} pts={dose} color={G2.dose} hi={0.5} shadeK={0.2} />}
-          <Cel id={`${id}-pl`} pts={plunger} color={G2.plunger} hi={0.2} />
-          <Inked w={ink * 0.7}>
-            <Cel id={`${id}-co`} pts={collar} color={G2.collar} hi={0.4} />
-          </Inked>
+              <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.45 * s + 1.8)} strokeLinecap="round" />
+              <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.45 * s)} strokeLinecap="round" />
+              <Inked w={ink * 0.8}>
+                <Cel id={`${id}-br`} pts={barrel} color="#E8F1F4" hi={0.7} shadeK={0.16} />
+              </Inked>
+              {dose && <Cel id={`${id}-ds`} pts={dose} color={G2.dose} hi={0.5} shadeK={0.2} />}
+              <Cel id={`${id}-pl`} pts={plunger} color={G2.plunger} hi={0.2} />
+              <Inked w={ink * 0.7}>
+                <Cel id={`${id}-co`} pts={collar} color={G2.collar} hi={0.4} />
+              </Inked>
+            </g>
+          )}
           {/* latch line and coil */}
           {latched ? (
             <path d={`M${f2(hTop[0])},${f2(hTop[1])} Q${f2(cFront[0] + 0.6 * s)},${f2(cFront[1])} ${f2(hBot[0])},${f2(hBot[1])}`} stroke={G2.line} strokeWidth={f2(Math.max(1.2, 0.32 * s))} fill="none" />
@@ -301,4 +307,33 @@ export const deployAt = (t: number, tl: number, travel: number) => {
   const prog = u < 1 ? 1 - Math.pow(1 - u, 2.2) : 1;
   const recoil = dt < 0.03 ? dt / 0.03 : Math.max(0, 1 - (dt - 0.03) / 0.3);
   return {injRear: INJ.loadedRear + travel * prog, latched: false, heat, recoil, impact: dt - T, moving: u < 1};
+};
+
+/** the injector alone, lying in `frame` (the stance frame it was fired in) with its rear at body x `rear`: for a fired
+ *  injector left in a target while the insect (drawn with `spent: true`) walks away */
+export const Injector2D: React.FC<{id: string; v: View; frame: Frame; rear: number; plunger?: number}> = ({id, v, frame, rear, plunger = 0}) => {
+  const ink = inkFor(v) * 0.8;
+  const s = v.s;
+  const T = PACK.tube;
+  const inj = (x: number): V3 => toW(frame, [x, T.a[1], 0]);
+  const barrel = cylPts(v, inj(rear), inj(rear + INJ.barrelLen), INJ.barrelR);
+  const dose0 = rear + INJ.plungerLen + (INJ.barrelLen - INJ.plungerLen - 1) * plunger;
+  const dose = dose0 < rear + INJ.barrelLen - 1.2 ? cylPts(v, inj(dose0), inj(rear + INJ.barrelLen - 0.6), INJ.barrelR - 0.45) : null;
+  const plg = cylPts(v, inj(dose0 - INJ.plungerLen + 0.6), inj(dose0), INJ.barrelR - 0.3);
+  const collar = cylPts(v, inj(rear + INJ.collarAt - 0.6), inj(rear + INJ.collarAt + 0.9), INJ.collarR);
+  const nA = P(v, inj(rear + INJ.collarAt + 0.9)), nB = P(v, inj(rear + INJ.barrelLen + 1.2 + INJ.needleLen));
+  return (
+    <g>
+      <path d={lineD(nA, nB)} stroke={INK} strokeWidth={f2(0.45 * s + 1.8)} strokeLinecap="round" />
+      <path d={lineD(nA, nB)} stroke={G2.needle} strokeWidth={f2(0.45 * s)} strokeLinecap="round" />
+      <Inked w={ink * 0.8}>
+        <Cel id={`${id}-br`} pts={barrel} color="#E8F1F4" hi={0.7} shadeK={0.16} />
+      </Inked>
+      {dose && <Cel id={`${id}-ds`} pts={dose} color={G2.dose} hi={0.5} shadeK={0.2} />}
+      <Cel id={`${id}-pl`} pts={plg} color={G2.plunger} hi={0.2} />
+      <Inked w={ink * 0.7}>
+        <Cel id={`${id}-co`} pts={collar} color={G2.collar} hi={0.4} />
+      </Inked>
+    </g>
+  );
 };

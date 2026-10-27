@@ -49,11 +49,12 @@ export const dPlunger = (t: number) => {
 
 // ------------------------------------------------------------------ antennae against the silicone
 /** the silicone block (and a little clearance for the antenna's thickness) */
-const BOX = {x0: D_FACE - 0.45, x1: D_FACE + 30.6, y1: 34.45, z: 18.45};
-const inBox = (p: V3) => p[0] > BOX.x0 && p[0] < BOX.x1 && p[1] < BOX.y1 && Math.abs(p[2]) < BOX.z;
+const boxAt = (face: number) => ({x0: face - 0.45, x1: face + 30.6, y1: 34.45, z: 18.45});
 /** an antenna that meets the silicone flexes along it instead of going in: each segment that would enter the block
  *  keeps its length and slides along the face it meets (the free shape is the rig's) */
-export const constrainAntenna = (pts: V3[]): V3[] => {
+export const constrainAntenna = (pts: V3[], face = D_FACE): V3[] => {
+  const BOX = boxAt(face);
+  const inBox = (p: V3) => p[0] > BOX.x0 && p[0] < BOX.x1 && p[1] < BOX.y1 && Math.abs(p[2]) < BOX.z;
   const out: V3[] = [pts[0]];
   for (let i = 0; i + 1 < pts.length; i++) {
     const a = pts[i], b = pts[i + 1];
