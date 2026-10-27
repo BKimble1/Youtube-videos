@@ -1,0 +1,1 @@
+{"extends": "./tsconfig.json", "compilerOptions": {"noEmit": false, "outDir": "/tmp/fgw_probe", "rootDir": "src", "skipLibCheck": true, "noEmitOnError": false, "types": []}, "include": [], "files": ["src/v2/dev/probeA1.ts"]}

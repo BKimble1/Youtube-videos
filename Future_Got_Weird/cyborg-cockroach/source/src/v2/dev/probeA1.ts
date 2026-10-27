@@ -1,0 +1,10 @@
+import {a1Pose, a1View, A1_FIRE, A1_TRAVEL, a1Walk} from '../shots/h/A1';
+import {deployAt} from '../roach/Gear2D';
+import {P} from '../roach/ortho';
+import {toW} from '../../lib/v3';
+import {plantedStop} from '../../rig/roach';
+declare const console: {log: (...a: unknown[]) => void};
+const t = 1.8;
+const p = a1Pose(t), v = a1View(t), d = deployAt(t, A1_FIRE, A1_TRAVEL);
+console.log('origin', p.frame.o, 'walk', a1Walk(t), 'stop', plantedStop(36), 'injRear', d.injRear, 'travel', A1_TRAVEL);
+console.log('tip world', toW(p.frame, [d.injRear + 24.7, 27.3, 0]), 'tip scr', P(v, toW(p.frame, [d.injRear + 24.7, 27.3, 0])), 'face scr', P(v, [40, 27, 0]), 's', v.s);

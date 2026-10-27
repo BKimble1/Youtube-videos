@@ -7,6 +7,10 @@ import {OpTest} from './dev/OpTest';
 import {S13Test} from './dev/S13Test';
 import {AlcTest} from './dev/AlcTest';
 import {Film, FilmStill, Sheet} from './Film';
+import {RigSheet2} from './v2/dev/RigSheet2';
+import {Film2, FilmStill2, Sheet2} from './v2/Film2';
+import {FRAMES2} from './v2/cuts2';
+import {WalkStrip2} from './v2/dev/WalkStrip2';
 import {FPS, FRAMES, W, H} from './timeline';
 
 export const RemotionRoot: React.FC = () => (
@@ -18,6 +22,11 @@ export const RemotionRoot: React.FC = () => (
     <Still id="OpTest" component={OpTest} width={W} height={H} defaultProps={{t: 3.5, cams: []}} />
     <Still id="AlcTest" component={AlcTest} width={W} height={H} defaultProps={{T: 29, cos: []}} />
     <Still id="S13Test" component={S13Test} width={W} height={H} defaultProps={{f: 840, cos: []}} />
+    <Composition id="CyborgCockroachV2" component={Film2} durationInFrames={FRAMES2} fps={FPS} width={W} height={H} defaultProps={{audio: false as string | false, captions: true}} />
+    <Still id="FilmStillV2" component={FilmStill2} width={W} height={H} defaultProps={{f: 0, captions: true}} />
+    <Still id="SheetV2" component={Sheet2} width={W} height={H} defaultProps={{fs: [0, 10, 20, 30], captions: false}} />
+    <Still id="WalkStrip2" component={WalkStrip2} width={W} height={H} defaultProps={{az: 90, el: 10}} />
+    <Still id="RigSheet2" component={RigSheet2} width={W} height={H} defaultProps={{t: 0.5}} />
     <Composition id="RigSheet" component={RigSheet} durationInFrames={90} fps={30} width={1080} height={1920} defaultProps={{}} />
     <Composition id="WalkStrip" component={WalkStrip} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{}} />
   </>
