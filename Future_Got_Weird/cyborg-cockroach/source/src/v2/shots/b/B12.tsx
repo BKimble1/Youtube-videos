@@ -154,9 +154,9 @@ const Scene: React.FC<{id: string; t: number; v: View; grip: Grip; refF: Frame; 
 const B1_AZ = 20, B1_EL = 32, B1_S = 9.0;
 const B1_AT: V3 = [-2, 12, 0];
 export const b1View = (t: number): View => {
-  // one slow push in toward the pack as it comes down
-  const u = sr(t, 136 / FPS, 175 / FPS);
-  return viewAt(B1_AZ, B1_EL, B1_S * (1 + 0.07 * u), B1_AT, 540, 1200 - 30 * u);
+  // one slow push in toward the pack as it comes down, still easing in at the cut (no hold once it is seated)
+  const u = sr(t, 136 / FPS, 200 / FPS);
+  return viewAt(B1_AZ, B1_EL, B1_S * (1 + 0.13 * u), B1_AT, 540, 1200 - 45 * u);
 };
 export const B1: React.FC<ShotProps> = ({f}) => {
   const t = f / FPS;
