@@ -23,8 +23,8 @@ const T0 = R.from / 30;
 const T1 = R.to / 30;
 
 // layout at rest (the shot's END framing; scene px)
-const OP = {x: 830, y: 960, scale: 1.3};
-const BENCH_FAR = 860;
+const OP = {x: 830, y: 1040, scale: 1.3};
+const BENCH_FAR = 940;
 const BENCH_FRONT = 1830;
 const D_WALL = 2.6;
 const D_OP = 1.45;

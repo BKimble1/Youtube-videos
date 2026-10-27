@@ -35,21 +35,29 @@ export const MM_U = 3.75;
 /** the fallen slab's underside over her (pocket px): clear of her head, lifting toward the right (the daylight gap) */
 export const under = (x: number) => 372 - 0.4 * (x - 500);
 
-// ---------------------------------------------------------------- the crack on her floor (card-local u)
-/** where the hole's face (crack frame origin) sits on her floor, and the walk's heading (deg in her floor plane, from
- *  her +X = her left toward +Z = forward): straight at her near fingertips */
-/** the floor under her near fingertips (card u; her hand open), the walk's heading and the crack's distance from them */
+// ---------------------------------------------------------------- the slab, the crack, the ledge (card-local u)
+/** the floor under her near fingertips (card u; her hand open) */
 export const TIP = {X: -20, Z: 105};
-export const HEAD_DEG = 6;
-const CRACK_D = 108; // u (40 cm)
-/** the crack set (block, ledge, crevice, the medic) is drawn SC times its true size in her pocket: the cartoon's usual
- *  cheat for a small subject beside a person (the insect then reads at about two thirds of her hand's length, the
- *  proportion F6 uses); distances along the walk are in these scaled millimetres */
+/** a broken slab lying on her floor ahead of her near hand (card u). Its face toward her right (the camera's side) is at
+ *  X = x0; daylight from beyond leaks under that face's lip (the slit, Z slit0..slit1) and spreads a fan of light on the
+ *  floor toward -X (to fanX). The insect walks inside along the slit toward her (-Z), unseen, its shadow sliding over
+ *  the fan (F1), and comes out of the crack in the slab's end face toward her (Z = z0, F2), onto the narrow ledge over
+ *  the crevice, toward her fingertips (F3-F5). Beyond slit1 the gap is choked with debris (the shadow comes out of the
+ *  dark into the light). */
+export const SLAB = {x0: -66, x1: 40, z0: 192, z1: 330, h: 40, slit0: 199, slit1: 236, gap: 4.5, fanX: -112, light: 0.3 /* tan of the light's elevation */, inX: 6};
+/** the crack frame's origin: the hole's face, in the slab's end face */
+export const CRACK_AT = {X: -42, Z: SLAB.z0};
+/** the walk's heading (deg in her floor plane, from +X toward +Z): straight at her near fingertips */
+export const HEAD_DEG = (Math.atan2(TIP.Z - CRACK_AT.Z, TIP.X - CRACK_AT.X) * 180) / Math.PI;
+/** the crack set (the hole, the ledge, the crevice, the medic) is drawn SC times its true size in her pocket: the
+ *  cartoon's usual cheat for a small subject beside a person (the insect then reads at about two thirds of her hand's
+ *  length, the proportion F6 uses); crack-frame distances are in these scaled millimetres (1 u = 2.5 of them) */
 export const SC = 1.5;
-export const CRACK_AT = {X: TIP.X - CRACK_D * Math.cos((HEAD_DEG * Math.PI) / 180), Z: TIP.Z - CRACK_D * Math.sin((HEAD_DEG * Math.PI) / 180)};
-/** the ledge: from the hole's face to her floor, 70 mm wide; the crevice around it */
-export const LEDGE = {x1: 168, zN: -35, zF: 36, thick: 46};
-export const CREVICE = {z0: -96, z1: 110, deep: 420};
+/** the ledge: from the hole's face toward her floor, about 70 mm wide; the crevice around it (crack-frame mm) */
+export const LEDGE = {x1: 150, zN: -35, zF: 36, thick: 24};
+export const CREVICE = {z0: -190, z1: 118, deep: 420};
+/** her fingertips' distance from the hole's face along the walk (crack-frame mm) */
+export const TIP_X = (Math.hypot(TIP.X - CRACK_AT.X, TIP.Z - CRACK_AT.Z) * MM_U) / SC;
 
 /** crack-frame mm -> her card-local u (before her camera elevation) */
 const cfToCard = (p0: V3) => {
@@ -86,22 +94,16 @@ export const cardPx = (X: number, Y: number, Z: number): [number, number] => {
   return [q.x, q.y];
 };
 
-// ---------------------------------------------------------------- F1: the crack of light ahead of her hands
-/** a rubble slab lying on the floor ahead of her near hand (card u: its face toward her right, the camera's side, at
- *  X = x; it runs from Z = z0 to z1); daylight from beyond leaks under that face's lip (the slit, from Z = slit0 to
- *  slit1) and spreads a fan of light on the floor toward -X. The unseen insect walks along inside the slit toward -Z
- *  (toward her, then on beneath the rubble to the crack); its shadow, thrown toward -X by the low light, slides across
- *  the fan. Beyond slit1 the gap is choked with debris, so the shadow comes out of the dark into the light. */
-export const SLIT = {x: -55, x1: 40, z0: 140, z1: 250, h: 40, slit0: 150, slit1: 214, gap: 4.5, fanX: -104, light: 0.3 /* tan of the light's elevation */, inX: 5};
-/** the unseen insect's body origin along its walk (insect mm, from the lump, toward card -Z), F1 film seconds */
+// ---------------------------------------------------------------- F1: the unseen insect in the slit
+/** its body origin along its walk (crack-frame mm, from slit1, toward card -Z), F1 film seconds */
 export const slitWalkX = (T: number) => {
   const t0 = R1.from / FPS;
-  return -46 + 56 * (T - t0);
+  return -46 + 58 * (T - t0);
 };
-/** the insect's mm (x along its walk = card -Z, y up, z = card +X) -> the floor point its shadow falls on (px): each
- *  point drops along the light (low, from beyond the slab) onto the floor toward -X */
-export const slitShadowPx = (p: V3): [number, number] => cardPx(SLIT.x + SLIT.inX + p[2] / MM_U - p[1] / (MM_U * SLIT.light), 0, SLIT.slit1 - p[0] / MM_U);
-export const slitShadowView = (): View => linView(slitShadowPx, HER.scale / MM_U);
+/** its mm (x along the walk = card -Z, y up, z = card +X) -> the floor point its shadow falls on (px): each point
+ *  drops along the light (low, from beyond the slab) onto the floor toward -X */
+export const slitShadowPx = (p: V3): [number, number] => cardPx(SLAB.x0 + SLAB.inX + (p[2] * SC) / MM_U - (p[1] * SC) / (MM_U * SLAB.light), 0, SLAB.slit1 - (p[0] * SC) / MM_U);
+export const slitShadowView = (): View => linView(slitShadowPx, (HER.scale / MM_U) * SC);
 
 // ---------------------------------------------------------------- the medic's walk (film seconds T, crack-frame mm)
 const T2 = R2.from / FPS, T3 = R3.from / FPS, T4 = R4.from / FPS, T5 = R5.from / FPS, T6 = R5.to / FPS;
@@ -109,7 +111,7 @@ const T2 = R2.from / FPS, T3 = R3.from / FPS, T4 = R4.from / FPS, T5 = R5.from /
  *  careful on the ledge, slowing as it nears her */
 export const medicV = (T: number) =>
   keys(T, [[T2 - 0.25, 0], [T2 + 0.3, 46], [T3, 50], [T3 + 0.5, 52], [T4, 48], [T5, 44], [T6, 40]]);
-const X0 = -37; // body origin at T2 - 0.25: the head (x + 35) just inside the hole, antennae already at the mouth
+const X0 = -44; // body origin at T2 - 0.25: the head (x + 35) inside the hole, antennae reaching for the mouth
 const DT = 1 / 240;
 /** body origin x (mm) at film second T (integrated speed: a pure function of T) */
 export const medicX = (T: number) => {

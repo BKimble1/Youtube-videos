@@ -18,7 +18,7 @@ export const f1ShadowAt = (T: number) => {
 };
 export const f1Cam = (lf: number) => {
   const u = sr(lf, F1_K.head0, R1.to - R1.from + 4);
-  return camAt(lerp(790, 820, u), lerp(905, 925, u), 540, 960, 1.4);
+  return camAt(lerp(790, 815, u), lerp(905, 930, u), 540, 960, 1.3);
 };
 
 export const F1: React.FC<ShotProps> = ({f, lf}) => {

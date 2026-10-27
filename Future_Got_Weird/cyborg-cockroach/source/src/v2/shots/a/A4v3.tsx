@@ -22,7 +22,7 @@ const T0 = R.from / 30;
 const T1 = R.to / 30;
 export const A4_AZ = -6;
 export const A4_EL = 6;
-const S = 8.2;
+const S = 7.4;
 
 /** the look point: the body plus a lead along its heading (so the frame swings left as the head comes round), eased */
 const look = (t: number) => {
@@ -36,7 +36,7 @@ export const a4View = (t: number): View => {
   const a = look(T0 - 0.15), b = look(Math.min(t, T1 + 0.25) - 0.08);
   const k = 0.35 + 0.65 * u;
   const x = lerp(a.x, b.x, k);
-  return viewAt(A4_AZ, A4_EL, S, [x, 10, 0], 450, 1080);
+  return viewAt(A4_AZ, A4_EL, S, [x, 10, 0], 475, 1080);
 };
 
 /** the far lab beyond the bench (scene px; blurred), parallax against the truck */

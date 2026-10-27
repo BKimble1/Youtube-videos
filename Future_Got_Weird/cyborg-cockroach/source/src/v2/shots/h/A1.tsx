@@ -154,7 +154,7 @@ export const A1Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   // the block squashes on contact and wobbles back (a soft solid)
   const wob = imp >= 0 ? Math.exp(-imp / 0.12) * Math.sin(imp * 42) : 0;
   const F = a1InjFrame();
-  const led = t > 1.1 && Math.floor((t - 1.1) * 12) % 2 === 0 ? 1 : 0.25;
+  const led = t > 1.1 && Math.floor((t - 1.1) * 12 + 1) % 2 === 0 ? 1 : 0.25; // lit on the last frame (the match cut)
   const cam = {x: 540, y: 960, z: 1 + 0.25 * sr(t, A1_REL, 0.7) - 0.2 * sr(t, 0.85, 1.45)};
   const tgt = (veil?: number) => (
     <g transform={wob ? `translate(${f2(wob * 0.5 * v.s)} 0)` : undefined}>

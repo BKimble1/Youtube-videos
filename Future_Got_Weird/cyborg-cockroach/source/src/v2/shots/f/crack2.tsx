@@ -15,11 +15,12 @@ import {View, P, facing} from '../../roach/ortho';
 import {RB, Pt, poly, line, jag, f2} from '../e/art';
 import {LEDGE, CREVICE} from './world';
 
+/** the slab the crack is in (world.ts SLAB, in crack-frame mm: x0 -> zL, x1 -> zR, z1 -> back) */
 export const CK = {
-  back: -210,
-  zL: -125,
-  zR: 118,
-  h: 54,
+  back: -345,
+  zL: -60,
+  zR: 205,
+  h: 100,
   /** the hole in the face x = 0, as (z, y) points, floor to floor */
   hole: [[-45, 0], [-43, 10], [-36, 18], [-27, 23], [-19, 31], [-8, 36], [4, 34], [15, 37], [26, 31], [35, 23], [42, 12], [44, 0]] as [number, number][],
 };
@@ -158,7 +159,7 @@ export const Crevice: React.FC<{id: string; v: View; w?: number; near?: boolean}
 
 /** the narrow ledge: its top (a broken strip of slab, lit, a few chips) and the long side faces seen from here */
 export const Ledge: React.FC<{id: string; v: View; w?: number; dark?: number}> = ({id, v, w = 4, dark = 0}) => {
-  const c = mix(RB.concLit, RB.deep, dark);
+  const c = mix(RB.conc, RB.deep, dark);
   const T = LEDGE.thick;
   const topPts: Pt[] = [...LX.map((x) => fp(v, x, 0, ledgeZ(x)[0])), ...[...LX].reverse().map((x) => fp(v, x, 0, ledgeZ(x)[1]))];
   // the broken underside of a side face (jagged)
@@ -178,7 +179,7 @@ export const Ledge: React.FC<{id: string; v: View; w?: number; dark?: number}> =
         </linearGradient>
       </defs>
       {sides.map((s) => (
-        <path key={s} d={poly(sideFace(s))} fill={shadeC(mix(RB.conc, RB.deep, dark), 0.3)} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
+        <path key={s} d={poly(sideFace(s))} fill={shadeC(mix(RB.concDark, RB.deep, dark), 0.45)} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       ))}
       <path d={poly(topPts)} fill={`url(#${id}-lg)`} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       {/* a hairline crack across the slab and grit on top */}
