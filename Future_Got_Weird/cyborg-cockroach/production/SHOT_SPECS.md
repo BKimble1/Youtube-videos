@@ -75,9 +75,9 @@ word timings in `source/src/data/timeline.json` (use `word('fire', 0)`, `wordIn(
 | S10 | 537-618 (17.90-20.60) | "They've demonstrated this on laboratory targets." | Target-side section: time-compressed delivery through the needle into silicone; then the fixture reads as a lab target. |
 | S11 | 618-655 (20.60-21.83) | "But the plan is to send them" | Lateral move following an insect through a gap in the lab set; a near edge crosses frame (occlusion bridge). |
 | S12 | 655-758 (21.83-25.27) | "beneath collapsed buildings, carrying emergency medicine." | Future rubble route at insect height ("Future rescue concept"); reveal the trapped person at the end of the route. |
-| S13 | 758-856 (25.27-28.53) | "So if you're trapped and something starts crawling toward you" | Survivor-level view: antennae appear through a gap, then the loaded backpack; she notices (alarm). |
-| S14 | 856-891 (28.53-29.70) | "you might actually" | Her face: alarm softens into cautious recognition; small breath out; near hand relaxes. |
-| S15 | 891-936 (29.70-31.20) | "want it to get closer." | Low-angle approach matching S01's camera and scale (her hand where the target was); ends mid-step = S01 frame 0 (loop). |
+| S13 | 758-856 (25.27-28.53) | "So if you're trapped and something starts crawling toward you" | Opens close on her face (a cut-in from S12's medium shot), eases back once to a raised view behind the insect's route: it comes through the gap and along the floor toward her hand, a clear gap still between them at the cut; she notices on "starts" (alarm, fingers draw in). |
+| S14 | 856-891 (28.53-29.70) | "you might actually" | From her near side, on the same side of the walk line as S15: her face in profile, forearm and hand across the middle, the insect coming in from the right toward her fingers (screen-left, as in S15). Alarm softens into cautious recognition; the near hand pulls back a little, then opens. |
+| S15 | 891-936 (29.70-31.20) | "want it to get closer." | The opening's camera exactly (S01_CAM carried into the alcove): the insect walks screen-left toward her open hand, which lies back from the target's spot and off the needle's line (a clear gap: no contact, no injection); the last frame flows into S01 frame 0 (loop). |
 
 ## Rubble and the survivor's alcove (coordination note, read before building S11/S12)
 
