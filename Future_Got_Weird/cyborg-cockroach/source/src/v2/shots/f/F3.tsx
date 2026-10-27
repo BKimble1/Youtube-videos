@@ -15,8 +15,8 @@ import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
 import {face} from '../../../crew/person/poses';
 
 /** the startle (on the rig's face controls): eyes wide, brows lifted (the inner ends a little more; still well under the
- *  bob's hairline), lids up, the mouth parted small on the catch of breath */
-const STARTLE = face({brow: 0.36, browIn: 0.65, lid: 0, wide: 0.9, mw: 8.5, curve: -0.2, open: 0.2});
+ *  bob's fringe: the recoil already lifts her face toward it), lids up, the mouth parted small on the catch of breath */
+const STARTLE = face({brow: 0.1, browIn: 0.8, lid: 0, wide: 0.9, mw: 8.5, curve: -0.2, open: 0.2});
 import {FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
 /** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, the startle (st0 -> st1: eyes

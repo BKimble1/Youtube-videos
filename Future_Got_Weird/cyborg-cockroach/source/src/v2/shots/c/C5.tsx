@@ -1,10 +1,13 @@
-// C5 (424-465, "first moves into position."): the overhead that establishes where the target is. Looking almost
-// straight down (el 80) on the same foam course the observer's feed has been showing (course.ts): the lane comes up
-// from the bottom of the frame, bends right and opens into a small test arena where the CLEAR silicone target stands on
-// its aluminium plate (upper middle). The medic (loaded launch tube, amber dose) walks out of the lane straight at the
-// target; the observer (lighter shell, camera module, aerial) follows behind it, still taking the bend. The view
-// follows the medic slowly (at a fraction of its pace; one move). At 465 the medic is on the course centreline heading
-// for the middle of the target's face, its head about 30 mm from it (D1, a low side view, picks up the alignment).
+// C5 (424-465, "first moves into position."): the shot that establishes where the target is, on the same foam course
+// the observer's feed has been showing (course.ts): the lane comes up from the bottom of the frame, bends right and
+// opens into a small test arena where the CLEAR silicone target stands on its aluminium plate (upper middle). The medic
+// (loaded launch tube, amber dose) walks out of the lane straight at the target; the observer (lighter shell, camera
+// module, aerial) follows behind it, still taking the bend. The view follows the medic slowly (at a fraction of its
+// pace; one move). At 465 the medic is on the course centreline heading for the middle of the target's face, its head
+// about 30 mm from it (D1, a low side view, picks up the alignment).
+// V5g: the near-overhead (el 80) is replaced by a HIGH THREE-QUARTER from behind the pair (az -120, el 48: the A5 / B4
+// range), where the flat renderer keeps both insects' shells, six legs, antennae and packs the same design as in every
+// other shot (near-top-down it drew lumpy ovals with stub legs). One fixed angle: no drawing-layer changes over the shot.
 import React from 'react';
 import {V2, V3} from '../../../lib/v3';
 import {Roach2D, R2} from '../../roach/Roach2D';
@@ -17,7 +20,7 @@ import {BLOCKS, curbs, CURB, centre, courseAt, feedMedicPose, feedObsPose, medic
 import {OBS_TINT} from './C2';
 
 export const C5_FROM = 424, C5_TO = 466;
-export const C5_AZ = -120, C5_EL = 80, C5_S = 4.4;
+export const C5_AZ = -120, C5_EL = 48, C5_S = 5.0;
 /** the target: its face on the course centreline at TARGET_S, facing back down the course (local +x = course heading) */
 export const C5_TARGET = {o: courseAt(TARGET_S, 0), yaw: centre(TARGET_S).yaw, depth: 30};
 const TGT_C: V3 = [C5_TARGET.o[0] + headOf(C5_TARGET.yaw)[0] * 15, 0, C5_TARGET.o[2] + headOf(C5_TARGET.yaw)[2] * 15];
@@ -26,7 +29,7 @@ const FOLLOW = 0.55;
 export const c5View = (f: number): View => {
   const m = centre(medicS(f / 30)).p;
   const c: V3 = [m[0] * FOLLOW + TGT_C[0] * (1 - FOLLOW), 0, m[2] * FOLLOW + TGT_C[2] * (1 - FOLLOW)];
-  return viewAt(C5_AZ, C5_EL, C5_S, c, 540, 850);
+  return viewAt(C5_AZ, C5_EL, C5_S, c, 540, 900);
 };
 /** a view in an object's own frame (origin o, heading yaw: local +x along headOf(yaw), local +z along rightOf(yaw)) */
 export const localView = (v: View, o: V3, yaw: number): View => {
@@ -64,7 +67,7 @@ export const C5Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
     const c = centre(b.s);
     const yaw = c.yaw + (b.yawAdd ?? 0);
     const o = courseAt(b.s, b.off);
-    if (!onScreen(P(v, o), (Math.hypot(b.L, b.W) / 2 + b.H * 0.3) * v.s)) return;
+    if (!onScreen(P(v, o), (Math.hypot(b.L, b.W) / 2 + b.H) * v.s)) return;
     const lv = localView(v, o, yaw);
     shadows.push(castShadow(v, lv, b.L, b.W, b.H, `bs${i}`));
     items.push({d: D(v, o), el: <Box2D key={`b${i}`} id={`${id}-b${i}`} v={lv} b={[-b.L / 2, b.L / 2, 0, b.H, -b.W / 2, b.W / 2]} color={b.color} />});

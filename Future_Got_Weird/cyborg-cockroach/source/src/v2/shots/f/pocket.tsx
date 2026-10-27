@@ -20,12 +20,13 @@ import {HER, under, cfView, cardPx, SLAB, SC, slitWalkX, slitShadowView, onBody,
 // ---------------------------------------------------------------- her faces (Face4: crew/person/Crew.tsx)
 /** tired (heavy lids), wary (alert: brows up and in, eyes open), unease (restrained: the brows draw together and up a
  *  little, the eyes widen slightly, the mouth closes small and tight, the corners a touch down), cautious hope (soft
- *  brows lifted in the middle, relaxed lids, closed almost-smile). Brows stay well below the bob's hairline. */
+ *  brows lifted in the middle, relaxed lids, closed almost-smile). Brows stay well below the bob's hairline: V5 keeps
+ *  the outer ends low (brow <= 0.2; the fringe comes down over the far brow's outer end) and lifts the inner ends. */
 export const FF: Record<'tired' | 'wary' | 'unease' | 'hope', Face4> = {
   tired: face({brow: 0.05, browIn: 0.45, lid: 0.42, mw: 11, curve: -0.12, open: 0}),
-  wary: face({brow: 0.22, browIn: 0.7, lid: 0.02, wide: 0.35, mw: 10, curve: -0.2, open: 0.04}),
-  unease: face({brow: 0.18, browIn: 0.9, lid: 0, wide: 0.42, mw: 8, curve: -0.34, open: 0}),
-  hope: face({brow: 0.22, browIn: 0.75, lid: 0.08, wide: 0.12, mw: 11, curve: 0.42, open: 0.03}),
+  wary: face({brow: -0.05, browIn: 0.85, lid: 0.02, wide: 0.35, mw: 10, curve: -0.2, open: 0.04}),
+  unease: face({brow: 0.05, browIn: 1.0, lid: 0, wide: 0.42, mw: 8, curve: -0.34, open: 0}),
+  hope: face({brow: 0.1, browIn: 0.85, lid: 0.08, wide: 0.12, mw: 11, curve: 0.42, open: 0.03}),
 };
 /** a keyed face track (smoothstep between keys) */
 export const faceTrack = (lf: number, k: [number, Face4][]): Face4 => keyed(lf, k.map(([t, f]) => [t, f] as [number, Face4]));
@@ -35,11 +36,12 @@ export type Acting = {
   exhale?: number; breath?: number; turn?: number; nod?: number; tilt?: number; face: Face4;
 };
 /** V5 consistency: the head turn she is drawn with in the pocket shots (F1, F3, F5), on the rig's own turn control.
- *  Her far (screen-right) eye must sit inside the head outline at every lid and eye width she uses (it broke the
- *  outline below about 13-18 deg here, more in the startle's recoil, which turns the head 3 deg away), and her far ear
- *  must stay hidden (it shows above about 20-24 deg): so the shots' turn acting is kept at 40 % around 18 deg, and the
- *  recoil's turn-away is given back. `raw` (F4, from behind her) passes the shot's own turn unchanged. */
-export const faceTurn = (a: Acting) => 18 + 0.4 * ((a.turn ?? 0) - 10) + 3 * a.recoil;
+ *  Her far (screen-right) eye and the outer end of its brow must sit inside the head outline at every lid, eye width
+ *  and brow she uses (they broke the outline below about 20 deg here; the startle's recoil turns the head 3 deg away,
+ *  which is given back), and her far ear must stay hidden (it shows above about 21-25 deg, earlier as she settles into
+ *  recognition): so the head turn is held near 23 deg, with 15 % of each shot's turn acting kept on top (the head's
+ *  following moves are carried by nod and tilt). `raw` (F4, from behind her) passes the shot's own turn unchanged. */
+export const faceTurn = (a: Acting) => 23 + 0.15 * ((a.turn ?? 0) - 10) + 3 * a.recoil - 5 * a.recog;
 export const herOpts = (T: number, a: Acting, raw = false) => ({
   ...HER, t: T, recog: a.recog, recoil: a.recoil, handOpen: a.handOpen, handSlide: a.handSlide ?? 0, blink: a.blink ?? 0, gaze: a.gaze,
   exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: raw ? a.turn ?? 0 : faceTurn(a), nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,

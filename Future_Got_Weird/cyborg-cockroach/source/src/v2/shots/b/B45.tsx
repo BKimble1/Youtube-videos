@@ -1,15 +1,20 @@
 // B4 (243-282, "then used electrical pulses") and B5 (283-314, "to steer it."): the foam obstacle course on the white
-// tray, one continuous camera over one walk, from above.
-// B4: close from above (az 0, el 84: it heads screen-right, its LEFT side is up-screen), the camera riding with the
-// walking medic, framed on the guidance electronics: the board (chips, coin cell, status LED), the LEFT antenna wire
-// running forward over the shield to the electrode at the left antenna's base (the abdomen runs out of frame left).
-// On "electrical" the LED flashes and three short pulses leave the board one after another and run the left wire to
-// the electrode; each arrival lights it and the left antenna flicks. A yellow block lines its right side.
-// B5 (V4): still from above. A blue block stands across its way (its antennae all but touch it); stimulating the left
-// antenna makes it veer RIGHT: it turns 90 degrees on its legs (the body follows its own path, the feet stay planted:
-// no sideways slide) through the gap past the yellow block's end and the blue block's corner, and walks on screen-down.
-// The camera rises from the electronics as it turns (s 12.5 -> 6.6, el 84 -> 79, a fixed azimuth, so the heading change
-// reads on screen as right -> down) and keeps drifting after it at half its pace to the cut (no settled hold).
+// tray, one continuous camera over one walk.
+// V5g: the near-top-down camera (el 84 -> 79) is gone: at that angle the flat renderer drew a different-looking insect
+// (lumpy oval shell, stub legs, a stray antenna line, the pack as a green capsule). Both shots are now one HIGH
+// THREE-QUARTER view from the insect's left (az 190 = its left side, a touch from behind; el 46 -> 49), the same range
+// as the A5 rise, where the shell, all six legs, both antennae and the pack keep their design.
+// B4: close on the guidance electronics, the camera riding with the walking medic (it heads screen-left, a little
+// away): the board (chips, coin cell, status LED), the LEFT antenna wire running forward over the shield to the
+// electrode at the left antenna's base, the left antenna (the abdomen runs out of frame right). On "electrical" the LED
+// flashes and three short pulses leave the board one after another and run the left wire to the electrode; each
+// arrival lights it and the left antenna flicks. The yellow block stands beyond it.
+// B5: a blue block stands across its way ahead; stimulating the left antenna makes it veer RIGHT: it turns 90 degrees
+// on its legs (the body follows its own path, the feet stay planted: no sideways slide) round the blue block's far end
+// and walks on away from us. The camera pulls back as it turns (s 11.6 -> 5.8, el 46 -> 49) and swings round with the
+// turn by about a third of it (az 190 -> 158.5, B45_ORBIT), so the insect visibly turns right on screen (left ->
+// up-screen) while the camera's view of it stays within one drawing regime (top-mode legs and antennae, all wires; no
+// eye or layer changes: checked per frame), and keeps drifting after it to the cut (no settled hold).
 import React from 'react';
 import {poseRoach, RoachPose} from '../../../rig/roach';
 import {V3, toW, ypr} from '../../../lib/v3';
@@ -47,19 +52,15 @@ export const b45Pose = (t: number): RoachPose => {
   });
 };
 
-// the course (world mm, y up): the yellow block on the inside of the turn (its corner is where the insect turns; it
-// hugs it, the right feet ~3 mm off the wall), the blue one across the way ahead, a red one beyond
+// the course (world mm, y up): the yellow block beyond it on its right, the blue one across the way ahead (its far end
+// at z = 14, round which it turns; its face 10 mm past the left feet after the turn), a red one beyond
 export const COURSE: {b: BoxB; c: string}[] = [
   {b: [-190, -6, 0, 28, 46, 160], c: LAB2.foamY},
-  {b: [68, 100, 0, 30, -62, 14], c: LAB2.foamB},
+  {b: [74, 106, 0, 30, -62, 14], c: LAB2.foamB},
   {b: [84, 136, 0, 26, 104, 154], c: LAB2.foamR},
 ];
 
-/** the camera (V5g): a HIGH THREE-QUARTER from behind the insect's left side (el 39 -> 43), well inside the range the
- *  flat renderer draws consistently (six legs, two antennae, the pack as one device). It walks away up-screen to the
- *  left; as it veers right the camera swings round with it by half the turn (B45_ORBIT), so its own view of the insect
- *  turns only 45 degrees (no leg, antenna, eye or wire changes its drawing layer mid-move) while the insect visibly
- *  turns right on screen and the course swings round behind it. */
+/** the camera (V5g): see the header. B45_ORBIT: the share of the insect's turn the camera's azimuth follows. */
 export const B45_AZ = 190, B45_ORBIT = 0.35;
 const BOARD: V3 = [4, 23, 0];
 const S_CLOSE = 11.6, S_WIDE = 5.8;

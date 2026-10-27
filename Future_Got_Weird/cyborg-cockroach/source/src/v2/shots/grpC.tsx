@@ -1,7 +1,7 @@
 // V3 shot group C (see production/V3_SHOT_PLAN.md): C1 the two configurations side by side (low, close); C2 the
 // observer walks up to the camera until its lens fills the frame; C3 through the lens: its feed following the medic;
-// C4 the feed on the operator's monitor, his thumb coming down over the button; C5 overhead: the medic walks out of the
-// lane at the clear target, the observer behind it.
+// C4 the feed on the operator's monitor, his thumb coming down over the button; C5 a high three-quarter from behind the
+// pair (el 48; V5g, was an el 80 overhead): the medic walks out of the lane at the clear target, the observer behind it.
 import React from 'react';
 import {ShotProps} from './index2';
 import {Cue, touchdownsP, steps} from '../../events';
@@ -24,7 +24,7 @@ export {C3Feed};
  *  C2: top band, over the blurred wall shelves (the aerial and then the camera module rise to about y 520 at most).
  *  C3: top band, over the blurred lab wall of the feed (the medic walks at y 1150-1400).
  *  C4: top band, over the wall above the monitor and his hair.
- *  C5: top band, over the empty tray and the backstop blocks (the target sits at y 500-800, the insects below). */
+ *  C5: top band, over the empty tray and the backstop blocks (the target sits at y 400-870, the insects below). */
 export const CAPY_C: Record<string, number> = {C1: 270, C2: 270, C3: 270, C4: 270, C5: 270};
 
 const CLOSE_STEP = {body: 1.0, bright: 0.5};
@@ -47,7 +47,7 @@ export const cuesC = (): Cue[] => {
   for (const {t, g} of steps(touchdownsP((ff) => feedMedicPose(ff / 30), C3_THROUGH, c3.to))) ev.push({kind: 'tick', t, gain: r10(-44 + g), name: 'C3 medic foot (ahead in the feed)'});
   // C4: the same feed, heard faintly through the monitor
   for (const {t, g} of steps(touchdownsP((ff) => feedMedicPose(ff / 30), c4.from, c4.to))) ev.push({kind: 'tick', t, gain: r10(-48 + g), name: 'C4 medic foot (on the monitor)'});
-  // C5: overhead, mid distance: the medic walking at the target, the observer behind it
+  // C5: high three-quarter, mid distance: the medic walking at the target, the observer behind it
   for (const {t, g} of steps(touchdownsP((ff) => c5Medic(ff), c5.from, c5.to))) ev.push({kind: 'tick', t, gain: r10(-39 + g), name: 'C5 medic foot (overhead)'});
   for (const {t, g} of steps(touchdownsP((ff) => c5Obs(ff), c5.from, c5.to))) ev.push({kind: 'tick', t, gain: r10(-43 + g), name: 'C5 observer foot (overhead, behind)'});
   return ev;

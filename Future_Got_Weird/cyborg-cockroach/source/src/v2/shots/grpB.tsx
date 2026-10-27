@@ -8,10 +8,12 @@
 //  B2 (187-208) b/B2.tsx   the same camera, still settling into the tight profile of the mounting (the module keeps its
 //                          screen place across the cut); the first step (B_GO 6.27 s) and a lateral track along the tube
 //  B3 (209-242) b/B3.tsx   low side tracking over a cork test board (textured; granules slide past), tripod gait
-//  B4 (243-282) b/B45.tsx  close from above on the electronics on the obstacle course: LED, three pulses along the
-//                          LEFT antenna wire (leave 8.52 s), the electrode glows, the left antenna flicks
-//  B5 (283-314) b/B45.tsx  continuous with B4, from above: a blue block across its way; it veers RIGHT past its corner
-//                          (turn 9.30-10.39 s, on its legs) while the camera rises to show the course and drifts after it
+//  B4 (243-282) b/B45.tsx  close on the electronics on the obstacle course, a high three-quarter from its left (el 46;
+//                          V5g, was a near-top-down el 84): LED, three pulses along the LEFT antenna wire (leave
+//                          8.52 s), the electrode glows, the left antenna flicks
+//  B5 (283-314) b/B45.tsx  continuous with B4: a blue block across its way; it veers RIGHT round its far end (turn
+//                          9.30-10.39 s, on its legs) while the camera pulls back (el 49), swings a third of the way
+//                          round with the turn and drifts after it
 import React from 'react';
 import {ShotProps} from './index2';
 import {Cue, touchdownsP, steps} from '../../events';
