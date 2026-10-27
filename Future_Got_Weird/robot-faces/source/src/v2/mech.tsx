@@ -66,29 +66,31 @@ export const CheekSection: React.FC<{id: string; st: RobotState; k: number; hot?
   return (
     <g>
       <defs>
-        <clipPath id={`${id}-w`}>
-          <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx)} ry={fmt(ry)} />
-        </clipPath>
+        {/* V5: no cut window: the silicone clears softly over the mechanism (an elliptical fade, no rim) */}
+        <radialGradient id={`${id}-fade`} cx={fmt(c.x)} cy={fmt(c.y)} r={fmt(Math.max(1, rx))} gradientUnits="userSpaceOnUse" gradientTransform={`translate(${fmt(c.x)} ${fmt(c.y)}) scale(1 ${fmt(ry / Math.max(1, rx))}) translate(${fmt(-c.x)} ${fmt(-c.y)})`}>
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="0.62" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#000000" />
+        </radialGradient>
+        <mask id={`${id}-w`} maskUnits="userSpaceOnUse" x={fmt(c.x - rx - 4)} y={fmt(c.y - ry - 4)} width={fmt(rx * 2 + 8)} height={fmt(ry * 2 + 8)}>
+          <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx)} ry={fmt(ry)} fill={`url(#${id}-fade)`} />
+        </mask>
         <radialGradient id={`${id}-cv`} cx={fmt(c.x - 6)} cy={fmt(c.y - 8)} r={fmt(Math.max(1, rx * 1.3))} gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#5A6688" />
-          <stop offset="1" stopColor="#363F5C" />
+          <stop offset="0" stopColor="#6A77A0" />
+          <stop offset="1" stopColor="#46507A" />
         </radialGradient>
       </defs>
-      <g clipPath={`url(#${id}-w)`}>
-        <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx + 2)} ry={fmt(ry + 2)} fill={`url(#${id}-cv)`} />
+      <g mask={`url(#${id}-w)`}>
+        <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx + 2)} ry={fmt(ry + 2)} fill={`url(#${id}-cv)`} opacity={0.82} />
         {/* frame ribs */}
         {[-14, 0, 14].map((dy, i) => (
-          <path key={i} d={`M${fmt(c.x - rx)},${fmt(c.y + dy)} Q${fmt(c.x)},${fmt(c.y + dy - 5)} ${fmt(c.x + rx)},${fmt(c.y + dy + 3)}`} fill="none" stroke="#7B87AA" strokeWidth={2.2} opacity={0.7} />
+          <path key={i} d={`M${fmt(c.x - rx)},${fmt(c.y + dy)} Q${fmt(c.x)},${fmt(c.y + dy - 5)} ${fmt(c.x + rx)},${fmt(c.y + dy + 3)}`} fill="none" stroke="#8A96BA" strokeWidth={2.2} opacity={0.6} />
         ))}
         {/* the skin's underside near the corner (a soft lip edge seen from inside) */}
         <path d={`M${fmt(cor.x + 2)},${fmt(cor.y - 12)} Q${fmt(cor.x - 4)},${fmt(cor.y)} ${fmt(cor.x + 2)},${fmt(cor.y + 12)}`} fill="none" stroke={mix(skin, '#FFFFFF', 0.2)} strokeWidth={5} opacity={0.75} />
         {two && <Servo S={S2} ang={a2} r={10} A={upL} hot={false} w={24} h={16} />}
         <Servo S={S1} ang={a1} r={11} A={cor} hot={hot} />
       </g>
-      {/* cut edge with thickness */}
-      <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx)} ry={fmt(ry)} fill="none" stroke={lit(skin, 0.15)} strokeWidth={4.5} />
-      <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(Math.max(0, rx - 2.4))} ry={fmt(Math.max(0, ry - 2.4))} fill="none" stroke={shade(skin, 0.35)} strokeWidth={1.4} />
-      <ellipse cx={fmt(c.x)} cy={fmt(c.y)} rx={fmt(rx + 2.4)} ry={fmt(ry + 2.4)} fill="none" stroke={INK} strokeWidth={1.2} />
       {/* the attachment shows through at the corner itself */}
       <circle cx={fmt(cor.x)} cy={fmt(cor.y)} r={3.6} fill={hot ? RPAL.led : '#F2F5FF'} stroke="#10141F" strokeWidth={1} opacity={0.95} />
     </g>

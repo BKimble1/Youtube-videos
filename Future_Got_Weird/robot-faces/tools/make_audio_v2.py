@@ -87,12 +87,13 @@ def fx(kind, p=1.0, dur=0.3):
 cues = []  # (time, kind, gain dB, pitch, dur, pan)
 def cue(t, kind, db=0.0, p=1.0, dur=0.3, pan=0.0): cues.append((t, kind, db, p, dur, pan))
 
-# V4 opening: its lips moving on frame 0 (faint lip motors on the shape changes); the corner motor pulling in the
-# cutaway as it starts to smile; its brows, jaw and lips moving into his expression
-for d in (0.26, 0.5, 0.92, 1.42):
-    cue(d - 0.04, 'servo', -16, 1.1, 0.2, -0.1)
+# V5 opening: frame 0 is already mid-copy (a short servo under it), then each copied face (glare, grin) is heard as a
+# quiet motor move; the corner motor in the cutaway; the whole-face expression for the crowd
+cue(0.0, 'servo', -15, 1.05, 0.25, -0.15)
+for tt in A['hook']:
+    cue(tt - 0.04, 'servo', -12, 1.0, 0.35, -0.15)
 cue(A['triesSmile'] + 0.25, 'servo', -9, 0.9, 1.0, -0.2)
-cue(A['copy2'], 'servo', -10, 1.0, 0.7, 0.1)
+cue(A['copy2'], 'servo', -11, 1.0, 0.6, -0.1)
 # V4 mirror trials: three different expressions
 for tt in A['mirrorTrials']:
     cue(tt - 0.1, 'servo', -10, 0.95, 0.4, 0.0)

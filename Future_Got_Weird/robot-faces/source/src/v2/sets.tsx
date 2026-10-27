@@ -15,9 +15,9 @@ import {INT} from '../shots/IntSet';
 import {MIR, reflectYaw} from '../shots/MirrorSet';
 import {AlcoveBack, DeskBack, LabBack, NookBack} from './env';
 import {CheekSection} from './mech';
-import {HomeBack, KitchenBack, LobbyBack, OfficeBack, StageBack, StationBack, StreetBack, StudioBack} from './new';
+import {HomeBack, KitchenBack, LobbyBack, OfficeBack, StageBack, StationBack, StreetBack, StudioBack, DemoBack, WorkshopBack, TestBayBack} from './new';
 
-export type Bg = 'lab' | 'alcove' | 'nook' | 'desk' | 'home' | 'station' | 'kitchen' | 'street' | 'stage' | 'office' | 'lobby' | 'studio' | 'none';
+export type Bg = 'lab' | 'alcove' | 'nook' | 'desk' | 'home' | 'station' | 'kitchen' | 'street' | 'stage' | 'office' | 'lobby' | 'studio' | 'demo' | 'workshop' | 'testbay' | 'none';
 /** an environment back plane, shifted/scaled so a setup can show the part of the room behind its subject */
 export const Back: React.FC<{id: string; bg: Bg; veil?: number; dx?: number; dy?: number; s?: number}> = ({id, bg, veil = 0, dx = 0, dy = 0, s = 1}) => (
   <g transform={`translate(${fmt(dx)} ${fmt(dy)}) scale(${fmt(s)})`}>
@@ -33,6 +33,9 @@ export const Back: React.FC<{id: string; bg: Bg; veil?: number; dx?: number; dy?
     {bg === 'office' && <OfficeBack veil={veil} />}
     {bg === 'lobby' && <LobbyBack veil={veil} />}
     {bg === 'studio' && <StudioBack veil={veil} />}
+    {bg === 'demo' && <DemoBack veil={veil} />}
+    {bg === 'workshop' && <WorkshopBack veil={veil} />}
+    {bg === 'testbay' && <TestBayBack veil={veil} />}
   </g>
 );
 
@@ -131,16 +134,16 @@ export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x
 };
 
 /** the profile two-shot: camera perpendicular to the interaction axis, both faces large and level */
-export const ProfileTwo: React.FC<{id: string; cam: Cam; robot: RobotState; vis: Vis; bg?: Bg; veil?: number; rTurn?: number; vTurn?: number; bgDx?: number; bgDy?: number; extraBench?: React.ReactNode}> = ({id, cam, robot, vis, bg = 'lab', veil = 0.2, rTurn = 72, vTurn = 0.9, bgDx = -500, bgDy = 160, extraBench}) => {
+export const ProfileTwo: React.FC<{id: string; cam: Cam; robot: RobotState; vis: Vis; bg?: Bg; veil?: number; rTurn?: number; vTurn?: number; bgDx?: number; bgDy?: number; extraBench?: React.ReactNode; vPose?: Partial<ManPose>; vx?: number; backLayer?: React.ReactNode}> = ({id, cam, robot, vis, bg = 'lab', veil = 0.2, rTurn = 72, vTurn = 0.9, bgDx = -500, bgDy = 160, extraBench, vPose, vx = 1290, backLayer}) => {
   const R = {x: 690, y: 470, s: 2.0};
   const benchY = 900;
   return (
     <g>
       <Layer cam={cam} depth={2.3}>
-        <Back id={`${id}-bk`} bg={bg} veil={veil} dx={bgDx} dy={bgDy} s={1.05} />
+        {backLayer ?? <Back id={`${id}-bk`} bg={bg} veil={veil} dx={bgDx} dy={bgDy} s={1.05} />}
       </Layer>
       <Layer cam={cam} depth={1.03}>
-        <Visitor id={`${id}-v`} hx={1290} hy={440} s={1.95} expr={vis.expr} blink={vis.blink} pose={{turn: vTurn, lTv: 120}} />
+        <Visitor id={`${id}-v`} hx={vx} hy={440} s={1.95} expr={vis.expr} blink={vis.blink} pose={{turn: vTurn, lTv: 120, ...vPose}} />
       </Layer>
       <Layer cam={cam} depth={1}>
         <Bench id={`${id}-bench`} x0={-1000} x1={3000} y={benchY} depth={80} face={600} legs={false} />

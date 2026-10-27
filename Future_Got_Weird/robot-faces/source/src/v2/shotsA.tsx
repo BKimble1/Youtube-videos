@@ -48,7 +48,7 @@ export const MechMotors: React.FC<{f: number}> = ({f}) => {
   );
 };
 /** the eight channels shown as physical sliders on a control desk; values follow each untrained combination */
-const sliderVals = (t: number) => {
+export const sliderVals = (t: number) => {
   let v = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5];
   BABBLE.forEach(([t0], i) => {
     const k = smooth(clamp((t - (t0 - 0.25)) / 0.22));
@@ -56,7 +56,7 @@ const sliderVals = (t: number) => {
   });
   return v;
 };
-const Sliders: React.FC<{x: number; y: number; vals: number[]; s?: number}> = ({x, y, vals, s = 1}) => (
+export const Sliders: React.FC<{x: number; y: number; vals: number[]; s?: number}> = ({x, y, vals, s = 1}) => (
   <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
     <path d="M-40,250 L560,250 L520,-40 L0,-40 Z" fill="#3A4450" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
     <path d="M-40,250 L560,250 L560,290 L-40,290 Z" fill="#2B333C" stroke={INK} strokeWidth={4} />

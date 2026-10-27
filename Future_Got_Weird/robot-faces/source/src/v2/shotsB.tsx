@@ -386,7 +386,7 @@ export const DistMouth: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 22, 0.6, 0);
   return (
     <g>
-      <RobotCU id="dm" cam={drift(f, T('looking as though'), T('and understanding'), {x: 940, y: 520, z: 1}, {x: 930, y: 530, z: 1.06})} st={st} x={900} y={250} s={5.6} veil={0.35} bgDx={600} />
+      <RobotCU id="dm" cam={drift(f, T('looking as though'), T('and understanding'), {x: 940, y: 520, z: 1}, {x: 930, y: 530, z: 1.06})} st={st} x={900} y={250} s={5.6} bg="demo" veil={0.3} bgDx={600} />
       <Tag x={960} y={1010} text="looking like speaking" k={pr(f, T('looking as though') + 0.2, T('looking as though') + 0.6)} size={34} anchor="middle" tone="light" />
     </g>
   );
@@ -411,7 +411,7 @@ export const DistOTS: React.FC<{f: number}> = ({f}) => (
 // "The movements still had flaws.": its mouth, still speaking, then stopped
 export const FlawMouth: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 0, 0, 0.05);
-  return <RobotCU id="fm" cam={drift(f, K.flaws, T('The team reported'), {x: 960, y: 520, z: 1}, {x: 960, y: 540, z: 1.08})} st={st} x={960} y={40} s={7.0} veil={0.45} bgDx={-600} />;
+  return <RobotCU id="fm" bg="demo" cam={drift(f, K.flaws, T('The team reported'), {x: 960, y: 520, z: 1}, {x: 960, y: 540, z: 1.08})} st={st} x={960} y={40} s={7.0} veil={0.45} bgDx={-600} />;
 };
 /** the person's lips: a first "ba" on "difficulties", then B on "B", then W on "W" */
 const W_CUT = T('“W.”') - 0.12;
@@ -439,7 +439,11 @@ const BWSplit: React.FC<{f: number; which: 'B' | 'W'; id: string; a: number; b: 
   const st = {...rob2(f), yaw: 0, gx: 0, gy: 0.05};
   const at = which === 'B' ? K.bw : T('“W.”');
   const on = pr(f, at - 0.1, at + 0.15);
-  const cam = drift(f, a, b, CAM0, {x: 960, y: 520, z: 1.03});
+  // V5: not a static pair of panels: the camera starts on the person's lips as the sound is made, travels across to
+  // the robot's attempt a beat later, and settles back on both
+  const cam = which === 'B'
+    ? camPath(f, [[a, {x: 560, y: 500, z: 1.45}], [at + 0.25, {x: 560, y: 505, z: 1.5}], [at + 0.95, {x: 1390, y: 505, z: 1.5}], [b, {x: 1160, y: 520, z: 1.2}]], (x) => x * x * (3 - 2 * x))
+    : camPath(f, [[a, {x: 1160, y: 520, z: 1.2}], [b, {x: 960, y: 520, z: 1.05}]], (x) => x * x * (3 - 2 * x));
   return (
     <g>
       <rect x={0} y={0} width={1920} height={1080} fill="#F1E9D7" />
@@ -464,7 +468,7 @@ export const FlawGap: React.FC<{f: number}> = ({f}) => {
   const ring = pr(f, K.small + 0.6, K.small + 0.9);
   return (
     <g>
-      <RobotCU id="fg" cam={drift(f, K.small, T('when you’re watching'), {x: 960, y: 500, z: 1}, {x: 960, y: 500, z: 1.12})} st={st} x={960} y={-230} s={10.5} veil={0.45} bgDx={-600}  />
+      <RobotCU id="fg" bg="demo" cam={drift(f, K.small, T('when you’re watching'), {x: 960, y: 500, z: 1}, {x: 960, y: 500, z: 1.12})} st={st} x={960} y={-230} s={10.5} veil={0.45} bgDx={-600}  />
     </g>
   );
 };

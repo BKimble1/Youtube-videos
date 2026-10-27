@@ -35,7 +35,7 @@ export const glide = (f: number, a: number, b: number, ks: Cam[], e: (x: number)
   return lerpCam(ks[i], ks[i + 1], u * n - i);
 };
 /** a crew member's viseme-driven mouth from a human track */
-const crewVis = (t: number, tr: Track, smile = 0.1): VisShape => {
+export const crewVis = (t: number, tr: Track, smile = 0.1): VisShape => {
   const v = humanVis(t, tr, 0.06);
   return {open: v.open, wide: v.wide - 0.2, round: v.wide < 0.8 ? clamp((0.9 - v.wide) * 2.5) : 0, smile: Math.max(smile, v.smile)};
 };
@@ -321,7 +321,17 @@ export const CrewTalk: React.FC<{id: string; f: number; look: string; bg: 'kitch
         <Back id={`${id}-bk`} bg={bg} veil={0.18} dx={-150} dy={140} />
       </Layer>
       <Layer cam={cam} depth={1}>
-        <CrewChar id={id} look={CAST[look]} pose={{...POSE0, lookX, tilt, brows: sing ? 0.6 : 0.2, blink: sing ? 0.25 : undefined}} frame={f} seed={seed} x={x} y={y} scale={scale} life={0.8} vis={v} shadow={false} />
+        {(() => {
+          // V5: speakers move while they talk: a hand rises on stressed syllables, the head tilts and nods, the
+          // weight shifts; singers open their arms (all from the speech track, so it is in time with the mouth)
+          const ph = t * (1.3 + (seed % 5) * 0.17) + seed;
+          const em = Math.max(0, v.open - 0.25) * 1.6;
+          const g = 0.5 + 0.5 * Math.sin(ph * 0.9);
+          const armR = sing ? {a: 38 + 10 * Math.sin(t * 1.4), b: 40 + 12 * Math.sin(t * 1.1)} : {a: 12 + 26 * g + 14 * em, b: 30 + 70 * g + 20 * em};
+          const armL = sing ? {a: 38 + 10 * Math.sin(t * 1.4 + 1), b: 40 + 12 * Math.sin(t * 1.1 + 1)} : {a: 10 + 8 * Math.sin(ph * 0.5), b: 14 + 18 * Math.max(0, Math.sin(ph * 0.5 + 1))};
+          const pose = {...POSE0, lookX: lookX + 0.15 * Math.sin(ph * 0.37), tilt: tilt + 4 * Math.sin(ph * 0.6) + 3 * em, lean: 2.2 * Math.sin(ph * 0.31), brows: (sing ? 0.6 : 0.2) + 0.35 * em, blink: sing ? 0.25 : undefined, armL, armR};
+          return <CrewChar id={id} look={CAST[look]} pose={pose} frame={f} seed={seed} x={x} y={y} scale={scale} life={0.8} vis={v} shadow={false} />;
+        })()}
         {fore}
       </Layer>
     </g>
@@ -469,7 +479,7 @@ const VisMouth: React.FC<{f: number; cam: Cam}> = ({f, cam}) => {
   return (
     <g>
       <Layer cam={cam} depth={2.4}>
-        <Back id="g1-bk" bg="lab" veil={0.5} dx={-1200} />
+        <Back id="g1-bk" bg="lobby" veil={0.5} dx={-1200} />
       </Layer>
       <Layer cam={cam} depth={1}>
         <Head id="g1-h" c={{x: 960 - m.x, y: 600 - m.y}} R={R} roll={0} turn={turn} expr={v.expr} blink={v.blink} inkW={26} />
@@ -483,7 +493,7 @@ export const G1Mouth: React.FC<{f: number}> = ({f}) => <VisMouth f={f} cam={drif
 export const G2Mouth: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 20, 0.6, 0);
   const s = 6.4;
-  return <RobotCU id="g2" cam={drift(f, T('copy into'), T('shared-looking'), CAM0, {x: 960, y: 590, z: 1.05})} st={st} x={960} y={600 - 72 * s} s={s} veil={0.45} bgDx={-500} />;
+  return <RobotCU id="g2" bg="lobby" cam={drift(f, T('copy into'), T('shared-looking'), CAM0, {x: 960, y: 590, z: 1.05})} st={st} x={960} y={600 - 72 * s} s={s} veil={0.45} bgDx={-500} />;
 };
 // 178.72 - 180.90 "shared-looking moment.": both of them, face to face
 export const G3Pair: React.FC<{f: number}> = ({f}) => <ProfileTwo id="g3" cam={drift(f, T('shared-looking'), K.these, {x: 990, y: 470, z: 1.5}, {x: 990, y: 462, z: 1.62})} robot={rob2(f)} vis={vis2(f)} rTurn={62} />;
@@ -491,7 +501,7 @@ export const G3Pair: React.FC<{f: number}> = ({f}) => <ProfileTwo id="g3" cam={d
 export const G5Under: React.FC<{f: number}> = ({f}) => {
   const xr = pr(f, T('tell us whether') - 0.2, T('tell us whether') + 0.5);
   const st = view(rob2(f), 0, 0, 0.02);
-  return <RobotCU id="g5" cam={drift(f, T('A successful'), K.picture, {x: 960, y: 620, z: 1.25}, {x: 960, y: 560, z: 1.02})} st={st} x={960} y={420} s={3.6} veil={0.45} bgDx={-500} xray={xr} xrayDark={0.32} xrayHot={['corner', 'cheek']} />;
+  return <RobotCU id="g5" bg="testbay" cam={drift(f, T('A successful'), K.picture, {x: 960, y: 620, z: 1.25}, {x: 960, y: 560, z: 1.02})} st={st} x={960} y={420} s={3.6} veil={0.45} bgDx={-500} xray={xr} xrayDark={0.32} xrayHot={['corner', 'cheek']} />;
 };
 /** a station kiosk with the research head on it */
 const Kiosk: React.FC<{id: string; x: number; y: number; s: number; st: RobotState}> = ({id, x, y, s, st}) => (

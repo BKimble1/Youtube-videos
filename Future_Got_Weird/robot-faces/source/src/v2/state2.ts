@@ -47,6 +47,25 @@ const keyed = (t: number, ks: [number, Partial<RobotState>][], w = 0.14): Partia
   }
   return o as Partial<RobotState>;
 };
+/** keyed like `keyed`, with the upper lid as well */
+const keyedL = (t: number, ks: [number, Partial<RobotState>][], w = 0.14): Partial<RobotState> => {
+  const o: Record<string, number> = {smile: 0, open: 0, round: 0, press: 0, wide: 0, asym: 0, brow: 0, lid: 0.16};
+  for (const [t0, v] of ks) {
+    const k = ss(t, t0 - w / 2, t0 + w / 2);
+    if (k <= 0) continue;
+    for (const key of Object.keys(o)) o[key] = o[key] + (((v as any)[key] ?? (key === 'lid' ? 0.16 : 0)) - o[key]) * k;
+  }
+  return o as Partial<RobotState>;
+};
+/** V5 hook: his faces (start times) and the robot's versions of them, `HOOK_LAG` later */
+export const HOOK_LAG = 0.3;
+export const HOOK_T = [-0.55, 0.95, 1.8, 2.55];
+const HOOK_R: [number, Partial<RobotState>][] = [
+  [HOOK_T[0], {open: 0.58, round: 0.75, brow: 1, lid: 0}],
+  [HOOK_T[1], {brow: -1, press: 0.8, smile: -0.7, asym: 0.15, lid: 0.4}],
+  [HOOK_T[2], {smile: 1, wide: 0.55, open: 0.3, brow: 0.3, lid: 0.3}],
+  [HOOK_T[3], {smile: 0.06, lid: 0.16}],
+];
 const applyMouth = (st: RobotState, v: Partial<RobotState>, k = 1) => {
   (['smile', 'open', 'round', 'press', 'wide', 'asym', 'brow'] as const).forEach((key) => ((st as any)[key] = (st as any)[key] * (1 - k) + ((v as any)[key] ?? 0) * k));
 };
@@ -103,17 +122,16 @@ const rob2core = (f: number): RobotState => {
     // the response smile, then (offscreen, during the stiff face) a relax, then the full lift in its close-up
     let smile = 0.04 + 0.92 * e.r;
     if (t < T('Then it tries')) {
-      // V4: mid-speech to the camera on frame 0 (silent shapes, not the narration); at 0.95 s its eyes go to the
-      // person beside the camera and the head turns a little toward him; it stops and watches his mouth
-      const v = robotVis(t, OPEN_TRACK, 0.09);
-      const k = 1 - ss(t, 1.7, 2.0);
-      applyMouth(st, {...v, smile: Math.max(v.smile, 0.06)}, k);
-      st.brow = 0.45 * (ss(t, 0.55, 0.9) - ss(t, 1.5, 1.9)) + 0.15 * ss(t, 2.2, 2.6);
-      st.yaw = 14 * ss(t, 0.95, 1.8);
-      st.gx = 0.06 * (ss(t, 0.4, 0.46) - ss(t, 0.95, 1.0)) + 0.42 * ss(t, 0.95, 1.08);
-      // its eyes drop to his mouth as the cue forms, and come back to his eyes
-      st.gy = 0.22 * (ss(t, 2.1, 2.3) - ss(t, 3.25, 3.45));
-      st.lid = 0.16 - 0.06 * ss(t, 2.1, 2.4);
+      // V5 hook: face to face, inches apart. He pulls one dramatic face after another; it gives each one back a
+      // beat later (brows, lids, jaw and lips together). Then his face softens, a smile starts, and it watches his
+      // mouth for it.
+      const ex = keyedL(t - HOOK_LAG, HOOK_R, 0.24);
+      applyMouth(st, ex, 1);
+      st.lid = ex.lid ?? 0.16;
+      st.yaw = 0;
+      st.gx = 0.5;
+      st.gy = 0.24 * (ss(t, 2.95, 3.15) - ss(t, 3.7, 3.9));
+      st.blink = blinkAt(t, [2.75]);
       return st;
     }
     if (t < T('Researchers')) {
@@ -122,13 +140,13 @@ const rob2core = (f: number): RobotState => {
       st.gy = -0.05;
       st.smile = smile * (1 - 0.65 * ss(t, K.corner - 0.1, K.corner + 0.4));
       st.open = 0.04 * e.r;
-      // "That takes more than moving the corners of a mouth.": it reproduces his expression, a surprised "ooh":
-      // brows high, lids wide open, jaw dropped, lips rounded (brows, eyes, jaw and lips, not only the corners)
-      const ck = ss(t, EXPR_COPY - 0.05, EXPR_COPY + 0.45) * (1 - ss(t, T('Researchers') - 0.3, T('Researchers') + 0.2));
+      // V5 "That takes more than moving the corners of a mouth.": on stage, for the crowd: brows lift, eyes open,
+      // a wide open smile and a small tilt of the head: the whole face, not only the corners
+      const ck = ss(t, EXPR_COPY - 0.25, EXPR_COPY + 0.35) * (1 - ss(t, T('Researchers') - 0.3, T('Researchers') + 0.2));
       if (ck > 0) {
-        applyMouth(st, {smile: 0.04, round: 0.85, open: 0.5, wide: -0.2, brow: 1}, ck);
-        st.lid = 0.16 - 0.16 * ck;
-        st.gy = st.gy * (1 - ck);
+        applyMouth(st, {smile: 0.9, open: 0.28, wide: 0.45, brow: 0.95}, ck);
+        st.lid = 0.16 - 0.1 * ck;
+        st.roll = (st.roll ?? 0) + 6 * ck;
       }
       return st;
     }
@@ -311,6 +329,12 @@ export const vis2 = (f: number): {expr: Expr; blink: number} => {
   if (t < OPEN_END) {
     const e = exchange2(t, 0);
     let x = mixExpr(mixExpr(VX.rest, VX.cue, e.vc), VX.smile, e.vs);
+    // V5 hook: shock, glare, grin, each copied back; after the grin he is amazed; then the smile cue
+    if (t < T('Then it tries') + 0.3) {
+      let h: Expr = HOOK_H[0];
+      for (let i = 1; i < HOOK_H.length; i++) h = mixExpr(h, HOOK_H[i], ss(t, HOOK_T[i] - 0.12, HOOK_T[i] + 0.12));
+      x = mixExpr(h, x, ss(t, 2.9, 3.3));
+    }
     // as its smile arrives with his: a small, pleased surprise (brows up, eyes open)
     const sp = ss(t, 6.05, 6.5) * (1 - ss(t, 7.2, 7.7));
     x = {...x, browIn: x.browIn + 0.5 * sp, lid: x.lid * (1 - 0.8 * sp), pupil: 1 - 0.12 * sp};
@@ -318,10 +342,9 @@ export const vis2 = (f: number): {expr: Expr; blink: number} => {
     // it, a mock-surprised "ooh" (brows high, eyes wide, jaw dropped, lips rounded); when it gives the expression
     // back he goes still, a little uneasy and curious (brows drawn together, smile gone, lips parted)
     x = mixExpr(x, {...VX.rest, smile: 0.35, gx: -0.75}, ss(t, K.corner - 0.6, K.corner - 0.1) * (1 - ss(t, PRED.cue - 1.5, PRED.cue - 0.8)));
-    const te = ss(t, EXPR_HIS + 0.1, EXPR_HIS + 0.55) * (1 - ss(t, EXPR_COPY + 0.6, EXPR_COPY + 1.0));
-    x = mixExpr(x, TEASE, te);
-    const un = ss(t, EXPR_COPY + 0.7, EXPR_COPY + 1.1) * (1 - ss(t, PRED.cue - 1.5, PRED.cue - 0.8));
-    x = mixExpr(x, UNEASY, un);
+    // V5: on stage, as it makes its whole-face expression for the crowd, he lights up and glances out at them
+    const te = ss(t, EXPR_COPY - 0.1, EXPR_COPY + 0.4) * (1 - ss(t, PRED.cue - 1.5, PRED.cue - 0.8));
+    x = mixExpr(x, {...VX.smile, smile: 0.85, open: 0.22, browIn: 0.45, gx: -0.75 + 1.2 * ss(t, EXPR_COPY + 0.55, EXPR_COPY + 0.8), gy: 0}, te);
     // "predict an expression as it begins": a new cue, then the smile
     x = mixExpr(x, VX.cue, ss(t, PRED.cue, PRED.visible));
     x = mixExpr(x, VX.smile, ss(t, PRED.visible, PRED.full) * (1 - ss(t, K.mirrorWord, K.columbia)));
@@ -359,6 +382,12 @@ export const vis2 = (f: number): {expr: Expr; blink: number} => {
   return v;
 };
 
+const HOOK_H: Expr[] = [
+  {...VX.rest, browIn: 0.95, browDown: 0, lid: 0, squint: 0, pupil: 0.88, open: 0.6, wide: 0.76, smile: 0.05, teeth: 0.1, gx: -0.75, gy: 0, flush: 0.3},
+  {...VX.rest, browIn: 0, browDown: 1, lid: 0.36, squint: 0.42, open: 0.02, wide: 0.9, smile: -0.65, teeth: 0, gx: -0.75, gy: 0, flush: 0.25},
+  {...VX.smile, smile: 1, open: 0.36, wide: 1.25, teeth: 0.9, squint: 0.5, lid: 0.18, browIn: 0.2, gx: -0.75, gy: 0, flush: 0.5},
+  {...VX.rest, browIn: 0.75, browDown: 0, lid: 0, squint: 0, pupil: 1, open: 0.24, wide: 0.9, smile: 0.35, gx: -0.75, gy: 0, flush: 0.42},
+];
 const TEASE: Expr = {...VX.rest, browIn: 0.95, browDown: 0, lid: 0, squint: 0, pupil: 0.92, open: 0.5, wide: 0.7, smile: 0.08, teeth: 0, gx: -0.75, gy: 0, flush: 0.3};
 const UNEASY: Expr = {...VX.rest, browIn: 0.75, browDown: 0.1, lid: 0.02, squint: 0, pupil: 0.82, open: 0.1, wide: 0.86, smile: -0.05, gx: -0.75, gy: 0.02, flush: 0.22};
 const PUZZLED: Expr = {...VX.rest, browIn: 0.7, browDown: 0.0, lid: 0.08, squint: 0.15, smile: -0.1, open: 0.06, wide: 0.88, gx: -0.75, gy: -0.05, flush: 0.2};

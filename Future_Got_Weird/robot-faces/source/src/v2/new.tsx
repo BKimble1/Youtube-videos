@@ -390,12 +390,159 @@ export const StudioBack: React.FC<{veil?: number}> = ({veil = 0}) => (
   </g>
 );
 /** a studio microphone on a boom (pop filter in front), its capsule at (x, y) */
-export const StudioMic: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => (
-  <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
+export const StudioMic: React.FC<{x: number; y: number; s?: number; flip?: boolean}> = ({x, y, s = 1, flip = false}) => (
+  <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(flip ? -s : s)} ${fmt(s)})`}>
     <path d="M40,40 L420,-240" stroke="#1A1517" strokeWidth={16} strokeLinecap="round" />
     <rect x={-34} y={-70} width={68} height={140} rx={34} fill="#3A3D42" stroke={INK} strokeWidth={6} />
     {[-40, -20, 0, 20, 40].map((d) => <line key={d} x1={-26} y1={d} x2={26} y2={d} stroke="#5A5E66" strokeWidth={4} />)}
     <rect x={-20} y={66} width={40} height={30} fill="#26282C" stroke={INK} strokeWidth={4} />
-    <circle cx={-120} cy={0} r={78} fill="#2A2A30" opacity={0.35} stroke="#15151A" strokeWidth={5} />
+    {!flip && <circle cx={-120} cy={0} r={78} fill="#2A2A30" opacity={0.35} stroke="#15151A" strokeWidth={5} />}
+  </g>
+);
+
+/** V5: a robotics demonstration hall: a dark navy room, a large LED backdrop (soft colour fields drifting slowly,
+ *  no text), a lighting truss with spot lamps and beams, and a raised stage with a lit front edge. `t` drives the
+ *  backdrop's drift and the beams' slow sweep. */
+export const DemoBack: React.FC<{veil?: number; t?: number}> = ({veil = 0, t = 0}) => (
+  <g>
+    <defs>
+      <linearGradient id="demo-led" x1="0" y1="0" x2="1" y2="0.4">
+        <stop offset="0" stopColor="#1F2E6E" />
+        <stop offset="0.55" stopColor="#3B2C78" />
+        <stop offset="1" stopColor="#5C2A6E" />
+      </linearGradient>
+      <radialGradient id="demo-blob" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#7FD6FF" stopOpacity={0.55} />
+        <stop offset="1" stopColor="#7FD6FF" stopOpacity={0} />
+      </radialGradient>
+      <radialGradient id="demo-blob2" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stopColor="#FF8FD0" stopOpacity={0.45} />
+        <stop offset="1" stopColor="#FF8FD0" stopOpacity={0} />
+      </radialGradient>
+      <clipPath id="demo-ledc"><rect x={-300} y={-520} width={2520} height={1040} rx={12} /></clipPath>
+    </defs>
+    <rect x={-1400} y={-900} width={4800} height={2600} fill="#0F1426" />
+    {/* the LED backdrop */}
+    <rect x={-320} y={-540} width={2560} height={1080} rx={16} fill="#090C18" />
+    <g clipPath="url(#demo-ledc)">
+      <rect x={-300} y={-520} width={2520} height={1040} fill="url(#demo-led)" />
+      <ellipse cx={500 + 260 * Math.sin(t * 0.35)} cy={-80 + 90 * Math.cos(t * 0.27)} rx={720} ry={460} fill="url(#demo-blob)" />
+      <ellipse cx={1500 + 240 * Math.cos(t * 0.31)} cy={140 + 80 * Math.sin(t * 0.4)} rx={680} ry={420} fill="url(#demo-blob2)" />
+      {Array.from({length: 22}, (_, i) => <line key={`v${i}`} x1={-300 + i * 120} y1={-520} x2={-300 + i * 120} y2={520} stroke="#05070F" strokeWidth={3} opacity={0.45} />)}
+      {Array.from({length: 10}, (_, i) => <line key={`h${i}`} x1={-300} y1={-520 + i * 120} x2={2220} y2={-520 + i * 120} stroke="#05070F" strokeWidth={3} opacity={0.45} />)}
+    </g>
+    {/* truss and lamps */}
+    <rect x={-1400} y={-700} width={4800} height={34} fill="#2A3048" stroke="#05070F" strokeWidth={4} />
+    {Array.from({length: 48}, (_, i) => <path key={i} d={`M${-1400 + i * 100},-700 l50,34 l50,-34`} fill="none" stroke="#454C68" strokeWidth={3} />)}
+    {[-60, 420, 960, 1500, 1980].map((x, i) => {
+      const sw = 70 * Math.sin(t * 0.5 + i * 1.3);
+      return (
+        <g key={i}>
+          <path d={`M${x - 26},-650 L${x + 26},-650 L${x + 300 + sw},760 L${x - 300 + sw},760 Z`} fill={i % 2 ? '#BFD9FF' : '#FFE3B8'} opacity={0.06} />
+          <rect x={x - 30} y={-668} width={60} height={46} rx={10} fill="#1B2032" stroke="#05070F" strokeWidth={4} />
+          <ellipse cx={x} cy={-622} rx={22} ry={8} fill={i % 2 ? '#DDEBFF' : '#FFEFD2'} />
+        </g>
+      );
+    })}
+    {/* stage */}
+    <rect x={-1400} y={560} width={4800} height={1400} fill="#1A2036" />
+    <ellipse cx={960} cy={640} rx={900} ry={80} fill="#FFE9C8" opacity={0.12} />
+    <rect x={-1400} y={552} width={4800} height={10} fill="#33405E" />
+    {veil > 0.001 && <rect x={-6000} y={-6000} width={12000} height={12000} fill="#0F1426" opacity={veil} />}
+  </g>
+);
+/** the stage's front edge with its light strip, drawn across the frame at `y` (foreground of the stage) */
+export const StageLip: React.FC<{y: number}> = ({y}) => (
+  <g>
+    <rect x={-1400} y={y} width={4800} height={70} fill="#0D111F" stroke="#05070F" strokeWidth={4} />
+    <rect x={-1400} y={y + 4} width={4800} height={6} fill="#7FD6FF" opacity={0.75} />
+    <rect x={-1400} y={y + 70} width={4800} height={1200} fill="#0A0D18" />
+  </g>
+);
+
+/** V5: an engineering workshop: slate walls, steel shelving with coloured parts bins, a red rolling tool chest, an
+ *  industrial arm parked in the corner, hanging lamps with warm pools of light (slate and amber, not cream and teal) */
+export const WorkshopBack: React.FC<{veil?: number}> = ({veil = 0}) => (
+  <g>
+    <rect x={-1400} y={-900} width={4800} height={2600} fill="#46505C" />
+    {Array.from({length: 30}, (_, i) => <rect key={i} x={-1400 + i * 160} y={-900} width={4} height={1460} fill="#3C454F" />)}
+    {/* steel shelving with bins */}
+    {[-600, 1500].map((x0, j) => (
+      <g key={j}>
+        {[0, 1, 2, 3].map((r) => (
+          <g key={r}>
+            <rect x={x0} y={-420 + r * 210} width={620} height={14} fill="#9AA3AD" stroke="#20262D" strokeWidth={3} />
+            {Array.from({length: 5}, (_, c) => (
+              <rect key={c} x={x0 + 18 + c * 120} y={-420 + r * 210 - 86} width={100} height={86} rx={6} fill={['#D9A441', '#3E86B5', '#C8483A', '#5E9C6E', '#8A8F98'][(c + r + j) % 5]} stroke="#20262D" strokeWidth={3} />
+            ))}
+          </g>
+        ))}
+        <rect x={x0} y={-560} width={12} height={1120} fill="#7E8892" />
+        <rect x={x0 + 608} y={-560} width={12} height={1120} fill="#7E8892" />
+      </g>
+    ))}
+    {/* tool chest */}
+    <rect x={260} y={180} width={360} height={380} rx={10} fill="#C8483A" stroke="#20262D" strokeWidth={5} />
+    {[0, 1, 2, 3, 4].map((i) => <g key={i}><rect x={276} y={200 + i * 70} width={328} height={56} rx={4} fill="#B33D31" stroke="#20262D" strokeWidth={3} /><rect x={400} y={222 + i * 70} width={80} height={10} rx={5} fill="#D9DDE2" /></g>)}
+    {/* a parked industrial arm */}
+    <rect x={870} y={470} width={180} height={90} rx={8} fill="#E0A63A" stroke="#20262D" strokeWidth={5} />
+    <path d="M960,470 L900,250 L1120,120" fill="none" stroke="#20262D" strokeWidth={62} strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M960,470 L900,250 L1120,120" fill="none" stroke="#E8B04A" strokeWidth={50} strokeLinecap="round" strokeLinejoin="round" />
+    <circle cx={900} cy={250} r={34} fill="#5A616B" stroke="#20262D" strokeWidth={5} />
+    <rect x={1110} y={92} width={70} height={56} rx={8} fill="#5A616B" stroke="#20262D" strokeWidth={5} />
+    {/* hanging lamps */}
+    {[-200, 760, 1700].map((x, i) => (
+      <g key={i}>
+        <line x1={x} y1={-900} x2={x} y2={-470} stroke="#15191E" strokeWidth={5} />
+        <path d={`M${x - 80},-400 Q${x},-500 ${x + 80},-400 Z`} fill="#2C3238" stroke="#15191E" strokeWidth={4} />
+        <ellipse cx={x} cy={-398} rx={56} ry={10} fill="#FFE2A0" />
+        <path d={`M${x - 70},-398 L${x + 70},-398 L${x + 420},560 L${x - 420},560 Z`} fill="#FFD48A" opacity={0.07} />
+      </g>
+    ))}
+    {/* floor */}
+    <rect x={-1400} y={560} width={4800} height={1400} fill="#3A3F45" />
+    <rect x={-1400} y={552} width={4800} height={10} fill="#2A2E33" />
+    <rect x={-1400} y={700} width={4800} height={14} fill="#D9B341" opacity={0.6} />
+    {veil > 0.001 && <rect x={-6000} y={-6000} width={12000} height={12000} fill="#46505C" opacity={veil} />}
+  </g>
+);
+/** the workbench top and front, at `y` */
+export const Workbench: React.FC<{x0: number; x1: number; y: number}> = ({x0, x1, y}) => (
+  <g>
+    <rect x={x0} y={y - 26} width={x1 - x0} height={34} fill="#B98A57" stroke="#20262D" strokeWidth={4} />
+    <rect x={x0 + 10} y={y + 8} width={x1 - x0 - 20} height={600} fill="#5A6068" stroke="#20262D" strokeWidth={4} />
+    {Array.from({length: Math.ceil((x1 - x0) / 220)}, (_, i) => <rect key={i} x={x0 + 30 + i * 220} y={y + 40} width={190} height={120} rx={6} fill="#4C525A" stroke="#20262D" strokeWidth={2} />)}
+  </g>
+);
+
+/** V5: a test bay: bright clinical walls, a large dark observation window (control room behind, monitors glowing),
+ *  ceiling light panels, a camera on a tripod, floor tape marks (white and green, not cream and teal) */
+export const TestBayBack: React.FC<{veil?: number}> = ({veil = 0}) => (
+  <g>
+    <rect x={-1400} y={-900} width={4800} height={2600} fill="#E9ECEE" />
+    {Array.from({length: 12}, (_, i) => <rect key={i} x={-1400 + i * 420} y={-900} width={4} height={1460} fill="#D5DADD" />)}
+    {/* ceiling light panels */}
+    {[-700, 0, 700, 1400, 2100].map((x, i) => <rect key={i} x={x} y={-780} width={420} height={40} rx={6} fill="#FFFFFF" stroke="#B9C0C5" strokeWidth={3} />)}
+    {/* observation window into the control room */}
+    <rect x={-120} y={-420} width={1500} height={640} rx={10} fill="#1A2229" stroke="#2C353D" strokeWidth={10} />
+    <rect x={-100} y={-400} width={1460} height={600} fill="#24313A" />
+    {[60, 420, 780, 1140].map((x, i) => (
+      <g key={i}>
+        <rect x={x} y={-20} width={240} height={150} rx={6} fill="#0F161B" />
+        <rect x={x + 10} y={-10} width={220} height={130} fill={i % 2 ? '#3D6E8A' : '#2F5B74'} opacity={0.9} />
+      </g>
+    ))}
+    <rect x={-100} y={140} width={1460} height={60} fill="#1A2229" />
+    <path d="M-60,-390 l120,0 l-260,590 l-120,0 Z" fill="#FFFFFF" opacity={0.07} />
+    {/* camera on a tripod */}
+    <path d="M1700,560 L1760,250 L1820,560 M1760,250 L1760,560" fill="none" stroke="#2C353D" strokeWidth={10} strokeLinecap="round" />
+    <rect x={1700} y={190} width={140} height={78} rx={10} fill="#2C353D" />
+    <circle cx={1700} cy={228} r={26} fill="#121A20" stroke="#2C353D" strokeWidth={6} />
+    {/* floor */}
+    <rect x={-1400} y={560} width={4800} height={1400} fill="#C9CFD3" />
+    <rect x={-1400} y={552} width={4800} height={10} fill="#AEB6BB" />
+    <rect x={200} y={700} width={140} height={12} fill="#4FA86F" />
+    <rect x={1500} y={760} width={140} height={12} fill="#4FA86F" />
+    {veil > 0.001 && <rect x={-6000} y={-6000} width={12000} height={12000} fill="#E9ECEE" opacity={veil} />}
   </g>
 );

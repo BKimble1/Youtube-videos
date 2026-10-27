@@ -174,7 +174,7 @@ export const StudyCue: React.FC<{f: number}> = ({f}) => (
 // "One model": the robot's eye camera, very close
 export const StudyLens: React.FC<{f: number}> = ({f}) => {
   const st = view(rob2(f), 30, 0.55, 0.05);
-  return <RobotCU id="sl" cam={drift(f, K.oneModel, T('human expression.'), {x: 960, y: 540, z: 1}, {x: 960, y: 540, z: 1.08})} st={st} x={1180} y={760} s={9.0} veil={0.5} bgDx={-300} lensGlow={1} />;
+  return <RobotCU id="sl" bg="testbay" cam={drift(f, K.oneModel, T('human expression.'), {x: 960, y: 540, z: 1}, {x: 960, y: 540, z: 1.08})} st={st} x={1180} y={760} s={9.0} veil={0.5} bgDx={-300} lensGlow={1} />;
 };
 // "predicted the human expression.": on the screen, the coming smile as a dashed prediction
 export const StudyPredict: React.FC<{f: number}> = ({f}) => (
@@ -189,7 +189,7 @@ export const StudyMotor: React.FC<{f: number}> = ({f}) => {
   const k = pr(f, K.another2 + 0.1, K.another2 + 0.5);
   return (
     <g>
-      <RobotCU id="sm" cam={drift(f, K.another2, K.ms840, {x: 820, y: 640, z: 1}, {x: 810, y: 650, z: 1.06})} st={st} x={900} y={420} s={5.2} cheek={{k, side: -1, r: 1.25}} veil={0.4} />
+      <RobotCU id="sm" bg="testbay" cam={drift(f, K.another2, K.ms840, {x: 820, y: 640, z: 1}, {x: 810, y: 650, z: 1.06})} st={st} x={900} y={420} s={5.2} cheek={{k, side: -1, r: 1.25}} veil={0.4} />
       <Tag x={90} y={980} text="expression → motor commands" k={pr(f, T('translated the') - 0.1, T('translated the') + 0.3)} size={30} tone="warm" />
     </g>
   );
