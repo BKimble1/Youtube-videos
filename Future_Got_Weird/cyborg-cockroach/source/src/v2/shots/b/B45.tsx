@@ -55,17 +55,19 @@ export const COURSE: {b: BoxB; c: string}[] = [
   {b: [84, 136, 0, 26, 104, 154], c: LAB2.foamR},
 ];
 
-/** the camera (V5g): a HIGH THREE-QUARTER from the insect's front-left (az 168: its left side and face toward us, el
- *  39 -> 43), well inside the range the flat renderer draws consistently (all six legs, both antennae, the pack as one
- *  device). It heads screen-left; the right turn takes it away from us (up-screen) past the blue block's far end. */
-export const B45_AZ = 210;
+/** the camera (V5g): a HIGH THREE-QUARTER from behind the insect's left side (el 39 -> 43), well inside the range the
+ *  flat renderer draws consistently (six legs, two antennae, the pack as one device). It walks away up-screen to the
+ *  left; as it veers right the camera swings round with it by half the turn (B45_ORBIT), so its own view of the insect
+ *  turns only 45 degrees (no leg, antenna, eye or wire changes its drawing layer mid-move) while the insect visibly
+ *  turns right on screen and the course swings round behind it. */
+export const B45_AZ = 200, B45_ORBIT = 0.5;
 const BOARD: V3 = [4, 23, 0];
 const S_CLOSE = 11.6, S_WIDE = 5.8;
-const EL_CLOSE = 35, EL_WIDE = 43;
+const EL_CLOSE = 46, EL_WIDE = 49;
 /** the wide view looks between the insect and the turn's corner (so it keeps drifting with the walk: no hold) */
 const C_END: V3 = [40, 0, 20];
 const C_FOLLOW = 0.5;
-const A_CLOSE: [number, number] = [680, 960], A_WIDE: [number, number] = [600, 980];
+const A_CLOSE: [number, number] = [640, 980], A_WIDE: [number, number] = [560, 1000];
 /** the point the close camera rides with: the board, in the path frame (the gait's bob and roll never shake it) */
 const follow = (t: number): V3 => {
   const pp = PATH45(b45S(t));
@@ -73,14 +75,16 @@ const follow = (t: number): V3 => {
 };
 /** B5's pull back as it turns (eased in at the cut, still settling at B5's end) */
 export const b5Rise = (f: number) => sr(f, 281, 321);
-export const b45View = (f: number): View => {
+/** the camera's azimuth: it swings with the turn (the path's heading, eased: smoother in arc length) */
+export const b45Az = (f: number, az0 = B45_AZ, orbit = B45_ORBIT) => az0 + orbit * ((PATH45.yawAt(b45S(f / FPS)) * 180) / Math.PI);
+export const b45View = (f: number, az0 = B45_AZ, orbit = B45_ORBIT): View => {
   const t = f / FPS;
   const fo = follow(t);
   const u = b5Rise(f);
   const s = S_CLOSE * Math.pow(S_WIDE / S_CLOSE, u);
   const wide: V3 = [lerp(C_END[0], fo[0], C_FOLLOW), 0, lerp(C_END[2], fo[2], C_FOLLOW)];
   const at: V3 = [lerp(fo[0], wide[0], u), lerp(fo[1], wide[1], u), lerp(fo[2], wide[2], u)];
-  return viewAt(B45_AZ, lerp(EL_CLOSE, EL_WIDE, u), s, at, lerp(A_CLOSE[0], A_WIDE[0], u), lerp(A_CLOSE[1], A_WIDE[1], u));
+  return viewAt(b45Az(f, az0, orbit), lerp(EL_CLOSE, EL_WIDE, u), s, at, lerp(A_CLOSE[0], A_WIDE[0], u), lerp(A_CLOSE[1], A_WIDE[1], u));
 };
 
 const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {

@@ -34,9 +34,12 @@ export type Acting = {
   recog: number; recoil: number; handOpen: number; handSlide?: number; blink?: number; gaze: {x: number; y: number};
   exhale?: number; breath?: number; turn?: number; nod?: number; tilt?: number; face: Face4;
 };
+/** V5: her head is turned this much further toward the camera in every shot (on the rig's own turn control), so her far
+ *  (screen-right) eye always sits inside the head outline instead of on it, at every lid and eye width she uses */
+export const FACE_TURN = 11;
 export const herOpts = (T: number, a: Acting) => ({
   ...HER, t: T, recog: a.recog, recoil: a.recoil, handOpen: a.handOpen, handSlide: a.handSlide ?? 0, blink: a.blink ?? 0, gaze: a.gaze,
-  exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: a.turn ?? 0, nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
+  exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: (a.turn ?? 0) + FACE_TURN, nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
 });
 export const herLayout = (T: number, a: Acting) => survivorLayout(herOpts(T, a));
 
@@ -46,50 +49,59 @@ const sm01 = (x: number) => {
   const u = Math.min(1, Math.max(0, x));
   return u * u * (3 - 2 * u);
 };
-/** an explicit pose for the redrawn near hand (overrides what the rig's handOpen implies): open 0..1 (finger length,
- *  thumb out), splay (the rig's finger spread: 0.05 together .. 0.95 spread) */
-export type HandPose = {open: number; splay: number};
-/** Her near (right) hand redrawn over the rig's own, on the rig's own flat-hand map (survivorRig handR + handMap) and in
- *  the rig's HandArt 'open' construction: identical to the rig's hand while it is tense (fingers drawn in), but as it
- *  relaxes the fingers lengthen to a real open hand (the rig's open hand stops at short stubs, which reads as a fist):
- *  palm down, fingers straight and spread, the thumb out to the side. A superset of the rig's shape, so it covers it.
- *  V5: the palm's outline no longer runs across the end of the forearm (that arc read as a seam ring at the wrist): the
- *  hand joins the forearm as one shape. `pose` (optional) sets the fingers explicitly (F4: flat, together). */
-export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: number; scale: number}; pose?: HandPose}> = ({o, pose}) => {
+/** Her near (right) hand: ONE construction for every F frame (V5 consistency pass), drawn on the rig's own flat-hand
+ *  map (survivorRig handR + handMap: palm down on the floor, continuing the forearm) in the rig's HandArt proportions
+ *  (palm, four fingers, thumb). handOpen only bends the same four fingers: tense = curled (each finger visibly there,
+ *  shortened by the bend, a crease across its middle joint), relaxing = the same fingers uncurling, open = the same
+ *  fingers flat and a little spread. The finger lengths, palm and thumb never change, so there is no mitten state and
+ *  no size jump between shots. The rig's own hand under it is drawn tense (Survivor handOpen 0: short stubs, together),
+ *  so it always lies inside this one. The palm's outline does not run across the end of the forearm (no seam ring). */
+export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: number; scale: number}}> = ({o}) => {
   const R = survivorRig(o, {x: o.x, y: o.y, scale: o.scale});
   const h = R.handR, m = handMap(h, R.cd);
-  const open = sm01(pose ? pose.open : o.handOpen ?? 0);
-  const splay = pose ? pose.splay : h.splay;
-  const curl = (n: number) => (pose ? (1 - open) * (0.9 + 0.06 * Math.sin(n * 1.7)) : h.curl[n] ?? 0);
+  const open = sm01(o.handOpen ?? 0);
+  const splay = 0.1 + 0.35 * open;
   const ol = inkW(o.scale) / (o.scale * m.gm);
   const skin = PERSON.skin, side = h.thumb;
   const fingers = [-1.5, -0.5, 0.5, 1.5].map((i, n) => {
+    const curl = (1 - open) * (0.9 + 0.06 * Math.sin(n * 1.7));
     const a = i * 15 * (0.4 + splay) * RAD;
-    const L = (22 - Math.abs(i) * 2.5) * (1 - 0.45 * curl(n)) * (1 + 0.45 * open);
+    const Lf = (22 - Math.abs(i) * 2.5) * 1.18; // the finger's full (flat) length
+    const L = Lf * (1 - 0.5 * curl); // seen from above, a curled finger is shortened by its bend
     const x0 = i * 6.5, y0 = 12;
-    return {x0, y0, x1: x0 + Math.sin(a) * L, y1: y0 + Math.cos(a) * L};
+    const ux = Math.sin(a), uy = Math.cos(a);
+    return {x0, y0, x1: x0 + ux * L, y1: y0 + uy * L, ux, uy, L, curl};
   });
   const st = {stroke: INK, strokeWidth: ol, strokeLinejoin: 'round' as const};
-  // the thumb swings out from the palm as the hand opens
-  const th = side * -(38 + 10 * open);
+  const thumb = (c: string, w: number) => (
+    <g transform={`rotate(${side * -38})`}>
+      <line x1={side * -10} y1={2} x2={side * (-24 - 3 * open)} y2={8} stroke={c} strokeWidth={w} strokeLinecap="round" />
+    </g>
+  );
   return (
     <g transform={m.matrix}>
       {fingers.map((f, n) => <line key={`u${n}`} x1={f.x0} y1={f.y0} x2={f.x1} y2={f.y1} stroke={INK} strokeWidth={11 + ol * 2} strokeLinecap="round" />)}
-      <g transform={`rotate(${th})`}>
-        <line x1={side * -10} y1={2} x2={side * (-24 - 4 * open)} y2={8} stroke={INK} strokeWidth={11 + ol * 2} strokeLinecap="round" />
-        <line x1={side * -10} y1={2} x2={side * (-24 - 4 * open)} y2={8} stroke={skin} strokeWidth={11} strokeLinecap="round" />
-      </g>
+      {thumb(INK, 11 + ol * 2)}
+      {thumb(skin, 11)}
       <ellipse cx={0} cy={4} rx={18} ry={15} fill={skin} {...st} />
       {fingers.map((f, n) => <line key={`s${n}`} x1={f.x0} y1={f.y0} x2={f.x1} y2={f.y1} stroke={skin} strokeWidth={11} strokeLinecap="round" />)}
       <ellipse cx={0} cy={6} rx={15} ry={10} fill={skin} />
       {/* the wrist: skin over the palm outline's back arc where it lies across the forearm's end (inside the forearm's
           width: the forearm is 15 u each side of its axis, 16 hand-local units at the map's lateral scale) */}
       <rect x={-15.7} y={-14} width={31.4} height={15} fill={skin} />
-      {/* the gaps between the open fingers (ink, from the knuckles out) */}
-      {open > 0.4 && fingers.slice(0, 3).map((f, n) => {
+      {/* the gaps between the fingers (ink, from the knuckles out to near the tips): always four fingers */}
+      {fingers.slice(0, 3).map((f, n) => {
         const g = fingers[n + 1];
-        const mx0 = (f.x0 + g.x0) / 2, my0 = f.y0 + 3, mx1 = (f.x0 + g.x0) / 2 + ((f.x1 - f.x0) + (g.x1 - g.x0)) * 0.22, my1 = f.y0 + 3 + ((f.y1 - f.y0) + (g.y1 - g.y0)) * 0.22;
-        return <line key={`g${n}`} x1={mx0} y1={my0} x2={mx1} y2={my1} stroke={INK} strokeWidth={ol * 0.7} strokeLinecap="round" opacity={Math.min(1, (open - 0.4) * 3)} />;
+        const ux = (f.ux + g.ux) / 2, uy = (f.uy + g.uy) / 2, l = Math.min(f.L, g.L) - 2.5;
+        const mx0 = (f.x0 + g.x0) / 2, my0 = f.y0 + 3;
+        return <line key={`g${n}`} x1={mx0} y1={my0} x2={mx0 + ux * (l - 3)} y2={my0 + uy * (l - 3)} stroke={INK} strokeWidth={ol * 0.7} strokeLinecap="round" />;
+      })}
+      {/* curled fingers: a crease across each finger at its bent middle joint */}
+      {fingers.map((f, n) => {
+        const k = Math.min(1, Math.max(0, (f.curl - 0.2) / 0.4));
+        if (k <= 0.01) return null;
+        const cx = f.x0 + f.ux * f.L * 0.62, cy = f.y0 + f.uy * f.L * 0.62, hw = 3.2;
+        return <line key={`c${n}`} x1={cx - f.uy * hw} y1={cy + f.ux * hw} x2={cx + f.uy * hw} y2={cy - f.ux * hw} stroke={INK} strokeWidth={ol * 0.6} strokeLinecap="round" opacity={k} />;
       })}
     </g>
   );
@@ -209,7 +221,7 @@ export const Pocket: React.FC<PocketProps> = ({id, T, a, shadow = false, fan = 1
       <Crevice id={`${id}cv`} v={v} w={3} />
       <Glow2 id={`${id}lg`} cx={P(v, [80, 0, 0])[0]} cy={P(v, [80, 0, 0])[1]} rx={170} ry={60} color={RB.day} a={0.45} />
       <Ledge id={`${id}le`} v={v} w={3} />
-      <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} hideFarArm />
+      <Survivor id={`${id}sv`} {...o} handOpen={0} between={block} cutX={cut.x} hideFarArm />
       <NearHand o={o} />
       {medic && <Roach2D pose={medic} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={medic.frame} g={{kind: 'injector'}} />}} />}
       {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={17} />}

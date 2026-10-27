@@ -53,6 +53,9 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
       <Block id={`${sid}bl`} v={v} w={5} dark={0.05} />
       <path d={poly(slit)} fill={RB.dayHot} />
       <Grit t={t} x={gTop[0]} y0={gTop[1]} y1={q(0, 0, -6)[1] - 4} t0={F2_GRIT.t0} dur={F2_GRIT.dur} n={9} g={2600} r={4.5} spread={18} seed={12} />
+      {/* the daylight shaft lights the slab and the floor but is drawn under the insect (V5: over it, it washed out its
+          own colours) */}
+      <Shaft id={`${sid}shf`} pts={[[700, -100], [1180, -100], [700, 1500], [160, 1400]]} from={[1000, -60]} to={[420, 1400]} a={0.3} />
       <g clipPath={`url(#${sid}-ic)`}>
         <defs>
           <clipPath id={`${sid}-ic`} clipRule="evenodd">
@@ -65,11 +68,10 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
       {/* the antennae out in the light (the parts in front of the hole's face), over the hole's shadow */}
       {[pose.antL, pose.antR].map((a, i) => {
         const out = a.filter((p) => p[0] > -1);
-        return out.length > 1 ? <Antenna2D key={i} v={v} pts={out} ink={ink * 0.75} color="#B9825A" /> : null;
+        return out.length > 1 ? <Antenna2D key={i} v={v} pts={out} ink={ink * 0.75} /> : null; // the rig's own dark antenna colour
       })}
       <Pebbles id={`${sid}pb`} a={q(150, 0, 90)} b={q(220, 0, 160)} n={4} size={26} seed={21} tone={RB.concLit} w={4} dark={0.2} />
       <Pebbles id={`${sid}pc`} a={q(170, 0, -170)} b={q(240, 0, -120)} n={4} size={28} seed={22} tone={RB.concLit} w={4} dark={0.2} />
-      <Shaft id={`${sid}shf`} pts={[[700, -100], [1180, -100], [700, 1500], [160, 1400]]} from={[1000, -60]} to={[420, 1400]} a={0.3} />
       <Motes id={`${sid}m`} t={t + 3} n={22} x0={0} y0={300} x1={1080} y1={1700} r={5} seed={14} a={0.5} />
       {/* near rubble framing the bottom corners */}
       <Slab id={`${sid}f1`} face={jag([[-100, 1600], [240, 1680], [360, 1820], [340, 2020], [-100, 2020]], 14, 31)} top={jag([[-100, 1600], [240, 1680], [360, 1820], [-100, 1740]], 8, 32)} tone="#5D5F66" w={6} dark={0.55} specks={10} />

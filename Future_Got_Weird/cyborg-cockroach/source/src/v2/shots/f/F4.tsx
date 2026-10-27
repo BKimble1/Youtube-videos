@@ -14,7 +14,7 @@ import {keys, sr} from '../../../lib/ease';
 import {f2} from '../../roach/ortho';
 import {RB, Pt, Slab, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, jag, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
-import {FF, faceTrack, herOpts, Acting, NearHand} from './pocket';
+import {FF, faceTrack, herOpts, Acting, NearHand, FACE_TURN} from './pocket';
 import {F3_HAND_END} from './F3';
 import {medicPose, R4, FPS, SLAB, SC, MM_U, Place, cfViewAt, cardPxAt, onBody, BARREL} from './world';
 import {ShotProps} from '../index2';
@@ -52,7 +52,7 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
   const a: Acting = {
     recog: 0, recoil: 0.3, handOpen: F4_HAND.from + (F4_HAND.to - F4_HAND.from) * sr(lf, F4_K.flat0, F4_K.flat1), gaze: {x: head[0], y: head[1]},
     breath: 0.6 + 0.6 * sr(lf, F4_K.breath0, F4_K.breath1),
-    turn: keys(lf, [[0, -14], [24, -16]]), nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
+    turn: keys(lf, [[0, -14], [24, -16]]) - FACE_TURN, // (herOpts adds FACE_TURN; from behind it stays turned away) nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
     face: faceTrack(lf, [[0, FF.unease]]),
   };
   const o = {...herOpts(T, a), x: PL4.x, y: PL4.y, scale: PL4.scale, yaw: PL4.yaw, elev: PL4.elev};
@@ -98,12 +98,12 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
       <g filter={`url(#${sid}-hb)`}>
         <defs>
           <filter id={`${sid}-hb`} x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="4.5" />
+            <feGaussianBlur stdDeviation="2.5" />
           </filter>
         </defs>
         {/* her forearm's and hand's soft contact shadow on the floor (the light from the upper right) */}
         <path d={`M${L.nearElbow.x + 30},${L.nearElbow.y + 40} L${L.nearWrist.x + 40},${L.nearWrist.y + 30} L${L.nearTip.x + 34},${L.nearTip.y + 26}`} stroke="#2A2522" strokeOpacity={0.4} strokeWidth={PL4.scale * 34} strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        <Survivor id={`${sid}sv`} {...o} hideFarArm />
+        <Survivor id={`${sid}sv`} {...o} handOpen={0} hideFarArm />
         <NearHand o={o} />
         <Glow2 id={`${sid}rim`} cx={L.head.x + 260} cy={L.head.y - 260} rx={300} ry={260} color={RB.day} a={0.22} />
       </g>
