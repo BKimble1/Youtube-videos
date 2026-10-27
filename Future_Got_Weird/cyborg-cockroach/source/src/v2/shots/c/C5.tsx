@@ -18,6 +18,7 @@ import {ShotProps} from '../index2';
 import {rnd} from '../../../lib/ease';
 import {BLOCKS, curbs, CURB, centre, courseAt, feedMedicPose, feedObsPose, medicS, headOf, rightOf, TARGET_S} from './course';
 import {OBS_TINT} from './C2';
+import {LegJointPatches} from '../b/common';
 
 export const C5_FROM = 424, C5_TO = 466;
 export const C5_AZ = -120, C5_EL = 48, C5_S = 5.0;
@@ -96,8 +97,8 @@ export const C5Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
   }
   // the two insects
   const med = c5Medic(f), obs = c5Obs(f);
-  items.push({d: D(v, [med.frame.o[0], 0, med.frame.o[2]]), el: <Roach2D key="md" pose={med} v={v} o={{id: `${id}-md`, gear: <Gear2D id={`${id}-mg`} v={v} f={med.frame} g={{kind: 'injector'}} />}} />});
-  items.push({d: D(v, [obs.frame.o[0], 0, obs.frame.o[2]]), el: <Roach2D key="ob" pose={obs} v={v} o={{id: `${id}-ob`, tint: OBS_TINT, gear: <Gear2D id={`${id}-og`} v={v} f={obs.frame} g={{kind: 'camera'}} />}} />});
+  items.push({d: D(v, [med.frame.o[0], 0, med.frame.o[2]]), el: <g key="md"><LegJointPatches pose={med} v={v} /><Roach2D pose={med} v={v} o={{id: `${id}-md`, gear: <Gear2D id={`${id}-mg`} v={v} f={med.frame} g={{kind: 'injector'}} />}} /></g>});
+  items.push({d: D(v, [obs.frame.o[0], 0, obs.frame.o[2]]), el: <g key="ob"><LegJointPatches pose={obs} v={v} /><Roach2D pose={obs} v={v} o={{id: `${id}-ob`, tint: OBS_TINT, gear: <Gear2D id={`${id}-og`} v={v} f={obs.frame} g={{kind: 'camera'}} />}} /></g>});
   items.sort((a, b) => a.d - b.d);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">

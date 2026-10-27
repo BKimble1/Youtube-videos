@@ -234,7 +234,14 @@ export const Roach2D: React.FC<{pose: RoachPose; v: View; o: Roach2DOpts}> = ({p
   const gx = P(v, toW(f, [30, 0, 0])), gb = P(v, toW(f, [-40, 0, 0])), gz = P(v, toW(f, [0, 0, 22]));
   const sw = Math.hypot(gx[0] - gb[0], gx[1] - gb[1]) / 2, sh = Math.max(4, Math.hypot(gz[0] - g0[0], gz[1] - g0[1]));
   const sang = (Math.atan2(gx[1] - gb[1], gx[0] - gb[0]) * 180) / Math.PI;
-  const legLimb = (l: LegPose, far: boolean) => <Leg2D key={l.def.name} v={v} l={l} color={far ? R2.legFar : R2.leg} ink={ink * 0.85} />;
+  // V5: a leg's shade blends with its depth (and toward the top view's single shade) instead of flipping at a threshold,
+  // so legs never change colour in a jump while the insect turns or the camera rises
+  const topK = Math.min(1, Math.max(0, (v.F[1] - 0.62) / 0.16));
+  const legShade = (l: LegPose) => {
+    const nearK = Math.min(1, Math.max(0, (D(v, l.coxa) - cD + 1) / 6));
+    return mix(R2.legFar, R2.leg, nearK * (1 - topK) + topK);
+  };
+  const legLimb = (l: LegPose, _far: boolean) => <Leg2D key={l.def.name} v={v} l={l} color={legShade(l)} ink={ink * 0.85} />;
   const cercus = (c: {a: V2; b: V2}, k: number) => (
     <g key={k}>
       <path d={`M${f2(c.a[0])},${f2(c.a[1])} L${f2(c.b[0])},${f2(c.b[1])}`} stroke={INK} strokeWidth={f2(0.9 * v.s + ink)} strokeLinecap="round" />
