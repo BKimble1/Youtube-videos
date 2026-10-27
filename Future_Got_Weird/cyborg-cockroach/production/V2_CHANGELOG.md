@@ -69,7 +69,7 @@ Not used. The Runway connector authenticates, but its asset download host refuse
 - Audio: -14.2 LUFS integrated, true peak -1.5 dBTP, voice 22.8 dB over the rest in the phone band. The file's audio matches the mix (correlation 0.99998, offset 0 ms).
 - Whisper transcript of the file: word error rate 0 against the locked script.
 - Caption windows: 23/23 OK.
-- Motion: every non-cut motion spike is intentional (the D2 snap at frame 498). The first render had one 13-frame near-hold in B1 (5.8-6.2 s); it is fixed, because the push now runs through the cut.
+- Motion: every non-cut motion spike is intentional (the D2 snap at frame 498). No low-motion holds remain (the first render had a 13-frame near-hold in B1 at 5.8-6.2 s, fixed by running the push through the cut).
 - Inspected frame by frame: 0-89 (hook, firing at frame 27, remote, LED match cut) and 876-935 (realization, final approach, loop into frame 0). The F5 caption was moved to the top band, off her fingertips.
 
 ## Known remaining issues
