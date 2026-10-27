@@ -83,10 +83,10 @@ export const E4: React.FC<ShotProps> = ({f, lf}) => {
   // the gravel bed: its top band (z -70..70) and its front down to the frame's bottom
   const bedTop: Pt[] = [near(xNow - 80, -70), near(xNow + 80, -70), near(xNow + 80, 70), near(xNow - 80, 70)];
   const grit = Array.from({length: 70}, (_, i) => {
-    const x = -120 + rnd(i, 51) * 330, z = -66 + rnd(i + 1, 51) * 130;
+    const x = s0 - 30 + rnd(i, 51) * 90, z = -66 + rnd(i + 1, 51) * 130;
     const p = near(x, z);
     if (p[0] < -40 || p[0] > 1120) return null;
-    const r = (0.5 + rnd(i + 2, 51) * 1.1) * S;
+    const r = (0.4 + rnd(i + 2, 51) * 0.8) * S;
     return <ellipse key={i} cx={f2(p[0])} cy={f2(p[1])} rx={f2(r)} ry={f2(r * 0.42)} fill={i % 3 ? '#6F665E' : '#8F857A'} stroke={INK} strokeWidth={2} />;
   });
   // the rebar stub behind the far legs
@@ -112,11 +112,11 @@ export const E4: React.FC<ShotProps> = ({f, lf}) => {
       <Motes id={`${id}-mo`} t={t + 5} n={20} x0={0} y0={300} x1={1080} y1={1250} r={4} seed={62} a={0.7} />
       {/* near grit, out of focus, sliding past */}
       <Blur id={`${id}-nb`} sd={10}>
-        {Array.from({length: 7}, (_, i) => {
-          const x = -60 + i * 46 + rnd(i, 71) * 20;
+        {Array.from({length: 10}, (_, i) => {
+          const x = s0 - 28 + i * 9 + rnd(i, 71) * 4;
           const p = near(x, 120, 0);
-          const r = (3 + rnd(i + 1, 71) * 4) * S;
-          return <ellipse key={i} cx={f2(p[0])} cy={f2(p[1] + 330 + rnd(i + 2, 71) * 160)} rx={f2(r)} ry={f2(r * 0.6)} fill={i % 2 ? '#2C2621' : '#3C342D'} />;
+          const r = (2.2 + rnd(i + 1, 71) * 2.6) * S;
+          return <ellipse key={i} cx={f2(p[0])} cy={f2(p[1] + 200 + rnd(i + 2, 71) * 200)} rx={f2(r)} ry={f2(r * 0.6)} fill={i % 2 ? '#2C2621' : '#3C342D'} />;
         })}
       </Blur>
     </svg>
