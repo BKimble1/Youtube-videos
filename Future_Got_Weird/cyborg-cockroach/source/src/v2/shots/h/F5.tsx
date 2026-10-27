@@ -107,7 +107,7 @@ export const F5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
         return <circle key={i} cx={f2(g[0])} cy={f2(g[1])} r={3 + (i % 4)} fill={i % 2 ? RB.concDark : RB.dust} opacity={0.8} />;
       })}
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'injector', injRear: d.injRear, latched: d.latched, heat: d.heat}} />}} />
-      <F5Hand id={`${id}h`} t={t} tip={tip} L={118 * v.s} open={sr(t, 29.6, 30.4)} />
+      <F5Hand id={`${id}h`} t={t} tip={tip} L={118 * v.s} open={1} />
       <Vignette id={`${id}vg`} a={0.45} />
     </svg>
   );
