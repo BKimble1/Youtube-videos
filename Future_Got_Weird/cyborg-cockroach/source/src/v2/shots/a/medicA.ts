@@ -32,8 +32,8 @@ const TA = 0.28;
 export const MED_TURN = -2.75;
 const LT = 112;
 const PIV = 4;
-/** the body's travel per gait unit once walking (short quick strides: ~0.55 x 26 = 14 mm per stride) */
-const KMAX = 0.55;
+/** the body's travel per gait unit once walking (short quick strides: ~0.46 x 26 = 12 mm per stride; ~57 mm/s) */
+const KMAX = 0.46;
 /** a small pivot on planted feet before the first step (rad, the same direction as the turn) */
 const Y_PLANT = -0.07;
 /** how far the body draws back on its planted feet (mm, body x) */
