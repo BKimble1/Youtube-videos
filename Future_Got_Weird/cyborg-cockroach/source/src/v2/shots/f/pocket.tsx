@@ -7,7 +7,8 @@ import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {View, P, f2 as f2o} from '../../roach/ortho';
 import {Layer, Cam} from '../../dc/camera';
-import {Survivor, survivorLayout} from '../../../crew/person';
+import {Survivor, survivorLayout, survivorRig, handMap, PERSON} from '../../../crew/person';
+import {inkW} from '../../../crew/person/geo';
 import {Face4} from '../../../crew/person/Crew';
 import {face, keyed} from '../../../crew/person/poses';
 import {INK} from '../../../lib/ink';
@@ -38,6 +39,51 @@ export const herOpts = (T: number, a: Acting) => ({
   exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: a.turn ?? 0, nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
 });
 export const herLayout = (T: number, a: Acting) => survivorLayout(herOpts(T, a));
+
+// ---------------------------------------------------------------- her near hand, open
+const RAD = Math.PI / 180;
+const sm01 = (x: number) => {
+  const u = Math.min(1, Math.max(0, x));
+  return u * u * (3 - 2 * u);
+};
+/** Her near (right) hand redrawn over the rig's own, on the rig's own flat-hand map (survivorRig handR + handMap) and in
+ *  the rig's HandArt 'open' construction: identical to the rig's hand while it is tense (fingers drawn in), but as it
+ *  relaxes the fingers lengthen to a real open hand (the rig's open hand stops at short stubs, which reads as a fist):
+ *  palm down, fingers straight and spread, the thumb out to the side. A superset of the rig's shape, so it covers it. */
+export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: number; scale: number}}> = ({o}) => {
+  const R = survivorRig(o, {x: o.x, y: o.y, scale: o.scale});
+  const h = R.handR, m = handMap(h, R.cd);
+  const open = sm01(o.handOpen ?? 0);
+  const ol = inkW(o.scale) / (o.scale * m.gm);
+  const skin = PERSON.skin, side = h.thumb;
+  const fingers = [-1.5, -0.5, 0.5, 1.5].map((i, n) => {
+    const a = i * 15 * (0.4 + h.splay) * RAD;
+    const L = (22 - Math.abs(i) * 2.5) * (1 - 0.45 * (h.curl[n] ?? 0)) * (1 + 0.45 * open);
+    const x0 = i * 6.5, y0 = 12;
+    return {x0, y0, x1: x0 + Math.sin(a) * L, y1: y0 + Math.cos(a) * L};
+  });
+  const st = {stroke: INK, strokeWidth: ol, strokeLinejoin: 'round' as const};
+  // the thumb swings out from the palm as the hand opens
+  const th = side * -(38 + 10 * open);
+  return (
+    <g transform={m.matrix}>
+      {fingers.map((f, n) => <line key={`u${n}`} x1={f.x0} y1={f.y0} x2={f.x1} y2={f.y1} stroke={INK} strokeWidth={11 + ol * 2} strokeLinecap="round" />)}
+      <g transform={`rotate(${th})`}>
+        <line x1={side * -10} y1={2} x2={side * (-24 - 4 * open)} y2={8} stroke={INK} strokeWidth={11 + ol * 2} strokeLinecap="round" />
+        <line x1={side * -10} y1={2} x2={side * (-24 - 4 * open)} y2={8} stroke={skin} strokeWidth={11} strokeLinecap="round" />
+      </g>
+      <ellipse cx={0} cy={4} rx={18} ry={15} fill={skin} {...st} />
+      {fingers.map((f, n) => <line key={`s${n}`} x1={f.x0} y1={f.y0} x2={f.x1} y2={f.y1} stroke={skin} strokeWidth={11} strokeLinecap="round" />)}
+      <ellipse cx={0} cy={6} rx={15} ry={10} fill={skin} />
+      {/* the gaps between the open fingers (ink, from the knuckles out) */}
+      {open > 0.4 && fingers.slice(0, 3).map((f, n) => {
+        const g = fingers[n + 1];
+        const mx0 = (f.x0 + g.x0) / 2, my0 = f.y0 + 3, mx1 = (f.x0 + g.x0) / 2 + ((f.x1 - f.x0) + (g.x1 - g.x0)) * 0.22, my1 = f.y0 + 3 + ((f.y1 - f.y0) + (g.y1 - g.y0)) * 0.22;
+        return <line key={`g${n}`} x1={mx0} y1={my0} x2={mx1} y2={my1} stroke={INK} strokeWidth={ol * 0.7} strokeLinecap="round" opacity={Math.min(1, (open - 0.4) * 3)} />;
+      })}
+    </g>
+  );
+};
 
 // ---------------------------------------------------------------- the slab ahead of her hands, the slit, its light
 const cp = (X: number, Y: number, Z: number): Pt => cardPx(X, Y, Z) as Pt;
@@ -154,6 +200,7 @@ export const Pocket: React.FC<PocketProps> = ({id, T, a, shadow = false, fan = 1
       <Glow2 id={`${id}lg`} cx={P(v, [80, 0, 0])[0]} cy={P(v, [80, 0, 0])[1]} rx={170} ry={60} color={RB.day} a={0.45} />
       <Ledge id={`${id}le`} v={v} w={3} />
       <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} />
+      <NearHand o={o} />
       {medic && <Roach2D pose={medic} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={medic.frame} g={{kind: 'injector'}} />}} />}
       {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={17} />}
       {/* the slab is nearer the camera than anything coming out of its far end: drawn over the insect */}

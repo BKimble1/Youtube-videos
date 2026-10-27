@@ -26,7 +26,7 @@ export const F5: React.FC<ShotProps> = ({f, lf}) => {
   const h = sr(lf, K.hope0, K.hope1);
   const a: Acting = {
     recog: 0.6 * h, recoil: 0.3 * (1 - sr(lf, K.hope0 - 1, K.hope1)),
-    handOpen: 0.02 + 0.98 * sr(lf, K.open0, K.open1), handSlide: 0.55 * sr(lf, K.slide0, K.slide1),
+    handOpen: 0.02 + 0.98 * sr(lf, K.open0, K.open1), handSlide: 0.2 * sr(lf, K.slide0, K.slide1),
     gaze,
     exhale: clamp(Math.sin(Math.PI * clamp((lf - K.ex0) / (K.ex1 - K.ex0)))),
     breath: 0.8,

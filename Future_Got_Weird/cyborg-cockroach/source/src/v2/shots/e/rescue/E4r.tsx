@@ -4,21 +4,23 @@
 // tripod lifts, swings over the chunks and lands on a chunk top while the other tripod holds, and the body rides at the
 // mean height of its feet.
 import React from 'react';
-import {poseRoach, straightPath, RoachPose} from '../../../../rig/roach';
+import {poseRoach, straightPath, RoachPose, GAIT} from '../../../../rig/roach';
+import {V3} from '../../../../lib/v3';
 import {Roach2D} from '../../../roach/Roach2D';
 import {Gear2D} from '../../../roach/Gear2D';
 import {viewAt, View, P, D} from '../../../roach/ortho';
-import {rnd} from '../../../../lib/ease';
+import {rnd, smooth} from '../../../../lib/ease';
 import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Rebar, Glow2, Motes, VGrad, Vignette, poly, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, onGround, Blur} from './kit';
+import {idf, FPS, Blur, probe} from './kit';
 
 export const E4_N = 16;
+const E4_F0 = 700;
 const S = 15; // px per mm
 const V_MM = 34;
-const SX = 440, SY = 930; // the body's ground point on screen
+const SX = 360, SY = 930; // the body's ground point on screen (the head and its antennae, probing ahead, in frame)
 const AZ = 24, EL = 52;
 const s0 = 31;
 
@@ -56,16 +58,47 @@ const inside = (c: Chunk, x: number, z: number) => {
 /** the rubble's height under a ground point (mm) */
 export const e4H = (x: number, z: number) => CHUNKS.reduce((m, c) => (Math.abs(x - c.xc) < 11 && Math.abs(z - c.zc) < 11 && inside(c, x, z) ? Math.max(m, topAt(c, x, z)) : m), 0);
 
-const motion = (lf: number, lift = 0) => {
+const motion = (lf: number, lift = 0, pitch = 0, roll = 0) => {
   const t = lf / FPS;
-  return {path: straightPath([0, 0, 0], 0), s: s0 + V_MM * t, t: t + 23.4, search: 0.5, antL: {yaw: 0.5, pitch: 0.1}, antR: {yaw: 0.46, pitch: 0.14}, seed: 5, offset: [0, lift, 0] as [number, number, number]};
+  return {path: straightPath([0, 0, 0], 0), s: s0 + V_MM * t, t: t + 23.4, ...probe(lf + E4_F0, 1, 0.12), seed: 5, offset: [0, lift, 0] as [number, number, number], pitch, roll};
 };
-/** the posed insect on the rubble: feet on the chunk tops, the body raised to the mean height of its feet */
+/** each foot's ground height (mm): a planted foot stands on the rubble under it; a swinging foot carries from the
+ *  height it lifted off to the height it lands on (so it never pops onto a chunk), clear of the rubble below it */
+const footH = (lf: number): number[] => {
+  const m = motion(lf);
+  const p = poseRoach(m);
+  const u = m.s / GAIT.stride;
+  return p.legs.map((l, i) => {
+    const ph = u + l.def.phase, k = Math.floor(ph), fr = ph - k;
+    const now = e4H(l.foot[0], l.foot[2]);
+    if (fr < GAIT.duty) return now;
+    const w = (fr - GAIT.duty) / (1 - GAIT.duty);
+    const fa = poseRoach({...m, s: (k + 0.001 - l.def.phase) * GAIT.stride}).legs[i].foot;
+    const fb = poseRoach({...m, s: (k + 1.001 - l.def.phase) * GAIT.stride}).legs[i].foot;
+    const ha = e4H(fa[0], fa[2]), hb = e4H(fb[0], fb[2]);
+    return Math.max(ha + (hb - ha) * smooth(w), now + 0.6 - GAIT.lift * Math.sin(Math.PI * w));
+  });
+};
+/** the posed insect on the rubble: feet on the chunk tops; the body rides at the mean height of its feet and tilts with
+ *  them (pitch from the front pair against the hind pair, roll from the left feet against the right) */
 export const e4Pose = (lf: number): RoachPose => {
-  const p0 = poseRoach(motion(lf));
-  const lift = p0.legs.reduce((a, l) => a + e4H(l.foot[0], l.foot[2]), 0) / 6;
-  return onGround(poseRoach(motion(lf, lift)), e4H);
+  const hs = footH(lf);
+  const L = LEGS_I;
+  const mean = (ix: number[]) => ix.reduce((a, i) => a + hs[i], 0) / ix.length;
+  const lift = mean([0, 1, 2, 3, 4, 5]);
+  const pitch = 0.8 * Math.atan2(mean(L.front) - mean(L.hind), 58);
+  const roll = 0.8 * Math.atan2(mean(L.left) - mean(L.right), 60);
+  const p = poseRoach(motion(lf, lift, pitch, roll));
+  return {
+    ...p,
+    legs: p.legs.map((l, i) => {
+      const up = (q: V3): V3 => [q[0], q[1] + hs[i], q[2]];
+      return {...l, foot: up(l.foot), ankle: up(l.ankle)};
+    }),
+  };
 };
+/** leg indices (rig LEGS order: L1 R1 L2 R2 L3 R3) */
+const LEGS_I = {front: [0, 1], hind: [4, 5], left: [0, 2, 4], right: [1, 3, 5]};
 export const e4View = (lf: number): View => viewAt(AZ, EL, S, [s0 + V_MM * (lf / FPS), 0, 0], SX, SY);
 
 const Chunk3: React.FC<{v: View; c: Chunk}> = ({v, c}) => {

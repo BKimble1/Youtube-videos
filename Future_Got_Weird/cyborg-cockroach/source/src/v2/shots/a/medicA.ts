@@ -39,12 +39,12 @@ export const MED_GO = MED_PULSE + 0.05;
  *  (~4 steps a second per tripod) from A4's start */
 const V1 = 70;
 const VS = 125;
-const TA = 0.3;
+const TA = 0.22;
 const UP0 = 2.95;
 const UP1 = 3.3;
 /** the turn: total heading change (rad, - = toward +z: the insect's right), over LT gait units, about body x = PIV */
 export const MED_TURN = -2.75;
-const LT = 112;
+const LT = 150;
 const PIV = 4;
 /** the body's travel per gait unit once walking (short quick strides: ~0.46 x 26 = 12 mm per stride; ~57 mm/s) */
 const KMAX = 0.46;
@@ -123,7 +123,7 @@ export const medPose = (t: number): RoachPose => {
     search: lerp(0.75, 0.6, wk),
     offset: [-BACK * back(t), 0, 0],
     yawAdd,
-    antL: {yaw: lerp(1.2, 0.55, wk) + 0.32 * fl, pitch: lerp(0.75, 0.22, wk) + 0.42 * fl, curl: lerp(0.7, 0.85, wk) - 0.25 * fl},
+    antL: {yaw: lerp(1.2, 0.55, wk) + 0.3 * fl, pitch: lerp(0.75, 0.22, wk) + 0.5 * fl, curl: lerp(0.7, 0.85, wk) + 0.25 * fl},
     antR: {yaw: lerp(1.2, 0.55, wk) + 0.1 * fr, pitch: lerp(0.75, 0.22, wk) + 0.16 * fr, curl: lerp(0.7, 0.85, wk)},
   });
   return {...p, antL: constrainAntenna(p.antL, A1_FACE), antR: constrainAntenna(p.antR, A1_FACE)};

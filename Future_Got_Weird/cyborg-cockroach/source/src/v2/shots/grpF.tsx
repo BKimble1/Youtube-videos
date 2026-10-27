@@ -23,9 +23,9 @@ export const SHOTS_F: Record<string, React.FC<ShotProps>> = {F1, F2, F3, F4, F5}
 export const CAPY_F: Record<string, number> = {
   F1: 270, // top band, over the slab above her head (start) / right of her forehead (end); the light and the shadow are low right
   F2: 1570, // low, over the floor and the near rubble in front of the ledge (the insect at y 650-1100)
-  F3: 1590, // low: over her forearms (start, her chin at y ~1080) / the floor below the ledge (end; the insect at y < 1540)
-  F4: 270, // top band, over the slab top beyond the hole (the insect at y 700-1100, her head at x < 330)
-  F5: 1590, // low, over the floor below her hand and the insect (insect bottom ~1540)
+  F3: 270, // top band, over the slab's underside above her head (hair top at y ~400 close, ~380 in the two-shot)
+  F4: 270, // top band, over the floor and the slab beyond the hole (the insect at y 560-920, her head's top at y ~470, x < 260)
+  F5: 270, // top band, over the slab's underside above her head (hair top at y ~380; the insect and her hand are low right)
 };
 
 const ticks = (f0: number, f1: number) => steps(touchdownsP((ff) => medicPose(ff / FPS), f0, f1));

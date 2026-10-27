@@ -68,7 +68,7 @@ export const A2_THUMB_DOWN = MED_TAP - 0.035;
 export const A2_THUMB_UP = MED_TAP + 0.1;
 const thumb = (t: number) => {
   const dpad = sr(t, T0 + 0.06, T0 + 0.5);
-  const z = keys(t, [[T0, 4.5], [T0 + 0.5, 3.2], [A2_THUMB_LIFT - 0.18, 3.6], [A2_THUMB_LIFT, 11], [A2_THUMB_DOWN, 0.8], [MED_TAP, 0.2], [A2_THUMB_UP, 0.3], [A2_THUMB_UP + 0.22, 3.0], [T1, 2.4]]);
+  const z = keys(t, [[T0, 4.5], [T0 + 0.5, 3.2], [A2_THUMB_LIFT - 0.18, 3.6], [A2_THUMB_LIFT, 15], [A2_THUMB_DOWN, 1.0], [MED_TAP, 0.2], [A2_THUMB_UP, 0.3], [A2_THUMB_UP + 0.22, 3.0], [T1, 2.4]]);
   const press = keys(t, [[A2_THUMB_DOWN, 0], [MED_TAP, 1], [A2_THUMB_UP, 1], [A2_THUMB_UP + 0.1, 0]]);
   return {dpad, z, press};
 };

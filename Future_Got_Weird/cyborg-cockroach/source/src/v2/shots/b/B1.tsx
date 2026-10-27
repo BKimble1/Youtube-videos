@@ -39,8 +39,8 @@ const PATH = straightPath([-S_REST, 0, 0], 0);
 export const bWalkS = (t: number) => S_REST + setOff(t, B_GO, B_SPEED, 0.5);
 /** the descent starts on B1's first drawn frame, from 46 mm above the seat */
 const T_DESC = B1_F0 / FPS, LIFT0 = 46;
-/** the module's height above its seat (mm): a decelerating descent that lands softly at B_SEAT */
-export const packLift = (t: number) => (t >= B_SEAT ? 0 : LIFT0 * Math.pow(1 - clamp((t - T_DESC) / (B_SEAT - T_DESC)), 1.7));
+/** the module's height above its seat (mm): a decelerating descent that lands at B_SEAT, still moving a little (pressed home) */
+export const packLift = (t: number) => (t >= B_SEAT ? 0 : LIFT0 * Math.pow(1 - clamp((t - T_DESC) / (B_SEAT - T_DESC)), 1.4));
 /** the press: the body gives a little under the fingers, then recovers */
 const press = (t: number) => {
   const d = t - (B_SEAT - 0.03);
@@ -67,7 +67,7 @@ const packFrame = (f: Frame, t: number): Frame => {
 const CA = {az: 20, el: 12, s: 10.5, at: [2, 14, 0] as V3, x: 540, y: 1060};
 const CB = {az: 0, el: 8, s: 25, x: 540, y: 960};
 /** the push in (starts as the hands lift away, still settling over the cut, at rest by B2's ninth frame) */
-export const bbPush = (f: number) => sr(f, 171, 196);
+export const bbPush = (f: number) => sr(f, 168.5, 195);
 /** the body's x (path frame: the gait's bob never moves the camera) */
 const bodyX = (t: number) => bPose(t).bodyFrame0.o[0];
 /** B2's track: from over the saddle's rear to the tube's mouth (body x, mm), with the first step */
@@ -151,10 +151,10 @@ const solveGrips = (v: View, f: Frame): ArmPose[] => {
   return memo.b1;
 };
 /** the release: the fingers ease off as the hands rise straight up and a little back (mm), accelerating away */
-export const B1_OPEN: [number, number] = [171, 179];
-export const handRelease = (f: number) => ({release: sr(f, B1_OPEN[0], B1_OPEN[1]), up: 80 * easeIn(ramp(f, 170.5, 186), 1.6), back: 14 * easeIn(ramp(f, 170.5, 186), 1.6)});
+export const B1_OPEN: [number, number] = [168.5, 176];
+export const handRelease = (f: number) => ({release: sr(f, B1_OPEN[0], B1_OPEN[1]), up: 80 * easeIn(ramp(f, 168, 184), 1.6), back: 14 * easeIn(ramp(f, 168, 184), 1.6)});
 /** the eased-off hand: the pinch a little relaxed (the index tip does not reach further down as it opens) */
-const relaxed = (p: ArmPose['pose']): ArmPose['pose'] => ({...p, curl: p.curl.map((c) => c + 0.12) as HandPose['curl'], thumb: p.thumb + 12, spread: p.spread + 0.2});
+const relaxed = (p: ArmPose['pose']): ArmPose['pose'] => ({...p, curl: p.curl.map((c) => c + 0.12) as HandPose['curl'], thumb: Math.max(0, p.thumb - 10), spread: p.spread + 0.2});
 
 // ------------------------------------------------------------------ the scene (B1 and B2)
 export const BenchScene: React.FC<{f: number; id: string}> = ({f: f0, id}) => {
@@ -219,7 +219,7 @@ export const BenchScene: React.FC<{f: number; id: string}> = ({f: f0, id}) => {
         </g>
         <path d={`M-40,${f2(far[1])} H1120 V1980 H-40 Z`} fill={LAB2.benchTop} />
       </g>
-      <Mat2D v={v} x0={-190} x1={260} z0={-250} z1={190} bench={false} />
+      <Mat2D v={v} x0={-190} x1={260} z0={-250} z1={460} bench={false} />
       {w && <WireDraw v={v} w={w} layer="under" />}
       <Roach2D
         pose={pose}

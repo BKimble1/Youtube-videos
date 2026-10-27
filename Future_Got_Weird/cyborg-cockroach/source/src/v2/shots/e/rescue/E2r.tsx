@@ -25,11 +25,11 @@ export const E2_N = 25;
 const E2_F0 = 655;
 /** the lens (px focal length) and its principal point: aimed level into the gap */
 const F = 740;
-const G = {x: 540, y: 1300};
+const G = {x: 540, y: 1250};
 /** the lip of the fallen slab (depth, mm), the gap's height under it (mm, lower to the right where the slab comes down
  *  to the floor), the slab's thickness */
 const DL = 200;
-const hL = (x: number) => 80 - 0.09 * x;
+const hL = (x: number) => Math.max(0, 95 - 0.16 * x);
 const T = 210;
 
 // ---------------------------------------------------------------- the camera
@@ -47,6 +47,13 @@ export const e2Cam = (lf: number): E2Cam => {
   const u = e2U(lf);
   const k = (E2_N - 1) / (ZC1 - ZC0);
   return {zc: ZC0 + (ZC1 - ZC0) * herm(u, V0 * k, V1 * k), H: 14 + 20 * (1 - u) ** 2.4, xc: 0.45 * insectXZ(lf)[0]};
+};
+
+/** the local frame at which the lip passes over the camera (it is then 60 mm ahead): the air pass ends here */
+export const e2LipLf = () => {
+  let lf = 0;
+  while (lf < E2_N - 1 && DL - e2Cam(lf).zc > 60) lf++;
+  return lf;
 };
 
 // ---------------------------------------------------------------- the medic: walking in under the lip
@@ -90,11 +97,11 @@ const Behind: React.FC<{id: string; t: number}> = ({id, t}) => {
     <g>
       <VGrad id={`${id}-sk`} x0={-2000} y0={-2600} x1={3000} y1={1400} stops={[[0, '#BFD6E0'], [0.5, '#F2E6CC'], [1, '#EBD3AA']]} />
       <Glow2 id={`${id}-pl`} cx={a(1600, 3000)[0] + 10 * Math.sin(t)} cy={a(1600, 3000)[1]} rx={700} ry={520} color={RB.dust} a={0.6} />
-      <path d={poly(fac)} fill={mix('#A9A29B', '#F2E6CC', 0.35)} />
+      <path d={poly(fac)} fill={mix('#A9A29B', '#F2E6CC', 0.5)} />
       {Array.from({length: 5}, (_, r) =>
         Array.from({length: 3}, (_, k) => {
           const x = -5200 + k * 1300, y = 1800 + r * 2500;
-          return <path key={`${r}-${k}`} d={poly([a(x, y), a(x + 700, y), a(x + 700, y + 1100), a(x, y + 1100)])} fill={mix('#5B6E78', '#F2E6CC', 0.4)} />;
+          return <path key={`${r}-${k}`} d={poly([a(x, y), a(x + 700, y), a(x + 700, y + 1100), a(x, y + 1100)])} fill={mix('#5B6E78', '#F2E6CC', 0.55)} />;
         }),
       )}
       <path d={poly(jag([a(-3000, -200), a(-2000, 900), a(-600, 1300), a(900, 700), a(2600, 1500), a(5000, 900), a(5000, -200)], 10, 241, 40))} fill={mix('#8A817A', '#F2E6CC', 0.3)} />
@@ -143,7 +150,7 @@ const InChunk: React.FC<{id: string; ch: (typeof IN_CHUNKS)[number]; lit: number
 // ---------------------------------------------------------------- the fallen slab at the lip, the propping block
 const SlabFront: React.FC<{id: string; w: number}> = ({id, w}) => {
   const a = ap(DL);
-  const x0 = -1300, x1 = 880;
+  const x0 = -1300, x1 = 590;
   const lower: Pt[] = jag([a(x0, hL(x0)), a(x1, hL(x1))], 10, 211, 50, false);
   const upper: Pt[] = jag([a(x0, hL(x0) + T), a(x1 + 150, hL(x1) + T - 40)], 14, 212, 50, false);
   const face: Pt[] = [...upper, a(x1 + 150, 0), a(x1, 0), ...lower.slice().reverse()];
@@ -151,7 +158,7 @@ const SlabFront: React.FC<{id: string; w: number}> = ({id, w}) => {
   void und;
   return (
     <g>
-      <Slab id={`${id}-sf`} face={face} tone={RB.conc} w={w} dark={0.26} specks={60} topTone={RB.concLit}
+      <Slab id={`${id}-sf`} face={face} tone={RB.conc} w={w} dark={0.26} specks={140} topTone={RB.concLit}
         cracks={[[a(-260, 150), a(-200, 200), a(-230, 250)], [a(120, 120), a(170, 170), a(150, 230)], [a(430, 90), a(400, 160)]]}
         rim={upper} />
       {/* the lip's underside edge, a dark band where the face turns under */}
@@ -173,22 +180,85 @@ const Block: React.FC<{id: string; w: number}> = ({id, w}) => {
 };
 
 // ---------------------------------------------------------------- the rescuer's glove at the right of the opening
-const DG = 150;
+const DG = 165;
 const Glove: React.FC<{id: string; w: number}> = ({id, w}) => {
   const a = ap(DG);
-  const wr = a(300, 4), tip = a(95, 4);
+  const wr = a(235, 6), tip = a(40, 6);
   const L = Math.hypot(tip[0] - wr[0], tip[1] - wr[1]);
   return (
-    <g transform={`translate(${f2(wr[0])} ${f2(wr[1])}) scale(1 0.42) translate(${f2(-wr[0])} ${f2(-wr[1])})`}>
-      <GloveArm id={`${id}-ga`} a={{wrist: {x: wr[0], y: wr[1]}, ang: -176, L, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 2}} ink={w} shadow={{alpha: 0.3, offset: {x: 0.03 * L, y: 0.1 * L}}} />
+    <g transform={`translate(${f2(wr[0])} ${f2(wr[1])}) scale(1 0.62) translate(${f2(-wr[0])} ${f2(-wr[1])})`}>
+      <GloveArm id={`${id}-ga`} a={{wrist: {x: wr[0], y: wr[1]}, ang: -172, L, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 2}} ink={w} shadow={{alpha: 0.3, offset: {x: 0.03 * L, y: 0.1 * L}}} />
     </g>
   );
 };
 
+// ---------------------------------------------------------------- overhead: rebar stubs and debris hanging from the underside
+const HANG: {x: number; z: number; L: number; seed: number}[] = [
+  {x: -150, z: 228, L: 22, seed: 281},
+  {x: 120, z: 262, L: 16, seed: 282},
+  {x: -60, z: 330, L: 26, seed: 283},
+  {x: 190, z: 420, L: 14, seed: 284},
+  {x: -230, z: 520, L: 30, seed: 285},
+];
+const Hang: React.FC<{h: (typeof HANG)[number]; w: number}> = ({h, w}) => {
+  const a = ap(h.z);
+  const y0 = hL(h.x);
+  const k = (rnd(h.seed, 3) - 0.5) * 8;
+  void w;
+  return (
+    <g>
+      <Rebar pts={[a(h.x - 6, y0 + 1), a(h.x - 4 + k * 0.2, y0 - h.L * 0.6), a(h.x + k, y0 - h.L), a(h.x + 8 + k, y0 - h.L * 0.7), a(h.x + 10, y0 + 1)]} w={(F * 1.3) / h.z} dark={0.45} />
+    </g>
+  );
+};
+
+/** dust motes in the gap's air (world points, mm): drifting slowly, lit by the daylight near the mouth */
+const DUST = Array.from({length: 46}, (_, i) => ({x: -170 + rnd(i, 291) * 340, y: 4 + rnd(i + 1, 291) * 80, z: -60 + rnd(i + 2, 291) * 560, ph: rnd(i + 3, 291) * 6.28}));
+const DustIn: React.FC<{c: E2Cam; t: number; light: number}> = ({c, t, light}) => (
+  <g>
+    {DUST.map((d, i) => {
+      const z = d.z, dd = z - c.zc;
+      if (dd < 12 || d.y > hL(d.x) - 2) return null;
+      const [x, y] = pr(c, d.x + 3 * Math.sin(t * 0.9 + d.ph), d.y + 2 * Math.sin(t * 0.7 + d.ph * 2), z);
+      if (x < -20 || x > 1100 || y < -20 || y > 1940) return null;
+      const r = Math.min(9, (F * 0.55) / dd);
+      const lit = z < DL ? 1 : 0.35 + 0.65 * light * (1 - sr(z, DL, DL + 200));
+      return <circle key={i} cx={f2(x)} cy={f2(y)} r={f2(r)} fill={RB.dayHot} opacity={f2(0.5 * lit * Math.min(1, dd / 40))} />;
+    })}
+  </g>
+);
+
+/** cracks and drifts of dust on the floor (world polylines on the floor plane) */
+const CRACKS: [number, number][][] = [
+  [[-260, -40], [-220, 40], [-240, 110], [-200, 170]],
+  [[150, -60], [120, 20], [160, 90], [140, 150], [175, 190]],
+  [[-90, 60], [-40, 95], [10, 90], [60, 130]],
+  [[330, 10], [290, 80], [300, 160]],
+];
+const DRIFT = [{x: -140, z: 40, rx: 90, rz: 50}, {x: 190, z: 120, rx: 120, rz: 40}, {x: -10, z: -30, rx: 140, rz: 40}];
+const FloorMarks: React.FC<{c: E2Cam}> = ({c}) => (
+  <g>
+    {DRIFT.map((d, i) => {
+      if (d.z - d.rz - c.zc < 14) return null;
+      const pts: Pt[] = Array.from({length: 16}, (_, j) => {
+        const th = (j / 16) * Math.PI * 2;
+        return pr(c, d.x + d.rx * Math.cos(th), 0, d.z + d.rz * Math.sin(th));
+      });
+      return <path key={`d${i}`} d={poly(pts)} fill="#D2C4AE" opacity={0.35} />;
+    })}
+    {CRACKS.map((cr, i) => {
+      const pts = cr.filter((p) => p[1] - c.zc > 14).map((p) => pr(c, p[0], 0, p[1]));
+      if (pts.length < 2) return null;
+      const d = Math.max(20, cr[0][1] - c.zc);
+      return <path key={`c${i}`} d={line2(pts)} stroke="#6A5F55" strokeWidth={f2(Math.min(4, (F * 0.6) / d))} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={0.7} />;
+    })}
+  </g>
+);
+
 // ---------------------------------------------------------------- floor grit (projected on the floor plane)
-const GRIT = Array.from({length: 150}, (_, i) => ({
-  x: -520 + rnd(i, 271) * 1040,
-  z: -40 + rnd(i + 1, 271) ** 1.3 * 1400,
+const GRIT = Array.from({length: 240}, (_, i) => ({
+  x: -420 + rnd(i, 271) * 840,
+  z: -70 + rnd(i + 1, 271) ** 1.6 * 1400,
   r: 1.2 + rnd(i + 2, 271) ** 2 * 6,
   k: 5 + Math.floor(rnd(i + 3, 271) * 3),
   a0: rnd(i + 4, 271) * 6.28,
@@ -228,11 +298,11 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
   const near: Pt[] = [pr(c, -4000, 0, c.zc + 10), pr(c, 4000, 0, c.zc + 10), pr(c, 4000, 0, DL), pr(c, -4000, 0, DL)];
   const inFloor: Pt[] = [pr(c, -4000, 0, DL), pr(c, 4000, 0, DL), pr(c, 4000, 0, DFAR), pr(c, -4000, 0, DFAR)];
   // the slab's underside: a plane over the passage (its height follows the lip)
-  const ceil: Pt[] = [pr(c, -1300, hL(-1300), DL), pr(c, 900, hL(900), DL), pr(c, 900, hL(900), DFAR), pr(c, -1300, hL(-1300), DFAR)];
+  const ceil: Pt[] = [pr(c, -1300, hL(-1300), DL), pr(c, 594, 0, DL), pr(c, 594, 0, DFAR), pr(c, -1300, hL(-1300), DFAR)];
   const yFar = pr(c, 0, 0, DFAR)[1];
   // the light falls off as the lip passes over the camera
   const under = sr(c.zc, 40, ZC1);
-  const shade = 0.8 - 0.22 * u; // the insect is already in the slab's shadow
+  const shade = 0.86 - 0.14 * u; // the insect is already in the slab's shadow
   const grFar = GRIT.filter((g) => g.z >= iz), grNear = GRIT.filter((g) => g.z < iz);
   const chunks = IN_CHUNKS.map((ch, i) => <Card key={i} c={c} D={ch.z}><InChunk id={`${id}-ic${i}`} ch={ch} lit={0} /></Card>);
   return (
@@ -248,6 +318,11 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
           <stop offset="0.6" stopColor="#302822" />
           <stop offset="1" stopColor="#5A4F45" />
         </linearGradient>
+        <linearGradient id={`${id}-cl`} x1="0" y1={f2(pr(c, 0, hL(0), DL)[1])} x2="0" y2={f2(pr(c, 0, hL(0), DFAR)[1])} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#4A403A" />
+          <stop offset="0.25" stopColor="#2A231F" />
+          <stop offset="1" stopColor="#151110" />
+        </linearGradient>
         <filter id={`${id}-sd`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
           <feColorMatrix type="matrix" values={`${shade} 0 0 0 0  0 ${shade} 0 0 0  0 0 ${shade * 0.97} 0 0  0 0 0 1 0`} />
         </filter>
@@ -255,13 +330,17 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
       <Card c={c} D={DB}><Behind id={`${id}k`} t={t} /></Card>
       <Card c={c} D={DFAR}><Far id={`${id}r`} /></Card>
       <path d={poly(inFloor)} fill={`url(#${id}-if)`} />
-      <path d={poly(ceil)} fill="#191412" />
+      <path d={poly(ceil)} fill={`url(#${id}-cl)`} />
       {chunks.slice(2).reverse()}
       <Card c={c} D={DSH}><ShaftIn id={`${id}h`} t={t} /></Card>
       {chunks.slice(0, 2).reverse()}
+      {HANG.map((h, i) => <Card key={`h${i}`} c={c} D={h.z}><Hang h={h} w={wAt(c, h.z, 4)} /></Card>)}
       <path d={poly(near)} fill={`url(#${id}-nf)`} />
       <Glow2 id={`${id}-pool`} cx={pr(c, 80, 0, DL - 90)[0]} cy={pr(c, 80, 0, DL - 90)[1]} rx={700} ry={160} color={RB.dayHot} a={0.28 * (1 - under)} />
+      <FloorMarks c={c} />
       <Grit2 c={c} items={grFar} />
+      {/* the dust hanging in the gap, between the camera and the insect and beyond (world points: they stream past) */}
+      <DustIn c={c} t={t} light={1 - under} />
       <g filter={`url(#${id}-sd)`}>
         <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       </g>
@@ -270,8 +349,6 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
       <Card c={c} D={DL}><SlabFront id={`${id}s`} w={wAt(c, DL, 5.5)} /></Card>
       <Card c={c} D={DG}><Glove id={`${id}v`} w={wAt(c, DG, 8)} /></Card>
       <Motes id={`${id}-m`} t={t} n={14} x0={-100} y0={300} x1={1180} y1={1800} r={4} seed={225} a={0.45 * (1 - under)} />
-      {/* the daylight behind is cut off as the lip passes overhead */}
-      <rect x={0} y={0} width={1080} height={1920} fill="#0A0807" opacity={(0.5 * under).toFixed(3)} />
       <Glow2 id={`${id}-rim`} cx={pr(c, ix, 10, iz)[0]} cy={pr(c, ix, 10, iz)[1]} rx={260} ry={130} color={RB.day} a={0.1 * (1 - under)} />
     </svg>
   );

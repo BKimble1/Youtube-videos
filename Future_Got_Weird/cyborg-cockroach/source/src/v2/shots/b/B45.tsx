@@ -1,15 +1,15 @@
 // B4 (243-282, "then used electrical pulses") and B5 (283-314, "to steer it."): the foam obstacle course on the white
-// tray, one continuous camera over one walk.
+// tray, one continuous camera over one walk, from above.
 // B4: close from above (az 0, el 84: it heads screen-right, its LEFT side is up-screen), the camera riding with the
 // walking medic, framed on the guidance electronics: the board (chips, coin cell, status LED), the LEFT antenna wire
 // running forward over the shield to the electrode at the left antenna's base (the abdomen runs out of frame left).
 // On "electrical" the LED flashes and three short pulses leave the board one after another and run the left wire to
-// the electrode; each arrival lights it and the left antenna flicks. A yellow block lines its right side, a blue block
-// stands across its way ahead.
-// B5: stimulating the left antenna makes it veer RIGHT: the body yaws right and it turns round the corner of the
-// yellow block, clear of the blue one; the camera rises and comes round to meet it as it turns toward the lens
-// (el 84 -> 45, s 12.5 -> 8) to hold the turn and the course (blocks, a red one beyond). It ends heading world +z
-// (screen-down, toward the camera) between the yellow and blue blocks, still walking.
+// the electrode; each arrival lights it and the left antenna flicks. A yellow block lines its right side.
+// B5 (V4): still from above. A blue block stands across its way (its antennae all but touch it); stimulating the left
+// antenna makes it veer RIGHT: it turns 90 degrees on its legs (the body follows its own path, the feet stay planted:
+// no sideways slide) through the gap past the yellow block's end and the blue block's corner, and walks on screen-down.
+// The camera rises from the electronics as it turns (s 12.5 -> 6.6, el 84 -> 79, a fixed azimuth, so the heading change
+// reads on screen as right -> down) and keeps drifting after it at half its pace to the cut (no settled hold).
 import React from 'react';
 import {poseRoach, RoachPose} from '../../../rig/roach';
 import {V3, toW, ypr} from '../../../lib/v3';
@@ -27,7 +27,7 @@ export const B45_SPEED = 46;
 export const TURN_S0 = 0, TURN_S1 = 50;
 const PATH45 = turnPath([0, 0], TURN_S0, TURN_S1, -Math.PI / 2);
 /** time the body reaches the start of the turn (just after the last pulse lands) */
-export const T_TURN = 9.12;
+export const T_TURN = 9.3;
 /** the pulse train leaves the board at T_PULSE ("electrical" 8.49 s): three pulses, 0.1 s apart, 0.26 s along the wire */
 export const T_PULSE = 8.52;
 export const PULSE_GAP = 0.1, PULSE_RUN = 0.26;
@@ -51,30 +51,32 @@ export const b45Pose = (t: number): RoachPose => {
 // hugs it, the right feet ~3 mm off the wall), the blue one across the way ahead, a red one beyond
 export const COURSE: {b: BoxB; c: string}[] = [
   {b: [-190, -6, 0, 40, 39, 160], c: LAB2.foamY},
-  {b: [80, 142, 0, 30, -90, 30], c: LAB2.foamB},
-  {b: [78, 130, 0, 26, 112, 162], c: LAB2.foamR},
+  {b: [66, 128, 0, 30, -110, 14], c: LAB2.foamB},
+  {b: [84, 136, 0, 26, 104, 154], c: LAB2.foamR},
 ];
 
 const AZ = 0;
 const BOARD: V3 = [1, 23, 0];
-const S_CLOSE = 12.5, S_WIDE = 8;
-const EL_CLOSE = 84, EL_WIDE = 45;
-/** where the wide view looks (the turn's middle) and where it puts it on screen */
-const C_END: V3 = [30, 0, 40];
-const A_CLOSE: [number, number] = [260, 900], A_WIDE: [number, number] = [540, 900];
+const S_CLOSE = 12.5, S_WIDE = 6.6;
+const EL_CLOSE = 84, EL_WIDE = 79;
+/** the wide view looks between the insect and the turn's corner (so it keeps drifting with the walk: no hold) */
+const C_END: V3 = [36, 0, 6];
+const C_FOLLOW = 0.5;
+const A_CLOSE: [number, number] = [260, 900], A_WIDE: [number, number] = [540, 820];
 /** the point the close camera rides with: the board, in the path frame (the gait's bob and roll never shake it) */
 const follow = (t: number): V3 => {
   const pp = PATH45(b45S(t));
   return toW(ypr(pp.p, pp.yaw), BOARD);
 };
 /** B5's rise as it turns (eased in at the cut, still settling at B5's end) */
-export const b5Rise = (f: number) => sr(f, 280, 303);
+export const b5Rise = (f: number) => sr(f, 281, 321);
 export const b45View = (f: number): View => {
   const t = f / FPS;
   const fo = follow(t);
   const u = b5Rise(f);
   const s = S_CLOSE * Math.pow(S_WIDE / S_CLOSE, u);
-  const at: V3 = [lerp(fo[0], C_END[0], u), lerp(fo[1], C_END[1], u), lerp(fo[2], C_END[2], u)];
+  const wide: V3 = [lerp(C_END[0], fo[0], C_FOLLOW), 0, lerp(C_END[2], fo[2], C_FOLLOW)];
+  const at: V3 = [lerp(fo[0], wide[0], u), lerp(fo[1], wide[1], u), lerp(fo[2], wide[2], u)];
   return viewAt(AZ, lerp(EL_CLOSE, EL_WIDE, u), s, at, lerp(A_CLOSE[0], A_WIDE[0], u), lerp(A_CLOSE[1], A_WIDE[1], u));
 };
 

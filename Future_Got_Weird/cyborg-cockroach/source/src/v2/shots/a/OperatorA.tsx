@@ -42,7 +42,10 @@ export const operatorA = (p: OperatorAProps) => {
     const j = g.joints;
     const s = g.s;
     const wrist = add(j.L.W, mul(j.L.foreDir, -6 * s));
-    const pad = remotePt(g.view, PAD_AT.x, PAD_AT.y, 1.6 - 1.1 * Math.min(1, p.dpadPress ?? 0) + (p.dpadZ ?? 1.2));
+    // a raised thumb is aimed a little further out over the pad, so it lifts straight up off it (the thumb's own
+    // reach would otherwise draw the tip back toward its root)
+    const z = p.dpadZ ?? 1.2;
+    const pad = remotePt(g.view, PAD_AT.x - 0.4 * Math.max(0, z - 3), PAD_AT.y, 1.6 - 1.1 * Math.min(1, p.dpadPress ?? 0) + z);
     const onPad = aimThumb(wrist, j.L.handAng, DIM.hand * s, 1, {...H_REMOTE, curl: H_REMOTE.curl.map((c) => c + 0.04) as HandPose['curl']}, pad);
     lHand = mixHand(g.lHand, onPad, k);
   }

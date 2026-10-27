@@ -13,13 +13,13 @@ import {Survivor, survivorLayout} from '../../../crew/person';
 import {keys, sr} from '../../../lib/ease';
 import {RB, Pt, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
-import {FF, faceTrack, herOpts, Acting} from './pocket';
+import {FF, faceTrack, herOpts, Acting, NearHand} from './pocket';
 import {medicPose, R4, FPS, SLAB, SC, MM_U, Place, cfViewAt, cardPxAt, onBody, BARREL} from './world';
 import {ShotProps} from '../index2';
 
-/** the over-the-shoulder placement of her card projection (yaw 160: from behind her right shoulder; elevation 50:
- *  looking down past her head at the floor ahead), 10 px per rig unit (the insect about 320 px long) */
-export const PL4: Place = {x: -176, y: 1974, scale: 10, yaw: 160, elev: 50};
+/** the over-the-shoulder placement of her card projection (yaw 158: from behind her right shoulder; elevation 60:
+ *  looking down past her head at the floor ahead), 9.5 px per rig unit (the insect about 300 px long) */
+export const PL4: Place = {x: -235, y: 1718, scale: 9, yaw: 150, elev: 60};
 /** grit shaken off the slab's lip above the hole (shot seconds) */
 export const F4_GRIT = {t0: 0.12, dur: 0.5};
 /** her held breath: a small breath in (shot frames) */
@@ -42,9 +42,9 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
   // her: tense, a little leaned back, watching it come (her face is turned away from us: only the cheek's edge)
   const head = q(pose.frame.o[0] + pose.frame.x[0] * 33, 10, pose.frame.o[2] + pose.frame.x[2] * 33);
   const a: Acting = {
-    recog: 0, recoil: 0.3, handOpen: 0.03, gaze: {x: head[0], y: head[1]},
+    recog: 0, recoil: 0.3, handOpen: 0.12, gaze: {x: head[0], y: head[1]},
     breath: 0.6 + 0.6 * sr(lf, F4_K.breath0, F4_K.breath1),
-    turn: keys(lf, [[0, 8], [24, 6]]), nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2,
+    turn: keys(lf, [[0, -14], [24, -16]]), nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
     face: faceTrack(lf, [[0, FF.unease]]),
   };
   const o = {...herOpts(T, a), x: PL4.x, y: PL4.y, scale: PL4.scale, yaw: PL4.yaw, elev: PL4.elev};
@@ -83,7 +83,10 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
             <feGaussianBlur stdDeviation="6" />
           </filter>
         </defs>
+        {/* her forearm's and hand's soft contact shadow on the floor (the light from the upper right) */}
+        <path d={`M${L.nearElbow.x + 30},${L.nearElbow.y + 40} L${L.nearWrist.x + 40},${L.nearWrist.y + 30} L${L.nearTip.x + 34},${L.nearTip.y + 26}`} stroke="#2A2522" strokeOpacity={0.4} strokeWidth={PL4.scale * 34} strokeLinecap="round" strokeLinejoin="round" fill="none" />
         <Survivor id={`${sid}sv`} {...o} />
+        <NearHand o={o} />
         <Glow2 id={`${sid}rim`} cx={L.head.x + 260} cy={L.head.y - 260} rx={300} ry={260} color={RB.day} a={0.22} />
       </g>
       <Vignette id={`${sid}vg`} a={0.5} />

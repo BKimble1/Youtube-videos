@@ -17,10 +17,11 @@ export const f1ShadowAt = (T: number) => {
   return {x, y};
 };
 /** close on her face, then the camera follows her gaze down to the light on the floor ahead of her hand, keeping her
- *  eyes in the top corner */
+ *  whole face (eyes, nose, mouth) in the top-left corner (V4: the move ends 45 px earlier and a little wider, so the
+ *  frame edge no longer cuts through her face) */
 export const f1Cam = (lf: number) => {
   const u = sr(lf, F1_K.eyes + 1, R1.to - R1.from - 1);
-  return camAt(lerp(600, 865, u), lerp(830, 1000, u), 540, 960, lerp(1.4, 1.6, u));
+  return camAt(lerp(600, 820, u), lerp(830, 1000, u), 540, 960, lerp(1.4, 1.5, u));
 };
 
 export const F1: React.FC<ShotProps> = ({f, lf}) => {

@@ -11,22 +11,24 @@ import {viewAt, View} from '../../../roach/ortho';
 import {Layer, Cam} from '../../../dc/camera';
 import {clamp, sr} from '../../../../lib/ease';
 import {mix} from '../../../../lib/color';
-import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, VGrad, Pipe, Grit, jag, poly} from '../art';
+import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, VGrad, Grit, jag, poly} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, Blur} from './kit';
+import {idf, FPS, Blur, probe} from './kit';
 
 export const E3_N = 20;
+const E3_F0 = 680;
 /** a trickle of grit from the crack, down through the shaft (shot seconds) */
 export const E3_GRIT = {t0: 0.08, dur: 0.5};
-const S = 2.6; // px per mm at the subject plane
+/** px per mm at the subject plane: twice V3's, so the insect reads (E2 ends near this size; the beam still dwarfs it) */
+const S = 5.4;
 const V_MM = 60;
 /** the insect's ground point on screen at the start, and the share of its travel the camera follows */
-const X0 = 470, Y0 = 1352, FOLLOW = 0.6;
+const X0 = 420, Y0 = 1352, FOLLOW = 0.6;
 export const E3_VIEW: View = viewAt(4, 7, S, [0, 0, 0], X0, Y0);
 const s0 = 12;
 export const e3Pose = (lf: number): RoachPose => {
   const t = lf / FPS;
-  return poseRoach({path: straightPath([0, 0, 0], 0), s: s0 + V_MM * t, t: t + 22.7, search: 0.7, antL: {yaw: 0.55, pitch: 0.18}, antR: {yaw: 0.5, pitch: 0.22}, seed: 5});
+  return poseRoach({path: straightPath([0, 0, 0], 0), s: s0 + V_MM * t, t: t + 22.7, ...probe(lf + E3_F0, 1), seed: 5});
 };
 export const e3Cam = (lf: number): Cam => ({x: 540 + FOLLOW * S * V_MM * (lf / FPS), y: 960, z: 1});
 const D_BACK = 2.4, D_BEAM = 1.04, D_SUBJ = 1, D_FORE = 0.14;
@@ -35,7 +37,8 @@ const D_BACK = 2.4, D_BEAM = 1.04, D_SUBJ = 1, D_FORE = 0.14;
  *  lets the daylight through (subject-layer px). */
 const BX = 742;
 const BD = 820; // the beam's depth on screen
-const bot = (x: number) => (x < BX ? 1196 - 0.2 * (BX - x) : 1200 - 0.24 * (x - BX));
+/** the beam's underside (raised clear of the larger insect and its antennae) */
+const bot = (x: number) => (x < BX ? 1080 - 0.2 * (BX - x) : 1084 - 0.24 * (x - BX));
 /** the shaft: down through the crack at the break onto the floor ahead of the insect */
 const SH = {top: [[BX - 26, bot(BX) - 30], [BX + 26, bot(BX) - 30]] as Pt[], bot: [[BX + 50, 1356], [BX - 190, 1356]] as Pt[]};
 
@@ -44,7 +47,6 @@ const Back: React.FC<{id: string}> = ({id}) => (
     <VGrad id={`${id}-bk`} x0={-1500} y0={-500} x1={2600} y1={2500} stops={[[0, '#141110'], [0.5, '#221D1A'], [1, '#141110']]} />
     <Slab id={`${id}-b1`} face={jag([[-300, 1120], [300, 1100], [520, 1150], [500, 1400], [-300, 1400]], 10, 301, 50)} tone={RB.far} w={4} dark={0.62} specks={10} />
     <Slab id={`${id}-b2`} face={jag([[860, 1110], [1500, 1080], [1500, 1400], [900, 1400]], 10, 302, 50)} tone={RB.far} w={4} dark={0.66} specks={10} />
-    <Pipe a={[420, 1240]} b={[980, 1210]} r={10} dark={0.62} />
   </g>
 );
 

@@ -49,7 +49,7 @@ export const e1Pose = (lf: number): RoachPose => {
   return poseRoach({path: straightPath([0, 0, 0], 0), s: 4 + V_MM * t, t: t + 20.6, ...probe(lf + E1_F0, 0.8), seed: 5});
 };
 /** the glove's wrist (ground layer px) */
-const E1_GLOVE = {x: 1120, y: 1452};
+const E1_GLOVE = {x: 880, y: 1446};
 /** the opening's mouth (end-frame px, ground layer) */
 export const E1_MOUTH = {x0: 300, x1: 700, top: 1160, floor: 1330};
 
@@ -201,8 +201,8 @@ const Ground: React.FC<{id: string; t: number; pose: RoachPose}> = ({id, t, pose
       <Pebbles id={`${id}-g1`} a={[700, 1400]} b={[1250, 1370]} n={10} size={14} seed={108} tone={RB.conc} />
       {/* the rescuer's gloved hand resting flat on the floor at the right of the opening, where it has just set the
           insect down (lying flat: foreshortened by the camera's elevation); E2 finds it at the same place */}
-      <g transform={`translate(${E1_GLOVE.x} ${E1_GLOVE.y}) scale(1 0.56) translate(${-E1_GLOVE.x} ${-E1_GLOVE.y})`}>
-        <GloveArm id={`${id}-ga`} a={{wrist: {x: E1_GLOVE.x, y: E1_GLOVE.y}, ang: -168, L: 250, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 8}} ink={4.5} shadow={{alpha: 0.3, offset: {x: 8, y: 16}}} />
+      <g transform={`translate(${E1_GLOVE.x} ${E1_GLOVE.y}) scale(1 0.62) translate(${-E1_GLOVE.x} ${-E1_GLOVE.y})`}>
+        <GloveArm id={`${id}-ga`} a={{wrist: {x: E1_GLOVE.x, y: E1_GLOVE.y}, ang: -172, L: 230, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 8}} ink={4.5} shadow={{alpha: 0.3, offset: {x: 8, y: 16}}} />
       </g>
       <Glow2 id={`${id}-pool`} cx={520} cy={1470} rx={460} ry={130} color={RB.dayHot} a={0.35} />
       <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
