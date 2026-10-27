@@ -16,7 +16,7 @@ import {face} from '../../../crew/person/poses';
 
 /** the startle (on the rig's face controls): eyes wide, brows lifted (the inner ends a little more; still well under the
  *  bob's hairline), lids up, the mouth parted small on the catch of breath */
-const STARTLE = face({brow: 0.5, browIn: 0.75, lid: 0, wide: 0.9, mw: 8.5, curve: -0.2, open: 0.2});
+const STARTLE = face({brow: 0.42, browIn: 0.7, lid: 0, wide: 0.9, mw: 8.5, curve: -0.2, open: 0.2});
 import {FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
 /** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, the startle (st0 -> st1: eyes
