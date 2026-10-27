@@ -56,6 +56,7 @@ Every shot draws the same pose rig, the same `Roach2D`/`Gear2D` geometry and the
   - The tucked far arm no longer shows as a stray knob.
   - Eyes stay inside the head outline, and brows clear the fringe.
   - A clear startle (eyes widen, head and shoulders recoil, a small gasp), then unease, then cautious hope as the hand opens.
+- **Scientist's arms:** with a hand resting on the bench, his far (right) arm now bends out from his far shoulder at the front of his chest, so the remote arm and the bench arm come from opposite shoulders. Before, the far elbow was hidden behind his torso and the forearm seemed to come out of his middle, on the remote arm's side. The fix is in the shared rig, so it applies to every shot where his hand rests on a table: the lab shots, the monitor shot and the field table.
 - **The insect in the crack** keeps its own brown shell and dark antennae; it is no longer washed out.
 - **Ending:** the final close-up lands on frame 0's framing (whole insect and injector), so the loop is seamless.
 
