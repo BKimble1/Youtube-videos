@@ -16,9 +16,9 @@ import {ShotProps} from '../../index2';
 import {idf, FPS, onGround, Blur} from './kit';
 
 export const E4_N = 16;
-const S = 13.5; // px per mm
+const S = 15; // px per mm
 const V_MM = 34;
-const SX = 470, SY = 1010; // the body's ground point on screen
+const SX = 440, SY = 930; // the body's ground point on screen
 const AZ = 24, EL = 52;
 const s0 = 31;
 

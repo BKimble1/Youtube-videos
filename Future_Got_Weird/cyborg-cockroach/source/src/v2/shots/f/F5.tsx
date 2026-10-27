@@ -6,12 +6,12 @@ import React from 'react';
 import {sr, keys, lerp, clamp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
 import {ShotProps} from '../index2';
-import {PocketFrame, FF, faceTrack, Acting, camAt} from './pocket';
+import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
 import {R5, FPS, medicPose, cfView, onBody, BARREL} from './world';
 
 /** shot frames: the glance to the device, the glint, the change of face, the breath out, the hand */
 export const F5_K = {glance0: 1, glance1: 4, glint: 4, back: 9, hope0: 4, hope1: 13, ex0: 6, ex1: 17, open0: 6, open1: 16, slide0: 8, slide1: 18};
-export const f5Cam = () => camAt(800, 975, 540, 960, 1.25);
+export const f5Cam = () => camAt(F5_CAM.x, F5_CAM.y, 540, 960, F5_CAM.z);
 export const f5Glint = (lf: number) => clamp(1 - Math.abs(lf - F5_K.glint) / 3.5);
 export const F5: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / FPS;

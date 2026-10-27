@@ -8,16 +8,18 @@ import {sr, keys, lerp, clamp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
 import {Grit} from '../e/art';
 import {ShotProps} from '../index2';
-import {PocketFrame, FF, faceTrack, Acting, camAt} from './pocket';
+import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
 import {R3, FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
 /** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, disgust and recoil */
 export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 13, see: 10, disg0: 10, disg1: 16, rec0: 11, rec1: 17};
 /** the grit trickle off the slab's top edge (pocket px), shot seconds */
 export const F3_GRIT = {t0: 0.0, dur: 0.4};
+/** close on her face through the turn and the disgust, then the camera follows her gaze down to the insect, ending on
+ *  the two-shot F5 holds */
 export const f3Cam = (lf: number) => {
-  const u = sr(lf, F3_K.eyes, 25);
-  return camAt(lerp(700, 795, u), lerp(760, 975, u), 540, 960, lerp(1.4, 1.15, u));
+  const u = sr(lf, 14, 29);
+  return camAt(lerp(590, F5_CAM.x, u), lerp(800, F5_CAM.y, u), 540, 960, lerp(1.4, F5_CAM.z, u));
 };
 export const F3: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / FPS, t = lf / FPS;

@@ -16,9 +16,11 @@ export const f1ShadowAt = (T: number) => {
   const [x, y] = slitShadowPx([slitWalkX(T) + 26, 10, 0]);
   return {x, y};
 };
+/** close on her face, then the camera follows her gaze down to the light on the floor ahead of her hand, keeping her
+ *  eyes in the top corner */
 export const f1Cam = (lf: number) => {
-  const u = sr(lf, F1_K.head0, R1.to - R1.from + 4);
-  return camAt(lerp(790, 815, u), lerp(905, 930, u), 540, 960, 1.3);
+  const u = sr(lf, F1_K.eyes + 1, R1.to - R1.from - 1);
+  return camAt(lerp(600, 865, u), lerp(830, 1000, u), 540, 960, lerp(1.4, 1.6, u));
 };
 
 export const F1: React.FC<ShotProps> = ({f, lf}) => {

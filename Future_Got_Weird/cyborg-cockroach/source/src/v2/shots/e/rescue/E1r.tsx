@@ -37,7 +37,7 @@ export const e1Pose = (lf: number): RoachPose => {
 export const E1_MOUTH = {x0: 300, x1: 700, top: 1160, floor: 1330};
 
 // ---------------------------------------------------------------- the sky and the far city
-const Sky: React.FC<{id: string}> = ({id}) => (
+export const Sky: React.FC<{id: string}> = ({id}) => (
   <g>
     <VGrad id={`${id}-sk`} x0={-1500} y0={-1500} x1={2600} y1={3200} stops={[[0, '#9CC3DA'], [0.3, '#C9DFE6'], [0.45, '#F4E9CF'], [0.6, '#F8DDB0'], [1, '#E9C99A']]} />
     <Glow2 id={`${id}-sun`} cx={120} cy={-120} rx={900} ry={800} color={RB.dayHot} a={0.85} />
@@ -51,7 +51,7 @@ const Sky: React.FC<{id: string}> = ({id}) => (
 // ---------------------------------------------------------------- the collapsed building
 const FH = 122; // floor height (px)
 const ROOF = 250;
-const Building: React.FC<{id: string; t: number}> = ({id, t}) => {
+export const Building: React.FC<{id: string; t: number}> = ({id, t}) => {
   const floors = 6;
   // the standing part's torn right edge, per floor
   const tear = [560, 520, 548, 470, 505, 440, 470];
@@ -117,7 +117,7 @@ const Building: React.FC<{id: string; t: number}> = ({id, t}) => {
 };
 
 // ---------------------------------------------------------------- the rubble heap
-const Heap: React.FC<{id: string}> = ({id}) => (
+export const Heap: React.FC<{id: string}> = ({id}) => (
   <g>
     <defs>
       <linearGradient id={`${id}-hg`} x1="0" y1="900" x2="0" y2="1300" gradientUnits="userSpaceOnUse">

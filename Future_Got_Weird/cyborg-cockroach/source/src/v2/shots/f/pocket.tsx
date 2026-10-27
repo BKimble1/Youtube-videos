@@ -18,13 +18,13 @@ import {Crevice, Ledge} from './crack2';
 import {HER, under, cfView, cardPx, SLAB, SC, slitWalkX, slitShadowView, onBody, BARREL} from './world';
 
 // ---------------------------------------------------------------- her faces (Face4: crew/person/Crew.tsx)
-/** tired (heavy lids), wary (alert, brows up and in), disgust (the cartoon "ew": one brow down, narrowed lids, lips
- *  pulled back off clenched teeth, corners down, a crease beside the nose), cautious hope (soft brows lifted in the
- *  middle, relaxed lids, closed almost-smile) */
+/** tired (heavy lids), wary (alert, brows up and in), disgust (the cartoon "ugh": brows down and in with one raised,
+ *  narrowed lids, an open frown pulled up at one corner, creases beside the nose), cautious hope (soft brows lifted in
+ *  the middle, relaxed lids, closed almost-smile) */
 export const FF: Record<'tired' | 'wary' | 'disgust' | 'hope', Face4> = {
   tired: face({brow: 0.05, browIn: 0.45, lid: 0.42, mw: 11, curve: -0.12, open: 0}),
   wary: face({brow: 0.42, browIn: 0.72, lid: 0.02, wide: 0.45, mw: 10, curve: -0.22, open: 0.06}),
-  disgust: face({brow: -0.2, browIn: 0.2, asym: 0.55, lid: 0.24, wide: 0, mw: 13, curve: -0.6, open: 0.3, teeth: 1, smirk: -0.25}),
+  disgust: face({brow: -0.15, browIn: -0.75, asym: 0.6, lid: 0.32, wide: 0, mw: 12, curve: -0.95, open: 0.7, teeth: 0.5, smirk: -0.45}),
   hope: face({brow: 0.34, browIn: 0.82, lid: 0.08, wide: 0.12, mw: 11, curve: 0.4, open: 0.04}),
 };
 /** a keyed face track (smoothstep between keys) */
@@ -55,7 +55,7 @@ const Wrinkle: React.FC<{T: number; a: Acting}> = ({T, a}) => {
     return `M${f2o(p0.x)},${f2o(p0.y)} Q${f2o(pm.x)},${f2o(pm.y)} ${f2o(p1.x)},${f2o(p1.y)}`;
   };
   // a crease from the nose's wing down and out on each visible side (the upper lip pulled up)
-  const ds = [arc(-11, -21, -13, -3), arc(11, 21, -13, -3)].filter(Boolean) as string[];
+  const ds = [arc(-5, -12, -3, -1.5), arc(-6, -13, -8, -1.5), arc(5, 12, -3, -1.5), arc(6, 13, -8, -1.5)].filter(Boolean) as string[];
   return (
     <g opacity={Math.min(1, w)}>
       {ds.map((d, i) => (
@@ -78,16 +78,16 @@ const SlitFan: React.FC<{id: string; T: number; shadow: boolean; fan: number}> =
     <g>
       <defs>
         <linearGradient id={`${id}-fan`} gradientUnits="userSpaceOnUse" x1={f2o(g0[0])} y1={f2o(g0[1])} x2={f2o(g1[0])} y2={f2o(g1[1])}>
-          <stop offset="0" stopColor={RB.dayHot} stopOpacity={0.95 * fan} />
-          <stop offset="0.45" stopColor={RB.day} stopOpacity={0.55 * fan} />
+          <stop offset="0" stopColor={RB.dayHot} stopOpacity={fan} />
+          <stop offset="0.5" stopColor={RB.day} stopOpacity={0.7 * fan} />
           <stop offset="1" stopColor={RB.day} stopOpacity={0} />
         </linearGradient>
         <clipPath id={`${id}-fc`}>
           <path d={poly(fanP)} />
         </clipPath>
         <filter id={`${id}-sf`} x="-30%" y="-30%" width="160%" height="160%">
-          <feColorMatrix type="matrix" values="0 0 0 0 0.10  0 0 0 0 0.08  0 0 0 0 0.07  0 0 0 0.82 0" />
-          <feGaussianBlur stdDeviation="1.4" />
+          <feColorMatrix type="matrix" values="0 0 0 0 0.09  0 0 0 0 0.07  0 0 0 0 0.06  0 0 0 0.92 0" />
+          <feGaussianBlur stdDeviation="1.1" />
         </filter>
       </defs>
       <path d={poly(fanP)} fill={`url(#${id}-fan)`} />
@@ -181,7 +181,7 @@ export const Pocket: React.FC<PocketProps> = ({id, T, a, shadow = false, fan = 1
       <Ledge id={`${id}le`} v={v} w={3} />
       <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} front={<Wrinkle T={T} a={a} />} />
       {medic && <Roach2D pose={medic} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={medic.frame} g={{kind: 'injector'}} />}} />}
-      {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={12} />}
+      {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={17} />}
       {/* the slab is nearer the camera than anything coming out of its far end: drawn over the insect */}
       <SlabBody id={`${id}sb`} T={T} shadow={shadow} fan={fan} />
       {/* the fallen slab over her: a thick broken band, lit along its lower edge */}
@@ -207,6 +207,9 @@ export const Glint: React.FC<{id: string; at: Pt; a: number; r: number}> = ({id,
   );
 };
 
+/** the two-shot (F3's end, F5): her face upper left (the back of her head out of frame), her near hand, the ledge and
+ *  the insect lower right */
+export const F5_CAM = {x: 775, y: 1000, z: 1.9};
 /** a camera that puts pocket point (wx, wy) at screen (sx, sy) with zoom z */
 export const camAt = (wx: number, wy: number, sx: number, sy: number, z: number): Cam => ({x: wx - (sx - 540) / z, y: wy - (sy - 960) / z, z});
 /** pocket px -> screen px for a camera (subject layer) */

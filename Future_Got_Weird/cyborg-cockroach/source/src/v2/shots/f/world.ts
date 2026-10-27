@@ -44,7 +44,7 @@ export const TIP = {X: -20, Z: 105};
  *  the fan (F1), and comes out of the crack in the slab's end face toward her (Z = z0, F2), onto the narrow ledge over
  *  the crevice, toward her fingertips (F3-F5). Beyond slit1 the gap is choked with debris (the shadow comes out of the
  *  dark into the light). */
-export const SLAB = {x0: -66, x1: 40, z0: 192, z1: 330, h: 40, slit0: 199, slit1: 236, gap: 4.5, fanX: -112, light: 0.3 /* tan of the light's elevation */, inX: 6};
+export const SLAB = {x0: -66, x1: 40, z0: 192, z1: 330, h: 40, slit0: 197, slit1: 252, gap: 6, fanX: -134, light: 0.22 /* tan of the light's elevation */, inX: 6};
 /** the crack frame's origin: the hole's face, in the slab's end face */
 export const CRACK_AT = {X: -42, Z: SLAB.z0};
 /** the walk's heading (deg in her floor plane, from +X toward +Z): straight at her near fingertips */
@@ -110,8 +110,8 @@ const T2 = R2.from / FPS, T3 = R3.from / FPS, T4 = R4.from / FPS, T5 = R5.from /
 /** speed (mm/s): it sets off just before F2 opens (antennae out first), comes on steadily, a little slower and more
  *  careful on the ledge, slowing as it nears her */
 export const medicV = (T: number) =>
-  keys(T, [[T2 - 0.25, 0], [T2 + 0.3, 46], [T3, 50], [T3 + 0.5, 52], [T4, 48], [T5, 44], [T6, 40]]);
-const X0 = -44; // body origin at T2 - 0.25: the head (x + 35) inside the hole, antennae reaching for the mouth
+  keys(T, [[T2 - 0.25, 0], [T2 + 0.15, 54], [T3, 54], [T3 + 0.5, 52], [T4, 48], [T5, 44], [T6, 40]]);
+const X0 = -40; // body origin at T2 - 0.25: the head (x + 35) inside the hole, antennae reaching for the mouth
 const DT = 1 / 240;
 /** body origin x (mm) at film second T (integrated speed: a pure function of T) */
 export const medicX = (T: number) => {

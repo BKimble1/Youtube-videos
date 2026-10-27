@@ -11,11 +11,13 @@ import {viewAt, View} from '../../../roach/ortho';
 import {Layer, Cam} from '../../../dc/camera';
 import {clamp, sr} from '../../../../lib/ease';
 import {mix} from '../../../../lib/color';
-import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, VGrad, Pipe, jag, poly} from '../art';
+import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, VGrad, Pipe, Grit, jag, poly} from '../art';
 import {ShotProps} from '../../index2';
 import {idf, FPS, Blur} from './kit';
 
 export const E3_N = 20;
+/** a trickle of grit from the crack, down through the shaft (shot seconds) */
+export const E3_GRIT = {t0: 0.08, dur: 0.5};
 const S = 2.6; // px per mm at the subject plane
 const V_MM = 60;
 /** the insect's ground point on screen at the start, and the share of its travel the camera follows */
@@ -32,7 +34,7 @@ const D_BACK = 2.4, D_BEAM = 1.04, D_SUBJ = 1, D_FORE = 0.14;
 /** the beam, broken in two over the floor: each half a straight member sagging to the break at BX, where a crack
  *  lets the daylight through (subject-layer px). */
 const BX = 742;
-const BD = 900; // the beam's depth on screen
+const BD = 820; // the beam's depth on screen
 const bot = (x: number) => (x < BX ? 1196 - 0.2 * (BX - x) : 1200 - 0.24 * (x - BX));
 /** the shaft: down through the crack at the break onto the floor ahead of the insect */
 const SH = {top: [[BX - 26, bot(BX) - 30], [BX + 26, bot(BX) - 30]] as Pt[], bot: [[BX + 50, 1356], [BX - 190, 1356]] as Pt[]};
@@ -132,6 +134,7 @@ export const E3: React.FC<ShotProps> = ({f, lf}) => {
         {/* ambient dark over the insect until it reaches the light */}
         <Glow2 id={`${id}-rl`} cx={xs + 20} cy={Y0 - 40} rx={150} ry={80} color={RB.day} a={0.22 * inLight} />
         <Shaft id={`${id}-sh`} pts={[...SH.top, ...SH.bot]} from={[BX, bot(BX) - 30]} to={[BX - 70, 1350]} a={1} />
+        <Grit t={t} x={BX + 2} y0={bot(BX) + 6} y1={1346} t0={E3_GRIT.t0} dur={E3_GRIT.dur} n={14} seed={335} spread={8} color={RB.dayHot} />
         <Motes id={`${id}-mo`} t={t + 3} n={26} x0={BX - 160} y0={bot(BX) - 60} x1={BX + 40} y1={1350} r={3} seed={334} clip={poly([...SH.top, ...SH.bot])} a={0.9} />
       </Layer>
       <rect x={0} y={0} width={1080} height={1920} fill="#0A0807" opacity={(0.18 * (1 - clamp(lf / 8))).toFixed(3)} />
