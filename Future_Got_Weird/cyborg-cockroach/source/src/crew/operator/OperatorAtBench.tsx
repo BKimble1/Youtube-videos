@@ -116,7 +116,9 @@ export const operatorAtBench = (p: OperatorAtBenchProps) => {
   if (far === 'bench' && p.benchTopY !== undefined) {
     // fingertips resting on the bench top, hand angled down toward it (as the lab's resting far hand)
     const fx = p.x - (p.farHandX ?? 70) * s;
-    pose = {...pose, rElb: -1};
+    // V5: the elbow bends OUT past his front edge (screen-left), so the far arm reads as coming from his far shoulder
+    // (it hangs down his front and the forearm reaches forward onto the bench), never as a second arm out of his middle
+    pose = {...pose, rElb: 1};
     pose = placeHand(pose, 'R', {x: fx, y: p.benchTopY + BENCH_REST * s}, 122, 0.74, 0.0);
   } else {
     // hanging at his side: in 3/4 the far shoulder is on his front edge, so the arm hangs (in world space, plumb)
