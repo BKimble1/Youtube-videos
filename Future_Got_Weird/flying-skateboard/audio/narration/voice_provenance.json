@@ -1,0 +1,54 @@
+{
+ "provider": "ElevenLabs (restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 27 Oct 2026 returned this id ('Test Voice For Youtube.'); the same id as Glass Climbing V6, Real Web Fluid, Invisibility Shield"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags (not spoken)",
+ "flow_id": "WBJNpgf6a9K7o7BfU8Vy",
+ "date": "2026-10-27",
+ "prompt": "[excited, conversational] This skateboard could make you FLY across a RIVER. [curious, explaining, brisk] You see, ten powerful electric propellers blast air downward, lifting you completely off the ground. [leaning in] But his first version used JET ENGINES\u2026 [beat] and caught FIRE. [matter-of-fact] So he switched to electric. [building] Except there's one HUGE problem. [dry] The board can't balance itself. [brisk, clear] He has to control it with his entire BODY, while an AI voice coach helps him learn how to balance. [building, impressed] And after just over ten days of practice, he actually flew across a RIVER\u2026 [excited] and THROUGH a CANYON. [playful, curious] How much would someone have to PAY YOU to ride this thing?",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are the locked script's emphasis. Spoken words are exactly production/NARRATION_APPROVED.txt.",
+ "credits_reported": "2 x 730.9 (speech), 2 x ~185 (Scribe)",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_pjvQ.mp3",
+   "generation_id": "pjvQYEo2uwtUu9SSysgJ",
+   "sha256": "c32cdc1f9164bcd3fc7770e1b87479e44ea664fa5bcac775f849c71528b53763",
+   "duration_s": 33.567,
+   "scribe": "verbatim (independent transcription of the plain MP3, asset hNjTMedIdBYKtWZhyu0j, generation xK9rw8aJLyQgd9h6Q1Zf); '10' for 'ten' only",
+   "emphasis_dB_vs_median_word": {
+    "fly": 3.1,
+    "fire": 3.4,
+    "huge": 1.9,
+    "body": 2.7,
+    "canyon": 1.1,
+    "pay": 3.6,
+    "you": 3.3
+   },
+   "chosen": true,
+   "why": "verbatim and the stronger emphasis on FLY, FIRE, CANYON and PAY YOU (measured word RMS and pitch against the take's median word)"
+  },
+  {
+   "file": "audio/narration/takes/t2_f6Tj.mp3",
+   "generation_id": "f6TjO8LBkbMXYc7SnQz4",
+   "sha256": "48db8a875c2b991bd8c0386bc629a2c5b0d614423179508120a945311c092bd8",
+   "duration_s": 33.802,
+   "scribe": "verbatim (asset eybHXeTlM79FtjfM0Ow6, generation rNSDrB9nrrG4OiFN1Y4P); '10' for 'ten' only",
+   "emphasis_dB_vs_median_word": {
+    "fly": 2.1,
+    "fire": 1.7,
+    "huge": 1.6,
+    "body": 2.1,
+    "canyon": 0.4,
+    "pay": 1.0,
+    "you": 3.0
+   },
+   "chosen": false
+  }
+ ],
+ "note_scribe_first_pass": "A first Scribe run on the generation node itself (OURztLDMpeJNDpND08M5) echoed the prompt text including the tags, so it was not used as a word check; the plain-asset runs above are independent.",
+ "processing": "tools/make_narration.py: 48 kHz mono; +0.30 s after 'FIRE.' and +0.40 s after 'CANYON.' (room tone from the gap itself); 0.10 s lead; 1.75 s tail. Nothing cut, stretched or pitch-shifted."
+}
