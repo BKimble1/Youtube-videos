@@ -38,8 +38,8 @@ const HER = (() => {
 const under = (x: number) => 372 - 0.4 * (x - 500);
 
 // ---------------------------------------------------------------- the near floor and the crack (fg world px)
-const FG_ROLL = -9;
-const HOLE_AT: Pt = [40, 1500];
+const FG_ROLL = -15;
+const HOLE_AT: Pt = [40, 1550];
 export const fgView: View = viewAt(22, 20, 4.9, [0, 0, 0], HOLE_AT[0], HOLE_AT[1]);
 const rollPt = (p: Pt): Pt => {
   const a = (FG_ROLL * Math.PI) / 180, c = Math.cos(a), s = Math.sin(a);
@@ -116,9 +116,9 @@ const Near: React.FC<{id: string; pose: RoachPose | null}> = ({id, pose}) => {
   const v = fgView;
   return (
     <g transform={`rotate(${FG_ROLL} ${HOLE_AT[0]} ${HOLE_AT[1]})`}>
-      <CrackFloor id={`${id}fl`} v={v} x0={-60} x1={520} z0={-120} z1={110} drop={420} w={4} dark={0.36} />
-      <Pebbles id={`${id}fe`} a={P(v, [60, 0, -122]) as Pt} b={P(v, [520, 0, -126]) as Pt} n={11} size={13} seed={33} tone={RB.concDark} w={3} dark={0.1} />
-      <path d={`M${P(v, [250, 0, -120]).join(',')} L${P(v, [262, 0, -60]).join(',')} L${P(v, [240, 0, -20]).join(',')}`} stroke="#4E4844" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <CrackFloor id={`${id}fl`} v={v} x0={-60} x1={560} z0={-75} z1={110} drop={420} w={4} dark={0.36} />
+      <Pebbles id={`${id}fe`} a={P(v, [60, 0, -77]) as Pt} b={P(v, [560, 0, -80]) as Pt} n={11} size={13} seed={33} tone={RB.concDark} w={3} dark={0.1} />
+      <path d={`M${P(v, [250, 0, -75]).join(',')} L${P(v, [262, 0, -50]).join(',')} L${P(v, [240, 0, -20]).join(',')}`} stroke="#4E4844" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       <Glow2 id={`${id}pl`} cx={P(v, [120, 0, 0])[0]} cy={P(v, [120, 0, 0])[1]} rx={420} ry={110} color={RB.day} a={0.3} />
       <Pebbles id={`${id}np`} a={P(v, [180, 0, 80]) as Pt} b={P(v, [460, 0, 95]) as Pt} n={6} size={12} seed={31} tone={RB.concLit} w={3} />
       <CrackBlock id={`${id}cb`} v={v} w={4} dark={0.3} />

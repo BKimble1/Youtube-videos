@@ -232,7 +232,25 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
             </g>
           )}
           {heat > 0 && <circle cx={f2(coilC[0])} cy={f2(coilC[1])} r={f2((1.4 + 2.4 * heat) * s)} fill={G2.heat} opacity={0.32 * heat} />}
-          <path d={`M${f2(coilC[0] - 0.9 * s)},${f2(coilC[1] - 0.8 * s)} l${f2(0.45 * s)},${f2(1.6 * s)} l${f2(0.45 * s)},${f2(-1.6 * s)} l${f2(0.45 * s)},${f2(1.6 * s)} l${f2(0.45 * s)},${f2(-1.6 * s)}`} stroke={heat > 0.3 ? mix(G2.coil, G2.heat, heat) : G2.coil} strokeWidth={f2(Math.max(1, 0.32 * s))} fill="none" strokeLinejoin="round" />
+          {(() => {
+            // a small wound nichrome coil around the latch line (a projected helix of four turns along the line) with its two leads
+            const al = Math.hypot(hBot[0] - hTop[0], hBot[1] - hTop[1]) || 1;
+            const ax = [(hBot[0] - hTop[0]) / al, (hBot[1] - hTop[1]) / al], nx = [-ax[1], ax[0]];
+            const at = (k: number, c: number) => `${f2(coilC[0] + (ax[0] * k + nx[0] * c) * s)},${f2(coilC[1] + (ax[1] * k + nx[1] * c) * s)}`;
+            const pts: string[] = [];
+            for (let i = 0; i <= 64; i++) {
+              const u = i / 64, th = u * 4 * Math.PI * 2;
+              pts.push(at(-0.8 + 1.6 * u + 0.16 * Math.sin(th), 0.5 * Math.cos(th)));
+            }
+            const col = heat > 0.3 ? mix(G2.coil, G2.heat, heat) : G2.coil;
+            const w = f2(Math.max(1, 0.22 * s));
+            return (
+              <g>
+                <path d={`M${at(-0.8, 0.5)} L${at(-1.1, 1.5)} M${at(0.8, 0.5)} L${at(1.1, 1.5)}`} stroke={G2.coil} strokeWidth={w} fill="none" strokeLinecap="round" />
+                <path d={`M${pts.join(' L')}`} stroke={col} strokeWidth={w} fill="none" strokeLinejoin="round" />
+              </g>
+            );
+          })()}
           {/* tube front: outline, rim rings, a long highlight */}
           <path d={smoothClosed(tube)} fill="none" stroke={INK} strokeWidth={f2(ink * 0.9)} />
           {[T.a[0] + 0.6, T.b[0] - 0.6].map((x, i) => {

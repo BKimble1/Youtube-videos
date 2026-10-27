@@ -111,11 +111,12 @@ export const Box2D: React.FC<{id: string; v: View; b: [number, number, number, n
 /** the silicone target: a soft pink translucent block standing on an aluminium base plate with a backing plate at its
  *  far end. dir = 1: its face is the plane x = face and the block extends toward +x (an insect heading +x meets it).
  *  `dent` 0..1 shows the needle's entry dimple; `glow` 0..1 an amber dose cloud inside (delivery). */
-export const Target2D: React.FC<{id: string; v: View; face: number; dir?: 1 | -1; h?: number; half?: number; depth?: number; dent?: number; entryY?: number; veil?: number}> = ({id, v, face, dir = 1, h = 34, half = 18, depth = 30, dent = 0, entryY = 27, veil}) => {
+export const Target2D: React.FC<{id: string; v: View; face: number; dir?: 1 | -1; h?: number; half?: number; depth?: number; dent?: number; entryY?: number; veil?: number; veilR?: number}> = ({id, v, face, dir = 1, h = 34, half = 18, depth = 30, dent = 0, entryY = 27, veil, veilR}) => {
   const xA = dir > 0 ? face : face - depth, xB = dir > 0 ? face + depth : face;
   // veil: the silicone again, translucent, drawn over the insect's gear so a needle inside it reads as inside
   if (veil !== undefined) {
-    const q = boxHull(v, xA, xB, 0, h, -half, half);
+    // veilR: only a sleeve round the needle's line (so an antenna lying on the face stays in front of it)
+    const q = veilR ? boxHull(v, dir > 0 ? xA + 0.6 : xA, dir > 0 ? xB : xB - 0.6, entryY - veilR, entryY + veilR, -veilR, veilR) : boxHull(v, xA, xB, 0, h, -half, half);
     return <path d={polyD(q)} fill={LAB2.silicone} opacity={veil} />;
   }
   return (

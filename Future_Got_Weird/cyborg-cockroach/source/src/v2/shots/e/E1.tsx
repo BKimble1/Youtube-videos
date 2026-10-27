@@ -25,7 +25,7 @@ export const E1_GRIT = {x: 905, t0: 0.9, dur: 1.4};
 const GAP = ((GD as unknown as Record<string, unknown>).D6_GAP as {x0: number; x1: number; y0: number; y1: number} | undefined) ?? {x0: 330, x1: 750, y0: 0, y1: 1920};
 
 /** camera progress: already moving at the cut (D6 pushes into the gap), settling at the end */
-export const e1U = (lf: number) => easeOut(lf / (E1_N - 1), 2.1);
+export const e1U = (lf: number) => easeOut(lf / (E1_N - 1), 1.55);
 const CAM_END = {x: 640, y: 1000, z: 1.6};
 export const e1Cam = (lf: number): Cam => {
   const u = e1U(lf);
@@ -166,7 +166,7 @@ export const E1: React.FC<ShotProps> = ({lf}) => {
   const u = e1U(lf);
   const pose = e1Pose(lf);
   const v = E1_VIEW;
-  const veil = 0.6 * (1 - sr(u, 0.04, 0.4));
+  const veil = 0.84 * (1 - sr(u, 0.02, 0.42));
   const zGap = 1 + (cam.z - 1) / D_GAP;
   const gapGone = u > 0.6 || (GAP.x0 - 540) * zGap < -560 && (GAP.x1 - 540) * zGap > 560;
   return (

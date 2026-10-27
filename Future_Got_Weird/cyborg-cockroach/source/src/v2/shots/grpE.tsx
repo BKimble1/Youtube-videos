@@ -15,7 +15,7 @@ export const CAPY_E: Record<string, number> = {
   E1: 1590, // low, over the dark ledge face and foreground rubble (the medic walks at y 1250-1450, her head at ~800)
   F1: 1560, // low, over her forearms (her face fills y 330-1100)
   F2: 1570, // low, over the floor in front of the crack (the insect's head at ~y 1050-1250)
-  F3: 1340, // between her hands (bottom ~y 1280) and the insect coming in at the lower left (its tube top ~y 1420)
+  F3: 1330, // between her hands (bottom ~y 1280) and the insect coming in at the lower left (antennae ~y 1380+, tube ~1420)
   F4: 270, // top band, over the slab (her head top ~y 420, the insect at y 1350-1550)
 };
 
