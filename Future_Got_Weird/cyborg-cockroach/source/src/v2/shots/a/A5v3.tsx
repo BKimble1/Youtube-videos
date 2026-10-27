@@ -10,12 +10,13 @@ import {sr, lerp, clamp} from '../../../lib/ease';
 import {V3} from '../../../lib/v3';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D, Injector2D} from '../../roach/Gear2D';
-import {viewAt, View, P, D, f2} from '../../roach/ortho';
+import {viewAt, View, P, D, f2, polyD} from '../../roach/ortho';
+import {shade as shadeC} from '../../../lib/color';
 import {LabWall2, Target2D, LAB2} from '../../sets/Lab2';
 import {INK} from '../../../lib/ink';
 import {ShotProps} from '../index2';
 import {A1_FACE} from '../h/A1';
-import {FoamBox, Tray2D, BoxB} from '../b/common';
+import {FoamBox, BoxB} from '../b/common';
 import {OperatorA} from './OperatorA';
 import {GroundShadow} from './kitA';
 import {medPose, medGear, medAt, medInjFrame, MED_INJ_REAR} from './medicA';
@@ -25,10 +26,10 @@ const R = shotRange('A5');
 const T0 = R.from / 30;
 const T1 = R.to / 30;
 export const A5_AZ = 22;
-const EL0 = 14;
-const EL1 = 48;
+const EL0 = 10;
+const EL1 = 52;
 const S0 = 4.4;
-const S1 = 3.6;
+const S1 = 3.5;
 
 const rise = (t: number) => sr(t, T0 - 0.05, T1 + 0.05);
 /** horizontal unit vectors of the view: R (screen right) and toward the viewer, in world (x, z) */
@@ -38,10 +39,10 @@ const FH: [number, number] = [Math.sin(AZ), Math.cos(AZ)];
 /** where the insect is at the start of the shot (the bench layout is placed from it) */
 const M0 = medAt(T0).p;
 const at = (a: number, b: number): V3 => [M0[0] + RH[0] * a + FH[0] * b, 0, M0[2] + RH[1] * a + FH[1] * b];
-/** the bench's far edge (screen-horizontal), the operator's place behind it */
-const EDGE_B = -170;
-const OP_A = 30;
-const OP_B = -215;
+/** the tray (a rectangle in screen-right / toward-viewer coordinates, mm from the insect's start) and the bench's far
+ *  edge just beyond it (screen-horizontal), with the operator standing behind it */
+const TRAY = {a0: -640, a1: 330, b0: -150, b1: 460};
+const EDGE_B = -172;
 
 /** the camera follows the insect (a little behind its lead, so it drifts left in frame) while it rises */
 export const a5View = (t: number): View => {
@@ -51,7 +52,7 @@ export const a5View = (t: number): View => {
   const m0 = medAt(T0).p;
   const k = 0.65; // the share of the insect's travel the camera follows
   const lx = lerp(m0[0], look[0], k), lz = lerp(m0[2], look[2], k);
-  return viewAt(A5_AZ, lerp(EL0, EL1, u), lerp(S0, S1, u), [lx, 8, lz], 600, lerp(1290, 1250, u));
+  return viewAt(A5_AZ, lerp(EL0, EL1, u), lerp(S0, S1, u), [lx, 8, lz], 600, lerp(1330, 1300, u));
 };
 
 /** the foam course ahead (world mm): a gate of blue and red blocks, more beyond, and the near yellow block */
@@ -61,12 +62,37 @@ const COURSE: {b: BoxB; c: string}[] = (() => {
     return [c[0] - w / 2, c[0] + w / 2, 0, h, c[2] - d / 2, c[2] + d / 2];
   };
   return [
-    {b: box(-215, -70, 40, 34, 34), c: LAB2.foamB},
-    {b: box(-300, -20, 50, 30, 26), c: LAB2.foamR},
-    {b: box(-240, 62, 44, 36, 30), c: LAB2.foamR},
-    {b: box(-205, 150, 70, 46, 40), c: LAB2.foamY},
+    {b: box(-165, -78, 42, 34, 34), c: LAB2.foamB},
+    {b: box(-250, -30, 50, 30, 26), c: LAB2.foamR},
+    {b: box(-185, 48, 44, 36, 30), c: LAB2.foamR},
+    {b: box(-178, 215, 80, 56, 44), c: LAB2.foamY},
   ];
 })();
+
+/** the white tray, laid along the view's axes (its far edge parallel to the bench's): rim, floor and a faint grid */
+const TrayAB: React.FC<{v: View}> = ({v}) => {
+  const q = (a0: number, a1: number, b0: number, b1: number) => polyD([P(v, at(a0, b0)), P(v, at(a1, b0)), P(v, at(a1, b1)), P(v, at(a0, b1))]);
+  const {a0, a1, b0, b1} = TRAY;
+  const rim = 9;
+  const gc = shadeC(LAB2.surface, 0.07);
+  const ls: React.ReactNode[] = [];
+  for (let a = Math.ceil((a0 + rim) / 20) * 20; a <= a1 - rim; a += 20) {
+    const p = P(v, at(a, b0 + rim)), r = P(v, at(a, b1 - rim));
+    ls.push(<path key={`a${a}`} d={`M${f2(p[0])},${f2(p[1])} L${f2(r[0])},${f2(r[1])}`} stroke={gc} strokeWidth={1.6} />);
+  }
+  for (let b = Math.ceil((b0 + rim) / 20) * 20; b <= b1 - rim; b += 20) {
+    const p = P(v, at(a0 + rim, b)), r = P(v, at(a1 - rim, b));
+    ls.push(<path key={`b${b}`} d={`M${f2(p[0])},${f2(p[1])} L${f2(r[0])},${f2(r[1])}`} stroke={gc} strokeWidth={1.6} />);
+  }
+  return (
+    <g>
+      <path d={q(a0, a1, b0, b1)} fill={LAB2.surfaceShade} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+      <path d={q(a0 + rim * 0.35, a1 - rim * 0.35, b0 + rim * 0.35, b1 - rim * 0.35)} fill="#DCE4E8" />
+      <path d={q(a0 + rim, a1 - rim, b0 + rim, b1 - rim)} fill={LAB2.surface} />
+      {ls}
+    </g>
+  );
+};
 
 export const A5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   const v = a5View(t);
@@ -74,9 +100,9 @@ export const A5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   const ins = P(v, pose.frame.o);
   // the bench's far edge (horizontal on screen) and the operator behind it
   const edge = P(v, at(0, EDGE_B));
-  const opG = P(v, at(OP_A, OP_B));
+  // he is far beyond the tray (forced perspective): small, and drifting right less than the bench as the camera tracks
   const opScale = 0.74;
-  const opHip = {x: opG[0], y: edge[1] + 38 * opScale};
+  const opHip = {x: lerp(830, 870, rise(t)), y: edge[1] + 38 * opScale};
   // his eyes and thumb: on the insect, working the pad (two short nudges on the pad)
   const nudge = clamp(Math.sin((t - T0) * Math.PI * 3.2) * 1.4 + 0.2);
   const opProps = {
@@ -110,7 +136,7 @@ export const A5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
       <path d={`M-50,${f2(edge[1])} H1130`} stroke={INK} strokeWidth={5} />
       <path d={`M-50,${f2(edge[1] + 5)} H1130`} stroke="#FFFFFF" strokeWidth={2} opacity={0.2} />
       <OperatorA id={`${id}oh`} layer="hands" {...opProps} />
-      <Tray2D v={v} x0={-520} x1={190} z0={-140} z1={420} grid={20} bench={false} />
+      <TrayAB v={v} />
       {far.map((c, i) => <FoamBox key={`f${i}`} id={`${id}cf${i}`} v={v} b={c.b} color={c.c} />)}
       <Target2D id={`${id}t`} v={v} face={A1_FACE} dir={1} dent={1} />
       <Injector2D id={`${id}i`} v={v} frame={medInjFrame()} rear={MED_INJ_REAR} />
