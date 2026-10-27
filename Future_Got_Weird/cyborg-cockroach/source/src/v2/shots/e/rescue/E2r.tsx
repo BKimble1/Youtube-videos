@@ -228,13 +228,7 @@ const DustIn: React.FC<{c: E2Cam; t: number; light: number}> = ({c, t, light}) =
   </g>
 );
 
-/** cracks and drifts of dust on the floor (world polylines on the floor plane) */
-const CRACKS: [number, number][][] = [
-  [[-260, -40], [-220, 40], [-240, 110], [-200, 170]],
-  [[150, -60], [120, 20], [160, 90], [140, 150], [175, 190]],
-  [[-90, 60], [-40, 95], [10, 90], [60, 130]],
-  [[330, 10], [290, 80], [300, 160]],
-];
+/** drifts of pale dust on the floor (world ellipses on the floor plane) */
 const DRIFT = [{x: -140, z: 40, rx: 90, rz: 50}, {x: 190, z: 120, rx: 120, rz: 40}, {x: -10, z: -30, rx: 140, rz: 40}];
 const FloorMarks: React.FC<{c: E2Cam}> = ({c}) => (
   <g>
@@ -245,12 +239,6 @@ const FloorMarks: React.FC<{c: E2Cam}> = ({c}) => (
         return pr(c, d.x + d.rx * Math.cos(th), 0, d.z + d.rz * Math.sin(th));
       });
       return <path key={`d${i}`} d={poly(pts)} fill="#D2C4AE" opacity={0.35} />;
-    })}
-    {CRACKS.map((cr, i) => {
-      const pts = cr.filter((p) => p[1] - c.zc > 14).map((p) => pr(c, p[0], 0, p[1]));
-      if (pts.length < 2) return null;
-      const d = Math.max(20, cr[0][1] - c.zc);
-      return <path key={`c${i}`} d={line2(pts)} stroke="#6A5F55" strokeWidth={f2(Math.min(4, (F * 0.6) / d))} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={0.7} />;
     })}
   </g>
 );
