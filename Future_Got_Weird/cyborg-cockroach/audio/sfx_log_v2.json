@@ -1,0 +1,826 @@
+[
+ {
+  "name": "A1 foot",
+  "at": 0.042,
+  "frame": 1.2,
+  "dur": 0.025,
+  "gain_db": -26.2,
+  "hero": false
+ },
+ {
+  "name": "A1 coil heats",
+  "at": 0.6,
+  "frame": 18.0,
+  "dur": 0.3,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "A1 RELEASE: latch line parts (accent 1)",
+  "at": 0.9,
+  "frame": 27.0,
+  "dur": 0.07,
+  "gain_db": -14,
+  "hero": true
+ },
+ {
+  "name": "A1 spring snaps",
+  "at": 0.904,
+  "frame": 27.1,
+  "dur": 0.22,
+  "gain_db": -21,
+  "hero": true
+ },
+ {
+  "name": "A1 needle seats in the silicone",
+  "at": 0.975,
+  "frame": 29.2,
+  "dur": 0.22,
+  "gain_db": -19,
+  "hero": true
+ },
+ {
+  "name": "A2 thumb meets the cap",
+  "at": 2.29,
+  "frame": 68.7,
+  "dur": 0.07,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "A2 FIRE button pressed",
+  "at": 2.35,
+  "frame": 70.5,
+  "dur": 0.06,
+  "gain_db": -20,
+  "hero": true
+ },
+ {
+  "name": "A2 remote LED turns amber",
+  "at": 2.36,
+  "frame": 70.8,
+  "dur": 0.03,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "A3 backpack LED lights",
+  "at": 2.767,
+  "frame": 83.0,
+  "dur": 0.03,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "A3 signal leaves along the trace",
+  "at": 2.837,
+  "frame": 85.1,
+  "dur": 0.03,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "A3 coil starts to glow (small)",
+  "at": 3.147,
+  "frame": 94.4,
+  "dur": 0.287,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "A4 nod: glove on the remote",
+  "at": 4.0,
+  "frame": 120.0,
+  "dur": 0.9,
+  "gain_db": -46,
+  "hero": false
+ },
+ {
+  "name": "B1 pack seats",
+  "at": 5.53,
+  "frame": 165.9,
+  "dur": 0.035,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "B2 foot (first steps)",
+  "at": 6.975,
+  "frame": 209.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "B2 foot (first steps)",
+  "at": 7.258,
+  "frame": 217.8,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "B3 foot",
+  "at": 7.542,
+  "frame": 226.2,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "B3 foot",
+  "at": 7.825,
+  "frame": 234.8,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "B3 foot",
+  "at": 8.108,
+  "frame": 243.2,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "B3 foot",
+  "at": 8.392,
+  "frame": 251.8,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "B4 pulse 1 leaves the board",
+  "at": 8.58,
+  "frame": 257.4,
+  "dur": 0.03,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "B4 foot",
+  "at": 8.608,
+  "frame": 258.2,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "B4 pulse 2 leaves the board",
+  "at": 8.68,
+  "frame": 260.4,
+  "dur": 0.03,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "B4 pulse 3 leaves the board",
+  "at": 8.78,
+  "frame": 263.4,
+  "dur": 0.03,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "B4 foot",
+  "at": 8.892,
+  "frame": 266.8,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "B4 foot",
+  "at": 9.175,
+  "frame": 275.2,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "B5 foot (turn)",
+  "at": 9.458,
+  "frame": 283.8,
+  "dur": 0.025,
+  "gain_db": -35.2,
+  "hero": false
+ },
+ {
+  "name": "B5 foot (turn)",
+  "at": 9.742,
+  "frame": 292.2,
+  "dur": 0.025,
+  "gain_db": -35.2,
+  "hero": false
+ },
+ {
+  "name": "B5 foot (turn)",
+  "at": 10.025,
+  "frame": 300.8,
+  "dur": 0.025,
+  "gain_db": -35.2,
+  "hero": false
+ },
+ {
+  "name": "B5 foot (turn)",
+  "at": 10.308,
+  "frame": 309.2,
+  "dur": 0.025,
+  "gain_db": -35.2,
+  "hero": false
+ },
+ {
+  "name": "C1 observer foot",
+  "at": 10.75,
+  "frame": 322.5,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "C1 medic foot",
+  "at": 10.767,
+  "frame": 323.0,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "C1 observer foot",
+  "at": 11.0,
+  "frame": 330.0,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "C1 medic foot",
+  "at": 11.042,
+  "frame": 331.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "C1 observer foot",
+  "at": 11.25,
+  "frame": 337.5,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "C1 medic foot",
+  "at": 11.308,
+  "frame": 339.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "C2 observer foot (close)",
+  "at": 11.583,
+  "frame": 347.5,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "C2 observer foot (close)",
+  "at": 11.967,
+  "frame": 359.0,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "C3 through the lens",
+  "at": 12.333,
+  "frame": 370.0,
+  "dur": 0.4,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "C2 observer foot (close)",
+  "at": 12.35,
+  "frame": 370.5,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 12.783,
+  "frame": 383.5,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 12.9,
+  "frame": 387.0,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 13.017,
+  "frame": 390.5,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 13.158,
+  "frame": 394.8,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 13.258,
+  "frame": 397.8,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 13.417,
+  "frame": 402.5,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 13.492,
+  "frame": 404.8,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 13.683,
+  "frame": 410.5,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 13.725,
+  "frame": 411.8,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 13.942,
+  "frame": 418.2,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 13.967,
+  "frame": 419.0,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C3 observer foot (under the lens, soft)",
+  "at": 14.2,
+  "frame": 426.0,
+  "dur": 0.025,
+  "gain_db": -33.2,
+  "hero": false
+ },
+ {
+  "name": "C3 medic foot (ahead in the feed)",
+  "at": 14.2,
+  "frame": 426.0,
+  "dur": 0.025,
+  "gain_db": -39.2,
+  "hero": false
+ },
+ {
+  "name": "C4 feed foot",
+  "at": 14.433,
+  "frame": 433.0,
+  "dur": 0.025,
+  "gain_db": -42.2,
+  "hero": false
+ },
+ {
+  "name": "C4 feed foot",
+  "at": 14.675,
+  "frame": 440.2,
+  "dur": 0.025,
+  "gain_db": -42.2,
+  "hero": false
+ },
+ {
+  "name": "C4 feed foot",
+  "at": 14.908,
+  "frame": 447.2,
+  "dur": 0.025,
+  "gain_db": -42.2,
+  "hero": false
+ },
+ {
+  "name": "C4 feed foot",
+  "at": 15.15,
+  "frame": 454.5,
+  "dur": 0.025,
+  "gain_db": -42.2,
+  "hero": false
+ },
+ {
+  "name": "C4 feed foot",
+  "at": 15.383,
+  "frame": 461.5,
+  "dur": 0.025,
+  "gain_db": -42.2,
+  "hero": false
+ },
+ {
+  "name": "D1 foot (lining up)",
+  "at": 15.608,
+  "frame": 468.2,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "D1 foot (lining up)",
+  "at": 15.883,
+  "frame": 476.5,
+  "dur": 0.025,
+  "gain_db": -31.2,
+  "hero": false
+ },
+ {
+  "name": "D2 coil heats",
+  "at": 16.265,
+  "frame": 488.0,
+  "dur": 0.3,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "D2 LINE PARTS (mechanism, accent 2)",
+  "at": 16.565,
+  "frame": 497.0,
+  "dur": 0.07,
+  "gain_db": -13,
+  "hero": true
+ },
+ {
+  "name": "D2 spring drives the injector",
+  "at": 16.57,
+  "frame": 497.1,
+  "dur": 0.22,
+  "gain_db": -21,
+  "hero": true
+ },
+ {
+  "name": "D2 NEEDLE INTO SILICONE",
+  "at": 16.64,
+  "frame": 499.2,
+  "dur": 0.22,
+  "gain_db": -17,
+  "hero": true
+ },
+ {
+  "name": "D3 seal opens",
+  "at": 18.14,
+  "frame": 544.2,
+  "dur": 0.04,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "D3 gas behind the plunger",
+  "at": 18.18,
+  "frame": 545.4,
+  "dur": 1.15,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "D6 foot",
+  "at": 21.167,
+  "frame": 635.0,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "D6 into the gap (air pass)",
+  "at": 21.267,
+  "frame": 638.0,
+  "dur": 0.567,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "D6 foot",
+  "at": 21.375,
+  "frame": 641.2,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "D6 foot",
+  "at": 21.583,
+  "frame": 647.5,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "D6 foot",
+  "at": 21.792,
+  "frame": 653.8,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "E1 through the gap (the near rubble edges pass the lens)",
+  "at": 21.833,
+  "frame": 655.0,
+  "dur": 1.233,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 22.008,
+  "frame": 660.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 22.333,
+  "frame": 670.0,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 22.658,
+  "frame": 679.8,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 grit trickle from the slab over her",
+  "at": 22.733,
+  "frame": 682.0,
+  "dur": 1.4,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 22.983,
+  "frame": 689.5,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 23.308,
+  "frame": 699.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 23.633,
+  "frame": 709.0,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 rubble creaks",
+  "at": 23.733,
+  "frame": 712.0,
+  "dur": 0.9,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 23.958,
+  "frame": 718.8,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 24.283,
+  "frame": 728.5,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 24.608,
+  "frame": 738.2,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 24.933,
+  "frame": 748.0,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "E1 foot (on the ledge)",
+  "at": 25.258,
+  "frame": 757.8,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "F1 grit trickle (she hears it)",
+  "at": 25.567,
+  "frame": 767.0,
+  "dur": 0.75,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "F1 scrape at the crack (her eyes dart to it)",
+  "at": 26.267,
+  "frame": 788.0,
+  "dur": 0.18,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "F2 foot (close, out of the crack)",
+  "at": 26.725,
+  "frame": 801.8,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "F2 foot (close, out of the crack)",
+  "at": 27.058,
+  "frame": 811.8,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "F2 grit from the crack as it pushes out",
+  "at": 27.087,
+  "frame": 812.6,
+  "dur": 0.45,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "F2 foot (close, out of the crack)",
+  "at": 27.342,
+  "frame": 820.2,
+  "dur": 0.025,
+  "gain_db": -30.2,
+  "hero": false
+ },
+ {
+  "name": "F3 rubble shifts under her startle",
+  "at": 27.633,
+  "frame": 829.0,
+  "dur": 0.9,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "F3 foot",
+  "at": 27.85,
+  "frame": 835.5,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "F3 foot",
+  "at": 28.083,
+  "frame": 842.5,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "F3 foot",
+  "at": 28.317,
+  "frame": 849.5,
+  "dur": 0.025,
+  "gain_db": -34.2,
+  "hero": false
+ },
+ {
+  "name": "F4 foot (coming on)",
+  "at": 28.575,
+  "frame": 857.2,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "F4 foot (coming on)",
+  "at": 28.858,
+  "frame": 865.8,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "F4 foot (coming on)",
+  "at": 29.167,
+  "frame": 875.0,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "F4 foot (coming on)",
+  "at": 29.483,
+  "frame": 884.5,
+  "dur": 0.025,
+  "gain_db": -32.2,
+  "hero": false
+ },
+ {
+  "name": "F5 grit under the feet",
+  "at": 29.8,
+  "frame": 894.0,
+  "dur": 1.2,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "F5 foot (FINAL APPROACH, accent 3)",
+  "at": 29.933,
+  "frame": 898.0,
+  "dur": 0.025,
+  "gain_db": -25.2,
+  "hero": true
+ },
+ {
+  "name": "F5 foot (FINAL APPROACH, accent 3)",
+  "at": 30.175,
+  "frame": 905.2,
+  "dur": 0.025,
+  "gain_db": -25.2,
+  "hero": true
+ },
+ {
+  "name": "F5 foot (FINAL APPROACH, accent 3)",
+  "at": 30.425,
+  "frame": 912.8,
+  "dur": 0.025,
+  "gain_db": -25.2,
+  "hero": true
+ },
+ {
+  "name": "F5 foot (FINAL APPROACH, accent 3)",
+  "at": 30.708,
+  "frame": 921.2,
+  "dur": 0.025,
+  "gain_db": -25.2,
+  "hero": true
+ }
+]

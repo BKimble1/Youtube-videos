@@ -69,11 +69,11 @@ export const f1Cam = (lf: number) => {
 };
 export const f3Cam = (lf: number) => {
   const u = sr(lf, 0, F3R.to - F3R.from);
-  return camAt(EYE_AT.x, EYE_AT.y, 560, 520, 1.18 + 0.06 * u);
+  return camAt(EYE_AT.x, EYE_AT.y, 560, 600, 1.36 + 0.06 * u);
 };
 export const f4Cam = (lf: number) => {
   const u = sr(lf, 0, F4R.to - F4R.from);
-  return camAt(EYE_AT.x, EYE_AT.y, 600, 650 + 10 * u, 1 + 0.07 * u);
+  return camAt(EYE_AT.x, EYE_AT.y, 600, 640 + 10 * u, 0.96 + 0.07 * u);
 };
 
 // ---------------------------------------------------------------- the pocket (depth 1)

@@ -608,6 +608,672 @@
    "name": "A1 needle seats in the silicone"
   },
   {
+   "kind": "click",
+   "t": 2.29,
+   "gain": -40,
+   "name": "A2 thumb meets the cap"
+  },
+  {
+   "kind": "button",
+   "t": 2.35,
+   "gain": -20,
+   "hero": true,
+   "name": "A2 FIRE button pressed",
+   "args": {
+    "f": 1500
+   }
+  },
+  {
+   "kind": "pulse",
+   "t": 2.36,
+   "gain": -40,
+   "name": "A2 remote LED turns amber"
+  },
+  {
+   "kind": "pulse",
+   "t": 2.7666666666666666,
+   "gain": -28,
+   "name": "A3 backpack LED lights"
+  },
+  {
+   "kind": "pulse",
+   "t": 2.8366666666666664,
+   "gain": -36,
+   "name": "A3 signal leaves along the trace"
+  },
+  {
+   "kind": "sizzle",
+   "t": 3.1466666666666665,
+   "gain": -38,
+   "name": "A3 coil starts to glow (small)",
+   "args": {
+    "d": 0.2866666666666666
+   }
+  },
+  {
+   "kind": "creak",
+   "t": 4,
+   "gain": -46,
+   "name": "A4 nod: glove on the remote"
+  },
+  {
+   "kind": "click",
+   "t": 5.53,
+   "gain": -27,
+   "name": "B1 pack seats",
+   "args": {
+    "f": 2600,
+    "d": 0.035,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 6.975,
+   "gain": -34.228787452803374,
+   "name": "B2 foot (first steps)"
+  },
+  {
+   "kind": "tick",
+   "t": 7.258333333333334,
+   "gain": -34.228787452803374,
+   "name": "B2 foot (first steps)"
+  },
+  {
+   "kind": "tick",
+   "t": 7.541666666666667,
+   "gain": -31.228787452803374,
+   "name": "B3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 7.825,
+   "gain": -31.228787452803374,
+   "name": "B3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.108333333333333,
+   "gain": -31.228787452803374,
+   "name": "B3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 8.391666666666667,
+   "gain": -31.228787452803374,
+   "name": "B3 foot"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.58,
+   "gain": -33,
+   "name": "B4 pulse 1 leaves the board"
+  },
+  {
+   "kind": "tick",
+   "t": 8.608333333333333,
+   "gain": -32.228787452803374,
+   "name": "B4 foot"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.68,
+   "gain": -35,
+   "name": "B4 pulse 2 leaves the board"
+  },
+  {
+   "kind": "pulse",
+   "t": 8.78,
+   "gain": -37,
+   "name": "B4 pulse 3 leaves the board"
+  },
+  {
+   "kind": "tick",
+   "t": 8.891666666666667,
+   "gain": -32.228787452803374,
+   "name": "B4 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.175,
+   "gain": -32.228787452803374,
+   "name": "B4 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 9.458333333333334,
+   "gain": -35.228787452803374,
+   "name": "B5 foot (turn)"
+  },
+  {
+   "kind": "tick",
+   "t": 9.741666666666667,
+   "gain": -35.228787452803374,
+   "name": "B5 foot (turn)"
+  },
+  {
+   "kind": "tick",
+   "t": 10.025,
+   "gain": -35.228787452803374,
+   "name": "B5 foot (turn)"
+  },
+  {
+   "kind": "tick",
+   "t": 10.308333333333334,
+   "gain": -35.228787452803374,
+   "name": "B5 foot (turn)"
+  },
+  {
+   "kind": "tick",
+   "t": 10.75,
+   "gain": -32.2,
+   "name": "C1 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 10.766666666666667,
+   "gain": -34.2,
+   "name": "C1 medic foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11,
+   "gain": -32.2,
+   "name": "C1 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.041666666666666,
+   "gain": -34.2,
+   "name": "C1 medic foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.25,
+   "gain": -32.2,
+   "name": "C1 observer foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.308333333333334,
+   "gain": -34.2,
+   "name": "C1 medic foot"
+  },
+  {
+   "kind": "tick",
+   "t": 11.583333333333334,
+   "gain": -30.2,
+   "name": "C2 observer foot (close)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 11.966666666666667,
+   "gain": -30.2,
+   "name": "C2 observer foot (close)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "air",
+   "t": 12.333333333333334,
+   "gain": -31,
+   "name": "C3 through the lens",
+   "args": {
+    "d": 0.4,
+    "lo": 400,
+    "hi": 3200,
+    "rise": true
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 12.35,
+   "gain": -30.2,
+   "name": "C2 observer foot (close)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 12.783333333333333,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 12.9,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 13.016666666666667,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 13.158333333333333,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 13.258333333333333,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 13.416666666666666,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 13.491666666666667,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 13.683333333333334,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 13.725,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 13.941666666666666,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 13.966666666666667,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 14.2,
+   "gain": -33.2,
+   "name": "C3 observer foot (under the lens, soft)",
+   "args": {
+    "body": 1,
+    "bright": 0.3
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 14.2,
+   "gain": -39.2,
+   "name": "C3 medic foot (ahead in the feed)"
+  },
+  {
+   "kind": "tick",
+   "t": 14.433333333333334,
+   "gain": -42.2,
+   "name": "C4 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.675,
+   "gain": -42.2,
+   "name": "C4 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 14.908333333333333,
+   "gain": -42.2,
+   "name": "C4 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 15.15,
+   "gain": -42.2,
+   "name": "C4 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 15.383333333333333,
+   "gain": -42.2,
+   "name": "C4 feed foot"
+  },
+  {
+   "kind": "tick",
+   "t": 15.608333333333333,
+   "gain": -31.228787452803374,
+   "name": "D1 foot (lining up)"
+  },
+  {
+   "kind": "tick",
+   "t": 15.883333333333333,
+   "gain": -31.228787452803374,
+   "name": "D1 foot (lining up)"
+  },
+  {
+   "kind": "sizzle",
+   "t": 16.265,
+   "gain": -30,
+   "name": "D2 coil heats",
+   "args": {
+    "d": 0.3
+   }
+  },
+  {
+   "kind": "click",
+   "t": 16.565,
+   "gain": -13,
+   "hero": true,
+   "name": "D2 LINE PARTS (mechanism, accent 2)"
+  },
+  {
+   "kind": "spring",
+   "t": 16.57,
+   "gain": -21,
+   "hero": true,
+   "name": "D2 spring drives the injector"
+  },
+  {
+   "kind": "thock",
+   "t": 16.640000000000093,
+   "gain": -17,
+   "hero": true,
+   "name": "D2 NEEDLE INTO SILICONE"
+  },
+  {
+   "kind": "click",
+   "t": 18.14,
+   "gain": -33,
+   "name": "D3 seal opens",
+   "args": {
+    "f": 3200,
+    "d": 0.04,
+    "bright": 0.6
+   }
+  },
+  {
+   "kind": "fizz",
+   "t": 18.18,
+   "gain": -31,
+   "name": "D3 gas behind the plunger",
+   "args": {
+    "d": 1.15
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 21.166666666666668,
+   "gain": -32.228787452803374,
+   "name": "D6 foot"
+  },
+  {
+   "kind": "air",
+   "t": 21.266666666666666,
+   "gain": -30,
+   "name": "D6 into the gap (air pass)",
+   "args": {
+    "d": 0.5666666666666667,
+    "lo": 250,
+    "hi": 2400,
+    "rise": true
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 21.375,
+   "gain": -32.228787452803374,
+   "name": "D6 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.583333333333332,
+   "gain": -32.228787452803374,
+   "name": "D6 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 21.791666666666668,
+   "gain": -32.228787452803374,
+   "name": "D6 foot"
+  },
+  {
+   "kind": "air",
+   "t": 21.833333333333332,
+   "gain": -30,
+   "name": "E1 through the gap (the near rubble edges pass the lens)",
+   "args": {
+    "d": 1.2333333333333334,
+    "lo": 220,
+    "hi": 2200,
+    "rise": false
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 22.008333333333333,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 22.333333333333332,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 22.658333333333335,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "grit",
+   "t": 22.73333333333333,
+   "gain": -40,
+   "name": "E1 grit trickle from the slab over her",
+   "args": {
+    "d": 1.4,
+    "rate": 18
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 22.983333333333334,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 23.308333333333334,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 23.633333333333333,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "creak",
+   "t": 23.73333333333333,
+   "gain": -38,
+   "name": "E1 rubble creaks"
+  },
+  {
+   "kind": "tick",
+   "t": 23.958333333333332,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 24.283333333333335,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 24.608333333333334,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 24.933333333333334,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "tick",
+   "t": 25.258333333333333,
+   "gain": -34.228787452803374,
+   "name": "E1 foot (on the ledge)"
+  },
+  {
+   "kind": "grit",
+   "t": 25.566666666666666,
+   "gain": -37,
+   "name": "F1 grit trickle (she hears it)",
+   "args": {
+    "d": 0.75,
+    "rate": 22
+   }
+  },
+  {
+   "kind": "grit",
+   "t": 26.266666666666666,
+   "gain": -36,
+   "name": "F1 scrape at the crack (her eyes dart to it)",
+   "args": {
+    "d": 0.18,
+    "rate": 40
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 26.725,
+   "gain": -30.228787452803374,
+   "name": "F2 foot (close, out of the crack)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 27.058333333333334,
+   "gain": -30.228787452803374,
+   "name": "F2 foot (close, out of the crack)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "grit",
+   "t": 27.08666666666667,
+   "gain": -38,
+   "name": "F2 grit from the crack as it pushes out",
+   "args": {
+    "d": 0.45,
+    "rate": 16
+   }
+  },
+  {
+   "kind": "tick",
+   "t": 27.341666666666665,
+   "gain": -30.228787452803374,
+   "name": "F2 foot (close, out of the crack)",
+   "args": {
+    "body": 1,
+    "bright": 0.5
+   }
+  },
+  {
+   "kind": "creak",
+   "t": 27.633333333333333,
+   "gain": -40,
+   "name": "F3 rubble shifts under her startle"
+  },
+  {
+   "kind": "tick",
+   "t": 27.85,
+   "gain": -34.228787452803374,
+   "name": "F3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 28.083333333333332,
+   "gain": -34.228787452803374,
+   "name": "F3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 28.316666666666666,
+   "gain": -34.228787452803374,
+   "name": "F3 foot"
+  },
+  {
+   "kind": "tick",
+   "t": 28.575,
+   "gain": -32.228787452803374,
+   "name": "F4 foot (coming on)"
+  },
+  {
+   "kind": "tick",
+   "t": 28.858333333333334,
+   "gain": -32.228787452803374,
+   "name": "F4 foot (coming on)"
+  },
+  {
+   "kind": "tick",
+   "t": 29.166666666666668,
+   "gain": -32.228787452803374,
+   "name": "F4 foot (coming on)"
+  },
+  {
+   "kind": "tick",
+   "t": 29.483333333333334,
+   "gain": -32.228787452803374,
+   "name": "F4 foot (coming on)"
+  },
+  {
    "kind": "grit",
    "t": 29.8,
    "gain": -40,
