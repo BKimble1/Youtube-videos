@@ -16,7 +16,8 @@ import {FPS, medicPose, cfView, onBody, BARREL} from './world';
 export const F5_K = {glance0: 1, glance1: 4, glint: 4.5, back: 11, hope0: 4, hope1: 13, ex0: 6, ex1: 17, open0: 5, open1: 13, slide0: 8, slide1: 18};
 export const f5Cam = () => camAt(F5_CAM.x, F5_CAM.y, 540, 960, F5_CAM.z);
 export const f5Glint = (lf: number) => clamp(1 - Math.abs(lf - F5_K.glint) / 4);
-export const F5: React.FC<ShotProps> = ({f, lf}) => {
+/** her acting at film frame f (shot frame lf) */
+export const f5Acting = (f: number, lf: number): Acting => {
   const T = f / FPS;
   const K = F5_K;
   const pose = medicPose(T);
@@ -36,5 +37,11 @@ export const F5: React.FC<ShotProps> = ({f, lf}) => {
     tilt: keys(lf, [[0, -2.5], [K.hope1, 2]]),
     face: faceTrack(lf, [[0, FF.unease], [K.hope0, FF.unease], [K.hope1, FF.hope]]),
   };
+  return a;
+};
+export const F5: React.FC<ShotProps> = ({f, lf}) => {
+  const T = f / FPS;
+  const pose = medicPose(T);
+  const a = f5Acting(f, lf);
   return <PocketFrame id={`f5f${f}`} cam={f5Cam()} T={T} a={a} medic={pose} glint={f5Glint(lf)} fan={0.8} vig={0.45} />;
 };

@@ -4,7 +4,10 @@
 // Pure functions of their inputs.
 import React from 'react';
 import {RoachPose} from '../../../../rig/roach';
-import {V3} from '../../../../lib/v3';
+import {R2, sprawl} from '../../../roach/Roach2D';
+import {View, P, D} from '../../../roach/ortho';
+import {shade as shadeC} from '../../../../lib/color';
+import {V3, V2, toW} from '../../../../lib/v3';
 import {Cam} from '../../../dc/camera';
 import {f2} from '../art';
 import {INK} from '../../../../lib/ink';
@@ -166,6 +169,52 @@ export const HardHat: React.FC<{id: string; cx: number; by: number; w: number; e
       <path d={`M${f2(lx - lw / 2)},${f2(ly - lh / 2)} h${f2(lw)} v${f2(lh)} h${f2(-lw)} Z`} fill="#2E3438" stroke={INK} strokeWidth={f2(ink * 0.8)} strokeLinejoin="round" />
       <ellipse cx={f2(lx - lw * 0.18)} cy={f2(ly)} rx={f2(lh * 0.34)} ry={f2(lh * 0.34)} fill="#BFD3DC" stroke={INK} strokeWidth={f2(ink * 0.5)} />
       <path d={`M${f2(lx - lw * 0.26)},${f2(ly - lh * 0.14)} l${f2(lh * 0.12)},${f2(-lh * 0.08)}`} stroke="#FFFFFF" strokeWidth={f2(ink * 0.5)} strokeLinecap="round" />
+    </g>
+  );
+};
+
+/** an opaque underlay for the insect's legs, drawn just BEFORE Roach2D (same pose and view). Roach2D's limb outline
+ *  (flatLimb) closes each segment with its end caps bulging INWARD, so every knee and ankle is a round hole in the
+ *  leg's fill and whatever lies behind (pebbles, chunk edges) shows through the leg, most visibly where a leg is
+ *  foreshortened (V5 QA, E4 703/715). This fills each segment's side-to-side quad and a disk at each joint (no wider
+ *  than the narrower of its two segments), so it never shows past Roach2D's own outline. */
+export const LegFill: React.FC<{pose: RoachPose; v: View; shadow?: number}> = ({pose, v, shadow = 1}) => {
+  const top = v.F[1] > 0.7;
+  const f = pose.frame;
+  const cD = D(v, toW(f, [0, 8, 0]));
+  // Roach2D's contact shadow, drawn here UNDER the underlay (the caller passes Roach2D shadow: 0), so the joints do
+  // not pick up a darker disk where the shadow would show through the holes (same geometry as Roach2D's)
+  const g0 = P(v, [f.o[0], 0, f.o[2]]);
+  const gx = P(v, toW(f, [30, 0, 0])), gb = P(v, toW(f, [-40, 0, 0])), gz = P(v, toW(f, [0, 0, 22]));
+  const sw = Math.hypot(gx[0] - gb[0], gx[1] - gb[1]) / 2, sh = Math.max(4, Math.hypot(gz[0] - g0[0], gz[1] - g0[1]));
+  const sang = (Math.atan2(gx[1] - gb[1], gx[0] - gb[0]) * 180) / Math.PI;
+  const p = sprawl(pose);
+  const quad = (a: V2, b: V2, ra: number, rb: number) => {
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+    const nx = -dy / L, ny = dx / L;
+    return `M${f2(a[0] + nx * ra)},${f2(a[1] + ny * ra)} L${f2(b[0] + nx * rb)},${f2(b[1] + ny * rb)} L${f2(b[0] - nx * rb)},${f2(b[1] - ny * rb)} L${f2(a[0] - nx * ra)},${f2(a[1] - ny * ra)} Z`;
+  };
+  const disk = (c: V2, r: number) => `M${f2(c[0] - r)},${f2(c[1])} a${f2(r)},${f2(r)} 0 1 0 ${f2(2 * r)},0 a${f2(r)},${f2(r)} 0 1 0 ${f2(-2 * r)},0 Z`;
+  return (
+    <g>
+      {shadow > 0 && (
+        <ellipse cx={f2((gx[0] + gb[0]) / 2 + 0.06 * sw)} cy={f2((gx[1] + gb[1]) / 2 + (top ? 0.18 * sh : 0.06 * sh))} rx={f2(sw * 1.08)} ry={f2(top ? sh * 1.15 : Math.max(5, sh * 0.32))} transform={`rotate(${f2(sang)} ${f2((gx[0] + gb[0]) / 2)} ${f2((gx[1] + gb[1]) / 2)})`} fill={R2.shadow} opacity={0.22 * shadow} />
+      )}
+      {p.legs.map((l) => {
+        const s = v.s, d = l.def;
+        const near = !top && D(v, l.coxa) > cD + 2;
+        const col = top || near ? R2.leg : R2.legFar;
+        const c = P(v, l.coxa), k = P(v, l.knee), a = P(v, l.ankle), ft = P(v, l.foot);
+        const rF = d.rFem * s * 0.95, rT = d.rTib * s * 0.9, rTa = 0.75 * s;
+        const e = 0.985; // a hair inside the outline
+        const dd = [quad(c, k, rF * e, rF * 0.82 * e), quad(k, a, rT * e, rT * 0.62 * e), disk(k, Math.min(rF * 0.82, rT) * e), disk(a, Math.min(rT * 0.62, rTa) * e)].join(' ');
+        return (
+          <g key={d.name}>
+            <path d={dd} fill={col} />
+            <path d={`${quad(a, ft, rTa * e, rTa * 0.55 * e)} ${disk(ft, rTa * 0.55 * e)}`} fill={shadeC(col, 0.12)} />
+          </g>
+        );
+      })}
     </g>
   );
 };

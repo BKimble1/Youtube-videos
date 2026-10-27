@@ -112,9 +112,9 @@ const Streaks: React.FC<{v: View; frame: ReturnType<typeof a1InjFrame>; rear: nu
   if (k <= 0.05) return null;
   const y = PACK.tube.a[1];
   return (
-    <g stroke="#172B3A" strokeLinecap="round" opacity={0.55 * k}>
+    <g stroke="#172B3A" strokeLinecap="round" opacity={0.4 * k}>
       {[-1.6, 0.2, 1.8].map((dy, i) => {
-        const a = P(v, toW(frame, [rear - 2 - 9 * k - i * 2, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear + 8, y + dy, 0.5 * dy]));
+        const a = P(v, toW(frame, [rear - 2 - 9 * k - i * 2, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear - 0.6, y + dy, 0.5 * dy]));
         return <path key={i} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} strokeWidth={f2(Math.max(1.5, 0.28 * v.s))} />;
       })}
     </g>

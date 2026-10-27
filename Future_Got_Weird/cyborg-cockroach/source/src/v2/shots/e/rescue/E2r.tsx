@@ -16,7 +16,7 @@ import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Glow2, Motes, Shaft, VGrad, jag, poly, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, cardT, probe, HardHat} from './kit';
+import {idf, FPS, cardT, probe, HardHat, LegFill} from './kit';
 import {E1_END_RATE} from './E1r';
 
 export const E2_N = 25;
@@ -326,7 +326,8 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
       {/* the dust hanging in the gap, between the camera and the insect and beyond (world points: they stream past) */}
       <DustIn c={c} t={t} light={1 - under} />
       <g filter={`url(#${id}-sd)`}>
-        <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+        <LegFill pose={pose} v={v} />
+        <Roach2D pose={pose} v={v} o={{id: `${id}-r`, shadow: 0, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       </g>
       <Grit2 c={c} items={grNear} />
       <Card c={c} D={DBLK}><Block id={`${id}b`} w={wAt(c, DBLK, 5)} /></Card>

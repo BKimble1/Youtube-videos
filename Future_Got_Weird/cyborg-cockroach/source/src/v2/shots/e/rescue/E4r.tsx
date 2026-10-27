@@ -14,7 +14,7 @@ import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Rebar, Glow2, Motes, VGrad, Vignette, poly, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, Blur, probe} from './kit';
+import {idf, FPS, Blur, probe, LegFill} from './kit';
 
 export const E4_N = 16;
 const E4_F0 = 700;
@@ -158,7 +158,8 @@ export const E4: React.FC<ShotProps> = ({f, lf}) => {
       {grit}
       <Rebar pts={[q(rbx, rbz, -2), q(rbx + 0.5, rbz, 22), q(rbx + 7, rbz, 30)]} w={1.9 * S} dark={0.15} />
       {chunks.map(({c, i}) => <Chunk3 key={i} v={v} c={c} />)}
-      <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+      <LegFill pose={pose} v={v} />
+      <Roach2D pose={pose} v={v} o={{id: `${id}-r`, shadow: 0, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       <Motes id={`${id}-mo`} t={t + 5} n={20} x0={0} y0={300} x1={1080} y1={1250} r={4} seed={62} a={0.7} />
       <Vignette id={`${id}-vg`} a={0.75} />
     </svg>

@@ -88,3 +88,14 @@ export const ellipsoidOutline = (v: View, c: V3, a: V3, b: V3, cc: V3, n = 48): 
   return thin(hull(pts), 1.5).slice(0, n * 4);
 };
 export {sub, add, mul, dot, norm};
+/** a closed polygon with its long edges subdivided (pieces <= maxLen px), so smoothClosed keeps straight edges straight
+ *  and only softens the corners (a hull with few corners would otherwise be smoothed into a lens or an oval) */
+export const densify = (pts: V2[], maxLen = 6): V2[] => {
+  const out: V2[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const n = Math.max(1, Math.ceil(Math.hypot(b[0] - a[0], b[1] - a[1]) / maxLen));
+    for (let k = 0; k < n; k++) out.push([a[0] + ((b[0] - a[0]) * k) / n, a[1] + ((b[1] - a[1]) * k) / n]);
+  }
+  return out;
+};

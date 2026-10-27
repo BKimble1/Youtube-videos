@@ -20,7 +20,7 @@ import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, D} from '../../roach/ortho';
 import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
-import {Tray2D, FoamBox, BoxB, turnPath, pulseTrain, PulseTrails, FPS} from './common';
+import {Tray2D, FoamBox, BoxB, turnPath, pulseTrain, PulseTrails, LegJointPatches, FPS} from './common';
 
 export const B45_SPEED = 46;
 /** the turn: heading eases from +x to +z (a right turn) over arc length 0..50 mm */
@@ -51,17 +51,17 @@ export const b45Pose = (t: number): RoachPose => {
 // hugs it, the right feet ~3 mm off the wall), the blue one across the way ahead, a red one beyond
 export const COURSE: {b: BoxB; c: string}[] = [
   {b: [-190, -6, 0, 28, 46, 160], c: LAB2.foamY},
-  {b: [66, 120, 0, 30, -44, 14], c: LAB2.foamB},
+  {b: [68, 100, 0, 30, -62, 14], c: LAB2.foamB},
   {b: [84, 136, 0, 26, 104, 154], c: LAB2.foamR},
 ];
 
 /** the camera (V5g): a HIGH THREE-QUARTER from the insect's front-left (az 168: its left side and face toward us, el
  *  39 -> 43), well inside the range the flat renderer draws consistently (all six legs, both antennae, the pack as one
  *  device). It heads screen-left; the right turn takes it away from us (up-screen) past the blue block's far end. */
-export const B45_AZ = 168;
+export const B45_AZ = 210;
 const BOARD: V3 = [4, 23, 0];
 const S_CLOSE = 11.6, S_WIDE = 5.8;
-const EL_CLOSE = 39, EL_WIDE = 43;
+const EL_CLOSE = 35, EL_WIDE = 43;
 /** the wide view looks between the insect and the turn's corner (so it keeps drifting with the walk: no hold) */
 const C_END: V3 = [40, 0, 20];
 const C_FOLLOW = 0.5;
@@ -98,6 +98,7 @@ const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <Tray2D v={v} x0={-320} x1={340} z0={-420} z1={360} grid={20} />
       {boxes.filter((q) => q.d < insD).map(box)}
+      <LegJointPatches pose={pose} v={v} />
       <Roach2D
         pose={pose}
         v={v}

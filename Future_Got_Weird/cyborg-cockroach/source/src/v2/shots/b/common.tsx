@@ -10,9 +10,10 @@ import {add, mul, perp, rad, V} from '../../../lib/math';
 import {shade as shadeC} from '../../../lib/color';
 import {clamp, smoother, rnd} from '../../../lib/ease';
 import {wiresOn} from '../../../rig/gear';
-import {Path} from '../../../rig/roach';
+import {Path, RoachPose} from '../../../rig/roach';
+import {sprawl, R2} from '../../roach/Roach2D';
 import {Hand, HandPose, digitTips} from '../../dc/Hand';
-import {View, P, Pd, f2, polyD, smoothOpen} from '../../roach/ortho';
+import {View, P, D, Pd, f2, polyD, smoothOpen} from '../../roach/ortho';
 import {G2} from '../../roach/Gear2D';
 import {LAB2, Box2D} from '../../sets/Lab2';
 import {GLOVE, COAT} from '../../../crew/operator';
@@ -447,6 +448,37 @@ export const FoamBox: React.FC<{id: string; v: View; b: BoxB; color: string; sha
           from a high three-quarter view */}
       {sides(v, b)}
       {v.F[1] > 0.3 && pores}
+    </g>
+  );
+};
+
+// ------------------------------------------------------------------ leg joint patches (a workaround for a kit issue)
+/** Roach2D's flat limbs (flatLimb in v2/roach/Roach2D.tsx) draw their end caps bulging INTO the segment, so where the
+ *  femur meets the tibia (knee) and the tibia meets the tarsus (ankle) a small disk is covered by neither segment and
+ *  the background shows through as a white ring (most visible in close views). Drawn UNDER the insect (before
+ *  Roach2D), these disks in the legs' own fill fill those holes; elsewhere they lie inside the leg's silhouette (their
+ *  radius is the segment's half width at the joint), or under the shell, so they never show on their own. Harmless if
+ *  the kit is fixed. Same near/far colour rule as Roach2D. */
+export const LegJointPatches: React.FC<{pose: RoachPose; v: View}> = ({pose, v}) => {
+  const p = sprawl(pose);
+  const f = p.frame;
+  const top = v.F[1] > 0.7;
+  const cD = D(v, toW(f, [0, 8, 0]));
+  const s = v.s;
+  return (
+    <g>
+      {p.legs.map((l) => {
+        const near = !top && D(v, l.coxa) > cD + 2;
+        const col = top || near ? R2.leg : R2.legFar;
+        const rF = l.def.rFem * s * 0.95, rT = l.def.rTib * s * 0.9;
+        const k = P(v, l.knee), a = P(v, l.ankle);
+        return (
+          <g key={l.def.name}>
+            <circle cx={f2(k[0])} cy={f2(k[1])} r={f2(Math.max(rF * 0.82, rT))} fill={col} />
+            <circle cx={f2(a[0])} cy={f2(a[1])} r={f2(Math.max(rT * 0.62, 0.75 * s))} fill={col} />
+          </g>
+        );
+      })}
     </g>
   );
 };

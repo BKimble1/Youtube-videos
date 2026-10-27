@@ -40,12 +40,13 @@ export const medicHeadPx = (T: number) => {
   const p = P(cfView(), [fr.o[0] + fr.x[0] * 33, fr.o[1] + 10, fr.o[2] + fr.x[2] * 33]);
   return {x: p[0], y: p[1]};
 };
-export const F3: React.FC<ShotProps> = ({f, lf}) => {
-  const T = f / FPS, t = lf / FPS;
+const f3Edge = () => cardPx(SLAB.x0 + 4, SLAB.h, SLAB.z0 + 26);
+/** her acting at film frame f (shot frame lf) */
+export const f3Acting = (f: number, lf: number): Acting => {
+  const T = f / FPS;
   const K = F3_K;
-  const pose = medicPose(T);
   const head = medicHeadPx(T);
-  const edge = cardPx(SLAB.x0 + 4, SLAB.h, SLAB.z0 + 26);
+  const edge = f3Edge();
   const look = sr(lf, K.eyes, K.eyes + 3);
   const gaze = {x: lerp(edge[0], head.x, look), y: lerp(edge[1] - 20, head.y, look)};
   // the startle: a fast rise (4 frames) and a slower settle; the recoil settles to F4/F5's small lean back (0.3)
@@ -63,6 +64,13 @@ export const F3: React.FC<ShotProps> = ({f, lf}) => {
     tilt: keys(lf, [[0, 2], [K.head1, -2], [29, -2.5]]),
     face: faceTrack(lf, [[0, FF.wary], [K.st0, FF.wary], [K.st1, STARTLE], [K.un0, STARTLE], [K.un1, FF.unease]]),
   };
+  return a;
+};
+export const F3: React.FC<ShotProps> = ({f, lf}) => {
+  const T = f / FPS, t = lf / FPS;
+  const pose = medicPose(T);
+  const edge = f3Edge();
+  const a = f3Acting(f, lf);
   const gy0 = edge[1] + 6;
   return (
     <PocketFrame id={`f3f${f}`} cam={f3Cam(lf)} T={T} a={a} medic={pose} fan={0.8} vig={0.5}

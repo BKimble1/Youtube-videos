@@ -16,7 +16,7 @@ import {mix, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Rebar, Pipe, Glow2, jag, poly, f2} from '../art';
 import {shotRange} from '../../../cuts2';
 import {ShotProps} from '../../index2';
-import {idf, FPS, FeedGrade, FeedLook, probe} from './kit';
+import {idf, FPS, FeedGrade, FeedLook, probe, LegFill} from './kit';
 
 const E5R = shotRange('E5');
 /** feed time: seconds since the feed starts (E5's first frame) */
@@ -146,7 +146,8 @@ const PassageScene: React.FC<{f: number; id: string}> = ({f, id}) => {
       })}
       {/* the lamp's cone on the floor ahead, and the medic inside it */}
       <Glow2 id={`${id}-cone`} cx={VP.x} cy={VP.y + 240} rx={480} ry={130} color="#DDEFFF" a={0.3} />
-      <Roach2D pose={pose} v={v} o={{id: `${id}-md`, shadow: 1.2, gear: <Gear2D id={`${id}-mg`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+      <LegFill pose={pose} v={v} shadow={1.2} />
+      <Roach2D pose={pose} v={v} o={{id: `${id}-md`, shadow: 0, gear: <Gear2D id={`${id}-mg`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       <defs>
         <radialGradient id={`${id}-dk`} cx="0.52" cy="0.56" r="0.62">
           <stop offset="0.35" stopColor="#060504" stopOpacity={0} />

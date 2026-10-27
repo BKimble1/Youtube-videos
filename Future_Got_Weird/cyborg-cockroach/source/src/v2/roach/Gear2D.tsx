@@ -8,7 +8,7 @@ import {V2, V3, Frame, toW, dirW, sub, norm, add, mul} from '../../lib/v3';
 import {Inked, INK} from '../../lib/ink';
 import {lit as litC, shade as shadeC, mix} from '../../lib/color';
 import {PACK, INJ, wiresOn, WirePt} from '../../rig/gear';
-import {View, P, D, f2, hull, smoothClosed, smoothOpen, polyD, facing} from './ortho';
+import {View, P, D, f2, hull, smoothClosed, smoothOpen, polyD, facing, densify} from './ortho';
 import {Cel, InkFlat, inkFor} from './Roach2D';
 
 export const G2 = {
@@ -37,7 +37,7 @@ export const G2 = {
 const boxPts = (v: View, f: Frame, c: V3, h: V3): V2[] => {
   const pts: V2[] = [];
   for (const sx of [-1, 1]) for (const sy of [-1, 1]) for (const sz of [-1, 1]) pts.push(P(v, toW(f, [c[0] + sx * h[0], c[1] + sy * h[1], c[2] + sz * h[2]])));
-  return hull(pts);
+  return densify(hull(pts));
 };
 /** a cylinder's orthographic outline: hull of its two end circles (axis a->b, radius r, in world) */
 const cylPts = (v: View, a: V3, b: V3, r: number): V2[] => {
@@ -50,7 +50,7 @@ const cylPts = (v: View, a: V3, b: V3, r: number): V2[] => {
     const o = add(mul(t0, Math.cos(th) * r), mul(t1, Math.sin(th) * r));
     pts.push(P(v, add(a, o)), P(v, add(b, o)));
   }
-  return hull(pts);
+  return densify(hull(pts));
 };
 const lineD = (a: V2, b: V2) => `M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`;
 
@@ -86,22 +86,52 @@ export const SPRING_FREE = 21; // body x of the spring's free length front
 export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = ({id, v, f, g}) => {
   const ink = inkFor(v) * 0.8;
   const s = v.s;
-  const cD = D(v, toW(f, [0, 8, 0]));
+  void D;
   const T = PACK.tube;
   const injRear = g.injRear ?? INJ.loadedRear;
   const latched = g.latched ?? true;
   const heat = g.heat ?? 0;
   // ---- wires (drawn first: they run under the board's edge and over the shell)
   const w = wiresOn(f);
-  const wireRun = (pts: WirePt[]) => pts.filter((q) => v.F[1] > 0.6 || D(v, q.p) >= cD - 1.5).map((q) => P(v, q.p));
+  // V5: a wire point is seen where its shell surface faces the camera (points on the pack, with no normal, always
+  // are); each run is cut exactly where the wire crosses the silhouette (interpolated), so as the view turns the wire
+  // grows or shrinks continuously instead of popping (V4 dropped whole points by depth, and showed all from above)
+  const vis = (q: WirePt) => (q.n ? facing(v, q.n) / Math.hypot(q.n[0], q.n[1], q.n[2]) + 0.06 : 1);
+  const wireRuns = (pts: WirePt[]): V2[][] => {
+    const runs: V2[][] = [];
+    let cur: V2[] = [];
+    for (let i = 0; i < pts.length; i++) {
+      const a = pts[i], fa = vis(a);
+      if (fa >= 0) cur.push(P(v, a.p));
+      if (i + 1 < pts.length) {
+        const b = pts[i + 1], fb = vis(b);
+        if ((fa >= 0) !== (fb >= 0)) {
+          const u = fa / (fa - fb);
+          cur.push(P(v, [a.p[0] + (b.p[0] - a.p[0]) * u, a.p[1] + (b.p[1] - a.p[1]) * u, a.p[2] + (b.p[2] - a.p[2]) * u]));
+          if (fa >= 0) {
+            runs.push(cur);
+            cur = [];
+          }
+        }
+      }
+    }
+    if (cur.length) runs.push(cur);
+    return runs.filter((r) => r.length >= 2);
+  };
   const wire = (k: 'antL' | 'antR' | 'cerL' | 'cerR', col: string) => {
-    const r = wireRun(w[k]);
-    if (r.length < 2) return null;
-    const d = smoothOpen(r);
+    const rs = wireRuns(w[k]);
+    if (!rs.length) return null;
     return (
       <g key={k}>
-        <path d={d} stroke={INK} strokeWidth={f2(0.55 * s + 1.6)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={d} stroke={col} strokeWidth={f2(0.55 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        {rs.map((r, i) => {
+          const d = r.length > 2 ? smoothOpen(r) : lineD(r[0], r[1]);
+          return (
+            <g key={i}>
+              <path d={d} stroke={INK} strokeWidth={f2(0.55 * s + 1.6)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={d} stroke={col} strokeWidth={f2(0.55 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          );
+        })}
       </g>
     );
   };
@@ -117,7 +147,7 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
   };
   const pulseEls = (['antL', 'antR'] as const).flatMap((k) => {
     const r = w[k].map((q) => P(v, q.p));
-    const ok = v.F[1] > 0.6 || D(v, w[k][w[k].length - 1].p) >= cD - 1.5;
+    const ok = vis(w[k][w[k].length - 1]) >= 0;
     if (!ok) return [];
     const ps = (g.pulses?.[k] ?? []).map((t, i) => {
       const p = along(r, t);
@@ -143,9 +173,10 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
   // electrode beads at the wire ends
   const ends = (['antL', 'antR', 'cerL', 'cerR'] as const).flatMap((k) => {
     const q = w[k][w[k].length - 1];
-    if (!(v.F[1] > 0.6 || D(v, q.p) >= cD - 1.5)) return [];
+    const a = Math.min(1, vis(q) / 0.08);
+    if (a <= 0) return [];
     const p = P(v, q.p);
-    return [<circle key={`${k}e`} cx={f2(p[0])} cy={f2(p[1])} r={f2(0.75 * s)} fill="#E9EEF2" stroke={INK} strokeWidth={f2(Math.max(1, 0.25 * s))} />];
+    return [<circle key={`${k}e`} cx={f2(p[0])} cy={f2(p[1])} r={f2(0.75 * s)} fill="#E9EEF2" stroke={INK} strokeWidth={f2(Math.max(1, 0.25 * s))} opacity={a} />];
   });
   // ---- the pack
   const saddle = boxPts(v, f, PACK.saddle.c, PACK.saddle.h);

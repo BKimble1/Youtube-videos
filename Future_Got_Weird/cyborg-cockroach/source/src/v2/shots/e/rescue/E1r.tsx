@@ -13,7 +13,7 @@ import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Pebbles, Motes, Glow2, VGrad, Pipe, jag, poly, line, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, cardT, probe, HardHat} from './kit';
+import {idf, FPS, cardT, probe, HardHat, LegFill} from './kit';
 
 export const E1_N = 36;
 /** E1's first film frame (the antennae's probing runs on film time) */
@@ -203,7 +203,8 @@ const Ground: React.FC<{id: string; t: number; pose: RoachPose}> = ({id, t, pose
           is a fraction of its length); E2 passes it at the same place */}
       <HardHat id={`${id}-hh`} cx={E1_HAT.x} by={E1_HAT.y} w={E1_HAT.w} el={30} ink={4.5} />
       <Glow2 id={`${id}-pool`} cx={520} cy={1470} rx={460} ry={130} color={RB.dayHot} a={0.35} />
-      <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+      <LegFill pose={pose} v={v} />
+      <Roach2D pose={pose} v={v} o={{id: `${id}-r`, shadow: 0, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       <Motes id={`${id}-m`} t={t} n={22} x0={-50} y0={980} x1={1130} y1={1500} r={3.2} seed={110} a={0.6} />
     </g>
   );

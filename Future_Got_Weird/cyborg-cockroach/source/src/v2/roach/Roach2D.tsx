@@ -255,9 +255,10 @@ export const Roach2D: React.FC<{pose: RoachPose; v: View; o: Roach2DOpts}> = ({p
       <Inked w={ink}>
         <Cel id={`${id}-hd`} pts={head} color={R2.head} hi={0.25} />
       </Inked>
-      {eyes.filter((e) => e.ok).map((e, i) => {
+      {eyes.filter((e) => e.k > 0.04).map((e, i) => {
+        // (V5: fades in and out with its facing instead of popping at a threshold)
         const c = P(v, e.c);
-        return <ellipse key={i} cx={f2(c[0])} cy={f2(c[1])} rx={f2(2.1 * v.s * Math.min(1, 0.4 + e.k))} ry={f2(2.7 * v.s)} fill={R2.eye} />;
+        return <ellipse key={i} cx={f2(c[0])} cy={f2(c[1])} rx={f2(2.1 * v.s * Math.min(1, 0.4 + e.k))} ry={f2(2.7 * v.s)} fill={R2.eye} opacity={Math.min(1, (e.k - 0.04) / 0.12)} />;
       })}
       {(() => {
         const abdEl = (

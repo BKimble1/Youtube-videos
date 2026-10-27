@@ -24,7 +24,8 @@ export const f1Cam = (lf: number) => {
   return camAt(lerp(600, 820, u), lerp(830, 1000, u), 540, 960, lerp(1.4, 1.5, u));
 };
 
-export const F1: React.FC<ShotProps> = ({f, lf}) => {
+/** her acting at film frame f (shot frame lf) */
+export const f1Acting = (f: number, lf: number): Acting => {
   const T = f / FPS;
   const K = F1_K;
   // her eyes: down on her near hand, then a flick to the shadow, then they stay on it
@@ -44,5 +45,10 @@ export const F1: React.FC<ShotProps> = ({f, lf}) => {
     tilt: keys(lf, [[0, -2], [K.head1, 2]]),
     face: faceTrack(lf, [[0, FF.tired], [K.eyes, FF.tired], [K.eyes + 6, FF.wary]]),
   };
+  return a;
+};
+export const F1: React.FC<ShotProps> = ({f, lf}) => {
+  const T = f / FPS;
+  const a = f1Acting(f, lf);
   return <PocketFrame id={`f1f${f}`} cam={f1Cam(lf)} T={T} a={a} shadow fan={1} vig={0.55} />;
 };

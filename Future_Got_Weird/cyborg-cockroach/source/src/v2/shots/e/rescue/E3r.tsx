@@ -13,7 +13,7 @@ import {clamp, sr} from '../../../../lib/ease';
 import {mix} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, VGrad, Grit, jag, poly} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, Blur, probe} from './kit';
+import {idf, FPS, Blur, probe, LegFill} from './kit';
 
 export const E3_N = 20;
 const E3_F0 = 680;
@@ -133,7 +133,8 @@ export const E3: React.FC<ShotProps> = ({f, lf}) => {
       <Layer cam={cam} depth={D_SUBJ}>
         <Floor id={`${id}l`} />
         <Glow2 id={`${id}-pool`} cx={BX - 55} cy={Y0 - 4} rx={170} ry={22} color={RB.dayHot} a={0.75} />
-        <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+        <LegFill pose={pose} v={v} />
+        <Roach2D pose={pose} v={v} o={{id: `${id}-r`, shadow: 0, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
         {/* ambient dark over the insect until it reaches the light */}
         <Glow2 id={`${id}-rl`} cx={xs + 20} cy={Y0 - 40} rx={150} ry={80} color={RB.day} a={0.22 * inLight} />
         <Shaft id={`${id}-sh`} pts={[...SH.top, ...SH.bot]} from={[BX, bot(BX) - 30]} to={[BX - 70, 1350]} a={1} />
