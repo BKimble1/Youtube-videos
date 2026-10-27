@@ -1,5 +1,27 @@
 # Future Got Weird: Scientists Turned Dead Spiders Into Robots (Dead Spider)
 
+## V5 FINAL (27 Oct 2026)
+
+**Status.** A conservative finalization of V4. **It is not published.**
+
+**Unchanged:** the narration and caption timing.
+
+**What changed:**
+- the second dead spider is pale and clearly distinct from the gripper;
+- the grab and lift are seen from a low three-quarter angle, showing the gap and the shadow;
+- the completed lift holds for about 0.65 s before the end;
+- captions sit in the Shorts safe area.
+
+**Deliverable.** `exports/FGW_Dead_Spider_V5_FINAL_1080x1920.mp4`: native 1080×1920, 30 fps, 30.2 s.
+
+**Notes.** `production/SOURCE_NOTES_V5.md`.
+
+**Source.** `source/src/v5/` (composition `DeadSpiderV5`).
+
+**QA.** `qa/v5/`.
+
+**Tools.** `tools/export_cues_v5.ts`, `tools/make_audio_v5.py` and `tools/cap_check_v5.ts`.
+
 ## V4 FINAL (27 Oct 2026)
 
 **Status.** The final polish pass on V3, rendered from source and checked from the file. **It is not published.**
