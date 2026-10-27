@@ -1,0 +1,133 @@
+{
+ "file": "exports/FGW_Cyborg_Cockroach_V1_REVIEW_1080x1920.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "936",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "color_transfer": "bt709",
+  "color_primaries": "bt709",
+  "duration": "31.200000"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "258879",
+  "duration": "31.210000"
+ },
+ "format_duration": "31.210000",
+ "loudness": {
+  "I_LUFS": -14.2,
+  "LRA": 5.2,
+  "TP_dBTP": -1.5
+ },
+ "black_segments": [],
+ "freezes_ge_0.7s": [],
+ "keyframes": {
+  "count": 66,
+  "max_gap_s": 0.5
+ },
+ "audio_offset_vs_mix_ms": 0.0,
+ "audio_corr_vs_mix": 0.99998,
+ "whisper": {
+  "wer": 0.0,
+  "diffs": [],
+  "text": "This cockroach can fire a needle, and a person holding a remote decides when it shoots. Scientists strapped a tiny launcher onto a living cockroach, then used electrical pulses to steer it. A second cockroach carries a camera. letting the operator watch as the first moves into position. Once it lines up, they fire the injector. They've demonstrated this on laboratory targets. But the plan is to send them beneath collapsed buildings, carrying emergency medicine. So if you're trapped and something starts crawling toward you, you might actually want it to get closer."
+ },
+ "caption_windows_ok": "23/23",
+ "caption_misses": [],
+ "loop_seam": {
+  "last_to_first": 62.07,
+  "last_steps": [
+   0.49,
+   0.54,
+   0.62
+  ]
+ },
+ "motion_spikes": [
+  {
+   "frame": 57,
+   "t": 1.9,
+   "diff": 39.33,
+   "neigh": 0.06
+  },
+  {
+   "frame": 102,
+   "t": 3.4,
+   "diff": 42.16,
+   "neigh": 0.26
+  },
+  {
+   "frame": 150,
+   "t": 5.0,
+   "diff": 53.63,
+   "neigh": 2.26
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "diff": 32.37,
+   "neigh": 4.76
+  },
+  {
+   "frame": 315,
+   "t": 10.5,
+   "diff": 26.87,
+   "neigh": 2.08
+  },
+  {
+   "frame": 372,
+   "t": 12.4,
+   "diff": 94.35,
+   "neigh": 7.67
+  },
+  {
+   "frame": 462,
+   "t": 15.4,
+   "diff": 43.43,
+   "neigh": 0.41
+  },
+  {
+   "frame": 537,
+   "t": 17.9,
+   "diff": 36.47,
+   "neigh": 0.13
+  },
+  {
+   "frame": 618,
+   "t": 20.6,
+   "diff": 22.62,
+   "neigh": 0.77
+  },
+  {
+   "frame": 758,
+   "t": 25.267,
+   "diff": 59.67,
+   "neigh": 0.44
+  },
+  {
+   "frame": 856,
+   "t": 28.533,
+   "diff": 59.18,
+   "neigh": 0.16
+  },
+  {
+   "frame": 891,
+   "t": 29.7,
+   "diff": 56.63,
+   "neigh": 0.69
+  }
+ ],
+ "low_motion_runs": [
+  0.0,
+  0.93,
+  2.2,
+  16.83,
+  27.57
+ ]
+}
