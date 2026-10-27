@@ -57,6 +57,17 @@ at real time, so the loop from the control-room shot into the press is unchanged
 The skeleton flash no longer lands on a sound; the loud crack now marks the connection. The narration and mix are
 unchanged.
 
+## Faster "FOLLOWED it" (client note, 27 Oct)
+
+Before this change, the connected bolt held in one wide view for about 2.5 s (1.75–4.31). Now:
+
+| Time (s) | Shot |
+|---|---|
+| 1.75–2.52 | The wide view of the connection. |
+| 2.52 | Cut on the caption change. |
+| 2.52–3.52 | A close shot rushes up the guided section with the bolt (`v5/Hook5_follow.tsx`). The bolt hugs the cyan line inside the warm channel, and the branching grows large at the top. |
+| 3.52 | Cut back to the wide on the restrike crack. The re-strokes flash on their sounds, and B starts from the same view at 4.31. |
+
 ## Verification
 
 - **Audio identity.** The audio packets and decoded PCM are identical to the locked track (V2's review stream),
