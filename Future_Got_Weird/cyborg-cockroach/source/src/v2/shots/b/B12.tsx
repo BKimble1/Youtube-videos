@@ -20,7 +20,7 @@ import {viewAt, View, P, f2} from '../../roach/ortho';
 import {LabWall2, Bench2, LAB2} from '../../sets/Lab2';
 import {Layer} from '../../dc/camera';
 import {ShotProps} from '../index2';
-import {Tray2D, GloveArm, ArmPose, solvePinch, placeIndex, pinchPose, OPEN_POSE, mixPose, carriedWires, WireDraw, setOff, FPS} from './common';
+import {Tray2D, FoamBox, LAB_BLOCKS, GloveArm, ArmPose, solvePinch, placeIndex, pinchPose, OPEN_POSE, mixPose, carriedWires, WireDraw, setOff, FPS} from './common';
 
 // ------------------------------------------------------------------ the shared action (one insect, one world)
 /** the pack is pressed home (s) */
@@ -58,11 +58,11 @@ const packFrame = (f: Frame, t: number): Frame => {
 // grip points on the pack (body frame of the seated pack, mm): each hand pinches one end of the saddle, the index tip
 // against its near side, the thumb tip against its far side (just showing over the far top edge)
 const GRIPS: {I: V3; T: V3}[] = [
-  {I: [-15.0, 22.2, 11.0], T: [-15.0, 23.4, -10.4]}, // the rear end (the researcher's right hand, screen left)
-  {I: [16.6, 22.2, 11.0], T: [16.6, 23.4, -10.4]}, // the front end (left hand, screen right)
+  {I: [-14.6, 22.9, 10.6], T: [-14.6, 23.6, -10.2]}, // the rear end (the researcher's right hand, screen left)
+  {I: [16.4, 22.9, 10.6], T: [16.4, 23.6, -10.2]}, // the front end (left hand, screen right)
 ];
 const G_REF: V3 = [0, 23, 0];
-const HAND_MM = 66;
+const HAND_MM = 60;
 
 type Grip = ArmPose[];
 const memo: Record<string, Grip> = {};
@@ -163,14 +163,17 @@ export const B1: React.FC<ShotProps> = ({f}) => {
   const v = b1View(t);
   const refF = bPose(B_SEAT + 0.6).frame;
   const vRef = viewAt(B1_AZ, B1_EL, B1_S, B1_AT, 540, 1200);
-  const grip = mapGrip(solveGrips('b1', vRef, refF, [58, 122], [236, 304], [-1, 1]), vRef, v);
+  const grip = mapGrip(solveGrips('b1', vRef, refF, [70, 110], [244, 296], [-1, 1]), vRef, v);
   // the far bench edge, wall and cabinets in scene px behind the tray (blurred)
   const benchFar = P(v, [0, 0, -330])[1];
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <Backdrop id="b1" v={v} far={benchFar} />
+      <Backdrop id={`b1f${f}`} v={v} far={benchFar} />
       <Tray2D v={v} x0={-200} x1={240} z0={-260} z1={170} grid={20} />
-      <Scene id="b1" t={t} v={v} grip={grip} refF={refF} hm={{release: 0, up: 0, back: 0}} />
+      {LAB_BLOCKS.map((k, i) => (
+        <FoamBox key={i} id={`b1f${f}k${i}`} v={v} b={k.b} color={k.c} />
+      ))}
+      <Scene id={`b1f${f}`} t={t} v={v} grip={grip} refF={refF} hm={{release: 0, up: 0, back: 0}} />
     </svg>
   );
 };
@@ -210,7 +213,10 @@ export const B2: React.FC<ShotProps> = ({f}) => {
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <Tray2D v={v} x0={-200} x1={260} z0={-170} z1={170} grid={20} />
-      <Scene id="b2" t={t} v={v} grip={grip} refF={refF} hm={{release, up: 150 * u, back: 120 * u}} depthK={0.0042} />
+      {LAB_BLOCKS.map((k, i) => (
+        <FoamBox key={i} id={`b2f${f}k${i}`} v={v} b={k.b} color={k.c} />
+      ))}
+      <Scene id={`b2f${f}`} t={t} v={v} grip={grip} refF={refF} hm={{release, up: 150 * u, back: 120 * u}} depthK={0.0042} />
     </svg>
   );
 };

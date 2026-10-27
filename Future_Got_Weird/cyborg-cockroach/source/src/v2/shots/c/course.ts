@@ -80,7 +80,7 @@ export const feedObsPose = (t: number): RoachPose => {
   const h = headOf(o.yaw);
   // a locally straight path through the current position (the observer's own legs are out of the feed)
   const path: Path = (s) => ({p: [o.p[0] + h[0] * (s - o.s), 0, o.p[1] + h[2] * (s - o.s)], yaw: o.yaw});
-  return poseRoach({path, s: o.s, t, seed: 4, search: 0.9, antL: {yaw: 0.5, pitch: 0.12}, antR: {yaw: 0.5, pitch: 0.12}});
+  return poseRoach({path, s: o.s, t, seed: 4, search: 0.9, antL: {yaw: 0.62, pitch: 0.42, curl: 0.7}, antR: {yaw: 0.62, pitch: 0.42, curl: 0.7}});
 };
 
 // ------------------------------------------------------------------ the lens and its 2.5D layering
@@ -166,8 +166,9 @@ export const curbs = () => {
   for (let s = CURB.from; s < CURB.to; s += CURB.L + CURB.gap, k++)
     for (const sd of [-1, 1]) {
       const c = s + CURB.L / 2;
-      // the inside of the bend is open (the corner block stands back from it): the observer cuts across there
-      if (sd > 0 && c > CRS.S1 - 25 && c < BEND_END + 35) continue;
+      // the inside of the bend and the right edge beyond it are open (the corner block stands back from it): the
+      // observer cuts across there as it follows the medic
+      if (sd > 0 && c > CRS.S1 - 25) continue;
       out.push({s: c, off: sd * CURB.off, color: k % 2 ? '#F4F1EA' : sd < 0 ? LAB2.foamB : LAB2.foamR});
     }
   return out;

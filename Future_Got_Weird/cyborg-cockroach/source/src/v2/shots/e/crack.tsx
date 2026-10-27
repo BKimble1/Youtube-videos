@@ -76,7 +76,15 @@ export const CrackBlock: React.FC<{id: string; v: View; w?: number; dark?: numbe
  *  heading, black a little inside the mouth, clear just outside it (measured at mid-body height), clipped to the hole */
 export const CrackShadow: React.FC<{id: string; v: View; a: number}> = ({id, v, a}) => {
   const {hole} = crackFaces(v);
-  const hi = fp(v, -22, 12, 0), lo = fp(v, 10, 12, 0);
+  // the ramp runs across the screen direction of the insect's width (z), so lateral position does not change it;
+  // along it, depth (x) is measured at mid-body height
+  const o = fp(v, 0, 10, 0), ex = fp(v, 1, 10, 0), ez = fp(v, 0, 10, 1);
+  const zx = ez[0] - o[0], zy = ez[1] - o[1], zl = Math.hypot(zx, zy) || 1;
+  let px = -zy / zl, py = zx / zl;
+  const k = (ex[0] - o[0]) * px + (ex[1] - o[1]) * py;
+  if (k < 0) { px = -px; py = -py; }
+  const kk = Math.abs(k);
+  const hi: Pt = [o[0] - px * kk * 24, o[1] - py * kk * 24], lo: Pt = [o[0] + px * kk * 10, o[1] + py * kk * 10];
   return (
     <g>
       <defs>

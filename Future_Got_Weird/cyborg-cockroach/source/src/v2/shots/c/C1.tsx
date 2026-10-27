@@ -17,29 +17,29 @@ import {TrayPlane, Beyond2D, farForLip} from './tray';
 
 export const C1_FROM = 315, C1_TO = 345;
 const T0 = C1_FROM / 30;
-const MEDIC_PATH = straightPath([-10, 0, -50], 0);
-const OBS_PATH = straightPath([-14, 0, 48], 0);
+const MEDIC_PATH = straightPath([-40, 0, -48], 0);
+const OBS_PATH = straightPath([28, 0, 48], 0);
 export const c1Medic = (f: number): RoachPose => {
   const t = f / 30;
-  return poseRoach({path: MEDIC_PATH, s: 46 * (t - T0), t, seed: 1, search: 0.8, antL: {yaw: 0.75, pitch: 0.3}, antR: {yaw: 0.75, pitch: 0.3}});
+  return poseRoach({path: MEDIC_PATH, s: 48 * (t - T0), t, seed: 1, search: 0.8, antL: {yaw: 0.75, pitch: 0.3}, antR: {yaw: 0.75, pitch: 0.3}});
 };
 export const c1Obs = (f: number): RoachPose => {
   const t = f / 30;
-  return poseRoach({path: OBS_PATH, s: 56 * (t - T0), t, seed: 4, search: 0.9, antL: {yaw: 0.8, pitch: 0.34}, antR: {yaw: 0.8, pitch: 0.34}});
+  return poseRoach({path: OBS_PATH, s: 52 * (t - T0), t, seed: 4, search: 0.9, antL: {yaw: 0.8, pitch: 0.34}, antR: {yaw: 0.8, pitch: 0.34}});
 };
 export const C1_AZ = 40, C1_EL = 36;
 export const c1View = (f: number): View => {
   const u = sr(f, C1_FROM - 6, C1_TO + 4);
   const x = 0 + 42 * u; // follows the pair at a little less than their pace
-  return viewAt(C1_AZ, C1_EL, 5.5 + 0.25 * u, [x, 10, 0], 520, 1000);
+  return viewAt(C1_AZ, C1_EL, 6.6 + 0.3 * u, [x, 10, 0], 540, 960);
 };
 
 /** foam blocks and curb pieces at the start of the course (world mm, axis-aligned) */
 const PROPS: {b: [number, number, number, number, number, number]; c: string}[] = [
   {b: [-260, -190, 0, 62, -190, -130], c: LAB2.foamB},
   {b: [-170, -110, 0, 48, -205, -150], c: LAB2.foamY},
-  {b: [150, 225, 0, 70, 120, 180], c: LAB2.foamR},
-  {b: [240, 300, 0, 54, 110, 165], c: '#9ED0B0'},
+  {b: [190, 255, 0, 56, 150, 205], c: LAB2.foamR},
+  {b: [270, 330, 0, 44, 140, 190], c: '#9ED0B0'},
 ];
 const curbRow = (z: number, x0: number, x1: number, k0: number) => {
   const out: {b: [number, number, number, number, number, number]; c: string}[] = [];
@@ -58,8 +58,8 @@ export const C1Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
   };
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <Beyond2D id={`${id}-lb`} lipY={330} k={1.15} dx={-0.6 * (v.ox - c1View(C1_FROM).ox)} />
-      <TrayPlane v={v} c={[20, 0, 0]} far={farForLip(v, [20, 0, 0], 330)} />
+      <Beyond2D id={`${id}-lb`} lipY={150} k={1.15} dx={-0.6 * (v.ox - c1View(C1_FROM).ox)} />
+      <TrayPlane v={v} c={[20, 0, 0]} far={farForLip(v, [20, 0, 0], 150)} />
       {PROPS.map((p, i) => shadowBox(p.b, i))}
       {CURBS.map((c, i) => (
         <Box2D key={`c${i}`} id={`${id}-c${i}`} v={v} b={c.b} color={c.c} />

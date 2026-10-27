@@ -1,5 +1,5 @@
 // D5 (578-619, "on laboratory targets."): back to the whole animal in the lab, three-quarter from behind the target's
-// face (az -24, el 17), so the spent injector reads clearly: the medic stands where it fired, the barrel's rear still
+// face (az -24, el 22), so the spent injector reads clearly: the medic stands where it fired, the barrel's rear still
 // in its tube, the needle in the silicone, the plunger at the front of the empty barrel and the small amber bloom inside
 // the target. It waits: breathing, antennae searching low and wide. One eased pull-back reveals the bench: the pale
 // tray, more silicone targets in their cradles from earlier trials (each with its puncture and a faded amber bloom),
@@ -19,10 +19,10 @@ import {d3Bloom} from './D3';
 import {V3} from '../../../lib/v3';
 
 const R = shotRange('D5');
-export const D5_AZ = -24, D5_EL = 17;
+export const D5_AZ = -24, D5_EL = 22;
 export const d5View = (f: number): View => {
   const u = sr(f, R.from - 3, R.to + 3);
-  return viewAt(D5_AZ, D5_EL, lerp(9.6, 5.6, u), [lerp(22, 46, u), lerp(16, 20, u), lerp(0, -55, u)], 540, 1000);
+  return viewAt(D5_AZ, D5_EL, lerp(9.6, 6.5, u), [lerp(22, 33, u), lerp(16, 14, u), lerp(0, -45, u)], 540, lerp(1000, 1040, u));
 };
 /** a view shifted so that a prop drawn at the origin stands at world offset o */
 const shifted = (v: View, o: V3): View => {
@@ -31,9 +31,9 @@ const shifted = (v: View, o: V3): View => {
 };
 /** the earlier trials' targets: world offset of each target (its face at x = D_FACE + o[0]) and the old dose height */
 const OLD: {o: V3; y: number}[] = [
-  {o: [92, 0, -125], y: 25},
-  {o: [-118, 0, -175], y: 28},
-  {o: [176, 0, -40], y: 23},
+  {o: [45, 0, -150], y: 25},
+  {o: [-70, 0, -100], y: 28},
+  {o: [-20, 0, -235], y: 23},
 ];
 
 export const D5: React.FC<ShotProps> = ({f}) => {
@@ -51,7 +51,7 @@ export const D5: React.FC<ShotProps> = ({f}) => {
       <defs>
         <NeedleClip id={`${id}-nc`} v={v} inj={inj} injRear={d.injRear} face={D_FACE} />
       </defs>
-      <LabRoomMM id={`${id}room`} v={v} blur={lerp(4, 2.2, sr(f, R.from, R.to))} plate={1.05} tray={[-260, 330, -230, 140]} />
+      <LabRoomMM id={`${id}room`} v={v} blur={lerp(4, 2.2, sr(f, R.from, R.to))} plate={1.05} tray={[-260, 330, -275, 140]} />
       {olds.map((q) => {
         const vs = shifted(v, q.o);
         return (

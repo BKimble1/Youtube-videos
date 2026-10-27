@@ -14,9 +14,10 @@ import {sr, clamp, lerp} from '../../../lib/ease';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View} from '../../roach/ortho';
-import {Box2D, LAB2} from '../../sets/Lab2';
+import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
-import {Tray2D, BoxShadow, turnPath, pulseTrain, FPS} from './common';
+import {Tray2D, FoamBox, turnPath, pulseTrain, PulseTrails, FPS} from './common';
+import {wiresOn} from '../../../rig/gear';
 
 export const B45_SPEED = 46;
 /** the turn: heading eases from +x to +z (a right turn) over arc length 0..66 mm */
@@ -51,8 +52,8 @@ const BLOCK_B: [number, number, number, number, number, number] = [96, 170, 0, 3
 const AZ = -90, EL = 84;
 const BOARD: V3 = [2, 24, 0];
 const ELECTRODE_L: V3 = [34, 10.4, -4.5];
-const S_CLOSE = 21, S_WIDE = 6;
-const C_END: V3 = [30, 0, 33];
+const S_CLOSE = 21, S_WIDE = 7;
+const C_END: V3 = [30, 0, 42];
 /** the body point the camera follows: from the board to the left electrode as the pulses run (in the path frame, so the
  *  gait's bob and roll never shake the camera) */
 const follow = (t: number): {p: V3; u: number} => {
@@ -70,7 +71,7 @@ export const b45View = (f: number): View => {
   const uo = sr(f, 283, 308);
   const s = sClose * Math.pow(S_WIDE / sClose, uo);
   const at: V3 = [lerp(fo.p[0], C_END[0], uo), lerp(fo.p[1], C_END[1], uo), lerp(fo.p[2], C_END[2], uo)];
-  return viewAt(AZ, EL, s, at, 540, lerp(1040, 960, uo));
+  return viewAt(AZ, EL, s, at, 540, lerp(1150, 960, uo));
 };
 
 const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
@@ -81,17 +82,23 @@ const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <Tray2D v={v} x0={-320} x1={340} z0={-260} z1={320} grid={20} />
-      <BoxShadow id={`${id}sy`} v={v} b={BLOCK_Y} push={[0.9 * v.s, 1.1 * v.s]} alpha={0.16} />
-      <BoxShadow id={`${id}sb`} v={v} b={BLOCK_B} push={[0.9 * v.s, 1.1 * v.s]} alpha={0.16} />
-      <Box2D id={`${id}ky`} v={v} b={BLOCK_Y} color={LAB2.foamY} />
-      <Box2D id={`${id}kb`} v={v} b={BLOCK_B} color={LAB2.foamB} />
+      <FoamBox id={`${id}ky`} v={v} b={BLOCK_Y} color={LAB2.foamY} />
+      <FoamBox id={`${id}kb`} v={v} b={BLOCK_B} color={LAB2.foamB} />
       <Roach2D
         pose={pose}
         v={v}
-        o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'injector', led: p.led, pulses: {antL: p.fr}, zap: {antL: p.zap}}} />}}
+        o={{
+          id: `${id}r`,
+          gear: (
+            <g>
+              <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'injector', led: p.led, pulses: {antL: p.fr}, zap: {antL: p.zap}}} />
+              {p.fr.length > 0 && <PulseTrails id={`${id}pt`} v={v} wire={wiresOn(pose.frame).antL.map((q) => q.p)} fr={p.fr} />}
+            </g>
+          ),
+        }}
       />
     </svg>
   );
 };
-export const B4: React.FC<ShotProps> = ({f}) => <Scene45 f={f} id="b4" />;
-export const B5: React.FC<ShotProps> = ({f}) => <Scene45 f={f} id="b5" />;
+export const B4: React.FC<ShotProps> = ({f}) => <Scene45 f={f} id={`b4f${f}`} />;
+export const B5: React.FC<ShotProps> = ({f}) => <Scene45 f={f} id={`b5f${f}`} />;

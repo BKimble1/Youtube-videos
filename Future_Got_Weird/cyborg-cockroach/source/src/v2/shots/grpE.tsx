@@ -3,5 +3,6 @@ import React from 'react';
 import {ShotProps} from './index2';
 import {E1} from './e/E1';
 import {F2} from './e/F2';
+import {F1, F3, F4} from './e/F';
 
-export const SHOTS_E: Record<string, React.FC<ShotProps>> = {E1, F2};
+export const SHOTS_E: Record<string, React.FC<ShotProps>> = {E1, F1, F2, F3, F4};

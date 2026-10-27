@@ -23,7 +23,7 @@ export const c2Pose = (f: number): RoachPose => {
   return poseRoach({path: PATH, s: 34 * (t - C2_FROM / 30) + 10, t, seed: 4, search: 0.8, antL: {yaw: 1.0, pitch: 0.42, curl: 0.8}, antR: {yaw: 1.0, pitch: 0.42, curl: 0.8}});
 };
 /** the push, as log(px per mm): an ease-in through C2 that keeps accelerating on through the lens in C3's first frames */
-const S0 = 10.5, S1 = 78;
+const S0 = 13, S1 = 84;
 const logS = (f: number) => {
   const n = C2_TO - 1 - C2_FROM;
   const u = (f - C2_FROM) / n;

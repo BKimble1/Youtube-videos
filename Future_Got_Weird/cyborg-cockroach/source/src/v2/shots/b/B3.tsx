@@ -12,7 +12,7 @@ import {viewAt, View, P, f2} from '../../roach/ortho';
 import {LabWall2, Bench2, Box2D, LAB2} from '../../sets/Lab2';
 import {Layer} from '../../dc/camera';
 import {ShotProps} from '../index2';
-import {Tray2D, BoxShadow, FPS} from './common';
+import {Tray2D, FoamBox, LAB_BLOCKS, FPS} from './common';
 import {bPose, bWalkS} from './B12';
 
 const B3_AZ = 0, B3_EL = 10, B3_S = 9.2;
@@ -24,11 +24,7 @@ export const b3View = (t: number): View => {
   return viewAt(B3_AZ, B3_EL, B3_S, [bodyX(t) + 6 - 4 * u, 12, 0], 500, 1060);
 };
 // props on the far side of the tray (world mm): foam blocks the walk passes
-const BLOCKS: {b: [number, number, number, number, number, number]; c: string}[] = [
-  {b: [10, 52, 0, 36, -150, -112], c: LAB2.foamB},
-  {b: [96, 150, 0, 26, -138, -104], c: LAB2.foamY},
-  {b: [-80, -40, 0, 30, -128, -96], c: LAB2.foamR},
-];
+const BLOCKS = LAB_BLOCKS;
 export const B3: React.FC<ShotProps> = ({f}) => {
   const t = f / FPS;
   const v = b3View(t);
@@ -41,28 +37,25 @@ export const B3: React.FC<ShotProps> = ({f}) => {
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <defs>
-        <filter id="b3-bl" x="-10%" y="-10%" width="120%" height="120%">
+        <filter id={`b3-bl${f}`} x="-10%" y="-10%" width="120%" height="120%">
           <feGaussianBlur stdDeviation="7" />
         </filter>
       </defs>
       <rect x={-20} y={-20} width={1120} height={1960} fill={LAB2.wallBot} />
-      <g filter="url(#b3-bl)">
+      <g filter={`url(#b3-bl${f})`}>
         <Layer cam={cam} depth={3.2}>
           <g transform={`translate(-300 ${f2(benchFar - 1010 * 1.3)}) scale(1.3)`}>
-            <LabWall2 id="b3w" />
+            <LabWall2 id={`b3w${f}`} />
           </g>
         </Layer>
       </g>
       <path d={`M-20,${f2(benchFar - 14)} H1100 V${f2(benchNear)} H-20 Z`} fill={LAB2.benchTop} />
-      <Bench2 id="b3b" top={benchNear} k={1.3} />
+      <Bench2 id={`b3b${f}`} top={benchNear} k={1.3} />
       <Tray2D v={v} x0={-260} x1={320} z0={-170} z1={200} grid={20} bench={false} />
       {BLOCKS.map((k, i) => (
-        <g key={i}>
-          <BoxShadow id={`b3s${i}`} v={v} b={k.b} push={[16, 6]} alpha={0.12} />
-          <Box2D id={`b3k${i}`} v={v} b={k.b} color={k.c} />
-        </g>
+        <FoamBox key={i} id={`b3k${f}_${i}`} v={v} b={k.b} color={k.c} />
       ))}
-      <Roach2D pose={pose} v={v} o={{id: 'b3r', gear: <Gear2D id="b3g" v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+      <Roach2D pose={pose} v={v} o={{id: `b3r${f}`, gear: <Gear2D id={`b3g${f}`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
     </svg>
   );
 };

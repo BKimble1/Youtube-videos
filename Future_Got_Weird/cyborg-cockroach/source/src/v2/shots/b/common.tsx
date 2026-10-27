@@ -8,13 +8,13 @@ import {INK, Inked, Deco, InkLine} from '../../../lib/ink';
 import {Capsule, SoftShadow} from '../../../lib/shade';
 import {add, mul, perp, rad, V} from '../../../lib/math';
 import {shade as shadeC} from '../../../lib/color';
-import {clamp, smoother} from '../../../lib/ease';
+import {clamp, smoother, rnd} from '../../../lib/ease';
 import {wiresOn} from '../../../rig/gear';
 import {Path} from '../../../rig/roach';
 import {Hand, HandPose, digitTips} from '../../dc/Hand';
 import {View, P, f2, polyD, smoothOpen} from '../../roach/ortho';
 import {G2} from '../../roach/Gear2D';
-import {LAB2} from '../../sets/Lab2';
+import {LAB2, Box2D} from '../../sets/Lab2';
 import {GLOVE, COAT} from '../../../crew/operator';
 
 export const FPS = 30;
@@ -259,4 +259,69 @@ export const pulseTrain = (t: number, tP: number, gap = 0.1, run = 0.26) => {
   }
   const led = t >= tP - 0.02 && t <= tP + 2 * gap + 0.06 ? 1 : 0;
   return {fr, zap: Math.min(1, zap), twitch: Math.min(1.2, twitch), led, arrive: tP + run, last: tP + 2 * gap + run};
+};
+
+/** a short glowing trail behind each pulse on a wire (screen polyline of the wire, board -> electrode): the signal's
+ *  wake along the conductor, fading behind the bead (Gear2D draws the bead itself) */
+export const PulseTrails: React.FC<{id: string; v: View; wire: V3[]; fr: number[]; len?: number}> = ({id, v, wire, fr, len = 0.2}) => {
+  const pts = wire.map((p) => P(v, p));
+  const L: number[] = [0];
+  for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const tot = L[L.length - 1] || 1;
+  const at = (u: number): V2 => {
+    const x = clamp(u) * tot;
+    let i = 1;
+    while (i < L.length - 1 && L[i] < x) i++;
+    const k = (x - L[i - 1]) / Math.max(1e-6, L[i] - L[i - 1]);
+    return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * k, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * k];
+  };
+  return (
+    <g>
+      {fr.map((u, j) => {
+        const n = 10;
+        const segs: React.ReactNode[] = [];
+        for (let i = 0; i < n; i++) {
+          const a = u - len * (1 - i / n), b = u - len * (1 - (i + 1) / n);
+          if (b <= 0) continue;
+          const pa = at(Math.max(0, a)), pb = at(b);
+          segs.push(<path key={i} d={`M${f2(pa[0])},${f2(pa[1])} L${f2(pb[0])},${f2(pb[1])}`} stroke="#FFF3B0" strokeWidth={f2(0.62 * v.s)} strokeLinecap="round" opacity={(0.08 + 0.75 * ((i + 1) / n)) * 0.9} />);
+        }
+        return <g key={`${id}${j}`}>{segs}</g>;
+      })}
+    </g>
+  );
+};
+
+// ------------------------------------------------------------------ foam blocks
+export type BoxB = [number, number, number, number, number, number];
+/** the foam blocks on the B1-B3 tray (world mm; the walk runs along +x from the origin, these stand on the far side) */
+export const LAB_BLOCKS: {b: BoxB; c: string}[] = [
+  {b: [10, 52, 0, 36, -150, -112], c: LAB2.foamB},
+  {b: [96, 150, 0, 26, -138, -104], c: LAB2.foamY},
+  {b: [-80, -40, 0, 30, -128, -96], c: LAB2.foamR},
+];
+/** a foam block: Box2D with its soft ground shadow and a scatter of pores on the top face (deterministic) */
+export const FoamBox: React.FC<{id: string; v: View; b: BoxB; color: string; shadow?: boolean}> = ({id, v, b, color, shadow = true}) => {
+  const [x0, x1, , y1, z0, z1] = b;
+  const pores: React.ReactNode[] = [];
+  const n = Math.min(40, Math.round(((x1 - x0) * (z1 - z0)) / 160));
+  const dark = shadeC(color, 0.16);
+  for (let i = 0; i < n; i++) {
+    const px = x0 + 3 + (x1 - x0 - 6) * rnd(i, 11 + x0), pz = z0 + 3 + (z1 - z0 - 6) * rnd(i, 23 + z0);
+    const r = 0.7 + 1.0 * rnd(i, 5);
+    const c = P(v, [px, y1, pz]), cx = P(v, [px + r, y1, pz]), cz = P(v, [px, y1, pz + r * (0.7 + 0.5 * rnd(i, 9))]);
+    const ring: V2[] = [];
+    for (let k = 0; k < 10; k++) {
+      const th = (k / 10) * Math.PI * 2;
+      ring.push([c[0] + (cx[0] - c[0]) * Math.cos(th) + (cz[0] - c[0]) * Math.sin(th), c[1] + (cx[1] - c[1]) * Math.cos(th) + (cz[1] - c[1]) * Math.sin(th)]);
+    }
+    pores.push(<path key={i} d={polyD(ring)} fill={dark} opacity={0.42} />);
+  }
+  return (
+    <g>
+      {shadow && <BoxShadow id={`${id}-sh`} v={v} b={b} push={[0.9 * v.s, 1.1 * v.s * Math.max(0.3, v.F[1])]} alpha={0.15} />}
+      <Box2D id={`${id}-bx`} v={v} b={b} color={color} />
+      {v.F[1] > 0.3 && pores}
+    </g>
+  );
 };
