@@ -26,8 +26,15 @@ const GRIP_ANG = 172;
 /** the remote's centre in the hand's own frame (u along the hand from the wrist, v toward the thumb; hand lengths) */
 const REMOTE_UV = {u: 0.6, v: 0.3};
 const REMOTE_TILT = 58;
-/** a resting far hand's fingertips land this far (scale 1 px) in front of the bench's back edge, on its top */
-const BENCH_REST = 7;
+/** where the thumb's pad goes at thumbLift 1 (mm, remote model space, from its spot on the cap): as in the close-up it
+ *  draws back toward its root and rises, so it stands curled up just behind the cap and the cap is left clear */
+const LIFT = {x: 4, y: -4, z: 14};
+/** a resting far hand: its placed point (0.74 along the hand) sits this far (scale 1 px, + = down) from the bench's back
+ *  edge, so the fingertips end on the bench top short of anything lying on it (the arena mat in S03) */
+const BENCH_REST = -12;
+/** how far past that point the resting hand's fingertips can reach down the screen (scale 1 px): the hands pass is
+ *  clipped below it, so the tips are never cut by the clip */
+const BENCH_TIPS = 30;
 
 export type OperatorAtBenchProps = {
   /** unique id prefix for SVG defs (required when several figures are on screen) */
@@ -51,6 +58,8 @@ export type OperatorAtBenchProps = {
   breath?: number;
   /** 0..1: the thumb presses the fire button (the cap goes down under it) */
   thumbPress?: number;
+  /** 0..1: the thumb lifted up off the cap (as after the shot in the close-up); 0 = its pad on the cap */
+  thumbLift?: number;
   /** status LED on the remote */
   led?: LedArg;
   /** where he looks (screen px); default: down-left on the bench, 380 px left of the hip at scale 1 */
@@ -125,9 +134,11 @@ export const operatorAtBench = (p: OperatorAtBenchProps) => {
   const HU = (u: number, v: number): V => add(lWrist, add(mul(hd, u * L), mul(hn, v * L))); // thumbSide +1
   const k = (REMOTE_PER_HAND * L) / REMOTE.L;
   const view: RemoteView = {c: HU(REMOTE_UV.u, REMOTE_UV.v), k, rot: lAng + 180 - 4, tilt: REMOTE_TILT};
-  // the thumb's pad on the cap: a little behind its centre (toward the wrist), following it down
+  // the thumb's pad on the cap: a little behind its centre (toward the wrist), following it down; lifted, it rises
+  // clear of it (LIFT)
   const capTop = capTopAt(press);
-  const pad = remotePt(view, REMOTE.btn.x + 3.5, REMOTE.btn.y - 1, capTop + 1.2);
+  const up = smooth(p.thumbLift ?? 0);
+  const pad = remotePt(view, REMOTE.btn.x + 3.5 + LIFT.x * up, REMOTE.btn.y - 1 + LIFT.y * up, capTop + 1.2 + LIFT.z * up);
   const lHand: HandPose = aimThumb(lWrist, lAng, L, 1, {...H_REMOTE, curl: H_REMOTE.curl.map((c) => c + 0.04 * press) as HandPose['curl']}, pad);
   const rHand: HandPose = far === 'bench' && p.benchTopY !== undefined ? H_BENCH : H_SIDE;
 
@@ -153,7 +164,7 @@ export const OperatorAtBench: React.FC<OperatorAtBenchProps> = (props) => {
   const clip = props.benchTopY !== undefined ? `url(#${id}-${layer}-above)` : undefined;
   // the hands pass may reach a little onto the bench top (a resting far hand); a hanging one stays behind the edge
   const handsClip = props.benchTopY !== undefined ? `url(#${id}-${layer}-aboveH)` : undefined;
-  const handsY = (props.benchTopY ?? 0) + ((props.farHand ?? 'side') === 'bench' ? (BENCH_REST + 10) * s : 0);
+  const handsY = (props.benchTopY ?? 0) + ((props.farHand ?? 'side') === 'bench' ? (BENCH_REST + BENCH_TIPS) * s : 0);
   const body = (
     <g clipPath={clip}>
       <Man id={`${id}-b`} pose={g.pose} expr={g.expr} blink={g.blink} lHand={g.lHand} rHand={g.rHand} outfit={HERO_LAB} inkK={INK_K} />

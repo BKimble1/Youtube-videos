@@ -108,6 +108,27 @@ const inFoot = (fr: Frame, p: V3, m = 0.4) => {
   const q = toL(fr, p);
   return Math.abs(q[2]) < Math.max(loftW(PLATES, q[0]), loftW(PRONOTUM, q[0])) + m;
 };
+/** whether a body-local point lies inside a loft's solid (its superelliptic sections, as lib/loft.ts loftLocal) */
+const inLoft = (d: LoftDef, q: V3) => {
+  const u = (q[0] - d.x0) / (d.x1 - d.x0);
+  const w = u < 0 || u > 1 ? 0 : d.w(u);
+  if (w < 1e-3) return false;
+  const dy = q[1] - d.yc(u), h = Math.max(1e-3, dy >= 0 ? d.ht(u) : d.hb(u));
+  return Math.pow(Math.abs(q[2]) / w, d.n ?? 2.2) + (dy / h) * (dy / h) < 1;
+};
+/** whether the pronotum shield lies on the sight line from body-local point q to the body-local eye e (sampled where the
+ *  line crosses the shield's length) */
+const behindPro = (q: V3, e: V3, n = 32) => {
+  const dx = e[0] - q[0];
+  let lo = 0, hi = 1;
+  if (Math.abs(dx) > 1e-6) {
+    const a = (PRONOTUM.x0 - q[0]) / dx, b = (PRONOTUM.x1 - q[0]) / dx;
+    (lo = clamp(Math.min(a, b))), (hi = clamp(Math.max(a, b)));
+  } else if (q[0] < PRONOTUM.x0 || q[0] > PRONOTUM.x1) return false;
+  for (let k = 0; k < n && hi > lo; k++) if (inLoft(PRONOTUM, lerp3(q, e, lerp(lo, hi, (k + 0.5) / n)))) return true;
+  return false;
+};
+
 export type LegFrom = {seg: number; t: number};
 /** where along the leg chain (0 femur, 1 tibia, 2 tarsus; fraction t) it leaves the body's footprint for good: a near
  *  leg is drawn behind the body, then redrawn from this point on, so it emerges from under the shell's edge instead of
@@ -167,18 +188,22 @@ const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: s
   );
 };
 
-const Antenna: React.FC<{id: string; pts: V3[]; cam: Cam; from: number; to: number; haze: (c: string) => string}> = ({id, pts, cam, from, to, haze}) => {
-  if (to - from < 1) return null;
-  const sp = pts.slice(from, to + 1).map((q) => proj(cam, q));
-  const w0 = 1.45 * scaleAt(cam, pts[from]), w1 = 0.6 * scaleAt(cam, pts[to]);
+/** an antenna's segments where `on[i]` (segment i joins pts[i] and pts[i + 1]); the taper and banding run over the whole
+ *  chain, so the two layers it is split into (behind / in front of the pronotum) join without a step */
+const Antenna: React.FC<{id: string; pts: V3[]; cam: Cam; on: boolean[]; haze: (c: string) => string}> = ({id, pts, cam, on, haze}) => {
+  if (pts.length < 2 || !on.some((x) => x)) return null;
+  const sp = pts.map((q) => proj(cam, q));
+  const w0 = 1.45 * scaleAt(cam, pts[0]), w1 = 0.6 * scaleAt(cam, pts[pts.length - 1]);
   const segs = [];
   for (let i = 0; i < sp.length - 1; i++) {
+    if (!on[i]) continue;
     const t = i / Math.max(1, sp.length - 1);
     const w = w0 + (w1 - w0) * t;
     segs.push(<path key={i} d={`M${fmt(sp[i][0])} ${fmt(sp[i][1])} L${fmt(sp[i + 1][0])} ${fmt(sp[i + 1][1])}`} stroke={INK} strokeWidth={w + 2.2} strokeLinecap="round" />);
   }
   const fill = [];
   for (let i = 0; i < sp.length - 1; i++) {
+    if (!on[i]) continue;
     const t = i / Math.max(1, sp.length - 1);
     const w = w0 + (w1 - w0) * t;
     fill.push(<path key={i} d={`M${fmt(sp[i][0])} ${fmt(sp[i][1])} L${fmt(sp[i + 1][0])} ${fmt(sp[i + 1][1])}`} stroke={haze(i % 2 ? CHITIN.ant : mix(CHITIN.ant, '#7A4A36', 0.35))} strokeWidth={w} strokeLinecap="round" />);
@@ -205,13 +230,16 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
   const camAbove = dot(norm(sub(cam.eye, fr.o)), fr.y) > 0.76;
   const near = (p: LegPose) => !o.legsBehind && !camAbove && dot(sub(cam.eye, p.coxa), legOutward(fr, p)) > 0;
   const legsNear = pose.legs.filter((p) => near(p));
-  // antenna split: segments under the pronotum hood (body x < 33) draw before the pronotum
-  const split = (pts: V3[]) => {
-    let i = 0;
-    while (i < pts.length - 1 && dot(sub(pts[i], fr.o), fr.x) < 33.5) i++;
-    return i;
-  };
-  const sL = split(pose.antL), sR = split(pose.antR);
+  // antenna layers: a segment draws before the head and pronotum where the shield lies between it and the camera (under
+  // the hood, body x < 33.5, or seen past the shield from behind, so only what clears its silhouette shows), after them
+  // otherwise (a far antenna seen from behind is no longer painted onto the shell)
+  const eyeL = toL(fr, cam.eye);
+  const hidden = (pts: V3[]) =>
+    pts.slice(1).map((b, i) => {
+      const m = toL(fr, lerp3(pts[i], b, 0.5));
+      return m[0] < 33.5 || behindPro(m, eyeL);
+    });
+  const hL = hidden(pose.antL), hR = hidden(pose.antR);
   // depth order for the two antennae and the near/far legs
   const bth = pose.breath - 0.5;
   const plates: LoftDef = {...PLATES, ht: (u) => PLATES.ht(u) * (1 + 0.05 * bth * (1 - u)), w: (u) => PLATES.w(u) * (1 + 0.016 * bth * (1 - u))};
@@ -242,8 +270,8 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
       {pose.legs.map((p) => (
         <Leg key={p.def.name} id={`${o.id}-${p.def.name}`} p={p} cam={cam} inkW={inkW * (near(p) ? 0.85 : 0.8)} haze={near(p) ? haze : (c) => haze(shade(c, 0.18))} />
       ))}
-      <Antenna id={`${o.id}-aL0`} pts={pose.antL} cam={cam} from={0} to={sL} haze={haze} />
-      <Antenna id={`${o.id}-aR0`} pts={pose.antR} cam={cam} from={0} to={sR} haze={haze} />
+      <Antenna id={`${o.id}-aL0`} pts={pose.antL} cam={cam} on={hL} haze={haze} />
+      <Antenna id={`${o.id}-aR0`} pts={pose.antR} cam={cam} on={hR} haze={haze} />
       {pose.cerci.map(([a, b], i) => {
         const pa = proj(cam, a), pb = proj(cam, b);
         return (
@@ -321,8 +349,8 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
           </Deco>
         </Shell>
       </Inked>
-      <Antenna id={`${o.id}-aL1`} pts={pose.antL} cam={cam} from={sL} to={pose.antL.length - 1} haze={haze} />
-      <Antenna id={`${o.id}-aR1`} pts={pose.antR} cam={cam} from={sR} to={pose.antR.length - 1} haze={haze} />
+      <Antenna id={`${o.id}-aL1`} pts={pose.antL} cam={cam} on={hL.map((h) => !h)} haze={haze} />
+      <Antenna id={`${o.id}-aR1`} pts={pose.antR} cam={cam} on={hR.map((h) => !h)} haze={haze} />
       {o.gear}
       {legsNear.map((p) => {
         const e = exitOf(fr, p);

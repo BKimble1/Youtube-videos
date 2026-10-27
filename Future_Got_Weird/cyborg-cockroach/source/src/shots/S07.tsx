@@ -96,7 +96,9 @@ export const observerRig = (P: ObsParams) => {
       path: hp.path, s: sAt(t), t, seed: 7, search: 0.75 + 0.2 * stopped,
       offset: [0, -0.5 * stopped, 0],
       pitch: -0.006 * (br - 0.5),
-      antL: {yaw: 0.6, pitch: 0.14}, antR: {yaw: 0.6, pitch: 0.14},
+      // the left antenna (the camera's side) sweeps out and stays raised: at the default it points at the low lens and its
+      // curl, seen end-on, hangs straight down the frame like a seventh leg during the push
+      antL: {yaw: 0.95, pitch: 0.3, curl: 0.6}, antR: {yaw: 0.6, pitch: 0.14},
       breathe: br,
     });
   };

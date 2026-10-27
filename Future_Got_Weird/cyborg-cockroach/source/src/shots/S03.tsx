@@ -29,15 +29,16 @@ export const s03Cam = (t: number, eyeA: V3 = [85, 78, 307], eyeB: V3 = [80, 75, 
 const HEAD_PX = Math.abs(operatorAtBench({x: 0, y: 0, scale: 1}).head.y);
 const MM_PER_PX = 670 / HEAD_PX;
 
-/** the operator placed in the projected room: hip anchor, scale from the camera, body below the bench's far edge hidden */
-export const operatorIn = (cam: Cam, t: number, opts: {layer: 'body' | 'hands'; gaze: [number, number]; press?: number; exprMix?: number}) => {
+/** the operator placed in the projected room: hip anchor, scale from the camera, body below the bench's far edge hidden;
+ *  the thumb is lifted clear of the fire button unless `lift` says otherwise (S02 ends on it rising off the cap) */
+export const operatorIn = (cam: Cam, t: number, opts: {layer: 'body' | 'hands'; gaze: [number, number]; press?: number; lift?: number; exprMix?: number}) => {
   const hip = ROOM.operator.hip;
   const p = proj(cam, hip);
   const scale = scaleAt(cam, hip) * MM_PER_PX;
   const bench = proj(cam, [hip[0], 0, ROOM.bench.z0]);
   return (
     <OperatorAtBench id={`op-${opts.layer}`} x={p[0]} y={p[1]} scale={scale} t={t} expr="focus" exprTo="pleased" exprMix={opts.exprMix ?? 0}
-      thumbPress={opts.press ?? 0} led="fired" gazeX={opts.gaze[0]} gazeY={opts.gaze[1]} benchTopY={bench[1]} farHand="bench" layer={opts.layer} />
+      thumbPress={opts.press ?? 0} thumbLift={opts.lift ?? 1} led="fired" gazeX={opts.gaze[0]} gazeY={opts.gaze[1]} benchTopY={bench[1]} farHand="bench" layer={opts.layer} />
   );
 };
 
