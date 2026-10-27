@@ -1,5 +1,6 @@
 // V2 shots, part 3: training on people (alcove B), the result, the distinction and the flaws (77.15 - 132.32 s).
 import React from 'react';
+import {StudioMic} from './new';
 import {Head, EXPR_NEUTRAL} from '../dc/Head';
 import {INK} from '../dc/ink';
 import {clamp, fmt, lerp} from '../dc/math';
@@ -315,28 +316,16 @@ export const ResultSpeech: React.FC<{f: number}> = ({f}) => {
 };
 // "and song.": profile, sung vowels held longer
 export const ResultSong: React.FC<{f: number}> = ({f}) => {
-  const t = f / 30;
   const st = view(rob2(f), 64, 0.3, -0.05);
-  return (
-    <g>
-      <RobotCU id="rg" cam={drift(f, K.song, K.languages, {x: 900, y: 560, z: 1}, {x: 900, y: 560, z: 1.05})} st={st} x={820} y={450} s={3.6} veil={0.3} bgDx={600} bgDy={160} />
-      <Wave x={1275} y={420} w={510} h={46} t0={t - 2.4} t1={t} fn={tr2} color="#C9822B" />
-      <Tag x={1530} y={520} text="song" k={1} size={34} anchor="middle" tone="warm" />
-    </g>
-  );
+  // V4: a recording studio; it sings into a microphone (no waveform graphic)
+  return <RobotCU id="rg" cam={drift(f, K.song, K.languages, {x: 900, y: 560, z: 1}, {x: 900, y: 560, z: 1.05})} st={st} x={820} y={450} s={3.6} bg="studio" veil={0.05} bgDx={300} bgDy={160} fore={<StudioMic x={1420} y={560} s={1.5} />} />;
 };
 // "It could even synchronize with audio in languages it hadn't been trained on.": front; a recording in another
 // language (not one it was trained on), the lips still following the sound
 export const ResultLang: React.FC<{f: number}> = ({f}) => {
-  const t = f / 30;
   const st = view(rob2(f), 0, 0, 0.05);
-  return (
-    <g>
-      <RobotCU id="rl" cam={drift(f, K.languages, K.meaning, {x: 960, y: 520, z: 1}, {x: 960, y: 530, z: 1.06})} st={st} x={960} y={360} s={3.8} veil={0.35} bgDx={-900} bgDy={160} />
-      <Wave x={300} y={980} w={1320} h={44} t0={t - 3} t1={t} fn={tr3} color="#8A6BB5" />
-      <Tag x={960} y={820} text="a language it was not trained on" k={pr(f, T('in languages') - 0.2, T('in languages') + 0.2)} size={32} anchor="middle" tone="light" />
-    </g>
-  );
+  // V4: the studio again, from the front: a recording in another language plays on the control-room monitor
+  return <RobotCU id="rl" cam={drift(f, K.languages, K.meaning, {x: 960, y: 520, z: 1}, {x: 960, y: 530, z: 1.06})} st={st} x={960} y={360} s={3.8} bg="studio" veil={0.05} bgDx={-1150} bgDy={160} fore={<StudioMic x={1500} y={700} s={1.3} />} />;
 };
 // "The meaning of those words wasn't required for the lip movements.": the physical path, sound -> motors -> lips,
 // with an empty slot where meaning would be

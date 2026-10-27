@@ -87,12 +87,15 @@ def fx(kind, p=1.0, dur=0.3):
 cues = []  # (time, kind, gain dB, pitch, dur, pan)
 def cue(t, kind, db=0.0, p=1.0, dur=0.3, pan=0.0): cues.append((t, kind, db, p, dur, pan))
 
-# V3 opening: the lip motors are heard faintly as the face turns translucent (the motor in the cheek pulls); its
-# smile as the camera pulls back to the person; the copied lip shapes; the lip motors seen working
-for d in (2.5, 2.74, 2.88, 3.14):
-    cue(d - 0.04, 'servo', -14, 1.1, 0.22, -0.1)
-cue(A['triesSmile'] + 0.1, 'servo', -9, 0.9, 1.1, -0.2)
-cue(A['copy2'], 'servo', -11, 1.05, 0.9, 0.1)
+# V4 opening: its lips moving on frame 0 (faint lip motors on the shape changes); the corner motor pulling in the
+# cutaway as it starts to smile; its brows, jaw and lips moving into his expression
+for d in (0.26, 0.5, 0.92, 1.42):
+    cue(d - 0.04, 'servo', -16, 1.1, 0.2, -0.1)
+cue(A['triesSmile'] + 0.25, 'servo', -9, 0.9, 1.0, -0.2)
+cue(A['copy2'], 'servo', -10, 1.0, 0.7, 0.1)
+# V4 mirror trials: three different expressions
+for tt in A['mirrorTrials']:
+    cue(tt - 0.1, 'servo', -10, 0.95, 0.4, 0.0)
 # the mirror: four quick tests, the copied lip shapes, the predicted smile
 for d in (0.06, 0.42, 0.78, 1.12):
     cue(K['mirrorCut'] + d - 0.05, 'servo', -11, 1.0 + 0.1 * (d > 0.5), 0.3, 0.2)

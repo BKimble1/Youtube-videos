@@ -42,11 +42,11 @@ const letterHold = (f: number, a: number, b: number) => {
   );
 };
 // "Imagine telling someone good news.": the visitor, a letter in his hand, telling it (silent)
-export const LateNews: React.FC<{f: number}> = ({f}) => <VisitorCU id="ln" cam={drift(f, K.news, K.stare, {x: 1010, y: 560, z: 1}, {x: 1010, y: 550, z: 1.03})} vis={vis2(f)} turn={0.42} fore={letterHold(f, K.news, K.finish + 99)} />;
+export const LateNews: React.FC<{f: number}> = ({f}) => <VisitorCU id="ln" cam={drift(f, K.news, K.stare, {x: 1010, y: 560, z: 1}, {x: 1010, y: 550, z: 1.03})} vis={vis2(f)} turn={0.42} bg="lobby" veil={0.25} fore={letterHold(f, K.news, K.finish + 99)} />;
 // "They stare at you.": the robot, unmoved; a slow push
 export const LateStare: React.FC<{f: number}> = ({f}) => <RobotCU id="ls" cam={drift(f, K.stare, K.finish, {x: 905, y: 500, z: 1.42}, {x: 900, y: 495, z: 1.58})} st={view(rob2(f), 24, 0.62, -0.04)} />;
 // "You finish smiling.": his smile completes; the letter lowers
-export const LateFinish: React.FC<{f: number}> = ({f}) => <VisitorCU id="lf" cam={drift(f, K.finish, K.switchOn, {x: 1010, y: 550, z: 1.03}, {x: 1010, y: 545, z: 1.05})} vis={vis2(f)} turn={0.42} fore={letterHold(f, K.news - 9, K.switchOn - 0.2)} />;
+export const LateFinish: React.FC<{f: number}> = ({f}) => <VisitorCU id="lf" cam={drift(f, K.finish, K.switchOn, {x: 1010, y: 550, z: 1.03}, {x: 1010, y: 545, z: 1.05})} vis={vis2(f)} turn={0.42} bg="lobby" veil={0.25} fore={letterHold(f, K.news - 9, K.switchOn - 0.2)} />;
 // "Then their smile switches on.": the robot's smile arrives, late and fast
 export const LateSwitch: React.FC<{f: number}> = ({f}) => <RobotCU id="lw" cam={drift(f, K.switchOn, K.awkward, {x: 920, y: 540, z: 1.12}, {x: 920, y: 540, z: 1.16})} st={view(rob2(f), 24, 0.62, -0.04)} />;
 // "Even a well-drawn expression can feel awkward when it arrives late.": the two faces side by side, with the two

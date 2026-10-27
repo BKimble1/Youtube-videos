@@ -21,7 +21,7 @@ import {CheekSection} from './mech';
 import {CAST, CREW_HEAD, CrewChar, VisShape} from './crew';
 import {HumanoidBody, OldBot, ShapeMap, SideMech} from './new';
 import {humanTrace, Panel, robotTrace} from './props';
-import {COPY_DT, END, LIPS_H, MONTAGE, OLDBOT, PRED, rob2, SAMPLE, sampleT, vis2} from './state2';
+import {COPY_DT, END, LIPS_H, MIRROR_TRIALS, MONTAGE, OLDBOT, PRED, rob2, SAMPLE, sampleT, vis2} from './state2';
 import {drift, e2, e3} from './shots2';
 
 const view = (st: RobotState, yaw: number, gx?: number, gy?: number): RobotState => ({...st, yaw, gx: gx ?? st.gx, gy: gy ?? st.gy});
@@ -229,9 +229,13 @@ export const B7Shapes: React.FC<{f: number}> = ({f}) => {
 // ================================================================== MIRROR PRACTICE
 // 54.71 - 57.28 "It moved its face while watching its reflection,": the reflection, close, its motors showing
 export const P2Refl: React.FC<{f: number}> = ({f}) => {
-  const c0 = mirrorLayerCam({x: MIR.refl.x, y: MIR.refl.y + 10}, 2.7);
-  const c1 = mirrorLayerCam({x: MIR.refl.x, y: MIR.refl.y + 16}, 2.9);
-  return <MirrorSet2 id="p2" cam={drift(f, T('It moved its face'), T('building a relationship'), c0, c1)} st={rob2(f)} reflXray={0.8 * pr(f, T('It moved its face') + 0.2, T('It moved its face') + 0.6)} reflHot={['corner', 'lip', 'jaw']} />;
+  const t = f / 30;
+  const c0 = mirrorLayerCam({x: MIR.refl.x, y: MIR.refl.y + 10}, 2.5);
+  const c1 = mirrorLayerCam({x: MIR.refl.x, y: MIR.refl.y + 16}, 2.75);
+  // V4: only the motors making the current trial show through the reflection's skin
+  const cur = MIRROR_TRIALS.filter(([t0]) => t >= t0 - 0.1).pop();
+  const hot = cur ? cur[2] : ['corner'];
+  return <MirrorSet2 id="p2" cam={drift(f, T('It moved its face'), T('building a relationship'), c0, c1)} st={rob2(f)} reflXray={0.6 * pr(f, T('It moved its face') + 0.1, T('It moved its face') + 0.4)} reflHot={hot} />;
 };
 /** the bars for one trial (a fixed pattern per trial) */
 const trialBars = (i: number) => Array.from({length: 8}, (_, j) => 0.15 + 0.8 * (((i * 37 + j * 53) % 17) / 17));

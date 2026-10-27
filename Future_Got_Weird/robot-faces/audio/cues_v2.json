@@ -6,16 +6,16 @@
    "a": 0,
    "b": 3.92,
    "tr": "start",
-   "what": "Frame 0 mid-speech, eyes on us; the camera eases back as the expression changes; the silicone turns translucent and the cheek opens onto the motor pulling the corner as the lips keep moving",
+   "what": "Frame 0 mid-speech, eyes on us; within a second its eyes go past us and the camera pulls back and trucks: a person stands in the right foreground; it stops and watches his mouth as his smile forms",
    "cont": ""
   },
   {
    "id": "v2-reveal",
    "a": 3.92,
    "b": 5.62,
-   "tr": "match",
-   "what": "From the open cheek, one pull back: the section closes and it is facing a person; its smile begins",
-   "cont": "the open cheek section matched across the cut"
+   "tr": "cut-action",
+   "what": "Close on its mouth as the smile begins; the silicone clears over the two motors doing it and the cheek opens onto the corner motor pulling; the section closes as the camera eases back",
+   "cont": ""
   },
   {
    "id": "v3-pair",
@@ -28,18 +28,26 @@
   {
    "id": "v4-his",
    "a": 7.61,
-   "b": 8.799999999999999,
+   "b": 8.540000000000001,
    "tr": "cut",
-   "what": "His mouth, large: he says something to it",
+   "what": "He tries an expression on it: a mock-surprised \"ooh\", brows high, eyes wide, jaw dropped",
    "cont": ""
   },
   {
    "id": "v5-copy",
-   "a": 8.799999999999999,
+   "a": 8.540000000000001,
+   "b": 9.620000000000001,
+   "tr": "cut",
+   "what": "Its version: brows, lids, jaw and lips move together into his expression",
+   "cont": ""
+  },
+  {
+   "id": "v6-react",
+   "a": 9.620000000000001,
    "b": 10.41,
-   "tr": "match",
-   "what": "Its mouth in the same place makes the same shapes; the skin turns translucent and every lip motor works at once",
-   "cont": "mouth position and size matched; identity changes, no morph"
+   "tr": "cut",
+   "what": "Over its shoulder, still holding the expression: he goes still, curious and a little uneasy",
+   "cont": ""
   },
   {
    "id": "a9-truck",
@@ -108,9 +116,17 @@
   {
    "id": "b3-motors",
    "a": 24.362,
-   "b": 26.862000000000002,
+   "b": 26.05,
    "tr": "cut",
    "what": "The skin turns translucent; motors switch on by group as brows, smile and lips move",
+   "cont": ""
+  },
+  {
+   "id": "b4-muscle",
+   "a": 26.05,
+   "b": 26.862000000000002,
+   "tr": "cut",
+   "what": "His face, close: as he smiles the cheek clears over the muscle doing it; it shortens and pulls the corner up and out",
    "cont": ""
   },
   {
@@ -118,8 +134,8 @@
    "a": 26.862000000000002,
    "b": 28.002,
    "tr": "cut-action",
-   "what": "The corner motor, very close: horn, rod and corner moving as one",
-   "cont": "the movement continues across the cut"
+   "what": "Match cut from his mouth corner to the robot’s: only the corner motor shows, its horn, rod and corner moving as one",
+   "cont": "mouth corner in the same place across the cut"
   },
   {
    "id": "b6-combos",
@@ -134,7 +150,7 @@
    "a": 30.562,
    "b": 32.322,
    "tr": "cut",
-   "what": "The sections close, the skin is whole, and it makes four distinct expressions",
+   "what": "Split view of one moment: the whole face (left) and its side section (right); the linkages push and pull the lips into four distinct expressions",
    "cont": ""
   },
   {
@@ -326,7 +342,7 @@
    "a": 89.763,
    "b": 91.84,
    "tr": "cut",
-   "what": "The robot watching footage run on fast: one person after another",
+   "what": "A dark room lit by a wall of screens: a different person speaking or singing on each, each changing clip on its own beat; it looks from face to face",
    "cont": ""
   },
   {
@@ -374,7 +390,7 @@
    "a": 104.03,
    "b": 107.43,
    "tr": "cut",
-   "what": "Speaker box plays speech; the lips follow (silent illustration)",
+   "what": "A dark testing room: two identical heads hear the same speech; the left only flaps its jaw with the loudness, late; the right makes the learned shapes on time; wide, then close on each mouth",
    "cont": ""
   },
   {
@@ -478,7 +494,7 @@
    "a": 132.32,
    "b": 135.56,
    "tr": "cut",
-   "what": "Back at the interaction bench",
+   "what": "A hotel reception: he comes up to the counter and leans in to a robotic assistant; it turns to him in two stiff steps; he hesitates and eases back",
    "cont": ""
   },
   {
@@ -526,7 +542,7 @@
    "a": 144.126,
    "b": 147.6,
    "tr": "cut",
-   "what": "Over the robot’s shoulder: its late smile at the edge of frame; his awkward reaction",
+   "what": "Over the assistant’s shoulder: its late smile at the edge of frame; across the counter, his awkward reaction",
    "cont": ""
   },
   {
@@ -622,7 +638,7 @@
    "a": 178.72,
    "b": 180.9,
    "tr": "cut",
-   "what": "Face to face: a shared-looking moment",
+   "what": "Back at the reception counter: this time its smile arrives with his, and he lights up, leaning in",
    "cont": ""
   },
   {
@@ -725,9 +741,9 @@
    "id": "z1-smile",
    "a": 206.5,
    "b": 208.09,
-   "tr": "match",
-   "what": "The research head, to the camera, in the opening’s framing: its smile forms",
-   "cont": "face framing matched from the humanoid"
+   "tr": "cut",
+   "what": "Split view of the same head: left, the untrained way (corners stepping up one motor at a time, lopsided, eyes and brows still); right, the learned smile in one movement; the split closes onto the learned face",
+   "cont": ""
   },
   {
    "id": "z2-him",
@@ -839,7 +855,12 @@
   "firstBa": 125.36,
   "look": 190.34,
   "easier": 197.86,
-  "copy2": 8.86,
+  "copy2": 8.61,
+  "mirrorTrials": [
+   54.910000000000004,
+   55.76,
+   56.56
+  ],
   "predRobot": 15.95,
   "copy": 14.84,
   "montage": [

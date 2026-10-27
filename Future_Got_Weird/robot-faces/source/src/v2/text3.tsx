@@ -6,7 +6,7 @@ import React from 'react';
 
 type Kind = 'source' | 'disclose' | 'fact';
 const ALLOW: Record<string, [Kind, string]> = {
-  'Columbia University': ['source', 'Columbia University'],
+  'Columbia University': ['source', 'Columbia University · Creative Machines Lab'],
   'Lip-sync study · Science Robotics · January 2026': ['source', 'Lip-sync study · Science Robotics · Jan 2026'],
   'Earlier study · Science Robotics · 2024': ['source', 'Earlier study · Science Robotics · 2024'],
   Illustration: ['disclose', 'Illustration'],
@@ -38,7 +38,8 @@ export const Tag: React.FC<{x: number; y: number; text: string; k?: number; anch
   const a = ALLOW[text];
   if (!a || k <= 0.001) return null;
   const [kind, s] = a;
-  if (kind === 'source') return <Plain x={64} y={84} text={s} size={30} k={k} />;
+  // V4: sources small and discreet, always in the same top-left spot
+  if (kind === 'source') return <Plain x={56} y={66} text={s} size={23} k={k * 0.88} weight={700} />;
   if (kind === 'fact') return <Plain x={64} y={1030} text={s} size={40} k={k} />;
-  return <Plain x={64} y={1036} text={s} size={24} k={k * 0.9} weight={700} />;
+  return <Plain x={56} y={1040} text={s} size={22} k={k * 0.85} weight={700} />;
 };

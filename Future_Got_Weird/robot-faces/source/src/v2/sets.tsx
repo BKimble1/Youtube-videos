@@ -15,9 +15,9 @@ import {INT} from '../shots/IntSet';
 import {MIR, reflectYaw} from '../shots/MirrorSet';
 import {AlcoveBack, DeskBack, LabBack, NookBack} from './env';
 import {CheekSection} from './mech';
-import {HomeBack, KitchenBack, OfficeBack, StageBack, StationBack, StreetBack} from './new';
+import {HomeBack, KitchenBack, LobbyBack, OfficeBack, StageBack, StationBack, StreetBack, StudioBack} from './new';
 
-export type Bg = 'lab' | 'alcove' | 'nook' | 'desk' | 'home' | 'station' | 'kitchen' | 'street' | 'stage' | 'office' | 'none';
+export type Bg = 'lab' | 'alcove' | 'nook' | 'desk' | 'home' | 'station' | 'kitchen' | 'street' | 'stage' | 'office' | 'lobby' | 'studio' | 'none';
 /** an environment back plane, shifted/scaled so a setup can show the part of the room behind its subject */
 export const Back: React.FC<{id: string; bg: Bg; veil?: number; dx?: number; dy?: number; s?: number}> = ({id, bg, veil = 0, dx = 0, dy = 0, s = 1}) => (
   <g transform={`translate(${fmt(dx)} ${fmt(dy)}) scale(${fmt(s)})`}>
@@ -31,6 +31,8 @@ export const Back: React.FC<{id: string; bg: Bg; veil?: number; dx?: number; dy?
     {bg === 'street' && <StreetBack veil={veil} />}
     {bg === 'stage' && <StageBack veil={veil} />}
     {bg === 'office' && <OfficeBack veil={veil} />}
+    {bg === 'lobby' && <LobbyBack veil={veil} />}
+    {bg === 'studio' && <StudioBack veil={veil} />}
   </g>
 );
 
@@ -53,10 +55,11 @@ export const LabTwo: React.FC<{
   overVisitor?: React.ReactNode;
   xray?: number;
   xrayDark?: number;
+  xrayHot?: string[];
   cheek?: {k: number; side?: 1 | -1; r?: number};
   cut?: Cutaway;
   veil?: number;
-}> = ({id, cam, robot, vis, visPose, lHand = HAND_RELAXED, rHand = HAND_RELAXED, holdL, holdR, onBench, overRobot, overVisitor, xray, xrayDark, cheek, cut, veil = 0.08}) => (
+}> = ({id, cam, robot, vis, visPose, lHand = HAND_RELAXED, rHand = HAND_RELAXED, holdL, holdR, onBench, overRobot, overVisitor, xray, xrayDark, xrayHot, cheek, cut, veil = 0.08}) => (
   <g>
     <Layer cam={cam} depth={1.9}>
       <Back id={`${id}-bk`} bg="lab" veil={veil} dx={-60} dy={40} />
@@ -72,7 +75,7 @@ export const LabTwo: React.FC<{
       <path d={`M320,${INT.benchY + 40} C380,${INT.benchY + 60} 450,${INT.benchY + 58} ${INT.robot.x - 80},${INT.benchY + 44}`} fill="none" stroke="#2B313A" strokeWidth={7} strokeLinecap="round" />
       {onBench}
       <RobotSupport id={`${id}-sup`} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} yaw={robot.yaw} postLen={POST_INT} />
-      <Robot id={`${id}-rob`} st={robot} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} xray={xray} xrayDark={xrayDark} xrayHot={['corner', 'cheek', 'lip']} cut={cut} />
+      <Robot id={`${id}-rob`} st={robot} x={INT.robot.x} y={INT.robot.y} s={INT.robot.s} xray={xray} xrayDark={xrayDark} xrayHot={xrayHot ?? ['corner', 'cheek', 'lip']} xrayFocus cut={cut} />
       {cheek && cheek.k > 0.001 && (
         <g transform={`translate(${INT.robot.x} ${INT.robot.y}) scale(${INT.robot.s})`}>
           <CheekSection id={`${id}-ck`} st={robot} k={cheek.k} side={cheek.side ?? -1} r={cheek.r ?? 1} />
@@ -100,8 +103,8 @@ export const VisitorCU: React.FC<{id: string; cam: Cam; vis: Vis; bg?: Bg; hx?: 
 );
 
 /** a robot single: head on its support at (x, y), scale s, seen at `yaw`; optional local cheek section */
-export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x?: number; y?: number; s?: number; veil?: number; bgDx?: number; bgDy?: number; bgS?: number; cheek?: {k: number; side?: 1 | -1; hot?: boolean; r?: number; u?: number}; xray?: number; xrayHot?: string[]; xrayDark?: number; cut?: Cutaway; lensGlow?: number; grid?: number; gridAt?: {u: number; v: number; r: number}; fore?: React.ReactNode; over?: React.ReactNode; behind?: React.ReactNode; benchY?: number}> = ({
-  id, cam, st, bg = 'lab', x = 860, y = 520, s = 3.1, veil = 0.3, bgDx = 700, bgDy = 120, bgS = 1.1, cheek, xray, xrayHot, xrayDark, cut, lensGlow, grid, gridAt, fore, over, behind, benchY,
+export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x?: number; y?: number; s?: number; veil?: number; bgDx?: number; bgDy?: number; bgS?: number; cheek?: {k: number; side?: 1 | -1; hot?: boolean; r?: number; u?: number}; xray?: number; xrayHot?: string[]; xrayDark?: number; xrayFocus?: boolean; cut?: Cutaway; lensGlow?: number; grid?: number; gridAt?: {u: number; v: number; r: number}; fore?: React.ReactNode; over?: React.ReactNode; behind?: React.ReactNode; benchY?: number}> = ({
+  id, cam, st, bg = 'lab', x = 860, y = 520, s = 3.1, veil = 0.3, bgDx = 700, bgDy = 120, bgS = 1.1, cheek, xray, xrayHot, xrayDark, xrayFocus, cut, lensGlow, grid, gridAt, fore, over, behind, benchY,
 }) => {
   const post = benchY !== undefined ? Math.max(0, (benchY + 36 - y) / s - 206) : 600;
   return (
@@ -114,7 +117,7 @@ export const RobotCU: React.FC<{id: string; cam: Cam; st: RobotState; bg?: Bg; x
         {benchY !== undefined && <Bench id={`${id}-bench`} x0={-1200} x1={3200} y={benchY} depth={90} face={700} legs={false} />}
         {benchY !== undefined && <Shadow cx={x} cy={benchY + 44} rx={70 * s} ry={6 * s} />}
         <RobotSupport id={`${id}-sup`} x={x} y={y} s={s} yaw={st.yaw} postLen={post} />
-        <Robot id={`${id}-r`} st={st} x={x} y={y} s={s} xray={xray} xrayHot={xrayHot} xrayDark={xrayDark} cut={cut} lensGlow={lensGlow} grid={grid} gridAt={gridAt} />
+        <Robot id={`${id}-r`} st={st} x={x} y={y} s={s} xray={xray} xrayHot={xrayHot} xrayDark={xrayDark} xrayFocus={xrayFocus ?? (xrayHot?.length ?? 0) > 0} cut={cut} lensGlow={lensGlow} grid={grid} gridAt={gridAt} />
         {cheek && cheek.k > 0.001 && (
           <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
             <CheekSection id={`${id}-ck`} st={st} k={cheek.k} side={cheek.side ?? -1} hot={cheek.hot ?? true} r={cheek.r ?? 1} u={cheek.u ?? 66} />
@@ -197,7 +200,7 @@ export const MirrorSet2: React.FC<{id: string; cam: Cam; st: RobotState; reflExt
           <g transform={`translate(${MIR.refl.x} ${MIR.refl.y}) scale(-1 1)`}>
             <Shadow cx={0} cy={MIR.refl.s * (POST_REFL + 210)} rx={95} ry={10} />
             <RobotSupport id={`${id}-rsup`} x={0} y={0} s={MIR.refl.s} yaw={rs.yaw} postLen={POST_REFL} tint="#BFD7E2" tintK={0.12} />
-            <Robot id={`${id}-rr`} st={rs} x={0} y={0} s={MIR.refl.s} tint="#BFD7E2" tintK={0.12} cornerCue={cornerCue} xray={reflXray} xrayHot={reflHot} xrayDark={0.32} />
+            <Robot id={`${id}-rr`} st={rs} x={0} y={0} s={MIR.refl.s} tint="#BFD7E2" tintK={0.12} cornerCue={cornerCue} xray={reflXray} xrayHot={reflHot} xrayDark={0.32} xrayFocus={reflHot.length > 0} />
             {reflExtra}
           </g>
           {overGlass}

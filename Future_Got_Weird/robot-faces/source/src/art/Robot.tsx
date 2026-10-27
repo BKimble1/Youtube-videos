@@ -248,13 +248,15 @@ type Props = {
   xrayHot?: string[];
   /** V2: darkness of the skin under the x-ray (V1 0.55); lower reads as translucent silicone */
   xrayDark?: number;
+  /** V4: show only the motors in xrayHot (the ones driving the current movement), with a faint frame */
+  xrayFocus?: boolean;
 };
 
 const inkW = 5.2;
 /** cranium and the frame behind the jaw: full width at the temples, tapering to the neck housing */
 const SHELL_D = `M0,${-RY} C${RX * 0.56},${-RY} ${RX},${-RY * 0.55} ${RX},-6 C${RX},${RY * 0.36} ${RX * 0.86},${RY * 0.62} ${RX * 0.6},${RY * 0.8} C${RX * 0.42},${RY * 0.9} ${-RX * 0.42},${RY * 0.9} ${-RX * 0.6},${RY * 0.8} C${-RX * 0.86},${RY * 0.62} ${-RX},${RY * 0.36} ${-RX},-6 C${-RX},${-RY * 0.55} ${-RX * 0.56},${-RY} 0,${-RY} Z`;
 
-export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, grid = 0, gridAt, anchors = 0, focusAnchor, cornerCue = 0, lensGlow = 0, xray = 0, xrayHot = [], xrayDark = 0.55}) => {
+export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, grid = 0, gridAt, anchors = 0, focusAnchor, cornerCue = 0, lensGlow = 0, xray = 0, xrayHot = [], xrayDark = 0.55, xrayFocus = false}) => {
   const pass = useInk().pass;
   const T = (c: string) => (tint && tintK > 0 ? mix(c, tint, tintK) : c);
   const skin = T(RPAL.skin);
@@ -633,17 +635,18 @@ export const Robot: React.FC<Props> = ({id, st, x, y, s, tint, tintK = 0, cut, g
           const pts: P3[] = [];
           for (let el = 44; el >= -66; el -= 10) pts.push(proj(st, az, el, 0.86));
           const v = pts.filter((p) => p.z > 0.05);
-          return v.length > 1 ? <path key={az} d={smooth(v)} fill="none" stroke="#5E6C9C" strokeWidth={2} opacity={0.7} /> : null;
+          return v.length > 1 ? <path key={az} d={smooth(v)} fill="none" stroke="#5E6C9C" strokeWidth={2} opacity={xrayFocus ? 0.25 : 0.7} /> : null;
         })}
         {[30, 0, -30, -55].map((el) => {
           const pts: P3[] = [];
           for (let az = -70; az <= 70; az += 10) pts.push(proj(st, az, el, 0.86));
           const v = pts.filter((p) => p.z > 0.05);
-          return v.length > 1 ? <path key={el} d={smooth(v)} fill="none" stroke="#5E6C9C" strokeWidth={2} opacity={0.7} /> : null;
+          return v.length > 1 ? <path key={el} d={smooth(v)} fill="none" stroke="#5E6C9C" strokeWidth={2} opacity={xrayFocus ? 0.25 : 0.7} /> : null;
         })}
         {ms.map((q, i) => {
           if (q.m.z < 0.05) return null;
           const hot = xrayHot.includes(q.g);
+          if (xrayFocus && !hot) return null;
           return (
             <g key={i}>
               <line x1={fmt(q.m.x)} y1={fmt(q.m.y)} x2={fmt(q.to.x)} y2={fmt(q.to.y)} stroke={hot ? '#FFD18A' : '#C7CFE6'} strokeWidth={hot ? 2.2 : 1.5} strokeLinecap="round" opacity={0.9} />

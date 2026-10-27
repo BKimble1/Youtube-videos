@@ -5,24 +5,26 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, H, W} from '../lib/core';
 import {K} from '../state';
 import {T} from '../lib/core';
-import {END} from './state2';
+import {END, EXPR_COPY} from './state2';
 import * as O from './shots2';
 import * as A from './shotsA';
 import * as B from './shotsB';
 import * as C from './shotsC';
 import * as D from './shotsD';
 import * as E from './shotsE';
+import * as F from './shotsF';
 
 export type Tr = 'start' | 'cut' | 'cut-action' | 'match' | 'occlusion' | 'continuous';
 export type Shot2 = {id: string; a: number; b: number; C: React.FC<{f: number}>; tr: Tr; what: string; cont?: string};
 const D_ = D;
 export const SHOTS2: Shot2[] = [
   // ---- opening
-  {id: 'v1-face', a: 0, b: T('Then it tries'), C: E.V1Face, tr: 'start', what: 'Frame 0 mid-speech, eyes on us; the camera eases back as the expression changes; the silicone turns translucent and the cheek opens onto the motor pulling the corner as the lips keep moving'},
-  {id: 'v2-reveal', a: T('Then it tries'), b: T('same time'), C: E.V2Reveal, tr: 'match', what: 'From the open cheek, one pull back: the section closes and it is facing a person; its smile begins', cont: 'the open cheek section matched across the cut'},
+  {id: 'v1-face', a: 0, b: T('Then it tries'), C: E.V1Face, tr: 'start', what: 'Frame 0 mid-speech, eyes on us; within a second its eyes go past us and the camera pulls back and trucks: a person stands in the right foreground; it stops and watches his mouth as his smile forms'},
+  {id: 'v2-reveal', a: T('Then it tries'), b: T('same time'), C: E.V2Reveal, tr: 'cut-action', what: 'Close on its mouth as the smile begins; the silicone clears over the two motors doing it and the cheek opens onto the corner motor pulling; the section closes as the camera eases back'},
   {id: 'v3-pair', a: T('same time'), b: K.corner, C: E.V3Pair, tr: 'cut', what: 'Face to face: both smiles land together; his brows lift, pleasantly surprised'},
-  {id: 'v4-his', a: K.corner, b: T('That takes more') + 0.05 + 1.2 - 0.06, C: E.V4His, tr: 'cut', what: 'His mouth, large: he says something to it'},
-  {id: 'v5-copy', a: T('That takes more') + 0.05 + 1.2 - 0.06, b: T('Researchers'), C: E.V5Copy, tr: 'match', what: 'Its mouth in the same place makes the same shapes; the skin turns translucent and every lip motor works at once', cont: 'mouth position and size matched; identity changes, no morph'},
+  {id: 'v4-his', a: K.corner, b: EXPR_COPY - 0.12, C: E.V4His, tr: 'cut', what: 'He tries an expression on it: a mock-surprised "ooh", brows high, eyes wide, jaw dropped'},
+  {id: 'v5-copy', a: EXPR_COPY - 0.12, b: EXPR_COPY + 0.96, C: E.V5Copy, tr: 'cut', what: 'Its version: brows, lids, jaw and lips move together into his expression'},
+  {id: 'v6-react', a: EXPR_COPY + 0.96, b: T('Researchers'), C: E.V6React, tr: 'cut', what: 'Over its shoulder, still holding the expression: he goes still, curious and a little uneasy'},
   {id: 'a9-truck', a: T('Researchers'), b: K.mirrorCut, C: O.MirTruck, tr: 'cut', what: 'Across the lab: the mirror frame slides past and reveals the reflection'},
   {id: 'a10-tests', a: K.mirrorCut, b: T('copy human'), C: D_.A10Tests, tr: 'cut', what: 'The reflection: four different test expressions, the motors faintly visible'},
   {id: 'a11-lips', a: T('copy human'), b: T('copy human') + 0.62, C: D_.A11Lips, tr: 'cut', what: 'A person\u2019s lips, very close'},
@@ -32,10 +34,11 @@ export const SHOTS2: Shot2[] = [
   // ---- mechanism
   {id: 'b1-orbit', a: K.columbia, b: T('flexible'), C: D_.B1Orbit, tr: 'cut', what: 'The camera circles from its profile to its face; Columbia tag'},
   {id: 'b2-flex', a: T('flexible'), b: T('with twenty-six'), C: D_.B2Flex, tr: 'cut', what: 'Close: the silicone stretches'},
-  {id: 'b3-motors', a: T('with twenty-six'), b: T('face ways') + 0.3, C: D_.B3Motors, tr: 'cut', what: 'The skin turns translucent; motors switch on by group as brows, smile and lips move'},
-  {id: 'b5-actuator', a: T('face ways') + 0.3, b: K.combos, C: E.M1Actuator, tr: 'cut-action', what: 'The corner motor, very close: horn, rod and corner moving as one', cont: 'the movement continues across the cut'},
+  {id: 'b3-motors', a: T('with twenty-six'), b: F.MUSCLE_A, C: D_.B3Motors, tr: 'cut', what: 'The skin turns translucent; motors switch on by group as brows, smile and lips move'},
+  {id: 'b4-muscle', a: F.MUSCLE_A, b: F.MUSCLE_B, C: F.H1Muscle, tr: 'cut', what: 'His face, close: as he smiles the cheek clears over the muscle doing it; it shortens and pulls the corner up and out'},
+  {id: 'b5-actuator', a: T('face ways') + 0.3, b: K.combos, C: E.M1Actuator, tr: 'cut-action', what: 'Match cut from his mouth corner to the robot\u2019s: only the corner motor shows, its horn, rod and corner moving as one', cont: 'mouth corner in the same place across the cut'},
   {id: 'b6-combos', a: K.combos, b: T('create the'), C: A.MechCombos, tr: 'cut', what: 'Sliders jump to untried combinations; the face makes shapes nobody asked for'},
-  {id: 'b7-shapes', a: T('create the'), b: K.banana, C: D_.B7Shapes, tr: 'cut', what: 'The sections close, the skin is whole, and it makes four distinct expressions'},
+  {id: 'b7-shapes', a: T('create the'), b: K.banana, C: F.B7Split, tr: 'cut', what: 'Split view of one moment: the whole face (left) and its side section (right); the linkages push and pull the lips into four distinct expressions'},
   // ---- mouths
   {id: 'u1-banana', a: K.banana, b: K.yourLips, C: A.BananaHuman, tr: 'cut', what: 'The visitor\u2019s mouth says the narrated \u201cbanana\u201d (syllables timed to the take)'},
   {id: 'u2-moves', a: K.yourLips, b: K.imagine, C: A.LipsMoves, tr: 'cut', what: 'His face: together / open / stretch / toward, each marked as named'},
@@ -63,14 +66,14 @@ export const SHOTS2: Shot2[] = [
   {id: 't5-profile', a: T('the system learned'), b: T('videos of humans'), C: D_.T5Profile, tr: 'cut', what: 'Another person in profile on a street, lips moving'},
   {id: 't6-talk', a: T('videos of humans'), b: T('singing,'), C: D_.T6Talk, tr: 'cut', what: 'Another, talking in a kitchen'},
   {id: 't8-sing', a: T('singing,'), b: K.youtube, C: D_.T8Sing, tr: 'cut', what: 'Someone singing on a small stage'},
-  {id: 't9-hours', a: K.youtube, b: K.important, C: E.P1Stream, tr: 'cut', what: 'The robot watching footage run on fast: one person after another'},
+  {id: 't9-hours', a: K.youtube, b: K.important, C: F.ScreenRoom, tr: 'cut', what: 'A dark room lit by a wall of screens: a different person speaking or singing on each, each changing clip on its own beat; it looks from face to face'},
   {id: 't10-one', a: K.important, b: K.linked, C: E.P2One, tr: 'cut', what: 'One person, one sample: the sound runs beneath them; the camera closes on the mouth'},
   {id: 't11-human', a: K.linked, b: T('robot’s model'), C: D_.T11Human, tr: 'cut', what: 'A person\u2019s lips, very close, saying that example'},
   {id: 't12-robot', a: T('robot’s model'), b: K.speechAudio, C: D_.T12Robot, tr: 'match', what: 'The robot\u2019s lips in the same place, making the same shapes', cont: 'mouth position matched'},
   {id: 'e1-path', a: K.speechAudio, b: T('through the motors.'), C: D_.E1Path, tr: 'cut', what: 'One move along the signal: speaker -> trace -> the learned map lights the matching shape -> cable -> motors -> lips'},
   {id: 'e2-robot', a: T('through the motors.'), b: K.result, C: D_.E2Robot, tr: 'cut', what: 'The robot, its lips moving with that speech'},
   // ---- the result, the distinction, the flaws, the late smile, the 2024 study (V2 first pass)
-  {id: 'r1-speech', a: K.result, b: K.song, C: B.ResultSpeech, tr: 'cut', what: 'Speaker box plays speech; the lips follow (silent illustration)'},
+  {id: 'r1-speech', a: K.result, b: K.song, C: F.R1Compare, tr: 'cut', what: 'A dark testing room: two identical heads hear the same speech; the left only flaps its jaw with the loudness, late; the right makes the learned shapes on time; wide, then close on each mouth'},
   {id: 'r2-song', a: K.song, b: K.languages, C: B.ResultSong, tr: 'cut', what: 'Profile: sung vowels, held'},
   {id: 'r3-lang', a: K.languages, b: K.meaning, C: B.ResultLang, tr: 'cut', what: 'Front: a recording in an untrained language, lips still following'},
   {id: 'r4-puzzled', a: K.meaning, b: K.distinction, C: D_.R4Puzzled, tr: 'cut', what: 'Face to face: its lips keep time with a language neither of them speaks; he plainly doesn\u2019t follow it'},
@@ -83,13 +86,13 @@ export const SHOTS2: Shot2[] = [
   {id: 'f3-w', a: T('“W.”') - 0.12, b: K.small, C: B.FlawW, tr: 'cut', what: 'W: rounded and pushed forward; the robot under-rounds'},
   {id: 'f4-gap', a: K.small, b: T('when you’re watching'), C: B.FlawGap, tr: 'cut', what: 'The gap, very close, ringed'},
   {id: 'f5-notice', a: T('when you’re watching'), b: K.another, C: B.FlawNotice, tr: 'cut', what: 'The visitor\u2019s eyes narrow on it'},
-  {id: 'l1-two', a: K.another, b: K.when, C: C.LateTwo, tr: 'cut', what: 'Back at the interaction bench'},
-  {id: 'l2-rob', a: K.when, b: K.news, C: C.LateRob, tr: 'cut', what: 'The robot, waiting'},
+  {id: 'l1-two', a: K.another, b: K.when, C: F.L1Lobby, tr: 'cut', what: 'A hotel reception: he comes up to the counter and leans in to a robotic assistant; it turns to him in two stiff steps; he hesitates and eases back'},
+  {id: 'l2-rob', a: K.when, b: K.news, C: F.L2Assist, tr: 'cut', what: 'The robot, waiting'},
   {id: 'l3-news', a: K.news, b: K.stare, C: C.LateNews, tr: 'cut', what: 'He tells good news, a letter in hand (silent)'},
-  {id: 'l4-stare', a: K.stare, b: K.finish, C: C.LateStare, tr: 'cut', what: 'The robot stares; slow push'},
+  {id: 'l4-stare', a: K.stare, b: K.finish, C: F.L4Assist, tr: 'cut', what: 'The robot stares; slow push'},
   {id: 'l5-finish', a: K.finish, b: K.switchOn, C: C.LateFinish, tr: 'cut', what: 'His smile completes; the letter lowers'},
-  {id: 'l6-switch', a: K.switchOn, b: K.awkward, C: C.LateSwitch, tr: 'cut', what: 'The robot\u2019s smile switches on, late and fast'},
-  {id: 'l7-compare', a: K.awkward, b: K.study24, C: E.L7Reaction, tr: 'cut', what: 'Over the robot\u2019s shoulder: its late smile at the edge of frame; his awkward reaction'},
+  {id: 'l6-switch', a: K.switchOn, b: K.awkward, C: F.L6Assist, tr: 'cut', what: 'The robot\u2019s smile switches on, late and fast'},
+  {id: 'l7-compare', a: K.awkward, b: K.study24, C: F.L7Over, tr: 'cut', what: 'Over the assistant\u2019s shoulder: its late smile at the edge of frame; across the counter, his awkward reaction'},
   {id: 'y1-study', a: K.study24, b: K.watched, C: C.StudyWide, tr: 'cut', what: 'Study set: robot facing a monitor that plays a face; push toward the screen'},
   {id: 'y2-screen', a: K.watched, b: T('and learned to'), C: C.StudyScreen, tr: 'cut', what: 'Screen insert: the face'},
   {id: 'y3-cue', a: T('and learned to'), b: K.oneModel, C: C.StudyCue, tr: 'cut', what: 'Corners and cheeks marked; the small changes begin'},
@@ -102,7 +105,7 @@ export const SHOTS2: Shot2[] = [
   // ---- the final minute
   {id: 'g1-his', a: K.enough, b: T('copy into'), C: D_.G1Mouth, tr: 'cut', what: 'His smile, very close'},
   {id: 'g2-its', a: T('copy into'), b: T('shared-looking'), C: D_.G2Mouth, tr: 'match', what: 'Its smile in the same place in the frame', cont: 'mouth position matched; identity changes, no morph'},
-  {id: 'g3-pair', a: T('shared-looking'), b: K.these, C: D_.G3Pair, tr: 'cut', what: 'Face to face: a shared-looking moment'},
+  {id: 'g3-pair', a: T('shared-looking'), b: K.these, C: F.G3Lobby, tr: 'cut', what: 'Back at the reception counter: this time its smile arrives with his, and he lights up, leaning in'},
   {id: 'g4-motor', a: K.these, b: T('A successful'), C: C.TogetherMotor, tr: 'cut', what: 'The smile from the side, its corner motor working: facial movement'},
   {id: 'g5-under', a: T('A successful'), b: K.picture, C: D_.G5Under, tr: 'cut', what: 'The smile; the camera draws back as the motors under it show through'},
   {id: 'h1-station', a: K.picture, b: K.speaking, C: D_.H1Station, tr: 'cut', what: 'An imagined concourse where such faces are ordinary: kiosk heads talking with passers-by'},
@@ -116,7 +119,7 @@ export const SHOTS2: Shot2[] = [
   {id: 'h8-read', a: K.question, b: T('meaning we attach'), C: D_.H8Read, tr: 'cut', what: 'He leans in to read a humanoid assistant\u2019s face'},
   {id: 'h9-timed', a: T('meaning we attach'), b: K.again, C: D_.H9Timed, tr: 'cut', what: 'Its well-timed smile; one push in to the opening\u2019s framing'},
   // ---- the ending (loops to frame 0)
-  {id: 'z1-smile', a: K.again, b: K.learned, C: D_.Z1Smile, tr: 'match', what: 'The research head, to the camera, in the opening\u2019s framing: its smile forms', cont: 'face framing matched from the humanoid'},
+  {id: 'z1-smile', a: K.again, b: K.learned, C: F.Z1Evolve, tr: 'cut', what: 'Split view of the same head: left, the untrained way (corners stepping up one motor at a time, lopsided, eyes and brows still); right, the learned smile in one movement; the split closes onto the learned face'},
   {id: 'z2-him', a: K.learned, b: K.deciding, C: D_.Z2Him, tr: 'cut', what: 'The person it smiled with'},
   {id: 'z3-loop', a: K.deciding, b: END + 1, C: D_.Z3Loop, tr: 'cut', what: 'Back to it, looking at us: the smile softens, the brows lift, its lips part into frame 0\u2019s shape as the camera arrives at frame 0\u2019s framing'},
 ];

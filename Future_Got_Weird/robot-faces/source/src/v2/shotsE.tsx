@@ -11,72 +11,64 @@ import {pr, T} from '../lib/core';
 import {humanVis} from '../lib/visemes';
 import {INT} from '../shots/IntSet';
 import {K, SPEECH} from '../state';
-import {Back, LabTwo, OverRobot, ProfileTwo, RobotCU} from './sets';
+import {Back, LabTwo, OverRobot, ProfileTwo, RobotCU, VisitorCU} from './sets';
+import {Visitor} from '../art/Visitor';
 import {CAST, CREW_HEAD, CrewChar} from './crew';
 import {AlcoveSet, AL, ScreenScene} from './shotsB';
 import {CrewTalk, ECU0, glide} from './shotsD';
 import {humanTrace} from './props';
 import {Tag} from './text3';
-import {COPY2, rob2, SAMPLE, sampleT, vis2, VSPEAK_T0} from './state2';
+import {EXPR_COPY, rob2, SAMPLE, sampleT, vis2} from './state2';
 import {drift, e2, e3} from './shots2';
 
 const view = (st: RobotState, yaw: number, gx?: number, gy?: number): RobotState => ({...st, yaw, gx: gx ?? st.gx, gy: gy ?? st.gy});
 const sm3 = (x: number) => x * x * (3 - 2 * x);
 const R0 = {x: 960, y: 470, s: 3.2};
 
-// ================================================================== the opening
-// 0 - 3.92 "This robot watches for a smile before it fully appears.": one shot. Frame 0 is mid-speech, eyes on us;
-// the camera eases back to the whole face as the expression changes; then, while the lips keep moving, the silicone
-// turns translucent and the cheek opens onto the motor that is pulling the corner.
+// ================================================================== the opening (V4)
+// 0 - 3.92 "This robot watches for a smile before it fully appears.": one shot. Frame 0 is mid-speech, eyes on us.
+// Within the first second its eyes go past the camera and the camera pulls back and trucks right: a person is
+// standing just in front of it, his face large in the right foreground. It stops and watches his mouth while his
+// smile starts to form.
 const V1_END = T('Then it tries');
-export const V1Face: React.FC<{f: number}> = ({f}) => {
-  const st = view(rob2(f), 0);
-  const cam = camPath(f, [[0, ECU0], [1.15, {x: 960, y: 552, z: 2.5}], [2.25, {x: 960, y: 575, z: 1.62}], [V1_END, {x: 915, y: 610, z: 1.86}]], sm3);
-  const xr = pr(f, 2.2, 2.95);
-  const ck = pr(f, 2.45, 3.05, e3);
-  return <RobotCU id="v1" cam={cam} st={st} x={R0.x} y={R0.y} s={R0.s} veil={0.3} bgDx={-200} bgDy={160} xray={0.55 * xr} xrayDark={0.16} xrayHot={['corner', 'lip', 'cheek']} cheek={{k: ck, side: -1, r: 1.15, u: 50}} />;
+/** the visitor's head and shoulders, large and near, at screen right (he faces screen-left, toward the robot) */
+const ForeVisitor: React.FC<{id: string; f: number; hx: number; hy: number; s: number; turn?: number}> = ({id, f, hx, hy, s, turn = 0.78}) => {
+  const v = vis2(f);
+  return <Visitor id={id} hx={hx} hy={hy} s={s} expr={v.expr} blink={v.blink} pose={{turn, lTv: 120}} />;
 };
-// 3.92 - 5.62 "Then it tries to smile": from the open cheek, one pull back: it is facing a person
+export const V1Face: React.FC<{f: number}> = ({f}) => {
+  const st = rob2(f);
+  const cam = camPath(f, [[0, ECU0], [0.6, {x: 962, y: 545, z: 2.5}], [1.75, {x: 1090, y: 470, z: 1.2}], [V1_END, {x: 1070, y: 478, z: 1.3}]], sm3);
+  return <RobotCU id="v1" cam={cam} st={st} x={R0.x} y={R0.y} s={R0.s} veil={0.3} bgDx={-200} bgDy={160} fore={<ForeVisitor id="v1-fv" f={f} hx={1700} hy={450} s={2.6} />} />;
+};
+// 3.92 - 5.62 "Then it tries to smile": close on its mouth as the smile begins; the silicone clears over the two
+// motors doing it (the others stay hidden) and the cheek opens onto the corner motor: its horn turns, the rod pulls,
+// the corner lifts. The section closes as the camera eases back.
 const V2_END = T('same time');
 export const V2Reveal: React.FC<{f: number}> = ({f}) => {
-  const st = rob2(f);
+  const st = view(rob2(f), 24, 0.62, 0.02);
+  const X = 900, Y = 420, S = 4.4;
   const c = lipAnchors(st).find((q) => q.k === 'cornerL')!.p;
-  const cx = INT.robot.x + c.x * INT.robot.s - 60, cy = INT.robot.y + c.y * INT.robot.s - 20;
-  const cam = camPath(f, [[V1_END, {x: cx, y: cy, z: 4.6}], [V2_END - 0.15, {x: 990, y: 440, z: 1.74}]], (x) => 1 - Math.pow(1 - x, 3));
-  const ck = 1 - pr(f, V1_END + 0.35, V1_END + 0.95);
-  const xr = 0.55 * (1 - pr(f, V1_END + 0.2, V1_END + 0.9));
-  return <LabTwo id="v2" cam={cam} robot={st} vis={vis2(f)} xray={xr} xrayDark={0.16} cheek={{k: ck, side: -1, r: 1.35}} />;
+  const cx = X + c.x * S, cy = Y + c.y * S;
+  const cam = camPath(f, [[V1_END, {x: cx + 120, y: cy - 10, z: 2.05}], [V1_END + 0.9, {x: cx + 40, y: cy - 30, z: 2.35}], [V2_END, {x: cx + 160, y: cy - 120, z: 1.45}]], sm3);
+  const xr = pr(f, V1_END + 0.12, V1_END + 0.55) * (1 - pr(f, V2_END - 0.55, V2_END - 0.1));
+  const ck = pr(f, V1_END + 0.3, V1_END + 0.75, e3) * (1 - pr(f, V2_END - 0.6, V2_END - 0.15));
+  return <RobotCU id="v2" cam={cam} st={st} x={X} y={Y} s={S} veil={0.35} bgDx={-200} xray={0.5 * xr} xrayDark={0.14} xrayHot={['corner', 'cheek']} cheek={{k: ck, side: -1, r: 1.25}} />;
 };
 // 5.62 - 7.61 "at the same time as the person in front of it.": face to face; his smile, a small surprise as its
 // smile lands with his
 export const V3Pair: React.FC<{f: number}> = ({f}) => <ProfileTwo id="v3" cam={drift(f, V2_END, K.corner, {x: 995, y: 470, z: 1.55}, {x: 995, y: 462, z: 1.66})} robot={rob2(f)} vis={vis2(f)} rTurn={64} />;
-/** the visitor's mouth, large (his 3/4 face), framed so the mouth sits at (960, 600) */
-const HisMouth: React.FC<{f: number; cam: Cam; R?: number}> = ({f, cam, R = 880}) => {
-  const v = vis2(f);
-  const turn = 0.35;
-  const m = {x: -36 * turn * (R / 100), y: 54 * (R / 100)};
-  return (
-    <g>
-      <Layer cam={cam} depth={2.4}>
-        <Back id="v4-bk" bg="lab" veil={0.45} dx={-1300} />
-      </Layer>
-      <Layer cam={cam} depth={1}>
-        <Head id="v4-h" c={{x: 960 - m.x, y: 600 - m.y}} R={R} roll={0} turn={turn} expr={v.expr} blink={v.blink} inkW={Math.max(10, R / 34)} />
-      </Layer>
-    </g>
-  );
-};
-// 7.61 - 8.86 "That takes more than moving the": he says something; his whole mouth moves
-const V4_END = VSPEAK_T0 + COPY2 - 0.06;
-export const V4His: React.FC<{f: number}> = ({f}) => <HisMouth f={f} cam={drift(f, K.corner, V4_END, {x: 960, y: 560, z: 1}, {x: 960, y: 572, z: 1.04})} />;
-// 8.86 - 10.41 "corners of a mouth.": the robot's mouth in the same place makes the same shapes; then the skin turns
-// translucent and every lip motor is seen working at once
+// 7.61 - 8.54 "That takes more than": he tries an expression on it: a mock-surprised "ooh", brows high, jaw dropped
+const V4_END = EXPR_COPY - 0.12;
+export const V4His: React.FC<{f: number}> = ({f}) => <VisitorCU id="v4" cam={drift(f, K.corner, V4_END, {x: 1010, y: 390, z: 1.45}, {x: 1010, y: 384, z: 1.53})} vis={vis2(f)} hx={1060} hy={470} s={2.7} turn={0.42} veil={0.35} />;
+// 8.54 - 9.62 "moving the corners": its version: brows, lids, jaw and lips together, unnervingly close to his
+const V5_END = EXPR_COPY + 0.96;
 export const V5Copy: React.FC<{f: number}> = ({f}) => {
-  const st = view(rob2(f), 22, 0.6, 0);
-  const s = 6.0;
-  const xr = pr(f, T('of a mouth.') - 0.25, T('of a mouth.') + 0.35);
-  return <RobotCU id="v5" cam={drift(f, V4_END, T('Researchers'), {x: 960, y: 560, z: 1}, {x: 940, y: 520, z: 0.9})} st={st} x={1010} y={600 - 72 * s} s={s} veil={0.4} bgDx={-500} xray={0.85 * xr} xrayDark={0.2} xrayHot={['lip', 'corner', 'cheek', 'jaw']} />;
+  const st = view(rob2(f), 16, 0.5, 0.02);
+  return <RobotCU id="v5" cam={drift(f, V4_END, V5_END, {x: 925, y: 500, z: 1.22}, {x: 925, y: 494, z: 1.3})} st={st} x={R0.x - 40} y={R0.y} s={R0.s} veil={0.35} bgDx={-200} bgDy={160} />;
 };
+// 9.62 - 10.41 "of a mouth.": over its shoulder, still holding his expression; he goes still, curious and uneasy
+export const V6React: React.FC<{f: number}> = ({f}) => <OverRobot id="v6" cam={drift(f, V5_END, T('Researchers'), {x: 1120, y: 470, z: 1.3}, {x: 1150, y: 450, z: 1.5})} robot={rob2(f)} vis={vis2(f)} rYaw={132} />;
 
 // ================================================================== mechanism close-ups
 /** a tight actuator close-up: the cheek section large, the servo, rod and corner filling the frame */
@@ -85,7 +77,7 @@ const Actuator: React.FC<{id: string; f: number; a: number; b: number; yaw: numb
   const X = 900, Y = 360, S = 7.0 * zoom;
   const c = lipAnchors(st).find((q) => q.k === 'cornerL')!.p;
   const fx = X + c.x * S - 60 * zoom, fy = Y + c.y * S;
-  return <RobotCU id={id} cam={drift(f, a, b, {x: fx + 30, y: fy, z: 1}, {x: fx, y: fy + 10, z: 1.08})} st={st} x={X} y={Y} s={S} veil={0.5} bgDx={-400} cheek={{k: 1, side: -1, r: 1.25}} xray={0.35} xrayDark={0.15} xrayHot={['corner', 'lip']} />;
+  return <RobotCU id={id} cam={drift(f, a, b, {x: fx + 30, y: fy - 120, z: 1}, {x: fx, y: fy - 110, z: 1.08})} st={st} x={X} y={Y} s={S} veil={0.5} bgDx={-400} cheek={{k: 1, side: -1, r: 1.1, u: 54}} xray={0.3} xrayDark={0.12} xrayHot={['corner']} />;
 };
 // 27.0 - 28.0 "move.": the corner motor, very close
 export const M1Actuator: React.FC<{f: number}> = ({f}) => <Actuator id="m1" f={f} a={T('face ways') + 0.3} b={K.combos} yaw={6} />;

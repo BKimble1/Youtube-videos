@@ -298,3 +298,104 @@ export const OfficeBack: React.FC<{veil?: number}> = ({veil = 0}) => (
   </g>
 );
 export {lerp, shade, mix};
+
+/** V4 Act 4: a hotel lobby reception: warm wood panelling, a key-cabinet grid, pendant lamps, a long counter line, a
+ *  plant and a window to the street; a different palette from the lab (ochre and walnut, not cream and teal) */
+export const LobbyBack: React.FC<{veil?: number}> = ({veil = 0}) => (
+  <g>
+    <rect x={-1400} y={-800} width={4800} height={2400} fill="#E9D7B5" />
+    {/* panelling */}
+    <rect x={-1400} y={-120} width={4800} height={680} fill="#B9844F" />
+    {Array.from({length: 22}, (_, i) => (
+      <rect key={i} x={-1400 + i * 220 + 16} y={-100} width={188} height={640} rx={6} fill="#C69361" stroke="#8E5F33" strokeWidth={3} />
+    ))}
+    <rect x={-1400} y={-140} width={4800} height={26} fill="#7A4F2A" />
+    {/* key cabinet */}
+    <rect x={180} y={-40} width={560} height={330} rx={8} fill="#6B4527" stroke={INK} strokeWidth={4} />
+    {Array.from({length: 24}, (_, i) => {
+      const cx = 220 + (i % 8) * 66, cy = -10 + Math.floor(i / 8) * 100;
+      return (
+        <g key={i}>
+          <rect x={cx - 26} y={cy} width={52} height={76} rx={4} fill="#5A3A20" stroke="#3E2814" strokeWidth={2} />
+          {i % 3 !== 1 && <path d={`M${cx},${cy + 18} l0,28`} stroke="#E8C06A" strokeWidth={5} strokeLinecap="round" />}
+          {i % 3 !== 1 && <circle cx={cx} cy={cy + 52} r={7} fill="#E8C06A" />}
+        </g>
+      );
+    })}
+    {/* window to the street */}
+    <rect x={1240} y={-330} width={520} height={760} fill="#BCD3DA" stroke={INK} strokeWidth={5} />
+    <rect x={1262} y={-308} width={476} height={716} fill="#D7E6EA" />
+    <rect x={1262} y={200} width={476} height={208} fill="#A8B7AE" />
+    <rect x={1330} y={40} width={120} height={170} fill="#B7C4C6" />
+    <rect x={1520} y={-20} width={160} height={230} fill="#C3CED0" />
+    <line x1={1500} y1={-308} x2={1500} y2={408} stroke={INK} strokeWidth={4} />
+    <path d="M1290,-300 l80,0 l-160,700 l-80,0 Z" fill="#FFF" opacity={0.2} />
+    {/* pendant lamps */}
+    {[-260, 940, 2100].map((x, i) => (
+      <g key={i}>
+        <line x1={x} y1={-800} x2={x} y2={-360} stroke={INK} strokeWidth={4} />
+        <path d={`M${x - 70},-300 Q${x},-400 ${x + 70},-300 Z`} fill="#2F3A33" stroke={INK} strokeWidth={4} />
+        <ellipse cx={x} cy={-298} rx={50} ry={10} fill="#FFE7A8" />
+        <ellipse cx={x} cy={-200} rx={260} ry={200} fill="#FFE7A8" opacity={0.12} />
+      </g>
+    ))}
+    {/* plant */}
+    <path d="M-330,560 l30,-150 l120,0 l30,150 Z" fill="#3E4A44" stroke={INK} strokeWidth={3} />
+    {[-50, -20, 15, 45].map((a, i) => (
+      <ellipse key={i} cx={-240 + a} cy={290 - Math.abs(a)} rx={24} ry={110} transform={`rotate(${a * 0.8} ${-240 + a} ${290 - Math.abs(a)})`} fill={i % 2 ? '#6E9A62' : '#4F7D48'} stroke={INK} strokeWidth={2} />
+    ))}
+    {/* floor */}
+    <rect x={-1400} y={560} width={4800} height={1200} fill="#7C5A3E" />
+    <rect x={-1400} y={552} width={4800} height={10} fill="#5E3F24" />
+    {veil > 0.001 && <rect x={-6000} y={-6000} width={12000} height={12000} fill="#EBDDC2" opacity={veil} />}
+  </g>
+);
+
+/** the reception counter front (walnut with a brass rail), drawn across the frame at `y` */
+export const LobbyCounter: React.FC<{x0: number; x1: number; y: number; h?: number}> = ({x0, x1, y, h = 420}) => (
+  <g>
+    <rect x={x0} y={y - 22} width={x1 - x0} height={30} rx={6} fill="#E6D3B0" stroke={INK} strokeWidth={4} />
+    <rect x={x0 + 10} y={y + 8} width={x1 - x0 - 20} height={h} fill="#6E4628" stroke={INK} strokeWidth={4} />
+    {Array.from({length: Math.ceil((x1 - x0) / 160)}, (_, i) => (
+      <rect key={i} x={x0 + 30 + i * 160} y={y + 40} width={128} height={h - 60} rx={6} fill="#7D5332" stroke="#4E3019" strokeWidth={2} />
+    ))}
+    <rect x={x0 + 10} y={y + 20} width={x1 - x0 - 20} height={8} fill="#D8B25E" />
+  </g>
+);
+
+/** V4 Act 3: a small recording studio: acoustic foam in a staggered grid, a warm practical lamp, a window into a dim
+ *  control room with a mixing desk, a dark floor */
+export const StudioBack: React.FC<{veil?: number}> = ({veil = 0}) => (
+  <g>
+    <rect x={-1400} y={-800} width={4800} height={2400} fill="#2E2A2C" />
+    {Array.from({length: 13 * 7}, (_, i) => {
+      const c = i % 13, r = Math.floor(i / 13);
+      const x = -1100 + c * 200 + (r % 2) * 100, y = -500 + r * 150;
+      return <rect key={i} x={x} y={y} width={180} height={130} rx={10} fill={(c + r) % 3 === 0 ? '#3D3437' : '#463B3E'} stroke="#231E20" strokeWidth={3} />;
+    })}
+    {/* control-room window */}
+    <rect x={1050} y={-200} width={700} height={380} rx={8} fill="#141A20" stroke={INK} strokeWidth={6} />
+    <rect x={1070} y={-180} width={660} height={340} fill="#1F2B36" />
+    <rect x={1100} y={80} width={600} height={70} fill="#2B3742" />
+    {Array.from({length: 18}, (_, i) => <rect key={i} x={1115 + i * 32} y={92} width={10} height={30 + ((i * 7) % 4) * 6} fill={i % 5 === 0 ? '#E8A84A' : '#6F8FA8'} opacity={0.75} />)}
+    <path d="M1090,-170 l90,0 l-140,320 l-60,0 Z" fill="#FFF" opacity={0.06} />
+    {/* warm practical lamp */}
+    <ellipse cx={-300} cy={-60} rx={420} ry={320} fill="#F2B866" opacity={0.12} />
+    <rect x={-330} y={-60} width={60} height={600} fill="#1A1517" />
+    <path d="M-380,-60 L-220,-60 L-250,-150 L-350,-150 Z" fill="#E8A84A" stroke={INK} strokeWidth={4} />
+    {/* floor */}
+    <rect x={-1400} y={560} width={4800} height={1200} fill="#1E1B1C" />
+    <rect x={-1400} y={552} width={4800} height={10} fill="#141112" />
+    {veil > 0.001 && <rect x={-6000} y={-6000} width={12000} height={12000} fill="#2E2A2C" opacity={veil} />}
+  </g>
+);
+/** a studio microphone on a boom (pop filter in front), its capsule at (x, y) */
+export const StudioMic: React.FC<{x: number; y: number; s?: number}> = ({x, y, s = 1}) => (
+  <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
+    <path d="M40,40 L420,-240" stroke="#1A1517" strokeWidth={16} strokeLinecap="round" />
+    <rect x={-34} y={-70} width={68} height={140} rx={34} fill="#3A3D42" stroke={INK} strokeWidth={6} />
+    {[-40, -20, 0, 20, 40].map((d) => <line key={d} x1={-26} y1={d} x2={26} y2={d} stroke="#5A5E66" strokeWidth={4} />)}
+    <rect x={-20} y={66} width={40} height={30} fill="#26282C" stroke={INK} strokeWidth={4} />
+    <circle cx={-120} cy={0} r={78} fill="#2A2A30" opacity={0.35} stroke="#15151A" strokeWidth={5} />
+  </g>
+);
