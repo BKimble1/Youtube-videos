@@ -106,7 +106,7 @@ const flatLimb = (a: V2, b: V2, ra: number, rb: number) => {
   const nx = -dy / L, ny = dx / L;
   const A1: V2 = [a[0] + nx * ra, a[1] + ny * ra], A2: V2 = [a[0] - nx * ra, a[1] - ny * ra];
   const B1: V2 = [b[0] + nx * rb, b[1] + ny * rb], B2: V2 = [b[0] - nx * rb, b[1] - ny * rb];
-  return `M${f2(A1[0])},${f2(A1[1])} L${f2(B1[0])},${f2(B1[1])} A${f2(rb)},${f2(rb)} 0 0 1 ${f2(B2[0])},${f2(B2[1])} L${f2(A2[0])},${f2(A2[1])} A${f2(ra)},${f2(ra)} 0 0 1 ${f2(A1[0])},${f2(A1[1])} Z`;
+  return `M${f2(A1[0])},${f2(A1[1])} L${f2(B1[0])},${f2(B1[1])} A${f2(rb)},${f2(rb)} 0 0 0 ${f2(B2[0])},${f2(B2[1])} L${f2(A2[0])},${f2(A2[1])} A${f2(ra)},${f2(ra)} 0 0 0 ${f2(A1[0])},${f2(A1[1])} Z`;
 };
 const Leg2D: React.FC<{v: View; l: LegPose; color: string; ink: number}> = ({v, l, color, ink}) => {
   const s = v.s, d = l.def;

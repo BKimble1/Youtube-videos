@@ -23,9 +23,9 @@ import {HER, under, cfView, cardPx, SLAB, SC, slitWalkX, slitShadowView, onBody,
  *  brows lifted in the middle, relaxed lids, closed almost-smile). Brows stay well below the bob's hairline. */
 export const FF: Record<'tired' | 'wary' | 'unease' | 'hope', Face4> = {
   tired: face({brow: 0.05, browIn: 0.45, lid: 0.42, mw: 11, curve: -0.12, open: 0}),
-  wary: face({brow: 0.3, browIn: 0.7, lid: 0.02, wide: 0.35, mw: 10, curve: -0.2, open: 0.04}),
-  unease: face({brow: 0.26, browIn: 0.95, lid: 0, wide: 0.42, mw: 8, curve: -0.34, open: 0}),
-  hope: face({brow: 0.3, browIn: 0.8, lid: 0.08, wide: 0.12, mw: 11, curve: 0.42, open: 0.03}),
+  wary: face({brow: 0.22, browIn: 0.7, lid: 0.02, wide: 0.35, mw: 10, curve: -0.2, open: 0.04}),
+  unease: face({brow: 0.18, browIn: 0.9, lid: 0, wide: 0.42, mw: 8, curve: -0.34, open: 0}),
+  hope: face({brow: 0.22, browIn: 0.75, lid: 0.08, wide: 0.12, mw: 11, curve: 0.42, open: 0.03}),
 };
 /** a keyed face track (smoothstep between keys) */
 export const faceTrack = (lf: number, k: [number, Face4][]): Face4 => keyed(lf, k.map(([t, f]) => [t, f] as [number, Face4]));
@@ -34,12 +34,15 @@ export type Acting = {
   recog: number; recoil: number; handOpen: number; handSlide?: number; blink?: number; gaze: {x: number; y: number};
   exhale?: number; breath?: number; turn?: number; nod?: number; tilt?: number; face: Face4;
 };
-/** V5: her head is turned this much further toward the camera in every shot (on the rig's own turn control), so her far
- *  (screen-right) eye always sits inside the head outline instead of on it, at every lid and eye width she uses */
-export const FACE_TURN = 11;
-export const herOpts = (T: number, a: Acting) => ({
+/** V5 consistency: the head turn she is drawn with in the pocket shots (F1, F3, F5), on the rig's own turn control.
+ *  Her far (screen-right) eye must sit inside the head outline at every lid and eye width she uses (it broke the
+ *  outline below about 13-18 deg here, more in the startle's recoil, which turns the head 3 deg away), and her far ear
+ *  must stay hidden (it shows above about 20-24 deg): so the shots' turn acting is kept at 40 % around 18 deg, and the
+ *  recoil's turn-away is given back. `raw` (F4, from behind her) passes the shot's own turn unchanged. */
+export const faceTurn = (a: Acting) => 18 + 0.4 * ((a.turn ?? 0) - 10) + 3 * a.recoil;
+export const herOpts = (T: number, a: Acting, raw = false) => ({
   ...HER, t: T, recog: a.recog, recoil: a.recoil, handOpen: a.handOpen, handSlide: a.handSlide ?? 0, blink: a.blink ?? 0, gaze: a.gaze,
-  exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: (a.turn ?? 0) + FACE_TURN, nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
+  exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: raw ? a.turn ?? 0 : faceTurn(a), nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
 });
 export const herLayout = (T: number, a: Acting) => survivorLayout(herOpts(T, a));
 
@@ -52,7 +55,7 @@ const sm01 = (x: number) => {
 /** Her near (right) hand: ONE construction for every F frame (V5 consistency pass), drawn on the rig's own flat-hand
  *  map (survivorRig handR + handMap: palm down on the floor, continuing the forearm) in the rig's HandArt proportions
  *  (palm, four fingers, thumb). handOpen only bends the same four fingers: tense = curled (each finger visibly there,
- *  shortened by the bend, a crease across its middle joint), relaxing = the same fingers uncurling, open = the same
+ *  shortened by the bend, the gaps between them drawn), relaxing = the same fingers uncurling, open = the same
  *  fingers flat and a little spread. The finger lengths, palm and thumb never change, so there is no mitten state and
  *  no size jump between shots. The rig's own hand under it is drawn tense (Survivor handOpen 0: short stubs, together),
  *  so it always lies inside this one. The palm's outline does not run across the end of the forearm (no seam ring). */
@@ -66,11 +69,11 @@ export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: 
   const fingers = [-1.5, -0.5, 0.5, 1.5].map((i, n) => {
     const curl = (1 - open) * (0.9 + 0.06 * Math.sin(n * 1.7));
     const a = i * 15 * (0.4 + splay) * RAD;
-    const Lf = (22 - Math.abs(i) * 2.5) * 1.18; // the finger's full (flat) length
+    const Lf = (22 - Math.abs(i) * 2.5) * 1.3; // the finger's full (flat) length
     const L = Lf * (1 - 0.5 * curl); // seen from above, a curled finger is shortened by its bend
     const x0 = i * 6.5, y0 = 12;
     const ux = Math.sin(a), uy = Math.cos(a);
-    return {x0, y0, x1: x0 + ux * L, y1: y0 + uy * L, ux, uy, L, curl};
+    return {x0, y0, x1: x0 + ux * L, y1: y0 + uy * L, ux, uy, L};
   });
   const st = {stroke: INK, strokeWidth: ol, strokeLinejoin: 'round' as const};
   const thumb = (c: string, w: number) => (
@@ -95,13 +98,6 @@ export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: 
         const ux = (f.ux + g.ux) / 2, uy = (f.uy + g.uy) / 2, l = Math.min(f.L, g.L) - 2.5;
         const mx0 = (f.x0 + g.x0) / 2, my0 = f.y0 + 3;
         return <line key={`g${n}`} x1={mx0} y1={my0} x2={mx0 + ux * (l - 3)} y2={my0 + uy * (l - 3)} stroke={INK} strokeWidth={ol * 0.7} strokeLinecap="round" />;
-      })}
-      {/* curled fingers: a crease across each finger at its bent middle joint */}
-      {fingers.map((f, n) => {
-        const k = Math.min(1, Math.max(0, (f.curl - 0.2) / 0.4));
-        if (k <= 0.01) return null;
-        const cx = f.x0 + f.ux * f.L * 0.62, cy = f.y0 + f.uy * f.L * 0.62, hw = 3.2;
-        return <line key={`c${n}`} x1={cx - f.uy * hw} y1={cy + f.ux * hw} x2={cx + f.uy * hw} y2={cy - f.ux * hw} stroke={INK} strokeWidth={ol * 0.6} strokeLinecap="round" opacity={k} />;
       })}
     </g>
   );

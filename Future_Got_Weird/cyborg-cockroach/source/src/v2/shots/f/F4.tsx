@@ -14,7 +14,7 @@ import {keys, sr} from '../../../lib/ease';
 import {f2} from '../../roach/ortho';
 import {RB, Pt, Slab, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, jag, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
-import {FF, faceTrack, herOpts, Acting, NearHand, FACE_TURN} from './pocket';
+import {FF, faceTrack, herOpts, Acting, NearHand} from './pocket';
 import {F3_HAND_END} from './F3';
 import {medicPose, R4, FPS, SLAB, SC, MM_U, Place, cfViewAt, cardPxAt, onBody, BARREL} from './world';
 import {ShotProps} from '../index2';
@@ -52,10 +52,10 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
   const a: Acting = {
     recog: 0, recoil: 0.3, handOpen: F4_HAND.from + (F4_HAND.to - F4_HAND.from) * sr(lf, F4_K.flat0, F4_K.flat1), gaze: {x: head[0], y: head[1]},
     breath: 0.6 + 0.6 * sr(lf, F4_K.breath0, F4_K.breath1),
-    turn: keys(lf, [[0, -14], [24, -16]]) - FACE_TURN, // (herOpts adds FACE_TURN; from behind it stays turned away) nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
+    turn: keys(lf, [[0, -14], [24, -16]]), nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
     face: faceTrack(lf, [[0, FF.unease]]),
   };
-  const o = {...herOpts(T, a), x: PL4.x, y: PL4.y, scale: PL4.scale, yaw: PL4.yaw, elev: PL4.elev};
+  const o = {...herOpts(T, a, true), x: PL4.x, y: PL4.y, scale: PL4.scale, yaw: PL4.yaw, elev: PL4.elev};
   const L = survivorLayout(o);
   // V5: the camera leans in over her shoulder as it approaches (no hold): a slow push toward the insect
   const pu = sr(lf, 0, 24);
