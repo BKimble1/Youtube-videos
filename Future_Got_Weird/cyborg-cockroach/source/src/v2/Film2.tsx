@@ -1,7 +1,7 @@
 // V2 film: the shot table drawn per frame, the future-concept identifier over the rubble shot, captions on top, the mix.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
-import {shotAt2} from './shots/all2';
+import {shotAt2, SHOTS2_TABLE} from './shots/all2';
 import {Captions2} from './Captions2';
 import {shotRange} from './cuts2';
 import {FPS} from '../timeline';
@@ -18,32 +18,28 @@ const ConceptLabel2: React.FC<{f: number}> = ({f}) => {
     </div>
   );
 };
-/** A5 -> B1: the camera tracks left with the insect and a foam block near the lens crosses the frame (blurred, out of
- *  focus), fully covering it around the cut at B1's first frame */
+/** A5 -> B1 (V4): an EDGE wipe, no blank frames. The camera tracks left with the insect and a narrow foam block near
+ *  the lens crosses the frame left to right (blurred, out of focus); B1 is revealed behind its trailing edge while A5
+ *  is still running ahead of it */
 const B1 = shotRange('B1');
-const FoamWipe: React.FC<{f: number}> = ({f}) => {
-  const f0 = B1.from - 10, f1 = B1.from + 7;
-  if (f < f0 || f > f1) return null;
-  const u = (f - f0) / (f1 - f0);
-  const W = 1750;
-  const x = -W - 40 + (1080 + W + 80) * u;
-  return (
-    <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
-      <defs>
-        <filter id={`fw${f}`} x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="10" />
-        </filter>
-      </defs>
-      <g filter={`url(#fw${f})`}>
-        <rect x={x} y={-60} width={W} height={2040} rx={60} fill="#F2C46A" stroke="#172B3A" strokeWidth={18} />
-        <rect x={x + W - 140} y={-60} width={140} height={2040} fill="#D9A84E" />
-        {[...Array(40)].map((_, i) => (
-          <circle key={i} cx={x + 60 + ((i * 263) % (W - 160))} cy={40 + ((i * 419) % 1840)} r={10 + (i % 4) * 5} fill="#D9A84E" opacity={0.7} />
-        ))}
-      </g>
-    </svg>
-  );
-};
+const W0 = B1.from - 9, W1 = B1.from + 8;
+const wipeX = (f: number) => -320 + (1080 + 640) * ((f - W0) / (W1 - W0));
+const FoamEdge: React.FC<{f: number; x: number}> = ({f, x}) => (
+  <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
+    <defs>
+      <filter id={`fw${f}`} x="-30%" y="-5%" width="160%" height="110%">
+        <feGaussianBlur stdDeviation="9" />
+      </filter>
+    </defs>
+    <g filter={`url(#fw${f})`}>
+      <rect x={x - 150} y={-60} width={300} height={2040} rx={40} fill="#F2C46A" stroke="#172B3A" strokeWidth={16} />
+      <rect x={x + 60} y={-60} width={90} height={2040} fill="#D9A84E" />
+      {[...Array(14)].map((_, i) => (
+        <circle key={i} cx={x - 110 + ((i * 97) % 200)} cy={60 + ((i * 419) % 1800)} r={9 + (i % 4) * 4} fill="#D9A84E" opacity={0.7} />
+      ))}
+    </g>
+  </svg>
+);
 /** D5 -> E1: the lab window's daylight blooms over the cut and resolves into the collapsed building in daylight */
 const Bloom: React.FC<{f: number}> = ({f}) => {
   const c = E1.from;
@@ -64,10 +60,27 @@ const Bloom: React.FC<{f: number}> = ({f}) => {
 };
 export const Frame2: React.FC<{f: number; captions: boolean}> = ({f, captions}) => {
   const s = shotAt2(f);
+  const wipe = f >= W0 && f <= W1;
+  let pic: React.ReactNode = <s.C f={f} lf={f - s.from} n={s.to - s.from} />;
+  if (wipe) {
+    const t = SHOTS2_TABLE();
+    const nx = t.find((q) => q.id === 'B1')!, pv = t[t.indexOf(nx) - 1];
+    const x = wipeX(f);
+    pic = (
+      <>
+        <AbsoluteFill style={{clipPath: `inset(0 0 0 ${Math.max(0, x).toFixed(1)}px)`}}>
+          <pv.C f={f} lf={f - pv.from} n={pv.to - pv.from} />
+        </AbsoluteFill>
+        <AbsoluteFill style={{clipPath: `inset(0 ${Math.max(0, 1080 - x).toFixed(1)}px 0 0)`}}>
+          <nx.C f={f} lf={f - nx.from} n={nx.to - nx.from} />
+        </AbsoluteFill>
+        <FoamEdge f={f} x={x} />
+      </>
+    );
+  }
   return (
     <AbsoluteFill style={{backgroundColor: '#14202A', overflow: 'hidden'}}>
-      <s.C f={f} lf={f - s.from} n={s.to - s.from} />
-      <FoamWipe f={f} />
+      {pic}
       <Bloom f={f} />
       <ConceptLabel2 f={f} />
       {captions && <Captions2 f={f} />}

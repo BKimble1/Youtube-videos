@@ -238,7 +238,7 @@ export const Gear2D: React.FC<{id: string; v: View; f: Frame; g: GearState}> = (
               <path d={tail(hBot, -1)} stroke={G2.line} strokeWidth={f2(Math.max(1.2, 0.32 * s))} fill="none" strokeLinecap="round" />
             </g>
           )}
-          {heat > 0 && <circle cx={f2(coilC[0])} cy={f2(coilC[1])} r={f2((1.4 + 2.4 * heat) * s)} fill={G2.heat} opacity={0.32 * heat} />}
+          {heat > 0 && <circle cx={f2(coilC[0])} cy={f2(coilC[1])} r={f2((0.8 + 1.1 * heat) * s)} fill={G2.heat} opacity={0.22 * heat} />}
           {(() => {
             // a small wound nichrome coil around the latch line (a projected helix of four turns along the line) with its two leads
             const al = Math.hypot(hBot[0] - hTop[0], hBot[1] - hTop[1]) || 1;

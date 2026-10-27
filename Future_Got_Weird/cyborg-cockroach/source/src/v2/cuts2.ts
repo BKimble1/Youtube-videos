@@ -1,9 +1,10 @@
-// V3 shot boundaries (frame each shot starts), on the locked narration (see production/V3_SHOT_PLAN.md). The V2 table
+// V4 (V3 + polish) shot boundaries (frame each shot starts), on the locked narration (see production/V3_SHOT_PLAN.md). The V2 table
 // is in git history (commit adf4e10).
 export const SHOTS2: [string, number][] = [
-  ['A1', 0], // hook: approach, trigger, the spring launches the injector, the needle into clear silicone, track back
-  ['A2', 42], // match cut: the backpack's LED -> the remote; the gloved thumb presses the red button
-  ['A3', 67], // "And a person holding a": the operator; his eye line leads down to the insect on the bench
+  ['A0', 0], // V4 hook: tight on the launcher at the moment of action (needle, coil glowing, clear target)
+  ['AR', 5], // match cut: the gloved thumb drives the remote's red FIRE button home
+  ['A1', 11], // back on the launcher: the line parts, the spring launches the injector, impact, track back to the insect
+  ['A2', 39], // the operator; he taps the D-pad and the camera tracks along to the insect, which responds at once
   ['A4', 90], // "remote decides": low side view; the insect turns away from the target and walks off
   ['A5', 113], // "when it shoots": rise over the table, the operator guiding it; a foreground block wipes on
   ['B1', 143], // "Scientists strapped a tiny": gloved hands fit the module (high angle)

@@ -30,8 +30,10 @@ const TIP0 = INJ.loadedRear + INJ.barrelLen + 1.2 + INJ.needleLen;
 const GAP = A1_FACE - TIP0;
 export const A1_TRAVEL = GAP + 5;
 /** the trigger (the coil cuts the line) and the launch time (spring stroke to the face, accelerating) */
-export const A1_REL = 0.3;
-export const A1_STROKE = 0.2;
+/** V4: the thumb bottoms out the FIRE button at A1_PRESS (the AR insert); the coil cuts the line at A1_REL */
+export const A1_PRESS = 0.233;
+export const A1_REL = 0.38;
+export const A1_STROKE = 0.17;
 export const A1_FIRE = A1_REL; // (kept name: the release time)
 export const A1_IMPACT = A1_REL + A1_STROKE;
 
@@ -43,7 +45,8 @@ const PATH = straightPath([-S_STOP, 0, 0], 0);
 
 /** the launch: injector rear (body x along the tube), latch, coil heat, body recoil, time since contact, motion */
 export const a1Launch = (t: number) => {
-  const heat = t < A1_REL ? clamp((t + 0.45) / 0.7) : Math.max(0, 1 - (t - A1_REL) / 0.3);
+  // standby glow, then the press drives the coil hot until the line parts
+  const heat = t < A1_REL ? 0.42 + 0.06 * Math.sin(t * 40) * clamp(1 - t / A1_PRESS) + 0.58 * clamp((t - A1_PRESS) / (A1_REL - A1_PRESS)) : Math.max(0, 1 - (t - A1_REL) / 0.3);
   const dt = t - A1_REL;
   if (dt < 0) return {injRear: INJ.loadedRear, latched: true, heat, recoil: 0, impact: -1, speed: 0};
   let x: number, speed: number;
@@ -84,12 +87,15 @@ export const a1InjFrame = () => a1Pose(A1_REL).frame;
 export const A1_AZ = 24;
 export type ViewParams = {az: number; el: number; s: number; at: [number, number, number]; sx: number; sy: number};
 export const a1ViewParams = (t: number, dx = 0): ViewParams => {
-  const go = sr(t, A1_REL, A1_IMPACT + 0.12); // follow the launch in
-  const back = sr(t, 0.85, 1.45); // track back along the launcher
-  const s = 12.4 + 8.2 * go - 11.6 * back + 0.4 * sr(t, -0.2, 0.3);
-  const atX = 15 + 25 * go - 42 * back + dx;
-  const atY = 17 + 9 * go - 12 * back;
-  return {az: A1_AZ - 4 * back, el: 17 + 16 * back, s, at: [atX, atY, 0], sx: 540 - 40 * go + 60 * back, sy: 1010 - 90 * go + 40 * back};
+  // V4: frame 0 is TIGHT on the launcher: the tube mouth, the loaded needle, the glowing coil and the clear target's
+  // face; the launch carries the camera a little toward the target; after the impact it tracks back along the
+  // launcher, rising, to reveal the living insect wearing it (legs, antennae) beside the target
+  const go = sr(t, A1_REL, A1_IMPACT + 0.1);
+  const back = sr(t, 0.72, 1.3);
+  const s = 19 + 2 * go - 11.4 * back;
+  const atX = 29 + 7 * go - 34 * back + dx;
+  const atY = 24.5 + 0.8 * go - 12.3 * back;
+  return {az: A1_AZ - 4 * back, el: 15 + 18 * back, s, at: [atX, atY, 0], sx: 540 + 60 * back, sy: 930 + 70 * back};
 };
 export const viewOf = (q: ViewParams): View => viewAt(q.az, q.el, q.s, q.at, q.sx, q.sy);
 export const a1View = (t: number, dx = 0): View => viewOf(a1ViewParams(t, dx));

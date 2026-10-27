@@ -3,8 +3,8 @@
 // clear tube's walls, the barrel, the collar, the aluminium cradle), the silicone a pale clear-aqua cut face, the spring
 // its wire sections. The needle sits 5 mm into the silicone, the barrel's rear still in the tube. At 17.30 s the foil
 // seal on the plunger's activator capsule splits and gas forms behind the plunger (bubbles, a faint fizz); the plunger
-// runs forward along the barrel (17.35-17.92 s), the amber dose goes down the needle's bore and blooms softly in the
-// silicone ahead of the tip (complete by about 18.0 s, inside the shot). The insect is drawn whole (its near antenna is
+// runs forward along the barrel (17.35-17.92 s), the amber dose goes down the needle's bore and diffuses as a small soft
+// translucent cloud in the silicone ahead of the tip (complete by about 18.0 s, inside the shot). The insect is drawn whole (its near antenna is
 // cut away with the near half). Locked off.
 import React from 'react';
 import {V2, Frame, toW} from '../../../lib/v3';
@@ -20,6 +20,7 @@ import {ShotProps} from '../index2';
 import {shotRange} from '../../cuts2';
 import {dPoseFull, dLaunch, dPlunger, dBloom, D_FACE, D_SEAL, D_PLUNGE0} from './trial';
 import {LabRoomMM} from './room';
+import {DoseCloud} from './inside';
 import {d2View} from './D2';
 
 const R = shotRange('D3');
@@ -75,10 +76,9 @@ export const D3: React.FC<ShotProps> = ({f}) => {
   const neck = INJ.barrelLen - 0.6;
   const nA = INJ.collarAt + 0.9, nB = INJ.barrelLen + 1.2 + INJ.needleLen;
   const nR = 0.26, bore = 0.1;
-  // ---- the bloom: a few soft overlapping lobes ahead of the tip
+  // ---- the dose: a small soft translucent cloud diffusing ahead of the tip
   const tip = I(nB, 0);
-  const bR = 2.5 * Math.cbrt(Math.max(0, bloom)) * s;
-  const lobes: [number, number, number][] = [[0.55, 0, 1], [0.35, 0.45, 0.72], [0.4, -0.5, 0.7], [0.15, 0.1, 0.8], [0.8, 0.25, 0.6]];
+  const bR = 2.3 * Math.cbrt(Math.max(0, bloom)) * s;
   // ---- gas bubbles in the chamber between the barrel's rear wall and the plunger
   const chamber0 = 0.5, chamber1 = prR;
   const bubbles: React.ReactNode[] = [];
@@ -159,15 +159,6 @@ export const D3: React.FC<ShotProps> = ({f}) => {
         {HATCH(`${id}-hg`, '#9FB7C4', hatchW)}
         {HATCH(`${id}-ha`, '#7E8C97', hatchW)}
         {HATCH(`${id}-hs`, LAB2.siliconeDeep, hatchW * 1.6)}
-        <radialGradient id={`${id}-bl`}>
-          <stop offset="0" stopColor="#F2A93B" stopOpacity={0.95} />
-          <stop offset="0.55" stopColor="#F2A93B" stopOpacity={0.75} />
-          <stop offset="1" stopColor="#F2A93B" stopOpacity={0} />
-        </radialGradient>
-        <radialGradient id={`${id}-bh`}>
-          <stop offset="0" stopColor="#F7C46E" stopOpacity={0.55} />
-          <stop offset="1" stopColor="#F7C46E" stopOpacity={0} />
-        </radialGradient>
       </defs>
       <LabRoomMM id={`${id}room`} v={v} blur={9} plate={1.7} tray={[-400, 400, -300, 420]} />
       {/* ---- the target in section: the aluminium cradle (base and backing plate) and the silicone */}
@@ -179,14 +170,7 @@ export const D3: React.FC<ShotProps> = ({f}) => {
       <path d={box(W, D_FACE, D_FACE + 30, 0, 34)} fill={`url(#${id}-hs)`} opacity={0.35} />
       <path d={box(W, D_FACE + 0.6, D_FACE + 30, 33.2, 34)} fill="#FFFFFF" opacity={0.35} />
       {/* ---- the bloom (under the needle) */}
-      {bloom > 0 && (
-        <g>
-          <ellipse cx={f2(tip[0] + 0.5 * bR)} cy={f2(tip[1])} rx={f2(bR * 2.1)} ry={f2(bR * 1.9)} fill={`url(#${id}-bh)`} />
-          {lobes.map(([dx, dy, k], i) => (
-            <circle key={i} cx={f2(tip[0] + dx * bR)} cy={f2(tip[1] + dy * bR)} r={f2(bR * k)} fill={`url(#${id}-bl)`} />
-          ))}
-        </g>
-      )}
+      <DoseCloud id={`${id}dc`} c={tip} dir={[1, 0]} r={bR} k={bloom} t={t} alpha={0.55} />
       {/* ---- the insect (whole, behind the cut tube) and its backpack (the tube is drawn here in section) */}
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={fr} g={{kind: 'none', noWires: false}} />}} />
       {/* ---- the launch tube in section */}
