@@ -55,9 +55,9 @@ const camC = (t: number) => {
 
 /** the joint in close-up: the flexible joint membrane on the outer side of the bend (inflated by the pressure) and the
  *  flexor muscle on the inner side (pulls the joint closed once nothing opposes it) */
-export const JointDetail: React.FC<{B: Basis; P: SpiderPose; pr: number; live: number; op: number}> = ({B, P, pr, live, op}) => {
+export const JointDetail: React.FC<{B: Basis; P: SpiderPose; pr: number; live: number; op: number; leg?: number; color?: string}> = ({B, P, pr, live, op, leg = C_LEG, color}) => {
   if (op < 0.01) return null;
-  const L = legLocal(C_LEG, P.e[C_LEG]).map((q) => toWorld(P, q));
+  const L = legLocal(leg, P.e[leg], P.dth?.[leg] ?? 0).map((q) => toWorld(P, q));
   const A = proj(B, L[1]), J = proj(B, L[2]), C = proj(B, L[3]);
   const r = 0.36 * J.s;
   const u1 = nrm({x: J.x - A.x, y: J.y - A.y}), u2 = nrm({x: C.x - J.x, y: C.y - J.y});
@@ -74,7 +74,7 @@ export const JointDetail: React.FC<{B: Basis; P: SpiderPose; pr: number; live: n
   const f0 = {x: A.x + (J.x - A.x) * 0.3 + inner.x * r * 0.42, y: A.y + (J.y - A.y) * 0.3 + inner.y * r * 0.42};
   const f1 = {x: J.x + u2.x * r * 0.95 + inner.x * r * 0.5, y: J.y + u2.y * r * 0.95 + inner.y * r * 0.5};
   const tension = 1 - pr;
-  const fluid = mix(FLUID_DIM, FLUID, live);
+  const fluid = color ?? mix(FLUID_DIM, FLUID, live);
   const iw = Math.max(2.2, r * 0.05);
   return (
     <g opacity={op}>

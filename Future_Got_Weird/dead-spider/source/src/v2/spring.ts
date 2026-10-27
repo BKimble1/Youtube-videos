@@ -36,3 +36,9 @@ export const legTracks = (cmd: (t: number) => number, p: SpringParams, t0: numbe
   const tr = LAG2.map((l, i) => springTrack((t) => cmd(t - l), p, t0, t1, STIFF[i]));
   return (t: number) => tr.map((f) => clamp(f(t), -0.04, 1.1));
 };
+
+/** eight spring-driven legs, each following its own command (staggered openings) */
+export const legTracksPer = (cmds: ((t: number) => number)[], p: SpringParams | SpringParams[], t0: number, t1: number) => {
+  const tr = cmds.map((c, i) => springTrack(c, Array.isArray(p) ? p[i] : p, t0, t1, STIFF[i]));
+  return (t: number) => tr.map((f) => clamp(f(t), -0.04, 1.1));
+};

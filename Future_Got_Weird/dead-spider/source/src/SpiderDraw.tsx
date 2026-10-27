@@ -14,7 +14,8 @@ export type SpiderLook = {leg: string; legBand: string; cara: string; caraBand: 
 export const LOOK_A: SpiderLook = {leg: '#8C6A45', legBand: '#4E3826', cara: '#4C3626', caraBand: '#B39467', abd: '#6E5034', heart: '#3A281B', spot: '#C7A97C', eye: '#121A20'};
 /** the living-spider illustration (cutaway): a pale shell so the hemolymph inside reads */
 export const LOOK_CUT: SpiderLook = {leg: '#D9C9B2', legBand: '#C2AE93', cara: '#CDB89C', caraBand: '#E6D9C4', abd: '#D3C0A4', heart: '#B9A386', spot: '#EFE5D3', eye: '#3A4650'};
-export type Cut = {fluid: string; core: number; flow?: number; squeeze: number; dim: number};
+/** muscles: draw the prosoma's squeezing muscles (a living spider; off for the dead specimen); chamber: fill 0..1 */
+export type Cut = {fluid: string; core: number; flow?: number; squeeze: number; dim: number; muscles?: boolean; chamber?: number};
 
 /** the second specimen (same species; a slightly paler, warmer individual so the two bodies stay distinct) */
 export const LOOK_B: SpiderLook = {leg: '#B08A5C', legBand: '#6D5034', cara: '#6B5038', caraBand: '#D2B88E', abd: '#93704A', heart: '#5A3F29', spot: '#E2CDA6', eye: '#121A20'};
@@ -25,7 +26,7 @@ const surf = (P: SpiderPose, c: V3, a: number, b: number, cc: number, x: number,
   return toWorld(P, [c[0] + x, c[1] + y, c[2] + up * cc * Math.sqrt(Math.max(0, k))]);
 };
 
-export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: string; hideLegs?: number[]; opacity?: number; cut?: Cut; focusLeg?: number; focus?: number} = {id: 's'}): Item[] => {
+export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: string; hideLegs?: number[]; opacity?: number; cut?: Cut; focusLeg?: number; focus?: number; cutLegs?: number[]; cutBody?: boolean} = {id: 's'}): Item[] => {
   const items: Item[] = [];
   const sk = P.s ?? 1;
   const W = (p: V3) => toWorld(P, p);
@@ -43,12 +44,13 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
     if (o.hideLegs?.includes(i)) return;
     for (let k = 0; k < 6; k++) {
       const c = k === 0 ? shade(look.leg, 0.15) : k === 2 || k === 5 ? look.legBand : look.leg;
-      const core: Core | undefined = o.cut ? {color: o.cut.fluid, k: o.cut.core * (k === 5 ? 0.5 : 0.62), flow: o.cut.flow !== undefined ? o.cut.flow - k * 0.6 : undefined} : undefined;
+      const legCut = o.cut && (!o.cutLegs || o.cutLegs.includes(i));
+      const core: Core | undefined = o.cut && legCut ? {color: o.cut.fluid, k: o.cut.core * (k === 5 ? 0.5 : 0.62), flow: o.cut.flow !== undefined ? o.cut.flow - k * 0.6 : undefined} : undefined;
       const dimmed = o.focusLeg !== undefined && o.focusLeg !== i ? 1 - 0.8 * (o.focus ?? 0) : 1;
-      items.push(capsuleItem(B, L[k], L[k + 1], LEG_R[k] * sk, LEG_R[k + 1] * sk, c, {band: !o.cut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}));
+      items.push(capsuleItem(B, L[k], L[k + 1], LEG_R[k] * sk, LEG_R[k + 1] * sk, c, {band: !legCut && (k === 1 || k === 3 || k === 4) ? look.legBand : undefined, bandAt: 0.78, spec: 0.4, opacity: (o.opacity ?? 1) * dimmed, core}));
     }
     // a few spines on the tibia and metatarsus
-    for (const k of o.cut ? [] : [3, 4]) {
+    for (const k of o.cut && (!o.cutLegs || o.cutLegs.includes(i)) ? [] : [3, 4]) {
       const a = L[k], b = L[k + 1];
       const mid = (u: number) => add3(a, mul3(sub3(b, a), u));
       for (const u of [0.35, 0.7]) {
@@ -71,7 +73,8 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
 
   // ---- abdomen (behind the prosoma in a top view; its markings on the dorsal surface)
   const aC: V3 = [ABD.x, 0, ABD.z];
-  const abdDeco = dorsalVisible && !o.cut ? (
+  const bodyCut = o.cut && o.cutBody !== false;
+  const abdDeco = dorsalVisible && !bodyCut ? (
     <g>
       {/* heart mark: a dark lance on the front half */}
       <path d={smoothClosed([[-0.2, 0], [-1.0, 0.55], [-2.2, 0.42], [-3.0, 0], [-2.2, -0.42], [-1.0, -0.55]].map(([x, y]) => proj(B, surf(P, aC, ABD.a, ABD.b, ABD.c, x + 2.4, y))))} fill={look.heart} opacity={0.9} />
@@ -88,7 +91,7 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
   // ---- prosoma with carapace pattern and eyes
   const pC: V3 = [0, 0, 0];
   const band = [[2.0, 0.55], [1.2, 0.7], [0.2, 0.55], [-0.8, 0.42], [-1.8, 0.28], [-2.2, 0], [-1.8, -0.28], [-0.8, -0.42], [0.2, -0.55], [1.2, -0.7], [2.0, -0.55]];
-  const cutDeco = o.cut
+  const cutDeco = o.cut && bodyCut
     ? (() => {
         // the prosoma's fluid space, squeezed by the muscles on "pressure"; and the leg bases it feeds
         const sq = o.cut.squeeze;
@@ -102,15 +105,15 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
         });
         return (
           <g>
-            <path d={chamber} fill={o.cut.fluid} opacity={0.85} />
-            {muscles.map((m, j) => (
+            <path d={chamber} fill={o.cut.fluid} opacity={0.85 * (o.cut.chamber ?? 1)} />
+            {o.cut.muscles !== false && muscles.map((m, j) => (
               <path key={j} d={`M${m.a.x.toFixed(1)},${m.a.y.toFixed(1)} L${m.b.x.toFixed(1)},${m.b.y.toFixed(1)}`} stroke="#D98C8C" strokeWidth={((0.32 + 0.14 * sq) * m.a.s).toFixed(2)} strokeLinecap="round" opacity={0.85} />
             ))}
           </g>
         );
       })()
     : undefined;
-  const proDeco = o.cut ? cutDeco : dorsalVisible ? (
+  const patternDeco = dorsalVisible ? (
     <g>
       <path d={smoothClosed(band.map(([x, y]) => proj(B, surf(P, pC, PRO.a, PRO.b, PRO.c, x, y))))} fill={look.caraBand} opacity={0.85} />
       {/* pale margins */}
@@ -126,6 +129,13 @@ export const spiderItems = (B: Basis, P: SpiderPose, look: SpiderLook, o: {id: s
       })}
     </g>
   ) : undefined;
+  // in section the carapace pattern gives way to the chamber as it fills
+  const proDeco = bodyCut ? (
+    <g>
+      {(o.cut?.chamber ?? 1) < 1 && <g opacity={1 - (o.cut?.chamber ?? 1)}>{patternDeco}</g>}
+      {cutDeco}
+    </g>
+  ) : patternDeco;
   items.push(ellipsoidItem(B, W(pC), [ax([PRO.a, 0, 0]), ax([0, PRO.b, 0]), ax([0, 0, PRO.c])], look.cara, {deco: proDeco, spec: 1, glossy: true, zBias: -0.05, opacity: o.opacity}));
   // eyes: anterior row of four small, two large posterior medians, two posterior laterals (static)
   const eyes: [number, number, number][] = [

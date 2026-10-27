@@ -41,7 +41,8 @@ const SWEEP = [
   [0, 0, 6, 11, 15, 18],
 ];
 
-export type SpiderPose = {pos: V3; yaw: number; pitch?: number; roll?: number; e: number[]; s?: number};
+/** dth: per-leg elevation offset (deg, + raises the whole leg about its base), used to keep feet on the ground */
+export type SpiderPose = {pos: V3; yaw: number; pitch?: number; roll?: number; e: number[]; s?: number; dth?: number[]};
 
 /** body-local -> world */
 export const toWorld = (P: SpiderPose, p: V3): V3 => add3(P.pos, rotZ(rotY(rotX(mul3(p, P.s ?? 1), P.roll ?? 0), P.pitch ?? 0), P.yaw));
@@ -56,7 +57,7 @@ export const legN = (i: number) => i % 4;
 const JIT = [0.6, -1.2, 0.9, -0.4, -0.8, 1.1, -0.5, 0.7];
 
 /** the seven joint points of leg i in body-local coordinates for extension e */
-export const legLocal = (i: number, e: number): V3[] => {
+export const legLocal = (i: number, e: number, dth = 0): V3[] => {
   const s = legSide(i), n = legN(i);
   const a = (ATTACH[n] * Math.PI) / 180;
   const A: V3 = [PRO.a * 0.8 * Math.cos(a), s * PRO.b * 0.8 * Math.sin(a), -0.42];
@@ -68,7 +69,7 @@ export const legLocal = (i: number, e: number): V3[] => {
     // the distal segments sweep forward (legs I, II) or back (III, IV) in plan, more as the leg extends
     const d = ((dirDeg + SWEEP[n][k] * (0.35 + 0.65 * e)) * Math.PI) / 180;
     const u: V3 = [Math.cos(d), s * Math.sin(d), 0];
-    const th = TH_CURL[n][k] + (TH_OPEN[n][k] - TH_CURL[n][k]) * e + (k > 0 ? JIT[(i + k) % 8] : 0);
+    const th = TH_CURL[n][k] + (TH_OPEN[n][k] - TH_CURL[n][k]) * e + (k > 0 ? JIT[(i + k) % 8] : 0) + dth;
     const t = (th * Math.PI) / 180;
     const seg = L * FRAC[k];
     p = add3(p, add3(mul3(u, seg * Math.cos(t)), [0, 0, seg * Math.sin(t)]));
@@ -117,7 +118,7 @@ export const sdfEll = (c: V3, ax: V3): SDF => (p) => {
 export const sdfUnion = (...fs: SDF[]): SDF => (p) => Math.min(...fs.map((f) => f(p)));
 
 const legClear = (P: SpiderPose, i: number, e: number, sdf: SDF) => {
-  const L = legLocal(i, e).map((q) => toWorld(P, q));
+  const L = legLocal(i, e, P.dth?.[i] ?? 0).map((q) => toWorld(P, q));
   let m = Infinity;
   // the coxa and femur sit up against the body; the touching parts are the patella, tibia, metatarsus and tarsus
   for (let k = 2; k < L.length - 1; k++) {
@@ -129,24 +130,34 @@ const legClear = (P: SpiderPose, i: number, e: number, sdf: SDF) => {
   }
   return m;
 };
-/** the most-closed extension leg i can reach (closing from e = 1 toward `eCmd`) without passing into the solid:
- *  the leg stops at its first contact and stays there */
-export const legContact = (P: SpiderPose, i: number, eCmd: number, sdf: SDF) => {
-  if (legClear(P, i, eCmd, sdf) >= 0) return eCmd;
-  let lo = eCmd, hi = 1;
-  if (legClear(P, i, hi, sdf) < 0) return 1;
-  for (let k = 0; k < 14; k++) {
-    const m = (lo + hi) / 2;
-    if (legClear(P, i, m, sdf) < 0) lo = m;
-    else hi = m;
+/** the most-closed extension leg i can reach closing from e = 1 toward `eCmd` without passing into the solid.
+ *  If the commanded pose itself penetrates, the leg stops at the nearest clear pose above it (it rests on the
+ *  surface). With `sweep`, a leg closing from open also stops at its FIRST contact on the way, so it can never pass
+ *  through a thin or flat object to a clear pose on the far side (a gripper closing on a payload). */
+export const legContact = (P: SpiderPose, i: number, eCmd: number, sdf: SDF, sweep = false) => {
+  const bisect = (lo: number, hi: number) => {
+    for (let k = 0; k < 14; k++) {
+      const m = (lo + hi) / 2;
+      if (legClear(P, i, m, sdf) < 0) lo = m;
+      else hi = m;
+    }
+    return hi;
+  };
+  if (legClear(P, i, eCmd, sdf) < 0) return legClear(P, i, 1, sdf) < 0 ? 1 : bisect(eCmd, 1);
+  if (!sweep || eCmd >= 1 || legClear(P, i, 1, sdf) < 0) return eCmd;
+  const step = 0.025;
+  let prev = 1;
+  for (let e = 1 - step; e > eCmd; e -= step) {
+    if (legClear(P, i, e, sdf) < 0) return bisect(e, prev);
+    prev = e;
   }
-  return hi;
+  return eCmd;
 };
 /** the eight leg extensions with contact */
 export const solveContact = (P: SpiderPose, sdf: SDF | null): SpiderPose => (sdf ? {...P, e: P.e.map((e, i) => legContact(P, i, e, sdf))} : P);
 
 /** world joints of every leg */
-export const legsWorld = (P: SpiderPose) => P.e.map((e, i) => legLocal(i, e).map((q) => toWorld(P, q)));
+export const legsWorld = (P: SpiderPose) => P.e.map((e, i) => legLocal(i, e, P.dth?.[i] ?? 0).map((q) => toWorld(P, q)));
 /** the lowest world z over the legs (for clearance checks) */
 export const lowestZ = (P: SpiderPose) => Math.min(...legsWorld(P).flat().map((p) => p[2]));
 export const legTipsWorld = (P: SpiderPose) => legsWorld(P).map((l) => l[l.length - 1]);

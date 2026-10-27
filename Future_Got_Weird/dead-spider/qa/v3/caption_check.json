@@ -1,0 +1,331 @@
+[
+ {
+  "f": 81,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 789,
+  "y": 1468
+ },
+ {
+  "f": 82,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 820,
+  "y": 1491
+ },
+ {
+  "f": 83,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 849,
+  "y": 1513
+ },
+ {
+  "f": 84,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 876,
+  "y": 1534
+ },
+ {
+  "f": 85,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 899,
+  "y": 1553
+ },
+ {
+  "f": 86,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 918,
+  "y": 1570
+ },
+ {
+  "f": 87,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 937,
+  "y": 1578
+ },
+ {
+  "f": 88,
+  "caption": "you could make its legs MOVE again.",
+  "point": "leg tip 0",
+  "x": 963,
+  "y": 1571
+ },
+ {
+  "f": 246,
+  "caption": "You see, spiders use fluid pressure",
+  "point": "leg tip 5",
+  "x": 354,
+  "y": 1466
+ },
+ {
+  "f": 247,
+  "caption": "You see, spiders use fluid pressure",
+  "point": "leg tip 5",
+  "x": 314,
+  "y": 1507
+ },
+ {
+  "f": 248,
+  "caption": "You see, spiders use fluid pressure",
+  "point": "leg tip 5",
+  "x": 270,
+  "y": 1553
+ },
+ {
+  "f": 249,
+  "caption": "You see, spiders use fluid pressure",
+  "point": "leg tip 5",
+  "x": 222,
+  "y": 1604
+ },
+ {
+  "f": 299,
+  "caption": "to straighten their legs.",
+  "point": "leg tip 4",
+  "x": 496,
+  "y": 1515
+ },
+ {
+  "f": 384,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 931,
+  "y": 1570
+ },
+ {
+  "f": 384,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 434,
+  "y": 1585
+ },
+ {
+  "f": 385,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 863,
+  "y": 1535
+ },
+ {
+  "f": 385,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 5",
+  "x": 444,
+  "y": 1535
+ },
+ {
+  "f": 386,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 4",
+  "x": 795,
+  "y": 1493
+ },
+ {
+  "f": 386,
+  "caption": "that pressure disappears.",
+  "point": "leg tip 6",
+  "x": 114,
+  "y": 1492
+ },
+ {
+  "f": 486,
+  "caption": "to a dead spider…",
+  "point": "leg tip 0",
+  "x": 583,
+  "y": 1501
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "body",
+  "x": 540,
+  "y": 1529
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 0",
+  "x": 534,
+  "y": 1514
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 1",
+  "x": 533,
+  "y": 1517
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 2",
+  "x": 540,
+  "y": 1519
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 3",
+  "x": 540,
+  "y": 1518
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 4",
+  "x": 545,
+  "y": 1514
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 5",
+  "x": 543,
+  "y": 1519
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 6",
+  "x": 540,
+  "y": 1518
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "leg tip 7",
+  "x": 539,
+  "y": 1518
+ },
+ {
+  "f": 488,
+  "caption": "to a dead spider…",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1514
+ },
+ {
+  "f": 489,
+  "caption": "to a dead spider…",
+  "point": "abdomen",
+  "x": 543,
+  "y": 1577
+ },
+ {
+  "f": 490,
+  "caption": "to a dead spider…",
+  "point": "hub",
+  "x": 540,
+  "y": 1526
+ },
+ {
+  "f": 514,
+  "caption": "and pumped air inside.",
+  "point": "hub",
+  "x": 540,
+  "y": 1587
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "body",
+  "x": 541,
+  "y": 1572
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "abdomen",
+  "x": 525,
+  "y": 1530
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 0",
+  "x": 537,
+  "y": 1556
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 1",
+  "x": 537,
+  "y": 1559
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 2",
+  "x": 543,
+  "y": 1560
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 3",
+  "x": 541,
+  "y": 1560
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 4",
+  "x": 547,
+  "y": 1554
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 5",
+  "x": 547,
+  "y": 1559
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 6",
+  "x": 542,
+  "y": 1559
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "leg tip 7",
+  "x": 541,
+  "y": 1560
+ },
+ {
+  "f": 515,
+  "caption": "and pumped air inside.",
+  "point": "needle entry",
+  "x": 540,
+  "y": 1557
+ },
+ {
+  "f": 517,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 889,
+  "y": 1580
+ },
+ {
+  "f": 518,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 872,
+  "y": 1527
+ },
+ {
+  "f": 519,
+  "caption": "and pumped air inside.",
+  "point": "block",
+  "x": 862,
+  "y": 1493
+ }
+]

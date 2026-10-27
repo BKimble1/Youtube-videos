@@ -1,0 +1,387 @@
+{
+ "file": "FGW_Dead_Spider_V3_REVIEW_1080x1920.mp4",
+ "size_mb": 19.1,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "frames": 906,
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "duration_s": 30.2
+ },
+ "audio": {
+  "codec": "aac",
+  "sr": 48000,
+  "channels": 2,
+  "bit_rate": 317375,
+  "duration_s": 30.208
+ },
+ "black_segments": [],
+ "loudness": {
+  "integrated_lufs": -15.01,
+  "true_peak_dbtp_4x": -2.94,
+  "first_speech_s": 0.02
+ },
+ "asr": {
+  "zipformer": {
+   "wer": 0.011,
+   "diffs": [
+    [
+     "replace",
+     "they'd",
+     "they"
+    ]
+   ]
+  },
+  "whisper": {
+   "wer": 0.011,
+   "diffs": [
+    [
+     "replace",
+     "they'd",
+     "they"
+    ]
+   ]
+  }
+ },
+ "frame_change": {
+  "median": 2.71,
+  "p99": 26.76,
+  "jumps_over_12": [
+   {
+    "frame": 71,
+    "mad": 15.5,
+    "on_cut": false
+   },
+   {
+    "frame": 73,
+    "mad": 13.2,
+    "on_cut": false
+   },
+   {
+    "frame": 74,
+    "mad": 15.5,
+    "on_cut": false
+   },
+   {
+    "frame": 75,
+    "mad": 17.5,
+    "on_cut": false
+   },
+   {
+    "frame": 76,
+    "mad": 18.9,
+    "on_cut": false
+   },
+   {
+    "frame": 77,
+    "mad": 19.8,
+    "on_cut": false
+   },
+   {
+    "frame": 78,
+    "mad": 21.8,
+    "on_cut": false
+   },
+   {
+    "frame": 79,
+    "mad": 22.1,
+    "on_cut": false
+   },
+   {
+    "frame": 80,
+    "mad": 22.2,
+    "on_cut": false
+   },
+   {
+    "frame": 81,
+    "mad": 20.4,
+    "on_cut": false
+   },
+   {
+    "frame": 82,
+    "mad": 19.5,
+    "on_cut": false
+   },
+   {
+    "frame": 83,
+    "mad": 18.2,
+    "on_cut": false
+   },
+   {
+    "frame": 84,
+    "mad": 16.6,
+    "on_cut": false
+   },
+   {
+    "frame": 85,
+    "mad": 14.6,
+    "on_cut": false
+   },
+   {
+    "frame": 86,
+    "mad": 12.0,
+    "on_cut": false
+   },
+   {
+    "frame": 89,
+    "mad": 13.8,
+    "on_cut": false
+   },
+   {
+    "frame": 90,
+    "mad": 14.8,
+    "on_cut": false
+   },
+   {
+    "frame": 91,
+    "mad": 13.4,
+    "on_cut": false
+   },
+   {
+    "frame": 136,
+    "mad": 95.3,
+    "on_cut": true
+   },
+   {
+    "frame": 234,
+    "mad": 49.7,
+    "on_cut": true
+   },
+   {
+    "frame": 405,
+    "mad": 70.3,
+    "on_cut": true
+   },
+   {
+    "frame": 429,
+    "mad": 110.8,
+    "on_cut": true
+   },
+   {
+    "frame": 450,
+    "mad": 30.7,
+    "on_cut": true
+   },
+   {
+    "frame": 477,
+    "mad": 12.2,
+    "on_cut": false
+   },
+   {
+    "frame": 478,
+    "mad": 13.0,
+    "on_cut": false
+   },
+   {
+    "frame": 479,
+    "mad": 21.5,
+    "on_cut": false
+   },
+   {
+    "frame": 480,
+    "mad": 18.9,
+    "on_cut": false
+   },
+   {
+    "frame": 481,
+    "mad": 15.8,
+    "on_cut": false
+   },
+   {
+    "frame": 486,
+    "mad": 18.1,
+    "on_cut": false
+   },
+   {
+    "frame": 487,
+    "mad": 23.0,
+    "on_cut": false
+   },
+   {
+    "frame": 488,
+    "mad": 24.7,
+    "on_cut": false
+   },
+   {
+    "frame": 489,
+    "mad": 23.1,
+    "on_cut": false
+   },
+   {
+    "frame": 490,
+    "mad": 21.6,
+    "on_cut": false
+   },
+   {
+    "frame": 491,
+    "mad": 20.1,
+    "on_cut": false
+   },
+   {
+    "frame": 492,
+    "mad": 17.8,
+    "on_cut": false
+   },
+   {
+    "frame": 493,
+    "mad": 14.2,
+    "on_cut": false
+   },
+   {
+    "frame": 495,
+    "mad": 15.1,
+    "on_cut": false
+   },
+   {
+    "frame": 496,
+    "mad": 16.7,
+    "on_cut": false
+   },
+   {
+    "frame": 497,
+    "mad": 14.5,
+    "on_cut": false
+   },
+   {
+    "frame": 512,
+    "mad": 16.5,
+    "on_cut": false
+   },
+   {
+    "frame": 513,
+    "mad": 17.8,
+    "on_cut": false
+   },
+   {
+    "frame": 514,
+    "mad": 22.7,
+    "on_cut": false
+   },
+   {
+    "frame": 515,
+    "mad": 23.9,
+    "on_cut": false
+   },
+   {
+    "frame": 516,
+    "mad": 26.8,
+    "on_cut": false
+   },
+   {
+    "frame": 517,
+    "mad": 15.8,
+    "on_cut": false
+   },
+   {
+    "frame": 541,
+    "mad": 16.5,
+    "on_cut": false
+   },
+   {
+    "frame": 542,
+    "mad": 14.5,
+    "on_cut": false
+   },
+   {
+    "frame": 584,
+    "mad": 35.2,
+    "on_cut": true
+   },
+   {
+    "frame": 702,
+    "mad": 48.6,
+    "on_cut": true
+   },
+   {
+    "frame": 728,
+    "mad": 13.3,
+    "on_cut": false
+   },
+   {
+    "frame": 729,
+    "mad": 14.9,
+    "on_cut": false
+   },
+   {
+    "frame": 730,
+    "mad": 15.4,
+    "on_cut": false
+   },
+   {
+    "frame": 731,
+    "mad": 14.9,
+    "on_cut": false
+   },
+   {
+    "frame": 732,
+    "mad": 13.8,
+    "on_cut": false
+   },
+   {
+    "frame": 733,
+    "mad": 12.8,
+    "on_cut": false
+   },
+   {
+    "frame": 786,
+    "mad": 45.3,
+    "on_cut": true
+   },
+   {
+    "frame": 799,
+    "mad": 12.4,
+    "on_cut": false
+   },
+   {
+    "frame": 810,
+    "mad": 61.3,
+    "on_cut": true
+   },
+   {
+    "frame": 844,
+    "mad": 12.3,
+    "on_cut": false
+   },
+   {
+    "frame": 845,
+    "mad": 12.5,
+    "on_cut": false
+   },
+   {
+    "frame": 846,
+    "mad": 13.0,
+    "on_cut": false
+   },
+   {
+    "frame": 847,
+    "mad": 13.8,
+    "on_cut": false
+   },
+   {
+    "frame": 848,
+    "mad": 14.8,
+    "on_cut": false
+   },
+   {
+    "frame": 849,
+    "mad": 14.3,
+    "on_cut": false
+   },
+   {
+    "frame": 850,
+    "mad": 13.1,
+    "on_cut": false
+   },
+   {
+    "frame": 851,
+    "mad": 12.6,
+    "on_cut": false
+   }
+  ],
+  "loop_seam_mad": 26.7
+ }
+}

@@ -1,5 +1,48 @@
 # Future Got Weird: Scientists Turned Dead Spiders Into Robots (Dead Spider)
 
+## V3 (27 Oct 2026)
+
+**Status.** A visual production pass on V2, rendered from source and checked from the files. **It is not published.**
+Nobody has watched it in real time or listened to it.
+
+**Format.** Vertical 1080×1920, 30 fps, 906 frames, 30.200 s.
+
+**Narration and captions.** The approved V2 narration (audio, wording and timing) and the V2 captions are unchanged.
+
+**What changed.**
+- **The hook** is one continuous pressure-driven action:
+  - a dark macro mat and a needle puncture with a shudder;
+  - staggered leg snaps;
+  - a ride through the entry point into a section of the pressure chamber and one hinge;
+  - out to the whole dead spider snapping wide open on "MOVE".
+- **Death.** A living spider on stone dies; its legs fold at the joints while its feet stay on the rock.
+- **The leg joint.** A continuous path into a living spider's leg joint on a leaf, then back out.
+- **The lab** has depth: glassware in front of and behind the stations.
+  - Forceps steady the specimen.
+  - The camera travels along the syringe and back down with the air.
+  - A low-angle clamp shows all eight legs on the block.
+  - A new three-quarter view of the carry and the drop into the dish.
+- **The ending.** A hidden-then-revealed second spider on its own platform. The grip is real contact by every leg,
+  then the lift. The last frame echoes the first.
+
+| Deliverable | File |
+|---|---|
+| Review | `exports/FGW_Dead_Spider_V3_REVIEW_1080x1920.mp4` |
+| Mix (V2 narration unchanged), measurements, effects, picture cues | `audio/mix/FGW_Dead_Spider_V3_mix.wav`, `audio/mix/mix_measure_v3.json`, `audio/sfx_cues_v3.json`, `audio/cues_v3.json` |
+| Notes, QA, remaining imperfections | `production/SOURCE_NOTES_V3.md` |
+| QA evidence | `qa/v3/` |
+| Source | `source/src/v3/` (composition `DeadSpiderV3`) |
+
+**Rebuild V3.**
+
+    source/node_modules/.bin/esbuild tools/export_cues_v3.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec3.cjs --external:remotion && NODE_PATH=source/node_modules node /tmp/ec3.cjs audio/cues_v3.json
+    python3 tools/make_audio_v3.py
+    (cd source && npx remotion render src/index.ts DeadSpiderV3 ../exports/FGW_Dead_Spider_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=3)
+    FGW_SCRIPT=production/NARRATION_APPROVED_V2.txt python3 tools/qa.py exports/FGW_Dead_Spider_V3_REVIEW_1080x1920.mp4 <asr_model_root> qa/v3/review audio/cues_v3.json
+    source/node_modules/.bin/esbuild tools/cap_check_v3.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.css=empty --outfile=/tmp/cc3.cjs --external:remotion --external:@fontsource-variable/* && NODE_PATH=source/node_modules node /tmp/cc3.cjs qa/v3/caption_check.json
+
+Working sheets: `cd source && ./sheet3.sh out.png "f1,f2,..." [captions]`.
+
 ## V2 (27 Oct 2026)
 
 **Status.** A second review version, rebuilt for retention. It is rendered from source and checked from the files.
