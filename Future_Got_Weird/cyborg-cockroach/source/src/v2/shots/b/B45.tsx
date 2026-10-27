@@ -65,7 +65,7 @@ const EL_CLOSE = 39, EL_WIDE = 43;
 /** the wide view looks between the insect and the turn's corner (so it keeps drifting with the walk: no hold) */
 const C_END: V3 = [40, 0, 20];
 const C_FOLLOW = 0.5;
-const A_CLOSE: [number, number] = [680, 900], A_WIDE: [number, number] = [600, 980];
+const A_CLOSE: [number, number] = [680, 960], A_WIDE: [number, number] = [600, 980];
 /** the point the close camera rides with: the board, in the path frame (the gait's bob and roll never shake it) */
 const follow = (t: number): V3 => {
   const pp = PATH45(b45S(t));
