@@ -17,7 +17,7 @@ import {sr, clamp, lerp} from '../../../lib/ease';
 import {wiresOn} from '../../../rig/gear';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
-import {viewAt, View} from '../../roach/ortho';
+import {viewAt, View, D} from '../../roach/ortho';
 import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {Tray2D, FoamBox, BoxB, turnPath, pulseTrain, PulseTrails, FPS} from './common';
@@ -50,25 +50,28 @@ export const b45Pose = (t: number): RoachPose => {
 // the course (world mm, y up): the yellow block on the inside of the turn (its corner is where the insect turns; it
 // hugs it, the right feet ~3 mm off the wall), the blue one across the way ahead, a red one beyond
 export const COURSE: {b: BoxB; c: string}[] = [
-  {b: [-190, -6, 0, 40, 39, 160], c: LAB2.foamY},
-  {b: [66, 128, 0, 30, -110, 14], c: LAB2.foamB},
+  {b: [-190, -6, 0, 28, 46, 160], c: LAB2.foamY},
+  {b: [66, 120, 0, 30, -44, 14], c: LAB2.foamB},
   {b: [84, 136, 0, 26, 104, 154], c: LAB2.foamR},
 ];
 
-const AZ = 0;
-const BOARD: V3 = [1, 23, 0];
-const S_CLOSE = 12.5, S_WIDE = 6.6;
-const EL_CLOSE = 84, EL_WIDE = 79;
+/** the camera (V5g): a HIGH THREE-QUARTER from the insect's front-left (az 168: its left side and face toward us, el
+ *  39 -> 43), well inside the range the flat renderer draws consistently (all six legs, both antennae, the pack as one
+ *  device). It heads screen-left; the right turn takes it away from us (up-screen) past the blue block's far end. */
+export const B45_AZ = 168;
+const BOARD: V3 = [4, 23, 0];
+const S_CLOSE = 11.6, S_WIDE = 5.8;
+const EL_CLOSE = 39, EL_WIDE = 43;
 /** the wide view looks between the insect and the turn's corner (so it keeps drifting with the walk: no hold) */
-const C_END: V3 = [36, 0, 6];
+const C_END: V3 = [40, 0, 20];
 const C_FOLLOW = 0.5;
-const A_CLOSE: [number, number] = [260, 900], A_WIDE: [number, number] = [540, 820];
+const A_CLOSE: [number, number] = [680, 900], A_WIDE: [number, number] = [600, 980];
 /** the point the close camera rides with: the board, in the path frame (the gait's bob and roll never shake it) */
 const follow = (t: number): V3 => {
   const pp = PATH45(b45S(t));
   return toW(ypr(pp.p, pp.yaw), BOARD);
 };
-/** B5's rise as it turns (eased in at the cut, still settling at B5's end) */
+/** B5's pull back as it turns (eased in at the cut, still settling at B5's end) */
 export const b5Rise = (f: number) => sr(f, 281, 321);
 export const b45View = (f: number): View => {
   const t = f / FPS;
@@ -77,7 +80,7 @@ export const b45View = (f: number): View => {
   const s = S_CLOSE * Math.pow(S_WIDE / S_CLOSE, u);
   const wide: V3 = [lerp(C_END[0], fo[0], C_FOLLOW), 0, lerp(C_END[2], fo[2], C_FOLLOW)];
   const at: V3 = [lerp(fo[0], wide[0], u), lerp(fo[1], wide[1], u), lerp(fo[2], wide[2], u)];
-  return viewAt(AZ, lerp(EL_CLOSE, EL_WIDE, u), s, at, lerp(A_CLOSE[0], A_WIDE[0], u), lerp(A_CLOSE[1], A_WIDE[1], u));
+  return viewAt(B45_AZ, lerp(EL_CLOSE, EL_WIDE, u), s, at, lerp(A_CLOSE[0], A_WIDE[0], u), lerp(A_CLOSE[1], A_WIDE[1], u));
 };
 
 const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
@@ -85,12 +88,16 @@ const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
   const v = b45View(f);
   const pose = b45Pose(t);
   const p = b45Pulse(t);
+  // depth order: the blocks behind the insect, the insect, the blocks in front of it (by each block's nearest
+  // footprint corner against the insect's ground point)
+  const insD = D(v, [pose.frame.o[0], 0, pose.frame.o[2]]);
+  const nearD = (b: BoxB) => Math.max(...[b[0], b[1]].flatMap((x) => [b[4], b[5]].map((z) => D(v, [x, 0, z]))));
+  const boxes = COURSE.map((k, i) => ({k, i, d: nearD(k.b)}));
+  const box = (q: {k: {b: BoxB; c: string}; i: number}) => <FoamBox key={q.i} id={`${id}k${q.i}`} v={v} b={q.k.b} color={q.k.c} />;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <Tray2D v={v} x0={-320} x1={340} z0={-260} z1={320} grid={20} />
-      {COURSE.map((k, i) => (
-        <FoamBox key={i} id={`${id}k${i}`} v={v} b={k.b} color={k.c} />
-      ))}
+      <Tray2D v={v} x0={-320} x1={340} z0={-420} z1={360} grid={20} />
+      {boxes.filter((q) => q.d < insD).map(box)}
       <Roach2D
         pose={pose}
         v={v}
@@ -104,6 +111,7 @@ const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {
           ),
         }}
       />
+      {boxes.filter((q) => q.d >= insD).map(box)}
     </svg>
   );
 };

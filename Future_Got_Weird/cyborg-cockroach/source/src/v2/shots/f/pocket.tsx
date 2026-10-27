@@ -209,7 +209,7 @@ export const Pocket: React.FC<PocketProps> = ({id, T, a, shadow = false, fan = 1
       <Crevice id={`${id}cv`} v={v} w={3} />
       <Glow2 id={`${id}lg`} cx={P(v, [80, 0, 0])[0]} cy={P(v, [80, 0, 0])[1]} rx={170} ry={60} color={RB.day} a={0.45} />
       <Ledge id={`${id}le`} v={v} w={3} />
-      <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} />
+      <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} hideFarArm />
       <NearHand o={o} />
       {medic && <Roach2D pose={medic} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={medic.frame} g={{kind: 'injector'}} />}} />}
       {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={17} />}

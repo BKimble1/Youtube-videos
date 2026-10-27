@@ -50,6 +50,8 @@ export type SurvivorProps = SurvivorOpts & {
   hideLeftOf?: number;
   /** skip the legs entirely (they are under the slab) */
   hideLegs?: boolean;
+  /** skip the far (left) arm: tucked under her chest, it only peeks out as a stray knob beside the near hand */
+  hideFarArm?: boolean;
   /** screen x of a slab's leading edge lying across her (see draw order); survivorLayout(...).cutAt(z).x gives it for a
    *  body position z (use z <= -40: behind the shoulders, so both arms stay in front of the slab) */
   cutX?: number;
@@ -192,10 +194,10 @@ export const Survivor: React.FC<SurvivorProps> = (props) => {
       </g>
       <defs><clipPath id={`${id}-torso`}><path d={torsoD} /></clipPath></defs>
       {cutClip && <defs><clipPath id={`${id}-cut`}><path d={cutClip} /></clipPath></defs>}
-      {!cutClip && arm(1)}
+      {!cutClip && !props.hideFarArm && arm(1)}
       <g clipPath={bodyClip}>{torso}</g>
       {props.between}
-      {cutClip && arm(1)}
+      {cutClip && !props.hideFarArm && arm(1)}
       {cutClip && <g clipPath={`url(#${id}-cut)`}><g clipPath={bodyClip}>{torso}</g></g>}
       {/* neck */}
       <line x1={neckA.x} y1={neckA.y} x2={neckB.x} y2={neckB.y} stroke={INK} strokeWidth={32 * k + ol * 2} strokeLinecap="butt" />

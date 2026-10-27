@@ -11,6 +11,7 @@ import {Gear2D} from '../../roach/Gear2D';
 import {P} from '../../roach/ortho';
 import {Survivor, survivorLayout} from '../../../crew/person';
 import {keys, sr} from '../../../lib/ease';
+import {f2} from '../../roach/ortho';
 import {RB, Pt, Slab, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, jag, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
 import {FF, faceTrack, herOpts, Acting, NearHand} from './pocket';
@@ -56,8 +57,14 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
   };
   const o = {...herOpts(T, a), x: PL4.x, y: PL4.y, scale: PL4.scale, yaw: PL4.yaw, elev: PL4.elev};
   const L = survivorLayout(o);
+  // V5: the camera leans in over her shoulder as it approaches (no hold): a slow push toward the insect
+  const pu = sr(lf, 0, 24);
+  const zk = 1 + 0.07 * pu;
+  const cam = `translate(${f2(head[0])} ${f2(head[1])}) scale(${zk.toFixed(4)}) translate(${f2(-head[0] - 14 * pu)} ${f2(-head[1] - 10 * pu)})`;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
+      <rect width={1080} height={1920} fill="#1B1A1D" />
+      <g transform={cam}>
       <VGrad id={`${sid}bg`} x0={0} y0={-100} x1={0} y1={2000} stops={[[0, '#2B292D'], [1, '#1B1A1D']]} />
       <path d={poly(floor)} fill="#6C6560" />
       <Glow2 id={`${sid}fl`} cx={640} cy={1050} rx={620} ry={420} color={RB.day} a={0.42} />
@@ -96,9 +103,10 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
         </defs>
         {/* her forearm's and hand's soft contact shadow on the floor (the light from the upper right) */}
         <path d={`M${L.nearElbow.x + 30},${L.nearElbow.y + 40} L${L.nearWrist.x + 40},${L.nearWrist.y + 30} L${L.nearTip.x + 34},${L.nearTip.y + 26}`} stroke="#2A2522" strokeOpacity={0.4} strokeWidth={PL4.scale * 34} strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        <Survivor id={`${sid}sv`} {...o} />
+        <Survivor id={`${sid}sv`} {...o} hideFarArm />
         <NearHand o={o} />
         <Glow2 id={`${sid}rim`} cx={L.head.x + 260} cy={L.head.y - 260} rx={300} ry={260} color={RB.day} a={0.22} />
+      </g>
       </g>
       <Vignette id={`${sid}vg`} a={0.5} />
     </svg>
