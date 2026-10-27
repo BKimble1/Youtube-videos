@@ -7,7 +7,7 @@ import React from 'react';
 import {B, basis, Cam, camKeys, proj, scaleAt, v3} from '../world/cam';
 import {Box, INK, Line3, Poly, ry, rz} from '../world/draw';
 import {cardAt, cardPt, FloorShadow, Person, U} from '../art/person';
-import {walk, Gait} from '../art/walk';
+import {heelStrikes, walk, walkX, Gait} from '../art/walk';
 import {GUESSER, manJoints, ManPose, Outfit} from '../dc/Man';
 import {EXPR_NEUTRAL, Expr} from '../dc/Head';
 import {HandPose} from '../dc/Hand';
@@ -27,21 +27,29 @@ const BACK = 2.8;
 const CG = {wall: '#DCD8E6', wallLo: '#C9C4D8', floor: '#B9BCC2', floorLine: '#A5A8AF', tape: '#F2C14E', ceil: '#EEF0F2', door: '#9AA7B8'};
 
 type Walker = {o: Outfit; seed: number; s: number; carry?: 'crate' | 'pack'; id: number};
-const WALKERS: Walker[] = [
-  {o: {skin: '#7A4B32', hair: '#1C1A1A', shirt: '#2E8F8A', stripe: null, pants: '#55606B', shoe: '#F2F2F2', longSleeve: true, hairStyle: 'curly'}, seed: 3, s: 1.0, id: 3},
-  {o: {skin: '#F3CDB0', hair: '#E3BC63', shirt: '#F2B134', stripe: null, pants: '#3D5A80', shoe: '#FFFFFF', longSleeve: true, hairStyle: 'bun'}, seed: 27, s: 0.96, id: 27},
-  {o: GUESSER, seed: 12, s: 1.0, id: 12},
-  {o: {skin: '#C68B63', hair: '#2B2B33', shirt: '#7C6BD6', stripe: null, pants: '#B8A27A', shoe: '#3A3A3A', glasses: true, hairStyle: 'short'}, seed: 58, s: 1.03, id: 58},
-  {o: {skin: '#F0C8A8', hair: '#6B4226', shirt: '#5FAF6A', stripe: null, pants: '#2E3440', shoe: '#E8E8E8', hairStyle: 'swoop'}, seed: 91, s: 0.98, carry: 'pack', id: 91},
-  {o: {skin: '#D9A07C', hair: '#B8B8B8', shirt: '#E07A5F', stripe: null, pants: '#4A4A55', shoe: '#2F2F2F', longSleeve: true, hairStyle: 'short'}, seed: 140, s: 1.02, carry: 'crate', id: 140},
-  {o: {skin: '#5C3A28', hair: '#121212', shirt: '#F4F1EA', stripe: '#4F7CC9', pants: '#2F3E5C', shoe: '#FFFFFF', hairStyle: 'swoop'}, seed: 176, s: 1.01, id: 176},
+// V2: four participants (fewer, a metre apart), each with their own stride, posture and arm swing
+const WALKERS: (Walker & {g: Partial<Gait>})[] = [
+  {o: {skin: '#7A4B32', hair: '#1C1A1A', shirt: '#2E8F8A', stripe: null, pants: '#55606B', shoe: '#F2F2F2', longSleeve: true, hairStyle: 'curly'}, seed: 3, s: 1.0, id: 3, g: {T: 0.8, arm: 20, elbow: 14, lean: 3}},
+  {o: {skin: '#F3CDB0', hair: '#E3BC63', shirt: '#F2B134', stripe: null, pants: '#3D5A80', shoe: '#FFFFFF', longSleeve: true, hairStyle: 'bun'}, seed: 27, s: 0.95, id: 27, g: {T: 0.74, arm: 16, elbow: 22, lean: 5}},
+  {o: GUESSER, seed: 12, s: 1.0, id: 12, g: {T: 0.78, arm: 19, elbow: 16, lean: 4}},
+  {o: {skin: '#D9A07C', hair: '#B8B8B8', shirt: '#E07A5F', stripe: null, pants: '#4A4A55', shoe: '#2F2F2F', longSleeve: true, hairStyle: 'short'}, seed: 140, s: 1.01, carry: 'crate', id: 140, g: {T: 0.84, lean: 6, hipY: -489, holdArms: {l: {sh: 34, el: 62, wr: -10}, r: {sh: 40, el: 58, wr: -10}}}},
 ];
-const SPACING = 0.6;
-const V = 880; // units/s
+const SPACING = 1.0;
+const V = 640; // units/s (1.07 m/s, an easy walk along the test lane)
 /** each walker crosses x = 0 (the middle of the lane) at tc */
-const crossT = (i: number) => GB.g0 + 0.45 + i * SPACING;
-const gaitOf = (i: number): Gait => ({x0: V * crossT(i), v: V, T: 0.82, ph: hash(i, 4), hipY: -480 * WALKERS[i].s - 4, arm: 70});
+const crossT = (i: number) => GB.g0 + 0.25 + i * SPACING;
+/** in each walker's own rig units (their card is scaled by s), so world speed and spacing are the same for everyone */
+const gaitOf = (i: number): Gait => ({x0: (V / WALKERS[i].s) * crossT(i), v: V / WALKERS[i].s, ph: hash(i, 4), T: 0.95, ...WALKERS[i].g});
 
+/** footsteps heard in the corridor: every walker's heel strikes while they are in the shot, quieter off-centre */
+export const corridorFootsteps = () =>
+  WALKERS.flatMap((w, i) => {
+    const g = gaitOf(i);
+    return heelStrikes(g, GB.g0, GB.g1)
+      .map((s) => ({...s, who: `walker ${w.id}`, x: (walkX(g, s.t) * w.s) / U}))
+      .filter((s) => Math.abs(s.x) < 1.9)
+      .map((s) => ({t: s.t, foot: s.foot, who: s.who, gain: 0.55 * (1 - Math.abs(s.x) / 2.4)}));
+  });
 const camG = (t: number): Cam => {
   const c0: Cam = {pos: v3(0.05, 1.42, -2.7), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 840};
   const c1: Cam = {pos: v3(0.0, 2.4, -1.4), yaw: 0, pitch: 0, f: 2400, cx: 540, cy: 900}; // rises and narrows: the display fills the frame, the walkers stay a row of heads at the bottom
@@ -177,12 +185,12 @@ export const CorridorScene: React.FC<{t: number}> = ({t}) => {
   const b = basis(camG(t));
   const cd = cardAt(b, v3(0, 0, LANE_Z));
   const hand: HandPose = {curl: [0.22, 0.28, 0.32, 0.36], spread: 0.35, thumb: 22, thumbCurl: 0.4};
+  const grip: HandPose = {curl: [0.5, 0.55, 0.6, 0.62], spread: 0.2, thumb: 30, thumbCurl: 0.4};
   const people = WALKERS.map((w, i) => {
-    let p = walk(gaitOf(i), t);
-    if (w.carry === 'crate') p = {...p, lTu: -235, lTv: -175, lElb: -1, rTu: -240, rTv: -205, rElb: -1};
+    const p = walk(gaitOf(i), t);
     const ex: Expr = {...EXPR_NEUTRAL, gx: -0.6, smile: 0.15 + 0.2 * hash(i, 2)};
     return {w, i, p, ex};
-  }).filter(({p}) => Math.abs(p.x) < 1.9 * U);
+  }).filter(({p, w}) => Math.abs(p.x * w.s) < 1.9 * U);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
       <rect width={1080} height={1920} fill={CG.wall} />
@@ -193,10 +201,10 @@ export const CorridorScene: React.FC<{t: number}> = ({t}) => {
         const c = {...cd, k: cd.k * w.s};
         return (
           <g key={i}>
-            <FloorShadow cd={c} x={p.x / w.s} w={200} />
-            {w.carry && <Carry cd={c} p={{...p, x: p.x / w.s, lAx: p.lAx! / w.s, rAx: p.rAx! / w.s}} kind={w.carry} front={false} />}
-            <Person id={`${u}w${i}`} cd={c} p={{...p, x: p.x / w.s, lAx: p.lAx! / w.s, rAx: p.rAx! / w.s}} look={{outfit: w.o, expr: ex, lHand: hand, rHand: hand}} />
-            {w.carry && <Carry cd={c} p={{...p, x: p.x / w.s, lAx: p.lAx! / w.s, rAx: p.rAx! / w.s}} kind={w.carry} front />}
+            <FloorShadow cd={c} x={p.x} w={200} />
+            {w.carry && <Carry cd={c} p={p} kind={w.carry} front={false} />}
+            <Person id={`${u}w${i}`} cd={c} p={p} farBehind={w.carry !== 'crate'} look={{outfit: w.o, expr: ex, lHand: w.carry === 'crate' ? grip : hand, rHand: w.carry === 'crate' ? grip : hand}} />
+            {w.carry && <Carry cd={c} p={p} kind={w.carry} front />}
           </g>
         );
       })}

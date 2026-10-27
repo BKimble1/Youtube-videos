@@ -7,6 +7,7 @@ import React from 'react';
 import {B, proj, scaleAt, v3, V3} from '../world/cam';
 import {Box, INK, Line3, Poly, rx, ry, rz} from '../world/draw';
 import {clamp, f1, lerp, mixHex, useUid} from '../lib';
+import {reachPalmWorld} from './labHero';
 
 export const Z_CUT = 0.75;
 export const Z_BACK = 3.4;
@@ -38,7 +39,10 @@ export const antPt = (u: number, yy: number, nn = 0) => {
 export const MON = {x: 0.565, y: 1.74, z: 1.0, w: 0.84, h: 0.74};
 /** the security camera (on a drop pole from the ceiling, looking toward the door) and its public-view screen on the
  *  office's back wall */
-export const CCTV = {x: -1.25, y: 2.02, z: 1.2};
+// V2: mounted where his palm lands on the reach (forward and up, so the arm stays clear of his face); the lens is at
+// the camera's left end, about 0.15 m from its centre
+const PALM = reachPalmWorld();
+export const CCTV = {x: PALM.x + 0.15, y: PALM.y - 0.03, z: 1.2};
 /** the public-view screen hangs from the ceiling beside the camera, facing the room (and us) */
 export const PUB = {x: -0.72, y: 2.02, z: 1.3, w: 0.56, h: 0.34};
 

@@ -1,0 +1,374 @@
+[
+ {
+  "t": -0.82,
+  "foot": "",
+  "who": "hero (lab retreat)",
+  "gain": 0.9
+ },
+ {
+  "t": -0.5,
+  "foot": "",
+  "who": "hero (lab retreat)",
+  "gain": 0.9
+ },
+ {
+  "t": -0.18,
+  "foot": "",
+  "who": "hero (lab retreat)",
+  "gain": 0.9
+ },
+ {
+  "t": 0.24,
+  "foot": "",
+  "who": "hero (lab retreat)",
+  "gain": 0.9
+ },
+ {
+  "t": 15.21,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 15.66,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 15.698,
+  "foot": "L",
+  "who": "passer-by",
+  "gain": 0.35
+ },
+ {
+  "t": 16.11,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 16.56,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 17.01,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 17.46,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 17.91,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 18.36,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 18.81,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 19.26,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 19.71,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 20.16,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 20.61,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 0.7
+ },
+ {
+  "t": 21.06,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 1
+ },
+ {
+  "t": 21.51,
+  "foot": "L",
+  "who": "hero (café)",
+  "gain": 1
+ },
+ {
+  "t": 21.96,
+  "foot": "R",
+  "who": "hero (café)",
+  "gain": 1
+ },
+ {
+  "t": 22.364,
+  "foot": "R",
+  "who": "walker 27",
+  "gain": 0.25
+ },
+ {
+  "t": 22.486,
+  "foot": "L",
+  "who": "walker 3",
+  "gain": 0.53
+ },
+ {
+  "t": 22.734,
+  "foot": "L",
+  "who": "walker 27",
+  "gain": 0.34
+ },
+ {
+  "t": 22.886,
+  "foot": "R",
+  "who": "walker 3",
+  "gain": 0.47
+ },
+ {
+  "t": 22.979,
+  "foot": "R",
+  "who": "walker 12",
+  "gain": 0.16
+ },
+ {
+  "t": 23.104,
+  "foot": "R",
+  "who": "walker 27",
+  "gain": 0.43
+ },
+ {
+  "t": 23.286,
+  "foot": "L",
+  "who": "walker 3",
+  "gain": 0.38
+ },
+ {
+  "t": 23.369,
+  "foot": "L",
+  "who": "walker 12",
+  "gain": 0.26
+ },
+ {
+  "t": 23.474,
+  "foot": "L",
+  "who": "walker 27",
+  "gain": 0.53
+ },
+ {
+  "t": 23.686,
+  "foot": "R",
+  "who": "walker 3",
+  "gain": 0.28
+ },
+ {
+  "t": 23.759,
+  "foot": "R",
+  "who": "walker 12",
+  "gain": 0.35
+ },
+ {
+  "t": 23.844,
+  "foot": "R",
+  "who": "walker 27",
+  "gain": 0.48
+ },
+ {
+  "t": 24.086,
+  "foot": "L",
+  "who": "walker 3",
+  "gain": 0.18
+ },
+ {
+  "t": 24.148,
+  "foot": "L",
+  "who": "walker 140",
+  "gain": 0.2
+ },
+ {
+  "t": 24.149,
+  "foot": "L",
+  "who": "walker 12",
+  "gain": 0.45
+ },
+ {
+  "t": 24.214,
+  "foot": "L",
+  "who": "walker 27",
+  "gain": 0.39
+ },
+ {
+  "t": 24.539,
+  "foot": "R",
+  "who": "walker 12",
+  "gain": 0.54
+ },
+ {
+  "t": 24.568,
+  "foot": "R",
+  "who": "walker 140",
+  "gain": 0.3
+ },
+ {
+  "t": 24.584,
+  "foot": "R",
+  "who": "walker 27",
+  "gain": 0.3
+ },
+ {
+  "t": 24.929,
+  "foot": "L",
+  "who": "walker 12",
+  "gain": 0.46
+ },
+ {
+  "t": 24.954,
+  "foot": "L",
+  "who": "walker 27",
+  "gain": 0.21
+ },
+ {
+  "t": 24.988,
+  "foot": "L",
+  "who": "walker 140",
+  "gain": 0.41
+ },
+ {
+  "t": 25.319,
+  "foot": "R",
+  "who": "walker 12",
+  "gain": 0.37
+ },
+ {
+  "t": 25.324,
+  "foot": "R",
+  "who": "walker 27",
+  "gain": 0.12
+ },
+ {
+  "t": 25.408,
+  "foot": "R",
+  "who": "walker 140",
+  "gain": 0.51
+ },
+ {
+  "t": 25.709,
+  "foot": "L",
+  "who": "walker 12",
+  "gain": 0.27
+ },
+ {
+  "t": 25.828,
+  "foot": "L",
+  "who": "walker 140",
+  "gain": 0.49
+ },
+ {
+  "t": 26.099,
+  "foot": "R",
+  "who": "walker 12",
+  "gain": 0.18
+ },
+ {
+  "t": 26.248,
+  "foot": "R",
+  "who": "walker 140",
+  "gain": 0.39
+ },
+ {
+  "t": 26.668,
+  "foot": "L",
+  "who": "walker 140",
+  "gain": 0.28
+ },
+ {
+  "t": 27.36,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 27.81,
+  "foot": "R",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 28.26,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 28.71,
+  "foot": "R",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 29.16,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 29.61,
+  "foot": "R",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 30.06,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 30.51,
+  "foot": "R",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 30.96,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 31.41,
+  "foot": "R",
+  "who": "hero (café H)",
+  "gain": 0.75
+ },
+ {
+  "t": 31.86,
+  "foot": "L",
+  "who": "hero (café H)",
+  "gain": 0.75
+ }
+]

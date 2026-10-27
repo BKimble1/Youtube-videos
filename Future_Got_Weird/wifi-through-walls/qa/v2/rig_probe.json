@@ -1,0 +1,116 @@
+[
+ {
+  "name": "cafe hero",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 2.842170943040401e-14,
+   "t": 0.16666666666666666
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   19.8,
+   41.7
+  ],
+  "hipSecondDiff_units": 4.66,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 36.4
+ },
+ {
+  "name": "cafe passer",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 2.842170943040401e-14,
+   "t": 0
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   19.8,
+   40.7
+  ],
+  "hipSecondDiff_units": 4.51,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 37.4
+ },
+ {
+  "name": "corridor 3",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 4.0194366942304644e-14,
+   "t": 0.13333333333333333
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   19.9,
+   42
+  ],
+  "hipSecondDiff_units": 6.14,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 38.4
+ },
+ {
+  "name": "corridor 27",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 2.929642751054232e-14,
+   "t": 0.13333333333333333
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   19.8,
+   41.8
+  ],
+  "hipSecondDiff_units": 6.6,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 50
+ },
+ {
+  "name": "corridor 12",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 3.1776437161565096e-14,
+   "t": 0.16666666666666666
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   19.8,
+   41.6
+  ],
+  "hipSecondDiff_units": 6.24,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 46.2
+ },
+ {
+  "name": "corridor 140 crate",
+  "maxAnkleMiss_units": 0,
+  "worst": {
+   "miss": 2.842170943040401e-14,
+   "t": 0.06666666666666667
+  },
+  "maxStanceSlip_units_per_frame": 0,
+  "armBoneLengthDeviation_units": 0,
+  "stanceKneeFlex_deg": [
+   20,
+   43.8
+  ],
+  "hipSecondDiff_units": 6.62,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 43
+ },
+ {
+  "name": "lab hero (all lab frames)",
+  "frames": 591,
+  "maxAnkleMiss_units": 0,
+  "armBoneLengthDeviation_units": 0.04,
+  "legBoneLengthDeviation_units": 0,
+  "maxWristToKnee_units_while_resting": 34.5,
+  "maxBackwardElbow_deg": 0,
+  "maxJointSecondDiff_units_per_frame2": 31.7,
+  "at_frame": 1072,
+  "joint": "far knee"
+ }
+]

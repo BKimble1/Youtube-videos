@@ -5,6 +5,11 @@
   "gain_db": -20.0
  },
  {
+  "t": 0.24,
+  "name": "footstep (hero (lab retreat))",
+  "gain_db": -11.9
+ },
+ {
   "t": 0.28,
   "name": "back hits the wall",
   "gain_db": -1.4
@@ -215,9 +220,49 @@
   "gain_db": 0.0
  },
  {
+  "t": 15.21,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.5
+ },
+ {
+  "t": 15.215,
+  "name": "signal folds into the router",
+  "gain_db": -30.5
+ },
+ {
+  "t": 15.66,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -14.5
+ },
+ {
+  "t": 15.698,
+  "name": "footstep (passer-by)",
+  "gain_db": -20.6
+ },
+ {
+  "t": 16.11,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -16.1
+ },
+ {
+  "t": 16.56,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.9
+ },
+ {
+  "t": 17.01,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.8
+ },
+ {
   "t": 17.355,
   "name": "wifi packet",
   "gain_db": -34.9
+ },
+ {
+  "t": 17.46,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -16.1
  },
  {
   "t": 17.545,
@@ -228,6 +273,11 @@
   "t": 17.735,
   "name": "wifi packet",
   "gain_db": -34.9
+ },
+ {
+  "t": 17.91,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -14.3
  },
  {
   "t": 17.925,
@@ -250,6 +300,11 @@
   "gain_db": -30.5
  },
  {
+  "t": 18.36,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -14.0
+ },
+ {
   "t": 18.495,
   "name": "wifi packet",
   "gain_db": -34.9
@@ -258,6 +313,11 @@
   "t": 18.685,
   "name": "wifi packet",
   "gain_db": -34.9
+ },
+ {
+  "t": 18.81,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -16.0
  },
  {
   "t": 18.875,
@@ -270,6 +330,11 @@
   "gain_db": -26.0
  },
  {
+  "t": 19.26,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.7
+ },
+ {
   "t": 19.475,
   "name": "compare tick",
   "gain_db": -26.0
@@ -278,6 +343,11 @@
   "t": 19.695,
   "name": "compare tick",
   "gain_db": -26.0
+ },
+ {
+  "t": 19.71,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.2
  },
  {
   "t": 19.915,
@@ -290,9 +360,34 @@
   "gain_db": -20.9
  },
  {
+  "t": 20.16,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -15.5
+ },
+ {
+  "t": 20.61,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -16.5
+ },
+ {
+  "t": 21.06,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -11.4
+ },
+ {
   "t": 21.06,
   "name": "quiet emphasis (WITHOUT)",
   "gain_db": -6.0
+ },
+ {
+  "t": 21.51,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -11.8
+ },
+ {
+  "t": 21.96,
+  "name": "footstep (hero (caf\u00e9))",
+  "gain_db": -11.0
  },
  {
   "t": 22.325,
@@ -300,19 +395,109 @@
   "gain_db": 0.0
  },
  {
-  "t": 22.975,
+  "t": 22.364,
+  "name": "footstep (walker 27)",
+  "gain_db": -24.3
+ },
+ {
+  "t": 22.486,
+  "name": "footstep (walker 3)",
+  "gain_db": -16.6
+ },
+ {
+  "t": 22.734,
+  "name": "footstep (walker 27)",
+  "gain_db": -20.3
+ },
+ {
+  "t": 22.775,
   "name": "walker matched",
   "gain_db": -24.4
  },
  {
-  "t": 23.575,
+  "t": 22.886,
+  "name": "footstep (walker 3)",
+  "gain_db": -19.7
+ },
+ {
+  "t": 22.979,
+  "name": "footstep (walker 12)",
+  "gain_db": -28.4
+ },
+ {
+  "t": 23.104,
+  "name": "footstep (walker 27)",
+  "gain_db": -19.2
+ },
+ {
+  "t": 23.286,
+  "name": "footstep (walker 3)",
+  "gain_db": -21.0
+ },
+ {
+  "t": 23.369,
+  "name": "footstep (walker 12)",
+  "gain_db": -25.0
+ },
+ {
+  "t": 23.474,
+  "name": "footstep (walker 27)",
+  "gain_db": -18.7
+ },
+ {
+  "t": 23.686,
+  "name": "footstep (walker 3)",
+  "gain_db": -22.6
+ },
+ {
+  "t": 23.759,
+  "name": "footstep (walker 12)",
+  "gain_db": -21.6
+ },
+ {
+  "t": 23.775,
   "name": "walker matched",
   "gain_db": -24.4
  },
  {
-  "t": 24.175,
-  "name": "walker matched",
-  "gain_db": -24.4
+  "t": 23.844,
+  "name": "footstep (walker 27)",
+  "gain_db": -17.6
+ },
+ {
+  "t": 24.086,
+  "name": "footstep (walker 3)",
+  "gain_db": -25.7
+ },
+ {
+  "t": 24.148,
+  "name": "footstep (walker 140)",
+  "gain_db": -25.6
+ },
+ {
+  "t": 24.149,
+  "name": "footstep (walker 12)",
+  "gain_db": -19.9
+ },
+ {
+  "t": 24.214,
+  "name": "footstep (walker 27)",
+  "gain_db": -19.6
+ },
+ {
+  "t": 24.539,
+  "name": "footstep (walker 12)",
+  "gain_db": -18.1
+ },
+ {
+  "t": 24.568,
+  "name": "footstep (walker 140)",
+  "gain_db": -23.2
+ },
+ {
+  "t": 24.584,
+  "name": "footstep (walker 27)",
+  "gain_db": -23.1
  },
  {
   "t": 24.775,
@@ -320,14 +505,44 @@
   "gain_db": -24.4
  },
  {
-  "t": 25.375,
-  "name": "walker matched",
-  "gain_db": -24.4
+  "t": 24.929,
+  "name": "footstep (walker 12)",
+  "gain_db": -19.8
+ },
+ {
+  "t": 24.954,
+  "name": "footstep (walker 27)",
+  "gain_db": -24.7
+ },
+ {
+  "t": 24.988,
+  "name": "footstep (walker 140)",
+  "gain_db": -20.1
+ },
+ {
+  "t": 25.319,
+  "name": "footstep (walker 12)",
+  "gain_db": -20.3
+ },
+ {
+  "t": 25.324,
+  "name": "footstep (walker 27)",
+  "gain_db": -30.4
+ },
+ {
+  "t": 25.408,
+  "name": "footstep (walker 140)",
+  "gain_db": -16.9
  },
  {
   "t": 25.695,
   "name": "dataset sweep",
   "gain_db": -33.2
+ },
+ {
+  "t": 25.709,
+  "name": "footstep (walker 12)",
+  "gain_db": -23.3
  },
  {
   "t": 25.712,
@@ -350,6 +565,11 @@
   "gain_db": -33.2
  },
  {
+  "t": 25.775,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
   "t": 25.777,
   "name": "dataset sweep",
   "gain_db": -33.2
@@ -368,6 +588,11 @@
   "t": 25.827,
   "name": "dataset sweep",
   "gain_db": -33.2
+ },
+ {
+  "t": 25.828,
+  "name": "footstep (walker 140)",
+  "gain_db": -18.2
  },
  {
   "t": 25.843,
@@ -415,11 +640,6 @@
   "gain_db": -33.2
  },
  {
-  "t": 25.975,
-  "name": "walker matched",
-  "gain_db": -24.4
- },
- {
   "t": 25.976,
   "name": "dataset sweep",
   "gain_db": -33.2
@@ -458,6 +678,11 @@
   "t": 26.091,
   "name": "dataset sweep",
   "gain_db": -33.2
+ },
+ {
+  "t": 26.099,
+  "name": "footstep (walker 12)",
+  "gain_db": -26.7
  },
  {
   "t": 26.108,
@@ -503,6 +728,11 @@
   "t": 26.239,
   "name": "dataset sweep",
   "gain_db": -33.2
+ },
+ {
+  "t": 26.248,
+  "name": "footstep (walker 140)",
+  "gain_db": -21.2
  },
  {
   "t": 26.256,
@@ -610,11 +840,6 @@
   "gain_db": -33.2
  },
  {
-  "t": 26.575,
-  "name": "walker matched",
-  "gain_db": -24.4
- },
- {
   "t": 26.586,
   "name": "dataset sweep",
   "gain_db": -33.2
@@ -638,6 +863,11 @@
   "t": 26.652,
   "name": "dataset sweep",
   "gain_db": -33.2
+ },
+ {
+  "t": 26.668,
+  "name": "footstep (walker 140)",
+  "gain_db": -24.4
  },
  {
   "t": 26.669,
@@ -680,14 +910,69 @@
   "gain_db": 0.0
  },
  {
+  "t": 27.36,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.2
+ },
+ {
+  "t": 27.81,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -15.3
+ },
+ {
+  "t": 28.26,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.3
+ },
+ {
+  "t": 28.71,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.9
+ },
+ {
+  "t": 29.16,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -15.0
+ },
+ {
+  "t": 29.61,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -15.8
+ },
+ {
   "t": 29.825,
   "name": "seen before",
   "gain_db": -20.9
  },
  {
+  "t": 30.06,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.7
+ },
+ {
+  "t": 30.51,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.5
+ },
+ {
   "t": 30.615,
   "name": "unease swell",
   "gain_db": -18.4
+ },
+ {
+  "t": 30.96,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.6
+ },
+ {
+  "t": 31.41,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -15.1
+ },
+ {
+  "t": 31.86,
+  "name": "footstep (hero (caf\u00e9 H))",
+  "gain_db": -14.6
  },
  {
   "t": 31.95,
@@ -720,8 +1005,23 @@
   "gain_db": -19.2
  },
  {
+  "t": 35.647,
+  "name": "footstep (hero (lab retreat))",
+  "gain_db": -13.7
+ },
+ {
+  "t": 35.967,
+  "name": "footstep (hero (lab retreat))",
+  "gain_db": -13.1
+ },
+ {
   "t": 36.247,
   "name": "skid (wraps from the end)",
   "gain_db": -1.9
+ },
+ {
+  "t": 36.287,
+  "name": "footstep (hero (lab retreat))",
+  "gain_db": -13.0
  }
 ]

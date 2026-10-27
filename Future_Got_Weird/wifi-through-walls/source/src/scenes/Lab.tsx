@@ -45,8 +45,8 @@ const CHERO: Cam = {pos: v3(-0.42, 0.78, -1.05), yaw: 0, pitch: -3, f: 2000, cx:
 /** the display and the man together (the proof) */
 const CSPLIT: Cam = {pos: v3(-0.03, 1.2, -2.55), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 860};
 /** scene I: the office corner with the security camera, then back to the opening frame */
-const CI1: Cam = {pos: v3(-0.95, 1.45, -2.6), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 690};
-const CI2: Cam = {pos: v3(-0.98, 1.5, -2.3), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 720};
+const CI1: Cam = {pos: v3(-1.05, 1.45, -2.6), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 690};
+const CI2: Cam = {pos: v3(-1.1, 1.5, -2.3), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 720};
 const CI3: Cam = {pos: v3(-0.45, 1.5, -3.9), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 690};
 
 export const labCam = (t: number): Cam => {
@@ -77,7 +77,8 @@ export const labCam = (t: number): Cam => {
     [LB.skel - 0.1, CMON(1.22)],
     [LB.raise - 0.25, CMON(1.16)],
     [LB.raise + 0.2, CSPLIT],
-    [LB.but, CSPLIT],
+    // a slow push while the skeleton copies the raised hand (emphasis without a cut)
+    [LB.but, {...CSPLIT, pos: add3(CSPLIT.pos, v3(0, 0.02, 0.14))}],
     [LB.creepy + 0.1, CMON(1.0)],
     [LB.out, CMON(0.42)],
   ]);
@@ -174,6 +175,21 @@ const Reflections: React.FC<{b: B; t: number; kpW: Record<KPName, V3>}> = ({b, t
 };
 
 // ------------------------------------------------------------------ the display
+/** the signal traces the skeleton dissolves into, in screen space for display rect r */
+export const tracePaths = (r: {x: number; y: number; w: number; h: number}, t: number, dissolve: number) =>
+  Array.from({length: 14}, (_, i) => {
+    const y = r.y + r.h * (0.12 + (i / 13) * 0.8);
+    const ph = t * 5 + i * 0.7;
+    const amp = r.h * 0.02 * (0.6 + hash(i, 9));
+    const x0 = r.x + r.w * (0.3 + 0.2 * hash(i, 7)) - dissolve * r.w * 0.6;
+    const pts = Array.from({length: 40}, (_, k) => {
+      const x = x0 + (k / 39) * r.w * (0.2 + 1.3 * dissolve);
+      return {x, y: y + Math.sin(ph + k * 0.5) * amp * (0.4 + dissolve)};
+    });
+    return {pts, color: i % 2 ? '#5CE1FF' : '#FFD24A'};
+  });
+/** the display's rect in the last lab frame before the cut (the traces fill the picture there) */
+export const cutMonRect = () => monRect(basis(labCam(LAB_OUT - 0.001)));
 type ScreenState = {build: Build; heat: number; dissolve: number; ping: number};
 const screenState = (t: number): ScreenState => {
   const s = LB.skel;
@@ -220,20 +236,12 @@ const Screen: React.FC<{b: B; t: number}> = ({b, t}) => {
       })}
     </g>
   ) : null;
-  // scene D: the skeleton streams away as signal traces running to the right
+  // scene D: the skeleton streams away as signal traces (they carry on into the café: Cafe.tsx SignalCarry)
   const traces = st.dissolve > 0 ? (
     <g>
-      {Array.from({length: 14}, (_, i) => {
-        const y = r.y + r.h * (0.12 + (i / 13) * 0.8);
-        const ph = t * 5 + i * 0.7;
-        const amp = r.h * 0.02 * (0.6 + hash(i, 9));
-        const x0 = r.x + r.w * (0.3 + 0.2 * hash(i, 7)) - st.dissolve * r.w * 0.6;
-        const pts = Array.from({length: 40}, (_, k) => {
-          const x = x0 + (k / 39) * r.w * (0.2 + 1.3 * st.dissolve);
-          return `${f1(x)},${f1(y + Math.sin(ph + k * 0.5) * amp * (0.4 + st.dissolve))}`;
-        });
-        return <path key={i} d={`M${pts.join('L')}`} fill="none" stroke={i % 2 ? '#5CE1FF' : '#FFD24A'} strokeWidth={lw * 0.8} opacity={st.dissolve * 0.9} strokeLinecap="round" />;
-      })}
+      {tracePaths(r, t, st.dissolve).map((tr, i) => (
+        <path key={i} d={`M${tr.pts.map((p) => `${f1(p.x)},${f1(p.y)}`).join('L')}`} fill="none" stroke={tr.color} strokeWidth={lw * 0.8} opacity={st.dissolve * 0.9} strokeLinecap="round" />
+      ))}
     </g>
   ) : null;
   return (
@@ -258,9 +266,10 @@ const Screen: React.FC<{b: B; t: number}> = ({b, t}) => {
 const PubFeed: React.FC<{b: B; t: number; hx: number}> = ({b, t, hx}) => {
   const r = pubRect(b);
   const camera = W('camera').start;
-  // the palm arrives over the lens from about camera - 0.12; it leaves as he lets go before the dash
-  const cover = ss(t, camera - 0.14, camera + 0.02) * (1 - ss(t, DUR - 1.32, DUR - 1.18));
-  const dark = t > END0 ? ss(t, camera + 0.02, camera + 0.12) * (1 - ss(t, DUR - 1.3, DUR - 1.2)) : 0;
+  // the palm arrives over the lens from about camera - 0.12; it leaves on "or" (labHero.ts), the picture returns
+  const or = W('or').start;
+  const cover = ss(t, camera - 0.14, camera + 0.02) * (1 - ss(t, or - 0.02, or + 0.12));
+  const dark = t > END0 ? ss(t, camera + 0.02, camera + 0.12) * (1 - ss(t, or + 0.05, or + 0.15)) : 0;
   // he is in the picture while he stands under the camera (local hip x left of about -380)
   const inView = clamp((-330 - hx) / 80);
   const fx = r.x + r.w * clamp(0.75 + (hx + 534) / 900, 0, 1.2);
@@ -317,8 +326,8 @@ export const LabScene: React.FC<{t: number}> = ({t}) => {
         <Screen b={b} t={t} />
       </MonitorStand>
       <FloorShadow cd={cd} x={h.p.x - 20} w={230} />
-      <Cctv b={b} live={!(t > W('camera').start && t < DUR - 1.2)} />
-      <Person id={`${u}hero`} cd={cd} p={h.p} look={{expr: h.x, lHand: h.lh, rHand: h.rh}} />
+      <Cctv b={b} live={!(t > W('camera').start && t < W('or').start + 0.15)} />
+      <Person id={`${u}hero`} cd={cd} p={h.p} look={{expr: h.x, lHand: h.lh, rHand: h.rh}} farBehind nearPalm={h.palm} />
       {lit > 0 && <ellipse cx={f1(cd.x + cd.k * (h.p.x - 40))} cy={f1(cd.y - cd.k * 420)} rx={f1(cd.k * 260)} ry={f1(cd.k * 480)} fill={C.rf} opacity={0.1 * lit} style={{mixBlendMode: 'screen'}} />}
       <Reflections b={b} t={t} kpW={kpW} />
       <Section b={b} sep={sep} glow={lit} />

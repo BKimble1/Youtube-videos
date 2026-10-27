@@ -47,9 +47,9 @@ export type Look = {
   rHand?: HandPose;
   hairSway?: number;
 };
-export const Person: React.FC<{id: string; cd: Card; p: ManPose; look?: Look; flip?: boolean; opacity?: number; children?: React.ReactNode; overAll?: React.ReactNode}> = ({id, cd, p, look = {}, flip, opacity, children, overAll}) => cd.depth < 0.25 ? null : (
+export const Person: React.FC<{id: string; cd: Card; p: ManPose; look?: Look; flip?: boolean; opacity?: number; children?: React.ReactNode; overAll?: React.ReactNode; farBehind?: boolean; nearPalm?: boolean}> = ({id, cd, p, look = {}, flip, opacity, children, overAll, farBehind, nearPalm}) => cd.depth < 0.25 ? null : (
   <g transform={`translate(${cd.x.toFixed(2)} ${cd.y.toFixed(2)}) scale(${(cd.k * (flip ? -1 : 1)).toFixed(5)} ${cd.k.toFixed(5)})`} opacity={opacity}>
-    <Man id={id} pose={p} expr={look.expr ?? EXPR_NEUTRAL} blink={look.blink ?? 0} lHand={look.lHand ?? HAND_RELAXED} rHand={look.rHand ?? HAND_RELAXED} outfit={look.outfit ?? GUESSER} hairSway={look.hairSway ?? 0} overAll={overAll}>
+    <Man id={id} pose={p} expr={look.expr ?? EXPR_NEUTRAL} blink={look.blink ?? 0} lHand={look.lHand ?? HAND_RELAXED} rHand={look.rHand ?? HAND_RELAXED} outfit={look.outfit ?? GUESSER} hairSway={look.hairSway ?? 0} overAll={overAll} farBehind={farBehind} nearPalm={nearPalm}>
       {children}
     </Man>
   </g>

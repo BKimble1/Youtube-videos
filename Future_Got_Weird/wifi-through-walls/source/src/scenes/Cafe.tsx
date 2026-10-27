@@ -6,7 +6,7 @@ import React from 'react';
 import {add3, B, basis, Cam, camKeys, depth, proj, scaleAt, v3, V3} from '../world/cam';
 import {Line3, Poly, rz} from '../world/draw';
 import {cardAt, cardPt, FloorShadow, Person, pose, U} from '../art/person';
-import {walk, walkX, Gait} from '../art/walk';
+import {heelStrikes, walk, walkX, Gait} from '../art/walk';
 import {manJoints, Outfit} from '../dc/Man';
 import {EXPR_NEUTRAL, EXPR_UNEASY, Expr, mixExpr} from '../dc/Head';
 import {HAND_RELAXED, HandPose} from '../dc/Hand';
@@ -14,6 +14,7 @@ import {PAL} from '../dc/color';
 import {BladeSign, CafeBack, CafeFore, CafeGround, CC, FACADE, LAPTOP, MONI, PATH_Z, ROUTER, Table, TABLE} from './cafeSet';
 import {clamp, f1, hash, keyS, ss, useUid, word} from '../lib';
 import {INK} from '../world/draw';
+import {cutMonRect, tracePaths} from './Lab';
 
 const W = word;
 export const CB = {
@@ -33,9 +34,19 @@ export const CB = {
 const HERO_Z = PATH_Z;
 const V = 560; // units/s (0.93 m/s)
 /** E/F: he enters from the right */
-const GE: Gait = {x0: 2.1 * U + V * CB.e0, v: V, T: 0.95, ph: 0.1, hipY: -478, arm: 60};
+const GE: Gait = {x0: 2.1 * U + V * CB.e0, v: V, T: 0.9, ph: 0.1, arm: 19, elbow: 16, lean: 4};
 /** H: a second pass, a few steps further along */
-const GH: Gait = {x0: 1.15 * U + V * CB.h0, v: V, T: 0.95, ph: 0.6, hipY: -478, arm: 60};
+const GH: Gait = {x0: 1.15 * U + V * CB.h0, v: V, T: 0.9, ph: 0.6, arm: 19, elbow: 16, lean: 4};
+// V2: the passer-by crosses behind him while the transition's traces still cover the picture, then the two walk apart
+// (no overlapping bodies on screen)
+const PASS_G: Gait = {x0: -2.4 * U + 520 * CB.e0, v: 520, T: 0.94, ph: 0.3, arm: 16, elbow: 20, lean: 3};
+const PASS_OUT = CB.e0 + 0.75;
+/** footsteps heard in the café shots (heel strikes of the walkers on screen); gain 0..1 */
+export const cafeFootsteps = () => [
+  ...heelStrikes(GE, CB.e0, CB.f1).map((s) => ({...s, who: 'hero (café)', gain: s.t > CB.even - 0.05 ? 1 : 0.7})),
+  ...heelStrikes(PASS_G, CB.e0 + 0.3, PASS_OUT).map((s) => ({...s, who: 'passer-by', gain: 0.35})),
+  ...heelStrikes(GH, CB.h0, CB.h1).map((s) => ({...s, who: 'hero (café H)', gain: 0.75})),
+];
 const heroGait = (t: number) => (t < CB.h0 - 0.5 ? GE : GH);
 export const heroX = (t: number) => walkX(heroGait(t), t) / U;
 
@@ -43,42 +54,50 @@ const CUSTOMER: Outfit = {skin: '#8D5A3B', hair: '#1E1A1A', shirt: '#7C6BD6', st
 const PASSER: Outfit = {skin: '#F1C7A5', hair: '#E2B85C', shirt: '#E07A5F', stripe: null, pants: '#2F4858', shoe: '#F4F1EA', longSleeve: true, hairStyle: 'bun'};
 const CUST_G = v3(TABLE.x + 0.5, 0, TABLE.z + 0.02);
 const custPose = (t: number) =>
-  pose({x: 0, y: -282, torso: 9, chest: 3, neck: 6 + 2 * Math.sin(t * 0.9), turn: 0.62,
+  // V2: hunched over the laptop (head low), so the hero walking behind her reads as a separate layer above her
+  pose({x: 0, y: -282, torso: 18, chest: 8, neck: 10 + 2 * Math.sin(t * 0.9), turn: 0.62,
     lW: 1, lWx: (LAPTOP.x - CUST_G.x) * U + 30 + 8 * Math.sin(t * 7), lWy: -(TABLE.y + 0.03) * U, lElb: -1,
     rW: 1, rWx: (LAPTOP.x - CUST_G.x) * U + 95 + 8 * Math.sin(t * 6 + 1), rWy: -(TABLE.y + 0.03) * U, rElb: -1,
     lAx: -255, lAy: -27, lA: 1, rAx: -205, rAy: -27, rA: 1});
 const custExpr: Expr = {...EXPR_NEUTRAL, lid: 0.3, gx: -0.4, gy: 0.5, smile: 0.1};
 
 // ------------------------------------------------------------------ cameras
-const camE = (t: number): Cam => {
+export const camE = (t: number): Cam => {
   const hx = heroX(t);
   if (t >= CB.even - 0.05) return {pos: v3(hx - 0.16, 1.1, HERO_Z - 1.95 + 0.15 * ss(t, CB.even - 0.05, CB.f1)), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 960};
-  const track: Cam = {pos: v3(hx - 0.42, 1.38, -2.55), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 760};
+  const track: Cam = {pos: v3(hx - 0.42, 1.5, -2.55), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 800};
   const screen: Cam = {pos: v3(MONI.x, MONI.y + 0.02, MONI.z - 1.05), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 900};
   const hxF = heroX(t);
   const close: Cam = {pos: v3(hxF - 0.22, 1.02, HERO_Z - 2.15), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 860};
+  // V2: a cut to the laptop (this screen camera stands behind his walking line; a push to it passed through him and the
+  // customer)
+  const cutS = CB.identify + 0.05;
+  if (t >= cutS) return camKeys(t, [[cutS, {...screen, pos: add3(screen.pos, v3(0, 0, -0.1))}], [CB.even - 0.05, {...screen, pos: add3(screen.pos, v3(0, 0, 0.12))}, (x) => x]]);
   return camKeys(t, [
     [CB.e0, {...track, pos: add3(track.pos, v3(0.25, 0.2, -0.2))}],
     [CB.ordinary, track],
-    [CB.identify - 0.15, track],
-    [CB.identify + 0.5, screen],
-    [CB.even - 0.05, {...screen, pos: add3(screen.pos, v3(0, 0, 0.12))}, (x) => x],
+    [cutS, {...track, pos: add3(track.pos, v3(-0.05, 0, 0.1))}],
   ]);
 };
 const camH = (t: number): Cam => {
   const hx = heroX(t);
   const high: Cam = {pos: v3(hx - 0.3, 3.0, -2.3), yaw: 0, pitch: -16, f: 2000, cx: 540, cy: 960};
   const street: Cam = {pos: v3(hx - 0.42, 1.3, -2.45), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 760};
-  const screen: Cam = {pos: v3(MONI.x, MONI.y + 0.02, MONI.z - 1.05), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 900};
+  // V2: the screen seen from in front of his walking line with a longer lens (same framing as from 1.05 m), so the moves
+  // street -> screen -> window never cross his path; he is still well to the right, out of frame, while it holds
+  const SZ = 0.9;
+  const screen: Cam = {pos: v3(MONI.x, MONI.y + 0.02, SZ), yaw: 0, pitch: 0, f: (2000 * (MONI.z - SZ)) / 1.05, cx: 540, cy: 900};
   // the window: he passes in front of the laptop, close enough to read his face
   const win: Cam = {pos: v3(Math.max(hx + 0.05, MONI.x - 0.15), 1.42, -0.95), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 900};
+  // cuts on "recognizes" (to the laptop) and "without" (to him at the window), each shot with its own slow push: a move
+  // between these cameras would sweep past him at arm's length
+  const cutS = CB.recognizes - 0.05, cutW = CB.without + 0.1;
+  if (t >= cutW) return camKeys(t, [[cutW, {...win, pos: add3(win.pos, v3(0.04, 0, -0.1))}], [CB.h1, {...win, pos: add3(win.pos, v3(-0.05, 0, 0.12))}]]);
+  if (t >= cutS) return camKeys(t, [[cutS, {...screen, pos: add3(screen.pos, v3(0, 0, -0.12))}], [cutW, {...screen, pos: add3(screen.pos, v3(0, 0, 0.08))}]]);
   return camKeys(t, [
     [CB.h0, high],
-    [CB.recognizes - 0.3, street],
-    [CB.recognizes + 0.25, screen],
-    [CB.without - 0.15, screen],
-    [CB.without + 0.45, win],
-    [CB.h1, {...win, pos: add3(win.pos, v3(-0.05, 0, 0.12))}],
+    [cutS - 0.5, street],
+    [cutS, {...street, pos: add3(street.pos, v3(-0.05, 0, 0.1))}],
   ]);
 };
 // ------------------------------------------------------------------ Wi-Fi
@@ -116,6 +135,34 @@ const Link: React.FC<{b: B; t: number; bodyX: number}> = ({b, t, bodyX}) => {
           </g>
         );
       })}
+    </g>
+  );
+};
+/** the transition from the lab: the signal traces that filled the picture at the cut keep flowing, then fold into
+ *  the café's router (they shrink toward it and fade), so the signal itself carries the viewer into the new place */
+const CARRY = 0.6;
+const SignalCarry: React.FC<{b: B; t: number}> = ({b, t}) => {
+  const m0 = (t - CB.e0) / CARRY;
+  if (m0 < 0 || m0 >= 1) return null;
+  const m = m0 * m0 * (3 - 2 * m0);
+  const r = cutMonRect();
+  const R = proj(b, add3(ROUTER, v3(0, 0.08, -0.05)));
+  const k = 1 - 0.985 * m;
+  const lw = Math.max(1.8, r.w * 0.016) * 0.8 * (1 - 0.7 * m);
+  return (
+    <g>
+      {/* the dark of the display lifts off the café as the traces fold away */}
+      <g opacity={1 - ss(m0, 0, 0.4)}>
+        <rect width={1080} height={1920} fill="#081626" />
+        {/* the display's grid, as it was at the cut */}
+        {Array.from({length: 9}, (_, i) => r.x + (i / 8) * r.w).map((x, i) => <line key={i} x1={f1(x)} y1={r.y} x2={f1(x)} y2={r.y + r.h} stroke="#17324A" strokeWidth={Math.max(1, r.w * 0.016 * 0.35)} />)}
+        {[0.2, 0.4, 0.6, 0.8].map((q) => <line key={q} x1={r.x} y1={f1(r.y + r.h * q)} x2={r.x + r.w} y2={f1(r.y + r.h * q)} stroke="#17324A" strokeWidth={Math.max(1, r.w * 0.016 * 0.35)} />)}
+      </g>
+      <g style={{mixBlendMode: 'screen'}} opacity={0.9 * (1 - ss(m0, 0.55, 1))}>
+      {tracePaths(r, t, 1).map((tr, i) => (
+        <path key={i} d={`M${tr.pts.map((p) => `${f1(R.x + (p.x - R.x) * k)},${f1(R.y + (p.y - R.y) * k)}`).join('L')}`} fill="none" stroke={tr.color} strokeWidth={f1(lw)} strokeLinecap="round" />
+      ))}
+      </g>
     </g>
   );
 };
@@ -251,16 +298,11 @@ export const CafeScene: React.FC<{t: number}> = ({t}) => {
   // expressions: easy-going; H: he notices the window (head turns toward the camera, eyes to the right)
   const notice = isH ? ss(t, CB.anything - 0.55, CB.anything - 0.15) : 0;
   const ex: Expr = mixExpr({...EXPR_NEUTRAL, smile: 0.3, gx: -0.5}, {...EXPR_UNEASY, gx: -0.95, gy: 0.15, browIn: 0.95, pupil: 0.72}, notice);
-  // F: both palms come up, open and empty, while he keeps walking
-  const shrug = 0; // tried: an open-palms shrug read as adjusting his belt in this rig; the hands stay open and swinging
-  const lerpN = (a: number, c: number) => a + (c - a) * shrug;
-  const hpN = {...hp, turn: hp.turn + 0.3 * notice, neck: hp.neck + 4 * notice,
-    lTu: lerpN(hp.lTu, -150), lTv: lerpN(hp.lTv, -250), lWr: lerpN(hp.lWr, -80), lElb: hp.lElb,
-    rTu: lerpN(hp.rTu, -160), rTv: lerpN(hp.rTv, -300), rWr: lerpN(hp.rWr, -70)};
-  const hands: HandPose = {curl: [0.08, 0.1, 0.12, 0.15], spread: 0.55, thumb: 34, thumbCurl: 0.15};
+  const hpN = {...hp, turn: hp.turn + 0.3 * notice, neck: hp.neck + 4 * notice};
+  const hands: HandPose = {curl: [0.16, 0.2, 0.24, 0.28], spread: 0.4, thumb: 28, thumbCurl: 0.25};
   const custCd = cardAt(b, CUST_G);
   // the passer-by on the far side of the sidewalk (walks to screen-right: a mirrored card)
-  const passG: Gait = {x0: 3.0 * U + 520 * CB.e0, v: 520, T: 0.98, ph: 0.3, hipY: -480, arm: 55};
+  const passG = PASS_G;
   const passCd = cardAt(b, v3(0, 0, 2.75));
   const passP = walk(passG, t);
   const showPass = !isH && t < CB.identify - 0.25; // gone before the push into the laptop (her path crosses the camera's)
@@ -275,12 +317,12 @@ export const CafeScene: React.FC<{t: number}> = ({t}) => {
       {showPass && (
         <g>
           <FloorShadow cd={{...passCd, x: passCd.x - passCd.k * passP.x}} w={200} />
-          <Person id={`${u}pass`} cd={passCd} p={passP} flip look={{outfit: PASSER, expr: {...EXPR_NEUTRAL, gx: -0.3, smile: 0.35}}} />
+          <Person id={`${u}pass`} cd={passCd} p={passP} flip farBehind look={{outfit: PASSER, expr: {...EXPR_NEUTRAL, gx: -0.3, smile: 0.35}}} />
         </g>
       )}
       <Rings b={b} t={t} at={add3(ROUTER, v3(0, 0.12, -0.1))} strength={isH ? 0.5 : 1} />
       <FloorShadow cd={cd} x={hp.x} w={210} />
-      <Person id={`${u}hero`} cd={cd} p={hpN} look={{expr: ex, lHand: hands, rHand: hands, hairSway: 3 * Math.sin(t * 6.6)}} />
+      <Person id={`${u}hero`} cd={cd} p={hpN} farBehind look={{expr: ex, lHand: hands, rHand: hands, hairSway: 2 * Math.sin(t * 6.4)}} />
       <Pockets cd={cd} p={hpN} t={t} a={pocket} />
       <Link b={b} t={t} bodyX={hx} />
       {!isH && <Table b={b} part="back" />}
@@ -294,6 +336,7 @@ export const CafeScene: React.FC<{t: number}> = ({t}) => {
       {!isH && <Person id={`${u}cust`} cd={custCd} p={custPose(t)} look={{outfit: CUSTOMER, expr: custExpr}} />}
       {!isH && <Table b={b} part="front" />}
       <CafeFore b={b} />
+      <SignalCarry b={b} t={t} />
     </svg>
   );
 };

@@ -44,6 +44,8 @@ export type Outfit = {
 export const GUESSER: Outfit = {skin: PAL.skin, hair: PAL.hair, shirt: PAL.shirt, stripe: PAL.stripe, pants: PAL.pants, shoe: PAL.shoe};
 
 export type ManPose = {
+  /** V2: soft-IK onset for the planted legs (default SOFT_IK); a walk uses 0.99 so the stance knee can nearly straighten */
+  legSoft?: number;
   x: number;
   y: number;
   s: number;
@@ -127,11 +129,11 @@ export const SOFT_IK = 0.96;
 export const MAX_STRETCH = 1.0;
 /** Two-bone IK: elbow on side `side` (+1 = clockwise of the shoulder->target line). `plant` 0..1: how firmly the
  *  effector is planted in the world; a planted effector stays exactly on its target (bones stretch <= 4.5%). */
-const ik = (S: V, T: V, l1: number, l2: number, side: number, plant = 0) => {
+const ik = (S: V, T: V, l1: number, l2: number, side: number, plant = 0, softK = SOFT_IK) => {
   const d0 = sub(T, S);
   const Lt = l1 + l2;
   const d = Math.max(len(d0), Math.abs(l1 - l2) + 0.5);
-  const ds = SOFT_IK * Lt;
+  const ds = softK * Lt;
   const soft = d <= ds ? d : ds + (Lt - ds) * (1 - Math.exp(-(d - ds) / (Lt - ds)));
   const sc = 1 + (clamp(d / soft, 1, MAX_STRETCH) - 1) * clamp(plant);
   const reach = soft * sc;
@@ -208,7 +210,7 @@ export const manJoints = (p: ManPose) => {
     if (w > 0 && tx !== undefined && ty !== undefined) {
       // planted foot: two-bone IK from the hip to the ankle target, knee forward (toward his front, screen-left)
       const T = {x: tx, y: ty};
-      const r = ik(hp, T, DIM.thigh * s * (fs ?? 1), DIM.shin * s * (fsh ?? 1), 1, sstep(0.8, 0.9, w));
+      const r = ik(hp, T, DIM.thigh * s * (fs ?? 1), DIM.shin * s * (fsh ?? 1), 1, sstep(0.8, 0.9, w), p.legSoft ?? SOFT_IK);
       K = lerpV(K, r.E, w);
       A = lerpV(A, r.W, w);
       const sd = norm(sub(A, K));
@@ -313,9 +315,14 @@ type Props = {
   /** V8 (Glass Climbing): the near short sleeve drawn as a whole sleeve with a rounded, outlined crown over the shoulder,
    *  and the near arm's skin starting under it (for views where the near arm hangs in front of the torso) */
   sleeveCap?: boolean;
+  /** Wi-Fi Through Walls V2: the far forearm and hand stay behind the torso (walking, a hand raised behind the head),
+   *  instead of being drawn again in front of the tee wherever they overlap it (the chest-clutch default) */
+  farBehind?: boolean;
+  /** Wi-Fi Through Walls V2: show the palm of the near hand (a hand raised with the palm forward) */
+  nearPalm?: boolean;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide, sleeveCap}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide, sleeveCap, farBehind, nearPalm}) => {
   const j = manJoints(p);
   const s = p.s;
   const OUT = 7 * s * inkK; // crew contour
@@ -589,7 +596,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {web && <InkPath d={web} fill={shade(sk, 0.18)} />}
         {/* the far arm's tightly folded elbow shows no inner crease (that side of the fold is hidden) */}
         <Limb id={`${id}-${k}lb`} A={isFar ? A.S : nearArmTop} B={A.E} C={A.W} rA={29 * s} rB={23.5 * s} rC={o.longSleeve ? 21 * s : 17 * s} color={o.longSleeve ? (isFar ? far(o.shirt) : o.shirt) : sk} spec={0.22} crease={isFar ? 0 : IN * 0.8} />
-        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view="back" pose={hp} color={o.glove ? (isFar ? far(o.glove) : o.glove) : sk} ink={IN * 0.9} bare sheen={o.glove ? 0.2 : 1} />
+        <Hand id={`${id}-${k}h`} wrist={add(A.W, mul(A.foreDir, -6 * s))} ang={A.handAng} L={DIM.hand * s} thumbSide={thumbSide} view={nearPalm && !isFar ? 'palm' : 'back'} pose={hp} color={o.glove ? (isFar ? far(o.glove) : o.glove) : sk} ink={IN * 0.9} bare sheen={o.glove ? 0.2 : 1} />
       </Inked>
     );
   };
@@ -682,12 +689,12 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {overTorso}
       </Deco>
       {/* the far forearm and hand cross the chest in front of the tee (behind the raised near thigh) */}
-      <g mask={`url(#${id}-rfm)`}>
+      {!farBehind && <g mask={`url(#${id}-rfm)`}>
         <Inked w={IN}>
           <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={o.longSleeve ? 21 * s : 17 * s} color={o.longSleeve ? far(o.shirt) : far(skin)} spec={0.2} />
           <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(o.glove ?? skin)} ink={IN * 0.9} bare sheen={o.glove ? 0.2 : 1} />
         </Inked>
-      </g>
+      </g>}
       {nearLegFront && (
         <g mask={`url(#${id}-llm)`}>
           <Inked w={IN}>

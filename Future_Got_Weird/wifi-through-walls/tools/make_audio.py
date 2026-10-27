@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The V1 mix: the final narration, an original synthesized music bed, synthesized electronic tones, and five
+"""The V2 mix (V1 plus footsteps from the walkers' heel strikes, audio/footsteps.json, and V2 picture timing): the final narration, an original synthesized music bed, synthesized electronic tones, and five
 ElevenLabs sound effects (audio/sfx/el_*.mp3, generated for this film). Cue times are taken from the measured word
 timeline (audio/narration/words_final.json) with the same beat offsets the picture uses (source/src/scenes/*.tsx).
 
@@ -7,7 +7,7 @@ Loop: the music is written in exactly 16 bars of the film's length (64 beats in 
 music note and effect is mixed into a circular buffer (anything that rings past the last frame continues at frame 0),
 so the end of the film runs into its start without a jump or click. The narration is not circular.
 
-Outputs: audio/mix/FGW_WiFi_Walls_V1_mix.wav (48 kHz/24-bit stereo), source/public/audio/mix.wav, audio/cues.json,
+Outputs: audio/mix/FGW_WiFi_Walls_V2_mix.wav (48 kHz/24-bit stereo), source/public/audio/mix.wav, audio/cues.json,
 audio/mix/mix_measure.json.
 usage: python3 -I tools/make_audio.py"""
 import json, os, subprocess
@@ -180,6 +180,20 @@ cue(sfx, 'low impact (ElevenLabs)', B['creepy'] + 0.02, boom, 0.8)
 cue(sfx, 'sub drop', B['creepy'] + 0.02, sub, 0.35)
 stream = hp_fast(noise(0.8, 6000, 0.5, 2.0, 0.8), 1500) * np.linspace(0.2, 1, int(0.8 * SR))
 cue(sfx, 'data stream', LAB_OUT - 0.7, stream, 0.05)
+# ---- V2: the traces fold into the café's router (Cafe.tsx SignalCarry, 0.6 s from the cut): a falling sweep
+cue(ui, 'signal folds into the router', LAB_OUT + 0.02, chirp(3400, 900, 0.55) * np.linspace(1, 0.3, int(0.55 * SR)), 0.03)
+# ---- V2: footsteps (soft sneaker heel + scuff), one per heel strike of a walker on screen
+def step_sound(hard=False):
+    n = int(0.07 * SR)
+    tt = np.arange(n) / SR
+    heel = lp_fast(rng.standard_normal(n), 520 if hard else 380) * np.exp(-tt / 0.018) * np.minimum(1, tt / 0.0015)
+    m = int(0.03 * SR)
+    scuff = np.zeros(n)
+    scuff[int(0.025 * SR):int(0.025 * SR) + m] = hp_fast(lp_fast(rng.standard_normal(m), 4200), 1800) * np.exp(-np.arange(m) / (0.008 * SR))
+    return heel * 1.0 + scuff * 0.25
+for s_ in json.load(open(os.path.join(EP, 'audio/footsteps.json'))):
+    g_ = s_['gain'] * (0.85 + 0.3 * rng.random())
+    cue(sfx, f"footstep ({s_['who']})", s_['t'], step_sound(s_['who'].startswith('hero (lab')), 0.25 * g_)
 # ---- E/F/H: café ambience (ElevenLabs loop), ducked to near-silence under WITHOUT their phones
 cafe = load('el_cafe_amb_loop.mp3')
 cafe = cafe / (np.sqrt(np.mean(cafe ** 2)) + 1e-9) * 0.05
@@ -212,8 +226,9 @@ cue(sfx, 'quiet emphasis (WITHOUT)', B['without'] + 0.02, lp_fast(noise(0.35, 30
 room = lp_fast(rng.standard_normal(int(5 * SR)), 250) * 0.012
 cue(amb, 'corridor room tone', CAFE_F1, room[: int((CAFE_H0 - CAFE_F1) * SR)] * np.minimum(1, np.minimum(np.arange(int((CAFE_H0 - CAFE_F1) * SR)) / (0.05 * SR), (int((CAFE_H0 - CAFE_F1) * SR) - np.arange(int((CAFE_H0 - CAFE_F1) * SR))) / (0.05 * SR))), 1.0)
 g0 = B['they2'] - 0.1
-for i in range(7):
-    cue(ui, 'walker matched', g0 + 0.45 + i * 0.6 + 0.2, blip(988 + 90 * i, 0.08), 0.06)
+# V2: four walkers, one a second (source/src/scenes/Corridor.tsx: crossT = g0 + 0.25 + i, matched 0.15-0.3 s later)
+for i in range(4):
+    cue(ui, 'walker matched', g0 + 0.25 + i * 1.0 + 0.2, blip(988 + 120 * i, 0.08), 0.06)
 for n_ in range(0, 197, 3):
     tt_ = B['everyone'] - 0.15 + n_ * 0.0055
     cue(ui, 'dataset sweep', tt_, blip(1400 + 4 * n_, 0.035), 0.022)
@@ -311,7 +326,7 @@ st = np.stack([L, R], 1)
 peak = np.abs(st).max()
 st = st / peak * 10 ** (-1.5 / 20)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
-out = os.path.join(EP, 'audio/mix/FGW_WiFi_Walls_V1_mix.wav')
+out = os.path.join(EP, 'audio/mix/FGW_WiFi_Walls_V2_mix.wav')
 sf.write(out, st, SR, subtype='PCM_24')
 meas = subprocess.run(['ffmpeg', '-v', 'info', '-nostats', '-i', out, '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
 I = float([l for l in meas.splitlines() if l.strip().startswith('I:')][-1].split()[1])
