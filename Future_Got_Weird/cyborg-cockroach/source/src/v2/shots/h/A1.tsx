@@ -41,10 +41,10 @@ export const a1Pose = (t: number, lab = true): RoachPose => {
 };
 /** the view: three-quarter from the insect's left front, pushing in slowly toward the tube mouth / target */
 export const A1_AZ = 12, A1_EL = 16;
-export const a1View = (t: number): View => {
+export const a1View = (t: number, dx = 0): View => {
   const u = sr(t, -0.2, 1.9);
   const s = 14.6 + 3.2 * u;
-  const at: [number, number, number] = [17 + 9 * u, 16, 0];
+  const at: [number, number, number] = [17 + 9 * u + dx, 16, 0];
   return viewAt(A1_AZ, A1_EL, s, at, 530 - 10 * u, 960);
 };
 

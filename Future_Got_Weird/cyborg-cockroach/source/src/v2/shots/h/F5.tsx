@@ -11,7 +11,8 @@ import {Surface2D} from '../../sets/Lab2';
 import {Hand, HAND_RELAXED, mixHand, HAND_LIMP} from '../../dc/Hand';
 import {Lin, SoftShadow} from '../../../lib/shade';
 import {noise1, sr} from '../../../lib/ease';
-import {a1Pose, a1View, A1_FIRE, A1_TRAVEL, A1_FACE} from './A1';
+import {RB, Shaft, Motes, Glow2, Vignette} from '../e/art';
+import {a1Pose, a1View, a1Walk, A1_FIRE, A1_TRAVEL} from './A1';
 import {FRAMES2} from '../../cuts2';
 import {ShotProps} from '../index2';
 
@@ -38,25 +39,24 @@ const Chunk: React.FC<{pts: [number, number][]; color: string; ink?: number}> = 
   );
 };
 
-/** the rubble backdrop for the close shots (blurred: it is far behind the macro subject) */
+/** the rubble backdrop for the close shots, in her pocket's light (group E's palette: dark concrete, a warm daylight
+ *  shaft from the upper right, dust motes); blurred, it is far behind the macro subject */
 export const RubbleBack2: React.FC<{id: string; t: number}> = ({id, t}) => (
   <g>
-    <Lin id={`${id}-bg`} d="M0,0 H1080 V1920 H0 Z" from={{x: 0, y: 0}} to={{x: 0, y: 1300}} stops={[[0, '#3C3632'], [1, '#6E655D']]} />
+    <Lin id={`${id}-bg`} d="M0,0 H1080 V1920 H0 Z" from={{x: 0, y: 0}} to={{x: 0, y: 1100}} stops={[[0, RB.deep], [1, RB.far]]} />
     <g filter={`url(#${id}-bl)`}>
       <defs>
         <filter id={`${id}-bl`} x="-10%" y="-10%" width="120%" height="120%">
-          <feGaussianBlur stdDeviation="8" />
+          <feGaussianBlur stdDeviation="9" />
         </filter>
       </defs>
-      <Chunk pts={[[-60, 380], [420, 300], [520, 700], [60, 820], [-60, 760]]} color={RUB2.concreteDeep} ink={8} />
-      <Chunk pts={[[560, 120], [1140, 60], [1140, 640], [700, 720], [520, 520]]} color={RUB2.concrete} ink={8} />
-      <Chunk pts={[[300, 760], [760, 700], [880, 900], [260, 960]]} color={RUB2.mid} ink={8} />
-      <path d="M760,0 L1080,0 L1080,40 L520,980 L380,980 Z" fill={RUB2.day} opacity={0.12} />
-      {[...Array(26)].map((_, i) => {
-        const x = (i * 137.3) % 1080, y = 120 + ((i * 251.7) % 820) + 18 * noise1(t * 0.5 + i, 3);
-        return <circle key={i} cx={f2(x + 10 * noise1(t * 0.4 + i * 2, 5))} cy={f2(y)} r={2 + (i % 3)} fill={RUB2.dust} opacity={0.5} />;
-      })}
+      <Chunk pts={[[-60, 300], [460, 210], [560, 640], [60, 780], [-60, 720]]} color={RB.far} ink={8} />
+      <Chunk pts={[[600, 60], [1140, -20], [1140, 600], [760, 700], [560, 470]]} color={RB.concDark} ink={8} />
+      <Chunk pts={[[280, 700], [780, 640], [900, 860], [240, 930]]} color={RB.farLit} ink={8} />
+      <path d="M520,690 L1140,330" stroke={RB.rebar} strokeWidth={14} strokeLinecap="round" />
     </g>
+    <Shaft id={`${id}-sh`} pts={[[820, -40], [1120, -40], [700, 1100], [260, 1100]]} from={[960, 0]} to={[480, 1100]} a={0.42} />
+    <Motes id={`${id}-m`} t={t} n={34} x0={300} y0={60} x1={1060} y1={1000} r={2.6} seed={11} a={0.7} />
   </g>
 );
 
@@ -74,26 +74,36 @@ export const F5Hand: React.FC<{id: string; t: number; tip: {x: number; y: number
   );
 };
 
+/** the camera pans with the insect at first (so it is in frame from the cut, already big) and settles onto A1's
+ *  frame-0 view as the shot ends: the pan amount k fades to 0, so frame 935 hands over to A1 exactly */
+const f5View = (tau: number) => {
+  const k = 0.72 * (1 - sr(tau, -1.5, -0.04));
+  return a1View(tau, k * (a1Walk(tau) - a1Walk(0)));
+};
 export const F5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   const tau = t - FRAMES2 / 30; // loop time: A1's clock
-  const v = a1View(tau);
+  const v = f5View(tau);
+  const v0 = a1View(tau);
   const pose = a1Pose(tau, false);
   const d = deployAt(tau, A1_FIRE, A1_TRAVEL);
-  // fingertips in the near foreground, ahead of and below the insect's head where it stops at the loop point (fixed in
-  // the world: placed from the stance pose, on A1's frame-0 view)
+  // her fingertips lie in the near foreground, ahead of and below the insect's head where it stops at the loop point
+  // (placed on A1's frame-0 view, then carried with the pan: the hand is fixed in the world)
   const head0 = P(a1View(0), toW(a1Pose(0, false).frame, [36, 4, 0]));
-  // (the relaxed fingers curl, so the drawn tips land well short of the hand's straight length: aim it further in)
-  const tip = {0: head0[0] - 120, 1: head0[1] + 120};
+  const o = P(v, [0, 0, 0]), o0 = P(v0, [0, 0, 0]);
+  const tip = {x: head0[0] - 120 + (o[0] - o0[0]), y: head0[1] + 205 + (o[1] - o0[1])};
+  const head = P(v, toW(pose.frame, [30, 2, 0]));
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <RubbleBack2 id={`${id}b`} t={t} />
-      <Surface2D v={v} x0={-400} x1={420} z0={-160} z1={140} color={RUB2.floor} />
-      {[...Array(18)].map((_, i) => {
-        const g = P(v, [-120 + ((i * 47.3) % 240), 0, -60 + ((i * 29.1) % 120)]);
-        return <circle key={i} cx={f2(g[0])} cy={f2(g[1])} r={3 + (i % 4)} fill={i % 2 ? RUB2.concreteDeep : RUB2.dust} opacity={0.8} />;
+      <Surface2D v={v} x0={-600} x1={600} z0={-160} z1={140} color={RB.conc} />
+      <Glow2 id={`${id}gl`} cx={head[0] + 80} cy={head[1] + 60} rx={620} ry={300} color={RB.day} a={0.34} />
+      {[...Array(22)].map((_, i) => {
+        const g = P(v, [-220 + ((i * 47.3) % 440), 0, -60 + ((i * 29.1) % 120)]);
+        return <circle key={i} cx={f2(g[0])} cy={f2(g[1])} r={3 + (i % 4)} fill={i % 2 ? RB.concDark : RB.dust} opacity={0.8} />;
       })}
-      <F5Hand id={`${id}h`} t={t} tip={{x: tip[0], y: tip[1]}} L={118 * v.s} open={sr(t, 29.6, 30.4)} />
+      <F5Hand id={`${id}h`} t={t} tip={tip} L={118 * v.s} open={sr(t, 29.6, 30.4)} />
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'injector', injRear: d.injRear, latched: d.latched, heat: d.heat}} />}} />
+      <Vignette id={`${id}vg`} a={0.45} />
     </svg>
   );
 };
