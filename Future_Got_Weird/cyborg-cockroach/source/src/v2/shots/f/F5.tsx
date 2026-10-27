@@ -7,7 +7,7 @@ import {sr, keys, lerp, clamp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
 import {ShotProps} from '../index2';
 import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
-import {R5, FPS, medicPose, cfView, onBody, BARREL} from './world';
+import {FPS, medicPose, cfView, onBody, BARREL} from './world';
 
 /** shot frames: the glance to the device, the glint, the change of face, the breath out, the hand */
 export const F5_K = {glance0: 1, glance1: 4, glint: 4, back: 9, hope0: 4, hope1: 13, ex0: 6, ex1: 17, open0: 6, open1: 16, slide0: 8, slide1: 18};
@@ -38,4 +38,3 @@ export const F5: React.FC<ShotProps> = ({f, lf}) => {
   };
   return <PocketFrame id="f5" cam={f5Cam()} T={T} a={a} medic={pose} glint={f5Glint(lf)} fan={0.8} vig={0.45} />;
 };
-void R5;

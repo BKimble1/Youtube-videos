@@ -209,7 +209,7 @@ export const Glint: React.FC<{id: string; at: Pt; a: number; r: number}> = ({id,
 
 /** the two-shot (F3's end, F5): her face upper left (the back of her head out of frame), her near hand, the ledge and
  *  the insect lower right */
-export const F5_CAM = {x: 775, y: 1000, z: 1.9};
+export const F5_CAM = {x: 735, y: 1000, z: 1.9};
 /** a camera that puts pocket point (wx, wy) at screen (sx, sy) with zoom z */
 export const camAt = (wx: number, wy: number, sx: number, sy: number, z: number): Cam => ({x: wx - (sx - 540) / z, y: wy - (sy - 960) / z, z});
 /** pocket px -> screen px for a camera (subject layer) */

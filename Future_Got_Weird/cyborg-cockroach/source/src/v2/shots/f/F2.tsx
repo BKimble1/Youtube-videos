@@ -8,7 +8,6 @@ import {Roach2D, Antenna2D, inkFor} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, P} from '../../roach/ortho';
 import {sr, lerp} from '../../../lib/ease';
-import {INK} from '../../../lib/ink';
 import {RB, Pt, Slab, Rebar, Pebbles, Motes, Grit, Glow2, VGrad, Vignette, Shaft, jag, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
 import {medicPose, medicX, R2, FPS, SLAB, SC, MM_U} from './world';
@@ -75,7 +74,6 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
       <Slab id="f2f1" face={jag([[-100, 1600], [240, 1680], [360, 1820], [340, 2020], [-100, 2020]], 14, 31)} top={jag([[-100, 1600], [240, 1680], [360, 1820], [-100, 1740]], 8, 32)} tone="#5D5F66" w={6} dark={0.55} specks={10} />
       <Slab id="f2f2" face={jag([[840, 1740], [1180, 1640], [1180, 2020], [780, 2020]], 14, 33)} top={jag([[840, 1740], [1180, 1640], [1180, 1720], [820, 1820]], 8, 34)} tone="#6A6B70" w={6} dark={0.55} specks={10} />
       <Vignette id="f2vg" a={0.5} />
-      <path d="M0,0" stroke={INK} />
     </svg>
   );
 };

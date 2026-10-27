@@ -8,7 +8,7 @@ import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, P} from '../../roach/ortho';
 import {Layer, Cam} from '../../dc/camera';
-import {sr, lerp, rnd} from '../../../lib/ease';
+import {rnd} from '../../../lib/ease';
 import {INK} from '../../../lib/ink';
 import {RB, Pt, Slab, Rebar, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, jag, poly, f2} from '../e/art';
 import {Block, Crevice, Ledge, CK, ledgeZ} from './crack2';
@@ -93,4 +93,3 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
     </svg>
   );
 };
-void sr; void lerp;

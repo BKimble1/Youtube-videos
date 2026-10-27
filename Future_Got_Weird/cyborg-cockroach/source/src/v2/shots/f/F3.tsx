@@ -4,12 +4,12 @@
 // side, a squint) and a recoil (head pulls back, fingers curl in), a small shudder. The camera follows her gaze down to
 // the insect, ending on the two-shot.
 import React from 'react';
-import {sr, keys, lerp, clamp} from '../../../lib/ease';
+import {sr, keys, lerp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
 import {Grit} from '../e/art';
 import {ShotProps} from '../index2';
 import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
-import {R3, FPS, medicPose, cfView, cardPx, SLAB} from './world';
+import {FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
 /** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, disgust and recoil */
 export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 13, see: 10, disg0: 10, disg1: 16, rec0: 11, rec1: 17};
@@ -52,4 +52,3 @@ export const F3: React.FC<ShotProps> = ({f, lf}) => {
       over={<Grit t={t} x={edge[0] + 8} y0={gy0} y1={gy0 + 130} t0={F3_GRIT.t0} dur={F3_GRIT.dur} n={9} g={2400} r={4} spread={14} seed={17} />} />
   );
 };
-void clamp;
