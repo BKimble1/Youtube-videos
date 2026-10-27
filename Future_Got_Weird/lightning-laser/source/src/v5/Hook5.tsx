@@ -20,6 +20,7 @@ import {CUT_X, HAND5, roomCam5} from './cams5_hook';
 import {Room5} from './Room5';
 import {Ext5} from './Hook5_ext';
 import {Post5} from './Hook5_fx';
+import {Follow5, FOLLOW0, FOLLOW1} from './Hook5_follow';
 
 /** the faster hook (client note: press, shock and lightning within the first two seconds): the shots above are played
  *  on a hook clock T = hookT(t), a smooth monotone time warp. The press stays on "fired" (0.2, real time), the hold on
@@ -27,7 +28,9 @@ import {Post5} from './Hook5_fx';
  *  run a little faster, the rocket up the beam in real time, and the leader's climb is quickened so that it connects
  *  on the loud crack (1.75). From that frame the film is V3's opening itself (openCam/openSt: the connection at 1.75,
  *  the re-strokes at 3.52, 3.64, 3.83 on their sounds, B's start at 4.31), cut on the connection flash. Near t = 0 the
- *  clock is real time, so the loop shot (Loop5) still runs straight into the press. */
+ *  clock is real time, so the loop shot (Loop5) still runs straight into the press. On the caption change (2.52) a
+ *  close shot rushes up the guided section with the bolt (Hook5_follow.tsx) and cuts back out on the restrike crack
+ *  (3.52), so the connected bolt is not held in one view for 2.5 s. */
 const WARP: [number, number][] = [[0, 0], [0.3, 0.3], [0.55, 1.3], [0.7, 1.75], [0.85, 1.9], [1.05, 2.25], [1.45, 2.65], [1.75, 3.52]];
 const SLOPE = (() => {
   // Fritsch-Carlson monotone cubic slopes (velocity changes smoothly between the knots), slope 1 at t = 0
@@ -45,6 +48,7 @@ export const hookT = (t: number) => {
 export const HOOK_TO_V3 = 1.75;
 
 export const HookA5: React.FC<{t: number}> = ({t}) => {
+  if (t >= FOLLOW0 && t < FOLLOW1) return <Follow5 t={t} />;
   if (t >= HOOK_TO_V3 || t >= HAND5) return <OpenA t={t} />;
   const T = hookT(t);
   const tag = `k5-${Math.round(t * 30)}`;
