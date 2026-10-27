@@ -1,6 +1,20 @@
 # Future Got Weird: Robots Are Learning to Copy Our Faces
 
-## V4 (27 Oct 2026): current
+## V5 (27 Oct 2026): current
+
+V5 keeps the narration exactly (3:33.333) and rebuilds the visual storytelling: a stage hook (face-off mimicry on frame
+0, a soft skin cutaway, the audience pull-back), new settings (demonstration hall, workshop, test bay, wider lab, video
+call) and a stage finale that ends on the frame-0 face-off. Not published; not watched or heard in real time.
+
+| Deliverable | File |
+|---|---|
+| Final review, 3840×2160 | `exports/FGW_Robot_Faces_V5_FINAL_REVIEW_3840x2160.mp4` (Git-ignored; delivered separately) |
+| Review, 1920×1080 | `exports/FGW_Robot_Faces_V5_REVIEW_1920x1080.mp4` (Git-ignored; checksummed parts in `backup/`) |
+| Report and QA | `production/V5_CHANGE_QA.md` |
+
+Composition `RobotFacesV5` (same render and mux commands as V4).
+
+## V4 (27 Oct 2026)
 
 V4 keeps the narration and its timing exactly (3:33.333, 6,400 frames) and rebuilds the visuals: a new opening (the
 robot mid-speech, the person revealed in the first second, an expression copied with brows, eyes, jaw and lips), a human

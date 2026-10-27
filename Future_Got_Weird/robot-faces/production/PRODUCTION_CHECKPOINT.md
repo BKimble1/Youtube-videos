@@ -1,6 +1,16 @@
 # Production checkpoint: Robots Are Learning to Copy Our Faces
 
-## V4 (27 Oct 2026): current
+## V5 (27 Oct 2026): current
+
+- Composition `RobotFacesV5` (90 shots). V4 is at commit `13a31de`.
+- New scenes: `source/src/v2/shotsG.tsx` (hook face-off, stage pair, crowd, workshop, test bay, materials, controller,
+  wider lab, studio engineer, stage distinction beats, 2024 study face to face, video call, finale).
+- New settings in `new.tsx`: `DemoBack` / `StageLip`, `WorkshopBack` / `Workbench`, `TestBayBack` (`Back` bg `demo`,
+  `workshop`, `testbay`).
+- `mech.tsx`: `CheekSection` is a soft masked clearing (no rim). `state2.ts`: `HOOK_T`, `HOOK_LAG`, `HOOK_H`, `HOOK_R`.
+- `shotsD.tsx` `CrewTalk`: speech-driven gestures. Report: `production/V5_CHANGE_QA.md`.
+
+## V4 (27 Oct 2026)
 
 - Composition `RobotFacesV4` (renamed from `RobotFacesV3`; same `Film2` table, now 95 shots). V3 is at commit `f03600d`.
 - New V4 shots: `source/src/v2/shotsF.tsx` (muscle match, split section, screen room, comparison, lobby, evolution

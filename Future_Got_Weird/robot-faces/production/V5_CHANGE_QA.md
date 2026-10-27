@@ -11,6 +11,7 @@ can be rebuilt from commit `13a31de`.
 | | File |
 |---|---|
 | Final review, 3840×2160, 30 fps | `exports/FGW_Robot_Faces_V5_FINAL_REVIEW_3840x2160.mp4` |
+| Review, 1920×1080 (same cut) | `exports/FGW_Robot_Faces_V5_REVIEW_1920x1080.mp4` (checksummed parts in `backup/`) |
 | Subtitles | `captions/FGW_Robot_Faces_V2.srt`, unchanged: the narration and its timing are unchanged |
 | Mix | `audio/mix/FGW_Robot_Faces_V2_mix.wav`, rebuilt with the V5 action cues; narration file untouched |
 | Shot / transition map | `production/V2_TRANSITIONS.md`, regenerated from the V5 table |
@@ -74,7 +75,26 @@ one continuous camera path in the first shot; no talking head.
 
 ## Checks performed
 
-PLACEHOLDER_CHECKS
+There is no playback in this environment: **normal-speed viewing with sound has not been done.** Everything below is
+read from frames or measured.
+
+- **Scans on the source:** invalid SVG values: none (`qa/v5/nan_scan.txt`). State continuity
+  (`qa/v5/state_continuity.txt`): no reset inside a shot; the flagged fast changes are the hook's copied expressions
+  (each eased over about 0.24 s), speech shapes, keyed mirror trials and eye saccades.
+- **Every new scene checked as stills while building** (`qa/v5/*.png`). Fixed on the way: overlapping heads in the
+  face-off; a halo ellipse behind the robot; hands hidden behind the console and the bench (front-arm passes added);
+  a hand that could not reach the silicone tab; the sheet's mesh crossing its own edge; a parked arm reading as part
+  of the head; a mic boom and pop-filter ring across the robot's face; the engineer hidden in the studio window; a
+  blank laptop screen on the video call; the visitor behind the speaker box in the finale; an open "O" mouth on the
+  final frame.
+- **Every second of the film** and the first 12 s at quarter-second steps, read from the 1080p render
+  (`qa/v5/check/sec_*.png`, `opening_quarter_seconds.png`). No further problems found.
+- **Measured on the 1080p review** (`qa/v5/check/check_qa.json`): 6,400 frames, 213.333 s; −14.2 LUFS, LRA 3.4,
+  −1.4 dBTP; no black frames; no frozen stretch of 2.5 s or more; audio against the narration at 0 ms lag (r = 0.92);
+  67 captions on word onsets, no overlaps. SHA-256 `a1d102d5a41d7956b3e297891544f0858faabde5fef4bf3037fb5176a312eed1`.
+- **Measured on the 4K final review:** H.264 3840×2160, 30 fps, 6,400 frames, 213.333 s, 194.8 MB; −14.2 LUFS,
+  peak −1.4 dBFS; no black frames; no frozen stretch of 2.5 s or more. Native 4K frames read back
+  (`qa/v5/final/final_frames.png`). SHA-256 `3d823de3c3f5b52aa10c38f24c506bee309d76dd357febf940a01b7ac62f6123`.
 
 ## Limitations
 
