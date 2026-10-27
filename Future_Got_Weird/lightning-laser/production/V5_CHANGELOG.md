@@ -33,6 +33,30 @@ adds distinct shots through the explanation, makes the rod comparison explicit, 
 | 30.78–31.88 | "into the SKY—" | Whole-system wide | **Payoff wide.** The channel is large in frame, from the rod tip into the cloud deck. The guided leader reaches the cloud base and lightning crawls through it. There is a surge on "SKY" and packets on the payoff ticks. |
 | 31.88–33.50 | "using the AIR ITSELF." | Whole-system wide held | **Loop shot in the control room.** She watches the glowing channel through the window. The machine starts charging again, the beam drops to standby, and her hand travels back toward FIRE. Frame 0 continues it: the press at 0.2 s. |
 
+## Faster hook (client note, 27 Oct)
+
+The press, the shock and the lightning now all land inside the first two seconds; before, they took about 3.5 s.
+
+| Time (s) | Event |
+|---|---|
+| 0.2 | The fingertip hits FIRE. |
+| 0.27 | The beam ignites. |
+| 0.55–0.7 | The surge arcs build. |
+| 0.70–0.85 | The x-ray skeleton flash, at real speed. |
+| 0.85–1.05 | The recoil, then the whip upward. |
+| 1.05 | Outside: the camera rockets up the beam. |
+| 1.5 | The leader leaves the rod tip. |
+| 1.75 | The leader connects along the beam on the loud crack. |
+
+From 1.75 the shot is V3's opening view. Its restrikes at 3.52, 3.64 and 3.83 fall on their sounds, and B still starts
+at 4.31.
+
+How it is done: the hook's own shots play on a smooth time warp (`v5/Hook5.tsx` `hookT`). Near frame 0 the warp runs
+at real time, so the loop from the control-room shot into the press is unchanged.
+
+The skeleton flash no longer lands on a sound; the loud crack now marks the connection. The narration and mix are
+unchanged.
+
 ## Verification
 
 - **Audio identity.** The audio packets and decoded PCM are identical to the locked track (V2's review stream),
