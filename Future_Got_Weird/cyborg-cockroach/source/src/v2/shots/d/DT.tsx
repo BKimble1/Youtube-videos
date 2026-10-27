@@ -19,7 +19,7 @@ const dipAt = (t: number) => {
   return dt < 0 ? Math.max(0, 1 - (D_PRESS - t) / 0.06) * 0.5 : Math.exp(-dt / 0.12) * Math.cos(dt * 18);
 };
 /** the close-up's placement (rotation: the forearm runs up and back toward him, beyond) */
-export const DT_CU = {x: 430, y: 1330, scale: 1.05, rotation: -150};
+export const DT_CU = {x: 390, y: 1470, scale: 0.95, rotation: -122};
 export const dtProps = (t: number) => {
   const dip = dipAt(t);
   return {id: '', press: pressAt(t), lift: liftAt(t), led: (t >= D_PRESS + 0.01 ? 'fired' : 'armed') as 'fired' | 'armed', x: DT_CU.x + 3 * dip, y: DT_CU.y + 10 * dip, scale: DT_CU.scale, rotation: DT_CU.rotation};
@@ -27,7 +27,7 @@ export const dtProps = (t: number) => {
 /** where the button is on screen (for the caption check and the cue) */
 export const dtButton = (t: number) => remoteCloseUpGeometry(dtProps(t)).button;
 /** the operator beyond: hip point and scale */
-const OP = {x: 820, y: 1420, s: 1.85};
+const OP = {x: 680, y: 1580, s: 2.0};
 
 export const DT: React.FC<ShotProps> = ({f}) => {
   const t = f / 30;
@@ -42,9 +42,9 @@ export const DT: React.FC<ShotProps> = ({f}) => {
         <filter id={`${id}-bo`} x="-10%" y="-10%" width="120%" height="120%">
           <feGaussianBlur stdDeviation={2.2} />
         </filter>
-        <radialGradient id={`${id}-mon`} cx="0" cy="0.42" r="0.95">
-          <stop offset="0" stopColor="#CFF1FF" stopOpacity={0.55} />
-          <stop offset="0.5" stopColor="#9FD8F0" stopOpacity={0.18} />
+        <radialGradient id={`${id}-mon`} cx="0" cy="0.36" r="0.8">
+          <stop offset="0" stopColor="#D8F4FF" stopOpacity={0.85} />
+          <stop offset="0.5" stopColor="#9FD8F0" stopOpacity={0.28} />
           <stop offset="1" stopColor="#9FD8F0" stopOpacity={0} />
         </radialGradient>
         <radialGradient id={`${id}-vg`} cx="0.5" cy="0.5" r="0.75">
@@ -62,7 +62,7 @@ export const DT: React.FC<ShotProps> = ({f}) => {
       </g>
       {/* the operator beyond (head and shoulders), a touch soft; no hands in this pass (his hand is the close-up's) */}
       <g filter={`url(#${id}-bo)`}>
-        <OperatorAtBench id={`${id}op`} x={OP.x} y={OP.y} scale={OP.s} t={t} expr="focus" blink={0} gazeX={-600} gazeY={760} benchTopY={OP.y - 225 * OP.s} layer="body" />
+        <OperatorAtBench id={`${id}op`} x={OP.x} y={OP.y} scale={OP.s} t={t} expr="focus" blink={0} gx={-0.85} gy={0.12} benchTopY={OP.y - 225 * OP.s} layer="body" />
       </g>
       {/* the monitor's cool glow from the left */}
       <rect width={1080} height={1920} fill={`url(#${id}-mon)`} />

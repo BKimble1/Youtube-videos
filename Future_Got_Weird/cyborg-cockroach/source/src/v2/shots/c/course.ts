@@ -48,6 +48,8 @@ export const MEDIC_S0 = 122;
 export const medicS = (t: number) => MEDIC_S0 + MEDIC_V * (t - FEED_T0);
 /** the silicone target's face on the centreline (the medic's head is about 30 mm from it at frame 465) */
 export const TARGET_S = 362;
+/** the lane's walls and curbs end here: beyond, the open arena round the target */
+export const ARENA_S = BEND_END + 46;
 export const feedMedicPose = (t: number): RoachPose =>
   poseRoach({path: MEDIC_PATH, s: medicS(t), t, seed: 1, search: 0.7, antL: {yaw: 0.7, pitch: 0.2}, antR: {yaw: 0.7, pitch: 0.2}});
 /** the observer follows down the lane at 50 mm/s, steering for a point LA mm ahead on the centreline with a short lag
@@ -132,14 +134,15 @@ export const worldView = (L: Lens, c: V3): {v: View; d: number} | null => {
 // ------------------------------------------------------------------ the course furniture (object frames)
 export type Block = {s: number; off: number; yawAdd?: number; L: number; W: number; H: number; color: string};
 const FOAMS = [LAB2.foamB, LAB2.foamY, LAB2.foamR, '#9ED0B0'];
-/** foam blocks walling the lane on both sides (gaps between them), one big block on the inside of the bend, and a
- *  pair flanking the target like a gate */
+/** foam blocks walling the lane on both sides (gaps between them), one big block on the inside of the bend; the lane
+ *  walls end a little after the bend (ARENA_S): the lane opens into an open test arena where the clear target stands,
+ *  with two backstop blocks beyond it (none on the medic's right near the target: D1's low side camera is there) */
 export const BLOCKS: Block[] = (() => {
   const out: Block[] = [];
   let k = 0;
   for (const sd of [-1, 1] as const) {
     let s = -110 + (sd > 0 ? 18 : 0);
-    while (s < BEND_END + 150) {
+    while (s < ARENA_S - 10) {
       const L = 46 + rnd(k, 1) * 26, W = 40 + rnd(k, 2) * 18, H = 58 + rnd(k, 3) * 60, gap = 16 + rnd(k, 4) * 16;
       const c = s + L / 2;
       // the inside of the bend (right) is a single big corner block (below)
@@ -150,16 +153,18 @@ export const BLOCKS: Block[] = (() => {
     }
   }
   // two posts at the lane's edges: the lens passes them close
+  // (the right-hand post and the corner block stand clear of the line the observer takes: it cuts the bend on the
+  // inside, up to about 70 mm right of the centreline, as the C5 overhead shows)
   out.push({s: 8, off: -42, L: 16, W: 16, H: 52, color: LAB2.foamY});
-  out.push({s: 52, off: 42, L: 16, W: 16, H: 46, color: LAB2.foamB});
+  out.push({s: 46, off: 66, L: 16, W: 16, H: 46, color: LAB2.foamB});
   const mid = CRS.S1 + (CRS.R * CRS.THETA) / 2;
-  out.push({s: mid, off: CRS.LANE + 36 + 30, L: 64, W: 60, H: 72, color: LAB2.foamR});
-  out.push({s: TARGET_S + 20, off: -(CRS.LANE + 34), L: 46, W: 40, H: 92, color: LAB2.foamB});
-  out.push({s: TARGET_S + 20, off: CRS.LANE + 34, L: 46, W: 40, H: 84, color: LAB2.foamY});
+  out.push({s: mid, off: 140, L: 64, W: 60, H: 72, color: LAB2.foamR});
+  out.push({s: TARGET_S + 64, off: -36, L: 40, W: 56, H: 96, color: LAB2.foamB});
+  out.push({s: TARGET_S + 78, off: 34, L: 34, W: 40, H: 70, color: LAB2.foamY});
   return out.filter((b) => !(b.s > TARGET_S - 40 && b.s < TARGET_S + 10));
 })();
 /** the course edges: low curb pieces either side of the lane, alternating colours */
-export const CURB = {off: CRS.LANE, L: 20, gap: 6, W: 7, H: 6, from: -120, to: TARGET_S - 4};
+export const CURB = {off: CRS.LANE, L: 20, gap: 6, W: 7, H: 6, from: -120, to: ARENA_S};
 export const curbs = () => {
   const out: {s: number; off: number; color: string}[] = [];
   let k = 0;

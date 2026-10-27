@@ -72,13 +72,13 @@ export const dLaunch = (t: number) => {
     speed = 1 - u;
   } else {
     const u = dt - D_STROKE - T_PEN;
-    x = D_TRAVEL - 1.0 * Math.exp(-u / 0.08) * Math.sin(u * 30); // a small rebound, then it seats
+    x = D_TRAVEL - 1.4 * Math.exp(-u / 0.08) * Math.sin(u * 30); // a small rebound, then it seats
     speed = 0;
   }
   const imp = dt - D_STROKE;
   const recoil = dt < 0.04 ? dt / 0.04 : Math.max(0, 1 - (dt - 0.04) / 0.35);
   // the silicone gives under the needle's arrival and wobbles back (a soft solid)
-  const squash = imp < 0 ? 0 : 1.3 * Math.exp(-imp / 0.1) * Math.cos(imp * 40);
+  const squash = imp < 0 ? 0 : imp < 0.04 ? 1.6 * (imp / 0.04) : 1.6 * Math.exp(-(imp - 0.04) / 0.1) * Math.cos((imp - 0.04) * 40);
   // the spring follows the injector to its free length, then rings a little there
   const rear = INJ.loadedRear + x;
   const tFree = Math.pow((SPRING_FREE - INJ.loadedRear) / D_GAP, 1 / 1.55) * D_STROKE;
@@ -143,12 +143,12 @@ export const dPoseFull = (t: number, recoilOn = true): RoachPose => {
   // at the release they come off the face and sweep low and wide (clear of the silicone, out past its sides) and
   // search slowly while it waits
   const reach = sr(t, D_STOP_T - 0.4, D_STOP_T + 0.08);
-  const lift = sr(t, D_FIRE + 0.03, D_FIRE + 0.33);
+  const lift = sr(t, D_FIRE + 0.01, D_FIRE + 0.22);
   const tap = (ph: number) => 0.13 * Math.sin(2 * Math.PI * 2.6 * t + ph) * reach * (1 - lift);
   const ant = (ph: number) => ({
-    yaw: lerp(0.62 - 0.27 * reach, 1.18, lift),
-    pitch: lerp(0.2 + 0.6 * reach, 0.02, lift) + tap(ph),
-    curl: lerp(0.95 - 0.65 * reach, 0.45, lift),
+    yaw: lerp(0.62 - 0.3 * reach, 1.18, lift),
+    pitch: lerp(0.2 - 0.1 * reach, 0.02, lift) + tap(ph),
+    curl: lerp(0.95 - 0.55 * reach, 0.45, lift),
   });
   const p = poseRoach({
     path: PATH, s: dWalkS(t), t, search: lerp(0.85 - 0.35 * reach, 0.45, lift), seed: 3,

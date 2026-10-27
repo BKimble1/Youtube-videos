@@ -3,21 +3,42 @@
 // can be played without moving the gaze point. Drawn exactly as OperatorAtBench draws it (body pass clipped above the
 // bench's far edge, then a hands pass with the remote held between the digits).
 import React from 'react';
-import {Man} from '../../../crew/operator/dc/Man';
-import {HERO_LAB} from '../../../crew/operator/cast';
-import {operatorAtBench, OperatorAtBenchProps, Remote} from '../../../crew/operator';
-import {fmt} from '../../../lib/math';
+import {Man, DIM} from '../../../crew/operator/dc/Man';
+import {HandPose} from '../../../crew/operator/dc/Hand';
+import {HERO_LAB, H_REMOTE} from '../../../crew/operator/cast';
+import {operatorAtBench, OperatorAtBenchProps, Remote, REMOTE, remotePt} from '../../../crew/operator';
+import {aimThumb} from '../../../crew/operator/RemoteCloseUp';
+import {fmt, add, mul} from '../../../lib/math';
 
 const INK_K = 0.9;
 /** the far hand resting on the bench reaches this far below the bench line (OperatorAtBench: BENCH_REST + BENCH_TIPS) */
 const HANDS_BELOW = -12 + 30;
 
-export const operatorA = (p: OperatorAtBenchProps & {nod?: number}) => {
+/** V3 addition: `dpad` 0..1 moves the near thumb from the fire button onto the direction pad (steering), with `dpadZ`
+ *  its pad's height above the pad (mm; small = pressing) */
+export type OperatorAProps = OperatorAtBenchProps & {nod?: number; dpad?: number; dpadZ?: number};
+const mixHand = (a: HandPose, b: HandPose, k: number): HandPose => ({
+  ...a,
+  thumb: a.thumb + (b.thumb - a.thumb) * k,
+  thumbCurl: a.thumbCurl + (b.thumbCurl - a.thumbCurl) * k,
+  curl: a.curl.map((c, i) => c + (b.curl[i] - c) * k) as HandPose['curl'],
+});
+export const operatorA = (p: OperatorAProps) => {
   const g = operatorAtBench(p);
-  return {...g, pose: {...g.pose, neck: g.pose.neck + (p.nod ?? 0)}};
+  const k = Math.max(0, Math.min(1, p.dpad ?? 0));
+  let lHand = g.lHand;
+  if (k > 0) {
+    const j = g.joints;
+    const s = g.s;
+    const wrist = add(j.L.W, mul(j.L.foreDir, -6 * s));
+    const pad = remotePt(g.view, REMOTE.dpad.x + 3, REMOTE.dpad.y - 1, 1.6 + (p.dpadZ ?? 1.2));
+    const onPad = aimThumb(wrist, j.L.handAng, DIM.hand * s, 1, {...H_REMOTE, curl: H_REMOTE.curl.map((c) => c + 0.04) as HandPose['curl']}, pad);
+    lHand = mixHand(g.lHand, onPad, k);
+  }
+  return {...g, lHand, pose: {...g.pose, neck: g.pose.neck + (p.nod ?? 0)}};
 };
 
-export const OperatorA: React.FC<OperatorAtBenchProps & {nod?: number}> = (props) => {
+export const OperatorA: React.FC<OperatorAProps> = (props) => {
   const id = props.id ?? 'opa';
   const layer = props.layer ?? 'all';
   const g = operatorA(props);

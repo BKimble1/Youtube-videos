@@ -1,45 +1,43 @@
-// V2 shot group B (see production/V2_SHOT_PLAN.md): B1-B5, "Scientists strapped a tiny launcher onto a living
-// cockroach, then used electrical pulses to steer it." Shot code in ./b/:
-//  B1 (136-185) b/B12.tsx  3/4 from the front right: two gloved hands lower the backpack (wires trailing) and press it
-//                          home on "strapped" (5.53 s)
-//  B2 (186-221) b/B12.tsx  straight down: the hands let go and lift away; the insect sets off (6.45 s)
-//  B3 (222-254) b/B3.tsx   profile at insect height, tracking the walk (the same continuous walk as B2)
-//  B4 (255-282) b/B45.tsx  close from above on the board: three pulses run the LEFT antenna wire to the electrode
-//  B5 (283-314) b/B45.tsx  continuous with B4: the insect turns right round a foam block as the camera pulls out
+// V3 shot group B (see production/V3_SHOT_PLAN.md): B1-B5, "Scientists strapped a tiny launcher onto a living
+// cockroach, then used electrical pulses to steer it." The medic is LOADED throughout (an earlier moment than A1).
+// Five setups, each with new information:
+//  B1 (143-186) b/B1.tsx   high angle over the fitting mat: gloved hands lower the module onto the living insect, press
+//                          it home on "strapped" (B_SEAT 5.55 s), the fingers open and the hands lift away
+//  B2 (187-208) b/B2.tsx   NEW tight profile of the mounting (saddle, board, clamps, wires, tube, spring, loaded
+//                          injector, latch, needle); it takes its first step (B_GO 6.27 s) and the camera tracks forward
+//                          along the tube with it
+//  B3 (209-242) b/B3.tsx   low side tracking over a cork test board (textured; granules slide past), tripod gait
+//  B4 (243-282) b/B45.tsx  close from above on the electronics on the obstacle course: LED, three pulses along the
+//                          LEFT antenna wire (leave 8.52 s), the electrode glows, the left antenna flicks
+//  B5 (283-314) b/B45.tsx  continuous with B4: it veers RIGHT round the yellow block's corner (turn from 8.95 s); the
+//                          camera rises over the turn
 import React from 'react';
 import {ShotProps} from './index2';
-import {Cue, touchdownsP} from '../../events';
+import {Cue, touchdownsP, steps} from '../../events';
 import {shotRange} from '../cuts2';
-import {B1, B2, bPose, B_SEAT} from './b/B12';
-import {B3} from './b/B3';
+import {B1, bPose, B_SEAT} from './b/B1';
+import {B2} from './b/B2';
+import {B3, b3Pose} from './b/B3';
 import {B4, B5, b45Pose, T_PULSE, PULSE_GAP} from './b/B45';
 import {FPS} from './b/common';
 
 export const SHOTS_B: Record<string, React.FC<ShotProps>> = {B1, B2, B3, B4, B5};
 
-/** caption centre y per shot: below the insect and the hands (B1-B3), below the board / over the rear of the body in
- *  the close insert and the turn (B4-B5, kept the same across the invisible cut) */
-export const CAPY_B: Record<string, number> = {B1: 1530, B2: 1500, B3: 1500, B4: 1560, B5: 1560};
-
-/** one tick per contact instant (a tripod's legs landing on the same sub-frame sum into one tick, +10 log10(legs) dB) */
-const steps = (tds: number[]) => {
-  const legs = new Map<number, number>();
-  for (const td of tds) legs.set(td, (legs.get(td) ?? 0) + 1);
-  return [...legs].map(([t, n]) => ({t, g: 10 * Math.log10(n)}));
-};
+/** caption centre y per shot: the low band, below the insect, the module and the hands' grip in every setup (the B1
+ *  and B2 captions run on into B2 and B3, which keep the band clear too) */
+export const CAPY_B: Record<string, number> = {B1: 1530, B2: 1530, B3: 1530, B4: 1560, B5: 1560};
 
 export const cuesB = (): Cue[] => {
   const ev: Cue[] = [];
-  const b1 = shotRange('B1'), b2 = shotRange('B2'), b3 = shotRange('B3'), b4 = shotRange('B4'), b5 = shotRange('B5');
-  // B1: the pack seats (a soft plastic click as its saddle meets the shell)
-  ev.push({kind: 'click', t: B_SEAT, gain: -27, name: 'B1 pack seats', args: {f: 2600, d: 0.035, bright: 0.5}});
-  void b1;
-  // B2-B3: the first steps and the walk (one continuous walk; top view in B2, close profile in B3)
-  for (const {t, g} of steps(touchdownsP((ff) => bPose(ff / FPS), b2.from, b3.to))) {
-    const inB3 = t * FPS >= b3.from;
-    ev.push({kind: 'tick', t, gain: (inB3 ? -36 : -39) + g, name: inB3 ? 'B3 foot' : 'B2 foot (first steps)'});
-  }
-  // B4-B5: the walk up the tray and through the turn
+  const b2 = shotRange('B2'), b3 = shotRange('B3'), b4 = shotRange('B4'), b5 = shotRange('B5');
+  // B1: the module seats (a soft plastic click as its saddle meets the shell under the press)
+  ev.push({kind: 'click', t: B_SEAT, gain: -26, name: 'B1 module pressed home', args: {f: 2600, d: 0.035, bright: 0.5}});
+  // B2: its first steps (close: a little more body)
+  for (const {t, g} of steps(touchdownsP((ff) => bPose(ff / FPS), b2.from, b2.to))) ev.push({kind: 'tick', t, gain: -36 + g, name: 'B2 first step', args: {body: 0.9, bright: 0.5}});
+  // B3: the walk over cork (soft ticks) and a faint grain under the feet
+  for (const {t, g} of steps(touchdownsP((ff) => b3Pose(ff / FPS), b3.from, b3.to))) ev.push({kind: 'tick', t, gain: -38 + g, name: 'B3 foot on cork'});
+  ev.push({kind: 'grit', t: b3.from / FPS + 0.03, gain: -46, name: 'B3 cork grain under the feet', args: {d: (b3.to - b3.from) / FPS - 0.06, rate: 12}});
+  // B4-B5: the walk up the course and through the turn
   for (const {t, g} of steps(touchdownsP((ff) => b45Pose(ff / FPS), b4.from, b5.to))) {
     const inB5 = t * FPS >= b5.from;
     ev.push({kind: 'tick', t, gain: (inB5 ? -40 : -37) + g, name: inB5 ? 'B5 foot (turn)' : 'B4 foot'});

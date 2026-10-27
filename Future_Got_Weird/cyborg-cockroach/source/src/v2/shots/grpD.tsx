@@ -1,64 +1,52 @@
-// V2 shot group D (see production/V2_SHOT_PLAN.md): the lab trial and the hand-off to the rubble.
-// D1 the medic lines up on the silicone target; D2 ECU of the tube: the coil parts the line, the spring drives the
-// injector, the needle goes into the silicone (on the second "fire"); D3 the cutaway: gas behind the plunger, the dose
-// down the needle, a small amber bloom; D5 the whole animal with the spent injector in the target, other lab targets on
-// the bench; D6 a fresh loaded medic sets off into a narrow dark gap between two tall lab blocks (D6_GAP -> E1).
+// V3 shot group D (see production/V3_SHOT_PLAN.md): the demonstration, one continuous trial (d/trial.ts).
+// D1 low side view: the medic stops and lines up on the clear target (antennae on its face); DT the operator's thumb
+// presses the fire button (low over the thumb, his face beyond in the monitor's glow); D2 ECU: the coil parts the line,
+// the spring drives the injector, the needle into the clear silicone (squash, rings, rebound); D3 the cutaway: gas
+// behind the plunger, the amber dose blooms in the silicone; D5 one rise over the bench (the array of earlier trials)
+// toward the bright window, whose light fills the frame (the film's daylight bloom into E1).
 import React from 'react';
 import {ShotProps} from './index2';
-import type {Cue} from '../../events';
-import type {RoachPose} from '../../rig/roach';
+import {Cue, touchdownsP, steps} from '../../events';
 import {FPS} from '../../timeline';
 import {shotRange} from '../cuts2';
 import {D1} from './d/D1';
+import {DT, DT_CONTACT} from './d/DT';
 import {D2} from './d/D2';
 import {D3} from './d/D3';
 import {D5} from './d/D5';
-import {D6, d6Gap, d6Pose} from './d/D6';
-import {dPoseFull, dDeploy, D_FIRE, D_SEAL, D_PLUNGE1} from './d/trial';
+import {dPoseFull, dLaunch, D_PRESS, D_FIRE, D_IMPACT, D_SEAL, D_PLUNGE1} from './d/trial';
 
-export const SHOTS_D: Record<string, React.FC<ShotProps>> = {D1, D2, D3, D5, D6};
+export const SHOTS_D: Record<string, React.FC<ShotProps>> = {D1, DT, D2, D3, D5};
 
-/** caption centre y per shot: the top band (the lab wall / the blocks above the subject); the lower half holds the
- *  insect's head and legs (D1, D5), the head under the tube and the section (D2, D3) and the insect entering the gap (D6) */
-export const CAPY_D: Record<string, number> = {D1: 290, D2: 290, D3: 290, D5: 290, D6: 290};
+/** caption centre y per shot. D1: top band over the lab wall (the insect and the target sit at y 800-1250).
+ *  DT: the low band, over the coat sleeve and the soft bench (his face is at y 350-900, the thumb and the button at
+ *  y 1150-1450). D2, D3: top band over the blurred wall (the tube at y 900, the head below it, the target's top ~730).
+ *  D5: top band (the bench, the insect and the targets are in the lower two thirds as the camera rises; the window
+ *  rises into the upper middle). */
+export const CAPY_D: Record<string, number> = {D1: 270, DT: 270, D2: 270, D3: 270, D5: 270};
 
-/** the dark opening at D6's last frame (screen px): x0/x1 its left/right edges at the mouth, y0 its top (clamped to the
- *  frame), y1 the floor at the mouth. E1 opens on a matching opening. */
-export const D6_GAP = d6Gap(shotRange('D6').to - 1);
+/** retired with D6 (V2); E1 reads it until it stops: the narrow opening it matched (screen px) */
+export const D6_GAP = {x0: 330, x1: 750, y0: 0, y1: 1920};
 
-/** foot touchdowns (sub-frame), one per contact instant (the legs of a tripod summed: +10 log10(legs) dB) */
-const touchdowns = (poseAt: (ff: number) => RoachPose, f0: number, f1: number) => {
-  const out = new Map<number, number>();
-  let prev: boolean[] | null = null;
-  for (let f = f0; f < f1; f++)
-    for (let k = 0; k < 4; k++) {
-      const ff = f + k / 4;
-      const up = poseAt(ff).legs.map((l) => l.up);
-      if (prev) up.forEach((u, i) => {
-        if (prev![i] && !u) out.set(ff / FPS, (out.get(ff / FPS) ?? 0) + 1);
-      });
-      prev = up;
-    }
-  return [...out].map(([t, n]) => ({t, g: 10 * Math.log10(n)}));
-};
-
+const r10 = (x: number) => Math.round(x * 10) / 10;
+const r3 = (x: number) => Math.round(x * 1000) / 1000;
 export const cuesD = (): Cue[] => {
   const ev: Cue[] = [];
-  const d1 = shotRange('D1'), d6 = shotRange('D6');
-  for (const {t, g} of touchdowns((ff) => dPoseFull(ff / FPS), d1.from, d1.to)) ev.push({kind: 'tick', t, gain: -36 + g, name: 'D1 foot (lining up)'});
-  // the coil heats from 0.35 s before the release (Gear2D deployAt)
-  ev.push({kind: 'sizzle', t: D_FIRE - 0.3, gain: -30, name: 'D2 coil heats', args: {d: 0.3}});
-  ev.push({kind: 'click', t: D_FIRE, gain: -13, hero: true, name: 'D2 LINE PARTS (mechanism, accent 2)'});
-  ev.push({kind: 'spring', t: D_FIRE + 0.005, gain: -21, hero: true, name: 'D2 spring drives the injector'});
-  // the needle seats when the spring's stroke ends (deployAt: impact = 0)
-  let tImp = D_FIRE;
-  while (dDeploy(tImp).impact < 0) tImp += 0.001;
-  ev.push({kind: 'thock', t: tImp, gain: -17, hero: true, name: 'D2 NEEDLE INTO SILICONE'});
-  // D3: the activator seal opens on "they've", gas forms behind the plunger while it runs
-  ev.push({kind: 'click', t: D_SEAL, gain: -33, name: 'D3 seal opens', args: {f: 3200, d: 0.04, bright: 0.6}});
-  ev.push({kind: 'fizz', t: D_SEAL + 0.04, gain: -31, name: 'D3 gas behind the plunger', args: {d: D_PLUNGE1 - D_SEAL + 0.15}});
-  // D6: the fresh medic sets off and walks into the gap; one soft air pass as the camera follows it in
-  for (const {t, g} of touchdowns((ff) => d6Pose(ff / FPS), d6.from, d6.to)) ev.push({kind: 'tick', t, gain: -37 + g, name: 'D6 foot'});
-  ev.push({kind: 'air', t: (d6.from + 18) / FPS, gain: -30, name: 'D6 into the gap (air pass)', args: {d: (d6.to - d6.from - 18) / FPS, lo: 250, hi: 2400, rise: true}});
+  const d1 = shotRange('D1');
+  // D1: the last steps into the stop (close, low: a little body)
+  for (const {t, g} of steps(touchdownsP((ff) => dPoseFull(ff / FPS), d1.from, d1.to))) ev.push({kind: 'tick', t: r3(t), gain: r10(-36 + g), name: 'D1 foot (lining up)', args: {body: 1.0, bright: 0.5}});
+  // DT: the thumb drives the cap home (the click as it bottoms out)
+  ev.push({kind: 'button', t: r3(D_PRESS - 0.01), gain: -24, name: 'DT FIRE BUTTON pressed (cap bottoms out)', args: {f: 1700}});
+  // the coil goes hot from the press to the release (a faint standby warmth before it is silent)
+  ev.push({kind: 'sizzle', t: r3(D_PRESS), gain: -29, name: 'D2 coil heats (from the press)', args: {d: r3(D_FIRE - D_PRESS)}});
+  // D2: the line parts, the spring drives the injector, the needle into the silicone
+  ev.push({kind: 'click', t: r3(D_FIRE), gain: -13, hero: true, name: 'D2 LINE PARTS (spark)'});
+  ev.push({kind: 'spring', t: r3(D_FIRE + 0.005), gain: -21, hero: true, name: 'D2 spring drives the injector'});
+  ev.push({kind: 'thock', t: r3(D_IMPACT), gain: -17, hero: true, name: 'D2 NEEDLE INTO SILICONE (squash, rebound)'});
+  // D3: the activator seal opens, gas pushes the plunger
+  ev.push({kind: 'click', t: r3(D_SEAL), gain: -33, name: 'D3 seal opens', args: {f: 3200, d: 0.04, bright: 0.6}});
+  ev.push({kind: 'fizz', t: r3(D_SEAL + 0.04), gain: -31, name: 'D3 gas behind the plunger', args: {d: r3(D_PLUNGE1 - D_SEAL + 0.1)}});
   return ev;
 };
+/** (for checks) the thumb meets the cap, the needle's contact frame */
+export const D_TIMES = {contact: DT_CONTACT, press: D_PRESS, fire: D_FIRE, impact: D_IMPACT, seal: D_SEAL, seat: D_IMPACT + 0.2, launch: dLaunch};

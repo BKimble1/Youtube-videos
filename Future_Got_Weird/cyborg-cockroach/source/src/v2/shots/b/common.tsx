@@ -12,7 +12,7 @@ import {clamp, smoother, rnd} from '../../../lib/ease';
 import {wiresOn} from '../../../rig/gear';
 import {Path} from '../../../rig/roach';
 import {Hand, HandPose, digitTips} from '../../dc/Hand';
-import {View, P, f2, polyD, smoothOpen} from '../../roach/ortho';
+import {View, P, Pd, f2, polyD, smoothOpen} from '../../roach/ortho';
 import {G2} from '../../roach/Gear2D';
 import {LAB2, Box2D} from '../../sets/Lab2';
 import {GLOVE, COAT} from '../../../crew/operator';
@@ -60,6 +60,84 @@ export const BoxShadow: React.FC<{id: string; v: View; b: [number, number, numbe
         </filter>
       </defs>
       <path d={polyD(pts)} fill="#1A1612" opacity={alpha} filter={`url(#${id}-bl)`} />
+    </g>
+  );
+};
+
+
+// ------------------------------------------------------------------ V3 surfaces
+/** the fitting station's cutting mat (B1-B2): dark slate blue with a pale printed grid (10 mm, every fifth line
+ *  stronger), on the bench top. Different from the white experiment tray used by the course (B4-B5). */
+export const MAT = {base: '#2F4D5C', edge: '#263F4B', line: '#4C6F80', major: '#7096A8'};
+export const Mat2D: React.FC<{v: View; x0: number; x1: number; z0: number; z1: number; bench?: boolean; vis?: [number, number]}> = ({v, x0, x1, z0, z1, bench = true, vis}) => {
+  const q = (a: number, b: number, c: number, d: number, y = 0) => polyD([P(v, [a, y, c]), P(v, [b, y, c]), P(v, [b, y, d]), P(v, [a, y, d])]);
+  const ls: React.ReactNode[] = [];
+  const e = 6;
+  const xa = Math.max(x0 + e, vis ? vis[0] : -1e9), xb = Math.min(x1 - e, vis ? vis[1] : 1e9);
+  for (let x = Math.ceil(xa / 10) * 10; x <= xb; x += 10) {
+    const a = P(v, [x, 0, z0 + e]), b = P(v, [x, 0, z1 - e]);
+    const mj = x % 50 === 0;
+    ls.push(<path key={`x${x}`} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} stroke={mj ? MAT.major : MAT.line} strokeWidth={mj ? 2.2 : 1.3} opacity={mj ? 0.8 : 0.7} />);
+  }
+  for (let z = Math.ceil((z0 + e) / 10) * 10; z <= z1 - e; z += 10) {
+    const a = P(v, [xa, 0, z]), b = P(v, [xb, 0, z]);
+    const mj = z % 50 === 0;
+    ls.push(<path key={`z${z}`} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} stroke={mj ? MAT.major : MAT.line} strokeWidth={mj ? 2.2 : 1.3} opacity={mj ? 0.8 : 0.7} />);
+  }
+  return (
+    <g>
+      {bench && <path d={q(x0 - 3000, x1 + 3000, z0 - 3000, z1 + 3000, -6)} fill={LAB2.benchTop} />}
+      <path d={q(x0, x1, z0, z1)} fill={MAT.edge} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+      <path d={q(x0 + 2.5, x1 - 2.5, z0 + 2.5, z1 - 2.5)} fill={MAT.base} />
+      {ls}
+    </g>
+  );
+};
+
+/** the textured test surface (B3): a cork board, its granules drawn flat on the ground plane (so they slide past a
+ *  tracking camera with the ground). Only granules inside the visible x window `vis` are drawn. */
+export const CORK = {base: '#C8955C', lo: '#A8723F', hi: '#E0B57D', pit: '#7A5130', edge: '#9C6B3C'};
+export const Cork2D: React.FC<{v: View; x0: number; x1: number; z0: number; z1: number; cell?: number; thick?: number}> = ({v, x0, x1, z0, z1, cell = 5.5, thick = 6}) => {
+  const q = (a: number, b: number, c: number, d: number, y = 0) => polyD([P(v, [a, y, c]), P(v, [b, y, c]), P(v, [b, y, d]), P(v, [a, y, d])]);
+  const ex = Pd(v, [1, 0, 0]), ez = Pd(v, [0, 0, 1]);
+  const tones = [CORK.lo, CORK.hi, CORK.pit];
+  const ds: string[][] = [[], [], []];
+  // only the granules on screen: for each row (z), the x range whose projection lies within the frame (the view's
+  // screen-right axis must have an x component: a side or three-quarter view)
+  const R0 = v.R[0], R2 = v.R[2];
+  for (let j = Math.floor(z0 / cell); j < Math.ceil(z1 / cell); j++) {
+    const zc = (j + 0.5) * cell;
+    const xs = [-40, 1120].map((sx) => ((sx - v.ox) / v.s - zc * R2) / R0).sort((a, b) => a - b);
+    const xa = Math.max(x0, xs[0] - cell), xb = Math.min(x1, xs[1] + cell);
+    for (let i = Math.floor(xa / cell); i <= Math.ceil(xb / cell); i++) {
+      for (let k = 0; k < 2; k++) {
+        const h = i * 7919 + j * 104729 + k * 31;
+        const x = (i + rnd(h, 1)) * cell, z = (j + rnd(h, 2)) * cell;
+        if (x < x0 + 1 || x > x1 - 1 || z < z0 + 1 || z > z1 - 1) continue;
+        const r = (k ? 0.45 : 0.7) + 0.9 * rnd(h, 3);
+        const tn = rnd(h, 4) < 0.5 ? 0 : rnd(h, 4) < 0.85 ? 1 : 2;
+        const el = 0.6 + 0.6 * rnd(h, 5), rot = rnd(h, 6) * Math.PI;
+        const c = P(v, [x, 0, z]);
+        if (c[1] < -30 || c[1] > 1950) continue;
+        const pts: V2[] = [];
+        for (let m = 0; m < 6; m++) {
+          const th = (m / 6) * Math.PI * 2;
+          const a = r * Math.cos(th), b = r * el * Math.sin(th);
+          const u = a * Math.cos(rot) - b * Math.sin(rot), w = a * Math.sin(rot) + b * Math.cos(rot);
+          pts.push([c[0] + ex[0] * u + ez[0] * w, c[1] + ex[1] * u + ez[1] * w]);
+        }
+        ds[tn].push(`M${pts.map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L')}Z`);
+      }
+    }
+  }
+  return (
+    <g>
+      {/* the board's edge (thickness) toward the viewer, then its top */}
+      <path d={polyD([P(v, [x0, 0, z1]), P(v, [x1, 0, z1]), P(v, [x1, -thick, z1]), P(v, [x0, -thick, z1])])} fill={CORK.edge} />
+      <path d={q(x0, x1, z0, z1)} fill={CORK.base} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+      {ds.map((d, i) => (
+        <path key={i} d={d.join(' ')} fill={tones[i]} opacity={i === 2 ? 0.55 : 0.75} />
+      ))}
     </g>
   );
 };
@@ -300,6 +378,24 @@ export const LAB_BLOCKS: {b: BoxB; c: string}[] = [
   {b: [96, 150, 0, 26, -183, -149], c: LAB2.foamY},
   {b: [-80, -40, 0, 30, -173, -141], c: LAB2.foamR},
 ];
+const sides = (v: View, b: BoxB) => {
+  const [x0, x1, y0, y1, z0, z1] = b;
+  const fs: {pts: V3[]; n: V3; k: number}[] = [
+    {pts: [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]], n: [0, 0, 1], k: 0.14},
+    {pts: [[x1, y0, z1], [x1, y0, z0], [x1, y1, z0], [x1, y1, z1]], n: [1, 0, 0], k: 0.24},
+    {pts: [[x0, y0, z0], [x0, y0, z1], [x0, y1, z1], [x0, y1, z0]], n: [-1, 0, 0], k: 0.1},
+    {pts: [[x1, y0, z0], [x0, y0, z0], [x0, y1, z0], [x1, y1, z0]], n: [0, 0, -1], k: 0.28},
+  ];
+  const top = [P(v, [x0, y1, z0]), P(v, [x1, y1, z0]), P(v, [x1, y1, z1]), P(v, [x0, y1, z1])];
+  return (
+    <g>
+      {fs.filter((q) => q.n[0] * v.F[0] + q.n[1] * v.F[1] + q.n[2] * v.F[2] > 0.05).map((q, i) => (
+        <path key={i} d={polyD(q.pts.map((p) => P(v, p)))} fill="#1A1612" opacity={q.k} />
+      ))}
+      {v.F[1] < 0.97 && <path d={polyD(top)} fill="none" stroke={INK} strokeWidth={f2(Math.max(1.4, 0.18 * v.s))} strokeLinejoin="round" opacity={0.75} />}
+    </g>
+  );
+};
 /** a foam block: Box2D with its soft ground shadow and a scatter of pores on the top face (deterministic) */
 export const FoamBox: React.FC<{id: string; v: View; b: BoxB; color: string; shadow?: boolean}> = ({id, v, b, color, shadow = true}) => {
   const [x0, x1, , y1, z0, z1] = b;
@@ -321,6 +417,9 @@ export const FoamBox: React.FC<{id: string; v: View; b: BoxB; color: string; sha
     <g>
       {shadow && <BoxShadow id={`${id}-sh`} v={v} b={b} push={[0.9 * v.s, 1.1 * v.s * Math.max(0.3, v.F[1])]} alpha={0.15} />}
       <Box2D id={`${id}-bx`} v={v} b={b} color={color} />
+      {/* the visible side faces a step darker than the lit top, and the top's edge inked, so a block reads as a block
+          from a high three-quarter view */}
+      {sides(v, b)}
       {v.F[1] > 0.3 && pores}
     </g>
   );

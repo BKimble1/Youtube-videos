@@ -13,7 +13,7 @@ export const Streaks: React.FC<{v: View; frame: Frame; rear: number; k: number}>
   if (k <= 0.05) return null;
   const y = PACK.tube.a[1];
   return (
-    <g stroke="#FFFFFF" strokeLinecap="round" opacity={0.85 * k}>
+    <g stroke="#172B3A" strokeLinecap="round" opacity={0.55 * k}>
       {[-1.6, 0.2, 1.8].map((dy, i) => {
         const a = P(v, toW(frame, [rear - 2 - 9 * k - i * 2, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear + 8, y + dy, 0.5 * dy]));
         return <path key={i} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} strokeWidth={f2(Math.max(1.5, 0.28 * v.s))} />;
@@ -25,10 +25,10 @@ export const Streaks: React.FC<{v: View; frame: Frame; rear: number; k: number}>
 /** the line parting: a bright spark at the coil for a few frames, then a thin wisp from the burnt line */
 export const Spark: React.FC<{v: View; frame: Frame; t: number}> = ({v, frame, t}) => {
   const dt = t - D_FIRE;
-  if (dt < 0 || dt > 0.6) return null;
-  const u = dt / 0.1;
+  if (dt < -0.02 || dt > 0.6) return null;
+  const u = (dt + 0.02) / 0.14;
   const c = P(v, toW(frame, [PACK.tube.b[0] + 0.4, PACK.tube.a[1] + PACK.tube.r * 0.55, 0]));
-  const r = (1.2 + 2.8 * Math.min(1, u)) * v.s;
+  const r = (2.2 + 4.5 * Math.min(1, u)) * v.s;
   const smoke = [0, 1, 2].map((k) => {
     const w = clamp((dt - 0.03 - k * 0.05) / 0.5);
     if (w <= 0 || w >= 1) return null;
@@ -39,13 +39,13 @@ export const Spark: React.FC<{v: View; frame: Frame; t: number}> = ({v, frame, t
   return (
     <g>
       {u <= 1 && (
-        <g opacity={1 - u}>
-          <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r)} fill="#FFE9A8" opacity={0.55} />
+        <g opacity={1 - u * u}>
+          <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r * 1.25)} fill="#FFD36B" opacity={0.35} />
+          <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(r * 0.45)} fill="#FFF6DE" opacity={0.9} />
           {[0, 1, 2, 3, 4, 5].map((i) => {
             const a = (i / 6) * Math.PI * 2 + 0.3;
             return <path key={i} d={`M${f2(c[0] + Math.cos(a) * r * 0.35)},${f2(c[1] + Math.sin(a) * r * 0.35)} L${f2(c[0] + Math.cos(a) * r)},${f2(c[1] + Math.sin(a) * r)}`} stroke="#FFF6DE" strokeWidth={f2(Math.max(1.5, 0.25 * v.s))} strokeLinecap="round" />;
           })}
-          <circle cx={f2(c[0])} cy={f2(c[1])} r={f2(0.45 * v.s)} fill="#FFFFFF" />
         </g>
       )}
       {smoke}

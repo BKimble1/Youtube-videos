@@ -1,82 +1,92 @@
-// C1 (315-344, "A second cockroach"): two insects, two jobs, in one high three-quarter view of the lab tray at the
-// start of the foam course. Far (upper right): the medic, launch tube loaded (spring, amber injector, latch line).
-// Near (lower left): the observer, a shade lighter, with the dark camera module and its round lens on its back and a
-// short aerial. Both walk screen-right in a tripod gait, antennae searching; the observer is a little faster and
-// draws level. The view drifts with them (one slow move).
+// C1 (315-340, "A second cockroach"): the two configurations side by side, close and low (front three-quarter, el 13,
+// at insect height on the tray). Nearest, lower left and big: the OBSERVER (lighter shell, dark camera module with its
+// round blue lens looking forward, a short aerial). Just behind it, to the right and a little ahead: the MEDIC (clear
+// launch tube with the spring, the amber dose and the needle, latch line and coil). Both walk slowly toward the
+// viewer's right in a tripod gait, antennae searching. 2.5D: each insect is drawn through its own view, the far one
+// smaller and higher; the camera follows the pair a little (pan at part of their pace; the far one drifts less).
 import React from 'react';
-import {V3} from '../../../lib/v3';
-import {clamp, sr} from '../../../lib/ease';
+import {sr} from '../../../lib/ease';
 import {poseRoach, straightPath, RoachPose} from '../../../rig/roach';
-import {Roach2D, R2} from '../../roach/Roach2D';
+import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
-import {viewAt, View, P, f2} from '../../roach/ortho';
-import {Surface2D, Box2D, Target2D, LAB2} from '../../sets/Lab2';
+import {viewAt, View, f2} from '../../roach/ortho';
+import {Box2D, LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
 import {OBS_TINT} from './C2';
-import {TrayPlane, Beyond2D, farForLip} from './tray';
+import {Beyond2D} from './tray';
 
-export const C1_FROM = 315, C1_TO = 345;
+export const C1_FROM = 315, C1_TO = 341;
 const T0 = C1_FROM / 30;
-const MEDIC_PATH = straightPath([-40, 0, -48], 0);
-const OBS_PATH = straightPath([28, 0, 48], 0);
-export const c1Medic = (f: number): RoachPose => {
-  const t = f / 30;
-  return poseRoach({path: MEDIC_PATH, s: 48 * (t - T0), t, seed: 1, search: 0.8, antL: {yaw: 0.75, pitch: 0.3}, antR: {yaw: 0.75, pitch: 0.3}});
-};
+const OBS_V = 34, MED_V = 31;
 export const c1Obs = (f: number): RoachPose => {
   const t = f / 30;
-  return poseRoach({path: OBS_PATH, s: 52 * (t - T0), t, seed: 4, search: 0.9, antL: {yaw: 0.8, pitch: 0.34}, antR: {yaw: 0.8, pitch: 0.34}});
+  return poseRoach({path: straightPath([0, 0, 0], 0), s: 20 + OBS_V * (t - T0), t, seed: 4, search: 0.85, antL: {yaw: 0.8, pitch: 0.36, curl: 0.85}, antR: {yaw: 0.8, pitch: 0.36, curl: 0.85}});
 };
-export const C1_AZ = 40, C1_EL = 36;
-export const c1View = (f: number): View => {
-  const u = sr(f, C1_FROM - 6, C1_TO + 4);
-  const x = 0 + 42 * u; // follows the pair at a little less than their pace
-  return viewAt(C1_AZ, C1_EL, 6.6 + 0.3 * u, [x, 10, 0], 540, 960);
+export const c1Medic = (f: number): RoachPose => {
+  const t = f / 30;
+  return poseRoach({path: straightPath([0, 0, 0], 0), s: 9 + MED_V * (t - T0), t, seed: 1, search: 0.8, antL: {yaw: 0.72, pitch: 0.28}, antR: {yaw: 0.72, pitch: 0.28}});
+};
+export const C1_AZ = 63, C1_EL = 13;
+/** near (observer) and far (medic) scales, px per mm */
+const S_NEAR = 10.6, S_FAR = 8.2;
+/** the follow: a pan (scene px at the near plane) of part of the observer's screen travel, eased in and out */
+const pan = (f: number) => -120 * sr(f, C1_FROM - 4, C1_TO + 4);
+export const c1Views = (f: number): {near: View; far: View} => {
+  const p = pan(f);
+  return {
+    near: viewAt(C1_AZ, C1_EL, S_NEAR, [0, 0, 0], 360 + p, 1480),
+    far: viewAt(C1_AZ, C1_EL, S_FAR, [0, 0, 0], 690 + (p * S_FAR) / S_NEAR, 1060),
+  };
 };
 
-/** foam blocks and curb pieces at the start of the course (world mm, axis-aligned) */
-const PROPS: {b: [number, number, number, number, number, number]; c: string}[] = [
-  {b: [-260, -190, 0, 62, -190, -130], c: LAB2.foamB},
-  {b: [-170, -110, 0, 48, -205, -150], c: LAB2.foamY},
-  {b: [190, 255, 0, 56, 150, 205], c: LAB2.foamR},
-  {b: [270, 330, 0, 44, 140, 190], c: '#9ED0B0'},
+/** out-of-focus course blocks far behind (scene px), and one curb piece passing close in front */
+const FAR_BLOCKS: {x: number; y: number; w: number; h: number; c: string}[] = [
+  {x: 60, y: 650, w: 150, h: 120, c: LAB2.foamB},
+  {x: 840, y: 610, w: 210, h: 170, c: LAB2.foamY},
+  {x: 1040, y: 690, w: 120, h: 90, c: LAB2.foamR},
 ];
-const curbRow = (z: number, x0: number, x1: number, k0: number) => {
-  const out: {b: [number, number, number, number, number, number]; c: string}[] = [];
-  let k = k0;
-  for (let x = x0; x < x1; x += 26, k++) out.push({b: [x, x + 20, 0, 6, z - 3.5, z + 3.5], c: k % 2 ? '#F4F1EA' : z < 0 ? LAB2.foamB : LAB2.foamR});
-  return out;
-};
-const CURBS = [...curbRow(-102, -320, 330, 0), ...curbRow(98, -320, 330, 1)];
 
 export const C1Scene: React.FC<{f: number; id: string}> = ({f, id}) => {
-  const v = c1View(f);
+  const {near, far} = c1Views(f);
   const med = c1Medic(f), obs = c1Obs(f);
-  const shadowBox = (b: [number, number, number, number, number, number], i: number) => {
-    const q = [P(v, [b[0] + 6, 0, b[4] + 4]), P(v, [b[1] + 10, 0, b[4] + 4]), P(v, [b[1] + 10, 0, b[5] + 9]), P(v, [b[0] + 6, 0, b[5] + 9])];
-    return <path key={`s${i}`} d={`M${q.map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L')} Z`} fill={R2.shadow} opacity={0.1} />;
-  };
+  const p = pan(f);
+  const lipY = 780;
+  const fb = (x: number) => x + p * 0.3;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <Beyond2D id={`${id}-lb`} lipY={150} k={1.15} dx={-0.6 * (v.ox - c1View(C1_FROM).ox)} />
-      <TrayPlane v={v} c={[20, 0, 0]} far={farForLip(v, [20, 0, 0], 150)} />
-      {PROPS.map((p, i) => shadowBox(p.b, i))}
-      {CURBS.map((c, i) => (
-        <Box2D key={`c${i}`} id={`${id}-c${i}`} v={v} b={c.b} color={c.c} />
-      ))}
-      {PROPS.filter((p) => p.b[4] < 0).map((p, i) => (
-        <Box2D key={`pb${i}`} id={`${id}-pb${i}`} v={v} b={p.b} color={p.c} />
-      ))}
-      <Target2D id={`${id}-tg`} v={v} face={330} dir={1} />
-      <Roach2D pose={med} v={v} o={{id: `${id}-m`, gear: <Gear2D id={`${id}-mg`} v={v} f={med.frame} g={{kind: 'injector'}} />}} />
-      <Roach2D pose={obs} v={v} o={{id: `${id}-o`, tint: OBS_TINT, gear: <Gear2D id={`${id}-og`} v={v} f={obs.frame} g={{kind: 'camera'}} />}} />
-      {PROPS.filter((p) => p.b[4] > 0).map((p, i) => (
-        <Box2D key={`pf${i}`} id={`${id}-pf${i}`} v={v} b={p.b} color={p.c} />
-      ))}
+      <defs>
+        <filter id={`${id}-bl`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="7" />
+        </filter>
+        <filter id={`${id}-bl2`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation="16" />
+        </filter>
+        <linearGradient id={`${id}-fl`} x1="0" y1={lipY} x2="0" y2="1920" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#D3DEE3" />
+          <stop offset="0.25" stopColor={LAB2.surface} />
+          <stop offset="1" stopColor="#F4F7F8" />
+        </linearGradient>
+      </defs>
+      <Beyond2D id={`${id}-lb`} lipY={lipY} k={1.2} dx={p * 0.2} blur={10} bench={70} />
+      <rect x={-20} y={lipY} width={1120} height={1940 - lipY} fill={`url(#${id}-fl)`} />
+      <path d={`M-20,${lipY} H1100`} stroke="#FFFFFF" strokeWidth={2} opacity={0.6} />
+      <g filter={`url(#${id}-bl)`}>
+        {FAR_BLOCKS.map((b, i) => (
+          <g key={i}>
+            <rect x={f2(fb(b.x) - b.w / 2)} y={f2(b.y - b.h)} width={b.w} height={b.h} fill={b.c} />
+            <rect x={f2(fb(b.x) - b.w / 2)} y={f2(b.y - b.h)} width={b.w} height={f2(b.h * 0.22)} fill="#FFFFFF" opacity={0.25} />
+            <ellipse cx={f2(fb(b.x))} cy={b.y + 4} rx={b.w * 0.6} ry={8} fill="#1A1612" opacity={0.12} />
+          </g>
+        ))}
+      </g>
+      <Roach2D pose={med} v={far} o={{id: `${id}-m`, gear: <Gear2D id={`${id}-mg`} v={far} f={med.frame} g={{kind: 'injector'}} />}} />
+      <Roach2D pose={obs} v={near} o={{id: `${id}-o`, tint: OBS_TINT, gear: <Gear2D id={`${id}-og`} v={near} f={obs.frame} g={{kind: 'camera'}} />}} />
+      {/* a curb piece of the course very close to the lens, out of focus, bottom left */}
+      <g filter={`url(#${id}-bl2)`}>
+        <Box2D id={`${id}-cb`} v={viewAt(C1_AZ, C1_EL, 18, [0, 0, 0], 60 + p * 1.6, 1880)} b={[-10, 10, 0, 7, -4, 4]} color={LAB2.foamR} />
+      </g>
     </svg>
   );
 };
 
 export const C1: React.FC<ShotProps> = ({f}) => <C1Scene f={f} id={`c1-${f}`} />;
-void clamp;
-void ([0, 0, 0] as V3);

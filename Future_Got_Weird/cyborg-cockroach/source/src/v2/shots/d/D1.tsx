@@ -17,7 +17,7 @@ export const D1_AZ = -16, D1_EL = 5;
 /** the camera follows the body's x (the walk decelerates into the stop, so the truck does too) */
 export const d1View = (f: number): View => {
   const bx = dPoseFull(f / 30, false).frame.o[0];
-  return viewAt(D1_AZ, D1_EL, 8.6, [16 + 0.8 * bx, 14, 0], 540, 1060);
+  return viewAt(D1_AZ, D1_EL, 10.6, [24 + 0.8 * bx, 14, 0], 540, 1080);
 };
 
 export const D1: React.FC<ShotProps> = ({f}) => {
@@ -28,7 +28,7 @@ export const D1: React.FC<ShotProps> = ({f}) => {
   const id = `d1f${f}`;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <LabRoomMM id={`${id}room`} v={v} blur={5} tray={[-400, 400, -200, 420]} />
+      <LabRoomMM id={`${id}room`} v={v} blur={5} tray={[-400, 400, -200, 420]} props={false} />
       <Target2D id={`${id}t`} v={v} face={D_FACE} dir={1} />
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={g} />}} />
     </svg>

@@ -3,9 +3,11 @@
 import React from 'react';
 import {ShotProps} from './index2';
 import {Cue, touchdownsP, steps} from '../../events';
-import {A2} from './a/A2';
-import {A3, A3_SIG0, A3_HEAT0} from './a/A3';
-import {A4, A4_NOD} from './a/A4';
+import {A2} from './a/A2v3';
+import {A3_SIG0, A3_HEAT0} from './a/A3';
+import {A3} from './a/A3v3';
+import {A4_NOD} from './a/A4';
+import {A4} from './a/A4v3';
 import {C4} from './a/C4';
 import {A2_PRESS, A2_CONTACT, A2_LED, A3R, C4R, MATCH, MATCH_LED, matchRadius} from './a/timingA';
 import {feedMedicPose} from './c/course';
