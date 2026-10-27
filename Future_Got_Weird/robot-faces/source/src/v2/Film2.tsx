@@ -20,7 +20,7 @@ export type Shot2 = {id: string; a: number; b: number; C: React.FC<{f: number}>;
 const D_ = D;
 export const SHOTS2: Shot2[] = [
   // ---- opening
-  {id: 'v1-face', a: 0, b: T('Then it tries'), C: G.G1FaceOff, tr: 'start', what: 'Frame 0: face to face, inches apart, on a demonstration stage; he pulls a shocked face, a glare, a huge grin, and it gives each back a beat later (brows, lids, jaw, lips); the camera travels between the faces; he is amazed; a smile starts and it watches his mouth'},
+  {id: 'v1-face', a: 0, b: T('Then it tries'), C: G.G1FaceOff, tr: 'start', what: 'Frame 0: face to face, inches apart, on a demonstration stage, the camera low and canted, tight on the robot mid-copy with its jaw and brow motors showing through the skin; he pulls a glare, a huge grin, and it gives each back a beat later, the motors for each face showing as it moves; the camera levels and travels between the faces; he is amazed; a smile starts and it watches his mouth'},
   {id: 'v2-reveal', a: T('Then it tries'), b: T('same time'), C: E.V2Reveal, tr: 'cut-action', what: 'Close on its mouth as the smile begins: the silicone clears over the corner motor; the horn turns, the rod pulls, the skin moves, the smile forms; the clearing closes'},
   {id: 'v3-pair', a: T('same time'), b: K.corner, C: G.G3StagePair, tr: 'cut', what: 'The stage, side on: he leans in; the two smiles land together; he is delighted'},
   {id: 'v4-crowd', a: K.corner, b: T('Researchers'), C: G.G4Crowd, tr: 'cut', what: 'One pull back: the stage, the LED wall and the people watching; it makes a whole-face expression for them; one films it, two turn to each other, one raises both hands'},
@@ -49,7 +49,7 @@ export const SHOTS2: Shot2[] = [
   {id: 'p1-turn', a: K.practiced, b: T('It moved its face'), C: A.PracWide, tr: 'cut', what: 'The lab with the mirror: it turns to its reflection'},
   {id: 'p2-refl', a: T('It moved its face'), b: T('building a relationship'), C: D_.P2Refl, tr: 'cut', what: 'The reflection, close: a trial, its motors showing through the skin'},
   {id: 'p3-montage', a: T('building a relationship'), b: K.moveThese, C: D_.P3Montage, tr: 'cut', what: 'A run of trials: each face it makes is captured with the commands that made it'},
-  {id: 'p4-lips', a: K.moveThese, b: K.change, C: D_.P4Lips, tr: 'cut', what: 'The reflected mouth, very close: these motors, this mouth shape'},
+  {id: 'p4-lips', a: K.moveThese, b: K.change, C: G.P4Mirror, tr: 'cut', what: 'The mirror from beside the robot: its head in the foreground as it works; in the glass, the motors for that mouth shape show through'},
   {id: 'p5-into', a: K.change, b: K.skin, C: D_.P5Into, tr: 'cut', what: 'A new combination; then the camera goes into the reflection\u2019s cheek until the skin fills the frame'},
   // ---- skin
   {id: 's1-skin', a: K.skin, b: K.pull, C: G.S1Material, tr: 'match', what: 'The workbench: she pulls a tab on a clamped silicone sheet and the whole area around it stretches; then she lifts a metal bracket and turns it: it moves as one piece', cont: 'skin fills the frame on both sides of the cut'},
@@ -79,7 +79,7 @@ export const SHOTS2: Shot2[] = [
   {id: 'd2-mouth', a: T('looking as though'), b: T('and understanding'), C: B.DistMouth, tr: 'cut', what: 'Its mouth, close: looking like speaking'},
   {id: 'd3-listener', a: T('and understanding'), b: T('are different'), C: G.D3Listener, tr: 'cut', what: 'In the audience, one of them listens to the words, head on one side, and frowns'},
   {id: 'd4-ots', a: T('are different'), b: K.flaws, C: G.D4Stage, tr: 'cut', what: 'Behind it on the stage, looking out over the audience'},
-  {id: 'f1-mouth', a: K.flaws, b: T('The team reported'), C: B.FlawMouth, tr: 'cut', what: 'Its mouth still speaking, then stopping'},
+  {id: 'f1-mouth', a: K.flaws, b: T('The team reported'), C: G.F1Stage, tr: 'cut', what: 'On the stage it keeps speaking; the camera moves in from the stage to its mouth'},
   {id: 'f2-b', a: T('The team reported'), b: T('“W.”') - 0.12, C: B.FlawB, tr: 'cut', what: 'B: the person\u2019s lips close fully; the robot\u2019s leave a gap (large split)'},
   {id: 'f3-w', a: T('“W.”') - 0.12, b: K.small, C: B.FlawW, tr: 'cut', what: 'W: rounded and pushed forward; the robot under-rounds'},
   {id: 'f4-gap', a: K.small, b: T('when you’re watching'), C: B.FlawGap, tr: 'cut', what: 'The gap, very close, ringed'},

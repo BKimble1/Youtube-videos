@@ -15,8 +15,8 @@ import {DemoBack, HomeBack, StageLip, StudioBack, StudioMic, TestBayBack, Worksh
 import {Laptop, Puppet, SpeakerBox} from './props';
 import {Sliders, sliderVals} from './shotsA';
 import {Tag} from './text3';
-import {Back, ProfileTwo, RobotCU} from './sets';
-import {EXPR_COPY, rob2, vis2} from './state2';
+import {Back, MirrorSet2, ProfileTwo, RobotCU} from './sets';
+import {EXPR_COPY, HOOK_LAG, HOOK_T, rob2, vis2} from './state2';
 import {drift} from './shots2';
 
 const sm3 = (x: number) => x * x * (3 - 2 * x);
@@ -46,14 +46,24 @@ export const G1FaceOff: React.FC<{f: number}> = ({f}) => {
   const t = f / 30;
   const st = view(rob2(f), 24);
   const v = vis2(f);
-  const cam = camPath(f, [[0, {x: 905, y: 530, z: 1.26}], [0.8, {x: 860, y: 532, z: 1.32}], [1.45, {x: 1030, y: 510, z: 1.3}], [2.35, {x: 880, y: 528, z: 1.33}], [T('Then it tries'), {x: 960, y: 515, z: 1.44}]], sm3);
+  // V6: the shot opens low and a little canted, tight on the robot mid-copy with his face large at the right edge;
+  // it levels and widens to the two-shot as he pulls the next face, then travels between the faces as before
+  const cam = camPath(f, [[0, {x: 800, y: 575, z: 1.5, roll: -3}], [0.8, {x: 850, y: 548, z: 1.38, roll: -1.2}], [1.45, {x: 1030, y: 510, z: 1.3, roll: 0}], [2.35, {x: 880, y: 528, z: 1.33}], [T('Then it tries'), {x: 960, y: 515, z: 1.44}]], sm3);
+  // V6: as it gives each face back, the silicone clears over the motors doing that face (and only those): jaw and
+  // brows for the shock, brows and lids for the glare, corners and cheeks for the grin
+  const copy = HOOK_T.map((h) => h + HOOK_LAG);
+  const bump = (c: number) => ss(t, c - 0.12, c + 0.12) * (1 - ss(t, c + 0.45, c + 0.75));
+  const k0 = 1 - ss(t, 0.35, 0.7);
+  const k1 = bump(copy[1]), k2 = bump(copy[2]);
+  const xr = Math.max(k0, k1, k2);
+  const hot = k0 >= k1 && k0 >= k2 ? ['jaw', 'brow', 'lip'] : k1 >= k2 ? ['brow', 'lid', 'lip'] : ['corner', 'cheek', 'lid'];
   const R = {x: 640, y: 540, s: 3.0};
   return (
     <g>
       <Hall cam={cam} t={t} depth={2.6} veil={0.42} dx={-80} dy={140} />
       <Layer cam={cam} depth={1}>
         <RobotSupport id="g1-sup" x={R.x} y={R.y} s={R.s} yaw={st.yaw} postLen={260} />
-        <Robot id="g1-r" st={st} x={R.x} y={R.y} s={R.s} />
+        <Robot id="g1-r" st={st} x={R.x} y={R.y} s={R.s} xray={0.42 * xr} xrayDark={0.14} xrayHot={hot} xrayFocus />
       </Layer>
       <Layer cam={cam} depth={0.96}>
         <Visitor id="g1-v" hx={1350} hy={490} s={2.7} expr={v.expr} blink={v.blink} pose={{turn: 0.72, lTv: 120, torso: 6, neck: -4}} />
@@ -909,4 +919,22 @@ export const Z3Final: React.FC<{f: number}> = ({f}) => {
       </Layer>
     </g>
   );
+};
+
+// ================================================================== V6 pacing fixes
+// 61.12 - 63.41 "Move these motors, get this mouth shape.": instead of a third reflection close-up, the mirror from
+// beside the robot: its head in the foreground turns slightly as it works, and in the glass the motors for that shape
+// show through
+export const P4Mirror: React.FC<{f: number}> = ({f}) => {
+  const a = K.moveThese, b = K.change;
+  const cam = drift(f, a, b, {x: 1010, y: 445, z: 1.62}, {x: 1080, y: 440, z: 1.82});
+  const xr = pr(f, a, a + 0.3) * (1 - pr(f, T('get this') + 0.4, T('get this') + 0.7));
+  return <MirrorSet2 id="p4m" cam={cam} st={rob2(f)} reflXray={0.7 * xr} reflHot={['corner', 'cheek', 'lip']} />;
+};
+// 122.51 - 124.54 "The movements still had flaws.": on the stage it keeps speaking; the camera moves in from the stage
+// to its mouth (the shot that follows is the close comparison)
+export const F1Stage: React.FC<{f: number}> = ({f}) => {
+  const a = K.flaws, b = T('The team reported');
+  const cam = camPath(f, [[a, {x: 880, y: 470, z: 1.5}], [b, {x: 872, y: 520, z: 3.2}]], sm3);
+  return <StageWide f={f} cam={cam} t0={a - 6} st={{...rob2(f), yaw: 14, gx: 0.1}} />;
 };

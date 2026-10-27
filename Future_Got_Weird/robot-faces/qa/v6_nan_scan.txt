@@ -1,0 +1,1 @@
+scanned 6400 frames; 0 shots with invalid values; 90 shots
