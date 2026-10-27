@@ -60,7 +60,7 @@ export const COURSE: {b: BoxB; c: string}[] = [
  *  left; as it veers right the camera swings round with it by half the turn (B45_ORBIT), so its own view of the insect
  *  turns only 45 degrees (no leg, antenna, eye or wire changes its drawing layer mid-move) while the insect visibly
  *  turns right on screen and the course swings round behind it. */
-export const B45_AZ = 200, B45_ORBIT = 0.5;
+export const B45_AZ = 190, B45_ORBIT = 0.35;
 const BOARD: V3 = [4, 23, 0];
 const S_CLOSE = 11.6, S_WIDE = 5.8;
 const EL_CLOSE = 46, EL_WIDE = 49;
