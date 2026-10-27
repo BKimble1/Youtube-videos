@@ -2,8 +2,8 @@
 // camera keeps E1's forward speed and keeps sinking toward the insect's height as it follows the medic in under the
 // slab's lip: one physical move through the gap, built as a pinhole camera over flat layers at real depths (mm): the
 // slab's broken front face and the block propping it are cards at the lip, the floor and the slab's underside are
-// planes, the passage beyond and its thin shaft of daylight are cards deeper in, the rescuer's glove (it has just set
-// the insect down) a card on the floor at the right. Nearer things grow and slide out faster than far ones (the glove
+// planes, the passage beyond and its thin shaft of daylight are cards deeper in, the rescuer's hard hat (E1's, at the
+// same place) a card on the floor at the right. Nearer things grow and slide out faster than far ones (the hat
 // leaves first, the lip passes overhead), so it reads as moving through the gap, never as a zoom. The daylight behind
 // falls off as the lip passes over; the insect grows steadily from E1's size to E3's.
 import React from 'react';
@@ -15,10 +15,8 @@ import {clamp, sr, rnd} from '../../../../lib/ease';
 import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Glow2, Motes, Shaft, VGrad, jag, poly, f2} from '../art';
-import {GloveArm} from '../../b/common';
-import {HAND_RELAXED} from '../../../dc/Hand';
 import {ShotProps} from '../../index2';
-import {idf, FPS, cardT, probe} from './kit';
+import {idf, FPS, cardT, probe, HardHat} from './kit';
 import {E1_END_RATE} from './E1r';
 
 export const E2_N = 25;
@@ -165,7 +163,7 @@ const SlabFront: React.FC<{id: string; w: number}> = ({id, w}) => {
       <path d={line2(lower)} stroke="#231E1B" strokeWidth={f2(w * 2.4)} fill="none" strokeLinecap="round" />
       <Rebar pts={[a(-90, hL(-90) + 2), a(-80, hL(-90) - 14), a(-92, hL(-90) - 24)]} w={w * 1.6} dark={0.4} />
       <Rebar pts={[a(320, hL(320) + 2), a(312, hL(320) - 10), a(326, hL(320) - 18)]} w={w * 1.6} dark={0.4} />
-      <Glow2 id={`${id}-sun`} cx={a(-500, T)[0]} cy={a(-500, T)[1]} rx={600} ry={260} color={RB.dayHot} a={0.35} />
+      <Glow2 id={`${id}-sun`} cx={a(520, T)[0]} cy={a(520, T)[1]} rx={600} ry={260} color={RB.dayHot} a={0.35} />
     </g>
   );
 };
@@ -179,17 +177,15 @@ const Block: React.FC<{id: string; w: number}> = ({id, w}) => {
   );
 };
 
-// ---------------------------------------------------------------- the rescuer's glove at the right of the opening
+// ---------------------------------------------------------------- the rescuer's hard hat at the right of the opening
+/** E1's hard hat, lying crown-up on the floor at the right of the mouth (world mm): nearer the lens than the insect, so
+ *  it slides out to the right faster than the lip as the camera goes in */
 const DG = 165;
-const Glove: React.FC<{id: string; w: number}> = ({id, w}) => {
+const HAT = {x: 165, L: 250};
+const Hat: React.FC<{id: string; w: number}> = ({id, w}) => {
   const a = ap(DG);
-  const wr = a(235, 6), tip = a(40, 6);
-  const L = Math.hypot(tip[0] - wr[0], tip[1] - wr[1]);
-  return (
-    <g transform={`translate(${f2(wr[0])} ${f2(wr[1])}) scale(1 0.62) translate(${f2(-wr[0])} ${f2(-wr[1])})`}>
-      <GloveArm id={`${id}-ga`} a={{wrist: {x: wr[0], y: wr[1]}, ang: -172, L, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 2}} ink={w} shadow={{alpha: 0.3, offset: {x: 0.03 * L, y: 0.1 * L}}} />
-    </g>
-  );
+  const [x, y] = a(HAT.x, 0);
+  return <HardHat id={`${id}-hh`} cx={x} by={y} w={(F * HAT.L) / DG} el={11} ink={w} />;
 };
 
 // ---------------------------------------------------------------- overhead: rebar stubs and debris hanging from the underside
@@ -335,7 +331,7 @@ export const E2: React.FC<ShotProps> = ({f, lf}) => {
       <Grit2 c={c} items={grNear} />
       <Card c={c} D={DBLK}><Block id={`${id}b`} w={wAt(c, DBLK, 5)} /></Card>
       <Card c={c} D={DL}><SlabFront id={`${id}s`} w={wAt(c, DL, 5.5)} /></Card>
-      <Card c={c} D={DG}><Glove id={`${id}v`} w={wAt(c, DG, 8)} /></Card>
+      <Card c={c} D={DG}><Hat id={`${id}v`} w={wAt(c, DG, 5.5)} /></Card>
       <Motes id={`${id}-m`} t={t} n={14} x0={-100} y0={300} x1={1180} y1={1800} r={4} seed={225} a={0.45 * (1 - under)} />
       <Glow2 id={`${id}-rim`} cx={pr(c, ix, 10, iz)[0]} cy={pr(c, ix, 10, iz)[1]} rx={260} ry={130} color={RB.day} a={0.1 * (1 - under)} />
     </svg>

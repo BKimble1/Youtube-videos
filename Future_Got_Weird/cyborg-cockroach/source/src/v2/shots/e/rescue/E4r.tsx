@@ -27,7 +27,7 @@ const s0 = 31;
 /** angular rubble chunks (world mm): a convex broken footprint in the ground plane (x, z), extruded to a slightly
  *  tilted top: top(x, z) = h + gx (x - xc) + gz (z - zc) */
 type Chunk = {fp: [number, number][]; xc: number; zc: number; h: number; gx: number; gz: number; tone: string};
-const TONES = [RB.concLit, RB.conc, '#9A6A52', RB.concDark, RB.concPale, RB.conc];
+const TONES = [RB.concLit, RB.conc, mix('#9A6A52', RB.conc, 0.45), RB.concDark, RB.concPale, RB.conc];
 const CHUNKS: Chunk[] = Array.from({length: 190}, (_, i) => {
   // dense along the insect's path, thinning out to the sides
   const zu = rnd(i + 9, 41) * 2 - 1;
@@ -113,7 +113,8 @@ const Chunk3: React.FC<{v: View; c: Chunk}> = ({v, c}) => {
     if (nx * ((ax + bx) / 2 - c.xc) + nz * ((az + bz) / 2 - c.zc) < 0) (nx = -nx), (nz = -nz);
     const facing = nx * v.F[0] + nz * v.F[2];
     if (facing <= 0) continue;
-    const lit = Math.max(0, (nx * -0.6 + nz * -0.3) / Math.hypot(nx, nz));
+    // lit from the upper right (screen +x is world +x here), as the shaft in E3 and the daylight through the rescue
+    const lit = Math.max(0, (nx * 0.6 + nz * -0.3) / Math.hypot(nx, nz));
     sides.push(<path key={i} d={poly([q(ax, topAt(c, ax, az), az), q(bx, topAt(c, bx, bz), bz), q(bx, -0.5, bz), q(ax, -0.5, az)])} fill={shadeC(c.tone, 0.42 - 0.2 * lit)} stroke={INK} strokeWidth={3} strokeLinejoin="round" />);
   }
   return (
@@ -150,7 +151,7 @@ export const E4: React.FC<ShotProps> = ({f, lf}) => {
           <circle key={i} cx={f2(((rnd(i, 61) * 1300 - 60 * t + 1300) % 1300) - 110)} cy={f2(200 + rnd(i + 1, 61) * 620)} r={f2(18 + rnd(i + 2, 61) * 30)} fill={RB.day} opacity={0.18} />
         ))}
       </Blur>
-      <Glow2 id={`${id}-key`} cx={360} cy={760} rx={900} ry={700} color={RB.day} a={0.2} />
+      <Glow2 id={`${id}-key`} cx={620} cy={640} rx={900} ry={700} color={RB.day} a={0.2} />
       {/* the floor: a gravel bed receding into the dark */}
       <path d={poly([q(-300, -300), q(400, -300), q(400, 300), q(-300, 300)])} fill="#5E554D" />
       <Glow2 id={`${id}-pool`} cx={SX + 80} cy={SY + 80} rx={700} ry={560} color={RB.day} a={0.3} />

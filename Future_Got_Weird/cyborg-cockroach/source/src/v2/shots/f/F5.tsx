@@ -9,6 +9,7 @@ import {P} from '../../roach/ortho';
 import {ShotProps} from '../index2';
 import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
 import {medicHeadPx} from './F3';
+import {F4_HAND} from './F4';
 import {FPS, medicPose, cfView, onBody, BARREL} from './world';
 
 /** shot frames: the glance to the device, the glint, the change of face, the breath out, the hand opening and sliding */
@@ -26,7 +27,7 @@ export const F5: React.FC<ShotProps> = ({f, lf}) => {
   const h = sr(lf, K.hope0, K.hope1);
   const a: Acting = {
     recog: 0.6 * h, recoil: 0.3 * (1 - sr(lf, K.hope0 - 1, K.hope1)),
-    handOpen: 0.02 + 0.98 * sr(lf, K.open0, K.open1), handSlide: 0.2 * sr(lf, K.slide0, K.slide1),
+    handOpen: F4_HAND.to + (1 - F4_HAND.to) * sr(lf, K.open0, K.open1), handSlide: 0.2 * sr(lf, K.slide0, K.slide1),
     gaze,
     exhale: clamp(Math.sin(Math.PI * clamp((lf - K.ex0) / (K.ex1 - K.ex0)))),
     breath: 0.8,

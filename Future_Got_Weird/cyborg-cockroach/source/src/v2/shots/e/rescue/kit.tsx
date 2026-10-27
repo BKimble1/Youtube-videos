@@ -7,6 +7,7 @@ import {RoachPose} from '../../../../rig/roach';
 import {V3} from '../../../../lib/v3';
 import {Cam} from '../../../dc/camera';
 import {f2} from '../art';
+import {INK} from '../../../../lib/ink';
 
 export const FPS = 30;
 
@@ -97,4 +98,74 @@ export const probe = (f: number, reach = 1, down = 0) => {
     return {yaw: 0.5 + 0.3 * reach * sw, pitch: 0.16 - down - 0.42 * reach * tap + 0.1 * reach * Math.max(0, sw), curl: 0.85 + 0.25 * reach * tap};
   };
   return {antL: one(0), antR: one(Math.PI * 0.85), search: 0.18};
+};
+
+/** a rescuer's yellow hard hat (with its reflective band and a clipped-on headlamp) left lying crown-up on the floor
+ *  at the void's entrance: the scale reference for E1 and E2 (a non-body object, far bigger than the insect). Flat
+ *  fills, one cel tone, the crew ink. Seen from elevation `el` (deg) in profile, its peak to the left; daylight from
+ *  the upper right (the cel shade on the left, the cast shadow to the lower left). (cx, by): the brim's centre on the
+ *  floor; w: the brim's length (px); ink: contour width (px). */
+export const HardHat: React.FC<{id: string; cx: number; by: number; w: number; el: number; ink: number}> = ({id, cx, by, w, el, ink}) => {
+  const se = Math.sin((el * Math.PI) / 180), ce = Math.cos((el * Math.PI) / 180);
+  const Rb = 0.45 * w, Rd = 0.36 * w, Hd = 0.36 * w, tb = 0.026 * w * ce + 0.01 * w;
+  const bx = cx - 0.05 * w; // a short brim round the sides and back, running out to the peak at the left
+  const dy = by - tb; // the dome sits on the brim's top
+  const ryB = Math.max(0.012 * w, Rb * se), ryD = Math.max(0.01 * w, Rd * se);
+  const ryT = Math.sqrt((Hd * ce) ** 2 + (Rd * se) ** 2);
+  const n = 28;
+  const arc = (x0: number, y0: number, rx: number, ry: number, a0: number, a1: number) =>
+    Array.from({length: n + 1}, (_, i) => {
+      const a = a0 + ((a1 - a0) * i) / n;
+      return [x0 + rx * Math.cos(a), y0 + ry * Math.sin(a)] as [number, number];
+    });
+  const d = (pts: [number, number][], close = true) => `M${pts.map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L')}${close ? ' Z' : ''}`;
+  // the dome: the top arc (silhouette) over the front half of its base ring
+  const dome = [...arc(cx, dy, Rd, ryT, Math.PI, 2 * Math.PI), ...arc(cx, dy, Rd, ryD, 0, Math.PI)];
+  // a horizontal ring on the dome at height h (fraction of Hd): its front half
+  const ring = (h: number) => {
+    const r = Rd * Math.sqrt(Math.max(0, 1 - h * h));
+    return arc(cx, dy - h * Hd * ce, r, r * se, 0, Math.PI);
+  };
+  const r1 = ring(0.14), r2 = ring(0.3);
+  const band = [...r1, ...r2.slice().reverse()];
+  // the cel shade: the left third of the dome (away from the light)
+  const sA = arc(cx, dy, Rd, ryT, Math.PI, Math.PI * 1.4), sB = arc(cx, dy, Rd, ryD, Math.PI * 0.64, Math.PI);
+  const sTop = sA[sA.length - 1], sBot = sB[0];
+  const shadeD = `${d(sA, false)} Q${f2(cx - Rd * 0.12)},${f2(dy - ryT * 0.25)} ${f2(sBot[0])},${f2(sBot[1])} L${sB.slice(1).map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L')} Z`;
+  void sTop;
+  // the raised centre rib, running front to back over the crown (the dome's vertical section across the view)
+  const rib = (o: number) => arc(cx, dy + o * se, Rd * 0.985, Hd * ce, Math.PI * 1.03, Math.PI * 1.97);
+  const ribA = rib(-0.035 * w), ribB = rib(0.035 * w);
+  const hi = arc(cx, dy, Rd * 0.86, ryT * 0.88, Math.PI * 1.62, Math.PI * 1.84);
+  const Y = '#F2BE2C', YS = '#C98E17', YH = '#FFE58A';
+  // the headlamp on the front-left of the dome, over the band
+  const lx = cx - Rd * 0.62, ly = dy - 0.22 * Hd * ce + Rd * 0.5 * se, lw = 0.13 * w, lh = 0.085 * w;
+  return (
+    <g>
+      <defs>
+        <filter id={`${id}-sb`} x="-30%" y="-80%" width="160%" height="260%">
+          <feGaussianBlur stdDeviation={f2(0.025 * w)} />
+        </filter>
+      </defs>
+      {/* the cast shadow, thrown to the lower left */}
+      <ellipse cx={f2(bx - 0.08 * w)} cy={f2(by + 0.015 * w)} rx={f2(Rb * 1.05)} ry={f2(ryB + 0.03 * w)} fill="#1E1814" opacity={0.42} filter={`url(#${id}-sb)`} />
+      {/* the brim: its thickness (underside) and its top */}
+      <ellipse cx={f2(bx)} cy={f2(by)} rx={f2(Rb)} ry={f2(ryB)} fill={YS} stroke={INK} strokeWidth={f2(ink)} />
+      <ellipse cx={f2(bx)} cy={f2(by - tb)} rx={f2(Rb)} ry={f2(ryB)} fill={Y} stroke={INK} strokeWidth={f2(ink)} />
+      {/* the dome */}
+      <path d={d(dome)} fill={Y} />
+      <path d={shadeD} fill={YS} opacity={0.9} />
+      <path d={d(band)} fill="#E6ECEE" />
+      <path d={d(r2, false)} stroke="#AAB6BB" strokeWidth={f2(ink * 0.5)} fill="none" />
+      <path d={d([...ribA, ...ribB.slice().reverse()])} fill={YH} opacity={0.55} />
+      <path d={d(ribA, false)} stroke={INK} strokeWidth={f2(ink * 0.55)} fill="none" strokeLinecap="round" />
+      <path d={d(ribB, false)} stroke={INK} strokeWidth={f2(ink * 0.55)} fill="none" strokeLinecap="round" />
+      <path d={d(hi, false)} stroke={YH} strokeWidth={f2(ink * 1.3)} fill="none" strokeLinecap="round" />
+      <path d={d(dome)} fill="none" stroke={INK} strokeWidth={f2(ink)} strokeLinejoin="round" />
+      {/* the headlamp: a dark housing on the band, its lens (off) */}
+      <path d={`M${f2(lx - lw / 2)},${f2(ly - lh / 2)} h${f2(lw)} v${f2(lh)} h${f2(-lw)} Z`} fill="#2E3438" stroke={INK} strokeWidth={f2(ink * 0.8)} strokeLinejoin="round" />
+      <ellipse cx={f2(lx - lw * 0.18)} cy={f2(ly)} rx={f2(lh * 0.34)} ry={f2(lh * 0.34)} fill="#BFD3DC" stroke={INK} strokeWidth={f2(ink * 0.5)} />
+      <path d={`M${f2(lx - lw * 0.26)},${f2(ly - lh * 0.14)} l${f2(lh * 0.12)},${f2(-lh * 0.08)}`} stroke="#FFFFFF" strokeWidth={f2(ink * 0.5)} strokeLinecap="round" />
+    </g>
+  );
 };

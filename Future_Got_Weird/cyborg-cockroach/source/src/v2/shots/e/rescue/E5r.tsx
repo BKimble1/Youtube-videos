@@ -16,7 +16,7 @@ import {mix, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Rebar, Pipe, Glow2, jag, poly, f2} from '../art';
 import {shotRange} from '../../../cuts2';
 import {ShotProps} from '../../index2';
-import {idf, FPS, FeedGrade, FeedLook} from './kit';
+import {idf, FPS, FeedGrade, FeedLook, probe} from './kit';
 
 const E5R = shotRange('E5');
 /** feed time: seconds since the feed starts (E5's first frame) */
@@ -42,7 +42,8 @@ const feedPath: Path = (s) => {
 };
 export const feedMedic = (f: number): RoachPose => {
   const t = ft(f);
-  return poseRoach({path: feedPath, s: 10 + V_MM * t, t: t + 24, search: 0.5, antL: {yaw: 0.5, pitch: 0.3}, antR: {yaw: 0.48, pitch: 0.32}, seed: 5});
+  // the antennae probe ahead as in E1-E4 (film time, kit.probe), never frozen
+  return poseRoach({path: feedPath, s: 10 + V_MM * t, t: t + 24, ...probe(f, 0.7), seed: 5});
 };
 /** the observer's camera: walking straight on behind (the passage's sections open out at a constant rate) */
 const feedCam = (f: number): Cam => ({x: VP.x, y: VP.y, z: 1 + 0.3 * ft(f)});
@@ -129,6 +130,12 @@ const PassageScene: React.FC<{f: number; id: string}> = ({f, id}) => {
   return (
     <g>
       <rect x={-50} y={-50} width={1180} height={2020} fill="#0B0908" />
+      {/* far down the passage, beyond its last section: a faint warm glow, daylight leaking in from the upper right
+          (her pocket ahead, where F1's slit of daylight comes from); seen only through the openings */}
+      <Layer cam={cam} depth={9}>
+        <Glow2 id={`${id}-wa`} cx={VP.x + 34} cy={VP.y - 34} rx={78} ry={62} color="#FFB866" a={0.5} />
+        <path d={`M${VP.x + 52},${VP.y - 70} L${VP.x + 64},${VP.y - 66} L${VP.x + 30},${VP.y + 10} L${VP.x + 22},${VP.y + 8} Z`} fill="#FFD9A0" opacity={0.5} />
+      </Layer>
       {DEPTHS.slice().reverse().map((d, ri) => {
         const k = DEPTHS.length - 1 - ri;
         return (

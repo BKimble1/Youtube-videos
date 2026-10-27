@@ -7,7 +7,7 @@
 import React from 'react';
 import {Man} from '../../../../crew/operator/dc/Man';
 import {DIM} from '../../../../crew/operator/dc/Man';
-import {HERO_LAB, H_REMOTE} from '../../../../crew/operator/cast';
+import {HERO_LAB, H_REMOTE, blinkAt} from '../../../../crew/operator/cast';
 import {aimThumb} from '../../../../crew/operator/RemoteCloseUp';
 import {operatorAtBench, OperatorAtBenchProps, Remote, REMOTE, remotePt} from '../../../../crew/operator';
 import {add, mul, rad, fmt} from '../../../../lib/math';
@@ -29,6 +29,9 @@ export const E6_SCREEN = {x: 318, y: 958, k: 0.29};
 /** the press on the D-pad's right arm: down, held, released (film frames) */
 const PRESS = {f0: FEED_TURN.f - 5, f1: FEED_TURN.f - 2, f2: FEED_TURN.f + 3, f3: FEED_TURN.f + 6};
 export const e6Press = (f: number) => smoother(clamp((f - PRESS.f0) / (PRESS.f1 - PRESS.f0))) * (1 - smoother(clamp((f - PRESS.f2) / (PRESS.f3 - PRESS.f2))));
+/** one blink just after the press, as the medic turns in the feed (the rig's automatic track would have his eyes
+ *  shut on E6's first frame); 0.2 s, done by frame 756 */
+const E6_BLINK = (f: number) => blinkAt((f - (PRESS.f2 + 2)) / FPS + 0.6);
 /** the remote held 20 mm further back in the hand (toward the wrist) than at the lab bench */
 const SHIFT_MM = 20;
 
@@ -172,7 +175,7 @@ export const E6: React.FC<ShotProps> = ({f}) => {
   const t = f / FPS;
   const press = e6Press(f);
   const opProps: OperatorAtBenchProps = {
-    x: OP.x, y: OP.y, scale: OP.scale, t, expr: 'focus', led: 'armed', blink: 0,
+    x: OP.x, y: OP.y, scale: OP.scale, t, expr: 'focus', led: 'armed', blink: E6_BLINK(f),
     gazeX: E6_SCREEN.x + 30, gazeY: E6_SCREEN.y + 60, benchTopY: TABLE, farHand: 'bench', farHandX: 150,
   };
   // the camera drifts with his gaze toward the monitor (far layer slower: parallax)
@@ -202,7 +205,7 @@ export const E6: React.FC<ShotProps> = ({f}) => {
       <RuggedMonitor id={`${id}mn`} f={f} />
       <OperatorField id={`${id}oh`} layer="hands" {...opProps} press={press} />
       </g>
-      <Glow2 id={`${id}-sun`} cx={80} cy={120} rx={800} ry={600} color={RB.dayHot} a={0.28} />
+      <Glow2 id={`${id}-sun`} cx={1000} cy={60} rx={800} ry={560} color={RB.dayHot} a={0.28} />
     </svg>
   );
 };

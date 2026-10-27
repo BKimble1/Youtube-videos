@@ -11,19 +11,26 @@ import {Gear2D} from '../../roach/Gear2D';
 import {P} from '../../roach/ortho';
 import {Survivor, survivorLayout} from '../../../crew/person';
 import {keys, sr} from '../../../lib/ease';
-import {RB, Pt, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, poly} from '../e/art';
+import {RB, Pt, Slab, Pebbles, Motes, Glow2, VGrad, Vignette, Shaft, Grit, jag, poly} from '../e/art';
 import {Block, blockClipD, HoleShadow, Crevice, Ledge, CK} from './crack2';
 import {FF, faceTrack, herOpts, Acting, NearHand} from './pocket';
+import {F3_HAND_END} from './F3';
 import {medicPose, R4, FPS, SLAB, SC, MM_U, Place, cfViewAt, cardPxAt, onBody, BARREL} from './world';
 import {ShotProps} from '../index2';
 
-/** the over-the-shoulder placement of her card projection (yaw 158: from behind her right shoulder; elevation 60:
- *  looking down past her head at the floor ahead), 9.5 px per rig unit (the insect about 300 px long) */
-export const PL4: Place = {x: -110, y: 1400, scale: 6, yaw: 122, elev: 44};
+/** the over-the-shoulder placement of her card projection (V5: yaw 122, from behind and to the side of her right
+ *  shoulder; elevation 44, looking down past her head at the floor ahead; 6 px per rig unit, the insect about 190 px
+ *  long). V4's steeper view from straight behind (yaw 150, elev 60, 9 px/u) put her elbow at the bottom edge with the
+ *  upper arm and the forearm both rising from it, so her fist read as raised and disconnected. From here her arm is one
+ *  continuous L on the floor: the back of her head and her shoulder at the left, the sleeved upper arm down to the elbow
+ *  planted on the floor, the forearm lying along the floor to her hand, with its contact shadow */
+export const PL4: Place = {x: -80, y: 1300, scale: 6, yaw: 122, elev: 44};
 /** grit shaken off the slab's lip above the hole (shot seconds) */
 export const F4_GRIT = {t0: 0.12, dur: 0.5};
-/** her held breath: a small breath in (shot frames) */
-export const F4_K = {breath0: 6, breath1: 16};
+/** her held breath: a small breath in; her fist loosens and her hand settles flat on the floor (shot frames) */
+export const F4_K = {breath0: 6, breath1: 16, flat0: 3, flat1: 16};
+/** her near hand (handOpen): from F3's tense end to lying flat on the floor, fingers together (F5 opens it from here) */
+export const F4_HAND = {from: F3_HAND_END, to: 0.6};
 
 export const F4: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / FPS, t = lf / FPS;
@@ -42,7 +49,7 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
   // her: tense, a little leaned back, watching it come (her face is turned away from us: only the cheek's edge)
   const head = q(pose.frame.o[0] + pose.frame.x[0] * 33, 10, pose.frame.o[2] + pose.frame.x[2] * 33);
   const a: Acting = {
-    recog: 0, recoil: 0.3, handOpen: 0.12, gaze: {x: head[0], y: head[1]},
+    recog: 0, recoil: 0.3, handOpen: F4_HAND.from + (F4_HAND.to - F4_HAND.from) * sr(lf, F4_K.flat0, F4_K.flat1), gaze: {x: head[0], y: head[1]},
     breath: 0.6 + 0.6 * sr(lf, F4_K.breath0, F4_K.breath1),
     turn: keys(lf, [[0, -14], [24, -16]]), nod: keys(lf, [[0, 10], [24, 13]]), tilt: -2, // (cheated a little away: from behind only her ear and the edge of her cheek show)
     face: faceTrack(lf, [[0, FF.unease]]),
@@ -54,8 +61,12 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
       <VGrad id={`${sid}bg`} x0={0} y0={-100} x1={0} y1={2000} stops={[[0, '#2B292D'], [1, '#1B1A1D']]} />
       <path d={poly(floor)} fill="#6C6560" />
       <Glow2 id={`${sid}fl`} cx={640} cy={1050} rx={620} ry={420} color={RB.day} a={0.42} />
-      <Pebbles id={`${sid}p1`} a={cp(-150, 0, 40)} b={cp(-60, 0, 150)} n={6} size={26} seed={41} tone={RB.concLit} w={4} dark={0.15} />
-      <Pebbles id={`${sid}p2`} a={cp(40, 0, 150)} b={cp(140, 0, 230)} n={5} size={24} seed={42} tone={RB.concLit} w={4} dark={0.2} />
+      {/* the fallen slab's underside over her pocket, lit along its lower edge (beyond her head) */}
+      <Slab id={`${sid}cs`} face={jag([[-100, -100], [1180, -100], [1180, 120], [600, 175], [-100, 250]], 12, 47, 70)} tone={RB.conc} w={4} dark={0.3} specks={20} cracks={[[[300, -40], [350, 90], [330, 200]]]} rim={[[-100, 250], [600, 175], [1180, 120]]} />
+      {/* the rubble piled beyond the crack's block (the pocket's far side), lit along its lower edge */}
+      <Slab id={`${sid}fw`} face={jag([[420, -100], [1180, -100], [1180, 640], [960, 560], [700, 470], [520, 330], [420, 200]], 14, 48, 60)} tone="#55535A" w={4} dark={0.3} specks={22} cracks={[[[760, 120], [800, 260], [770, 380]], [[1000, 60], [960, 200]]]} rim={[[420, 200], [520, 330], [700, 470], [960, 560]]} rimColor="#D9C9A6" />
+      <Pebbles id={`${sid}p1`} a={cp(-150, 0, 40)} b={cp(-60, 0, 150)} n={3} size={24} seed={41} tone={RB.concLit} w={4} dark={0.15} />
+      <Pebbles id={`${sid}p2`} a={cp(40, 0, 150)} b={cp(140, 0, 230)} n={3} size={22} seed={42} tone={RB.concLit} w={4} dark={0.2} />
       <Pebbles id={`${sid}p3`} a={q(170, 0, 60)} b={q(200, 0, 140)} n={4} size={22} seed={43} tone={RB.concLit} w={4} dark={0.15} />
       <Crevice id={`${sid}cv`} v={v} w={5} />
       <path d={poly(fan)} fill={RB.day} opacity={0.3} />
@@ -80,7 +91,7 @@ export const F4: React.FC<ShotProps> = ({f, lf}) => {
       <g filter={`url(#${sid}-hb)`}>
         <defs>
           <filter id={`${sid}-hb`} x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur stdDeviation="6" />
+            <feGaussianBlur stdDeviation="4.5" />
           </filter>
         </defs>
         {/* her forearm's and hand's soft contact shadow on the floor (the light from the upper right) */}

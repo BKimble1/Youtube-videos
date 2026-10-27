@@ -1,10 +1,12 @@
 // V4 shot group F (production/V3_SHOT_PLAN.md + the V4 polish brief): F1-F5, the trapped survivor and the medic coming to her.
 //   F1 758-792 her pocket; a shadow slides into the light leaking under the slab ahead of her hands; she sees it
 //   F2 793-817 the medic pushes out of the crack in the slab's end onto the narrow ledge (close)
-//   F3 818-847 close on her face: her eyes drop to it and track it; restrained unease (brows together and up a little,
-//              eyes a little wider, mouth tight, a small lean back); the camera follows her gaze down to the two-shot
-//   F4 848-872 over her right shoulder (her head, shoulder and fist large and soft at the left): the medic comes off the
-//              hole across the rubble ledge toward her hand and the camera, weight in its walk, injector on its back
+//   F3 818-847 close on her face: her eyes drop to it: a clean startle (eyes widen, brows lift, a quick small recoil of
+//              head and shoulders, a catch of breath, held), then she settles into wary unease, her eyes tracking it; the
+//              camera follows her gaze down to the two-shot
+//   F4 848-872 over her right shoulder (V5: her head, shoulder, sleeved upper arm, elbow and forearm one continuous soft
+//              L on the floor at the left, her hand settling flat): the medic comes off the hole across the rubble ledge
+//              toward her hand, weight in its walk, injector on its back
 //   F5 873-891 the two-shot: the injector glints; unease turns to cautious hope; her near hand opens and slides toward it
 // One world (f/world.ts): the same pocket, slab, crack, ledge and walk in every shot.
 import React from 'react';
@@ -22,7 +24,7 @@ export const SHOTS_F: Record<string, React.FC<ShotProps>> = {F1, F2, F3, F4, F5}
 /** caption centre y per shot (screen px): never over her face, the insect or the needle */
 export const CAPY_F: Record<string, number> = {
   F1: 270, // top band, over the slab above her head (start) / right of her forehead (end); the light and the shadow are low right
-  F2: 1570, // low, over the floor and the near rubble in front of the ledge (the insect at y 650-1100)
+  F2: 210, // V5: high, over the dark rubble above the slab (the insect at y 650-1100); "starts crawling" starts here and runs into F3, where a low band would sit on her hand
   F3: 270, // top band, over the slab's underside above her head (hair top at y ~400 close, ~380 in the two-shot)
   F4: 270, // top band, over the floor and the slab beyond the hole (the insect at y 560-920, her head's top at y ~470, x < 260)
   F5: 270, // top band, over the slab's underside above her head (hair top at y ~380; the insect and her hand are low right)
@@ -37,10 +39,11 @@ export const cuesF = (): Cue[] => {
   // F2: grit from the crack as the head pushes out; its first steps out onto the ledge (close)
   ev.push({kind: 'grit', t: R2.from / FPS + F2_GRIT.t0, gain: -38, name: 'F2 grit from the crack as it pushes out', args: {d: F2_GRIT.dur, rate: 16}});
   for (const {t, g} of ticks(R2.from, R2.to)) ev.push({kind: 'tick', t, gain: -35 + g, name: 'F2 foot (close, out of the crack)', args: {body: 1.0, bright: 0.5}});
-  // F3: grit trickles off the slab's edge, the tiny feet on the ledge (her eyes drop to them), her small breath in as she leans back
+  // F3: grit trickles off the slab's edge, the tiny feet on the ledge (her eyes drop to them), her small catch of breath
+  // (a gasp, subtle) at the startle, then the breath held
   ev.push({kind: 'grit', t: R3.from / FPS + F3_GRIT.t0, gain: -42, name: 'F3 grit off the slab edge', args: {d: F3_GRIT.dur, rate: 14}});
   for (const {t, g} of ticks(R3.from, R3.to)) ev.push({kind: 'tick', t, gain: -41 + g, name: 'F3 foot (on the ledge, distant)'});
-  ev.push({kind: 'air', t: (R3.from + F3_K.lean0) / FPS, gain: -44, name: 'F3 her small breath in (unease)', args: {d: (F3_K.lean1 - F3_K.lean0) / FPS, lo: 400, hi: 2200, rise: true}});
+  ev.push({kind: 'air', t: (R3.from + F3_K.st0) / FPS, gain: -41, name: 'F3 her small gasp (the startle)', args: {d: (F3_K.st1 - F3_K.st0 + 1) / FPS, lo: 600, hi: 3000, rise: true}});
   // F4: grit off the slab's lip above the hole, the feet on the rubble ledge (over her shoulder, closer)
   ev.push({kind: 'grit', t: R4.from / FPS + F4_GRIT.t0, gain: -43, name: 'F4 grit off the slab lip above the hole', args: {d: F4_GRIT.dur, rate: 12}});
   for (const {t, g} of ticks(R4.from, R4.to)) ev.push({kind: 'tick', t, gain: -38 + g, name: 'F4 foot (on the rubble ledge)', args: {body: 0.9, bright: 0.55}});

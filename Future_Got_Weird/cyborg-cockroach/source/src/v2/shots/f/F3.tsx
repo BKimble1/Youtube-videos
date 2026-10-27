@@ -1,19 +1,30 @@
 // F3 (818-847, "crawling toward you..."): close on her face (the whole head, headroom under the slab), eyes up on the
 // slab ahead where grit trickles off its edge (something moving inside); a scrape below: her eyes drop to it, her head
-// turns and dips to follow, and she sees the cockroach coming along the ledge toward her hand. Restrained unease: her
-// eyes widen slightly, her brows draw together and up a little, her mouth closes small and tight, she leans back a
-// little and her fingers tighten. Her eyes keep tracking it as it comes; she blinks once. The camera follows her gaze
-// down to the insect, ending on the two-shot F5 holds.
+// turns and dips to follow, and she sees the cockroach coming along the ledge toward her hand. V5: the first sight is a
+// clean STARTLE: over 4 frames her eyes widen, her brows lift, her mouth parts on a small catch of breath, and her
+// head and shoulders make a quick small recoil; she holds the breath (no breathing) while her eyes stay on it. Then she
+// settles, within half a second, into wary unease (brows drawn together and up a little, eyes still a little wide,
+// mouth closed small and tight), her eyes tracking it as it comes; she blinks once. Everything stays on the face rig.
+// The camera follows her gaze down to the insect, ending on the two-shot F5 holds.
 import React from 'react';
 import {sr, keys, lerp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
 import {Grit} from '../e/art';
 import {ShotProps} from '../index2';
 import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
+import {face} from '../../../crew/person/poses';
+
+/** the startle (on the rig's face controls): eyes wide, brows lifted (the inner ends a little more; still well under the
+ *  bob's hairline), lids up, the mouth parted small on the catch of breath */
+const STARTLE = face({brow: 0.5, browIn: 0.75, lid: 0, wide: 0.9, mw: 8.5, curve: -0.2, open: 0.2});
 import {FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
-/** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, the unease, the lean back, a blink */
-export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 14, see: 9, un0: 9, un1: 17, lean0: 11, lean1: 19, blink: 22};
+/** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, the startle (st0 -> st1: eyes
+ *  widen, brows lift, the quick recoil, the catch of breath), the held breath (to hold1), the settle into unease
+ *  (un0 -> un1), a blink */
+export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 15, see: 8, st0: 8, st1: 12, hold1: 17, un0: 13, un1: 23, blink: 25};
+/** her near hand (handOpen) at F3's end: drawn in tight at the startle (F4 starts from it) */
+export const F3_HAND_END = 0.04;
 /** the grit trickle off the slab's top edge (pocket px), shot seconds */
 export const F3_GRIT = {t0: 0.0, dur: 0.4};
 /** close on her face through the turn and the reaction, then the camera follows her gaze down to the insect, ending
@@ -37,17 +48,20 @@ export const F3: React.FC<ShotProps> = ({f, lf}) => {
   const edge = cardPx(SLAB.x0 + 4, SLAB.h, SLAB.z0 + 26);
   const look = sr(lf, K.eyes, K.eyes + 3);
   const gaze = {x: lerp(edge[0], head.x, look), y: lerp(edge[1] - 20, head.y, look)};
-  const lean = sr(lf, K.lean0, K.lean1);
+  // the startle: a fast rise (4 frames) and a slower settle; the recoil settles to F4/F5's small lean back (0.3)
+  const st = sr(lf, K.st0, K.st1);
+  const settle = sr(lf, K.un0, K.un1);
   const a: Acting = {
-    recog: 0, recoil: 0.3 * lean,
-    handOpen: 0.14 - 0.12 * sr(lf, K.lean0, K.lean0 + 6), // her fingers tighten a little
+    recog: 0, recoil: 0.8 * st - 0.5 * settle,
+    handOpen: 0.14 - (0.14 - F3_HAND_END) * sr(lf, K.st0, K.st1 + 2), // her fingers draw in tight
     blink: Math.max(0, 1 - Math.abs(lf - K.blink) / 1.6),
     gaze,
-    breath: keys(lf, [[0, 0.35], [K.un0, 0.3], [K.lean1, 0.6], [29, 0.7]]),
+    // breathing: the held breath at the startle (the chest stops), then breathing again, shallow, as she settles
+    breath: keys(lf, [[0, 0.35], [K.st0, 0.3], [K.st1, 0.05], [K.hold1, 0.05], [29, 0.6]]),
     turn: keys(lf, [[0, 4], [K.head0, 4], [K.head1, 11], [29, 10]]),
     nod: keys(lf, [[0, -4], [K.head0, -4], [K.head1, 11], [29, 12]]),
     tilt: keys(lf, [[0, 2], [K.head1, -2], [29, -2.5]]),
-    face: faceTrack(lf, [[0, FF.wary], [K.un0, FF.wary], [K.un1, FF.unease]]),
+    face: faceTrack(lf, [[0, FF.wary], [K.st0, FF.wary], [K.st1, STARTLE], [K.un0, STARTLE], [K.un1, FF.unease]]),
   };
   const gy0 = edge[1] + 6;
   return (

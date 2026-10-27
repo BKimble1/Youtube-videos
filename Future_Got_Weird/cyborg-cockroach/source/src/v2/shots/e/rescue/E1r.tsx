@@ -13,9 +13,7 @@ import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Pebbles, Motes, Glow2, VGrad, Pipe, jag, poly, line, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, FPS, cardT, probe} from './kit';
-import {GloveArm} from '../../b/common';
-import {HAND_RELAXED} from '../../../dc/Hand';
+import {idf, FPS, cardT, probe, HardHat} from './kit';
 
 export const E1_N = 36;
 /** E1's first film frame (the antennae's probing runs on film time) */
@@ -48,8 +46,9 @@ export const e1Pose = (lf: number): RoachPose => {
   const t = lf / FPS;
   return poseRoach({path: straightPath([0, 0, 0], 0), s: 4 + V_MM * t, t: t + 20.6, ...probe(lf + E1_F0, 0.8), seed: 5});
 };
-/** the glove's wrist (ground layer px) */
-const E1_GLOVE = {x: 880, y: 1446};
+/** the rescuer's hard hat lying on the floor at the right of the opening: its brim centre and length (ground layer px;
+ *  about 260 mm long at the subject's 1.3 px/mm, a little nearer the lens) */
+const E1_HAT = {x: 735, y: 1456, w: 290};
 /** the opening's mouth (end-frame px, ground layer) */
 export const E1_MOUTH = {x0: 300, x1: 700, top: 1160, floor: 1330};
 
@@ -57,7 +56,8 @@ export const E1_MOUTH = {x0: 300, x1: 700, top: 1160, floor: 1330};
 export const Sky: React.FC<{id: string}> = ({id}) => (
   <g>
     <VGrad id={`${id}-sk`} x0={-1500} y0={-1500} x1={2600} y1={3200} stops={[[0, '#9CC3DA'], [0.3, '#C9DFE6'], [0.45, '#F4E9CF'], [0.6, '#F8DDB0'], [1, '#E9C99A']]} />
-    <Glow2 id={`${id}-sun`} cx={120} cy={-120} rx={900} ry={800} color={RB.dayHot} a={0.85} />
+    {/* the sun high at the upper right (the light direction through the whole rescue: E2's lip, E3's shaft, F1's slit) */}
+    <Glow2 id={`${id}-sun`} cx={980} cy={-140} rx={900} ry={800} color={RB.dayHot} a={0.85} />
     {/* far blocks in the haze */}
     {[[-200, 560, 120], [-60, 470, 110], [700, 520, 140], [860, 430, 120], [1010, 600, 160]].map(([x, y, w], i) => (
       <path key={i} d={`M${x},${y} H${x + w} V1300 H${x} Z`} fill={mix('#A9B8C0', '#F4E9CF', 0.45)} opacity={0.75} />
@@ -199,11 +199,9 @@ const Ground: React.FC<{id: string; t: number; pose: RoachPose}> = ({id, t, pose
       {/* gravel and dust on the floor */}
       <Pebbles id={`${id}-g0`} a={[-200, 1380]} b={[260, 1430]} n={9} size={13} seed={107} tone={RB.concLit} />
       <Pebbles id={`${id}-g1`} a={[700, 1400]} b={[1250, 1370]} n={10} size={14} seed={108} tone={RB.conc} />
-      {/* the rescuer's gloved hand resting flat on the floor at the right of the opening, where it has just set the
-          insect down (lying flat: foreshortened by the camera's elevation); E2 finds it at the same place */}
-      <g transform={`translate(${E1_GLOVE.x} ${E1_GLOVE.y}) scale(1 0.62) translate(${-E1_GLOVE.x} ${-E1_GLOVE.y})`}>
-        <GloveArm id={`${id}-ga`} a={{wrist: {x: E1_GLOVE.x, y: E1_GLOVE.y}, ang: -172, L: 230, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 8}} ink={4.5} shadow={{alpha: 0.3, offset: {x: 8, y: 16}}} />
-      </g>
+      {/* a rescuer's yellow hard hat left lying crown-up at the right of the opening (the scale reference: the insect
+          is a fraction of its length); E2 passes it at the same place */}
+      <HardHat id={`${id}-hh`} cx={E1_HAT.x} by={E1_HAT.y} w={E1_HAT.w} el={30} ink={4.5} />
       <Glow2 id={`${id}-pool`} cx={520} cy={1470} rx={460} ry={130} color={RB.dayHot} a={0.35} />
       <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       <Motes id={`${id}-m`} t={t} n={22} x0={-50} y0={980} x1={1130} y1={1500} r={3.2} seed={110} a={0.6} />

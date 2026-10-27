@@ -46,19 +46,26 @@ const sm01 = (x: number) => {
   const u = Math.min(1, Math.max(0, x));
   return u * u * (3 - 2 * u);
 };
+/** an explicit pose for the redrawn near hand (overrides what the rig's handOpen implies): open 0..1 (finger length,
+ *  thumb out), splay (the rig's finger spread: 0.05 together .. 0.95 spread) */
+export type HandPose = {open: number; splay: number};
 /** Her near (right) hand redrawn over the rig's own, on the rig's own flat-hand map (survivorRig handR + handMap) and in
  *  the rig's HandArt 'open' construction: identical to the rig's hand while it is tense (fingers drawn in), but as it
  *  relaxes the fingers lengthen to a real open hand (the rig's open hand stops at short stubs, which reads as a fist):
- *  palm down, fingers straight and spread, the thumb out to the side. A superset of the rig's shape, so it covers it. */
-export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: number; scale: number}}> = ({o}) => {
+ *  palm down, fingers straight and spread, the thumb out to the side. A superset of the rig's shape, so it covers it.
+ *  V5: the palm's outline no longer runs across the end of the forearm (that arc read as a seam ring at the wrist): the
+ *  hand joins the forearm as one shape. `pose` (optional) sets the fingers explicitly (F4: flat, together). */
+export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: number; scale: number}; pose?: HandPose}> = ({o, pose}) => {
   const R = survivorRig(o, {x: o.x, y: o.y, scale: o.scale});
   const h = R.handR, m = handMap(h, R.cd);
-  const open = sm01(o.handOpen ?? 0);
+  const open = sm01(pose ? pose.open : o.handOpen ?? 0);
+  const splay = pose ? pose.splay : h.splay;
+  const curl = (n: number) => (pose ? (1 - open) * (0.9 + 0.06 * Math.sin(n * 1.7)) : h.curl[n] ?? 0);
   const ol = inkW(o.scale) / (o.scale * m.gm);
   const skin = PERSON.skin, side = h.thumb;
   const fingers = [-1.5, -0.5, 0.5, 1.5].map((i, n) => {
-    const a = i * 15 * (0.4 + h.splay) * RAD;
-    const L = (22 - Math.abs(i) * 2.5) * (1 - 0.45 * (h.curl[n] ?? 0)) * (1 + 0.45 * open);
+    const a = i * 15 * (0.4 + splay) * RAD;
+    const L = (22 - Math.abs(i) * 2.5) * (1 - 0.45 * curl(n)) * (1 + 0.45 * open);
     const x0 = i * 6.5, y0 = 12;
     return {x0, y0, x1: x0 + Math.sin(a) * L, y1: y0 + Math.cos(a) * L};
   });
@@ -75,6 +82,9 @@ export const NearHand: React.FC<{o: ReturnType<typeof herOpts> & {x: number; y: 
       <ellipse cx={0} cy={4} rx={18} ry={15} fill={skin} {...st} />
       {fingers.map((f, n) => <line key={`s${n}`} x1={f.x0} y1={f.y0} x2={f.x1} y2={f.y1} stroke={skin} strokeWidth={11} strokeLinecap="round" />)}
       <ellipse cx={0} cy={6} rx={15} ry={10} fill={skin} />
+      {/* the wrist: skin over the palm outline's back arc where it lies across the forearm's end (inside the forearm's
+          width: the forearm is 15 u each side of its axis, 16 hand-local units at the map's lateral scale) */}
+      <rect x={-15.7} y={-14} width={31.4} height={15} fill={skin} />
       {/* the gaps between the open fingers (ink, from the knuckles out) */}
       {open > 0.4 && fingers.slice(0, 3).map((f, n) => {
         const g = fingers[n + 1];
