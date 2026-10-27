@@ -34,7 +34,7 @@ const sm = (x: number) => {
  *          0.8, or even 0.7, runs into it) and a smaller mouth;
  *  recog = cautious recognition: soft brows lifted in the middle, relaxed lids, closed almost-smile. */
 export const SURV_FACES = {
-  alarm: face({brow: 0.35, browIn: 1.4, wide: 1, mw: 9, curve: -0.3, open: 0.42}),
+  alarm: face({brow: 0, browIn: 1.3, wide: 1, mw: 9, curve: -0.3, open: 0.42}),
   recog: face({brow: 0.28, browIn: 0.75, lid: 0.1, wide: 0.05, mw: 11, curve: 0.4, open: 0}),
 };
 

@@ -13,9 +13,10 @@ Sound priorities (the brief):
   4. a restrained tonal bed that changes subtly at the rescue turn ("But the plan...") and warms at the recognition.
 No gunshot, no whoosh on every cut (one soft air pass on the occlusion bridge only), no opening sting, no outro.
 
-Loop: the film is a loop; effects and the bed are placed modulo the film length; both ambiences are shaped so the end
-(rubble, settling) meets the start (lab) without a gap or click; the loop-safe AAC mux (tools/mux_loop_audio.py) fills
-the AAC padding with the start of the mix.
+Loop: the film is a loop; effects and the bed are placed modulo the film length; after the last word the bed (music and
+ambience) crossfades from the rubble back to the lab under a held duck, so the end meets the start (lab, under "This")
+at the same level without a gap or click; the loop point sits on a zero crossing of the bed, so the first play starts
+from silence too; the loop-safe AAC mux (tools/mux_loop_audio.py) fills the AAC padding with the start of the mix.
 
 Levels: voice -17 LUFS (gain only); bed about 16 LU under the voice and ducked further under speech; effects under the
 voice (the three accents on an unducked bus); the whole at -14 LUFS (BS.1770, stereo) with a 4x-oversampled true-peak
@@ -92,9 +93,11 @@ assert len(v) <= N or np.abs(v[N:]).max() < 1e-4
 
 # ---------------------------------------------------------------- sections
 S = cj['sections']  # seconds: lab_end (the occlusion bridge), rubble_start, recog (recognition beat)
-lab = win(-1.0, S['bridge'], 0.0, 0.35)  # lab room tone until the bridge (wraps into the start)
-rub = win(S['rubble'] - 0.1, DUR - 0.25, 0.3, 0.25)  # rubble atmosphere from the bridge to just before the loop
-recog = win(S['recog'], DUR - 0.3, 0.8, 0.3)
+END = WORDS[-1]['end']  # the payoff word ends: from here to the loop point the bed crossfades back to frame 0's lab
+XF = DUR - END
+lab = win(0.0, S['bridge'], XF, 0.35)  # lab room tone until the bridge; it returns in the tail (wraps into the start)
+rub = win(S['rubble'] - 0.1, END, 0.3, XF)  # rubble atmosphere from the bridge, out over the loop crossfade
+recog = win(S['recog'], END, 0.8, XF)
 
 
 # ---------------------------------------------------------------- bed
@@ -113,6 +116,9 @@ pad_lab_air = circ(lambda x: lp(hp(x, 500), 3200), pad([(659.26, 0.05), (739.99,
 # rubble: lower, darker, with air (C minor-ish), then a warm lift at the recognition (Ab major colour)
 pad_rub = circ(lambda x: lp(x, 700), pad([(65.41, 0.5), (98.0, 0.3), (130.81, 0.14), (155.56, 0.08)], 0.06))
 pad_warm = circ(lambda x: lp(x, 1600), pad([(103.83, 0.3), (130.81, 0.24), (155.56, 0.2), (207.65, 0.1), (261.63, 0.06)], 0.07))
+# their upper layers (as pad_lab_air for the lab): without them a phone speaker loses the bed from the bridge on
+pad_rub_air = circ(lambda x: lp(hp(x, 400), 2200), pad([(523.25, 0.045), (622.25, 0.032), (783.99, 0.024)], 0.04))
+pad_warm_air = circ(lambda x: lp(hp(x, 400), 2600), pad([(415.30, 0.04), (523.25, 0.03), (622.25, 0.022)], 0.06))
 beat = 60 / 96
 beats = int(round(DUR / beat))
 bpd = DUR / beats
@@ -124,13 +130,15 @@ for k in range(beats):
     if k % 4 == 2:
         s += 0.25 * np.sin(2 * np.pi * 330 * tt) * np.exp(-tt / 0.05)  # a tiny woody tick on the off-beat
     place(pulse, s * (0.75 if k % 2 == 0 else 0.4), k * bpd)
-music = (pad_lab * 0.8 + pad_lab_air * 0.9 + pulse * 0.42) * lab + pad_rub * 0.9 * rub * (1 - 0.6 * recog) + pad_warm * 0.85 * recog
+music = (pad_lab * 0.8 + pad_lab_air * 0.9 + pulse * 0.42) * lab + pad_rub * 0.9 * rub * (1 - 0.6 * recog) + pad_rub_air * 0.9 * rub * (1 - recog) \
+    + (pad_warm * 0.85 + pad_warm_air * 0.9) * recog
 
 # ---------------------------------------------------------------- ambience
 room = circ(lambda x: hp(lp(x, 900), 60), noise(N)) * 0.5 + 0.05 * np.sin(2 * np.pi * loopf(120) * t) + 0.03 * np.sin(2 * np.pi * loopf(60) * t)
 room /= np.abs(room).max()
 wind = circ(lambda x: lp(hp(x, 90), 650), noise(N))
 wind *= 0.6 + 0.4 * np.sin(2 * np.pi * loopf(0.23) * t) * np.sin(2 * np.pi * loopf(0.071) * t + 1)
+wind *= 1 - 0.6 * win(w('so'), DUR, 0.4, 0.0)  # the wind settles in the survivor's pocket, under the soft last lines
 wind /= np.abs(wind).max()
 amb = room * 0.35 * lab + wind * 0.55 * rub
 
@@ -145,11 +153,11 @@ def add(name, sig, at, gain_db, hero=False):
     log.append({'name': name, 'at': round(at % DUR, 3), 'frame': round((at % DUR) * FPS, 1), 'dur': round(len(sig) / SR, 3), 'gain_db': round(gain_db, 1), 'hero': hero})
 
 
-def tick(f=6200, d=0.025, body=0.0):
-    """an insect foot contact: a tiny dry chitin tick (and, on hard ground, a hint of body)"""
+def tick(f=6200, d=0.025, body=0.0, bright=1.0):
+    """an insect foot contact: a tiny dry chitin tick (and, on hard ground or close up, some body)"""
     n = int(d * SR)
     tt = np.arange(n) / SR
-    s = np.sin(2 * np.pi * f * (1 + 0.15 * rng.random()) * tt) * np.exp(-tt / 0.0018) + 0.5 * bp(noise(n), 3000, 11000) * np.exp(-tt / 0.0012)
+    s = bright * (np.sin(2 * np.pi * f * (1 + 0.15 * rng.random()) * tt) * np.exp(-tt / 0.0018) + 0.5 * bp(noise(n), 3000, 11000) * np.exp(-tt / 0.0012))
     if body:
         s += body * np.sin(2 * np.pi * 900 * tt) * np.exp(-tt / 0.004)
     return s
@@ -170,7 +178,7 @@ def spring(d=0.22, f0=1650, f1=1150):
     n = int(d * SR)
     tt = np.arange(n) / SR
     ph = 2 * np.pi * np.cumsum(np.geomspace(f0, f1, n)) / SR
-    s = (np.sin(ph) + 0.4 * np.sin(2.76 * ph)) * np.exp(-tt / 0.045) * (0.7 + 0.3 * np.sin(2 * np.pi * 38 * tt))
+    s = (np.sin(ph) + 0.2 * np.sin(2.76 * ph)) * np.exp(-tt / 0.045) * (0.7 + 0.3 * np.sin(2 * np.pi * 38 * tt))  # (upper partial low: the /f/ of "fire")
     return s * env(n, 0.001, 0.05)
 
 
@@ -300,10 +308,20 @@ def lufs(x): return meter.integrated_loudness(np.stack([x, x], 1)) if x.ndim == 
 ve = lp(np.abs(voice), 8, 1)
 ve /= ve.max() + 1e-9
 speech = np.clip(ve * 5, 0, 1)
+# the duck holds from the payoff line through the silent tail and the loop point into "This" (wrapping): the bed does not
+# swell after the last word, and meets frame 0, already under the first word, at the same level
+speech = np.maximum(speech, win(w('get'), DUR + 0.1, 0.1, 0.1))
 duck = 1 - 0.5 * speech
 voice_l = voice * db(-17 - lufs(voice))
 mus_l = music * duck * db(-17 - 16 - lufs(music * duck))
 amb_l = amb * (1 - 0.35 * speech) * db(-17 - 22 - lufs(amb))
+# the first play starts from silence: the loop point goes on a zero crossing of the bed (the bed loops seamlessly, so
+# turning it by a few milliseconds changes nothing else; the voice and the effects stay where they are)
+bed = mus_l + amb_l
+near = np.arange(-int(0.01 * SR), int(0.01 * SR))
+zc = near[np.sign(bed[near % N]) != np.sign(bed[(near + 1) % N])]
+z0 = zc[np.argmin(np.abs(zc))]
+mus_l, amb_l = np.roll(mus_l, -z0), np.roll(amb_l, -z0)
 sfx_l = sfx * db(2) * (1 - 0.3 * speech)
 key_l = key * db(2)
 mix = voice_l + mus_l + amb_l + sfx_l + key_l
@@ -346,6 +364,8 @@ meas = {
     'duration_s': DUR,
     'voice_stem_vs_source_corr': round(float(np.corrcoef(voice_l[:len(v)], v[:N])[0, 1]), 6),
     'seam_jump': round(float(abs(mix[0] - mix[-1])), 5),
+    'first_sample': round(float(abs(mix[0])), 5),  # the first play starts from (near) silence
+    'seam_shift_ms': round(1000 * z0 / SR, 2),  # the bed turned to put the loop point on its zero crossing
     'typical_step': round(float(np.median(np.abs(np.diff(mix)))), 5),
     'effects': len(log),
 }

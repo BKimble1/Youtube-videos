@@ -157,7 +157,9 @@ export const exitOf = (fr: Frame, p: LegPose): LegFrom | null => {
   return {seg, t: clamp(hi - 0.9 / Math.max(1, segLen))};
 };
 
-const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: string) => string; from?: LegFrom}> = ({id, p, cam, inkW, haze, from = {seg: 0, t: 0}}) => {
+/** far: a leg on the body's far side from the camera, its spines drawn as fine bristles in the tibia's colour (dark, finger
+ *  thick spines on a far front leg rising past the shell's edge read as a claw gripping it) */
+const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: string) => string; from?: LegFrom; far?: boolean}> = ({id, p, cam, inkW, haze, from = {seg: 0, t: 0}, far = false}) => {
   const L = p.def;
   const s = (q: V3) => scaleAt(cam, q);
   const V = (q: V2) => ({x: q[0], y: q[1]});
@@ -187,7 +189,7 @@ const Leg: React.FC<{id: string; p: LegPose; cam: Cam; inkW: number; haze: (c: s
       {parts}
       <Deco>
         {spines.map(([b, t], i) => (
-          <path key={i} d={`M${fmt(b[0])} ${fmt(b[1])} L${fmt(t[0])} ${fmt(t[1])}`} stroke={haze(CHITIN.spine)} strokeWidth={Math.max(1.2, rA * (L.front ? 0.8 : 0.6))} strokeLinecap="round" />
+          <path key={i} d={`M${fmt(b[0])} ${fmt(b[1])} L${fmt(t[0])} ${fmt(t[1])}`} stroke={haze(far ? CHITIN.legDeep : CHITIN.spine)} strokeWidth={Math.max(1, rA * (L.front ? 0.8 : 0.6) * (far ? 0.5 : 1))} strokeLinecap="round" />
         ))}
       </Deco>
     </Inked>
@@ -236,6 +238,8 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
   const camAbove = dot(norm(sub(cam.eye, fr.o)), fr.y) > 0.76;
   const near = (p: LegPose) => !o.legsBehind && !camAbove && dot(sub(cam.eye, p.coxa), legOutward(fr, p)) > 0;
   const legsNear = pose.legs.filter((p) => near(p));
+  // the far side proper (as `near`, but also when every leg is drawn behind the body; not from above, where neither side is)
+  const farSide = (p: LegPose) => !camAbove && dot(sub(cam.eye, p.coxa), legOutward(fr, p)) <= 0;
   // antenna layers: a segment draws before the body, head and pronotum where the shell lies between it and the camera
   // (under the hood, body x < 33.5, or seen past the shield from behind, so only what clears its silhouette shows), after
   // them otherwise (a far antenna seen from behind is not painted onto the shell)
@@ -273,7 +277,7 @@ export const Roach: React.FC<{pose: RoachPose; cam: Cam; o: RoachDrawOpts}> = ({
         </g>
       )}
       {pose.legs.map((p) => (
-        <Leg key={p.def.name} id={`${o.id}-${p.def.name}`} p={p} cam={cam} inkW={inkW * (near(p) ? 0.85 : 0.8)} haze={near(p) ? haze : (c) => haze(shade(c, 0.18))} />
+        <Leg key={p.def.name} id={`${o.id}-${p.def.name}`} p={p} cam={cam} inkW={inkW * (near(p) ? 0.85 : 0.8)} haze={near(p) ? haze : (c) => haze(shade(c, 0.18))} far={farSide(p)} />
       ))}
       <Antenna id={`${o.id}-aL0`} pts={pose.antL} cam={cam} on={hL} haze={haze} />
       <Antenna id={`${o.id}-aR0`} pts={pose.antR} cam={cam} on={hR} haze={haze} />
