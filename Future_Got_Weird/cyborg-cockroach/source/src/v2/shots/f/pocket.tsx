@@ -7,10 +7,9 @@ import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {View, P, f2 as f2o} from '../../roach/ortho';
 import {Layer, Cam} from '../../dc/camera';
-import {Survivor, survivorLayout, survivorRig} from '../../../crew/person';
+import {Survivor, survivorLayout} from '../../../crew/person';
 import {Face4} from '../../../crew/person/Crew';
 import {face, keyed} from '../../../crew/person/poses';
-import {inkW} from '../../../crew/person/geo';
 import {INK} from '../../../lib/ink';
 import {RoachPose, poseRoach, straightPath} from '../../../rig/roach';
 import {RB, Pt, Slab, Rebar, Pebbles, Shaft, Motes, Glow2, VGrad, Vignette, jag, poly, line} from '../e/art';
@@ -18,14 +17,14 @@ import {Crevice, Ledge} from './crack2';
 import {HER, under, cfView, cardPx, SLAB, SC, slitWalkX, slitShadowView, onBody, BARREL} from './world';
 
 // ---------------------------------------------------------------- her faces (Face4: crew/person/Crew.tsx)
-/** tired (heavy lids), wary (alert, brows up and in), disgust (the cartoon "ugh": brows down and in with one raised,
- *  narrowed lids, an open frown pulled up at one corner, creases beside the nose), cautious hope (soft brows lifted in
- *  the middle, relaxed lids, closed almost-smile) */
-export const FF: Record<'tired' | 'wary' | 'disgust' | 'hope', Face4> = {
+/** tired (heavy lids), wary (alert: brows up and in, eyes open), unease (restrained: the brows draw together and up a
+ *  little, the eyes widen slightly, the mouth closes small and tight, the corners a touch down), cautious hope (soft
+ *  brows lifted in the middle, relaxed lids, closed almost-smile). Brows stay well below the bob's hairline. */
+export const FF: Record<'tired' | 'wary' | 'unease' | 'hope', Face4> = {
   tired: face({brow: 0.05, browIn: 0.45, lid: 0.42, mw: 11, curve: -0.12, open: 0}),
-  wary: face({brow: 0.42, browIn: 0.72, lid: 0.02, wide: 0.45, mw: 10, curve: -0.22, open: 0.06}),
-  disgust: face({brow: -0.15, browIn: -0.75, asym: 0.6, lid: 0.32, wide: 0, mw: 12, curve: -0.95, open: 0.7, teeth: 0.5, smirk: -0.45}),
-  hope: face({brow: 0.34, browIn: 0.82, lid: 0.08, wide: 0.12, mw: 11, curve: 0.4, open: 0.04}),
+  wary: face({brow: 0.3, browIn: 0.7, lid: 0.02, wide: 0.35, mw: 10, curve: -0.2, open: 0.04}),
+  unease: face({brow: 0.26, browIn: 0.95, lid: 0, wide: 0.42, mw: 8, curve: -0.34, open: 0}),
+  hope: face({brow: 0.3, browIn: 0.8, lid: 0.08, wide: 0.12, mw: 11, curve: 0.42, open: 0.03}),
 };
 /** a keyed face track (smoothstep between keys) */
 export const faceTrack = (lf: number, k: [number, Face4][]): Face4 => keyed(lf, k.map(([t, f]) => [t, f] as [number, Face4]));
@@ -33,37 +32,12 @@ export const faceTrack = (lf: number, k: [number, Face4][]): Face4 => keyed(lf, 
 export type Acting = {
   recog: number; recoil: number; handOpen: number; handSlide?: number; blink?: number; gaze: {x: number; y: number};
   exhale?: number; breath?: number; turn?: number; nod?: number; tilt?: number; face: Face4;
-  /** 0..1 the creases beside the nose (disgust) */
-  wrinkle?: number;
 };
 export const herOpts = (T: number, a: Acting) => ({
   ...HER, t: T, recog: a.recog, recoil: a.recoil, handOpen: a.handOpen, handSlide: a.handSlide ?? 0, blink: a.blink ?? 0, gaze: a.gaze,
   exhale: a.exhale ?? 0, breath: a.breath ?? 1, dust: 0.9, turn: a.turn ?? 0, nod: a.nod ?? 0, tilt: a.tilt ?? 0, face: a.face,
 });
 export const herLayout = (T: number, a: Acting) => survivorLayout(herOpts(T, a));
-
-/** the disgust creases beside the nose, on Head4's own sphere */
-const Wrinkle: React.FC<{T: number; a: Acting}> = ({T, a}) => {
-  const w = a.wrinkle ?? 0;
-  if (w < 0.03) return null;
-  const R = survivorRig(herOpts(T, a), {x: HER.x, y: HER.y, scale: HER.scale});
-  const hm = R.hm;
-  const sw = inkW(HER.scale) * 0.62;
-  const arc = (az0: number, az1: number, el: number, bow: number) => {
-    const p0 = hm.at(az0, el), p1 = hm.at(az1, el), pm = hm.at((az0 + az1) / 2, el + bow);
-    if (Math.min(p0.d, p1.d) < 0.2) return null;
-    return `M${f2o(p0.x)},${f2o(p0.y)} Q${f2o(pm.x)},${f2o(pm.y)} ${f2o(p1.x)},${f2o(p1.y)}`;
-  };
-  // a crease from the nose's wing down and out on each visible side (the upper lip pulled up)
-  const ds = [arc(-5, -12, -3, -1.5), arc(-6, -13, -8, -1.5), arc(5, 12, -3, -1.5), arc(6, 13, -8, -1.5)].filter(Boolean) as string[];
-  return (
-    <g opacity={Math.min(1, w)}>
-      {ds.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke={INK} strokeWidth={f2o(sw * (i === 2 ? 0.8 : 1))} strokeLinecap="round" />
-      ))}
-    </g>
-  );
-};
 
 // ---------------------------------------------------------------- the slab ahead of her hands, the slit, its light
 const cp = (X: number, Y: number, Z: number): Pt => cardPx(X, Y, Z) as Pt;
@@ -179,7 +153,7 @@ export const Pocket: React.FC<PocketProps> = ({id, T, a, shadow = false, fan = 1
       <Crevice id={`${id}cv`} v={v} w={3} />
       <Glow2 id={`${id}lg`} cx={P(v, [80, 0, 0])[0]} cy={P(v, [80, 0, 0])[1]} rx={170} ry={60} color={RB.day} a={0.45} />
       <Ledge id={`${id}le`} v={v} w={3} />
-      <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} front={<Wrinkle T={T} a={a} />} />
+      <Survivor id={`${id}sv`} {...o} between={block} cutX={cut.x} />
       {medic && <Roach2D pose={medic} v={v} o={{id: `${id}r`, gear: <Gear2D id={`${id}g`} v={v} f={medic.frame} g={{kind: 'injector'}} />}} />}
       {medic && glint > 0.01 && <Glint id={`${id}gt`} at={P(v, onBody(medic, BARREL)) as Pt} a={glint} r={17} />}
       {/* the slab is nearer the camera than anything coming out of its far end: drawn over the insect */}
@@ -207,9 +181,9 @@ export const Glint: React.FC<{id: string; at: Pt; a: number; r: number}> = ({id,
   );
 };
 
-/** the two-shot (F3's end, F5): her face upper left (the back of her head out of frame), her near hand, the ledge and
- *  the insect lower right */
-export const F5_CAM = {x: 735, y: 1000, z: 1.9};
+/** the two-shot (F3's end, F5): her whole head upper left (headroom under the slab, only the back of the bob at the
+ *  frame's left edge), her near hand, the ledge and the insect lower right */
+export const F5_CAM = {x: 660, y: 880, z: 1.4};
 /** a camera that puts pocket point (wx, wy) at screen (sx, sy) with zoom z */
 export const camAt = (wx: number, wy: number, sx: number, sy: number, z: number): Cam => ({x: wx - (sx - 540) / z, y: wy - (sy - 960) / z, z});
 /** pocket px -> screen px for a camera (subject layer) */

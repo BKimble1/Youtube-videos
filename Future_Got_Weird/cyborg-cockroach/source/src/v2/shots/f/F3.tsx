@@ -1,8 +1,9 @@
-// F3 (818-847, "crawling toward you..."): close on her face, eyes up on the slab ahead where grit trickles off its edge
-// (something moving inside); a scrape below: her eyes drop, her head turns and dips, and she sees it, the cockroach
-// pushing out of the crack onto the ledge: disgust (brows down and knitted, nose wrinkled, upper lip pulled up on one
-// side, a squint) and a recoil (head pulls back, fingers curl in), a small shudder. The camera follows her gaze down to
-// the insect, ending on the two-shot.
+// F3 (818-847, "crawling toward you..."): close on her face (the whole head, headroom under the slab), eyes up on the
+// slab ahead where grit trickles off its edge (something moving inside); a scrape below: her eyes drop to it, her head
+// turns and dips to follow, and she sees the cockroach coming along the ledge toward her hand. Restrained unease: her
+// eyes widen slightly, her brows draw together and up a little, her mouth closes small and tight, she leans back a
+// little and her fingers tighten. Her eyes keep tracking it as it comes; she blinks once. The camera follows her gaze
+// down to the insect, ending on the two-shot F5 holds.
 import React from 'react';
 import {sr, keys, lerp} from '../../../lib/ease';
 import {P} from '../../roach/ortho';
@@ -11,40 +12,42 @@ import {ShotProps} from '../index2';
 import {PocketFrame, FF, faceTrack, Acting, camAt, F5_CAM} from './pocket';
 import {FPS, medicPose, cfView, cardPx, SLAB} from './world';
 
-/** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, disgust and recoil */
-export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 13, see: 10, disg0: 10, disg1: 16, rec0: 11, rec1: 17};
+/** shot frames: grit off the slab's edge, the scrape (her eyes drop), the head turn, the unease, the lean back, a blink */
+export const F3_K = {grit: 0, scrape: 4, eyes: 5, head0: 6, head1: 14, see: 9, un0: 9, un1: 17, lean0: 11, lean1: 19, blink: 22};
 /** the grit trickle off the slab's top edge (pocket px), shot seconds */
 export const F3_GRIT = {t0: 0.0, dur: 0.4};
-/** close on her face through the turn and the disgust, then the camera follows her gaze down to the insect, ending on
- *  the two-shot F5 holds */
+/** close on her face through the turn and the reaction, then the camera follows her gaze down to the insect, ending
+ *  on the two-shot F5 holds */
+export const F3_CAM0 = {x: 505, y: 765, z: 1.6};
 export const f3Cam = (lf: number) => {
-  const u = sr(lf, 14, 29);
-  return camAt(lerp(590, F5_CAM.x, u), lerp(800, F5_CAM.y, u), 540, 960, lerp(1.4, F5_CAM.z, u));
+  const u = sr(lf, 13, 29);
+  return camAt(lerp(F3_CAM0.x, F5_CAM.x, u), lerp(F3_CAM0.y, F5_CAM.y, u), 540, 960, lerp(F3_CAM0.z, F5_CAM.z, u));
+};
+/** the insect's head (pocket px) in the two-shots */
+export const medicHeadPx = (T: number) => {
+  const fr = medicPose(T).frame;
+  const p = P(cfView(), [fr.o[0] + fr.x[0] * 33, fr.o[1] + 10, fr.o[2] + fr.x[2] * 33]);
+  return {x: p[0], y: p[1]};
 };
 export const F3: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / FPS, t = lf / FPS;
   const K = F3_K;
   const pose = medicPose(T);
-  const v = cfView();
-  const fr = pose.frame;
-  const headPt = P(v, [fr.o[0] + fr.x[0] * 33, fr.o[1] + 10, fr.o[2] + fr.x[2] * 33]);
+  const head = medicHeadPx(T);
   const edge = cardPx(SLAB.x0 + 4, SLAB.h, SLAB.z0 + 26);
   const look = sr(lf, K.eyes, K.eyes + 3);
-  const gaze = {x: lerp(edge[0], headPt[0], look), y: lerp(edge[1] - 20, headPt[1], look)};
-  const rc = sr(lf, K.rec0, K.rec1);
-  // a small shudder after the recoil (decaying)
-  const sh = lf > K.rec1 ? Math.sin(((lf - K.rec1) / 3.2) * Math.PI * 2) * Math.exp(-(lf - K.rec1) / 6) : 0;
+  const gaze = {x: lerp(edge[0], head.x, look), y: lerp(edge[1] - 20, head.y, look)};
+  const lean = sr(lf, K.lean0, K.lean1);
   const a: Acting = {
-    recog: 0, recoil: 0.85 * rc,
-    handOpen: 0.2 - 0.2 * sr(lf, K.rec0, K.rec0 + 5),
-    blink: lf >= K.disg0 && lf < K.disg0 + 4 ? 0.35 * Math.sin(((lf - K.disg0) / 4) * Math.PI) : 0,
+    recog: 0, recoil: 0.3 * lean,
+    handOpen: 0.14 - 0.12 * sr(lf, K.lean0, K.lean0 + 6), // her fingers tighten a little
+    blink: Math.max(0, 1 - Math.abs(lf - K.blink) / 1.6),
     gaze,
-    breath: keys(lf, [[0, 0.3], [K.rec0, 0.3], [K.rec1, 1.4], [29, 1.1]]),
-    turn: keys(lf, [[0, 4], [K.head0, 4], [K.head1, 12], [K.rec1 + 1, 5], [29, 6]]) + 2.2 * sh, // she turns to it, then a little away (side-eye)
-    nod: keys(lf, [[0, -4], [K.head0, -4], [K.head1, 12], [29, 11]]),
-    tilt: keys(lf, [[0, 2], [K.head1, -3]]) + 1.5 * sh,
-    face: faceTrack(lf, [[0, FF.wary], [K.disg0, FF.wary], [K.disg1, FF.disgust]]),
-    wrinkle: sr(lf, K.disg0 + 1, K.disg1),
+    breath: keys(lf, [[0, 0.35], [K.un0, 0.3], [K.lean1, 0.6], [29, 0.7]]),
+    turn: keys(lf, [[0, 4], [K.head0, 4], [K.head1, 11], [29, 10]]),
+    nod: keys(lf, [[0, -4], [K.head0, -4], [K.head1, 11], [29, 12]]),
+    tilt: keys(lf, [[0, 2], [K.head1, -2], [29, -2.5]]),
+    face: faceTrack(lf, [[0, FF.wary], [K.un0, FF.wary], [K.un1, FF.unease]]),
   };
   const gy0 = edge[1] + 6;
   return (

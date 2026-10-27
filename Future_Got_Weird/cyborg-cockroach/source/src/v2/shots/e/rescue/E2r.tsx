@@ -1,162 +1,279 @@
-// E2 (655-679, "beneath collapsed"): low behind the medic at the wedge-shaped opening under the fallen slab (E1's
-// slab, now close: its broken front face runs diagonally down to the right). A gloved hand (the operator's light blue
-// glove and white sleeve) rests flat on the floor at the right where it has just set the insect down: the fingers alone
-// are as long as the opening is high, too small for a person. The camera follows the insect in: the slab's lip, the
-// propping block and the hand open out past the frame (nearer layers faster) while the medic walks on into the dark;
-// the daylight behind falls off.
+// E2 (655-679, "beneath collapsed"): the descent carried on from E1, now low at the opening under the fallen slab. The
+// camera keeps E1's forward speed and keeps sinking toward the insect's height as it follows the medic in under the
+// slab's lip: one physical move through the gap, built as a pinhole camera over flat layers at real depths (mm): the
+// slab's broken front face and the block propping it are cards at the lip, the floor and the slab's underside are
+// planes, the passage beyond and its thin shaft of daylight are cards deeper in, the rescuer's glove (it has just set
+// the insect down) a card on the floor at the right. Nearer things grow and slide out faster than far ones (the glove
+// leaves first, the lip passes overhead), so it reads as moving through the gap, never as a zoom. The daylight behind
+// falls off as the lip passes over; the insect grows steadily from E1's size to E3's.
 import React from 'react';
 import {poseRoach, straightPath, RoachPose} from '../../../../rig/roach';
 import {Roach2D} from '../../../roach/Roach2D';
 import {Gear2D} from '../../../roach/Gear2D';
-import {viewAt} from '../../../roach/ortho';
-import {Layer, Cam} from '../../../dc/camera';
-import {smoother, clamp, sr} from '../../../../lib/ease';
+import {viewAt, View} from '../../../roach/ortho';
+import {clamp, sr, rnd} from '../../../../lib/ease';
 import {INK} from '../../../../lib/ink';
-import {mix} from '../../../../lib/color';
-import {RB, Pt, Slab, Rebar, Pebbles, Glow2, Motes, Shaft, jag, poly, f2} from '../art';
+import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
+import {RB, Pt, Slab, Rebar, Glow2, Motes, Shaft, VGrad, jag, poly, f2} from '../art';
 import {GloveArm} from '../../b/common';
 import {HAND_RELAXED} from '../../../dc/Hand';
 import {ShotProps} from '../../index2';
-import {idf, FPS} from './kit';
+import {idf, FPS, cardT, probe} from './kit';
+import {E1_END_RATE} from './E1r';
 
 export const E2_N = 25;
-/** where the camera goes: the gap under the slab, at the insect's level (start-frame px) */
-const G = {x: 560, y: 1340};
-const Z1 = 3.4;
-export const e2U = (lf: number) => smoother(clamp((lf + 3) / (E2_N + 1)));
-export const e2Cam = (lf: number): Cam => {
-  const u = e2U(lf);
-  // zoom in log space so the forward move reads at an even rate
-  const z = Math.exp(Math.log(Z1) * u);
-  const w = (1 - 1 / z) / (1 - 1 / Z1);
-  return {x: 540 + (G.x - 540) * w, y: 960 + (G.y - 960) * w, z};
-};
-const D_IN = 4, D_SLAB = 0.95, D_NEAR = 0.42;
+const E2_F0 = 655;
+/** the lens (px focal length) and its principal point: aimed level into the gap */
+const F = 740;
+const G = {x: 540, y: 1300};
+/** the lip of the fallen slab (depth, mm), the gap's height under it (mm, lower to the right where the slab comes down
+ *  to the floor), the slab's thickness */
+const DL = 200;
+const hL = (x: number) => 80 - 0.09 * x;
+const T = 210;
 
-// ---------------------------------------------------------------- the medic (screen space; the camera trails it)
+// ---------------------------------------------------------------- the camera
+const herm = (u: number, m0: number, m1: number) => {
+  const x = clamp(u);
+  return -2 * x ** 3 + 3 * x ** 2 + m0 * (x ** 3 - 2 * x ** 2 + x) + m1 * (x ** 3 - x ** 2);
+};
+const ZC0 = -105, ZC1 = 158;
+/** E1's forward rate at the cut (the subject layer's growth per frame), carried into the slab here */
+const V0 = E1_END_RATE * (DL - ZC0); // mm per frame
+const V1 = 4;
+export type E2Cam = {zc: number; H: number; xc: number};
+export const e2U = (lf: number) => clamp(lf / (E2_N - 1));
+export const e2Cam = (lf: number): E2Cam => {
+  const u = e2U(lf);
+  const k = (E2_N - 1) / (ZC1 - ZC0);
+  return {zc: ZC0 + (ZC1 - ZC0) * herm(u, V0 * k, V1 * k), H: 14 + 20 * (1 - u) ** 2.4, xc: 0.45 * insectXZ(lf)[0]};
+};
+
+// ---------------------------------------------------------------- the medic: walking in under the lip
 const V_MM = 52;
+const BETA = (8 * Math.PI) / 180; // a little to the right of straight in
+const Z0 = 247, X0 = -24;
+const insectXZ = (lf: number): [number, number] => {
+  const d = V_MM * (lf / FPS);
+  return [X0 + Math.sin(BETA) * d, Z0 + Math.cos(BETA) * d];
+};
 export const e2Pose = (lf: number): RoachPose => {
   const t = lf / FPS;
-  return poseRoach({path: straightPath([0, 0, 0], 0), s: 70 + V_MM * t, t: t + 21.8, search: 0.6, antL: {yaw: 0.42, pitch: 0.3}, antR: {yaw: 0.4, pitch: 0.32}, seed: 5});
-};
-const e2View = (lf: number, pose: RoachPose) => {
-  const u = e2U(lf);
-  return viewAt(-80, 15, 3.7 - 0.5 * u, [pose.frame.o[0], 0, 0], E2_AT.x, E2_AT.y - 60 * u);
+  return poseRoach({path: straightPath([0, 0, 0], 0), s: 70 + V_MM * t, t: t + 21.8, ...probe(lf + E2_F0, 1), seed: 5});
 };
 
-/** the slab's underside edge (start-frame px) */
-const UND = (x: number) => 1010 + 0.3 * x;
-const T = 190; // its broken front face
-/** the gap under its lip: where the floor runs in (px below the lip) */
-const FLOOR = 205;
-/** the insect's ground point on screen at the start */
-export const E2_AT = {x: 548, y: 1392};
+/** world (x right, y up from the floor, z ahead; mm) to the screen, for the camera */
+const pr = (c: E2Cam, x: number, y: number, z: number): Pt => {
+  const d = Math.max(1, z - c.zc);
+  return [G.x + (F * (x - c.xc)) / d, G.y - (F * (y - c.H)) / d];
+};
+/** authored px of a card at depth D (as the reference camera sees it: on the floor at the origin) */
+const ap = (D: number) => (x: number, y: number): Pt => [G.x + (F * x) / D, G.y - (F * y) / D];
+/** a card at depth D, placed for the camera */
+const Card: React.FC<{c: E2Cam; D: number; children: React.ReactNode}> = ({c, D, children}) =>
+  D - c.zc < 6 ? null : <g transform={cardT(G, D, c.zc, F * c.xc, -F * c.H)}>{children}</g>;
+/** ink width in a card at depth D that comes out as w screen px */
+const wAt = (c: E2Cam, D: number, w: number) => (w * Math.max(6, D - c.zc)) / D;
 
-const Inside: React.FC<{id: string; t: number}> = ({id, t}) => (
-  <g>
-    <rect x={-1500} y={-1500} width={4000} height={5000} fill="#14100E" />
-    {/* the passage beyond (seen once the lip is overhead): a low ceiling, rubble walls closing in, a gritty floor
-        and, far in, a thin shaft of daylight through a crack, dust turning in it */}
-    <path d={poly(jag([[-400, 990], [1500, 975], [1500, 1700], [-400, 1700]], 10, 201, 40))} fill="#3A322C" />
-    <Glow2 id={`${id}-fl`} cx={640} cy={1010} rx={420} ry={110} color={RB.day} a={0.22} />
-    <Slab id={`${id}-wl`} face={jag([[-400, 820], [330, 900], [470, 980], [420, 1060], [-400, 1200]], 8, 203, 40)} tone={RB.concDark} w={4} dark={0.6} specks={8} />
-    <Slab id={`${id}-wr`} face={jag([[1500, 840], [880, 910], [790, 975], [850, 1050], [1500, 1180]], 8, 204, 40)} tone={RB.conc} w={4} dark={0.64} specks={8} />
-    <Shaft id={`${id}-sh`} pts={[[690, 520], [760, 520], [710, 1015], [590, 1015]]} from={[720, 520]} to={[650, 1010]} a={0.85} />
-    <Motes id={`${id}-mo`} t={t} n={14} x0={590} y0={600} x1={760} y1={1000} r={2.6} seed={206} clip={poly([[690, 560], [750, 560], [700, 1010], [600, 1010]])} />
-    <Glow2 id={`${id}-sp`} cx={650} cy={1004} rx={110} ry={22} color={RB.dayHot} a={0.8} />
-    <Pebbles id={`${id}-fp`} a={[420, 1040]} b={[820, 1035]} n={8} size={8} seed={205} tone={RB.concDark} dark={0.5} />
-  </g>
-);
+const e2View = (lf: number, c: E2Cam, pose: RoachPose): View => {
+  const [x, z] = insectXZ(lf);
+  const at = pr(c, x, 0, z);
+  return viewAt(-90 + 8, 22 - 10 * e2U(lf), F / (z - c.zc), [pose.bodyFrame0.o[0], 0, 0], at[0], at[1]);
+};
 
-const SlabFront: React.FC<{id: string}> = ({id}) => {
-  const L = -500, R = 1600;
-  const lower: Pt[] = jag([[L, UND(L)], [R, UND(R)]], 10, 211, 50, false);
-  const upper: Pt[] = jag([[L, UND(L) - T], [R, UND(R) - T - 20]], 10, 212, 50, false);
+// ---------------------------------------------------------------- the daylit ruin behind the slab (seen over it)
+const DB = 5000;
+const Behind: React.FC<{id: string; t: number}> = ({id, t}) => {
+  const a = ap(DB);
+  const fac: Pt[] = [a(-6000, -200), a(-6000, 14000), a(-1500, 14000), a(-1300, 11000), a(-1600, 8000), a(-900, 5200), a(-1200, 2500), a(-600, -200)];
   return (
     <g>
-      <defs>
-        <linearGradient id={`${id}-fl`} x1="0" y1="1250" x2="0" y2="1920" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#5E554D" />
-          <stop offset="0.45" stopColor="#A2937F" />
-          <stop offset="1" stopColor="#C2B39E" />
-        </linearGradient>
-      </defs>
-      {/* the floor in front of the slab (lit by the daylight behind the camera), running in under it */}
-      <path d={poly([[L, UND(L) + FLOOR], [R, UND(R) + FLOOR], [R, 2700], [L, 2700]])} fill={`url(#${id}-fl)`} />
-      <path d={`M120,${UND(120) + FLOOR + 60} L260,${UND(260) + FLOOR + 90} L300,${UND(300) + FLOOR + 160}`} stroke="#6A5F55" strokeWidth={3} fill="none" opacity={0.7} />
-      <path d={`M760,${UND(760) + FLOOR + 40} L700,${UND(700) + FLOOR + 120}`} stroke="#6A5F55" strokeWidth={3} fill="none" opacity={0.7} />
-      <Pebbles id={`${id}-p4`} a={[200, UND(200) + FLOOR + 70]} b={[900, UND(900) + FLOOR + 50]} n={10} size={6} seed={216} tone={RB.concLit} dark={0.25} />
-      <Pebbles id={`${id}-p5`} a={[100, UND(100) + FLOOR + 170]} b={[1000, UND(1000) + FLOOR + 130]} n={8} size={9} seed={217} tone={RB.conc} dark={0.2} />
-      <Pebbles id={`${id}-p3`} a={[300, UND(300) + FLOOR + 6]} b={[1000, UND(1000) + FLOOR + 6]} n={9} size={9} seed={215} tone={RB.concLit} dark={0.35} />
-      {/* the underside going in: a dark ceiling band (seen when the lip has passed overhead) */}
-      <path d={poly([[L, UND(L) - 4], [R, UND(R) - 4], [R, UND(R) + 60], [L, UND(L) + 60]])} fill="#231E1B" />
-      <Slab id={`${id}-sf`} face={[...upper, ...lower.slice().reverse()]} tone={RB.conc} w={6} dark={0.28} specks={40} topTone={RB.concLit}
-        cracks={[[[180, 920], [220, 1010], [205, 1060]], [[760, 1060], [800, 1150], [790, 1220]]]}
-        rim={upper} />
-      <Slab id={`${id}-st`} face={[[L, -1600], [R, -1600], ...upper.slice().reverse()]} tone={mix(RB.concLit, RB.day, 0.3)} w={6} dark={0.02} specks={50}
-        cracks={[[[60, 700], [140, 760], [170, 860]], [[640, 520], [700, 640], [760, 700]], [[300, 300], [330, 420]]]} />
-      <Glow2 id={`${id}-sun`} cx={160} cy={300} rx={700} ry={500} color={RB.dayHot} a={0.45} />
-      <Rebar pts={[[330, UND(330) - 6], [350, UND(330) + 50], [330, UND(330) + 90]]} w={10} dark={0.4} />
-      <Rebar pts={[[900, UND(900) - 6], [880, UND(900) + 40], [920, UND(900) + 70]]} w={10} dark={0.4} />
-      {/* the propping block at the left */}
-      <Slab id={`${id}-bl`} face={jag([[L, UND(L) - 20], [110, UND(110) - 4], [150, 1500], [L, 1560]], 10, 214, 50)} tone={RB.concDark} w={6} dark={0.3} specks={20} rim={[[110, UND(110)], [150, 1500]]} rimColor={mix(RB.day, RB.concLit, 0.4)} />
+      <VGrad id={`${id}-sk`} x0={-2000} y0={-2600} x1={3000} y1={1400} stops={[[0, '#BFD6E0'], [0.5, '#F2E6CC'], [1, '#EBD3AA']]} />
+      <Glow2 id={`${id}-pl`} cx={a(1600, 3000)[0] + 10 * Math.sin(t)} cy={a(1600, 3000)[1]} rx={700} ry={520} color={RB.dust} a={0.6} />
+      <path d={poly(fac)} fill={mix('#A9A29B', '#F2E6CC', 0.35)} />
+      {Array.from({length: 5}, (_, r) =>
+        Array.from({length: 3}, (_, k) => {
+          const x = -5200 + k * 1300, y = 1800 + r * 2500;
+          return <path key={`${r}-${k}`} d={poly([a(x, y), a(x + 700, y), a(x + 700, y + 1100), a(x, y + 1100)])} fill={mix('#5B6E78', '#F2E6CC', 0.4)} />;
+        }),
+      )}
+      <path d={poly(jag([a(-3000, -200), a(-2000, 900), a(-600, 1300), a(900, 700), a(2600, 1500), a(5000, 900), a(5000, -200)], 10, 241, 40))} fill={mix('#8A817A', '#F2E6CC', 0.3)} />
     </g>
   );
 };
 
-const Near: React.FC<{id: string; t: number}> = ({id, t}) => (
+// ---------------------------------------------------------------- deep in: the passage, a shaft of daylight
+const DFAR = 1700, DSH = 720;
+const Far: React.FC<{id: string}> = ({id}) => {
+  const a = ap(DFAR);
+  return (
+    <g>
+      <path d={poly([a(-3000, -60), a(3000, -60), a(3000, 400), a(-3000, 400)])} fill="#1A1513" />
+      <Glow2 id={`${id}-fg`} cx={a(60, 30)[0]} cy={a(60, 30)[1]} rx={160} ry={40} color={RB.day} a={0.18} />
+      <path d={poly(jag([a(-900, -5), a(-300, 40), a(-120, 25), a(-60, -5)], 4, 251, 20))} fill="#2A2320" />
+      <path d={poly(jag([a(240, -5), a(380, 50), a(900, 70), a(1200, -5)], 4, 252, 20))} fill="#2A2320" />
+    </g>
+  );
+};
+const ShaftIn: React.FC<{id: string; t: number}> = ({id, t}) => {
+  const a = ap(DSH);
+  const x = 70, top = hL(x);
+  const pts: Pt[] = [a(x - 5, top), a(x + 5, top), a(x + 16, 0), a(x - 14, 0)];
+  return (
+    <g>
+      <Shaft id={`${id}-sh`} pts={pts} from={a(x, top)} to={a(x, 0)} a={0.9} />
+      <Glow2 id={`${id}-sp`} cx={a(x, 0)[0]} cy={a(x, 0)[1]} rx={(F * 40) / DSH} ry={(F * 8) / DSH} color={RB.dayHot} a={0.75} />
+      <Motes id={`${id}-mo`} t={t} n={10} x0={a(x - 14, 0)[0]} y0={a(x, top)[1]} x1={a(x + 16, 0)[0]} y1={a(x, 0)[1]} r={1.6} seed={256} clip={poly(pts)} a={0.9} />
+    </g>
+  );
+};
+/** chunks of rubble lying in the passage (cards standing on the floor) */
+const IN_CHUNKS: {x: number; z: number; w: number; h: number; seed: number; tone: string}[] = [
+  {x: -230, z: 430, w: 120, h: 34, seed: 261, tone: RB.concDark},
+  {x: 210, z: 560, w: 150, h: 24, seed: 262, tone: RB.conc},
+  {x: -120, z: 980, w: 160, h: 40, seed: 263, tone: RB.concDark},
+  {x: 330, z: 1150, w: 200, h: 20, seed: 264, tone: RB.conc},
+];
+const InChunk: React.FC<{id: string; ch: (typeof IN_CHUNKS)[number]; lit: number}> = ({id, ch, lit}) => {
+  const a = ap(ch.z);
+  const pts: Pt[] = jag([a(ch.x - ch.w / 2, -1), a(ch.x - ch.w / 2 + 10, ch.h * 0.8), a(ch.x - 10, ch.h), a(ch.x + ch.w / 2 - 16, ch.h * 0.7), a(ch.x + ch.w / 2, -1)], (F * 3) / ch.z, ch.seed, (F * 20) / ch.z);
+  return <Slab id={id} face={pts} tone={ch.tone} w={(F * 1.2) / ch.z} dark={0.72 - 0.2 * lit} specks={6} />;
+};
+
+// ---------------------------------------------------------------- the fallen slab at the lip, the propping block
+const SlabFront: React.FC<{id: string; w: number}> = ({id, w}) => {
+  const a = ap(DL);
+  const x0 = -1300, x1 = 880;
+  const lower: Pt[] = jag([a(x0, hL(x0)), a(x1, hL(x1))], 10, 211, 50, false);
+  const upper: Pt[] = jag([a(x0, hL(x0) + T), a(x1 + 150, hL(x1) + T - 40)], 14, 212, 50, false);
+  const face: Pt[] = [...upper, a(x1 + 150, 0), a(x1, 0), ...lower.slice().reverse()];
+  const und: Pt[] = [...lower, a(x1, -2), a(x0, -2)].slice(0, 0);
+  void und;
+  return (
+    <g>
+      <Slab id={`${id}-sf`} face={face} tone={RB.conc} w={w} dark={0.26} specks={60} topTone={RB.concLit}
+        cracks={[[a(-260, 150), a(-200, 200), a(-230, 250)], [a(120, 120), a(170, 170), a(150, 230)], [a(430, 90), a(400, 160)]]}
+        rim={upper} />
+      {/* the lip's underside edge, a dark band where the face turns under */}
+      <path d={line2(lower)} stroke="#231E1B" strokeWidth={f2(w * 2.4)} fill="none" strokeLinecap="round" />
+      <Rebar pts={[a(-90, hL(-90) + 2), a(-80, hL(-90) - 14), a(-92, hL(-90) - 24)]} w={w * 1.6} dark={0.4} />
+      <Rebar pts={[a(320, hL(320) + 2), a(312, hL(320) - 10), a(326, hL(320) - 18)]} w={w * 1.6} dark={0.4} />
+      <Glow2 id={`${id}-sun`} cx={a(-500, T)[0]} cy={a(-500, T)[1]} rx={600} ry={260} color={RB.dayHot} a={0.35} />
+    </g>
+  );
+};
+const line2 = (pts: Pt[]) => `M${pts.map((p) => `${f2(p[0])},${f2(p[1])}`).join(' L')}`;
+const DBLK = DL - 6;
+const Block: React.FC<{id: string; w: number}> = ({id, w}) => {
+  const a = ap(DBLK);
+  return (
+    <Slab id={`${id}-bl`} face={jag([a(-1300, 0), a(-1300, hL(-1300)), a(-240, hL(-240)), a(-215, 0)], 8, 214, 40)} tone={RB.concDark} w={w} dark={0.32} specks={20}
+      rim={[a(-240, hL(-240) - 4), a(-215, 2)]} rimColor={mix(RB.day, RB.concLit, 0.4)} />
+  );
+};
+
+// ---------------------------------------------------------------- the rescuer's glove at the right of the opening
+const DG = 150;
+const Glove: React.FC<{id: string; w: number}> = ({id, w}) => {
+  const a = ap(DG);
+  const wr = a(300, 4), tip = a(95, 4);
+  const L = Math.hypot(tip[0] - wr[0], tip[1] - wr[1]);
+  return (
+    <g transform={`translate(${f2(wr[0])} ${f2(wr[1])}) scale(1 0.42) translate(${f2(-wr[0])} ${f2(-wr[1])})`}>
+      <GloveArm id={`${id}-ga`} a={{wrist: {x: wr[0], y: wr[1]}, ang: -176, L, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 2}} ink={w} shadow={{alpha: 0.3, offset: {x: 0.03 * L, y: 0.1 * L}}} />
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------- floor grit (projected on the floor plane)
+const GRIT = Array.from({length: 150}, (_, i) => ({
+  x: -520 + rnd(i, 271) * 1040,
+  z: -40 + rnd(i + 1, 271) ** 1.3 * 1400,
+  r: 1.2 + rnd(i + 2, 271) ** 2 * 6,
+  k: 5 + Math.floor(rnd(i + 3, 271) * 3),
+  a0: rnd(i + 4, 271) * 6.28,
+  tone: i % 4 === 0 ? RB.concLit : i % 3 ? RB.concDark : RB.conc,
+}));
+const Grit2: React.FC<{c: E2Cam; items: typeof GRIT}> = ({c, items}) => (
   <g>
-    {/* the floor in front of the slab, lit by the daylight behind the camera */}
-    <defs>
-      <linearGradient id={`${id}-fl`} x1="0" y1="1380" x2="0" y2="1920" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stopColor="#6F655C" />
-        <stop offset="0.5" stopColor="#A89A88" />
-        <stop offset="1" stopColor="#C2B39E" />
-      </linearGradient>
-    </defs>
-    <Glow2 id={`${id}-pool`} cx={560} cy={1700} rx={620} ry={260} color={RB.dayHot} a={0.3} />
-    <Pebbles id={`${id}-p0`} a={[-80, 1560]} b={[300, 1700]} n={8} size={22} seed={222} tone={RB.concLit} />
-    <Pebbles id={`${id}-p1`} a={[180, 1840]} b={[520, 1900]} n={5} size={30} seed={223} tone={RB.conc} />
-    <Pebbles id={`${id}-p2`} a={[380, 1470]} b={[740, 1460]} n={7} size={12} seed={224} tone={RB.concLit} />
-    {/* the gloved hand that set it down: flat on the floor, fingers toward the opening */}
-    <GloveArm id={`${id}-ga`} a={{wrist: {x: 1190, y: 1770}, ang: -162, L: 600, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 14}} ink={11} shadow={{alpha: 0.32, offset: {x: 18, y: 34}}} />
-    <Motes id={`${id}-m`} t={t} n={16} x0={-100} y0={900} x1={1200} y1={1800} r={4.5} seed={225} a={0.55} />
+    {items.map((g, i) => {
+      const d = g.z - c.zc;
+      if (d < 14) return null;
+      const [x, y] = pr(c, g.x, 0, g.z);
+      if (x < -60 || x > 1140 || y > 1990) return null;
+      const s = F / d;
+      const flat = Math.max(0.28, Math.min(0.8, (c.H + 2) / d + 0.22));
+      const pts: Pt[] = Array.from({length: g.k}, (_, j) => {
+        const th = g.a0 + (j / g.k) * Math.PI * 2;
+        const rr = g.r * s * (0.75 + 0.3 * rnd(i * 7 + j, 272));
+        return [x + Math.cos(th) * rr, y - g.r * s * 0.4 + Math.sin(th) * rr * flat];
+      });
+      const inside = sr(g.z, DL - 30, DL + 120);
+      const col = mix(litC(g.tone, 0.1), mix(g.tone, RB.deep, 0.75), inside);
+      return <path key={i} d={poly(pts)} fill={col} stroke={INK} strokeWidth={f2(Math.min(3.2, Math.max(0.8, s * 0.45)))} strokeLinejoin="round" />;
+    })}
   </g>
 );
 
 export const E2: React.FC<ShotProps> = ({f, lf}) => {
   const id = idf('e3b', f);
   const t = lf / FPS;
-  const cam = e2Cam(lf);
+  const c = e2Cam(lf);
   const u = e2U(lf);
   const pose = e2Pose(lf);
-  const v = e2View(lf, pose);
-  // the light falls off: the daylight behind is cut off as the lip passes overhead
-  const dark = 0.62 * sr(u, 0.35, 1);
+  const v = e2View(lf, c, pose);
+  const [ix, iz] = insectXZ(lf);
+  // the floor: lit in front of the lip, falling into the dark under the slab
+  const yLip = pr(c, 0, 0, DL)[1];
+  const near: Pt[] = [pr(c, -4000, 0, c.zc + 10), pr(c, 4000, 0, c.zc + 10), pr(c, 4000, 0, DL), pr(c, -4000, 0, DL)];
+  const inFloor: Pt[] = [pr(c, -4000, 0, DL), pr(c, 4000, 0, DL), pr(c, 4000, 0, DFAR), pr(c, -4000, 0, DFAR)];
+  // the slab's underside: a plane over the passage (its height follows the lip)
+  const ceil: Pt[] = [pr(c, -1300, hL(-1300), DL), pr(c, 900, hL(900), DL), pr(c, 900, hL(900), DFAR), pr(c, -1300, hL(-1300), DFAR)];
+  const yFar = pr(c, 0, 0, DFAR)[1];
+  // the light falls off as the lip passes over the camera
+  const under = sr(c.zc, 40, ZC1);
+  const shade = 0.8 - 0.22 * u; // the insect is already in the slab's shadow
+  const grFar = GRIT.filter((g) => g.z >= iz), grNear = GRIT.filter((g) => g.z < iz);
+  const chunks = IN_CHUNKS.map((ch, i) => <Card key={i} c={c} D={ch.z}><InChunk id={`${id}-ic${i}`} ch={ch} lit={0} /></Card>);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <Layer cam={cam} depth={D_IN}>
-        <Inside id={`${id}i`} t={t} />
-      </Layer>
-      <Layer cam={cam} depth={D_SLAB}>
-        <SlabFront id={`${id}s`} />
-      </Layer>
-      <Layer cam={cam} depth={D_NEAR}>
-        <Near id={`${id}n`} t={t} />
-      </Layer>
       <defs>
-        <radialGradient id={`${id}-dk`} cx="0.5" cy="0.66" r="0.7">
-          <stop offset="0" stopColor="#0A0807" stopOpacity={dark * 0.55} />
-          <stop offset="1" stopColor="#0A0807" stopOpacity={dark} />
-        </radialGradient>
+        <linearGradient id={`${id}-nf`} x1="0" y1={f2(yLip)} x2="0" y2="1920" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#7A6E62" />
+          <stop offset="0.35" stopColor="#A89A88" />
+          <stop offset="1" stopColor="#C4B5A0" />
+        </linearGradient>
+        <linearGradient id={`${id}-if`} x1="0" y1={f2(yFar)} x2="0" y2={f2(yLip)} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#1C1714" />
+          <stop offset="0.6" stopColor="#302822" />
+          <stop offset="1" stopColor="#5A4F45" />
+        </linearGradient>
+        <filter id={`${id}-sd`} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={`${shade} 0 0 0 0  0 ${shade} 0 0 0  0 0 ${shade * 0.97} 0 0  0 0 0 1 0`} />
+        </filter>
       </defs>
-      <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id}-dk)`} />
-      <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
-      <rect x={0} y={0} width={1080} height={1920} fill="#0A0807" opacity={(dark * 0.45).toFixed(3)} />
-      {/* the last of the daylight on its back */}
-      <Glow2 id={`${id}-rim`} cx={E2_AT.x} cy={E2_AT.y - 40 - 60 * u} rx={220} ry={120} color={RB.day} a={0.16 * (1 - u)} />
+      <Card c={c} D={DB}><Behind id={`${id}k`} t={t} /></Card>
+      <Card c={c} D={DFAR}><Far id={`${id}r`} /></Card>
+      <path d={poly(inFloor)} fill={`url(#${id}-if)`} />
+      <path d={poly(ceil)} fill="#191412" />
+      {chunks.slice(2).reverse()}
+      <Card c={c} D={DSH}><ShaftIn id={`${id}h`} t={t} /></Card>
+      {chunks.slice(0, 2).reverse()}
+      <path d={poly(near)} fill={`url(#${id}-nf)`} />
+      <Glow2 id={`${id}-pool`} cx={pr(c, 80, 0, DL - 90)[0]} cy={pr(c, 80, 0, DL - 90)[1]} rx={700} ry={160} color={RB.dayHot} a={0.28 * (1 - under)} />
+      <Grit2 c={c} items={grFar} />
+      <g filter={`url(#${id}-sd)`}>
+        <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
+      </g>
+      <Grit2 c={c} items={grNear} />
+      <Card c={c} D={DBLK}><Block id={`${id}b`} w={wAt(c, DBLK, 5)} /></Card>
+      <Card c={c} D={DL}><SlabFront id={`${id}s`} w={wAt(c, DL, 5.5)} /></Card>
+      <Card c={c} D={DG}><Glove id={`${id}v`} w={wAt(c, DG, 8)} /></Card>
+      <Motes id={`${id}-m`} t={t} n={14} x0={-100} y0={300} x1={1180} y1={1800} r={4} seed={225} a={0.45 * (1 - under)} />
+      {/* the daylight behind is cut off as the lip passes overhead */}
+      <rect x={0} y={0} width={1080} height={1920} fill="#0A0807" opacity={(0.5 * under).toFixed(3)} />
+      <Glow2 id={`${id}-rim`} cx={pr(c, ix, 10, iz)[0]} cy={pr(c, ix, 10, iz)[1]} rx={260} ry={130} color={RB.day} a={0.1 * (1 - under)} />
     </svg>
   );
 };
-void f2;
-void INK;
+void shadeC;

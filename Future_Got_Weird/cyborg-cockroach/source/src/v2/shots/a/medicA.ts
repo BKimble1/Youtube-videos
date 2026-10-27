@@ -1,4 +1,7 @@
-// Group A (V3): the medic after the hook, as one continuous performance through A3-A5 (a pure function of film time t).
+// Group A (V4): the medic after the hook, as one continuous performance through A2-A5 (a pure function of film time t).
+// V4 retime: the operator taps the D-pad in A2 at MED_TAP; the command reaches the backpack at once (MED_PULSE), the
+// left antenna flicks, it draws back on planted feet and steps into the turn with short cautious strides (A2's end),
+// then speeds up into the turn-away and the walk (A4, A5).
 //   - It stands in A1's firing stance (body origin at world x = 0 heading +x, the clear target's face at A1_FACE), the
 //     tube empty and the spring extended, the fired injector left in the silicone (A1's stance frame).
 //   - MED_PULSE: the operator's steering command arrives (board LED, a short pulse train along the LEFT antenna wire:
@@ -20,14 +23,25 @@ import {constrainAntenna} from '../d/trial';
 
 /** A1's stance (gait distance at the stop: all six feet planted) */
 export const MED_S0 = plantedStop(36);
-/** the steering command (board LED + pulses on the left antenna wire), the draw-back, the first step */
-export const MED_PULSE = 2.62;
-export const MED_BACK0 = 2.72;
-export const MED_BACK1 = 2.92;
-export const MED_GO = 2.8;
-/** gait speed (gait units per second: 26 per stride, ~4 steps a second per tripod) and its ramp-up */
+/** V4: the operator's thumb bottoms out on the D-pad (A2), the steering command (board LED + pulses on the left
+ *  antenna wire) arrives a frame later, the draw-back, the first step */
+export const MED_TAP = 2.2;
+export const MED_PULSE = MED_TAP + 0.03;
+/** a pulse's run along the wire (board -> electrode) and the spacing of the three pulses */
+const PULSE_RUN = 0.1;
+const PULSE_GAP = 0.06;
+/** the electrode fires (end of the first pulse's run): the antenna flicks */
+export const MED_ZAP = MED_PULSE + PULSE_RUN;
+export const MED_BACK0 = MED_PULSE + 0.03;
+export const MED_BACK1 = MED_PULSE + 0.2;
+export const MED_GO = MED_PULSE + 0.05;
+/** gait speed (gait units per second: 26 per stride): short cautious turning steps at V1 first (A2), then up to VS
+ *  (~4 steps a second per tripod) from A4's start */
+const V1 = 70;
 const VS = 125;
-const TA = 0.28;
+const TA = 0.3;
+const UP0 = 2.95;
+const UP1 = 3.3;
 /** the turn: total heading change (rad, - = toward +z: the insect's right), over LT gait units, about body x = PIV */
 export const MED_TURN = -2.75;
 const LT = 112;
@@ -72,17 +86,23 @@ export const MED_PATH: Path = (s: number) => {
   return {p: [px, 0, pz], yaw: y};
 };
 
-/** gait distance at time t */
+/** gait speed at time t, and the gait distance (its integral, tabulated once at 1/600 s) */
+const medV = (t: number) => V1 * sr(t, MED_GO, MED_GO + TA) + (VS - V1) * sr(t, UP0, UP1);
+const ST_DT = 1 / 600;
+const ST_N = Math.ceil((UP1 + 0.1 - MED_GO) / ST_DT) + 2;
+const ST = new Float64Array(ST_N);
+for (let i = 1; i < ST_N; i++) ST[i] = ST[i - 1] + 0.5 * (medV(MED_GO + (i - 1) * ST_DT) + medV(MED_GO + i * ST_DT)) * ST_DT;
 export const medS = (t: number) => {
   const dt = t - MED_GO;
   if (dt <= 0) return MED_S0;
-  if (dt < TA) {
-    const u = dt / TA;
-    return MED_S0 + VS * TA * (u * u * u - (u * u * u * u) / 2);
-  }
-  return MED_S0 + VS * TA * 0.5 + VS * (dt - TA);
+  const u = dt / ST_DT;
+  if (u >= ST_N - 1) return MED_S0 + ST[ST_N - 1] + VS * (dt - (ST_N - 1) * ST_DT);
+  const i = Math.floor(u);
+  return MED_S0 + ST[i] + (ST[i + 1] - ST[i]) * (u - i);
 };
 
+/** a quick antenna flick: up in ~2 frames, settling back over ~0.3 s (0 before) */
+const flick = (dt: number) => (dt <= 0 ? 0 : dt < 0.06 ? Math.sin(((dt / 0.06) * Math.PI) / 2) : Math.exp(-(dt - 0.06) / 0.11) * Math.cos((dt - 0.06) * 9));
 const back = (t: number) => sr(t, MED_BACK0, MED_BACK1) * (1 - sr(t, MED_GO + 0.3, MED_GO + 1.1));
 
 /** the posed medic at film time t */
@@ -92,8 +112,10 @@ export const medPose = (t: number): RoachPose => {
   // planted pivot first; the path's own heading takes over as it steps
   const pl = Y_PLANT * sr(t, MED_BACK0 + 0.04, MED_GO + 0.1);
   const yawAdd = Math.abs(yawW(w)) >= Math.abs(pl) ? 0 : pl - yawW(w);
-  // antennae: spread up on the silicone face (A1's stance), then forward and low for walking
+  // antennae: spread up on the silicone face (A1's stance), then forward and low for walking; the LEFT one (the
+  // stimulated side) flicks up and out as the electrode fires, the right one a little after it
   const wk = sr(t, MED_BACK0, MED_GO + 0.45);
+  const fl = flick(t - MED_ZAP), fr = flick(t - MED_ZAP - 0.05);
   const p = poseRoach({
     path: MED_PATH,
     s,
@@ -101,8 +123,8 @@ export const medPose = (t: number): RoachPose => {
     search: lerp(0.75, 0.6, wk),
     offset: [-BACK * back(t), 0, 0],
     yawAdd,
-    antL: {yaw: lerp(1.2, 0.55, wk), pitch: lerp(0.75, 0.22, wk), curl: lerp(0.7, 0.85, wk)},
-    antR: {yaw: lerp(1.2, 0.55, wk), pitch: lerp(0.75, 0.22, wk), curl: lerp(0.7, 0.85, wk)},
+    antL: {yaw: lerp(1.2, 0.55, wk) + 0.32 * fl, pitch: lerp(0.75, 0.22, wk) + 0.42 * fl, curl: lerp(0.7, 0.85, wk) - 0.25 * fl},
+    antR: {yaw: lerp(1.2, 0.55, wk) + 0.1 * fr, pitch: lerp(0.75, 0.22, wk) + 0.16 * fr, curl: lerp(0.7, 0.85, wk)},
   });
   return {...p, antL: constrainAntenna(p.antL, A1_FACE), antR: constrainAntenna(p.antR, A1_FACE)};
 };
@@ -116,12 +138,12 @@ export const medSteer = (t: number) => {
   const fr: number[] = [];
   let zap = 0;
   for (let k = 0; k < 3; k++) {
-    const u = (t - (MED_PULSE + k * 0.07)) / 0.16;
+    const u = (t - (MED_PULSE + k * PULSE_GAP)) / PULSE_RUN;
     if (u >= 0 && u <= 1) fr.push(1 - Math.pow(1 - u, 1.25));
-    const da = t - (MED_PULSE + k * 0.07 + 0.16);
+    const da = t - (MED_PULSE + k * PULSE_GAP + PULSE_RUN);
     if (da >= 0) zap = Math.max(zap, Math.exp(-da / 0.12));
   }
-  const led = t >= MED_PULSE - 0.03 && t <= MED_PULSE + 0.2 ? 1 : 0;
+  const led = t >= MED_PULSE - 0.01 && t <= MED_PULSE + 0.2 ? 1 : 0;
   return {fr, zap: Math.min(1, zap), led};
 };
 

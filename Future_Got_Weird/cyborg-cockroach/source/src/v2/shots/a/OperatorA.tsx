@@ -6,7 +6,7 @@ import React from 'react';
 import {Man, DIM} from '../../../crew/operator/dc/Man';
 import {HandPose} from '../../../crew/operator/dc/Hand';
 import {HERO_LAB, H_REMOTE} from '../../../crew/operator/cast';
-import {operatorAtBench, OperatorAtBenchProps, Remote, REMOTE, remotePt} from '../../../crew/operator';
+import {operatorAtBench, OperatorAtBenchProps, Remote, REMOTE, remotePt, RemoteView} from '../../../crew/operator';
 import {aimThumb} from '../../../crew/operator/RemoteCloseUp';
 import {fmt, add, mul} from '../../../lib/math';
 
@@ -15,8 +15,19 @@ const INK_K = 0.9;
 const HANDS_BELOW = -12 + 30;
 
 /** V3 addition: `dpad` 0..1 moves the near thumb from the fire button onto the direction pad (steering), with `dpadZ`
- *  its pad's height above the pad (mm; small = pressing) */
-export type OperatorAProps = OperatorAtBenchProps & {nod?: number; dpad?: number; dpadZ?: number};
+ *  its pad's height above the pad (mm; small = pressing). V4: `dpadPress` 0..1 sinks the pad's right arm (the one under
+ *  the thumb) into its well and shades it. */
+export type OperatorAProps = OperatorAtBenchProps & {nod?: number; dpad?: number; dpadZ?: number; dpadPress?: number};
+/** where the thumb's pad lands on the direction pad (remote mm): on its right arm, just out from the centre */
+const PAD_AT = {x: REMOTE.dpad.x + 4.5, y: REMOTE.dpad.y - 0.6};
+/** the pressed right arm of the direction pad (drawn over the remote, under the thumb) */
+const PadArm: React.FC<{view: RemoteView; press: number}> = ({view, press}) => {
+  if (press <= 0.01) return null;
+  const D = REMOTE.dpad;
+  const z = D.h * (1 - 0.8 * press);
+  const q = [[D.x + D.w, D.y - D.w], [D.x + D.arm, D.y - D.w], [D.x + D.arm, D.y + D.w], [D.x + D.w, D.y + D.w]].map(([x, y]) => remotePt(view, x, y, z));
+  return <path d={`M${q.map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L')} Z`} fill="#2E3A44" opacity={fmt(0.55 * Math.min(1, press))} />;
+};
 const mixHand = (a: HandPose, b: HandPose, k: number): HandPose => ({
   ...a,
   thumb: a.thumb + (b.thumb - a.thumb) * k,
@@ -31,7 +42,7 @@ export const operatorA = (p: OperatorAProps) => {
     const j = g.joints;
     const s = g.s;
     const wrist = add(j.L.W, mul(j.L.foreDir, -6 * s));
-    const pad = remotePt(g.view, REMOTE.dpad.x + 3, REMOTE.dpad.y - 1, 1.6 + (p.dpadZ ?? 1.2));
+    const pad = remotePt(g.view, PAD_AT.x, PAD_AT.y, 1.6 - 1.1 * Math.min(1, p.dpadPress ?? 0) + (p.dpadZ ?? 1.2));
     const onPad = aimThumb(wrist, j.L.handAng, DIM.hand * s, 1, {...H_REMOTE, curl: H_REMOTE.curl.map((c) => c + 0.04) as HandPose['curl']}, pad);
     lHand = mixHand(g.lHand, onPad, k);
   }
@@ -43,7 +54,12 @@ export const OperatorA: React.FC<OperatorAProps> = (props) => {
   const layer = props.layer ?? 'all';
   const g = operatorA(props);
   const s = g.s;
-  const remote = <Remote id={`${id}-rm`} view={g.view} press={g.press} led={props.led} ink={7 * s * INK_K * 0.72 * 0.9} />;
+  const remote = (
+    <g>
+      <Remote id={`${id}-rm`} view={g.view} press={g.press} led={props.led} ink={7 * s * INK_K * 0.72 * 0.9} />
+      <PadArm view={g.view} press={props.dpadPress ?? 0} />
+    </g>
+  );
   const clip = props.benchTopY !== undefined ? `url(#${id}-${layer}-above)` : undefined;
   const handsClip = props.benchTopY !== undefined ? `url(#${id}-${layer}-aboveH)` : undefined;
   const handsY = (props.benchTopY ?? 0) + ((props.farHand ?? 'side') === 'bench' ? HANDS_BELOW * s : 0);

@@ -5,8 +5,9 @@
 // tube (16.60-16.77 s, gaining speed, crisp streaks behind it; the spring follows it to its free length and rings there),
 // the needle meets the clear silicone (16.77 s): the block squashes toward its backing plate and wobbles, rings spread
 // round the entry, the needle goes 5 mm in, the injector rebounds a little and seats, the barrel's rear still in the
-// tube; the body recoils on its planted feet and settles. The camera holds, then travels with the injector toward the
-// target (one move, driven by the launch) and stops with it.
+// tube; the body recoils on its planted feet and settles. V4: one framing holds the coil, the loaded needle, the gap and
+// the face (the injector visibly crosses the frame; graduation ticks on its clear barrel, the needle's run seen inside the
+// silicone), the spark is a small brief one at the coil; the camera only eases on a little with the injector after it.
 import React from 'react';
 import {sr} from '../../../lib/ease';
 import {Roach2D} from '../../roach/Roach2D';

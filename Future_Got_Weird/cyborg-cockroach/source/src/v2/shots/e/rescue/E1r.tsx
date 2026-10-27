@@ -8,31 +8,48 @@ import {poseRoach, straightPath, RoachPose} from '../../../../rig/roach';
 import {Roach2D} from '../../../roach/Roach2D';
 import {Gear2D} from '../../../roach/Gear2D';
 import {viewAt, View} from '../../../roach/ortho';
-import {Layer, Cam} from '../../../dc/camera';
-import {smoother, clamp, rnd} from '../../../../lib/ease';
+import {clamp, rnd} from '../../../../lib/ease';
 import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
 import {RB, Pt, Slab, Rebar, Pebbles, Motes, Glow2, VGrad, Pipe, jag, poly, line, f2} from '../art';
 import {ShotProps} from '../../index2';
-import {idf, endWrap, FPS} from './kit';
+import {idf, FPS, cardT, probe} from './kit';
+import {GloveArm} from '../../b/common';
+import {HAND_RELAXED} from '../../../dc/Hand';
 
 export const E1_N = 36;
-/** the crane: from high on the facade down to the opening (end-frame px at the subject depth) */
-const CRANE = 1250;
-const END: Cam = {x: 540, y: 960, z: 1};
-export const e1Cam = (lf: number): Cam => {
-  const u = smoother(clamp(lf / 31));
-  return {x: 540, y: END.y - CRANE * (1 - u), z: 1};
+/** E1's first film frame (the antennae's probing runs on film time) */
+const E1_F0 = 619;
+/** one descent, carried on through E2: a crane down the facade (px at the subject depth) that curves into a push
+ *  forward toward the opening (a pinhole card camera, kit.cardT: the near rubble grows and slides away faster than the
+ *  heap, the building and the sky). It does not stop at the cut: E2 picks up the same forward speed. */
+const CRANE = 1250, Y_END = 40, C_END = 0.3;
+/** the principal point: the camera is aimed at the opening */
+export const E1_P0 = {x: 520, y: 1250};
+const herm = (u: number, m0: number, m1: number) => {
+  const x = clamp(u);
+  return -2 * x ** 3 + 3 * x ** 2 + m0 * (x ** 3 - 2 * x ** 2 + x) + m1 * (x ** 3 - x ** 2);
 };
+export const e1Cam = (lf: number) => ({
+  oy: -CRANE + (CRANE + Y_END) * herm(lf / (E1_N - 1), 0, 0.08),
+  c: C_END * herm((lf - 9) / (E1_N - 1 - 9), 0, 1.7),
+});
+/** the forward speed at the end of E1 (per frame) and the subject layer's growth rate there: E2 starts at this rate */
+export const E1_END_RATE = (() => {
+  const a = e1Cam(E1_N - 1).c, b = e1Cam(E1_N - 2).c;
+  return (a - b) / (1 - a);
+})();
 const D_SKY = 7, D_BLD = 3.2, D_HEAP = 1.9, D_GND = 1, D_FORE = 0.62;
 
 // ---------------------------------------------------------------- the medic (ground layer, end-frame px)
 const V_MM = 52;
-export const E1_VIEW: View = viewAt(-68, 30, 1.3, [0, 0, 0], 452, 1468);
+export const E1_VIEW: View = viewAt(-68, 30, 1.3, [0, 0, 0], 470, 1396);
 export const e1Pose = (lf: number): RoachPose => {
   const t = lf / FPS;
-  return poseRoach({path: straightPath([0, 0, 0], 0), s: 4 + V_MM * t, t: t + 20.6, search: 0.8, antL: {yaw: 0.5, pitch: 0.25}, antR: {yaw: 0.46, pitch: 0.28}, seed: 5});
+  return poseRoach({path: straightPath([0, 0, 0], 0), s: 4 + V_MM * t, t: t + 20.6, ...probe(lf + E1_F0, 0.8), seed: 5});
 };
+/** the glove's wrist (ground layer px) */
+const E1_GLOVE = {x: 1120, y: 1452};
 /** the opening's mouth (end-frame px, ground layer) */
 export const E1_MOUTH = {x0: 300, x1: 700, top: 1160, floor: 1330};
 
@@ -182,6 +199,11 @@ const Ground: React.FC<{id: string; t: number; pose: RoachPose}> = ({id, t, pose
       {/* gravel and dust on the floor */}
       <Pebbles id={`${id}-g0`} a={[-200, 1380]} b={[260, 1430]} n={9} size={13} seed={107} tone={RB.concLit} />
       <Pebbles id={`${id}-g1`} a={[700, 1400]} b={[1250, 1370]} n={10} size={14} seed={108} tone={RB.conc} />
+      {/* the rescuer's gloved hand resting flat on the floor at the right of the opening, where it has just set the
+          insect down (lying flat: foreshortened by the camera's elevation); E2 finds it at the same place */}
+      <g transform={`translate(${E1_GLOVE.x} ${E1_GLOVE.y}) scale(1 0.56) translate(${-E1_GLOVE.x} ${-E1_GLOVE.y})`}>
+        <GloveArm id={`${id}-ga`} a={{wrist: {x: E1_GLOVE.x, y: E1_GLOVE.y}, ang: -168, L: 250, ts: 1, pose: {...HAND_RELAXED, spread: 0.3}, fore: 8}} ink={4.5} shadow={{alpha: 0.3, offset: {x: 8, y: 16}}} />
+      </g>
       <Glow2 id={`${id}-pool`} cx={520} cy={1470} rx={460} ry={130} color={RB.dayHot} a={0.35} />
       <Roach2D pose={pose} v={v} o={{id: `${id}-r`, gear: <Gear2D id={`${id}-g`} v={v} f={pose.frame} g={{kind: 'injector'}} />}} />
       <Motes id={`${id}-m`} t={t} n={22} x0={-50} y0={980} x1={1130} y1={1500} r={3.2} seed={110} a={0.6} />
@@ -202,11 +224,7 @@ export const E1: React.FC<ShotProps> = ({f, lf}) => {
   const t = lf / FPS;
   const cam = e1Cam(lf);
   const pose = e1Pose(lf);
-  const L = (d: number, el: React.ReactNode) => (
-    <Layer cam={cam} depth={d}>
-      <g transform={endWrap(END, d)}>{el}</g>
-    </Layer>
-  );
+  const L = (d: number, el: React.ReactNode) => <g transform={cardT(E1_P0, d, cam.c, 0, cam.oy)}>{el}</g>;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       {L(D_SKY, <Sky id={`${id}s`} />)}

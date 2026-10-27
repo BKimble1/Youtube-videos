@@ -74,3 +74,27 @@ export const Blur: React.FC<{id: string; sd: number; children: React.ReactNode; 
     <g filter={`url(#${id})`}>{children}</g>
   </g>
 );
+
+/** a pinhole card camera (flat 2D layers placed at real depths, so a move forward parallaxes them correctly: a layer at
+ *  depth D scales by D / (D - c) about the principal point P0 as the camera advances by c, and a sideways or vertical
+ *  camera offset (ox, oy, in px at depth 1) shifts it by o / D). Content is authored as seen from the reference camera
+ *  (c = 0, o = 0). Not a zoom: nearer layers grow and slide out faster than far ones. */
+export const cardT = (P0: {x: number; y: number}, D: number, c: number, ox = 0, oy = 0) => {
+  const s = D / Math.max(1e-3, D - c);
+  return `translate(${P0.x.toFixed(3)} ${P0.y.toFixed(3)}) scale(${s.toFixed(5)}) translate(${(-(P0.x + ox / D)).toFixed(3)} ${(-(P0.y + oy / D)).toFixed(3)})`;
+};
+
+/** the antennae actively probing (one function of the FILM frame, so they carry across the cuts): slow alternating
+ *  sweeps outward and in, each antenna in turn dipping to tap the ground or an obstacle ahead while the other lifts.
+ *  `reach` (0..1) scales the sweep; `down` biases both lower (feeling a step). Returns RoachMotion antL/antR. */
+export const probe = (f: number, reach = 1, down = 0) => {
+  const t = f / FPS;
+  const w = 2 * Math.PI * 1.25; // one sweep cycle per 0.8 s (a cockroach sweeps about 1-2 Hz while walking)
+  const one = (ph: number) => {
+    const sw = Math.sin(w * t + ph);
+    // the tap: the antenna dips at the inward end of its sweep (toward the path ahead), lifting as it swings out
+    const tap = Math.max(0, -Math.sin(w * t + ph + 0.9)) ** 1.5;
+    return {yaw: 0.5 + 0.3 * reach * sw, pitch: 0.16 - down - 0.42 * reach * tap + 0.1 * reach * Math.max(0, sw), curl: 0.85 + 0.25 * reach * tap};
+  };
+  return {antL: one(0), antR: one(Math.PI * 0.85), search: 0.18};
+};

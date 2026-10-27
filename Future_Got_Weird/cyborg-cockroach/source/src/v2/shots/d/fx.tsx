@@ -8,14 +8,14 @@ import {PACK, INJ} from '../../../rig/gear';
 import {View, P, f2} from '../../roach/ortho';
 import {D_FACE, D_FIRE} from './trial';
 
-/** speed streaks behind the injector (thin crisp lines along the tube, longer with speed k 0..1) */
+/** speed streaks trailing the injector's rear (thin crisp lines in the tube behind it, longer with speed k 0..1) */
 export const Streaks: React.FC<{v: View; frame: Frame; rear: number; k: number}> = ({v, frame, rear, k}) => {
   if (k <= 0.05) return null;
   const y = PACK.tube.a[1];
   return (
     <g stroke="#172B3A" strokeLinecap="round" opacity={0.4 * k}>
       {[-1.6, 0.2, 1.8].map((dy, i) => {
-        const a = P(v, toW(frame, [rear - 2 - 9 * k - i * 2, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear + 8, y + dy, 0.5 * dy]));
+        const a = P(v, toW(frame, [rear - 1.5 - 7 * k - i * 1.5, y + dy, 0.5 * dy])), b = P(v, toW(frame, [rear - 0.6, y + dy, 0.5 * dy]));
         return <path key={i} d={`M${f2(a[0])},${f2(a[1])} L${f2(b[0])},${f2(b[1])}`} strokeWidth={f2(Math.max(1.5, 0.28 * v.s))} />;
       })}
     </g>

@@ -14,7 +14,7 @@
 import {V3, cross} from '../../../lib/v3';
 import {View} from '../../roach/ortho';
 import {keys} from '../../../lib/ease';
-import {poseRoach, straightPath, RoachPose} from '../../../rig/roach';
+import {poseRoach, straightPath, RoachPose, GAIT} from '../../../rig/roach';
 import {survivorLayout} from '../../../crew/person';
 import {elevator} from '../../../crew/person';
 import {cardPt, v3} from '../../../crew/person/geo';
@@ -33,7 +33,7 @@ export const HER = (() => {
 /** rig unit in mm (crew/person: 1 u = 3.75 mm) */
 export const MM_U = 3.75;
 /** the fallen slab's underside over her (pocket px): clear of her head, lifting toward the right (the daylight gap) */
-export const under = (x: number) => 372 - 0.4 * (x - 500);
+export const under = (x: number) => 300 - 0.4 * (x - 500); // V4: raised 72 px so it clears the top of her hair
 
 // ---------------------------------------------------------------- the slab, the crack, the ledge (card-local u)
 /** the floor under her near fingertips (card u; her hand open) */
@@ -66,12 +66,16 @@ const cfToCard = (p0: V3) => {
   // crack x -> (cos a, 0, sin a); crack y -> up; crack z = x cross y -> (-sin a, 0, cos a)
   return v3(CRACK_AT.X + (p[0] * c - p[2] * s) / MM_U, p[1] / MM_U, CRACK_AT.Z + (p[0] * s + p[2] * c) / MM_U);
 };
-/** crack-frame mm -> pocket-world px (her own projection) */
-export const cfPx = (p: V3): [number, number] => {
-  const E = elevator(HER.yaw, HER.elev);
-  const q = cardPt({x: HER.x, y: HER.y, k: HER.scale, phi: HER.yaw, depth: 0}, E(cfToCard(p)));
+/** a placement of her card projection: screen anchor, px per rig unit, card yaw, camera elevation (HER is the pocket's) */
+export type Place = {x: number; y: number; scale: number; yaw: number; elev: number};
+/** crack-frame mm -> screen px through a placement of her card projection */
+export const cfPxAt = (pl: Place) => (p: V3): [number, number] => {
+  const E = elevator(pl.yaw, pl.elev);
+  const q = cardPt({x: pl.x, y: pl.y, k: pl.scale, phi: pl.yaw, depth: 0}, E(cfToCard(p)));
   return [q.x, q.y];
 };
+/** crack-frame mm -> pocket-world px (her own projection) */
+export const cfPx = (p: V3): [number, number] => cfPxAt(HER)(p);
 /** an affine map (mm -> px) as a View (ortho.ts): origin plus the images of the three unit axes. For a true
  *  orthographic projection R and U come out orthonormal; for a shadow (a projection along the light onto the floor)
  *  they are sheared, which is fine for a silhouette */
@@ -87,6 +91,14 @@ export const linView = (map: (p: V3) => [number, number], s: number): View => {
 };
 /** the crack frame in her projection (pocket-world px) */
 export const cfView = (): View => linView(cfPx, (HER.scale / MM_U) * SC);
+/** the crack frame through any placement of her card projection (F4's over-the-shoulder view) */
+export const cfViewAt = (pl: Place): View => linView(cfPxAt(pl), (pl.scale / MM_U) * SC);
+/** a card-local point (u) -> screen px through a placement */
+export const cardPxAt = (pl: Place, X: number, Y: number, Z: number): [number, number] => {
+  const E = elevator(pl.yaw, pl.elev);
+  const q = cardPt({x: pl.x, y: pl.y, k: pl.scale, phi: pl.yaw, depth: 0}, E(v3(X, Y, Z)));
+  return [q.x, q.y];
+};
 /** any card-local floor point (u) -> pocket-world px */
 export const cardPx = (X: number, Y: number, Z: number): [number, number] => {
   const E = elevator(HER.yaw, HER.elev);
@@ -128,8 +140,12 @@ const PATH = straightPath([0, 0, 0], 0);
 export const medicPose = (T: number): RoachPose => {
   const srch = keys(T, [[T2, 1.15], [T3, 0.85], [T4 + 0.2, 0.6], [T6, 0.5]]);
   const pitch = keys(T, [[T2, 0.7], [T3, 0.42], [T4, 0.24], [T6, 0.2]]);
+  // weight: the body sags a little more while only one tripod carries it (mid-swing) and rises as the next plants,
+  // and rolls a touch toward the supporting side (on top of the rig's own small bob)
+  const s = medicX(T), u = s / GAIT.stride;
   return poseRoach({
-    path: PATH, s: medicX(T), t: T, search: srch, seed: 5,
+    path: PATH, s, t: T, search: srch, seed: 5,
+    offset: [0, 0.9 * Math.cos(u * Math.PI * 4) - 0.2, 0], roll: 0.022 * Math.sin(u * Math.PI * 2),
     antL: {yaw: keys(T, [[T2, 0.95], [T3, 0.66], [T4, 0.6], [T6, 0.5]]), pitch, curl: keys(T, [[T2, 0.5], [T3, 0.8]])},
     antR: {yaw: keys(T, [[T2, 0.9], [T3, 0.6], [T4, 0.58], [T6, 0.48]]), pitch: pitch + 0.04, curl: keys(T, [[T2, 0.45], [T3, 0.8]])},
   });

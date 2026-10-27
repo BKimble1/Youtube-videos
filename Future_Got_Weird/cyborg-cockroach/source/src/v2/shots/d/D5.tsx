@@ -1,9 +1,9 @@
 // D5 (544-618, "They've demonstrated this on laboratory targets."): one rise over the bench. It opens low and close,
 // three-quarter from the target's side (az -28): the medic stands where it fired, the spent injector bridging its tube
-// and the clear target (the needle in the silicone, the plunger at the front of the empty barrel, the amber bloom inside
-// the block); it waits, breathing, antennae searching low and wide. The camera cranes up and back (motivated by the
+// and the clear target (the needle in the silicone, the plunger at the front of the empty barrel, a small soft amber cloud
+// in the clear block); it waits, breathing, antennae searching low and wide. The camera cranes up and back (motivated by the
 // array it reveals): the bench top opens out into a row of earlier trials' clear targets, each with its puncture and a
-// faded amber dose, the vials at the back of the bench, then the lab wall rises into frame with its tall window, bright
+// faint amber haze, while out-of-focus near props on the bench slide down past the lens (the rise's parallax), the vials at the back of the bench, then the lab wall rises into frame with its tall window, bright
 // with daylight; the window's light grows over the bench (a warm shaft across it) and in the last frames it fills the
 // frame (the film's daylight bloom carries it into E1).
 import React from 'react';
@@ -26,7 +26,7 @@ export const D5_AZ = -28;
  *  but still moving as the light takes over */
 export const d5Rise = (f: number) => {
   const x = clamp((f - (R.from - 3)) / (R.to + 14 - (R.from - 3)));
-  return 0.32 * x + 0.68 * x * x * (3 - 2 * x);
+  return 0.42 * x + 0.58 * x * x * (3 - 2 * x);
 };
 /** the scale: an even pull-out (geometric), slower at first so the insect stays big and readable early in the move */
 const d5Scale = (u: number) => 7.4 * Math.pow(2.75 / 7.4, Math.pow(u, 1.25));
@@ -37,8 +37,8 @@ export const d5View = (f: number): View => {
 /** the near foreground (out of focus, between the lens and the insect): its parallax, relative to the look point */
 const NEAR_K = 2.1;
 const NEAR: {o: V3; kind: 'target' | 'beaker'}[] = [
-  {o: [-150, 0, 150], kind: 'target'},
-  {o: [125, 0, 175], kind: 'beaker'},
+  {o: [-205, 0, 265], kind: 'target'},
+  {o: [-111, 0, 285], kind: 'beaker'},
 ];
 /** the wall plate: a little larger as the camera rises toward the window; the window centred over the bench */
 const plateK = (f: number) => lerp(1.05, 1.32, d5Rise(f));
@@ -154,7 +154,7 @@ export const D5: React.FC<ShotProps> = ({f}) => {
             return q.kind === 'target' ? (
               <Target2D key={i} id={`${id}n${i}`} v={vs} face={D_FACE} dir={1} />
             ) : (
-              <Bottle key={i} v={vs} b={{x: 0, z: 0, r: 16, h: 58, c: '#E3F1F6', fill: 0.45}} ink={Math.max(1.5, Math.min(4, 0.25 * v.s + 1))} />
+              <Bottle key={i} v={vs} b={{x: 0, z: 0, r: 16, h: 40, c: '#E3F1F6', fill: 0.5}} ink={Math.max(1.5, Math.min(4, 0.25 * v.s + 1))} />
             );
           })}
         </g>

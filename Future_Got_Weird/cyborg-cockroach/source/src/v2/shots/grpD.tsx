@@ -2,7 +2,7 @@
 // D1 low side view: the medic stops and lines up on the clear target (antennae on its face); DT the operator's thumb
 // presses the fire button (low over the thumb, his face beyond in the monitor's glow); D2 ECU: the coil parts the line,
 // the spring drives the injector, the needle into the clear silicone (squash, rings, rebound); D3 the cutaway: gas
-// behind the plunger, the amber dose blooms in the silicone; D5 one rise over the bench (the array of earlier trials)
+// behind the plunger, the amber dose diffuses as a small soft cloud in the silicone; D5 one rise over the bench (the array of earlier trials)
 // toward the bright window, whose light fills the frame (the film's daylight bloom into E1).
 import React from 'react';
 import {ShotProps} from './index2';
@@ -40,8 +40,8 @@ export const cuesD = (): Cue[] => {
   // the coil goes hot from the press to the release (a faint standby warmth before it is silent)
   ev.push({kind: 'sizzle', t: r3(D_PRESS), gain: -29, name: 'D2 coil heats (from the press)', args: {d: r3(D_FIRE - D_PRESS)}});
   // D2: the line parts, the spring drives the injector, the needle into the silicone
-  ev.push({kind: 'click', t: r3(D_FIRE), gain: -13, hero: true, name: 'D2 LINE PARTS (spark)'});
-  ev.push({kind: 'spring', t: r3(D_FIRE + 0.005), gain: -21, hero: true, name: 'D2 spring drives the injector'});
+  ev.push({kind: 'click', t: r3(D_FIRE), gain: -16, hero: true, name: 'D2 LINE PARTS (small spark at the coil)'});
+  ev.push({kind: 'spring', t: r3(D_FIRE + 0.005), gain: -23, hero: true, name: 'D2 spring drives the injector along the tube'});
   ev.push({kind: 'thock', t: r3(D_IMPACT), gain: -17, hero: true, name: 'D2 NEEDLE INTO SILICONE (squash, rebound)'});
   // D3: the activator seal opens, gas pushes the plunger
   ev.push({kind: 'click', t: r3(D_SEAL), gain: -33, name: 'D3 seal opens', args: {f: 3200, d: 0.04, bright: 0.6}});

@@ -242,8 +242,12 @@ export const carriedWires = (fb: Frame, fp: Frame, lift: number): Wires => {
   });
   return {pts: out, wts};
 };
-/** the wires (and electrode beads); `warp` scales the pack end about c by k (the pack nearer the camera when lifted) */
-export const WireDraw: React.FC<{v: View; w: Wires; warp?: {c: V2; k: number}}> = ({v, w, warp}) => {
+/** the wires (and electrode beads); `warp` scales the pack end about c by k (the pack nearer the camera when lifted).
+ *  V4 `layer`: 'under' draws every wire whole (put it before the insect, so the shell hides what runs behind it);
+ *  'over' draws only the runs that lie in front of the body's mid-plane (depth >= cD - 1.5, as Gear2D does) and their
+ *  electrode beads, over the insect. Together a carried wire hangs in front of the shell where it is in front of it, and
+ *  goes behind it where it is behind it (never through it). */
+export const WireDraw: React.FC<{v: View; w: Wires; warp?: {c: V2; k: number}; layer?: 'under' | 'over'; cD?: number}> = ({v, w, warp, layer, cD = -1e9}) => {
   const s = v.s;
   const sp = (key: WireKey) =>
     w.pts[key].map((p, i) => {
@@ -252,18 +256,39 @@ export const WireDraw: React.FC<{v: View; w: Wires; warp?: {c: V2; k: number}}> 
       const kk = 1 + (warp.k - 1) * w.wts[key][i];
       return [warp.c[0] + (q[0] - warp.c[0]) * kk, warp.c[1] + (q[1] - warp.c[1]) * kk] as V2;
     });
+  const vis = (p: V3) => layer !== 'over' || v.F[1] > 0.6 || dot3(p, v.F) >= cD - 1.5;
   const one = (key: WireKey, col: string) => {
-    const d = smoothOpen(sp(key));
+    const pts = sp(key);
+    // the runs to draw (consecutive visible points)
+    const runs: V2[][] = [];
+    let cur: V2[] = [];
+    w.pts[key].forEach((p, i) => {
+      if (vis(p)) cur.push(pts[i]);
+      else {
+        if (cur.length > 1) runs.push(cur);
+        cur = [];
+      }
+    });
+    if (cur.length > 1) runs.push(cur);
     return (
       <g key={key}>
-        <path d={d} stroke={INK} strokeWidth={f2(0.55 * s + 1.6)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={d} stroke={col} strokeWidth={f2(0.55 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        {runs.map((r, j) => {
+          const d = smoothOpen(r);
+          return (
+            <g key={j}>
+              <path d={d} stroke={INK} strokeWidth={f2(0.55 * s + 1.6)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              <path d={d} stroke={col} strokeWidth={f2(0.55 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            </g>
+          );
+        })}
       </g>
     );
   };
-  const ends = (['antL', 'antR', 'cerL', 'cerR'] as WireKey[]).map((key) => {
-    const e = P(v, w.pts[key][w.pts[key].length - 1]);
-    return <circle key={`${key}e`} cx={f2(e[0])} cy={f2(e[1])} r={f2(0.75 * s)} fill="#E9EEF2" stroke={INK} strokeWidth={f2(Math.max(1, 0.25 * s))} />;
+  const ends = (['antL', 'antR', 'cerL', 'cerR'] as WireKey[]).flatMap((key) => {
+    const p3 = w.pts[key][w.pts[key].length - 1];
+    if (layer === 'under' || !vis(p3)) return [];
+    const e = P(v, p3);
+    return [<circle key={`${key}e`} cx={f2(e[0])} cy={f2(e[1])} r={f2(0.75 * s)} fill="#E9EEF2" stroke={INK} strokeWidth={f2(Math.max(1, 0.25 * s))} />];
   });
   return (
     <g>
@@ -275,6 +300,7 @@ export const WireDraw: React.FC<{v: View; w: Wires; warp?: {c: V2; k: number}}> 
     </g>
   );
 };
+const dot3 = (a: V3, b: V3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 
 // ------------------------------------------------------------------ walking
 /** distance walked from rest: starts at tGo, eases up to speed V (mm/s) over ta seconds (C1: no jerk in the gait) */
