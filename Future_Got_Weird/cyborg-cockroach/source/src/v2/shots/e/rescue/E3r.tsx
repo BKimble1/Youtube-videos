@@ -24,7 +24,7 @@ const S = 5.4;
 const V_MM = 60;
 /** the insect's ground point on screen at the start, and the share of its travel the camera follows */
 const X0 = 420, Y0 = 1352, FOLLOW = 0.6;
-export const E3_VIEW: View = viewAt(4, 7, S, [0, 0, 0], X0, Y0);
+export const E3_VIEW: View = viewAt(14, 13, S, [0, 0, 0], X0, Y0);
 const s0 = 12;
 export const e3Pose = (lf: number): RoachPose => {
   const t = lf / FPS;
@@ -92,7 +92,7 @@ const Beam: React.FC<{id: string}> = ({id}) => {
 /** the floor slab the insect walks on: its top seen at a grazing angle, its broken front face below */
 const Floor: React.FC<{id: string}> = ({id}) => {
   const L = -400, R = 2200;
-  const top = Y0 - 18, edge = Y0 + 14;
+  const top = Y0 - 40, edge = Y0 + 66; // the top face seen from 13 deg up: deep enough for the near feet
   return (
     <g>
       <path d={poly([[L, top], [R, top], [R, edge], [L, edge]])} fill="#6E655D" />
@@ -100,6 +100,7 @@ const Floor: React.FC<{id: string}> = ({id}) => {
         cracks={[[[300, 1420], [340, 1560], [310, 1700]], [[900, 1460], [860, 1620]], [[1500, 1400], [1540, 1600]]]} rim={jag([[L, edge], [R, edge]], 5, 321, 50, false)} rimColor={mix(RB.concLit, RB.deep, 0.35)} />
       <VGrad id={`${id}-fd`} x0={L} y0={edge + 20} x1={R} y1={2400} stops={[[0, 'rgba(10,8,7,0)'], [0.5, 'rgba(10,8,7,0.45)'], [1, 'rgba(10,8,7,0.7)']]} />
       <Pebbles id={`${id}-p0`} a={[-200, Y0 - 4]} b={[2100, Y0 - 2]} n={34} size={7} seed={322} tone={RB.concDark} dark={0.25} />
+      <Pebbles id={`${id}-p1`} a={[-200, Y0 + 44]} b={[2100, Y0 + 48]} n={26} size={9} seed={323} tone={RB.conc} dark={0.3} />
     </g>
   );
 };

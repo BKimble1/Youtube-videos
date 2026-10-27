@@ -76,7 +76,7 @@ const footH = (lf: number): number[] => {
     const fa = poseRoach({...m, s: (k + 0.001 - l.def.phase) * GAIT.stride}).legs[i].foot;
     const fb = poseRoach({...m, s: (k + 1.001 - l.def.phase) * GAIT.stride}).legs[i].foot;
     const ha = e4H(fa[0], fa[2]), hb = e4H(fb[0], fb[2]);
-    return Math.max(ha + (hb - ha) * smooth(w), now + 0.6 - GAIT.lift * Math.sin(Math.PI * w));
+    return Math.max(ha + (hb - ha) * smooth(w), now + (0.8 - GAIT.lift) * Math.sin(Math.PI * w));
   });
 };
 /** the posed insect on the rubble: feet on the chunk tops; the body rides at the mean height of its feet and tilts with
@@ -86,8 +86,8 @@ export const e4Pose = (lf: number): RoachPose => {
   const L = LEGS_I;
   const mean = (ix: number[]) => ix.reduce((a, i) => a + hs[i], 0) / ix.length;
   const lift = mean([0, 1, 2, 3, 4, 5]);
-  const pitch = 0.8 * Math.atan2(mean(L.front) - mean(L.hind), 58);
-  const roll = 0.8 * Math.atan2(mean(L.left) - mean(L.right), 60);
+  const pitch = Math.atan2(mean(L.front) - mean(L.hind), 58);
+  const roll = Math.atan2(mean(L.left) - mean(L.right), 60);
   const p = poseRoach(motion(lf, lift, pitch, roll));
   return {
     ...p,
