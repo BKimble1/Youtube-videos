@@ -20,8 +20,11 @@ export const SceneAt: React.FC<{t: number}> = ({t}) => {
 };
 
 export const Frame: React.FC<{f: number; captions: boolean; uid?: string}> = ({f, captions, uid = ''}) => (
-  <IdCtx.Provider value={uid}>
-    <AbsoluteFill style={{backgroundColor: '#14212A', overflow: 'hidden'}}>
+  // ids carry the frame number: Chrome can keep a stale mask or clip between video frames when an id is reused
+  <IdCtx.Provider value={`${uid}f${Math.round(f)}_`}>
+    {/* key: every frame is a fresh mount (identical to a single still); reusing the DOM left ghost paint of masked
+        sleeves from earlier frames in the video render */}
+    <AbsoluteFill key={Math.round(f)} style={{backgroundColor: '#14212A', overflow: 'hidden'}}>
       <SceneAt t={f / FPS} />
       {captions && <Captions t={f / FPS} cy={capY(f / FPS)} />}
     </AbsoluteFill>

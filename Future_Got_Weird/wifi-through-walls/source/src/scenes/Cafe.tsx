@@ -62,7 +62,7 @@ const camE = (t: number): Cam => {
     [CB.ordinary, track],
     [CB.identify - 0.15, track],
     [CB.identify + 0.5, screen],
-    [CB.even - 0.05, screen],
+    [CB.even - 0.05, {...screen, pos: add3(screen.pos, v3(0, 0, 0.12))}, (x) => x],
   ]);
 };
 const camH = (t: number): Cam => {
@@ -112,7 +112,7 @@ const Link: React.FC<{b: B; t: number; bodyX: number}> = ({b, t, bodyX}) => {
           <g key={sI} opacity={sI === 1 ? 1 : near * 0.9}>
             <path d={d} fill="none" stroke="#5CE1FF" strokeWidth={w * 3.2} opacity={0.22} strokeLinecap="round" />
             <path d={d} fill="none" stroke="#9FEFFF" strokeWidth={w * 0.8} opacity={0.55} strokeLinecap="round" />
-            <path d={d} fill="none" stroke="#FFFFFF" strokeWidth={w * 1.1} strokeDasharray={`${f1(w * 2.2)} ${f1(w * 5)}`} strokeDashoffset={f1(-t * w * 30)} strokeLinecap="round" />
+            <path d={d} fill="none" stroke="#FFFFFF" strokeWidth={w * 0.6} strokeDasharray={`${f1(w * 0.9)} ${f1(w * 3.2)}`} strokeDashoffset={f1(-t * w * 30)} strokeLinecap="round" />
           </g>
         );
       })}
@@ -263,7 +263,7 @@ export const CafeScene: React.FC<{t: number}> = ({t}) => {
   const passG: Gait = {x0: 3.0 * U + 520 * CB.e0, v: 520, T: 0.98, ph: 0.3, hipY: -480, arm: 55};
   const passCd = cardAt(b, v3(0, 0, 2.75));
   const passP = walk(passG, t);
-  const showPass = !isH && t < CB.identify + 0.6;
+  const showPass = !isH && t < CB.identify - 0.25; // gone before the push into the laptop (her path crosses the camera's)
   const linkOn = !isH ? 1 : 0.6;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>

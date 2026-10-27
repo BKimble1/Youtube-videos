@@ -35,7 +35,7 @@ export const antPt = (u: number, yy: number, nn = 0) => {
   return v3(ANT.x + h.x * u + n.x * nn, yy, ANT.z + h.z * u + n.z * nn);
 };
 /** the RF display on a rolling stand (screen faces the camera) */
-export const MON = {x: 0.5, y: 1.74, z: 1.0, w: 0.72, h: 0.66};
+export const MON = {x: 0.565, y: 1.74, z: 1.0, w: 0.84, h: 0.74};
 /** the security camera (on a drop pole from the ceiling, looking toward the door) and its public-view screen on the
  *  office's back wall */
 export const CCTV = {x: -1.25, y: 2.02, z: 1.2};

@@ -1,0 +1,19 @@
+{
+ "duration_s": 36.46666666666667,
+ "frames": 1094,
+ "beat_s": 0.5697916666666667,
+ "bpm": 105.3016453382084,
+ "ebur128": [
+  "Integrated loudness:",
+  "I:         -14.4 LUFS",
+  "Threshold: -24.5 LUFS",
+  "Loudness range:",
+  "LRA:         1.8 LU",
+  "Threshold: -34.5 LUFS",
+  "LRA low:   -15.5 LUFS",
+  "LRA high:  -13.7 LUFS",
+  "True peak:",
+  "Peak:       -1.4 dBFS"
+ ],
+ "loop_seam_sample_jump": 0.0
+}

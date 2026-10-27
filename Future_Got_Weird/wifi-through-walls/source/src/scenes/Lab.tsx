@@ -27,10 +27,12 @@ export const LB = {
   out: W('in', 0).start - 0.12, // cut to the cafe
 };
 export const LAB_OUT = LB.out;
+/** moments the display's skeleton visibly updates and the array pings (mirrored in tools/make_audio.py) */
+export const TRACK_PINGS = () => [0.05, 0.34, 1.08, 2.0, W('watch').start + 0.02, W('watch').start + 0.17, 3.3, W('or').start + 0.1, W('or').start + 0.45, W('wifi', 1).start + 0.35];
 
 // ------------------------------------------------------------------ cameras
 /** C0: the opening (and closing) frame. */
-export const C0: Cam = {pos: v3(-0.1, 1.42, -2.95), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 687};
+export const C0: Cam = {pos: v3(-0.08, 1.42, -2.95), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 687};
 const C1: Cam = {...C0, pos: v3(0.04, 1.42, -2.95)};
 /** looking at the display (it fills most of the frame) */
 const CMON = (d: number, dy = 0): Cam => ({pos: v3(MON.x, MON.y + dy, MON.z - d), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 960});
@@ -53,7 +55,7 @@ export const labCam = (t: number): Cam => {
     return camKeys(t, [
       [END0, CI1],
       [W('camera').start + 0.4, CI2],
-      [or - 0.2, CI2],
+      [or - 0.2, {...CI2, pos: add3(CI2.pos, v3(0.04, 0.02, 0.12))}, (x) => x],
       [or + 0.4, CI3],
       [DUR - 1.1, CI3],
       [DUR, C0],
@@ -200,7 +202,7 @@ const Screen: React.FC<{b: B; t: number}> = ({b, t}) => {
   const h = heroLab(t >= 0.1 ? t - 0.1 : t - 0.1 + DUR);
   const kp = mapKP(keypoints(h.p), (p) => toS(HERO_G.x + p.x / U, -p.y / U));
   const wallA = toS(WALL.x0, 0), wallB = toS(WALL.x1, 0);
-  const lw = Math.max(1.6, r.w * 0.0135);
+  const lw = Math.max(1.8, r.w * 0.016);
   const grid = Array.from({length: 9}, (_, i) => r.x + (i / 8) * r.w);
   // raw RF heat: blobs around the body's reflecting parts, noisy
   const heat = st.heat > 0 ? (
@@ -295,7 +297,9 @@ export const LabScene: React.FC<{t: number}> = ({t}) => {
   const b = basis(cam);
   const h = heroLab(t);
   const cd = cardAt(b, HERO_G);
-  const pulse = t > LB.emit && t < LB.body + 0.3 ? 0.5 + 0.5 * Math.sin((t - LB.emit) * (2 * Math.PI) / PERIOD) : t > LB.ai + 0.1 && t < LB.ai + 0.7 ? 1 - ss(t, LB.ai + 0.3, LB.ai + 0.7) : 0.15;
+  // tracking pings (the same moments carry a soft ping in the mix, tools/make_audio.py): the array's patches flash
+  const ping = TRACK_PINGS().reduce((a, p) => a + (t >= p ? Math.exp(-(t - p) / 0.12) : 0) + (t + DUR - p < 0.6 && t < 0.6 ? Math.exp(-(t + DUR - p) / 0.12) : 0), 0);
+  const pulse = t > LB.emit && t < LB.body + 0.3 ? 0.5 + 0.5 * Math.sin((t - LB.emit) * (2 * Math.PI) / PERIOD) : t > LB.ai + 0.1 && t < LB.ai + 0.7 ? 1 - ss(t, LB.ai + 0.3, LB.ai + 0.7) : clamp(0.2 + 0.8 * ping);
   const sep = wallSep(t);
   const open = ss(t, LB.open, LB.open + 0.45) * (1 - ss(t, LB.raise, LB.raise + 0.4));
   // keypoints in the world (for the reflections)

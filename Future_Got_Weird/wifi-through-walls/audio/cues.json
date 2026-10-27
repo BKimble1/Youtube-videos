@@ -1,0 +1,727 @@
+[
+ {
+  "t": 0.05,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 0.28,
+  "name": "back hits the wall",
+  "gain_db": -1.4
+ },
+ {
+  "t": 0.34,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 1.08,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 2.0,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 2.695,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 2.845,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 3.3,
+  "name": "tracking ping",
+  "gain_db": -20.0
+ },
+ {
+  "t": 4.14,
+  "name": "cover latch",
+  "gain_db": -9.1
+ },
+ {
+  "t": 4.16,
+  "name": "cover swings",
+  "gain_db": -26.0
+ },
+ {
+  "t": 4.98,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 5.26,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 5.54,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 5.82,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 6.1,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 6.38,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 6.42,
+  "name": "waves pass the wall (muffled)",
+  "gain_db": -5.2
+ },
+ {
+  "t": 6.66,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 6.94,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 7.22,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 7.5,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 7.78,
+  "name": "chirp",
+  "gain_db": -33.2
+ },
+ {
+  "t": 7.805,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 7.865,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 7.925,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 7.985,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 8.045,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 8.105,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 8.165,
+  "name": "reflection glint",
+  "gain_db": -29.1
+ },
+ {
+  "t": 9.175,
+  "name": "received",
+  "gain_db": -21.9
+ },
+ {
+  "t": 9.275,
+  "name": "received",
+  "gain_db": -23.1
+ },
+ {
+  "t": 9.655,
+  "name": "skeleton builds",
+  "gain_db": -20.9
+ },
+ {
+  "t": 9.955,
+  "name": "skeleton builds",
+  "gain_db": -20.9
+ },
+ {
+  "t": 10.205,
+  "name": "skeleton builds",
+  "gain_db": -20.9
+ },
+ {
+  "t": 10.455,
+  "name": "skeleton builds",
+  "gain_db": -20.9
+ },
+ {
+  "t": 11.655,
+  "name": "match tone",
+  "gain_db": -20.0
+ },
+ {
+  "t": 11.775,
+  "name": "match tone",
+  "gain_db": -20.0
+ },
+ {
+  "t": 13.19,
+  "name": "match tone",
+  "gain_db": -23.1
+ },
+ {
+  "t": 13.865,
+  "name": "reverse swell",
+  "gain_db": -24.4
+ },
+ {
+  "t": 14.335,
+  "name": "low impact (ElevenLabs)",
+  "gain_db": -1.9
+ },
+ {
+  "t": 14.335,
+  "name": "sub drop",
+  "gain_db": -9.1
+ },
+ {
+  "t": 14.495,
+  "name": "data stream",
+  "gain_db": -26.0
+ },
+ {
+  "t": 15.195,
+  "name": "caf\u00e9 ambience",
+  "gain_db": 0.0
+ },
+ {
+  "t": 17.355,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 17.545,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 17.735,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 17.925,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 18.115,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 18.305,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 18.355,
+  "name": "link disturbed",
+  "gain_db": -30.5
+ },
+ {
+  "t": 18.495,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 18.685,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 18.875,
+  "name": "wifi packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 19.255,
+  "name": "compare tick",
+  "gain_db": -26.0
+ },
+ {
+  "t": 19.475,
+  "name": "compare tick",
+  "gain_db": -26.0
+ },
+ {
+  "t": 19.695,
+  "name": "compare tick",
+  "gain_db": -26.0
+ },
+ {
+  "t": 19.915,
+  "name": "compare tick",
+  "gain_db": -26.0
+ },
+ {
+  "t": 19.955,
+  "name": "MATCH chime",
+  "gain_db": -20.9
+ },
+ {
+  "t": 21.06,
+  "name": "quiet emphasis (WITHOUT)",
+  "gain_db": -6.0
+ },
+ {
+  "t": 22.325,
+  "name": "corridor room tone",
+  "gain_db": 0.0
+ },
+ {
+  "t": 22.975,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 23.575,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 24.175,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 24.775,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 25.375,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 25.695,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.712,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.728,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.744,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.761,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.777,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.794,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.811,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.827,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.843,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.86,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.877,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.893,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.898,
+  "name": "miss",
+  "gain_db": -26.0
+ },
+ {
+  "t": 25.91,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.926,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.942,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.959,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.975,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 25.976,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 25.992,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.009,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.025,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.041,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.058,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.075,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.091,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.108,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.124,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.14,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.157,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.174,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.19,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.207,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.223,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.239,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.256,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.273,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.289,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.305,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.322,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.338,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.355,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.372,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.388,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.404,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.421,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.438,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.454,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.471,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.487,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.503,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.52,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.526,
+  "name": "miss",
+  "gain_db": -26.0
+ },
+ {
+  "t": 26.537,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.553,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.57,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.575,
+  "name": "walker matched",
+  "gain_db": -24.4
+ },
+ {
+  "t": 26.586,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.602,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.619,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.636,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.652,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.669,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.685,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.701,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.718,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.735,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.751,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 26.768,
+  "name": "dataset sweep",
+  "gain_db": -33.2
+ },
+ {
+  "t": 27.02,
+  "name": "caf\u00e9 ambience (H)",
+  "gain_db": 0.0
+ },
+ {
+  "t": 29.825,
+  "name": "seen before",
+  "gain_db": -20.9
+ },
+ {
+  "t": 30.615,
+  "name": "unease swell",
+  "gain_db": -18.4
+ },
+ {
+  "t": 31.95,
+  "name": "office room tone",
+  "gain_db": 0.0
+ },
+ {
+  "t": 32.95,
+  "name": "palm over the lens (ElevenLabs)",
+  "gain_db": 4.1
+ },
+ {
+  "t": 33.05,
+  "name": "picture dies",
+  "gain_db": -26.0
+ },
+ {
+  "t": 34.56,
+  "name": "RF tracking ping (returns)",
+  "gain_db": -19.2
+ },
+ {
+  "t": 34.91,
+  "name": "RF tracking ping (returns)",
+  "gain_db": -19.2
+ },
+ {
+  "t": 34.99,
+  "name": "RF tracking ping (returns)",
+  "gain_db": -19.2
+ },
+ {
+  "t": 36.247,
+  "name": "skid (wraps from the end)",
+  "gain_db": -1.9
+ }
+]

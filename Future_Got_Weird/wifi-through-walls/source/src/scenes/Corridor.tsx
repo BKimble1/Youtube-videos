@@ -44,7 +44,7 @@ const gaitOf = (i: number): Gait => ({x0: V * crossT(i), v: V, T: 0.82, ph: hash
 
 const camG = (t: number): Cam => {
   const c0: Cam = {pos: v3(0.05, 1.42, -2.7), yaw: 0, pitch: 0, f: 2000, cx: 540, cy: 840};
-  const c1: Cam = {pos: v3(0.0, 2.25, -0.2), yaw: 0, pitch: 2, f: 2000, cx: 540, cy: 960};
+  const c1: Cam = {pos: v3(0.0, 2.4, -1.4), yaw: 0, pitch: 0, f: 2400, cx: 540, cy: 900}; // rises and narrows: the display fills the frame, the walkers stay a row of heads at the bottom
   return camKeys(t, [
     [GB.g0, {...c0, pos: v3(0.2, 1.42, -2.8)}],
     [GB.everyone - 0.35, c0],

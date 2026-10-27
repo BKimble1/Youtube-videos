@@ -1,0 +1,197 @@
+{
+ "provider": "ElevenLabs (restricted connector, this workspace)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "The established FGW narrator (same voice id as Invisibility Shield, Real Web Fluid, Glass Climbing V6 and Living Skin voice_provenance.json)."
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "x9imutOfNeoBmdM0knmD",
+ "node_id": "D9rfgqLkbbuxqalUHNGC",
+ "generated": "2026-10-27",
+ "settings_note": "The restricted connector exposes no stability / similarity / style / speed controls for eleven_v4 generations; delivery was directed with inline audio tags instead. The brief's suggested numeric settings could not be applied.",
+ "prompt": "[urgent, hushed, quick] If you hid behind this wall... [alarmed discovery] this machine could STILL WATCH YOU. [brisk, conversational] Scientists built a system that shoots invisible radio waves THROUGH walls. [curious, flowing] And when they bounce off your body, AI creates a moving SKELETON of you. [playful, demonstrating] Raise your hand? It raises its hand. [lower, ominous] But here's where it gets CREEPY. [brisk, building] In a separate experiment, scientists used ordinary Wi-Fi signals to IDENTIFY people walking past. [short, surprised] Even WITHOUT their phones. [confident] They tested 197 people... and identified almost EVERYONE correctly. [leaning in, quietly unsettling] So imagine walking past a café, and it recognizes you without you doing ANYTHING. [conversational, posing a choice] Now would you rather have a CAMERA watching you... Or Wi-Fi that knows who you are?",
+ "note_on_prompt": "Bracketed tags are delivery directions (not spoken); capitals are emphasis. The spoken words are exactly production/NARRATION_APPROVED.txt.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/take1.mp3",
+   "generation_id": "ZEefrA0qxxtmFN4GC19U",
+   "sha256": "6b4490a8bef152057c55dde7336fbce7e8a857338ca0da38a36029ba8d8edbd6",
+   "duration_s": 37.72,
+   "asr": {
+    "zipformer": {
+     "transcript": "IF YOU HID BEHIND THIS WALL THIS MACHINE COULD STILL WATCH YOU SCIENTISTS BUILT A SYSTEM THAT SHOOTS INVISIBLE RADIO WAVES THROUGH WALLS AND WHEN THEY BOUNCE OFF YOUR BODY A I CREATES A MOVING SKELETON OF YOU RAISE YOUR HAND IT RAISES ITS HAND BUT HERE'S WHERE IT GETS CREEPY IN A SEPARATE EXPERIMENT SCIENTISTS USED ORDINARY WYFIED SIGNALS TO IDENTIFY PEOPLE WALKING PAST EVEN WITHOUT THEIR PHONES THEY TESTED ONE HUNDRED NINETY SEVEN PEOPLE AND IDENTIFIED ALMOST EVERY ONE CORRECTLY SO IMAGINE WALKING PAST A CAFE AND IT RECOGNIZES YOU WITHOUT YOU DOING ANYTHING NOW WOULD YOU RATHER HAVE A CAMERA WATCHING YOU OR WHY FY THAT KNOWS WHO YOU ARE",
+     "wer": 0.045,
+     "diffs": [
+      [
+       "replace",
+       "wifi",
+       "wyfied"
+      ],
+      [
+       "replace",
+       "everyone",
+       "every one"
+      ],
+      [
+       "replace",
+       "wifi",
+       "why fy"
+      ]
+     ]
+    },
+    "whisper": {
+     "transcript": "If you hid behind this wall, this machine could still watch you! Scientists built a system that shoots invisible radio waves through walls. And when they bounce off your body, AI creates a moving skeleton of you. Raise your hand? It raises its hand. But here's where it gets creepy. In a separate experiment, scientists used ordinary Wi-Fi signals to identify people walking past. Even without their phones, they tested 197 people and identified almost everyone correctly. So, imagine walking past a cafe and it recognizes you without you doing anything. Now, would you rather have a camera watching you? or Wi-Fi that knows who you are.",
+     "wer": 0.036,
+     "diffs": [
+      [
+       "replace",
+       "wifi",
+       "wi fi"
+      ],
+      [
+       "replace",
+       "wifi",
+       "wi fi"
+      ]
+     ]
+    }
+   }
+  },
+  {
+   "file": "audio/narration/takes/take2.mp3",
+   "generation_id": "fRrOld7c7RUAgC41epx4",
+   "sha256": "2fd38add9c1fc67ab0e42446076264ee4cba65bebe7547c4e6fe912e7a5bac74",
+   "duration_s": 37.41,
+   "asr": {
+    "zipformer": {
+     "transcript": "YOU HID BEHIND THIS WALL THIS MACHINE COULD STILL WATCH YOU SCIENTISTS BUILT A SYSTEM THAT SHOOTS INVISIBLE RADIO WAVES THROUGH WALLS AND WHEN THEY BOUNCE OFF YOUR BODY A I CREATES A MOVING SKELETON OF YOU RAISE YOUR HAND IT RAISES ITS HAND BUT HERE'S WHERE IT GETS CREEPY IN A SEPARATE EXPERIMENT SCIENTISTS USED ORDINARY WYFIED SIGNALS TO IDENTIFY PEOPLE WALKING PAST EVEN WITHOUT THEIR PHONES THEY TESTED ONE HUNDRED NINETY SEVEN PEOPLE AND IDENTIFIED ALMOST EVERY ONE CORRECTLY SO IMAGINE WALKING PAST A CAFE AND IT RECOGNIZES YOU WITHOUT YOU DOING ANYTHING NOW WOULD YOU RATHER HAVE A CAMERA WATCHING YOU OR WHY FY THAT KNOWS WHO YOU ARE",
+     "wer": 0.054,
+     "diffs": [
+      [
+       "delete",
+       "if",
+       ""
+      ],
+      [
+       "replace",
+       "wifi",
+       "wyfied"
+      ],
+      [
+       "replace",
+       "everyone",
+       "every one"
+      ],
+      [
+       "replace",
+       "wifi",
+       "why fy"
+      ]
+     ]
+    },
+    "whisper": {
+     "transcript": "If you hid behind this wall, this machine could still watch you! Scientists built a system that shoots invisible radio waves through walls. And when they bounce off your body, AI creates a moving skeleton of you. Raise your hand? It raises its hand. But here's where it gets creepy. In a separate experiment, scientists used ordinary Wi-Fi signals to identify people walking past. Even without their phones, they tested 197 people and identified almost everyone correctly. So imagine walking past a cafe and it recognizes you without you doing anything. Now, would you rather have a camera watching you? or Wi-Fi that knows who you are.",
+     "wer": 0.036,
+     "diffs": [
+      [
+       "replace",
+       "wifi",
+       "wi fi"
+      ],
+      [
+       "replace",
+       "wifi",
+       "wi fi"
+      ]
+     ]
+    }
+   },
+   "chosen": true,
+   "why": "Both takes are word-perfect on Whisper (only Wi-Fi spelling differences). Take 2 is 0.3 s quicker with the same phrasing and a stronger opening line. (The full-take zipformer transcript dropped the opening \"If\"; decoding the first 4 s of the final narration on its own, with or without 0.4 s of lead-in silence, the same model hears \"IF YOU HID BEHIND THIS WALL\", so that was a chunking artefact.)"
+  }
+ ],
+ "edit": {
+  "what": "Only sentence pauses were shortened (silent samples below -45 dBFS removed from the middle of 11 pauses, 8 ms crossfades). No time-stretch, pitch or EQ.",
+  "pause_cuts": [
+   {
+    "at_s": 1.47,
+    "removed_s": 0.085,
+    "after": "wall",
+    "pause_was_s": 0.385
+   },
+   {
+    "at_s": 3.585,
+    "removed_s": 0.105,
+    "after": "you",
+    "pause_was_s": 0.405
+   },
+   {
+    "at_s": 7.435,
+    "removed_s": 0.075,
+    "after": "walls",
+    "pause_was_s": 0.335
+   },
+   {
+    "at_s": 11.415,
+    "removed_s": 0.09,
+    "after": "you",
+    "pause_was_s": 0.39
+   },
+   {
+    "at_s": 12.365,
+    "removed_s": 0.085,
+    "after": "hand",
+    "pause_was_s": 0.355
+   },
+   {
+    "at_s": 13.7,
+    "removed_s": 0.135,
+    "after": "hand",
+    "pause_was_s": 0.455
+   },
+   {
+    "at_s": 21.25,
+    "removed_s": 0.085,
+    "after": "past",
+    "pause_was_s": 0.345
+   },
+   {
+    "at_s": 22.935,
+    "removed_s": 0.135,
+    "after": "phones",
+    "pause_was_s": 0.435
+   },
+   {
+    "at_s": 27.785,
+    "removed_s": 0.135,
+    "after": "correctly",
+    "pause_was_s": 0.455
+   },
+   {
+    "at_s": 30.065,
+    "removed_s": 0.095,
+    "after": "cafe",
+    "pause_was_s": 0.365
+   },
+   {
+    "at_s": 32.89,
+    "removed_s": 0.245,
+    "after": "anything",
+    "pause_was_s": 0.605
+   }
+  ],
+  "final": "audio/narration/FGW_WiFi_Walls_narration_final.wav",
+  "final_duration_s": 36.46666666666667
+ },
+ "sound_effects": {
+  "model_id": "eleven_text_to_sound_v2",
+  "files": [
+   "audio/sfx/el_skid_thump.mp3",
+   "audio/sfx/el_cam_slap.mp3",
+   "audio/sfx/el_low_boom.mp3",
+   "audio/sfx/el_cafe_amb_loop.mp3"
+  ],
+  "note": "generated for this film in the same flow; the music bed and the electronic tones are synthesized in tools/make_audio.py (original, no third-party music)."
+ }
+}
