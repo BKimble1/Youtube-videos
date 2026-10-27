@@ -15,13 +15,13 @@ import {ShotProps} from '../index2';
 import {Tray2D, BoxShadow, FPS} from './common';
 import {bPose, bWalkS} from './B12';
 
-const B3_AZ = 0, B3_EL = 7, B3_S = 9.2;
+const B3_AZ = 0, B3_EL = 10, B3_S = 9.2;
 /** the body's x on the tray (the walk runs along +x from the origin) */
 const bodyX = (t: number) => bPose(t).bodyFrame0.o[0];
 export const b3View = (t: number): View => {
   // tracking: the camera rides with the insect; a slight ease ahead (it settles a few mm further on through the shot)
   const u = sr(t, 222 / FPS, 254 / FPS);
-  return viewAt(B3_AZ, B3_EL, B3_S, [bodyX(t) + 6 - 4 * u, 12, 0], 500, 1010);
+  return viewAt(B3_AZ, B3_EL, B3_S, [bodyX(t) + 6 - 4 * u, 12, 0], 500, 1060);
 };
 // props on the far side of the tray (world mm): foam blocks the walk passes
 const BLOCKS: {b: [number, number, number, number, number, number]; c: string}[] = [
@@ -36,7 +36,7 @@ export const B3: React.FC<ShotProps> = ({f}) => {
   // the room beyond the bench: wall layer (slower), the bench's far edge, cabinets below the bench front
   const o = P(v, [0, 0, 0]);
   const benchFar = P(v, [0, 0, -260])[1];
-  const benchNear = P(v, [0, 0, 190])[1];
+  const benchNear = P(v, [0, 0, 260])[1];
   const cam = {x: 540 - (o[0] - 500) * 1, y: 960, z: 1};
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
@@ -55,7 +55,7 @@ export const B3: React.FC<ShotProps> = ({f}) => {
       </g>
       <path d={`M-20,${f2(benchFar - 14)} H1100 V${f2(benchNear)} H-20 Z`} fill={LAB2.benchTop} />
       <Bench2 id="b3b" top={benchNear} k={1.3} />
-      <Tray2D v={v} x0={-260} x1={320} z0={-170} z1={140} grid={20} bench={false} />
+      <Tray2D v={v} x0={-260} x1={320} z0={-170} z1={200} grid={20} bench={false} />
       {BLOCKS.map((k, i) => (
         <g key={i}>
           <BoxShadow id={`b3s${i}`} v={v} b={k.b} push={[16, 6]} alpha={0.12} />

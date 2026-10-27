@@ -10,7 +10,7 @@ const T2 = F2R.from / 30, T3 = F3R.from / 30, T4 = F4R.from / 30, T5 = F4R.to / 
 /** speed (mm/s): it sets off as F2 opens (antennae first), keeps coming through F3, comes on steadily in F4 */
 export const emergeV = (T: number) =>
   keys(T, [[T2 - 0.2, 0], [T2 + 0.3, 44], [T3 - 0.1, 50], [T3 + 0.45, 56], [T4, 50], [T4 + 0.4, 42], [T5, 40]]);
-const X0 = -46; // body origin (x) at T2 - 0.2: the head (x + 35) still 11 mm inside the hole, antennae already at the mouth
+const X0 = -43; // body origin (x) at T2 - 0.2: the head (x + 35) still 11 mm inside the hole, antennae already at the mouth
 const DT = 1 / 240;
 /** body origin x (mm) at film second T (integrated speed: a pure function of T) */
 export const emergeX = (T: number) => {
@@ -26,6 +26,6 @@ const PATH = straightPath([0, 0, 0], 0);
 /** the pose at film second T; search is the antennae's probing (high as it comes out, settling as it walks on) */
 export const emergePose = (T: number): RoachPose => {
   const srch = keys(T, [[T2, 1.15], [T3, 0.9], [T4 + 0.3, 0.6]]);
-  const pitch = keys(T, [[T2, 0.45], [T3, 0.3], [T4, 0.18]]);
-  return poseRoach({path: PATH, s: emergeX(T), t: T, search: srch, seed: 5, antL: {yaw: 0.7, pitch}, antR: {yaw: 0.66, pitch: pitch + 0.04}});
+  const pitch = keys(T, [[T2, 0.62], [T3, 0.42], [T4, 0.22]]);
+  return poseRoach({path: PATH, s: emergeX(T), t: T, search: srch, seed: 5, antL: {yaw: keys(T, [[T2, 0.42], [T4, 0.66]]), pitch}, antR: {yaw: keys(T, [[T2, 0.38], [T4, 0.62]]), pitch: pitch + 0.04}});
 };

@@ -225,3 +225,16 @@ export const VGrad: React.FC<{id: string; x0: number; y0: number; x1: number; y1
     <rect x={f2(x0)} y={f2(y0)} width={f2(x1 - x0)} height={f2(y1 - y0)} fill={`url(#${id}-v)`} />
   </g>
 );
+
+/** a soft dark vignette over the frame (screen px) */
+export const Vignette: React.FC<{id: string; a?: number}> = ({id, a = 0.55}) => (
+  <g>
+    <defs>
+      <radialGradient id={`${id}-vg`} cx="0.5" cy="0.48" r="0.75">
+        <stop offset="0.55" stopColor="#0A0909" stopOpacity={0} />
+        <stop offset="1" stopColor="#0A0909" stopOpacity={a} />
+      </radialGradient>
+    </defs>
+    <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id}-vg)`} />
+  </g>
+);

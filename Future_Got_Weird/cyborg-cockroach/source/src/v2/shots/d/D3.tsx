@@ -27,7 +27,7 @@ const C0 = d2Cam(R.from - 1);
 export const d3View = (f: number): View => {
   const u = sr(f, R.from, R.to + 4);
   // continue from D2's last framing (same scale and anchor), then push on to hold the whole barrel and the tip
-  return viewAt(D2_AZ, D2_EL, lerp(C0.s, 33, u), [lerp(C0.x, 34.3, u), lerp(C0.y, 26.2, u), 0], 540, 1000);
+  return viewAt(D2_AZ, D2_EL, lerp(C0.s, 33, u), [lerp(C0.x, 35, u), lerp(C0.y, 26.2, u), 0], 540, 1000);
 };
 
 /** delivered fraction of the dose (the bloom's volume follows it) */
@@ -153,7 +153,7 @@ export const D3: React.FC<ShotProps> = ({f}) => {
           <stop offset="1" stopColor="#F7C46E" stopOpacity={0} />
         </radialGradient>
       </defs>
-      <LabRoomMM id={`${id}room`} v={v} blur={9} tray={[-400, 400, -300, 420]} />
+      <LabRoomMM id={`${id}room`} v={v} blur={9} plate={1.7} tray={[-400, 400, -300, 420]} />
       {/* ---- the target in section: the aluminium cradle (base and backing plate) and the silicone */}
       <path d={box(W, D_FACE - 5, D_FACE + 37, -3, 0)} fill={LAB2.alu} stroke={INK} strokeWidth={f2(ink)} />
       <path d={box(W, D_FACE - 5, D_FACE + 37, -3, 0)} fill={`url(#${id}-ha)`} opacity={0.6} />

@@ -15,7 +15,7 @@ import {rnd} from '../../../lib/ease';
 
 // ------------------------------------------------------------------ the course centreline (mm, ground y = 0)
 /** straight along +x, a right-hand bend of radius R through THETA, then straight to the target */
-export const CRS = {S1: 70, R: 110, THETA: (65 * Math.PI) / 180, LANE: 46};
+export const CRS = {S1: 60, R: 130, THETA: (60 * Math.PI) / 180, LANE: 46};
 export const BEND_END = CRS.S1 + CRS.R * CRS.THETA;
 /** centreline point and heading (yaw, the rig's convention: 0 = +x, negative = turned right toward +z) */
 export const centre = (s: number): {p: V3; yaw: number} => {
@@ -53,7 +53,7 @@ export const feedMedicPose = (t: number): RoachPose =>
 /** the observer follows down the lane at 50 mm/s, steering for a point LA mm ahead on the centreline with a short lag
  *  (so it takes the bend a little early and the lens turns with the course). Integrated once at a fixed step from a
  *  settled start (deterministic), then looked up by time. */
-export const OBS = {v: 50, tau: 0.3, LA: 60, s0: -25, tStart: 10.4, dt: 1 / 240, tEnd: 17.5};
+export const OBS = {v: 50, tau: 0.3, LA: 30, s0: -25, tStart: 10.4, dt: 1 / 240, tEnd: 17.5};
 type ObsState = {p: [number, number]; yaw: number; s: number};
 const OBS_TAB: ObsState[] = (() => {
   const out: ObsState[] = [];
@@ -153,7 +153,7 @@ export const BLOCKS: Block[] = (() => {
   out.push({s: 8, off: -42, L: 16, W: 16, H: 52, color: LAB2.foamY});
   out.push({s: 52, off: 42, L: 16, W: 16, H: 46, color: LAB2.foamB});
   const mid = CRS.S1 + (CRS.R * CRS.THETA) / 2;
-  out.push({s: mid, off: CRS.LANE + 26 + 30, L: 64, W: 60, H: 72, color: LAB2.foamR});
+  out.push({s: mid, off: CRS.LANE + 36 + 30, L: 64, W: 60, H: 72, color: LAB2.foamR});
   out.push({s: TARGET_S + 20, off: -(CRS.LANE + 34), L: 46, W: 40, H: 92, color: LAB2.foamB});
   out.push({s: TARGET_S + 20, off: CRS.LANE + 34, L: 46, W: 40, H: 84, color: LAB2.foamY});
   return out.filter((b) => !(b.s > TARGET_S - 40 && b.s < TARGET_S + 10));

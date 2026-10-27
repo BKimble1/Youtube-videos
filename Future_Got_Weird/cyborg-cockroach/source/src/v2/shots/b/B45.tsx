@@ -1,5 +1,5 @@
 // B4 (255-282, "electrical pulses") and B5 (283-314, "to steer it."): one continuous move over one walk.
-// A high view from just behind the insect (az -90, el 74: it heads screen-up, its LEFT side is screen-left), close on
+// A view from above, a touch behind the insect (az -90, el 84: it heads screen-up, its LEFT side is screen-left), close on
 // the backpack as it walks up the tray beside a foam block. Wiring -> electronics -> antenna: the board's status LED
 // flashes and three short pulses leave the board one after another and run along the LEFT antenna wire, over the
 // shield, to the electrode at the left antenna's base; the camera follows them forward from the board to the head
@@ -47,11 +47,12 @@ export const b45Pose = (t: number): RoachPose => {
 const BLOCK_Y: [number, number, number, number, number, number] = [-260, 5, 0, 36, 37, 260];
 const BLOCK_B: [number, number, number, number, number, number] = [96, 170, 0, 30, -150, 26];
 
-const AZ = -90, EL = 74;
+// el 84: nearly straight down (below about 81 degrees from behind, Roach2D draws the shield under the abdomen)
+const AZ = -90, EL = 84;
 const BOARD: V3 = [2, 24, 0];
 const ELECTRODE_L: V3 = [34, 10.4, -4.5];
-const S_CLOSE = 14.5, S_WIDE = 4.6;
-const C_END: V3 = [46, 0, 40];
+const S_CLOSE = 21, S_WIDE = 6;
+const C_END: V3 = [30, 0, 33];
 /** the body point the camera follows: from the board to the left electrode as the pulses run (in the path frame, so the
  *  gait's bob and roll never shake the camera) */
 const follow = (t: number): {p: V3; u: number} => {

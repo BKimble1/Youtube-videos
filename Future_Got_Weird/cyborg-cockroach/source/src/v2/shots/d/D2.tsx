@@ -106,7 +106,7 @@ export const D2: React.FC<ShotProps> = ({f}) => {
   const v = d2View(f);
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <LabRoomMM id="d2room" v={v} blur={9} tray={[-400, 400, -300, 420]} />
+      <LabRoomMM id="d2room" v={v} blur={9} plate={1.7} tray={[-400, 400, -300, 420]} />
       <D2Scene f={f} t={t} v={v} id="d2" />
     </svg>
   );

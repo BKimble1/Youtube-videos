@@ -1,7 +1,7 @@
-// Group D: the lab room in insect millimetres, drawn through the same orthographic view as the insect, so a push or a
-// pull-back keeps the bench, the wall and the props locked together: the lab wall (Lab2's LabWall2, mapped onto the
-// wall plane), the dark bench top and its front edge over the teal cabinets, the pale experiment tray, a few lab
-// bottles and a beaker at the back of the bench. Depth of field: the wall and the back props can be blurred.
+// Group D: the lab room. The bench is in insect millimetres, drawn through the same orthographic view as the insect, so
+// a push or a pull-back keeps the bench top, its front edge over the teal cabinets, the pale experiment tray and a few
+// vials at the back of the bench locked together; the lab wall (Lab2's LabWall2: shelves of jars, the teal stripe) is a
+// background plate sitting on the bench top's back edge, as in A1. Depth of field: the wall and the vials can be blurred.
 import React from 'react';
 import {V3} from '../../../lib/v3';
 import {INK} from '../../../lib/ink';
@@ -13,15 +13,12 @@ export const ROOM = {zWall: -300, zFront: 450, slab: 32, wallK: 1.25};
 
 const quad = (v: View, pts: V3[]) => polyD(pts.map((p) => P(v, p)));
 
-/** the wall plane: LabWall2's scene px mapped onto the plane z = zWall (scene y 1300 at the bench, wallK mm per px) */
-const WallMM: React.FC<{id: string; v: View}> = ({id, v}) => {
-  const k = ROOM.wallK;
-  const O = P(v, [0, 0, ROOM.zWall]);
-  const px = Pd(v, [1, 0, 0]), py = Pd(v, [0, 1, 0]);
-  const a = k * px[0], b = k * px[1], c = -k * py[0], d = -k * py[1];
-  const e = O[0] - 540 * k * px[0] + 1300 * k * py[0], f = O[1] - 540 * k * px[1] + 1300 * k * py[1];
+/** the wall as a background plate (like A1's): LabWall2 in its own scene px, scaled by `k` about its bench line
+ *  (scene y 1080, just under the teal stripe), which sits on the bench top's back edge; `dx` drifts it sideways */
+const WallPlate: React.FC<{id: string; v: View; k: number; dx: number}> = ({id, v, k, dx}) => {
+  const yJ = P(v, [0, 0, ROOM.zWall])[1];
   return (
-    <g transform={`matrix(${[a, b, c, d, e, f].map((n) => n.toFixed(5)).join(' ')})`}>
+    <g transform={`translate(${f2(540 + dx)} ${f2(yJ)}) scale(${k.toFixed(4)}) translate(-540 -1080)`}>
       <LabWall2 id={id} />
     </g>
   );
@@ -29,13 +26,13 @@ const WallMM: React.FC<{id: string; v: View}> = ({id, v}) => {
 
 /** bottles and a beaker standing at the back of the bench (flat, in mm) */
 const PROPS: {x: number; z: number; r: number; h: number; c: string; cap?: string; neck?: number; fill?: number}[] = [
-  {x: -330, z: -235, r: 34, h: 150, c: '#BFD8E6', cap: '#2FA7A0', neck: 0.3, fill: 0.55},
-  {x: -250, z: -250, r: 26, h: 205, c: '#E98F7A', cap: '#3B444C', neck: 0.25},
-  {x: -60, z: -240, r: 42, h: 110, c: '#E3F1F6', fill: 0.4},
-  {x: 140, z: -245, r: 30, h: 185, c: '#F2C46A', cap: '#3B444C', neck: 0.28},
-  {x: 215, z: -230, r: 24, h: 140, c: '#9ED0B0', cap: '#E9EEF2', neck: 0.3},
-  {x: 420, z: -240, r: 38, h: 120, c: '#BFD8E6', fill: 0.5},
-  {x: 560, z: -250, r: 28, h: 200, c: '#7FC9C2', cap: '#3B444C', neck: 0.25},
+  {x: -230, z: -255, r: 14, h: 62, c: '#BFD8E6', cap: '#2FA7A0', neck: 0.3, fill: 0.55},
+  {x: -196, z: -262, r: 11, h: 78, c: '#E98F7A', cap: '#3B444C', neck: 0.25},
+  {x: -120, z: -250, r: 18, h: 44, c: '#E3F1F6', fill: 0.4},
+  {x: 150, z: -258, r: 12, h: 72, c: '#F2C46A', cap: '#3B444C', neck: 0.28},
+  {x: 180, z: -250, r: 10, h: 56, c: '#9ED0B0', cap: '#E9EEF2', neck: 0.3},
+  {x: 290, z: -255, r: 16, h: 48, c: '#BFD8E6', fill: 0.5},
+  {x: 360, z: -262, r: 12, h: 80, c: '#7FC9C2', cap: '#3B444C', neck: 0.25},
 ];
 
 const Bottle: React.FC<{v: View; b: (typeof PROPS)[number]; ink: number}> = ({v, b, ink}) => {
@@ -63,7 +60,7 @@ const Bottle: React.FC<{v: View; b: (typeof PROPS)[number]; ink: number}> = ({v,
 };
 
 /** wall, bench top, front edge, cabinets, tray and back props. blur: px of depth-of-field on the wall and props. */
-export const LabRoomMM: React.FC<{id: string; v: View; blur?: number; tray?: [number, number, number, number]; props?: boolean}> = ({id, v, blur = 0, tray = [-260, 300, -190, 120], props = true}) => {
+export const LabRoomMM: React.FC<{id: string; v: View; blur?: number; tray?: [number, number, number, number]; props?: boolean; plate?: number; plateDx?: number}> = ({id, v, blur = 0, tray = [-260, 300, -190, 120], props = true, plate = 1.2, plateDx = 0}) => {
   const {zWall: zw, zFront: zf, slab} = ROOM;
   const X0 = -4000, X1 = 4000;
   const ink = Math.max(1.5, Math.min(4, 0.25 * v.s + 1));
@@ -84,7 +81,7 @@ export const LabRoomMM: React.FC<{id: string; v: View; blur?: number; tray?: [nu
         )}
       </defs>
       <g filter={bl ? `url(#${id}-bl)` : undefined}>
-        <WallMM id={`${id}-w`} v={v} />
+        <WallPlate id={`${id}-w`} v={v} k={plate} dx={plateDx} />
         {/* the bench top (dark), its back edge against the wall */}
         <path d={quad(v, [[X0, 0, zw], [X1, 0, zw], [X1, 0, zf], [X0, 0, zf]])} fill={LAB2.benchTop} />
         <path d={quad(v, [[X0, 0, zw], [X1, 0, zw], [X1, 0, zw + 14], [X0, 0, zw + 14]])} fill={shadeC(LAB2.benchTop, 0.3)} />

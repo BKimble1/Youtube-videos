@@ -17,7 +17,7 @@ export const CRK = {
   zR: 120, // the end toward the viewer's left
   h: 120, // height
   /** the hole in the face x = 0, as (z, y) points, floor to floor */
-  hole: [[-60, 0], [-58, 13], [-48, 25], [-36, 31], [-28, 41], [-11, 47], [5, 43], [18, 46], [34, 38], [46, 28], [55, 15], [58, 0]] as [number, number][],
+  hole: [[-48, 0], [-46, 11], [-38, 21], [-29, 26], [-22, 35], [-9, 40], [4, 37], [15, 39], [27, 32], [37, 24], [44, 13], [46, 0]] as [number, number][],
 };
 
 const fp = (v: View, x: number, y: number, z: number): Pt => P(v, [x, y, z] as V3) as Pt;
@@ -41,7 +41,6 @@ export const CrackBlock: React.FC<{id: string; v: View; w?: number; dark?: numbe
   const c = mix(RB.conc, RB.deep, dark);
   const faceJ = jag([face[0], face[1], face[2], face[3]], 5 * v.s * 0.4, 91, 22 * v.s);
   const topJ = jag(top, 4 * v.s * 0.4, 92, 26 * v.s);
-  const inner: Pt[] = [...hole, ...CRK.hole.slice().reverse().map(([z, y]) => fp(v, -40, y * 0.9, z * 0.9))];
   const holeC = hole.reduce((a, p) => [a[0] + p[0] / hole.length, a[1] + p[1] / hole.length], [0, 0]);
   const deep = fp(v, -60, 20, 0);
   const crk = (pts: [number, number, number][]) => line(pts.map(([x, y, z]) => fp(v, x, y, z)));
@@ -61,7 +60,6 @@ export const CrackBlock: React.FC<{id: string; v: View; w?: number; dark?: numbe
       <path d={poly(topJ)} fill={litC(c, 0.3)} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       <path d={`${poly(faceJ)} ${poly(hole)}`} fillRule="evenodd" fill={`url(#${id}-fg)`} stroke={INK} strokeWidth={w} strokeLinejoin="round" />
       <path d={poly(hole)} fill={`url(#${id}-hg)`} />
-      <path d={poly(inner)} fill="#0D0B0B" opacity={0.35} />
       {/* cracks running out of the hole */}
       <path d={crk([[0, 50, -12], [0, 72, -20], [0, 92, -6], [0, 120, -14]])} stroke={shadeC(c, 0.7)} strokeWidth={f2(Math.max(2, 0.5 * v.s))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       <path d={crk([[0, 40, 38], [0, 58, 62], [0, 64, 96]])} stroke={shadeC(c, 0.7)} strokeWidth={f2(Math.max(2, 0.45 * v.s))} fill="none" strokeLinecap="round" strokeLinejoin="round" />

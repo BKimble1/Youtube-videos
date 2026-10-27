@@ -109,8 +109,8 @@ export const C2Scene: React.FC<{f: number; id: string; feed?: number; feedFrame?
           <feGaussianBlur stdDeviation="9" />
         </filter>
       </defs>
-      <Beyond2D id={`${id}-lb`} lipY={lipY} k={1.25 + 0.35 * lu} dx={-40 * lu} blur={9 + 4 * lu} />
-      <TrayPlane v={v} c={trayC} far={farForLip(v, trayC, lipY)} />
+      <Beyond2D id={`${id}-lb`} lipY={lipY} k={1.15 + 0.15 * lu} dx={-40 * lu} blur={9 + 4 * lu} />
+      <TrayPlane v={v} c={trayC} far={farForLip(v, trayC, lipY)} lip={Math.min(6, 40 / v.s)} />
       <Roach2D pose={pose} v={v} o={{id: `${id}r`, tint: OBS_TINT, gear: <Gear2D id={`${id}g`} v={v} f={pose.frame} g={{kind: 'camera'}} />}} />
       <LensGlass id={`${id}lg`} f={f} feed={feed} feedFrame={feedFrame} />
     </svg>
