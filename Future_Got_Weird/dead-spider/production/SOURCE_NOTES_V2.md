@@ -84,3 +84,100 @@ The contact solver still stops each leg at its first touch: on the pad, the bloc
 Runway was not used for V2. The network policy still blocks Runway's output host (`dnznrvs05pmza.cloudfront.net`), so
 generated plates cannot be downloaded into this environment. Every frame is the deterministic vector world. Allowing
 that host in the environment's network settings would make Runway plates usable in a V3.
+
+## Audio
+
+`tools/make_audio_v2.py` makes everything here; nothing is sampled.
+
+- **Bed and effects.** The V1 bed and effect voices, plus two new sounds: a crisp leg "snap" and a glass clink for the
+  dish.
+- **59 effects.** Each one is placed from the picture's own events (`audio/cues_v2.json`, from
+  `tools/export_cues_v2.ts`):
+  - needle contact ticks;
+  - stopper squeaks and air hiss;
+  - leg snaps on the opens: hook, "MOVE", "spread OPEN" and the drop;
+  - eight foot clicks at the measured contact time of each leg on the block, and again on the second spider;
+  - servo sounds for the arm, a tick as each payload leaves its surface, and the clink and bounce in the dish.
+- **Levels.** Integrated loudness −15.0 LUFS, true peak −2.9 dBTP.
+- **Ending.** The bed runs to the last frame. There is no fade tail and no dead air after the action.
+
+## Captions
+
+The channel style, applied phrase by phrase. Each caption has one fixed height (`v2/Captions2.tsx`), chosen with
+`tools/cap_check_v2.ts`. That tool projects the needle entry, hub, thumb rest, body, abdomen, all leg tips, the block
+and the second spider through every frame's camera.
+
+- **Positions.** Most captions sit at y 1500–1540. Two sit near the top, at y 340: "You see…" (the leg reaches low)
+  and "and pumped air inside." One sits at y 640: "But when they released the pressure…", which keeps clear of the
+  stopper and hub.
+- **Remaining overlaps.** During the camera's ride down the syringe, the thumb rest passes under the top caption for 1
+  frame (504) and the hub for 2 frames (538–539).
+
+## QA (on the exported file)
+
+`qa/v2/`:
+- `review_qa.json`: stream facts, black frames, loudness, ASR, frame-change jumps;
+- `review_asr.json`;
+- `caption_check.json`;
+- contact pages, built straight from the export with `tools/frame_pages.sh`.
+
+**Stream facts.** H.264 High, 1080×1920, 30 fps, 906 frames, 30.200 s, yuv420p bt709; AAC 48 kHz stereo at about
+317 kb/s.
+
+**Black frames.** None.
+
+**Transcript of the export.** Zipformer and Whisper each have WER 0.011. The only difference from the script is
+"they'd" heard as "they".
+
+**First 3 s, every frame** (`first3s_0/32/64.png`):
+- frame 0: the curled spider, big and central, with the needle above the prosoma;
+- the needle touches it at frame 6 and is in by frame 9;
+- the legs open between frames 15 and 20, with a visible overshoot that settles by frame 30;
+- the hand turns the hanging spider face-on between 1.0 and 2.45 s;
+- the air is let out at frame 75 and the legs sag over frames 80–85;
+- the second push opens them again on "MOVE".
+
+**Every syringe, limb and grab window, frame by frame:**
+
+| Window | Page | What was checked |
+| --- | --- | --- |
+| Insertion | `insert_440.png` | The needle only ever enters the top middle of the prosoma, never a leg. |
+| Pump and open | `pump_open_495.png` | Stopper, air slug, then the legs. |
+| Release and clamp | `clamp_640.png` | All eight legs touch the block between 22.06 and 22.11 s. The block leaves the bench only after that, at 23.06 s. |
+| Drop into the dish | `drop_740.png` | The block falls only after the legs open. |
+| Final grab | `grab_840.png` | All eight legs touch the second spider between 28.37 and 28.41 s. It leaves its pad at 28.92 s, after the grip. |
+
+**Overview.** `every10th.png` shows every 10th frame of the whole film.
+
+**Frame change.** Every jump over the threshold falls on a planned cut, except frames 501–510. Those frames are the
+continuous camera ride down the syringe: a deliberate move, mean absolute difference 14–20. No frame is blank and none
+is held still for long.
+
+**Loop.** The last frame (the pair in mid-air under the needle, high three-quarter view, white pad) echoes frame 0
+(curled spider under the needle, high three-quarter view, white pad). It is not a pixel match: the frame difference is
+about 79.
+
+**Not done.** Nobody has watched or listened to the film in real time. This environment has no display or speakers.
+
+## Remaining imperfections (for V3)
+
+1. **The ride down the syringe** (16.6–17.6 s) is the fastest camera move in the film. It is continuous and
+   purposeful, but on a phone it may read as a quick tilt. A slightly longer narration gap there, or a split-screen
+   alternative, would soften it.
+2. **Hands.** The gloved hands are at true scale next to a 1 mL syringe, so the fingers are large and chunky in the
+   plunger close-ups. Only an index-finger press is animated. The release shows the plunger pushed back up by the air:
+   there is no thumb pull.
+3. **The hook has no hand in frame.** At that macro scale a real hand would fill the screen, so the push is shown by
+   the air slug and the barrel's air.
+4. **Dead pose.** The rig's dead pose folds the legs up around the sides of the front body section, inherited from V1.
+   Real dead spiders tuck the leg tips tighter beneath the body.
+5. **Beat A from overhead.** The open legs read as fairly straight radial sticks from directly above.
+6. **Overlaps the solver does not check.** It stops legs on objects but does not test leg against leg, either within
+   one spider or between the two spiders. No overlap was visible on the contact pages, but this is not guaranteed by
+   construction.
+7. **Narration.** "They'd turned" is spoken as "they turned" in both takes. Another generation could be requested if
+   it matters.
+8. **Runway** is still blocked by the network policy, so every background is the vector lab and ground. Allow
+   `dnznrvs05pmza.cloudfront.net` to try Runway plates.
+9. **Loop seam.** It is a compositional echo, not a seamless loop: the backgrounds differ (the claw stand and dark
+   bench against the hook's pad).
