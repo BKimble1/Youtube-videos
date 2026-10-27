@@ -20,7 +20,7 @@ export const cuesH = (): Cue[] => {
   // A1: the last step into the stance, the coil, the release (accent 1), the spring, the needle seating
   for (const {t, g} of steps(touchdownsP((ff) => a1Pose(ff / FPS), a1.from, a1.to))) ev.push({kind: 'tick', t, gain: -31 + g, name: 'A1 foot', args: CLOSE_STEP});
   ev.push({kind: 'sizzle', t: 0, gain: -33, name: 'A0 coil standby glow', args: {d: A1_PRESS}});
-  ev.push({kind: 'button', t: A1_PRESS, gain: -20, hero: true, name: 'AR FIRE button bottoms out (accent 1)', args: {f: 1500}});
+  ev.push({kind: 'button', t: A1_PRESS, gain: -27, name: 'off-screen FIRE press (the operator; seen in A2)', args: {f: 1500}});
   ev.push({kind: 'sizzle', t: A1_PRESS + 0.01, gain: -28, name: 'A1 coil driven hot', args: {d: A1_REL - A1_PRESS}});
   ev.push({kind: 'click', t: A1_REL, gain: -15, hero: true, name: 'A1 TRIGGER: latch line parts'});
   ev.push({kind: 'spring', t: A1_REL + 0.004, gain: -19, hero: true, name: 'A1 spring drives the injector'});

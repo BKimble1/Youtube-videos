@@ -87,15 +87,15 @@ export const a1InjFrame = () => a1Pose(A1_REL).frame;
 export const A1_AZ = 24;
 export type ViewParams = {az: number; el: number; s: number; at: [number, number, number]; sx: number; sy: number};
 export const a1ViewParams = (t: number, dx = 0): ViewParams => {
-  // V4: frame 0 is TIGHT on the launcher: the tube mouth, the loaded needle, the glowing coil and the clear target's
-  // face; the launch carries the camera a little toward the target; after the impact it tracks back along the
-  // launcher, rising, to reveal the living insect wearing it (legs, antennae) beside the target
-  const go = sr(t, A1_REL, A1_IMPACT + 0.1);
-  const back = sr(t, 0.72, 1.3);
-  const s = 19 + 2 * go - 11.4 * back;
-  const atX = 29 + 7 * go - 34 * back + dx;
-  const atY = 24.5 + 0.8 * go - 12.3 * back;
-  return {az: A1_AZ - 4 * back, el: 15 + 18 * back, s, at: [atX, atY, 0], sx: 540 + 60 * back, sy: 930 + 70 * back};
+  // V5: frame 0 shows the whole living cockroach (head, antennae, six legs, the backpack and its spring-loaded
+  // injector) and the clear target ahead; ONE move follows the mechanism: as the line parts the camera travels with the
+  // injector along the needle's line toward the target, slowing to settle close on the needle in the silicone with
+  // the insect's head and launcher still in frame (the recoil reads on its planted legs)
+  const go = sr(t, A1_REL - 0.12, A1_IMPACT + 0.45);
+  const s = 10.6 + 6.2 * go;
+  const atX = 12 + 22 * go + dx;
+  const atY = 16 + 7 * go;
+  return {az: A1_AZ + 4 * go, el: 26 - 8 * go, s, at: [atX, atY, 0], sx: 545 - 45 * go, sy: 1060 - 60 * go};
 };
 export const viewOf = (q: ViewParams): View => viewAt(q.az, q.el, q.s, q.at, q.sx, q.sy);
 export const a1View = (t: number, dx = 0): View => viewOf(a1ViewParams(t, dx));
