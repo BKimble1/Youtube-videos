@@ -15,6 +15,7 @@ import {LabWall2, Bench2, Surface2D, Target2D, LAB2} from '../../sets/Lab2';
 import {Layer} from '../../dc/camera';
 import {word} from '../../../timeline';
 import {ShotProps} from '../index2';
+import {constrainAntenna} from '../d/trial';
 
 /** the firing stance: body origin at world x = 0 heading +x, the target face 40 mm ahead */
 export const A1_FACE = 40;
@@ -28,13 +29,15 @@ export const a1Walk = (t: number) => {
   return s;
 };
 const PATH = straightPath([-S_STOP, 0, 0], 0);
-export const a1Pose = (t: number): RoachPose => {
+/** `lab`: the silicone target stands ahead (the antennae flex along it instead of passing in); F5 has none */
+export const a1Pose = (t: number, lab = true): RoachPose => {
   const d = deployAt(t, A1_FIRE, A1_TRAVEL);
-  return poseRoach({
+  const p = poseRoach({
     path: PATH, s: a1Walk(t), t, search: 0.7,
     offset: [-1.4 * d.recoil, -0.3 * d.recoil, 0],
     antL: {yaw: 1.25, pitch: 0.85, curl: 0.7}, antR: {yaw: 1.25, pitch: 0.85, curl: 0.7},
   });
+  return lab ? {...p, antL: constrainAntenna(p.antL), antR: constrainAntenna(p.antR)} : p;
 };
 /** the view: three-quarter from the insect's left front, pushing in slowly toward the tube mouth / target */
 export const A1_AZ = 12, A1_EL = 16;

@@ -77,11 +77,11 @@ export const F5Hand: React.FC<{id: string; t: number; tip: {x: number; y: number
 export const F5Scene: React.FC<{t: number; id: string}> = ({t, id}) => {
   const tau = t - FRAMES2 / 30; // loop time: A1's clock
   const v = a1View(tau);
-  const pose = a1Pose(tau);
+  const pose = a1Pose(tau, false);
   const d = deployAt(tau, A1_FIRE, A1_TRAVEL);
   // fingertips in the near foreground, ahead of and below the insect's head where it stops at the loop point (fixed in
   // the world: placed from the stance pose, on A1's frame-0 view)
-  const head0 = P(a1View(0), toW(a1Pose(0).frame, [36, 4, 0]));
+  const head0 = P(a1View(0), toW(a1Pose(0, false).frame, [36, 4, 0]));
   // (the relaxed fingers curl, so the drawn tips land well short of the hand's straight length: aim it further in)
   const tip = {0: head0[0] - 120, 1: head0[1] + 120};
   return (

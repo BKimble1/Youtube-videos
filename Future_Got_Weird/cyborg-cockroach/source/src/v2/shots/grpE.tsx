@@ -43,11 +43,11 @@ export const cuesE = (): Cue[] => {
   ev.push({kind: 'grit', t: (f1.from + F1_SCRAPE) / FPS, gain: -36, name: 'F1 scrape at the crack (her eyes dart to it)', args: {d: 0.18, rate: 40}});
   // F2: the emergence: grit from the crack as the head pushes out, the first steps out (close)
   ev.push({kind: 'grit', t: f2.from / FPS + F2_GRIT.t0, gain: -38, name: 'F2 grit from the crack as it pushes out', args: {d: F2_GRIT.dur, rate: 16}});
-  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f2.from, f2.to))) ev.push({kind: 'tick', t, gain: -33 + g, name: 'F2 foot (close, out of the crack)', args: {body: 1.0, bright: 0.5}});
+  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f2.from, f2.to))) ev.push({kind: 'tick', t, gain: -35 + g, name: 'F2 foot (close, out of the crack)', args: {body: 1.0, bright: 0.5}});
   // F3: she startles (the rubble shifts under her); its feet keep coming
   ev.push({kind: 'creak', t: (f3.from + F3_RECOIL.l0) / FPS, gain: -40, name: 'F3 rubble shifts under her startle'});
-  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f3.from, f3.to))) ev.push({kind: 'tick', t, gain: -37 + g, name: 'F3 foot'});
+  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f3.from, f3.to))) ev.push({kind: 'tick', t, gain: -39 + g, name: 'F3 foot'});
   // F4: it comes on toward her hand
-  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f4.from, f4.to))) ev.push({kind: 'tick', t, gain: -35 + g, name: 'F4 foot (coming on)'});
+  for (const {t, g} of steps(touchdownsP((ff) => emergePose(ff / FPS), f4.from, f4.to))) ev.push({kind: 'tick', t, gain: -37 + g, name: 'F4 foot (coming on)'});
   return ev;
 };
