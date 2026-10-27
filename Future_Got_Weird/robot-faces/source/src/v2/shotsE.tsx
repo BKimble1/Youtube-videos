@@ -53,7 +53,7 @@ export const V2Reveal: React.FC<{f: number}> = ({f}) => {
   const cam = camPath(f, [[V1_END, {x: cx + 120, y: cy - 10, z: 2.05}], [V1_END + 0.9, {x: cx + 40, y: cy - 30, z: 2.35}], [V2_END, {x: cx + 160, y: cy - 120, z: 1.45}]], sm3);
   const xr = pr(f, V1_END + 0.12, V1_END + 0.55) * (1 - pr(f, V2_END - 0.55, V2_END - 0.1));
   const ck = pr(f, V1_END + 0.3, V1_END + 0.75, e3) * (1 - pr(f, V2_END - 0.6, V2_END - 0.15));
-  return <RobotCU id="v2" cam={cam} st={st} x={X} y={Y} s={S} veil={0.35} bgDx={-200} xray={0.5 * xr} xrayDark={0.14} xrayHot={['corner', 'cheek']} cheek={{k: ck, side: -1, r: 1.25}} />;
+  return <RobotCU id="v2" cam={cam} st={st} x={X} y={Y} s={S} veil={0.35} bgDx={-200} xray={0.5 * xr} xrayDark={0.14} xrayHot={['corner', 'cheek']} cheek={{k: ck, side: -1, r: 1.1, u: 54}} />;
 };
 // 5.62 - 7.61 "at the same time as the person in front of it.": face to face; his smile, a small surprise as its
 // smile lands with his

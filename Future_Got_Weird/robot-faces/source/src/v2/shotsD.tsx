@@ -538,7 +538,6 @@ export const H4Lips: React.FC<{f: number}> = ({f}) => {
   return (
     <g>
       <RobotCU id="h4" cam={glide(f, T('Its mouth follows'), T('and its expression'), [{x: 960, y: 420, z: 1.1}, {x: 960, y: 700, z: 1.1}])} st={st} x={960} y={300} s={6.2} veil={0.45} bg="home" bgDx={-200} bgDy={60} />
-      <Wave x={1365} y={990} w={450} h={36} t0={t - 2} t1={t} fn={voiceTr} color="#3E8F88" />
     </g>
   );
 };
