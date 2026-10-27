@@ -12,7 +12,7 @@ import {viewAt, View, P} from '../../roach/ortho';
 import {Layer, Cam} from '../../dc/camera';
 import {easeOut, sr, clamp} from '../../../lib/ease';
 import {Survivor, survivorLayout} from '../../../crew/person';
-import {RB, Pt, Slab, Rebar, Pebbles, Shaft, Motes, Grit, Glow2, VGrad, jag, poly, line, f2} from './art';
+import {RB, Pt, Slab, Rebar, Pebbles, Shaft, Motes, Grit, Glow2, VGrad, Pipe, jag, poly, line, f2} from './art';
 import {INK} from '../../../lib/ink';
 import {mix} from '../../../lib/color';
 import * as GD from '../grpD';
@@ -102,6 +102,7 @@ const Pocket: React.FC<{t: number}> = ({t}) => {
       <path d={poly([[-300, under(-300) - 20], [1400, under(1400) - 20], [1400, 1300], [-300, 1300]])} fill="#2B2A2E" />
       <path d={poly(floor)} fill="#6E6762" />
       <Glow2 id="e1fp" cx={L.head.x + 120} cy={L.anchor.y + 6} rx={360} ry={80} color={RB.day} a={0.42} />
+      <Pipe a={[1400, 905]} b={[1040, 960]} r={13} dark={0.35} />
       <Pebbles id="e1pb0" a={[L.nearTip.x + 60, L.anchor.y + 6]} b={[1200, L.anchor.y - 30]} n={8} size={12} seed={5} dark={0.2} />
       <Survivor id="e1sv" {...o} between={block} cutX={cut.x} />
       {/* the fallen ceiling slab: a thick broken band, its underside dark, its front face lit along the lower edge */}
@@ -117,6 +118,7 @@ const Mid: React.FC = () => (
   <g>
     <Slab id="e1mB" face={jag([[800, 1210], [1400, 1110], [1400, 1330], [820, 1330]], 8, 53)} top={jag([[800, 1210], [1400, 1110], [1400, 1150], [830, 1245]], 5, 54)} tone={RB.conc} w={3.5} dark={0.3} specks={10} />
     <Rebar pts={[[1050, 1190], [1020, 1090], [1040, 1010]]} w={7} dark={0.3} />
+    <Pipe a={[-300, 1300]} b={[120, 1262]} r={12} dark={0.45} flangeAt={0.6} />
     <Slab id="e1mA" face={jag([[-300, 1210], [170, 1190], [260, 1260], [-300, 1340]], 8, 51)} top={jag([[-300, 1210], [170, 1190], [200, 1215], [-300, 1240]], 4, 52)} tone={RB.concDark} w={3.5} dark={0.3} specks={8} />
   </g>
 );
@@ -129,7 +131,6 @@ const Ledge: React.FC = () => {
   const front: Pt[] = [...jag([q(-300, 62), q(320, 62)], 5, 62, 46, false), q(318, 62, -30), q(290, 62, -70), q(300, 62, -150), q(-300, 62, -230)];
   return (
     <g>
-      <path d={poly([q(-300, -80, -260), q(400, -84, -260), q(400, -84), q(-300, -80)])} fill={RB.deep} opacity={0.75} />
       <Slab id="e1lg" face={front} top={top} tone={RB.conc} w={3.5} dark={0.42} topTone={mix(RB.concLit, RB.day, 0.16)} cracks={[[q(40, 62), q(52, 62, -50), q(30, 62, -120)], [q(200, 62), q(212, 62, -80)]]} specks={24} rim={[q(-300, 62), q(320, 62)]} />
       <path d={line([q(-40, -78), q(-10, -40), q(-30, -5), q(10, 30)])} stroke={RB.concDark} strokeWidth={2.5} fill="none" strokeLinecap="round" opacity={0.8} />
       <Pebbles id="e1lp" a={q(-200, -70)} b={q(240, -74)} n={6} size={8} seed={63} tone={RB.concLit} />

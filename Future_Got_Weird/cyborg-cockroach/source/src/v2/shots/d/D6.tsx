@@ -99,6 +99,11 @@ export const D6: React.FC<ShotProps> = ({f}) => {
       <rect x="-200" y="-200" width="1500" height="2400" fill={`url(#${id}-ig)`} mask={`url(#${id}-im)`} />
       {/* the near block (right) */}
       <Box2D id={`${id}bn`} v={v} b={[0, L, 0, H, G, G + BW]} color="#6A8996" />
+      {/* crisp highlights on the blocks' front vertical edges */}
+      {([[0, G + BW], [0, -G - BW]] as [number, number][]).map(([x, z], i) => {
+        const a = P(v, [x, 2, z]), b = P(v, [x, H - 2, z]);
+        return <path key={i} d={`M${f2(a[0] + 4 * (i ? 1 : -1))},${f2(a[1])} L${f2(b[0] + 4 * (i ? 1 : -1))},${f2(b[1])}`} stroke="#FFFFFF" strokeWidth={f2(Math.max(2, 0.5 * v.s))} opacity={0.3} strokeLinecap="round" />;
+      })}
     </svg>
   );
 };

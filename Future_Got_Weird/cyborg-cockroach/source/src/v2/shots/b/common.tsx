@@ -296,9 +296,9 @@ export const PulseTrails: React.FC<{id: string; v: View; wire: V3[]; fr: number[
 export type BoxB = [number, number, number, number, number, number];
 /** the foam blocks on the B1-B3 tray (world mm; the walk runs along +x from the origin, these stand on the far side) */
 export const LAB_BLOCKS: {b: BoxB; c: string}[] = [
-  {b: [10, 52, 0, 36, -150, -112], c: LAB2.foamB},
-  {b: [96, 150, 0, 26, -138, -104], c: LAB2.foamY},
-  {b: [-80, -40, 0, 30, -128, -96], c: LAB2.foamR},
+  {b: [10, 52, 0, 36, -195, -157], c: LAB2.foamB},
+  {b: [96, 150, 0, 26, -183, -149], c: LAB2.foamY},
+  {b: [-80, -40, 0, 30, -173, -141], c: LAB2.foamR},
 ];
 /** a foam block: Box2D with its soft ground shadow and a scatter of pores on the top face (deterministic) */
 export const FoamBox: React.FC<{id: string; v: View; b: BoxB; color: string; shadow?: boolean}> = ({id, v, b, color, shadow = true}) => {

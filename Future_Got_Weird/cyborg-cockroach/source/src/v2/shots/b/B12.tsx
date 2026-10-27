@@ -170,9 +170,6 @@ export const B1: React.FC<ShotProps> = ({f}) => {
     <svg width={1080} height={1920} viewBox="0 0 1080 1920">
       <Backdrop id={`b1f${f}`} v={v} far={benchFar} />
       <Tray2D v={v} x0={-200} x1={240} z0={-260} z1={170} grid={20} />
-      {LAB_BLOCKS.map((k, i) => (
-        <FoamBox key={i} id={`b1f${f}k${i}`} v={v} b={k.b} color={k.c} />
-      ))}
       <Scene id={`b1f${f}`} t={t} v={v} grip={grip} refF={refF} hm={{release: 0, up: 0, back: 0}} />
     </svg>
   );
@@ -196,11 +193,19 @@ const Backdrop: React.FC<{id: string; v: View; far: number}> = ({id, far}) => (
 
 // ------------------------------------------------------------------ B2
 const B2_AZ = 0, B2_EL = 90, B2_S = 8.4;
-const B2_AT: V3 = [8, 0, 0];
+/** where the pack's centre is on screen in a view at time t (for matching the cuts) */
+export const packScreenAt = (v: View, t: number) => P(v, toW(packFrame(bPose(t).frame, t), G_REF));
+let b2Anchor: [number, number] | null = null;
 export const b2View = (t: number): View => {
-  // the camera drifts with the insect as it sets off (it keeps a little of its travel)
+  // the cut from B1 keeps the pack where it was on screen; then the camera drifts with the insect as it sets off (it
+  // keeps a little of its travel)
+  if (!b2Anchor) {
+    const p = packScreenAt(b1View(185 / FPS), 185 / FPS);
+    b2Anchor = [p[0], p[1]];
+  }
   const dx = bWalkS(t) - S_REST;
-  return viewAt(B2_AZ, B2_EL, B2_S, [B2_AT[0] + 0.6 * dx, 0, 0], 500, 1000);
+  const w0 = toW(bPose(186 / FPS).frame, G_REF);
+  return viewAt(B2_AZ, B2_EL, B2_S, [w0[0] + 0.85 * dx, w0[1], w0[2]], b2Anchor[0], b2Anchor[1]);
 };
 export const B2: React.FC<ShotProps> = ({f}) => {
   const t = f / FPS;

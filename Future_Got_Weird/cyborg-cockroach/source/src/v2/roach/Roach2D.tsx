@@ -274,8 +274,8 @@ export const Roach2D: React.FC<{pose: RoachPose; v: View; o: Roach2DOpts}> = ({p
             <Cel id={`${id}-pr`} pts={pro} color={o.tint ? litC(o.tint, 0.06) : R2.pronotum} hiPos={[0.38, 0.2, 0.24, 0.07, -8]} hi={0.55} />
           </Inked>
         );
-        // the shield overlaps the abdomen unless the viewer is behind the insect
-        return facing(v, f.x) < -0.15 ? [proEl, abdEl] : [abdEl, proEl];
+        // the shield overlaps the abdomen unless the viewer is low behind the insect (from high above it always does)
+        return facing(v, f.x) < -0.15 && facing(v, f.y) < 0.7 ? [proEl, abdEl] : [abdEl, proEl];
       })()}
       {o.gear}
       {cerci.filter((c) => c.near).map(cercus)}

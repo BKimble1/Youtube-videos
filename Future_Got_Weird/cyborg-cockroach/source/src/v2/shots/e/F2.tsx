@@ -49,7 +49,7 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
       {/* the antennae out in the light (the parts in front of the hole's face), over the hole's shadow */}
       {[pose.antL, pose.antR].map((a, i) => {
         const out = a.filter((p) => p[0] > -1);
-        return out.length > 1 ? <Antenna2D key={i} v={v} pts={out} ink={inkFor(v) * 0.75} /> : null;
+        return out.length > 1 ? <Antenna2D key={i} v={v} pts={out} ink={inkFor(v) * 0.75} color="#B9825A" /> : null;
       })}
       <Pebbles id="f2pb" a={q(60, 0, -230)} b={q(110, 0, -150)} n={4} size={26} seed={21} tone={RB.concLit} w={4} dark={0.25} />
       <Pebbles id="f2pc" a={q(70, 0, 110)} b={q(120, 0, 190)} n={4} size={28} seed={22} tone={RB.concLit} w={4} dark={0.25} />
@@ -57,7 +57,21 @@ export const F2: React.FC<ShotProps> = ({f, lf}) => {
       {/* near rubble framing the bottom corners */}
       <Slab id="f2f1" face={jag([[-100, 1560], [260, 1640], [380, 1800], [360, 2020], [-100, 2020]], 14, 31)} top={jag([[-100, 1560], [260, 1640], [380, 1800], [-100, 1700]], 8, 32)} tone="#5D5F66" w={6} dark={0.6} specks={10} />
       <Slab id="f2f2" face={jag([[820, 1700], [1180, 1600], [1180, 2020], [760, 2020]], 14, 33)} top={jag([[820, 1700], [1180, 1600], [1180, 1680], [800, 1780]], 8, 34)} tone="#6A6B70" w={6} dark={0.62} specks={10} />
+      <TopShade />
       <Vignette id="f2vg" />
     </svg>
   );
 };
+
+/** light falls off toward the top of the frame (the block's upper face is in the slab's shadow) */
+const TopShade: React.FC = () => (
+  <g>
+    <defs>
+      <linearGradient id="f2ts" x1={0} y1={0} x2={0} y2={1}>
+        <stop offset="0" stopColor="#0A0909" stopOpacity={0.62} />
+        <stop offset="0.42" stopColor="#0A0909" stopOpacity={0} />
+      </linearGradient>
+    </defs>
+    <rect x={0} y={0} width={1080} height={1920} fill="url(#f2ts)" />
+  </g>
+);

@@ -19,7 +19,7 @@ export const D_TRAVEL = D_FACE + 5 - (INJ.barrelLen + 1.2 + INJ.needleLen) - INJ
 export const D_FIRE = word('fire', 1).start + 0.05;
 /** the activator seal opens on "they've"; the plunger runs, the dose blooms (time-compressed) */
 export const D_SEAL = word("they've", 0).start;
-export const D_PLUNGE0 = D_SEAL + 0.12;
+export const D_PLUNGE0 = D_SEAL + 0.05;
 export const D_PLUNGE1 = D_SEAL + 1.0;
 /** the stop: the walk ends with all six feet planted */
 export const D_STOP_T = 16.0;
@@ -41,8 +41,11 @@ export const D_YAW_T0 = 16.05, D_YAW_T1 = 16.3;
 const bump = (t: number, a: number, b: number) => (t <= a || t >= b ? 0 : Math.sin((Math.PI * (t - a)) / (b - a)));
 
 export const dDeploy = (t: number) => deployAt(t, D_FIRE, D_TRAVEL);
-/** plunger travel 0..1 (gas behind it) */
-export const dPlunger = (t: number) => sr(t, D_PLUNGE0, D_PLUNGE1);
+/** plunger travel 0..1: the gas pushes hardest as it forms, then the plunger slows into the barrel's front */
+export const dPlunger = (t: number) => {
+  const u = clamp((t - D_PLUNGE0) / (D_PLUNGE1 - D_PLUNGE0));
+  return u <= 0 ? 0 : 1 - Math.pow(1 - u, 1.9) * (1 - 0.35 * Math.exp(-u * 30));
+};
 
 // ------------------------------------------------------------------ antennae against the silicone
 /** the silicone block (and a little clearance for the antenna's thickness) */

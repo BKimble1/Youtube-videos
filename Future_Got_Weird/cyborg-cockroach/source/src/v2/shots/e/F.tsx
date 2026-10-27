@@ -69,7 +69,7 @@ export const f1Cam = (lf: number) => {
 };
 export const f3Cam = (lf: number) => {
   const u = sr(lf, 0, F3R.to - F3R.from);
-  return camAt(EYE_AT.x, EYE_AT.y, 560, 560, 1.18 + 0.06 * u);
+  return camAt(EYE_AT.x, EYE_AT.y, 560, 520, 1.18 + 0.06 * u);
 };
 export const f4Cam = (lf: number) => {
   const u = sr(lf, 0, F4R.to - F4R.from);
@@ -116,7 +116,9 @@ const Near: React.FC<{id: string; pose: RoachPose | null}> = ({id, pose}) => {
   const v = fgView;
   return (
     <g transform={`rotate(${FG_ROLL} ${HOLE_AT[0]} ${HOLE_AT[1]})`}>
-      <CrackFloor id={`${id}fl`} v={v} x0={-60} x1={520} z0={-120} z1={110} drop={420} w={4} dark={0.25} />
+      <CrackFloor id={`${id}fl`} v={v} x0={-60} x1={520} z0={-120} z1={110} drop={420} w={4} dark={0.36} />
+      <Pebbles id={`${id}fe`} a={P(v, [60, 0, -122]) as Pt} b={P(v, [520, 0, -126]) as Pt} n={11} size={13} seed={33} tone={RB.concDark} w={3} dark={0.1} />
+      <path d={`M${P(v, [250, 0, -120]).join(',')} L${P(v, [262, 0, -60]).join(',')} L${P(v, [240, 0, -20]).join(',')}`} stroke="#4E4844" strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       <Glow2 id={`${id}pl`} cx={P(v, [120, 0, 0])[0]} cy={P(v, [120, 0, 0])[1]} rx={420} ry={110} color={RB.day} a={0.3} />
       <Pebbles id={`${id}np`} a={P(v, [180, 0, 80]) as Pt} b={P(v, [460, 0, 95]) as Pt} n={6} size={12} seed={31} tone={RB.concLit} w={3} />
       <CrackBlock id={`${id}cb`} v={v} w={4} dark={0.3} />
@@ -148,7 +150,7 @@ const Frame: React.FC<{cam: Cam; T: number; a: HerActing; id: string; pose: Roac
 
 // ---------------------------------------------------------------- F1
 /** the grit trickle that catches her ear (shot seconds, world px), then the scrape at her front left (the crack) */
-export const F1_GRIT = {x: 830, t0: 0.3, dur: 0.75};
+export const F1_GRIT = {x: 800, t0: 0.3, dur: 0.75};
 export const F1_SCRAPE = 30; // shot frame: a scrape from the crack; her eyes dart down-left to it
 export const F1: React.FC<ShotProps> = ({f, lf}) => {
   const T = f / 30, t = lf / 30;
@@ -169,7 +171,7 @@ export const F1: React.FC<ShotProps> = ({f, lf}) => {
   })();
   const blink = Math.max(0, 1 - Math.abs(lf - 5) / 2.5);
   const a: HerActing = {recog: 0.35, recoil: 0.15 * sr(lf, F1_SCRAPE, F1_SCRAPE + 4), handOpen: 0.3 - 0.3 * sr(lf, F1_SCRAPE, F1_SCRAPE + 6), blink, gaze: look, lid: keys(lf, [[0, 0.5], [11, 0.5], [16, 0.15], [F1_SCRAPE, 0.15], [F1_SCRAPE + 3, 0]]), turn: keys(lf, [[F1_SCRAPE, 0], [F1_SCRAPE + 6, 6]]), nod: keys(lf, [[10, 2], [16, -2], [27, 3]])};
-  return <Frame cam={cam} T={T} a={a} id="f1" pose={null} vig={0.55} grit={<Grit t={t} x={F1_GRIT.x} y0={gy0} y1={1150} t0={F1_GRIT.t0} dur={F1_GRIT.dur} n={20} g={1900} r={4} spread={14} seed={4} />} />;
+  return <Frame cam={cam} T={T} a={a} id="f1" pose={null} vig={0.55} grit={<Grit t={t} x={F1_GRIT.x} y0={gy0} y1={1150} t0={F1_GRIT.t0} dur={F1_GRIT.dur} n={24} g={1900} r={5.5} spread={18} seed={4} />} />;
 };
 
 // ---------------------------------------------------------------- F3

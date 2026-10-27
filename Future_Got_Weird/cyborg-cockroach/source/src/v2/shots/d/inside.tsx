@@ -32,7 +32,7 @@ export const InsideNeedle: React.FC<{id: string; v: View; inj: Frame; injRear: n
   const x0 = face - inj.o[0] - injRear;
   const a = P(v, toW(inj, [injRear + x0, ty, 0])), b = P(v, toW(inj, [injRear + NEEDLE_END, ty, 0]));
   const tipC = P(v, toW(inj, [injRear + NEEDLE_END + 0.5, ty, 0]));
-  const r = 3.1 * Math.cbrt(Math.max(0, bloom)) * v.s;
+  const r = 2.5 * Math.cbrt(Math.max(0, bloom)) * v.s;
   return (
     <g opacity={seen}>
       <defs>

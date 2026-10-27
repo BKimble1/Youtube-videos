@@ -26,6 +26,6 @@ const PATH = straightPath([0, 0, 0], 0);
 /** the pose at film second T; search is the antennae's probing (high as it comes out, settling as it walks on) */
 export const emergePose = (T: number): RoachPose => {
   const srch = keys(T, [[T2, 1.15], [T3, 0.9], [T4 + 0.3, 0.6]]);
-  const pitch = keys(T, [[T2, 0.55], [T3, 0.4], [T4, 0.22]]);
-  return poseRoach({path: PATH, s: emergeX(T), t: T, search: srch, seed: 5, antL: {yaw: keys(T, [[T2, 0.8], [T3, 0.62], [T4, 0.66]]), pitch}, antR: {yaw: keys(T, [[T2, 0.74], [T3, 0.58], [T4, 0.62]]), pitch: pitch + 0.04}});
+  const pitch = keys(T, [[T2, 0.78], [T3, 0.45], [T4, 0.22]]);
+  return poseRoach({path: PATH, s: emergeX(T), t: T, search: srch, seed: 5, antL: {yaw: keys(T, [[T2, 0.95], [T3, 0.66], [T4, 0.66]]), pitch, curl: keys(T, [[T2, 0.5], [T3, 0.8]])}, antR: {yaw: keys(T, [[T2, 0.9], [T3, 0.6], [T4, 0.62]]), pitch: pitch + 0.04, curl: keys(T, [[T2, 0.45], [T3, 0.8]])}});
 };

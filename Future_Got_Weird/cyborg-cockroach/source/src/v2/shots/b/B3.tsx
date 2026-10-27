@@ -5,7 +5,7 @@
 // as B2: one continuous s), feet planted; antennae searching ahead; the injector pack seated and wired.
 import React from 'react';
 import {V3} from '../../../lib/v3';
-import {sr} from '../../../lib/ease';
+import {sr, lerp} from '../../../lib/ease';
 import {Roach2D} from '../../roach/Roach2D';
 import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View, P, f2} from '../../roach/ortho';
@@ -13,15 +13,23 @@ import {LabWall2, Bench2, Box2D, LAB2} from '../../sets/Lab2';
 import {Layer} from '../../dc/camera';
 import {ShotProps} from '../index2';
 import {Tray2D, FoamBox, LAB_BLOCKS, FPS} from './common';
-import {bPose, bWalkS} from './B12';
+import {bPose, bWalkS, b2View, packScreenAt} from './B12';
 
 const B3_AZ = 0, B3_EL = 10, B3_S = 9.2;
 /** the body's x on the tray (the walk runs along +x from the origin) */
 const bodyX = (t: number) => bPose(t).bodyFrame0.o[0];
+let b3Off: [number, number] | null = null;
 export const b3View = (t: number): View => {
-  // tracking: the camera rides with the insect; a slight ease ahead (it settles a few mm further on through the shot)
+  // the cut from B2 keeps the pack where it was on screen; tracking: the camera rides with the insect, with a slight
+  // ease ahead (it settles a few mm further on through the shot)
+  if (!b3Off) {
+    const a = packScreenAt(b2View(221 / FPS), 221 / FPS);
+    const b = packScreenAt(viewAt(B3_AZ, B3_EL, B3_S, [bodyX(222 / FPS) + 6, 12, 0], 500, 1060), 222 / FPS);
+    b3Off = [a[0] - b[0], Math.max(-120, Math.min(120, a[1] - b[1]))];
+  }
   const u = sr(t, 222 / FPS, 254 / FPS);
-  return viewAt(B3_AZ, B3_EL, B3_S, [bodyX(t) + 6 - 4 * u, 12, 0], 500, 1060);
+    // (the camera leads a little: the insect settles left of centre, nose into the space ahead)
+  return viewAt(B3_AZ, B3_EL, B3_S, [bodyX(t) + 6, 12, 0], lerp(500 + b3Off[0], 505, u), 1060 + b3Off[1]);
 };
 // props on the far side of the tray (world mm): foam blocks the walk passes
 const BLOCKS = LAB_BLOCKS;

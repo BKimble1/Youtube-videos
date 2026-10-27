@@ -16,6 +16,8 @@ import {Gear2D} from '../../roach/Gear2D';
 import {viewAt, View} from '../../roach/ortho';
 import {LAB2} from '../../sets/Lab2';
 import {ShotProps} from '../index2';
+import {packScreenAt} from './B12';
+import {b3View} from './B3';
 import {Tray2D, FoamBox, turnPath, pulseTrain, PulseTrails, FPS} from './common';
 import {wiresOn} from '../../../rig/gear';
 
@@ -63,6 +65,7 @@ const follow = (t: number): {p: V3; u: number} => {
   const l: V3 = [lerp(BOARD[0], ELECTRODE_L[0], u), lerp(BOARD[1], ELECTRODE_L[1], u), lerp(BOARD[2], ELECTRODE_L[2], u)];
   return {p: toW(fr, l), u};
 };
+let b4From: [number, number] | null = null;
 export const b45View = (f: number): View => {
   const t = f / FPS;
   const fo = follow(t);
@@ -71,7 +74,13 @@ export const b45View = (f: number): View => {
   const uo = sr(f, 283, 308);
   const s = sClose * Math.pow(S_WIDE / sClose, uo);
   const at: V3 = [lerp(fo.p[0], C_END[0], uo), lerp(fo.p[1], C_END[1], uo), lerp(fo.p[2], C_END[2], uo)];
-  return viewAt(AZ, EL, s, at, 540, lerp(1150, 960, uo));
+  // the cut from B3 puts the board where the pack was on screen; the anchor then eases to the frame's centre line
+  if (!b4From) {
+    const q = packScreenAt(b3View(254 / FPS), 254 / FPS);
+    b4From = [q[0], q[1]];
+  }
+  const ax = lerp(b4From[0], 540, fo.u), ay = lerp(b4From[1], 1150, fo.u);
+  return viewAt(AZ, EL, s, at, lerp(ax, 540, uo), lerp(ay, 960, uo));
 };
 
 const Scene45: React.FC<{f: number; id: string}> = ({f, id}) => {

@@ -238,3 +238,38 @@ export const Vignette: React.FC<{id: string; a?: number}> = ({id, a = 0.55}) => 
     <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id}-vg)`} />
   </g>
 );
+
+/** a broken length of metal pipe (building services): ink underlay, grey tube with a lit stripe, a flange, a dark bore */
+export const Pipe: React.FC<{a: Pt; b: Pt; r: number; dark?: number; flangeAt?: number}> = ({a, b, r, dark = 0, flangeAt = 0.35}) => {
+  const c = mix('#8E9AA3', RB.deep, dark);
+  const L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1;
+  const ux = (b[0] - a[0]) / L, uy = (b[1] - a[1]) / L, nx = -uy, ny = ux;
+  const fl: Pt = [a[0] + (b[0] - a[0]) * flangeAt, a[1] + (b[1] - a[1]) * flangeAt];
+  const ang = (Math.atan2(uy, ux) * 180) / Math.PI;
+  return (
+    <g>
+      <path d={line([a, b])} stroke={INK} strokeWidth={f2(2 * r + 5)} strokeLinecap="butt" />
+      <path d={line([a, b])} stroke={c} strokeWidth={f2(2 * r)} strokeLinecap="butt" />
+      <path d={line([[a[0] - nx * r * 0.45, a[1] - ny * r * 0.45], [b[0] - nx * r * 0.45, b[1] - ny * r * 0.45]])} stroke={litC(c, 0.35)} strokeWidth={f2(r * 0.35)} />
+      <path d={line([[a[0] + nx * r * 0.5, a[1] + ny * r * 0.5], [b[0] + nx * r * 0.5, b[1] + ny * r * 0.5]])} stroke={shadeC(c, 0.35)} strokeWidth={f2(r * 0.5)} />
+      <rect x={f2(fl[0] - r * 0.35)} y={f2(fl[1] - r * 1.45)} width={f2(r * 0.7)} height={f2(r * 2.9)} fill={shadeC(c, 0.1)} stroke={INK} strokeWidth={2.5} transform={`rotate(${f2(ang)} ${f2(fl[0])} ${f2(fl[1])})`} />
+      <ellipse cx={f2(b[0])} cy={f2(b[1])} rx={f2(r * 0.42)} ry={f2(r)} fill={RB.deep} stroke={INK} strokeWidth={2.5} transform={`rotate(${f2(ang)} ${f2(b[0])} ${f2(b[1])})`} />
+    </g>
+  );
+};
+
+/** a fragment of tiled floor: a grid of n x m tiles through a floor mapping g(u, v) (u, v in tile units), with a few
+ *  tiles missing (broken edge) */
+export const Tiles: React.FC<{g: (u: number, v: number) => Pt; n: number; m: number; seed: number; color?: string; w?: number}> = ({g, n, m, seed, color = '#B9CCD3', w = 2}) => (
+  <g>
+    {Array.from({length: n * m}, (_, k) => {
+      const i = k % n, j = Math.floor(k / n);
+      const edge = i === 0 || j === 0 || i === n - 1 || j === m - 1;
+      if (edge && rnd(k, seed) < 0.45) return null;
+      const g0 = 0.06;
+      const pts: Pt[] = [g(i + g0, j + g0), g(i + 1 - g0, j + g0), g(i + 1 - g0, j + 1 - g0), g(i + g0, j + 1 - g0)];
+      const c = rnd(k + 9, seed) < 0.2 ? shadeC(color, 0.15) : color;
+      return <path key={k} d={poly(pts)} fill={c} stroke={INK} strokeWidth={w} strokeLinejoin="round" opacity={0.9} />;
+    })}
+  </g>
+);
