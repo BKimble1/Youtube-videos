@@ -7,10 +7,11 @@
 // leaves first, the lip passes overhead), so it reads as moving through the gap, never as a zoom. The daylight behind
 // falls off as the lip passes over; the insect grows steadily from E1's size to E3's.
 import React from 'react';
-import {poseRoach, straightPath, RoachPose} from '../../../../rig/roach';
+import {poseRoach, straightPath, RoachPose, GAIT} from '../../../../rig/roach';
+import {V3} from '../../../../lib/v3';
 import {Roach2D} from '../../../roach/Roach2D';
 import {Gear2D} from '../../../roach/Gear2D';
-import {viewAt, View} from '../../../roach/ortho';
+import {view, View, P} from '../../../roach/ortho';
 import {clamp, sr, rnd} from '../../../../lib/ease';
 import {INK} from '../../../../lib/ink';
 import {mix, shade as shadeC, lit as litC} from '../../../../lib/color';
@@ -82,10 +83,31 @@ const Card: React.FC<{c: E2Cam; D: number; children: React.ReactNode}> = ({c, D,
 /** ink width in a card at depth D that comes out as w screen px */
 const wAt = (c: E2Cam, D: number, w: number) => (w * Math.max(6, D - c.zc)) / D;
 
-const e2View = (lf: number, c: E2Cam, pose: RoachPose): View => {
+/** a rig point (mm) in E2's world: the body origin at insectXZ, rig +x along the heading (BETA right of straight in),
+ *  rig +z (the insect's right side) to the right */
+const rigToWorld = (lf: number, pose: RoachPose, p: V3): V3 => {
   const [x, z] = insectXZ(lf);
-  const at = pr(c, x, 0, z);
-  return viewAt(-90 + 8, 22 - 10 * e2U(lf), F / (z - c.zc), [pose.bodyFrame0.o[0], 0, 0], at[0], at[1]);
+  const dx = p[0] - pose.bodyFrame0.o[0], dz = p[2];
+  return [x + Math.sin(BETA) * dx + Math.cos(BETA) * dz, p[1], z + Math.cos(BETA) * dx - Math.sin(BETA) * dz];
+};
+/** the insect's flat view, scaled for its depth and placed so its STANCE feet sit where the camera sees their floor
+ *  points (each foot weighted by how planted it is: 1 in stance, falling to 0 mid-swing, so the anchor moves
+ *  smoothly). Anchoring on the body instead let the planted feet slide on the floor by up to ~6 px a frame as the
+ *  camera closes in (V4). */
+export const e2View = (lf: number, c: E2Cam, pose: RoachPose): View => {
+  const [, z] = insectXZ(lf);
+  const v0 = view(-90 + 8, 22 - 10 * e2U(lf), F / (z - c.zc), 0, 0);
+  const u = pose.bodyFrame0.o[0] / GAIT.stride; // the rig's straight path: s = body x
+  let sx = 0, sy = 0, sw = 0;
+  pose.legs.forEach((l) => {
+    const ph = u + l.def.phase, fr = ph - Math.floor(ph);
+    const w = fr < GAIT.duty ? 1 : (1 - Math.sin((Math.PI * (fr - GAIT.duty)) / (1 - GAIT.duty))) ** 2 + 1e-3;
+    const ideal = pr(c, ...rigToWorld(lf, pose, l.foot)), flat = P(v0, l.foot);
+    sx += w * (ideal[0] - flat[0]);
+    sy += w * (ideal[1] - flat[1]);
+    sw += w;
+  });
+  return {...v0, ox: sx / sw, oy: sy / sw};
 };
 
 // ---------------------------------------------------------------- the daylit ruin behind the slab (seen over it)

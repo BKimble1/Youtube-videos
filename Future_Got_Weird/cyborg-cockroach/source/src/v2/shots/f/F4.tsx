@@ -19,7 +19,7 @@ import {ShotProps} from '../index2';
 
 /** the over-the-shoulder placement of her card projection (yaw 158: from behind her right shoulder; elevation 60:
  *  looking down past her head at the floor ahead), 9.5 px per rig unit (the insect about 300 px long) */
-export const PL4: Place = {x: -235, y: 1718, scale: 9, yaw: 150, elev: 60};
+export const PL4: Place = {x: -110, y: 1400, scale: 6, yaw: 122, elev: 44};
 /** grit shaken off the slab's lip above the hole (shot seconds) */
 export const F4_GRIT = {t0: 0.12, dur: 0.5};
 /** her held breath: a small breath in (shot frames) */
