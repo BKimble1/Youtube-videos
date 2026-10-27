@@ -1,5 +1,22 @@
 # Future Got Weird: Robots Are Learning to Copy Our Faces
 
+## V4 (27 Oct 2026): current
+
+V4 keeps the narration and its timing exactly (3:33.333, 6,400 frames) and rebuilds the visuals: a new opening (the
+robot mid-speech, the person revealed in the first second, an expression copied with brows, eyes, jaw and lips), a human
+cheek muscle matched to the robot's corner motor, focused motor cutaways, distinct mirror trials, a screen-wall room, a
+side-by-side comparison in a testing room, a recording studio, a hotel-lobby reception for the late smile and its
+payoff, and an earlier-against-learned split before the loop. Not published; not watched or heard in real time.
+
+| Deliverable | File |
+|---|---|
+| Review, 1920×1080 | `exports/FGW_Robot_Faces_V4_REVIEW_1920x1080.mp4` (Git-ignored; checksummed 20 MB parts in `backup/`) |
+| Master, 3840×2160 (2× from the vectors) | `exports/FGW_Robot_Faces_V4_MASTER_3840x2160.mp4` (Git-ignored; delivered separately) |
+| Report and QA | `production/V4_CHANGE_QA.md` |
+
+Render: `cd source && npx remotion render src/index.ts RobotFacesV4 out.mp4 --props='{"audio":false}' --muted --crf=16`
+(add `--scale=2 --crf=17` for the master), then mux with `audio/mix/FGW_Robot_Faces_V2_mix.wav`.
+
 ## V1 (26 Oct 2026)
 
 **Status.** The first complete version is done:
@@ -28,7 +45,7 @@ or video playback. `production/QA_REPORT.md` lists exactly what was checked and 
 | Checkpoint for V2 | `production/PRODUCTION_CHECKPOINT.md` |
 | Interaction still (film frame at 4.6 s, no text) | `cover/FGW_Robot_Faces_V1_interaction_still_4.6s_1920x1080.png` |
 
-## V2 (current)
+## V2
 
 V2 rebuilds every shot on the same narration. It has 80 shots, the recording alcove and study nook settings,
 physical mechanism sections, and a matched return to the opening. Runtime 3:33.333 (6,400 frames).

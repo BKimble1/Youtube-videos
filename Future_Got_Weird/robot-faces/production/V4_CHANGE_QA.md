@@ -106,7 +106,19 @@ from frames and measurements.
 - **Every second of the film**, read from the rendered review (`qa/v4/review/sec_01.png` … `sec_08.png`). Found and
   fixed before the final renders: the cheek window in the 3.9 s cutaway bulged past the face outline; a leftover
   waveform in the home shot (3:12).
-- MEASURED_PLACEHOLDER
+- **Measured QA on the review** (`qa/v4/review/review_qa.json`):
+  - H.264 1920×1080, 30 fps, 6,400 frames, 213.333 s (equal to the narration master);
+  - −14.2 LUFS, LRA 3.3, −1.4 dBTP;
+  - no black frames; no frozen stretch of 2.5 s or more;
+  - audio against the narration at 0 ms lag (r = 0.92);
+  - 67 captions on word onsets, no overlaps;
+  - SHA-256 `9cdfbc8c42fa18faa92beaa94c58455047bcb1b1d9bfd4c5adf67491547aadf8`.
+- **Master** (ffprobe / ebur128 / blackdetect on the file):
+  - H.264 3840×2160, 30 fps, 6,400 frames, 213.333 s, 185.7 MB;
+  - −14.2 LUFS, peak −1.4 dBFS; no black frames;
+  - SHA-256 `50a635e733de7e1f4873e0019bfd86d2a188e08b9a318ad141cc89c52f194ede`.
+  - Native 4K frames read back (`qa/v4/master/`): frame 0, the cutaway, the muscle, the screen room, the comparison,
+    the lobby, the evolution split, the last frame. The last frame matches frame 0's framing and mouth shape.
 
 ## Remaining limitations
 

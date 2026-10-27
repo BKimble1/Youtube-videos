@@ -1,6 +1,20 @@
 # Production checkpoint: Robots Are Learning to Copy Our Faces
 
-## V2 (26 Oct 2026): current
+## V4 (27 Oct 2026): current
+
+- Composition `RobotFacesV4` (renamed from `RobotFacesV3`; same `Film2` table, now 95 shots). V3 is at commit `f03600d`.
+- New V4 shots: `source/src/v2/shotsF.tsx` (muscle match, split section, screen room, comparison, lobby, evolution
+  split). New settings in `new.tsx`: `LobbyBack`, `LobbyCounter`, `StudioBack`, `StudioMic` (`Back` bg `lobby`,
+  `studio`). The opening shots stay in `shotsE.tsx` (V1Face … V6React).
+- `art/Robot.tsx`: `xrayFocus` shows only the hot motor groups; on by default in `RobotCU` when `xrayHot` is given,
+  in `LabTwo`, and in the mirror reflection.
+- `state2.ts`: V4 opening (`EXPR_HIS`, `EXPR_COPY`, `TEASE`, `UNEASY`), `MIRROR_TRIALS`, and a living-head layer
+  (`rob2` wraps `rob2core` with a small pitch / roll motion).
+- Tools: `tools/contact_v4.sh` (per-second and quarter-second sheets from a finished video).
+- Report: `production/V4_CHANGE_QA.md`.
+
+
+## V2 (26 Oct 2026)
 
 **State.**
 - V2 is rendered: the review (1080p), a native 4K master and a 540p draft.
