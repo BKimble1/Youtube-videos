@@ -21,6 +21,9 @@ export const A2_END = A3R.from / FPS_A;
 
 /** where the pressed button's cap sits on screen on A2's last frame (and where A3's LED opens): centre + radius */
 export const MATCH = {x: 540, y: 1010};
+/** the thumb covers the cap's lower-left; the red that shows is centred a little up and right of the cap centre:
+ *  A3's LED lens opens there */
+export const MATCH_LED = {x: MATCH.x + 22, y: MATCH.y - 12};
 
 const pressAt = (t: number) => {
   // the pad travels down with the cap, accelerating (a firm press), then a small squeeze once it bottoms out
