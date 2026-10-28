@@ -444,12 +444,13 @@ const C4_CAM = camFrom(FIELD(C4).B.o, ck(-24, 6, 4.6, 42, 0.62, 0));
 // the close views never bob with his small moves; the moves between them swing about their targets.
 const drift = (t: number, T: number) => s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, T, 0.6));
 const shift = (c: Cam, d: V3): Cam => ({...c, pos: a3(c.pos, d), tgt: a3(c.tgt, d)});
-const CK1 = C1, CK2 = M.voice - 0.1, CK3 = C3 - 0.02, CK4 = C3 + 0.3;
+const CK1 = C1, CK2 = M.voice + 0.02, CK3 = C3 - 0.02, CK4 = C3 + 0.3;
 // all three views are from his right (the earbud's) side, so the camera never crosses his body
 const phoneCam = (t: number): Cam => {
   const jp = pilotJoints(FIELD(CK1).B, FIELD(CK1).pose);
   const phone = toW(FIELD(CK1).B, v3(0, 0.004, 0));
-  const pos = a3(a3(a3(phone, m3(jp.up, 0.92)), m3(jp.hL, -0.42)), m3(jp.chF, 0.12));
+  // V8: higher and further out to his right, so the move up to the wrist starts outside his legs
+  const pos = a3(a3(a3(phone, m3(jp.up, 1.05)), m3(jp.hL, -0.62)), m3(jp.chF, 0.12));
   return shift({pos, tgt: phone, roll: 0, fov: 40}, drift(t, CK1));
 };
 const wristCam = (t: number): Cam => {
@@ -477,7 +478,8 @@ const swingOut = (a: Cam, b: Cam, k: number, out: number): Cam => {
 const coachCam = (t: number, st: St): Cam => {
   void st;
   if (t < C4) {
-    if (t < CK2) return swingCam(phoneCam(t), wristCam(t), sstep(CK1 + 0.24, CK2, t));
+    // (V8: the tighter timing made this a 0.36 s whip through his legs: now 0.56 s, backing off from him mid-move)
+    if (t < CK2) return swingOut(phoneCam(t), wristCam(t), sstep(CK1 + 0.16, CK2, t), 0.45);
     return swingCam(wristCam(t), bodyCam(t), sstep(CK3 + 0.06, C4 - 0.05, t));
   }
   return standPart(C4_CAM, fieldPos, t, C4, 0.85, 0.62, 42);
