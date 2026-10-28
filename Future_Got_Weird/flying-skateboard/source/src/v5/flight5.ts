@@ -279,7 +279,8 @@ export const departure = (t: number, T0: number): St => {
   const roll = lag(side, t) * 95;
   const B = frameYPR(v3(x, alt, z), 0, pitch, roll);
   return {B, alt, speed: v, pitch, roll, yaw: 0, thrust: 0.9, pos: B.o, vel: v3(0.54 * Math.cos(s * 0.9), climb, v), rps: 30,
-    pose: pose({lean: lean(t), side: side(t), crouch: 0.44, bend: 12, twist: 24, armF: 0.42, armFs: 0.72, armR: 0.24, look: 70, nod: 8, thumb: 0.75, bal: clamp(-side(t) * 12, -1, 1)})};
+    // V5: a little life in the long rides (knees, front arm and gaze drift slowly), not a held pose
+    pose: pose({lean: lean(t), side: side(t), crouch: 0.44 + 0.035 * noise1(t * 0.9, 91), bend: 12, twist: 24, armF: 0.42 + 0.08 * noise1(t * 0.7, 92), armFs: 0.72, armR: 0.24 + 0.05 * noise1(t * 0.8, 93), look: 70 + 5 * noise1(t * 0.5, 94), nod: 8, thumb: 0.75, bal: clamp(-side(t) * 12, -1, 1)})};
 };
 
 // ------------------------------------------------------------------ the payoff: the last of the river and into the gorge
@@ -305,7 +306,7 @@ export const payoff4 = (t: number, Tin: number): St => {
   const B = frameYPR(v3(x, alt, z), yaw, pitch, roll);
   const sd = side(t) - bank / 300;
   return {B, alt, speed: v, pitch, roll, yaw, thrust: 0.9, pos: B.o, vel: v3(dx, 0, v), rps: 30,
-    pose: pose({lean: lean(t), side: sd, crouch: 0.48, bend: 13, twist: 24, armF: 0.5, armFs: 0.9, look: 70, nod: 8, thumb: 0.8, bal: clamp(-sd * 12, -1, 1)})};
+    pose: pose({lean: lean(t), side: sd, crouch: 0.48 + 0.035 * noise1(t * 0.9, 95), bend: 13, twist: 24, armF: 0.5 + 0.08 * noise1(t * 0.7, 96), armFs: 0.9, armR: 0.3 + 0.05 * noise1(t * 0.8, 97), look: 70 + 5 * noise1(t * 0.5, 98), nod: 8, thumb: 0.8, bal: clamp(-sd * 12, -1, 1)})};
 };
 
 /** the workshop: the inventor standing back from the test stand with the remote */

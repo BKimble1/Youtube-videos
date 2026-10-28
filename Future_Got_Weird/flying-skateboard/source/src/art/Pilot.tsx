@@ -300,20 +300,29 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const visorPts = sphereRegion(L, Hc, R * 1.0, visorLoop, visIn);
   // V5: short dark hair at the back of the head, from under the helmet's back rim down to the nape (a rear view showed
   // a blank skin-coloured disc that read as a featureless face); on the skin sphere itself, so its outline is exact
-  const HAIR = {ps: 1.95, th0: -0.2, th1: -0.8};
+  // its top edge runs just above the shell's rim (hidden under the shell), so no skin shows between hair and helmet
+  const HAIR = {ps: 1.95, th1: -0.8};
+  const rimTh = (ps: number) => {
+    const k = Math.max(0, -0.5 * Math.cos(ps));
+    return Math.asin(0.12 / Math.sqrt(1 + k * k)) - Math.atan(k);
+  };
   const hairIn = (d: V3) => {
     const q = loc(d);
     const th = Math.asin(Math.max(-1, Math.min(1, q.u)));
-    return Math.abs(Math.atan2(q.l, q.f)) > HAIR.ps && th < HAIR.th0 && th > HAIR.th1;
+    const ps = Math.atan2(q.l, q.f);
+    return Math.abs(ps) > HAIR.ps && th < rimTh(ps) + 0.06 && th > HAIR.th1;
   };
   const hairLoop = (() => {
     const at = (th: number, ps: number) => HD(Math.cos(th) * Math.cos(ps), Math.sin(th), Math.cos(th) * Math.sin(ps));
     const pts: V3[] = [];
     const N = 16, a0 = HAIR.ps, a1 = 2 * Math.PI - HAIR.ps;
-    for (let i = 0; i <= N; i++) pts.push(at(HAIR.th0, a0 + ((a1 - a0) * i) / N));
-    for (let i = 1; i <= N / 2; i++) pts.push(at(HAIR.th0 + ((HAIR.th1 - HAIR.th0) * i) / (N / 2), a1));
+    for (let i = 0; i <= N; i++) {
+      const ps = a0 + ((a1 - a0) * i) / N;
+      pts.push(at(rimTh(ps) + 0.06, ps));
+    }
+    for (let i = 1; i <= N / 2; i++) pts.push(at(rimTh(a1) + 0.06 + ((HAIR.th1 - rimTh(a1) - 0.06) * i) / (N / 2), a1));
     for (let i = 1; i <= N; i++) pts.push(at(HAIR.th1, a1 - ((a1 - a0) * i) / N));
-    for (let i = 1; i < N / 2; i++) pts.push(at(HAIR.th1 + ((HAIR.th0 - HAIR.th1) * i) / (N / 2), a0));
+    for (let i = 1; i < N / 2; i++) pts.push(at(HAIR.th1 + ((rimTh(a0) + 0.06 - HAIR.th1) * i) / (N / 2), a0));
     return pts;
   })();
   const hairPts = sphereRegion(L, Hc, R * 0.93, hairLoop, hairIn);
