@@ -1,0 +1,554 @@
+[
+ {
+  "name": "frame 0: air already rushing past",
+  "at": 35.6,
+  "frame": -9.0,
+  "dur": 0.7,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "his knees take the heave (cloth)",
+  "at": 0.45,
+  "frame": 13.5,
+  "dur": 0.3,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "the camera sinks below the deck: the thrusters (rotor air)",
+  "at": 1.4,
+  "frame": 42.0,
+  "dur": 0.8,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "over the gravel bar (air, water on the stones)",
+  "at": 1.9,
+  "frame": 57.0,
+  "dur": 0.8,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "rising to the wide crossing (air)",
+  "at": 2.15,
+  "frame": 64.5,
+  "dur": 1.1,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "cut under the board: the fans close by",
+  "at": 3.36,
+  "frame": 100.8,
+  "dur": 0.5,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "count: duct 1 rim (tiny tick)",
+  "at": 4.014,
+  "frame": 120.4,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 2 rim (tiny tick)",
+  "at": 4.101,
+  "frame": 123.0,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 3 rim (tiny tick)",
+  "at": 4.188,
+  "frame": 125.6,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 4 rim (tiny tick)",
+  "at": 4.274,
+  "frame": 128.2,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 5 rim (tiny tick)",
+  "at": 4.362,
+  "frame": 130.8,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 6 rim (tiny tick)",
+  "at": 4.449,
+  "frame": 133.5,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 7 rim (tiny tick)",
+  "at": 4.535,
+  "frame": 136.1,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 8 rim (tiny tick)",
+  "at": 4.622,
+  "frame": 138.7,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 9 rim (tiny tick)",
+  "at": 4.71,
+  "frame": 141.3,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 10 rim (tiny tick)",
+  "at": 4.796,
+  "frame": 143.9,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "electric propellers: the rotors spin up",
+  "at": 4.83,
+  "frame": 144.9,
+  "dur": 0.9,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "blast air downward: the air rush to the water",
+  "at": 5.78,
+  "frame": 173.4,
+  "dur": 1.0,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "the downwash hits the water (spray hiss)",
+  "at": 6.16,
+  "frame": 184.8,
+  "dur": 0.9,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "cut to the flat: grit and grass blown out",
+  "at": 6.9,
+  "frame": 207.0,
+  "dur": 1.0,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the deck takes his weight as the rotors bite (knock)",
+  "at": 7.11,
+  "frame": 213.3,
+  "dur": 0.3,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "he rises clear past the camera (air)",
+  "at": 7.51,
+  "frame": 225.3,
+  "dur": 1.0,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "he flies on, over and past (air)",
+  "at": 8.46,
+  "frame": 253.8,
+  "dur": 0.8,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "ignition: starter clicks",
+  "at": 10.03,
+  "frame": 300.9,
+  "dur": 0.15,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "turbine spool-up whine and roar",
+  "at": 10.29,
+  "frame": 308.7,
+  "dur": 2.23,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "heat: casings and lines ticking",
+  "at": 11.07,
+  "frame": 332.1,
+  "dur": 1.8,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "recirculation: rough rumble and rattle",
+  "at": 11.7,
+  "frame": 351.0,
+  "dur": 0.92,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "fuel drip 1 onto the deck",
+  "at": 12.13,
+  "frame": 363.9,
+  "dur": 0.05,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "fuel drip 2 onto the deck",
+  "at": 12.26,
+  "frame": 367.8,
+  "dur": 0.05,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "fuel drip 3 onto the deck",
+  "at": 12.39,
+  "frame": 371.7,
+  "dur": 0.05,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "fuel drip 4 onto the deck",
+  "at": 12.52,
+  "frame": 375.6,
+  "dur": 0.05,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "fuel drip 5 onto the deck",
+  "at": 12.65,
+  "frame": 379.5,
+  "dur": 0.05,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "vapour hiss off the pool",
+  "at": 12.02,
+  "frame": 360.6,
+  "dur": 0.5,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "FIRE: the vapour catches (whoomp)",
+  "at": 12.49,
+  "frame": 374.7,
+  "dur": 0.9,
+  "gain_db": -14,
+  "hero": true
+ },
+ {
+  "name": "fire crackle (quickly under the narration)",
+  "at": 12.64,
+  "frame": 379.2,
+  "dur": 1.0,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "engines wind down",
+  "at": 12.97,
+  "frame": 389.1,
+  "dur": 1.0,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "the smoke rolls over the stand and clears (soft air)",
+  "at": 13.24,
+  "frame": 397.2,
+  "dur": 1.0,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "duct 1 seats",
+  "at": 14.356,
+  "frame": 430.7,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 2 seats",
+  "at": 14.447,
+  "frame": 433.4,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 3 seats",
+  "at": 14.523,
+  "frame": 435.7,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 4 seats",
+  "at": 14.593,
+  "frame": 437.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 5 seats",
+  "at": 14.66,
+  "frame": 439.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 6 seats",
+  "at": 14.727,
+  "frame": 441.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 7 seats",
+  "at": 14.797,
+  "frame": 443.9,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 8 seats",
+  "at": 14.873,
+  "frame": 446.2,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 9 seats",
+  "at": 14.964,
+  "frame": 448.9,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 10 seats",
+  "at": 15.16,
+  "frame": 454.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "lift (rotors bite)",
+  "at": 15.6,
+  "frame": 468.0,
+  "dur": 0.5,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the nose dips: a lurch of air",
+  "at": 16.61,
+  "frame": 498.3,
+  "dur": 0.6,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "cloth: the hips go back",
+  "at": 16.91,
+  "frame": 507.3,
+  "dur": 0.4,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "heel-side shift (cloth, deck creak)",
+  "at": 18.28,
+  "frame": 548.4,
+  "dur": 0.35,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "toe-side shift (cloth)",
+  "at": 19.48,
+  "frame": 584.4,
+  "dur": 0.35,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "he leans and rides off (air)",
+  "at": 20.46,
+  "frame": 613.8,
+  "dur": 0.7,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "the gust rolls the board (air)",
+  "at": 21.19,
+  "frame": 635.7,
+  "dur": 0.6,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the whole-body save (cloth)",
+  "at": 21.44,
+  "frame": 643.2,
+  "dur": 0.4,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "board phone: soft tick",
+  "at": 22.58,
+  "frame": 677.4,
+  "dur": 0.02,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "wrist phone: soft tick",
+  "at": 23.09,
+  "frame": 692.7,
+  "dur": 0.02,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "AI coach cue in the earpiece",
+  "at": 23.49,
+  "frame": 704.7,
+  "dur": 0.42,
+  "gain_db": -27,
+  "hero": true
+ },
+ {
+  "name": "the correction (cloth)",
+  "at": 24.01,
+  "frame": 720.3,
+  "dur": 0.35,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "settled: clean air",
+  "at": 24.56,
+  "frame": 736.8,
+  "dur": 0.9,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "an unsteady takeoff (air, wobble)",
+  "at": 25.38,
+  "frame": 761.4,
+  "dur": 0.5,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the overhead pass (air)",
+  "at": 25.85,
+  "frame": 775.5,
+  "dur": 0.5,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "a low pass across the flat (air)",
+  "at": 26.34,
+  "frame": 790.2,
+  "dur": 0.6,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "over the shoreline: the river opens up (air swells)",
+  "at": 26.95,
+  "frame": 808.5,
+  "dur": 1.1,
+  "gain_db": -29,
+  "hero": false
+ },
+ {
+  "name": "RIVER: the wide (air swells)",
+  "at": 28.3,
+  "frame": 849.0,
+  "dur": 1.4,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "cut into the canyon (air narrows)",
+  "at": 29.71,
+  "frame": 891.3,
+  "dur": 1.0,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "the walls sweep past (air)",
+  "at": 30.2,
+  "frame": 906.0,
+  "dur": 0.8,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "behind him down the canyon (air)",
+  "at": 30.49,
+  "frame": 914.7,
+  "dur": 0.9,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "back over the river (steady wind)",
+  "at": 31.74,
+  "frame": 952.2,
+  "dur": 1.2,
+  "gain_db": -31,
+  "hero": false
+ }
+]

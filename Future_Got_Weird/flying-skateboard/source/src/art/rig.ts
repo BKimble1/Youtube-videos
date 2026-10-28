@@ -140,7 +140,8 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   const li = 0.22 * (p.listen ?? 0);
   const hU = n3(a3(m3(hU0, Math.cos(li)), m3(hL0, Math.sin(li))));
   const hL = n3(c3(hF, hU));
-  const Hc = a3(N, m3(n3(a3(up, m3(hF, 0.12))), D.headUp * 0.72));
+  // V5: the head pivots at the neck: the head centre is a fixed offset in the head's own frame from the neck joint
+  const Hc = a3(a3(N, m3(hU, D.headUp * 0.72)), m3(hF, 0.014));
   // arms. Front (left) hand: out toward the nose, low to shoulder height
   const bal = p.bal ?? 0;
   const handF = a3(

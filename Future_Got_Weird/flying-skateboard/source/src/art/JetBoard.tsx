@@ -55,7 +55,7 @@ export const jetFuelLine = (B: Frame, i: number): V3[] => {
   return [v3(T.x + Math.sign(ex || 0.001) * 0.03, T.r * 1.6, (T.z0 + T.z1) / 2), v3(ex * 0.6, 0.05, ez * 0.5 + (T.z0 + T.z1) / 4), v3(ex, JET.top - 0.02, ez + (ez > 0 ? -JET.r : ez < 0 ? JET.r : -JET.r))].map((q) => toW(B, q));
 };
 
-export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; stand?: boolean}> = ({id, L, B, st, stand = true}) => {
+export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; stand?: boolean; overlay?: React.ReactNode}> = ({id, L, B, st, stand = true, overlay}) => {
   const kc = L.p(B.o).k;
   const w = inkW(kc, 0.004);
   const above = d3(s3(L.pos, B.o), B.y) > 0;
@@ -201,6 +201,8 @@ export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; st
       {standEl}
       {lower}
       {deckEl}
+      {/* V5: things lying on the deck surface (a fuel puddle) go here, under the engines and lines */}
+      {overlay}
       {topStuff}
     </g>
   ) : (

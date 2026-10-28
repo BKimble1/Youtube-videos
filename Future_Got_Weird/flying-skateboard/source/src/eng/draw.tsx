@@ -162,6 +162,76 @@ export const spherePatch = (L: Lens, c: V3, R: number, inside: (d: V3) => boolea
   }
   return hull(pts);
 };
+/** V5: the exact visible outline of a region on a sphere (centre c, radius R) bounded by a closed loop of unit
+ *  directions `loop` given in a frame that moves with the object (so the outline turns rigidly with it, with no
+ *  sampling grid to quantise it). The loop is clipped where it passes behind the sphere's visible rim (the circle of
+ *  tangency seen from the camera, which projects to the silhouette); between where it leaves and re-enters the visible
+ *  side, the outline follows that rim, on the side that lies inside the region (`inside`). Empty when nothing is in
+ *  view. Works for non-convex regions; the result changes continuously as the object or the camera moves. */
+export const sphereRegion = (L: Lens, c: V3, R: number, loop: V3[], inside: (d: V3) => boolean, arcStep = 0.08): P2[] => {
+  const toC = s3(L.pos, c);
+  const dist = Math.hypot(toC.x, toC.y, toC.z);
+  if (dist <= R * 1.001) return [];
+  const t = n3(toC);
+  const c0 = R / dist;
+  const sr = Math.sqrt(1 - c0 * c0);
+  const sv = (d: V3) => d3(d, t) - c0;
+  const n = loop.length;
+  let start = -1;
+  for (let i = 0; i < n; i++) if (sv(loop[i]) >= 0) {
+    start = i;
+    break;
+  }
+  const proj3 = (d: V3) => L.p(a3(c, m3(d, R)));
+  if (start < 0) {
+    // the rim is entirely out of sight: the region is either the whole visible side or nothing
+    if (!inside(t)) return [];
+    const e1 = n3(Math.abs(t.y) < 0.9 ? c3(t, {x: 0, y: 1, z: 0}) : c3(t, {x: 1, y: 0, z: 0}));
+    const e2 = c3(t, e1);
+    return Array.from({length: 64}, (_, k) => {
+      const a = (k / 64) * Math.PI * 2;
+      return proj3(a3(m3(t, c0), a3(m3(e1, sr * Math.cos(a)), m3(e2, sr * Math.sin(a)))));
+    });
+  }
+  // a point on the visible rim at the same bearing (around the view axis) as direction d
+  const onRim = (d: V3) => {
+    const q = s3(d, m3(t, d3(d, t)));
+    const ql = Math.hypot(q.x, q.y, q.z) || 1;
+    return a3(m3(t, c0), m3(q, sr / ql));
+  };
+  const out: V3[] = [];
+  let exitAt: V3 | null = null;
+  const arc = (from: V3, to: V3) => {
+    const e1 = n3(s3(from, m3(t, d3(from, t))));
+    const e2 = c3(t, e1);
+    let phi = Math.atan2(d3(to, e2), d3(to, e1));
+    if (phi < 0) phi += Math.PI * 2;
+    // two ways round: take the one whose middle lies inside the region
+    const at = (a: number) => a3(m3(t, c0), a3(m3(e1, sr * Math.cos(a)), m3(e2, sr * Math.sin(a))));
+    const fwd = inside(n3(at(phi / 2)));
+    const total = fwd ? phi : phi - Math.PI * 2;
+    const steps = Math.max(1, Math.ceil(Math.abs(total) / arcStep));
+    for (let k = 1; k < steps; k++) out.push(at((total * k) / steps));
+  };
+  for (let k = 0; k < n; k++) {
+    const a = loop[(start + k) % n], b = loop[(start + k + 1) % n];
+    const sa = sv(a), sb = sv(b);
+    if (sa >= 0) out.push(a);
+    if (sa >= 0 !== sb >= 0) {
+      const x = onRim(n3(a3(m3(a, sb / (sb - sa)), m3(b, -sa / (sb - sa)))));
+      if (sa >= 0) {
+        out.push(x);
+        exitAt = x;
+      } else {
+        if (exitAt) arc(exitAt, x);
+        out.push(x);
+        exitAt = null;
+      }
+    }
+  }
+  return out.map(proj3);
+};
+
 /** silhouette circle of a sphere */
 export const sphereD = (L: Lens, c: V3, R: number) => {
   const p = L.p(c);

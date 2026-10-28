@@ -233,12 +233,13 @@ const Ripples: React.FC<{L: Lens; t: number; calm?: number; L2?: Lens}> = ({L, t
   const buckets: Record<string, string[]> = {};
   const drift = -RIVER.current * t;
   for (const [cell, r1, r0] of levels) {
-    const i0 = Math.floor((g.x - r1) / cell), i1 = Math.ceil((g.x + r1) / cell);
+    // V5: the lattice drifts with the current (no modulo wrap), so each crest keeps its identity as it moves
+    const i0 = Math.floor((g.x - drift - r1) / cell), i1 = Math.ceil((g.x - drift + r1) / cell);
     const k0 = Math.floor((g.z - r1) / cell), k1 = Math.ceil((g.z + r1) / cell);
     for (let i = i0; i <= i1; i++) {
       for (let k = k0; k <= k1; k++) {
         const hsh = hash(i * 7919 + k, Math.round(cell * 10));
-        const x = i * cell + hash(i * 31 + k, 11) * cell + (drift % cell);
+        const x = i * cell + hash(i * 31 + k, 11) * cell + drift;
         const z = k * cell + hash(i * 17 + k, 13) * cell;
         if (z < 1.5 || z > RIVER.far - 1.5) continue;
         const dd = Math.hypot(x - g.x, z - g.z);

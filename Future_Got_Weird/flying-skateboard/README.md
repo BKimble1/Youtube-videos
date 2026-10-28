@@ -1,5 +1,20 @@
 # Future Got Weird: Flying Skateboard (Song Xingyu / 神奇阿宇 "Amazing Ayu")
 
+## V5 review (28 Oct 2026)
+
+**Status:** REVIEW. See `production/QA_REPORT_V5.md` for what the frame-by-frame QC of the rendered file found and what remains. **It is not final until it has been watched in real time with sound**, which can't be done in this environment.
+
+| Deliverable | File |
+|---|---|
+| **V5 review video**: true 1080×1920 (rendered at 2160×3840, Lanczos-downsampled), 30 fps, 1077 frames, 35.90 s, captions burned in, seamless loop | `exports/FGW_Flying_Skateboard_V5_REVIEW_1080x1920.mp4` |
+| Changelog | `production/CHANGELOG_V5.md` |
+| QC report and remaining problems | `production/QA_REPORT_V5.md` |
+| V5 mix, measurements, effect cues | `audio/mix/FGW_Flying_Skateboard_V5_mix.wav`, `audio/mix/mix_measure_v5.json`, `audio/sfx_cues_v5.json` (`tools/make_audio_v5.py`, `tools/export_cues_v5.ts`) |
+| Sheets and measurements (from the MP4) | `qa/v5_review_*` |
+| Remotion | composition `FlyingSkateboardV5`, code in `source/src/v5/`. The exact sphere-region outline is `sphereRegion` in `eng/draw.tsx`; the rigid head assembly is in `art/Pilot.tsx`; the neck pivot is in `art/rig.ts`. Helmet stability measurement: `source/src/dev/helmetStab.ts`; head close-up sheet: composition `HeadTest`. |
+
+Rebuild: as for V3 (see below), with `_v5`/`V5` names. Working stills: `cd source && ./sheet5.sh out.png "t1,..." [captions]`.
+
 ## V4 review (28 Oct 2026)
 
 **Status:** REVIEW. The frame-by-frame QC passes, with the residuals listed in `production/QA_REPORT_V4.md`. **It is not final until it has been watched in real time with sound**, which can't be done in this environment.

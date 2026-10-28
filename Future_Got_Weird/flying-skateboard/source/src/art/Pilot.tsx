@@ -7,7 +7,7 @@ import React from 'react';
 import {limbGeo} from '../dc/limb';
 import {capsulePath} from '../dc/shade';
 import {a3, d3, Lens, lerp3, m3, n3, s3, V3} from '../eng/v3';
-import {circ3, curveD, f2, hull, inkW, lit, P2, polyD, proj, shade, Shape, smoothD, sphereD, spherePatch, thin} from '../eng/draw';
+import {circ3, curveD, f2, hull, inkW, lit, P2, polyD, proj, shade, Shape, smoothD, sphereD, sphereRegion, thin} from '../eng/draw';
 import {DIMS, PilotJ} from './rig';
 
 export const GEAR = {
@@ -57,12 +57,13 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     if (!vis(ank)) return {z: 0, el: null};
     const base = s3(ank, m3(B.y, DIMS.ankleH));
     const c: V3[] = [];
-    for (const x of [-0.08, 0.2]) for (const y of [0, 0.105]) for (const z of [-0.058, 0.058]) c.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
+    // V5: the shoe sits on the board's solid spine (|x| < 0.165), clear of the toe-side fan ducts
+    for (const x of [-0.115, 0.135]) for (const y of [0, 0.105]) for (const z of [-0.058, 0.058]) c.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
     // rounded toe
-    c.push(a3(base, a3(m3(B.x, 0.235), m3(B.y, 0.04))));
+    c.push(a3(base, a3(m3(B.x, 0.162), m3(B.y, 0.04))));
     const pts = thin(hull(proj(L, c)), 1.5);
     const sole: V3[] = [];
-    for (const x of [-0.085, 0.235]) for (const z of [-0.06, 0.06]) for (const y of [0, 0.02]) sole.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
+    for (const x of [-0.12, 0.162]) for (const z of [-0.06, 0.06]) for (const y of [0, 0.02]) sole.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
     const sp = thin(hull(proj(L, sole)), 1.5);
     const lace = proj(L, [a3(base, a3(m3(B.x, 0.0), m3(B.y, 0.108))), a3(base, a3(m3(B.x, 0.12), m3(B.y, 0.085)))]);
     const top = facing(base, B.y) > 0;
@@ -242,37 +243,76 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const neck = !vis(j.N, j.Hc) ? null : <path key="nk" d={capsulePath(neckA, neckB, 0.052 * neckA.k, 0.05 * neckB.k)} fill={shade(GEAR.skin, 0.12)} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />;
   const collarPts = thin(hull(proj(L, circ3(lerp3(j.S, j.N, 0.15), j.chL, j.chF, 0.075, 16))), 1.5);
   const collar = <Shape key="col" id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} />;
+  // V5: the head and helmet are one rigid assembly in the head frame (hF, hU, hL), pivoting at the neck. Every part
+  // (shell, visor, stripe, ears, earbud, chin strap) is defined in that frame, and outlines are exact clipped curves
+  // (sphereRegion), so a head turn rotates the whole assembly continuously: no sampling grid, no on/off thresholds.
   const R = DIMS.headR;
   const Hc = j.Hc;
+  const HD = (f: number, u: number, l: number): V3 => n3(a3(a3(m3(j.hF, f), m3(j.hU, u)), m3(j.hL, l)));
+  const loc = (d: V3) => ({f: d3(d, j.hF), u: d3(d, j.hU), l: d3(d, j.hL)});
   const skin = sphereD(L, Hc, R * 0.93);
-  const helmetPts = spherePatch(L, Hc, R * 1.06, (d) => {
-    const u = d.x * j.hU.x + d.y * j.hU.y + d.z * j.hU.z;
-    const fwd = d.x * j.hF.x + d.y * j.hF.y + d.z * j.hF.z;
-    return u + 0.5 * Math.max(0, -fwd) > 0.12;
+  // shell: above a rim that sits level across the brow and drops down over the back of the head
+  const shellIn = (d: V3) => {
+    const q = loc(d);
+    return q.u + 0.5 * Math.max(0, -q.f) > 0.12;
+  };
+  const shellRim: V3[] = Array.from({length: 96}, (_, i) => {
+    const ps = (i / 96) * Math.PI * 2;
+    const cp = Math.cos(ps), sp = Math.sin(ps);
+    const k = Math.max(0, -0.5 * cp);
+    const th = Math.asin(0.12 / Math.sqrt(1 + k * k)) - Math.atan(k);
+    return HD(Math.cos(th) * cp, Math.sin(th), Math.cos(th) * sp);
   });
-  const visorPts = spherePatch(L, Hc, R * 1.0, (d) => {
-    const u = d.x * j.hU.x + d.y * j.hU.y + d.z * j.hU.z;
-    const fwd = d.x * j.hF.x + d.y * j.hF.y + d.z * j.hF.z;
-    return fwd > 0.42 && u < 0.36 && u > -0.12;
-  });
-  const visVisor = facing(a3(Hc, m3(j.hF, R)), j.hF) > -0.25 && visorPts.length > 2;
-  // centre stripe over the helmet crown (front to back)
-  const stripe = circ3(Hc, j.hF, j.hU, R * 1.07, 30, -0.15, Math.PI * 1.05).filter((q) => facing(q, s3(q, Hc)) > 0);
+  const helmetPts = sphereRegion(L, Hc, R * 1.06, shellRim, shellIn);
+  // visor: the band across the eyes (fwd > 0.42, between u = -0.12 and 0.36)
+  const visIn = (d: V3) => {
+    const q = loc(d);
+    return q.f > 0.42 && q.u < 0.36 && q.u > -0.12;
+  };
+  const visorLoop = (() => {
+    const th0 = Math.asin(-0.12), th1 = Math.asin(0.36);
+    const pm = (th: number) => Math.acos(Math.min(1, 0.42 / Math.cos(th)));
+    const at = (th: number, ps: number) => HD(Math.cos(th) * Math.cos(ps), Math.sin(th), Math.cos(th) * Math.sin(ps));
+    const pts: V3[] = [];
+    const N = 16;
+    for (let i = 0; i <= N; i++) pts.push(at(th0, -pm(th0) + (2 * pm(th0) * i) / N));
+    for (let i = 1; i <= N; i++) {
+      const th = th0 + ((th1 - th0) * i) / N;
+      pts.push(at(th, pm(th)));
+    }
+    for (let i = 1; i <= N; i++) pts.push(at(th1, pm(th1) - (2 * pm(th1) * i) / N));
+    for (let i = 1; i < N; i++) {
+      const th = th1 - ((th1 - th0) * i) / N;
+      pts.push(at(th, -pm(th)));
+    }
+    return pts;
+  })();
+  const visorPts = sphereRegion(L, Hc, R * 1.0, visorLoop, visIn);
+  const visVisor = visorPts.length > 2;
+  // centre stripe over the shell crown, from the brow rim to the back rim (clipped to the shell outline below)
+  const stripe = circ3(Hc, j.hF, j.hU, R * 1.06, 40, 0.14, Math.PI + 0.36).filter((q) => facing(q, s3(q, Hc)) > 0);
+  // ears and the earbud: thin disks on the side of the head, foreshortened with the turn (edge-on as they go out of
+  // sight, so nothing pops)
+  const disk = (c: V3, ra: V3, rb: V3, n = 20) => proj(L, Array.from({length: n}, (_, i) => {
+    const a = (i / n) * Math.PI * 2;
+    return a3(c, a3(m3(ra, Math.cos(a)), m3(rb, Math.sin(a))));
+  }));
   const ear = (s: number) => {
     const c = a3(a3(Hc, m3(j.hL, s * R * 0.9)), m3(j.hU, -0.03));
-    const e = p(c);
-    const vis = facing(c, m3(j.hL, s)) > 0.05;
-    if (!vis) return null;
-    const bud = p(a3(c, m3(j.hL, s * 0.018)));
+    const fc = facing(c, m3(j.hL, s));
+    if (fc <= 0) return null;
+    const earD = polyD(disk(c, m3(j.hF, 0.028), m3(j.hU, 0.038)));
+    const budC = a3(c, m3(j.hL, s * 0.018));
+    const bud = p(budC);
     const glowR = (0.014 + 0.03 * coach) * bud.k;
     return (
       <g key={`ear${s}`}>
-        <ellipse cx={f2(e.x)} cy={f2(e.y)} rx={f2(0.028 * e.k)} ry={f2(0.038 * e.k)} fill={shade(GEAR.skin, 0.08)} stroke="#172B3A" strokeWidth={f2(w * 1.6)} paintOrder="stroke" />
+        <path d={earD} fill={shade(GEAR.skin, 0.08)} stroke="#172B3A" strokeWidth={f2(w * 1.6)} strokeLinejoin="round" paintOrder="stroke" />
         {s > 0 && (
           <g>
-            {coach > 0.01 && <circle cx={f2(bud.x)} cy={f2(bud.y)} r={f2(glowR)} fill={GEAR.coach} opacity={0.35 * coach} />}
-            <circle cx={f2(bud.x)} cy={f2(bud.y)} r={f2(0.017 * bud.k)} fill="#1D232B" stroke="#0B1218" strokeWidth={f2(w)} />
-            <circle cx={f2(bud.x)} cy={f2(bud.y)} r={f2(0.006 * bud.k)} fill={coach > 0.05 ? '#9BE8FF' : GEAR.coach} />
+            {coach > 0.01 && <circle cx={f2(bud.x)} cy={f2(bud.y)} r={f2(glowR)} fill={GEAR.coach} opacity={0.35 * coach * Math.min(1, fc * 4)} />}
+            <path d={polyD(disk(budC, m3(j.hF, 0.017), m3(j.hU, 0.017)))} fill="#1D232B" stroke="#0B1218" strokeWidth={f2(w)} strokeLinejoin="round" />
+            <path d={polyD(disk(a3(budC, m3(j.hL, s * 0.004)), m3(j.hF, 0.006), m3(j.hU, 0.006), 12))} fill={coach > 0.05 ? '#9BE8FF' : GEAR.coach} />
           </g>
         )}
       </g>
@@ -289,9 +329,20 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     const vis = pts.filter((q) => facing(q, s3(q, Hc)) > 0);
     return vis.length > 1 ? <path key={`st${s}`} d={curveD(proj(L, vis))} stroke="#2A2F37" strokeWidth={f2(0.012 * p(Hc).k)} fill="none" strokeLinecap="round" /> : null;
   };
+  // a highlight across the visor: the visible part of a short arc on the visor surface, clipped to the visor outline
   const visorGloss = visVisor ? (() => {
-    const g = proj(L, [a3(Hc, m3(n3(a3(a3(j.hF, m3(j.hU, 0.22)), m3(j.hL, 0.35))), R * 1.01)), a3(Hc, m3(n3(a3(a3(j.hF, m3(j.hU, 0.24)), m3(j.hL, -0.05))), R * 1.01))]);
-    return <path d={`M${f2(g[0].x)},${f2(g[0].y)} L${f2(g[1].x)},${f2(g[1].y)}`} stroke="#FFFFFF" strokeOpacity={0.45} strokeWidth={f2(0.016 * p(Hc).k)} strokeLinecap="round" />;
+    const arcPts = Array.from({length: 9}, (_, i) => a3(Hc, m3(HD(1, 0.23, 0.35 - (0.4 * i) / 8), R * 1.0))).filter((q) => facing(q, s3(q, Hc)) > 0);
+    if (arcPts.length < 2) return null;
+    return (
+      <g>
+        <defs>
+          <clipPath id={`${id}-vc`}>
+            <path d={polyD(visorPts)} />
+          </clipPath>
+        </defs>
+        <path clipPath={`url(#${id}-vc)`} d={curveD(proj(L, arcPts))} stroke="#FFFFFF" strokeOpacity={0.45} strokeWidth={f2(0.016 * p(Hc).k)} fill="none" strokeLinecap="round" />
+      </g>
+    );
   })() : null;
   const head = !vis(Hc, a3(Hc, m3(j.hU, R)), a3(Hc, m3(j.hF, R))) ? null : (
     <g key="head">
@@ -300,9 +351,18 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       {ear(1)}
       {strap(1)}
       {strap(-1)}
-      <Shape id={`${id}-hel`} d={smoothD(thin(helmetPts, 1.5), 0.15)} pts={helmetPts} color={GEAR.helmet} w={w} k={1.2} />
-      {stripe.length > 1 && <path d={curveD(proj(L, stripe))} stroke={GEAR.helmetStripe} strokeWidth={f2(0.03 * p(Hc).k)} fill="none" strokeLinecap="round" />}
-      {visVisor && <Shape id={`${id}-vis`} d={smoothD(thin(visorPts, 1.2), 0.14)} pts={visorPts} color={GEAR.visor} w={w} k={0.9} />}
+      {helmetPts.length > 2 && <Shape id={`${id}-hel`} d={polyD(helmetPts)} pts={helmetPts} color={GEAR.helmet} w={w} k={1.2} />}
+      {helmetPts.length > 2 && stripe.length > 1 && (
+        <g>
+          <defs>
+            <clipPath id={`${id}-hc`}>
+              <path d={polyD(helmetPts)} />
+            </clipPath>
+          </defs>
+          <path clipPath={`url(#${id}-hc)`} d={curveD(proj(L, stripe))} stroke={GEAR.helmetStripe} strokeWidth={f2(0.03 * p(Hc).k)} fill="none" strokeLinecap="butt" />
+        </g>
+      )}
+      {visVisor && <Shape id={`${id}-vis`} d={polyD(visorPts)} pts={visorPts} color={GEAR.visor} w={w} k={0.9} />}
       {visorGloss}
     </g>
   );

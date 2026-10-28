@@ -137,7 +137,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
     const hullP = hull([...top, ...bot]);
     const hub = ring(-0.02, 0.034);
     return (
-      <g key={`drop${i}`}>
+      <g key={`drop${i}`} opacity={Math.min(1, u / 0.3)}>
         <path d={smoothD(hullP, 0.05)} fill={COL.duct} stroke={INK} strokeWidth={f2(w * 2)} paintOrder="stroke" />
         <path d={polyD(top)} fill={COL.ductIn} stroke="#5A6672" strokeWidth={f2(w * 1.2)} />
         <path d={polyD(hub)} fill={COL.hub} />
@@ -166,13 +166,24 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
       )
     : null;
   // light strips along the nose and tail edges, at mid-thickness
+  // V5: each segment of the strip fades with how squarely its stretch of the board's side faces the camera, so the
+  // lights turn away smoothly instead of popping on and off point by point
   const strip = (ids: number[], color: string) => {
     const pts = ids.map((k) => {
       const [x, z] = BD.outline[k];
       return toW(B, v3(x * 1.003, -BD.thick * 0.45, z * 1.003));
     });
-    const vis = pts.filter((q) => d3(s3(L.pos, q), n3(s3(q, B.o))) > -0.02);
-    return vis.length > 1 ? <path d={`M${proj(L, vis).map((q) => `${f2(q.x)},${f2(q.y)}`).join(' L')}`} stroke={color} strokeWidth={f2(Math.max(1, 0.02 * kc))} fill="none" strokeLinecap="round" /> : null;
+    const segs: React.ReactNode[] = [];
+    for (let i = 0; i + 1 < pts.length; i++) {
+      const m = a3(m3(pts[i], 0.5), m3(pts[i + 1], 0.5));
+      const outward = n3(s3(s3(m, B.o), m3(B.y, d3(s3(m, B.o), B.y))));
+      const fc = d3(n3(s3(L.pos, m)), outward);
+      const op = Math.max(0, Math.min(1, (fc + 0.02) / 0.18));
+      if (op <= 0.01) continue;
+      const a = L.p(pts[i]), b = L.p(pts[i + 1]);
+      segs.push(<path key={i} d={`M${f2(a.x)},${f2(a.y)} L${f2(b.x)},${f2(b.y)}`} stroke={color} strokeOpacity={op} strokeWidth={f2(Math.max(1, 0.02 * kc))} fill="none" strokeLinecap="round" />);
+    }
+    return segs.length ? <g>{segs}</g> : null;
   };
   // underside: battery pack and wiring runs along the spine
   const battery = !above ? (() => {
