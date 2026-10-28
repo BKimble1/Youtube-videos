@@ -328,10 +328,13 @@ const SmokePush: React.FC<{id: string; L: Lens; c: V3; t: number; t0: number}> =
     const a = (i / 12) * Math.PI * 2 + 0.3 * noise1(i * 1.3, 51);
     const r = 0.35 + 1.5 * (1 - Math.exp(-age * 2.2)) * (0.8 + 0.4 * hash(i, 52));
     const q = a3(c, v3(Math.cos(a) * r, -0.35 * (1 - Math.exp(-age * 2.0)) + 0.1 * Math.sin(i), Math.sin(a) * r * 0.8));
-    if (d3(s3(q, L.pos), L.f) < 0.15) continue;
+    // (a puff blown toward the camera fades out before it reaches it, instead of vanishing at the near plane)
+    const dz = d3(s3(q, L.pos), L.f);
+    const near = sstep(0.4, 1.4, dz);
+    if (near < 0.01) continue;
     const p = L.p(q);
     const g = 104 + ((i * 13) % 5) * 9;
-    puffs.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2((0.28 + 0.2 * age) * p.k)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={f2(0.55 * Math.max(0, 1 - age / 1.3) * Math.min(1, age * 6))} />);
+    puffs.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2((0.28 + 0.2 * age) * p.k)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={f2(0.55 * near * Math.max(0, 1 - age / 1.3) * Math.min(1, age * 6))} />);
   }
   const pc = L.p(c);
   return (
@@ -457,7 +460,7 @@ const fieldPos = (t: number) => FIELD(t).B.o;
 const F1_CAM = camFrom(FIELD(F1 + 0.12).B.o, ck(-66, 8, 5.0, 42, 0.6, 0));
 const F2_CAM = camFrom(FIELD(F2).B.o, ck(-6, 5, 4.4, 42, 0.62, 0));
 // F3: tracks the board (a close-up must stay on his legs); eases back to the whole body once the legs have answered
-const F3K: Key[] = [[F3, ck(-34, 4, 2.0, 40, 0.46, 0), {hold: true}], [F3 + 0.72, ck(-34, 4, 2.0, 40, 0.46, 0)], [F3 + 1.55, ck(-36, 8, 4.7, 42, 0.78, 0), {hold: true}], [C1, ck(-36, 8, 4.7, 42, 0.78, 0)]];
+const F3K: Key[] = [[F3, ck(-34, 4, 2.0, 40, 0.46, 0), {hold: true}], [F3 + 0.72, ck(-34, 4, 2.0, 40, 0.46, 0)], [F3 + 1.55, ck(-36, 8, 5.8, 42, 0.72, 0), {hold: true}], [C1, ck(-36, 8, 5.8, 42, 0.72, 0)]];
 const fieldCam = (t: number): Cam => {
   if (t < F2) return standPart(F1_CAM, fieldPos, t, F1, 0.6 * sstep(F1, F1 + 1.1, t), 0.6 + 0.05 * sstep(F1, F1 + 0.8, t), 42);
   if (t < F3) return standPart(F2_CAM, fieldPos, t, F2, 0.7, 0.62, 42);
@@ -580,7 +583,12 @@ export const SHOTS6: Shot[] = [
     focus: (t) => box(lens(liftCam(t)), lift4(t, MATCH)),
   },
   {name: 'the jet prototype test and the redesign on the same stand (workshop)', from: M.but, to: M.except, draw: (t, pre) => <WorkshopScene id={`${pre}ws`} t={t} />, focus: (t) => wsFocus(t)},
-  fieldShot('balance: the problem, the tendency, the legs, the whole body', F1, C1, fieldCam),
+  {
+    ...fieldShot('balance: the problem, the tendency, the legs, the whole body', F1, C1, fieldCam),
+    // in the legs close-up the action is the knees, ankles and deck (the jacket fills the top of the frame): keep the
+    // caption off them
+    focus: (t) => (t >= F3 && t < F3 + 1.2 ? {x0: 0, y0: 760, x1: 1080, y1: 1920} : box(lens(fieldCam(t)), FIELD(t))),
+  },
   {
     name: 'the AI coach: deck phone (sensing), wrist phone (coaching), earbud and the change in his stance, the recovery', from: C1, to: PR1,
     draw: (t, pre) => {
