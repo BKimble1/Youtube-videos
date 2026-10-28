@@ -209,7 +209,8 @@ const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
   const dark = hazeAt('#8C979E', dist);
   if (d3(s3(v3(BRIDGE.x, 40, 260), L.pos), L.f) < 50) return null;
   const deck = [P(BRIDGE.x, BRIDGE.y, BRIDGE.z0), P(BRIDGE.x, BRIDGE.y, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0)];
-  const els: React.ReactNode[] = [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} strokeDasharray={mirror ? '9 6' : undefined} />];
+  // (V5: the deck is not reflected: on the rough water its straight line read as a rail crossing the river)
+  const els: React.ReactNode[] = mirror ? [] : [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} />];
   BRIDGE.pylons.forEach((pz, i) => {
     for (const dx of [-9, 9]) {
       // V5: on the rain-roughened water the reflection is broken into short ripple-length pieces and only reaches part

@@ -51,15 +51,20 @@ const TREES: {x: number; z: number; h: number; r: number}[] = Array.from({length
 
 const Tree: React.FC<{L: Lens; x: number; z: number; h: number; r: number; i: number; wind: number}> = ({L, x, z, h, r, i, wind}) => {
   const base = v3(x, 0, z);
-  if (d3(s3(base, L.pos), L.f) < 1) return null;
+  const crown = v3(x + wind * 0.12 * Math.sin(i), h * 0.72, z);
+  // V5: a tree is drawn only when its base and its crown are both well in front of the camera; a crown almost level
+  // with the camera plane projected to circles (and a ground shadow) tens of thousands of pixels across, which tinted
+  // the whole frame until the camera turned away from it
+  if (d3(s3(base, L.pos), L.f) < 2 || d3(s3(crown, L.pos), L.f) < 2) return null;
   const top = L.p(v3(x, h * 0.55, z));
   const b = L.p(base);
-  const c = L.p(v3(x + wind * 0.12 * Math.sin(i), h * 0.72, z));
+  const c = L.p(crown);
   const R = r * c.k;
+  if (R > 4000) return null;
   const col = mix(PALF.tree, '#7AA06A', hash(i, 75) * 0.5);
   return (
     <g>
-      <ellipse cx={f2(b.x)} cy={f2(b.y)} rx={f2(R * 1.1)} ry={f2(R * 0.25)} fill="#3F5E35" opacity={0.25} />
+      <ellipse cx={f2(b.x)} cy={f2(b.y)} rx={f2(r * 1.1 * b.k)} ry={f2(r * 0.25 * b.k)} fill="#3F5E35" opacity={0.25} />
       <path d={`M${f2(b.x)},${f2(b.y)} L${f2(top.x)},${f2(top.y)}`} stroke={PALF.trunk} strokeWidth={f2(Math.max(1, 0.22 * b.k))} strokeLinecap="round" />
       {[[-0.45, 0.15, 0.7], [0.4, 0.1, 0.75], [0, -0.35, 0.85], [0, 0.1, 0.9]].map(([u, v, s], k) => (
         <circle key={k} cx={f2(c.x + u * R)} cy={f2(c.y + v * R)} r={f2(s * R)} fill={k === 3 ? lit(col, 0.1) : shade(col, 0.08 * k)} stroke="#2F4A2A" strokeWidth={f2(Math.max(0.6, 0.012 * c.k))} paintOrder="stroke" />

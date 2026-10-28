@@ -249,8 +249,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   // comes down to the shoulder plane (V5: seen edge-on its ends used to float beside the neck)
   const colC = lerp3(j.S, j.N, 0.1);
   const colOp = Math.max(0, Math.min(1, (facing(colC, j.up) - 0.08) / 0.22));
-  // the order flips exactly where the camera crosses the plane of the shoulders, where both orders look the same
-  const neckBehind = facing(j.S, j.up) < 0;
+
   const collarPts = colOp > 0.01 ? thin(hull(proj(L, circ3(colC, j.chL, j.chF, 0.072, 16))), 1.5) : [];
   const collar = colOp > 0.01 ? <g key="col" opacity={f2(colOp)}><Shape id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} /></g> : null;
   // V5: the head and helmet are one rigid assembly in the head frame (hF, hU, hL), pivoting at the neck. Every part
@@ -410,11 +409,34 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const shoes = [shoe('sf', j.ankF), shoe('sr', j.ankR)].sort((a, b) => b.z - a.z).map((s) => s.el);
   const legs = zF > zR ? [legF, legR] : [legR, legF];
   const arms = [
-    {z: armFz, el: arm('af', j.shF, j.elbF, j.wriF, true)},
-    {z: armRz, el: arm('ar', j.shR, j.elbR, j.wriR, false)},
+    {z: armFz, k: 0, el: arm('af', j.shF, j.elbF, j.wriF, true)},
+    {z: armRz, k: 1, el: arm('ar', j.shR, j.elbR, j.wriR, false)},
   ].sort((a, b) => b.z - a.z);
-  const behind = arms.filter((a) => a.z > tz + 0.02).map((a) => a.el);
-  const before = arms.filter((a) => a.z <= tz + 0.02).map((a) => a.el);
+  // V5: whether an arm is in front of the torso: its forearm against the torso's surface along the same line of sight
+  // (the torso as a cylinder from pelvis to shoulders), as a signed margin in metres. The arm is always drawn behind,
+  // and its in-front copy fades in over a few centimetres of that margin, so a change of order never pops (the old
+  // test against the torso's centre depth switched in one frame while the arm overlapped the torso).
+  const frontMargin = (q: V3) => {
+    const r = 0.15;
+    const ax = s3(j.S, j.P), len = Math.hypot(ax.x, ax.y, ax.z), u = m3(ax, 1 / len);
+    const dq = s3(q, cam), dist = Math.hypot(dq.x, dq.y, dq.z), v = m3(dq, 1 / dist);
+    const w0 = s3(cam, j.P);
+    const vu = d3(v, u), wu = d3(w0, u);
+    const A = 1 - vu * vu, Bq = 2 * (d3(v, w0) - vu * wu), C = d3(w0, w0) - wu * wu - r * r;
+    // nearest approach of the line of sight to the torso axis, or where it enters the torso
+    let tRef = A > 1e-6 ? -Bq / (2 * A) : dist;
+    const disc = Bq * Bq - 4 * A * C;
+    if (A > 1e-6 && disc > 0) {
+      const tHit = (-Bq - Math.sqrt(disc)) / (2 * A);
+      const h = wu + vu * tHit;
+      if (tHit > 0 && h > -0.05 && h < len + 0.1) tRef = tHit;
+    }
+    return tRef - dist;
+  };
+  const armA = [frontMargin(lerp3(j.elbF, j.wriF, 0.5)), frontMargin(lerp3(j.elbR, j.wriR, 0.6))].map((m) => Math.max(0, Math.min(1, m / 0.05 + 0.5)));
+  void tz;
+  const behind = arms.map((a) => <g key={`b${a.k}`}>{a.el}</g>);
+  const before = arms.filter((a) => armA[a.k] > 0.01).map((a) => <g key={`f${a.k}`} opacity={armA[a.k] < 0.99 ? f2(armA[a.k]) : undefined}>{a.el}</g>);
   if (pov) {
     // only the lower legs reach into the rider's own view
     const shin = (k: string, kn: V3, an: V3) => {
@@ -438,10 +460,20 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       {behind}
       {/* V5: seen from below the collar the neck comes out from behind the jacket's top edge (drawn first, so the
           torso hides its base); from above it rises out of the collar ring */}
-      {neckBehind && neck}
+      {/* V5: the neck is always drawn behind the jacket (its top edge hides the neck's base). Seen from above, the
+          collar opening shows the neck going down into the jacket: the neck again, clipped to the opening, fading in
+          with the collar ring. Nothing switches order, so nothing pops as the camera passes shoulder height. */}
+      {neck}
       {torso}
       {collar}
-      {!neckBehind && neck}
+      {collar && neck && (
+        <g opacity={f2(colOp)}>
+          <clipPath id={`${id}-colc`}>
+            <path d={smoothD(collarPts)} />
+          </clipPath>
+          <g clipPath={`url(#${id}-colc)`}>{neck}</g>
+        </g>
+      )}
       {head}
       {before}
     </g>

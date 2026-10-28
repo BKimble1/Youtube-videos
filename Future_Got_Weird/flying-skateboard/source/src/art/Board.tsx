@@ -186,12 +186,14 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
     return segs.length ? <g>{segs}</g> : null;
   };
   // underside: battery pack and wiring runs along the spine
-  const battery = !above ? (() => {
+  // V5: the pack is always drawn: under the board when the deck is seen from below, and behind the board's body when
+  // seen from above, so the part hanging below the silhouette shows and nothing pops as the deck tips past the camera
+  const battery = (() => {
     const c: V3[] = [];
     for (const x of [-0.1, 0.1]) for (const z of [-0.3, 0.3]) for (const y of [-BD.thick, -BD.thick - 0.06]) c.push(toW(B, v3(x, y, z)));
     const pts = hull(proj(L, c));
     return <path d={smoothD(pts, 0.06)} fill={COL.battery} stroke={INK} strokeWidth={f2(w * 2)} paintOrder="stroke" />;
-  })() : null;
+  })();
   const wires = !above
     ? BD.ducts.map(([x, z], i) => {
         const a = L.p(toW(B, v3(Math.sign(x) * 0.1, -BD.thick - 0.005, z * 0.6)));
@@ -204,6 +206,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
       <defs>
         <LinFill id={`${id}-fg`} b={b} color={above ? COL.frame : COL.under} k={0.9} />
       </defs>
+      {above && battery}
       {/* thickness: the hull of both faces, in the side tone */}
       <path d={smoothD(sideH, 0.1)} fill={COL.side} stroke={INK} strokeWidth={f2(w * 2)} strokeLinejoin="round" paintOrder="stroke" />
       {strip([0, 1, 2, 17, 16], COL.led)}
@@ -227,7 +230,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
           <circle cx={f2(L.p(phoneC).x)} cy={f2(L.p(phoneC).y)} r={f2(Math.max(0.6, 0.006 * kc))} fill="#E8F6FF" />
         </g>
       )}
-      {battery}
+      {!above && battery}
       {wires}
       {above && seating.map(dropUnit)}
     </g>

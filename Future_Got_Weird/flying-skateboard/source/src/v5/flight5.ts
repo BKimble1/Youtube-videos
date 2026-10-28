@@ -101,7 +101,7 @@ export const hook4 = (tau: number): St => {
     // the rotors work harder through "electric propellers blast air downward" (the explanation is also the strongest wash)
     B, alt, speed: HK4.v, pitch, roll, yaw, thrust: 0.7 + 0.28 * sstep(4.9, 5.9, tau) * (1 - sstep(7.2, 7.6, tau)), pos: v3(x, alt, z), vel: v3(dx, 0, HK4.v), rps: 30,
     pose: pose({
-      lean: hLean(tau), side: sd, crouch: 0.46 + 0.16 * work + 0.1 * carve + 3.0 * absorb + 0.03 * noise1(tau * 0.7, 4), twist: 24 + 4 * noise1(tau * 0.5, 5), bend: 11 + 6 * work + 4 * carve,
+      lean: hLean(tau), side: sd, crouch: 0.46 + 0.16 * work + 0.1 * carve + 2.0 * Math.max(0, absorb) + 0.8 * Math.min(0, absorb) + 0.03 * noise1(tau * 0.7, 4), twist: 24 + 4 * noise1(tau * 0.5, 5), bend: 11 + 6 * work + 4 * carve,
       look: 64 + 6 * noise1(tau * 0.4, 6), nod: 10 + 4 * work, armF: 0.45 + 0.12 * work + 0.1 * carve + 0.06 * noise1(tau * 1.1, 7), armFs: 0.8 + 0.2 * work,
       armR: 0.22 + 0.06 * noise1(tau * 0.8, 10), thumb: 0.5, bal: clamp(-hSide(tau) * 15 + 0.3 * carve, -1, 1),
     }),

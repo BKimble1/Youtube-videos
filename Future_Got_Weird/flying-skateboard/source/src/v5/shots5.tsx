@@ -83,8 +83,8 @@ const camFrom = (tgt: V3, c: CK): V3 => {
 
 // ================================================================ 1: the opening crossing and the mechanism (one flight over the Yangtze)
 // 0-1.4 s one strong low front three-quarter tracking angle from his toe side, held (the river streams beneath, his
-// knees take a heave); 1.4-2.4 s he carves toward his heels and the board banks toe edge up, turning its thrusters to
-// the camera (the composition changes because he rides, the camera only holds); 2.2-3.4 s one steady rise and
+// knees take a heave); 1.3-2.4 s he carves toward his heels and the board banks toe edge up, turning its thrusters to
+// the camera (the composition changes because he rides, the camera settles and holds); 1.6-3.37 s one steady rise and
 // pull-back to the crossing (elevation, distance and azimuth each change one way only, no dip-and-climb). Cut on the
 // "You see" caption to a still underside close-up for the ten fans; cut on "blast" to a low tracking view of the air
 // reaching the water.
@@ -100,9 +100,9 @@ const HOOKK: Key[] = [
   [LOOPK[0] - DUR, LOOPK[1]],
   [0.0, ck(252, -8, 4.6, 44, 0.7, 0)],
   [0.7, ck(254, -8, 4.6, 44, 0.69, 0)],
-  [1.4, ck(256, -8, 4.6, 44, 0.67, 0)],
-  [2.2, ck(258.5, -6.5, 5.2, 44, 0.7, 0)],
-  [CUT_UNDER, ck(263, 6, 7.6, 44, 0.85, 0)],
+  [1.6, ck(255.2, -8, 4.62, 44, 0.68, 0), {hold: true}],
+  // the rise ends low (2 degrees): the far bridge deck then stays behind his body instead of sliding up past his head
+  [CUT_UNDER, ck(263, 2, 7.6, 44, 0.85, 0)],
 ];
 // V5: the underside is held still from almost straight below, so the board fills the frame and hides the rider
 // (a steeper view showed his face from under the chin); the air shot is low and wide enough to hold the board, its
