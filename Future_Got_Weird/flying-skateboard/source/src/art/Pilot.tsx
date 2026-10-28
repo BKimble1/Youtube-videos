@@ -192,9 +192,9 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     const cr = (u: number, v: number) => p(a3(c, a3(m3(fd, u), m3(side, v))));
     const body = [cr(-0.045, -0.03), cr(0.045, -0.03), cr(0.045, 0.03), cr(-0.045, 0.03)];
     const scr = [cr(-0.038, -0.023), cr(0.038, -0.023), cr(0.038, 0.023), cr(-0.038, 0.023)];
-    // V5: fades with its facing as the forearm turns (it popped on and off at a threshold)
-    const wpOp = Math.max(0, Math.min(1, (facing(c, nrm) - 0.02) / 0.16));
-    const vis = wpOp > 0.01;
+    // V5 (final): opaque, and drawn only while its face is toward the camera: it turns away edge-on, as a line, so it
+    // never pops (it used to fade, which showed the sleeve through it)
+    const vis = facing(c, nrm) > 0;
     const iconK = Math.max(0, Math.min(1, (j.wristUp - 0.2) / 0.25));
     const pc = p(c);
     // attitude readout: a horizon bar tilted by the board roll, shifted by pitch, and a centre dot
@@ -219,7 +219,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       );
     })();
     return vis ? (
-      <g key="wp" opacity={f2(wpOp)}>
+      <g key="wp">
         <path d={polyD(body)} fill={GEAR.phone} stroke="#0B1218" strokeWidth={f2(w * 1.6)} strokeLinejoin="round" paintOrder="stroke" />
         <path d={polyD(scr)} fill={GEAR.screen} />
         {iconK > 0.01 && <g opacity={f2(iconK)}>{icon}</g>}

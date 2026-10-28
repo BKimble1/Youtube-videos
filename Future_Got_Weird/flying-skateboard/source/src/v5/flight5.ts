@@ -114,7 +114,8 @@ export const LIFT_AT = v3(-40, 0, -26);
 export const lift4 = (t: number, T0: number): St => {
   const s = t - T0;
   const up = sstep(0.62, 1.9, s);
-  const alt = REST + 2.5 * up + 0.5 * sstep(1.9, 2.9, s) + 0.05 * Math.sin(s * 2.2) * up;
+  // (V5 final: one continuous rise; a second ease-in after the first ease-out made the camera's tilt hitch)
+  const alt = REST + 3.0 * sstep(0.62, 2.6, s) + 0.05 * Math.sin(s * 2.2) * up;
   const fwd = (u: number) => (u > 1.65 ? 1.15 * (u - 1.65) ** 2 : 0);
   const z = LIFT_AT.z + fwd(s);
   const lean = (u: number) => 0.01 + 0.08 * sstep(1.45, 1.9, u - T0);

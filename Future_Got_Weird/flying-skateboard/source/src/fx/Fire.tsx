@@ -66,8 +66,10 @@ export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: numb
         pts.push(`${f2(pp.x)},${f2(pp.y)}`);
       }
       if (pts.length > 1) {
-        strands.push(<path key={`${i}-${s}g`} d={`M${pts.join(' L')}`} stroke="#FFB765" strokeOpacity={0.22 * k} strokeWidth={12} fill="none" strokeLinecap="round" />);
-        strands.push(<path key={`${i}-${s}`} d={`M${pts.join(' L')}`} stroke={s ? '#FFE2B0' : '#FFF6E6'} strokeOpacity={0.6 * k} strokeWidth={3.2} fill="none" strokeLinecap="round" strokeDasharray={smooth ? undefined : '14 9'} />);
+        // (V5 smooth: each strand fades in and out over its run, so none appears or vanishes at full length)
+        const life = smooth ? Math.sin(Math.PI * Math.min(1, Math.max(0, ph))) : 1;
+        strands.push(<path key={`${i}-${s}g`} d={`M${pts.join(' L')}`} stroke="#FFB765" strokeOpacity={0.22 * k * life} strokeWidth={12} fill="none" strokeLinecap="round" />);
+        strands.push(<path key={`${i}-${s}`} d={`M${pts.join(' L')}`} stroke={s ? '#FFE2B0' : '#FFF6E6'} strokeOpacity={0.6 * k * life} strokeWidth={3.2} fill="none" strokeLinecap="round" strokeDasharray={smooth ? undefined : '14 9'} />);
       }
     }
   });
@@ -150,6 +152,24 @@ export const FlameBed: React.FC<{id: string; L: Lens; items: {at: V3; size: numb
     }
     glows.push(<ellipse key={i} cx={f2(p.x)} cy={f2(p.y - size * 0.3 * p.k * k)} rx={f2(size * 1.6 * p.k * k)} ry={f2(size * 1.1 * p.k * k)} fill={`url(#${id}-gl)`} opacity={f2(Math.min(1, k * 1.5))} />);
   });
+  // the anchors along the trail joined by a ribbon of flame (outer and core), so the fire reads as one band along the
+  // line instead of a staircase of separate lobes
+  const live = items.filter((it) => it.k > 0.01 && d3(s3(it.at, L.pos), L.f) > 0.15);
+  for (let i = 0; i + 1 < live.length; i++) {
+    const a = live[i], b = live[i + 1];
+    const pa = L.p(a.at), pb = L.p(b.at);
+    const wa = a.size * 0.3 * (0.15 + 0.85 * a.k) * pa.k, wb = b.size * 0.3 * (0.15 + 0.85 * b.k) * pb.k;
+    const ha = a.size * a.k * 0.55 * pa.k, hb = b.size * b.k * 0.55 * pb.k;
+    // (wound the same way as the tongues, so the nonzero fill merges them instead of cutting holes)
+    const quad = (sc: number) => {
+      let q = [{x: pa.x, y: pa.y + wa * 0.5 * sc}, {x: pa.x, y: pa.y - ha * sc}, {x: pb.x, y: pb.y - hb * sc}, {x: pb.x, y: pb.y + wb * 0.5 * sc}];
+      const area = q.reduce((acc, v, k) => acc + v.x * q[(k + 1) % 4].y - q[(k + 1) % 4].x * v.y, 0);
+      if (area < 0) q = q.reverse();
+      return `M${q.map((v) => `${f2(v.x)},${f2(v.y)}`).join(' L')} Z`;
+    };
+    outer.push(quad(1));
+    inner.push(quad(0.55));
+  }
   if (!outer.length) return null;
   const kMax = Math.max(...items.map((it) => it.k));
   return (

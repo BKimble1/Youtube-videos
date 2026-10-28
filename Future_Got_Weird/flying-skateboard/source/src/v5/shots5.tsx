@@ -171,16 +171,18 @@ const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t) - 6 * sstep(M.fireE, 
 // fire dies, then rises slowly back as the redesign takes its place, ending on the framing the field shot continues.
 // All from the same side of the stand, so the prototype keeps its orientation.
 const W2 = M.jet, LEAK0 = M.andCaught - 0.15;
-const W1K: Key[] = [[M.but, ck(-50, 64, 2.4, 54, 0.0, 0)], [W2, ck(-50, 56, 2.3, 54, 0.0, 0)]];
+// (V5 final: one angle with a slight straight push in; a change of elevation round the fixed board read as an orbit)
+const W1K: Key[] = [[M.but, ck(-50, 60, 2.4, 54, 0.0, 0)], [W2, ck(-50, 60, 2.3, 54, 0.0, 0)]];
 // (V5: held at one angle with a slight push in; the 8 degree arc this close read as an orbit round the engines)
 const W2K: Key[] = [[W2, ck(-42, -7, 1.66, 50, -0.3, 0)], [LEAK0, ck(-42, -7, 1.58, 50, -0.3, 0)]];
 // V5: W3 holds near-still on the fire. At the peak of the smoke (when it fills the frame) a cut to W4, already on
 // the field shot's side of the stand; as the smoke clears W4 makes one slow move, back and down (no arc round the stand).
 const W4 = M.so + 0.08;
 const W3K: Key[] = [
-  [LEAK0, ck(-52, 26, 1.7, 48, 0.02, 0)],
+  // (V5 final: one angle, easing straight back; the azimuth and elevation creep read as a slow orbit round the fire)
+  [LEAK0, ck(-55, 28, 1.7, 48, 0.02, 0)],
   [M.fireE, ck(-55, 28, 1.8, 48, 0.02, 0)],
-  [W4, ck(-58, 30, 2.0, 48, 0.05, 0)],
+  [W4, ck(-55, 28, 2.0, 48, 0.02, 0)],
 ];
 const W4K: Key[] = [
   [W4, ck(-89, 17, 4.7, 44, 0.6, 0), {hold: true}],
@@ -397,7 +399,8 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const FL: [number, number][] = [[0, 0.15], [0.07, 0.09], [0.14, 0.1], [0.2, 0.13], [0.33, 0.11], [0.45, 0.12], [0.58, 0.1], [0.7, 0.11]];
   const flames = FL.map(([u, size]) => ({at: along(u), size, k: fireK * Math.min(1, Math.max(0, (spread * 0.95 + 0.01 - u) / 0.1))}));
   const burn = sstep(M.fire + 0.08, M.fire + 0.8, t);
-  const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.12) * 0.55;
+  // (V5 final: a softer, slightly longer bloom; the stronger one pumped the whole frame like an exposure flicker)
+  const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.2) ** 2 * 0.3;
   const react = sstep(M.fire - 0.02, M.fire + 0.3, t) * (1 - sstep(M.so - 0.2, M.so + 0.3, t));
   const flinch = sstep(M.fire, M.fire + 0.16, t) * (1 - sstep(M.fire + 0.8, M.fire + 1.3, t));
   const jInv = pilotJoints(INV, inventor4(react, flinch));
