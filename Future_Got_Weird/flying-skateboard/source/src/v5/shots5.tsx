@@ -44,9 +44,9 @@ const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, set, surface, tint = 0
     {(water ?? (surface === 'water' ? 1 : 0)) < 0.999 && <Wash id={`${id}-wg`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust * (1 - (water ?? 0))} t={t} vel={st.vel} surface="ground" foam={1} soft />}
     {(water ?? (surface === 'water' ? 1 : 0)) > 0.001 && <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust * (water ?? 1)} t={t} vel={st.vel} surface="water" foam={1} soft />}
     {st.alt < 14 && <RiderShadow L={L} B={st.B} pose={st.pose} sun={sun ?? (set === 'river' ? RSUN : undefined)} minOp={set === 'river' ? 1.1 : 0.35} color={mix('#24361F', '#0B2427', water ?? (surface === 'water' ? 1 : 0))} />}
-    {!below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
+    {!below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} speed={set === 'field' ? 0.4 : 1} />}
     <Rider id={id} L={L} B={st.B} pose={st.pose} coach={coach} pov={pov} st={{phase: t * 2.6, rps: st.rps > 20 ? 11 : st.rps, thrust: st.thrust, tilt: {pitch: st.pitch, roll: st.roll}}} />
-    {below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
+    {below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} speed={set === 'field' ? 0.4 : 1} />}
     {extra}
   </g>
 );
@@ -167,7 +167,8 @@ const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t) - 6 * sstep(M.fireE, 
 // All from the same side of the stand, so the prototype keeps its orientation.
 const W2 = M.jet, LEAK0 = M.andCaught - 0.15;
 const W1K: Key[] = [[M.but, ck(-50, 64, 2.4, 54, 0.0, 0)], [W2, ck(-50, 56, 2.3, 54, 0.0, 0)]];
-const W2K: Key[] = [[W2, ck(-38, -8, 1.65, 50, -0.3, 0)], [LEAK0, ck(-46, -6, 1.55, 50, -0.3, 0)]];
+// (V5: held at one angle with a slight push in; the 8 degree arc this close read as an orbit round the engines)
+const W2K: Key[] = [[W2, ck(-42, -7, 1.66, 50, -0.3, 0)], [LEAK0, ck(-42, -7, 1.58, 50, -0.3, 0)]];
 // V5: W3 holds near-still on the fire. At the peak of the smoke (when it fills the frame) a cut to W4, already on
 // the field shot's side of the stand; as the smoke clears W4 makes one slow move, back and down (no arc round the stand).
 const W4 = M.so + 0.08;
@@ -259,14 +260,15 @@ const FuelLeak: React.FC<{L: Lens; B: Frame; t: number; t0: number; t1: number; 
   }
   if (part === 'pool') {
     // V5: the puddle lies flat on the deck (a disk in the deck plane), drawn by the JetBoard under its engines
-    const rr = (0.03 + 0.06 * sstep(t0, t1, t));
+    const rr = (0.03 + 0.06 * sstep(t0 + 0.36, t1, t));
     const disk = (c: V3, ra: number, rb: number) => polyD(proj(L, Array.from({length: 24}, (_, i) => {
       const a = (i / 24) * Math.PI * 2;
       return a3(c, a3(m3(B.x, Math.cos(a) * ra), m3(B.z, Math.sin(a) * rb * (1 + 0.15 * Math.sin(a * 3)))));
     })));
     void r;
     // it burns off with the fire (shrinking and fading) and leaves the scorch the JetBoard draws
-    const kp = sstep(t0, t0 + 0.4, t) * (1 - sstep(t1 + 0.25, M.so - 0.1, t));
+    // (the first drop lands about 0.38 s after the weep starts: the pool forms from then, not before)
+    const kp = sstep(t0 + 0.36, t0 + 0.6, t) * (1 - sstep(t1 + 0.25, M.so - 0.1, t));
     const rb = rr * (1 - 0.5 * sstep(t1 + 0.25, M.so - 0.1, t));
     return (
       <g opacity={kp}>
@@ -311,6 +313,27 @@ const SmokeVeil: React.FC<{id: string; L: Lens; c: V3; k: number; t: number}> = 
     </g>
   );
 };
+/** V5: the room full of smoke: an opaque grey with soft lighter and darker billows rolling across it, so the frame
+ *  is never a frozen flat grey and the cut and the board swap underneath it cannot show */
+const FogMotion: React.FC<{id: string; t: number; k: number}> = ({id, t, k}) => {
+  const puffs = Array.from({length: 9}, (_, i) => {
+    const x = ((i * 0.37 + t * (0.05 + 0.02 * (i % 3))) % 1.3 - 0.15) * 1080;
+    const y = (0.12 + (i * 0.29) % 0.85) * 1920 - t * 40 * (1 + (i % 2));
+    const g = 96 + ((i * 17) % 4) * 10;
+    return <circle key={i} cx={f2(x)} cy={f2(((y % 1920) + 1920) % 1920)} r={f2(260 + (i % 4) * 70)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={0.55} />;
+  });
+  return (
+    <g opacity={f2(k)}>
+      <defs>
+        <filter id={`${id}-b`} x="-30%" y="-30%" width="160%" height="160%">
+          <feGaussianBlur stdDeviation={90} />
+        </filter>
+      </defs>
+      <rect x={0} y={0} width={1080} height={1920} fill="rgb(106,103,99)" />
+      <g filter={`url(#${id}-b)`}>{puffs}</g>
+    </g>
+  );
+};
 // the redesign in the same cradle: the electric board's deck sits on the stand rails where the jet plank was
 const BE = (B: Frame): Frame => ({...B, o: a3(B.o, m3(B.y, -0.045 + BD.thick))});
 // V5: the electric board comes out of the smoke complete (the unit-by-unit seating popped and cut through the rim),
@@ -330,12 +353,14 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const fl = jetFuelLine(B, 2);
   const pool = toW(B, v3(0.13, 0.004, -0.02));
   const along = (u: number) => (u < 0.2 ? lerp3(pool, fl[2], u / 0.2) : u < 0.6 ? lerp3(fl[2], fl[1], (u - 0.2) / 0.4) : lerp3(fl[1], fl[0], (u - 0.6) / 0.4));
-  const spread = sstep(M.fire, M.fire + 0.5, t);
+  const spread = sstep(M.fire, M.fire + 1.1, t);
   // the vapour flashes and the flame grows over a quarter second; when the fuel is shut off it dies down over half a second
   const out = sstep(M.fireE + 0.05, M.so - 0.05, t);
   const fireK = sstep(M.fire - 0.04, M.fire + 0.22, t) * (1 - out);
   // V5: each tongue of flame grows in place as the fire runs along the line (no clusters appearing in one frame)
-  const flames = [0, 0.2, 0.45, 0.7].map((u) => ({at: along(u), k: fireK * Math.min(1, Math.max(0, (spread * 0.9 + 0.01 - u) / 0.14))})).filter((f) => f.k > 0.01);
+  // the flame climbs the drip trail from the pool to the fitting, then runs along the line (anchors every few cm)
+  const FL: [number, number][] = [[0, 0.15], [0.07, 0.09], [0.14, 0.1], [0.2, 0.13], [0.33, 0.11], [0.45, 0.12], [0.58, 0.1], [0.7, 0.11]];
+  const flames = FL.map(([u, size]) => ({at: along(u), size, k: fireK * Math.min(1, Math.max(0, (spread * 0.95 + 0.01 - u) / 0.1))})).filter((f) => f.k > 0.01);
   const flameAt = flames.map((f) => f.at);
   const burn = sstep(M.fire + 0.08, M.fire + 0.8, t);
   const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.12) * 0.55;
@@ -348,7 +373,7 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const veil = sstep(M.so - 0.45, M.so - 0.05, t) * (1 - sstep(M.so + 0.3, M.switched + 0.15, t));
   // V5: for a moment the smoke fills the whole room (it hides the stand legs and the walls too), and the cut to the
   // new side and the swap of the boards both happen inside it
-  const fog = 0.94 * sstep(M.so - 0.3, M.so, t) * (1 - sstep(M.so + 0.25, M.so + 0.6, t));
+  const fog = sstep(M.so - 0.3, M.so - 0.02, t) * (1 - sstep(M.so + 0.22, M.so + 0.6, t));
   const swap = t < M.so + 0.12 ? 0 : 1;
   const camUp = d3(s3(L.pos, B.o), B.y) > 0;
   const smokeK = sstep(M.fire + 0.2, M.so, t) * 0.6 * (1 - sstep(M.so - 0.2, M.switched + 0.2, t));
@@ -364,15 +389,15 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
           {camUp && <Recirc L={L} from={nozzles.map((n) => v3(n.x, 0.05, n.z))} to={intakes} k={recirc} t={t} smooth />}
           <JetBoard id={`${id}-jb`} L={L} B={B} stand={false} st={{phase: jetPhase(t), rps: jetRps(t), burn, heat: h}} overlay={<FuelLeak L={L} B={B} t={t} t0={LEAK0} t1={M.fire} part="pool" />} />
           <FuelLeak L={L} B={B} t={t} t0={LEAK0} t1={M.fire} part="drips" />
-          {camUp && <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6)} t={t} />}
+          {camUp && <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6) * (1 - sstep(LEAK0, LEAK0 + 0.3, t))} t={t} />}
           <Smoke L={L} at={[along(0), along(0.45)]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so - 0.5, M.so + 0.2, t))} />
-          {flames.map((f, i) => <Flames key={i} id={`${id}-fl${i}`} L={L} at={[f.at]} size={0.15} k={f.k} t={t} />)}
+          {flames.map((f, i) => <Flames key={i} id={`${id}-fl${i}`} L={L} at={[f.at]} size={f.size} k={f.k} t={t} grow />)}
           <Flash id={`${id}-fs`} c={L.p(fl[2])} k={flash} />
         </g>
       )}
       {swap > 0 && <Rider id={`${id}-eb`} L={L} B={BE(B)} pose={lift4(0, 10).pose} noPilot st={{phase: ePhase(t), rps: 5 * sstep(M.switched, M.except - 0.2, t), thrust: 0, built: 10}} />}
       <SmokeVeil id={`${id}-sv`} L={L} c={a3(B.o, v3(0, 0.15, 0))} k={veil} t={t} />
-      {fog > 0.005 && <rect x={0} y={0} width={1080} height={1920} fill="rgb(106,103,99)" opacity={f2(fog)} />}
+      {fog > 0.005 && <FogMotion id={`${id}-fm`} t={t} k={fog} />}
     </g>
   );
 };
@@ -399,7 +424,8 @@ const A2 = M.theBoard;
 // A2 is closer and round to his other side, so the cut changes both angle (46 degrees) and size (V5's first cut had
 // the rider the same size in both and read as a jump cut)
 const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 7, 4.8, 42, 0.8, 0));
-const fieldCam = (t: number): Cam => (t < A2 ? standCam(A1_CAM, fieldPos, t, 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42, 0.5) : standPart(A2_CAM, fieldPos, t, A2, 0.75, 0.85, 42));
+// (A1 starts from rest on the match cut, as the workshop move ended, and eases into following the lift)
+const fieldCam = (t: number): Cam => (t < A2 ? standPart(A1_CAM, fieldPos, t, M.except, sstep(M.except, M.except + 0.7, t), 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42) : standPart(A2_CAM, fieldPos, t, A2, 0.75, 0.85, 42));
 // D (coach): controlled close-ups, each held still: C1 the phone built into the deck (from above); C2 his own view of
 // the wrist phone he has raised; C3 the earbud on his ear as the cue plays (camera fixed to his torso, so the small
 // listening tilt of his head reads); C4 back to a standing medium view as he makes the correction and the board settles.

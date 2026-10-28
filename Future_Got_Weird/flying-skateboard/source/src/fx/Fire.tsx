@@ -75,7 +75,7 @@ export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: numb
 };
 
 /** flame tongues at 3D anchor points; size in metres; k = intensity 0..1 */
-export const Flames: React.FC<{id: string; L: Lens; at: V3[]; size: number; k: number; t: number}> = ({id, L, at, size, k, t}) => {
+export const Flames: React.FC<{id: string; L: Lens; at: V3[]; size: number; k: number; t: number; grow?: boolean}> = ({id, L, at, size, k, t, grow = false}) => {
   if (k <= 0.01) return null;
   return (
     <g>
@@ -96,8 +96,10 @@ export const Flames: React.FC<{id: string; L: Lens; at: V3[]; size: number; k: n
         const tongues = [];
         for (let j = 0; j < 5; j++) {
           const h0 = size * k * (0.6 + 0.5 * hash(i * 9 + j, 7)) * (1 + 0.35 * noise1(t * 7 + j * 2.3 + i, 11));
-          const wd = size * 0.32 * (0.7 + 0.5 * hash(i * 5 + j, 8));
-          const off = (j - 2) * size * 0.16;
+          // (V5 grow: a young flame is narrow as well as short, so a new tongue of fire does not appear at full width)
+          const gw = grow ? 0.25 + 0.75 * k : 1;
+          const wd = size * 0.32 * (0.7 + 0.5 * hash(i * 5 + j, 8)) * gw;
+          const off = (j - 2) * size * 0.16 * gw;
           const sway = noise1(t * 5 + j + i * 1.7, 12) * size * 0.2;
           tongues.push({h: h0 * p.k, w: wd * p.k, off: off * p.k, sway: sway * p.k});
         }

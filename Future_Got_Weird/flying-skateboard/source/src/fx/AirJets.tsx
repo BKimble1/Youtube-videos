@@ -9,7 +9,7 @@ import {hash, noise1} from '../dc/math';
 import {f2} from '../eng/draw';
 import {a3, c3, d3, Frame, Lens, m3, n3, s3, V3, v3} from '../eng/v3';
 
-export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; vel?: V3; reach?: number; alpha?: number; dense?: number}> = ({L, B, t, thrust, vel = v3(0, 0, 0), reach = 1.3, alpha = 1, dense = 0}) => {
+export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; vel?: V3; reach?: number; alpha?: number; dense?: number; speed?: number}> = ({L, B, t, thrust, vel = v3(0, 0, 0), reach = 1.3, alpha = 1, dense = 0, speed = 1}) => {
   if (thrust < 0.05 || alpha < 0.01) return null;
   const jetV = 13 + 6 * thrust;
   const dir = n3(a3(m3(B.y, -jetV), m3(vel, -1)));
@@ -24,7 +24,9 @@ export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; ve
       const h = hash(i * 17 + k, 61);
       const ang0 = h * Math.PI * 2;
       const rr = BD.ductR * (0.3 + 0.55 * hash(i * 5 + k, 62));
-      const ph = (t * (1.6 + 1.2 * thrust) + h) % 1;
+      // (V5: `speed` < 1 slows the wisps where they are short and close: travelling further than their own width each
+      // frame, they read as lines redrawn in new places)
+      const ph = (t * (1.6 + 1.2 * thrust) * speed + h) % 1;
       const pts: string[] = [];
       let ok = true;
       for (let q = 0; q <= 6; q++) {

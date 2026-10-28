@@ -96,7 +96,8 @@ export const hook4 = (tau: number): St => {
   // comes up under him and extend as it drops away
   const absorb = heave(tau) - lag(heave, tau, 0.3, 0.03, 8);
   // the knees work with every correction: they flex as the weight moves and recover after it
-  const work = Math.min(1, Math.abs(hSide(tau)) * 14 + Math.abs(hLean(tau) - 0.085) * 12 + Math.abs(heave(tau)) * 1.5);
+  // (V5: saturates smoothly; a hard clamp stopped the arm dead on the loop's first frame)
+  const work = 1 - Math.exp(-1.3 * (Math.abs(hSide(tau)) * 14 + Math.abs(hLean(tau) - 0.085) * 12 + Math.abs(heave(tau)) * 1.5));
   return {
     // the rotors work harder through "electric propellers blast air downward" (the explanation is also the strongest wash)
     B, alt, speed: HK4.v, pitch, roll, yaw, thrust: 0.7 + 0.28 * sstep(4.9, 5.9, tau) * (1 - sstep(7.2, 7.6, tau)), pos: v3(x, alt, z), vel: v3(dx, 0, HK4.v), rps: 30,
@@ -114,7 +115,7 @@ export const lift4 = (t: number, T0: number): St => {
   const s = t - T0;
   const up = sstep(0.62, 1.9, s);
   const alt = REST + 2.5 * up + 0.5 * sstep(1.9, 2.9, s) + 0.05 * Math.sin(s * 2.2) * up;
-  const fwd = (u: number) => (u > 1.65 ? 1.7 * (u - 1.65) ** 2 : 0);
+  const fwd = (u: number) => (u > 1.65 ? 1.15 * (u - 1.65) ** 2 : 0);
   const z = LIFT_AT.z + fwd(s);
   const lean = (u: number) => 0.01 + 0.08 * sstep(1.45, 1.9, u - T0);
   const side = (u: number) => 0.016 * noise1(u * 1.2, 21) * sstep(0.7, 1.1, u - T0);
@@ -242,12 +243,15 @@ export const takeoff = (t: number, T0: number): St => {
     pose: pose({side: wob(t), crouch: 0.62, bend: 18, armF: 0.9, armFs: 1.0, armR: 0.55, look: 38, nod: 28, bal: clamp(-wob(t) * 13, -1, 1), hipLead: 0.6})};
 };
 /** E2 later: an S-curve over the field, leaning into each turn, path traced by the downwash in the grass */
+// V5: flown slower and tighter (about 4.5 m/s), so the S reads under the still overhead camera in the half second it
+// is on screen (at 7.7 m/s he crossed the frame in under half a second)
+const SCX = (s: number) => -4.6 + 3.2 * s, SCZ = (s: number) => 0.8 + 1.0 * Math.sin(s * 3.4);
 export const sCurve = (t: number, T0: number): St => {
-  const px = (s: number) => -5 + 5.2 * s, pz = (s: number) => 2.2 * Math.sin(s * 2.6);
+  const px = SCX, pz = SCZ;
   const s = t - T0;
   const dx = (px(s + 0.02) - px(s - 0.02)) / 0.04, dz = (pz(s + 0.02) - pz(s - 0.02)) / 0.04;
   const yaw = yawOf(dx, dz);
-  const curv = -2.2 * 2.6 * 2.6 * Math.sin(s * 2.6);
+  const curv = -1.0 * 3.4 * 3.4 * Math.sin(s * 3.4);
   const bank = clamp(curv * 0.9, -12, 12);
   const B = frameYPR(v3(px(s), 1.4, pz(s)), yaw, -6, bank);
   return {B, alt: 1.4, speed: Math.hypot(dx, dz), pitch: -6, roll: bank, yaw, thrust: 0.85, pos: B.o, vel: v3(dx, 0, dz), rps: 30,
@@ -257,7 +261,7 @@ export const sCurvePath = (T0: number, t: number) => {
   const pts: V3[] = [];
   for (let u = T0 - 0.6; u <= t; u += 0.04) {
     const s = u - T0;
-    pts.push(v3(-5 + 5.2 * s, 0.01, 2.2 * Math.sin(s * 2.6)));
+    pts.push(v3(SCX(s), 0.01, SCZ(s)));
   }
   return pts;
 };

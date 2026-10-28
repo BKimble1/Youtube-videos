@@ -304,7 +304,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   // V5: short dark hair at the back of the head, from under the helmet's back rim down to the nape (a rear view showed
   // a blank skin-coloured disc that read as a featureless face); on the skin sphere itself, so its outline is exact
   // its top edge runs just above the shell's rim (hidden under the shell), so no skin shows between hair and helmet
-  const HAIR = {ps: 1.95, th1: -0.8};
+  const HAIR = {ps: 1.95, th1: -1.15};
   const rimTh = (ps: number) => {
     const k = Math.max(0, -0.5 * Math.cos(ps));
     return Math.asin(0.12 / Math.sqrt(1 + k * k)) - Math.atan(k);
@@ -388,7 +388,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const head = !vis(Hc, a3(Hc, m3(j.hU, R)), a3(Hc, m3(j.hF, R))) ? null : (
     <g key="head">
       <path d={skin.d} fill={GEAR.skin} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />
-      {hairPts.length > 2 && <path d={polyD(hairPts)} fill="#3B2C24" />}
+      {hairPts.length > 2 && <path d={polyD(hairPts)} fill="#5A4231" />}
       {ear(-1)}
       {ear(1)}
       {strap(1)}

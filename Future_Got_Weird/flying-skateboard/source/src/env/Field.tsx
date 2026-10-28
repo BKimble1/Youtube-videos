@@ -43,11 +43,12 @@ const HillRing: React.FC<{L: Lens; R: number; base: number; amp: number; color: 
   return <path d={ds.join(' ')} fill={color} stroke={color} strokeWidth={1} />;
 };
 
+const SHED_X = -17, SHED_Z = 21;
 const TREES: {x: number; z: number; h: number; r: number}[] = Array.from({length: 26}, (_, i) => {
   const a = hash(i, 71) * Math.PI * 2;
   const d = 16 + hash(i, 72) * 46;
   return {x: Math.cos(a) * d, z: Math.sin(a) * d, h: 4 + hash(i, 73) * 5, r: 1.6 + hash(i, 74) * 1.6};
-}).filter((t) => !(t.x < -2 && t.x > -16 && t.z > 8 && t.z < 22));
+}).filter((t) => !(t.x < SHED_X + 7 && t.x > SHED_X - 7 && t.z > SHED_Z - 7 && t.z < SHED_Z + 7));
 
 const Tree: React.FC<{L: Lens; x: number; z: number; h: number; r: number; i: number; wind: number}> = ({L, x, z, h, r, i, wind}) => {
   const base = v3(x, 0, z);
@@ -74,7 +75,8 @@ const Tree: React.FC<{L: Lens; x: number; z: number; h: number; r: number; i: nu
 };
 
 /** the workshop shed: plank walls, a corrugated tin roof, a wide open door (same building as the interior set) */
-export const SHED = {x: -9, z: 15, w: 9, d: 7, h: 3.2, roof: 4.4};
+// (V5: further left and back, so its roofline never runs into his helmet in the standing cameras)
+export const SHED = {x: -17, z: 21, w: 9, d: 7, h: 3.2, roof: 4.4};
 const Shed: React.FC<{L: Lens}> = ({L}) => {
   const {x, z, w, d, h, roof} = SHED;
   const P = (px: number, py: number, pz: number) => v3(x + px, py, z + pz);

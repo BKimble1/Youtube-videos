@@ -7,8 +7,8 @@ import {CAPS, FPS} from './story/time';
 import {capY, placeFor} from './story/capPlace';
 import {E} from './story/time';
 
-// V5: a caption that would appear 1-3 frames before a picture cut appears on the cut frame instead (and the caption
-// before it holds until then), so caption and picture change together rather than as two pops
+// V5: a caption that would change within 3 frames of a picture cut changes on the cut frame instead (the caption
+// before it holds, or ends, at the same frame), so caption and picture change together rather than as two pops
 const capFrames = new Map<string, {s: number[]; h: number[]}>();
 const framesFor = (cuts?: number[]) => {
   const key = cuts ? cuts.join(',') : '';
@@ -17,7 +17,7 @@ const framesFor = (cuts?: number[]) => {
     const h = CAPS.map((c) => Math.round(c.hide * FPS));
     if (cuts)
       for (let k = 1; k < CAPS.length; k++) {
-        const c = cuts.find((x) => x > s[k] && x <= s[k] + 3);
+        const c = cuts.find((x) => x >= s[k] - 3 && x <= s[k] + 3 && x !== s[k] && x > s[k - 1]);
         if (c === undefined) continue;
         if (h[k - 1] === s[k]) h[k - 1] = c;
         s[k] = c;

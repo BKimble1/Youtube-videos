@@ -45,8 +45,13 @@ export const makePlacer = (shot: Focus) => {
     }
     return best;
   };
-  const capY = (i: number) => {
-    if (!m.has(i)) m.set(i, placeFor(CAPS[i].show, CAPS[i].hide));
+  const capY = (i: number): number => {
+    if (!m.has(i)) {
+      // V5: keep the previous caption's place when it is clear for this one too (fewer jumps between captions)
+      const ts = Array.from({length: 7}, (_, k) => CAPS[i].show + ((CAPS[i].hide - CAPS[i].show) * k) / 6);
+      const prev = i > 0 && CAPS[i].show - CAPS[i - 1].hide < 0.3 ? capY(i - 1) : null;
+      m.set(i, prev !== null && clear(prev, ts) === 0 ? prev : placeFor(CAPS[i].show, CAPS[i].hide));
+    }
     return m.get(i)!;
   };
   return {placeFor, capY};
