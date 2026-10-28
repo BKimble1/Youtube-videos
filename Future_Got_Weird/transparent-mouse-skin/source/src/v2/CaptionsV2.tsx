@@ -8,11 +8,11 @@ const CAP_Y: [string, number][] = [
   ['You see', 280], ['normally', 280], ['scattering', 280], ['But the', 280], ['how the', 280], ['making', 280], ['more like', 280],
   ['Then', 1440], ['and the', 1440], ['the moving', 1440],
 ];
-export const CaptionsV2: React.FC<{t: number}> = ({t}) => {
+export const CaptionsV2: React.FC<{t: number; table?: [string, number][]}> = ({t, table = CAP_Y}) => {
   const i = CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);
   if (i < 0) return null;
   const c = CAPTIONS[i];
-  const [first, cy] = CAP_Y[i];
+  const [first, cy] = table[i];
   if (!c.text.startsWith(first)) throw new Error(`caption table out of step at ${i}: ${c.text}`);
   const age = t - c.show;
   const a = i === 0 ? 1 : clamp(age / 0.07);
