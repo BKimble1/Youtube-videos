@@ -11,6 +11,7 @@ import {Film3, FilmStill3, Sheet3} from './v3/Film3';
 import {Film4, FilmStill4, Sheet4} from './v4/Film4';
 import {Film5, FilmStill5, Sheet5} from './v5/Film5';
 import {Film6, FilmStill6, Sheet6} from './v6/Film6';
+import {Film7, FilmStill7, Sheet7} from './v7/Film7';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -32,6 +33,9 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="FlyingSkateboardV6" component={Film6} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v6' as string | false, captions: true}} />
     <Still id="FilmStillV6" component={FilmStill6} width={W} height={H} defaultProps={{t: 0, captions: false}} />
     <Still id="SheetV6" component={Sheet6} width={4320} height={5760} defaultProps={{ts: [0], captions: false}} />
+    <Composition id="FlyingSkateboardV7" component={Film7} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v7' as string | false, captions: true}} />
+    <Still id="FilmStillV7" component={FilmStill7} width={W} height={H} defaultProps={{t: 0, captions: false}} />
+    <Still id="SheetV7" component={Sheet7} width={4320} height={5760} defaultProps={{ts: [0], captions: false}} />
     <Still id="HeadTest" component={HeadTest} width={W} height={H} defaultProps={{}} />
     <Still id="RigTest" component={RigTest} width={W} height={H} defaultProps={{}} />
   </>
