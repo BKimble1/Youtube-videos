@@ -5,13 +5,13 @@
  "bpm": 105.3016453382084,
  "ebur128": [
   "Integrated loudness:",
-  "I:         -14.3 LUFS",
-  "Threshold: -24.4 LUFS",
+  "I:         -14.4 LUFS",
+  "Threshold: -24.5 LUFS",
   "Loudness range:",
   "LRA:         2.2 LU",
-  "Threshold: -34.4 LUFS",
-  "LRA low:   -15.7 LUFS",
-  "LRA high:  -13.5 LUFS",
+  "Threshold: -34.5 LUFS",
+  "LRA low:   -15.8 LUFS",
+  "LRA high:  -13.6 LUFS",
   "True peak:",
   "Peak:       -1.4 dBFS"
  ],

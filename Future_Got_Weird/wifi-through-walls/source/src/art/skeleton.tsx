@@ -64,3 +64,48 @@ export const SkeletonDraw: React.FC<{id: string; kp: Record<KPName, Pt>; w: numb
 };
 /** map rig-local keypoints into a screen box: the figure's bounding frame `src` (rig units) to `dst` (px) */
 export const mapKP = (kp: Record<KPName, Pt>, fn: (p: Pt) => Pt) => Object.fromEntries(Object.entries(kp).map(([k, p]) => [k, fn(p)])) as Record<KPName, Pt>;
+/** V9: the estimate drawn as a body, so it reads as a person at a glance: soft glowing volumes (head, neck, a rounded
+ *  torso, tapered limbs) behind the thin keypoint skeleton. Generic proportions only (no hair, face or clothing): the
+ *  same mannequin for anyone. `m`: px per metre; `a(L)`: a limb's opacity (0..1, e.g. while it is being built). The far
+ *  (right, cyan) side is drawn first, then the torso, then the near (left, yellow) side. */
+const THICK: Record<string, number> = {'lsh-lel': 0.095, 'rsh-rel': 0.095, 'lel-lwr': 0.075, 'rel-rwr': 0.075, 'lhip-lkn': 0.15, 'rhip-rkn': 0.15, 'lkn-lan': 0.105, 'rkn-ran': 0.105, 'neck-head': 0.07};
+export const BodyGlow: React.FC<{kp: Record<KPName, Pt>; m: number; a?: (L: (typeof LIMBS)[number]) => number; head?: number; torso?: number; boost?: number}> = ({kp, m, a = () => 1, head = 1, torso = 1, boost = 0}) => {
+  const vol = (L: (typeof LIMBS)[number], i: number) => {
+    const th = THICK[`${L.a}-${L.b}`];
+    if (!th) return null;
+    const A = kp[L.a], Bp = kp[L.b], o = a(L);
+    if (o <= 0) return null;
+    const col = L.side === 'r' ? '#3FC7F0' : L.side === 'l' ? '#F2C23A' : '#9EEBFF';
+    return (
+      <g key={`v${i}`} opacity={o}>
+        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m * 1.5)} strokeLinecap="round" opacity={0.16 + 0.1 * boost} />
+        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m)} strokeLinecap="round" opacity={0.42 + 0.2 * boost} />
+      </g>
+    );
+  };
+  const far = LIMBS.map((L, i) => (L.side === 'r' ? vol(L, i) : null));
+  const near = LIMBS.map((L, i) => (L.side === 'l' ? vol(L, i) : null));
+  const T = [kp.lsh, kp.rsh, kp.rhip, kp.lhip];
+  const tp = T.map((p) => `${f1(p.x)},${f1(p.y)}`).join(' ');
+  const hr = 0.105 * m;
+  // the head sits a little above the head keypoint's neck side (the keypoint is the head's centre)
+  const H = kp.head;
+  return (
+    <g style={{mixBlendMode: 'screen'}}>
+      {far}
+      {torso > 0 && (
+        <g opacity={torso}>
+          <polygon points={tp} fill="#7FDFFF" stroke="#7FDFFF" strokeWidth={f1(0.13 * m)} strokeLinejoin="round" opacity={0.3 + 0.12 * boost} />
+          <line x1={f1(kp.neck.x)} y1={f1(kp.neck.y)} x2={f1(H.x)} y2={f1(H.y)} stroke="#9EEBFF" strokeWidth={f1(0.07 * m)} strokeLinecap="round" opacity={0.4} />
+        </g>
+      )}
+      {near}
+      {head > 0 && (
+        <g opacity={head}>
+          <circle cx={f1(H.x)} cy={f1(H.y)} r={f1(hr * 1.35)} fill="#BFF4FF" opacity={0.14 + 0.1 * boost} />
+          <circle cx={f1(H.x)} cy={f1(H.y)} r={f1(hr)} fill="#9EEBFF" opacity={0.38 + 0.15 * boost} stroke="#E8FCFF" strokeWidth={f1(Math.max(2, 0.012 * m))} strokeOpacity={0.8} />
+        </g>
+      )}
+    </g>
+  );
+};

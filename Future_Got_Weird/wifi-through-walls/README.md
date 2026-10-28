@@ -1,5 +1,33 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V9 (first-three-seconds and clarity pass)
+
+**Status (28 Oct 2026):** V9 review rendered natively at 1080×1920, 30 fps, and checked from the file. **Not published;
+the 4K master has not been made.** It keeps the approved narration (same recording, words, order and timing).
+
+The changes:
+- **Opening:** a closer opening of him, the concrete wall and the live screen, with the screen's estimate drawn as a
+  generic glowing body. On "behind" he flinches, arms over his head; then he curls into a ball; on "watch you" he
+  peeks, and the screen matches each move.
+- **Mechanism:** one held radio → wall → him → receiver path, with bold cyan out, a white hit and a yellow echo.
+- **Separate study:** the SEPARATE STUDY sign is removed, and the street gains a person-level move.
+- **197 result:** a clean "ALMOST EVERYONE IDENTIFIED CORRECTLY" replaces the 197-tile grid.
+- **Return visit:** a high-angle view with an animated signature lock (SAME ID: #12).
+- **Ending:** the WI-FI echoes start under him, and the loop join keeps the waves continuous.
+
+Remaining limitations are listed at the end of the change log.
+
+| Deliverable | File |
+|---|---|
+| V9 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V9_REVIEW_1080x1920.mp4` |
+| Change log, checks, limitations | `production/V9_CHANGELOG.md` |
+| Editable source (V9 scenes) | `source/src/v9/` (joins in `source/src/Film.tsx`; the glowing body in `source/src/art/skeleton.tsx`) |
+| Probes, measured QA | `qa/v9/` (`tools/v9/*`) |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V9_mix.wav`, `audio/v9_events.json` (`tools/v9/events.ts`, `tools/v9/make_audio9.py`) |
+| Stills | `stills/FGW_WiFi_V9_*.png` |
+
+`source/` now builds V9. V4–V8's scene code stays in `source/src/v4/` to `v8/`.
+
 ## V8 (targeted visual polish)
 
 **Status (28 Oct 2026):** V8 review rendered natively at 1080×1920, 30 fps, and checked from the file. **Not published;
@@ -25,7 +53,7 @@ Remaining limitations are listed at the end of the change log.
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V8_mix.wav`, `audio/v8_events.json` (`tools/v8/events.ts`, `tools/v8/make_audio8.py`) |
 | Stills | `stills/FGW_WiFi_V8_*.png` |
 
-`source/` now builds V8. V4–V7's scene code stays in `source/src/v4/` to `v7/`.
+V8's scene code is in `source/src/v8/`.
 
 ## V7 (targeted visual revision)
 

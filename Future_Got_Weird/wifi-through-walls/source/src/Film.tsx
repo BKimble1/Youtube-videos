@@ -6,14 +6,14 @@ import './fonts';
 import {clamp, FPS, IdCtx, ss, useUid, word} from './lib';
 import {Captions} from './Captions';
 import {capY} from './captions';
-import {LAB_OUT, LabScene, LB, labSil} from './v8/Lab8';
-import {LAB_IN} from './v8/hero8';
-import {cafeCam, CafeScene4, cafeSil, CF, E_OUT, G_BACK, G_IN, heroSteps, heroStepsG, OR_SPLIT, POV_IN, povCam, rxCam, splitCam, UI_IN, UI_OUT} from './v8/Cafe8';
-import {StudyScene4} from './v8/Study8';
-import {CafeSplitUI, ReturnUI, SPLIT_Y} from './v8/ui';
-import {LAMPS, RXANT} from './v8/cafeSet8';
+import {LAB_OUT, LabScene, LB, labSil} from './v9/Lab9';
+import {LAB_IN} from './v9/hero9';
+import {cafeCam, CafeScene4, cafeSil, CF, E_OUT, G_BACK, G_IN, heroSteps, heroStepsG, heroX, OR_SPLIT, POV_IN, povCam, rxCam, splitCam, UI_IN, UI_OUT} from './v9/Cafe9';
+import {StudyScene4} from './v9/Study9';
+import {CafeSplitUI, ReturnUI, SPLIT_Y} from './v9/ui';
+import {LAMPS, PATH_Z, RXANT} from './v9/cafeSet9';
 import {Person} from './art/person';
-import {keypoints, LIMBS, COL} from './art/skeleton';
+import {BodyGlow, keypoints, LIMBS, COL} from './art/skeleton';
 import {lerpPose} from './dc/Man';
 import {basis, proj, v3} from './world/cam';
 
@@ -46,8 +46,11 @@ const Silhouette: React.FC<{t: number}> = ({t}) => {
   const kp = keypoints(p);
   const S = (q: {x: number; y: number}) => ({x: cd.x + cd.k * q.x, y: cd.y + cd.k * q.y});
   const w = Math.max(5, cd.k * 26);
+  const M = Object.fromEntries(Object.entries(kp).map(([k, q]) => [k, S(q)])) as typeof kp;
   return (
     <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: a}}>
+      {/* V9: the same generic glowing body as on the screen */}
+      <BodyGlow kp={M} m={cd.k * 600} />
       <g style={{mixBlendMode: 'screen'}}>
         {LIMBS.map((L, i) => {
           const A = S(kp[L.a]), Bp = S(kp[L.b]);
@@ -152,9 +155,12 @@ const WifiEchoes: React.FC<{t: number}> = ({t}) => {
   const b = basis(rxCam(1340));
   // the receiver's antenna tips (its box top is at table height + 0.09, the antennas reach + 0.25)
   const E = proj(b, v3(RXANT.x, 0.99, RXANT.z));
+  // V9: they start right under him (where he walks in the picture above), so the signal visibly runs from him to the
+  // receiver
+  const hx = Math.max(160, Math.min(760, proj(basis(povCam(380)), v3(heroX(t), 0.3, PATH_Z)).x));
   const trains = [0, 1, 2, 3].map((k) => {
     const u = (((t - OR_SPLIT) * 0.8 + k / 4) % 1 + 1) % 1;
-    const S = {x: 420 + k * 120, y: SPLIT_Y + 30};
+    const S = {x: hx - 90 + k * 60, y: SPLIT_Y + 30};
     const P = {x: S.x + (E.x - S.x) * u, y: S.y + (E.y - S.y) * u};
     const dx = E.x - S.x, dy = E.y - S.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
     const pts: string[] = [];
@@ -181,8 +187,6 @@ const Tags: React.FC<{t: number}> = ({t}) => {
   const wifiA = t >= OR_SPLIT && t < LAB_IN ? ss(t, OR_SPLIT + 0.2, OR_SPLIT + 0.4) : 0;
   return (
     <AbsoluteFill>
-      <StudyTag t={t} t0={CF.in + 0.38} t1={CF.ordinary + 0.2} text="SEPARATE STUDY" sub="identifying people from Wi-Fi signals" />
-      {later > 0 && <Chip x={790} y={600} text="LATER" a={later} color="#FFD84A" />}
       {camA > 0 && <Chip x={60} y={205} text="CAMERA" a={camA} />}
       {wifiA > 0 && <Chip x={60} y={SPLIT_Y + 24} text="WI-FI" a={wifiA} color="#7CFFB2" />}
     </AbsoluteFill>
