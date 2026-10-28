@@ -1,0 +1,141 @@
+{
+ "source": "audio/narration/FGW_Flying_Skateboard_narration_V1.wav",
+ "old_duration": 35.9,
+ "new_duration": 31.3,
+ "frames": 939,
+ "removed_total_s": 4.6,
+ "cuts_old_time": [
+  [
+   0.0,
+   0.09
+  ],
+  [
+   3.075,
+   0.27
+  ],
+  [
+   3.905,
+   0.02
+  ],
+  [
+   8.9775,
+   0.24
+  ],
+  [
+   11.6175,
+   0.22
+  ],
+  [
+   13.0625,
+   0.48
+  ],
+  [
+   15.11,
+   0.29
+  ],
+  [
+   17.7475,
+   0.25
+  ],
+  [
+   19.865,
+   0.26
+  ],
+  [
+   25.0175,
+   0.27
+  ],
+  [
+   29.6075,
+   0.08
+  ],
+  [
+   31.1275,
+   0.56
+  ]
+ ],
+ "crossfade_ms": 12.0,
+ "joins": [
+  {
+   "join": "river -> you",
+   "at_old": 2.9,
+   "gap": 0.51,
+   "kept": 0.24,
+   "removed": 0.27
+  },
+  {
+   "join": "see -> ten",
+   "at_old": 3.7,
+   "gap": 0.27,
+   "kept": 0.25,
+   "removed": 0.02
+  },
+  {
+   "join": "ground -> but",
+   "at_old": 8.86,
+   "gap": 0.45,
+   "kept": 0.21,
+   "removed": 0.24
+  },
+  {
+   "join": "engines -> and",
+   "at_old": 11.46,
+   "gap": 0.44,
+   "kept": 0.22,
+   "removed": 0.22
+  },
+  {
+   "join": "fire -> so",
+   "at_old": 12.92,
+   "gap": 0.72,
+   "kept": 0.24,
+   "removed": 0.48
+  },
+  {
+   "join": "electric -> except",
+   "at_old": 14.98,
+   "gap": 0.5,
+   "kept": 0.21,
+   "removed": 0.29
+  },
+  {
+   "join": "problem -> the",
+   "at_old": 17.62,
+   "gap": 0.46,
+   "kept": 0.21,
+   "removed": 0.25
+  },
+  {
+   "join": "itself -> he",
+   "at_old": 19.74,
+   "gap": 0.47,
+   "kept": 0.21,
+   "removed": 0.26
+  },
+  {
+   "join": "balance -> and",
+   "at_old": 24.88,
+   "gap": 0.48,
+   "kept": 0.21,
+   "removed": 0.27
+  },
+  {
+   "join": "river -> and",
+   "at_old": 29.46,
+   "gap": 0.3,
+   "kept": 0.22,
+   "removed": 0.08
+  },
+  {
+   "join": "canyon -> how",
+   "at_old": 30.96,
+   "gap": 0.83,
+   "kept": 0.27,
+   "removed": 0.56
+  }
+ ],
+ "lead_s": 0.04,
+ "tail_after_last_word_s": 0.302,
+ "words_max_abs_diff_vs_source": 0.0,
+ "speech_end_new": 30.998
+}
