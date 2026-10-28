@@ -617,12 +617,12 @@
  {
   "t": 15.456,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.0
+  "gain_db": -23.4
  },
  {
-  "t": 15.484,
+  "t": 15.456,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.4
+  "gain_db": -20.4
  },
  {
   "t": 15.533,
@@ -637,10 +637,10 @@
  {
   "t": 15.876,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.4
+  "gain_db": -22.8
  },
  {
-  "t": 15.974,
+  "t": 15.916,
   "name": "footstep (pedestrian)",
   "gain_db": -22.4
  },
@@ -657,10 +657,10 @@
  {
   "t": 16.296,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.8
+  "gain_db": -22.9
  },
  {
-  "t": 16.464,
+  "t": 16.376,
   "name": "footstep (pedestrian)",
   "gain_db": -22.6
  },
@@ -677,10 +677,10 @@
  {
   "t": 16.716,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.9
+  "gain_db": -22.2
  },
  {
-  "t": 16.954,
+  "t": 16.836,
   "name": "footstep (pedestrian)",
   "gain_db": -22.5
  },
@@ -697,7 +697,12 @@
  {
   "t": 17.136,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.2
+  "gain_db": -22.5
+ },
+ {
+  "t": 17.296,
+  "name": "footstep (pedestrian)",
+  "gain_db": -23.4
  },
  {
   "t": 17.433,
@@ -705,14 +710,14 @@
   "gain_db": -14.8
  },
  {
-  "t": 17.444,
-  "name": "footstep (pedestrian)",
-  "gain_db": -23.4
- },
- {
   "t": 17.535,
   "name": "wifi packet",
   "gain_db": -37.1
+ },
+ {
+  "t": 17.756,
+  "name": "footstep (pedestrian)",
+  "gain_db": -22.6
  },
  {
   "t": 17.907,
@@ -720,14 +725,14 @@
   "gain_db": -16.9
  },
  {
-  "t": 17.934,
-  "name": "footstep (pedestrian)",
-  "gain_db": -22.6
- },
- {
   "t": 17.955,
   "name": "wifi packet",
   "gain_db": -37.1
+ },
+ {
+  "t": 18.216,
+  "name": "footstep (pedestrian)",
+  "gain_db": -22.3
  },
  {
   "t": 18.255,
@@ -892,77 +897,77 @@
  {
   "t": 22.344,
   "name": "footstep (participant)",
-  "gain_db": -19.0
+  "gain_db": -17.8
  },
  {
   "t": 22.35,
   "name": "footstep (participant)",
-  "gain_db": -17.5
+  "gain_db": -18.9
  },
  {
   "t": 22.386,
   "name": "footstep (participant)",
-  "gain_db": -18.5
+  "gain_db": -19.7
  },
  {
   "t": 22.764,
   "name": "footstep (participant)",
-  "gain_db": -17.8
+  "gain_db": -18.3
  },
  {
   "t": 22.776,
   "name": "footstep (participant)",
-  "gain_db": -19.7
+  "gain_db": -18.9
  },
  {
   "t": 22.85,
   "name": "footstep (participant)",
-  "gain_db": -18.9
+  "gain_db": -19.0
  },
  {
   "t": 23.03,
   "name": "footstep (participant)",
-  "gain_db": -17.6
+  "gain_db": -18.9
  },
  {
   "t": 23.166,
   "name": "footstep (participant)",
-  "gain_db": -18.9
+  "gain_db": -19.2
  },
  {
   "t": 23.184,
   "name": "footstep (participant)",
-  "gain_db": -18.3
+  "gain_db": -18.7
  },
  {
   "t": 23.35,
   "name": "footstep (participant)",
-  "gain_db": -19.0
+  "gain_db": -17.9
  },
  {
   "t": 23.38,
   "name": "footstep (participant)",
-  "gain_db": -18.9
+  "gain_db": -17.9
  },
  {
   "t": 23.556,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -17.8
  },
  {
   "t": 23.604,
   "name": "footstep (participant)",
-  "gain_db": -18.7
+  "gain_db": -18.0
  },
  {
   "t": 23.73,
   "name": "footstep (participant)",
-  "gain_db": -17.9
+  "gain_db": -19.2
  },
  {
   "t": 23.85,
   "name": "footstep (participant)",
-  "gain_db": -17.9
+  "gain_db": -17.6
  },
  {
   "t": 23.895,
@@ -977,37 +982,37 @@
  {
   "t": 23.946,
   "name": "footstep (participant)",
-  "gain_db": -17.8
+  "gain_db": -18.6
  },
  {
   "t": 24.024,
   "name": "footstep (participant)",
-  "gain_db": -18.0
+  "gain_db": -18.2
  },
  {
   "t": 24.08,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -17.5
  },
  {
   "t": 24.336,
   "name": "footstep (participant)",
-  "gain_db": -18.6
+  "gain_db": -17.5
  },
  {
   "t": 24.35,
   "name": "footstep (participant)",
-  "gain_db": -17.6
+  "gain_db": -19.0
  },
  {
   "t": 24.43,
   "name": "footstep (participant)",
-  "gain_db": -17.5
+  "gain_db": -18.4
  },
  {
   "t": 24.444,
   "name": "footstep (participant)",
-  "gain_db": -18.2
+  "gain_db": -17.6
  },
  {
   "t": 24.475,
@@ -1082,12 +1087,12 @@
  {
   "t": 27.486,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -20.3
+  "gain_db": -18.4
  },
  {
   "t": 28.026,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -18.4
+  "gain_db": -18.2
  },
  {
   "t": 28.51,
@@ -1097,7 +1102,7 @@
  {
   "t": 28.566,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -18.2
+  "gain_db": -19.1
  },
  {
   "t": 28.67,
@@ -1122,7 +1127,7 @@
  {
   "t": 29.106,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -19.1
+  "gain_db": -19.8
  },
  {
   "t": 29.15,
@@ -1142,12 +1147,12 @@
  {
   "t": 29.646,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -19.8
+  "gain_db": -18.5
  },
  {
   "t": 30.186,
   "name": "footstep (hero (past the caf\u00e9, later; split screen))",
-  "gain_db": -18.5
+  "gain_db": -19.9
  },
  {
   "t": 30.235,
@@ -1162,17 +1167,17 @@
  {
   "t": 30.726,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -14.9
+  "gain_db": -13.5
  },
  {
   "t": 31.266,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -13.5
+  "gain_db": -13.3
  },
  {
   "t": 31.806,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -13.3
+  "gain_db": -15.1
  },
  {
   "t": 31.95,
@@ -1182,12 +1187,12 @@
  {
   "t": 32.346,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -16.3
+  "gain_db": -14.5
  },
  {
   "t": 32.886,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -14.5
+  "gain_db": -15.4
  },
  {
   "t": 33.0,
@@ -1197,12 +1202,12 @@
  {
   "t": 33.426,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -19.2
+  "gain_db": -18.6
  },
  {
   "t": 33.966,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.6
+  "gain_db": -19.0
  },
  {
   "t": 34.39,
@@ -1217,7 +1222,7 @@
  {
   "t": 34.506,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -19.0
+  "gain_db": -18.4
  },
  {
   "t": 34.65,
@@ -1237,7 +1242,7 @@
  {
   "t": 35.046,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.4
+  "gain_db": -20.5
  },
  {
   "t": 35.046,
@@ -1267,7 +1272,7 @@
  {
   "t": 35.586,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -20.5
+  "gain_db": -19.4
  },
  {
   "t": 35.7,

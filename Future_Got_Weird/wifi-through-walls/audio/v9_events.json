@@ -102,32 +102,37 @@
    "who": "hero (café, close)"
   },
   {
-   "t": 15.484,
+   "t": 15.456,
    "gain": 0.3,
    "who": "pedestrian"
   },
   {
-   "t": 15.974,
+   "t": 15.916,
    "gain": 0.3,
    "who": "pedestrian"
   },
   {
-   "t": 16.464,
+   "t": 16.376,
    "gain": 0.3,
    "who": "pedestrian"
   },
   {
-   "t": 16.954,
+   "t": 16.836,
    "gain": 0.3,
    "who": "pedestrian"
   },
   {
-   "t": 17.444,
+   "t": 17.296,
    "gain": 0.3,
    "who": "pedestrian"
   },
   {
-   "t": 17.934,
+   "t": 17.756,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 18.216,
    "gain": 0.3,
    "who": "pedestrian"
   },
