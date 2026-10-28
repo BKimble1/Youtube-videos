@@ -1,0 +1,453 @@
+{
+ "audio": "audio/narration/takes/t2_0ET9.mp3",
+ "model": "whisper-small ct2 int8 (faster-whisper)",
+ "text": "They made a living mouse's skin transparent and watched its organs moving underneath without making a single cut. They'd rubbed a food dye solution onto its skin. You see, water and fat normally bend light differently, scattering it and hiding what's underneath. But the dye changes how the watery parts bend light, making them behave more like the fat. Then they wash the dye away and the skin hid the moving organs again.",
+ "wer_vs_approved": 0.014,
+ "diffs": [
+  [
+   "replace",
+   "washed",
+   "wash"
+  ]
+ ],
+ "words": [
+  {
+   "word": "They",
+   "start": 0.0,
+   "end": 0.16,
+   "p": 0.847
+  },
+  {
+   "word": "made",
+   "start": 0.16,
+   "end": 0.38,
+   "p": 0.983
+  },
+  {
+   "word": "a",
+   "start": 0.38,
+   "end": 0.48,
+   "p": 0.995
+  },
+  {
+   "word": "living",
+   "start": 0.48,
+   "end": 0.74,
+   "p": 0.95
+  },
+  {
+   "word": "mouse's",
+   "start": 0.74,
+   "end": 1.26,
+   "p": 0.982
+  },
+  {
+   "word": "skin",
+   "start": 1.26,
+   "end": 1.56,
+   "p": 0.999
+  },
+  {
+   "word": "transparent",
+   "start": 1.56,
+   "end": 2.32,
+   "p": 0.996
+  },
+  {
+   "word": "and",
+   "start": 2.78,
+   "end": 3.06,
+   "p": 0.573
+  },
+  {
+   "word": "watched",
+   "start": 3.06,
+   "end": 3.34,
+   "p": 0.988
+  },
+  {
+   "word": "its",
+   "start": 3.34,
+   "end": 3.52,
+   "p": 0.958
+  },
+  {
+   "word": "organs",
+   "start": 3.52,
+   "end": 3.86,
+   "p": 0.997
+  },
+  {
+   "word": "moving",
+   "start": 3.86,
+   "end": 4.22,
+   "p": 0.994
+  },
+  {
+   "word": "underneath",
+   "start": 4.22,
+   "end": 4.7,
+   "p": 0.996
+  },
+  {
+   "word": "without",
+   "start": 5.3,
+   "end": 5.58,
+   "p": 0.792
+  },
+  {
+   "word": "making",
+   "start": 5.58,
+   "end": 5.92,
+   "p": 0.999
+  },
+  {
+   "word": "a",
+   "start": 5.92,
+   "end": 6.1,
+   "p": 0.999
+  },
+  {
+   "word": "single",
+   "start": 6.1,
+   "end": 6.42,
+   "p": 0.999
+  },
+  {
+   "word": "cut.",
+   "start": 6.42,
+   "end": 6.84,
+   "p": 0.998
+  },
+  {
+   "word": "They'd",
+   "start": 7.46,
+   "end": 7.68,
+   "p": 0.969
+  },
+  {
+   "word": "rubbed",
+   "start": 7.68,
+   "end": 7.94,
+   "p": 0.997
+  },
+  {
+   "word": "a",
+   "start": 7.94,
+   "end": 7.98,
+   "p": 0.994
+  },
+  {
+   "word": "food",
+   "start": 7.98,
+   "end": 8.26,
+   "p": 0.948
+  },
+  {
+   "word": "dye",
+   "start": 8.26,
+   "end": 8.46,
+   "p": 0.99
+  },
+  {
+   "word": "solution",
+   "start": 8.46,
+   "end": 8.86,
+   "p": 1.0
+  },
+  {
+   "word": "onto",
+   "start": 8.86,
+   "end": 9.12,
+   "p": 0.958
+  },
+  {
+   "word": "its",
+   "start": 9.12,
+   "end": 9.32,
+   "p": 0.969
+  },
+  {
+   "word": "skin.",
+   "start": 9.32,
+   "end": 9.68,
+   "p": 0.999
+  },
+  {
+   "word": "You",
+   "start": 10.24,
+   "end": 10.3,
+   "p": 0.983
+  },
+  {
+   "word": "see,",
+   "start": 10.3,
+   "end": 10.46,
+   "p": 0.999
+  },
+  {
+   "word": "water",
+   "start": 10.76,
+   "end": 10.96,
+   "p": 0.997
+  },
+  {
+   "word": "and",
+   "start": 10.96,
+   "end": 11.14,
+   "p": 0.997
+  },
+  {
+   "word": "fat",
+   "start": 11.14,
+   "end": 11.42,
+   "p": 0.999
+  },
+  {
+   "word": "normally",
+   "start": 11.42,
+   "end": 11.84,
+   "p": 0.997
+  },
+  {
+   "word": "bend",
+   "start": 11.84,
+   "end": 12.2,
+   "p": 0.995
+  },
+  {
+   "word": "light",
+   "start": 12.2,
+   "end": 12.44,
+   "p": 0.995
+  },
+  {
+   "word": "differently,",
+   "start": 12.44,
+   "end": 12.9,
+   "p": 0.999
+  },
+  {
+   "word": "scattering",
+   "start": 13.3,
+   "end": 13.62,
+   "p": 0.996
+  },
+  {
+   "word": "it",
+   "start": 13.62,
+   "end": 13.94,
+   "p": 0.999
+  },
+  {
+   "word": "and",
+   "start": 13.94,
+   "end": 14.1,
+   "p": 0.945
+  },
+  {
+   "word": "hiding",
+   "start": 14.1,
+   "end": 14.4,
+   "p": 0.999
+  },
+  {
+   "word": "what's",
+   "start": 14.4,
+   "end": 14.68,
+   "p": 0.995
+  },
+  {
+   "word": "underneath.",
+   "start": 14.68,
+   "end": 15.02,
+   "p": 0.999
+  },
+  {
+   "word": "But",
+   "start": 15.64,
+   "end": 15.76,
+   "p": 0.995
+  },
+  {
+   "word": "the",
+   "start": 15.76,
+   "end": 15.88,
+   "p": 0.993
+  },
+  {
+   "word": "dye",
+   "start": 15.88,
+   "end": 16.12,
+   "p": 0.999
+  },
+  {
+   "word": "changes",
+   "start": 16.12,
+   "end": 16.54,
+   "p": 0.998
+  },
+  {
+   "word": "how",
+   "start": 16.54,
+   "end": 16.76,
+   "p": 0.998
+  },
+  {
+   "word": "the",
+   "start": 16.76,
+   "end": 16.88,
+   "p": 0.998
+  },
+  {
+   "word": "watery",
+   "start": 16.88,
+   "end": 17.22,
+   "p": 0.99
+  },
+  {
+   "word": "parts",
+   "start": 17.22,
+   "end": 17.54,
+   "p": 0.968
+  },
+  {
+   "word": "bend",
+   "start": 17.54,
+   "end": 17.82,
+   "p": 0.994
+  },
+  {
+   "word": "light,",
+   "start": 17.82,
+   "end": 18.2,
+   "p": 0.992
+  },
+  {
+   "word": "making",
+   "start": 18.44,
+   "end": 18.68,
+   "p": 0.998
+  },
+  {
+   "word": "them",
+   "start": 18.68,
+   "end": 18.84,
+   "p": 0.992
+  },
+  {
+   "word": "behave",
+   "start": 18.84,
+   "end": 19.16,
+   "p": 0.999
+  },
+  {
+   "word": "more",
+   "start": 19.16,
+   "end": 19.4,
+   "p": 0.998
+  },
+  {
+   "word": "like",
+   "start": 19.4,
+   "end": 19.6,
+   "p": 0.999
+  },
+  {
+   "word": "the",
+   "start": 19.6,
+   "end": 19.72,
+   "p": 0.997
+  },
+  {
+   "word": "fat.",
+   "start": 19.72,
+   "end": 20.04,
+   "p": 0.999
+  },
+  {
+   "word": "Then",
+   "start": 20.62,
+   "end": 20.86,
+   "p": 0.997
+  },
+  {
+   "word": "they",
+   "start": 20.86,
+   "end": 21.06,
+   "p": 0.841
+  },
+  {
+   "word": "wash",
+   "start": 21.06,
+   "end": 21.32,
+   "p": 0.549
+  },
+  {
+   "word": "the",
+   "start": 21.32,
+   "end": 21.52,
+   "p": 0.997
+  },
+  {
+   "word": "dye",
+   "start": 21.52,
+   "end": 21.74,
+   "p": 0.994
+  },
+  {
+   "word": "away",
+   "start": 21.74,
+   "end": 22.06,
+   "p": 0.998
+  },
+  {
+   "word": "and",
+   "start": 22.06,
+   "end": 22.7,
+   "p": 0.768
+  },
+  {
+   "word": "the",
+   "start": 22.7,
+   "end": 22.82,
+   "p": 0.995
+  },
+  {
+   "word": "skin",
+   "start": 22.82,
+   "end": 23.16,
+   "p": 0.999
+  },
+  {
+   "word": "hid",
+   "start": 23.16,
+   "end": 23.42,
+   "p": 0.992
+  },
+  {
+   "word": "the",
+   "start": 23.42,
+   "end": 23.56,
+   "p": 0.996
+  },
+  {
+   "word": "moving",
+   "start": 23.56,
+   "end": 23.76,
+   "p": 0.998
+  },
+  {
+   "word": "organs",
+   "start": 23.76,
+   "end": 24.12,
+   "p": 0.998
+  },
+  {
+   "word": "again.",
+   "start": 24.12,
+   "end": 24.48,
+   "p": 0.997
+  }
+ ]
+}

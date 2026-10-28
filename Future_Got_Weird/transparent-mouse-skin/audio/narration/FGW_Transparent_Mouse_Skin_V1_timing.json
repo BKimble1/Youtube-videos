@@ -1,0 +1,407 @@
+{
+ "take": "audio/narration/takes/t2_0ET9.mp3",
+ "lead_cut_s": 0.03,
+ "gap_cuts_s_in_take_time": [
+  [
+   2.69,
+   2.79
+  ],
+  [
+   5.09,
+   5.18
+  ],
+  [
+   7.14,
+   7.32
+  ],
+  [
+   9.98,
+   10.01
+  ],
+  [
+   15.4,
+   15.47
+  ],
+  [
+   20.32,
+   20.44
+  ],
+  [
+   22.38,
+   22.49
+  ]
+ ],
+ "gap_max_s": 0.42,
+ "hesitation_s": 0.28,
+ "duration_s": 25.066666666666666,
+ "frames": 752,
+ "pocketsphinx_transcript": "emile living now says skin transparent and watched its organs moving underneath without making a single cut the road of food dye solution on to its skin easy water into that normally bend light differently scattering it and hiding what's underneath but the diet changes how the water reports and then like making them behave more like the fat then they watch the guy away in the skin hit the moving organs again",
+ "pocketsphinx_wer_vs_approved": 0.329,
+ "words": [
+  {
+   "word": "they",
+   "start": 0.0,
+   "end": 0.13
+  },
+  {
+   "word": "made",
+   "start": 0.13,
+   "end": 0.35
+  },
+  {
+   "word": "a",
+   "start": 0.35,
+   "end": 0.39
+  },
+  {
+   "word": "living",
+   "start": 0.39,
+   "end": 0.8
+  },
+  {
+   "word": "mouse's",
+   "start": 0.8,
+   "end": 1.17
+  },
+  {
+   "word": "skin",
+   "start": 1.18,
+   "end": 1.6
+  },
+  {
+   "word": "transparent",
+   "start": 1.6,
+   "end": 2.44
+  },
+  {
+   "word": "and",
+   "start": 2.85,
+   "end": 2.94
+  },
+  {
+   "word": "watched",
+   "start": 2.94,
+   "end": 3.28
+  },
+  {
+   "word": "its",
+   "start": 3.28,
+   "end": 3.42
+  },
+  {
+   "word": "organs",
+   "start": 3.42,
+   "end": 3.87
+  },
+  {
+   "word": "moving",
+   "start": 3.88,
+   "end": 4.2
+  },
+  {
+   "word": "underneath",
+   "start": 4.2,
+   "end": 4.59
+  },
+  {
+   "word": "without",
+   "start": 5.15,
+   "end": 5.42
+  },
+  {
+   "word": "making",
+   "start": 5.44,
+   "end": 5.76
+  },
+  {
+   "word": "a",
+   "start": 5.76,
+   "end": 5.81
+  },
+  {
+   "word": "single",
+   "start": 5.81,
+   "end": 6.27
+  },
+  {
+   "word": "cut",
+   "start": 6.27,
+   "end": 6.68
+  },
+  {
+   "word": "they'd",
+   "start": 7.1,
+   "end": 7.22
+  },
+  {
+   "word": "rubbed",
+   "start": 7.22,
+   "end": 7.49
+  },
+  {
+   "word": "a",
+   "start": 7.49,
+   "end": 7.54
+  },
+  {
+   "word": "food",
+   "start": 7.54,
+   "end": 7.87
+  },
+  {
+   "word": "dye",
+   "start": 7.87,
+   "end": 8.07
+  },
+  {
+   "word": "solution",
+   "start": 8.07,
+   "end": 8.53
+  },
+  {
+   "word": "onto",
+   "start": 8.54,
+   "end": 8.8
+  },
+  {
+   "word": "its",
+   "start": 8.8,
+   "end": 8.94
+  },
+  {
+   "word": "skin",
+   "start": 8.95,
+   "end": 9.33
+  },
+  {
+   "word": "you",
+   "start": 9.74,
+   "end": 9.81
+  },
+  {
+   "word": "see",
+   "start": 9.81,
+   "end": 10.1
+  },
+  {
+   "word": "water",
+   "start": 10.1,
+   "end": 10.59
+  },
+  {
+   "word": "and",
+   "start": 10.59,
+   "end": 10.7
+  },
+  {
+   "word": "fat",
+   "start": 10.7,
+   "end": 11.05
+  },
+  {
+   "word": "normally",
+   "start": 11.05,
+   "end": 11.49
+  },
+  {
+   "word": "bend",
+   "start": 11.49,
+   "end": 11.77
+  },
+  {
+   "word": "light",
+   "start": 11.77,
+   "end": 12.04
+  },
+  {
+   "word": "differently",
+   "start": 12.04,
+   "end": 12.58
+  },
+  {
+   "word": "scattering",
+   "start": 12.77,
+   "end": 13.34
+  },
+  {
+   "word": "it",
+   "start": 13.34,
+   "end": 13.46
+  },
+  {
+   "word": "and",
+   "start": 13.52,
+   "end": 13.64
+  },
+  {
+   "word": "hiding",
+   "start": 13.64,
+   "end": 14.02
+  },
+  {
+   "word": "what's",
+   "start": 14.02,
+   "end": 14.2
+  },
+  {
+   "word": "underneath",
+   "start": 14.2,
+   "end": 14.61
+  },
+  {
+   "word": "but",
+   "start": 15.13,
+   "end": 15.22
+  },
+  {
+   "word": "the",
+   "start": 15.22,
+   "end": 15.3
+  },
+  {
+   "word": "dye",
+   "start": 15.3,
+   "end": 15.62
+  },
+  {
+   "word": "changes",
+   "start": 15.62,
+   "end": 16.11
+  },
+  {
+   "word": "how",
+   "start": 16.11,
+   "end": 16.23
+  },
+  {
+   "word": "the",
+   "start": 16.23,
+   "end": 16.3
+  },
+  {
+   "word": "watery",
+   "start": 16.3,
+   "end": 16.75
+  },
+  {
+   "word": "parts",
+   "start": 16.75,
+   "end": 17.05
+  },
+  {
+   "word": "bend",
+   "start": 17.06,
+   "end": 17.34
+  },
+  {
+   "word": "light",
+   "start": 17.34,
+   "end": 17.67
+  },
+  {
+   "word": "making",
+   "start": 17.92,
+   "end": 18.19
+  },
+  {
+   "word": "them",
+   "start": 18.19,
+   "end": 18.3
+  },
+  {
+   "word": "behave",
+   "start": 18.31,
+   "end": 18.67
+  },
+  {
+   "word": "more",
+   "start": 18.67,
+   "end": 18.89
+  },
+  {
+   "word": "like",
+   "start": 18.89,
+   "end": 19.04
+  },
+  {
+   "word": "the",
+   "start": 19.07,
+   "end": 19.14
+  },
+  {
+   "word": "fat",
+   "start": 19.15,
+   "end": 19.55
+  },
+  {
+   "word": "then",
+   "start": 19.97,
+   "end": 20.26
+  },
+  {
+   "word": "they",
+   "start": 20.26,
+   "end": 20.36
+  },
+  {
+   "word": "washed",
+   "start": 20.36,
+   "end": 20.73
+  },
+  {
+   "word": "the",
+   "start": 20.76,
+   "end": 20.83
+  },
+  {
+   "word": "dye",
+   "start": 20.83,
+   "end": 21.06
+  },
+  {
+   "word": "away",
+   "start": 21.06,
+   "end": 21.52
+  },
+  {
+   "word": "and",
+   "start": 21.79,
+   "end": 21.91
+  },
+  {
+   "word": "the",
+   "start": 21.91,
+   "end": 21.97
+  },
+  {
+   "word": "skin",
+   "start": 21.97,
+   "end": 22.41
+  },
+  {
+   "word": "hid",
+   "start": 22.41,
+   "end": 22.67
+  },
+  {
+   "word": "the",
+   "start": 22.67,
+   "end": 22.73
+  },
+  {
+   "word": "moving",
+   "start": 22.73,
+   "end": 23.06
+  },
+  {
+   "word": "organs",
+   "start": 23.06,
+   "end": 23.42
+  },
+  {
+   "word": "again",
+   "start": 23.42,
+   "end": 23.76
+  }
+ ]
+}

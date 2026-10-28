@@ -1,0 +1,42 @@
+{
+ "file": "../../../../../tmp/claude-0/draft1.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "nb_frames": "752",
+  "pix_fmt": "yuvj420p",
+  "color_space": "bt470bg"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317370"
+ },
+ "duration": 25.067,
+ "size_bytes": 14301477,
+ "full_decode_errors": 0,
+ "loudness": {
+  "I_LUFS": -14.0,
+  "LRA": 6.7,
+  "TP_dBFS": -1.4
+ },
+ "black_segments": [],
+ "freezes_ge_0.8s": [],
+ "audio_lag_vs_mix_ms": 0.0,
+ "first_audio_above_-40dBFS_s": 0.0,
+ "whisper": {
+  "text": "They made a living mouse's skin transparent and watched its organs moving underneath without making a single cut. They'd rubbed a food dye solution onto its skin. You see, water and fat normally bend light differently, scattering it and hiding what's underneath. But the dye changes how the watery parts bend light, making them behave more like the fat. Then they wash the dye away and the skin hid the moving organs again.",
+  "wer_vs_locked": 0.014,
+  "diffs": [
+   [
+    "replace",
+    "washed",
+    "wash"
+   ]
+  ]
+ }
+}
