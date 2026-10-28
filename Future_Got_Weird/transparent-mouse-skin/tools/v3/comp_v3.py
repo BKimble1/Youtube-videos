@@ -108,7 +108,7 @@ def arrival(xm, ym):
     for tau, px, py in T[::2]:
         d = np.sqrt((xm - px) ** 2 + (ym - py) ** 2)
         dmin = np.minimum(dmin, d)
-        a = np.minimum(a, np.where(d < R0 + 2.6, tau + np.maximum(0, d - R0) / SPREAD, 1e4))
+        a = np.minimum(a, np.where(d < R0 + 4.5, tau + np.maximum(0, d - R0) / SPREAD, 1e4))
     return a, dmin
 
 _ARR = {}
@@ -118,12 +118,12 @@ def arrival_cam(cam):
         a, dmin = arrival(x, y)
         n = noise2(x, y, 0.9, 1) * 0.22 + noise2(x, y, 0.25, 2) * 0.08  # an organic, uneven uptake
         # less dye reaches the edge of the applied area: clarity falls off over ~2 mm, unevenly
-        edge = ss(R0 + 2.2 + n * 3, R0 - 0.2 + n * 3, dmin).astype(np.float32)
-        wetedge = ss(R0 + 1.2 + n * 2, R0 + 0.6 + n * 2, dmin).astype(np.float32)
+        edge = ss(R0 + 2.2 + n * 2, R0 - 0.2 + n * 2, dmin).astype(np.float32)
+        wetedge = ss(R0 + 1.4 + n * 2, R0 - 0.2 + n * 2, dmin).astype(np.float32) * 0.6  # a thin wet film: tints, doesn't paint
         _ARR[cam] = (a, n, edge, wetedge)
     return _ARR[cam]
 
-def stain_clear(cam, tau, lag=0.18, dur=0.55):
+def stain_clear(cam, tau, lag=0.08, dur=0.42):
     a, n, edge, wetedge = arrival_cam(cam)
     st = ss(a, a + 0.10, tau) * wetedge
     cl = ss(a + lag + n, a + lag + dur + n, tau) * edge
