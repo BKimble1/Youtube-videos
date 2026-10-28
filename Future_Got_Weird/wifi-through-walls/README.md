@@ -1,5 +1,37 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V4 (polish pass)
+
+**Status (28 Oct 2026):** V4 review rendered and checked from the file. **Not published.** Same narration, voice,
+story order and ending question. Every shot is rebuilt:
+
+- **Opening:** a cross-section of a concrete wall, with him on one side and the detector already tracking him on the
+  other. The camera travels through the wall.
+- **Mechanism:** tracked radio packets and echoes, not rings or diagrams.
+- **Live demo:** a right-hand raise and a turn, step and crouch, all matched by the skeleton.
+- **Café:** the skeleton becomes a silhouette that walks into a café street. The café experiment runs on its own
+  router and receiver.
+- **197 study:** a corridor of walkers, then the matching screen and the grid.
+- **Café, reverse angle:** seen again from inside.
+- **Ending:** CCTV versus Wi-Fi, then back into frame 0.
+
+| Deliverable | File |
+|---|---|
+| V4 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V4_REVIEW_1080x1920.mp4` |
+| Change log | `production/V4_CHANGELOG.md` |
+| Source (V4 scenes) | `source/src/v4/` (joins in `source/src/Film.tsx`) |
+| Rig probe | `qa/v4/rig_probe.json` (`tools/v4/rig_probe4.ts`) |
+| Measured QA of the MP4 | `qa/v4/V4_qa.json`, `qa/v4/V4_motion_scan.json`, `qa/v4/V4_asr_mp4.json` |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V4_mix.wav`, `audio/v4_events.json` (`tools/v4/events.ts`), `tools/v4/make_audio4.py` |
+| Stills | `stills/FGW_WiFi_V4_*.png` |
+
+`source/` now builds V4 (the composition id is still `WiFiWallsV1`). To rebuild V4, run the same steps as in
+**Rebuild** below, with these substitutions:
+
+- Sound timing: `tools/v4/events.ts` → `audio/v4_events.json`.
+- Mix: `python3 -I tools/v4/make_audio4.py`.
+- Output name: `..._V4_REVIEW_...`.
+
 ## V3 (visual rebuild)
 
 **Status (28 Oct 2026):** V3 review rendered and checked from the file. **Not published.** Same narration, voice, story

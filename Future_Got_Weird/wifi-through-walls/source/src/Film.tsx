@@ -1,59 +1,103 @@
-// FGW "Wi-Fi Through Walls" V1: the composition. Every frame is a pure function of the frame number; captions are
+// FGW "Wi-Fi Through Walls" V4: the composition. Every frame is a pure function of the frame number; captions are
 // drawn in screen space on top.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import './fonts';
-import {FPS, IdCtx} from './lib';
+import {clamp, FPS, IdCtx, ss, useUid, word} from './lib';
 import {Captions} from './Captions';
 import {capY} from './captions';
-import {LAB_OUT, LabScene} from './v3/Lab3';
-import {END0} from './v3/hero3';
-import {cafeCam, CafeScene3, E_OUT, H_IN, panelEdge} from './v3/Cafe3';
-import {StudyScene3} from './v3/Study3';
-import {basis} from './world/cam';
-import {clamp} from './lib';
+import {LAB_OUT, LabScene, LB, labSil} from './v4/Lab4';
+import {LAB_IN} from './v4/hero4';
+import {cafeCam, CafeScene4, cafeSil, E_OUT, G_IN, UI_IN, UI_OUT} from './v4/Cafe4';
+import {StudyScene4, STUDY_UI_IN} from './v4/Study4';
+import {CafeUI, StudyUI} from './v4/ui';
+import {LAMPS} from './v4/cafeSet4';
+import {Person} from './art/person';
+import {keypoints, LIMBS, COL} from './art/skeleton';
+import {lerpPose} from './dc/Man';
+import {basis, proj, v3} from './world/cam';
 
-/** the lab (hook to the push into the skeleton) | the café (E) | the study | the café (H) | the lab (the ending, into
- *  frame 0). Joins: a glow match (the skeleton's head keypoint becomes the café router's status light); the ad panel
- *  wiping past the lens (café to study, café to lab, both matched on his walk); a screen match (the study display to
- *  the café laptop). */
-const Glow: React.FC<{a: number}> = ({a}) => (
-  <div style={{position: 'absolute', inset: 0, background: `radial-gradient(circle at 50% 50%, rgba(240,255,255,${a}) 0%, rgba(150,240,255,${a * 0.85}) ${f1(8 + 30 * a)}%, rgba(20,40,60,${a * 0.6}) ${f1(30 + 60 * a)}%, rgba(10,20,30,0) 100%)`}} />
-);
-const f1 = (n: number) => n.toFixed(1);
-/** the scene behind the panel's trailing edge (screen x < edge) is the next place */
+/** the lab | the café (E) | the café's analysis screen | the café | the study | its matching screen | the café from
+ *  inside (G) and the CCTV corner (H) | the lab (the ending, into frame 0). Joins: the skeleton becomes a silhouette
+ *  that walks out of the display into the street; a lamp post passing the lens (café to study); a zoom into one
+ *  participant's cell that becomes the café laptop's stored record (study to café); a push into the café's wall that
+ *  arrives inside the lab's concrete (café to lab). */
+const SIL_A = LB.creepy + 0.1;
+const SIL_OUT = LAB_OUT + 0.4;
+const Navy: React.FC<{a: number}> = ({a}) => <AbsoluteFill style={{backgroundColor: '#04101C', opacity: a}} />;
+/** the silhouette: his figure filled with the radio's cyan (and its skeleton fading out of it) */
+const Silhouette: React.FC<{t: number}> = ({t}) => {
+  const u = useUid();
+  // locked on the display's skeleton until it is filled, then it walks out into the street
+  const e = ss(t, SIL_A + 0.2, LAB_OUT);
+  const lab = labSil(Math.min(t, LAB_OUT));
+  const cafe = cafeSil(t);
+  const cd = t < LAB_OUT ? {x: lab.cd.x + (cafe.cd.x - lab.cd.x) * e, y: lab.cd.y + (cafe.cd.y - lab.cd.y) * e, k: lab.cd.k + (cafe.cd.k - lab.cd.k) * e, depth: 1} : cafe.cd;
+  const p = t < LAB_OUT ? lerpPose(lab.p, cafe.p, e) : cafe.p;
+  const a = t < LAB_OUT ? ss(t, SIL_A, SIL_A + 0.25) : 1 - ss(t, LAB_OUT + 0.05, SIL_OUT);
+  const kp = keypoints(p);
+  const S = (q: {x: number; y: number}) => ({x: cd.x + cd.k * q.x, y: cd.y + cd.k * q.y});
+  const skA = t < LAB_OUT ? 1 - ss(t, SIL_A, LAB_OUT - 0.1) : 0;
+  return (
+    <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
+      <defs>
+        <filter id={`${u}sil`} x="-30%" y="-30%" width="160%" height="160%">
+          <feFlood floodColor="#5CE1FF" result="f" />
+          <feComposite in="f" in2="SourceAlpha" operator="in" result="c" />
+          <feGaussianBlur in="c" stdDeviation="10" result="g" />
+          <feMerge><feMergeNode in="g" /><feMergeNode in="c" /></feMerge>
+        </filter>
+      </defs>
+      <g opacity={a} filter={`url(#${u}sil)`}>
+        <Person id={`${u}silp`} cd={cd} p={p} farBehind />
+      </g>
+      {skA > 0 && LIMBS.map((L, i) => {
+        const A = S(kp[L.a]), Bp = S(kp[L.b]);
+        return <line key={i} x1={A.x} y1={A.y} x2={Bp.x} y2={Bp.y} stroke={COL[L.side]} strokeWidth={6} strokeLinecap="round" opacity={skA * a} />;
+      })}
+    </svg>
+  );
+};
+/** the scene behind the wiping element's trailing edge (screen x < edge) is the next place */
 const Wipe: React.FC<{edge: number; before: React.ReactNode; after: React.ReactNode}> = ({edge, before, after}) => (
   <AbsoluteFill>
     <AbsoluteFill>{after}</AbsoluteFill>
     <AbsoluteFill style={{clipPath: `inset(0 0 0 ${Math.max(0, edge).toFixed(1)}px)`}}>{before}</AbsoluteFill>
   </AbsoluteFill>
 );
+const lampEdge = (t: number) => {
+  const b = basis(cafeCam(t));
+  // the lamp's left edge (its pole is 0.12 m thick), where the study shows through
+  return proj(b, v3(LAMPS[0] - 0.06, 1.2, 0.45)).x;
+};
+const WIPE_A = E_OUT - 0.45;
 export const SceneAt: React.FC<{t: number}> = ({t}) => {
-  // lab -> café: the push into the head keypoint ends in light; the café opens on the router's light
-  if (t < LAB_OUT) return <AbsoluteFill><LabScene t={t} />{t > LAB_OUT - 0.3 && <Glow a={clamp((t - (LAB_OUT - 0.3)) / 0.3)} />}</AbsoluteFill>;
-  if (t < LAB_OUT + 0.35) return <AbsoluteFill><CafeScene3 t={t} /><Glow a={1 - clamp((t - LAB_OUT) / 0.35)} /></AbsoluteFill>;
-  // café -> study and café -> lab: the ad panel
-  const wipe = (tt: number, next: React.ReactNode) => {
-    const edge = panelEdge(basis(cafeCam(tt)));
-    if (edge >= 1080) return next;
-    if (edge <= 0) return <CafeScene3 t={tt} />;
-    return <Wipe edge={edge} before={<CafeScene3 t={tt} />} after={next} />;
-  };
-  if (t < E_OUT - 0.7) return <CafeScene3 t={t} />;
-  if (t < E_OUT + 0.3) return wipe(t, <StudyScene3 t={t} />);
-  if (t < H_IN) return <StudyScene3 t={t} />;
-  // study -> café: through the display into the café laptop's screen
-  if (t < H_IN + 0.2) return <AbsoluteFill><CafeScene3 t={t} /><AbsoluteFill style={{opacity: 1 - clamp((t - H_IN) / 0.2)}}><StudyScene3 t={t} /></AbsoluteFill></AbsoluteFill>;
-  if (t < END0 - 0.7) return <CafeScene3 t={t} />;
-  if (t < END0 + 0.25) return wipe(t, <LabScene t={t} />);
+  if (t < SIL_A) return <LabScene t={t} />;
+  if (t < LAB_OUT) return <AbsoluteFill><LabScene t={t} /><Navy a={ss(t, LB.creepy + 0.3, LAB_OUT)} /><Silhouette t={t} /></AbsoluteFill>;
+  if (t < SIL_OUT) return <AbsoluteFill><CafeScene4 t={t} /><Navy a={1 - ss(t, LAB_OUT, SIL_OUT - 0.05)} /><Silhouette t={t} /></AbsoluteFill>;
+  if (t < UI_IN) return <CafeScene4 t={t} />;
+  if (t < UI_OUT) return <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}><CafeUI t={t} t0={UI_IN} /></svg>;
+  if (t < WIPE_A) return <CafeScene4 t={t} />;
+  if (t < E_OUT + 0.25) {
+    const edge = lampEdge(t);
+    if (edge >= 1080) return <StudyScene4 t={t} />;
+    if (edge <= 0) return <CafeScene4 t={t} />;
+    return <Wipe edge={edge} before={<CafeScene4 t={t} />} after={<StudyScene4 t={t} />} />;
+  }
+  if (t < STUDY_UI_IN) return <StudyScene4 t={t} />;
+  if (t < G_IN) return <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}><StudyUI t={t} t0={STUDY_UI_IN} tEnd={G_IN} /></svg>;
+  if (t < G_IN + 0.25) return <AbsoluteFill><CafeScene4 t={t} /><AbsoluteFill style={{opacity: 1 - clamp((t - G_IN) / 0.25)}}><svg width={1080} height={1920}><StudyUI t={G_IN} t0={STUDY_UI_IN} tEnd={G_IN} /></svg></AbsoluteFill></AbsoluteFill>;
+  // café -> lab: the push into the café's wall; inside the lab's concrete
+  if (t < LAB_IN - 0.12) return <CafeScene4 t={t} />;
+  if (t < LAB_IN) return <AbsoluteFill><LabScene t={t + (LAB_IN - t)} /><AbsoluteFill style={{opacity: 1 - clamp((t - (LAB_IN - 0.12)) / 0.12)}}><CafeScene4 t={t} /></AbsoluteFill></AbsoluteFill>;
   return <LabScene t={t} />;
 };
+void word;
 
 export const Frame: React.FC<{f: number; captions: boolean; uid?: string}> = ({f, captions, uid = ''}) => (
   // ids carry the frame number: Chrome can keep a stale mask or clip between video frames when an id is reused
   <IdCtx.Provider value={`${uid}f${Math.round(f)}_`}>
-    {/* key: every frame is a fresh mount (identical to a single still); reusing the DOM left ghost paint of masked
-        sleeves from earlier frames in the video render */}
+    {/* key: every frame is a fresh mount (identical to a single still) */}
     <AbsoluteFill key={Math.round(f)} style={{backgroundColor: '#14212A', overflow: 'hidden'}}>
       <SceneAt t={f / FPS} />
       {captions && <Captions t={f / FPS} cy={capY(f / FPS)} />}
