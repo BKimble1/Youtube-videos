@@ -7,7 +7,7 @@ import {hash, noise1} from '../dc/math';
 import {f2, polyD} from '../eng/draw';
 import {d3, Lens, m3, s3, V3, v3, a3} from '../eng/v3';
 
-export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'; foam?: number; soft?: boolean}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water', foam = 0, soft = false}) => {
+export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'; foam?: number; soft?: boolean; crisp?: boolean}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water', foam = 0, soft = false, crisp = false}) => {
   const k = thrust * Math.pow(Math.max(0, Math.min(1, 1 - (alt - 0.3) / 10.5)), 1.2);
   if (k < 0.02) return null;
   // V5 (soft): the patch centres where the swept-back jets actually reach the surface (AirJets' jet speed)
@@ -41,8 +41,17 @@ export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: n
       const q = P(a, r);
       if (d3(s3(q, L.pos), L.f) < 0.5) continue;
       // a short crest across the outward direction, with a kink
-      const t0 = P(a - 0.12 / (0.5 + ph), r), t1 = P(a + 0.12 / (0.5 + ph), r * 1.02);
-      const m = P(a + 0.02, r * 1.06);
+      let t0 = P(a - 0.12 / (0.5 + ph), r), t1 = P(a + 0.12 / (0.5 + ph), r * 1.02);
+      let m = P(a + 0.02, r * 1.06);
+      if (crisp) {
+        // V8: a crest of fixed length (about 0.3 m) across the outward direction at q, bowed outward a little: the
+        // stretched-radius arcs became metres-long chords in fast flight and read as a scribbled web
+        const ox = q.x - c.x, oz = q.z - c.z, ol = Math.hypot(ox, oz) || 1;
+        const nx = ox / ol, nz = oz / ol, hl = 0.15 * (1 - 0.4 * ph);
+        t0 = v3(q.x - nz * hl, q.y, q.z + nx * hl);
+        t1 = v3(q.x + nz * hl, q.y, q.z - nx * hl);
+        m = v3(q.x + nx * 0.05, q.y, q.z + nz * 0.05);
+      }
       const pa = L.p(t0), pm = L.p(m), pb = L.p(t1);
       const op = (1 - ph) * k;
       if (op < 0.05) continue;
