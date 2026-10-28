@@ -340,7 +340,9 @@ const SmokePush: React.FC<{id: string; L: Lens; c: V3; t: number; t0: number}> =
   return (
     <g>
       <defs>
-        <filter id={`${id}-b`} x="-50%" y="-50%" width="200%" height="200%">
+        {/* a fixed frame-sized region: a region sized from the puffs' bounding box shrank when one puff faded out and
+            cut off the others' blur in one frame */}
+        <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={1680} height={2520}>
           <feGaussianBlur stdDeviation={f2(0.06 * pc.k)} />
         </filter>
       </defs>
