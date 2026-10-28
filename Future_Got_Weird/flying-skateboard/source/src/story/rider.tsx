@@ -7,11 +7,11 @@ import {pilotJoints, PilotPose} from '../art/rig';
 import {d3, Frame, Lens, s3, toW, V3, v3} from '../eng/v3';
 import {SUN} from '../eng/draw';
 
-export const Rider: React.FC<{id: string; L: Lens; B: Frame; pose: PilotPose; st: BoardState; coach?: number; noPilot?: boolean; pov?: boolean}> = ({id, L, B, pose, st, coach = 0, noPilot, pov}) => {
+export const Rider: React.FC<{id: string; L: Lens; B: Frame; pose: PilotPose; st: BoardState; coach?: number; noPilot?: boolean; pov?: boolean; voice?: {k: number; t: number}}> = ({id, L, B, pose, st, coach = 0, noPilot, pov, voice}) => {
   const j = pilotJoints(B, pose);
   const tilt = st.tilt ?? {pitch: 0, roll: 0};
   const board = <Board id={`${id}-b`} L={L} B={B} st={st} />;
-  const pilot = noPilot ? null : <Pilot id={`${id}-p`} L={L} j={j} coach={coach} tilt={tilt} thumb={pose.thumb} pov={pov} />;
+  const pilot = noPilot ? null : <Pilot id={`${id}-p`} L={L} j={j} coach={coach} tilt={tilt} thumb={pose.thumb} pov={pov} voice={voice} />;
   return boardAbove(L, B) ? (
     <g>
       {board}

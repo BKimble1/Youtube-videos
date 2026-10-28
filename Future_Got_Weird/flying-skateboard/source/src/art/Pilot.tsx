@@ -40,9 +40,11 @@ type Props = {
   noController?: boolean;
   /** rider's-eye view: the camera is in the head, so only the legs and shoes are drawn */
   pov?: boolean;
+  /** V6: the AI coach speaking (k 0..1, t = clock): a voice waveform on the wrist phone, in the earbud's colour */
+  voice?: {k: number; t: number};
 };
 
-export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, roll: 0}, thumb = 0.4, noController, pov}) => {
+export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, roll: 0}, thumb = 0.4, noController, pov, voice}) => {
   const p = L.p;
   const kc = p(j.P).k;
   const w = inkW(kc);
@@ -214,7 +216,20 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
           <path d={`M${f2(ref[0][0].x)},${f2(ref[0][0].y)} L${f2(cr(-0.031, -0.004).x)},${f2(cr(-0.031, -0.004).y)} M${f2(ref[1][0].x)},${f2(ref[1][0].y)} L${f2(cr(0.031, -0.004).x)},${f2(cr(0.031, -0.004).y)}`} stroke="#E8F6FF" strokeWidth={f2(Math.max(0.8, 0.003 * pc.k))} strokeLinecap="round" />
           <path d={polyD(bar)} fill={ok ? '#21D19F' : '#FFB347'} />
           {[-0.016, 0.016].map((u) => <circle key={u} cx={f2(P2(u, -0.0065).x)} cy={f2(P2(u, -0.0065).y)} r={f2(Math.max(0.5, 0.0022 * pc.k))} fill={ok ? '#21D19F' : '#FFB347'} />)}
-          <path d={`M${f2(cr(-0.012, 0.016).x)},${f2(cr(-0.012, 0.016).y)} L${f2(cr(0.012, 0.016).x)},${f2(cr(0.012, 0.016).y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeOpacity={0.6} strokeWidth={f2(Math.max(0.7, 0.003 * pc.k))} strokeLinecap="round" />
+          {!(voice && voice.k > 0.01) && <path d={`M${f2(cr(-0.012, 0.016).x)},${f2(cr(-0.012, 0.016).y)} L${f2(cr(0.012, 0.016).x)},${f2(cr(0.012, 0.016).y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeOpacity={0.6} strokeWidth={f2(Math.max(0.7, 0.003 * pc.k))} strokeLinecap="round" />}
+          {/* V6: the coach app speaking: a voice waveform in the earbud's colour along the bottom of the screen */}
+          {voice && voice.k > 0.01 && (
+            <path
+              d={[-2, -1, 0, 1, 2].map((b) => {
+                const hgt = 0.0015 + 0.006 * voice.k * (0.35 + 0.65 * Math.abs(Math.sin(voice.t * 13 + b * 1.7) * Math.sin(voice.t * 5.3 + b)));
+                const a = cr(b * 0.0075, 0.016 - hgt), c = cr(b * 0.0075, 0.016 + hgt);
+                return `M${f2(a.x)},${f2(a.y)} L${f2(c.x)},${f2(c.y)}`;
+              }).join(' ')}
+              stroke={GEAR.coach}
+              strokeWidth={f2(Math.max(0.8, 0.0035 * pc.k))}
+              strokeLinecap="round"
+            />
+          )}
         </g>
       );
     })();
