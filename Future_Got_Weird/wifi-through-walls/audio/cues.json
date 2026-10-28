@@ -5,23 +5,18 @@
   "gain_db": -21.9
  },
  {
-  "t": 0.4,
-  "name": "arm snaps up (sleeve)",
-  "gain_db": -23.1
+  "t": 0.33,
+  "name": "he lands in the crouch (sneakers)",
+  "gain_db": -18.4
  },
  {
-  "t": 0.5,
+  "t": 0.36,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 0.62,
-  "name": "tracking ping (the screen redraws)",
-  "gain_db": -21.9
- },
- {
-  "t": 0.95,
-  "name": "tucks in (clothes)",
+  "t": 0.82,
+  "name": "leans (clothes)",
   "gain_db": -26.0
  },
  {
@@ -37,12 +32,22 @@
  {
   "t": 1.32,
   "name": "footstep (lab)",
-  "gain_db": -11.7
+  "gain_db": -13.1
  },
  {
-  "t": 1.5,
+  "t": 1.45,
   "name": "hand to his chin (sleeve)",
   "gain_db": -30.5
+ },
+ {
+  "t": 1.59,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 1.62,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
  },
  {
   "t": 1.7,
@@ -50,9 +55,39 @@
   "gain_db": -34.0
  },
  {
-  "t": 1.805,
-  "name": "echo received (soft)",
-  "gain_db": -34.9
+  "t": 1.8,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 1.835,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 1.87,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 1.905,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 1.94,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 1.975,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.01,
+  "name": "joint locks",
+  "gain_db": -37.1
  },
  {
   "t": 2.04,
@@ -60,14 +95,54 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.146,
+  "t": 2.045,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.072,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
-  "t": 2.353,
-  "name": "echo received (soft)",
-  "gain_db": -34.9
+  "t": 2.08,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.115,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.15,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.185,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.22,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.255,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.265,
+  "name": "STILL accent (low impact)",
+  "gain_db": -6.9
+ },
+ {
+  "t": 2.285,
+  "name": "STILL accent (tone)",
+  "gain_db": -21.9
  },
  {
   "t": 2.38,
@@ -75,22 +150,17 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.4,
-  "name": "through the wall (muffled)",
-  "gain_db": -5.2
- },
- {
-  "t": 2.55,
-  "name": "concrete grit",
-  "gain_db": -34.0
- },
- {
-  "t": 2.669,
+  "t": 2.444,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
-  "t": 2.69,
+  "t": 2.45,
+  "name": "rises to peek (clothes)",
+  "gain_db": -26.9
+ },
+ {
+  "t": 2.703,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -100,14 +170,14 @@
   "gain_db": -34.0
  },
  {
-  "t": 3.04,
+  "t": 2.925,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
   "t": 3.05,
-  "name": "tracking ping (the screen redraws)",
-  "gain_db": -21.9
+  "name": "echo received (soft)",
+  "gain_db": -34.9
  },
  {
   "t": 4.14,
@@ -130,7 +200,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 5.634,
+  "t": 5.44,
+  "name": "the followed pulse leaves the array",
+  "gain_db": -26.0
+ },
+ {
+  "t": 5.519,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -140,7 +215,7 @@
   "gain_db": -34.0
  },
  {
-  "t": 5.891,
+  "t": 5.928,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -150,19 +225,19 @@
   "gain_db": -34.0
  },
  {
-  "t": 6.225,
+  "t": 6.37,
+  "name": "the pulse enters the concrete (muffled)",
+  "gain_db": -6.0
+ },
+ {
+  "t": 6.384,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 6.388,
+  "t": 6.398,
   "name": "echo received",
   "gain_db": -29.9
- },
- {
-  "t": 6.45,
-  "name": "packets enter the concrete (muffled)",
-  "gain_db": -6.9
  },
  {
   "t": 6.46,
@@ -170,12 +245,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 6.567,
+  "t": 6.712,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 6.716,
+  "t": 6.799,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -185,12 +260,7 @@
   "gain_db": -34.0
  },
  {
-  "t": 6.925,
-  "name": "echo received",
-  "gain_db": -29.9
- },
- {
-  "t": 7.053,
+  "t": 7.054,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -200,12 +270,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 7.266,
+  "t": 7.259,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 7.396,
+  "t": 7.392,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -215,12 +285,17 @@
   "gain_db": -34.0
  },
  {
-  "t": 7.582,
+  "t": 7.541,
+  "name": "the pulse meets his head (glint)",
+  "gain_db": -26.0
+ },
+ {
+  "t": 7.602,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 7.741,
+  "t": 7.71,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -230,12 +305,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 7.908,
+  "t": 7.947,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 8.081,
+  "t": 8.041,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -245,12 +320,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 8.264,
+  "t": 8.288,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 8.419,
+  "t": 8.395,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -260,12 +335,17 @@
   "gain_db": -34.0
  },
  {
-  "t": 8.604,
+  "t": 8.627,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 8.759,
+  "t": 8.713,
+  "name": "its echo arrives (receive bar)",
+  "gain_db": -21.9
+ },
+ {
+  "t": 8.713,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -275,12 +355,17 @@
   "gain_db": -34.0
  },
  {
-  "t": 8.915,
+  "t": 8.937,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 8.973,
+  "t": 9.019,
+  "name": "echo received",
+  "gain_db": -29.9
+ },
+ {
+  "t": 9.135,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -290,17 +375,12 @@
   "gain_db": -23.7
  },
  {
-  "t": 9.176,
-  "name": "echo received",
-  "gain_db": -29.9
- },
- {
   "t": 9.18,
   "name": "transmit packet",
   "gain_db": -34.0
  },
  {
-  "t": 9.25,
+  "t": 9.255,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -310,57 +390,102 @@
   "gain_db": -25.2
  },
  {
-  "t": 9.455,
-  "name": "pose forms",
-  "gain_db": -21.9
+  "t": 9.345,
+  "name": "keypoint placed",
+  "gain_db": -28.0
  },
  {
-  "t": 9.49,
+  "t": 9.42,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 9.427,
   "name": "echo received",
   "gain_db": -29.9
  },
  {
-  "t": 9.705,
-  "name": "pose forms",
-  "gain_db": -21.9
+  "t": 9.495,
+  "name": "keypoint placed",
+  "gain_db": -28.0
  },
  {
-  "t": 9.955,
-  "name": "pose forms",
-  "gain_db": -21.9
+  "t": 9.57,
+  "name": "keypoint placed",
+  "gain_db": -28.0
  },
  {
-  "t": 10.155,
-  "name": "pose forms",
-  "gain_db": -21.9
+  "t": 9.645,
+  "name": "keypoint placed",
+  "gain_db": -28.0
  },
  {
-  "t": 11.474,
+  "t": 9.72,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 9.795,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 9.87,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 9.945,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 10.02,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 10.095,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 10.17,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 10.245,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 10.32,
+  "name": "keypoint placed",
+  "gain_db": -28.0
+ },
+ {
+  "t": 11.562,
   "name": "hand echo received",
   "gain_db": -31.1
  },
  {
-  "t": 11.813,
+  "t": 11.901,
   "name": "hand echo received",
   "gain_db": -31.1
  },
  {
-  "t": 11.93,
+  "t": 12.112,
   "name": "hand echo received",
   "gain_db": -31.1
  },
  {
-  "t": 12.158,
+  "t": 12.244,
   "name": "hand echo received",
   "gain_db": -31.1
  },
  {
-  "t": 12.27,
-  "name": "hand echo received",
-  "gain_db": -31.1
- },
- {
-  "t": 12.508,
+  "t": 12.452,
   "name": "hand echo received",
   "gain_db": -31.1
  },
@@ -370,7 +495,7 @@
   "gain_db": -21.4
  },
  {
-  "t": 13.197,
+  "t": 13.132,
   "name": "hand echo received",
   "gain_db": -31.1
  },
@@ -380,7 +505,7 @@
   "gain_db": -21.4
  },
  {
-  "t": 13.29,
+  "t": 13.282,
   "name": "hand echo received",
   "gain_db": -31.1
  },
@@ -407,7 +532,7 @@
  {
   "t": 14.415,
   "name": "footstep (lab)",
-  "gain_db": -12.2
+  "gain_db": -13.3
  },
  {
   "t": 14.415,
@@ -432,7 +557,7 @@
  {
   "t": 15.057,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -14.3
+  "gain_db": -16.4
  },
  {
   "t": 15.435,
@@ -447,17 +572,17 @@
  {
   "t": 15.456,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.3
+  "gain_db": -22.5
  },
  {
   "t": 15.533,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.8
+  "gain_db": -16.7
  },
  {
   "t": 15.738,
   "name": "footstep (pedestrian)",
-  "gain_db": -24.0
+  "gain_db": -24.2
  },
  {
   "t": 15.855,
@@ -467,17 +592,17 @@
  {
   "t": 15.876,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.8
+  "gain_db": -21.3
  },
  {
   "t": 16.008,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -14.6
+  "gain_db": -16.0
  },
  {
   "t": 16.168,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.3
+  "gain_db": -22.7
  },
  {
   "t": 16.275,
@@ -487,17 +612,17 @@
  {
   "t": 16.296,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.9
+  "gain_db": -20.8
  },
  {
   "t": 16.483,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.7
+  "gain_db": -15.1
  },
  {
   "t": 16.598,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.1
+  "gain_db": -22.6
  },
  {
   "t": 16.695,
@@ -507,17 +632,17 @@
  {
   "t": 16.716,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.7
+  "gain_db": -21.1
  },
  {
   "t": 16.957,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.6
+  "gain_db": -15.8
  },
  {
   "t": 17.028,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.9
+  "gain_db": -23.3
  },
  {
   "t": 17.115,
@@ -527,17 +652,17 @@
  {
   "t": 17.136,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.6
+  "gain_db": -22.8
  },
  {
   "t": 17.433,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.8
+  "gain_db": -15.2
  },
  {
   "t": 17.458,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.7
+  "gain_db": -24.0
  },
  {
   "t": 17.535,
@@ -552,12 +677,12 @@
  {
   "t": 17.888,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.5
+  "gain_db": -22.2
  },
  {
   "t": 17.907,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.7
+  "gain_db": -16.6
  },
  {
   "t": 17.955,
@@ -567,7 +692,7 @@
  {
   "t": 18.318,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.8
+  "gain_db": -24.1
  },
  {
   "t": 18.375,
@@ -577,7 +702,7 @@
  {
   "t": 18.383,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.2
+  "gain_db": -15.8
  },
  {
   "t": 18.795,
@@ -587,7 +712,7 @@
  {
   "t": 18.858,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.9
+  "gain_db": -15.3
  },
  {
   "t": 18.895,
@@ -612,7 +737,7 @@
  {
   "t": 19.332,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -21.6
+  "gain_db": -20.5
  },
  {
   "t": 19.345,
@@ -652,7 +777,7 @@
  {
   "t": 19.808,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -20.7
+  "gain_db": -19.8
  },
  {
   "t": 19.855,
@@ -677,7 +802,7 @@
  {
   "t": 20.282,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -20.2
+  "gain_db": -21.3
  },
  {
   "t": 20.475,
@@ -692,7 +817,7 @@
  {
   "t": 20.758,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.2
+  "gain_db": -13.1
  },
  {
   "t": 21.06,
@@ -702,12 +827,12 @@
  {
   "t": 21.233,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -14.2
+  "gain_db": -12.1
  },
  {
   "t": 21.707,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -13.6
+  "gain_db": -12.3
  },
  {
   "t": 21.945,
@@ -717,7 +842,7 @@
  {
   "t": 22.183,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -13.8
+  "gain_db": -12.9
  },
  {
   "t": 22.295,
@@ -725,108 +850,128 @@
   "gain_db": 0.0
  },
  {
+  "t": 22.344,
+  "name": "footstep (participant)",
+  "gain_db": -17.8
+ },
+ {
   "t": 22.35,
-  "name": "footstep (participant)",
-  "gain_db": -19.2
- },
- {
-  "t": 22.386,
-  "name": "footstep (participant)",
-  "gain_db": -17.7
- },
- {
-  "t": 22.395,
-  "name": "walk recorded",
-  "gain_db": -26.0
- },
- {
-  "t": 22.776,
   "name": "footstep (participant)",
   "gain_db": -18.4
  },
  {
-  "t": 22.85,
+  "t": 22.386,
   "name": "footstep (participant)",
   "gain_db": -17.5
  },
  {
-  "t": 23.03,
+  "t": 22.764,
+  "name": "footstep (participant)",
+  "gain_db": -19.4
+ },
+ {
+  "t": 22.776,
   "name": "footstep (participant)",
   "gain_db": -19.5
+ },
+ {
+  "t": 22.85,
+  "name": "footstep (participant)",
+  "gain_db": -19.1
+ },
+ {
+  "t": 23.03,
+  "name": "footstep (participant)",
+  "gain_db": -18.1
  },
  {
   "t": 23.166,
   "name": "footstep (participant)",
-  "gain_db": -18.3
+  "gain_db": -17.3
  },
  {
-  "t": 23.35,
-  "name": "footstep (participant)",
-  "gain_db": -18.8
- },
- {
-  "t": 23.38,
-  "name": "footstep (participant)",
-  "gain_db": -19.5
- },
- {
-  "t": 23.445,
-  "name": "walk recorded",
-  "gain_db": -26.0
- },
- {
-  "t": 23.556,
-  "name": "footstep (participant)",
-  "gain_db": -19.7
- },
- {
-  "t": 23.73,
-  "name": "footstep (participant)",
-  "gain_db": -19.0
- },
- {
-  "t": 23.85,
-  "name": "footstep (participant)",
-  "gain_db": -19.6
- },
- {
-  "t": 23.946,
-  "name": "footstep (participant)",
-  "gain_db": -19.2
- },
- {
-  "t": 24.08,
-  "name": "footstep (participant)",
-  "gain_db": -19.2
- },
- {
-  "t": 24.336,
+  "t": 23.184,
   "name": "footstep (participant)",
   "gain_db": -17.3
  },
  {
+  "t": 23.35,
+  "name": "footstep (participant)",
+  "gain_db": -18.1
+ },
+ {
+  "t": 23.38,
+  "name": "footstep (participant)",
+  "gain_db": -19.1
+ },
+ {
+  "t": 23.556,
+  "name": "footstep (participant)",
+  "gain_db": -17.4
+ },
+ {
+  "t": 23.604,
+  "name": "footstep (participant)",
+  "gain_db": -17.3
+ },
+ {
+  "t": 23.73,
+  "name": "footstep (participant)",
+  "gain_db": -19.5
+ },
+ {
+  "t": 23.85,
+  "name": "footstep (participant)",
+  "gain_db": -18.8
+ },
+ {
+  "t": 23.895,
+  "name": "match #27",
+  "gain_db": -24.4
+ },
+ {
+  "t": 23.895,
+  "name": "push onto the results display",
+  "gain_db": -29.1
+ },
+ {
+  "t": 23.946,
+  "name": "footstep (participant)",
+  "gain_db": -18.7
+ },
+ {
+  "t": 24.024,
+  "name": "footstep (participant)",
+  "gain_db": -17.5
+ },
+ {
+  "t": 24.08,
+  "name": "footstep (participant)",
+  "gain_db": -17.7
+ },
+ {
+  "t": 24.336,
+  "name": "footstep (participant)",
+  "gain_db": -19.7
+ },
+ {
   "t": 24.35,
   "name": "footstep (participant)",
-  "gain_db": -19.6
- },
- {
-  "t": 24.375,
-  "name": "dissolve to the screen",
-  "gain_db": -30.5
- },
- {
-  "t": 24.395,
-  "name": "walk recorded",
-  "gain_db": -26.0
+  "gain_db": -18.8
  },
  {
   "t": 24.43,
   "name": "footstep (participant)",
-  "gain_db": -19.8
+  "gain_db": -19.1
+ },
+ {
+  "t": 24.444,
+  "name": "footstep (participant)",
+  "gain_db": -19.1
  },
  {
   "t": 24.475,
-  "name": "matching room tone",
+  "name": "study room tone (results display)",
   "gain_db": 0.0
  },
  {
@@ -1217,12 +1362,12 @@
  {
   "t": 27.486,
   "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -17.7
+  "gain_db": -18.1
  },
  {
   "t": 28.026,
   "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -15.6
+  "gain_db": -16.7
  },
  {
   "t": 28.53,
@@ -1232,27 +1377,27 @@
  {
   "t": 28.566,
   "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -16.2
+  "gain_db": -18.2
  },
  {
   "t": 29.106,
   "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -23.3
+  "gain_db": -22.6
+ },
+ {
+  "t": 29.555,
+  "name": "seen before (his picture comes up)",
+  "gain_db": -20.9
  },
  {
   "t": 29.646,
   "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -23.7
- },
- {
-  "t": 30.005,
-  "name": "seen before",
-  "gain_db": -21.4
+  "gain_db": -21.9
  },
  {
   "t": 30.186,
   "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -21.7
+  "gain_db": -23.4
  },
  {
   "t": 30.235,
@@ -1267,17 +1412,17 @@
  {
   "t": 30.726,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -15.3
+  "gain_db": -15.6
  },
  {
   "t": 31.266,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -14.3
+  "gain_db": -13.3
  },
  {
   "t": 31.806,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -13.9
+  "gain_db": -13.3
  },
  {
   "t": 31.95,
@@ -1287,12 +1432,12 @@
  {
   "t": 32.346,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -15.6
+  "gain_db": -16.4
  },
  {
   "t": 32.886,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -15.3
+  "gain_db": -16.1
  },
  {
   "t": 33.0,
@@ -1302,12 +1447,12 @@
  {
   "t": 33.426,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -20.7
+  "gain_db": -19.1
  },
  {
   "t": 33.966,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -20.4
+  "gain_db": -18.2
  },
  {
   "t": 34.39,
@@ -1322,7 +1467,7 @@
  {
   "t": 34.506,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.2
+  "gain_db": -20.2
  },
  {
   "t": 34.65,
@@ -1342,27 +1487,42 @@
  {
   "t": 35.046,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.6
+  "gain_db": -20.5
  },
  {
-  "t": 35.24,
-  "name": "dissolve to the lab",
-  "gain_db": -29.1
+  "t": 35.07,
+  "name": "router packet",
+  "gain_db": -34.9
  },
  {
-  "t": 35.29,
-  "name": "lab room tone (hum)",
-  "gain_db": 0.0
+  "t": 35.28,
+  "name": "router packet",
+  "gain_db": -34.9
  },
  {
-  "t": 35.467,
-  "name": "footstep (lab)",
-  "gain_db": -13.3
+  "t": 35.317,
+  "name": "he stops (scuff)",
+  "gain_db": -14.0
  },
  {
-  "t": 35.747,
-  "name": "footstep (lab)",
-  "gain_db": -13.1
+  "t": 35.49,
+  "name": "router packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 35.586,
+  "name": "footstep (hero (in the CCTV picture))",
+  "gain_db": -18.4
+ },
+ {
+  "t": 35.7,
+  "name": "router packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 35.717,
+  "name": "the duck (clothes, a rush)",
+  "gain_db": -21.9
  },
  {
   "t": 35.967,
@@ -1370,13 +1530,8 @@
   "gain_db": -20.9
  },
  {
-  "t": 35.987,
-  "name": "footstep (lab)",
-  "gain_db": -11.8
- },
- {
-  "t": 36.167,
-  "name": "he crouches (clothes)",
-  "gain_db": -26.0
+  "t": 36.017,
+  "name": "lab room tone (hum)",
+  "gain_db": 0.0
  }
 ]

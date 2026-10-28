@@ -1,5 +1,33 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V7 (targeted visual revision)
+
+**Status (28 Oct 2026):** V7 review rendered at 1080×1920 and checked from the file. **Not published. The 4K master
+has not been made yet.** It keeps V6's narration, voice, story order and runtime, with these revisions:
+
+- **Hook:** frame 0 is him already ducking behind the wall, the large screen's skeleton ducking with him. Then a
+  lateral reveal, the lean, the joint lock and the STILL accent with a peek.
+- **Mechanism:** follows one pulse to him and back.
+- **Skeleton payoff:** the skeleton is built point by point, then his hand and the skeleton's hand close up.
+- **Escalation:** the screen opens into the street.
+- **Café experiment:** a split screen of his gait and the receiver matching it.
+- **Study:** four participants matched on the data wall, then a wall-size 197 display.
+- **Payoff:** the laptop shows his picture.
+- **Ending:** the CCTV picture against the Wi-Fi receiver, then a match cut on his duck into frame 0.
+
+Remaining known defects are listed at the end of the change log.
+
+| Deliverable | File |
+|---|---|
+| V7 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V7_REVIEW_1080x1920.mp4` |
+| Change log and remaining defects | `production/V7_CHANGELOG.md` |
+| Source (V7 scenes) | `source/src/v7/` (joins in `source/src/Film.tsx`) |
+| Probes, measured QA | `qa/v7/` (`tools/v7/cam_probe.ts`, `face_probe.ts`, `rig_probe7.ts`, `pop_scan.py`) |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V7_mix.wav`, `audio/v7_events.json` (`tools/v7/events.ts`, `tools/v7/make_audio7.py`) |
+| Stills | `stills/FGW_WiFi_V7_*.png` |
+
+`source/` now builds V7. V4, V5 and V6's scene code stays in `source/src/v4/`, `v5/` and `v6/`.
+
 ## V6 (cinematic stability and character rig pass)
 
 **Status (28 Oct 2026):** V6 review rendered and checked from the file. **Not published.** It keeps V5's narration,
@@ -22,7 +50,7 @@ Remaining known defects are listed at the end of the change log.
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V6_mix.wav`, `audio/v6_events.json` (`tools/v6/events.ts`, `tools/v6/make_audio6.py`) |
 | Stills | `stills/FGW_WiFi_V6_*.png` |
 
-`source/` now builds V6. V4's and V5's scene code stay in `source/src/v4/` and `source/src/v5/`.
+V6's scene code is in `source/src/v6/`.
 
 ## V5 (targeted final revision)
 

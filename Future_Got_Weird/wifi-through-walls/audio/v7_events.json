@@ -1,0 +1,494 @@
+{
+ "duration": 36.46666666666667,
+ "labSteps": [
+  {
+   "t": -2.5
+  },
+  {
+   "t": -2.2
+  },
+  {
+   "t": -1.9
+  },
+  {
+   "t": -1.62
+  },
+  {
+   "t": -1.38
+  },
+  {
+   "t": 1.15
+  },
+  {
+   "t": 1.32
+  },
+  {
+   "t": 13.885
+  },
+  {
+   "t": 14.415
+  }
+ ],
+ "footsteps": [
+  {
+   "t": 15.057,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 15.533,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 16.008,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 16.483,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 16.957,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 17.433,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 17.907,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 18.383,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 18.858,
+   "gain": 0.7,
+   "who": "hero (café)"
+  },
+  {
+   "t": 19.332,
+   "gain": 0.4,
+   "who": "hero (through the window, split screen)"
+  },
+  {
+   "t": 19.808,
+   "gain": 0.4,
+   "who": "hero (through the window, split screen)"
+  },
+  {
+   "t": 20.282,
+   "gain": 0.4,
+   "who": "hero (through the window, split screen)"
+  },
+  {
+   "t": 20.758,
+   "gain": 0.95,
+   "who": "hero (café, close)"
+  },
+  {
+   "t": 21.233,
+   "gain": 0.95,
+   "who": "hero (café, close)"
+  },
+  {
+   "t": 21.707,
+   "gain": 0.95,
+   "who": "hero (café, close)"
+  },
+  {
+   "t": 22.183,
+   "gain": 0.95,
+   "who": "hero (café, close)"
+  },
+  {
+   "t": 15.738,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 16.168,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 16.598,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 17.028,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 17.458,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 17.888,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 18.318,
+   "gain": 0.3,
+   "who": "pedestrian"
+  },
+  {
+   "t": 15.456,
+   "gain": 0.35,
+   "who": "pedestrian"
+  },
+  {
+   "t": 15.876,
+   "gain": 0.35,
+   "who": "pedestrian"
+  },
+  {
+   "t": 16.296,
+   "gain": 0.35,
+   "who": "pedestrian"
+  },
+  {
+   "t": 16.716,
+   "gain": 0.35,
+   "who": "pedestrian"
+  },
+  {
+   "t": 17.136,
+   "gain": 0.35,
+   "who": "pedestrian"
+  },
+  {
+   "t": 27.486,
+   "gain": 0.6,
+   "who": "hero (past the café)"
+  },
+  {
+   "t": 28.026,
+   "gain": 0.6,
+   "who": "hero (past the café)"
+  },
+  {
+   "t": 28.566,
+   "gain": 0.6,
+   "who": "hero (past the café)"
+  },
+  {
+   "t": 29.106,
+   "gain": 0.3,
+   "who": "hero (off screen, the camera at the window)"
+  },
+  {
+   "t": 29.646,
+   "gain": 0.3,
+   "who": "hero (off screen, the camera at the window)"
+  },
+  {
+   "t": 30.186,
+   "gain": 0.3,
+   "who": "hero (off screen, the camera at the window)"
+  },
+  {
+   "t": 30.726,
+   "gain": 0.8,
+   "who": "hero (close, unaware)"
+  },
+  {
+   "t": 31.266,
+   "gain": 0.8,
+   "who": "hero (close, unaware)"
+  },
+  {
+   "t": 31.806,
+   "gain": 0.8,
+   "who": "hero (close, unaware)"
+  },
+  {
+   "t": 32.346,
+   "gain": 0.7,
+   "who": "hero (toward the CCTV)"
+  },
+  {
+   "t": 32.886,
+   "gain": 0.7,
+   "who": "hero (toward the CCTV)"
+  },
+  {
+   "t": 33.426,
+   "gain": 0.45,
+   "who": "hero (in the CCTV picture)"
+  },
+  {
+   "t": 33.966,
+   "gain": 0.45,
+   "who": "hero (in the CCTV picture)"
+  },
+  {
+   "t": 34.506,
+   "gain": 0.45,
+   "who": "hero (in the CCTV picture)"
+  },
+  {
+   "t": 35.046,
+   "gain": 0.45,
+   "who": "hero (in the CCTV picture)"
+  },
+  {
+   "t": 35.586,
+   "gain": 0.45,
+   "who": "hero (in the CCTV picture)"
+  },
+  {
+   "t": 22.386,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 22.776,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.166,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.556,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.946,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.336,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 22.35,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 22.85,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.35,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.85,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.35,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 22.344,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 22.764,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.184,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.604,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.024,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.444,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.03,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.38,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 23.73,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.08,
+   "gain": 0.5,
+   "who": "participant"
+  },
+  {
+   "t": 24.43,
+   "gain": 0.5,
+   "who": "participant"
+  }
+ ],
+ "openingArrivals": [
+  1.59,
+  2.072,
+  2.444,
+  2.703,
+  2.925,
+  3.05
+ ],
+ "echoArrivals": [
+  5.519,
+  5.928,
+  6.384,
+  6.398,
+  6.712,
+  6.799,
+  7.054,
+  7.259,
+  7.392,
+  7.602,
+  7.71,
+  7.947,
+  8.041,
+  8.288,
+  8.395,
+  8.627,
+  8.713,
+  8.937,
+  9.019,
+  9.135,
+  9.255,
+  9.427
+ ],
+ "raiseArrivals": [
+  11.562,
+  11.901,
+  12.112,
+  12.244,
+  12.452,
+  12.595,
+  12.792,
+  12.94,
+  13.132,
+  13.282
+ ],
+ "walkerCross": [
+  22.395,
+  22.895,
+  23.395,
+  23.895
+ ],
+ "studyMatches": [
+  {
+   "t": 23.895,
+   "seed": 27
+  }
+ ],
+ "studyPush": {
+  "from": 23.795,
+  "to": 25.545
+ },
+ "duck0": -0.9,
+ "heroPulse": {
+  "emit": 5.44,
+  "wallIn": 6.37,
+  "hit": 7.541,
+  "arrive": 8.713
+ },
+ "beats": {
+  "still": 2.275,
+  "sci": 3.64,
+  "built": 4.16,
+  "shoots": 4.98,
+  "radio": 5.75,
+  "through": 6.4,
+  "and": 7.365,
+  "bounce": 7.685,
+  "body": 8.275,
+  "ai": 8.925,
+  "moving": 9.655,
+  "skel": 10.085,
+  "of": 10.675,
+  "raise": 11.295,
+  "hand": 11.575,
+  "it": 12.14,
+  "its": 12.61,
+  "but": 13.415,
+  "where": 13.905,
+  "creepy": 14.315,
+  "or": 34.46,
+  "labOut": 14.934999999999999,
+  "labIn": 36.016666666666666,
+  "uiIn": 18.945,
+  "uiOut": 20.75,
+  "eOut": 22.295,
+  "gIn": 27.14,
+  "ePush": 16.895,
+  "gPush": 28.03,
+  "gBack": 30.235,
+  "hIn": 31.849999999999998,
+  "povIn": 32.98,
+  "orSplit": 34.44,
+  "studyUiIn": 24.475,
+  "silA": 14.415,
+  "wipeA": 21.845000000000002,
+  "cafe_in": 14.934999999999999,
+  "cafe_sep": 15.435,
+  "cafe_sci": 16.565,
+  "cafe_ordinary": 17.355,
+  "cafe_wifi": 17.865,
+  "cafe_signals": 18.345,
+  "cafe_identify": 18.905,
+  "cafe_people": 19.415,
+  "cafe_walking": 19.725,
+  "cafe_past": 20.075,
+  "cafe_even": 20.8,
+  "cafe_without": 21.04,
+  "cafe_phones": 21.52,
+  "cafe_they": 22.425,
+  "cafe_so": 27.14,
+  "cafe_walking2": 27.73,
+  "cafe_cafe": 28.41,
+  "cafe_recognizes": 29.405,
+  "cafe_without2": 30.235,
+  "cafe_anything": 31.215,
+  "cafe_now": 32.05,
+  "cafe_camera": 33,
+  "cafe_watching": 33.45,
+  "cafe_or": 34.46,
+  "cafe_knows": 35.19
+ }
+}

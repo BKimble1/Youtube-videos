@@ -1,0 +1,29 @@
+{
+ "maxPerFrame": {
+  "turn": {
+   "d": 0.118,
+   "f": 1080
+  },
+  "neck": {
+   "d": 4.576,
+   "f": 1080
+  },
+  "gx": {
+   "d": 0.232,
+   "f": 1061
+  },
+  "gy": {
+   "d": 0.112,
+   "f": 1000
+  },
+  "open": {
+   "d": 0.06,
+   "f": 1061
+  },
+  "lid": {
+   "d": 0.687,
+   "f": 272
+  }
+ },
+ "note": "turn: 0..1 head angle; neck: deg; gx, gy: gaze -1..1; open: mouth 0..1; lid: blink"
+}
