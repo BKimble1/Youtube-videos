@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""The V2 mix (V1 plus footsteps from the walkers' heel strikes, audio/footsteps.json, and V2 picture timing): the final narration, an original synthesized music bed, synthesized electronic tones, and five
+"""The V3 mix (the V1/V2 engine; V3 cues from the picture's own event timing, audio/v3_events.json): the final narration, an original synthesized music bed, synthesized electronic tones, and five
 ElevenLabs sound effects (audio/sfx/el_*.mp3, generated for this film). Cue times are taken from the measured word
 timeline (audio/narration/words_final.json) with the same beat offsets the picture uses (source/src/scenes/*.tsx).
 
@@ -7,7 +7,7 @@ Loop: the music is written in exactly 16 bars of the film's length (64 beats in 
 music note and effect is mixed into a circular buffer (anything that rings past the last frame continues at frame 0),
 so the end of the film runs into its start without a jump or click. The narration is not circular.
 
-Outputs: audio/mix/FGW_WiFi_Walls_V2_mix.wav (48 kHz/24-bit stereo), source/public/audio/mix.wav, audio/cues.json,
+Outputs: audio/mix/FGW_WiFi_Walls_V3_mix.wav (48 kHz/24-bit stereo), source/public/audio/mix.wav, audio/cues.json,
 audio/mix/mix_measure.json.
 usage: python3 -I tools/make_audio.py"""
 import json, os, subprocess
@@ -123,53 +123,69 @@ def click(dur=0.012):
     return rng.standard_normal(n) * np.exp(-np.arange(n) / (0.002 * SR))
 
 
-# ------------------------------------------------------------------ beats (as the picture)
+# ------------------------------------------------------------------ beats and events (as the picture: audio/v3_events.json
+# is written by tools/v3/events.ts from the same functions that draw the frames)
+EV = json.load(open(os.path.join(EP, 'audio/v3_events.json')))
+E = EV['beats']
 B = {
-    'watch': w('watch'), 'sci': w('scientists', 0), 'built': w('built'), 'shoots': w('shoots'), 'through': w('through'),
-    'bounce': w('bounce'), 'ai': w('a', 1), 'moving': w('moving'), 'raise': w('raise'), 'hand': w('hand', 0), 'hand2': w('hand', 1),
-    'but': w('but'), 'creepy': w('creepy'), 'in': w('in', 0), 'ordinary': w('ordinary'), 'identify': w('identify'),
-    'even': w('even'), 'without': w('without', 0), 'they2': w('they', 1), 'people2': w('people', 1), 'everyone': w('everyone'),
-    'so': w('so'), 'recognizes': w('recognizes'), 'anything': w('anything'), 'now': w('now'), 'camera': w('camera'),
-    'watching': w('watching'), 'or': w('or'), 'wifi2': w('wifi', 1),
+    'watch': w('watch'), 'raise': w('raise'), 'hand': w('hand', 0), 'hand2': w('hand', 1), 'but': w('but'), 'creepy': w('creepy'),
+    'even': w('even'), 'they2': w('they', 1), 'camera': w('camera'), 'or': w('or'), 'wifi2': w('wifi', 1), 'anything': w('anything'),
 }
-LAB_OUT = B['in'] - 0.12
-CAFE_F1 = B['they2'] - 0.1
-CAFE_H0 = B['so'] - 0.12
-CAFE_H1 = B['now'] - 0.1
+LAB_OUT = E['labOut']
+CAFE_F1 = E['eOut']
+CAFE_H0 = E['hIn']
+CAFE_H1 = E['end0']
 
 sfx = Bus(True)
 ui = Bus(True)
 amb = Bus(True)
 
-# ---- hook: the skid starts just before frame 0 (it wraps from the film's end), the back hits the wall at 0.30
-skid = load('el_skid_thump.mp3', 0.0, 0.32)
+
+def step_sound(hard=False):
+    """a soft sneaker step: heel thud and a short scuff"""
+    n = int(0.07 * SR)
+    tt = np.arange(n) / SR
+    heel = lp_fast(rng.standard_normal(n), 520 if hard else 380) * np.exp(-tt / 0.018) * np.minimum(1, tt / 0.0015)
+    m = int(0.03 * SR)
+    scuff = np.zeros(n)
+    scuff[int(0.025 * SR):int(0.025 * SR) + m] = hp_fast(lp_fast(rng.standard_normal(m), 4200), 1800) * np.exp(-np.arange(m) / (0.008 * SR))
+    return heel + scuff * 0.25
+
+
+# ---- the lab: his steps (the ending's walk and backward retreat, the squat's last step), the wall at his back, the duck
+for s_ in EV['labSteps']:
+    cue(sfx, 'footstep (lab)', s_['t'], step_sound(True), 0.25 * s_['gain'] * (0.85 + 0.3 * rng.random()))
 thump = load('el_skid_thump.mp3', 2.45, 2.95)
-cue(sfx, 'skid (wraps from the end)', -0.22, skid, 0.8)
-cue(sfx, 'back hits the wall', 0.28, thump, 0.85)
-# tracking: a soft ping each time the display's skeleton visibly updates (frame 0, the slide, the shh, the crouch)
-for t, f in [(0.05, 1568), (0.34, 1568), (1.08, 1397), (2.0, 1568), (B['watch'] + 0.02, 1760), (B['watch'] + 0.17, 2349), (3.3, 1397)]:
-    cue(ui, 'tracking ping', t, blip(f), 0.10)
-# ---- A: the radio's cover clicks open, the FMCW chirps start with the first wave front
-cue(sfx, 'cover latch', B['built'] - 0.02, click(), 0.35)
-cue(sfx, 'cover swings', B['built'], noise(0.35, 1400, 0.03, 0.12), 0.05)
-t = B['shoots']
-while t < B['bounce'] + 0.2:
-    cue(ui, 'chirp', t, chirp(2600, 5200, 0.1), 0.022)
-    t += 0.28
-cue(sfx, 'waves pass the wall (muffled)', B['through'] + 0.02, lp_fast(noise(0.5, 800, 0.02, 0.25), 400), 0.55)
-# ---- B: reflections glint off the body, return to the receiver, the skeleton resolves
-for i, d in enumerate([0, 0.06, 0.12, 0.18, 0.24, 0.3, 0.36]):
-    cue(ui, 'reflection glint', B['bounce'] + 0.12 + d, tone(2637 + 220 * (i % 3), 0.18, 0.002, 0.07), 0.035)
-cue(ui, 'received', B['ai'] + 0.25, blip(1175, 0.14), 0.08)
-cue(ui, 'received', B['ai'] + 0.35, blip(1568, 0.12), 0.07)
-s = B['moving']
-for k, (dt, f) in enumerate([(0.0, 880), (0.3, 1047), (0.55, 1319), (0.8, 1568)]):
-    cue(ui, 'skeleton builds', s + dt, blip(f, 0.1), 0.09)
-# ---- C: the raised hand is matched (two-note confirmation), then the second arm
-cue(ui, 'match tone', B['hand'] + 0.08, blip(1319, 0.1), 0.1)
-cue(ui, 'match tone', B['hand'] + 0.2, blip(1760, 0.14), 0.1)
-cue(ui, 'match tone', B['hand2'] + 0.42, blip(1568, 0.12), 0.07)
-# ---- D: the low impact under CREEPY, a data stream rising into the cut
+cue(sfx, 'back meets the wall', -0.42, thump, 0.55)
+cue(sfx, 'the duck (clothes)', -0.12, hp_fast(noise(0.32, 3000, 0.04, 0.2), 900), 0.05)
+# the radio's display updates as he moves (soft pings), from frame 0 on
+for t in [0.05, 0.62, 1.35, 2.15, 2.95, 3.5]:
+    cue(ui, 'tracking ping', t, blip(1568 if t < 2 else 1397), 0.09)
+# ---- how it works: the cover latch, a transmit chirp with every wavefront, the fronts entering the concrete
+cue(sfx, 'cover latch', E['built'] - 0.02, click(), 0.35)
+cue(sfx, 'cover swings', E['built'], noise(0.35, 1400, 0.03, 0.12), 0.05)
+for t in EV['txPulses']:
+    cue(ui, 'transmit chirp', t, chirp(2600, 5200, 0.1), 0.022)
+cue(sfx, 'waves enter the concrete (muffled)', EV['wallIn'], lp_fast(noise(0.55, 800, 0.02, 0.3), 380), 0.6)
+for i, t in enumerate([EV['hit'] + d for d in (0, 0.05, 0.1, 0.15, 0.2, 0.25)]):
+    cue(ui, 'wave meets his body (glint)', t, tone(2637 + 220 * (i % 3), 0.16, 0.002, 0.06), 0.03)
+# echoes reaching the receive patches (each a short blip), the range readout settling
+for t in sorted(EV['echoArrivals']):
+    cue(ui, 'echo received', t, blip(1175 + 60 * rng.random(), 0.07), 0.035)
+cue(ui, 'received', E['ai'] + 0.25, blip(1175, 0.14), 0.07)
+cue(ui, 'received', E['ai'] + 0.35, blip(1568, 0.12), 0.06)
+s = E['moving']
+for dt, f in [(-0.2, 880), (0.05, 1047), (0.3, 1319), (0.5, 1568)]:
+    cue(ui, 'skeleton builds', s + dt, blip(f, 0.1), 0.085)
+# ---- the raised hand: its echoes arrive, the skeleton's arm rises, a match tone when he notices
+# (kept out of "its hand", 12.61-13.10: the voice must stay clear there)
+its0, hand1 = w('its'), [x for x in WORDS if x['word'] == 'hand'][1]['end']
+for t in sorted(EV['raiseArrivals']):
+    if not (its0 - 0.1 < t < hand1):
+        cue(ui, 'hand echo received', t, blip(1480, 0.06), 0.03)
+cue(ui, 'match tone', hand1 + 0.03, blip(1319, 0.1), 0.09)
+cue(ui, 'match tone', hand1 + 0.15, blip(1760, 0.14), 0.09)
+# ---- CREEPY: the push into the head keypoint, a low impact, a rising shimmer into the café router's light
 boom = load('el_low_boom.mp3')
 n = int(1.8 * SR)
 tt = np.arange(n) / SR
@@ -178,23 +194,10 @@ swell = lp_fast(rng.standard_normal(int(0.45 * SR)), 900) * np.linspace(0, 1, in
 cue(sfx, 'reverse swell', B['creepy'] - 0.45, swell, 0.06)
 cue(sfx, 'low impact (ElevenLabs)', B['creepy'] + 0.02, boom, 0.8)
 cue(sfx, 'sub drop', B['creepy'] + 0.02, sub, 0.35)
-stream = hp_fast(noise(0.8, 6000, 0.5, 2.0, 0.8), 1500) * np.linspace(0.2, 1, int(0.8 * SR))
-cue(sfx, 'data stream', LAB_OUT - 0.7, stream, 0.05)
-# ---- V2: the traces fold into the café's router (Cafe.tsx SignalCarry, 0.6 s from the cut): a falling sweep
-cue(ui, 'signal folds into the router', LAB_OUT + 0.02, chirp(3400, 900, 0.55) * np.linspace(1, 0.3, int(0.55 * SR)), 0.03)
-# ---- V2: footsteps (soft sneaker heel + scuff), one per heel strike of a walker on screen
-def step_sound(hard=False):
-    n = int(0.07 * SR)
-    tt = np.arange(n) / SR
-    heel = lp_fast(rng.standard_normal(n), 520 if hard else 380) * np.exp(-tt / 0.018) * np.minimum(1, tt / 0.0015)
-    m = int(0.03 * SR)
-    scuff = np.zeros(n)
-    scuff[int(0.025 * SR):int(0.025 * SR) + m] = hp_fast(lp_fast(rng.standard_normal(m), 4200), 1800) * np.exp(-np.arange(m) / (0.008 * SR))
-    return heel * 1.0 + scuff * 0.25
-for s_ in json.load(open(os.path.join(EP, 'audio/footsteps.json'))):
-    g_ = s_['gain'] * (0.85 + 0.3 * rng.random())
-    cue(sfx, f"footstep ({s_['who']})", s_['t'], step_sound(s_['who'].startswith('hero (lab')), 0.25 * g_)
-# ---- E/F/H: café ambience (ElevenLabs loop), ducked to near-silence under WITHOUT their phones
+shimmer = hp_fast(noise(0.7, 7000, 0.5, 0.3, 0.6), 2500) * np.linspace(0.3, 1, int(0.7 * SR))
+cue(sfx, 'glow into the café router', LAB_OUT - 0.4, shimmer, 0.04)
+cue(ui, 'router light', LAB_OUT + 0.1, blip(2093, 0.12), 0.05)
+# ---- café (E and H): ambience, the router's packets, his steps, the analysis laptop
 cafe = load('el_cafe_amb_loop.mp3')
 cafe = cafe / (np.sqrt(np.mean(cafe ** 2)) + 1e-9) * 0.05
 def place_bed(bus, t0, t1, bed, name, fade=0.08, duck=None):
@@ -210,40 +213,46 @@ def place_bed(bus, t0, t1, bed, name, fade=0.08, duck=None):
             k = np.clip((tt - a) / 0.15, 0, 1) * np.clip((b - tt) / 0.25, 0, 1)
             e *= 1 - (1 - g) * k
     cue(bus, name, t0, reps * e, 1.0)
-place_bed(amb, LAB_OUT, CAFE_F1, cafe, 'café ambience', 0.04, duck=[(B['even'] - 0.05, B['they2'] - 0.3, 0.15)])
-place_bed(amb, CAFE_H0, CAFE_H1, cafe[int(3 * SR):], 'café ambience (H)', 0.04)
-# Wi-Fi texture in the café: quiet chirps; the body crossing the link; the monitor's match chime
-t = B['ordinary']
-while t < B['identify']:
-    cue(ui, 'wifi packet', t, chirp(2200, 3400, 0.05), 0.018)
-    t += 0.19
-cue(ui, 'link disturbed', B['identify'] - 0.55, tone(660, 0.6, 0.05, 0.3, 0.5, 'tri', glide=-0.3), 0.03)
+place_bed(amb, LAB_OUT, CAFE_F1, cafe, 'café ambience', 0.12, duck=[(B['even'] - 0.05, B['they2'] - 0.3, 0.3)])
+place_bed(amb, CAFE_H0, CAFE_H1, cafe[int(3 * SR):], 'café ambience (H)', 0.12)
+for s_ in EV['footsteps']:
+    cue(sfx, f"footstep ({s_['who']})", s_['t'], step_sound(False), 0.25 * s_['gain'] * (0.85 + 0.3 * rng.random()))
+t = E['cafe_sep']
+while t < E['cafe_identify']:
+    cue(ui, 'wifi packet', t, chirp(2200, 3400, 0.05), 0.016)
+    t += 0.42
 for k in range(4):
-    cue(ui, 'compare tick', B['identify'] + 0.35 + k * 0.22, blip(1047, 0.05), 0.05)
-cue(ui, 'MATCH chime', B['identify'] + 1.05, blip(1319, 0.16) + 0.6 * blip(1976, 0.16), 0.09)
-cue(sfx, 'quiet emphasis (WITHOUT)', B['without'] + 0.02, lp_fast(noise(0.35, 300, 0.005, 0.12), 180), 0.5)
-# ---- G: the corridor: room tone; each walker matched as they pass (a tick, rising); the dataset sweep
-room = lp_fast(rng.standard_normal(int(5 * SR)), 250) * 0.012
-cue(amb, 'corridor room tone', CAFE_F1, room[: int((CAFE_H0 - CAFE_F1) * SR)] * np.minimum(1, np.minimum(np.arange(int((CAFE_H0 - CAFE_F1) * SR)) / (0.05 * SR), (int((CAFE_H0 - CAFE_F1) * SR) - np.arange(int((CAFE_H0 - CAFE_F1) * SR))) / (0.05 * SR))), 1.0)
-g0 = B['they2'] - 0.1
-# V2: four walkers, one a second (source/src/scenes/Corridor.tsx: crossT = g0 + 0.25 + i, matched 0.15-0.3 s later)
-for i in range(4):
-    cue(ui, 'walker matched', g0 + 0.25 + i * 1.0 + 0.2, blip(988 + 120 * i, 0.08), 0.06)
-for n_ in range(0, 197, 3):
-    tt_ = B['everyone'] - 0.15 + n_ * 0.0055
-    cue(ui, 'dataset sweep', tt_, blip(1400 + 4 * n_, 0.035), 0.022)
-cue(ui, 'miss', B['everyone'] - 0.15 + 37 * 0.0055, tone(220, 0.12, 0.003, 0.06, 0, 'tri'), 0.05)
-cue(ui, 'miss', B['everyone'] - 0.15 + 151 * 0.0055, tone(220, 0.12, 0.003, 0.06, 0, 'tri'), 0.05)
-# ---- H: recognised: a darker match chime
-cue(ui, 'seen before', B['recognizes'] + 0.42, blip(880, 0.2) + 0.7 * blip(1047, 0.2), 0.09)
+    cue(ui, 'compare tick', E['cafe_people'] + 0.2 + k * 0.08, blip(1047, 0.05), 0.045)
+cue(ui, 'MATCH chime', E['cafe_walking'] + 0.45, blip(1319, 0.16) + 0.6 * blip(1976, 0.16), 0.085)
+cue(ui, 'no phone', E['cafe_even'] + 0.0, tone(330, 0.16, 0.004, 0.08, 0, 'tri'), 0.05)
+cue(sfx, 'quiet emphasis (WITHOUT)', w('without', 0) + 0.02, lp_fast(noise(0.35, 300, 0.005, 0.12), 180), 0.5)
+cue(ui, 'seen before', E['cafe_recognizes'] + 0.55, blip(880, 0.2) + 0.7 * blip(1047, 0.2), 0.09)
 cue(sfx, 'unease swell', B['anything'] - 0.6, lp_fast(noise(1.0, 500, 0.6, 0.6, 0.6), 300), 0.12)
-# ---- I: the camera: his palm slaps over it, the picture dies; the RF ping he hears; the dash (wraps to frame 0)
-cue(amb, 'office room tone', CAFE_H1, room[: int((DUR - CAFE_H1) * SR)] * np.minimum(1, np.arange(int((DUR - CAFE_H1) * SR)) / (0.05 * SR)), 1.0)
-slap = load('el_cam_slap.mp3', 1.95, 2.4)
-cue(sfx, 'palm over the lens (ElevenLabs)', B['camera'] - 0.05, slap, 1.6)
-cue(ui, 'picture dies', B['camera'] + 0.05, chirp(1200, 200, 0.18) * 0.8, 0.05)
-for t, f in [(B['or'] + 0.1, 1568), (B['or'] + 0.45, 1568), (B['wifi2'] + 0.35, 1760)]:
-    cue(ui, 'RF tracking ping (returns)', t, blip(f), 0.11)
+# the ad panel passing the lens (to the study, and to the lab ending): a soft air whoosh
+for t in (CAFE_F1 - 0.2, CAFE_H1 - 0.2):
+    cue(sfx, 'panel passes the lens', t, lp_fast(noise(0.45, 1200, 0.18, 0.2), 900), 0.12)
+# ---- the study: room tone, the recordings saved, the grid filling, matches sweeping (a few misses)
+room = lp_fast(rng.standard_normal(int(5 * SR)), 250) * 0.012
+nr = int((CAFE_H0 - CAFE_F1) * SR)
+cue(amb, 'study room tone', CAFE_F1, room[:nr] * np.minimum(1, np.minimum(np.arange(nr) / (0.05 * SR), (nr - np.arange(nr)) / (0.05 * SR))), 1.0)
+for tc in (E['crossA'], E['crossB']):
+    cue(ui, 'recording saved', tc + 0.65, blip(1568, 0.1) + 0.5 * blip(2093, 0.1), 0.06)
+for n_ in range(0, 197, 4):
+    cue(ui, 'recordings fill', E['study_people'] + 0.25 + n_ * 0.003, blip(1200 + 3 * n_, 0.03), 0.014)
+order = sorted(range(197), key=lambda n_: (n_ * 37) % 197)
+for k, n_ in enumerate(order):
+    if k % 3 == 0:
+        cue(ui, 'match sweep', E['study_identified'] + 0.15 + ((n_ * 37) % 197) * 0.008, blip(1400 + 4 * k, 0.035), 0.02)
+for n_ in (37, 104, 151):
+    cue(ui, 'unmatched', E['study_identified'] + 0.15 + ((n_ * 37) % 197) * 0.008, tone(220, 0.12, 0.003, 0.06, 0, 'tri'), 0.05)
+cue(ui, 'into the café laptop', CAFE_H0 - 0.1, chirp(900, 2400, 0.25) * 0.8, 0.03)
+# ---- the ending: office room tone; the security camera; the blind spot; the radio still pinging
+nr = int((DUR - CAFE_H1) * SR)
+cue(amb, 'office room tone', CAFE_H1, room[:nr] * np.minimum(1, np.arange(nr) / (0.05 * SR)), 1.0)
+cue(sfx, 'security camera servo', B['camera'] + 0.05, lp_fast(chirp(180, 260, 0.35), 1200) * 0.8, 0.08)
+cue(ui, 'camera picture: he leaves it', B['or'] + 0.35, chirp(900, 400, 0.18) * 0.8, 0.035)
+for t, f in [(B['or'] + 0.15, 1568), (B['or'] + 0.55, 1568), (B['wifi2'] + 0.35, 1760)]:
+    cue(ui, 'RF tracking ping (still)', t, blip(f), 0.1)
 
 # ------------------------------------------------------------------ music: 64 beats in DUR (16 bars), D minor
 beat = DUR / 64
@@ -251,7 +260,7 @@ mus = Bus(True)
 def sec_gain(t):
     """music level by section (linear); equal at 0 and DUR so the loop is seamless"""
     keys = [(0, 0.8), (3.5, 0.8), (4.0, 0.95), (B['raise'] - 0.3, 0.95), (B['raise'], 0.5), (B['but'] - 0.1, 0.5), (B['but'] + 0.3, 0.25), (B['creepy'] + 0.6, 0.15), (LAB_OUT, 0.7),
-            (B['even'] - 0.1, 0.7), (B['even'] + 0.2, 0.05), (B['they2'] - 0.25, 0.05), (B['they2'] + 0.1, 0.95), (CAFE_H0, 0.95), (CAFE_H0 + 0.3, 0.6),
+            (B['even'] - 0.1, 0.7), (B['even'] + 0.2, 0.15), (B['they2'] - 0.25, 0.15), (B['they2'] + 0.1, 0.95), (CAFE_H0, 0.95), (CAFE_H0 + 0.3, 0.6),
             (CAFE_H1, 0.6), (B['camera'] + 0.1, 0.45), (B['or'] + 0.2, 0.75), (DUR, 0.8)]
     xs, ys = zip(*keys)
     return np.interp(t, xs, ys)
@@ -326,7 +335,7 @@ st = np.stack([L, R], 1)
 peak = np.abs(st).max()
 st = st / peak * 10 ** (-1.5 / 20)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
-out = os.path.join(EP, 'audio/mix/FGW_WiFi_Walls_V2_mix.wav')
+out = os.path.join(EP, 'audio/mix/FGW_WiFi_Walls_V3_mix.wav')
 sf.write(out, st, SR, subtype='PCM_24')
 meas = subprocess.run(['ffmpeg', '-v', 'info', '-nostats', '-i', out, '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr
 I = float([l for l in meas.splitlines() if l.strip().startswith('I:')][-1].split()[1])

@@ -1,0 +1,49 @@
+{
+ "zipformer": {
+  "transcript": "YOU HID BEHIND THIS WALL THIS MACHINE COULD STILL WATCH YOU SCIENTISTS BUILT A SYSTEM THAT SHOOTS INVISIBLE RADIO WAVES THROUGH WALLS AND WHEN THEY BOUNCE OFF YOUR BODY A I CREATE'S A MOVING SKELETON OF YOU RAISE YOUR HAND IT RAISES ITS HAND BUT HERE'S WHERE IT GETS CREEPY IN A SEPARATE EXPERIMENT SCIENTISTS USED ORDINARY WIFE SIGNALS TO IDENTIFY PEOPLE WALKING PAST EVEN WITHOUT THEIR FOES THEY TESTED ONE HUNDRED NINETY SEVEN PEOPLE AND IDENTIFIED ALMOST EVERY ONE CORRECTLY SO IMAGINE WALKING PAST A CAFE AND IT RECOGNIZES YOU WITHOUT YOU DOING ANYTHING NOW WOULD YOU RATHER HAVE A CAMERA WATCHING YOU OR WHY FY THAT KNOWS WHO YOU ARE",
+  "wer": 0.072,
+  "diffs": [
+   [
+    "delete",
+    "if",
+    ""
+   ],
+   [
+    "replace",
+    "creates",
+    "create's"
+   ],
+   [
+    "replace",
+    "wifi",
+    "wife"
+   ],
+   [
+    "replace",
+    "phones",
+    "foes"
+   ],
+   [
+    "replace",
+    "everyone",
+    "every one"
+   ],
+   [
+    "replace",
+    "wifi",
+    "why fy"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you hid behind this wall This machine could still watch you! Scientists built a system that shoots invisible radio waves through walls. And when they bounce off your body? AI creates a moving skeleton of you. Raise your hand. It raises its hand. But here's where it gets creepy. In a separate experiment Scientists used ordinary Wi-Fi signals to identify people walking past. even without their phones. They tested 197 people. and identified almost everyone correctly. So imagine walking past a cafe. And it recognizes you without you doing... Now, would you rather have a camera watching you? or Wi-Fi that knows who you are.",
+  "wer": 0.009,
+  "diffs": [
+   [
+    "delete",
+    "anything",
+    ""
+   ]
+  ]
+ }
+}

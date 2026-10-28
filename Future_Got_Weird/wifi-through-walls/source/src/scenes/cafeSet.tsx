@@ -10,11 +10,12 @@ import {f1, hash, mixHex, useUid} from '../lib';
 export const FACADE = 3.2;
 export const PATH_Z = 1.75;
 export const CURB_Z = 0.25;
-export const ROUTER = v3(0.15, 1.36, FACADE + 0.12);
+// V3: the router sits on a shelf inside the right-hand window, the analysis laptop on its ledge to the left
+export const ROUTER = v3(2.45, 1.36, FACADE + 0.12);
 export const TABLE = {x: -1.75, z: 0.85, y: 0.74};
 export const LAPTOP = v3(TABLE.x + 0.12, TABLE.y + 0.13, TABLE.z - 0.02);
 /** the monitoring laptop on the inside window ledge: its screen (faces the street) */
-export const MONI = {x: -2.75, y: 1.42, z: FACADE + 0.06, w: 0.5, h: 0.31};
+export const MONI = {x: 1.55, y: 1.45, z: FACADE + 0.06, w: 0.6, h: 0.375};
 export const CC = {
   sky: '#BFE3EE', brick: '#C9705A', brickDeep: '#A9584A', mortar: '#E3B7A6', teal: '#2E8F8A', tealDeep: '#1F6E6A', cream: '#FFF4DF',
   glass: '#2C4D5C', glassLit: '#3E6A7A', interior: '#F3D9B1', interiorDeep: '#D9B98E', wood: '#8A5A3B', woodLight: '#B07A52',
@@ -174,7 +175,7 @@ export const CafeFore: React.FC<{b: B}> = ({b}) => (
         <Line3 b={b} pts={[v3(x, -0.14, 0.12), v3(x, 4.6, 0.12)]} stroke="#2E4A55" w={0.085} />
       </g>
     ))}
-    {[-7.6, 1.9].map((x) => (
+    {[-7.6, 4.7].map((x) => (
       <g key={x}>
         <Box b={b} x0={x - 0.3} x1={x + 0.3} y0={0} y1={0.55} z0={0.35} z1={0.85} front={CC.pot} side="#8E5236" top="#6B3F2A" />
         {[0, 1, 2, 3, 4].map((i) => {

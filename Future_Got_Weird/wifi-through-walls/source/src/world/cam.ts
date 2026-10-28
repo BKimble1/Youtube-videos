@@ -83,3 +83,25 @@ export const camKeys = (t: number, keys: [number, Cam, ((x: number) => number)?]
 };
 /** a camera that frames world point `target` at screen (sx, sy) from position `pos` (looking along +z, pitch p) */
 export const camFraming = (pos: V3, pitch: number, f: number, cy = 960): Cam => ({pos, yaw: 0, pitch, f, cx: 540, cy});
+/** V3: a camera path through keys with continuous velocity (cubic Hermite, finite-difference tangents), so a move
+ *  can pass through a key without stopping; a key marked `stop` is passed at rest (a hold or a reversal). */
+export const camPath = (t: number, keys: [number, Cam, boolean?][]): Cam => {
+  if (t <= keys[0][0]) return keys[0][1];
+  const n = keys.length;
+  if (t >= keys[n - 1][0]) return keys[n - 1][1];
+  let i = 0;
+  while (i < n - 2 && t > keys[i + 1][0]) i++;
+  const flat = (c: Cam) => [c.pos.x, c.pos.y, c.pos.z, c.yaw, c.pitch, c.f, c.cx, c.cy, c.roll ?? 0];
+  const tan = (k: number) => {
+    if (k <= 0 || k >= n - 1 || keys[k][2]) return flat(keys[k][1]).map(() => 0);
+    const a = flat(keys[k - 1][1]), b = flat(keys[k + 1][1]);
+    const dt = keys[k + 1][0] - keys[k - 1][0];
+    return a.map((v, j) => (b[j] - v) / dt);
+  };
+  const [t0, c0] = keys[i], [t1, c1] = keys[i + 1];
+  const h = t1 - t0, s = (t - t0) / h;
+  const p0 = flat(c0), p1 = flat(c1), m0 = tan(i), m1 = tan(i + 1);
+  const h00 = 2 * s ** 3 - 3 * s ** 2 + 1, h10 = s ** 3 - 2 * s ** 2 + s, h01 = -2 * s ** 3 + 3 * s ** 2, h11 = s ** 3 - s ** 2;
+  const v = p0.map((a, j) => h00 * a + h10 * h * m0[j] + h01 * p1[j] + h11 * h * m1[j]);
+  return {pos: v3(v[0], v[1], v[2]), yaw: v[3], pitch: v[4], f: v[5], cx: v[6], cy: v[7], roll: v[8]};
+};

@@ -1,0 +1,65 @@
+{
+ "duration": 36.46666666666667,
+ "results": [
+  {
+   "name": "lab hero (all lab frames, through the loop seam)",
+   "frames": 605,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0.09,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 43.9,
+   "at_frame": 1077,
+   "joint": "near wrist"
+  },
+  {
+   "name": "café hero (E)",
+   "frames": 224,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 37.7,
+   "at_frame": 588,
+   "joint": "far knee"
+  },
+  {
+   "name": "café hero (H)",
+   "frames": 147,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 42.2,
+   "at_frame": 863,
+   "joint": "far knee"
+  },
+  {
+   "name": "study participant A",
+   "frames": 139,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 46.9,
+   "at_frame": 771,
+   "joint": "near knee"
+  },
+  {
+   "name": "study participant B",
+   "frames": 139,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 33.4,
+   "at_frame": 731,
+   "joint": "near knee"
+  }
+ ]
+}
