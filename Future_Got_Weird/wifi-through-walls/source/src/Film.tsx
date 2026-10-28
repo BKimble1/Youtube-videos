@@ -6,12 +6,12 @@ import './fonts';
 import {clamp, FPS, IdCtx, ss, useUid, word} from './lib';
 import {Captions} from './Captions';
 import {capY} from './captions';
-import {LAB_OUT, LabScene, LB, labSil} from './v4/Lab4';
-import {LAB_IN} from './v4/hero4';
-import {cafeCam, CafeScene4, cafeSil, E_OUT, G_IN, UI_IN, UI_OUT} from './v4/Cafe4';
-import {StudyScene4, STUDY_UI_IN} from './v4/Study4';
-import {CafeUI, StudyUI} from './v4/ui';
-import {LAMPS} from './v4/cafeSet4';
+import {LAB_OUT, LabScene, LB, labSil} from './v5/Lab5';
+import {LAB_IN} from './v5/hero5';
+import {cafeCam, CafeScene4, cafeSil, E_OUT, G_CUT, G_IN, heroSteps, splitCam, UI_IN, UI_OUT} from './v5/Cafe5';
+import {StudyScene4, STUDY_UI_IN} from './v5/Study5';
+import {CafeSplitUI, SPLIT_Y, StudyUI} from './v5/ui';
+import {LAMPS} from './v5/cafeSet5';
 import {Person} from './art/person';
 import {keypoints, LIMBS, COL} from './art/skeleton';
 import {lerpPose} from './dc/Man';
@@ -71,12 +71,29 @@ const lampEdge = (t: number) => {
   return proj(b, v3(LAMPS[0] - 0.06, 1.2, 0.45)).x;
 };
 const WIPE_A = E_OUT - 0.45;
+const STEPS_E = heroSteps();
+/** the café experiment's split screen: him passing the window (from behind the receiver), the receiver's laptop below;
+ *  it opens from the full scene (the laptop slides up from the bottom) and cuts back to the street on "even" */
+const Split: React.FC<{t: number}> = ({t}) => {
+  const k = ss(t, UI_IN, UI_IN + 0.3);
+  const y = 1920 - (1920 - SPLIT_Y) * k;
+  return (
+    <AbsoluteFill>
+      <AbsoluteFill style={{transform: `translateY(${(y - SPLIT_Y).toFixed(1)}px)`}}>
+        <svg width={1080} height={1920}><CafeSplitUI t={t} steps={STEPS_E} /></svg>
+      </AbsoluteFill>
+      <AbsoluteFill style={{clipPath: `inset(0 0 ${(1920 - y).toFixed(1)}px 0)`}}>
+        <CafeScene4 t={t} camOverride={splitCam(t)} />
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
 export const SceneAt: React.FC<{t: number}> = ({t}) => {
   if (t < SIL_A) return <LabScene t={t} />;
   if (t < LAB_OUT) return <AbsoluteFill><LabScene t={t} /><Navy a={ss(t, LB.creepy + 0.3, LAB_OUT)} /><Silhouette t={t} /></AbsoluteFill>;
   if (t < SIL_OUT) return <AbsoluteFill><CafeScene4 t={t} /><Navy a={1 - ss(t, LAB_OUT, SIL_OUT - 0.05)} /><Silhouette t={t} /></AbsoluteFill>;
   if (t < UI_IN) return <CafeScene4 t={t} />;
-  if (t < UI_OUT) return <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}><CafeUI t={t} t0={UI_IN} /></svg>;
+  if (t < UI_OUT) return <Split t={t} />;
   if (t < WIPE_A) return <CafeScene4 t={t} />;
   if (t < E_OUT + 0.25) {
     const edge = lampEdge(t);
@@ -85,11 +102,15 @@ export const SceneAt: React.FC<{t: number}> = ({t}) => {
     return <Wipe edge={edge} before={<CafeScene4 t={t} />} after={<StudyScene4 t={t} />} />;
   }
   if (t < STUDY_UI_IN) return <StudyScene4 t={t} />;
+  if (t < STUDY_UI_IN + 0.2) return <AbsoluteFill><StudyScene4 t={STUDY_UI_IN} /><AbsoluteFill style={{opacity: clamp((t - STUDY_UI_IN) / 0.2)}}><svg width={1080} height={1920}><StudyUI t={t} t0={STUDY_UI_IN} tEnd={G_IN} /></svg></AbsoluteFill></AbsoluteFill>;
   if (t < G_IN) return <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}><StudyUI t={t} t0={STUDY_UI_IN} tEnd={G_IN} /></svg>;
   if (t < G_IN + 0.25) return <AbsoluteFill><CafeScene4 t={t} /><AbsoluteFill style={{opacity: 1 - clamp((t - G_IN) / 0.25)}}><svg width={1080} height={1920}><StudyUI t={G_IN} t0={STUDY_UI_IN} tEnd={G_IN} /></svg></AbsoluteFill></AbsoluteFill>;
   // café -> lab: the push into the café's wall; inside the lab's concrete
-  if (t < LAB_IN - 0.12) return <CafeScene4 t={t} />;
-  if (t < LAB_IN) return <AbsoluteFill><LabScene t={t + (LAB_IN - t)} /><AbsoluteFill style={{opacity: 1 - clamp((t - (LAB_IN - 0.12)) / 0.12)}}><CafeScene4 t={t} /></AbsoluteFill></AbsoluteFill>;
+  // the cutaway through the window (street -> the receiver's laptop inside)
+  if (t >= G_CUT - 0.25 && t < G_CUT) return <AbsoluteFill><CafeScene4 t={t} camOverride={cafeCam(G_CUT)} /><AbsoluteFill style={{opacity: 1 - ss(t, G_CUT - 0.25, G_CUT)}}><CafeScene4 t={t} /></AbsoluteFill></AbsoluteFill>;
+  // screen to screen: the café receiver's laptop dissolves into the lab's skeleton screen
+  if (t < LAB_IN - 0.25) return <CafeScene4 t={t} />;
+  if (t < LAB_IN) return <AbsoluteFill><LabScene t={LAB_IN} /><AbsoluteFill style={{opacity: 1 - ss(t, LAB_IN - 0.25, LAB_IN)}}><CafeScene4 t={t} /></AbsoluteFill></AbsoluteFill>;
   return <LabScene t={t} />;
 };
 void word;

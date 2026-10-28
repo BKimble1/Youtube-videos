@@ -1,0 +1,89 @@
+{
+ "duration": 36.46666666666667,
+ "results": [
+  {
+   "name": "lab hero (all lab frames, through the loop seam)",
+   "frames": 484,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0.01,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 37.8,
+   "at_frame": 1089,
+   "joint": "near knee"
+  },
+  {
+   "name": "café hero (street, E)",
+   "frames": 166,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 39,
+   "at_frame": 641,
+   "joint": "near knee"
+  },
+  {
+   "name": "café hero (seen from inside, G)",
+   "frames": 141,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 31.1,
+   "at_frame": 845,
+   "joint": "near knee"
+  },
+  {
+   "name": "café hero (CCTV corner, H)",
+   "frames": 103,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 36.8,
+   "at_frame": 1006,
+   "joint": "near knee"
+  },
+  {
+   "name": "study walker A",
+   "frames": 66,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 52,
+   "at_frame": 687,
+   "joint": "near knee"
+  },
+  {
+   "name": "study walker B",
+   "frames": 66,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 39,
+   "at_frame": 675,
+   "joint": "far knee"
+  },
+  {
+   "name": "study walker C",
+   "frames": 66,
+   "maxAnkleMiss_units": 0,
+   "maxPlantedFootSlip_units_per_frame": 0,
+   "armBoneDeviation_units": 0,
+   "legBoneDeviation_units": 0,
+   "maxBackwardElbow_deg": 0,
+   "maxJointAccel_units_per_frame2": 53.1,
+   "at_frame": 694,
+   "joint": "far knee"
+  }
+ ]
+}

@@ -1,43 +1,48 @@
 [
  {
   "t": 0.04,
-  "name": "tracking ping",
-  "gain_db": -21.4
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
  },
  {
   "t": 0.4,
-  "name": "the duck (clothes)",
-  "gain_db": -26.9
+  "name": "arm snaps up (sleeve)",
+  "gain_db": -23.1
  },
  {
-  "t": 0.45,
-  "name": "tracking ping",
-  "gain_db": -21.4
+  "t": 0.5,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
  },
  {
   "t": 0.62,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
+ },
+ {
+  "t": 0.95,
+  "name": "tucks in (clothes)",
+  "gain_db": -26.0
+ },
+ {
+  "t": 1.0,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
+ },
+ {
+  "t": 1.15,
   "name": "footstep (lab)",
-  "gain_db": -11.8
+  "gain_db": -13.3
  },
  {
-  "t": 0.8,
+  "t": 1.32,
   "name": "footstep (lab)",
-  "gain_db": -12.2
+  "gain_db": -11.7
  },
  {
-  "t": 0.86,
-  "name": "arm lifts (sleeve)",
-  "gain_db": -29.1
- },
- {
-  "t": 0.92,
-  "name": "tracking ping",
-  "gain_db": -21.4
- },
- {
-  "t": 1.12,
-  "name": "tracking ping",
-  "gain_db": -21.4
+  "t": 1.5,
+  "name": "hand to his chin (sleeve)",
+  "gain_db": -30.5
  },
  {
   "t": 1.7,
@@ -45,14 +50,24 @@
   "gain_db": -34.0
  },
  {
+  "t": 1.805,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
   "t": 2.04,
   "name": "transmit packet",
   "gain_db": -34.0
  },
  {
-  "t": 2.15,
-  "name": "through the wall (muffled)",
-  "gain_db": -5.2
+  "t": 2.146,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 2.353,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
  },
  {
   "t": 2.38,
@@ -60,14 +75,49 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.45,
+  "t": 2.4,
+  "name": "through the wall (muffled)",
+  "gain_db": -5.2
+ },
+ {
+  "t": 2.55,
   "name": "concrete grit",
   "gain_db": -34.0
+ },
+ {
+  "t": 2.669,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 2.69,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
  },
  {
   "t": 2.72,
   "name": "transmit packet",
   "gain_db": -34.0
+ },
+ {
+  "t": 3.04,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 3.05,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
+ },
+ {
+  "t": 4.14,
+  "name": "cover latch",
+  "gain_db": -10.5
+ },
+ {
+  "t": 4.16,
+  "name": "cover swings",
+  "gain_db": -26.0
  },
  {
   "t": 5.1,
@@ -80,7 +130,7 @@
   "gain_db": -34.0
  },
  {
-  "t": 5.541,
+  "t": 5.634,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -105,7 +155,7 @@
   "gain_db": -29.9
  },
  {
-  "t": 6.378,
+  "t": 6.388,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -125,7 +175,7 @@
   "gain_db": -29.9
  },
  {
-  "t": 6.715,
+  "t": 6.716,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -261,7 +311,7 @@
  },
  {
   "t": 9.455,
-  "name": "skeleton forms",
+  "name": "pose forms",
   "gain_db": -21.9
  },
  {
@@ -271,17 +321,17 @@
  },
  {
   "t": 9.705,
-  "name": "skeleton forms",
+  "name": "pose forms",
   "gain_db": -21.9
  },
  {
   "t": 9.955,
-  "name": "skeleton forms",
+  "name": "pose forms",
   "gain_db": -21.9
  },
  {
   "t": 10.155,
-  "name": "skeleton forms",
+  "name": "pose forms",
   "gain_db": -21.9
  },
  {
@@ -342,7 +392,7 @@
  {
   "t": 13.885,
   "name": "footstep (lab)",
-  "gain_db": -11.3
+  "gain_db": -11.8
  },
  {
   "t": 14.335,
@@ -357,7 +407,7 @@
  {
   "t": 14.415,
   "name": "footstep (lab)",
-  "gain_db": -11.5
+  "gain_db": -12.2
  },
  {
   "t": 14.415,
@@ -382,7 +432,7 @@
  {
   "t": 15.057,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -14.7
+  "gain_db": -14.3
  },
  {
   "t": 15.435,
@@ -397,17 +447,17 @@
  {
   "t": 15.456,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.6
+  "gain_db": -21.3
  },
  {
   "t": 15.533,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.1
+  "gain_db": -15.8
  },
  {
   "t": 15.738,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.2
+  "gain_db": -24.0
  },
  {
   "t": 15.855,
@@ -422,12 +472,12 @@
  {
   "t": 16.008,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.8
+  "gain_db": -14.6
  },
  {
   "t": 16.168,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.9
+  "gain_db": -22.3
  },
  {
   "t": 16.275,
@@ -437,17 +487,17 @@
  {
   "t": 16.296,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.9
+  "gain_db": -22.9
  },
  {
   "t": 16.483,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.3
+  "gain_db": -16.7
  },
  {
   "t": 16.598,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.6
+  "gain_db": -23.1
  },
  {
   "t": 16.695,
@@ -457,12 +507,12 @@
  {
   "t": 16.716,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.3
+  "gain_db": -20.7
  },
  {
   "t": 16.957,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.9
+  "gain_db": -15.6
  },
  {
   "t": 17.028,
@@ -477,17 +527,17 @@
  {
   "t": 17.136,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.7
+  "gain_db": -20.6
  },
  {
   "t": 17.433,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.4
+  "gain_db": -16.8
  },
  {
   "t": 17.458,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.9
+  "gain_db": -23.7
  },
  {
   "t": 17.535,
@@ -497,12 +547,12 @@
  {
   "t": 17.888,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.9
+  "gain_db": -23.5
  },
  {
   "t": 17.907,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -14.7
+  "gain_db": -15.7
  },
  {
   "t": 17.955,
@@ -510,14 +560,19 @@
   "gain_db": -37.1
  },
  {
-  "t": 18.318,
-  "name": "footstep (pedestrian)",
-  "gain_db": -24.0
+  "t": 17.965,
+  "name": "through the window",
+  "gain_db": -24.4
  },
  {
-  "t": 18.345,
-  "name": "into the caf\u00e9",
-  "gain_db": -0.9
+  "t": 18.115,
+  "name": "caf\u00e9 inside (router, receiver, split screen)",
+  "gain_db": -1.4
+ },
+ {
+  "t": 18.318,
+  "name": "footstep (pedestrian)",
+  "gain_db": -22.8
  },
  {
   "t": 18.375,
@@ -527,12 +582,7 @@
  {
   "t": 18.383,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.8
- },
- {
-  "t": 18.395,
-  "name": "through the window",
-  "gain_db": -24.4
+  "gain_db": -15.2
  },
  {
   "t": 18.795,
@@ -542,40 +592,55 @@
  {
   "t": 18.858,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.7
+  "gain_db": -15.9
  },
  {
-  "t": 18.945,
-  "name": "caf\u00e9 (under the analysis screen)",
-  "gain_db": -9.1
+  "t": 18.895,
+  "name": "laptop rises (split)",
+  "gain_db": -26.0
  },
  {
-  "t": 19.315,
+  "t": 19.215,
+  "name": "wifi packet",
+  "gain_db": -37.1
+ },
+ {
+  "t": 19.265,
   "name": "signature column",
   "gain_db": -30.5
  },
  {
-  "t": 19.395,
+  "t": 19.332,
+  "name": "footstep (hero (through the window, split screen))",
+  "gain_db": -21.6
+ },
+ {
+  "t": 19.345,
   "name": "signature column",
   "gain_db": -30.5
  },
  {
-  "t": 19.475,
+  "t": 19.425,
   "name": "signature column",
   "gain_db": -30.5
  },
  {
-  "t": 19.555,
+  "t": 19.505,
+  "name": "signature column",
+  "gain_db": -30.5
+ },
+ {
+  "t": 19.585,
   "name": "signature column",
   "gain_db": -30.5
  },
  {
   "t": 19.635,
-  "name": "signature column",
-  "gain_db": -30.5
+  "name": "wifi packet",
+  "gain_db": -37.1
  },
  {
-  "t": 19.715,
+  "t": 19.665,
   "name": "signature column",
   "gain_db": -30.5
  },
@@ -585,24 +650,39 @@
   "gain_db": -28.0
  },
  {
-  "t": 19.835,
+  "t": 19.808,
+  "name": "footstep (hero (through the window, split screen))",
+  "gain_db": -20.7
+ },
+ {
+  "t": 19.855,
   "name": "compare tick",
   "gain_db": -28.0
  },
  {
-  "t": 19.915,
+  "t": 19.955,
   "name": "compare tick",
   "gain_db": -28.0
  },
  {
-  "t": 19.995,
-  "name": "compare tick",
-  "gain_db": -28.0
+  "t": 20.055,
+  "name": "wifi packet",
+  "gain_db": -37.1
  },
  {
   "t": 20.195,
   "name": "MATCH chime",
   "gain_db": -21.9
+ },
+ {
+  "t": 20.282,
+  "name": "footstep (hero (through the window, split screen))",
+  "gain_db": -20.2
+ },
+ {
+  "t": 20.475,
+  "name": "wifi packet",
+  "gain_db": -37.1
  },
  {
   "t": 20.75,
@@ -612,7 +692,7 @@
  {
   "t": 20.758,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -11.7
+  "gain_db": -12.2
  },
  {
   "t": 21.06,
@@ -622,12 +702,12 @@
  {
   "t": 21.233,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -11.8
+  "gain_db": -14.2
  },
  {
   "t": 21.707,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.3
+  "gain_db": -13.6
  },
  {
   "t": 21.945,
@@ -637,7 +717,7 @@
  {
   "t": 22.183,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.5
+  "gain_db": -13.8
  },
  {
   "t": 22.295,
@@ -647,12 +727,12 @@
  {
   "t": 22.35,
   "name": "footstep (participant)",
-  "gain_db": -18.5
+  "gain_db": -17.5
  },
  {
   "t": 22.386,
   "name": "footstep (participant)",
-  "gain_db": -18.3
+  "gain_db": -18.4
  },
  {
   "t": 22.395,
@@ -662,32 +742,32 @@
  {
   "t": 22.776,
   "name": "footstep (participant)",
-  "gain_db": -17.8
+  "gain_db": -18.3
  },
  {
   "t": 22.85,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -18.8
  },
  {
   "t": 23.03,
   "name": "footstep (participant)",
-  "gain_db": -17.7
+  "gain_db": -19.5
  },
  {
   "t": 23.166,
   "name": "footstep (participant)",
-  "gain_db": -18.7
+  "gain_db": -19.7
  },
  {
   "t": 23.35,
   "name": "footstep (participant)",
-  "gain_db": -19.5
+  "gain_db": -19.6
  },
  {
   "t": 23.38,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -19.0
  },
  {
   "t": 23.445,
@@ -697,37 +777,42 @@
  {
   "t": 23.556,
   "name": "footstep (participant)",
-  "gain_db": -18.1
+  "gain_db": -19.2
  },
  {
   "t": 23.73,
   "name": "footstep (participant)",
-  "gain_db": -17.8
+  "gain_db": -19.2
  },
  {
   "t": 23.85,
   "name": "footstep (participant)",
-  "gain_db": -19.7
+  "gain_db": -19.6
  },
  {
   "t": 23.946,
   "name": "footstep (participant)",
-  "gain_db": -19.3
+  "gain_db": -17.3
  },
  {
   "t": 24.08,
   "name": "footstep (participant)",
-  "gain_db": -17.9
+  "gain_db": -19.8
+ },
+ {
+  "t": 24.125,
+  "name": "push onto the screen",
+  "gain_db": -26.0
  },
  {
   "t": 24.336,
   "name": "footstep (participant)",
-  "gain_db": -18.4
+  "gain_db": -19.2
  },
  {
   "t": 24.35,
   "name": "footstep (participant)",
-  "gain_db": -18.8
+  "gain_db": -19.5
  },
  {
   "t": 24.395,
@@ -737,7 +822,7 @@
  {
   "t": 24.43,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -18.9
  },
  {
   "t": 24.475,
@@ -771,393 +856,398 @@
  },
  {
   "t": 24.865,
-  "name": "identified",
+  "name": "identified (#27)",
   "gain_db": -22.5
  },
  {
   "t": 25.525,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.545,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.566,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.586,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.607,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.627,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.647,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.668,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.688,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.709,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.729,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.749,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.77,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.79,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.811,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.831,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.851,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.872,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.892,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.913,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.933,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.953,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.974,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 25.994,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.008,
-  "name": "not matched",
+  "name": "tile not matched",
   "gain_db": -26.9
  },
  {
   "t": 26.015,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.021,
-  "name": "not matched",
+  "name": "tile not matched",
   "gain_db": -26.9
  },
  {
   "t": 26.035,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.055,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.076,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.096,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.117,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.137,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.157,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.178,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.198,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.219,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.239,
-  "name": "not matched",
+  "name": "tile not matched",
   "gain_db": -26.9
  },
  {
   "t": 26.259,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.28,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.3,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.321,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.341,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.361,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.382,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.402,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.423,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.443,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.463,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.484,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.504,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.525,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.545,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.565,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.586,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.606,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.627,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.647,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.667,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.688,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.708,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.729,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.749,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.769,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.79,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.797,
-  "name": "not matched",
+  "name": "tile not matched",
   "gain_db": -26.9
  },
  {
   "t": 26.81,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.82,
-  "name": "into record #12",
+  "name": "into his tile (#12)",
   "gain_db": -24.4
  },
  {
   "t": 26.831,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
   "t": 26.851,
-  "name": "match sweep",
+  "name": "tile matched",
   "gain_db": -34.9
  },
  {
-  "t": 27.09,
-  "name": "record #12",
-  "gain_db": -30.5
- },
- {
   "t": 27.14,
-  "name": "caf\u00e9 inside (G)",
-  "gain_db": -0.9
+  "name": "street (walking past the caf\u00e9)",
+  "gain_db": 0.0
  },
  {
   "t": 27.486,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -19.6
+  "name": "footstep (hero (past the caf\u00e9))",
+  "gain_db": -17.7
  },
  {
   "t": 28.026,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -19.3
+  "name": "footstep (hero (past the caf\u00e9))",
+  "gain_db": -15.6
  },
  {
   "t": 28.566,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -18.8
+  "name": "footstep (hero (past the caf\u00e9))",
+  "gain_db": -16.2
+ },
+ {
+  "t": 28.71,
+  "name": "through the window (cutaway)",
+  "gain_db": -26.0
+ },
+ {
+  "t": 28.81,
+  "name": "caf\u00e9 inside (the receiver match)",
+  "gain_db": -0.9
  },
  {
   "t": 29.106,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -19.5
+  "name": "footstep (hero (through the window))",
+  "gain_db": -22.0
  },
  {
   "t": 29.646,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -20.5
+  "name": "footstep (hero (through the window))",
+  "gain_db": -22.4
  },
  {
   "t": 30.005,
@@ -1166,13 +1256,18 @@
  },
  {
   "t": 30.186,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -19.8
+  "name": "footstep (hero (through the window))",
+  "gain_db": -20.4
  },
  {
   "t": 30.385,
   "name": "out through the glass",
   "gain_db": -26.0
+ },
+ {
+  "t": 30.435,
+  "name": "street (him unaware, the CCTV corner)",
+  "gain_db": 0.0
  },
  {
   "t": 30.615,
@@ -1181,23 +1276,18 @@
  },
  {
   "t": 30.726,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -19.1
+  "name": "footstep (hero (close, unaware))",
+  "gain_db": -15.3
  },
  {
   "t": 31.266,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -18.6
+  "name": "footstep (hero (close, unaware))",
+  "gain_db": -14.3
  },
  {
   "t": 31.806,
-  "name": "footstep (hero (seen from inside))",
-  "gain_db": -18.8
- },
- {
-  "t": 31.85,
-  "name": "street (CCTV corner)",
-  "gain_db": 0.0
+  "name": "footstep (hero (close, unaware))",
+  "gain_db": -13.9
  },
  {
   "t": 31.95,
@@ -1207,7 +1297,7 @@
  {
   "t": 31.967,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -15.1
+  "gain_db": -14.4
  },
  {
   "t": 32.2,
@@ -1217,7 +1307,7 @@
  {
   "t": 32.442,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -15.2
+  "gain_db": -14.1
  },
  {
   "t": 32.75,
@@ -1227,7 +1317,7 @@
  {
   "t": 32.917,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -14.0
+  "gain_db": -15.7
  },
  {
   "t": 33.0,
@@ -1237,87 +1327,87 @@
  {
   "t": 33.392,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -13.6
- },
- {
-  "t": 33.82,
-  "name": "off the camera picture",
-  "gain_db": -26.0
+  "gain_db": -15.4
  },
  {
   "t": 33.867,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -14.0
+  "gain_db": -13.2
  },
  {
-  "t": 33.9,
-  "name": "router packet",
-  "gain_db": -34.0
+  "t": 34.22,
+  "name": "off the camera picture",
+  "gain_db": -26.0
  },
  {
-  "t": 34.11,
-  "name": "router packet",
-  "gain_db": -34.0
+  "t": 34.3,
+  "name": "caf\u00e9 inside (the receiver, no camera)",
+  "gain_db": -1.9
  },
  {
-  "t": 34.32,
+  "t": 34.3,
   "name": "router packet",
-  "gain_db": -34.0
+  "gain_db": -34.9
  },
  {
   "t": 34.342,
   "name": "footstep (hero (CCTV corner))",
-  "gain_db": -15.3
+  "gain_db": -13.6
  },
  {
-  "t": 34.46,
-  "name": "into the concrete",
-  "gain_db": -6.0
+  "t": 34.51,
+  "name": "router packet",
+  "gain_db": -34.9
  },
  {
-  "t": 34.6,
+  "t": 34.72,
+  "name": "router packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 34.817,
+  "name": "footstep (hero (CCTV corner))",
+  "gain_db": -13.6
+ },
+ {
+  "t": 34.82,
+  "name": "identity held (#12)",
+  "gain_db": -24.4
+ },
+ {
+  "t": 34.93,
+  "name": "router packet",
+  "gain_db": -34.9
+ },
+ {
+  "t": 34.99,
+  "name": "screen to screen",
+  "gain_db": -26.0
+ },
+ {
+  "t": 35.29,
   "name": "lab room tone (hum)",
   "gain_db": 0.0
  },
  {
-  "t": 34.867,
-  "name": "footstep (lab)",
-  "gain_db": -13.3
- },
- {
-  "t": 35.06,
-  "name": "detector redraws (still)",
-  "gain_db": -20.9
- },
- {
-  "t": 35.14,
-  "name": "detector redraws (still)",
-  "gain_db": -20.9
- },
- {
-  "t": 35.167,
-  "name": "footstep (lab)",
-  "gain_db": -13.1
- },
- {
   "t": 35.467,
   "name": "footstep (lab)",
-  "gain_db": -11.8
+  "gain_db": -13.3
  },
  {
   "t": 35.747,
   "name": "footstep (lab)",
-  "gain_db": -13.3
+  "gain_db": -13.1
  },
  {
   "t": 35.967,
-  "name": "detector redraws (still)",
+  "name": "the screen redraws (still)",
   "gain_db": -20.9
  },
  {
   "t": 35.987,
   "name": "footstep (lab)",
-  "gain_db": -11.7
+  "gain_db": -11.8
  },
  {
   "t": 36.167,

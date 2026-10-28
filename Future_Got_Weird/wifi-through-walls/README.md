@@ -1,5 +1,33 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V5 (targeted final revision)
+
+**Status (28 Oct 2026):** V5 review rendered and checked from the file. **Not published.** It keeps the same
+narration, voice, captions, story order, ending question and runtime as V4. The revisions:
+
+- **Opening:** his arm move is matched by the skeleton within the first second; then the move to the wall, his face,
+  and the echoes' path through the concrete to the screen.
+- **Mechanism:** one connected path, with raw traces until "AI creates".
+- **Demo:** his action, then the reconstruction, then the side-by-side comparison.
+- **Café experiment:** the push in at the router, then a split screen of him walking with the receiver's laptop
+  matching his steps.
+- **Study:** the corridor walk becomes the matching screen, and the results are tiles of people. The zoom into his
+  tile becomes him walking past the café.
+- **Payoff:** a window cutaway to the match, then back to him, unaware.
+- **Ending:** the CCTV picture, then the Wi-Fi receiver with no camera, then screen to screen into frame 0.
+
+| Deliverable | File |
+|---|---|
+| V5 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V5_REVIEW_1080x1920.mp4` |
+| Change log | `production/V5_CHANGELOG.md` |
+| Source (V5 scenes) | `source/src/v5/` (joins in `source/src/Film.tsx`) |
+| Rig probe, measured QA | `qa/v5/` (`tools/v5/rig_probe5.ts`, `tools/v5/pop_scan.py`) |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V5_mix.wav`, `audio/v5_events.json` (`tools/v5/events.ts`, `tools/v5/make_audio5.py`) |
+| Stills | `stills/FGW_WiFi_V5_*.png` |
+
+`source/` now builds V5. V4's scene code stays in `source/src/v4/` (to build it, point `Film.tsx`'s imports back at
+it).
+
 ## V4 (polish pass)
 
 **Status (28 Oct 2026):** V4 review rendered and checked from the file. **Not published.** Same narration, voice,
@@ -25,7 +53,7 @@ story order and ending question. Every shot is rebuilt:
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V4_mix.wav`, `audio/v4_events.json` (`tools/v4/events.ts`), `tools/v4/make_audio4.py` |
 | Stills | `stills/FGW_WiFi_V4_*.png` |
 
-`source/` now builds V4 (the composition id is still `WiFiWallsV1`). To rebuild V4, run the same steps as in
+V4's scene code is in `source/src/v4/` (the composition id is still `WiFiWallsV1`). To rebuild V4, run the same steps as in
 **Rebuild** below, with these substitutions:
 
 - Sound timing: `tools/v4/events.ts` → `audio/v4_events.json`.
