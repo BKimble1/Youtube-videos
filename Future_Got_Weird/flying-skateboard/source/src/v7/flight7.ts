@@ -291,15 +291,15 @@ export const fieldFlight6 = (K: FieldK6) => {
   const bump = (u: number, c: number, w: number) => Math.exp(-(((u - c) / w) ** 2));
   const DS: Dist[] = [
     // the problem: grows over about a second (two overlapping lobes read as one slow divergence), caught late
-    {ch: 'roll', amp: 4.6, c: K.problem + 0.55, w: 0.42, delay: 0.42},
-    {ch: 'roll', amp: 6.2, c: K.problem + 1.0, w: 0.3, delay: 0.42},
+    {ch: 'roll', amp: 6.8, c: K.problem + 0.55, w: 0.42, delay: 0.42},
+    {ch: 'roll', amp: 9.4, c: K.problem + 1.0, w: 0.3, delay: 0.42},
     // can't balance itself: the nose dips, then rises past level
-    {ch: 'pitch', amp: -5.0, c: K.itself + 0.45, w: 0.28, delay: 0.16},
-    {ch: 'pitch', amp: 3.4, c: K.itself + 1.25, w: 0.26, delay: 0.14},
+    {ch: 'pitch', amp: -8.0, c: K.itself + 0.45, w: 0.28, delay: 0.16},
+    {ch: 'pitch', amp: 5.0, c: K.itself + 1.25, w: 0.26, delay: 0.14},
     // control it: a toe-side roll answered in the legs
-    {ch: 'roll', amp: 4.4, c: K.control + 0.32, w: 0.2, delay: 0.1, gain: 1.1},
+    {ch: 'roll', amp: 6.2, c: K.control + 0.32, w: 0.2, delay: 0.1, gain: 1.1},
     // the entire body: a bigger heel-side roll
-    {ch: 'roll', amp: -6.0, c: K.body + 0.42, w: 0.24, delay: 0.12, gain: 1.15},
+    {ch: 'roll', amp: -9.0, c: K.body + 0.42, w: 0.24, delay: 0.12, gain: 1.15},
     // learned: met at once
     {ch: 'roll', amp: 3.2, c: K.learned + 0.42, w: 0.17, delay: 0.02, gain: 1.3},
   ];
@@ -359,9 +359,10 @@ export const fieldFlight6 = (K: FieldK6) => {
   return (t: number): St => {
     const S = sim();
     const up = sstep(K.lift, K.lift + 0.6, t);
-    const alt = REST + 0.5 * up + 0.03 * Math.sin(t * 1.9) * up;
-    const f = at(S, S.f, t), sd = at(S, S.s, t);
-    const vf = at(S, S.vf, t), vs = at(S, S.vs, t);
+    const alt = REST + 0.72 * up + 0.03 * Math.sin(t * 1.9) * up;
+    // V7: a slow flight attempt, not a hover: the board drifts forward at about 0.7 m/s once it is up
+    const f = at(S, S.f, t) + 0.7 * ssI(K.lift + 0.2, K.lift + 1.2, t), sd = at(S, S.s, t);
+    const vf = at(S, S.vf, t) + 0.7 * sstep(K.lift + 0.2, K.lift + 1.2, t), vs = at(S, S.vs, t);
     const B = frameYPR(v3(f, alt, -sd), 90, pitch(t), roll(t));
     const unsteady = Math.min(1, (Math.abs(pitch(t)) + Math.abs(roll(t))) / 7);
     const work = clamp((look('crouch', t) - 0.47) / 0.26, 0, 1);
@@ -460,12 +461,15 @@ export const flight6 = (t: number, T0: number): St => {
   const z = zz(s);
   const v = (zz(s + 0.01) - zz(s - 0.01)) / 0.02;
   const x = DEP6.x + 0.5 * Math.sin(Math.max(0, s - 1.6) * 0.8);
-  const alt = REST + 1.0 * sstep(0.05, 0.55, s) + 3.0 * sstep(1.4, 2.7, s) + 0.05 * Math.sin(s * 2.1) * sstep(0.5, 1.0, s);
-  const climb = (REST + 1.0 * sstep(0.05, 0.55, s + 0.02) + 3.0 * sstep(1.4, 2.7, s + 0.02) - (REST + 1.0 * sstep(0.05, 0.55, s - 0.02) + 3.0 * sstep(1.4, 2.7, s - 0.02))) / 0.04;
+  // V7: out over the water he climbs to about 9 m (the river crossing is seen from high above, the water far below)
+  const altAt = (u: number) => REST + 1.0 * sstep(0.05, 0.55, u) + 8.0 * sstep(1.4, 3.9, u);
+  const alt = altAt(s) + 0.05 * Math.sin(s * 2.1) * sstep(0.5, 1.0, s);
+  const climb = (altAt(s + 0.02) - altAt(s - 0.02)) / 0.04;
   // he leans into the acceleration (the board pitches nose down and the tilted thrust drives it forward)
   const lean = (u: number) => 0.03 + 0.07 * sstep(T0 + 0.2, T0 + 0.6, u) - 0.02 * sstep(T0 + 1.6, T0 + 2.2, u) + 0.012 * noise1(u * 0.9, 83);
   // the practised wobble on lift-off: one small roll, caught at once
-  const wob = (u: number) => 0.022 * Math.exp(-(((u - T0 - 0.32) / 0.12) ** 2)) - 0.012 * Math.exp(-(((u - T0 - 0.55) / 0.14) ** 2)) + 0.008 * noise1(u * 1.2, 84);
+  // V7: a confident take-off: the practised wobble is barely there
+  const wob = (u: number) => 0.008 * Math.exp(-(((u - T0 - 0.32) / 0.12) ** 2)) - 0.004 * Math.exp(-(((u - T0 - 0.55) / 0.14) ** 2)) + 0.008 * noise1(u * 1.2, 84);
   const pitch = -lag(lean, t) * 75;
   const roll = lag(wob, t) * 95;
   const B = frameYPR(v3(x, alt, z), 0, pitch, roll);
@@ -491,7 +495,9 @@ export const payoff4 = (t: number, Tin: number): St => {
   const bank = clamp(-ddx * 1.6, -16, 16);
   const alt = 4.6 + 1.2 * sstep(Tin - 0.6, Tin + 1.2, t) + 0.15 * Math.sin(t * 1.4);
   const lean = (u: number) => 0.1 + 0.02 * noise1(u * 0.9, 71);
-  const side = (u: number) => 0.02 * noise1(u * 1.1, 72);
+  // V7: between the walls a gust rocks him toe-side and he answers it (and its small echo)
+  const bump = (u: number, c: number, w: number) => Math.exp(-(((u - c) / w) ** 2));
+  const side = (u: number) => 0.02 * noise1(u * 1.1, 72) + 0.04 * bump(u, Tin + 10.75, 0.16) - 0.022 * bump(u, Tin + 11.15, 0.16);
   const pitch = -lag(lean, t) * 75 - 2;
   const roll = lag(side, t) * 95 + bank;
   const B = frameYPR(v3(x, alt, z), yaw, pitch, roll);

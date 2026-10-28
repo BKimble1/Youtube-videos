@@ -418,7 +418,7 @@ const wsFocus = (t: number): Box[] => {
 const capAt = (s: string) => Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith(s))!.show * 30) / 30;
 const F1 = WS_END, F2 = capAt('the board'), F3 = capAt('he has to'), C1 = capAt('while an'), C2 = M.voice - 0.09, C3 = capAt('helps him'), C4 = capAt('how to balance');
 const PR1 = capAt('and after'), PR2 = capAt('he actually'), P2 = capAt('and through'), Q1 = capAt('how much');
-const FK6 = {lift: F1 - 0.3, problem: M.huge + 0.02, itself: F2, control: F3, body: capAt('with his'), coach: C1, wrist: C2, cue: C3 - 0.05, fix: C3 + 0.04, learned: C4, end: PR1};
+const FK6 = {lift: F1 - 0.3, problem: M.huge + 0.02, itself: F2, control: F3, body: capAt('with his'), coach: C1, wrist: C2 - 0.2, cue: C3 - 0.05, fix: C3 + 0.04, learned: C4, end: PR1};
 const FIELD = fieldFlight6(FK6);
 const fieldPos = (t: number) => FIELD(t).B.o;
 const F1_CAM = camFrom(FIELD(F1 + 0.12).B.o, ck(-66, 8, 5.0, 42, 0.6, 0));
@@ -427,30 +427,51 @@ const F2_CAM = camFrom(FIELD(F2).B.o, ck(-6, 5, 4.4, 42, 0.62, 0));
 const F3K: Key[] = [[F3, ck(-34, 4, 2.0, 40, 0.46, 0), {hold: true}], [F3 + 0.72, ck(-34, 4, 2.0, 40, 0.46, 0)], [F3 + 1.55, ck(-36, 8, 5.8, 42, 0.72, 0), {hold: true}], [C1, ck(-36, 8, 5.8, 42, 0.72, 0)]];
 const fieldCam = (t: number): Cam => {
   if (t < F2) return standPart(F1_CAM, fieldPos, t, F1, 0.6 * sstep(F1, F1 + 1.1, t), 0.6 + 0.05 * sstep(F1, F1 + 0.8, t), 42);
-  if (t < F3) return standPart(F2_CAM, fieldPos, t, F2, 0.7, 0.62, 42);
+  if (t < F3) return standPart(F2_CAM, fieldPos, t, F2, 0.95, 0.62, 42);
   return trackCam(fieldPos, t, splineRec(t, F3K), 0.6);
 };
 const C4_CAM = camFrom(FIELD(C4).B.o, ck(-24, 6, 4.6, 42, 0.62, 0));
+// V7: one continuous camera through the coach beat (no cuts): the deck phone reading the tilt -> up to the wrist
+// phone as the coach speaks -> round to the earbud as the cue lands -> back out along the same side to his body and
+// the board as he corrects. Each pose is set up from the body at a fixed moment and carried by the board's drift, so
+// the close views never bob with his small moves; the moves between them swing about their targets.
+const drift = (t: number, T: number) => s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, T, 0.6));
+const shift = (c: Cam, d: V3): Cam => ({...c, pos: a3(c.pos, d), tgt: a3(c.tgt, d)});
+const CK1 = C1, CK2 = M.voice - 0.1, CK3 = C3 - 0.02, CK4 = C3 + 0.3;
+// all three views are from his right (the earbud's) side, so the camera never crosses his body
+const phoneCam = (t: number): Cam => {
+  const jp = pilotJoints(FIELD(CK1).B, FIELD(CK1).pose);
+  const phone = toW(FIELD(CK1).B, v3(0, 0.004, 0));
+  const pos = a3(a3(a3(phone, m3(jp.up, 0.92)), m3(jp.hL, -0.42)), m3(jp.chF, 0.12));
+  return shift({pos, tgt: phone, roll: 0, fov: 40}, drift(t, CK1));
+};
+const wristCam = (t: number): Cam => {
+  // over his right shoulder, just behind the earbud: the wrist screen he is reading, the earbud at the frame's edge
+  const T = CK2 + 0.2;
+  const jw = pilotJoints(FIELD(T).B, FIELD(T).pose);
+  const fd = n3(s3(jw.wriF, jw.elbF));
+  const wrist = a3(jw.wriF, m3(fd, -0.07));
+  const pos = a3(a3(a3(jw.Hc, m3(jw.hL, -0.3)), m3(jw.hF, -0.34)), m3(jw.up, 0.12));
+  return shift({pos, tgt: lerp3(wrist, jw.Hc, 0.18), roll: 0, fov: 46}, drift(t, T));
+};
+const bodyCam = (t: number): Cam => {
+  // a medium view from his right front (the earbud's side), head to knees: the change in his stance in one frame
+  const jc = pilotJoints(FIELD(C3).B, FIELD(C3).pose);
+  const mid = lerp3(jc.P, jc.S, 0.75);
+  const pos = a3(a3(a3(mid, m3(jc.hL, -1.75)), m3(jc.chF, 1.0)), v3(0, 0.25, 0));
+  return shift({pos, tgt: a3(mid, v3(0, -0.12, 0)), roll: 0, fov: 44}, drift(t, C3));
+};
+// (the swing between two close views backs off from the body mid-move, so the camera never passes through his arm)
+const swingOut = (a: Cam, b: Cam, k: number, out: number): Cam => {
+  const c = swingCam(a, b, k);
+  const f = 1 + out * Math.sin(Math.PI * k);
+  return {...c, pos: a3(c.tgt, m3(s3(c.pos, c.tgt), f))};
+};
 const coachCam = (t: number, st: St): Cam => {
-  if (t < C2) return orbitBoard(st.B, splineRec(t, [[C1, ck(-4, 56, 1.0, 38, 0.004, 0)], [C2, ck(0, 58, 0.95, 38, 0.004, 0)]]));
-  if (t < C3) {
-    // held still: set up from the settled pose (the arm is already up) and carried only by the board's drift
-    const T = C2 + 0.2;
-    const jw = pilotJoints(FIELD(T).B, FIELD(T).pose);
-    const fd = n3(s3(jw.wriF, jw.elbF));
-    const wrist = a3(jw.wriF, m3(fd, -0.07));
-    const pos = a3(a3(a3(wrist, m3(n3(s3(jw.Hc, wrist)), 0.56)), m3(jw.chL, 0.1)), m3(jw.up, 0.05));
-    const drift = s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, T, 0.6));
-    return {pos: a3(pos, drift), tgt: a3(wrist, drift), roll: 0, fov: 36};
-  }
+  void st;
   if (t < C4) {
-    // V6: a medium view from his right front (the earbud's side), head to knees, set at the cut and carried by the
-    // board's drift: the cue and the change in his stance in one frame
-    const jc = pilotJoints(FIELD(C3).B, FIELD(C3).pose);
-    const mid = lerp3(jc.P, jc.S, 0.75);
-    const pos = a3(a3(a3(mid, m3(jc.hL, -1.75)), m3(jc.chF, 1.0)), v3(0, 0.25, 0));
-    const drift = s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, C3, 0.6));
-    return {pos: a3(pos, drift), tgt: a3(a3(mid, v3(0, -0.05, 0)), drift), roll: 0, fov: 42};
+    if (t < CK2) return swingCam(phoneCam(t), wristCam(t), sstep(CK1 + 0.24, CK2, t));
+    return swingCam(wristCam(t), bodyCam(t), sstep(CK3 + 0.06, C4 - 0.05, t));
   }
   return standPart(C4_CAM, fieldPos, t, C4, 0.85, 0.62, 42);
 };
@@ -466,12 +487,16 @@ const prCam = (t: number) => trackCam(prPos, t, PRK, 0.4);
 // ================================================================ 7: the river crossing, then the canyon (separate places)
 // "across a RIVER": the same flight further out, from high off his side: the shore he left falls away behind him,
 // channel buoys pass beneath, and the camera keeps rising, so the width of the river (the scale) opens up as he goes.
-const CRK: Key[] = [[PR2, ck(284, 13, 9.5, 52, 1.0, 0)], [P2, ck(289, 19, 12.5, 52, 1.2, 0)]];
+// V7: alongside and a little above him first (the far shore and the town sliding past behind), then rising to a high
+// angle that looks down past him to the water far below
+const CRK: Key[] = [[PR2, ck(278, 6, 8.0, 50, 0.8, 0)], [M.river2, ck(292, 32, 11.5, 52, 0.4, 0)], [P2, ck(298, 46, 14.5, 54, 0.2, 0)]];
 const crCam = (t: number) => trackCam(prPos, t, splineRec(t, CRK));
 // "and THROUGH a CANYON": a cut to the canyon flight, a separate demonstration. We join it deep inside the gorge (no
 // river behind him), at about 6 m over its water, tracked from behind with both walls and the way ahead in frame.
 const TIN = P2 - 10;
-const PAYK: Key[] = [[P2, ck(349, 10, 6.2, 54, 1.0, 0)], [Q1, ck(351, 9, 5.8, 54, 0.95, 0)]];
+// V7: low over the water beside the right-hand wall, the rock face streaming past in the foreground with him small in
+// the middle of the gorge; then the camera rises behind him so both walls tower over him, the gorge running on ahead
+const PAYK: Key[] = [[P2, ck(10, -16, 12, 60, 1.4, 0)], [M.canyon + 0.1, ck(5, -2, 14, 58, 2.0, 0)], [Q1, ck(0, 14, 20, 56, 3.0, 0)]];
 const payPos = (t: number) => payoff4(t, TIN).B.o;
 const payCam = (t: number) => trackCam(payPos, t, splineRec(t, PAYK));
 /** channel buoys: foreground and background objects passing at their own depth (speed and scale) */
@@ -556,9 +581,9 @@ export const SHOTS7: Shot[] = [
     name: 'the AI coach: deck phone (sensing), wrist phone (coaching), earbud and the change in his stance, the recovery', from: C1, to: PR1,
     draw: (t, pre) => {
       const st = FIELD(t);
-      return <FlightScene id={`${pre}fd`} t={t} st={st} L={lens(coachCam(t, st))} set="field" surface="ground" coach={st.pulse} jets={t < C3 ? 0.4 : 1} />;
+      return <FlightScene id={`${pre}fd`} t={t} st={st} L={lens(coachCam(t, st))} set="field" surface="ground" coach={st.pulse} jets={t < CK3 ? 0.4 : 1} />;
     },
-    focus: (t) => (t < C3 ? {x0: 300, y0: 700, x1: 780, y1: 1200} : box(lens(coachCam(t, FIELD(t))), FIELD(t))),
+    focus: (t) => (t < CK2 + 0.3 ? {x0: 180, y0: 560, x1: 900, y1: 1360} : t < C4 - 0.2 ? {x0: 100, y0: 120, x1: 980, y1: 1380} : box(lens(coachCam(t, FIELD(t))), FIELD(t))),
   },
   riverShot('practice to flight: lift-off on the flat, over the shoreline, out over the water (tracking)', PR1, PR2, pr, prCam, {
     surface: (t) => (pr(t).pos.z < 0 ? 'ground' : 'water'), water: (t) => sstep(-1.0, 3.0, pr(t).pos.z), tint: 0.35,
@@ -578,7 +603,7 @@ export const SHOTS7: Shot[] = [
   },
 ];
 /** every picture cut: the shot boundaries and the cuts inside shots (workshop, balance, coach) */
-export const CUTS7 = [...SHOTS7.slice(1).map((s) => s.from), F2, F3, C2, C3, C4].sort((a, b) => a - b);
+export const CUTS7 = [...SHOTS7.slice(1).map((s) => s.from), F2, F3, C4].sort((a, b) => a - b);
 /** V6: the timing of the visible events the sound follows (exported to the mix by tools/export_cues_v6.ts) */
 export const BEATS7 = {...FK6, shore: PR1 + 1.74, gust: GUST_AT};
 export const shotAt7 = (t: number) => SHOTS7.find((s) => t >= s.from && t < s.to) ?? SHOTS7[SHOTS7.length - 1];
