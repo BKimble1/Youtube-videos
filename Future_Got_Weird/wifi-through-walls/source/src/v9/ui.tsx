@@ -135,7 +135,7 @@ export const StudyUI: React.FC<{t: number; t0: number; tEnd: number}> = ({t, t0,
   const hit = ss(t, ident + 0.02, ident + 0.14);
   // V9: a gentle push into the result over the last 0.9 s (then a dissolve to the return visit)
   const out = ss(t, tEnd - 0.9, tEnd + 0.2);
-  const zc = {x: 540, y: 1050};
+  const zc = {x: 540, y: 900};
   const zoom = 1 + 0.08 * out;
   const everyone = T_('everyone');
   // the result: one clean statement, stamped on "almost", its check drawn, EVERYONE lit on "everyone"

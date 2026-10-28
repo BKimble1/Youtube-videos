@@ -87,11 +87,11 @@ const heroAt = (t: number) => {
 };
 export const heroX = (t: number) => walkPose(t).x / U;
 const xG = (t: number) => (GG.x0 - GG.v * t) / U;
-/** pedestrians on the street in E (V9: both going his way, so no one crosses through him): P1 strolls along the
- *  shopfront ahead of him (behind him in depth), P2 ahead of him, nearer the curb */
+/** pedestrians on the street in E (V9: both going his way and ahead of him, so no one crosses or trails through him):
+ *  P1 walks along the shopfront two metres ahead of him at his pace, P2 ahead of him, nearer the curb */
 const PEDS: {o: Outfit; g: Gait; z: number; flip: boolean; s: number}[] = [
   {o: {skin: '#F3CDB0', hair: '#E3BC63', shirt: '#F2B134', stripe: null, pants: '#3D5A80', shoe: '#FFFFFF', longSleeve: true, hairStyle: 'bun'},
-    g: {x0: (3.2 * U) / 0.96 + 420 * 15.0, v: 420, T: 0.98, ph: 0.2, arm: 15, elbow: 20, lean: 3}, z: 2.75, flip: false, s: 0.96},
+    g: {x0: (2.2 * U) / 0.96 + 560 * 15.0, v: 560, T: 0.92, ph: 0.2, arm: 16, elbow: 20, lean: 3}, z: 2.75, flip: false, s: 0.96},
   {o: {skin: '#7A4B32', hair: '#1C1A1A', shirt: '#2E8F8A', stripe: null, pants: '#55606B', shoe: '#F2F2F2', longSleeve: true, hairStyle: 'curly'},
     g: {x0: at0(3.0, 15.0, 680), v: 680, T: 0.84, ph: 0.6, arm: 20, elbow: 14, lean: 3}, z: 1.05, flip: false, s: 1.02},
 ];
@@ -340,7 +340,8 @@ export const CafeScene4: React.FC<{t: number; silhouette?: number; camOverride?:
           {flipAll && <Fore b={b} />}
           {outside}
           <PacketDraw b={b} t={t} list={pk} show={show} len={0.32} />
-          {!flipAll && <Fore b={b} />}
+          {/* (not in the return visit's high view: from up there the nearest lamp post would smear across a corner) */}
+          {!flipAll && !(!camOverride && t >= G_IN - 1 && t < G_BACK) && <Fore b={b} />}
         </g>
       ) : (
         <g>

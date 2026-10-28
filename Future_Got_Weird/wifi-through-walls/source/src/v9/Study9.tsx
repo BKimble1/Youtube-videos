@@ -75,7 +75,7 @@ export const studyCam = (t: number): Cam => camPath(t, [
   [PUSH0, scam(camX(PUSH0), 1.3, LANE_Z - 2.7)],
   [PUSH1, scam(PANEL.x, PANEL.y, 1.15, 1150, 960), true],
   [G_IN - 0.85, scam(PANEL.x, PANEL.y, 1.22, 1150, 960), true],
-  [G_IN, scam(PANEL.x, PANEL.y, 1.45, 1150, 960), true],
+  [G_IN, scam(PANEL.x, PANEL.y, 1.32, 1150, 960), true],
 ]);
 const PUSH0 = E_OUT + 1.5, PUSH1 = E_OUT + 3.25;
 
