@@ -131,7 +131,8 @@ const OPENK: [number, OK7, {hold?: boolean}?][] = [
   [0.0, ok7(256, 30, 5.4, 54, 0.15)],
   [0.45, ok7(260, 16, 5.0, 54, 0.25)],
   [1.4, ok7(268, 2, 5.4, 54, 0.4)],
-  [2.3, ok7(282, 12, 8.6, 52, 0.6)],
+  // (build B: a smaller widening that rises to show the far bank over him, so he stays readable)
+  [2.3, ok7(280, 18, 7.0, 52, 0.5)],
   [2.65, ok7(288, 0, 7.4, 54, 0.0)],
   [CUT_UNDER + 0.3, ok7(282, -40, 4.6, 54, 0.0)],
   [CUT_UNDER + 0.75, ok7(272, -76, 3.4, 56, 0.0), {hold: true}],
@@ -450,6 +451,7 @@ const shoulderCam = (t: number, near: number): Cam => {
   const fd = n3(s3(jw.wriF, jw.elbF));
   const wrist = a3(jw.wriF, m3(fd, -0.07));
   const pos = a3(a3(a3(jw.Hc, m3(jw.hL, -1.05 + 0.2 * near)), m3(jw.hF, -1.7 + 0.4 * near)), m3(jw.up, 0.2));
+  // (V12 build B tried tilting down to include the deck phone: it sat behind his shin, crowded; reverted)
   return shift({pos, tgt: lerp3(wrist, jw.Hc, 0.35), roll: 0, fov: 42}, drift(t, T));
 };
 const bodyCam = (t: number): Cam => {
@@ -500,7 +502,9 @@ const TIN = P2 - 10;
 // V9: close behind him at a constant distance (his size holds), low over the gorge's water with the walls towering on
 // both sides and the gorge running on ahead past him; rising a little as he flies on
 // V11: the canyon opens on a close tracking angle beside and behind him that swings out and up to reveal the walls
-const PAYK: Key[] = [[P2, ck(28, 2, 4.4, 58, 0.9, 0)], [M.canyon + 0.1, ck(12, 4, 5.8, 58, 1.2, 0)], [Q1, ck(2, 10, 7.2, 56, 1.5, 0)]];
+// V12 build B: close beside and behind him the whole way (4.4-5.2 m, his size holds), low, swinging round behind him so
+// the walls pass on both sides and the gorge opens ahead
+const PAYK: Key[] = [[P2, ck(30, 2, 4.4, 58, 0.9, 0)], [M.canyon + 0.1, ck(16, 3, 4.8, 58, 1.0, 0)], [Q1, ck(6, 6, 5.2, 58, 1.1, 0)]];
 const payPos = (t: number) => payoff4(t, TIN).B.o;
 const payCam = (t: number) => trackCam(payPos, t, splineRec(t, PAYK));
 /** channel buoys: foreground and background objects passing at their own depth (speed and scale) */
