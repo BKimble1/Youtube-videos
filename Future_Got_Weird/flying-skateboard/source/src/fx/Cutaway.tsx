@@ -258,8 +258,8 @@ export const UnitSection: React.FC<{id: string; L: Lens; B: Frame; i: number; k:
 export const ConceptTag: React.FC<{k: number}> = ({k}) =>
   k <= 0.01 ? null : (
     <g opacity={f2(k)}>
-      <rect x={44} y={1468} width={330} height={44} rx={10} fill="#0E1A22" opacity={0.55} />
-      <text x={60} y={1498} fontFamily="Nunito Variable, Nunito, sans-serif" fontSize={24} fontWeight={700} fill="#EAF6FF" letterSpacing={1}>
+      <rect x={44} y={1716} width={330} height={44} rx={10} fill="#0E1A22" opacity={0.55} />
+      <text x={60} y={1746} fontFamily="Nunito Variable, Nunito, sans-serif" fontSize={24} fontWeight={700} fill="#EAF6FF" letterSpacing={1}>
         ILLUSTRATIVE CUTAWAY
       </text>
     </g>

@@ -9,7 +9,7 @@ import {hash, noise1} from '../dc/math';
 import {circ3, f2, mix, P2, polyD, proj, shade, lit} from '../eng/draw';
 import {a3, clipNear, d3, H, Lens, m3, n3, s3, V3, v3, W} from '../eng/v3';
 import {GorgeAt, gorgeNotch, GorgeWalls} from './Gorge';
-import {Shoal, ShoalAt, ShoreFlat} from './Shore';
+import {Blow, Shoal, ShoalAt, ShoreFlat} from './Shore';
 
 export const RIVER = {far: 520, current: 1.1};
 export const PALR = {
@@ -118,9 +118,15 @@ const CLOUDS: [number, number, number, number][] = [
   [-2600, 900, 4200, 380], [-400, 1100, 5200, 520], [1900, 950, 4700, 420], [3800, 1250, 6000, 560], [-4800, 1150, 5600, 480],
   [-1500, 900, -4300, 420], [900, 1050, -5200, 520], [3300, 950, -4600, 400], [-3800, 1200, -6000, 560], [5600, 1000, 1200, 520], [-6200, 1050, -400, 520],
 ];
-export const Clouds: React.FC<{L: Lens}> = ({L}) => (
+// V7: a scattered layer of fair-weather clouds right over the opening's reach of river, so the views up at the
+// board's underside have sky that moves past as it flies (not an empty backdrop)
+const HICLOUDS: [number, number, number, number][] = [
+  [-60, 240, 40, 46], [90, 260, 95, 54], [-20, 230, 150, 40], [140, 250, 190, 50], [-130, 270, 220, 58],
+  [40, 235, 265, 44], [-80, 255, 320, 52], [110, 245, 360, 46], [-10, 265, 410, 56], [-170, 240, 120, 48], [190, 260, 300, 52],
+];
+export const Clouds: React.FC<{L: Lens; high?: boolean}> = ({L, high = false}) => (
   <g>
-    {CLOUDS.map(([x, y, z, r], i) => {
+    {(high ? [...CLOUDS, ...HICLOUDS.map(([x, y, z, r]): [number, number, number, number] => [x, y, z, r * 0.8])] : CLOUDS).map(([x, y, z, r], i) => {
       const c = v3(x, y, z);
       if (d3(s3(c, L.pos), L.f) < 50) return null;
       const p = L.p(c);
@@ -370,7 +376,7 @@ export const Buoy: React.FC<{L: Lens; at: V3; t: number}> = ({L, at, t}) => {
 };
 
 /** Everything behind the flying board: sky, clouds, ridges, town, bridge, water, reflections, ripples. */
-export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean; shoal?: ShoalAt; gorgeWater?: number}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false, shoal, gorgeWater}) => {
+export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean; shoal?: ShoalAt; gorgeWater?: number; hiClouds?: boolean; blow?: Blow}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false, shoal, gorgeWater, hiClouds = false, blow}) => {
   const rs = ridges(L, gorge, near);
   const h = horizon(L);
   // water: the river quad between the banks, clipped to the front of the camera
@@ -457,7 +463,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
   return (
     <g>
       <Sky id={id} L={L} tint={tint} />
-      <Clouds L={L} />
+      <Clouds L={L} high={hiClouds} />
       {rs.map((r, i) => ridgeEl(r, i, false))}
       {gorge && <GorgeWalls L={L} t={t} g={gorge} wfrom={gorgeWater} />}
       {/* V5: inside the gorge shot the gorge's own water (extended back over the river) is the only water, so the
@@ -486,7 +492,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
         </g>
       )}
       {shoal && <Shoal L={L} g={shoal} />}
-      {near > 0 && <ShoreFlat id={`${id}-sh`} L={L} t={t} near={near} wind={wind} />}
+      {near > 0 && <ShoreFlat id={`${id}-sh`} L={L} t={t} near={near} wind={wind} blow={blow} />}
       <Bridge L={L} near={near} />
     </g>
   );

@@ -43,7 +43,9 @@ const LOGS = Array.from({length: 9}, (_, i) => ({x: -400 + hash(i, 121) * 800, z
 const WILLOWS = Array.from({length: 60}, (_, i) => ({x: -900 + hash(i, 131) * 1800, z: -70 - hash(i, 132) * 70, r: 2.5 + hash(i, 133) * 2.5, h: 5 + hash(i, 134) * 5}));
 
 /** world-fixed texture: pebbles on the beach, grass tufts beyond (levels of detail around the camera) */
-const Texture: React.FC<{L: Lens; t: number; wind: number}> = ({L, t, wind}) => {
+/** V7: a downwash on the grass: the tufts under and round the board are blown flat and outward, fluttering */
+export type Blow = {at: V3; k: number; R: number};
+const Texture: React.FC<{L: Lens; t: number; wind: number; blow?: Blow}> = ({L, t, wind, blow}) => {
   const g = v3(L.pos.x, 0, L.pos.z);
   const peb: Record<string, string[]> = {};
   const tuft: Record<string, string[]> = {};
@@ -72,7 +74,17 @@ const Texture: React.FC<{L: Lens; t: number; wind: number}> = ({L, t, wind}) => 
         } else {
           const hh = cell * (0.28 + h * 0.3);
           const sway = wind * (0.3 + 0.7 * Math.sin(t * 3 + x * 0.7)) * hh * 0.5;
-          const b = L.p(v3(x + sway + hh * 0.15, hh, z));
+          let bx = x + sway + hh * 0.15, by = hh, bz = z;
+          if (blow && blow.k > 0.01) {
+            const dx = x - blow.at.x, dz = z - blow.at.z, dr = Math.hypot(dx, dz) || 0.01;
+            const f = blow.k * Math.max(0, 1 - dr / blow.R) ** 0.7 * (0.85 + 0.15 * Math.sin(t * 23 + x * 9 + z * 7));
+            if (f > 0.005) {
+              bx = x + (sway + hh * 0.15) * (1 - f) + (dx / dr) * hh * 0.95 * f;
+              bz = z + (dz / dr) * hh * 0.95 * f;
+              by = hh * (1 - 0.72 * f);
+            }
+          }
+          const b = L.p(v3(bx, by, bz));
           const wd = Math.max(0.6, Math.min(3, cell * 0.06 * a.k * 0.4));
           const key = `${h > 0.55 ? PALS.grassDeep : lit(PALS.grass, 0.25)}|${wd.toFixed(1)}`;
           (tuft[key] ??= []).push(`M${f2(a.x)},${f2(a.y)}L${f2(b.x)},${f2(b.y)}`);
@@ -142,7 +154,7 @@ const Props: React.FC<{L: Lens}> = ({L}) => {
 };
 
 /** the flat itself: grass, beach band and wet edge, textured and furnished */
-export const ShoreFlat: React.FC<{id: string; L: Lens; t: number; near: number; wind?: number}> = ({id, L, t, near, wind = 0.3}) => {
+export const ShoreFlat: React.FC<{id: string; L: Lens; t: number; near: number; wind?: number; blow?: Blow}> = ({id, L, t, near, wind = 0.3, blow}) => {
   const grassQ = clipNear(L, band(L, (x) => beachZ(x) + 0.5, () => -near - 14, 0.004), 0.3);
   const beachQ = clipNear(L, band(L, shoreZ, beachZ), 0.3);
   const wetQ = clipNear(L, band(L, shoreZ, (x) => shoreZ(x) - 1.6 - 0.8 * noise1(x / 7, 104), 0.008), 0.3);
@@ -160,7 +172,7 @@ export const ShoreFlat: React.FC<{id: string; L: Lens; t: number; near: number; 
       {grassQ.length > 2 && <path d={polyD(proj(L, grassQ))} fill={`url(#${id}-sg)`} />}
       {beachQ.length > 2 && <path d={polyD(proj(L, beachQ))} fill={PALS.beach} />}
       {wetQ.length > 2 && <path d={polyD(proj(L, wetQ))} fill={PALS.wet} />}
-      <Texture L={L} t={t} wind={wind} />
+      <Texture L={L} t={t} wind={wind} blow={blow} />
       <Props L={L} />
     </g>
   );

@@ -71,7 +71,7 @@ const hx = (tau: number) => 1.3 * Math.sin(tau * 0.42 + 0.5);
 // board heaves gently in the air at 0.45-0.95 s and his knees take it; during "blast air downward" he sinks a little
 const heave = (tau: number) => 0.14 * (sstep(1.42, 1.68, tau) - sstep(1.68, 2.05, tau)) - 0.1 * (sstep(-2.2, -1.9, tau) - sstep(-1.9, -1.5, tau));
 // V7: about 7 m over the water (the drop reads at once); during "blast air downward" he sinks a little
-const halt = (tau: number) => 7.0 + 0.16 * Math.sin(tau * 0.8 + 0.3) + heave(tau) - 0.5 * sstep(4.9, 6.0, tau);
+const halt = (tau: number) => 7.0 + 0.16 * Math.sin(tau * 0.8 + 0.3) + heave(tau) - 3.6 * sstep(5.0, 6.9, tau); // V7: it drops toward the river as the air is followed down
 /** weight shifts: frame 0 is mid-correction (toes, then back); before frame 0 (the ending) a gust correction while
  *  the camera comes down, and a smaller one as it settles on frame 0's view */
 const hSide = (tau: number) =>

@@ -12,7 +12,7 @@
 // exactly on frame 0's camera.
 import React from 'react';
 import {BD, ductWorld} from '../art/Board';
-import {JetBoard, jetFuelLine, jetIntake, jetNozzle} from '../art/JetBoard';
+import {JET, JetBoard, jetIntake, jetNozzle} from '../art/JetBoard';
 import {Pilot} from '../art/Pilot';
 import {pilotJoints} from '../art/rig';
 import {mix} from '../dc/color';
@@ -37,13 +37,13 @@ export {M};
 const NEAR = 150; // the riverside flat between the water and the near-bank hills (m)
 
 // ================================================================ shared scene: a flight over water or ground
-type SceneP = {id: string; t: number; st: St; L: Lens; L2?: Lens; count?: number; set: 'river' | 'field'; surface: 'water' | 'ground'; tint?: number; coach?: number; pov?: boolean; jets?: number; reach?: number; sun?: V3; buoys?: boolean; extra?: React.ReactNode; under?: React.ReactNode; water?: number; gorgeWater?: number; gorge?: boolean};
+type SceneP = {id: string; t: number; st: St; L: Lens; L2?: Lens; count?: number; set: 'river' | 'field'; surface: 'water' | 'ground'; tint?: number; coach?: number; pov?: boolean; jets?: number; reach?: number; sun?: V3; buoys?: boolean; extra?: React.ReactNode; under?: React.ReactNode; water?: number; gorgeWater?: number; gorge?: boolean; blow?: boolean};
 // V6: the river set has no gorge cut into its far bank except in the canyon shot, so the Yangtze crossing never leads
 // into the canyon (they were separate demonstrations)
-const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, count, set, surface, tint = 0, coach = 0, pov, jets = 1, reach, sun, buoys, extra, under, water, gorgeWater, gorge}) => (
+const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, count, set, surface, tint = 0, coach = 0, pov, jets = 1, reach, sun, buoys, extra, under, water, gorgeWater, gorge, blow}) => (
   <g>
     {set === 'river'
-      ? <RiverBack id={`${id}-rv`} L={L} t={t} gorge={gorge ? GORGE4 : undefined} near={NEAR} L2={L2} tint={tint} cliffs shoal={SHOAL} wind={0.3 + 0.5 * Math.max(0, 1 - st.alt / 4)} gorgeWater={gorgeWater} />
+      ? <RiverBack id={`${id}-rv`} L={L} t={t} gorge={gorge ? GORGE4 : undefined} near={NEAR} L2={L2} tint={tint} cliffs shoal={SHOAL} wind={0.3 + 0.5 * Math.max(0, 1 - st.alt / 4)} gorgeWater={gorgeWater} hiClouds blow={blow ? {at: st.pos, k: st.thrust * Math.max(0, Math.min(1, 1.15 - st.alt / 3.6)), R: 1.3 + 0.45 * st.alt} : undefined} />
       : <FieldBack id={`${id}-fd`} L={L} t={t} tint={tint} wind={0.3 + st.thrust * 0.6 * Math.max(0, 1 - (st.alt - REST) / 3)} />}
     {buoys && <Buoys L={L} t={t} />}
     {under}
@@ -130,11 +130,11 @@ const OPENK: [number, OK7, {hold?: boolean}?][] = [
   [3.5, ok7(282, -40, 4.6, 54, 0.0)],
   [4.0, ok7(272, -76, 3.4, 56, 0.0), {hold: true}],
   [M.electric, ok7(272, -76, 3.4, 56, 0.0)],
-  [M.electric + 0.45, ok7(276, -28, 1.5, 50, 0.0, 1)],
-  [CUT_AIR - 0.05, ok7(278, -5, 0.78, 46, 0.0, 1), {hold: true}],
-  [CUT_AIR + 0.2, ok7(278, -5, 0.8, 46, 0.0, 1, -0.1)],
-  [CUT_AIR + 0.75, ok7(279, -10, 2.4, 52, 0.0, 1, -3.4)],
-  [CUT2, ok7(280, -14, 3.4, 56, 0.0, 1, -6.0)],
+  [M.electric + 0.45, ok7(276, -24, 1.2, 46, 0.0, 1)],
+  [CUT_AIR - 0.05, ok7(278, -14, 0.5, 44, 0.0, 1, -0.02), {hold: true}],
+  [CUT_AIR + 0.2, ok7(278, -14, 0.52, 44, 0.0, 1, -0.06)],
+  [CUT_AIR + 0.75, ok7(284, 0, 2.6, 52, 0.0, 0.7, -1.2)],
+  [CUT2, ok7(292, 12, 5.5, 58, 0.0, 0, -1.8)],
 ];
 const hookPos = (t: number) => hook4(t).B.o;
 const hookCam = (t: number): Cam => {
@@ -144,7 +144,7 @@ const hookCam = (t: number): Cam => {
   return trackCam(hookPos, t, {...c, tx: duct.x * c.wd, tz: duct.z * c.wd, ty: c.ty + duct.y * c.wd + c.dy});
 };
 // the reveal's timing
-const IRIS = (t: number) => sstep(CUT_UNDER + 0.25, CUT_UNDER + 0.85, t);
+const IRIS = (t: number) => sstep(CUT_UNDER + 0.25, CUT_UNDER + 0.85, t) * (1 - sstep(CUT_AIR + 0.45, CUT_AIR + 0.95, t));
 const LOAD = (t: number) => sstep(M.ten - 0.05, M.ten + 0.4, t);
 const SECT = (t: number) => sstep(M.electric + 0.15, M.electric + 0.6, t) * (1 - sstep(CUT_AIR + 0.55, CUT_AIR + 0.9, t));
 // the unit's motor seen in the section spins up from rest (drawn at a readable rate) as current reaches it
@@ -169,66 +169,86 @@ const liftPos = (t: number) => lift4(t, MATCH).B.o;
 // (V5's first cut tilted at up to 0.85 screen heights a second)
 // (ahead of the board, so the downstream bridge stays out of frame behind him: from his side its pylon stood under
 // the board like a post)
-const LIFT_CAM = v3(-40 + 8.0, 1.5, -26 + 4.5);
-const LIFT_FY = 0.6;
-// V5 (final): the tilt eases in from rest at the cut (he starts to rise in the frame first), and the pan follows his
-// move off with a share that falls away as he goes, so it peaks mid-move and is slowing at the cut instead of
-// accelerating into it; he travels on toward frame right
-const LIFT_PAN = 1.2;
+// V7: the camera starts low in the grass close to the board, where the downwash flattens the grass round it, and
+// cranes up and back as the board lifts him, so his height over the ground changes noticeably in the frame
+const LIFT_LOW = v3(-40 + 2.6, 0.95, -26 + 1.9), LIFT_HIGH = v3(-40 + 7.2, 2.1, -26 + 5.2);
 const liftCam = (t: number): Cam => {
-  const p0 = liftPos(CUT2);
-  const p = smoothPos(liftPos, t, 0.6);
-  const dz = p.z - p0.z;
-  const tg = v3(p0.x + 0.6 * (p.x - p0.x), 1.35 + LIFT_FY * sstep(CUT2, CUT2 + 0.55, t) * (p.y - p0.y), p0.z + LIFT_PAN * (1 - Math.exp(-dz / LIFT_PAN)));
-  return {pos: LIFT_CAM, tgt: tg, roll: 0, fov: 42};
+  const u = sstep(CUT2 + 0.1, M.but + 0.3, t);
+  const p = smoothPos(liftPos, t, 0.5);
+  const tg = v3(p.x, 0.3 + (p.y - 0.14) * 0.85 + 0.4 * u, p.z);
+  return {pos: lerp3(LIFT_LOW, LIFT_HIGH, u), tgt: tg, roll: 0, fov: 50 - 6 * u};
 };
 
 // ================================================================ 3: the jet prototype test (workshop)
-const JB = (t: number) => {
-  const vib = 0.008 * sstep(M.engines + 0.2, M.andCaught + 0.2, t) * (1 - sstep(M.fireE + 0.2, M.fireE + 0.7, t));
-  return frameYPR(v3(noise1(t * 40, 1) * vib, 0.92 + noise1(t * 43, 2) * vib, noise1(t * 37, 3) * vib), 20, 0, 0);
-};
-const INV = frameYPR(v3(-2.7, 0, 0.5), 40, 0, 0);
+// V7: one continuous camera from the jet test, through the redesign on the same stand, to the electric board lifting
+// off it (cut to the field on "one HUGE problem"). The jet test escalates in one move: ignition, hot exhaust onto the
+// floor, the hot air drawn back up into the intakes (as the reports explain), the casings overheating, then fire
+// round the engines. Controlled: no explosion; it is put out on "So he switched".
+const WS_END = Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith('one huge'))!.show * 30) / 30;
 const ign = (t: number) => sstep(M.but + 0.75, M.but + 1.05, t); // starters click, the compressors begin to turn
-const run = (t: number) => sstep(M.jet - 0.2, M.jet + 0.35, t) * (1 - sstep(M.fireE + 0.15, M.fireE + 0.6, t));
-const heat = (t: number) => sstep(M.engines + 0.1, M.fire - 0.05, t) * (1 - 0.55 * sstep(M.so - 0.3, M.so + 0.5, t));
+const run = (t: number) => sstep(M.jet - 0.2, M.jet + 0.35, t) * (1 - sstep(M.so - 0.1, M.so + 0.35, t));
+const heat = (t: number) => sstep(M.engines + 0.1, M.fire, t) * (1 - 0.7 * sstep(M.so, M.so + 0.8, t));
 // V5: the drawn compressor blades turn at most 1 turn/s (12 degrees a frame, under a third of the blade spacing), so
 // they never strobe or appear to run backward; above that the speed shows as blur (from jetRps), not as rotation
 const ssI = (a: number, b: number, t: number) => {
   const s = Math.min(1, Math.max(0, (t - a) / (b - a)));
   return (b - a) * (s ** 3 - s ** 4 / 2) + Math.max(0, t - b);
 };
-const jetPhase = (t: number) => -(ssI(M.but + 0.75, M.but + 1.05, t) - 0.9 * ssI(M.fireE, M.so - 0.2, t));
-const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t) - 6 * sstep(M.fireE, M.so - 0.2, t);
-// W1 "But his first version": from above, the whole prototype on its stand, the camera settling down a little;
-// W2 "used JET ENGINES": cut to a low mechanical close-up under the deck; W3 "and caught FIRE": cut to a high
-// three-quarter view of the deck top, where the leak, the vapour and the fire are; it stays with the prototype as the
-// fire dies, then rises slowly back as the redesign takes its place, ending on the framing the field shot continues.
-// All from the same side of the stand, so the prototype keeps its orientation.
-const W2 = M.jet, W3 = M.andCaught - 0.15;
-// (V5 final: one angle with a slight straight push in; a change of elevation round the fixed board read as an orbit)
-const W1K: Key[] = [[M.but, ck(-50, 60, 2.4, 54, 0.0, 0)], [W2, ck(-50, 60, 2.3, 54, 0.0, 0)]];
-// (V5: held at one angle with a slight push in; the 8 degree arc this close read as an orbit round the engines)
-const W2K: Key[] = [[W2, ck(-42, -7, 1.66, 50, -0.3, 0)], [W3, ck(-42, -7, 1.58, 50, -0.3, 0)]];
-// V5: W3 holds near-still on the fire. At the peak of the smoke (when it fills the frame) a cut to W4, already on
-// the field shot's side of the stand; as the smoke clears W4 makes one slow move, back and down (no arc round the stand).
-const W4 = M.so + 0.08;
-const W3K: Key[] = [
-  // (V5 final: one angle, easing straight back; the azimuth and elevation creep read as a slow orbit round the fire)
-  [W3, ck(-55, 28, 1.7, 48, 0.02, 0)],
-  [M.fireE, ck(-55, 28, 1.8, 48, 0.02, 0)],
-  [W4, ck(-55, 28, 2.0, 48, 0.02, 0)],
+const jetPhase = (t: number) => -(ssI(M.but + 0.75, M.but + 1.05, t) - 0.9 * ssI(M.so - 0.1, M.so + 0.5, t));
+const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t);
+// the redesign: the five jets lift out of their mounts, the bare plank goes up and away toward its tail, the electric
+// deck comes down into the same cradle from the nose side, its ten units seat in turn, the fans spin up, and it lifts
+const JLIFT = (i: number, t: number) => {
+  const u = sstep(M.so + 0.12 + 0.06 * i, M.so + 0.55 + 0.06 * i, t);
+  return 2.6 * u * u;
+};
+const PLANK = (t: number) => sstep(M.so + 0.48, M.so + 0.96, t);
+const DECK = (t: number) => sstep(M.so + 0.68, M.so + 1.22, t);
+const BUILT = (t: number) => 10.8 * Math.min(1, Math.max(0, (t - (M.so + 1.2)) / 0.62));
+const ESPIN = M.so + 1.56;
+const ePhase = (t: number) => 1.6 * ssI(ESPIN, ESPIN + 0.65, t);
+const eRps = (t: number) => 9 * sstep(ESPIN, ESPIN + 0.65, t);
+const RISE = (t: number) => 0.38 * sstep(WS_END - 0.54, WS_END + 0.3, t);
+type WK = CK & {wd: number};
+const wk = (az: number, el: number, dist: number, fov: number, ty: number, wd = 0): WK => ({...ck(az, el, dist, fov, ty, 0), wd});
+const WS_UNIT = 2; // a front-row unit on the camera's side
+const WSK: [number, WK, {hold?: boolean}?][] = [
+  [M.but, wk(-38, 22, 3.3, 50, -0.05)],
+  [M.jet, wk(-42, 15, 2.6, 50, -0.12)],
+  // low at the deck's edge: the plumes hit the floor and the hot air curls back up to the intakes
+  [M.andCaught, wk(-47, 9, 2.15, 50, -0.2)],
+  [M.fire + 0.3, wk(-50, 17, 2.35, 50, -0.1)],
+  [M.so, wk(-53, 30, 2.8, 50, 0.0)],
+  // the redesign view: from above, the stand and the parts coming out and going in
+  [M.so + 0.75, wk(-56, 50, 3.9, 50, 0.1)],
+  [M.so + 1.2, wk(-58, 52, 4.0, 50, 0.08)],
+  // in to one new unit as its motor spins up
+  [ESPIN - 0.05, wk(-60, 48, 1.9, 46, 0.0, 1)],
+  [ESPIN + 0.45, wk(-60, 44, 1.6, 46, 0.0, 1)],
+  [WS_END, wk(-64, 20, 3.6, 48, 0.28, 0)],
 ];
-const W4K: Key[] = [
-  [W4, ck(-89, 17, 4.7, 44, 0.6, 0), {hold: true}],
-  [M.except, ck(-90, 14, 5.8, 42, 0.75, 0)],
-];
+const JB0 = frameYPR(v3(0, 0.92, 0), 20, 0, 0);
+const JB = (t: number) => {
+  const vib = 0.008 * sstep(M.engines + 0.2, M.andCaught + 0.2, t) * (1 - sstep(M.so - 0.1, M.so + 0.3, t));
+  return frameYPR(v3(noise1(t * 40, 1) * vib, 0.92 + noise1(t * 43, 2) * vib, noise1(t * 37, 3) * vib), 20, 0, 0);
+};
+// the redesign in the same cradle: the electric board's deck sits on the stand rails where the jet plank was
+const BE = (B: Frame): Frame => ({...B, o: a3(B.o, m3(B.y, -0.045 + BD.thick))});
+const plankB = (t: number): Frame => {
+  const a = PLANK(t) ** 2;
+  return {...JB(t), o: a3(a3(JB(t).o, m3(JB0.y, 2.4 * a)), m3(JB0.z, -1.6 * a))};
+};
+const elecB = (t: number): Frame => {
+  const b = 1 - DECK(t);
+  const B = BE(JB0);
+  const hov = RISE(t) > 0.01 ? 0.012 * Math.sin((t - WS_END) * 5) * sstep(WS_END - 0.3, WS_END + 0.2, t) : 0;
+  return frameYPR(a3(a3(B.o, m3(JB0.y, 2.2 * b + RISE(t) + hov)), m3(JB0.z, 1.7 * b)), 20, 0, 0);
+};
 const jetCam = (t: number): Cam => {
-  const B = JB(Math.min(t, M.so));
-  if (t < W2) return orbitBoard(B, splineRec(t, W1K));
-  if (t < W3) return aboveGround(orbitBoard(B, splineRec(t, W2K)), 0.12);
-  if (t < W4) return orbitBoard(B, splineRec(t, W3K));
-  return orbitBoard(B, splineRec(t, W4K));
+  const c = splineRec(t, WSK);
+  const unit = ductWorld(elecB(Math.min(t, ESPIN + 0.5)), WS_UNIT, 0);
+  const tgt = lerp3(a3(JB0.o, v3(0, c.ty, 0)), unit, c.wd);
+  return {pos: camFrom(tgt, {...c, ty: 0}), tgt, roll: 0, fov: c.fov};
 };
 /** heat haze: wavering translucent strands rising off the hot nozzles and the deck around them */
 const HeatHaze: React.FC<{L: Lens; at: V3[]; k: number; t: number}> = ({L, at, k, t}) => {
@@ -295,156 +315,70 @@ const FireMarks: React.FC<{L: Lens; B: Frame; c: V3; scorch: number; glow: numbe
     </g>
   );
 };
-/** a dense, drifting bank of smoke over the stand (soft blurred puffs around a centre point), k = 0..1 cover */
-const SmokeVeil: React.FC<{id: string; L: Lens; c: V3; k: number; t: number}> = ({id, L, c, k, t}) => {
+// the fire: round the engines' bases on the deck (where the hot air is drawn in), starting at the centre engine and
+// reaching the others in turn; flames at three points round each casing
+const FIRE_ORDER: [number, number][] = [[2, 0], [0, 0.2], [1, 0.28], [3, 0.42], [4, 0.5]];
+const fireK = (t: number, d: number) => sstep(M.fire - 0.06 + d, M.fire + 0.2 + d, t) * (1 - sstep(M.so - 0.12, M.so + 0.22, t));
+/** V7: the redesign view: the room light cools and a measuring grid lies on the floor round the stand */
+const RedesignGrid: React.FC<{L: Lens; k: number}> = ({L, k}) => {
   if (k < 0.01) return null;
-  const puffs: React.ReactNode[] = [];
-  for (let i = 0; i < 14; i++) {
-    const a = (i / 14) * Math.PI * 2 + 0.4 * noise1(i * 1.7, 41);
-    const r = 0.25 + 0.45 * ((i * 37) % 7) / 7;
-    const q = a3(c, v3(Math.cos(a) * r + 0.12 * Math.sin(t * 0.9 + i), 0.12 * Math.sin(i * 2.3) + 0.25 * (t - M.so) + 0.05 * i % 0.3, Math.sin(a) * r * 0.8));
-    if (d3(s3(q, L.pos), L.f) < 0.15) continue;
-    const p = L.p(q);
-    const g = 92 + ((i * 13) % 5) * 8;
-    puffs.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2((0.42 + 0.12 * Math.sin(i)) * p.k)} fill={`rgb(${g},${g - 3},${g - 6})`} />);
+  const segs: string[] = [];
+  const R = 2.0, step = 0.25;
+  for (let i = -8; i <= 8; i++) {
+    for (const dir of [0, 1]) {
+      const a = dir ? v3(i * step, 0.002, -R) : v3(-R, 0.002, i * step);
+      const b = dir ? v3(i * step, 0.002, R) : v3(R, 0.002, i * step);
+      const ln = clipNear(L, [a, b], 0.2, false);
+      if (ln.length < 2) continue;
+      segs.push(polyD(proj(L, ln), false));
+    }
   }
-  const pc = L.p(c);
-  return (
-    <g opacity={Math.min(1, k * 1.15)}>
-      <defs>
-        <filter id={`${id}-b`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={f2(0.09 * pc.k)} />
-        </filter>
-      </defs>
-      <g filter={`url(#${id}-b)`}>
-        <ellipse cx={f2(pc.x)} cy={f2(pc.y)} rx={f2(1.0 * pc.k)} ry={f2(0.7 * pc.k)} fill="rgb(104,101,97)" />
-        {puffs}
-      </g>
-    </g>
-  );
+  return <path d={segs.join(' ')} stroke="#8FD3FF" strokeOpacity={0.32 * k} strokeWidth={2} fill="none" />;
 };
-/** V5: the room full of smoke: an opaque grey with lighter and darker billows rolling across it, so the frame is never
- *  a frozen flat grey and the cut and the board swap underneath it cannot show. (V5 final: stronger light and dark
- *  billows that roll and rise at 3-7 px a frame; positions run from the smoke's own clock, never wrapping.) */
-const FogMotion: React.FC<{id: string; t: number; k: number}> = ({id, t, k}) => {
-  const tt = t - M.so;
-  const puffs = Array.from({length: 12}, (_, i) => {
-    const x = (-0.15 + ((i * 0.53) % 1.3) + tt * (0.12 + 0.05 * (i % 3)) * (i % 2 ? 1 : -1)) * 1080;
-    const y = (0.04 + ((i * 0.29) % 0.95)) * 1920 - tt * 110 * (1 + (i % 3) * 0.5);
-    const g = [150, 74, 120][i % 3];
-    return <circle key={i} cx={f2(x)} cy={f2(y)} r={f2(230 + (i % 4) * 60)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={0.62} />;
-  });
-  return (
-    <g opacity={f2(k)}>
-      <defs>
-        <filter id={`${id}-b`} x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation={80} />
-        </filter>
-      </defs>
-      <rect x={0} y={0} width={1080} height={1920} fill="rgb(106,103,99)" />
-      <g filter={`url(#${id}-b)`}>{puffs}</g>
-    </g>
-  );
-};
-/** V6: the electric board's fans spin up and their air pushes the last of the smoke off the stand, outward and down
- *  (the design change carries the end of the scene, not a pan over a still board) */
-const SmokePush: React.FC<{id: string; L: Lens; c: V3; t: number; t0: number}> = ({id, L, c, t, t0}) => {
-  const age = t - t0;
-  if (age < 0 || age > 1.3) return null;
-  const puffs: React.ReactNode[] = [];
-  for (let i = 0; i < 12; i++) {
-    const a = (i / 12) * Math.PI * 2 + 0.3 * noise1(i * 1.3, 51);
-    const r = 0.35 + 1.5 * (1 - Math.exp(-age * 2.2)) * (0.8 + 0.4 * hash(i, 52));
-    const q = a3(c, v3(Math.cos(a) * r, -0.35 * (1 - Math.exp(-age * 2.0)) + 0.1 * Math.sin(i), Math.sin(a) * r * 0.8));
-    // (a puff blown toward the camera fades out before it reaches it, instead of vanishing at the near plane)
-    const dz = d3(s3(q, L.pos), L.f);
-    const near = sstep(0.4, 1.4, dz);
-    if (near < 0.01) continue;
-    const p = L.p(q);
-    const g = 104 + ((i * 13) % 5) * 9;
-    puffs.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2((0.28 + 0.2 * age) * p.k)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={f2(0.55 * near * Math.max(0, 1 - age / 1.3) * Math.min(1, age * 6))} />);
-  }
-  const pc = L.p(c);
-  return (
-    <g>
-      <defs>
-        {/* a fixed frame-sized region: a region sized from the puffs' bounding box shrank when one puff faded out and
-            cut off the others' blur in one frame */}
-        <filter id={`${id}-b`} filterUnits="userSpaceOnUse" x={-300} y={-300} width={1680} height={2520}>
-          <feGaussianBlur stdDeviation={f2(0.06 * pc.k)} />
-        </filter>
-      </defs>
-      <g filter={`url(#${id}-b)`}>{puffs}</g>
-    </g>
-  );
-};
-// the redesign in the same cradle: the electric board's deck sits on the stand rails where the jet plank was
-const BE = (B: Frame): Frame => ({...B, o: a3(B.o, m3(B.y, -0.045 + BD.thick))});
-// V5: the electric board comes out of the smoke complete (the unit-by-unit seating popped and cut through the rim),
-// then powers up: the fans spin up smoothly, at most 1.6 turns/s drawn (19 degrees a frame for five blades)
-const ePhase = (t: number) => 1.6 * ssI(M.switched, M.except - 0.4, t);
 const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const cam = jetCam(t);
   const L = lens(cam);
-  const B = JB(Math.min(t, M.so));
+  const B = plankB(t);
   const r = run(t);
   const h = heat(t);
+  const lifts = [0, 1, 2, 3, 4].map((i) => JLIFT(i, t));
   const nozzles = [0, 1, 2, 3, 4].map((i) => jetNozzle(B, i));
   const intakes = [0, 1, 2, 3, 4].map((i) => jetIntake(B, i));
-  const recirc = sstep(M.engines + 0.3, M.andCaught + 0.1, t) * (1 - sstep(M.fire + 0.1, M.fire + 0.6, t));
-  // V6: the fire starts at the base of the centre engine, climbs its casing to the fuel fitting and runs back along
-  // that line (the affected equipment); it dies down and leaves the scorch. No cause is shown (none is reported).
-  const fl = jetFuelLine(B, 2);
-  const pool = toW(B, v3(0.12, 0.004, -0.03));
-  const along = (u: number) => (u < 0.2 ? lerp3(pool, fl[2], u / 0.2) : u < 0.6 ? lerp3(fl[2], fl[1], (u - 0.2) / 0.4) : lerp3(fl[1], fl[0], (u - 0.6) / 0.4));
-  const spread = sstep(M.fire, M.fire + 1.1, t);
-  // the vapour flashes and the flame grows over a quarter second; when the fuel is shut off it dies down over half a second
-  // V5 (final): it is out (with the scorch showing) before the smoke closes in, rather than dying under it
-  const out = sstep(M.fireE - 0.05, M.fireE + 0.38, t);
-  const fireK = sstep(M.fire - 0.04, M.fire + 0.22, t) * (1 - out);
-  // V5: each tongue of flame grows in place as the fire runs along the line (no clusters appearing in one frame)
-  // the flame climbs from the engine's base to the fitting, then runs along the line (anchors every few cm)
-  const FL: [number, number][] = [[0, 0.15], [0.07, 0.09], [0.14, 0.1], [0.2, 0.13], [0.33, 0.11], [0.45, 0.12], [0.58, 0.1], [0.7, 0.11]];
-  const flames = FL.map(([u, size]) => ({at: along(u), size, k: fireK * Math.min(1, Math.max(0, (spread * 0.95 + 0.01 - u) / 0.1))}));
-  const burn = sstep(M.fire + 0.08, M.fire + 0.8, t);
-  // (V5 final: a softer, slightly longer bloom; the stronger one pumped the whole frame like an exposure flicker)
+  const recirc = sstep(M.engines - 0.1, M.andCaught, t) * (1 - sstep(M.fire + 0.4, M.so, t));
+  // one flame bed per engine (a bed joins its tongues into one band)
+  const flameBeds = FIRE_ORDER.map(([i, d]) => [0, 2.1, 4.2].map((a, k) => {
+    const [ex, ez] = JET.engines[i];
+    const aa = a + i * 0.7;
+    return {at: toW(B, v3(ex + Math.cos(aa) * (JET.r + 0.015), 0.004, ez + Math.sin(aa) * (JET.r + 0.015))), size: k === 0 ? 0.13 : 0.09, k: fireK(t, d + k * 0.05)};
+  }));
+  const fireAll = fireK(t, 0);
+  const burn = sstep(M.fire + 0.08, M.so, t);
   const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.2) ** 2 * 0.3;
-  const react = sstep(M.fire - 0.02, M.fire + 0.3, t) * (1 - sstep(M.so - 0.2, M.so + 0.3, t));
-  const flinch = sstep(M.fire, M.fire + 0.16, t) * (1 - sstep(M.fire + 0.8, M.fire + 1.3, t));
-  const jInv = pilotJoints(INV, inventor4(react, flinch));
-  const invNear = (cam.pos.x - INV.o.x) ** 2 + (cam.pos.z - INV.o.z) ** 2 < 0.5;
-  // V5: the smoke left by the fire thickens into a veil over the stand, the prototype is swapped while it is hidden,
-  // and the smoke clears on the new electric frame sitting in the same cradle (no see-through overlap of two boards)
-  // (V5 final: it clears with the room's smoke, so the new board is not revealed after the stand around it)
-  const veil = sstep(M.so - 0.45, M.so - 0.05, t) * (1 - sstep(M.so + 0.16, M.so + 0.5, t));
-  // V5: for a moment the smoke fills the whole room (it hides the stand legs and the walls too), and the cut to the
-  // new side and the swap of the boards both happen inside it
-  const fog = sstep(M.so - 0.3, M.so - 0.02, t) * (1 - sstep(M.so + 0.22, M.so + 0.6, t));
-  const swap = t < M.so + 0.12 ? 0 : 1;
   const camUp = d3(s3(L.pos, B.o), B.y) > 0;
-  const smokeK = sstep(M.fire + 0.2, M.so, t) * 0.6 * (1 - sstep(M.so - 0.2, M.switched + 0.2, t));
+  const smokeK = sstep(M.fire + 0.2, M.so, t) * 0.6 * (1 - sstep(M.so + 0.3, M.so + 1.2, t));
+  const redesign = sstep(M.so + 0.1, M.so + 0.6, t);
+  const eB = elecB(t);
+  const thrust = sstep(ESPIN + 0.1, ESPIN + 0.7, t);
+  const plankGone = PLANK(t) > 0.999;
   return (
     <g>
-      <WorkshopBack id={`${id}-ws`} L={L} t={t} glow={(r * 0.5 + 0.7 * fireK + 0.3 * h) * (1 - swap)} smoke={smokeK} />
+      <WorkshopBack id={`${id}-ws`} L={L} t={t} glow={r * 0.5 + 0.7 * fireAll + 0.4 * h} smoke={smokeK} />
+      {redesign > 0.01 && <rect x={-50} y={-50} width={1180} height={2020} fill="#1D3A57" opacity={f2(0.32 * redesign)} />}
+      <RedesignGrid L={L} k={redesign} />
       <Exhaust id={`${id}-ex`} L={L} nozzles={nozzles} floorY={0} k={r} t={t} />
-      <TestStand L={L} B={B} />
-      {swap < 1 && (
-        <g opacity={1 - swap}>
-          {/* the hot air curls up round the deck edge: drawn under the deck, which hides the part beneath it; never
-              seen from below (it would cross the deck's underside) */}
+      <TestStand L={L} B={JB0} />
+      {thrust > 0.01 && <AirJets L={L} B={eB} t={t} thrust={thrust} alpha={0.8} reach={0.8} speed={0.5} />}
+      {!plankGone && (
+        <g>
           {camUp && <Recirc L={L} from={nozzles.map((n) => v3(n.x, 0.05, n.z))} to={intakes} k={recirc} t={t} smooth />}
-          {/* (the flames' light warms the casings: the engines' heat glow carries it) */}
-          <JetBoard id={`${id}-jb`} L={L} B={B} stand={false} st={{phase: jetPhase(t), rps: jetRps(t), burn, heat: Math.max(h, 0.75 * fireK)}} overlay={<FireMarks id={`${id}-fm0`} L={L} B={B} c={pool} scorch={sstep(M.fire + 0.15, M.fireE + 0.35, t)} glow={0.85 * fireK} />} />
-          {camUp && <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6) * (1 - sstep(M.fire - 0.1, M.fire + 0.1, t))} t={t} />}
-          <Smoke L={L} at={[along(0), along(0.45)]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so - 0.5, M.so + 0.2, t))} />
-          <FlameBed id={`${id}-fl`} L={L} items={flames} t={t} />
-          <Flash id={`${id}-fs`} c={L.p(fl[2])} k={flash} />
+          <JetBoard id={`${id}-jb`} L={L} B={B} stand={false} st={{phase: jetPhase(t), rps: jetRps(t), burn, heat: Math.max(h, 0.75 * fireAll), casingHeat: h * (1 - redesign), lift: lifts}} overlay={<FireMarks id={`${id}-fm0`} L={L} B={B} c={toW(B, v3(0, 0.004, 0))} scorch={0} glow={0.85 * fireAll} />} />
+          {camUp && <HeatHaze L={L} at={intakes.map((n) => a3(n, v3(0, 0.02, 0)))} k={h * (1 - sstep(M.fire - 0.1, M.fire + 0.1, t))} t={t} />}
+          <Smoke L={L} at={[toW(B, v3(0, 0.05, 0)), toW(B, v3(0.1, 0.05, 0.4)), toW(B, v3(-0.1, 0.05, -0.4))]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so + 0.2, M.so + 0.9, t))} />
+          {flameBeds.map((items, n) => <FlameBed key={n} id={`${id}-fl${n}`} L={L} items={items} t={t} />)}
+          <Flash id={`${id}-fs`} c={L.p(jetIntake(B, 2))} k={flash} />
         </g>
       )}
-      {swap > 0 && <Rider id={`${id}-eb`} L={L} B={BE(B)} pose={lift4(0, 10).pose} noPilot st={{phase: ePhase(t), rps: 9 * sstep(M.switched, M.except - 0.4, t), thrust: 0, built: 10}} />}
-      <SmokeVeil id={`${id}-sv`} L={L} c={a3(B.o, v3(0, 0.15, 0))} k={veil} t={t} />
-      <SmokePush id={`${id}-sp`} L={L} c={a3(B.o, v3(0, 0.1, 0))} t={t} t0={M.switched - 0.05} />
-      {fog > 0.005 && <FogMotion id={`${id}-fm`} t={t} k={fog} />}
+      {DECK(t) > 0.001 && <Rider id={`${id}-eb`} L={L} B={eB} pose={lift4(0, 10).pose} noPilot st={{phase: ePhase(t), rps: eRps(t), thrust: 0, built: BUILT(t)}} />}
     </g>
   );
 };
@@ -453,10 +387,10 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
  *  (V5 final) the bright window and door openings, which a white caption cannot be read against */
 const wsFocus = (t: number): Box[] => {
   const L = lens(jetCam(t));
-  const B = JB(Math.min(t, M.so));
+  const B = t < M.so + 0.7 ? JB(t) : elecB(t);
   const pts = [-0.5, 0.5].flatMap((x) => [-0.9, 0.9].flatMap((z) => [0.3, -0.12].map((y) => L.p(toW(B, v3(x, y, z))))));
   const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
-  const boxes: Box[] = [{x0: Math.min(...xs) - 30, y0: Math.min(...ys) - 30, x1: Math.max(...xs) + 30, y1: Math.max(...ys) + 30}];
+  const boxes: Box[] = [{x0: Math.max(0, Math.min(...xs) - 30), y0: Math.max(0, Math.min(...ys) - 30), x1: Math.min(1080, Math.max(...xs) + 30), y1: Math.min(1920, Math.max(...ys) + 30)}];
   for (const quad of WS_OPENINGS) {
     const q = clipNear(L, quad, 0.12);
     if (q.length < 3) continue;
@@ -482,9 +416,9 @@ const wsFocus = (t: number): Box[] => {
 //      knees softer, hips over his toes), and the deck comes level
 //   C4 "how to balance.": a standing wide view: a fresh gust, met at once and settled
 const capAt = (s: string) => Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith(s))!.show * 30) / 30;
-const F1 = M.except, F2 = capAt('the board'), F3 = capAt('he has to'), C1 = capAt('while an'), C2 = M.voice - 0.09, C3 = capAt('helps him'), C4 = capAt('how to balance');
+const F1 = WS_END, F2 = capAt('the board'), F3 = capAt('he has to'), C1 = capAt('while an'), C2 = M.voice - 0.09, C3 = capAt('helps him'), C4 = capAt('how to balance');
 const PR1 = capAt('and after'), PR2 = capAt('he actually'), P2 = capAt('and through'), Q1 = capAt('how much');
-const FK6 = {lift: F1 + 0.12, problem: M.huge - 0.25, itself: F2, control: F3, body: capAt('with his'), coach: C1, wrist: C2, cue: C3 - 0.05, fix: C3 + 0.04, learned: C4, end: PR1};
+const FK6 = {lift: F1 - 0.3, problem: M.huge + 0.02, itself: F2, control: F3, body: capAt('with his'), coach: C1, wrist: C2, cue: C3 - 0.05, fix: C3 + 0.04, learned: C4, end: PR1};
 const FIELD = fieldFlight6(FK6);
 const fieldPos = (t: number) => FIELD(t).B.o;
 const F1_CAM = camFrom(FIELD(F1 + 0.12).B.o, ck(-66, 8, 5.0, 42, 0.6, 0));
@@ -607,11 +541,11 @@ export const SHOTS7: Shot[] = [
     name: 'the lift on the riverside flat (standing camera)', from: CUT2, to: M.but,
     draw: (t, pre) => {
       const st = lift4(t, MATCH);
-      return <FlightScene id={`${pre}lf`} t={t} st={st} L={lens(liftCam(t))} set="river" surface="ground" />;
+      return <FlightScene id={`${pre}lf`} t={t} st={st} L={lens(liftCam(t))} set="river" surface="ground" blow />;
     },
     focus: (t) => box(lens(liftCam(t)), lift4(t, MATCH)),
   },
-  {name: 'the jet prototype test and the redesign on the same stand (workshop)', from: M.but, to: M.except, draw: (t, pre) => <WorkshopScene id={`${pre}ws`} t={t} />, focus: (t) => wsFocus(t)},
+  {name: 'the jet prototype test and the redesign on the same stand (workshop)', from: M.but, to: WS_END, draw: (t, pre) => <WorkshopScene id={`${pre}ws`} t={t} />, focus: (t) => wsFocus(t)},
   {
     ...fieldShot('balance: the problem, the tendency, the legs, the whole body', F1, C1, fieldCam),
     // in the legs close-up the action is the knees, ankles and deck (the jacket fills the top of the frame): keep the
@@ -644,7 +578,7 @@ export const SHOTS7: Shot[] = [
   },
 ];
 /** every picture cut: the shot boundaries and the cuts inside shots (workshop, balance, coach) */
-export const CUTS7 = [...SHOTS7.slice(1).map((s) => s.from), W2, W3, W4, F2, F3, C2, C3, C4].sort((a, b) => a - b);
+export const CUTS7 = [...SHOTS7.slice(1).map((s) => s.from), F2, F3, C2, C3, C4].sort((a, b) => a - b);
 /** V6: the timing of the visible events the sound follows (exported to the mix by tools/export_cues_v6.ts) */
 export const BEATS7 = {...FK6, shore: PR1 + 1.74, gust: GUST_AT};
 export const shotAt7 = (t: number) => SHOTS7.find((s) => t >= s.from && t < s.to) ?? SHOTS7[SHOTS7.length - 1];
@@ -655,7 +589,7 @@ export {toW};
 export const riderView7 = (t: number): {L: Lens; st: St} | null => {
   if (t < CUT2) return {L: lens(hookCam(t)), st: hook4(t)};
   if (t < M.but) return {L: lens(liftCam(t)), st: lift4(t, MATCH)};
-  if (t < M.except) return null;
+  if (t < WS_END) return null;
   if (t < C1) return {L: lens(fieldCam(t)), st: FIELD(t)};
   if (t < PR1) return {L: lens(coachCam(t, FIELD(t))), st: FIELD(t)};
   if (t < PR2) return {L: lens(prCam(t)), st: pr(t)};

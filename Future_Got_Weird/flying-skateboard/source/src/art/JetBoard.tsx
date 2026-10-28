@@ -42,6 +42,8 @@ export type JetState = {
   lift?: number[];
   /** V2: 0..1 heat soak: nozzles glow, nearby fuel lines and wiring heat toward orange */
   heat?: number;
+  /** V7: 0..1 the casings themselves overheating (the lower casings toward dull red, the upper ones warming) */
+  casingHeat?: number;
 };
 
 const eng = (B: Frame, i: number, y: number) => toW(B, v3(JET.engines[i][0], y, JET.engines[i][1]));
@@ -61,6 +63,7 @@ export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; st
   const above = d3(s3(L.pos, B.o), B.y) > 0;
   const lifts = st.lift ?? [];
   const heat = st.heat ?? 0;
+  const ch = st.casingHeat ?? 0;
   const eng = (Bf: Frame, i: number, y: number) => toW(Bf, v3(JET.engines[i][0], y + (lifts[i] ?? 0), JET.engines[i][1]));
   const D = JET.deck;
   const deckPts = (y: number) => [v3(-D.x, y, -D.z), v3(D.x, y, -D.z), v3(D.x, y, D.z), v3(-D.x, y, D.z)].map((q) => toW(B, q));
@@ -163,13 +166,13 @@ export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; st
   const order = JET.engines.map((_, i) => i).sort((a, b) => d3(s3(eng(B, b, 0), L.pos), L.f) - d3(s3(eng(B, a, 0), L.pos), L.f));
   const lower = order.map((i) => (
     <g key={`lo${i}`}>
-      {casing(i, -JET.deck.t, JET.bot + 0.07, JET.r, JET.r * 0.95, JCOL.casing, `cl${i}`)}
+      {casing(i, -JET.deck.t, JET.bot + 0.07, JET.r, JET.r * 0.95, mix(JCOL.casing, '#C9431F', ch * 0.85), `cl${i}`)}
       {casing(i, JET.bot + 0.07, JET.bot, JET.r * 0.8, JET.r * 0.62, mix(JCOL.nozzle, '#E4502A', heat * 0.8), `nz${i}`)}
     </g>
   ));
   const upper = order.map((i) => (
     <g key={`up${i}`}>
-      {casing(i, 0, JET.top, JET.r, JET.r * 1.02, JCOL.casing, `cu${i}`)}
+      {casing(i, 0, JET.top, JET.r, JET.r * 1.02, mix(JCOL.casing, '#C98A62', ch * 0.4), `cu${i}`)}
       {intakeFace(i)}
     </g>
   ));
