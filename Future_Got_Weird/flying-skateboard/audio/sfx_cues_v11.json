@@ -1,0 +1,194 @@
+[
+ {
+  "name": "the skin opens (soft mechanical slide)",
+  "at": 3.25,
+  "frame": 97.5,
+  "dur": 0.35,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "count: duct 1 rim (tiny tick)",
+  "at": 3.609,
+  "frame": 108.3,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 2 rim (tiny tick)",
+  "at": 3.696,
+  "frame": 110.9,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 3 rim (tiny tick)",
+  "at": 3.784,
+  "frame": 113.5,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 4 rim (tiny tick)",
+  "at": 3.87,
+  "frame": 116.1,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 5 rim (tiny tick)",
+  "at": 3.958,
+  "frame": 118.7,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 6 rim (tiny tick)",
+  "at": 4.045,
+  "frame": 121.3,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 7 rim (tiny tick)",
+  "at": 4.131,
+  "frame": 123.9,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 8 rim (tiny tick)",
+  "at": 4.218,
+  "frame": 126.6,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 9 rim (tiny tick)",
+  "at": 4.306,
+  "frame": 129.2,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 10 rim (tiny tick)",
+  "at": 4.393,
+  "frame": 131.8,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "the air down the duct to the river",
+  "at": 5.706,
+  "frame": 171.2,
+  "dur": 0.9,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the grass blown flat round the board (rustle)",
+  "at": 6.72,
+  "frame": 201.6,
+  "dur": 0.9,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "ignition: starter clicks",
+  "at": 9.374,
+  "frame": 281.2,
+  "dur": 0.15,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "heat: casings ticking",
+  "at": 10.414,
+  "frame": 312.4,
+  "dur": 1.468,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "FIRE: it catches round the engines (contained whoomp)",
+  "at": 11.602,
+  "frame": 348.1,
+  "dur": 0.8,
+  "gain_db": -22,
+  "hero": true
+ },
+ {
+  "name": "backfire 1: a soft pop from the centre nozzle",
+  "at": 10.672,
+  "frame": 320.2,
+  "dur": 0.18,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "backfire 2: a soft pop from the centre nozzle",
+  "at": 11.092,
+  "frame": 332.8,
+  "dur": 0.18,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "wrist phone: soft tick",
+  "at": 20.584,
+  "frame": 617.5,
+  "dur": 0.02,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "AI coach cue in the earbud",
+  "at": 21.413,
+  "frame": 642.4,
+  "dur": 0.42,
+  "gain_db": -29,
+  "hero": true
+ },
+ {
+  "name": "a fresh gust, met at once (air)",
+  "at": 22.3,
+  "frame": 669.0,
+  "dur": 0.45,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "over the shoreline: the river opens up (air)",
+  "at": 24.933,
+  "frame": 748.0,
+  "dur": 1.0,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "into the canyon (air narrows)",
+  "at": 27.103,
+  "frame": 813.1,
+  "dur": 0.8,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "a gust between the walls; he answers it (cloth)",
+  "at": 28.033,
+  "frame": 841.0,
+  "dur": 0.3,
+  "gain_db": -39,
+  "hero": false
+ }
+]
