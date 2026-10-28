@@ -15,7 +15,7 @@ export const MC = {x: 540, y: 1065}; // patch centre (world)
 export const PATCH = {rx: 150, ry: 205};
 export const BREATH_C = {x: 540, y: 1050};
 
-const COL = {
+export const COL = {
   furBelly: '#F2ECE3', furShade: '#D8CEC2', furBack: '#A3A8AE', furBackDeep: '#7F868E',
   skin: '#F0C0B0', skinDeep: '#D99B8C', pink: '#F0A9A0', paw: '#F2B6A9', pawDeep: '#D48E82', nose: '#E58F8A',
   cavity: '#A4434B', liver: '#6E2230', liverLit: '#9A3A45', gut: '#E8978B', gutLit: '#F7C6B8', gutInk: '#6A2330',
@@ -23,7 +23,7 @@ const COL = {
 };
 
 // ---------- geometry helpers ----------
-const crPath = (pts: V[], closed: boolean) => {
+export const crPath = (pts: V[], closed: boolean) => {
   const n = pts.length;
   const g = (i: number) => (closed ? pts[(i + n) % n] : pts[Math.max(0, Math.min(n - 1, i))]);
   let d = `M${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
@@ -150,11 +150,11 @@ export const Anatomy: React.FC<{t: number}> = ({t}) => {
 };
 
 // ---------- skin surface details (constant: present whatever the transmission) ----------
-const PORES = Array.from({length: 150}, (_, i) => {
+export const PORES = Array.from({length: 150}, (_, i) => {
   const a = hash(i, 3) * Math.PI * 2, rr = Math.sqrt(hash(i, 7)) * 0.97;
   return {x: MC.x + Math.cos(a) * rr * PATCH.rx, y: MC.y + Math.sin(a) * rr * PATCH.ry, r: 1.1 + hash(i, 11) * 1.4};
 });
-const STUBBLE = Array.from({length: 170}, (_, i) => {
+export const STUBBLE = Array.from({length: 170}, (_, i) => {
   const a = (i / 170) * Math.PI * 2 + hash(i, 5) * 0.04;
   const e = 0.97 + hash(i, 9) * 0.06;
   const x = MC.x + Math.cos(a) * PATCH.rx * e, y = MC.y + Math.sin(a) * PATCH.ry * e;
@@ -162,11 +162,11 @@ const STUBBLE = Array.from({length: 170}, (_, i) => {
   const nx = Math.cos(a) * PATCH.ry, ny = Math.sin(a) * PATCH.rx; const nl = Math.hypot(nx, ny);
   return {x, y, x2: x + (nx / nl) * L + (hash(i, 17) - 0.5) * 6, y2: y + (ny / nl) * L + (hash(i, 19) - 0.5) * 6};
 });
-const BEADS = Array.from({length: 22}, (_, i) => {
+export const BEADS = Array.from({length: 22}, (_, i) => {
   const a = hash(i, 41) * Math.PI * 2, rr = Math.sqrt(hash(i, 43)) * 0.9;
   return {x: MC.x + Math.cos(a) * rr * PATCH.rx, y: MC.y + Math.sin(a) * rr * PATCH.ry, r: 4 + hash(i, 47) * 7};
 });
-const FURLINES = Array.from({length: 90}, (_, i) => {
+export const FURLINES = Array.from({length: 90}, (_, i) => {
   const x = 380 + hash(i, 21) * 320, y = 760 + hash(i, 23) * 640;
   return {x, y, a: (hash(i, 29) - 0.5) * 0.6};
 });

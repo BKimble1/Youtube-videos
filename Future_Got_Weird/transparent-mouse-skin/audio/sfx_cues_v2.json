@@ -1,0 +1,140 @@
+[
+ {
+  "name": "hook brushing",
+  "at": 0.0,
+  "dur": 2.44,
+  "gain_db": -27
+ },
+ {
+  "name": "reveal shimmer",
+  "at": 0.25,
+  "dur": 1.6,
+  "gain_db": -41
+ },
+ {
+  "name": "tilt drift",
+  "at": 2.63,
+  "dur": 0.9,
+  "gain_db": -36
+ },
+ {
+  "name": "wipe back in time",
+  "at": 6.66,
+  "dur": 1.01,
+  "gain_db": -29
+ },
+ {
+  "name": "drop lands in dish",
+  "at": 7.99,
+  "dur": 0.054,
+  "gain_db": -27
+ },
+ {
+  "name": "dye blooms",
+  "at": 8.04,
+  "dur": 0.6,
+  "gain_db": -36
+ },
+ {
+  "name": "swab dips",
+  "at": 8.22,
+  "dur": 0.35,
+  "gain_db": -33
+ },
+ {
+  "name": "swab contact",
+  "at": 8.85,
+  "dur": 0.08,
+  "gain_db": -25
+ },
+ {
+  "name": "swab rubbing",
+  "at": 8.87,
+  "dur": 0.84,
+  "gain_db": -28
+ },
+ {
+  "name": "dive into the tissue",
+  "at": 9.18,
+  "dur": 1.1,
+  "gain_db": -27
+ },
+ {
+  "name": "light bends",
+  "at": 11.44,
+  "dur": 1.4,
+  "gain_db": -38
+ },
+ {
+  "name": "light scatters",
+  "at": 12.72,
+  "dur": 1.3,
+  "gain_db": -41
+ },
+ {
+  "name": "dye flows in",
+  "at": 15.25,
+  "dur": 1.6,
+  "gain_db": -31
+ },
+ {
+  "name": "dye enters",
+  "at": 15.4,
+  "dur": 1.8,
+  "gain_db": -38
+ },
+ {
+  "name": "rays settle",
+  "at": 17.26,
+  "dur": 1.6,
+  "gain_db": -38
+ },
+ {
+  "name": "pull out",
+  "at": 19.25,
+  "dur": 1.05,
+  "gain_db": -29
+ },
+ {
+  "name": "rinse squirt",
+  "at": 20.31,
+  "dur": 0.45,
+  "gain_db": -26
+ },
+ {
+  "name": "rinse trickle",
+  "at": 20.44,
+  "dur": 2.18,
+  "gain_db": -29
+ },
+ {
+  "name": "drip 1",
+  "at": 22.02,
+  "dur": 0.054,
+  "gain_db": -31
+ },
+ {
+  "name": "drip 2",
+  "at": 22.47,
+  "dur": 0.054,
+  "gain_db": -31
+ },
+ {
+  "name": "drip 3",
+  "at": 23.07,
+  "dur": 0.054,
+  "gain_db": -31
+ },
+ {
+  "name": "skin closes over",
+  "at": 21.74,
+  "dur": 1.6,
+  "gain_db": -43
+ },
+ {
+  "name": "loop brushing",
+  "at": 24.73,
+  "dur": 0.337,
+  "gain_db": -27
+ }
+]

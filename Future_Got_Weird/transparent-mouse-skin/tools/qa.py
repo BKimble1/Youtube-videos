@@ -4,7 +4,7 @@
 MP4's own audio compared with the locked script, the hook frames (0-3 s every 0.2 s) and milestone frames, and a
 phone-size sheet with an approximate Shorts UI overlay. (Adapted from Glass Climbing tools/qa.py; Whisper replaces
 Vosk, whose models cannot be downloaded here.)
-usage: python3 tools/qa.py <mp4> <whisper model dir> <out prefix>"""
+usage: python3 tools/qa.py <mp4> <whisper model dir> <out prefix> [mix wav, default the V1 mix]"""
 import json, os, re, subprocess, sys
 import numpy as np, soundfile as sf
 from PIL import Image, ImageDraw
@@ -35,7 +35,7 @@ R['freezes_ge_0.8s'] = re.findall(r'freeze_start: \S+', fd)
 # sync: the MP4's audio against the mix
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-ac', '1', '-ar', '48000', '-f', 'f32le', '-'], capture_output=True).stdout
 a = np.frombuffer(raw, np.float32).astype(np.float64)
-m, _ = sf.read(os.path.join(EP, 'audio/mix/FGW_Transparent_Mouse_Skin_V1_mix.wav')); m = m.mean(1)
+m, _ = sf.read(os.path.join(EP, sys.argv[4] if len(sys.argv) > 4 else 'audio/mix/FGW_Transparent_Mouse_Skin_V1_mix.wav')); m = m.mean(1)
 n = min(len(a), len(m), 48000 * 8)
 cc = np.fft.irfft(np.fft.rfft(a[:n], 2 * n) * np.conj(np.fft.rfft(m[:n], 2 * n)))
 lag = int(np.argmax(cc)); lag = lag - 2 * n if lag > n else lag

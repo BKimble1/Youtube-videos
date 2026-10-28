@@ -1,5 +1,23 @@
 # Future Got Weird: This Food Dye Makes Mouse Skin See-Through (Transparent Mouse Skin)
 
+## V2: hook and retention rebuild (review)
+
+**Status (28 Oct 2026):** `exports/FGW_Transparent_Mouse_Skin_V2_REVIEW_1080x1920.mp4` (1080×1920, 30 fps, 752 frames,
+25.067 s, −14.0 LUFS, −1.4 dBTP). Same locked narration and narrator take as V1, same story; rebuilt pictures: a hook
+that opens on organs already visible through the skin under a sweeping swab, a three-quarter view and a close view, the
+intact whole mouse, a wipe back to the method (food-colouring bottle, dish, swab), a dive into the tissue where the
+light bends, scatters and then straightens as the dye enters the water, a pull-out through the rinse, and a loop back
+into the opening sweep. **Not published, not uploaded; not watched in real time.**
+
+| | |
+|---|---|
+| Shot list | `production/V2_SHOTS_AND_TRANSITIONS.md` |
+| QA | `production/QA_REPORT.md` (V2 section), `production/qa_v2/` |
+| Mix | `audio/mix_v2/` (`tools/make_audio_v2.py`, cues in `audio/sfx_cues_v2.json`, beats in `audio/beats_v2.json` from `tools/export_beats_v2.ts`) |
+| Source | `source/src/v2/` (composition `MouseSkinV2`) |
+| Render | `cd source && npx remotion render src/index.ts MouseSkinV2 out.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4` (run `python3 tools/make_audio_v2.py` first: `source/public/audio/*.wav` is not committed) |
+| Sheets | `python3 tools/sheet_from_mp4.py <mp4> out.png "0,15,30,..."` |
+
 ## V1: first review version
 
 **Status (28 Oct 2026):** the V1 review and native 2160×3840 master were rendered from source and checked from the

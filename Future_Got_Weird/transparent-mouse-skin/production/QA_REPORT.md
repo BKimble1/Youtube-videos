@@ -97,3 +97,42 @@ There are no generated plates, so there is no plate resolution to document. See 
   slots are documented in `RUNWAY_NOTES.md`.
 - Dead Spider V6 and Cyborg Cockroach V5 are not in this repository and were not viewed.
 - The ray indices are exaggerated for legibility, and the section is a schematic (stated in `SOURCE_NOTES.md`).
+
+---
+
+# V2 (hook and retention rebuild): QA (28 Oct 2026)
+
+**Review version only. Nobody has watched or listened to V2 in real time either** (no playback in this session).
+Motion was judged from frame sheets of the rendered MP4 (`tools/sheet_from_mp4.py`) and a frame-difference scan.
+
+| Check | Result |
+|---|---|
+| File | `exports/FGW_Transparent_Mouse_Skin_V2_REVIEW_1080x1920.mp4`, 28 MB, H.264 High, 1080×1920, 30 fps, 752 frames, 25.067 s, yuv420p bt709; AAC 48 kHz stereo 320 kb/s |
+| Full decode | 0 errors |
+| Loudness (ffmpeg ebur128 on the MP4) | −14.0 LUFS integrated, LRA 6.7, true peak −1.4 dBFS |
+| Black segments / freezes ≥ 0.8 s | none / none |
+| Audio vs the V2 mix | 0.0 ms lag |
+| Narration | the same accepted take as V1, sample for sample (gain only); voice level and bed (18 LU under) as V1 |
+| Whisper small on the MP4's own audio | the script verbatim except "washed" heard as "wash" (WER 0.014), the same elision as V1 |
+| `tools/check_script.py` | pass (captions = script verbatim, SRT matches, no engagement prompts in any source file) |
+| Motion scan (`qa_v2/motion_scan_V2.json`) | one spike only, the planned cut at 5.13 s; longest low-motion stretch 0.86 s; loop seam difference 8.4 against a 5.4 median |
+| Hook sheet | `qa_v2/V2_hook_0-3s.png`: organs visible through intact skin from frame 0, the window growing each 0.2 s |
+| Phone UI overlay | `qa_v2/V2_phone_ui.png`: captions clear of the top and bottom UI bands and the right-hand buttons |
+
+Found and fixed during V2 QC:
+- the hook's wet film hid the organs (thinned); the swab was drawn about twice real size against the belly (rescaled);
+- the steep three-quarter view showed the bench plane's edge and the backdrop (extra over-scan for the bench, depth haze);
+- the dive into the skin looked past the plane's horizon (shallower dive);
+- the camera following a photon inside the tissue stuttered when the photon wrapped (replaced by a smooth descent along the rays);
+- the outside shot was nearly static for 1.8 s (now a descending push-in);
+- the pans to the dish and back to the skin were whip-fast (slower, overlapping the wipe and the swab's travel);
+- the exit from the tissue showed the micro world's bounds (now one continuous pull-out from deep on the organs);
+- the dye runoff on the pad read as a glow around the mouse (smaller, fainter, at the flanks).
+
+Not done or not possible:
+- The benchmark FGW Shorts named in the brief (the cockroach and laser-voices Shorts) are not in this repository or its
+  history, so V2 was not compared against them.
+- Runway plates are still blocked; V2 uses the vector bench and props.
+- No 4K master, clean version, cover or SRT revision was made for V2 (the brief asked for the review render). The
+  V1 SRT's text and timing still apply (same take, same captions).
+- Listen to: the effects level against the voice, the wipe whoosh, and the loop brushing running into frame 0.

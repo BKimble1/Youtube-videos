@@ -25,7 +25,7 @@ export const Bench: React.FC<{id: string; wetStain: number; dish?: boolean}> = (
           <rect x={150} y={250} width={780} height={1760} rx={36} />
         </clipPath>
       </defs>
-      <rect x={-900} y={-700} width={2880} height={3400} fill="#56677A" />
+      <rect x={-2400} y={-2600} width={5900} height={6800} fill="#56677A" />
       {/* bench seams */}
       <path d="M-900,240 L1980,240 M-900,2120 L1980,2120" stroke="#46566A" strokeWidth={6} />
       {Array.from({length: 40}, (_, i) => (

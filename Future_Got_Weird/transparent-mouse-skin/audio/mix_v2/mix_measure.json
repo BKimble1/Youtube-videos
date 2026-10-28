@@ -1,0 +1,9 @@
+{
+ "integrated_lufs_stereo": -14.05,
+ "sample_peak_dbfs": -1.5,
+ "voice_lufs_in_mix_stereo": -14.01,
+ "bed_to_voice_lu": -18.0,
+ "fx_peak_dbfs": -24.76,
+ "duration_s": 25.066666666666666,
+ "samples": 1203200
+}
