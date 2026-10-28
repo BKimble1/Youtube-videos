@@ -545,6 +545,11 @@
   "gain_db": -37.1
  },
  {
+  "t": 17.595,
+  "name": "caf\u00e9 through the glass, close",
+  "gain_db": -4.4
+ },
+ {
   "t": 17.888,
   "name": "footstep (pedestrian)",
   "gain_db": -23.5
@@ -558,16 +563,6 @@
   "t": 17.955,
   "name": "wifi packet",
   "gain_db": -37.1
- },
- {
-  "t": 17.965,
-  "name": "through the window",
-  "gain_db": -24.4
- },
- {
-  "t": 18.115,
-  "name": "caf\u00e9 inside (router, receiver, split screen)",
-  "gain_db": -1.4
  },
  {
   "t": 18.318,
@@ -598,6 +593,11 @@
   "t": 18.895,
   "name": "laptop rises (split)",
   "gain_db": -26.0
+ },
+ {
+  "t": 18.945,
+  "name": "street (split screen)",
+  "gain_db": -1.9
  },
  {
   "t": 19.215,
@@ -727,12 +727,12 @@
  {
   "t": 22.35,
   "name": "footstep (participant)",
-  "gain_db": -17.5
+  "gain_db": -19.2
  },
  {
   "t": 22.386,
   "name": "footstep (participant)",
-  "gain_db": -18.4
+  "gain_db": -17.7
  },
  {
   "t": 22.395,
@@ -742,12 +742,12 @@
  {
   "t": 22.776,
   "name": "footstep (participant)",
-  "gain_db": -18.3
+  "gain_db": -18.4
  },
  {
   "t": 22.85,
   "name": "footstep (participant)",
-  "gain_db": -18.8
+  "gain_db": -17.5
  },
  {
   "t": 23.03,
@@ -757,17 +757,17 @@
  {
   "t": 23.166,
   "name": "footstep (participant)",
-  "gain_db": -19.7
+  "gain_db": -18.3
  },
  {
   "t": 23.35,
   "name": "footstep (participant)",
-  "gain_db": -19.6
+  "gain_db": -18.8
  },
  {
   "t": 23.38,
   "name": "footstep (participant)",
-  "gain_db": -19.0
+  "gain_db": -19.5
  },
  {
   "t": 23.445,
@@ -777,12 +777,12 @@
  {
   "t": 23.556,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -19.7
  },
  {
   "t": 23.73,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -19.0
  },
  {
   "t": 23.85,
@@ -792,27 +792,27 @@
  {
   "t": 23.946,
   "name": "footstep (participant)",
-  "gain_db": -17.3
+  "gain_db": -19.2
  },
  {
   "t": 24.08,
   "name": "footstep (participant)",
-  "gain_db": -19.8
- },
- {
-  "t": 24.125,
-  "name": "push onto the screen",
-  "gain_db": -26.0
+  "gain_db": -19.2
  },
  {
   "t": 24.336,
   "name": "footstep (participant)",
-  "gain_db": -19.2
+  "gain_db": -17.3
  },
  {
   "t": 24.35,
   "name": "footstep (participant)",
-  "gain_db": -19.5
+  "gain_db": -19.6
+ },
+ {
+  "t": 24.375,
+  "name": "dissolve to the screen",
+  "gain_db": -30.5
  },
  {
   "t": 24.395,
@@ -822,7 +822,7 @@
  {
   "t": 24.43,
   "name": "footstep (participant)",
-  "gain_db": -18.9
+  "gain_db": -19.8
  },
  {
   "t": 24.475,
@@ -1145,6 +1145,11 @@
   "gain_db": -34.9
  },
  {
+  "t": 26.64,
+  "name": "into his tile (#12)",
+  "gain_db": -28.0
+ },
+ {
   "t": 26.647,
   "name": "tile matched",
   "gain_db": -34.9
@@ -1195,11 +1200,6 @@
   "gain_db": -34.9
  },
  {
-  "t": 26.82,
-  "name": "into his tile (#12)",
-  "gain_db": -24.4
- },
- {
   "t": 26.831,
   "name": "tile matched",
   "gain_db": -34.9
@@ -1225,29 +1225,24 @@
   "gain_db": -15.6
  },
  {
+  "t": 28.53,
+  "name": "caf\u00e9 through the glass (the receiver match)",
+  "gain_db": -4.4
+ },
+ {
   "t": 28.566,
   "name": "footstep (hero (past the caf\u00e9))",
   "gain_db": -16.2
  },
  {
-  "t": 28.71,
-  "name": "through the window (cutaway)",
-  "gain_db": -26.0
- },
- {
-  "t": 28.81,
-  "name": "caf\u00e9 inside (the receiver match)",
-  "gain_db": -0.9
- },
- {
   "t": 29.106,
-  "name": "footstep (hero (through the window))",
-  "gain_db": -22.0
+  "name": "footstep (hero (off screen, the camera at the window))",
+  "gain_db": -23.3
  },
  {
   "t": 29.646,
-  "name": "footstep (hero (through the window))",
-  "gain_db": -22.4
+  "name": "footstep (hero (off screen, the camera at the window))",
+  "gain_db": -23.7
  },
  {
   "t": 30.005,
@@ -1256,17 +1251,12 @@
  },
  {
   "t": 30.186,
-  "name": "footstep (hero (through the window))",
-  "gain_db": -20.4
+  "name": "footstep (hero (off screen, the camera at the window))",
+  "gain_db": -21.7
  },
  {
-  "t": 30.385,
-  "name": "out through the glass",
-  "gain_db": -26.0
- },
- {
-  "t": 30.435,
-  "name": "street (him unaware, the CCTV corner)",
+  "t": 30.235,
+  "name": "street (him unaware, the CCTV, the ending split)",
   "gain_db": 0.0
  },
  {
@@ -1295,29 +1285,14 @@
   "gain_db": -28.0
  },
  {
-  "t": 31.967,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -14.4
+  "t": 32.346,
+  "name": "footstep (hero (toward the CCTV))",
+  "gain_db": -15.6
  },
  {
-  "t": 32.2,
-  "name": "security camera servo",
-  "gain_db": -23.1
- },
- {
-  "t": 32.442,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -14.1
- },
- {
-  "t": 32.75,
-  "name": "security camera servo",
-  "gain_db": -24.4
- },
- {
-  "t": 32.917,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -15.7
+  "t": 32.886,
+  "name": "footstep (hero (toward the CCTV))",
+  "gain_db": -15.3
  },
  {
   "t": 33.0,
@@ -1325,49 +1300,34 @@
   "gain_db": -26.9
  },
  {
-  "t": 33.392,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -15.4
+  "t": 33.426,
+  "name": "footstep (hero (in the CCTV picture))",
+  "gain_db": -20.7
  },
  {
-  "t": 33.867,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -13.2
+  "t": 33.966,
+  "name": "footstep (hero (in the CCTV picture))",
+  "gain_db": -20.4
  },
  {
-  "t": 34.22,
-  "name": "off the camera picture",
+  "t": 34.39,
+  "name": "laptop rises (ending split)",
   "gain_db": -26.0
  },
  {
-  "t": 34.3,
-  "name": "caf\u00e9 inside (the receiver, no camera)",
-  "gain_db": -1.9
- },
- {
-  "t": 34.3,
+  "t": 34.44,
   "name": "router packet",
   "gain_db": -34.9
  },
  {
-  "t": 34.342,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -13.6
+  "t": 34.506,
+  "name": "footstep (hero (in the CCTV picture))",
+  "gain_db": -18.2
  },
  {
-  "t": 34.51,
+  "t": 34.65,
   "name": "router packet",
   "gain_db": -34.9
- },
- {
-  "t": 34.72,
-  "name": "router packet",
-  "gain_db": -34.9
- },
- {
-  "t": 34.817,
-  "name": "footstep (hero (CCTV corner))",
-  "gain_db": -13.6
  },
  {
   "t": 34.82,
@@ -1375,14 +1335,19 @@
   "gain_db": -24.4
  },
  {
-  "t": 34.93,
+  "t": 34.86,
   "name": "router packet",
   "gain_db": -34.9
  },
  {
-  "t": 34.99,
-  "name": "screen to screen",
-  "gain_db": -26.0
+  "t": 35.046,
+  "name": "footstep (hero (in the CCTV picture))",
+  "gain_db": -18.6
+ },
+ {
+  "t": 35.24,
+  "name": "dissolve to the lab",
+  "gain_db": -29.1
  },
  {
   "t": 35.29,

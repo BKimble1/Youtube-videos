@@ -1,5 +1,29 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V6 (cinematic stability and character rig pass)
+
+**Status (28 Oct 2026):** V6 review rendered and checked from the file. **Not published.** It keeps V5's narration,
+voice, subtitles, story order, runtime and characters, with steadier cameras:
+- **Camera motion:** mean camera motion is down from 15.3 to 3.85 px per frame, and frames moving 15 px or more are
+  down from 409 to 42.
+- **Café geometry:** every café shot is from the street side, so he always walks screen-left.
+- **Street CCTV:** a fixed camera on the lamp post.
+- **Ending:** the camera and Wi-Fi comparison shares one frame, then a still, seamless return to frame 0.
+- **Eyes:** glances are eased.
+
+Remaining known defects are listed at the end of the change log.
+
+| Deliverable | File |
+|---|---|
+| V6 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V6_REVIEW_1080x1920.mp4` |
+| Change log and remaining defects | `production/V6_CHANGELOG.md` |
+| Source (V6 scenes) | `source/src/v6/` (joins in `source/src/Film.tsx`) |
+| Camera, face and rig probes, measured QA | `qa/v6/` (`tools/v6/cam_probe.ts`, `face_probe.ts`, `rig_probe6.ts`, `pop_scan.py`) |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V6_mix.wav`, `audio/v6_events.json` (`tools/v6/events.ts`, `tools/v6/make_audio6.py`) |
+| Stills | `stills/FGW_WiFi_V6_*.png` |
+
+`source/` now builds V6. V4's and V5's scene code stay in `source/src/v4/` and `source/src/v5/`.
+
 ## V5 (targeted final revision)
 
 **Status (28 Oct 2026):** V5 review rendered and checked from the file. **Not published.** It keeps the same
@@ -25,8 +49,7 @@ narration, voice, captions, story order, ending question and runtime as V4. The 
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V5_mix.wav`, `audio/v5_events.json` (`tools/v5/events.ts`, `tools/v5/make_audio5.py`) |
 | Stills | `stills/FGW_WiFi_V5_*.png` |
 
-`source/` now builds V5. V4's scene code stays in `source/src/v4/` (to build it, point `Film.tsx`'s imports back at
-it).
+V5's scene code is in `source/src/v5/` (to build it, point `Film.tsx`'s imports back at it).
 
 ## V4 (polish pass)
 
