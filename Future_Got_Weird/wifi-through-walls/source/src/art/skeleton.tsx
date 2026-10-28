@@ -69,7 +69,8 @@ export const mapKP = (kp: Record<KPName, Pt>, fn: (p: Pt) => Pt) => Object.fromE
  *  same mannequin for anyone. `m`: px per metre; `a(L)`: a limb's opacity (0..1, e.g. while it is being built). The far
  *  (right, cyan) side is drawn first, then the torso, then the near (left, yellow) side. */
 const THICK: Record<string, number> = {'lsh-lel': 0.095, 'rsh-rel': 0.095, 'lel-lwr': 0.075, 'rel-rwr': 0.075, 'lhip-lkn': 0.15, 'rhip-rkn': 0.15, 'lkn-lan': 0.105, 'rkn-ran': 0.105, 'neck-head': 0.07};
-export const BodyGlow: React.FC<{kp: Record<KPName, Pt>; m: number; a?: (L: (typeof LIMBS)[number]) => number; head?: number; torso?: number; boost?: number}> = ({kp, m, a = () => 1, head = 1, torso = 1, boost = 0}) => {
+/** `soft` (V10): scales the broad glow (1 = V9; 0.8 = a fifth less halo, the cores unchanged) */
+export const BodyGlow: React.FC<{kp: Record<KPName, Pt>; m: number; a?: (L: (typeof LIMBS)[number]) => number; head?: number; torso?: number; boost?: number; soft?: number}> = ({kp, m, a = () => 1, head = 1, torso = 1, boost = 0, soft = 1}) => {
   const vol = (L: (typeof LIMBS)[number], i: number) => {
     const th = THICK[`${L.a}-${L.b}`];
     if (!th) return null;
@@ -78,8 +79,8 @@ export const BodyGlow: React.FC<{kp: Record<KPName, Pt>; m: number; a?: (L: (typ
     const col = L.side === 'r' ? '#3FC7F0' : L.side === 'l' ? '#F2C23A' : '#9EEBFF';
     return (
       <g key={`v${i}`} opacity={o}>
-        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m * 1.5)} strokeLinecap="round" opacity={0.16 + 0.1 * boost} />
-        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m)} strokeLinecap="round" opacity={0.42 + 0.2 * boost} />
+        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m * 1.5 * soft)} strokeLinecap="round" opacity={(0.16 + 0.1 * boost) * soft} />
+        <line x1={f1(A.x)} y1={f1(A.y)} x2={f1(Bp.x)} y2={f1(Bp.y)} stroke={col} strokeWidth={f1(th * m)} strokeLinecap="round" opacity={(0.42 + 0.2 * boost) * (0.5 + 0.5 * soft)} />
       </g>
     );
   };
@@ -95,14 +96,14 @@ export const BodyGlow: React.FC<{kp: Record<KPName, Pt>; m: number; a?: (L: (typ
       {far}
       {torso > 0 && (
         <g opacity={torso}>
-          <polygon points={tp} fill="#7FDFFF" stroke="#7FDFFF" strokeWidth={f1(0.13 * m)} strokeLinejoin="round" opacity={0.3 + 0.12 * boost} />
+          <polygon points={tp} fill="#7FDFFF" stroke="#7FDFFF" strokeWidth={f1(0.13 * m)} strokeLinejoin="round" opacity={(0.3 + 0.12 * boost) * (0.5 + 0.5 * soft)} />
           <line x1={f1(kp.neck.x)} y1={f1(kp.neck.y)} x2={f1(H.x)} y2={f1(H.y)} stroke="#9EEBFF" strokeWidth={f1(0.07 * m)} strokeLinecap="round" opacity={0.4} />
         </g>
       )}
       {near}
       {head > 0 && (
         <g opacity={head}>
-          <circle cx={f1(H.x)} cy={f1(H.y)} r={f1(hr * 1.35)} fill="#BFF4FF" opacity={0.14 + 0.1 * boost} />
+          <circle cx={f1(H.x)} cy={f1(H.y)} r={f1(hr * (1 + 0.35 * soft))} fill="#BFF4FF" opacity={(0.14 + 0.1 * boost) * soft} />
           <circle cx={f1(H.x)} cy={f1(H.y)} r={f1(hr)} fill="#9EEBFF" opacity={0.38 + 0.15 * boost} stroke="#E8FCFF" strokeWidth={f1(Math.max(2, 0.012 * m))} strokeOpacity={0.8} />
         </g>
       )}

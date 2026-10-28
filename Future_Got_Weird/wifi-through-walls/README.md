@@ -1,5 +1,21 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V10 (final polish)
+
+**Status (28 Oct 2026):** final, rendered natively at 1080×1920, 30 fps, and checked from the file. It is V9 with three
+targeted changes: the opening gesture starts at 0.22 s with the skeleton in exact sync, the skeleton's glow is about
+20% softer with stronger caption backing, and the downward movement now runs continuously across the replay cut.
+
+| Deliverable | File |
+|---|---|
+| **V10 final:** 1080×1920, 30 fps, 1094 frames, 36.48 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V10_FINAL_1080x1920.mp4` |
+| Change log, checks | `production/V10_CHANGELOG.md` |
+| Editable source | `source/src/v10/` (joins in `source/src/Film.tsx`) |
+| QA, mix, timing | `qa/v10/`, `audio/mix/FGW_WiFi_Walls_V10_mix.wav`, `audio/v10_events.json` (`tools/v10/*`) |
+| Stills | `stills/FGW_WiFi_V10_*.png` |
+
+`source/` now builds V10. V4–V9's scene code stays in `source/src/v4/` to `v9/`.
+
 ## V9 (first-three-seconds and clarity pass)
 
 **Status (28 Oct 2026):** V9 review rendered natively at 1080×1920, 30 fps, and checked from the file. **Not published;
@@ -26,7 +42,7 @@ Remaining limitations are listed at the end of the change log.
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V9_mix.wav`, `audio/v9_events.json` (`tools/v9/events.ts`, `tools/v9/make_audio9.py`) |
 | Stills | `stills/FGW_WiFi_V9_*.png` |
 
-`source/` now builds V9. V4–V8's scene code stays in `source/src/v4/` to `v8/`.
+V9's scene code is in `source/src/v9/`.
 
 ## V8 (targeted visual polish)
 

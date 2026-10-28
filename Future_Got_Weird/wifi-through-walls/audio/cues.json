@@ -5,39 +5,39 @@
   "gain_db": -21.9
  },
  {
-  "t": 0.42,
+  "t": 0.3,
   "name": "arms over his head (sleeves, a rush)",
   "gain_db": -20.9
  },
  {
-  "t": 0.5,
+  "t": 0.36,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 0.78,
+  "t": 0.62,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 1.35,
+  "t": 1.2,
   "name": "pulls into a ball (clothes)",
   "gain_db": -26.0
  },
  {
-  "t": 1.45,
+  "t": 1.25,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 1.62,
+  "t": 1.5,
   "name": "footstep (lab)",
   "gain_db": -13.3
  },
  {
-  "t": 1.681,
-  "name": "echo received (soft)",
-  "gain_db": -34.9
+  "t": 1.68,
+  "name": "footstep (lab)",
+  "gain_db": -13.1
  },
  {
   "t": 1.7,
@@ -45,17 +45,17 @@
   "gain_db": -34.0
  },
  {
-  "t": 1.819,
+  "t": 1.722,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 1.804,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
   "t": 1.82,
-  "name": "footstep (lab)",
-  "gain_db": -13.1
- },
- {
-  "t": 1.98,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
@@ -65,14 +65,14 @@
   "gain_db": -34.0
  },
  {
+  "t": 2.093,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
   "t": 2.1,
   "name": "joint locks",
   "gain_db": -37.1
- },
- {
-  "t": 2.106,
-  "name": "echo received (soft)",
-  "gain_db": -34.9
  },
  {
   "t": 2.135,
@@ -80,7 +80,7 @@
   "gain_db": -37.1
  },
  {
-  "t": 2.167,
+  "t": 2.149,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -140,7 +140,7 @@
   "gain_db": -37.1
  },
  {
-  "t": 2.442,
+  "t": 2.438,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -155,7 +155,7 @@
   "gain_db": -37.1
  },
  {
-  "t": 2.508,
+  "t": 2.489,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -180,12 +180,12 @@
   "gain_db": -28.0
  },
  {
-  "t": 2.772,
+  "t": 2.761,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
-  "t": 2.849,
+  "t": 2.831,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -215,7 +215,7 @@
   "gain_db": -29.9
  },
  {
-  "t": 5.413,
+  "t": 5.403,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -260,7 +260,7 @@
   "gain_db": -34.0
  },
  {
-  "t": 6.29,
+  "t": 6.289,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -1255,14 +1255,14 @@
   "gain_db": -34.9
  },
  {
-  "t": 35.217,
-  "name": "the duck (clothes, a rush)",
-  "gain_db": -23.1
- },
- {
   "t": 35.28,
   "name": "router packet",
   "gain_db": -34.9
+ },
+ {
+  "t": 35.417,
+  "name": "the duck (clothes, a rush)",
+  "gain_db": -23.1
  },
  {
   "t": 35.49,

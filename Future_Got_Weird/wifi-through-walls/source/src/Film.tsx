@@ -6,12 +6,12 @@ import './fonts';
 import {clamp, FPS, IdCtx, ss, useUid, word} from './lib';
 import {Captions} from './Captions';
 import {capY} from './captions';
-import {LAB_OUT, LabScene, LB, labSil} from './v9/Lab9';
-import {LAB_IN} from './v9/hero9';
-import {cafeCam, CafeScene4, cafeSil, CF, E_OUT, G_BACK, G_IN, heroSteps, heroStepsG, heroX, OR_SPLIT, POV_IN, povCam, rxCam, splitCam, UI_IN, UI_OUT} from './v9/Cafe9';
-import {StudyScene4} from './v9/Study9';
-import {CafeSplitUI, ReturnUI, SPLIT_Y} from './v9/ui';
-import {LAMPS, PATH_Z, RXANT} from './v9/cafeSet9';
+import {LAB_OUT, LabScene, LB, labSil} from './v10/Lab10';
+import {LAB_IN} from './v10/hero10';
+import {cafeCam, CafeScene4, cafeSil, CF, E_OUT, G_BACK, G_IN, heroSteps, heroStepsG, heroX, OR_SPLIT, POV_IN, povCam, rxCam, splitCam, UI_IN, UI_OUT} from './v10/Cafe10';
+import {StudyScene4} from './v10/Study10';
+import {CafeSplitUI, ReturnUI, SPLIT_Y} from './v10/ui';
+import {LAMPS, PATH_Z, RXANT} from './v10/cafeSet10';
 import {Person} from './art/person';
 import {BodyGlow, keypoints, LIMBS, COL} from './art/skeleton';
 import {lerpPose} from './dc/Man';
@@ -50,11 +50,11 @@ const Silhouette: React.FC<{t: number}> = ({t}) => {
   return (
     <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: a}}>
       {/* V9: the same generic glowing body as on the screen */}
-      <BodyGlow kp={M} m={cd.k * 600} />
+      <BodyGlow kp={M} m={cd.k * 600} soft={0.8} />
       <g style={{mixBlendMode: 'screen'}}>
         {LIMBS.map((L, i) => {
           const A = S(kp[L.a]), Bp = S(kp[L.b]);
-          return <line key={`g${i}`} x1={A.x} y1={A.y} x2={Bp.x} y2={Bp.y} stroke={COL[L.side]} strokeWidth={w * 3} strokeLinecap="round" opacity={0.3} />;
+          return <line key={`g${i}`} x1={A.x} y1={A.y} x2={Bp.x} y2={Bp.y} stroke={COL[L.side]} strokeWidth={w * 2.5} strokeLinecap="round" opacity={0.24} />;
         })}
       </g>
       {LIMBS.map((L, i) => {
