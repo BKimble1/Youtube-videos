@@ -1,0 +1,85 @@
+{
+ "file": "exports/FGW_Robot_Metabolism_V1_REVIEW_1080x1920.mp4",
+ "bytes": 17218104,
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "r_frame_rate": "30/1",
+  "nb_read_frames": "771",
+  "duration": "25.700000"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "256953",
+  "duration": "25.700000"
+ },
+ "format_duration": "25.700000",
+ "full_decode_errors": [],
+ "black": [],
+ "freeze": [],
+ "loudness": {
+  "integrated_lufs": -14.6,
+  "true_peak_dbfs": -2.6
+ },
+ "audio_lag_ms_vs_mix": 0.0,
+ "continuity": {
+  "median_frame_diff": 4.33,
+  "planned_cuts": [
+   235,
+   286,
+   449,
+   513
+  ],
+  "off_cut_spikes": [
+   [
+    269,
+    17.87
+   ],
+   [
+    270,
+    18.62
+   ],
+   [
+    271,
+    19.56
+   ],
+   [
+    272,
+    20.41
+   ],
+   [
+    273,
+    20.13
+   ],
+   [
+    274,
+    20.51
+   ],
+   [
+    275,
+    20.28
+   ],
+   [
+    276,
+    19.7
+   ],
+   [
+    277,
+    18.89
+   ]
+  ]
+ },
+ "captions": {
+  "phrases": 17,
+  "caption_words_equal_locked": true,
+  "srt_words_equal_locked": true,
+  "caption_text_exact": true,
+  "max_lead_s": 0.04
+ }
+}

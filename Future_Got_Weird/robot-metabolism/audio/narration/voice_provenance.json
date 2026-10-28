@@ -1,0 +1,71 @@
+{
+ "status": "Final narration: the channel narrator, one take, verified word for word by an independent recogniser.",
+ "provider": "ElevenLabs (restricted MCP connector; api.elevenlabs.io itself is not reachable from this container)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 28 Oct 2026 returned this id (category generated, 'Test Voice For Youtube.'); same id as Glass Climbing V6 and Robot Faces"
+ },
+ "model_id": "eleven_v4",
+ "why_model": "the configuration of the latest approved FGW narrations (Glass Climbing V6, Robot Faces); eleven_v4 takes delivery direction as inline audio tags, the connector's documented direction mechanism",
+ "voice_settings": "connector defaults (no stored-voice change; the connector exposes no speed control for eleven_v4)",
+ "prompt_sent": "[confident, conversational, brisk] This robot uses other robots as spare body parts. It’s built from motorized rods that stretch and shrink, with magnets at their ends. A person controls the movements, guiding another rod into place. Once it connects, that extra piece becomes a walking stick, helping the robot move faster downhill. And if a part stops working, it can drop it and attach a replacement. [slightly unsettling] So that broken robot beside it… could become its next body part.",
+ "note_on_prompt": "The two bracketed tags are eleven_v4 delivery directions and are not spoken (confirmed by the Scribe transcript). The spoken words are production/NARRATION_LOCKED.txt verbatim; the line break inside the last sentence was sent as a space.",
+ "flow_id": "1vUFgqKtS880IKjoZp7d",
+ "date": "2026-10-28",
+ "output_format": "MP3 44.1 kHz mono 128 kb/s: the only format the connector returns. The 48 kHz/24-bit WAV is an editing conversion and adds no information.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_sFSG.mp3",
+   "generation_id": "sFSGtyouI0ubSii0lWiV",
+   "session_id": "8wfPiyJEdaW0rRDyR3oL",
+   "credits": 489.95,
+   "sha256": "1e789251731807b2375eaa59c8bc85c9bf8db8642053966c604388be2435304c",
+   "duration_s": 25.234,
+   "chosen": true,
+   "why": "first and only take: 180 wpm, every word correct (Scribe), no direction spoken, natural sentence links; no second take needed"
+  }
+ ],
+ "edits": {
+  "tool": "tools/make_narration.py",
+  "lead_cut_s": 0.03,
+  "removed_silence_raw_s": [
+   [
+    23.27,
+    23.39
+   ]
+  ],
+  "what": "30 ms of empty lead-in removed; 0.12 s removed from the middle of the digital silence after 'beside it…' (10 ms crossfades), leaving a ~0.28 s gap word-end to word-start (~0.2 s of true silence). No word cut; no time-stretch or pitch change.",
+  "tail_s": 0.8
+ },
+ "final": {
+  "file": "audio/narration/FGW_Robot_Metabolism_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono",
+  "measured_duration_s": 25.7,
+  "frames_at_30fps": 771,
+  "speech_s": [
+   0.0,
+   24.89
+  ],
+  "wpm": 180.9,
+  "sha256": "a39ecdf85bd61f0ae1242a6f1b3469615be3f41ff5c4761df1df5b480c43afb2",
+  "word_timing": "PocketSphinx forced alignment of the edited file with onset correction (tools/align.py) -> audio/narration/words_V1.json -> source/src/data/timeline.json; cross-checked against Scribe word times (below)"
+ },
+ "verification": {
+  "scribe": {
+   "model": "eleven_scribe_v1",
+   "run_on": "the final edited WAV (asset IS60ePmhxE7Du2axU8P7)",
+   "generation_id": "AaWbcgfqNLQNKeMcIJqn",
+   "credits": 141.35,
+   "transcript": "This robot uses other robots as spare body parts. It's built from motorized rods that stretch and shrink with magnets at their ends. A person controls the movements, guiding another rod into place. Once it connects, that extra piece becomes a walking stick, helping the robot move faster downhill. And if a part stops working, it can drop it and attach a replacement. So that broken robot beside it could become its next body part",
+   "word_count": 75,
+   "diffs_vs_locked": [],
+   "result": "exact word match (75/75)"
+  },
+  "pocketsphinx_free_recognition": {
+   "wer": 0.267,
+   "note": "small bundled model; useful only as a rough cross-check"
+  },
+  "listening": "not possible: this container has no audio playback"
+ }
+}

@@ -1,0 +1,554 @@
+{
+ "fps": 30,
+ "frames": 771,
+ "duration": 25.7,
+ "captions": [
+  {
+   "text": "This robot uses other robots",
+   "emph": [
+    "other",
+    "robots"
+   ],
+   "start": 0.0,
+   "end": 1.77,
+   "w0": 0,
+   "show": 0,
+   "hide": 1.73
+  },
+  {
+   "text": "as spare body parts.",
+   "emph": [
+    "spare",
+    "body",
+    "parts"
+   ],
+   "start": 1.77,
+   "end": 2.96,
+   "w0": 5,
+   "show": 1.73,
+   "hide": 3.24
+  },
+  {
+   "text": "It\u2019s built from motorized rods",
+   "emph": [],
+   "start": 3.28,
+   "end": 4.76,
+   "w0": 9,
+   "show": 3.24,
+   "hide": 4.73
+  },
+  {
+   "text": "that stretch and shrink,",
+   "emph": [],
+   "start": 4.77,
+   "end": 5.99,
+   "w0": 14,
+   "show": 4.73,
+   "hide": 6.18
+  },
+  {
+   "text": "with magnets at their ends.",
+   "emph": [
+    "magnets"
+   ],
+   "start": 6.22,
+   "end": 7.43,
+   "w0": 18,
+   "show": 6.18,
+   "hide": 7.84
+  },
+  {
+   "text": "A person controls the movements,",
+   "emph": [],
+   "start": 7.88,
+   "end": 9.38,
+   "w0": 23,
+   "show": 7.84,
+   "hide": 9.48
+  },
+  {
+   "text": "guiding another rod into place.",
+   "emph": [],
+   "start": 9.52,
+   "end": 11.08,
+   "w0": 28,
+   "show": 9.48,
+   "hide": 11.52
+  },
+  {
+   "text": "Once it connects,",
+   "emph": [],
+   "start": 11.56,
+   "end": 12.29,
+   "w0": 33,
+   "show": 11.52,
+   "hide": 12.51
+  },
+  {
+   "text": "that extra piece",
+   "emph": [],
+   "start": 12.55,
+   "end": 13.29,
+   "w0": 36,
+   "show": 12.51,
+   "hide": 13.25
+  },
+  {
+   "text": "becomes a walking stick,",
+   "emph": [
+    "walking",
+    "stick"
+   ],
+   "start": 13.29,
+   "end": 14.41,
+   "w0": 39,
+   "show": 13.25,
+   "hide": 14.61
+  },
+  {
+   "text": "helping the robot",
+   "emph": [],
+   "start": 14.65,
+   "end": 15.37,
+   "w0": 43,
+   "show": 14.61,
+   "hide": 15.33
+  },
+  {
+   "text": "move faster downhill.",
+   "emph": [],
+   "start": 15.37,
+   "end": 16.55,
+   "w0": 46,
+   "show": 15.33,
+   "hide": 17.05
+  },
+  {
+   "text": "And if a part stops working,",
+   "emph": [],
+   "start": 17.09,
+   "end": 18.26,
+   "w0": 49,
+   "show": 17.05,
+   "hide": 18.48
+  },
+  {
+   "text": "it can drop it",
+   "emph": [],
+   "start": 18.52,
+   "end": 19.18,
+   "w0": 55,
+   "show": 18.48,
+   "hide": 19.2
+  },
+  {
+   "text": "and attach a replacement.",
+   "emph": [
+    "replacement"
+   ],
+   "start": 19.24,
+   "end": 20.34,
+   "w0": 59,
+   "show": 19.2,
+   "hide": 20.8
+  },
+  {
+   "text": "So that broken robot beside it\u2026",
+   "emph": [],
+   "start": 20.84,
+   "end": 23.02,
+   "w0": 63,
+   "show": 20.8,
+   "hide": 23.26
+  },
+  {
+   "text": "could become its next body part.",
+   "emph": [
+    "body",
+    "part"
+   ],
+   "start": 23.3,
+   "end": 24.89,
+   "w0": 69,
+   "show": 23.26,
+   "hide": 25.24
+  }
+ ],
+ "words": [
+  {
+   "word": "this",
+   "start": 0.0,
+   "end": 0.26
+  },
+  {
+   "word": "robot",
+   "start": 0.26,
+   "end": 0.67
+  },
+  {
+   "word": "uses",
+   "start": 0.67,
+   "end": 1.02
+  },
+  {
+   "word": "other",
+   "start": 1.02,
+   "end": 1.32
+  },
+  {
+   "word": "robots",
+   "start": 1.32,
+   "end": 1.77
+  },
+  {
+   "word": "as",
+   "start": 1.77,
+   "end": 1.87
+  },
+  {
+   "word": "spare",
+   "start": 1.87,
+   "end": 2.18
+  },
+  {
+   "word": "body",
+   "start": 2.18,
+   "end": 2.5
+  },
+  {
+   "word": "parts",
+   "start": 2.5,
+   "end": 2.96
+  },
+  {
+   "word": "it's",
+   "start": 3.28,
+   "end": 3.42
+  },
+  {
+   "word": "built",
+   "start": 3.42,
+   "end": 3.62
+  },
+  {
+   "word": "from",
+   "start": 3.67,
+   "end": 3.83
+  },
+  {
+   "word": "motorized",
+   "start": 3.83,
+   "end": 4.38
+  },
+  {
+   "word": "rods",
+   "start": 4.39,
+   "end": 4.76
+  },
+  {
+   "word": "that",
+   "start": 4.77,
+   "end": 4.88
+  },
+  {
+   "word": "stretch",
+   "start": 4.92,
+   "end": 5.41
+  },
+  {
+   "word": "and",
+   "start": 5.41,
+   "end": 5.55
+  },
+  {
+   "word": "shrink",
+   "start": 5.55,
+   "end": 5.99
+  },
+  {
+   "word": "with",
+   "start": 6.22,
+   "end": 6.32
+  },
+  {
+   "word": "magnets",
+   "start": 6.34,
+   "end": 6.82
+  },
+  {
+   "word": "at",
+   "start": 6.82,
+   "end": 6.91
+  },
+  {
+   "word": "their",
+   "start": 6.93,
+   "end": 7.09
+  },
+  {
+   "word": "ends",
+   "start": 7.09,
+   "end": 7.43
+  },
+  {
+   "word": "a",
+   "start": 7.88,
+   "end": 7.93
+  },
+  {
+   "word": "person",
+   "start": 7.93,
+   "end": 8.3
+  },
+  {
+   "word": "controls",
+   "start": 8.3,
+   "end": 8.76
+  },
+  {
+   "word": "the",
+   "start": 8.77,
+   "end": 8.85
+  },
+  {
+   "word": "movements",
+   "start": 8.85,
+   "end": 9.38
+  },
+  {
+   "word": "guiding",
+   "start": 9.52,
+   "end": 9.85
+  },
+  {
+   "word": "another",
+   "start": 9.85,
+   "end": 10.18
+  },
+  {
+   "word": "rod",
+   "start": 10.18,
+   "end": 10.43
+  },
+  {
+   "word": "into",
+   "start": 10.43,
+   "end": 10.61
+  },
+  {
+   "word": "place",
+   "start": 10.61,
+   "end": 11.08
+  },
+  {
+   "word": "once",
+   "start": 11.56,
+   "end": 11.74
+  },
+  {
+   "word": "it",
+   "start": 11.74,
+   "end": 11.81
+  },
+  {
+   "word": "connects",
+   "start": 11.82,
+   "end": 12.29
+  },
+  {
+   "word": "that",
+   "start": 12.55,
+   "end": 12.7
+  },
+  {
+   "word": "extra",
+   "start": 12.7,
+   "end": 13.03
+  },
+  {
+   "word": "piece",
+   "start": 13.03,
+   "end": 13.29
+  },
+  {
+   "word": "becomes",
+   "start": 13.29,
+   "end": 13.61
+  },
+  {
+   "word": "a",
+   "start": 13.61,
+   "end": 13.64
+  },
+  {
+   "word": "walking",
+   "start": 13.64,
+   "end": 14.09
+  },
+  {
+   "word": "stick",
+   "start": 14.09,
+   "end": 14.41
+  },
+  {
+   "word": "helping",
+   "start": 14.65,
+   "end": 14.93
+  },
+  {
+   "word": "the",
+   "start": 14.93,
+   "end": 15.0
+  },
+  {
+   "word": "robot",
+   "start": 15.0,
+   "end": 15.37
+  },
+  {
+   "word": "move",
+   "start": 15.37,
+   "end": 15.56
+  },
+  {
+   "word": "faster",
+   "start": 15.56,
+   "end": 16.05
+  },
+  {
+   "word": "downhill",
+   "start": 16.05,
+   "end": 16.55
+  },
+  {
+   "word": "and",
+   "start": 17.09,
+   "end": 17.17
+  },
+  {
+   "word": "if",
+   "start": 17.17,
+   "end": 17.25
+  },
+  {
+   "word": "a",
+   "start": 17.25,
+   "end": 17.3
+  },
+  {
+   "word": "part",
+   "start": 17.3,
+   "end": 17.54
+  },
+  {
+   "word": "stops",
+   "start": 17.55,
+   "end": 17.84
+  },
+  {
+   "word": "working",
+   "start": 17.84,
+   "end": 18.26
+  },
+  {
+   "word": "it",
+   "start": 18.52,
+   "end": 18.59
+  },
+  {
+   "word": "can",
+   "start": 18.6,
+   "end": 18.73
+  },
+  {
+   "word": "drop",
+   "start": 18.74,
+   "end": 19.01
+  },
+  {
+   "word": "it",
+   "start": 19.06,
+   "end": 19.18
+  },
+  {
+   "word": "and",
+   "start": 19.24,
+   "end": 19.34
+  },
+  {
+   "word": "attach",
+   "start": 19.34,
+   "end": 19.67
+  },
+  {
+   "word": "a",
+   "start": 19.67,
+   "end": 19.7
+  },
+  {
+   "word": "replacement",
+   "start": 19.7,
+   "end": 20.34
+  },
+  {
+   "word": "so",
+   "start": 20.84,
+   "end": 21.29
+  },
+  {
+   "word": "that",
+   "start": 21.29,
+   "end": 21.48
+  },
+  {
+   "word": "broken",
+   "start": 21.48,
+   "end": 21.89
+  },
+  {
+   "word": "robot",
+   "start": 21.89,
+   "end": 22.33
+  },
+  {
+   "word": "beside",
+   "start": 22.35,
+   "end": 22.82
+  },
+  {
+   "word": "it",
+   "start": 22.82,
+   "end": 23.02
+  },
+  {
+   "word": "could",
+   "start": 23.3,
+   "end": 23.53
+  },
+  {
+   "word": "become",
+   "start": 23.53,
+   "end": 23.83
+  },
+  {
+   "word": "its",
+   "start": 23.83,
+   "end": 23.98
+  },
+  {
+   "word": "next",
+   "start": 23.98,
+   "end": 24.2
+  },
+  {
+   "word": "body",
+   "start": 24.26,
+   "end": 24.55
+  },
+  {
+   "word": "part",
+   "start": 24.55,
+   "end": 24.89
+  }
+ ]
+}

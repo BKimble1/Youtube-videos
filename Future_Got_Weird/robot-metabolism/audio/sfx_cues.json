@@ -1,0 +1,255 @@
+[
+ {
+  "name": "motors: whir following the measured link activity (module X, body T, replacement R, comparison P)",
+  "at": 0,
+  "gain_db": -26
+ },
+ {
+  "name": "CONNECT: the module snaps onto the robot (magnetic contact)",
+  "at": 2.005,
+  "frame": 60.2,
+  "dur": 0.1,
+  "gain_db": -16,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: the replacement snaps on (magnetic contact)",
+  "at": 19.895,
+  "frame": 596.9,
+  "dur": 0.1,
+  "gain_db": -16,
+  "hero": true
+ },
+ {
+  "name": "the connector cut-away opens (air, faint)",
+  "at": 6.19,
+  "frame": 185.7,
+  "dur": 0.5,
+  "gain_db": -44,
+  "hero": false
+ },
+ {
+  "name": "the cut-away closes (air, faint)",
+  "at": 7.38,
+  "frame": 221.4,
+  "dur": 0.4,
+  "gain_db": -46,
+  "hero": false
+ },
+ {
+  "name": "a key press",
+  "at": 8.41,
+  "frame": 252.3,
+  "dur": 0.06,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "a key press",
+  "at": 8.99,
+  "frame": 269.7,
+  "dur": 0.06,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "a key press",
+  "at": 9.39,
+  "frame": 281.7,
+  "dur": 0.06,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "weight settles onto the stick (creak)",
+  "at": 11.76,
+  "frame": 352.8,
+  "dur": 0.25,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "FAIL: the module's motor winds down",
+  "at": 17.68,
+  "frame": 530.4,
+  "dur": 0.6,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "the dead module settles flat on the mat",
+  "at": 18.84,
+  "frame": 565.2,
+  "dur": 0.2,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "the connector lets go (soft un-click)",
+  "at": 18.9,
+  "frame": 567.0,
+  "dur": 0.12,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 15.533,
+  "frame": 466.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.0,
+  "frame": 480.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.467,
+  "frame": 494.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.933,
+  "frame": 508.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 21.067,
+  "frame": 632.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 21.733,
+  "frame": 652.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 22.367,
+  "frame": 671.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 2.433,
+  "frame": 73.0,
+  "dur": 0.433,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 4.033,
+  "frame": 121.0,
+  "dur": 0.633,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 4.9,
+  "frame": 147.0,
+  "dur": 0.367,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 5.533,
+  "frame": 166.0,
+  "dur": 0.4,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 13.833,
+  "frame": 415.0,
+  "dur": 0.4,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 15.367,
+  "frame": 461.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 15.833,
+  "frame": 475.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.3,
+  "frame": 489.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.767,
+  "frame": 503.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 20.7,
+  "frame": 621.0,
+  "dur": 0.333,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 21.533,
+  "frame": 646.0,
+  "dur": 0.2,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 22.133,
+  "frame": 664.0,
+  "dur": 0.2,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 22.767,
+  "frame": 683.0,
+  "dur": 0.2,
+  "gain_db": -38,
+  "hero": false
+ }
+]

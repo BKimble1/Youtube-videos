@@ -1,0 +1,68 @@
+1
+00:00:00,000 --> 00:00:01,730
+This robot uses other robots
+
+2
+00:00:01,730 --> 00:00:03,240
+as spare body parts.
+
+3
+00:00:03,240 --> 00:00:04,730
+It’s built from motorized rods
+
+4
+00:00:04,730 --> 00:00:06,180
+that stretch and shrink,
+
+5
+00:00:06,180 --> 00:00:07,840
+with magnets at their ends.
+
+6
+00:00:07,840 --> 00:00:09,480
+A person controls the movements,
+
+7
+00:00:09,480 --> 00:00:11,520
+guiding another rod into place.
+
+8
+00:00:11,520 --> 00:00:12,510
+Once it connects,
+
+9
+00:00:12,510 --> 00:00:13,250
+that extra piece
+
+10
+00:00:13,250 --> 00:00:14,610
+becomes a walking stick,
+
+11
+00:00:14,610 --> 00:00:15,330
+helping the robot
+
+12
+00:00:15,330 --> 00:00:17,050
+move faster downhill.
+
+13
+00:00:17,050 --> 00:00:18,480
+And if a part stops working,
+
+14
+00:00:18,480 --> 00:00:19,200
+it can drop it
+
+15
+00:00:19,200 --> 00:00:20,800
+and attach a replacement.
+
+16
+00:00:20,800 --> 00:00:23,260
+So that broken robot beside it…
+
+17
+00:00:23,260 --> 00:00:25,240
+could become its next body part.
+

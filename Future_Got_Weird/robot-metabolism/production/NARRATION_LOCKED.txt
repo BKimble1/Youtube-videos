@@ -1,0 +1,12 @@
+This robot uses other robots as spare body parts.
+
+It’s built from motorized rods that stretch and shrink, with magnets at their ends.
+
+A person controls the movements, guiding another rod into place.
+
+Once it connects, that extra piece becomes a walking stick, helping the robot move faster downhill.
+
+And if a part stops working, it can drop it and attach a replacement.
+
+So that broken robot beside it…
+could become its next body part.
