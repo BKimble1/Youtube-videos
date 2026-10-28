@@ -9,7 +9,7 @@ import {hash, noise1} from '../dc/math';
 import {f2} from '../eng/draw';
 import {a3, c3, d3, Frame, Lens, m3, n3, s3, V3, v3} from '../eng/v3';
 
-export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; vel?: V3; reach?: number; alpha?: number; dense?: number; speed?: number}> = ({L, B, t, thrust, vel = v3(0, 0, 0), reach = 1.3, alpha = 1, dense = 0, speed = 1}) => {
+export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; vel?: V3; reach?: number; alpha?: number; dense?: number; speed?: number; bias?: number}> = ({L, B, t, thrust, vel = v3(0, 0, 0), reach = 1.3, alpha = 1, dense = 0, speed = 1, bias = 0}) => {
   if (thrust < 0.05 || alpha < 0.01) return null;
   const jetV = 13 + 6 * thrust;
   const dir = n3(a3(m3(B.y, -jetV), m3(vel, -1)));
@@ -20,7 +20,10 @@ export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; ve
   const len = reach * (0.55 + 0.45 * thrust);
   for (let i = 0; i < BD.ducts.length; i++) {
     const exit = ductWorld(B, i, -BD.thick);
-    for (let k = 0; k < 3 + Math.round(3 * dense); k++) {
+    // V9: `bias` (-1..1) is the thrust difference across the board: the toe-side ducts (x > 0) blow harder for bias > 0
+    const g = Math.max(0.35, Math.min(1.9, 1 + bias * Math.sign(BD.ducts[i][0])));
+    const lenI = len * g;
+    for (let k = 0; k < 3 + Math.round(3 * dense) + (g > 1.25 ? 3 : 0); k++) {
       const h = hash(i * 17 + k, 61);
       const ang0 = h * Math.PI * 2;
       const rr = BD.ductR * (0.3 + 0.55 * hash(i * 5 + k, 62));
@@ -32,7 +35,7 @@ export const AirJets: React.FC<{L: Lens; B: Frame; t: number; thrust: number; ve
       for (let q = 0; q <= 6; q++) {
         const u = Math.min(1, ph * 1.25 - 0.25 + q * 0.035);
         if (u < 0) continue;
-        const dist = u * len;
+        const dist = u * lenI;
         const swirl = ang0 + (i % 2 ? -1 : 1) * (1.4 * Math.exp(-dist / 0.35)) * u * 3;
         const wander = 0.06 * dist * dist + 0.02;
         const off = a3(m3(sx, Math.cos(swirl) * rr * (1 + 0.5 * dist) + wander * noise1(t * 2.1 + i + k * 1.7 + dist, 63)), m3(sz, Math.sin(swirl) * rr * (1 + 0.5 * dist) + wander * noise1(t * 1.9 + i * 2 + k + dist, 64)));

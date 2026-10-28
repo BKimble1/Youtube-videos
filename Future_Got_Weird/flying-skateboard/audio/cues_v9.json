@@ -1,0 +1,632 @@
+{
+ "duration": 31.8,
+ "fps": 30,
+ "frames": 954,
+ "words": [
+  {
+   "word": "this",
+   "start": 0.04,
+   "end": 0.35
+  },
+  {
+   "word": "skateboard",
+   "start": 0.43,
+   "end": 0.87
+  },
+  {
+   "word": "could",
+   "start": 0.93,
+   "end": 1.03
+  },
+  {
+   "word": "make",
+   "start": 1.07,
+   "end": 1.21
+  },
+  {
+   "word": "you",
+   "start": 1.25,
+   "end": 1.31
+  },
+  {
+   "word": "fly",
+   "start": 1.4,
+   "end": 1.87
+  },
+  {
+   "word": "across",
+   "start": 1.93,
+   "end": 2.27
+  },
+  {
+   "word": "a",
+   "start": 2.33,
+   "end": 2.35
+  },
+  {
+   "word": "river",
+   "start": 2.47,
+   "end": 2.81
+  },
+  {
+   "word": "you",
+   "start": 3.098,
+   "end": 3.208
+  },
+  {
+   "word": "see",
+   "start": 3.248,
+   "end": 3.388
+  },
+  {
+   "word": "ten",
+   "start": 3.658,
+   "end": 3.988
+  },
+  {
+   "word": "powerful",
+   "start": 4.068,
+   "end": 4.528
+  },
+  {
+   "word": "electric",
+   "start": 4.568,
+   "end": 4.888
+  },
+  {
+   "word": "propellers",
+   "start": 4.948,
+   "end": 5.388
+  },
+  {
+   "word": "blast",
+   "start": 5.548,
+   "end": 5.968
+  },
+  {
+   "word": "air",
+   "start": 6.008,
+   "end": 6.188
+  },
+  {
+   "word": "downward",
+   "start": 6.228,
+   "end": 6.648
+  },
+  {
+   "word": "lifting",
+   "start": 6.848,
+   "end": 7.108
+  },
+  {
+   "word": "you",
+   "start": 7.148,
+   "end": 7.228
+  },
+  {
+   "word": "completely",
+   "start": 7.268,
+   "end": 7.888
+  },
+  {
+   "word": "off",
+   "start": 7.948,
+   "end": 8.068
+  },
+  {
+   "word": "the",
+   "start": 8.108,
+   "end": 8.168
+  },
+  {
+   "word": "ground",
+   "start": 8.208,
+   "end": 8.548
+  },
+  {
+   "word": "but",
+   "start": 8.756,
+   "end": 8.846
+  },
+  {
+   "word": "his",
+   "start": 8.866,
+   "end": 9.086
+  },
+  {
+   "word": "first",
+   "start": 9.146,
+   "end": 9.406
+  },
+  {
+   "word": "version",
+   "start": 9.426,
+   "end": 9.766
+  },
+  {
+   "word": "used",
+   "start": 9.846,
+   "end": 10.086
+  },
+  {
+   "word": "jet",
+   "start": 10.186,
+   "end": 10.406
+  },
+  {
+   "word": "engines",
+   "start": 10.466,
+   "end": 10.906
+  },
+  {
+   "word": "and",
+   "start": 11.164,
+   "end": 11.324
+  },
+  {
+   "word": "caught",
+   "start": 11.384,
+   "end": 11.584
+  },
+  {
+   "word": "fire",
+   "start": 11.784,
+   "end": 12.184
+  },
+  {
+   "word": "so",
+   "start": 12.492,
+   "end": 12.852
+  },
+  {
+   "word": "he",
+   "start": 12.892,
+   "end": 13.012
+  },
+  {
+   "word": "switched",
+   "start": 13.032,
+   "end": 13.272
+  },
+  {
+   "word": "to",
+   "start": 13.292,
+   "end": 13.372
+  },
+  {
+   "word": "electric",
+   "start": 13.412,
+   "end": 13.832
+  },
+  {
+   "word": "except",
+   "start": 14.04,
+   "end": 14.38
+  },
+  {
+   "word": "there's",
+   "start": 14.4,
+   "end": 14.7
+  },
+  {
+   "word": "one",
+   "start": 14.76,
+   "end": 14.96
+  },
+  {
+   "word": "huge",
+   "start": 15.07,
+   "end": 15.64
+  },
+  {
+   "word": "problem",
+   "start": 15.74,
+   "end": 16.18
+  },
+  {
+   "word": "the",
+   "start": 16.388,
+   "end": 16.528
+  },
+  {
+   "word": "board",
+   "start": 16.568,
+   "end": 16.788
+  },
+  {
+   "word": "can't",
+   "start": 16.888,
+   "end": 17.168
+  },
+  {
+   "word": "balance",
+   "start": 17.208,
+   "end": 17.528
+  },
+  {
+   "word": "itself",
+   "start": 17.588,
+   "end": 18.048
+  },
+  {
+   "word": "he",
+   "start": 18.276,
+   "end": 18.386
+  },
+  {
+   "word": "has",
+   "start": 18.466,
+   "end": 18.586
+  },
+  {
+   "word": "to",
+   "start": 18.626,
+   "end": 18.686
+  },
+  {
+   "word": "control",
+   "start": 18.706,
+   "end": 19.046
+  },
+  {
+   "word": "it",
+   "start": 19.086,
+   "end": 19.146
+  },
+  {
+   "word": "with",
+   "start": 19.186,
+   "end": 19.266
+  },
+  {
+   "word": "his",
+   "start": 19.286,
+   "end": 19.386
+  },
+  {
+   "word": "entire",
+   "start": 19.426,
+   "end": 19.986
+  },
+  {
+   "word": "body",
+   "start": 20.006,
+   "end": 20.326
+  },
+  {
+   "word": "while",
+   "start": 20.546,
+   "end": 20.686
+  },
+  {
+   "word": "an",
+   "start": 20.726,
+   "end": 20.846
+  },
+  {
+   "word": "ai",
+   "start": 20.906,
+   "end": 21.126
+  },
+  {
+   "word": "voice",
+   "start": 21.206,
+   "end": 21.426
+  },
+  {
+   "word": "coach",
+   "start": 21.506,
+   "end": 21.726
+  },
+  {
+   "word": "helps",
+   "start": 21.766,
+   "end": 21.966
+  },
+  {
+   "word": "him",
+   "start": 21.986,
+   "end": 22.086
+  },
+  {
+   "word": "learn",
+   "start": 22.126,
+   "end": 22.286
+  },
+  {
+   "word": "how",
+   "start": 22.326,
+   "end": 22.386
+  },
+  {
+   "word": "to",
+   "start": 22.426,
+   "end": 22.506
+  },
+  {
+   "word": "balance",
+   "start": 22.526,
+   "end": 22.946
+  },
+  {
+   "word": "and",
+   "start": 23.154,
+   "end": 23.234
+  },
+  {
+   "word": "after",
+   "start": 23.314,
+   "end": 23.554
+  },
+  {
+   "word": "just",
+   "start": 23.654,
+   "end": 23.794
+  },
+  {
+   "word": "over",
+   "start": 23.854,
+   "end": 24.094
+  },
+  {
+   "word": "ten",
+   "start": 24.134,
+   "end": 24.354
+  },
+  {
+   "word": "days",
+   "start": 24.414,
+   "end": 24.594
+  },
+  {
+   "word": "of",
+   "start": 24.634,
+   "end": 24.714
+  },
+  {
+   "word": "practice",
+   "start": 24.754,
+   "end": 25.234
+  },
+  {
+   "word": "he",
+   "start": 25.464,
+   "end": 25.634
+  },
+  {
+   "word": "actually",
+   "start": 25.714,
+   "end": 26.154
+  },
+  {
+   "word": "flew",
+   "start": 26.194,
+   "end": 26.354
+  },
+  {
+   "word": "across",
+   "start": 26.394,
+   "end": 26.714
+  },
+  {
+   "word": "a",
+   "start": 26.774,
+   "end": 26.894
+  },
+  {
+   "word": "river",
+   "start": 26.934,
+   "end": 27.254
+  },
+  {
+   "word": "and",
+   "start": 27.492,
+   "end": 27.812
+  },
+  {
+   "word": "through",
+   "start": 27.832,
+   "end": 28.012
+  },
+  {
+   "word": "a",
+   "start": 28.052,
+   "end": 28.112
+  },
+  {
+   "word": "canyon",
+   "start": 28.172,
+   "end": 28.692
+  },
+  {
+   "word": "how",
+   "start": 29.06,
+   "end": 29.19
+  },
+  {
+   "word": "much",
+   "start": 29.23,
+   "end": 29.37
+  },
+  {
+   "word": "would",
+   "start": 29.39,
+   "end": 29.51
+  },
+  {
+   "word": "someone",
+   "start": 29.55,
+   "end": 29.75
+  },
+  {
+   "word": "have",
+   "start": 29.81,
+   "end": 29.93
+  },
+  {
+   "word": "to",
+   "start": 29.95,
+   "end": 30.13
+  },
+  {
+   "word": "pay",
+   "start": 30.21,
+   "end": 30.49
+  },
+  {
+   "word": "you",
+   "start": 30.53,
+   "end": 30.61
+  },
+  {
+   "word": "to",
+   "start": 30.65,
+   "end": 30.729
+  },
+  {
+   "word": "ride",
+   "start": 30.77,
+   "end": 30.97
+  },
+  {
+   "word": "this",
+   "start": 31.01,
+   "end": 31.17
+  },
+  {
+   "word": "thing",
+   "start": 31.21,
+   "end": 31.43
+  }
+ ],
+ "marks": {
+  "yousee": 3.098,
+  "ten": 3.658,
+  "powerfulE": 4.528,
+  "electric": 4.568,
+  "blast": 5.548,
+  "lifting": 6.848,
+  "ground": 8.208,
+  "groundE": 8.548,
+  "but": 8.756,
+  "jet": 10.186,
+  "engines": 10.466,
+  "andCaught": 11.164,
+  "fire": 11.784,
+  "fireE": 12.184,
+  "so": 12.492,
+  "electric2": 13.412,
+  "switched": 12.982,
+  "except": 14.04,
+  "huge": 15.07,
+  "problemE": 16.18,
+  "theBoard": 16.388,
+  "itself": 17.588,
+  "heHas": 18.276,
+  "body": 20.006,
+  "while": 20.546,
+  "ai": 20.906,
+  "voice": 21.206,
+  "coach": 21.506,
+  "learn": 22.126,
+  "balance2": 22.526,
+  "andAfter": 23.154,
+  "tenDays": 24.134,
+  "practice": 24.754,
+  "heActually": 25.464,
+  "flew": 26.194,
+  "river2": 26.934,
+  "river2E": 27.254,
+  "andThrough": 27.492,
+  "through": 27.832,
+  "canyon": 28.172,
+  "canyonE": 28.692,
+  "howMuch": 29.06,
+  "pay": 30.21,
+  "thing": 31.21,
+  "thingE": 31.43
+ },
+ "shots": [
+  {
+   "name": "opening: flight, the underside, inside one unit, the air to the water (one camera)",
+   "from": 0,
+   "to": 6.8
+  },
+  {
+   "name": "the lift on the riverside flat (standing camera)",
+   "from": 6.8,
+   "to": 8.756
+  },
+  {
+   "name": "the jet prototype test and the redesign on the same stand (workshop)",
+   "from": 8.756,
+   "to": 14.733333333333333
+  },
+  {
+   "name": "balance: the problem, the tendency, the legs, the whole body",
+   "from": 14.733333333333333,
+   "to": 20.5
+  },
+  {
+   "name": "the AI coach: deck phone (sensing), wrist phone (coaching), earbud and the change in his stance, the recovery",
+   "from": 20.5,
+   "to": 23.1
+  },
+  {
+   "name": "practice to flight: lift-off on the flat, over the shoreline, out over the water (tracking)",
+   "from": 23.1,
+   "to": 25.433333333333334
+  },
+  {
+   "name": "across the river: the shore falls behind, the river opens up (high tracking)",
+   "from": 25.433333333333334,
+   "to": 27.466666666666665
+  },
+  {
+   "name": "the canyon flight (a separate demonstration), deep in the gorge (tracking)",
+   "from": 27.466666666666665,
+   "to": 29.033333333333335
+  },
+  {
+   "name": "ending: one crane down over the river onto frame 0",
+   "from": 29.033333333333335,
+   "to": 31.8
+  }
+ ],
+ "cuts": [
+  6.8,
+  8.756,
+  14.733333333333333,
+  16.333333333333332,
+  18.233333333333334,
+  20.5,
+  21.733333333333334,
+  22.3,
+  23.1,
+  25.433333333333334,
+  27.466666666666665,
+  29.033333333333335
+ ],
+ "beats": {
+  "lift": 14.433333333333332,
+  "problem": 14.753333333333332,
+  "itself": 16.333333333333332,
+  "control": 18.233333333333334,
+  "body": 19.133333333333333,
+  "coach": 20.5,
+  "wrist": 20.916,
+  "cue": 21.683333333333334,
+  "fix": 21.773333333333333,
+  "learned": 22.3,
+  "end": 23.1,
+  "shore": 24.84,
+  "gust": 0.9,
+  "iris": 3.316666666666667,
+  "wsJets": 12.59873015873016,
+  "wsPlank": 12.936708994708995,
+  "wsDeck": 13.096804232804233,
+  "wsUnits": 13.559301587301587,
+  "wsSpin": 13.879492063492064,
+  "wsRise": 14.193333333333332
+ }
+}

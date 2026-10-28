@@ -1,0 +1,290 @@
+[
+ {
+  "name": "the skin opens (soft mechanical slide)",
+  "at": 3.317,
+  "frame": 99.5,
+  "dur": 0.35,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "count: duct 1 rim (tiny tick)",
+  "at": 3.701,
+  "frame": 111.0,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 2 rim (tiny tick)",
+  "at": 3.788,
+  "frame": 113.7,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 3 rim (tiny tick)",
+  "at": 3.875,
+  "frame": 116.3,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 4 rim (tiny tick)",
+  "at": 3.962,
+  "frame": 118.9,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 5 rim (tiny tick)",
+  "at": 4.05,
+  "frame": 121.5,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 6 rim (tiny tick)",
+  "at": 4.136,
+  "frame": 124.1,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 7 rim (tiny tick)",
+  "at": 4.223,
+  "frame": 126.7,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 8 rim (tiny tick)",
+  "at": 4.31,
+  "frame": 129.3,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 9 rim (tiny tick)",
+  "at": 4.397,
+  "frame": 131.9,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "count: duct 10 rim (tiny tick)",
+  "at": 4.484,
+  "frame": 134.5,
+  "dur": 0.02,
+  "gain_db": -43,
+  "hero": false
+ },
+ {
+  "name": "the air down the duct to the river",
+  "at": 5.798,
+  "frame": 173.9,
+  "dur": 0.9,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the grass blown flat round the board (rustle)",
+  "at": 6.82,
+  "frame": 204.6,
+  "dur": 0.9,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "ignition: starter clicks",
+  "at": 9.476,
+  "frame": 284.3,
+  "dur": 0.15,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "heat: casings ticking",
+  "at": 10.516,
+  "frame": 315.5,
+  "dur": 1.518,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "FIRE: it catches round the engines (contained whoomp)",
+  "at": 11.754,
+  "frame": 352.6,
+  "dur": 0.8,
+  "gain_db": -22,
+  "hero": true
+ },
+ {
+  "name": "fire crackle (under the narration, quickly down)",
+  "at": 11.884,
+  "frame": 356.5,
+  "dur": 0.9,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the fire is put out (hiss)",
+  "at": 12.492,
+  "frame": 374.8,
+  "dur": 0.45,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "the jets lifted out (one soft clunk, air)",
+  "at": 12.649,
+  "frame": 379.5,
+  "dur": 0.5,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "the electric deck set down in the cradle",
+  "at": 13.374,
+  "frame": 401.2,
+  "dur": 0.3,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "unit 1 seats (click)",
+  "at": 13.559,
+  "frame": 406.8,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 2 seats (click)",
+  "at": 13.601,
+  "frame": 408.0,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 3 seats (click)",
+  "at": 13.643,
+  "frame": 409.3,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 4 seats (click)",
+  "at": 13.685,
+  "frame": 410.6,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 5 seats (click)",
+  "at": 13.727,
+  "frame": 411.8,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 6 seats (click)",
+  "at": 13.769,
+  "frame": 413.1,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 7 seats (click)",
+  "at": 13.811,
+  "frame": 414.3,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 8 seats (click)",
+  "at": 13.853,
+  "frame": 415.6,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 9 seats (click)",
+  "at": 13.895,
+  "frame": 416.9,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "unit 10 seats (click)",
+  "at": 13.937,
+  "frame": 418.1,
+  "dur": 0.025,
+  "gain_db": -42,
+  "hero": false
+ },
+ {
+  "name": "wrist phone: soft tick",
+  "at": 20.866,
+  "frame": 626.0,
+  "dur": 0.02,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "AI coach cue in the earbud",
+  "at": 21.713,
+  "frame": 651.4,
+  "dur": 0.42,
+  "gain_db": -29,
+  "hero": true
+ },
+ {
+  "name": "a fresh gust, met at once (air)",
+  "at": 22.6,
+  "frame": 678.0,
+  "dur": 0.45,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "over the shoreline: the river opens up (air)",
+  "at": 24.64,
+  "frame": 739.2,
+  "dur": 1.0,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "into the canyon (air narrows)",
+  "at": 27.437,
+  "frame": 823.1,
+  "dur": 0.8,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "a gust between the walls; he answers it (cloth)",
+  "at": 28.367,
+  "frame": 851.0,
+  "dur": 0.3,
+  "gain_db": -39,
+  "hero": false
+ }
+]
