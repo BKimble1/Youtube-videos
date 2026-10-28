@@ -232,7 +232,15 @@ export const box = (P: Proj, c: V3, h: V3, cols: {top: string; side: string; fro
 export const Paint: React.FC<{items: (Item | null | undefined | false)[]}> = ({items}) => {
   const list = items.filter(Boolean) as Item[];
   list.sort((a, b) => a.layer - b.layer || b.depth - a.depth);
-  return <>{list.map((it) => <React.Fragment key={it.key}>{it.el}</React.Fragment>)}</>;
+  // keys must be unique within a frame: two objects can share a link id (two robots each have a module "M"), and a
+  // duplicate key makes React keep stale elements from earlier frames
+  const seen = new Map<string, number>();
+  const key = (k: string) => {
+    const n = seen.get(k) ?? 0;
+    seen.set(k, n + 1);
+    return n ? `${k}~${n}` : k;
+  };
+  return <>{list.map((it) => <React.Fragment key={key(it.key)}>{it.el}</React.Fragment>)}</>;
 };
 
 export {len};

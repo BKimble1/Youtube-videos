@@ -1,5 +1,25 @@
 # Future Got Weird: This Robot Uses Other Robots as Spare Parts (Robot Metabolism)
 
+## V2 (28 Oct 2026): hook and retention rebuild, for review
+
+`exports/FGW_Robot_Metabolism_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 25.70 s (771 frames).
+
+- Same locked narration, take, voice and captions as V1.
+- It opens mid-transfer: a broken robot's intact module is handed to an incomplete robot, which closes its base and
+  rises. It then shows:
+  - the actuator and connector cutaways;
+  - a one-key operator beat;
+  - a stick module guided in and connected;
+  - a ramp shot that tracks alongside the robot (it crawls, then walks on the stick);
+  - the stick failing, falling and rolling aside, and a replacement connected.
+- It ends on a second pair beginning the same transfer, framed exactly like frame 0, so the film loops.
+- **Not published, uploaded or scheduled; not yet watched or heard in real time.**
+- Changes, the timing against the brief, the loop and the QA: `production/V2_CHANGES_QA.md`.
+- V2 source:
+  - `source/src/v2/` (composition `RobotMetabolismV2`);
+  - `tools/render_v2.sh`, `tools/make_audio_v2.py`, `tools/export_cues_v2.ts`, `tools/rig_probe2.ts`.
+- V1 below is unchanged.
+
 ## V1 (28 Oct 2026): first review version
 
 Vertical Short, 30 fps, **25.70 s (771 frames)**. The locked 75-word narration, verbatim, in the channel narrator

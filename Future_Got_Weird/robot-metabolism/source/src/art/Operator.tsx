@@ -36,7 +36,7 @@ const MON = {x: 70, y: 620, w: 600, h: 360};
 /** the camera the monitor shows: the bench from the operator's side (the shot after this one opens on it) */
 export const FEED_CAM = (t: number): Cam => ({eye: {x: -0.2, y: 0.42, z: 0.95}, target: {x: 0.12, y: 0.1, z: 0.0}, f: 1350 - 0 * t, ox: 0, oy: 0});
 
-export const Operator: React.FC<{t: number; keyT: number[]}> = ({t, keyT}) => {
+export const Operator: React.FC<{t: number; keyT: number[]; feed?: (t: number) => React.ReactNode}> = ({t, keyT, feed}) => {
   // a key press: the right index finger and wrist go down for ~0.18 s
   const press = Math.max(0, ...keyT.map((k) => Math.max(0, 1 - Math.abs(t - k) / 0.12)));
   const rHand: HandPose = {
@@ -94,7 +94,7 @@ export const Operator: React.FC<{t: number; keyT: number[]}> = ({t, keyT}) => {
       <path d={`M${MON.x + MON.w / 2 - 90} ${DESK_TOP + 2} L${MON.x + MON.w / 2 + 90} ${DESK_TOP + 2} L${MON.x + MON.w / 2 + 70} ${DESK_TOP - 12} L${MON.x + MON.w / 2 - 70} ${DESK_TOP - 12} Z`} fill="#3A4859" stroke={INK} strokeWidth={4} />
       <rect x={MON.x - 16} y={MON.y - 16} width={MON.w + 32} height={MON.h + 32} rx={14} fill="#2A3744" stroke={INK} strokeWidth={5} />
       <svg x={MON.x} y={MON.y} width={MON.w} height={MON.h} viewBox={`0 ${960 - 540} 1080 1080`} preserveAspectRatio="xMidYMid slice">
-        <Scene3D cam={FEED_CAM(t)} build={(P) => benchItems(P, s)} idp="mon" />
+        {feed ? feed(t) : <Scene3D cam={FEED_CAM(t)} build={(P) => benchItems(P, s)} idp="mon" />}
       </svg>
       <rect x={MON.x} y={MON.y} width={MON.w} height={MON.h} fill="none" stroke={lit('#2A3744', 0.2)} strokeWidth={3} />
       <circle cx={MON.x + MON.w - 10} cy={MON.y + MON.h + 6} r={4} fill="#45E38E" />

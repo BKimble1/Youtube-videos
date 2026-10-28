@@ -1,0 +1,223 @@
+[
+ {
+  "name": "motors: whir following the measured link activity (body, module M, stick S, replacement R, the second robot)",
+  "at": 0,
+  "gain_db": -26
+ },
+ {
+  "name": "CONNECT: the module snaps onto the reaching vertex (magnetic click)",
+  "at": 1.885,
+  "frame": 56.6,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: its other end snaps onto the rear vertex (the base closes) (magnetic click)",
+  "at": 2.295,
+  "frame": 68.8,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: the stick snaps on (magnetic click)",
+  "at": 11.885,
+  "frame": 356.6,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: the replacement snaps on (magnetic click)",
+  "at": 19.885,
+  "frame": 596.5,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "the broken robot's module lets go (un-click; the loop pre-roll)",
+  "at": 25.05,
+  "frame": 751.5,
+  "dur": 0.12,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "the failed stick lets go (un-click)",
+  "at": 18.56,
+  "frame": 556.8,
+  "dur": 0.12,
+  "gain_db": -23,
+  "hero": false
+ },
+ {
+  "name": "the stick drops onto the mat",
+  "at": 19.04,
+  "frame": 571.2,
+  "dur": 0.18,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "it rolls aside",
+  "at": 19.08,
+  "frame": 572.4,
+  "dur": 0.28,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "a key press",
+  "at": 8.39,
+  "frame": 251.7,
+  "dur": 0.06,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "the housing cut-away opens (air, faint)",
+  "at": 4.72,
+  "frame": 141.6,
+  "dur": 0.45,
+  "gain_db": -44,
+  "hero": false
+ },
+ {
+  "name": "the connector cut-away opens (air, faint)",
+  "at": 6.14,
+  "frame": 184.2,
+  "dur": 0.45,
+  "gain_db": -44,
+  "hero": false
+ },
+ {
+  "name": "FAIL: the stick's motor winds down",
+  "at": 17.62,
+  "frame": 528.6,
+  "dur": 0.6,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "the body rises (structure creak)",
+  "at": 2.58,
+  "frame": 77.4,
+  "dur": 0.3,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 15.133,
+  "frame": 454.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 15.6,
+  "frame": 468.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.067,
+  "frame": 482.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.533,
+  "frame": 496.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 20.567,
+  "frame": 617.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 21.667,
+  "frame": 650.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 13.767,
+  "frame": 413.0,
+  "dur": 0.267,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 14.967,
+  "frame": 449.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 15.433,
+  "frame": 463.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 15.9,
+  "frame": 477.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.367,
+  "frame": 491.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.833,
+  "frame": 505.0,
+  "dur": 0.167,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 20.9,
+  "frame": 627.0,
+  "dur": 0.2,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 21.467,
+  "frame": 644.0,
+  "dur": 0.2,
+  "gain_db": -38,
+  "hero": false
+ }
+]

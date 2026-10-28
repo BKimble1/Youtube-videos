@@ -34,13 +34,13 @@ R['loudness'] = {'integrated_lufs': float(re.search(r'I:\s+(-?[\d.]+) LUFS', sum
 # sync against the mix
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-ac', '1', '-ar', '8000', '-f', 'f32le', '-'], capture_output=True, check=True).stdout
 a = np.frombuffer(raw, np.float32)
-m, msr = sf.read(os.path.join(EP, 'audio/mix/FGW_Robot_Metabolism_V1_mix.wav'))
+m, msr = sf.read(os.path.join(EP, os.environ.get('QA_MIX', 'audio/mix/FGW_Robot_Metabolism_V1_mix.wav')))
 m = m.mean(1)[::6][:len(a)]
 n = min(len(a), len(m)); a, m = a[:n], m[:n]
 c = np.correlate(a[8000:24000], m[8000 - 400:24000 + 400], 'valid')
 R['audio_lag_ms_vs_mix'] = round((np.argmax(c) - 400) / 8.0, 2)
 # continuity: mean absolute luma difference per frame, spikes off the planned cuts
-cues = json.load(open(os.path.join(EP, 'audio/cues.json')))
+cues = json.load(open(os.path.join(EP, os.environ.get('QA_CUES', 'audio/cues.json'))))
 cutf = [round(x * 30) for x in cues['cuts']]
 w, h = 216, 384
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-vf', f'scale={w}:{h},format=gray', '-f', 'rawvideo', '-'], capture_output=True, check=True).stdout

@@ -5,7 +5,7 @@ out, frames = sys.argv[1], [int(x) for x in sys.argv[2].split(',')]
 cap = (sys.argv[3] if len(sys.argv) > 3 else 'true') == 'true'
 jobs = []
 for k in range(0, len(frames), 12):
-    jobs.append({'id': 'Sheet', 'props': {'frames': frames[k:k + 12], 'captions': cap}, 'out': f'{out}_{k // 12}.png', 'scale': 0.25})
+    jobs.append({'id': 'Sheet', 'props': {'frames': frames[k:k + 12], 'captions': cap, 'v': int(os.environ.get('V', '1'))}, 'out': f'{out}_{k // 12}.png', 'scale': 0.25})
 p = out + '_jobs.json'
 json.dump(jobs, open(p, 'w'))
 subprocess.run(['node', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'stills.mjs'), p], check=True, stdout=subprocess.DEVNULL)

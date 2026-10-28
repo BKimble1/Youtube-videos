@@ -35,6 +35,7 @@ export const COL = {
   bandT: '#8DB6D6', // the receiving robot's own links
   bandX: '#F2A23C', // the acquired module (persistent accent)
   bandR: '#2EB5A5', // the replacement
+  bandS: '#E8705E', // (V2) the walking-stick module
   bandB: '#A4ADB6', // the broken robot's links
   bandP: '#B9C3CD', // the comparison robot on the ramp
 };
@@ -57,6 +58,17 @@ export type Link = {
   noCapB?: boolean;
   /** faded (the comparison robot) */
   dim?: number;
+  /** (V2) direction the magnet window at end a / b faces (world); default straight out of the end. Animating it shows
+   *  the free-form connector's sphere turning its pole toward a partner before contact */
+  winA?: V3;
+  winB?: V3;
+  /** (V2) the connector's magnet pulled back into its shell (0..1): it lets go */
+  relA?: number;
+  relB?: number;
+  /** (V2) cut-away of the housing (0..1): motor windings, lead screw, the nut on the inner rod */
+  cut?: number;
+  /** (V2) rotation of the link about its own axis (rad): the status light turns with it (rolling) */
+  roll?: number;
 };
 
 /** probe data: the rod length and whether it is inside the actuator range */
@@ -64,15 +76,18 @@ export const linkLen = (l: Link) => len(sub(l.b, l.a));
 
 // ------------------------------------------------------------------------------------------------------------
 /** the screen-space marks of a connector: magnet window facing out of the end, or the cut-away */
-const capDeco = (P: Proj, c: V3, out: V3, sec: number) => (s: {x: number; y: number}, R: number) => {
+const capDeco = (P: Proj, c: V3, out0: V3, sec: number, win?: V3, rel = 0) => (s: {x: number; y: number}, R: number) => {
+  const out = win ? norm(win) : out0;
   const toCam = norm(sub(P.cam.eye, c));
   const facing = dot(out, toCam);
-  const tip = P.proj(add(c, mul(out, RC * 0.62)));
+  const tip = P.proj(add(c, mul(out, RC * 0.62 * (1 - 0.45 * rel))));
   const dx = tip.x - s.x, dy = tip.y - s.y;
   const els: React.ReactNode[] = [];
   if (sec < 0.02 && facing > -0.35) {
     const k = Math.max(0, Math.min(1, (facing + 0.35) / 0.6));
-    els.push(<ellipse key="w" cx={s.x + dx} cy={s.y + dy} rx={R * 0.42} ry={R * 0.42 * (0.45 + 0.55 * Math.abs(facing))} transform={`rotate(${(Math.atan2(dy, dx) * 180) / Math.PI} ${s.x + dx} ${s.y + dy})`} fill={COL.magnetWin} opacity={k} />);
+    const wr = R * 0.42 * (1 - 0.4 * rel);
+    els.push(<ellipse key="w" cx={s.x + dx} cy={s.y + dy} rx={wr} ry={wr * (0.45 + 0.55 * Math.abs(facing))} transform={`rotate(${(Math.atan2(dy, dx) * 180) / Math.PI} ${s.x + dx} ${s.y + dy})`} fill={COL.magnetWin} opacity={k} />);
+    if (win && rel < 0.5 && k > 0.2) els.push(<circle key="wg" cx={s.x + dx * 1.08} cy={s.y + dy * 1.08} r={wr * 0.32} fill="#7F93A6" opacity={k * (1 - 2 * rel)} />);
   }
   if (sec > 0.02) {
     // cut-away: the shell turns to a cross-section showing the sphere magnet in its cup, sprung toward the face
@@ -106,6 +121,47 @@ const capDeco = (P: Proj, c: V3, out: V3, sec: number) => (s: {x: number; y: num
   return <>{els}</>;
 };
 
+/** (V2) the housing opened: copper motor windings, the lead screw it turns, and the nut on the end of the inner rod
+ *  riding along the screw (its position follows the link's length; the thread pattern shifts with it, so the screw
+ *  visibly turns as the rod moves) */
+const cutaway = (P: Proj, l: Link, at: (s: number) => V3, L: number, h0: number, h1: number, k: number): Item | null => {
+  const A = P.proj(at(h0 + 0.004)), B = P.proj(at(h1 - 0.006));
+  if (A.z < 0.05 || B.z < 0.05) return null;
+  const ax = {x: B.x - A.x, y: B.y - A.y};
+  const al = Math.hypot(ax.x, ax.y);
+  if (al < 6) return null;
+  const u = {x: ax.x / al, y: ax.y / al};
+  const n = {x: -u.y, y: u.x};
+  const ra = P.rad(at(h0), R_HOUS * 0.8), rb = P.rad(at(h1), R_HOUS * 0.8);
+  const pt = (t: number, w: number) => {
+    const r = ra + (rb - ra) * t;
+    return {x: A.x + ax.x * t + n.x * w * r, y: A.y + ax.y * t + n.y * w * r};
+  };
+  const f = (p: {x: number; y: number}) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+  const win = `M${f(pt(0, 1))} L${f(pt(1, 1))} L${f(pt(1, -1))} L${f(pt(0, -1))} Z`;
+  // nut position along the window (0..1) from the length
+  const e = Math.max(0, Math.min(1, (L - L_MIN) / (L_MAX - L_MIN)));
+  const motorEnd = 0.36;
+  const tn = motorEnd + 0.06 + (0.94 - motorEnd - 0.06) * e;
+  const els: React.ReactNode[] = [];
+  els.push(<path key="w" d={win} fill="#22303D" />);
+  // motor windings (copper) at the motor end
+  for (let i = 0; i < 6; i++) {
+    const t0 = 0.03 + i * 0.05;
+    els.push(<path key={`m${i}`} d={`M${f(pt(t0, 0.85))} L${f(pt(t0 + 0.032, 0.85))} L${f(pt(t0 + 0.032, -0.85))} L${f(pt(t0, -0.85))} Z`} fill={i % 2 ? '#C9773A' : '#E0954F'} />);
+  }
+  // lead screw with a thread that shifts as the nut moves
+  const pitch = 0.05;
+  els.push(<path key="sc" d={`M${f(pt(motorEnd, 0))} L${f(pt(1, 0))}`} stroke="#A9B6C1" strokeWidth={Math.max(1.5, (ra + rb) * 0.32)} strokeLinecap="round" />);
+  const ph = ((tn / pitch) * 3.1) % 1;
+  for (let t = motorEnd + pitch * ph; t < 1; t += pitch) els.push(<path key={`th${t.toFixed(3)}`} d={`M${f(pt(t, 0.24))} L${f(pt(t + pitch * 0.45, -0.24))}`} stroke="#5E6F7E" strokeWidth={Math.max(1, (ra + rb) * 0.1)} />);
+  // the inner rod inside the housing, from the nut to the open end, and the nut
+  els.push(<path key="rod" d={`M${f(pt(tn, 0.5))} L${f(pt(1.02, 0.5))} L${f(pt(1.02, -0.5))} L${f(pt(tn, -0.5))} Z`} fill={COL.rod} opacity={0.85} />);
+  els.push(<path key="nut" d={`M${f(pt(tn - 0.035, 0.95))} L${f(pt(tn + 0.035, 0.95))} L${f(pt(tn + 0.035, -0.95))} L${f(pt(tn - 0.035, -0.95))} Z`} fill="#D9A441" stroke={INK} strokeWidth={1.2} />);
+  els.push(<path key="edge" d={win} fill="none" stroke={INK} strokeWidth={Math.max(1.2, (ra + rb) * 0.12)} />);
+  return {layer: 3, depth: 0, key: `${l.id}-cut`, el: <g key={`${l.id}-cut`} opacity={k}>{els}</g>};
+};
+
 /** the drawn parts of one link */
 export const linkItems = (P: Proj, l: Link, o: {layer?: number} = {}): Item[] => {
   const out: (Item | null)[] = [];
@@ -123,10 +179,15 @@ export const linkItems = (P: Proj, l: Link, o: {layer?: number} = {}): Item[] =>
   let side = sub(toCam, mul(u, dot(toCam, u)));
   const sl = len(side);
   side = sl > 1e-4 ? mul(side, 1 / sl) : norm(cross(u, v3(0, 1, 0)));
-  const ledP = add(at(h0 + 0.03), mul(side, R_MOTOR * 0.96));
+  // rolling: the light goes round the axis; it is hidden while it faces away
+  const rl = l.roll ?? 0;
+  const side2 = norm(cross(u, side));
+  const ledDir = add(mul(side, Math.cos(rl)), mul(side2, Math.sin(rl)));
+  const ledVis = Math.cos(rl) > 0.15;
+  const ledP = add(at(h0 + 0.03), mul(ledDir, R_MOTOR * 0.96));
   const ledS = P.proj(ledP);
   const ledR = Math.max(1.5, P.rad(ledP, 0.0046));
-  const ledEl = (
+  const ledEl = !ledVis ? null : (
       <g key={`${l.id}-led`} opacity={op}>
         {l.led > 0.02 && <circle cx={ledS.x} cy={ledS.y} r={ledR * 3} fill={rgba(COL.ledOn, 0.38 * l.led)} />}
         <circle cx={ledS.x} cy={ledS.y} r={ledR} fill={l.led > 0.5 ? COL.ledOn : l.led > 0.02 ? lit(COL.ledOff, l.led) : COL.ledOff} stroke={INK} strokeWidth={Math.max(0.8, ledR * 0.35)} />
@@ -144,13 +205,14 @@ export const linkItems = (P: Proj, l: Link, o: {layer?: number} = {}): Item[] =>
   hous.push(tube(P, at(h0 - 0.004), at(h0 + 0.052), R_MOTOR, R_MOTOR, COL.motor, {layer, opacity: op}));
   hous.push(tube(P, at(h0 + 0.078), at(h0 + 0.1), R_HOUS * 1.06, R_HOUS * 1.06, l.band, {layer, k: 0.8, opacity: op}));
   const za = P.camSpace(l.a).z, zb = P.camSpace(l.b).z;
-  if (zb < za) body.push(...hous, rod);
-  else body.push(rod, ...hous);
+  const cutEl = (l.cut ?? 0) > 0.01 ? cutaway(P, l, at, L, h0, h1, l.cut!) : null;
+  if (zb < za) body.push(...hous, cutEl, rod);
+  else body.push(rod, ...hous, cutEl);
   const bodyItems = body.filter(Boolean) as Item[];
   if (bodyItems.length) out.push({layer, depth: (za + zb) / 2, key: `${l.id}-body`, el: <g key={`${l.id}-body`}>{bodyItems.map((it) => <React.Fragment key={it.key}>{it.el}</React.Fragment>)}{ledEl}</g>});
   // connectors
-  out.push(sphere(P, capA, RC, COL.shell, {layer, deco: capDeco(P, capA, mul(u, -1), l.secA ?? 0), opacity: op}));
-  if (!l.noCapB) out.push(sphere(P, capB, RC, COL.shell, {layer, deco: capDeco(P, capB, u, l.secB ?? 0), opacity: op}));
+  out.push(sphere(P, capA, RC, COL.shell, {layer, deco: capDeco(P, capA, mul(u, -1), l.secA ?? 0, l.winA, l.relA ?? 0), opacity: op}));
+  if (!l.noCapB) out.push(sphere(P, capB, RC, COL.shell, {layer, deco: capDeco(P, capB, u, l.secB ?? 0, l.winB, l.relB ?? 0), opacity: op}));
   else {
     // snapped-off end: a jagged stub of the shell
     const s = P.proj(capB);

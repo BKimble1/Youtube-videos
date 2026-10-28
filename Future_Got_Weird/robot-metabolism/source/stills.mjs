@@ -13,6 +13,6 @@ const browserExecutable = process.env.REMOTION_BROWSER_EXECUTABLE ?? '/opt/pw-br
 const serveUrl = await bundle({entryPoint: path.join(src, 'src/index.ts'), onProgress: () => {}});
 for (const j of jobs) {
   const comp = await selectComposition({serveUrl, id: j.id, inputProps: j.props, browserExecutable});
-  await renderStill({composition: comp, serveUrl, output: j.out, inputProps: j.props, scale: j.scale ?? 1, browserExecutable, imageFormat: 'png', overwrite: true});
+  await renderStill({composition: comp, serveUrl, output: j.out, inputProps: j.props, scale: j.scale ?? 1, frame: j.frame ?? 0, browserExecutable, imageFormat: 'png', overwrite: true});
   console.log('wrote', j.out);
 }
