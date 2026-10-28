@@ -45,3 +45,14 @@ The composition is `FlyingSkateboardV12`, in `source/src/v12/`.
 ## Sound (`tools/make_audio_v12.py`)
 - **Unchanged:** the V11 mix, re-cued to the V12 cue file.
 - **Levels:** −14.0 LUFS, voice 17.8 dB above everything else in the speech band.
+
+## Build B (the same brief, re-sent): closing the gaps build A's QA report listed
+- **Opening widening (1.4–2.6 s):**
+  - A smaller widening that rises to show the far bank, bridge and town over him.
+  - He stays about a quarter of the frame height. Build A: about an eighth.
+- **Canyon:**
+  - The camera stays close beside and behind him the whole way (4.4–5.2 m; build A: out to 7.2 m), low, swinging round behind him so the walls pass on both sides and the gorge opens ahead.
+  - His size holds through the climax.
+- **Coach view:**
+  - Tried: tilting down to include the deck phone with the wrist phone and earbud. The phone sat behind his shin and under the caption, which was crowded, so it was reverted.
+  - The deck phone's readout stays in the legs close-up and the correction view.
