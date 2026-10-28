@@ -1,6 +1,6 @@
 {
  "file": "FGW_Flying_Skateboard_V5_REVIEW_1080x1920.mp4",
- "size_mb": 23.74,
+ "size_mb": 23.63,
  "video": {
   "codec": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "frames": 1077,
   "duration_s": 35.9,
   "pix_fmt": "yuv420p",
-  "bitrate_kbps": 5290
+  "bitrate_kbps": 5266
  },
  "audio_stream": [
   {
@@ -24,7 +24,7 @@
  "black_frames": [],
  "frozen_1s_starts": [],
  "loop_junction_mad": 2.923,
- "median_frame_step_mad": 1.474,
+ "median_frame_step_mad": 1.467,
  "max_frame_step_mad": 73.37,
  "max_step_frame": 675,
  "audio": {

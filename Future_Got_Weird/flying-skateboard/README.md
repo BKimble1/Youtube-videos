@@ -11,7 +11,7 @@
 | QC report and remaining problems | `production/QA_REPORT_V5.md` |
 | V5 mix, measurements, effect cues | `audio/mix/FGW_Flying_Skateboard_V5_mix.wav`, `audio/mix/mix_measure_v5.json`, `audio/sfx_cues_v5.json` (`tools/make_audio_v5.py`, `tools/export_cues_v5.ts`) |
 | Sheets and measurements (from the MP4) | `qa/v5_review_*` |
-| Remotion | composition `FlyingSkateboardV5`, code in `source/src/v5/`. The exact sphere-region outline is `sphereRegion` in `eng/draw.tsx`; the rigid head assembly is in `art/Pilot.tsx`; the neck pivot is in `art/rig.ts`. Helmet stability measurement: `source/src/dev/helmetStab.ts`; head close-up sheet: composition `HeadTest`. |
+| Remotion | composition `FlyingSkateboardV5`, code in `source/src/v5/`. The exact sphere-region outline is `sphereRegion` in `eng/draw.tsx`; the rigid head assembly is in `art/Pilot.tsx`; the neck pivot is in `art/rig.ts`. Helmet stability measurement: `source/src/dev/helmetStab.ts` (one turn) and `source/src/dev/helmetFilm.ts` (every frame of the film); head close-up sheet: composition `HeadTest`. |
 
 Rebuild: as for V3 (see below), with `_v5`/`V5` names. Working stills: `cd source && ./sheet5.sh out.png "t1,..." [captions]`.
 

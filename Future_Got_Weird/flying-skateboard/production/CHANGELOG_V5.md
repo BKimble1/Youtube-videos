@@ -6,7 +6,7 @@ Kept from V4:
 - the runtime (35.9 s, 30 fps, 1077 frames);
 - the score.
 
-**How V5 was checked.** Each build was rendered, then reviewed frame by frame from the rendered file by independent reviewers: one per section, a measured camera-motion pass, a skeptic re-checking each finding, and a coverage critic. There were three rounds of review in all. Everything they confirmed was fixed in the source and re-rendered. Automated checks were also run on every frame:
+**How V5 was checked.** Each build was rendered, then reviewed frame by frame from the rendered file by independent reviewers: one per section, a measured camera-motion pass, a skeptic re-checking each finding, and a coverage critic. There were four rounds of review in all. Everything they confirmed was fixed in the source and re-rendered, apart from the low items listed in the QA report. Automated checks were also run on every frame:
 - a regional pop scan;
 - a helmet outline stability measurement;
 - an arm layering check.
@@ -58,7 +58,7 @@ Kept from V4:
   - The region grows and shrinks continuously, so a change of order never pops and no torso outline shows through a sleeve.
   - Earlier V5 builds switched the order whole, then faded a copy in. The fade left a semi-transparent sleeve, and one shoulder still flipped in a single frame in the earbud close-up.
 - **The hook's heave** is taken in the knees: they compress as the deck rises and recover without springing up past his stance.
-- **The wrist phone** fades with its facing as his forearm turns, and its readout crossfades as he raises it.
+- **The wrist phone** is opaque and drawn only while it faces the camera; it turns away edge-on, so it never pops. Its readout crossfades as he raises it.
 - **Long rides** keep a little slow motion in his knees, arms and gaze instead of a held pose.
 
 - **Board:**
@@ -75,6 +75,7 @@ Kept from V4:
 - **Mechanism:**
   - On the "You see" caption, a still view of the underside from almost straight below: all ten fans, with the board hiding the rider.
   - On "blast", a low, wide, steady view in which the jets run down to a soft churned patch on the water.
+  - The board rises in one continuous move; a second ease-in after the first ease-out made the camera's tilt hitch.
   - On "lifting you completely", the riverside lift from a standing camera that follows only part of the rise and move-off. Its tilt eases in from rest at the cut. Its pan follows a share of his travel that falls away, so it peaks mid-move and is slowing at the cut.
   - Before, it started at 6 px a frame and accelerated to 14 px a frame into the cut.
 - **Workshop:**
@@ -106,6 +107,10 @@ Kept from V4:
   - a soft radial glow.
 
   Before, separate clusters with stroked flat bases stacked into a staircase with hard seams, and the glows were hard-edged discs.
+- The anchors along the climb are joined by a ribbon of flame, so the fire reads as one band up the casing.
+- The ignition bloom is soft; a stronger one pumped the whole frame like an exposure flicker.
+- The hot-air strands fade in and out over their run instead of appearing and vanishing at full length.
+- The top view and the fire view each hold one angle (their slow elevation and azimuth creep read as orbits).
 - The fire is out about 0.3 s before the smoke closes in, leaving a scorch on the deck where the pool burned. A dying flame narrows as well as shortening and fades; it used to squash into hollow outline slivers under the smoke.
 - The jet compressors never strobe or appear to run backward (drawn rotation at most 12° a frame; more speed shows as blur).
 - The hot-air recirculation is drawn under the deck and never from below. The heat haze clears once the leak starts.
