@@ -5,48 +5,38 @@
   "gain_db": -21.9
  },
  {
-  "t": 0.33,
-  "name": "he lands in the crouch (sneakers)",
-  "gain_db": -18.4
+  "t": 0.1,
+  "name": "arms over his head (sleeves, a rush)",
+  "gain_db": -21.9
  },
  {
-  "t": 0.36,
+  "t": 0.3,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 0.82,
-  "name": "leans (clothes)",
-  "gain_db": -26.0
+  "t": 0.44,
+  "name": "tracking ping (the screen redraws)",
+  "gain_db": -21.9
  },
  {
   "t": 1.0,
+  "name": "arms down (clothes)",
+  "gain_db": -26.9
+ },
+ {
+  "t": 1.05,
   "name": "tracking ping (the screen redraws)",
   "gain_db": -21.9
  },
  {
-  "t": 1.15,
+  "t": 1.55,
   "name": "footstep (lab)",
   "gain_db": -13.3
  },
  {
-  "t": 1.32,
-  "name": "footstep (lab)",
-  "gain_db": -13.1
- },
- {
-  "t": 1.45,
-  "name": "hand to his chin (sleeve)",
-  "gain_db": -30.5
- },
- {
-  "t": 1.59,
-  "name": "echo received (soft)",
-  "gain_db": -34.9
- },
- {
-  "t": 1.62,
-  "name": "tracking ping (the screen redraws)",
+  "t": 1.55,
+  "name": "feet shuffle in (sneakers)",
   "gain_db": -21.9
  },
  {
@@ -55,39 +45,19 @@
   "gain_db": -34.0
  },
  {
-  "t": 1.8,
-  "name": "joint locks",
-  "gain_db": -37.1
+  "t": 1.72,
+  "name": "footstep (lab)",
+  "gain_db": -13.1
  },
  {
-  "t": 1.835,
-  "name": "joint locks",
-  "gain_db": -37.1
+  "t": 1.765,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
  },
  {
-  "t": 1.87,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 1.905,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 1.94,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 1.975,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 2.01,
-  "name": "joint locks",
-  "gain_db": -37.1
+  "t": 1.827,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
  },
  {
   "t": 2.04,
@@ -95,42 +65,37 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.045,
+  "t": 2.1,
   "name": "joint locks",
   "gain_db": -37.1
  },
  {
-  "t": 2.072,
+  "t": 2.102,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
-  "t": 2.08,
+  "t": 2.135,
   "name": "joint locks",
   "gain_db": -37.1
  },
  {
-  "t": 2.115,
+  "t": 2.168,
+  "name": "echo received (soft)",
+  "gain_db": -34.9
+ },
+ {
+  "t": 2.17,
   "name": "joint locks",
   "gain_db": -37.1
  },
  {
-  "t": 2.15,
+  "t": 2.205,
   "name": "joint locks",
   "gain_db": -37.1
  },
  {
-  "t": 2.185,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 2.22,
-  "name": "joint locks",
-  "gain_db": -37.1
- },
- {
-  "t": 2.255,
+  "t": 2.24,
   "name": "joint locks",
   "gain_db": -37.1
  },
@@ -140,9 +105,34 @@
   "gain_db": -6.9
  },
  {
+  "t": 2.275,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
   "t": 2.285,
   "name": "STILL accent (tone)",
   "gain_db": -21.9
+ },
+ {
+  "t": 2.31,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.345,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.35,
+  "name": "rises to peek (clothes)",
+  "gain_db": -26.9
+ },
+ {
+  "t": 2.38,
+  "name": "joint locks",
+  "gain_db": -37.1
  },
  {
   "t": 2.38,
@@ -150,19 +140,39 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.444,
+  "t": 2.414,
   "name": "echo received (soft)",
   "gain_db": -34.9
+ },
+ {
+  "t": 2.415,
+  "name": "joint locks",
+  "gain_db": -37.1
  },
  {
   "t": 2.45,
-  "name": "rises to peek (clothes)",
-  "gain_db": -26.9
+  "name": "joint locks",
+  "gain_db": -37.1
  },
  {
-  "t": 2.703,
+  "t": 2.485,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.508,
   "name": "echo received (soft)",
   "gain_db": -34.9
+ },
+ {
+  "t": 2.52,
+  "name": "joint locks",
+  "gain_db": -37.1
+ },
+ {
+  "t": 2.555,
+  "name": "joint locks",
+  "gain_db": -37.1
  },
  {
   "t": 2.72,
@@ -170,12 +180,12 @@
   "gain_db": -34.0
  },
  {
-  "t": 2.925,
+  "t": 2.724,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
  {
-  "t": 3.05,
+  "t": 2.84,
   "name": "echo received (soft)",
   "gain_db": -34.9
  },
@@ -195,6 +205,11 @@
   "gain_db": -34.0
  },
  {
+  "t": 5.168,
+  "name": "echo received",
+  "gain_db": -29.9
+ },
+ {
   "t": 5.44,
   "name": "transmit packet",
   "gain_db": -34.0
@@ -210,12 +225,27 @@
   "gain_db": -29.9
  },
  {
+  "t": 5.56,
+  "name": "echo received",
+  "gain_db": -29.9
+ },
+ {
   "t": 5.78,
   "name": "transmit packet",
   "gain_db": -34.0
  },
  {
+  "t": 5.807,
+  "name": "echo received",
+  "gain_db": -29.9
+ },
+ {
   "t": 5.928,
+  "name": "echo received",
+  "gain_db": -29.9
+ },
+ {
+  "t": 6.057,
   "name": "echo received",
   "gain_db": -29.9
  },
@@ -465,7 +495,17 @@
   "gain_db": -28.0
  },
  {
+  "t": 11.432,
+  "name": "hand echo received",
+  "gain_db": -31.1
+ },
+ {
   "t": 11.562,
+  "name": "hand echo received",
+  "gain_db": -31.1
+ },
+ {
+  "t": 11.772,
   "name": "hand echo received",
   "gain_db": -31.1
  },
@@ -522,12 +562,12 @@
  {
   "t": 14.335,
   "name": "low impact (ElevenLabs)",
-  "gain_db": -2.5
+  "gain_db": -7.5
  },
  {
   "t": 14.335,
   "name": "sub drop",
-  "gain_db": -9.9
+  "gain_db": -15.9
  },
  {
   "t": 14.415,
@@ -557,7 +597,12 @@
  {
   "t": 15.057,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.4
+  "gain_db": -15.3
+ },
+ {
+  "t": 15.315,
+  "name": "SEPARATE STUDY tag",
+  "gain_db": -18.4
  },
  {
   "t": 15.435,
@@ -572,17 +617,17 @@
  {
   "t": 15.456,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.5
+  "gain_db": -22.2
  },
  {
   "t": 15.533,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.7
+  "gain_db": -14.8
  },
  {
   "t": 15.738,
   "name": "footstep (pedestrian)",
-  "gain_db": -24.2
+  "gain_db": -23.7
  },
  {
   "t": 15.855,
@@ -592,17 +637,17 @@
  {
   "t": 15.876,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.3
+  "gain_db": -22.8
  },
  {
   "t": 16.008,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -16.0
+  "gain_db": -14.7
  },
  {
   "t": 16.168,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.7
+  "gain_db": -23.3
  },
  {
   "t": 16.275,
@@ -612,17 +657,17 @@
  {
   "t": 16.296,
   "name": "footstep (pedestrian)",
-  "gain_db": -20.8
+  "gain_db": -22.9
  },
  {
   "t": 16.483,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.1
+  "gain_db": -15.0
  },
  {
   "t": 16.598,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.6
+  "gain_db": -22.4
  },
  {
   "t": 16.695,
@@ -632,17 +677,17 @@
  {
   "t": 16.716,
   "name": "footstep (pedestrian)",
-  "gain_db": -21.1
+  "gain_db": -22.7
  },
  {
   "t": 16.957,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.8
+  "gain_db": -16.3
  },
  {
   "t": 17.028,
   "name": "footstep (pedestrian)",
-  "gain_db": -23.3
+  "gain_db": -22.7
  },
  {
   "t": 17.115,
@@ -652,17 +697,17 @@
  {
   "t": 17.136,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.8
+  "gain_db": -22.3
  },
  {
   "t": 17.433,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.2
+  "gain_db": -15.5
  },
  {
   "t": 17.458,
   "name": "footstep (pedestrian)",
-  "gain_db": -24.0
+  "gain_db": -23.9
  },
  {
   "t": 17.535,
@@ -670,14 +715,9 @@
   "gain_db": -37.1
  },
  {
-  "t": 17.595,
-  "name": "caf\u00e9 through the glass, close",
-  "gain_db": -4.4
- },
- {
   "t": 17.888,
   "name": "footstep (pedestrian)",
-  "gain_db": -22.2
+  "gain_db": -21.8
  },
  {
   "t": 17.907,
@@ -690,9 +730,14 @@
   "gain_db": -37.1
  },
  {
+  "t": 18.255,
+  "name": "caf\u00e9 through the glass, close",
+  "gain_db": -4.4
+ },
+ {
   "t": 18.318,
   "name": "footstep (pedestrian)",
-  "gain_db": -24.1
+  "gain_db": -22.7
  },
  {
   "t": 18.375,
@@ -702,7 +747,7 @@
  {
   "t": 18.383,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.8
+  "gain_db": -15.4
  },
  {
   "t": 18.795,
@@ -712,7 +757,7 @@
  {
   "t": 18.858,
   "name": "footstep (hero (caf\u00e9))",
-  "gain_db": -15.3
+  "gain_db": -14.9
  },
  {
   "t": 18.895,
@@ -737,7 +782,7 @@
  {
   "t": 19.332,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -20.5
+  "gain_db": -20.8
  },
  {
   "t": 19.345,
@@ -777,7 +822,7 @@
  {
   "t": 19.808,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -19.8
+  "gain_db": -19.2
  },
  {
   "t": 19.855,
@@ -795,14 +840,14 @@
   "gain_db": -37.1
  },
  {
-  "t": 20.195,
+  "t": 20.145,
   "name": "MATCH chime",
   "gain_db": -21.9
  },
  {
   "t": 20.282,
   "name": "footstep (hero (through the window, split screen))",
-  "gain_db": -21.3
+  "gain_db": -20.6
  },
  {
   "t": 20.475,
@@ -817,7 +862,7 @@
  {
   "t": 20.758,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -13.1
+  "gain_db": -12.3
  },
  {
   "t": 21.06,
@@ -827,12 +872,12 @@
  {
   "t": 21.233,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.1
+  "gain_db": -11.9
  },
  {
   "t": 21.707,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.3
+  "gain_db": -12.9
  },
  {
   "t": 21.945,
@@ -842,7 +887,7 @@
  {
   "t": 22.183,
   "name": "footstep (hero (caf\u00e9, close))",
-  "gain_db": -12.9
+  "gain_db": -13.6
  },
  {
   "t": 22.295,
@@ -852,7 +897,7 @@
  {
   "t": 22.344,
   "name": "footstep (participant)",
-  "gain_db": -17.8
+  "gain_db": -19.2
  },
  {
   "t": 22.35,
@@ -862,67 +907,67 @@
  {
   "t": 22.386,
   "name": "footstep (participant)",
-  "gain_db": -17.5
+  "gain_db": -19.4
  },
  {
   "t": 22.764,
   "name": "footstep (participant)",
-  "gain_db": -19.4
+  "gain_db": -18.1
  },
  {
   "t": 22.776,
   "name": "footstep (participant)",
-  "gain_db": -19.5
+  "gain_db": -19.3
  },
  {
   "t": 22.85,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -17.2
  },
  {
   "t": 23.03,
   "name": "footstep (participant)",
-  "gain_db": -18.1
+  "gain_db": -18.0
  },
  {
   "t": 23.166,
   "name": "footstep (participant)",
-  "gain_db": -17.3
+  "gain_db": -19.6
  },
  {
   "t": 23.184,
   "name": "footstep (participant)",
-  "gain_db": -17.3
+  "gain_db": -19.1
  },
  {
   "t": 23.35,
   "name": "footstep (participant)",
-  "gain_db": -18.1
+  "gain_db": -18.6
  },
  {
   "t": 23.38,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -17.2
  },
  {
   "t": 23.556,
   "name": "footstep (participant)",
-  "gain_db": -17.4
+  "gain_db": -18.5
  },
  {
   "t": 23.604,
   "name": "footstep (participant)",
-  "gain_db": -17.3
+  "gain_db": -17.4
  },
  {
   "t": 23.73,
   "name": "footstep (participant)",
-  "gain_db": -19.5
+  "gain_db": -18.9
  },
  {
   "t": 23.85,
   "name": "footstep (participant)",
-  "gain_db": -18.8
+  "gain_db": -19.2
  },
  {
   "t": 23.895,
@@ -937,37 +982,37 @@
  {
   "t": 23.946,
   "name": "footstep (participant)",
-  "gain_db": -18.7
+  "gain_db": -19.5
  },
  {
   "t": 24.024,
   "name": "footstep (participant)",
-  "gain_db": -17.5
+  "gain_db": -17.7
  },
  {
   "t": 24.08,
   "name": "footstep (participant)",
-  "gain_db": -17.7
+  "gain_db": -17.3
  },
  {
   "t": 24.336,
   "name": "footstep (participant)",
-  "gain_db": -19.7
+  "gain_db": -18.9
  },
  {
   "t": 24.35,
   "name": "footstep (participant)",
-  "gain_db": -18.8
+  "gain_db": -18.4
  },
  {
   "t": 24.43,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -18.2
  },
  {
   "t": 24.444,
   "name": "footstep (participant)",
-  "gain_db": -19.1
+  "gain_db": -18.6
  },
  {
   "t": 24.475,
@@ -1360,44 +1405,74 @@
   "gain_db": 0.0
  },
  {
-  "t": 27.486,
-  "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -18.1
+  "t": 27.29,
+  "name": "saved record (kept)",
+  "gain_db": -26.0
  },
  {
-  "t": 28.026,
-  "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -16.7
- },
- {
-  "t": 28.53,
+  "t": 27.44,
   "name": "caf\u00e9 through the glass (the receiver match)",
   "gain_db": -4.4
  },
  {
+  "t": 27.486,
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -19.6
+ },
+ {
+  "t": 28.026,
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -18.7
+ },
+ {
+  "t": 28.51,
+  "name": "new signal arriving",
+  "gain_db": -32.0
+ },
+ {
   "t": 28.566,
-  "name": "footstep (hero (past the caf\u00e9))",
-  "gain_db": -18.2
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -20.1
+ },
+ {
+  "t": 28.67,
+  "name": "new signal arriving",
+  "gain_db": -32.0
+ },
+ {
+  "t": 28.83,
+  "name": "new signal arriving",
+  "gain_db": -32.0
+ },
+ {
+  "t": 28.99,
+  "name": "new signal arriving",
+  "gain_db": -32.0
  },
  {
   "t": 29.106,
-  "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -22.6
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -20.5
  },
  {
-  "t": 29.555,
-  "name": "seen before (his picture comes up)",
+  "t": 29.15,
+  "name": "new signal arriving",
+  "gain_db": -32.0
+ },
+ {
+  "t": 29.425,
+  "name": "SAME ID #12",
   "gain_db": -20.9
  },
  {
   "t": 29.646,
-  "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -21.9
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -19.5
  },
  {
   "t": 30.186,
-  "name": "footstep (hero (off screen, the camera at the window))",
-  "gain_db": -23.4
+  "name": "footstep (hero (past the caf\u00e9, later; split screen))",
+  "gain_db": -19.2
  },
  {
   "t": 30.235,
@@ -1406,23 +1481,23 @@
  },
  {
   "t": 30.615,
-  "name": "unease swell",
-  "gain_db": -19.2
+  "name": "unease swell (kept under the voice)",
+  "gain_db": -30.5
  },
  {
   "t": 30.726,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -15.6
+  "gain_db": -13.9
  },
  {
   "t": 31.266,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -13.3
+  "gain_db": -13.9
  },
  {
   "t": 31.806,
   "name": "footstep (hero (close, unaware))",
-  "gain_db": -13.3
+  "gain_db": -15.6
  },
  {
   "t": 31.95,
@@ -1432,12 +1507,12 @@
  {
   "t": 32.346,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -16.4
+  "gain_db": -16.9
  },
  {
   "t": 32.886,
   "name": "footstep (hero (toward the CCTV))",
-  "gain_db": -16.1
+  "gain_db": -15.0
  },
  {
   "t": 33.0,
@@ -1447,12 +1522,12 @@
  {
   "t": 33.426,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -19.1
+  "gain_db": -20.1
  },
  {
   "t": 33.966,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.2
+  "gain_db": -18.7
  },
  {
   "t": 34.39,
@@ -1467,7 +1542,7 @@
  {
   "t": 34.506,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -20.2
+  "gain_db": -20.5
  },
  {
   "t": 34.65,
@@ -1487,7 +1562,12 @@
  {
   "t": 35.046,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -20.5
+  "gain_db": -19.0
+ },
+ {
+  "t": 35.046,
+  "name": "he stops (scuff)",
+  "gain_db": -14.0
  },
  {
   "t": 35.07,
@@ -1495,14 +1575,14 @@
   "gain_db": -34.9
  },
  {
+  "t": 35.217,
+  "name": "the duck (clothes, a rush)",
+  "gain_db": -23.1
+ },
+ {
   "t": 35.28,
   "name": "router packet",
   "gain_db": -34.9
- },
- {
-  "t": 35.317,
-  "name": "he stops (scuff)",
-  "gain_db": -14.0
  },
  {
   "t": 35.49,
@@ -1512,7 +1592,7 @@
  {
   "t": 35.586,
   "name": "footstep (hero (in the CCTV picture))",
-  "gain_db": -18.4
+  "gain_db": -18.2
  },
  {
   "t": 35.7,
@@ -1520,18 +1600,18 @@
   "gain_db": -34.9
  },
  {
-  "t": 35.717,
-  "name": "the duck (clothes, a rush)",
-  "gain_db": -21.9
- },
- {
   "t": 35.967,
   "name": "the screen redraws (still)",
   "gain_db": -20.9
  },
  {
-  "t": 36.017,
+  "t": 36.117,
   "name": "lab room tone (hum)",
   "gain_db": 0.0
+ },
+ {
+  "t": 36.117,
+  "name": "match cut to the lab (soft thud)",
+  "gain_db": -10.5
  }
 ]

@@ -8,10 +8,10 @@
   "I:         -14.3 LUFS",
   "Threshold: -24.4 LUFS",
   "Loudness range:",
-  "LRA:         2.0 LU",
+  "LRA:         2.2 LU",
   "Threshold: -34.4 LUFS",
-  "LRA low:   -15.6 LUFS",
-  "LRA high:  -13.6 LUFS",
+  "LRA low:   -15.7 LUFS",
+  "LRA high:  -13.5 LUFS",
   "True peak:",
   "Peak:       -1.4 dBFS"
  ],

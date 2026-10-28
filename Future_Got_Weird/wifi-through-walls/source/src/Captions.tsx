@@ -15,7 +15,8 @@ export const Captions: React.FC<{t: number; cy: number}> = ({t, cy}) => {
   const words = c.text.split(' ');
   return (
     <div style={{position: 'absolute', left: 90, width: 800, top: cy, transform: `translateY(-50%) scale(${pop})`, opacity: a, textAlign: 'center', textWrap: 'balance'} as React.CSSProperties}>
-      <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 68, lineHeight: 1.16, letterSpacing: '0.005em', color: '#FFFFFF',
+      {/* V8: a soft dark backing keeps the caption's contrast over waves, screens and dissolves */}
+      <span style={{display: 'inline', background: 'rgba(6,10,16,0.42)', borderRadius: 22, padding: '2px 18px', boxDecorationBreak: 'clone', WebkitBoxDecorationBreak: 'clone',fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 68, lineHeight: 1.16, letterSpacing: '0.005em', color: '#FFFFFF',
         WebkitTextStroke: '11px rgba(6,9,14,0.95)', paintOrder: 'stroke fill', textShadow: '0 5px 16px rgba(0,0,0,0.6)'} as React.CSSProperties}>
         {words.map((wd, k) => {
           const key = wd.toLowerCase().replace(/[^a-z0-9']/g, '');

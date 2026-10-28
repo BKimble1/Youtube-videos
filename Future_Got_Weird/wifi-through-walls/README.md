@@ -1,5 +1,32 @@
 # Future Got Weird: Wi-Fi Can See Through Walls
 
+## V8 (targeted visual polish)
+
+**Status (28 Oct 2026):** V8 review rendered natively at 1080×1920, 30 fps, and checked from the file. **Not published;
+the 4K master has not been made.** It keeps V7's narration recording, words, order, timing and voice. The changes:
+
+- **Opening:** a stable shared composition with one big mirrored gesture (forearms over his head).
+- **Mechanism:** a clearer one-pulse mechanism whose echo now reaches the receiver.
+- **Creepy turn:** joints only.
+- **Separate identity study:** a SEPARATE STUDY cue, and large STORED SAMPLES → NEW SAMPLE → MATCH: #12 with generic
+  avatars.
+- **197 payoff:** 197 and ALMOST EVERYONE read first, labelled as a schematic illustration.
+- **Return visit:** LATER, with SAVED RECORD → NEW SIGNAL → SAME ID.
+- **Ending:** a labelled CAMERA vs WI-FI comparison and an exact crouch-to-crouch loop join after the closing caption.
+
+Remaining limitations are listed at the end of the change log.
+
+| Deliverable | File |
+|---|---|
+| V8 review: 1080×1920, 30 fps, 1094 frames, 36.47 s, H.264 + AAC | `exports/FGW_WiFi_ThroughWalls_V8_REVIEW_1080x1920.mp4` |
+| Change log, checks, limitations | `production/V8_CHANGELOG.md` |
+| Editable source (V8 scenes) | `source/src/v8/` (joins in `source/src/Film.tsx`) |
+| Probes, measured QA, voice clarity | `qa/v8/` (`tools/v8/*`) |
+| Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V8_mix.wav`, `audio/v8_events.json` (`tools/v8/events.ts`, `tools/v8/make_audio8.py`) |
+| Stills | `stills/FGW_WiFi_V8_*.png` |
+
+`source/` now builds V8. V4–V7's scene code stays in `source/src/v4/` to `v7/`.
+
 ## V7 (targeted visual revision)
 
 **Status (28 Oct 2026):** V7 review rendered at 1080×1920 and checked from the file. **Not published. The 4K master
@@ -26,7 +53,7 @@ Remaining known defects are listed at the end of the change log.
 | Mix, sound-event timing | `audio/mix/FGW_WiFi_Walls_V7_mix.wav`, `audio/v7_events.json` (`tools/v7/events.ts`, `tools/v7/make_audio7.py`) |
 | Stills | `stills/FGW_WiFi_V7_*.png` |
 
-`source/` now builds V7. V4, V5 and V6's scene code stays in `source/src/v4/`, `v5/` and `v6/`.
+V7's scene code is in `source/src/v7/`.
 
 ## V6 (cinematic stability and character rig pass)
 
