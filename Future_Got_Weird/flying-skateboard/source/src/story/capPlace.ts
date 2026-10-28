@@ -5,7 +5,8 @@
 import {CAPS} from './time';
 import {shotAt} from './shots';
 
-export const SLOTS = [1450, 1300, 400, 540, 1150];
+// (V5: 1000 is a last resort, between a high rider and the water his air reaches)
+export const SLOTS = [1450, 1300, 400, 540, 1150, 1000];
 const HALF = 88; // two lines of 70 px Nunito
 const memo = new Map<number, number>();
 const clearOf = (y: number, ts: number[]) => {
@@ -35,8 +36,14 @@ export const makePlacer = (shot: Focus) => {
     }
     return worst;
   };
+  // (V5: sampled inside the caption's time on screen; captions now change on a nearby cut, so the first instant of the
+  // nominal span can belong to the previous shot)
+  const span = (show: number, hide: number) => {
+    const a = hide - show > 0.3 ? show + 0.1 : show, b = hide - show > 0.3 ? hide - 0.05 : hide;
+    return Array.from({length: 7}, (_, i) => a + ((b - a) * i) / 6);
+  };
   const placeFor = (show: number, hide: number) => {
-    const ts = Array.from({length: 7}, (_, i) => show + ((hide - show) * i) / 6);
+    const ts = span(show, hide);
     let best = SLOTS[0], bestOv = Infinity;
     for (const y of SLOTS) {
       const ov = clear(y, ts);
@@ -48,7 +55,7 @@ export const makePlacer = (shot: Focus) => {
   const capY = (i: number): number => {
     if (!m.has(i)) {
       // V5: keep the previous caption's place when it is clear for this one too (fewer jumps between captions)
-      const ts = Array.from({length: 7}, (_, k) => CAPS[i].show + ((CAPS[i].hide - CAPS[i].show) * k) / 6);
+      const ts = span(CAPS[i].show, CAPS[i].hide);
       const prev = i > 0 && CAPS[i].show - CAPS[i - 1].hide < 0.3 ? capY(i - 1) : null;
       m.set(i, prev !== null && clear(prev, ts) === 0 ? prev : placeFor(CAPS[i].show, CAPS[i].hide));
     }

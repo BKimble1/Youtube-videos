@@ -200,8 +200,8 @@ const Town: React.FC<{L: Lens; layer: number}> = ({L, layer}) => (
 );
 
 /** Badong's cable-stayed bridge downstream: deck, two H pylons, stay fans. */
-// (V5: the deck runs on as an approach viaduct over the near bank, so its end is never seen hanging in mid-air)
-const BRIDGE = {x: -1150, y: 46, z0: -900, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
+// (V5: the deck's near end stands on an abutment pier at the bank, so it is never seen hanging in mid-air)
+const BRIDGE = {x: -1150, y: 46, z0: -60, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
 const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
   const sy = mirror ? -1 : 1;
   const P = (x: number, y: number, z: number) => L.p(v3(x, y * sy, z));
@@ -212,6 +212,11 @@ const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
   const deck = [P(BRIDGE.x, BRIDGE.y, BRIDGE.z0), P(BRIDGE.x, BRIDGE.y, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0)];
   // (V5: the deck is not reflected: on the rough water its straight line read as a rail crossing the river)
   const els: React.ReactNode[] = mirror ? [] : [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} />];
+  if (!mirror) {
+    // the abutment pier under the deck's near end, down to the bank
+    const pa = P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0 + 3), pb = P(BRIDGE.x, 0, BRIDGE.z0 + 3);
+    els.push(<path key="ab" d={`M${f2(pa.x)},${f2(pa.y)} L${f2(pb.x)},${f2(pb.y)}`} stroke={col} strokeWidth={f2(Math.max(1.5, 7 * pa.k))} />);
+  }
   BRIDGE.pylons.forEach((pz, i) => {
     for (const dx of [-9, 9]) {
       // V5: on the rain-roughened water the reflection is broken into short ripple-length pieces and only reaches part
