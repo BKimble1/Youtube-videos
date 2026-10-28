@@ -38,18 +38,30 @@ export type JetState = {
   rps: number;
   /** 0..1 burn damage: scorch on the wiring, the fuel lines and the deck */
   burn: number;
-  /** 0..1 vibration amplitude (m) applied by the caller to the frame */
+  /** V2: per-engine lift above its mount (m): an engine being lowered into place during the assembly */
+  lift?: number[];
+  /** V2: 0..1 heat soak: nozzles glow, nearby fuel lines and wiring heat toward orange */
+  heat?: number;
 };
 
 const eng = (B: Frame, i: number, y: number) => toW(B, v3(JET.engines[i][0], y, JET.engines[i][1]));
 
-export const jetIntake = (B: Frame, i: number) => eng(B, i, JET.top);
-export const jetNozzle = (B: Frame, i: number) => eng(B, i, JET.bot);
+export const jetIntake = (B: Frame, i: number, lift = 0) => eng(B, i, JET.top + lift);
+export const jetNozzle = (B: Frame, i: number, lift = 0) => eng(B, i, JET.bot + lift);
+/** V2: the fuel-line fitting at engine i (where the leak ignites) and points along its line back to the tank */
+export const jetFuelLine = (B: Frame, i: number): V3[] => {
+  const [ex, ez] = JET.engines[i];
+  const T = JET.tank;
+  return [v3(T.x + Math.sign(ex || 0.001) * 0.03, T.r * 1.6, (T.z0 + T.z1) / 2), v3(ex * 0.6, 0.05, ez * 0.5 + (T.z0 + T.z1) / 4), v3(ex, JET.top - 0.02, ez + (ez > 0 ? -JET.r : ez < 0 ? JET.r : -JET.r))].map((q) => toW(B, q));
+};
 
 export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; stand?: boolean}> = ({id, L, B, st, stand = true}) => {
   const kc = L.p(B.o).k;
   const w = inkW(kc, 0.004);
   const above = d3(s3(L.pos, B.o), B.y) > 0;
+  const lifts = st.lift ?? [];
+  const heat = st.heat ?? 0;
+  const eng = (Bf: Frame, i: number, y: number) => toW(Bf, v3(JET.engines[i][0], y + (lifts[i] ?? 0), JET.engines[i][1]));
   const D = JET.deck;
   const deckPts = (y: number) => [v3(-D.x, y, -D.z), v3(D.x, y, -D.z), v3(D.x, y, D.z), v3(-D.x, y, D.z)].map((q) => toW(B, q));
   const deckTop = deckPts(0), deckBot = deckPts(-D.t);
@@ -111,15 +123,17 @@ export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; st
   const tankA = circ3(toW(B, v3(T.x, T.r + 0.002, T.z0)), B.x, B.y, T.r, 18), tankB = circ3(toW(B, v3(T.x, T.r + 0.002, T.z1)), B.x, B.y, T.r, 18);
   const tankPts = thin(hull(proj(L, [...tankA, ...tankB])), 0.8);
   const burn = st.burn;
-  const fuelCol = mix(JCOL.fuel, JCOL.scorch, burn * 0.85);
+  const fuelCol = mix(mix(JCOL.fuel, '#FFB25A', heat * 0.6), JCOL.scorch, burn * 0.85);
   const line = (i: number) => {
+    if ((lifts[i] ?? 0) > 0.005) return null;
     const [ex, ez] = JET.engines[i];
     const pts = [v3(T.x + Math.sign(ex || 0.001) * 0.03, T.r * 1.6, (T.z0 + T.z1) / 2), v3(ex * 0.6, 0.05, ez * 0.5 + (T.z0 + T.z1) / 4), v3(ex, JET.top - 0.02, ez + (ez > 0 ? -JET.r : ez < 0 ? JET.r : -JET.r))].map((q) => toW(B, q));
     return <path key={`fl${i}`} d={curveD(proj(L, pts))} stroke={fuelCol} strokeWidth={f2(Math.max(1, 0.012 * kc))} fill="none" strokeLinecap="round" />;
   };
   const wires = JET.engines.map(([ex, ez], i) => {
     const pts = [v3(0.24, 0.03, -0.62), v3(ex * 0.8 + 0.08, 0.025, ez * 0.7 - 0.08), v3(ex + 0.06, JET.top - 0.05, ez)].map((q) => toW(B, q));
-    const col = i % 2 ? mix(JCOL.wireRed, JCOL.scorch, burn * 0.9) : JCOL.wire;
+    if ((lifts[i] ?? 0) > 0.005) return null;
+    const col = mix(i % 2 ? mix(JCOL.wireRed, JCOL.scorch, burn * 0.9) : JCOL.wire, '#E8572A', heat * 0.55 * (1 - burn));
     return <path key={`w${i}`} d={curveD(proj(L, pts))} stroke={col} strokeWidth={f2(Math.max(0.8, 0.008 * kc))} fill="none" strokeLinecap="round" />;
   });
   const ecu = (() => {
@@ -150,7 +164,7 @@ export const JetBoard: React.FC<{id: string; L: Lens; B: Frame; st: JetState; st
   const lower = order.map((i) => (
     <g key={`lo${i}`}>
       {casing(i, -JET.deck.t, JET.bot + 0.07, JET.r, JET.r * 0.95, JCOL.casing, `cl${i}`)}
-      {casing(i, JET.bot + 0.07, JET.bot, JET.r * 0.8, JET.r * 0.62, JCOL.nozzle, `nz${i}`)}
+      {casing(i, JET.bot + 0.07, JET.bot, JET.r * 0.8, JET.r * 0.62, mix(JCOL.nozzle, '#E4502A', heat * 0.8), `nz${i}`)}
     </g>
   ));
   const upper = order.map((i) => (

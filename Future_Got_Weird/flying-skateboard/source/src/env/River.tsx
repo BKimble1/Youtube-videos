@@ -8,6 +8,7 @@ import {fmt} from '../dc/math';
 import {hash, noise1} from '../dc/math';
 import {circ3, f2, mix, P2, polyD, proj, shade, lit} from '../eng/draw';
 import {a3, clipNear, d3, H, Lens, m3, n3, s3, V3, v3, W} from '../eng/v3';
+import {GorgeAt, gorgeNotch, GorgeWalls} from './Gorge';
 
 export const RIVER = {far: 520, current: 1.1};
 export const PALR = {
@@ -53,7 +54,7 @@ const ridgeH = (x: number, layer: number, side: number) => {
 const LAYERS = LAY.map((l) => l[0]);
 
 type Ridge = {pts: V3[]; dist: number; color: string; layer: number; side: number; z: number; cap?: V3[]};
-const ridges = (L: Lens): Ridge[] => {
+const ridges = (L: Lens, gorge?: GorgeAt): Ridge[] => {
   const out: Ridge[] = [];
   for (const side of [1, -1]) {
     for (let li = 0; li < LAYERS.length; li++) {
@@ -61,7 +62,7 @@ const ridges = (L: Lens): Ridge[] => {
       const step = li === 0 ? 14 : li < 4 ? 30 : li < 6 ? 45 : 90;
       const x0 = Math.floor((L.pos.x - 9000) / step) * step;
       const pts: V3[] = [];
-      for (let x = x0; x <= L.pos.x + 9000; x += step) pts.push(v3(x, ridgeH(x, li, side), z));
+      for (let x = x0; x <= L.pos.x + 9000; x += step) pts.push(v3(x, gorge && side > 0 && gorgeNotch(gorge, x, z) ? -6 : ridgeH(x, li, side), z));
       pts.push(v3(L.pos.x + 9000, -6, z), v3(x0, -6, z));
       const dist = Math.abs(z - L.pos.z) + 1;
       const c = LAY[li][4];
@@ -225,7 +226,7 @@ const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
 };
 
 /** world-fixed ripple crests on the water (short arcs), four levels of detail, drifting with the current */
-const Ripples: React.FC<{L: Lens; t: number; calm?: number}> = ({L, t, calm = 0}) => {
+const Ripples: React.FC<{L: Lens; t: number; calm?: number; L2?: Lens}> = ({L, t, calm = 0, L2}) => {
   const g = v3(L.pos.x, 0, L.pos.z);
   const levels: [number, number, number][] = [[2.2, 36, 0], [4.6, 110, 36], [11, 380, 110], [32, 1400, 380]];
   const buckets: Record<string, string[]> = {};
@@ -253,6 +254,20 @@ const Ripples: React.FC<{L: Lens; t: number; calm?: number}> = ({L, t, calm = 0}
         const op = Math.round((light ? 0.3 + 0.55 * tw : 0.2 + 0.25 * tw) * (1 - calm) * 4) / 4;
         if (op <= 0) continue;
         const key = `${light ? 'L' : 'D'}|${wd.toFixed(1)}|${op}`;
+        // V2 motion blur: where the water sweeps past the lens faster than a crest's own length, the crest streaks
+        // from where it was a shutter-time ago to where it is now
+        if (L2) {
+          const p2 = L2.p(q);
+          const disp = Math.hypot(p2.x - pc.x, p2.y - pc.y);
+          if (disp > Math.hypot(b.x - a.x, b.y - a.y) * 1.2) {
+            // a streak, capped in length and drawn fainter (the eye reads speed, not rain)
+            const k = Math.min(1, 46 / disp);
+            const sx = pc.x + (p2.x - pc.x) * k, sy = pc.y + (p2.y - pc.y) * k;
+            const key2 = `${light ? 'L' : 'D'}|${wd.toFixed(1)}|${Math.round(op * 0.5 * 4) / 4}`;
+            if (light) (buckets[key2] ??= []).push(`M${f2(sx)},${f2(sy)}L${f2(pc.x)},${f2(pc.y)}`);
+            continue;
+          }
+        }
         (buckets[key] ??= []).push(`M${f2(a.x)},${f2(a.y)}Q${f2(m.x)},${f2(m.y)} ${f2(b.x)},${f2(b.y)}`);
       }
     }
@@ -339,8 +354,8 @@ export const Buoy: React.FC<{L: Lens; at: V3; t: number}> = ({L, at, t}) => {
 };
 
 /** Everything behind the flying board: sky, clouds, ridges, town, bridge, water, reflections, ripples. */
-export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number}> = ({id, L, t, tint = 0}) => {
-  const rs = ridges(L);
+export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens}> = ({id, L, t, tint = 0, gorge, L2}) => {
+  const rs = ridges(L, gorge);
   const h = horizon(L);
   // water: the river quad between the banks, clipped to the front of the camera
   const wq = clipNear(L, [v3(L.pos.x - 9000, 0, -LAY[0][0]), v3(L.pos.x + 9000, 0, -LAY[0][0]), v3(L.pos.x + 9000, 0, RIVER.far + LAY[0][0]), v3(L.pos.x - 9000, 0, RIVER.far + LAY[0][0])], 0.4);
@@ -402,6 +417,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number}
       <Sky id={id} L={L} tint={tint} />
       <Clouds L={L} />
       {rs.map((r, i) => ridgeEl(r, i, false))}
+      {gorge && <GorgeWalls L={L} t={t} g={gorge} />}
       {wp.length > 2 && (
         <g>
           <defs>
@@ -421,7 +437,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number}
           <g clipPath={`url(#${id}-wc)`}>
             <Slicks L={L} t={t} />
             <Bridge L={L} mirror />
-            <Ripples L={L} t={t} />
+            <Ripples L={L} t={t} L2={L2} />
           </g>
         </g>
       )}

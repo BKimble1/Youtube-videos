@@ -72,7 +72,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
   const order = BD.ducts.map((_, i) => i).sort((a, b) => d3(s3(ductPt(B, b, 0), L.pos), L.f) - d3(s3(ductPt(B, a, 0), L.pos), L.f));
   const blur = Math.min(1, st.rps / 18);
   const dz = (i: number) => {
-    if (i + 1 > built + 0.999) return null;
+    if (i + 1 > built + 0.999) return <path key={i} d={polyD(holes[i])} fill="#4A535C" stroke={INK} strokeWidth={f2(w * 1.2)} />;
     const seat0 = Math.min(1, Math.max(0, built - i));
     if (seat0 < 0.999) return null;
     const c = ductPt(B, i, BD.fanY);

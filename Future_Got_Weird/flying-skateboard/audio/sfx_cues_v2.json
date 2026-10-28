@@ -1,0 +1,514 @@
+[
+ {
+  "name": "frame 0: rotor air already in motion",
+  "at": 35.55,
+  "frame": -10.5,
+  "dur": 0.7,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the balance correction (a puff of air)",
+  "at": 0.3,
+  "frame": 9.0,
+  "dur": 0.45,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "pull back over the river (air)",
+  "at": 0.8,
+  "frame": 24.0,
+  "dur": 0.8,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "the crossing banks up (air rising)",
+  "at": 1.9,
+  "frame": 57.0,
+  "dur": 1.2,
+  "gain_db": -29,
+  "hero": false
+ },
+ {
+  "name": "under the board (air passes over)",
+  "at": 3.1,
+  "frame": 93.0,
+  "dur": 0.8,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "count: duct 1 rim (tiny tick)",
+  "at": 4.014,
+  "frame": 120.4,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 2 rim (tiny tick)",
+  "at": 4.101,
+  "frame": 123.0,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 3 rim (tiny tick)",
+  "at": 4.188,
+  "frame": 125.6,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 4 rim (tiny tick)",
+  "at": 4.274,
+  "frame": 128.2,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 5 rim (tiny tick)",
+  "at": 4.362,
+  "frame": 130.8,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 6 rim (tiny tick)",
+  "at": 4.449,
+  "frame": 133.5,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 7 rim (tiny tick)",
+  "at": 4.535,
+  "frame": 136.1,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 8 rim (tiny tick)",
+  "at": 4.622,
+  "frame": 138.7,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 9 rim (tiny tick)",
+  "at": 4.71,
+  "frame": 141.3,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "count: duct 10 rim (tiny tick)",
+  "at": 4.796,
+  "frame": 143.9,
+  "dur": 0.02,
+  "gain_db": -40,
+  "hero": false
+ },
+ {
+  "name": "cutaway: air drawn in through one duct",
+  "at": 4.98,
+  "frame": 149.4,
+  "dur": 0.8,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "blast air downward (air rush)",
+  "at": 5.76,
+  "frame": 172.8,
+  "dur": 1.0,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "water ring -> dust ring (fwump)",
+  "at": 6.36,
+  "frame": 190.8,
+  "dur": 0.6,
+  "gain_db": -25,
+  "hero": true
+ },
+ {
+  "name": "dust, grass and leaves blow out",
+  "at": 6.57,
+  "frame": 197.1,
+  "dur": 1.2,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "lift-off (the rotors bite)",
+  "at": 7.06,
+  "frame": 211.8,
+  "dur": 0.4,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "swoop down to the fan",
+  "at": 8.86,
+  "frame": 265.8,
+  "dur": 0.5,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "fan -> intake: the turn carries over (whirr)",
+  "at": 9.19,
+  "frame": 275.7,
+  "dur": 0.4,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "engine 4 lowered and seated (clunk)",
+  "at": 10.26,
+  "frame": 307.8,
+  "dur": 0.25,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "ignition: starter clicks",
+  "at": 10.44,
+  "frame": 313.2,
+  "dur": 0.15,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "turbine spool-up whine and roar",
+  "at": 10.49,
+  "frame": 314.7,
+  "dur": 2.03,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "heat: casings and lines ticking",
+  "at": 11.12,
+  "frame": 333.6,
+  "dur": 1.9,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "recirculation: rough rumble and rattle",
+  "at": 11.7,
+  "frame": 351.0,
+  "dur": 0.92,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "FIRE: the fuel fitting catches (whoomp)",
+  "at": 12.49,
+  "frame": 374.7,
+  "dur": 0.9,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "fire crackle (quickly under the narration)",
+  "at": 12.64,
+  "frame": 379.2,
+  "dur": 1.0,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "turbines wind down",
+  "at": 12.97,
+  "frame": 389.1,
+  "dur": 1.0,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "compressor -> electric fan: the spin carries over",
+  "at": 13.52,
+  "frame": 405.6,
+  "dur": 0.5,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "the spare unit slides along the bench",
+  "at": 14.03,
+  "frame": 420.9,
+  "dur": 0.5,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the spare unit seats (knock)",
+  "at": 14.61,
+  "frame": 438.3,
+  "dur": 0.16,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "duct 2 seats",
+  "at": 14.784,
+  "frame": 443.5,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 3 seats",
+  "at": 14.843,
+  "frame": 445.3,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 4 seats",
+  "at": 14.892,
+  "frame": 446.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 5 seats",
+  "at": 14.938,
+  "frame": 448.1,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 6 seats",
+  "at": 14.982,
+  "frame": 449.5,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 7 seats",
+  "at": 15.028,
+  "frame": 450.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 8 seats",
+  "at": 15.077,
+  "frame": 452.3,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 9 seats",
+  "at": 15.136,
+  "frame": 454.1,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "duct 10 seats",
+  "at": 15.26,
+  "frame": 457.8,
+  "dur": 0.16,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "lift (rotors bite)",
+  "at": 15.6,
+  "frame": 468.0,
+  "dur": 0.5,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the tilt: a lurch of air",
+  "at": 16.61,
+  "frame": 498.3,
+  "dur": 0.6,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "cloth: the hips answer",
+  "at": 16.96,
+  "frame": 508.8,
+  "dur": 0.4,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "drift sideways (air)",
+  "at": 17.98,
+  "frame": 539.4,
+  "dur": 0.8,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "second correction (cloth)",
+  "at": 19.48,
+  "frame": 584.4,
+  "dur": 0.35,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "the board drifts, he catches it (air)",
+  "at": 20.31,
+  "frame": 609.3,
+  "dur": 0.7,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "controller: thumb on the throttle (click)",
+  "at": 21.99,
+  "frame": 659.7,
+  "dur": 0.03,
+  "gain_db": -29,
+  "hero": false
+ },
+ {
+  "name": "phone 1: soft tick",
+  "at": 22.63,
+  "frame": 678.9,
+  "dur": 0.02,
+  "gain_db": -37,
+  "hero": false
+ },
+ {
+  "name": "phone 2: soft tick",
+  "at": 23.09,
+  "frame": 692.7,
+  "dur": 0.02,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "AI coach cue in the earpiece",
+  "at": 23.49,
+  "frame": 704.7,
+  "dur": 0.42,
+  "gain_db": -27,
+  "hero": true
+ },
+ {
+  "name": "the correction (cloth)",
+  "at": 24.01,
+  "frame": 720.3,
+  "dur": 0.35,
+  "gain_db": -36,
+  "hero": false
+ },
+ {
+  "name": "settled: clean air",
+  "at": 24.56,
+  "frame": 736.8,
+  "dur": 0.9,
+  "gain_db": -33,
+  "hero": false
+ },
+ {
+  "name": "early session: a wobbling hover (air)",
+  "at": 25.41,
+  "frame": 762.3,
+  "dur": 0.6,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "a clean low pass (air)",
+  "at": 26.11,
+  "frame": 783.3,
+  "dur": 0.7,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "out over the water: the glide",
+  "at": 26.86,
+  "frame": 805.8,
+  "dur": 0.9,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "RIVER: the wide (air swells)",
+  "at": 28.3,
+  "frame": 849.0,
+  "dur": 1.4,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "into the gorge mouth (air narrows)",
+  "at": 29.48,
+  "frame": 884.4,
+  "dur": 1.0,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "the chase between the walls (air)",
+  "at": 30.49,
+  "frame": 914.7,
+  "dur": 0.8,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "rising to the high view (air)",
+  "at": 31.01,
+  "frame": 930.3,
+  "dur": 0.9,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "back over the river (air)",
+  "at": 31.74,
+  "frame": 952.2,
+  "dur": 0.8,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "PAY YOU: in close to the board (air)",
+  "at": 32.64,
+  "frame": 979.2,
+  "dur": 0.6,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "swing round to the opening angle (air)",
+  "at": 33.74,
+  "frame": 1012.2,
+  "dur": 1.0,
+  "gain_db": -34,
+  "hero": false
+ }
+]

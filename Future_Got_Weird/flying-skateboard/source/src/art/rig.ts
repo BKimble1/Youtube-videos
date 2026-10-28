@@ -31,6 +31,17 @@ export type PilotPose = {
   wristUp: number;
   /** rear foot off the deck: 0 = planted on the deck .. 1 = on the ground behind the heel edge (stepping on) */
   stepR?: number;
+  /** V2: 0..1 the hips lead the correction and the shoulders counter-lean over the feet (instead of the whole body
+   *  tipping as one block) */
+  hipLead?: number;
+  /** V2: 0..1 the head stays level with the world (the eyes keep the horizon) instead of following the spine */
+  level?: number;
+  /** V2: -1..1 arm counterbalance: the front hand rises and the rear hand drops (and the reverse) */
+  bal?: number;
+  /** V2: 0..1 listening to the earpiece: a small head tilt toward the bud and the eyes drop */
+  listen?: number;
+  /** V2: 0..1 the rear (controller) hand comes up in front of the chest: holding a remote at a test */
+  remote?: number;
 };
 export const POSE0: PilotPose = {lean: 0, side: 0, crouch: 0.35, twist: 22, bend: 8, look: 62, nod: 6, armF: 0.55, armFs: 0.3, armR: 0.3, thumb: 0.4, wristUp: 0};
 
@@ -91,7 +102,8 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   const legR = ik3(hipR, ankR, D.thigh, D.shin, kneeDir(-1));
   // spine: leans in the direction of the shift, plus the chest bend toward the toes
   const bend = (p.bend * Math.PI) / 180;
-  const up = n3(a3(a3(B.y, m3(B.z, p.lean * 1.1)), m3(B.x, p.side * 1.0 + Math.sin(bend) * 0.9)));
+  const hl = p.hipLead ?? 0;
+  const up = n3(a3(a3(B.y, m3(B.z, p.lean * 1.1 * (1 - 1.5 * hl))), m3(B.x, p.side * (1.0 - 1.6 * hl) + Math.sin(bend) * 0.9)));
   const chF0 = dirB(Math.cos(tw), 0, Math.sin(tw));
   // chest forward re-orthogonalised against the spine
   const chF = n3(s3(chF0, m3(up, d3(chF0, up))));
@@ -103,16 +115,25 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   const N = a3(S, m3(up, D.neck));
   // head: yaw toward the nose (about the spine), nod down
   const lk = (p.look * Math.PI) / 180;
-  const hF0 = n3(a3(m3(chF, Math.cos(lk)), m3(chL, Math.sin(lk))));
-  const nd = (p.nod * Math.PI) / 180;
-  const hF = n3(a3(m3(hF0, Math.cos(nd)), m3(up, -Math.sin(nd))));
-  const hL = n3(c3(hF, up));
-  const hU = n3(c3(hL, hF));
+  // the head's own up: the spine's, or the world's when the eyes hold the horizon
+  const hup = n3(lerp3(up, v3(0, 1, 0), p.level ?? 0));
+  const chFh = n3(s3(chF, m3(hup, d3(chF, hup))));
+  const chLh = n3(c3(chFh, hup));
+  const hF0 = n3(a3(m3(chFh, Math.cos(lk)), m3(chLh, Math.sin(lk))));
+  const nd = ((p.nod + 14 * (p.listen ?? 0)) * Math.PI) / 180;
+  const hF = n3(a3(m3(hF0, Math.cos(nd)), m3(hup, -Math.sin(nd))));
+  const hL0 = n3(c3(hF, hup));
+  const hU0 = n3(c3(hL0, hF));
+  // listening: roll the head a little toward the earpiece side (+hL)
+  const li = 0.22 * (p.listen ?? 0);
+  const hU = n3(a3(m3(hU0, Math.cos(li)), m3(hL0, Math.sin(li))));
+  const hL = n3(c3(hF, hU));
   const Hc = a3(N, m3(n3(a3(up, m3(hF, 0.12))), D.headUp * 0.72));
   // arms. Front (left) hand: out toward the nose, low to shoulder height
+  const bal = p.bal ?? 0;
   const handF = a3(
-    a3(a3(shF, m3(chL, 0.12 + 0.22 * p.armF + 0.16 * p.armFs)), m3(chF, 0.1 + 0.06 * p.armF - 0.04 * p.armFs)),
-    m3(up, -0.56 + 0.3 * p.armF + 0.14 * p.armFs),
+    a3(a3(shF, m3(chL, 0.12 + 0.22 * p.armF + 0.16 * p.armFs + 0.05 * Math.abs(bal))), m3(chF, 0.1 + 0.06 * p.armF - 0.04 * p.armFs)),
+    m3(up, -0.56 + 0.3 * p.armF + 0.14 * p.armFs + 0.26 * bal),
   );
   // reading the wrist phone: the left forearm comes up across the front of the chest
   const readF = a3(a3(a3(S, m3(chF, 0.36)), m3(chL, 0.02)), m3(up, -0.2));
@@ -121,7 +142,9 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   const elbPole = (s: number) => n3(a3(a3(m3(up, -1), m3(chF, -0.55)), m3(chL, 0.35 * s)));
   const armF = ik3(shF, handF2, D.upper, D.fore, elbPole(1));
   // rear (right) hand on the controller, in front of the belly
-  const handR = a3(a3(a3(Wst, m3(chF, 0.1 + 0.16 * p.armR)), m3(chL, -0.31 - 0.04 * p.armR)), m3(up, -0.2 + 0.2 * p.armR));
+  const handR0 = a3(a3(a3(Wst, m3(chF, 0.1 + 0.16 * p.armR)), m3(chL, -0.31 - 0.04 * p.armR - 0.04 * Math.abs(bal))), m3(up, -0.2 + 0.2 * p.armR - 0.2 * bal));
+  const remoteAt = a3(a3(a3(Wst, m3(chF, 0.34)), m3(chL, -0.08)), m3(up, 0.14));
+  const handR = lerp3(handR0, remoteAt, p.remote ?? 0);
   const armR = ik3(shR, handR, D.upper, D.fore, elbPole(-1));
   return {
     B, P, up, chF, chL, S, Wst, N, Hc, hF, hL, hU,

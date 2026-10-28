@@ -60,3 +60,17 @@ The ink and shading primitives, the limb construction and the captions are the c
 The pilot is a new, reference-grounded figure: the inventor, shown by his gear. No established Weird Crew character's face is changed or replaced. The guesser does not appear.
 
 He is built on a new 3D joint rig (`art/rig.ts`), not on the crew's 2D 3/4-view rig. The storyboard orbits the rider and shows him from below and from his own eyes, and the 2D rig only draws one facing.
+
+## V2: where the picture follows the V2 brief rather than the verified details
+
+The V2 brief asked for two things that go beyond, or against, the details verified for V1. Both are flagged here so they can be checked before publishing.
+
+| V2 brief | Verified detail | What V2 shows | Risk |
+|---|---|---|---|
+| "Two monitoring phones observing the practice area" | One phone **in the board** and one **on the wrist** feed the AI coach | Both verified phones are still there: the deck phone in the board's spine and the wrist phone on his left forearm. The AI-coach beat adds **two phones on small tripods** at the edge of the pad. Their screens show the phone's own live view of him (a stick figure, a deck line, a tilt bar) and a speaker glyph that pulses with the earpiece cue | The tripod phones are a staging device, not a reported detail. If the real setup used only the board and wrist phones, replace the tripods with views over the deck phone and the wrist phone (`G` in `source/src/v2/shots2.tsx`) |
+| "Follow him toward the canyon entrance as the walls grow taller" (one continuous chase) | The Yangtze crossing and the canyon flight were **separate demonstrations** | One connected path: across the last of the Yangtze, into a gorge that opens out of the far bank. The narration's "…and THROUGH a CANYON" still reads as a second feat, but the picture does not separate them | Implies a single flight from river into gorge. To restore V1's accuracy, put a match cut at `TIN` (the gorge mouth) and run the gorge as its own flight |
+
+Other V2 additions are dramatisation within the verified facts:
+- The jet fire starts at a leaking fitting on the centre engine's fuel line and runs back along that line. The reports say only that the combined test caught fire and damaged parts of the system; the exact origin is not reported.
+- The inventor stands at the bench during the test and steps back from the fire; nobody is shown hurt.
+- The ten-days montage shows three distinct practice moments (an early hover, a low pass, a glide out over the water). It makes no claim about which day each was.

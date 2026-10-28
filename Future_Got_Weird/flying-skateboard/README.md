@@ -1,5 +1,32 @@
 # Future Got Weird: Flying Skateboard (Song Xingyu / 神奇阿宇 "Amazing Ayu")
 
+## V2 review (28 Oct 2026)
+
+**Status:** V2 is rendered and checked from the file. **Not published.** As with V1, nobody has watched it in real time or listened to it here: there is no playback in this environment. `production/QA_REPORT_V2.md` lists what was checked, against the V2 brief's QC list.
+
+| Deliverable | File |
+|---|---|
+| **V2 review video**: 1080×1920, 30 fps, 1077 frames, 35.90 s, H.264 High CRF 16 + AAC 320 kb/s, captions burned in, seamless loop | `exports/FGW_Flying_Skateboard_V2_REVIEW_1080x1920.mp4` |
+| Narration | unchanged from V1 (the same WAV, sample for sample) |
+| V2 mix, measurements, effect cue list | `audio/mix/FGW_Flying_Skateboard_V2_mix.wav`, `audio/mix/mix_measure_v2.json`, `audio/sfx_cues_v2.json`, `audio/mix/stems_v2/` |
+| V2 picture timing for the mix | `audio/cues_v2.json` (`tools/export_cues_v2.ts`) |
+| Contact sheets (from the MP4) | `qa/v2_review_sheet_*.png`: first three seconds, fire, balance, payoff, loop, every cut, every second |
+| QA measurements | `qa/v2_review_qa.json` |
+| Shots and transitions | `production/SHOTS_AND_TRANSITIONS_V2.md` |
+| Where V2 follows its brief over the verified facts | `production/SOURCE_NOTES.md` (section "V2") |
+| QA summary | `production/QA_REPORT_V2.md` |
+| Remotion project | `source/` (composition `FlyingSkateboardV2`; V2 code in `source/src/v2/`, new assets `art/Monitor.tsx`, `fx/Section.tsx`, `env/Gorge.tsx`) |
+
+V2 rebuild (after the V1 steps for narration):
+
+```sh
+source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec2.cjs && NODE_PATH=source/node_modules node /tmp/ec2.cjs audio/cues_v2.json
+python3 tools/make_audio_v2.py              # writes source/public/audio/mix_v2.wav and audio/mix/
+(cd source && npx remotion render src/index.ts FlyingSkateboardV2 ../exports/FGW_Flying_Skateboard_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --image-format=png --gop=15 --crf=16 --x264-preset=medium --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+python3 tools/qa.py exports/FGW_Flying_Skateboard_V2_REVIEW_1080x1920.mp4 qa/v2_review audio/cues_v2.json
+```
+V2 working stills: `cd source && ./sheet2.sh out.png "t1,t2,..." [captions]`.
+
 ## V1 review (27 Oct 2026)
 
 **Status:** the first complete version is rendered and checked from the file. **Not published.** Nobody has watched it in real time or listened to it here: there is no playback in this environment. `production/QA_REPORT.md` lists exactly what was checked, what was fixed and what remains.

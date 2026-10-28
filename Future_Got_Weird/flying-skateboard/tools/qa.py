@@ -6,7 +6,7 @@
   - audio from the MP4: integrated loudness, true sample peak, the loop seam
   - contact sheets from the MP4: the first three seconds at the brief's QC times, the fire reveal, the balance sequence,
     the canyon payoff, the loop junction, and one frame per second
-usage: python3 tools/qa.py <mp4> <out_prefix>"""
+usage: python3 tools/qa.py <mp4> <out_prefix> [cues.json (default audio/cues.json; V2: audio/cues_v2.json)]"""
 import json, os, subprocess, sys
 import numpy as np
 from PIL import Image, ImageDraw
@@ -72,7 +72,7 @@ def grab(ts, out, cols=4, scale=0.25, label=True):
         sheet.paste(im, ((i % cols) * im.width, (i // cols) * im.height))
     sheet.save(out)
 
-cues = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
+cues = json.load(open(sys.argv[3] if len(sys.argv) > 3 else os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
 Mk = cues['marks']
 dur = res['video']['duration_s']
 grab([0.0, 0.25, 0.5, 0.75, 1.0, 1.5, 2.0, 2.5, 3.0], pre + '_sheet_first3s.png', cols=5, scale=0.3)
@@ -81,3 +81,6 @@ grab([Mk['huge'], Mk['huge'] + 0.6, Mk['theBoard'], Mk['itself'], Mk['heHas'] + 
 grab([Mk['practice'] + 0.3, Mk['flew'], Mk['river2'], Mk['andThrough'] - 0.1, Mk['andThrough'], Mk['through'], Mk['canyon'], Mk['canyonE'] + 0.2, Mk['howMuch'] - 0.2], pre + '_sheet_payoff.png')
 grab([dur - 2.0, dur - 1.5, dur - 1.0, dur - 0.5, dur - 0.07, 0.0, 0.5, 1.0, 1.5, 2.0], pre + '_sheet_loop.png', cols=5, scale=0.3)
 grab([i + 0.5 for i in range(int(dur))], pre + '_sheet_every_second.png', cols=6, scale=0.2)
+# every shot boundary: the frame before and the frame after each cut or match
+bt = [b for sh in cues['shots'][1:] for b in (sh['from'] - 1 / 30, sh['from'] + 0.001)]
+grab(bt, pre + '_sheet_cuts.png', cols=4, scale=0.25)

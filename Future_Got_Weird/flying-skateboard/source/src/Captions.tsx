@@ -7,14 +7,15 @@ import {CAPS, FPS} from './story/time';
 import {capY, placeFor} from './story/capPlace';
 import {E} from './story/time';
 
-export const Captions: React.FC<{t: number}> = ({t}) => {
+export const Captions: React.FC<{t: number; placer?: {placeFor: (a: number, b: number) => number; capY: (i: number) => number}}> = ({t, placer}) => {
+  const pf = placer?.placeFor ?? placeFor, cy = placer?.capY ?? capY;
   const f = Math.round(t * FPS);
   const i = CAPS.findIndex((c, k) => f >= (k === 0 ? 0 : Math.round(c.show * FPS)) && f < Math.round(c.hide * FPS));
   if (i < 0) {
     // the closing question's brief emphasis while the flight goes on (ends well before the loop)
     const p0 = Math.round((E('thing') + 0.62) * FPS), p1 = Math.round((E('thing') + 1.4) * FPS);
     if (f >= p0 && f < p1) {
-      const y = placeFor(p0 / FPS, p1 / FPS);
+      const y = pf(p0 / FPS, p1 / FPS);
       return (
         <div style={{position: 'absolute', left: 90, width: 900, top: y, transform: 'translateY(-50%)', textAlign: 'center'}}>
           <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 84, letterSpacing: '0.01em', color: '#FFD84A',
@@ -25,7 +26,7 @@ export const Captions: React.FC<{t: number}> = ({t}) => {
     return null;
   }
   const c = CAPS[i];
-  const y = capY(i);
+  const y = cy(i);
   const words = c.text.split(' ');
   return (
     <div style={{position: 'absolute', left: 90, width: 900, top: y, transform: 'translateY(-50%)', textAlign: 'center', textWrap: 'balance'} as React.CSSProperties}>
