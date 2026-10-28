@@ -165,3 +165,36 @@ export const ShoreFlat: React.FC<{id: string; L: Lens; t: number; near: number; 
     </g>
   );
 };
+
+/** V4: a mid-river gravel bar (low water on the Yangtze): a long pebble shoal lying along the current with a dark wet
+ *  rim, scattered stones and a few boulders. It passes beneath the rider in the opening so the forward travel reads. */
+export type ShoalAt = {x: number; z: number; len: number; wid: number};
+const shoalR = (g: ShoalAt, a: number) => 1 + 0.12 * noise1(a * 2.1, 151) + 0.05 * noise1(a * 6.3, 152);
+const shoalPt = (g: ShoalAt, a: number, k: number, y: number) => v3(g.x + Math.cos(a) * g.len * 0.5 * shoalR(g, a) * k, y, g.z + Math.sin(a) * g.wid * 0.5 * shoalR(g, a) * k * (1 + 0.25 * Math.cos(a)));
+export const Shoal: React.FC<{L: Lens; g: ShoalAt}> = ({L, g}) => {
+  const ring = (k: number, y: number) => Array.from({length: 64}, (_, i) => shoalPt(g, (i / 64) * Math.PI * 2, k, y));
+  const wet = clipNear(L, ring(1.0, 0.01), 0.3), dry = clipNear(L, ring(0.82, 0.02), 0.3);
+  if (wet.length < 3) return null;
+  const stones: React.ReactNode[] = [];
+  for (let i = 0; i < 260; i++) {
+    const a = hash(i, 161) * Math.PI * 2, r = Math.sqrt(hash(i, 162)) * 0.9;
+    const q = shoalPt(g, a, r, 0.03);
+    if (d3(s3(q, L.pos), L.f) < 0.5) continue;
+    const p = L.p(q);
+    if (p.x < -20 || p.x > W + 20 || p.y < -20 || p.y > H + 20) continue;
+    const big = hash(i, 163) > 0.93;
+    const rr = (big ? 0.35 + hash(i, 164) * 0.5 : 0.06 + hash(i, 165) * 0.12) * p.k;
+    if (rr < 0.5) continue;
+    const col = ['#9D978A', '#D8D2C2', '#B2AB9B'][i % 3];
+    stones.push(big
+      ? <path key={i} d={`M${f2(p.x - rr)},${f2(p.y)} C${f2(p.x - rr)},${f2(p.y - rr * 0.9)} ${f2(p.x + rr)},${f2(p.y - rr * 0.9)} ${f2(p.x + rr)},${f2(p.y)} Z`} fill={PALS.rock} stroke="#4E4A40" strokeWidth={f2(Math.max(0.6, Math.min(2.5, rr * 0.08)))} />
+      : <ellipse key={i} cx={f2(p.x)} cy={f2(p.y)} rx={f2(rr)} ry={f2(rr * 0.55)} fill={col} opacity={0.8} />);
+  }
+  return (
+    <g>
+      <path d={polyD(proj(L, wet))} fill={PALS.wet} />
+      {dry.length > 2 && <path d={polyD(proj(L, dry))} fill={PALS.beach} />}
+      {stones}
+    </g>
+  );
+};

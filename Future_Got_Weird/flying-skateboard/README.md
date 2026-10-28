@@ -1,5 +1,20 @@
 # Future Got Weird: Flying Skateboard (Song Xingyu / 神奇阿宇 "Amazing Ayu")
 
+## V4 review (28 Oct 2026)
+
+**Status:** REVIEW. The frame-by-frame QC passes, with the residuals listed in `production/QA_REPORT_V4.md`. **It is not final until it has been watched in real time with sound**, which can't be done in this environment.
+
+| Deliverable | File |
+|---|---|
+| **V4 review video**: true 1080×1920 (rendered at 2160×3840, Lanczos-downsampled), 30 fps, 35.90 s, captions burned in, seamless loop | `exports/FGW_Flying_Skateboard_V4_REVIEW_1080x1920.mp4` |
+| Changelog | `production/CHANGELOG_V4.md` |
+| QC report and remaining issues | `production/QA_REPORT_V4.md` |
+| V4 mix, measurements, effect cues | `audio/mix/FGW_Flying_Skateboard_V4_mix.wav`, `audio/mix/mix_measure_v4.json`, `audio/sfx_cues_v4.json` (`tools/make_audio_v4.py`, `tools/export_cues_v4.ts`) |
+| Sheets and measurements (from the MP4) | `qa/v4_review_*` |
+| Remotion | composition `FlyingSkateboardV4`, code in `source/src/v4/`. The rig's new `upright` option is in `art/rig.ts`; the mid-river `Shoal` is in `env/Shore.tsx`. |
+
+Rebuild: as for V3 (see below), with `_v4`/`V4` names. Working stills: `cd source && ./sheet4.sh out.png "t1,..." [captions]`.
+
 ## V3 review (28 Oct 2026)
 
 **Status:** V3 is rendered and checked from the file. **Not published.** Nobody has watched it in real time here: there is no playback in this environment. `production/QA_REPORT_V3.md` is the self-QC report and `production/CHANGELOG_V3.md` lists the changes.

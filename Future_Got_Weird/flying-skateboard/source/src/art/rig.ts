@@ -42,6 +42,10 @@ export type PilotPose = {
   listen?: number;
   /** V2: 0..1 the rear (controller) hand comes up in front of the chest: holding a remote at a test */
   remote?: number;
+  /** V4: 0..1 the body stays upright in the world while the deck tilts under it: the pelvis is kept over the feet
+   *  along the world vertical and the spine is built from the world up, so the ankles and knees absorb the deck's
+   *  tilt (as a rider does) instead of the whole body tipping with the board as one block */
+  upright?: number;
 };
 export const POSE0: PilotPose = {lean: 0, side: 0, crouch: 0.35, twist: 22, bend: 8, look: 62, nod: 6, armF: 0.55, armFs: 0.3, armR: 0.3, thumb: 0.4, wristUp: 0};
 
@@ -90,7 +94,13 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
     : L(0.0, D.ankleH, -D.footZ);
   // pelvis: height from the crouch; shifted by the lean (the knees take up the difference)
   const hipH = 0.93 - p.crouch * 0.3;
-  const P = L(-0.035 + p.side * 0.9, hipH, p.lean * 0.9);
+  const ur = p.upright ?? 0;
+  const P0 = L(-0.035 + p.side * 0.9, hipH, p.lean * 0.9);
+  // the board's own heading directions, flattened to the horizontal (for the upright body)
+  const xh = n3(v3(B.x.x, 0, B.x.z)), zh = n3(v3(B.z.x, 0, B.z.z));
+  const feetC = lerp3(ankF, ankR, 0.5);
+  const Pw = a3(a3(a3(feetC, v3(0, hipH - D.ankleH, 0)), m3(xh, -0.035 + p.side * 0.9)), m3(zh, p.lean * 0.9));
+  const P = ur > 0 ? lerp3(P0, Pw, ur) : P0;
   // body axes: facing +x (toes) turned by the twist toward the nose; up tilted with the lean
   const tw = (p.twist * Math.PI) / 180;
   const fwd0 = dirB(Math.cos(tw * 0.35), 0, Math.sin(tw * 0.35));
@@ -103,7 +113,9 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   // spine: leans in the direction of the shift, plus the chest bend toward the toes
   const bend = (p.bend * Math.PI) / 180;
   const hl = p.hipLead ?? 0;
-  const up = n3(a3(a3(B.y, m3(B.z, p.lean * 1.1 * (1 - 1.5 * hl))), m3(B.x, p.side * (1.0 - 1.6 * hl) + Math.sin(bend) * 0.9)));
+  const upB = n3(a3(a3(B.y, m3(B.z, p.lean * 1.1 * (1 - 1.5 * hl))), m3(B.x, p.side * (1.0 - 1.6 * hl) + Math.sin(bend) * 0.9)));
+  const upW = n3(a3(a3(v3(0, 1, 0), m3(zh, p.lean * 1.1 * (1 - 1.5 * hl))), m3(xh, p.side * (1.0 - 1.6 * hl) + Math.sin(bend) * 0.9)));
+  const up = ur > 0 ? n3(lerp3(upB, upW, ur)) : upB;
   const chF0 = dirB(Math.cos(tw), 0, Math.sin(tw));
   // chest forward re-orthogonalised against the spine
   const chF = n3(s3(chF0, m3(up, d3(chF0, up))));

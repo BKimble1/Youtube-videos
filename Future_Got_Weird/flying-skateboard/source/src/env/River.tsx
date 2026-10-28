@@ -9,7 +9,7 @@ import {hash, noise1} from '../dc/math';
 import {circ3, f2, mix, P2, polyD, proj, shade, lit} from '../eng/draw';
 import {a3, clipNear, d3, H, Lens, m3, n3, s3, V3, v3, W} from '../eng/v3';
 import {GorgeAt, gorgeNotch, GorgeWalls} from './Gorge';
-import {ShoreFlat} from './Shore';
+import {Shoal, ShoalAt, ShoreFlat} from './Shore';
 
 export const RIVER = {far: 520, current: 1.1};
 export const PALR = {
@@ -355,7 +355,7 @@ export const Buoy: React.FC<{L: Lens; at: V3; t: number}> = ({L, at, t}) => {
 };
 
 /** Everything behind the flying board: sky, clouds, ridges, town, bridge, water, reflections, ripples. */
-export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false}) => {
+export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean; shoal?: ShoalAt}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false, shoal}) => {
   const rs = ridges(L, gorge, near);
   const h = horizon(L);
   // water: the river quad between the banks, clipped to the front of the camera
@@ -465,6 +465,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
           </g>
         </g>
       )}
+      {shoal && <Shoal L={L} g={shoal} />}
       {near > 0 && <ShoreFlat id={`${id}-sh`} L={L} t={t} near={near} wind={wind} />}
       <Bridge L={L} />
     </g>

@@ -7,7 +7,7 @@ import {hash, noise1} from '../dc/math';
 import {f2, polyD} from '../eng/draw';
 import {d3, Lens, m3, s3, V3, v3, a3} from '../eng/v3';
 
-export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water'}) => {
+export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'; foam?: number}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water', foam = 0}) => {
   const k = thrust * Math.pow(Math.max(0, Math.min(1, 1 - (alt - 0.3) / 10.5)), 1.2);
   if (k < 0.02) return null;
   const lagT = alt / 12;
@@ -47,12 +47,12 @@ export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: n
       if (op < 0.05) continue;
       paws.push(`M${f2(pa.x)},${f2(pa.y)}L${f2(pm.x)},${f2(pm.y)}L${f2(pb.x)},${f2(pb.y)}`);
     }
-    if (alt < 3.2) {
+    if (alt < 3.2 + 2.2 * foam) {
       for (let i = 0; i < 24; i++) {
         const a = hash(i, 75) * Math.PI * 2;
         const ph = (t * 1.4 + hash(i, 76)) % 1;
         const q0 = P(a, R * (0.6 + ph * 0.9));
-        const q = v3(q0.x, 0.05 + Math.sin(ph * Math.PI) * 0.5 * (1 - alt / 3.5), q0.z);
+        const q = v3(q0.x, 0.05 + Math.sin(ph * Math.PI) * 0.5 * Math.max(0.3, 1 - alt / (3.5 + 2.2 * foam)), q0.z);
         if (d3(s3(q, L.pos), L.f) < 0.4) continue;
         const p = L.p(q);
         spray.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2(Math.max(0.6, 0.03 * p.k))} fill="#FFFFFF" opacity={0.6 * k * (1 - ph)} />);
@@ -61,7 +61,8 @@ export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: n
     return (
       <g>
         <path d={polyD(blobP)} fill="#24585A" opacity={0.3 * k} />
-        <path d={paws.join('')} stroke="#EEF9F6" strokeWidth={f2(Math.max(0.7, Math.min(3, 0.03 * kc)))} strokeOpacity={0.55 * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+        {foam > 0 && <path d={polyD(blobP)} fill="#CFEDE6" opacity={0.32 * k * foam} />}
+        <path d={paws.join('')} stroke="#EEF9F6" strokeWidth={f2(Math.max(0.7, Math.min(3, 0.03 * kc)))} strokeOpacity={Math.min(1, 0.55 * k * (1 + 0.8 * foam))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
         {spray}
       </g>
     );
