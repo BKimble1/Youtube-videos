@@ -1,0 +1,13 @@
+{
+ "integrated_lufs_stereo": -14.0,
+ "sample_peak_dbfs": -2.45,
+ "voice_over_rest_speech_band_db": 17.8,
+ "electric_bed_gap_minus_speech_db": 0.17,
+ "jet_over_electric_bed_db": 2.8,
+ "duration_s": 31.3,
+ "voice_stem_vs_source_corr": 1.0,
+ "seam_jump": 0.0028,
+ "effects": 24,
+ "score_beats": 63,
+ "bpm": 120.77
+}
