@@ -22,7 +22,7 @@ import {Wash} from '../fx/Wash';
 import {sstep} from '../story/flight';
 import {ca, ck, CK, Key, orbitAnch, orbitBoard, splineRec} from '../story/cam';
 import {Rider, RiderShadow} from '../story/rider';
-import {DUR} from '../story/time';
+import {CAPS, DUR} from '../story/time';
 import {aboveGround, blendCam, Box, M, riderBox, Shot, swingCam, toOrbit, unwrap} from '../v2/shots2';
 import {DEP, departure, fieldFlight, GORGE4, hook4, inventor4, lift4, payoff4, REST, sCurve, sCurvePath, St, takeoff} from './flight5';
 
@@ -38,14 +38,17 @@ const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, set, surface, tint = 0
       : <FieldBack id={`${id}-fd`} L={L} t={t} tint={tint} wind={0.3 + st.thrust * 0.6 * Math.max(0, 1 - (st.alt - REST) / 3)} />}
     {buoys && <Buoys L={L} t={t} />}
     {under}
-    <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust} t={t} vel={st.vel} surface={surface} foam={1} />
+    <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust} t={t} vel={st.vel} surface={surface} foam={1} soft />
     {st.alt < 14 && <RiderShadow L={L} B={st.B} pose={st.pose} sun={sun ?? (set === 'river' ? RSUN : undefined)} minOp={set === 'river' ? 1.1 : 0.35} color={surface === 'water' ? '#0B2427' : undefined} />}
-    <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />
+    {!below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
     <Rider id={id} L={L} B={st.B} pose={st.pose} coach={coach} pov={pov} st={{phase: t * 2.6, rps: st.rps > 20 ? 11 : st.rps, thrust: st.thrust, tilt: {pitch: st.pitch, roll: st.roll}}} />
+    {below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
     {extra}
   </g>
 );
 const box = (L: Lens, st: St) => riderBox(L, st.B, st.pose);
+// V5: seen from under the deck the jets are between the board and the camera, so they are drawn over it
+const below = (L: Lens, st: St) => d3(s3(L.pos, st.B.o), st.B.y) < -0.05;
 // the sun over the river: high, behind the camera of the rear high three-quarter views, so the rider's shadow falls on
 // the water ahead of him where those views can see it (the height above the water reads at a glance)
 const RSUN = n3(v3(0.35, 0.78, -0.52));
@@ -63,7 +66,7 @@ const smoothPos = (f: (t: number) => V3, t: number, w = 0.3): V3 => {
 };
 /** track the board at a world-space offset (orbit az/el/dist around its smoothed position) */
 const trackCam = (pos: (t: number) => V3, t: number, c: CK, w = 0.3): Cam => {
-  const tg = a3(smoothPos(pos, t, w), v3(0, c.ty, 0));
+  const tg = a3(smoothPos(pos, t, w), v3(c.tx ?? 0, c.ty, c.tz ?? 0));
   const R = Math.PI / 180;
   return {pos: a3(tg, v3(-Math.sin(c.az * R) * Math.cos(c.el * R) * c.dist, Math.sin(c.el * R) * c.dist, -Math.cos(c.az * R) * Math.cos(c.el * R) * c.dist)), tgt: tg, roll: 0, fov: c.fov};
 };
@@ -75,28 +78,33 @@ const camFrom = (tgt: V3, c: CK): V3 => {
 };
 
 // ================================================================ 1: the opening crossing and the mechanism (one flight over the Yangtze)
-// 0-1.4 s one strong low front three-quarter tracking angle from his toe side (the river streams beneath, his knees
-// work); 1.4-2.1 s the camera sinks below deck level so the thrusters come into view (a crane down, not a swing);
-// 2.1-3.4 s it rises and pulls back to show the crossing. Cut on "You see" to a still underside close-up for the ten
-// fans; cut on "blast" to a low tracking view of the air reaching the water.
+// 0-1.4 s one strong low front three-quarter tracking angle from his toe side, held (the river streams beneath, his
+// knees take a heave); 1.4-2.4 s he carves toward his heels and the board banks toe edge up, turning its thrusters to
+// the camera (the composition changes because he rides, the camera only holds); 2.2-3.4 s one steady rise and
+// pull-back to the crossing (elevation, distance and azimuth each change one way only, no dip-and-climb). Cut on the
+// "You see" caption to a still underside close-up for the ten fans; cut on "blast" to a low tracking view of the air
+// reaching the water.
 export const SHOAL = {x: 4, z: 104, len: 48, wid: 11};
 const MATCH = M.lifting - 0.74; // the lift's own clock
-const CUT_UNDER = M.yousee;
+// the caption for "You see" appears two frames before the word: the cut lands on the same frame
+const CUT_UNDER = Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith('you see'))!.show * 30) / 30;
 const CUT_AIR = M.blast - 0.02;
 const CUT2 = M.blast + 1.06; // end of "downward": cut to the riverside flat
 // the ending's last key before the loop (shared, so the camera velocity at frame 0 is the same on both sides)
-const LOOPK: [number, CK] = [M.thingE + 0.6, ck(249.5, -7.5, 4.7, 44, 0.72, 0)];
+const LOOPK: [number, CK] = [M.thingE + 0.6, ck(249.5, -8, 4.6, 44, 0.7, 0)];
 const HOOKK: Key[] = [
   [LOOPK[0] - DUR, LOOPK[1]],
   [0.0, ck(252, -8, 4.6, 44, 0.7, 0)],
-  [0.7, ck(254.5, -8.5, 4.45, 44, 0.68, 0)],
-  [1.4, ck(257, -10, 4.25, 44, 0.62, 0)],
-  [2.1, ck(260, -24, 3.6, 44, 0.32, 0)],
-  [2.7, ck(264, -4, 6.8, 46, 0.75, 0)],
-  [CUT_UNDER, ck(268, 8, 8.6, 48, 0.9, 0)],
+  [0.7, ck(254, -8, 4.6, 44, 0.69, 0)],
+  [1.4, ck(256, -8, 4.6, 44, 0.67, 0)],
+  [2.2, ck(258.5, -6.5, 5.2, 44, 0.7, 0)],
+  [CUT_UNDER, ck(263, 6, 7.6, 44, 0.85, 0)],
 ];
-const UNDK: Key[] = [[CUT_UNDER, ck(262, -58, 4.0, 44, 0.12, 0)], [CUT_AIR, ck(268, -60, 3.8, 44, 0.12, 0)]];
-const AIRK: Key[] = [[CUT_AIR, ck(264, 2, 7.0, 46, -0.8, 0)], [CUT2, ck(267, 2, 7.2, 46, -0.85, 0)]];
+// V5: the underside is held still from almost straight below, so the board fills the frame and hides the rider
+// (a steeper view showed his face from under the chin); the air shot is low and wide enough to hold the board, its
+// jets and the churned patch where they reach the water, with the bridge clear of the board
+const UNDK: Key[] = [[CUT_UNDER, ck(258, -80, 3.3, 58, 0.05, 0, 0, 0.12)], [CUT_AIR, ck(258, -80, 3.3, 58, 0.05, 0, 0, 0.12)]];
+const AIRK: Key[] = [[CUT_AIR, ck(250, 3, 11.5, 46, -1.5, 0, 0, -1.1)], [CUT2, ck(251.5, 3, 11.6, 46, -1.55, 0, 0, -1.1)]];
 const hookPos = (t: number) => hook4(t).B.o;
 const hookCam = (t: number): Cam => {
   if (t < CUT_UNDER) return trackCam(hookPos, t, splineRec(t, HOOKK));
@@ -110,10 +118,18 @@ const hookCam = (t: number): Cam => {
 // and passes above and beside it; the last frames look up at the board's underside, which matches the jet prototype
 // seen from above.
 const liftPos = (t: number) => lift4(t, MATCH).B.o;
-const LIFT_CAM = v3(-40 + 3.6, 1.35, -26 + 2.4);
+// V5: the camera stands a little further off, at his toe side and slightly behind, and follows only part of the
+// rise and of the move off: he rises in the frame and travels toward frame right instead of the camera chasing him
+// (V5's first cut tilted at up to 0.85 screen heights a second)
+// (ahead of the board, so the downstream bridge stays out of frame behind him: from his side its pylon stood under
+// the board like a post)
+const LIFT_CAM = v3(-40 + 8.0, 1.5, -26 + 4.5);
+const LIFT_FY = 0.6;
 const liftCam = (t: number): Cam => {
-  const up = sstep(M.lifting - 0.2, M.lifting + 0.9, t);
-  return standCam(LIFT_CAM, liftPos, t, 0.45 + 0.4 * up, 46);
+  const p0 = liftPos(CUT2);
+  const p = smoothPos(liftPos, t, 0.6);
+  const tg = v3(p0.x + 0.6 * (p.x - p0.x), 1.35 + LIFT_FY * (p.y - p0.y), p0.z + 0.55 * (p.z - p0.z));
+  return {pos: LIFT_CAM, tgt: tg, roll: 0, fov: 42};
 };
 
 // ================================================================ 3: the jet prototype test (workshop)
@@ -135,18 +151,24 @@ const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t) - 6 * sstep(M.fireE, 
 const W2 = M.jet, LEAK0 = M.andCaught - 0.15;
 const W1K: Key[] = [[M.but, ck(-50, 64, 2.4, 54, 0.0, 0)], [W2, ck(-50, 56, 2.3, 54, 0.0, 0)]];
 const W2K: Key[] = [[W2, ck(-38, -8, 1.65, 50, -0.3, 0)], [LEAK0, ck(-46, -6, 1.55, 50, -0.3, 0)]];
+// V5: W3 holds near-still on the fire. At the peak of the smoke (when it fills the frame) a cut to W4, already on
+// the field shot's side of the stand; as the smoke clears W4 makes one slow move, back and down (no arc round the stand).
+const W4 = M.so + 0.08;
 const W3K: Key[] = [
   [LEAK0, ck(-52, 26, 1.7, 48, 0.02, 0)],
-  [M.fireE, ck(-57, 28, 1.8, 48, 0.02, 0)],
-  [M.so - 0.1, ck(-62, 30, 2.1, 48, 0.05, 0)],
-  [M.switched + 0.4, ck(-76, 22, 3.3, 46, 0.45, 0)],
+  [M.fireE, ck(-55, 28, 1.8, 48, 0.02, 0)],
+  [W4, ck(-58, 30, 2.0, 48, 0.05, 0)],
+];
+const W4K: Key[] = [
+  [W4, ck(-88, 24, 2.3, 46, 0.2, 0), {hold: true}],
   [M.except, ck(-90, 14, 4.4, 42, 0.75, 0)],
 ];
 const jetCam = (t: number): Cam => {
   const B = JB(Math.min(t, M.so));
   if (t < W2) return orbitBoard(B, splineRec(t, W1K));
   if (t < LEAK0) return aboveGround(orbitBoard(B, splineRec(t, W2K)), 0.12);
-  return orbitBoard(B, splineRec(t, W3K));
+  if (t < W4) return orbitBoard(B, splineRec(t, W3K));
+  return orbitBoard(B, splineRec(t, W4K));
 };
 /** heat haze: wavering translucent strands rising off the hot nozzles and the deck around them */
 const HeatHaze: React.FC<{L: Lens; at: V3[]; k: number; t: number}> = ({L, at, k, t}) => {
@@ -347,9 +369,15 @@ const coachCam = (t: number, st: St): Cam => {
   if (t < C2) return orbitBoard(st.B, splineRec(t, [[M.while, ck(-4, 56, 1.0, 38, 0.004, 0)], [C2, ck(0, 58, 0.95, 38, 0.004, 0)]]));
   const j = pilotJoints(st.B, st.pose);
   if (t < C3) {
-    const fd = n3(s3(j.wriF, j.elbF));
-    const wrist = a3(j.wriF, m3(fd, -0.07));
-    return {pos: a3(a3(a3(wrist, m3(n3(s3(j.Hc, wrist)), 0.56)), m3(j.chL, 0.1)), m3(j.up, 0.05)), tgt: wrist, roll: 0, fov: 36};
+    // V5: held still: set up from the settled pose (the arm is already up) and carried only by the board's drift; the
+    // wrist moves a little within the frame. (Fixed to the moving wrist, it rolled about 70 degrees in 7 frames.)
+    const T = C2 + 0.2;
+    const jw = pilotJoints(FIELD(T).B, FIELD(T).pose);
+    const fd = n3(s3(jw.wriF, jw.elbF));
+    const wrist = a3(jw.wriF, m3(fd, -0.07));
+    const pos = a3(a3(a3(wrist, m3(n3(s3(jw.Hc, wrist)), 0.56)), m3(jw.chL, 0.1)), m3(jw.up, 0.05));
+    const drift = s3(st.B.o, FIELD(T).B.o);
+    return {pos: a3(pos, drift), tgt: a3(wrist, drift), roll: 0, fov: 36};
   }
   if (t < C4) {
     // fixed to the torso at the moment of the cut (the head moves within the frame, the frame does not move)
@@ -364,9 +392,11 @@ const coachCam = (t: number, st: St): Cam => {
 
 // ================================================================ 6: the practice progression
 const E2 = M.andAfter + 0.49, E3 = M.tenDays, E4 = M.practice - 0.06;
-const E1_CAM = camFrom(takeoff(M.andAfter, M.andAfter).B.o, ck(-16, 5, 4.2, 44, 0.55, 0));
+// V5: E1 is set clearly apart from the coach correction before it (behind his toe side, higher, wider), not a re-framing
+const E1_CAM = camFrom(takeoff(M.andAfter, M.andAfter).B.o, ck(22, 14, 5.6, 44, 0.6, 0));
 const E2_CAM: Cam = {pos: v3(-3.6, 5.6, -1.6), tgt: v3(-3.7, 0.6, 0.9), roll: 0, fov: 52};
-const E3_CAM = v3(DEP.x + 3.0, 0.38, -2.2);
+// V5: a steady low front three-quarter track on the flat (a standing camera beside his path whipped round as he passed)
+const E3K = ck(246, 3, 5.2, 46, 0.6, 0);
 const P2 = M.andThrough; // cut into the canyon
 // over the shoreline and out across the open river: a steady rear three-quarter track that slowly rises and eases back
 // to show how wide the water is around him
@@ -436,7 +466,8 @@ export const SHOTS5: Shot[] = [
     // "electric propellers": the jets lengthen as the rotors speed up
     reach: (t) => 1.3 + 1.9 * sstep(M.electric, M.electric + 0.5, t),
   }),
-  riverShot('blast air downward: the air reaching the water', CUT_AIR, CUT2, hook4, hookCam, {jets: () => 1.45, reach: () => 3.2}),
+  // the jets run all the way down to the water (their path is swept back about 30 degrees by the speed)
+  riverShot('blast air downward: the air reaching the water', CUT_AIR, CUT2, hook4, hookCam, {jets: () => 1.45, reach: (t) => 1.16 * hook4(t).alt}),
   {
     name: 'the lift on the riverside flat (standing camera)', from: CUT2, to: M.but,
     draw: (t, pre) => {
@@ -479,7 +510,7 @@ export const SHOTS5: Shot[] = [
     },
     focus: (t) => box(lens(E2_CAM), sCurve(t, E2)),
   },
-  riverShot('practice: low and level toward a standing camera on the flat', E3, E4, dep, (t) => standCam(E3_CAM, (u) => dep(u).B.o, t, 0.7, 50), {surface: () => 'ground'}),
+  riverShot('practice: low and level over the flat (tracking)', E3, E4, dep, (t) => trackCam((u) => dep(u).B.o, t, E3K), {surface: () => 'ground'}),
   riverShot('over the shoreline and across the open river (tracking)', E4, P2, dep, (t) => trackCam((u) => dep(u).B.o, t, splineRec(t, E4K)), {
     surface: (t) => (dep(t).pos.z < 0 ? 'ground' : 'water'), buoys: true,
   }),
@@ -494,6 +525,8 @@ export const SHOTS5: Shot[] = [
     focus: (t) => box(lens(endCam(t)), hook4(t - DUR)),
   },
 ];
+/** every picture cut: the shot boundaries and the cuts inside shots (workshop, balance, coach) */
+export const CUTS5 = [...SHOTS5.slice(1).map((s) => s.from), W2, LEAK0, W4, A2, C2, C3, C4].sort((a, b) => a - b);
 export const shotAt5 = (t: number) => SHOTS5.find((s) => t >= s.from && t < s.to) ?? SHOTS5[SHOTS5.length - 1];
 export type {Box, CK};
 export {DEP, toW};
@@ -508,7 +541,7 @@ export const riderView5 = (t: number): {L: Lens; st: St} | null => {
   if (t < M.andAfter) return {L: lens(coachCam(t, FIELD(t))), st: FIELD(t)};
   if (t < E2) return {L: lens(standCam(E1_CAM, (u) => takeoff(u, M.andAfter).B.o, t, 0.6, 44)), st: takeoff(t, M.andAfter)};
   if (t < E3) return {L: lens(E2_CAM), st: sCurve(t, E2)};
-  if (t < E4) return {L: lens(standCam(E3_CAM, (u) => dep(u).B.o, t, 0.7, 50)), st: dep(t)};
+  if (t < E4) return {L: lens(trackCam((u) => dep(u).B.o, t, E3K)), st: dep(t)};
   if (t < P2) return {L: lens(trackCam((u) => dep(u).B.o, t, splineRec(t, E4K))), st: dep(t)};
   if (t < M.howMuch) return {L: lens(payCam(t)), st: payoff4(t, TIN)};
   return {L: lens(endCam(t)), st: hook4(t - DUR)};

@@ -550,11 +550,11 @@
   {
    "name": "hook: one tracking angle, the thrusters, the crossing",
    "from": 0,
-   "to": 3.41
+   "to": 3.3666666666666667
   },
   {
    "name": "the ten fans from below (still)",
-   "from": 3.41,
+   "from": 3.3666666666666667,
    "to": 5.840000000000001
   },
   {
@@ -593,7 +593,7 @@
    "to": 26.34
   },
   {
-   "name": "practice: low and level toward a standing camera on the flat",
+   "name": "practice: low and level over the flat (tracking)",
    "from": 26.34,
    "to": 26.900000000000002
   },

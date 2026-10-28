@@ -218,10 +218,10 @@ def isstep(y): return 0.5 - np.sin(np.arcsin(1 - 2 * y) / 3)  # inverse of smoot
 # hook
 add('frame 0: air already rushing past', whoosh(0.7, 300, 1400), -0.3, -31)
 add('his knees take the heave (cloth)', bp(noise(int(0.3 * SR)), 900, 5000) * env(int(0.3 * SR), 0.05, 0.15), 0.45, -37)
-add('the camera sinks below the deck: the thrusters (rotor air)', whoosh(0.8, 2200, 700, False), 1.4, -31)
-add('over the gravel bar (air, water on the stones)', P(whoosh(0.8, 400, 1500), 0.4 * bp(noise(int(0.8 * SR)), 600, 3000) * env(int(0.8 * SR), 0.2, 0.3)), 1.9, -32)
-add('rising to the wide crossing (air)', whoosh(1.1, 300, 2200), 2.15, -31)
-add('cut under the board: the fans close by', whoosh(0.5, 1800, 900, False) * 0.7, M['yousee'] - 0.05, -34)
+add('he carves: the board banks and its thrusters turn to us (rotor air)', whoosh(0.9, 2200, 700, False), 1.35, -31)
+add('over the gravel bar (air, water on the stones)', P(whoosh(0.8, 400, 1500), 0.4 * bp(noise(int(0.8 * SR)), 600, 3000) * env(int(0.8 * SR), 0.2, 0.3)), 2.05, -32)
+add('rising to the wide crossing (air)', whoosh(1.1, 300, 2200), 2.3, -31)
+add('cut under the board: the fans close by', whoosh(0.5, 1800, 900, False) * 0.7, SH['under']['from'] - 0.03, -34)
 # mechanism
 for i in range(10):
     add(f'count: duct {i + 1} rim (tiny tick)', click(4200 + 120 * i, 0.02), M['ten'] + (M['powerfulE'] - M['ten']) * (i + 0.5) / 10, -40)

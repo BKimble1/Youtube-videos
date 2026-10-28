@@ -7,10 +7,11 @@ import {hash, noise1} from '../dc/math';
 import {f2, polyD} from '../eng/draw';
 import {d3, Lens, m3, s3, V3, v3, a3} from '../eng/v3';
 
-export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'; foam?: number}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water', foam = 0}) => {
+export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: number; t: number; vel?: V3; surface?: 'water' | 'ground'; foam?: number; soft?: boolean}> = ({id, L, at, alt, thrust, t, vel = v3(0, 0, 0), surface = 'water', foam = 0, soft = false}) => {
   const k = thrust * Math.pow(Math.max(0, Math.min(1, 1 - (alt - 0.3) / 10.5)), 1.2);
   if (k < 0.02) return null;
-  const lagT = alt / 12;
+  // V5 (soft): the patch centres where the swept-back jets actually reach the surface (AirJets' jet speed)
+  const lagT = soft ? alt / (13 + 6 * thrust) : alt / 12;
   const c = a3(v3(at.x, 0.02, at.z), m3(v3(vel.x, 0, vel.z), -lagT));
   if (d3(s3(c, L.pos), L.f) < 0.6) return null;
   const R = 0.9 + alt * 0.32;
@@ -58,10 +59,19 @@ export const Wash: React.FC<{id: string; L: Lens; at: V3; alt: number; thrust: n
         spray.push(<circle key={i} cx={f2(p.x)} cy={f2(p.y)} r={f2(Math.max(0.6, 0.03 * p.k))} fill="#FFFFFF" opacity={0.6 * k * (1 - ph)} />);
       }
     }
+    // V5: the churned patch has soft edges (a hard-edged pale shape read as a rock under the water)
+    const sd = Math.max(2, Math.min(36, 0.22 * kc));
     return (
       <g>
-        <path d={polyD(blobP)} fill="#24585A" opacity={0.3 * k} />
-        {foam > 0 && <path d={polyD(blobP)} fill="#CFEDE6" opacity={0.32 * k * foam} />}
+        <defs>
+          <filter id={`${id}-wb`} x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation={f2(sd)} />
+          </filter>
+        </defs>
+        <g filter={soft ? `url(#${id}-wb)` : undefined}>
+          <path d={polyD(blobP)} fill="#24585A" opacity={(soft ? 0.42 : 0.3) * k} />
+          {foam > 0 && <path d={polyD(blobP)} fill="#CFEDE6" opacity={(soft ? 0.45 : 0.32) * k * foam} />}
+        </g>
         <path d={paws.join('')} stroke="#EEF9F6" strokeWidth={f2(Math.max(0.7, Math.min(3, 0.03 * kc)))} strokeOpacity={Math.min(1, 0.55 * k * (1 + 0.8 * foam))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
         {spray}
       </g>

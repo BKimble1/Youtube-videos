@@ -16,33 +16,33 @@
   "hero": false
  },
  {
-  "name": "the camera sinks below the deck: the thrusters (rotor air)",
-  "at": 1.4,
-  "frame": 42.0,
-  "dur": 0.8,
+  "name": "he carves: the board banks and its thrusters turn to us (rotor air)",
+  "at": 1.35,
+  "frame": 40.5,
+  "dur": 0.9,
   "gain_db": -31,
   "hero": false
  },
  {
   "name": "over the gravel bar (air, water on the stones)",
-  "at": 1.9,
-  "frame": 57.0,
+  "at": 2.05,
+  "frame": 61.5,
   "dur": 0.8,
   "gain_db": -32,
   "hero": false
  },
  {
   "name": "rising to the wide crossing (air)",
-  "at": 2.15,
-  "frame": 64.5,
+  "at": 2.3,
+  "frame": 69.0,
   "dur": 1.1,
   "gain_db": -31,
   "hero": false
  },
  {
   "name": "cut under the board: the fans close by",
-  "at": 3.36,
-  "frame": 100.8,
+  "at": 3.337,
+  "frame": 100.1,
   "dur": 0.5,
   "gain_db": -34,
   "hero": false

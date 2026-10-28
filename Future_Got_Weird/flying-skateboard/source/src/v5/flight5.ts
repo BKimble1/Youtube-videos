@@ -53,10 +53,20 @@ const yawOf = (dx: number, dz: number) => (Math.atan2(dx, dz) * 180) / Math.PI;
 // ------------------------------------------------------------------ the hook crossing (also the ending, tau < 0)
 // 11 m/s, 8-9 m above the Yangtze, 80 m out from the near bank at frame 0, heading for the far bank (+z).
 export const HK4 = {z0: 80, v: 11};
-const hx = (tau: number) => 1.3 * Math.sin(tau * 0.42 + 0.5);
+// V5: at 1.3-2.3 s he carves toward his heel side, so the board banks toe edge up into the turn and its thrusters
+// turn toward the low camera on his toe side (the reveal comes from his riding, not from a camera move); he holds the
+// new heading (about 11 degrees) through the rest of the opening flight. ssI is the integral of sstep, so the sideways
+// velocity eases in.
+const ssI = (a: number, b: number, t: number) => {
+  const s = Math.min(1, Math.max(0, (t - a) / (b - a)));
+  return (b - a) * (s ** 3 - s ** 4 / 2) + Math.max(0, t - b);
+};
+const CARVE = 2.0; // m/s sideways at the apex of the turn (about 10 degrees of heading at 11 m/s)
+const carveX = (tau: number) => -CARVE * ssI(1.3, 2.3, tau);
+const hx = (tau: number) => 1.3 * Math.sin(tau * 0.42 + 0.5) + carveX(tau);
 // about 4.3 m over the river (a height the reports support, low enough that the downwash roughens the water); the
 // board heaves gently in the air at 0.45-0.95 s and his knees take it; during "blast air downward" he sinks a little
-const heave = (tau: number) => 0.14 * (sstep(0.42, 0.62, tau) - sstep(0.62, 0.95, tau)) - 0.1 * (sstep(-2.2, -1.9, tau) - sstep(-1.9, -1.5, tau));
+const heave = (tau: number) => 0.14 * (sstep(0.42, 0.68, tau) - sstep(0.68, 1.05, tau)) - 0.1 * (sstep(-2.2, -1.9, tau) - sstep(-1.9, -1.5, tau));
 const halt = (tau: number) => 4.3 + 0.16 * Math.sin(tau * 0.8 + 0.3) + heave(tau) - 0.5 * sstep(4.9, 6.0, tau);
 /** weight shifts: frame 0 is mid-correction (toes, then back); a lean and its correction at 1.9-2.65; before frame 0
  *  (the ending) a gust correction while we look down past his feet, and a smaller one as the camera comes round */
@@ -70,21 +80,28 @@ export const hook4 = (tau: number): St => {
   const dx = (hx(tau + 0.05) - hx(tau - 0.05)) / 0.1;
   const yaw = yawOf(dx, HK4.v);
   const ddx = (hx(tau + 0.1) - 2 * hx(tau) + hx(tau - 0.1)) / 0.01;
-  const bank = -ddx * 1.2;
+  // V5: the board banks into its sideways acceleration (the tilted thrust is what pushes it round), toe edge up for a
+  // turn toward the heels
+  const bank = (Math.atan(ddx / G) * 180) / Math.PI;
+  const carve = Math.min(1, Math.abs(bank) / 12);
   const pitch = -lag(hLean, tau) * 75 - 2;
   const roll = lag(hSide, tau) * 95 + bank;
   const alt = halt(tau);
   const B = frameYPR(v3(x, alt, z), yaw, pitch, roll);
-  const sd = hSide(tau);
+  // he leans into the turn with the board (hips toward the inside), the knees loaded
+  const sd = hSide(tau) + 0.0045 * bank;
+  // V5: the knees take the heave: the body follows the board's rise a moment late, so the legs compress as the deck
+  // comes up under him and extend as it drops away
+  const absorb = heave(tau) - lag(heave, tau, 0.3, 0.03, 8);
   // the knees work with every correction: they flex as the weight moves and recover after it
-  const work = Math.min(1, Math.abs(sd) * 14 + Math.abs(hLean(tau) - 0.085) * 12 + Math.abs(heave(tau)) * 4);
+  const work = Math.min(1, Math.abs(hSide(tau)) * 14 + Math.abs(hLean(tau) - 0.085) * 12 + Math.abs(heave(tau)) * 1.5);
   return {
     // the rotors work harder through "electric propellers blast air downward" (the explanation is also the strongest wash)
     B, alt, speed: HK4.v, pitch, roll, yaw, thrust: 0.7 + 0.28 * sstep(4.9, 5.9, tau) * (1 - sstep(7.2, 7.6, tau)), pos: v3(x, alt, z), vel: v3(dx, 0, HK4.v), rps: 30,
     pose: pose({
-      lean: hLean(tau), side: sd, crouch: 0.46 + 0.16 * work + 0.03 * noise1(tau * 0.7, 4), twist: 24 + 4 * noise1(tau * 0.5, 5), bend: 11 + 6 * work,
-      look: 64 + 6 * noise1(tau * 0.4, 6), nod: 10 + 4 * work, armF: 0.45 + 0.12 * work + 0.06 * noise1(tau * 1.1, 7), armFs: 0.8 + 0.2 * work,
-      armR: 0.22 + 0.06 * noise1(tau * 0.8, 10), thumb: 0.5, bal: clamp(-sd * 15, -1, 1),
+      lean: hLean(tau), side: sd, crouch: 0.46 + 0.16 * work + 0.1 * carve + 3.0 * absorb + 0.03 * noise1(tau * 0.7, 4), twist: 24 + 4 * noise1(tau * 0.5, 5), bend: 11 + 6 * work + 4 * carve,
+      look: 64 + 6 * noise1(tau * 0.4, 6), nod: 10 + 4 * work, armF: 0.45 + 0.12 * work + 0.1 * carve + 0.06 * noise1(tau * 1.1, 7), armFs: 0.8 + 0.2 * work,
+      armR: 0.22 + 0.06 * noise1(tau * 0.8, 10), thumb: 0.5, bal: clamp(-hSide(tau) * 15 + 0.3 * carve, -1, 1),
     }),
   };
 };
@@ -194,7 +211,8 @@ export const fieldFlight = (K: FieldK) => {
     const listen = sstep(K.cue + 0.05, K.cue + 0.35, t) * (1 - sstep(K.fix + 0.1, K.fix + 0.55, t));
     // the wrist comes up to read the board's attitude and goes down when the cue arrives; the head looks down at it
     // and stays down, listening, until he makes the correction (slow, small turns)
-    const wristUp = sstep(K.while + 0.5, K.while + 0.9, t) * (1 - sstep(K.cue + 0.1, K.cue + 0.5, t));
+    // V5: the arm comes up while the deck phone is on screen, so it is settled when we cut to his view of the wrist
+    const wristUp = sstep(K.while + 0.1, K.while + 0.5, t) * (1 - sstep(K.cue + 0.1, K.cue + 0.5, t));
     const headDown = sstep(K.while + 0.45, K.while + 0.95, t) * (1 - sstep(K.fix + 0.05, K.fix + 0.65, t));
     return {
       B, alt, speed: Math.hypot(vf, vs), pitch: pitch(t), roll: roll(t), yaw: 90, thrust: 0.2 + 0.75 * sstep(K.lift - 0.5, K.lift + 0.1, t), pos: B.o, vel: v3(vf, 0, -vs),

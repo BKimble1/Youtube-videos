@@ -7,16 +7,18 @@ import {H, W} from '../eng/v3';
 import {FPS} from '../story/time';
 import {Captions} from '../Captions';
 import {makePlacer} from '../story/capPlace';
-import {shotAt5} from './shots5';
+import {CUTS5, shotAt5} from './shots5';
 
 const placer5 = makePlacer(shotAt5);
 const PRICE = {y: 360, size: 112};
+// every picture cut, as the first frame of the new shot
+const CUTF = CUTS5.map((c) => Math.ceil(c * FPS - 1e-9));
 export const Frame5: React.FC<{t: number; captions: boolean; pre?: string}> = ({t, captions, pre = ''}) => (
   <AbsoluteFill style={{backgroundColor: '#1A252D', overflow: 'hidden'}}>
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
       {shotAt5(t).draw(t, pre)}
     </svg>
-    {captions && <Captions t={t} placer={placer5} price={PRICE} />}
+    {captions && <Captions t={t} placer={placer5} price={PRICE} cuts={CUTF} />}
   </AbsoluteFill>
 );
 export const Film5: React.FC<{audio: string | false; captions: boolean}> = ({audio, captions}) => {

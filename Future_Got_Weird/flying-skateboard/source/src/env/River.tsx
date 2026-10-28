@@ -209,12 +209,16 @@ const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
   const dark = hazeAt('#8C979E', dist);
   if (d3(s3(v3(BRIDGE.x, 40, 260), L.pos), L.f) < 50) return null;
   const deck = [P(BRIDGE.x, BRIDGE.y, BRIDGE.z0), P(BRIDGE.x, BRIDGE.y, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0)];
-  const els: React.ReactNode[] = [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} />];
+  const els: React.ReactNode[] = [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} strokeDasharray={mirror ? '9 6' : undefined} />];
   BRIDGE.pylons.forEach((pz, i) => {
     for (const dx of [-9, 9]) {
-      const a = P(BRIDGE.x + dx, 0, pz), b = P(BRIDGE.x + dx * 0.3, BRIDGE.ph, pz);
-      els.push(<path key={`p${i}${dx}`} d={`M${f2(a.x)},${f2(a.y)} L${f2(b.x)},${f2(b.y)}`} stroke={col} strokeWidth={f2(Math.max(1.2, 5 * a.k))} />);
+      // V5: on the rain-roughened water the reflection is broken into short ripple-length pieces and only reaches part
+      // way down (a solid mirrored line read as a pole standing in the river)
+      const a = P(BRIDGE.x + dx, 0, pz), b = P(BRIDGE.x + dx * (mirror ? 0.79 : 0.3), mirror ? BRIDGE.ph * 0.3 : BRIDGE.ph, pz);
+      const sw = Math.max(1.2, 5 * a.k);
+      els.push(<path key={`p${i}${dx}`} d={`M${f2(a.x)},${f2(a.y)} L${f2(b.x)},${f2(b.y)}`} stroke={col} strokeWidth={f2(sw)} strokeDasharray={mirror ? `${f2(sw * 2.2)} ${f2(sw * 1.6)}` : undefined} />);
     }
+    if (mirror) return;
     for (let c = 1; c <= 9; c++) {
       const top = P(BRIDGE.x, BRIDGE.ph - 6 - c * 3, pz);
       for (const s of [-1, 1]) {
@@ -223,7 +227,7 @@ const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
       }
     }
   });
-  return <g opacity={mirror ? 0.3 : 1}>{els}</g>;
+  return <g opacity={mirror ? 0.16 : 1}>{els}</g>;
 };
 
 /** world-fixed ripple crests on the water (short arcs), four levels of detail, drifting with the current */

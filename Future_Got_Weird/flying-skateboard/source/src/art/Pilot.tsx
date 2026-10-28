@@ -241,8 +241,12 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   // --- neck and head
   const neckA = p(lerp3(j.S, j.N, 0.2)), neckB = p(a3(j.Hc, m3(j.hU, -0.06)));
   const neck = !vis(j.N, j.Hc) ? null : <path key="nk" d={capsulePath(neckA, neckB, 0.052 * neckA.k, 0.05 * neckB.k)} fill={shade(GEAR.skin, 0.12)} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />;
-  const collarPts = thin(hull(proj(L, circ3(lerp3(j.S, j.N, 0.15), j.chL, j.chF, 0.075, 16))), 1.5);
-  const collar = <Shape key="col" id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} />;
+  // the collar opening is a ring on top of the torso: it can only be seen from above, so it fades out as the camera
+  // comes down to the shoulder plane (V5: seen edge-on its ends used to float beside the neck)
+  const colC = lerp3(j.S, j.N, 0.1);
+  const colOp = Math.max(0, Math.min(1, (facing(colC, j.up) - 0.08) / 0.22));
+  const collarPts = colOp > 0.01 ? thin(hull(proj(L, circ3(colC, j.chL, j.chF, 0.072, 16))), 1.5) : [];
+  const collar = colOp > 0.01 ? <g key="col" opacity={f2(colOp)}><Shape id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} /></g> : null;
   // V5: the head and helmet are one rigid assembly in the head frame (hF, hU, hL), pivoting at the neck. Every part
   // (shell, visor, stripe, ears, earbud, chin strap) is defined in that frame, and outlines are exact clipped curves
   // (sphereRegion), so a head turn rotates the whole assembly continuously: no sampling grid, no on/off thresholds.
