@@ -457,8 +457,8 @@
  },
  {
   "name": "AI coach cue in the earpiece",
-  "at": 23.49,
-  "frame": 704.7,
+  "at": 23.647,
+  "frame": 709.4,
   "dur": 0.42,
   "gain_db": -27,
   "hero": true

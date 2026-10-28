@@ -264,7 +264,9 @@ add('the gust rolls the board (air)', whoosh(0.6, 700, 1500), M['body'] - 0.75, 
 add('the whole-body save (cloth)', bp(noise(int(0.4 * SR)), 900, 5000) * env(int(0.4 * SR), 0.04, 0.2), M['body'] - 0.5, -35)
 add('board phone: soft tick', click(5200, 0.02), M['while'] + 0.1, -37)
 add('wrist phone: soft tick', click(5600, 0.02), M['voice'] - 0.05, -37)
-add('AI coach cue in the earpiece', chime(988, 1319), M['coach'] + 0.05, -27, True)
+# V5 (final): the chime lands on the cut to the earbud close-up (the first cut after "coach")
+C3 = min(c for c in cj['cuts'] if c > M['coach'] + 0.05)
+add('AI coach cue in the earpiece', chime(988, 1319), C3 - 0.02, -27, True)
 add('the correction (cloth)', bp(noise(int(0.35 * SR)), 900, 5000) * env(int(0.35 * SR), 0.05, 0.2), M['learn'] - 0.05, -36)
 add('settled: clean air', whoosh(0.9, 400, 1500), M['balance2'] + 0.1, -33)
 # practice

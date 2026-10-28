@@ -54,7 +54,12 @@ const ductPt = (B: Frame, i: number, y: number) => toW(B, v3(BD.ducts[i][0], y, 
 export const boardAbove = (L: Lens, B: Frame) => d3(s3(L.pos, B.o), B.y) > 0;
 
 export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = ({id, L, B, st}) => {
-  const above = boardAbove(L, B);
+  // V5 (final): the deck top is seen only from above its plane and the underside only from below the bottom plane;
+  // between the two (camera level with the board's edge) neither face is drawn, only the side. A face therefore
+  // appears or goes edge-on as a line, so the deck details and the underside wiring never swap in one frame.
+  const camY = d3(s3(L.pos, B.o), B.y);
+  const above = camY > 0;
+  const below = camY < -BD.thick;
   const kc = L.p(B.o).k;
   const w = inkW(kc, 0.004);
   const built = st.built ?? 10;
@@ -70,7 +75,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
   const holes = BD.ducts.map((_, i) => proj(L, circ3(ductPt(B, i, fy), B.x, B.z, BD.ductR, 30)));
   const holeD = holes.map((h) => polyD(h)).join(' ');
   const order = BD.ducts.map((_, i) => i).sort((a, b) => d3(s3(ductPt(B, b, 0), L.pos), L.f) - d3(s3(ductPt(B, a, 0), L.pos), L.f));
-  const blur = Math.min(1, st.rps / 18);
+  const blur = Math.min(1, st.rps / 12);
   const dz = (i: number) => {
     if (i + 1 > built + 0.999) return <path key={i} d={polyD(holes[i])} fill="#4A535C" stroke={INK} strokeWidth={f2(w * 1.2)} />;
     const seat0 = Math.min(1, Math.max(0, built - i));
@@ -80,15 +85,20 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
     const pc = L.p(c);
     const blades: React.ReactNode[] = [];
     const nb = 5;
-    const ph = st.phase * Math.PI * 2 * (i % 2 ? -1 : 1) + i * 0.7;
-    for (let b = 0; b < nb; b++) {
+    const dir = i % 2 ? -1 : 1;
+    const ph = st.phase * Math.PI * 2 * dir + i * 0.7;
+    // V5 (final): above a few turns a second the blades would move more than half their spacing in a frame and seem to
+    // jump about, so they fade out by 12 rps and the spin shows as the blur disc and speed arcs. The arcs turn at a
+    // quarter of the drawn phase rate (under 10 degrees a frame in flight), so they read as one steady spin.
+    const bladeOp = Math.max(0, Math.min(1, 1 - (st.rps - 3) / 9));
+    for (let b = 0; b < nb && bladeOp > 0.01; b++) {
       const a = ph + (b * Math.PI * 2) / nb;
       const pts = [0.03, 0.105].flatMap((r, k) => {
         const da = k === 0 ? 0.32 : 0.16;
         return [a - da, a + da].map((aa) => toW(B, v3(BD.ducts[i][0] + Math.cos(aa) * r, BD.fanY, BD.ducts[i][1] + Math.sin(aa) * r)));
       });
       const pp = proj(L, [pts[0], pts[2], pts[3], pts[1]]);
-      blades.push(<path key={b} d={polyD(pp)} fill={COL.blade} opacity={1 - blur * 0.82} />);
+      blades.push(<path key={b} d={polyD(pp)} fill={COL.blade} opacity={f2(bladeOp)} />);
     }
     const disc = proj(L, circ3(c, B.x, B.z, 0.108, 28));
     const hub = proj(L, circ3(c, B.x, B.z, 0.034, 16));
@@ -107,18 +117,18 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
           <path d={polyD(proj(L, circ3(ductPt(B, i, above ? -BD.thick : 0), B.x, B.z, BD.ductR, 30)))} fill={COL.ductIn} />
           {blur > 0.05 && <path d={polyD(disc)} fill="#A9B5C1" opacity={0.42 * blur} />}
           {blades}
-          {blur > 0.2 && [0, 1, 2].map((r) => {
-            const a0 = st.phase * Math.PI * 2 + r * 2.1;
+          {blur > 0.02 && [0, 1, 2].map((r) => {
+            const a0 = st.phase * Math.PI * 2 * 0.25 * dir + r * 2.1 + i * 0.7;
             const arc = proj(L, circ3(c, B.x, B.z, 0.05 + r * 0.022, 8, a0, a0 + 1.4));
             return <path key={`s${r}`} d={`M${arc.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' L')}`} stroke="#E4ECF2" strokeOpacity={0.6 * blur} strokeWidth={f2(Math.max(0.6, 0.006 * pc.k))} fill="none" strokeLinecap="round" />;
           })}
           {/* V3: the exit side (seen from below): three stator arms holding the motor can in front of the fan */}
-          {!above && [0, 1, 2].map((s) => {
+          {below && [0, 1, 2].map((s) => {
             const aa = (s * Math.PI * 2) / 3 + 0.5 + i;
             const q = proj(L, [0.036, BD.ductR].map((r) => toW(B, v3(BD.ducts[i][0] + Math.cos(aa) * r, -BD.thick + 0.018, BD.ducts[i][1] + Math.sin(aa) * r))));
             return <path key={`st${s}`} d={`M${f2(q[0].x)},${f2(q[0].y)} L${f2(q[1].x)},${f2(q[1].y)}`} stroke="#3B444E" strokeWidth={f2(Math.max(0.8, 0.016 * pc.k))} strokeLinecap="round" />;
           })}
-          {!above && <path d={polyD(proj(L, circ3(toW(B, v3(BD.ducts[i][0], -BD.thick + 0.02, BD.ducts[i][1])), B.x, B.z, 0.046, 18)))} fill="#59636F" stroke={INK} strokeWidth={f2(w * 0.8)} />}
+          {below && <path d={polyD(proj(L, circ3(toW(B, v3(BD.ducts[i][0], -BD.thick + 0.02, BD.ducts[i][1])), B.x, B.z, 0.046, 18)))} fill="#59636F" stroke={INK} strokeWidth={f2(w * 0.8)} />}
           <path d={polyD(hub)} fill={COL.hub} stroke={INK} strokeWidth={f2(w * 0.8)} />
         </g>
         <path d={polyD(rim)} fill="none" stroke={flash > 0.01 ? COL.led : INK} strokeWidth={f2(w * (1.6 + flash * 2.4))} strokeOpacity={1} />
@@ -186,15 +196,15 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
     return segs.length ? <g>{segs}</g> : null;
   };
   // underside: battery pack and wiring runs along the spine
-  // V5: the pack is always drawn: under the board when the deck is seen from below, and behind the board's body when
-  // seen from above, so the part hanging below the silhouette shows and nothing pops as the deck tips past the camera
+  // V5: the pack is always drawn: in front of the board from below its bottom plane, and behind the board's body
+  // otherwise, so the part hanging below the silhouette shows and nothing pops as the deck tips past the camera
   const battery = (() => {
     const c: V3[] = [];
     for (const x of [-0.1, 0.1]) for (const z of [-0.3, 0.3]) for (const y of [-BD.thick, -BD.thick - 0.06]) c.push(toW(B, v3(x, y, z)));
     const pts = hull(proj(L, c));
     return <path d={smoothD(pts, 0.06)} fill={COL.battery} stroke={INK} strokeWidth={f2(w * 2)} paintOrder="stroke" />;
   })();
-  const wires = !above
+  const wires = below
     ? BD.ducts.map(([x, z], i) => {
         const a = L.p(toW(B, v3(Math.sign(x) * 0.1, -BD.thick - 0.005, z * 0.6)));
         const c = L.p(toW(B, v3(x - Math.sign(x) * BD.rimR, -BD.thick - 0.004, z)));
@@ -206,14 +216,15 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
       <defs>
         <LinFill id={`${id}-fg`} b={b} color={above ? COL.frame : COL.under} k={0.9} />
       </defs>
-      {above && battery}
+      {/* the pack hangs under the bottom plane: behind the board's body from above that plane, in front from below */}
+      {!below && battery}
       {/* thickness: the hull of both faces, in the side tone */}
       <path d={smoothD(sideH, 0.1)} fill={COL.side} stroke={INK} strokeWidth={f2(w * 2)} strokeLinejoin="round" paintOrder="stroke" />
       {strip([0, 1, 2, 17, 16], COL.led)}
       {strip([8, 9, 10], COL.tail)}
-      {order.map(dz)}
+      {(above || below) && order.map(dz)}
       {/* the visible face with the ten inlets cut out */}
-      <path d={`${faceD} ${holeD}`} fillRule="evenodd" fill={`url(#${id}-fg)`} stroke={INK} strokeWidth={f2(w * 1.6)} strokeLinejoin="round" />
+      {(above || below) && <path d={`${faceD} ${holeD}`} fillRule="evenodd" fill={`url(#${id}-fg)`} stroke={INK} strokeWidth={f2(w * 1.6)} strokeLinejoin="round" />}
       {grilles}
       {grip && <path d={polyD(grip)} fill={COL.grip} opacity={0.9} />}
       {above && (
@@ -230,7 +241,7 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
           <circle cx={f2(L.p(phoneC).x)} cy={f2(L.p(phoneC).y)} r={f2(Math.max(0.6, 0.006 * kc))} fill="#E8F6FF" />
         </g>
       )}
-      {!above && battery}
+      {below && battery}
       {wires}
       {above && seating.map(dropUnit)}
     </g>

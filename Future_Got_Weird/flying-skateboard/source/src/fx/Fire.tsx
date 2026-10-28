@@ -120,6 +120,64 @@ export const Flames: React.FC<{id: string; L: Lens; at: V3[]; size: number; k: n
   );
 };
 
+/** V5 (final): a bed of flame over several anchors (each with its own size and intensity) drawn as ONE silhouette:
+ *  every tongue's outline first as an ink underlay, then all the fills, then the hot cores, so no tongue's base or
+ *  edge shows inside the fire (V5 first cut: separate clusters with stroked flat bases stacked into a staircase).
+ *  Tongue bases are rounded, each anchor keeps its own shapes (hashed by its index), the glow is a soft radial
+ *  gradient, and a dying flame narrows as well as shortening and fades as it goes. */
+export const FlameBed: React.FC<{id: string; L: Lens; items: {at: V3; size: number; k: number}[]; t: number}> = ({id, L, items, t}) => {
+  const outer: string[] = [], inner: string[] = [];
+  const glows: React.ReactNode[] = [];
+  let sw = 0.6;
+  items.forEach((it, i) => {
+    const k = it.k;
+    if (k <= 0.01 || d3(s3(it.at, L.pos), L.f) < 0.15) return;
+    const p = L.p(it.at);
+    const size = it.size;
+    sw = Math.max(sw, 0.004 * p.k);
+    const gw = 0.15 + 0.85 * k;
+    for (let j = 0; j < 5; j++) {
+      const h = size * k * (0.6 + 0.5 * hash(i * 9 + j, 7)) * (1 + 0.35 * noise1(t * 7 + j * 2.3 + i * 1.9, 11)) * p.k;
+      const wd = size * 0.32 * (0.7 + 0.5 * hash(i * 5 + j, 8)) * gw * p.k;
+      const x = p.x + (j - 2) * size * 0.16 * gw * p.k, y = p.y;
+      const sway = noise1(t * 5 + j + i * 1.7, 12) * size * 0.2 * p.k;
+      const shape = (sc: number) => {
+        const hh = h * sc, ww = wd * sc;
+        return `M${f2(x - ww)},${f2(y)} C${f2(x - ww)},${f2(y - hh * 0.45)} ${f2(x + sway - ww * 0.2)},${f2(y - hh * 0.7)} ${f2(x + sway)},${f2(y - hh)} C${f2(x + sway + ww * 0.2)},${f2(y - hh * 0.7)} ${f2(x + ww)},${f2(y - hh * 0.45)} ${f2(x + ww)},${f2(y)} C${f2(x + ww)},${f2(y + ww * 0.75)} ${f2(x - ww)},${f2(y + ww * 0.75)} ${f2(x - ww)},${f2(y)} Z`;
+      };
+      outer.push(shape(1));
+      inner.push(shape(0.55));
+    }
+    glows.push(<ellipse key={i} cx={f2(p.x)} cy={f2(p.y - size * 0.3 * p.k * k)} rx={f2(size * 1.6 * p.k * k)} ry={f2(size * 1.1 * p.k * k)} fill={`url(#${id}-gl)`} opacity={f2(Math.min(1, k * 1.5))} />);
+  });
+  if (!outer.length) return null;
+  const kMax = Math.max(...items.map((it) => it.k));
+  return (
+    <g opacity={f2(Math.min(1, kMax / 0.25))}>
+      <defs>
+        <linearGradient id={`${id}-fo`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#FFB13B" />
+          <stop offset="0.6" stopColor="#FF6B2B" />
+          <stop offset="1" stopColor="#E8361F" />
+        </linearGradient>
+        <linearGradient id={`${id}-fi`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#FFFBE0" />
+          <stop offset="1" stopColor="#FFD449" />
+        </linearGradient>
+        <radialGradient id={`${id}-gl`}>
+          <stop offset="0" stopColor="#FF9A45" stopOpacity={0.4} />
+          <stop offset="0.55" stopColor="#FF8A3A" stopOpacity={0.16} />
+          <stop offset="1" stopColor="#FF7A2A" stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <g style={{mixBlendMode: 'screen'}}>{glows}</g>
+      <path d={outer.join(' ')} fill="#B3261A" stroke="#B3261A" strokeWidth={f2(sw * 2)} strokeLinejoin="round" />
+      <path d={outer.join(' ')} fill={`url(#${id}-fo)`} />
+      <path d={inner.join(' ')} fill={`url(#${id}-fi)`} />
+    </g>
+  );
+};
+
 /** smoke puffs from 3D sources, rising and spreading; born at t0 */
 export const Smoke: React.FC<{L: Lens; at: V3[]; t: number; t0: number; k?: number; dark?: number}> = ({L, at, t, t0, k = 1, dark = 0.6}) => {
   if (t < t0) return null;

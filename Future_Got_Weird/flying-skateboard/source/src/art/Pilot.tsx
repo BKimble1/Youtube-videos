@@ -6,7 +6,7 @@
 import React from 'react';
 import {limbGeo} from '../dc/limb';
 import {capsulePath} from '../dc/shade';
-import {a3, d3, Lens, lerp3, m3, n3, s3, V3} from '../eng/v3';
+import {a3, c3, d3, l3, Lens, lerp3, m3, n3, s3, V3} from '../eng/v3';
 import {circ3, curveD, f2, hull, inkW, lit, P2, polyD, proj, shade, Shape, smoothD, sphereD, sphereRegion, thin} from '../eng/draw';
 import {DIMS, PilotJ} from './rig';
 
@@ -52,13 +52,19 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const dep = (q: V3) => d3(s3(q, cam), L.f);
 
   // --- shoes (boxes in the board frame, planted on the deck)
-  const shoe = (k: string, ank: V3) => {
+  // V5 (final): the shoe's top is a plane parallel to the deck. The shoe lies below it and the trouser leg above it,
+  // except the leg's rounded end, which is inside the shoe. Seen from above that plane the shoe is drawn first and the
+  // leg over it, cut off at the plane; seen from below, the leg first and the shoe over it. Where the order changes
+  // the camera is in the plane and the two shapes only touch along a line, so nothing pops and nothing is drawn
+  // see-through (V5 first cut: a fading copy of the shoes let the trouser ends show through them).
+  const SHOE_TOP = 0.105;
+  const shoe = (k: string, ank: V3, knee: V3, hip: V3) => {
     const B = j.B;
-    if (!vis(ank)) return {z: 0, over: 0, el: null};
+    if (!vis(ank)) return {z: 0, up: true, el: null, clip: null};
     const base = s3(ank, m3(B.y, DIMS.ankleH));
     const c: V3[] = [];
     // V5: the shoe sits on the board's solid spine (|x| < 0.165), clear of the toe-side fan ducts
-    for (const x of [-0.115, 0.135]) for (const y of [0, 0.105]) for (const z of [-0.058, 0.058]) c.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
+    for (const x of [-0.115, 0.135]) for (const y of [0, SHOE_TOP]) for (const z of [-0.058, 0.058]) c.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
     // rounded toe
     c.push(a3(base, a3(m3(B.x, 0.162), m3(B.y, 0.04))));
     const pts = thin(hull(proj(L, c)), 1.5);
@@ -66,18 +72,30 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     for (const x of [-0.12, 0.162]) for (const z of [-0.06, 0.06]) for (const y of [0, 0.02]) sole.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
     const sp = thin(hull(proj(L, sole)), 1.5);
     const lace = proj(L, [a3(base, a3(m3(B.x, 0.0), m3(B.y, 0.108))), a3(base, a3(m3(B.x, 0.12), m3(B.y, 0.085)))]);
-    const fcy = facing(base, B.y);
-    const top = fcy > 0;
+    const topC = a3(base, m3(B.y, SHOE_TOP));
+    const up = d3(s3(cam, topC), B.y) > 0;
+    // the leg above the plane: the hull of its cut at the plane and its knee and hip discs (all convex pieces)
+    let clip: string | null = null;
+    if (up) {
+      const sh = s3(knee, ank);
+      const lam = (SHOE_TOP - DIMS.ankleH) / Math.max(0.05, d3(sh, B.y));
+      const cut = a3(ank, m3(sh, lam));
+      const disc = (q: V3, r: number) => {
+        const pq = p(q), rr = r * pq.k + 3 * w;
+        return Array.from({length: 16}, (_, i) => ({x: pq.x + rr * Math.cos((i / 16) * Math.PI * 2), y: pq.y + rr * Math.sin((i / 16) * Math.PI * 2)}));
+      };
+      const cutP = proj(L, circ3(cut, B.x, B.z, 0.054, 20));
+      clip = polyD(hull([...cutP, ...disc(knee, 0.062), ...disc(hip, 0.085)]));
+    }
     return {
       z: dep(base) + 0.02,
-      // V5: seen from below the deck the shoe's toe is in front of the trouser hem: a second copy over the legs fades in
-      // as the camera goes under the deck plane (the trousers were drawn over the shoes, so the feet read as stumps)
-      over: Math.max(0, Math.min(1, (0.02 - fcy) / 0.18)),
+      up,
+      clip,
       el: (
         <g key={k}>
           <Shape id={`${id}-${k}`} d={smoothD(pts, 0.12)} pts={pts} color={GEAR.shoe} w={w} k={0.8} />
           <path d={smoothD(sp, 0.1)} fill={GEAR.sole} opacity={0.85} />
-          {top && <path d={polyD(lace, false)} stroke="#9AA8B5" strokeWidth={f2(w * 1.6)} strokeLinecap="round" fill="none" />}
+          {up && <path d={polyD(lace, false)} stroke="#9AA8B5" strokeWidth={f2(w * 1.6)} strokeLinecap="round" fill="none" />}
         </g>
       ),
     };
@@ -242,20 +260,57 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       {isFront ? wristPhone() : controller()}
     </g>
   );
-  const tz = dep(lvl(0.5));
   const armFz = dep(lerp3(j.elbF, j.wriF, 0.5));
   const armRz = dep(lerp3(j.elbR, j.wriR, 0.6));
 
   // --- neck and head
-  const neckA = p(lerp3(j.S, j.N, 0.2)), neckB = p(a3(j.Hc, m3(j.hU, -0.06)));
+  // the neck runs from inside the jacket (hidden by it) up into the head
+  const neckA = p(lerp3(j.S, j.N, -0.5)), neckB = p(a3(j.Hc, m3(j.hU, -0.06)));
   const neck = !vis(j.N, j.Hc) ? null : <path key="nk" d={capsulePath(neckA, neckB, 0.052 * neckA.k, 0.05 * neckB.k)} fill={shade(GEAR.skin, 0.12)} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />;
-  // the collar opening is a ring on top of the torso: it can only be seen from above, so it fades out as the camera
-  // comes down to the shoulder plane (V5: seen edge-on its ends used to float beside the neck)
+  // V5 (final): the collar opening is a ring on top of the jacket, seen only from above its plane (it is edge-on, a
+  // line, where it appears). It is opaque and clipped to the jacket, so its ends never float beside the neck. The
+  // neck is drawn again over it, clipped to the region beyond the ring's near arc: the neck rises out of the opening,
+  // in front of the ring's back and the jacket behind it, and behind the jacket's front. No fading copies, so the neck
+  // never reads as glassy.
   const colC = lerp3(j.S, j.N, 0.1);
-  const colOp = Math.max(0, Math.min(1, (facing(colC, j.up) - 0.08) / 0.22));
-
-  const collarPts = colOp > 0.01 ? thin(hull(proj(L, circ3(colC, j.chL, j.chF, 0.072, 16))), 1.5) : [];
-  const collar = colOp > 0.01 ? <g key="col" opacity={f2(colOp)}><Shape id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} /></g> : null;
+  const colN = (() => {
+    const nn = n3(c3(j.chF, j.chL));
+    return d3(nn, j.up) < 0 ? m3(nn, -1) : nn;
+  })();
+  const colR = 0.068;
+  const colUp = d3(s3(cam, colC), colN) > 0.002;
+  const collarPts = colUp ? proj(L, circ3(colC, j.chL, j.chF, colR, 28)) : [];
+  const neckClip = (() => {
+    if (!colUp || !neck) return null;
+    const toC = n3(s3(cam, colC));
+    const hd = n3(s3(toC, m3(colN, d3(toC, colN))));
+    const e2 = c3(colN, hd);
+    const nk = n3(s3(j.Hc, colC));
+    const arc = Array.from({length: 17}, (_, i) => {
+      const a = (i / 16) * Math.PI;
+      return a3(colC, a3(m3(e2, colR * Math.cos(a)), m3(hd, colR * Math.sin(a))));
+    });
+    const far = [a3(a3(colC, m3(e2, -colR * 1.8)), m3(nk, 0.6)), a3(a3(colC, m3(e2, colR * 1.8)), m3(nk, 0.6))];
+    return polyD(proj(L, [...arc, ...far]));
+  })();
+  const collar = colUp ? (
+    <g key="col">
+      <defs>
+        <clipPath id={`${id}-tc2`}>
+          <path d={torsoD} />
+        </clipPath>
+        {neckClip && (
+          <clipPath id={`${id}-nc`}>
+            <path d={neckClip} />
+          </clipPath>
+        )}
+      </defs>
+      <g clipPath={`url(#${id}-tc2)`}>
+        <Shape id={`${id}-col`} d={polyD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} />
+      </g>
+      {neckClip && <g clipPath={`url(#${id}-nc)`}>{neck}</g>}
+    </g>
+  ) : null;
   // V5: the head and helmet are one rigid assembly in the head frame (hF, hU, hL), pivoting at the neck. Every part
   // (shell, visor, stripe, ears, earbud, chin strap) is defined in that frame, and outlines are exact clipped curves
   // (sphereRegion), so a head turn rotates the whole assembly continuously: no sampling grid, no on/off thresholds.
@@ -409,77 +464,153 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     </g>
   );
 
-  // order: shoes, legs (far first), arms behind the torso, torso, collar, neck, head, arms in front
-  const shoeList = [shoe('sf', j.ankF), shoe('sr', j.ankR)].sort((a, b) => b.z - a.z);
-  const shoes = shoeList.map((s) => s.el);
-  const shoesOver = shoeList.filter((s) => s.over > 0.01 && s.el).map((s, i) => <g key={`so${i}`} opacity={s.over < 0.99 ? f2(s.over) : undefined}>{s.el}</g>);
-  const legs = zF > zR ? [legF, legR] : [legR, legF];
-  const arms = [
-    {z: armFz, k: 0, el: arm('af', j.shF, j.elbF, j.wriF, true)},
-    {z: armRz, k: 1, el: arm('ar', j.shR, j.elbR, j.wriR, false)},
-  ].sort((a, b) => b.z - a.z);
-  // V5: whether an arm is in front of the torso: its forearm against the torso's surface along the same line of sight
-  // (the torso as a cylinder from pelvis to shoulders), as a signed margin in metres. The arm is always drawn behind,
-  // and its in-front copy fades in over a few centimetres of that margin, so a change of order never pops (the old
-  // test against the torso's centre depth switched in one frame while the arm overlapped the torso).
-  const frontMargin = (q: V3) => {
-    const r = 0.15;
-    const ax = s3(j.S, j.P), len = Math.hypot(ax.x, ax.y, ax.z), u = m3(ax, 1 / len);
-    const dq = s3(q, cam), dist = Math.hypot(dq.x, dq.y, dq.z), v = m3(dq, 1 / dist);
+  // V5 (final): the torso as an elliptic cylinder (the jacket's chest section, hem to shoulders), and how far a point
+  // is in front of it along its line of sight: the depth at which the sight line enters the torso (or, if it misses,
+  // passes closest to its axis) minus the point's own depth
+  const TOR = (() => {
+    const ax0 = s3(j.S, j.P), len = l3(ax0), u = m3(ax0, 1 / len);
+    const l = n3(s3(j.chL, m3(u, d3(j.chL, u))));
+    const f0 = c3(u, l);
+    return {u, l, f: d3(f0, j.chF) < 0 ? m3(f0, -1) : f0, len, rx: 0.172, ry: 0.118};
+  })();
+  const inFront = (q: V3) => {
+    const dq = s3(q, cam), dist = l3(dq), v = m3(dq, 1 / dist);
     const w0 = s3(cam, j.P);
-    const vu = d3(v, u), wu = d3(w0, u);
-    const A = 1 - vu * vu, Bq = 2 * (d3(v, w0) - vu * wu), C = d3(w0, w0) - wu * wu - r * r;
-    // nearest approach of the line of sight to the torso axis, or where it enters the torso
-    let tRef = A > 1e-6 ? -Bq / (2 * A) : dist;
+    const al = d3(w0, TOR.l) / TOR.rx, af = d3(w0, TOR.f) / TOR.ry, au = d3(w0, TOR.u);
+    const vl = d3(v, TOR.l) / TOR.rx, vf = d3(v, TOR.f) / TOR.ry, vu = d3(v, TOR.u);
+    const A = vl * vl + vf * vf, Bq = 2 * (al * vl + af * vf), C = al * al + af * af - 1;
+    let tRef = A > 1e-9 ? -Bq / (2 * A) : dist + 1;
     const disc = Bq * Bq - 4 * A * C;
-    if (A > 1e-6 && disc > 0) {
-      const tHit = (-Bq - Math.sqrt(disc)) / (2 * A);
-      const h = wu + vu * tHit;
-      if (tHit > 0 && h > -0.05 && h < len + 0.1) tRef = tHit;
+    if (A > 1e-9 && disc > 0) {
+      const sq = Math.sqrt(disc);
+      let t0 = (-Bq - sq) / (2 * A), t1 = (-Bq + sq) / (2 * A);
+      const h0 = -0.06 * TOR.len, h1 = TOR.len;
+      if (Math.abs(vu) > 1e-9) {
+        const s0 = (h0 - au) / vu, s1 = (h1 - au) / vu;
+        t0 = Math.max(t0, Math.min(s0, s1));
+        t1 = Math.min(t1, Math.max(s0, s1));
+      } else if (au < h0 || au > h1) t1 = t0 - 1;
+      if (t1 > t0 && t0 > 0) tRef = t0;
     }
     return tRef - dist;
   };
-  const armA = [frontMargin(lerp3(j.elbF, j.wriF, 0.5)), frontMargin(lerp3(j.elbR, j.wriR, 0.6))].map((m) => Math.max(0, Math.min(1, m / 0.05 + 0.5)));
-  void tz;
-  const behind = arms.map((a) => <g key={`b${a.k}`}>{a.el}</g>);
-  const before = arms.filter((a) => armA[a.k] > 0.01).map((a) => <g key={`f${a.k}`} opacity={armA[a.k] < 0.99 ? f2(armA[a.k]) : undefined}>{a.el}</g>);
-  if (pov) {
-    // only the lower legs reach into the rider's own view
-    const shin = (k: string, kn: V3, an: V3) => {
-      if (!vis(kn, an)) return null;
-      const a = p(kn), b = p(an);
-      return <path key={k} d={capsulePath(a, b, 0.056 * a.k, 0.046 * b.k)} fill={GEAR.pants} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />;
+  // V5 (final): the part of an arm that is in front of the torso, as a screen region. For sections along each tube of
+  // the arm (upper arm; forearm with glove and device), the run of its front surface that the line of sight reaches
+  // before the torso is found by sampling across it; the region joins those runs (and reaches past the tube's edge,
+  // to take in its outline, the glove and the device, only where the run reaches the edge). The arm is always drawn
+  // behind the torso, and an opaque copy clipped to this region in front, so a change of order never pops and nothing
+  // shows through a sleeve (the first V5 cut faded a whole copy in and out).
+  const WS = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1];
+  const tubeRegion = (A: V3, Bp: V3, ra: number, rb: number, pad: number) => {
+    const dv = s3(Bp, A), ln = l3(dv);
+    if (ln < 1e-4) return null;
+    const dn = m3(dv, 1 / ln);
+    const mid = lerp3(A, Bp, 0.5);
+    const toCam = n3(s3(cam, mid));
+    const u0 = c3(dn, toCam), ul = l3(u0);
+    if (ul < 0.05) return null;
+    const u = m3(u0, 1 / ul);
+    const f1 = c3(u, dn);
+    const fc = d3(f1, toCam) < 0 ? m3(f1, -1) : f1;
+    const NS = 10;
+    const runs: {c: V3; r: number; lo: number; hi: number}[] = [];
+    let any = false;
+    for (let i = 0; i <= NS; i++) {
+      const sv = i / NS, c = lerp3(A, Bp, sv), r = ra + (rb - ra) * sv;
+      const m = WS.map((wv) => inFront(a3(c, m3(a3(m3(u, wv), m3(fc, Math.sqrt(1 - wv * wv))), r))));
+      const pos = m.map((x) => x > 0);
+      const i0 = pos.indexOf(true), i1 = pos.lastIndexOf(true);
+      if (i0 < 0) {
+        const im = m.indexOf(Math.max(...m));
+        runs.push({c, r, lo: WS[im], hi: WS[im]});
+        continue;
+      }
+      any = true;
+      const cross = (a: number, b: number) => WS[a] + ((WS[b] - WS[a]) * (0 - m[a])) / (m[b] - m[a]);
+      runs.push({c, r, lo: i0 === 0 ? -1 : cross(i0 - 1, i0), hi: i1 === WS.length - 1 ? 1 : cross(i1, i1 + 1)});
+    }
+    if (!any) return null;
+    const pt = (c: V3, r: number, wv: number) => {
+      const E = 1 + pad / r, aw = Math.abs(wv);
+      const g = aw <= 0.8 ? wv : Math.sign(wv) * (0.8 + ((aw - 0.8) / 0.2) * (E - 0.8));
+      return p(a3(c, m3(a3(m3(u, g), m3(fc, Math.sqrt(Math.max(0, 1 - wv * wv)))), r)));
     };
-    void shin;
-    // V3: the whole legs (the camera in the head sees the thighs as well as the shins and shoes)
+    // the ends reach past the tube's end by its radius (the rounded cap) and the pad
+    const r0 = runs[0], r1 = runs[NS];
+    const cap0 = {...r0, c: a3(r0.c, m3(dn, -(ra + pad)))}, cap1 = {...r1, c: a3(r1.c, m3(dn, rb + pad))};
+    const all = [cap0, ...runs, cap1];
+    return polyD([...all.map((q) => pt(q.c, q.r, q.lo)), ...all.reverse().map((q) => pt(q.c, q.r, q.hi))]);
+  };
+  const padI = (3 * w) / kc;
+  const armRegion = (sh: V3, el: V3, wr: V3) => {
+    if (!vis(sh, el, wr)) return [];
+    const fd = forearm(wr, el);
+    return [
+      tubeRegion(sh, el, 0.064, 0.052, 0.012 + padI),
+      tubeRegion(el, a3(wr, m3(fd, 0.15)), 0.052, 0.048, 0.04 + padI),
+    ].filter((x): x is string => !!x);
+  };
+
+  // order: shoes below their top plane's camera side, legs (far first, cut at the shoe top when seen from above),
+  // shoes seen from below, arms behind the torso, neck, torso, collar (with the neck rising out of it), head, the
+  // in-front parts of the arms
+  const sF = shoe('sf', j.ankF, j.kneeF, j.hipF), sR = shoe('sr', j.ankR, j.kneeR, j.hipR);
+  const shoeList = [sF, sR].sort((a, b) => b.z - a.z);
+  const shoesFirst = shoeList.filter((s) => s.up).map((s) => s.el);
+  const shoesAfter = shoeList.filter((s) => !s.up).map((s) => s.el);
+  const legCut = (k: string, el: React.ReactNode, sh: typeof sF) =>
+    !el ? null : sh.up && sh.clip ? (
+      <g key={k}>
+        <defs>
+          <clipPath id={`${id}-${k}c`}>
+            <path d={sh.clip} />
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${id}-${k}c)`}>{el}</g>
+      </g>
+    ) : (
+      <g key={k}>{el}</g>
+    );
+  const lF = legCut('lfx', legF, sF), lR = legCut('lrx', legR, sR);
+  const legs = zF > zR ? [lF, lR] : [lR, lF];
+  const arms = [
+    {z: armFz, k: 0, el: arm('af', j.shF, j.elbF, j.wriF, true), reg: armRegion(j.shF, j.elbF, j.wriF)},
+    {z: armRz, k: 1, el: arm('ar', j.shR, j.elbR, j.wriR, false), reg: armRegion(j.shR, j.elbR, j.wriR)},
+  ].sort((a, b) => b.z - a.z);
+  const behind = arms.map((a) => <g key={`b${a.k}`}>{a.el}</g>);
+  const before = arms
+    .filter((a) => a.reg.length > 0)
+    .map((a) => (
+      <g key={`f${a.k}`}>
+        <defs>
+          <clipPath id={`${id}-ac${a.k}`}>
+            {a.reg.map((d, i) => (
+              <path key={i} d={d} />
+            ))}
+          </clipPath>
+        </defs>
+        <g clipPath={`url(#${id}-ac${a.k})`}>{a.el}</g>
+      </g>
+    ));
+  if (pov) {
+    // V3: the camera in the head sees the whole legs and the shoes
     return (
       <g>
-        {shoes}
+        {shoesFirst}
         {legs}
-        {shoesOver}
+        {shoesAfter}
       </g>
     );
   }
   return (
     <g>
-      {shoes}
+      {shoesFirst}
       {legs}
-      {shoesOver}
+      {shoesAfter}
       {behind}
-      {/* V5: the neck is always drawn behind the jacket (its top edge hides the neck's base). Seen from above, the
-          collar opening shows the neck going down into the jacket: the neck again, clipped to the opening, fading in
-          with the collar ring. Nothing switches order, so nothing pops as the camera passes shoulder height. */}
       {neck}
       {torso}
       {collar}
-      {collar && neck && (
-        <g opacity={f2(colOp)}>
-          <clipPath id={`${id}-colc`}>
-            <path d={smoothD(collarPts)} />
-          </clipPath>
-          <g clipPath={`url(#${id}-colc)`}>{neck}</g>
-        </g>
-      )}
       {head}
       {before}
     </g>

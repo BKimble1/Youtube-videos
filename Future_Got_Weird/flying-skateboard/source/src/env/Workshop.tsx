@@ -51,6 +51,11 @@ const box = (L: Lens, x0: number, x1: number, y0: number, y1: number, z0: number
   );
 };
 
+/** V5: the bright window and door openings as world quads (caption placement keeps text off them) */
+export const WS_OPENINGS: V3[][] = [
+  [P(ROOM.x0 + 0.01, 1.2, -1.6), P(ROOM.x0 + 0.01, 1.2, 0.2), P(ROOM.x0 + 0.01, 2.3, 0.2), P(ROOM.x0 + 0.01, 2.3, -1.6)],
+  [P(ROOM.x1 - 0.01, 0, -2.8), P(ROOM.x1 - 0.01, 0, -0.6), P(ROOM.x1 - 0.01, 2.4, -0.6), P(ROOM.x1 - 0.01, 2.4, -2.8)],
+];
 export const WorkshopBack: React.FC<{id: string; L: Lens; t: number; smoke?: number; glow?: number}> = ({id, L, t, smoke = 0, glow = 0}) => {
   const fs = faces().filter((f) => {
     const c = f.pts.reduce((a, q) => P(a.x + q.x / f.pts.length, a.y + q.y / f.pts.length, a.z + q.z / f.pts.length), P(0, 0, 0));
@@ -130,7 +135,19 @@ export const WorkshopBack: React.FC<{id: string; L: Lens; t: number; smoke?: num
       {floor.length > 2 && <path d={polyD(proj(L, floor))} fill={C.floor} />}
       <path d={seams.join('')} stroke={C.floorDeep} strokeWidth={1.2} opacity={0.5} />
       {stains}
-      {win.length > 2 && <path d={polyD(proj(L, win))} fill="#E9F3F2" stroke={C.beam} strokeWidth={3} />}
+      {/* V5 (final): the window shows the sky, with a frame cross (a near-white pane read as a whiteboard and a white
+          caption over it lost its contrast) */}
+      {win.length > 2 && <path d={polyD(proj(L, win))} fill="#A8CCDC" stroke={C.beam} strokeWidth={3} />}
+      {win.length > 2 && (() => {
+        const bars = [[P(ROOM.x0 + 0.02, 1.75, -1.6), P(ROOM.x0 + 0.02, 1.75, 0.2)], [P(ROOM.x0 + 0.02, 1.2, -0.7), P(ROOM.x0 + 0.02, 2.3, -0.7)]]
+          .map((b) => clipNear(L, b, 0.12, false))
+          .filter((b) => b.length === 2)
+          .map((b) => {
+            const [a, c] = proj(L, b);
+            return `M${f2(a.x)},${f2(a.y)}L${f2(c.x)},${f2(c.y)}`;
+          });
+        return <path d={bars.join('')} stroke={C.beam} strokeWidth={f2(Math.max(2, 0.05 * L.p(P(ROOM.x0, 1.75, -0.7)).k))} />;
+      })()}
       {door.length > 2 && <path d={polyD(proj(L, door))} fill="#CFE6D2" stroke={C.beam} strokeWidth={3} />}
       {shaft.length > 2 && <path d={polyD(proj(L, shaft))} fill="#FFF1C8" opacity={0.16} />}
       {peg.length > 2 && <path d={polyD(proj(L, peg))} fill={C.peg} stroke={C.beam} strokeWidth={1.5} />}

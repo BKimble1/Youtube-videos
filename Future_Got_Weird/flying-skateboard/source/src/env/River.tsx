@@ -144,12 +144,17 @@ const TreeLine: React.FC<{L: Lens; r: {pts: V3[]; color: string; layer: number; 
   const els: string[] = [];
   const n = r.pts.length - 2;
   const every = r.layer === 0 ? 1 : r.layer < 4 ? 2 : 3;
-  for (let i = 0; i < n; i += every) {
+  // V5 (final): trees are picked and sized by their crest point's place in the world, not by its index in this
+  // frame's list (which starts at the camera: each time the camera crossed a grid line every crown jumped)
+  const step = r.pts[1].x - r.pts[0].x;
+  for (let i = 0; i < n; i++) {
     const q = r.pts[i];
+    const gi = Math.round(q.x / step) + 100000;
+    if (gi % every !== 0) continue;
     if (d3(s3(q, L.pos), L.f) < 5) continue;
     const p = L.p(q);
     if (p.x < -40 || p.x > W + 40 || p.y < -40 || p.y > H) continue;
-    const rr = [3.2, 4, 5, 6, 10][r.layer] * (0.7 + hash(i, r.layer + 40) * 0.6) * p.k;
+    const rr = [3.2, 4, 5, 6, 10][r.layer] * (0.7 + hash(gi, r.layer + 40) * 0.6) * p.k;
     if (rr < 0.8) continue;
     els.push(`M${f2(p.x - rr)},${f2(p.y)} a${f2(rr)},${f2(rr * 0.9)} 0 1,1 ${f2(2 * rr)},0 Z`);
   }
@@ -200,23 +205,21 @@ const Town: React.FC<{L: Lens; layer: number}> = ({L, layer}) => (
 );
 
 /** Badong's cable-stayed bridge downstream: deck, two H pylons, stay fans. */
-// (V5: the deck's near end stands on an abutment pier at the bank, so it is never seen hanging in mid-air)
-const BRIDGE = {x: -1150, y: 46, z0: -60, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
-const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
+// (V5 final: the deck's near end runs into the near bank's third terrace, whose crest stands about 10 m above the
+// deck there, so it is never seen ending in mid-air; a post under it read as a goal frame, and a ramp down to the
+// bank as a white diagonal across the hills)
+const BRIDGE = {x: -1150, y: 46, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
+const Bridge: React.FC<{L: Lens; mirror?: boolean; near?: number}> = ({L, mirror, near = 0}) => {
+  const z0 = -LAYERS[2] - near;
   const sy = mirror ? -1 : 1;
   const P = (x: number, y: number, z: number) => L.p(v3(x, y * sy, z));
   const dist = Math.hypot(BRIDGE.x - L.pos.x, 260 - L.pos.z);
   const col = hazeAt('#E8ECEE', dist);
   const dark = hazeAt('#8C979E', dist);
   if (d3(s3(v3(BRIDGE.x, 40, 260), L.pos), L.f) < 50) return null;
-  const deck = [P(BRIDGE.x, BRIDGE.y, BRIDGE.z0), P(BRIDGE.x, BRIDGE.y, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0)];
+  const deck = [P(BRIDGE.x, BRIDGE.y, z0), P(BRIDGE.x, BRIDGE.y, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z1), P(BRIDGE.x, BRIDGE.y - 4, z0)];
   // (V5: the deck is not reflected: on the rough water its straight line read as a rail crossing the river)
   const els: React.ReactNode[] = mirror ? [] : [<path key="d" d={polyD(deck)} fill={col} stroke={dark} strokeWidth={0.8} />];
-  if (!mirror) {
-    // the abutment pier under the deck's near end, down to the bank
-    const pa = P(BRIDGE.x, BRIDGE.y - 4, BRIDGE.z0 + 3), pb = P(BRIDGE.x, 0, BRIDGE.z0 + 3);
-    els.push(<path key="ab" d={`M${f2(pa.x)},${f2(pa.y)} L${f2(pb.x)},${f2(pb.y)}`} stroke={col} strokeWidth={f2(Math.max(1.5, 7 * pa.k))} />);
-  }
   BRIDGE.pylons.forEach((pz, i) => {
     for (const dx of [-9, 9]) {
       // V5: on the rain-roughened water the reflection is broken into short ripple-length pieces and only reaches part
@@ -484,7 +487,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
       )}
       {shoal && <Shoal L={L} g={shoal} />}
       {near > 0 && <ShoreFlat id={`${id}-sh`} L={L} t={t} near={near} wind={wind} />}
-      <Bridge L={L} />
+      <Bridge L={L} near={near} />
     </g>
   );
 };

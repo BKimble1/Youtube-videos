@@ -96,10 +96,15 @@ export const GorgeWalls: React.FC<{L: Lens; t: number; g: GorgeAt; water?: boole
   const rv = clipNear(L, riverPts, 0.8);
   const gl: string[] = [];
   if (water) {
-    for (let u = Math.max(0, Math.floor((L.pos.z - g.oz) / 4) * 4); u < L.pos.z - g.oz + 300 && u < GLEN; u += 4) {
+    // V5 (final): the glints ride the current out of the gorge on a lattice that moves with it (a modulo drift reset
+    // the whole field every 3.3 s), and they stay inside the channel (they ran over the sand banks)
+    const drift = t * 1.2;
+    for (let n = Math.floor((Math.max(0, L.pos.z - g.oz) + drift) / 4); n * 4 - drift < Math.min(GLEN, L.pos.z - g.oz + 300); n++) {
       for (let k = 0; k < 2; k++) {
-        const x = g.ox + gcx(u) + (hash(u * 2 + k, 13) - 0.5) * 22 - ((t * 1.2) % 4);
-        const q = v3(x, 0.02, g.oz + u + hash(u + k, 14) * 4);
+        const u = n * 4 + hash(n * 2 + k + 5000, 14) * 4 - drift;
+        if (u < 0) continue;
+        const x = g.ox + gcx(u) + (hash(n * 2 + k + 5000, 13) - 0.5) * 20;
+        const q = v3(x, 0.02, g.oz + u);
         if (d3(s3(q, L.pos), L.f) < 1) continue;
         const a = L.p(v3(q.x - 0.9, 0.02, q.z)), b = L.p(v3(q.x + 0.9, 0.02, q.z));
         gl.push(`M${f2(a.x)},${f2(a.y)}L${f2(b.x)},${f2(b.y)}`);

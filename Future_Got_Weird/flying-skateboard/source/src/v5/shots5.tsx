@@ -11,14 +11,14 @@ import {JetBoard, jetFuelLine, jetIntake, jetNozzle} from '../art/JetBoard';
 import {Pilot} from '../art/Pilot';
 import {pilotJoints} from '../art/rig';
 import {mix} from '../dc/color';
-import {noise1} from '../dc/math';
+import {hash, noise1} from '../dc/math';
 import {f2, polyD, proj} from '../eng/draw';
-import {a3, Cam, d3, Frame, frameYPR, l3, lens, Lens, lerp3, m3, n3, s3, toW, v3, V3} from '../eng/v3';
+import {a3, Cam, clipNear, d3, Frame, frameYPR, l3, lens, Lens, lerp3, m3, n3, s3, toW, v3, V3} from '../eng/v3';
 import {FieldBack} from '../env/Field';
 import {Buoy, RiverBack} from '../env/River';
-import {WorkshopBack} from '../env/Workshop';
+import {WorkshopBack, WS_OPENINGS} from '../env/Workshop';
 import {AirJets} from '../fx/AirJets';
-import {Exhaust, Flames, Flash, Recirc, Smoke} from '../fx/Fire';
+import {Exhaust, FlameBed, Flash, Recirc, Smoke} from '../fx/Fire';
 import {Wash} from '../fx/Wash';
 import {sstep} from '../story/flight';
 import {ca, ck, CK, Key, orbitAnch, orbitBoard, splineRec} from '../story/cam';
@@ -45,7 +45,7 @@ const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, set, surface, tint = 0
     {(water ?? (surface === 'water' ? 1 : 0)) > 0.001 && <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust * (water ?? 1)} t={t} vel={st.vel} surface="water" foam={1} soft />}
     {st.alt < 14 && <RiderShadow L={L} B={st.B} pose={st.pose} sun={sun ?? (set === 'river' ? RSUN : undefined)} minOp={set === 'river' ? 1.1 : 0.35} color={mix('#24361F', '#0B2427', water ?? (surface === 'water' ? 1 : 0))} />}
     {!below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} speed={set === 'field' ? 0.4 : 1} />}
-    <Rider id={id} L={L} B={st.B} pose={st.pose} coach={coach} pov={pov} st={{phase: t * 2.6, rps: st.rps > 20 ? 11 : st.rps, thrust: st.thrust, tilt: {pitch: st.pitch, roll: st.roll}}} />
+    <Rider id={id} L={L} B={st.B} pose={st.pose} coach={coach} pov={pov} st={{phase: t * 2.6, rps: st.rps > 20 ? 14 : st.rps, thrust: st.thrust, tilt: {pitch: st.pitch, roll: st.roll}}} />
     {below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} speed={set === 'field' ? 0.4 : 1} />}
     {extra}
   </g>
@@ -109,7 +109,7 @@ const HOOKK: Key[] = [
   [0.7, ck(254, -8, 4.6, 44, 0.69, 0)],
   [1.6, ck(255.2, -8, 4.62, 44, 0.68, 0), {hold: true}],
   // the rise ends low (2 degrees): the far bridge deck then stays behind his body instead of sliding up past his head
-  [CUT_UNDER, ck(263, 2, 7.6, 44, 0.85, 0)],
+  [CUT_UNDER, ck(263, -3, 7.6, 44, 0.85, 0)],
 ];
 // V5: the underside is held still from almost straight below, so the board fills the frame and hides the rider
 // (a steeper view showed his face from under the chin); the air shot is low and wide enough to hold the board, its
@@ -136,10 +136,15 @@ const liftPos = (t: number) => lift4(t, MATCH).B.o;
 // the board like a post)
 const LIFT_CAM = v3(-40 + 8.0, 1.5, -26 + 4.5);
 const LIFT_FY = 0.6;
+// V5 (final): the tilt eases in from rest at the cut (he starts to rise in the frame first), and the pan follows his
+// move off with a share that falls away as he goes, so it peaks mid-move and is slowing at the cut instead of
+// accelerating into it; he travels on toward frame right
+const LIFT_PAN = 1.2;
 const liftCam = (t: number): Cam => {
   const p0 = liftPos(CUT2);
   const p = smoothPos(liftPos, t, 0.6);
-  const tg = v3(p0.x + 0.6 * (p.x - p0.x), 1.35 + LIFT_FY * (p.y - p0.y), p0.z + 0.55 * (p.z - p0.z));
+  const dz = p.z - p0.z;
+  const tg = v3(p0.x + 0.6 * (p.x - p0.x), 1.35 + LIFT_FY * sstep(CUT2, CUT2 + 0.55, t) * (p.y - p0.y), p0.z + LIFT_PAN * (1 - Math.exp(-dz / LIFT_PAN)));
   return {pos: LIFT_CAM, tgt: tg, roll: 0, fov: 42};
 };
 
@@ -231,17 +236,32 @@ const FuelLeak: React.FC<{L: Lens; B: Frame; t: number; t0: number; t1: number; 
   const pool = toW(B, v3(0.13, 0.004, -0.02));
   const k = sstep(t0, t0 + 0.4, t) * (1 - sstep(t1 + 0.3, t1 + 0.6, t));
   const els: React.ReactNode[] = [];
-  // drips: each falls from the fitting to the pool in 0.28 s
-  for (let i = 0; i < 6; i++) {
-    const born = t0 + 0.1 + i * 0.13;
-    const age = (t - born) % 0.8;
-    if (t < born || age > 0.28 || t > t1 + 0.1) continue;
-    const u = age / 0.28;
-    const q = v3(fit.x + (pool.x - fit.x) * u * 0.6, fit.y + (pool.y - fit.y) * u * u, fit.z + (pool.z - fit.z) * u * 0.6);
+  // drips (V5 final): fuel runs from the fitting down the casing to the lip straight above the pool and falls from
+  // there into the pool, so the drops visibly feed it; the drops come at irregular intervals and each takes its own
+  // time (evenly spaced identical drops repeated every four frames)
+  const lip = v3(pool.x, fit.y - 0.025, pool.z);
+  let born = t0 + 0.1;
+  for (let i = 0; i < 40 && born < t1 + 0.1; i++) {
+    const dur = i === 0 ? 0.28 : 0.26 + 0.08 * hash(i, 61);
+    const age = t - born;
+    const b0 = born;
+    born += 0.16 + 0.14 * hash(i, 62);
+    if (age < 0 || age > dur || b0 > t1 + 0.1) continue;
+    const u = age / dur;
+    const run = 0.45;
+    const q = u < run
+      ? lerp3(fit, lip, sstep(0, 1, u / run))
+      : v3(lip.x, lip.y + (pool.y - lip.y) * ((u - run) / (1 - run)) ** 2, lip.z);
     if (d3(s3(q, L.pos), L.f) < 0.1) continue;
     const p = L.p(q);
-    els.push(<ellipse key={`d${i}`} cx={f2(p.x)} cy={f2(p.y)} rx={f2(0.006 * p.k)} ry={f2(0.01 * p.k)} fill="#F5B53A" stroke="#8A5A10" strokeWidth={f2(Math.max(0.5, 0.0015 * p.k))} />);
+    const fall = u >= run;
+    els.push(<ellipse key={`d${i}`} cx={f2(p.x)} cy={f2(p.y)} rx={f2(0.006 * p.k)} ry={f2((fall ? 0.011 : 0.007) * p.k)} fill="#F5B53A" stroke="#8A5A10" strokeWidth={f2(Math.max(0.5, 0.0015 * p.k))} />);
   }
+  // the wet trail down the casing from the fitting to the lip
+  const trail = (() => {
+    const a = L.p(fit), b = L.p(lip);
+    return <path key="trail" d={`M${f2(a.x)},${f2(a.y)} L${f2(b.x)},${f2(b.y)}`} stroke="#E7A02A" strokeOpacity={0.55 * sstep(t0, t0 + 0.4, t)} strokeWidth={f2(Math.max(0.8, 0.006 * a.k))} strokeLinecap="round" fill="none" />;
+  })();
   // the bead at the fitting, and the pool spreading on the deck
   const pf = L.p(fit), pp = L.p(pool);
   const r = (0.03 + 0.06 * sstep(t0, t1, t)) * pp.k;
@@ -270,15 +290,27 @@ const FuelLeak: React.FC<{L: Lens; B: Frame; t: number; t0: number; t1: number; 
     // (the first drop lands about 0.38 s after the weep starts: the pool forms from then, not before)
     const kp = sstep(t0 + 0.36, t0 + 0.6, t) * (1 - sstep(t1 + 0.25, M.so - 0.1, t));
     const rb = rr * (1 - 0.5 * sstep(t1 + 0.25, M.so - 0.1, t));
+    // V5 (final): the fire leaves a scorch on the deck where the pool burned, and up the trail to the fitting
+    const sc = sstep(M.fire + 0.15, M.fireE + 0.35, t);
+    const scorch = sc > 0.01 ? (
+      <g opacity={f2(sc)}>
+        <path d={disk(a3(pool, m3(B.x, 0.01)), 0.12, 0.1)} fill="#2B231E" opacity={0.6} />
+        <path d={disk(a3(pool, m3(B.x, 0.02)), 0.07, 0.06)} fill="#1C1714" opacity={0.6} />
+      </g>
+    ) : null;
     return (
+      <g>
+      {scorch}
       <g opacity={kp}>
         <path d={disk(pool, rb, rb * 0.8)} fill="#E7A02A" opacity={0.75} />
         <path d={disk(a3(pool, m3(B.x, -rb * 0.25)), rb * 0.4, rb * 0.25)} fill="#FFE29A" opacity={0.6} />
+      </g>
       </g>
     );
   }
   return (
     <g opacity={k}>
+      {trail}
       <circle cx={f2(pf.x)} cy={f2(pf.y + 0.008 * pf.k)} r={f2(0.008 * pf.k)} fill="#F5B53A" stroke="#8A5A10" strokeWidth={f2(Math.max(0.5, 0.0015 * pf.k))} />
       <path d={vap.join('')} stroke="#FFF1C4" strokeOpacity={0.25} strokeWidth={f2(Math.max(1, 0.006 * pp.k))} fill="none" strokeLinecap="round" />
       {els}
@@ -313,20 +345,22 @@ const SmokeVeil: React.FC<{id: string; L: Lens; c: V3; k: number; t: number}> = 
     </g>
   );
 };
-/** V5: the room full of smoke: an opaque grey with soft lighter and darker billows rolling across it, so the frame
- *  is never a frozen flat grey and the cut and the board swap underneath it cannot show */
+/** V5: the room full of smoke: an opaque grey with lighter and darker billows rolling across it, so the frame is never
+ *  a frozen flat grey and the cut and the board swap underneath it cannot show. (V5 final: stronger light and dark
+ *  billows that roll and rise at 3-7 px a frame; positions run from the smoke's own clock, never wrapping.) */
 const FogMotion: React.FC<{id: string; t: number; k: number}> = ({id, t, k}) => {
-  const puffs = Array.from({length: 9}, (_, i) => {
-    const x = ((i * 0.37 + t * (0.05 + 0.02 * (i % 3))) % 1.3 - 0.15) * 1080;
-    const y = (0.12 + (i * 0.29) % 0.85) * 1920 - t * 40 * (1 + (i % 2));
-    const g = 96 + ((i * 17) % 4) * 10;
-    return <circle key={i} cx={f2(x)} cy={f2(((y % 1920) + 1920) % 1920)} r={f2(260 + (i % 4) * 70)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={0.55} />;
+  const tt = t - M.so;
+  const puffs = Array.from({length: 12}, (_, i) => {
+    const x = (-0.15 + ((i * 0.53) % 1.3) + tt * (0.12 + 0.05 * (i % 3)) * (i % 2 ? 1 : -1)) * 1080;
+    const y = (0.04 + ((i * 0.29) % 0.95)) * 1920 - tt * 110 * (1 + (i % 3) * 0.5);
+    const g = [150, 74, 120][i % 3];
+    return <circle key={i} cx={f2(x)} cy={f2(y)} r={f2(230 + (i % 4) * 60)} fill={`rgb(${g},${g - 3},${g - 6})`} opacity={0.62} />;
   });
   return (
     <g opacity={f2(k)}>
       <defs>
         <filter id={`${id}-b`} x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation={90} />
+          <feGaussianBlur stdDeviation={80} />
         </filter>
       </defs>
       <rect x={0} y={0} width={1080} height={1920} fill="rgb(106,103,99)" />
@@ -355,13 +389,13 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const along = (u: number) => (u < 0.2 ? lerp3(pool, fl[2], u / 0.2) : u < 0.6 ? lerp3(fl[2], fl[1], (u - 0.2) / 0.4) : lerp3(fl[1], fl[0], (u - 0.6) / 0.4));
   const spread = sstep(M.fire, M.fire + 1.1, t);
   // the vapour flashes and the flame grows over a quarter second; when the fuel is shut off it dies down over half a second
-  const out = sstep(M.fireE + 0.05, M.so - 0.05, t);
+  // V5 (final): it is out (with the scorch showing) before the smoke closes in, rather than dying under it
+  const out = sstep(M.fireE - 0.05, M.fireE + 0.38, t);
   const fireK = sstep(M.fire - 0.04, M.fire + 0.22, t) * (1 - out);
   // V5: each tongue of flame grows in place as the fire runs along the line (no clusters appearing in one frame)
   // the flame climbs the drip trail from the pool to the fitting, then runs along the line (anchors every few cm)
   const FL: [number, number][] = [[0, 0.15], [0.07, 0.09], [0.14, 0.1], [0.2, 0.13], [0.33, 0.11], [0.45, 0.12], [0.58, 0.1], [0.7, 0.11]];
-  const flames = FL.map(([u, size]) => ({at: along(u), size, k: fireK * Math.min(1, Math.max(0, (spread * 0.95 + 0.01 - u) / 0.1))})).filter((f) => f.k > 0.01);
-  const flameAt = flames.map((f) => f.at);
+  const flames = FL.map(([u, size]) => ({at: along(u), size, k: fireK * Math.min(1, Math.max(0, (spread * 0.95 + 0.01 - u) / 0.1))}));
   const burn = sstep(M.fire + 0.08, M.fire + 0.8, t);
   const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.12) * 0.55;
   const react = sstep(M.fire - 0.02, M.fire + 0.3, t) * (1 - sstep(M.so - 0.2, M.so + 0.3, t));
@@ -370,7 +404,8 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const invNear = (cam.pos.x - INV.o.x) ** 2 + (cam.pos.z - INV.o.z) ** 2 < 0.5;
   // V5: the smoke left by the fire thickens into a veil over the stand, the prototype is swapped while it is hidden,
   // and the smoke clears on the new electric frame sitting in the same cradle (no see-through overlap of two boards)
-  const veil = sstep(M.so - 0.45, M.so - 0.05, t) * (1 - sstep(M.so + 0.3, M.switched + 0.15, t));
+  // (V5 final: it clears with the room's smoke, so the new board is not revealed after the stand around it)
+  const veil = sstep(M.so - 0.45, M.so - 0.05, t) * (1 - sstep(M.so + 0.16, M.so + 0.5, t));
   // V5: for a moment the smoke fills the whole room (it hides the stand legs and the walls too), and the cut to the
   // new side and the swap of the boards both happen inside it
   const fog = sstep(M.so - 0.3, M.so - 0.02, t) * (1 - sstep(M.so + 0.22, M.so + 0.6, t));
@@ -391,7 +426,7 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
           <FuelLeak L={L} B={B} t={t} t0={LEAK0} t1={M.fire} part="drips" />
           {camUp && <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6) * (1 - sstep(LEAK0, LEAK0 + 0.3, t))} t={t} />}
           <Smoke L={L} at={[along(0), along(0.45)]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so - 0.5, M.so + 0.2, t))} />
-          {flames.map((f, i) => <Flames key={i} id={`${id}-fl${i}`} L={L} at={[f.at]} size={f.size} k={f.k} t={t} grow />)}
+          <FlameBed id={`${id}-fl`} L={L} items={flames} t={t} />
           <Flash id={`${id}-fs`} c={L.p(fl[2])} k={flash} />
         </g>
       )}
@@ -402,17 +437,30 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   );
 };
 
-/** the workshop's protected region for caption placement: the board (jet or electric) as it sits in frame */
-const wsFocus = (t: number) => {
+/** the workshop's protected region for caption placement: the board (jet or electric) as it sits in frame, and
+ *  (V5 final) the bright window and door openings, which a white caption cannot be read against */
+const wsFocus = (t: number): Box[] => {
   const L = lens(jetCam(t));
   const B = JB(Math.min(t, M.so));
   const pts = [-0.5, 0.5].flatMap((x) => [-0.9, 0.9].flatMap((z) => [0.3, -0.12].map((y) => L.p(toW(B, v3(x, y, z))))));
   const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
-  return {x0: Math.min(...xs) - 30, y0: Math.min(...ys) - 30, x1: Math.max(...xs) + 30, y1: Math.max(...ys) + 30};
+  const boxes: Box[] = [{x0: Math.min(...xs) - 30, y0: Math.min(...ys) - 30, x1: Math.max(...xs) + 30, y1: Math.max(...ys) + 30}];
+  for (const quad of WS_OPENINGS) {
+    const q = clipNear(L, quad, 0.12);
+    if (q.length < 3) continue;
+    const pp = q.map((v) => L.p(v));
+    const b = {x0: Math.min(...pp.map((p) => p.x)) - 10, y0: Math.min(...pp.map((p) => p.y)) - 10, x1: Math.max(...pp.map((p) => p.x)) + 10, y1: Math.max(...pp.map((p) => p.y)) + 10};
+    if (b.x1 > 0 && b.x0 < 1080 && b.y1 > 0 && b.y0 < 1920) boxes.push(b);
+  }
+  return boxes;
 };
 
 // ================================================================ 5: learning on the field (A problem, B feet, C ride, D coach)
-const FK = {lift: M.except + 0.12, huge: M.huge, theBoard: M.theBoard, itself: M.itself, heHas: M.heHas, body: M.body, while: M.while, cue: M.coach, fix: M.learn - 0.1, done: M.balance2, end: M.andAfter};
+// V5 (final): the earbud close-up and the correction shot cut exactly where their captions change ("helps him learn",
+// "how to balance."), as the brief asks; the earbud's light starts just before the close-up and peaks inside it
+const capAt = (s: string) => Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith(s))!.show * 30) / 30;
+const C3 = capAt('helps him'), C4 = capAt('how to balance');
+const FK = {lift: M.except + 0.12, huge: M.huge, theBoard: M.theBoard, itself: M.itself, heHas: M.heHas, body: M.body, while: M.while, cue: C3 - 0.05, fix: M.learn - 0.1, done: M.balance2, end: M.andAfter};
 const FIELD = fieldFlight(FK);
 // A1 (15.5-18.1): a camera standing still at the framing the workshop shot ended on: the board lifts, the nose dips,
 // he answers. A2 (18.1-22.5): cut to a second standing camera, lower and a little to his front: the heel-side and
@@ -425,11 +473,13 @@ const A2 = M.theBoard;
 // the rider the same size in both and read as a jump cut)
 const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 7, 4.8, 42, 0.8, 0));
 // (A1 starts from rest on the match cut, as the workshop move ended, and eases into following the lift)
-const fieldCam = (t: number): Cam => (t < A2 ? standPart(A1_CAM, fieldPos, t, M.except, sstep(M.except, M.except + 0.7, t), 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42) : standPart(A2_CAM, fieldPos, t, A2, 0.75, 0.85, 42));
+// (V5 final: A1 follows only 60% of the lift, eased over 1.1 s, so he rises in the frame and the tilt stays gentle;
+// it followed all of it within 0.7 s, a 450 px boom peaking at 35 px a frame)
+const fieldCam = (t: number): Cam => (t < A2 ? standPart(A1_CAM, fieldPos, t, M.except, 0.6 * sstep(M.except, M.except + 1.1, t), 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42) : standPart(A2_CAM, fieldPos, t, A2, 0.75, 0.85, 42));
 // D (coach): controlled close-ups, each held still: C1 the phone built into the deck (from above); C2 his own view of
 // the wrist phone he has raised; C3 the earbud on his ear as the cue plays (camera fixed to his torso, so the small
 // listening tilt of his head reads); C4 back to a standing medium view as he makes the correction and the board settles.
-const C2 = M.voice - 0.09, C3 = M.coach + 0.06, C4 = M.learn - 0.05;
+const C2 = M.voice - 0.09;
 const C4_CAM = (() => {
   const B = FIELD(C4).B;
   return camFrom(B.o, ck(-30, 6, 4.8, 42, 0.85, 0));
