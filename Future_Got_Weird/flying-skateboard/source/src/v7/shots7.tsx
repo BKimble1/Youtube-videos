@@ -605,7 +605,7 @@ export const SHOTS7: Shot[] = [
 /** every picture cut: the shot boundaries and the cuts inside shots (workshop, balance, coach) */
 export const CUTS7 = [...SHOTS7.slice(1).map((s) => s.from), F2, F3, C4].sort((a, b) => a - b);
 /** V6: the timing of the visible events the sound follows (exported to the mix by tools/export_cues_v6.ts) */
-export const BEATS7 = {...FK6, shore: PR1 + 1.74, gust: GUST_AT};
+export const BEATS7 = {...FK6, shore: PR1 + 1.74, gust: GUST_AT, iris: CUT_UNDER + 0.25, wsJets: M.so + 0.12, wsPlank: M.so + 0.5, wsDeck: M.so + 0.68, wsUnits: M.so + 1.2, wsSpin: ESPIN, wsRise: WS_END - 0.54};
 export const shotAt7 = (t: number) => SHOTS7.find((s) => t >= s.from && t < s.to) ?? SHOTS7[SHOTS7.length - 1];
 export type {Box, CK};
 export {toW};
