@@ -31,7 +31,7 @@ const ROCKDEEP = '#7F705F';
 const GREEN = '#6A8F52';
 const YS = [0, 8, 20, 34, 50, 70, 92, 118, 146, 176, 210];
 
-export const GorgeWalls: React.FC<{L: Lens; t: number; g: GorgeAt; water?: boolean}> = ({L, t, g, water = true}) => {
+export const GorgeWalls: React.FC<{L: Lens; t: number; g: GorgeAt; water?: boolean; wfrom?: number}> = ({L, t, g, water = true, wfrom}) => {
   const u0 = Math.max(0, Math.floor((L.pos.z - g.oz - 60) / 7) * 7);
   const strips: {d: string; color: string; dist: number; strata: string; shrubs: string; seams: string}[] = [];
   const P = (u: number, y: number, s: number) => v3(g.ox + gcx(u) + s * ghw(u, y, s), y * ghk(u), g.oz + u);
@@ -71,7 +71,8 @@ export const GorgeWalls: React.FC<{L: Lens; t: number; g: GorgeAt; water?: boole
         if (d3(s3(q, L.pos), L.f) < 1) continue;
         const p = L.p(q);
         const r = (2.4 + hash(Math.round(u) + k, 11) * 3) * p.k;
-        if (r < 0.6 || p.x < -r || p.x > W + r) continue;
+        // (V5: culled only when the whole clump, about 1.6 r either side, is off screen; at -r half of it still showed)
+        if (r < 0.6 || p.x < -1.8 * r || p.x > W + 1.8 * r) continue;
         // a clump of three rounded bushes on the ledge
         for (const [dx, dy, rr] of [[-0.7, 0.1, 0.65], [0, -0.25, 0.8], [0.75, 0.05, 0.6]]) {
           const cxp = p.x + dx * r, cyp = p.y + dy * r, R = rr * r;
@@ -86,8 +87,11 @@ export const GorgeWalls: React.FC<{L: Lens; t: number; g: GorgeAt; water?: boole
   const uEnd = Math.min(GLEN, u0 + 820);
   for (let u = u0; u <= uEnd; u += 10) floorPts.push(v3(g.ox + gcx(u) - 46, 0, g.oz + u));
   for (let u = uEnd; u >= u0; u -= 10) floorPts.push(v3(g.ox + gcx(u) + 46, 0, g.oz + u));
-  for (let u = u0; u <= uEnd; u += 10) riverPts.push(v3(g.ox + gcx(u) - 13 - 4 * Math.max(0, 1 - u / 60) * 4, 0.01, g.oz + u));
-  for (let u = uEnd; u >= u0; u -= 10) riverPts.push(v3(g.ox + gcx(u) + 13 + 4 * Math.max(0, 1 - u / 60) * 4, 0.01, g.oz + u));
+  // V5 (wfrom < 0): the gorge's water starts back out on the river, so flying in, its seam with the river is already
+  // behind the camera (a straight seam swept across the frame)
+  const uw = Math.min(u0, wfrom ?? u0);
+  for (let u = uw; u <= uEnd; u += 10) riverPts.push(v3(g.ox + gcx(Math.max(0, u)) - 13 - 4 * Math.max(0, 1 - u / 60) * 4, 0.01, g.oz + u));
+  for (let u = uEnd; u >= uw; u -= 10) riverPts.push(v3(g.ox + gcx(Math.max(0, u)) + 13 + 4 * Math.max(0, 1 - u / 60) * 4, 0.01, g.oz + u));
   const fl = clipNear(L, floorPts, 0.8);
   const rv = clipNear(L, riverPts, 0.8);
   const gl: string[] = [];

@@ -249,6 +249,8 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   // comes down to the shoulder plane (V5: seen edge-on its ends used to float beside the neck)
   const colC = lerp3(j.S, j.N, 0.1);
   const colOp = Math.max(0, Math.min(1, (facing(colC, j.up) - 0.08) / 0.22));
+  // the order flips exactly where the camera crosses the plane of the shoulders, where both orders look the same
+  const neckBehind = facing(j.S, j.up) < 0;
   const collarPts = colOp > 0.01 ? thin(hull(proj(L, circ3(colC, j.chL, j.chF, 0.072, 16))), 1.5) : [];
   const collar = colOp > 0.01 ? <g key="col" opacity={f2(colOp)}><Shape id={`${id}-col`} d={smoothD(collarPts)} pts={collarPts} color={GEAR.jacketDeep} w={w} /></g> : null;
   // V5: the head and helmet are one rigid assembly in the head frame (hF, hU, hL), pivoting at the neck. Every part
@@ -296,6 +298,25 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     return pts;
   })();
   const visorPts = sphereRegion(L, Hc, R * 1.0, visorLoop, visIn);
+  // V5: short dark hair at the back of the head, from under the helmet's back rim down to the nape (a rear view showed
+  // a blank skin-coloured disc that read as a featureless face); on the skin sphere itself, so its outline is exact
+  const HAIR = {ps: 1.95, th0: -0.2, th1: -0.8};
+  const hairIn = (d: V3) => {
+    const q = loc(d);
+    const th = Math.asin(Math.max(-1, Math.min(1, q.u)));
+    return Math.abs(Math.atan2(q.l, q.f)) > HAIR.ps && th < HAIR.th0 && th > HAIR.th1;
+  };
+  const hairLoop = (() => {
+    const at = (th: number, ps: number) => HD(Math.cos(th) * Math.cos(ps), Math.sin(th), Math.cos(th) * Math.sin(ps));
+    const pts: V3[] = [];
+    const N = 16, a0 = HAIR.ps, a1 = 2 * Math.PI - HAIR.ps;
+    for (let i = 0; i <= N; i++) pts.push(at(HAIR.th0, a0 + ((a1 - a0) * i) / N));
+    for (let i = 1; i <= N / 2; i++) pts.push(at(HAIR.th0 + ((HAIR.th1 - HAIR.th0) * i) / (N / 2), a1));
+    for (let i = 1; i <= N; i++) pts.push(at(HAIR.th1, a1 - ((a1 - a0) * i) / N));
+    for (let i = 1; i < N / 2; i++) pts.push(at(HAIR.th1 + ((HAIR.th0 - HAIR.th1) * i) / (N / 2), a0));
+    return pts;
+  })();
+  const hairPts = sphereRegion(L, Hc, R * 0.93, hairLoop, hairIn);
   const visVisor = visorPts.length > 2;
   // centre stripe over the shell crown, from the brow rim to the back rim (clipped to the shell outline below)
   const stripe = circ3(Hc, j.hF, j.hU, R * 1.06, 40, 0.14, Math.PI + 0.36).filter((q) => facing(q, s3(q, Hc)) > 0);
@@ -355,6 +376,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   const head = !vis(Hc, a3(Hc, m3(j.hU, R)), a3(Hc, m3(j.hF, R))) ? null : (
     <g key="head">
       <path d={skin.d} fill={GEAR.skin} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />
+      {hairPts.length > 2 && <path d={polyD(hairPts)} fill="#3B2C24" />}
       {ear(-1)}
       {ear(1)}
       {strap(1)}
@@ -405,9 +427,12 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       {shoes}
       {legs}
       {behind}
+      {/* V5: seen from below the collar the neck comes out from behind the jacket's top edge (drawn first, so the
+          torso hides its base); from above it rises out of the collar ring */}
+      {neckBehind && neck}
       {torso}
       {collar}
-      {neck}
+      {!neckBehind && neck}
       {head}
       {before}
     </g>

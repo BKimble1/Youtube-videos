@@ -10,6 +10,7 @@ import {BD, ductWorld} from '../art/Board';
 import {JetBoard, jetFuelLine, jetIntake, jetNozzle} from '../art/JetBoard';
 import {Pilot} from '../art/Pilot';
 import {pilotJoints} from '../art/rig';
+import {mix} from '../dc/color';
 import {noise1} from '../dc/math';
 import {f2, polyD, proj} from '../eng/draw';
 import {a3, Cam, d3, Frame, frameYPR, l3, lens, Lens, lerp3, m3, n3, s3, toW, v3, V3} from '../eng/v3';
@@ -30,16 +31,19 @@ export {M};
 const NEAR = 150; // the riverside flat between the water and the near-bank hills (m)
 
 // ================================================================ shared scene: a flight over water or ground
-type SceneP = {id: string; t: number; st: St; L: Lens; L2?: Lens; set: 'river' | 'field'; surface: 'water' | 'ground'; tint?: number; coach?: number; pov?: boolean; jets?: number; reach?: number; sun?: V3; buoys?: boolean; extra?: React.ReactNode; under?: React.ReactNode};
-const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, set, surface, tint = 0, coach = 0, pov, jets = 1, reach, sun, buoys, extra, under}) => (
+type SceneP = {id: string; t: number; st: St; L: Lens; L2?: Lens; set: 'river' | 'field'; surface: 'water' | 'ground'; tint?: number; coach?: number; pov?: boolean; jets?: number; reach?: number; sun?: V3; buoys?: boolean; extra?: React.ReactNode; under?: React.ReactNode; water?: number; gorgeWater?: number};
+const FlightScene: React.FC<SceneP> = ({id, t, st, L, L2, set, surface, tint = 0, coach = 0, pov, jets = 1, reach, sun, buoys, extra, under, water, gorgeWater}) => (
   <g>
     {set === 'river'
-      ? <RiverBack id={`${id}-rv`} L={L} t={t} gorge={GORGE4} near={NEAR} L2={L2} tint={tint} cliffs shoal={SHOAL} wind={0.3 + 0.5 * Math.max(0, 1 - st.alt / 4)} />
+      ? <RiverBack id={`${id}-rv`} L={L} t={t} gorge={GORGE4} near={NEAR} L2={L2} tint={tint} cliffs shoal={SHOAL} wind={0.3 + 0.5 * Math.max(0, 1 - st.alt / 4)} gorgeWater={gorgeWater} />
       : <FieldBack id={`${id}-fd`} L={L} t={t} tint={tint} wind={0.3 + st.thrust * 0.6 * Math.max(0, 1 - (st.alt - REST) / 3)} />}
     {buoys && <Buoys L={L} t={t} />}
     {under}
-    <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust} t={t} vel={st.vel} surface={surface} foam={1} soft />
-    {st.alt < 14 && <RiderShadow L={L} B={st.B} pose={st.pose} sun={sun ?? (set === 'river' ? RSUN : undefined)} minOp={set === 'river' ? 1.1 : 0.35} color={surface === 'water' ? '#0B2427' : undefined} />}
+    {/* V5: over the shoreline the downwash and the shadow blend from ground to water (water = 0..1) instead of
+        switching in one frame */}
+    {(water ?? (surface === 'water' ? 1 : 0)) < 0.999 && <Wash id={`${id}-wg`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust * (1 - (water ?? 0))} t={t} vel={st.vel} surface="ground" foam={1} soft />}
+    {(water ?? (surface === 'water' ? 1 : 0)) > 0.001 && <Wash id={`${id}-wa`} L={L} at={st.pos} alt={st.alt} thrust={st.thrust * (water ?? 1)} t={t} vel={st.vel} surface="water" foam={1} soft />}
+    {st.alt < 14 && <RiderShadow L={L} B={st.B} pose={st.pose} sun={sun ?? (set === 'river' ? RSUN : undefined)} minOp={set === 'river' ? 1.1 : 0.35} color={mix('#24361F', '#0B2427', water ?? (surface === 'water' ? 1 : 0))} />}
     {!below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
     <Rider id={id} L={L} B={st.B} pose={st.pose} coach={coach} pov={pov} st={{phase: t * 2.6, rps: st.rps > 20 ? 11 : st.rps, thrust: st.thrust, tilt: {pitch: st.pitch, roll: st.roll}}} />
     {below(L, st) && <AirJets L={L} B={st.B} t={t} thrust={st.thrust} vel={st.vel} alpha={Math.min(1, jets)} reach={reach} dense={Math.max(0, jets - 1)} />}
@@ -427,7 +431,7 @@ const E2 = M.andAfter + 0.49, E3 = M.tenDays, E4 = M.practice - 0.06;
 // V5: E1 is set clearly apart from the coach correction before it (behind his toe side, higher, wider), not a re-framing
 const E1_CAM = camFrom(takeoff(M.andAfter, M.andAfter).B.o, ck(22, 14, 5.6, 44, 0.6, 0));
 // V5: higher, so his S-curve crosses the frame at about half the screen speed (he was gone in under half a second)
-const E2_CAM: Cam = {pos: v3(-3.54, 8.6, -3.1), tgt: v3(-3.7, 0.6, 0.9), roll: 0, fov: 52};
+const E2_CAM: Cam = {pos: v3(-3.94, 8.6, -2.0), tgt: v3(-4.1, 0.6, 2.0), roll: 0, fov: 52};
 // V5: a steady low front three-quarter track on the flat (a standing camera beside his path whipped round as he passed)
 const E3K = ck(246, 3, 5.2, 46, 0.6, 0);
 const P2 = M.andThrough; // cut into the canyon
@@ -456,7 +460,10 @@ const PathTrace: React.FC<{L: Lens; T0: number; t: number}> = ({L, T0, t}) => {
 const TIN = M.andThrough - 0.2;
 // a steady rear three-quarter track across the last of the river and on into the gorge: the walls pass at their own
 // depths while the camera keeps its offset (it closes in slightly as the walls rise)
-const PAYK: Key[] = [[P2, ck(354, 9, 7.6, 52, 1.0, 0)], [M.howMuch, ck(356, 8, 6.8, 52, 0.95, 0)]];
+// V5: a track from behind him and a little to his toe side, both walls and the way ahead in frame (the gorge only reads
+// as a canyon close to its axis), closer than the river shot before it so the cut changes size as well as place; the
+// back of his head now has hair, so it no longer reads as a blank face
+const PAYK: Key[] = [[P2, ck(349, 10, 6.2, 54, 1.0, 0)], [M.howMuch, ck(351, 9, 5.8, 54, 0.95, 0)]];
 const payPos = (t: number) => payoff4(t, TIN).B.o;
 const payCam = (t: number) => trackCam(payPos, t, splineRec(t, PAYK));
 /** channel buoys along the crossing: foreground objects passing at their own depth (speed and scale) */
@@ -481,13 +488,13 @@ const ENDK: Key[] = [
 const endCam = (t: number): Cam => trackCam((u: number) => hook4(u - DUR).B.o, t, splineRec(t, ENDK));
 
 // ================================================================ the shot list
-const riverShot = (name: string, from: number, to: number, stAt: (t: number) => St, camAt: (t: number) => Cam, o: {blur?: (t: number) => boolean; surface?: (t: number) => 'water' | 'ground'; jets?: (t: number) => number; reach?: (t: number) => number; pov?: (t: number) => boolean; buoys?: boolean} = {}): Shot => ({
+const riverShot = (name: string, from: number, to: number, stAt: (t: number) => St, camAt: (t: number) => Cam, o: {blur?: (t: number) => boolean; surface?: (t: number) => 'water' | 'ground'; water?: (t: number) => number; jets?: (t: number) => number; reach?: (t: number) => number; pov?: (t: number) => boolean; buoys?: boolean; gorgeWater?: number} = {}): Shot => ({
   name, from, to,
   draw: (t, pre) => {
     const st = stAt(t);
     const L = lens(camAt(t));
     const L2 = o.blur?.(t) ? lens(camAt(t - SHUT)) : undefined;
-    return <FlightScene id={`${pre}${name.slice(0, 3)}`} t={t} st={st} L={L} L2={L2} set="river" surface={o.surface?.(t) ?? 'water'} jets={o.jets?.(t) ?? 1} reach={o.reach?.(t)} pov={o.pov?.(t)} buoys={o.buoys} />;
+    return <FlightScene id={`${pre}${name.slice(0, 3)}`} t={t} st={st} L={L} L2={L2} set="river" surface={o.surface?.(t) ?? 'water'} water={o.water?.(t)} jets={o.jets?.(t) ?? 1} reach={o.reach?.(t)} pov={o.pov?.(t)} buoys={o.buoys} gorgeWater={o.gorgeWater} />;
   },
   focus: (t) => box(lens(camAt(t)), stAt(t)),
 });
@@ -545,9 +552,9 @@ export const SHOTS5: Shot[] = [
   },
   riverShot('practice: low and level over the flat (tracking)', E3, E4, dep, (t) => trackCam((u) => dep(u).B.o, t, E3K), {surface: () => 'ground'}),
   riverShot('over the shoreline and across the open river (tracking)', E4, P2, dep, (t) => trackCam((u) => dep(u).B.o, t, splineRec(t, E4K)), {
-    surface: (t) => (dep(t).pos.z < 0 ? 'ground' : 'water'), buoys: true,
+    surface: (t) => (dep(t).pos.z < 0 ? 'ground' : 'water'), water: (t) => sstep(-1.0, 3.0, dep(t).pos.z), buoys: true,
   }),
-  riverShot('into and through the canyon (tracking)', P2, M.howMuch, (t) => payoff4(t, TIN), payCam, {buoys: true}),
+  riverShot('into and through the canyon (tracking)', P2, M.howMuch, (t) => payoff4(t, TIN), payCam, {buoys: true, gorgeWater: -70}),
   {
     name: 'ending: one steady track over the river onto frame 0', from: M.howMuch, to: DUR + 1,
     draw: (t, pre) => {

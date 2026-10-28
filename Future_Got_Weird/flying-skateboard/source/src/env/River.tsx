@@ -360,7 +360,7 @@ export const Buoy: React.FC<{L: Lens; at: V3; t: number}> = ({L, at, t}) => {
 };
 
 /** Everything behind the flying board: sky, clouds, ridges, town, bridge, water, reflections, ripples. */
-export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean; shoal?: ShoalAt}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false, shoal}) => {
+export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean; shoal?: ShoalAt; gorgeWater?: number}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false, shoal, gorgeWater}) => {
   const rs = ridges(L, gorge, near);
   const h = horizon(L);
   // water: the river quad between the banks, clipped to the front of the camera
@@ -397,7 +397,10 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
     const cl = clipNear(L, pts, 1);
     if (cl.length < 3) return null;
     const pp = proj(L, cl);
-    const capC = !mirror && r.cap ? clipNear(L, r.cap, 1) : [];
+    // V5: no terrace cap once the camera is past the ridge's front plane (flying up the gorge it is inside the
+    // terrace, and the near-clipped cap polygon covered the sky gap between the gorge walls)
+    const past = r.side > 0 ? L.pos.z > r.z - 2 : L.pos.z < r.z + 2;
+    const capC = !mirror && r.cap && !past ? clipNear(L, r.cap, 1) : [];
     const capEl = capC.length > 2 ? <path d={polyD(proj(L, capC))} fill={lit(r.color, 0.1)} /> : null;
     if (mirror) return <path key={`m${i}`} d={polyD(pp)} fill={mix(shade(r.color, 0.2), PALR.waterNear, 0.45)} opacity={0.22} />;
     const crest = pp.slice(0, pp.length - 2);
@@ -446,8 +449,10 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
       <Sky id={id} L={L} tint={tint} />
       <Clouds L={L} />
       {rs.map((r, i) => ridgeEl(r, i, false))}
-      {gorge && <GorgeWalls L={L} t={t} g={gorge} />}
-      {wp.length > 2 && (
+      {gorge && <GorgeWalls L={L} t={t} g={gorge} wfrom={gorgeWater} />}
+      {/* V5: inside the gorge shot the gorge's own water (extended back over the river) is the only water, so the
+          river's far edge never sweeps across the frame as a straight seam */}
+      {wp.length > 2 && gorgeWater === undefined && (
         <g>
           <defs>
             <linearGradient id={`${id}-wat`} gradientUnits="userSpaceOnUse" x1={f2(W / 2)} y1={f2(hy)} x2={f2(W / 2 + nx * 1500)} y2={f2(hy + ny * 1500)}>
