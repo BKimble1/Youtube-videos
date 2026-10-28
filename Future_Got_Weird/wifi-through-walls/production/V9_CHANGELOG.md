@@ -102,3 +102,47 @@ his right hand. The dark-screen reveal and walk-out on "creepy" are kept, now wi
 - **Added:** the result stamp (a soft thump and chime as the check draws), EVERYONE lit, the signature rising and
   locking, and a gentle push into the result.
 - **Unchanged:** levels and the music: −14.3 LUFS target, true peak −1.4 dBFS, the loop sample-continuous.
+
+## Checks on the delivered MP4
+
+**File metadata (ffprobe):**
+- Video: H.264, **width 1080, height 1920**, 30/1 fps, 1094 frames, rendered natively from source (not upscaled).
+- Audio: AAC 48 kHz at 320 kb/s; audio-to-video lag 0 ms; 36.48 s.
+
+**Measured:**
+- **Loudness:** −14.3 LUFS integrated, LRA 2.2 LU, true peak −1.4 dBFS.
+- **Black frames and freezes:** none.
+- **One-frame pops** (`qa/v9/V9_pop_scan.json`): none.
+- **Loop seam:** the last-to-first picture change is **1.88**, below the 3.51 median between consecutive frames.
+- **Motion spikes** (`qa/v9/V9_motion_scan.json`): only at the intended cuts (11.0, 11.8, 12.7, 19.0, 20.8, 30.3, 31.9,
+  33.0 and 34.5 s, and the 36.13 s match cut).
+- **Rig probe** (`qa/v9/rig_probe.json`): no ankle misses, no planted-foot slip, no backward elbows; arm length drift at
+  most 0.03 units. The largest joint acceleration (43.8) is the deliberate flinch at 0.5 s.
+- **Camera probe** (`qa/v9/cam_probe.json`): mean 6.4 px per frame. The fastest continuous moves are the push onto the
+  197 display (about 24 s) and the ending's split-screen slide, which is a layout move.
+- **Speech recognition:** Whisper 0.9% WER, Zipformer 6.3% WER. As in V8, Whisper drops "anything" even on the bare
+  recording, and Zipformer mishears "Wi-Fi" as "wife".
+- **Voice vs the rest of the mix:** median +12.5 dB. The one low window is at 31.5 s, the quiet tail of "anything", as
+  in V8.
+
+**Frame review:** done from the MP4, as phone-size contact sheets without sound.
+- Every 3 frames over 0–2.3 s and every 10 frames elsewhere, plus the loop seam frame by frame.
+- Fixed during review:
+  - the yellow pedestrian walking through and then trailing him (she now walks two metres ahead);
+  - a lamp post smearing across a corner of the high return-visit view;
+  - the 197 heading cropping as the push ended;
+  - the live skeleton vanishing in one frame at 4.98 s (it now fades out over 0.35 s).
+
+## Remaining limitations
+
+- **Not watched or heard in real time:** I reviewed frames, not real-time playback, and could not listen to the mix.
+  Please watch it twice at normal speed with sound before the 4K master.
+- **The loop join is still a cut:** the crouch under the camera cuts to the same crouch behind the lab wall. The
+  signal link is the Wi-Fi echoes, which start under him and run to the receiver, and the waves crossing the wall
+  from frame 0. Nothing travels across the cut itself.
+- **Small in frame:** the outgoing pulse is small in the radio shot at about 5.1 s, before the wide path shot.
+- **Sources not re-checked:** kit.edu is still blocked by this session's network policy. On screen I added no claim
+  beyond the narration: 197 PEOPLE TESTED, ALMOST EVERYONE IDENTIFIED CORRECTLY, the crowd labelled "illustration".
+- **No Cyborg Cockroach reference:** the Cyborg Cockroach Short is not in this repository, so it could not be compared
+  directly.
+- **No 4K master yet.**

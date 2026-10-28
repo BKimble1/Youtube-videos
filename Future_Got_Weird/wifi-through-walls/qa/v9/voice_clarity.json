@@ -1,13 +1,13 @@
 {
  "note": "voice level minus music+ambience+effects level, dB, per 0.5 s window while speaking",
  "windows": 72,
- "min_db": -6.3,
- "p10_db": 6.2,
- "median_db": 12.6,
+ "min_db": -6.4,
+ "p10_db": 6.3,
+ "median_db": 12.5,
  "lowest_windows": [
   [
    31.5,
-   -6.3
+   -6.4
   ],
   [
    14.5,

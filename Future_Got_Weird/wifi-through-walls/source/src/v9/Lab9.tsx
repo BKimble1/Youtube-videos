@@ -140,7 +140,9 @@ const toScreen = (r: {x: number; y: number; w: number; h: number}, q: {u: number
 /** the screen's state: 'live' (the skeleton), or (shoots .. of) the raw echo traces and the skeleton being built from
  *  them point by point (V7: one keypoint every 75 ms from just after "AI", the limbs join as both ends exist) */
 const BUILD0 = LB.ai + 0.32, BUILD_DT = 0.075;
-const building = (t: number) => tau(t) >= 0 && t >= LB.shoots && t < LB.of + 0.2;
+// V9: the live skeleton fades out over 0.35 s on "shoots" (it was cut in one frame), then the screen waits for the echo
+const LIVE_FADE = 0.35;
+const building = (t: number) => tau(t) >= 0 && t >= LB.shoots + LIVE_FADE && t < LB.of + 0.2;
 const dispPhase = (t: number) => {
   if (!building(t)) return {raw: 0};
   // V9: the screen waits (empty) while the pulse travels; the traces start when its echo arrives at the receiver
@@ -200,7 +202,8 @@ export const DispPicture: React.FC<{r: {x: number; y: number; w: number; h: numb
   const lock = (j: number) => clamp((t - (1.9 + j * 0.035)) / 0.3) * (1 - ss(t, 3.6, 4.0));
   const still = tau(t) >= 0 && t > LB.still ? Math.exp(-(t - LB.still) / 0.35) : 0;
   // on CREEPY the skeleton is handed to the silhouette that fills it (Film.tsx) and leaves the screen with it
-  const handOver = t > LB.creepy && t < LB.creepy + 1.5 ? 1 - ss(t, LB.creepy + 0.25, LB.creepy + 0.4) : 1;
+  const handOver = (t > LB.creepy && t < LB.creepy + 1.5 ? 1 - ss(t, LB.creepy + 0.25, LB.creepy + 0.4) : 1) *
+    (tau(t) >= 0 && t >= LB.shoots && t < LB.shoots + LIVE_FADE ? 1 - ss(t, LB.shoots, LB.shoots + LIVE_FADE) : 1);
   const trail: Record<KPName, P2>[] = [];
   const limb = (k: Record<KPName, P2>, a: number, w: number, key: string, glow = false) => LIMBS.map((L, i) => (
     <line key={`${key}${i}`} x1={f1(k[L.a].x)} y1={f1(k[L.a].y)} x2={f1(k[L.b].x)} y2={f1(k[L.b].y)} stroke={COL[L.side]} strokeWidth={f1(w)} strokeLinecap="round" opacity={a * Math.min(doneAt(L.a), doneAt(L.b))} style={glow ? {mixBlendMode: 'screen'} : undefined} />
@@ -242,7 +245,7 @@ export const DispPicture: React.FC<{r: {x: number; y: number; w: number; h: numb
       ))}
       </g>
       <circle cx={f1(r.x + r.w * 0.06)} cy={f1(r.y + r.h * 0.045)} r={f1(r.h * 0.012)} fill={Math.floor(t * 2) % 2 ? '#FF4D4D' : '#B33'} />
-      <text x={f1(r.x + r.w * 0.09)} y={f1(r.y + r.h * 0.057)} fontSize={f1(r.h * 0.033)} fontFamily="JetBrains Mono, monospace" fill="#BFE9F5" opacity={0.85}>{build ? 'RECEIVING' : 'LIVE · 1 PERSON'}</text>
+      <text x={f1(r.x + r.w * 0.09)} y={f1(r.y + r.h * 0.057)} fontSize={f1(r.h * 0.033)} fontFamily="JetBrains Mono, monospace" fill="#BFE9F5" opacity={0.85}>{tau(t) >= 0 && t >= LB.shoots && t < LB.of + 0.2 ? 'RECEIVING' : 'LIVE · 1 PERSON'}</text>
     </g>
   );
 };
