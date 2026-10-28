@@ -1,0 +1,71 @@
+{
+ "file": "exports/FGW_Robot_Metabolism_V3_REVIEW_1080x1920.mp4",
+ "bytes": 24506842,
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "r_frame_rate": "30/1",
+  "nb_read_frames": "771",
+  "duration": "25.700000"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "256697",
+  "duration": "25.700000"
+ },
+ "format_duration": "25.700000",
+ "full_decode_errors": [],
+ "black": [],
+ "freeze": [],
+ "loudness": {
+  "integrated_lufs": -14.6,
+  "true_peak_dbfs": -2.6
+ },
+ "audio_lag_ms_vs_mix": 0.0,
+ "continuity": {
+  "median_frame_diff": 5.96,
+  "planned_cuts": [
+   88,
+   184,
+   235,
+   259,
+   324,
+   408,
+   438,
+   465,
+   522,
+   627
+  ],
+  "off_cut_spikes": []
+ },
+ "captions": {
+  "phrases": 17,
+  "caption_words_equal_locked": true,
+  "srt_words_equal_locked": true,
+  "caption_text_exact": true,
+  "max_lead_s": 0.04
+ },
+ "loop_seam_below_caption_band": {
+  "seam_770_to_0": 0.63,
+  "end_steps": [
+   0.89,
+   0.81,
+   0.71,
+   0.61,
+   0.54
+  ],
+  "start_steps": [
+   1.13,
+   2.47,
+   3.77,
+   5.04,
+   6.14
+  ]
+ }
+}

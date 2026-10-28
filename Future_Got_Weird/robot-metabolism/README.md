@@ -1,5 +1,30 @@
 # Future Got Weird: This Robot Uses Other Robots as Spare Parts (Robot Metabolism)
 
+## V3 (28 Oct 2026): mechanical rig rebuild, hook and retention revision, for review
+
+`exports/FGW_Robot_Metabolism_V3_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 25.70 s (771 frames). Same locked
+narration, take, voice, caption timing and style.
+
+- **New rig** (`source/src/v3/`):
+  - every link is a fixed-structure actuator between two connector balls (only its rod slides);
+  - joints are clusters of touching magnet balls that never overlap and never shift when a part attaches;
+  - every piece is a convex solid painted in exact occlusion order (pairwise ray tests and a topological sort,
+    `source/src/lib/solid.ts`).
+- **Story:**
+  1. A robot takes a donor's part (two contacts) and stands up.
+  2. The rod's actuator, shown in cutaway; the joints turning; a connector magnet, shown in cutaway.
+  3. A one-key operator beat.
+  4. The rear foot reaches back to a rod; contact; the rod becomes a walking stick.
+  5. A ratchet gait over a crest and down a 10° ramp.
+  6. The stick stalls and dies; it is released, falls and rolls aside.
+  7. One side step; a replacement attached; recovery.
+  8. The camera travels to a broken robot and its parts, into the opening composition, so the film loops.
+- **Verified every frame:** 0 mechanical faults (`tools/probe3.ts`) and 0 occlusion/view faults
+  (`tools/probe3_view.ts`).
+- **Not published, uploaded or scheduled; not yet watched or heard in real time.**
+- Details, the timing against the brief, QA: `production/V3_CHANGES_QA.md`.
+- Build: `sh tools/render_v3.sh review`.
+
 ## V2 (28 Oct 2026): hook and retention rebuild, for review
 
 `exports/FGW_Robot_Metabolism_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 25.70 s (771 frames).

@@ -1,0 +1,247 @@
+[
+ {
+  "name": "motors: whir following the measured actuator activity (body, link L, stick S, replacement R, the second robot)",
+  "at": 0,
+  "gain_db": -26
+ },
+ {
+  "name": "CONNECT: the loose module meets the reaching foot (magnetic click)",
+  "at": 0.585,
+  "frame": 17.5,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: its far end meets the rear foot (the base closes) (magnetic click)",
+  "at": 1.585,
+  "frame": 47.6,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: the walking stick meets the rear foot (magnetic click)",
+  "at": 11.885,
+  "frame": 356.6,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "CONNECT: the replacement meets the rear foot (magnetic click)",
+  "at": 19.965,
+  "frame": 599.0,
+  "dur": 0.145,
+  "gain_db": -15,
+  "hero": true
+ },
+ {
+  "name": "FAIL: the stick stalls mid-push (strain, then cut)",
+  "at": 17.74,
+  "frame": 532.2,
+  "dur": 0.26,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "FAIL: the stick's motor winds down",
+  "at": 17.97,
+  "frame": 539.1,
+  "dur": 0.5,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "the stick lets go (un-click)",
+  "at": 18.6,
+  "frame": 558.0,
+  "dur": 0.12,
+  "gain_db": -23,
+  "hero": false
+ },
+ {
+  "name": "the stick drops onto the surface",
+  "at": 19.0,
+  "frame": 570.0,
+  "dur": 0.18,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "it rolls aside",
+  "at": 19.02,
+  "frame": 570.6,
+  "dur": 0.38,
+  "gain_db": -32,
+  "hero": false
+ },
+ {
+  "name": "the body settles onto its feet",
+  "at": 19.07,
+  "frame": 572.1,
+  "dur": 0.22,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "a key press",
+  "at": 8.41,
+  "frame": 252.3,
+  "dur": 0.06,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "the housing cut-away opens (air, faint)",
+  "at": 3.15,
+  "frame": 94.5,
+  "dur": 0.45,
+  "gain_db": -44,
+  "hero": false
+ },
+ {
+  "name": "the connector cut-away opens (air, faint)",
+  "at": 6.15,
+  "frame": 184.5,
+  "dur": 0.45,
+  "gain_db": -44,
+  "hero": false
+ },
+ {
+  "name": "the body rises (structure creak)",
+  "at": 2.1,
+  "frame": 63.0,
+  "dur": 0.3,
+  "gain_db": -34,
+  "hero": false
+ },
+ {
+  "name": "the body rears up onto its stick (structure creak)",
+  "at": 12.35,
+  "frame": 370.5,
+  "dur": 0.26,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "the body rears up onto its stick (structure creak)",
+  "at": 20.4,
+  "frame": 612.0,
+  "dur": 0.26,
+  "gain_db": -35,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 13.167,
+  "frame": 395.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 14.4,
+  "frame": 432.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 15.633,
+  "frame": 469.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 16.267,
+  "frame": 488.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip plants on the surface (tap)",
+  "at": 17.5,
+  "frame": 525.0,
+  "dur": 0.09,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 12.933,
+  "frame": 388.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 13.533,
+  "frame": 406.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 14.167,
+  "frame": 425.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 14.767,
+  "frame": 443.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 15.4,
+  "frame": 462.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.033,
+  "frame": 481.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 16.633,
+  "frame": 499.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 17.267,
+  "frame": 518.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ },
+ {
+  "name": "the stick tip slides (scuff)",
+  "at": 20.8,
+  "frame": 624.0,
+  "dur": 0.233,
+  "gain_db": -38,
+  "hero": false
+ }
+]

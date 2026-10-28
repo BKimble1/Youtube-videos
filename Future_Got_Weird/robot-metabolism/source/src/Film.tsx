@@ -4,8 +4,9 @@ import {CAPTIONS, FPS} from './lib/time';
 import {CaptionView} from './Captions';
 import {SHOTS, capPlace, Shot} from './shots';
 import {SHOTS2, capPlace2} from './v2/shots2';
+import {SHOTS3, capPlace3} from './v3/shots3';
 
-const VERSIONS: Record<number, {shots: Shot[]; cap: (i: number, t: number) => number}> = {1: {shots: SHOTS, cap: capPlace}, 2: {shots: SHOTS2, cap: capPlace2}};
+const VERSIONS: Record<number, {shots: Shot[]; cap: (i: number, t: number) => number}> = {1: {shots: SHOTS, cap: capPlace}, 2: {shots: SHOTS2, cap: capPlace2}, 3: {shots: SHOTS3, cap: capPlace3}};
 
 /** the caption showing at frame f (shows and hides on whole frames) */
 const capAt = (f: number) => {

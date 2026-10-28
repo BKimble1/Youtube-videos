@@ -5,6 +5,7 @@ import React from 'react';
 import {add, cross, dot, len, mul, norm, sub, V3} from './v3';
 import {lit, rgba, shade} from '../dc/color';
 import {INK} from '../dc/ink';
+import {overlapPoint, overlapPoints, rayHit, Shape2, Solid} from './solid';
 
 export const W = 1080;
 export const H = 1920;
@@ -59,16 +60,20 @@ const clipNear = (pts: {x: number; y: number; z: number}[]) => {
   return out;
 };
 
-const f2 = (n: number) => (Math.round(n * 100) / 100).toString();
+export const f2 = (n: number) => (Math.round(n * 100) / 100).toString();
 export const pathOf = (pts: {x: number; y: number}[], close = true) => pts.map((p, i) => `${i ? 'L' : 'M'}${f2(p.x)} ${f2(p.y)}`).join(' ') + (close ? ' Z' : '');
 
-/** a primitive: `depth` is the camera-space distance used for painter's ordering inside its layer */
-export type Item = {layer: number; depth: number; key: string; el: React.ReactNode};
+/** a primitive: `depth` is the camera-space distance used for painter's ordering inside its layer.
+ *  (V3) `cs` is the piece's convex solid in camera space and `sh` its drawn outline; `grp`/`ax`/`axFwd` order the
+ *  pieces of one link along its axis (ax increasing toward the camera when axFwd). See lib/solid.ts and sort3. */
+export type Item = {layer: number; depth: number; key: string; el: React.ReactNode; cs?: Solid; sh?: Shape2;
+  /** pieces of one link: its id, the piece's station range [s0, s1] along the axis, and the axis (camera space) */
+  grp?: string; axr?: [number, number]; axP?: V3; axU?: V3};
 
 // ---------------------------------------------------------------------------------------------------------------
 // primitives
 
-const LIGHT2 = {x: -0.62, y: -0.78};
+export const LIGHT2 = {x: -0.62, y: -0.78};
 let uid = 0;
 let pre = 'a';
 /** restart element ids for a view; each simultaneous view needs its own prefix (gradient ids are document-wide) */
@@ -76,7 +81,7 @@ export const resetIds = (prefix = 'a') => {
   uid = 0;
   pre = prefix;
 };
-const nid = (p: string) => `${pre}${p}${uid++}`;
+export const nid = (p: string) => `${pre}${p}${uid++}`;
 
 /** line weight for an object of screen size s (px): the channel's ~3-4 px contour, lighter on small parts */
 export const lw = (s: number, k = 1) => Math.max(1.2, Math.min(4.2, 1.1 + s * 0.09)) * k;
@@ -113,7 +118,7 @@ export const line = (P: Proj, pts: V3[], color: string, sw: number, o: {layer?: 
   return {layer: o.layer ?? 3, depth, key: nid('k'), el: <path key={nid('l')} d={pathOf(s, false)} fill="none" stroke={color} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" opacity={o.opacity} strokeDasharray={o.dash} />};
 };
 
-const capsuleD = (a: {x: number; y: number}, b: {x: number; y: number}, ra: number, rb: number) => {
+export const capsuleD = (a: {x: number; y: number}, b: {x: number; y: number}, ra: number, rb: number) => {
   const dx = b.x - a.x, dy = b.y - a.y;
   const d = Math.max(0.01, Math.hypot(dx, dy));
   const ax = {x: dx / d, y: dy / d};
@@ -234,6 +239,106 @@ export const Paint: React.FC<{items: (Item | null | undefined | false)[]}> = ({i
   list.sort((a, b) => a.layer - b.layer || b.depth - a.depth);
   // keys must be unique within a frame: two objects can share a link id (two robots each have a module "M"), and a
   // duplicate key makes React keep stale elements from earlier frames
+  const seen = new Map<string, number>();
+  const key = (k: string) => {
+    const n = seen.get(k) ?? 0;
+    seen.set(k, n + 1);
+    return n ? `${k}~${n}` : k;
+  };
+  return <>{list.map((it) => <React.Fragment key={key(it.key)}>{it.el}</React.Fragment>)}</>;
+};
+
+export type SortStats = {pairs: number; cycles: number; edges: [number, number][]};
+
+/** (V3) the paint order of a layer of items: exact pairwise occlusion for solids, topological, far-to-near tie-break.
+ *  Returns the ordered items and, for the probe, the overlap edges (back index, front index into the input) and the
+ *  number of cycles that had to be broken (expected 0). */
+export const sort3 = (list: Item[], P: Proj): {items: Item[]; stats: SortStats} => {
+  const n = list.length;
+  const cx = W / 2 + (P.cam.ox ?? 0), cy = H / 2 + (P.cam.oy ?? 0), f = P.cam.f;
+  const ray = (p: {x: number; y: number}): V3 => ({x: (p.x - cx) / f, y: -(p.y - cy) / f, z: 1});
+  const succ: number[][] = Array.from({length: n}, () => []);
+  const indeg = new Array(n).fill(0);
+  const edges: [number, number][] = [];
+  let pairs = 0;
+  // screen bounding boxes for a quick reject
+  const bb = list.map((it) => {
+    if (!it.sh) return null;
+    const r = Math.max(it.sh.rp, it.sh.rq);
+    return [Math.min(it.sh.p.x, it.sh.q.x) - r, Math.min(it.sh.p.y, it.sh.q.y) - r, Math.max(it.sh.p.x, it.sh.q.x) + r, Math.max(it.sh.p.y, it.sh.q.y) + r];
+  });
+  for (let i = 0; i < n; i++) {
+    const A = list[i];
+    if (!A.sh || !A.cs) continue;
+    for (let j = i + 1; j < n; j++) {
+      const B = list[j];
+      if (!B.sh || !B.cs || A.layer !== B.layer) continue;
+      const a = bb[i]!, b = bb[j]!;
+      if (a[2] < b[0] || b[2] < a[0] || a[3] < b[1] || b[3] < a[1]) continue;
+      let front: number;
+      if (A.grp !== undefined && A.grp === B.grp && A.axr && B.axr && A.axP && A.axU) {
+        // same link: at the boundary between the two pieces, the one on the camera's side of it is in front
+        if (!overlapPoint(A.sh, B.sh, 0.5)) continue;
+        const [lo, hi] = A.axr[0] < B.axr[0] ? [i, j] : [j, i];
+        const sx = (list[lo].axr![1] + list[hi].axr![0]) / 2;
+        const X = {x: A.axP.x + A.axU.x * sx, y: A.axP.y + A.axU.y * sx, z: A.axP.z + A.axU.z * sx};
+        front = -(A.axU.x * X.x + A.axU.y * X.y + A.axU.z * X.z) > 0 ? hi : lo;
+      } else {
+        // the first sample point whose ray hits both solids decides (no such point: the pictures do not overlap)
+        let fr = -1;
+        for (const p of overlapPoints(A.sh, B.sh)) {
+          const d = ray(p);
+          const ta = rayHit(d, A.cs), tb = rayHit(d, B.cs);
+          if (ta < Infinity && tb < Infinity) {
+            fr = ta < tb ? i : j;
+            break;
+          }
+        }
+        if (fr < 0) continue;
+        front = fr;
+      }
+      const back = front === i ? j : i;
+      succ[back].push(front);
+      indeg[front]++;
+      edges.push([back, front]);
+      pairs++;
+    }
+  }
+  // Kahn, always taking the farthest ready item (stable far-to-near among unconstrained items)
+  const done = new Array(n).fill(false);
+  const out: Item[] = [];
+  let cycles = 0;
+  for (let k = 0; k < n; k++) {
+    let pick = -1;
+    for (let i = 0; i < n; i++) if (!done[i] && indeg[i] === 0 && (pick < 0 || list[i].depth > list[pick].depth)) pick = i;
+    if (pick < 0) {
+      // a cycle: break it at the farthest remaining item (counted; the probe requires none)
+      cycles++;
+      for (let i = 0; i < n; i++) if (!done[i] && (pick < 0 || list[i].depth > list[pick].depth)) pick = i;
+    }
+    done[pick] = true;
+    out.push(list[pick]);
+    for (const s2 of succ[pick]) indeg[s2]--;
+  }
+  return {items: out, stats: {pairs, cycles, edges}};
+};
+
+/** (V3) paint items by layer, each layer in exact occlusion order */
+export const order3 = (items: (Item | null | undefined | false)[], P: Proj): {items: Item[]; stats: SortStats[]} => {
+  const list = items.filter(Boolean) as Item[];
+  const layers = [...new Set(list.map((i) => i.layer))].sort((a, b) => a - b);
+  const out: Item[] = [];
+  const stats: SortStats[] = [];
+  for (const L of layers) {
+    const r = sort3(list.filter((i) => i.layer === L), P);
+    out.push(...r.items);
+    stats.push(r.stats);
+  }
+  return {items: out, stats};
+};
+
+export const Paint3: React.FC<{items: (Item | null | undefined | false)[]; P: Proj}> = ({items, P}) => {
+  const {items: list} = order3(items, P);
   const seen = new Map<string, number>();
   const key = (k: string) => {
     const n = seen.get(k) ?? 0;
