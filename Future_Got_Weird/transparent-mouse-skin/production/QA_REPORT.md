@@ -11,7 +11,7 @@ and a frame-difference scan, which cannot certify how it feels at speed.
 |---|---|---|
 | `exports/FGW_Transparent_Mouse_Skin_V1_REVIEW_1080x1920.mp4` | 19.9 MB | H.264 High, 1080×1920, 30 fps, 752 frames, 25.067 s, yuv420p bt709. AAC 48 kHz stereo 320 kb/s. 0 decode errors. |
 | `exports/FGW_Transparent_Mouse_Skin_V1_MASTER_2160x3840.mp4` | 60.7 MB | H.264, **2160×3840 native** (vectors rendered at 2×, not an upscale; see `qa/master/native_vs_upscaled_f408.png`), 30 fps, 752 frames, 25.067 s. 0 decode errors. |
-| `exports/FGW_Transparent_Mouse_Skin_V1_CLEAN_NO_CAPTIONS_1080x1920.mp4` | (see the README) | the same film without captions (`captions: false`) |
+| `exports/FGW_Transparent_Mouse_Skin_V1_CLEAN_NO_CAPTIONS_1080x1920.mp4` | 18 MB | the same film without captions (`captions: false`): 1080×1920, 30 fps, 752 frames, 25.067 s. 0 decode errors. −14.0 LUFS. |
 | `cover/…f120_4.00s…png` | | frame 120 of the film at 2160×3840 and 1080×1920, plain and with "SEE-THROUGH SKIN" (cover only) |
 
 There are no generated plates, so there is no plate resolution to document. See `RUNWAY_NOTES.md`.
