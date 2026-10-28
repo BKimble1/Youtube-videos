@@ -26,8 +26,7 @@ export const Rider: React.FC<{id: string; L: Lens; B: Frame; pose: PilotPose; st
 };
 
 /** The rider's and board's shadow on the ground (y = 0), cast along the sun: it separates from the board as it lifts. */
-export const RiderShadow: React.FC<{L: Lens; B: Frame; pose: PilotPose}> = ({L, B, pose}) => {
-  const sun = SUN;
+export const RiderShadow: React.FC<{L: Lens; B: Frame; pose: PilotPose; sun?: V3; minOp?: number; color?: string}> = ({L, B, pose, sun = SUN, minOp = 0.35, color = '#24361F'}) => {
   const onG = (p: V3): V3 => v3(p.x - (sun.x * p.y) / sun.y, 0.004, p.z - (sun.z * p.y) / sun.y);
   const ok = (p: V3) => d3(s3(p, L.pos), L.f) > 0.3;
   const outline = BD.outline.map(([x, z]) => onG(toW(B, v3(x, -BD.thick, z))));
@@ -41,15 +40,15 @@ export const RiderShadow: React.FC<{L: Lens; B: Frame; pose: PilotPose}> = ({L, 
   }).join('');
   const hc = L.p(onG(j.Hc));
   const lift = Math.max(0, B.o.y - 0.13);
-  const op = 0.3 * Math.max(0.35, 1 - lift / 4);
+  const op = 0.3 * Math.max(minOp, 1 - lift / 4);
   return (
     <g opacity={op}>
       <path d={'M' + outline.map((q) => {
         const p = L.p(q);
         return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
-      }).join(' L') + ' Z'} fill="#24361F" />
-      <path d={d} stroke="#24361F" strokeWidth={(0.12 * k).toFixed(1)} strokeLinecap="round" fill="none" />
-      <circle cx={hc.x.toFixed(1)} cy={hc.y.toFixed(1)} r={(0.13 * k).toFixed(1)} fill="#24361F" />
+      }).join(' L') + ' Z'} fill={color} />
+      <path d={d} stroke={color} strokeWidth={(0.12 * k).toFixed(1)} strokeLinecap="round" fill="none" />
+      <circle cx={hc.x.toFixed(1)} cy={hc.y.toFixed(1)} r={(0.13 * k).toFixed(1)} fill={color} />
     </g>
   );
 };

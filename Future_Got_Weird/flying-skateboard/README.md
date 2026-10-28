@@ -1,5 +1,31 @@
 # Future Got Weird: Flying Skateboard (Song Xingyu / 神奇阿宇 "Amazing Ayu")
 
+## V3 review (28 Oct 2026)
+
+**Status:** V3 is rendered and checked from the file. **Not published.** Nobody has watched it in real time here: there is no playback in this environment. `production/QA_REPORT_V3.md` is the self-QC report and `production/CHANGELOG_V3.md` lists the changes.
+
+| Deliverable | File |
+|---|---|
+| **V3 review video**: true 1080×1920 (rendered at 2160×3840, Lanczos-downsampled), 30 fps, 1077 frames, 35.90 s, H.264 High CRF 16 + AAC 320 kb/s, captions burned in, seamless loop | `exports/FGW_Flying_Skateboard_V3_REVIEW_1080x1920.mp4` |
+| Changelog | `production/CHANGELOG_V3.md` |
+| Self-QC (first three seconds, transitions, anatomy, training variety, loop) | `production/QA_REPORT_V3.md` |
+| Shots and transitions | `production/SHOTS_AND_TRANSITIONS_V3.md` |
+| Narration | unchanged from V1 (the same WAV, sample for sample) |
+| V3 mix, measurements, effect cues | `audio/mix/FGW_Flying_Skateboard_V3_mix.wav`, `audio/mix/mix_measure_v3.json`, `audio/sfx_cues_v3.json` (`tools/make_audio_v3.py`, cues from `tools/export_cues_v3.ts`) |
+| Contact sheets and QA measurements (from the MP4) | `qa/v3_review_sheet_*.png` (hook beats, every cut, training, loop, every second and more), `qa/v3_review_qa.json` |
+| Remotion project | composition `FlyingSkateboardV3`; code in `source/src/v3/`; new assets `env/Shore.tsx`, `fx/AirJets.tsx`, `fx/Wash.tsx` |
+
+V3 rebuild (after the V1 narration steps):
+
+```sh
+source/node_modules/.bin/esbuild tools/export_cues_v3.ts --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/ec3.cjs && NODE_PATH=source/node_modules node /tmp/ec3.cjs audio/cues_v3.json
+python3 tools/make_audio_v3.py              # writes source/public/audio/mix_v3.wav and audio/mix/
+(cd source && npx remotion render src/index.ts FlyingSkateboardV3 /tmp/v3_master_2160x3840.mov --props='{"audio":"mix_v3","captions":true}' --scale=2 --image-format=png --crf=12 --pixel-format=yuv420p --color-space=bt709 --audio-codec=pcm-16 --concurrency=4)
+ffmpeg -i /tmp/v3_master_2160x3840.mov -vf "scale=1080:1920:flags=lanczos+accurate_rnd+full_chroma_int,format=yuv420p" -c:v libx264 -profile:v high -preset slow -crf 16 -g 30 -color_primaries bt709 -color_trc bt709 -colorspace bt709 -c:a aac -b:a 320k -ar 48000 -movflags +faststart exports/FGW_Flying_Skateboard_V3_REVIEW_1080x1920.mp4
+python3 tools/qa.py exports/FGW_Flying_Skateboard_V3_REVIEW_1080x1920.mp4 qa/v3_review audio/cues_v3.json
+```
+V3 working stills: `cd source && ./sheet3.sh out.png "t1,t2,..." [captions]`. The 2160×3840 master (142 MB) is not committed: it exceeds GitHub's 100 MB file limit. Regenerate it with the render line above.
+
 ## V2 review (28 Oct 2026)
 
 **Status:** V2 is rendered and checked from the file. **Not published.** As with V1, nobody has watched it in real time or listened to it here: there is no playback in this environment. `production/QA_REPORT_V2.md` lists what was checked, against the V2 brief's QC list.

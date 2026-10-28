@@ -7,7 +7,7 @@ import {CAPS, FPS} from './story/time';
 import {capY, placeFor} from './story/capPlace';
 import {E} from './story/time';
 
-export const Captions: React.FC<{t: number; placer?: {placeFor: (a: number, b: number) => number; capY: (i: number) => number}}> = ({t, placer}) => {
+export const Captions: React.FC<{t: number; placer?: {placeFor: (a: number, b: number) => number; capY: (i: number) => number}; price?: {y: number; size: number}}> = ({t, placer, price}) => {
   const pf = placer?.placeFor ?? placeFor, cy = placer?.capY ?? capY;
   const f = Math.round(t * FPS);
   const i = CAPS.findIndex((c, k) => f >= (k === 0 ? 0 : Math.round(c.show * FPS)) && f < Math.round(c.hide * FPS));
@@ -15,11 +15,11 @@ export const Captions: React.FC<{t: number; placer?: {placeFor: (a: number, b: n
     // the closing question's brief emphasis while the flight goes on (ends well before the loop)
     const p0 = Math.round((E('thing') + 0.62) * FPS), p1 = Math.round((E('thing') + 1.4) * FPS);
     if (f >= p0 && f < p1) {
-      const y = pf(p0 / FPS, p1 / FPS);
+      const y = price?.y ?? pf(p0 / FPS, p1 / FPS);
       return (
         <div style={{position: 'absolute', left: 90, width: 900, top: y, transform: 'translateY(-50%)', textAlign: 'center'}}>
-          <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 84, letterSpacing: '0.01em', color: '#FFD84A',
-            WebkitTextStroke: '12px rgba(6,9,14,0.94)', paintOrder: 'stroke fill', textShadow: '0 5px 16px rgba(0,0,0,0.6)'} as React.CSSProperties}>YOUR PRICE?</span>
+          <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: price?.size ?? 84, letterSpacing: '0.01em', color: '#FFD84A',
+            WebkitTextStroke: `${price ? 16 : 12}px rgba(6,9,14,0.94)`, paintOrder: 'stroke fill', textShadow: '0 5px 16px rgba(0,0,0,0.6)'} as React.CSSProperties}>YOUR PRICE?</span>
         </div>
       );
     }

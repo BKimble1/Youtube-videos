@@ -74,3 +74,14 @@ Other V2 additions are dramatisation within the verified facts:
 - The jet fire starts at a leaking fitting on the centre engine's fuel line and runs back along that line. The reports say only that the combined test caught fire and damaged parts of the system; the exact origin is not reported.
 - The inventor stands at the bench during the test and steps back from the fire; nobody is shown hurt.
 - The ten-days montage shows three distinct practice moments (an early hover, a low pass, a glide out over the water). It makes no claim about which day each was.
+
+## V3: accuracy changes
+
+- **The AI coach now matches the reported system.** The V2 tripod phones are gone.
+  - The coach beat shows the phone in the board (an artificial horizon reading the board's attitude), the phone on his wrist (a level readout), and the earpiece cue.
+  - He makes the correction himself; the AI never balances or flies the board.
+- **Still a V2/V3-brief choice:** the river crossing and the canyon are one connected flight, from the river into the gorge mouth. The verified details say these were separate demonstrations; see the V2 table above for how to separate them again.
+- **New and not a reported detail: the riverside flat.** It is the near bank of the river set, where the lift and the later practice flights are staged.
+  - It is presented as a practice area, not a documented location.
+  - The montage makes no claim about which day each practice flight was.
+- **The jet fire** is a short, contained fire at a fuel fitting, then the scorched prototype. The reports say only that the combined test caught fire and damaged parts of the system. Nobody is hurt and there is no explosion.

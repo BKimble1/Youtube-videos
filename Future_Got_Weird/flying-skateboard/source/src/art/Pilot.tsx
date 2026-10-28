@@ -176,12 +176,32 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     const hu = 0.012 * Math.max(-1, Math.min(1, tilt.pitch / 12));
     const h0 = cr(-0.032 * Math.cos(hr), hu - 0.032 * Math.sin(hr) * 0.6), h1 = cr(0.032 * Math.cos(hr), hu + 0.032 * Math.sin(hr) * 0.6);
     const ok = Math.abs(tilt.roll) < 4 && Math.abs(tilt.pitch) < 4;
+    // V3: when the wrist is turned up to read it, the screen shows the board side-on against a level reference: the
+    // board icon tilts with the roll (exaggerated x3 so it reads at a glance), amber when off level, green when level
+    const icon = (() => {
+      const r3 = Math.max(-0.6, Math.min(0.6, hr * 3));
+      const P2 = (u: number, v: number) => cr(u * Math.cos(r3) - v * Math.sin(r3), u * Math.sin(r3) + v * Math.cos(r3) - 0.004);
+      const bar = [P2(-0.026, -0.0035), P2(0.026, -0.0035), P2(0.029, 0), P2(0.026, 0.0035), P2(-0.026, 0.0035), P2(-0.029, 0)];
+      const ref = [[-0.036, -0.03], [0.036, 0.03]].map(([a0, a1]) => [cr(a0, -0.004), cr(a1, -0.004)]);
+      return (
+        <g>
+          <path d={`M${f2(ref[0][0].x)},${f2(ref[0][0].y)} L${f2(cr(-0.031, -0.004).x)},${f2(cr(-0.031, -0.004).y)} M${f2(ref[1][0].x)},${f2(ref[1][0].y)} L${f2(cr(0.031, -0.004).x)},${f2(cr(0.031, -0.004).y)}`} stroke="#E8F6FF" strokeWidth={f2(Math.max(0.8, 0.003 * pc.k))} strokeLinecap="round" />
+          <path d={polyD(bar)} fill={ok ? '#21D19F' : '#FFB347'} />
+          {[-0.016, 0.016].map((u) => <circle key={u} cx={f2(P2(u, -0.0065).x)} cy={f2(P2(u, -0.0065).y)} r={f2(Math.max(0.5, 0.0022 * pc.k))} fill={ok ? '#21D19F' : '#FFB347'} />)}
+          <path d={`M${f2(cr(-0.012, 0.016).x)},${f2(cr(-0.012, 0.016).y)} L${f2(cr(0.012, 0.016).x)},${f2(cr(0.012, 0.016).y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeOpacity={0.6} strokeWidth={f2(Math.max(0.7, 0.003 * pc.k))} strokeLinecap="round" />
+        </g>
+      );
+    })();
     return vis ? (
       <g key="wp">
         <path d={polyD(body)} fill={GEAR.phone} stroke="#0B1218" strokeWidth={f2(w * 1.6)} strokeLinejoin="round" paintOrder="stroke" />
         <path d={polyD(scr)} fill={GEAR.screen} />
-        <path d={`M${f2(h0.x)},${f2(h0.y)} L${f2(h1.x)},${f2(h1.y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeWidth={f2(Math.max(0.8, 0.006 * pc.k))} strokeLinecap="round" />
-        <circle cx={f2(cr(0, 0).x)} cy={f2(cr(0, 0).y)} r={f2(Math.max(0.6, 0.004 * pc.k))} fill="#E8F6FF" />
+        {j.wristUp > 0.3 ? icon : (
+          <g>
+            <path d={`M${f2(h0.x)},${f2(h0.y)} L${f2(h1.x)},${f2(h1.y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeWidth={f2(Math.max(0.8, 0.006 * pc.k))} strokeLinecap="round" />
+            <circle cx={f2(cr(0, 0).x)} cy={f2(cr(0, 0).y)} r={f2(Math.max(0.6, 0.004 * pc.k))} fill="#E8F6FF" />
+          </g>
+        )}
       </g>
     ) : null;
   };
@@ -303,11 +323,12 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       const a = p(kn), b = p(an);
       return <path key={k} d={capsulePath(a, b, 0.056 * a.k, 0.046 * b.k)} fill={GEAR.pants} stroke="#172B3A" strokeWidth={f2(w * 2)} paintOrder="stroke" />;
     };
+    void shin;
+    // V3: the whole legs (the camera in the head sees the thighs as well as the shins and shoes)
     return (
       <g>
         {shoes}
-        {shin('kf', lerp3(j.kneeF, j.ankF, 0.25), j.ankF)}
-        {shin('kr', lerp3(j.kneeR, j.ankR, 0.25), j.ankR)}
+        {legs}
       </g>
     );
   }

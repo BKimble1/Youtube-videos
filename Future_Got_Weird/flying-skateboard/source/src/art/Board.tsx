@@ -112,6 +112,13 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
             const arc = proj(L, circ3(c, B.x, B.z, 0.05 + r * 0.022, 8, a0, a0 + 1.4));
             return <path key={`s${r}`} d={`M${arc.map((q) => `${f2(q.x)},${f2(q.y)}`).join(' L')}`} stroke="#E4ECF2" strokeOpacity={0.6 * blur} strokeWidth={f2(Math.max(0.6, 0.006 * pc.k))} fill="none" strokeLinecap="round" />;
           })}
+          {/* V3: the exit side (seen from below): three stator arms holding the motor can in front of the fan */}
+          {!above && [0, 1, 2].map((s) => {
+            const aa = (s * Math.PI * 2) / 3 + 0.5 + i;
+            const q = proj(L, [0.036, BD.ductR].map((r) => toW(B, v3(BD.ducts[i][0] + Math.cos(aa) * r, -BD.thick + 0.018, BD.ducts[i][1] + Math.sin(aa) * r))));
+            return <path key={`st${s}`} d={`M${f2(q[0].x)},${f2(q[0].y)} L${f2(q[1].x)},${f2(q[1].y)}`} stroke="#3B444E" strokeWidth={f2(Math.max(0.8, 0.016 * pc.k))} strokeLinecap="round" />;
+          })}
+          {!above && <path d={polyD(proj(L, circ3(toW(B, v3(BD.ducts[i][0], -BD.thick + 0.02, BD.ducts[i][1])), B.x, B.z, 0.046, 18)))} fill="#59636F" stroke={INK} strokeWidth={f2(w * 0.8)} />}
           <path d={polyD(hub)} fill={COL.hub} stroke={INK} strokeWidth={f2(w * 0.8)} />
         </g>
         <path d={polyD(rim)} fill="none" stroke={flash > 0.01 ? COL.led : INK} strokeWidth={f2(w * (1.6 + flash * 2.4))} strokeOpacity={1} />
@@ -198,7 +205,13 @@ export const Board: React.FC<{id: string; L: Lens; B: Frame; st: BoardState}> = 
       {above && (
         <g>
           <path d={polyD([ph(-0.045, -0.085), ph(0.045, -0.085), ph(0.045, 0.085), ph(-0.045, 0.085)])} fill="#11171D" stroke="#060A0E" strokeWidth={f2(w)} />
-          <path d={polyD([ph(-0.038, -0.075), ph(0.038, -0.075), ph(0.038, 0.075), ph(-0.038, 0.075)])} fill="#0E2A3A" />
+          <path d={polyD([ph(-0.038, -0.075), ph(0.038, -0.075), ph(0.038, 0.075), ph(-0.038, 0.075)])} fill="#1F5F86" />
+          {/* V3: an artificial horizon: the ground half tilts with the board's roll and slides with its pitch */}
+          <clipPath id={`${id}-phc`}>
+            <path d={polyD([ph(-0.038, -0.075), ph(0.038, -0.075), ph(0.038, 0.075), ph(-0.038, 0.075)])} />
+          </clipPath>
+          <path clipPath={`url(#${id}-phc)`} d={polyD([[-0.2, 0], [0.2, 0], [0.2, -0.2], [-0.2, -0.2]].map(([u, v]) => ph(u * Math.cos(hr) - v * Math.sin(hr), hz * 2.2 + u * Math.sin(hr) + v * Math.cos(hr))))} fill="#6B4C33" />
+          {[-1, 1].map((sg) => <path key={sg} d={`M${f2(ph(sg * 0.038, 0).x)},${f2(ph(sg * 0.038, 0).y)} L${f2(ph(sg * 0.024, 0).x)},${f2(ph(sg * 0.024, 0).y)}`} stroke="#FFFFFF" strokeWidth={f2(Math.max(0.8, 0.006 * kc))} />)}
           <path d={`M${f2(ph(-0.03 * Math.cos(hr), hz - 0.03 * Math.sin(hr)).x)},${f2(ph(-0.03 * Math.cos(hr), hz - 0.03 * Math.sin(hr)).y)} L${f2(ph(0.03 * Math.cos(hr), hz + 0.03 * Math.sin(hr)).x)},${f2(ph(0.03 * Math.cos(hr), hz + 0.03 * Math.sin(hr)).y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeWidth={f2(Math.max(0.8, 0.007 * kc))} strokeLinecap="round" />
           <circle cx={f2(L.p(phoneC).x)} cy={f2(L.p(phoneC).y)} r={f2(Math.max(0.6, 0.006 * kc))} fill="#E8F6FF" />
         </g>

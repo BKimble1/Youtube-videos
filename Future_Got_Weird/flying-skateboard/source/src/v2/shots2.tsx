@@ -34,15 +34,15 @@ export const M = {
   andThrough: T('and through'), through: T('through'), canyon: T('canyon'), canyonE: E('canyon'), howMuch: T('how much'), pay: T('pay'), thing: T('thing'), thingE: E('thing'),
 };
 
-const riderBox = (L: Lens, B: Frame, pose: FlightState['pose']): Box => {
+export const riderBox = (L: Lens, B: Frame, pose: FlightState['pose']): Box => {
   const j = pilotJoints(B, pose);
   const pts = [j.Hc, j.ankF, j.ankR, j.handF, j.handR, j.P, ...BD.outline.filter((_, i) => i % 3 === 0).map(([x, z]) => a3(a3(B.o, m3(B.x, x)), m3(B.z, z)))].map((q) => L.p(q));
   return {x0: Math.min(...pts.map((p) => p.x)) - 30, y0: Math.min(...pts.map((p) => p.y)) - 60, x1: Math.max(...pts.map((p) => p.x)) + 30, y1: Math.max(...pts.map((p) => p.y)) + 40};
 };
-const blendCam = (a: Cam, b: Cam, k: number): Cam => ({pos: lerp3(a.pos, b.pos, k), tgt: lerp3(a.tgt, b.tgt, k), roll: (a.roll ?? 0) * (1 - k) + (b.roll ?? 0) * k, fov: (a.fov ?? 50) * (1 - k) + (b.fov ?? 50) * k});
+export const blendCam = (a: Cam, b: Cam, k: number): Cam => ({pos: lerp3(a.pos, b.pos, k), tgt: lerp3(a.tgt, b.tgt, k), roll: (a.roll ?? 0) * (1 - k) + (b.roll ?? 0) * k, fov: (a.fov ?? 50) * (1 - k) + (b.fov ?? 50) * k});
 /** blend two cameras about their targets: the view direction turns and the distance eases, so a move from a close
  * top-down view out to a wide one swings round the subject instead of sliding the eye through the scenery */
-const swingCam = (a: Cam, b: Cam, k: number): Cam => {
+export const swingCam = (a: Cam, b: Cam, k: number): Cam => {
   const tgt = lerp3(a.tgt, b.tgt, k);
   const oa = s3(a.pos, a.tgt), ob = s3(b.pos, b.tgt);
   const da = l3(oa), db = l3(ob);
@@ -51,7 +51,7 @@ const swingCam = (a: Cam, b: Cam, k: number): Cam => {
   return {pos: a3(tgt, m3(dir, dist)), tgt, roll: (a.roll ?? 0) * (1 - k) + (b.roll ?? 0) * k, fov: (a.fov ?? 50) * (1 - k) + (b.fov ?? 50) * k};
 };
 /** orbit parameters equivalent to a world camera about the board target (to hand a world move back to an orbit) */
-const toOrbit = (B: Frame, cam: Cam, ty: number, fov: number): CK => {
+export const toOrbit = (B: Frame, cam: Cam, ty: number, fov: number): CK => {
   const tgt = a3(B.o, v3(0, ty, 0));
   const d = s3(cam.pos, tgt);
   const dist = l3(d);
@@ -59,7 +59,7 @@ const toOrbit = (B: Frame, cam: Cam, ty: number, fov: number): CK => {
   const az = (Math.atan2(-d.x, -d.z) * 180) / Math.PI;
   return ck(az, el, dist, fov, ty, 0);
 };
-const unwrap = (az: number, near: number) => az + 360 * Math.round((near - az) / 360);
+export const unwrap = (az: number, near: number) => az + 360 * Math.round((near - az) / 360);
 
 // ================================================================ A + B: the hook and the mechanism (one flight over the river)
 const HOOKA: Key[] = [
@@ -138,7 +138,7 @@ const LIFTK: Key[] = [
   [M.groundE, ck(326, 2, 2.7, 50, 1.25, 0)],
 ];
 const FAN_I = 8, FAN_D = 0.62;
-const aboveGround = (c: Cam, y = 0.28): Cam => (c.pos.y >= y ? c : {...c, pos: v3(c.pos.x, y, c.pos.z)});
+export const aboveGround = (c: Cam, y = 0.28): Cam => (c.pos.y >= y ? c : {...c, pos: v3(c.pos.x, y, c.pos.z)});
 const liftCam = (t: number, st: FlightState): Cam => {
   const c = aboveGround(orbitBoard(st.B, splineRec(t, LIFTK)));
   const k = sstep(M.groundE, M.but, t);

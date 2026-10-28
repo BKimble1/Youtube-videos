@@ -84,3 +84,7 @@ grab([i + 0.5 for i in range(int(dur))], pre + '_sheet_every_second.png', cols=6
 # every shot boundary: the frame before and the frame after each cut or match
 bt = [b for sh in cues['shots'][1:] for b in (sh['from'] - 1 / 30, sh['from'] + 0.001)]
 grab(bt, pre + '_sheet_cuts.png', cols=4, scale=0.25)
+# the brief's hook beats (V3: 0-0.45 front-low, 0.45-1.15 alongside, 1.15-1.9 under, 1.9-2.65 high, 2.65-3.5 lateral)
+grab([0.0, 0.22, 0.45, 0.8, 1.15, 1.5, 1.9, 2.25, 2.65, 3.05, 3.4, 3.5], pre + '_sheet_hook_beats.png', cols=4, scale=0.25)
+# the learning sequence, one frame every 0.6 s
+grab([Mk['except'] + 0.1 + 0.6 * i for i in range(20) if Mk['except'] + 0.1 + 0.6 * i < Mk['heActually'] + 0.6], pre + '_sheet_training.png', cols=5, scale=0.2)

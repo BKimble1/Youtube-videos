@@ -9,6 +9,7 @@ import {hash, noise1} from '../dc/math';
 import {circ3, f2, mix, P2, polyD, proj, shade, lit} from '../eng/draw';
 import {a3, clipNear, d3, H, Lens, m3, n3, s3, V3, v3, W} from '../eng/v3';
 import {GorgeAt, gorgeNotch, GorgeWalls} from './Gorge';
+import {ShoreFlat} from './Shore';
 
 export const RIVER = {far: 520, current: 1.1};
 export const PALR = {
@@ -54,11 +55,11 @@ const ridgeH = (x: number, layer: number, side: number) => {
 const LAYERS = LAY.map((l) => l[0]);
 
 type Ridge = {pts: V3[]; dist: number; color: string; layer: number; side: number; z: number; cap?: V3[]};
-const ridges = (L: Lens, gorge?: GorgeAt): Ridge[] => {
+const ridges = (L: Lens, gorge?: GorgeAt, near = 0): Ridge[] => {
   const out: Ridge[] = [];
   for (const side of [1, -1]) {
     for (let li = 0; li < LAYERS.length; li++) {
-      const z = side > 0 ? RIVER.far + LAYERS[li] : -LAYERS[li];
+      const z = side > 0 ? RIVER.far + LAYERS[li] : -LAYERS[li] - near;
       const step = li === 0 ? 14 : li < 4 ? 30 : li < 6 ? 45 : 90;
       const x0 = Math.floor((L.pos.x - 9000) / step) * step;
       const pts: V3[] = [];
@@ -69,7 +70,7 @@ const ridges = (L: Lens, gorge?: GorgeAt): Ridge[] => {
       // the cap: crest heights carried back to the next layer (a terrace top), for the low layers
       let cap: V3[] | undefined;
       if (li < 4) {
-        const zb = side > 0 ? RIVER.far + LAYERS[li + 1] : -LAYERS[li + 1];
+        const zb = side > 0 ? RIVER.far + LAYERS[li + 1] : -LAYERS[li + 1] - near;
         const crest = pts.slice(0, pts.length - 2);
         cap = [...crest, ...crest.slice().reverse().map((q) => v3(q.x, q.y, zb))];
       }
@@ -354,8 +355,8 @@ export const Buoy: React.FC<{L: Lens; at: V3; t: number}> = ({L, at, t}) => {
 };
 
 /** Everything behind the flying board: sky, clouds, ridges, town, bridge, water, reflections, ripples. */
-export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens}> = ({id, L, t, tint = 0, gorge, L2}) => {
-  const rs = ridges(L, gorge);
+export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number; gorge?: GorgeAt; L2?: Lens; near?: number; wind?: number; cliffs?: boolean}> = ({id, L, t, tint = 0, gorge, L2, near = 0, wind = 0.3, cliffs = false}) => {
+  const rs = ridges(L, gorge, near);
   const h = horizon(L);
   // water: the river quad between the banks, clipped to the front of the camera
   const wq = clipNear(L, [v3(L.pos.x - 9000, 0, -LAY[0][0]), v3(L.pos.x + 9000, 0, -LAY[0][0]), v3(L.pos.x + 9000, 0, RIVER.far + LAY[0][0]), v3(L.pos.x - 9000, 0, RIVER.far + LAY[0][0])], 0.4);
@@ -364,6 +365,28 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
   const ln = Math.hypot(dx, dy) || 1;
   const nx = -dy / ln, ny = dx / ln; // down-screen
   const hy = h.a.y + (h.b.y - h.a.y) * ((W / 2 - h.a.x) / (dx || 1));
+  // V3: limestone cliff bands on the ridge faces (the Three Gorges look): a bare rock face under a green cap, in
+  // stretches along the river, with strata lines; hazed with distance like the ridge itself
+  const cliffBand = (r: Ridge, gid: string) => {
+    const crest = r.pts.slice(0, r.pts.length - 2);
+    const rocky = (x: number) => Math.min(1, Math.max(0, (noise1(x / 260, r.layer * 11 + r.side * 5) + 0.15) * 2.4));
+    const topY = (q: V3) => q.y * (0.22 + 0.62 * rocky(q.x));
+    const upper = crest.map((q) => v3(q.x, topY(q), q.z - r.side * 0.5));
+    const lower = crest.map((q) => v3(q.x, q.y * 0.2, q.z - r.side * 0.5)).reverse();
+    const cl = clipNear(L, [...upper, ...lower], 1);
+    if (cl.length < 3) return null;
+    const rock = mix(r.side > 0 ? '#C9BBA2' : '#C2B59C', PALR.haze, Math.min(0.85, 1 - Math.exp(-r.dist / 2200)));
+    const strata = [0.35, 0.5, 0.65].map((f) => {
+      const ln = clipNear(L, crest.map((q) => v3(q.x, q.y * (0.2 + (topY(q) / Math.max(1, q.y) - 0.2) * f), q.z - r.side * 0.6)), 1, false);
+      return ln.length > 1 ? polyD(proj(L, ln), false) : '';
+    }).join(' ');
+    return (
+      <g clipPath={`url(#${gid}c)`}>
+        <path d={polyD(proj(L, cl))} fill={rock} />
+        <path d={strata} fill="none" stroke={shade(rock, 0.22)} strokeWidth={f2(r.layer <= 2 ? 3 : 2)} opacity={0.5} strokeLinejoin="round" />
+      </g>
+    );
+  };
   const ridgeEl = (r: Ridge, i: number, mirror: boolean) => {
     const pts = mirror ? r.pts.map((q) => v3(q.x, -q.y * 0.92, q.z)) : r.pts;
     const cl = clipNear(L, pts, 1);
@@ -389,6 +412,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
           </clipPath>
         </defs>
         <path d={polyD(pp)} fill={`url(#${gid})`} />
+        {cliffs && r.layer >= 1 && r.layer <= 4 && cliffBand(r, gid)}
         {r.layer >= 4 && r.layer <= 6 && (
           <g clipPath={`url(#${gid}c)`}>
             <path d={polyD(crest, false)} fill="none" stroke={lit(r.color, 0.3)} strokeWidth={f2(r.layer === 4 ? 14 : 8)} opacity={0.45} strokeLinejoin="round" />
@@ -441,6 +465,7 @@ export const RiverBack: React.FC<{id: string; L: Lens; t: number; tint?: number;
           </g>
         </g>
       )}
+      {near > 0 && <ShoreFlat id={`${id}-sh`} L={L} t={t} near={near} wind={wind} />}
       <Bridge L={L} />
     </g>
   );
