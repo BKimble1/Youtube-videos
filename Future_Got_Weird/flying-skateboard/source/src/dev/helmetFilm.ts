@@ -62,3 +62,10 @@ console.log('frames measured', rows.length, 'steps', steps.length);
 console.log('median step (fraction of head disc): shell', med(steps.map((s) => s.ds)).toFixed(4), 'visor', med(steps.map((s) => s.dv)).toFixed(4));
 console.log('largest shell steps', JSON.stringify([...steps].sort((a, b) => b.ds - a.ds).slice(0, 6).map((s) => ({t: (s.f / 30).toFixed(2), d: s.ds.toFixed(4)}))));
 console.log('largest visor steps', JSON.stringify([...steps].sort((a, b) => b.dv - a.dv).slice(0, 6).map((s) => ({t: (s.f / 30).toFixed(2), d: s.dv.toFixed(4)}))));
+// a pop is a step much larger than both of its neighbours; a smooth turn has neighbours of similar size
+const iso = steps
+  .map((s, i) => ({s, n: Math.max(steps[i - 1]?.f === s.f - 1 ? steps[i - 1].ds : 0, steps[i + 1]?.f === s.f + 1 ? steps[i + 1].ds : 0)}))
+  .filter((x) => x.s.ds > 0.004)
+  .map((x) => ({t: (x.s.f / 30).toFixed(2), d: x.s.ds.toFixed(4), ratio: (x.s.ds / Math.max(1e-5, x.n)).toFixed(1)}))
+  .sort((a, b) => +b.ratio - +a.ratio);
+console.log('most isolated shell steps above 0.4% (step / larger neighbour)', JSON.stringify(iso.slice(0, 6)));
