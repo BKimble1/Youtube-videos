@@ -54,7 +54,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   // --- shoes (boxes in the board frame, planted on the deck)
   const shoe = (k: string, ank: V3) => {
     const B = j.B;
-    if (!vis(ank)) return {z: 0, el: null};
+    if (!vis(ank)) return {z: 0, over: 0, el: null};
     const base = s3(ank, m3(B.y, DIMS.ankleH));
     const c: V3[] = [];
     // V5: the shoe sits on the board's solid spine (|x| < 0.165), clear of the toe-side fan ducts
@@ -66,9 +66,13 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     for (const x of [-0.12, 0.162]) for (const z of [-0.06, 0.06]) for (const y of [0, 0.02]) sole.push(a3(base, a3(a3(m3(B.x, x), m3(B.y, y)), m3(B.z, z))));
     const sp = thin(hull(proj(L, sole)), 1.5);
     const lace = proj(L, [a3(base, a3(m3(B.x, 0.0), m3(B.y, 0.108))), a3(base, a3(m3(B.x, 0.12), m3(B.y, 0.085)))]);
-    const top = facing(base, B.y) > 0;
+    const fcy = facing(base, B.y);
+    const top = fcy > 0;
     return {
       z: dep(base) + 0.02,
+      // V5: seen from below the deck the shoe's toe is in front of the trouser hem: a second copy over the legs fades in
+      // as the camera goes under the deck plane (the trousers were drawn over the shoes, so the feet read as stumps)
+      over: Math.max(0, Math.min(1, (0.02 - fcy) / 0.18)),
       el: (
         <g key={k}>
           <Shape id={`${id}-${k}`} d={smoothD(pts, 0.12)} pts={pts} color={GEAR.shoe} w={w} k={0.8} />
@@ -406,7 +410,9 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
   );
 
   // order: shoes, legs (far first), arms behind the torso, torso, collar, neck, head, arms in front
-  const shoes = [shoe('sf', j.ankF), shoe('sr', j.ankR)].sort((a, b) => b.z - a.z).map((s) => s.el);
+  const shoeList = [shoe('sf', j.ankF), shoe('sr', j.ankR)].sort((a, b) => b.z - a.z);
+  const shoes = shoeList.map((s) => s.el);
+  const shoesOver = shoeList.filter((s) => s.over > 0.01 && s.el).map((s, i) => <g key={`so${i}`} opacity={s.over < 0.99 ? f2(s.over) : undefined}>{s.el}</g>);
   const legs = zF > zR ? [legF, legR] : [legR, legF];
   const arms = [
     {z: armFz, k: 0, el: arm('af', j.shF, j.elbF, j.wriF, true)},
@@ -450,6 +456,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       <g>
         {shoes}
         {legs}
+        {shoesOver}
       </g>
     );
   }
@@ -457,9 +464,8 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     <g>
       {shoes}
       {legs}
+      {shoesOver}
       {behind}
-      {/* V5: seen from below the collar the neck comes out from behind the jacket's top edge (drawn first, so the
-          torso hides its base); from above it rises out of the collar ring */}
       {/* V5: the neck is always drawn behind the jacket (its top edge hides the neck's base). Seen from above, the
           collar opening shows the neck going down into the jacket: the neck again, clipped to the opening, fading in
           with the collar ring. Nothing switches order, so nothing pops as the camera passes shoulder height. */}

@@ -47,8 +47,9 @@ export const RiderShadow: React.FC<{L: Lens; B: Frame; pose: PilotPose; sun?: V3
         const p = L.p(q);
         return `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
       }).join(' L') + ' Z'} fill={color} />
-      <path d={d} stroke={color} strokeWidth={(0.12 * k).toFixed(1)} strokeLinecap="round" fill="none" />
-      <circle cx={hc.x.toFixed(1)} cy={hc.y.toFixed(1)} r={(0.13 * k).toFixed(1)} fill={color} />
+      <path d={d} stroke={color} strokeWidth={(0.15 * k).toFixed(1)} strokeLinecap="round" fill="none" />
+      {/* (V5: a head no wider than the shoulders' shadow; a larger disc on thin limbs read as a lollipop) */}
+      <circle cx={hc.x.toFixed(1)} cy={hc.y.toFixed(1)} r={(0.095 * k).toFixed(1)} fill={color} />
     </g>
   );
 };

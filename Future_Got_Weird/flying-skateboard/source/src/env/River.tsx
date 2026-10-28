@@ -200,7 +200,8 @@ const Town: React.FC<{L: Lens; layer: number}> = ({L, layer}) => (
 );
 
 /** Badong's cable-stayed bridge downstream: deck, two H pylons, stay fans. */
-const BRIDGE = {x: -1150, y: 46, z0: -60, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
+// (V5: the deck runs on as an approach viaduct over the near bank, so its end is never seen hanging in mid-air)
+const BRIDGE = {x: -1150, y: 46, z0: -900, z1: RIVER.far + 60, pylons: [120, 400], ph: 150};
 const Bridge: React.FC<{L: Lens; mirror?: boolean}> = ({L, mirror}) => {
   const sy = mirror ? -1 : 1;
   const P = (x: number, y: number, z: number) => L.p(v3(x, y * sy, z));

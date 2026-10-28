@@ -18,16 +18,19 @@ const clearOf = (y: number, ts: number[]) => {
   }
   return worst;
 };
-type Focus = (t: number) => {focus?: (t: number) => {x0: number; y0: number; x1: number; y1: number} | null};
+type Bx = {x0: number; y0: number; x1: number; y1: number};
+type Focus = (t: number) => {focus?: (t: number) => Bx | Bx[] | null};
 /** V2: a placer for any shot list */
 export const makePlacer = (shot: Focus) => {
   const m = new Map<number, number>();
   const clear = (y: number, ts: number[]) => {
     let worst = 0;
     for (const t of ts) {
-      const b = shot(t).focus?.(t);
-      if (!b) continue;
-      const ov = Math.max(0, Math.min(y + HALF, b.y1) - Math.max(y - HALF, b.y0)) * Math.max(0, Math.min(990, b.x1) - Math.max(90, b.x0));
+      const fb = shot(t).focus?.(t);
+      if (!fb) continue;
+      // V5: a shot may protect several regions (e.g. the rider and the patch of water his air reaches)
+      let ov = 0;
+      for (const b of Array.isArray(fb) ? fb : [fb]) ov += Math.max(0, Math.min(y + HALF, b.y1) - Math.max(y - HALF, b.y0)) * Math.max(0, Math.min(990, b.x1) - Math.max(90, b.x0));
       worst = Math.max(worst, ov);
     }
     return worst;

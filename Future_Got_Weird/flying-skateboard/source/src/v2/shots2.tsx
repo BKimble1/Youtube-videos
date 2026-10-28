@@ -23,7 +23,7 @@ import {DUR, E, T} from '../story/time';
 import {coachFlight, earlyHover, glide, GORGE, hookFlight, inventorPose, liftDemo2, lowPass, payoffFlight, problemFlight, REST} from './flight2';
 
 export type Box = {x0: number; y0: number; x1: number; y1: number};
-export type Shot = {name: string; from: number; to: number; draw: (t: number, pre: string) => React.ReactNode; focus?: (t: number) => Box | null};
+export type Shot = {name: string; from: number; to: number; draw: (t: number, pre: string) => React.ReactNode; focus?: (t: number) => Box | Box[] | null};
 
 export const M = {
   yousee: T('you see'), ten: T('ten'), powerfulE: E('powerful'), electric: T('electric'), blast: T('blast'), lifting: T('lifting'), ground: T('ground'), groundE: E('ground'),

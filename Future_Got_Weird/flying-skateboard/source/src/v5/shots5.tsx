@@ -76,6 +76,12 @@ const trackCam = (pos: (t: number) => V3, t: number, c: CK, w = 0.3): Cam => {
 };
 /** a camera standing at `at`, panning/tilting to keep the (smoothed) board in frame */
 const standCam = (at: V3, pos: (t: number) => V3, t: number, ty: number, fov: number, w = 0.35): Cam => ({pos: at, tgt: a3(smoothPos(pos, t, w), v3(0, ty, 0)), roll: 0, fov});
+/** V5: a standing camera that follows only a share `k` of the board's travel since `t0` (he moves through the frame
+ *  and the background barely sweeps; following him fully read as an arc round him) */
+const standPart = (at: V3, pos: (t: number) => V3, t: number, t0: number, k: number, ty: number, fov: number, w = 0.5): Cam => {
+  const p0 = smoothPos(pos, t0, w), p = smoothPos(pos, t, w);
+  return {pos: at, tgt: a3(a3(p0, m3(s3(p, p0), k)), v3(0, ty, 0)), roll: 0, fov};
+};
 const camFrom = (tgt: V3, c: CK): V3 => {
   const R = Math.PI / 180;
   return a3(a3(tgt, v3(0, c.ty, 0)), v3(-Math.sin(c.az * R) * Math.cos(c.el * R) * c.dist, Math.sin(c.el * R) * c.dist, -Math.cos(c.az * R) * Math.cos(c.el * R) * c.dist));
@@ -93,7 +99,8 @@ const MATCH = M.lifting - 0.74; // the lift's own clock
 // the caption for "You see" appears two frames before the word: the cut lands on the same frame
 const CUT_UNDER = Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith('you see'))!.show * 30) / 30;
 const CUT_AIR = M.blast - 0.02;
-const CUT2 = M.blast + 1.06; // end of "downward": cut to the riverside flat
+// the cut to the riverside flat lands on the "lifting you completely" caption (and the board is already lifting)
+const CUT2 = Math.round(CAPS.find((c) => c.text.toLowerCase().startsWith('lifting'))!.show * 30) / 30;
 // the ending's last key before the loop (shared, so the camera velocity at frame 0 is the same on both sides)
 const LOOPK: [number, CK] = [M.thingE + 0.6, ck(249.5, -8, 4.6, 44, 0.7, 0)];
 const HOOKK: Key[] = [
@@ -391,15 +398,15 @@ const A2 = M.theBoard;
 // V5: A1 stands wider (5.8 m: the follow tilt as the board lifts is slower, and the captions have room above him) and
 // A2 is closer and round to his other side, so the cut changes both angle (46 degrees) and size (V5's first cut had
 // the rider the same size in both and read as a jump cut)
-const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 7, 4.5, 42, 0.8, 0));
-const fieldCam = (t: number): Cam => (t < A2 ? standCam(A1_CAM, fieldPos, t, 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42, 0.5) : standCam(A2_CAM, fieldPos, t, 0.85, 42, 0.5));
+const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 7, 4.8, 42, 0.8, 0));
+const fieldCam = (t: number): Cam => (t < A2 ? standCam(A1_CAM, fieldPos, t, 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42, 0.5) : standPart(A2_CAM, fieldPos, t, A2, 0.75, 0.85, 42));
 // D (coach): controlled close-ups, each held still: C1 the phone built into the deck (from above); C2 his own view of
 // the wrist phone he has raised; C3 the earbud on his ear as the cue plays (camera fixed to his torso, so the small
 // listening tilt of his head reads); C4 back to a standing medium view as he makes the correction and the board settles.
 const C2 = M.voice - 0.09, C3 = M.coach + 0.06, C4 = M.learn - 0.05;
 const C4_CAM = (() => {
   const B = FIELD(C4).B;
-  return camFrom(B.o, ck(-30, 6, 4.2, 42, 0.85, 0));
+  return camFrom(B.o, ck(-30, 6, 4.8, 42, 0.85, 0));
 })();
 const coachCam = (t: number, st: St): Cam => {
   if (t < C2) return orbitBoard(st.B, splineRec(t, [[M.while, ck(-4, 56, 1.0, 38, 0.004, 0)], [C2, ck(0, 58, 0.95, 38, 0.004, 0)]]));
@@ -412,7 +419,7 @@ const coachCam = (t: number, st: St): Cam => {
     const fd = n3(s3(jw.wriF, jw.elbF));
     const wrist = a3(jw.wriF, m3(fd, -0.07));
     const pos = a3(a3(a3(wrist, m3(n3(s3(jw.Hc, wrist)), 0.56)), m3(jw.chL, 0.1)), m3(jw.up, 0.05));
-    const drift = s3(st.B.o, FIELD(T).B.o);
+    const drift = s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, T, 0.6));
     return {pos: a3(pos, drift), tgt: a3(wrist, drift), roll: 0, fov: 36};
   }
   if (t < C4) {
@@ -420,10 +427,10 @@ const coachCam = (t: number, st: St): Cam => {
     const jc = pilotJoints(FIELD(C3).B, FIELD(C3).pose);
     const ear0 = a3(jc.Hc, m3(jc.hL, -0.1));
     const pos = a3(a3(a3(ear0, m3(jc.hL, -0.62)), m3(jc.hF, 0.22)), m3(jc.hU, 0.06));
-    const drift = s3(st.B.o, FIELD(C3).B.o);
+    const drift = s3(smoothPos(fieldPos, t, 0.6), smoothPos(fieldPos, C3, 0.6));
     return {pos: a3(pos, drift), tgt: a3(ear0, drift), roll: 0, fov: 36};
   }
-  return standCam(C4_CAM, fieldPos, t, 0.85, 42, 0.5);
+  return standPart(C4_CAM, fieldPos, t, C4, 0.88, 0.85, 42);
 };
 
 // ================================================================ 6: the practice progression
@@ -507,7 +514,18 @@ export const SHOTS5: Shot[] = [
     reach: (t) => 1.3 + 1.9 * sstep(M.electric, M.electric + 0.5, t),
   }),
   // the jets run all the way down to the water (their path is swept back about 30 degrees by the speed)
-  riverShot('blast air downward: the air reaching the water', CUT_AIR, CUT2, hook4, hookCam, {jets: () => 1.45, reach: (t) => 1.16 * hook4(t).alt}),
+  {
+    ...riverShot('blast air downward: the air reaching the water', CUT_AIR, CUT2, hook4, hookCam, {jets: () => 1.45, reach: (t) => 1.16 * hook4(t).alt}),
+    // V5: the caption keeps clear of the churned patch where the air meets the water (the point of the shot), too
+    focus: (t) => {
+      const L = lens(hookCam(t)), st = hook4(t);
+      const lagT = st.alt / (13 + 6 * st.thrust), R = 0.9 + st.alt * 0.32;
+      const c = v3(st.pos.x - st.vel.x * lagT, 0.02, st.pos.z - st.vel.z * lagT);
+      const ps = [[-1, 0], [1, 0], [0, -1], [0, 1]].map(([dx, dz]) => L.p(v3(c.x + dx * R * 1.3, 0.02, c.z + dz * R * 1.3)));
+      const xs = ps.map((p) => p.x), ys = ps.map((p) => p.y);
+      return [box(L, st), {x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys)}];
+    },
+  },
   {
     name: 'the lift on the riverside flat (standing camera)', from: CUT2, to: M.but,
     draw: (t, pre) => {

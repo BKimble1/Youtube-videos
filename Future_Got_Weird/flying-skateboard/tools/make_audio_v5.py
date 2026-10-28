@@ -74,7 +74,7 @@ voice = np.zeros(N); voice[:min(N, len(v))] = v[:N]
 def isstep(y): return 0.5 - np.sin(np.arcsin(1 - 2 * y) / 3)  # inverse of smoothstep
 TIN = M['andThrough']  # the cut into the canyon (shots5.tsx P2)
 MATCH = M['lifting'] - 0.74     # the lift's clock
-CUT2 = M['blast'] + 1.06        # the water under the board cuts to the riverside flat
+CUT2 = SH['lift']['from']        # the water under the board cuts to the riverside flat (V5: on the 'lifting' caption)
 DEPX = SH['shoreline']['from'] + 0.32  # over the shoreline, out onto the water
 
 # ---------------------------------------------------------------- where we are
