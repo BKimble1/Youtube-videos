@@ -16,7 +16,9 @@ import {FlightState, lag, sstep} from '../story/flight';
 export const REST = 0.125;
 const G = 9.81;
 export const clamp = (x: number, a: number, b: number) => Math.min(b, Math.max(a, x));
-const pose = (o: Partial<PilotPose>): PilotPose => ({...POSE0, hipLead: 0.6, level: 0.8, upright: 0.75, ...o});
+// V5: the earbud is on his right ear, the side every toe-side camera sees (so the earbud close-up is shot from the
+// same side of the line as the shots around it)
+const pose = (o: Partial<PilotPose>): PilotPose => ({...POSE0, hipLead: 0.6, level: 0.8, upright: 0.75, ear: -1, ...o});
 export type St = FlightState & {vel: V3; rps: number; unsteady?: number; pulse?: number; listen?: number};
 
 const memo = <T,>(fn: () => T) => {

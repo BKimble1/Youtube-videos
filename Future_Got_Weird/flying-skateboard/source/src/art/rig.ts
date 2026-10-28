@@ -40,6 +40,8 @@ export type PilotPose = {
   bal?: number;
   /** V2: 0..1 listening to the earpiece: a small head tilt toward the bud and the eyes drop */
   listen?: number;
+  /** V5: which ear wears the earbud: 1 left (default, V2-V4), -1 right (V5: the ear the toe-side cameras see) */
+  ear?: number;
   /** V2: 0..1 the rear (controller) hand comes up in front of the chest: holding a remote at a test */
   remote?: number;
   /** V4: 0..1 the body stays upright in the world while the deck tilts under it: the pelvis is kept over the feet
@@ -136,8 +138,9 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
   const hF = n3(a3(m3(hF0, Math.cos(nd)), m3(hup, -Math.sin(nd))));
   const hL0 = n3(c3(hF, hup));
   const hU0 = n3(c3(hL0, hF));
-  // listening: roll the head a little toward the earpiece side (+hL)
-  const li = 0.22 * (p.listen ?? 0);
+  // listening: roll the head a little toward the earpiece side
+  const ear = p.ear ?? 1;
+  const li = 0.22 * (p.listen ?? 0) * ear;
   const hU = n3(a3(m3(hU0, Math.cos(li)), m3(hL0, Math.sin(li))));
   const hL = n3(c3(hF, hU));
   // V5: the head pivots at the neck: the head centre is a fixed offset in the head's own frame from the neck joint
@@ -163,7 +166,7 @@ export const pilotJoints = (B: Frame, p: PilotPose) => {
     B, P, up, chF, chL, S, Wst, N, Hc, hF, hL, hU,
     hipF, hipR, kneeF: legF.J, kneeR: legR.J, ankF: legF.W, ankR: legR.W, ankFt: ankF, ankRt: ankR,
     shF, shR, elbF: armF.J, elbR: armR.J, wriF: armF.W, wriR: armR.W, handF, handR,
-    fwd0, left0, wristUp: wu,
+    fwd0, left0, wristUp: wu, ear,
   };
 };
 /** the centre of the body, for camera targets */

@@ -43,7 +43,7 @@ export const Exhaust: React.FC<{id: string; L: Lens; nozzles: V3[]; floorY: numb
 };
 
 /** hot air curling back up: wavy translucent strands rising from the floor splash around the deck edge */
-export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: number}> = ({L, from, to, k, t}) => {
+export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: number; smooth?: boolean}> = ({L, from, to, k, t, smooth = false}) => {
   if (k <= 0.01) return null;
   const strands: React.ReactNode[] = [];
   from.forEach((a, i) => {
@@ -51,8 +51,10 @@ export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: numb
     for (let s = 0; s < 4; s++) {
       const ph = (t * 1.1 + s / 4 + hash(i, 5)) % 1;
       const pts: string[] = [];
-      for (let u = 0; u <= 10; u++) {
-        const q = u / 10;
+      // V5 (smooth): finer sampling, so the visible stretch slides along the strand instead of jumping between samples
+      const nU = smooth ? 40 : 10;
+      for (let u = 0; u <= nU; u++) {
+        const q = u / nU;
         if (q > ph + 0.35 || q < ph - 0.05) continue;
         // out from the splash, up past the deck edge, and in over the top toward the intake
         const out = Math.sin(q * Math.PI) * 0.45;
@@ -65,7 +67,7 @@ export const Recirc: React.FC<{L: Lens; from: V3[]; to: V3[]; k: number; t: numb
       }
       if (pts.length > 1) {
         strands.push(<path key={`${i}-${s}g`} d={`M${pts.join(' L')}`} stroke="#FFB765" strokeOpacity={0.22 * k} strokeWidth={12} fill="none" strokeLinecap="round" />);
-        strands.push(<path key={`${i}-${s}`} d={`M${pts.join(' L')}`} stroke={s ? '#FFE2B0' : '#FFF6E6'} strokeOpacity={0.6 * k} strokeWidth={3.2} fill="none" strokeLinecap="round" strokeDasharray="14 9" />);
+        strands.push(<path key={`${i}-${s}`} d={`M${pts.join(' L')}`} stroke={s ? '#FFE2B0' : '#FFF6E6'} strokeOpacity={0.6 * k} strokeWidth={3.2} fill="none" strokeLinecap="round" strokeDasharray={smooth ? undefined : '14 9'} />);
       }
     }
   });

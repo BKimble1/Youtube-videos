@@ -141,7 +141,13 @@ const INV = frameYPR(v3(-2.7, 0, 0.5), 40, 0, 0);
 const ign = (t: number) => sstep(M.but + 0.75, M.but + 1.05, t); // starters click, the compressors begin to turn
 const run = (t: number) => sstep(M.jet - 0.2, M.jet + 0.35, t) * (1 - sstep(M.fireE + 0.15, M.fireE + 0.6, t));
 const heat = (t: number) => sstep(M.engines + 0.1, M.fire - 0.05, t) * (1 - 0.55 * sstep(M.so - 0.3, M.so + 0.5, t));
-const jetPhase = (t: number) => -(t * 2.6 * ign(t) + 6 * Math.max(0, Math.min(t, M.fireE + 0.3) - M.jet));
+// V5: the drawn compressor blades turn at most 1 turn/s (12 degrees a frame, under a third of the blade spacing), so
+// they never strobe or appear to run backward; above that the speed shows as blur (from jetRps), not as rotation
+const ssI = (a: number, b: number, t: number) => {
+  const s = Math.min(1, Math.max(0, (t - a) / (b - a)));
+  return (b - a) * (s ** 3 - s ** 4 / 2) + Math.max(0, t - b);
+};
+const jetPhase = (t: number) => -(ssI(M.but + 0.75, M.but + 1.05, t) - 0.9 * ssI(M.fireE, M.so - 0.2, t));
 const jetRps = (t: number) => 2 + 7 * ign(t) + 22 * run(t) - 6 * sstep(M.fireE, M.so - 0.2, t);
 // W1 "But his first version": from above, the whole prototype on its stand, the camera settling down a little;
 // W2 "used JET ENGINES": cut to a low mechanical close-up under the deck; W3 "and caught FIRE": cut to a high
@@ -160,8 +166,8 @@ const W3K: Key[] = [
   [W4, ck(-58, 30, 2.0, 48, 0.05, 0)],
 ];
 const W4K: Key[] = [
-  [W4, ck(-88, 24, 2.3, 46, 0.2, 0), {hold: true}],
-  [M.except, ck(-90, 14, 4.4, 42, 0.75, 0)],
+  [W4, ck(-89, 17, 4.7, 44, 0.6, 0), {hold: true}],
+  [M.except, ck(-90, 14, 5.8, 42, 0.75, 0)],
 ];
 const jetCam = (t: number): Cam => {
   const B = JB(Math.min(t, M.so));
@@ -248,10 +254,13 @@ const FuelLeak: React.FC<{L: Lens; B: Frame; t: number; t0: number; t1: number; 
       return a3(c, a3(m3(B.x, Math.cos(a) * ra), m3(B.z, Math.sin(a) * rb * (1 + 0.15 * Math.sin(a * 3)))));
     })));
     void r;
+    // it burns off with the fire (shrinking and fading) and leaves the scorch the JetBoard draws
+    const kp = sstep(t0, t0 + 0.4, t) * (1 - sstep(t1 + 0.25, M.so - 0.1, t));
+    const rb = rr * (1 - 0.5 * sstep(t1 + 0.25, M.so - 0.1, t));
     return (
-      <g opacity={k}>
-        <path d={disk(pool, rr, rr * 0.8)} fill="#E7A02A" opacity={0.75} />
-        <path d={disk(a3(pool, m3(B.x, -rr * 0.25)), rr * 0.4, rr * 0.25)} fill="#FFE29A" opacity={0.6} />
+      <g opacity={kp}>
+        <path d={disk(pool, rb, rb * 0.8)} fill="#E7A02A" opacity={0.75} />
+        <path d={disk(a3(pool, m3(B.x, -rb * 0.25)), rb * 0.4, rb * 0.25)} fill="#FFE29A" opacity={0.6} />
       </g>
     );
   }
@@ -293,7 +302,9 @@ const SmokeVeil: React.FC<{id: string; L: Lens; c: V3; k: number; t: number}> = 
 };
 // the redesign in the same cradle: the electric board's deck sits on the stand rails where the jet plank was
 const BE = (B: Frame): Frame => ({...B, o: a3(B.o, m3(B.y, -0.045 + BD.thick))});
-const builtAt = (t: number) => 10 * sstep(M.switched + 0.05, M.except - 0.3, t);
+// V5: the electric board comes out of the smoke complete (the unit-by-unit seating popped and cut through the rim),
+// then powers up: the fans spin up smoothly, at most 1.6 turns/s drawn (19 degrees a frame for five blades)
+const ePhase = (t: number) => 1.6 * ssI(M.switched, M.except - 0.2, t);
 const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   const cam = jetCam(t);
   const L = lens(cam);
@@ -312,7 +323,9 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   // the vapour flashes and the flame grows over a quarter second; when the fuel is shut off it dies down over half a second
   const out = sstep(M.fireE + 0.05, M.so - 0.05, t);
   const fireK = sstep(M.fire - 0.04, M.fire + 0.22, t) * (1 - out);
-  const flameAt = [0, 0.2, 0.45, 0.7].filter((u) => u <= spread * 0.9 + 0.01).map(along);
+  // V5: each tongue of flame grows in place as the fire runs along the line (no clusters appearing in one frame)
+  const flames = [0, 0.2, 0.45, 0.7].map((u) => ({at: along(u), k: fireK * Math.min(1, Math.max(0, (spread * 0.9 + 0.01 - u) / 0.14))})).filter((f) => f.k > 0.01);
+  const flameAt = flames.map((f) => f.at);
   const burn = sstep(M.fire + 0.08, M.fire + 0.8, t);
   const flash = Math.max(0, 1 - Math.abs(t - M.fire - 0.03) / 0.12) * 0.55;
   const react = sstep(M.fire - 0.02, M.fire + 0.3, t) * (1 - sstep(M.so - 0.2, M.so + 0.3, t));
@@ -322,7 +335,11 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
   // V5: the smoke left by the fire thickens into a veil over the stand, the prototype is swapped while it is hidden,
   // and the smoke clears on the new electric frame sitting in the same cradle (no see-through overlap of two boards)
   const veil = sstep(M.so - 0.45, M.so - 0.05, t) * (1 - sstep(M.so + 0.3, M.switched + 0.15, t));
+  // V5: for a moment the smoke fills the whole room (it hides the stand legs and the walls too), and the cut to the
+  // new side and the swap of the boards both happen inside it
+  const fog = 0.94 * sstep(M.so - 0.3, M.so, t) * (1 - sstep(M.so + 0.25, M.so + 0.6, t));
   const swap = t < M.so + 0.12 ? 0 : 1;
+  const camUp = d3(s3(L.pos, B.o), B.y) > 0;
   const smokeK = sstep(M.fire + 0.2, M.so, t) * 0.6 * (1 - sstep(M.so - 0.2, M.switched + 0.2, t));
   return (
     <g>
@@ -331,19 +348,31 @@ const WorkshopScene: React.FC<{id: string; t: number}> = ({id, t}) => {
       <TestStand L={L} B={B} />
       {swap < 1 && (
         <g opacity={1 - swap}>
+          {/* the hot air curls up round the deck edge: drawn under the deck, which hides the part beneath it; never
+              seen from below (it would cross the deck's underside) */}
+          {camUp && <Recirc L={L} from={nozzles.map((n) => v3(n.x, 0.05, n.z))} to={intakes} k={recirc} t={t} smooth />}
           <JetBoard id={`${id}-jb`} L={L} B={B} stand={false} st={{phase: jetPhase(t), rps: jetRps(t), burn, heat: h}} overlay={<FuelLeak L={L} B={B} t={t} t0={LEAK0} t1={M.fire} part="pool" />} />
           <FuelLeak L={L} B={B} t={t} t0={LEAK0} t1={M.fire} part="drips" />
-          <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6)} t={t} />
-          <Recirc L={L} from={nozzles.map((n) => v3(n.x, 0.05, n.z))} to={intakes} k={recirc} t={t} />
-          <Smoke L={L} at={flameAt.length ? flameAt : [fl[2]]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so - 0.5, M.so + 0.2, t))} />
-          <Flames id={`${id}-fl`} L={L} at={flameAt} size={0.15} k={fireK} t={t} />
+          {camUp && <HeatHaze L={L} at={nozzles.map((n) => a3(n, v3(0, 0.12, 0)))} k={h * (1 - burn * 0.6)} t={t} />}
+          <Smoke L={L} at={[along(0), along(0.45)]} t={t} t0={M.fire + 0.1} k={0.8 * sstep(M.fire, M.fire + 0.3, t) * (1 - sstep(M.so - 0.5, M.so + 0.2, t))} />
+          {flames.map((f, i) => <Flames key={i} id={`${id}-fl${i}`} L={L} at={[f.at]} size={0.15} k={f.k} t={t} />)}
           <Flash id={`${id}-fs`} c={L.p(fl[2])} k={flash} />
         </g>
       )}
-      {swap > 0 && <Rider id={`${id}-eb`} L={L} B={BE(B)} pose={lift4(0, 10).pose} noPilot st={{phase: 0, rps: 0, thrust: 0, built: builtAt(t)}} />}
+      {swap > 0 && <Rider id={`${id}-eb`} L={L} B={BE(B)} pose={lift4(0, 10).pose} noPilot st={{phase: ePhase(t), rps: 5 * sstep(M.switched, M.except - 0.2, t), thrust: 0, built: 10}} />}
       <SmokeVeil id={`${id}-sv`} L={L} c={a3(B.o, v3(0, 0.15, 0))} k={veil} t={t} />
+      {fog > 0.005 && <rect x={0} y={0} width={1080} height={1920} fill="rgb(106,103,99)" opacity={f2(fog)} />}
     </g>
   );
+};
+
+/** the workshop's protected region for caption placement: the board (jet or electric) as it sits in frame */
+const wsFocus = (t: number) => {
+  const L = lens(jetCam(t));
+  const B = JB(Math.min(t, M.so));
+  const pts = [-0.5, 0.5].flatMap((x) => [-0.9, 0.9].flatMap((z) => [0.3, -0.12].map((y) => L.p(toW(B, v3(x, y, z))))));
+  const xs = pts.map((p) => p.x), ys = pts.map((p) => p.y);
+  return {x0: Math.min(...xs) - 30, y0: Math.min(...ys) - 30, x1: Math.max(...xs) + 30, y1: Math.max(...ys) + 30};
 };
 
 // ================================================================ 5: learning on the field (A problem, B feet, C ride, D coach)
@@ -353,9 +382,12 @@ const FIELD = fieldFlight(FK);
 // he answers. A2 (18.1-22.5): cut to a second standing camera, lower and a little to his front: the heel-side and
 // toe-side tilts and his corrections, then he leans and rides off across the pad and the camera pans with him.
 const fieldPos = (t: number) => FIELD(t).B.o;
-const A1_CAM = camFrom(FIELD(M.except).B.o, ck(-20, 14, 4.4, 42, 0.75, 0));
+const A1_CAM = camFrom(FIELD(M.except).B.o, ck(-20, 14, 5.8, 42, 0.75, 0));
 const A2 = M.theBoard;
-const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 6, 4.5, 42, 0.8, 0));
+// V5: A1 stands wider (5.8 m: the follow tilt as the board lifts is slower, and the captions have room above him) and
+// A2 is closer and round to his other side, so the cut changes both angle (46 degrees) and size (V5's first cut had
+// the rider the same size in both and read as a jump cut)
+const A2_CAM = camFrom(FIELD(A2).B.o, ck(26, 7, 4.5, 42, 0.8, 0));
 const fieldCam = (t: number): Cam => (t < A2 ? standCam(A1_CAM, fieldPos, t, 0.75 + 0.1 * sstep(M.except, M.except + 0.8, t), 42, 0.5) : standCam(A2_CAM, fieldPos, t, 0.85, 42, 0.5));
 // D (coach): controlled close-ups, each held still: C1 the phone built into the deck (from above); C2 his own view of
 // the wrist phone he has raised; C3 the earbud on his ear as the cue plays (camera fixed to his torso, so the small
@@ -382,8 +414,8 @@ const coachCam = (t: number, st: St): Cam => {
   if (t < C4) {
     // fixed to the torso at the moment of the cut (the head moves within the frame, the frame does not move)
     const jc = pilotJoints(FIELD(C3).B, FIELD(C3).pose);
-    const ear0 = a3(jc.Hc, m3(jc.hL, 0.1));
-    const pos = a3(a3(a3(ear0, m3(jc.hL, 0.62)), m3(jc.hF, 0.22)), m3(jc.hU, 0.06));
+    const ear0 = a3(jc.Hc, m3(jc.hL, -0.1));
+    const pos = a3(a3(a3(ear0, m3(jc.hL, -0.62)), m3(jc.hF, 0.22)), m3(jc.hU, 0.06));
     const drift = s3(st.B.o, FIELD(C3).B.o);
     return {pos: a3(pos, drift), tgt: a3(ear0, drift), roll: 0, fov: 36};
   }
@@ -394,7 +426,8 @@ const coachCam = (t: number, st: St): Cam => {
 const E2 = M.andAfter + 0.49, E3 = M.tenDays, E4 = M.practice - 0.06;
 // V5: E1 is set clearly apart from the coach correction before it (behind his toe side, higher, wider), not a re-framing
 const E1_CAM = camFrom(takeoff(M.andAfter, M.andAfter).B.o, ck(22, 14, 5.6, 44, 0.6, 0));
-const E2_CAM: Cam = {pos: v3(-3.6, 5.6, -1.6), tgt: v3(-3.7, 0.6, 0.9), roll: 0, fov: 52};
+// V5: higher, so his S-curve crosses the frame at about half the screen speed (he was gone in under half a second)
+const E2_CAM: Cam = {pos: v3(-3.54, 8.6, -3.1), tgt: v3(-3.7, 0.6, 0.9), roll: 0, fov: 52};
 // V5: a steady low front three-quarter track on the flat (a standing camera beside his path whipped round as he passed)
 const E3K = ck(246, 3, 5.2, 46, 0.6, 0);
 const P2 = M.andThrough; // cut into the canyon
@@ -476,7 +509,7 @@ export const SHOTS5: Shot[] = [
     },
     focus: (t) => box(lens(liftCam(t)), lift4(t, MATCH)),
   },
-  {name: 'the jet prototype test and the redesign on the same stand (workshop)', from: M.but, to: M.except, draw: (t, pre) => <WorkshopScene id={`${pre}ws`} t={t} />, focus: () => ({x0: 140, y0: 520, x1: 940, y1: 1340})},
+  {name: 'the jet prototype test and the redesign on the same stand (workshop)', from: M.but, to: M.except, draw: (t, pre) => <WorkshopScene id={`${pre}ws`} t={t} />, focus: (t) => wsFocus(t)},
   {
     name: 'balance: the problem and his corrections (standing cameras)', from: M.except, to: M.while,
     draw: (t, pre) => {

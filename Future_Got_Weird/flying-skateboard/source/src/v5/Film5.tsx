@@ -12,7 +12,11 @@ import {CUTS5, shotAt5} from './shots5';
 const placer5 = makePlacer(shotAt5);
 const PRICE = {y: 360, size: 112};
 // every picture cut, as the first frame of the new shot
-const CUTF = CUTS5.map((c) => Math.ceil(c * FPS - 1e-9));
+const CUTF = CUTS5.map((c) => {
+  let f = Math.round(c * FPS);
+  if (f / FPS < c) f++; // the same test the shot list uses (t >= from)
+  return f;
+});
 export const Frame5: React.FC<{t: number; captions: boolean; pre?: string}> = ({t, captions, pre = ''}) => (
   <AbsoluteFill style={{backgroundColor: '#1A252D', overflow: 'hidden'}}>
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>

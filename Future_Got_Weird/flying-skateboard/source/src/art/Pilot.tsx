@@ -170,7 +170,10 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     const cr = (u: number, v: number) => p(a3(c, a3(m3(fd, u), m3(side, v))));
     const body = [cr(-0.045, -0.03), cr(0.045, -0.03), cr(0.045, 0.03), cr(-0.045, 0.03)];
     const scr = [cr(-0.038, -0.023), cr(0.038, -0.023), cr(0.038, 0.023), cr(-0.038, 0.023)];
-    const vis = facing(c, nrm) > 0.08;
+    // V5: fades with its facing as the forearm turns (it popped on and off at a threshold)
+    const wpOp = Math.max(0, Math.min(1, (facing(c, nrm) - 0.02) / 0.16));
+    const vis = wpOp > 0.01;
+    const iconK = Math.max(0, Math.min(1, (j.wristUp - 0.2) / 0.25));
     const pc = p(c);
     // attitude readout: a horizon bar tilted by the board roll, shifted by pitch, and a centre dot
     const hr = (tilt.roll * Math.PI) / 180;
@@ -194,11 +197,12 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
       );
     })();
     return vis ? (
-      <g key="wp">
+      <g key="wp" opacity={f2(wpOp)}>
         <path d={polyD(body)} fill={GEAR.phone} stroke="#0B1218" strokeWidth={f2(w * 1.6)} strokeLinejoin="round" paintOrder="stroke" />
         <path d={polyD(scr)} fill={GEAR.screen} />
-        {j.wristUp > 0.3 ? icon : (
-          <g>
+        {iconK > 0.01 && <g opacity={f2(iconK)}>{icon}</g>}
+        {iconK < 0.99 && (
+          <g opacity={f2(1 - iconK)}>
             <path d={`M${f2(h0.x)},${f2(h0.y)} L${f2(h1.x)},${f2(h1.y)}`} stroke={ok ? '#21D19F' : '#FFB347'} strokeWidth={f2(Math.max(0.8, 0.006 * pc.k))} strokeLinecap="round" />
             <circle cx={f2(cr(0, 0).x)} cy={f2(cr(0, 0).y)} r={f2(Math.max(0.6, 0.004 * pc.k))} fill="#E8F6FF" />
           </g>
@@ -312,7 +316,7 @@ export const Pilot: React.FC<Props> = ({id, L, j, coach = 0, tilt = {pitch: 0, r
     return (
       <g key={`ear${s}`}>
         <path d={earD} fill={shade(GEAR.skin, 0.08)} stroke="#172B3A" strokeWidth={f2(w * 1.6)} strokeLinejoin="round" paintOrder="stroke" />
-        {s > 0 && (
+        {s === (j.ear ?? 1) && (
           <g>
             {coach > 0.01 && <circle cx={f2(bud.x)} cy={f2(bud.y)} r={f2(glowR)} fill={GEAR.coach} opacity={0.35 * coach * Math.min(1, fc * 4)} />}
             <path d={polyD(disk(budC, m3(j.hF, 0.017), m3(j.hU, 0.017)))} fill="#1D232B" stroke="#0B1218" strokeWidth={f2(w)} strokeLinejoin="round" />
