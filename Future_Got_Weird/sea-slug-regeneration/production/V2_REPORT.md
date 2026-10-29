@@ -105,12 +105,51 @@ the session's permission system, so it was not tried again. **Every scene is Rem
 - **What the gate changed:**
   - **2.3–4.3 s:** on the first gate render this stretch was nearly static. I added the slow push toward the body.
   - **Low macro:** the subject sat high in the frame over empty sand. I recentred it.
-  - The final hook file was re-rendered after these changes and is the same frames as the full review's first 5 s.
+  - The final hook file was re-rendered after these changes. It is the same frames as the full review's first 5 s.
 
 ## QA of the full render
 
-RESULTS_PLACEHOLDER
+From the delivered files (`qa/v2/`: `review_qa.json`, `audio.json`, frame sheets every 0.5 s, phone-size sheet,
+cut strips, loop seam).
+
+| Check | Result |
+| --- | --- |
+| Format | 1080×1920, 30 fps, 860 frames, 28.667 s, H.264 yuv420p bt709; AAC 48 kHz stereo |
+| Motion scan (every frame) | One-frame changes only at the two deliberate cuts (490 seabed, 751 lab). No static hold over 1 s. |
+| Strobing | The first full render had day/night darkening that flipped every 2–5 frames in the time-lapse runs, which is a photosensitivity risk. It now dips slowly: two nights across the week and one per regrowth run, all well under 3 flashes a second. The motion scan no longer flags those frames. |
+| Loop (frame 859 → 0) | Same camera, pose, neck state, set and lens state; the TIME-LAPSE tag is already on. The only change is the caption ("TWICE." → "If this sea slug"). Seam change 2.2× the median frame change, all of it caption. Audio seam continuous (sample jump 0.0006 in the mix). **The loop works.** |
+| Narration in the file | Offset 0.0 ms against the narration wav (cross-correlation); correlation 0.98 through the mix and AAC |
+| Loudness | −14.1 LUFS integrated (the same measurement gives V1 −14.1); sample peak −4.4 dBFS. The voice is 28.7 dB above everything else in the 300–4000 Hz band during speech (mix measurement). |
+| Effects | 30 cues, each on a visible event (`audio/sfx_cues_v2.json`). The new heart has five held heartbeats on the picture's beat frames (613 + 20 k). |
+| Captions | Same words and timing as V1. They sit low, or high where the subject is low, and are clear of the head, neck, heart and regrowth on every sampled frame. |
+
+**How the files were made.** `remotion render` stalled in its headless screenshot step on these frames in this
+environment (11 of 860 frames after 30 min, with SwiftShader and with ANGLE). The same React picture rasterised in
+Playwright's Chromium in about 1.3 s a frame, so the deliverables were made with `tools/render_v2.tsx` (React static
+markup → Playwright PNG) and encoded with ffmpeg to V1's settings. The Remotion composition `SeaSlugV2` is the same
+picture and is still the editable project, and `Sheet2` contact sheets render normally.
 
 ## Unresolved
 
-UNRESOLVED_PLACEHOLDER
+- **Runway: nothing.** Its CDN is blocked here (see above). To use it next time, allow
+  `dnznrvs05pmza.cloudfront.net` in the environment's network settings.
+- **Not watched in real time and not heard.** There is no audio or video output in this environment. Pacing, sync
+  and levels were judged from frames and measurements only. A person should watch it on a phone with sound before
+  any decision.
+- **The opening is still one continuous move.** It reads, never stops moving and keeps the subject large. But the
+  spider and cockroach benchmarks hit harder in the first 2.5 s with cuts or strong reframes. If it feels slow on a
+  phone, the next step is a cut at about 1.45 s to the low macro instead of the camera drop.
+- **Facets on the parapodium margins.** The mesh resolution was raised, but at full size the ruffled margins and
+  the far parapodium still show stepped shading in places. It is not a plastic look, but it is not as smooth as the
+  spider V6 finish either.
+- **Small heart in the scene 3 section.** It is seen at an oblique angle and is about 70 px across: readable, but
+  small on a phone.
+- **The head alone (scenes 5–6) reads as a short, blunt block.** That is the sealed wound, which is anatomically
+  right, but its rounded rear could be softer.
+- **The seabed is muted and green-grey.** It is less bright and less saturated than the lab.
+- **Runtime 28.7 s.** This is unchanged from V1 because the narration is unchanged and was not stretched.
+- **Render path.** The deliverables come from the Playwright renderer, not `remotion render` (see above).
+- **Gate tooling limit.** The hook file's automatic audio check (a 6 s correlation window) cannot run on a 5 s
+  file. Its sync is the same as the full file's, because it is cut from the same frames and mix.
+
+Because of the first three points, V2 is a **review cut, not a final**.

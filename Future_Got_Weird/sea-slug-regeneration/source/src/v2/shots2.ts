@@ -347,7 +347,8 @@ const heartShot = (f: number): State2 => {
   const day = Math.round(dayAt(f));
   return {
     shot: 'H', env: 'sea', orbit, pieces: [p], feed: {u: 0.02, drain: 1}, lapse, frondFade: ease(f, fWeek1, fNew + 6),
-    night: lapse * 0.34 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (dayAt(f) - 1))),
+    // nights: two slow dips across the week (kept well under 3 flashes a second; the day counter carries the speed)
+    night: lapse * 0.28 * (0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * seg(f, fWeek0, fWeek1))),
     labels: [{text: `TIME-LAPSE · DAY ${day}`, op: ease(f, fWeek0 - 2, fWeek0 + 3) * (1 - ease(f, fNew + 6, fNew + 14)), icon: 'ff'}],
   };
 };
@@ -385,7 +386,8 @@ const growShot = (f: number): State2 => {
   const day = dayStage(f);
   return {
     shot: 'G', env: 'sea', orbit, pieces: [p], feed: {u: 0.02, drain: 1}, lapse: run, frondFade: 1 - ease(f, S.grow, S.grow + 14),
-    night: run * 0.34 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (day - 7))),
+    // one slow night dip per run (no strobing)
+    night: run * 0.28 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (f < ST[2].f + 2 ? seg(f, ST[1].f - 2, ST[2].f + 2) : seg(f, ST[3].f - 2, ST[4].f + 2)))),
     labels: [{text: `${running(f) ? 'TIME-LAPSE · ' : ''}DAY ${Math.round(day)}`, op: ease(f, S.grow + 4, S.grow + 10) * (1 - ease(f, S.twice - 8, S.twice - 2)), icon: running(f) ? 'ff' : 'none'}],
   };
 };
