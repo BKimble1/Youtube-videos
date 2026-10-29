@@ -315,23 +315,25 @@ def shot_lab(t, s0, s1):
 APPLY_TRACK = [(-0.40, 1.15, 0.05), (0.0, 0.62, 0.40), (0.22, 0.40, 0.48), (0.45, 0.62, 0.55), (0.65, 0.42, 0.63), (0.84, 0.58, 0.70), (1.2, 1.25, 0.95)]
 _AP = {}
 def apply_arrival():
+    """when the solution reaches each point in the application shot, and how much reaches it (soft, uneven edge)"""
     if 'a' not in _AP:
         x, y, *_ = mm_map('APPLY'); h, w = x.shape
         taus = np.arange(0.0, 0.85, 0.01)
         q = np.array([_cr(APPLY_TRACK, s) for s in taus]) * [w, h]
         T = np.column_stack([taus, px_to_mm('APPLY', q)])
-        a = np.full(x.shape, 1e4, np.float32)
+        a = np.full(x.shape, 1e4, np.float32); dmin = np.full(x.shape, 1e4, np.float32)
         for tau, px, py in T[::2]:
-            d = np.sqrt((x - px) ** 2 + (y - py) ** 2)
-            a = np.minimum(a, np.where(d < 1.2 + 1.4, tau + np.maximum(0, d - 1.2) / 2.0, 1e4))
-        _AP['a'] = a + noise2(x, y, 0.6, 3) * 0.08
+            d = np.sqrt((x - px) ** 2 + (y - py) ** 2); dmin = np.minimum(dmin, d)
+            a = np.minimum(a, np.where(d < 4.0, tau + np.maximum(0, d - 0.9) / 2.0, 1e4))
+        n = noise2(x, y, 0.7, 3) * 0.25 + noise2(x, y, 0.2, 1) * 0.08
+        _AP['a'] = (a + n * 0.3, ss(2.2 + n * 2, 0.6 + n * 2, dmin).astype(np.float32))
     return _AP['a']
 
 def shot_apply(t, s0, s1):
     """S5: the soaked applicator on the skin; the solution spreads into the surface; the camera dives in"""
     A = plate('plates/APPLY_A.exr')['rgb']; B = plate('plates/APPLY_B.exr')['rgb'] * np.array([1.08, 0.94, 0.78], np.float32); h, w = A.shape[:2]
     tau = t - TL.B['contact']
-    a = apply_arrival(); st = ss(a, a + 0.15, tau)
+    a, amt = apply_arrival(); st = ss(a, a + 0.15, tau) * amt * 0.75
     img = A + (B - A) * st[..., None]
     if tau < 1.2:
         u, v = _cr(APPLY_TRACK, tau)
@@ -525,12 +527,19 @@ def shot_wash(t, s0, s1):
     dry = base_dry + (cleared_dry - base_dry) * treated[..., None]
     wetimg = Wa + (cleared_wet - Wa) * clear_now[..., None]
     img = dry + (wetimg - dry) * wet[..., None]
-    # the moving water sheet: a bright, refracting front, ripples behind it
-    edge = np.exp(-((fr * 1.3 - flow) / 0.025) ** 2) * (fr < 1.25)
+    # the moving water: a soft front, then a running film (streaking highlights along the flow, refraction) that thins out
     yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
-    rip = np.sin(xx * 0.05 + yy * 0.08 - t * 18) * 2.0 * wet * ss(1.8, 0.4, since)
-    img = remap(img, rip, rip * 0.6)
-    img = img + edge[..., None] * np.array([0.55, 0.6, 0.65], np.float32) * img.mean() * 1.5
+    run = wet * ss(2.2, 0.6, since)
+    fx, fy = 0.45, 0.75; nrm = math.hypot(fx, fy); fx, fy = fx / nrm, fy / nrm
+    along = xx * fx + yy * fy; across = -xx * fy + yy * fx
+    sp = 900.0 * w / 1080
+    st1 = noise2(across, along * 0.12 - t * sp * 0.12, 9 * w / 1080, 2)
+    st2 = noise2(across * 1.7, along * 0.2 - t * sp * 0.2, 5 * w / 1080, 3)
+    hl = np.clip(st1 * 0.8 + st2 * 0.5 - 0.6, 0, None) ** 1.5
+    img = remap(img, (st1 * 3.0 * run).astype(np.float32), (st2 * 3.0 * run).astype(np.float32))
+    front = np.exp(-((fr * 1.3 - flow) / 0.09) ** 2) * (fr < 1.3)
+    sheen = (hl * run * 1.6 + front * 0.35)[..., None] * np.array([0.9, 0.95, 1.0], np.float32) * float(img.mean())
+    img = img + sheen
     for td, x0 in ((22.02, 0.36), (22.47, 0.62), (23.07, 0.48)):  # beads running down off the skin (the mix's drips)
         if td - 0.15 <= t < td + 0.45:
             f = ease((t - td + 0.15) / 0.6)

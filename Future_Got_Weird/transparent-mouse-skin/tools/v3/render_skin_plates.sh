@@ -10,6 +10,6 @@ job HOOK 1.12 A B C K
 job SIDE 1.3 A C K
 job GRAZE 1.4 A C K
 job APPLY 1.12 A B
-job WIDE 1.15 C K
+job WIDE 1.15 C K A
 job WASH 1.12 W WC WK C K A
 echo done

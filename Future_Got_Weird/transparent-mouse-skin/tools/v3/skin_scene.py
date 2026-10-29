@@ -84,10 +84,10 @@ def mix(nt, fac, a, b):
     link(nt, a, m.inputs[1]); link(nt, b, m.inputs[2])
     return m
 
-def shadow_pass(nt, shader):
+def shadow_pass(nt, shader, tint=(0.98, 0.72, 0.5)):
     """let light through a cleared layer to the organs (glass-shadow trick: shadow rays see it as transparent)"""
     lp = nt.nodes.new('ShaderNodeLightPath'); tr = nt.nodes.new('ShaderNodeBsdfTransparent')
-    tr.inputs[0].default_value = (0.98, 0.72, 0.5, 1)
+    tr.inputs[0].default_value = (*tint, 1)
     return mix(nt, lp.outputs['Is Shadow Ray'], shader, tr.outputs[0])
 
 def grid_mesh(name, nx, ny, zoff, uv=True):
@@ -389,17 +389,25 @@ fur.data.materials.append(hair_mat('furm'))
 
 # ---------------- water beads (rinse states) ----------------
 if WET:
+    from mathutils import Vector
     wm, nt, out = mat('water')
     p = principled(nt, **{'Base Color': (1, 1, 1, 1), 'Transmission Weight': 1.0, 'Roughness': 0.0, 'IOR': 1.333})
-    link(nt, p.outputs[0], out.inputs[0])
-    bx = rng.uniform(-8, 8, 260); byy = rng.uniform(-20, 12, 260)
-    keep = (bx / 8.5) ** 2 + ((byy + 1) / 17) ** 2 < 1
+    link(nt, shadow_pass(nt, p.outputs[0], (1, 1, 1)).outputs[0], out.inputs[0])  # light reaches the skin under the bead
+    # beads sitting on the skin (a flattened cap whose base just meets the surface): the skin is seen through them
+    bx = rng.uniform(-9, 9, 420); byy = rng.uniform(-20, 12, 420)
+    keep = (bx / 9.0) ** 2 + ((byy + 1) / 18) ** 2 < 1
     for x, y in zip(bx[keep], byy[keep]):
-        r = rng.uniform(0.12, 0.55)
+        r = rng.uniform(0.06, 0.26) if rng.random() < 0.85 else rng.uniform(0.3, 0.45)
         n = normal(np.array([x]), np.array([y]))[0]
-        c = np.array([x, y, S(x, y)]) + n * (-0.35 * r)
-        bpy.ops.mesh.primitive_uv_sphere_add(segments=24, ring_count=12, location=c)
-        ob = bpy.context.active_object; ob.scale = (r, r * rng.uniform(0.8, 1.2), r * 0.62); bpy.ops.object.shade_smooth()
+        hz = r * 0.55
+        c = np.array([x, y, S(x, y)]) + n * (0.02)
+        bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=16, location=c)
+        ob = bpy.context.active_object; ob.scale = (r, r * rng.uniform(0.85, 1.15), hz); bpy.ops.object.shade_smooth()
+        ob.rotation_euler = Vector(n).to_track_quat('Z', 'Y').to_euler()
+        # keep only the upper half: a cap on the surface
+        bm_me = ob.data
+        for v in bm_me.vertices:
+            if v.co.z < 0: v.co.z = 0.0
         ob.data.materials.append(wm)
 
 # ---------------- light: a large soft key from the head end/left, a cool fill, a rim ----------------
