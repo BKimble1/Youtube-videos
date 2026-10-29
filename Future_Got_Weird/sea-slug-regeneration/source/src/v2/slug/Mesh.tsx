@@ -9,8 +9,9 @@ import {INK} from '../../kit/dc/ink';
 import {Basis, P2, V2, V3, add3, cross3, depth, dot3, len3, mul3, norm3, proj, sub3} from '../../kit/three';
 import {clamp, lerp, smooth} from '../../lib';
 import {A_CUT, A_HEART, C, F0, F1, Piece, SPOTS, TUBULES, geo, growPale, growSpots, isRegen} from './body';
+import {capsuleItem, ellipsoidItem} from '../../kit/draw3';
 
-type Facet = {z: number; d: string; fill: string; op?: number; ink?: string; kind?: 'deco' | 'line'; sw?: number; stroke?: string};
+type Facet = {z: number; d: string; fill: string; op?: number; ink?: string; kind?: 'deco' | 'line'; sw?: number; stroke?: string; node?: React.ReactNode};
 const f1 = (n: number) => n.toFixed(1);
 const poly = (pts: V2[]) => `M${pts.map((p) => `${f1(p.x)},${f1(p.y)}`).join('L')}Z`;
 const seg = (a: V2, b: V2) => `M${f1(a.x)},${f1(a.y)}L${f1(b.x)},${f1(b.y)}`;
@@ -71,6 +72,19 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     const c = (cut.a0 + cut.a1) / 2, hw = ((cut.a1 - cut.a0) / 2) * cut.open;
     return Math.abs(a - c) < hw;
   };
+  // V3 tissue window: how see-through the wall is at (a, theta); a soft organic edge, the near flank and back only
+  const win = p.win && p.win.open > 0.005 ? p.win : undefined;
+  const winA = (a: number, th = 0) => {
+    if (!win) return 0;
+    const r = win.r * (0.75 + 0.25 * win.open) * (1 + 0.1 * Math.sin(th * 3 + a * 0.6) + 0.06 * Math.sin(a * 1.7 + 1));
+    return win.open * (1 - smooth(clamp((Math.abs(a - win.a) / r - 0.55) / 0.45)));
+  };
+  const winAt = (a: number, th: number) => {
+    const c = Math.cos(th) * nearSide, sn = Math.sin(th);
+    return winA(a, th) * smooth(clamp((c + 0.35) / 0.6)) * smooth(clamp((sn + 0.45) / 0.5));
+  };
+  const wk = p.weak ?? 0;
+  let zWin = Infinity;
 
   // ------------------------------------------------ the tube (head + trunk)
   const hasTrunk = p.a1 > A_CUT + 0.5 && (!regen || g > 0.015);
@@ -120,20 +134,29 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
   for (let i = 0; i < nA; i++) {
     const am = (as[i] + as[i + 1]) / 2;
     for (let j = 0; j < M; j++) {
+      const thm = (ths[j] + ths[j + 1]) / 2;
       if (!vis[i][j]) continue;
       const q = [ring[i][j], ring[i + 1][j], ring[i + 1][j + 1], ring[i][j + 1]];
       const qc = quadOf(q);
-      const thm = (ths[j] + ths[j + 1]) / 2;
       const foot = Math.sin(thm) < -0.3;
       const base = foot ? T(C.foot, am) : am < A_CUT ? headCol : T(C.body, am);
-      const fill = shadeV(base, [vn[i][j], vn[i + 1][j], vn[i + 1][j + 1], vn[i][j + 1]], q, foot ? 0.2 : 1);
+      let fill = shadeV(base, [vn[i][j], vn[i + 1][j], vn[i + 1][j + 1], vn[i][j + 1]], q, foot ? 0.2 : 1);
+      // the weak spot: a pale, slightly translucent band of tissue round the neck groove
+      if (wk > 0.01) fill = mix(fill, '#EEF3C9', 0.5 * wk * clamp(1 - Math.abs(am - A_CUT) / 1.6));
+      const ww = winAt(am, thm);
       // outline edges: where the neighbouring facet turns away (silhouette), and open ends
       let ink = '';
       if (!visAt(i, j - 1)) ink += seg(R2[i][j], R2[i + 1][j]);
       if (!visAt(i, j + 1)) ink += seg(R2[i][j + 1], R2[i + 1][j + 1]);
       if (!visAt(i - 1, j) && (i > 0 || G.w(as[0]) > 0.4)) ink += seg(R2[i][j], R2[i][j + 1]);
       if (!visAt(i + 1, j) && (i < nA - 1 || G.w(as[nA]) > 0.4)) ink += seg(R2[i + 1][j], R2[i + 1][j + 1]);
-      F.push({z: depth(B, qc), d: poly([R2[i][j], R2[i + 1][j], R2[i + 1][j + 1], R2[i][j + 1]]), fill, op: surfOp, ink: ink || undefined});
+      // in the window the wall reads as clear tissue onto the body cavity (the organs are drawn over it)
+      if (ww > 0.01) {
+        const [lam] = lightOf(vn[i][j], qc);
+        fill = mix(fill, mix('#2F5F2E', '#6E9E52', clamp(0.3 + 0.4 * lam)), 0.88 * ww);
+        if (ww > 0.3) zWin = Math.min(zWin, depth(B, qc));
+      }
+      F.push({z: depth(B, qc), d: poly([R2[i][j], R2[i + 1][j], R2[i + 1][j + 1], R2[i][j + 1]]), fill, op: surfOp, ink: ww > 0.6 ? undefined : ink || undefined});
     }
   }
   // spots on the tube
@@ -154,7 +177,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
       const n0 = sub3(pt, G.at(s.a, 0, G.h(s.a) * 0.45));
       if (dot3(n0, sub3(eye, pt)) <= 0) return;
       if (cut && Math.cos(s.q) * nearSide > 0 && inCut(s.a)) return;
-      const op = spotOp(s.a);
+      const op = spotOp(s.a) * (1 - winAt(s.a, s.q));
       if (op < 0.02) return;
       F.push(spotF(add3(pt, mul3(norm3(n0), 0.05)), sub3(G.tube(s.a + 0.4, s.q), G.tube(s.a - 0.4, s.q)), sub3(G.tube(s.a, s.q + 0.06), G.tube(s.a, s.q - 0.06)), s.r, s.pale, op));
     });
@@ -215,7 +238,12 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           if (i === 0 || removed(i - 1)) ink += seg(G2[i][k], G2[i][k + 1]);
           if (i === nAf - 1 || removed(i + 1)) ink += seg(G2[i + 1][k], G2[i + 1][k + 1]);
 
-          F.push({z: depth(B, qc), d: poly([G2[i][k], G2[i + 1][k], G2[i + 1][k + 1], G2[i][k + 1]]), fill, op: xr > 0 ? 1 - 0.55 * xr : undefined, ink: ink || undefined});
+          const fw = side === nearSide ? winA(am) * 0.9 : 0;
+          if (fw > 0.01) {
+            fill = mix(fill, mix('#4F8A42', '#9CC97C', 0.4 + 0.4 * s), 0.75 * fw);
+            if (fw > 0.3) zWin = Math.min(zWin, depth(B, qc));
+          }
+          F.push({z: depth(B, qc), d: poly([G2[i][k], G2[i + 1][k], G2[i + 1][k + 1], G2[i][k + 1]]), fill, op: xr > 0 ? 1 - 0.55 * xr : undefined, ink: fw > 0.6 ? undefined : ink || undefined});
         }
       }
       // spots on the outer face; digestive tubules
@@ -228,7 +256,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           let n = norm3(cross3(ta, tb));
           if (dot3(n, out) < 0) n = mul3(n, -1);
           if (dot3(n, sub3(eye, pt)) <= 0) return;
-          const op = spotOp(sp.a);
+          const op = spotOp(sp.a) * (side === nearSide ? 1 - winA(sp.a) : 1);
           if (op < 0.02) return;
           F.push(spotF(add3(pt, mul3(n, 0.1)), ta, tb, sp.r, sp.pale, op));
         });
@@ -373,7 +401,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
   // ------------------------------------------------ the heart (inside; through translucent tissue or in the cutaway)
   const hv = p.heart ?? 0;
   const heartA = heartA_;
-  if (hv > 0.01 && p.a0 <= heartA && aEnd >= heartA) {
+  if (hv > 0.01 && !p.win && p.a0 <= heartA && aEnd >= heartA) {
     const c3 = G.at(heartA, 0, G.h(heartA) * 0.66);
     const c = Pp(c3);
     const s = c.s * (p.scale ?? 1);
@@ -393,6 +421,83 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     });
   }
 
+  // ------------------------------------------------ V3: the organs inside the window
+  if (win) {
+    const axes = (a: number, rl: number, rw: number, rh: number): [V3, V3, V3] => {
+      const tA = norm3(sub3(G.at(a + 0.6, 0, 0), G.at(a - 0.6, 0, 0)));
+      const lat = norm3(sub3(G.at(a, 1, 0), G.at(a, 0, 0)));
+      const sc0 = p.scale ?? 1;
+      return [mul3(tA, rl * sc0), mul3(lat, rw * sc0), [0, 0, rh * sc0]];
+    };
+    const OR: {z: number; el: React.ReactNode}[] = [];
+    const organ = (a: number, v: number, zf: number, r: [number, number, number], col: string, op: number, o2: {spec?: number; ink?: number; glossy?: boolean} = {}) => {
+      if (a < p.a0 + 0.4 || a > aEnd - 0.4 || op < 0.02) return;
+      const c3 = G.at(a, v * G.w(a), G.h(a) * zf);
+      OR.push(ellipsoidItem(B, c3, axes(a, r[0], r[1], r[2]), col, {opacity: clamp(op), spec: o2.spec ?? 0.6, ink: o2.ink ?? Math.max(0.8, inkW * 0.45), glossy: o2.glossy}));
+    };
+    const vis0 = (a: number) => winA(a) * 1.25;
+    const gS = regen ? growSpots(g) : 1;
+    // the digestive gland: branching green lobes filling the body and running out under the parapodia
+    for (let k = 0; k < 60; k++) {
+      const a = 24 + k * 1.2 + 0.5 * Math.sin(k * 2.3);
+      const v = (k % 2 ? 1 : -1) * (0.2 + 0.3 * Math.abs(Math.sin(k * 1.7)));
+      organ(a, v, 0.48 + 0.18 * Math.sin(k * 2.9), [1.5 + 0.6 * Math.abs(Math.sin(k)), 1.1, 0.95], k % 3 ? C.gland : '#4E8A3C', vis0(a) * (a > A_CUT + 3 ? gS : 1) * 0.9, {spec: 0.35});
+    }
+    // the head: the pale buccal mass at the front, the paired cerebral ganglia above it
+    organ(5.5, 0, 0.38, [2.3, 1.7, 1.4], '#E5BFA6', vis0(5.5), {spec: 0.5});
+    for (const sd of [1, -1]) organ(9.5, sd * 0.22, 0.62, [1.0, 0.95, 0.8], '#F2E8BE', vis0(9.5), {spec: 0.7});
+    // the gut: one continuous pale tube back from the buccal mass, where the window shows it
+    {
+      const pts: ReturnType<typeof Pp>[] = [];
+      let opS = 0, zs = 0;
+      for (let a = Math.max(p.a0 + 0.5, 7); a < Math.min(aEnd - 1, 90); a += 1.0) {
+        const op = vis0(a) * (a > A_CUT + 3 ? gS : 1) * 0.9;
+        if (op < 0.12) continue;
+        const q = Pp(G.at(a, 0.08 * G.w(a) * Math.sin(a * 0.35), G.h(a) * 0.27));
+        pts.push(q);
+        opS += op;
+        zs += q.z;
+      }
+      if (pts.length > 2) {
+        const d = `M${pts.map((q) => `${f1(q.x)},${f1(q.y)}`).join('L')}`, w = Math.max(1.2, 0.7 * pts[0].s * (p.scale ?? 1));
+        OR.push({z: zs / pts.length, el: (
+          <g opacity={clamp((0.7 * opS) / pts.length)}>
+            <path d={d} fill="none" stroke={shade('#E7D6A0', 0.45)} strokeWidth={w + 2.5} strokeLinecap="round" strokeLinejoin="round" />
+            <path d={d} fill="none" stroke="#E9DAA6" strokeWidth={w} strokeLinecap="round" strokeLinejoin="round" />
+          </g>
+        )});
+      }
+    }
+    // the heart in its pericardium, on the back just behind the neck: a pale coral two-chambered pump in a clear sac.
+    // Regrowth: first a loose cluster of cells, which draws together into the sac and heart.
+    if (hv > 0.01 && p.a0 <= heartA && aEnd >= heartA) {
+      const bt = p.beat ?? 0, gsz = regen ? lerp(0.55, 1, smooth(g)) : 1;
+      const form = smooth(clamp((hv - 0.25) / 0.75));
+      const op = vis0(heartA);
+      if (hv < 1) {
+        const R0 = (k: number) => Math.sin(k * 78.233) * 43758.5453 % 1;
+        for (let k = 0; k < 14; k++) {
+          const ph = k * 2.4, rr = (1 - form) * 3.2 + 0.4;
+          const a = heartA + Math.cos(ph) * rr * 0.9, v = (Math.sin(ph) * rr * 0.12);
+          organ(a, v, 0.66 + 0.12 * R0(k), [0.5, 0.5, 0.5].map((x) => x * gsz) as [number, number, number], '#F0B7A2', op * clamp(hv * 3) * (1 - form * 0.9), {spec: 0.5});
+        }
+      }
+      organ(heartA, 0, 0.66, [3.6 * gsz, 2.5 * gsz, 2.0 * gsz], C.peri, op * 0.4 * form, {spec: 1, glossy: true, ink: Math.max(0.6, inkW * 0.3)});
+      // systole: the ventricle squeezes and shortens while the auricle fills; diastole the reverse
+      const sys = clamp(bt / 1.6);
+      // the aorta: a fine vessel running forward from the ventricle
+      if (form > 0.3) {
+        const v0 = G.at(heartA - 2.2 * gsz, 0, G.h(heartA) * 0.62), v1 = G.at(heartA - 6 * gsz, 0, G.h(heartA - 6) * 0.5);
+        OR.push(capsuleItem(B, v0, v1, 0.38 * gsz * (p.scale ?? 1), 0.28 * gsz * (p.scale ?? 1), '#E9A593', {opacity: clamp(op * form), ink: Math.max(0.6, inkW * 0.3), spec: 0.4}));
+      }
+      organ(heartA - 0.7 * gsz, 0, 0.63, [2.1 * (1 - 0.18 * sys), 1.25 * (1 - 0.26 * sys), 1.35 * (1 - 0.24 * sys)].map((x) => x * gsz) as [number, number, number], '#E0806C', op * form, {spec: 0.8, glossy: true});
+      organ(heartA + 1.6 * gsz, 0.06, 0.72, [1.2 * (1 + 0.2 * sys), 1.15 * (1 + 0.22 * sys), 0.8].map((x) => x * gsz) as [number, number, number], '#EFB5A2', op * form * 0.9, {spec: 0.6});
+    }
+    // over the window skin, in their own far-to-near order
+    const zTop = (isFinite(zWin) ? zWin : depth(B, G.at(win.a, 0, 3))) - 0.05;
+    OR.sort((a2, b2) => b2.z - a2.z).forEach((it, k) => F.push({z: zTop - 1e-4 * k, d: '', fill: 'node', kind: 'deco', node: it.el}));
+  }
+
   // ------------------------------------------------ draw far to near
   F.sort((a, b) => b.z - a.z);
   const els = F.map((f, i) => {
@@ -410,7 +515,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
         </g>
       );
     }
-    if (f.fill === 'node') return <React.Fragment key={i}>{(f as Facet & {node: React.ReactNode}).node}</React.Fragment>;
+    if (f.fill === 'node') return <React.Fragment key={i}>{f.node}</React.Fragment>;
     if (f.kind === 'line') return <path key={i} d={f.d} fill="none" stroke={f.stroke} strokeWidth={f.sw} strokeLinecap="round" strokeLinejoin="round" opacity={f.op} />;
     if (f.kind === 'deco') return <path key={i} d={f.d} fill={f.fill} opacity={f.op} />;
     return (

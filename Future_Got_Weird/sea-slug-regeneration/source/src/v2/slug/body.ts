@@ -71,6 +71,9 @@ export type Piece = {
   cut?: {a0: number; a1: number; open: number};
   /** the weak spot: a fine line marking the breaking plane at the neck groove (0..1) */
   weak?: number;
+  /** V3 tissue window: over a soft organic patch around anatomical a (half-length r) the near body wall turns
+   *  translucent and the organs inside show (open 0..1). With a window the heart is drawn as an organ in its sac. */
+  win?: {a: number; r: number; open: number};
 };
 
 const growLen = (g: number) => lerp(0.06, 1, smooth(clamp(g)));
