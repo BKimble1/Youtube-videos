@@ -114,15 +114,17 @@ const hook = (f: number): State2 => {
   const low = ease(f, 43, 66);
   const settle = ease(f, 78, 110);
   // the target moves from the neck onto a point between the head and the body (both stay in frame)
-  const tgt: V3 = [lerp(hc[0], bc[0], 0.36), lerp(hc[1], bc[1], 0.36), 3];
+  const push = ease(f, 76, S.body - 1, (u) => u * u * (3 - 2 * u));
+  const tgt: V3 = [lerp(hc[0], bc[0], 0.36 + 0.05 * push), lerp(hc[1], bc[1], 0.36 + 0.05 * push), 3];
   const target: V3 = [lerp(ORB0.target[0], tgt[0], follow), lerp(ORB0.target[1], tgt[1], follow), lerp(4, 3, follow)];
   const orbit: Orbit = {
     target,
     az: lerp(-26, lerp(-16, -22, settle), low),
     el: lerp(36, lerp(13, 12, settle), low),
-    d: lerp(200, lerp(175, 185, settle), low),
+    // then a slow push toward the abandoned body (2.6-4.3 s) that sets up the rack focus of the next shot
+    d: lerp(200, lerp(175, 185, settle), low) * lerp(1, 0.9, push),
     f: lerp(3150, 3000, low),
-    cy: lerp(980, lerp(900, 880, settle), follow),
+    cy: lerp(980, lerp(960, 1030, settle), follow),
   };
   const trail = f > BRK ? {path: PH2, from: S0 - 20, to: head.tip - 21, op: 0.5 * ease(f, BRK, BRK + 20)} : undefined;
   // 2.05-2.6 s: sand grit right by the lens slides through the bottom of the frame as the camera tracks (parallax)
