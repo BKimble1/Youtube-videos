@@ -169,7 +169,7 @@ const bodyState = (f: number): State2 => {
   orbit = lerpOrbit(orbit, neck, E(f, B5.toNeck - 6, B5.anat + 6));
   const head = pieces[1];
   return {
-    shot: 'B', env: 'lab', labTeal: true, orbit, pieces, frags: FRAGS5, blur: {head: 8}, probe: probeAt(f), props: PROPS, dim: 0.85 * E(f, B5.toNeck, B5.anat + 8),
+    shot: 'B', env: 'lab', labTeal: true, orbit, pieces, frags: FRAGS5, blur: {head: 8}, probe: probeAt(f), props: PROPS, dim: darkIn(f),
     trail: {path: PH2, from: S0 - 20 + GBRK, to: head.tip - 21, op: 0.5, w: 0.45}, labels: [],
   };
 };
@@ -185,6 +185,7 @@ const secHead = (f: number) => S0 + GBRK + ST_[clamp(Math.round(f - B5.part), 0,
 const beatOld = (f: number) => beatAt(f, 120, 22) * (1 + 0.5 * Math.exp(-Math.pow((f - B5.heart - 4) / 6, 2)));
 const winOf = (open: number): Piece['win'] => ({a: 24, r: 17, open});
 const DARK = 0.86;
+const darkIn = (f: number) => DARK * E(f, B5.toNeck, B5.anat + 8);
 const anatomyPieces = (f: number): Piece[] => {
   const t = f / 30;
   const open = E(f, B5.win0 - 2, B5.win0 + 12);
@@ -228,7 +229,7 @@ const anatomyState = (f: number): State2 => {
   const rew = seg(f, B5.anat, B5.anat + 2) * (1 - seg(f, B5.rew1, B5.rew1 + 6));
   const tl = seg(f, B5.pull - 2, B5.pull + 4) * (1 - seg(f, B5.part + 10, B5.part + 16));
   return {
-    shot: 'A', env: 'lab', labTeal: true, orbit, pieces, frags: FRAGS5, dim: DARK, micro: f > B5.micro - 10 ? microAt(f) : undefined, microV5: true,
+    shot: 'A', env: 'lab', labTeal: true, orbit, pieces, frags: FRAGS5, dim: darkIn(f), micro: f > B5.micro - 10 ? microAt(f) : undefined, microV5: true,
     labels: [{text: 'REWIND', op: rew, icon: 'rw'}, {text: 'TIME-LAPSE', op: tl, icon: 'ff'}],
   };
 };
@@ -320,9 +321,10 @@ export const beat5 = (f: number) => {
   const one = (f0: number) => (f < f0 ? 0 : 1.6 * Math.pow(Math.sin(Math.PI * clamp((f - f0) / 9)), 2));
   return Math.max(one(B5.beat), one(B5.beat2)) + (f > B5.beat2 + 10 ? 0.5 * beatAt(f, B5.beat2 + 10, BEAT_PER5) : 0);
 };
+const openH = (f: number) => E(f, B5.win2, B5.win2 + 10) * (1 - E(f, B5.beat2 + 9, B5.grow0 + 8));
 const heartState = (f: number): State2 => {
   const from = feedState(B5.week0 + 12).orbit;
-  const open = E(f, B5.win2, B5.win2 + 10) * (1 - E(f, B5.beat2 + 9, B5.grow0 + 8));
+  const open = openH(f);
   const hv = ease(f, B5.win2 + 2, B5.newHeart + 8);
   const p = regen5(f, {heart: hv, beat: beat5(f), win: {a: 0, r: 34, open}});
   p.win!.a = heartAOf(p);
@@ -343,9 +345,10 @@ const heartState = (f: number): State2 => {
 // ---------------------------------------------------------------- 21.5-25.0 s: the body grows back
 const growState = (f: number): State2 => {
   const settle = 1 - E(f, B5.grow1 - 6, B5.end0 - 2);
-  const winOpen = 0.65 * E(f, B5.grow0, B5.grow0 + 8) * (1 - E(f, B5.m14 - 6, B5.m14 + 10));
+  const winOpen = Math.max(openH(f), 0.65 * E(f, B5.grow0, B5.grow0 + 8) * (1 - E(f, B5.m14 - 6, B5.m14 + 10)));
   const walking = ease(f, WALK0, WALK0 + 8);
-  const p = regen5(f, {crawl: (2 * Math.PI * f) / (walking > 0.5 ? 18 : 9), crawlAmp: lerp(0.5 * settle, 1.3, walking), surge: 0.03 * walking * Math.cos((2 * Math.PI * f) / 18), sway: 1.4, bend: 0.25 * Math.sin(f / 9) * settle, heart: 1, beat: 0.6 * beatAt(f, B5.beat2 + 10, BEAT_PER5), win: {a: 50, r: 34, open: winOpen}});
+  const p = regen5(f, {crawl: (2 * Math.PI * f) / (walking > 0.5 ? 18 : 9), crawlAmp: lerp(0.5 * settle, 1.3, walking), surge: 0.03 * walking * Math.cos((2 * Math.PI * f) / 18), sway: 1.4, bend: 0.25 * Math.sin(f / 9) * settle, heart: 1, beat: beat5(f), win: {a: 50, r: 34, open: winOpen}});
+  p.win!.a = lerp(heartAOf(p), 50, E(f, B5.grow0, B5.grow0 + 20));
   const from = heartState(B5.grow0 - 1).orbit;
   const mid = (a: number) => geo(p).at(a, 0, 4);
   const v7 = rel(mid(20), PHS_AZ, -112, 18, 100, 3300, 1000);
@@ -356,8 +359,8 @@ const growState = (f: number): State2 => {
   orbit = lerpOrbit(orbit, v21, E(f, B5.m21 - 16, B5.m21 + 8));
   const run = 1 - ease(f, B5.grow1 - 6, B5.grow1 + 2);
   return {
-    shot: 'G', env: 'sea', seaVivid: true, orbit, pieces: [p], feed: {u: 0.02, drain: 1, down: true, gone: E(f, B5.grow0, B5.m14)}, lapse: run, frondFade: 0.6 * (1 - E(f, B5.grow0, B5.grow0 + 10)),
-    night: run * 0.18 * (0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * seg(f, B5.grow0, B5.grow1))),
+    shot: 'G', env: 'sea', seaVivid: true, orbit, pieces: [p], feed: {u: 0.02, drain: 1, down: true, gone: E(f, B5.grow0, B5.m14)}, lapse: run, frondFade: 0.6 * openH(f),
+    night: Math.max(run * 0.18 * (0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * seg(f, B5.grow0, B5.grow1))), 0.22 * openH(f)),
     labels: [{text: `TIME-LAPSE · DAY ${Math.round(dayAt5(f))}`, op: 1 - ease(f, B5.grow1 + 2, B5.grow1 + 8), icon: 'ff'}],
   };
 };
