@@ -22,6 +22,8 @@ const ramp = (base: string, lam: number, spec: number) => {
   const c = t < 0.5 ? mix(shade(base, 0.7), base, t / 0.5) : mix(base, lit(base, 0.42), (t - 0.5) / 0.5);
   return spec > 0.02 ? mix(c, '#FFFFFF', Math.min(0.8, spec)) : c;
 };
+/** facets with a corner nearer than this (world units in front of the lens) are not drawn */
+const NEAR = 3;
 const quadOf = (q: V3[]) => mul3(add3(add3(q[0], q[1]), add3(q[2], q[3])), 0.25);
 
 export type SlugOpts = {ink?: number; op?: number; noSpots?: boolean};
@@ -156,6 +158,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
         fill = mix(fill, mix('#2F5F2E', '#6E9E52', clamp(0.3 + 0.4 * lam)), 0.88 * ww);
         if (ww > 0.3) zWin = Math.min(zWin, depth(B, qc));
       }
+      if (Math.min(R2[i][j].z, R2[i + 1][j].z, R2[i + 1][j + 1].z, R2[i][j + 1].z) < NEAR) continue; // behind or at the lens
       F.push({z: depth(B, qc), d: poly([R2[i][j], R2[i + 1][j], R2[i + 1][j + 1], R2[i][j + 1]]), fill, op: surfOp, ink: ww > 0.6 ? undefined : ink || undefined});
     }
   }
@@ -256,6 +259,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
             fill = mix(fill, mix('#4F8A42', '#9CC97C', 0.4 + 0.4 * s), 0.75 * fw);
             if (fw > 0.3) zWin = Math.min(zWin, depth(B, qc));
           }
+          if (Math.min(G2[i][k].z, G2[i + 1][k].z, G2[i + 1][k + 1].z, G2[i][k + 1].z) < NEAR) continue;
           F.push({z: depth(B, qc), d: poly([G2[i][k], G2[i + 1][k], G2[i + 1][k + 1], G2[i][k + 1]]), fill, op: xr > 0 ? 1 - 0.55 * xr : undefined, ink: fw > 0.6 ? undefined : ink || undefined});
         }
       }
@@ -289,13 +293,15 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     for (const side of [1, -1]) {
       const bA = 6.5, h0 = G.h(bA);
       const swA = sw * 0.9 * Math.sin(t * 1.9 + side * 0.8), swV = sw * 0.7 * Math.sin(t * 1.4 + side * 2.1);
-      const P0 = G.at(bA, side * 2.6, h0 * 0.92), P1 = G.at(3.6 + swA * 0.3, side * 5.4, h0 + 7.4), P2_ = G.at(-2.2 + swA, side * (9.8 + swV), h0 + 13.0);
+      // V4: shorter, more slender rhinophores (they were reading as two big orange horns)
+      const rk = p.style === 'v4' ? 0.7 : 1;
+      const P0 = G.at(bA, side * 2.6, h0 * 0.92), P1 = G.at(3.6 + swA * 0.3, side * (2.6 + 2.8 * rk), h0 + 7.4 * rk), P2_ = G.at(-2.2 * rk + swA, side * (2.6 + (7.2 + swV) * rk), h0 + 13.0 * rk);
       const nU = 10, nR = 10;
       const cen: V3[] = [], rad: number[] = [];
       for (let i = 0; i <= nU; i++) {
         const u = i / nU;
         cen.push([0, 1, 2].map((k) => (1 - u) * (1 - u) * P0[k] + 2 * u * (1 - u) * P1[k] + u * u * P2_[k]) as V3);
-        rad.push((lerp(1.6, 0.5, Math.pow(u, 1.25)) + 0.28 * Math.sin(Math.PI * u)) * (u > 0.97 ? 0.6 : 1));
+        rad.push((lerp(1.6, 0.5, Math.pow(u, 1.25)) + 0.28 * Math.sin(Math.PI * u)) * (u > 0.97 ? 0.6 : 1) * (p.style === 'v4' ? 0.82 : 1));
       }
       const rings = cen.map((c, i) => {
         const tan = norm3(sub3(cen[Math.min(nU, i + 1)], cen[Math.max(0, i - 1)]));
@@ -328,13 +334,14 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           const q = [rings[i][k], rings[i + 1][k], rings[i + 1][k + 1], rings[i][k + 1]];
           const qc = quadOf(q);
           const u = (i + 0.5) / nU;
-          const base = u < 0.6 ? headCol : u < 0.85 ? C.rhinoTip : C.rhinoTip2;
+          const base = p.style === 'v4' ? (u < 0.74 ? headCol : u < 0.9 ? '#D9A24E' : '#EBCB78') : u < 0.6 ? headCol : u < 0.85 ? C.rhinoTip : C.rhinoTip2;
           let ink = '';
           if (!rvAt(i, k - 1)) ink += seg(RR[i][k], RR[i + 1][k]);
           if (!rvAt(i, k + 1)) ink += seg(RR[i][k + 1], RR[i + 1][k + 1]);
           if (i === nU - 1) ink += seg(RR[i + 1][k], RR[i + 1][k + 1]);
           // the rhinophores are thin and translucent: lift their shadow side so a back-lit one never goes muddy
           const [lam, spc] = lightOf(rn[i][k], qc);
+          if (Math.min(RR[i][k].z, RR[i + 1][k].z, RR[i + 1][k + 1].z, RR[i][k + 1].z) < NEAR) continue;
           F.push({z: depth(B, qc), d: poly([RR[i][k], RR[i + 1][k], RR[i + 1][k + 1], RR[i][k + 1]]), fill: ramp(base, lam * 0.6 + 0.25, spc * 1.2), ink: ink || undefined});
         }
       // the rolled groove along the inner side
@@ -457,7 +464,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
       organ(a, v, 0.48 + 0.18 * Math.sin(k * 2.9), [1.5 + 0.6 * Math.abs(Math.sin(k)), 1.1, 0.95], k % 3 ? C.gland : '#4E8A3C', vis0(a) * (a > A_CUT + 3 ? gS : 1) * 0.9, {spec: 0.35});
     }
     // the head: the pale buccal mass at the front, the paired cerebral ganglia above it
-    organ(5.5, 0, 0.38, [2.3, 1.7, 1.4], '#E5BFA6', vis0(5.5), {spec: 0.5});
+    const pm = p.pump ?? 0;
+    organ(5.5 - 0.5 * pm, 0, 0.38, [2.3 * (1 + 0.16 * pm), 1.7 * (1 - 0.12 * pm), 1.4 * (1 + 0.18 * pm)], mix('#E5BFA6', '#9CC46E', 0.35 * (p.green ?? 0)), vis0(5.5), {spec: 0.5});
     for (const sd of [1, -1]) organ(9.5, sd * 0.22, 0.62, [1.0, 0.95, 0.8], '#F2E8BE', vis0(9.5), {spec: 0.7});
     // the gut: one continuous pale tube back from the buccal mass, where the window shows it
     {
@@ -504,8 +512,11 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
         const v0 = G.at(heartA - 2.2 * gsz, 0, G.h(heartA) * 0.62), v1 = G.at(heartA - 6 * gsz, 0, G.h(heartA - 6) * 0.5);
         OR.push(capsuleItem(B, v0, v1, 0.38 * gsz * (p.scale ?? 1), 0.28 * gsz * (p.scale ?? 1), '#E9A593', {opacity: clamp(op * form), ink: Math.max(0.6, inkW * 0.3), spec: 0.4}));
       }
-      organ(heartA - 0.7 * gsz, 0, 0.63, [2.1 * (1 - 0.3 * sys), 1.25 * (1 - 0.38 * sys), 1.35 * (1 - 0.36 * sys)].map((x) => x * gsz) as [number, number, number], mix('#E0806C', '#C9594A', sys), op * form, {spec: 0.8, glossy: true});
-      organ(heartA + 1.6 * gsz, 0.06, 0.72, [1.2 * (1 + 0.2 * sys), 1.15 * (1 + 0.22 * sys), 0.8].map((x) => x * gsz) as [number, number, number], '#EFB5A2', op * form * 0.9, {spec: 0.6});
+      const sq = regen ? 1.5 : 1; // the new heart's squeeze is drawn larger so it reads at phone size
+      // (the new heart is seen from above: its squeeze must show in plan, so length and width shrink hard)
+      const vk = regen ? [0.55, 0.55, 0.3] : [0.3, 0.38, 0.36];
+      organ(heartA - 0.7 * gsz, 0, 0.63, [2.1 * (1 - vk[0] * sys), 1.25 * (1 - vk[1] * sys), 1.35 * (1 - vk[2] * sys)].map((x) => x * gsz * (regen ? 1.25 : 1)) as [number, number, number], mix('#E0806C', '#A8382E', sys), op * form, {spec: 0.8, glossy: true});
+      organ(heartA + 1.6 * gsz, 0.06, 0.72, [1.2 * (1 + 0.2 * sq * sys), 1.15 * (1 + 0.22 * sq * sys), 0.8].map((x) => x * gsz) as [number, number, number], '#EFB5A2', op * form * 0.9, {spec: 0.6});
     }
     // over the window skin, in their own far-to-near order
     const zTop = (isFinite(zWin) ? zWin : depth(B, G.at(win.a, 0, 3))) - 0.05;
@@ -554,6 +565,7 @@ export const SlugFloor: React.FC<{B: Basis; p: Piece; id: string; alpha?: number
   const outline = [...as.map((a) => proj(B, G.at(a, ext(a), 0.02))), ...as.slice().reverse().map((a) => proj(B, G.at(a, -ext(a), 0.02)))];
   const foot = [...as.map((a) => proj(B, G.at(a, G.w(a) * 1.06, 0.01))), ...as.slice().reverse().map((a) => proj(B, G.at(a, -G.w(a) * 1.06, 0.01)))];
   const s = proj(B, G.at((p.a0 + aEnd) / 2, 0, 0)).s;
+  if (outline.some((q) => q.z < NEAR)) return null;
   return (
     <g>
       <defs>

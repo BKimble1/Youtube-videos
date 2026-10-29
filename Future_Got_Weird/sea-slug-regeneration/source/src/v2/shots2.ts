@@ -14,13 +14,15 @@ export type State2 = {
   pieces: Piece[];
   /** rack focus: blur (px) on the head piece, on the body piece, on the background */
   blur?: {head?: number; body?: number; back?: number};
-  trail?: {path: Path; from: number; to: number; op: number};
+  trail?: {path: Path; from: number; to: number; op: number; w?: number};
   frags?: Frag[];
   probe?: {tip: V3; dir: V3; press: number; op: number};
   dim?: number;
-  micro?: {op: number; para: number; zoom: number; reveal: number; swim?: number; bar?: number};
+  micro?: {op: number; para: number; zoom: number; reveal: number; swim?: number; bar?: number; pan?: number};
+  /** V4 micro look (Micro4) */
+  microV4?: boolean;
   /** the food frond: puncture height (0..1 along the stalk) and how far it has drained */
-  feed?: {u: number; drain: number; down?: boolean; flow?: number};
+  feed?: {u: number; drain: number; down?: boolean; flow?: number; gone?: number};
   /** time-lapse: the set animates fast (0..1) and the light cycles (night darkening 0..1) */
   lapse?: number;
   /** fade the algae out (inside views) */

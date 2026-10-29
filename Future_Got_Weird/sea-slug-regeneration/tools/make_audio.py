@@ -24,9 +24,9 @@ EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
 # V2 (`make_audio.py V2`): the same voice, beds and synthesis, retimed to the V2 picture (audio/cues_v2.json)
 VER = sys.argv[1] if len(sys.argv) > 1 else 'V1'
-V3 = VER == 'V3'
-V2 = VER in ('V2', 'V3')  # V3 shares the V2 cue layout and choices, plus its own events below
-cj = json.load(open(os.path.join(EP, {'V1': 'audio/cues.json', 'V2': 'audio/cues_v2.json', 'V3': 'audio/cues_v3.json'}[VER])))
+V3 = VER in ('V3', 'V4')  # V4 uses the V3 event set on its own frames
+V2 = VER in ('V2', 'V3', 'V4')  # V3 shares the V2 cue layout and choices, plus its own events below
+cj = json.load(open(os.path.join(EP, {'V1': 'audio/cues.json', 'V2': 'audio/cues_v2.json', 'V3': 'audio/cues_v3.json', 'V4': 'audio/cues_v4.json'}[VER])))
 FR = cj['frames']
 DUR = FR / 30
 N = int(round(DUR * SR))
@@ -232,9 +232,9 @@ if peak > db(-1.5):
     mix[over] = np.sign(mix[over]) * (thr + (db(-1.5) - thr) * np.tanh((np.abs(mix[over]) - thr) / (db(-1.5) - thr)))
 final_l = meter.integrated_loudness(mix)
 
-MD = {'V1': 'audio/mix', 'V2': 'audio/mix_v2', 'V3': 'audio/mix_v3'}[VER]
+MD = {'V1': 'audio/mix', 'V2': 'audio/mix_v2', 'V3': 'audio/mix_v3', 'V4': 'audio/mix_v4'}[VER]
 os.makedirs(os.path.join(EP, MD, 'stems'), exist_ok=True)
-sf.write(os.path.join(EP, {'V1': 'source/public/audio/mix.wav', 'V2': 'source/public/audio/mix_v2.wav', 'V3': 'source/public/audio/mix_v3.wav'}[VER]), mix, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, {'V1': 'source/public/audio/mix.wav', 'V2': 'source/public/audio/mix_v2.wav', 'V3': 'source/public/audio/mix_v3.wav', 'V4': 'source/public/audio/mix_v4.wav'}[VER]), mix, SR, subtype='PCM_24')
 sf.write(os.path.join(EP, MD, f'FGW_SeaSlug_{VER}_mix.wav'), mix, SR, subtype='PCM_24')
 g = db(-14 - mix_l)
 for name, x in [('voice', voice_n * g), ('beds', music_n * duck * g), ('effects', (sfx * duck * 2.2 + key * 2.2) * g)]:
@@ -250,6 +250,6 @@ meas = {'duration_s': DUR, 'frames': FR, 'integrated_lufs': round(final_l, 2), '
         'loop_seam_sample_jump': round(seam, 5),
         'voice_correlation_with_source': round(float(np.corrcoef(voice_n, voice)[0, 1]), 6)}
 json.dump(meas, open(os.path.join(EP, MD, 'mix_measure.json'), 'w'), indent=1)
-json.dump(log, open(os.path.join(EP, {'V1': 'audio/sfx_cues.json', 'V2': 'audio/sfx_cues_v2.json', 'V3': 'audio/sfx_cues_v3.json'}[VER]), 'w'), indent=1)
+json.dump(log, open(os.path.join(EP, {'V1': 'audio/sfx_cues.json', 'V2': 'audio/sfx_cues_v2.json', 'V3': 'audio/sfx_cues_v3.json', 'V4': 'audio/sfx_cues_v4.json'}[VER]), 'w'), indent=1)
 print(json.dumps(meas, indent=1))
 print(len(log), 'effect cues')

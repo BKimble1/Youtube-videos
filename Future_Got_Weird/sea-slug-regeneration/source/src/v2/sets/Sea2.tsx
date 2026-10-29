@@ -85,7 +85,7 @@ const frondGeo = (fr: Frond, t: number) => {
 const GREEN = '#63B947', GREEN_HI = '#B4E487', GREEN_DK = '#2F7430', EMPTY = '#DDEBCB';
 
 /** depth-sorted items for the fronds (blurred by distance from the focal plane, fogged behind) */
-export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed: {u: number; drain: number; down?: boolean; flow?: number}, fade = 0): Item[] =>
+export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed: {u: number; drain: number; down?: boolean; flow?: number; gone?: number}, fade = 0): Item[] =>
   FRONDS.map((fr, i) => {
     if (fade > 0.99) return {z: 0, el: null};
     const G = frondGeo(fr, t);
@@ -150,7 +150,7 @@ export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed
     const bp = P(fr.base);
     els.push(<ellipse key="hf" cx={bp.x} cy={bp.y} rx={1.6 * bp.s} ry={0.6 * bp.s} fill={mix('#3E6A34', WATER, fg * 0.8)} opacity={0.8} />);
     void s;
-    return {z, el: <g key={`fd${i}`} filter={b ? `url(#${id}rb${b})` : undefined} opacity={0.94 * (1 - fade)}>{els}</g>};
+    return {z, el: <g key={`fd${i}`} filter={b ? `url(#${id}rb${b})` : undefined} opacity={0.94 * (1 - fade) * (fr.food ? 1 - (feed.gone ?? 0) : 1)}>{els}</g>};
   });
 
 const blob = (c: V3, rx: number, ry: number, rot: number, n: number, R: () => number): V3[] =>

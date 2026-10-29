@@ -1,17 +1,18 @@
 // V2 frame renderer (fallback for `remotion render`, whose headless screenshot path stalled intermittently on these
 // frames in this environment): each frame is the same React picture (Picture2), rendered to static markup and
 // rasterised by Playwright's Chromium at 1080x1920, written as PNG. Encode afterwards with ffmpeg (README).
-// Usage (bundled with esbuild): node render_v2.cjs <outDir> <from> <to> <worker> <workers> [v2|v3]
+// Usage (bundled with esbuild): node render_v2.cjs <outDir> <from> <to> <worker> <workers> [v2|v3|v4]
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {mkdirSync} from 'fs';
 import {Picture2} from '../source/src/v2/Film2';
 import {Picture3} from '../source/src/v3/Film3';
+import {Picture4} from '../source/src/v4/Film4';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const {chromium} = require('playwright');
 const [out, from, to, wk, nw] = [process.argv[2], +process.argv[3], +process.argv[4], +process.argv[5], +process.argv[6]];
-const Pic = process.argv[7] === 'v3' ? Picture3 : Picture2;
+const Pic = process.argv[7] === 'v4' ? Picture4 : process.argv[7] === 'v3' ? Picture3 : Picture2;
 const NM = process.env.NM ?? `${process.cwd()}/source/node_modules`; // run from the episode folder
 (async () => {
   mkdirSync(out, {recursive: true});

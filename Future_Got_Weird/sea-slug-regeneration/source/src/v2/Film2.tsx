@@ -12,6 +12,7 @@ import {GLOVE} from '../kit/scene';
 import {add3, mul3} from '../kit/three';
 import {DishRim, ForeGrit, LabBack, LensGrit} from './sets/Lab2';
 import {Micro2} from './sets/Micro2';
+import {Micro4} from '../v4/Micro4';
 import {SeaBack, SeaOver, frondItems} from './sets/Sea2';
 import {SlugFloor, slugItem} from './slug/Mesh';
 import {CUTS2, State2, stateAt2} from './shots2';
@@ -84,7 +85,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string; de
         {(st.night ?? 0) > 0.005 && <rect width={W} height={H} fill="#06202C" opacity={st.night} />}
         {st.env === 'lab' && <ForeGrit B={B} id={id} near={focusZ * 0.45} />}
         {st.fore && <LensGrit B={B} id={id} bits={st.fore} />}
-        {st.micro && <Micro2 id={id} t={t} {...st.micro} />}
+        {st.micro && (st.microV4 ? <Micro4 id={id} t={t} {...st.micro} /> : <Micro2 id={id} t={t} {...st.micro} />)}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}
       </svg>
       {captions && <Captions t={f / FPS} f={f} place={def.place} cuts={def.cuts} />}
@@ -104,7 +105,7 @@ const Trail2: React.FC<{st: State2; B: ReturnType<typeof basis>}> = ({st, B}) =>
   const d = `M${pts.map(P2).join(' L')}`;
   return (
     <g opacity={tr.op}>
-      <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity={0.25} strokeWidth={9 * s} strokeLinecap="round" />
+      <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity={0.25} strokeWidth={9 * s * (tr.w ?? 1)} strokeLinecap="round" />
       <path d={d} fill="none" stroke="#FFFFFF" strokeOpacity={0.7} strokeWidth={0.8 * s} strokeLinecap="round" />
     </g>
   );

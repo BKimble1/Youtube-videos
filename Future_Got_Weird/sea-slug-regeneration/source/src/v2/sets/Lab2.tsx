@@ -48,6 +48,8 @@ const fragEls = (B: Basis, f: Frag, t: number, k: string) => {
     const prev = pts[i - 1] ?? f.c;
     pts.push(i === 0 ? f.c : [prev[0] + Math.cos(a) * (f.len / n), prev[1] + Math.sin(a) * (f.len / n), 0.3 + 0.8 * Math.sin(Math.PI * u)]);
   }
+  // nothing behind or right at the lens (a fragment the camera passes over would otherwise blow up across the frame)
+  if (pts.some((q) => proj(B, q).z < 12)) return null;
   const s = proj(B, f.c).s;
   const main = pts.map((q) => proj(B, q));
   // soft Bryopsis: a translucent stalk with two close rows of fine pinnules that curve gently toward the tip and

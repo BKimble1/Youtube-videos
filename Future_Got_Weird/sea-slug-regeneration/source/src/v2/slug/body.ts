@@ -76,6 +76,10 @@ export type Piece = {
   win?: {a: number; r: number; open: number};
   /** V3: a muscular contraction travelling along the body (a ring of narrowing and lift at anatomical a) */
   ripple?: {a: number; amp: number};
+  /** V4 design: narrower parapodia carried more upright and folded over the back, smaller rhinophores */
+  style?: 'v4';
+  /** V4: the buccal mass pumping while feeding (0..1, phase-driven by the caller) */
+  pump?: number;
 };
 
 const growLen = (g: number) => lerp(0.06, 1, smooth(clamp(g)));
@@ -157,14 +161,18 @@ export const geo = (p: Piece): Geo => {
   };
   // asymmetric parapodia: the left opens wider and ruffles more; the right curls in further
   const SIDE = {[1]: {open: 20, curl: 50, ruff: 1.2, ph: 0.0}, [-1]: {open: 28, curl: 58, ruff: 0.95, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
+  const SIDE4 = {[1]: {open: 36, curl: 64, ruff: 0.85, ph: 0.0}, [-1]: {open: 44, curl: 72, ruff: 0.7, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
+  const v4 = p.style === 'v4';
   const flap = (side: number, a: number, s: number): V3 => {
-    const S = SIDE[side];
-    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a));
+    const S = v4 ? SIDE4[side] : SIDE[side];
+    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a)) * (v4 ? 0.88 : 1);
     const tt = clamp((a - F0) / (F1 - F0));
     const ends = Math.pow(1 - Math.sin(Math.PI * tt), 1.4);
     // margin ruffles: a few slow waves along the edge, drifting with time
     const ruf = S.ruff * (Math.sin(a * 0.46 + t * 1.1 + S.ph) * 7 + Math.sin(a * 1.17 - t * 0.7 + S.ph) * 3.5);
-    const a0d = S.open + 30 * ends + 34 * fl + 70 * twAt(side, a);
+    // V4: two or three broad folds along the base, so the sheet is not one flat leaf
+    const folds = v4 ? 9 * Math.sin(a * 0.19 + S.ph + 0.3 * Math.sin(t * 0.7)) + 4 * Math.sin(a * 0.41 - S.ph) : 0;
+    const a0d = S.open + 30 * ends + 34 * fl + 70 * twAt(side, a) + folds;
     let lat = wa * (0.98 + 0.04 * Math.sin(a * 0.31 + side)), z = ha * 0.34;
     const n = 6, ds = (spr * s) / n;
     for (let k = 1; k <= n; k++) {
