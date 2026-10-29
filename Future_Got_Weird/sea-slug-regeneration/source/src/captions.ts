@@ -4,8 +4,11 @@ import {CAPTIONS} from './lib';
 
 const LOW = 1560, HIGH = 330;
 const PLACE: number[] = CAPTIONS.map(() => LOW);
+// V2 per-caption placements (index -> centre y); read by capPlace2
+export const PLACE2: Record<number, number> = {3: HIGH, 4: HIGH};
 export const capPlace = (i: number, f: number) => {
   void f;
   return PLACE[i] ?? LOW;
 };
+export const capPlace2 = (i: number) => PLACE2[i] ?? LOW;
 export {HIGH, LOW};

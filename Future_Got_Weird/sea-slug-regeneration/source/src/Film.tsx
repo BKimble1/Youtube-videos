@@ -60,9 +60,9 @@ const NeckRing: React.FC<{st: State}> = ({st}) => {
   );
 };
 
-export const Captions: React.FC<{t: number; f: number}> = ({t, f}) => {
+export const Captions: React.FC<{t: number; f: number; place?: (i: number, f: number) => number; cuts?: number[]}> = ({t, f, place, cuts: cutsIn}) => {
   // a caption change within two frames of a cut happens on the cut
-  const cuts = [S.feed, S.twice];
+  const cuts = cutsIn ?? [S.feed, S.twice];
   const fr = (s: number) => {
     const f0 = Math.round(s * FPS);
     return cuts.find((c) => Math.abs(c - f0) <= 2) ?? f0;
@@ -70,7 +70,7 @@ export const Captions: React.FC<{t: number; f: number}> = ({t, f}) => {
   const i = CAPTIONS.findIndex((c, k) => f >= (k === 0 ? 0 : fr(c.show)) && f < fr(c.hide));
   if (i < 0) return null;
   const c = CAPTIONS[i];
-  const y = capPlace(i, f);
+  const y = (place ?? capPlace)(i, f);
   const words = c.text.split(' ');
   void t;
   return (
