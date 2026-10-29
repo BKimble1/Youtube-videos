@@ -18,11 +18,11 @@ export const stalkLine = (R: Rig, sp: StalkSpec): V3[] => {
   const st = R.st, sc = st.scale ?? 1;
   const base = hw(st, R.head, STALK_BASE);
   const H = R.head;
-  let d = norm3(add3(mul3(H.u, 1), add3(mul3(H.f, -0.3), mul3(H.l, sp.lean))));
+  let d = norm3(add3(mul3(H.u, 1), add3(mul3(H.f, -0.55), mul3(H.l, sp.lean))));
   const pts: V3[] = [base];
   const step = (sp.len * sc) / NS;
   for (let k = 1; k <= NS; k++) {
-    const w1 = noise1(k * 0.45, sp.seed) * 0.085, w2 = noise1(k * 0.45, sp.seed + 7) * 0.085;
+    const w1 = noise1(k * 0.32, sp.seed) * 0.11, w2 = noise1(k * 0.32, sp.seed + 7) * 0.11;
     d = norm3(add3(d, add3([0, 0, -sp.bend * 0.045 * (k < 4 ? 0.3 : 1)], add3(mul3(H.l, w1), mul3(H.f, w2)))));
     pts.push(add3(pts[k - 1], mul3(d, step)));
   }

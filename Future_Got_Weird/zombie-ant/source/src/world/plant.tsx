@@ -73,9 +73,14 @@ export const midrib = (lf: Leaf, sp: ReturnType<typeof leafSpine>, u: number) =>
   const c = lerp3(sp.pts[k], sp.pts[k + 1], t);
   const up = norm3(lerp3(sp.ups[k], sp.ups[k + 1], t));
   const dir = norm3(lerp3(sp.dirs[k], sp.dirs[k + 1], t));
-  const r = 0.34 * (1 - u) + 0.1;
+  let r = 0.34 * (1 - u) + 0.1;
   let cc = add3(c, mul3(up, -MIDRIB_DROP));
-  if (lf.dent) cc = add3(cc, mul3(up, -lf.dent.d * Math.exp(-(((u - lf.dent.u) * lf.L) ** 2) / 2.5)));
+  if (lf.dent) {
+    const g = Math.exp(-(((u - lf.dent.u) * lf.L) ** 2) / 2.5);
+    cc = add3(cc, mul3(up, -lf.dent.d * g));
+    // the vein is squeezed where the jaws clamp it
+    r *= 1 - 0.7 * Math.min(1, lf.dent.d / 0.5) * Math.exp(-(((u - lf.dent.u) * lf.L) ** 2) / 0.35);
+  }
   return {c: cc, r, up, dir};
 };
 
@@ -150,7 +155,7 @@ export const leafItems = (B: Basis, lf: Leaf, o: {fog?: number; key?: string} = 
   // the raised midrib under the blade: one smooth tapering tube
   const rib: Item[] = [];
   if (under) {
-    const us = Array.from({length: 25}, (_, k) => (k / 24) * 0.95);
+    const us = Array.from({length: 49}, (_, k) => (k / 48) * 0.95);
     // the part of the midrib in front of the lens (a contiguous run)
     const ms = us.map((u) => midrib(lf, sp, u)).filter((m) => proj(B, m.c).z > NEAR + 0.5);
     if (ms.length > 1) rib.push(tubeItem(B, ms.map((m) => m.c), ms.map((m) => m.r), mix(mix(base, '#C4DE8E', 0.55), '#5E826A', fog * 0.5), {key: `${id}r`, spec: 0.35, ink: Math.max(0.8, w * 0.95), inkOpacity: 1 - fog * 0.6}));

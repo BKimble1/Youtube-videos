@@ -41,39 +41,45 @@
   "way": 29.965
  },
  "HOOK": {
-  "contact": 0.16,
-  "close": 0.16,
+  "contact": 0.32,
+  "close": 0.15,
+  "appr": 0.32,
+  "struggle": [
+   0.36,
+   0.72
+  ],
   "hang": [
-   0.24,
-   0.6
+   0.72,
+   1.06
   ],
   "relax": [
-   0.3,
-   0.7
+   0.66,
+   1
   ],
-  "dieEnd": 0.9,
-  "emerge0": 0.5,
-  "emerge1": 0.82,
-  "stalk0": 0.72,
-  "stalk1": 1.62,
-  "asc0": 1.12,
-  "asc1": 1.68,
-  "open0": 1.66,
-  "open1": 1.88,
-  "spore": 1.88,
-  "land": 2.75
+  "dieEnd": 1.05,
+  "emerge0": 1,
+  "emerge1": 1.28,
+  "stalk0": 1.16,
+  "stalk1": 1.92,
+  "asc0": 1.45,
+  "asc1": 1.95,
+  "open0": 1.93,
+  "open1": 2.08,
+  "spore": 2.08,
+  "land": 2.85
  },
  "EV": {
   "grip": 0,
-  "contact1": 0.16,
-  "swing1": 0.24,
-  "emerge1": 0.5,
-  "grow1a": 0.72,
-  "grow1b": 1.62,
-  "asc1": 1.12,
-  "open1": 1.66,
-  "spore1": 1.88,
-  "land1": 2.75,
+  "contact1": 0.32,
+  "struggle1": 0.36,
+  "swing1": 0.72,
+  "emerge1": 1,
+  "grow1a": 1.16,
+  "grow1b": 1.92,
+  "asc1": 1.45,
+  "open1": 1.93,
+  "spore1": 2.08,
+  "land1": 2.85,
   "walk2a": 1.9,
   "germ": 3.28,
   "spread0": 4.805,

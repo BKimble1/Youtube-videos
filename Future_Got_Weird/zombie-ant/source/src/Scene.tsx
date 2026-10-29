@@ -96,7 +96,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
     const k = Math.max(0, 1 - (t - HOOK.land) / 0.5);
     a2.push({z: proj(B, hs.p).z - 0.6, el: <g key="hsl">{sporeEl(B, hs.p, hs.d, 0.45, 1, 'hs', 0.3 + 0.8 * k, 7).el}</g>});
   }
-  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [2.0, 1.4], onPlant ? a2 : []);
+  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [3.0, 2.2], onPlant ? a2 : []);
   if (g2) groups.push(g2);
   const xr = xrayAt(t);
   if (!onPlant) {

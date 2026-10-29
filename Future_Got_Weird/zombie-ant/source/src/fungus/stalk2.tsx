@@ -28,7 +28,9 @@ export const resetStalkIds = (ns = '') => {
 /** radius (mm) along the stalk at arc fraction a, for a stalk grown to g */
 const radius = (sp: StalkSpec, a: number, g: number) => {
   const flare = 0.16 * Math.exp(-a / 0.035);
-  let r = 0.34 - 0.11 * a + flare + 0.025 * noise1(a * 16, sp.seed) + 0.05 * Math.exp(-(((a - ASC_AT) / 0.05) ** 2));
+  // uneven thickness: slow swellings and pinches, two small nodes, and a thickening where the cushion sits
+  const nodes = 0.04 * Math.exp(-(((a - 0.23 - 0.05 * Math.sin(sp.seed)) / 0.03) ** 2)) + 0.035 * Math.exp(-(((a - 0.41) / 0.025) ** 2));
+  let r = 0.34 - 0.11 * a + flare + 0.045 * noise1(a * 9, sp.seed) + 0.02 * noise1(a * 23, sp.seed + 3) + nodes + 0.05 * Math.exp(-(((a - ASC_AT) / 0.05) ** 2));
   const growing = g < 0.985;
   const toTip = (g - a) * sp.len; // mm from the tip
   if (growing) {
@@ -46,12 +48,21 @@ export const emergeItems = (B: Basis, R: Rig, e: number): Item[] => {
   if (e <= 0.01) return [];
   const st = R.st, sc = st.scale ?? 1, H = R.head;
   const c = hw(st, H, STALK_BASE);
-  const n = norm3(add3(mul3(H.u, 1), mul3(H.f, -0.35)));
+  const n = norm3(add3(mul3(H.u, 1), mul3(H.f, -0.55)));
   const bl = Math.min(1, e / 0.55);
   const items: Item[] = [];
   // the blister: the cuticle stretched and paling over the swelling tissue
   const bc = add3(c, mul3(n, 0.08 * bl * sc));
-  items.push(ellipsoidItem(B, bc, [mul3(H.f, 0.42 * bl * sc), mul3(H.l, 0.42 * bl * sc), mul3(n, 0.24 * bl * sc)], mix('#7A4632', '#D6AE90', 0.35 + 0.5 * bl), {spec: 1.2, glossy: true, zBias: -0.15 * sc}));
+  items.push(ellipsoidItem(B, bc, [mul3(H.f, 0.5 * bl * sc), mul3(H.l, 0.46 * bl * sc), mul3(n, 0.26 * bl * sc)], mix('#7A4632', '#D6AE90', 0.35 + 0.5 * bl), {spec: 1.0, glossy: true, zBias: -0.15 * sc}));
+  // the primordium: a small irregular knot of pale lobes pushing through the split
+  const pk = Math.max(0, Math.min(1, (e - 0.55) / 0.45));
+  if (pk > 0) {
+    const lobes: [number, number, number, number][] = [[0, 0, 0.22, 0.3], [0.16, 0.1, 0.12, 0.2], [-0.12, -0.1, 0.1, 0.18], [0.05, -0.16, 0.16, 0.16]];
+    lobes.forEach(([a, b, h, r], j) => {
+      const q = add3(add3(c, mul3(n, (0.12 + h) * pk * sc)), add3(mul3(H.f, a * sc), mul3(H.l, b * sc)));
+      items.push(ellipsoidItem(B, q, [mul3(H.f, r * pk * sc), mul3(H.l, r * 0.9 * pk * sc), mul3(n, r * 0.8 * pk * sc)], mix('#E9DCC0', '#C9B08A', j * 0.25), {spec: 0.6, zBias: -0.25 * sc - 0.02 * j}));
+    });
+  }
   // cracks radiating through the head's cuticle as it splits
   const cr = Math.max(0, Math.min(1, (e - 0.35) / 0.4));
   if (cr > 0) {
@@ -98,7 +109,8 @@ const collarEl = (B: Basis, R: Rig, k: number, key: string): Item => {
     z: C.z - 0.2 * sc,
     el: (
       <g key={key} opacity={Math.min(1, k * 1.5)}>
-        <circle cx={f2(C.x)} cy={f2(C.y)} r={f2(0.42 * k * sc * C.s)} fill="#EEE9DC" opacity={0.75} />
+        <circle cx={f2(C.x)} cy={f2(C.y)} r={f2(0.62 * k * sc * C.s)} fill="#EEE9DC" opacity={0.35} />
+        <circle cx={f2(C.x)} cy={f2(C.y)} r={f2(0.45 * k * sc * C.s)} fill="#F2EEE3" opacity={0.75} />
         {strokes.map((d, m) => <path key={m} d={d} stroke="#F6F2E7" strokeWidth={f2(w)} strokeLinecap="round" opacity={0.85} />)}
       </g>
     ),
@@ -186,7 +198,7 @@ export const stalkItemsV2 = (B: Basis, R: Rig, sp: StalkSpec, g: number, asc: nu
   if (asc > 0.01 && g > ASC_AT + 0.06) {
     const C = cushion(line, asc, open);
     const Cp = proj(B, C.c);
-    const base = ellipsoidItem(B, C.c, [mul3(C.d, 1.3 * C.k * sc), mul3(C.out, 0.8 * C.k * sc), mul3(C.side, 1.0 * C.k * sc)], fogC('#6E3E20'), {spec: 0.4, zBias: (o.zBias ?? 0) - 0.02});
+    const base = ellipsoidItem(B, C.c, [mul3(C.d, 1.3 * C.k * sc), mul3(C.out, 0.8 * C.k * sc), mul3(C.side, 1.0 * C.k * sc)], fogC('#5C3A22'), {spec: 0.2, zBias: (o.zBias ?? 0) - 0.02});
     const bumps = perithecia(C)
       .map((q, i) => {
         const Q = proj(B, q.pos);
@@ -204,18 +216,18 @@ export const stalkItemsV2 = (B: Basis, R: Rig, sp: StalkSpec, g: number, asc: nu
           {base.el}
           <defs>
             <radialGradient id={pid} cx="0.35" cy="0.3" r="0.75">
-              <stop offset="0" stopColor={fogC(lit('#B5703A', 0.35))} />
-              <stop offset="0.6" stopColor={fogC('#A2602F')} />
-              <stop offset="1" stopColor={fogC(shade('#A2602F', 0.4))} />
+              <stop offset="0" stopColor={fogC(lit('#93633C', 0.3))} />
+              <stop offset="0.6" stopColor={fogC('#86562F')} />
+              <stop offset="1" stopColor={fogC(shade('#86562F', 0.45))} />
             </radialGradient>
           </defs>
           {bumps.map((b) => {
-            const r = br * b.Q.s * (0.85 + 0.3 * hash(b.i * 2.3));
+            const r = br * b.Q.s * (0.6 + 0.65 * hash(b.i * 2.3));
             const tipP = proj(B, add3(b.pos, mul3(b.n, CUSH.bump * C.k * sc * 0.9)));
             return (
               <g key={b.i}>
-                <circle cx={f2(b.Q.x)} cy={f2(b.Q.y)} r={f2(r)} fill={`url(#${pid})`} stroke={INK} strokeWidth={f2(Math.max(0.5, w * 0.5))} />
-                {open > 0.02 && <circle cx={f2(tipP.x)} cy={f2(tipP.y)} r={f2(r * (0.18 + 0.2 * open))} fill="#1A0D06" opacity={0.3 + 0.7 * open} />}
+                <circle cx={f2(b.Q.x)} cy={f2(b.Q.y)} r={f2(r)} fill={`url(#${pid})`} stroke={shade('#5C3A22', 0.5)} strokeWidth={f2(Math.max(0.4, w * 0.35))} />
+                {open > 0.02 && <circle cx={f2(tipP.x)} cy={f2(tipP.y)} r={f2(r * (0.1 + 0.14 * open))} fill="#1A0D06" opacity={0.25 + 0.6 * open} />}
               </g>
             );
           })}

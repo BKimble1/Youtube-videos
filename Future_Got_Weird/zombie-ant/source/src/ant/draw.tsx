@@ -49,8 +49,9 @@ export const antItems = (B: Basis, R: Rig, o: AntDrawOpts = {}): Item[] => {
   const st = R.st;
   const sc = st.scale ?? 1;
   // x-ray: the exoskeleton as a light amber, translucent shell that keeps its contour
-  const dc = (c: string) => (o.xray ? mix('#D9A86E', c, 0.25) : deadCol(c, st.dead));
-  const fo = o.xray ? 0.3 : undefined;
+  // V3: a dark, translucent shell, so the fungus inside reads against it
+  const dc = (c: string) => (o.xray ? mix('#3A2418', c, 0.35) : deadCol(c, st.dead));
+  const fo = o.xray ? 0.55 : undefined;
   const items: Item[] = [];
   const op = o.shell; // whole-part opacity
   const body = st.body;
