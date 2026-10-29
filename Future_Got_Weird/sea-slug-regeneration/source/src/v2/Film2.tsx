@@ -12,6 +12,7 @@ import {GLOVE} from '../kit/scene';
 import {add3, mul3} from '../kit/three';
 import {DishRim, ForeGrit, LabBack} from './sets/Lab2';
 import {Micro2} from './sets/Micro2';
+import {SeaBack, SeaOver, frondItems} from './sets/Sea2';
 import {SlugFloor, slugItem} from './slug/Mesh';
 import {CUTS2, State2, stateAt2} from './shots2';
 import {capPlace2} from '../captions';
@@ -24,6 +25,9 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
   const t = f / FPS;
   const focusZ = proj(B, st.orbit.target).z;
   const items: {p?: {id: string}; it: Item}[] = st.pieces.map((p) => ({p, it: slugItem(B, p)}));
+  // in time-lapse the tuft sways fast (its own clock runs ahead)
+  const tSet = t + (st.lapse ?? 0) * (f - 552) * 0.5;
+  if (st.env === 'sea') frondItems(B, id, tSet, focusZ, st.feed ?? {u: 0, drain: 0}, st.frondFade).forEach((it) => items.push({it}));
   let hand: React.ReactNode = null;
   if (st.probe && st.probe.op > 0.01) {
     const pr = st.probe;
@@ -56,6 +60,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
           ))}
         </defs>
         {st.env === 'lab' && <LabBack B={B} id={id} t={t} focusZ={focusZ} frags={st.frags} dim={st.dim} />}
+        {st.env === 'sea' && <SeaBack B={B} id={id} t={t} focusZ={focusZ} />}
         {st.trail && <Trail2 st={st} B={B} />}
         {st.pieces.map((p) => <SlugFloor key={p.id} B={B} p={p} id={`${id}${p.id}`} />)}
         {st.env === 'lab' && <DishRim B={B} />}
@@ -65,6 +70,8 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
           return <g key={p?.id ?? `it${i}`} filter={b && b > 0.5 ? `url(#${id}rb${k})` : undefined}>{it.el}</g>;
         })}
         {hand}
+        {st.env === 'sea' && <SeaOver id={id} />}
+        {(st.night ?? 0) > 0.005 && <rect width={W} height={H} fill="#06202C" opacity={st.night} />}
         {st.env === 'lab' && <ForeGrit B={B} id={id} near={focusZ * 0.45} />}
         {st.micro && <Micro2 id={id} t={t} {...st.micro} />}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}

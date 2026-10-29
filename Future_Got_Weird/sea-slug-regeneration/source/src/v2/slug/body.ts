@@ -95,7 +95,12 @@ export const wf = (p: Piece, a: number) => {
   if (isRegen(p)) {
     const g = p.grow!;
     if (a > N0 && a <= A_CUT) f = lerp(1, Math.sqrt(Math.max(0, 1 - Math.pow((a - N0) / (A_CUT - N0), 2))), 1 - smooth(clamp(g / 0.12)));
-    if (a > A_CUT) f = lerp(1, growWid(g), smooth(clamp((a - A_CUT) / 6))) * smooth(clamp(g / 0.07));
+    if (a > A_CUT) {
+      f = lerp(1, growWid(g), smooth(clamp((a - A_CUT) / 6))) * smooth(clamp(g / 0.07));
+      // while it is short the new tissue ends in a rounded bud, not a flat cut
+      const u = (a - A_CUT) / (100 - A_CUT);
+      f *= lerp(Math.sqrt(clamp((1 - u) / 0.3)), 1, smooth(clamp((g - 0.3) / 0.5)));
+    }
     return f;
   }
   if (a > N0 && a < N1) {

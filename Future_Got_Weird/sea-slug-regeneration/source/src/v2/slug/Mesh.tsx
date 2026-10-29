@@ -381,7 +381,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     const ax = Pp(G.at(heartA - 1, 0, G.h(heartA) * 0.66)), bx = Pp(G.at(heartA + 1, 0, G.h(heartA) * 0.66));
     const ang = (Math.atan2(bx.y - ax.y, bx.x - ax.x) * 180) / Math.PI;
     const gs = regen ? lerp(0.62, 1, smooth(g)) : 1;
-    const vs = (1 + 0.2 * bt) * lerp(0.45, 1, smooth(hv)) * gs;
+    const vs = (1 + (regen ? 0.3 : 0.2) * bt) * lerp(0.45, 1, smooth(hv)) * gs;
     const lw = Math.max(1, 0.12 * s);
     F.push({
       z: cut && secZ ? Math.min(depth(B, c3), secZ - 0.6) : depth(B, c3),

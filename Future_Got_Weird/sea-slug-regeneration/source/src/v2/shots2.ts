@@ -19,6 +19,13 @@ export type State2 = {
   probe?: {tip: V3; dir: V3; press: number; op: number};
   dim?: number;
   micro?: {op: number; para: number; zoom: number; reveal: number};
+  /** the food frond: puncture height (0..1 along the stalk) and how far it has drained */
+  feed?: {u: number; drain: number};
+  /** time-lapse: the set animates fast (0..1) and the light cycles (night darkening 0..1) */
+  lapse?: number;
+  /** fade the algae out (inside views) */
+  frondFade?: number;
+  night?: number;
   labels: {text: string; op: number; icon?: 'ff' | 'rw' | 'none'; y?: number}[];
 };
 
@@ -264,13 +271,114 @@ const paraShot = (f: number): State2 => {
   return {shot: 'P', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, dim: 0.3 * (1 - kout), micro, labels: [{text: 'HYPOTHESIS', op: hyp, icon: 'none'}]};
 };
 
-const rest = (f: number): State2 => ({...paraShot(Math.min(f, S.feed - 1)), shot: 'R'});
+// ---------------------------------------------------------------- "But the head starts eating algae,"
+// Cut to the seabed: a low macro on a tuft of Bryopsis. The head glides in, rears a little and presses its snout to a
+// frond's stalk; it pumps (a slow rhythmic surge) while the frond drains from the puncture upward and goes pale and
+// clear, and the head itself greens.
+export const PHS = new Path([[0, 160], [0, -160]]);
+export const fArrive = S.feed + 18, fSuck = S.feed + 22;
+export const headSea = (f: number): Piece => {
+  const t = f / 30;
+  const arrive = ease(f, S.feed - 6, fArrive, outCubic);
+  const pump = f > fSuck ? Math.sin((2 * Math.PI * (f - fSuck)) / 11) : 0;
+  const go = 1 - ease(f, fArrive - 8, fArrive + 2);
+  return {
+    id: 'head', path: PHS, tip: lerp(110, 124.4, arrive) + 0.35 * pump, a0: 0, a1: 22, gap: 0, pinch: 1, seal: 1, t,
+    crawl: (2 * Math.PI * f) / 26, crawlAmp: go, surge: 0.018 * pump * ease(f, fSuck, fSuck + 6),
+    rear: 0.35 * ease(f, fArrive - 10, fArrive + 4), green: 0.85 * ease(f, fSuck + 2, S.heart + 10),
+  };
+};
+const feedShot = (f: number): State2 => {
+  const k = ease(f, S.feed, S.heart, (u) => u * (2 - u));
+  const orbit: Orbit = {target: [0, 41, 6], az: lerp(-78, -70, k), el: lerp(14, 11, k), d: lerp(96, 84, k), f: 3300, cy: 1160};
+  return {shot: 'F', env: 'sea', orbit, pieces: [headSea(f)], feed: {u: 0.02, drain: ease(f, fSuck + 2, S.heart + 14)}, labels: []};
+};
+
+// ---------------------------------------------------------------- "and about a week later, a new heart starts beating."
+// TIME-LAPSE on the seabed: days pass (light cycling, the tuft swaying fast), DAY 1 -> DAY 7; a small pale stub grows
+// behind the head. Then a cutaway opens through the new tissue: a tiny new heart forms on "new heart" and starts to
+// beat on "beating" (the heartbeat sound is cued from the same frames), and the beat is held.
+export const fWeek0 = S.heart + 6, fWeek1 = F('new') - 4, fNew = F('new'), fBeat = F('beating'), BEAT_PER = 20;
+export const growAt = (f: number) => {
+  // day 1 -> 7 (about 0.17), then the weeks of scene 7 run it on to 1
+  if (f < S.grow) return 0.025 + 0.15 * ease(f, fWeek0, fWeek1, (u) => u * (2 - u));
+  return growStage(f);
+};
+export const dayAt = (f: number) => (f < S.grow ? 1 + 6 * ease(f, fWeek0, fWeek1) : dayStage(f));
+const TIP_SEA = 124.4;
+export const regenSea = (f: number, o: Partial<Piece> = {}): Piece => {
+  const t = f / 30;
+  const hv = f < fNew - 6 ? 0 : ease(f, fNew - 6, fNew + 10);
+  return {
+    id: 'regen', path: PHS, tip: TIP_SEA, a0: 0, a1: 100, gap: 0, pinch: 1, seal: 1, t, grow: growAt(f), green: 0.85,
+    heart: hv, beat: beatAt(f, fBeat, BEAT_PER) + (f < fBeat ? 0.25 * hv * Math.sin((2 * Math.PI * (f - fNew)) / 30) * 0 : 0), ...o,
+  };
+};
+const heartShot = (f: number): State2 => {
+  const lapse = ease(f, fWeek0 - 2, fWeek0 + 2) * (1 - ease(f, fWeek1, fWeek1 + 4));
+  const open = ease(f, fWeek1 - 2, fNew + 4);
+  const p = regenSea(f, {cut: {a0: 10, a1: 70, open}});
+  const from = feedShot(S.heart - 1).orbit;
+  const side: Orbit = {target: [0, 54, 4], az: -112, el: 30, d: 120, f: 3300, cy: 1060};
+  const sec: Orbit = {target: [0, 35.6 + 25, 4], az: -100, el: 40, d: 100, f: 3300 * 1.75, cy: 1000};
+  const k1 = ease(f, S.heart, fWeek1, (u) => u * u * (3 - 2 * u)), k2 = ease(f, fWeek1 - 4, fNew + 14, (u) => u * u * (3 - 2 * u));
+  const orbit = lerpOrbit(lerpOrbit(from, side, k1), sec, k2);
+  const day = Math.round(dayAt(f));
+  return {
+    shot: 'H', env: 'sea', orbit, pieces: [p], feed: {u: 0.02, drain: 1}, lapse, frondFade: ease(f, fWeek1, fNew + 6),
+    night: lapse * 0.34 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (dayAt(f) - 1))),
+    labels: [{text: `TIME-LAPSE · DAY ${day}`, op: ease(f, fWeek0 - 2, fWeek0 + 3) * (1 - ease(f, fNew + 6, fNew + 14)), icon: 'ff'}],
+  };
+};
+// ---------------------------------------------------------------- "Then over the next few weeks, an entire new body grows back."
+// Three held stages behind the same head, joined by short time-lapse runs: DAY 7 (the bud with its new heart),
+// DAY 14 (body lengthening, parapodia forming as narrow pale flaps, first spots), DAY 21 (full length, parapodia
+// open and ruffled, markings and green restored). The camera rises to an overhead-oblique so the whole animal
+// lies up the frame with the head at the top and the growth coming toward the lens.
+const ST = [
+  {f: S.grow, day: 7, g: 0.175},
+  {f: S.grow + 22, day: 7, g: 0.175},
+  {f: S.grow + 34, day: 14, g: 0.56},
+  {f: S.grow + 58, day: 14, g: 0.56},
+  {f: S.grow + 74, day: 21, g: 1},
+];
+const stageAt = (f: number, key: 'day' | 'g') => {
+  for (let i = 0; i < ST.length - 1; i++) if (f < ST[i + 1].f) return lerp(ST[i][key], ST[i + 1][key], ease(f, ST[i].f, ST[i + 1].f, (u) => u * u * (3 - 2 * u)));
+  return ST[ST.length - 1][key];
+};
+function growStage(f: number) {
+  return stageAt(f, 'g');
+}
+function dayStage(f: number) {
+  return stageAt(f, 'day');
+}
+const running = (f: number) => (f > ST[1].f - 2 && f < ST[2].f + 2) || (f > ST[3].f - 2 && f < ST[4].f + 2) ? 1 : 0;
+const growShot = (f: number): State2 => {
+  const close = 1 - ease(f, S.grow - 2, S.grow + 10);
+  const p = regenSea(f, {cut: {a0: 10, a1: 70, open: close}});
+  const from = heartShot(S.grow - 1).orbit;
+  const wide: Orbit = {target: [0, 35.6 + 46, 2], az: -168, el: 54, d: 290, f: 3300, cy: 880};
+  const orbit = lerpOrbit(from, wide, ease(f, S.grow, S.grow + 30, (u) => u * u * (3 - 2 * u)));
+  // the time-lapse runs: days and nights flicker past, the tuft sways fast
+  const run = ease(f, ST[1].f - 2, ST[1].f + 3) * (1 - ease(f, ST[2].f - 3, ST[2].f + 2)) + ease(f, ST[3].f - 2, ST[3].f + 3) * (1 - ease(f, ST[4].f - 3, ST[4].f + 2));
+  const day = dayStage(f);
+  return {
+    shot: 'G', env: 'sea', orbit, pieces: [p], feed: {u: 0.02, drain: 1}, lapse: run, frondFade: 1 - ease(f, S.grow, S.grow + 14),
+    night: run * 0.34 * (0.5 - 0.5 * Math.cos(2 * Math.PI * (day - 7))),
+    labels: [{text: `${running(f) ? 'TIME-LAPSE · ' : ''}DAY ${Math.round(day)}`, op: ease(f, S.grow + 4, S.grow + 10) * (1 - ease(f, S.twice - 8, S.twice - 2)), icon: running(f) ? 'ff' : 'none'}],
+  };
+};
+
+const rest = (f: number): State2 => ({...growShot(Math.min(f, S.twice - 1)), shot: 'R'});
 
 export const stateAt2 = (f: number): State2 => {
   if (f < S.body) return hook(f);
   if (f < S.weak) return bodyShot(f);
   if (f < S.para) return weakShot(f);
   if (f < S.feed) return paraShot(f);
+  if (f < S.heart) return feedShot(f);
+  if (f < S.grow) return heartShot(f);
+  if (f < S.twice) return growShot(f);
   return rest(f);
 };
 void inOut;
