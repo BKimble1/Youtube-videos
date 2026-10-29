@@ -22,7 +22,7 @@ export const stalkLine = (R: Rig, sp: StalkSpec): V3[] => {
   const pts: V3[] = [base];
   const step = (sp.len * sc) / NS;
   for (let k = 1; k <= NS; k++) {
-    const w1 = noise1(k * 0.35, sp.seed) * 0.05, w2 = noise1(k * 0.35, sp.seed + 7) * 0.05;
+    const w1 = noise1(k * 0.45, sp.seed) * 0.085, w2 = noise1(k * 0.45, sp.seed + 7) * 0.085;
     d = norm3(add3(d, add3([0, 0, -sp.bend * 0.045 * (k < 4 ? 0.3 : 1)], add3(mul3(H.l, w1), mul3(H.f, w2)))));
     pts.push(add3(pts[k - 1], mul3(d, step)));
   }
@@ -35,26 +35,35 @@ export const stalkAt = (line: V3[], a: number) => {
   return {p: lerp3(line[k], line[k + 1], t), d: norm3(sub3(line[k + 1], line[k]))};
 };
 export const ASC_AT = 0.62;
-/** the ascoma: centre, axes (along, out, side) */
+/** the ascoma (V2): a cushion of perithecia on the stalk's lower side; centre, frame and size */
 export const ascoma = (line: V3[], asc: number, open: number) => {
   const {p, d} = stalkAt(line, ASC_AT);
-  // the cushion faces the ground (perpendicular to the stalk, toward -z)
   let out = sub3([0, 0, -1], mul3(d, dot3([0, 0, -1], d)));
   if (len3(out) < 0.2) out = norm3(cross3(d, [1, 0, 0]));
   out = norm3(out);
   const side = norm3(cross3(d, out));
-  const k = asc * (1 + 0.12 * open);
-  const c = add3(p, mul3(out, 0.42 * k));
-  return {c, d, out, side, ax: [mul3(d, 1.25 * k), mul3(out, 0.62 * k), mul3(side, 0.7 * k)] as [V3, V3, V3]};
+  const k = asc * (1 + 0.1 * open);
+  return {p, d, out, side, k, c: add3(p, mul3(out, 0.35 * k)), ax: [mul3(d, 1.3 * k), mul3(out, 0.75 * k), mul3(side, 0.95 * k)] as [V3, V3, V3]};
 };
-/** ostiole points on the cushion (unit sphere directions, the side facing out) */
-const OST = Array.from({length: 26}, (_, k) => {
-  const th = Math.acos(1 - 2 * hash(k * 3.7 + 1) * 0.55);
-  const ph = hash(k * 9.1 + 4) * Math.PI * 2;
-  return [Math.cos(th), Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph)] as V3; // (out, along, side)
-});
-export const ostioles = (A: ReturnType<typeof ascoma>): V3[] =>
-  OST.map((u) => add3(A.c, add3(mul3(A.ax[1], u[0]), add3(mul3(A.ax[0], u[1] * 0.9), mul3(A.ax[2], u[2] * 0.9)))));
+/** the perithecia: unit positions on the cushion's dome (along, side, height) */
+const PERI = (() => {
+  const out: [number, number, number][] = [];
+  for (let i = 0; i < 34; i++) {
+    const r = Math.sqrt(hash(i * 3.3 + 0.7)) * 0.95;
+    const a = hash(i * 7.1 + 2.1) * Math.PI * 2;
+    out.push([r * Math.cos(a), r * Math.sin(a), Math.sqrt(Math.max(0, 1 - r * r))]);
+  }
+  return out;
+})();
+export const CUSH = {along: 1.25, side: 0.95, h: 0.95, bump: 0.19};
+export const perithecia = (C: ReturnType<typeof ascoma>) =>
+  PERI.map(([u, v, h]) => {
+    const pos = add3(C.p, add3(mul3(C.d, u * CUSH.along * C.k), add3(mul3(C.side, v * CUSH.side * C.k), mul3(C.out, (0.12 + h * CUSH.h) * C.k))));
+    const n = norm3(add3(mul3(C.out, h + 0.25), add3(mul3(C.d, u * 0.7), mul3(C.side, v * 0.7))));
+    return {pos, n};
+  });
+/** the openings the spores are shot from */
+export const ostioles = (C: ReturnType<typeof ascoma>): V3[] => perithecia(C).map((q) => add3(q.pos, mul3(q.n, CUSH.bump * C.k)));
 
 const f2 = (n: number) => n.toFixed(2);
 let fid = 0;

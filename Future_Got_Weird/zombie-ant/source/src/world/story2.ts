@@ -5,28 +5,33 @@ import {AntState, LegPose, lerpLeg, solve} from '../ant/rig';
 import {clamp, keyS, lerp, noise1, ring, ss, ss5} from '../lib';
 import {Leaf} from './plant';
 import {biteAnchor, biteBody, biteState, L2, P2, PATH2, SURF2, s2, TM, ant2Walk} from './story';
-import {gaitLegs, pathLen, pathPose, STRIDE, straight, floorS} from './gait';
+import {gaitLegs, pathLen, pathPose, STRIDE, straight, floorS, bob} from './gait';
 import {ascoma, ostioles, StalkSpec, stalkLine} from '../fungus/fungus';
 import {NET_END} from '../fungus/hyphae';
+import {CELLS_END} from '../fungus/hyphae2';
 
 // ------------------------------------------------------------------ the infection inside ant #2 (4.0 - 8.3 s)
 export const INF = {
-  germ0: TM.you + 0.02, // the germ tube starts into the cuticle
-  germ1: TM.you + 0.5,
-  net0: TM.spreads - 0.05, // the network starts to spread
+  germ0: 3.28, // the germ tube pierces the cuticle under the landed spore
+  germ1: 3.7,
+  cell0: 3.5, // fungal cells bud and multiply in the tissue under it
+  cell1: 5.4,
+  net0: TM.spreads + 0.1, // the network spreads through the body
   net1: TM.muscles + 0.3, // ...and has wrapped the muscles
-  xr0: TM.you + 0.05, // the x-ray opens around the entry point
-  xr1: TM.body + 0.1, // ...to the whole body
-  xrOut0: TM.then - 0.25, // and closes again: back to the intact ant
-  xrOut1: TM.then + 0.12,
+  xr0: 3.36, // the shell turns translucent round the entry point
+  xr1: TM.body + 0.1, // ...then over the whole body
+  xrOut0: TM.then - 0.3, // and closes again: back to the intact ant
+  xrOut1: TM.then + 0.08,
 };
 /** network time (s of growth) at film time t */
 export const netTime = (t: number) => keyS(t, [[INF.net0, 0], [TM.controlling, NET_END * 0.62], [INF.net1, NET_END]], (x) => x);
+/** growth time of the fungal cells in the close-up tissue */
+export const cellTime = (t: number) => keyS(t, [[INF.cell0, 0], [INF.cell1, CELLS_END + 0.3]], (x) => x);
 /** muscle contraction pulses as the fungus takes control (strongest on "MUSCLES") */
 export const SPASMS = [TM.controlling + 0.2, TM.controlling + 0.5, TM.muscles, TM.muscles + 0.32];
 export const pulseAt = (t: number) => SPASMS.reduce((a, s, k) => Math.max(a, (k === 2 ? 1 : 0.6) * Math.exp(-(((t - s) / 0.07) ** 2))), 0);
 export const xrayAt = (t: number) => ({
-  r: keyS(t, [[INF.xr0, 0], [INF.xr0 + 0.45, 230], [INF.xr1, 1800]], (x) => x * x * (3 - 2 * x)),
+  r: keyS(t, [[INF.xr0, 0], [INF.xr0 + 0.4, 470], [4.7, 520], [INF.xr1, 1800]], (x) => x * x * (3 - 2 * x)),
   a: 1 - ss(t, INF.xrOut0, INF.xrOut1),
 });
 
@@ -47,6 +52,7 @@ const BITE2 = {
   tHang: [11.4, 12.9] as [number, number],
   relax: [12.25, TM.go + 0.1] as [number, number],
   twitchEnd: TM.dies + 0.05,
+  close: 0.16,
   // it swings partly down as it reaches for the vein, bites, holds, then hangs as its legs let go
   hangOf: (t: number) => keyS(t, [[10.45, 90], [10.8, 50], [11.0, 46], [11.5, 44], [12.9, 5]]),
 };
@@ -78,7 +84,7 @@ export const s2b = (t: number) => {
 const walk2 = (t: number): AntState => {
   const s = Math.min(s2b(t), S_ARR);
   const bodyAt = (q: number) => pathPose(PATH2, q);
-  let body = bodyAt(s);
+  let body = bob(bodyAt(s), s);
   const moving = ss(t, 8.1, 8.4);
   // compelled, slightly abnormal: a sway of the body while it walks
   body = yawF(body, 6 * moving * noise1(t * 3.1, 11));
@@ -121,8 +127,9 @@ export const ant2State = (t: number): AntState => {
 // ------------------------------------------------------------------ the fungus on ant #2
 export const SP2: StalkSpec = {seed: 11, len: 18, bend: 0.85, lean: -0.1};
 export const fungus2 = (t: number) => ({
+  e: ss(t, TM.but + 0.1, TM.started),
   teth: ss(t, TM.but, TM.started + 0.3),
-  g: keyS(t, [[TM.started - 0.2, 0], [TM.started + 0.35, 0.06], [TM.because + 0.1, 0.07], [TM.head + 0.1, 1]], (x) => x * x * (3 - 2 * x)),
+  g: keyS(t, [[TM.started - 0.1, 0], [TM.started + 0.45, 0.07], [TM.because + 0.1, 0.08], [TM.head + 0.1, 1]], (x) => x * x * (3 - 2 * x)),
   asc: ss(t, TM.head - 1.1, TM.finally),
   open: ss(t, TM.finally + 0.1, TM.opens + 0.25),
 });
@@ -140,7 +147,7 @@ const s3 = (t: number) => 4 + 9 * (t - ANT3_T.start);
 export const ant3State = (t: number): AntState => {
   const bodyAt = (q: number) => pathPose(PATH3, q);
   const s = s3(t);
-  const body = yawF(bodyAt(s), 5 * noise1(t * 2, 21));
+  const body = yawF(bob(bodyAt(s), s), 5 * noise1(t * 2, 21));
   const st: AntState = {body, headPitch: 15, headYaw: 6 * noise1(t * 2.5, 22), mand: 0.15, antSpread: 0.8, antTw: [10 * noise1(t * 5, 23), 10 * noise1(t * 5, 24)], legs: [], gasterPitch: 5, dead: 0};
   st.legs = gaitLegs(st, bodyAt, s, floorS);
   return st;
@@ -149,7 +156,7 @@ const PATH5 = [straight([24, 30, 1.6], [-60, 26, 1.6], [-1, -0.05, 0], [0, 0, 1]
 export const ant5State = (t: number): AntState => {
   const bodyAt = (q: number) => pathPose(PATH5, q);
   const s = 8 * (t - 21.5);
-  const body = bodyAt(s);
+  const body = bob(bodyAt(s), s);
   const st: AntState = {body, headPitch: 15, headYaw: 5 * noise1(t * 2.5, 32), mand: 0.15, antSpread: 0.8, antTw: [10 * noise1(t * 5, 33), 10 * noise1(t * 5, 34)], legs: [], gasterPitch: 5, dead: 0};
   st.legs = gaitLegs(st, bodyAt, s, floorS);
   return st;
@@ -213,6 +220,7 @@ export const EVENTS2: Record<string, number> = {
   release: TM.go - 0.05, // the legs let go; the body drops to hang
   dies: TM.dies,
   teth0: TM.but, // mycelium breaks out of the joints
+  emerge2: TM.but + 0.4, // the back of the head splits
   bud: TM.started + 0.05, // the stalk bud pushes out
   grow2a: TM.because,
   grow2b: TM.head + 0.1,

@@ -1,0 +1,9 @@
+{
+ "integrated_lufs": -14.09,
+ "true_peak_dbtp_4x": -1.6,
+ "sample_peak_dbfs": -2.37,
+ "voice_gain_db": 6.5,
+ "voice_max_gain_reduction_db": -10.52,
+ "duration_s": 30.567,
+ "effects": 32
+}

@@ -2,7 +2,7 @@
 // part is an Item with a camera depth, so near legs pass in front of the body and far legs behind it from any view.
 import React from 'react';
 import {Basis, capsule2, dot3, mul3, norm3, P2, proj, smoothClosed, smoothOpen, sub3, V3, add3, lerp3} from '../core/three';
-import {capsuleItem, ellipsoidItem, inkW, Item} from '../core/draw3';
+import {capsuleItem, ellipsoidItem, ellipsoidPath, inkW, Item} from '../core/draw3';
 import {lit, mix, shade} from '../core/color';
 import {INK} from '../core/ink';
 import {dirW, Frame, pitchF, toW} from '../core/frame';
@@ -127,3 +127,15 @@ export const groupItem = (items: Item[], z: number, key: string, extra?: {opacit
     </g>
   ),
 });
+
+/** the outlines of the mesosoma, petiole and gaster (screen paths), to clip what is seen inside the body */
+export const bodyClipPaths = (B: Basis, R: Rig): string[] => {
+  const st = R.st, sc = st.scale ?? 1, body = st.body;
+  const meso: [V3, V3][] = [[[1.3, 0, 0.32], [0.95, 0.74, 0.78]], [[0.1, 0, 0.28], [1.2, 0.56, 0.66]], [[-1.12, 0, 0.3], [0.66, 0.5, 0.58]]];
+  const out = meso.map(([c, a], k) => ellipsoidPath(B, bw(st, c), ax3(pitchF(body, [6, 0, -12][k]), a, sc)));
+  out.push(ellipsoidPath(B, bw(st, [-1.86, 0, 0.32]), ax3(body, [0.27, 0.36, 0.56], sc)));
+  const gF = pitchF(body, -st.gasterPitch, bw(st, [-2.0, 0, 0.3]));
+  out.push(ellipsoidPath(B, toW(gF, mul3([-3.55, 0, 0.12], sc)), ax3(gF, [1.85, 1.42, 1.3], sc)));
+  out.push(ellipsoidPath(B, R.headC, ax3(R.head, HEAD_AX, sc)));
+  return out;
+};

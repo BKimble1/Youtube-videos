@@ -18,13 +18,15 @@ export const capY = (i: number) => {
 export const Captions: React.FC<{t: number}> = ({t}) => {
   const i = capIndex(t);
   if (i < 0) return null;
-  return <CaptionLine c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - CAPTIONS[i].show) / 0.067)} />;
+  // keyed per caption, in its own composited layer: a new caption replaces the old element outright (headless Chrome
+  // otherwise left fragments of the previous caption in a few frames when they were only partly repainted)
+  return <CaptionLine key={i} c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - CAPTIONS[i].show) / 0.067)} />;
 };
 /** one caption, centred on y, kept clear of the right-hand action buttons */
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; left?: number; width?: number}> = ({c, y, a, left = 110, width = 760}) => {
   const words = c.text.split(' ');
   return (
-    <div style={{position: 'absolute', left, width, top: y, transform: 'translateY(-50%)', opacity: a, textAlign: 'center', textWrap: 'balance'} as React.CSSProperties}>
+    <div style={{position: 'absolute', left, width, top: y, transform: 'translateY(-50%) translateZ(0)', willChange: 'transform, opacity', opacity: a, textAlign: 'center', textWrap: 'balance'} as React.CSSProperties}>
       <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 66, lineHeight: 1.16, letterSpacing: '0.005em', color: '#FFFFFF',
         WebkitTextStroke: '10px rgba(6,9,14,0.94)', paintOrder: 'stroke fill', textShadow: '0 5px 16px rgba(0,0,0,0.6)'} as React.CSSProperties}>
         {words.map((wd, k) => {

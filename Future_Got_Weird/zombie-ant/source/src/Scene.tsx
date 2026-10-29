@@ -5,15 +5,17 @@ import {basis, Basis, Orbit, proj, V3} from './core/three';
 import {Item, resetIds} from './core/draw3';
 import {resetTubeIds} from './core/tube';
 import {Rig, solve} from './ant/rig';
-import {antItems, groupItem} from './ant/draw';
+import {antItems, bodyClipPaths, groupItem} from './ant/draw';
 import {Leaf, leafItems, resetLeafIds, stemItems} from './world/plant';
 import {Dome, FarLayer, floorItems} from './world/env';
-import {resetFungusIds, sporeEl, SporeDefs, stalkItems, tetherItems, trailEl} from './fungus/fungus';
-import {brainItems, germTube, interiorItems, networkEl} from './fungus/hyphae';
+import {resetFungusIds, sporeEl, SporeDefs, tetherItems, trailEl} from './fungus/fungus';
+import {emergeItems, resetStalkIds, stalkItemsV2} from './fungus/stalk2';
+import {brainItems, germTube, interiorItems} from './fungus/hyphae';
+import {organicNetworkEl, tissueItems} from './fungus/hyphae2';
 import {cam} from './world/camera';
 import {blurAt, lightAt, shotCam} from './world/shots';
 import {A1, ant1State, burst1, fungus1, heroSpore1, HOOK, LAND2, leaf1, P1_STEM, P2_STEM, SP1, TM} from './world/story';
-import {A2, ant2State, ant3State, ant5State, burst2, fungus2, heroSpore2, INF, leaf2, netTime, pulseAt, SP2, TC2, xrayAt} from './world/story2';
+import {A2, ant2State, ant3State, ant5State, burst2, fungus2, heroSpore2, INF, leaf2, netTime, cellTime, pulseAt, SP2, TC2, xrayAt} from './world/story2';
 import {GRAVES} from './world/grave';
 import {ant4State, leaf4, P4_STEM} from './world/loop';
 import {biteMark} from './world/marks';
@@ -43,9 +45,10 @@ const plantGroup = (B: Basis, key: string, leaves: Leaf[], stem: V3[] | null, st
   return {z: anchor, el: <g key={key}>{sortDraw(items)}</g>};
 };
 /** a dead ant with its fungus */
-const deadAnt = (B: Basis, R: Rig, sp: typeof SP1, f: {g: number; asc: number; open: number; teth: number}) => [
+const deadAnt = (B: Basis, R: Rig, sp: typeof SP1, f: {g: number; asc: number; open: number; teth: number; e?: number}) => [
   ...antItems(B, R),
-  ...stalkItems(B, R, sp, f.g, f.asc, f.open),
+  ...emergeItems(B, R, f.e ?? 1),
+  ...stalkItemsV2(B, R, sp, f.g, f.asc, f.open),
   ...tetherItems(B, R, f.teth),
 ];
 /** is a world point roughly in front of the camera and near the frame? */
@@ -58,6 +61,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
   resetIds(fkey);
   resetLeafIds(fkey);
   resetFungusIds(fkey);
+  resetStalkIds(fkey);
   resetTubeIds(fkey);
   const O = orbit ?? shotCam(t);
   const B = basis(cam(O));
@@ -90,9 +94,9 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
   const hs = heroSpore1(t);
   if (hs && hs.on && t < INF.germ1 + 0.4) {
     const k = Math.max(0, 1 - (t - HOOK.land) / 0.5);
-    a2.push({z: proj(B, hs.p).z - 0.6, el: <g key="hsl">{sporeEl(B, hs.p, hs.d, 0.7, 1, 'hs', 0.5 + 1.2 * k, 10).el}</g>});
+    a2.push({z: proj(B, hs.p).z - 0.6, el: <g key="hsl">{sporeEl(B, hs.p, hs.d, 0.45, 1, 'hs', 0.3 + 0.8 * k, 7).el}</g>});
   }
-  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [1.5, 1.1], onPlant ? a2 : []);
+  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [2.0, 1.4], onPlant ? a2 : []);
   if (g2) groups.push(g2);
   const xr = xrayAt(t);
   if (!onPlant) {
@@ -105,6 +109,8 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
         const g = netTime(t);
         const shell = antItems(B, R2, {xray: true});
         const inner = interiorItems(B, R2, pulse, clamp(g / 3));
+        const tissue = tissueItems(B, R2, cellTime(t), pulse);
+        const clipD = bodyClipPaths(B, R2);
         const germ = clamp((t - INF.germ0) / (INF.germ1 - INF.germ0));
         groups.push({
           z: c2.z,
@@ -125,6 +131,9 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
                   <rect x="-2000" y="-2000" width="5000" height="6000" fill="#000" />
                   <circle cx={E.x} cy={E.y} r={xr.r} fill={`url(#${fkey}xrIn)`} />
                 </mask>
+                <clipPath id={`${fkey}bodyClip`}>
+                  {clipD.map((d, k) => <path key={k} d={d} />)}
+                </clipPath>
                 <mask id={`${fkey}mOut`} maskUnits="userSpaceOnUse" x="-2000" y="-2000" width="5000" height="6000">
                   <rect x="-2000" y="-2000" width="5000" height="6000" fill="#FFF" />
                   <circle cx={E.x} cy={E.y} r={xr.r} fill={`url(#${fkey}xrOut)`} />
@@ -133,11 +142,12 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
               <g mask={`url(#${fkey}mOut)`}>{sortDraw(a2.filter((i) => i.z > 1))}</g>
               <g mask={`url(#${fkey}mIn)`}>
                 {sortDraw(shell.filter((i) => i.z > 1))}
-                {sortDraw(inner.filter((i) => i.z > 1))}
-                {networkEl(B, R2, g)}
+                <g clipPath={`url(#${fkey}bodyClip)`}>{sortDraw(tissue.filter((i) => i.z > 1))}</g>
+                <g opacity={clamp((200 - scale) / 70)}>{sortDraw(inner.filter((i) => i.z > 1))}</g>
+                {organicNetworkEl(B, R2, g)}
                 {sortDraw(brainItems(B, R2).filter((i) => i.z > 1))}
                 {germTube(B, R2, germ, LAND2)}
-                {hs && hs.on && sporeEl(B, hs.p, hs.d, 0.7, 1, 'hsx', 0.3, 10).el}
+                {hs && hs.on && sporeEl(B, hs.p, hs.d, 0.45, 1, 'hsx', 0.2, 7).el}
               </g>
             </g>
           ),
@@ -150,7 +160,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
     const s3 = ant3State(t);
     const a3 = antItems(B, solve(s3));
     const h2 = heroSpore2(t);
-    if (h2 && h2.on) a3.push({...sporeEl(B, h2.p, h2.d, 0.7, 1, 'h2l', 0.4 + Math.max(0, 1 - (t - 24.9) / 0.5), 9), z: proj(B, h2.p).z - 0.6});
+    if (h2 && h2.on) a3.push({...sporeEl(B, h2.p, h2.d, 0.45, 1, 'h2l', 0.3 + 0.8 * Math.max(0, 1 - (t - 24.9) / 0.5), 7), z: proj(B, h2.p).z - 0.6});
     if (near(B, s3.body.o)) groups.push(groupItem(a3, proj(B, s3.body.o).z, 'a3'));
     const s5 = ant5State(t);
     if (near(B, s5.body.o)) groups.push(groupItem(antItems(B, solve(s5)), proj(B, s5.body.o).z, 'a5'));
@@ -172,26 +182,26 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
   }
   // ---- spores in the air
   if (hs && !hs.on) {
-    const e = sporeEl(B, hs.p, hs.d, 0.55, 1, 'hs', 1.2, 18);
+    const e = sporeEl(B, hs.p, hs.d, 0.4, 1, 'hs', 0.6, 9);
     const tr: V3[] = [];
     for (let k = 0; k <= 6; k++) {
       const q = heroSpore1(t - k * 0.035);
       if (q) tr.push(q.p);
     }
-    if (e.z > 1) groups.push({z: e.z, el: <g key="hsg">{trailEl(B, tr, 'hst', 5)}{e.el}</g>});
+    if (e.z > 1) groups.push({z: e.z, el: <g key="hsg">{trailEl(B, tr, 'hst', 3)}{e.el}</g>});
   }
   const h2 = heroSpore2(t);
   if (h2 && !h2.on) {
-    const e = sporeEl(B, h2.p, h2.d, 0.55, 1, 'h2', 1.2, 16);
+    const e = sporeEl(B, h2.p, h2.d, 0.4, 1, 'h2', 0.6, 9);
     const tr: V3[] = [];
     for (let k = 0; k <= 6; k++) {
       const q = heroSpore2(t - k * 0.035);
       if (q && !q.on) tr.push(q.p);
     }
-    if (e.z > 1) groups.push({z: e.z, el: <g key="h2g">{trailEl(B, tr, 'h2t', 4)}{e.el}</g>});
+    if (e.z > 1) groups.push({z: e.z, el: <g key="h2g">{trailEl(B, tr, 'h2t', 3)}{e.el}</g>});
   }
   [...burst1(t), ...burst2(t)].forEach((s, k) => {
-    const e = sporeEl(B, s.p, s.d, 0.45, s.a * 0.85, `b${k}`, 0.7, 6);
+    const e = sporeEl(B, s.p, s.d, 0.32, s.a * 0.8, `b${k}`, 0.35, 4);
     if (e.z > 1) groups.push(e);
   });
   const blur = blurAt(t, O);

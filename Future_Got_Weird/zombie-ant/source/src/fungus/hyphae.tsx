@@ -196,7 +196,7 @@ export const interiorItems = (B: Basis, R: Rig, pulse: number, wrapped: number):
     items.push(capsuleItem(B, lerp3(L.knee, L.ankle, 0.12), lerp3(L.knee, L.ankle, 0.7), 0.07 * sc, 0.05 * sc, m, {spec: 0.2, ink: 0.6}));
   });
   // gut in the gaster (pale amber), gradually filling with fungal cells
-  items.push(ellipsoidItem(B, bw(st, [-3.5, 0, 0.42]), ax(st.body, [1.25, 0.8, 0.75]), mix('#E3C27E', '#EFE6CF', wrapped * 0.6), {spec: 0.4}));
+  items.push(ellipsoidItem(B, bw(st, [-3.5, 0, 0.42]), ax(st.body, [1.0, 0.6, 0.55]), mix('#C99A5C', '#E8DCC0', wrapped * 0.5), {spec: 0.2, fillOpacity: 0.55}));
   return items;
 };
 
@@ -220,7 +220,7 @@ export const germTube = (B: Basis, R: Rig, g: number, landLocal: V3): React.Reac
     const q = u < 0.5 ? {x: pts[0].x + (pts[1].x - pts[0].x) * u * 2, y: pts[0].y + (pts[1].y - pts[0].y) * u * 2} : {x: pts[1].x + (pts[2].x - pts[1].x) * (u - 0.5) * 2, y: pts[1].y + (pts[2].y - pts[1].y) * (u - 0.5) * 2};
     sm.push(q);
   }
-  const w = Math.max(1.2, 0.06 * pts[0].s);
+  const w = Math.max(1.0, 0.035 * pts[0].s);
   const tip = sm[sm.length - 1];
   return (
     <g>

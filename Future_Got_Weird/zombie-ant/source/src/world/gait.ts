@@ -90,3 +90,11 @@ export const gaitLegs = (st: AntState, bodyAt: (s: number) => Frame, s: number, 
     return planted(st, i, q, n, lift * Math.sin(Math.PI * u));
   });
 };
+
+/** the body's small rise and sway with each tripod step (two per stride), for a living walk */
+export const bob = (F: Frame, s: number, k = 1): Frame => {
+  const ph = (2 * Math.PI * s) / STRIDE;
+  const up = 0.07 * k * Math.sin(2 * ph);
+  const sway = 0.06 * k * Math.sin(ph);
+  return {...F, o: add3(F.o, add3(mul3(F.u, up), mul3(F.l, sway)))};
+};

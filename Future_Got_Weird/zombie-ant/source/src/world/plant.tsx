@@ -1,7 +1,7 @@
 // Understory plants: a leaf is a curved, cupped blade with a raised midrib on its underside; a stem is a tapered
 // tube. Leaves can dip (the bite and the ant's weight) and carry a local dent where jaws clamp the midrib.
 import React from 'react';
-import {add3, Basis, cross3, dot3, lerp3, mul3, norm3, P2, proj, smoothClosed, smoothOpen, spline3, sub3, V3} from '../core/three';
+import {add3, Basis, cross3, dot3, lerp3, mul3, norm3, P2, proj, projPoly, smoothClosed, smoothOpen, spline3, sub3, V3} from '../core/three';
 import {tubeItem} from '../core/tube';
 import {capsuleItem, inkW, Item} from '../core/draw3';
 import {lit, mix, rgba, shade} from '../core/color';
@@ -96,9 +96,14 @@ export const leafItems = (B: Basis, lf: Leaf, o: {fog?: number; key?: string} = 
     edgeA.push(leafPt(lf, sp, u, 1));
     edgeB.push(leafPt(lf, sp, u, -1));
   }
-  const outline = [...edgeA, ...edgeB.slice(1, -1).reverse()].map((p) => proj(B, p));
-  // never draw a leaf that reaches the lens (its projection would wrap)
-  if (Math.min(...outline.map((q) => q.z)) < 3) return {blade: {z: -1, el: null}, under: false, rib: []};
+  const ring3 = [...edgeA, ...edgeB.slice(1, -1).reverse()];
+  const outline = ring3.map((p) => proj(B, p));
+  // where the leaf reaches past the lens, clip it at the near plane (only the part behind the lens is cut)
+  const NEAR = 2.5;
+  const clipped = outline.some((q) => q.z < NEAR);
+  const bladePath = clipped ? projPoly(B, ring3, NEAR) : smoothClosed(outline);
+  if (!bladePath) return {blade: {z: -1, el: null}, under: false, rib: []};
+  const front = (ps: V3[]) => ps.every((p) => proj(B, p).z > NEAR);
   const mid = leafPt(lf, sp, 0.45, 0);
   const C = proj(B, mid);
   const upMid = norm3(sp.ups[Math.round(N * 0.45)]);
@@ -114,11 +119,12 @@ export const leafItems = (B: Basis, lf: Leaf, o: {fog?: number; key?: string} = 
   for (let k = 1; k <= 7; k++) {
     const u0 = 0.08 + k * 0.105;
     for (const sg of [1, -1]) {
-      const pts = [0, 0.35, 0.7, 0.92].map((v, j) => proj(B, leafPt(lf, sp, Math.min(0.98, u0 + j * 0.055), sg * v)));
-      veins.push(smoothOpen(pts));
+      const p3 = [0, 0.35, 0.7, 0.92].map((v, j) => leafPt(lf, sp, Math.min(0.98, u0 + j * 0.055), sg * v));
+      if (front(p3)) veins.push(smoothOpen(p3.map((p) => proj(B, p))));
     }
   }
-  const ribTop = smoothOpen([0, 0.2, 0.4, 0.6, 0.8, 0.97].map((u) => proj(B, leafPt(lf, sp, u, 0))));
+  const rt3 = [0, 0.2, 0.4, 0.6, 0.8, 0.97].map((u) => leafPt(lf, sp, u, 0)).filter((p) => proj(B, p).z > NEAR);
+  const ribTop = rt3.length > 1 ? smoothOpen(rt3.map((p) => proj(B, p))) : '';
   const lightDir = {x: -0.6, y: -0.8};
   const blade: Item = {
     z: C.z,
@@ -131,7 +137,7 @@ export const leafItems = (B: Basis, lf: Leaf, o: {fog?: number; key?: string} = 
             <stop offset="1" stopColor={shade(base, under ? 0.3 : 0.42)} />
           </linearGradient>
         </defs>
-        <path d={smoothClosed(outline)} fill={`url(#${id})`} stroke={INK} strokeOpacity={1 - fog * 0.7} strokeWidth={f2(w)} strokeLinejoin="round" />
+        <path d={bladePath} fill={`url(#${id})`} stroke={INK} strokeOpacity={1 - fog * 0.7} strokeWidth={f2(w)} strokeLinejoin="round" />
         <g opacity={(under ? 0.55 : 0.45) * (1 - fog * 0.7)}>
           {veins.map((d, k) => (
             <path key={k} d={d} fill="none" stroke={under ? lit(base, 0.4) : lit(base, 0.32)} strokeWidth={f2(Math.max(0.6, 0.12 * s))} strokeLinecap="round" />
@@ -144,9 +150,10 @@ export const leafItems = (B: Basis, lf: Leaf, o: {fog?: number; key?: string} = 
   // the raised midrib under the blade: one smooth tapering tube
   const rib: Item[] = [];
   if (under) {
-    const us = Array.from({length: 17}, (_, k) => (k / 16) * 0.95);
-    const ms = us.map((u) => midrib(lf, sp, u));
-    rib.push(tubeItem(B, ms.map((m) => m.c), ms.map((m) => m.r), mix(mix(base, '#C4DE8E', 0.55), '#5E826A', fog * 0.5), {key: `${id}r`, spec: 0.35, ink: Math.max(0.8, w * 0.95), inkOpacity: 1 - fog * 0.6}));
+    const us = Array.from({length: 25}, (_, k) => (k / 24) * 0.95);
+    // the part of the midrib in front of the lens (a contiguous run)
+    const ms = us.map((u) => midrib(lf, sp, u)).filter((m) => proj(B, m.c).z > NEAR + 0.5);
+    if (ms.length > 1) rib.push(tubeItem(B, ms.map((m) => m.c), ms.map((m) => m.r), mix(mix(base, '#C4DE8E', 0.55), '#5E826A', fog * 0.5), {key: `${id}r`, spec: 0.35, ink: Math.max(0.8, w * 0.95), inkOpacity: 1 - fog * 0.6}));
   }
   return {blade, under, rib};
 };

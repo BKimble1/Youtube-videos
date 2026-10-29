@@ -83,7 +83,7 @@ export const capsuleItem = (B: Basis, a: V3, b: V3, ra: number, rb: number, colo
           stroke="#FFFFFF"
           strokeWidth={f2(Math.max(0.6, Math.min(rA, rB) * 0.32))}
           strokeLinecap="round"
-          opacity={0.32 * (o.spec ?? 0.5) * 2}
+          opacity={0.2 * (o.spec ?? 0.5) * 2}
         />
       )}
     </g>
@@ -149,7 +149,7 @@ export const ellipsoidItem = (B: Basis, c: V3, ax: [V3, V3, V3], color: string, 
       </defs>
       <path d={d} fill={`url(#${id})`} fillOpacity={o.fillOpacity} />
       {o.deco && <g clipPath={`url(#${id}c)`}>{o.deco}</g>}
-      {(o.spec ?? 1) > 0 && <ellipse cx={f2(C.x + LIGHT.x * R * 0.42)} cy={f2(C.y + LIGHT.y * R * 0.48)} rx={f2(R * 0.2)} ry={f2(R * 0.1)} transform={`rotate(-35 ${f2(C.x + LIGHT.x * R * 0.42)} ${f2(C.y + LIGHT.y * R * 0.48)})`} fill="#FFFFFF" opacity={(o.glossy ? 0.55 : 0.28) * (o.spec ?? 1)} />}
+      {(o.spec ?? 1) > 0 && <ellipse cx={f2(C.x + LIGHT.x * R * 0.42)} cy={f2(C.y + LIGHT.y * R * 0.48)} rx={f2(R * 0.15)} ry={f2(R * 0.07)} transform={`rotate(-35 ${f2(C.x + LIGHT.x * R * 0.42)} ${f2(C.y + LIGHT.y * R * 0.48)})`} fill="#FFFFFF" opacity={(o.glossy ? 0.38 : 0.2) * (o.spec ?? 1)} />}
       <path d={d} fill="none" stroke={INK} strokeWidth={f2(o.ink ?? inkW(C.s, 1.1))} strokeLinejoin="round" />
     </g>
   );

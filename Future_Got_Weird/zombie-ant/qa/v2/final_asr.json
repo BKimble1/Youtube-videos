@@ -1,0 +1,29 @@
+{
+ "zipformer": {
+  "transcript": "IF THIS FUNGUS GETS INSIDE AN ANT IT CAN TURN IT INTO A ZOMBY YOU SEE IT SPREADS THROUGH THE ANT'S BODY AND STARTS CONTROLLING ITS MUSCLES THEN IT FORCES THE ANT TO CLIMB A PLANT AND BITE DOWN SO HARD IT CAN'T LET GO THE ANT DIES BUT THE FUNGUS IS JUST GETTING STARTED BECAUSE OVER THE NEXT FEW DAYS A GIANT STALK GROWS STRAIGHT OUT OF ITS HEAD AND WHEN IT FINALLY OPENS IT RELEASES SPOORS ON TO THE ANTS BELOW AND BENEATH THAT ONE LEAF THERE COULD BE DOZENS MORE ANTS THAT DIED THE EXACT SAME WAY",
+  "wer": 0.04,
+  "diffs": [
+   [
+    "replace",
+    "zombie",
+    "zomby"
+   ],
+   [
+    "replace",
+    "spores onto",
+    "spoors on to"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If this fungus gets inside an ant, it can turn it into a zombie. You see, it spreads through the ant's body and starts controlling its muscles. Then it forces the ant to climb a plant and bite down so hard it can't let go. The ant dies, but the fungus is just getting started. Because over the next few days, a giant stalk grows straight out of its head. And when it finally opens, it releases spores onto the ants below. And beneath that one leaf, there could be dozens more ants that died the exact",
+  "wer": 0.02,
+  "diffs": [
+   [
+    "delete",
+    "same way",
+    ""
+   ]
+  ]
+ }
+}

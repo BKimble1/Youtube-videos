@@ -7,7 +7,7 @@ the mandible contact, leaf creaks, the fungal growth, the spore puffs, the landi
 No whooshes on camera moves, no impacts, no cartoon sounds.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; sample ceiling -1.5 dBFS (true peak measured 4x).
 usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
-Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Ant_V1_mix.wav, audio/mix/mix_measure.json, audio/sfx_log.json"""
+Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Ant_V2_mix.wav, audio/mix/mix_measure_v2.json, audio/sfx_log_v2.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
@@ -40,13 +40,21 @@ def win(a, b, fa=0.3, fb=0.3): return np.clip(np.minimum((t - (a - fa)) / fa, ((
 def norm(x): return x / (np.max(np.abs(x)) + 1e-9)
 
 # ---------------- effect generators ----------------
-def click(dur=0.05, f=2300, bright=5200):
-    """a hard chitin contact: a sharp transient and a tiny resonant body"""
+def click(dur=0.09, f=2300, bright=5200):
+    """V2: the jaws biting into the vein: a hard chitin snap, a short fibrous crunch as the teeth sink in, and a
+    small low body thump (felt more than heard), so the contact lands without being loud"""
     n = int(dur * SR); tt = np.arange(n) / SR
-    tr = hp(noise(n), 2500) * np.exp(-tt / 0.0025)
-    body = np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.012) + 0.5 * np.sin(2 * np.pi * f * 1.73 * tt) * np.exp(-tt / 0.007)
-    ring_ = bp(noise(n), bright * 0.8, bright * 1.25) * np.exp(-tt / 0.02)
-    return norm(0.9 * tr + 0.6 * body + 0.35 * ring_)
+    tr = hp(noise(n), 2500) * np.exp(-tt / 0.0022)
+    body = np.sin(2 * np.pi * f * tt) * np.exp(-tt / 0.011) + 0.5 * np.sin(2 * np.pi * f * 1.73 * tt) * np.exp(-tt / 0.006)
+    ring_ = bp(noise(n), bright * 0.8, bright * 1.25) * np.exp(-tt / 0.018)
+    # the crunch: a few dense micro-cracks in the first 40 ms
+    cr = np.zeros(n)
+    for k in range(9):
+        i = int((0.004 + 0.035 * rng.random()) * SR)
+        m = min(n - i, 220)
+        cr[i:i + m] += bp(noise(m), 1800, 6500) * np.exp(-np.arange(m) / SR / 0.0015) * (0.4 + 0.6 * rng.random())
+    thump = np.sin(2 * np.pi * (150 - 60 * tt / dur) * tt) * np.exp(-tt / 0.03)
+    return norm(0.85 * tr + 0.5 * body + 0.3 * ring_ + 0.6 * cr + 0.55 * thump)
 def creak(dur=0.4, f0=180, f1=120, grain=55):
     """a soft plant-tissue creak: a pulse train through a resonance"""
     n = int(dur * SR); tt = np.arange(n) / SR
@@ -129,10 +137,28 @@ E = EV.get
 if E('grip') is not None:
     place(sfx, rustle(0.35, 2500, 8000), max(0, E('grip')), 'leg grip rustle', -30)
 if E('contact1') is not None:
-    place(sfx, click(0.06, 2100, 5600), E('contact1') - 0.004, 'mandible contact', -13)
+    place(sfx, click(0.09, 2100, 5600), E('contact1') - 0.004, 'mandible contact', -12)
     place(sfx, creak(0.32, 230, 150, 70), E('contact1') + 0.01, 'leaf flex creak', -27)
 if E('swing1') is not None:
     place(sfx, creak(0.45, 150, 95, 40), E('swing1'), 'leaf sag under the hanging ant', -30)
+def tear(dur=0.5):
+    """the cuticle splitting as the fungus pushes out: a slow wet stretch then a run of small cracks"""
+    n = int(dur * SR); tt = np.arange(n) / SR
+    stretch = creak(dur, 120, 260, grain=30) * np.clip(tt / dur * 1.5, 0, 1)
+    cr = crackle(dur, 70, 1500, 6000) * np.clip((tt / dur - 0.4) * 3, 0, 1)
+    wet = bp(noise(n), 300, 1200) * env(n, dur * 0.5, dur * 0.3) * 0.4
+    return norm(0.7 * stretch + 0.6 * cr + wet)
+def swell(dur=2.0, f=58):
+    """a low organic swell under the growth (felt, not a tone)"""
+    n = int(dur * SR); tt = np.arange(n) / SR
+    x = np.sin(2 * np.pi * f * tt + 0.8 * np.sin(2 * np.pi * 0.7 * tt)) + 0.5 * np.sin(2 * np.pi * f * 1.5 * tt)
+    return norm(lp(x * (1 + 0.3 * bp(noise(n), 2, 8)), 220)) * env(n, dur * 0.45, dur * 0.4)
+if E('emerge1') is not None:
+    place(sfx, tear(0.45), E('emerge1'), 'cuticle splits (hook)', -27)
+if E('emerge2') is not None:
+    place(sfx, tear(1.6), E('emerge2'), 'cuticle splits behind the head', -28)
+if E('grow2a') is not None:
+    place(sfx, swell(E('grow2b') - E('grow2a') + 0.4, 55), E('grow2a') - 0.2, 'growth swell (low)', -27)
 if E('grow1a') is not None:
     d = E('grow1b') - E('grow1a') + 0.25
     place(sfx, growth(d, 90, 300), E('grow1a'), 'stalk growth (time-lapse)', -24)
@@ -160,7 +186,7 @@ if E('walk2b0') is not None:
     place(sfx, rustle(0.3, 2000, 7000), E('onLeaf'), 'onto the leaf', -32)
 # the death grip
 if E('contact2') is not None:
-    place(sfx, click(0.06, 2000, 5400), E('contact2') - 0.004, 'mandible contact (death grip)', -13)
+    place(sfx, click(0.09, 2000, 5400), E('contact2') - 0.004, 'mandible contact (death grip)', -12)
     place(sfx, creak(0.32, 220, 140, 70), E('contact2') + 0.01, 'leaf flex creak', -26)
     place(sfx, creak(0.5, 160, 120, 45), E('hard'), 'the grip tightens (leaf creak)', -30)
     place(sfx, rustle(0.35, 1500, 6000), E('release'), 'legs let go', -30)
@@ -258,10 +284,10 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_Zombie_Ant_V1_mix.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, 'audio/mix/FGW_Zombie_Ant_V2_mix.wav'), mix2, SR, subtype='PCM_24')
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG)}
-json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure.json'), 'w'), indent=1)
-json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log.json'), 'w'), indent=1)
+json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v2.json'), 'w'), indent=1)
+json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v2.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))
