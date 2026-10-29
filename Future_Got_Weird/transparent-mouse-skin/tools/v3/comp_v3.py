@@ -111,10 +111,15 @@ def arrival(xm, ym):
         a = np.minimum(a, np.where(d < R0 + 4.5, tau + np.maximum(0, d - R0) / SPREAD, 1e4))
     return a, dmin
 
+# where the treated patch sits under each camera (mm offset of the patch from where the hook's strokes put it):
+# each view frames the boundary its move is built around; within a shot the patch is fixed to the skin
+PATCH_OFFSET = {'SIDE': (-9.0, -4.0), 'GRAZE': (-3.0, 0.0)}
 _ARR = {}
 def arrival_cam(cam):
     if cam not in _ARR:
         x, y, *_ = mm_map(cam)
+        ox, oy = PATCH_OFFSET.get(cam, (0.0, 0.0))
+        x, y = x - ox, y - oy
         a, dmin = arrival(x, y)
         n = noise2(x, y, 0.9, 1) * 0.22 + noise2(x, y, 0.25, 2) * 0.08  # an organic, uneven uptake
         # less dye reaches the edge of the applied area: clarity falls off over ~2 mm, unevenly
@@ -225,16 +230,16 @@ def shot_side(t, s0, s1):
     img = skin_frame('SIDE', t, final=True)
     h, w = img.shape[:2]
     u = ease((t - s0) / (s1 - s0))
-    cx = lerp(w * 0.38, w * 0.62, u); cy = h * 0.5 + 6 * breath(t)
-    return view(img, cx, cy, (1.0 / 1.3) * w / W * (1.0 - 0.05 * u))
+    cx = lerp(w * 0.36, w * 0.64, u); cy = h * 0.52 + 6 * breath(t)
+    return view(img, cx, cy, 0.66 * w / W * (1.0 - 0.04 * u))
 
 def shot_graze(t, s0, s1):
     """S3: grazing macro travelling along the surface: unbroken skin over the treated patch"""
     img = skin_frame('GRAZE', t, final=True)
     h, w = img.shape[:2]
     u = (t - s0) / (s1 - s0)
-    cx = lerp(w * 0.33, w * 0.67, u); cy = h * 0.5 + 4 * breath(t)
-    return view(img, cx, cy, (1.0 / 1.4) * w / W)
+    cx = lerp(w * 0.32, w * 0.68, u); cy = h * 0.55 + 4 * breath(t)
+    return view(img, cx, cy, 0.6 * w / W)
 
 # ---------------- lab ----------------
 _PL = {}
