@@ -542,12 +542,12 @@ def shot_wash(t, s0, s1):
     fx, fy = 0.45, 0.75; nrm = math.hypot(fx, fy); fx, fy = fx / nrm, fy / nrm
     along = xx * fx + yy * fy; across = -xx * fy + yy * fx
     sp = 900.0 * w / 1080
-    st1 = noise2(across, along * 0.12 - t * sp * 0.12, 9 * w / 1080, 2)
-    st2 = noise2(across * 1.7, along * 0.2 - t * sp * 0.2, 5 * w / 1080, 3)
-    hl = np.clip(st1 * 0.8 + st2 * 0.5 - 0.6, 0, None) ** 1.5
+    st1 = noise2(across, along * 0.25 - t * sp * 0.25, 34 * w / 1080, 2)
+    st2 = noise2(across * 1.3, along * 0.35 - t * sp * 0.35, 18 * w / 1080, 3)
+    hl = cv2.GaussianBlur(np.clip(st1 * 0.7 + st2 * 0.4 - 0.5, 0, None).astype(np.float32), (0, 0), 3)
     img = remap(img, (st1 * 3.0 * run).astype(np.float32), (st2 * 3.0 * run).astype(np.float32))
     front = np.exp(-((fr * 1.3 - flow) / 0.09) ** 2) * (fr < 1.3)
-    sheen = (hl * run * 1.6 + front * 0.35)[..., None] * np.array([0.9, 0.95, 1.0], np.float32) * float(img.mean())
+    sheen = (hl * run * 0.45 + front * 0.25)[..., None] * np.array([0.9, 0.95, 1.0], np.float32) * float(img.mean())
     img = img + sheen
     for td, x0 in ((22.02, 0.36), (22.47, 0.62), (23.07, 0.48)):  # beads running down off the skin (the mix's drips)
         if td - 0.15 <= t < td + 0.45:

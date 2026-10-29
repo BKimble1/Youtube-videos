@@ -136,3 +136,33 @@ Not done or not possible:
 - No 4K master, clean version, cover or SRT revision was made for V2 (the brief asked for the review render). The
   V1 SRT's text and timing still apply (same take, same captions).
 - Listen to: the effects level against the voice, the wipe whoosh, and the loop brushing running into frame 0.
+
+---
+
+# V3 (mouse visuals replaced, physically rendered): QA (29 Oct 2026)
+
+**Review version. Not watched or listened to in real time** (no playback here); judged from full-resolution frames
+of the composite and the checks below. Shot list and approach: `production/V3_SHOTS_AND_TRANSITIONS.md`.
+
+| Check | Result |
+|---|---|
+| File | `exports/FGW_Transparent_Mouse_Skin_V3_REVIEW_1080x1920.mp4`, 95 MB, H.264 High, 1080×1920, 30 fps, 752 frames, 25.067 s, yuv420p bt709; AAC 48 kHz stereo 320 kb/s |
+| Full decode | 0 errors |
+| Loudness | −14.0 LUFS, LRA 6.7, true peak −1.4 dBFS (the V2 mix, unchanged) |
+| Black / freezes ≥ 0.8 s | none / none |
+| Audio vs mix | 0.0 ms |
+| Whisper on the MP4's audio | script verbatim except "washed" heard as "wash" (the known elision, as V1/V2) |
+| `tools/check_script.py` | pass |
+| Motion scan (`qa_v3/motion_scan_V3.json`) | spikes only at the planned cuts (2.63, 4.73, 6.70, 8.53, 14.77, 17.07, 20.33 s), the beam switching on (11.6 s) and two fast but motivated tissue moves (down to the gut 18.5–19.0 s, the pull-out 19.4–19.8 s); loop seam 4.0 vs a 1.95 median |
+
+**Anatomical quality verdict.** No full-body mouse is shown; none was modelled (no reference material reachable; see
+the shot list). The skin close-ups — shaved belly, fur at the shave edge, stubble, follicles, the cleared red-orange
+patch with intestine loops under intact skin — read as photographed skin in the stills reviewed; the intestine is a
+simplified coil (no mesentery detail) and the cleared patch's edge is a soft procedural texture. The lab is
+photoreal; the hand was rejected and is not shown. The tissue block is a physically rendered 3D visualisation, closer
+to a medical animation than to microscopy. Judge in motion before publishing.
+
+Found and fixed in V3 QC: a hard rim on the cleared patch (feathered by dye uptake), a flat mustard stain (now a thin
+wet tint), water beads sunk into the skin and casting full shadows (now caps on the surface that pass light), rain-like
+wash streaks (now a soft running film), an applicator drawn at 6.5 mm against an 11 mm field (now a fine-tip
+applicator at a believable size), a shimmer painted on empty space above the tissue, an overexposed milky close-up.
