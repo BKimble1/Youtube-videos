@@ -17,36 +17,36 @@
    "bit_rate": "317374"
   }
  ],
- "mean_change": 4.053,
+ "mean_change": 3.968,
  "median_change": 1.276,
  "max_change": {
   "frame": 751,
-  "value": 76.68
+  "value": 79.79
  },
  "one_frame_spikes": [
   {
    "frame": 490,
-   "change": 75.11,
+   "change": 76.92,
    "neighbours": [
-    0.25,
-    16.3
+    0.24,
+    9.99
    ]
   },
   {
    "frame": 751,
-   "change": 76.68,
+   "change": 79.79,
    "neighbours": [
-    7.68,
+    3.88,
     1.07
    ]
   }
  ],
  "static_holds_over_1s_start_frames": [],
- "loop_seam_change": 4.156,
+ "loop_seam_change": 4.158,
  "loop_seam_vs_median": 3.26,
  "cut_changes": {
   "218": 0.04,
-  "490": 75.11,
-  "751": 76.68
+  "490": 76.92,
+  "751": 79.79
  }
 }

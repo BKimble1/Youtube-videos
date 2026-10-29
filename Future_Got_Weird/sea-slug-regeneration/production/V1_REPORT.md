@@ -102,7 +102,7 @@ I also used the standing rules in `../FGW_EDITING_RULES.md`.
 - **Physical coherence:**
   - The neck thins over 0.5 s, closes to a point and parts with a muted organic pop. There is no snap and no wound
     effect.
-  - Both ends round over within about 0.25 s; at first they were cone-shaped for 0.6 s and I fixed that.
+  - Both ends round over within about 0.3 s; at first they were cone-shaped for 0.6 s and I fixed that.
 - **Does the head move at once:** yes. It continues at the speed of the pull, about 4 px per frame at 1080, with a
   pedal-wave surge. It steers along a curving route (added after the first proof showed a straight "dragged"
   slide).
