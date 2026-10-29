@@ -1,0 +1,250 @@
+[
+ {
+  "name": "neck stretch (wraps the loop)",
+  "at": 27.167,
+  "frame": 815.0,
+  "dur": 2.033,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "neck parts (hook)",
+  "at": 0.533,
+  "frame": 16.0,
+  "dur": 0.22,
+  "gain_db": -19,
+  "hero": true
+ },
+ {
+  "name": "brush bristles",
+  "at": 4.833,
+  "frame": 145.0,
+  "dur": 0.16,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "body flinch",
+  "at": 4.933,
+  "frame": 148.0,
+  "dur": 0.2,
+  "gain_db": -19,
+  "hero": true
+ },
+ {
+  "name": "body flinch 2",
+  "at": 6.067,
+  "frame": 182.0,
+  "dur": 0.16,
+  "gain_db": -22,
+  "hero": false
+ },
+ {
+  "name": "rewind swell",
+  "at": 7.267,
+  "frame": 218.0,
+  "dur": 0.767,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "weak spot tone",
+  "at": 8.167,
+  "frame": 245.0,
+  "dur": 1.6,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "x-ray reveal",
+  "at": 9.7,
+  "frame": 291.0,
+  "dur": 0.9,
+  "gain_db": -20,
+  "hero": false
+ },
+ {
+  "name": "neck stretch (anatomy)",
+  "at": 10.1,
+  "frame": 303.0,
+  "dur": 0.733,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "neck parts (anatomy)",
+  "at": 10.833,
+  "frame": 325.0,
+  "dur": 0.22,
+  "gain_db": -21,
+  "hero": true
+ },
+ {
+  "name": "zoom in hush",
+  "at": 13.067,
+  "frame": 392.0,
+  "dur": 1.2,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "zoom out",
+  "at": 15.267,
+  "frame": 458.0,
+  "dur": 0.867,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "seabed arrival (water swell)",
+  "at": 16.133,
+  "frame": 484.0,
+  "dur": 0.8,
+  "gain_db": -22,
+  "hero": false
+ },
+ {
+  "name": "sip 1",
+  "at": 17.533,
+  "frame": 526.0,
+  "dur": 0.09,
+  "gain_db": -24,
+  "hero": false
+ },
+ {
+  "name": "sip 2",
+  "at": 17.767,
+  "frame": 533.0,
+  "dur": 0.09,
+  "gain_db": -25,
+  "hero": false
+ },
+ {
+  "name": "sip 3",
+  "at": 18.0,
+  "frame": 540.0,
+  "dur": 0.09,
+  "gain_db": -26,
+  "hero": false
+ },
+ {
+  "name": "sip 4",
+  "at": 18.233,
+  "frame": 547.0,
+  "dur": 0.09,
+  "gain_db": -27,
+  "hero": false
+ },
+ {
+  "name": "sip 5",
+  "at": 18.467,
+  "frame": 554.0,
+  "dur": 0.09,
+  "gain_db": -28,
+  "hero": false
+ },
+ {
+  "name": "day tick 1",
+  "at": 18.2,
+  "frame": 546.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 2",
+  "at": 18.367,
+  "frame": 551.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 3",
+  "at": 18.533,
+  "frame": 556.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 4",
+  "at": 18.667,
+  "frame": 560.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 5",
+  "at": 18.833,
+  "frame": 565.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 6",
+  "at": 19.0,
+  "frame": 570.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "day tick 7",
+  "at": 19.133,
+  "frame": 574.0,
+  "dur": 0.05,
+  "gain_db": -31,
+  "hero": false
+ },
+ {
+  "name": "heartbeat 1",
+  "at": 20.423,
+  "frame": 612.7,
+  "dur": 0.7,
+  "gain_db": -21,
+  "hero": true
+ },
+ {
+  "name": "heartbeat 2",
+  "at": 21.223,
+  "frame": 636.7,
+  "dur": 0.7,
+  "gain_db": -25,
+  "hero": true
+ },
+ {
+  "name": "heartbeat 3",
+  "at": 22.023,
+  "frame": 660.7,
+  "dur": 0.7,
+  "gain_db": -30,
+  "hero": true
+ },
+ {
+  "name": "lab air on the cut",
+  "at": 24.983,
+  "frame": 749.5,
+  "dur": 0.4,
+  "gain_db": -30,
+  "hero": false
+ },
+ {
+  "name": "TWICE accent",
+  "at": 27.447,
+  "frame": 823.4,
+  "dur": 1.6,
+  "gain_db": -22,
+  "hero": true
+ },
+ {
+  "name": "TWICE shimmer",
+  "at": 27.467,
+  "frame": 824.0,
+  "dur": 1.1,
+  "gain_db": -24,
+  "hero": false
+ }
+]

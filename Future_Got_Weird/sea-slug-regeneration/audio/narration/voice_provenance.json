@@ -1,0 +1,58 @@
+{
+ "provider": "ElevenLabs (restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 29 Oct 2026 returned this id (category generated, 'Test Voice For Youtube.'); same id as the earlier FGW episodes (glass-climbing V6, moth-silk, invisibility-shield)"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags (not spoken); capitals as in the locked script",
+ "prompt": "[fast, conversational, slightly eerie] If this sea slug cuts off its own HEAD… that head can keep CRAWLING. [fascinated] And its headless BODY? It keeps MOVING too. [matter-of-fact, brisk] You see, there's a weak spot just behind its head. When it breaks apart, even its HEART stays behind. [curious] Scientists think it may be escaping PARASITES in its old body. [building excitement] But the head starts eating algae… and about a week later, a NEW HEART starts BEATING. [excited] Then, over the next few weeks, an ENTIRE NEW BODY grows back. [amazed, punchy] And one of these sea slugs actually did it… TWICE.",
+ "flow_id": "H6CYyIOsY2EHgHI9rYY3",
+ "date": "2026-10-29",
+ "credits_reported": "2 x 610.9 (speech) + 2 x 154.9 (Scribe transcription)",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_Yx6F.mp3",
+   "generation_id": "Yx6FFjvTqa9u53KZ7Rn5",
+   "sha256": "782daefa17ef4395fac44e34790181f4a6f6fbb811700045bb20cabe47a57496",
+   "duration_s": 28.186,
+   "scribe": {
+    "file": "audio/narration/takes/t1_Yx6F_scribe_words.json",
+    "words": 90,
+    "verbatim": true,
+    "sentence_breaks": "CRAWLING. / body. / back. heard as sentence ends, as in the script"
+   },
+   "chosen": true,
+   "why": "verbatim (90/90 words); the script's sentence breaks are kept (take 2 runs 'crawling, and' / 'body, but' / 'back, and' together)"
+  },
+  {
+   "file": "audio/narration/takes/t2_M7Yf.mp3",
+   "generation_id": "M7YfpTRyRIZ82kOj30gN",
+   "sha256": "964b38e9d993f5afe3382a22528fd73f430f356c71eb3afa39b43cff18dffde3",
+   "duration_s": 28.186,
+   "scribe": {
+    "file": "audio/narration/takes/t2_M7Yf_scribe_words.json",
+    "words": 90,
+    "verbatim": true
+   },
+   "chosen": false,
+   "why": "verbatim, but three sentence boundaries are run together"
+  }
+ ],
+ "final": {
+  "file": "audio/narration/FGW_SeaSlug_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono",
+  "tool": "tools/make_narration.py",
+  "edits": "none: decoded verbatim (no cut, no time-stretch, no pitch change); a 0.6 s tail after the last word for the loop",
+  "duration_s": 28.6667,
+  "frames_at_30fps": 860,
+  "speech_s": [
+   0.034,
+   28.067
+  ],
+  "sha256": "20bf17e6ba10dfbbe08a90a315667a5f5906da4bac4161e51b54bcf3e51f3f89",
+  "word_timing": "ElevenLabs Scribe word times of the same take -> source/src/data/timeline.json (captions, show/hide) and captions/FGW_SeaSlug_Regeneration_V1.srt"
+ },
+ "duration_note": "The natural read is 28.0 s of speech, under the brief's 32-36 s target. Per the brief, the speech was not stretched to reach it."
+}

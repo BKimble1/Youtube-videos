@@ -1,0 +1,645 @@
+{
+ "fps": 30,
+ "frames": 860,
+ "duration": 28.666666666666668,
+ "speech": [
+  0.034,
+  28.067
+ ],
+ "captions": [
+  {
+   "text": "If this sea slug",
+   "emph": [],
+   "start": 0.08,
+   "end": 0.94,
+   "show": 0.04,
+   "hide": 0.94
+  },
+  {
+   "text": "cuts off its own HEAD\u2026",
+   "emph": [
+    "head"
+   ],
+   "start": 0.98,
+   "end": 1.94,
+   "show": 0.94,
+   "hide": 2.29
+  },
+  {
+   "text": "that head can keep CRAWLING.",
+   "emph": [
+    "crawling"
+   ],
+   "start": 2.54,
+   "end": 3.86,
+   "show": 2.5,
+   "hide": 4.26
+  },
+  {
+   "text": "And its headless BODY?",
+   "emph": [
+    "body"
+   ],
+   "start": 4.3,
+   "end": 5.3,
+   "show": 4.26,
+   "hide": 5.74
+  },
+  {
+   "text": "It keeps MOVING too.",
+   "emph": [
+    "moving"
+   ],
+   "start": 5.78,
+   "end": 6.78,
+   "show": 5.74,
+   "hide": 7.24
+  },
+  {
+   "text": "You see, there\u2019s a weak spot",
+   "emph": [],
+   "start": 7.28,
+   "end": 8.66,
+   "show": 7.24,
+   "hide": 8.7
+  },
+  {
+   "text": "just behind its head.",
+   "emph": [],
+   "start": 8.74,
+   "end": 9.58,
+   "show": 8.7,
+   "hide": 9.98
+  },
+  {
+   "text": "When it breaks apart,",
+   "emph": [],
+   "start": 10.02,
+   "end": 10.78,
+   "show": 9.98,
+   "hide": 11.04
+  },
+  {
+   "text": "even its HEART stays behind.",
+   "emph": [
+    "heart"
+   ],
+   "start": 11.08,
+   "end": 12.48,
+   "show": 11.04,
+   "hide": 12.96
+  },
+  {
+   "text": "Scientists think it may be",
+   "emph": [],
+   "start": 13.0,
+   "end": 14.02,
+   "show": 12.96,
+   "hide": 14.02
+  },
+  {
+   "text": "escaping PARASITES",
+   "emph": [
+    "parasites"
+   ],
+   "start": 14.06,
+   "end": 15.06,
+   "show": 14.02,
+   "hide": 15.06
+  },
+  {
+   "text": "in its old body.",
+   "emph": [],
+   "start": 15.1,
+   "end": 15.84,
+   "show": 15.06,
+   "hide": 16.28
+  },
+  {
+   "text": "But the head",
+   "emph": [],
+   "start": 16.32,
+   "end": 16.76,
+   "show": 16.28,
+   "hide": 16.82
+  },
+  {
+   "text": "starts eating algae\u2026",
+   "emph": [],
+   "start": 16.86,
+   "end": 17.84,
+   "show": 16.82,
+   "hide": 18.16
+  },
+  {
+   "text": "and about a week later,",
+   "emph": [],
+   "start": 18.2,
+   "end": 19.04,
+   "show": 18.16,
+   "hide": 19.28
+  },
+  {
+   "text": "a NEW HEART starts BEATING.",
+   "emph": [
+    "new",
+    "heart",
+    "beating"
+   ],
+   "start": 19.32,
+   "end": 20.74,
+   "show": 19.28,
+   "hide": 21.2
+  },
+  {
+   "text": "Then, over the next few weeks,",
+   "emph": [],
+   "start": 21.24,
+   "end": 22.6,
+   "show": 21.2,
+   "hide": 22.72
+  },
+  {
+   "text": "an ENTIRE NEW BODY grows back.",
+   "emph": [
+    "entire",
+    "new",
+    "body"
+   ],
+   "start": 22.76,
+   "end": 24.66,
+   "show": 22.72,
+   "hide": 25.0
+  },
+  {
+   "text": "And one of these sea slugs",
+   "emph": [],
+   "start": 25.04,
+   "end": 26.22,
+   "show": 25.0,
+   "hide": 26.28
+  },
+  {
+   "text": "actually did it\u2026 TWICE.",
+   "emph": [
+    "twice"
+   ],
+   "start": 26.32,
+   "end": 28.0,
+   "show": 26.28,
+   "hide": 28.667
+  }
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.08,
+   "end": 0.18
+  },
+  {
+   "word": "this",
+   "start": 0.24,
+   "end": 0.4
+  },
+  {
+   "word": "sea",
+   "start": 0.48,
+   "end": 0.66
+  },
+  {
+   "word": "slug",
+   "start": 0.7,
+   "end": 0.94
+  },
+  {
+   "word": "cuts",
+   "start": 0.98,
+   "end": 1.14
+  },
+  {
+   "word": "off",
+   "start": 1.18,
+   "end": 1.28
+  },
+  {
+   "word": "its",
+   "start": 1.32,
+   "end": 1.42
+  },
+  {
+   "word": "own",
+   "start": 1.46,
+   "end": 1.64
+  },
+  {
+   "word": "head,",
+   "start": 1.7,
+   "end": 1.94
+  },
+  {
+   "word": "that",
+   "start": 2.54,
+   "end": 2.68
+  },
+  {
+   "word": "head",
+   "start": 2.74,
+   "end": 2.92
+  },
+  {
+   "word": "can",
+   "start": 2.94,
+   "end": 3.08
+  },
+  {
+   "word": "keep",
+   "start": 3.12,
+   "end": 3.28
+  },
+  {
+   "word": "crawling.",
+   "start": 3.36,
+   "end": 3.86
+  },
+  {
+   "word": "And",
+   "start": 4.3,
+   "end": 4.36
+  },
+  {
+   "word": "its",
+   "start": 4.4,
+   "end": 4.54
+  },
+  {
+   "word": "headless",
+   "start": 4.58,
+   "end": 4.96
+  },
+  {
+   "word": "body,",
+   "start": 5.0,
+   "end": 5.3
+  },
+  {
+   "word": "it",
+   "start": 5.78,
+   "end": 5.84
+  },
+  {
+   "word": "keeps",
+   "start": 5.88,
+   "end": 6.08
+  },
+  {
+   "word": "moving",
+   "start": 6.14,
+   "end": 6.46
+  },
+  {
+   "word": "too.",
+   "start": 6.52,
+   "end": 6.78
+  },
+  {
+   "word": "You",
+   "start": 7.28,
+   "end": 7.36
+  },
+  {
+   "word": "see,",
+   "start": 7.4,
+   "end": 7.54
+  },
+  {
+   "word": "there's",
+   "start": 7.78,
+   "end": 7.92
+  },
+  {
+   "word": "a",
+   "start": 7.96,
+   "end": 8.039
+  },
+  {
+   "word": "weak",
+   "start": 8.119,
+   "end": 8.26
+  },
+  {
+   "word": "spot",
+   "start": 8.38,
+   "end": 8.66
+  },
+  {
+   "word": "just",
+   "start": 8.74,
+   "end": 8.88
+  },
+  {
+   "word": "behind",
+   "start": 8.9,
+   "end": 9.16
+  },
+  {
+   "word": "its",
+   "start": 9.18,
+   "end": 9.3
+  },
+  {
+   "word": "head.",
+   "start": 9.34,
+   "end": 9.58
+  },
+  {
+   "word": "When",
+   "start": 10.02,
+   "end": 10.08
+  },
+  {
+   "word": "it",
+   "start": 10.1,
+   "end": 10.18
+  },
+  {
+   "word": "breaks",
+   "start": 10.2,
+   "end": 10.4
+  },
+  {
+   "word": "apart,",
+   "start": 10.44,
+   "end": 10.78
+  },
+  {
+   "word": "even",
+   "start": 11.08,
+   "end": 11.24
+  },
+  {
+   "word": "its",
+   "start": 11.28,
+   "end": 11.46
+  },
+  {
+   "word": "heart",
+   "start": 11.54,
+   "end": 11.76
+  },
+  {
+   "word": "stays",
+   "start": 11.86,
+   "end": 12.08
+  },
+  {
+   "word": "behind.",
+   "start": 12.1,
+   "end": 12.48
+  },
+  {
+   "word": "Scientists",
+   "start": 13.0,
+   "end": 13.4
+  },
+  {
+   "word": "think",
+   "start": 13.44,
+   "end": 13.6
+  },
+  {
+   "word": "it",
+   "start": 13.64,
+   "end": 13.72
+  },
+  {
+   "word": "may",
+   "start": 13.78,
+   "end": 13.92
+  },
+  {
+   "word": "be",
+   "start": 13.94,
+   "end": 14.02
+  },
+  {
+   "word": "escaping",
+   "start": 14.06,
+   "end": 14.48
+  },
+  {
+   "word": "parasites",
+   "start": 14.56,
+   "end": 15.06
+  },
+  {
+   "word": "in",
+   "start": 15.1,
+   "end": 15.14
+  },
+  {
+   "word": "its",
+   "start": 15.18,
+   "end": 15.28
+  },
+  {
+   "word": "old",
+   "start": 15.32,
+   "end": 15.48
+  },
+  {
+   "word": "body.",
+   "start": 15.52,
+   "end": 15.84
+  },
+  {
+   "word": "But",
+   "start": 16.32,
+   "end": 16.42
+  },
+  {
+   "word": "the",
+   "start": 16.44,
+   "end": 16.54
+  },
+  {
+   "word": "head",
+   "start": 16.6,
+   "end": 16.76
+  },
+  {
+   "word": "starts",
+   "start": 16.86,
+   "end": 17.12
+  },
+  {
+   "word": "eating",
+   "start": 17.14,
+   "end": 17.4
+  },
+  {
+   "word": "algae,",
+   "start": 17.5,
+   "end": 17.84
+  },
+  {
+   "word": "and",
+   "start": 18.2,
+   "end": 18.26
+  },
+  {
+   "word": "about",
+   "start": 18.3,
+   "end": 18.44
+  },
+  {
+   "word": "a",
+   "start": 18.48,
+   "end": 18.56
+  },
+  {
+   "word": "week",
+   "start": 18.58,
+   "end": 18.76
+  },
+  {
+   "word": "later,",
+   "start": 18.8,
+   "end": 19.04
+  },
+  {
+   "word": "a",
+   "start": 19.32,
+   "end": 19.34
+  },
+  {
+   "word": "new",
+   "start": 19.58,
+   "end": 19.8
+  },
+  {
+   "word": "heart",
+   "start": 19.84,
+   "end": 20.04
+  },
+  {
+   "word": "starts",
+   "start": 20.12,
+   "end": 20.38
+  },
+  {
+   "word": "beating.",
+   "start": 20.42,
+   "end": 20.74
+  },
+  {
+   "word": "Then",
+   "start": 21.24,
+   "end": 21.6
+  },
+  {
+   "word": "over",
+   "start": 21.66,
+   "end": 21.78
+  },
+  {
+   "word": "the",
+   "start": 21.82,
+   "end": 21.88
+  },
+  {
+   "word": "next",
+   "start": 21.94,
+   "end": 22.14
+  },
+  {
+   "word": "few",
+   "start": 22.18,
+   "end": 22.28
+  },
+  {
+   "word": "weeks,",
+   "start": 22.36,
+   "end": 22.6
+  },
+  {
+   "word": "an",
+   "start": 22.76,
+   "end": 22.82
+  },
+  {
+   "word": "entire",
+   "start": 22.86,
+   "end": 23.42
+  },
+  {
+   "word": "new",
+   "start": 23.46,
+   "end": 23.68
+  },
+  {
+   "word": "body",
+   "start": 23.7,
+   "end": 23.98
+  },
+  {
+   "word": "grows",
+   "start": 24.06,
+   "end": 24.32
+  },
+  {
+   "word": "back.",
+   "start": 24.36,
+   "end": 24.66
+  },
+  {
+   "word": "And",
+   "start": 25.04,
+   "end": 25.18
+  },
+  {
+   "word": "one",
+   "start": 25.22,
+   "end": 25.32
+  },
+  {
+   "word": "of",
+   "start": 25.36,
+   "end": 25.42
+  },
+  {
+   "word": "these",
+   "start": 25.46,
+   "end": 25.6
+  },
+  {
+   "word": "sea",
+   "start": 25.68,
+   "end": 25.78
+  },
+  {
+   "word": "slugs",
+   "start": 25.88,
+   "end": 26.22
+  },
+  {
+   "word": "actually",
+   "start": 26.32,
+   "end": 26.74
+  },
+  {
+   "word": "did",
+   "start": 26.78,
+   "end": 26.92
+  },
+  {
+   "word": "it",
+   "start": 26.96,
+   "end": 27.1
+  },
+  {
+   "word": "twice",
+   "start": 27.46,
+   "end": 28.0
+  }
+ ]
+}
