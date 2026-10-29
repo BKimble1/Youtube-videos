@@ -1,0 +1,10 @@
+{
+ "duration_s": 28.666666666666668,
+ "frames": 860,
+ "integrated_lufs": -14.12,
+ "peak_dbfs": -1.5,
+ "voice_lufs_in_mix": -14.01,
+ "voice_to_rest_db_300_4000hz_during_speech": 28.7,
+ "loop_seam_sample_jump": 0.00059,
+ "voice_correlation_with_source": 1.0
+}

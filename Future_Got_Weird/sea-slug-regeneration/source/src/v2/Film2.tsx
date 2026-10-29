@@ -10,7 +10,7 @@ import {cylinderItem, ellipsoidItem, Item, resetIds} from '../kit/draw3';
 import {Hand, HAND_CLUTCH} from '../kit/dc/Hand';
 import {GLOVE} from '../kit/scene';
 import {add3, mul3} from '../kit/three';
-import {DishRim, ForeGrit, LabBack} from './sets/Lab2';
+import {DishRim, ForeGrit, LabBack, LensGrit} from './sets/Lab2';
 import {Micro2} from './sets/Micro2';
 import {SeaBack, SeaOver, frondItems} from './sets/Sea2';
 import {SlugFloor, slugItem} from './slug/Mesh';
@@ -22,7 +22,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
   const id = `f${f}`;
   resetIds(id);
   const B = basis(orbitCam(st.orbit));
-  const t = f / FPS;
+  const t = st.loopT ?? f / FPS;
   const focusZ = proj(B, st.orbit.target).z;
   const items: {p?: {id: string}; it: Item}[] = st.pieces.map((p) => ({p, it: slugItem(B, p)}));
   // in time-lapse the tuft sways fast (its own clock runs ahead)
@@ -73,6 +73,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
         {st.env === 'sea' && <SeaOver id={id} />}
         {(st.night ?? 0) > 0.005 && <rect width={W} height={H} fill="#06202C" opacity={st.night} />}
         {st.env === 'lab' && <ForeGrit B={B} id={id} near={focusZ * 0.45} />}
+        {st.fore && <LensGrit B={B} id={id} bits={st.fore} />}
         {st.micro && <Micro2 id={id} t={t} {...st.micro} />}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}
       </svg>

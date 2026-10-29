@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sound design and mix for FGW Sea Slug Regeneration V1.
+"""Sound design and mix for FGW Sea Slug Regeneration V1 (and V2: run with the argument V2).
 
 The narration (ElevenLabs Test Voice, take 1) is used sample for sample (gain only). Everything else is synthesised
 here (no samples, no third-party music), placed on the picture's event frames (audio/cues.json, exported from
@@ -16,13 +16,16 @@ source/src/shots.ts by tools/export_cues.ts), and kept under the voice:
 Levels: voice about -17 LUFS, beds 16-20 LU under it and ducked under speech, the whole at -14 LUFS, -1.5 dBFS peak.
 Outputs: source/public/audio/mix.wav, audio/mix/FGW_SeaSlug_V1_mix.wav, audio/mix/stems/*.wav, audio/mix/mix_measure.json,
          audio/sfx_cues.json"""
-import json, os
+import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
+# V2 (`make_audio.py V2`): the same voice, beds and synthesis, retimed to the V2 picture (audio/cues_v2.json)
+VER = sys.argv[1] if len(sys.argv) > 1 else 'V1'
+V2 = VER == 'V2'
+cj = json.load(open(os.path.join(EP, 'audio/cues_v2.json' if V2 else 'audio/cues.json')))
 FR = cj['frames']
 DUR = FR / 30
 N = int(round(DUR * SR))
@@ -169,24 +172,34 @@ def boom():
 # the hook's separation: the stretch starts in the ending (the neck begins to pull on TWICE) and wraps into the first frames
 add('neck stretch (wraps the loop)', stretch(F(FR - cj['loopGap0'] + cj['brk'])), F(cj['loopGap0']), -24)
 add('neck parts (hook)', pop(), F(cj['brk']), -19, hero=True)
-add('brush bristles', bristle(), F(cj['touch'] - 2), -24)
+if V2:
+    add('probe tap', tick(), F(cj['touch']), -30)
+else:
+    add('brush bristles', bristle(), F(cj['touch'] - 2), -24)
 add('body flinch', squish(0.2), F(cj['touch'] + 1), -19, hero=True)
 add('body flinch 2', squish(0.16), F(cj['move'] - 2), -22)
 add('rewind swell', swish(F(cj['rew1'] - cj['rew0']) + 0.1, up=True)[::-1], F(cj['rew0']), -24)
 add('weak spot tone', chime(), F(cj['weak']), -27)
-add('x-ray reveal', shimmer(0.9), F(cj['xray']), -20)
+add('cutaway reveal' if V2 else 'x-ray reveal', shimmer(0.9), F(cj['join'] if V2 else cj['xray']), -22 if V2 else -20)
 add('neck stretch (anatomy)', stretch(F(cj['brk2'] - cj['brk2start'])), F(cj['brk2start']), -25)
 add('neck parts (anatomy)', pop(), F(cj['brk2']), -21, hero=True)
 add('zoom in hush', swish(F(cj['in1'] - cj['in0']), up=True), F(cj['in0']), -25)
 add('zoom out', swish(F(cj['out1'] - cj['out0']), up=False), F(cj['out0']), -25)
 add('seabed arrival (water swell)', lp(noise(int(0.8 * SR)), 900) * np.sin(np.pi * np.arange(int(0.8 * SR)) / int(0.8 * SR)) * 0.4, F(Sx['feed']) - 0.2, -22)
-for k in range(5):
-    add(f'sip {k + 1}', sip(), F(cj['arrive'] + 6 + k * 7), -24 - k)
+if V2:
+    k = 0
+    while cj['suck'] + 3 + k * cj['pumpPer'] < Sx['heart'] - 2:
+        add(f'sip {k + 1}', sip(), F(cj['suck'] + 3 + k * cj['pumpPer']), -24 - k)
+        k += 1
+else:
+    for k in range(5):
+        add(f'sip {k + 1}', sip(), F(cj['arrive'] + 6 + k * 7), -24 - k)
 for k, fr in enumerate(cj['days']):
     if fr < Sx['grow']:
         add(f'day tick {k + 1}', tick(), F(fr), -31)
-for k in range(3):
-    add(f'heartbeat {k + 1}', lubdub(), F(cj['beat'] + k * cj['beatPer']) - 0.01, [-21, -25, -30][k], hero=True)
+# the new heart: V2 holds the beat (five beats, on the picture's own beat frames, easing away into the regrowth)
+for k, g in enumerate([-21, -23, -26, -29, -33] if V2 else [-21, -25, -30]):
+    add(f'heartbeat {k + 1}', lubdub(), F(cj['beat'] + k * cj['beatPer']) - 0.01, g, hero=True)
 add('lab air on the cut', swish(0.4, up=False), F(Sx['twice']) - 0.05, -30)
 add('TWICE accent', boom(), F(cj['twice']) - 0.02, -22, hero=True)
 add('TWICE shimmer', shimmer(1.1), F(cj['twice']), -24)
@@ -214,12 +227,13 @@ if peak > db(-1.5):
     mix[over] = np.sign(mix[over]) * (thr + (db(-1.5) - thr) * np.tanh((np.abs(mix[over]) - thr) / (db(-1.5) - thr)))
 final_l = meter.integrated_loudness(mix)
 
-os.makedirs(os.path.join(EP, 'audio/mix/stems'), exist_ok=True)
-sf.write(os.path.join(EP, 'source/public/audio/mix.wav'), mix, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_SeaSlug_V1_mix.wav'), mix, SR, subtype='PCM_24')
+MD = 'audio/mix_v2' if V2 else 'audio/mix'
+os.makedirs(os.path.join(EP, MD, 'stems'), exist_ok=True)
+sf.write(os.path.join(EP, 'source/public/audio/mix_v2.wav' if V2 else 'source/public/audio/mix.wav'), mix, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, MD, f'FGW_SeaSlug_{VER}_mix.wav'), mix, SR, subtype='PCM_24')
 g = db(-14 - mix_l)
 for name, x in [('voice', voice_n * g), ('beds', music_n * duck * g), ('effects', (sfx * duck * 2.2 + key * 2.2) * g)]:
-    sf.write(os.path.join(EP, f'audio/mix/stems/{name}.wav'), x, SR, subtype='PCM_24')
+    sf.write(os.path.join(EP, MD, f'stems/{name}.wav'), x, SR, subtype='PCM_24')
 # speech clarity: voice vs everything else in the 300-4000 Hz band, while speech is present
 others = (music_n * duck + sfx * duck * 2.2 + key * 2.2) * g
 vb, ob = bp(voice_n * g, 300, 4000), bp(others, 300, 4000)
@@ -230,7 +244,7 @@ meas = {'duration_s': DUR, 'frames': FR, 'integrated_lufs': round(final_l, 2), '
         'voice_lufs_in_mix': round(meter.integrated_loudness(voice_n * g), 2), 'voice_to_rest_db_300_4000hz_during_speech': round(snr, 1),
         'loop_seam_sample_jump': round(seam, 5),
         'voice_correlation_with_source': round(float(np.corrcoef(voice_n, voice)[0, 1]), 6)}
-json.dump(meas, open(os.path.join(EP, 'audio/mix/mix_measure.json'), 'w'), indent=1)
-json.dump(log, open(os.path.join(EP, 'audio/sfx_cues.json'), 'w'), indent=1)
+json.dump(meas, open(os.path.join(EP, MD, 'mix_measure.json'), 'w'), indent=1)
+json.dump(log, open(os.path.join(EP, 'audio/sfx_cues_v2.json' if V2 else 'audio/sfx_cues.json'), 'w'), indent=1)
 print(json.dumps(meas, indent=1))
 print(len(log), 'effect cues')

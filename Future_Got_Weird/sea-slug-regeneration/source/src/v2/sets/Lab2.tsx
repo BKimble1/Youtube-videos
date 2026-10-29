@@ -50,24 +50,32 @@ const fragEls = (B: Basis, f: Frag, t: number, k: string) => {
   }
   const s = proj(B, f.c).s;
   const main = pts.map((q) => proj(B, q));
+  // soft Bryopsis: a translucent stalk with two close rows of fine pinnules that curve gently toward the tip and
+  // shorten along it (no outline: the filaments are thin, wet and see-through)
   const br: React.ReactNode[] = [];
-  for (let i = 1; i < n; i++) {
+  const m = 16;
+  for (let i = 2; i < m; i++) {
+    const u = i / m, j = Math.min(n - 1, Math.max(1, Math.round(u * n)));
     for (const sd of [1, -1]) {
-      const p0 = pts[i];
-      const dir = Math.atan2(pts[i + 1][1] - pts[i - 1][1], pts[i + 1][0] - pts[i - 1][0]) + sd * (0.7 + R() * 0.3);
-      const L = (1 - i / n) * 3.4 + 1;
-      const q: V3 = [p0[0] + Math.cos(dir) * L, p0[1] + Math.sin(dir) * L, p0[2] + 0.4];
-      const a = proj(B, p0), b = proj(B, q);
-      br.push(<path key={`${i}${sd}`} d={`M${P2(a)} Q${P2({x: (a.x + b.x) / 2 + sd * 0.15 * s, y: (a.y + b.y) / 2})} ${P2(b)}`} stroke="#5DA944" strokeWidth={Math.max(1, 0.38 * s)} fill="none" strokeLinecap="round" />);
+      const p0 = pts[j];
+      const tang = Math.atan2(pts[j + 1][1] - pts[j - 1][1], pts[j + 1][0] - pts[j - 1][0]);
+      const L = (2.6 * Math.pow(1 - u, 0.8) + 0.7) * (0.8 + R() * 0.4);
+      const a0 = tang + sd * (0.95 + R() * 0.2), a1 = tang + sd * (0.45 + R() * 0.15);
+      const back = (u - j / n) * f.len;
+      const o: V3 = [p0[0] + Math.cos(tang) * back, p0[1] + Math.sin(tang) * back, p0[2]];
+      const q1: V3 = [o[0] + Math.cos(a0) * L * 0.5, o[1] + Math.sin(a0) * L * 0.5, o[2] + 0.25];
+      const q2: V3 = [q1[0] + Math.cos(a1) * L * 0.5, q1[1] + Math.sin(a1) * L * 0.5, o[2] + 0.35];
+      const A = proj(B, o), Q1 = proj(B, q1), Q2 = proj(B, q2);
+      br.push(<path key={`${i}${sd}`} d={`M${P2(A)} Q${P2(Q1)} ${P2(Q2)}`} stroke="#6CBE4E" strokeWidth={Math.max(0.9, 0.24 * s)} fill="none" strokeLinecap="round" opacity={0.9} />);
     }
   }
   const d = `M${main.map(P2).join(' L')}`;
   return (
     <g key={k}>
-      <path d={d} stroke={INK} strokeWidth={Math.max(1.6, 0.95 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      <path d={d} stroke="#4E9A3B" strokeWidth={Math.max(1.2, 0.7 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} stroke="#3E7F34" strokeWidth={Math.max(1.3, 0.6 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={0.55} />
+      <path d={d} stroke="#5DB044" strokeWidth={Math.max(1, 0.42 * s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />
       {br}
-      <path d={d} stroke="#A9DC7E" strokeWidth={Math.max(0.6, 0.22 * s)} fill="none" strokeLinecap="round" opacity={0.7} />
+      <path d={d} stroke="#BDE99A" strokeWidth={Math.max(0.5, 0.14 * s)} fill="none" strokeLinecap="round" opacity={0.75} />
     </g>
   );
 };
@@ -197,6 +205,30 @@ export const DishRim: React.FC<{B: Basis}> = ({B}) => {
 };
 
 /** foreground grains very close to the lens (out of focus, parallax) */
+/** large grains right by the lens, drawn very soft (they slide past fast as the camera moves: parallax) */
+export const LensGrit: React.FC<{B: Basis; id: string; bits: {c: V3; r: number; col: string; op?: number}[]}> = ({B, id, bits}) => (
+  <g>
+    <defs>
+      <filter id={`${id}lg`} x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation={16} />
+      </filter>
+    </defs>
+    <g filter={`url(#${id}lg)`}>
+      {bits.map((b, i) => {
+        const P = proj(B, [b.c[0], b.c[1], b.c[2] + b.r * 0.6]);
+        if (P.z < 3) return null;
+        const r = b.r * P.s;
+        return (
+          <g key={i} opacity={(b.op ?? 1) * 0.7}>
+            <ellipse cx={P.x} cy={P.y} rx={r * 1.15} ry={r} fill={b.col} />
+            <ellipse cx={P.x - r * 0.2} cy={P.y - r * 0.25} rx={r * 0.6} ry={r * 0.45} fill={lit(b.col, 0.6)} />
+          </g>
+        );
+      })}
+    </g>
+  </g>
+);
+
 export const ForeGrit: React.FC<{B: Basis; id: string; near: number}> = ({B, id, near}) => (
   <g>
     <defs>

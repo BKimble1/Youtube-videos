@@ -2,7 +2,7 @@
 // World units ~0.2 mm (the slug is 100 long); cameras are kit orbits (azimuth from -y, elevation, distance, focal).
 import {F, FRAMES, clamp, ease, inOut, lerp, outCubic, seg} from '../lib';
 import {Path} from '../geo';
-import {Orbit, V3, lerpOrbit, orbitCam} from '../kit/three';
+import {Orbit, V3, lerpOrbit, orbitCam, unproj} from '../kit/three';
 import {Piece, geo} from './slug/body';
 import {Frag} from './sets/Lab2';
 
@@ -25,6 +25,10 @@ export type State2 = {
   lapse?: number;
   /** fade the algae out (inside views) */
   frondFade?: number;
+  /** big out-of-focus grit right by the lens (world) */
+  fore?: {c: V3; r: number; col: string; op?: number}[];
+  /** the set's clock (the last shot runs it into frame 0's) */
+  loopT?: number;
   night?: number;
   labels: {text: string; op: number; icon?: 'ff' | 'rw' | 'none'; y?: number}[];
 };
@@ -121,7 +125,22 @@ const hook = (f: number): State2 => {
     cy: lerp(980, lerp(900, 880, settle), follow),
   };
   const trail = f > BRK ? {path: PH2, from: S0 - 20, to: head.tip - 21, op: 0.5 * ease(f, BRK, BRK + 20)} : undefined;
-  return {shot: 'H', env: 'lab', orbit, pieces, trail, frags: HOOK_FRAGS, labels: [{text: 'TIME-LAPSE', op: 1 - seg(f, 112, 124), icon: 'ff'}]};
+  // 2.05-2.6 s: sand grit right by the lens slides through the bottom of the frame as the camera tracks (parallax)
+  // they drift with the water (to the left, slowly) and come and go softly
+  const fop = ease(f, 52, 60) * (1 - ease(f, 84, 98));
+  const fore = fop > 0 ? foreBits().map((b) => ({...b, c: [b.c[0] - 0.16 * (f - 69), b.c[1], b.c[2] + 0.04 * (f - 69)] as V3, op: fop})) : undefined;
+  return {shot: 'H', env: 'lab', orbit, pieces, trail, frags: HOOK_FRAGS, fore, labels: [{text: 'TIME-LAPSE', op: 1 - seg(f, 112, 124), icon: 'ff'}]};
+};
+let FORE: State2['fore'];
+const foreBits = () => {
+  if (FORE) return FORE;
+  FORE = []; // (the camera does not depend on these; guards the call below)
+  // detritus flecks drifting in the water right by the lens, placed from the camera as it is at 2.3 s (they sit
+  // where the frame is empty, lower left and right; as the camera tracks they slide past much faster than the slug)
+  const c = orbitCam(hook(69).orbit);
+  const P = (x: number, y: number, z: number, r: number, col: string) => ({c: unproj(c, x, y, z), r, col});
+  FORE = [P(230, 1560, 55, 1.1, '#F3EEE2'), P(880, 1700, 48, 0.7, '#FBF8F0'), P(520, 1840, 62, 1.4, '#EDE5D4')];
+  return FORE;
 };
 
 // ---------------------------------------------------------------- "And its headless BODY? It keeps MOVING too."
@@ -369,7 +388,40 @@ const growShot = (f: number): State2 => {
   };
 };
 
-const rest = (f: number): State2 => ({...growShot(Math.min(f, S.twice - 1)), shot: 'R'});
+// ---------------------------------------------------------------- "And one of these sea slugs actually did it... TWICE."
+// Back in the dish: the regrown slug glides in and settles where the film began; the camera closes on the neck.
+// A constriction forms on "actually did it"; on "TWICE" the head starts to pull away and the neck stretches, so the
+// last frame runs straight into frame 0 (same camera, same pose, the gap growing at the hook's 0.33 units a frame).
+export const fDid = F('actually'), fTwice = F('twice');
+const LOOP = FRAMES; // the virtual frame that is frame 0 again
+const gapLoop = (f: number) => {
+  if (f < fTwice) return 0;
+  const u = clamp((f - fTwice) / (LOOP - fTwice));
+  // 0 -> 7 with the end slope equal to the hook's (6/18 a frame), so the stretch carries on without a hitch
+  const k = (gapHook(1) - gapHook(0)) * (LOOP - fTwice) / 7;
+  const b = k - 2, a = 1 - b;
+  return 7 * (a * u * u + b * u * u * u);
+};
+const twiceShot = (f: number): State2 => {
+  const tl = (f - LOOP) / 30; // the clock runs into frame 0's
+  const gap = gapLoop(f);
+  const glide = ease(f, S.twice, fTwice, (u) => u * (2 - u));
+  const bodyTip = lerp(S0 - 26, S0, glide);
+  const constrict = 0.46 * ease(f, fDid - 2, fDid + 16);
+  const crawl = (2 * Math.PI * (f - LOOP)) / 26;
+  const pieces: Piece[] = [{
+    id: 'whole', path: PH2, tip: bodyTip + gap, a0: 0, a1: 100, gap, pinch: Math.max(constrict, pinchOf(gap)), t: tl,
+    crawl, crawlAmp: 1 - ease(f, fTwice - 20, fTwice + 4),
+  }];
+  const end = hook(0).orbit;
+  const mid = onPath(bodyTip - 34, 0, 3);
+  const start: Orbit = {target: [mid[0], mid[1], 3], az: -58, el: 44, d: 340, f: 3150, cy: 1000};
+  const k = ease(f, S.twice + 6, LOOP, (u) => u * u * (3 - 2 * u));
+  const orbit = lerpOrbit(start, end, k);
+  return {shot: 'T', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, labels: [{text: 'TIME-LAPSE', op: ease(f, LOOP - 9, LOOP - 1), icon: 'ff'}], loopT: tl};
+};
+
+const rest = (f: number): State2 => twiceShot(f);
 
 export const stateAt2 = (f: number): State2 => {
   if (f < S.body) return hook(f);
@@ -386,3 +438,19 @@ void lerpOrbit;
 
 /** cuts in V2 (caption changes within two frames of one happen on it) */
 export const CUTS2: number[] = [S.feed, S.twice];
+
+/** the picture's event frames for the sound (tools/export_cues_v2.ts -> audio/cues_v2.json) */
+export const CUES2 = () => {
+  const days: number[] = [];
+  let last = 0;
+  for (let f = S.heart; f < S.twice; f++) {
+    const d = Math.round(dayAt(f));
+    if (d !== last && last > 0) days.push(f);
+    last = d;
+  }
+  return {
+    frames: FRAMES, S, brk: BRK, touch: fTouch, move: fMove, rew0: fRew0, rew1: fRew1, join: fJoin, weak: fWeak, brk2start: fBreak0, brk2: fBreak,
+    heart: fHeart, in0: fIn0, in1: fIn1, para: F('parasites'), out0: fOut0, out1: fOut1, arrive: fArrive, suck: fSuck, pumpPer: 11,
+    week0: fWeek0, week1: fWeek1, newHeart: fNew, beat: fBeat, beatPer: BEAT_PER, did: fDid, twice: fTwice, loopGap0: fTwice, days,
+  };
+};

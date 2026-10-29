@@ -75,8 +75,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
   // ------------------------------------------------ the tube (head + trunk)
   const hasTrunk = p.a1 > A_CUT + 0.5 && (!regen || g > 0.015);
   const aEnd = hasTrunk ? p.a1 : Math.min(p.a1, A_CUT);
-  const nA = Math.max(12, Math.round((aEnd - p.a0) * 0.8));
-  const M = 20;
+  const nA = Math.max(14, Math.round((aEnd - p.a0) * 1.05));
+  const M = 28;
   const as: number[] = [];
   for (let i = 0; i <= nA; i++) as.push(lerp(p.a0, aEnd, i / nA));
   const ths: number[] = [];
@@ -163,7 +163,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
   const fa0 = Math.max(F0, p.a0), fa1 = Math.min(F1, p.a1);
   if (hasTrunk && fa1 - fa0 > 2 && G.sp((F0 + F1) / 2) > 0.6) {
     for (const side of [1, -1]) {
-      const nAf = 60, nS = 9;
+      const nAf = 84, nS = 12;
       const af: number[] = [];
       for (let i = 0; i <= nAf; i++) af.push(lerp(fa0, fa1, i / nAf));
       const grid = af.map((a) => Array.from({length: nS + 1}, (_, k) => G.flap(side, a, k / nS)));
