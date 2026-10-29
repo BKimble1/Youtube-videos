@@ -326,9 +326,15 @@ const feedState = (f: number): State2 => {
   const rear = rel(geo(head).at(20, 0, 4), PHS_AZ, -118, 30, 90, 3300, 1020);
   let orbit = lerpOrbit(m, contact, E(f, B4.feed + 2, B4.contact + 4));
   orbit = lerpOrbit(orbit, rear, E(f, B4.moveOn, B4.week0 + 12));
-  const pieces = f < B4.back ? [head] : [regen4(f, {rear: head.rear, green: head.green, crawl: head.crawl, crawlAmp: head.crawlAmp})];
+  // (the crawl settles before the hand-over to the time-lapse, which holds the animal still)
+  const pieces = f < B4.back ? [head] : [regen4(f, {rear: head.rear, green: head.green, crawl: head.crawl, crawlAmp: (head.crawlAmp ?? 0) * (1 - ease(f, B4.week0 - 2, B4.week0 + 8))})];
   const drain = ease(f, B4.contact + 2, B4.moveOn + 4, (u) => u * (2 - u));
-  return {shot: 'F', env: 'sea', orbit, pieces, feed: {u: 0.02, drain, down: true, flow: ease(f, B4.contact + 2, B4.contact + 7) * (1 - ease(f, B4.moveOn - 4, B4.moveOn + 2))}, labels: []};
+  const lapse = ease(f, B4.week0 - 2, B4.week0 + 3);
+  return {
+    shot: 'F', env: 'sea', orbit, pieces, feed: {u: 0.02, drain, down: true, flow: ease(f, B4.contact + 2, B4.contact + 7) * (1 - ease(f, B4.moveOn - 4, B4.moveOn + 2))}, lapse,
+    night: lapse * 0.22 * (0.5 - 0.5 * Math.cos(2 * Math.PI * 2 * seg(f, B4.week0, B4.newHeart))),
+    labels: [{text: `TIME-LAPSE · DAY ${Math.max(1, Math.round(dayAt4(f)))}`, op: ease(f, B4.week0, B4.week0 + 4), icon: 'ff'}],
+  };
 };
 
 // ---------------------------------------------------------------- 19.0-21.5 s: a new heart

@@ -1,0 +1,51 @@
+{
+ "file": "exports/FGW_SeaSlug_Regeneration_V4_REVIEW_1080x1920.mp4",
+ "codec": "h264",
+ "size": [
+  1080,
+  1920
+ ],
+ "fps": "30/1",
+ "frames": 860,
+ "pix_fmt": "yuv420p",
+ "duration_s": 28.666667,
+ "audio": [
+  {
+   "codec": "aac",
+   "rate": "48000",
+   "channels": 2,
+   "bit_rate": "253804"
+  }
+ ],
+ "mean_change": 3.499,
+ "median_change": 2.798,
+ "max_change": {
+  "frame": 463,
+  "value": 21.0
+ },
+ "one_frame_spikes": [
+  {
+   "frame": 490,
+   "change": 17.17,
+   "neighbours": [
+    2.5,
+    5.66
+   ]
+  },
+  {
+   "frame": 751,
+   "change": 17.73,
+   "neighbours": [
+    2.63,
+    0.63
+   ]
+  }
+ ],
+ "static_holds_over_1s_start_frames": [],
+ "loop_seam_change": 3.283,
+ "loop_seam_vs_median": 1.17,
+ "cut_changes": {
+  "490": 17.17,
+  "751": 17.73
+ }
+}
