@@ -32,7 +32,7 @@ export type SlugOpts = {ink?: number; op?: number; noSpots?: boolean};
 
 export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: React.ReactNode} => {
   const G = geo(p);
-  const PC = p.style === 'v5' ? C5 : C;
+  const PC = (p.style === 'v5' || p.style === 'v6') ? C5 : C;
   const regen = isRegen(p);
   const g = p.grow ?? 1;
   const pale = regen ? growPale(g) : 0;
@@ -252,8 +252,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           fill = mix(fill, PC.glow, 0.3 * Math.pow(s, 3)); // thin margins transmit light
           if (k === nS - 1) fill = mix(fill, T(PC.flapEdge, am), outer ? 0.55 : 0.3); // the darker edging
           // V5: Elysia cf. marginata's margin: a fine orange band inside a black rim along the parapodial edge
-          if (p.style === 'v5' && k === nS - 1) fill = T(outer ? '#20301E' : '#2E4A2A', am);
-          if (p.style === 'v5' && k === nS - 2) fill = mix(fill, T('#E89A3C', am), outer ? 0.7 : 0.45);
+          if ((p.style === 'v5' || p.style === 'v6') && k === nS - 1) fill = T(outer ? '#20301E' : '#2E4A2A', am);
+          if ((p.style === 'v5' || p.style === 'v6') && k === nS - 2) fill = mix(fill, T('#E89A3C', am), outer ? 0.7 : 0.45);
           if (s < 0.2) fill = shade(fill, 0.2 * (1 - s / 0.2)); // shadow where it meets the body
           let ink = '';
           if (k === nS - 1) ink += seg(G2[i][nS], G2[i + 1][nS]);
@@ -283,7 +283,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           if (op < 0.02) return;
           F.push(spotF(add3(pt, mul3(n, 0.1)), ta, tb, sp.r, sp.pale, op));
         });
-      TUBULES.filter((tb) => tb.side === side).forEach((tb) => {
+      // (V6 drops these vein-like tubules: they made the parapodia read as a leaf)
+      if (p.style !== 'v6') TUBULES.filter((tb) => tb.side === side).forEach((tb) => {
         const pts = tb.pts.filter(([a]) => a > fa0 + 0.5 && a < fa1 - 0.5 && !(cut && side === nearSide && inCut(a))).map(([a, s]) => G.flap(side, a, s));
         if (pts.length < 2) return;
         // only where the outer face is toward the camera (they lie under its surface)
@@ -300,14 +301,18 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
       const bA = 6.5, h0 = G.h(bA);
       const swA = sw * 0.9 * Math.sin(t * 1.9 + side * 0.8), swV = sw * 0.7 * Math.sin(t * 1.4 + side * 2.1);
       // V4: shorter, more slender rhinophores (they were reading as two big orange horns)
-      const rk = p.style === 'v5' ? 0.78 : p.style === 'v4' ? 0.7 : 1;
-      const P0 = G.at(bA, side * 2.6, h0 * 0.92), P1 = G.at(3.6 + swA * 0.3, side * (2.6 + 2.8 * rk), h0 + 7.4 * rk), P2_ = G.at(-2.2 * rk + swA, side * (2.6 + (7.2 + swV) * rk), h0 + 13.0 * rk);
+      const rk = (p.style === 'v5' || p.style === 'v6') ? 0.78 : p.style === 'v4' ? 0.7 : 1;
+      // V6: short, thick, rolled rhinophores that flare out sideways like ears (not two rigid spikes)
+      const v6r = p.style === 'v6';
+      const P0 = G.at(bA, side * 2.6, h0 * 0.92);
+      const P1 = v6r ? G.at(5.0 + swA * 0.2, side * 5.2, h0 + 3.6) : G.at(3.6 + swA * 0.3, side * (2.6 + 2.8 * rk), h0 + 7.4 * rk);
+      const P2_ = v6r ? G.at(3.4 + swA * 0.5, side * (8.6 + swV * 0.5), h0 + 5.6) : G.at(-2.2 * rk + swA, side * (2.6 + (7.2 + swV) * rk), h0 + 13.0 * rk);
       const nU = 10, nR = 10;
       const cen: V3[] = [], rad: number[] = [];
       for (let i = 0; i <= nU; i++) {
         const u = i / nU;
         cen.push([0, 1, 2].map((k) => (1 - u) * (1 - u) * P0[k] + 2 * u * (1 - u) * P1[k] + u * u * P2_[k]) as V3);
-        rad.push((lerp(1.6, 0.5, Math.pow(u, 1.25)) + 0.28 * Math.sin(Math.PI * u)) * (u > 0.97 ? 0.6 : 1) * (p.style === 'v4' || p.style === 'v5' ? 0.82 : 1));
+        rad.push(p.style === 'v6' ? (lerp(1.9, 0.9, Math.pow(u, 1.4)) + 0.3 * Math.sin(Math.PI * u)) * (u > 0.96 ? 0.75 : 1) : (lerp(1.6, 0.5, Math.pow(u, 1.25)) + 0.28 * Math.sin(Math.PI * u)) * (u > 0.97 ? 0.6 : 1) * (p.style === 'v4' || p.style === 'v5' ? 0.82 : 1));
       }
       const rings = cen.map((c, i) => {
         const tan = norm3(sub3(cen[Math.min(nU, i + 1)], cen[Math.max(0, i - 1)]));
@@ -340,7 +345,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           const q = [rings[i][k], rings[i + 1][k], rings[i + 1][k + 1], rings[i][k + 1]];
           const qc = quadOf(q);
           const u = (i + 0.5) / nU;
-          const base = p.style === 'v5' ? (u < 0.7 ? headCol : u < 0.88 ? '#E9952F' : '#F7C755') : p.style === 'v4' ? (u < 0.74 ? headCol : u < 0.9 ? '#D9A24E' : '#EBCB78') : u < 0.6 ? headCol : u < 0.85 ? PC.rhinoTip : PC.rhinoTip2;
+          const base = p.style === 'v6' ? (u < 0.66 ? headCol : u < 0.84 ? '#D98B2E' : '#F2BE4E') : p.style === 'v5' ? (u < 0.7 ? headCol : u < 0.88 ? '#E9952F' : '#F7C755') : p.style === 'v4' ? (u < 0.74 ? headCol : u < 0.9 ? '#D9A24E' : '#EBCB78') : u < 0.6 ? headCol : u < 0.85 ? PC.rhinoTip : PC.rhinoTip2;
           let ink = '';
           if (!rvAt(i, k - 1)) ink += seg(RR[i][k], RR[i + 1][k]);
           if (!rvAt(i, k + 1)) ink += seg(RR[i][k + 1], RR[i + 1][k + 1]);
@@ -499,7 +504,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     // Regrowth: first a loose cluster of cells, which draws together into the sac and heart.
     if (hv > 0.01 && p.a0 <= heartA && aEnd >= heartA) {
       // (V5 draws the heart a little larger so it reads at phone size)
-      const bt = p.beat ?? 0, gsz = (regen ? lerp(0.85, 1, smooth(g)) : 1) * (p.style === 'v5' ? 1.25 : 1);
+      const bt = p.beat ?? 0, gsz = (regen ? lerp(0.85, 1, smooth(g)) : 1) * ((p.style === 'v5' || p.style === 'v6') ? 1.25 : 1);
       const form = smooth(clamp((hv - 0.25) / 0.75));
       const op = vis0(heartA);
       if (hv < 1) {

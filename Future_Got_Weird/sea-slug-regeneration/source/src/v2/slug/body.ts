@@ -77,7 +77,7 @@ export type Piece = {
   /** V3: a muscular contraction travelling along the body (a ring of narrowing and lift at anatomical a) */
   ripple?: {a: number; amp: number};
   /** V4 design: narrower parapodia carried more upright and folded over the back, smaller rhinophores */
-  style?: 'v4' | 'v5';
+  style?: 'v4' | 'v5' | 'v6';
   /** V4: the buccal mass pumping while feeding (0..1, phase-driven by the caller) */
   pump?: number;
 };
@@ -146,8 +146,10 @@ export const geo = (p: Piece): Geo => {
   const wave = (a: number) => ca * Math.sin(a * 0.3 - cr);
   const rp = p.ripple;
   const rip = (a: number) => (rp ? rp.amp * Math.exp(-Math.pow((a - rp.a) / 6, 2)) : 0);
-  const w = (a: number) => halfW(a) * wf(p, a) * (1 + 0.035 * wave(a)) * (1 - 0.34 * rip(a));
-  const hk = (a: number) => (p.style === 'v5' ? (a < A_CUT ? 1.18 : 1.12) : 1);
+  // V6: irregular soft-body contours (slow swellings along the body, not a smooth leaf outline)
+  const lump = (a: number) => (p.style === 'v6' ? 1 + 0.07 * Math.sin(a * 0.37 + 1.3) + 0.045 * Math.sin(a * 0.83 + 0.4) + 0.025 * Math.sin(a * 1.9) : 1);
+  const w = (a: number) => halfW(a) * wf(p, a) * lump(a) * (1 + 0.035 * wave(a)) * (1 - 0.34 * rip(a));
+  const hk = (a: number) => (p.style === 'v6' ? (a < A_CUT ? 1.3 : 1.22) * (2 - lump(a + 4)) : p.style === 'v5' ? (a < A_CUT ? 1.18 : 1.12) : 1);
   const h = (a: number) => heightOf(a) * hk(a) * Math.min(1, wf(p, a) * 1.1 + 0.12) * (1 + 0.05 * wave(a + 3)) * (1 + 0.42 * rip(a));
   const tw = p.twitch;
   const twAt = (side: number, a: number) => (tw && tw.side === side ? tw.amp * Math.exp(-Math.pow((a - tw.a) / 13, 2)) : 0);
@@ -165,17 +167,18 @@ export const geo = (p: Piece): Geo => {
   // V5: the parapodia raised like wings and rolled in over the back (a cloak with the dorsal groove showing), not a flat leaf
   const SIDE5 = {[1]: {open: 58, curl: 84, ruff: 0.75, ph: 0.0}, [-1]: {open: 64, curl: 92, ruff: 0.6, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
   const SIDE4 = {[1]: {open: 36, curl: 64, ruff: 0.85, ph: 0.0}, [-1]: {open: 44, curl: 72, ruff: 0.7, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
-  const v4 = p.style === 'v4' || p.style === 'v5', v5 = p.style === 'v5';
+  const v4 = p.style === 'v4' || p.style === 'v5' || p.style === 'v6', v5 = (p.style === 'v5' || p.style === 'v6');
   const flap = (side: number, a: number, s: number): V3 => {
     const S = v5 ? SIDE5[side] : v4 ? SIDE4[side] : SIDE[side];
-    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a)) * (v5 ? 0.8 : v4 ? 0.88 : 1);
+    const v6 = p.style === 'v6';
+    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a)) * (p.style === 'v6' ? 0.7 : v5 ? 0.8 : v4 ? 0.88 : 1);
     const tt = clamp((a - F0) / (F1 - F0));
     const ends = Math.pow(1 - Math.sin(Math.PI * tt), 1.4);
     // margin ruffles: a few slow waves along the edge, drifting with time
     const ruf = S.ruff * (Math.sin(a * 0.46 + t * 1.1 + S.ph) * 7 + Math.sin(a * 1.17 - t * 0.7 + S.ph) * 3.5);
     // V4: two or three broad folds along the base, so the sheet is not one flat leaf
     const folds = v4 ? 9 * Math.sin(a * 0.19 + S.ph + 0.3 * Math.sin(t * 0.7)) + 4 * Math.sin(a * 0.41 - S.ph) : 0;
-    const a0d = S.open + 30 * ends + 34 * fl + 70 * twAt(side, a) + folds;
+    const a0d = S.open + (v6 ? 8 : 0) + 30 * ends + 34 * fl + 70 * twAt(side, a) + folds * (v6 ? 1.5 : 1);
     let lat = wa * (0.98 + 0.04 * Math.sin(a * 0.31 + side)), z = ha * 0.34;
     const n = 6, ds = (spr * s) / n;
     for (let k = 1; k <= n; k++) {

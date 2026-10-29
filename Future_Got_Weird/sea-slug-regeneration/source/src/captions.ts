@@ -20,4 +20,7 @@ export const capPlace4 = (i: number) => PLACE4[i] ?? LOW;
 // V5 per-caption placements (index -> centre y)
 export const PLACE5: Record<number, number> = {};
 export const capPlace5 = (i: number) => PLACE5[i] ?? LOW;
+// V6 per-caption placements (index -> centre y)
+export const PLACE6: Record<number, number> = {};
+export const capPlace6 = (i: number) => PLACE6[i] ?? LOW;
 export {HIGH, LOW};
