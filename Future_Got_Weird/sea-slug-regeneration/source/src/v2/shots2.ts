@@ -18,6 +18,7 @@ export type State2 = {
   frags?: Frag[];
   probe?: {tip: V3; dir: V3; press: number; op: number};
   dim?: number;
+  micro?: {op: number; para: number; zoom: number; reveal: number};
   labels: {text: string; op: number; icon?: 'ff' | 'rw' | 'none'; y?: number}[];
 };
 
@@ -172,7 +173,7 @@ const norm = (v: V3): V3 => {
 // pericardium. The neck parts again in section; the heart stays (beating) in the body; the head leaves without it.
 export const fRew0 = S.weak, fRew1 = S.weak + 20, fJoin = S.weak + 27;
 export const fWeak = Math.max(F('weak') - 2, fJoin), fBreak0 = F('when') + 2, fBreak = fBreak0 + 22, fHeart = F('heart', 1);
-const ORB_SIDE: Orbit = {target: onPath(S0 - 19, 0, 5), az: -80, el: 21, d: 140, f: 3050, cy: 960};
+const ORB_SIDE: Orbit = {target: onPath(S0 - 24, 0, 5), az: -146, el: 36, d: 150, f: 3000, cy: 1150};
 export const beatAt = (f: number, f0: number, per = 24) => {
   if (f < f0) return 0;
   const u = ((f - f0) % per) / per;
@@ -217,6 +218,9 @@ const weakShot = (f: number): State2 => {
   const from = bodyShot(S.weak - 1).orbit;
   const k = ease(f, fRew0, fJoin + 6);
   let orbit = lerpOrbit(from, ORB_SIDE, k);
+  // in close on the section while the weak spot and the heart are introduced, back out for the break
+  const zin = ease(f, fJoin + 4, fJoin + 34) * (1 - ease(f, fBreak0 - 8, fBreak0 + 10));
+  orbit = {...orbit, f: orbit.f * (1 + 0.32 * zin), target: [lerp(orbit.target[0], onPath(S0 - 26, 0, 4)[0], zin), lerp(orbit.target[1], onPath(S0 - 26, 0, 4)[1], zin), orbit.target[2]]};
   // after the break, keep the heart (behind) and the leaving head both in frame: aim between them, widen a little
   if (f > fBreak) {
     const hd = geo(pieces[1]).at(10, 0, 4), ht = geo(pieces[0]).at(31, 0, 4);
@@ -225,7 +229,7 @@ const weakShot = (f: number): State2 => {
     orbit = {...orbit, target: [lerp(orbit.target[0], mid[0], k2), lerp(orbit.target[1], mid[1], k2), orbit.target[2]], f: lerp(orbit.f, 2550, ease(f, fBreak + 10, S.para))};
   }
   return {
-    shot: 'W', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, dim: 0.42 * ease(f, fRew0 + 4, fJoin + 4),
+    shot: 'W', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, dim: 0.3 * ease(f, fRew0 + 4, fJoin + 4),
     labels: [{text: 'REWIND', op: seg(f, fRew0, fRew0 + 3) * (1 - seg(f, fRew1 + 2, fRew1 + 10)), icon: 'rw'}],
   };
 };
@@ -234,18 +238,30 @@ const weakShot = (f: number): State2 => {
 // A continuous push into the abandoned body's cut face, down to its tissue; two parasites, drawn ghosted under a
 // HYPOTHESIS tag; then out again and after the head as it leaves.
 export const fIn0 = S.para + 2, fIn1 = S.para + 34, fOut0 = F('old') - 4, fOut1 = S.feed - 2;
-export const MICRO_A = 44;
+export const MICRO_A = 38;
 const paraShot = (f: number): State2 => {
   const pieces = secPieces(f, 1 - ease(f, fOut0 + 10, fOut1));
   const body = pieces[0], head = pieces[1];
   const base = weakShot(S.para - 1).orbit;
   const mc = geo(body).at(MICRO_A, 0, 3.4);
-  const deep: Orbit = {...base, target: mc, az: -90, el: 4, d: 130, f: 3900 * 26, cy: 960};
+  // push straight on into the cut face (it fills the frame), then the tissue layer takes over and keeps pushing
+  const deep: Orbit = {...base, target: mc, az: -132, el: 44, d: 120, f: 3000 * 5.5, cy: 960};
   const hd = geo(head).at(12, 0, 4);
-  const away: Orbit = {target: [hd[0], hd[1] + 8, 3], az: -40, el: 16, d: 170, f: 3300, cy: 1040};
-  const kin = ease(f, fIn0, fIn1, (u) => u * u * (3 - 2 * u)), kout = ease(f, fOut0, fOut1, (u) => u * u * (3 - 2 * u));
-  const orbit = kout > 0 ? lerpOrbit(deep, away, kout) : lerpOrbit(base, deep, kin);
-  return {shot: 'P', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, dim: 0.42 * (1 - kout), labels: []};
+  const away: Orbit = {target: [hd[0], hd[1] + 8, 3], az: -150, el: 26, d: 170, f: 3300, cy: 1100};
+  // the swap to the head happens behind the tissue; the tissue then dissolves onto the head gliding away
+  const kin = ease(f, fIn0, fIn1, (u) => u * u * u), kout = f >= fOut0 + 2 ? 1 : 0;
+  const away2: Orbit = {...away, d: lerp(185, 160, ease(f, fOut0, fOut1)), az: lerp(-158, -146, ease(f, fOut0, fOut1))};
+  let orbit = kout > 0 ? away2 : lerpOrbit(base, deep, kin);
+  if (!kout) {
+    // the aim settles on the cut face first, then the lens closes in on it
+    const ka = ease(f, fIn0 - 2, fIn0 + 16);
+    orbit = {...orbit, target: [lerp(base.target[0], mc[0], ka), lerp(base.target[1], mc[1], ka), lerp(base.target[2], mc[2], ka)]};
+  }
+  const fPar = F('parasites');
+  const mop = ease(f, fIn1 - 12, fIn1) * (1 - ease(f, fOut0 + 3, fOut0 + 14));
+  const micro = {op: mop, reveal: ease(f, fIn1 - 12, fIn1 + 2), para: ease(f, fPar - 16, fPar - 2), zoom: 1 + 0.55 * ease(f, fIn1 - 12, fOut0 + 9) + 0.6 * ease(f, fOut0, fOut0 + 9)};
+  const hyp = ease(f, fPar - 2, fPar + 6) * (1 - ease(f, fOut0, fOut0 + 6));
+  return {shot: 'P', env: 'lab', orbit, pieces, frags: HOOK_FRAGS, dim: 0.3 * (1 - kout), micro, labels: [{text: 'HYPOTHESIS', op: hyp, icon: 'none'}]};
 };
 
 const rest = (f: number): State2 => ({...paraShot(Math.min(f, S.feed - 1)), shot: 'R'});

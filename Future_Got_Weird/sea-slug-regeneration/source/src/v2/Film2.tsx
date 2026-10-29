@@ -11,6 +11,7 @@ import {Hand, HAND_CLUTCH} from '../kit/dc/Hand';
 import {GLOVE} from '../kit/scene';
 import {add3, mul3} from '../kit/three';
 import {DishRim, ForeGrit, LabBack} from './sets/Lab2';
+import {Micro2} from './sets/Micro2';
 import {SlugFloor, slugItem} from './slug/Mesh';
 import {CUTS2, State2, stateAt2} from './shots2';
 import {capPlace2} from '../captions';
@@ -65,6 +66,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions
         })}
         {hand}
         {st.env === 'lab' && <ForeGrit B={B} id={id} near={focusZ * 0.45} />}
+        {st.micro && <Micro2 id={id} t={t} {...st.micro} />}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}
       </svg>
       {captions && <Captions t={t} f={f} place={(i) => capPlace2(i)} cuts={CUTS2} />}
