@@ -294,7 +294,7 @@ const feedShot = (f: number): State => {
   const day = dayAt(f);
   return {
     shot: 'F', env: {algae: 1}, cam, pieces: [p], eaten: eatenAt(f), night,
-    labels: [{text: 'TIME-LAPSE', op: seg(f, fWeek0 - 2, fWeek0 + 2), icon: 'ff'}, {text: day ? `DAY ${day}` : '', op: day ? 1 : 0, y: 172}],
+    labels: [{text: 'TIME-LAPSE', op: seg(f, fWeek0 - 2, fWeek0 + 2), icon: 'ff'}, {text: day ? `DAY ${day}` : '', op: day ? 1 : 0, y: 184}],
   };
 };
 
@@ -309,7 +309,7 @@ const growShot = (f: number): State => {
   const zoom = Math.exp(lerp(Math.log(from.zoom), Math.log(lerp(13, 8.6, smooth(clamp((g - 0.12) / 0.88)))), k));
   const cam: Cam = {...from, x: lerp(from.x, c[0], k), y: lerp(from.y, c[1], k), zoom, tilt: lerp(66, 70, ease(f, S.grow, S.twice)), oy: lerp(800, 860, k)};
   const day = dayAt(f);
-  return {shot: 'G', env: {algae: 1}, cam, pieces: [p], eaten: eatenAt(f), labels: [{text: 'TIME-LAPSE', op: 1 - seg(f, S.twice - 10, S.twice - 2), icon: 'ff'}, {text: `DAY ${day}`, op: 1 - seg(f, S.twice - 10, S.twice - 2), y: 172}]};
+  return {shot: 'G', env: {algae: 1}, cam, pieces: [p], eaten: eatenAt(f), labels: [{text: 'TIME-LAPSE', op: 1 - seg(f, S.twice - 10, S.twice - 2), icon: 'ff'}, {text: `DAY ${day}`, op: 1 - seg(f, S.twice - 10, S.twice - 2), y: 184}]};
 };
 
 const middle = (f: number): State => {

@@ -270,11 +270,11 @@ export const Label: React.FC<{text: string; op: number; y?: number; icon?: 'ff' 
     <g opacity={clamp(op)} transform={`translate(64, ${y})`}>
       {icon !== 'none' && (
         <g transform={icon === 'rw' ? 'translate(44,0) scale(-1,1)' : ''} fill="#FFFFFF" stroke="#0D1A1D" strokeWidth={3} strokeLinejoin="round">
-          <path d="M0,-14 L16,0 L0,14Z" />
-          <path d="M18,-14 L34,0 L18,14Z" />
+          <path d="M0,-16 L18,0 L0,16Z" />
+          <path d="M20,-16 L38,0 L20,16Z" />
         </g>
       )}
-      <text x={icon === 'none' ? 0 : 52} y={11} fontFamily='"Nunito Variable", Nunito, sans-serif' fontWeight={900} fontSize={32} letterSpacing="0.12em" fill="#FFFFFF" stroke="#0D1A1D" strokeWidth={7} paintOrder="stroke" strokeLinejoin="round">
+      <text x={icon === 'none' ? 0 : 54} y={14} fontFamily='"Nunito Variable", Nunito, sans-serif' fontWeight={900} fontSize={40} letterSpacing="0.1em" fill="#FFFFFF" stroke="#0D1A1D" strokeWidth={7} paintOrder="stroke" strokeLinejoin="round">
         {text}
       </text>
     </g>
