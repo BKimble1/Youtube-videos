@@ -12,6 +12,11 @@ import {clamp, lerp, rng} from '../../lib';
 
 export const WATER = '#2C7A7C';
 const WATER_TOP = '#7CC1AE', WATER_DEEP = '#164E5C';
+// the live palette (V2-V4 muted; V5 vivid): set per frame by the compositor
+export const PAL = {water: WATER, top: WATER_TOP, deep: WATER_DEEP, floor: '#948C72', reef: '#3F6E63'};
+export const seaPalette = (vivid: boolean) => {
+  Object.assign(PAL, vivid ? {water: '#1C8C95', top: '#8EE0CF', deep: '#0A4766', floor: '#B7A57A', reef: '#2E7D6E'} : {water: WATER, top: WATER_TOP, deep: WATER_DEEP, floor: '#948C72', reef: '#3F6E63'});
+};
 
 type Frond = {base: V3; h: number; phi: number; lean: number; seed: number; ph: number; food?: boolean; fore?: boolean};
 /** the tuft, placed round the feeding point FEED (the stalk the slug pierces) */
@@ -99,7 +104,7 @@ export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed
     // V2: drains outward from the puncture. V3 (down): the contents run down to the puncture, so the frond clears
     // from its tips toward the stalk base
     const drained = (u: number) => (!fr.food ? 0 : feed.down ? clamp((feed.drain * 1.35 - (1 - u)) * 3, 0, 1) : clamp((feed.drain * 1.3 - Math.abs(u - feed.u) * 1.6) * 3, 0, 1));
-    const col = (c: string, u: number) => mix(mix(c, EMPTY, drained(u) * 0.9), WATER, fg * 0.85);
+    const col = (c: string, u: number) => mix(mix(c, EMPTY, drained(u) * 0.9), PAL.water, fg * 0.85);
     const P = (p: V3) => proj(B, p);
     const axPts = G.ax.map(P);
     const els: React.ReactNode[] = [];
@@ -148,7 +153,7 @@ export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed
     els.push(<path key="s3" d={dS} stroke={GREEN_HI} strokeWidth={wS * 0.28} fill="none" strokeLinecap="round" opacity={0.55 * (1 - fg)} />);
     // the base: a small holdfast of rhizoids on the rock
     const bp = P(fr.base);
-    els.push(<ellipse key="hf" cx={bp.x} cy={bp.y} rx={1.6 * bp.s} ry={0.6 * bp.s} fill={mix('#3E6A34', WATER, fg * 0.8)} opacity={0.8} />);
+    els.push(<ellipse key="hf" cx={bp.x} cy={bp.y} rx={1.6 * bp.s} ry={0.6 * bp.s} fill={mix('#3E6A34', PAL.water, fg * 0.8)} opacity={0.8} />);
     void s;
     return {z, el: <g key={`fd${i}`} filter={b ? `url(#${id}rb${b})` : undefined} opacity={0.94 * (1 - fade) * (fr.food ? 1 - (feed.gone ?? 0) : 1)}>{els}</g>};
   });
@@ -172,12 +177,12 @@ export const SeaBack: React.FC<{B: Basis; id: string; t: number; focusZ: number}
   for (let i = 0; i < 26; i++) {
     const y0 = -300 + i * i * 6, y1 = -300 + (i + 1) * (i + 1) * 6;
     const fg = fog(B, focusZ, [0, (y0 + y1) / 2, 0]);
-    bands.push(<path key={i} d={projPoly(B, [[-3000, y0, 0], [3000, y0, 0], [3000, y1 + 2, 0], [-3000, y1 + 2, 0]])} fill={mix('#948C72', WATER, 0.2 + Math.pow(fg, 0.8) * 0.8)} />);
+    bands.push(<path key={i} d={projPoly(B, [[-3000, y0, 0], [3000, y0, 0], [3000, y1 + 2, 0], [-3000, y1 + 2, 0]])} fill={mix(PAL.floor, PAL.water, 0.2 + Math.pow(fg, 0.8) * 0.8)} />);
   }
   const patches = PATCHES.map((p, i) => {
     const fg = fog(B, focusZ, p.c);
     if (depth(B, p.c) < 5) return null;
-    return <path key={i} d={projPoly(B, blob(p.c, p.r, p.r * 0.7, p.rot, 9, rng(p.seed)))} fill={mix(p.col, WATER, 0.2 + fg * 0.8)} opacity={0.85} />;
+    return <path key={i} d={projPoly(B, blob(p.c, p.r, p.r * 0.7, p.rot, 9, rng(p.seed)))} fill={mix(p.col, PAL.water, 0.2 + fg * 0.8)} opacity={0.85} />;
   });
   const rays = [0, 1, 2, 3, 4].map((k) => {
     const x = 120 + k * 230 + Math.sin(t * 0.35 + k * 1.7) * 40;
@@ -193,8 +198,8 @@ export const SeaBack: React.FC<{B: Basis; id: string; t: number; focusZ: number}
     <g>
       <defs>
         <linearGradient id={`${id}wg`} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2={Math.max(200, hy)}>
-          <stop offset="0" stopColor={WATER_TOP} />
-          <stop offset="1" stopColor={mix('#948C72', WATER, 1)} />
+          <stop offset="0" stopColor={PAL.top} />
+          <stop offset="1" stopColor={mix(PAL.floor, PAL.water, 1)} />
         </linearGradient>
         <filter id={`${id}sb`} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={18} /></filter>
         <filter id={`${id}pb`} x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation={2.2} /></filter>
@@ -206,7 +211,7 @@ export const SeaBack: React.FC<{B: Basis; id: string; t: number; focusZ: number}
             const a = (k / 13) * Math.PI;
             return [r.c[0] + Math.cos(a) * r.w, r.c[1], Math.sin(a) * r.h * (0.8 + 0.2 * Math.sin(k * 2.3 + i))];
           });
-          return <path key={i} d={projPoly(B, pts)} fill={mix('#3F6E63', WATER, 0.55)} opacity={0.8} />;
+          return <path key={i} d={projPoly(B, pts)} fill={mix(PAL.reef, PAL.water, 0.55)} opacity={0.8} />;
         })}
         {rays}
       </g>
@@ -222,8 +227,8 @@ export const SeaOver: React.FC<{id: string}> = ({id}) => (
   <g>
     <defs>
       <radialGradient id={`${id}sv`} cx="0.5" cy="0.45" r="0.8">
-        <stop offset="0.6" stopColor={WATER_DEEP} stopOpacity={0} />
-        <stop offset="1" stopColor={WATER_DEEP} stopOpacity={0.45} />
+        <stop offset="0.6" stopColor={PAL.deep} stopOpacity={0} />
+        <stop offset="1" stopColor={PAL.deep} stopOpacity={0.45} />
       </radialGradient>
     </defs>
     <rect width={1080} height={1920} fill={`url(#${id}sv)`} />

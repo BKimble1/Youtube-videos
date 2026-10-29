@@ -45,7 +45,7 @@ const CellG: React.FC<{c: Cell; id: string; tone: number}> = ({c, id, tone}) => 
 );
 
 /** a copepod-like parasite, length L, heading +x; legs beat with phase ph */
-const Copepod4: React.FC<{L: number; ph: number; id: string}> = ({L, ph, id}) => {
+export const Copepod4: React.FC<{L: number; ph: number; id: string}> = ({L, ph, id}) => {
   const beat = Math.sin(ph);
   return (
     <g>

@@ -77,7 +77,7 @@ export type Piece = {
   /** V3: a muscular contraction travelling along the body (a ring of narrowing and lift at anatomical a) */
   ripple?: {a: number; amp: number};
   /** V4 design: narrower parapodia carried more upright and folded over the back, smaller rhinophores */
-  style?: 'v4';
+  style?: 'v4' | 'v5';
   /** V4: the buccal mass pumping while feeding (0..1, phase-driven by the caller) */
   pump?: number;
 };
@@ -147,7 +147,8 @@ export const geo = (p: Piece): Geo => {
   const rp = p.ripple;
   const rip = (a: number) => (rp ? rp.amp * Math.exp(-Math.pow((a - rp.a) / 6, 2)) : 0);
   const w = (a: number) => halfW(a) * wf(p, a) * (1 + 0.035 * wave(a)) * (1 - 0.34 * rip(a));
-  const h = (a: number) => heightOf(a) * Math.min(1, wf(p, a) * 1.1 + 0.12) * (1 + 0.05 * wave(a + 3)) * (1 + 0.42 * rip(a));
+  const hk = (a: number) => (p.style === 'v5' ? (a < A_CUT ? 1.18 : 1.12) : 1);
+  const h = (a: number) => heightOf(a) * hk(a) * Math.min(1, wf(p, a) * 1.1 + 0.12) * (1 + 0.05 * wave(a + 3)) * (1 + 0.42 * rip(a));
   const tw = p.twitch;
   const twAt = (side: number, a: number) => (tw && tw.side === side ? tw.amp * Math.exp(-Math.pow((a - tw.a) / 13, 2)) : 0);
   const sp = (a: number) => spreadOf(a) * growFlap(g) * (1 - 0.14 * fl) * (1 - 0.5 * rip(a));
@@ -161,11 +162,13 @@ export const geo = (p: Piece): Geo => {
   };
   // asymmetric parapodia: the left opens wider and ruffles more; the right curls in further
   const SIDE = {[1]: {open: 20, curl: 50, ruff: 1.2, ph: 0.0}, [-1]: {open: 28, curl: 58, ruff: 0.95, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
+  // V5: the parapodia raised like wings and rolled in over the back (a cloak with the dorsal groove showing), not a flat leaf
+  const SIDE5 = {[1]: {open: 58, curl: 84, ruff: 0.75, ph: 0.0}, [-1]: {open: 64, curl: 92, ruff: 0.6, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
   const SIDE4 = {[1]: {open: 36, curl: 64, ruff: 0.85, ph: 0.0}, [-1]: {open: 44, curl: 72, ruff: 0.7, ph: 2.1}} as Record<number, {open: number; curl: number; ruff: number; ph: number}>;
-  const v4 = p.style === 'v4';
+  const v4 = p.style === 'v4' || p.style === 'v5', v5 = p.style === 'v5';
   const flap = (side: number, a: number, s: number): V3 => {
-    const S = v4 ? SIDE4[side] : SIDE[side];
-    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a)) * (v4 ? 0.88 : 1);
+    const S = v5 ? SIDE5[side] : v4 ? SIDE4[side] : SIDE[side];
+    const wa = w(a), ha = h(a), spr = sp(a) * (1 - 0.32 * twAt(side, a)) * (v5 ? 0.8 : v4 ? 0.88 : 1);
     const tt = clamp((a - F0) / (F1 - F0));
     const ends = Math.pow(1 - Math.sin(Math.PI * tt), 1.4);
     // margin ruffles: a few slow waves along the edge, drifting with time

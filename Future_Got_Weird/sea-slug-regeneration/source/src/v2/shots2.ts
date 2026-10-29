@@ -21,6 +21,11 @@ export type State2 = {
   micro?: {op: number; para: number; zoom: number; reveal: number; swim?: number; bar?: number; pan?: number};
   /** V4 micro look (Micro4) */
   microV4?: boolean;
+  /** V5 micro look (Micro5) and vivid seabed palette */
+  microV5?: boolean;
+  seaVivid?: boolean;
+  /** V5 bright lab: dark teal wall behind a warm pale floor */
+  labTeal?: boolean;
   /** the food frond: puncture height (0..1 along the stalk) and how far it has drained */
   feed?: {u: number; drain: number; down?: boolean; flow?: number; gone?: number};
   /** time-lapse: the set animates fast (0..1) and the light cycles (night darkening 0..1) */

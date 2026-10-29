@@ -13,7 +13,8 @@ import {add3, mul3} from '../kit/three';
 import {DishRim, ForeGrit, LabBack, LensGrit} from './sets/Lab2';
 import {Micro2} from './sets/Micro2';
 import {Micro4} from '../v4/Micro4';
-import {SeaBack, SeaOver, frondItems} from './sets/Sea2';
+import {Micro5} from '../v5/Micro5';
+import {SeaBack, SeaOver, frondItems, seaPalette} from './sets/Sea2';
 import {SlugFloor, slugItem} from './slug/Mesh';
 import {CUTS2, State2, stateAt2} from './shots2';
 import {capPlace2} from '../captions';
@@ -25,6 +26,7 @@ export type FilmDef = {stateAt: (f: number) => State2; cuts: number[]; place: (i
 export const V2DEF: FilmDef = {stateAt: stateAt2, cuts: CUTS2, place: (i) => capPlace2(i)};
 export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string; def?: FilmDef}> = ({f, captions = true, idp = 'v', def = V2DEF}) => {
   const st: State2 = def.stateAt(f);
+  seaPalette(!!st.seaVivid);
   const id = idp;
   resetIds(id);
   const B = basis(orbitCam(st.orbit));
@@ -70,7 +72,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string; de
             </filter>
           ))}
         </defs>
-        {st.env === 'lab' && <LabBack B={B} id={id} t={t} focusZ={focusZ} frags={st.frags} dim={st.dim} />}
+        {st.env === 'lab' && <LabBack B={B} id={id} t={t} focusZ={focusZ} frags={st.frags} dim={st.dim} teal={st.labTeal} />}
         {st.env === 'sea' && <SeaBack B={B} id={id} t={t} focusZ={focusZ} />}
         {st.trail && <Trail2 st={st} B={B} />}
         {st.pieces.map((p) => <SlugFloor key={p.id} B={B} p={p} id={`${id}${p.id}`} />)}
@@ -85,7 +87,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string; de
         {(st.night ?? 0) > 0.005 && <rect width={W} height={H} fill="#06202C" opacity={st.night} />}
         {st.env === 'lab' && <ForeGrit B={B} id={id} near={focusZ * 0.45} />}
         {st.fore && <LensGrit B={B} id={id} bits={st.fore} />}
-        {st.micro && (st.microV4 ? <Micro4 id={id} t={t} {...st.micro} /> : <Micro2 id={id} t={t} {...st.micro} />)}
+        {st.micro && (st.microV5 ? <Micro5 id={id} t={t} {...st.micro} /> : st.microV4 ? <Micro4 id={id} t={t} {...st.micro} /> : <Micro2 id={id} t={t} {...st.micro} />)}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}
       </svg>
       {captions && <Captions t={f / FPS} f={f} place={def.place} cuts={def.cuts} />}

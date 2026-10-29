@@ -110,7 +110,7 @@ const grainEls = (B: Basis, filter: (z: number) => boolean) => {
 };
 
 /** the FGW lab wall far behind (pale wall, teal band, shelves of coloured bottles), scaled to this world */
-const LabWall: React.FC<{B: Basis; id: string; wallY: number; blur: number; K: number}> = ({B, id, wallY, blur, K}) => {
+const LabWall: React.FC<{B: Basis; id: string; wallY: number; blur: number; K: number; teal?: boolean}> = ({B, id, wallY, blur, K, teal}) => {
   const P = (ax: number, ay: number): V3 => [ax * K - 600 * K, wallY, (1100 - ay) * K - 6];
   const o = proj(B, P(0, 0)), px = proj(B, P(1000, 0)), py = proj(B, P(0, 1000));
   if (o.z < 10) return null;
@@ -126,7 +126,7 @@ const LabWall: React.FC<{B: Basis; id: string; wallY: number; blur: number; K: n
       </defs>
       <g filter={`url(#${id}-b)`}>
         <g transform={`matrix(${m})`}>
-          <path d="M-4500,-3000 H6500 V1300 H-4500 Z" fill="#D6E5EC" />
+          <path d="M-4500,-3000 H6500 V1300 H-4500 Z" fill={teal ? '#245E66' : '#D6E5EC'} />
           <path d="M-4500,960 H6500 V1010 H-4500 Z" fill="#2FA7A0" opacity={0.75} />
           {[-2400, -1200, 0, 1200, 2400, 3600].map((x, i) => (
             <g key={i}>
@@ -145,7 +145,7 @@ const LabWall: React.FC<{B: Basis; id: string; wallY: number; blur: number; K: n
               })}
             </g>
           ))}
-          <path d="M-4500,1010 H6500 V1300 H-4500 Z" fill="#E9EEF0" />
+          <path d="M-4500,1010 H6500 V1300 H-4500 Z" fill={teal ? '#2F7378' : '#E9EEF0'} />
         </g>
       </g>
     </g>
@@ -155,7 +155,7 @@ const LabWall: React.FC<{B: Basis; id: string; wallY: number; blur: number; K: n
 export const DISH2 = {c: [0, 40, 0] as V3, r: 260, wall: 46};
 
 /** back layers: the lab wall, the bench, the dish's far wall and its sand floor with grains and fragments */
-export const LabBack: React.FC<{B: Basis; id: string; t: number; dim?: number; focusZ: number; frags?: Frag[]}> = ({B, id, t, dim = 0, focusZ, frags = FRAGS}) => {
+export const LabBack: React.FC<{B: Basis; id: string; t: number; dim?: number; focusZ: number; frags?: Frag[]; teal?: boolean}> = ({B, id, t, dim = 0, focusZ, frags = FRAGS, teal}) => {
   const ring = (r: number, z: number, n = 120) => Array.from({length: n}, (_, i) => [DISH2.c[0] + Math.cos((i / n) * Math.PI * 2) * r, DISH2.c[1] + Math.sin((i / n) * Math.PI * 2) * r, z] as V3);
   const s0 = proj(B, DISH2.c).s;
   // depth of field: things far behind the subject blur with distance
@@ -176,10 +176,10 @@ export const LabBack: React.FC<{B: Basis; id: string; t: number; dim?: number; f
           <feGaussianBlur stdDeviation={Math.max(1.5, 0.9 * s0)} />
         </filter>
       </defs>
-      <rect width={1080} height={1920} fill="#DDE7EC" />
-      <LabWall B={B} id={`${id}lw`} wallY={1500} blur={bAt(wallZ) + 5} K={0.3} />
+      <rect width={1080} height={1920} fill={teal ? '#245E66' : '#DDE7EC'} />
+      <LabWall B={B} id={`${id}lw`} wallY={1500} blur={bAt(wallZ) + 5} K={0.3} teal={teal} />
       {/* bench top */}
-      <path d={projPoly(B, [[-3000, -1500, -6], [3000, -1500, -6], [3000, 1490, -6], [-3000, 1490, -6]])} fill="#EEF2F3" />
+      <path d={projPoly(B, [[-3000, -1500, -6], [3000, -1500, -6], [3000, 1490, -6], [-3000, 1490, -6]])} fill={teal ? '#D9CFBC' : '#EEF2F3'} />
       {/* the dish: far wall (inner face), the floor of sand */}
       <path d={projPoly(B, ring(DISH2.r + 8, -6))} fill="#C9D6DC" opacity={0.6} />
       <path d={projPoly(B, ring(DISH2.r, 0))} fill="#E4DBC8" />
