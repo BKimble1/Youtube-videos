@@ -9,3 +9,6 @@ Config.setConcurrency(3);
 // Chrome Headless Shell cannot be downloaded in this environment (remotion.media is not allowlisted),
 // so use the locally installed Playwright build. Override with REMOTION_BROWSER_EXECUTABLE if needed.
 Config.setBrowserExecutable(process.env.REMOTION_BROWSER_EXECUTABLE ?? '/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell');
+// ANGLE is less prone than SwiftShader to stalling on the V2 frames, but `remotion render` still stalled
+// intermittently in its screenshot step here, so the V2 deliverables are rasterised by tools/render_v2.tsx (README).
+Config.setChromiumOpenGlRenderer('angle');

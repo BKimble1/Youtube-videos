@@ -17,9 +17,12 @@ import {SlugFloor, slugItem} from './slug/Mesh';
 import {CUTS2, State2, stateAt2} from './shots2';
 import {capPlace2} from '../captions';
 
-export const Picture2: React.FC<{f: number; captions?: boolean}> = ({f, captions = true}) => {
+// SVG ids (filters, gradients, masks) need only be unique within a page. The film keeps one prefix for every frame
+// (so the live page does not re-link thousands of url(#...) references each frame); contact sheets, with several
+// frames on a page, give each frame its own.
+export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string}> = ({f, captions = true, idp = 'v'}) => {
   const st: State2 = stateAt2(f);
-  const id = `f${f}`;
+  const id = idp;
   resetIds(id);
   const B = basis(orbitCam(st.orbit));
   const t = st.loopT ?? f / FPS;
@@ -114,7 +117,7 @@ export const Sheet2: React.FC<{fs: number[]; captions: boolean}> = ({fs, caption
   <AbsoluteFill style={{backgroundColor: '#111'}}>
     {fs.slice(0, 16).map((f, i) => (
       <div key={i} style={{position: 'absolute', left: (i % 4) * 270, top: Math.floor(i / 4) * 480, width: W, height: H, transform: 'scale(0.25)', transformOrigin: '0 0', overflow: 'hidden'}}>
-        <Picture2 f={f} captions={captions} />
+        <Picture2 f={f} captions={captions} idp={`f${f}`} />
         <div style={{position: 'absolute', right: 24, bottom: 20, fontSize: 70, color: '#FF0', fontFamily: 'monospace', textShadow: '0 0 8px #000'}}>{f} · {(f / FPS).toFixed(2)}s</div>
       </div>
     ))}
