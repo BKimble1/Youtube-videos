@@ -44,7 +44,12 @@ def rgba(path):
         for p in f.parts:
             for k, c in p.channels.items(): ch[k] = c.pixels
         k = [k for k in ch if k.endswith('Combined')][0]
-        _P[path] = ch[k].astype(np.float32)
+        px = ch[k].astype(np.float32)
+        # the shadow catcher also darkens the whole plane faintly (ambient); keep only the cast shadow, so a moved
+        # sprite shows no rectangle
+        a = px[..., 3]; shadow_only = px[..., :3].max(-1) < 0.02
+        px[..., 3] = np.where(shadow_only, np.clip((a - 0.12) / 0.88, 0, 1), a)
+        _P[path] = px
     return _P[path]
 
 _MM = {}
@@ -113,7 +118,7 @@ def arrival(xm, ym):
 
 # where the treated patch sits under each camera (mm offset of the patch from where the hook's strokes put it):
 # each view frames the boundary its move is built around; within a shot the patch is fixed to the skin
-PATCH_OFFSET = {'SIDE': (-9.0, -4.0), 'GRAZE': (-3.0, 0.0)}
+PATCH_OFFSET = {'SIDE': (-9.0, -4.0), 'GRAZE': (-3.0, 0.0), 'WIDE': (-4.4, -0.8), 'WASH': (-5.9, -1.8)}
 _ARR = {}
 def arrival_cam(cam):
     if cam not in _ARR:
@@ -209,7 +214,10 @@ def swab_sprite(cam, tip_px, lift=0.0):
     """the soaked applicator over a skin plate, its bud at tip_px (plate px)"""
     spr = rgba(f'lab/SWAB_{cam}.exr')
     h, w = spr.shape[:2]
-    return spr, tip_px[0] - w / 2 + lift * 30, tip_px[1] - h / 2 - lift * 55, 1 + lift * 0.06
+    # the sprite is a 6.5 mm cotton bud; the film uses a fine-tip applicator, sized to read in each shot's framing
+    return spr, tip_px[0] - w / 2 + lift * 30, tip_px[1] - h / 2 - lift * 55, SWAB_SCALE[cam] * (1 + lift * 0.06)
+
+SWAB_SCALE = {'HOOK': 1.0, 'APPLY': 1.0}  # sizes are set by the sprites' render fields (render_rest.sh: 2.04x, 3.3x)
 
 def shot_hook(t, tau):
     """S1 / S12: tight on the belly; the applicator strokes and the skin behind it turns translucent"""
@@ -349,7 +357,7 @@ def shot_apply(t, s0, s1):
 def tissue_cam(t):
     """the MAIN tissue camera through S6 - S10: (centre x, y as plate fractions, window width as plate fraction)"""
     B = TL.B
-    keys = [(B['tis0'], 0.50, 0.17, 0.40), (B['tis0'] + 1.35, 0.50, 0.40, 0.80),
+    keys = [(B['tis0'], 0.50, 0.30, 0.42), (B['tis0'] + 1.35, 0.50, 0.40, 0.80),
             (B['beam0'], 0.50, 0.42, 0.80), (B['hideCam0'], 0.50, 0.42, 0.70), (B['hideCam1'], 0.50, 0.76, 0.52),
             (B['dye0'] - 0.01, 0.50, 0.78, 0.50)]
     return keys
@@ -421,7 +429,8 @@ def shot_tissue(t):
         fg = sss(B['fat'] - 0.05, B['fat'] + 0.15, t) * (1 - sss(B['fat'] + 0.6, B['fat'] + 1.0, t))
         yy, xx = np.mgrid[0:h, 0:w].astype(np.float32)
         caus = (0.5 + 0.5 * np.sin(xx * 0.035 + np.sin(yy * 0.02 + t * 3) * 2 + t * 4)) ** 6
-        img = img * (1 + 0.35 * fg * lip) + (caus[..., None] * np.array([0.18, 0.35, 0.55]) * 0.25 * wg * (1 - lip)) * img.mean()
+        tissue_px = np.clip(M.sum(-1) * 3, 0, 1)[..., None]  # not the empty space above the skin
+        img = img * (1 + 0.35 * fg * lip) + (caus[..., None] * np.array([0.18, 0.35, 0.55]) * 0.25 * wg * (1 - lip) * tissue_px) * img.mean()
     # light paths
     entry = beam_entry()
     if B['beam0'] + 0.2 <= t < B['dye0']:
@@ -563,7 +572,7 @@ def bead(img, c, r):
     out = img.copy(); out[y0:y1, x0:x1] = new; return out
 
 # ---------------- the film ----------------
-SHOT_EXPOSURE = {'hook': -2.0, 'side': -2.0, 'graze': -2.0, 'lab': -1.0, 'apply': -2.0, 'tissue': -3.0, 'dye': -2.6, 'wide': -2.0, 'wash': -2.0}
+SHOT_EXPOSURE = {'hook': -2.0, 'side': -2.0, 'graze': -2.0, 'lab': -1.0, 'apply': -2.0, 'tissue': -3.0, 'dye': -3.5, 'wide': -2.0, 'wash': -2.0}
 
 def shot_at(name, t):
     B = TL.B; s0, s1 = TL.SHOTS[name]
