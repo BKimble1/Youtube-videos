@@ -231,7 +231,8 @@ const paraShot = (f: number): State => {
   const away: Cam = {...base, x: hd[0], y: hd[1] + 22, tilt: 70, zoom: 9.2, oy: 760};
   const kout = ease(f, fOut0, fOut1, (u) => u * u * (3 - 2 * u));
   const cam = kout > 0 ? camLerp(deep, away, kout) : camLerp(base, deep, kin);
-  const mop = clamp((Math.log(cam.zoom) - Math.log(50)) / (Math.log(110) - Math.log(50)));
+  // the cell layer is fully gone before its grid could be smaller than the screen (grid edge at zoom ~56)
+  const mop = clamp((Math.log(cam.zoom) - Math.log(72)) / (Math.log(125) - Math.log(72)));
   const para = ease(f, F('parasites') - 10, F('parasites') + 2) * (1 - ease(f, fOut0 + 4, fOut0 + 10));
   return {
     shot: 'P', env: {teal: 1}, cam, pieces,
@@ -243,7 +244,7 @@ const paraShot = (f: number): State => {
 // ---------------------------------------------------------------- feeding, a week, the new heart (natural algae seabed)
 export const PA = new Path([[4, 260], [3, 120], [0, 0], [-4, -120], [-8, -240]]);
 const fArrive = S.feed + 30, fWeek0 = F('and', 2), fWeek1 = F('a', 3) - 4, fNew = F('new', 1), fBeat = F('beating');
-const tipA0 = 200, tipFeed = 246; // the head reaches the frond tips at arc ~246
+const tipA0 = 233, tipFeed = 246; // the head glides on into the frond tips at arc ~246
 const dayAt = (f: number) => {
   if (f < fWeek0) return 0;
   if (f < fWeek1) return 1 + Math.floor(6 * seg(f, fWeek0, fWeek1 - 2) + 1e-6);
@@ -268,7 +269,8 @@ const eatenAt = (f: number) => (i: number) => {
 };
 const feedPiece = (f: number): Piece => {
   const t = f / 30;
-  const arrive = ease(f, S.feed, fArrive, (u) => 1 - Math.pow(1 - u, 2.2));
+  // continues at its gliding speed across the cut (about 0.4 units a frame), then slows into the fronds
+  const arrive = ease(f, S.feed, fArrive, (u) => 1 - Math.pow(1 - u, 2));
   let tip = lerp(tipA0, tipFeed, arrive);
   // feeding: small presses into the fronds; through the week it shifts between fronds
   tip += f > fArrive ? 0.5 * Math.sin((f - fArrive) * 0.45) * (1 - seg(f, fWeek1, fWeek1 + 8)) : 0;
@@ -285,8 +287,9 @@ const feedShot = (f: number): State => {
   const hd = piecePoint(p, 12);
   const rear = piecePoint(p, 27, 0, 3);
   const push = ease(f, fWeek1 - 10, fNew + 6);
-  const settle = ease(f, S.feed, fArrive + 10);
-  const cam: Cam = {...camFeed0, x: lerp(hd[0], rear[0], push), y: lerp(hd[1] + 4, rear[1], push), zoom: lerp(lerp(9.2, 14, settle), 20, push), tilt: lerp(lerp(70, 60, settle), 66, push), oy: lerp(lerp(760, 960, settle), 800, push)};
+  // the first frame matches the outgoing camera relative to the head (same place on screen, same size)
+  const settle = ease(f, S.feed + 4, fArrive + 16);
+  const cam: Cam = {...camFeed0, x: lerp(hd[0], rear[0], push), y: lerp(lerp(hd[1] + 22, hd[1] + 4, settle), rear[1], push), zoom: lerp(lerp(9.2, 14, settle), 20, push), tilt: lerp(lerp(70, 60, settle), 66, push), oy: lerp(lerp(760, 960, settle), 800, push)};
   const night = f > fWeek0 && f < fWeek1 ? 0.3 * Math.pow(Math.max(0, Math.sin(Math.PI * 6 * seg(f, fWeek0, fWeek1))), 2) : 0;
   const day = dayAt(f);
   return {
