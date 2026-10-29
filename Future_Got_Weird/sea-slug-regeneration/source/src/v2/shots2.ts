@@ -18,15 +18,17 @@ export type State2 = {
   frags?: Frag[];
   probe?: {tip: V3; dir: V3; press: number; op: number};
   dim?: number;
-  micro?: {op: number; para: number; zoom: number; reveal: number};
+  micro?: {op: number; para: number; zoom: number; reveal: number; swim?: number; bar?: number};
   /** the food frond: puncture height (0..1 along the stalk) and how far it has drained */
-  feed?: {u: number; drain: number};
+  feed?: {u: number; drain: number; down?: boolean; flow?: number};
   /** time-lapse: the set animates fast (0..1) and the light cycles (night darkening 0..1) */
   lapse?: number;
   /** fade the algae out (inside views) */
   frondFade?: number;
   /** big out-of-focus grit right by the lens (world) */
   fore?: {c: V3; r: number; col: string; op?: number}[];
+  /** V3: solid props on the floor, depth-sorted with the animal (a shell shard, a pebble) */
+  props?: {c: V3; r: [number, number, number]; yaw: number; col: string; blur?: number}[];
   /** the set's clock (the last shot runs it into frame 0's) */
   loopT?: number;
   night?: number;

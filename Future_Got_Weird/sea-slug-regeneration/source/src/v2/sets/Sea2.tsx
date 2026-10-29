@@ -8,7 +8,7 @@ import React from 'react';
 import {Basis, P2, V3, depth, proj, projPoly} from '../../kit/three';
 import {Item} from '../../kit/draw3';
 import {mix} from '../../kit/dc/color';
-import {clamp, rng} from '../../lib';
+import {clamp, lerp, rng} from '../../lib';
 
 export const WATER = '#2C7A7C';
 const WATER_TOP = '#7CC1AE', WATER_DEEP = '#164E5C';
@@ -85,18 +85,20 @@ const frondGeo = (fr: Frond, t: number) => {
 const GREEN = '#63B947', GREEN_HI = '#B4E487', GREEN_DK = '#2F7430', EMPTY = '#DDEBCB';
 
 /** depth-sorted items for the fronds (blurred by distance from the focal plane, fogged behind) */
-export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed: {u: number; drain: number}, fade = 0): Item[] =>
+export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed: {u: number; drain: number; down?: boolean; flow?: number}, fade = 0): Item[] =>
   FRONDS.map((fr, i) => {
     if (fade > 0.99) return {z: 0, el: null};
     const G = frondGeo(fr, t);
     const mid = G.at(0.35);
     const z = depth(B, mid);
-    if (z < 4 || (!fr.fore && z < focusZ * 0.92)) return {z, el: null};
+    if (z < 4 || (!fr.fore && !fr.food && z < focusZ * 0.92)) return {z, el: null};
     const fg = fog(B, focusZ, mid);
     const b = pickBlur(blurOf(z, focusZ));
     const s = proj(B, mid).s;
     // the food frond drains from the puncture outward: the emptied part is pale and clear
-    const drained = (u: number) => (fr.food ? clamp((feed.drain * 1.3 - Math.abs(u - feed.u) * 1.6) * 3, 0, 1) : 0);
+    // V2: drains outward from the puncture. V3 (down): the contents run down to the puncture, so the frond clears
+    // from its tips toward the stalk base
+    const drained = (u: number) => (!fr.food ? 0 : feed.down ? clamp((feed.drain * 1.35 - (1 - u)) * 3, 0, 1) : clamp((feed.drain * 1.3 - Math.abs(u - feed.u) * 1.6) * 3, 0, 1));
     const col = (c: string, u: number) => mix(mix(c, EMPTY, drained(u) * 0.9), WATER, fg * 0.85);
     const P = (p: V3) => proj(B, p);
     const axPts = G.ax.map(P);
@@ -122,8 +124,26 @@ export const frondItems = (B: Basis, id: string, t: number, focusZ: number, feed
     els.push(<path key="s0" d={dS} stroke={col(GREEN_DK, 0.5)} strokeWidth={wS * 1.3} fill="none" strokeLinecap="round" opacity={0.6} />);
     els.push(<path key="s1" d={dS} stroke={col(GREEN, 0.5)} strokeWidth={wS} fill="none" strokeLinecap="round" />);
     if (fr.food && feed.drain > 0) {
-      const n = axPts.length - 1, top = Math.round(clamp((feed.drain * 1.3) / 1.6 + feed.u, 0, 1) * n);
-      if (top >= 1) els.push(<path key="s2" d={sd(axPts.slice(0, top + 1))} stroke={EMPTY} strokeWidth={wS * 0.95} fill="none" strokeLinecap="round" opacity={0.92} />);
+      const n = axPts.length - 1;
+      if (feed.down) {
+        const from = Math.round(clamp(1 - feed.drain * 1.35, 0, 1) * n);
+        if (from < n) els.push(<path key="s2" d={sd(axPts.slice(from))} stroke={EMPTY} strokeWidth={wS * 0.95} fill="none" strokeLinecap="round" opacity={0.92} />);
+      } else {
+        const top = Math.round(clamp((feed.drain * 1.3) / 1.6 + feed.u, 0, 1) * n);
+        if (top >= 1) els.push(<path key="s2" d={sd(axPts.slice(0, top + 1))} stroke={EMPTY} strokeWidth={wS * 0.95} fill="none" strokeLinecap="round" opacity={0.92} />);
+      }
+    }
+    // V3: chloroplast-green cytoplasm streaming down the stalk into the puncture while the slug feeds
+    if (fr.food && (feed.flow ?? 0) > 0.01) {
+      const n = axPts.length - 1;
+      for (let k = 0; k < 16; k++) {
+        const ph = ((t * 1.6 + k / 16) % 1 + 1) % 1; // 0 at the top of the green part .. 1 at the puncture
+        const uTop = clamp(1 - feed.drain * 1.35, feed.u + 0.08, 0.8);
+        const u = lerp(uTop, feed.u, ph);
+        const x = u * n, j = Math.min(n - 1, Math.floor(x)), r = x - j;
+        const q = {x: axPts[j].x + (axPts[j + 1].x - axPts[j].x) * r, y: axPts[j].y + (axPts[j + 1].y - axPts[j].y) * r};
+        els.push(<ellipse key={`fl${k}`} cx={q.x} cy={q.y} rx={wS * 0.42} ry={wS * 0.32} fill="#1F6B22" stroke="#C8F09A" strokeWidth={Math.max(0.8, wS * 0.06)} opacity={(feed.flow ?? 0) * Math.sin(Math.PI * ph)} />);
+      }
     }
     els.push(<path key="s3" d={dS} stroke={GREEN_HI} strokeWidth={wS * 0.28} fill="none" strokeLinecap="round" opacity={0.55 * (1 - fg)} />);
     // the base: a small holdfast of rhizoids on the rock

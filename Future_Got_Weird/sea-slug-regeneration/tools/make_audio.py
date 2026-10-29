@@ -24,8 +24,9 @@ EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
 # V2 (`make_audio.py V2`): the same voice, beds and synthesis, retimed to the V2 picture (audio/cues_v2.json)
 VER = sys.argv[1] if len(sys.argv) > 1 else 'V1'
-V2 = VER == 'V2'
-cj = json.load(open(os.path.join(EP, 'audio/cues_v2.json' if V2 else 'audio/cues.json')))
+V3 = VER == 'V3'
+V2 = VER in ('V2', 'V3')  # V3 shares the V2 cue layout and choices, plus its own events below
+cj = json.load(open(os.path.join(EP, {'V1': 'audio/cues.json', 'V2': 'audio/cues_v2.json', 'V3': 'audio/cues_v3.json'}[VER])))
 FR = cj['frames']
 DUR = FR / 30
 N = int(round(DUR * SR))
@@ -178,6 +179,8 @@ else:
     add('brush bristles', bristle(), F(cj['touch'] - 2), -24)
 add('body flinch', squish(0.2), F(cj['touch'] + 1), -19, hero=True)
 add('body flinch 2', squish(0.16), F(cj['move'] - 2), -22)
+if V3:
+    add('contraction ripple', squish(0.28), F(cj['ripple']), -27)
 add('rewind swell', swish(F(cj['rew1'] - cj['rew0']) + 0.1, up=True)[::-1], F(cj['rew0']), -24)
 add('weak spot tone', chime(), F(cj['weak']), -27)
 add('cutaway reveal' if V2 else 'x-ray reveal', shimmer(0.9), F(cj['join'] if V2 else cj['xray']), -22 if V2 else -20)
@@ -196,9 +199,11 @@ else:
         add(f'sip {k + 1}', sip(), F(cj['arrive'] + 6 + k * 7), -24 - k)
 for k, fr in enumerate(cj['days']):
     if fr < Sx['grow']:
-        add(f'day tick {k + 1}', tick(), F(fr), -31)
+        add(f'day tick {k + 1}', tick(), F(fr), -33 if V3 else -31)
+    elif V3 and k % 3 == 0:
+        add(f'day tick {k + 1}', tick(), F(fr), -35)
 # the new heart: V2 holds the beat (five beats, on the picture's own beat frames, easing away into the regrowth)
-for k, g in enumerate([-21, -23, -26, -29, -33] if V2 else [-21, -25, -30]):
+for k, g in enumerate([-20, -21, -29, -34] if V3 else [-21, -23, -26, -29, -33] if V2 else [-21, -25, -30]):
     add(f'heartbeat {k + 1}', lubdub(), F(cj['beat'] + k * cj['beatPer']) - 0.01, g, hero=True)
 add('lab air on the cut', swish(0.4, up=False), F(Sx['twice']) - 0.05, -30)
 add('TWICE accent', boom(), F(cj['twice']) - 0.02, -22, hero=True)
@@ -227,9 +232,9 @@ if peak > db(-1.5):
     mix[over] = np.sign(mix[over]) * (thr + (db(-1.5) - thr) * np.tanh((np.abs(mix[over]) - thr) / (db(-1.5) - thr)))
 final_l = meter.integrated_loudness(mix)
 
-MD = 'audio/mix_v2' if V2 else 'audio/mix'
+MD = {'V1': 'audio/mix', 'V2': 'audio/mix_v2', 'V3': 'audio/mix_v3'}[VER]
 os.makedirs(os.path.join(EP, MD, 'stems'), exist_ok=True)
-sf.write(os.path.join(EP, 'source/public/audio/mix_v2.wav' if V2 else 'source/public/audio/mix.wav'), mix, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, {'V1': 'source/public/audio/mix.wav', 'V2': 'source/public/audio/mix_v2.wav', 'V3': 'source/public/audio/mix_v3.wav'}[VER]), mix, SR, subtype='PCM_24')
 sf.write(os.path.join(EP, MD, f'FGW_SeaSlug_{VER}_mix.wav'), mix, SR, subtype='PCM_24')
 g = db(-14 - mix_l)
 for name, x in [('voice', voice_n * g), ('beds', music_n * duck * g), ('effects', (sfx * duck * 2.2 + key * 2.2) * g)]:
@@ -245,6 +250,6 @@ meas = {'duration_s': DUR, 'frames': FR, 'integrated_lufs': round(final_l, 2), '
         'loop_seam_sample_jump': round(seam, 5),
         'voice_correlation_with_source': round(float(np.corrcoef(voice_n, voice)[0, 1]), 6)}
 json.dump(meas, open(os.path.join(EP, MD, 'mix_measure.json'), 'w'), indent=1)
-json.dump(log, open(os.path.join(EP, 'audio/sfx_cues_v2.json' if V2 else 'audio/sfx_cues.json'), 'w'), indent=1)
+json.dump(log, open(os.path.join(EP, {'V1': 'audio/sfx_cues.json', 'V2': 'audio/sfx_cues_v2.json', 'V3': 'audio/sfx_cues_v3.json'}[VER]), 'w'), indent=1)
 print(json.dumps(meas, indent=1))
 print(len(log), 'effect cues')

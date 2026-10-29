@@ -11,4 +11,7 @@ export const capPlace = (i: number, f: number) => {
   return PLACE[i] ?? LOW;
 };
 export const capPlace2 = (i: number) => PLACE2[i] ?? LOW;
+// V3 per-caption placements (index -> centre y)
+export const PLACE3: Record<number, number> = {};
+export const capPlace3 = (i: number) => PLACE3[i] ?? LOW;
 export {HIGH, LOW};

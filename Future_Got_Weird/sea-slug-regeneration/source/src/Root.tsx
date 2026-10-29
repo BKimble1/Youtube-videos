@@ -1,4 +1,5 @@
 import React from 'react';
+import {Film3, Sheet3} from './v3/Film3';
 import {WinTest} from './v3/dev/WinTest';
 import {Composition, Still} from 'remotion';
 import './fonts';
@@ -19,6 +20,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SeaSlugV2" component={Film2} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
     <Still id="Frame2" component={({f, captions}: {f: number; captions: boolean}) => <Picture2 f={f} captions={captions} />} width={W} height={H} defaultProps={{f: 0, captions: true}} />
     <Still id="Sheet2" component={Sheet2} width={W} height={H} defaultProps={{fs: [0, 9, 18, 30], captions: true}} />
+    <Composition id="SeaSlugV3" component={Film3} durationInFrames={FRAMES} fps={FPS} width={W} height={H} defaultProps={{audio: 'mix_v3' as string | false, captions: true}} />
+    <Still id="Sheet3" component={Sheet3} width={W} height={H} defaultProps={{fs: [0, 9, 18, 30], captions: true}} />
     <Still id="WinTest" component={WinTest} width={W} height={H} defaultProps={{az: -60, el: 30, d: 130, ta: 24, open: 1, gap: 0, beat: 0, heart: 1}} />
     <Still id="Model2" component={Model2} width={W} height={H} defaultProps={{i: 1}} />
     <Still id="Model2Sheet" component={Model2Sheet} width={W} height={H} />

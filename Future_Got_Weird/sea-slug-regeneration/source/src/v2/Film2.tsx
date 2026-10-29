@@ -20,8 +20,10 @@ import {capPlace2} from '../captions';
 // SVG ids (filters, gradients, masks) need only be unique within a page. The film keeps one prefix for every frame
 // (so the live page does not re-link thousands of url(#...) references each frame); contact sheets, with several
 // frames on a page, give each frame its own.
-export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string}> = ({f, captions = true, idp = 'v'}) => {
-  const st: State2 = stateAt2(f);
+export type FilmDef = {stateAt: (f: number) => State2; cuts: number[]; place: (i: number, f: number) => number};
+export const V2DEF: FilmDef = {stateAt: stateAt2, cuts: CUTS2, place: (i) => capPlace2(i)};
+export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string; def?: FilmDef}> = ({f, captions = true, idp = 'v', def = V2DEF}) => {
+  const st: State2 = def.stateAt(f);
   const id = idp;
   resetIds(id);
   const B = basis(orbitCam(st.orbit));
@@ -30,6 +32,11 @@ export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string}> =
   const items: {p?: {id: string}; it: Item}[] = st.pieces.map((p) => ({p, it: slugItem(B, p)}));
   // in time-lapse the tuft sways fast (its own clock runs ahead)
   const tSet = t + (st.lapse ?? 0) * (f - 552) * 0.5;
+  (st.props ?? []).forEach((pr) => {
+    const cy = Math.cos((pr.yaw * Math.PI) / 180), sy = Math.sin((pr.yaw * Math.PI) / 180);
+    const it = ellipsoidItem(B, pr.c, [[pr.r[0] * cy, pr.r[0] * sy, 0], [-pr.r[1] * sy, pr.r[1] * cy, 0], [0, 0, pr.r[2]]], pr.col, {spec: 0.8});
+    items.push({it: pr.blur ? {z: it.z, el: <g filter={`url(#${id}rb${pr.blur})`}>{it.el}</g>} : it});
+  });
   if (st.env === 'sea') frondItems(B, id, tSet, focusZ, st.feed ?? {u: 0, drain: 0}, st.frondFade).forEach((it) => items.push({it}));
   let hand: React.ReactNode = null;
   if (st.probe && st.probe.op > 0.01) {
@@ -80,7 +87,7 @@ export const Picture2: React.FC<{f: number; captions?: boolean; idp?: string}> =
         {st.micro && <Micro2 id={id} t={t} {...st.micro} />}
         {st.labels.map((l, i) => <Label key={i} text={l.text} op={l.op} icon={l.icon} y={l.y} />)}
       </svg>
-      {captions && <Captions t={t} f={f} place={(i) => capPlace2(i)} cuts={CUTS2} />}
+      {captions && <Captions t={f / FPS} f={f} place={def.place} cuts={def.cuts} />}
     </AbsoluteFill>
   );
 };

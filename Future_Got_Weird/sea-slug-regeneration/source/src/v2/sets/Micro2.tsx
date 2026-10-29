@@ -94,7 +94,7 @@ const Copepod: React.FC<{L: number; t: number; ph: number}> = ({L, t, ph}) => {
   );
 };
 
-export const Micro2: React.FC<{id: string; op: number; t: number; para: number; zoom: number; reveal: number}> = ({id, op, t, para, zoom, reveal}) => {
+export const Micro2: React.FC<{id: string; op: number; t: number; para: number; zoom: number; reveal: number; swim?: number; bar?: number}> = ({id, op, t, para, zoom, reveal, swim, bar = 0}) => {
   if (op <= 0.001) return null;
   const cx = W / 2, cy = H * 0.47;
   const layer = (k: number, rot: number, node: React.ReactNode) => (
@@ -103,10 +103,17 @@ export const Micro2: React.FC<{id: string; op: number; t: number; para: number; 
   const zf = 0.8 + 0.2 * zoom, zm = zoom, zn = Math.pow(zoom, 1.9);
   const drift = t * 3;
   // parasites move slowly through the gland tissue
-  const bugs = [
-    {x: -170 + Math.sin(t * 0.9) * 24 + drift * 4, y: -260 + Math.cos(t * 0.7) * 16, a: 28, ph: 0, L: 300},
-    {x: 190 - drift * 3, y: 250 + Math.sin(t * 0.8 + 1) * 18, a: 196, ph: 2, L: 260},
-  ];
+  // V3 (swim = seconds since they appear): they work their way through the gland, between the cells
+  const sw = swim ?? 0;
+  const bugs = swim === undefined
+    ? [
+        {x: -170 + Math.sin(t * 0.9) * 24 + drift * 4, y: -260 + Math.cos(t * 0.7) * 16, a: 28, ph: 0, L: 300},
+        {x: 190 - drift * 3, y: 250 + Math.sin(t * 0.8 + 1) * 18, a: 196, ph: 2, L: 260},
+      ]
+    : [
+        {x: -360 + sw * 150 + Math.sin(sw * 5) * 10, y: -300 + sw * 34 + Math.sin(sw * 3.1) * 22, a: 14 + 10 * Math.sin(sw * 2.3), ph: 0, L: 300},
+        {x: 330 - sw * 120, y: 280 - sw * 20 + Math.sin(sw * 2.7 + 1) * 20, a: 190 + 12 * Math.sin(sw * 1.9 + 1), ph: 2, L: 250},
+      ];
   return (
     <g opacity={op}>
       <defs>
@@ -141,6 +148,13 @@ export const Micro2: React.FC<{id: string; op: number; t: number; para: number; 
         ))}
         <g filter={`url(#${id}mcN)`} opacity={0.3}>{layer(zn, 20, <Sheet cells={NEAR} fill="#C5E2A6" edge="#6E9F58" chl="#3B7F33" chlHi="#93C76A" nuc="#678A4F" lw={6} />)}</g>
         <rect width={W} height={H} fill={`url(#${id}mcV)`} />
+        {bar > 0.01 && (
+          <g opacity={bar} transform={`translate(${W - 250}, ${H * 0.71})`}>
+            <path d={`M0,0 L${(90 * zoom).toFixed(1)},0`} stroke="#0D1A1D" strokeWidth={10} strokeLinecap="round" />
+            <path d={`M0,0 L${(90 * zoom).toFixed(1)},0`} stroke="#FFFFFF" strokeWidth={5} strokeLinecap="round" />
+            <text x={0} y={-16} fontFamily='"Nunito Variable", Nunito, sans-serif' fontWeight={900} fontSize={30} fill="#FFFFFF" stroke="#0D1A1D" strokeWidth={6} paintOrder="stroke">0.1 mm</text>
+          </g>
+        )}
       </g>
     </g>
   );

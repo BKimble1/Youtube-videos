@@ -8,7 +8,7 @@ import {lit, mix, shade} from '../../kit/dc/color';
 import {INK} from '../../kit/dc/ink';
 import {Basis, P2, V2, V3, add3, cross3, depth, dot3, len3, mul3, norm3, proj, sub3} from '../../kit/three';
 import {clamp, lerp, smooth} from '../../lib';
-import {A_CUT, A_HEART, C, F0, F1, Piece, SPOTS, TUBULES, geo, growPale, growSpots, isRegen} from './body';
+import {A_CUT, C, F0, F1, Piece, SPOTS, TUBULES, geo, growPale, growSpots, heartAOf, isRegen} from './body';
 import {capsuleItem, ellipsoidItem} from '../../kit/draw3';
 
 type Facet = {z: number; d: string; fill: string; op?: number; ink?: string; kind?: 'deco' | 'line'; sw?: number; stroke?: string; node?: React.ReactNode};
@@ -55,7 +55,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     return ramp(base, lam, spec * gloss);
   };
   const Pp = (q: V3) => proj(B, q);
-  const T = (col: string, a: number) => (pale > 0 && a > A_CUT ? mix(col, C.pale, pale * 0.8) : col);
+  const T = (col: string, a: number) => (pale > 0 && a > A_CUT ? mix(col, C.pale, pale * 0.62) : col);
   const headCol = mix(C.head, '#76B954', p.green ?? 0);
   const F: Facet[] = [];
   const mid = G.at((p.a0 + p.a1) / 2, 0, 3);
@@ -142,7 +142,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
       const base = foot ? T(C.foot, am) : am < A_CUT ? headCol : T(C.body, am);
       let fill = shadeV(base, [vn[i][j], vn[i + 1][j], vn[i + 1][j + 1], vn[i][j + 1]], q, foot ? 0.2 : 1);
       // the weak spot: a pale, slightly translucent band of tissue round the neck groove
-      if (wk > 0.01) fill = mix(fill, '#EEF3C9', 0.5 * wk * clamp(1 - Math.abs(am - A_CUT) / 1.6));
+      if (wk > 0.01) fill = mix(fill, '#F2F6D2', 0.72 * wk * clamp(1 - Math.abs(am - A_CUT) / 1.8));
       const ww = winAt(am, thm);
       // outline edges: where the neighbouring facet turns away (silhouette), and open ends
       let ink = '';
@@ -158,6 +158,18 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
       }
       F.push({z: depth(B, qc), d: poly([R2[i][j], R2[i + 1][j], R2[i + 1][j + 1], R2[i][j + 1]]), fill, op: surfOp, ink: ww > 0.6 ? undefined : ink || undefined});
     }
+  }
+  // the weak spot: a fine dashed ring round the neck groove, on the side toward the camera
+  if (wk > 0.01 && A_CUT > p.a0 + 0.5 && A_CUT < aEnd - 0.5) {
+    const n = 40, pts: V3[] = [];
+    for (let k = 0; k <= n; k++) pts.push(G.tube(A_CUT, -Math.PI / 2 + (k / n) * Math.PI * 2));
+    const P = pts.map(Pp);
+    let d = '';
+    for (let k = 0; k < n; k++) {
+      const mid3 = mul3(add3(pts[k], pts[k + 1]), 0.5), ax = G.at(A_CUT, 0, G.h(A_CUT) * 0.45);
+      if (dot3(sub3(mid3, ax), sub3(eye, mid3)) > 0 && k % 2 === 0) d += seg(P[k], P[k + 1]);
+    }
+    if (d) F.push({z: depth(B, G.at(A_CUT, 0, G.h(A_CUT))) - 3, d, fill: 'none', kind: 'line', stroke: '#FFFFFF', sw: Math.max(1.5, 0.3 * sc), op: 0.85 * wk});
   }
   // spots on the tube
   const spotF = (pt: V3, ta: V3, tb: V3, r: number, pl: boolean | undefined, op: number): Facet => {
@@ -186,7 +198,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
   const fa0 = Math.max(F0, p.a0), fa1 = Math.min(F1, p.a1);
   if (hasTrunk && fa1 - fa0 > 2 && G.sp((F0 + F1) / 2) > 0.6) {
     for (const side of [1, -1]) {
-      const nAf = 84, nS = 12;
+      // denser when the camera is close (the curling margins otherwise shade in visible terraces)
+      const nAf = sc > 22 ? 120 : 84, nS = sc > 22 ? 20 : 12;
       const af: number[] = [];
       for (let i = 0; i <= nAf; i++) af.push(lerp(fa0, fa1, i / nAf));
       const grid = af.map((a) => Array.from({length: nS + 1}, (_, k) => G.flap(side, a, k / nS)));
@@ -331,7 +344,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     }
   }
 
-  const heartA_ = regen && g < 1 ? A_CUT + lerp(3.6, A_HEART - A_CUT, smooth(g)) / lerp(0.06, 1, smooth(clamp(g))) : A_HEART;
+  const heartA_ = heartAOf(p);
   // ------------------------------------------------ the cut face (sagittal section through the window)
   let secZ = 0;
   if (cut) {
@@ -471,7 +484,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
     // the heart in its pericardium, on the back just behind the neck: a pale coral two-chambered pump in a clear sac.
     // Regrowth: first a loose cluster of cells, which draws together into the sac and heart.
     if (hv > 0.01 && p.a0 <= heartA && aEnd >= heartA) {
-      const bt = p.beat ?? 0, gsz = regen ? lerp(0.55, 1, smooth(g)) : 1;
+      const bt = p.beat ?? 0, gsz = regen ? lerp(0.85, 1, smooth(g)) : 1;
       const form = smooth(clamp((hv - 0.25) / 0.75));
       const op = vis0(heartA);
       if (hv < 1) {
@@ -482,7 +495,8 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
           organ(a, v, 0.66 + 0.12 * R0(k), [0.5, 0.5, 0.5].map((x) => x * gsz) as [number, number, number], '#F0B7A2', op * clamp(hv * 3) * (1 - form * 0.9), {spec: 0.5});
         }
       }
-      organ(heartA, 0, 0.66, [3.6 * gsz, 2.5 * gsz, 2.0 * gsz], C.peri, op * 0.4 * form, {spec: 1, glossy: true, ink: Math.max(0.6, inkW * 0.3)});
+      const sys0 = clamp(bt / 1.6);
+      organ(heartA, 0, 0.66, [3.6 * gsz * (1 - 0.06 * sys0), 2.5 * gsz * (1 - 0.06 * sys0), 2.0 * gsz], C.peri, op * 0.4 * form, {spec: 1, glossy: true, ink: Math.max(0.6, inkW * 0.3)});
       // systole: the ventricle squeezes and shortens while the auricle fills; diastole the reverse
       const sys = clamp(bt / 1.6);
       // the aorta: a fine vessel running forward from the ventricle
@@ -490,7 +504,7 @@ export const slugItem = (B: Basis, p: Piece, o: SlugOpts = {}): {z: number; el: 
         const v0 = G.at(heartA - 2.2 * gsz, 0, G.h(heartA) * 0.62), v1 = G.at(heartA - 6 * gsz, 0, G.h(heartA - 6) * 0.5);
         OR.push(capsuleItem(B, v0, v1, 0.38 * gsz * (p.scale ?? 1), 0.28 * gsz * (p.scale ?? 1), '#E9A593', {opacity: clamp(op * form), ink: Math.max(0.6, inkW * 0.3), spec: 0.4}));
       }
-      organ(heartA - 0.7 * gsz, 0, 0.63, [2.1 * (1 - 0.18 * sys), 1.25 * (1 - 0.26 * sys), 1.35 * (1 - 0.24 * sys)].map((x) => x * gsz) as [number, number, number], '#E0806C', op * form, {spec: 0.8, glossy: true});
+      organ(heartA - 0.7 * gsz, 0, 0.63, [2.1 * (1 - 0.3 * sys), 1.25 * (1 - 0.38 * sys), 1.35 * (1 - 0.36 * sys)].map((x) => x * gsz) as [number, number, number], mix('#E0806C', '#C9594A', sys), op * form, {spec: 0.8, glossy: true});
       organ(heartA + 1.6 * gsz, 0.06, 0.72, [1.2 * (1 + 0.2 * sys), 1.15 * (1 + 0.22 * sys), 0.8].map((x) => x * gsz) as [number, number, number], '#EFB5A2', op * form * 0.9, {spec: 0.6});
     }
     // over the window skin, in their own far-to-near order

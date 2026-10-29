@@ -74,6 +74,8 @@ export type Piece = {
   /** V3 tissue window: over a soft organic patch around anatomical a (half-length r) the near body wall turns
    *  translucent and the organs inside show (open 0..1). With a window the heart is drawn as an organ in its sac. */
   win?: {a: number; r: number; open: number};
+  /** V3: a muscular contraction travelling along the body (a ring of narrowing and lift at anatomical a) */
+  ripple?: {a: number; amp: number};
 };
 
 const growLen = (g: number) => lerp(0.06, 1, smooth(clamp(g)));
@@ -82,6 +84,11 @@ export const growFlap = (g: number) => smooth(clamp((g - 0.24) / 0.62));
 export const growPale = (g: number) => 1 - smooth(clamp((g - 0.12) / 0.85));
 export const growSpots = (g: number) => smooth(clamp((g - 0.42) / 0.5));
 export const isRegen = (p: Piece) => p.grow !== undefined;
+/** anatomical a of the heart (a regrowing body carries its new heart close behind the head while it is short) */
+export const heartAOf = (p: Piece) => {
+  const g = p.grow ?? 1;
+  return isRegen(p) && g < 1 ? A_CUT + lerp(3.6, A_HEART - A_CUT, smooth(g)) / lerp(0.06, 1, smooth(clamp(g))) : A_HEART;
+};
 
 /** arc distance back from the tip for anatomical a */
 export const dist = (p: Piece, a: number) => {
@@ -102,7 +109,8 @@ export const wf = (p: Piece, a: number) => {
       f = lerp(1, growWid(g), smooth(clamp((a - A_CUT) / 6))) * smooth(clamp(g / 0.07));
       // while it is short the new tissue ends in a rounded bud, not a flat cut
       const u = (a - A_CUT) / (100 - A_CUT);
-      f *= lerp(Math.sqrt(clamp((1 - u) / 0.3)), 1, smooth(clamp((g - 0.3) / 0.5)));
+      // (the shorter it is, the more of its length the dome takes: a bud, then a tapering tail)
+      f *= lerp(Math.sqrt(clamp((1 - u) / lerp(0.95, 0.3, smooth(clamp(g / 0.4))))), 1, smooth(clamp((g - 0.3) / 0.5)));
     }
     return f;
   }
@@ -132,11 +140,13 @@ export const geo = (p: Piece): Geo => {
   const cr = p.crawl ?? 0, ca = p.crawlAmp ?? 0, rear = p.rear ?? 0;
   // pedal waves: muscular swellings travelling back along the body while it crawls
   const wave = (a: number) => ca * Math.sin(a * 0.3 - cr);
-  const w = (a: number) => halfW(a) * wf(p, a) * (1 + 0.035 * wave(a));
-  const h = (a: number) => heightOf(a) * Math.min(1, wf(p, a) * 1.1 + 0.12) * (1 + 0.05 * wave(a + 3));
+  const rp = p.ripple;
+  const rip = (a: number) => (rp ? rp.amp * Math.exp(-Math.pow((a - rp.a) / 6, 2)) : 0);
+  const w = (a: number) => halfW(a) * wf(p, a) * (1 + 0.035 * wave(a)) * (1 - 0.34 * rip(a));
+  const h = (a: number) => heightOf(a) * Math.min(1, wf(p, a) * 1.1 + 0.12) * (1 + 0.05 * wave(a + 3)) * (1 + 0.42 * rip(a));
   const tw = p.twitch;
   const twAt = (side: number, a: number) => (tw && tw.side === side ? tw.amp * Math.exp(-Math.pow((a - tw.a) / 13, 2)) : 0);
-  const sp = (a: number) => spreadOf(a) * growFlap(g) * (1 - 0.14 * fl);
+  const sp = (a: number) => spreadOf(a) * growFlap(g) * (1 - 0.14 * fl) * (1 - 0.5 * rip(a));
   const at = (a: number, v: number, z: number): V3 => {
     const pt = p.path.at(p.tip - dist(p, a) * sc);
     const nx = -pt.ty, ny = pt.tx;
