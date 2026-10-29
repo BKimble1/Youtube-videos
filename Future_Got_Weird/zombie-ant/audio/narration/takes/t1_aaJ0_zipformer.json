@@ -1,0 +1,559 @@
+{
+ "audio": "audio/narration/takes/t1_aaJ0.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.93,
+   2.35
+  ],
+  [
+   3.97,
+   4.32
+  ],
+  [
+   4.68,
+   4.91
+  ],
+  [
+   6.36,
+   6.66
+  ],
+  [
+   8.26,
+   8.69
+  ],
+  [
+   10.95,
+   11.24
+  ],
+  [
+   13.59,
+   14.01
+  ],
+  [
+   15.17,
+   15.55
+  ],
+  [
+   17.5,
+   17.96
+  ],
+  [
+   19.36,
+   19.58
+  ],
+  [
+   21.95,
+   22.39
+  ],
+  [
+   23.61,
+   23.89
+  ],
+  [
+   26.12,
+   26.61
+  ],
+  [
+   27.93,
+   28.38
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.1
+  },
+  {
+   "word": "this",
+   "start": 0.12,
+   "end": 0.35
+  },
+  {
+   "word": "fungus",
+   "start": 0.36,
+   "end": 0.79
+  },
+  {
+   "word": "gets",
+   "start": 0.8,
+   "end": 1.07
+  },
+  {
+   "word": "inside",
+   "start": 1.08,
+   "end": 1.43
+  },
+  {
+   "word": "an",
+   "start": 1.44,
+   "end": 1.63
+  },
+  {
+   "word": "ANT\u2026",
+   "start": 1.64,
+   "end": 1.93
+  },
+  {
+   "word": "it",
+   "start": 2.35,
+   "end": 2.4
+  },
+  {
+   "word": "can",
+   "start": 2.39,
+   "end": 2.53
+  },
+  {
+   "word": "turn",
+   "start": 2.54,
+   "end": 2.77
+  },
+  {
+   "word": "it",
+   "start": 2.78,
+   "end": 2.93
+  },
+  {
+   "word": "into",
+   "start": 2.94,
+   "end": 3.17
+  },
+  {
+   "word": "a",
+   "start": 3.18,
+   "end": 3.26
+  },
+  {
+   "word": "ZOMBIE.",
+   "start": 3.26,
+   "end": 3.97
+  },
+  {
+   "word": "You",
+   "start": 4.32,
+   "end": 4.38
+  },
+  {
+   "word": "see,",
+   "start": 4.385,
+   "end": 4.68
+  },
+  {
+   "word": "it",
+   "start": 4.91,
+   "end": 4.96
+  },
+  {
+   "word": "spreads",
+   "start": 4.955,
+   "end": 5.39
+  },
+  {
+   "word": "through",
+   "start": 5.395,
+   "end": 5.55
+  },
+  {
+   "word": "the",
+   "start": 5.555,
+   "end": 5.67
+  },
+  {
+   "word": "ant\u2019s",
+   "start": 5.675,
+   "end": 6.07
+  },
+  {
+   "word": "body\u2026",
+   "start": 6.075,
+   "end": 6.36
+  },
+  {
+   "word": "and",
+   "start": 6.66,
+   "end": 6.71
+  },
+  {
+   "word": "starts",
+   "start": 6.7,
+   "end": 6.98
+  },
+  {
+   "word": "controlling",
+   "start": 6.99,
+   "end": 7.51
+  },
+  {
+   "word": "its",
+   "start": 7.51,
+   "end": 7.78
+  },
+  {
+   "word": "MUSCLES.",
+   "start": 7.79,
+   "end": 8.26
+  },
+  {
+   "word": "Then",
+   "start": 8.69,
+   "end": 8.87
+  },
+  {
+   "word": "it",
+   "start": 8.875,
+   "end": 9.08
+  },
+  {
+   "word": "forces",
+   "start": 9.115,
+   "end": 9.59
+  },
+  {
+   "word": "the",
+   "start": 9.595,
+   "end": 9.75
+  },
+  {
+   "word": "ant",
+   "start": 9.755,
+   "end": 9.99
+  },
+  {
+   "word": "to",
+   "start": 9.995,
+   "end": 10.11
+  },
+  {
+   "word": "CLIMB",
+   "start": 10.115,
+   "end": 10.47
+  },
+  {
+   "word": "a",
+   "start": 10.475,
+   "end": 10.63
+  },
+  {
+   "word": "plant\u2026",
+   "start": 10.635,
+   "end": 10.95
+  },
+  {
+   "word": "and",
+   "start": 11.24,
+   "end": 11.29
+  },
+  {
+   "word": "bite",
+   "start": 11.28,
+   "end": 11.63
+  },
+  {
+   "word": "down",
+   "start": 11.655,
+   "end": 11.89
+  },
+  {
+   "word": "so",
+   "start": 11.895,
+   "end": 12.21
+  },
+  {
+   "word": "hard",
+   "start": 12.215,
+   "end": 12.53
+  },
+  {
+   "word": "it",
+   "start": 12.535,
+   "end": 12.7
+  },
+  {
+   "word": "can\u2019t",
+   "start": 12.735,
+   "end": 13.09
+  },
+  {
+   "word": "let",
+   "start": 13.095,
+   "end": 13.33
+  },
+  {
+   "word": "GO.",
+   "start": 13.335,
+   "end": 13.59
+  },
+  {
+   "word": "The",
+   "start": 14.01,
+   "end": 14.11
+  },
+  {
+   "word": "ant",
+   "start": 14.12,
+   "end": 14.47
+  },
+  {
+   "word": "DIES\u2026",
+   "start": 14.52,
+   "end": 15.17
+  },
+  {
+   "word": "but",
+   "start": 15.55,
+   "end": 15.6
+  },
+  {
+   "word": "the",
+   "start": 15.59,
+   "end": 15.67
+  },
+  {
+   "word": "fungus",
+   "start": 15.68,
+   "end": 16.19
+  },
+  {
+   "word": "is",
+   "start": 16.2,
+   "end": 16.35
+  },
+  {
+   "word": "just",
+   "start": 16.4,
+   "end": 16.72
+  },
+  {
+   "word": "getting",
+   "start": 16.72,
+   "end": 17.03
+  },
+  {
+   "word": "STARTED.",
+   "start": 17.04,
+   "end": 17.5
+  },
+  {
+   "word": "Because",
+   "start": 17.96,
+   "end": 18.08
+  },
+  {
+   "word": "over",
+   "start": 18.09,
+   "end": 18.29
+  },
+  {
+   "word": "the",
+   "start": 18.29,
+   "end": 18.44
+  },
+  {
+   "word": "next",
+   "start": 18.45,
+   "end": 18.76
+  },
+  {
+   "word": "few",
+   "start": 18.77,
+   "end": 19.09
+  },
+  {
+   "word": "days,",
+   "start": 19.09,
+   "end": 19.36
+  },
+  {
+   "word": "a",
+   "start": 19.58,
+   "end": 19.66
+  },
+  {
+   "word": "giant",
+   "start": 19.67,
+   "end": 20.1
+  },
+  {
+   "word": "stalk",
+   "start": 20.11,
+   "end": 20.5
+  },
+  {
+   "word": "grows",
+   "start": 20.55,
+   "end": 20.86
+  },
+  {
+   "word": "straight",
+   "start": 20.87,
+   "end": 21.26
+  },
+  {
+   "word": "out",
+   "start": 21.27,
+   "end": 21.42
+  },
+  {
+   "word": "of",
+   "start": 21.43,
+   "end": 21.54
+  },
+  {
+   "word": "its",
+   "start": 21.55,
+   "end": 21.82
+  },
+  {
+   "word": "HEAD.",
+   "start": 21.83,
+   "end": 21.95
+  },
+  {
+   "word": "And",
+   "start": 22.39,
+   "end": 22.44
+  },
+  {
+   "word": "when",
+   "start": 22.43,
+   "end": 22.48
+  },
+  {
+   "word": "it",
+   "start": 22.49,
+   "end": 22.64
+  },
+  {
+   "word": "finally",
+   "start": 22.65,
+   "end": 23.2
+  },
+  {
+   "word": "opens\u2026",
+   "start": 23.21,
+   "end": 23.61
+  },
+  {
+   "word": "it",
+   "start": 23.89,
+   "end": 23.94
+  },
+  {
+   "word": "releases",
+   "start": 23.93,
+   "end": 24.46
+  },
+  {
+   "word": "spores",
+   "start": 24.47,
+   "end": 24.94
+  },
+  {
+   "word": "onto",
+   "start": 24.95,
+   "end": 25.18
+  },
+  {
+   "word": "the",
+   "start": 25.19,
+   "end": 25.29
+  },
+  {
+   "word": "ants",
+   "start": 25.31,
+   "end": 25.7
+  },
+  {
+   "word": "BELOW.",
+   "start": 25.71,
+   "end": 26.12
+  },
+  {
+   "word": "And",
+   "start": 26.61,
+   "end": 26.66
+  },
+  {
+   "word": "beneath",
+   "start": 26.65,
+   "end": 27.08
+  },
+  {
+   "word": "that",
+   "start": 27.085,
+   "end": 27.36
+  },
+  {
+   "word": "one",
+   "start": 27.365,
+   "end": 27.6
+  },
+  {
+   "word": "leaf\u2026",
+   "start": 27.605,
+   "end": 27.93
+  },
+  {
+   "word": "there",
+   "start": 28.38,
+   "end": 28.43
+  },
+  {
+   "word": "could",
+   "start": 28.42,
+   "end": 28.59
+  },
+  {
+   "word": "be",
+   "start": 28.595,
+   "end": 28.79
+  },
+  {
+   "word": "dozens",
+   "start": 28.795,
+   "end": 29.27
+  },
+  {
+   "word": "more",
+   "start": 29.275,
+   "end": 29.47
+  },
+  {
+   "word": "ants",
+   "start": 29.475,
+   "end": 29.83
+  },
+  {
+   "word": "that",
+   "start": 29.835,
+   "end": 30.0
+  },
+  {
+   "word": "died",
+   "start": 30.035,
+   "end": 30.31
+  },
+  {
+   "word": "the",
+   "start": 30.315,
+   "end": 30.47
+  },
+  {
+   "word": "exact",
+   "start": 30.475,
+   "end": 31.03
+  },
+  {
+   "word": "same",
+   "start": 31.035,
+   "end": 31.39
+  },
+  {
+   "word": "way.",
+   "start": 31.395,
+   "end": 31.59
+  }
+ ]
+}

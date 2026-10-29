@@ -1,0 +1,19 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Dead Spider and Cyborg Cockroach); confirmed with creative_list_voices on 2026-10-29"},
+ "model_id": "eleven_v4",
+ "flow_id": "tVCU8c69k7Sb1XRnfvlp",
+ "prompt": "[curious, intense, conversational] If this fungus gets inside an ANT — it can turn it into a ZOMBIE. [brisk, explaining] You see, it spreads through the ant's body — and starts controlling its MUSCLES. Then it forces the ant to CLIMB a plant — and bite down so hard it can't let GO. [darker, intense] The ant DIES — but the fungus is just getting STARTED. [building] Because over the next few days, a giant stalk grows straight out of its HEAD. And when it finally opens — it releases spores onto the ants BELOW. [quieter, eerie] And beneath that one leaf — there could be dozens more ants that died the exact same way.",
+ "prompt_note": "The locked words, verbatim. The script's ellipses were given to the model as em-dash beats so it would not pause at every ellipsis (the brief: continuous and urgent); the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 618.9 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_aaJ0.mp3", "generation_id": "aaJ0vQylGG9Z73fJUxoV", "duration_s": 31.79, "chosen": true,
+   "asr": {"whisper_base_en": "1 difference: ant's -> aunt's (homophone)", "zipformer_en": "spellings only: zomby, spoors on to"}},
+  {"file": "audio/narration/takes/t2_rKUl.mp3", "generation_id": "rKUl2nYECA44r442UCnF", "duration_s": 31.24, "chosen": false,
+   "why_not": "zipformer hears bungus / sombi / giant's / aunt: softer articulation of fungus and zombie"}
+ ],
+ "edits": "Speech untouched (no splice inside a word, no time-stretch, no pitch change). Twelve long silent gaps between phrases shortened (removed audio below -45 dBFS, 10 ms crossfades): sentence ends to 0.28 s, dash beats to 0.24 s, 'DIES…' kept at 0.34 s, 'leaf…' 0.30 s; 1.43 s removed in total (see FGW_Zombie_Ant_V1_words.json). Mix: gentle compressor and a look-ahead limiter on the voice.",
+ "word_timing": {"master": "local sherpa-onnx Zipformer token timestamps, snapped to measured pause onsets (tools/align_zipformer.py)", "cross_reference": "ElevenLabs Scribe (takes/t1_aaJ0_scribe.json): it returns the prompt's text and lags up to ~0.4 s, so it is not the master"},
+ "final": {"file": "audio/narration/FGW_Zombie_Ant_narration_V1.wav", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 30.16], "film_s": 30.567, "asr_on_master": "whisper base.en: 0 differences"},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause measurement and level."
+}
