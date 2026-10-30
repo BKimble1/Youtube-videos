@@ -385,7 +385,7 @@ export const Shrimp: React.FC<ShrimpProps> = ({t, tau, open, w}) => {
 export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
   const F = FOOT_Y;
   const top = pts([[-70, F + 1.2], [-52, F + 0.4], [-40, F + 0.9], [-30, F + 0.3], [-20, F + 0.55], [-10, F + 0.15], [-3, F + 0.3], [1.5, F + 0.5], [4.4, F + 1.6], [6.0, F + 4.0]]);
-  const body = [...top, ...pts([[6.2, F + 8], [4.0, F + 12.5], [-2, F + 16], [-14, F + 19], [-30, F + 21], [-50, F + 24], [-70, F + 30]])];
+  const body = [...top, ...pts([[7.0, F + 9], [7.5, F + 22], [5, F + 40], [-10, F + 70], [-70, F + 70]])];
   const d = openPath(body, 0.8) + ' Z';
   // encrusting growth as soft irregular blotches (coralline pink, sponge ochre, algal green), low contrast
   const blot = (cx: number, cy: number, r: number, k: number) =>
@@ -397,11 +397,11 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
   return (
     <g>
       <defs>
-        <linearGradient id="h9-rock" gradientUnits="userSpaceOnUse" x1="0" y1={F - 1} x2="3" y2={F + 20}>
+        <linearGradient id="h9-rock" gradientUnits="userSpaceOnUse" x1="0" y1={F - 1} x2="2" y2={F + 34}>
           <stop offset="0" stopColor="#8A8E7A" />
-          <stop offset="0.15" stopColor="#6A7468" />
-          <stop offset="0.6" stopColor="#4A5A58" />
-          <stop offset="1" stopColor="#36474C" />
+          <stop offset="0.08" stopColor="#6C7668" />
+          <stop offset="0.4" stopColor="#465A58" />
+          <stop offset="1" stopColor="#2A4A4E" />
         </linearGradient>
       </defs>
       <path d={d} fill={INK} stroke={INK} strokeWidth={w * 0.72 * 2} strokeLinejoin="round" />
