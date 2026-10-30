@@ -1,6 +1,6 @@
 {
  "file": "exports/FGW_HOOK_02_UNDERWATER_COCKROACH.mp4",
- "size_bytes": 5823782,
+ "size_bytes": 5837004,
  "video": {
   "codec_name": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "duration": "6.000000",
-  "bit_rate": "7434025"
+  "bit_rate": "7451654"
  },
  "frames": 180,
  "audio": {
@@ -25,12 +25,12 @@
  "mix_lufs": -16.73,
  "sample_peak_dbfs": -1.0,
  "motion_mean_per_second": [
-  3.101,
-  4.685,
-  6.777,
+  3.12,
+  4.645,
+  6.756,
   10.965,
-  9.089,
-  3.024
+  9.098,
+  3.033
  ],
  "longest_static_run_frames": 0,
  "longest_static_run_starts_frame": 0,

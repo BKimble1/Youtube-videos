@@ -91,8 +91,10 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     const shrink = 1 - ss(t, T.slump1 - 0.1, T.esc0 + 0.35);
     for (const p of deformed) {
       const pts = p.pts.map((q) => ({x: q.x * shrink, y: q.y * shrink}));
-      items.push({k: 'p', d: pathScreen(Afig, pts), g: 'dome'});
-      items.push({k: 'p', d: pathScreen(Afig, pts, {x: sweepFig.x * 0.6, y: sweepFig.y * 0.6}), g: 'dome'});
+      const sp = pts.map((q) => ap(Afig, q));
+      const b = {x0: Math.min(...sp.map((q) => q.x)), x1: Math.max(...sp.map((q) => q.x)), y0: Math.min(...sp.map((q) => q.y)) - 40, y1: Math.max(...sp.map((q) => q.y))};
+      items.push({k: 'p', d: pathScreen(Afig, pts), g: 'dome', b});
+      items.push({k: 'p', d: pathScreen(Afig, pts, {x: sweepFig.x * 0.6, y: sweepFig.y * 0.6}), g: 'dome', b});
     }
     for (const dr of DRIPS) {
       const u = clamp((t - dr.t0) / dr.d);

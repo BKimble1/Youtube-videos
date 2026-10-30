@@ -1,0 +1,51 @@
+{
+ "file": "exports/FGW_HOOK_01_TONGUE_PARASITE.mp4",
+ "size_bytes": 4225872,
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "duration": "6.000000",
+  "bit_rate": "5303286"
+ },
+ "frames": 180,
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317374",
+  "duration": "6.016000"
+ },
+ "audio_decoded_s": 6.016,
+ "voice_onset_s": 0.027,
+ "mix_lufs": -17.01,
+ "sample_peak_dbfs": -0.94,
+ "motion_mean_per_second": [
+  2.228,
+  4.566,
+  6.145,
+  3.428,
+  6.576,
+  4.872
+ ],
+ "longest_static_run_frames": 0,
+ "longest_static_run_starts_frame": 0,
+ "frame_jumps_over_18": [],
+ "checks": {
+  "codec_h264": true,
+  "size_1080x1920": true,
+  "fps_30": true,
+  "pix_yuv420p": true,
+  "frames_180": true,
+  "video_6.000s": true,
+  "audio_aac": true,
+  "audio_len_6.0s(\u00b125ms)": true,
+  "voice_onset<=0.10s": true,
+  "no_static_run>0.5s": true
+ },
+ "all_pass": true
+}

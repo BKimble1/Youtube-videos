@@ -9,7 +9,7 @@ import {Ell} from './cam';
 
 export type Goo =
   | {k: 'e'; e: Ell; g?: 'dome' | 'flat'; a?: number}
-  | {k: 'p'; d: string; g?: 'dome' | 'flat'; a?: number; tf?: string};
+  | {k: 'p'; d: string; g?: 'dome' | 'flat'; a?: number; tf?: string; b?: Box};
 
 export type Box = {x0: number; y0: number; x1: number; y1: number};
 export const gooBox = (items: Goo[], pad: number, extra?: Box): Box => {
@@ -21,6 +21,11 @@ export const gooBox = (items: Goo[], pad: number, extra?: Box): Box => {
       x1 = Math.max(x1, it.e.cx + r);
       y0 = Math.min(y0, it.e.cy - r);
       y1 = Math.max(y1, it.e.cy + r);
+    } else if (it.b) {
+      x0 = Math.min(x0, it.b.x0);
+      x1 = Math.max(x1, it.b.x1);
+      y0 = Math.min(y0, it.b.y0);
+      y1 = Math.max(y1, it.b.y1);
     }
   }
   if (extra) {
