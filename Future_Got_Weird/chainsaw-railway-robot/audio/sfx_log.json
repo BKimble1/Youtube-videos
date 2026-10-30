@@ -1,0 +1,117 @@
+[
+{
+"t": 140.03,
+"sfx": "chainsaw_stop",
+"gain": 0.8
+},
+{
+"t": 12.17,
+"sfx": "crack1",
+"gain": 0.9
+},
+{
+"t": 53.21,
+"sfx": "crack2",
+"gain": 0.9
+},
+{
+"t": 153.6,
+"sfx": "crack3",
+"gain": 0.9
+},
+{
+"t": 48.617,
+"sfx": "clamp",
+"gain": 0.7
+},
+{
+"t": 149.817,
+"sfx": "clamp",
+"gain": 0.7
+},
+{
+"t": 8.57,
+"sfx": "grip squeeze",
+"gain": 0.35
+},
+{
+"t": 48.555,
+"sfx": "takes weight",
+"gain": 0.45
+},
+{
+"t": 36.2,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 37.833,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 75.867,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 82.0,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 84.733,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 148.733,
+"sfx": "controller click",
+"gain": 0.25
+},
+{
+"t": 82.025,
+"sfx": "feedback thump",
+"gain": 0.5
+},
+{
+"t": 89.635,
+"sfx": "twig rustle",
+"gain": 0.6
+},
+{
+"t": 92.95,
+"sfx": "STEEL hit",
+"gain": 0.95
+},
+{
+"t": 92.97,
+"sfx": "claw touch",
+"gain": 0.4
+},
+{
+"t": 107.585,
+"sfx": "fitting lands (illustration)",
+"gain": 0.35
+},
+{
+"t": 117.1,
+"sfx": "card jrEast",
+"gain": 0.12
+},
+{
+"t": 120.81,
+"sfx": "card jrWest",
+"gain": 0.12
+},
+{
+"t": 125.08,
+"sfx": "card rolling",
+"gain": 0.12
+},
+{
+"t": 129.32,
+"sfx": "card single",
+"gain": 0.12
+}
+]

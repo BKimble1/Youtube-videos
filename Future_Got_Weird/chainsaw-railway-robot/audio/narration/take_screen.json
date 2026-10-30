@@ -1,0 +1,788 @@
+{
+ "b1_t1_FFHo.mp3": {
+  "block": 1,
+  "duration": 41.52,
+  "speech_span": [
+   0.05,
+   41.32
+  ],
+  "wpm": 193.4,
+  "pauses_ge_0.25s": [
+   0.39,
+   0.51,
+   0.37,
+   0.51,
+   0.45,
+   0.48,
+   0.41,
+   0.35,
+   0.42,
+   0.4,
+   0.65,
+   0.26,
+   0.45,
+   0.36
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "and",
+    "in"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "and",
+    "in"
+   ]
+  ]
+ },
+ "b1_t2_K056.mp3": {
+  "block": 1,
+  "duration": 41.52,
+  "speech_span": [
+   0.06,
+   41.34
+  ],
+  "wpm": 193.3,
+  "pauses_ge_0.25s": [
+   0.37,
+   0.44,
+   0.34,
+   0.43,
+   0.27,
+   0.43,
+   0.46,
+   0.41,
+   0.35,
+   0.44,
+   0.45,
+   0.58,
+   0.44,
+   0.38
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "and",
+    "in"
+   ]
+  ]
+ },
+ "b1_t3_OlHd.mp3": {
+  "block": 1,
+  "duration": 42.24,
+  "speech_span": [
+   0.06,
+   42.09
+  ],
+  "wpm": 189.9,
+  "pauses_ge_0.25s": [
+   0.4,
+   0.45,
+   0.37,
+   0.48,
+   0.43,
+   0.56,
+   0.48,
+   0.36,
+   0.5,
+   0.42,
+   0.5,
+   0.27,
+   0.51,
+   0.41
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ],
+  "whisper": []
+ },
+ "b1_t4_MhDv.mp3": {
+  "block": 1,
+  "duration": 41.92,
+  "speech_span": [
+   0.06,
+   41.76
+  ],
+  "wpm": 191.4,
+  "pauses_ge_0.25s": [
+   0.43,
+   0.46,
+   0.37,
+   0.49,
+   0.47,
+   0.55,
+   0.43,
+   0.41,
+   0.25,
+   0.48,
+   0.44,
+   0.62,
+   0.27,
+   0.5,
+   0.42
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ],
+  "whisper": []
+ },
+ "b2_t1_EY4e.mp3": {
+  "block": 2,
+  "duration": 49.36,
+  "speech_span": [
+   0.07,
+   49.26
+  ],
+  "wpm": 180.5,
+  "pauses_ge_0.25s": [
+   0.47,
+   0.39,
+   0.55,
+   0.27,
+   0.54,
+   0.31,
+   0.5,
+   0.39,
+   0.61,
+   0.55,
+   0.62,
+   0.51,
+   0.35,
+   0.63,
+   0.48
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "bilateral",
+    "biteral"
+   ],
+   [
+    "replace",
+    "robot",
+    "roebot"
+   ],
+   [
+    "replace",
+    "fingertips",
+    "finger tips"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ]
+ },
+ "b2_t2_owgF.mp3": {
+  "block": 2,
+  "duration": 48.16,
+  "speech_span": [
+   0.05,
+   48.03
+  ],
+  "wpm": 185.1,
+  "pauses_ge_0.25s": [
+   0.41,
+   0.41,
+   0.48,
+   0.61,
+   0.32,
+   0.5,
+   0.28,
+   0.64,
+   0.49,
+   0.57,
+   0.45,
+   0.34,
+   0.64,
+   0.43
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "bilateral",
+    "biteral"
+   ],
+   [
+    "replace",
+    "fingertips",
+    "finger tips"
+   ]
+  ],
+  "whisper": []
+ },
+ "b2_t3_Z3Md.mp3": {
+  "block": 2,
+  "duration": 49.44,
+  "speech_span": [
+   0.1,
+   49.29
+  ],
+  "wpm": 180.5,
+  "pauses_ge_0.25s": [
+   0.49,
+   0.45,
+   0.58,
+   0.3,
+   0.6,
+   0.31,
+   0.54,
+   0.31,
+   0.6,
+   0.52,
+   0.6,
+   0.52,
+   0.3,
+   0.6,
+   0.51
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "claw",
+    "clock"
+   ],
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "robot",
+    "roebot"
+   ],
+   [
+    "replace",
+    "fingertips",
+    "finger tips"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ]
+ },
+ "b2_t4_rLLk.mp3": {
+  "block": 2,
+  "duration": 48.88,
+  "speech_span": [
+   0.05,
+   48.78
+  ],
+  "wpm": 182.2,
+  "pauses_ge_0.25s": [
+   0.43,
+   0.41,
+   0.5,
+   0.26,
+   0.56,
+   0.3,
+   0.47,
+   0.33,
+   0.6,
+   0.52,
+   0.52,
+   0.49,
+   0.32,
+   0.77,
+   0.48
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "footage",
+    "fottage"
+   ],
+   [
+    "replace",
+    "robot",
+    "roebot"
+   ],
+   [
+    "replace",
+    "fingertips",
+    "finger tips"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ]
+  ]
+ },
+ "b3_t1_9WbL.mp3": {
+  "block": 3,
+  "duration": 41.76,
+  "speech_span": [
+   0.03,
+   41.65
+  ],
+  "wpm": 171.6,
+  "pauses_ge_0.25s": [
+   0.42,
+   0.27,
+   0.47,
+   0.27,
+   0.6,
+   0.61,
+   0.66,
+   0.47,
+   0.34,
+   0.62,
+   0.51
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "2024",
+    "twenty twenty four"
+   ],
+   [
+    "replace",
+    "singlearm robot",
+    "single arm rowbot"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "singlearm",
+    "single arm"
+   ]
+  ]
+ },
+ "b3_t2_c1ju.mp3": {
+  "block": 3,
+  "duration": 40.88,
+  "speech_span": [
+   0.03,
+   40.7
+  ],
+  "wpm": 175.6,
+  "pauses_ge_0.25s": [
+   0.47,
+   0.45,
+   0.54,
+   0.52,
+   0.6,
+   0.41,
+   0.32,
+   0.45,
+   0.51
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "2024",
+    "twenty twenty four"
+   ],
+   [
+    "replace",
+    "with an",
+    "within"
+   ],
+   [
+    "replace",
+    "singlearm robot",
+    "single arm rowbot"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "jr east",
+    "jreast"
+   ],
+   [
+    "replace",
+    "singlearm",
+    "single arm"
+   ]
+  ]
+ },
+ "b3_t3_q6Ne.mp3": {
+  "block": 3,
+  "duration": 40.56,
+  "speech_span": [
+   0.05,
+   40.4
+  ],
+  "wpm": 177.0,
+  "pauses_ge_0.25s": [
+   0.42,
+   0.46,
+   0.26,
+   0.54,
+   0.49,
+   0.56,
+   0.36,
+   0.36,
+   0.49,
+   0.52
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "2024",
+    "twenty twenty four"
+   ],
+   [
+    "replace",
+    "with an",
+    "within"
+   ],
+   [
+    "replace",
+    "singlearm robot",
+    "single arm rowbot"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "singlearm",
+    "single arm"
+   ]
+  ]
+ },
+ "b3_t4_tvdB.mp3": {
+  "block": 3,
+  "duration": 41.92,
+  "speech_span": [
+   0.09,
+   41.74
+  ],
+  "wpm": 171.4,
+  "pauses_ge_0.25s": [
+   0.45,
+   0.49,
+   0.56,
+   0.54,
+   0.56,
+   0.46,
+   0.32,
+   0.53,
+   0.54
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "jr",
+    "j r"
+   ],
+   [
+    "replace",
+    "2024",
+    "twenty twenty four"
+   ],
+   [
+    "replace",
+    "singlearm robot",
+    "single arm rowbot"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "singlearm",
+    "single arm"
+   ]
+  ]
+ },
+ "b4_t1_b841.mp3": {
+  "block": 4,
+  "duration": 11.84,
+  "speech_span": [
+   0.05,
+   11.71
+  ],
+  "wpm": 205.8,
+  "pauses_ge_0.25s": [
+   0.39,
+   0.5,
+   0.39
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "find",
+    "fine"
+   ]
+  ],
+  "whisper": []
+ },
+ "b4_t2_3Zfl.mp3": {
+  "block": 4,
+  "duration": 11.92,
+  "speech_span": [
+   0.06,
+   11.82
+  ],
+  "wpm": 204.1,
+  "pauses_ge_0.25s": [
+   0.42,
+   0.45,
+   0.38
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "find",
+    "fine"
+   ]
+  ],
+  "whisper": []
+ },
+ "b4_t3_7oOE.mp3": {
+  "block": 4,
+  "duration": 12.24,
+  "speech_span": [
+   0.06,
+   12.09
+  ],
+  "wpm": 199.5,
+  "pauses_ge_0.25s": [
+   0.46,
+   0.57,
+   0.41
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "find",
+    "fine"
+   ]
+  ],
+  "whisper": []
+ },
+ "b4_t4_0KUP.mp3": {
+  "block": 4,
+  "duration": 12.16,
+  "speech_span": [
+   0.08,
+   12.04
+  ],
+  "wpm": 200.7,
+  "pauses_ge_0.25s": [
+   0.41,
+   0.51,
+   0.41
+  ],
+  "zipformer": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "find",
+    "fine"
+   ]
+  ],
+  "whisper": [
+   [
+    "replace",
+    "and tell",
+    "until"
+   ]
+  ]
+ }
+}

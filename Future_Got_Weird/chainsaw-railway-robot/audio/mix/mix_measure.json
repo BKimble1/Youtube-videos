@@ -1,0 +1,11 @@
+{
+ "file": "audio/mix/FGW_Chainsaw_Robot_V1_mix.wav",
+ "sha256": "9e00e9f4fdbc699288c64f886356d89fd164a8db14526f8ae2f2a00845abccec",
+ "duration_s": 154.8333,
+ "integrated_lufs": -14.01,
+ "true_peak_dbtp": -1.5,
+ "sample_peak_dbfs": -1.51,
+ "voice_only_lufs": -14.24,
+ "effects_and_beds_lufs": -23.54,
+ "voice_minus_rest_lu": 9.3
+}

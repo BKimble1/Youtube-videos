@@ -1,0 +1,2642 @@
+[
+{
+"word": "Japan",
+"block": 0,
+"start": 0.25,
+"end": 0.68
+},
+{
+"word": "built",
+"block": 0,
+"start": 0.69,
+"end": 0.96
+},
+{
+"word": "a",
+"block": 0,
+"start": 0.97,
+"end": 1.04
+},
+{
+"word": "robot",
+"block": 0,
+"start": 1.05,
+"end": 1.52
+},
+{
+"word": "with",
+"block": 0,
+"start": 1.53,
+"end": 1.64
+},
+{
+"word": "a",
+"block": 0,
+"start": 1.65,
+"end": 1.76
+},
+{
+"word": "CHAINSAW",
+"block": 0,
+"start": 1.77,
+"end": 2.45
+},
+{
+"word": "for",
+"block": 0,
+"start": 2.45,
+"end": 2.6
+},
+{
+"word": "an",
+"block": 0,
+"start": 2.61,
+"end": 2.8
+},
+{
+"word": "arm.",
+"block": 0,
+"start": 2.81,
+"end": 3.07
+},
+{
+"word": "And",
+"block": 0,
+"start": 3.47,
+"end": 3.52
+},
+{
+"word": "this",
+"block": 0,
+"start": 3.51,
+"end": 3.7
+},
+{
+"word": "is",
+"block": 0,
+"start": 3.71,
+"end": 3.9
+},
+{
+"word": "real",
+"block": 0,
+"start": 3.91,
+"end": 4.22
+},
+{
+"word": "footage",
+"block": 0,
+"start": 4.23,
+"end": 4.66
+},
+{
+"word": "of",
+"block": 0,
+"start": 4.67,
+"end": 4.78
+},
+{
+"word": "it",
+"block": 0,
+"start": 4.79,
+"end": 4.88
+},
+{
+"word": "cutting",
+"block": 0,
+"start": 4.91,
+"end": 5.18
+},
+{
+"word": "branches",
+"block": 0,
+"start": 5.19,
+"end": 5.75
+},
+{
+"word": "beside",
+"block": 0,
+"start": 5.75,
+"end": 6.02
+},
+{
+"word": "a",
+"block": 0,
+"start": 6.03,
+"end": 6.18
+},
+{
+"word": "railway.",
+"block": 0,
+"start": 6.19,
+"end": 6.64
+},
+{
+"word": "Watch",
+"block": 0,
+"start": 7.09,
+"end": 7.26
+},
+{
+"word": "the",
+"block": 0,
+"start": 7.265,
+"end": 7.42
+},
+{
+"word": "other",
+"block": 0,
+"start": 7.425,
+"end": 7.7
+},
+{
+"word": "hand.",
+"block": 0,
+"start": 7.705,
+"end": 7.91
+},
+{
+"word": "It",
+"block": 0,
+"start": 8.28,
+"end": 8.33
+},
+{
+"word": "grabs",
+"block": 0,
+"start": 8.32,
+"end": 8.69
+},
+{
+"word": "the",
+"block": 0,
+"start": 8.695,
+"end": 8.85
+},
+{
+"word": "branch",
+"block": 0,
+"start": 8.855,
+"end": 9.32
+},
+{
+"word": "before",
+"block": 0,
+"start": 9.44,
+"end": 9.53
+},
+{
+"word": "the",
+"block": 0,
+"start": 9.54,
+"end": 9.73
+},
+{
+"word": "saw",
+"block": 0,
+"start": 9.74,
+"end": 9.97
+},
+{
+"word": "touches",
+"block": 0,
+"start": 9.98,
+"end": 10.48
+},
+{
+"word": "it.",
+"block": 0,
+"start": 10.96,
+"end": 11.01
+},
+{
+"word": "As",
+"block": 0,
+"start": 11.0,
+"end": 11.05
+},
+{
+"word": "the",
+"block": 0,
+"start": 11.04,
+"end": 11.09
+},
+{
+"word": "blade",
+"block": 0,
+"start": 11.08,
+"end": 11.43
+},
+{
+"word": "cuts",
+"block": 0,
+"start": 11.44,
+"end": 11.79
+},
+{
+"word": "through,",
+"block": 0,
+"start": 11.8,
+"end": 12.08
+},
+{
+"word": "that",
+"block": 0,
+"start": 12.32,
+"end": 12.43
+},
+{
+"word": "claw",
+"block": 0,
+"start": 12.44,
+"end": 12.83
+},
+{
+"word": "is",
+"block": 0,
+"start": 12.84,
+"end": 12.99
+},
+{
+"word": "still",
+"block": 0,
+"start": 13.0,
+"end": 13.32
+},
+{
+"word": "holding",
+"block": 0,
+"start": 13.32,
+"end": 13.71
+},
+{
+"word": "the",
+"block": 0,
+"start": 13.72,
+"end": 13.91
+},
+{
+"word": "wood.",
+"block": 0,
+"start": 13.92,
+"end": 14.08
+},
+{
+"word": "That's",
+"block": 0,
+"start": 14.51,
+"end": 14.62
+},
+{
+"word": "important,",
+"block": 0,
+"start": 14.655,
+"end": 15.15
+},
+{
+"word": "because",
+"block": 0,
+"start": 15.175,
+"end": 15.41
+},
+{
+"word": "a",
+"block": 0,
+"start": 15.415,
+"end": 15.57
+},
+{
+"word": "falling",
+"block": 0,
+"start": 15.575,
+"end": 15.93
+},
+{
+"word": "branch",
+"block": 0,
+"start": 15.935,
+"end": 16.29
+},
+{
+"word": "and",
+"block": 0,
+"start": 16.295,
+"end": 16.41
+},
+{
+"word": "train",
+"block": 0,
+"start": 16.415,
+"end": 16.69
+},
+{
+"word": "tracks",
+"block": 0,
+"start": 16.695,
+"end": 17.05
+},
+{
+"word": "are",
+"block": 0,
+"start": 17.055,
+"end": 17.21
+},
+{
+"word": "a",
+"block": 0,
+"start": 17.215,
+"end": 17.41
+},
+{
+"word": "terrible",
+"block": 0,
+"start": 17.415,
+"end": 17.95
+},
+{
+"word": "combination.",
+"block": 0,
+"start": 17.975,
+"end": 18.65
+},
+{
+"word": "But",
+"block": 0,
+"start": 19.7,
+"end": 19.75
+},
+{
+"word": "now",
+"block": 0,
+"start": 19.74,
+"end": 19.89
+},
+{
+"word": "look",
+"block": 0,
+"start": 19.9,
+"end": 20.05
+},
+{
+"word": "at",
+"block": 0,
+"start": 20.06,
+"end": 20.21
+},
+{
+"word": "the",
+"block": 0,
+"start": 20.22,
+"end": 20.29
+},
+{
+"word": "rest",
+"block": 0,
+"start": 20.3,
+"end": 20.59
+},
+{
+"word": "of",
+"block": 0,
+"start": 20.62,
+"end": 20.69
+},
+{
+"word": "the",
+"block": 0,
+"start": 20.7,
+"end": 20.81
+},
+{
+"word": "robot.",
+"block": 0,
+"start": 20.82,
+"end": 21.19
+},
+{
+"word": "It",
+"block": 0,
+"start": 21.67,
+"end": 21.72
+},
+{
+"word": "doesn't",
+"block": 0,
+"start": 21.71,
+"end": 22.02
+},
+{
+"word": "have",
+"block": 0,
+"start": 22.03,
+"end": 22.26
+},
+{
+"word": "legs.",
+"block": 0,
+"start": 22.27,
+"end": 22.65
+},
+{
+"word": "It's",
+"block": 0,
+"start": 23.4,
+"end": 23.45
+},
+{
+"word": "attached",
+"block": 0,
+"start": 23.46,
+"end": 23.9
+},
+{
+"word": "to",
+"block": 0,
+"start": 23.9,
+"end": 24.05
+},
+{
+"word": "a",
+"block": 0,
+"start": 24.06,
+"end": 24.17
+},
+{
+"word": "massive",
+"block": 0,
+"start": 24.18,
+"end": 24.73
+},
+{
+"word": "boom,",
+"block": 0,
+"start": 24.74,
+"end": 25.12
+},
+{
+"word": "rising",
+"block": 0,
+"start": 25.33,
+"end": 25.62
+},
+{
+"word": "out",
+"block": 0,
+"start": 25.625,
+"end": 25.78
+},
+{
+"word": "of",
+"block": 0,
+"start": 25.785,
+"end": 25.86
+},
+{
+"word": "a",
+"block": 0,
+"start": 25.865,
+"end": 26.02
+},
+{
+"word": "railway",
+"block": 0,
+"start": 26.025,
+"end": 26.42
+},
+{
+"word": "maintenance",
+"block": 0,
+"start": 26.425,
+"end": 26.94
+},
+{
+"word": "vehicle.",
+"block": 0,
+"start": 26.945,
+"end": 27.29
+},
+{
+"word": "And",
+"block": 0,
+"start": 27.79,
+"end": 27.84
+},
+{
+"word": "it's",
+"block": 0,
+"start": 27.83,
+"end": 27.97
+},
+{
+"word": "not",
+"block": 0,
+"start": 27.98,
+"end": 28.17
+},
+{
+"word": "deciding",
+"block": 0,
+"start": 28.18,
+"end": 28.69
+},
+{
+"word": "where",
+"block": 0,
+"start": 28.7,
+"end": 28.9
+},
+{
+"word": "to",
+"block": 0,
+"start": 28.9,
+"end": 29.09
+},
+{
+"word": "cut.",
+"block": 0,
+"start": 29.1,
+"end": 29.26
+},
+{
+"word": "A",
+"block": 0,
+"start": 29.68,
+"end": 29.75
+},
+{
+"word": "PERSON",
+"block": 0,
+"start": 29.75,
+"end": 30.26
+},
+{
+"word": "is",
+"block": 0,
+"start": 30.27,
+"end": 30.42
+},
+{
+"word": "controlling",
+"block": 0,
+"start": 30.43,
+"end": 31.03
+},
+{
+"word": "every",
+"block": 0,
+"start": 31.15,
+"end": 31.48
+},
+{
+"word": "movement.",
+"block": 0,
+"start": 31.49,
+"end": 31.97
+},
+{
+"word": "From",
+"block": 0,
+"start": 32.72,
+"end": 32.77
+},
+{
+"word": "a",
+"block": 0,
+"start": 32.76,
+"end": 32.86
+},
+{
+"word": "cabin",
+"block": 0,
+"start": 32.87,
+"end": 33.26
+},
+{
+"word": "below,",
+"block": 0,
+"start": 33.27,
+"end": 33.65
+},
+{
+"word": "the",
+"block": 0,
+"start": 33.92,
+"end": 33.97
+},
+{
+"word": "operator",
+"block": 0,
+"start": 33.96,
+"end": 34.5
+},
+{
+"word": "watches",
+"block": 0,
+"start": 34.505,
+"end": 34.9
+},
+{
+"word": "through",
+"block": 0,
+"start": 34.905,
+"end": 35.02
+},
+{
+"word": "the",
+"block": 0,
+"start": 35.025,
+"end": 35.14
+},
+{
+"word": "robot's",
+"block": 0,
+"start": 35.145,
+"end": 35.66
+},
+{
+"word": "cameras",
+"block": 0,
+"start": 35.665,
+"end": 36.1
+},
+{
+"word": "and",
+"block": 0,
+"start": 36.105,
+"end": 36.22
+},
+{
+"word": "moves",
+"block": 0,
+"start": 36.225,
+"end": 36.54
+},
+{
+"word": "its",
+"block": 0,
+"start": 36.545,
+"end": 36.74
+},
+{
+"word": "arms",
+"block": 0,
+"start": 36.745,
+"end": 37.06
+},
+{
+"word": "using",
+"block": 0,
+"start": 37.065,
+"end": 37.38
+},
+{
+"word": "hand",
+"block": 0,
+"start": 37.385,
+"end": 37.62
+},
+{
+"word": "controls.",
+"block": 0,
+"start": 37.625,
+"end": 38.13
+},
+{
+"word": "It",
+"block": 0,
+"start": 38.64,
+"end": 38.69
+},
+{
+"word": "looks",
+"block": 0,
+"start": 38.68,
+"end": 38.85
+},
+{
+"word": "like",
+"block": 0,
+"start": 38.865,
+"end": 39.06
+},
+{
+"word": "a",
+"block": 0,
+"start": 39.065,
+"end": 39.22
+},
+{
+"word": "giant",
+"block": 0,
+"start": 39.225,
+"end": 39.66
+},
+{
+"word": "humanoid",
+"block": 0,
+"start": 39.665,
+"end": 40.26
+},
+{
+"word": "robot,",
+"block": 0,
+"start": 40.265,
+"end": 40.65
+},
+{
+"word": "but",
+"block": 0,
+"start": 41.06,
+"end": 41.11
+},
+{
+"word": "the",
+"block": 0,
+"start": 41.1,
+"end": 41.21
+},
+{
+"word": "actual",
+"block": 0,
+"start": 41.215,
+"end": 41.69
+},
+{
+"word": "intelligence",
+"block": 0,
+"start": 41.695,
+"end": 42.33
+},
+{
+"word": "is",
+"block": 0,
+"start": 42.335,
+"end": 42.49
+},
+{
+"word": "sitting",
+"block": 0,
+"start": 42.495,
+"end": 42.85
+},
+{
+"word": "at",
+"block": 0,
+"start": 42.855,
+"end": 43.01
+},
+{
+"word": "the",
+"block": 0,
+"start": 43.015,
+"end": 43.13
+},
+{
+"word": "bottom.",
+"block": 0,
+"start": 43.135,
+"end": 43.47
+},
+{
+"word": "And",
+"block": 1,
+"start": 44.8,
+"end": 44.91
+},
+{
+"word": "those",
+"block": 1,
+"start": 44.92,
+"end": 45.11
+},
+{
+"word": "two",
+"block": 1,
+"start": 45.12,
+"end": 45.36
+},
+{
+"word": "arms",
+"block": 1,
+"start": 45.36,
+"end": 45.67
+},
+{
+"word": "aren't",
+"block": 1,
+"start": 45.68,
+"end": 45.99
+},
+{
+"word": "just",
+"block": 1,
+"start": 46.0,
+"end": 46.22
+},
+{
+"word": "for",
+"block": 1,
+"start": 46.24,
+"end": 46.43
+},
+{
+"word": "show.",
+"block": 1,
+"start": 46.44,
+"end": 46.78
+},
+{
+"word": "One",
+"block": 1,
+"start": 47.21,
+"end": 47.31
+},
+{
+"word": "grips",
+"block": 1,
+"start": 47.315,
+"end": 47.71
+},
+{
+"word": "the",
+"block": 1,
+"start": 47.715,
+"end": 47.87
+},
+{
+"word": "branch",
+"block": 1,
+"start": 47.875,
+"end": 48.23
+},
+{
+"word": "and",
+"block": 1,
+"start": 48.235,
+"end": 48.35
+},
+{
+"word": "takes",
+"block": 1,
+"start": 48.355,
+"end": 48.63
+},
+{
+"word": "its",
+"block": 1,
+"start": 48.635,
+"end": 48.91
+},
+{
+"word": "weight.",
+"block": 1,
+"start": 48.915,
+"end": 49.15
+},
+{
+"word": "The",
+"block": 1,
+"start": 49.56,
+"end": 49.61
+},
+{
+"word": "other",
+"block": 1,
+"start": 49.6,
+"end": 49.87
+},
+{
+"word": "angles",
+"block": 1,
+"start": 49.875,
+"end": 50.39
+},
+{
+"word": "the",
+"block": 1,
+"start": 50.395,
+"end": 50.55
+},
+{
+"word": "chainsaw",
+"block": 1,
+"start": 50.555,
+"end": 51.11
+},
+{
+"word": "into",
+"block": 1,
+"start": 51.115,
+"end": 51.31
+},
+{
+"word": "the",
+"block": 1,
+"start": 51.315,
+"end": 51.47
+},
+{
+"word": "cut.",
+"block": 1,
+"start": 51.475,
+"end": 51.71
+},
+{
+"word": "As",
+"block": 1,
+"start": 52.21,
+"end": 52.26
+},
+{
+"word": "the",
+"block": 1,
+"start": 52.25,
+"end": 52.35
+},
+{
+"word": "blade",
+"block": 1,
+"start": 52.36,
+"end": 52.71
+},
+{
+"word": "breaks",
+"block": 1,
+"start": 52.72,
+"end": 53.15
+},
+{
+"word": "through,",
+"block": 1,
+"start": 53.16,
+"end": 53.43
+},
+{
+"word": "the",
+"block": 1,
+"start": 53.69,
+"end": 53.74
+},
+{
+"word": "claw",
+"block": 1,
+"start": 53.73,
+"end": 53.99
+},
+{
+"word": "can",
+"block": 1,
+"start": 54.0,
+"end": 54.19
+},
+{
+"word": "keep",
+"block": 1,
+"start": 54.2,
+"end": 54.39
+},
+{
+"word": "holding",
+"block": 1,
+"start": 54.4,
+"end": 54.8
+},
+{
+"word": "the",
+"block": 1,
+"start": 54.8,
+"end": 54.92
+},
+{
+"word": "branch",
+"block": 1,
+"start": 54.92,
+"end": 55.31
+},
+{
+"word": "instead",
+"block": 1,
+"start": 55.32,
+"end": 55.63
+},
+{
+"word": "of",
+"block": 1,
+"start": 55.64,
+"end": 55.76
+},
+{
+"word": "letting",
+"block": 1,
+"start": 55.76,
+"end": 56.0
+},
+{
+"word": "it",
+"block": 1,
+"start": 56.0,
+"end": 56.15
+},
+{
+"word": "drop",
+"block": 1,
+"start": 56.16,
+"end": 56.43
+},
+{
+"word": "onto",
+"block": 1,
+"start": 56.44,
+"end": 56.67
+},
+{
+"word": "the",
+"block": 1,
+"start": 56.68,
+"end": 56.8
+},
+{
+"word": "railway.",
+"block": 1,
+"start": 56.8,
+"end": 57.25
+},
+{
+"word": "A",
+"block": 1,
+"start": 57.81,
+"end": 57.86
+},
+{
+"word": "crane",
+"block": 1,
+"start": 57.85,
+"end": 58.21
+},
+{
+"word": "can",
+"block": 1,
+"start": 58.21,
+"end": 58.4
+},
+{
+"word": "lift",
+"block": 1,
+"start": 58.41,
+"end": 58.8
+},
+{
+"word": "something.",
+"block": 1,
+"start": 58.81,
+"end": 59.17
+},
+{
+"word": "A",
+"block": 1,
+"start": 59.47,
+"end": 59.52
+},
+{
+"word": "chainsaw",
+"block": 1,
+"start": 59.51,
+"end": 60.07
+},
+{
+"word": "can",
+"block": 1,
+"start": 60.08,
+"end": 60.32
+},
+{
+"word": "cut",
+"block": 1,
+"start": 60.32,
+"end": 60.63
+},
+{
+"word": "something.",
+"block": 1,
+"start": 60.64,
+"end": 60.98
+},
+{
+"word": "This",
+"block": 1,
+"start": 61.45,
+"end": 61.5
+},
+{
+"word": "machine",
+"block": 1,
+"start": 61.495,
+"end": 62.01
+},
+{
+"word": "is",
+"block": 1,
+"start": 62.015,
+"end": 62.13
+},
+{
+"word": "designed",
+"block": 1,
+"start": 62.135,
+"end": 62.53
+},
+{
+"word": "to",
+"block": 1,
+"start": 62.535,
+"end": 62.69
+},
+{
+"word": "do",
+"block": 1,
+"start": 62.695,
+"end": 62.88
+},
+{
+"word": "BOTH,",
+"block": 1,
+"start": 62.935,
+"end": 63.21
+},
+{
+"word": "at",
+"block": 1,
+"start": 63.54,
+"end": 63.61
+},
+{
+"word": "the",
+"block": 1,
+"start": 63.615,
+"end": 63.77
+},
+{
+"word": "same",
+"block": 1,
+"start": 63.775,
+"end": 64.17
+},
+{
+"word": "time,",
+"block": 1,
+"start": 64.175,
+"end": 64.51
+},
+{
+"word": "under",
+"block": 1,
+"start": 64.72,
+"end": 64.93
+},
+{
+"word": "one",
+"block": 1,
+"start": 64.935,
+"end": 65.17
+},
+{
+"word": "person's",
+"block": 1,
+"start": 65.175,
+"end": 65.73
+},
+{
+"word": "control.",
+"block": 1,
+"start": 65.735,
+"end": 66.15
+},
+{
+"word": "But",
+"block": 1,
+"start": 67.0,
+"end": 67.05
+},
+{
+"word": "there's",
+"block": 1,
+"start": 67.04,
+"end": 67.17
+},
+{
+"word": "another",
+"block": 1,
+"start": 67.18,
+"end": 67.49
+},
+{
+"word": "piece",
+"block": 1,
+"start": 67.5,
+"end": 67.73
+},
+{
+"word": "of",
+"block": 1,
+"start": 67.74,
+"end": 67.85
+},
+{
+"word": "engineering",
+"block": 1,
+"start": 67.86,
+"end": 68.41
+},
+{
+"word": "you",
+"block": 1,
+"start": 68.42,
+"end": 68.54
+},
+{
+"word": "can't",
+"block": 1,
+"start": 68.58,
+"end": 68.9
+},
+{
+"word": "see",
+"block": 1,
+"start": 68.9,
+"end": 69.09
+},
+{
+"word": "in",
+"block": 1,
+"start": 69.1,
+"end": 69.21
+},
+{
+"word": "the",
+"block": 1,
+"start": 69.22,
+"end": 69.27
+},
+{
+"word": "footage.",
+"block": 1,
+"start": 69.34,
+"end": 69.72
+},
+{
+"word": "The",
+"block": 1,
+"start": 70.24,
+"end": 70.29
+},
+{
+"word": "Japanese",
+"block": 1,
+"start": 70.28,
+"end": 70.77
+},
+{
+"word": "robotics",
+"block": 1,
+"start": 70.78,
+"end": 71.29
+},
+{
+"word": "company",
+"block": 1,
+"start": 71.3,
+"end": 71.65
+},
+{
+"word": "behind",
+"block": 1,
+"start": 71.66,
+"end": 71.98
+},
+{
+"word": "this",
+"block": 1,
+"start": 71.98,
+"end": 72.13
+},
+{
+"word": "kind",
+"block": 1,
+"start": 72.14,
+"end": 72.29
+},
+{
+"word": "of",
+"block": 1,
+"start": 72.3,
+"end": 72.42
+},
+{
+"word": "machine",
+"block": 1,
+"start": 72.42,
+"end": 72.85
+},
+{
+"word": "developed",
+"block": 1,
+"start": 72.86,
+"end": 73.29
+},
+{
+"word": "something",
+"block": 1,
+"start": 73.3,
+"end": 73.61
+},
+{
+"word": "called",
+"block": 1,
+"start": 73.62,
+"end": 73.98
+},
+{
+"word": "bilateral",
+"block": 1,
+"start": 73.98,
+"end": 74.77
+},
+{
+"word": "control.",
+"block": 1,
+"start": 74.78,
+"end": 75.25
+},
+{
+"word": "Tiny",
+"block": 1,
+"start": 75.77,
+"end": 76.07
+},
+{
+"word": "movements",
+"block": 1,
+"start": 76.07,
+"end": 76.51
+},
+{
+"word": "at",
+"block": 1,
+"start": 76.51,
+"end": 76.63
+},
+{
+"word": "the",
+"block": 1,
+"start": 76.63,
+"end": 76.7
+},
+{
+"word": "operator's",
+"block": 1,
+"start": 76.71,
+"end": 77.27
+},
+{
+"word": "controls",
+"block": 1,
+"start": 77.31,
+"end": 77.83
+},
+{
+"word": "command",
+"block": 1,
+"start": 77.87,
+"end": 78.26
+},
+{
+"word": "much",
+"block": 1,
+"start": 78.27,
+"end": 78.58
+},
+{
+"word": "larger",
+"block": 1,
+"start": 78.59,
+"end": 78.94
+},
+{
+"word": "forces",
+"block": 1,
+"start": 78.95,
+"end": 79.42
+},
+{
+"word": "at",
+"block": 1,
+"start": 79.43,
+"end": 79.5
+},
+{
+"word": "the",
+"block": 1,
+"start": 79.55,
+"end": 79.66
+},
+{
+"word": "robot.",
+"block": 1,
+"start": 79.67,
+"end": 80.07
+},
+{
+"word": "And",
+"block": 1,
+"start": 80.56,
+"end": 80.61
+},
+{
+"word": "resistance",
+"block": 1,
+"start": 80.6,
+"end": 81.11
+},
+{
+"word": "at",
+"block": 1,
+"start": 81.115,
+"end": 81.23
+},
+{
+"word": "the",
+"block": 1,
+"start": 81.235,
+"end": 81.35
+},
+{
+"word": "robot",
+"block": 1,
+"start": 81.355,
+"end": 81.82
+},
+{
+"word": "can",
+"block": 1,
+"start": 81.835,
+"end": 81.95
+},
+{
+"word": "be",
+"block": 1,
+"start": 81.955,
+"end": 82.07
+},
+{
+"word": "transmitted",
+"block": 1,
+"start": 82.075,
+"end": 82.69
+},
+{
+"word": "back",
+"block": 1,
+"start": 82.715,
+"end": 82.95
+},
+{
+"word": "through",
+"block": 1,
+"start": 82.955,
+"end": 83.19
+},
+{
+"word": "those",
+"block": 1,
+"start": 83.195,
+"end": 83.46
+},
+{
+"word": "controls,",
+"block": 1,
+"start": 83.475,
+"end": 84.02
+},
+{
+"word": "so",
+"block": 1,
+"start": 84.34,
+"end": 84.39
+},
+{
+"word": "the",
+"block": 1,
+"start": 84.38,
+"end": 84.49
+},
+{
+"word": "person",
+"block": 1,
+"start": 84.5,
+"end": 84.81
+},
+{
+"word": "can",
+"block": 1,
+"start": 84.82,
+"end": 85.01
+},
+{
+"word": "actually",
+"block": 1,
+"start": 85.02,
+"end": 85.49
+},
+{
+"word": "sense",
+"block": 1,
+"start": 85.5,
+"end": 85.85
+},
+{
+"word": "how",
+"block": 1,
+"start": 85.86,
+"end": 86.01
+},
+{
+"word": "hard",
+"block": 1,
+"start": 86.02,
+"end": 86.33
+},
+{
+"word": "the",
+"block": 1,
+"start": 86.34,
+"end": 86.45
+},
+{
+"word": "machine",
+"block": 1,
+"start": 86.46,
+"end": 86.81
+},
+{
+"word": "is",
+"block": 1,
+"start": 86.82,
+"end": 87.01
+},
+{
+"word": "pushing.",
+"block": 1,
+"start": 87.02,
+"end": 87.33
+},
+{
+"word": "Imagine",
+"block": 1,
+"start": 88.13,
+"end": 88.46
+},
+{
+"word": "touching",
+"block": 1,
+"start": 88.465,
+"end": 88.78
+},
+{
+"word": "a",
+"block": 1,
+"start": 88.785,
+"end": 88.9
+},
+{
+"word": "tree",
+"block": 1,
+"start": 88.905,
+"end": 89.14
+},
+{
+"word": "branch",
+"block": 1,
+"start": 89.145,
+"end": 89.5
+},
+{
+"word": "with",
+"block": 1,
+"start": 89.505,
+"end": 89.62
+},
+{
+"word": "your",
+"block": 1,
+"start": 89.625,
+"end": 89.75
+},
+{
+"word": "fingertips.",
+"block": 1,
+"start": 89.785,
+"end": 90.41
+},
+{
+"word": "Except",
+"block": 1,
+"start": 90.89,
+"end": 91.2
+},
+{
+"word": "your",
+"block": 1,
+"start": 91.21,
+"end": 91.44
+},
+{
+"word": "fingers",
+"block": 1,
+"start": 91.45,
+"end": 91.92
+},
+{
+"word": "are",
+"block": 1,
+"start": 91.93,
+"end": 92.13
+},
+{
+"word": "now",
+"block": 1,
+"start": 92.13,
+"end": 92.36
+},
+{
+"word": "giant",
+"block": 1,
+"start": 92.37,
+"end": 92.85
+},
+{
+"word": "STEEL",
+"block": 1,
+"start": 92.85,
+"end": 93.37
+},
+{
+"word": "ARMS.",
+"block": 1,
+"start": 93.37,
+"end": 93.86
+},
+{
+"word": "And",
+"block": 2,
+"start": 95.85,
+"end": 96.0
+},
+{
+"word": "this",
+"block": 2,
+"start": 96.01,
+"end": 96.2
+},
+{
+"word": "isn't",
+"block": 2,
+"start": 96.21,
+"end": 96.64
+},
+{
+"word": "just",
+"block": 2,
+"start": 96.65,
+"end": 96.88
+},
+{
+"word": "a",
+"block": 2,
+"start": 96.89,
+"end": 97.04
+},
+{
+"word": "robotics",
+"block": 2,
+"start": 97.05,
+"end": 97.64
+},
+{
+"word": "stunt.",
+"block": 2,
+"start": 97.65,
+"end": 97.98
+},
+{
+"word": "Railway",
+"block": 2,
+"start": 98.43,
+"end": 98.76
+},
+{
+"word": "workers",
+"block": 2,
+"start": 98.765,
+"end": 99.12
+},
+{
+"word": "have",
+"block": 2,
+"start": 99.125,
+"end": 99.28
+},
+{
+"word": "to",
+"block": 2,
+"start": 99.285,
+"end": 99.4
+},
+{
+"word": "maintain",
+"block": 2,
+"start": 99.405,
+"end": 99.8
+},
+{
+"word": "equipment",
+"block": 2,
+"start": 99.805,
+"end": 100.36
+},
+{
+"word": "high",
+"block": 2,
+"start": 100.365,
+"end": 100.52
+},
+{
+"word": "above",
+"block": 2,
+"start": 100.525,
+"end": 100.88
+},
+{
+"word": "the",
+"block": 2,
+"start": 100.885,
+"end": 101.04
+},
+{
+"word": "tracks,",
+"block": 2,
+"start": 101.045,
+"end": 101.43
+},
+{
+"word": "sometimes",
+"block": 2,
+"start": 101.63,
+"end": 102.0
+},
+{
+"word": "near",
+"block": 2,
+"start": 102.01,
+"end": 102.28
+},
+{
+"word": "overhead",
+"block": 2,
+"start": 102.29,
+"end": 102.68
+},
+{
+"word": "electrical",
+"block": 2,
+"start": 102.69,
+"end": 103.24
+},
+{
+"word": "hardware.",
+"block": 2,
+"start": 103.25,
+"end": 103.67
+},
+{
+"word": "That",
+"block": 2,
+"start": 104.16,
+"end": 104.21
+},
+{
+"word": "means",
+"block": 2,
+"start": 104.2,
+"end": 104.53
+},
+{
+"word": "climbing,",
+"block": 2,
+"start": 104.555,
+"end": 105.13
+},
+{
+"word": "handling",
+"block": 2,
+"start": 105.33,
+"end": 105.62
+},
+{
+"word": "heavy",
+"block": 2,
+"start": 105.63,
+"end": 105.94
+},
+{
+"word": "tools,",
+"block": 2,
+"start": 105.95,
+"end": 106.39
+},
+{
+"word": "and",
+"block": 2,
+"start": 106.54,
+"end": 106.59
+},
+{
+"word": "controlling",
+"block": 2,
+"start": 106.585,
+"end": 107.14
+},
+{
+"word": "things",
+"block": 2,
+"start": 107.145,
+"end": 107.46
+},
+{
+"word": "that",
+"block": 2,
+"start": 107.465,
+"end": 107.62
+},
+{
+"word": "can",
+"block": 2,
+"start": 107.625,
+"end": 107.86
+},
+{
+"word": "fall.",
+"block": 2,
+"start": 107.865,
+"end": 108.08
+},
+{
+"word": "Moving",
+"block": 2,
+"start": 108.64,
+"end": 108.79
+},
+{
+"word": "the",
+"block": 2,
+"start": 108.8,
+"end": 108.99
+},
+{
+"word": "operator",
+"block": 2,
+"start": 109.0,
+"end": 109.6
+},
+{
+"word": "away",
+"block": 2,
+"start": 109.6,
+"end": 109.84
+},
+{
+"word": "from",
+"block": 2,
+"start": 109.84,
+"end": 109.99
+},
+{
+"word": "the",
+"block": 2,
+"start": 110.0,
+"end": 110.15
+},
+{
+"word": "dangerous",
+"block": 2,
+"start": 110.16,
+"end": 110.67
+},
+{
+"word": "part",
+"block": 2,
+"start": 110.68,
+"end": 110.87
+},
+{
+"word": "of",
+"block": 2,
+"start": 110.88,
+"end": 110.95
+},
+{
+"word": "the",
+"block": 2,
+"start": 110.96,
+"end": 111.11
+},
+{
+"word": "job",
+"block": 2,
+"start": 111.12,
+"end": 111.47
+},
+{
+"word": "changes",
+"block": 2,
+"start": 111.48,
+"end": 111.99
+},
+{
+"word": "the",
+"block": 2,
+"start": 112.0,
+"end": 112.19
+},
+{
+"word": "risk.",
+"block": 2,
+"start": 112.2,
+"end": 112.5
+},
+{
+"word": "That's",
+"block": 2,
+"start": 113.35,
+"end": 113.43
+},
+{
+"word": "one",
+"block": 2,
+"start": 113.44,
+"end": 113.64
+},
+{
+"word": "reason",
+"block": 2,
+"start": 113.64,
+"end": 114.03
+},
+{
+"word": "Japan's",
+"block": 2,
+"start": 114.04,
+"end": 114.51
+},
+{
+"word": "railways",
+"block": 2,
+"start": 114.52,
+"end": 114.95
+},
+{
+"word": "are",
+"block": 2,
+"start": 114.96,
+"end": 115.08
+},
+{
+"word": "putting",
+"block": 2,
+"start": 115.08,
+"end": 115.32
+},
+{
+"word": "machines",
+"block": 2,
+"start": 115.32,
+"end": 115.8
+},
+{
+"word": "like",
+"block": 2,
+"start": 115.8,
+"end": 115.95
+},
+{
+"word": "this",
+"block": 2,
+"start": 115.96,
+"end": 116.15
+},
+{
+"word": "to",
+"block": 2,
+"start": 116.16,
+"end": 116.35
+},
+{
+"word": "work.",
+"block": 2,
+"start": 116.36,
+"end": 116.54
+},
+{
+"word": "JR",
+"block": 2,
+"start": 117.1,
+"end": 117.41
+},
+{
+"word": "East",
+"block": 2,
+"start": 117.42,
+"end": 117.73
+},
+{
+"word": "introduced",
+"block": 2,
+"start": 117.74,
+"end": 118.27
+},
+{
+"word": "this",
+"block": 2,
+"start": 118.3,
+"end": 118.49
+},
+{
+"word": "type",
+"block": 2,
+"start": 118.5,
+"end": 118.69
+},
+{
+"word": "of",
+"block": 2,
+"start": 118.7,
+"end": 118.82
+},
+{
+"word": "machine",
+"block": 2,
+"start": 118.82,
+"end": 119.24
+},
+{
+"word": "earlier",
+"block": 2,
+"start": 119.26,
+"end": 119.73
+},
+{
+"word": "this",
+"block": 2,
+"start": 119.74,
+"end": 119.97
+},
+{
+"word": "year.",
+"block": 2,
+"start": 119.98,
+"end": 120.15
+},
+{
+"word": "And",
+"block": 2,
+"start": 120.61,
+"end": 120.66
+},
+{
+"word": "JR",
+"block": 2,
+"start": 120.66,
+"end": 121.09
+},
+{
+"word": "West,",
+"block": 2,
+"start": 121.1,
+"end": 121.52
+},
+{
+"word": "which",
+"block": 2,
+"start": 121.7,
+"end": 121.76
+},
+{
+"word": "was",
+"block": 2,
+"start": 121.77,
+"end": 121.89
+},
+{
+"word": "already",
+"block": 2,
+"start": 121.89,
+"end": 122.32
+},
+{
+"word": "using",
+"block": 2,
+"start": 122.33,
+"end": 122.61
+},
+{
+"word": "a",
+"block": 2,
+"start": 122.61,
+"end": 122.73
+},
+{
+"word": "related",
+"block": 2,
+"start": 122.73,
+"end": 123.12
+},
+{
+"word": "system",
+"block": 2,
+"start": 123.13,
+"end": 123.52
+},
+{
+"word": "in",
+"block": 2,
+"start": 123.53,
+"end": 123.64
+},
+{
+"word": "2024,",
+"block": 2,
+"start": 123.65,
+"end": 124.56
+},
+{
+"word": "is",
+"block": 2,
+"start": 124.88,
+"end": 124.93
+},
+{
+"word": "rolling",
+"block": 2,
+"start": 124.92,
+"end": 125.31
+},
+{
+"word": "out",
+"block": 2,
+"start": 125.32,
+"end": 125.47
+},
+{
+"word": "an",
+"block": 2,
+"start": 125.48,
+"end": 125.63
+},
+{
+"word": "improved",
+"block": 2,
+"start": 125.64,
+"end": 126.13
+},
+{
+"word": "humanoid",
+"block": 2,
+"start": 126.16,
+"end": 126.72
+},
+{
+"word": "model",
+"block": 2,
+"start": 126.72,
+"end": 127.05
+},
+{
+"word": "with",
+"block": 2,
+"start": 127.08,
+"end": 127.23
+},
+{
+"word": "an",
+"block": 2,
+"start": 127.24,
+"end": 127.33
+},
+{
+"word": "even",
+"block": 2,
+"start": 127.44,
+"end": 127.79
+},
+{
+"word": "longer",
+"block": 2,
+"start": 127.8,
+"end": 128.27
+},
+{
+"word": "reach.",
+"block": 2,
+"start": 128.28,
+"end": 128.59
+},
+{
+"word": "It's",
+"block": 2,
+"start": 129.12,
+"end": 129.21
+},
+{
+"word": "also",
+"block": 2,
+"start": 129.215,
+"end": 129.49
+},
+{
+"word": "introducing",
+"block": 2,
+"start": 129.495,
+"end": 130.09
+},
+{
+"word": "a",
+"block": 2,
+"start": 130.095,
+"end": 130.21
+},
+{
+"word": "separate",
+"block": 2,
+"start": 130.215,
+"end": 130.61
+},
+{
+"word": "single-arm",
+"block": 2,
+"start": 130.615,
+"end": 131.01
+},
+{
+"word": "robot",
+"block": 2,
+"start": 131.015,
+"end": 131.73
+},
+{
+"word": "built",
+"block": 2,
+"start": 131.735,
+"end": 131.92
+},
+{
+"word": "for",
+"block": 2,
+"start": 131.935,
+"end": 132.05
+},
+{
+"word": "lifting",
+"block": 2,
+"start": 132.055,
+"end": 132.45
+},
+{
+"word": "heavy",
+"block": 2,
+"start": 132.455,
+"end": 132.77
+},
+{
+"word": "railway",
+"block": 2,
+"start": 132.775,
+"end": 133.25
+},
+{
+"word": "components.",
+"block": 2,
+"start": 133.255,
+"end": 133.77
+},
+{
+"word": "The",
+"block": 2,
+"start": 134.31,
+"end": 134.36
+},
+{
+"word": "goal",
+"block": 2,
+"start": 134.35,
+"end": 134.63
+},
+{
+"word": "is",
+"block": 2,
+"start": 134.64,
+"end": 134.83
+},
+{
+"word": "safer",
+"block": 2,
+"start": 134.84,
+"end": 135.23
+},
+{
+"word": "maintenance,",
+"block": 2,
+"start": 135.24,
+"end": 135.8
+},
+{
+"word": "with",
+"block": 2,
+"start": 136.03,
+"end": 136.08
+},
+{
+"word": "fewer",
+"block": 2,
+"start": 136.075,
+"end": 136.47
+},
+{
+"word": "people",
+"block": 2,
+"start": 136.475,
+"end": 136.75
+},
+{
+"word": "needed",
+"block": 2,
+"start": 136.755,
+"end": 137.13
+},
+{
+"word": "for",
+"block": 2,
+"start": 137.155,
+"end": 137.31
+},
+{
+"word": "each",
+"block": 2,
+"start": 137.315,
+"end": 137.59
+},
+{
+"word": "job.",
+"block": 2,
+"start": 137.595,
+"end": 137.9
+},
+{
+"word": "And",
+"block": 3,
+"start": 139.58,
+"end": 139.73
+},
+{
+"word": "there's",
+"block": 3,
+"start": 139.74,
+"end": 140.09
+},
+{
+"word": "STILL",
+"block": 3,
+"start": 140.1,
+"end": 140.37
+},
+{
+"word": "a",
+"block": 3,
+"start": 140.38,
+"end": 140.53
+},
+{
+"word": "human",
+"block": 3,
+"start": 140.54,
+"end": 140.94
+},
+{
+"word": "controlling",
+"block": 3,
+"start": 140.94,
+"end": 141.45
+},
+{
+"word": "that",
+"block": 3,
+"start": 141.46,
+"end": 141.61
+},
+{
+"word": "chainsaw.",
+"block": 3,
+"start": 141.62,
+"end": 142.18
+},
+{
+"word": "That",
+"block": 3,
+"start": 142.64,
+"end": 142.69
+},
+{
+"word": "might",
+"block": 3,
+"start": 142.69,
+"end": 142.97
+},
+{
+"word": "actually",
+"block": 3,
+"start": 142.97,
+"end": 143.36
+},
+{
+"word": "be",
+"block": 3,
+"start": 143.37,
+"end": 143.48
+},
+{
+"word": "the",
+"block": 3,
+"start": 143.49,
+"end": 143.6
+},
+{
+"word": "most",
+"block": 3,
+"start": 143.61,
+"end": 143.84
+},
+{
+"word": "interesting",
+"block": 3,
+"start": 143.85,
+"end": 144.41
+},
+{
+"word": "part.",
+"block": 3,
+"start": 144.41,
+"end": 144.52
+},
+{
+"word": "Japan",
+"block": 3,
+"start": 145.17,
+"end": 145.4
+},
+{
+"word": "didn't",
+"block": 3,
+"start": 145.405,
+"end": 145.68
+},
+{
+"word": "give",
+"block": 3,
+"start": 145.685,
+"end": 145.84
+},
+{
+"word": "a",
+"block": 3,
+"start": 145.845,
+"end": 145.92
+},
+{
+"word": "robot",
+"block": 3,
+"start": 145.925,
+"end": 146.32
+},
+{
+"word": "a",
+"block": 3,
+"start": 146.325,
+"end": 146.44
+},
+{
+"word": "chainsaw",
+"block": 3,
+"start": 146.445,
+"end": 146.96
+},
+{
+"word": "and",
+"block": 3,
+"start": 146.965,
+"end": 147.08
+},
+{
+"word": "tell",
+"block": 3,
+"start": 147.085,
+"end": 147.24
+},
+{
+"word": "it",
+"block": 3,
+"start": 147.245,
+"end": 147.36
+},
+{
+"word": "to",
+"block": 3,
+"start": 147.365,
+"end": 147.48
+},
+{
+"word": "go",
+"block": 3,
+"start": 147.485,
+"end": 147.68
+},
+{
+"word": "find",
+"block": 3,
+"start": 147.685,
+"end": 148.0
+},
+{
+"word": "trees.",
+"block": 3,
+"start": 148.005,
+"end": 148.42
+},
+{
+"word": "It",
+"block": 3,
+"start": 148.83,
+"end": 148.88
+},
+{
+"word": "gave",
+"block": 3,
+"start": 148.87,
+"end": 149.1
+},
+{
+"word": "a",
+"block": 3,
+"start": 149.105,
+"end": 149.22
+},
+{
+"word": "PERSON",
+"block": 3,
+"start": 149.265,
+"end": 149.66
+},
+{
+"word": "a",
+"block": 3,
+"start": 149.665,
+"end": 149.82
+},
+{
+"word": "pair",
+"block": 3,
+"start": 149.825,
+"end": 150.06
+},
+{
+"word": "of",
+"block": 3,
+"start": 150.065,
+"end": 150.22
+},
+{
+"word": "giant",
+"block": 3,
+"start": 150.225,
+"end": 150.62
+},
+{
+"word": "mechanical",
+"block": 3,
+"start": 150.625,
+"end": 151.3
+},
+{
+"word": "arms.",
+"block": 3,
+"start": 151.305,
+"end": 151.75
+}
+]

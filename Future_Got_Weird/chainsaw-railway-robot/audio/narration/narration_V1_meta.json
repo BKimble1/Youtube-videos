@@ -1,0 +1,108 @@
+{
+ "file": "audio/narration/FGW_Chainsaw_Robot_narration_V1.wav",
+ "sha256": "130d07b690b3612822143f5eea69b14288b42d412e760c55644c172baa29fc5a",
+ "duration_s": 154.8333,
+ "frames_30fps": 4645,
+ "words": 440,
+ "speech_s": [
+  0.25,
+  151.75
+ ],
+ "wpm_over_speech_span": 174.3,
+ "lead_s": 0.25,
+ "gaps_s": [
+  1.25,
+  1.9,
+  1.6
+ ],
+ "tail_s": 3.0,
+ "holds": [
+  {
+   "after": "terrible combination.",
+   "block": 1,
+   "was_s": 0.56,
+   "now_s": 1.05,
+   "why": "the held branch hangs over the rails before the pull-back begins"
+  },
+  {
+   "after": "have legs.",
+   "block": 1,
+   "was_s": 0.36,
+   "now_s": 0.75,
+   "why": "the camera reaches the empty space below the torso"
+  },
+  {
+   "after": "every movement.",
+   "block": 1,
+   "was_s": 0.5,
+   "now_s": 0.75,
+   "why": "push into the cab window"
+  },
+  {
+   "after": "person's control.",
+   "block": 2,
+   "was_s": 0.6,
+   "now_s": 0.85,
+   "why": "the lifted piece is set down clear of the track"
+  },
+  {
+   "after": "is pushing.",
+   "block": 2,
+   "was_s": 0.77,
+   "now_s": 0.8,
+   "why": "the handle pushes back against the hand"
+  },
+  {
+   "after": "the risk.",
+   "block": 3,
+   "was_s": 0.54,
+   "now_s": 0.85,
+   "why": "the worker is replaced by the machine at the same target"
+  },
+  {
+   "after": "interesting part.",
+   "block": 4,
+   "was_s": 0.57,
+   "now_s": 0.65,
+   "why": "travel from the paused saw to the controls"
+  }
+ ],
+ "blocks": [
+  {
+   "block": 1,
+   "take": "audio/narration/takes/b1_t3_OlHd.mp3",
+   "generation_id": "OlHdXnnbPsqGvZgGz2YZ",
+   "src_in": 0.0,
+   "src_out": 42.17,
+   "film_start": 0.25,
+   "inserted_s": 1.13
+  },
+  {
+   "block": 2,
+   "take": "audio/narration/takes/b2_t4_rLLk.mp3",
+   "generation_id": "rLLkPnbRlfhsTftlQtPz",
+   "src_in": 0.0,
+   "src_out": 48.87,
+   "film_start": 44.8,
+   "inserted_s": 0.28
+  },
+  {
+   "block": 3,
+   "take": "audio/narration/takes/b3_t4_tvdB.mp3",
+   "generation_id": "tvdBpLCoAMm9cOzRe6vA",
+   "src_in": 0.0,
+   "src_out": 41.82,
+   "film_start": 95.85,
+   "inserted_s": 0.31
+  },
+  {
+   "block": 4,
+   "take": "audio/narration/takes/b4_t3_7oOE.mp3",
+   "generation_id": "7oOEkLVoePxjNJzpPQue",
+   "src_in": 0.0,
+   "src_out": 12.17,
+   "film_start": 139.58,
+   "inserted_s": 0.08
+  }
+ ]
+}

@@ -1,0 +1,926 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search \"Test Voice\" on 2026-10-30 returned this id (\"Test Voice For Youtube.\"); same id as Robot Faces and Zombie Ant"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "HNz1r5oEVqizYWtrZcQs",
+ "script": "SCRIPT_LOCKED.md, 440 words, verbatim, in four blocks (tools/script.py BLOCK_STARTS). Bracket tags are delivery directions, not spoken.",
+ "runs": [
+  {
+   "set": 1,
+   "tags": [
+    "[energetic, confident, conversational]",
+    "[energetic, clear, conversational]",
+    "[energetic, clear, conversational]",
+    "[confident, conversational, building]"
+   ],
+   "credits": 5461.4400000000005
+  },
+  {
+   "set": 2,
+   "why": "set 1 read at 172-206 wpm (about 2:23 of speech); a relaxed-pace tag was tried once; it did not change the rate measurably (the connector exposes no speed control)",
+   "tags": [
+    "[confident, engaged, relaxed storytelling pace]",
+    "[engaged, clear, relaxed storytelling pace]",
+    "[engaged, clear, relaxed storytelling pace]",
+    "[warm, confident, relaxed storytelling pace]"
+   ],
+   "credits": 5529.4400000000005
+  }
+ ],
+ "takes": [
+  {
+   "file": "audio/narration/takes/b1_t1_FFHo.mp3",
+   "generation_id": "FFHoqtG4xSOQ2dxDnBWa",
+   "sha256": "099c5afad106a9f483c4abf98d0a778e8e86402eb15e7a75f13b8c8b2d269205",
+   "selected": false,
+   "screen": {
+    "block": 1,
+    "duration": 41.52,
+    "speech_span": [
+     0.05,
+     41.32
+    ],
+    "wpm": 193.4,
+    "pauses_ge_0.25s": [
+     0.39,
+     0.51,
+     0.37,
+     0.51,
+     0.45,
+     0.48,
+     0.41,
+     0.35,
+     0.42,
+     0.4,
+     0.65,
+     0.26,
+     0.45,
+     0.36
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "and",
+      "in"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "and",
+      "in"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b1_t2_K056.mp3",
+   "generation_id": "K0561pOA4P7eaZ6ldqWq",
+   "sha256": "45d480717c5f3fc64c2e41bf396cf727b412375e9e1eeea50b99e135422a823e",
+   "selected": false,
+   "screen": {
+    "block": 1,
+    "duration": 41.52,
+    "speech_span": [
+     0.06,
+     41.34
+    ],
+    "wpm": 193.3,
+    "pauses_ge_0.25s": [
+     0.37,
+     0.44,
+     0.34,
+     0.43,
+     0.27,
+     0.43,
+     0.46,
+     0.41,
+     0.35,
+     0.44,
+     0.45,
+     0.58,
+     0.44,
+     0.38
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "and",
+      "in"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b2_t1_EY4e.mp3",
+   "generation_id": "EY4epgXQ9WEen9vMibY0",
+   "sha256": "26b43184c5d1c002747e709eb55688b236518458d8d0dbf2796972ab240fcefe",
+   "selected": false,
+   "screen": {
+    "block": 2,
+    "duration": 49.36,
+    "speech_span": [
+     0.07,
+     49.26
+    ],
+    "wpm": 180.5,
+    "pauses_ge_0.25s": [
+     0.47,
+     0.39,
+     0.55,
+     0.27,
+     0.54,
+     0.31,
+     0.5,
+     0.39,
+     0.61,
+     0.55,
+     0.62,
+     0.51,
+     0.35,
+     0.63,
+     0.48
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "onto",
+      "on to"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "bilateral",
+      "biteral"
+     ],
+     [
+      "replace",
+      "robot",
+      "roebot"
+     ],
+     [
+      "replace",
+      "fingertips",
+      "finger tips"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b2_t2_owgF.mp3",
+   "generation_id": "owgFSrOgAXfW5nq9dNuc",
+   "sha256": "4cc348f8e0c8782f79da0786069c9103fb9a3b00cec6f3a5570530bc41c372a5",
+   "selected": false,
+   "screen": {
+    "block": 2,
+    "duration": 48.16,
+    "speech_span": [
+     0.05,
+     48.03
+    ],
+    "wpm": 185.1,
+    "pauses_ge_0.25s": [
+     0.41,
+     0.41,
+     0.48,
+     0.61,
+     0.32,
+     0.5,
+     0.28,
+     0.64,
+     0.49,
+     0.57,
+     0.45,
+     0.34,
+     0.64,
+     0.43
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "onto",
+      "on to"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "bilateral",
+      "biteral"
+     ],
+     [
+      "replace",
+      "fingertips",
+      "finger tips"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b3_t1_9WbL.mp3",
+   "generation_id": "9WbLdQtOIhDw2pXM9Ci2",
+   "sha256": "e8ed03bb82148cf27f2f85a6d495280125a98c0558cd90c03c0403388caf7a0a",
+   "selected": false,
+   "screen": {
+    "block": 3,
+    "duration": 41.76,
+    "speech_span": [
+     0.03,
+     41.65
+    ],
+    "wpm": 171.6,
+    "pauses_ge_0.25s": [
+     0.42,
+     0.27,
+     0.47,
+     0.27,
+     0.6,
+     0.61,
+     0.66,
+     0.47,
+     0.34,
+     0.62,
+     0.51
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "2024",
+      "twenty twenty four"
+     ],
+     [
+      "replace",
+      "singlearm robot",
+      "single arm rowbot"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "singlearm",
+      "single arm"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b3_t2_c1ju.mp3",
+   "generation_id": "c1juPmmtntevs0QzzleL",
+   "sha256": "263da9fe8f985310dfb4d2ff0c177b84a9dd670eeaa360e784c51c89e76937ef",
+   "selected": false,
+   "screen": {
+    "block": 3,
+    "duration": 40.88,
+    "speech_span": [
+     0.03,
+     40.7
+    ],
+    "wpm": 175.6,
+    "pauses_ge_0.25s": [
+     0.47,
+     0.45,
+     0.54,
+     0.52,
+     0.6,
+     0.41,
+     0.32,
+     0.45,
+     0.51
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "2024",
+      "twenty twenty four"
+     ],
+     [
+      "replace",
+      "with an",
+      "within"
+     ],
+     [
+      "replace",
+      "singlearm robot",
+      "single arm rowbot"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "jr east",
+      "jreast"
+     ],
+     [
+      "replace",
+      "singlearm",
+      "single arm"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b4_t1_b841.mp3",
+   "generation_id": "b841P2e8gZqPBYndhUQq",
+   "sha256": "9b82331e80f732a80268981e664a1d20e6da3faa55522fc2b3aafb5d554a156e",
+   "selected": false,
+   "screen": {
+    "block": 4,
+    "duration": 11.84,
+    "speech_span": [
+     0.05,
+     11.71
+    ],
+    "wpm": 205.8,
+    "pauses_ge_0.25s": [
+     0.39,
+     0.5,
+     0.39
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "find",
+      "fine"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b4_t2_3Zfl.mp3",
+   "generation_id": "3ZfloLJKLUYdl5IKzbjY",
+   "sha256": "a595e575bdc60cae65bdfab4762831fb0555b8fbc6ad195afd974ff1ac1d8fff",
+   "selected": false,
+   "screen": {
+    "block": 4,
+    "duration": 11.92,
+    "speech_span": [
+     0.06,
+     11.82
+    ],
+    "wpm": 204.1,
+    "pauses_ge_0.25s": [
+     0.42,
+     0.45,
+     0.38
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "find",
+      "fine"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b1_t3_OlHd.mp3",
+   "generation_id": "OlHdXnnbPsqGvZgGz2YZ",
+   "sha256": "d35a672bd35f2cb38211b7d53ba11d434b1fd3cf6aa8280553f5ccf3a3fe51e3",
+   "selected": true,
+   "screen": {
+    "block": 1,
+    "duration": 42.24,
+    "speech_span": [
+     0.06,
+     42.09
+    ],
+    "wpm": 189.9,
+    "pauses_ge_0.25s": [
+     0.4,
+     0.45,
+     0.37,
+     0.48,
+     0.43,
+     0.56,
+     0.48,
+     0.36,
+     0.5,
+     0.42,
+     0.5,
+     0.27,
+     0.51,
+     0.41
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b1_t4_MhDv.mp3",
+   "generation_id": "MhDvZ45KWJx7eh0zMuU4",
+   "sha256": "be8e899ea9ca464fc7afd89bb5e310a31713f5b1ae10e59ec391cba5f5d9b749",
+   "selected": false,
+   "screen": {
+    "block": 1,
+    "duration": 41.92,
+    "speech_span": [
+     0.06,
+     41.76
+    ],
+    "wpm": 191.4,
+    "pauses_ge_0.25s": [
+     0.43,
+     0.46,
+     0.37,
+     0.49,
+     0.47,
+     0.55,
+     0.43,
+     0.41,
+     0.25,
+     0.48,
+     0.44,
+     0.62,
+     0.27,
+     0.5,
+     0.42
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b2_t3_Z3Md.mp3",
+   "generation_id": "Z3MdhF7wgCbwHqhtPNso",
+   "sha256": "a673fd6b701b3cc7703882801ef2b7b2c45c072c9996a0fd9280c187df02e801",
+   "selected": false,
+   "screen": {
+    "block": 2,
+    "duration": 49.44,
+    "speech_span": [
+     0.1,
+     49.29
+    ],
+    "wpm": 180.5,
+    "pauses_ge_0.25s": [
+     0.49,
+     0.45,
+     0.58,
+     0.3,
+     0.6,
+     0.31,
+     0.54,
+     0.31,
+     0.6,
+     0.52,
+     0.6,
+     0.52,
+     0.3,
+     0.6,
+     0.51
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "claw",
+      "clock"
+     ],
+     [
+      "replace",
+      "onto",
+      "on to"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "robot",
+      "roebot"
+     ],
+     [
+      "replace",
+      "fingertips",
+      "finger tips"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b2_t4_rLLk.mp3",
+   "generation_id": "rLLkPnbRlfhsTftlQtPz",
+   "sha256": "72d36598e3b8c622a94bce57d5ede6b981e6f2507d75fc167b96863667588148",
+   "selected": true,
+   "screen": {
+    "block": 2,
+    "duration": 48.88,
+    "speech_span": [
+     0.05,
+     48.78
+    ],
+    "wpm": 182.2,
+    "pauses_ge_0.25s": [
+     0.43,
+     0.41,
+     0.5,
+     0.26,
+     0.56,
+     0.3,
+     0.47,
+     0.33,
+     0.6,
+     0.52,
+     0.52,
+     0.49,
+     0.32,
+     0.77,
+     0.48
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "onto",
+      "on to"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "footage",
+      "fottage"
+     ],
+     [
+      "replace",
+      "robot",
+      "roebot"
+     ],
+     [
+      "replace",
+      "fingertips",
+      "finger tips"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b3_t3_q6Ne.mp3",
+   "generation_id": "q6NewrfH8L4tq8Z1XlTG",
+   "sha256": "52454eccdf3d64253420adad891e601233b44cf34163e517dc8ab1a38c80b8bf",
+   "selected": false,
+   "screen": {
+    "block": 3,
+    "duration": 40.56,
+    "speech_span": [
+     0.05,
+     40.4
+    ],
+    "wpm": 177.0,
+    "pauses_ge_0.25s": [
+     0.42,
+     0.46,
+     0.26,
+     0.54,
+     0.49,
+     0.56,
+     0.36,
+     0.36,
+     0.49,
+     0.52
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "2024",
+      "twenty twenty four"
+     ],
+     [
+      "replace",
+      "with an",
+      "within"
+     ],
+     [
+      "replace",
+      "singlearm robot",
+      "single arm rowbot"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "singlearm",
+      "single arm"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b3_t4_tvdB.mp3",
+   "generation_id": "tvdBpLCoAMm9cOzRe6vA",
+   "sha256": "cba380dfcf8a29675129f81d6352069abebefb19dd8ca1b2eb7bc060bb322072",
+   "selected": true,
+   "screen": {
+    "block": 3,
+    "duration": 41.92,
+    "speech_span": [
+     0.09,
+     41.74
+    ],
+    "wpm": 171.4,
+    "pauses_ge_0.25s": [
+     0.45,
+     0.49,
+     0.56,
+     0.54,
+     0.56,
+     0.46,
+     0.32,
+     0.53,
+     0.54
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "jr",
+      "j r"
+     ],
+     [
+      "replace",
+      "2024",
+      "twenty twenty four"
+     ],
+     [
+      "replace",
+      "singlearm robot",
+      "single arm rowbot"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "robotics",
+      "robotic"
+     ],
+     [
+      "replace",
+      "singlearm",
+      "single arm"
+     ]
+    ]
+   }
+  },
+  {
+   "file": "audio/narration/takes/b4_t3_7oOE.mp3",
+   "generation_id": "7oOEkLVoePxjNJzpPQue",
+   "sha256": "05e3d6218e143c2338886593ae9f8262ac60adba9819a5f40f8cdb92fbe62b3a",
+   "selected": true,
+   "screen": {
+    "block": 4,
+    "duration": 12.24,
+    "speech_span": [
+     0.06,
+     12.09
+    ],
+    "wpm": 199.5,
+    "pauses_ge_0.25s": [
+     0.46,
+     0.57,
+     0.41
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "find",
+      "fine"
+     ]
+    ],
+    "whisper": []
+   }
+  },
+  {
+   "file": "audio/narration/takes/b4_t4_0KUP.mp3",
+   "generation_id": "0KUP8aZXUSRZkdufArT4",
+   "sha256": "16ea79247727873721739a2a27c271f169e799604a3fe169a94df47522f96e71",
+   "selected": false,
+   "screen": {
+    "block": 4,
+    "duration": 12.16,
+    "speech_span": [
+     0.08,
+     12.04
+    ],
+    "wpm": 200.7,
+    "pauses_ge_0.25s": [
+     0.41,
+     0.51,
+     0.41
+    ],
+    "zipformer": [
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "chainsaw",
+      "chain saw"
+     ],
+     [
+      "replace",
+      "find",
+      "fine"
+     ]
+    ],
+    "whisper": [
+     [
+      "replace",
+      "and tell",
+      "until"
+     ]
+    ]
+   }
+  }
+ ],
+ "selection": "per block, by two local ASR models (sherpa-onnx zipformer-en-2023-06-26 and whisper base.en, tools/asr_takes.py): fewest real differences from the locked words, clearest key terms (bilateral, footage, single-arm); block 1 take 3 (whisper: 0 differences), block 2 take 4 (bilateral recognised), block 3 take 4 (171 wpm, cleanest \"with an\"), block 4 take 3 (whisper: 0 differences)",
+ "edits": "none inside speech (no splice in a word, no time-stretch, no pitch change). Fixed silences between blocks and seven lengthened sentence-end pauses (listed in narration_V1_meta.json with reasons).",
+ "word_timing": "tools/make_narration.py: local Zipformer token timestamps matched to the locked words, onsets snapped to measured pauses",
+ "final": {
+  "file": "audio/narration/FGW_Chainsaw_Robot_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, rate and pause measurement."
+}

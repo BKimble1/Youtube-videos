@@ -1,0 +1,34 @@
+{
+ "note": "One-shot effects generated for this episode with ElevenLabs sound effects (eleven_text_to_sound_v2) on flow HNz1r5oEVqizYWtrZcQs, 2026-10-30, about 16.7 credits each. The connector returned 1-6 s clips regardless of the requested length, so continuous beds are synthesised in tools/make_audio.py. No broadcast or third-party audio is used.",
+ "runway_unused": "Seven Runway sound effects (task ids a08821e5-17f5-4aea-b8fc-ba6ccbf052eb, 3614f199-44ad-467d-9639-b820943c4bad, 14b30c37-edb9-4197-bae4-8d7b30ff4709, f7638cf0-cf56-4a53-8bb8-af6d9ec89e7f, f2bd8790-b73d-4c5f-9f46-6108315e2663, f9c44a9e-207f-4d59-9814-e9ba88ee0a4d, 8141b736-3816-4d01-83e6-02e31636ee04; 58 credits) were generated first, but their download host (dnznrvs05pmza.cloudfront.net) is blocked by this environment's network policy, so they are not in the mix. They remain in the Runway library.",
+ "files": {
+  "el_chainsaw_cut.mp3": {
+   "generation_id": "EzQavRqynoR0fY1O3LaT",
+   "sha256": "c34a755f5ce9f6a45469ea22bb0d8195a7c81d3a11674882506ca4ceb73a0bf5"
+  },
+  "el_chainsaw_stop.mp3": {
+   "generation_id": "AanI6Vlj7sYsVo1QL9h9",
+   "sha256": "93d83e55b6b25aa0a846122b76a8549f52803b69e2414e468e43ceaf99c96abb"
+  },
+  "el_servo.mp3": {
+   "generation_id": "6JK4VodD883YbMGQINGp",
+   "sha256": "3723c603859e2da1bfc86551aa6c143020350b5a193f4de9a96652b97855bf02"
+  },
+  "el_clamp.mp3": {
+   "generation_id": "4rjzao6M9I243IYmDpPy",
+   "sha256": "fc4a5272cdfdd0ae5e8fdfd3cf1c1f5d1ceae54cc0a25b4fdd76b83327d61f85"
+  },
+  "el_crack.mp3": {
+   "generation_id": "pKPskuRbRmsI6RCGdj5Z",
+   "sha256": "b7852ea00dab9efdbc75851c6528cffed95f7a7dd99e4c18174e614b037b6715"
+  },
+  "el_cabin.mp3": {
+   "generation_id": "QggunvKGm1VD9iIP9mSO",
+   "sha256": "d39286887e82d581808dd11ca84a62db54b12ac5f8265fd6588f72ad568a289d"
+  },
+  "el_steel_hit.mp3": {
+   "generation_id": "mGR3uXTKtPRAtM6707wv",
+   "sha256": "fc73eddd2baed59b6a0bd2428a47b7960d237ecdb17d49df330d1e3913b10b68"
+  }
+ }
+}

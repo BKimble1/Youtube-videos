@@ -1,0 +1,242 @@
+1
+00:00:00,250 --> 00:00:03,320
+Japan built a robot with
+a CHAINSAW for an arm.
+
+2
+00:00:03,470 --> 00:00:06,890
+And this is real footage of it
+cutting branches beside a railway.
+
+3
+00:00:07,090 --> 00:00:08,160
+Watch the other hand.
+
+4
+00:00:08,280 --> 00:00:10,980
+It grabs the branch
+before the saw touches it.
+
+5
+00:00:11,000 --> 00:00:14,330
+As the blade cuts through, that
+claw is still holding the wood.
+
+6
+00:00:14,510 --> 00:00:17,955
+That's important, because a falling
+branch and train tracks are a terrible
+
+7
+00:00:17,975 --> 00:00:18,900
+combination.
+
+8
+00:00:19,700 --> 00:00:21,440
+But now look at the rest of the robot.
+
+9
+00:00:21,670 --> 00:00:22,900
+It doesn't have legs.
+
+10
+00:00:23,400 --> 00:00:25,310
+It's attached to a massive boom,
+
+11
+00:00:25,330 --> 00:00:27,540
+rising out of a railway
+maintenance vehicle.
+
+12
+00:00:27,790 --> 00:00:29,510
+And it's not deciding where to cut.
+
+13
+00:00:29,680 --> 00:00:32,220
+A PERSON is controlling every movement.
+
+14
+00:00:32,720 --> 00:00:36,525
+From a cabin below, the operator watches
+through the robot's cameras and moves
+
+15
+00:00:36,545 --> 00:00:38,380
+its arms using hand controls.
+
+16
+00:00:38,640 --> 00:00:40,900
+It looks like a giant humanoid robot,
+
+17
+00:00:41,060 --> 00:00:43,720
+but the actual intelligence
+is sitting at the bottom.
+
+18
+00:00:44,800 --> 00:00:47,030
+And those two arms aren't just for show.
+
+19
+00:00:47,210 --> 00:00:49,400
+One grips the branch and takes its weight.
+
+20
+00:00:49,560 --> 00:00:51,960
+The other angles the
+chainsaw into the cut.
+
+21
+00:00:52,210 --> 00:00:55,740
+As the blade breaks through, the claw
+can keep holding the branch instead of
+
+22
+00:00:55,760 --> 00:00:57,500
+letting it drop onto the railway.
+
+23
+00:00:57,810 --> 00:00:59,420
+A crane can lift something.
+
+24
+00:00:59,470 --> 00:01:01,230
+A chainsaw can cut something.
+
+25
+00:01:01,450 --> 00:01:03,460
+This machine is designed to do BOTH,
+
+26
+00:01:03,540 --> 00:01:06,400
+at the same time, under
+one person's control.
+
+27
+00:01:07,000 --> 00:01:09,970
+But there's another piece of engineering
+you can't see in the footage.
+
+28
+00:01:10,240 --> 00:01:13,600
+The Japanese robotics company behind
+this kind of machine developed something
+
+29
+00:01:13,620 --> 00:01:15,500
+called bilateral control.
+
+30
+00:01:15,770 --> 00:01:19,650
+Tiny movements at the operator's controls
+command much larger forces at the
+
+31
+00:01:19,670 --> 00:01:20,320
+robot.
+
+32
+00:01:20,560 --> 00:01:24,270
+And resistance at the robot can be
+transmitted back through those controls,
+
+33
+00:01:24,340 --> 00:01:27,580
+so the person can actually sense
+how hard the machine is pushing.
+
+34
+00:01:28,130 --> 00:01:30,660
+Imagine touching a tree
+branch with your fingertips.
+
+35
+00:01:30,890 --> 00:01:34,110
+Except your fingers are
+now giant STEEL ARMS.
+
+36
+00:01:35,850 --> 00:01:38,230
+And this isn't just a robotics stunt.
+
+37
+00:01:38,430 --> 00:01:41,610
+Railway workers have to maintain
+equipment high above the tracks,
+
+38
+00:01:41,630 --> 00:01:43,920
+sometimes near overhead
+electrical hardware.
+
+39
+00:01:44,160 --> 00:01:46,520
+That means climbing, handling heavy tools,
+
+40
+00:01:46,540 --> 00:01:48,330
+and controlling things that can fall.
+
+41
+00:01:48,640 --> 00:01:52,180
+Moving the operator away from the
+dangerous part of the job changes the
+
+42
+00:01:52,200 --> 00:01:52,750
+risk.
+
+43
+00:01:53,350 --> 00:01:56,790
+That's one reason Japan's railways are
+putting machines like this to work.
+
+44
+00:01:57,100 --> 00:02:00,400
+JR East introduced this type
+of machine earlier this year.
+
+45
+00:02:00,610 --> 00:02:04,810
+And JR West, which was already
+using a related system in 2024,
+
+46
+00:02:04,880 --> 00:02:08,840
+is rolling out an improved humanoid
+model with an even longer reach.
+
+47
+00:02:09,120 --> 00:02:12,755
+It's also introducing a separate
+single-arm robot built for lifting heavy
+
+48
+00:02:12,775 --> 00:02:14,020
+railway components.
+
+49
+00:02:14,310 --> 00:02:18,150
+The goal is safer maintenance, with
+fewer people needed for each job.
+
+50
+00:02:19,580 --> 00:02:22,430
+And there's STILL a human
+controlling that chainsaw.
+
+51
+00:02:22,640 --> 00:02:24,770
+That might actually be
+the most interesting part.
+
+52
+00:02:25,170 --> 00:02:28,670
+Japan didn't give a robot a chainsaw
+and tell it to go find trees.
+
+53
+00:02:28,830 --> 00:02:32,000
+It gave a PERSON a pair
+of giant mechanical arms.
