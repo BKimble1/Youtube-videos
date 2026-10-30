@@ -7,7 +7,8 @@ import {camAt, camTransform} from './world/camera';
 import {B, TM} from './world/story';
 import {Torso, UpperArm, ForearmSkin, Hand, Head, EarSiteScar} from './world/woman';
 import {RibWindow} from './world/chest';
-import {Piece, carveScrim} from './world/piece';
+import {Piece} from './world/piece';
+import {Tray} from './world/tray';
 import {ArmSurface, ArmTools, turnAt} from './world/arm';
 import {Flap, FlapTools, Anastomosis} from './world/head';
 import {CrashNight, CrashGlass, crashAmt} from './world/crash';
@@ -56,7 +57,7 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
   const ow = 1.5 + 0.5 * clamp((cam.z - 1) / 4);
   const turn = turnAt(t);
   const hair = ss(cam.z, 2.5, 5.5);
-  const ribOpen = ss(t, B.ribWin[0], B.ribWin[1]) * (1 - ss(t, B.travel[0] + 0.1, B.travel[0] + 0.5));
+  const ribOpen = ss(t, B.ribWin[0], B.ribWin[1]) * (1 - ss(t, B.carry1[1] - 0.1, B.carry1[1] + 0.3));
   const taken = t >= B.lift[0] ? 1 : 0;
   const scar = 1 - 0.75 * ss(t, B.seat[0], B.seat[1]);
   const blink = Math.max(Math.exp(-(((t - 3.05) / 0.06) ** 2)), Math.exp(-(((t - 18.3) / 0.06) ** 2)));
@@ -73,6 +74,7 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
         <g transform={camTransform(cam)}>
           <CrashGlass t={t} />
           <Torso ow={ow} />
+          <Tray ow={ow} />
           <RibWindow open={ribOpen} taken={taken} t={t} ow={ow} />
           <Head ow={ow} site={<EarSiteScar a={scar} />} blink={blink} />
           <UpperArm ow={ow} />
@@ -81,7 +83,6 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
           </ForearmSkin>
           <Hand ow={ow} turn={turn} />
           <ArmTools t={t} />
-          {carveScrim(t) > 0.001 && <rect x={-2000} y={-2000} width={5000} height={6000} fill="#0C151A" opacity={carveScrim(t)} />}
           <Piece t={t} camZ={cam.z} />
           <Anastomosis t={t} />
           <Flap t={t} camZ={cam.z} />

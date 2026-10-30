@@ -1,7 +1,7 @@
 {
  "fps": 30,
- "frames": 645,
- "duration": 21.5,
+ "frames": 609,
+ "duration": 20.3,
  "captions": [
   {
    "text": "Doctors grew an EAR",
@@ -21,23 +21,23 @@
    "start": 1.276,
    "end": 2.956,
    "show": 1.236,
-   "hide": 3.386
+   "hide": 3.196
   },
   {
    "text": "She lost her ear in a crash,",
    "emph": [],
-   "start": 3.426,
-   "end": 4.906,
-   "show": 3.386,
-   "hide": 4.871
+   "start": 3.236,
+   "end": 4.716,
+   "show": 3.196,
+   "hide": 4.681
   },
   {
    "text": "so surgeons carved a replacement",
    "emph": [],
-   "start": 4.911,
-   "end": 6.596,
-   "show": 4.871,
-   "hide": 6.591
+   "start": 4.721,
+   "end": 6.406,
+   "show": 4.681,
+   "hide": 6.401
   },
   {
    "text": "from her own rib cartilage.",
@@ -45,70 +45,70 @@
     "rib",
     "cartilage"
    ],
-   "start": 6.631,
-   "end": 8.046,
-   "show": 6.591,
-   "hide": 8.386
+   "start": 6.441,
+   "end": 7.856,
+   "show": 6.401,
+   "hide": 8.096
   },
   {
    "text": "They tucked it beneath her arm skin,",
    "emph": [],
-   "start": 8.426,
-   "end": 9.906,
-   "show": 8.386,
-   "hide": 9.876
+   "start": 8.136,
+   "end": 9.616,
+   "show": 8.096,
+   "hide": 9.586
   },
   {
    "text": "where new blood vessels formed around it.",
    "emph": [],
-   "start": 9.916,
-   "end": 11.816,
-   "show": 9.876,
-   "hide": 12.266
+   "start": 9.626,
+   "end": 11.526,
+   "show": 9.586,
+   "hide": 11.766
   },
   {
    "text": "Months later,",
    "emph": [],
-   "start": 12.306,
-   "end": 12.896,
-   "show": 12.266,
-   "hide": 12.861
+   "start": 11.806,
+   "end": 12.396,
+   "show": 11.766,
+   "hide": 12.361
   },
   {
    "text": "they moved the living ear to her head,",
    "emph": [],
-   "start": 12.901,
-   "end": 14.696,
-   "show": 12.861,
-   "hide": 14.876
+   "start": 12.401,
+   "end": 14.196,
+   "show": 12.361,
+   "hide": 14.376
   },
   {
    "text": "reconnecting its blood supply and nerves.",
    "emph": [],
-   "start": 14.916,
-   "end": 16.956,
-   "show": 14.876,
-   "hide": 17.626
+   "start": 14.416,
+   "end": 16.456,
+   "show": 14.376,
+   "hide": 16.696
   },
   {
    "text": "And for MONTHS\u2026",
    "emph": [
     "months"
    ],
-   "start": 17.666,
-   "end": 18.606,
-   "show": 17.626,
-   "hide": 18.886
+   "start": 16.736,
+   "end": 17.676,
+   "show": 16.696,
+   "hide": 17.936
   },
   {
    "text": "her new ear was right HERE.",
    "emph": [
     "here"
    ],
-   "start": 18.926,
-   "end": 20.706,
-   "show": 18.886,
-   "hide": 21.5
+   "start": 17.976,
+   "end": 19.756,
+   "show": 17.936,
+   "hide": 20.3
   }
  ],
  "words": [
@@ -154,283 +154,283 @@
   },
   {
    "word": "She",
-   "start": 3.426,
-   "end": 3.476
+   "start": 3.236,
+   "end": 3.286
   },
   {
    "word": "lost",
-   "start": 3.466,
-   "end": 3.786
+   "start": 3.276,
+   "end": 3.596
   },
   {
    "word": "her",
-   "start": 3.791,
-   "end": 3.946
+   "start": 3.601,
+   "end": 3.756
   },
   {
    "word": "ear",
-   "start": 3.951,
-   "end": 4.226
+   "start": 3.761,
+   "end": 4.036
   },
   {
    "word": "in",
-   "start": 4.231,
-   "end": 4.346
+   "start": 4.041,
+   "end": 4.156
   },
   {
    "word": "a",
-   "start": 4.351,
-   "end": 4.466
+   "start": 4.161,
+   "end": 4.276
   },
   {
    "word": "crash,",
-   "start": 4.471,
-   "end": 4.906
+   "start": 4.281,
+   "end": 4.716
   },
   {
    "word": "so",
-   "start": 4.911,
-   "end": 5.106
+   "start": 4.721,
+   "end": 4.916
   },
   {
    "word": "surgeons",
-   "start": 5.111,
-   "end": 5.626
+   "start": 4.921,
+   "end": 5.436
   },
   {
    "word": "carved",
-   "start": 5.631,
-   "end": 5.906
+   "start": 5.441,
+   "end": 5.716
   },
   {
    "word": "a",
-   "start": 5.911,
-   "end": 5.986
+   "start": 5.721,
+   "end": 5.796
   },
   {
    "word": "replacement",
-   "start": 5.991,
-   "end": 6.596
+   "start": 5.801,
+   "end": 6.406
   },
   {
    "word": "from",
-   "start": 6.631,
-   "end": 6.786
+   "start": 6.441,
+   "end": 6.596
   },
   {
    "word": "her",
-   "start": 6.791,
-   "end": 6.906
+   "start": 6.601,
+   "end": 6.716
   },
   {
    "word": "own",
-   "start": 6.951,
-   "end": 7.186
+   "start": 6.761,
+   "end": 6.996
   },
   {
    "word": "rib",
-   "start": 7.191,
-   "end": 7.496
+   "start": 7.001,
+   "end": 7.306
   },
   {
    "word": "cartilage.",
-   "start": 7.511,
-   "end": 8.046
+   "start": 7.321,
+   "end": 7.856
   },
   {
    "word": "They",
-   "start": 8.426,
-   "end": 8.476
+   "start": 8.136,
+   "end": 8.186
   },
   {
    "word": "tucked",
-   "start": 8.466,
-   "end": 8.706
+   "start": 8.176,
+   "end": 8.416
   },
   {
    "word": "it",
-   "start": 8.716,
-   "end": 8.826
+   "start": 8.426,
+   "end": 8.536
   },
   {
    "word": "beneath",
-   "start": 8.836,
-   "end": 9.126
+   "start": 8.546,
+   "end": 8.836
   },
   {
    "word": "her",
-   "start": 9.156,
-   "end": 9.306
+   "start": 8.866,
+   "end": 9.016
   },
   {
    "word": "arm",
-   "start": 9.316,
-   "end": 9.546
+   "start": 9.026,
+   "end": 9.256
   },
   {
    "word": "skin,",
-   "start": 9.556,
-   "end": 9.906
+   "start": 9.266,
+   "end": 9.616
   },
   {
    "word": "where",
-   "start": 9.916,
-   "end": 10.106
+   "start": 9.626,
+   "end": 9.816
   },
   {
    "word": "new",
-   "start": 10.116,
-   "end": 10.306
+   "start": 9.826,
+   "end": 10.016
   },
   {
    "word": "blood",
-   "start": 10.316,
-   "end": 10.586
+   "start": 10.026,
+   "end": 10.296
   },
   {
    "word": "vessels",
-   "start": 10.596,
-   "end": 11.026
+   "start": 10.306,
+   "end": 10.736
   },
   {
    "word": "formed",
-   "start": 11.036,
-   "end": 11.346
+   "start": 10.746,
+   "end": 11.056
   },
   {
    "word": "around",
-   "start": 11.356,
-   "end": 11.616
+   "start": 11.066,
+   "end": 11.326
   },
   {
    "word": "it.",
-   "start": 11.616,
-   "end": 11.816
+   "start": 11.326,
+   "end": 11.526
   },
   {
    "word": "Months",
-   "start": 12.306,
-   "end": 12.576
+   "start": 11.806,
+   "end": 12.076
   },
   {
    "word": "later,",
-   "start": 12.581,
-   "end": 12.896
+   "start": 12.081,
+   "end": 12.396
   },
   {
    "word": "they",
-   "start": 12.901,
-   "end": 13.096
+   "start": 12.401,
+   "end": 12.596
   },
   {
    "word": "moved",
-   "start": 13.101,
-   "end": 13.416
+   "start": 12.601,
+   "end": 12.916
   },
   {
    "word": "the",
-   "start": 13.421,
-   "end": 13.536
+   "start": 12.921,
+   "end": 13.036
   },
   {
    "word": "living",
-   "start": 13.541,
-   "end": 13.856
+   "start": 13.041,
+   "end": 13.356
   },
   {
    "word": "ear",
-   "start": 13.861,
-   "end": 14.096
+   "start": 13.361,
+   "end": 13.596
   },
   {
    "word": "to",
-   "start": 14.101,
-   "end": 14.296
+   "start": 13.601,
+   "end": 13.796
   },
   {
    "word": "her",
-   "start": 14.301,
-   "end": 14.496
+   "start": 13.801,
+   "end": 13.996
   },
   {
    "word": "head,",
-   "start": 14.501,
-   "end": 14.696
+   "start": 14.001,
+   "end": 14.196
   },
   {
    "word": "reconnecting",
-   "start": 14.916,
-   "end": 15.396
+   "start": 14.416,
+   "end": 14.896
   },
   {
    "word": "its",
-   "start": 15.406,
-   "end": 15.596
+   "start": 14.906,
+   "end": 15.096
   },
   {
    "word": "blood",
-   "start": 15.606,
-   "end": 15.926
+   "start": 15.106,
+   "end": 15.426
   },
   {
    "word": "supply",
-   "start": 15.926,
-   "end": 16.316
+   "start": 15.426,
+   "end": 15.816
   },
   {
    "word": "and",
-   "start": 16.326,
-   "end": 16.476
+   "start": 15.826,
+   "end": 15.976
   },
   {
    "word": "nerves.",
-   "start": 16.486,
-   "end": 16.956
+   "start": 15.986,
+   "end": 16.456
   },
   {
    "word": "And",
-   "start": 17.666,
-   "end": 17.716
+   "start": 16.736,
+   "end": 16.786
   },
   {
    "word": "for",
-   "start": 17.706,
-   "end": 18.016
+   "start": 16.776,
+   "end": 17.086
   },
   {
    "word": "MONTHS\u2026",
-   "start": 18.021,
-   "end": 18.606
+   "start": 17.091,
+   "end": 17.676
   },
   {
    "word": "her",
-   "start": 18.926,
-   "end": 18.996
+   "start": 17.976,
+   "end": 18.046
   },
   {
    "word": "new",
-   "start": 19.006,
-   "end": 19.276
+   "start": 18.056,
+   "end": 18.326
   },
   {
    "word": "ear",
-   "start": 19.286,
-   "end": 19.596
+   "start": 18.336,
+   "end": 18.646
   },
   {
    "word": "was",
-   "start": 19.606,
-   "end": 19.836
+   "start": 18.656,
+   "end": 18.886
   },
   {
    "word": "right",
-   "start": 19.846,
-   "end": 20.276
+   "start": 18.896,
+   "end": 19.326
   },
   {
    "word": "HERE.",
-   "start": 20.286,
-   "end": 20.706
+   "start": 19.336,
+   "end": 19.756
   }
  ]
 }

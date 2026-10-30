@@ -6,7 +6,7 @@ import {ANAT, SK, INK} from './pal';
 import {clamp, ss} from '../lib';
 import {B} from './story';
 import {sample, at, partial} from './geom';
-import {Scalpel} from './tools';
+import {Scalpel, slideIn} from './tools';
 
 const ln = (w: number) => ({stroke: INK, strokeWidth: w, vectorEffect: 'non-scaling-stroke' as const, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const});
 export const WIN = {x: 372, y: 1118, r: 175};
@@ -33,12 +33,14 @@ const RIBS_R: Rib[] = [
   {bone: 'M 140 1184 C 172 1200 206 1222 232 1232', cart: 'M 232 1232 C 250 1236 262 1220 268 1200', w: 15},
 ];
 
-const Band: React.FC<{d: string; w: number; base: string; light: string; deep: string; ow: number}> = ({d, w, base, light, deep}) => (
+const Band: React.FC<{d: string; w: number; base: string; light: string; deep: string; ow: number; glow?: number}> = ({d, w, base, light, deep, glow = 0}) => (
   <g>
+    {glow > 0.01 && <path d={d} fill="none" stroke="#CFF6FF" strokeWidth={w + 10} strokeLinecap="round" opacity={0.55 * glow} filter="url(#soft5)" />}
     <path d={d} fill="none" stroke={INK} strokeWidth={w + 2.2} strokeLinecap="round" />
     <path d={d} fill="none" stroke={deep} strokeWidth={w} strokeLinecap="round" />
     <path d={d} fill="none" stroke={base} strokeWidth={w * 0.72} strokeLinecap="round" transform="translate(-1 -1.6)" />
     <path d={d} fill="none" stroke={light} strokeWidth={w * 0.22} strokeLinecap="round" opacity="0.8" transform="translate(-1.5 -4)" />
+    {glow > 0.01 && <path d={d} fill="none" stroke="#F4FDFF" strokeWidth={w * 0.6} strokeLinecap="round" opacity={0.35 * glow} />}
   </g>
 );
 
@@ -48,6 +50,8 @@ export const RibWindow: React.FC<{open: number; taken: number; t: number; ow: nu
   const r = WIN.r * (0.15 + 0.85 * ss(open, 0, 1));
   const cut = clamp((t - B.cut[0]) / (B.cut[1] - B.cut[0]));
   const outline = sample(BLOCK, 16);
+  // "rib cartilage": the cartilage parts of the ribs light up (the bone does not), then settle
+  const glow = ss(t, B.ident[0], B.ident[0] + 0.2) * (1 - 0.6 * ss(t, B.ident[1] - 0.1, B.ident[1] + 0.3));
   return (
     <g opacity={ss(open, 0, 0.25)}>
       <defs>
@@ -80,13 +84,13 @@ export const RibWindow: React.FC<{open: number; taken: number; t: number; ow: nu
         {RIBS_R.map((rb, i) => (
           <g key={i}>
             <Band d={rb.bone} w={rb.w} base={ANAT.bone} light="#FFF8EA" deep={ANAT.boneShade} ow={ow} />
-            <Band d={rb.cart} w={rb.w * 0.9} base={ANAT.cartilage} light={ANAT.cartilageLight} deep={ANAT.cartilageShade} ow={ow} />
+            <Band d={rb.cart} w={rb.w * 0.9} base={ANAT.cartilage} light={ANAT.cartilageLight} deep={ANAT.cartilageShade} ow={ow} glow={glow} />
           </g>
         ))}
         {RIBS.map((rb, i) => (
           <g key={i}>
             <Band d={rb.bone} w={rb.w} base={ANAT.bone} light="#FFF8EA" deep={ANAT.boneShade} ow={ow} />
-            <Band d={rb.cart} w={rb.w * 0.92} base={ANAT.cartilage} light={ANAT.cartilageLight} deep={ANAT.cartilageShade} ow={ow} />
+            <Band d={rb.cart} w={rb.w * 0.92} base={ANAT.cartilage} light={ANAT.cartilageLight} deep={ANAT.cartilageShade} ow={ow} glow={glow} />
           </g>
         ))}
         {/* the 6th and 7th cartilages fuse into a plate here: the block that will be taken */}
@@ -111,12 +115,14 @@ export const RibWindow: React.FC<{open: number; taken: number; t: number; ow: nu
           {cut > 0 && taken < 1 && <path d={partial(outline, cut)} fill="none" stroke="#5A1418" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />}
         </g>
       </g>
-      {/* the scalpel tracing the block */}
-      {cut > 0 && cut < 1 && (() => {
+      {/* the scalpel tracing the block: it comes in along its own axis, cuts, and leaves the same way */}
+      {t > B.cut[0] - 0.22 && t < B.cut[1] + 0.25 && (() => {
         const q = at(outline, cut);
-        const c = Math.cos((PIECE_HOME.rot * Math.PI) / 180), s = Math.sin((PIECE_HOME.rot * Math.PI) / 180);
-        const wx = PIECE_HOME.x + q.p.x * c - q.p.y * s, wy = PIECE_HOME.y + q.p.x * s + q.p.y * c;
-        return <Scalpel x={wx} y={wy} a={-150} s={0.8} ow={ow} o={ss(cut, 0, 0.08) * (1 - ss(cut, 0.92, 1))} />;
+        const cs = Math.cos((PIECE_HOME.rot * Math.PI) / 180), sn = Math.sin((PIECE_HOME.rot * Math.PI) / 180);
+        const tip = {x: PIECE_HOME.x + q.p.x * cs - q.p.y * sn, y: PIECE_HOME.y + q.p.x * sn + q.p.y * cs};
+        const k = ss(t, B.cut[0] - 0.22, B.cut[0]) * (1 - ss(t, B.cut[1], B.cut[1] + 0.25));
+        const p = slideIn(tip, -150, k, 280);
+        return <Scalpel x={p.x} y={p.y} a={-150} s={0.8} ow={ow} />;
       })()}
     </g>
   );

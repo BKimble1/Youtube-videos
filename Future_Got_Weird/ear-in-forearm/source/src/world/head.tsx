@@ -8,8 +8,8 @@ import {B, TM} from './story';
 import {FIG} from './woman';
 import {EarHeight, Relief, EAR_OUTLINE} from './ear';
 import {FLAP_D} from './arm';
-import {sample, at, partial} from './geom';
-import {Forceps, NeedleHolder} from './tools';
+import {sample, at, partial, P} from './geom';
+import {Forceps, NeedleHolder, slideIn} from './tools';
 import {lit, shade} from '../core/color';
 
 const A = FIG.armEar, S = FIG.earSite;
@@ -125,94 +125,110 @@ export const Flap: React.FC<{t: number; camZ: number}> = ({t, camZ}) => {
 const FRONT = sample('M -15 -27 C -15 -18 -16 -10 -15 -2 C -16 8 -14 18 -10 28 C -8 34 -6 40 -2 43', 8);
 
 export const FlapTools: React.FC<{t: number}> = ({t}) => {
-  if (t < B.raise[0] || t > B.seat[1] + 0.2) return null;
-  const f = flapAt(t);
-  const a = ((f.rot * Math.PI) / 180), k = f.s;
+  // forceps come in from above-right along their axis, hold the flap from lifting to seating, then leave the same way
+  const t0 = B.raise[0] - 0.25, t1 = B.seat[1] + 0.3;
+  if (t < t0 || t > t1) return null;
+  const f = t < B.raise[0] ? flapAt(B.raise[0]) : flapAt(t);
+  const a = (f.rot * Math.PI) / 180, k = f.s;
   const lx = 24 * f.sx * k, ly = -46 * k;
-  const x = f.x + lx * Math.cos(a) - ly * Math.sin(a), y = f.y + lx * Math.sin(a) + ly * Math.cos(a);
-  const o = ss(t, B.raise[0], B.raise[0] + 0.15) * (1 - ss(t, B.seat[1] - 0.1, B.seat[1] + 0.2));
-  return <Forceps x={x} y={y} a={-125} s={0.85} ow={1.3} o={o} open={0.2 * (1 - ss(t, B.raise[0], B.raise[0] + 0.15)) + 0.5 * ss(t, B.seat[1] - 0.1, B.seat[1] + 0.1)} />;
+  const tip = {x: f.x + lx * Math.cos(a) - ly * Math.sin(a), y: f.y + lx * Math.sin(a) + ly * Math.cos(a)};
+  const kin = ss(t, t0, B.raise[0]) * (1 - ss(t, B.seat[1], t1));
+  const p = slideIn(tip, 135, kin, 300);
+  const open = 0.6 * (1 - ss(t, B.raise[0] - 0.06, B.raise[0])) + 0.6 * ss(t, B.seat[1] - 0.08, B.seat[1]);
+  return <Forceps x={p.x} y={p.y} a={135} s={0.85} ow={1.3} open={open} />;
 };
 
-// ---- the microsurgery cutaway, in front of and below the new ear ----
-export const AW = {x: S.x - 20, y: S.y + 60, r: 30};
+// ---- the microsurgery cutaway, just in front of the new ear (where the scalp's own vessels run) ----
+export const AW = {x: S.x - 30, y: S.y + 18, r: 30};
 export const anaWin = (t: number) => ss(t, B.closeUp[0], B.closeUp[0] + 0.3) * (1 - ss(t, B.closeUp[1] - 0.05, B.closeUp[1] + 0.3));
 
-type Line = {flap: string; rec: string; y: number; c: string; w: number; beat: readonly [number, number]; stitches: number};
-const LINES: Line[] = [
-  {flap: 'M 2 -9 C 14 -9 24 -12 30 -24 C 34 -32 36 -40 40 -50', rec: 'M -2 -9 C -14 -9 -26 -6 -34 2 C -40 8 -44 14 -48 22', y: -9, c: ANAT.artery, w: 4.2, beat: B.artery, stitches: 6},
-  {flap: 'M 2 3 C 16 3 28 -2 34 -14 C 38 -22 42 -32 46 -42', rec: 'M -2 3 C -16 3 -26 8 -32 16 C -36 22 -40 30 -44 38', y: 3, c: ANAT.vein, w: 4.8, beat: B.vein, stitches: 6},
-  {flap: 'M 2 15 C 16 15 28 12 36 2 C 42 -6 46 -14 50 -22', rec: 'M -2 15 C -14 15 -24 20 -30 28 C -34 34 -36 42 -38 50', y: 15, c: ANAT.nerve, w: 2.6, beat: B.nerve, stitches: 2},
-];
+// The flap's vessels and nerve leave from under the ear (up-right); the recipient vessels and nerve come up from below
+// (down-left). Each pair meets end to end on one straight seam, side by side, and both ends run on out under the
+// cutaway's soft edge, so nothing ends in mid-air.
+const DV = {x: 0.6, y: -0.8}, NV = {x: 0.8, y: 0.6};
+type Line = {J: P; c: string; w: number; beat: readonly [number, number]; stitches: number; flap: string; rec: string};
+const mk = (i: number, c: string, w: number, beat: readonly [number, number], stitches: number): Line => {
+  const J = {x: NV.x * (i - 1) * 13, y: NV.y * (i - 1) * 13};
+  const q = (k: number, n = 0, dx = 0) => `${(J.x + DV.x * k + NV.x * n + dx).toFixed(1)} ${(J.y + DV.y * k + NV.y * n).toFixed(1)}`;
+  return {
+    J, c, w, beat, stitches,
+    rec: `M ${q(-46, 5)} C ${q(-30, 3)} ${q(-12)} ${q(0)}`,
+    flap: `M ${q(0)} C ${q(12)} ${q(28, -2)} ${q(46, -3, 8)}`,
+  };
+};
+const LINES: Line[] = [mk(0, ANAT.artery, 4.2, B.artery, 6), mk(1, ANAT.vein, 4.8, B.vein, 6), mk(2, ANAT.nerve, 2.6, B.nerve, 2)];
 const LS = LINES.map((l) => ({f: sample(l.flap), r: sample(l.rec)}));
 
 export const Anastomosis: React.FC<{t: number}> = ({t}) => {
   const win = anaWin(t);
   if (win <= 0.01) return null;
   const flow = clamp((t - B.flow[0]) / (B.flow[1] - B.flow[0]));
-  let tool: {x: number; y: number} | null = null;
+  let tool: P = {x: LINES[0].J.x, y: LINES[0].J.y};
   const els = LINES.map((l, i) => {
     const [b0, b1] = l.beat;
-    const gap = 7 * (1 - ss(t, b0, b0 + 0.22));
-    const stU = clamp((t - (b0 + 0.22)) / (b1 - b0 - 0.25));
+    const gap = 6 * (1 - ss(t, b0, b0 + 0.2));
+    const stU = clamp((t - (b0 + 0.2)) / (b1 - b0 - 0.22));
     const nSt = Math.floor(stU * l.stitches + 0.001);
-    if (stU > 0 && stU < 1) {
+    if (t >= b0) {
       const k = Math.min(l.stitches - 1, nSt), ph = stU * l.stitches - k;
       const ang = (k / l.stitches) * Math.PI * 2;
-      tool = {x: 0.5 * Math.sin(ph * Math.PI) + 0.6, y: l.y + (l.w / 2 + 1) * Math.cos(ang) - 2 * Math.sin(ph * Math.PI)};
+      const off = (l.w / 2 + 0.8) * Math.cos(ang);
+      tool = {x: l.J.x + NV.x * off + DV.x * 2 * Math.sin(ph * Math.PI), y: l.J.y + NV.y * off + DV.y * 2 * Math.sin(ph * Math.PI)};
     }
     const deep = shade(l.c, 0.45);
     const fFill = i === 0 ? flow : i === 1 ? clamp(flow * 1.2 - 0.1) : 0;
+    const g = {x: DV.x * gap, y: DV.y * gap};
     return (
       <g key={i}>
-        <g transform={`translate(${gap} 0)`}>
-          <path d={l.flap} fill="none" stroke={deep} strokeWidth={l.w + 1} strokeLinecap="round" />
-          <path d={l.flap} fill="none" stroke={i < 2 ? lerpColor(l.c, '#7A5A5A', 0.45 * (1 - fFill)) : l.c} strokeWidth={l.w} strokeLinecap="round" />
+        <g transform={`translate(${g.x} ${g.y})`}>
+          <path d={l.flap} fill="none" stroke={deep} strokeWidth={l.w + 1} strokeLinecap="butt" />
+          <path d={l.flap} fill="none" stroke={i < 2 ? lerpColor(l.c, '#7A5A5A', 0.45 * (1 - fFill)) : l.c} strokeWidth={l.w} strokeLinecap="butt" />
           {fFill > 0 && i < 2 && <path d={partial(LS[i].f, fFill)} fill="none" stroke={lit(l.c, 0.45)} strokeWidth={l.w * 0.3} strokeLinecap="round" />}
         </g>
-        <g transform={`translate(${-gap} 0)`}>
-          <path d={l.rec} fill="none" stroke={deep} strokeWidth={l.w + 1} strokeLinecap="round" />
-          <path d={l.rec} fill="none" stroke={l.c} strokeWidth={l.w} strokeLinecap="round" />
+        <g transform={`translate(${-g.x} ${-g.y})`}>
+          <path d={l.rec} fill="none" stroke={deep} strokeWidth={l.w + 1} strokeLinecap="butt" />
+          <path d={l.rec} fill="none" stroke={l.c} strokeWidth={l.w} strokeLinecap="butt" />
           <path d={l.rec} fill="none" stroke={lit(l.c, 0.45)} strokeWidth={l.w * 0.3} strokeLinecap="round" opacity={i < 2 ? 1 : 0.6} />
         </g>
         {Array.from({length: Math.min(l.stitches, nSt)}, (_, k) => {
           const ang = (k / l.stitches) * Math.PI * 2;
-          const yy = l.y + (l.w / 2) * Math.cos(ang) * 0.95;
-          const front = Math.sin(ang) >= -0.2;
-          return front ? <path key={k} d={`M -1.4 ${yy - 0.5} L 1.4 ${yy + 0.5}`} stroke="#141820" strokeWidth={0.55} strokeLinecap="round" /> : null;
+          if (Math.sin(ang) < -0.2) return null; // stitches on the far side of the vessel are hidden
+          const off = (l.w / 2) * Math.cos(ang) * 0.95;
+          const P0 = {x: l.J.x + NV.x * off, y: l.J.y + NV.y * off};
+          return <path key={k} d={`M ${P0.x - DV.x * 1.4} ${P0.y - DV.y * 1.4} L ${P0.x + DV.x * 1.4} ${P0.y + DV.y * 1.4}`} stroke="#141820" strokeWidth={0.55} strokeLinecap="round" />;
         })}
       </g>
     );
   });
+  // the needle holder comes in from lower left along its axis, works the seams, and leaves the same way
+  const kin = ss(t, B.artery[0] - 0.25, B.artery[0]) * (1 - ss(t, B.nerve[1], B.nerve[1] + 0.25));
+  const tp = slideIn({x: AW.x + tool.x, y: AW.y + tool.y}, -40, kin, 120);
   return (
     <g>
       <defs>
         <radialGradient id="awG">
           <stop offset="0" stopColor="#FFF" />
-          <stop offset="0.62" stopColor="#FFF" />
+          <stop offset="0.76" stopColor="#FFF" />
           <stop offset="1" stopColor="#000" />
         </radialGradient>
         <mask id="awM">
-          <ellipse cx={AW.x} cy={AW.y + 2} rx={AW.r * 1.25 * (0.4 + 0.6 * win)} ry={AW.r * 1.05 * (0.4 + 0.6 * win)} fill="url(#awG)" opacity={win} />
+          <ellipse cx={AW.x} cy={AW.y + 2} rx={AW.r * 1.3 * (0.4 + 0.6 * win)} ry={AW.r * 1.35 * (0.4 + 0.6 * win)} fill="url(#awG)" opacity={win} />
         </mask>
       </defs>
       <g mask="url(#awM)">
-        <circle cx={AW.x} cy={AW.y} r={AW.r + 4} fill={ANAT.tissue} />
-        <circle cx={AW.x} cy={AW.y} r={AW.r + 4} fill={ANAT.fat} opacity="0.3" />
-        {Array.from({length: 9}, (_, i) => (
-          <path key={i} d={`M ${AW.x - 34 + i * 8} ${AW.y - 34} C ${AW.x - 30 + i * 8} ${AW.y - 10} ${AW.x - 38 + i * 8} ${AW.y + 10} ${AW.x - 34 + i * 8} ${AW.y + 34}`} stroke={ANAT.tissueDeep} strokeWidth="0.5" opacity="0.3" fill="none" />
+        <rect x={AW.x - 50} y={AW.y - 50} width={100} height={100} fill={ANAT.tissueDeep} />
+        <rect x={AW.x - 50} y={AW.y - 50} width={100} height={100} fill={ANAT.tissue} opacity="0.55" />
+        {Array.from({length: 11}, (_, i) => (
+          <path key={i} d={`M ${AW.x - 44 + i * 8} ${AW.y - 44} C ${AW.x - 40 + i * 8} ${AW.y - 10} ${AW.x - 48 + i * 8} ${AW.y + 10} ${AW.x - 44 + i * 8} ${AW.y + 44}`} stroke={ANAT.tissueDeep} strokeWidth="0.5" opacity="0.3" fill="none" />
         ))}
         <g transform={`translate(${AW.x} ${AW.y})`}>{els}</g>
-        {tool && (() => {
-          const tl = tool as {x: number; y: number};
-          return <NeedleHolder x={AW.x + tl.x} y={AW.y + tl.y} a={-40} s={0.22} ow={1.1} />;
-        })()}
+        {kin > 0.001 && <NeedleHolder x={tp.x} y={tp.y} a={-40} s={0.22} ow={1.1} />}
       </g>
     </g>
   );
 };
 const lerpColor = (a: string, b: string, u: number) => {
-  const p = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+  const p = (hx: string) => [1, 3, 5].map((i) => parseInt(hx.slice(i, i + 2), 16));
   const A2 = p(a), B2 = p(b);
   return '#' + A2.map((v, i) => Math.round(v + (B2[i] - v) * u).toString(16).padStart(2, '0')).join('');
 };

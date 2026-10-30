@@ -133,7 +133,7 @@ const hsh = (n: number) => {
   return v - Math.floor(v);
 };
 /** Fine forearm hairs, lying along the arm toward the wrist; only drawn when the camera is close (a). */
-const HAIRS = Array.from({length: 260}, (_, i) => {
+const HAIRS = Array.from({length: 170}, (_, i) => {
   const y = 540 + hsh(i * 3.1) * 400, c = armAt(y);
   const x = c.left + 3 + hsh(i * 7.7) * (c.right - c.left - 6);
   const L = 3.5 + hsh(i * 1.3) * 4, a = -90 + (hsh(i * 5.9) - 0.5) * 40 + (x - c.c) * 0.25;
@@ -141,7 +141,7 @@ const HAIRS = Array.from({length: 260}, (_, i) => {
 });
 const ArmHair: React.FC<{a: number}> = ({a}) =>
   a <= 0.01 ? null : (
-    <g opacity={a * 0.6} stroke={HAIR.base} strokeWidth={0.3} strokeLinecap="round" fill="none">
+    <g opacity={a * 0.38} stroke={HAIR.light} strokeWidth={0.24} strokeLinecap="round" fill="none">
       {HAIRS.map((h, i) => (
         <path key={i} d={`M ${h.x.toFixed(2)} ${h.y.toFixed(2)} Q ${((h.x + h.x2) / 2 + 0.6).toFixed(2)} ${((h.y + h.y2) / 2).toFixed(2)} ${h.x2.toFixed(2)} ${h.y2.toFixed(2)}`} opacity={h.o} />
       ))}
@@ -283,15 +283,16 @@ export const Head: React.FC<{ow: number; site?: React.ReactNode; blink?: number}
 /** The healed ear site, before reconstruction: smooth scarred skin, the ear canal opening kept, a small tragus remnant. */
 export const EarSiteScar: React.FC<{a?: number}> = ({a = 1}) => (
   <g opacity={a}>
-    {/* the healed footprint where the ear was: smoother, paler, slightly shiny skin with a soft scar border */}
-    <path d="M 427 508 C 444 498 466 504 474 522 C 482 544 476 576 462 592 C 448 604 432 598 426 584 C 418 562 416 526 427 508 Z" fill={SK.scar} opacity="0.75" filter="url(#soft2)" />
-    <path d="M 427 508 C 444 498 466 504 474 522 C 482 544 476 576 462 592 C 448 604 432 598 426 584 C 418 562 416 526 427 508 Z" fill="none" stroke={shade(SK.scar, 0.3)} strokeWidth="1.6" opacity="0.55" />
-    <path d="M 440 514 C 452 512 462 520 466 532 M 432 576 C 442 586 454 586 462 578 M 458 530 C 464 544 466 558 462 570" fill="none" stroke={shade(SK.scar, 0.3)} strokeWidth="1.3" opacity="0.5" />
-    <ellipse cx="452" cy="530" rx="9" ry="5" fill="#F6D2BC" opacity="0.4" filter="url(#soft2)" />
-    {/* a small tragus remnant, and the ear canal opening behind it */}
+    {/* V2, made readable at a glance: the flat, healed footprint where the ear was (smoother, paler, a little shiny),
+        bounded by a firm scar line along the old attachment; the ear canal opening is kept, with a small tragus stub */}
+    <path d="M 427 506 C 444 494 468 500 477 520 C 486 544 480 578 464 594 C 448 606 431 600 425 584 C 417 562 415 524 427 506 Z" fill={SK.scar} opacity="0.85" filter="url(#soft2)" />
+    <path d="M 432 512 C 446 502 466 506 473 522 C 480 542 476 572 462 588 C 450 598 436 594 431 582" fill="none" stroke={shade(SK.scar, 0.38)} strokeWidth="2.6" strokeLinecap="round" opacity="0.85" />
+    <path d="M 432 512 C 446 502 466 506 473 522 C 480 542 476 572 462 588 C 450 598 436 594 431 582" fill="none" stroke="#F3D3C0" strokeWidth="1" strokeLinecap="round" opacity="0.6" transform="translate(-1.2 -1.2)" />
+    <path d="M 444 520 C 454 520 462 530 464 542 M 440 574 C 448 582 456 582 462 576" fill="none" stroke={shade(SK.scar, 0.3)} strokeWidth="1.3" opacity="0.5" />
+    <ellipse cx="452" cy="532" rx="10" ry="6" fill="#F6D2BC" opacity="0.45" filter="url(#soft2)" />
     <ellipse cx="431" cy="557" rx="5" ry="9" fill={SK.light} />
     <ellipse cx="431" cy="557" rx="5" ry="9" fill="none" stroke={SK.deep} strokeWidth="1" opacity="0.6" />
-    <ellipse cx="442" cy="558" rx="4.6" ry="6.5" fill="#3B2019" />
-    <ellipse cx="441" cy="556.5" rx="2" ry="2.8" fill="#1E0E0A" />
+    <ellipse cx="442" cy="558" rx="5.2" ry="7.2" fill="#3B2019" />
+    <ellipse cx="441" cy="556.5" rx="2.3" ry="3.1" fill="#1E0E0A" />
   </g>
 );

@@ -42,3 +42,9 @@ export const NeedleHolder: React.FC<{x: number; y: number; a: number; s?: number
     <path d="M -150 -3 L -62 -1.4" stroke={STEEL.light} strokeWidth="1" />
   </g>
 );
+
+/** a tool's tip slid in from outside the frame along its own axis (k = 0: out of shot, 1: at the work) */
+export const slideIn = (tip: {x: number; y: number}, a: number, k: number, D = 300) => {
+  const r = (a * Math.PI) / 180, u = Math.min(1, Math.max(0, k)), e = 1 - u * u * u * (u * (u * 6 - 15) + 10);
+  return {x: tip.x - Math.cos(r) * D * e, y: tip.y - Math.sin(r) * D * e};
+};

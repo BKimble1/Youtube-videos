@@ -9,7 +9,7 @@ import {FIG} from './woman';
 import {EarHeight, Relief, EAR_OUTLINE, FRAME_OUTLINE} from './ear';
 import {sample, at, partial, P} from './geom';
 import {pieceAt, POCKET_X} from './piece';
-import {Scalpel} from './tools';
+import {Scalpel, slideIn} from './tools';
 import {lit, shade} from '../core/color';
 
 const A = FIG.armEar;
@@ -33,6 +33,9 @@ export const armEarAmt = (t: number) => {
   if (t < B.rewind[0]) return 0;
   return ss5(t, B.rewind[0], B.rewind[1]);
 };
+const VS = {a: B.vessels[0] + 0.35, b: B.vessels[0] + 0.9, c: B.vessels[0] + 1.35};
+/** after each growth stage lands, a short pulse brightens the vessels (and, at the end, the tissue flushes) */
+const vesselPulse = (t: number) => Math.max(...[VS.b, VS.c, B.vessels[1]].map((p) => Math.exp(-(((t - p) / 0.09) ** 2))));
 export const vesselWin = (t: number) => ss(t, B.vessels[0], B.vessels[0] + 0.4) * (1 - ss(t, B.winClose[0], B.winClose[1]));
 const donorAmt = (t: number) => (t >= B.raise[0] && t < TM.reconnecting + 0.6 ? ss(t, B.raise[0], B.raise[0] + 0.25) : 0);
 const graftAmt = (t: number) => (t >= TM.reconnecting + 0.6 ? 1 - ss(t, B.rewind[0], B.rewind[1] - 0.1) : 0);
@@ -56,7 +59,9 @@ const smooth = (pts: P[]) => {
 };
 const VESSELS: V[] = (() => {
   const out: V[] = [];
-  const v0 = B.vessels[0] + 0.2, v1 = B.vessels[1] - 0.2;
+  // V2: three clear stages after the cutaway opens (about 0.35 s): trunks sprout from the artery; branches reach the
+  // framework and wrap around its margin; fine sprigs spread and the tissue flushes (VS)
+  const v0 = VS.a, v1 = B.vessels[1];
   const add = (pts: P[], w: number, c: string, t0: number, dur: number, o = 0.95) => {
     const d = smooth(pts);
     out.push({d, s: sample(d, 12), w, c, t0, t1: t0 + dur, o});
@@ -74,20 +79,20 @@ const VESSELS: V[] = (() => {
     {y: 78, node: {x: -28, y: 56}, targets: [0.62, 0.55, 0.47]},
   ];
   trunks.forEach((tr, i) => {
-    const t0 = lerp(v0, v1 - 1.0, i / 3);
-    add(wig([{x: -39, y: tr.y}, {x: -35, y: (tr.y + tr.node.y) / 2 + 3}, tr.node], 3, i * 31), 2.1, ANAT.artery, t0, 0.28);
+    const t0 = VS.a + i * 0.06;
+    add(wig([{x: -39, y: tr.y}, {x: -35, y: (tr.y + tr.node.y) / 2 + 3}, tr.node], 3, i * 31), 2.1, ANAT.artery, t0, 0.32);
     tr.targets.forEach((u, j) => {
       const T = RING(u, 1.04);
       const W = out_(T, 1.32);
       const pts = wig([tr.node, {x: (tr.node.x + W.x) / 2, y: (tr.node.y + W.y) / 2 + (hash(i * 9 + j) - 0.5) * 10}, W, T], 3.5, i * 50 + j * 7);
-      const tj = t0 + 0.22 + j * 0.12;
-      add(pts, 1.4 - j * 0.15, i === 1 && j === 1 ? ANAT.vein : ANAT.artery, tj, 0.4);
+      const tj = VS.b + j * 0.06 + i * 0.03;
+      add(pts, 1.4 - j * 0.15, i === 1 && j === 1 ? ANAT.vein : ANAT.artery, tj, 0.28);
       for (const dir of [-1, 1]) {
         const span = 0.06 + hash(i * 7.3 + j * 3 + dir) * 0.08;
         const arc = Array.from({length: 6}, (_, q) => RING(u + dir * span * (q / 5), 1.04 + 0.025 * Math.sin(q * 1.3 + j)));
-        add(wig(arc, 2.2, i * 13 + j * 5 + dir), 0.95, ANAT.artery, tj + 0.32, 0.4, 0.9);
+        add(wig(arc, 2.2, i * 13 + j * 5 + dir), 0.95, ANAT.artery, tj + 0.22, 0.3, 0.9);
         const e = arc[arc.length - 1], f = out_(e, 1.25);
-        add(wig([e, {x: (e.x + f.x) / 2 + 3, y: (e.y + f.y) / 2 - 2}, f], 3, i * 17 + j + dir), 0.6, ANAT.artery, tj + 0.6, 0.3, 0.7);
+        add(wig([e, {x: (e.x + f.x) / 2 + 3, y: (e.y + f.y) / 2 - 2}, f], 3, i * 17 + j + dir), 0.6, ANAT.artery, VS.c + hash(i + j * 3 + dir) * 0.12, 0.25, 0.7);
       }
     });
   });
@@ -104,7 +109,7 @@ const Vessels: React.FC<{t: number}> = ({t}) => (
         <g key={i} opacity={v.o}>
           <path d={d} fill="none" stroke={shade(v.c, 0.45)} strokeWidth={v.w + 0.9} strokeLinecap="round" />
           <path d={d} fill="none" stroke={v.c} strokeWidth={v.w} strokeLinecap="round" />
-          <path d={d} fill="none" stroke={lit(v.c, 0.55)} strokeWidth={v.w * 0.28} strokeLinecap="round" transform="translate(-0.3 -0.4)" opacity="0.7" />
+          <path d={d} fill="none" stroke={lit(v.c, 0.55)} strokeWidth={v.w * (0.28 + 0.3 * vesselPulse(t))} strokeLinecap="round" transform="translate(-0.3 -0.4)" opacity={0.7 + 0.3 * vesselPulse(t)} />
         </g>
       );
     })}
@@ -144,7 +149,7 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
   const dn = donorAmt(t), gr = graftAmt(t);
   const uInc = clamp((t - B.incise[0]) / (B.incise[1] - B.incise[0]));
   // skin pocket: opens just before the framework arrives, closes after; stitches stay until "Months later"
-  const pocket = ss(t, B.travel[1] - 0.35, B.insert[0]) * (1 - ss(t, B.insert[0] + 0.4, B.insert[1]));
+  const pocket = ss(t, B.carry2[1] - 0.45, B.insert[0]) * (1 - ss(t, B.insert[0] + 0.4, B.insert[1]));
   const stitches = ss(t, B.insert[1] - 0.15, B.insert[1] + 0.1) * (1 - ss(t, TM.months - 0.6, TM.months));
   const reliefX = inserting ? pc.x : ex;
   const depth = inserting ? 2.3 * ss(t, B.insert[0] + 0.05, B.insert[1]) : 2.3 * amt;
@@ -181,7 +186,7 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
             </defs>
           )}
           <g transform={`translate(${reliefX} ${inserting ? pc.y : A.y}) scale(${inserting ? 1 : ek} 1)`}>
-            <Relief id="armR" x={-90} y={-240} w={180} h={480} px={px} depth={depth} blur={1.9} tex={tex} texFreq={0.9}>
+            <Relief id="armR" x={-90} y={-240} w={180} h={480} px={px} depth={depth * (1 + 0.35 * (1 - ss(px, 2.2, 4.5)))} blur={1.9} gain={1.15 + 0.45 * (1 - ss(px, 2.2, 4.5))} tex={tex} texFreq={0.9}>
               <EarHeight p={{lobule: 0.3}} />
             </Relief>
           </g>
@@ -218,6 +223,8 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
           <g mask="url(#vwM)">
             <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.tissue} />
             <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.fat} opacity="0.28" />
+            {/* the tissue around the framework flushes as it is perfused */}
+            <ellipse cx={A.x + 3} cy={A.y - 1} rx={52} ry={70} fill="#E0473F" opacity={0.28 * ss(t, VS.c, B.vessels[1]) + 0.12 * vesselPulse(t)} filter="url(#soft10)" />
             {Array.from({length: 14}, (_, i) => (
               <path key={i} d={`M ${A.x - 70 + i * 11} ${A.y - 160} C ${A.x - 66 + i * 11} ${A.y - 50} ${A.x - 74 + i * 11} ${A.y + 50} ${A.x - 70 + i * 11} ${A.y + 160}`} stroke={ANAT.tissueDeep} strokeWidth="1" opacity="0.25" fill="none" />
             ))}
@@ -240,9 +247,11 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
 };
 /** Tools working on the forearm (drawn above the arm, not clipped by it). */
 export const ArmTools: React.FC<{t: number}> = ({t}) => {
+  if (t < B.incise[0] - 0.22 || t > B.incise[1] + 0.25) return null;
   const uInc = clamp((t - B.incise[0]) / (B.incise[1] - B.incise[0]));
-  if (uInc <= 0 || uInc >= 1) return null;
   const q = at(FLAP_S, uInc).p;
-  return <Scalpel x={A.x + q.x} y={A.y + q.y} a={-155} s={0.7} ow={1.3} o={ss(uInc, 0, 0.1) * (1 - ss(uInc, 0.9, 1))} />;
+  const k = ss(t, B.incise[0] - 0.22, B.incise[0]) * (1 - ss(t, B.incise[1], B.incise[1] + 0.25));
+  const p = slideIn({x: A.x + q.x, y: A.y + q.y}, -155, k, 260);
+  return <Scalpel x={p.x} y={p.y} a={-155} s={0.7} ow={1.3} />;
 };
 export {HOOK_POS};

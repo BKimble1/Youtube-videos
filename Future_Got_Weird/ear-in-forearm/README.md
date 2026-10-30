@@ -1,6 +1,27 @@
 # Future Got Weird: Doctors Grew an Ear Inside Her Arm
 
-## V1 (current)
+## V2 (current)
+
+**Status.** A review version, checked from the files. **It is not published.**
+
+**Deliverable.** `exports/FGW_Ear_Forearm_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 609 frames, 20.3 s.
+
+**Report.** `production/V2_REPORT.md`: changes, measured QA and remaining issues.
+
+**Narration and audio.**
+- Same locked take as V1, with tightened sentence gaps: `audio/narration/FGW_Ear_Forearm_narration_V2.wav`.
+- Mix: `audio/mix/FGW_Ear_Forearm_V2_mix.wav`.
+- Captions: `captions/FGW_Ear_Forearm_V2.srt`.
+
+**QA evidence.** `qa/v2/`.
+
+**Source.** `source/src/` (composition `EarForearmV2`). The V1 source is at commit `4f47c44`.
+
+**Rebuild.** As below, with these changes:
+- run `make_audio.py mix_v2`;
+- render `EarForearmV2` with `--props='{"audio":"mix_v2","captions":true}'`.
+
+## V1
 
 **Status.** A review version, rendered from source and checked from the files. **It is not published.**
 
