@@ -1,6 +1,28 @@
 # Future Got Weird: Doctors Grew an Ear Inside Her Arm
 
-## V5 FINAL REVIEW (current)
+## V6 FINAL MASTER (current)
+
+**Status.** A final master plus a review copy. **It is not published.**
+
+**Deliverables.**
+- `exports/FGW_Ear_Forearm_V6_FINAL_MASTER_1080x1920.mp4`: 1080×1920 (verified), 30 fps, 587 frames, 19.58 s.
+- `exports/FGW_Ear_Forearm_V6_REVIEW_1080x1920.mp4`: a smaller review copy of the same cut.
+
+**What changed.** A targeted retention edit of V5:
+- the hook flows into the missing ear and crash memory, then to the ribs, while the narration is still speaking;
+- tissue visibly grows over the scaffold before the vessels;
+- a wide carry shows the ear moving from forearm to head;
+- a 1 s reconnection cutaway;
+- the same flashback loop.
+
+**Report.** `production/V6_FINAL_REPORT.md`. QA evidence is in `qa/v6/`.
+
+**Rebuild.**
+- Narration: `python3 tools/make_narration.py` (V6 spacing: 0.16 s sentence gaps).
+- Mix: `python3 tools/make_audio.py mix_v6`.
+- Render composition `EarForearmV6` with `--props='{"audio":"mix_v6","captions":true}'`.
+
+## V5 FINAL REVIEW
 
 **Status.** A review copy. **It is not published.**
 

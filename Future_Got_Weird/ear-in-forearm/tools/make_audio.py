@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Effects and mix for FGW "Doctors Grew an Ear Inside Her Arm" V5 (re-cued to the V5 picture: stitch-by-stitch closure, a memory swell into the closing flashback). Everything here is synthesised (no samples, no
-third-party music). The narration master (audio/narration/FGW_Ear_Forearm_narration_V5.wav) is used sample for sample
+"""Effects and mix for FGW "Doctors Grew an Ear Inside Her Arm" V6 (re-cued to the V6 picture: the crash memory on the missing-ear shot, stitch-by-stitch closure, tissue growth, a 1 s reconnection, the earlier flashback). Everything here is synthesised (no samples, no
+third-party music). The narration master (audio/narration/FGW_Ear_Forearm_narration_V6.wav) is used sample for sample
 (gain, a gentle compressor and a peak limiter only).
 Under it: one continuous low ambient bed (clinic air and a quiet low pad; it never cuts in and out), and restrained
 effects placed from the picture's own events (audio/cues.json, exported from story.ts):
@@ -16,14 +16,14 @@ Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; sample ceilin
 The bed's tones and LFOs are whole cycles over the film's length and the noise is filtered circularly, so the end of
 the film runs straight into its start (the loop).
 usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
-Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Ear_Forearm_V5_mix.wav, audio/mix/mix_measure_v5.json, audio/sfx_log_v5.json"""
+Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Ear_Forearm_V6_mix.wav, audio/mix/mix_measure_v6.json, audio/sfx_log_v6.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v5'
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v6'
 cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
 DUR, TM, B = cj['DUR'], cj['TM'], cj['B']
 N = int(round(DUR * SR))
@@ -145,7 +145,7 @@ place(impact_low(), 0.0, 'low impact under the opening ear', -17)
 place(stretch(0.75), 0.02, 'skin stretch (opening)', -27)
 place(rub(1.2), E('turn')[0] + 0.1, 'forearm turning (skin)', -38)
 # the crash memory
-place(crash_far(), TM['crash'] + 0.02, 'distant muffled crash, a little glass', -24)
+place(crash_far(), E('crash')[0] + 0.06, 'distant muffled crash, a little glass', -24)
 # rib harvest
 place(organic(1.2) * 0.6, E('ribWin')[0], 'chest opening (soft tissue)', -33)
 place(slice_(E('cut')[1] - E('cut')[0]), E('cut')[0], 'blade traces the cartilage block', -30)
@@ -174,6 +174,7 @@ for k in range(5):  # V5: the stitches go in one by one
 # vessels grow in the tissue around it
 v0, v1 = E('vessels')
 place(organic(v1 - v0 + 0.3), v0, 'organic swell, faint pulse (vessels forming)', -27)
+place(stretch(0.6, 90, 60, 18), E('cover')[0], 'new tissue creeping over the scaffold (soft, wet)', -33)
 # the transfer
 place(slice_(E('incise')[1] - E('incise')[0]), E('incise')[0], 'flap outlined', -32)
 place(wet_lift(0.45), E('raise')[0] + 0.1, 'living ear lifted', -26)
@@ -214,7 +215,7 @@ amb = 0.6 * norm(air) + norm(hiss) * 0.12
 LOG.append({'t': round(E('reveal')[0], 3), 'sfx': 'bed: warm release (minor -> major) for the finished ear', 'gain_db': 0})
 
 # ---------------- voice and mix ----------------
-v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Ear_Forearm_narration_V5.wav'))
+v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Ear_Forearm_narration_V6.wav'))
 assert vsr == SR and len(v) == N, (vsr, len(v), N)
 meter = pyln.Meter(SR)
 def compress(x, thr_db=-20.0, ratio=3.0, att=0.004, rel_=0.09):
@@ -252,7 +253,7 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_Ear_Forearm_V5_mix.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, 'audio/mix/FGW_Ear_Forearm_V6_mix.wav'), mix2, SR, subtype='PCM_24')
 # stems-level check: effects never above the voice
 def rms_db(x): return 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-12)
 sp = venv > 0.15
@@ -262,6 +263,6 @@ res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_
        'voice_rms_db_in_speech': round(rms_db(voice[sp] * g), 1), 'effects_rms_db_in_speech': round(rms_db((sfx * fx_duck)[sp] * g), 1),
        'beds_rms_db_in_speech': round(rms_db((db(-31) * amb * duck + db(-33) * bed * duck)[sp] * g), 1),
        'loop_seam_step': round(float(abs(mix[0] - mix[-1])), 4)}
-json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v5.json'), 'w'), indent=1)
-json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v5.json'), 'w'), indent=1)
+json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v6.json'), 'w'), indent=1)
+json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v6.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))

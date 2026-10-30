@@ -7,7 +7,7 @@ import {Caption, CAPTIONS, clamp} from './lib';
 // V2: low captions sit at y 1340, above the Shorts title and description area; the vessel cutaway fills the middle, so
 // its caption goes high
 export const CAP_Y: [string, number][] = [
-  ['Doctors', 1340], ['inside', 1340], ['She', 1340], ['so', 380], ['from', 380], ['They', 1340], ['where', 250], ['Months', 1340],
+  ['Doctors', 1340], ['inside', 1340], ['She', 1450], ['so', 380], ['from', 380], ['They', 1340], ['where', 250], ['Months', 1340],
   ['they', 1340], ['reconnecting', 1340], ['And', 1340], ['her', 1340],
 ];
 export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);

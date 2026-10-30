@@ -23,6 +23,16 @@ export const turnAt = (t: number) => (t > B.turn[0] && t < B.turn[1] ? 0.24 * Ma
 const FLAP_K = 1.08; // V3: a tight margin, so the lifted flap keeps the ear's own outline and size
 const OUTL = sample(EAR_OUTLINE, 16);
 const HELIX_D = HELIX, SCAPHA_D = SCAPHA;
+/** fibres of new tissue creeping inward over the scaffold from its margin (V6) */
+const COVER_FIBRES = (() => {
+  const fs = sample(FRAME_OUTLINE, 10), out: {x0: number; y0: number; x1: number; y1: number; delay: number}[] = [];
+  for (let k = 0; k < 26; k++) {
+    const q = at(fs, (k + 0.3) / 26).p;
+    const dx = 4 - q.x, dy = -4 - q.y, n = Math.hypot(dx, dy) || 1, L = 10 + 8 * hash(k * 2.7);
+    out.push({x0: +q.x.toFixed(1), y0: +q.y.toFixed(1), x1: q.x + (dx / n) * L + (hash(k * 4.1) - 0.5) * 4, y1: q.y + (dy / n) * L, delay: 0.25 * hash(k * 6.3)});
+  }
+  return out;
+})();
 /** fine skin creases radiating from the raised outline (the skin is stretched over the framework) */
 const CREASES = (() => {
   const fs = sample(FRAME_OUTLINE, 10), out: string[] = [];
@@ -165,6 +175,7 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
   const pocket = ss(t, B.carry2[1] - 0.45, B.insert[0]) * (1 - ss(t, B.insert[0] + 0.4, B.insert[1]));
   const stitches = ss(t, B.insert[1] - 0.15, B.insert[1] - 0.1) * (1 - ss(t, TM.months - 0.6, TM.months));
   const reliefX = inserting ? pc.x : ex;
+  const cov = ss(t, B.cover[0], B.cover[1]) * (t < B.raise[0] ? 1 : 0);
   const cw = ss(t, B.carry2[1] - 0.3, B.carry2[1]) * (1 - ss(t, B.winClose[0], B.winClose[1]));
   const fpos = inserting ? {x: pc.x, y: pc.y, s: pc.s} : {x: A.x, y: A.y, s: 1};
   // V4: the living skin over the ear swells very slightly with the pulse (about 70 bpm)
@@ -227,8 +238,26 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
             {t >= B.insert[0] && (
               <g clipPath={inserting ? 'url(#underSkinV)' : undefined}>
                 <g transform={`translate(${fpos.x} ${fpos.y}) scale(${fpos.s})`}>
-                  <path d={FRAME_OUTLINE} fill={ANAT.cartilageLight} opacity="0.42" filter="url(#soft2)" />
+                  <path d={FRAME_OUTLINE} fill={ANAT.cartilageLight} opacity={0.42 - 0.17 * cov} filter="url(#soft2)" />
                   <path d={FRAME_OUTLINE} fill="none" stroke={ANAT.cartilageShade} strokeWidth="2" opacity="0.25" filter="url(#soft2)" />
+                  {/* V6: new living tissue grows in from the margin over the scaffold (a soft pink film and fibres creeping
+                      inward), so the vessels that follow have tissue to grow into */}
+                  {cov > 0.01 && (
+                    <g>
+                      <path d={FRAME_OUTLINE} fill="none" stroke="#C85A4E" strokeWidth={48 * cov} opacity={0.78} filter="url(#soft3)" clipPath="url(#covClip)" />
+                      <defs>
+                        <clipPath id="covClip">
+                          <path d={FRAME_OUTLINE} />
+                        </clipPath>
+                      </defs>
+                      <g clipPath="url(#covClip)" stroke="#9E3A33" strokeWidth={1.3} fill="none" opacity={0.9} strokeLinecap="round">
+                        {COVER_FIBRES.map((f, i) => {
+                          const u = clamp(cov * 1.3 - f.delay);
+                          return u > 0 ? <path key={i} d={`M ${f.x0} ${f.y0} L ${(f.x0 + (f.x1 - f.x0) * u).toFixed(1)} ${(f.y0 + (f.y1 - f.y0) * u).toFixed(1)}`} /> : null;
+                        })}
+                      </g>
+                    </g>
+                  )}
                 </g>
               </g>
             )}

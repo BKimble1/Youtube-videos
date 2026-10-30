@@ -22,12 +22,13 @@ export const KEYS: Key[] = [
   {t: 0, ...OPEN, v: SEAM},
   {t: B.push[1], x: A.x, y: A.y + 26, z: 9.0, stop: true},
   {t: 0.85, x: A.x - 8, y: A.y - 24, z: 2.7},
-  {t: 1.55, x: 640, y: 640, z: 1.5},
-  {t: 2.3, x: 520, y: 590, z: 2.2},
-  {t: 2.95, x: S.x - 30, y: S.y + 10, z: 3.4},
-  {t: TM.crash + 0.05, x: S.x - 26, y: S.y + 14, z: 3.6},
-  {t: B.crash[1] + 0.05, x: S.x - 40, y: S.y + 50, z: 3.1},
-  {t: B.ribWin[1] - 0.05, x: 362, y: 1084, z: 2.4},
+  // V6: the reveal of her face flows straight on, along her gaze, to the missing ear (established by about 2 s); the
+  // camera keeps pushing in, then leaves for the ribs while "She lost her ear in a crash" is still being said
+  {t: 1.35, x: 690, y: 640, z: 1.6},
+  {t: 1.95, x: S.x - 24, y: S.y + 12, z: 3.2},
+  {t: 2.6, x: S.x - 20, y: S.y + 16, z: 3.7},
+  {t: 3.2, x: S.x - 36, y: S.y + 100, z: 3.0},
+  {t: B.ident[0], x: 368, y: 1092, z: 2.6},
   {t: B.cut[0] + 0.3, x: 382, y: 1122, z: 3.4},
   {t: B.lift[1], x: 394, y: 1116, z: 3.6},
   {t: (B.carry1[0] + B.carry1[1]) / 2, x: 590, y: 1250, z: 2.35},
@@ -36,22 +37,24 @@ export const KEYS: Key[] = [
   {t: B.rim[1], x: ON_TRAY.x + 4, y: ON_TRAY.y - 8, z: 4.6},
   {t: (B.carry2[0] + B.carry2[1]) / 2, x: 830, y: 1060, z: 2.7},
   {t: B.carry2[1], x: A.x + 22, y: A.y + 4, z: 3.8},
-  {t: B.insert[1], x: A.x + 4, y: A.y + 4, z: 4.4},
-  {t: (B.vessels[0] + B.vessels[1]) / 2, x: A.x, y: A.y, z: 5.3},
-  {t: B.winClose[0], x: A.x, y: A.y + 4, z: 5.6},
-  {t: TM.months, x: A.x, y: A.y + 10, z: 4.4},
-  {t: B.raise[1], x: A.x - 60, y: A.y - 20, z: 3.2},
-  {t: B.carry[1] - 0.05, x: S.x + 40, y: S.y + 10, z: 3.3},
-  {t: B.seat[1], x: S.x - 16, y: S.y + 18, z: 4.8},
-  // V5: the reconnection is a brief, closer look that already pulls back while the nerve is joined
-  {t: B.artery[0] + 0.15, x: AW.x + 2, y: AW.y, z: 6.2},
-  {t: B.nerve[1], x: AW.x, y: AW.y - 4, z: 4.6},
-  // the finished ear: a clean view of her head, then down over her neck and shoulder (no ear in frame) into the past
-  {t: TM.and2 + 0.05, x: S.x - 30, y: S.y + 36, z: 2.55},
-  {t: B.fb[0] - 0.2, x: S.x + 4, y: S.y + 52, z: 2.8},
+  // V6: one continuous push from the insertion down into the tissue (closure, tissue growth, vessels), then out to
+  // the healed skin, months later
+  {t: B.insert[1], x: A.x + 6, y: A.y + 2, z: 4.6},
+  {t: B.cover[1], x: A.x + 2, y: A.y, z: 5.6},
+  {t: B.winClose[0], x: A.x, y: A.y, z: 6.6},
+  {t: TM.months + 0.1, x: A.x, y: A.y + 8, z: 4.2},
+  {t: B.raise[1], x: A.x - 50, y: A.y - 16, z: 3.3},
+  // the carry: wide enough mid-way to see the forearm and the head, so the ear's journey reads
+  {t: (B.carry[0] + B.carry[1]) / 2, x: (A.x + S.x) / 2 + 30, y: (A.y + S.y) / 2 - 10, z: 2.1},
+  {t: B.carry[1], x: S.x + 20, y: S.y + 12, z: 3.6},
+  {t: B.closeUp[0] + 0.25, x: AW.x + 4, y: AW.y - 2, z: 5.6},
+  {t: B.closeUp[1], x: S.x - 10, y: S.y + 20, z: 3.6},
+  // the finished ear in place for a beat, then down over her neck and shoulder (no ear in frame) into the past
+  {t: B.fb[0] - 0.2, x: S.x + 4, y: S.y + 52, z: 3.0},
   {t: B.fb[0] + 0.05, x: 640, y: 710, z: 4.4},
-  {t: B.fb[1] + 0.3, x: 770, y: 718, z: 3.6},
-  {t: TM.here, x: 830, y: 704, z: 3.5},
+  {t: B.fb[1] + 0.3, x: 770, y: 718, z: 3.4},
+  {t: TM.her, x: 820, y: 712, z: 3.9},
+  {t: TM.here, x: 834, y: 718, z: 5.0},
   {t: TM.end, ...OPEN, v: SEAM},
 ];
 
