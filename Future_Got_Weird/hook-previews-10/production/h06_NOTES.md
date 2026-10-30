@@ -25,7 +25,7 @@ No cuts, crossfades, whips or flashes. Zoom is keyed in log space with Catmull-R
 - The cutaway shows the broodsac inside the tentacle and the lumen packed with encysted metacercariae.
 - The robin notices the stalk (head turn, focusing eye, a hop closer) and does not attack.
 - **Deliberately not shown:** brain control, any claim of it, or any change to the snail's behaviour; the bird eating the snail or the life cycle in the bird; gore. Only one broodsac is drawn (the parasite has a branched sporocyst in the body; that part isn't shown).
-- **Sources:** Wesołowska & Wesołowski 2014, *J. Zool.* 292:151 (broodsac pulsation in tentacles, the light-exposure behaviour of infected snails); Casey et al. 2003 (Leucochloridium in Succinea); general references on Succinea putris shell form.
+- **Sources:** the production brief's science notes (broodsac banding, 40–75 pulses/min, metacercariae, bird transmission, no brain control); Wesołowska & Wesołowski 2014, *J. Zool.* 292:151 (pulsating broodsacs in tentacles, infected snails in more exposed spots); general descriptions of the *Succinea putris* shell. I did not re-check the citations in this session.
 
 ## Assets
 - All newly drawn in `source/src/h06/`:
