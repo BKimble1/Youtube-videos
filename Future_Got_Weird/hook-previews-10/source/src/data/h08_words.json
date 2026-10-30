@@ -1,0 +1,71 @@
+{
+ "hook": "08",
+ "line": "These contact lenses detect infrared signals\u2026 even when your eyes are closed.",
+ "emph": [
+  "infrared",
+  "closed"
+ ],
+ "speech_end": 4.46,
+ "words": [
+  {
+   "word": "These",
+   "start": 0.06,
+   "end": 0.32
+  },
+  {
+   "word": "contact",
+   "start": 0.32,
+   "end": 0.76
+  },
+  {
+   "word": "lenses",
+   "start": 0.76,
+   "end": 1.19
+  },
+  {
+   "word": "detect",
+   "start": 1.2,
+   "end": 1.53
+  },
+  {
+   "word": "infrared",
+   "start": 1.6,
+   "end": 2.16
+  },
+  {
+   "word": "signals\u2026",
+   "start": 2.16,
+   "end": 2.65
+  },
+  {
+   "word": "even",
+   "start": 2.93,
+   "end": 3.08
+  },
+  {
+   "word": "when",
+   "start": 3.08,
+   "end": 3.24
+  },
+  {
+   "word": "your",
+   "start": 3.24,
+   "end": 3.52
+  },
+  {
+   "word": "eyes",
+   "start": 3.52,
+   "end": 3.76
+  },
+  {
+   "word": "are",
+   "start": 3.76,
+   "end": 3.96
+  },
+  {
+   "word": "closed.",
+   "start": 3.96,
+   "end": 4.46
+  }
+ ]
+}

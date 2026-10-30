@@ -1,0 +1,65 @@
+{
+ "hook": "01",
+ "line": "This parasite destroys a fish\u2019s tongue\u2026 then becomes its new tongue.",
+ "emph": [
+  "tongue"
+ ],
+ "speech_end": 4.66,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.26
+  },
+  {
+   "word": "parasite",
+   "start": 0.27,
+   "end": 0.93
+  },
+  {
+   "word": "destroys",
+   "start": 0.95,
+   "end": 1.55
+  },
+  {
+   "word": "a",
+   "start": 1.55,
+   "end": 1.67
+  },
+  {
+   "word": "fish\u2019s",
+   "start": 1.67,
+   "end": 2.19
+  },
+  {
+   "word": "tongue\u2026",
+   "start": 2.19,
+   "end": 2.57
+  },
+  {
+   "word": "then",
+   "start": 2.99,
+   "end": 3.15
+  },
+  {
+   "word": "becomes",
+   "start": 3.15,
+   "end": 3.71
+  },
+  {
+   "word": "its",
+   "start": 3.71,
+   "end": 4.03
+  },
+  {
+   "word": "new",
+   "start": 4.03,
+   "end": 4.35
+  },
+  {
+   "word": "tongue.",
+   "start": 4.35,
+   "end": 4.66
+  }
+ ]
+}

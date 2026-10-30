@@ -1,0 +1,77 @@
+{
+ "hook": "02",
+ "line": "Scientists gave a cockroach a diving suit\u2026 and kept it underwater for hours.",
+ "emph": [
+  "diving",
+  "suit",
+  "hours"
+ ],
+ "speech_end": 4.57,
+ "words": [
+  {
+   "word": "Scientists",
+   "start": 0.06,
+   "end": 0.57
+  },
+  {
+   "word": "gave",
+   "start": 0.58,
+   "end": 0.77
+  },
+  {
+   "word": "a",
+   "start": 0.78,
+   "end": 0.88
+  },
+  {
+   "word": "cockroach",
+   "start": 0.9,
+   "end": 1.46
+  },
+  {
+   "word": "a",
+   "start": 1.46,
+   "end": 1.62
+  },
+  {
+   "word": "diving",
+   "start": 1.62,
+   "end": 2.06
+  },
+  {
+   "word": "suit\u2026",
+   "start": 2.06,
+   "end": 2.32
+  },
+  {
+   "word": "and",
+   "start": 2.67,
+   "end": 2.73
+  },
+  {
+   "word": "kept",
+   "start": 2.71,
+   "end": 2.94
+  },
+  {
+   "word": "it",
+   "start": 2.94,
+   "end": 3.13
+  },
+  {
+   "word": "underwater",
+   "start": 3.14,
+   "end": 3.74
+  },
+  {
+   "word": "for",
+   "start": 3.74,
+   "end": 4.02
+  },
+  {
+   "word": "hours.",
+   "start": 4.02,
+   "end": 4.57
+  }
+ ]
+}

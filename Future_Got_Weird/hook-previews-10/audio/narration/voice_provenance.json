@@ -1,0 +1,161 @@
+{
+ "provider": "ElevenLabs (restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "GZAX1BnY2Ww17dwzZolu",
+ "generated_once": "one run of two variations per line; no regeneration",
+ "selection": "clean ASR on both models, then the take with less total speech time (more room for the visual payoff); every pick keeps a >=0.28 s beat at the ellipsis",
+ "hooks": {
+  "01": {
+   "take": "h01_t1_EqyAn5er2VRH6sVpGZAU.mp3",
+   "whisper": "exact",
+   "zipformer": "exact",
+   "voice_gain_db": 3.55,
+   "speech_s": [
+    0.06,
+    4.66
+   ]
+  },
+  "02": {
+   "take": "h02_t2_h74bPyHPBjTr0TGJ11cM.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "underwater",
+     "under water"
+    ]
+   ],
+   "voice_gain_db": 2.93,
+   "speech_s": [
+    0.06,
+    4.57
+   ]
+  },
+  "03": {
+   "take": "h03_t1_kL6qb1S9L3qnBa20leGw.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "a mantis",
+     "amantus"
+    ]
+   ],
+   "voice_gain_db": 4.35,
+   "speech_s": [
+    0.06,
+    4.5
+   ]
+  },
+  "04": {
+   "take": "h04_t1_5SQkoY6FXTX7b9rCGncu.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "remolded",
+     "re moulded"
+    ]
+   ],
+   "voice_gain_db": 0.71,
+   "speech_s": [
+    0.06,
+    4.35
+   ]
+  },
+  "05": {
+   "take": "h05_t2_YoZnGwz03iNM72bkFYAt.mp3",
+   "whisper": "exact",
+   "zipformer": "exact",
+   "voice_gain_db": 1.79,
+   "speech_s": [
+    0.06,
+    4.53
+   ]
+  },
+  "06": {
+   "take": "h06_t2_86kymvhDp9ZLf2jgoyv7.mp3",
+   "whisper": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stalk"
+    ]
+   ],
+   "zipformer": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stalk"
+    ]
+   ],
+   "voice_gain_db": 3.38,
+   "speech_s": [
+    0.06,
+    4.61
+   ]
+  },
+  "07": {
+   "take": "h07_t2_ALioCbYaJJXifm6X8bpd.mp3",
+   "whisper": "exact",
+   "zipformer": "exact",
+   "voice_gain_db": 2.3,
+   "speech_s": [
+    0.06,
+    4.29
+   ]
+  },
+  "08": {
+   "take": "h08_t2_kFSxlCs1Ih791dJdOLPY.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "infrared",
+     "info red"
+    ]
+   ],
+   "voice_gain_db": 1.34,
+   "speech_s": [
+    0.06,
+    4.46
+   ]
+  },
+  "09": {
+   "take": "h09_t2_lE2SRkknrH8umOCOWkMO.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "shockwave",
+     "shock wave"
+    ]
+   ],
+   "voice_gain_db": 2.82,
+   "speech_s": [
+    0.06,
+    4.65
+   ]
+  },
+  "10": {
+   "take": "h10_t1_Fc7hxSPwXd5XfXy5cvaJ.mp3",
+   "whisper": "exact",
+   "zipformer": [
+    [
+     "replace",
+     "bypassing",
+     "by passing"
+    ]
+   ],
+   "voice_gain_db": 2.2,
+   "speech_s": [
+    0.06,
+    4.48
+   ]
+  }
+ }
+}

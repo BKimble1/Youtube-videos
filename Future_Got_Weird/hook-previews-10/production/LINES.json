@@ -1,0 +1,12 @@
+{
+ "01": {"slug": "TONGUE_PARASITE", "line": "This parasite destroys a fish’s tongue… then becomes its new tongue.", "emph": ["tongue"]},
+ "02": {"slug": "UNDERWATER_COCKROACH", "line": "Scientists gave a cockroach a diving suit… and kept it underwater for hours.", "emph": ["diving", "suit", "hours"]},
+ "03": {"slug": "MANTIS_WORM", "line": "This worm drives a mantis into water… then crawls out of its body.", "emph": ["water", "body"]},
+ "04": {"slug": "LIQUID_METAL_ROBOT", "line": "This metal robot melts through a cage… then gets remolded into shape.", "emph": ["melts", "remolded"]},
+ "05": {"slug": "BOMBARDIER_BEETLE", "line": "This beetle shoots boiling chemicals… from explosions inside its own body.", "emph": ["boiling", "explosions"]},
+ "06": {"slug": "ZOMBIE_SNAIL", "line": "This parasite turns a snail’s eyestalk into a pulsing lure for birds.", "emph": ["eyestalk", "lure"]},
+ "07": {"slug": "BEATING_HEART", "line": "Doctors can keep a human heart beating… even after it’s removed from the body.", "emph": ["beating", "removed"]},
+ "08": {"slug": "INFRARED_CONTACTS", "line": "These contact lenses detect infrared signals… even when your eyes are closed.", "emph": ["infrared", "closed"]},
+ "09": {"slug": "PISTOL_SHRIMP", "line": "This tiny shrimp snaps its claw… creating a shockwave and flash of light.", "emph": ["shockwave", "light"]},
+ "10": {"slug": "BRAIN_SPINE_IMPLANT", "line": "A brain implant helped this man walk again… by bypassing his spinal injury.", "emph": ["walk", "spinal"]}
+}

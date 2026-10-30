@@ -1,0 +1,66 @@
+{
+ "hook": "05",
+ "line": "This beetle shoots boiling chemicals\u2026 from explosions inside its own body.",
+ "emph": [
+  "boiling",
+  "explosions"
+ ],
+ "speech_end": 4.53,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.23
+  },
+  {
+   "word": "beetle",
+   "start": 0.23,
+   "end": 0.67
+  },
+  {
+   "word": "shoots",
+   "start": 0.67,
+   "end": 1.07
+  },
+  {
+   "word": "boiling",
+   "start": 1.07,
+   "end": 1.55
+  },
+  {
+   "word": "chemicals\u2026",
+   "start": 1.55,
+   "end": 2.15
+  },
+  {
+   "word": "from",
+   "start": 2.45,
+   "end": 2.54
+  },
+  {
+   "word": "explosions",
+   "start": 2.55,
+   "end": 3.3
+  },
+  {
+   "word": "inside",
+   "start": 3.31,
+   "end": 3.67
+  },
+  {
+   "word": "its",
+   "start": 3.67,
+   "end": 3.9
+  },
+  {
+   "word": "own",
+   "start": 3.91,
+   "end": 4.19
+  },
+  {
+   "word": "body.",
+   "start": 4.19,
+   "end": 4.53
+  }
+ ]
+}

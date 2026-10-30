@@ -1,0 +1,76 @@
+{
+ "hook": "09",
+ "line": "This tiny shrimp snaps its claw\u2026 creating a shockwave and flash of light.",
+ "emph": [
+  "shockwave",
+  "light"
+ ],
+ "speech_end": 4.65,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.25
+  },
+  {
+   "word": "tiny",
+   "start": 0.25,
+   "end": 0.73
+  },
+  {
+   "word": "shrimp",
+   "start": 0.73,
+   "end": 1.12
+  },
+  {
+   "word": "snaps",
+   "start": 1.13,
+   "end": 1.61
+  },
+  {
+   "word": "its",
+   "start": 1.61,
+   "end": 1.81
+  },
+  {
+   "word": "claw\u2026",
+   "start": 1.81,
+   "end": 2.19
+  },
+  {
+   "word": "creating",
+   "start": 2.51,
+   "end": 2.85
+  },
+  {
+   "word": "a",
+   "start": 2.85,
+   "end": 2.97
+  },
+  {
+   "word": "shockwave",
+   "start": 2.97,
+   "end": 3.57
+  },
+  {
+   "word": "and",
+   "start": 3.57,
+   "end": 3.79
+  },
+  {
+   "word": "flash",
+   "start": 3.81,
+   "end": 4.17
+  },
+  {
+   "word": "of",
+   "start": 4.17,
+   "end": 4.37
+  },
+  {
+   "word": "light.",
+   "start": 4.37,
+   "end": 4.65
+  }
+ ]
+}

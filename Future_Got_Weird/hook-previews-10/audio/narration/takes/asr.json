@@ -1,0 +1,1395 @@
+{
+ "h01_t1_EqyAn5er2VRH6sVpGZAU.mp3": {
+  "hook": "01",
+  "zipformer": {
+   "text": "this parasite destroys a fish's tongue then becomes its new tongue",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "this parasite destroys a fish's tongue then becomes its new tongue",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "parasite",
+    0.24
+   ],
+   [
+    "destroys",
+    0.92
+   ],
+   [
+    "a",
+    1.52
+   ],
+   [
+    "fish's",
+    1.64
+   ],
+   [
+    "tongue",
+    2.16
+   ],
+   [
+    "then",
+    2.8
+   ],
+   [
+    "becomes",
+    3.12
+   ],
+   [
+    "its",
+    3.68
+   ],
+   [
+    "new",
+    4.0
+   ],
+   [
+    "tongue",
+    4.32
+   ]
+  ]
+ },
+ "h01_t2_R0UezhPMuebAp7dYklOi.mp3": {
+  "hook": "01",
+  "zipformer": {
+   "text": "this parasite destroys a fish's tongue then becomes its new tongue",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "this parasite destroys a fish's tongue then becomes its new tongue",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "parasite",
+    0.24
+   ],
+   [
+    "destroys",
+    0.92
+   ],
+   [
+    "a",
+    1.48
+   ],
+   [
+    "fish's",
+    1.64
+   ],
+   [
+    "tongue",
+    2.16
+   ],
+   [
+    "then",
+    2.8
+   ],
+   [
+    "becomes",
+    3.2
+   ],
+   [
+    "its",
+    3.72
+   ],
+   [
+    "new",
+    4.04
+   ],
+   [
+    "tongue",
+    4.32
+   ]
+  ]
+ },
+ "h02_t1_mVICij8A2bpiGiuRA236.mp3": {
+  "hook": "02",
+  "zipformer": {
+   "text": "scientists gave a cockroach a diving suit and kept it under water for hours",
+   "diffs": [
+    [
+     "replace",
+     "underwater",
+     "under water"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "scientists gave a cockroach a diving suit and kept it underwater for hours",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "scientists",
+    0.0
+   ],
+   [
+    "gave",
+    0.8
+   ],
+   [
+    "a",
+    1.04
+   ],
+   [
+    "cockroach",
+    1.12
+   ],
+   [
+    "a",
+    1.68
+   ],
+   [
+    "diving",
+    1.88
+   ],
+   [
+    "suit",
+    2.32
+   ],
+   [
+    "and",
+    2.68
+   ],
+   [
+    "kept",
+    2.92
+   ],
+   [
+    "it",
+    3.24
+   ],
+   [
+    "under",
+    3.4
+   ],
+   [
+    "water",
+    3.64
+   ],
+   [
+    "for",
+    4.04
+   ],
+   [
+    "hours",
+    4.32
+   ]
+  ]
+ },
+ "h02_t2_h74bPyHPBjTr0TGJ11cM.mp3": {
+  "hook": "02",
+  "zipformer": {
+   "text": "scientists gave a cockroach a diving suit and kept it under water for hours",
+   "diffs": [
+    [
+     "replace",
+     "underwater",
+     "under water"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "scientists gave a cockroach a diving suit and kept it underwater for hours",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "scientists",
+    0.0
+   ],
+   [
+    "gave",
+    0.76
+   ],
+   [
+    "a",
+    0.96
+   ],
+   [
+    "cockroach",
+    1.08
+   ],
+   [
+    "a",
+    1.64
+   ],
+   [
+    "diving",
+    1.8
+   ],
+   [
+    "suit",
+    2.24
+   ],
+   [
+    "and",
+    2.6
+   ],
+   [
+    "kept",
+    2.8
+   ],
+   [
+    "it",
+    3.12
+   ],
+   [
+    "under",
+    3.32
+   ],
+   [
+    "water",
+    3.52
+   ],
+   [
+    "for",
+    3.92
+   ],
+   [
+    "hours",
+    4.2
+   ]
+  ]
+ },
+ "h03_t1_kL6qb1S9L3qnBa20leGw.mp3": {
+  "hook": "03",
+  "zipformer": {
+   "text": "this worm drives amantus into water then crawls out of its body",
+   "diffs": [
+    [
+     "replace",
+     "a mantis",
+     "amantus"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this worm drives a mantis into water then crawls out of its body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "worm",
+    0.24
+   ],
+   [
+    "drives",
+    0.64
+   ],
+   [
+    "amantus",
+    1.0
+   ],
+   [
+    "into",
+    1.64
+   ],
+   [
+    "water",
+    2.0
+   ],
+   [
+    "then",
+    2.6
+   ],
+   [
+    "crawls",
+    2.92
+   ],
+   [
+    "out",
+    3.52
+   ],
+   [
+    "of",
+    3.68
+   ],
+   [
+    "its",
+    3.8
+   ],
+   [
+    "body",
+    4.08
+   ]
+  ]
+ },
+ "h03_t2_Mg4C5WLhmFT9vuKA6Ue9.mp3": {
+  "hook": "03",
+  "zipformer": {
+   "text": "this worm drives amantus into water then crawls out of its body",
+   "diffs": [
+    [
+     "replace",
+     "a mantis",
+     "amantus"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this worm drives a mantis into water then crawls out of its body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "worm",
+    0.28
+   ],
+   [
+    "drives",
+    0.64
+   ],
+   [
+    "amantus",
+    1.0
+   ],
+   [
+    "into",
+    1.68
+   ],
+   [
+    "water",
+    2.0
+   ],
+   [
+    "then",
+    2.68
+   ],
+   [
+    "crawls",
+    3.04
+   ],
+   [
+    "out",
+    3.6
+   ],
+   [
+    "of",
+    3.76
+   ],
+   [
+    "its",
+    3.92
+   ],
+   [
+    "body",
+    4.16
+   ]
+  ]
+ },
+ "h04_t1_5SQkoY6FXTX7b9rCGncu.mp3": {
+  "hook": "04",
+  "zipformer": {
+   "text": "this metal robot melts through a cage then gets re moulded into shape",
+   "diffs": [
+    [
+     "replace",
+     "remolded",
+     "re moulded"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this metal robot melts through a cage then gets remolded into shape",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "metal",
+    0.24
+   ],
+   [
+    "robot",
+    0.64
+   ],
+   [
+    "melts",
+    1.08
+   ],
+   [
+    "through",
+    1.48
+   ],
+   [
+    "a",
+    1.68
+   ],
+   [
+    "cage",
+    1.84
+   ],
+   [
+    "then",
+    2.4
+   ],
+   [
+    "gets",
+    2.76
+   ],
+   [
+    "re",
+    3.08
+   ],
+   [
+    "moulded",
+    3.24
+   ],
+   [
+    "into",
+    3.72
+   ],
+   [
+    "shape",
+    4.04
+   ]
+  ]
+ },
+ "h04_t2_TQ7HZODp2yOtBwmejaw7.mp3": {
+  "hook": "04",
+  "zipformer": {
+   "text": "this metal robot melts through a cage then gets re moulded into shape",
+   "diffs": [
+    [
+     "replace",
+     "remolded",
+     "re moulded"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this metal robot melts through a cage then gets remolded into shape",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "metal",
+    0.2
+   ],
+   [
+    "robot",
+    0.6
+   ],
+   [
+    "melts",
+    1.08
+   ],
+   [
+    "through",
+    1.48
+   ],
+   [
+    "a",
+    1.68
+   ],
+   [
+    "cage",
+    1.84
+   ],
+   [
+    "then",
+    2.48
+   ],
+   [
+    "gets",
+    3.0
+   ],
+   [
+    "re",
+    3.36
+   ],
+   [
+    "moulded",
+    3.52
+   ],
+   [
+    "into",
+    4.04
+   ],
+   [
+    "shape",
+    4.36
+   ]
+  ]
+ },
+ "h05_t1_MrqMPHrzGNX4GFlIPf3T.mp3": {
+  "hook": "05",
+  "zipformer": {
+   "text": "this beetle shoots boiling chemicals from explosions inside its own body",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "this beetle shoots boiling chemicals from explosions inside its own body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "beetle",
+    0.2
+   ],
+   [
+    "shoots",
+    0.68
+   ],
+   [
+    "boiling",
+    1.08
+   ],
+   [
+    "chemicals",
+    1.56
+   ],
+   [
+    "from",
+    2.36
+   ],
+   [
+    "explosions",
+    2.6
+   ],
+   [
+    "inside",
+    3.4
+   ],
+   [
+    "its",
+    3.76
+   ],
+   [
+    "own",
+    4.04
+   ],
+   [
+    "body",
+    4.32
+   ]
+  ]
+ },
+ "h05_t2_YoZnGwz03iNM72bkFYAt.mp3": {
+  "hook": "05",
+  "zipformer": {
+   "text": "this beetle shoots boiling chemicals from explosions inside its own body",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "this beetle shoots boiling chemicals from explosions inside its own body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "beetle",
+    0.2
+   ],
+   [
+    "shoots",
+    0.64
+   ],
+   [
+    "boiling",
+    1.04
+   ],
+   [
+    "chemicals",
+    1.52
+   ],
+   [
+    "from",
+    2.28
+   ],
+   [
+    "explosions",
+    2.52
+   ],
+   [
+    "inside",
+    3.28
+   ],
+   [
+    "its",
+    3.64
+   ],
+   [
+    "own",
+    3.88
+   ],
+   [
+    "body",
+    4.16
+   ]
+  ]
+ },
+ "h06_t1_DW8emhhVPLj7zZTfMOI3.mp3": {
+  "hook": "06",
+  "zipformer": {
+   "text": "this parasite turns a snail's eye stalk into a pulsing lure for birds",
+   "diffs": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stalk"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this parasite turns a snail's eye stock into a pulsing lure for birds",
+   "diffs": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stock"
+    ]
+   ]
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "parasite",
+    0.32
+   ],
+   [
+    "turns",
+    1.0
+   ],
+   [
+    "a",
+    1.28
+   ],
+   [
+    "snail's",
+    1.4
+   ],
+   [
+    "eye",
+    1.92
+   ],
+   [
+    "stalk",
+    2.16
+   ],
+   [
+    "into",
+    2.52
+   ],
+   [
+    "a",
+    2.72
+   ],
+   [
+    "pulsing",
+    2.88
+   ],
+   [
+    "lure",
+    3.44
+   ],
+   [
+    "for",
+    3.88
+   ],
+   [
+    "birds",
+    4.12
+   ]
+  ]
+ },
+ "h06_t2_86kymvhDp9ZLf2jgoyv7.mp3": {
+  "hook": "06",
+  "zipformer": {
+   "text": "this parasite turns a snail's eye stalk into a pulsing lure for birds",
+   "diffs": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stalk"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this parasite turns a snail's eye stalk into a pulsing lure for birds",
+   "diffs": [
+    [
+     "replace",
+     "eyestalk",
+     "eye stalk"
+    ]
+   ]
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "parasite",
+    0.28
+   ],
+   [
+    "turns",
+    0.96
+   ],
+   [
+    "a",
+    1.2
+   ],
+   [
+    "snail's",
+    1.32
+   ],
+   [
+    "eye",
+    1.84
+   ],
+   [
+    "stalk",
+    2.08
+   ],
+   [
+    "into",
+    2.44
+   ],
+   [
+    "a",
+    2.64
+   ],
+   [
+    "pulsing",
+    2.76
+   ],
+   [
+    "lure",
+    3.36
+   ],
+   [
+    "for",
+    3.76
+   ],
+   [
+    "birds",
+    4.0
+   ]
+  ]
+ },
+ "h07_t1_Xe8uiTt6VTJ4z6KuadQh.mp3": {
+  "hook": "07",
+  "zipformer": {
+   "text": "doctors can keep a human heart beating even after it's removed from the body",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "doctors can keep a human heart beating even after it's removed from the body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "doctors",
+    0.0
+   ],
+   [
+    "can",
+    0.52
+   ],
+   [
+    "keep",
+    0.68
+   ],
+   [
+    "a",
+    0.88
+   ],
+   [
+    "human",
+    1.04
+   ],
+   [
+    "heart",
+    1.4
+   ],
+   [
+    "beating",
+    1.68
+   ],
+   [
+    "even",
+    2.4
+   ],
+   [
+    "after",
+    2.72
+   ],
+   [
+    "it's",
+    3.0
+   ],
+   [
+    "removed",
+    3.28
+   ],
+   [
+    "from",
+    3.76
+   ],
+   [
+    "the",
+    3.92
+   ],
+   [
+    "body",
+    4.08
+   ]
+  ]
+ },
+ "h07_t2_ALioCbYaJJXifm6X8bpd.mp3": {
+  "hook": "07",
+  "zipformer": {
+   "text": "doctors can keep a human heart beating even after it's removed from the body",
+   "diffs": []
+  },
+  "whisper": {
+   "text": "doctors can keep a human heart beating even after it's removed from the body",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "doctors",
+    0.0
+   ],
+   [
+    "can",
+    0.68
+   ],
+   [
+    "keep",
+    0.88
+   ],
+   [
+    "a",
+    1.04
+   ],
+   [
+    "human",
+    1.2
+   ],
+   [
+    "heart",
+    1.56
+   ],
+   [
+    "beating",
+    1.84
+   ],
+   [
+    "even",
+    2.48
+   ],
+   [
+    "after",
+    2.8
+   ],
+   [
+    "it's",
+    3.08
+   ],
+   [
+    "removed",
+    3.36
+   ],
+   [
+    "from",
+    3.8
+   ],
+   [
+    "the",
+    3.96
+   ],
+   [
+    "body",
+    4.16
+   ]
+  ]
+ },
+ "h08_t1_sATVIEJ7coqVi6ofmuMb.mp3": {
+  "hook": "08",
+  "zipformer": {
+   "text": "these contact lenses detect info red signals even when your eyes are closed",
+   "diffs": [
+    [
+     "replace",
+     "infrared",
+     "info red"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "these contact lenses detect infrared signals even when your eyes are closed",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "these",
+    0.0
+   ],
+   [
+    "contact",
+    0.32
+   ],
+   [
+    "lenses",
+    0.76
+   ],
+   [
+    "detect",
+    1.2
+   ],
+   [
+    "info",
+    1.56
+   ],
+   [
+    "red",
+    1.84
+   ],
+   [
+    "signals",
+    2.16
+   ],
+   [
+    "even",
+    2.8
+   ],
+   [
+    "when",
+    3.08
+   ],
+   [
+    "your",
+    3.28
+   ],
+   [
+    "eyes",
+    3.52
+   ],
+   [
+    "are",
+    3.8
+   ],
+   [
+    "closed",
+    4.04
+   ]
+  ]
+ },
+ "h08_t2_kFSxlCs1Ih791dJdOLPY.mp3": {
+  "hook": "08",
+  "zipformer": {
+   "text": "these contact lenses detect info red signals even when your eyes are closed",
+   "diffs": [
+    [
+     "replace",
+     "infrared",
+     "info red"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "these contact lenses detect infrared signals even when your eyes are closed",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "these",
+    0.0
+   ],
+   [
+    "contact",
+    0.28
+   ],
+   [
+    "lenses",
+    0.72
+   ],
+   [
+    "detect",
+    1.16
+   ],
+   [
+    "info",
+    1.52
+   ],
+   [
+    "red",
+    1.84
+   ],
+   [
+    "signals",
+    2.12
+   ],
+   [
+    "even",
+    2.76
+   ],
+   [
+    "when",
+    3.04
+   ],
+   [
+    "your",
+    3.2
+   ],
+   [
+    "eyes",
+    3.48
+   ],
+   [
+    "are",
+    3.72
+   ],
+   [
+    "closed",
+    3.92
+   ]
+  ]
+ },
+ "h09_t1_ZCFsirgvXU4BSWpn0CTI.mp3": {
+  "hook": "09",
+  "zipformer": {
+   "text": "this tiny shrimp snaps its claw creating a shock wave and flash of light",
+   "diffs": [
+    [
+     "replace",
+     "shockwave",
+     "shock wave"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this tiny shrimp snaps its claw creating a shockwave and flash of light",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "tiny",
+    0.24
+   ],
+   [
+    "shrimp",
+    0.72
+   ],
+   [
+    "snaps",
+    1.12
+   ],
+   [
+    "its",
+    1.6
+   ],
+   [
+    "claw",
+    1.84
+   ],
+   [
+    "creating",
+    2.32
+   ],
+   [
+    "a",
+    2.84
+   ],
+   [
+    "shock",
+    3.0
+   ],
+   [
+    "wave",
+    3.36
+   ],
+   [
+    "and",
+    3.6
+   ],
+   [
+    "flash",
+    3.84
+   ],
+   [
+    "of",
+    4.2
+   ],
+   [
+    "light",
+    4.4
+   ]
+  ]
+ },
+ "h09_t2_lE2SRkknrH8umOCOWkMO.mp3": {
+  "hook": "09",
+  "zipformer": {
+   "text": "this tiny shrimp snaps its claw creating a shock wave and flash of light",
+   "diffs": [
+    [
+     "replace",
+     "shockwave",
+     "shock wave"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "this tiny shrimp snaps its claw creating a shockwave and flash of light",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "this",
+    0.0
+   ],
+   [
+    "tiny",
+    0.28
+   ],
+   [
+    "shrimp",
+    0.76
+   ],
+   [
+    "snaps",
+    1.16
+   ],
+   [
+    "its",
+    1.64
+   ],
+   [
+    "claw",
+    1.84
+   ],
+   [
+    "creating",
+    2.36
+   ],
+   [
+    "a",
+    2.88
+   ],
+   [
+    "shock",
+    3.0
+   ],
+   [
+    "wave",
+    3.36
+   ],
+   [
+    "and",
+    3.6
+   ],
+   [
+    "flash",
+    3.84
+   ],
+   [
+    "of",
+    4.2
+   ],
+   [
+    "light",
+    4.4
+   ]
+  ]
+ },
+ "h10_t1_Fc7hxSPwXd5XfXy5cvaJ.mp3": {
+  "hook": "10",
+  "zipformer": {
+   "text": "a brain implant helped this man walk again by by passing his spinal injury",
+   "diffs": [
+    [
+     "replace",
+     "bypassing",
+     "by passing"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "a brain implant helped this man walk again by bypassing his spinal injury",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "a",
+    0.0
+   ],
+   [
+    "brain",
+    0.24
+   ],
+   [
+    "implant",
+    0.6
+   ],
+   [
+    "helped",
+    1.08
+   ],
+   [
+    "this",
+    1.36
+   ],
+   [
+    "man",
+    1.56
+   ],
+   [
+    "walk",
+    1.8
+   ],
+   [
+    "again",
+    2.12
+   ],
+   [
+    "by",
+    2.64
+   ],
+   [
+    "by",
+    2.96
+   ],
+   [
+    "passing",
+    3.2
+   ],
+   [
+    "his",
+    3.68
+   ],
+   [
+    "spinal",
+    3.84
+   ],
+   [
+    "injury",
+    4.28
+   ]
+  ]
+ },
+ "h10_t2_5pBVeQRknpGbw4ZAZdye.mp3": {
+  "hook": "10",
+  "zipformer": {
+   "text": "a brain implant help this man walk again by by passing his spinal injury",
+   "diffs": [
+    [
+     "replace",
+     "helped",
+     "help"
+    ],
+    [
+     "replace",
+     "bypassing",
+     "by passing"
+    ]
+   ]
+  },
+  "whisper": {
+   "text": "a brain implant helped this man walk again by bypassing his spinal injury",
+   "diffs": []
+  },
+  "zip_words": [
+   [
+    "a",
+    0.0
+   ],
+   [
+    "brain",
+    0.08
+   ],
+   [
+    "implant",
+    0.4
+   ],
+   [
+    "help",
+    0.84
+   ],
+   [
+    "this",
+    1.12
+   ],
+   [
+    "man",
+    1.32
+   ],
+   [
+    "walk",
+    1.6
+   ],
+   [
+    "again",
+    1.92
+   ],
+   [
+    "by",
+    2.4
+   ],
+   [
+    "by",
+    2.72
+   ],
+   [
+    "passing",
+    3.0
+   ],
+   [
+    "his",
+    3.48
+   ],
+   [
+    "spinal",
+    3.68
+   ],
+   [
+    "injury",
+    4.12
+   ]
+  ]
+ }
+}

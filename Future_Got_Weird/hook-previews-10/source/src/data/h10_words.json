@@ -1,0 +1,76 @@
+{
+ "hook": "10",
+ "line": "A brain implant helped this man walk again\u2026 by bypassing his spinal injury.",
+ "emph": [
+  "walk",
+  "spinal"
+ ],
+ "speech_end": 4.48,
+ "words": [
+  {
+   "word": "A",
+   "start": 0.06,
+   "end": 0.12
+  },
+  {
+   "word": "brain",
+   "start": 0.1,
+   "end": 0.41
+  },
+  {
+   "word": "implant",
+   "start": 0.42,
+   "end": 0.9
+  },
+  {
+   "word": "helped",
+   "start": 0.9,
+   "end": 1.18
+  },
+  {
+   "word": "this",
+   "start": 1.18,
+   "end": 1.38
+  },
+  {
+   "word": "man",
+   "start": 1.38,
+   "end": 1.62
+  },
+  {
+   "word": "walk",
+   "start": 1.62,
+   "end": 1.94
+  },
+  {
+   "word": "again\u2026",
+   "start": 1.94,
+   "end": 2.25
+  },
+  {
+   "word": "by",
+   "start": 2.65,
+   "end": 2.78
+  },
+  {
+   "word": "bypassing",
+   "start": 2.78,
+   "end": 3.5
+  },
+  {
+   "word": "his",
+   "start": 3.5,
+   "end": 3.65
+  },
+  {
+   "word": "spinal",
+   "start": 3.66,
+   "end": 4.1
+  },
+  {
+   "word": "injury.",
+   "start": 4.1,
+   "end": 4.48
+  }
+ ]
+}

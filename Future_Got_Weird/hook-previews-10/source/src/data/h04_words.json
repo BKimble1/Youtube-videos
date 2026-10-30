@@ -1,0 +1,71 @@
+{
+ "hook": "04",
+ "line": "This metal robot melts through a cage\u2026 then gets remolded into shape.",
+ "emph": [
+  "melts",
+  "remolded"
+ ],
+ "speech_end": 4.35,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.27
+  },
+  {
+   "word": "metal",
+   "start": 0.28,
+   "end": 0.68
+  },
+  {
+   "word": "robot",
+   "start": 0.68,
+   "end": 1.12
+  },
+  {
+   "word": "melts",
+   "start": 1.12,
+   "end": 1.52
+  },
+  {
+   "word": "through",
+   "start": 1.52,
+   "end": 1.72
+  },
+  {
+   "word": "a",
+   "start": 1.72,
+   "end": 1.88
+  },
+  {
+   "word": "cage\u2026",
+   "start": 1.88,
+   "end": 2.34
+  },
+  {
+   "word": "then",
+   "start": 2.62,
+   "end": 2.8
+  },
+  {
+   "word": "gets",
+   "start": 2.8,
+   "end": 3.12
+  },
+  {
+   "word": "remolded",
+   "start": 3.12,
+   "end": 3.76
+  },
+  {
+   "word": "into",
+   "start": 3.76,
+   "end": 4.08
+  },
+  {
+   "word": "shape.",
+   "start": 4.08,
+   "end": 4.35
+  }
+ ]
+}

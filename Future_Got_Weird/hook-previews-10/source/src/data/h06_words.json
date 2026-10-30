@@ -1,0 +1,71 @@
+{
+ "hook": "06",
+ "line": "This parasite turns a snail\u2019s eyestalk into a pulsing lure for birds.",
+ "emph": [
+  "eyestalk",
+  "lure"
+ ],
+ "speech_end": 4.61,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.31
+  },
+  {
+   "word": "parasite",
+   "start": 0.31,
+   "end": 0.96
+  },
+  {
+   "word": "turns",
+   "start": 1.02,
+   "end": 1.23
+  },
+  {
+   "word": "a",
+   "start": 1.23,
+   "end": 1.35
+  },
+  {
+   "word": "snail\u2019s",
+   "start": 1.35,
+   "end": 1.83
+  },
+  {
+   "word": "eyestalk",
+   "start": 1.89,
+   "end": 2.46
+  },
+  {
+   "word": "into",
+   "start": 2.47,
+   "end": 2.67
+  },
+  {
+   "word": "a",
+   "start": 2.67,
+   "end": 2.77
+  },
+  {
+   "word": "pulsing",
+   "start": 2.79,
+   "end": 3.38
+  },
+  {
+   "word": "lure",
+   "start": 3.39,
+   "end": 3.78
+  },
+  {
+   "word": "for",
+   "start": 3.79,
+   "end": 3.99
+  },
+  {
+   "word": "birds.",
+   "start": 4.04,
+   "end": 4.61
+  }
+ ]
+}

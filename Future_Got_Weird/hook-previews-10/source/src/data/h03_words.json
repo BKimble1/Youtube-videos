@@ -1,0 +1,76 @@
+{
+ "hook": "03",
+ "line": "This worm drives a mantis into water\u2026 then crawls out of its body.",
+ "emph": [
+  "water",
+  "body"
+ ],
+ "speech_end": 4.5,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.26
+  },
+  {
+   "word": "worm",
+   "start": 0.27,
+   "end": 0.67
+  },
+  {
+   "word": "drives",
+   "start": 0.67,
+   "end": 1.03
+  },
+  {
+   "word": "a",
+   "start": 1.03,
+   "end": 1.09
+  },
+  {
+   "word": "mantis",
+   "start": 1.07,
+   "end": 1.67
+  },
+  {
+   "word": "into",
+   "start": 1.67,
+   "end": 2.02
+  },
+  {
+   "word": "water\u2026",
+   "start": 2.03,
+   "end": 2.42
+  },
+  {
+   "word": "then",
+   "start": 2.83,
+   "end": 2.95
+  },
+  {
+   "word": "crawls",
+   "start": 2.95,
+   "end": 3.55
+  },
+  {
+   "word": "out",
+   "start": 3.55,
+   "end": 3.71
+  },
+  {
+   "word": "of",
+   "start": 3.71,
+   "end": 3.82
+  },
+  {
+   "word": "its",
+   "start": 3.83,
+   "end": 4.11
+  },
+  {
+   "word": "body.",
+   "start": 4.11,
+   "end": 4.5
+  }
+ ]
+}
