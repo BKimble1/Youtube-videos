@@ -110,7 +110,7 @@ export const FigureArt: React.FC<{
 }> = ({id, parts, sweep, ink, grain = 1, warm = 0}) => {
   const base = warm > 0 ? mix(BASE, '#C9A88A', 0.35 * warm) : BASE;
   const top = lit(base, 0.2);
-  const steps = 5;
+  const steps = 10;
   const sw = Math.hypot(sweep.x, sweep.y) > 0.004;
   return (
     <g>
@@ -178,7 +178,7 @@ export const FigureSheen: React.FC<{parts: {name: string; pts: P2[]}[]; a: numbe
           y1 = Math.max(y1, q.y);
         }
         const cx = x0 + (x1 - x0) * 0.2, cy = y0 + (y1 - y0) * 0.58;
-        return <ellipse key={p.name} cx={cx} cy={cy} rx={(x1 - x0) * 0.045} ry={(y1 - y0) * 0.32} fill="#FFFFFF" opacity={a * 0.22} />;
+        return <ellipse key={p.name} cx={cx} cy={cy} rx={(x1 - x0) * 0.045} ry={(y1 - y0) * 0.32} fill="#FFFFFF" opacity={a * 0.13} />;
       })}
   </Deco>
 );

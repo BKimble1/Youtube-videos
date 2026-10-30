@@ -1,0 +1,100 @@
+{
+ "file": "exports/FGW_HOOK_04_LIQUID_METAL_ROBOT.mp4",
+ "size_bytes": 5042580,
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "duration": "6.000000",
+  "bit_rate": "6392188"
+ },
+ "frames": 180,
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317374",
+  "duration": "6.016000"
+ },
+ "audio_decoded_s": 6.016,
+ "voice_onset_s": 0.038,
+ "mix_lufs": -15.93,
+ "sample_peak_dbfs": -1.01,
+ "motion_mean_per_second": [
+  11.868,
+  16.362,
+  7.695,
+  6.272,
+  6.249,
+  7.946
+ ],
+ "longest_static_run_frames": 0,
+ "longest_static_run_starts_frame": 0,
+ "frame_jumps_over_18": [
+  [
+   32,
+   18.44
+  ],
+  [
+   33,
+   18.97
+  ],
+  [
+   34,
+   19.39
+  ],
+  [
+   35,
+   19.63
+  ],
+  [
+   36,
+   19.92
+  ],
+  [
+   37,
+   20.04
+  ],
+  [
+   38,
+   20.08
+  ],
+  [
+   39,
+   19.7
+  ],
+  [
+   40,
+   19.64
+  ],
+  [
+   41,
+   18.97
+  ],
+  [
+   42,
+   19.25
+  ],
+  [
+   43,
+   18.19
+  ]
+ ],
+ "checks": {
+  "codec_h264": true,
+  "size_1080x1920": true,
+  "fps_30": true,
+  "pix_yuv420p": true,
+  "frames_180": true,
+  "video_6.000s": true,
+  "audio_aac": true,
+  "audio_len_6.0s(\u00b125ms)": true,
+  "voice_onset<=0.10s": true,
+  "no_static_run>0.5s": true
+ },
+ "all_pass": true
+}
