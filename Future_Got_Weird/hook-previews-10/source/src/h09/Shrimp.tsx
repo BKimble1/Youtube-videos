@@ -8,7 +8,7 @@
 import React from 'react';
 import {Deco, Inked, INK} from '../shared/ink';
 import {lit, mix, rgba, shade} from '../shared/color';
-import {closedPath, openPath, noise1} from '../shared/lib';
+import {closedPath, hash, openPath, noise1} from '../shared/lib';
 import {Blob, Capsule, Gloss, Lin, SoftShadow} from './shade';
 import {add, fmt, len, lerpV, mul, norm, perp, rot, sub, V} from './math';
 import {CLAW_COXA, CLAW_RAISE, FOOT_Y} from './timeline';
@@ -384,25 +384,31 @@ export const Shrimp: React.FC<ShrimpProps> = ({t, tau, open, w}) => {
 /** the boulder the shrimp is perched on, drawn in shrimp-local space (top surface at FOOT_Y), with its contact shadow */
 export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
   const F = FOOT_Y;
-  const top = pts([[-70, F + 1.2], [-52, F + 0.4], [-40, F + 0.9], [-30, F + 0.3], [-20, F + 0.55], [-10, F + 0.15], [0, F + 0.35], [7, F + 0.2], [12, F + 0.7], [15.2, F + 2.4], [16.6, F + 6]]);
-  const body = [...top, ...pts([[16.4, F + 14], [13, F + 30], [6, F + 60], [-70, F + 60]])];
+  const top = pts([[-70, F + 1.2], [-52, F + 0.4], [-40, F + 0.9], [-30, F + 0.3], [-20, F + 0.55], [-10, F + 0.15], [-3, F + 0.3], [1.5, F + 0.5], [4.4, F + 1.6], [6.0, F + 4.0]]);
+  const body = [...top, ...pts([[6.2, F + 8], [4.0, F + 12.5], [-2, F + 16], [-14, F + 19], [-30, F + 21], [-50, F + 24], [-70, F + 30]])];
   const d = openPath(body, 0.8) + ' Z';
-  const patches: [number, number, number, string][] = [[-24, 4.5, 3.2, '#B07A86'], [-6, 9, 4.2, '#8E9A6A'], [6, 3.5, 2.4, '#B07A86'], [-38, 10, 5, '#7F8E74'], [10, 12, 3.6, '#A88A6A'], [-14, 16, 4, '#B07A86']];
+  // encrusting growth as soft irregular blotches (coralline pink, sponge ochre, algal green), low contrast
+  const blot = (cx: number, cy: number, r: number, k: number) =>
+    closedPath(Array.from({length: 9}).map((_, i) => {
+      const a = (i / 9) * Math.PI * 2, rr = r * (0.75 + 0.45 * hash(k * 13 + i * 3.1));
+      return v(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * 0.6);
+    }), 1);
+  const patches: [number, number, number, string][] = [[-24, 2.2, 3.0, '#A97C84'], [-8, 6, 4.0, '#8B9468'], [-1, 2.0, 1.8, '#A97C84'], [-38, 7, 5, '#7D8B70'], [-15, 13, 4.5, '#A68A64'], [-30, 16, 5, '#A97C84'], [-46, 3, 3.5, '#A68A64']];
   return (
     <g>
       <defs>
-        <linearGradient id="h9-rock" gradientUnits="userSpaceOnUse" x1="0" y1={F - 1} x2="6" y2={F + 34}>
-          <stop offset="0" stopColor="#9C9A82" />
-          <stop offset="0.12" stopColor="#7E8072" />
-          <stop offset="0.5" stopColor="#5C6862" />
-          <stop offset="1" stopColor="#3C4C4C" />
+        <linearGradient id="h9-rock" gradientUnits="userSpaceOnUse" x1="0" y1={F - 1} x2="3" y2={F + 20}>
+          <stop offset="0" stopColor="#8A8E7A" />
+          <stop offset="0.15" stopColor="#6A7468" />
+          <stop offset="0.6" stopColor="#4A5A58" />
+          <stop offset="1" stopColor="#36474C" />
         </linearGradient>
       </defs>
       <path d={d} fill={INK} stroke={INK} strokeWidth={w * 0.72 * 2} strokeLinejoin="round" />
       <path d={d} fill="url(#h9-rock)" />
       {/* encrusting coralline and sponge patches, pits */}
       {patches.map(([x, y, r, c], i) => (
-        <ellipse key={i} cx={x} cy={F + y} rx={r} ry={r * 0.55} fill={c} opacity={0.42} transform={`rotate(${-8 + i * 11} ${x} ${F + y})`} />
+        <path key={i} d={blot(x, F + y, r, i)} fill={c} opacity={0.24} />
       ))}
       {Array.from({length: 46}).map((_, i) => {
         const x = -62 + ((i * 37.3) % 76), y = F + 1.5 + ((i * 13.7) % 22);
@@ -410,7 +416,7 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
       })}
       {/* lit top edge and a few algae tufts along it */}
       <path d={openPath(top, 0.8)} fill="none" stroke={rgba('#E8E4CC', 0.35)} strokeWidth={0.45} strokeLinecap="round" />
-      {[-46, -27, -16, 9].map((x, i) => (
+      {[-46, -27, -16].map((x, i) => (
         <g key={`tuft${i}`}>
           {[0, 1, 2, 3].map((k) => {
             const sw = 0.4 * Math.sin(tau * 1.3 + i + k * 0.7);

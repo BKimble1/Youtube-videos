@@ -1,6 +1,6 @@
 {
  "file": "exports/FGW_HOOK_06_ZOMBIE_SNAIL.mp4",
- "size_bytes": 4511395,
+ "size_bytes": 4341422,
  "video": {
   "codec_name": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "duration": "6.000000",
-  "bit_rate": "5684005"
+  "bit_rate": "5457353"
  },
  "frames": 180,
  "audio": {
@@ -25,12 +25,12 @@
  "mix_lufs": -16.19,
  "sample_peak_dbfs": -0.97,
  "motion_mean_per_second": [
-  0.931,
-  4.187,
-  3.833,
-  4.126,
-  5.297,
-  4.329
+  0.93,
+  4.183,
+  3.782,
+  4.049,
+  5.25,
+  4.525
  ],
  "longest_static_run_frames": 0,
  "longest_static_run_starts_frame": 0,

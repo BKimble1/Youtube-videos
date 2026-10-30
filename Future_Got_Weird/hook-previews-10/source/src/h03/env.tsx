@@ -163,23 +163,23 @@ export const splashItems = (B: Basis, t: number, entry: V3): Item[] => {
     const tau = t - t0;
     const life = tau / (0.36 + 0.1 * hash(i));
     if (life >= 1) continue;
-    const span = (0.22 + 0.12 * hash(i * 2.1)) * (1 - 0.5 * life);
+    const span = (0.38 + 0.2 * hash(i * 2.1)) * (1 - 0.4 * life);
     const R = 4 + (60 + 40 * hash(i * 5.3)) * tau;
-    const hTop = (5 + 6 * hash(i * 7.1)) * Math.sin(Math.PI * Math.min(1, life * 1.1));
+    const hTop = (2.5 + 3 * hash(i * 7.1)) * Math.sin(Math.PI * Math.min(1, life * 1.1));
     const n = 7;
     const lo: {x: number; y: number}[] = [], hi: {x: number; y: number}[] = [];
     for (let k = 0; k <= n; k++) {
       const a = a0 + span * (k / n - 0.5);
       const bulge = Math.sin((Math.PI * k) / n);
       lo.push(proj(B, [entry[0] + R * Math.cos(a), entry[1] + R * Math.sin(a), hTop * 0.35 * bulge]));
-      hi.push(proj(B, [entry[0] + (R + 1.2) * Math.cos(a), entry[1] + (R + 1.2) * Math.sin(a), hTop * (0.55 + 0.45 * bulge)]));
+      hi.push(proj(B, [entry[0] + (R + 1.6) * Math.cos(a), entry[1] + (R + 1.6) * Math.sin(a), hTop * (0.75 + 0.25 * bulge)]));
     }
     const C = proj(B, [entry[0] + R * Math.cos(a0), entry[1] + R * Math.sin(a0), hTop * 0.6]);
     items.push({
       z: C.z,
       el: (
         <g key={`sh${i}`} opacity={1 - life ** 2}>
-          <path d={smoothClosed([...lo, ...[...hi].reverse()])} fill="rgba(226,247,242,0.55)" stroke={rgba('#F8FFFD', 0.95)} strokeWidth={f2(Math.max(1, 0.12 * C.s))} strokeLinejoin="round" />
+          <path d={smoothClosed([...lo, ...[...hi].reverse()])} fill="rgba(226,247,242,0.4)" stroke={rgba('#F8FFFD', 0.95)} strokeWidth={f2(Math.max(1, 0.12 * C.s))} strokeLinejoin="round" />
         </g>
       ),
     });
@@ -216,7 +216,7 @@ export const splashItems = (B: Basis, t: number, entry: V3): Item[] => {
 /** the air pocket dragged down along the plunging prothorax (from the surface to the neck, never over the face): a
  *  silvery sheath that pinches off near the surface and breaks into bubbles by ~0.4 s */
 export const airPocketItem = (B: Basis, t: number, along: (x: number) => V3, z: number): Item | null => {
-  const fade = 1 - ss(t, 0.16, 0.42);
+  const fade = 1 - ss(t, 0.1, 0.36);
   if (fade < 0.02) return null;
   // the current surface crossing along the prothorax
   let xc = 0;
@@ -225,15 +225,22 @@ export const airPocketItem = (B: Basis, t: number, along: (x: number) => V3, z: 
   const xBot = 19.5;
   if (xBot - xTop < 1) return null;
   const A = proj(B, along(xTop)), Bp = proj(B, along(xBot));
-  const ra = 2.6 * (1 - 0.4 * ss(t, 0.05, 0.3)) * A.s, rb = 2.4 * Bp.s;
-  const d = capsule2(A, Bp, ra, rb);
-  const ripple = 0.6 * Math.sin(t * 40);
+  const ang = (Math.atan2(Bp.y - A.y, Bp.x - A.x) * 180) / Math.PI;
+  // an irregular sheath of air: elongated silvery lobes riding on the upper side of the prothorax, wobbling
+  const lobes = Array.from({length: 7}, (_, k) => {
+    const u = k / 6;
+    const x = xTop + (xBot - xTop) * u;
+    const P = proj(B, along(x));
+    const rx = (2.2 + 0.8 * hash(k * 3.1)) * P.s * (1 - 0.3 * u), ry = (1.1 + 0.5 * hash(k * 7.7)) * P.s * (1 + 0.15 * Math.sin(t * 30 + k));
+    const off = -0.9 * P.s;
+    const nx = Math.sin((ang * Math.PI) / 180) * off, ny = -Math.cos((ang * Math.PI) / 180) * off;
+    return <ellipse key={k} cx={f2(P.x - nx)} cy={f2(P.y - ny)} rx={f2(rx)} ry={f2(ry)} transform={`rotate(${f2(ang + 8 * Math.sin(t * 20 + k))} ${f2(P.x - nx)} ${f2(P.y - ny)})`} fill="rgba(226,247,242,0.13)" stroke="rgba(240,252,248,0.55)" strokeWidth={f2(Math.max(1, 0.1 * P.s))} />;
+  });
   return {
     z,
     el: (
       <g key="air" opacity={fade}>
-        <path d={d} fill="rgba(222,246,240,0.16)" stroke="#EFFCF8" strokeWidth={f2(Math.max(1.2, 0.14 * A.s))} strokeLinejoin="round" opacity={0.9} />
-        <path d={`M${f2(A.x - ra * 0.5)},${f2(A.y + ripple)} L${f2(Bp.x - rb * 0.55)},${f2(Bp.y)}`} stroke="#FFFFFF" strokeWidth={f2(Math.max(1, 0.18 * A.s))} strokeLinecap="round" opacity={0.55} />
+        {lobes}
       </g>
     ),
   };

@@ -1,6 +1,6 @@
 {
  "file": "exports/FGW_HOOK_01_TONGUE_PARASITE.mp4",
- "size_bytes": 4225872,
+ "size_bytes": 4263030,
  "video": {
   "codec_name": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "duration": "6.000000",
-  "bit_rate": "5303286"
+  "bit_rate": "5352809"
  },
  "frames": 180,
  "audio": {
@@ -25,12 +25,12 @@
  "mix_lufs": -17.01,
  "sample_peak_dbfs": -0.94,
  "motion_mean_per_second": [
-  2.228,
-  4.566,
-  6.145,
-  3.428,
-  6.576,
-  4.872
+  2.296,
+  4.793,
+  6.967,
+  3.526,
+  7.209,
+  5.359
  ],
  "longest_static_run_frames": 0,
  "longest_static_run_starts_frame": 0,

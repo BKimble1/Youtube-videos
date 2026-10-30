@@ -1,6 +1,6 @@
 {
  "file": "exports/FGW_HOOK_10_BRAIN_SPINE_IMPLANT.mp4",
- "size_bytes": 5593281,
+ "size_bytes": 5551780,
  "video": {
   "codec_name": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "duration": "6.000000",
-  "bit_rate": "7126562"
+  "bit_rate": "7071206"
  },
  "frames": 180,
  "audio": {
@@ -25,10 +25,10 @@
  "mix_lufs": -16.72,
  "sample_peak_dbfs": -1.01,
  "motion_mean_per_second": [
-  3.819,
+  3.818,
   8.028,
-  7.029,
-  15.658,
+  7.09,
+  15.751,
   13.894,
   8.987
  ],
@@ -36,8 +36,20 @@
  "longest_static_run_starts_frame": 0,
  "frame_jumps_over_18": [
   [
+   111,
+   18.04
+  ],
+  [
+   112,
+   18.07
+  ],
+  [
    113,
-   18.13
+   18.19
+  ],
+  [
+   114,
+   18.0
   ]
  ],
  "checks": {

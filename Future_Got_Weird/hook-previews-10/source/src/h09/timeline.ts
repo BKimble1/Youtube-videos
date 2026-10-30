@@ -39,9 +39,9 @@ export const tau = (t: number) => {
 };
 
 // ---------- shrimp placement ----------
-export const BODY_ROT = -40; // degrees: perched head-up on a sloping boulder (a diagonal through the portrait frame)
+export const BODY_ROT = -60; // degrees: perched head-up on a sloping boulder (a diagonal through the portrait frame)
 export const CLAW_COXA: V = {x: -1.0, y: 2.8}; // shrimp-local
-export const CLAW_RAISE = 8; // big cheliped relative to the body (degrees; jet stays at -34 deg on screen)
+export const CLAW_RAISE = 28; // big cheliped relative to the body (degrees; jet stays at -34 deg on screen)
 export const NOZZLE_LOCAL: V = {x: 19.7, y: 4.1}; // claw-local (unrotated cheliped), where the jet leaves the claw
 export const FOOT_Y = 8.0; // shrimp-local y of the rock surface under the feet
 export const FLOOR_Y = 30; // world y of the sand floor around the boulder
@@ -99,8 +99,8 @@ const camKeys = (() => {
   const push = (t: number, p: V, s: number) => k.push([t, p.x, p.y, Math.log(s)]);
   const claw0 = clawToWorld({x: 9.5, y: 2.0});
   void claw0;
-  push(0.0, {x: 0.6, y: -0.7}, 27);
-  push(0.6, {x: 3.4, y: -2.4}, 31);
+  push(0.0, {x: 4.6, y: 3.4}, 34);
+  push(0.6, {x: 6.6, y: 0.8}, 37);
   push(1.05, add(b(1.05), {x: -2.2, y: 0.8}), 62);
   push(1.75, add(b(1.75), {x: -0.4, y: 0.2}), 140);
   push(2.6, b(2.6), 225);

@@ -10,7 +10,7 @@ import {EV} from './timeline';
 export const mantisO = (t: number): V3 => [8 * (1 - Math.exp(-t / 0.5)) + 3 * t, 0, 2 - 59 * (1 - Math.exp(-t / 0.42)) - 9 * t - 5 * Math.max(0, t - 1.5) ** 2 / (1 + 0.4 * Math.max(0, t - 1.5))];
 
 export const mantisState = (t: number): MState => {
-  const pitch = 12 + 24 * Math.exp(-t / 0.5) + 3 * Math.sin(1.7 * t + 0.4);
+  const pitch = 12 + 36 * Math.exp(-t / 0.45) + 3 * Math.sin(1.7 * t + 0.4);
   const yaw = -14 + 4 * Math.sin(0.6 * t + 0.5);
   const roll = 5 * Math.sin(0.9 * t + 1);
   const body = bodyFrame(mantisO(t), yaw, pitch, roll);
@@ -76,13 +76,13 @@ export const camera = (t: number): Cam3 => {
   const M0z = toW(mantisState(0).body, [-12, 0, 0])[2] - 4;
   let T: V3 = [M[0] + 4, 0, M0z + (M[2] - M0z) * (1 - Math.exp(-((t / 0.42) ** 1.6)))];
   T = lerp3(T, [A[0], 0, A[2] - 3], ss5(t, 0.9, 2.1));
-  const Wc = add3(lerp3(w.E, w.C, 0.5), mul3([-12, 0, -4], 1 - ss(w.e, 20, 90)));
+  const Wc = add3(lerp3(w.E, w.C, 0.4), mul3([-12, 0, -4], 1 - ss(w.e, 20, 90)));
   T = lerp3(T, [Wc[0], 0, Wc[2]], ss5(t, 1.8, 3.6));
   let D = keyCR(t, [[0, 184], [1.0, 182], [1.9, 158], [2.6, 155], [3.4, 185], [4.4, 235], [6.0, 270]]);
   // the pull-back frames the mantis and the whole trailing worm (fit to a soft bounding box, below the caption)
   const bx = softBox(st, w.pts);
   const sFit = Math.min(900 / bx.w, 1200 / bx.h);
-  const u = ss5(t, 3.5, 5.7);
+  const u = ss5(t, 3.1, 5.6);
   const Tfit: V3 = [bx.cx, 0, bx.cz + (1150 - 960) / sFit];
   T = lerp3(T, Tfit, u);
   D = D + (FOCAL / sFit - D) * u;
@@ -90,7 +90,7 @@ export const camera = (t: number): Cam3 => {
   const Fp0 = pitchF(st.body, -st.raise);
   const Hd = toW(Fp0, [24, 0, -3]);
   const o = ss5(t, 0.05, 1.15);
-  T = lerp3([Hd[0] - 2, 0, Hd[2] + 5], T, o);
+  T = lerp3([Hd[0] - 7, 0, Hd[2] + 9], T, o);
   D = 112 + (D - 112) * o;
   T[1] = 0;
   const el = keyCR(t, [[0, 5], [1, 8], [3, 10], [6, 12]]);
