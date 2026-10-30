@@ -1,0 +1,93 @@
+{
+ "hook": "02",
+ "file": "source/public/audio/h02_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -15.97,
+ "fx_bus_lufs": -29.92,
+ "mix_lufs": -16.72,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.067,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "underwater bed",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "low pad",
+   "gain_db": -6
+  },
+  {
+   "t": 0,
+   "sfx": "distant bubble streams",
+   "gain_db": -10
+  },
+  {
+   "t": 0.05,
+   "sfx": "foot plant",
+   "gain_db": -13
+  },
+  {
+   "t": 0.392,
+   "sfx": "foot plant",
+   "gain_db": -13
+  },
+  {
+   "t": 0.734,
+   "sfx": "foot plant",
+   "gain_db": -13
+  },
+  {
+   "t": 2.45,
+   "sfx": "O2 bubbling on MnO2 sponge",
+   "gain_db": -6
+  },
+  {
+   "t": 2.6,
+   "sfx": "peroxide fizz",
+   "gain_db": -12
+  },
+  {
+   "t": 2.95,
+   "sfx": "gas along the tubes",
+   "gain_db": -12
+  },
+  {
+   "t": 2.97,
+   "sfx": "tube pulse",
+   "gain_db": -15
+  },
+  {
+   "t": 3.42,
+   "sfx": "cut window opens (tissue)",
+   "gain_db": -14
+  },
+  {
+   "t": 3.46,
+   "sfx": "gas reaches spiracle 1",
+   "gain_db": -10
+  },
+  {
+   "t": 3.56,
+   "sfx": "gas reaches spiracle 2",
+   "gain_db": -12
+  },
+  {
+   "t": 3.62,
+   "sfx": "oxygen spreads into tracheae",
+   "gain_db": -19
+  },
+  {
+   "t": 4.32,
+   "sfx": "pressure swell (beneath the slab)",
+   "gain_db": -9
+  },
+  {
+   "t": 4.9,
+   "sfx": "bubbles past the slab",
+   "gain_db": -12
+  }
+ ],
+ "notes": "HOOK 02 underwater cyborg cockroach: muffled bed, foot ticks, O2 fizz, tube flow, spiracle puffs, pressure swell"
+}

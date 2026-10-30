@@ -1,0 +1,148 @@
+{
+ "hook": "10",
+ "file": "source/public/audio/h10_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -16.09,
+ "fx_bus_lufs": -29.91,
+ "mix_lufs": -16.7,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.064,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "clinic room tone",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "low hum + pad",
+   "gain_db": -6
+  },
+  {
+   "t": 0,
+   "sfx": "walker wheels rolling",
+   "gain_db": -18
+  },
+  {
+   "t": 0.62,
+   "sfx": "near foot lands 0.62",
+   "gain_db": -5
+  },
+  {
+   "t": 2.92,
+   "sfx": "near foot lands 2.92",
+   "gain_db": -5
+  },
+  {
+   "t": 5.22,
+   "sfx": "near foot lands 5.22",
+   "gain_db": -2
+  },
+  {
+   "t": 1.77,
+   "sfx": "far foot lands 1.77",
+   "gain_db": -9
+  },
+  {
+   "t": 4.07,
+   "sfx": "far foot lands 4.07",
+   "gain_db": -9
+  },
+  {
+   "t": 0.85,
+   "sfx": "far foot scuff 0.85",
+   "gain_db": -16
+  },
+  {
+   "t": 3.15,
+   "sfx": "far foot scuff 3.15",
+   "gain_db": -16
+  },
+  {
+   "t": 5.45,
+   "sfx": "far foot scuff 5.45",
+   "gain_db": -16
+  },
+  {
+   "t": 0.0,
+   "sfx": "near foot swinging at open",
+   "gain_db": -14
+  },
+  {
+   "t": 4.3,
+   "sfx": "near foot lifts (stimulated step)",
+   "gain_db": -12
+  },
+  {
+   "t": 0.62,
+   "sfx": "walker frame tick as weight loads",
+   "gain_db": -14
+  },
+  {
+   "t": 5.22,
+   "sfx": "walker frame tick at final step",
+   "gain_db": -12
+  },
+  {
+   "t": 2.04,
+   "sfx": "motor cortex fires (faint glassy)",
+   "gain_db": -18
+  },
+  {
+   "t": 2.16,
+   "sfx": "implant electrodes record (ticks)",
+   "gain_db": -16
+  },
+  {
+   "t": 2.4,
+   "sfx": "headset coil receives",
+   "gain_db": -16
+  },
+  {
+   "t": 2.42,
+   "sfx": "pulses down the headset cable",
+   "gain_db": -18
+  },
+  {
+   "t": 3.02,
+   "sfx": "own signal dies at the injury (dull thud)",
+   "gain_db": -8
+  },
+  {
+   "t": 3.02,
+   "sfx": "injury fizzle",
+   "gain_db": -20
+  },
+  {
+   "t": 3.28,
+   "sfx": "processor decodes (clicks)",
+   "gain_db": -15
+  },
+  {
+   "t": 3.78,
+   "sfx": "transmitter -> pulse generator",
+   "gain_db": -16
+  },
+  {
+   "t": 4.12,
+   "sfx": "paddle stimulation pulse train",
+   "gain_db": -16
+  },
+  {
+   "t": 4.12,
+   "sfx": "paddle fires",
+   "gain_db": -8
+  },
+  {
+   "t": 4.3,
+   "sfx": "leg muscles contract (organic creak)",
+   "gain_db": -13
+  },
+  {
+   "t": 4.35,
+   "sfx": "muscle squeeze",
+   "gain_db": -16
+  }
+ ],
+ "notes": "clinic bed; footsteps on the gait; electrical ticks/zaps on each hop of the signal path; dull thud at the injury; paddle stimulation buzz and muscle creak on the final step"
+}

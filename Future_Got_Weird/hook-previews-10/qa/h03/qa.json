@@ -1,0 +1,51 @@
+{
+ "file": "exports/FGW_HOOK_03_MANTIS_WORM.mp4",
+ "size_bytes": 3666625,
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "duration": "6.000000",
+  "bit_rate": "4557592"
+ },
+ "frames": 180,
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "317374",
+  "duration": "6.016000"
+ },
+ "audio_decoded_s": 6.016,
+ "voice_onset_s": 0.003,
+ "mix_lufs": -16.58,
+ "sample_peak_dbfs": -0.97,
+ "motion_mean_per_second": [
+  3.644,
+  2.137,
+  1.93,
+  1.376,
+  1.616,
+  0.994
+ ],
+ "longest_static_run_frames": 0,
+ "longest_static_run_starts_frame": 0,
+ "frame_jumps_over_18": [],
+ "checks": {
+  "codec_h264": true,
+  "size_1080x1920": true,
+  "fps_30": true,
+  "pix_yuv420p": true,
+  "frames_180": true,
+  "video_6.000s": true,
+  "audio_aac": true,
+  "audio_len_6.0s(\u00b125ms)": true,
+  "voice_onset<=0.10s": true,
+  "no_static_run>0.5s": true
+ },
+ "all_pass": true
+}

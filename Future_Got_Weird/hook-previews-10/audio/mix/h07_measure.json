@@ -1,0 +1,93 @@
+{
+ "hook": "07",
+ "file": "source/public/audio/h07_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -15.99,
+ "fx_bus_lufs": -28.4,
+ "mix_lufs": -17.0,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.064,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "clinic room tone",
+   "gain_db": -10
+  },
+  {
+   "t": 0,
+   "sfx": "console hum",
+   "gain_db": -16
+  },
+  {
+   "t": 0.29,
+   "sfx": "pulsatile pump stroke after each beat (x8)",
+   "gain_db": -12
+  },
+  {
+   "t": 0.04,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 0.8,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 1.56,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 2.32,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 3.08,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 3.84,
+   "sfx": "heartbeat lub",
+   "gain_db": -5
+  },
+  {
+   "t": 4.6,
+   "sfx": "heartbeat lub",
+   "gain_db": -2
+  },
+  {
+   "t": 5.36,
+   "sfx": "heartbeat lub (closing beat)",
+   "gain_db": 3
+  },
+  {
+   "t": 4.62,
+   "sfx": "low swell into the closing beat",
+   "gain_db": -14
+  },
+  {
+   "t": 2.48,
+   "sfx": "window opens (soft wet tissue)",
+   "gain_db": -10
+  },
+  {
+   "t": 2.63,
+   "sfx": "coronary flow inside the cutaway",
+   "gain_db": -13
+  },
+  {
+   "t": 3.0,
+   "sfx": "low blood-cell trickle",
+   "gain_db": -24
+  },
+  {
+   "t": 4.33,
+   "sfx": "window closes",
+   "gain_db": -12
+  }
+ ],
+ "notes": "heart in a box: room + hum + pump bed; lub-dub on every beat (keyed to \"beating\"), monitor ticks, cutaway open/flow/close, a heavier closing beat after the narration"
+}

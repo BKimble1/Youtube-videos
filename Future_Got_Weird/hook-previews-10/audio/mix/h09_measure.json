@@ -1,0 +1,93 @@
+{
+ "hook": "09",
+ "file": "source/public/audio/h09_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -15.97,
+ "fx_bus_lufs": -30.21,
+ "mix_lufs": -16.16,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.059,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "underwater bed",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "distant reef crackle (other snapping shrimp)",
+   "gain_db": -14
+  },
+  {
+   "t": 0.65,
+   "sfx": "slow-motion pressure swell",
+   "gain_db": -6
+  },
+  {
+   "t": 0.36,
+   "sfx": "joint lock click",
+   "gain_db": -14
+  },
+  {
+   "t": 0.67,
+   "sfx": "claw shuts (plunger seats)",
+   "gain_db": -8
+  },
+  {
+   "t": 0.65,
+   "sfx": "jet leaving the socket",
+   "gain_db": -10
+  },
+  {
+   "t": 0.76,
+   "sfx": "bubble balloons (stretched)",
+   "gain_db": -16
+  },
+  {
+   "t": 0.76,
+   "sfx": "nucleation",
+   "gain_db": -14
+  },
+  {
+   "t": 3.12,
+   "sfx": "collapse rush + crack",
+   "gain_db": -3
+  },
+  {
+   "t": 3.66,
+   "sfx": "SNAP: collapse shock",
+   "gain_db": 0
+  },
+  {
+   "t": 3.66,
+   "sfx": "pressure thump",
+   "gain_db": -4
+  },
+  {
+   "t": 3.66,
+   "sfx": "faint glint for the tiny flash",
+   "gain_db": -20
+  },
+  {
+   "t": 4.5,
+   "sfx": "fish jolted",
+   "gain_db": -14
+  },
+  {
+   "t": 5.05,
+   "sfx": "claw re-opening",
+   "gain_db": -16
+  },
+  {
+   "t": 5.85,
+   "sfx": "claw locks open",
+   "gain_db": -12
+  },
+  {
+   "t": 4.7,
+   "sfx": "residual micro-bubbles",
+   "gain_db": -20
+  }
+ ],
+ "notes": "Pistol shrimp: snap crack placed at the bubble collapse (3.66 s), claw shut is only a small clack."
+}

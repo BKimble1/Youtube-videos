@@ -1,0 +1,93 @@
+{
+ "hook": "03",
+ "file": "source/public/audio/h03_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -16.16,
+ "fx_bus_lufs": -30.39,
+ "mix_lufs": -16.56,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.068,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "pond-side air (fades as the camera goes under)",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "underwater bed",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "low eerie pad from the window opening",
+   "gain_db": -2
+  },
+  {
+   "t": -0.04,
+   "sfx": "entry splash (mid-plunge at frame 0)",
+   "gain_db": 0
+  },
+  {
+   "t": 0.0,
+   "sfx": "body hitting the water",
+   "gain_db": -4
+  },
+  {
+   "t": 0.08,
+   "sfx": "entrained bubble cloud",
+   "gain_db": -5
+  },
+  {
+   "t": 0.55,
+   "sfx": "leg stroke 0",
+   "gain_db": -12
+  },
+  {
+   "t": 0.95,
+   "sfx": "leg stroke 1",
+   "gain_db": -12
+  },
+  {
+   "t": 1.35,
+   "sfx": "leg stroke 2",
+   "gain_db": -12
+  },
+  {
+   "t": 1.05,
+   "sfx": "tension swell as the coil is revealed",
+   "gain_db": -8
+  },
+  {
+   "t": 1.52,
+   "sfx": "segments part (soft membrane pop)",
+   "gain_db": -6
+  },
+  {
+   "t": 1.62,
+   "sfx": "worm tip pushes out",
+   "gain_db": -3
+  },
+  {
+   "t": 1.92,
+   "sfx": "slow slither",
+   "gain_db": -5
+  },
+  {
+   "t": 2.9,
+   "sfx": "worm crawling out (faster)",
+   "gain_db": -1
+  },
+  {
+   "t": 4.55,
+   "sfx": "slither continues, easing",
+   "gain_db": -5
+  },
+  {
+   "t": 4.4,
+   "sfx": "low swell under the pull-back",
+   "gain_db": -9
+  }
+ ],
+ "notes": "splash/bubbles at the plunge, muffled bed, membrane pop at the parting, wet slither under \"crawls out\", low swell at the pull-back"
+}

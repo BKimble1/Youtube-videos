@@ -1,0 +1,88 @@
+{
+ "hook": "05",
+ "file": "source/public/audio/h05_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -16.17,
+ "fx_bus_lufs": -29.76,
+ "mix_lufs": -16.63,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.06,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "soil-floor air bed",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "low tension pad",
+   "gain_db": -10
+  },
+  {
+   "t": 0.0,
+   "sfx": "ant approach rustle",
+   "gain_db": -14
+  },
+  {
+   "t": 0.38,
+   "sfx": "burst 1 pulsed spray",
+   "gain_db": -2
+  },
+  {
+   "t": 0.43,
+   "sfx": "droplet sizzle on the ant",
+   "gain_db": -10
+  },
+  {
+   "t": 0.46,
+   "sfx": "ant flinch",
+   "gain_db": -12
+  },
+  {
+   "t": 0.54,
+   "sfx": "ant backs off",
+   "gain_db": -15
+  },
+  {
+   "t": 2.45,
+   "sfx": "valve opens",
+   "gain_db": -12
+  },
+  {
+   "t": 2.47,
+   "sfx": "reactants flow in",
+   "gain_db": -13
+  },
+  {
+   "t": 2.75,
+   "sfx": "chamber pop",
+   "gain_db": -2
+  },
+  {
+   "t": 2.65,
+   "sfx": "heating reaction sizzle",
+   "gain_db": -13
+  },
+  {
+   "t": 4.72,
+   "sfx": "burst 2 pulsed spray",
+   "gain_db": -2
+  },
+  {
+   "t": 4.77,
+   "sfx": "droplet sizzle 2",
+   "gain_db": -11
+  },
+  {
+   "t": 4.8,
+   "sfx": "ant flinch 2",
+   "gain_db": -12
+  },
+  {
+   "t": 5.0,
+   "sfx": "ant retreat",
+   "gain_db": -15
+  }
+ ],
+ "notes": "pulsed spray pops on every discharge pulse; chamber pops on PULSES; no music, no whooshes"
+}

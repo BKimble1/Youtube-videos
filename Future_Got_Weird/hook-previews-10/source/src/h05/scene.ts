@@ -1,0 +1,180 @@
+// HOOK 05: the one timeline (event times, beetle and ant poses, camera). Every beat is keyed to the narration's word
+// starts (h05_words.json). tools/audio/h05.py mirrors EV (print it with `node -e` or read the notes).
+import WORDS from '../data/h05_words.json';
+import {clamp, keyCR, keyS, noise1, ss, ss5, wordAt, Words} from '../shared/lib';
+import {add3, Cam3, lerp3, mul3, norm3, Orbit, orbitCam, sub3, V3} from '../shared/three';
+import {Frame, frame, pitchF, rollF, toW, yawF} from './core/frame';
+import {BeetleState, BODY_H, restFeet, solveB, TIP_REST, aimDir, BRig} from './beetle/rig';
+import {AntState, LegPose, solve as solveAnt, Rig as AntRig, freeLeg, lerpLeg} from './ant/rig';
+import {floorS, gaitLegs, bob} from './ant/gait';
+
+const W = WORDS as Words;
+const w = (s: string) => wordAt(W, s).start;
+
+// ------------------------------------------------------------------ event times (s)
+const T_SHOOTS = w('shoots'); // 0.67
+const T_FROM = w('from'); // 2.45
+const T_EXPL = w('explosions'); // 2.55
+const T_BODY = w('body'); // 4.19
+export const EV = {
+  aim0: 0.06, aim1: 0.34, // the abdominal tip swings onto the ant
+  burst1: [0.38, 0.86] as [number, number], // first discharge (pulsed)
+  hit1: 0.44, // the spray reaches the ant's face
+  trackBack: [0.92, 2.5] as [number, number], // camera follows the spray back to the tip
+  cutIn: [1.7, 2.4] as [number, number], // abdomen turns semi-transparent
+  valve0: T_FROM, // first valve opening
+  pop0: T_EXPL + 0.2, // first explosive pulse in the chamber
+  pulsesEnd: 4.36,
+  cutOut: [4.15, 4.75] as [number, number],
+  burst2: [4.72, 5.08] as [number, number],
+  hit2: 4.78,
+  shoots: T_SHOOTS,
+  body: T_BODY,
+};
+/** the chamber's pulse times: the first one slow and readable, then faster */
+export const PULSES: number[] = (() => {
+  const out: number[] = [];
+  let tt = EV.pop0, k = 0;
+  while (tt < EV.pulsesEnd) {
+    out.push(tt);
+    tt += Math.max(0.13, 0.24 - 0.022 * k);
+    k++;
+  }
+  return out;
+})();
+/** discharge pulses (for the spray): the first burst, the chamber pulses, the second burst */
+export const SPRAY_PULSES: {t: number; k: number; burst: number}[] = (() => {
+  const out: {t: number; k: number; burst: number}[] = [];
+  for (let tt = EV.burst1[0], k = 0; tt < EV.burst1[1]; tt += 0.042, k++) out.push({t: tt, k, burst: 1});
+  PULSES.forEach((tt, k) => out.push({t: tt + 0.02, k: 100 + k, burst: 0}));
+  for (let tt = EV.burst2[0], k = 0; tt < EV.burst2[1]; tt += 0.042, k++) out.push({t: tt, k: 200 + k, burst: 2});
+  return out;
+})();
+
+// ------------------------------------------------------------------ the beetle
+export const BODY0: Frame = frame([0, 0, BODY_H], [1, 0, 0], [0, 0, 1]);
+const FEET0 = restFeet(BODY0);
+
+// ------------------------------------------------------------------ the ant (approach, recoil, groom, return, retreat)
+const Q: V3 = [-8.0, 5.25, 1.55]; // the ant's head at the first hit
+const HDG = norm3([0.39, -0.92, 0]);
+const S0 = add3(Q, mul3(HDG, -12));
+const ARC_S = 4.2; // below this the path curves (the ant turns away as it backs off)
+const KAPPA = 19; // deg of turn per mm along the arc
+const antBodyAt = (s: number): Frame => {
+  const base = (ss_: number): V3 => [S0[0] + HDG[0] * ss_, S0[1] + HDG[1] * ss_, 1.5];
+  if (s >= ARC_S) return frame(base(s), HDG, [0, 0, 1]);
+  // integrate the heading back along the arc
+  let p = base(ARC_S);
+  let yaw = 0;
+  const n = 16, ds = (ARC_S - s) / n;
+  for (let i = 0; i < n; i++) {
+    yaw += KAPPA * ds;
+    const a = (yaw * Math.PI) / 180;
+    const hd: V3 = [HDG[0] * Math.cos(a) - HDG[1] * Math.sin(a), HDG[0] * Math.sin(a) + HDG[1] * Math.cos(a), 0];
+    p = sub3(p, mul3(hd, ds));
+  }
+  const a = (yaw * Math.PI) / 180;
+  const hd: V3 = [HDG[0] * Math.cos(a) - HDG[1] * Math.sin(a), HDG[0] * Math.sin(a) + HDG[1] * Math.cos(a), 0];
+  return frame(p, hd, [0, 0, 1]);
+};
+const antS = (t: number) =>
+  keyCR(t, [
+    [0, 6.3], [0.44, 8.25], [0.62, 7.5], [1.0, 5.2], [1.6, 3.4], [2.4, 2.9], [3.2, 3.1], [3.9, 4.4], [4.45, 6.9], [4.8, 8.05], [5.05, 7.0], [5.6, 4.1], [6.0, 2.0],
+  ]);
+export const antState = (t: number): AntState => {
+  const s = antS(t);
+  // flinch after each hit: head and fore body thrown up and back, antennae swept back, mandibles snap
+  const fl = Math.max(ss(t, EV.hit1, EV.hit1 + 0.1) * (1 - ss(t, 0.8, 1.6)), ss(t, EV.hit2, EV.hit2 + 0.1) * (1 - ss(t, 5.3, 6.0) * 0.6));
+  let body = bob(antBodyAt(s), s, 1);
+  body = pitchF(body, -14 * fl + 3 * Math.sin(t * 7) * fl, body.o);
+  body = {...body, o: add3(body.o, [0, 0, 0.25 * fl])};
+  // grooming windows: the right foreleg draws the right antenna through it
+  const groom = Math.max(ss(t, 1.15, 1.45) * (1 - ss(t, 3.3, 3.7)), ss(t, 5.05, 5.35));
+  const st: AntState = {
+    body,
+    headPitch: -10 * fl + 22 * groom + 4 * Math.sin(t * 5.3),
+    headYaw: -16 * groom + 4 * noise1(t * 2, 3),
+    mand: clamp(0.85 * (1 - fl) * (1 - groom) + 0.15 + 0.1 * Math.sin(t * 9)),
+    antSpread: clamp(0.9 - 0.6 * fl - 0.3 * groom + 0.08 * Math.sin(t * 3.1)),
+    antTw: [10 * Math.sin(t * 6.3) + 25 * fl, 10 * Math.sin(t * 5.1 + 1) + 25 * fl - 20 * groom],
+    legs: [],
+    gasterPitch: 6 * fl + 4 * Math.sin(t * 2.3),
+    dead: 0,
+    antFwd: 0.9 - 0.6 * fl,
+    scale: 0.88,
+  };
+  const g = gaitLegs(st, (ss_) => antBodyAt(ss_), s, floorS, 0.9, 1);
+  st.legs = g;
+  if (groom > 0.001) {
+    // place the right foreleg (index 1) on the right antenna's flagellum, rubbing along it
+    const R0 = solveAnt({...st, legs: g});
+    const ant = R0.ants[1];
+    const rub = 0.5 + 0.5 * Math.sin(t * 2 * Math.PI * 3.2);
+    const p = lerp3(ant.pts[1], ant.pts[4], rub);
+    const pose: LegPose = {ankle: add3(p, add3(mul3(body.u, -0.35), mul3(body.f, -0.2))), foot: add3(p, add3(mul3(body.f, 0.9), mul3(body.u, 0.3))), pole: add3(body.u, mul3(body.l, -1))};
+    st.legs = g.map((L, i) => (i === 1 ? lerpLeg(L, pose, groom) : L));
+  }
+  return st;
+};
+export const antRig = (t: number): AntRig => solveAnt(antState(t));
+
+// ------------------------------------------------------------------ beetle pose
+const antHead = (t: number): V3 => antRig(t).headC;
+/** how far the tip is turned toward the ant (0 rest .. 1 aimed) */
+export const aimW = (t: number) => Math.max(ss5(t, EV.aim0, EV.aim1) * (1 - ss(t, 1.4, 2.2) * 0.55), ss5(t, 4.3, 4.6)) * (1 - ss(t, 5.3, 5.95) * 0.6);
+export const beetleState = (t: number): BeetleState => {
+  const br = Math.sin(t * 2 * Math.PI * 0.9);
+  // a brace toward the threat when it fires
+  const brace = Math.max(ss(t, 0.3, 0.45) * (1 - ss(t, 0.9, 1.6)), ss(t, 4.5, 4.65) * (1 - ss(t, 5.1, 5.8)));
+  let body: Frame = {...BODY0, o: add3(BODY0.o, [0.06 * Math.sin(t * 1.7), 0.04 * Math.sin(t * 1.3 + 1), 0.04 * br - 0.1 * brace])};
+  body = rollF(body, 2.5 * brace + 0.8 * Math.sin(t * 1.1), body.o);
+  body = yawF(body, 3 * brace * -1 + 1.0 * Math.sin(t * 0.9), body.o);
+  const tipFrom = toW(body, [-5.05, 0, -0.32]);
+  const target = antHead(Math.min(t, t < 2.5 ? t : t));
+  const aim = aimDir(body, tipFrom, add3(target, [0, 0, 0.1]));
+  const u = aimW(t);
+  // between bursts, the tip settles part of the way back and keeps small aiming corrections
+  const tipDir = norm3(lerp3(TIP_REST, aim, u));
+  const feet = FEET0.map((p) => p);
+  // a small step adjustment with the far hind leg after the second burst, and front-leg shuffles
+  const lift = [0, 0, 0, 0, 0, 0].map((_, i) => 0);
+  lift[0] = 0.5 * Math.max(0, Math.sin(Math.PI * clamp((t - 1.9) / 0.35))) + 0.5 * Math.max(0, Math.sin(Math.PI * clamp((t - 5.35) / 0.35)));
+  lift[3] = 0.45 * Math.max(0, Math.sin(Math.PI * clamp((t - 3.3) / 0.35)));
+  lift[5] = 0.45 * Math.max(0, Math.sin(Math.PI * clamp((t - 5.6) / 0.33)));
+  return {
+    body,
+    headPitch: 8 + 3 * Math.sin(t * 1.9) - 5 * brace,
+    headYaw: 4 * Math.sin(t * 1.3) - 6 * brace,
+    mand: 0.25 + 0.2 * Math.max(0, Math.sin(t * 4.1)),
+    antWave: [8 * Math.sin(t * 3.3) + 6 * noise1(t * 2.5, 1) - 18 * brace, 8 * Math.sin(t * 2.9 + 1.3) + 6 * noise1(t * 2.5, 2) - 18 * brace],
+    antLift: [6 * Math.sin(t * 2.1), 6 * Math.sin(t * 2.4 + 2)],
+    feet,
+    lift,
+    tipDir,
+    pump: 0.5 + 0.5 * br,
+  };
+};
+export const beetleRig = (t: number): BRig => solveB(beetleState(t));
+
+// ------------------------------------------------------------------ camera (one continuous path)
+const GL: V3 = [-4.3, 0.1, BODY_H - 0.1]; // the gland system (world, at rest)
+export const CAMK = {
+  tx: [[0, -4.4], [0.95, -5.8], [1.6, -5.7], [2.3, -5.25], [2.75, -4.9], [3.5, -4.75], [4.1, -4.8], [4.75, -5.0], [5.4, -4.6], [6.0, -4.4]] as [number, number][],
+  ty: [[0, 3.3], [0.95, 3.2], [1.6, 1.8], [2.3, 0.5], [2.75, 0.2], [3.5, 0.15], [4.1, 0.2], [4.75, 2.0], [5.4, 2.9], [6.0, 3.0]] as [number, number][],
+  tz: [[0, 1.1], [0.95, 1.3], [2.3, 1.25], [4.1, 1.25], [5.4, 1.1], [6.0, 1.1]] as [number, number][],
+  az: [[0, 58], [0.95, 56], [1.6, 47], [2.5, 26], [3.5, 19], [4.1, 17], [4.9, 36], [6.0, 52]] as [number, number][],
+  el: [[0, 28], [0.95, 29], [2.5, 42], [4.1, 44], [4.9, 33], [6.0, 28]] as [number, number][],
+  cy: [[0, 830], [0.95, 850], [2.5, 900], [4.1, 900], [5.0, 860], [6.0, 850]] as [number, number][],
+  d: [[0, 47], [0.95, 44], [1.6, 30], [2.3, 17.5], [2.75, 13.6], [3.5, 12.6], [4.1, 13.4], [4.75, 27], [5.4, 40], [6.0, 45]] as [number, number][],
+};
+export const camOrbit = (t: number): Orbit => ({
+  target: [keyCR(t, CAMK.tx), keyCR(t, CAMK.ty), keyCR(t, CAMK.tz)],
+  az: keyCR(t, CAMK.az),
+  el: keyCR(t, CAMK.el),
+  d: Math.exp(keyCR(t, CAMK.d.map(([a, v]) => [a, Math.log(v)] as [number, number]))),
+  f: 3500,
+  cy: keyCR(t, CAMK.cy),
+});
+export const camAt = (t: number): Cam3 => orbitCam(camOrbit(t));
+export {GL};
