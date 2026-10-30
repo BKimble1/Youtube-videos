@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""Effects and mix for FGW "Tooth in Eye" V1. Everything is synthesised (no samples, no third-party music).
-The narration master (audio/narration/FGW_Tooth_Eye_narration_V1.wav) is used sample for sample (gain only).
+"""Effects and mix for FGW "Tooth in Eye" V2 (V1 placement is at commit 73ce4c9d). Everything is synthesised (no samples, no third-party music).
+The narration master (audio/narration/FGW_Tooth_Eye_narration_V2.wav) is used sample for sample (gain only).
 Under it: an uninterrupted room/body ambience and a quiet low pad that opens into a warm chord when his sight returns,
 plus restrained effects placed from the picture's own events (audio/cues.json, exported from story.ts):
 a distinctive unsettling tone on the opening reveal, the piezo saw, the bone giving way, a subdued dental drill on the
 hole, a small mechanical click as the optical cylinder seats, soft tissue sounds, a faint shimmer for light.
 No whooshes on camera moves, no stingers, no cartoon sounds.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; true peak about -1.5 dBTP (measured 4x).
-usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
-Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Tooth_Eye_V1_mix.wav, audio/mix/mix_measure.json, audio/sfx_log.json"""
+usage: python3 tools/make_audio.py [mix_name]   (default mix_v2)
+Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Tooth_Eye_V2_mix.wav, audio/mix/mix_measure_v2.json, audio/sfx_log_v2.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v1'
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v2'
 cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
 DUR, TM, EV = cj['DUR'], cj['TM'], cj['EV']
 N = int(round(DUR * SR))
@@ -194,41 +194,40 @@ def tick2(dur=0.04, f=2200):
 
 sfx = np.zeros(N)
 E = EV.get
-# the opening reveal
-place(sfx, uncanny(1.4), 0.0, 'opening: glassy detuned tone + wet creak (the graft turns see-through)', -18)
-place(sfx, ting(0.5, 2640), 0.40, 'tiny ting off the cylinder', -31)
-# into the cylinder, light to the retina
-place(sfx, shimmer(0.7, 3000, 6500), E('lumen'), 'light at the end of the cylinder (faint shimmer)', -36)
-place(sfx, shimmer(0.8, 6500, 2600), E('raysIn'), 'light travelling to the retina', -35)
-place(sfx, chime(1.5), E('retinaLit1') - 0.05, 'retina lit (warm soft chime)', -32)
-# why it was needed
-place(sfx, glide(0.55, 420, 170), E('rewind'), 'rewind to before (soft falling tone)', -36)
-place(sfx, lp(noise(int(0.9 * SR)), 500) * env(int(0.9 * SR), 0.3, 0.4), E('scatter'), 'light scattered by the scar (muffled)', -34)
-place(sfx, wetslide(0.4), E('donorIn') + 0.25, 'donor cornea placed', -31)
-place(sfx, swell(1.0, 50), E('cloud') - 0.1, 'the graft clouds over (low dull swell)', -30)
+# the hook: the finished reconstruction, light already passing to the retina
+place(sfx, uncanny(1.3), 0.0, 'opening: glassy detuned tone + wet creak under the reveal', -19)
+place(sfx, shimmer(0.9, 6500, 2600), E('raysIn'), 'light through the cylinder', -36)
+place(sfx, chime(1.4), E('retinaLit1') - 0.05, 'retina lit (warm soft chime)', -33)
+place(sfx, chime(1.2, (587.3, 880.0, 1174.7)), E('seeGlow'), 'retina glows on SEE', -35)
+# the damaged cornea: penlight, white glare; a donor cornea, a red reflex, then it clouds
+place(sfx, tick2(0.03, 2600), E('penOn'), 'penlight click', -33)
+place(sfx, wetslide(0.35), E('donorIn'), 'donor cornea laid on', -32)
+place(sfx, chime(0.7, (440.0, 659.3)), E('reflex'), 'light gets through (brief warm tone)', -37)
+place(sfx, swell(0.9, 50), E('cloud'), 'the graft clouds over (low dull swell)', -30)
 # the tooth
-place(sfx, wetslide(0.35), E('jawOpen'), None, -38)
-place(sfx, piezo(E('saw1e') - E('saw1'), 2900, 55), E('saw1'), 'piezo saw round the root', -29)
-place(sfx, crack(0.3), E('elevator'), 'bone gives way under the elevator', -26)
-place(sfx, wetslide(0.35), E('lift'), 'the block lifts out', -30)
-place(sfx, piezo(E('saw2e') - E('saw2'), 3400, 70), E('saw2'), 'trimming saw (crown off, plate shaped)', -30)
-place(sfx, tick2(0.04, 1900), E('offcut') + 0.18, 'offcut drops on the drape', -34)
-place(sfx, drill(E('drille') - E('drill')), E('drill'), 'dental drill through the dentin (subdued)', -27)
-place(sfx, snap(0.08), E('click') - 0.004, 'the optical cylinder seats (click)', -17)
-# the pocket
+place(sfx, wetslide(0.4), E('retract'), 'cheek retractors', -36)
+place(sfx, piezo(E('saw1e') - E('saw1'), 2900, 55), E('saw1'), 'piezo saw round the root', -30)
+place(sfx, crack(0.3), E('elevator'), 'bone gives way under the elevator', -27)
+place(sfx, wetslide(0.35), E('lift'), 'the block lifts out', -31)
+place(sfx, piezo(E('saw2e') - E('saw2'), 3400, 70), E('saw2'), 'trimming saw: crown off, plate shaped', -31)
+place(sfx, tick2(0.04, 1900), E('offcut'), 'offcut drops on the drape', -34)
+place(sfx, drill(E('drille') - E('drill')), E('drill'), 'dental drill through the dentin (subdued)', -28)
+place(sfx, snap(0.08), E('click') - 0.004, 'the optical cylinder seats (click)', -18)
+# under the skin of the other eye
 place(sfx, wetslide(0.3), E('incision'), 'incision', -36)
-place(sfx, wetslide(0.55), E('tuck'), 'slid beneath the skin', -30)
+place(sfx, wetslide(0.5), E('tuck'), 'slid beneath the skin', -31)
 for k in range(3):
-    place(sfx, tick2(0.03, 1500), E('suture') + k * 0.1, 'sutures' if k == 0 else None, -38)
+    place(sfx, tick2(0.03, 1500), E('suture') + k * 0.09, 'sutures' if k == 0 else None, -38)
 place(sfx, creep(E('growB') - E('growA')), E('growA'), 'tissue growing round the implant (organic, quiet)', -31)
-place(sfx, wetslide(0.4), E('lift2'), 'taken out of the pocket', -32)
-# into the eye
-place(sfx, wetslide(0.35), E('flap'), 'graft lifted', -33)
-place(sfx, crackle(0.25, 60, 3000, 8000), E('trephine'), 'corneal disc removed', -34)
-place(sfx, tick2(0.04, 1300), E('seat') + 0.02, 'implant seated', -30)
-place(sfx, wetslide(0.35), E('flapBack'), 'graft laid back over it', -33)
-place(sfx, shimmer(0.9, 6500, 2600), E('raysIn2'), 'light through the cylinder', -34)
-place(sfx, chime(2.0, (587.3, 880.0, 1174.7)), E('retinaLit2') - 0.05, 'retina lit (warm chime)', -30)
+place(sfx, wetslide(0.4), E('lift2'), 'out of the pocket', -32)
+# into the front of the damaged eye
+place(sfx, wetslide(0.3), E('flap'), 'graft lifted', -34)
+place(sfx, crackle(0.25, 60, 3000, 8000), E('trephine'), 'corneal disc removed', -35)
+place(sfx, tick2(0.04, 1300), E('seat'), 'implant seated', -30)
+place(sfx, wetslide(0.3), E('flapBack'), 'graft laid back over it', -34)
+place(sfx, shimmer(1.2, 6500, 2600), E('raysIn2'), 'light through the cylinder to the retina', -34)
+place(sfx, chime(1.8, (587.3, 880.0, 1174.7)), E('retinaLit2') - 0.05, 'retina lit (warm chime)', -30)
+place(sfx, shimmer(0.45, 2600, 6500), E('loopRays'), 'light enters again (loop)', -38)
 
 # ---------------- beds ----------------
 room = circ(lambda x: lp(hp(x, 90), 1400), noise(N)) * (0.75 + 0.25 * np.sin(2 * np.pi * 0.09 * t + 1))
@@ -239,7 +238,14 @@ def win2(a, b, fa, fb): return np.clip(np.minimum((t - (a - fa)) / fa, ((b + fb)
 dark = win2(E('povDark'), E('povClear') - 0.2, 0.25, 0.6)
 open_ = np.clip((t - (E('povClear') - 0.3)) / 1.2, 0, 1)
 room_dark = circ(lambda x: lp(x, 300), room)
-amb = 0.55 * norm(room) * (1 - dark) + 0.55 * norm(room_dark) * dark + 0.05 * norm(hum) + 0.10 * norm(air) * (0.4 + 0.9 * open_)
+beep = np.zeros(N)
+for k in range(int(DUR / 0.92) + 1):
+    t0 = 0.31 + k * 0.92
+    n = int(0.09 * SR); tt = np.arange(n) / SR
+    place(beep, np.sin(2 * np.pi * 1046.5 * tt) * env(n, 0.005, 0.05), t0)
+beep_dark = circ(lambda x: lp(x, 400), beep)
+amb = 0.55 * norm(room) * (1 - dark) + 0.55 * norm(room_dark) * dark + 0.05 * norm(hum) + 0.10 * norm(air) * (0.4 + 0.9 * open_) \
+    + 0.035 * (norm(beep) * (1 - dark) + norm(beep_dark + 1e-9) * dark * 0.6)
 birds = np.zeros(N)
 for k in range(6):
     t0 = E('povClear') + 0.25 + k * 0.38 + 0.12 * rng.random()
@@ -259,9 +265,11 @@ def pad(freqs):
 pad_a = pad([(55.0, 0.5), (110.0, 0.3), (130.81, 0.16), (164.81, 0.1), (116.54, 0.05)])
 pad_w = pad([(73.42, 0.45), (146.83, 0.3), (185.0, 0.2), (220.0, 0.18), (329.63, 0.1), (369.99, 0.06)])
 warm = np.clip((t - (E('povClear') - 0.1)) / 1.4, 0, 1) ** 1.5
+# back to the opening's pad over the last 0.7 s, so the loop seam is continuous in sound too
+warm = warm * (1 - np.clip((t - (DUR - 0.7)) / 0.7, 0, 1))
 bed = norm(pad_a) * (1 - warm) * (1 - 0.5 * dark) + norm(pad_w) * warm * 1.25
 # ---------------- voice and mix ----------------
-v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Tooth_Eye_narration_V1.wav'))
+v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Tooth_Eye_narration_V2.wav'))
 assert vsr == SR and len(v) == N, (vsr, len(v), N)
 meter = pyln.Meter(SR)
 def compress(x, thr_db=-20.0, ratio=3.0, att=0.004, rel=0.09):
@@ -307,10 +315,10 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_Tooth_Eye_V1_mix.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, 'audio/mix/FGW_Tooth_Eye_V2_mix.wav'), mix2, SR, subtype='PCM_24')
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG)}
-json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure.json'), 'w'), indent=1)
-json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log.json'), 'w'), indent=1)
+json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v2.json'), 'w'), indent=1)
+json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v2.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))

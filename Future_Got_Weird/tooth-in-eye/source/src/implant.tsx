@@ -8,17 +8,19 @@ import React from 'react';
 import {clamp, hash, lerp} from './lib';
 
 export type V3 = [number, number, number];
-export type Rot = {yaw: number; pitch: number; roll: number};
+export type Rot = {yaw: number; pitch: number; roll: number; spin?: number};
 const D = Math.PI / 180;
 
-export const rotM = ({yaw, pitch, roll}: Rot) => {
+export const rotM = ({yaw, pitch, roll, spin = 0}: Rot) => {
   const cy = Math.cos(yaw * D), sy = Math.sin(yaw * D), cp = Math.cos(pitch * D), sp = Math.sin(pitch * D), cr = Math.cos(roll * D), sr = Math.sin(roll * D);
-  // R = Rz(roll) Rx(pitch) Ry(yaw)
+  // R = Rz(roll) Rx(pitch) Ry(yaw) Rz(spin): spin turns the object in its own face plane first
   const Ry = [[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]];
   const Rx = [[1, 0, 0], [0, cp, -sp], [0, sp, cp]];
   const Rz = [[cr, -sr, 0], [sr, cr, 0], [0, 0, 1]];
   const mul = (A: number[][], B: number[][]) => A.map((r) => [0, 1, 2].map((j) => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
-  return mul(Rz, mul(Rx, Ry));
+  const cs = Math.cos(spin * D), ss_ = Math.sin(spin * D);
+  const Rs = [[cs, -ss_, 0], [ss_, cs, 0], [0, 0, 1]];
+  return mul(Rz, mul(Rx, mul(Ry, Rs)));
 };
 const ap = (R: number[][], p: V3): V3 => [R[0][0] * p[0] + R[0][1] * p[1] + R[0][2] * p[2], R[1][0] * p[0] + R[1][1] * p[1] + R[1][2] * p[2], R[2][0] * p[0] + R[2][1] * p[1] + R[2][2] * p[2]];
 
@@ -62,7 +64,7 @@ export const LAMINA: [number, number][] = (() => {
   }
   return [[1.5, -0.2], ...lo, [16.6, 0.0], [16.6, 5.5], [9, 5.6], [1.5, 5.35]];
 })();
-export const HOLE: [number, number] = [12.0, -0.1];
+export const HOLE: [number, number] = [10.0, -0.1];   // through the root dentin, near the plate's middle
 export const HOLE_R = 1.8;
 export const Z_F = 1.6, Z_B = -1.6;             // lamina faces (3.2 mm thick); the block is the same slab
 export const CYL_Z0 = -5.5, CYL_Z1 = 3.8;       // optical cylinder: 4 mm behind the lamina, 2.2 mm proud in front
@@ -108,8 +110,8 @@ const FrontFace: React.FC<{id: string; outline: [number, number][]; withCrown: b
       <defs>
         <clipPath id={`${id}o`}><path d={P(outline)} /></clipPath>
         <clipPath id={`${id}r`}><path d={P(ROOT)} /></clipPath>
-        <linearGradient id={`${id}bone`} x1="0" y1="1" x2="0.2" y2="0"><stop offset="0" stopColor="#C99B73" /><stop offset="1" stopColor="#E3C29C" /></linearGradient>
-        <linearGradient id={`${id}den`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FBF3DD" /><stop offset="0.55" stopColor="#F0E2BF" /><stop offset="1" stopColor="#DCC596" /></linearGradient>
+        <linearGradient id={`${id}bone`} x1="0" y1="1" x2="0.2" y2="0"><stop offset="0" stopColor="#B98762" /><stop offset="1" stopColor="#D6AE86" /></linearGradient>
+        <linearGradient id={`${id}den`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFBEF" /><stop offset="0.55" stopColor="#F6EBD0" /><stop offset="1" stopColor="#E2CDA0" /></linearGradient>
         <linearGradient id={`${id}en`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset="0.6" stopColor="#EEF1F2" /><stop offset="1" stopColor="#CFD8DC" /></linearGradient>
       </defs>
       <g clipPath={`url(#${id}o)`}>
@@ -132,7 +134,8 @@ const FrontFace: React.FC<{id: string; outline: [number, number][]; withCrown: b
             <path key={`l${i}`} d={'M' + Array.from({length: 13}, (_, j) => {const x = lerp(1.5, 17, j / 12); return `${x},${-0.95 * rootW(x) * k}`;}).join('L')} fill="none" stroke="#E0C99C" strokeWidth={0.12} />
           ))}
         </g>
-        <path d={P(ROOT)} fill="none" stroke="rgba(120,84,50,0.55)" strokeWidth={0.14} />
+        <path d={P(ROOT)} fill="none" stroke="#C9A35E" strokeWidth={0.32} />
+        <path d={P(ROOT)} fill="none" stroke="rgba(110,76,40,0.7)" strokeWidth={0.12} />
         {withCrown && (
           <g>
             <path d={P(CROWN)} fill={`url(#${id}en)`} />
@@ -321,6 +324,27 @@ export const Implant: React.FC<ImplantProps> = (pr) => {
       </g>
       <path d={backD} transform={mat(backZ)} fill={shade(MAT.bone, 0.7, MAT.tissue, tissue)} />
       {quads.map((q, i) => <path key={i} d={q.d} fill={q.fill} stroke={q.fill} strokeWidth={0.9 * px} strokeLinejoin="round" />)}
+      {(() => {
+        // the neck cut (x = 16.6): the root in cross-section, dentin round the pulp canal, a strip of bone
+        if (pr.outline || piece !== 'lamina') return null;
+        const X0 = 16.6, n = ap(R, [1, 0, 0]);
+        if (n[2] <= 0.05) return null;
+        const e0 = ap(R, [X0 + ox, oy, oz]);
+        const m = `matrix(${s * R[0][1]},${-s * R[1][1]},${s * R[0][2]},${-s * R[1][2]},${x + s * e0[0]},${y - s * e0[1]})`;
+        const rw = rootW(16.6), lo = -0.92 * rw;
+        return (
+          <g transform={m}>
+            <rect x={lo} y={Z_B} width={5.5 - lo} height={Z_F - Z_B} fill="#C99B73" />
+            {pores.filter((_, i) => i % 3 === 0).map((p, i) => <circle key={i} cx={rw + 0.3 + (p.x / 19) * (5.5 - rw - 0.5)} cy={Z_B + 0.3 + ((p.y + 6) / 12) * (Z_F - Z_B - 0.6)} r={0.16} fill="#8C5E40" opacity={0.7} />)}
+            <rect x={lo} y={Z_B} width={rw - lo} height={Z_F - Z_B} fill="#FBF3DD" />
+            <rect x={lo + 0.35} y={Z_B + 0.25} width={rw - lo - 0.7} height={Z_F - Z_B - 0.5} fill="none" stroke="#E6D2A6" strokeWidth={0.12} rx={0.6} />
+            <ellipse cx={0.05} cy={0} rx={0.62} ry={0.55} fill="#A8695A" stroke="#7E4A3E" strokeWidth={0.08} />
+            <line x1={rw} x2={rw} y1={Z_B} y2={Z_F} stroke="#D2B47E" strokeWidth={0.25} />
+            <line x1={lo} x2={lo} y1={Z_B} y2={Z_F} stroke="#D2B47E" strokeWidth={0.25} />
+            <rect x={lo} y={Z_B} width={5.5 - lo} height={Z_F - Z_B} fill="none" stroke="rgba(52,32,22,0.85)" strokeWidth={1.6 * pxo} />
+          </g>
+        );
+      })()}
       <g transform={mat(faceZ)}>
         {front ? (
           <FrontFace id={`${id}f`} outline={outline} withCrown={withCrown} tissue={tissue} px={pxo} vessels={vessels} />

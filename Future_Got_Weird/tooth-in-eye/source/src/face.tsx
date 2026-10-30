@@ -38,17 +38,17 @@ export type FaceProps = {
 };
 
 // ---- eye shapes (relative to the eye centre; s = +1 for the screen-right eye so it mirrors) ----
-const upperLid = (s: number, sq: number) => {
+export const upperLid = (s: number, sq: number) => {
   const m = (x: number) => x * s;
   return `M${m(-14.6)},${0.6} C${m(-9)},${-7.6 + sq} ${m(4)},${-7.9 + sq} ${m(14.4)},${1.2}`;
 };
-const lowerLid = (s: number, sq: number) => {
+export const lowerLid = (s: number, sq: number) => {
   const m = (x: number) => x * s;
   return `M${m(14.4)},${1.2} C${m(6)},${6.6 - sq * 0.6} ${m(-6)},${6.8 - sq * 0.6} ${m(-14.6)},${0.6}`;
 };
-const fissure = (s: number, sq: number) => upperLid(s, sq) + ' ' + lowerLid(s, sq).replace(/^M[^C]*/, '') + 'Z';
+export const fissure = (s: number, sq: number) => upperLid(s, sq) + ' ' + lowerLid(s, sq).replace(/^M[^C]*/, '') + 'Z';
 
-const Lashes: React.FC<{s: number; sq: number; px: number}> = ({s, sq, px}) => {
+export const Lashes: React.FC<{s: number; sq: number; px: number}> = ({s, sq, px}) => {
   const out = [];
   for (let i = 0; i < 22; i++) {
     const u = 0.08 + 0.84 * (i / 21);

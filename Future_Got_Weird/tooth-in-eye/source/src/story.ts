@@ -19,16 +19,13 @@ export const TM = {
   END: DUR,
 };
 
-/** sound-design events (exported to audio/cues.json for tools/make_audio.py) */
+/** V2 sound-design events (exported to audio/cues.json for tools/make_audio.py); times match Scene2.tsx */
 export const EV = {
-  reveal: 0.0,
-  lumen: 2.55,
-  raysIn: 2.86, retinaLit1: 3.47,
-  rewind: 4.55, scatter: 5.4, donorIn: 6.55, donorSeat: 7.2, cloud: 7.62,
-  jawOpen: 8.55, saw1: 9.12, saw1e: 9.95, elevator: 10.22, lift: 10.48,
-  saw2: 11.02, saw2e: 11.45, offcut: 11.42, drill: 11.72, drille: 12.32, click: 13.9,
-  incision: 14.95, tuck: 15.3, suture: 15.95, monthsA: 16.95, monthsB: 17.75, growA: 17.9, growB: 19.25,
-  reopen: 19.45, lift2: 19.7, flap: 21.0, trephine: 21.28, seat: 21.95, flapBack: 22.05,
-  raysIn2: 22.62, retinaLit2: 23.82, retinaDive: 24.0,
-  povDark: 24.75, povClear: 26.55, reaction: 27.45, loopPush: 27.95,
+  reveal: 0.0, raysIn: 0.0, retinaLit1: 0.86, seeGlow: 3.3,
+  penOn: 4.72, donorIn: 6.62, reflex: 6.78, cloud: 7.22,
+  retract: 7.95, saw1: 8.6, saw1e: 9.3, elevator: 9.4, lift: 9.72,
+  saw2: 10.38, saw2e: 10.78, offcut: 10.98, drill: 11.12, drille: 11.64, click: 13.12,
+  incision: 13.94, tuck: 14.24, suture: 15.0, monthsA: 15.85, monthsB: 16.6, growA: 17.1, growB: 18.2,
+  lift2: 18.5, flap: 19.95, trephine: 20.15, seat: 20.72, flapBack: 20.78,
+  raysIn2: 21.2, retinaLit2: 22.3, povDark: 22.95, povClear: 24.05, reaction: 25.09, loopRays: 26.55,
 };

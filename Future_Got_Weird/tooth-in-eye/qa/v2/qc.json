@@ -1,0 +1,74 @@
+{
+ "container": {
+  "width": 1080,
+  "height": 1920,
+  "fps": "30/1",
+  "frames": 810,
+  "pix_fmt": "yuv420p",
+  "vcodec": "h264",
+  "profile": "High",
+  "color": [
+   "bt709",
+   "bt709",
+   "bt709"
+  ],
+  "duration_s": 27.008,
+  "acodec": "aac",
+  "sr": "48000",
+  "ch": 2,
+  "bitrate_kbps": 4386
+ },
+ "frame_diff_median": 2.26,
+ "one_frame_spikes": [
+  {
+   "frame": 131,
+   "t": 4.367,
+   "diff": 77.92,
+   "neighbours": [
+    2.11,
+    0.43
+   ]
+  },
+  {
+   "frame": 755,
+   "t": 25.167,
+   "diff": 94.42,
+   "neighbours": [
+    0.49,
+    0.32
+   ]
+  }
+ ],
+ "loop_seam_mean_diff": 9.78,
+ "opening_step_diffs": [
+  7.48,
+  7.04,
+  6.55,
+  6.1,
+  5.39,
+  4.55
+ ],
+ "black_frames": [],
+ "audio": {
+  "integrated_lufs": -13.6,
+  "true_peak_dbtp_4x": -1.63
+ },
+ "asr": {
+  "zipformer": {
+   "transcript": "DOCTORS PUT A TOOTH INSIDE THIS MAN'S EYE AND HE COULD SEE AGAIN HIS CORNEA WAS SO DAMAGED A NORMAL TRANSPLANT WOULDN'T WORK SO SURGEONS REMOVED ONE OF HIS TEETH WITH A PIECE OF BONE DRILLED A HOLE THROUGH IT AND FITTED A CLEAR LENS INSIDE THEY TUCKED IT BENEATH THE SKIN NEAR HIS OTHER EYE FOR MONTHS LETTING LIVING TISSUE GROW AROUND IT THEN THEY IMPLANTED IT INTO HIS DAMAGED EYE ALLOWING LIGHT TO REACH HIS RETINA AFTER TEN YEARS BLIND HE COULD SEE AGAIN",
+   "wer": 0.0,
+   "diffs": []
+  },
+  "whisper": {
+   "transcript": "Doctors put a tooth inside this man's eye, and he could see again. His cornea was so damaged, a normal transplant wouldn't work. So surgeons removed one of his teeth with a piece of bone, drilled a hole through it, and fitted a clear lens inside. They tucked it beneath the skin near his other eye for months, letting living tissue grow around it. Then, they implanted it into his damaged eye, allowing light to reach his retina. After 10 years blind, he could see again.",
+   "wer": 0.012,
+   "diffs": [
+    [
+     "delete",
+     "ten",
+     ""
+    ]
+   ]
+  }
+ }
+}

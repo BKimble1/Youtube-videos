@@ -1,6 +1,31 @@
 # Future Got Weird: Doctors Put a Tooth Inside His Eye (OOKP)
 
-## V1 (review)
+## V2 (review, current)
+
+**Status.** A structural rework of V1, rendered from source and checked from the files. **It is not publish-ready.**
+It has not been watched or heard in real time, and the "ten years blind" line still needs a confirmed source.
+
+**Report.** `production/V2_REPORT.md`: changes, timeline, QC, unresolved defects.
+
+| Deliverable | File |
+|---|---|
+| Full review | `exports/FGW_Tooth_Eye_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 810 frames, 27.0 s |
+| Hook review (first 4 s) | `exports/FGW_Tooth_Eye_V2_HOOK_REVIEW_1080x1920.mp4` |
+| Narration | `audio/narration/FGW_Tooth_Eye_narration_V2.wav`: the same approved take; only long pauses shortened |
+| Word times | `audio/narration/FGW_Tooth_Eye_V2_words.json`, `source/src/data/timeline.json` |
+| Captions | Burned in. `captions/FGW_Tooth_Eye_V2.srt` (phrases), `captions/FGW_Tooth_Eye_V2_words.srt` (word by word) |
+| Mix | `audio/mix/FGW_Tooth_Eye_V2_mix.wav`. Measurements: `audio/mix/mix_measure_v2.json`. Effects log: `audio/sfx_log_v2.json` |
+| QA evidence | `qa/v2/` (qc.json, ASR, 2 fps sheet, loop seam, hook frames) |
+| Source | `source/src/Scene2.tsx` and friends (composition `ToothEyeV2`) |
+
+**Rebuild V2.** As below, but:
+- the narration step now writes the V2 files;
+- run `python3 tools/make_audio.py mix_v2`;
+- render `ToothEyeV2` with `--props='{"audio":"mix_v2","captions":true}'`.
+
+V1's source is at commit `73ce4c9d`.
+
+## V1 (review, superseded)
 
 **Status.** A review version, rendered from source and checked from the files. **It is not published, and not yet
 publish-ready:** it has not been watched or heard in real time, and the "ten years blind" line needs a confirmed

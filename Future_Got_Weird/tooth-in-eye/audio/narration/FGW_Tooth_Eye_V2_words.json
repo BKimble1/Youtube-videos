@@ -1,0 +1,536 @@
+{
+ "take": "audio/narration/takes/t1_gksf.mp3",
+ "fixed": {
+  "38": [
+   12.175,
+   12.3
+  ],
+  "39": [
+   12.3,
+   12.44
+  ],
+  "40": [
+   12.745,
+   12.83
+  ],
+  "62": [
+   18.965,
+   19.02
+  ],
+  "63": [
+   19.03,
+   19.34
+  ]
+ },
+ "removed_silence": [
+  {
+   "from": 2.74,
+   "to": 2.9,
+   "after": "EYE\u2026",
+   "gap_was": 0.42,
+   "gap_now": 0.26
+  },
+  {
+   "from": 4.4,
+   "to": 4.67,
+   "after": "AGAIN.",
+   "gap_was": 0.51,
+   "gap_now": 0.24
+  },
+  {
+   "from": 8.33,
+   "to": 8.49,
+   "after": "work.",
+   "gap_was": 0.4,
+   "gap_now": 0.24
+  },
+  {
+   "from": 11.33,
+   "to": 11.42,
+   "after": "bone,",
+   "gap_was": 0.29,
+   "gap_now": 0.2
+  },
+  {
+   "from": 12.54,
+   "to": 12.645,
+   "after": "it,",
+   "gap_was": 0.305,
+   "gap_now": 0.2
+  },
+  {
+   "from": 14.52,
+   "to": 14.78,
+   "after": "inside.",
+   "gap_was": 0.5,
+   "gap_now": 0.24
+  },
+  {
+   "from": 17.57,
+   "to": 17.64,
+   "after": "months,",
+   "gap_was": 0.27,
+   "gap_now": 0.2
+  },
+  {
+   "from": 19.47,
+   "to": 19.8,
+   "after": "it.",
+   "gap_was": 0.59,
+   "gap_now": 0.26
+  },
+  {
+   "from": 22.5,
+   "to": 22.55,
+   "after": "eye,",
+   "gap_was": 0.25,
+   "gap_now": 0.2
+  },
+  {
+   "from": 24.37,
+   "to": 24.64,
+   "after": "retina.",
+   "gap_was": 0.53,
+   "gap_now": 0.26
+  },
+  {
+   "from": 26.71,
+   "to": 26.86,
+   "after": "blind\u2026",
+   "gap_was": 0.45,
+   "gap_now": 0.3
+  }
+ ],
+ "words": [
+  {
+   "word": "Doctors",
+   "start": 0.0,
+   "end": 0.47
+  },
+  {
+   "word": "put",
+   "start": 0.48,
+   "end": 0.68
+  },
+  {
+   "word": "a",
+   "start": 0.68,
+   "end": 0.81
+  },
+  {
+   "word": "TOOTH",
+   "start": 0.84,
+   "end": 1.24
+  },
+  {
+   "word": "inside",
+   "start": 1.24,
+   "end": 1.59
+  },
+  {
+   "word": "this",
+   "start": 1.6,
+   "end": 1.79
+  },
+  {
+   "word": "man\u2019s",
+   "start": 1.8,
+   "end": 2.27
+  },
+  {
+   "word": "EYE\u2026",
+   "start": 2.28,
+   "end": 2.61
+  },
+  {
+   "word": "and",
+   "start": 2.87,
+   "end": 2.92
+  },
+  {
+   "word": "he",
+   "start": 2.91,
+   "end": 3.05
+  },
+  {
+   "word": "could",
+   "start": 3.06,
+   "end": 3.34
+  },
+  {
+   "word": "SEE",
+   "start": 3.34,
+   "end": 3.69
+  },
+  {
+   "word": "AGAIN.",
+   "start": 3.7,
+   "end": 4.12
+  },
+  {
+   "word": "His",
+   "start": 4.36,
+   "end": 4.42
+  },
+  {
+   "word": "cornea",
+   "start": 4.425,
+   "end": 4.98
+  },
+  {
+   "word": "was",
+   "start": 4.985,
+   "end": 5.18
+  },
+  {
+   "word": "so",
+   "start": 5.185,
+   "end": 5.46
+  },
+  {
+   "word": "damaged,",
+   "start": 5.465,
+   "end": 6.0
+  },
+  {
+   "word": "a",
+   "start": 6.17,
+   "end": 6.22
+  },
+  {
+   "word": "normal",
+   "start": 6.21,
+   "end": 6.6
+  },
+  {
+   "word": "transplant",
+   "start": 6.605,
+   "end": 7.2
+  },
+  {
+   "word": "wouldn\u2019t",
+   "start": 7.205,
+   "end": 7.6
+  },
+  {
+   "word": "work.",
+   "start": 7.605,
+   "end": 7.78
+  },
+  {
+   "word": "So",
+   "start": 8.02,
+   "end": 8.07
+  },
+  {
+   "word": "surgeons",
+   "start": 8.06,
+   "end": 8.57
+  },
+  {
+   "word": "removed",
+   "start": 8.58,
+   "end": 8.97
+  },
+  {
+   "word": "one",
+   "start": 8.98,
+   "end": 9.13
+  },
+  {
+   "word": "of",
+   "start": 9.14,
+   "end": 9.25
+  },
+  {
+   "word": "his",
+   "start": 9.26,
+   "end": 9.37
+  },
+  {
+   "word": "teeth",
+   "start": 9.38,
+   "end": 9.69
+  },
+  {
+   "word": "with",
+   "start": 9.7,
+   "end": 9.82
+  },
+  {
+   "word": "a",
+   "start": 9.82,
+   "end": 9.89
+  },
+  {
+   "word": "piece",
+   "start": 9.94,
+   "end": 10.17
+  },
+  {
+   "word": "of",
+   "start": 10.18,
+   "end": 10.33
+  },
+  {
+   "word": "bone,",
+   "start": 10.34,
+   "end": 10.64
+  },
+  {
+   "word": "drilled",
+   "start": 10.84,
+   "end": 11.13
+  },
+  {
+   "word": "a",
+   "start": 11.135,
+   "end": 11.25
+  },
+  {
+   "word": "hole",
+   "start": 11.255,
+   "end": 11.46
+  },
+  {
+   "word": "through",
+   "start": 11.495,
+   "end": 11.62
+  },
+  {
+   "word": "it,",
+   "start": 11.62,
+   "end": 11.76
+  },
+  {
+   "word": "and",
+   "start": 11.96,
+   "end": 12.045
+  },
+  {
+   "word": "fitted",
+   "start": 12.035,
+   "end": 12.325
+  },
+  {
+   "word": "a",
+   "start": 12.335,
+   "end": 12.445
+  },
+  {
+   "word": "clear",
+   "start": 12.455,
+   "end": 12.765
+  },
+  {
+   "word": "lens",
+   "start": 12.775,
+   "end": 13.175
+  },
+  {
+   "word": "inside.",
+   "start": 13.175,
+   "end": 13.615
+  },
+  {
+   "word": "They",
+   "start": 13.855,
+   "end": 13.905
+  },
+  {
+   "word": "tucked",
+   "start": 13.895,
+   "end": 14.115
+  },
+  {
+   "word": "it",
+   "start": 14.125,
+   "end": 14.235
+  },
+  {
+   "word": "beneath",
+   "start": 14.245,
+   "end": 14.535
+  },
+  {
+   "word": "the",
+   "start": 14.565,
+   "end": 14.675
+  },
+  {
+   "word": "skin",
+   "start": 14.685,
+   "end": 14.965
+  },
+  {
+   "word": "near",
+   "start": 14.965,
+   "end": 15.195
+  },
+  {
+   "word": "his",
+   "start": 15.205,
+   "end": 15.335
+  },
+  {
+   "word": "other",
+   "start": 15.365,
+   "end": 15.555
+  },
+  {
+   "word": "eye",
+   "start": 15.565,
+   "end": 15.845
+  },
+  {
+   "word": "for",
+   "start": 15.845,
+   "end": 16.045
+  },
+  {
+   "word": "months,",
+   "start": 16.045,
+   "end": 16.425
+  },
+  {
+   "word": "letting",
+   "start": 16.625,
+   "end": 16.845
+  },
+  {
+   "word": "living",
+   "start": 16.85,
+   "end": 17.125
+  },
+  {
+   "word": "tissue",
+   "start": 17.13,
+   "end": 17.605
+  },
+  {
+   "word": "grow",
+   "start": 17.61,
+   "end": 17.845
+  },
+  {
+   "word": "around",
+   "start": 17.85,
+   "end": 17.905
+  },
+  {
+   "word": "it.",
+   "start": 17.915,
+   "end": 18.225
+  },
+  {
+   "word": "Then",
+   "start": 18.485,
+   "end": 18.675
+  },
+  {
+   "word": "they",
+   "start": 18.685,
+   "end": 18.995
+  },
+  {
+   "word": "implanted",
+   "start": 19.005,
+   "end": 19.635
+  },
+  {
+   "word": "it",
+   "start": 19.645,
+   "end": 19.765
+  },
+  {
+   "word": "into",
+   "start": 19.805,
+   "end": 19.995
+  },
+  {
+   "word": "his",
+   "start": 20.005,
+   "end": 20.205
+  },
+  {
+   "word": "damaged",
+   "start": 20.205,
+   "end": 20.715
+  },
+  {
+   "word": "eye,",
+   "start": 20.725,
+   "end": 20.955
+  },
+  {
+   "word": "allowing",
+   "start": 21.155,
+   "end": 21.505
+  },
+  {
+   "word": "light",
+   "start": 21.51,
+   "end": 21.785
+  },
+  {
+   "word": "to",
+   "start": 21.79,
+   "end": 21.905
+  },
+  {
+   "word": "reach",
+   "start": 21.91,
+   "end": 22.185
+  },
+  {
+   "word": "his",
+   "start": 22.19,
+   "end": 22.345
+  },
+  {
+   "word": "retina.",
+   "start": 22.35,
+   "end": 22.745
+  },
+  {
+   "word": "After",
+   "start": 23.005,
+   "end": 23.295
+  },
+  {
+   "word": "TEN",
+   "start": 23.3,
+   "end": 23.775
+  },
+  {
+   "word": "YEARS",
+   "start": 23.78,
+   "end": 24.255
+  },
+  {
+   "word": "blind\u2026",
+   "start": 24.26,
+   "end": 24.795
+  },
+  {
+   "word": "he",
+   "start": 25.095,
+   "end": 25.145
+  },
+  {
+   "word": "could",
+   "start": 25.15,
+   "end": 25.425
+  },
+  {
+   "word": "see",
+   "start": 25.43,
+   "end": 25.745
+  },
+  {
+   "word": "again.",
+   "start": 25.75,
+   "end": 26.115
+  }
+ ]
+}
