@@ -1,0 +1,109 @@
+{
+ "file": "exports/FGW_Chainsaw_Robot_V1_PREVIS_REVIEW_1920x1080.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1920,
+  "height": 1080,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "nb_frames": "4645",
+  "bit_rate": "3467179"
+ },
+ "audio": [
+  {
+   "codec_name": "aac",
+   "sample_rate": "48000",
+   "channels": 2,
+   "bit_rate": "310556",
+   "duration": "154.833000"
+  }
+ ],
+ "duration_s": 154.833333,
+ "size_mb": 73.3,
+ "narration_master_s": 154.8333,
+ "full_decode_errors": 0,
+ "loudness": {
+  "integrated_lufs": -14.0,
+  "lra_lu": 3.5,
+  "true_peak_dbtp": -1.4
+ },
+ "black_segments": [],
+ "frozen_segments_over_2s": [],
+ "frame_diff": {
+  "mean": 3.68,
+  "p99": 25.66,
+  "spike_frames": [
+   982,
+   1160,
+   2010,
+   2644,
+   2727,
+   2876,
+   3136,
+   3137,
+   3160,
+   3401,
+   4188,
+   4356,
+   4480
+  ],
+  "planned_cut_frames": [
+   982,
+   1160,
+   2010,
+   2644,
+   2727,
+   2876,
+   3137,
+   3160,
+   3401,
+   4188,
+   4356,
+   4480
+  ],
+  "unplanned_spikes": []
+ },
+ "low_motion_seconds": [
+  18,
+  75,
+  135,
+  138
+ ],
+ "audio_vs_narration": {
+  "best_lag_ms": 0,
+  "corr": 0.6099
+ },
+ "asr_whisper_on_mix": {
+  "differences": [
+   [
+    "replace",
+    "chainsaw",
+    "chain saw"
+   ],
+   [
+    "replace",
+    "robotics",
+    "robotic"
+   ],
+   [
+    "replace",
+    "singlearm",
+    "single arm"
+   ],
+   [
+    "replace",
+    "and tell",
+    "until"
+   ]
+  ],
+  "locked_words": 440
+ },
+ "srt": {
+  "cues": 53,
+  "max_start_offset_from_a_word_onset_ms": 0.0,
+  "overlaps": 0,
+  "last_end_s": 152.0
+ }
+}

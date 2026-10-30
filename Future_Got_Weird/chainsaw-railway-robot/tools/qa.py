@@ -53,7 +53,7 @@ act = cues['act']
 planned = [f for f in range(1, len(act)) if act[f] != act[f - 1]]
 # the cab/bilateral switch inside 'cab' and the overlay segment changes are planned too
 tt = cues['tt']
-for k in ('another', 'imagine'):
+for k in ('another', 'imagine', 'climbing', 'tools'):  # deliberate cuts in the safety scene: wires -> ladder -> platform
     planned.append(int(round(tt[k] * 30)))
 unplanned = [f for f in spikes if all(abs(f - p) > 1 for p in planned)]
 res['frame_diff'] = {'mean': round(float(d.mean()), 2), 'p99': round(float(np.percentile(d, 99)), 2), 'spike_frames': spikes,

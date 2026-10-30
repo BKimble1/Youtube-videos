@@ -23,7 +23,8 @@ a local reveal around the hand, with the hand, controller and camera path contin
 | 1:30.9 | **match cut** | fingertip at the twig → claw fingertips at the branch, same screen point and direction | the "fingers" are steel arms | keep. Editorial match between two objects, not a morph |
 | 1:30.9–1:35.9 | pull back | claw → whole machine + person on the ground | scale | keep |
 | 1:35.9 | cut | Koumi Line worksite → generic electrified line | the human risk elsewhere | keep (new place, labelled generic) |
-| 1:44.2 / 1:46.6 | camera moves | platform → ladder → fitting | climbing, tools, falling objects | keep |
+| 1:44.6 / 1:45.3 | cuts | overhead wires → ladder climber → platform worker with a heavy fitting | climbing, heavy tools | keep. Deliberate cuts between separate workers (V1 first render had a one-frame whip here from misordered camera keys; fixed) |
+| 1:46.6 | camera move | fitting → dashed fall path to the track | things that can fall | keep |
 | 1:48.6 | in-scene change | workers → machine at the same bracket | moving the operator away | keep |
 | 1:53.4 | cut | electrified line → timeline railway | the rollout across companies and dates | keep (new representation, deliberate cut) |
 | 2:00.6 → 2:04.9 | camera dolly left, then right | MAR 2026 → JUL 2024 → past TODAY → NOV 2026 | chronology as narrated | keep. The reversal follows the narration's order (2026 → 2024 → planned) |

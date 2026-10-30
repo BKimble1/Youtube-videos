@@ -49,9 +49,9 @@ const placeFeet = (p: ManPose, foot: V) => {
 };
 
 export const safetyCam = (t: number): Cam => ({
-  x: keys(t, [[tt.stunt, 600], [tt.workers, 500], [tt.high + 0.6, 560], [tt.overhead + 0.6, 640], [tt.climbing, -1100], [tt.climbing + 0.9, -1150], [tt.tools, 480], [tt.fall + 0.4, 560], [tt.moving, 300], [tt.moving + 1.8, 120], [tt.reason, 160]]),
-  y: keys(t, [[tt.stunt, -420], [tt.workers, -360], [tt.high + 0.6, -560], [tt.overhead + 0.6, -620], [tt.climbing, -420], [tt.climbing + 0.9, -440], [tt.tools, -560], [tt.fall + 0.4, -380], [tt.moving, -420], [tt.moving + 1.8, -440], [tt.reason, -440]]),
-  z: zkeys(t, [[tt.stunt, 0.62], [tt.workers, 0.9], [tt.high + 0.6, 1.5], [tt.overhead + 0.6, 2.0], [tt.climbing, 1.2], [tt.climbing + 0.9, 1.25], [tt.tools, 1.6], [tt.fall + 0.4, 1.05], [tt.moving, 0.9], [tt.moving + 1.8, 0.68], [tt.reason, 0.66]]),
+  x: keys(t, [[tt.stunt, 600], [tt.workers, 500], [tt.high + 0.6, 560], [tt.overhead + 0.6, 640], [tt.climbing - 0.034, 660], [tt.climbing, -1100], [tt.tools - 0.034, -1150], [tt.tools, 480], [tt.fall + 0.4, 560], [tt.moving, 300], [tt.moving + 1.8, 120], [tt.reason, 160]]),
+  y: keys(t, [[tt.stunt, -420], [tt.workers, -360], [tt.high + 0.6, -560], [tt.overhead + 0.6, -620], [tt.climbing - 0.034, -620], [tt.climbing, -420], [tt.tools - 0.034, -440], [tt.tools, -560], [tt.fall + 0.4, -380], [tt.moving, -420], [tt.moving + 1.8, -440], [tt.reason, -440]]),
+  z: zkeys(t, [[tt.stunt, 0.62], [tt.workers, 0.9], [tt.high + 0.6, 1.5], [tt.overhead + 0.6, 2.0], [tt.climbing - 0.034, 2.0], [tt.climbing, 1.2], [tt.tools - 0.034, 1.25], [tt.tools, 1.6], [tt.fall + 0.4, 1.05], [tt.moving, 0.9], [tt.moving + 1.8, 0.68], [tt.reason, 0.66]]),
 });
 
 export const Safety: React.FC<{t: number}> = ({t}) => {
