@@ -7,7 +7,7 @@ import {emerged, outsidePts, WORM_L} from './worm';
 import {EV} from './timeline';
 
 /** mantis body origin (prothorax / mesothorax joint): a fast head-first plunge that water drag slows, then a slow sink */
-export const mantisO = (t: number): V3 => [8 * (1 - Math.exp(-t / 0.5)) + 3 * t, 0, 6 - 59 * (1 - Math.exp(-t / 0.42)) - 9 * t - 5 * Math.max(0, t - 1.5) ** 2 / (1 + 0.4 * Math.max(0, t - 1.5))];
+export const mantisO = (t: number): V3 => [8 * (1 - Math.exp(-t / 0.5)) + 3 * t, 0, 2 - 59 * (1 - Math.exp(-t / 0.42)) - 9 * t - 5 * Math.max(0, t - 1.5) ** 2 / (1 + 0.4 * Math.max(0, t - 1.5))];
 
 export const mantisState = (t: number): MState => {
   const pitch = 12 + 24 * Math.exp(-t / 0.5) + 3 * Math.sin(1.7 * t + 0.4);
@@ -30,8 +30,9 @@ export const mantisState = (t: number): MState => {
   return {
     body,
     raise: 18 + 4 * Math.sin(1.3 * t),
-    headPitch: 2 + 6 * Math.sin(1.1 * t + 1),
-    headYaw: -38 + 10 * Math.sin(0.7 * t + 0.3),
+    // the head is tilted back (face toward the viewer) through the plunge, then settles
+    headPitch: 2 + 6 * Math.sin(1.1 * t + 1) - 24 * (1 - ss(t, 0.7, 1.7)),
+    headYaw: -38 + 10 * Math.sin(0.7 * t + 0.3) - 8 * (1 - ss(t, 0.7, 1.7)),
     fore: [0, 1].map((j) => ({f: 20 + 9 * A * Math.sin(ph * 0.5 + j), open: 10 + 26 * A * Math.max(0, Math.sin(ph * 0.5 + 0.6 + j * 0.7))})),
     legs,
     antW: t * 2.2,
@@ -85,6 +86,12 @@ export const camera = (t: number): Cam3 => {
   const Tfit: V3 = [bx.cx, 0, bx.cz + (1150 - 960) / sFit];
   T = lerp3(T, Tfit, u);
   D = D + (FOCAL / sFit - D) * u;
+  // the opening: tight on the head and raptorial legs breaking the surface, following them down, then widening
+  const Fp0 = pitchF(st.body, -st.raise);
+  const Hd = toW(Fp0, [24, 0, -3]);
+  const o = ss5(t, 0.05, 1.15);
+  T = lerp3([Hd[0] - 2, 0, Hd[2] + 5], T, o);
+  D = 112 + (D - 112) * o;
   T[1] = 0;
   const el = keyCR(t, [[0, 5], [1, 8], [3, 10], [6, 12]]);
   const az = keyCR(t, [[0, -4], [2, 4], [6, 0]]);

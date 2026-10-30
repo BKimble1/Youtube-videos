@@ -12,7 +12,7 @@ import {resetTubeIds} from './core/tube';
 import {toW} from './core/frame';
 import {abdPath, ABD, mantisItems, MState, proFrame} from './mantis';
 import {coilEl, wormItems} from './worm';
-import {Backdrop, bubbleItems, motes, splashItems, Waterline} from './env';
+import {airPocketItem, Backdrop, bubbleItems, motes, splashItems, Waterline} from './env';
 import {camera, mantisO, mantisState, wormNow} from './scene';
 import {EV, W03} from './timeline';
 
@@ -84,11 +84,17 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   // the entry point: where the prothorax crossed the surface
   const entry = ENTRY;
   items.push(...splashItems(B, t, entry));
+  const Fp = proFrame(st);
+  const air = airPocketItem(B, t, (x) => toW(Fp, [x, 0, 0]), proj(B, toW(Fp, [12, 0, 0])).z - 1.5);
+  if (air) items.push(air);
+  // bubbles: most early ones are dragged down with the head, forelegs and prothorax (prothorax frame), later ones
+  // escape from the thorax and the wing gap
   const src = (ts: number, k: number): V3 => {
     const s2 = mantisState(Math.max(0, ts));
-    const anchors: V3[] = [[24, 0, 0], [14, -2, -4], [6, 2, -2], [0, -3, -3], [-6, 0, -3], [-20, -3, -2], [-38, 2, 0]];
-    const a = anchors[k % anchors.length];
-    return toW(s2.body, a);
+    const F2 = proFrame(s2);
+    const pro: V3[] = [[24, 0, 2.5], [21, -2, -7], [25, 1.5, -9], [16, 0, 1.5], [10, -1, 1.5], [19, 1.5, -4], [13, -1.5, 0.5]];
+    const body: V3[] = [[-6, 0, -3], [-20, -3, -2], [-38, 2, 0]];
+    return k < 100 && k % 5 !== 4 ? toW(F2, pro[k % pro.length]) : toW(s2.body, body[k % body.length]);
   };
   const vel = (ts: number): V3 => {
     const a = mantisO(Math.max(0, ts)), b = mantisO(Math.max(0, ts) + 0.02);
