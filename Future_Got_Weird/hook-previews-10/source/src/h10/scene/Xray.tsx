@@ -343,7 +343,7 @@ const Tissue: React.FC<{F: Frames; pose: ManPose}> = ({F, pose}) => {
       </defs>
       <defs>
         <clipPath id="h10-nohead">
-          <path d={`M-20000,-20000 H20000 V20000 H-20000 Z ${polyD(Array.from({length: 48}, (_, i) => F.head(100 * Math.cos((i / 48) * 2 * Math.PI), 107 * Math.sin((i / 48) * 2 * Math.PI))))} Z`} clipRule="evenodd" />
+          <path d={`M${F.j.H.x - 3000},${F.j.H.y - 3000} h6000 v6000 h-6000 Z ${polyD(Array.from({length: 48}, (_, i) => F.head(100 * Math.cos((i / 48) * 2 * Math.PI), 107 * Math.sin((i / 48) * 2 * Math.PI))))} Z`} clipRule="evenodd" />
         </clipPath>
       </defs>
       <g opacity={0.86} fill="url(#h10-tis)" clipPath="url(#h10-nohead)">

@@ -34,14 +34,14 @@ export const TL = {
 };
 
 const jawAngle = (t: number) =>
-  keyS(t, [[0, 19], [0.42, 23], [0.85, 29], [1.38, 23], [1.92, 30.5], [2.5, 21], [3.3, 18], [4.1, 20], [TL.close[0], 26], [TL.close[1], 3.5], [TL.reopen[0], 5], [TL.reopen[1], 30.5], [6.0, 28]]);
+  keyS(t, [[0, 19], [0.42, 23], [0.85, 29], [1.38, 23], [1.92, 30.5], [2.5, 21], [3.3, 18], [4.1, 20], [TL.close[0], 26], [TL.close[1], 3.5], [TL.reopen[0], 5], [TL.reopen[1], 25], [6.0, 22.5]]);
 
 const cam = (t: number) => {
-  const az = keyCR(t, [[0, -60], [1.0, -57], [2.05, -46], [2.95, -24], [3.6, -20.5], [4.25, -24], [5.05, -60], [6.0, -75]]);
-  const el = keyCR(t, [[0, 12], [1.0, 15], [2.05, 16], [2.95, 6], [3.6, 4.5], [4.25, 6], [5.05, 10], [6.0, 8]]);
-  const d = Math.exp(keyCR(t, [[0, Math.log(205)], [1.0, Math.log(180)], [2.05, Math.log(128)], [2.95, Math.log(98)], [3.6, Math.log(96)], [4.25, Math.log(108)], [5.05, Math.log(160)], [6.0, Math.log(138)]]));
-  const tf: V3 = [keyCR(t, [[0, 8], [1.0, 8], [2.05, 9.5], [2.95, 12.5], [3.6, 13], [4.25, 15], [5.05, 16], [6.0, 17]]), 3,
-    keyCR(t, [[0, 4], [1.0, 3], [2.05, 1], [2.95, -2.2], [3.6, -2.4], [4.25, -2], [5.05, 1], [6.0, 1.0]])];
+  const az = keyCR(t, [[0, -60], [1.0, -57], [2.05, -46], [2.95, -24], [3.6, -20.5], [4.25, -24], [5.05, -58], [6.0, -65]]);
+  const el = keyCR(t, [[0, 12], [1.0, 15], [2.05, 16], [2.95, 6], [3.6, 4.5], [4.25, 6], [5.05, 10], [6.0, 9]]);
+  const d = Math.exp(keyCR(t, [[0, Math.log(205)], [1.0, Math.log(180)], [2.05, Math.log(128)], [2.95, Math.log(98)], [3.6, Math.log(96)], [4.25, Math.log(108)], [5.05, Math.log(150)], [6.0, Math.log(118)]]));
+  const tf: V3 = [keyCR(t, [[0, 8], [1.0, 8], [2.05, 9.5], [2.95, 12.5], [3.6, 13], [4.25, 15], [5.05, 16.5], [6.0, 18]]), 3,
+    keyCR(t, [[0, 4], [1.0, 3], [2.05, 1], [2.95, -2.2], [3.6, -2.4], [4.25, -2], [5.05, 0.5], [6.0, 0.0]])];
   const jaw = keyCR(t, [[0, 0.2], [1.0, 0.4], [2.05, 0.8], [2.95, 1], [4.25, 1], [5.05, 0.7], [6.0, 0.7]]);
   const cx = keyCR(t, [[0, 400], [1.0, 430], [2.05, 470], [4.25, 520], [5.05, 480], [6.0, 470]]);
   const cy = keyCR(t, [[0, 870], [1.0, 880], [2.05, 1000], [2.95, 1370], [4.25, 1350], [5.05, 1040], [6.0, 900]]);
@@ -74,7 +74,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   const front = tongueAt(T, Math.max(T.base + 0.8, Math.min(T.tip - 0.8, headFx - 2.2)));
   // rest the head on the tongue (or the stub), the rear on the floor
   const headZ = Math.max(FLOOR_Z, front.top) + 0.15;
-  const tilt = (Math.atan2(headZ - FLOOR_Z, 25) * 180) / Math.PI;
+  const peek = ss(t, TL.reopen[0] + 0.1, 6.0);
+  const tilt = (Math.atan2(headZ - FLOOR_Z, 25) * 180) / Math.PI + 4.5 * peek;
   const oz = FLOOR_Z + 13 * Math.sin((tilt * Math.PI) / 180);
   const lift = [0, 1, 2, 3, 4, 5, 6].map((k) => (k < 2 ? Math.sin(Math.PI * clamp((t - TL.slide[0] + k * 0.08) / 0.45)) * 0.9 : 0));
   const cone = ss(t, TL.feed[0] - 0.25, TL.feed[0] + 0.1) * (1 - ss(t, TL.feed[1], TL.feed[1] + 0.3));

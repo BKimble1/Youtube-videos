@@ -55,7 +55,7 @@ export const Backdrop: React.FC<{cam: Cam; dim: number}> = ({cam, dim}) => {
         </linearGradient>
       </defs>
       <g transform={layerTransform(cam, d1)}>
-        <rect x={fmt(cam.x - 6000)} y={-5000} width={12000} height={5000 - 160} fill="url(#h10-wall)" />
+        <rect x={fmt(cam.x / 2.6 - 1500)} y={-3000} width={3000} height={3000 - 160} fill="url(#h10-wall)" />
         {span(0, d1, 900).map((x) => (
           <g key={`w${x}`}>
             <ellipse cx={fmt(x + 200)} cy={-880} rx={420} ry={700} fill="url(#h10-winglow)" />
@@ -68,11 +68,11 @@ export const Backdrop: React.FC<{cam: Cam; dim: number}> = ({cam, dim}) => {
           <rect key={`p${x}`} x={fmt(x)} y={-1600} width={4} height={1440} fill={WALL_D} opacity={0.22} />
         ))}
         {/* wall rail and skirting */}
-        <rect x={fmt(cam.x - 6000)} y={-470} width={12000} height={16} rx={8} fill="#6E8C86" opacity={0.8} />
-        <rect x={fmt(cam.x - 6000)} y={-456} width={12000} height={6} fill="#13252B" opacity={0.25} />
-        <rect x={fmt(cam.x - 6000)} y={-230} width={12000} height={70} fill={mix(WALL_D, '#10191D', 0.3)} opacity={0.9} />
+        <rect x={fmt(cam.x / 2.6 - 1500)} y={-470} width={3000} height={16} rx={8} fill="#6E8C86" opacity={0.8} />
+        <rect x={fmt(cam.x / 2.6 - 1500)} y={-456} width={3000} height={6} fill="#13252B" opacity={0.25} />
+        <rect x={fmt(cam.x / 2.6 - 1500)} y={-230} width={3000} height={70} fill={mix(WALL_D, '#10191D', 0.3)} opacity={0.9} />
         {/* the floor's far part, up to the skirting */}
-        <rect x={fmt(cam.x - 6000)} y={-160} width={12000} height={600} fill="#3B5A5E" />
+        <rect x={fmt(cam.x / 2.6 - 1500)} y={-160} width={3000} height={600} fill="#3B5A5E" />
       </g>
       <g transform={layerTransform(cam, d2)} opacity={0.55}>
         {/* out-of-focus parallel bars */}
@@ -87,7 +87,7 @@ export const Backdrop: React.FC<{cam: Cam; dim: number}> = ({cam, dim}) => {
           </g>
         ))}
       </g>
-      {dim > 0 && <rect x={-20000} y={-20000} width={40000} height={40000} fill="#08151B" opacity={dim} />}
+      {dim > 0 && <rect x={0} y={0} width={1080} height={1920} fill="#08151B" opacity={dim} />}
     </g>
   );
 };
@@ -109,12 +109,12 @@ export const Floor: React.FC<{cx: number}> = ({cx}) => {
           <stop offset="1" stopColor="#1F363B" />
         </linearGradient>
       </defs>
-      <rect x={fmt(cx - 4000)} y={-110} width={8000} height={190} fill="url(#h10-floorfade)" />
-      <rect x={fmt(cx - 4000)} y={80} width={8000} height={2000} fill="url(#h10-floornear)" />
+      <rect x={fmt(cx - 1400)} y={-110} width={2800} height={190} fill="url(#h10-floorfade)" />
+      <rect x={fmt(cx - 1400)} y={80} width={2800} height={900} fill="url(#h10-floornear)" />
       {seams.map((x) => (
         <path key={x} d={`M${fmt(x)},-60 L${fmt(x - 70)},900`} stroke="#17292E" strokeOpacity={0.22} strokeWidth={3} />
       ))}
-      <rect x={fmt(cx - 4000)} y={-6} width={8000} height={3} fill="#9CC3C2" opacity={0.06} />
+      <rect x={fmt(cx - 1400)} y={-6} width={2800} height={3} fill="#9CC3C2" opacity={0.06} />
     </g>
   );
 };
