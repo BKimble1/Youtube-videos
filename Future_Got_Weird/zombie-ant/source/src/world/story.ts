@@ -6,7 +6,7 @@
 //   the stem, crawls under leaf L2 and bites the midrib; it dies, the stalk grows, spores fall onto ant #3 below;
 // - the graveyard: other dead ants on nearby leaves; ant #4, alive and infected, approaching a vein (the loop).
 import {add3, cross3, len3, lerp3, mul3, norm3, sub3, V3} from '../core/three';
-import {dirW, Frame, frame, rotA, rotF, slerpF, toL, toW} from '../core/frame';
+import {dirW, Frame, frame, rotA, slerpF, toL, toW} from '../core/frame';
 import {AntState, freeLeg, LegPose, lerpLeg, NECK, planted, REST_FOOT, solve} from '../ant/rig';
 import {clamp, keyS, lerp, noise1, ring, ss, ss5, word} from '../lib';
 import {Leaf, leafSpine, midrib, MIDRIB_DROP} from './plant';
@@ -96,27 +96,15 @@ const baseState = (body: Frame, o: Partial<AntState> = {}): AntState => ({body, 
 
 /** the bite sequence, relative to the moment the jaws meet the vein (tc). Used for ant #1 (the hook), ant #2 and
  *  ant #4 (the loop). approach: head short of the grip before contact; pitch: the body swinging down to hang. */
-export const biteState = (A: BiteAnchor, t: number, tc: number, k: {hang0: number; hang1: number; tHang: [number, number]; relax: [number, number]; holdFront?: boolean; dead?: number; twitchEnd?: number; hangOf?: (t: number) => number; close?: number; settle?: number; appr?: number; struggle?: [number, number]}): AntState => {
+export const biteState = (A: BiteAnchor, t: number, tc: number, k: {hang0: number; hang1: number; tHang: [number, number]; relax: [number, number]; holdFront?: boolean; dead?: number; twitchEnd?: number; hangOf?: (t: number) => number; close?: number; settle?: number}): AntState => {
   const tau = t - tc;
   const cl = k.close ?? 0.1; // how long the jaws take to close
   // the head closes the last fraction of a millimetre as the jaws shut, then the jaws bite in (squeeze)
-  let approach = tau < -cl ? 0.75 + (-cl - tau) * 1.6 : tau < 0 ? 0.75 * (-tau / cl) ** 1.6 : -0.12 * ss(tau, 0, 0.08);
-  // (V3) when given, the open jaws start already round the vein, just short of it, and close the last fraction
-  if (k.appr !== undefined && tau < 0) approach = k.appr * Math.min(1, -tau / tc) ** 1.3;
+  const approach = tau < -cl ? 0.75 + (-cl - tau) * 1.6 : tau < 0 ? 0.75 * (-tau / cl) ** 1.6 : -0.12 * ss(tau, 0, 0.08);
   const mand = tau < -cl ? 1 : tau < 0 ? lerp(MAND_GRIP, 1, (-tau / cl) ** 1.5) : MAND_GRIP - 0.07 * ss(tau, 0, 0.08) + 0.02 * ring(tau, 0.08, 6, 0.08);
   // the body swings down to hang, with a small settling swing
   const hp = (k.hangOf ? k.hangOf(t) : lerp(k.hang0, k.hang1, ss5(t, k.tHang[0], k.tHang[1]))) + (k.settle ?? 5) * ring(t, k.tHang[1] - 0.12, 1.4, 0.35);
-  let body = biteBody(A, hp, approach);
-  // (V3) a last struggle with the jaws anchored: the body tugs and twists about the neck while the head stays put
-  let tug = 0;
-  if (k.struggle) {
-    const [s0, s1] = k.struggle;
-    const e = t > s0 && t < s1 ? Math.sin((Math.PI * (t - s0)) / (s1 - s0)) : 0;
-    tug = e;
-    const neck = add3(body.o, dirW(body, NECK));
-    body = rotF(body, A.f, 8 * e * Math.sin(2 * Math.PI * 3.2 * (t - s0) + 0.6), neck);
-    body = rotF(body, cross3(A.u, A.f), 7 * e * Math.sin(2 * Math.PI * 4.6 * (t - s0)), neck);
-  }
+  const body = biteBody(A, hp, approach);
   const st = baseState(body, {headPitch: hp, mand, dead: k.dead ?? 0});
   const live = 1 - ss(t, k.relax[0], (k.twitchEnd ?? k.relax[1]));
   st.antSpread = 0.55 + 0.25 * live;
@@ -138,8 +126,6 @@ export const biteState = (A: BiteAnchor, t: number, tc: number, k: {hang0: numbe
     const F = freeLeg(st, i, r[0], r[1], r[2], r[3]);
     const stag = [0.25, 0.2, 0.05, 0.1, 0, 0.08][i];
     let wgt = ss(t, k.relax[0] + stag * (k.relax[1] - k.relax[0]), k.relax[1]);
-    // legs kick off the leaf and back during the struggle
-    wgt = Math.max(wgt, 0.45 * tug * Math.max(0, Math.sin(2 * Math.PI * 4 * t + i * 1.3)));
     if (k.holdFront && i < 2) wgt *= 0.25;
     return lerpLeg(P, F, wgt);
   });
@@ -156,49 +142,47 @@ export const UB1 = 0.4;
 /** ant #1's bite anchor follows the leaf as it flexes (defined after leaf1 below) */
 export const A1 = (t = 0) => biteAnchor(leaf1(t), UB1, 1);
 // plant P2 (ant #2): a straight stem at x = 0, its leaf L2 reaching back toward -x
-export const P2 = {x: 0, y: 10, r: 3.0, zc: 27.6};
+export const P2 = {x: 0, y: 10, r: 2.0, zc: 27.6};
 export const L2: Leaf = {id: 'L2', base: [-1.2, 10, 28.0], dir: norm3([-1, 0, 0.02]), up: [0, 0, 1], L: 27, Wd: 14, droop: 16, cup: 1.1};
 export const P2_STEM: V3[] = [[0, 10, -0.5], [0, 10, 8], [0, 10, 16], [0, 10, 24], [-0.4, 10, 27.4], [-1.2, 10, 28.0]];
 
 // ------------------------------------------------------------------ fungus on ant #1
 export const SP1: StalkSpec = {seed: 3, len: 17, bend: 0.95, lean: 0.12};
 export const HOOK = {
-  contact: 0.32, // the open jaws, already round the vein at frame 0, snap shut on it
-  close: 0.15,
-  appr: 0.32, // mm short of the grip at frame 0
-  struggle: [0.36, 0.72] as [number, number], // a last struggle: the body tugs, the head stays anchored
-  hang: [0.72, 1.06] as [number, number],
-  relax: [0.66, 1.0] as [number, number],
-  dieEnd: 1.05,
-  emerge0: 1.0, // the back of the head swells, splits; the fungus pushes out
-  emerge1: 1.28,
-  stalk0: 1.16,
-  stalk1: 1.92,
-  asc0: 1.45,
-  asc1: 1.95,
-  open0: 1.93,
-  open1: 2.08,
-  spore: 2.08, // the hero spore leaves the cushion
-  land: 2.85, // ...and lands on ant #2
+  contact: 0.16, // the jaws, already closing at frame 0, meet the vein and bite in
+  close: 0.16,
+  hang: [0.24, 0.6] as [number, number],
+  relax: [0.3, 0.7] as [number, number],
+  dieEnd: 0.9,
+  emerge0: 0.5, // the back of the head swells, splits; the primordium pushes out
+  emerge1: 0.82,
+  stalk0: 0.72,
+  stalk1: 1.62,
+  asc0: 1.12,
+  asc1: 1.68,
+  open0: 1.66,
+  open1: 1.88,
+  spore: 1.88, // the hero spore leaves the cushion
+  land: 2.75, // ...and lands on ant #2
 };
 export const ant1State = (t: number): AntState => {
-  const st = biteState(A1(t), t, HOOK.contact, {hang0: 40, hang1: 14, tHang: HOOK.hang, relax: HOOK.relax, holdFront: true, close: HOOK.close, settle: 1.5, appr: HOOK.appr, struggle: HOOK.struggle});
-  st.dead = ss(t, 0.75, HOOK.dieEnd);
+  const st = biteState(A1(t), t, HOOK.contact, {hang0: 46, hang1: 16, tHang: HOOK.hang, relax: HOOK.relax, holdFront: true, close: HOOK.close, settle: 1.5});
+  st.dead = ss(t, 0.5, HOOK.dieEnd);
   return st;
 };
 export const fungus1 = (t: number) => ({
   e: ss(t, HOOK.emerge0, HOOK.emerge1),
-  g: keyS(t, [[HOOK.stalk0, 0], [1.5, 0.4], [HOOK.stalk1, 1]], (x) => x * x * (3 - 2 * x)),
+  g: keyS(t, [[HOOK.stalk0, 0], [1.2, 0.42], [HOOK.stalk1, 1]], (x) => x * x * (3 - 2 * x)),
   asc: ss(t, HOOK.asc0, HOOK.asc1),
   open: ss(t, HOOK.open0, HOOK.open1),
-  teth: ss(t, 1.0, 1.7),
+  teth: ss(t, 0.7, 1.5),
 });
 /** the leaf L1 reacting: a dent where the jaws clamp, a flex at contact, a slight sag under the hanging ant */
 export function leaf1(t: number): Leaf {
   return {
   ...L1,
-  dip: 1.8 * ss(t, 0.72, 1.06) + 4.2 * ring(t, HOOK.contact, 5, 0.18) + 1.6 * ring(t, 0.42, 4, 0.2),
-  dent: {u: UB1, d: 0.5 * ss(t, HOOK.contact - 0.02, HOOK.contact + 0.06) + 0.16 * ring(t, HOOK.contact + 0.04, 7, 0.12)},
+  dip: 1.8 * ss(t, 0.3, 0.95) + 3.4 * ring(t, HOOK.contact, 5, 0.18),
+  dent: {u: UB1, d: 0.42 * ss(t, HOOK.contact - 0.02, HOOK.contact + 0.08) + 0.14 * ring(t, HOOK.contact + 0.04, 7, 0.12)},
   };
 }
 
@@ -297,7 +281,6 @@ export const burst1 = (t: number) => {
 export const EVENTS: Record<string, number> = {
   grip: 0.0, // legs gripping the leaf as it reaches the vein
   contact1: HOOK.contact, // the jaws meet the vein
-  struggle1: HOOK.struggle[0], // the body tugs against the locked jaws
   swing1: HOOK.hang[0], // the body swings down to hang
   emerge1: HOOK.emerge0, // the back of the head swells and splits
   grow1a: HOOK.stalk0, // the stalk starts (time-lapse)

@@ -21,7 +21,6 @@ import {ant4State, leaf4, P4_STEM} from './world/loop';
 import {biteMark} from './world/marks';
 import {FOREST} from './world/forest';
 import {Captions} from './Captions';
-import {LensLeaf} from './world/lensLeaf';
 import {toW} from './core/frame';
 import {clamp, DUR} from './lib';
 
@@ -47,7 +46,7 @@ const plantGroup = (B: Basis, key: string, leaves: Leaf[], stem: V3[] | null, st
 /** a dead ant with its fungus */
 const deadAnt = (B: Basis, R: Rig, sp: typeof SP1, f: {g: number; asc: number; open: number; teth: number; e?: number}) => [
   ...antItems(B, R),
-  ...emergeItems(B, R, f.e ?? 1),
+  ...emergeItems(B, R, f.e ?? 1, sp),
   ...stalkItemsV2(B, R, sp, f.g, f.asc, f.open),
   ...tetherItems(B, R, f.teth),
 ];
@@ -96,7 +95,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
     const k = Math.max(0, 1 - (t - HOOK.land) / 0.5);
     a2.push({z: proj(B, hs.p).z - 0.6, el: <g key="hsl">{sporeEl(B, hs.p, hs.d, 0.45, 1, 'hs', 0.3 + 0.8 * k, 7).el}</g>});
   }
-  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [3.0, 2.2], onPlant ? a2 : []);
+  const g2 = plantGroup(B, 'P2', [leaf2(t)], P2_STEM, [2.0, 1.4], onPlant ? a2 : []);
   if (g2) groups.push(g2);
   const xr = xrayAt(t);
   if (!onPlant) {
@@ -175,7 +174,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
     });
   }
   // ---- ant #4 on its leaf (the loop)
-  if (t > 29.0) {
+  if (t > 27.0) {
     const R4 = solve(ant4State(t));
     const g4 = plantGroup(B, 'P4', [leaf4(t)], P4_STEM, [1.3, 0.9], antItems(B, R4));
     if (g4) groups.push(g4);
@@ -239,7 +238,6 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean; orbit
         <SporeDefs />
         {sortDraw(focusGroups)}
       </svg>
-      <LensLeaf t={t} ns={fkey} />
       <div style={{position: 'absolute', inset: 0, background: `rgba(10,22,30,${((1 - light) * 0.55).toFixed(3)})`}} />
       {cool > 0.01 && <div style={{position: 'absolute', inset: 0, background: `rgba(30,60,70,${(0.16 * cool).toFixed(3)})`, mixBlendMode: 'multiply'}} />}
       <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(5,14,10,0.42) 100%)'}} />

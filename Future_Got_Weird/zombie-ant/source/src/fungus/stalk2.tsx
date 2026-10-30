@@ -15,7 +15,7 @@ import {lit, mix, shade} from '../core/color';
 import {INK} from '../core/ink';
 import {hash, noise1} from '../lib';
 import {hw, Rig, STALK_BASE} from '../ant/rig';
-import {ascoma as cushion, ASC_AT, CUSH, perithecia, StalkSpec, stalkAt, stalkLine} from './fungus';
+import {ascoma as cushion, ASC_AT, CUSH, perithecia, StalkSpec, stalkAt, stalkBase, stalkLine} from './fungus';
 
 const f2 = (n: number) => n.toFixed(2);
 let sid = 0;
@@ -44,11 +44,11 @@ const radius = (sp: StalkSpec, a: number, g: number) => {
 };
 
 /** emergence at the back of the head: blister, cracks, then the primordium (e 0..1) */
-export const emergeItems = (B: Basis, R: Rig, e: number): Item[] => {
+export const emergeItems = (B: Basis, R: Rig, e: number, sp?: StalkSpec): Item[] => {
   if (e <= 0.01) return [];
   const st = R.st, sc = st.scale ?? 1, H = R.head;
-  const c = hw(st, H, STALK_BASE);
-  const n = norm3(add3(mul3(H.u, 1), mul3(H.f, -0.55)));
+  const c = hw(st, H, sp ? stalkBase(sp) : STALK_BASE);
+  const n = norm3(add3(mul3(H.u, 1), mul3(H.f, sp?.nape ? -0.55 : -0.35)));
   const bl = Math.min(1, e / 0.55);
   const items: Item[] = [];
   // the blister: the cuticle stretched and paling over the swelling tissue
@@ -92,9 +92,9 @@ export const emergeItems = (B: Basis, R: Rig, e: number): Item[] => {
 };
 
 /** the basal collar of white mycelium where the stalk leaves the head */
-const collarEl = (B: Basis, R: Rig, k: number, key: string): Item => {
+const collarEl = (B: Basis, R: Rig, k: number, key: string, sp?: StalkSpec): Item => {
   const st = R.st, sc = st.scale ?? 1, H = R.head;
-  const c = hw(st, H, STALK_BASE);
+  const c = hw(st, H, sp ? stalkBase(sp) : STALK_BASE);
   const C = proj(B, c);
   const strokes: string[] = [];
   for (let m = 0; m < 18; m++) {
@@ -193,7 +193,7 @@ export const stalkItemsV2 = (B: Basis, R: Rig, sp: StalkSpec, g: number, asc: nu
       ),
     },
   ];
-  items.push(collarEl(B, R, Math.min(1, g * 6), `${id}c`));
+  items.push(collarEl(B, R, Math.min(1, g * 6), `${id}c`, sp));
   // the reproductive region: a cushion of perithecia on the stalk's lower side
   if (asc > 0.01 && g > ASC_AT + 0.06) {
     const C = cushion(line, asc, open);

@@ -190,8 +190,6 @@ export const organicNetworkEl = (B: Basis, R: Rig, g: number): React.ReactNode =
   const beads: {x: number; y: number; r: number}[] = [];
   NETWORK.forEach((f, fi) => {
     if (g <= f.born[0]) return;
-    // V3: the trunks only (no side twigs): a clean, readable network
-    if (f.pts.length <= 3) return;
     const pts: {x: number; y: number; s: number}[] = [];
     for (let k = 0; k < f.pts.length; k++) {
       if (g >= f.born[k]) {
@@ -209,7 +207,7 @@ export const organicNetworkEl = (B: Basis, R: Rig, g: number): React.ReactNode =
     strands.push({d: smoothOpen(pts), w: Math.max(0.8, f.w * 1.35 * s * sc)});
     // cells strung along the strand, more of them where the strand is older
     pts.forEach((q, k) => {
-      if ((k + fi) % 4) return;
+      if ((k + fi) % 2) return;
       beads.push({x: q.x, y: q.y, r: Math.max(1.2, (0.045 + 0.02 * hash(fi * 7 + k)) * q.s * sc)});
     });
   });

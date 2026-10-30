@@ -21,7 +21,7 @@ export const HEAD_C: V3 = [1.36, 0, 0.12];
 export const HEAD_AX: V3 = [1.42, 1.38, 1.15];
 /** mandible base (one side) in head coordinates */
 export const MAND_BASE: V3 = [2.45, 0.46, -0.52];
-export const MAND_LEN = 1.25;
+export const MAND_LEN = 1.6;
 
 export type LegPose = {ankle: V3; foot: V3; pole?: V3};
 export type AntState = {
@@ -145,9 +145,7 @@ export const solve = (st: AntState): Rig => {
     const inw = norm3(sub3(mul3(fm, Math.sin(a)), mul3(out, Math.cos(a))));
     const P = (u: number, w: number) => add3(base, add3(mul3(dir, u * MAND_LEN * sc), mul3(inw, w * MAND_LEN * sc)));
     // outer edge then the toothed inner edge, base to tip and back
-    // V3: Camponotus-like: a triangular blade with a curved outer edge, a hooked apical tooth and small teeth along
-    // the inner (biting) margin
-    const shape: [number, number][] = [[0, -0.16], [0.35, -0.2], [0.68, -0.13], [0.9, 0.0], [1.0, 0.16], [0.96, 0.3], [0.86, 0.27], [0.8, 0.31], [0.72, 0.27], [0.64, 0.31], [0.56, 0.27], [0.47, 0.3], [0.38, 0.26], [0.25, 0.27], [0.1, 0.22], [0, 0.18]];
+    const shape: [number, number][] = [[0, -0.2], [0.3, -0.24], [0.62, -0.17], [0.86, -0.04], [0.98, 0.12], [1.0, 0.22], [0.9, 0.25], [0.84, 0.19], [0.76, 0.27], [0.66, 0.2], [0.57, 0.29], [0.46, 0.21], [0.36, 0.28], [0.22, 0.2], [0.06, 0.24], [0, 0.18]];
     return {base, pts: shape.map(([u, w]) => P(u, w)), tip: P(1.0, 0.2), s};
   });
   // antennae: a long scape back and up over the head, then a jointed funiculus forward and out
@@ -172,5 +170,7 @@ export const solve = (st: AntState): Rig => {
 };
 
 /** a point on the dorsal back of the head, where the fungal stalk emerges (head coordinates) */
-// V3: the nape: the dorsal joint between the back of the head and the pronotum (head coordinates; the neck is the origin)
-export const STALK_BASE: V3 = [-0.12, 0, 0.62];
+export const STALK_BASE: V3 = [0.55, 0, 1.0];
+/** (final pass) the nape: the dorsal joint between the back of the head and the pronotum, where the stalk of ant #2
+ *  emerges (head coordinates; the neck is the origin) */
+export const STALK_NAPE: V3 = [-0.12, 0, 0.62];

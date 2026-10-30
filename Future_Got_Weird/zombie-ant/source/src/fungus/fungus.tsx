@@ -9,20 +9,23 @@ import {ellipsoidItem, inkW, Item} from '../core/draw3';
 import {lit, mix, shade} from '../core/color';
 import {INK} from '../core/ink';
 import {hash, noise1} from '../lib';
-import {hw, Rig, STALK_BASE} from '../ant/rig';
+import {hw, Rig, STALK_BASE, STALK_NAPE} from '../ant/rig';
 
-export type StalkSpec = {seed: number; len: number; bend: number; lean: number};
+export type StalkSpec = {seed: number; len: number; bend: number; lean: number; nape?: boolean};
+/** where a stalk leaves the head (head coordinates) */
+export const stalkBase = (sp: StalkSpec) => (sp.nape ? STALK_NAPE : STALK_BASE);
 const NS = 28;
 /** the full-grown stalk's centreline (head coordinates are used for the start, then it curves under gravity) */
 export const stalkLine = (R: Rig, sp: StalkSpec): V3[] => {
   const st = R.st, sc = st.scale ?? 1;
-  const base = hw(st, R.head, STALK_BASE);
+  const base = hw(st, R.head, stalkBase(sp));
   const H = R.head;
-  let d = norm3(add3(mul3(H.u, 1), add3(mul3(H.f, -0.55), mul3(H.l, sp.lean))));
+  let d = norm3(add3(mul3(H.u, 1), add3(mul3(H.f, sp.nape ? -0.55 : -0.3), mul3(H.l, sp.lean))));
   const pts: V3[] = [base];
   const step = (sp.len * sc) / NS;
   for (let k = 1; k <= NS; k++) {
-    const w1 = noise1(k * 0.32, sp.seed) * 0.11, w2 = noise1(k * 0.32, sp.seed + 7) * 0.11;
+    const wa = sp.nape ? 0.11 : 0.085, wf = sp.nape ? 0.32 : 0.45;
+    const w1 = noise1(k * wf, sp.seed) * wa, w2 = noise1(k * wf, sp.seed + 7) * wa;
     d = norm3(add3(d, add3([0, 0, -sp.bend * 0.045 * (k < 4 ? 0.3 : 1)], add3(mul3(H.l, w1), mul3(H.f, w2)))));
     pts.push(add3(pts[k - 1], mul3(d, step)));
   }

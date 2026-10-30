@@ -7,7 +7,7 @@ the mandible contact, leaf creaks, the fungal growth, the spore puffs, the landi
 No whooshes on camera moves, no impacts, no cartoon sounds.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; sample ceiling -1.5 dBFS (true peak measured 4x).
 usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
-Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Ant_V3_mix.wav, audio/mix/mix_measure_v3.json, audio/sfx_log_v3.json"""
+Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Ant_V4_FINAL_mix.wav, audio/mix/mix_measure_v4.json, audio/sfx_log_v4.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
@@ -288,10 +288,10 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_Zombie_Ant_V3_mix.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, 'audio/mix/FGW_Zombie_Ant_V4_FINAL_mix.wav'), mix2, SR, subtype='PCM_24')
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG)}
-json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v3.json'), 'w'), indent=1)
-json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v3.json'), 'w'), indent=1)
+json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v4.json'), 'w'), indent=1)
+json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v4.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))

@@ -120,16 +120,19 @@ export const ant2State = (t: number): AntState => {
   if (t < W_END) return walk2(t);
   const bite = biteState(A2(t), t, TC2, BITE2);
   bite.dead = ss(t, TM.dies - 0.1, TM.dies + 0.8);
+  // (final pass) the moment of death: one last small spasm of the gaster, then it sags and everything is still
+  bite.gasterPitch += 7 * ring(t, TM.dies, 5, 0.12) - 7 * ss(t, TM.dies + 0.05, TM.dies + 0.6);
   if (t < B_IN) return blendState(walk2(W_END), bite, ss5(t, W_END, B_IN));
   return bite;
 };
 
 // ------------------------------------------------------------------ the fungus on ant #2
-export const SP2: StalkSpec = {seed: 11, len: 18, bend: 0.85, lean: -0.1};
+export const SP2: StalkSpec = {seed: 11, len: 18, bend: 0.85, lean: -0.1, nape: true};
 export const fungus2 = (t: number) => ({
-  e: ss(t, TM.but + 0.1, TM.started),
+  e: ss(t, TM.but + 0.1, TM.started - 0.1),
   teth: ss(t, TM.but, TM.started + 0.3),
-  g: keyS(t, [[TM.started - 0.1, 0], [TM.started + 0.45, 0.07], [TM.because + 0.1, 0.08], [TM.head + 0.1, 1]], (x) => x * x * (3 - 2 * x)),
+  // (final pass) continuous growth from the bud to full length: no plateau
+  g: keyS(t, [[TM.started - 0.2, 0], [TM.because + 0.3, 0.16], [TM.head + 0.1, 1]], (x) => x),
   asc: ss(t, TM.head - 1.1, TM.finally),
   open: ss(t, TM.finally + 0.1, TM.opens + 0.25),
 });
@@ -230,5 +233,4 @@ export const EVENTS2: Record<string, number> = {
   land3: ANT3_T.land,
   ants3: 23.9, // the ants walking below
   reveal: TM.there, // the graveyard opens out
-  lens: 30.12, // the leaf passing the lens (the loop)
 };

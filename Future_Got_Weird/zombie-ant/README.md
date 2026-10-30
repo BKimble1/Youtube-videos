@@ -1,6 +1,18 @@
 # Future Got Weird: Zombie Ant Fungus
 
-## V3 (current, release candidate)
+## V4 FINAL (current)
+
+**What it is.** A surgical polish of V2. **It is not published.**
+
+**Deliverable.** `exports/FGW_Zombie_Ant_V4_FINAL_1080x1920.mp4`: native 1080×1920, 30 fps, 917 frames, 30.57 s.
+
+**Change log.** `production/V4_FINAL_CHANGELOG.md`; QA in `qa/v4/`.
+
+**Source.** `source/src/` (composition `ZombieAntV4`).
+
+**Audio.** `python3 tools/make_audio.py mix_v4`.
+
+## V3 (superseded; V4 is based on V2)
 
 **Status.** It is not published.
 
@@ -42,8 +54,8 @@ watched it in real time or listened to it: this environment has no display or sp
     python3 -m pip install numpy scipy soundfile pyloudnorm sherpa-onnx
     python3 tools/make_narration.py                       # take -> narration master, timeline, captions, SRT
     source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
-    python3 tools/make_audio.py mix_v3                    # effects + mix -> source/public/audio/mix_v3.wav
-    (cd source && npm ci && npx remotion render src/index.ts ZombieAntV3 ../exports/FGW_Zombie_Ant_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/make_audio.py mix_v4                    # effects + mix -> source/public/audio/mix_v4.wav
+    (cd source && npm ci && npx remotion render src/index.ts ZombieAntV4 ../exports/FGW_Zombie_Ant_V4_FINAL_1080x1920.mp4 --props='{"audio":"mix_v4","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`. ASR models (sherpa-onnx Zipformer
 en-2023-06-26 and Whisper base.en) come from the k2-fsa GitHub releases: `tools/asr_sherpa.py <audio> <model_root>`.
