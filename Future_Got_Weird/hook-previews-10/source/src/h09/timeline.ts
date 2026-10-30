@@ -99,8 +99,8 @@ const camKeys = (() => {
   const push = (t: number, p: V, s: number) => k.push([t, p.x, p.y, Math.log(s)]);
   const claw0 = clawToWorld({x: 9.5, y: 2.0});
   void claw0;
-  push(0.0, {x: 4.2, y: 3.6}, 32.5);
-  push(0.6, {x: 6.0, y: 1.2}, 35.5);
+  push(0.0, {x: 3.7, y: 4.0}, 30);
+  push(0.6, {x: 5.2, y: 1.4}, 34);
   push(1.05, add(b(1.05), {x: -2.2, y: 0.8}), 62);
   push(1.75, add(b(1.75), {x: -0.4, y: 0.2}), 140);
   push(2.6, b(2.6), 225);
@@ -108,7 +108,7 @@ const camKeys = (() => {
   push(4.2, add(PC, {x: 1.2, y: -2.2}), 72);
   push(4.6, add(PC, {x: 0.5, y: -5.0}), 40);
   push(5.2, add(PC, {x: -11, y: 3.5}), 23);
-  push(6.0, {x: 5.0, y: -2.0}, 15.5);
+  push(6.0, {x: 2.8, y: -1.0}, 15.5);
   return k;
 })();
 

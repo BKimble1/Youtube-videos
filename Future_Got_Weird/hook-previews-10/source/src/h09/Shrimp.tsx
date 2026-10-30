@@ -347,8 +347,8 @@ export const Shrimp: React.FC<ShrimpProps> = ({t, tau, open, w}) => {
         <Deco>
           <defs>
             <radialGradient id="h9-eye">
-              <stop offset="0" stopColor="#24120E" stopOpacity="0.62" />
-              <stop offset="0.55" stopColor="#3A1C14" stopOpacity="0.45" />
+              <stop offset="0" stopColor="#1E0E0A" stopOpacity="0.85" />
+              <stop offset="0.6" stopColor="#3A1C14" stopOpacity="0.62" />
               <stop offset="1" stopColor="#3A1C14" stopOpacity="0" />
             </radialGradient>
             <linearGradient id="h9-hood" x1="0" y1="0" x2="0" y2="1">
@@ -356,7 +356,7 @@ export const Shrimp: React.FC<ShrimpProps> = ({t, tau, open, w}) => {
               <stop offset="1" stopColor="#FFF6EA" stopOpacity="0.04" />
             </linearGradient>
           </defs>
-          <ellipse cx={0.05} cy={-1.3} rx={0.95} ry={0.82} fill="url(#h9-eye)" />
+          <ellipse cx={0.0} cy={-1.3} rx={1.05} ry={0.92} fill="url(#h9-eye)" />
           <path d={closedPath(pts([[-1.9, -2.55], [-0.4, -2.45], [0.9, -1.85], [1.5, -1.0], [1.3, -0.25], [0.3, 0.0], [-1.1, -0.45], [-1.95, -1.4]]), 0.9)} fill="url(#h9-hood)" />
           <path d={openPath(pts([[-1.95, -2.5], [-2.05, -1.3], [-1.2, -0.4], [0.2, -0.05]]))} fill="none" stroke={rgba(INK, 0.45)} strokeWidth={w * 0.45} strokeLinecap="round" />
           <path d={openPath(pts([[-0.9, -2.25], [0.4, -2.0], [1.1, -1.4]]))} fill="none" stroke="#FFFFFF" strokeOpacity={0.55} strokeWidth={0.16} strokeLinecap="round" />
@@ -384,7 +384,7 @@ export const Shrimp: React.FC<ShrimpProps> = ({t, tau, open, w}) => {
 /** the boulder the shrimp is perched on, drawn in shrimp-local space (top surface at FOOT_Y), with its contact shadow */
 export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
   const F = FOOT_Y;
-  const top = pts([[-70, F + 1.2], [-52, F + 0.4], [-40, F + 0.9], [-30, F + 0.3], [-20, F + 0.55], [-10, F + 0.15], [-3, F + 0.3], [1.5, F + 0.5], [4.4, F + 1.6], [6.0, F + 4.0]]);
+  const top = pts([[-70, F + 1.2], [-52, F + 0.4], [-40, F + 0.9], [-30, F + 0.3], [-20, F + 0.15], [-10, F + 0.05], [-3, F + 0.05], [1.5, F + 0.25], [4.4, F + 1.6], [6.0, F + 4.0]]);
   const body = [...top, ...pts([[7.0, F + 9], [7.5, F + 22], [5, F + 40], [-10, F + 70], [-70, F + 70]])];
   const d = openPath(body, 0.8) + ' Z';
   // encrusting growth as soft irregular blotches (coralline pink, sponge ochre, algal green), low contrast
@@ -393,7 +393,7 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
       const a = (i / 9) * Math.PI * 2, rr = r * (0.75 + 0.45 * hash(k * 13 + i * 3.1));
       return v(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr * 0.6);
     }), 1);
-  const patches: [number, number, number, string][] = [[-24, 2.2, 3.0, '#A97C84'], [-8, 6, 4.0, '#8B9468'], [-1, 2.0, 1.8, '#A97C84'], [-38, 7, 5, '#7D8B70'], [-15, 13, 4.5, '#A68A64'], [-30, 16, 5, '#A97C84'], [-46, 3, 3.5, '#A68A64']];
+  const patches: [number, number, number, string][] = [[-24, 2.6, 3.0, '#A97C84'], [-8, 6, 4.0, '#8B9468'], [-38, 7, 5, '#7D8B70'], [-15, 13, 4.5, '#A68A64'], [-46, 3, 3.5, '#A68A64']];
   return (
     <g>
       <defs>
@@ -408,7 +408,7 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
       <path d={d} fill="url(#h9-rock)" />
       {/* encrusting coralline and sponge patches, pits */}
       {patches.map(([x, y, r, c], i) => (
-        <path key={i} d={blot(x, F + y, r, i)} fill={c} opacity={0.24} />
+        <path key={i} d={blot(x, F + y, r, i)} fill={c} opacity={0.17} />
       ))}
       {Array.from({length: 46}).map((_, i) => {
         const x = -62 + ((i * 37.3) % 76), y = F + 1.5 + ((i * 13.7) % 22);
@@ -416,7 +416,7 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
       })}
       {/* lit top edge and a few algae tufts along it */}
       <path d={openPath(top, 0.8)} fill="none" stroke={rgba('#E8E4CC', 0.35)} strokeWidth={0.45} strokeLinecap="round" />
-      {[-46, -27, -16].map((x, i) => (
+      {[-52, -40].map((x, i) => (
         <g key={`tuft${i}`}>
           {[0, 1, 2, 3].map((k) => {
             const sw = 0.4 * Math.sin(tau * 1.3 + i + k * 0.7);
@@ -426,8 +426,7 @@ export const Rock: React.FC<{tau: number; w: number}> = ({tau, w}) => {
           })}
         </g>
       ))}
-      <SoftShadow id="h9-shadow" c={v(-9, F + 0.35)} rx={16} ry={1.1} alpha={0.4} color="#14302E" />
-      <SoftShadow id="h9-shadow2" c={v(-24, F + 0.3)} rx={6} ry={0.8} alpha={0.3} color="#14302E" />
+      <SoftShadow id="h9-shadow" c={v(-8, F + 0.75)} rx={10} ry={0.45} alpha={0.3} color="#1E3430" />
     </g>
   );
 };

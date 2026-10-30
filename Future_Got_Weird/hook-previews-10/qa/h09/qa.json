@@ -1,6 +1,6 @@
 {
  "file": "exports/FGW_HOOK_09_PISTOL_SHRIMP.mp4",
- "size_bytes": 3983844,
+ "size_bytes": 3832858,
  "video": {
   "codec_name": "h264",
   "profile": "High",
@@ -10,7 +10,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "duration": "6.000000",
-  "bit_rate": "4980678"
+  "bit_rate": "4779428"
  },
  "frames": 180,
  "audio": {
@@ -25,14 +25,14 @@
  "mix_lufs": -16.18,
  "sample_peak_dbfs": -0.98,
  "motion_mean_per_second": [
-  3.091,
-  2.988,
-  2.305,
-  3.207,
-  3.865,
-  2.667
+  3.773,
+  2.925,
+  2.306,
+  3.181,
+  3.645,
+  2.871
  ],
- "longest_static_run_frames": 1,
+ "longest_static_run_frames": 0,
  "longest_static_run_starts_frame": 0,
  "frame_jumps_over_18": [],
  "checks": {

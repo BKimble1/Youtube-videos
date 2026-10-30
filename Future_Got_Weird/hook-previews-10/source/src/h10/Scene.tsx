@@ -44,6 +44,7 @@ const Repeat: React.FC<{T: Parameters<typeof Train>[0]['T']; t: number; t0: numb
   return <g>{out}</g>;
 };
 
+const DBG = {man: true, over: true};
 export const Scene: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t);
   const pose = poseAt(t);
@@ -89,8 +90,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
           <Capsule id="h10-xb2" a={{x: G.x + FRAME.front - 10, y: -250}} b={{x: GF.x + FRAME.front - 10, y: -258}} ra={5} rb={5} color="#7F8E98" />
         </g>
         <Backpack F={F} dec={act.dec} t={t} />
-        <Man id="h10-man" pose={pose} expr={EXPR} lHand={GRIP} rHand={GRIP} outfit={PARTICIPANT}
-          overTorso={
+        {DBG.man && <Man id="h10-man" pose={pose} expr={EXPR} lHand={GRIP} rHand={GRIP} outfit={PARTICIPANT}
+          overTorso={!DBG.over ? undefined :
             <g>
               {win.r > 0.5 && (
                 <g mask="url(#h10-win)">
@@ -111,10 +112,13 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
               <Train T={Pt.cableBelt} t={t} t0={CUE.belt0} t1={CUE.belt1} n={4} gap={0.06} r={4.5} tail={60} />
             </g>
           }
-        />
+        />}
         <WalkerSide id="h10-wn" G={G} roll={roll} ink={ink} />
         <Man id="h10-mh" pose={pose} expr={EXPR} lHand={GRIP} rHand={GRIP} outfit={PARTICIPANT} handsOnly handsOnlySide="L" />
       </g>
+      {/* a near-invisible full-frame veil that changes every frame: it makes the renderer repaint the whole frame
+          (without it, Chrome's sequential render left stale copies of the figure behind him) */}
+      <rect x={0} y={0} width={1080} height={1920} fill="#000" opacity={(0.004 + 0.002 * (Math.round(t * 30) % 2)).toFixed(3)} />
     </svg>
   );
 };

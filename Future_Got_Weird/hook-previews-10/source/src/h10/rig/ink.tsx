@@ -38,7 +38,7 @@ export const Inked: React.FC<{w: number; children: React.ReactNode; opacity?: nu
               <stop offset="1" stopColor="#FFF" />
             </radialGradient>
             <mask id={`${id}-fm`}>
-              <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+              <rect x="-1500" y="-1600" width="2000" height="1800" fill="#FFF" />
               {fade!.map((q, i) => (
                 <circle key={i} cx={q.c.x.toFixed(2)} cy={q.c.y.toFixed(2)} r={q.r.toFixed(2)} fill={`url(#${id}-fg)`} />
               ))}

@@ -184,7 +184,7 @@ export const Hand: React.FC<Props> = ({id, wrist, ang, L, thumbSide: ts, view, p
           <stop offset="1" stopColor="#FFF" />
         </linearGradient>
         <mask id={`${id}-pm`}>
-          <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-pf)`} />
+          <rect x="-1500" y="-1600" width="2000" height="1800" fill={`url(#${id}-pf)`} />
         </mask>
       </defs>
       <g mask={pass === 'ink' ? undefined : `url(#${id}-pm)`}>

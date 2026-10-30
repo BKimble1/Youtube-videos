@@ -417,13 +417,13 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
     const c = isFar ? far(o.shirt) : o.shirt;
     const fadeR = r0 * 1.15;
     const inner = (
-      <ellipse key="in" cx={fmt(hem.x)} cy={fmt(hem.y)} rx={fmt(r1 * 0.24)} ry={fmt(r1 * 0.93)} transform={`rotate(${fmt(ang(u))} ${fmt(hem.x)} ${fmt(hem.y)})`} fill={shade(c, 0.42)} />
+      <ellipse key={`${k}in`} cx={fmt(hem.x)} cy={fmt(hem.y)} rx={fmt(r1 * 0.24)} ry={fmt(r1 * 0.93)} transform={`rotate(${fmt(ang(u))} ${fmt(hem.x)} ${fmt(hem.y)})`} fill={shade(c, 0.42)} />
     );
     // near sleeve: the tee's stripes run on through the whole crown (they match the tee's on both sides) and fade
     // out down the tube; the side contours fade out toward the shoulder line
     const sf0 = add(A.S, mul(u, r0 * 0.5));
     const sf1 = add(A.S, mul(u, fadeR));
-    const big = 4000;
+    const big = 400;
     const hemSide = `M${P(add(A.S, mul(n, big)))} L${P(add(add(A.S, mul(n, big)), mul(u, big)))} L${P(add(add(A.S, mul(n, -big)), mul(u, big)))} L${P(add(A.S, mul(n, -big)))} Z`;
     // near sleeve (V4 fix): a copy of the tee covers the crown and the tube's top, opaque down to tm0 and gone by tm1,
     // over the sleeve's fill and side lines; the copy's stripes end on a soft, slightly arched edge (radial ramp about
@@ -444,7 +444,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       return {
         inner,
         body: (
-          <g key="sl">
+          <g key={`${k}sl`}>
             <Inked w={IN} id={`${id}-${k}si`}>
               <Lin id={`${id}-${k}sg`} d={dCap} from={add(mid, mul(ln, r0))} to={add(mid, mul(ln, -r0))} stops={[[0, '#FFFFFF'], [0.45, mix(c, '#F2F5F8', 0.5)], [0.85, mix(c, '#C9D5E0', 0.8)], [1, mix(c, '#B4C3D1', 0.8)]]} />
             </Inked>
@@ -456,7 +456,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       };
     }
     const body = (
-      <g key="sl">
+      <g key={`${k}sl`}>
         <defs>
           {isFar ? (
             <radialGradient id={`${id}-${k}sf`} gradientUnits="userSpaceOnUse" cx={fmt(A.S.x)} cy={fmt(A.S.y)} r={fmt(fadeR)}>
@@ -471,7 +471,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
             </linearGradient>
           )}
           <mask id={`${id}-${k}sm`}>
-            <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}sf)`} />
+            <rect x="-1500" y="-1600" width="2000" height="1800" fill={`url(#${id}-${k}sf)`} />
           </mask>
           {!isFar && (
             // the crown is cut by the tee's outline: the tee itself plus everything on the hem side of the shoulder
@@ -484,7 +484,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {!isFar && (
           <defs>
             <mask id={`${id}-${k}hm`}>
-              <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+              <rect x="-1500" y="-1600" width="2000" height="1800" fill="#FFF" />
               <ellipse cx={fmt(j.head.x)} cy={fmt(j.head.y)} rx={fmt(hR)} ry={fmt(hR + 0.07 * DIM.headR * s)} transform={`rotate(${fmt(-(tc + p.neck))} ${fmt(j.head.x)} ${fmt(j.head.y)})`} fill="#000" />
               <path d={hemSide} fill="#FFF" />
             </mask>
@@ -515,7 +515,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
                 <stop offset="1" stopColor="#FFF" />
               </radialGradient>
               <mask id={`${id}-${k}sc`}>
-                <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-${k}rg)`} />
+                <rect x="-1500" y="-1600" width="2000" height="1800" fill={`url(#${id}-${k}rg)`} />
               </mask>
             </defs>
             <g clipPath={`url(#${id}-tclip)`}>
@@ -545,7 +545,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
                 </Inked>
               </mask>
               <clipPath id={`${id}-${k}ox`}>
-                <path d={`M-20000 -20000 H20000 V20000 H-20000 Z ${d}`} clipRule="evenodd" />
+                <path d={`M-1500 -1600 H500 V200 H-1500 Z ${d}`} clipRule="evenodd" />
               </clipPath>
             </defs>
             <g mask={`url(#${id}-${k}om)`}>
@@ -633,7 +633,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
             <circle cx={fmt(j.lLeg.hp.x)} cy={fmt(j.lLeg.hp.y)} r={fmt(96 * s)} />
           </clipPath>
           <mask id={`${id}-llm`}>
-            <rect x="-20000" y="-20000" width="40000" height="40000" fill="#FFF" />
+            <rect x="-1500" y="-1600" width="2000" height="1800" fill="#FFF" />
             <g clipPath={`url(#${id}-llh)`}>
               <path d={torsoD} fill="#000" />
             </g>

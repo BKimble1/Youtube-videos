@@ -64,13 +64,8 @@ export const Backpack: React.FC<{F: Frames; dec: number; t: number}> = ({F, dec,
   const bodyD = ptsD(body);
   return (
     <g>
-      <defs>
-        <linearGradient id="h10-pack" gradientUnits="userSpaceOnUse" x1={fmt(T(340, 90).x)} y1={fmt(T(340, 90).y)} x2={fmt(T(200, 160).x)} y2={fmt(T(200, 160).y)}>
-          <stop offset="0" stopColor="#4C5D68" />
-          <stop offset="1" stopColor="#26323A" />
-        </linearGradient>
-      </defs>
-      <path d={bodyD} fill="url(#h10-pack)" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+      <path d={bodyD} fill="#36454F" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+      <path d={ptsD([T(340, 92), T(342, 126), T(300, 132), T(290, 96)])} fill="#56687A" opacity={0.45} />
       <path d={ptsD(pocket)} fill="#2C3A43" stroke={INK} strokeWidth={2.5} />
       <path d={openPath([T(336, 100), T(334, 150)].map((p) => ({x: p.x, y: p.y})))} stroke="#FFFFFF" strokeOpacity={0.12} strokeWidth={4} fill="none" strokeLinecap="round" />
       {leds.map((l, i) => (

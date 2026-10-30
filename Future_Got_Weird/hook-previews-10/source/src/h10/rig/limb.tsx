@@ -179,7 +179,7 @@ export const Limb: React.FC<LimbProps> = ({id, A, B, C, rA, rB, rC, color, capA,
           <stop offset="1" stopColor="#FFF" />
         </linearGradient>
         <mask id={`${id}-mk`}>
-          <rect x="-20000" y="-20000" width="40000" height="40000" fill={`url(#${id}-fm)`} />
+          <rect x="-1500" y="-1600" width="2000" height="1800" fill={`url(#${id}-fm)`} />
         </mask>
         <clipPath id={`${id}-cp`}>
           <path d={g.d} />
