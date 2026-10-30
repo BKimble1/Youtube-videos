@@ -32,7 +32,7 @@ export const pathsOf = (F: Frames) => {
   const byName = (n: string) => verts.find((v) => v.name === n)!;
   // the cord: dorsal to the vertebral bodies (canal), from the brainstem to the conus at L1
   const cordOff = (v: Vert) => v.depth * 0.5 + 9 * F.s;
-  const cordPts: V[] = [Hh(40, 6), Hh(38, 30), ...verts.filter((v) => v.region !== 'L' || v.name === 'L1').map((v) => add(v.p, mul(v.n, cordOff(v))))];
+  const cordPts: V[] = [Hh(42, 8), ...verts.filter((v) => v.region !== 'L' || v.name === 'L1').map((v) => add(v.p, mul(v.n, cordOff(v))))];
   const cord = track(cordPts, 8);
   // the paddle lies on the back of the cord over T11-L1 (the lumbosacral segments), in the epidural space
   const t11 = byName('T11'), l1 = byName('L1'), t12 = byName('T12');
@@ -77,7 +77,7 @@ export const pathsOf = (F: Frames) => {
   const hop1 = track([Hh(HEADPT.implant.x, HEADPT.implant.y - 6), Hh(HEADPT.puck.x, HEADPT.puck.y + 8)], 4);
   const hop2 = track([T(TORPT.pod.u, TORPT.pod.v), T(TORPT.ipg.u, TORPT.ipg.v)], 4);
   // the brain's own motor command: cortex -> internal capsule -> brainstem -> cord (stops at the injury)
-  const natural = track([Hh(HEADPT.cortex.x, HEADPT.cortex.y), Hh(16, -36), Hh(24, -10), ...cordPts.slice(0, 7)], 8);
+  const natural = track([Hh(HEADPT.cortex.x, HEADPT.cortex.y), Hh(16, -36), Hh(24, -10), ...cordPts.slice(0, 6)], 8);
   // the injured segment: C5-C7
   const c5 = byName('C5'), c7 = byName('C7');
   const lesion = {a: add(c5.p, mul(c5.n, cordOff(c5))), b: add(c7.p, mul(c7.n, cordOff(c7))), c: add(byName('C6').p, mul(byName('C6').n, cordOff(byName('C6'))))};

@@ -14,8 +14,8 @@ import {beatEnv, PULSE_F, PULSE_T0} from './timeline';
 
 export const STALK_BASE = V(250, -150);
 const C1 = V(-8, -110), C2 = V(26, -236), C3 = V(88, -318); // relative to the base
-const NS = 90; // spine segments
-const NCAP = 9; // cap rings
+const NS = 180; // spine segments
+const NCAP = 20; // cap rings
 export const SKIN = '#CDBFA4';
 const HEAD_SKIN = '#9E9078';
 const f2 = (n: number) => n.toFixed(2);
@@ -137,9 +137,9 @@ export const Eyestalk: React.FC<{t: number; z: number; film: number; cut: Cut}> 
     const u = uOf(Math.min(sm, 1.2), t);
     const n = nrm(add(A.n, B.n));
     const m = V((A.c.x + B.c.x) / 2, (A.c.y + B.c.y) / 2), r = (A.r + B.r) / 2;
-    const fade = clamp((i + 0.5) / 7);
+    const fade = clamp((i + 0.5) / 14);
     let base = band(u);
-    if (i < 7) base = mix(HEAD_SKIN, base, fade);
+    if (i < 14) base = mix(HEAD_SKIN, base, fade);
     const id = `h06-sg${i}`;
     defs.push(
       <linearGradient key={id} id={id} gradientUnits="userSpaceOnUse" x1={f2(m.x - n.x * r)} y1={f2(m.y - n.y * r)} x2={f2(m.x + n.x * r)} y2={f2(m.y + n.y * r)}>
@@ -169,15 +169,15 @@ export const Eyestalk: React.FC<{t: number; z: number; film: number; cut: Cut}> 
       fill={green ? '#16240E' : '#E8E2C8'} opacity={(green ? 0.6 : 0.5) * (1 - film) * (0.35 + 0.65 * fs)} />;
   });
   // --- outline (sides and tip; open at the base where the tentacle grows out of the head) ---
-  const i0 = 6;
+  const i0 = 12;
   const left = rings.slice(i0).map((R) => at(R, -1));
   const right = rings.slice(i0).map((R) => at(R, 1)).reverse();
   const outline = poly([...left, ...right], false);
   // --- wet sheen along the lit side ---
-  const spec = rings.slice(8, NR - 3).map((R) => at(R, -0.55));
-  const spec2 = rings.slice(14, NS - 6).map((R) => at(R, -0.62));
+  const spec = rings.slice(16, NR - 6).map((R) => at(R, -0.55));
+  const spec2 = rings.slice(28, NS - 12).map((R) => at(R, -0.62));
   // --- the eye at the tip (the eye stays at the tip; the broodsac pushes in behind it) ---
-  const tipR = rings[NS + 5];
+  const tipR = rings[NS + 11];
   const eye = at(tipR, -0.1);
   // --- cutaway window ---
   let cutEl: React.ReactNode = null;

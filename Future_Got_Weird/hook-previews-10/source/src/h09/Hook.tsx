@@ -3,9 +3,9 @@
 // whole (tiny) shrimp re-cocking its claw. Event times: ./timeline.ts (mirrored in tools/audio/h09.py).
 import React from 'react';
 import {HookFrame, HookProps} from '../shared/HookFrame';
-import {camAt, dactylOpen, tau, W9, worldTransform} from './timeline';
+import {BODY_ROT, camAt, dactylOpen, tau, W9, worldTransform} from './timeline';
 import {Backdrop, Bokeh, Floor, Particles} from './Env';
-import {Shrimp, ShrimpShadow} from './Shrimp';
+import {Rock, Shrimp} from './Shrimp';
 import {Fish} from './Fish';
 import {Bubble, Flash, flashI, Jet, Shock} from './Fx';
 
@@ -20,8 +20,10 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       <svg width={1080} height={1920} style={{position: 'absolute'}}>
         <g transform={worldTransform(cam)}>
           <Floor tau={ta} />
-          <ShrimpShadow />
-          <Shrimp t={t} tau={ta} open={dactylOpen(t)} w={w} />
+          <g transform={`rotate(${BODY_ROT})`}>
+            <Rock tau={ta} w={w} />
+            <Shrimp t={t} tau={ta} open={dactylOpen(t)} w={w} />
+          </g>
           <Fish t={t} tau={ta} w={w} />
         </g>
         <Jet cam={cam} t={t} />

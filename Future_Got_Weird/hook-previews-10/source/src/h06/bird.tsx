@@ -18,7 +18,7 @@ const f2 = (n: number) => n.toFixed(2);
 // upright perched posture: plump body tilted head-up, tail angled down and back
 const BODY: P[] = [V(14, -156), V(40, -146), V(58, -128), V(66, -104), V(64, -80), V(54, -58), V(36, -42), V(12, -34), V(-14, -36), V(-36, -48), V(-52, -66), V(-60, -90), V(-58, -114), V(-46, -136), V(-24, -152)];
 const TAIL: P[] = [V(-42, -62), V(-70, -42), V(-100, -16), V(-109, -8), V(-101, -1), V(-66, -27), V(-32, -46)];
-const WING: P[] = [V(26, -136), V(4, -146), V(-26, -140), V(-50, -120), V(-66, -94), V(-82, -64), V(-92, -44), V(-85, -40), V(-62, -57), V(-38, -74), V(-12, -92), V(10, -108), V(24, -122)];
+const WING: P[] = [V(26, -136), V(4, -146), V(-26, -140), V(-50, -120), V(-64, -96), V(-76, -70), V(-84, -54), V(-77, -50), V(-58, -62), V(-38, -74), V(-12, -92), V(10, -108), V(24, -122)];
 const NECK = V(24, -140);
 
 export type RobinPose = {crouch: number; air: number; feet: 'ground' | 'tucked'; head: number; pitch: number; blink: number; tail: number};
@@ -120,9 +120,9 @@ export const Robin: React.FC<{pose: RobinPose; id: string}> = ({pose, id}) => {
         <path d="M20,-130 C0,-134 -28,-122 -44,-104" fill="none" stroke={lit(BROWN, 0.3)} strokeWidth={2} opacity={0.7} />
         <path d="M14,-114 C-6,-112 -30,-98 -48,-80" fill="none" stroke="#D9C79E" strokeWidth={1.8} opacity={0.6} />
         {[0, 1, 2, 3, 4].map((k) => (
-          <path key={k} d={`M${-30 - k * 6},${-84 + k * 2} L${-78 - k * 3},${-50 + k * 1.2}`} stroke={shade(BROWN, 0.5)} strokeWidth={1.2} opacity={0.55} />
+          <path key={k} d={`M${-30 - k * 6},${-84 + k * 2} L${-72 - k * 2},${-58 + k * 1.2}`} stroke={shade(BROWN, 0.5)} strokeWidth={1.2} opacity={0.55} />
         ))}
-        <path d="M-20,-80 C-40,-70 -62,-58 -84,-46" fill="none" stroke="#C9B48C" strokeWidth={1.4} opacity={0.5} />
+        <path d="M-20,-80 C-40,-72 -58,-62 -76,-54" fill="none" stroke="#C9B48C" strokeWidth={1.4} opacity={0.5} />
         {/* head details (they turn with the head) */}
         <g transform={headTf}>
           <g clipPath={`url(#${id}-ch)`}>

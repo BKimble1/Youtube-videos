@@ -3,7 +3,7 @@
 // the subject's depth as a 2.5D split line; the plunge adds a crown splash, droplets, surface rings and an
 // entrained bubble cloud that rises past the camera.
 import React from 'react';
-import {Basis, proj, smoothClosed, smoothOpen, V3} from '../shared/three';
+import {Basis, capsule2, proj, smoothClosed, smoothOpen, V3} from '../shared/three';
 import {clamp, hash, ss} from '../shared/lib';
 import {Item} from './core/draw3';
 import {mix, rgba} from '../shared/color';
@@ -152,72 +152,91 @@ export const Waterline: React.FC<{B: Basis; t: number; entry: V3}> = ({B, t, ent
   );
 };
 
-/** the crown splash around the entry point (front and back halves as separate items) and flying droplets */
+/** the impact splash around the entry point: a ring of thrown droplets and a few thin sheet fragments that lift off the
+ *  rim and fall back (no solid crown, so nothing hides the head below the surface) */
 export const splashItems = (B: Basis, t: number, entry: V3): Item[] => {
-  const tt = t + 0.12;
-  const life = clamp(tt / 0.5);
-  if (life >= 1) return [];
-  const R = 5 + 22 * tt;
-  const h = 13 * Math.sin(Math.PI * Math.min(1, tt / 0.5)) * (1 - 0.3 * life);
   const items: Item[] = [];
-  const N = 28;
-  const half = (front: boolean) => {
-    const base: {x: number; y: number}[] = [], top: {x: number; y: number}[] = [];
-    for (let i = 0; i <= N; i++) {
-      const a = (front ? Math.PI : 0) + (i / N) * Math.PI;
-      // smooth lobes along the rim (no zigzag): a few low-frequency bumps
-      const hh = h * (0.78 + 0.16 * Math.sin(a * 5 + 1.3) + 0.08 * Math.sin(a * 9 + 0.4));
-      base.push(proj(B, [entry[0] + R * Math.cos(a), entry[1] + R * Math.sin(a), 0]));
-      top.push(proj(B, [entry[0] + R * 1.18 * Math.cos(a), entry[1] + R * 1.18 * Math.sin(a), hh]));
+  // thin sheet fragments: short curved slivers of the rim, thrown up and out, breaking up by ~0.35 s
+  for (let i = 0; i < 9; i++) {
+    const a0 = 2 * Math.PI * (i / 9 + 0.07 * hash(i * 3.9));
+    const t0 = -0.1;
+    const tau = t - t0;
+    const life = tau / (0.36 + 0.1 * hash(i));
+    if (life >= 1) continue;
+    const span = (0.22 + 0.12 * hash(i * 2.1)) * (1 - 0.5 * life);
+    const R = 4 + (60 + 40 * hash(i * 5.3)) * tau;
+    const hTop = (5 + 6 * hash(i * 7.1)) * Math.sin(Math.PI * Math.min(1, life * 1.1));
+    const n = 7;
+    const lo: {x: number; y: number}[] = [], hi: {x: number; y: number}[] = [];
+    for (let k = 0; k <= n; k++) {
+      const a = a0 + span * (k / n - 0.5);
+      const bulge = Math.sin((Math.PI * k) / n);
+      lo.push(proj(B, [entry[0] + R * Math.cos(a), entry[1] + R * Math.sin(a), hTop * 0.35 * bulge]));
+      hi.push(proj(B, [entry[0] + (R + 1.2) * Math.cos(a), entry[1] + (R + 1.2) * Math.sin(a), hTop * (0.55 + 0.45 * bulge)]));
     }
-    const d = smoothClosed([...base, ...[...top].reverse()]);
-    const C = proj(B, [entry[0], entry[1] + (front ? -R : R), h * 0.5]);
-    const gid = front ? 'h3crf' : 'h3crb';
-    const yT = Math.min(...top.map((p) => p.y)), yB = Math.max(...base.map((p) => p.y));
-    return {
+    const C = proj(B, [entry[0] + R * Math.cos(a0), entry[1] + R * Math.sin(a0), hTop * 0.6]);
+    items.push({
       z: C.z,
       el: (
-        <g key={front ? 'cf' : 'cb'} opacity={1 - life * 0.7}>
-          <defs>
-            <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1="0" y1={f2(yT)} x2="0" y2={f2(yB)}>
-              <stop offset="0" stopColor="#F4FFFC" stopOpacity={0.85} />
-              <stop offset="1" stopColor="#9FD3CA" stopOpacity={front ? 0.35 : 0.5} />
-            </linearGradient>
-          </defs>
-          <path d={d} fill={`url(#${gid})`} stroke={rgba('#17384A', 0.25)} strokeWidth={f2(Math.max(1, 0.1 * C.s))} strokeLinejoin="round" />
-          <path d={smoothOpen(top)} fill="none" stroke="#FFFFFF" strokeWidth={f2(Math.max(1.5, 0.28 * C.s))} strokeLinecap="round" opacity={0.85} />
+        <g key={`sh${i}`} opacity={1 - life ** 2}>
+          <path d={smoothClosed([...lo, ...[...hi].reverse()])} fill="rgba(226,247,242,0.55)" stroke={rgba('#F8FFFD', 0.95)} strokeWidth={f2(Math.max(1, 0.12 * C.s))} strokeLinejoin="round" />
         </g>
       ),
-    };
-  };
-  items.push(half(true), half(false));
-  // droplets: launched from the crown rim, ballistic
-  for (let i = 0; i < 26; i++) {
-    const a = 2 * Math.PI * hash(i * 4.1);
-    const t0 = -0.14 + 0.12 * hash(i * 1.9);
+    });
+  }
+  // droplets: a ring thrown from the rim, ballistic, round with a short trail
+  for (let i = 0; i < 44; i++) {
+    const a = 2 * Math.PI * (i / 44 + 0.4 * hash(i * 4.1) / 44);
+    const t0 = -0.13 + 0.1 * hash(i * 1.9);
     const tau = t - t0;
     if (tau <= 0) continue;
-    const vr = 70 + 160 * hash(i * 6.3), vz = 260 + 420 * hash(i * 8.7);
+    const vr = 60 + 170 * hash(i * 6.3), vz = 220 + 420 * hash(i * 8.7);
     const z = vz * tau - 4905 * tau * tau;
-    if (z < -1) continue;
-    const r0 = 6 + vr * tau;
+    if (z < -0.5) continue;
+    const r0 = 4 + vr * tau;
     const p = [entry[0] + r0 * Math.cos(a), entry[1] + r0 * Math.sin(a), z] as V3;
     const P = proj(B, p);
     const vzNow = vz - 9810 * tau;
-    const q = proj(B, [p[0] - Math.cos(a) * vr * 0.006, p[1] - Math.sin(a) * vr * 0.006, z - vzNow * 0.006]);
-    const rr = (0.35 + 0.6 * hash(i * 2.2)) * P.s;
+    const q = proj(B, [p[0] - Math.cos(a) * vr * 0.005, p[1] - Math.sin(a) * vr * 0.005, z - vzNow * 0.005]);
+    const rr = (0.25 + 0.55 * hash(i * 2.2)) * P.s;
     items.push({
       z: P.z,
       el: (
         <g key={`d${i}`}>
-          <path d={`M${f2(q.x)},${f2(q.y)} L${f2(P.x)},${f2(P.y)}`} stroke="rgba(225,246,240,0.35)" strokeWidth={f2(rr * 1.1)} strokeLinecap="round" />
-          <circle cx={f2(P.x)} cy={f2(P.y)} r={f2(rr)} fill="#EAF8F4" stroke="rgba(23,43,58,0.35)" strokeWidth={0.8} />
+          <path d={`M${f2(q.x)},${f2(q.y)} L${f2(P.x)},${f2(P.y)}`} stroke="rgba(225,246,240,0.3)" strokeWidth={f2(rr * 1.0)} strokeLinecap="round" />
+          <circle cx={f2(P.x)} cy={f2(P.y)} r={f2(rr)} fill="#E4F6F1" stroke="rgba(23,43,58,0.35)" strokeWidth={0.8} />
           <circle cx={f2(P.x - rr * 0.3)} cy={f2(P.y - rr * 0.35)} r={f2(rr * 0.32)} fill="#FFFFFF" />
         </g>
       ),
     });
   }
   return items;
+};
+
+/** the air pocket dragged down along the plunging prothorax (from the surface to the neck, never over the face): a
+ *  silvery sheath that pinches off near the surface and breaks into bubbles by ~0.4 s */
+export const airPocketItem = (B: Basis, t: number, along: (x: number) => V3, z: number): Item | null => {
+  const fade = 1 - ss(t, 0.16, 0.42);
+  if (fade < 0.02) return null;
+  // the current surface crossing along the prothorax
+  let xc = 0;
+  for (let x = 0; x <= 20; x += 0.25) if (along(x)[2] <= 0) { xc = x; break; }
+  const xTop = xc + (18.5 - xc) * ss(t, 0.05, 0.4) * 0.7;
+  const xBot = 19.5;
+  if (xBot - xTop < 1) return null;
+  const A = proj(B, along(xTop)), Bp = proj(B, along(xBot));
+  const ra = 2.6 * (1 - 0.4 * ss(t, 0.05, 0.3)) * A.s, rb = 2.4 * Bp.s;
+  const d = capsule2(A, Bp, ra, rb);
+  const ripple = 0.6 * Math.sin(t * 40);
+  return {
+    z,
+    el: (
+      <g key="air" opacity={fade}>
+        <path d={d} fill="rgba(222,246,240,0.16)" stroke="#EFFCF8" strokeWidth={f2(Math.max(1.2, 0.14 * A.s))} strokeLinejoin="round" opacity={0.9} />
+        <path d={`M${f2(A.x - ra * 0.5)},${f2(A.y + ripple)} L${f2(Bp.x - rb * 0.55)},${f2(Bp.y)}`} stroke="#FFFFFF" strokeWidth={f2(Math.max(1, 0.18 * A.s))} strokeLinecap="round" opacity={0.55} />
+      </g>
+    ),
+  };
 };
 
 export type BubbleSrc = (ts: number, k: number) => V3;

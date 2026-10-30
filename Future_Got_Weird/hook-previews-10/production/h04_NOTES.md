@@ -54,5 +54,25 @@ squelches for the sag (0.55 s) and the slump (1.0 s); 4 drip blips (0.72–1.16 
 (1.27/1.37/1.53 s); pinch-off pops (~2.1–2.2 s); a merge blip (2.28 s); a drag flow (2.5–3.3 s); a relay click as the coil goes off (3.3 s); a fill flow
 (3.22–3.92 s) with a "full" blip; a freeze crackle (3.84–4.44 s); a magnet clack (4.74 s); a tilt creak; a set-down click and thump (5.5 s); and a release click (5.6 s).
 
-## QA
-(see below)
+## QA (rendered file `exports/FGW_HOOK_04_LIQUID_METAL_ROBOT.mp4`)
+`qa_clip.py 04`: **all_pass true**. 180 frames, 6.000 s, h264 yuv420p 1080x1920 30 fps, AAC, audio 6.016 s, voice onset
+0.038 s, mix −15.93 LUFS, peak −1.01 dBFS. Motion per second: [12.1, 17.0, 7.4, 6.4, 6.2, 7.9]. Longest static run: 0 frames.
+The frame-difference flags of 18–21 at frames 31–38 come from the busy copper spiral sliding under the steady pull-back/pan
+(checked frame by frame: the move is smooth, with no jump).
+
+Fixes between passes:
+- Pass 0 → 1: the liquid read as white plastic, so I added a mirror-metal ramp (dark rim, mid-grey top, white slopes) and summed
+  low-alpha domes for metaball-like merging, with post-light blur against 8-bit terracing. The copper coil was too loud, so it is now
+  smaller, darker and under a tinted glass. I enlarged the figure and made the cage taller so the ring clears the head. The magnet now runs beside
+  the pool and the cavity instead of covering them. I removed the cable (a distracting grey band).
+- Pass 1 → 2: the solid figure read as glassy, so I darkened it, made the grain finer and non-repeating, cut the glossy sheen ovals and made the
+  thickness sweep a flat colour (no banding). I fixed a bug where the goo filter region ignored the figure's polygons, which made the liquid head vanish
+  and left the solid head floating. I spread the early pull-back over a longer time, kept the magnet in frame during the escape and made the release and lift-off read before the end.
+
+## Known limitations
+- Lying vs. standing is mainly told by the mould, the shadow and the thickness sweep. Seen from above, the frozen figure in the cavity already
+  looks figure-shaped (which is intended, but it makes the "lift" a subtle 2.5D tilt).
+- The liquid's height-field lighting can show faint contour ripples on large flat pools; the dark valleys between beads during the escape
+  read a little like holes for a few frames (around 1.8–2.0 s).
+- Caption phrase 1 sits over the back arc of the cage's top ring (not the action). The magnet is near the right edge during the escape.
+- The scale and timing are compressed, and the mould sits beside the cage for continuity (in the paper the recast happened separately).

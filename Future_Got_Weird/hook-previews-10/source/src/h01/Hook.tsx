@@ -44,7 +44,7 @@ const cam = (t: number) => {
     keyCR(t, [[0, 4], [1.0, 3], [2.05, 1], [2.95, -2.2], [3.6, -2.4], [4.25, -2], [5.05, 0.5], [6.0, 0.0]])];
   const jaw = keyCR(t, [[0, 0.2], [1.0, 0.4], [2.05, 0.8], [2.95, 1], [4.25, 1], [5.05, 0.7], [6.0, 0.7]]);
   const cx = keyCR(t, [[0, 400], [1.0, 430], [2.05, 470], [4.25, 520], [5.05, 480], [6.0, 470]]);
-  const cy = keyCR(t, [[0, 870], [1.0, 880], [2.05, 1000], [2.95, 1370], [4.25, 1350], [5.05, 1040], [6.0, 900]]);
+  const cy = keyCR(t, [[0, 1010], [1.0, 1020], [2.05, 1100], [2.95, 1370], [4.25, 1350], [5.05, 1200], [6.0, 1130]]);
   return {az, el, d, tf, jaw, cx, cy};
 };
 
@@ -159,7 +159,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
 };
 
 export const Hook: React.FC<HookProps> = (props) => (
-  <HookFrame hook="01" W={W} bg="#123038" capY={[1560, 330]} props={props}>
+  <HookFrame hook="01" W={W} bg="#123038" capY={320} props={props}>
     {(t) => <Scene t={t} />}
   </HookFrame>
 );

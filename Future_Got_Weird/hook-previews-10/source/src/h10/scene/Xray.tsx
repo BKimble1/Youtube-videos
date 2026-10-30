@@ -148,7 +148,7 @@ const HeadInside: React.FC<{F: Frames; act: Act}> = ({F, act}) => {
       {[-6, 0, 6].map((k) => (
         <path key={k} d={`M${44 + k},${16 + k} Q66,${8 + k * 1.6} ${88},${18 + k}`} fill="none" stroke={shade(BRAIN, 0.45)} strokeWidth={1} opacity={0.7} />
       ))}
-      <path d={capsulePath({x: 40, y: 6}, {x: 36, y: 112}, 9, 6.5)} fill={mix(CORD, BRAIN, 0.3)} stroke={shade(CORD, 0.5)} strokeWidth={1.4} />
+      <path d={capsulePath({x: 40, y: 6}, {x: 38, y: 62}, 9, 6.5)} fill={mix(CORD, BRAIN, 0.3)} stroke={shade(CORD, 0.5)} strokeWidth={1.4} />
       <path d={ptsD(brain)} fill="url(#h10-brain)" stroke={shade(BRAIN, 0.55)} strokeWidth={1.6} />
       {/* the dura over the brain */}
       <path d="M-70,-62 C-50,-86 -10,-93 26,-91 C58,-86 80,-62 88,-40" fill="none" stroke="#F6E9E4" strokeOpacity={0.55} strokeWidth={1.6} />
@@ -352,7 +352,7 @@ const Tissue: React.FC<{F: Frames; pose: ManPose}> = ({F, pose}) => {
         <path d={torsoPath(pose)} />
         <path d={neckD} />
       </g>
-      <path d={HEAD_D} transform={`translate(${fmt(h.x)} ${fmt(h.y)}) rotate(${fmt(F.headRoll)}) scale(${fmt((DIM.headR * s) / 100)})`} fill="url(#h10-tis)" opacity={0.74} />
+      <path d={HEAD_D} transform={`translate(${fmt(h.x)} ${fmt(h.y)}) rotate(${fmt(F.headRoll)}) scale(${fmt((DIM.headR * s) / 100)})`} fill="url(#h10-tis)" opacity={0.62} />
     </g>
   );
 };
@@ -371,11 +371,11 @@ export const Xray: React.FC<{F: Frames; Pt: Paths; pose: ManPose; act: Act; chil
       <g clipPath="url(#h10-legclip)">
         <Leg F={F} Pt={Pt} act={act} />
       </g>
+      <HeadInside F={F} act={act} />
       <Trunk F={F} Pt={Pt} act={act} />
       <Tube T={Pt.femoral} w={3.6 * F.s} color={NERVE} />
       <Tube T={Pt.sciatic} w={5 * F.s} color={NERVE} />
       <Tube T={Pt.peroneal} w={3 * F.s} color={NERVE} />
-      <HeadInside F={F} act={act} />
       {children}
     </g>
   );
