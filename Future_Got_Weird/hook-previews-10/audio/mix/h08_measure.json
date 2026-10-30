@@ -1,0 +1,133 @@
+{
+ "hook": "08",
+ "file": "source/public/audio/h08_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -16.16,
+ "fx_bus_lufs": -30.55,
+ "mix_lufs": -16.35,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.069,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "lab room tone",
+   "gain_db": -6
+  },
+  {
+   "t": 0,
+   "sfx": "low pad",
+   "gain_db": -3
+  },
+  {
+   "t": 0.05,
+   "sfx": "lid closing",
+   "gain_db": -14
+  },
+  {
+   "t": 0.0,
+   "sfx": "LED on (pulse 1)",
+   "gain_db": -12
+  },
+  {
+   "t": 4.68,
+   "sfx": "LED on (pulse 7)",
+   "gain_db": -12
+  },
+  {
+   "t": 5.38,
+   "sfx": "LED on (pulse 8)",
+   "gain_db": -12
+  },
+  {
+   "t": 0.26,
+   "sfx": "conversion glow (pulse 1)",
+   "gain_db": -10
+  },
+  {
+   "t": 1.36,
+   "sfx": "conversion glow (pulse 2)",
+   "gain_db": -10
+  },
+  {
+   "t": 1.96,
+   "sfx": "conversion glow (pulse 3)",
+   "gain_db": -10
+  },
+  {
+   "t": 4.36,
+   "sfx": "conversion glow (pulse 6)",
+   "gain_db": -10
+  },
+  {
+   "t": 5.06,
+   "sfx": "conversion glow (pulse 7)",
+   "gain_db": -10
+  },
+  {
+   "t": 5.76,
+   "sfx": "conversion glow (pulse 8)",
+   "gain_db": -10
+  },
+  {
+   "t": 1.0,
+   "sfx": "cutaway opens",
+   "gain_db": -12
+  },
+  {
+   "t": 1.82,
+   "sfx": "dive swell",
+   "gain_db": -12
+  },
+  {
+   "t": 2.93,
+   "sfx": "NIR absorbed",
+   "gain_db": -14
+  },
+  {
+   "t": 3.17,
+   "sfx": "NIR absorbed",
+   "gain_db": -12
+  },
+  {
+   "t": 3.36,
+   "sfx": "green emission",
+   "gain_db": -7
+  },
+  {
+   "t": 3.64,
+   "sfx": "NIR absorbed",
+   "gain_db": -14
+  },
+  {
+   "t": 3.84,
+   "sfx": "NIR absorbed",
+   "gain_db": -12
+  },
+  {
+   "t": 3.98,
+   "sfx": "green emission",
+   "gain_db": -7
+  },
+  {
+   "t": 2.88,
+   "sfx": "crystals absorbing (pulse 4)",
+   "gain_db": -22
+  },
+  {
+   "t": 3.6,
+   "sfx": "crystals absorbing (pulse 5)",
+   "gain_db": -22
+  },
+  {
+   "t": 3.98,
+   "sfx": "burst of conversions",
+   "gain_db": -6
+  },
+  {
+   "t": 4.97,
+   "sfx": "cutaway closes",
+   "gain_db": -16
+  }
+ ],
+ "notes": "HOOK 08 infrared contacts: LED ticks, conversion pings, tissue cutaway, crystal absorption/emission"
+}
