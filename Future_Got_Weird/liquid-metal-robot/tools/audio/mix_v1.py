@@ -21,9 +21,9 @@ DRIPS = [0.74, 0.91, 1.14, 1.2]
 GAPS = [(ESC0, ESC1 - 0.08), (ESC0 + 0.1, ESC1), (ESC0 + 0.26, ESC1 - 0.14)]
 # --- scenes 3-7 (timeline.ts T) ---
 OPEN0 = st('gallium') + 0.2
-PEAK = en('particles') - 0.28
+PEAK = st('particles') - 0.04
 COIL_ON = st('magnetic', 1)
-MELT0, SLUMP1 = st('heats') - 0.12, st('liquid') + 0.25
+MELT0, SLUMP1 = st('magnetic', 1) + 0.2, st('liquid') + 0.25
 STEER2_0, STEER2_1 = st('another') + 0.15, en('metal', 1) + 0.15
 COIL_OFF = st('cools') - 0.3
 FREEZE2_0, FREEZE2_1 = st('cools') + 0.05, st('hardens') + 0.45

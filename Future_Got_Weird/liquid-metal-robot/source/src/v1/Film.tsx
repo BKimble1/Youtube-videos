@@ -14,7 +14,8 @@
 // Science: Wang et al., Matter 2023 (MPTM). Heating is the coils' alternating field; motion is always the external
 // magnet; the recast uses a mould; the stomach is a model.
 import React from 'react';
-import {HookFrame, HookProps} from '../shared/HookFrame';
+import {HookProps} from '../shared/HookFrame';
+import {FilmFrame} from './captions';
 import {clamp, keyCR, ss} from '../shared/lib';
 import {a3, Cam, circlePts, ellipsoid, facingAngle, m3, project, V3, v3} from './cam';
 import {FIG_H, FIG_T, FigureArt, FigureSheen, meltDeform, PARTS, partPath} from './figure';
@@ -22,7 +23,7 @@ import {Box, Goo, gooBox, GooLayer} from './liquid';
 import {cameraPrev, castPose, magnetAt, TP} from './motion';
 import {affine, affStr, ap, Lip, lump, openingState, pathScreen, s3v, toLocal} from './opening';
 import {Bench, cage, frontRegion, Magnet, MOULD, MouldBody, Pad, RP, ZT} from './props';
-import {Ball, ballDisk, ModelFloor, ModelShell, Stage, Stub, Tube} from './props2';
+import {Ball, ballDisk, CCoil, ModelFloor, ModelShell, Stage, Stub, Tube} from './props2';
 import {SoftShadow} from './shade';
 import {CutWindow} from './macro';
 import {Inked, InkPath} from '../shared/ink';
@@ -34,19 +35,20 @@ const CK: [number, number, number, number, number, number, number][] = [
   [5.1, 0.92, -1.85, 1.12, 330, 39.5, 4],
   [5.75, 1.12, -1.7, 1.28, 1250, 25, 1.5],
   [6.45, 1.13, -1.72, 1.32, 5000, 14, 0],
-  [T.peak, 1.13, -1.72, 1.32, 14500, 12, -0.5],
-  [7.82, 1.13, -1.7, 1.24, 3600, 18, -1.5],
-  [8.25, 1.12, -1.63, 1.0, 950, 30, -3],
-  [8.75, 1.1, -1.6, 0.8, 470, 37, -4],
+  [T.peak, 1.13, -1.72, 1.32, 13000, 12, -0.5],
+  [7.4, 1.13, -1.7, 1.24, 3000, 19, -1.5],
+  [7.72, 1.12, -1.63, 1.0, 900, 30, -3],
+  [8.02, 1.1, -1.6, 0.82, 510, 36, -4],
+  [8.8, 1.1, -1.6, 0.68, 455, 38.5, -3.8],
   [9.6, 1.12, -1.62, 0.55, 430, 40, -3],
   [10.7, 1.5, -1.15, 0.5, 400, 41, -1],
   [11.65, 1.8, 0.05, 0.5, 420, 42, 1],
   [12.6, 1.86, 0.28, 0.45, 490, 44, 2],
   [13.5, 2.0, 0.3, 0.5, 450, 44, 2],
   [14.4, 2.75, 0.2, 0.6, 320, 44, 1],
-  [15.5, 4.6, -0.1, 0.9, 150, 46, 0],
-  [16.6, 6.3, -0.2, 1.0, 92, 48, -1],
-  [17.4, 6.6, 0.25, 0.7, 170, 49, -3],
+  [15.4, 4.9, -0.05, 0.9, 150, 48, 0],
+  [16.5, 7.35, -0.3, 0.9, 124, 52, -1],
+  [17.4, 6.8, 0.3, 0.7, 205, 51, -3],
   [18.2, 7.2, 0.62, 0.55, 380, 50, -4],
   [18.9, 7.62, 0.8, 0.55, 600, 50, -2],
   [20.4, 7.86, 0.86, 0.6, 720, 50, 7],
@@ -350,6 +352,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
         <>
           <Bench c={c} t={t} />
           {showModel && <Stage c={c} ink={ink} t={t} power={power2} />}
+          {showModel && <CCoil c={c} ink={ink} t={t} power={power2} />}
           {showModel && <ModelFloor c={c} ink={ink} />}
           <Pad c={c} t={t} power={power1} ink={ink} />
           <MouldBody c={c} ink={ink} />
@@ -470,7 +473,7 @@ const MeltingArt: React.FC<{id: string; A: ReturnType<typeof affine>; parts: {na
   );
 
 export const Film: React.FC<HookProps> = (props) => (
-  <HookFrame hook="v1" W={W} bg="#1C3634" capY={300} breaks={BREAKS} props={props}>
+  <FilmFrame W={W} bg="#1C3634" capY={300} breaks={BREAKS} props={props}>
     {(t) => <Scene t={t} />}
-  </HookFrame>
+  </FilmFrame>
 );

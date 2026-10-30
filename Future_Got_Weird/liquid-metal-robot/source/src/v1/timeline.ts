@@ -35,11 +35,11 @@ export const T = {
   push0: st('shape') + 0.95,
   open0: st('gallium') + 0.2,
   open1: st('tiny') + 0.15,
-  peak: en('particles') - 0.28,
-  close1: st('heats') - 0.35,
+  peak: st('particles') - 0.04,
+  close1: st('magnetic', 1) - 0.1,
   // scene 4: heat -> liquid, steer, cool -> solid
   coilOn: st('magnetic', 1),
-  melt0: st('heats') - 0.12,
+  melt0: st('magnetic', 1) + 0.2,
   front1: st('heats') + 0.62,
   slump0: st('heats') + 0.1,
   slump1: st('liquid') + 0.25,
@@ -66,7 +66,7 @@ export const T = {
 };
 
 // ---------------------------------------------------------------- places on the bench (cm)
-export const STAGE = {x0: 2.45, x1: 11.4, y0: -3.9, y1: 3.0};
+export const STAGE = {x0: 2.45, x1: 11.4, y0: -3.9, y1: 4.0};
 export const MODEL_O = v3(7.3, -0.8, ZT); // stomach model's local origin
 export const TUBE = {x0: 3.35, x1: 5.95, y: 0.25, r: 0.55};
 export const BALL_R = 0.28;

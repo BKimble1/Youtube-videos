@@ -3,7 +3,7 @@
  "file": "source/public/audio/mix_v1.wav",
  "duration_s": 26.0,
  "voice_lufs": -15.94,
- "fx_bus_lufs": -31.81,
+ "fx_bus_lufs": -31.75,
  "mix_lufs": -16.2,
  "sample_peak_dbfs": -1.0,
  "voice_onset_s": 0.064,
@@ -204,7 +204,7 @@
    "gain_db": -12
   },
   {
-   "t": 8.515,
+   "t": 8.11,
    "sfx": "softening crackle",
    "gain_db": -11
   },

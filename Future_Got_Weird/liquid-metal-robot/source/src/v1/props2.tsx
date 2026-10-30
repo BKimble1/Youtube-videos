@@ -5,7 +5,7 @@ import React from 'react';
 import {INK, Inked} from '../shared/ink';
 import {Cam, ellipsoid, poly, project, SP, V3, v3} from './cam';
 import {boxFaces, ZT} from './props';
-import {Sphere, SoftShadow} from './shade';
+import {Capsule, Sphere, SoftShadow} from './shade';
 import {COIL2, MODEL_O, STAGE, TUBE} from './timeline';
 
 // ---------------------------------------------------------------- acrylic stage + its coil
@@ -15,7 +15,6 @@ export const Stage: React.FC<{c: Cam; ink: number; t: number; power: number}> = 
   return (
     <g>
       <SoftShadow id="stg-sh" c={{x: (a.x + b.x) / 2 + 20, y: (a.y + b.y) / 2 + 20}} rx={Math.abs(b.x - a.x) * 0.62} ry={Math.abs(b.y - a.y) * 0.6} alpha={0.22} color="#071417" />
-      <Coil c={c} ctr={COIL2} rH={1.6} rS={1.3} t={t} power={power} ink={ink} id="c2" />
       {faces.map((f, i) => (
         <path key={i} d={f.d} fill={f.col} fillOpacity={f.top ? 0.16 : 0.07} stroke="#E4F7F9" strokeOpacity={0.55} strokeWidth={Math.max(1, ink * 0.3)} strokeLinejoin="round" />
       ))}
@@ -118,21 +117,118 @@ const RINGS = [
   {sc: 0.72, z: ZT + H},
 ];
 
-/** the floor of the model (under its contents): faint pink plastic, rugae folds, the base rim */
+// the stomach's centreline in plan (fundus -> body -> antrum), for the rugae folds that run along it
+const CL: [number, number][] = [[-1.3, 2.25], [-0.2, 2.35], [1.1, 2.05], [2.15, 1.1], [2.45, -0.3], [2.0, -1.45], [0.9, -1.95], [-0.4, -1.85], [-1.1, -1.5]];
+const clSample = (() => {
+  const out: {p: [number, number]; n: [number, number]; s: number}[] = [];
+  const n = CL.length;
+  let acc = 0;
+  let prev: [number, number] | null = null;
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = CL[Math.max(0, i - 1)], p1 = CL[i], p2 = CL[i + 1], p3 = CL[Math.min(n - 1, i + 2)];
+    for (let k = 0; k < 10; k++) {
+      const u = k / 10, u2 = u * u, u3 = u2 * u;
+      const f = (a: number, b: number, c2: number, d: number) => 0.5 * (2 * b + (-a + c2) * u + (2 * a - 5 * b + 4 * c2 - d) * u2 + (-a + 3 * b - 3 * c2 + d) * u3);
+      const p: [number, number] = [f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1])];
+      if (prev) acc += Math.hypot(p[0] - prev[0], p[1] - prev[1]);
+      out.push({p, n: [0, 0], s: acc});
+      prev = p;
+    }
+  }
+  for (let i = 0; i < out.length; i++) {
+    const a = out[Math.max(0, i - 1)].p, b = out[Math.min(out.length - 1, i + 1)].p;
+    const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy) || 1;
+    out[i].n = [-dy / l, dx / l];
+  }
+  return out;
+})();
+
+/** the floor of the model (under its contents): pink-tinted clear plastic with soft rugae folds running along the
+ *  stomach, a gentle inner shading, and the base rim */
 export const ModelFloor: React.FC<{c: Cam; ink: number}> = ({c, ink}) => {
   const base = smoothRing(c, ring(1, ZT + 0.005));
+  const inner = smoothRing(c, ring(0.8, ZT + 0.006));
   const k = project(c, MODEL_O).k;
-  const fold = (sc: number, i0: number, i1: number) => {
-    const r = ring(sc, ZT + 0.01).slice(i0, i1).map((q) => project(c, q));
-    return r.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-  };
+  const folds = [-0.9, -0.45, 0.0, 0.45, 0.9].map((d, j) => {
+    const pts = clSample.map(({p, n, s: ss_}) => {
+      const off = d + 0.07 * Math.sin(ss_ * 3.1 + j * 1.7) + 0.04 * Math.sin(ss_ * 7.3 + j);
+      return project(c, v3(MODEL_O.x + p[0] + n[0] * off, MODEL_O.y + p[1] + n[1] * off, ZT + 0.012));
+    });
+    return pts.map((q, i) => `${i ? 'L' : 'M'}${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(' ');
+  });
   return (
     <g>
-      <path d={base} fill="#F3C2BC" fillOpacity={0.2} />
-      {[0.82, 0.66].map((sc, i) => (
-        <path key={i} d={fold(sc, 4, 52)} fill="none" stroke="#D98F88" strokeWidth={Math.max(1, 0.035 * k)} strokeLinecap="round" opacity={0.4} />
-      ))}
-      <path d={base} fill="none" stroke="#B9726B" strokeWidth={Math.max(1.2, ink * 0.45)} opacity={0.8} />
+      <defs>
+        <clipPath id="mf-clip">
+          <path d={base} />
+        </clipPath>
+      </defs>
+      <path d={base} fill="#F0B7B0" fillOpacity={0.34} />
+      <path d={inner} fill="#F7D3CE" fillOpacity={0.18} />
+      <g clipPath="url(#mf-clip)">
+        {folds.map((d, i) => (
+          <g key={i}>
+            <path d={d} fill="none" stroke="#C47A73" strokeWidth={Math.max(1.5, 0.07 * k)} strokeLinecap="round" strokeLinejoin="round" opacity={0.26} />
+            <path d={d} fill="none" stroke="#FFE9E5" strokeWidth={Math.max(1, 0.025 * k)} strokeLinecap="round" strokeLinejoin="round" opacity={0.35} transform={`translate(${(-0.02 * k).toFixed(1)} ${(-0.025 * k).toFixed(1)})`} />
+          </g>
+        ))}
+      </g>
+      <path d={base} fill="none" stroke="#A9625C" strokeWidth={Math.max(1.5, ink * 0.55)} opacity={0.85} />
+    </g>
+  );
+};
+
+/** the stage's induction coil: a C-core (ferrite yoke and two wound prongs) lying on the stage behind the model, its
+ *  pole faces aimed at the ball; status LED on the yoke and a faint current sheen on the windings while on */
+export const CCoil: React.FC<{c: Cam; ink: number; t: number; power: number}> = ({c, ink, t, power}) => {
+  const z = ZT + 0.32, r = 0.3, rw = 0.37;
+  const xs = [COIL2.x - 0.55, COIL2.x + 0.55];
+  const yB = COIL2.y + 2.55, yF = COIL2.y + 1.45; // yoke (back) and pole faces (front)
+  const P = (x: number, y: number) => project(c, v3(x, y, z));
+  const yA = P(xs[0], yB), yb = P(xs[1], yB);
+  const sh = project(c, v3(COIL2.x, (yB + yF) / 2, ZT));
+  const led = project(c, v3(COIL2.x, yB, z + r));
+  const prongs = xs.map((x, i) => {
+    const a = P(x, yB), b = P(x, yF);
+    const w0 = P(x, yB - 0.22), w1 = P(x, yF + 0.3);
+    const dx = w1.x - w0.x, dy = w1.y - w0.y, L = Math.hypot(dx, dy) || 1;
+    const nx = -dy / L, ny = dx / L;
+    const turns = 13;
+    const lines = Array.from({length: turns}, (_, j) => {
+      const u = (j + 0.5) / turns;
+      const cx = w0.x + dx * u, cy = w0.y + dy * u, rr = rw * w0.k * 0.95;
+      return `M${(cx + nx * rr).toFixed(1)},${(cy + ny * rr).toFixed(1)} L${(cx - nx * rr).toFixed(1)},${(cy - ny * rr).toFixed(1)}`;
+    }).join(' ');
+    const su = (t * 1.6 + i * 0.5) % 1;
+    const sx = w0.x + dx * su, sy = w0.y + dy * su;
+    const face = ellipsoid(c, v3(x, yF, z), [v3(r, 0, 0), v3(0, 0, r), v3(0, 0.002, 0)]);
+    return (
+      <g key={i}>
+        <Inked w={ink}>
+          <Capsule id={`cc-core${i}`} a={a} b={b} ra={r * a.k} rb={r * b.k} color="#4A5560" spec={0.25} />
+          <Capsule id={`cc-wind${i}`} a={w0} b={w1} ra={rw * w0.k} rb={rw * w1.k} color="#B9763F" spec={0.35} />
+        </Inked>
+        <path d={lines} stroke="#5A3018" strokeWidth={Math.max(1, 0.018 * w0.k)} opacity={0.55} />
+        {power > 0.02 && <circle cx={sx} cy={sy} r={rw * w0.k * 0.8} fill="#FFE2B8" opacity={0.28 * power} />}
+        <ellipse cx={face.cx} cy={face.cy} rx={face.rx} ry={face.ry} transform={`rotate(${face.rot.toFixed(2)} ${face.cx.toFixed(1)} ${face.cy.toFixed(1)})`} fill="#36404A" stroke={INK} strokeWidth={ink * 0.5} />
+      </g>
+    );
+  });
+  return (
+    <g>
+      <SoftShadow id="cc-sh" c={{x: sh.x + 0.1 * sh.k, y: sh.y + 0.06 * sh.k}} rx={1.0 * sh.k} ry={0.55 * sh.k} alpha={0.35} color="#071417" />
+      <Inked w={ink}>
+        <Capsule id="cc-yoke" a={yA} b={yb} ra={r * yA.k} rb={r * yb.k} color="#4A5560" spec={0.25} />
+      </Inked>
+      {prongs}
+      <circle cx={led.x} cy={led.y} r={0.06 * led.k} fill={power > 0.05 ? '#FFB347' : '#6B5A48'} stroke={INK} strokeWidth={ink * 0.4} />
+      {power > 0.05 && <circle cx={led.x} cy={led.y} r={0.2 * led.k} fill="url(#cc-led)" opacity={power} />}
+      <defs>
+        <radialGradient id="cc-led">
+          <stop offset="0" stopColor="#FFC870" stopOpacity={0.7} />
+          <stop offset="1" stopColor="#FFC870" stopOpacity={0} />
+        </radialGradient>
+      </defs>
     </g>
   );
 };
@@ -164,7 +260,8 @@ export const ModelShell: React.FC<{c: Cam; ink: number}> = ({c, ink}) => {
       </g>
       <path d={mid} fill="none" stroke="#FFFFFF" strokeOpacity={0.4} strokeWidth={Math.max(1.2, ink * 0.4)} />
       <path d={roof} fill="none" stroke="#FFFFFF" strokeOpacity={0.5} strokeWidth={Math.max(1.2, ink * 0.45)} />
-      <path d={mid} fill="none" stroke="#9E5A55" strokeOpacity={0.75} strokeWidth={Math.max(1.5, ink * 0.5)} />
+      <path d={mid} fill="none" stroke="#7E3F3A" strokeOpacity={0.85} strokeWidth={Math.max(2, ink * 0.65)} />
+      <path d={mid} fill="none" stroke="#FFFFFF" strokeOpacity={0.45} strokeWidth={Math.max(1.2, ink * 0.3)} transform={`translate(${(-0.012 * k).toFixed(1)} ${(-0.016 * k).toFixed(1)})`} />
       <path d={pl(glint)} fill="none" stroke="#FFFFFF" strokeOpacity={0.75} strokeWidth={Math.max(2, 0.06 * k)} strokeLinecap="round" />
       <path d={pl(glint2)} fill="none" stroke="#FFFFFF" strokeOpacity={0.45} strokeWidth={Math.max(1.5, 0.035 * k)} strokeLinecap="round" />
     </g>
