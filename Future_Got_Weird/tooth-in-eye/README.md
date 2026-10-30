@@ -1,6 +1,31 @@
 # Future Got Weird: Doctors Put a Tooth Inside His Eye (OOKP)
 
-## V3 (final review, current)
+## V4 (final review, current)
+
+**Status.** An anatomy correction pass on V3: the implant now sits as it really does, under the graft with only the
+small cylinder showing. Four fixes: the opening, the pocket, the reconstruction and the ending; 8–14 s is unchanged.
+Rendered from source and checked from the files. **It has not been watched or heard in real time, and "ten years
+blind" still needs a confirmed source.**
+
+**Report.** `production/V4_REPORT.md`: whether each of the four fixes was corrected, QC, remaining issues.
+
+| Deliverable | File |
+|---|---|
+| Final review | `exports/FGW_Tooth_Eye_V4_FINAL_REVIEW.mp4`: 1080×1920, 30 fps, 798 frames, 26.6 s |
+| Narration | `audio/narration/FGW_Tooth_Eye_narration_V4.wav`: the same take, sample-identical to V2/V3, with a 0.5 s tail |
+| Word times, captions | `audio/narration/FGW_Tooth_Eye_V4_words.json`, `source/src/data/timeline.json`, `captions/FGW_Tooth_Eye_V4.srt`, `captions/FGW_Tooth_Eye_V4_words.srt` |
+| Mix | `audio/mix/FGW_Tooth_Eye_V4_mix.wav`. Measurements: `audio/mix/mix_measure_v4.json`. Effects log: `audio/sfx_log_v4.json` |
+| QA evidence | `qa/v4/` |
+| Source | `source/src/Scene4.tsx` and friends (composition `ToothEyeV4`) |
+
+**Rebuild V4.**
+- Narration: `FGW_VER=V4 FGW_TAIL=0.5 python3 tools/make_narration.py`.
+- Then export the cues and run `python3 tools/make_audio.py mix_v4`.
+- Render `ToothEyeV4` with `--props='{"audio":"mix_v4","captions":true}'`.
+
+V3's exact source is at commit `50ef7a50`. The shared face and profile drawings changed in V4.
+
+## V3 (final review, superseded)
 
 **Status.** V2 with a rebuilt hook: his eye from outside with the implant, a push into the tooth plate, a dissolve to
 the light reaching the retina, and back to his smile and a glimpse of his view. The rest of V2 is kept, apart from a

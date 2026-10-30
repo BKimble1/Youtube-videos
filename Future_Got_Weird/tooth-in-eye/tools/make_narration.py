@@ -17,6 +17,7 @@ SR, FPS = 48000, 30
 TAKE = 'audio/narration/takes/t1_gksf.mp3'
 ALIGN = 'audio/narration/takes/t1_gksf_zipformer.json'
 TAIL = float(os.environ.get('FGW_TAIL', '0.9'))
+VER = os.environ.get('FGW_VER', 'V2')   # V4: FGW_VER=V4 FGW_TAIL=0.5 (the same speech; a shorter silent tail)
 # word index -> the gap after it, at most (s)
 CAP = {7: 0.26, 12: 0.24, 22: 0.24, 34: 0.20, 39: 0.20, 45: 0.24, 57: 0.20, 63: 0.26, 71: 0.20, 77: 0.26, 81: 0.30}
 os.chdir(ROOT)
@@ -75,19 +76,19 @@ for k, c in enumerate(caps):
 
 pad = np.zeros(int(round(DURATION * SR)), np.float32)
 pad[:min(len(y), len(pad))] = y[:len(pad)]
-wav = 'audio/narration/FGW_Tooth_Eye_narration_V2.wav'
+wav = f'audio/narration/FGW_Tooth_Eye_narration_{VER}.wav'
 sf.write(wav, pad, SR, subtype='PCM_24')
-json.dump({'take': TAKE, 'fixed': {str(k): v for k, v in FIX.items()}, 'removed_silence': [{'from': c[0], 'to': c[1], 'after': c[2], 'gap_was': c[3], 'gap_now': c[4]} for c in cuts], 'words': W}, open('audio/narration/FGW_Tooth_Eye_V2_words.json', 'w'), indent=1)
+json.dump({'take': TAKE, 'fixed': {str(k): v for k, v in FIX.items()}, 'removed_silence': [{'from': c[0], 'to': c[1], 'after': c[2], 'gap_was': c[3], 'gap_now': c[4]} for c in cuts], 'words': W}, open(f'audio/narration/FGW_Tooth_Eye_{VER}_words.json', 'w'), indent=1)
 tl = {'fps': FPS, 'frames': int(round(DURATION * FPS)), 'duration': DURATION, 'captions': caps, 'words': W}
 os.makedirs('source/src/data', exist_ok=True)
 json.dump(tl, open('source/src/data/timeline.json', 'w'), indent=1)
 
 def ts(t):
     ms = int(round(t * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}'
-with open('captions/FGW_Tooth_Eye_V2.srt', 'w') as f:
+with open(f'captions/FGW_Tooth_Eye_{VER}.srt', 'w') as f:
     for k, c in enumerate(caps):
         f.write(f"{k + 1}\n{ts(c['start'])} --> {ts(c['end'] + 0.3 if k + 1 == len(caps) else min(c['hide'], caps[k + 1]['start']))}\n{c['text']}\n\n")
-with open('captions/FGW_Tooth_Eye_V2_words.srt', 'w') as f:
+with open(f'captions/FGW_Tooth_Eye_{VER}_words.srt', 'w') as f:
     for k, w in enumerate(W):
         f.write(f"{k + 1}\n{ts(w['start'])} --> {ts(w['end'])}\n{w['word']}\n\n")
 print(json.dumps({'wav': wav, 'sha256': hashlib.sha256(open(wav, 'rb').read()).hexdigest(), 'take_s': round(len(y) / SR, 3),

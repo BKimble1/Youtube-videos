@@ -1,5 +1,5 @@
 {
- "DUR": 27,
+ "DUR": 26.6,
  "TM": {
   "doctors": 0,
   "tooth": 0.84,
@@ -62,13 +62,13 @@
   "see2": 25.43,
   "again2": 25.75,
   "again2e": 26.115,
-  "END": 27
+  "END": 26.6
  },
  "EV": {
   "reveal": 0,
-  "dissolve": 0.6,
-  "raysIn": 1.02,
-  "retinaLit1": 1.85,
+  "dissolve": 0.62,
+  "raysIn": 1.6,
+  "retinaLit1": 2.28,
   "glimpse": 3.34,
   "glimpseEnd": 4.36,
   "penOn": 4.72,
@@ -102,6 +102,6 @@
   "retinaLit2": 22.3,
   "povDark": 22.95,
   "povClear": 24.05,
-  "reaction": 25.09
+  "reaction": 25.15
  }
 }

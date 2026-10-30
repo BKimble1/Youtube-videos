@@ -4,10 +4,13 @@
 // Adds, for V2: a penlight test on the damaged eye (white glare off the scar; a red reflex through a clear cornea),
 // a donor cornea that clouds over, the retracted mouth with the full front teeth (the canine taken from the upper
 // left), and a layered cut-away of the pocket under the other eye.
+// V4: the finished OOKP eye front-on (the graft over the eye, the plate a gentle rise under it, only the small
+// cylinder's end showing) with a local cut-away of the graft over the plate; the pocket is under closed skin, seen
+// through it (no opening); a smile, an open mouth and a tear for his reaction.
 import React from 'react';
 import {clamp, hash, lerp} from './lib';
 import {EL, ER, ES, upperLid, lowerLid, fissure, Lashes} from './face';
-import {Implant, Rot, ROOT, CROWN, BLOCK, faceMatrix, projectPt} from './implant';
+import {Implant, Rot, ROOT, CROWN, BLOCK, LAMINA, HOLE, HOLE_R, Z_F, faceMatrix, projectPt, alongPoly} from './implant';
 import {CUT_U} from './profile';
 import {SKIN, SKIN_D, SKIN_L, HAIR, BEARD} from './profile2';
 
@@ -21,8 +24,33 @@ export type EyeLook = {
   donor: number;         // 0 away .. 1 seated
   donorCloud: number;    // the graft clouds and vessels grow in
   mucosa: number;        // stage-1 cheek-lining graft over the eye (pink)
+  ookp?: number;         // V4: the finished eye: the plate under the graft, the cylinder's end out of it
+  cut?: number;          // V4: local cut-away of the graft over the plate (0 closed .. 1 open)
 };
 export const LOOK0: EyeLook = {scar: 1, glare: 0, donor: 0, donorCloud: 0, mucosa: 0};
+/** V4: the implant's pose on the finished eye, front-on (its face to us, long axis across the eye, bone strip up), and
+ *  where its hole axis sits in the eye's own coordinates */
+export const FRONT_ROT: Rot = {yaw: 0, pitch: 0, roll: 0, spin: 0};
+export const EYE_HOLE: [number, number] = [0, 0.2];
+const ptsD = (q: [number, number][]) => 'M' + q.map((v) => `${v[0].toFixed(3)},${v[1].toFixed(3)}`).join('L') + 'Z';
+/** a polygon pushed outward from its centroid by d */
+const grow = (q: [number, number][], d: number): [number, number][] => {
+  const cx = q.reduce((a, v) => a + v[0], 0) / q.length, cy = q.reduce((a, v) => a + v[1], 0) / q.length;
+  return q.map(([x, y]) => {const vx = x - cx, vy = y - cy, L = Math.hypot(vx, vy) || 1; return [x + (vx / L) * d, y + (vy / L) * d];});
+};
+const plateOutline = (x: number, y: number, s: number, rot: Rot) => LAMINA.map(([a, b]) => {const q = projectPt(x, y, s, rot, [a, b, Z_F]); return [q[0], q[1]] as [number, number];});
+/** the end of the optical cylinder seen from in front: clear acrylic with the dark of the eye behind it */
+const CylEnd: React.FC<{id: string; x: number; y: number; px: number}> = ({id, x, y, px}) => (
+  <g>
+    <defs><radialGradient id={`${id}ce`} cx="0.42" cy="0.4" r="0.62"><stop offset="0" stopColor="#0B1116" /><stop offset="0.7" stopColor="#1C2A34" /><stop offset="1" stopColor="#3E5866" /></radialGradient></defs>
+    <circle cx={x + 0.2} cy={y + 0.25} r={HOLE_R + 0.45} fill="rgba(110,30,34,0.35)" style={{filter: 'blur(0.3px)'}} />
+    <circle cx={x + 0.18} cy={y + 0.2} r={HOLE_R} fill="#9DC4D4" />
+    <circle cx={x} cy={y} r={HOLE_R} fill={`url(#${id}ce)`} stroke="rgba(205,232,245,0.95)" strokeWidth={0.22} />
+    <circle cx={x} cy={y} r={HOLE_R} fill="none" stroke="rgba(20,40,52,0.9)" strokeWidth={1.2 * px} />
+    <ellipse cx={x - 0.62} cy={y - 0.6} rx={0.55} ry={0.32} fill="rgba(255,255,255,0.92)" transform={`rotate(-30 ${x - 0.62} ${y - 0.6})`} />
+    <circle cx={x + 0.7} cy={y + 0.62} r={0.2} fill="rgba(210,232,245,0.7)" />
+  </g>
+);
 
 const Eye2: React.FC<{id: string; px: number; s: number; L: EyeLook}> = ({id, px, s, L}) => {
   // what light does at the front of the eye: through a clear cornea it reaches the retina and the pupil glows red
@@ -86,13 +114,41 @@ const Eye2: React.FC<{id: string; px: number; s: number; L: EyeLook}> = ({id, px
         </g>
       )}
       {L.glare > 0 && <circle cx={1.2} cy={-0.9} r={0.55} fill="#FFFFFF" opacity={L.glare} />}
-      {L.glare === 0 && L.mucosa < 0.5 && <ellipse cx={-1.6} cy={-1.8} rx={1.1} ry={0.7} fill="rgba(255,255,255,0.8)" transform="rotate(-25 -1.6 -1.8)" />}
+      {L.glare === 0 && L.mucosa < 0.5 && !(L.ookp ?? 0) && <ellipse cx={-1.6} cy={-1.8} rx={1.1} ry={0.7} fill="rgba(255,255,255,0.8)" transform="rotate(-25 -1.6 -1.8)" />}
       {L.mucosa > 0 && (
         <g opacity={L.mucosa}>
           <rect x={-16} y={-9} width={32} height={18} fill={`url(#${id}muc)`} />
           {['M-13,-1 C-10,-2.4 -8,-1 -6,-2.6', 'M12.5,0.4 C10,-1 8.6,0.6 6.8,-0.8', 'M-4,4.6 C-3,3.6 -1.4,4.4 0,3.6', 'M3,-4.8 C4.4,-3.6 6,-4.4 7.2,-3.4'].map((d, i) => <path key={i} d={d} stroke="#B5444A" strokeWidth={0.22} fill="none" opacity={0.7} />)}
         </g>
       )}
+      {(L.ookp ?? 0) > 0 && (() => {
+        const ol = plateOutline(EYE_HOLE[0], EYE_HOLE[1], 1, FRONT_ROT);
+        const u = clamp(L.cut ?? 0);
+        const win = ptsD(grow(ol, 0.8));
+        const wT = `translate(${EYE_HOLE[0]},${EYE_HOLE[1]}) scale(${Math.max(0.001, u)}) translate(${-EYE_HOLE[0]},${-EYE_HOLE[1]})`;
+        return (
+          <g opacity={L.ookp}>
+            {/* the plate's rise under the graft: light on its upper edge, a soft shadow under its lower edge */}
+            <path d={ptsD(ol)} fill="#F3D2C4" opacity={0.18} />
+            <path d={ptsD(ol)} fill="none" stroke="rgba(255,232,224,0.6)" strokeWidth={0.7} transform="translate(-0.25,-0.3)" style={{filter: 'blur(0.35px)'}} />
+            <path d={ptsD(ol)} fill="none" stroke="rgba(120,40,42,0.32)" strokeWidth={0.8} transform="translate(0.3,0.45)" style={{filter: 'blur(0.4px)'}} />
+            {/* the local cut-away: the graft opened over the plate, its cut edge showing its thickness */}
+            {u > 0.002 && (
+              <g>
+                <defs><clipPath id={`${id}cw`}><path d={win} transform={wT} /></clipPath></defs>
+                <g clipPath={`url(#${id}cw)`}>
+                  <path d={win} fill="#B9625F" transform={wT} />
+                  <Implant id={`${id}pl`} x={EYE_HOLE[0]} y={EYE_HOLE[1]} s={1} rot={FRONT_ROT} px={px} cyl={0} hole={1} tissue={0.12} vessels={1} />
+                  <path d={win} transform={wT} fill="none" stroke="rgba(80,16,18,0.5)" strokeWidth={1.1 / Math.max(0.2, u)} style={{filter: 'blur(0.5px)'}} />
+                </g>
+                <path d={win} transform={wT} fill="none" stroke="#F2B7AF" strokeWidth={0.55 / Math.max(0.2, u)} strokeLinejoin="round" />
+                <path d={win} transform={wT} fill="none" stroke="rgba(110,40,40,0.85)" strokeWidth={1.1 * px / Math.max(0.2, u)} strokeLinejoin="round" />
+              </g>
+            )}
+            <CylEnd id={`${id}cy`} x={EYE_HOLE[0]} y={EYE_HOLE[1]} px={px} />
+          </g>
+        );
+      })()}
     </g>
   );
 };
@@ -206,13 +262,15 @@ export const cutPoint = (u: number): [number, number] => {
 };
 
 // ---------------------------------------------------------------- the pocket under the other eye
+// V4: no opening in the face. The plate goes in through a short incision under the lashes and lies beneath the skin
+// and the muscle of the lower lid; when we need to see it, the skin over it is seen through (the plate ghosted under
+// the skin's tint and the muscle fibres, confined to the plate's own outline), and the new vessels grow round it.
 export const POCKET2: [number, number] = [36, 28];
-const PWIN = 'M-13,-1 C-12.5,-7 -6,-9.6 1,-9.4 C8,-9.2 13.6,-6 13.8,0 C14,6.4 8,9.6 0,9.6 C-8,9.6 -13.4,6 -13,-1 Z';
 export type PocketState = {
   incision: number;      // the skin opened below the lashes
   sutured: number; heal: number;
-  win: number;           // layered cut-away open (0 .. 1)
-  bump: number;          // the implant under the skin (a raised outline when the window is closed)
+  win: number;           // V4: how far the skin over the pocket is seen through (0 .. 1)
+  bump: number;          // the implant under the skin (its rise, when not seen through)
   impl: {x: number; y: number; rot: Rot; tissue: number; vessels: number} | null;
   above: number;         // how far the implant is still outside the skin (1 fully outside .. 0 in the pocket)
 };
@@ -220,44 +278,46 @@ export const NO_POCKET2: PocketState = {incision: 0, sutured: 0, heal: 1, win: 0
 const INCISION_Y = POCKET2[1] - 11.5;
 
 const PocketCut: React.FC<{id: string; px: number; p: PocketState}> = ({id, px, p}) => {
-  const W = p.win;
-  const wt = `translate(${POCKET2[0]},${POCKET2[1]}) scale(${Math.max(0.001, W)})`;
-  const implEl = (key: string) => p.impl && <Implant key={key} id={`${id}${key}`} x={p.impl.x} y={p.impl.y} s={ES} rot={p.impl.rot} px={px} cylMode="clear" tissue={p.impl.tissue} vessels={p.impl.vessels} holeBg="#B5524C" />;
+  const see = clamp(p.win);
+  const implEl = (key: string, op = 1) => p.impl && <Implant key={key} id={`${id}${key}`} x={p.impl.x} y={p.impl.y} s={ES} rot={p.impl.rot} px={px} cylMode="clear" tissue={p.impl.tissue} vessels={p.impl.vessels} holeBg="#C98B7A" opacity={op} />;
+  const ol = p.impl ? plateOutline(p.impl.x, p.impl.y, ES, p.impl.rot) : null;
+  // where the plate rests in the pocket (for its rise and the vessels, which stay put while it is in)
+  const rest = plateOutline(POCKET2[0] + 1.6, POCKET2[1] + 0.4, ES, {yaw: 0, pitch: 0, roll: 0});
+  const vg = p.impl ? clamp(p.impl.vessels) : 0;
   return (
     <g>
       <defs>
-        <clipPath id={`${id}pw`}><path d={PWIN} transform={wt} /></clipPath>
         <clipPath id={`${id}ab`}><rect x={0} y={-60} width={90} height={INCISION_Y + 60} /></clipPath>
-        <pattern id={`${id}fat`} width="3" height="3" patternUnits="userSpaceOnUse"><rect width="3" height="3" fill="#EBCB82" /><circle cx="1.5" cy="1.5" r="1.25" fill="none" stroke="#D3AB5E" strokeWidth="0.25" /></pattern>
-        <pattern id={`${id}mus`} width="1.2" height="1.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="1.2" height="1.2" fill="#B9534A" /><line x1="0" y1="0.3" x2="1.2" y2="0.3" stroke="#A24439" strokeWidth="0.25" /></pattern>
+        <clipPath id={`${id}be`}><rect x={0} y={INCISION_Y} width={90} height={80} /></clipPath>
+        <pattern id={`${id}mus`} width="1.2" height="1.2" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="1.2" height="1.2" fill="none" /><line x1="0" y1="0.3" x2="1.2" y2="0.3" stroke="#A24439" strokeWidth="0.3" /></pattern>
       </defs>
-      {/* the bump of the buried plate, when the window is closed */}
+      {/* the plate's rise under the closed skin */}
       {p.bump > 0 && (
-        <g opacity={p.bump * (1 - W)}>
-          <ellipse cx={POCKET2[0] - 2} cy={POCKET2[1]} rx={10} ry={5.6} fill="none" stroke="rgba(255,226,200,0.55)" strokeWidth={1.4} transform="translate(-0.5,-0.6)" style={{filter: 'blur(0.8px)'}} />
-          <ellipse cx={POCKET2[0] - 2} cy={POCKET2[1]} rx={10} ry={5.6} fill="none" stroke="rgba(120,60,40,0.3)" strokeWidth={1.2} transform="translate(0.6,0.7)" style={{filter: 'blur(0.8px)'}} />
+        <g opacity={p.bump * (1 - see)}>
+          <path d={ptsD(rest)} fill="rgba(255,226,200,0.14)" stroke="rgba(255,228,204,0.3)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(-0.4,-0.5)" style={{filter: 'blur(1.4px)'}} />
+          <path d={ptsD(rest)} fill="none" stroke="rgba(120,60,40,0.2)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(0.6,0.8)" style={{filter: 'blur(1.5px)'}} />
         </g>
       )}
-      {/* the layered cut-away: skin edge, fat, then the muscle the plate lies under */}
-      {W > 0.01 && (
-        <g>
-          <g clipPath={`url(#${id}pw)`}>
-            <rect x={POCKET2[0] - 20} y={POCKET2[1] - 14} width={40} height={28} fill={`url(#${id}mus)`} />
-            {implEl('in')}
-            {/* the muscle fibres over the plate: it is beneath them, not on top */}
-            <rect x={POCKET2[0] - 20} y={POCKET2[1] - 14} width={40} height={28} fill={`url(#${id}mus)`} opacity={0.32} />
-            {/* new vessels in the capsule round it */}
-            {p.impl && p.impl.vessels > 0 && Array.from({length: 9}, (_, i) => {
-              const a = (i / 9) * Math.PI * 2 + 0.3, r0 = 12, r1 = 5 + 2 * hash(i);
-              const x0 = POCKET2[0] + r0 * Math.cos(a), y0 = POCKET2[1] + r0 * 0.68 * Math.sin(a), x1 = POCKET2[0] + r1 * Math.cos(a + 0.4), y1 = POCKET2[1] + r1 * 0.6 * Math.sin(a + 0.4);
-              return <path key={i} d={`M${x0},${y0} Q${(x0 + x1) / 2 + 1.5},${(y0 + y1) / 2 - 1} ${x1},${y1}`} stroke="#C4202E" strokeWidth={0.32} fill="none" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - clamp(p.impl!.vessels * 1.4 - (i % 3) * 0.15)} />;
-            })}
-            <path d={PWIN} transform={`${wt} scale(0.84)`} fill="none" stroke="#EBCB82" strokeWidth={2.2 / Math.max(0.2, W)} />
-            <path d={PWIN} transform={`${wt} scale(0.84)`} fill="none" stroke={`url(#${id}fat)`} strokeWidth={2.0 / Math.max(0.2, W)} />
-            <path d={PWIN} transform={`${wt} scale(0.94)`} fill="none" stroke="#E8A48E" strokeWidth={1.2 / Math.max(0.2, W)} />
-          </g>
-          <path d={PWIN} transform={wt} fill="none" stroke={SKIN} strokeWidth={1.1 / Math.max(0.2, W)} />
-          <path d={PWIN} transform={wt} fill="none" stroke={INK} strokeWidth={1.6 * px / Math.max(0.2, W)} />
+      {/* beneath the skin: the plate seen through it, under the muscle fibres and the skin's own tint */}
+      {see > 0.01 && p.impl && ol && (
+        <g clipPath={`url(#${id}be)`}>
+          {implEl('in', 0.25 + 0.45 * see)}
+          <path d={ptsD(grow(ol, 0.6))} fill={`url(#${id}mus)`} opacity={0.5 * see} />
+          <path d={ptsD(grow(ol, 1.4))} fill={SKIN} opacity={0.3 * see} style={{filter: 'blur(1.2px)'}} />
+          {/* the new vessels growing in from the surrounding tissue, round and over the plate's edge */}
+          {vg > 0 && Array.from({length: 12}, (_, i) => {
+            const [x0, y0] = alongPoly(grow(rest, 2.4 + 1.2 * hash(i * 3.1)), (i + 0.3 * hash(i)) / 12);
+            const [x1, y1] = alongPoly(grow(rest, -1.2), (i + 0.5) / 12);
+            const mx = (x0 + x1) / 2 + (hash(i * 7) - 0.5) * 2, my = (y0 + y1) / 2 + (hash(i * 9) - 0.5) * 2;
+            const bx = lerp(x0, x1, 0.45) + (hash(i * 5) - 0.5) * 2.5, by = lerp(y0, y1, 0.45) + (hash(i * 11) - 0.5) * 2.5;
+            const g = clamp(vg * 1.5 - (i % 4) * 0.12);
+            return (
+              <g key={i} opacity={see * (1 - p.above) * 0.85}>
+                <path d={`M${x0},${y0} Q${mx},${my} ${x1},${y1}`} stroke="#B9262F" strokeWidth={0.24} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - g} />
+                <path d={`M${lerp(x0, x1, 0.4)},${lerp(y0, y1, 0.4)} L${bx},${by}`} stroke="#C4323A" strokeWidth={0.15} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - clamp(g * 1.4 - 0.5)} />
+              </g>
+            );
+          })}
         </g>
       )}
       {/* the part of the plate still outside the skin, above the incision */}
@@ -278,24 +338,25 @@ const PocketCut: React.FC<{id: string; px: number; p: PocketState}> = ({id, px, 
 export const INCISION_AT = INCISION_Y;
 
 // ---------------------------------------------------------------- the face
-export type FaceState2 = {left: EyeLook; brow: number; smile: number; mouth: MouthState | null; pocket: PocketState; light: number; bruise: number};
+export type FaceState2 = {left: EyeLook; brow: number; smile: number; mouth: MouthState | null; pocket: PocketState; light: number; bruise: number; open?: number; tear?: number};
 
 export const Face2: React.FC<{id: string; px: number; f: FaceState2}> = ({id, px, f}) => {
   const epx = px / ES, brY = -f.brow * 3.2;
+  const sm = f.smile, op = f.open ?? 0, sq = 0.9 * sm;
   const mouthOn = f.mouth && f.mouth.retract > 0.001;
   const eye = (side: 'L' | 'R') => {
     const [cx, cy] = side === 'L' ? EL : ER, s = side === 'L' ? -1 : 1;
     const L = side === 'L' ? f.left : LOOK0;
     return (
       <g transform={`translate(${cx},${cy}) scale(${ES})`}>
-        <defs><clipPath id={`${id}f${side}`}><path d={fissure(s, 0)} /></clipPath></defs>
+        <defs><clipPath id={`${id}f${side}`}><path d={fissure(s, sq)} /></clipPath></defs>
         <g clipPath={`url(#${id}f${side})`}>
           <Eye2 id={`${id}e${side}`} px={epx} s={s} L={L} />
-          <path d={upperLid(s, 0) + ' L14.4,-8 L-14.6,-8 Z'} fill="rgba(60,20,10,0.28)" transform="translate(0,1.1)" style={{filter: 'blur(0.6px)'}} />
+          <path d={upperLid(s, sq) + ' L14.4,-8 L-14.6,-8 Z'} fill="rgba(60,20,10,0.28)" transform="translate(0,1.1)" style={{filter: 'blur(0.6px)'}} />
         </g>
-        <path d={fissure(s, 0)} fill="none" stroke={INK} strokeWidth={2.2 * epx} strokeLinejoin="round" />
-        <path d={upperLid(s, 0)} fill="none" stroke={INK} strokeWidth={3.4 * epx} strokeLinecap="round" />
-        <Lashes s={s} sq={0} px={epx} />
+        <path d={fissure(s, sq)} fill="none" stroke={INK} strokeWidth={2.2 * epx} strokeLinejoin="round" />
+        <path d={upperLid(s, sq)} fill="none" stroke={INK} strokeWidth={3.4 * epx} strokeLinecap="round" />
+        <Lashes s={s} sq={sq} px={epx} />
         <path d={s < 0 ? 'M14.4,1.2 q-1.6,-1.2 -2.6,0.1 q1.2,1.2 2.6,-0.1Z' : 'M-14.6,0.6 q1.6,-1.2 2.6,0.1 q-1.2,1.2 -2.6,-0.1Z'} fill="#D9817B" />
       </g>
     );
@@ -357,12 +418,32 @@ export const Face2: React.FC<{id: string; px: number; f: FaceState2}> = ({id, px
       <ellipse cx={5.6} cy={45.3} rx={2.4} ry={1.2} fill="#7A4434" />
       <ellipse cx={0} cy={38} rx={5} ry={4} fill={SKIN_L} opacity={0.6} />
       {/* mouth: closed, or held open by retractors for the tooth */}
-      {mouthOn ? <Mouth id={`${id}m`} px={px} m={f.mouth!} /> : (
-        <g>
-          <path d="M-19,72 C-9.5,69.6 9.5,69.6 19,72 C9.5,74.4 -9.5,74.4 -19,72 Z" fill="#A85F52" stroke={INK} strokeWidth={2 * px} />
-          <path d="M-15,75.5 C-7,79 7,79 15,75.5" stroke="#A85F52" strokeWidth={2.4} fill="none" strokeLinecap="round" />
-        </g>
-      )}
+      {mouthOn ? <Mouth id={`${id}m`} px={px} m={f.mouth!} /> : (() => {
+        // closed and neutral; or smiling (the corners lift and widen), and open (the upper teeth show)
+        const cx = 19 + sm * 3.5, cy = 72 - sm * 4.6, mid = 72 + sm * 1.4, bot = mid + op * 6.5;
+        const opening = `M${-cx},${cy} C${-9},${mid} ${9},${mid} ${cx},${cy} C${9},${bot} ${-9},${bot} ${-cx},${cy} Z`;
+        return (
+          <g>
+            {sm > 0.02 && [-1, 1].map((k) => <path key={k} d={`M${k * 12},${50 - sm} C${k * 19},${57} ${k * (21 + sm * 2)},${64 - sm * 2} ${k * (cx + 1.5)},${cy + 2.5}`} stroke={SKIN_D} strokeWidth={1.4} fill="none" opacity={0.75 * sm} strokeLinecap="round" />)}
+            {sm > 0.02 && [-1, 1].map((k) => <ellipse key={`c${k}`} cx={k * 31} cy={30 - sm * 2} rx={9} ry={5} fill={SKIN_L} opacity={0.35 * sm} style={{filter: 'blur(1.5px)'}} />)}
+            {op > 0.03 && (
+              <g>
+                <defs><clipPath id={`${id}mo2`}><path d={opening} /></clipPath></defs>
+                <path d={opening} fill="#4A1E1C" />
+                <g clipPath={`url(#${id}mo2)`}>
+                  <path d={`M${-cx},${cy - 4} L${cx},${cy - 4} L${cx},${cy + 0.4} C${9},${mid + 2.3} ${-9},${mid + 2.3} ${-cx},${cy + 0.4} Z`} fill="#F4F0E8" />
+                  {[-9, -3, 3, 9].map((x) => <line key={x} x1={x} x2={x} y1={mid - 2} y2={mid + 2.4} stroke="rgba(120,100,90,0.5)" strokeWidth={0.3} />)}
+                </g>
+              </g>
+            )}
+            <path d={`M${-cx},${cy} C${-9.5},${69.6 - sm * 1.2} ${9.5},${69.6 - sm * 1.2} ${cx},${cy} C${9},${mid} ${-9},${mid} ${-cx},${cy} Z`} fill="#A85F52" stroke={INK} strokeWidth={2 * px} strokeLinejoin="round" />
+            <path d={`M${-cx + 3},${bot - (bot - cy) * 0.35 + 2} C${-7},${bot + 4} ${7},${bot + 4} ${cx - 3},${bot - (bot - cy) * 0.35 + 2}`} stroke="#A85F52" strokeWidth={2.4} fill="none" strokeLinecap="round" />
+            <path d={`M${-cx},${cy} C${-9},${mid} ${9},${mid} ${cx},${cy}`} stroke={INK} strokeWidth={1.8 * px} fill="none" strokeLinecap="round" />
+          </g>
+        );
+      })()}
+      {/* a tear from his left eye */}
+      {(f.tear ?? 0) > 0 && <path d={`M${ER[0] + 7},${ER[1] + 7.6} C${ER[0] + 7.4},${10 + f.tear! * 6} ${ER[0] + 7.1},${12 + f.tear! * 9} ${ER[0] + 7.6},${13 + f.tear! * 11}`} stroke="#E6F4FA" strokeWidth={1.5} fill="none" opacity={0.85 * f.tear!} strokeLinecap="round" />}
       {/* bruise round the pocket while it heals */}
       {f.bruise > 0 && <ellipse cx={POCKET2[0] - 2} cy={POCKET2[1] - 2} rx={16} ry={10} fill="#8C5A84" opacity={0.26 * f.bruise} style={{filter: 'blur(2.5px)'}} />}
       <PocketCut id={`${id}pk`} px={px} p={f.pocket} />
