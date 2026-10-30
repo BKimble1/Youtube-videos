@@ -1,0 +1,44 @@
+{
+ "provider": "ElevenLabs (restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "same voice as the winning hook preview and the channel narrator"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "GZAX1BnY2Ww17dwzZolu",
+ "prompt_note": "locked words verbatim; capitals mark the brief's emphasis words; the ellipsis given as an em-dash beat; bracket tags direct delivery and are not spoken",
+ "generated_once": "one run of two variations; no regeneration",
+ "chosen": "t1_TWbg8tObJeKWnkvdCdFs.mp3",
+ "asr": {
+  "whisper": "exact",
+  "zipformer": [
+   [
+    "replace",
+    "remolded",
+    "re moulded"
+   ],
+   [
+    "replace",
+    "gallium",
+    "galleum"
+   ],
+   [
+    "replace",
+    "researchers",
+    "researches"
+   ],
+   [
+    "replace",
+    "model",
+    "model's"
+   ]
+  ]
+ },
+ "edits": "none to the speech: leading room silence trimmed so speech starts at 0.06 s; gain 3.08 dB to -16 LUFS",
+ "speech_s": [
+  0.06,
+  24.22
+ ],
+ "film_s": 26.0
+}

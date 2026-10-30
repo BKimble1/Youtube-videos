@@ -1,0 +1,7 @@
+source/node_modules/
+source/.remotion/
+source/out/
+tools/__pycache__/
+source/public/audio/*.wav
+audio/mix/stems/
+**/__pycache__/

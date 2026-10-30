@@ -1,0 +1,359 @@
+{
+ "line": "This metal robot melts through a cage\u2026 then gets remolded into shape. It\u2019s made from gallium packed with tiny magnetic particles. A magnetic field heats it into liquid. Another magnet steers the metal. And when it cools, it hardens again. But researchers tested something even stranger. Inside a model stomach, it melted around a trapped object, hardened, and carried it back out. Would you let one inside you?",
+ "emph": [
+  "melts",
+  "magnetic",
+  "particles",
+  "liquid",
+  "model",
+  "stomach",
+  "hardened",
+  "inside",
+  "you"
+ ],
+ "duration": 26.0,
+ "frames": 780,
+ "speech_end": 24.22,
+ "words": [
+  {
+   "word": "This",
+   "start": 0.06,
+   "end": 0.24
+  },
+  {
+   "word": "metal",
+   "start": 0.24,
+   "end": 0.68
+  },
+  {
+   "word": "robot",
+   "start": 0.68,
+   "end": 1.16
+  },
+  {
+   "word": "melts",
+   "start": 1.16,
+   "end": 1.55
+  },
+  {
+   "word": "through",
+   "start": 1.56,
+   "end": 1.76
+  },
+  {
+   "word": "a",
+   "start": 1.76,
+   "end": 1.88
+  },
+  {
+   "word": "cage\u2026",
+   "start": 1.88,
+   "end": 2.29
+  },
+  {
+   "word": "then",
+   "start": 2.55,
+   "end": 2.66
+  },
+  {
+   "word": "gets",
+   "start": 2.66,
+   "end": 2.98
+  },
+  {
+   "word": "remolded",
+   "start": 2.98,
+   "end": 3.62
+  },
+  {
+   "word": "into",
+   "start": 3.62,
+   "end": 3.9
+  },
+  {
+   "word": "shape.",
+   "start": 3.9,
+   "end": 4.13
+  },
+  {
+   "word": "It\u2019s",
+   "start": 4.56,
+   "end": 4.66
+  },
+  {
+   "word": "made",
+   "start": 4.665,
+   "end": 4.86
+  },
+  {
+   "word": "from",
+   "start": 4.865,
+   "end": 5.06
+  },
+  {
+   "word": "gallium",
+   "start": 5.065,
+   "end": 5.58
+  },
+  {
+   "word": "packed",
+   "start": 5.585,
+   "end": 5.82
+  },
+  {
+   "word": "with",
+   "start": 5.87,
+   "end": 6.03
+  },
+  {
+   "word": "tiny",
+   "start": 6.1,
+   "end": 6.42
+  },
+  {
+   "word": "magnetic",
+   "start": 6.425,
+   "end": 6.98
+  },
+  {
+   "word": "particles.",
+   "start": 6.985,
+   "end": 7.48
+  },
+  {
+   "word": "A",
+   "start": 7.87,
+   "end": 7.93
+  },
+  {
+   "word": "magnetic",
+   "start": 7.91,
+   "end": 8.31
+  },
+  {
+   "word": "field",
+   "start": 8.315,
+   "end": 8.63
+  },
+  {
+   "word": "heats",
+   "start": 8.635,
+   "end": 8.95
+  },
+  {
+   "word": "it",
+   "start": 8.955,
+   "end": 9.11
+  },
+  {
+   "word": "into",
+   "start": 9.115,
+   "end": 9.35
+  },
+  {
+   "word": "liquid.",
+   "start": 9.355,
+   "end": 9.7
+  },
+  {
+   "word": "Another",
+   "start": 10.1,
+   "end": 10.3
+  },
+  {
+   "word": "magnet",
+   "start": 10.3,
+   "end": 10.78
+  },
+  {
+   "word": "steers",
+   "start": 10.78,
+   "end": 11.18
+  },
+  {
+   "word": "the",
+   "start": 11.18,
+   "end": 11.3
+  },
+  {
+   "word": "metal.",
+   "start": 11.3,
+   "end": 11.55
+  },
+  {
+   "word": "And",
+   "start": 11.88,
+   "end": 11.94
+  },
+  {
+   "word": "when",
+   "start": 11.92,
+   "end": 11.99
+  },
+  {
+   "word": "it",
+   "start": 11.995,
+   "end": 12.16
+  },
+  {
+   "word": "cools,",
+   "start": 12.22,
+   "end": 12.65
+  },
+  {
+   "word": "it",
+   "start": 12.675,
+   "end": 12.91
+  },
+  {
+   "word": "hardens",
+   "start": 12.915,
+   "end": 13.47
+  },
+  {
+   "word": "again.",
+   "start": 13.475,
+   "end": 13.68
+  },
+  {
+   "word": "But",
+   "start": 14.17,
+   "end": 14.23
+  },
+  {
+   "word": "researchers",
+   "start": 14.21,
+   "end": 14.92
+  },
+  {
+   "word": "tested",
+   "start": 14.925,
+   "end": 15.36
+  },
+  {
+   "word": "something",
+   "start": 15.365,
+   "end": 15.71
+  },
+  {
+   "word": "even",
+   "start": 15.81,
+   "end": 16.16
+  },
+  {
+   "word": "stranger.",
+   "start": 16.165,
+   "end": 16.8
+  },
+  {
+   "word": "Inside",
+   "start": 17.29,
+   "end": 17.56
+  },
+  {
+   "word": "a",
+   "start": 17.565,
+   "end": 17.68
+  },
+  {
+   "word": "model",
+   "start": 17.685,
+   "end": 18.16
+  },
+  {
+   "word": "stomach,",
+   "start": 18.165,
+   "end": 18.53
+  },
+  {
+   "word": "it",
+   "start": 18.72,
+   "end": 18.78
+  },
+  {
+   "word": "melted",
+   "start": 18.765,
+   "end": 19.2
+  },
+  {
+   "word": "around",
+   "start": 19.205,
+   "end": 19.48
+  },
+  {
+   "word": "a",
+   "start": 19.485,
+   "end": 19.64
+  },
+  {
+   "word": "trapped",
+   "start": 19.645,
+   "end": 20.0
+  },
+  {
+   "word": "object,",
+   "start": 20.005,
+   "end": 20.44
+  },
+  {
+   "word": "hardened,",
+   "start": 20.65,
+   "end": 21.15
+  },
+  {
+   "word": "and",
+   "start": 21.165,
+   "end": 21.36
+  },
+  {
+   "word": "carried",
+   "start": 21.365,
+   "end": 21.8
+  },
+  {
+   "word": "it",
+   "start": 21.805,
+   "end": 22.0
+  },
+  {
+   "word": "back",
+   "start": 22.005,
+   "end": 22.32
+  },
+  {
+   "word": "out.",
+   "start": 22.325,
+   "end": 22.42
+  },
+  {
+   "word": "Would",
+   "start": 22.93,
+   "end": 22.99
+  },
+  {
+   "word": "you",
+   "start": 22.97,
+   "end": 23.11
+  },
+  {
+   "word": "let",
+   "start": 23.115,
+   "end": 23.31
+  },
+  {
+   "word": "one",
+   "start": 23.315,
+   "end": 23.51
+  },
+  {
+   "word": "inside",
+   "start": 23.515,
+   "end": 23.99
+  },
+  {
+   "word": "you?",
+   "start": 23.995,
+   "end": 24.22
+  }
+ ]
+}
