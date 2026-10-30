@@ -1,0 +1,18 @@
+{
+ "zipformer": {
+  "transcript": "DOCTORS PUT A TOOTH INSIDE THIS MAN'S EYE AND HE COULD SEE AGAIN HIS CORNEA WAS SO DAMAGED A NORMAL TRANSPLANT WOULDN'T WORK SO SURGEONS REMOVED ONE OF HIS TEETH WITH A PIECE OF BONE DRILLED A HOLE THROUGH IT AND FITTED A CLEAR LENS INSIDE THEY TUCKED IT BENEATH THE SKIN NEAR HIS OTHER EYE FOR MONTHS LETTING LIVING TISSUE GROW AROUND IT THEN THEY IMPLANTED IT INTO HIS DAMAGED EYE ALLOWING LIGHT TO REACH HIS RETINA AFTER TEN YEARS BLIND HE COULD SEE AGAIN",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "whisper": {
+  "transcript": "Doctors put a tooth inside this man's eye. and he could see again. His cornea was so damaged, a normal transplant wouldn't work. So, surgeons removed one of his teeth with a piece of bone, drilled a hole through it, and fitted a clear lens inside. They tucked it beneath the skin near his other eye for months, letting living tissue grow around it. Then, they implanted it into his damaged eye, allowing light to reach his retina. after 10 years blind He could see again.",
+  "wer": 0.012,
+  "diffs": [
+   [
+    "delete",
+    "ten",
+    ""
+   ]
+  ]
+ }
+}

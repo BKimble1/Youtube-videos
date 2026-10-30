@@ -1,0 +1,457 @@
+{
+ "take": "audio/narration/takes/t1_gksf.mp3",
+ "fixed": {
+  "38": [
+   12.175,
+   12.3
+  ],
+  "39": [
+   12.3,
+   12.44
+  ],
+  "40": [
+   12.745,
+   12.83
+  ],
+  "62": [
+   18.965,
+   19.02
+  ],
+  "63": [
+   19.03,
+   19.34
+  ]
+ },
+ "words": [
+  {
+   "word": "Doctors",
+   "start": 0.0,
+   "end": 0.47
+  },
+  {
+   "word": "put",
+   "start": 0.48,
+   "end": 0.68
+  },
+  {
+   "word": "a",
+   "start": 0.68,
+   "end": 0.81
+  },
+  {
+   "word": "TOOTH",
+   "start": 0.84,
+   "end": 1.24
+  },
+  {
+   "word": "inside",
+   "start": 1.24,
+   "end": 1.59
+  },
+  {
+   "word": "this",
+   "start": 1.6,
+   "end": 1.79
+  },
+  {
+   "word": "man\u2019s",
+   "start": 1.8,
+   "end": 2.27
+  },
+  {
+   "word": "EYE\u2026",
+   "start": 2.28,
+   "end": 2.61
+  },
+  {
+   "word": "and",
+   "start": 3.03,
+   "end": 3.08
+  },
+  {
+   "word": "he",
+   "start": 3.07,
+   "end": 3.21
+  },
+  {
+   "word": "could",
+   "start": 3.22,
+   "end": 3.5
+  },
+  {
+   "word": "SEE",
+   "start": 3.5,
+   "end": 3.85
+  },
+  {
+   "word": "AGAIN.",
+   "start": 3.86,
+   "end": 4.28
+  },
+  {
+   "word": "His",
+   "start": 4.79,
+   "end": 4.85
+  },
+  {
+   "word": "cornea",
+   "start": 4.855,
+   "end": 5.41
+  },
+  {
+   "word": "was",
+   "start": 5.415,
+   "end": 5.61
+  },
+  {
+   "word": "so",
+   "start": 5.615,
+   "end": 5.89
+  },
+  {
+   "word": "damaged,",
+   "start": 5.895,
+   "end": 6.43
+  },
+  {
+   "word": "a",
+   "start": 6.6,
+   "end": 6.65
+  },
+  {
+   "word": "normal",
+   "start": 6.64,
+   "end": 7.03
+  },
+  {
+   "word": "transplant",
+   "start": 7.035,
+   "end": 7.63
+  },
+  {
+   "word": "wouldn\u2019t",
+   "start": 7.635,
+   "end": 8.03
+  },
+  {
+   "word": "work.",
+   "start": 8.035,
+   "end": 8.21
+  },
+  {
+   "word": "So",
+   "start": 8.61,
+   "end": 8.66
+  },
+  {
+   "word": "surgeons",
+   "start": 8.65,
+   "end": 9.16
+  },
+  {
+   "word": "removed",
+   "start": 9.17,
+   "end": 9.56
+  },
+  {
+   "word": "one",
+   "start": 9.57,
+   "end": 9.72
+  },
+  {
+   "word": "of",
+   "start": 9.73,
+   "end": 9.84
+  },
+  {
+   "word": "his",
+   "start": 9.85,
+   "end": 9.96
+  },
+  {
+   "word": "teeth",
+   "start": 9.97,
+   "end": 10.28
+  },
+  {
+   "word": "with",
+   "start": 10.29,
+   "end": 10.41
+  },
+  {
+   "word": "a",
+   "start": 10.41,
+   "end": 10.48
+  },
+  {
+   "word": "piece",
+   "start": 10.53,
+   "end": 10.76
+  },
+  {
+   "word": "of",
+   "start": 10.77,
+   "end": 10.92
+  },
+  {
+   "word": "bone,",
+   "start": 10.93,
+   "end": 11.23
+  },
+  {
+   "word": "drilled",
+   "start": 11.52,
+   "end": 11.81
+  },
+  {
+   "word": "a",
+   "start": 11.815,
+   "end": 11.93
+  },
+  {
+   "word": "hole",
+   "start": 11.935,
+   "end": 12.14
+  },
+  {
+   "word": "through",
+   "start": 12.175,
+   "end": 12.3
+  },
+  {
+   "word": "it,",
+   "start": 12.3,
+   "end": 12.44
+  },
+  {
+   "word": "and",
+   "start": 12.745,
+   "end": 12.83
+  },
+  {
+   "word": "fitted",
+   "start": 12.82,
+   "end": 13.11
+  },
+  {
+   "word": "a",
+   "start": 13.12,
+   "end": 13.23
+  },
+  {
+   "word": "clear",
+   "start": 13.24,
+   "end": 13.55
+  },
+  {
+   "word": "lens",
+   "start": 13.56,
+   "end": 13.96
+  },
+  {
+   "word": "inside.",
+   "start": 13.96,
+   "end": 14.4
+  },
+  {
+   "word": "They",
+   "start": 14.9,
+   "end": 14.95
+  },
+  {
+   "word": "tucked",
+   "start": 14.94,
+   "end": 15.16
+  },
+  {
+   "word": "it",
+   "start": 15.17,
+   "end": 15.28
+  },
+  {
+   "word": "beneath",
+   "start": 15.29,
+   "end": 15.58
+  },
+  {
+   "word": "the",
+   "start": 15.61,
+   "end": 15.72
+  },
+  {
+   "word": "skin",
+   "start": 15.73,
+   "end": 16.01
+  },
+  {
+   "word": "near",
+   "start": 16.01,
+   "end": 16.24
+  },
+  {
+   "word": "his",
+   "start": 16.25,
+   "end": 16.38
+  },
+  {
+   "word": "other",
+   "start": 16.41,
+   "end": 16.6
+  },
+  {
+   "word": "eye",
+   "start": 16.61,
+   "end": 16.89
+  },
+  {
+   "word": "for",
+   "start": 16.89,
+   "end": 17.09
+  },
+  {
+   "word": "months,",
+   "start": 17.09,
+   "end": 17.47
+  },
+  {
+   "word": "letting",
+   "start": 17.74,
+   "end": 17.96
+  },
+  {
+   "word": "living",
+   "start": 17.965,
+   "end": 18.24
+  },
+  {
+   "word": "tissue",
+   "start": 18.245,
+   "end": 18.72
+  },
+  {
+   "word": "grow",
+   "start": 18.725,
+   "end": 18.96
+  },
+  {
+   "word": "around",
+   "start": 18.965,
+   "end": 19.02
+  },
+  {
+   "word": "it.",
+   "start": 19.03,
+   "end": 19.34
+  },
+  {
+   "word": "Then",
+   "start": 19.93,
+   "end": 20.12
+  },
+  {
+   "word": "they",
+   "start": 20.13,
+   "end": 20.44
+  },
+  {
+   "word": "implanted",
+   "start": 20.45,
+   "end": 21.08
+  },
+  {
+   "word": "it",
+   "start": 21.09,
+   "end": 21.21
+  },
+  {
+   "word": "into",
+   "start": 21.25,
+   "end": 21.44
+  },
+  {
+   "word": "his",
+   "start": 21.45,
+   "end": 21.65
+  },
+  {
+   "word": "damaged",
+   "start": 21.65,
+   "end": 22.16
+  },
+  {
+   "word": "eye,",
+   "start": 22.17,
+   "end": 22.4
+  },
+  {
+   "word": "allowing",
+   "start": 22.65,
+   "end": 23.0
+  },
+  {
+   "word": "light",
+   "start": 23.005,
+   "end": 23.28
+  },
+  {
+   "word": "to",
+   "start": 23.285,
+   "end": 23.4
+  },
+  {
+   "word": "reach",
+   "start": 23.405,
+   "end": 23.68
+  },
+  {
+   "word": "his",
+   "start": 23.685,
+   "end": 23.84
+  },
+  {
+   "word": "retina.",
+   "start": 23.845,
+   "end": 24.24
+  },
+  {
+   "word": "After",
+   "start": 24.77,
+   "end": 25.06
+  },
+  {
+   "word": "TEN",
+   "start": 25.065,
+   "end": 25.54
+  },
+  {
+   "word": "YEARS",
+   "start": 25.545,
+   "end": 26.02
+  },
+  {
+   "word": "blind\u2026",
+   "start": 26.025,
+   "end": 26.56
+  },
+  {
+   "word": "he",
+   "start": 27.01,
+   "end": 27.06
+  },
+  {
+   "word": "could",
+   "start": 27.065,
+   "end": 27.34
+  },
+  {
+   "word": "see",
+   "start": 27.345,
+   "end": 27.66
+  },
+  {
+   "word": "again.",
+   "start": 27.665,
+   "end": 28.03
+  }
+ ]
+}

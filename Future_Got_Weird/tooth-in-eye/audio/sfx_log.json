@@ -1,0 +1,137 @@
+[
+ {
+  "t": 0.0,
+  "sfx": "opening: glassy detuned tone + wet creak (the graft turns see-through)",
+  "gain_db": -18
+ },
+ {
+  "t": 0.4,
+  "sfx": "tiny ting off the cylinder",
+  "gain_db": -31
+ },
+ {
+  "t": 2.55,
+  "sfx": "light at the end of the cylinder (faint shimmer)",
+  "gain_db": -36
+ },
+ {
+  "t": 2.86,
+  "sfx": "light travelling to the retina",
+  "gain_db": -35
+ },
+ {
+  "t": 3.42,
+  "sfx": "retina lit (warm soft chime)",
+  "gain_db": -32
+ },
+ {
+  "t": 4.55,
+  "sfx": "rewind to before (soft falling tone)",
+  "gain_db": -36
+ },
+ {
+  "t": 5.4,
+  "sfx": "light scattered by the scar (muffled)",
+  "gain_db": -34
+ },
+ {
+  "t": 6.8,
+  "sfx": "donor cornea placed",
+  "gain_db": -31
+ },
+ {
+  "t": 7.52,
+  "sfx": "the graft clouds over (low dull swell)",
+  "gain_db": -30
+ },
+ {
+  "t": 9.12,
+  "sfx": "piezo saw round the root",
+  "gain_db": -29
+ },
+ {
+  "t": 10.22,
+  "sfx": "bone gives way under the elevator",
+  "gain_db": -26
+ },
+ {
+  "t": 10.48,
+  "sfx": "the block lifts out",
+  "gain_db": -30
+ },
+ {
+  "t": 11.02,
+  "sfx": "trimming saw (crown off, plate shaped)",
+  "gain_db": -30
+ },
+ {
+  "t": 11.6,
+  "sfx": "offcut drops on the drape",
+  "gain_db": -34
+ },
+ {
+  "t": 11.72,
+  "sfx": "dental drill through the dentin (subdued)",
+  "gain_db": -27
+ },
+ {
+  "t": 13.896,
+  "sfx": "the optical cylinder seats (click)",
+  "gain_db": -17
+ },
+ {
+  "t": 14.95,
+  "sfx": "incision",
+  "gain_db": -36
+ },
+ {
+  "t": 15.3,
+  "sfx": "slid beneath the skin",
+  "gain_db": -30
+ },
+ {
+  "t": 15.95,
+  "sfx": "sutures",
+  "gain_db": -38
+ },
+ {
+  "t": 17.9,
+  "sfx": "tissue growing round the implant (organic, quiet)",
+  "gain_db": -31
+ },
+ {
+  "t": 19.7,
+  "sfx": "taken out of the pocket",
+  "gain_db": -32
+ },
+ {
+  "t": 21,
+  "sfx": "graft lifted",
+  "gain_db": -33
+ },
+ {
+  "t": 21.28,
+  "sfx": "corneal disc removed",
+  "gain_db": -34
+ },
+ {
+  "t": 21.97,
+  "sfx": "implant seated",
+  "gain_db": -30
+ },
+ {
+  "t": 22.05,
+  "sfx": "graft laid back over it",
+  "gain_db": -33
+ },
+ {
+  "t": 22.62,
+  "sfx": "light through the cylinder",
+  "gain_db": -34
+ },
+ {
+  "t": 23.77,
+  "sfx": "retina lit (warm chime)",
+  "gain_db": -30
+ }
+]

@@ -1,0 +1,19 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel narrator named in the brief; confirmed with creative_list_voices on 2026-10-30 (same id as Zombie Ant, Dead Spider and Cyborg Cockroach)"},
+ "model_id": "eleven_v4",
+ "flow_id": "QDrIdgfWnuWYChpbCwqw",
+ "prompt": "[disbelieving, amazed, conversational] Doctors put a TOOTH inside this man’s EYE — and he could SEE AGAIN. [confident, fascinated, brisk] His cornea was so damaged, a normal transplant wouldn’t work. So surgeons removed one of his teeth with a piece of bone, drilled a hole through it, and fitted a clear lens inside. They tucked it beneath the skin near his other eye for months, letting living tissue grow around it. Then they implanted it into his damaged eye, allowing light to reach his retina. [genuinely amazed, warm] After TEN YEARS blind — he could see again.",
+ "prompt_note": "The locked words, verbatim (production/NARRATION_LOCKED.txt). The two ellipses were given to the model as em-dash beats so it would not stretch them into theatrical pauses. The bracket tags direct delivery and are not spoken: disbelief in the first sentence, confident fascination through the mechanism, genuine amazement at the result.",
+ "generated_once": "One run of two variations (the connector default), 2 x 567.9 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_gksf.mp3", "generation_id": "gksfjaurCbuWgHY5ta3p", "duration_s": 28.29, "chosen": true,
+   "asr": {"zipformer_en": "0 differences", "whisper_base_en": "1 difference: 'ten' written as the numeral '10' (normalisation, not a misread)"}},
+  {"file": "audio/narration/takes/t2_Ye6j.mp3", "generation_id": "Ye6jP50VYnf6Z0KhTvK0", "duration_s": 28.37, "chosen": false,
+   "why_not": "Also word-perfect for both models; Zipformer token alignment heard 'damaged eye' as 'damage dye' (a softer word boundary at a key phrase). Pause lengths were near-identical."}
+ ],
+ "edits": "None to the speech: no splice, no time-stretch, no pitch change, no gap shortening (its 0.17-0.53 s pauses read as continuous and the take fits the 28-31 s target). It is padded with 1.0 s of silence after the last word for the loop push. Mix: gentle compressor and a look-ahead limiter on the voice.",
+ "word_timing": {"master": "local sherpa-onnx Zipformer token timestamps, snapped to measured pause onsets (tools/align_zipformer.py)", "hand_fixes": "Two phrase-final words were placed after the following pause by the snapping; corrected from the 10 ms waveform energy in tools/make_narration.py (FIX): 'through | it, | and' and 'around | it.'"},
+ "final": {"file": "audio/narration/FGW_Tooth_Eye_narration_V1.wav", "format": "48 kHz, 24-bit, mono", "sha256": "dcef94e585c0fa188dedac618206c408188186b2770ef3b3aa7ec08d4993346d", "speech_s": [0.0, 28.03], "film_s": 29.033},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause measurement and level."
+}
