@@ -1,0 +1,32 @@
+{
+    "programs": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "h264",
+            "width": 1080,
+            "height": 1920,
+            "coded_width": 1080,
+            "coded_height": 1920,
+            "sample_aspect_ratio": "1:1",
+            "display_aspect_ratio": "9:16",
+            "pix_fmt": "yuv420p",
+            "r_frame_rate": "30/1",
+            "duration": "20.300000",
+            "nb_frames": "609"
+        },
+        {
+            "codec_name": "aac",
+            "sample_rate": "48000",
+            "channels": 2,
+            "r_frame_rate": "0/0",
+            "duration": "20.309000",
+            "nb_frames": "954"
+        }
+    ],
+    "format": {
+        "duration": "20.309000",
+        "size": "14749934"
+    }
+}

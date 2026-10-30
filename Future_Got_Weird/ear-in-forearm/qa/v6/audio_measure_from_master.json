@@ -1,0 +1,8 @@
+{
+ "integrated_lufs_stereo": -13.84,
+ "sample_peak_dbfs": -1.94,
+ "true_peak_dbtp_4x": -1.62,
+ "duration_s": 19.584,
+ "min_50ms_rms_db": -45.7,
+ "blocks_below_-50dB": 0
+}

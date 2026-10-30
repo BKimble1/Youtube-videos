@@ -1,0 +1,13 @@
+{
+ "integrated_lufs": -13.83,
+ "true_peak_dbtp_4x": -1.6,
+ "sample_peak_dbfs": -1.92,
+ "voice_gain_db": 6.76,
+ "voice_max_gain_reduction_db": -9.84,
+ "duration_s": 19.8,
+ "effects": 31,
+ "voice_rms_db_in_speech": -16.1,
+ "effects_rms_db_in_speech": -43.0,
+ "beds_rms_db_in_speech": -46.2,
+ "loop_seam_step": 0.0002
+}
