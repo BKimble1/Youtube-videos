@@ -20,7 +20,7 @@ const HOOK_POS = A;
 export const turnAt = (t: number) => (t > B.turn[0] && t < B.turn[1] ? 0.24 * Math.sin((Math.PI * (t - B.turn[0])) / (B.turn[1] - B.turn[0])) * Math.min(1, (B.turn[1] - t) * 2.5) : 0);
 
 /** the scaled outline used for the flap (the ear plus a margin of skin) */
-const FLAP_K = 1.2;
+const FLAP_K = 1.08; // V3: a tight margin, so the lifted flap keeps the ear's own outline and size
 const OUTL = sample(EAR_OUTLINE, 16);
 export const FLAP_D = 'M ' + OUTL.pts.map((p) => `${(3 + (p.x - 3) * FLAP_K).toFixed(2)} ${(-1 + (p.y + 1) * FLAP_K).toFixed(2)}`).join(' L ') + ' Z';
 const FLAP_S = sample(FLAP_D, 1);
@@ -152,6 +152,8 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
   const pocket = ss(t, B.carry2[1] - 0.45, B.insert[0]) * (1 - ss(t, B.insert[0] + 0.4, B.insert[1]));
   const stitches = ss(t, B.insert[1] - 0.15, B.insert[1] + 0.1) * (1 - ss(t, TM.months - 0.6, TM.months));
   const reliefX = inserting ? pc.x : ex;
+  const cw = ss(t, B.carry2[1] - 0.3, B.carry2[1]) * (1 - ss(t, B.winClose[0], B.winClose[1]));
+  const fpos = inserting ? {x: pc.x, y: pc.y, s: pc.s} : {x: A.x, y: A.y, s: 1};
   const depth = inserting ? 2.3 * ss(t, B.insert[0] + 0.05, B.insert[1]) : 2.3 * amt;
   return (
     <g>
@@ -173,6 +175,51 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
           {Array.from({length: 40}, (_, i) => (
             <circle key={i} cx={-22 + (i % 8) * 6.5 + (Math.floor(i / 8) % 2) * 3} cy={-34 + Math.floor(i / 8) * 15} r={0.9} fill={shade(SK.graft, 0.15)} opacity="0.5" />
           ))}
+        </g>
+      )}
+      {/* V3: one continuous local cutaway from the insertion through the vessel growth. The skin stays drawn over
+          everything inside it (the view below is only partly see-through), so the framework is always seen beneath an
+          intact layer of skin, never on it: tissue, the framework (only the part already inside the pocket), the new
+          vessels, then the skin's own relief on top. */}
+      {cw > 0.01 && (
+        <g>
+          <defs>
+            <radialGradient id="vwG">
+              <stop offset="0" stopColor="#FFF" />
+              <stop offset="0.62" stopColor="#FFF" />
+              <stop offset="1" stopColor="#000" />
+            </radialGradient>
+            <mask id="vwM">
+              <ellipse cx={A.x} cy={A.y} rx={74 * (0.5 + 0.5 * cw)} ry={104 * (0.5 + 0.5 * cw)} fill="url(#vwG)" opacity={cw} />
+            </mask>
+            <clipPath id="underSkinV">
+              <rect x={POCKET_X - 400} y={A.y - 300} width={400} height={600} />
+            </clipPath>
+          </defs>
+          <g mask="url(#vwM)">
+            <g opacity={0.5}>
+              <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.tissue} />
+              <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.fat} opacity="0.28" />
+              {Array.from({length: 14}, (_, i) => (
+                <path key={i} d={`M ${A.x - 70 + i * 11} ${A.y - 160} C ${A.x - 66 + i * 11} ${A.y - 50} ${A.x - 74 + i * 11} ${A.y + 50} ${A.x - 70 + i * 11} ${A.y + 160}`} stroke={ANAT.tissueDeep} strokeWidth="1" opacity="0.25" fill="none" />
+              ))}
+            </g>
+            <ellipse cx={A.x + 3} cy={A.y - 1} rx={52} ry={70} fill="#E0473F" opacity={0.22 * ss(t, VS.c, B.vessels[1]) + 0.1 * vesselPulse(t)} filter="url(#soft10)" />
+            {/* the framework, only once (and as far as) it is inside: a soft pale glow seen through the skin. Its shape on
+                the surface comes from the skin relief drawn over it, so it never reads as an object on the arm. */}
+            {t >= B.insert[0] && (
+              <g clipPath={inserting ? 'url(#underSkinV)' : undefined}>
+                <g transform={`translate(${fpos.x} ${fpos.y}) scale(${fpos.s})`}>
+                  <path d={FRAME_OUTLINE} fill={ANAT.cartilageLight} opacity="0.42" filter="url(#soft2)" />
+                  <path d={FRAME_OUTLINE} fill="none" stroke={ANAT.cartilageShade} strokeWidth="2" opacity="0.25" filter="url(#soft2)" />
+                </g>
+              </g>
+            )}
+            <g transform={`translate(${A.x} ${A.y})`} opacity={0.88}>
+              <Vessels t={t} />
+            </g>
+            <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={SK.volar} opacity="0.16" />
+          </g>
         </g>
       )}
       {/* the ear relief under the skin */}
@@ -205,35 +252,6 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
           {[-36, -18, 0, 18, 36].map((dy) => (
             <path key={dy} d={`M ${POCKET_X - 5} ${A.y + dy - 2} L ${POCKET_X + 5} ${A.y + dy + 2}`} stroke="#1D2633" strokeWidth="1.3" strokeLinecap="round" />
           ))}
-        </g>
-      )}
-      {/* the cutaway: skin made locally transparent over the framework, showing the new vessels in the tissue */}
-      {win > 0.01 && (
-        <g>
-          <defs>
-            <radialGradient id="vwG">
-              <stop offset="0" stopColor="#FFF" />
-              <stop offset="0.66" stopColor="#FFF" />
-              <stop offset="1" stopColor="#000" />
-            </radialGradient>
-            <mask id="vwM">
-              <ellipse cx={A.x} cy={A.y} rx={78 * win} ry={110 * win} fill="url(#vwG)" opacity={Math.min(1, win * 1.6)} />
-            </mask>
-          </defs>
-          <g mask="url(#vwM)">
-            <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.tissue} />
-            <rect x={A.x - 120} y={A.y - 160} width={240} height={320} fill={ANAT.fat} opacity="0.28" />
-            {/* the tissue around the framework flushes as it is perfused */}
-            <ellipse cx={A.x + 3} cy={A.y - 1} rx={52} ry={70} fill="#E0473F" opacity={0.28 * ss(t, VS.c, B.vessels[1]) + 0.12 * vesselPulse(t)} filter="url(#soft10)" />
-            {Array.from({length: 14}, (_, i) => (
-              <path key={i} d={`M ${A.x - 70 + i * 11} ${A.y - 160} C ${A.x - 66 + i * 11} ${A.y - 50} ${A.x - 74 + i * 11} ${A.y + 50} ${A.x - 70 + i * 11} ${A.y + 160}`} stroke={ANAT.tissueDeep} strokeWidth="1" opacity="0.25" fill="none" />
-            ))}
-            <g transform={`translate(${A.x} ${A.y})`}>
-              <path d={FRAME_OUTLINE} fill="#3A1A1C" opacity="0.35" transform="translate(2 3)" filter="url(#soft3)" />
-              <Vessels t={t} />
-              <CartilageFlat px={px} id="vwF" />
-            </g>
-          </g>
         </g>
       )}
       {/* the flap's outline being cut */}

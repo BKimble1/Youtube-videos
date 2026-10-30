@@ -1,6 +1,19 @@
 # Future Got Weird: Doctors Grew an Ear Inside Her Arm
 
-## V2 (current)
+## V3 FINAL REVIEW (current)
+
+**Status.** A final review copy. **It is not published.**
+
+**Deliverable.** `exports/FGW_Ear_Forearm_V3_FINAL_REVIEW.mp4`: 1080×1920 (verified), 30 fps, 609 frames, 20.3 s.
+
+**What changed.** V3 is a polish of V2: the implantation under intact skin, and the transfer continuity. The opening,
+the shot order, the narration, the mix and the ending are unchanged.
+
+**Report.** `production/V3_FINAL_REPORT.md`. QA evidence is in `qa/v3/`.
+
+**Rebuild.** Render composition `EarForearmV3` with `--props='{"audio":"mix_v2","captions":true}'`.
+
+## V2
 
 **Status.** A review version, checked from the files. **It is not published.**
 

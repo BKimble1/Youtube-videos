@@ -15,7 +15,8 @@ import {FIG} from './woman';
 import {TRAY} from './tray';
 
 const ln = (w: number) => ({stroke: INK, strokeWidth: w, vectorEffect: 'non-scaling-stroke' as const, strokeLinejoin: 'round' as const});
-export const POCKET_X = FIG.armEar.x + 30; // the incision on the forearm, on the little-finger side of the ear
+export const POCKET_X = FIG.armEar.x + 44; // V3: the incision is at the forearm's little-finger edge, so the framework
+// enters the skin pocket from beside the arm (in the air), never lying on the skin's surface
 export const ARM_IN = {x: FIG.armEar.x + 68, y: FIG.armEar.y - 6};
 const HOME = {...PIECE_HOME, s: 1};
 const LIFT = {x: PIECE_HOME.x + 16, y: PIECE_HOME.y - 14, rot: -70, s: 1.1};
@@ -105,7 +106,7 @@ const Shavings: React.FC<{t: number; t0: number; t1: number; tip: (u: number) =>
 };
 
 const GRIP_BLOCK = {x: 4, y: 44}; // forceps hold the block by its end
-const GRIP_FRAME = {x: 27, y: -8}; // and the framework by the back of its rim
+const GRIP_FRAME = {x: 24, y: -6}; // and the framework by the back of its rim
 const tipPath = (t: number): P | null => {
   const uO = clamp((t - B.outline[0]) / (B.outline[1] - B.outline[0]));
   const uG = clamp((t - B.grooves[0]) / (B.grooves[1] - B.grooves[0]));
@@ -172,6 +173,20 @@ export const Piece: React.FC<{t: number; camZ: number}> = ({t, camZ}) => {
     const p = approach(tip, -148, k, 260);
     scalpel = <Scalpel x={p.x} y={p.y} a={-148} s={0.55} ow={1.3} />;
   }
+  // while inserting, whatever has gone into the pocket (the framework and the forceps tips) is hidden by the skin
+  const pocketClip = t >= B.insert[0] - 0.05 && t < B.insert[1] + 0.35;
+  forceps = forceps && (
+    <g clipPath={pocketClip ? 'url(#pocketOutF)' : undefined}>
+      {pocketClip && (
+        <defs>
+          <clipPath id="pocketOutF">
+            <rect x={POCKET_X} y={FIG.armEar.y - 400} width={800} height={800} />
+          </clipPath>
+        </defs>
+      )}
+      {forceps}
+    </g>
+  );
   if (!st.visible) return <g>{forceps}</g>;
   return (
     <g>

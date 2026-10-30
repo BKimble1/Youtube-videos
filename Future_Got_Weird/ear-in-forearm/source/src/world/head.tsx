@@ -14,7 +14,7 @@ import {lit, shade} from '../core/color';
 
 const A = FIG.armEar, S = FIG.earSite;
 const ln = (w: number) => ({stroke: INK, strokeWidth: w, vectorEffect: 'non-scaling-stroke' as const, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const});
-export const HEAD_EAR = {x: S.x, y: S.y, rot: 14, sx: 0.8};
+export const HEAD_EAR = {x: S.x, y: S.y, rot: 14, sx: 0.88};
 
 type F = {x: number; y: number; rot: number; sx: number; s: number; lift: number; margin: number; on: boolean};
 export const flapAt = (t: number): F => {
@@ -22,30 +22,33 @@ export const flapAt = (t: number): F => {
   if (t < B.raise[0]) return {...arm, s: 1, lift: 0, margin: 1, on: false};
   if (t < B.raise[1]) {
     const u = ss5(t, B.raise[0], B.raise[1]);
-    return {...arm, y: A.y - 8 * u, s: 1 + 0.12 * u, lift: u, margin: 1, on: true};
+    return {...arm, y: A.y - 8 * u, s: 1 + 0.05 * u, lift: u, margin: 1, on: true};
   }
   if (t < B.carry[1]) {
     const u = ss5(t, B.carry[0], B.carry[1]);
     return {
       x: lerp(A.x, HEAD_EAR.x, u), y: lerp(A.y - 8, HEAD_EAR.y, u) - 46 * Math.sin(Math.PI * u), rot: lerp(0, HEAD_EAR.rot, u), sx: lerp(1, HEAD_EAR.sx, u),
-      s: 1.12, lift: 1, margin: 1 - 0.5 * ss(u, 0.5, 1), on: true,
+      s: 1.05, lift: 1, margin: 1 - 0.5 * ss(u, 0.5, 1), on: true,
     };
   }
   if (t < B.seat[1]) {
     const u = ss5(t, B.seat[0], B.seat[1]);
-    return {...HEAD_EAR, s: lerp(1.12, 1, u), lift: 1 - u, margin: 0.5 * (1 - u), on: true};
+    return {...HEAD_EAR, s: lerp(1.05, 1, u), lift: 1 - u, margin: 0.5 * (1 - u), on: true};
   }
   return {...HEAD_EAR, s: 1, lift: 0, margin: 0, on: true};
 };
 /** perfusion: the ear warms once blood flows through the new connection */
 const flowAmt = (t: number) => ss(t, B.flow[0] + 0.2, B.flow[1]);
 
-const EarSkin: React.FC<{px: number; id: string; warm: number}> = ({px, id, warm}) => (
+/** The ear with its skin. `def` (0..1) is how defined it is: at 0 it looks exactly like the relief it was under the
+ *  forearm skin (soft edges, faint lobule, no contour); as it is lifted free it gains its edge, the lobule and the
+ *  darker bowl. Its skin is the forearm's (a little lighter than her face), so it keeps that tone on the head. */
+const EarSkin: React.FC<{px: number; id: string; warm: number; def: number}> = ({px, id, warm, def}) => (
   <g>
     <defs>
       <radialGradient id={`${id}-g`} cx="0.3" cy="0.3" r="0.85">
         <stop offset="0" stopColor={SK.lighter} />
-        <stop offset="0.55" stopColor={SK.base} />
+        <stop offset="0.55" stopColor={SK.volar} />
         <stop offset="1" stopColor={SK.shade} />
       </radialGradient>
       <clipPath id={`${id}-c`}>
@@ -54,14 +57,13 @@ const EarSkin: React.FC<{px: number; id: string; warm: number}> = ({px, id, warm
     </defs>
     <path d={EAR_OUTLINE} fill={`url(#${id}-g)`} />
     <g clipPath={`url(#${id}-c)`}>
-      <Relief id={`${id}-r`} x={-60} y={-70} w={120} h={130} px={px} depth={2.1} blur={1.35} gain={1.15}>
-        <EarHeight p={{lobule: 1}} />
+      <Relief id={`${id}-r`} x={-60} y={-70} w={120} h={130} px={px} depth={2.1 + 0.2 * (1 - def)} blur={1.35 + 0.55 * (1 - def)} gain={1.15}>
+        <EarHeight p={{lobule: 0.3 + 0.7 * def}} />
       </Relief>
-      {/* the deep bowl and the canal side of it read darker on a real ear */}
-      <ellipse cx={-3} cy={10} rx={7} ry={8} fill={SK.deep} opacity="0.4" filter="url(#soft2)" />
+      <ellipse cx={-3} cy={10} rx={7} ry={8} fill={SK.deep} opacity={0.4 * def} filter="url(#soft2)" />
       <ellipse cx={4} cy={-5} rx={30} ry={40} fill="#D47A6A" opacity={0.18 * warm} filter="url(#soft6)" />
     </g>
-    <path d={EAR_OUTLINE} fill="none" {...ln(1.4)} />
+    <path d={EAR_OUTLINE} fill="none" {...ln(1.4)} opacity={def} />
   </g>
 );
 
@@ -72,9 +74,9 @@ export const Flap: React.FC<{t: number; camZ: number}> = ({t, camZ}) => {
   const tr = `translate(${f.x} ${f.y}) rotate(${f.rot}) scale(${f.s * f.sx} ${f.s})`;
   const px = camZ * f.s;
   const warm = 0.35 + 0.65 * flowAmt(t);
-  // the vessels it was raised on: stretched to the forearm while lifting, divided, then short stubs while carried
-  const raising = t < B.raise[1];
-  const pedU = ss(t, B.raise[0], B.raise[1]);
+  // V3: the vessels it was raised on stay under the flap (they are shown again only where they are reconnected, in the
+  // cutaway in front of the ear); nothing hangs from it in the air
+  const def = ss(t, B.raise[0], B.carry[0] + 0.3);
   const sut = t >= B.seat[1] ? 1 - ss(t, TM.and2 - 0.3, TM.and2 + 0.3) : 0;
   return (
     <g>
@@ -88,19 +90,7 @@ export const Flap: React.FC<{t: number; camZ: number}> = ({t, camZ}) => {
           <path d={EAR_OUTLINE} fill="#2A140C" filter="url(#soft3)" />
         </g>
       )}
-      {raising && (
-        <g opacity={pedU}>
-          <path d={`M ${A.x - 18} ${A.y + 40} C ${A.x - 26} ${A.y + 70} ${A.x - 36} ${A.y + 100} ${A.x - 40} ${A.y + 130}`} fill="none" stroke={ANAT.artery} strokeWidth="3" />
-          <path d={`M ${A.x - 13} ${A.y + 42} C ${A.x - 21} ${A.y + 72} ${A.x - 31} ${A.y + 102} ${A.x - 35} ${A.y + 132}`} fill="none" stroke={ANAT.vein} strokeWidth="3" />
-        </g>
-      )}
       <g transform={tr}>
-        {!raising && t < B.seat[1] && (
-          <g>
-            <path d="M -16 36 C -20 44 -22 52 -20 60" fill="none" stroke={ANAT.artery} strokeWidth="2.6" strokeLinecap="round" />
-            <path d="M -11 38 C -14 46 -15 54 -13 62" fill="none" stroke={ANAT.vein} strokeWidth="2.6" strokeLinecap="round" />
-          </g>
-        )}
         {f.margin > 0.01 && (
           <g opacity={f.margin}>
             <path d={FLAP_D} fill={SK.volar} />
@@ -108,7 +98,7 @@ export const Flap: React.FC<{t: number; camZ: number}> = ({t, camZ}) => {
             <path d={FLAP_D} fill="none" {...ln(1.3)} />
           </g>
         )}
-        <EarSkin px={px} id="flapE" warm={warm} />
+        <EarSkin px={px} id="flapE" warm={warm} def={def} />
         {sut > 0.01 && (
           <g opacity={sut}>
             {Array.from({length: 9}, (_, i) => {
