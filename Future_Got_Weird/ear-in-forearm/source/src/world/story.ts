@@ -45,10 +45,10 @@ export const TM = {
 // Derived beats (seconds). Each block is one physical action. V2: the cartilage is cut out of the chest, carried by
 // forceps to a surgical tray beside her, carved there, and carried by forceps to the forearm (never shaped in the chest).
 export const B = {
-  push: [0.0, 0.3] as const, // V4: frame 0 is the ear in extreme close-up; the camera settles, then pulls back
+  push: [0.0, 0.32] as const, // frame 0 is the ear in extreme close-up; the camera settles, then pulls back
   pulse: [0.0, 0.5] as const, // the ear pushes up under the skin as the film opens
   turn: [0, 0] as const, // V4: no cylindrical turn (it narrowed the ear); the forearm rotates rigidly instead (hook.ts)
-  armOff: 3.55, // the forearm leaves the frame: from here until the insertion it is the arm before surgery
+  armOff: 3.0, // the forearm is out of frame from here: until the insertion it is the arm before surgery
   crash: [TM.crash - 0.02, TM.crash + 0.5] as const,
   ribWin: [TM.surgeons - 0.05, TM.surgeons + 0.4] as const, // the chest opens locally on the ribs
   ident: [TM.carved - 0.15, TM.carved + 0.35] as const, // the cartilage (not the bone) lights up: "rib cartilage"
@@ -66,11 +66,15 @@ export const B = {
   raise: [TM.later + 0.37, TM.living] as const, // the living ear is lifted with its vessels
   carry: [TM.living, TM.head] as const, // carried to the head
   seat: [TM.head, TM.reconnecting] as const,
-  artery: [TM.blood2 - 0.35, TM.supply] as const,
-  vein: [TM.supply - 0.05, TM.nerves - 0.02] as const,
-  flow: [TM.supply + 0.1, TM.nervesEnd + 0.3] as const,
-  nerve: [TM.nerves - 0.02, TM.nervesEnd] as const,
-  closeUp: [TM.reconnecting, TM.nervesEnd + 0.15] as const, // the local cutaway in front of the new ear
-  reveal: [TM.nervesEnd + 0.1, TM.months2 + 0.6] as const,
-  rewind: [TM.right - 0.1, TM.here + 0.05] as const, // back at the forearm: the ear under the skin again
+  artery: [TM.blood2 - 0.4, TM.supply - 0.02] as const,
+  vein: [TM.supply - 0.08, TM.nerves - 0.04] as const,
+  flow: [TM.supply + 0.05, TM.nervesEnd + 0.2] as const,
+  nerve: [TM.nerves - 0.06, TM.nervesEnd - 0.12] as const,
+  closeUp: [TM.reconnecting + 0.1, TM.nervesEnd - 0.02] as const, // V5: a brief local cutaway in front of the new ear
+  reveal: [TM.nervesEnd, TM.months2 + 0.3] as const,
+  // V5 payoff: from the profile the camera moves down over her neck and shoulder (no ear in frame), the picture takes on
+  // a memory grade, and the raised forearm enters in the past, the ear already under its skin: an obvious flashback
+  fb: [TM.months2 + 0.43, TM.months2 + 0.68] as const,
+  fbOut: [TM.here + 0.45, TM.end] as const, // the grade lifts as the final push lands on frame 0's composition
+  rewind: [TM.months2 + 0.43, TM.months2 + 0.44] as const, // (the arm's state switch, made out of frame)
 };

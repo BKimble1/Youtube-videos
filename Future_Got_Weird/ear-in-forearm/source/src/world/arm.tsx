@@ -44,14 +44,14 @@ export const armEarAmt = (t: number) => {
   if (t < B.insert[0]) return 0;
   if (t < B.raise[0] + 0.05) return 1;
   if (t < B.rewind[0]) return 0;
-  return ss5(t, B.rewind[0], B.rewind[1]);
+  return 1; // V5: the flashback (the switch happens while the arm is out of frame)
 };
 const VS = {a: B.vessels[0] + 0.35, b: B.vessels[0] + 0.9, c: B.vessels[0] + 1.35};
 /** after each growth stage lands, a short pulse brightens the vessels (and, at the end, the tissue flushes) */
 const vesselPulse = (t: number) => Math.max(...[VS.b, VS.c, B.vessels[1]].map((p) => Math.exp(-(((t - p) / 0.09) ** 2))));
 export const vesselWin = (t: number) => ss(t, B.vessels[0], B.vessels[0] + 0.4) * (1 - ss(t, B.winClose[0], B.winClose[1]));
 const donorAmt = (t: number) => (t >= B.raise[0] && t < TM.reconnecting + 0.6 ? ss(t, B.raise[0], B.raise[0] + 0.25) : 0);
-const graftAmt = (t: number) => (t >= TM.reconnecting + 0.6 ? 1 - ss(t, B.rewind[0], B.rewind[1] - 0.1) : 0);
+const graftAmt = (t: number) => (t >= TM.reconnecting + 0.6 && t < B.rewind[0] ? 1 : 0);
 
 // ---- the vessel network (arm-local, ear centre at origin) ----
 type V = {d: string; s: ReturnType<typeof sample>; w: number; c: string; t0: number; t1: number; o: number};
@@ -163,12 +163,12 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
   const uInc = clamp((t - B.incise[0]) / (B.incise[1] - B.incise[0]));
   // skin pocket: opens just before the framework arrives, closes after; stitches stay until "Months later"
   const pocket = ss(t, B.carry2[1] - 0.45, B.insert[0]) * (1 - ss(t, B.insert[0] + 0.4, B.insert[1]));
-  const stitches = ss(t, B.insert[1] - 0.15, B.insert[1] + 0.1) * (1 - ss(t, TM.months - 0.6, TM.months));
+  const stitches = ss(t, B.insert[1] - 0.15, B.insert[1] - 0.1) * (1 - ss(t, TM.months - 0.6, TM.months));
   const reliefX = inserting ? pc.x : ex;
   const cw = ss(t, B.carry2[1] - 0.3, B.carry2[1]) * (1 - ss(t, B.winClose[0], B.winClose[1]));
   const fpos = inserting ? {x: pc.x, y: pc.y, s: pc.s} : {x: A.x, y: A.y, s: 1};
   // V4: the living skin over the ear swells very slightly with the pulse (about 70 bpm)
-  const hookOrLoop = t < B.armOff || t >= B.rewind[0]; // V4 additions apply to the opening and its loop return only
+  const hookOrLoop = t < B.armOff || t >= B.rewind[0]; // V4 additions apply to the opening and the closing flashback
   const beat = !hookOrLoop ? 1 : 1 + 0.035 * Math.max(0, Math.sin(2 * Math.PI * (Math.round(1.15 * TM.end) / TM.end) * t)) ** 3; // whole beats over the film: identical at the loop seam
   const depth = inserting ? 2.3 * ss(t, B.insert[0] + 0.05, B.insert[1]) : 2.3 * amt * beat;
   const flesh = hookOrLoop && amt > 0.02 ? Math.min(1, amt) : 0;
@@ -289,10 +289,14 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
       )}
       {stitches > 0.01 && (
         <g opacity={stitches}>
+          {/* V5: the skin edges meet, then the stitches go in one by one along the closed incision */}
           <path d={`M ${POCKET_X} ${A.y - 44} L ${POCKET_X} ${A.y + 44}`} stroke={SK.deep} strokeWidth="1.4" opacity="0.7" />
-          {[-36, -18, 0, 18, 36].map((dy) => (
-            <path key={dy} d={`M ${POCKET_X - 5} ${A.y + dy - 2} L ${POCKET_X + 5} ${A.y + dy + 2}`} stroke="#1D2633" strokeWidth="1.3" strokeLinecap="round" />
-          ))}
+          {[-36, -18, 0, 18, 36].map((dy, k) => {
+            const u = ss(t, B.insert[1] - 0.12 + k * 0.07, B.insert[1] - 0.04 + k * 0.07);
+            return u > 0 ? (
+              <path key={dy} d={`M ${POCKET_X - 5 * u} ${A.y + dy - 2 * u} L ${POCKET_X + 5 * u} ${A.y + dy + 2 * u}`} stroke="#1D2633" strokeWidth="1.3" strokeLinecap="round" />
+            ) : null;
+          })}
         </g>
       )}
       {/* the flap's outline being cut */}

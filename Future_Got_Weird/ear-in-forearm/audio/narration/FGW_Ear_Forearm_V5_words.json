@@ -1,0 +1,348 @@
+{
+ "take": "audio/narration/takes/t2_irmO.mp3",
+ "lead_trim_s": 0.0437,
+ "removed_silence": [
+  {
+   "take_from": 3.1,
+   "take_to": 3.37
+  },
+  {
+   "take_from": 8.19,
+   "take_to": 8.37
+  },
+  {
+   "take_from": 11.96,
+   "take_to": 12.25
+  },
+  {
+   "take_from": 17.1,
+   "take_to": 17.31
+  },
+  {
+   "take_from": 18.46,
+   "take_to": 18.56
+  }
+ ],
+ "words": [
+  {
+   "word": "Doctors",
+   "start": 0.0,
+   "end": 0.516
+  },
+  {
+   "word": "grew",
+   "start": 0.516,
+   "end": 0.746
+  },
+  {
+   "word": "an",
+   "start": 0.756,
+   "end": 0.926
+  },
+  {
+   "word": "EAR",
+   "start": 0.956,
+   "end": 1.266
+  },
+  {
+   "word": "inside",
+   "start": 1.276,
+   "end": 1.706
+  },
+  {
+   "word": "this",
+   "start": 1.716,
+   "end": 1.906
+  },
+  {
+   "word": "woman\u2019s",
+   "start": 1.916,
+   "end": 2.236
+  },
+  {
+   "word": "FOREARM.",
+   "start": 2.356,
+   "end": 2.956
+  },
+  {
+   "word": "She",
+   "start": 3.156,
+   "end": 3.206
+  },
+  {
+   "word": "lost",
+   "start": 3.196,
+   "end": 3.516
+  },
+  {
+   "word": "her",
+   "start": 3.521,
+   "end": 3.676
+  },
+  {
+   "word": "ear",
+   "start": 3.681,
+   "end": 3.956
+  },
+  {
+   "word": "in",
+   "start": 3.961,
+   "end": 4.076
+  },
+  {
+   "word": "a",
+   "start": 4.081,
+   "end": 4.196
+  },
+  {
+   "word": "crash,",
+   "start": 4.201,
+   "end": 4.636
+  },
+  {
+   "word": "so",
+   "start": 4.641,
+   "end": 4.836
+  },
+  {
+   "word": "surgeons",
+   "start": 4.841,
+   "end": 5.356
+  },
+  {
+   "word": "carved",
+   "start": 5.361,
+   "end": 5.636
+  },
+  {
+   "word": "a",
+   "start": 5.641,
+   "end": 5.716
+  },
+  {
+   "word": "replacement",
+   "start": 5.721,
+   "end": 6.326
+  },
+  {
+   "word": "from",
+   "start": 6.361,
+   "end": 6.516
+  },
+  {
+   "word": "her",
+   "start": 6.521,
+   "end": 6.636
+  },
+  {
+   "word": "own",
+   "start": 6.681,
+   "end": 6.916
+  },
+  {
+   "word": "rib",
+   "start": 6.921,
+   "end": 7.226
+  },
+  {
+   "word": "cartilage.",
+   "start": 7.241,
+   "end": 7.776
+  },
+  {
+   "word": "They",
+   "start": 7.976,
+   "end": 8.026
+  },
+  {
+   "word": "tucked",
+   "start": 8.016,
+   "end": 8.256
+  },
+  {
+   "word": "it",
+   "start": 8.266,
+   "end": 8.376
+  },
+  {
+   "word": "beneath",
+   "start": 8.386,
+   "end": 8.676
+  },
+  {
+   "word": "her",
+   "start": 8.706,
+   "end": 8.856
+  },
+  {
+   "word": "arm",
+   "start": 8.866,
+   "end": 9.096
+  },
+  {
+   "word": "skin,",
+   "start": 9.106,
+   "end": 9.456
+  },
+  {
+   "word": "where",
+   "start": 9.466,
+   "end": 9.656
+  },
+  {
+   "word": "new",
+   "start": 9.666,
+   "end": 9.856
+  },
+  {
+   "word": "blood",
+   "start": 9.866,
+   "end": 10.136
+  },
+  {
+   "word": "vessels",
+   "start": 10.146,
+   "end": 10.576
+  },
+  {
+   "word": "formed",
+   "start": 10.586,
+   "end": 10.896
+  },
+  {
+   "word": "around",
+   "start": 10.906,
+   "end": 11.166
+  },
+  {
+   "word": "it.",
+   "start": 11.166,
+   "end": 11.366
+  },
+  {
+   "word": "Months",
+   "start": 11.566,
+   "end": 11.836
+  },
+  {
+   "word": "later,",
+   "start": 11.841,
+   "end": 12.156
+  },
+  {
+   "word": "they",
+   "start": 12.161,
+   "end": 12.356
+  },
+  {
+   "word": "moved",
+   "start": 12.361,
+   "end": 12.676
+  },
+  {
+   "word": "the",
+   "start": 12.681,
+   "end": 12.796
+  },
+  {
+   "word": "living",
+   "start": 12.801,
+   "end": 13.116
+  },
+  {
+   "word": "ear",
+   "start": 13.121,
+   "end": 13.356
+  },
+  {
+   "word": "to",
+   "start": 13.361,
+   "end": 13.556
+  },
+  {
+   "word": "her",
+   "start": 13.561,
+   "end": 13.756
+  },
+  {
+   "word": "head,",
+   "start": 13.761,
+   "end": 13.956
+  },
+  {
+   "word": "reconnecting",
+   "start": 14.176,
+   "end": 14.656
+  },
+  {
+   "word": "its",
+   "start": 14.666,
+   "end": 14.856
+  },
+  {
+   "word": "blood",
+   "start": 14.866,
+   "end": 15.186
+  },
+  {
+   "word": "supply",
+   "start": 15.186,
+   "end": 15.576
+  },
+  {
+   "word": "and",
+   "start": 15.586,
+   "end": 15.736
+  },
+  {
+   "word": "nerves.",
+   "start": 15.746,
+   "end": 16.216
+  },
+  {
+   "word": "And",
+   "start": 16.416,
+   "end": 16.466
+  },
+  {
+   "word": "for",
+   "start": 16.456,
+   "end": 16.766
+  },
+  {
+   "word": "MONTHS\u2026",
+   "start": 16.771,
+   "end": 17.356
+  },
+  {
+   "word": "her",
+   "start": 17.576,
+   "end": 17.646
+  },
+  {
+   "word": "new",
+   "start": 17.656,
+   "end": 17.926
+  },
+  {
+   "word": "ear",
+   "start": 17.936,
+   "end": 18.246
+  },
+  {
+   "word": "was",
+   "start": 18.256,
+   "end": 18.486
+  },
+  {
+   "word": "right",
+   "start": 18.496,
+   "end": 18.926
+  },
+  {
+   "word": "HERE.",
+   "start": 18.936,
+   "end": 19.356
+  }
+ ]
+}

@@ -68,11 +68,31 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
   const blink = Math.max(hookBlink(t), Math.exp(-(((t - 18.3) / 0.06) ** 2)));
   const night = crashAmt(t);
   // the finished ear: a brief warm lift in the light (the release), then back to the clinic tone
-  const release = ss(t, B.reveal[0], B.reveal[0] + 0.5) * (1 - ss(t, TM.her - 0.1, TM.her + 0.6));
+  const release = ss(t, B.reveal[0], B.reveal[0] + 0.4) * (1 - ss(t, B.fb[0] - 0.25, B.fb[0] + 0.05));
+  // V5 flashback grade: warm, partly desaturated memory tone with a soft vignette; it lifts as the last push lands on
+  // frame 0's composition (so the loop seam is ungraded on both sides)
+  const fb = ss(t, B.fb[0], B.fb[1]) * (1 - ss(t, B.fbOut[0], B.fbOut[1]));
+  const fbM = (() => {
+    const L = [0.3, 0.59, 0.11], warm = [1.1, 0.98, 0.8], k = 0.62 * fb;
+    const rows = [0, 1, 2].map((r) => [0, 1, 2].map((c) => (1 - k) * (r === c ? 1 : 0) + k * L[c] * warm[r]));
+    return rows.map((row) => `${row.map((v) => v.toFixed(4)).join(' ')} 0 ${(0.03 * fb).toFixed(4)}`).join('  ') + '  0 0 0 1 0';
+  })();
   return (
     <>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
         <Soft />
+        {fb > 0.001 && (
+          <defs>
+            <filter id="fbGrade" x="0" y="0" width="1080" height="1920" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+              <feColorMatrix type="matrix" values={fbM} />
+            </filter>
+            <radialGradient id="fbVig" cx="0.5" cy="0.48" r="0.72">
+              <stop offset="0.55" stopColor="#2A1A0C" stopOpacity="0" />
+              <stop offset="1" stopColor="#2A1A0C" stopOpacity="0.55" />
+            </radialGradient>
+          </defs>
+        )}
+        <g filter={fb > 0.001 ? 'url(#fbGrade)' : undefined}>
         <rect width={1080} height={1920} fill="url(#bgG)" />
         <Backdrop cx={cam.x} cy={cam.y} z={cam.z} />
         <CrashNight t={t} />
@@ -102,6 +122,8 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
         {night > 0.001 && <rect width={1080} height={1920} fill="#0A1426" opacity={0.28 * night} />}
         {release > 0.001 && <rect width={1080} height={1920} fill="url(#warm)" opacity={release} />}
         <rect width={1080} height={1920} fill="url(#vig)" />
+        </g>
+        {fb > 0.001 && <rect width={1080} height={1920} fill="url(#fbVig)" opacity={fb} />}
       </svg>
       {captions && <Captions t={t} />}
     </>

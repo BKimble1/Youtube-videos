@@ -1,6 +1,26 @@
 # Future Got Weird: Doctors Grew an Ear Inside Her Arm
 
-## V4 FINAL REVIEW (current)
+## V5 FINAL REVIEW (current)
+
+**Status.** A review copy. **It is not published.**
+
+**Deliverable.** `exports/FGW_Ear_Forearm_V5_FINAL_REVIEW.mp4`: 1080×1920 (verified), 30 fps, 594 frames, 19.8 s.
+
+**What changed.** A finalization pass on V4:
+- tighter narration spacing (same take, words untouched);
+- a rebuilt hook motion that follows her gaze to the missing ear;
+- a stitch-by-stitch closure;
+- a brief reconnection cutaway;
+- a clean profile, then an obvious flashback that lands on frame 0.
+
+**Report.** `production/V5_FINAL_REPORT.md`. QA evidence is in `qa/v5/`.
+
+**Rebuild.**
+- Narration: `python3 tools/make_narration.py` (V5 spacing).
+- Mix: `python3 tools/make_audio.py mix_v5`.
+- Render composition `EarForearmV5` with `--props='{"audio":"mix_v5","captions":true}'`.
+
+## V4 FINAL REVIEW
 
 **Status.** A review copy. **It is not published.**
 
