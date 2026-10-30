@@ -1,0 +1,133 @@
+{
+ "hook": "06",
+ "file": "source/public/audio/h06_mix.wav",
+ "duration_s": 6.0,
+ "voice_lufs": -16.16,
+ "fx_bus_lufs": -31.21,
+ "mix_lufs": -16.18,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.064,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "forest air bed",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "low eerie pad",
+   "gain_db": -9
+  },
+  {
+   "t": 0.865,
+   "sfx": "broodsac throb @0.89",
+   "gain_db": -8
+  },
+  {
+   "t": 1.818,
+   "sfx": "broodsac throb @1.84",
+   "gain_db": -3
+  },
+  {
+   "t": 2.77,
+   "sfx": "broodsac throb @2.79",
+   "gain_db": -3
+  },
+  {
+   "t": 3.722,
+   "sfx": "broodsac throb @3.74",
+   "gain_db": -3
+  },
+  {
+   "t": 4.675,
+   "sfx": "broodsac throb @4.69",
+   "gain_db": -8
+  },
+  {
+   "t": 5.627,
+   "sfx": "broodsac throb @5.65",
+   "gain_db": -8
+  },
+  {
+   "t": 2.79,
+   "sfx": "pumping wave @2.79",
+   "gain_db": -6
+  },
+  {
+   "t": 2.87,
+   "sfx": "cysts jostle",
+   "gain_db": -16
+  },
+  {
+   "t": 3.742,
+   "sfx": "pumping wave @3.74",
+   "gain_db": -6
+  },
+  {
+   "t": 3.822,
+   "sfx": "cysts jostle",
+   "gain_db": -16
+  },
+  {
+   "t": 0.0,
+   "sfx": "slow crawl",
+   "gain_db": -18
+  },
+  {
+   "t": 2.47,
+   "sfx": "cut window opens",
+   "gain_db": -7
+  },
+  {
+   "t": 2.57,
+   "sfx": "eerie swell in the cutaway",
+   "gain_db": -14
+  },
+  {
+   "t": 4.16,
+   "sfx": "window closes",
+   "gain_db": -11
+  },
+  {
+   "t": 3.96,
+   "sfx": "hop push-off",
+   "gain_db": -16
+  },
+  {
+   "t": 4.22,
+   "sfx": "feet land on twig",
+   "gain_db": -10
+  },
+  {
+   "t": 4.23,
+   "sfx": "twig and leaves rustle",
+   "gain_db": -15
+  },
+  {
+   "t": 5.4,
+   "sfx": "hop push-off",
+   "gain_db": -16
+  },
+  {
+   "t": 5.66,
+   "sfx": "feet land on twig",
+   "gain_db": -10
+  },
+  {
+   "t": 5.67,
+   "sfx": "twig and leaves rustle",
+   "gain_db": -15
+  },
+  {
+   "t": 4.9,
+   "sfx": "robin tic call",
+   "gain_db": -15
+  },
+  {
+   "t": 5.04,
+   "sfx": "robin tic call 2",
+   "gain_db": -19
+  }
+ ],
+ "notes": "broodsac throbs on every pulse beat; cutaway pumping; robin landing, call, hop"
+}

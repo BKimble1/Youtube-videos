@@ -26,7 +26,7 @@ export const stalkSway = (t: number) => 0.04 * Math.sin(1.05 * t + 0.6) + 0.018 
 export const psi = (s: number, t: number) => 2 * Math.PI * (PULSE_F * (t - PULSE_T0) - 0.85 * s);
 const env = (s: number) => clamp(s / 0.12) * clamp((1.08 - s) / 0.24);
 const r0 = (s: number) => keyS(s, [[0, 38], [0.15, 55], [0.5, 61], [0.8, 58], [1, 44]], (x) => x * x * (3 - 2 * x));
-export const radiusAt = (s: number, t: number) => r0(s) * (1 + env(s) * (0.07 * Math.cos(psi(s, t)) + 0.035 * beatEnv(t - 0.12 * s)));
+export const radiusAt = (s: number, t: number) => r0(s) * (1 + env(s) * (0.105 * Math.cos(psi(s, t)) + 0.05 * beatEnv(t - 0.12 * s)));
 
 export const spine = (sway: number) => {
   const b = STALK_BASE;
@@ -88,7 +88,7 @@ export const band = (u: number) => {
 const isGreen = (u: number) => (u > 0.1 && u < 0.19) || (u > 0.333 && u < 0.43) || (u > 0.642 && u < 0.73);
 const isDarkRing = (u: number) => (u > 0.455 && u < 0.5) || (u > 0.755 && u < 0.795);
 /** band coordinate under spine coordinate s (bands are squeezed by the passing wave) */
-const uOf = (s: number, t: number) => (s - 0.04) / 0.96 + 0.018 * Math.sin(psi(s, t)) * env(s);
+const uOf = (s: number, t: number) => (s - 0.04) / 0.96 + 0.035 * Math.sin(psi(s, t)) * env(s);
 
 const L3 = (() => {
   const l = Math.hypot(0.45, 0.55, 0.7);
@@ -157,7 +157,7 @@ export const Eyestalk: React.FC<{t: number; z: number; film: number; cut: Cut}> 
   }
   // --- speckles (under the skin film) ---
   const specks = SPECK.map((q, k) => {
-    const s = q.s + 0.012 * Math.sin(psi(q.s, t)) * env(q.s);
+    const s = q.s + 0.03 * Math.sin(psi(q.s, t)) * env(q.s);
     const u = uOf(s, t);
     const green = isGreen(u), darkR = isDarkRing(u) && q.a > 0.55;
     if (!green && !darkR) return null;

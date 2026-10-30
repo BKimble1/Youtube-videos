@@ -13,13 +13,12 @@ export const EV = {
   cutOpen: w('into').start, // 2.47  the cut window starts to open
   cutFull: w('pulsing').start + 0.12, // 2.91  window fully open on "pulsing"
   lure: w('lure').start, // 3.39  strongest pumping wave passes through the window
-  birdHop1: birds - 0.06, // 3.98  robin hops onto the twig in the background (off frame -> edge)
-  birdHop2: birds + 0.30, // 4.34  second hop brings it into view
+  birdHop1: birds - 0.08, // 3.96  robin hops onto the twig in the background, into view
   pullStart: birds + 0.08, // 4.12  camera starts the pull-back
   cutClose: birds + 0.12, // 4.16  window closes during the pull-back
   notice: birds + 0.80, // 4.84  robin's head turns toward the eyestalk
   blink: birds + 1.10, // 5.14  quick blink / eye focus
-  birdHop3: birds + 1.36, // 5.40  hop closer
+  birdHop2: birds + 1.36, // 5.40  hop closer
   end: 6.0,
 };
 export const HOP = 0.26; // hop duration (s)

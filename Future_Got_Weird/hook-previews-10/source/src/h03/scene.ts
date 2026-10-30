@@ -75,7 +75,7 @@ export const camera = (t: number): Cam3 => {
   const M0z = toW(mantisState(0).body, [-12, 0, 0])[2] - 4;
   let T: V3 = [M[0] + 4, 0, M0z + (M[2] - M0z) * (1 - Math.exp(-((t / 0.42) ** 1.6)))];
   T = lerp3(T, [A[0], 0, A[2] - 3], ss5(t, 0.9, 2.1));
-  const Wc = add3(lerp3(w.E, w.C, 0.75), [-12, 0, -4]);
+  const Wc = add3(lerp3(w.E, w.C, 0.5), mul3([-12, 0, -4], 1 - ss(w.e, 20, 90)));
   T = lerp3(T, [Wc[0], 0, Wc[2]], ss5(t, 1.8, 3.6));
   let D = keyCR(t, [[0, 184], [1.0, 182], [1.9, 158], [2.6, 155], [3.4, 185], [4.4, 235], [6.0, 270]]);
   // the pull-back frames the mantis and the whole trailing worm (fit to a soft bounding box, below the caption)

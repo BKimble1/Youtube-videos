@@ -19,9 +19,9 @@ export const snailX = (t: number) => 30 * t;
 // camera, in snail-local coordinates (it follows the crawling snail). The centre blends from a wide framing to a
 // point on the eyestalk's spine (drifting toward the tip during the cutaway) and back out to the end framing, with C2
 // weights; the zoom is keyed in log space with velocity carried across keys.
-const KZ: [number, number][] = ([[0, 1.45], [EV.pushStart, 1.58], [EV.pushEnd, 3.15], [EV.pullStart, 3.4], [6.0, 1.04], [6.6, 0.97]] as [number, number][]).map(([a, b]) => [a, Math.log(b)]);
+const KZ: [number, number][] = ([[0, 1.45], [EV.pushStart, 1.58], [EV.pushEnd, 3.15], [EV.pullStart, 3.4], [6.0, 1.15], [6.6, 1.07]] as [number, number][]).map(([a, b]) => [a, Math.log(b)]);
 const W0 = (t: number) => ({x: 38 + 10 * t, y: -250 - 6 * t});
-const W1 = (t: number) => ({x: 10 - 10 * (t - 6), y: -258 - 6 * (t - 6)});
+const W1 = (t: number) => ({x: 30 - 10 * (t - 6), y: -262 - 6 * (t - 6)});
 const target = (t: number) => {
   const s = 0.5 + 0.12 * ss(t, EV.pushEnd, EV.pullStart);
   const sw = 0.6 * stalkSway(t);
@@ -47,9 +47,8 @@ const planeTf = (t: number, dz: number, tref: number) => {
 };
 
 const HOPS = [
-  {t0: EV.birdHop1, x0: -1180, x1: -820},
-  {t0: EV.birdHop2, x0: -820, x1: -520},
-  {t0: EV.birdHop3, x0: -520, x1: -360},
+  {t0: EV.birdHop1, x0: -800, x1: -480},
+  {t0: EV.birdHop2, x0: -480, x1: -300},
 ];
 const BIRD_S = 2.5; // bird-local units -> design px (bird plane, at the end camera)
 

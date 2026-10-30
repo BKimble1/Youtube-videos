@@ -111,7 +111,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
 };
 
 export const Hook: React.FC<HookProps> = (props) => (
-  <HookFrame hook="03" W={W03} bg="#2C6767" capY={[1500, 330]} props={props}>
+  <HookFrame hook="03" W={W03} bg="#2C6767" capY={[330, 330]} props={props}>
     {(t) => <Scene t={t} />}
   </HookFrame>
 );

@@ -192,6 +192,11 @@ export const SnailBody: React.FC<{t: number; px: number}> = ({t, px}) => {
         </radialGradient>
         <clipPath id="h06-body"><path d={d} /></clipPath>
         <clipPath id="h06-foot"><path d={footD} /></clipPath>
+        <radialGradient id="h06-hd">
+          <stop offset="0" stopColor={DARK} stopOpacity="0.45" />
+          <stop offset="0.6" stopColor={DARK} stopOpacity="0.3" />
+          <stop offset="1" stopColor={DARK} stopOpacity="0" />
+        </radialGradient>
         <linearGradient id="h06-ft" gradientUnits="userSpaceOnUse" x1="0" y1="-30" x2="0" y2="9">
           <stop offset="0" stopColor={lit(BODY, 0.42)} />
           <stop offset="1" stopColor={shade(BODY, 0.2)} />
@@ -206,7 +211,7 @@ export const SnailBody: React.FC<{t: number; px: number}> = ({t, px}) => {
       <path d={d} fill="url(#h06-bg1)" />
       <g clipPath="url(#h06-body)">
         {/* darker head and dorsal stripe */}
-        <path d={`M130,-166 C210,-210 330,-196 360,-120 L360,-70 C300,-110 220,-134 130,-144Z`} fill={DARK} opacity={0.38} />
+        <ellipse cx={290} cy={-140} rx={150} ry={95} fill="url(#h06-hd)" />
         <path d={`M20,-148 C120,-156 190,-176 236,-${188 - b}`} fill="none" stroke={shade(DARK, 0.35)} strokeWidth={5} opacity={0.35} />
         <path d={d} fill="url(#h06-bg2)" />
         {grooves.map((g, k) => <path key={k} d={g} fill="none" stroke={shade(BODY, 0.6)} strokeWidth={1.8} opacity={0.26} strokeLinecap="round" />)}

@@ -62,7 +62,7 @@ export const Midground: React.FC<{t: number}> = ({t}) => {
 };
 
 // ---------- the twig in the bird plane (design px at the end camera) ----------
-export const twigY = (x: number) => -205 - (x + 760) * 0.035 + 7 * Math.sin(x / 95);
+export const twigY = (x: number) => -232 - (x + 760) * 0.035 + 7 * Math.sin(x / 95);
 export const Twig: React.FC<{t: number}> = ({t}) => {
   const pts: P[] = [];
   const top: P[] = [], bot: P[] = [];
@@ -87,7 +87,7 @@ export const Twig: React.FC<{t: number}> = ({t}) => {
   return (
     <g>
       <defs>
-        <linearGradient id="h06-twig" x1="0" y1="-230" x2="0" y2="-170" gradientUnits="userSpaceOnUse">
+        <linearGradient id="h06-twig" x1="0" y1="-258" x2="0" y2="-197" gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#8A7052" />
           <stop offset="1" stopColor="#3E2F22" />
         </linearGradient>

@@ -171,6 +171,6 @@ export const robinState = (t: number, hops: {t0: number; x0: number; x1: number}
   const head = idle + look + after;
   const pitch = ss(t, notice + 0.1, notice + 0.4) * 8 + ss(t, 5.72, 6.1) * 7 - air * 0.08;
   const bl = clamp(1 - Math.abs(t - blinkT) / 0.07);
-  const tail = 10 * ring(t, hops[hops.length - 1].t0 + dur, 2.6, 0.15) + 6 * ring(t, hops[1].t0 + dur, 2.6, 0.15) - air * 0.12;
+  const tail = 10 * ring(t, hops[hops.length - 1].t0 + dur, 2.6, 0.15) + 6 * ring(t, hops[0].t0 + dur, 2.6, 0.15) - air * 0.12;
   return {x, pose: {crouch: Math.min(1.1, crouch), air, feet: tucked ? 'tucked' : 'ground', head, pitch, blink: bl, tail} as RobinPose};
 };

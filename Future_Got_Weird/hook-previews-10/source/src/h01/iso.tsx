@@ -249,7 +249,7 @@ export const Isopod: React.FC<{C: Ctx; P0: IsoPose; uid: string}> = ({C, P0, uid
     const pts: V2[] = [];
     for (let i = 0; i < 20; i++) {
       const a = (i / 20) * Math.PI * 2;
-      pts.push(PI_(C, P0, [c[0] + Math.cos(a) * 1.05 - 0.1, c[1] + s * Math.sin(a) * 0.3 + s * 0.1, c[2] + Math.sin(a) * 0.58 + 0.12]));
+      pts.push(PI_(C, P0, [c[0] + Math.cos(a) * 0.86 - 0.1, c[1] + s * Math.sin(a) * 0.26 + s * 0.1, c[2] + Math.sin(a) * 0.48 + 0.12]));
     }
     const cc = PI_(C, P0, [c[0] + 0.35, c[1] - s * 0.05, c[2] + 0.55]);
     const fac: (V2 & {s: number})[] = [];
