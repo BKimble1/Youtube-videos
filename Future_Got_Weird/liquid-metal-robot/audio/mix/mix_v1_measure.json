@@ -1,0 +1,308 @@
+{
+ "hook": "mix_v1",
+ "file": "source/public/audio/mix_v1.wav",
+ "duration_s": 26.0,
+ "voice_lufs": -15.94,
+ "fx_bus_lufs": -31.81,
+ "mix_lufs": -16.2,
+ "sample_peak_dbfs": -1.0,
+ "voice_onset_s": 0.064,
+ "effects": [
+  {
+   "t": 0,
+   "sfx": "lab room tone",
+   "gain_db": 0
+  },
+  {
+   "t": 0,
+   "sfx": "pad coil hum (field on)",
+   "gain_db": 0
+  },
+  {
+   "t": 7.91,
+   "sfx": "pad coil again hum (field on)",
+   "gain_db": 0
+  },
+  {
+   "t": 18.515,
+   "sfx": "stage coil hum (field on)",
+   "gain_db": 0
+  },
+  {
+   "t": 14.3,
+   "sfx": "stomach-model hollow air",
+   "gain_db": -4
+  },
+  {
+   "t": 0.0,
+   "sfx": "phase-change crackle",
+   "gain_db": -12
+  },
+  {
+   "t": 0.57,
+   "sfx": "figure sags",
+   "gain_db": -6
+  },
+  {
+   "t": 1.04,
+   "sfx": "slump into puddle (melts)",
+   "gain_db": -4
+  },
+  {
+   "t": 0.74,
+   "sfx": "drip 1",
+   "gain_db": -10
+  },
+  {
+   "t": 0.91,
+   "sfx": "drip 2",
+   "gain_db": -10
+  },
+  {
+   "t": 1.14,
+   "sfx": "drip 3",
+   "gain_db": -10
+  },
+  {
+   "t": 1.2,
+   "sfx": "drip 4",
+   "gain_db": -10
+  },
+  {
+   "t": 1.22,
+   "sfx": "liquid metal flows to the bars",
+   "gain_db": -8
+  },
+  {
+   "t": 1.27,
+   "sfx": "squeeze through gap 1",
+   "gain_db": -8
+  },
+  {
+   "t": 2.15,
+   "sfx": "neck pinches off 1",
+   "gain_db": -9
+  },
+  {
+   "t": 1.37,
+   "sfx": "squeeze through gap 2",
+   "gain_db": -8
+  },
+  {
+   "t": 2.231,
+   "sfx": "neck pinches off 2",
+   "gain_db": -9
+  },
+  {
+   "t": 1.53,
+   "sfx": "squeeze through gap 3",
+   "gain_db": -8
+  },
+  {
+   "t": 2.112,
+   "sfx": "neck pinches off 3",
+   "gain_db": -9
+  },
+  {
+   "t": 2.28,
+   "sfx": "beads merge",
+   "gain_db": -6
+  },
+  {
+   "t": 2.43,
+   "sfx": "pool dragged by the magnet",
+   "gain_db": -11
+  },
+  {
+   "t": 3.18,
+   "sfx": "pad coil off (relay)",
+   "gain_db": -16
+  },
+  {
+   "t": 3.1,
+   "sfx": "liquid fills the cavity",
+   "gain_db": -7
+  },
+  {
+   "t": 3.7,
+   "sfx": "freeze crackle",
+   "gain_db": -14
+  },
+  {
+   "t": 4.37,
+   "sfx": "magnet clacks onto the cast figure",
+   "gain_db": -5
+  },
+  {
+   "t": 4.42,
+   "sfx": "figure tilts out of the mould",
+   "gain_db": -14
+  },
+  {
+   "t": 4.95,
+   "sfx": "figure set down",
+   "gain_db": -7
+  },
+  {
+   "t": 4.95,
+   "sfx": "set-down body",
+   "gain_db": -12
+  },
+  {
+   "t": 5.03,
+   "sfx": "magnet lets go",
+   "gain_db": -11
+  },
+  {
+   "t": 5.08,
+   "sfx": "low tonal swell as the camera pushes in",
+   "gain_db": -10
+  },
+  {
+   "t": 5.265,
+   "sfx": "cut window opens (glassy shimmer)",
+   "gain_db": -15
+  },
+  {
+   "t": 6.425,
+   "sfx": "particle tick 1",
+   "gain_db": -17
+  },
+  {
+   "t": 6.535,
+   "sfx": "particle tick 2",
+   "gain_db": -17
+  },
+  {
+   "t": 6.645,
+   "sfx": "particle tick 3",
+   "gain_db": -17
+  },
+  {
+   "t": 6.755,
+   "sfx": "particle tick 4",
+   "gain_db": -17
+  },
+  {
+   "t": 6.865,
+   "sfx": "particle tick 5",
+   "gain_db": -17
+  },
+  {
+   "t": 6.975,
+   "sfx": "particle tick 6",
+   "gain_db": -17
+  },
+  {
+   "t": 7.085,
+   "sfx": "particle tick 7",
+   "gain_db": -17
+  },
+  {
+   "t": 7.91,
+   "sfx": "pad coil on (relay)",
+   "gain_db": -12
+  },
+  {
+   "t": 8.515,
+   "sfx": "softening crackle",
+   "gain_db": -11
+  },
+  {
+   "t": 9.055,
+   "sfx": "figure slumps to liquid",
+   "gain_db": -5
+  },
+  {
+   "t": 10.25,
+   "sfx": "puddle steered by the magnet",
+   "gain_db": -9
+  },
+  {
+   "t": 10.75,
+   "sfx": "turn 1",
+   "gain_db": -10
+  },
+  {
+   "t": 11.23,
+   "sfx": "turn 2",
+   "gain_db": -10
+  },
+  {
+   "t": 11.92,
+   "sfx": "pad coil off (relay)",
+   "gain_db": -12
+  },
+  {
+   "t": 12.27,
+   "sfx": "gentle solidification crackle",
+   "gain_db": -12
+  },
+  {
+   "t": 13.68,
+   "sfx": "solid slug slides (rigid)",
+   "gain_db": -17
+  },
+  {
+   "t": 15.5,
+   "sfx": "slug enters the esophagus tube",
+   "gain_db": -14
+  },
+  {
+   "t": 15.6,
+   "sfx": "slides through the tube",
+   "gain_db": -19
+  },
+  {
+   "t": 18.515,
+   "sfx": "stage coil on (relay)",
+   "gain_db": -12
+  },
+  {
+   "t": 18.565,
+   "sfx": "slug softens",
+   "gain_db": -12
+  },
+  {
+   "t": 18.765,
+   "sfx": "metal flows round the ball",
+   "gain_db": -7
+  },
+  {
+   "t": 19.205,
+   "sfx": "wraps round",
+   "gain_db": -8
+  },
+  {
+   "t": 19.973,
+   "sfx": "the two flows meet behind the ball",
+   "gain_db": -6
+  },
+  {
+   "t": 19.992,
+   "sfx": "capture",
+   "gain_db": -12
+  },
+  {
+   "t": 20.55,
+   "sfx": "grip hardens",
+   "gain_db": -12
+  },
+  {
+   "t": 21.22,
+   "sfx": "hard grip (set)",
+   "gain_db": -10
+  },
+  {
+   "t": 21.415,
+   "sfx": "assembly slides out through the tube",
+   "gain_db": -16
+  },
+  {
+   "t": 23.75,
+   "sfx": "exits the tube onto the stage",
+   "gain_db": -13
+  }
+ ],
+ "notes": "coil hum only while a field is on; melt, squeeze, fill, freeze crackles; magnet clicks; model air; wrap and capture"
+}
