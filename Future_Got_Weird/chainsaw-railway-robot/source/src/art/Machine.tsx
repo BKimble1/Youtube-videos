@@ -93,6 +93,9 @@ export type MachinePose = {
   head: number;
   /** body vibration amplitude (cm) while cutting */
   shake: number;
+  /** V2: 0..1 how far the fingers wrap round a branch of radius wrapR held at the grip point (claw-local x = 62) */
+  wrap?: number;
+  wrapR?: number;
 };
 
 export const DIMS = {
@@ -145,7 +148,7 @@ export type MGeo = ReturnType<typeof machineGeo>;
 const OUT = 3.2;
 
 /** the claw: palm block + four fingers (two near, two far), each two segments; open 0..1 */
-export const Claw: React.FC<{F: Frame; open: number; squeeze?: number; part?: 'all' | 'back' | 'front'; k?: number}> = ({F, open, squeeze = 0, part = 'all', k = 1}) => {
+export const Claw: React.FC<{F: Frame; open: number; squeeze?: number; part?: 'all' | 'back' | 'front'; k?: number; wrap?: number; wrapR?: number}> = ({F, open, squeeze = 0, part = 'all', k = 1, wrap = 0, wrapR = 10}) => {
   const u = useU();
   const o = clamp(open - squeeze * 0.08);
   const fingers = (sgn: number, back: boolean) => {
@@ -155,14 +158,24 @@ export const Claw: React.FC<{F: Frame; open: number; squeeze?: number; part?: 'a
     const a1 = a0 - sgn * lerp(30, 6, o);
     const tip = add(m, mul(dirOf(a1), 26 * k));
     const a2 = a1 - sgn * lerp(28, 10, o);
-    const nail = add(tip, mul(dirOf(a2), 9 * k));
+    const nail0 = add(tip, mul(dirOf(a2), 9 * k));
+    // V2: wrapped grip: knuckles beside the wood, tips curled under it, nails meeting below the centre
+    const R = wrapR + squeeze * -0.6;
+    const w = clamp(wrap);
+    const mW = fx(F, {x: 58, y: sgn * (R + 6.5)});
+    const tipW = fx(F, {x: 62 + R * 0.78, y: sgn * (R * 0.6)});
+    const nailW = fx(F, {x: 62 + R + 3, y: sgn * 2});
+    const L2 = (a: V, b: V) => ({x: a.x + (b.x - a.x) * w, y: a.y + (b.y - a.y) * w});
+    const mm = L2(m, mW);
+    const tp = L2(tip, tipW);
+    const nail = L2(nail0, nailW);
     const fill = back ? 'url(#m-dark)' : 'url(#m-joint)';
     return (
       <g key={`${sgn}${back}`}>
-        <IP d={slab(base, m, 7.5 * k, 6.5 * k)} fill={fill} ink={OUT} />
-        <IP d={slab(m, tip, 6.5 * k, 5 * k)} fill={fill} ink={OUT} />
-        <IP d={slab(tip, nail, 5 * k, 2.6 * k, 0.6)} fill={back ? COL.dark : COL.accent} ink={OUT * 0.8} />
-        <path d={circ(m, 3.6 * k)} fill={COL.steel} stroke={INK} strokeWidth={1.4} />
+        <IP d={slab(base, mm, 7.5 * k, 6.5 * k)} fill={fill} ink={OUT} />
+        <IP d={slab(mm, tp, 6.5 * k, 5 * k)} fill={fill} ink={OUT} />
+        <IP d={slab(tp, nail, 5 * k, 2.6 * k, 0.6)} fill={back ? COL.dark : COL.accent} ink={OUT * 0.8} />
+        <path d={circ(mm, 3.6 * k)} fill={COL.steel} stroke={INK} strokeWidth={1.4} />
       </g>
     );
   };
@@ -294,7 +307,7 @@ export const Robot: React.FC<{p: MachinePose; g: MGeo; noSaw?: boolean; split?: 
     {!noSaw && <Saw F={g.sawF} run={p.run} chain={p.chain} />}
     <Torso g={g} head={p.head} />
     <Arm S={g.SN} E={g.armN.E} Wr={g.armN.W} />
-    <Claw F={g.clawF} open={p.open} squeeze={p.squeeze} part={split ? 'front' : 'all'} />
+    <Claw F={g.clawF} open={p.open} squeeze={p.squeeze} part={split ? 'front' : 'all'} wrap={p.wrap} wrapR={p.wrapR} />
   </g>
 );
 
@@ -363,7 +376,7 @@ const P2 = (p: V) => `${f(p.x)} ${f(p.y)}`;
  *  claw's far fingers), 'front' (the robot without those fingers) */
 export const Machine: React.FC<{p: MachinePose; cabinLight?: number; windowGlow?: number; noSaw?: boolean; operator?: boolean; layer?: 'all' | 'base' | 'back' | 'front'}> = ({p, cabinLight, windowGlow, noSaw, operator, layer = 'all'}) => {
   const g = machineGeo(p);
-  if (layer === 'back') return <Claw F={g.clawF} open={p.open} squeeze={p.squeeze} part="back" />;
+  if (layer === 'back') return <Claw F={g.clawF} open={p.open} squeeze={p.squeeze} part="back" wrap={p.wrap} wrapR={p.wrapR} />;
   if (layer === 'front') return <Robot p={p} g={g} noSaw={noSaw} split />;
   return (
     <g>

@@ -3,7 +3,7 @@
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS, H, keys, W, zkeys} from './lib/core';
-import {TT} from './lib/timeline';
+import {BT, TT} from './lib/timeline';
 import {Worksite} from './shots/Worksite';
 import {Cab} from './shots/Cab';
 import {Bilateral} from './shots/Bilateral';
@@ -21,13 +21,15 @@ export const actAt = (t: number) => {
   if (t < tt.cabin) return 'worksite';
   if (t < tt.looks) return 'cab';
   if (t < tt.another) return 'worksite';
+  if (t < BT.bilWin) return 'cab';
+  if (t < BT.bilCab) return 'worksite';
   if (t < tt.imagine) return 'cab';
   if (t < tt.except) return 'hand';
   if (t < tt.stunt) return 'worksite';
   if (t < tt.reason) return 'safety';
   if (t < tt.still) return 'rollout';
   if (t < tt.japan2) return 'worksite';
-  if (t < tt.gave + 0.5) return 'cab';
+  if (t < BT.endCut) return 'cab';
   return 'worksite';
 };
 
@@ -57,7 +59,7 @@ export const Frame: React.FC<{t: number}> = ({t}) => {
   const act = actAt(t);
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{display: 'block'}}>
-      {act === 'worksite' && <Worksite t={t} lookout={t > tt.except && t < tt.stunt} />}
+      {act === 'worksite' && <Worksite t={t} signal={t > tt.another && t < tt.imagine} />}
       {act === 'cab' && (t < tt.another || t >= tt.japan2) && <Cab t={t} cam={cabCam(t)} />}
       {act === 'cab' && t >= tt.another && t < tt.imagine && <Bilateral t={t} />}
       {act === 'hand' && <Touch t={t} />}

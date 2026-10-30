@@ -155,7 +155,7 @@ export const along = (b: BranchDef, u: number) => {
   return {p, d, r, s, total: L[L.length - 1]};
 };
 
-const tube = (b: BranchDef, u0: number, u1: number, n = 18) => {
+export const tube = (b: BranchDef, u0: number, u1: number, n = 18) => {
   const top: V[] = [];
   const bot: V[] = [];
   for (let k = 0; k <= n; k++) {
@@ -289,9 +289,10 @@ export const Tree: React.FC<{x: number; y: number; h: number; seed: number; crow
 };
 
 /** sawdust: particles from the kerf, drifting down with gravity (deterministic per particle) */
-export const Sawdust: React.FC<{at: V; dir: V; t: number; t0: number; t1: number; scale?: number}> = ({at, dir, t, t0, t1, scale = 1}) => {
+export const Sawdust: React.FC<{at: V | ((t: number) => V); dir: V; t: number; t0: number; t1: number; scale?: number; rate?: number}> = ({at: at0, dir, t, t0, t1, scale = 1, rate: rate0}) => {
+  const at = (tb: number): V => (typeof at0 === 'function' ? at0(tb) : at0);
   const out = [];
-  const rate = 70;
+  const rate = rate0 ?? 70;
   const n0 = Math.max(0, Math.floor((t - 1.4 - t0) * rate));
   const n1 = Math.floor((Math.min(t, t1) - t0) * rate);
   for (let i = n0; i <= n1; i++) {
@@ -301,7 +302,7 @@ export const Sawdust: React.FC<{at: V; dir: V; t: number; t0: number; t1: number
     const sp = (90 + hash(i * 1.7) * 160) * scale;
     const ang = (hash(i * 2.9) - 0.5) * 0.9;
     const d = norm({x: dir.x * Math.cos(ang) - dir.y * Math.sin(ang), y: dir.x * Math.sin(ang) + dir.y * Math.cos(ang)});
-    const p = add(at, {x: d.x * sp * age, y: d.y * sp * age + 260 * scale * age * age});
+    const p = add(at(born), {x: d.x * sp * age, y: d.y * sp * age + 260 * scale * age * age});
     const r = (1.2 + hash(i * 4.1) * 2.2) * scale;
     out.push(<rect key={i} x={f(p.x - r)} y={f(p.y - r * 0.6)} width={f(r * 2)} height={f(r * 1.2)} fill={i % 3 ? '#F4DDB0' : '#E2BD7E'} opacity={clamp(1.3 - age)} transform={`rotate(${f(hash(i) * 180 + age * 400)} ${f(p.x)} ${f(p.y)})`} />);
   }

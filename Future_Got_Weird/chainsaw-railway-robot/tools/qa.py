@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Measured QA of a rendered export (everything is read from the file itself).
-usage: python3 tools/qa.py <video.mp4> <out_prefix>
+usage: python3 tools/qa.py <video.mp4> <out_prefix> [cues.json]
 - stream metadata (ffprobe); duration vs the narration master; a full decode (errors counted);
 - loudness of the delivered audio (ffmpeg ebur128: integrated, LRA, true peak);
 - black and frozen picture (blackdetect, freezedetect);
@@ -48,7 +48,7 @@ fr = np.frombuffer(raw, np.uint8).reshape(-1, H4, W4).astype(np.float32)
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2))
 med = np.array([np.median(d[max(0, i - 6):i + 7]) for i in range(len(d))])
 spikes = [i + 1 for i in range(len(d)) if d[i] > 6 and d[i] > 3.5 * (med[i] + 0.5)]
-cues = json.load(open('audio/cues.json'))
+cues = json.load(open(sys.argv[3] if len(sys.argv) > 3 else 'audio/cues.json'))
 act = cues['act']
 planned = [f for f in range(1, len(act)) if act[f] != act[f - 1]]
 # the cab/bilateral switch inside 'cab' and the overlay segment changes are planned too

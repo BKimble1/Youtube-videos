@@ -103,3 +103,19 @@ export const TT = {
   end: TE('mechanical arms.'),
   dur: DUR,
 };
+
+/** V2 beats derived from the words above */
+export const BT = {
+  // bilateral loop: out from the hand, through the cabin window, up the boom, contact, back down, felt, eased
+  bilOut: TT.tiny + 0.25,
+  bilWin: TT.tiny + 1.75,
+  bilUp: TT.tiny + 3.55,
+  bilContact: TT.resistance - 0.25,
+  bilDn0: TT.resistance + 1.05,
+  bilCab: TT.back + 1.22,
+  bilFelt: TT.back + 2.02,
+  bilEase0: TT.sense + 0.25,
+  bilEase1: TT.sense + 1.25,
+  // ending: one small hand movement, then the matched claw
+  endCut: TT.gave + 0.5,
+};

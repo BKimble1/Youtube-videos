@@ -49,30 +49,37 @@ const placeFeet = (p: ManPose, foot: V) => {
 };
 
 export const safetyCam = (t: number): Cam => ({
-  x: keys(t, [[tt.stunt, 600], [tt.workers, 500], [tt.high + 0.6, 560], [tt.overhead + 0.6, 640], [tt.climbing - 0.034, 660], [tt.climbing, -1100], [tt.tools - 0.034, -1150], [tt.tools, 480], [tt.fall + 0.4, 560], [tt.moving, 300], [tt.moving + 1.8, 120], [tt.reason, 160]]),
-  y: keys(t, [[tt.stunt, -420], [tt.workers, -360], [tt.high + 0.6, -560], [tt.overhead + 0.6, -620], [tt.climbing - 0.034, -620], [tt.climbing, -420], [tt.tools - 0.034, -440], [tt.tools, -560], [tt.fall + 0.4, -380], [tt.moving, -420], [tt.moving + 1.8, -440], [tt.reason, -440]]),
-  z: zkeys(t, [[tt.stunt, 0.62], [tt.workers, 0.9], [tt.high + 0.6, 1.5], [tt.overhead + 0.6, 2.0], [tt.climbing - 0.034, 2.0], [tt.climbing, 1.2], [tt.tools - 0.034, 1.25], [tt.tools, 1.6], [tt.fall + 0.4, 1.05], [tt.moving, 0.9], [tt.moving + 1.8, 0.68], [tt.reason, 0.66]]),
+  x: keys(t, [[tt.stunt, 600], [tt.workers, 500], [tt.high + 0.6, 470], [tt.overhead + 0.6, 640], [tt.climbing - 0.034, 660], [tt.climbing, -1100], [tt.tools - 0.034, -1150], [tt.tools, 480], [tt.fall + 0.4, 560], [tt.moving, 300], [tt.moving + 1.8, 0], [tt.reason, 20]]),
+  y: keys(t, [[tt.stunt, -420], [tt.workers, -360], [tt.high + 0.6, -430], [tt.overhead + 0.6, -620], [tt.climbing - 0.034, -620], [tt.climbing, -420], [tt.tools - 0.034, -440], [tt.tools, -560], [tt.fall + 0.4, -380], [tt.moving, -420], [tt.moving + 1.8, -440], [tt.reason, -440]]),
+  z: zkeys(t, [[tt.stunt, 0.62], [tt.workers, 0.9], [tt.high + 0.6, 1.05], [tt.overhead + 0.6, 2.0], [tt.climbing - 0.034, 2.0], [tt.climbing, 1.2], [tt.tools - 0.034, 1.25], [tt.tools, 1.6], [tt.fall + 0.4, 1.05], [tt.moving, 0.9], [tt.moving + 1.8, 0.62], [tt.reason, 0.6]]),
 });
 
 export const Safety: React.FC<{t: number}> = ({t}) => {
   const cam = safetyCam(t);
-  const ghost = 1 - pr(t, tt.moving, tt.moving + 0.9);
+  // V2: no fade. When the job moves to the machine, the platform lowers its worker to the ground and the climber
+  // comes down the ladder, while the machine rolls in and its claw takes over at the same bracket
+  const ghost = 1;
+  const down = pr(t, tt.moving - 0.1, tt.moving + 1.5);
   // work platform vehicle (left) with a raised deck at bracket height
-  const deckY = -420;
+  const deckY = lerp(-420, -175, down);
   const deckX0 = 120;
   const deckX1 = 330;
   // worker on the platform, reaching up to the bracket; heavy fitting in the hands during "tools"
   const lift = pr(t, tt.tools, tt.tools + 0.8);
   const wp0 = standing(0.2);
   const reachUp = {...wp0, lW: 1, rW: 1, lWx: BRACKET.x - 10, lWy: lerp(BRACKET.y + 30, BRACKET.y + 70, lift), rWx: BRACKET.x - 40, rWy: lerp(BRACKET.y + 40, BRACKET.y + 80, lift), lElb: -1, rElb: -1, turn: -0.6, neck: -18};
-  const worker = placeFeet(reachUp, {x: 300, y: deckY});
+  const rest = {...wp0, turn: -0.2, neck: -4};
+  const pose0 = down > 0 ? {...reachUp, lW: 1 - down, rW: 1 - down, lWy: lerp(reachUp.lWy, deckY - 100, down), rWy: lerp(reachUp.rWy, deckY - 90, down), neck: lerp(-18, rest.neck, down)} : reachUp;
+  const worker = placeFeet(pose0, {x: 300, y: deckY});
   // climber on the far mast ladder (climbing)
   const climb = pr(t, tt.climbing - 0.4, tt.climbing + 1.2);
-  const climbY = lerp(-60, -280, climb);
+  const climbY = lerp(lerp(-60, -280, climb), -10, pr(t, tt.moving, tt.moving + 1.4));
   const cp0 = {...standing(0.2), lW: 1, rW: 1, lWx: -1440, lWy: climbY - 160 + Math.sin(t * 4) * 6, rWx: -1430, rWy: climbY - 120 - Math.sin(t * 4) * 6, lHip: 30, lKnee: 50, rHip: -10, rKnee: 20, turn: 0.2};
   const climber = placeFeet(cp0, {x: -1410, y: climbY});
   // the falling fitting: dashed path from the bracket to the track
   const fo = pulse(t, tt.fall - 0.1, tt.fall + 0.3, tt.moving - 0.2, tt.moving + 0.4);
+  // height marker while the narration says "high above the tracks"
+  const hm = pulse(t, tt.high - 0.2, tt.high + 0.4, tt.climbing - 0.4, tt.climbing);
   const fu = pr(t, tt.fall + 0.1, tt.fall + 1.0, easeIn);
   const fp = {x: BRACKET.x + 30 + fu * 60, y: lerp(BRACKET.y + 30, -14, fu)};
   // clearance zone round the live equipment
@@ -126,9 +133,18 @@ export const Safety: React.FC<{t: number}> = ({t}) => {
             <Man id="climber" pose={climber} expr={{...EXPR_NEUTRAL, gx: 0.2, gy: -0.9}} lHand={HAND_CLUTCH} rHand={HAND_CLUTCH} outfit={WORKER} />
           </g>
         </g>
+        {hm > 0.001 && (
+          <g opacity={hm}>
+            <Line a={{x: deckX1 + 60, y: -10}} b={{x: deckX1 + 60, y: deckY}} w={5} c="#FFFFFF" />
+            <path d={poly([{x: deckX1 + 60, y: deckY - 4}, {x: deckX1 + 44, y: deckY + 26}, {x: deckX1 + 76, y: deckY + 26}])} fill="#FFFFFF" />
+            <path d={poly([{x: deckX1 + 60, y: -6}, {x: deckX1 + 44, y: -36}, {x: deckX1 + 76, y: -36}])} fill="#FFFFFF" />
+            <text x={deckX1 + 84} y={(deckY - 10) / 2} fill="#FFFFFF" stroke="#13263A" strokeWidth={8} paintOrder="stroke" style={{font: '900 34px "Nunito Variable"'}}>above the track</text>
+          </g>
+        )}
         {/* the fitting that could fall (illustration of the hazard) */}
         {fo > 0.001 && (
           <g opacity={fo}>
+            <text x={BRACKET.x + 110} y={-200} fill="#FFFFFF" stroke="#13263A" strokeWidth={7} paintOrder="stroke" style={{font: '800 36px "Nunito Variable"'}}>illustration · not a recorded incident</text>
             <path d={`M${BRACKET.x + 30} ${BRACKET.y + 30} Q ${BRACKET.x + 70} ${BRACKET.y + 300} ${BRACKET.x + 90} -14`} fill="none" stroke="#FFFFFF" strokeWidth={4} strokeDasharray="14 12" />
             <rect x={f(fp.x - 18)} y={f(fp.y - 10)} width={36} height={20} rx={4} fill="#9AA7B2" stroke={INK} strokeWidth={3} transform={`rotate(${f(fu * 160)} ${f(fp.x)} ${f(fp.y)})`} />
           </g>
@@ -140,6 +156,8 @@ export const Safety: React.FC<{t: number}> = ({t}) => {
             <Line a={add(cabPt, {x: 30, y: -10})} b={{x: BRACKET.x - 30, y: BRACKET.y + 40}} w={5} c="#FFFFFF" dash="16 12" />
             <path d={circ(add(cabPt, {x: 30, y: -10}), 14)} fill="#FFFFFF" />
             <path d={circ({x: BRACKET.x - 30, y: BRACKET.y + 40}, 14)} fill="#FFFFFF" />
+            <text x={cabPt.x - 40} y={cabPt.y + 140} textAnchor="middle" fill="#FFFFFF" stroke="#13263A" strokeWidth={12} paintOrder="stroke" style={{font: '900 60px "Nunito Variable"'}}>operator · on the ground</text>
+            <text x={BRACKET.x + 20} y={BRACKET.y - 120} textAnchor="middle" fill="#FFFFFF" stroke="#13263A" strokeWidth={12} paintOrder="stroke" style={{font: '900 60px "Nunito Variable"'}}>the elevated job</text>
           </g>
         )}
       </Layer>

@@ -1,14 +1,14 @@
 // Exports the picture's own event times and per-frame envelopes (from the same functions that draw the picture) to
 // audio/cues.json, so every sound is placed from the picture, not from estimates.
 import * as fs from 'fs';
-import {TT} from '../source/src/lib/timeline';
+import {BT, TT} from '../source/src/lib/timeline';
 import {FPS, FRAMES} from '../source/src/lib/core';
 import {worksite} from '../source/src/shots/Worksite';
 import {controls} from '../source/src/shots/Cab';
 import {actAt} from '../source/src/Film';
 import {SEGMENTS} from '../source/src/shots/Overlay';
 
-const out: Record<string, unknown> = {fps: FPS, frames: FRAMES, tt: TT};
+const out: Record<string, unknown> = {fps: FPS, frames: FRAMES, tt: TT, bt: BT};
 const run: number[] = [];
 const cutting: number[] = [];
 const open: number[] = [];

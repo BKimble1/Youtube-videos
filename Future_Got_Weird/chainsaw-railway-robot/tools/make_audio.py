@@ -13,8 +13,10 @@ from scipy.signal import butter, sosfilt, sosfiltfilt
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.chdir(ROOT)
 SR = 48000
-cues = json.load(open('audio/cues.json'))
+VER = os.environ.get('FGW_VER', 'V1')
+cues = json.load(open(f'audio/cues{"_" + VER.lower() if VER != "V1" else ""}.json'))
 tt = cues['tt']
+bt = cues['bt']
 FPS = cues['fps']
 NF = cues['frames']
 N = int(round(NF / FPS * SR))
@@ -127,12 +129,14 @@ haptic = (np.sin(2 * np.pi * 52 * t) * 0.6 + np.sin(2 * np.pi * 104 * t) * 0.2).
 haptic *= 0.22
 # the force-feedback moment: a soft, low push (sonic contrast)
 thump = (np.sin(2 * np.pi * 48 * np.arange(int(0.6 * SR)) / SR) * np.exp(-np.linspace(0, 5, int(0.6 * SR)))).astype(np.float32)
-place(fx, thump, tt['back'] - 0.05, 0.5, 'feedback thump')
+place(fx, thump, bt['bilFelt'] - 0.05, 0.55, 'feedback thump (pushback reaches the hand)')
 # signal shimmer while the pulses travel (very quiet)
 def shimmer(a, b, f1, g):
     m = env_from_frames([(1.0 if a <= k / FPS < b else 0.0) for k in range(NF)], 0.15)
     return (np.sin(2 * np.pi * f1 * t) * 0.5 + np.sin(2 * np.pi * f1 * 1.5 * t) * 0.3).astype(np.float32) * m * g
-sig = shimmer(tt['tiny'], tt['resistance'], 880, 0.025) + shimmer(tt['resistance'] + 0.1, tt['pushingEnd'] + 0.3, 660, 0.03)
+sig = shimmer(bt['bilOut'], bt['bilUp'], 880, 0.03) + shimmer(bt['bilDn0'], bt['bilFelt'], 660, 0.035)
+# contact: the claw meets the branch (a soft clunk) in the bilateral leg
+place(fx, SFX['clamp'], bt['bilContact'], 0.45, 'bilateral contact')
 
 # ---------------------------------------------------------------- touch / steel arms
 rustle = bp(rng.standard_normal(int(0.5 * SR)).astype(np.float32), 2500, 9000) * np.hanning(int(0.5 * SR)) * 0.35
@@ -176,7 +180,7 @@ outdoor = worksite + safety + 0.6 * hand
 forest = (wind + birds) * outdoor
 cabin_loop = granular(SFX['cabin'], N, 1.2, 0.4, seed=9)
 cabin_bed = norm_peak(cabin_loop, 0.04) * cab
-blue_room = lp(rng.standard_normal(N).astype(np.float32), 300) * 0.012 * (in_bilat + rollout)
+blue_room = lp(rng.standard_normal(N).astype(np.float32), 300) * 0.012 * rollout
 # a quiet pad under everything (continuity across cuts): slow chords, sine + soft octave
 chords = [(110.0, 138.6, 164.8), (98.0, 123.5, 146.8), (87.3, 110.0, 130.8), (98.0, 123.5, 155.6)]
 pad = np.zeros(N, np.float32)
@@ -201,7 +205,8 @@ vl = np.sqrt(sosfiltfilt(butter(1, 4, 'low', fs=SR, output='sos'), voice ** 2) +
 speaking = np.clip(vl / (np.percentile(vl[vl > 1e-4], 50) + 1e-9), 0, 1)
 duck = 1 - 0.55 * sosfiltfilt(butter(1, 3, 'low', fs=SR, output='sos'), speaking)
 
-sfx_bus = (saw_bus * 0.42 + place_bus * (1.0) * 0.5 + fx * 0.55 + servo + boom + haptic + sig + cat_hum + rail_roll + clack) * duck
+saw_duck = 1 - 0.84 * sosfiltfilt(butter(1, 3, 'low', fs=SR, output='sos'), speaking)
+sfx_bus = (saw_bus * 0.36 * saw_duck / np.maximum(duck, 1e-3) + place_bus * (1.0) * 0.5 + fx * 0.55 + servo + boom + haptic + sig + cat_hum + rail_roll + clack) * duck
 bed_bus = (forest + cabin_bed + blue_room) * (0.55 + 0.45 * duck) + pad * (0.6 + 0.4 * duck)
 # voice: gentle compression (slow) and presence
 v = hp(voice, 70)
@@ -219,7 +224,7 @@ ceil = 10 ** (-1.5 / 20)
 st = np.where(np.abs(st) > ceil * 0.8, np.sign(st) * (ceil * 0.8 + (ceil * 0.2) * np.tanh((np.abs(st) - ceil * 0.8) / (ceil * 0.2))), st)
 lufs = meter.integrated_loudness(st)
 os.makedirs('audio/mix/stems', exist_ok=True)
-out = 'audio/mix/FGW_Chainsaw_Robot_V1_mix.wav'
+out = f'audio/mix/FGW_Chainsaw_Robot_{VER}_mix.wav'
 sf.write(out, st.astype(np.float32), SR, subtype='PCM_24')
 os.makedirs('source/public/audio', exist_ok=True)
 sf.write('source/public/audio/mix.wav', st.astype(np.float32), SR, subtype='PCM_24')
@@ -233,6 +238,7 @@ bl = meter.integrated_loudness(np.stack([sfx_bus + bed_bus] * 2, 1) * 10 ** ((-1
 measure = {'file': out, 'sha256': hashlib.sha256(open(out, 'rb').read()).hexdigest(), 'duration_s': round(N / SR, 4),
            'integrated_lufs': round(lufs, 2), 'true_peak_dbtp': round(float(tp), 2), 'sample_peak_dbfs': round(float(20 * np.log10(np.abs(st).max())), 2),
            'voice_only_lufs': round(vl_db, 2), 'effects_and_beds_lufs': round(bl, 2), 'voice_minus_rest_lu': round(vl_db - bl, 2)}
-json.dump(measure, open('audio/mix/mix_measure.json', 'w'), indent=1)
-json.dump(log, open('audio/sfx_log.json', 'w'), indent=0)
+sfx = '' if VER == 'V1' else '_' + VER.lower()
+json.dump(measure, open(f'audio/mix/mix_measure{sfx}.json', 'w'), indent=1)
+json.dump(log, open(f'audio/sfx_log{sfx}.json', 'w'), indent=0)
 print(json.dumps(measure, indent=1))

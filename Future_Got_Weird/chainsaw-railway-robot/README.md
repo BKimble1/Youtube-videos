@@ -1,5 +1,33 @@
 # Future Got Weird — Japan Built a Robot With a Chainsaw for an Arm
 
+## V2 (30 Oct 2026): targeted previsualization improvement — current review
+
+V2 keeps the locked narration and its timing exactly (2:34.83, 4,645 frames) and rebuilds only what the review asked:
+- opening physical errors (wrapped grip, bar sinking into the kerf, chips from the kerf entry) and FS-1 split into
+  five footage beats;
+- a continuous grip → cut → weight → lift operation (0:45–1:07);
+- the bilateral-control loop as a journey through the machine (1:07–1:28);
+- a clearer safety handover (1:36–1:54);
+- the equipment shown large and readable with a fixed date rail (1:53–2:19);
+- a hand-matched ending (2:19–end).
+
+Still a **previsualization**: no authentic footage is cleared, and every stand-in carries a PREVIS tag.
+
+| Deliverable | File |
+|---|---|
+| Review, **1920×1080** (verified stream size), 30 fps | `exports/FGW_Chainsaw_Robot_V2_PREVIS_REVIEW_1920x1080.mp4` (Git-ignored; checksummed 20 MB parts in `backup/`) |
+| Change report (timestamped) and measured QA | `production/V2_CHANGE_REPORT.md`, `qa/v2/review_qa.json` |
+| V1 vs V2, the five review sections | `qa/v2/compare/*.png` |
+| Shots still waiting for real footage | `production/FOOTAGE_EDIT_PLAN.md` |
+| Mix | `audio/mix/FGW_Chainsaw_Robot_V2_mix.wav`, `audio/mix/mix_measure_v2.json` (cues: `audio/cues_v2.json`) |
+
+Rebuild V2: as V1 below, with `NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues_v2.json`,
+`FGW_VER=V2 python3 tools/make_audio.py`, the `ChainsawRobotV2` composition, the V2 mix in the mux, and
+`python3 tools/qa.py <export> qa/v2/review audio/cues_v2.json`; `python3 tools/compare.py <v1> <v2> qa/v2/compare`.
+
+**Next step (stopping rule):** clear and integrate authentic footage and do the final sync, not more animation
+passes.
+
 ## V1 (30 Oct 2026): previsualization review
 
 **Status.** A complete V1 **previsualization** review is rendered: locked narration, full picture, sound, captions

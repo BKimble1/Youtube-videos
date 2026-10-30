@@ -6,7 +6,7 @@ import React from 'react';
 import {add, clamp, easeInOut, easeOut, lerp, mul, V} from '../dc/math';
 import {lit, shade} from '../dc/color';
 import {H, keys, pr, pulse, W} from '../lib/core';
-import {TT} from '../lib/timeline';
+import {BT, TT} from '../lib/timeline';
 import {circ, f, INK, IP, Line, Mat, poly, slab} from '../lib/draw';
 import {Man, manJoints, ManPose} from '../dc/Man';
 import {Expr, EXPR_NEUTRAL} from '../dc/Head';
@@ -30,25 +30,26 @@ export const controls = (t: number) => {
     [tt.moves + 0.6, 13],
     [tt.controls1 + 0.3, 13],
     [tt.controls1 + 1.2, 4],
-    // bilateral: a tiny input ...
+    // bilateral: a small push sends the command ...
     [tt.tiny, 0],
-    [tt.tiny + 0.7, 7],
-    [tt.larger + 0.9, 7],
-    // ... the robot meets resistance, and the handle is pushed back against the hand
-    [tt.back - 0.1, 7],
-    [tt.back + 0.5, 3.2, easeOut],
-    [tt.sense + 0.2, 3.2],
-    [tt.sense + 0.9, 5],
-    [tt.pushingEnd + 0.4, 4.4],
-    // ending: one small movement
+    [BT.bilOut, 7.5],
+    // ... the feedback arrives: the handle is pushed back against the hand ...
+    [BT.bilFelt, 7.5],
+    [BT.bilFelt + 0.25, 5.2, easeOut],
+    // ... and the operator eases off to a smaller, controlled input
+    [BT.bilEase0, 5.2],
+    [BT.bilEase1, 3.8],
+    [tt.pushingEnd + 0.6, 3.8],
+    [tt.imagine, 2],
+    // ending: one small movement, pulling the grip toward the operator (its top travels right and down)
     [tt.gave - 0.2, 0],
-    [tt.gave + 0.45, 8],
+    [BT.endCut, -9, easeInOut],
   ]);
-  const trigL = keys(t, [[0, 0], [tt.gave, 0], [tt.pair - 0.05, 1, easeOut]]);
+  const trigL = keys(t, [[0, 0], [tt.gave + 0.05, 0], [BT.endCut, 1, easeOut]]);
   const tiltR = keys(t, [[0, 2], [tt.moves, 2], [tt.moves + 0.8, -3], [tt.controls1 + 1, 1], [tt.gave + 0.3, 1], [tt.mechanical - 0.3, 9]]);
   const trigR = keys(t, [[0, 0], [tt.mechanical - 0.7, 0], [tt.mechanical - 0.4, 1]]);
   // resistance felt: 0..1 (drives the pushback cue on the hand)
-  const felt = pulse(t, tt.back - 0.05, tt.back + 0.4, tt.pushingEnd + 0.3, tt.pushingEnd + 1.2);
+  const felt = pulse(t, BT.bilFelt - 0.1, BT.bilFelt + 0.15, tt.pushingEnd + 0.2, tt.imagine);
   return {tiltL, trigL, tiltR, trigR, felt};
 };
 export const gripAt = (G: V, tilt: number): V => {
@@ -122,6 +123,8 @@ export const OP_EXPR: Expr = {...EXPR_NEUTRAL, gx: -0.85, gy: 0.15, smile: 0.12,
 /** the robot's head-camera view for the monitors: centred between the claw and the saw */
 export const feedCam = (t: number): Cam => {
   const s = worksite(t);
+  // bilateral: the robot's camera looks at its claw pressing the branch
+  if (t > TT.another && t < TT.imagine) return {x: s.g.grip.x + 10, y: s.g.grip.y - 20, z: 2.6};
   const c = {x: (s.g.grip.x + s.g.sawCut.x) / 2, y: (s.g.grip.y + s.g.sawCut.y) / 2 + 20};
   return {x: c.x + 70, y: c.y, z: 3.1};
 };

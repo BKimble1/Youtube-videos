@@ -5,14 +5,15 @@ import React from 'react';
 import {AbsoluteFill, OffthreadVideo, Sequence, staticFile} from 'remotion';
 import FOOT from '../data/footage.json';
 import {FPS} from '../lib/core';
-import {TT} from '../lib/timeline';
+import {BT, TT} from '../lib/timeline';
 
-type Slot = {id: string; a: string; b: string; source: string; file: string | null; in: number; credit: string; cleared: boolean};
+type Slot = {id: string; a: string; b: string; source: string; beat?: string; file: string | null; in: number; credit: string; cleared: boolean};
 const at = (k: string) => {
   if (k === 'start') return 0;
   if (k === 'end') return TT.dur;
   const [name, off] = k.split('+');
-  return (TT as Record<string, number>)[name] + (off ? parseFloat(off) : 0);
+  const v = name.startsWith('BT.') ? (BT as Record<string, number>)[name.slice(3)] : (TT as Record<string, number>)[name];
+  return v + (off ? parseFloat(off) : 0);
 };
 export const SLOTS = (FOOT.slots as Slot[]).map((s) => ({...s, t0: at(s.a), t1: at(s.b)}));
 export const clearedAt = (t: number) => SLOTS.find((s) => s.cleared && s.file && t >= s.t0 && t < s.t1);

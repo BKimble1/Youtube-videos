@@ -1,10 +1,104 @@
 {
-  "_note": "Source-footage slots. A slot plays its clip only when `cleared` is true and `file` names a clip under source/public/footage/ (kept out of the public repository). See production/SOURCE_PROVENANCE.md section 3.",
-  "slots": [
-    {"id": "FS-1", "a": "start", "b": "rest", "source": "JR-EAST-ANN", "file": null, "in": 0, "credit": "", "cleared": false},
-    {"id": "FS-2", "a": "rest", "b": "cabin", "source": "JR-EAST-ANN / JR-EAST-KAB", "file": null, "in": 0, "credit": "", "cleared": false},
-    {"id": "FS-3", "a": "looks", "b": "another", "source": "JR-EAST-ANN / JR-EAST-FNN (or JR-WEST-OFFICIAL, labelled JR West)", "file": null, "in": 0, "credit": "", "cleared": false},
-    {"id": "FS-4a", "a": "still", "b": "japan2", "source": "JR-EAST-ANN", "file": null, "in": 0, "credit": "", "cleared": false},
-    {"id": "FS-4b", "a": "gave+0.5", "b": "end", "source": "JR-EAST-ANN", "file": null, "in": 0, "credit": "", "cleared": false}
-  ]
+ "_note": "Source-footage slots. A slot plays its clip only when `cleared` is true and `file` names a clip under source/public/footage/ (kept out of the public repository). See production/SOURCE_PROVENANCE.md section 3.",
+ "slots": [
+  {
+   "id": "FS-1a",
+   "a": "start",
+   "b": "realFootage",
+   "source": "JR-EAST-ANN",
+   "beat": "chainsaw already contacting the wood (no wind-up, no intro)",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-1b",
+   "a": "realFootage",
+   "b": "grabs",
+   "source": "JR-EAST-ANN",
+   "beat": "the gripper visibly supporting the branch",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-1c",
+   "a": "grabs",
+   "b": "through1+0.42",
+   "source": "JR-EAST-ANN",
+   "beat": "the saw continuing through the cut",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-1d",
+   "a": "through1+0.42",
+   "b": "important",
+   "source": "JR-EAST-ANN",
+   "beat": "the branch separating while the gripper still controls it",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-1e",
+   "a": "important",
+   "b": "rest",
+   "source": "JR-EAST-ANN / KAB",
+   "beat": "wider: both attachments connected to the machine (the dashed hazard overlay stays an illustration)",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-2",
+   "a": "rest",
+   "b": "cabin",
+   "source": "JR-EAST-ANN / JR-EAST-KAB",
+   "beat": "continuous reveal: torso, boom, rail vehicle, cabin",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-3",
+   "a": "looks",
+   "b": "another",
+   "source": "JR-EAST-ANN / JR-EAST-FNN (or JR-WEST-OFFICIAL, labelled JR West)",
+   "beat": "grip, cut, weight into the claw, lift clear of the track",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-4a",
+   "a": "still",
+   "b": "japan2",
+   "source": "JR-EAST-ANN",
+   "beat": "the saw stops; the machine at rest",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  },
+  {
+   "id": "FS-4b",
+   "a": "BT.endCut",
+   "b": "end",
+   "source": "JR-EAST-ANN",
+   "beat": "claw closes, saw comes in and cuts; wide with the cabin",
+   "file": null,
+   "in": 0,
+   "credit": "",
+   "cleared": false
+  }
+ ]
 }
