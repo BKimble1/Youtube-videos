@@ -58,15 +58,21 @@ beep 3.78; lead zaps 3.88; paddle zap 4.12 and a stimulation pulse-train buzz 4.
 
 ## QA
 
-Pass 1 (render 1): `qa_clip.py` all_pass, but the rendered file showed a smeared ghost of the backpack (a striped
-trail) from 1.8 s on that the stills did not show. Cause: a 40000-unit dim rectangle; replaced with a screen-sized rect
-and every oversized rect/clip trimmed. Verified with a test render of frames 60–110.
-Pass 2 fixes: the brainstem shortened so it no longer covers the injured segment; cord path smoothed; head tint lighter
-so the face reads through the window; anatomy drawn head-first so the cord and lesion sit on top.
-Earlier source passes: duplicate `h10-win` id (the mask was resolving to a gradient, so the cutaway was not local);
-headset redesigned (it read as goggles); IPG moved above the belt; pelvis bones simplified; neck lengthened.
+Pass 1 (render 1): `qa_clip.py` all_pass, but the rendered file showed a striped ghost behind his back from about
+1.8 s on (stacked stale copies of the torso outline) that single stills did not show. Bisected with short renders:
+duplicate React keys in the copied rig (`Man.tsx` sleeve parts `key="in"` / `key="sl"` used by both sleeves in one
+child list) leaked old DOM nodes during sequential rendering. Fixed with per-sleeve keys; also replaced the blur
+filter in the window mask with stacked strokes and trimmed every oversized mask/clip rect. Verified on a 0–60 test
+render and on the full final render (every 3rd frame inspected).
+Pass 2 fixes: brainstem shortened so it no longer covers the injured segment; cord path smoothed; head tint lighter so
+the face reads through the window; anatomy drawn head-first so the cord and lesion sit on top; natural signal now stops
+at C5 (top of the injury).
+Earlier source passes: duplicate `h10-win` id (the mask resolved to a gradient, so the cutaway was not local); headset
+redesigned (it read as goggles); pulse generator moved above the belt; pelvis bones simplified; neck lengthened.
 
-QA summary (final render): see below.
+Final `qa/h10/qa.json`: all_pass true; 180 frames, 1080x1920, 30 fps, h264 yuv420p, 6.000 s, AAC; mix −16.72 LUFS,
+peak −1.01 dBFS, voice onset 0.02 s; longest static run 0 frames; motion per second [3.81, 7.69, 5.91, 12.41, 10.84,
+6.10]; no frame jumps over 18.
 
 ## Known limitations
 
