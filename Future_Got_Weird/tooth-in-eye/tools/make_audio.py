@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Effects and mix for FGW "Tooth in Eye" V4 (the version follows the mix name: mix_v4 -> V4; V1 at commit 73ce4c9d). Everything is synthesised (no samples, no third-party music).
+"""Effects and mix for FGW "Tooth in Eye" V5 (the version follows the mix name: mix_v4 -> V4; V1 at commit 73ce4c9d). Everything is synthesised (no samples, no third-party music).
 The narration master (audio/narration/FGW_Tooth_Eye_narration_<V>.wav) is used sample for sample (gain only).
 Under it: an uninterrupted room/body ambience and a quiet low pad that opens into a warm chord when his sight returns,
 plus restrained effects placed from the picture's own events (audio/cues.json, exported from story.ts):
@@ -7,7 +7,7 @@ a distinctive unsettling tone on the opening reveal, the piezo saw, the bone giv
 hole, a small mechanical click as the optical cylinder seats, soft tissue sounds, a faint shimmer for light.
 No whooshes on camera moves, no stingers, no cartoon sounds.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; true peak about -1.5 dBTP (measured 4x).
-usage: python3 tools/make_audio.py [mix_name]   (default mix_v4)
+usage: python3 tools/make_audio.py [mix_name]   (default mix_v5)
 Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Tooth_Eye_<V>_mix.wav, audio/mix/mix_measure_<v>.json, audio/sfx_log_<v>.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
@@ -15,7 +15,7 @@ from scipy.signal import butter, sosfilt, resample_poly
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v4'
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v5'
 VER = NAME.split('_')[-1].upper()
 cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
 DUR, TM, EV = cj['DUR'], cj['TM'], cj['EV']
@@ -197,7 +197,7 @@ sfx = np.zeros(N)
 E = EV.get
 # the hook: the finished reconstruction, light already passing to the retina
 place(sfx, uncanny(1.3), 0.0, 'opening: glassy detuned tone + wet creak under the reveal', -19)
-place(sfx, wetslide(0.5), E('dissolve'), 'the graft opens over the plate (soft wet slide)', -38)
+place(sfx, wetslide(0.5), E('dissolve'), 'the graft opens over the plate, into the loop (soft wet slide)', -38)
 place(sfx, shimmer(0.9, 6500, 2600), E('raysIn'), 'light through the cylinder', -36)
 place(sfx, chime(1.4), E('retinaLit1') - 0.05, 'retina lit (warm soft chime)', -33)
 place(sfx, chime(1.2, (587.3, 880.0, 1174.7)), E('glimpse'), 'his first glimpse of the room on SEE (warm chime)', -34)

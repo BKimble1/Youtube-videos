@@ -19,13 +19,13 @@ export const TM = {
   END: DUR,
 };
 
-/** V4 sound-design events (exported to audio/cues.json for tools/make_audio.py); times match Scene4.tsx */
+/** V5 sound-design events (exported to audio/cues.json for tools/make_audio.py); times match Scene5.tsx */
 export const EV = {
-  reveal: 0.0, dissolve: 0.62, raysIn: 1.6, retinaLit1: 2.28, glimpse: 3.34, glimpseEnd: 4.36,
-  penOn: 4.72, donorIn: 6.62, reflex: 6.78, cloud: 7.22,
+  reveal: 0.0, dissolve: 26.1, raysIn: 1.1, retinaLit1: 1.88, glimpse: 2.95, glimpseEnd: 4.0,
+  penOn: 4.36, donorIn: 6.62, reflex: 6.78, cloud: 7.22,
   retract: 7.95, saw1: 8.6, saw1e: 9.3, elevator: 9.4, lift: 9.72,
   saw2: 10.38, saw2e: 10.78, offcut: 10.98, drill: 11.12, drille: 11.64, click: 13.12,
-  incision: 13.94, tuck: 14.24, suture: 15.0, monthsA: 15.85, monthsB: 16.6, growA: 17.1, growB: 18.2,
-  lift2: 18.5, flap: 19.95, trephine: 20.15, seat: 20.72, flapBack: 20.78,
-  raysIn2: 21.2, retinaLit2: 22.3, povDark: 22.95, povClear: 24.05, reaction: 25.15,
+  incision: 13.94, tuck: 14.24, suture: 15.0, monthsA: 15.65, monthsB: 16.65, growA: 16.0, growB: 18.1,
+  lift2: 18.45, flap: 19.95, trephine: 20.15, seat: 20.72, flapBack: 20.78,
+  raysIn2: 21.2, retinaLit2: 22.3, povDark: 22.95, povClear: 25.12, reaction: 25.78,
 };

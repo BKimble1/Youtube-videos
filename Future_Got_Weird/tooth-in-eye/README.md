@@ -1,6 +1,37 @@
 # Future Got Weird: Doctors Put a Tooth Inside His Eye (OOKP)
 
-## V4 (final review, current)
+## V5 (final review, current)
+
+**Status.** A retention pass on V4:
+- frame zero already shows the plate under the graft;
+- a push into the cylinder, then a fast light ride into the retina, which becomes his first sight (flowers snapping into focus);
+- one penlight shot of the scattering cornea;
+- the bench block held by forceps;
+- the pocket opening, then a cheek cut-away with the capsule and vessels growing;
+- the living implant carried and seated under the graft;
+- a deep blur until "SEE", then his hands, the flowers, his face and the push into frame zero.
+
+Rendered from source and checked from the files. **It has not been watched or heard in real time, and "ten years
+blind" still needs a confirmed source.**
+
+**Report.** `production/V5_REPORT.md`.
+
+| Deliverable | File |
+|---|---|
+| Final review | `exports/FGW_Tooth_Eye_V5_FINAL_REVIEW.mp4`: 1080×1920, 30 fps, 798 frames, 26.6 s |
+| Narration | `audio/narration/FGW_Tooth_Eye_narration_V5.wav` (identical to V4); word times and SRTs as V4 |
+| Mix | `audio/mix/FGW_Tooth_Eye_V5_mix.wav`. Measurements: `audio/mix/mix_measure_v5.json`. Effects log: `audio/sfx_log_v5.json` |
+| QA evidence | `qa/v5/` |
+| Source | `source/src/Scene5.tsx` and friends (composition `ToothEyeV5`) |
+
+**Rebuild V5.**
+- Narration: as V4, then copy it to `_V5.wav`.
+- Export the cues, then run `python3 tools/make_audio.py mix_v5`.
+- Render `ToothEyeV5` with `--props='{"audio":"mix_v5","captions":true}'`.
+
+V4's exact source is at commit `483f2bef`.
+
+## V4 (final review, superseded)
 
 **Status.** An anatomy correction pass on V3: the implant now sits as it really does, under the graft with only the
 small cylinder showing. Four fixes: the opening, the pocket, the reconstruction and the ending; 8–14 s is unchanged.

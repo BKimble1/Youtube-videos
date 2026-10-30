@@ -244,13 +244,105 @@ export const PlateSect: React.FC<{dx: number; px: number; id: string; part: 'pla
   );
 };
 
+/** V5: the pocket under the lower lid of his OTHER eye, as a sagittal cut-away through the lower lid and cheek (drawn
+ *  in this file's profile coordinates; the shot mirrors the whole profile to show his left side). Skin, fat and the
+ *  orbicularis muscle, the implant in its pocket beneath the muscle (face toward the skin, the cylinder along the
+ *  same axis as it will have in the eye), deep fat and the cheekbone. `open` opens the incision; `heal` closes it;
+ *  `grow` builds the fibrous capsule and its new vessels round the implant; `out` slides it back out. */
+export type PocketSect = {win: number; open: number; heal: number; grow: number; out: number; implOn: number};
+// the skin surface in the section plane (mid-pupil line): lower lid, the lid-cheek groove, the cheek
+const skinX = (y: number) => {
+  const k = [[8, 18.0], [11, 17.3], [13.5, 17.0], [16, 17.4], [19, 18.9], [22, 19.8], [26, 19.9], [30, 19.4], [34, 18.8]];
+  if (y <= k[0][0]) return k[0][1];
+  for (let i = 1; i < k.length; i++) if (y <= k[i][0]) {const u = (y - k[i - 1][0]) / (k[i][0] - k[i - 1][0]); const e = u * u * (3 - 2 * u); return lerp(k[i - 1][1], k[i][1], e);}
+  return k[k.length - 1][1];
+};
+const POCK_Y0 = 10.5, POCK_Y1 = 32.5, INC_Y = 12.4;
+export const POCK_C: [number, number] = [11.1, 21];            // the plate's mid-plane and hole axis in the pocket
+const band = (d0: number, d1: number) => {
+  const ys = Array.from({length: 45}, (_, i) => lerp(POCK_Y0, POCK_Y1, i / 44));
+  return poly([...ys.map((y) => [skinX(y) - d0, y] as [number, number]), ...ys.slice().reverse().map((y) => [skinX(y) - d1, y] as [number, number])], true);
+};
+export const POCK_WIN = (() => {
+  const ys = Array.from({length: 45}, (_, i) => lerp(POCK_Y0, POCK_Y1, i / 44));
+  const right = ys.map((y) => [skinX(y) + 0.05, y] as [number, number]);
+  return poly([[1.2, POCK_Y0 + 1.5], [3.0, POCK_Y0], ...right, [3.0, POCK_Y1], [1.2, POCK_Y1 - 1.5]], true);
+})();
+export const PocketSection: React.FC<{p: PocketSect; px: number; id: string}> = ({p, px, id}) => {
+  const [cx, cy] = POCK_C;
+  const out = p.out;   // 0 in the pocket .. 1 out through the incision
+  const g = clamp(p.grow);
+  const pl = {y0: cy - 5.65, y1: cy + 2.49};
+  const cap = 0.25 + 0.75 * g;   // capsule thickness (mm)
+  const op = clamp(p.open) * (1 - clamp(p.heal));
+  const sx = skinX(INC_Y);
+  // out: along the tract up to the incision and out of the skin
+  const ox = out * 9, oy = -out * 9.5;
+  return (
+    <g opacity={p.win}>
+      <defs>
+        <clipPath id={`${id}w`}><path d={POCK_WIN} /></clipPath>
+        <pattern id={`${id}fat`} width="2.2" height="2.2" patternUnits="userSpaceOnUse"><rect width="2.2" height="2.2" fill="#EBCB82" /><circle cx="1.1" cy="1.1" r="0.95" fill="none" stroke="#D3AB5E" strokeWidth="0.18" /></pattern>
+        <pattern id={`${id}mus`} width="1.1" height="1.1" patternUnits="userSpaceOnUse" patternTransform="rotate(82)"><rect width="1.1" height="1.1" fill="#BC5A4E" /><line x1="0" y1="0.28" x2="1.1" y2="0.28" stroke="#A34539" strokeWidth="0.22" /></pattern>
+        <pattern id={`${id}bn`} width="1.4" height="1.4" patternUnits="userSpaceOnUse"><rect width="1.4" height="1.4" fill="#EADBC0" /><circle cx="0.5" cy="0.5" r="0.22" fill="#CDB38E" /></pattern>
+      </defs>
+      <g clipPath={`url(#${id}w)`}>
+        <path d={band(15, 30)} fill={`url(#${id}bn)`} />
+        <path d={band(14.6, 15.2)} fill="#D9C7A6" />
+        <path d={band(4.8, 14.6)} fill={`url(#${id}fat)`} />
+        <path d={band(3.2, 4.8)} fill={`url(#${id}mus)`} />
+        <path d={band(1.4, 3.2)} fill={`url(#${id}fat)`} opacity={0.9} />
+        <path d={band(0, 1.4)} fill="#EDB89C" />
+        <path d={band(0, 0.3)} fill="#C98C70" />
+        {/* the tract from the incision down to the pocket, while it is open */}
+        {op > 0.05 && <path d={`M${sx - 2.4},${INC_Y} C${sx - 4.6},${INC_Y + 2.4} ${cx + 4.4},${pl.y0 - 1.6} ${cx + 3.2},${pl.y0 + 0.6}`} stroke="#6E1C20" strokeWidth={1.2 * op} fill="none" strokeLinecap="round" />}
+        {/* the incision: a wedge into the skin, open, then healing to a fine line */}
+        {p.open > 0 && (op > 0.05
+          ? <path d={`M${sx + 0.2},${INC_Y - 1.0 * op} L${sx - 2.6 - 2.4 * op},${INC_Y} L${sx + 0.2},${INC_Y + 1.0 * op} Z`} fill="#5A1418" />
+          : <path d={`M${sx},${INC_Y} L${sx - 1.4},${INC_Y}`} stroke="#B0685C" strokeWidth={0.25} opacity={0.4 + 0.4 * (1 - p.heal)} />)}
+        {/* the fibrous capsule growing round the implant, and the new vessels reaching it */}
+        {p.implOn > 0 && g > 0 && (
+          <g opacity={1 - clamp(out * 2.5)}>
+            <rect x={cx - 5.5 - cap} y={pl.y0 - cap} width={9.3 + 2 * cap} height={pl.y1 - pl.y0 + 2 * cap} rx={1.2} fill="#D98A80" opacity={0.35 + 0.5 * g} />
+            {Array.from({length: 11}, (_, i) => {
+              const a = (i / 11) * Math.PI * 2 + 0.4;
+              const x0 = cx - 0.8 + Math.cos(a) * 9.5, y0 = cy - 1.6 + Math.sin(a) * 9.5;
+              const x1 = cx - 0.8 + Math.cos(a + 0.15) * 4.6, y1 = cy - 1.6 + Math.sin(a + 0.15) * 5.4;
+              const mx = (x0 + x1) / 2 + (hash(i * 3.3) - 0.5) * 2.4, my = (y0 + y1) / 2 + (hash(i * 5.1) - 0.5) * 2.4;
+              const k = clamp(g * 1.5 - (i % 3) * 0.15);
+              return (
+                <g key={i}>
+                  <path d={`M${x0},${y0} Q${mx},${my} ${x1},${y1}`} stroke="#B3242E" strokeWidth={0.28} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - k} />
+                  <path d={`M${lerp(x0, x1, 0.55)},${lerp(y0, y1, 0.55)} l${(hash(i) - 0.5) * 2.4},${(hash(i + 7) - 0.5) * 2.4}`} stroke="#C0323A" strokeWidth={0.16} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - clamp(k * 1.6 - 0.6)} />
+                </g>
+              );
+            })}
+          </g>
+        )}
+      </g>
+      {/* the implant in its pocket (it leaves along the tract at the end, so it is not clipped then) */}
+      {p.implOn > 0 && (
+        <g clipPath={out > 0.01 ? undefined : `url(#${id}w)`}>
+          <g transform={`translate(${cx - PLATE_MID + ox},${cy + oy})`}>
+            {g > 0.5 && <rect x={PLATE_MID - 1.6 - 0.5} y={-5.65 - 0.5} width={4.2} height={8.14 + 1} rx={0.8} fill="#D98A80" opacity={clamp(out * 4) * 0.9} />}
+            <PlateSect dx={0} px={px} id={`${id}pp`} part="plate" tissue={0} />
+            <PlateSect dx={0} px={px} id={`${id}pc`} part="cyl" />
+          </g>
+        </g>
+      )}
+      <path d={POCK_WIN} fill="none" stroke="#E7A386" strokeWidth={1.0} />
+      <path d={POCK_WIN} fill="none" stroke={INK} strokeWidth={1.6 * px} />
+    </g>
+  );
+};
+
 export type Expr2 = {smile: number; brow: number; open: number};
 export const NEUTRAL2: Expr2 = {smile: 0, brow: 0, open: 0};
 
 /** the head in profile; `win` opens the eye cut-away from the eye outward (0 closed .. 1 open) */
 /** `ext` shows the finished eye from outside (V4: the graft over the plate, only the cylinder's end out of it);
  *  `pivot` is the point the cut-away grows from; `winOp` fades the cut-away in and out */
-export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; expr: Expr2; tear?: number; ext?: number; pivot?: [number, number]; winOp?: number; film?: number}> = ({s, px, id, win, expr, tear = 0, ext = 0, pivot = [10, 0], winOp = 1, film = 0.3}) => {
+export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; expr: Expr2; tear?: number; ext?: number; pivot?: [number, number]; winOp?: number; film?: number; blind?: boolean; pocket?: PocketSect}> = ({s, px, id, win, expr, tear = 0, ext = 0, pivot = [10, 0], winOp = 1, blind = false, pocket}) => {
   const sm = expr.smile, br = expr.brow;
   const wT = `translate(${pivot[0]},${pivot[1]}) scale(${Math.max(0.001, win)}) translate(${-pivot[0]},${-pivot[1]})`;
   return (
@@ -332,6 +424,16 @@ export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; 
           <path d="M5.6,4.4 C9,9.4 14,10.4 18,9" stroke={SKIN_D} strokeWidth={0.8} fill="none" opacity={0.7} />
           {tear > 0 && <path d={`M17.2,6.4 C16.9,${8 + tear * 5} 16.6,${10 + tear * 7} 17,${11 + tear * 8}`} stroke="#E6F4FA" strokeWidth={1.4} fill="none" opacity={0.85 * tear} strokeLinecap="round" />}
         </g>
+      ) : blind ? (
+        <g>
+          {/* V5: his other eye, also blind: a white, scarred cornea between ordinary lids */}
+          <path d="M6,-1.5 C9.5,-6 14.4,-6.6 16.6,-4.8 L16.8,4.8 C14.4,6.3 9.5,5.4 6,1.6 Z" fill="#F3E6E0" stroke={INK} strokeWidth={1.6 * px} />
+          <path d="M14.6,-4.6 C16.6,-3.6 17.4,-1.4 17.4,0 C17.4,1.6 16.6,3.6 14.6,4.6 Z" fill="#F7F6F2" stroke="rgba(120,110,100,0.6)" strokeWidth={1 * px} />
+          <path d="M8,-2.4 C10,-3.4 11.6,-2.8 13.4,-3.6 M8.4,2.6 C10.2,3.2 11.8,2.6 13.6,3.4" stroke="#C4525A" strokeWidth={0.2} fill="none" />
+          <path d={`M5,-2 C9,${-7.5 - sm * 0.3} 14.6,${-8.2 - sm * 0.3} 17.4,-5.4`} stroke={INK} strokeWidth={2.6 * px} fill="none" strokeLinecap="round" />
+          {Array.from({length: 7}, (_, i) => <path key={i} d={`M${8 + i * 1.35},${-6.6 - Math.sin(i * 0.5) * 0.6} l1.4,-1.5`} stroke={INK} strokeWidth={1.3 * px} />)}
+          <path d="M5.6,2 C9,6.2 14.2,6.8 17.2,5.2" stroke={INK} strokeWidth={1.8 * px} fill="none" />
+        </g>
       ) : (
         <g>
           <path d="M6,-1.5 C9.5,-6 14.4,-6.6 16.6,-4.8 L16.8,4.8 C14.4,6.3 9.5,5.4 6,1.6 Z" fill="#DE8F88" stroke={INK} strokeWidth={1.6 * px} />
@@ -343,6 +445,7 @@ export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; 
           {tear > 0 && <path d={`M16,6 C15.6,${8 + tear * 6} 15.2,${10 + tear * 8} 15.6,${11 + tear * 9}`} stroke="#E6F4FA" strokeWidth={1.6} fill="none" opacity={0.85 * tear} strokeLinecap="round" />}
         </g>
       )}
+      {pocket && pocket.win > 0 && <PocketSection p={pocket} px={px} id={`${id}pk`} />}
       {/* the cut-away: the eye in section; the plate (drawn over the cut edge, so it is never clipped as it arrives),
           then the graft and the cut lids in front of it, then the cylinder through the graft */}
       {win > 0 && winOp > 0 && (

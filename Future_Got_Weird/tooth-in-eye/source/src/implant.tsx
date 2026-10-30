@@ -77,7 +77,7 @@ const inCrown = (x: number) => x >= 17.2;
 
 // ---------------- materials ----------------
 const MAT = {
-  dentin: [232, 216, 178], bone: [206, 166, 124], enamel: [236, 238, 236], tissue: [222, 138, 132],
+  dentin: [240, 228, 196], bone: [222, 196, 164], enamel: [236, 238, 236], tissue: [222, 138, 132],
 } as const;
 const shade = (c: readonly number[], k: number, tint?: readonly number[], g = 0) => {
   const m = tint ? c.map((v, i) => lerp(v, tint[i], g)) : c;
@@ -110,7 +110,7 @@ const FrontFace: React.FC<{id: string; outline: [number, number][]; withCrown: b
       <defs>
         <clipPath id={`${id}o`}><path d={P(outline)} /></clipPath>
         <clipPath id={`${id}r`}><path d={P(ROOT)} /></clipPath>
-        <linearGradient id={`${id}bone`} x1="0" y1="1" x2="0.2" y2="0"><stop offset="0" stopColor="#B98762" /><stop offset="1" stopColor="#D6AE86" /></linearGradient>
+        <linearGradient id={`${id}bone`} x1="0" y1="1" x2="0.2" y2="0"><stop offset="0" stopColor="#D2B392" /><stop offset="1" stopColor="#E8D3B8" /></linearGradient>
         <linearGradient id={`${id}den`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#FFFBEF" /><stop offset="0.55" stopColor="#F6EBD0" /><stop offset="1" stopColor="#E2CDA0" /></linearGradient>
         <linearGradient id={`${id}en`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#FFFFFF" /><stop offset="0.6" stopColor="#EEF1F2" /><stop offset="1" stopColor="#CFD8DC" /></linearGradient>
       </defs>
@@ -118,7 +118,7 @@ const FrontFace: React.FC<{id: string; outline: [number, number][]; withCrown: b
         {/* bone everywhere, porous */}
         <path d={P(outline)} fill={`url(#${id}bone)`} />
         {pores.map((p, i) => (
-          <ellipse key={i} cx={p.x} cy={p.y} rx={p.r} ry={p.r * 0.7} transform={`rotate(${p.a} ${p.x} ${p.y})`} fill="#9C6E4E" opacity={0.55} />
+          <ellipse key={i} cx={p.x} cy={p.y} rx={p.r * 0.8} ry={p.r * 0.55} transform={`rotate(${p.a} ${p.x} ${p.y})`} fill={i % 3 ? '#B48A6C' : '#B9726A'} opacity={0.6} />
         ))}
         {/* the root */}
         <path d={P(ROOT)} fill={`url(#${id}den)`} />

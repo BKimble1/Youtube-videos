@@ -10,7 +10,7 @@
 import React from 'react';
 import {clamp, hash, lerp} from './lib';
 import {EL, ER, ES, upperLid, lowerLid, fissure, Lashes} from './face';
-import {Implant, Rot, ROOT, CROWN, BLOCK, LAMINA, HOLE, HOLE_R, Z_F, faceMatrix, projectPt, alongPoly} from './implant';
+import {Implant, Rot, ROOT, CROWN, BLOCK, LAMINA, HOLE, HOLE_R, Z_F, CYL_Z1, faceMatrix, projectPt, alongPoly} from './implant';
 import {CUT_U} from './profile';
 import {SKIN, SKIN_D, SKIN_L, HAIR, BEARD} from './profile2';
 
@@ -26,6 +26,7 @@ export type EyeLook = {
   mucosa: number;        // stage-1 cheek-lining graft over the eye (pink)
   ookp?: number;         // V4: the finished eye: the plate under the graft, the cylinder's end out of it
   cut?: number;          // V4: local cut-away of the graft over the plate (0 closed .. 1 open)
+  implRot?: Rot;         // V5: the plate turns a little in the cut-away as the camera pushes in (its cylinder shows through it)
 };
 export const LOOK0: EyeLook = {scar: 1, glare: 0, donor: 0, donorCloud: 0, mucosa: 0};
 /** V4: the implant's pose on the finished eye, front-on (its face to us, long axis across the eye, bone strip up), and
@@ -138,14 +139,14 @@ const Eye2: React.FC<{id: string; px: number; s: number; L: EyeLook}> = ({id, px
                 <defs><clipPath id={`${id}cw`}><path d={win} transform={wT} /></clipPath></defs>
                 <g clipPath={`url(#${id}cw)`}>
                   <path d={win} fill="#B9625F" transform={wT} />
-                  <Implant id={`${id}pl`} x={EYE_HOLE[0]} y={EYE_HOLE[1]} s={1} rot={FRONT_ROT} px={px} cyl={0} hole={1} tissue={0.12} vessels={1} />
+                  <Implant id={`${id}pl`} x={EYE_HOLE[0]} y={EYE_HOLE[1]} s={1} rot={L.implRot ?? FRONT_ROT} px={px} cyl={1} cylMode="clear" holeBg="#1A2630" tissue={0.12} vessels={1} />
                   <path d={win} transform={wT} fill="none" stroke="rgba(80,16,18,0.5)" strokeWidth={1.1 / Math.max(0.2, u)} style={{filter: 'blur(0.5px)'}} />
                 </g>
                 <path d={win} transform={wT} fill="none" stroke="#F2B7AF" strokeWidth={0.55 / Math.max(0.2, u)} strokeLinejoin="round" />
                 <path d={win} transform={wT} fill="none" stroke="rgba(110,40,40,0.85)" strokeWidth={1.1 * px / Math.max(0.2, u)} strokeLinejoin="round" />
               </g>
             )}
-            <CylEnd id={`${id}cy`} x={EYE_HOLE[0]} y={EYE_HOLE[1]} px={px} />
+            {(() => {const c = projectPt(EYE_HOLE[0], EYE_HOLE[1], 1, L.implRot ?? FRONT_ROT, [HOLE[0], HOLE[1], CYL_Z1]); return <CylEnd id={`${id}cy`} x={c[0]} y={c[1]} px={px} />;})()}
           </g>
         );
       })()}
@@ -273,6 +274,7 @@ export type PocketState = {
   bump: number;          // the implant under the skin (its rise, when not seen through)
   impl: {x: number; y: number; rot: Rot; tissue: number; vessels: number} | null;
   above: number;         // how far the implant is still outside the skin (1 fully outside .. 0 in the pocket)
+  gape?: number;         // V5: the incision held open as the implant goes in (the mouth of the pocket)
 };
 export const NO_POCKET2: PocketState = {incision: 0, sutured: 0, heal: 1, win: 0, bump: 0, impl: null, above: 1};
 const INCISION_Y = POCKET2[1] - 11.5;
@@ -293,9 +295,9 @@ const PocketCut: React.FC<{id: string; px: number; p: PocketState}> = ({id, px, 
       </defs>
       {/* the plate's rise under the closed skin */}
       {p.bump > 0 && (
-        <g opacity={p.bump * (1 - see)}>
-          <path d={ptsD(rest)} fill="rgba(255,226,200,0.14)" stroke="rgba(255,228,204,0.3)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(-0.4,-0.5)" style={{filter: 'blur(1.4px)'}} />
-          <path d={ptsD(rest)} fill="none" stroke="rgba(120,60,40,0.2)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(0.6,0.8)" style={{filter: 'blur(1.5px)'}} />
+        <g opacity={p.bump * (1 - see)} clipPath={`url(#${id}be)`}>
+          <path d={ptsD(ol ?? rest)} fill="rgba(255,226,200,0.14)" stroke="rgba(255,228,204,0.3)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(-0.4,-0.5)" style={{filter: 'blur(1.4px)'}} />
+          <path d={ptsD(ol ?? rest)} fill="none" stroke="rgba(120,60,40,0.2)" strokeWidth={1.6} strokeLinejoin="round" transform="translate(0.6,0.8)" style={{filter: 'blur(1.5px)'}} />
         </g>
       )}
       {/* beneath the skin: the plate seen through it, under the muscle fibres and the skin's own tint */}
@@ -322,6 +324,18 @@ const PocketCut: React.FC<{id: string; px: number; p: PocketState}> = ({id, px, 
       )}
       {/* the part of the plate still outside the skin, above the incision */}
       {p.impl && p.above > 0 && <g clipPath={`url(#${id}ab)`}>{implEl('out')}</g>}
+      {/* V5: the mouth of the pocket, held open: the skin edge drawn down from the incision, dark inside */}
+      {(p.gape ?? 0) > 0.01 && (() => {
+        const gp = p.gape!;
+        const top = `M${POCKET2[0] - 10},${INCISION_Y + 0.6} C${POCKET2[0] - 3},${INCISION_Y + 1.8} ${POCKET2[0] + 5},${INCISION_Y + 1.6} ${POCKET2[0] + 11},${INCISION_Y - 0.4}`;
+        const lo = `C${POCKET2[0] + 5},${INCISION_Y + 1.6 + 3.2 * gp} ${POCKET2[0] - 3},${INCISION_Y + 1.8 + 3.4 * gp} ${POCKET2[0] - 10},${INCISION_Y + 0.6}`;
+        return (
+          <g>
+            <path d={`${top} ${lo} Z`} fill="#4A1416" />
+            <path d={`M${POCKET2[0] + 11},${INCISION_Y - 0.4} ${lo}`} fill="none" stroke="#C9675F" strokeWidth={0.7} />
+          </g>
+        );
+      })()}
       {/* the incision below the lashes, sutures, the healed line */}
       {p.incision > 0 && (
         <g opacity={clamp(1 - p.heal * 0.85)}>
