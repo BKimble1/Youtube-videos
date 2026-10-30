@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Effects and mix for FGW "Tooth in Eye" V2 (V1 placement is at commit 73ce4c9d). Everything is synthesised (no samples, no third-party music).
+"""Effects and mix for FGW "Tooth in Eye" V3 (V2 placement: Scene2 events; V1 at commit 73ce4c9d). Everything is synthesised (no samples, no third-party music).
 The narration master (audio/narration/FGW_Tooth_Eye_narration_V2.wav) is used sample for sample (gain only).
 Under it: an uninterrupted room/body ambience and a quiet low pad that opens into a warm chord when his sight returns,
 plus restrained effects placed from the picture's own events (audio/cues.json, exported from story.ts):
@@ -7,15 +7,15 @@ a distinctive unsettling tone on the opening reveal, the piezo saw, the bone giv
 hole, a small mechanical click as the optical cylinder seats, soft tissue sounds, a faint shimmer for light.
 No whooshes on camera moves, no stingers, no cartoon sounds.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; true peak about -1.5 dBTP (measured 4x).
-usage: python3 tools/make_audio.py [mix_name]   (default mix_v2)
-Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Tooth_Eye_V2_mix.wav, audio/mix/mix_measure_v2.json, audio/sfx_log_v2.json"""
+usage: python3 tools/make_audio.py [mix_name]   (default mix_v3)
+Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Tooth_Eye_V3_mix.wav, audio/mix/mix_measure_v3.json, audio/sfx_log_v3.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v2'
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v3'
 cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
 DUR, TM, EV = cj['DUR'], cj['TM'], cj['EV']
 N = int(round(DUR * SR))
@@ -196,9 +196,10 @@ sfx = np.zeros(N)
 E = EV.get
 # the hook: the finished reconstruction, light already passing to the retina
 place(sfx, uncanny(1.3), 0.0, 'opening: glassy detuned tone + wet creak under the reveal', -19)
+place(sfx, wetslide(0.5), E('dissolve'), 'skin and lids dissolve into the cut-away (soft wet slide)', -38)
 place(sfx, shimmer(0.9, 6500, 2600), E('raysIn'), 'light through the cylinder', -36)
 place(sfx, chime(1.4), E('retinaLit1') - 0.05, 'retina lit (warm soft chime)', -33)
-place(sfx, chime(1.2, (587.3, 880.0, 1174.7)), E('seeGlow'), 'retina glows on SEE', -35)
+place(sfx, chime(1.2, (587.3, 880.0, 1174.7)), E('glimpse'), 'his first glimpse of the room on SEE (warm chime)', -34)
 # the damaged cornea: penlight, white glare; a donor cornea, a red reflex, then it clouds
 place(sfx, tick2(0.03, 2600), E('penOn'), 'penlight click', -33)
 place(sfx, wetslide(0.35), E('donorIn'), 'donor cornea laid on', -32)
@@ -227,7 +228,6 @@ place(sfx, tick2(0.04, 1300), E('seat'), 'implant seated', -30)
 place(sfx, wetslide(0.3), E('flapBack'), 'graft laid back over it', -34)
 place(sfx, shimmer(1.2, 6500, 2600), E('raysIn2'), 'light through the cylinder to the retina', -34)
 place(sfx, chime(1.8, (587.3, 880.0, 1174.7)), E('retinaLit2') - 0.05, 'retina lit (warm chime)', -30)
-place(sfx, shimmer(0.45, 2600, 6500), E('loopRays'), 'light enters again (loop)', -38)
 
 # ---------------- beds ----------------
 room = circ(lambda x: lp(hp(x, 90), 1400), noise(N)) * (0.75 + 0.25 * np.sin(2 * np.pi * 0.09 * t + 1))
@@ -237,6 +237,8 @@ def win2(a, b, fa, fb): return np.clip(np.minimum((t - (a - fa)) / fa, ((b + fb)
 # his blind view: everything muffled; then the room opens up (brighter air, gentle outdoor birds through the window)
 dark = win2(E('povDark'), E('povClear') - 0.2, 0.25, 0.6)
 open_ = np.clip((t - (E('povClear') - 0.3)) / 1.2, 0, 1)
+# the hook's brief glimpse of his room (3.34-4.36): the same brighter air, for one second
+open_ = np.maximum(open_, win2(E('glimpse') + 0.15, E('glimpseEnd') - 0.1, 0.25, 0.1))
 room_dark = circ(lambda x: lp(x, 300), room)
 beep = np.zeros(N)
 for k in range(int(DUR / 0.92) + 1):
@@ -315,10 +317,10 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, 'audio/mix/FGW_Tooth_Eye_V2_mix.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, 'audio/mix/FGW_Tooth_Eye_V3_mix.wav'), mix2, SR, subtype='PCM_24')
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG)}
-json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v2.json'), 'w'), indent=1)
-json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v2.json'), 'w'), indent=1)
+json.dump(res, open(os.path.join(EP, 'audio/mix/mix_measure_v3.json'), 'w'), indent=1)
+json.dump(LOG, open(os.path.join(EP, 'audio/sfx_log_v3.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))

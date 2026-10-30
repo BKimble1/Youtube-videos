@@ -25,6 +25,8 @@ const lamExt = (() => {
 export const LAM_EXT = lamExt;
 
 const HEAD = 'M-45,-112 C-10,-116 10,-100 12,-84 C16,-64 17,-44 20,-20 C21,-14 20,-10 19,-8 C24,4 34,18 42,28 C46,33 45,37 40,38 C36,39 33,39 31,40 C33,43 35,46 34,49 C33,52 31,54 30,55 C32,57 34,59 33,61 C32,64 29,67 27,69 C26,72 28,76 30,82 C32,88 30,95 24,99 C14,104 0,106 -8,108 L-10,150 L-78,150 C-80,120 -82,90 -92,60 C-104,30 -114,-10 -110,-44 C-104,-84 -80,-108 -45,-112 Z';
+/** the finished eye's opening between the lids, in profile (wide, round the raised implant) */
+export const EXT_OPEN = 'M3.5,-0.5 C6.5,-8.5 13,-10.2 20.2,-8.2 C21.6,-3 21.6,4 20,9.6 C13,11.4 6.5,8.8 3.5,1 Z';
 export const EYE_WIN = 'M-31,-6 C-31,-18 -20,-25 -4,-25 C6,-25 14,-22 17.5,-17 C20.5,-10 21.5,8 19.5,15 C15,22 6,25 -6,25 C-22,25 -31,16 -31,6 Z';
 
 const pts = (f: (u: number) => [number, number], n: number) => Array.from({length: n + 1}, (_, i) => f(i / n));
@@ -199,14 +201,18 @@ export type Expr2 = {smile: number; brow: number; open: number};
 export const NEUTRAL2: Expr2 = {smile: 0, brow: 0, open: 0};
 
 /** the head in profile; `win` opens the eye cut-away from the eye outward (0 closed .. 1 open) */
-export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; expr: Expr2; tear?: number}> = ({s, px, id, win, expr, tear = 0}) => {
+/** V3: `ext` shows the finished implant on the outside of the eye (the plate under a thin graft, the cylinder proud);
+ *  `pivot` is the point the cut-away grows from (it can open locally round the plate, then over the whole eye) */
+export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; expr: Expr2; tear?: number; ext?: number; pivot?: [number, number]; winOp?: number; film?: number}> = ({s, px, id, win, expr, tear = 0, ext = 0, pivot = [10, 0], winOp = 1, film = 0.3}) => {
   const sm = expr.smile, br = expr.brow;
+  const wT = `translate(${pivot[0]},${pivot[1]}) scale(${Math.max(0.001, win)}) translate(${-pivot[0]},${-pivot[1]})`;
   return (
     <g>
       <defs>
         <linearGradient id={`${id}hs`} x1="1" y1="0" x2="0" y2="0.2"><stop offset="0" stopColor={SKIN_L} /><stop offset="0.6" stopColor={SKIN} /><stop offset="1" stopColor={SKIN_D} /></linearGradient>
         <clipPath id={`${id}hc`}><path d={HEAD} /></clipPath>
-        <clipPath id={`${id}ew`}><path d={EYE_WIN} transform={`translate(10,0) scale(${Math.max(0.001, win)}) translate(-10,0)`} /></clipPath>
+        <clipPath id={`${id}ew`}><path d={EYE_WIN} transform={wT} /></clipPath>
+        <clipPath id={`${id}eo`}><path d={EXT_OPEN} /></clipPath>
         <pattern id={`${id}gp`} width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="none" /><path d="M4.5,2 L6,4.5 L4.5,7 L3,4.5Z" fill="#7FA2B6" opacity="0.7" /></pattern>
       </defs>
       {/* gown */}
@@ -247,19 +253,46 @@ export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; 
       <path d={`M0,${-23 - br * 3} C7,${-28 - br * 4} 14,${-27 - br * 3.5} 20,${-21.5 - br * 2}`} stroke={HAIR} strokeWidth={3.4} fill="none" strokeLinecap="round" />
       <path d="M36,36 C34,34 31,34 30,36" stroke="#7A4434" strokeWidth={1.6} fill="none" />
       {sm > 0.1 && [0, 1, 2].map((k) => <path key={k} d={`M${3 - k * 0.5},${-2 + k * 2.6} l-4,${-1 + k * 1}`} stroke={SKIN_D} strokeWidth={0.8} opacity={sm} />)}
-      {/* the eye from outside: the graft between the lids and the cylinder's small front window */}
-      <g>
-        <path d="M6,-1.5 C9.5,-6 14.4,-6.6 16.6,-4.8 L16.8,4.8 C14.4,6.3 9.5,5.4 6,1.6 Z" fill="#DE8F88" stroke={INK} strokeWidth={1.6 * px} />
-        <path d={`M5,-2 C9,${-7.5 - sm * 0.3} 14.6,${-8.2 - sm * 0.3} 17.4,-5.4`} stroke={INK} strokeWidth={2.6 * px} fill="none" strokeLinecap="round" />
-        {Array.from({length: 7}, (_, i) => <path key={i} d={`M${8 + i * 1.35},${-6.6 - Math.sin(i * 0.5) * 0.6} l1.4,-1.5`} stroke={INK} strokeWidth={1.3 * px} />)}
-        <path d="M5.6,2 C9,6.2 14.2,6.8 17.2,5.2" stroke={INK} strokeWidth={1.8 * px} fill="none" />
-        <rect x={16.6} y={-1.8} width={2.1} height={3.6} rx={0.4} fill="#16202A" stroke="#7FA1B4" strokeWidth={1.4 * px} />
-        <ellipse cx={18.2} cy={-0.9} rx={0.3} ry={0.5} fill="#FFFFFF" opacity={0.85} />
-        {tear > 0 && <path d={`M16,6 C15.6,${8 + tear * 6} 15.2,${10 + tear * 8} 15.6,${11 + tear * 9}`} stroke="#E6F4FA" strokeWidth={1.6} fill="none" opacity={0.85 * tear} strokeLinecap="round" />}
-      </g>
-      {/* the cut-away */}
-      {win > 0 && (
+      {/* the eye from outside */}
+      {ext > 0 ? (
         <g>
+          {/* the finished OOKP eye: the cheek-lining graft between wide lids, the tooth plate showing through it,
+              the clear optical cylinder standing proud of it */}
+          <path d={EXT_OPEN} fill="#DE8F88" />
+          <g clipPath={`url(#${id}eo)`}>
+            <Implant id={`${id}xi`} x={IMPL_AT[0]} y={IMPL_AT[1]} s={1} rot={IMPL_ROT} px={px} cylMode="clear" tissue={s.tissue} vessels={s.vessels} holeBg="#9FC3CF" />
+            <path d={EXT_OPEN} fill="#E79A94" opacity={film} />
+            {['M5,-1 C7,-3.4 8.6,-2.6 10.4,-4.4', 'M5.4,1.6 C7.4,3.8 9,3 10.6,5', 'M19.2,-6.2 C18.6,-4.8 19.6,-3.6 19.2,-2.4'].map((d, i) => <path key={i} d={d} stroke="#B5444A" strokeWidth={0.22} fill="none" opacity={0.7} />)}
+            {/* a wet sheen along the graft */}
+            <path d="M8,-5.4 C11,-7.6 15,-8 18.6,-7" stroke="rgba(255,240,236,0.7)" strokeWidth={0.45} fill="none" strokeLinecap="round" />
+          </g>
+          <Implant id={`${id}xc`} x={IMPL_AT[0]} y={IMPL_AT[1]} s={1} rot={IMPL_ROT} px={px} cylMode="clear" only="cylFront" />
+          <path d={EXT_OPEN} fill="none" stroke={INK} strokeWidth={1.6 * px} />
+          {/* lids: a strong upper margin with lashes, the crease above, the lower margin */}
+          <path d={`M3.5,-0.5 C6.5,${-8.5 - sm * 0.2} 13,${-10.2 - sm * 0.2} 20.2,-8.2`} stroke={INK} strokeWidth={3.2 * px} fill="none" strokeLinecap="round" />
+          {Array.from({length: 11}, (_, i) => {
+            const u = 0.12 + 0.8 * (i / 10), x = 3.5 + 16.7 * u, y = -0.5 - 9.5 * Math.sin(Math.PI * Math.min(1, u * 1.15)) + (u > 0.85 ? 1.6 : 0);
+            return <path key={i} d={`M${x},${y} q${0.8},-1.1 ${1.9},-1.6`} stroke={INK} strokeWidth={1.3 * px} fill="none" strokeLinecap="round" />;
+          })}
+          <path d="M3,-5.5 C7,-13 14,-14.4 19.4,-11.8" stroke={SKIN_D} strokeWidth={1.2} fill="none" />
+          <path d="M3.5,1 C6.5,8.8 13,11.4 20,9.6" stroke={INK} strokeWidth={2 * px} fill="none" />
+          <path d="M4.6,4 C8,12.4 14,14 19.6,12.6" stroke={SKIN_D} strokeWidth={0.9} fill="none" opacity={0.8} />
+          {tear > 0 && <path d={`M18.6,10.4 C18.2,${12 + tear * 5} 17.8,${14 + tear * 7} 18.2,${15 + tear * 8}`} stroke="#E6F4FA" strokeWidth={1.4} fill="none" opacity={0.85 * tear} strokeLinecap="round" />}
+        </g>
+      ) : (
+        <g>
+          <path d="M6,-1.5 C9.5,-6 14.4,-6.6 16.6,-4.8 L16.8,4.8 C14.4,6.3 9.5,5.4 6,1.6 Z" fill="#DE8F88" stroke={INK} strokeWidth={1.6 * px} />
+          <path d={`M5,-2 C9,${-7.5 - sm * 0.3} 14.6,${-8.2 - sm * 0.3} 17.4,-5.4`} stroke={INK} strokeWidth={2.6 * px} fill="none" strokeLinecap="round" />
+          {Array.from({length: 7}, (_, i) => <path key={i} d={`M${8 + i * 1.35},${-6.6 - Math.sin(i * 0.5) * 0.6} l1.4,-1.5`} stroke={INK} strokeWidth={1.3 * px} />)}
+          <path d="M5.6,2 C9,6.2 14.2,6.8 17.2,5.2" stroke={INK} strokeWidth={1.8 * px} fill="none" />
+          <rect x={16.6} y={-1.8} width={2.1} height={3.6} rx={0.4} fill="#16202A" stroke="#7FA1B4" strokeWidth={1.4 * px} />
+          <ellipse cx={18.2} cy={-0.9} rx={0.3} ry={0.5} fill="#FFFFFF" opacity={0.85} />
+          {tear > 0 && <path d={`M16,6 C15.6,${8 + tear * 6} 15.2,${10 + tear * 8} 15.6,${11 + tear * 9}`} stroke="#E6F4FA" strokeWidth={1.6} fill="none" opacity={0.85 * tear} strokeLinecap="round" />}
+        </g>
+      )}
+      {/* the cut-away */}
+      {win > 0 && winOp > 0 && (
+        <g opacity={winOp}>
           <g clipPath={`url(#${id}ew)`}><EyeSection2 s={s} px={px} id={`${id}es`} /></g>
           {/* the implant, seated on the front of the eye, cylinder through the opened cornea (drawn over the cut edge,
               so it is never clipped as it arrives) */}
@@ -268,7 +301,7 @@ export const Profile2: React.FC<{s: Sect2; px: number; id: string; win: number; 
               <Implant id={`${id}im`} x={IMPL_AT[0] + s.implDx} y={IMPL_AT[1]} s={1} rot={IMPL_ROT} px={px} cylMode="clear" tissue={s.tissue} vessels={s.vessels} holeBg="#9FC3CF" />
             </g>
           )}
-          <g transform={`translate(10,0) scale(${win}) translate(-10,0)`}>
+          <g transform={wT}>
             <path d={EYE_WIN} fill="none" stroke="#E7A386" strokeWidth={1.2 / win} />
             <path d={EYE_WIN} fill="none" stroke={INK} strokeWidth={1.8 * px / win} />
           </g>

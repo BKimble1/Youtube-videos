@@ -7,10 +7,10 @@ import {ModelSheet} from './dev/ModelSheet';
 import {P2Test} from './dev/P2Test';
 import {F2Test} from './dev/F2Test';
 
-// V2 (the V1 composition and its source are at commit 73ce4c9d)
+// V3 (V2's composition is at commit 82638d8d; V1 is at commit 73ce4c9d)
 export const RemotionRoot: React.FC = () => (
   <>
-    <Composition id="ToothEyeV2" component={Film} durationInFrames={FRAMES} fps={30} width={1080} height={1920} defaultProps={{audio: 'mix_v2' as string | false, captions: true}} />
+    <Composition id="ToothEyeV3" component={Film} durationInFrames={FRAMES} fps={30} width={1080} height={1920} defaultProps={{audio: 'mix_v3' as string | false, captions: true}} />
     <Composition id="Sheet" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0, 6, 12, 24, 40, 60, 70, 80, 90, 100, 115, 130, 150, 170, 190, 210], captions: true, cols: 4}} />
     <Composition id="ModelSheet" component={ModelSheet} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="P2Test" component={P2Test} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{z: 60, x: 14, y: 0, win: 1, smile: 0, brow: 0, open: 0, tissue: 0.25}} />

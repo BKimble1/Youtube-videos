@@ -2,11 +2,11 @@
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS} from './lib';
-import {Scene2} from './Scene2';
+import {Scene3} from './Scene3';
 
 export const Frame: React.FC<{f: number; captions: boolean}> = ({f, captions}) => (
   <AbsoluteFill style={{backgroundColor: '#22303B', overflow: 'hidden'}}>
-    <Scene2 t={f / FPS} fkey={`f${f}_`} captions={captions} />
+    <Scene3 t={f / FPS} fkey={`f${f}_`} captions={captions} />
   </AbsoluteFill>
 );
 export const Film: React.FC<{audio: string | false; captions: boolean}> = ({audio, captions}) => {

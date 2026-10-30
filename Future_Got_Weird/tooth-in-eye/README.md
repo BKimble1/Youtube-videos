@@ -1,6 +1,30 @@
 # Future Got Weird: Doctors Put a Tooth Inside His Eye (OOKP)
 
-## V2 (review, current)
+## V3 (final review, current)
+
+**Status.** V2 with a rebuilt hook: his eye from outside with the implant, a push into the tooth plate, a dissolve to
+the light reaching the retina, and back to his smile and a glimpse of his view. The rest of V2 is kept, apart from a
+single-push cornea demonstration and a stronger end focus pull. Rendered from source and checked from the files.
+**It has not been watched or heard in real time, and "ten years blind" still needs a confirmed source.**
+
+**Report.** `production/V3_REPORT.md`: changes, timeline, QC, unresolved items.
+
+| Deliverable | File |
+|---|---|
+| Final review | `exports/FGW_Tooth_Eye_V3_FINAL_REVIEW.mp4`: 1080×1920, 30 fps, 810 frames, 27.0 s |
+| Narration, word times, captions | Unchanged from V2 (same files) |
+| Mix | `audio/mix/FGW_Tooth_Eye_V3_mix.wav`. Measurements: `audio/mix/mix_measure_v3.json`. Effects log: `audio/sfx_log_v3.json` |
+| QA evidence | `qa/v3/` (qc.json, ASR, 2 fps sheet, hook frames, loop seam) |
+| Source | `source/src/Scene3.tsx` and friends (composition `ToothEyeV3`) |
+
+**Rebuild V3.** As below, but:
+- the narration step writes the V2 files, which V3 uses unchanged;
+- run `python3 tools/make_audio.py mix_v3`;
+- render `ToothEyeV3` with `--props='{"audio":"mix_v3","captions":true}'`.
+
+V2's exact source (composition `ToothEyeV2`, V2 sound events) is at commit `82638d8d`.
+
+## V2 (review, superseded)
 
 **Status.** A structural rework of V1, rendered from source and checked from the files. **It is not publish-ready.**
 It has not been watched or heard in real time, and the "ten years blind" line still needs a confirmed source.
