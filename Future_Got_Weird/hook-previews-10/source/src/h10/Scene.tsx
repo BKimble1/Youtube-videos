@@ -71,11 +71,11 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       <Backdrop cam={cam} dim={0.28 * win.on} />
       <g transform={world}>
         <defs>
-          <filter id="h10-wblur" filterUnits="userSpaceOnUse" {...box}>
-            <feGaussianBlur stdDeviation={(win.r * 0.3 + 0.01).toFixed(2)} />
-          </filter>
           <mask id="h10-win" maskUnits="userSpaceOnUse" {...box}>
-            {win.r > 0.5 && <path d={winD} fill="none" stroke="#FFF" strokeWidth={(win.r * 2).toFixed(2)} strokeLinecap="round" strokeLinejoin="round" filter="url(#h10-wblur)" />}
+            {/* soft-edged capsule: ten stacked strokes of rising width (no filter: cheaper and stable in the renderer) */}
+            {win.r > 0.5 && Array.from({length: 10}, (_, i) => (
+              <path key={i} d={winD} fill="none" stroke="#FFF" strokeOpacity={0.1} strokeWidth={(win.r * 2 * (0.55 + 0.1 * i)).toFixed(2)} strokeLinecap="round" strokeLinejoin="round" />
+            ))}
           </mask>
         </defs>
         <Floor cx={cam.x} />
