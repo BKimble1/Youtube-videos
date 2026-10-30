@@ -10,6 +10,8 @@ import {RibWindow} from './world/chest';
 import {Piece} from './world/piece';
 import {Tray} from './world/tray';
 import {ArmSurface, ArmTools, turnAt} from './world/arm';
+import {armRot, shoulderRot, headRot, gaze, brow, hookBlink, armEarNow, earTrack, ELBOW, SHOULDER, NECK} from './world/hook';
+import {FIG} from './world/woman';
 import {Flap, FlapTools, Anastomosis} from './world/head';
 import {CrashNight, CrashGlass, crashAmt} from './world/crash';
 import {BG} from './world/pal';
@@ -53,14 +55,17 @@ const Backdrop: React.FC<{cx: number; cy: number; z: number}> = ({cx, cy, z}) =>
 };
 
 export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) => {
-  const cam = camAt(t);
+  const cam0 = camAt(t);
+  // V4 hook: while the ear fills the frame the camera rides with it as the arm rotates, so it holds its place on screen
+  const ea = armEarNow(t), tk = earTrack(t);
+  const cam = {...cam0, x: cam0.x + (ea.x - FIG.armEar.x) * tk, y: cam0.y + (ea.y - FIG.armEar.y) * tk};
   const ow = 1.5 + 0.5 * clamp((cam.z - 1) / 4);
   const turn = turnAt(t);
   const hair = ss(cam.z, 2.5, 5.5);
   const ribOpen = ss(t, B.ribWin[0], B.ribWin[1]) * (1 - ss(t, B.carry1[1] - 0.1, B.carry1[1] + 0.3));
   const taken = t >= B.lift[0] ? 1 : 0;
   const scar = 1 - 0.75 * ss(t, B.seat[0], B.seat[1]);
-  const blink = Math.max(Math.exp(-(((t - 3.05) / 0.06) ** 2)), Math.exp(-(((t - 18.3) / 0.06) ** 2)));
+  const blink = Math.max(hookBlink(t), Math.exp(-(((t - 18.3) / 0.06) ** 2)));
   const night = crashAmt(t);
   // the finished ear: a brief warm lift in the light (the release), then back to the clinic tone
   const release = ss(t, B.reveal[0], B.reveal[0] + 0.5) * (1 - ss(t, TM.her - 0.1, TM.her + 0.6));
@@ -76,13 +81,19 @@ export const Scene: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
           <Torso ow={ow} />
           <Tray ow={ow} />
           <RibWindow open={ribOpen} taken={taken} t={t} ow={ow} />
-          <Head ow={ow} site={<EarSiteScar a={scar} />} blink={blink} />
+          <g transform={`rotate(${headRot(t)} ${NECK.x} ${NECK.y})`}>
+            <Head ow={ow} site={<EarSiteScar a={scar} />} blink={blink} gaze={gaze(t)} brow={brow(t)} />
+          </g>
+          <g transform={`rotate(${shoulderRot(t)} ${SHOULDER.x} ${SHOULDER.y})`}>
           <UpperArm ow={ow} />
+          <g transform={`rotate(${armRot(t)} ${ELBOW.x} ${ELBOW.y})`}>
           <ForearmSkin ow={ow} turn={turn} hair={hair}>
             <ArmSurface t={t} px={cam.z} />
           </ForearmSkin>
           <Hand ow={ow} turn={turn} />
           <ArmTools t={t} />
+          </g>
+          </g>
           <Piece t={t} camZ={cam.z} />
           <Anastomosis t={t} />
           <Flap t={t} camZ={cam.z} />

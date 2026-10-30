@@ -12,17 +12,22 @@ export type Cam = {x: number; y: number; z: number};
 type Key = {t: number; x: number; y: number; z: number; stop?: boolean; v?: [number, number, number]};
 
 const A = FIG.armEar, S = FIG.earSite;
-// V2 opening: the forearm and hand together (the ear reads against the arm), then one push onto the ear
-const OPEN = {x: 836, y: 660, z: 2.3};
-// the seam: the film ends moving into OPEN at the same speed the opening push starts with
-const SEAM: [number, number, number] = [0, 26, 0.32];
+// V4 opening: frame 0 is the ear in extreme close-up (the ear sits in the upper middle, clear of the caption); the camera
+// creeps in a touch, settles, then pulls back as the arm rotates
+const OPEN = {x: A.x, y: A.y + 30, z: 8.8};
+// the seam: the film ends pushing into OPEN at the same (slow) speed the opening creeps in with
+const SEAM: [number, number, number] = [0, 0, 0.12];
+// V3's spline tangent at the forearm-return key (from its neighbours in V3: her+0.1 and HERE)
+const V3T = [(0.85 * (822 - 470)) / (TM.here - TM.her - 0.1), (0.85 * (652 - 610)) / (TM.here - TM.her - 0.1), (0.85 * (Math.log(2.03) - Math.log(2.15))) / (TM.here - TM.her - 0.1)];
 export const KEYS: Key[] = [
   {t: 0, ...OPEN, v: SEAM},
-  {t: B.push[1], x: 838, y: 724, z: 4.5},
-  {t: 1.25, x: 792, y: 690, z: 2.6},
-  {t: 2.3, x: 606, y: 640, z: 1.45},
-  {t: 2.95, x: 560, y: 620, z: 1.6},
-  {t: TM.lostEar - 0.15, x: S.x - 30, y: S.y + 10, z: 3.4},
+  {t: B.push[1], x: A.x, y: A.y + 28, z: 9.0, stop: true},
+  {t: 0.85, x: A.x - 4, y: A.y - 6, z: 3.3},
+  {t: 1.5, x: 622, y: 650, z: 1.5},
+  {t: 2.35, x: 612, y: 640, z: 1.62},
+  {t: 3.0, x: 600, y: 610, z: 2.0},
+  // V4: pinned to V3's tangent (from V3's neighbours) so everything from here on is V3's footage
+  {t: TM.lostEar - 0.15, x: S.x - 30, y: S.y + 10, z: 3.4, v: [(0.85 * (S.x - 26 - 560)) / (TM.crash + 0.05 - 2.95), (0.85 * (S.y + 14 - 620)) / (TM.crash + 0.05 - 2.95), (0.85 * (Math.log(3.6) - Math.log(1.6))) / (TM.crash + 0.05 - 2.95)]},
   {t: TM.crash + 0.05, x: S.x - 26, y: S.y + 14, z: 3.6},
   {t: B.crash[1] + 0.05, x: S.x - 40, y: S.y + 50, z: 3.1},
   {t: B.ribWin[1] - 0.05, x: 362, y: 1084, z: 2.4},
@@ -46,8 +51,10 @@ export const KEYS: Key[] = [
   {t: TM.and2, x: S.x - 40, y: S.y + 30, z: 3.2},
   {t: TM.months2 + 0.45, x: 410, y: 590, z: 2.3},
   {t: TM.her + 0.1, x: 470, y: 610, z: 2.15},
-  {t: B.rewind[0], x: 790, y: 650, z: 2.0},
-  {t: TM.here, x: 822, y: 652, z: 2.03},
+  // V4: the tangent here is pinned to V3's value, so V3's footage is unchanged up to the start of the forearm return;
+  // only the return itself now lands on the extreme close-up of frame 0
+  {t: B.rewind[0], x: 790, y: 650, z: 2.0, v: [V3T[0], V3T[1], V3T[2]]},
+  {t: TM.here, x: 834, y: 706, z: 3.4},
   {t: TM.end, ...OPEN, v: SEAM},
 ];
 

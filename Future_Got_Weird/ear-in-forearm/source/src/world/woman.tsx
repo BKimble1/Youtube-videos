@@ -205,7 +205,9 @@ export const Hand: React.FC<{ow: number; turn: number}> = ({ow, turn}) => {
 };
 
 /** Head: face, hair and the left ear site. `site` draws what is at the ear site (scar, new ear...). */
-export const Head: React.FC<{ow: number; site?: React.ReactNode; blink?: number}> = ({ow, site, blink = 0}) => {
+export const Head: React.FC<{ow: number; site?: React.ReactNode; blink?: number; gaze?: number; brow?: number}> = ({ow, site, blink = 0, gaze = 0, brow = 0}) => {
+  // V4: gaze 0..1 turns the eyes down-right, toward the raised forearm; brow 0..1 lifts the brows a little
+  const gx = 4.5 * gaze, gy = 2 * gaze, by = -3.2 * brow;
   const FACE =
     'M 300 395 C 272 410 257 440 255 470 C 254 482 251 490 253 498 C 257 506 259 512 256 522 C 252 534 249 548 253 560 ' +
     'C 257 580 259 596 263 612 C 263 626 263 640 267 652 C 269 668 273 682 289 690 C 311 698 351 688 386 668 ' +
@@ -250,20 +252,30 @@ export const Head: React.FC<{ow: number; site?: React.ReactNode; blink?: number}
       {/* eyes */}
       <g>
         <path d="M 306 512 C 316 500 340 499 354 509 C 342 519 318 521 306 512 Z" fill="#F4EEE8" />
-        <circle cx="326" cy="510" r="8" fill="#3A2418" />
-        <circle cx="326" cy="510" r="3.6" fill="#120A07" />
-        <circle cx="323" cy="507" r="2" fill="#FFF" opacity="0.85" />
+        <clipPath id="eyeN">
+          <path d="M 306 512 C 316 500 340 499 354 509 C 342 519 318 521 306 512 Z" />
+        </clipPath>
+        <g clipPath="url(#eyeN)">
+          <circle cx={326 + gx} cy={510 + gy} r="8" fill="#3A2418" />
+          <circle cx={326 + gx} cy={510 + gy} r="3.6" fill="#120A07" />
+          <circle cx={323 + gx} cy={507 + gy} r="2" fill="#FFF" opacity="0.85" />
+        </g>
         <path d={`M 304 512 C 316 ${499 + lid * 14} 340 ${498 + lid * 14} 356 509`} fill="none" stroke={INK} strokeWidth="3.4" strokeLinecap="round" />
         {lid > 0.05 && <path d={`M 304 512 C 316 499 340 498 356 509 C 340 ${498 + lid * 14} 316 ${499 + lid * 14} 304 512 Z`} fill={SK.base} />}
         <path d="M 312 518 C 324 523 340 521 350 514" fill="none" stroke={SK.deep} strokeWidth="1.6" opacity="0.6" />
         <path d="M 260 513 C 264 505 277 504 285 509 C 279 516 266 518 260 513 Z" fill="#F0E8E2" />
-        <circle cx="271" cy="510.5" r="5.6" fill="#3A2418" />
-        <circle cx="271" cy="510.5" r="2.6" fill="#120A07" />
+        <clipPath id="eyeF">
+          <path d="M 260 513 C 264 505 277 504 285 509 C 279 516 266 518 260 513 Z" />
+        </clipPath>
+        <g clipPath="url(#eyeF)">
+          <circle cx={271 + gx * 0.75} cy={510.5 + gy * 0.8} r="5.6" fill="#3A2418" />
+          <circle cx={271 + gx * 0.75} cy={510.5 + gy * 0.8} r="2.6" fill="#120A07" />
+        </g>
         <path d={`M 258 513 C 264 ${504 + lid * 10} 277 ${503 + lid * 10} 287 509`} fill="none" stroke={INK} strokeWidth="2.8" strokeLinecap="round" />
         {lid > 0.05 && <path d={`M 258 513 C 264 504 277 503 287 509 C 277 ${503 + lid * 10} 264 ${504 + lid * 10} 258 513 Z`} fill={SK.base} />}
         {/* brows */}
-        <path d="M 300 486 C 316 477 340 477 360 487" fill="none" stroke={HAIR.base} strokeWidth="5.5" strokeLinecap="round" />
-        <path d="M 257 489 C 266 482 279 481 290 485" fill="none" stroke={HAIR.base} strokeWidth="4.5" strokeLinecap="round" />
+        <path d={`M 300 ${486 + by * 0.7} C 316 ${477 + by} 340 ${477 + by} 360 ${487 + by * 0.6}`} fill="none" stroke={HAIR.base} strokeWidth="5.5" strokeLinecap="round" />
+        <path d={`M 257 ${489 + by * 0.7} C 266 ${482 + by} 279 ${481 + by} 290 ${485 + by * 0.8}`} fill="none" stroke={HAIR.base} strokeWidth="4.5" strokeLinecap="round" />
       </g>
       {/* mouth */}
       <path d="M 268 627 C 280 619 300 618 322 625 C 306 628 284 630 268 627 Z" fill={SK.lip} />

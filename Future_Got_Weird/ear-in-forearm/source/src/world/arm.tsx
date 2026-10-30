@@ -6,7 +6,7 @@ import {ANAT, SK, INK} from './pal';
 import {clamp, ss, ss5, lerp, hash} from '../lib';
 import {B, TM} from './story';
 import {FIG} from './woman';
-import {EarHeight, Relief, EAR_OUTLINE, FRAME_OUTLINE} from './ear';
+import {EarHeight, Relief, EAR_OUTLINE, FRAME_OUTLINE, HELIX, SCAPHA} from './ear';
 import {sample, at, partial, P} from './geom';
 import {pieceAt, POCKET_X} from './piece';
 import {Scalpel, slideIn} from './tools';
@@ -22,6 +22,19 @@ export const turnAt = (t: number) => (t > B.turn[0] && t < B.turn[1] ? 0.24 * Ma
 /** the scaled outline used for the flap (the ear plus a margin of skin) */
 const FLAP_K = 1.08; // V3: a tight margin, so the lifted flap keeps the ear's own outline and size
 const OUTL = sample(EAR_OUTLINE, 16);
+const HELIX_D = HELIX, SCAPHA_D = SCAPHA;
+/** fine skin creases radiating from the raised outline (the skin is stretched over the framework) */
+const CREASES = (() => {
+  const fs = sample(FRAME_OUTLINE, 10), out: string[] = [];
+  for (let k = 0; k < 22; k++) {
+    const u = (k + 0.5 * hash(k * 3.1)) / 22, q = at(fs, u);
+    const nx = q.ty, ny = -q.tx; // outward normal (the outline runs clockwise)
+    const L = 6 + 7 * hash(k * 5.3), bend = (hash(k * 7.7) - 0.5) * 4;
+    const x0 = q.p.x + nx * 3.5, y0 = q.p.y + ny * 3.5;
+    out.push(`M ${x0.toFixed(1)} ${y0.toFixed(1)} Q ${(x0 + nx * L * 0.5 + ny * bend).toFixed(1)} ${(y0 + ny * L * 0.5 - nx * bend).toFixed(1)} ${(x0 + nx * L).toFixed(1)} ${(y0 + ny * L).toFixed(1)}`);
+  }
+  return out;
+})();
 export const FLAP_D = 'M ' + OUTL.pts.map((p) => `${(3 + (p.x - 3) * FLAP_K).toFixed(2)} ${(-1 + (p.y + 1) * FLAP_K).toFixed(2)}`).join(' L ') + ' Z';
 const FLAP_S = sample(FLAP_D, 1);
 
@@ -154,7 +167,11 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
   const reliefX = inserting ? pc.x : ex;
   const cw = ss(t, B.carry2[1] - 0.3, B.carry2[1]) * (1 - ss(t, B.winClose[0], B.winClose[1]));
   const fpos = inserting ? {x: pc.x, y: pc.y, s: pc.s} : {x: A.x, y: A.y, s: 1};
-  const depth = inserting ? 2.3 * ss(t, B.insert[0] + 0.05, B.insert[1]) : 2.3 * amt;
+  // V4: the living skin over the ear swells very slightly with the pulse (about 70 bpm)
+  const hookOrLoop = t < B.armOff || t >= B.rewind[0]; // V4 additions apply to the opening and its loop return only
+  const beat = !hookOrLoop ? 1 : 1 + 0.035 * Math.max(0, Math.sin(2 * Math.PI * (Math.round(1.15 * TM.end) / TM.end) * t)) ** 3; // whole beats over the film: identical at the loop seam
+  const depth = inserting ? 2.3 * ss(t, B.insert[0] + 0.05, B.insert[1]) : 2.3 * amt * beat;
+  const flesh = hookOrLoop && amt > 0.02 ? Math.min(1, amt) : 0;
   return (
     <g>
       {/* a faint warmth over the stretched skin */}
@@ -222,6 +239,18 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
           </g>
         </g>
       )}
+      {/* V4 flesh: warm blood colour deep in the folds, paler stretched skin along the rim (drawn under the lighting) */}
+      {flesh > 0 && (
+        <g transform={`translate(${ex} ${A.y}) scale(${ek} 1)`} opacity={flesh}>
+          <g filter="url(#soft3)" opacity={0.8}>
+            <ellipse cx={-1} cy={9} rx={10} ry={11} fill="#7E3A30" opacity="0.2" />
+            <ellipse cx={3} cy={-11} rx={6} ry={3} transform="rotate(-12 3 -11)" fill="#A9473D" opacity="0.22" />
+            <ellipse cx={4} cy={-28} rx={4} ry={4} fill="#A9473D" opacity="0.2" />
+            <path d={SCAPHA_D} fill="none" stroke="#A9473D" strokeWidth="3.5" opacity="0.26" strokeLinecap="round" />
+          </g>
+          <path d={HELIX_D} fill="none" stroke="#EDC6AA" strokeWidth="3" opacity={0.28} strokeLinecap="round" filter="url(#soft2)" transform="translate(-0.8 -1)" />
+        </g>
+      )}
       {/* the ear relief under the skin */}
       {depth > 0.01 && (
         <g clipPath={inserting ? 'url(#underSkin)' : undefined}>
@@ -236,6 +265,18 @@ export const ArmSurface: React.FC<{t: number; px: number}> = ({t, px}) => {
             <Relief id="armR" x={-90} y={-240} w={180} h={480} px={px} depth={depth * (1 + 0.35 * (1 - ss(px, 2.2, 4.5)))} blur={1.9} gain={1.15 + 0.45 * (1 - ss(px, 2.2, 4.5))} tex={tex} texFreq={0.9}>
               <EarHeight p={{lobule: 0.3}} />
             </Relief>
+          </g>
+        </g>
+      )}
+      {/* V4 flesh: a soft contact shadow where the bump rises from the flat skin, and fine tension creases around it
+          (only legible close up) */}
+      {flesh > 0 && (
+        <g transform={`translate(${ex} ${A.y}) scale(${ek} 1)`} opacity={flesh}>
+          <path d={FRAME_OUTLINE} fill="none" stroke="#5A2C20" strokeWidth="6" opacity="0.16" filter="url(#soft3)" transform="translate(1.6 2.2) scale(1.05)" />
+          <g opacity={0.3 * ss(px, 3, 6.5)} stroke="#8F5A42" strokeWidth="0.45" fill="none" strokeLinecap="round">
+            {CREASES.map((d, i) => (
+              <path key={i} d={d} />
+            ))}
           </g>
         </g>
       )}

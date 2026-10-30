@@ -45,9 +45,9 @@ export const TM = {
 // Derived beats (seconds). Each block is one physical action. V2: the cartilage is cut out of the chest, carried by
 // forceps to a surgical tray beside her, carved there, and carried by forceps to the forearm (never shaped in the chest).
 export const B = {
-  push: [0.0, 0.5] as const, // one purposeful push from the forearm-and-hand composition onto the ear
-  pulse: [0.0, 0.5] as const, // the ear pushes up under the skin as the push lands
-  turn: [0.9, 2.2] as const, // she turns her forearm a little
+  push: [0.0, 0.3] as const, // V4: frame 0 is the ear in extreme close-up; the camera settles, then pulls back
+  pulse: [0.0, 0.5] as const, // the ear pushes up under the skin as the film opens
+  turn: [0, 0] as const, // V4: no cylindrical turn (it narrowed the ear); the forearm rotates rigidly instead (hook.ts)
   armOff: 3.55, // the forearm leaves the frame: from here until the insertion it is the arm before surgery
   crash: [TM.crash - 0.02, TM.crash + 0.5] as const,
   ribWin: [TM.surgeons - 0.05, TM.surgeons + 0.4] as const, // the chest opens locally on the ribs

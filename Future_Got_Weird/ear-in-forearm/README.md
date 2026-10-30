@@ -1,6 +1,19 @@
 # Future Got Weird: Doctors Grew an Ear Inside Her Arm
 
-## V3 FINAL REVIEW (current)
+## V4 FINAL REVIEW (current)
+
+**Status.** A review copy. **It is not published.**
+
+**Deliverable.** `exports/FGW_Ear_Forearm_V4_FINAL_REVIEW.mp4`: 1080×1920 (verified), 30 fps, 609 frames, 20.3 s.
+
+**What changed.** V3 with a new 0–3.6 s opening: an extreme close-up of the forearm ear, then a rotating pull-back and
+her reaction. The loop return now lands on that close-up. Everything else is V3, verified pixel-identical.
+
+**Report.** `production/V4_FINAL_REPORT.md`. QA evidence is in `qa/v4/`.
+
+**Rebuild.** Render composition `EarForearmV4` with `--props='{"audio":"mix_v2","captions":true}'`.
+
+## V3 FINAL REVIEW
 
 **Status.** A final review copy. **It is not published.**
 
