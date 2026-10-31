@@ -1,0 +1,19 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Zombie Ant); confirmed with creative_list_voices on 2026-10-31"},
+ "model_id": "eleven_v4",
+ "flow_id": "IOWXq45Wj2FjvHGGsvkK",
+ "prompt": "[curious, energetic, slightly eerie] If this parasite gets inside a snail, it can turn its eyes into MOVING BAIT. [brisk, explaining] The worm grows through its body and fills its eyestalks with pulsing, colorful sacs. [eerie, fascinated] They start looking like tiny CATERPILLARS. [knowing] And that's exactly what the parasite wants. [building] Because when a BIRD spots one and eats it, the parasite gets inside the bird. [quieter, eerie] Then its eggs spread through the bird's droppings, ready to infect another snail.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). Capitals mark the brief's three emphasis words; the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 522.9 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_1AiP.mp3", "generation_id": "1AiPe8dmvyhjFC8CpQ6F", "duration_s": 24.45, "chosen": true,
+   "asr": "zipformer and whisper base.en: only spelling differences (eye stalks, sacks)", "emphasis_db_vs_median_word": {"moving": 6.1, "bait": 3.6, "bird": 5.9, "caterpillars": 0.2}},
+  {"file": "audio/narration/takes/t2_vG3r.mp3", "generation_id": "vG3rLxYNuUilKbsfEh6P", "duration_s": 24.35, "chosen": false,
+   "why_not": "whisper hears a sentence break before 'ready' (droppings. ready), a weaker 'bird' (+5.0 dB) and a fainter last 'snail' (-8.8 dB vs -5.0 dB)"}
+ ],
+ "edits": "None. The take is used sample for sample: no gap edits, no time-stretch, no pitch change. A 0.6 s tail after the last word carries the push into the loop.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps snapped to measured pause onsets (tools/align_zipformer.py)",
+ "final": {"file": "audio/narration/FGW_Zombie_Snail_narration_V1.wav", "sha256": "40af3250a953675cfeb8ad0cfec8075ab3febc6624ab165a290f85783064917f", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 24.26], "film_s": 24.867},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+}

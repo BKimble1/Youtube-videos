@@ -1,0 +1,508 @@
+{
+ "fps": 30,
+ "frames": 746,
+ "duration": 24.867,
+ "captions": [
+  {
+   "text": "If this parasite gets inside a snail,",
+   "emph": [
+    "snail"
+   ],
+   "start": 0.0,
+   "end": 2.1,
+   "show": 0.0,
+   "hide": 2.27
+  },
+  {
+   "text": "it can turn its eyes",
+   "emph": [
+    "eyes"
+   ],
+   "start": 2.31,
+   "end": 3.36,
+   "show": 2.27,
+   "hide": 3.325
+  },
+  {
+   "text": "into moving bait.",
+   "emph": [
+    "moving",
+    "bait"
+   ],
+   "start": 3.365,
+   "end": 4.61,
+   "show": 3.325,
+   "hide": 5.09
+  },
+  {
+   "text": "The worm grows through its body",
+   "emph": [
+    "grows"
+   ],
+   "start": 5.13,
+   "end": 6.5,
+   "show": 5.09,
+   "hide": 6.47
+  },
+  {
+   "text": "and fills its eyestalks",
+   "emph": [
+    "eyestalks"
+   ],
+   "start": 6.51,
+   "end": 7.77,
+   "show": 6.47,
+   "hide": 7.75
+  },
+  {
+   "text": "with pulsing, colorful sacs.",
+   "emph": [
+    "pulsing"
+   ],
+   "start": 7.79,
+   "end": 9.55,
+   "show": 7.75,
+   "hide": 9.94
+  },
+  {
+   "text": "They start looking like",
+   "emph": [],
+   "start": 9.98,
+   "end": 10.8,
+   "show": 9.94,
+   "hide": 10.765
+  },
+  {
+   "text": "tiny caterpillars.",
+   "emph": [
+    "caterpillars"
+   ],
+   "start": 10.805,
+   "end": 12.14,
+   "show": 10.765,
+   "hide": 12.49
+  },
+  {
+   "text": "And that's exactly what the parasite wants.",
+   "emph": [
+    "wants"
+   ],
+   "start": 12.53,
+   "end": 14.79,
+   "show": 12.49,
+   "hide": 15.14
+  },
+  {
+   "text": "Because when a bird spots one",
+   "emph": [
+    "bird"
+   ],
+   "start": 15.18,
+   "end": 16.5,
+   "show": 15.14,
+   "hide": 16.465
+  },
+  {
+   "text": "and eats it,",
+   "emph": [
+    "eats"
+   ],
+   "start": 16.505,
+   "end": 17.01,
+   "show": 16.465,
+   "hide": 17.26
+  },
+  {
+   "text": "the parasite gets inside the bird.",
+   "emph": [
+    "bird"
+   ],
+   "start": 17.3,
+   "end": 19.26,
+   "show": 17.26,
+   "hide": 19.81
+  },
+  {
+   "text": "Then its eggs spread",
+   "emph": [
+    "eggs"
+   ],
+   "start": 19.85,
+   "end": 21.15,
+   "show": 19.81,
+   "hide": 21.115
+  },
+  {
+   "text": "through the bird's droppings,",
+   "emph": [
+    "droppings"
+   ],
+   "start": 21.155,
+   "end": 22.41,
+   "show": 21.115,
+   "hide": 22.6
+  },
+  {
+   "text": "ready to infect another snail.",
+   "emph": [
+    "snail"
+   ],
+   "start": 22.64,
+   "end": 24.26,
+   "show": 22.6,
+   "hide": 24.867
+  }
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.15
+  },
+  {
+   "word": "this",
+   "start": 0.16,
+   "end": 0.35
+  },
+  {
+   "word": "parasite",
+   "start": 0.36,
+   "end": 0.95
+  },
+  {
+   "word": "gets",
+   "start": 0.96,
+   "end": 1.19
+  },
+  {
+   "word": "inside",
+   "start": 1.2,
+   "end": 1.55
+  },
+  {
+   "word": "a",
+   "start": 1.56,
+   "end": 1.67
+  },
+  {
+   "word": "snail,",
+   "start": 1.68,
+   "end": 2.1
+  },
+  {
+   "word": "it",
+   "start": 2.31,
+   "end": 2.36
+  },
+  {
+   "word": "can",
+   "start": 2.365,
+   "end": 2.6
+  },
+  {
+   "word": "turn",
+   "start": 2.605,
+   "end": 2.8
+  },
+  {
+   "word": "its",
+   "start": 2.805,
+   "end": 3.08
+  },
+  {
+   "word": "eyes",
+   "start": 3.085,
+   "end": 3.36
+  },
+  {
+   "word": "into",
+   "start": 3.365,
+   "end": 3.64
+  },
+  {
+   "word": "moving",
+   "start": 3.645,
+   "end": 4.14
+  },
+  {
+   "word": "bait.",
+   "start": 4.165,
+   "end": 4.61
+  },
+  {
+   "word": "The",
+   "start": 5.13,
+   "end": 5.18
+  },
+  {
+   "word": "worm",
+   "start": 5.17,
+   "end": 5.46
+  },
+  {
+   "word": "grows",
+   "start": 5.47,
+   "end": 5.78
+  },
+  {
+   "word": "through",
+   "start": 5.79,
+   "end": 5.99
+  },
+  {
+   "word": "its",
+   "start": 5.99,
+   "end": 6.13
+  },
+  {
+   "word": "body",
+   "start": 6.19,
+   "end": 6.5
+  },
+  {
+   "word": "and",
+   "start": 6.51,
+   "end": 6.66
+  },
+  {
+   "word": "fills",
+   "start": 6.67,
+   "end": 6.98
+  },
+  {
+   "word": "its",
+   "start": 6.99,
+   "end": 7.18
+  },
+  {
+   "word": "eyestalks",
+   "start": 7.19,
+   "end": 7.77
+  },
+  {
+   "word": "with",
+   "start": 7.79,
+   "end": 7.89
+  },
+  {
+   "word": "pulsing,",
+   "start": 7.95,
+   "end": 8.46
+  },
+  {
+   "word": "colorful",
+   "start": 8.47,
+   "end": 9.1
+  },
+  {
+   "word": "sacs.",
+   "start": 9.11,
+   "end": 9.55
+  },
+  {
+   "word": "They",
+   "start": 9.98,
+   "end": 10.03
+  },
+  {
+   "word": "start",
+   "start": 10.02,
+   "end": 10.34
+  },
+  {
+   "word": "looking",
+   "start": 10.365,
+   "end": 10.64
+  },
+  {
+   "word": "like",
+   "start": 10.645,
+   "end": 10.8
+  },
+  {
+   "word": "tiny",
+   "start": 10.805,
+   "end": 11.28
+  },
+  {
+   "word": "caterpillars.",
+   "start": 11.285,
+   "end": 12.14
+  },
+  {
+   "word": "And",
+   "start": 12.53,
+   "end": 12.58
+  },
+  {
+   "word": "that's",
+   "start": 12.57,
+   "end": 12.93
+  },
+  {
+   "word": "exactly",
+   "start": 12.935,
+   "end": 13.53
+  },
+  {
+   "word": "what",
+   "start": 13.535,
+   "end": 13.69
+  },
+  {
+   "word": "the",
+   "start": 13.695,
+   "end": 13.85
+  },
+  {
+   "word": "parasite",
+   "start": 13.855,
+   "end": 14.49
+  },
+  {
+   "word": "wants.",
+   "start": 14.495,
+   "end": 14.79
+  },
+  {
+   "word": "Because",
+   "start": 15.18,
+   "end": 15.3
+  },
+  {
+   "word": "when",
+   "start": 15.305,
+   "end": 15.46
+  },
+  {
+   "word": "a",
+   "start": 15.465,
+   "end": 15.62
+  },
+  {
+   "word": "bird",
+   "start": 15.625,
+   "end": 15.9
+  },
+  {
+   "word": "spots",
+   "start": 15.905,
+   "end": 16.3
+  },
+  {
+   "word": "one",
+   "start": 16.305,
+   "end": 16.5
+  },
+  {
+   "word": "and",
+   "start": 16.505,
+   "end": 16.6
+  },
+  {
+   "word": "eats",
+   "start": 16.625,
+   "end": 16.94
+  },
+  {
+   "word": "it,",
+   "start": 16.945,
+   "end": 17.01
+  },
+  {
+   "word": "the",
+   "start": 17.3,
+   "end": 17.35
+  },
+  {
+   "word": "parasite",
+   "start": 17.34,
+   "end": 17.95
+  },
+  {
+   "word": "gets",
+   "start": 17.955,
+   "end": 18.27
+  },
+  {
+   "word": "inside",
+   "start": 18.275,
+   "end": 18.79
+  },
+  {
+   "word": "the",
+   "start": 18.795,
+   "end": 18.99
+  },
+  {
+   "word": "bird.",
+   "start": 18.995,
+   "end": 19.26
+  },
+  {
+   "word": "Then",
+   "start": 19.85,
+   "end": 19.95
+  },
+  {
+   "word": "its",
+   "start": 19.955,
+   "end": 20.39
+  },
+  {
+   "word": "eggs",
+   "start": 20.395,
+   "end": 20.79
+  },
+  {
+   "word": "spread",
+   "start": 20.795,
+   "end": 21.15
+  },
+  {
+   "word": "through",
+   "start": 21.155,
+   "end": 21.27
+  },
+  {
+   "word": "the",
+   "start": 21.275,
+   "end": 21.43
+  },
+  {
+   "word": "bird's",
+   "start": 21.435,
+   "end": 21.87
+  },
+  {
+   "word": "droppings,",
+   "start": 21.875,
+   "end": 22.41
+  },
+  {
+   "word": "ready",
+   "start": 22.64,
+   "end": 22.8
+  },
+  {
+   "word": "to",
+   "start": 22.805,
+   "end": 22.96
+  },
+  {
+   "word": "infect",
+   "start": 22.965,
+   "end": 23.44
+  },
+  {
+   "word": "another",
+   "start": 23.445,
+   "end": 23.8
+  },
+  {
+   "word": "snail.",
+   "start": 23.805,
+   "end": 24.26
+  }
+ ]
+}

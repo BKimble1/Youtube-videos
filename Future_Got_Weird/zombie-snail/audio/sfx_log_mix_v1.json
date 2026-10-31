@@ -1,0 +1,97 @@
+[
+ {
+  "t": 1.37,
+  "sfx": "sac pulsation (per contraction)",
+  "gain_db": -23.0
+ },
+ {
+  "t": 2.28,
+  "sfx": "wingbeats overhead (shadow)",
+  "gain_db": -23
+ },
+ {
+  "t": 2.15,
+  "sfx": "air of the pass",
+  "gain_db": -33
+ },
+ {
+  "t": 4.39,
+  "sfx": "dive through the sac wall (wet)",
+  "gain_db": -25
+ },
+ {
+  "t": 5.12,
+  "sfx": "radula rasping",
+  "gain_db": -37
+ },
+ {
+  "t": 5.45,
+  "sfx": "egg swallowed (tiny)",
+  "gain_db": -36
+ },
+ {
+  "t": 5.86,
+  "sfx": "larva hatches",
+  "gain_db": -36
+ },
+ {
+  "t": 6,
+  "sfx": "sporocyst growing (organic creep)",
+  "gain_db": -26
+ },
+ {
+  "t": 6.72,
+  "sfx": "stalks filling (low swell)",
+  "gain_db": -29
+ },
+ {
+  "t": 13.25,
+  "sfx": "landing flutter",
+  "gain_db": -21.0
+ },
+ {
+  "t": 13.98,
+  "sfx": "twig takes the weight",
+  "gain_db": -27
+ },
+ {
+  "t": 16.775,
+  "sfx": "beak contact (peck)",
+  "gain_db": -17
+ },
+ {
+  "t": 16.825,
+  "sfx": "the stalk tears (soft, wet)",
+  "gain_db": -22
+ },
+ {
+  "t": 16.505,
+  "sfx": "feathers on the lunge",
+  "gain_db": -36
+ },
+ {
+  "t": 17.74,
+  "sfx": "swallow (gulp)",
+  "gain_db": -23
+ },
+ {
+  "t": 17.79,
+  "sfx": "inside the bird (muffled)",
+  "gain_db": -31
+ },
+ {
+  "t": 19.5,
+  "sfx": "sac bursts",
+  "gain_db": -27
+ },
+ {
+  "t": 20.451,
+  "sfx": "eggs released (tiny bubbles)",
+  "gain_db": -38
+ },
+ {
+  "t": 22.5,
+  "sfx": "dropping lands (soft)",
+  "gain_db": -23
+ }
+]
