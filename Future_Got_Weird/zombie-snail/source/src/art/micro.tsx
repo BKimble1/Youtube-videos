@@ -29,7 +29,7 @@ const resample = (ps: P[], n: number) => Array.from({length: n + 1}, (_, i) => a
 export const GUT_SNAIL: P[] = [pt(2.0, -0.95), pt(1.0, -1.55), pt(-0.6, -2.0), pt(-2.6, -2.25), pt(-4.6, -2.65), pt(-6.6, -3.35), pt(-8.4, -4.2)];
 // the sporocyst: a trunk from the visceral mass (under the shell) forward through the body into both eyestalk bases
 const SPORO_MAIN: P[] = [pt(-14.5, -1.6), pt(-11.6, -1.7), pt(-9.0, -2.0), pt(-6.8, -2.2), pt(-4.8, -2.4), pt(-3.2, -3.0), pt(-2.0, -3.8), pt(-1.05, -4.5)];
-const SPORO_FAR: P[] = [pt(-3.2, -3.0), pt(-2.7, -3.8), pt(-2.2, -4.55)];
+const SPORO_FAR: P[] = [pt(-6.8, -2.2), pt(-5.3, -2.75), pt(-4.0, -3.35), pt(-3.0, -3.95), pt(-2.2, -4.55)];
 const SPORO_SIDE: P[][] = [
   [pt(-11.6, -1.7), pt(-11.0, -0.8), pt(-12.6, -0.5)],
   [pt(-9.0, -2.0), pt(-8.6, -1.0), pt(-9.6, -0.5)],
@@ -86,8 +86,8 @@ export const snailInterior = (s: SnailInside) => (bend: (p: P) => P) => {
       <ellipse cx={bend(pt(1.0, -1.55)).x} cy={bend(pt(1.0, -1.55)).y} rx={0.75} ry={0.6} fill="#B9685A" stroke="#7A3328" strokeWidth={0.06} />
       {/* the sporocyst network */}
       {SPORO_SIDE.map((ps, i) => tubeEl(ps, clamp((g - 0.12 - i * 0.09) / 0.45), 0.33, `s${i}`))}
-      {tubeEl(SPORO_MAIN, clamp(0.25 + g * 0.75 * 1.4), 0.5, 'm')}
-      {tubeEl(SPORO_FAR, clamp((g - 0.35) / 0.35), 0.4, 'f')}
+      {tubeEl(SPORO_MAIN, 1, 0.5, 'm')}
+      {tubeEl(SPORO_FAR, clamp((g - 0.15) / 0.85), 0.44, 'f')}
     </g>
   );
 };

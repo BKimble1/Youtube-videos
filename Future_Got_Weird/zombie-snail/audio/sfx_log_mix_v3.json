@@ -1,0 +1,132 @@
+[
+ {
+  "t": 0.08,
+  "sfx": "sac pulsation (per contraction)",
+  "gain_db": -23.0
+ },
+ {
+  "t": 2.36,
+  "sfx": "stalk writhes (wet stretch)",
+  "gain_db": -26
+ },
+ {
+  "t": 1.15,
+  "sfx": "through the stalk surface (soft wet)",
+  "gain_db": -25
+ },
+ {
+  "t": 1.3,
+  "sfx": "larvae shifting inside the sac",
+  "gain_db": -29
+ },
+ {
+  "t": 2.3,
+  "sfx": "cutaway opens the body",
+  "gain_db": -26
+ },
+ {
+  "t": 5.07,
+  "sfx": "sporocyst growing (organic creep)",
+  "gain_db": -24
+ },
+ {
+  "t": 6.62,
+  "sfx": "second stalk swelling (low)",
+  "gain_db": -25
+ },
+ {
+  "t": 6.72,
+  "sfx": "second stalk stretching",
+  "gain_db": -29
+ },
+ {
+  "t": 7.85,
+  "sfx": "skin closes",
+  "gain_db": -29
+ },
+ {
+  "t": 8,
+  "sfx": "snail gliding up the leaf",
+  "gain_db": -32
+ },
+ {
+  "t": 15.25,
+  "sfx": "take-off",
+  "gain_db": -28
+ },
+ {
+  "t": 15.32,
+  "sfx": "wingbeats (the dive)",
+  "gain_db": -20.0
+ },
+ {
+  "t": 16.185,
+  "sfx": "twig takes the weight",
+  "gain_db": -27
+ },
+ {
+  "t": 16.545,
+  "sfx": "feathers on the lunge",
+  "gain_db": -29
+ },
+ {
+  "t": 16.735,
+  "sfx": "beak snap (strike)",
+  "gain_db": -14
+ },
+ {
+  "t": 16.74,
+  "sfx": "strike body (short low thump)",
+  "gain_db": -22
+ },
+ {
+  "t": 16.775,
+  "sfx": "the stalk tears (soft, wet)",
+  "gain_db": -21
+ },
+ {
+  "t": 17.69,
+  "sfx": "swallow (gulp)",
+  "gain_db": -23
+ },
+ {
+  "t": 17.74,
+  "sfx": "inside the bird (muffled)",
+  "gain_db": -28
+ },
+ {
+  "t": 18.35,
+  "sfx": "peristalsis squeeze",
+  "gain_db": -30
+ },
+ {
+  "t": 19.45,
+  "sfx": "sac bursts",
+  "gain_db": -26
+ },
+ {
+  "t": 19.6,
+  "sfx": "larvae settling",
+  "gain_db": -31
+ },
+ {
+  "t": 20.446,
+  "sfx": "eggs released (tiny bubbles)",
+  "gain_db": -36
+ },
+ {
+  "t": 22.42,
+  "sfx": "dropping lands (soft)",
+  "gain_db": -23
+ },
+ {
+  "t": 22.865,
+  "sfx": "snail rasps the dropping",
+  "gain_db": -32
+ },
+ {
+  "t": 24.06,
+  "sfx": "stalk blooms (low swell into the loop)",
+  "gain_db": -27
+ }
+]

@@ -10,7 +10,7 @@ effects placed from the picture's own events and pulse envelope (audio/cues.json
 No horror stingers, no whooshes on camera moves.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; true peak below -1.5 dBTP (4x oversampled).
 usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
-V2: re-cued to the V2 picture (cutaways, the climb, the strike, inside the bird, the second snail and the bloom).
+V3: re-cued to the V3 picture (hook through the stalk surface, the second stalk taken over, the bird's dive and a sharper strike). V2: re-cued to the V2 picture (cutaways, the climb, the strike, inside the bird, the second snail and the bloom).
 Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Snail_<MIX>.wav, audio/mix/mix_measure_<mix>.json, audio/sfx_log_<mix>.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
@@ -191,23 +191,27 @@ def slither(dur=4.0):
 # ---- the push in: the stalk writhes
 place(sfx, creak(0.55, 140, 210, 34), T['it'] + 0.05, 'stalk writhes (wet stretch)', -26)
 # ---- the cutaway opens the stalk; the larvae inside
-place(sfx, squelch(0.5, 220, 1600), E('cut0'), 'cutaway opens the stalk (soft wet peel)', -24)
+place(sfx, squelch(0.5, 220, 1600), E('cut0'), 'through the stalk surface (soft wet)', -25)
 place(sfx, squirm(E('cutClose') - E('cut0') + 0.3), E('cut0') + 0.15, 'larvae shifting inside the sac', -29)
 # ---- the body cutaway; the sporocyst grows; material pumps into the stalk
 place(sfx, squelch(0.45, 180, 1200), E('bodyCut0'), 'cutaway opens the body', -26)
 place(sfx, creep(E('stalkBack') - T['worm'] + 0.3), T['worm'] - 0.1, 'sporocyst growing (organic creep)', -24)
-place(sfx, swell(1.4, 58), E('stalkBack'), 'sac swelling (low)', -26)
+place(sfx, swell(1.4, 58), E('farFill0') - 0.1, 'second stalk swelling (low)', -25)
+place(sfx, creak(0.8, 110, 190, 30), E('farFill0'), 'second stalk stretching', -29)
 place(sfx, squelch(0.35, 250, 1400), E('cutClose'), 'skin closes', -29)
 # ---- the climb into the open
 place(sfx, slither(E('climb1') - E('climb0')), E('climb0'), 'snail gliding up the leaf', -32)
-# ---- the bird arrives: a flutter of wingbeats, the toes take the twig
-for i in range(8):
-    place(sfx, flap(0.09), E('land0') + 0.05 + i * 0.1, 'landing flutter' if i == 0 else None, -21 - 0.5 * i)
+# ---- the bird takes off from its first perch and dives in: a quick run of wingbeats, the toes take the twig
+place(sfx, rustle(0.2, 1800, 6000), E('land0') - 0.05, 'take-off', -28)
+nf = max(3, int((E('land1') - E('land0')) / 0.11))
+for i in range(nf):
+    place(sfx, flap(0.09), E('land0') + 0.02 + i * 0.11, 'wingbeats (the dive)' if i == 0 else None, -20 - 0.6 * i)
 place(sfx, creak(0.3, 210, 140, 60), E('land1') - 0.02, 'twig takes the weight', -27)
 place(sfx, tick(0.02, 2600), E('land1') - 0.03, None, -31)
 # ---- the strike: feathers, a hard beak snap, a short soft tear
 place(sfx, rustle(0.22, 2000, 6500), E('lunge'), 'feathers on the lunge', -29)
-place(sfx, tick(0.025, 3400), E('peck') - 0.01, 'beak snap (strike)', -16)
+place(sfx, tick(0.025, 3400), E('peck') - 0.01, 'beak snap (strike)', -14)
+place(sfx, spasm(), E('peck') - 0.005, 'strike body (short low thump)', -22)
 place(sfx, squelch(0.16, 600, 3200), E('peck') + 0.03, 'the stalk tears (soft, wet)', -21)
 # ---- the swallow, then inside the bird
 place(sfx, pop(0.14, 160), E('swallow') + 0.3, 'swallow (gulp)', -23)

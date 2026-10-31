@@ -68,16 +68,16 @@ export const T = {
   snailEnd: w('snail', 1).end,
 };
 export const EV = {
-  pull0: 0.5,
-  push0: 2.05,
-  cut0: T.into - 0.25,
-  bodyCut0: 4.5,
-  stalkBack: T.fills - 0.15,
+  cut0: 1.15,
+  bodyCut0: 2.3,
+  stalkBack: T.fills - 0.35,
+  farFill0: T.fills + 0.05,
+  farFill1: T.eyestalks + 0.65,
   cutClose: T.pulsing - 0.1,
   climb0: T.pulsing + 0.05,
   climb1: 12.6,
-  land0: 13.2,
-  land1: 14.0,
+  land0: T.because + 0.12,
+  land1: T.spots + 0.3,
   look: T.wants - 0.1,
   tilt: T.spots,
   lunge: T.eats - 0.08,
@@ -109,20 +109,26 @@ const FAR0 = {ang: -1.42, bend: 0.18, Ln: 4.4, Ls: 7.0, rn: 0.38, rmax: 1.2};
 const S0 = 0.86;
 export const x1 = (t: number) => (t < EV.climb0 ? 0.35 * t : lerp(0.35 * EV.climb0, XT, ss5(t, EV.climb0, EV.climb1)) + 0.05 * Math.max(0, t - EV.climb1));
 const pulseK = (t: number) => 1 + 0.35 * ss(t, T.it, T.it + 0.3) * (1 - ss(t, T.into, T.into + 0.4)) + 0.25 * ss(t, T.and, T.and + 0.8);
+/** the snail's body answers each contraction of the sac: the head bobs slightly and the lower tentacles twitch */
+const bodyReact = (t: number) => 0.025 * Math.sin(2 * Math.PI * 1.55 * t);
+const lowTwitch = (t: number) => 0.3 * Math.max(0, Math.sin(2 * Math.PI * 1.55 * t - 0.6)) ** 3;
 export const snail1 = (t: number): SnailState => {
   const wound = ss(t, EV.peck, EV.peck + 0.08);
-  const fill = ss(t, EV.stalkBack, EV.stalkBack + 1.1);
-  const cut = ss(t, EV.cut0, EV.cut0 + 0.7) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
-  const dev = 0.45 + 0.55 * ss(t, EV.stalkBack + 0.1, EV.stalkBack + 1.1);
+  const fill = ss(t, T.it, T.baitEnd);
+  const cut = ss(t, EV.cut0, EV.cut0 + 0.6) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
+  const dev = 0.55 + 0.45 * ss(t, EV.stalkBack, EV.farFill1);
+  const farS = ss(t, EV.farFill0, EV.farFill1);
+  const farCut = ss(t, EV.stalkBack, EV.stalkBack + 0.45) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
   const vivid = 0.35 + 0.65 * ss(t, T.they, T.cats);
   const pk = pulseK(t) * (1 - wound);
   const near: StalkParams = {...NEAR0, S: lerp(S0, 1, fill), band: 1 - wound, pulse: pk, vivid, wound, retract: 0.45 * ss(t, EV.peck + 0.04, EV.peck + 0.45), cut, dev};
-  const far: StalkParams = {...FAR0, S: lerp(S0, 1, fill), band: 1, pulse: pulseK(t) * (1 - 0.5 * ss(t, EV.peck, EV.peck + 0.4)), phase: 1.9, vivid,
+  const far: StalkParams = {...FAR0, S: farS, band: ss(t, EV.farFill0 + 0.1, EV.farFill1), pulse: pulseK(t) * ss(t, EV.farFill0 + 0.3, EV.farFill1 + 0.3) * (1 - 0.5 * ss(t, EV.peck, EV.peck + 0.4)), phase: 1.9, vivid,
+    cut: farCut, dev: ss(t, EV.farFill0, EV.farFill1 + 0.3),
     retract: 0.7 * ss(t, EV.peck + 0.05, EV.peck + 0.4) * (1 - 0.6 * ss(t, 18.4, 19.6))};
-  const cutAlpha = 1 - ss(t, EV.stalkBack + 0.35, EV.stalkBack + 0.75);
-  const xr = cutAlpha > 0.001 ? ss(t, EV.bodyCut0, EV.bodyCut0 + 0.75) : 0;
+  const cutAlpha = 1 - ss(t, EV.cutClose - 0.2, EV.cutClose + 0.3);
+  const xr = cutAlpha > 0.001 ? ss(t, EV.bodyCut0, EV.bodyCut0 + 0.9) : 0;
   const climbing = ss(t, EV.climb0, EV.climb0 + 0.4) * (1 - ss(t, EV.climb1 - 0.4, EV.climb1));
-  const lift = 0.05 + 0.2 * ss(t, EV.climb1 - 0.6, EV.climb1 + 0.4) + 0.02 * Math.sin(t * 2.1) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
+  const lift = 0.05 + 0.2 * ss(t, EV.climb1 - 0.6, EV.climb1 + 0.4) + 0.02 * Math.sin(t * 2.1) + bodyReact(t) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
   return {
     o: pt(x1(t), 0),
     k: 1,
@@ -134,7 +140,7 @@ export const snail1 = (t: number): SnailState => {
     far,
     xray: xr,
     cutAlpha,
-    lowRetract: ss(t, EV.peck, EV.peck + 0.2) * (1 - 0.7 * ss(t, 18, 19)),
+    lowRetract: Math.max(ss(t, EV.peck, EV.peck + 0.2) * (1 - 0.7 * ss(t, 18, 19)), lowTwitch(t)),
     light: 1 + 0.45 * ss(t, EV.climb1 - 1, EV.climb1),
   };
 };
@@ -144,10 +150,10 @@ export const x2 = (t: number) => -0.35 * (DUR - t);
 export const snail2 = (t: number): SnailState => {
   const bloom = ss(t, EV.bloom0, DUR);
   const tt = t - DUR; // phase-locked to snail 1 at t = 0
-  const near: StalkParams = {...NEAR0, S: S0 * bloom, band: ss(t, EV.bloom0 + 0.15, DUR), pulse: pulseK(0) * bloom, vivid: 0.35};
-  const far: StalkParams = {...FAR0, S: S0 * bloom, band: ss(t, EV.bloom0 + 0.15, DUR), pulse: pulseK(0) * bloom, phase: 1.9, vivid: 0.35};
+  const near: StalkParams = {...NEAR0, S: S0 * bloom, band: ss(t, EV.bloom0 + 0.15, DUR), pulse: pulseK(0) * bloom, vivid: 0.35, cut: 0, dev: 0.55};
+  const far: StalkParams = {...FAR0, S: 0, band: 0, pulse: 0, phase: 1.9, vivid: 0.35, cut: 0, dev: 0};
   const dip = ss(t, EV.touch - 0.3, EV.touch + 0.1) * (1 - ss(t, EV.touch + 0.55, EV.touch + 1.0));
-  return {o: pt(x2(t), 0), k: 1, t: tt, crawl: x2(t), lift: 0.05 + 0.02 * Math.sin(tt * 2.1), dip, rasp: dip > 0.5 ? 0.5 + 0.5 * Math.sin(t * 30) : 0, near, far, light: 1};
+  return {o: pt(x2(t), 0), k: 1, t: tt, crawl: x2(t), lift: 0.05 + 0.02 * Math.sin(tt * 2.1) + bodyReact(tt) * bloom, lowRetract: lowTwitch(tt) * bloom, dip, rasp: dip > 0.5 ? 0.5 + 0.5 * Math.sin(t * 30) : 0, near, far, light: 1};
 };
 
 /** a point on a snail's stalk in world coordinates, from its geometry without the pulse (a steady camera aim) */
@@ -189,15 +195,18 @@ export const F2 = (() => {
   const o = subP(pt(DROP_LAND.x - 0.6, -46), mulP(rotP(VENT_L, ANG2), BIRD_K));
   return addP(o, mulP(rotP(FEET_L, ANG2), BIRD_K));
 })();
+/** perch 0: where the bird first sits and notices the stalks (up and to the right of T) */
+export const F0 = pt(F1.x + 14, F1.y - 24);
+export const TWIG_0: P[] = [pt(F0.x - 8, F0.y + 0.8), pt(F0.x + 10, F0.y + 0.2), pt(F0.x + 40, F0.y - 2), pt(F0.x + 80, F0.y - 8)];
 export const TWIG_1: P[] = [pt(F1.x - 7, F1.y + 0.9), pt(F1.x + 6, F1.y + 0.6), pt(F1.x + 30, F1.y - 1.5), pt(F1.x + 70, F1.y - 6)];
 export const TWIG_2: P[] = [pt(F2.x - 40, F2.y + 2.5), pt(F2.x - 10, F2.y + 0.9), pt(F2.x + 8, F2.y + 0.6), pt(F2.x + 26, F2.y - 1.2)];
-export const birdOn = (t: number) => t > EV.land0 - 0.05;
+export const birdOn = (t: number) => t > 11.8;
 export const bird = (t: number): BirdState => {
-  // landing on perch 1: down from the upper right, wings spread and beating, folding as the toes grip
+  // the approach: one fast flight from perch 0 down to perch 1, wings beating, folding as the toes grip
   const land = ss5(t, EV.land0, EV.land1);
   const atPerch2 = t >= EV.perch2;
   const strikeU = ss(t, EV.lunge, EV.peck) * (1 - ss(t, EV.yank, EV.yank + 0.32));
-  const look = ss(t, EV.look, EV.look + 0.25);
+  const look = ss(t, EV.look, EV.look + 0.25) * (1 - ss(t, EV.land0 - 0.05, EV.land0 + 0.1)) + ss(t, EV.land1 - 0.05, EV.land1 + 0.1);
   let ang = lerp(-0.08 * look - 0.06 * ss(t, EV.tilt, EV.tilt + 0.2), PECK_ANG, strikeU);
   ang += 0.06 * ss(t, EV.swallow, EV.swallow + 0.2) * (1 - ss(t, EV.swallow + 0.5, EV.swallow + 0.9));
   if (atPerch2) ang = ANG2;
@@ -208,11 +217,12 @@ export const bird = (t: number): BirdState => {
   ha = lerp(ha, PECK_HA, strikeU);
   ha += 0.7 * ss(t, EV.swallow, EV.swallow + 0.16) * (1 - ss(t, EV.swallow + 0.42, EV.swallow + 0.75));
   if (atPerch2) ha = 0.05;
-  const o = atPerch2 ? oFromFeet(F2, ANG2) : t < EV.land1 ? (() => {
-    const end = oFromFeet(F1, 0);
-    return pt(lerp(end.x + 34, end.x, land), lerp(end.y - 42, end.y, land) - 5 * Math.sin(Math.PI * land));
+  const o = atPerch2 ? oFromFeet(F2, ANG2) : t < EV.land0 ? oFromFeet(F0, ang) : t < EV.land1 ? (() => {
+    const a = oFromFeet(F0, 0), end = oFromFeet(F1, 0);
+    return pt(lerp(a.x, end.x, land), lerp(a.y, end.y, land) - 7 * Math.sin(Math.PI * land));
   })() : oFromFeet(F1, ang);
-  const spread = t < EV.land1 + 0.25 ? 1 - ss(t, EV.land1 - 0.12, EV.land1 + 0.2) : 0;
+  const spread = t > EV.land0 - 0.08 && t < EV.land1 + 0.25 ? ss(t, EV.land0 - 0.08, EV.land0 + 0.06) * (1 - ss(t, EV.land1 - 0.1, EV.land1 + 0.2)) : 0;
+  if (t > EV.land0 && t < EV.land1) ang += -0.12 * Math.sin(Math.PI * land);
   const beak = Math.max(ss(t, EV.lunge, EV.lunge + 0.08) * (1 - ss(t, EV.peck - 0.03, EV.peck)), 0.42 * ss(t, EV.swallow + 0.05, EV.swallow + 0.14) * (1 - ss(t, EV.swallow + 0.28, EV.swallow + 0.4)));
   const gulp = t > EV.swallow + 0.22 && t < EV.swallow + 0.8 ? Math.sin(Math.PI * (t - EV.swallow - 0.22) / 0.58) : 0;
   return {
@@ -225,7 +235,7 @@ export const bird = (t: number): BirdState => {
     tail: ss(t, EV.release - 0.18, EV.release) * (1 - ss(t, EV.release + 0.25, EV.release + 0.6)),
     wing: spread,
     wingBeat: 0.5 * Math.sin(2 * Math.PI * 7 * t),
-    blink: t > 15.5 && t < 15.64 ? Math.sin((Math.PI * (t - 15.5)) / 0.14) : 0,
+    blink: t > 14.95 && t < 15.09 ? Math.sin((Math.PI * (t - 14.95)) / 0.14) : 0,
     xray: ss(t, EV.intoBird - 0.1, EV.intoBird + 0.3) * (1 - ss(t, EV.inside1 + 0.05, EV.inside1 + 0.45)),
     inside: ss(t, EV.inside0 - 0.15, EV.inside0 + 0.2) * (1 - ss(t, EV.inside1 - 0.15, EV.inside1 + 0.15)),
     k: BIRD_K,
@@ -251,6 +261,8 @@ export const VENT = birdPoints(bird(EV.release)).vent;
 // ---------------------------------------------------------------- the dropping
 export const DROP_K = 1.6;
 export const dropAt = (t: number): {c: P; land: number} | null => {
+  // already lying at H in the opening, so the first frame matches the last (it leaves the frame as the camera pushes in)
+  if (t < 3) return {c: DROP_LAND, land: 1};
   if (t < EV.release) return null;
   const u = clamp((t - EV.release) / (EV.landDrop - EV.release));
   const c = pt(lerp(VENT.x, DROP_LAND.x, u), lerp(VENT.y + 0.8, DROP_LAND.y, u * u));
@@ -268,17 +280,8 @@ const S1 = (u: number, wv: number, which: 'near' | 'far' = 'near') => (t: number
   const p = stalkPointW(snail1(t), u, which);
   return [p.x, p.y, wv];
 };
-/** the opening (and closing) frame: extreme close-up of the near stalk */
-const ECU_W = 3.6;
-const ecu1 = (t: number): [number, number, number] => {
-  const p = stalkPointW(snail1(t), 0.62);
-  return [p.x + 0.15, p.y - 0.1 * ss(t, 0, EV.pull0), ECU_W * (1 + 0.04 * ss(t, 0, EV.pull0))];
-};
-const ecu2 = (t: number): [number, number, number] => {
-  const p = stalkPointW(snail2(t), 0.62);
-  return [p.x + 0.15, p.y, ECU_W];
-};
-const snailWide = (t: number): [number, number, number] => [x1(t) - 6.2, -5.4, 23];
+/** the first (and last) frame: the head and both eyestalks, one grotesquely swollen */
+const frame0 = (t: number): [number, number, number] => [x1(t) - 0.4, -6.4, 10.5 - 0.5 * ss(t, 0, 0.3)];
 const BIN = (bx: number, by: number, wv: number) => (t: number): [number, number, number] => {
   const p = birdBodyW(t, pt(bx, by));
   return [p.x, p.y, wv];
@@ -300,32 +303,36 @@ const dropCam = (t: number): [number, number, number] => {
   const c = d ? d.c : VENT;
   return [c.x - 1.5, c.y + 2.5, lerp(34, 22, ss(t, EV.release, EV.landDrop))];
 };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const headCam = (wv: number, dx = 0, dy = 0) => (t: number): [number, number, number] => {
   const h = birdPoints(bird(t)).headC;
   return [h.x + dx, h.y + dy, wv];
 };
 const KEYS: Key[] = [
-  [0, ecu1],
-  [EV.pull0, ecu1],
-  [EV.push0, snailWide],
-  [T.it + 0.75, S1(0.45, 9.5)],
-  [EV.cut0 + 0.35, S1(0.55, 6.4)],
-  [EV.bodyCut0 + 0.1, S1(0.5, 6.0)],
-  [EV.bodyCut0 + 0.55, S1(0.05, 7.2)],
-  [T.grows + 0.35, (t) => [x1(t) - 9.6, -2.2, 9]],
-  [T.body + 0.25, (t) => [x1(t) - 6.4, -2.4, 8.6]],
-  [T.fills - 0.05, (t) => [x1(t) - 2.4, -3.6, 8.8]],
-  [T.eyestalks + 0.4, S1(0.55, 5.6)],
-  [EV.cutClose + 0.2, S1(0.5, 7.2)],
-  [T.pulsing + 0.75, (t) => [x1(t) + 0.2, -8.6, 8.8]],
+  [0, frame0],
+  [0.3, frame0],
+  [EV.cut0 + 0.05, S1(0.56, 5.2)],
+  [2.2, S1(0.6, 3.3)],
+  [T.into - 0.05, S1(0.05, 5.0)],
+  [T.baitEnd - 0.1, (t) => [x1(t) - 0.8, -5.8, 8.4]],
+  [T.grows + 0.15, (t) => [x1(t) - 10.2, -2.0, 9]],
+  [T.fills - 0.1, (t) => [x1(t) - 4.0, -3.3, 8.4]],
+  [EV.farFill1 - 0.2, S1(0.5, 6.3, 'far')],
+  [T.pulsing + 0.75, (t) => [x1(t) - 0.4, -7.4, 10.2]],
   [T.sacsEnd + 0.1, (t) => [x1(t) - 0.4, -8.0, 9.6]],
   [T.tiny, (t) => [x1(t) + 1.5, -11.5, 21]],
   [T.catsEnd + 0.15, (t) => [x1(t) - 1.5, -16, 34]],
-  [EV.land0 - 0.1, () => [XT + 3, -20, 56]],
-  [EV.land1 + 0.15, () => [XT + 6, -24, 62]],
-  [T.because - 0.05, () => [XT + 5, -22, 54]],
-  [T.spots - 0.15, headCam(17, -1.5, 1)],
-  [T.spots + 0.45, headCam(17, -2, 1.5)],
+  [T.and + 0.5, (t) => [x1(t) + 0.5, -9.5, 21]],
+  [T.wants - 0.15, () => [(XT + F0.x) / 2 - 4, (F0.y - 12) / 2 - 3, 68]],
+  [EV.land0, () => [(XT + F0.x) / 2 - 3, (F0.y - 12) / 2 - 3, 64]],
+  [(EV.land0 + EV.land1) / 2, (t) => {
+    const h = birdPoints(bird(t)).headC;
+    return [h.x - 4, h.y + 16, 42];
+  }],
+  [EV.land1 + 0.05, (t) => {
+    const h = birdPoints(bird(t)).headC;
+    return [(h.x + PECK_TARGET.x) / 2 - 2, (h.y + PECK_TARGET.y) / 2 + 3, 33];
+  }],
   [EV.lunge, (t) => {
     const h = birdPoints(bird(t)).headC;
     return [(h.x + PECK_TARGET.x) / 2, (h.y + PECK_TARGET.y) / 2, 27];
@@ -344,7 +351,7 @@ const KEYS: Key[] = [
   [EV.release + 0.05, dropCam],
   [EV.landDrop, dropCam],
   [EV.touch + 0.35, (t) => [x2(t) + 2.6, -2.6, 14]],
-  [DUR, ecu2],
+  [DUR, (t) => [x2(t) - 0.4, -6.4, 10.5]],
 ];
 const logLerp = (a: number, b: number, u: number) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * u);
 export const camAt = (t: number): Cam => {

@@ -8,7 +8,7 @@ import {Snail} from './art/snail';
 import {Bird} from './art/bird';
 import {Caterpillar, Dropping, FarForest, Leaf, MidPlants, Twig} from './art/env';
 import {birdInterior, snailInterior} from './art/micro';
-import {bird, birdInside, birdOn, camAt, Cam, CAT_DELTA, catBase, DROP_K, DROP_LAND, dropAt, EV, LEAF, lightAt, sacInBeak, snail1, snail1Inside, snail2, STEM, TWIG_1, TWIG_2, TWIG_CAT} from './story';
+import {bird, birdInside, birdOn, camAt, Cam, CAT_DELTA, catBase, DROP_K, DROP_LAND, dropAt, EV, LEAF, lightAt, sacInBeak, snail1, snail1Inside, snail2, STEM, TWIG_0, TWIG_1, TWIG_2, TWIG_CAT} from './story';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -76,7 +76,8 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
         {drop && drop.land > 0.5 && <Dropping c={drop.c} k={DROP_K} t={t} land={drop.land} />}
         <Snail st={{...s1, interior: snailInterior(snail1Inside(t))}} />
         {showS2 && <Snail st={snail2(t)} />}
-        {t > EV.land0 - 0.2 && <Twig pts={TWIG_1} r={1.7} />}
+        {t > 11.8 && <Twig pts={TWIG_1} r={1.7} />}
+        {t > 11.8 && t < 17.5 && <Twig pts={TWIG_0} r={1.8} />}
         <Twig pts={TWIG_2} r={2.0} />
         {birdOn(t) && (
           <Bird b={{...b, interior: birdInterior(birdInside(t)), inBeak: sac > 0 ? <SacInBeak t={t} a={sac} headAng={b.headAng} /> : undefined}} />

@@ -243,11 +243,17 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
       )}
       {cut > 0.01 && (() => {
         // the cutaway window: the near half of the skin and of the sac wall removed, from the tip down
-        const u0 = lerp(0.97, 0.07, sm(cut)), u1 = 0.965;
+        const u0 = lerp(0.58, 0.07, sm(cut)), u1 = lerp(0.6, 0.965, sm(cut));
         const S0 = 0.74;
-        const edge = (sv: number, a: number, b: number) => Array.from({length: 13}, (_, q) => at(g, a + ((b - a) * q) / 12, sv));
+        // a lens-shaped opening: a slit that widens, round-ended (never a box)
+        const uc = (u0 + u1) / 2, hw = Math.max(1e-3, (u1 - u0) / 2);
+        const lens = (u: number) => Math.min(1, lerp(0.75, 1.8, sm(cut)) * Math.sqrt(Math.max(0, 1 - Math.pow((u - uc) / hw, 2))));
+        const edge = (sv: number, a: number, b: number) => Array.from({length: 25}, (_, q) => {
+          const u = a + ((b - a) * q) / 24;
+          return at(g, u, sv * lens(u));
+        });
         const win = [...edge(S0, u0, u1), ...edge(-S0, u0, u1).reverse()];
-        const lum = [...edge(0.62, u0 + 0.01, u1 - 0.01), ...edge(-0.62, u0 + 0.01, u1 - 0.01).reverse()];
+        const lum = [...edge(0.62, u0, u1), ...edge(-0.62, u0, u1).reverse()];
         const dv = clamp(st.dev ?? 1);
         const lar: React.ReactNode[] = [];
         // larvae packed in rows; they shuffle up the sac with every contraction
@@ -281,12 +287,16 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
             <path d={poly(lum)} fill="#0C1A08" opacity={0.25} />
             <path d={open(musc)} fill="none" stroke="#B5605A" strokeWidth={rmean * 0.12} strokeOpacity={0.8} strokeLinecap="round" />
             <path d={open(musc)} fill="none" stroke="#E79A88" strokeWidth={rmean * 0.04} strokeOpacity={0.7} strokeDasharray={`${rmean * 0.05} ${rmean * 0.05}`} />
-            {lar}
+            <clipPath id={`${id}lw`}>
+              <path d={poly(lum)} />
+            </clipPath>
+            <g clipPath={`url(#${id}lw)`}>{lar}</g>
             {/* cut edges: the sac wall (lime) and the skin (fleshy grey-pink) */}
-            <path d={open(edge(0.62, u0 + 0.01, u1 - 0.01))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
-            <path d={open(edge(-0.62, u0 + 0.01, u1 - 0.01))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
-            <path d={poly(win)} fill="none" stroke="#C9A497" strokeWidth={rmean * 0.13} />
-            <path d={poly(win)} fill="none" stroke="#5E3A30" strokeWidth={rmean * 0.035} />
+            <path d={open(edge(0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+            <path d={open(edge(-0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+            <path d={poly(win)} fill="#E9F3D6" opacity={0.1} />
+            <path d={poly(win)} fill="none" stroke="#D8E6C4" strokeWidth={rmean * 0.16} strokeOpacity={0.45} filter={`url(#${id}h)`} />
+            <path d={poly(win)} fill="none" stroke="#C9A497" strokeWidth={rmean * 0.06} strokeOpacity={0.8} />
           </g>
         );
       })()}

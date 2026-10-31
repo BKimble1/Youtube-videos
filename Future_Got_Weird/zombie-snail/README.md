@@ -1,6 +1,26 @@
 # Future Got Weird Short 2: The Zombie Snail Parasite
 
-## V2 (current, release candidate)
+## V3 (current, final review)
+
+**Deliverable.** `exports/FGW_Zombie_Snail_V3_FINAL_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 746 frames, 24.875 s.
+**It is not published.**
+
+**Report and frame QC.** `production/V3_REPORT.md`.
+
+**Contact sheet.** `qa/v3/FGW_Zombie_Snail_V3_contact_sheet.png`.
+
+**What V3 changes.** It is a precision pass on V2:
+- the first frame shows a snail with one swollen stalk and one healthy stalk;
+- the camera pushes in and passes through the stalk surface to the parasite and its connection to the body;
+- the second stalk is taken over on screen;
+- the bird notices from above, makes one fast dive, then strikes;
+- the loop is frame-exact.
+
+**Unchanged.** The narration.
+
+**Source.** `source/src/`, composition `ZombieSnailV3`; mix `mix_v3`.
+
+## V2 (superseded)
 
 **Deliverable.** `exports/FGW_Zombie_Snail_V2_1080x1920.mp4`: 1080×1920, 30 fps, 746 frames, 24.875 s.
 **It is not published.** It is not marked final until someone watches it in real time.
@@ -16,7 +36,7 @@
 
 **Unchanged.** The narration and word timings.
 
-**Source.** `source/src/`, composition `ZombieSnailV2`; mix `mix_v2`.
+**Source.** At commit `9dcb6ba`, composition `ZombieSnailV2`; mix `mix_v2`.
 
 ## V1 (superseded)
 
