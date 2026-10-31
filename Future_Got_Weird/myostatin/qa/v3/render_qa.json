@@ -1,0 +1,287 @@
+{
+ "file": "FGW_Myostatin_V3_REVIEW_1080x1920.mp4",
+ "size_mb": 21.17,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 737,
+  "duration_s": 24.567
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 4.81,
+ "large_changes": [
+  {
+   "frame": 103,
+   "t": 3.433,
+   "mad": 30.71,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 104,
+   "t": 3.467,
+   "mad": 35.79,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 105,
+   "t": 3.5,
+   "mad": 41.76,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 106,
+   "t": 3.533,
+   "mad": 47.09,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 107,
+   "t": 3.567,
+   "mad": 49.85,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 108,
+   "t": 3.6,
+   "mad": 52.55,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 109,
+   "t": 3.633,
+   "mad": 62.58,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 110,
+   "t": 3.667,
+   "mad": 51.7,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 111,
+   "t": 3.7,
+   "mad": 49.06,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 112,
+   "t": 3.733,
+   "mad": 46.61,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 113,
+   "t": 3.767,
+   "mad": 39.92,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 114,
+   "t": 3.8,
+   "mad": 28.52,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 115,
+   "t": 3.833,
+   "mad": 28.92,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 116,
+   "t": 3.867,
+   "mad": 28.81,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 117,
+   "t": 3.9,
+   "mad": 32.27,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 118,
+   "t": 3.933,
+   "mad": 30.46,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 119,
+   "t": 3.967,
+   "mad": 24.24,
+   "planned": "dive into the biceps"
+  },
+  {
+   "frame": 223,
+   "t": 7.433,
+   "mad": 36.51,
+   "planned": "match cut: braked human fibre -> brake-free bull fibre"
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "mad": 25.97,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "mad": 29.59,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 262,
+   "t": 8.733,
+   "mad": 33.17,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 263,
+   "t": 8.767,
+   "mad": 33.72,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 264,
+   "t": 8.8,
+   "mad": 34.24,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 265,
+   "t": 8.833,
+   "mad": 40.66,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 266,
+   "t": 8.867,
+   "mad": 44.0,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 267,
+   "t": 8.9,
+   "mad": 46.46,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 268,
+   "t": 8.933,
+   "mad": 45.37,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 269,
+   "t": 8.967,
+   "mad": 36.68,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 270,
+   "t": 9.0,
+   "mad": 31.18,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "mad": 25.33,
+   "planned": "pull-out through the bull shoulder"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 50.17,
+   "planned": "cut to the lab"
+  },
+  {
+   "frame": 416,
+   "t": 13.867,
+   "mad": 24.29,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 417,
+   "t": 13.9,
+   "mad": 29.97,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 418,
+   "t": 13.933,
+   "mad": 34.8,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 51.8,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 420,
+   "t": 14.0,
+   "mad": 68.05,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 421,
+   "t": 14.033,
+   "mad": 68.85,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "mad": 48.42,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 423,
+   "t": 14.1,
+   "mad": 33.98,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 424,
+   "t": 14.133,
+   "mad": 32.42,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 425,
+   "t": 14.167,
+   "mad": 34.09,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 426,
+   "t": 14.2,
+   "mad": 31.74,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 448,
+   "t": 14.933,
+   "mad": 76.25,
+   "planned": "deliberate cut: \"in humans\""
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 7,
+ "longest_near_static_run_starts_s": 7.17,
+ "loop_last_vs_first_mad": 52.77
+}

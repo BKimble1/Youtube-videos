@@ -12,7 +12,7 @@ import {CollagenSheet, MicroWorld} from './art/micro';
 import {Bull, Dust, Fence, Grass, PastureSky} from './art/bull';
 import {BenchTop, Dish, LabBack, Researcher, SAMPLE, SAMPLE_RX, SAMPLE_RY} from './art/lab';
 import {Cam} from './art/micro';
-import {EV, K_ARM, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro} from './story';
+import {BULL_NEST, EV, K_ARM, K_BULL, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro} from './story';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -74,7 +74,7 @@ const ArmWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   const hook = inHook(t);
   const Wc = hookWindow();
   const db = dumbbellAt(t, a);
-  const dim = ss(t, T.weird - 0.15, T.weird + 0.2) * (1 - ss(t, T.bigger2 + 0.4, T.bigger2 + 1.2)) * 0.6 + 0.55 * a.xray * (hook ? 1 : 0);
+  const dim = ss(t, T.weird - 0.15, T.weird + 0.2) * (1 - ss(t, T.bigger2 + 0.4, T.bigger2 + 1.2)) * 0.6;
   const inCut = hook && a.cut ? nestedMicro(t, c, Wc, K_ARM) : undefined;
   return (
     <>
@@ -111,6 +111,18 @@ const BullWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
       <Layer c={c} delta={0} max={20}>
         <Grass />
         <Bull b={b} />
+        {b.cut && (
+          <g>
+            <defs>
+              <clipPath id={`bcut${Math.round(t * 30)}`}>
+                <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r} />
+              </clipPath>
+            </defs>
+            <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r + 0.9} fill="#F3ECEE" opacity={0.9} />
+            <g clipPath={`url(#bcut${Math.round(t * 30)})`}>{nestedMicro(t, c, BULL_NEST, K_BULL)}</g>
+            <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r + 0.3} fill="none" stroke="rgba(255,210,220,0.9)" strokeWidth={0.7} />
+          </g>
+        )}
         <Dust p={pt(64 + b.x, 0)} a={(t - EV.plant) / 0.6} />
       </Layer>
       {an > 0.01 && <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(6,20,40,0.15) 30%, rgba(4,12,28,0.75) 100%)', opacity: an}} />}
@@ -145,7 +157,9 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     if (inHook(t) && a.cut && covers(c, Wc, a.cut.r)) body = <MicroOnly t={t} c={toMicro(c, Wc, K_ARM)} />;
     else body = <ArmWorld t={t} c={c} />;
   } else if (wc.world === 'bull') {
-    body = <BullWorld t={t} c={c} />;
+    const b = bullAt(t);
+    if (b.cut && covers(c, BULL_NEST, b.cut.r)) body = <MicroOnly t={t} c={toMicro(c, BULL_NEST, K_BULL)} />;
+    else body = <BullWorld t={t} c={c} />;
   } else {
     if (covers(c, SAMPLE, SAMPLE_RX, SAMPLE_RY)) body = <MicroOnly t={t} c={toMicro(c, SAMPLE, K_LAB)} />;
     else body = <LabWorld t={t} c={c} />;

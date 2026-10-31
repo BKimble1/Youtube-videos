@@ -14,6 +14,8 @@ const bump = (s: number, c: number, w: number) => {
   const x = (s - c) / w;
   return Math.abs(x) >= 1 ? 0 : (1 - x * x) ** 2;
 };
+/** a bump with different widths on each side: a gradual rise (wl) and a steeper fall (wr) */
+const bumpA = (s: number, c: number, wl: number, wr: number) => bump(s, c, s < c ? wl : wr);
 const lin = (a: number, b: number, n: number) => Array.from({length: n}, (_, i) => a + ((b - a) * i) / (n - 1));
 
 export const SKIN = {lit: '#F6BE97', mid: '#E59C74', shade: '#B4674B', deep: '#8E4734', ink: '#4A2219', rim: '#FFE3C9'};
@@ -43,10 +45,10 @@ export const armFrame = (a: ArmState) => {
   const m = a.m, c = a.c;
   const B = lerp(1.35, 7.7, m) * (1 + 0.28 * c);
   const cb = 0.53 + 0.07 * c, wb = 0.45 - 0.08 * c;
-  const ra = (s: number) => lerp(3.25, 2.45, s) + (2.4 + 2.2 * m) * bump(s, -0.02, 0.32) + B * bump(s, cb, wb) + 0.35 * m * bump(s, 0.86, 0.12);
-  const rp = (s: number) => lerp(3.45, 2.5, s) + (3.0 + 2.6 * m) * bump(s, 0.0, 0.36) + (1.5 + 4.6 * m) * bump(s, 0.37, 0.5);
-  const rfa = (t: number) => lerp(2.55, 1.75, t) + (1.25 + 2.9 * m) * bump(t, 0.2, 0.44) * (1 + 0.15 * c);
-  const rfp = (t: number) => lerp(2.45, 1.65, t) + (0.85 + 1.8 * m) * bump(t, 0.24, 0.52);
+  const ra = (s: number) => lerp(3.15, 2.35, s) + (2.3 + 1.9 * m) * bump(s, -0.02, 0.3) + B * bumpA(s, cb + 0.05, wb + 0.08, wb - 0.14) + 0.3 * m * bump(s, 0.88, 0.1);
+  const rp = (s: number) => lerp(3.35, 2.45, s) + (2.8 + 2.2 * m) * bump(s, 0.0, 0.34) + (1.2 + 3.6 * m) * bumpA(s, 0.3, 0.26, 0.3) + (0.6 + 2.2 * m) * bump(s, 0.54, 0.22);
+  const rfa = (t: number) => lerp(2.5, 1.7, t) + (1.2 + 2.6 * m) * bumpA(t, 0.16, 0.2, 0.42) * (1 + 0.15 * c);
+  const rfp = (t: number) => lerp(2.4, 1.6, t) + (0.8 + 1.6 * m) * bump(t, 0.24, 0.5);
   /** point on the upper arm: s along (0 shoulder, 1 elbow), v across in units of the local radius (+ anterior) */
   const UA = (s: number, v: number) => add(add(a.S, mul(u, s * LU)), mul(an, v >= 0 ? v * ra(s) : v * rp(s)));
   const FA = (t: number, v: number) => add(add(E, mul(f, t * LF)), mul(fa, v >= 0 ? v * rfa(t) : v * rfp(t)));
@@ -136,6 +138,17 @@ export const ArmAnatomy: React.FC<{a: ArmState; g: ArmFrame; mode: 'cut' | 'xray
       <path d={tendon} fill={xr ? 'rgba(240,250,255,0.85)' : mix('#DCE3E8', '#FFFFFF', 0.5 * glow)} stroke={xr ? 'rgba(255,255,255,0.95)' : '#56616C'} strokeWidth={0.16} />
       <path d={open([lerpP(UA(0.77, 0.52), bicTip, 0.5), lerpP(bicTip, tub, 0.55), tub])} stroke={xr ? 'rgba(255,255,255,0.6)' : '#AEB8C1'} strokeWidth={0.12} fill="none" />
       <circle cx={tub.x} cy={tub.y} r={0.35} fill={boneInk} opacity={0.6} />
+      {/* each contraction: the belly bulges hard, but only a small, dim pulse of pull runs down the tendon to the bone */}
+      {glow > 0.02 && !xr && (() => {
+        const ph = ((a.t - 0.1) * 1.4) % 1;
+        const p = ph < 0.5 ? lerpP(bicTip, lerpP(bicTip, tub, 0.5), ph / 0.5) : lerpP(lerpP(bicTip, tub, 0.5), tub, (ph - 0.5) / 0.5);
+        return (
+          <g opacity={glow * (1 - ph * 0.6)}>
+            <circle cx={p.x} cy={p.y} r={0.75} fill="#FFE2B0" opacity={0.35} />
+            <circle cx={p.x} cy={p.y} r={0.32} fill="#FFF4DC" />
+          </g>
+        );
+      })()}
     </g>
   );
 };
@@ -330,7 +343,7 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
   const xr = a.xray;
   const skinOp = 1 - 0.86 * xr;
   const crease = [FA(0.02, 0.82), FA(0.1, 1.02), FA(0.22, 1.08)];
-  const peak = UA(0.56 + 0.05 * a.c, 0.72);
+  const peak = UA(0.6 + 0.05 * a.c, 0.74);
   const cut = a.cut && a.cut.r > 0.01 ? a.cut : undefined;
   const cutC = cut ? cut.c ?? UA(cut.s, cut.v) : undefined;
   const ec = a.elbowCut ?? 0;
@@ -385,8 +398,15 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
           <path d={open([UA(0.04, 0.95), UA(0.16, 0.45), UA(0.27, -0.05), UA(0.2, -0.6)])} stroke={SKIN.shade} strokeWidth={0.3 + 0.3 * m} fill="none" opacity={0.3 + 0.3 * m} />
           {/* forearm: brachioradialis groove */}
           <path d={open(lin(0.08, 0.75, 7).map((t) => FA(t, 0.15 - 0.15 * t)))} stroke={SKIN.shade} strokeWidth={0.3 + 0.2 * m} fill="none" opacity={0.06 + 0.3 * m} />
+          {/* muscle definition: the core shadow along the underside of the biceps belly, the triceps' horseshoe (lateral
+              head over the long head, onto the flat tendon), the brachialis between them */}
+          <path d={closed([...lin(0.26, 0.86, 9).map((s) => UA(s, 0.34 - 0.12 * Math.sin(PI * (s - 0.26) / 0.6))), ...lin(0.86, 0.26, 9).map((s) => UA(s, 0.12 - 0.06 * Math.sin(PI * (s - 0.26) / 0.6)))], 0.8)} fill={SKIN.shade} opacity={0.16 + 0.3 * m} />
+          <path d={open([UA(0.16, -0.72), UA(0.32, -0.52), UA(0.5, -0.5), UA(0.64, -0.66), UA(0.74, -0.86)])} stroke={SKIN.deep} strokeWidth={0.32 + 0.3 * m} fill="none" strokeLinecap="round" opacity={0.1 + 0.45 * m} />
+          <path d={open([UA(0.36, -0.42), UA(0.52, -0.3), UA(0.68, -0.34), UA(0.8, -0.5)])} stroke={SKIN.shade} strokeWidth={0.3 + 0.2 * m} fill="none" strokeLinecap="round" opacity={0.1 + 0.35 * m} />
+          <path d={closed([UA(0.66, -0.4), UA(0.78, -0.3), UA(0.94, -0.42), UA(0.92, -0.8), UA(0.78, -0.9)], 0.8)} fill={SKIN.lit} opacity={0.12 + 0.18 * m} />
+          <ellipse cx={UA(0.34, -0.62).x} cy={UA(0.34, -0.62).y} rx={2.2 + 2.2 * m} ry={0.9 + 1.0 * m} transform={`rotate(${(Math.atan2(u.y, u.x) * 180) / PI} ${UA(0.34, -0.62).x} ${UA(0.34, -0.62).y})`} fill={`url(#${idHL})`} opacity={0.35} />
           {/* taut skin: the highlight on the peak sharpens as it swells */}
-          <ellipse cx={peak.x} cy={peak.y} rx={(4 + 5 * m) * (1 + 0.1 * a.c)} ry={(1.6 + 2.6 * m)} transform={`rotate(${(Math.atan2(u.y, u.x) * 180) / PI} ${peak.x} ${peak.y})`} fill={`url(#${idHL})`} opacity={0.55 + 0.4 * m} />
+          <ellipse cx={peak.x} cy={peak.y} rx={(3 + 3.6 * m) * (1 + 0.1 * a.c)} ry={(1.1 + 1.7 * m)} transform={`rotate(${(Math.atan2(u.y, u.x) * 180) / PI} ${peak.x} ${peak.y})`} fill={`url(#${idHL})`} opacity={0.55 + 0.4 * m} />
           <ellipse cx={FA(0.24, 0.55).x} cy={FA(0.24, 0.55).y} rx={2.6 + 1.6 * m} ry={1.2 + 0.8 * m} transform={`rotate(${(Math.atan2(f.y, f.x) * 180) / PI} ${FA(0.24, 0.55).x} ${FA(0.24, 0.55).y})`} fill={`url(#${idHL})`} opacity={0.45} />
           {veinOp > 0.01 && (
             <g opacity={veinOp}>
@@ -470,15 +490,15 @@ export const Body: React.FC<{p: PersonState}> = ({p}) => {
   const H = p.hip;
   const K = pt(H.x + 40, H.y - 9), A = pt(H.x + 45, -9), toe = pt(H.x + 60, -1.5), heel = pt(H.x + 41, -1.5);
   const K2 = pt(K.x + 7, K.y - 3);
-  const cw = 19 + 9 * m;                   // chest width across, near shoulder to far shoulder
-  const backR = 8 + 6 * m;
+  const cw = 19 + 4 * m;                   // chest width across, near shoulder to far shoulder
+  const backR = 7.5 + 3 * m;
   const FS = pt(S.x + cw, S.y + 1.5);      // far shoulder joint
   const neck = pt(S.x + cw * 0.38, S.y - 8.5);
   const stern = S.x + cw * 0.5;
   const torso = closed([
     pt(H.x - 9, H.y + 2), pt(H.x - 11, H.y - 13), pt(S.x - backR, S.y + 16), pt(S.x - backR * 0.85, S.y + 4), pt(S.x - backR * 0.35, S.y - 4.5),
-    pt(neck.x - 6.5, neck.y + 2.5), pt(neck.x + 6.5, neck.y + 2.8), pt(FS.x - 4, FS.y - 6.5 - 1.5 * m), pt(FS.x + 3 + 2 * m, FS.y - 2.5), pt(FS.x + 5 + 2.5 * m, FS.y + 6),
-    pt(FS.x + 2 + 1.5 * m, FS.y + 18), pt(H.x + 22 + 4 * m, H.y - 14), pt(H.x + 20, H.y + 3),
+    pt(neck.x - 6.5, neck.y + 2.5), pt(neck.x + 6.5, neck.y + 2.8), pt(FS.x - 4, FS.y - 6 - 0.8 * m), pt(FS.x + 2.6 + 1 * m, FS.y - 2.5), pt(FS.x + 4.4 + 1.2 * m, FS.y + 6),
+    pt(FS.x + 1.6 + 0.6 * m, FS.y + 18), pt(H.x + 20 + 1.5 * m, H.y - 14), pt(H.x + 19, H.y + 3),
   ], 0.85);
   const thigh = closed([pt(H.x - 6, H.y + 6), pt(H.x - 6, H.y - 8), pt(K.x - 2, K.y - 7.5 - 1.5 * m), pt(K.x + 5, K.y - 1), pt(K.x + 4, K.y + 6), pt(H.x + 10, H.y + 9)], 0.9);
   const thigh2 = closed([pt(H.x + 6, H.y + 2), pt(H.x + 6, H.y - 10), pt(K2.x - 2, K2.y - 7.5 - 1.5 * m), pt(K2.x + 5, K2.y - 1), pt(K2.x + 4, K2.y + 6), pt(H.x + 16, H.y + 6)], 0.9);
@@ -542,7 +562,7 @@ export const Body: React.FC<{p: PersonState}> = ({p}) => {
 };
 
 /** where the head sits for a given near-shoulder position (the neck is part of the torso) */
-export const headFor = (S: P, m: number) => pt(S.x + (19 + 9 * m) * 0.38 - 1.5, S.y - 22.5);
+export const headFor = (S: P, m: number) => pt(S.x + (19 + 4 * m) * 0.38 - 1.5, S.y - 22.5);
 
 /** the head in a fixed three-quarter view (turned toward screen right). The face is one rigid design: brows, eyes and
  *  mouth sit on the face plane and only open, close or lift; the whole head tilts as one piece; the pupils move inside

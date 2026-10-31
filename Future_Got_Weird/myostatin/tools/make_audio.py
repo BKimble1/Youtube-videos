@@ -206,14 +206,16 @@ if V2:
         for k in range(3):
             place(sfx, blip(2600 - 300 * k, 800, 0.09), td + 0.05 + 0.09 * k, 'signal runs to the nucleus (electrical blip)' if i == 0 and k == 0 else None, -27)
     place(sfx, power(0.6, 360, 70), T['brake'] - 0.02, 'the brake: assembly powers down', -19)
-    place(sfx, shimmer(0.85, 1500, 5200), E('out0'), 'back out to the biceps (rising shimmer)', -29)
-    place(sfx, squelch(0.3, 260, 1600, 30), E('out1') - 0.3, 'the cutaway closes', -27)
-    place(sfx, chime(659.3, 0.8) * 0.6 + chime(987.8, 0.8) * 0.4, E('xr0'), 'translucent view (glassy tone)', -30)
-    # ---- bull
-    place(sfx, thump(0.7, 52, 30), E('cutBull'), 'the bull (low presence)', -20)
-    place(sfx, shimmer(1.0, 4800, 1600), E('cutBull') + 0.1, 'pull-out to the pasture', -31)
-    place(sfx, snort(0.45), E('bullOut1') - 0.1, 'the bull snorts', -26)
-    place(sfx, rustle(1.2, 500, 2500), E('rear0'), 'grass under the camera glide', -34)
+    # with the brake on, building blocks are knocked back off the membrane: tiny glassy taps
+    for i in range(10):
+        place(sfx, tick(0.02, 3600 + 400 * (i % 3)), T['brake'] + 0.25 + i * 0.09, 'building blocks turned away (taps)' if i == 0 else None, -31 - (i % 2) * 2)
+    # ---- the bull's fibre: no brake; it thickens fast; out through the shoulder to the bull
+    place(sfx, thump(0.6, 50, 30), E('cutBull'), 'cut to the bull\'s fibre (low presence)', -19)
+    place(sfx, power(0.6, 90, 420), E('cutBull') + 0.05, 'growth with no brake (powering up)', -21)
+    place(sfx, swell(1.0, 40, 1.2), E('cutBull') + 0.05, 'fibres thickening (organic swell)', -21)
+    place(sfx, shimmer(1.0, 1500, 5200), E('bullOut0'), 'out to the bull (rising shimmer)', -29)
+    place(sfx, snort(0.45), E('bullOut1') - 0.05, 'the bull snorts', -26)
+    place(sfx, rustle(1.6, 500, 2500), E('bullOut1') + 0.1, 'grass under the camera sweep', -34)
     place(sfx, rustle(0.35, 600, 3000), E('step0'), 'the hoof lifts', -30)
     place(sfx, hoof(), E('plant') - 0.01, 'deep bovine footstep', -12)
     place(sfx, creak(0.4, 95, 30), E('plant') + 0.02, 'shoulder muscles load', -24)

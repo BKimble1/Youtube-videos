@@ -134,7 +134,7 @@ export const Bull: React.FC<{b: BullState}> = ({b}) => {
   const outline = [body, nearFore, nearHind];
   const H0 = pt(b.x + 4 - 34, b.breathe * 0.4 + b.headNod + 14);
   const hp = (x: number, y: number) => add(pt(x, y), H0);
-  const head = closed([hp(118, -138), hp(134, -142), hp(148, -134), hp(160, -114), hp(170, -96), hp(172, -82), hp(164, -73), hp(150, -72), hp(136, -78), hp(124, -92), hp(116, -112)], 0.8);
+  const head = closed([hp(116, -140), hp(128, -144), hp(140, -140), hp(150, -126), hp(158, -108), hp(166, -94), hp(171, -84), hp(171, -72), hp(164, -64), hp(150, -64), hp(136, -70), hp(124, -82), hp(116, -100), hp(113, -120)], 0.85);
   // coat: white with big blue-black patches (the classic Belgian Blue pied coat) and blue roan ticking at their edges
   const patch = (pts: [number, number][], k: string, dark = true) => (
     <path key={k} d={closed(pts.map(([x, y]) => add(pt(x * KX, y), sh)), 0.9)} fill={dark ? '#3E4860' : COAT.roan} opacity={dark ? 0.92 : 0.6} />
@@ -253,17 +253,18 @@ export const Bull: React.FC<{b: BullState}> = ({b}) => {
       <Hoof p={T(fl.hoof)} ang={-28 * fl.lift} />
       <g transform={`rotate(${b.headNod * 0.8} ${94 + b.x} -100) translate(${120 + H0.x} ${-130 + H0.y}) scale(1.22) translate(${-(120 + H0.x)} ${-(-130 + H0.y)})`} opacity={1 - 0.75 * anat}>
         <path d={head} fill={COAT.white} stroke={COAT.ink} strokeWidth={1.1} strokeLinejoin="round" />
-        <path d={closed([hp(124, -100), hp(138, -84), hp(152, -76), hp(138, -77), hp(124, -88)], 0.8)} fill={COAT.base} opacity={0.9} />
-        {Array.from({length: 60}, (_, i) => <circle key={i} cx={120 + hash(i * 3.3) * 36 + H0.x} cy={-140 + hash(i * 7.1) * 44 + H0.y} r={0.4 + hash(i) * 0.7} fill={hash(i * 2.2) > 0.5 ? COAT.roanDk : COAT.roan} opacity={0.4} />)}
-        <path d={closed([hp(156, -110), hp(169, -98), hp(174, -84), hp(167, -73), hp(154, -74), hp(152, -92)], 0.8)} fill="#C8A6A2" stroke={COAT.ink} strokeWidth={0.8} />
-        <path d={`M${168 + H0.x} ${-93 + H0.y} q4 1 4 5 q-3 2 -6 0 Z`} fill="#3A2224" />
-        <path d={open([hp(155, -76), hp(167, -77)])} stroke="#6A4A4A" strokeWidth={1} />
-        <ellipse cx={138 + H0.x} cy={-122 + H0.y} rx={5.6} ry={4.4} fill={COAT.roanDk} opacity={0.9} />
-        <ellipse cx={138.6 + H0.x} cy={-122 + H0.y} rx={2.6} ry={2.2} fill="#140F0D" />
-        <circle cx={137.8 + H0.x} cy={-122.8 + H0.y} r={0.75} fill="#FFFFFF" />
-        <path d={open([hp(133, -126.5), hp(138, -128.2), hp(143.5, -126)])} stroke={COAT.ink} strokeWidth={0.9} fill="none" />
-        <path d={closed([hp(126, -132), hp(106, -144), hp(96, -142), hp(102, -134), hp(120, -126)], 0.8)} fill={COAT.base} stroke={COAT.ink} strokeWidth={0.9} />
-        <path d={closed([hp(122, -131), hp(106, -140), hp(101, -139), hp(116, -128)], 0.8)} fill="#E6C4C0" opacity={0.9} />
+        <path d={closed([hp(118, -102), hp(132, -84), hp(150, -68), hp(136, -70), hp(124, -82)], 0.8)} fill={COAT.base} opacity={0.9} />
+        <ellipse cx={130 + H0.x} cy={-92 + H0.y} rx={11} ry={13} fill={COAT.shade} opacity={0.3} />
+        {Array.from({length: 60}, (_, i) => <circle key={i} cx={116 + hash(i * 3.3) * 40 + H0.x} cy={-142 + hash(i * 7.1) * 64 + H0.y} r={0.4 + hash(i) * 0.7} fill={hash(i * 2.2) > 0.5 ? COAT.roanDk : COAT.roan} opacity={0.4} />)}
+        <path d={closed([hp(152, -106), hp(165, -97), hp(172, -86), hp(172, -71), hp(164, -63), hp(150, -64), hp(147, -80)], 0.8)} fill="#B99894" stroke={COAT.ink} strokeWidth={0.8} />
+        <path d={`M${163 + H0.x} ${-88 + H0.y} q6 0 7 6 q-4 3 -8 0 Z`} fill="#3A2224" />
+        <path d={open([hp(152, -70), hp(166, -70)])} stroke="#6A4A4A" strokeWidth={1.1} />
+        <ellipse cx={136 + H0.x} cy={-124 + H0.y} rx={4.8} ry={3.8} fill={COAT.roanDk} opacity={0.9} />
+        <ellipse cx={136.6 + H0.x} cy={-124 + H0.y} rx={2.3} ry={2.0} fill="#140F0D" />
+        <circle cx={135.8 + H0.x} cy={-124.8 + H0.y} r={0.7} fill="#FFFFFF" />
+        <path d={open([hp(131, -128), hp(136, -129.8), hp(141.5, -127.6)])} stroke={COAT.ink} strokeWidth={0.9} fill="none" />
+        <path d={closed([hp(122, -134), hp(100, -142), hp(90, -138), hp(98, -130), hp(118, -126)], 0.8)} fill={COAT.base} stroke={COAT.ink} strokeWidth={0.9} />
+        <path d={closed([hp(118, -132), hp(100, -138), hp(95, -136), hp(112, -128)], 0.8)} fill="#E6C4C0" opacity={0.9} />
         <path d={`M${121 + H0.x} ${-138 + H0.y} q2 -12 14 -16 q2 0 2 2 q-8 4 -10 15 Z`} fill="#EDE2C8" stroke={COAT.ink} strokeWidth={0.7} />
         <path d={`M${135 + H0.x} ${-154 + H0.y} q2 0 2 2 l-3 1 Z`} fill="#4A4032" />
         <path d={closed([hp(122, -140), hp(130, -146), hp(140, -142), hp(136, -136), hp(128, -134)], 0.8)} fill="#3E4860" opacity={0.85} />

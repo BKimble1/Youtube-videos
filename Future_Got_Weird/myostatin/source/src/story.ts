@@ -36,8 +36,8 @@ export const T = {
 export const LAST = (Math.round(DUR * FPS) - 1) / FPS; // time of the final frame
 export const EV = {
   cut0: 3.22, dive0: 3.3, dive1: 4.06,
-  out0: 6.52, out1: 7.38, xr0: 7.42, cutBull: T.animals,
-  bullOut1: 9.25, rear0: 9.6, rear1: 10.95, full1: 11.62, step0: 11.5, plant: 11.86, cutLab: T.sci,
+  out0: 6.52, out1: 7.38, xr0: 99, cutBull: T.but, bullOut0: 8.42, bullOut1: 9.45,
+  sweepRear: 10.45, sweepFront: 11.3, step0: 11.5, plant: 11.86, full1: 12.05, cutLab: T.sci,
   press: 13.46, dropFall: 13.64, dropLand: 13.78, labIn0: 13.72, labIn1: 14.24,
   catch1: 14.34, catch2: T.block, catch3: 14.58, release: 14.62, cutX: T.inW,
   xrayOut0: 15.5, xrayOut1: 16.32, grip: 16.9, curl0: 17.5, curlTop: 18.9, elbowIn0: 18.15, elbowIn1: 18.6, elbowOut0: 19.55, elbowOut1: 20.5,
@@ -50,12 +50,12 @@ export const S_FLEX = pt(-4, -84);
 const FLEX_A1 = -0.08, FLEX_A2 = 1.68;
 const S_CURL = pt(-6, -80.6);
 const CURL_A1 = Math.PI / 2 + 0.03, CURL_A2 = 0.06;
-export const M0 = 0.34; // an athletic arm, already flexing, in frame 0
+export const M0 = 0.28; // an athletic arm, already flexing, in frame 0
 /** the mass: surges on the narration's beats; the first starts at full speed in frame 0 */
 export const massHook = (t: number) =>
-  M0 + 0.2 * easeOut(t / 0.5) + 0.15 * ss(t, T.protein - 0.05, T.protein + 0.35) + 0.07 * ss(t, T.your, T.way - 0.2) + 0.14 * ss(t, T.way - 0.06, T.way + 0.2) + 0.1 * ss(t, T.bigger, T.bigger + 0.3)
+  M0 + 0.56 * easeOut(t / 0.5) + 0.07 * ss(t, T.protein - 0.05, T.protein + 0.35) + 0.05 * ss(t, T.way - 0.06, T.way + 0.2) + 0.04 * ss(t, T.bigger, T.bigger + 0.3)
   + 0.02 * Math.sin(t * 15) * (1 - ss(t, 3.2, 3.6));
-export const inHook = (t: number) => t < EV.xr0 + 0.5;
+export const inHook = (t: number) => t < 7.6;
 const flexArm = (t: number, m: number, c: number, xray = 0, cutR = 0): ArmState => ({
   S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * c, m, c, tear: 0, pops: 0, stretch: clamp((m - 0.28) / 0.62), xray, grip: false, t,
   cut: cutR > 0.01 ? {r: cutR, s: 0.52, v: 0.36, c: hookWindow()} : undefined,
@@ -65,8 +65,8 @@ export const armAt = (t: number): ArmState => {
     const m = Math.min(1.02, massHook(t));
     // each surge flexes it harder
     const c = 0.45 + 0.35 * Math.max(ss(t, T.protein - 0.05, T.protein + 0.3) * (1 - ss(t, 1.8, 2.4)), ss(t, T.way - 0.1, T.way + 0.2)) + 0.1 * ss(t, 0, 0.4);
-    const cutR = t < EV.out0 ? 2.7 * ss5(t, EV.cut0, EV.cut0 + 0.22) : 2.7 * (1 - ss5(t, EV.out1 - 0.32, EV.out1 - 0.04));
-    const a = flexArm(t, m, c, ss(t, EV.xr0, EV.cutBull - 0.04), cutR);
+    const cutR = 2.7 * ss5(t, EV.cut0, EV.cut0 + 0.22);
+    const a = flexArm(t, m, c, 0, cutR);
     // the seam strains: stitches pop on the two big surges (the sleeve tightens but holds)
     a.pops = t > T.protein && t < T.protein + 0.5 ? (t - T.protein) / 0.5 : t > T.way && t < T.way + 0.55 ? (t - T.way) / 0.55 : 0;
     return a;
@@ -82,8 +82,8 @@ export const armAt = (t: number): ArmState => {
   const raise = ss5(t, EV.raise0, EV.raise1);
   const S = add(lerp2(S_CURL, S_FLEX, raise), pt(0, -1.6 * rise));
   const a1c = CURL_A1 - 0.03 * rise + tr, a2c = CURL_A2 + 0.42 * rise + pulse * 0.05 + tr * 1.6;
-  const a1 = lerp(a1c, FLEX_A1, raise), a2 = lerp(a2c, FLEX_A2 + 0.05 * 0.85, raise);
-  const c = Math.max(strain * (0.88 + pulse), lerp(0, 0.85, raise));
+  const a1 = lerp(a1c, FLEX_A1, raise), a2 = lerp(a2c, FLEX_A2 + 0.05 * 0.45, raise);
+  const c = Math.max(strain * (0.88 + pulse), lerp(0, 0.45, raise));
   const ec = ss(t, EV.elbowIn0 + 0.15, EV.elbowIn1) * (1 - ss(t, EV.elbowOut0, EV.elbowOut0 + 0.28));
   const glow = ss(t, EV.elbowIn1, EV.elbowIn1 + 0.2) * (1 - ss(t, EV.elbowOut0 - 0.1, EV.elbowOut0 + 0.1));
   const grip = clamp((t - EV.grip) / 0.25) * (1 - ss(t, EV.raise0 - 0.05, EV.raise0 + 0.1));
@@ -106,7 +106,7 @@ const DETERMINED: Face = {brow: -0.15, eyes: 0.5, mouth: 0, strain: 0, look: pt(
 export const faceAt = (t: number): Face => {
   if (inHook(t)) {
     // frame 0: a confident flex; the first surge widens his eyes; by "protein" he is astonished; then delighted
-    const wow = ss(t, 0.25, 0.7);
+    const wow = ss(t, 0.3, 0.75);
     const awe = ss(t, T.your, T.way);
     return {brow: lerp(-0.15, 1, wow), eyes: lerp(0.5, 1, wow), mouth: lerp(0, 0.6, wow) * (1 - 0.5 * awe), strain: 0, look: pt(0.95, -0.55), smile: lerp(0.55, 0, wow) + 0.7 * awe};
   }
@@ -127,7 +127,7 @@ export const personAt = (t: number): PersonState => {
 
 // ---------------------------------------------------------------- the micro world
 export const K_ARM = 0.0004, K_BULL = 0.0016, K_LAB = 0.00045;
-export const microVariant = (t: number): MicroState['variant'] => (t < 12 ? 'human' : 'dish');
+export const microVariant = (t: number): MicroState['variant'] => (t < T.but ? 'human' : t < 12 ? 'bull' : 'dish');
 const integrate = (t0: number, t: number, g0: number, rate: (t: number) => number) => {
   let g = g0;
   const n = Math.max(1, Math.round((t - t0) * 120));
@@ -136,17 +136,21 @@ const integrate = (t0: number, t: number, g0: number, rate: (t: number) => numbe
 };
 const rateHuman = (t: number) => keyS(t, [[EV.cut0, 0.5], [EV.dive1, 0.5], [T.myostatin, 0.22], [T.acts, 0.16], [T.brake + 0.02, 0.05], [T.brake + 0.3, 0]]);
 const rateDish = (t: number) => keyS(t, [[EV.release, 0], [EV.release + 0.2, 0.26]]);
+const rateBull = (t: number) => keyS(t, [[T.but, 0.3], [T.but + 0.14, 1.05], [T.born + 0.5, 0.8], [EV.bullOut1, 0.3]]);
 export const microAt = (t: number): MicroState => {
   const variant = microVariant(t);
-  const t0 = variant === 'human' ? EV.cut0 : 12.5;
-  const g0 = 1.0;
-  const rate = variant === 'human' ? rateHuman : rateDish;
+  const t0 = variant === 'human' ? EV.cut0 : variant === 'bull' ? T.but : 12.5;
+  const g0 = variant === 'bull' ? 1.22 : 1.0;
+  const rate = variant === 'human' ? rateHuman : variant === 'bull' ? rateBull : rateDish;
   const g = integrate(t0, t, g0, rate);
   const gR = (tt: number) => integrate(t0, Math.max(t0, tt), g0, rate);
   const qOf = (gg: number) => (R0 * gg - 3) / STR;
   const q = qOf(g);
-  const nuc = variant === 'human' ? 1 - 0.85 * ss(t, T.brake - 0.05, T.brake + 0.3) : 0.18 + 0.82 * ss(t, EV.release, EV.release + 0.25);
-  const flowAt = (tt: number) => (variant === 'human' ? 1 - ss(tt, T.brake, T.brake + 0.35) : ss(tt, EV.release, EV.release + 0.3));
+  const nuc = variant === 'human' ? 1 - 0.85 * ss(t, T.brake - 0.05, T.brake + 0.3) : variant === 'bull' ? 1 : 0.18 + 0.82 * ss(t, EV.release, EV.release + 0.25);
+  const flowAt = (tt: number) => (variant === 'human' ? 1 - ss(tt, T.brake, T.brake + 0.35) : variant === 'bull' ? 1 : ss(tt, EV.release, EV.release + 0.3));
+  // with the brake on, building blocks still arrive but are turned away at the membrane (human, after "brake")
+  const spawnAt = (tt: number) => (variant === 'human' ? 1 - ss(tt, T.brake + 0.55, T.brake + 1.0) : flowAt(tt));
+  const bounced = (tt: number) => variant === 'human' && tt > T.brake - 0.2;
   const flow = flowAt(t);
   const rh = R0 * g;
   // building blocks: each bead leaves the fluid and arrives at the assembly front of the moment it gets there
@@ -157,11 +161,19 @@ export const microAt = (t: number): MicroState => {
     if (ts < t0 - 0.2) continue;
     const u = (t - ts) / life;
     if (u < 0 || u > 1) continue;
-    const fl = flowAt(ts);
+    const fl = spawnAt(ts);
     if (fl < 0.05) continue;
     const h1 = hashK(k * 1.7), h2 = hashK(k * 3.1);
     const end = zipFront(qOf(gR(ts + life)));
     const start = pt(-150 + 210 * h1, -rh - 30 - 70 * h2);
+    if (bounced(ts)) {
+      // up to the membrane over the stalled front, then knocked back out into the fluid
+      const hit = pt(end.x, -rh - 2.5);
+      const away = pt(hit.x + 46 * (h1 - 0.5), hit.y - 34 - 18 * h2);
+      const p = u < 0.55 ? bez(start, pt(lerp(start.x, hit.x, 0.5), lerp(start.y, hit.y, 0.2) - 10), hit, ss(u / 0.55, 0, 1)) : bez(hit, pt(hit.x + 10 * (h1 - 0.5), hit.y - 6), away, easeOut((u - 0.55) / 0.45));
+      beads.push({p, op: fl * Math.min(1, u * 5) * (u < 0.55 ? 1 : 1 - (u - 0.55) / 0.45)});
+      continue;
+    }
     const ctrl = pt(lerp(start.x, end.x, 0.5) + 30 * (h2 - 0.5), lerp(start.y, end.y, 0.2) - 10);
     beads.push({p: bez(start, ctrl, end, ss(u, 0, 1)), op: fl * Math.min(1, u * 5) * Math.min(1, (1 - u) * 8)});
   }
@@ -196,7 +208,7 @@ export const microAt = (t: number): MicroState => {
         }
       }
     });
-  } else {
+  } else if (variant === 'dish') {
     // two dimers already docked (the brake is on); three more arrive; antibodies from the drop catch them all
     const freeT = [EV.catch1, EV.catch2, EV.catch3];
     const recFree = [1, 2, 4];
@@ -229,7 +241,7 @@ export const microAt = (t: number): MicroState => {
       abs.push({p: aP, ang: t < tc ? Math.PI + (1 - ua) * 1.2 * Math.sin(t * 1.7 + i) : Math.PI, op: clamp((t - (EV.labIn1 - 0.25)) / 0.2), grip: ss(t, tc - 0.08, tc + 0.05)});
     });
   }
-  const gN = 1 + 0.45 * (g - g0);
+  const gN = variant === 'bull' ? 1.12 + 0.85 * (g - g0) : 1 + 0.45 * (g - g0);
   return {t, variant, g, gN, q, nuc, flow, beads, rec, myo, abs, sig};
 };
 const STR = 6;
@@ -245,8 +257,15 @@ export const bullAt = (t: number): BullState => {
   const x = 7 * ss(t, EV.step0 + 0.05, EV.plant + 0.05);
   const load = ss(t, EV.plant - 0.08, EV.plant + 0.05) * (1 - 0.5 * ss(t, EV.plant + 0.25, EV.plant + 0.6));
   // the hide is translucent over the musculature as we arrive from the human arm, and fills in as we pull out
-  const anat = 1 - ss(t, EV.cutBull + 0.35, EV.cutBull + 1.15);
-  return {x, step: t < EV.step0 ? 0 : step, load, plantT: t - EV.plant, breathe: Math.sin(t * 2.4), headNod: 2.4 * ring(t, EV.plant, 1.6, 0.35) + 1.2 * Math.sin(t * 1.3), anat, t};
+  const anat = 1 - ss(t, EV.bullOut0 + 0.5, EV.bullOut1 + 0.3);
+  const cutR = t < EV.bullOut0 + 0.6 ? 9 : 9 * (1 - ss(t, EV.bullOut0 + 0.6, EV.bullOut1 - 0.05));
+  return {x, step: t < EV.step0 ? 0 : step, load, plantT: t - EV.plant, breathe: Math.sin(t * 2.4), headNod: 2.4 * ring(t, EV.plant, 1.6, 0.35) + 1.2 * Math.sin(t * 1.3), anat, cut: cutR > 0.05 ? {r: cutR} : undefined, t};
+};
+/** the bull's shoulder, where the fibres sit (the nest of the micro world in the bull) */
+export const BULL_NEST: P = pt(49, -110);
+export const bullNest = (t: number): P => {
+  void t;
+  return BULL_NEST;
 };
 export const labAt = (t: number): LabState => {
   const press = ss(t, EV.press, EV.press + 0.12) * (1 - ss(t, EV.dropLand, EV.dropLand + 0.3));
@@ -292,18 +311,28 @@ export const toHost = (c: Cam, origin: P, k: number): Cam => ({x: origin.x + c.x
 export const toMicro = (c: Cam, origin: P, k: number): Cam => ({x: (c.x - origin.x) / k, y: (c.y - origin.y) / k, w: c.w / k});
 const M_BRAKE: Cam = {x: 0, y: -60, w: 186};
 /** frame 0 (and the last frame): a medium three-quarter shot of the flex, face and biceps */
-export const OPEN_CAM: Cam = {x: 10.5, y: -98, w: 52};
+export const OPEN_CAM: Cam = {x: 10.5, y: -98, w: 50};
+// the loop: frame 0 is tight on the athletic biceps; the last frame is the same view of the huge biceps, scaled so the
+// muscle's outline sits in the same place and at the same size on screen
+const flexPeak = (m: number, c: number) => {
+  const g = armFrame({S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * c, m, c, tear: 0, stretch: 1, xray: 0, grip: false, t: 0});
+  return {p: g.UA(0.62, 1), r: g.ra(0.62) + g.rp(0.62)};
+};
+const P0K = flexPeak(M0, 0.45), P1K = flexPeak(1, 0.45);
+export const TIGHT0: Cam = {x: P0K.p.x + 2, y: P0K.p.y + 9, w: 26};
+const KL = P1K.r / P0K.r;
+export const END_CAM: Cam = {x: P1K.p.x + 2, y: P1K.p.y + 9, w: 26 * Math.min(KL, 1.12)};
 const OPEN_IN: Cam = {x: 11.5, y: -96, w: 43};
 const BICEPS_CLOSE: Cam = {x: 12.5, y: -92, w: 28};
 const easeO = (x: number) => 1 - (1 - x) ** 3, easeI = (x: number) => x ** 3;
 const BULL_CLOSE: Cam = {x: 48, y: -110, w: 72};
-const BULL_WIDE: Cam = {x: 8, y: -108, w: 300};
+const BULL_WIDE: Cam = {x: 6, y: -106, w: 300};
 const BULL_REAR: Cam = {x: -50, y: -106, w: 210};
 const LAB_WIDE: Cam = {x: -7, y: -34, w: 74};
 export const camAt = (t: number): WCam => {
   if (t < EV.dive0) {
-    // already moving in frame 0 (the same speed the last frame arrives with)
-    const c = glide(t, [[0, OPEN_CAM], [1.1, OPEN_IN, easeO], [T.protein + 0.45, {x: 11, y: -97.5, w: 46}], [T.way - 0.1, {x: 12.5, y: -94, w: 34}], [EV.dive0, BICEPS_CLOSE]]);
+    // tight on the arm in frame 0; the camera tracks the swelling muscle back to his face, then closes on the biceps
+    const c = glide(t, [[0, TIGHT0], [0.95, OPEN_CAM], [T.protein + 0.45, {x: 11, y: -97.5, w: 46}], [T.way - 0.1, {x: 12.5, y: -94, w: 34}], [EV.dive0, BICEPS_CLOSE]]);
     return {...c, world: 'arm'};
   }
   const Wc = hookWindow();
@@ -311,17 +340,18 @@ export const camAt = (t: number): WCam => {
     const A = toMicro(BICEPS_CLOSE, Wc, K_ARM);
     return {...toHost(zoomAbout((t - EV.dive0) / (EV.dive1 - EV.dive0), A, M_BRAKE), Wc, K_ARM), world: 'arm'};
   }
-  if (t < EV.out0) {
-    return {...glide(t, [[EV.dive1, M_BRAKE], [T.acts, {x: 4, y: -68, w: 178}], [EV.out0, {x: 6, y: -72, w: 172}]]), world: 'micro'};
+  const MATCH: Cam = {x: 4, y: -70, w: 182};
+  if (t < T.but) return {...glide(t, [[EV.dive1, M_BRAKE], [T.acts, {x: 4, y: -68, w: 180}], [T.but, MATCH]]), world: 'micro'};
+  // the bull's fibre, cut in on "But": the same view, no brake; it thickens and pushes its neighbours apart
+  const B0: Cam = {x: 4, y: -70, w: 196};
+  if (t < EV.bullOut0) return {...glide(t, [[T.but, MATCH], [EV.bullOut0, B0]]), world: 'micro'};
+  if (t < EV.bullOut1) {
+    const A = toHost(B0, BULL_NEST, K_BULL);
+    return {...zoomAbout((t - EV.bullOut0) / (EV.bullOut1 - EV.bullOut0), A, BULL_WIDE), world: 'bull'};
   }
-  const OUT_TO: Cam = {x: 12, y: -93, w: 34};
-  if (t < EV.out1) {
-    const A = toHost({x: 6, y: -72, w: 172}, Wc, K_ARM);
-    return {...zoomAbout((t - EV.out0) / (EV.out1 - EV.out0), A, OUT_TO), world: 'arm'};
-  }
-  if (t < EV.cutBull) return {...glide(t, [[EV.out1, OUT_TO], [EV.cutBull, {x: 12.5, y: -93.5, w: 31}]]), world: 'arm'};
   if (t < EV.cutLab) {
-    const c = glide(t, [[EV.cutBull, BULL_CLOSE], [EV.bullOut1, BULL_WIDE], [EV.rear0, {x: -4, y: -108, w: 288}], [EV.rear1, BULL_REAR], [EV.full1, {x: 8, y: -108, w: 300}], [EV.cutLab, {x: 14, y: -108, w: 284}]]);
+    // one continuous reveal: the whole bull, along to the double-muscled rear, forward to the shoulder, back out for the step
+    const c = glide(t, [[EV.bullOut1, BULL_WIDE], [EV.sweepRear, {x: -44, y: -104, w: 214}], [EV.sweepFront, {x: 38, y: -110, w: 214}], [EV.full1, {x: 8, y: -106, w: 296}], [EV.cutLab, {x: 12, y: -106, w: 286}]]);
     return {...c, y: c.y + 0.7 * ring(t, EV.plant, 9, 0.08), world: 'bull'};
   }
   if (t < EV.labIn0) return {...glide(t, [[EV.cutLab, {x: -9, y: -36, w: 80}], [EV.labIn0, {x: 2, y: -18, w: 54}]]), world: 'lab'};
@@ -337,15 +367,15 @@ export const camAt = (t: number): WCam => {
     [EV.xrayOut1, {x: 6, y: -64, w: 98}],
     [EV.curl0, {x: 5, y: -62, w: 90}],
     [EV.elbowIn0, {x: 3, y: -58, w: 70}],
-    [EV.elbowIn1, {x: 1, y: -52, w: 38}],
-    [EV.elbowOut0, {x: 1, y: -51, w: 36}],
+    [EV.elbowIn1, {x: -1, y: -57, w: 31}],
+    [EV.elbowOut0, {x: -1, y: -56, w: 29}],
     [EV.elbowOut1, {x: 3, y: -62, w: 74}],
     [T.superhuman + 0.2, {x: 3, y: -66, w: 62}],
     [EV.sink0, {x: 2, y: -64, w: 58}],
     [EV.sink1, {x: 3, y: -66, w: 66}],
     [EV.raise0, {x: 5, y: -72, w: 72}],
-    [LAST - 0.95, {x: 9.5, y: -96, w: 60}],
-    [LAST + 1 / FPS, OPEN_CAM, easeI],
+    [LAST - 0.95, {x: 10, y: -96, w: 52}],
+    [LAST + 1 / FPS, END_CAM, easeI],
   ];
   return {...glide(t, keys), world: 'arm'};
 };
