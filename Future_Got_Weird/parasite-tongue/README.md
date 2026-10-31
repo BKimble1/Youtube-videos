@@ -1,6 +1,29 @@
 # Future Got Weird Short 1: The parasite that replaces a tongue
 
-**Deliverable.** `exports/FGW_Parasite_Tongue_FINAL_1080x1920.mp4`: 1080×1920, 30 fps, 720 frames, 24.0 s.
+## V2 (current)
+
+**Final.** `exports/FGW_Parasite_Tongue_V2_1080x1920.mp4`: 1080×1920, 30 fps, 720 frames, 24.0 s.
+
+**Review copy.** `exports/FGW_Parasite_Tongue_V2_REVIEW_timecode.mp4`, with timecode and beat labels burned in.
+
+**QC.** `QC_REPORT_V2.md`, with evidence in `qa/v2/`.
+
+**What changed.** One continuous 3D mouth set:
+- the result shown first
+- a rewind to the whole tongue
+- the gill entry
+- the bite
+- a staged time-lapse of the tongue withering
+- the anchored claws
+- an interior-to-exterior move
+- the meal
+- a looping return
+
+**Rebuild.** As below, then `tools/make_review.sh <final> <review>`.
+
+## V1 (superseded)
+
+**V1 deliverable.** `exports/FGW_Parasite_Tongue_FINAL_1080x1920.mp4` (source at commit 3246542): 1080×1920, 30 fps, 720 frames, 24.0 s.
 
 **QC.** `QC_REPORT.md` (timestamped), with measurements and contact sheets in `qa/`.
 
