@@ -297,11 +297,6 @@ export const Scientist: React.FC<{s: SciState; layer: 'back' | 'front'}> = ({s, 
       <rect x={needle.x - 0.45} y={barrelBot.y} width={0.9} height={1.3} rx={0.25} fill="#9FB2C4" stroke="#5E6F82" strokeWidth={0.1} />
       <rect x={needle.x - 1.2} y={barrelTop.y} width={2.4} height={barrelBot.y - barrelTop.y} rx={0.4} fill="#EAF6FF" opacity={0.55} stroke="#7F95AA" strokeWidth={0.14} />
       <rect x={needle.x - 1.05} y={level} width={2.1} height={Math.max(0, barrelBot.y - level - 0.15)} rx={0.3} fill={`url(#${idS})`} />
-      {Array.from({length: 9}, (_, i) => {
-        const yy = level + 0.6 + ((i * 0.618 + s.t * 0.3) % 1) * Math.max(0.1, barrelBot.y - level - 1.2);
-        const xx = needle.x - 0.7 + 1.4 * ((i * 0.37) % 1);
-        return <path key={i} d={`M${xx} ${yy} l0 0.32 M${xx} ${yy} l-0.2 -0.22 M${xx} ${yy} l0.2 -0.22`} stroke="#0B5E54" strokeWidth={0.07} strokeLinecap="round" opacity={0.8} />;
-      })}
       <rect x={needle.x - 1.05} y={level - 0.5} width={2.1} height={0.6} fill="#3A3F4E" />
       <rect x={needle.x - 0.22} y={level - 6.6} width={0.44} height={6.2} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.08} />
       <rect x={needle.x - 1.15} y={level - 7.1} width={2.3} height={0.55} rx={0.25} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.1} />

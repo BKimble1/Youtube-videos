@@ -39,6 +39,9 @@ if 'V4' in os.path.basename(src): PLANNED = PLANNED_V4
 PLANNED_V5 = [(1.3, 1.9, 'through the skin into the muscle'), (5.3, 5.7, 'push in on the binding'), (7.2, 7.9, 'down through connective tissue into the cow muscle'), (8.5, 9.7, 'out through the cow shoulder'),
               (12.5, 12.56, 'cut to the lab'), (13.6, 14.25, 'into the sample'), (14.9, 15.35, 'the bundle turns end-on'), (15.25, 16.3, 'out through his biceps'), (18.1, 18.7, 'into the elbow'), (19.5, 20.6, 'out of the elbow'), (23.2, 24.6, 'raise and flex into the loop framing')]
 if 'V5' in os.path.basename(src): PLANNED = PLANNED_V5
+PLANNED_V6 = [(0.6, 1.6, 'the push toward the biceps and the tissue reveal into the muscle'), (4.15, 4.8, 'closing on the surface'), (7.25, 8.65, 'pull back, dissolve to the cow, out to the field'), (10.0, 10.75, 'the cow develops'),
+              (12.5, 12.56, 'cut to the lab'), (12.56, 13.0, 'the camera follows her hands'), (13.6, 14.3, 'into the sample'), (15.2, 15.95, 'pull back, cut to the gym'), (21.0, 24.6, 'flex into the loop framing')]
+if 'V6' in os.path.basename(src): PLANNED = PLANNED_V6
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

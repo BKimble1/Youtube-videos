@@ -170,7 +170,62 @@ def rustle(dur=0.5, lo=1500, hi=7000):
 sfx = np.zeros(N)
 E = EV.get
 V2 = 'out0' in EV
-if 'cross0' in EV:
+if 'grow2a' in EV:
+    # ===================== V6 =====================
+    G = Q  # the bundle's thickness
+    mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
+    hookN = int(0.9 * SR)
+    sw = swell(0.9, 42, 1.4)
+    env_m = np.clip(mrate[:hookN] / (np.percentile(mrate[:hookN], 99) + 1e-9), 0, 1)
+    place(sfx, sw * (0.4 + 0.6 * env_m), 0.0, 'organic muscle swelling (follows the mass)', -13)
+    place(sfx, squelch(0.7, 160, 900, 20), 0.05, 'skin and muscle stretching', -27)
+    place(sfx, fabric_strain(0.6), 0.2, 'the sleeve strains', -24)
+    for i, dt_ in enumerate([0.0, 0.09, 0.2, 0.31]):
+        place(sfx, tick(0.02, 2600 + 700 * (i % 3)), 0.3 + dt_, 'stitches strain' if i == 0 else None, -23 - (i % 2) * 3)
+    place(sfx, swell(0.8, 46, 0.5), EV['reveal0'] - 0.05, 'the camera moves into the muscle (low swell)', -22)
+    place(sfx, squelch(0.4, 220, 1600, 26), EV['reveal0'] + 0.05, 'the skin thins away (soft wet tissue)', -25)
+    place(sfx, shimmer(0.7, 4200, 1400), EV['reveal0'] + 0.25, 'into the fibres (soft shimmer)', -31)
+    fib = np.array([1.0 if w in ('fibre', 'match') else 0.0 for w in WORLD])
+    mic = lp(sig100(fib), 6)
+    pulse = np.zeros(N)
+    for k in range(int(DUR * 1.3)):
+        place(pulse, thump(0.35, 62, 40), k / 1.3 + 0.05)
+    dg = np.clip(np.gradient(sig100(G)) * SR, 0, None)
+    grow_env = lp(np.clip(dg / 0.25, 0, 1), 8) * mic
+    gstretch = lp(bp(noise(N), 70, 420), 300)
+    place(sfx, norm(gstretch) * grow_env, 0.0, 'the bundle thickening (low organic stretch, follows the growth)', -19)
+    place(sfx, chime(392.0, 1.0) * 0.5, EV['myoIn'], 'the pink protein appears (soft tone)', -31)
+    place(sfx, lock(0.16), EV['docked'] - 0.04, 'myostatin docks into its receptor (soft click)', -15)
+    place(sfx, power(0.7, 300, 70), EV['docked'], 'growth winds down and stops', -20)
+    place(sfx, swell(0.9, 40, 0.4), EV['back0'], 'pull back from the surface', -26)
+    place(sfx, shimmer(0.8, 1500, 4800), EV['mix0'], 'the muscle surface becomes the cow (rising shimmer)', -29)
+    place(sfx, rustle(0.6, 600, 3000), EV['headUp0'], 'the cow lifts its head (grass rustle)', -30)
+    place(sfx, snort(0.45), EV['headUp1'] - 0.1, 'the cow snorts', -26)
+    place(sfx, swell(0.8, 38, 1.3), EV['grow2a'] - 0.05, 'the cow\'s muscles grow (deep organic swell)', -14)
+    place(sfx, creak(0.6, 110, 34), EV['grow2a'] + 0.05, 'hide and muscle stretching', -23)
+    place(sfx, rustle(0.4, 800, 3500), EV['shift0'], 'weight shifts (grass)', -30)
+    place(sfx, hoof(), EV['step1'] - 0.02, 'one heavy hoof step', -12)
+    place(sfx, thump(0.45, 60, 32), EV['step1'], 'its weight settles', -20)
+    place(sfx, tick(0.03, 4200) * 0.6, EV['cutLab'] + 0.3, 'glassware (tink)', -26)
+    place(sfx, creak(0.3, 700, 140), EV['press'], 'plunger squeak', -28)
+    place(sfx, plip(), EV['dropLand'], 'the drop lands on the sample', -22)
+    place(sfx, shimmer(0.55, 5000, 1500), EV['labIn0'] + 0.05, 'into the sample', -30)
+    place(sfx, lock(0.12), EV['wrap1'] - 0.04, 'the inhibitor closes round myostatin', -16)
+    place(sfx, lock(0.1) * 0.6, EV['contact'], 'the pair bumps the receptor (dull knock, no fit)', -21)
+    place(sfx, power(0.6, 90, 380), EV['away'], 'growth resumes (rising)', -21)
+    place(sfx, eerie(1.0), T['weird'] - 0.32, 'eerie cue before the twist', -18)
+    place(sfx, creak(0.25, 260, 80), EV['cutGym'] + 0.05, 'the grip tightens on the handle', -26)
+    place(sfx, rustle(0.4, 700, 3000), 16.4, 'he sits up (cloth)', -31)
+    place(sfx, bp(noise(int(0.6 * SR)), 300, 1500) * env(int(0.6 * SR), 0.25, 0.3), 17.05, 'a breath in', -30)
+    place(sfx, iron_creak(0.6), EV['lift0'], 'the weight comes up', -22)
+    place(sfx, creak(1.6, 120, 46), EV['slow'] - 0.1, 'the biceps strains', -23)
+    place(sfx, bp(noise(int(0.8 * SR)), 200, 1200) * env(int(0.8 * SR), 0.1, 0.5), EV['strain0'] + 0.2, 'effort exhale through teeth', -29)
+    place(sfx, clunk(), EV['lower1'] - 0.03, 'the dumbbell settles back on the floor', -16)
+    place(sfx, rustle(0.55, 900, 5000), EV['raise0'] + 0.05, 'the arm comes up into the flex (cloth)', -27)
+    place(sfx, fabric_strain(0.4), EV['raise1'] - 0.15, 'the sleeve tightens round the flexed arm', -28)
+    tail = swell(0.55, 42, 1.0)
+    place(sfx, tail * np.linspace(0, 1, len(tail)) ** 1.3, DUR - 0.55, 'swell into the loop (the opening swell begins)', -15)
+elif 'cross0' in EV:
     # ===================== V5 =====================
     mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
     hookN = int(1.3 * SR)
@@ -512,7 +567,7 @@ def circ(f, x): return f(np.concatenate([x, x, x]))[2 * len(x):]
 roomA = circ(lambda x: lp(hp(x, 60), 500), noise(N))
 air = circ(lambda x: bp(x, 400, 3000), noise(N))
 gym = (np.array([1.0 if w == 'arm' else 0.0 for w in WORLD]))
-past = (np.array([1.0 if w == 'bull' else 0.0 for w in WORLD]))
+past = (np.array([1.0 if w in ('bull', 'cow') else 0.0 for w in WORLD]))
 labw = (np.array([1.0 if w == 'lab' else 0.0 for w in WORLD]))
 hum = np.sin(2 * np.pi * 120 * t) * 0.3 + np.sin(2 * np.pi * 240 * t) * 0.1
 amb = (0.5 * norm(roomA) * lp(sig100(gym), 4) + 0.55 * norm(air) * lp(sig100(past), 4) + (0.4 * norm(roomA) + 0.2 * hum) * lp(sig100(labw), 4)

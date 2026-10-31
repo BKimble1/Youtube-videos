@@ -3,13 +3,13 @@
 // count q(t) (each whole step is one myofibril zipping into place).
 import * as fs from 'fs';
 import {DUR} from '../source/src/lib';
-import {EV, T, LAST, armAt, microAt, camAt} from '../source/src/story';
+import {EV, T, LAST, armAt, gAt, camAt} from '../source/src/story';
 
 const m: number[] = [], q: number[] = [], world: string[] = [], wv: number[] = [];
 for (let i = 0; i <= Math.round(DUR * 100); i++) {
   const t = i / 100;
   m.push(Math.round(armAt(t).m * 1000) / 1000);
-  q.push(Math.round(microAt(t).q * 1000) / 1000);
+  q.push(Math.round(gAt(t) * 1000) / 1000); // V6: the muscle bundle's thickness g(t)
   const c = camAt(t);
   world.push(c.world);
   wv.push(Math.round(Math.log(c.w) * 1000) / 1000);

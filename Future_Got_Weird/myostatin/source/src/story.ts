@@ -1,61 +1,55 @@
-// V5 timeline: every beat keyed to the measured narration (data/timeline.json via word()), the state of every subject
-// at time t, and one camera. Worlds: 'arm' (the character, cm), 'micro' (muscle, u), 'cross' (the muscle cut across,
-// u), 'bull' (cm), 'lab' (cm). A dive or pull-out between worlds is one zoom about a fixed point, defined in the deeper
-// world and mapped into the outer one through the window it passes; the outer world is dropped once that window covers
-// the frame. One continuous narrative:
+// V6 timeline. Every beat is keyed to the measured narration (data/timeline.json via word()). Worlds: 'arm' (the
+// character, cm), 'fibre' (the muscle bundle, u), 'cow' (cm), 'lab' (cm), and 'match' (the bundle's curved surface
+// dissolving into the cow's shoulder line). One continuous story:
 //
-//   0.00-0.25  the flexed arm is already growing (camera composed on the biceps and his face)
-//   0.25-0.80  the biceps balloons, the sleeve stretches, he reacts
-//   0.80-1.40  the camera approaches the swelling muscle; 1.40-1.85 through the skin into the fibres
-//   1.85-3.90  between recognisable fibres; settle on one: its nucleus streams building material to the myofibril
-//              being assembled, and the fibre widens ("WAY bigger")
-//   4.05-5.35  one myostatin molecule, followed toward a receptor; 5.35 it binds
-//   5.50-6.35  the signal runs into the cell to the nucleus; its stream stops; assembly stops ("brake")
-//   6.45-7.25  the fibre tries to thicken, twice, and is held back ("on muscle growth")
-//   7.20-7.85  "But some animals": the camera travels down through a sheet of connective tissue into another muscle,
-//              whose fibres are far larger and have no signal (born without the brake); they thicken
-//   8.55-9.60  out through the tissue and a window in the shoulder to the cow; it stands in its field, shifting its
-//              weight and moving its head; a heavier shift on "huge"
-//   12.52-14.20 the lab: the scientist dispenses treatment from a syringe onto a sample; the camera follows the drop in
-//   14.20-15.25 the second visit, framed close on one receptor: an antibody catches myostatin before it can bind; no
-//              signal; the bundle turns end-on and its fibres thicken
-//   15.25-16.30 the camera follows the thickening fibres out through a window in the character's biceps: the enlarged arm
-//   16.30-22.92 confident, he grips; the controlled curl strains; inside the elbow the muscle bulges while the bone barely
-//              turns; the stall; the weight sinks back
-//   22.92-24.57 disappointment: his arm relaxes; he looks at it and flexes; the camera approaches as it begins to swell:
-//               the last 1.35 s run on the opening's own clock (the loop)
-import {P, add, mul, pt} from './core/geo';
-import {DUR, FPS, FRAMES, clamp, easeOut, keyS, lerp, ring, ss, ss5, word} from './lib';
-import {ArmState, Face, PersonState, armFrame, headFor, tremorAt} from './art/person';
-import {Ab, Cam, MicroState, Myo, NUC_DY, NUC_X, REC_X, R0} from './art/micro';
-import {BullState} from './art/bull';
+//   0.00-0.62  tight on his face and flexed biceps (already big): the biceps' contour swells; his eyes follow it, his
+//              brows rise, then delighted disbelief
+//   0.00-1.55  one forward move toward the swelling muscle; from 0.84 the skin thins away from the biceps (a soft tissue
+//              reveal that spreads to the whole frame): inside the muscle by about 1.5 s
+//   1.55-4.15  one bundle fills the frame and thickens; its boundaries spread ("WAY bigger")
+//   4.15-7.25  close on its surface: one pink myostatin beside it ("It's called MYOSTATIN"), docking into one receptor
+//              ("BRAKE"); the expansion slows and stops; hold
+//   7.25-8.60  pull back; the bundle's curved surface dissolves into a cow's shoulder line; out to the whole animal (an
+//              ordinary build), which lifts its head
+//   10.05-10.68 "their muscles grow": shoulder, hindquarters and neck thicken; the belly stays lean
+//   10.9-12.45 the new build moves: a weight shift and one heavy step; the camera moves in on the shoulder and quarters
+//   12.52-14.25 the scientist dispenses a drop onto a muscle sample; the camera goes into it
+//   14.25-15.90 the same muscle environment: the teal inhibitor wraps the pink myostatin ("block"); it cannot dock;
+//              the receptor stays empty and the fibres thicken; pull back on the thickened bundle
+//   15.92-20.20 already gripping: confident; one continuous curl attempt that slows into strain; a disappointed glance at
+//              his biceps
+//   20.20-24.57 he lowers the weight, raises the arm into the flex ("looking SUPERHUMAN"); the camera closes in to the
+//              opening's exact framing and rig state (the loop: the swell starts again at frame 0)
+import {P, add, mul, pt, sub} from './core/geo';
+const dot = (a: P, b: P) => a.x * b.x + a.y * b.y;
+import {FPS, FRAMES, DUR, clamp, keyS, lerp, ss, ss5, word} from './lib';
+import {ArmState, Face, PersonState, armFrame, headFor} from './art/person';
+import {FibreState, INH_BOTTOM, dockPoint, topY} from './art/fibre';
+import {CowState} from './art/cow';
 import {SAMPLE, SciState, sciNeedle} from './art/lab';
-import {MUSCLE_RX} from './art/micro3d';
 
 const w = word;
 export const T = {
-  blocked: w('blocked').start, protein: w('protein').start, your: w('your').start, way: w('WAY').start, bigger: w('bigger').start, biggerEnd: w('bigger').end,
-  its: w("It's").start, myostatin: w('myostatin').start, myoEnd: w('myostatin').end, acts: w('acts').start, brake: w('brake').start,
-  growth: w('growth').start, growthEnd: w('growth').end,
-  but: w('But').start, animals: w('animals').start, born: w('born').start, without: w('without').start, brake2: w('brake', 1).start, brake2End: w('brake', 1).end,
+  blocked: w('blocked').start, protein: w('protein').start, way: w('WAY').start, bigger: w('bigger').start, biggerEnd: w('bigger').end,
+  its: w("It's").start, myostatin: w('myostatin').start, myoEnd: w('myostatin').end, acts: w('acts').start, brake: w('brake').start, growthEnd: w('growth').end,
+  but: w('But').start, animals: w('animals').start, born: w('born').start, brake2: w('brake', 1).start, brake2End: w('brake', 1).end,
   and2: w('and', 1).start, muscles2: w('muscles', 1).start, grow2: w('grow', 1).start, freak: w('freakishly').start, huge: w('huge').start, hugeEnd: w('huge').end,
-  sci: w('Scientists').start, developing: w('developing').start, drugs: w('drugs').start, block: w('block').start, inW: w('in').start, humans: w('humans').start, humansEnd: w('humans').end,
-  but2: w('But', 1).start, weird: w('weird').start, part: w('part').start, partEnd: w('part').end,
-  bigger2: w('bigger', 1).start, dont: w("don't").start, strength: w('strength').start, strengthEnd: w('strength').end,
-  so: w('So').start, looking: w('looking').start, superhuman: w('superhuman').start, without2: w('without', 1).start, superW: w('super').start, strongEnd: w('strong').end,
+  sci: w('Scientists').start, drugs: w('drugs').start, block: w('block').start, inW: w('in').start, humans: w('humans').start, humansEnd: w('humans').end,
+  but2: w('But', 1).start, weird: w('weird').start, partEnd: w('part').end,
+  bigger2: w('bigger', 1).start, strength: w('strength').start, strengthEnd: w('strength').end,
+  so: w('So').start, looking: w('looking').start, superhuman: w('superhuman').start, without2: w('without', 1).start, strongEnd: w('strong').end,
 };
 export const LAST = (Math.round(DUR * FPS) - 1) / FPS;
 export const LOOP_T = FRAMES / FPS;
 export const EV = {
-  grow0: 0.25, grow1: 0.8, react0: 0.3, react1: 0.85, approach0: 0.8, cut0: 1.3, dive0: 1.4, dive1: 1.85,
-  settle: 3.9, lead0: 4.05, bind: 5.35, sig0: 5.5, sig1: 6.05, dome1: 6.48, dome2: 6.88,
-  cross0: 7.2, crossSwitch: 7.52, cross1: 7.85, cowOut0: 8.55, cowOut1: 9.6, shift: T.huge, cutLab: T.sci,
-  press: 13.28, dropFall: 13.55, dropLand: 13.68, labIn0: 13.62, labIn1: 14.2,
-  catch1: 14.3, catch2: T.block, release: 14.62, yaw0: 14.92, yaw1: 15.28, armOut0: 15.25, armOut1: 16.25,
-  grip: 16.9, curl0: 17.5, curlTop: 18.9, elbowIn0: 18.15, elbowIn1: 18.6, elbowOut0: 19.55, elbowOut1: 20.5,
-  sink0: 22.42, sink1: 22.92, slump0: 22.95, slump1: 23.4, raise0: 23.22, raise1: 23.9,
-  // (names used by older passes; not in this cut)
-  wipe1: -9, wipe1End: -9, wipe2: -9, wipe2End: -9, out0: -9, out1: -9, cutX: T.inW, xrayOut0: -9, xrayOut1: -9,
+  grow0: 0.04, grow1: 0.62, reveal0: 0.84, inside: 1.55,
+  close0: 4.15, close1: 4.75, myoIn: 4.3, dock: 6.14, docked: 6.36, stop: 6.85,
+  back0: 7.25, back1: 7.62, mix0: 7.46, mix1: 7.8, cowFull: 8.6, headUp0: 8.45, headUp1: 9.2, tail0: 9.05,
+  grow2a: 10.05, grow2b: 10.68, shift0: 10.95, step0: 11.35, step1: 11.9, cutLab: T.sci,
+  press: 12.95, dropFall: 13.24, dropLand: 13.38, labIn0: 13.62, labIn1: 14.25,
+  wrap0: 14.46, wrap1: 14.68, contact: 14.86, away: 15.0, out0: 15.25, out1: 15.88, cutGym: T.but2,
+  lift0: T.bigger2, slow: 18.3, strain0: 19.1, glance0: 19.86, glance1: 20.4, lower0: 20.2, lower1: 20.92, release: 20.95, raise0: 21.0, raise1: 21.9,
+  doubt0: 22.25, doubt1: 23.0, settle: 23.7,
 };
 
 // ---------------------------------------------------------------- the character
@@ -63,209 +57,181 @@ export const S_FLEX = pt(-4, -84);
 const FLEX_A1 = -0.08, FLEX_A2 = 1.68;
 const S_CURL = pt(-6, -80.6);
 const CURL_A1 = Math.PI / 2 + 0.03, CURL_A2 = 0.06;
-/** the relaxed big arm (the end) and the pumped one (the rest of the film) */
-export const M_REST = 0.72, M_PUMP = 1.16;
-/** the hook's mass on its own clock tau (tau = t at the start; t - LOOP_T at the end): starting to rise just before
- *  frame 0, ballooning over 0.25-0.80 */
-export const massHook = (tau: number) => M_REST + (M_PUMP - M_REST) * ss5(tau, -0.22, 0.82) + 0.012 * Math.sin(tau * 15) * ss(tau, 0, 0.3) * (1 - ss(tau, 0.8, 1.1));
-export const M0 = massHook(0);
-const hookTau = (t: number) => (t > EV.raise0 - 0.02 ? t - LOOP_T : t);
-export const inHook = (t: number) => t < EV.dive1 + 0.4 || t > EV.raise0 - 0.02;
-let WC: P | undefined;
-export const hookWindow = (): P => {
-  if (!WC) WC = armFrame({S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * 0.85, m: massHook(EV.cut0), c: 0.85, tear: 0, stretch: 1, xray: 0, grip: false, t: 0}).UA(0.52, 0.36);
-  return WC;
+/** the arm's size at the loop seam (and through the strength scene), and after the opening swell */
+export const M_A = 0.84, M_B = 1.22;
+export const massHook = (tau: number) => (tau <= 0 ? M_A : M_A + (M_B - M_A) * ss5(tau, EV.grow0, EV.grow1));
+const hookC = (tau: number) => 0.8 + 0.12 * ss(tau, 0.05, 0.6);
+/** the hook's clock: t at the start, t - LOOP_T once the arm is back in the flex at the end */
+const hookTau = (t: number) => (t >= EV.raise1 ? t - LOOP_T : t);
+export const inHook = (t: number) => t < EV.inside + 0.3 || t >= EV.raise1;
+const flexArm = (tau: number): ArmState => {
+  const m = massHook(tau), c = hookC(tau);
+  return {S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * c, m, c, tear: 0, pops: tau > 0.25 && tau < 0.85 ? (tau - 0.25) / 0.6 : 0, stretch: clamp((m - 0.45) / 0.65), xray: 0, grip: false, t: tau};
 };
-const hookC = (tau: number) => 0.45 + 0.4 * ss(tau, 0.15, 0.7);
-const flexArm = (tau: number, m: number, c: number, cutR = 0): ArmState => ({
-  S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * c, m, c, tear: 0, pops: 0, stretch: clamp((m - 0.45) / 0.65), xray: 0, grip: false, t: tau,
-  cut: cutR > 0.01 ? {r: cutR, s: 0.52, v: 0.36, c: hookWindow()} : undefined,
-});
-/** the curl arm; the window the second visit's fibres come out through sits on its biceps */
+/** where the reveal opens, on the swollen biceps, and the micro world's mapping into the arm */
+export const REVEAL_C = (() => armFrame(flexArm(1)).UA(0.56, 0.42))();
+export const K_ARM = 0.0028, ARM_ROLL = FLEX_A1;
+export const revealR = (tau: number) => (tau < EV.reveal0 ? 0 : 2.4 * Math.exp(6.2 * (tau - 0.92)) * ss(tau, EV.reveal0, EV.reveal0 + 0.12));
+// the curl: one continuous attempt (fast start, slowing, nearly stalled under strain), then lowered
+const curlA2 = (t: number) => keyS(t, [[EV.lift0, CURL_A2], [EV.slow, 0.86], [EV.strain0, 1.18], [EV.lower0, 1.3], [EV.lower1, CURL_A2]], (x) => x);
+const curlEase = (t: number) => {
+  // velocity-continuous through the attempt: ease out of the start, then slower and slower
+  if (t <= EV.lift0) return CURL_A2;
+  if (t >= EV.lower0) {
+    const u = ss(t, EV.lower0, EV.lower1);
+    return lerp(1.3, CURL_A2, u);
+  }
+  const u = (t - EV.lift0) / (EV.lower0 - EV.lift0);
+  return CURL_A2 + (1.3 - CURL_A2) * (1 - (1 - u) ** 2.6);
+};
+void curlA2;
+const setAt = (t: number) => ss(t, 16.35, 16.9) * (1 - ss(t, EV.lift0 - 0.1, EV.lift0 + 0.2));
+const breathAt = (t: number) => Math.sin(Math.PI * clamp((t - 17.05) / 0.6)) * (t > 17.05 && t < 17.65 ? 1 : 0);
+const strainAt = (t: number) => ss(t, EV.slow - 0.1, EV.strain0 + 0.1) * (1 - ss(t, EV.lower0 + 0.1, EV.lower1));
 const curlArm = (t: number): ArmState => {
-  const rise = ss(t, EV.curl0, EV.curlTop) * (1 - ss(t, EV.sink0, EV.sink1));
-  const strain = ss(t, EV.curl0 - 0.15, EV.curl0 + 0.25) * (1 - ss(t, EV.sink1 - 0.1, EV.sink1 + 0.15));
-  const tr = tremorAt(t, 0.016 * strain * (0.6 + 0.4 * ss(t, EV.curlTop - 0.3, EV.curlTop + 0.5)));
-  const pulse = t > EV.elbowIn1 && t < EV.elbowOut0 ? 0.16 * Math.max(0, Math.sin((t - EV.elbowIn1) * 2 * Math.PI * 1.4)) : 0;
-  const S = add(S_CURL, pt(0, -1.6 * rise));
-  const a1 = CURL_A1 - 0.03 * rise + tr, a2 = CURL_A2 + 0.42 * rise + pulse * 0.05 + tr * 1.6;
-  const ec = ss(t, EV.elbowIn0 + 0.15, EV.elbowIn1) * (1 - ss(t, EV.elbowOut0, EV.elbowOut0 + 0.28));
-  const glow = ss(t, EV.elbowIn1, EV.elbowIn1 + 0.2) * (1 - ss(t, EV.elbowOut0 - 0.1, EV.elbowOut0 + 0.1));
-  // disappointment: as the weight settles his arm relaxes and the pump goes out of it
-  const m = lerp(M_PUMP, M_REST, ss(t, EV.slump0, EV.slump1));
-  return {S, a1, a2, m, c: strain * (0.88 + pulse), tear: 0, pops: 0, stretch: 1, xray: 0, grip: true, gripK: clamp((t - EV.grip) / 0.25), elbowCut: ec, fibreGlow: glow, t};
-};
-export const ARM_NEST = (() => armFrame(curlArm(EV.armOut0)).UA(0.5, 0.42))();
-export const K_ARMX = 5.2 / (MUSCLE_RX + 260); // the whole-muscle cross-section fills a 5.2 cm window in the biceps
-export const armWindowR = (t: number) => (t < EV.armOut1 - 0.35 ? 5.2 : 5.2 * (1 - ss(t, EV.armOut1 - 0.35, EV.armOut1 - 0.02)));
-export const armAt = (t: number): ArmState => {
-  if (inHook(t)) {
-    const tau = hookTau(t);
-    const m = massHook(tau);
-    const cutR = tau > 0 ? 2.7 * ss5(tau, EV.cut0, EV.cut0 + 0.16) : 0;
-    const flex = flexArm(tau, m, hookC(tau), cutR);
-    flex.pops = tau > 0.35 && tau < 0.95 ? (tau - 0.35) / 0.6 : 0;
-    if (tau >= 0) return flex;
-    // the end: from the dumbbell, he lifts the relaxed arm into the opening's flex (its size already the opening's)
-    const raise = ss5(t, EV.raise0, EV.raise1);
-    const hang = curlArm(Math.min(t, EV.raise0));
-    if (raise <= 0) return hang;
-    return {...flex, S: lerp2(hang.S, S_FLEX, raise), a1: lerp(hang.a1, flex.a1, raise), a2: lerp(hang.a2, flex.a2, raise), m: lerp(hang.m, flex.m, ss(raise, 0, 0.6)), c: lerp(0, flex.c, raise), grip: raise < 0.05, gripK: 1};
-  }
-  const a = curlArm(t);
-  // the second visit comes out through a window on his biceps
-  if (t > EV.armOut0 - 0.1 && t < EV.armOut1) {
-    const r = armWindowR(t);
-    if (r > 0.01) a.cut = {r, s: 0.5, v: 0.42, c: ARM_NEST};
-  }
-  return a;
+  const a2 = curlEase(t);
+  const st = strainAt(t);
+  const lift = ss(t, EV.lift0, EV.lift0 + 0.3) * (1 - ss(t, EV.lower0, EV.lower1));
+  // before the lift: he sits up and sets his shoulder, takes a breath; then the attempt
+  return {S: add(S_CURL, pt(0.6 * setAt(t), -1.4 * st - 1.3 * setAt(t) - 0.8 * breathAt(t))), a1: CURL_A1 - 0.04 * lift + 0.03 * setAt(t), a2, m: M_A, c: 0.3 + 0.62 * st + 0.2 * lift, tear: 0, pops: 0, stretch: 1, xray: 0, grip: t < EV.release, gripK: lerp(0.55, 1, ss(t, EV.cutGym + 0.05, EV.cutGym + 0.45)) + 0.2 * st, t};
 };
 const lerp2 = (a: P, b: P, u: number) => pt(lerp(a.x, b.x, u), lerp(a.y, b.y, u));
+export const armAt = (t: number): ArmState => {
+  if (t < EV.inside + 0.3 || t >= EV.raise1) {
+    const tau = hookTau(t);
+    const a = flexArm(tau);
+    const r = revealR(tau);
+    if (tau > 0 && r > 0.01) a.reveal = {c: REVEAL_C, r, ang: ARM_ROLL};
+    return a;
+  }
+  if (t >= EV.raise0) {
+    // from the lowered weight up into the opening's flex (its size is the same throughout)
+    const u = ss5(t, EV.raise0, EV.raise1);
+    const h = curlArm(EV.raise0), f = flexArm(-1);
+    return {...f, S: lerp2(h.S, f.S, u), a1: lerp(h.a1, f.a1, u), a2: lerp(h.a2, f.a2, u), c: lerp(h.c, f.c, u), grip: false};
+  }
+  return curlArm(t);
+};
 const REST = (() => {
-  const a0 = {S: S_CURL, a1: CURL_A1, a2: CURL_A2, m: 1, c: 0, tear: 0, stretch: 1, xray: 0, grip: true, t: 0} as ArmState;
-  const g0 = armFrame(a0);
+  const g0 = armFrame({S: S_CURL, a1: CURL_A1, a2: CURL_A2, m: M_A, c: 0, tear: 0, stretch: 1, xray: 0, grip: true, t: 0});
   return add(g0.W, mul(g0.f, 4.6));
 })();
 export const dumbbellAt = (t: number, a: ArmState): P => {
-  if (t > EV.raise0 || t < EV.curl0) return REST;
+  if (t < EV.lift0 || t > EV.lower1) return REST;
   const g = armFrame(a);
   const h = add(g.W, mul(g.f, 4.6));
   return pt(h.x, Math.min(REST.y, h.y));
 };
-/** faces. The hook's face runs on the hook's clock, so the last frames hand over to frame 0 exactly. */
+// faces. The hook face runs on the hook clock, so the last frames hand over to frame 0 exactly.
+const PROUD: Face = {brow: 0.05, eyes: 0.62, mouth: 0, strain: 0, look: pt(0.9, 0.15), smile: 0.45};
 const hookFace = (tau: number): Face => {
-  // a proud flex -> shock as it balloons (eyes wide, brows up, mouth open) -> amazement as the camera closes in
-  const shock = ss(tau, EV.react0, EV.react0 + 0.2);
-  const amaze = ss(tau, EV.react1, EV.react1 + 0.35);
-  return {brow: lerp(0.1, 1.25, shock) - 0.25 * amaze, eyes: lerp(0.58, 1, shock), mouth: lerp(0, 0.85, shock) * (1 - 0.45 * amaze), strain: 0, look: lerp2(pt(0.9, 0.1), pt(1, 0.35), ss(tau, 0, 1)), smile: 0.35 * (1 - shock), grin: 0.45 * amaze};
-};
-const DISAPPOINT: Face = {brow: -0.1, eyes: 0.45, mouth: 0, strain: 0, look: pt(0.6, 0.9), concern: 1};
-export const faceAt = (t: number): Face => {
-  if (t < EV.dive1 + 0.4) return hookFace(t);
-  if (t > EV.raise0 - 0.02) {
-    // from disappointment he looks at his arm as it comes up; the face meets the opening's proud look
-    const u = ss(t, EV.raise0, EV.raise1 + 0.2);
-    const h = hookFace(t - LOOP_T), c = DISAPPOINT;
-    return {brow: lerp(c.brow, h.brow, u), eyes: lerp(c.eyes, h.eyes, u), mouth: 0, strain: 0, look: lerp2(c.look, h.look, u), smile: lerp(0, h.smile ?? 0, u), grin: 0, concern: lerp(1, 0, u)};
-  }
-  // confidence -> strain -> disappointment
-  const confident = ss(t, EV.armOut1 - 0.2, EV.armOut1 + 0.2) * (1 - ss(t, EV.curl0 - 0.1, EV.curl0 + 0.15));
-  const strain = ss(t, EV.curl0 - 0.05, EV.curl0 + 0.25) * (1 - ss(t, EV.sink1 - 0.1, EV.sink1 + 0.1));
-  const surp = ss(t, T.bigger2 - 0.05, T.bigger2 + 0.25) * (1 - ss(t, T.bigger2 + 0.8, T.bigger2 + 1.1));
-  const dis = ss(t, EV.sink0 + 0.15, EV.slump0 + 0.1);
+  if (tau <= 0) return PROUD;
+  const follow = ss(tau, 0.04, 0.42), brows = ss(tau, 0.18, 0.42), joy = ss(tau, 0.42, 0.78);
+  // the eyes follow the swelling along the arm; the brows rise; then delighted disbelief (wide eyes, raised brows, an
+  // open grin)
   return {
-    brow: -0.15 * confident + 0.8 * surp - 0.1 * dis, eyes: 0.55 + 0.4 * surp - 0.2 * strain - 0.1 * dis, mouth: 0, strain: strain * (1 - 0.5 * surp),
-    look: dis > 0.01 ? lerp2(pt(0.55, 0.85), DISAPPOINT.look, dis) : pt(0.55, 0.85), smile: 0.75 * confident, grin: 0, concern: dis, quiz: 0.3 * confident,
+    brow: lerp(PROUD.brow, 1.15, brows) - 0.1 * joy, eyes: lerp(PROUD.eyes, 1, brows), mouth: 0.45 * brows * (1 - joy), strain: 0,
+    look: lerp2(PROUD.look, pt(1, 0.45), follow), smile: PROUD.smile! * (1 - brows), grin: 0.95 * joy,
   };
 };
+const CONF: Face = {brow: -0.12, eyes: 0.62, mouth: 0, strain: 0, look: pt(0.55, 0.85), smile: 0.8, quiz: 0.25};
+const DISAPPOINTED: Face = {brow: -0.12, eyes: 0.48, mouth: 0, strain: 0, look: pt(-0.2, 0.95), concern: 1};
+const mixFace = (a: Face, b: Face, u: number): Face => ({
+  brow: lerp(a.brow, b.brow, u), eyes: lerp(a.eyes, b.eyes, u), mouth: lerp(a.mouth, b.mouth, u), strain: lerp(a.strain, b.strain, u), look: lerp2(a.look, b.look, u),
+  smile: lerp(a.smile ?? 0, b.smile ?? 0, u), grin: lerp(a.grin ?? 0, b.grin ?? 0, u), concern: lerp(a.concern ?? 0, b.concern ?? 0, u), quiz: lerp(a.quiz ?? 0, b.quiz ?? 0, u),
+});
+export const faceAt = (t: number): Face => {
+  if (t < EV.inside + 0.3) return hookFace(t);
+  if (t >= EV.settle) return hookFace(t - LOOP_T);
+  // gripping, confident, a glance up to us (expecting an easy lift), back to the weight
+  const toCam: Face = {...CONF, look: pt(-0.3, 0.05), smile: 0.95, brow: 0.1};
+  let f = mixFace(CONF, toCam, ss(t, 16.45, 16.75) * (1 - ss(t, 17.25, 17.55)));
+  // the weight is slower than expected: surprise, then concentrated strain
+  const surprise: Face = {brow: 0.75, eyes: 0.92, mouth: 0.15, strain: 0, look: pt(0.4, 0.9), smile: 0};
+  const strain: Face = {brow: -0.05, eyes: 0.42, mouth: 0, strain: 1, look: pt(0.4, 0.85)};
+  f = mixFace(f, surprise, ss(t, EV.slow - 0.1, EV.slow + 0.25));
+  f = mixFace(f, strain, ss(t, EV.slow + 0.35, EV.strain0));
+  // a disappointed glance at the oversized biceps
+  f = mixFace(f, DISAPPOINTED, ss(t, EV.glance0 - 0.05, EV.glance1));
+  // flexing: proud again ("looking SUPERHUMAN"), a flicker of doubt, then the opening's proud look at the biceps
+  const flexProud: Face = {...PROUD, smile: 0.7};
+  f = mixFace(f, flexProud, ss(t, EV.raise0 + 0.2, EV.raise1));
+  const doubt: Face = {brow: 0.2, eyes: 0.55, mouth: 0, strain: 0, look: pt(0.3, 0.8), smile: 0.2, concern: 0.55};
+  f = mixFace(f, doubt, ss(t, EV.doubt0, EV.doubt0 + 0.3) * (1 - ss(t, EV.doubt1, EV.settle)));
+  return mixFace(f, PROUD, ss(t, EV.doubt1, EV.settle));
+};
 const BUILD = 1.0;
+const hookTilt = (tau: number) => -6 + 3 * ss(tau, 0.1, 0.45) - 3 * ss(tau, 0.45, 0.8);
 export const personAt = (t: number): PersonState => {
   const arm = armAt(t);
-  const tau = hookTau(t);
-  // head: follows the swelling muscle, recoils in shock, then leans in; at the end it drops, then lifts to the arm
-  const hookTilt = -6 + 3 * ss(tau, 0, 0.3) - 5 * ss(tau, EV.react0, EV.react0 + 0.2) + 4 * ss(tau, EV.react1, EV.react1 + 0.5);
-  const tilt = t < EV.dive1 + 0.4 ? hookTilt
-    : t > EV.raise0 - 0.02 ? lerp(12, hookTilt, ss(t, EV.raise0, EV.raise1))
-    : lerp(lerp(lerp(2, -3, ss(t, EV.armOut1 - 0.2, EV.armOut1 + 0.3)), 8, ss(t, EV.curl0, EV.curl0 + 0.5)), 12, ss(t, EV.sink0, EV.slump1));
+  let tilt: number;
+  if (t < EV.inside + 0.3) tilt = hookTilt(t);
+  else if (t >= EV.raise1) tilt = hookTilt(t - LOOP_T);
+  else {
+    tilt = lerp(2, 7, ss(t, EV.slow, EV.strain0)) + 5 * ss(t, EV.glance0, EV.glance1) - 4 * ss(t, 16.45, 16.75) * (1 - ss(t, 17.25, 17.6));
+    tilt = lerp(tilt, hookTilt(-1), ss(t, EV.raise0, EV.raise1));
+  }
   return {arm, hip: pt(-10, -40), lean: 0, head: headFor(arm.S, BUILD), headTilt: tilt, face: faceAt(t), t, xray: 0, farArm: 0, build: BUILD};
 };
 
-// ---------------------------------------------------------------- the micro world
-export const K_ARM = 0.0004, K_LAB = 0.00045, K_BULLM = 0.0016;
-export const microVariant = (t: number): MicroState['variant'] => (t < EV.crossSwitch ? 'human' : t < 12 ? 'bull' : 'dish');
-/** the sheet of connective tissue between the two muscles (human world y), and where the cow's muscle sits below it */
-export const BAND = {y0: 300, y1: 900}, BULL_SHIFT = 1270;
-const integrate = (t0: number, t: number, g0: number, rate: (t: number) => number) => {
-  let g = g0;
+// ---------------------------------------------------------------- the muscle bundle (both visits)
+const integrate = (t0: number, t: number, rate: (t: number) => number) => {
+  let g = 0;
   const n = Math.max(1, Math.round((t - t0) * 120));
   for (let i = 0; i < n; i++) g += rate(t0 + ((i + 0.5) * (t - t0)) / n) * ((t - t0) / n);
   return g;
 };
-const rateHuman = (t: number) => keyS(t, [[EV.cut0, 0.45], [2.6, 0.38], [T.way, 0.55], [EV.settle, 0.22], [EV.bind, 0.2], [EV.sig1, 0.03], [EV.sig1 + 0.3, 0]]);
-const rateBull = (t: number) => keyS(t, [[EV.crossSwitch, 0.4], [EV.cross1, 1.2], [EV.cowOut0, 0.8], [EV.cowOut1, 0.2]]);
-const rateDish = (t: number) => keyS(t, [[EV.release, 0], [EV.release + 0.2, 0.7], [EV.armOut1, 0.3]]);
-const FOCUS = 2;
-export const microAt = (t: number): MicroState => {
-  const variant = microVariant(t);
-  const t0 = variant === 'human' ? EV.cut0 : variant === 'bull' ? EV.crossSwitch : 12.5;
-  const g0 = variant === 'bull' ? 1.75 : variant === 'dish' ? 1.15 : 1.0;
-  const rate = variant === 'human' ? rateHuman : variant === 'bull' ? rateBull : rateDish;
-  const g = integrate(t0, t, g0, rate);
-  const qOf = (gg: number) => (R0 * gg - 3) / STR;
-  const q = qOf(g);
-  const rh = R0 * g;
-  const nucP = pt(NUC_X, -rh + NUC_DY);
-  const dockAt = (i: number) => pt(REC_X[i], -rh - 13);
-  const myo: Myo[] = [];
-  const sig: {p: P; op: number}[] = [];
-  const rec = REC_X.map(() => 0);
-  const abs: Ab[] = [];
-  const out: MicroState = {t, variant, g, gN: 1, q, nuc: 1, flow: 1, beads: [], rec, myo, abs, sig, minimal: true, focus: FOCUS, stream: 1};
-  if (variant === 'human') {
-    // one molecule, followed in from deep between the fibres; it binds the target receptor
-    if (t > EV.lead0 - 0.1) {
-      const u = clamp((t - EV.lead0) / (EV.bind - 0.05 - EV.lead0));
-      const tgt = dockAt(FOCUS);
-      const start = pt(-200, -rh - 130);
-      const p = t < EV.bind ? bez(start, pt(-120, -rh - 40), add(tgt, pt(0, -10)), ss(u, 0, 1)) : lerp2(add(tgt, pt(0, -10)), tgt, ss(t, EV.bind, EV.bind + 0.18));
-      out.lead = {p, ang: (1 - ss(u, 0.7, 1)) * 1.4 * Math.sin(t * 2.4), depth: 1 - ss(u, 0, 0.7), op: clamp((t - EV.lead0 + 0.1) / 0.25)};
-      if (t > EV.bind) rec[FOCUS] = 0.6 + 0.4 * Math.exp(-(t - EV.bind) / 0.3);
-    }
-    // the signal: pulses run down from the receptor through the cell to the nucleus
-    for (let k = 0; k < 5; k++) {
-      const s0 = EV.sig0 + 0.09 * k;
-      const v = (t - s0) / 0.42;
-      if (v > 0 && v < 1) sig.push({p: bez(pt(REC_X[FOCUS], -rh + 3), pt(lerp(REC_X[FOCUS], nucP.x, 0.3), -rh + 20), nucP, ss(v, 0, 1)), op: Math.min(1, v * 6) * Math.min(1, (1 - v) * 4)});
-    }
-    out.wave = {x: REC_X[FOCUS], u: clamp((t - EV.sig0) / 0.75)};
-    out.nuc = 1 - 0.85 * ss(t, EV.sig1 - 0.1, EV.sig1 + 0.25);
-    out.stream = 1 - ss(t, EV.sig1 - 0.05, EV.sig1 + 0.3);
-    out.flow = out.stream;
-    // the fibre pushes to thicken, and is held back (twice)
-    const push = (tc: number) => Math.max(0, Math.sin(Math.PI * clamp((t - tc) / 0.34))) * (t < tc + 0.34 ? 1 : 0);
-    const recoil = (tc: number) => ring(t, tc + 0.34, 5, 0.08) * 3;
-    out.dome = {x: 26, h: Math.max(0, 24 * push(EV.dome1) + 20 * push(EV.dome2) + recoil(EV.dome1) + recoil(EV.dome2))};
-    out.band = BAND;
-  } else if (variant === 'bull') {
-    // born without the brake: receptors empty, no molecule, the nucleus streaming; the fibres thicken fast
-    out.band = {y0: BAND.y0 - BULL_SHIFT, y1: BAND.y1 - BULL_SHIFT};
-  } else {
-    // the second visit: myostatin arrives but an antibody catches it first; the receptor stays empty; growth runs
-    out.minimal = true;
-    const tgt = dockAt(FOCUS);
-    [EV.catch1, EV.catch2].forEach((tc, i) => {
-      const start = pt(-170 + 300 * i, -rh - 150);
-      const meet = add(tgt, pt(-18 + 40 * i, -34 - 14 * i));
-      const u = clamp((t - (tc - 0.8)) / 0.8);
-      const p = t < tc ? bez(start, pt(lerp(start.x, meet.x, 0.5), lerp(start.y, meet.y, 0.3)), meet, ss(u, 0, 1)) : add(meet, pt(-20 * (i ? -1 : 1) * clamp((t - tc) / 0.6), -40 * ss(clamp((t - tc) / 0.6), 0, 1)));
-      myo.push({p, ang: t < tc ? 1.2 * Math.sin(t * 2 + i) : 0.4, op: 1 - ss(t, EV.yaw0 - 0.1, EV.yaw0 + 0.1), dock: 0, caught: t >= tc ? 1 : 0});
-      const aStart = pt(-60 + 120 * i, -rh - 240);
-      const ua = clamp((t - (EV.labIn1 - 0.2)) / (tc - (EV.labIn1 - 0.2)));
-      const aP = t < tc ? bez(aStart, pt(aStart.x - 30, lerp(aStart.y, meet.y, 0.5)), add(meet, pt(0, -12)), ss5(ua, 0, 1)) : add(p, pt(0, -12));
-      abs.push({p: aP, ang: t < tc ? Math.PI + (1 - ua) * 1.0 * Math.sin(t * 1.7 + i) : Math.PI, op: clamp((t - (EV.labIn1 - 0.2)) / 0.2) * (1 - ss(t, EV.yaw0 - 0.1, EV.yaw0 + 0.1)), grip: ss(t, tc - 0.08, tc + 0.05)});
-    });
-    out.nuc = 0.55 + 0.45 * ss(t, EV.release, EV.release + 0.25);
-    out.stream = 0.3 + 0.7 * ss(t, EV.release, EV.release + 0.3);
-  }
-  out.gN = variant === 'bull' ? 1.6 + 0.95 * (g - g0) : variant === 'dish' ? 1.1 + 0.9 * (g - g0) : 1 + 0.5 * (g - g0);
-  return out;
-};
-const STR = 6;
+const rate1 = (t: number) => keyS(t, [[0.9, 0.02], [1.6, 0.05], [2.4, 0.08], [T.way, 0.16], [T.biggerEnd, 0.1], [EV.close0, 0.13], [EV.dock, 0.17], [EV.docked, 0.07], [EV.stop, 0]]);
+const rate2 = (t: number) => keyS(t, [[EV.contact, 0], [EV.away, 0.16], [15.25, 0.34], [EV.out1, 0.26]]);
+export const visit = (t: number): 1 | 2 => (t < 10 ? 1 : 2);
+export const gAt = (t: number) => (visit(t) === 1 ? 1 + integrate(0.9, Math.max(0.9, Math.min(t, 7.9)), rate1) : 1 + integrate(EV.contact, Math.max(EV.contact, t), rate2));
 const bez = (a: P, c: P, b: P, u: number) => pt((1 - u) ** 2 * a.x + 2 * (1 - u) * u * c.x + u * u * b.x, (1 - u) ** 2 * a.y + 2 * (1 - u) * u * c.y + u * u * b.y);
-/** the second visit's bundle turning end-on */
-export const yawAt = (t: number) => ss5(t, EV.yaw0, EV.yaw1);
+export const fibreAt = (t: number): FibreState => {
+  const g = gAt(t);
+  const rec = pt(0, topY(g));
+  const dock = dockPoint(rec);
+  const rel = (x: number, y: number) => add(rec, pt(x, y));
+  if (visit(t) === 1) {
+    const recOp = ss(t, EV.close0, EV.close0 + 0.35);
+    if (t < EV.myoIn - 0.05) return {t, g, recOp};
+    // one protein, beside the surface, drifting to the receptor; it docks on "brake" and stays
+    const u = clamp((t - EV.myoIn) / (EV.dock - EV.myoIn));
+    const start = rel(-175, -235), mid = rel(-150, -70);
+    const above = add(dock, pt(0, -46));
+    let p = bez(start, mid, above, ss(u, 0, 1) * 0.15 + 0.85 * (1 - (1 - u) ** 1.6));
+    if (t >= EV.dock) p = lerp2(above, dock, ss(t, EV.dock, EV.docked));
+    const ang = t < EV.dock ? 0.16 * Math.sin((t - EV.myoIn) * 2.1) * (1 - ss(u, 0.7, 1)) - 0.25 * (1 - ss(u, 0, 0.8)) : 0;
+    return {t, g, recOp, myo: {p, ang, op: clamp((t - EV.myoIn + 0.05) / 0.3)}};
+  }
+  // visit 2: the protein heads for the receptor; the inhibitor wraps it on "block"; the pair cannot seat, bumps the rim
+  // and drifts away; the receptor stays empty
+  const start = rel(-200, -300), meet = rel(-70, -175);
+  let p: P;
+  if (t < EV.wrap0) p = lerp2(start, meet, ss(t, EV.labIn1 - 0.4, EV.wrap0 + 0.06) * 1.0);
+  else if (t < EV.contact) p = lerp2(lerp2(start, meet, ss(EV.wrap0, EV.labIn1 - 0.4, EV.wrap0 + 0.06)), rel(-8, -INH_BOTTOM - 4), ss(t, EV.wrap0, EV.contact));
+  else {
+    const c0 = rel(-8, -INH_BOTTOM - 4);
+    const bounce = 12 * Math.sin(Math.PI * clamp((t - EV.contact) / 0.22)) * (t < EV.contact + 0.22 ? 1 : 0);
+    const drift = ss(t, EV.away, EV.out1 + 0.2);
+    p = add(c0, pt(-190 * drift, -bounce - 260 * drift));
+  }
+  const iStart = rel(280, -470);
+  const ip = t < EV.wrap0 ? lerp2(iStart, add(p, pt(0, -6)), ss(t, EV.labIn1 - 0.35, EV.wrap0)) : p;
+  const ang = t < EV.contact ? 0.12 * Math.sin(t * 2.4) : -0.15 * ss(t, EV.away, EV.out1);
+  return {t, g, myo: {p, ang, op: 1}, inh: {p: ip, ang, op: clamp((t - (EV.labIn1 - 0.45)) / 0.2), wrap: ss(t, EV.wrap0, EV.wrap1)}};
+};
 
 // ---------------------------------------------------------------- the cow and the lab
-export const BULL_NEST: P = pt(49, -110);
-export const bullAt = (t: number): BullState => {
-  // standing in its field: a slow shift of weight and a turn of the head; a heavier shift on "huge" loads the shoulder
-  const sway = 2.4 * Math.sin((t - EV.cowOut1) * 1.9) * ss(t, EV.cowOut1 - 0.1, EV.cowOut1 + 0.5);
-  const heavy = ss(t, EV.shift - 0.15, EV.shift + 0.2) * (1 - 0.6 * ss(t, EV.shift + 0.5, EV.shift + 0.9));
-  const load = heavy;
-  const anat = 1 - ss(t, EV.cowOut0 + 0.5, EV.cowOut1 + 0.25);
-  const cutR = t < EV.cowOut0 + 0.6 ? 9 : 9 * (1 - ss(t, EV.cowOut0 + 0.6, EV.cowOut1 - 0.05));
-  const headNod = 5 * Math.sin((t - EV.cowOut1) * 1.3) * ss(t, EV.cowOut1, EV.cowOut1 + 0.5) - 4 * heavy;
-  return {x: sway + 3 * heavy, step: 0, load, plantT: t - EV.shift, breathe: Math.sin(t * 2.4), headNod, anat, cut: cutR > 0.05 ? {r: cutR} : undefined, t};
+export const cowAt = (t: number): CowState => {
+  const mu = ss5(t, EV.grow2a, EV.grow2b);
+  const back = -3 * ss(t, EV.shift0, EV.shift0 + 0.35) * (1 - ss(t, EV.step0, EV.step0 + 0.3));
+  const fwd = 9 * ss(t, EV.step0, EV.step1 + 0.1);
+  const land = 1.2 * ss(t, EV.step1 - 0.1, EV.step1) * (1 - ss(t, EV.step1, EV.step1 + 0.4));
+  return {
+    mu, bx: back + fwd, by: land, step: clamp((t - EV.step0) / (EV.step1 - EV.step0)), stepDx: 17,
+    head: 14 * (1 - ss(t, EV.headUp0, EV.headUp1)) + 3 * land, tail: Math.sin(Math.PI * 2 * clamp((t - EV.tail0) / 0.7)) * (t > EV.tail0 && t < EV.tail0 + 0.7 ? 1 : 0),
+    breathe: Math.sin(t * 2.2), t,
+  };
 };
 export const sciAt = (t: number): SciState => {
   const press = ss(t, EV.press, EV.press + 0.4);
@@ -274,12 +240,14 @@ export const sciAt = (t: number): SciState => {
   const form = ss(t, EV.press + 0.05, EV.dropFall);
   const fall = clamp((t - EV.dropFall) / (EV.dropLand - EV.dropFall));
   const dropY = t < EV.dropFall ? tip.y + 0.4 * form : lerp(tip.y + 0.4, SAMPLE.y - 0.3, fall * fall);
-  return {t, press, lean, drop: t < EV.dropLand ? form : 0, dropY, ripple: clamp((t - EV.dropLand) / 0.45), glow: ss(t, EV.dropLand, EV.dropLand + 0.4)};
+  return {t, press, lean, drop: t < EV.dropLand ? form : 0, dropY, ripple: clamp((t - EV.dropLand) / 0.45), glow: 0};
 };
+export const K_LAB = 0.0006;
 
 // ---------------------------------------------------------------- the camera
-export type World = 'arm' | 'micro' | 'cross' | 'bull' | 'lab';
-export type WCam = Cam & {world: World; band?: number};
+export type Cam = {x: number; y: number; w: number};
+export type World = 'arm' | 'fibre' | 'cow' | 'lab' | 'match';
+export type WCam = Cam & {world: World; roll?: number; cam2?: Cam; mix?: number};
 export const zoomAbout = (u: number, A: Cam, B: Cam, ease: (x: number) => number = (x) => ss5(x, 0, 1)): Cam => {
   const e = ease(clamp(u));
   const wv = Math.exp(lerp(Math.log(A.w), Math.log(B.w), e));
@@ -298,83 +266,82 @@ const glide = (t: number, keys: Key[]): Cam => {
   }
   return keys[keys.length - 1][1];
 };
-export const toHost = (c: Cam, origin: P, k: number): Cam => ({x: origin.x + c.x * k, y: origin.y + c.y * k, w: c.w * k});
-export const toMicro = (c: Cam, origin: P, k: number): Cam => ({x: (c.x - origin.x) / k, y: (c.y - origin.y) / k, w: c.w / k});
-// the opening: composed on the biceps and his face throughout (it never pulls back past the shoulder)
-const flexPeak = (m: number, c: number) => armFrame({S: S_FLEX, a1: FLEX_A1, a2: FLEX_A2 + 0.05 * c, m, c, tear: 0, stretch: 1, xray: 0, grip: false, t: 0}).UA(0.62, 1);
+// micro <-> host mappings (the arm's is rotated so the fibres run along the upper arm)
+const rotP = (p: P, a: number) => pt(p.x * Math.cos(a) - p.y * Math.sin(a), p.x * Math.sin(a) + p.y * Math.cos(a));
+export const toHost = (c: Cam, origin: P, k: number, a = 0): Cam => {
+  const q = add(origin, mul(rotP(pt(c.x, c.y), a), k));
+  return {x: q.x, y: q.y, w: c.w * k};
+};
+export const toMicro = (c: Cam, origin: P, k: number, a = 0): Cam => {
+  const q = rotP(mul(sub(pt(c.x, c.y), origin), 1 / k), -a);
+  return {x: q.x, y: q.y, w: c.w / k};
+};
+/** the opening (and the loop seam): his face and the flexed biceps, the biceps' peak at the centre right */
 export const TIGHT0: Cam = (() => {
-  const p = flexPeak(M0, hookC(0));
-  return {x: p.x + 1, y: p.y + 3, w: 33};
+  const p = armFrame(flexArm(0)).UA(0.6, 1);
+  return {x: p.x - 4, y: p.y - 3.5, w: 39};
 })();
-const REACT: Cam = {x: 10, y: -97, w: 37};
-const BICEPS_CLOSE: Cam = {x: 11.9, y: -90.4, w: 19};
-const LOOK: Cam = {x: 6, y: -92, w: 46};
-const hookCam = (tau: number): Cam => glide(tau, [[-1.35, LOOK], [0, TIGHT0], [EV.grow1, REACT], [EV.dive0, BICEPS_CLOSE]]);
-const M_FLY: Cam = {x: -380, y: -40, w: 420};
-const M_HERO: Cam = {x: -30, y: -40, w: 230};
-const LEAD_CAM = (t: number): Cam => ({x: lerp(-100, -10, ss(t, EV.lead0, EV.bind)), y: -52, w: 220});
-const BIND_CAM: Cam = {x: REC_X[FOCUS], y: -44, w: 140};
-const SIG_CAM: Cam = {x: 40, y: -36, w: 220};
-const DOME_CAM: Cam = {x: 30, y: -44, w: 220};
-const COW_FIBRE: Cam = {x: 10, y: -40, w: 250};
-const COW_WIDE: Cam = {x: 4, y: -106, w: 300};
+const M_BUNDLE: Cam = {x: 0, y: 0, w: 860};
+const IN_ARM = toHost(M_BUNDLE, REVEAL_C, K_ARM, ARM_ROLL);
+const hookCam = (tau: number): Cam => zoomAbout(tau / EV.inside, TIGHT0, IN_ARM, (x) => ss5(x * x, 0, 1));
+const closeCam = (gDock: number, w0: number, below: number): Cam => ({x: -12, y: topY(gDock) - below * w0 * (16 / 9), w: w0});
+const C1 = closeCam(1.53, 440, 0.08);
+const C2 = closeCam(1.0, 440, 0.12);
+const WIDE1: Cam = {x: 0, y: -300, w: 1000};
+// the cow: the match framing puts the withers where the bundle's crest is on screen
+const MATCH_SCREEN_Y = 960 + (topY(1.56) - 7 * 1.12 - WIDE1.y) * (1080 / WIDE1.w);
+const COW_MATCH: Cam = (() => {
+  const wv = 130;
+  return {x: 44, y: -151 - (MATCH_SCREEN_Y - 960) * (wv / 1080), w: wv};
+})();
+const COW_FULL: Cam = {x: 6, y: -110, w: 330};
+const COW_HOLD: Cam = {x: 4, y: -108, w: 334};
+const COW_IN: Cam = {x: -4, y: -104, w: 292};
 const LAB_WIDE: Cam = {x: -4, y: -40, w: 68};
-const RECEPTOR_CAM: Cam = {x: REC_X[FOCUS] + 6, y: -70, w: 150};
-const ARM_SEATED: Cam = {x: 4, y: -60, w: 78};
+const LAB_HANDS: Cam = {x: 11, y: -16, w: 38};
+const LAB_DISH: Cam = {x: 14, y: -5.5, w: 20};
+const CURL_A: Cam = {x: 4, y: -57, w: 94};
+const FLEX_MED: Cam = {x: 6, y: -90, w: 54};
 export const camAt = (t: number): WCam => {
-  if (t < EV.dive0 || t > EV.raise0 - 0.02) return {...hookCam(hookTau(t)), world: 'arm'};
-  // disappointment: from the curl framing up to his face and arm, arriving exactly where the opening's camera starts
-  if (t > EV.slump0) return {...glide(t, [[EV.slump0, {x: 1, y: -72, w: 58}], [EV.raise0 - 0.02, hookCam(EV.raise0 - 0.02 - LOOP_T)]]), world: 'arm'};
-  const Wc = hookWindow();
-  if (t < EV.dive1) {
-    const A = toMicro(BICEPS_CLOSE, Wc, K_ARM);
-    return {...toHost(zoomAbout((t - EV.dive0) / (EV.dive1 - EV.dive0), A, M_FLY), Wc, K_ARM), world: 'arm'};
+  if (t < EV.inside) {
+    const c = hookCam(t);
+    const a = armAt(t);
+    void a;
+    return {...c, world: 'arm'};
   }
-  if (t < EV.cross0) {
-    if (t < EV.lead0) return {...glide(t, [[EV.dive1, M_FLY], [EV.settle, M_HERO]]), world: 'micro'};
-    if (t < EV.bind) return {...zoomAbout((t - EV.lead0) / 0.3, M_HERO, LEAD_CAM(t), (x) => x), world: 'micro'};
-    return {...glide(t, [[EV.bind, LEAD_CAM(EV.bind)], [EV.bind + 0.25, BIND_CAM], [EV.sig1 + 0.1, SIG_CAM], [EV.dome2, DOME_CAM], [EV.cross0, DOME_CAM]]), world: 'micro'};
-  }
-  // down through the connective tissue into the cow's muscle (one camera move in one space)
-  if (t < EV.cowOut0) {
-    const yH = lerp(DOME_CAM.y, BULL_SHIFT + COW_FIBRE.y, ss5(t, EV.cross0, EV.cross1));
-    const xH = lerp(DOME_CAM.x, COW_FIBRE.x, ss5(t, EV.cross0, EV.cross1));
-    const wH = lerp(DOME_CAM.w, COW_FIBRE.w, ss5(t, EV.cross0, EV.cross1));
-    const c = t < EV.crossSwitch ? {x: xH, y: yH, w: wH} : {x: xH, y: yH - BULL_SHIFT, w: wH};
-    return {...c, world: 'micro'};
-  }
-  if (t < EV.cowOut1) {
-    const A = toHost(COW_FIBRE, BULL_NEST, K_BULLM);
-    return {...zoomAbout((t - EV.cowOut0) / (EV.cowOut1 - EV.cowOut0), A, COW_WIDE), world: 'bull'};
+  const fibreKeys: Key[] = [[EV.inside, M_BUNDLE], [EV.close0, {x: 0, y: -6, w: 850}], [EV.close1, C1], [EV.back0, C1], [EV.back1, WIDE1]];
+  if (t < EV.mix0) return {...glide(t, fibreKeys), world: 'fibre', roll: ARM_ROLL * (1 - ss(t, 1.75, 2.7))};
+  if (t < EV.mix1) {
+    // the bundle's crest dissolves into the cow's withers line (both cameras keep pulling back)
+    const c1 = t < EV.back1 ? glide(t, fibreKeys) : zoomAbout((t - EV.back1) / (EV.mix1 - EV.back1), WIDE1, {...WIDE1, w: WIDE1.w * 1.12}, (x) => x);
+    const c2 = zoomAbout((t - EV.mix0) / (EV.cowFull - EV.mix0), COW_MATCH, COW_FULL, (x) => 1 - (1 - x) ** 2.2);
+    return {...c1, world: 'match', cam2: c2, mix: ss(t, EV.mix0, EV.mix1)};
   }
   if (t < EV.cutLab) {
-    const c = glide(t, [[EV.cowOut1, COW_WIDE], [EV.shift - 0.2, {x: 18, y: -110, w: 280}], [EV.cutLab, {x: 22, y: -112, w: 268}]]);
-    return {...c, y: c.y + 0.7 * ring(t, EV.shift, 9, 0.08), world: 'bull'};
+    if (t < EV.cowFull) return {...zoomAbout((t - EV.mix0) / (EV.cowFull - EV.mix0), COW_MATCH, COW_FULL, (x) => 1 - (1 - x) ** 2.2), world: 'cow'};
+    return {...glide(t, [[EV.cowFull, COW_FULL], [EV.grow2a - 0.1, COW_HOLD], [EV.shift0, COW_HOLD], [EV.cutLab, COW_IN]]), world: 'cow'};
   }
-  if (t < EV.labIn0) return {...glide(t, [[EV.cutLab, LAB_WIDE], [EV.press, {x: 6, y: -24, w: 48}], [EV.labIn0, {x: 14, y: -9, w: 30}]]), world: 'lab'};
   if (t < EV.labIn1) {
-    const B = toHost(RECEPTOR_CAM, SAMPLE, K_LAB);
-    return {...zoomAbout((t - EV.labIn0) / (EV.labIn1 - EV.labIn0), {x: 14, y: -9, w: 30}, B), world: 'lab'};
+    if (t < EV.labIn0) return {...glide(t, [[EV.cutLab, LAB_WIDE], [EV.press, LAB_HANDS], [EV.labIn0, LAB_DISH]]), world: 'lab'};
+    const B = toHost(C2, SAMPLE, K_LAB);
+    return {...zoomAbout((t - EV.labIn0) / (EV.labIn1 - EV.labIn0), LAB_DISH, B, (x) => ss5(x, 0, 1)), world: 'lab'};
   }
-  if (t < EV.yaw0) return {...glide(t, [[EV.labIn1, RECEPTOR_CAM], [EV.yaw0, {x: 0, y: -40, w: 300}]]), world: 'micro'};
-  if (t < EV.armOut0 + 0.05) return {...glide(t, [[EV.yaw0, {x: 0, y: -40, w: 300}], [EV.yaw1, {x: 0, y: 0, w: 1400}]]), world: 'cross'};
-  if (t < EV.armOut1) {
-    // out of the cross-section through the window in his biceps
-    const A = toHost({x: 0, y: 0, w: 1400}, ARM_NEST, K_ARMX);
-    return {...zoomAbout((t - EV.armOut0 - 0.05) / (EV.armOut1 - EV.armOut0 - 0.05), A, ARM_SEATED), world: 'arm'};
-  }
+  if (t < EV.cutGym) return {...glide(t, [[EV.labIn1, C2], [EV.out0, C2], [EV.out1, {x: 0, y: -120, w: 980}]]), world: 'fibre'};
+  // the strength scene, then up into the flex and in to the opening framing
   const keys: Key[] = [
-    [EV.armOut1, ARM_SEATED],
-    [EV.grip, {x: 5, y: -66, w: 92}],
-    [EV.curl0, {x: 5, y: -70, w: 90}],
-    [EV.elbowIn0, {x: 3, y: -64, w: 84}],
-    [EV.elbowIn1, {x: -1, y: -57, w: 31}],
-    [EV.elbowOut0, {x: -1, y: -56, w: 29}],
-    [EV.elbowOut1, {x: 3, y: -62, w: 74}],
-    [T.superhuman + 0.2, {x: 3, y: -66, w: 62}],
-    [EV.sink0, {x: 2, y: -68, w: 58}],
-    [EV.slump0, {x: 1, y: -72, w: 58}],
+    [EV.cutGym, CURL_A],
+    [EV.lift0, {x: 3, y: -59, w: 88}],
+    [EV.strain0, {x: 2, y: -68, w: 80}],
+    [EV.glance1, {x: 0, y: -72, w: 76}],
+    [EV.raise1, FLEX_MED],
+    [LOOP_T, TIGHT0],
   ];
   return {...glide(t, keys), world: 'arm'};
 };
-void easeOut;
+/** is the screen point (world p) inside the upper arm's silhouette? */
+export const insideUpper = (a: ArmState, p: P) => {
+  const g = armFrame(a);
+  const d = sub(p, a.S);
+  const s = dot(d, g.u) / 31, v = dot(d, g.an);
+  return s > 0.1 && s < 0.95 && v < g.ra(s) * 0.97 && v > -g.rp(s) * 0.97;
+};

@@ -28,6 +28,7 @@ export type ArmState = {
   tear: number;   // sleeve seam split 0..1
   stretch: number; // sleeve tension 0..1
   xray: number;   // 0 opaque skin .. 1 translucent anatomical view
+  reveal?: {c: P; r: number; ang: number}; // V6: the skin melts away from c outward (soft edge, radius r cm), showing the muscle
   cut?: {r: number; s: number; v: number; c?: P}; // circular skin cutaway on the biceps: radius (cm), position along/across the arm (or a fixed centre)
   pops?: number;  // 0..1 progress of a burst of stitches popping off the straining seam (no split)
   gripK?: number; // how hard the hand squeezes the handle
@@ -47,7 +48,7 @@ export const armFrame = (a: ArmState) => {
   const cb = 0.53 + 0.07 * c, wb = 0.45 - 0.08 * c;
   const ra = (s: number) => lerp(3.15, 2.35, s) + (2.3 + 1.9 * m) * bump(s, -0.02, 0.3) + B * bumpA(s, cb + 0.05, wb + 0.08, wb - 0.14) + 0.3 * m * bump(s, 0.88, 0.1);
   const rp = (s: number) => lerp(3.35, 2.45, s) + (2.8 + 2.2 * m) * bump(s, 0.0, 0.34) + (1.2 + 3.6 * m) * bumpA(s, 0.3, 0.26, 0.3) + (0.6 + 2.2 * m) * bump(s, 0.54, 0.22);
-  const rfa = (t: number) => lerp(2.5, 1.7, t) + (1.2 + 2.6 * m) * bumpA(t, 0.16, 0.2, 0.42) * (1 + 0.15 * c);
+  const rfa = (t: number) => lerp(2.5, 1.7, t) + (1.2 + 1.7 * m) * bumpA(t, 0.2, 0.24, 0.42) * (1 + 0.1 * c);
   const rfp = (t: number) => lerp(2.4, 1.6, t) + (0.8 + 1.6 * m) * bump(t, 0.24, 0.5);
   /** point on the upper arm: s along (0 shoulder, 1 elbow), v across in units of the local radius (+ anterior) */
   const UA = (s: number, v: number) => add(add(a.S, mul(u, s * LU)), mul(an, v >= 0 ? v * ra(s) : v * rp(s)));
@@ -333,7 +334,7 @@ const Fist: React.FC<{a: ArmState; g: ArmFrame; stroke?: boolean}> = ({a, g, str
 };
 
 /** the near arm: union of upper arm, elbow and forearm, cel shaded, with grooves, veins, sleeve and the cutaways */
-export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: React.ReactNode; cutWindow?: (g: ArmFrame) => {c: P; r: number}}> = ({a, inCut}) => {
+export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: React.ReactNode; inReveal?: React.ReactNode; cutWindow?: (g: ArmFrame) => {c: P; r: number}}> = ({a, inCut, inReveal}) => {
   const g = armFrame(a);
   const {S, m} = {S: a.S, m: a.m};
   const {u, an, E, f, fa, W, UA, FA} = g;
@@ -431,6 +432,39 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
         <path d={open(crease)} stroke={SKIN.ink} strokeWidth={0.28} fill="none" strokeLinecap="round" opacity={clamp(a.a2 / 0.9)} />
       </g>
       {xr > 0 && <g opacity={clamp(xr * 1.2)}><ArmAnatomy a={a} g={g} mode="xray" /></g>}
+      {/* V6: the tissue reveal. The skin thins away from one point on the biceps, softly, showing the muscle's own
+          fibre bundles underneath; it spreads until it is the whole frame. */}
+      {a.reveal && a.reveal.r > 0.01 && (() => {
+        const rv = a.reveal;
+        const idM = `${idC}rm`, idG = `${idC}rg`, idR = `${idC}rr`, idU2 = `${idC}ru`;
+        return (
+          <g>
+            <defs>
+              <clipPath id={idU2}><path d={upper} /></clipPath>
+              <radialGradient id={idG} gradientUnits="userSpaceOnUse" cx={rv.c.x} cy={rv.c.y} r={rv.r}>
+                <stop offset={0} stopColor="#FFFFFF" />
+                <stop offset={0.62} stopColor="#FFFFFF" />
+                <stop offset={1} stopColor="#000000" />
+              </radialGradient>
+              <radialGradient id={idR} gradientUnits="userSpaceOnUse" cx={rv.c.x} cy={rv.c.y} r={rv.r}>
+                <stop offset={0.5} stopColor="#F7B8A4" stopOpacity={0} />
+                <stop offset={0.78} stopColor="#F7B8A4" stopOpacity={0.55} />
+                <stop offset={1} stopColor="#F7B8A4" stopOpacity={0} />
+              </radialGradient>
+              <mask id={idM} maskUnits="userSpaceOnUse" x={rv.c.x - rv.r} y={rv.c.y - rv.r} width={2 * rv.r} height={2 * rv.r}>
+                <circle cx={rv.c.x} cy={rv.c.y} r={rv.r} fill={`url(#${idG})`} />
+              </mask>
+            </defs>
+            <g clipPath={`url(#${idU2})`}>
+              <g mask={`url(#${idM})`}>
+                <circle cx={rv.c.x} cy={rv.c.y} r={rv.r} fill="#2A0B1C" />
+                {inReveal}
+              </g>
+              <circle cx={rv.c.x} cy={rv.c.y} r={rv.r} fill={`url(#${idR})`} />
+            </g>
+          </g>
+        );
+      })()}
       {/* the clean skin cutaway on the biceps, with skin, fat and fascia layers at its rim */}
       {cut && cutC && (
         <g>

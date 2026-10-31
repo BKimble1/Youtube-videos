@@ -1,0 +1,575 @@
+{
+ "file": "FGW_Myostatin_V6_REVIEW_1080x1920.mp4",
+ "size_mb": 14.88,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 737,
+  "duration_s": 24.567
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 2.89,
+ "large_changes": [
+  {
+   "frame": 22,
+   "t": 0.733,
+   "mad": 16.79,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 23,
+   "t": 0.767,
+   "mad": 19.43,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 24,
+   "t": 0.8,
+   "mad": 22.16,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 25,
+   "t": 0.833,
+   "mad": 23.83,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 26,
+   "t": 0.867,
+   "mad": 25.35,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 27,
+   "t": 0.9,
+   "mad": 27.5,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 28,
+   "t": 0.933,
+   "mad": 29.6,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 29,
+   "t": 0.967,
+   "mad": 29.85,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 30,
+   "t": 1.0,
+   "mad": 30.49,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 31,
+   "t": 1.033,
+   "mad": 35.76,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 43.03,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "mad": 50.4,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 34,
+   "t": 1.133,
+   "mad": 51.68,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 35,
+   "t": 1.167,
+   "mad": 37.77,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 36,
+   "t": 1.2,
+   "mad": 31.48,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 37,
+   "t": 1.233,
+   "mad": 27.69,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 38,
+   "t": 1.267,
+   "mad": 27.53,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 39,
+   "t": 1.3,
+   "mad": 26.81,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 40,
+   "t": 1.333,
+   "mad": 25.47,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 41,
+   "t": 1.367,
+   "mad": 24.46,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 42,
+   "t": 1.4,
+   "mad": 22.89,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 43,
+   "t": 1.433,
+   "mad": 19.47,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 44,
+   "t": 1.467,
+   "mad": 15.73,
+   "planned": "the push toward the biceps and the tissue reveal into the muscle"
+  },
+  {
+   "frame": 127,
+   "t": 4.233,
+   "mad": 19.08,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 128,
+   "t": 4.267,
+   "mad": 26.15,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 129,
+   "t": 4.3,
+   "mad": 32.87,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 130,
+   "t": 4.333,
+   "mad": 37.33,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 131,
+   "t": 4.367,
+   "mad": 39.5,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 132,
+   "t": 4.4,
+   "mad": 39.8,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 133,
+   "t": 4.433,
+   "mad": 39.09,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 134,
+   "t": 4.467,
+   "mad": 38.88,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 135,
+   "t": 4.5,
+   "mad": 36.71,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 136,
+   "t": 4.533,
+   "mad": 34.18,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 137,
+   "t": 4.567,
+   "mad": 31.2,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 138,
+   "t": 4.6,
+   "mad": 25.31,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 139,
+   "t": 4.633,
+   "mad": 21.4,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 140,
+   "t": 4.667,
+   "mad": 17.2,
+   "planned": "closing on the surface"
+  },
+  {
+   "frame": 220,
+   "t": 7.333,
+   "mad": 16.15,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 221,
+   "t": 7.367,
+   "mad": 23.19,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 222,
+   "t": 7.4,
+   "mad": 32.55,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 223,
+   "t": 7.433,
+   "mad": 32.17,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 32.1,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 225,
+   "t": 7.5,
+   "mad": 31.47,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 226,
+   "t": 7.533,
+   "mad": 29.74,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 227,
+   "t": 7.567,
+   "mad": 25.42,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "mad": 20.41,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 229,
+   "t": 7.633,
+   "mad": 17.1,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 230,
+   "t": 7.667,
+   "mad": 18.21,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 231,
+   "t": 7.7,
+   "mad": 16.68,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 232,
+   "t": 7.733,
+   "mad": 14.69,
+   "planned": "pull back, dissolve to the cow, out to the field"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 65.53,
+   "planned": "cut to the lab"
+  },
+  {
+   "frame": 379,
+   "t": 12.633,
+   "mad": 17.34,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 380,
+   "t": 12.667,
+   "mad": 20.4,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 381,
+   "t": 12.7,
+   "mad": 20.69,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 382,
+   "t": 12.733,
+   "mad": 20.55,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 383,
+   "t": 12.767,
+   "mad": 20.23,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 384,
+   "t": 12.8,
+   "mad": 18.4,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 385,
+   "t": 12.833,
+   "mad": 16.05,
+   "planned": "the camera follows her hands"
+  },
+  {
+   "frame": 412,
+   "t": 13.733,
+   "mad": 17.73,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 413,
+   "t": 13.767,
+   "mad": 24.06,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 414,
+   "t": 13.8,
+   "mad": 29.0,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 415,
+   "t": 13.833,
+   "mad": 31.65,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 416,
+   "t": 13.867,
+   "mad": 43.12,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 417,
+   "t": 13.9,
+   "mad": 48.33,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 418,
+   "t": 13.933,
+   "mad": 47.25,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 51.25,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 420,
+   "t": 14.0,
+   "mad": 45.64,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 421,
+   "t": 14.033,
+   "mad": 40.69,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "mad": 27.12,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 423,
+   "t": 14.1,
+   "mad": 25.65,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 424,
+   "t": 14.133,
+   "mad": 29.21,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 425,
+   "t": 14.167,
+   "mad": 24.86,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 426,
+   "t": 14.2,
+   "mad": 17.97,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 459,
+   "t": 15.3,
+   "mad": 15.69,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 460,
+   "t": 15.333,
+   "mad": 19.38,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 461,
+   "t": 15.367,
+   "mad": 22.11,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 462,
+   "t": 15.4,
+   "mad": 25.41,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 463,
+   "t": 15.433,
+   "mad": 27.43,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 464,
+   "t": 15.467,
+   "mad": 29.23,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 465,
+   "t": 15.5,
+   "mad": 31.9,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 466,
+   "t": 15.533,
+   "mad": 32.8,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 467,
+   "t": 15.567,
+   "mad": 33.28,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 468,
+   "t": 15.6,
+   "mad": 33.29,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 469,
+   "t": 15.633,
+   "mad": 32.81,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 470,
+   "t": 15.667,
+   "mad": 32.06,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 471,
+   "t": 15.7,
+   "mad": 31.3,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 472,
+   "t": 15.733,
+   "mad": 27.41,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 473,
+   "t": 15.767,
+   "mad": 22.67,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 474,
+   "t": 15.8,
+   "mad": 18.28,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 475,
+   "t": 15.833,
+   "mad": 14.99,
+   "planned": "pull back, cut to the gym"
+  },
+  {
+   "frame": 478,
+   "t": 15.933,
+   "mad": 59.88,
+   "planned": "pull back, cut to the gym"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 15,
+ "longest_near_static_run_starts_s": 6.77,
+ "loop_last_vs_first_mad": 3.02
+}
