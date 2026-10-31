@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
-"""QA of the RENDERED Liquid Metal Robot V1 (the MP4, not the source).
+"""QA of a RENDERED Liquid Metal Robot cut (the MP4, not the source).
 Checks: container/stream properties against the round's spec; exact frame count; decoded audio length, voice onset,
 loudness and peak; per-frame motion (mean absolute luma change between consecutive frames, 270x480 grey) and the
 longest near-static run; first and last frames as PNG; a sheet of every 15th frame from the file itself.
-usage: python3 tools/qa_clip.py [file.mp4]  -> qa/v1/ (qa.json, first.png, last.png, sheet.png = one frame per second)"""
+usage: python3 tools/qa_clip.py [file.mp4] [tag=v1]  -> qa/<tag>/ (qa.json, first.png, last.png, sheet.png = one frame per second)"""
 import sys, os, json, subprocess
 import numpy as np, pyloudnorm as pyln
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from common import ROOT
 TL = json.load(open(os.path.join(ROOT, 'source/src/data/words.json')))
 DUR, NF = TL['duration'], TL['frames']
-h = 'v1'
+h = sys.argv[2] if len(sys.argv) > 2 else 'v1'
 f = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, 'exports/FGW_Liquid_Metal_Robot_V1_REVIEW_1080x1920.mp4')
-out = os.path.join(ROOT, 'qa/v1'); os.makedirs(out, exist_ok=True)
+out = os.path.join(ROOT, f'qa/{h}'); os.makedirs(out, exist_ok=True)
 def run(*a): return subprocess.run(a, capture_output=True, check=True).stdout
 pr = json.loads(run('ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', f))
 v = [s for s in pr['streams'] if s['codec_type'] == 'video'][0]; a = [s for s in pr['streams'] if s['codec_type'] == 'audio']
