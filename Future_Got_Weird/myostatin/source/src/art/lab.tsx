@@ -2,7 +2,7 @@
 // holding a small sample of muscle in pink medium, with a micropipette. Background: a daylight window, shelves of
 // glassware, a microscope. Cool, clean light; the pipette drop is the only warm accent.
 import React from 'react';
-import {P, closed, open, pt} from '../core/geo';
+import {P, closed, lerpP, open, pt} from '../core/geo';
 import {mix} from '../core/color';
 import {uid} from '../core/ids';
 import {hash, lerp} from '../lib';
@@ -212,3 +212,107 @@ export const BenchTop: React.FC = () => (
   </g>
 );
 void mix;
+
+// ---------------------------------------------------------------- V5: the scientist, properly staged
+/** A scientist standing behind the bench in three-quarter view (turned toward screen right). The bench top crosses
+ *  the coat at waist height; both shoulders join the torso; the far hand grips the syringe barrel (fingers wrapped
+ *  round it, thumb on the plunger) in front of the body, above the bench; the near hand steadies the dish. */
+export const SCI_DISH = pt(15, -4.2);
+export type SciState = {t: number; press: number; lean: number; drop: number; dropY: number; ripple: number; glow: number};
+export const sciNeedle = (s: SciState) => pt(15 - 1.2 * s.lean, -10.4 + 4.2 * s.lean);
+const tubeL = (pts: P[], r: number[]) => {
+  const n = pts.length;
+  const T = pts.map((_, i) => {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+    const l = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    return pt((b.x - a.x) / l, (b.y - a.y) / l);
+  });
+  const N = T.map((v) => pt(-v.y, v.x));
+  return closed([...pts.map((p, i) => pt(p.x + N[i].x * r[i], p.y + N[i].y * r[i])), ...[...pts].reverse().map((p, i) => pt(p.x - N[n - 1 - i].x * r[n - 1 - i], p.y - N[n - 1 - i].y * r[n - 1 - i]))], 0.8);
+};
+export const Scientist: React.FC<{s: SciState; layer: 'back' | 'front'}> = ({s, layer}) => {
+  const skin = '#B9785A', skinS = '#8C5238', ink = '#3A2218';
+  const coat = '#F4F8FC', coatS = '#C9D6E4', coatInk = '#4A5A6E';
+  const glove = '#8D6BE0', gloveS = '#6447B8', gloveInk = '#2E2060';
+  const L = s.lean;
+  const sh = pt(1.2 * L, 1.2 * L); // the upper body leans in toward the dish
+  const P_ = (x: number, y: number) => pt(x + sh.x, y + sh.y);
+  const head = P_(-5, -79);
+  const N = P_(-23, -58), F = P_(9, -60);           // near and far shoulders
+  const needle = sciNeedle(s);
+  const barrelTop = pt(needle.x, needle.y - 19), barrelBot = pt(needle.x, needle.y - 5.6);
+  const grip = pt(needle.x, needle.y - 12.5);       // the far hand round the barrel
+  const Ef = P_(18, -40), Hn = pt(SCI_DISH.x - 7.2, -6.2), En = P_(-19, -33);
+  const level = barrelTop.y + 1.4 + 10.5 * s.press;
+  const idS = uid('scS');
+  if (layer === 'back') return (
+    <g>
+      {/* torso in the coat: chest toward the camera, the far shoulder tucked behind */}
+      <path d={closed([P_(-31, 6), P_(-31, -36), N, P_(-14, -64), P_(-1, -66), F, P_(16, -44), P_(17, 6)], 0.85)} fill={coat} stroke={coatInk} strokeWidth={0.6} strokeLinejoin="round" />
+      <path d={closed([P_(-14, -64), P_(-6, -52), P_(-1, -66)], 0.6)} fill="#5F7FA8" />
+      <path d={open([P_(-6, -52), P_(-7, -30), P_(-8, -4)])} stroke={coatS} strokeWidth={1.2} fill="none" />
+      <path d={open([P_(-14, -64), P_(-9, -48), P_(-6, -52)])} stroke={coatInk} strokeWidth={0.5} fill="none" />
+      <path d={open([P_(-1, -66), P_(-3, -50), P_(-6, -52)])} stroke={coatInk} strokeWidth={0.5} fill="none" />
+      <rect x={P_(4, -40).x} y={P_(4, -40).y} width={7} height={8} rx={1} fill={coatS} opacity={0.6} />
+      {/* neck and head (three-quarter; one face design: eyes on the face plane) */}
+      <path d={closed([P_(-9.5, -66), P_(-9, -72), P_(-2, -72), P_(-1.5, -65)], 0.6)} fill={skinS} />
+      <g transform={`rotate(${6 + 8 * L} ${head.x} ${head.y + 8})`}>
+        <path d={closed([pt(head.x - 8, head.y - 1.6), pt(head.x - 6.6, head.y - 7.6), pt(head.x - 2.2, head.y - 10.6), pt(head.x + 3.2, head.y - 10.6), pt(head.x + 7.4, head.y - 7.2), pt(head.x + 8.6, head.y - 2), pt(head.x + 8.4, head.y + 3.4), pt(head.x + 6.6, head.y + 7.2), pt(head.x + 3.4, head.y + 9.4), pt(head.x - 0.6, head.y + 9.2), pt(head.x - 5, head.y + 5.6), pt(head.x - 7.6, head.y + 2)], 0.9)} fill={skin} stroke={ink} strokeWidth={0.4} />
+        <path d={closed([pt(head.x - 8.4, head.y + 0.6), pt(head.x - 8.4, head.y - 7), pt(head.x - 3.4, head.y - 11.6), pt(head.x + 3.6, head.y - 11.6), pt(head.x + 8.2, head.y - 7.4), pt(head.x + 6.4, head.y - 6.6), pt(head.x + 1, head.y - 7.6), pt(head.x - 3.4, head.y - 5.6), pt(head.x - 5.2, head.y - 1.4)], 0.85)} fill="#24150E" />
+        <circle cx={head.x - 8.4} cy={head.y - 6.2} r={3.2} fill="#24150E" />
+        <path d={closed([pt(head.x - 4.8, head.y - 1.6), pt(head.x - 6.4, head.y - 2), pt(head.x - 7, head.y + 0.6), pt(head.x - 5.2, head.y + 2.4)], 0.8)} fill={skinS} />
+        {/* safety glasses over both eyes, both inside the face */}
+        <path d={closed([pt(head.x - 2.4, head.y - 3.2), pt(head.x + 7.6, head.y - 3.4), pt(head.x + 7.4, head.y + 0.4), pt(head.x - 2.2, head.y + 0.6)], 0.5)} fill="#BFE9FF" opacity={0.5} stroke="#2E4A66" strokeWidth={0.45} />
+        <path d={open([pt(head.x - 2.4, head.y - 2.4), pt(head.x - 5.6, head.y - 2)])} stroke="#2E4A66" strokeWidth={0.5} />
+        <ellipse cx={head.x + 0.8} cy={head.y - 1.2 + 0.5 * L} rx={0.9} ry={0.7} fill="#1A0F09" />
+        <ellipse cx={head.x + 5.6} cy={head.y - 1.3 + 0.5 * L} rx={0.65} ry={0.65} fill="#1A0F09" />
+        <path d={open([pt(head.x - 0.6, head.y - 4.6), pt(head.x + 2.2, head.y - 4.9)])} stroke="#24150E" strokeWidth={0.55} strokeLinecap="round" />
+        <path d={open([pt(head.x + 4.6, head.y - 4.8), pt(head.x + 6.8, head.y - 4.6)])} stroke="#24150E" strokeWidth={0.45} strokeLinecap="round" />
+        <path d={open([pt(head.x + 3.2, head.y - 1), pt(head.x + 4.4, head.y + 2.2), pt(head.x + 3.2, head.y + 2.8)])} stroke={ink} strokeWidth={0.35} fill="none" />
+        <path d={open([pt(head.x + 1.6, head.y + 5.2), pt(head.x + 3.4, head.y + 5.4), pt(head.x + 5, head.y + 5)])} stroke={ink} strokeWidth={0.4} fill="none" strokeLinecap="round" />
+      </g>
+    </g>
+  );
+  return (
+    <g>
+      {/* near arm: shoulder, elbow, the hand resting on the bench at the dish's rim */}
+      <path d={tubeL([N, lerpP(N, En, 0.5), En, lerpP(En, Hn, 0.5), pt(Hn.x - 2.4, Hn.y - 1)], [4.4, 4.2, 3.8, 3.4, 3.0])} fill={coat} stroke={coatInk} strokeWidth={0.6} />
+      <path d={open([pt(N.x + 1, N.y + 6), lerpP(N, En, 0.7)])} stroke={coatS} strokeWidth={1.2} fill="none" />
+      <rect x={Hn.x - 5.2} y={Hn.y - 3.2} width={2.6} height={5.4} rx={1} fill={coatS} stroke={coatInk} strokeWidth={0.4} transform={`rotate(-55 ${Hn.x - 3.9} ${Hn.y - 0.5})`} />
+      <path d={closed([pt(Hn.x - 3, Hn.y - 2.4), pt(Hn.x + 2.6, Hn.y - 2.2), pt(Hn.x + 4.6, Hn.y - 0.4), pt(Hn.x + 3.6, Hn.y + 1.6), pt(Hn.x - 2.6, Hn.y + 1.8)], 0.8)} fill={glove} stroke={gloveInk} strokeWidth={0.4} />
+      {[0.4, 1.6, 2.8].map((dx, i) => <path key={i} d={`M${Hn.x + dx} ${Hn.y - 1.8} l1.4 2.6`} stroke={gloveS} strokeWidth={0.4} />)}
+      {/* far arm: shoulder, elbow out to the side, forearm up to the hand round the barrel */}
+      <path d={tubeL([F, lerpP(F, Ef, 0.5), Ef, lerpP(Ef, grip, 0.55), pt(grip.x + 2.6, grip.y + 1)], [4.2, 4.0, 3.6, 3.2, 2.8])} fill={coat} stroke={coatInk} strokeWidth={0.6} />
+      <path d={open([lerpP(F, Ef, 0.3), Ef, lerpP(Ef, grip, 0.4)])} stroke={coatS} strokeWidth={1.1} fill="none" />
+      <rect x={grip.x + 2.1} y={grip.y - 2.6} width={2.6} height={5.4} rx={1} fill={coatS} stroke={coatInk} strokeWidth={0.4} transform={`rotate(-20 ${grip.x + 3.4} ${grip.y})`} />
+      {/* the syringe, in front of the body and above the bench: barrel of treatment, needle down to the sample */}
+      <defs>
+        <linearGradient id={idS} x1="0" y1="0" x2="1" y2="0">
+          <stop offset={0} stopColor="#2FE0C6" stopOpacity={0.55} />
+          <stop offset={0.4} stopColor="#9FFFF0" stopOpacity={0.8} />
+          <stop offset={1} stopColor="#1FB8A3" stopOpacity={0.6} />
+        </linearGradient>
+      </defs>
+      <path d={`M${needle.x - 0.12} ${barrelBot.y + 1.2} L${needle.x - 0.05} ${needle.y} L${needle.x + 0.05} ${needle.y} L${needle.x + 0.12} ${barrelBot.y + 1.2} Z`} fill="#C9D3DD" stroke="#5E6F82" strokeWidth={0.08} />
+      <rect x={needle.x - 0.45} y={barrelBot.y} width={0.9} height={1.3} rx={0.25} fill="#9FB2C4" stroke="#5E6F82" strokeWidth={0.1} />
+      <rect x={needle.x - 1.2} y={barrelTop.y} width={2.4} height={barrelBot.y - barrelTop.y} rx={0.4} fill="#EAF6FF" opacity={0.55} stroke="#7F95AA" strokeWidth={0.14} />
+      <rect x={needle.x - 1.05} y={level} width={2.1} height={Math.max(0, barrelBot.y - level - 0.15)} rx={0.3} fill={`url(#${idS})`} />
+      {Array.from({length: 9}, (_, i) => {
+        const yy = level + 0.6 + ((i * 0.618 + s.t * 0.3) % 1) * Math.max(0.1, barrelBot.y - level - 1.2);
+        const xx = needle.x - 0.7 + 1.4 * ((i * 0.37) % 1);
+        return <path key={i} d={`M${xx} ${yy} l0 0.32 M${xx} ${yy} l-0.2 -0.22 M${xx} ${yy} l0.2 -0.22`} stroke="#0B5E54" strokeWidth={0.07} strokeLinecap="round" opacity={0.8} />;
+      })}
+      <rect x={needle.x - 1.05} y={level - 0.5} width={2.1} height={0.6} fill="#3A3F4E" />
+      <rect x={needle.x - 0.22} y={level - 6.6} width={0.44} height={6.2} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.08} />
+      <rect x={needle.x - 1.15} y={level - 7.1} width={2.3} height={0.55} rx={0.25} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.1} />
+      <rect x={needle.x - 2.1} y={barrelTop.y - 0.25} width={4.2} height={0.5} rx={0.25} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.1} />
+      {/* the far hand: fingers wrapped round the barrel (in front of it), the thumb up on the plunger pad */}
+      <path d={closed([pt(grip.x + 3.2, grip.y - 2.2), pt(grip.x - 1.6, grip.y - 2.8), pt(grip.x - 2.2, grip.y + 2.4), pt(grip.x + 2.8, grip.y + 2.6)], 0.8)} fill={glove} stroke={gloveInk} strokeWidth={0.4} />
+      {[-1.6, -0.3, 1.0, 2.2].map((dy, i) => <path key={i} d={`M${grip.x - 1.9} ${grip.y + dy * 0.9} q-0.8 0.3 -0.2 0.9`} stroke={gloveS} strokeWidth={0.45} fill="none" />)}
+      <path d={`M${grip.x + 2.4} ${grip.y - 2.0} Q${grip.x + 2.2} ${(grip.y + level - 7) / 2} ${needle.x + 0.6} ${level - 7.3}`} stroke={glove} strokeWidth={1.7} strokeLinecap="round" fill="none" />
+      <path d={`M${grip.x + 2.4} ${grip.y - 2.0} Q${grip.x + 2.2} ${(grip.y + level - 7) / 2} ${needle.x + 0.6} ${level - 7.3}`} stroke={gloveInk} strokeWidth={0.25} strokeLinecap="round" fill="none" opacity={0.6} />
+      {/* the drop of treatment at the needle tip, falling onto the sample */}
+      {s.drop > 0 && <ellipse cx={needle.x} cy={s.dropY} rx={0.3 * s.drop + 0.1} ry={0.4 * s.drop + 0.1} fill="#7FF0DD" stroke="#0E6E62" strokeWidth={0.06} />}
+    </g>
+  );
+};

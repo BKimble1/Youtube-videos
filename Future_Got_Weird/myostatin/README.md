@@ -1,6 +1,21 @@
 # Future Got Weird: Myostatin, the muscle growth limiter
 
-## V4 (final retention pass, current)
+## V5 (visual clarity, anatomy and storytelling pass, current)
+
+**Deliverable.** `exports/FGW_Myostatin_V5_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 737 frames, 24.567 s.
+**It is not published.**
+
+**Report.** `production/V5_REPORT.md`, with evidence in `qa/v5/`. The source is composition `MyostatinV5`, mix `mix_v5`.
+
+**What changed.**
+- A rebuilt shoulder: a rounded deltoid cap with the sleeve wrapping it.
+- Two different micro visits that show myostatin as a signal: it binds, a signal runs to the nucleus and growth stops. Then antibodies block it and the fibres thicken.
+- A continuous path through tissue into the cow's muscle and out through its shoulder.
+- A staged lab: a scientist behind the bench, gripping the syringe, dispensing a drop.
+- A pull-out through his biceps; confidence, strain and disappointment through the curl.
+- An exact loop.
+
+## V4 (final retention pass, superseded; commit `72f3c8e`)
 
 **Deliverable.** `exports/FGW_Myostatin_V4_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 737 frames, 24.567 s.
 **It is not published.**
@@ -81,9 +96,9 @@ and `audio/sfx_log_mix_v1.json`.
     python3 -m pip install numpy scipy soundfile pyloudnorm sherpa-onnx pillow
     python3 tools/make_narration.py                       # take -> narration master (gap edits), timeline, captions, SRT
     source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
-    python3 tools/make_audio.py mix_v4                    # effects + music + mix -> source/public/audio/mix_v4.wav
-    (cd source && npm ci && npx remotion render src/index.ts MyostatinV4 ../exports/FGW_Myostatin_V4_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v4","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
-    python3 tools/qa_render.py exports/FGW_Myostatin_V4_REVIEW_1080x1920.mp4 qa/v4
+    python3 tools/make_audio.py mix_v5                    # effects + music + mix -> source/public/audio/mix_v5.wav
+    (cd source && npm ci && npx remotion render src/index.ts MyostatinV5 ../exports/FGW_Myostatin_V5_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v5","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/qa_render.py exports/FGW_Myostatin_V5_REVIEW_1080x1920.mp4 qa/v5
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`.
 

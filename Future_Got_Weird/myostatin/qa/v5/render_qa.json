@@ -1,0 +1,323 @@
+{
+ "file": "FGW_Myostatin_V5_REVIEW_1080x1920.mp4",
+ "size_mb": 27.91,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 737,
+  "duration_s": 24.567
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 7.0,
+ "large_changes": [
+  {
+   "frame": 45,
+   "t": 1.5,
+   "mad": 42.81,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 46,
+   "t": 1.533,
+   "mad": 52.15,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 47,
+   "t": 1.567,
+   "mad": 50.83,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 48,
+   "t": 1.6,
+   "mad": 72.69,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 49,
+   "t": 1.633,
+   "mad": 56.89,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 50,
+   "t": 1.667,
+   "mad": 59.75,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 51,
+   "t": 1.7,
+   "mad": 62.03,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 52,
+   "t": 1.733,
+   "mad": 37.67,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 53,
+   "t": 1.767,
+   "mad": 37.41,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 54,
+   "t": 1.8,
+   "mad": 35.22,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 222,
+   "t": 7.4,
+   "mad": 40.89,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 223,
+   "t": 7.433,
+   "mad": 50.95,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 51.42,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 225,
+   "t": 7.5,
+   "mad": 36.87,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "mad": 45.26,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 229,
+   "t": 7.633,
+   "mad": 47.36,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 230,
+   "t": 7.667,
+   "mad": 45.32,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 231,
+   "t": 7.7,
+   "mad": 39.44,
+   "planned": "down through connective tissue into the cow muscle"
+  },
+  {
+   "frame": 268,
+   "t": 8.933,
+   "mad": 38.47,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 269,
+   "t": 8.967,
+   "mad": 39.75,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 270,
+   "t": 9.0,
+   "mad": 43.01,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 271,
+   "t": 9.033,
+   "mad": 40.79,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 272,
+   "t": 9.067,
+   "mad": 45.21,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "mad": 38.08,
+   "planned": "out through the cow shoulder"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 58.83,
+   "planned": "cut to the lab"
+  },
+  {
+   "frame": 414,
+   "t": 13.8,
+   "mad": 41.15,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 415,
+   "t": 13.833,
+   "mad": 42.7,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 416,
+   "t": 13.867,
+   "mad": 52.31,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 417,
+   "t": 13.9,
+   "mad": 65.35,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 418,
+   "t": 13.933,
+   "mad": 64.27,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 45.39,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 448,
+   "t": 14.933,
+   "mad": 42.06,
+   "planned": "the bundle turns end-on"
+  },
+  {
+   "frame": 451,
+   "t": 15.033,
+   "mad": 36.1,
+   "planned": "the bundle turns end-on"
+  },
+  {
+   "frame": 452,
+   "t": 15.067,
+   "mad": 38.67,
+   "planned": "the bundle turns end-on"
+  },
+  {
+   "frame": 453,
+   "t": 15.1,
+   "mad": 35.7,
+   "planned": "the bundle turns end-on"
+  },
+  {
+   "frame": 456,
+   "t": 15.2,
+   "mad": 35.38,
+   "planned": "the bundle turns end-on"
+  },
+  {
+   "frame": 466,
+   "t": 15.533,
+   "mad": 36.45,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 467,
+   "t": 15.567,
+   "mad": 40.49,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 468,
+   "t": 15.6,
+   "mad": 41.15,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 469,
+   "t": 15.633,
+   "mad": 43.52,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 470,
+   "t": 15.667,
+   "mad": 44.4,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 471,
+   "t": 15.7,
+   "mad": 43.95,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 472,
+   "t": 15.733,
+   "mad": 50.63,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 473,
+   "t": 15.767,
+   "mad": 58.48,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 474,
+   "t": 15.8,
+   "mad": 63.46,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 475,
+   "t": 15.833,
+   "mad": 57.15,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 476,
+   "t": 15.867,
+   "mad": 41.16,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 478,
+   "t": 15.933,
+   "mad": 36.31,
+   "planned": "out through his biceps"
+  },
+  {
+   "frame": 479,
+   "t": 15.967,
+   "mad": 39.68,
+   "planned": "out through his biceps"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 2,
+ "longest_near_static_run_starts_s": 7.07,
+ "loop_last_vs_first_mad": 3.51
+}

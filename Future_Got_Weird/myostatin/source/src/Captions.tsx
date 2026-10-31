@@ -6,7 +6,7 @@ import {Caption, CAPTIONS, clamp} from './lib';
 
 export const CAP_Y: [string, number][] = [
   ['If you', 1500], ['your muscles', 1500], ["It's called", 1500], ['and it', 1500], ['But some', 1560], ['And their', 1560],
-  ['Scientists are', 1560], ['that block', 1560], ['But here', 560], ['Bigger muscles', 330], ['So you', 1250], ['without actually', 1500],
+  ['Scientists are', 1560], ['that block', 1560], ['But here', 800], ['Bigger muscles', 235], ['So you', 1250], ['without actually', 1500],
 ];
 export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);
 export const capY = (i: number) => {

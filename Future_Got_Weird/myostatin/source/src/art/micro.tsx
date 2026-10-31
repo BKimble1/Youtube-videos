@@ -34,11 +34,18 @@ export type MicroState = {
   wave?: {x: number; u: number};                          // the brake signal spreading from a receptor (u 0..1)
   bad?: {p: P; ang: number; op: number}[];               // misshapen, inactive myostatin (the Belgian Blue mutation)
   grip?: number;                                          // 0..1 how tightly the receptor's arms close on the lead
+  // V5: a clearer mechanism
+  stream?: number;   // 0..1 the nucleus's output: amber build particles running to the myofibril being assembled
+  minimal?: boolean; // only the hero's three central receptors (the target highlighted); no beads, no other receptors
+  focus?: number;    // index of the target receptor
+  band?: {y0: number; y1: number}; // a thick sheet of connective tissue (world y range) the camera travels through
 };
 
 export const PITCH = 90, R0 = 30, FASC = 1100;
 export const REC_X = [-96, -50, -4, 44, 92];
 export const ZIP_X0 = -170, ZIP_X1 = 170;
+/** the hero fibre's nucleus: along the fibre from the target receptor and deeper inside, so the signal visibly travels */
+export const NUC_X = 86, NUC_DY = 20;
 const STRAND = 6;
 export const rowY = (k: number) => -(3 + STRAND * k);
 export const heroR = (s: MicroState) => R0 * s.g;
@@ -217,7 +224,7 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam; bg?: boolean}> = ({s
       );
     }
     // nucleus under the membrane
-    const nx = 22, ny = -rh + 12;
+    const nx = NUC_X, ny = -rh + NUC_DY;
     hero.push(
       <g key="nuc">
         {s.nuc > 0.03 && <ellipse cx={nx} cy={ny} rx={38} ry={16} fill="#C792FF" opacity={0.22 * s.nuc * (0.8 + 0.2 * Math.sin(s.t * 9))} />}
@@ -245,22 +252,45 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam; bg?: boolean}> = ({s
       const {x: wx, u} = s.wave;
       const d = 30 + 260 * u, fade = 1 - u;
       [-1, 1].forEach((k) => hero.push(<rect key={`wv${k}`} x={wx + k * d - 22} y={-rh - 2} width={44} height={6} rx={3} fill="#FFC45E" opacity={0.85 * fade} />));
-      hero.push(<ellipse key="wvi" cx={wx} cy={-rh + 4} rx={20 + 200 * u} ry={6 + 40 * u} fill="none" stroke="#FFB347" strokeWidth={2.4 * fade + 0.3} opacity={0.6 * fade} />);
+      hero.push(<ellipse key="wvi" cx={wx} cy={-rh + 4} rx={16 + 90 * u} ry={5 + 14 * u} fill="none" stroke="#FFB347" strokeWidth={2 * fade + 0.3} opacity={0.45 * fade} />);
     }
     hero.push(<rect key="memT2" x={vx0} y={-rh + 3.2} width={vx1 - vx0} height={rh * 0.5} fill="#FFE2DC" opacity={0.1} />);
     hero.push(<rect key="memT3" x={vx0} y={-rh + 3.2} width={vx1 - vx0} height={2.2} fill="#FFFFFF" opacity={0.25} />);
     hero.push(<rect key="memB" x={vx0} y={rh - 3.2} width={vx1 - vx0} height={3.2} fill="#FFC9C6" opacity={0.6} />);
     REC_X.forEach((x, i) => {
-      hero.push(<Receptor key={`rt${i}`} x={x} y={-rh} act={s.rec[i] ?? 0} up />);
-      hero.push(<Receptor key={`rb${i}`} x={x + 24} y={rh} act={0} up={false} />);
+      if (s.minimal && (i < 1 || i > 3)) return;
+      const focus = s.minimal && i === (s.focus ?? 2);
+      hero.push(
+        <g key={`rt${i}`} opacity={s.minimal && !focus ? 0.55 : 1}>
+          {focus && <circle cx={x} cy={-rh - 9} r={16} fill="#7FB4FF" opacity={0.12} />}
+          <Receptor x={x} y={-rh} act={s.rec[i] ?? 0} up />
+        </g>,
+      );
+      if (!s.minimal) hero.push(<Receptor key={`rb${i}`} x={x + 24} y={rh} act={0} up={false} />);
     });
-    // receptors on the upper neighbour's lower membrane
-    const up = rowsH.find((r) => r.i === -1)!;
-    [-120, -72, -24, 26, 74, 122].forEach((x, i) => hero.push(<Receptor key={`rn${i}`} x={x} y={up.y + up.r} act={0} up={false} />));
+    if (!s.minimal) {
+      // receptors on the upper neighbour's lower membrane
+      const up = rowsH.find((r) => r.i === -1)!;
+      [-120, -72, -24, 26, 74, 122].forEach((x, i) => hero.push(<Receptor key={`rn${i}`} x={x} y={up.y + up.r} act={0} up={false} />));
+    }
+    // the nucleus's output: build particles stream to the myofibril being assembled (growth has a visible source)
+    if ((s.stream ?? 0) > 0.01) {
+      const st = s.stream ?? 0;
+      const n = Math.floor(s.q), fr = s.q - n;
+      const fx = lerp(ZIP_X0, ZIP_X1, fr), fy = rowY(n);
+      const nx0 = NUC_X, ny0 = -rh + NUC_DY;
+      for (let k = 0; k < 14; k++) {
+        const ph = (s.t * 1.6 + k / 14) % 1;
+        const tx = lerp(fx - 90, fx, (k % 5) / 4) , ty = fy;
+        const cx = (nx0 + tx) / 2 + 18 * Math.sin(k * 2.1), cy = Math.min(ny0, ty) - 10 - 6 * (k % 3);
+        const px = (1 - ph) ** 2 * nx0 + 2 * (1 - ph) * ph * cx + ph * ph * tx, py = (1 - ph) ** 2 * ny0 + 2 * (1 - ph) * ph * cy + ph * ph * ty;
+        hero.push(<g key={`st${k}`} opacity={st * Math.min(1, ph * 5) * Math.min(1, (1 - ph) * 5)}><circle cx={px} cy={py} r={3.4} fill="#FFC45E" opacity={0.3} /><circle cx={px} cy={py} r={1.6} fill="#FFE7A6" /></g>);
+      }
+    }
   }
   const ahead: React.ReactNode[] = [];
   if (detOp > 0.01) {
-    s.beads.forEach((b, i) => b.op > 0.01 && ahead.push(<g key={`b${i}`} opacity={b.op}><circle cx={b.p.x} cy={b.p.y} r={2.4} fill="#FFE38A" opacity={0.25} /><circle cx={b.p.x} cy={b.p.y} r={1.3} fill="#FFF1B8" stroke="#B38A2A" strokeWidth={0.25} /></g>));
+    if (!s.minimal) s.beads.forEach((b, i) => b.op > 0.01 && ahead.push(<g key={`b${i}`} opacity={b.op}><circle cx={b.p.x} cy={b.p.y} r={2.4} fill="#FFE38A" opacity={0.25} /><circle cx={b.p.x} cy={b.p.y} r={1.3} fill="#FFF1B8" stroke="#B38A2A" strokeWidth={0.25} /></g>));
     s.sig.forEach((g, i) => g.op > 0.01 && ahead.push(<g key={`s${i}`} opacity={g.op}><circle cx={g.p.x} cy={g.p.y} r={4.2} fill="#FFB347" opacity={0.3} /><circle cx={g.p.x} cy={g.p.y} r={1.9} fill="#FFC45E" stroke="#7A4300" strokeWidth={0.3} /></g>));
     s.abs.forEach((a, i) => a.op > 0.01 && ahead.push(<Antibody key={`a${i}`} p={a.p} ang={a.ang} op={a.op} grip={a.grip} />));
     s.myo.forEach((m, i) => m.op > 0.01 && ahead.push(<Myostatin key={`y${i}`} p={m.p} ang={m.ang} op={m.op} />));
@@ -270,7 +300,8 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam; bg?: boolean}> = ({s
       const blur = 3.2 * L.depth;
       ahead.push(
         <g key="lead" opacity={L.op} filter={blur > 0.3 ? `url(#${idLB})` : undefined}>
-          <Myostatin p={L.p} ang={L.ang} s={MYO_S * (1.25 - 0.55 * L.depth)} />
+          <circle cx={L.p.x} cy={L.p.y} r={22 * (1.2 - 0.5 * L.depth)} fill="#FF5FA8" opacity={0.16} />
+          <Myostatin p={L.p} ang={L.ang} s={MYO_S * (1.7 - 0.75 * L.depth)} />
         </g>,
       );
     }
@@ -326,6 +357,17 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam; bg?: boolean}> = ({s
       {detOp > 0.01 && <g opacity={detOp}>{hero}</g>}
       {ahead.length > 0 && <g opacity={detOp}>{ahead}</g>}
       {motes}
+      {s.band && s.band.y1 > vy0 && s.band.y0 < vy1 && (
+        <g>
+          <rect x={vx0} y={s.band.y0} width={vx1 - vx0} height={s.band.y1 - s.band.y0} fill="#EBC9C3" />
+          {Array.from({length: Math.ceil((s.band.y1 - s.band.y0) / 22)}, (_, k) => {
+            const y = s.band!.y0 + 11 + k * 22;
+            const pts = Array.from({length: 9}, (_, i) => pt(vx0 + ((vx1 - vx0) * i) / 8, y + 6 * Math.sin(i * 1.3 + k * 0.7)));
+            return <path key={k} d={open(pts)} stroke={k % 3 ? '#FFF4F1' : '#D9A9A2'} strokeWidth={9 + 5 * hash(k)} fill="none" opacity={0.7} strokeLinecap="round" />;
+          })}
+          <rect x={vx0} y={s.band.y0 - 8} width={vx1 - vx0} height={10} fill="#FFFFFF" opacity={0.25} />
+        </g>
+      )}
     </g>
   );
 };

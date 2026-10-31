@@ -52,7 +52,14 @@ export const armFrame = (a: ArmState) => {
   /** point on the upper arm: s along (0 shoulder, 1 elbow), v across in units of the local radius (+ anterior) */
   const UA = (s: number, v: number) => add(add(a.S, mul(u, s * LU)), mul(an, v >= 0 ? v * ra(s) : v * rp(s)));
   const FA = (t: number, v: number) => add(add(E, mul(f, t * LF)), mul(fa, v >= 0 ? v * rfa(t) : v * rfp(t)));
-  return {u, an, E, f, fa, W, ra, rp, rfa, rfp, UA, FA, B};
+  // the deltoid: a rounded cap over the shoulder joint, its top and bottom meeting the upper arm's contours, so the
+  // silhouette runs continuously from the shoulder into the biceps and triceps
+  const s0 = 0.06;
+  const capC = add(add(a.S, mul(u, 1.6 + 0.4 * m)), mul(an, (ra(s0) - rp(s0)) / 2));
+  const capRx = 6.0 + 2.4 * m, capRy = (ra(s0) + rp(s0)) / 2;
+  /** a point on the deltoid cap: theta 90 deg = the anterior contour, 180 = over the back of the shoulder, 270 = posterior */
+  const CAP = (theta: number, k = 1) => add(add(capC, mul(u, capRx * k * Math.cos(theta))), mul(an, capRy * k * Math.sin(theta)));
+  return {u, an, E, f, fa, W, ra, rp, rfa, rfp, UA, FA, B, capC, capRx, capRy, CAP, s0};
 };
 export type ArmFrame = ReturnType<typeof armFrame>;
 
@@ -162,9 +169,13 @@ const Sleeve: React.FC<{a: ArmState; g: ArmFrame}> = ({a, g}) => {
     const p = UA(s, v);
     return add(p, mul(v >= 0 ? g.an : mul(g.an, -1), gap));
   };
-  const ant = lin(-0.34, sH, 9).map((s) => off(s, 1));
-  const post = lin(sH, -0.34, 9).map((s) => off(s, -1));
-  const outline = [...ant, ...post];
+  const capOff = (th: number) => add(g.CAP(th), mul(nrm(sub(g.CAP(th), g.capC)), gap));
+  const hemPt = (v: number) => add(add(UA(sH, v), mul(v >= 0 ? g.an : mul(g.an, -1), gap * Math.abs(v))), mul(g.u, 1.9 * (1 - v * v)));
+  const ant = lin(sH, g.s0 + 0.02, 7).map((s) => off(s, 1));
+  const arc = lin(Math.PI * 0.5, Math.PI * 1.5, 11).map(capOff);
+  const post = lin(g.s0 + 0.02, sH, 7).map((s) => off(s, -1));
+  const hem = lin(-0.92, 0.92, 7).map(hemPt);
+  const outline = [...ant, ...arc.slice(1, -1), ...post, ...hem];
   const tear = a.tear;
   // the seam runs from the hem up the outer face of the sleeve; the split opens along it as a V, widest at the hem
   const seam = (k: number) => {
@@ -214,25 +225,23 @@ const Sleeve: React.FC<{a: ArmState; g: ArmFrame}> = ({a, g}) => {
       </defs>
       <g mask={tear > 0 ? `url(#${mk})` : undefined}>
         <path d={closed(outline, 0.9)} fill={`url(#${id})`} />
-        {/* only the sleeve's top and bottom edges and its hem are inked: its back end merges into the shirt */}
-        <path d={open(lin(-0.02, sH, 6).map((s) => off(s, 1)))} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
-        <path d={open(lin(-0.02, sH, 6).map((s) => off(s, -1)))} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
-        <path d={open([off(sH, 1), ...lin(0.9, -0.9, 5).map((v) => add(UA(sH, v), mul(v >= 0 ? g.an : mul(g.an, -1), gap))), off(sH, -1)])} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
-        {/* hem band */}
-        <path d={open(lin(-1, 1, 7).map((v) => UA(sH - 0.012, v)))} stroke={SHIRT.shade} strokeWidth={0.9} fill="none" opacity={0.6} />
-        <path d={open(hemSt)} stroke={SHIRT.seam} strokeWidth={0.12} strokeDasharray="0.35 0.3" fill="none" opacity={0.9} />
-        {/* the stitched seam */}
-        <path d={open(stitches)} stroke={SHIRT.shade} strokeWidth={0.32} fill="none" opacity={0.8} />
-        <path d={open(stitches)} stroke={SHIRT.seam} strokeWidth={0.11} strokeDasharray={`0.4 ${(0.32 + 0.45 * a.stretch).toFixed(2)}`} fill="none" />
+        <path d={closed(outline, 0.9)} fill="none" stroke={SHIRT.ink} strokeWidth={0.32} strokeLinejoin="round" />
+        {/* the armhole seam round the deltoid (where the sleeve joins the shirt), and the hem band */}
+        <path d={open(lin(Math.PI * 0.62, Math.PI * 1.38, 8).map((th) => g.CAP(th, 0.62)))} stroke={SHIRT.shade} strokeWidth={0.34} fill="none" opacity={0.75} />
+        <path d={open(lin(Math.PI * 0.62, Math.PI * 1.38, 8).map((th) => g.CAP(th, 0.62)))} stroke={SHIRT.seam} strokeWidth={0.11} strokeDasharray="0.4 0.35" fill="none" opacity={0.85} />
+        <path d={open(lin(-0.85, 0.85, 7).map((v) => add(hemPt(v), mul(g.u, -0.9))))} stroke={SHIRT.shade} strokeWidth={0.7} fill="none" opacity={0.5} />
+        <path d={open(lin(-0.85, 0.85, 7).map((v) => add(hemPt(v), mul(g.u, -0.55))))} stroke={SHIRT.seam} strokeWidth={0.12} strokeDasharray="0.35 0.3" fill="none" opacity={0.9} />
+        {/* the stitched seam (only drawn once it starts to give) */}
+        {tear > 0.01 && <path d={open(stitches)} stroke={SHIRT.shade} strokeWidth={0.32} fill="none" opacity={0.8} />}
+        {tear > 0.01 && <path d={open(stitches)} stroke={SHIRT.seam} strokeWidth={0.11} strokeDasharray={`0.4 ${(0.32 + 0.45 * a.stretch).toFixed(2)}`} fill="none" />}
         {folds > 0.02 &&
-          [0.15, 0.45, 0.75].map((k, i) => {
-            const p0 = seam(k);
-            const p1 = add(UA(sH - 0.05 - 0.1 * i, 0.85), mul(g.u, -0.5));
-            const p2 = add(UA(sH - 0.06 - 0.12 * i, -0.6), mul(g.u, -0.3));
+          [0.35, 0.7].map((v, i) => {
+            const p0 = g.CAP(Math.PI * (0.75 + 0.1 * i), 0.55);
+            const p1 = add(UA(sH - 0.03, v), mul(g.u, -0.4));
             return (
-              <g key={i} opacity={folds}>
-                <path d={open([p0, lerpP(p0, p1, 0.5), p1])} stroke={SHIRT.shade} strokeWidth={0.28} fill="none" strokeLinecap="round" />
-                <path d={open([p0, lerpP(p0, p2, 0.5), p2])} stroke={SHIRT.lit} strokeWidth={0.18} fill="none" strokeLinecap="round" opacity={0.7} />
+              <g key={i} opacity={folds * 0.6}>
+                <path d={open([p0, lerpP(p0, p1, 0.5), p1])} stroke={SHIRT.shade} strokeWidth={0.3} fill="none" strokeLinecap="round" />
+                <path d={open([p0, lerpP(p0, p1, 0.5), p1].map((q) => add(q, mul(g.an, 0.25))))} stroke={SHIRT.lit} strokeWidth={0.18} fill="none" strokeLinecap="round" opacity={0.6} />
               </g>
             );
           })}
@@ -329,7 +338,9 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
   const {S, m} = {S: a.S, m: a.m};
   const {u, an, E, f, fa, W, UA, FA} = g;
   // tremor (shaking under load) acts on the drawn shape only
-  const upper = closed([...lin(-0.12, 1.0, 18).map((s) => UA(s, 1)), add(E, mul(an, 0.4 * g.ra(1))), add(E, mul(u, 2.3)), add(E, mul(an, -0.5 * g.rp(1))), ...lin(1.0, -0.12, 18).map((s) => UA(s, -1))], 0.9);
+  // upper arm: from the deltoid cap (its back half wraps over the shoulder) down both contours to the elbow
+  const capArc = lin(Math.PI * 1.5, Math.PI * 0.5, 9).map((th) => g.CAP(th));
+  const upper = closed([...lin(g.s0, 1.0, 18).map((s) => UA(s, 1)), add(E, mul(an, 0.4 * g.ra(1))), add(E, mul(u, 2.3)), add(E, mul(an, -0.5 * g.rp(1))), ...lin(1.0, g.s0, 18).map((s) => UA(s, -1)), ...capArc.slice(1, -1)], 0.9);
   const fore = closed([...lin(0.04, 1, 14).map((t) => FA(t, 1)), add(W, mul(f, 0.9)), ...lin(1, 0.04, 14).map((t) => FA(t, -1)), add(E, mul(f, -2.0))], 0.9);
   const elbowR = 2.55 + 0.45 * m;
   const bis = nrm(add(an, fa));
@@ -349,7 +360,7 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
   const ec = a.elbowCut ?? 0;
   const ecC = add(UA(0.86, 0.15), mul(f, 1.2));
   const ecR = (12 + 2 * m) * ss(ec, 0, 1);
-  const veinOp = clamp((m - 0.35) / 0.5) * 0.85 * skinOp;
+  const veinOp = clamp((m - 0.55) / 0.5) * 0.45 * skinOp;
   const v1 = [UA(0.36, 0.42), UA(0.5, 0.5), UA(0.66, 0.44), UA(0.8, 0.47)];
   const v2 = [UA(0.55, 0.48), UA(0.62, 0.64), UA(0.66, 0.74)];
   const v3 = [FA(0.18, 0.35), FA(0.42, 0.25), FA(0.66, 0.32), FA(0.86, 0.2)];
@@ -364,6 +375,7 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
           <path d={fore} />
           <circle cx={E.x} cy={E.y} r={elbowR} />
         </clipPath>
+        <filter id={`${idC}df`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation={0.45} /></filter>
         <radialGradient id={idHL}>
           <stop offset={0} stopColor="#FFF4E8" stopOpacity={0.85} />
           <stop offset={0.5} stopColor="#FFE2C8" stopOpacity={0.3} />
@@ -387,23 +399,17 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
         <circle cx={E.x} cy={E.y} r={elbowR} fill={skinFill(idU)} />
         <path d={fore} fill={skinFill(idF)} />
         <path d={upper} fill={skinFill(idU)} />
-        <circle cx={E.x} cy={E.y} r={elbowR * 0.92} fill={skinFill(idF)} opacity={0.55} />
         <g clipPath={`url(#${idC})`}>
           {/* elbow point in shadow */}
-          <ellipse cx={olec.x} cy={olec.y} rx={2.0} ry={2.0} fill={SKIN.shade} opacity={0.55} />
-          {/* the biceps/triceps groove and the edge of the biceps belly */}
-          <path d={open(lin(0.22, 0.9, 8).map((s) => UA(s, -0.12 + 0.05 * Math.sin(PI * s))))} stroke={SKIN.deep} strokeWidth={0.38 + 0.35 * m} fill="none" strokeLinecap="round" opacity={0.1 + 0.45 * m} />
-          <path d={open(lin(0.28, 0.86, 8).map((s) => UA(s, 0.12 + 0.1 * Math.sin(PI * (s - 0.2)))))} stroke={SKIN.shade} strokeWidth={0.3 + 0.3 * m} fill="none" strokeLinecap="round" opacity={0.05 + 0.45 * m} />
-          {/* deltoid edge (seen when the sleeve has split) */}
-          <path d={open([UA(0.04, 0.95), UA(0.16, 0.45), UA(0.27, -0.05), UA(0.2, -0.6)])} stroke={SKIN.shade} strokeWidth={0.3 + 0.3 * m} fill="none" opacity={0.3 + 0.3 * m} />
-          {/* forearm: brachioradialis groove */}
-          <path d={open(lin(0.08, 0.75, 7).map((t) => FA(t, 0.15 - 0.15 * t)))} stroke={SKIN.shade} strokeWidth={0.3 + 0.2 * m} fill="none" opacity={0.06 + 0.3 * m} />
-          {/* muscle definition: the core shadow along the underside of the biceps belly, the triceps' horseshoe (lateral
-              head over the long head, onto the flat tendon), the brachialis between them */}
-          <path d={closed([...lin(0.26, 0.86, 9).map((s) => UA(s, 0.34 - 0.12 * Math.sin(PI * (s - 0.26) / 0.6))), ...lin(0.86, 0.26, 9).map((s) => UA(s, 0.12 - 0.06 * Math.sin(PI * (s - 0.26) / 0.6)))], 0.8)} fill={SKIN.shade} opacity={0.16 + 0.3 * m} />
-          <path d={open([UA(0.16, -0.72), UA(0.32, -0.52), UA(0.5, -0.5), UA(0.64, -0.66), UA(0.74, -0.86)])} stroke={SKIN.deep} strokeWidth={0.32 + 0.3 * m} fill="none" strokeLinecap="round" opacity={0.1 + 0.45 * m} />
-          <path d={open([UA(0.36, -0.42), UA(0.52, -0.3), UA(0.68, -0.34), UA(0.8, -0.5)])} stroke={SKIN.shade} strokeWidth={0.3 + 0.2 * m} fill="none" strokeLinecap="round" opacity={0.1 + 0.35 * m} />
-          <path d={closed([UA(0.66, -0.4), UA(0.78, -0.3), UA(0.94, -0.42), UA(0.92, -0.8), UA(0.78, -0.9)], 0.8)} fill={SKIN.lit} opacity={0.12 + 0.18 * m} />
+          <ellipse cx={olec.x} cy={olec.y} rx={1.8} ry={1.4} fill={SKIN.shade} opacity={0.25} filter={`url(#${idC}df)`} />
+          {/* soft muscle forms (blurred in world units, so they stay soft at any zoom): the groove between biceps and
+              triceps, the core shadow under the biceps belly, the triceps' horseshoe, the brachioradialis groove */}
+          <g filter={`url(#${idC}df)`}>
+            <path d={open(lin(0.24, 0.9, 8).map((s) => UA(s, -0.1 + 0.05 * Math.sin(PI * s))))} stroke={SKIN.deep} strokeWidth={0.7 + 0.5 * m} fill="none" strokeLinecap="round" opacity={0.08 + 0.32 * m} />
+            <path d={closed([...lin(0.3, 0.86, 9).map((s) => UA(s, 0.3 - 0.1 * Math.sin(PI * (s - 0.3) / 0.56))), ...lin(0.86, 0.3, 9).map((s) => UA(s, 0.06))], 0.8)} fill={SKIN.shade} opacity={0.12 + 0.24 * m} />
+            <path d={open([UA(0.2, -0.7), UA(0.36, -0.5), UA(0.54, -0.52), UA(0.7, -0.74)])} stroke={SKIN.deep} strokeWidth={0.6 + 0.4 * m} fill="none" strokeLinecap="round" opacity={0.08 + 0.3 * m} />
+            <path d={open(lin(0.08, 0.75, 7).map((t) => FA(t, 0.15 - 0.15 * t)))} stroke={SKIN.shade} strokeWidth={0.6} fill="none" opacity={0.06 + 0.25 * m} />
+          </g>
           <ellipse cx={UA(0.34, -0.62).x} cy={UA(0.34, -0.62).y} rx={2.2 + 2.2 * m} ry={0.9 + 1.0 * m} transform={`rotate(${(Math.atan2(u.y, u.x) * 180) / PI} ${UA(0.34, -0.62).x} ${UA(0.34, -0.62).y})`} fill={`url(#${idHL})`} opacity={0.35} />
           {/* taut skin: the highlight on the peak sharpens as it swells */}
           <ellipse cx={peak.x} cy={peak.y} rx={(3 + 3.6 * m) * (1 + 0.1 * a.c)} ry={(1.1 + 1.7 * m)} transform={`rotate(${(Math.atan2(u.y, u.x) * 180) / PI} ${peak.x} ${peak.y})`} fill={`url(#${idHL})`} opacity={0.55 + 0.4 * m} />

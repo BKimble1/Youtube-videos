@@ -170,7 +170,75 @@ def rustle(dur=0.5, lo=1500, hi=7000):
 sfx = np.zeros(N)
 E = EV.get
 V2 = 'out0' in EV
-if 'lead0' in EV:
+if 'cross0' in EV:
+    # ===================== V5 =====================
+    mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
+    hookN = int(1.3 * SR)
+    sw = swell(1.3, 42, 1.4)
+    env_m = np.clip(mrate[:hookN] / (np.percentile(mrate[:hookN], 99) + 1e-9), 0, 1)
+    place(sfx, sw * (0.45 + 0.55 * env_m), 0.0, 'organic muscle swelling (follows the mass)', -13)
+    place(sfx, squelch(0.9, 160, 900, 20), 0.05, 'wet tissue stretch', -27)
+    place(sfx, fabric_strain(0.7), 0.25, 'the sleeve stretches', -23)
+    for i, dt_ in enumerate([0.0, 0.08, 0.17, 0.26, 0.36]):
+        place(sfx, tick(0.02, 2600 + 700 * (i % 3)), 0.42 + dt_, 'stitches strain' if i == 0 else None, -22 - (i % 2) * 3)
+    place(sfx, thump(0.45, 64, 34), E('grow0'), 'the surge lands (low squeeze)', -17)
+    place(sfx, swell(0.6, 50, 0.6), E('approach0'), 'the camera closes on the muscle', -27)
+    place(sfx, squelch(0.3, 300, 2200, 40), E('cut0'), 'through the skin of the biceps', -22)
+    place(sfx, shimmer(0.7, 5200, 1500), E('dive0'), 'into the muscle (shimmer)', -29)
+    place(sfx, swell(0.7, 38, -0.4), E('dive0') + 0.05, 'into the muscle (low)', -23)
+    micro = np.array([1.0 if w in ('micro', 'cross') else 0.0 for w in WORLD])
+    mic = lp(sig100(micro), 6)
+    pulse = np.zeros(N)
+    for k in range(int(DUR * 1.3)):
+        place(pulse, thump(0.35, 62, 40), k / 1.3 + 0.05)
+    dq = np.clip(np.gradient(sig100(Q)) * SR, 0, None)
+    place(sfx, crackle(DUR, 80, 1800, 7000) * np.clip(dq / 4.0, 0, 1) * mic, 0.0, 'myofibrils assembling (follows the growth)', -21)
+    place(sfx, rustle(2.0, 400, 2200), E('dive1'), 'between the fibres (soft air)', -33)
+    place(sfx, chime(392.0, 1.0) * 0.5, E('lead0'), 'one myostatin molecule appears (soft tone)', -32)
+    place(sfx, lock(0.14), E('bind'), 'myostatin binds its receptor', -16)
+    for k in range(5):
+        place(sfx, blip(2600 - 260 * k, 800, 0.09), E('sig0') + 0.09 * k, 'the signal runs into the cell (blips)' if k == 0 else None, -25)
+    place(sfx, power(0.6, 360, 70), E('sig1') - 0.05, 'the nucleus stops building (powering down)', -18)
+    for i, td in enumerate([E('dome1'), E('dome2')]):
+        place(sfx, creak(0.32, 160, 50), td, 'the fibre pushes to thicken' if i == 0 else None, -24)
+        place(sfx, thump(0.25, 90, 50), td + 0.34, 'and is held back' if i == 0 else None, -21)
+    place(sfx, rustle(0.7, 300, 1600), E('cross0') + 0.05, 'down through connective tissue', -26)
+    place(sfx, swell(0.8, 40, 0.8), E('crossSwitch'), 'into a much larger muscle', -21)
+    place(sfx, power(0.6, 90, 420), E('cross1') - 0.1, 'growth with no brake (powering up)', -22)
+    place(sfx, swell(1.0, 44, 1.2), E('cross1'), 'the fibres thicken', -20)
+    place(sfx, shimmer(0.8, 1500, 5200), E('cowOut0'), 'out through the tissue to the cow (rising shimmer)', -29)
+    place(sfx, snort(0.45), E('cowOut1') + 0.25, 'the cow snorts', -26)
+    place(sfx, rustle(0.5, 600, 3000), E('cowOut1') + 0.9, 'grass under a shifting hoof', -32)
+    place(sfx, hoof(), E('shift') - 0.01, 'deep bovine weight shift on "huge"', -14)
+    place(sfx, creak(0.4, 95, 30), E('shift') + 0.02, 'shoulder muscles load', -24)
+    place(sfx, tick(0.03, 4200) * 0.6, E('cutLab') + 0.35, 'glassware (tink)', -26)
+    place(sfx, creak(0.3, 700, 140), E('press'), 'plunger squeak', -28)
+    place(sfx, bp(noise(int(0.3 * SR)), 2500, 7000) * env(int(0.3 * SR), 0.05, 0.15), E('press') + 0.03, 'treatment flows (soft hiss)', -32)
+    place(sfx, plip(), E('dropLand'), 'the drop lands on the sample', -22)
+    place(sfx, shimmer(0.5, 5200, 1500), E('labIn0') + 0.05, 'into the sample', -30)
+    for i, tc in enumerate([E('catch1'), E('catch2')]):
+        place(sfx, lock(0.1), tc, 'an antibody catches myostatin before it binds' if i == 0 else None, -18 if i == 1 else -21)
+    place(sfx, power(0.4, 90, 380), E('release'), 'building resumes', -23)
+    place(sfx, shimmer(0.6, 2200, 4200), E('yaw0'), 'the bundle turns end-on (shimmer)', -30)
+    place(sfx, creak(0.9, 110, 28), E('yaw1') - 0.2, 'fibres thickening', -26)
+    place(sfx, swell(1.0, 46, 0.3), E('armOut0'), 'out through his biceps', -22)
+    place(sfx, eerie(1.0), T['weird'] - 0.32, 'eerie cue before the twist', -18)
+    place(sfx, creak(0.25, 260, 80), E('grip'), 'the grip tightens on the handle', -27)
+    place(sfx, iron_creak(0.6), E('curl0'), 'dumbbell tension', -22)
+    place(sfx, creak(1.2, 120, 46), E('curl0'), 'the biceps strains', -24)
+    tr_len = E('sink0') - E('curl0') - 0.2
+    place(sfx, rattle(tr_len, 14) * np.linspace(0.6, 1, int(tr_len * SR)), E('curl0') + 0.2, 'the weight trembles, barely rising', -29)
+    place(sfx, squelch(0.3, 280, 1800, 30), E('elbowIn0') + 0.15, 'into the elbow', -26)
+    for k in range(2):
+        place(sfx, thump(0.3, 80, 45), E('elbowIn1') + k / 1.4, 'contraction pulse' if k == 0 else None, -22)
+        place(sfx, creak(0.25, 300, 60), E('elbowIn1') + k / 1.4 + 0.02, None, -28)
+    place(sfx, creak(0.7, 100, 30), E('sink0'), 'the arm gives out', -24)
+    place(sfx, clunk(), E('sink1') - 0.03, 'the dumbbell settles back on the floor', -15)
+    place(sfx, swell(0.5, 36, -0.6), E('slump0'), 'the pump goes out of the arm (deflating)', -25)
+    place(sfx, rustle(0.55, 900, 5000), E('raise0') + 0.05, 'the arm comes up (cloth)', -27)
+    tail = swell(0.55, 42, 1.0)
+    place(sfx, tail * np.linspace(0, 1, len(tail)) ** 1.3, DUR - 0.55, 'swell into the loop (the opening swell begins)', -15)
+elif 'lead0' in EV:
     # ===================== V4 =====================
     mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
     hookN = int(1.3 * SR)
@@ -484,6 +552,10 @@ lufs = meter.integrated_loudness(mix)
 g = min(db(-14.0 - lufs), db(-1.6) / peak)
 mix *= g
 mix = limit(mix, -1.6)
+# loop seam: a 4 ms ramp at the very end so the last sample continues into the first (no step at the wrap)
+nr = int(0.004 * SR)
+step = (mix[0] - (mix[1] - mix[0])) - mix[-1]
+mix[-nr:] += step * np.linspace(0, 1, nr) ** 2
 mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)

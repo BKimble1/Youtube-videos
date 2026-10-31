@@ -5,14 +5,14 @@
 import React from 'react';
 import {resetIds} from './core/ids';
 import {P, pt} from './core/geo';
-import {clamp, ss} from './lib';
+import {clamp, lerp, ss} from './lib';
 import {Arm, Bench, Body, Dumbbell} from './art/person';
 import {GymFloor, GymWall} from './art/gym';
-import {CollagenSheet, MicroWorld} from './art/micro';
+import {MicroWorld} from './art/micro';
 import {Bull, Dust, Fence, Grass, PastureSky} from './art/bull';
-import {BenchTop, Dish, LabBack, Researcher, SAMPLE, SAMPLE_RX, SAMPLE_RY} from './art/lab';
+import {BenchTop, Dish, LabBack, LabState, SAMPLE, SAMPLE_RX, SAMPLE_RY, Scientist} from './art/lab';
 import {Cam} from './art/micro';
-import {COW_NEST, EV, K_ARM, K_COW, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro, yawAt} from './story';
+import {ARM_NEST, BULL_NEST, BULL_SHIFT, EV, K_ARM, K_ARMX, K_BULLM, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, microAt, microVariant, personAt, sciAt, toMicro, yawAt} from './story';
 import {Bundle3D, CrossSection, FarFibres, NearFibres} from './art/micro3d';
 import {Captions} from './Captions';
 
@@ -45,12 +45,14 @@ const MicroOnly: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   // depth: a far layer of fibres seen through the gaps, and soft near fibres passing the lens (fade in after a dive)
   const depthOp = t < EV.dive1 + 0.35 ? ss(t, EV.dive1, EV.dive1 + 0.35) : t > EV.labIn1 - 0.05 && t < EV.labIn1 + 0.3 ? ss(t, EV.labIn1, EV.labIn1 + 0.3) : 1;
   const kF = 0.6, kN = 1.7;
-  const g = (k: number) => `translate(540 960) scale(${(1080 / c.w) * k}) translate(${-c.x} ${-c.y})`;
+  // the depth layers live in the human muscle's coordinates, so they run on unbroken through the tissue crossing
+  const cd = microVariant(t) === 'bull' ? {...c, y: c.y + BULL_SHIFT} : c;
+  const g = (k: number, cc: Cam = c) => `translate(540 960) scale(${(1080 / cc.w) * k}) translate(${-cc.x} ${-cc.y})`;
   return (
     <>
       <div style={{position: 'absolute', inset: 0, background: '#2A0A17'}} />
       <div style={{position: 'absolute', inset: 0, filter: 'blur(5px)', opacity: depthOp}}>
-        <svg width={1080} height={1920}><g transform={g(kF)}><FarFibres cam={{...c, w: c.w / kF}} t={t} /></g></svg>
+        <svg width={1080} height={1920}><g transform={g(kF, cd)}><FarFibres cam={{...cd, w: cd.w / kF}} t={t} /></g></svg>
       </div>
       <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
         <g transform={g(1)}>
@@ -58,7 +60,7 @@ const MicroOnly: React.FC<{t: number; c: Cam}> = ({t, c}) => {
         </g>
       </svg>
       <div style={{position: 'absolute', inset: 0, filter: 'blur(14px)', opacity: 0.75 * depthOp}}>
-        <svg width={1080} height={1920}><g transform={g(kN)}><NearFibres cam={{...c, w: c.w / kN}} t={t} /></g></svg>
+        <svg width={1080} height={1920}><g transform={g(kN, cd)}><NearFibres cam={{...cd, w: cd.w / kN}} t={t} /></g></svg>
       </div>
     </>
   );
@@ -70,7 +72,12 @@ const CrossOnly: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   return (
     <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
       <g transform={`translate(540 960) scale(${1080 / c.w}) translate(${-c.x} ${-c.y})`}>
-        {th < 0.999 ? <Bundle3D b={b} cam={c} /> : <CrossSection b={b} cam={c} />}
+        {th < 0.55 ? <Bundle3D b={b} cam={c} /> : (
+          <g>
+            <rect x={c.x - c.w} y={c.y - c.w * 1.8} width={c.w * 2} height={c.w * 3.6} fill="#2A0A17" />
+            <CrossSection b={b} cam={c} surround={ss(th, 0.55, 1)} />
+          </g>
+        )}
       </g>
     </svg>
   );
@@ -84,24 +91,39 @@ const nestedMicro = (t: number, host: Cam, origin: P, k: number) => {
   );
 };
 
+const nestedCross = (t: number, host: Cam, origin: P, k: number) => {
+  const ms = microAt(t);
+  return (
+    <g transform={`translate(${origin.x} ${origin.y}) scale(${k})`}>
+      <CrossSection cam={toMicro(host, origin, k)} b={{theta: 1, g: ms.g, gN: ms.gN, t}} />
+    </g>
+  );
+};
+const labState = (t: number): LabState => {
+  const s = sciAt(t);
+  return {t, press: s.press, drop: 0, dropY: 0, ripple: s.ripple, look: 0, dim: 0, glow: s.glow * (1 - ss(t, EV.labIn0, EV.labIn0 + 0.22))};
+};
+
 const ArmWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   const p = personAt(t);
   const a = p.arm;
   const hook = inHook(t);
   const Wc = hookWindow();
   const db = dumbbellAt(t, a);
+  // the bench and the weight stay in the world at the end (the camera leaves them below frame before the loop)
+  const props = !hook || t > EV.slump0;
   const dim = ss(t, T.weird - 0.15, T.weird + 0.2) * (1 - ss(t, T.bigger2 + 0.4, T.bigger2 + 1.2)) * 0.6;
-  const inCut = hook && a.cut ? nestedMicro(t, c, Wc, K_ARM) : undefined;
+  const inCut = a.cut ? (hook ? nestedMicro(t, c, Wc, K_ARM) : nestedCross(t, c, ARM_NEST, K_ARMX)) : undefined;
   return (
     <>
-      <Layer c={c} delta={420} min={hook ? 14 : 6}>
+      <Layer c={c} delta={420} min={t > EV.raise0 - 0.05 ? lerp(6, 14, ss(t, EV.raise0, EV.raise1)) : hook ? 14 : 6}>
         <GymWall dim={dim} />
       </Layer>
       <Layer c={c} delta={0} max={30}>
         <GymFloor />
-        {!hook && <Bench x0={-82} x1={4} top={-34} />}
+        {props && <Bench x0={-82} x1={4} top={-34} />}
         <Body p={p} />
-        {!hook && (
+        {props && (
           <g>
             <ellipse cx={db.x} cy={0.6} rx={22 - 0.8 * Math.max(0, -db.y - 18)} ry={2.2} fill="#000" opacity={0.55 - 0.08 * Math.max(0, -db.y - 18)} />
             <Dumbbell h={db} />
@@ -127,44 +149,45 @@ const BullWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
       <Layer c={c} delta={0} max={20}>
         <Grass />
         <Bull b={b} />
-        {b.cut && (
-          <g>
-            <defs>
-              <clipPath id={`bcut${Math.round(t * 30)}`}>
-                <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r} />
-              </clipPath>
-            </defs>
-            <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r + 0.9} fill="#F3ECEE" opacity={0.9} />
-            <g clipPath={`url(#bcut${Math.round(t * 30)})`}>
-              <g transform={`translate(${COW_NEST.x + b.x} ${COW_NEST.y}) scale(${K_COW})`}>
-                <CrossSection cam={toMicro(c, pt(COW_NEST.x + b.x, COW_NEST.y), K_COW)} b={{theta: 1, g: microAt(t).g, gN: microAt(t).gN, t}} />
-              </g>
+        {b.cut && (() => {
+          const O = pt(BULL_NEST.x + b.x, BULL_NEST.y);
+          const id = `bcut${Math.round(t * 30)}`;
+          return (
+            <g>
+              <defs>
+                <clipPath id={id}>
+                  <circle cx={O.x} cy={O.y} r={b.cut.r} />
+                </clipPath>
+              </defs>
+              <circle cx={O.x} cy={O.y} r={b.cut.r + 0.9} fill="#E9C9C4" opacity={0.95} />
+              <g clipPath={`url(#${id})`}>{nestedMicro(t, c, O, K_BULLM)}</g>
+              <circle cx={O.x} cy={O.y} r={b.cut.r + 0.3} fill="none" stroke="rgba(255,210,220,0.9)" strokeWidth={0.7} />
             </g>
-            <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r + 0.3} fill="none" stroke="rgba(255,210,220,0.9)" strokeWidth={0.7} />
-          </g>
-        )}
-        <Dust p={pt(64 + b.x, 0)} a={(t - EV.plant) / 0.6} />
+          );
+        })()}
+        <Dust p={pt(64 + b.x, 0)} a={(t - EV.shift) / 0.6} />
       </Layer>
       {an > 0.01 && <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(6,20,40,0.15) 30%, rgba(4,12,28,0.75) 100%)', opacity: an}} />}
     </>
   );
 };
 const LabWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
-  const s = labAt(t);
+  const sc = sciAt(t);
+  const s = labState(t);
   return (
     <>
       <Layer c={c} delta={140} min={4}>
         <LabBack s={s} />
       </Layer>
       <Layer c={c} delta={0} max={24}>
-        <Researcher s={s} />
+        <Scientist s={sc} layer="back" />
         <BenchTop />
         <Dish s={s} inSample={nestedMicro(t, c, SAMPLE, K_LAB)} />
+        <Scientist s={sc} layer="front" />
       </Layer>
     </>
   );
 };
-
 export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t, fkey, captions = true}) => {
   resetIds(fkey);
   const wc: WCam = camAt(t);
@@ -176,11 +199,12 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     const a = armAt(t);
     const Wc = hookWindow();
     if (inHook(t) && a.cut && covers(c, Wc, a.cut.r)) body = <MicroOnly t={t} c={toMicro(c, Wc, K_ARM)} />;
+    else if (!inHook(t) && a.cut && covers(c, ARM_NEST, a.cut.r)) body = <CrossOnly t={t} c={toMicro(c, ARM_NEST, K_ARMX)} />;
     else body = <ArmWorld t={t} c={c} />;
   } else if (wc.world === 'bull') {
     const b = bullAt(t);
-    const O = pt(COW_NEST.x + b.x, COW_NEST.y);
-    if (b.cut && covers(c, O, b.cut.r)) body = <CrossOnly t={Math.max(t, EV.yaw1)} c={toMicro(c, O, K_COW)} />;
+    const O = pt(BULL_NEST.x + b.x, BULL_NEST.y);
+    if (b.cut && covers(c, O, b.cut.r)) body = <MicroOnly t={t} c={toMicro(c, O, K_BULLM)} />;
     else body = <BullWorld t={t} c={c} />;
   } else {
     if (covers(c, SAMPLE, SAMPLE_RX, SAMPLE_RY)) body = <MicroOnly t={t} c={toMicro(c, SAMPLE, K_LAB)} />;

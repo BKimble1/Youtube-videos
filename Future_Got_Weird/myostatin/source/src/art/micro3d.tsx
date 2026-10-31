@@ -117,7 +117,7 @@ export const Bundle3D: React.FC<{b: Bundle; cam: Cam; bg?: boolean}> = ({b, cam,
 
 /** the whole muscle cut across: fascicles packed inside the epimysium; the hero fascicle drawn by Bundle3D */
 export const MUSCLE_RX = 9000, MUSCLE_RY = 6600;
-export const CrossSection: React.FC<{cam: Cam; b: Bundle}> = ({cam, b}) => {
+export const CrossSection: React.FC<{cam: Cam; b: Bundle; surround?: number}> = ({cam, b, surround = 1}) => {
   const sc = 1080 / cam.w;
   const idP = uid('csp'), idC = uid('csc'), idF = uid('csf');
   const fr = 560 * Math.max(1, 0.55 + 0.45 * b.gN);
@@ -159,14 +159,16 @@ export const CrossSection: React.FC<{cam: Cam; b: Bundle}> = ({cam, b}) => {
           <stop offset={1} stopColor="#D9A9A2" />
         </radialGradient>
       </defs>
-      {/* the epimysium round the whole muscle, and the perimysium between fascicles */}
-      <ellipse cx={0} cy={0} rx={MUSCLE_RX + 260} ry={MUSCLE_RY + 260} fill="#FFF1EC" />
-      <ellipse cx={0} cy={0} rx={MUSCLE_RX} ry={MUSCLE_RY} fill={`url(#${idF})`} />
-      <g clipPath={`url(#${idC})`}>{fasc}</g>
-      {/* the hero fascicle: its fibres end-on */}
-      <circle cx={0} cy={0} r={fr + 40} fill={PAL.fluid} />
-      <Bundle3D b={{...b, theta: 1}} cam={cam} bg={false} />
-      <circle cx={0} cy={0} r={fr + 40} fill="none" stroke={PAL.peri} strokeWidth={60} />
+      {/* the epimysium round the whole muscle, and the perimysium between fascicles (faded in as the bundle turns) */}
+      <g opacity={surround}>
+        <ellipse cx={0} cy={0} rx={MUSCLE_RX + 260} ry={MUSCLE_RY + 260} fill="#FFF1EC" />
+        <ellipse cx={0} cy={0} rx={MUSCLE_RX} ry={MUSCLE_RY} fill={`url(#${idF})`} />
+        <g clipPath={`url(#${idC})`}>{fasc}</g>
+        <circle cx={0} cy={0} r={fr + 40} fill={PAL.fluid} />
+      </g>
+      {/* the hero fascicle: its fibres end-on (still finishing its turn while the surround fades in) */}
+      <Bundle3D b={surround < 1 ? b : {...b, theta: 1}} cam={cam} bg={false} />
+      <circle cx={0} cy={0} r={fr + 40} fill="none" stroke={PAL.peri} strokeWidth={60} opacity={surround} />
       <ellipse cx={-MUSCLE_RX * 0.3} cy={-MUSCLE_RY * 0.45} rx={MUSCLE_RX * 0.5} ry={MUSCLE_RY * 0.25} fill="#FFFFFF" opacity={0.06} />
       {void pt}
     </g>
