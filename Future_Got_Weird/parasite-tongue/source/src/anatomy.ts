@@ -29,3 +29,25 @@ export const wall = (x: number, th: number, g: number, inset = 0): V3 => {
 };
 /** gill arches (depth of each arch on the side wall) */
 export const ARCH_X = [31, 34.6, 38.2, 41.8];
+
+// ---------------- the tongue (basihyal pad on the floor of the mouth; shrinks toward its base at x = 27 as it withers)
+export const TONGUE_BASE = 27;
+export const tongueDims = (sh: number) => ({xt: TONGUE_BASE - 24 * sh, H: 5.2 * (0.35 + 0.65 * sh), Wd: 6.2 * (0.55 + 0.45 * sh)});
+const tH = (u: number) => Math.pow(Math.sin((Math.PI * Math.min(1, u * 1.9)) / 2), 0.6) * (1 - 0.9 * Math.pow(u, 3));
+const tW = (u: number) => (0.35 + 0.65 * Math.pow(Math.sin((Math.PI * Math.min(1, u * 1.4)) / 2), 0.7)) * (1 - 0.3 * u);
+/** a point on the tongue's surface: u from tip (0) to base (1), v across (-1 .. 1) */
+export const tongueSurf = (u: number, v: number, sh: number, lift = 0): V3 => {
+  const {xt, H, Wd} = tongueDims(sh);
+  const x = lerp(xt, TONGUE_BASE, u);
+  const w = Wd * tW(u);
+  return [x, v * w, floorAt(x) + H * tH(u) * Math.pow(Math.max(0, 1 - v * v), 0.55) + lift];
+};
+/** height of the tongue's top (or the floor) under a world point */
+export const tongueZ = (x: number, y: number, sh: number) => {
+  const {xt, H, Wd} = tongueDims(sh);
+  if (x < xt || x > TONGUE_BASE) return floorAt(x);
+  const u = (x - xt) / (TONGUE_BASE - xt);
+  const v = y / (Wd * tW(u));
+  if (Math.abs(v) >= 1) return floorAt(x);
+  return floorAt(x) + H * tH(u) * Math.pow(1 - v * v, 0.55);
+};

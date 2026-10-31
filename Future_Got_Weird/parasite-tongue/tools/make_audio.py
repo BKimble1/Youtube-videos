@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Effects and mix for FGW Short 1 "The parasite that replaces a tongue". Everything under the voice is synthesised
+"""Effects and mix for FGW Short 1 "The parasite that replaces a tongue" (V2 picture). Everything under the voice is synthesised
 here (no samples, no third-party music). The narration master is used sample for sample (gain and gentle dynamics).
 Under it: underwater ambience (low water body, slow swells, sparse bubbles), a restrained unsettling bass texture that
 thickens for the reveal, and wet organic effects placed from the picture's own events (audio/cues.json, exported from
@@ -112,46 +112,55 @@ def flick(dur=0.05):
     n = int(dur * SR); tt = np.arange(n) / SR
     return norm(bp(noise(n), 2500, 8000) * np.exp(-tt / 0.006))
 
-# ---------------- the picture's events
-# the hook: the "tongue" wriggles (periodic with the motion, 0.75 s), wrapped so the loop's last frames match the first
-for k in range(4):
-    place(squelch(0.26, 950, 380), (k * 0.75 - 0.08) % DUR, 'tongue wriggle' if k == 0 else None, -26 - 2 * k, wrap=True)
-place(squelch(0.3, 1300, 420), C['reveal'], 'segments separate', -24)
-for k in range(7):
-    place(grip(), C['legsGrip'] + 0.025 * k + 0.01 * rng.random(), 'seven pairs of claws grip' if k == 0 else None, -30 - (k % 3))
-place(squelch(0.5, 500, 220, 0.5), C['pullBack'] + 0.1, 'jaw flex as the mouth gapes', -32)
-place(flow(1.05, 140, 1500), C['dive'] - 0.05, 'water drawn through the gills (one soft swell)', -25)
-for k in range(6):
-    place(bubble(), C['out'] + 0.08 * k + 0.05 * rng.random(), 'bubbles out of the gill opening' if k == 0 else None, -34)
-# the juvenile: tiny pleopod beats while it swims, then the crawl over the gill arches
-tt0 = C['juvSwim']
-while tt0 < W['crawls']:
-    place(flick(0.04), tt0, 'juvenile swims (pleopod beats)' if tt0 == C['juvSwim'] else None, -40)
-    tt0 += 0.11 + 0.04 * rng.random()
-place(squelch(0.35, 700, 300, 0.6), C['underCover'] + 0.05, 'slips under the gill cover', -29)
-tt0 = C['underCover'] + 0.3; first = True
-while tt0 < W['tongue2'] - 0.05:
-    place(click(0.02, 2800 + 1500 * rng.random()), tt0, 'claws on the gill arches' if first else None, -38 - 3 * rng.random()); first = False
-    tt0 += 0.055 + 0.03 * rng.random()
-place(grip(0.16), W['tongue2'], 'latches onto the tongue', -22)
-place(squelch(0.28, 900, 400), W['tongue2'] + 0.03, None, -28)
-# feeding: wet draws on the blood pulse (0.75 s), from "starts" to the start of the time-lapse
-tt0 = W['starts'] - 0.05; first = True
-while tt0 < C['lapse'] + 0.4:
+# ---------------- the picture's events (V2 timeline; times from audio/cues.json)
+def rev(x): return x[::-1].copy()
+def claws(t0, t1, every=0.11, gain=-37, name=None, f0=2400, wrap=False):
+    tt = t0; first = True
+    while tt < t1:
+        place(click(0.02, f0 + 1600 * rng.random()), tt + 0.015 * rng.random(), name if first else None, gain - 3 * rng.random(), wrap=wrap); first = False
+        tt += every * (0.8 + 0.4 * rng.random())
+# 0-2 s: the mouth snaps open on the living parasite; it lifts its head (every 1.5 s) and re-grips in a wave
+place(squelch(0.4, 520, 200, 0.9), C['open'], 'mouth snaps open (wet unstick)', -22)
+place(thump(0.16, 140, 70), C['open'] + 0.03, None, -27)
+for k in range(2):
+    place(squelch(0.3, 1100, 420), 0.3 + 1.5 * k, 'head lifts (wet)' if k == 0 else None, -27)
+claws(0.1, 2.0, 0.12, -36, 'claws re-grip in a wave')
+place(flow(1.4, 120, 900), C['push'], 'water as the camera pushes into the mouth (one soft swell)', -32)
+# 2-4 s: rewind: wet sounds played backwards under a soft rising reversed swell
+place(rev(flow(2.0, 150, 1200)), C['rewind'], 'rewind: reversed water swell', -30)
+for k in range(5):
+    place(rev(squelch(0.35, 900 - 80 * k, 320)), C['rewind'] + 0.12 + 0.25 * k, 'tongue grows back (reversed squelches)' if k == 0 else None, -28)
+claws(C['backOut'], C['rwEnd'], 0.05, -37, 'juvenile backs into the gills (fast claws)')
+# 4-6.5 s: out between the gill arches, down the wall, across the floor, onto the tongue
+place(squelch(0.35, 700, 300, 0.6), C['emerge'], 'squeezes out between the gill arches', -26)
+claws(C['emerge'] + 0.2, C['latch'] - 0.05, 0.06, -36, 'claws on the gill wall, the floor, the tongue')
+place(squelch(0.2, 800, 380, 0.4), C['floor'], 'drops onto the floor', -31)
+place(squelch(0.25, 900, 400, 0.5), C['climb'], 'climbs onto the tongue', -29)
+place(grip(0.16), C['latch'], 'latches onto the tongue', -21)
+place(squelch(0.28, 900, 400), C['latch'] + 0.03, None, -27)
+# 7-9.4 s: the bite, then wet draws on the blood pulse (0.75 s)
+place(squelch(0.18, 1600, 700, 0.8), C['bite'], 'mouthparts pierce the tongue', -24)
+tt0 = C['bite'] + 0.2; first = True
+while tt0 < C['lapse'] + 0.35:
     place(suck(0.3), tt0, 'feeding pulses (with the blood pulse)' if first else None, -27); first = False
     tt0 += 0.75
-# the time-lapse: the tongue shrivels (descending creak) under a faster breathing of the water
+# 9-11.5 s: time-lapse: the tongue shrivels; legs let go and re-grip as the body widens; three dim 'days'
 place(creak(C['lapseEnd'] - C['lapse'], 150, 55, 26), C['lapse'], 'tongue withers (slow descending tissue creak)', -27)
+claws(C['lapse'], C['lapseEnd'], 0.16, -36, 'legs re-grip as it grows')
 for k in range(5):
-    place(squelch(0.18, 600, 300, 0.4), C['lapse'] + 0.45 * k + 0.2, 'parasite grows (wet shifts)' if k == 0 else None, -34)
-# "the disgusting part": a slow push along its body, legs shifting
-for k in range(4):
-    place(grip(0.1), C['pushHead'] + 0.35 + 0.42 * k, 'legs shift on the stub' if k == 0 else None, -33)
-# the new tongue: the fish gapes, the segments flex
-for g in (C['gape1'], C['gape2']):
-    place(squelch(0.6, 380, 160, 0.7), g + 0.05, 'wet gape', -28)
-    for k in range(3):
-        place(squelch(0.16, 1100, 600, 0.3), g + 0.4 + 0.18 * k, 'segments flex' if k == 0 else None, -33)
+    place(squelch(0.18, 600, 300, 0.4), C['lapse'] + 0.48 * k + 0.2, 'parasite grows (wet shifts)' if k == 0 else None, -33)
+# 12-13.4 s: along the anchored legs
+for k in range(5):
+    place(grip(0.1), C['low'] + 0.3 * k, 'claws tighten in the stub' if k == 0 else None, -31)
+place(creak(1.2, 110, 80, 22), C['low'], 'tissue strains under the claws', -33)
+# 13.9-15.9 s: head-on inside: the mouth pumps (0.75 s), the parasite presses like a tongue
+tt0 = C['out0'] + 0.1; first = True
+while tt0 < C['exit']:
+    place(squelch(0.4, 420, 180, 0.6), tt0, 'mouth pumps (wet)' if first else None, -30); first = False
+    tt0 += 0.75
+for at in (14.65, 15.6):
+    place(squelch(0.3, 1000, 420, 0.7), at, 'parasite presses (segments flex)', -28)
+place(flow(1.2, 120, 900), C['exit'], 'water past the lips as the camera backs out', -33)
 # the meal
 tt0 = C['foodIn']; first = True
 while tt0 < C['snap'] - 0.1:
@@ -164,19 +173,13 @@ place(squelch(0.3, 650, 240), C['chew2'], None, -27)
 place(squelch(0.4, 900, 300, 0.8), 19.2, 'the parasite pushes the food back', -29)
 place(gulp(0.5), C['swallow'], 'swallow', -19)
 place(squelch(0.45, 450, 200, 0.6), C['reopen'], 'jaws unstick and reopen', -28)
-for k in range(4):
-    place(grip(0.1), C['reopen'] + 0.35 + 0.12 * k, 'claws re-grip' if k == 0 else None, -33)
-
-# the loop's tail: the parasite settles back into its tongue disguise as the camera pushes in (wriggle on its 0.75 s
-# motion, legs folding under), carrying into the hook's own wriggle at frame 0
-tt0 = 21.75; first = True
-while tt0 < DUR - 0.5:
-    place(squelch(0.26, 950, 380), tt0 - 0.08, 'wriggle as it settles back (loop)' if first else None, -27); first = False
-    tt0 += 0.75
-for k in range(7):
-    place(grip(0.1), 22.85 + 0.12 * k, 'legs fold under' if k == 0 else None, -34)
-place(flow(1.6, 100, 900), 21.45, 'the fish breathes (water over the gills)', -31)
-place(squelch(0.5, 450, 200, 0.6), 22.2, 'jaw flex', -31)
+# 20.9-22.4 s: the parasite rears up at the camera
+place(squelch(0.9, 300, 140, 0.8), C['rear'] + 0.1, 'parasite rears up (slow wet stretch)', -24)
+claws(C['rear'], 22.4, 0.08, -34, 'legs flex as it rears')
+# 22.6-24 s: the mouth eases half shut; the re-grip wave carries round into frame 0
+place(squelch(0.8, 380, 170, 0.5), C['close'], 'mouth eases half shut', -29)
+claws(22.6, DUR + 0.1, 0.12, -36, 'claws re-grip (into the loop)', wrap=True)
+place(flow(1.6, 100, 900), 21.45, 'the fish breathes (water over the gills)', -32)
 
 # ---------------- beds (periodic over DUR: no seam at the loop)
 water = circ(lambda x: lp(hp(x, 30), 380), noise(N))

@@ -4,17 +4,49 @@
 // from the full face into the mouth and through the gills is one continuous move.
 import React from 'react';
 import {lit, mix, rgba, shade} from './core/color';
-import {add3, Basis, cross3, dot3, mul3, norm3, P2, proj, projPoly, smoothClosed, smoothOpen, sub3, V2, V3} from './core/three';
-import {ARCH_X, floorAt, halfW, roofAt, roofZ, THROAT, wall, XS} from './anatomy';
+import {add3, Basis, cross3, dot3, lerp3, mul3, norm3, P2, proj, smoothClosed, smoothOpen, sub3, V2, V3} from './core/three';
+
+/** a world polygon clipped to the space in front of the camera, projected, then clipped to a box around the frame
+ *  (very near walls otherwise project to huge coordinates, which the blur filter cannot rasterise) */
+const projPoly = (B: Basis, pts: V3[], near = 0.8): string => {
+  const dz = (p: V3) => dot3(sub3(p, B.eye), B.fw);
+  const front: V3[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    const da = dz(a) - near, db = dz(b) - near;
+    if (da >= 0) front.push(a);
+    if ((da >= 0) !== (db >= 0)) front.push(lerp3(a, b, da / (da - db)));
+  }
+  if (front.length < 3) return '';
+  let poly: V2[] = front.map((p) => proj(B, p));
+  const edges: [(p: V2) => number, (a: V2, b: V2, t: number) => V2][] = [];
+  const box = [-800, -800, 1880, 2720];
+  const cut = (f: (p: V2) => number) => {
+    const out: V2[] = [];
+    for (let i = 0; i < poly.length; i++) {
+      const a = poly[i], b = poly[(i + 1) % poly.length];
+      const fa = f(a), fb = f(b);
+      if (fa >= 0) out.push(a);
+      if ((fa >= 0) !== (fb >= 0)) { const t = fa / (fa - fb); out.push({x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t}); }
+    }
+    poly = out;
+  };
+  cut((p) => p.x - box[0]); cut((p) => box[2] - p.x); cut((p) => p.y - box[1]); cut((p) => box[3] - p.y);
+  void edges;
+  if (poly.length < 3) return '';
+  return `M${poly.map(P2).join(' L')} Z`;
+};
+import {ARCH_X, floorAt, halfW, roofAt, roofZ, THROAT, tongueSurf, wall, XS} from './anatomy';
 import {IsoPose, isopodItems} from './isopod';
 import {clamp, hash, lerp} from './lib';
 import {Food, foodItems} from './food';
 
 type It = {z: number; el: React.ReactNode};
 const LIGHT: V3 = norm3([-0.75, 0, 0.66]);
-const DARK = '#24080B';
+const DARK = '#3A1215';
 const NTH = 30;
 
+const r0 = (arr: It[]) => arr.sort((a, b) => b.z - a.z).map((it, i) => <React.Fragment key={i}>{it.el}</React.Fragment>);
 const thAt = (j: number) => -Math.PI / 2 + (2 * Math.PI * j) / NTH; // j=0 floor centre
 const regionColor = (th: number) => {
   const s = Math.sin(th);
@@ -23,7 +55,8 @@ const regionColor = (th: number) => {
   return mix('#C77F77', '#DDB3AA', Math.pow(s, 1.5));
 };
 
-export type FrontState = {B: Basis; g: number; iso: IsoPose; isoLight?: V3; food?: Food | null; swallow?: number; t: number; fkey: string};
+export type TongueState = {shrink: number; pale: number; flow: number; biteX: number | null; bead: number};
+export type FrontState = {B: Basis; g: number; iso: IsoPose | null; isoLight?: V3; food?: Food | null; swallow?: number; t: number; fkey: string; tongue?: TongueState | null};
 
 export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
   const {B, g, t} = s;
@@ -34,7 +67,7 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
   let uid = 0;
   // inside the mouth the light travels with the camera (falls off with distance from it)
   const inside = clamp((B.eye[0] + 3) / 8);
-  const attAt = (p: V3, x: number) => lerp(Math.exp(-Math.max(0, x - 1) / 21), Math.exp(-Math.hypot(...sub3(p, B.eye)) / 26), inside);
+  const attAt = (p: V3, x: number) => lerp(Math.exp(-Math.max(0, x - 1) / 34), Math.exp(-Math.hypot(...sub3(p, B.eye)) / 34), inside);
   const id = (p: string) => `${s.fkey}${p}${uid++}`;
 
   // ---------------- throat: the dark opening at the back
@@ -53,9 +86,9 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
           <g key={gid}>
             <defs>
               <radialGradient id={gid} gradientUnits="userSpaceOnUse" cx={c.x.toFixed(1)} cy={c.y.toFixed(1)} r={Math.max(1, r).toFixed(1)}>
-                <stop offset="0" stopColor="#050102" />
-                <stop offset={(0.45 - 0.25 * sw).toFixed(2)} stopColor="#0B0204" />
-                <stop offset="1" stopColor="#3A0F12" />
+                <stop offset="0" stopColor="#140406" />
+                <stop offset={(0.4 - 0.25 * sw).toFixed(2)} stopColor="#2A090C" />
+                <stop offset="1" stopColor="#6A2226" />
               </radialGradient>
             </defs>
             <path d={d} fill={`url(#${gid})`} />
@@ -75,6 +108,7 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
       let n = norm3(cross3(sub3(q[1], q[0]), sub3(q[3], q[0])));
       const axis: V3 = [c[0], 0, (floorAt(c[0]) + roofZ(c[0], g)) / 2];
       if (dot3(n, sub3(axis, c)) < 0) n = mul3(n, -1);
+      if (dot3(n, toCam(c)) < -0.08) continue; // the wall seen from outside (a cutaway through it)
       const d = projPoly(B, q, 0.8);
       if (!d) continue;
       const thm = (t0 + t1) / 2;
@@ -98,7 +132,7 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
       for (let q = N; q >= 0; q--) slit.push(wall(sx1, lerp(thA, thB, q / N), g, 0.15));
       const ds = projPoly(B, slit, 0.8);
       const cS = wall((sx0 + sx1) / 2, 0, g);
-      const att = lerp(Math.exp(-Math.max(0, ax - 1) / 30), Math.exp(-Math.hypot(...sub3(cS, B.eye)) / 30), inside);
+      const att = lerp(Math.exp(-Math.max(0, ax - 1) / 40), Math.exp(-Math.hypot(...sub3(cS, B.eye)) / 40), inside);
       if (ds) {
         const fil: React.ReactNode[] = [];
         for (let q = 0; q < 22; q++) {
@@ -158,7 +192,7 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
     if (dz(p) < 2) continue;
     const P = proj(B, p);
     if (P.x < -20 || P.x > 1100 || P.y < -20 || P.y > 1940) continue;
-    const att = Math.exp(-x / 18);
+    const att = Math.exp(-x / 26);
     const light = hash(q * 2.2) > 0.55;
     items.push({z: dz(p) - 0.1, el: <ellipse key={id('sp')} cx={P.x.toFixed(1)} cy={P.y.toFixed(1)} rx={((0.18 + 0.3 * hash(q)) * P.s).toFixed(2)} ry={((0.12 + 0.2 * hash(q + 1)) * P.s).toFixed(2)} fill={light ? '#F4D2C8' : '#7A2E30'} opacity={(0.35 * att).toFixed(3)} />});
   }
@@ -178,8 +212,83 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
     items.push({z: dz(p) - 0.2, el: <ellipse key={id('w')} cx={P.x.toFixed(1)} cy={P.y.toFixed(1)} rx={(0.7 * P.s).toFixed(2)} ry={(0.35 * P.s).toFixed(2)} fill="#FFF3EE" opacity={(0.55 * sp).toFixed(3)} />});
   }
 
-  // ---------------- the parasite (and food), sorted with the walls and roof
-  const isoIt = isopodItems(B, s.iso, s.isoLight ?? [-0.5, 0, 1]);
+  // ---------------- the tongue: a pad on the floor, with its blood vessels on the surface
+  const tongueEls: React.ReactNode[] = [];
+  if (s.tongue) {
+    const T = s.tongue;
+    const NU = 16, NV = 12;
+    const base = mix('#D97C74', '#C9A39B', T.pale);
+    const quads: It[] = [];
+    for (let i = 0; i < NU; i++) {
+      for (let j = 0; j < NV; j++) {
+        const u0 = i / NU, u1 = (i + 1) / NU, v0 = -1 + (2 * j) / NV, v1 = -1 + (2 * (j + 1)) / NV;
+        const q = [tongueSurf(u0, v0, T.shrink), tongueSurf(u1, v0, T.shrink), tongueSurf(u1, v1, T.shrink), tongueSurf(u0, v1, T.shrink)];
+        const c = mul3(add3(add3(q[0], q[1]), add3(q[2], q[3])), 0.25);
+        let n = norm3(cross3(sub3(q[1], q[0]), sub3(q[3], q[0])));
+        if (n[2] < 0) n = mul3(n, -1);
+        if (dot3(n, toCam(c)) < -0.05) continue;
+        const d = projPoly(B, q, 0.8);
+        if (!d) continue;
+        const lamb = lerp(0.35 + 0.65 * Math.max(0, dot3(n, LIGHT)), 0.4 + 0.6 * Math.max(0, dot3(n, toCam(c))), inside);
+        const col = mix(DARK, mix(shade(base, 0.45), lit(base, 0.12), lamb), attAt(c, c[0]) * 0.6 + 0.4);
+        quads.push({z: dz(c), el: <path key={id('tq')} d={d} fill={col} stroke={col} strokeWidth={0.7} strokeLinejoin="round" />});
+      }
+    }
+    tongueEls.push(<g key="tq" filter={`url(#${s.fkey}tsoft)`}>{r0(quads)}</g>);
+    // papillae and wet glints
+    for (let q = 0; q < 70; q++) {
+      const u = 0.05 + 0.9 * hash(q * 3.7 + 11), v = -0.85 + 1.7 * hash(q * 5.1 + 7);
+      const p = tongueSurf(u, v, T.shrink, 0.03);
+      if (dz(p) < 1.5) continue;
+      const P = proj(B, p);
+      tongueEls.push(<circle key={id('tp')} cx={P.x.toFixed(1)} cy={P.y.toFixed(1)} r={Math.max(0.5, 0.16 * P.s).toFixed(2)} fill={hash(q) > 0.5 ? '#F6CFC6' : '#A8564F'} opacity={0.45} />);
+    }
+    // blood vessels: a midline vessel and two branches, from the base toward the tip
+    const vessel = (vs: (u: number) => number, u0: number, u1: number) => {
+      const pts: V3[] = [];
+      for (let k = 0; k <= 14; k++) { const u = lerp(u0, u1, k / 14); pts.push(tongueSurf(u, vs(u), T.shrink, 0.06)); }
+      return pts;
+    };
+    const vessels = [vessel(() => 0, 0.97, 0.1), vessel((u) => 0.5 * Math.sin((u - 0.15) * 2.4), 0.85, 0.2), vessel((u) => -0.5 * Math.sin((u - 0.15) * 2.4), 0.85, 0.2)];
+    const pulse = 0.5 + 0.5 * Math.cos((2 * Math.PI * t) / 0.75);
+    vessels.forEach((pts, vi) => {
+      if (pts.some((p) => dz(p) < 1.5)) return;
+      const P = pts.map((p) => proj(B, p));
+      const w = (vi === 0 ? 0.3 : 0.2) * P[4].s * (0.45 + 0.55 * T.flow);
+      tongueEls.push(<path key={id('vs')} d={smoothOpen(P)} fill="none" stroke="#9A1C28" strokeWidth={Math.max(0.6, w).toFixed(2)} strokeLinecap="round" opacity={0.25 + 0.35 * T.flow} />);
+      tongueEls.push(<path key={id('vc')} d={smoothOpen(P)} fill="none" stroke="#D8343E" strokeWidth={Math.max(0.4, w * 0.4 * (0.8 + 0.2 * pulse)).toFixed(2)} strokeLinecap="round" opacity={0.45 * T.flow} />);
+      // flow: bright pulses moving along the vessel (toward the bite while the parasite feeds)
+      for (let k = 0; k < 6; k++) {
+        const u = (((k / 6 + t * 0.7) % 1) + 1) % 1;
+        const idx = Math.min(13, Math.floor(u * 14)), fr = u * 14 - idx;
+        const a = P[idx], b = P[idx + 1];
+        tongueEls.push(<circle key={id('fp')} cx={(a.x + (b.x - a.x) * fr).toFixed(1)} cy={(a.y + (b.y - a.y) * fr).toFixed(1)} r={Math.max(0.6, w * 0.5).toFixed(2)} fill="#FF6A70" opacity={(0.55 * T.flow * Math.sin(Math.PI * u)).toFixed(2)} />);
+      }
+    });
+    // wrinkles as it withers
+    if (T.pale > 0.05) {
+      for (let k = 0; k < 6; k++) {
+        const u = 0.15 + 0.13 * k;
+        const pts: V3[] = [];
+        for (let m = 0; m <= 8; m++) pts.push(tongueSurf(u + 0.03 * Math.sin(m + k), -0.85 + (1.7 * m) / 8, T.shrink, 0.04));
+        if (pts.some((p) => dz(p) < 1.5)) continue;
+        const P = pts.map((p) => proj(B, p));
+        tongueEls.push(<path key={id('wr')} d={smoothOpen(P)} fill="none" stroke="#7E5A55" strokeWidth={Math.max(0.5, 0.12 * P[4].s).toFixed(2)} opacity={0.55 * T.pale} />);
+      }
+    }
+    // the bite: blood beading where the mouthparts went in
+    if (T.biteX !== null && T.bead > 0.01) {
+      const p = tongueSurf(clamp((T.biteX - tongueSurf(0, 0, T.shrink)[0]) / (27 - tongueSurf(0, 0, T.shrink)[0]), 0, 1), 0, T.shrink, 0.15);
+      if (dz(p) > 1.5) {
+        const P = proj(B, p);
+        tongueEls.push(<ellipse key={id('bd')} cx={P.x.toFixed(1)} cy={P.y.toFixed(1)} rx={(0.9 * T.bead * (0.85 + 0.15 * pulse) * P.s).toFixed(2)} ry={(0.6 * T.bead * P.s).toFixed(2)} fill="#B3101C" opacity={0.9} />);
+        tongueEls.push(<ellipse key={id('bh')} cx={(P.x - 0.25 * P.s).toFixed(1)} cy={(P.y - 0.2 * P.s).toFixed(1)} rx={(0.25 * T.bead * P.s).toFixed(2)} ry={(0.12 * T.bead * P.s).toFixed(2)} fill="#FFFFFF" opacity={0.6} />);
+      }
+    }
+  }
+
+  // ---------------- the parasite (and food)
+  const isoIt = s.iso ? isopodItems(B, s.iso, s.isoLight ?? [-0.5, 0, 1]) : [];
   const isoGroup: It = {z: 0, el: <g key="iso">{isoIt.sort((a, b) => b.z - a.z).map((it, i) => <React.Fragment key={i}>{it.el}</React.Fragment>)}</g>};
   const foodIt = s.food ? foodItems(B, s.food, id('fd')) : null;
 
@@ -194,7 +303,7 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
       inner.push(wall(0.6, th, g));
     }
     const dOut = projPoly(B, outer, 0.8), dIn = projPoly(B, inner, 0.8);
-    if (dOut && dIn && dz([-3.2, 0, 10]) > 1) {
+    if (dOut && dIn && outer.every((p) => dz(p) > 1.5) && inner.every((p) => dz(p) > 1.5)) {
       const gid = id('lp');
       const mid: V2[] = [], inn: V2[] = [], up: V2[] = [];
       for (let j = 0; j < NTH; j++) {
@@ -240,7 +349,8 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
   // ---------------- the face (a plane around the lips): head outline, eyes, nostrils, jaw lines, fins
   const face: React.ReactNode[] = [];
   const fins: React.ReactNode[] = [];
-  if (dz([-4, 0, 10]) > 2) {
+  const faceOp = clamp((-B.eye[0] - 5) / 5);
+  if (faceOp > 0.001 && dz([-4, 0, 10]) > 4 && dz([-4, 21, 40]) > 4 && dz([-4, -21, 40]) > 4) {
     const HP: [number, number][] = [[80, 2], [74, 7], [64, 12.5], [54, 17], [46, 20.2], [36, 21], [24, 20.6], [12, 20.2], [2, 19.6], [-8, 17.8], [-18, 14.6], [-27, 10.5], [-35, 6], [-40, 1.5]];
     const outline: V3[] = [];
     const fx = (z: number) => -4 + Math.max(0, z - 34) * 0.85 + Math.max(0, -z - 6) * 0.7;
@@ -343,20 +453,22 @@ export const FrontSet: React.FC<{s: FrontState}> = ({s}) => {
   const thr = items.filter((i) => i.z > 9e5), rest = items.filter((i) => i.z <= 9e5);
   return (
     <g>
-      {B.eye[0] < -3 && fins}
+      {faceOp > 0 && <g opacity={faceOp}>{fins}</g>}
       <defs>
-        <filter id={`${s.fkey}soft`} x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation={(B.eye[0] > -2 ? 1.6 : clamp(0.16 * proj(B, s.iso.o).s, 1.4, 9)).toFixed(2)} /></filter>
+        <filter id={`${s.fkey}tsoft`} filterUnits="userSpaceOnUse" x="-60" y="-60" width="1200" height="2040"><feGaussianBlur stdDeviation="1.1" /></filter>
+        <filter id={`${s.fkey}soft`} filterUnits="userSpaceOnUse" x="-60" y="-60" width="1200" height="2040"><feGaussianBlur stdDeviation={(B.eye[0] > -2 ? 1.6 : clamp(0.16 * proj(B, s.iso ? s.iso.o : [15, 0, 2]).s, 1.4, 9)).toFixed(2)} /></filter>
       </defs>
       <g filter={`url(#${s.fkey}soft)`}>
         {r(thr)}
         {r(under)}
         {r(rest)}
       </g>
+      {tongueEls}
       {foodIt && foodIt.behind && foodIt.el}
       {isoGroup.el}
       {foodIt && !foodIt.behind && !(s.food && s.food.p[0] < -2.5) && foodIt.el}
       {lipFront}
-      {face}
+      <g opacity={faceOp}>{face}</g>
       {foodIt && s.food && s.food.p[0] < -2.5 && foodIt.el}
     </g>
   );
