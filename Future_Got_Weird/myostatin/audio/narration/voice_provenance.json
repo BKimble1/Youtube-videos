@@ -1,0 +1,20 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Zombie Ant and Zombie Snail); confirmed with creative_list_voices on 2026-10-31"},
+ "model_id": "eleven_v4",
+ "flow_id": "8kD4IQKjdajDFhb2578s",
+ "prompt": "[energetic, curious] If you blocked this one protein, your muscles could grow WAY bigger. [brisk, explaining] It's called myostatin, and it acts like a brake on muscle growth. [slightly eerie] But some animals are born without that brake. [building] And their muscles grow FREAKISHLY HUGE. [intrigued, quick] Scientists are even developing drugs that block it in humans. [lower, like an unexpected discovery] But here's the weird part. [knowing] Bigger muscles don't always mean more strength. [eerie, wry] So you could end up looking SUPERHUMAN without actually being super strong.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). Capitals mark the brief's emphasis words ('WAY' is capitalised in the approved script itself); the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 581.9 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_9Qt4.mp3", "generation_id": "9Qt45YHtB1Foxiv8Xtqp", "duration_s": 25.84, "chosen": false,
+   "why_not": "weaker emphasis: 'WAY' +3.7 dB, 'huge' +5.2 dB, 'superhuman' +0.2 dB over the median word"},
+  {"file": "audio/narration/takes/t2_xLNo.mp3", "generation_id": "xLNovKrk7EntAZOEHQKS", "duration_s": 25.92, "chosen": true,
+   "asr": "zipformer and whisper base.en: homophones only (brake/break, super strong/superstrong, superhuman/super human; zipformer misspells myostatin)",
+   "emphasis_db_vs_median_word": {"WAY": 6.0, "freakishly": 3.3, "huge": 5.6, "superhuman": 1.7}}
+ ],
+ "edits": "Seven sentence gaps (measured below -45 dBFS) shortened to 0.24 s, except 0.36 s before and 0.30 s after 'But here's the weird part': 1.59 s removed in all, each cut in the middle of a silent run with a 12 ms equal-power crossfade. Every word is used sample for sample: no time-stretch, no pitch or gain change. See tools/make_narration.py.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps snapped to measured pause onsets, re-measured on the edited master (tools/align_zipformer.py -> audio/narration/master_zipformer.json)",
+ "final": {"file": "audio/narration/FGW_Myostatin_narration_V1.wav", "sha256": "116642485313a90f41e9b1f318629db5d7f162f998077d64910057b48f4d32c6", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 24.08], "film_s": 24.567},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+}

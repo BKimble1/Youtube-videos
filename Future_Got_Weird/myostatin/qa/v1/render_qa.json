@@ -1,0 +1,569 @@
+{
+ "file": "FGW_Myostatin_V1_REVIEW_1080x1920.mp4",
+ "size_mb": 21.99,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 737,
+  "duration_s": 24.567
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 3.95,
+ "large_changes": [
+  {
+   "frame": 59,
+   "t": 1.967,
+   "mad": 29.78,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 40.48,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 61,
+   "t": 2.033,
+   "mad": 51.07,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 62,
+   "t": 2.067,
+   "mad": 65.42,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 63,
+   "t": 2.1,
+   "mad": 64.57,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 64,
+   "t": 2.133,
+   "mad": 61.88,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 65,
+   "t": 2.167,
+   "mad": 49.2,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 66,
+   "t": 2.2,
+   "mad": 47.71,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 67,
+   "t": 2.233,
+   "mad": 44.04,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 68,
+   "t": 2.267,
+   "mad": 32.45,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 69,
+   "t": 2.3,
+   "mad": 30.43,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 70,
+   "t": 2.333,
+   "mad": 30.56,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 71,
+   "t": 2.367,
+   "mad": 34.59,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 72,
+   "t": 2.4,
+   "mad": 24.35,
+   "planned": "dive into the muscle"
+  },
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 21.8,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 225,
+   "t": 7.5,
+   "mad": 32.79,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 226,
+   "t": 7.533,
+   "mad": 34.04,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 227,
+   "t": 7.567,
+   "mad": 43.06,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "mad": 31.61,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 231,
+   "t": 7.7,
+   "mad": 26.5,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 232,
+   "t": 7.733,
+   "mad": 34.43,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 233,
+   "t": 7.767,
+   "mad": 39.84,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 234,
+   "t": 7.8,
+   "mad": 48.51,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 235,
+   "t": 7.833,
+   "mad": 30.93,
+   "planned": "collagen sheet (human -> bull)"
+  },
+  {
+   "frame": 257,
+   "t": 8.567,
+   "mad": 21.01,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 258,
+   "t": 8.6,
+   "mad": 24.17,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 259,
+   "t": 8.633,
+   "mad": 28.1,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "mad": 31.91,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "mad": 31.91,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 262,
+   "t": 8.733,
+   "mad": 27.43,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 263,
+   "t": 8.767,
+   "mad": 27.91,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 264,
+   "t": 8.8,
+   "mad": 28.01,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 265,
+   "t": 8.833,
+   "mad": 36.83,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 266,
+   "t": 8.867,
+   "mad": 42.15,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 267,
+   "t": 8.9,
+   "mad": 46.1,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 268,
+   "t": 8.933,
+   "mad": 49.83,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 269,
+   "t": 8.967,
+   "mad": 68.41,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 270,
+   "t": 9.0,
+   "mad": 61.5,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 271,
+   "t": 9.033,
+   "mad": 39.02,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 272,
+   "t": 9.067,
+   "mad": 27.86,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "mad": 29.38,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 274,
+   "t": 9.133,
+   "mad": 33.72,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 275,
+   "t": 9.167,
+   "mad": 29.95,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 276,
+   "t": 9.2,
+   "mad": 24.9,
+   "planned": "pull-out to the bull"
+  },
+  {
+   "frame": 364,
+   "t": 12.133,
+   "mad": 26.68,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 365,
+   "t": 12.167,
+   "mad": 43.6,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 366,
+   "t": 12.2,
+   "mad": 45.96,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 367,
+   "t": 12.233,
+   "mad": 62.65,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 368,
+   "t": 12.267,
+   "mad": 92.72,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 369,
+   "t": 12.3,
+   "mad": 45.78,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 370,
+   "t": 12.333,
+   "mad": 40.15,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 371,
+   "t": 12.367,
+   "mad": 26.52,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 372,
+   "t": 12.4,
+   "mad": 28.51,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 373,
+   "t": 12.433,
+   "mad": 33.05,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 374,
+   "t": 12.467,
+   "mad": 25.64,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 23.79,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 377,
+   "t": 12.567,
+   "mad": 46.31,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 378,
+   "t": 12.6,
+   "mad": 54.4,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 379,
+   "t": 12.633,
+   "mad": 41.07,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 381,
+   "t": 12.7,
+   "mad": 35.31,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 382,
+   "t": 12.733,
+   "mad": 47.21,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 383,
+   "t": 12.767,
+   "mad": 58.08,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 384,
+   "t": 12.8,
+   "mad": 49.22,
+   "planned": "into the shoulder, collagen sheet (bull -> dish)"
+  },
+  {
+   "frame": 386,
+   "t": 12.867,
+   "mad": 22.26,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 387,
+   "t": 12.9,
+   "mad": 32.8,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 388,
+   "t": 12.933,
+   "mad": 31.89,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 389,
+   "t": 12.967,
+   "mad": 31.18,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 390,
+   "t": 13.0,
+   "mad": 37.28,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 391,
+   "t": 13.033,
+   "mad": 41.27,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 392,
+   "t": 13.067,
+   "mad": 61.19,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 393,
+   "t": 13.1,
+   "mad": 69.84,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 394,
+   "t": 13.133,
+   "mad": 56.03,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 395,
+   "t": 13.167,
+   "mad": 41.89,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 396,
+   "t": 13.2,
+   "mad": 26.48,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 397,
+   "t": 13.233,
+   "mad": 26.98,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 398,
+   "t": 13.267,
+   "mad": 24.82,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 399,
+   "t": 13.3,
+   "mad": 21.19,
+   "planned": "pull-out to the lab"
+  },
+  {
+   "frame": 417,
+   "t": 13.9,
+   "mad": 24.56,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 418,
+   "t": 13.933,
+   "mad": 30.97,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 44.15,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 420,
+   "t": 14.0,
+   "mad": 56.43,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 421,
+   "t": 14.033,
+   "mad": 71.82,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "mad": 61.93,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 423,
+   "t": 14.1,
+   "mad": 36.64,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 424,
+   "t": 14.133,
+   "mad": 34.04,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 425,
+   "t": 14.167,
+   "mad": 33.63,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 426,
+   "t": 14.2,
+   "mad": 36.08,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 427,
+   "t": 14.233,
+   "mad": 23.82,
+   "planned": "into the sample"
+  },
+  {
+   "frame": 448,
+   "t": 14.933,
+   "mad": 68.87,
+   "planned": "deliberate cut: \"in humans\""
+  },
+  {
+   "frame": 591,
+   "t": 19.7,
+   "mad": 23.03,
+   "planned": "pull-out from the elbow"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 10,
+ "longest_near_static_run_starts_s": 10.03,
+ "loop_last_vs_first_mad": 34.37
+}

@@ -1,0 +1,404 @@
+{
+ "audio": "audio/narration/takes/t2_xLNo.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.73,
+   1.93
+  ],
+  [
+   3.87,
+   4.31
+  ],
+  [
+   7.42,
+   8.01
+  ],
+  [
+   10.14,
+   10.52
+  ],
+  [
+   13.01,
+   13.43
+  ],
+  [
+   16.49,
+   16.98
+  ],
+  [
+   17.15,
+   17.37
+  ],
+  [
+   18.48,
+   19.05
+  ],
+  [
+   21.12,
+   21.68
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.23
+  },
+  {
+   "word": "blocked",
+   "start": 0.24,
+   "end": 0.68
+  },
+  {
+   "word": "this",
+   "start": 0.68,
+   "end": 0.91
+  },
+  {
+   "word": "one",
+   "start": 0.92,
+   "end": 1.19
+  },
+  {
+   "word": "protein,",
+   "start": 1.2,
+   "end": 1.73
+  },
+  {
+   "word": "your",
+   "start": 1.93,
+   "end": 2.06
+  },
+  {
+   "word": "muscles",
+   "start": 2.07,
+   "end": 2.51
+  },
+  {
+   "word": "could",
+   "start": 2.51,
+   "end": 2.74
+  },
+  {
+   "word": "grow",
+   "start": 2.75,
+   "end": 3.1
+  },
+  {
+   "word": "WAY",
+   "start": 3.11,
+   "end": 3.38
+  },
+  {
+   "word": "bigger.",
+   "start": 3.39,
+   "end": 3.87
+  },
+  {
+   "word": "It's",
+   "start": 4.31,
+   "end": 4.4
+  },
+  {
+   "word": "called",
+   "start": 4.41,
+   "end": 4.72
+  },
+  {
+   "word": "myostatin,",
+   "start": 4.73,
+   "end": 5.52
+  },
+  {
+   "word": "and",
+   "start": 5.53,
+   "end": 5.58
+  },
+  {
+   "word": "it",
+   "start": 5.69,
+   "end": 5.8
+  },
+  {
+   "word": "acts",
+   "start": 5.81,
+   "end": 6.09
+  },
+  {
+   "word": "like",
+   "start": 6.09,
+   "end": 6.24
+  },
+  {
+   "word": "a",
+   "start": 6.25,
+   "end": 6.36
+  },
+  {
+   "word": "brake",
+   "start": 6.37,
+   "end": 6.68
+  },
+  {
+   "word": "on",
+   "start": 6.69,
+   "end": 6.84
+  },
+  {
+   "word": "muscle",
+   "start": 6.85,
+   "end": 7.24
+  },
+  {
+   "word": "growth.",
+   "start": 7.25,
+   "end": 7.42
+  },
+  {
+   "word": "But",
+   "start": 8.01,
+   "end": 8.06
+  },
+  {
+   "word": "some",
+   "start": 8.05,
+   "end": 8.35
+  },
+  {
+   "word": "animals",
+   "start": 8.355,
+   "end": 8.79
+  },
+  {
+   "word": "are",
+   "start": 8.795,
+   "end": 8.95
+  },
+  {
+   "word": "born",
+   "start": 8.955,
+   "end": 9.23
+  },
+  {
+   "word": "without",
+   "start": 9.235,
+   "end": 9.58
+  },
+  {
+   "word": "that",
+   "start": 9.595,
+   "end": 9.76
+  },
+  {
+   "word": "brake.",
+   "start": 9.795,
+   "end": 10.14
+  },
+  {
+   "word": "And",
+   "start": 10.52,
+   "end": 10.57
+  },
+  {
+   "word": "their",
+   "start": 10.56,
+   "end": 10.72
+  },
+  {
+   "word": "muscles",
+   "start": 10.73,
+   "end": 11.28
+  },
+  {
+   "word": "grow",
+   "start": 11.29,
+   "end": 11.55
+  },
+  {
+   "word": "freakishly",
+   "start": 11.61,
+   "end": 12.44
+  },
+  {
+   "word": "huge.",
+   "start": 12.45,
+   "end": 13.01
+  },
+  {
+   "word": "Scientists",
+   "start": 13.43,
+   "end": 13.97
+  },
+  {
+   "word": "are",
+   "start": 13.98,
+   "end": 14.09
+  },
+  {
+   "word": "even",
+   "start": 14.1,
+   "end": 14.34
+  },
+  {
+   "word": "developing",
+   "start": 14.34,
+   "end": 14.81
+  },
+  {
+   "word": "drugs",
+   "start": 14.82,
+   "end": 15.22
+  },
+  {
+   "word": "that",
+   "start": 15.22,
+   "end": 15.37
+  },
+  {
+   "word": "block",
+   "start": 15.38,
+   "end": 15.67
+  },
+  {
+   "word": "it",
+   "start": 15.7,
+   "end": 15.85
+  },
+  {
+   "word": "in",
+   "start": 15.86,
+   "end": 16.05
+  },
+  {
+   "word": "humans.",
+   "start": 16.06,
+   "end": 16.49
+  },
+  {
+   "word": "But",
+   "start": 16.98,
+   "end": 17.15
+  },
+  {
+   "word": "here's",
+   "start": 17.37,
+   "end": 17.65
+  },
+  {
+   "word": "the",
+   "start": 17.66,
+   "end": 17.82
+  },
+  {
+   "word": "weird",
+   "start": 17.82,
+   "end": 18.2
+  },
+  {
+   "word": "part.",
+   "start": 18.22,
+   "end": 18.48
+  },
+  {
+   "word": "Bigger",
+   "start": 19.05,
+   "end": 19.24
+  },
+  {
+   "word": "muscles",
+   "start": 19.245,
+   "end": 19.72
+  },
+  {
+   "word": "don't",
+   "start": 19.725,
+   "end": 20.04
+  },
+  {
+   "word": "always",
+   "start": 20.045,
+   "end": 20.28
+  },
+  {
+   "word": "mean",
+   "start": 20.285,
+   "end": 20.52
+  },
+  {
+   "word": "more",
+   "start": 20.525,
+   "end": 20.76
+  },
+  {
+   "word": "strength.",
+   "start": 20.765,
+   "end": 21.12
+  },
+  {
+   "word": "So",
+   "start": 21.68,
+   "end": 21.87
+  },
+  {
+   "word": "you",
+   "start": 21.88,
+   "end": 22.11
+  },
+  {
+   "word": "could",
+   "start": 22.12,
+   "end": 22.35
+  },
+  {
+   "word": "end",
+   "start": 22.36,
+   "end": 22.55
+  },
+  {
+   "word": "up",
+   "start": 22.56,
+   "end": 22.76
+  },
+  {
+   "word": "looking",
+   "start": 22.76,
+   "end": 23.07
+  },
+  {
+   "word": "superhuman",
+   "start": 23.08,
+   "end": 23.88
+  },
+  {
+   "word": "without",
+   "start": 23.88,
+   "end": 24.19
+  },
+  {
+   "word": "actually",
+   "start": 24.2,
+   "end": 24.64
+  },
+  {
+   "word": "being",
+   "start": 24.64,
+   "end": 24.91
+  },
+  {
+   "word": "super",
+   "start": 24.92,
+   "end": 24.97
+  },
+  {
+   "word": "strong.",
+   "start": 24.96,
+   "end": 25.76
+  }
+ ]
+}
