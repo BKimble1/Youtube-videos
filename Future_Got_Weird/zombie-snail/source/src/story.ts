@@ -1,18 +1,26 @@
-// The film's timeline: every beat keyed to the measured narration (data/timeline.json via word()), the states of
-// both snails, the bird and the dropping at time t, and the camera.
+// V2 timeline: every beat keyed to the measured narration (data/timeline.json via word()), the states of both
+// snails, the bird and the dropping at time t, and the camera.
 //
-//   0.00-4.6   HOOK  snail A, extreme close-up: one eyestalk swells, rings show, it pulses; the second follows; the
-//                    bird's shadow crosses; the camera pushes in until the pulsing stalk fills the frame ("moving bait")
-//   4.4-5.0    DIVE  through the sac wall into the packed larvae, dissolving into a fluke egg in a dropping
-//   5.0-7.9    snail B eats the egg; the glassy body shows the larva hatch and the sporocyst grow toward the head and
-//                    fill both eyestalks ("grows through its body ... fills its eyestalks")
-//   7.9-12.3   outside: the pulsing, colourful stalks; a real caterpillar on the twig behind pulses the same way
-//   12.3-15.2  the snail rises into the light, the stalks at full strength; a bird lands on the twig beside it
-//   15.2-17.4  the bird looks, pecks once and tears off one swollen stalk
-//   17.4-19.3  it swallows; its glassy body shows the sac going down the gut
-//   19.3-21.4  in the cloaca the larvae become adult flukes, and their eggs stream toward the vent
-//   21.4-22.6  a dropping falls onto the leaf below, beside snail A
-//   22.6-24.87 the camera pushes back into snail A's eyestalk: the last frame is the first
+// One leaf. Snail 1 starts at H (x = 0), already infected; it later climbs to the sunlit spot T near the leaf tip,
+// where the bird takes a stalk. The dropping falls back at H, where snail 2 arrives and ends in exactly the pose
+// snail 1 had in the first frame (same stalk, same pulse phase), so the last frame is the first.
+//
+//   0.00-0.50  extreme close-up of a swollen striped eyestalk; a contraction bulge travels up it
+//   0.50-2.05  continuous pull-back to the whole snail ("...inside a snail")
+//   2.05-3.10  push in: the stalk writhes and distorts ("it can turn its eyes")
+//   3.10-4.55  a lengthwise cutaway opens the stalk: the sac wall, packed larvae, the retractor ("into moving bait")
+//   4.55-6.60  down the stalk into a cutaway of the body: the green sporocyst grows from the visceral mass forward
+//              ("The worm grows through its body")
+//   6.60-7.85  back up into the stalk: material pumps in, the sac swells, the larvae mature ("fills its eyestalks")
+//   7.85-9.55  the skin closes: outside, both stalks pulse, colourful ("with pulsing, colorful sacs")
+//   9.55-12.5  one continuous pull-out to the forest as the snail climbs into the sun; a caterpillar on the twig
+//              above pulses the same way ("They start looking like tiny caterpillars")
+//   12.5-15.2  a thrush lands beside the exposed snail and turns one eye on it ("exactly what the parasite wants")
+//   15.2-17.0  the eye; a fast strike; one stalk torn off ("Because when a bird spots one and eats it")
+//   17.0-19.3  the swallow; the camera follows the sac down the gullet and into the gut ("...inside the bird")
+//   19.3-21.3  in the cloaca: the larvae become adult flukes, their uteri full of eggs; the eggs stream out
+//   21.3-22.45 out through the vent: the bird on a branch above H; the dropping falls ("...the bird's droppings")
+//   22.45-24.87 snail 2 reaches the dropping; the camera approaches its eyestalk, which blooms into frame 0
 import {P, pt} from './core/geo';
 import {DUR, clamp, lerp, ss, ss5, word} from './lib';
 import {SnailState, StalkParams} from './art/snail';
@@ -24,6 +32,10 @@ import {along, GUT_BIRD} from './art/micro';
 // ---------------------------------------------------------------- beats from the narration
 const w = word;
 export const T = {
+  snail0: w('snail').start,
+  it: w('it').start,
+  eyes: w('eyes').start,
+  into: w('into').start,
   bait0: w('moving').start,
   baitEnd: w('bait').end,
   worm: w('worm').start,
@@ -51,104 +63,97 @@ export const T = {
   spread: w('spread').start,
   droppings: w('droppings').start,
   ready: w('ready').start,
+  infect: w('infect').start,
   another: w('another').start,
   snailEnd: w('snail', 1).end,
 };
-// derived event times
 export const EV = {
-  shadow0: 2.1,
-  shadow1: 3.05,
-  dive0: T.baitEnd - 0.22,
-  swap: 4.93,
-  rasp0: 5.12,
-  swallowEgg: 5.45,
-  xray0: 5.55,
-  hatch: 5.86,
-  grow0: 6.0,
-  fill0: T.fills + 0.15,
-  xrayOut: T.pulsing - 0.25,
+  pull0: 0.5,
+  push0: 2.05,
+  cut0: T.into - 0.25,
+  bodyCut0: 4.5,
+  stalkBack: T.fills - 0.15,
+  cutClose: T.pulsing - 0.1,
+  climb0: T.pulsing + 0.05,
+  climb1: 12.6,
   land0: 13.2,
   land1: 14.0,
-  cock: T.wants - 0.05,
+  look: T.wants - 0.1,
   tilt: T.spots,
-  lunge: T.eats - 0.12,
-  peck: T.eats + 0.16,
-  yank: T.eats + 0.22,
-  swallow: T.par3 + 0.1,
-  birdX: T.par3 + 0.45,
-  burst: 19.5,
-  release: 21.55,
-  landDrop: 22.5,
+  lunge: T.eats - 0.08,
+  peck: T.eats + 0.12,
+  yank: T.eats + 0.17,
+  swallow: T.par3 + 0.05,
+  intoBird: T.par3 + 0.4,
+  inside0: 18.2,
+  burst: 19.45,
+  perch2: 20.0,
+  inside1: 21.25,
+  release: 21.62,
+  landDrop: 22.42,
+  touch: T.infect,
+  bloom0: T.snailEnd - 0.1,
 };
 
 // ---------------------------------------------------------------- the set
-export const LEAF_B: LeafSpec = {x0: -34, x1: 17, y: 0, far: 2.2, near: 3.2, tilt: 0, hue: '#4E8A2E', seed: 4};
-export const LEAF_A: LeafSpec = {x0: 8, x1: 80, y: 40, far: 2.4, near: 3.4, tilt: -0.004, hue: '#58913A', seed: 9};
-export const TWIG_BIRD: P[] = [pt(13, -2.4), pt(30, -3.2), pt(52, -4.6), pt(90, -7)];
-export const TWIG_CAT: P[] = [pt(-48, -14.2), pt(-26, -14.5), pt(-4, -13.9)];
-export const STEM_B: P[] = [pt(-34, 0.6), pt(-40, 6), pt(-44, 30), pt(-46, 90)];
-export const STEM_A: P[] = [pt(8, 40.6), pt(2, 46), pt(-2, 70), pt(-4, 130)];
-export const DROP_B = pt(4.1, -0.15);
-export const EGG_B = pt(2.15, -0.42);
-export const CAT_DELTA = 6;
+export const LEAF: LeafSpec = {x0: -32, x1: 54, y: 0, far: 2.4, near: 3.4, tilt: 0, hue: '#3E7A27', seed: 4};
+export const STEM: P[] = [pt(-32, 0.6), pt(-38, 6), pt(-42, 30), pt(-44, 120)];
+export const TWIG_CAT: P[] = [pt(10, -20.4), pt(24, -20.9), pt(42, -20.2), pt(76, -24)];
+export const CAT_DELTA = 4;
+export const XT = 30; // T: the exposed spot near the leaf tip
 
-// ---------------------------------------------------------------- snail A (hook and loop)
+// ---------------------------------------------------------------- snails
 const NEAR0 = {ang: -1.12, bend: 0.24, Ln: 4.6, Ls: 7.8, rn: 0.4, rmax: 1.35};
 const FAR0 = {ang: -1.42, bend: 0.18, Ln: 4.4, Ls: 7.0, rn: 0.38, rmax: 1.2};
-export const XA0 = 35.5;
-export const xA = (t: number) => (t < 12 ? XA0 + 0.42 * t : XA0 - 0.42 * (DUR - t));
-export const snailA = (t: number): SnailState => {
-  const hook = t < 12;
-  const near: StalkParams = hook
-    ? {...NEAR0, S: ss(t, -0.3, 0.95), band: ss(t, 0.18, 0.62), pulse: ss(t, 0.62, 1.2) * (1 + 0.2 * ss(t, 2.8, 3.8)), vivid: 0.35 * ss(t, 2.5, 4)}
-    : {...NEAR0, S: 0, band: 0, pulse: 0};
-  const far: StalkParams = hook
-    ? {...FAR0, S: ss(t, 1.3, 2.25), band: ss(t, 1.45, 2.1), pulse: ss(t, 1.8, 2.35), phase: 1.9}
-    : {...FAR0, S: 0, band: 0, pulse: 0};
-  // the loop: identical crawl phase at t = 0 and t = DUR
-  return {o: pt(xA(t), 40), k: 1, t: hook ? t : t - DUR, crawl: xA(t) - XA0, lift: 0.05 + 0.02 * Math.sin((2 * Math.PI * t) / (DUR / 12)), near, far};
-};
-
-// ---------------------------------------------------------------- snail B (infection, lure, the peck)
-export const snailB = (t: number): SnailState => {
-  const pulse = 0.85 * ss(t, T.pulsing, T.pulsing + 0.5) + 0.2 * ss(t, T.they, T.tiny) + 0.18 * ss(t, T.and, T.and + 0.7);
-  const wound = ss(t, EV.peck, EV.peck + 0.1);
-  const near: StalkParams = {...NEAR0, S: ss(t, EV.fill0, EV.fill0 + 0.85), band: ss(t, EV.fill0 + 0.05, EV.fill0 + 0.7) * (1 - wound), pulse: pulse * (1 - wound), vivid: ss(t, T.they, T.cats), wound, retract: 0.45 * ss(t, EV.peck + 0.05, EV.peck + 0.5), xray: 0};
-  const far: StalkParams = {...FAR0, S: ss(t, EV.fill0 + 0.3, EV.fill0 + 1.1), band: ss(t, EV.fill0 + 0.35, EV.fill0 + 1.0), pulse: pulse * (1 - 0.5 * ss(t, EV.peck, EV.peck + 0.4)), phase: 1.9, vivid: ss(t, T.they, T.cats), retract: 0.7 * ss(t, EV.peck + 0.06, EV.peck + 0.4) * (1 - 0.6 * ss(t, 18.4, 19.4))};
-  const xr = ss(t, EV.xray0, EV.xray0 + 0.35) * (1 - ss(t, EV.xrayOut, EV.xrayOut + 0.45));
-  near.xray = xr;
-  far.xray = xr;
-  const dip = ss(t, 4.9, EV.rasp0) * (1 - ss(t, 5.6, 6.0));
-  const lift = 0.05 + 0.22 * ss(t, T.and, T.and + 1.2) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
+/** the infected stalks at the moment of the first frame (snail 2 blooms into exactly this) */
+const S0 = 0.86;
+export const x1 = (t: number) => (t < EV.climb0 ? 0.35 * t : lerp(0.35 * EV.climb0, XT, ss5(t, EV.climb0, EV.climb1)) + 0.05 * Math.max(0, t - EV.climb1));
+const pulseK = (t: number) => 1 + 0.35 * ss(t, T.it, T.it + 0.3) * (1 - ss(t, T.into, T.into + 0.4)) + 0.25 * ss(t, T.and, T.and + 0.8);
+export const snail1 = (t: number): SnailState => {
+  const wound = ss(t, EV.peck, EV.peck + 0.08);
+  const fill = ss(t, EV.stalkBack, EV.stalkBack + 1.1);
+  const cut = ss(t, EV.cut0, EV.cut0 + 0.7) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
+  const dev = 0.45 + 0.55 * ss(t, EV.stalkBack + 0.1, EV.stalkBack + 1.1);
+  const vivid = 0.35 + 0.65 * ss(t, T.they, T.cats);
+  const pk = pulseK(t) * (1 - wound);
+  const near: StalkParams = {...NEAR0, S: lerp(S0, 1, fill), band: 1 - wound, pulse: pk, vivid, wound, retract: 0.45 * ss(t, EV.peck + 0.04, EV.peck + 0.45), cut, dev};
+  const far: StalkParams = {...FAR0, S: lerp(S0, 1, fill), band: 1, pulse: pulseK(t) * (1 - 0.5 * ss(t, EV.peck, EV.peck + 0.4)), phase: 1.9, vivid,
+    retract: 0.7 * ss(t, EV.peck + 0.05, EV.peck + 0.4) * (1 - 0.6 * ss(t, 18.4, 19.6))};
+  const cutAlpha = 1 - ss(t, EV.stalkBack + 0.35, EV.stalkBack + 0.75);
+  const xr = cutAlpha > 0.001 ? ss(t, EV.bodyCut0, EV.bodyCut0 + 0.75) : 0;
+  const climbing = ss(t, EV.climb0, EV.climb0 + 0.4) * (1 - ss(t, EV.climb1 - 0.4, EV.climb1));
+  const lift = 0.05 + 0.2 * ss(t, EV.climb1 - 0.6, EV.climb1 + 0.4) + 0.02 * Math.sin(t * 2.1) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
   return {
-    o: pt(-1.3 + 0.85 * ss(t, 4.95, EV.swallowEgg - 0.05), 0),
+    o: pt(x1(t), 0),
     k: 1,
     t,
-    crawl: 0.3 * t,
+    crawl: x1(t) * (1 + 0.6 * climbing),
     lift,
-    dip,
-    rasp: t > EV.rasp0 && t < 5.75 ? 0.5 + 0.5 * Math.sin((t - EV.rasp0) * 30) : 0,
-    flinch: ss(t, EV.peck, EV.peck + 0.15) - 0.65 * ss(t, EV.peck + 0.5, EV.peck + 1.6),
+    flinch: ss(t, EV.peck, EV.peck + 0.12) - 0.65 * ss(t, EV.peck + 0.5, EV.peck + 1.6),
     near,
     far,
     xray: xr,
+    cutAlpha,
     lowRetract: ss(t, EV.peck, EV.peck + 0.2) * (1 - 0.7 * ss(t, 18, 19)),
-    light: 1 + 0.4 * ss(t, T.and, T.and + 1.2),
+    light: 1 + 0.45 * ss(t, EV.climb1 - 1, EV.climb1),
   };
 };
-export const snailBInside = (t: number) => ({
-  eggU: ss(t, EV.swallowEgg, EV.hatch),
-  hatch: ss(t, EV.hatch - 0.05, EV.hatch + 0.25),
-  grow: ss(t, EV.grow0, EV.fill0 + 0.3),
-  glow: 1,
-  t,
-});
+export const snail1Inside = (t: number) => ({grow: ss(t, T.worm - 0.1, T.fills - 0.1), flow: 1 + 2.5 * ss(t, EV.stalkBack, EV.stalkBack + 0.4), t});
+/** snail 2 arrives at H; it touches the dropping, lifts its head, and its stalk blooms into the first frame */
+export const x2 = (t: number) => -0.35 * (DUR - t);
+export const snail2 = (t: number): SnailState => {
+  const bloom = ss(t, EV.bloom0, DUR);
+  const tt = t - DUR; // phase-locked to snail 1 at t = 0
+  const near: StalkParams = {...NEAR0, S: S0 * bloom, band: ss(t, EV.bloom0 + 0.15, DUR), pulse: pulseK(0) * bloom, vivid: 0.35};
+  const far: StalkParams = {...FAR0, S: S0 * bloom, band: ss(t, EV.bloom0 + 0.15, DUR), pulse: pulseK(0) * bloom, phase: 1.9, vivid: 0.35};
+  const dip = ss(t, EV.touch - 0.3, EV.touch + 0.1) * (1 - ss(t, EV.touch + 0.55, EV.touch + 1.0));
+  return {o: pt(x2(t), 0), k: 1, t: tt, crawl: x2(t), lift: 0.05 + 0.02 * Math.sin(tt * 2.1), dip, rasp: dip > 0.5 ? 0.5 + 0.5 * Math.sin(t * 30) : 0, near, far, light: 1};
+};
 
-/** the near stalk of a snail in world coordinates at time t (for aiming the camera and the beak) */
-export const stalkPointW = (st: SnailState, u: number, which: 'near' | 'far' = 'near'): P => {
-  const s = st[which];
+/** a point on a snail's stalk in world coordinates, from its geometry without the pulse (a steady camera aim) */
+export const stalkPointW = (st: SnailState, u: number, which: 'near' | 'far' = 'near', steady = true): P => {
+  const s = steady ? {...st[which], pulse: 0, bulge: 0} : st[which];
   const local = which === 'near' ? pt(-1.0, -4.45) : pt(-2.2, -4.5);
-  // the same bend the snail applies (see art/snail.tsx)
   const w_ = Math.min(1, Math.max(0, (local.x + 7.5) / 6.5));
   const wb = w_ * w_ * (3 - 2 * w_) * (1 - 0.3 * clamp(-local.y / 6 - 0.6));
   const a = -(st.lift - 0.16 * (st.dip ?? 0)) * wb;
@@ -161,37 +166,55 @@ export const stalkPointW = (st: SnailState, u: number, which: 'near' | 'far' = '
   return pt(st.o.x + c.x * st.k, st.o.y + c.y * st.k);
 };
 
-// ---------------------------------------------------------------- the bird
+// ---------------------------------------------------------------- the bird (a thrush, k = 0.72; it pivots on its feet)
 export const BIRD_K = 0.72;
-const BIRD_O = pt(27, -23.2);
-const PECK_TARGET = stalkPointW(snailB(EV.peck - 0.05), 0.7);
+const FEET_L = pt(8.6, 26.2);
 const BEAK_TIP = pt(-22.5, 2.6);
 const rotP = (p: P, a: number) => pt(p.x * Math.cos(a) - p.y * Math.sin(a), p.x * Math.sin(a) + p.y * Math.cos(a));
-const PECK_ANG = -0.62, PECK_HA = -0.78;
-const PECK_HEAD = (() => {
-  const r = rotP(pt((PECK_TARGET.x - BIRD_O.x) / BIRD_K, (PECK_TARGET.y - BIRD_O.y) / BIRD_K), -PECK_ANG);
-  const b = rotP(BEAK_TIP, PECK_HA);
-  return pt(r.x - b.x, r.y - b.y);
+const addP = (a: P, b: P) => pt(a.x + b.x, a.y + b.y);
+const subP = (a: P, b: P) => pt(a.x - b.x, a.y - b.y);
+const mulP = (a: P, k: number) => pt(a.x * k, a.y * k);
+/** body centre from the feet: the body turns about the toes, which stay on the twig */
+const oFromFeet = (F: P, ang: number) => subP(F, mulP(rotP(FEET_L, ang), BIRD_K));
+const PECK_ANG = -0.78, PECK_HA = -0.62;
+const PECK_HEAD = pt(HEAD_REST.x - 2.5, HEAD_REST.y + 5.5);
+const PECK_TARGET = stalkPointW(snail1(EV.peck - 0.06), 0.66);
+/** perch 1 (beside T), solved so the beak meets the stalk at full lean with an unstretched neck */
+export const F1 = subP(PECK_TARGET, mulP(rotP(subP(addP(PECK_HEAD, rotP(BEAK_TIP, PECK_HA)), FEET_L), PECK_ANG), BIRD_K));
+/** perch 2 (above H), placed so the vent is over the spot where the dropping lands */
+export const DROP_LAND = pt(5.0, LEAF.y - 0.15);
+const VENT_L = pt(22, 8);
+const ANG2 = -0.08;
+export const F2 = (() => {
+  const o = subP(pt(DROP_LAND.x - 0.6, -46), mulP(rotP(VENT_L, ANG2), BIRD_K));
+  return addP(o, mulP(rotP(FEET_L, ANG2), BIRD_K));
 })();
+export const TWIG_1: P[] = [pt(F1.x - 7, F1.y + 0.9), pt(F1.x + 6, F1.y + 0.6), pt(F1.x + 30, F1.y - 1.5), pt(F1.x + 70, F1.y - 6)];
+export const TWIG_2: P[] = [pt(F2.x - 40, F2.y + 2.5), pt(F2.x - 10, F2.y + 0.9), pt(F2.x + 8, F2.y + 0.6), pt(F2.x + 26, F2.y - 1.2)];
 export const birdOn = (t: number) => t > EV.land0 - 0.05;
 export const bird = (t: number): BirdState => {
-  // landing: an arc down from the upper right, wings beating, folding as the feet take the twig
+  // landing on perch 1: down from the upper right, wings spread and beating, folding as the toes grip
   const land = ss5(t, EV.land0, EV.land1);
-  const o = t < EV.land1 ? pt(lerp(62, BIRD_O.x, land), lerp(-62, BIRD_O.y, land) - 6 * Math.sin(Math.PI * land)) : BIRD_O;
-  const flap = t < EV.land1 + 0.2 ? 1 - ss(t, EV.land1 - 0.12, EV.land1 + 0.18) : 0;
-  const beat = 0.5 * Math.sin(2 * Math.PI * 7 * t);
-  // head: rest, a cock toward the snail, a tilt, the lunge, the yank, the swallow
-  const peckU = ss(t, EV.lunge, EV.peck) * (1 - ss(t, EV.yank, EV.yank + 0.35));
-  const restHead = pt(HEAD_REST.x + 1.5 * ss(t, EV.cock, EV.cock + 0.25), HEAD_REST.y + 2.5 * ss(t, EV.cock, EV.cock + 0.25));
-  const head = pt(lerp(restHead.x, PECK_HEAD.x, peckU), lerp(restHead.y, PECK_HEAD.y, peckU) - 3 * ss(t, EV.swallow, EV.swallow + 0.2) * (1 - ss(t, EV.swallow + 0.5, EV.swallow + 0.9)));
-  let ha = -0.28 * ss(t, EV.cock, EV.cock + 0.2) - 0.22 * ss(t, EV.tilt, EV.tilt + 0.15) * (1 - ss(t, EV.tilt + 0.35, EV.tilt + 0.55)) + 0.08 * Math.sin(t * 2.3) * ss(t, EV.land1, EV.land1 + 0.5);
-  ha = lerp(ha, PECK_HA, peckU);
-  ha += 0.75 * ss(t, EV.swallow, EV.swallow + 0.18) * (1 - ss(t, EV.swallow + 0.45, EV.swallow + 0.8));
-  ha -= 0.1 * ss(t, EV.yank, EV.yank + 0.3) * (1 - ss(t, EV.swallow - 0.1, EV.swallow));
-  const ang = lerp(-0.06 * ss(t, EV.cock, EV.cock + 0.3) - 0.05 * ss(t, EV.tilt, EV.tilt + 0.2), PECK_ANG, peckU);
-  const beak = Math.max(ss(t, EV.lunge, EV.lunge + 0.1) * (1 - ss(t, EV.peck - 0.03, EV.peck)), 0.45 * ss(t, EV.swallow + 0.05, EV.swallow + 0.15) * (1 - ss(t, EV.swallow + 0.3, EV.swallow + 0.42)));
-  const gulp = Math.sin(Math.PI * clamp((t - EV.swallow - 0.25) / 0.6)) * (t > EV.swallow + 0.25 && t < EV.swallow + 0.85 ? 1 : 0);
-  const xray = ss(t, EV.birdX, EV.birdX + 0.35) * (1 - ss(t, 21.25, 21.7));
+  const atPerch2 = t >= EV.perch2;
+  const strikeU = ss(t, EV.lunge, EV.peck) * (1 - ss(t, EV.yank, EV.yank + 0.32));
+  const look = ss(t, EV.look, EV.look + 0.25);
+  let ang = lerp(-0.08 * look - 0.06 * ss(t, EV.tilt, EV.tilt + 0.2), PECK_ANG, strikeU);
+  ang += 0.06 * ss(t, EV.swallow, EV.swallow + 0.2) * (1 - ss(t, EV.swallow + 0.5, EV.swallow + 0.9));
+  if (atPerch2) ang = ANG2;
+  const restHead = pt(HEAD_REST.x + 1.0 * look, HEAD_REST.y + 2.0 * look);
+  const head = atPerch2 ? HEAD_REST : pt(lerp(restHead.x, PECK_HEAD.x, strikeU), lerp(restHead.y, PECK_HEAD.y, strikeU) - 2.2 * ss(t, EV.swallow, EV.swallow + 0.2) * (1 - ss(t, EV.swallow + 0.5, EV.swallow + 0.9)));
+  // the head: a one-eyed look at the snail (birds sight with one eye), the strike, the toss and swallow
+  let ha = -0.24 * look - 0.2 * ss(t, EV.tilt, EV.tilt + 0.12) * (1 - ss(t, EV.tilt + 0.35, EV.tilt + 0.5));
+  ha = lerp(ha, PECK_HA, strikeU);
+  ha += 0.7 * ss(t, EV.swallow, EV.swallow + 0.16) * (1 - ss(t, EV.swallow + 0.42, EV.swallow + 0.75));
+  if (atPerch2) ha = 0.05;
+  const o = atPerch2 ? oFromFeet(F2, ANG2) : t < EV.land1 ? (() => {
+    const end = oFromFeet(F1, 0);
+    return pt(lerp(end.x + 34, end.x, land), lerp(end.y - 42, end.y, land) - 5 * Math.sin(Math.PI * land));
+  })() : oFromFeet(F1, ang);
+  const spread = t < EV.land1 + 0.25 ? 1 - ss(t, EV.land1 - 0.12, EV.land1 + 0.2) : 0;
+  const beak = Math.max(ss(t, EV.lunge, EV.lunge + 0.08) * (1 - ss(t, EV.peck - 0.03, EV.peck)), 0.42 * ss(t, EV.swallow + 0.05, EV.swallow + 0.14) * (1 - ss(t, EV.swallow + 0.28, EV.swallow + 0.4)));
+  const gulp = t > EV.swallow + 0.22 && t < EV.swallow + 0.8 ? Math.sin(Math.PI * (t - EV.swallow - 0.22) / 0.58) : 0;
   return {
     o,
     ang,
@@ -199,115 +222,140 @@ export const bird = (t: number): BirdState => {
     headAng: ha,
     beak,
     gulp: clamp(gulp),
-    tail: ss(t, EV.release - 0.15, EV.release) * (1 - ss(t, EV.release + 0.25, EV.release + 0.6)),
-    wing: flap,
-    wingBeat: beat,
-    blink: t > 15.45 && t < 15.6 ? Math.sin(Math.PI * (t - 15.45) / 0.15) : 0,
-    xray,
+    tail: ss(t, EV.release - 0.18, EV.release) * (1 - ss(t, EV.release + 0.25, EV.release + 0.6)),
+    wing: spread,
+    wingBeat: 0.5 * Math.sin(2 * Math.PI * 7 * t),
+    blink: t > 15.5 && t < 15.64 ? Math.sin((Math.PI * (t - 15.5)) / 0.14) : 0,
+    xray: ss(t, EV.intoBird - 0.1, EV.intoBird + 0.3) * (1 - ss(t, EV.inside1 + 0.05, EV.inside1 + 0.45)),
+    inside: ss(t, EV.inside0 - 0.15, EV.inside0 + 0.2) * (1 - ss(t, EV.inside1 - 0.15, EV.inside1 + 0.15)),
     k: BIRD_K,
   };
 };
 export const birdInside = (t: number) => ({
-  sacU: ss(t, EV.birdX - 0.1, EV.burst - 0.05) * 0.86,
+  sacU: ss(t, EV.swallow + 0.3, EV.burst - 0.05) * 0.86,
   burst: ss(t, EV.burst, EV.burst + 0.25),
-  flukes: ss(t, EV.burst + 0.15, T.eggs + 0.05),
-  eggs: ss(t, T.eggs, 21.35),
+  flukes: ss(t, EV.burst + 0.12, T.eggs + 0.05),
+  eggs: ss(t, T.eggs, EV.inside1 + 0.1),
   t,
-  closeUp: ss(t, 19.2, 19.7) * (1 - ss(t, 21.2, 21.6)),
+  closeUp: 1,
 });
 /** the sac held in the beak, from the peck to the swallow (0 = none) */
 export const sacInBeak = (t: number) => (t > EV.peck && t < EV.swallow + 0.32 ? 1 - ss(t, EV.swallow + 0.1, EV.swallow + 0.32) : 0);
+/** a point given in bird-body coordinates, in the world, at time t */
+export const birdBodyW = (t: number, p: P) => {
+  const b = bird(t);
+  return addP(b.o, mulP(rotP(p, b.ang), BIRD_K));
+};
 export const VENT = birdPoints(bird(EV.release)).vent;
 
-// ---------------------------------------------------------------- the falling dropping
-export const DROP_LAND = pt(VENT.x + 0.6, LEAF_A.y + LEAF_A.tilt * (VENT.x - LEAF_A.x0) - 0.15);
+// ---------------------------------------------------------------- the dropping
+export const DROP_K = 1.6;
 export const dropAt = (t: number): {c: P; land: number} | null => {
   if (t < EV.release) return null;
   const u = clamp((t - EV.release) / (EV.landDrop - EV.release));
   const c = pt(lerp(VENT.x, DROP_LAND.x, u), lerp(VENT.y + 0.8, DROP_LAND.y, u * u));
   return {c, land: ss(t, EV.landDrop - 0.02, EV.landDrop + 0.1)};
 };
-/** the landed dropping beside snail A: there in the opening too, so the loop's two ends match */
-export const dropA = (t: number): {c: P; land: number} | null => {
-  if (t < EV.swap + 0.05) return {c: DROP_LAND, land: 1};
-  return dropAt(t);
-};
-export const DROP_K = 1.6;
 
-// ---------------------------------------------------------------- the caterpillar on the twig behind snail B
-export const catBase = (t: number) => pt(-15.8 + 0.25 * clamp(t - 9), -14.35);
+// ---------------------------------------------------------------- the caterpillar on the twig above T
+export const catBase = (t: number) => pt(20 + 0.3 * clamp(t - 9), -20.75);
 
 // ---------------------------------------------------------------- camera
 export type Cam = {x: number; y: number; w: number; focus: number};
 type Key = [number, (t: number) => [number, number, number]];
 const C = (x: number, y: number, w_: number) => () => [x, y, w_] as [number, number, number];
-const hookCam = (t: number): [number, number, number] => [xA(t) + 0.55, 32.55 - 0.25 * ss(t, 0, 2.1), 11 - 0.6 * ss(t, 0, 2.1)];
-const stalkCam = (t: number, wv: number): [number, number, number] => {
-  const p = stalkPointW(snailA(t), 0.55);
+const S1 = (u: number, wv: number, which: 'near' | 'far' = 'near') => (t: number): [number, number, number] => {
+  const p = stalkPointW(snail1(t), u, which);
   return [p.x, p.y, wv];
 };
-const diveCam = (t: number): [number, number, number] => {
-  const p = stalkPointW(snailA(t), 0.5);
-  return [p.x, p.y, 0.3];
+/** the opening (and closing) frame: extreme close-up of the near stalk */
+const ECU_W = 3.6;
+const ecu1 = (t: number): [number, number, number] => {
+  const p = stalkPointW(snail1(t), 0.62);
+  return [p.x + 0.15, p.y - 0.1 * ss(t, 0, EV.pull0), ECU_W * (1 + 0.04 * ss(t, 0, EV.pull0))];
+};
+const ecu2 = (t: number): [number, number, number] => {
+  const p = stalkPointW(snail2(t), 0.62);
+  return [p.x + 0.15, p.y, ECU_W];
+};
+const snailWide = (t: number): [number, number, number] => [x1(t) - 6.2, -5.4, 23];
+const BIN = (bx: number, by: number, wv: number) => (t: number): [number, number, number] => {
+  const p = birdBodyW(t, pt(bx, by));
+  return [p.x, p.y, wv];
+};
+const sacCam = (wv: number) => (t: number): [number, number, number] => {
+  // follow the sac along a smoothed version of the gut's path, so the camera doesn't trace every bend
+  const u = ss(t, EV.swallow + 0.3, EV.burst - 0.05) * 0.86;
+  let x = 0, y = 0;
+  for (let k = -6; k <= 6; k++) {
+    const q = along(GUT_BIRD, clamp(u + k * 0.018));
+    x += q.x / 13;
+    y += q.y / 13;
+  }
+  const p = birdBodyW(t, pt(x, y));
+  return [p.x, p.y, wv];
 };
 const dropCam = (t: number): [number, number, number] => {
   const d = dropAt(t);
   const c = d ? d.c : VENT;
-  return [c.x - 2.5, c.y + 4, lerp(44, 28, ss(t, EV.release, EV.landDrop))];
+  return [c.x - 1.5, c.y + 2.5, lerp(34, 22, ss(t, EV.release, EV.landDrop))];
 };
-const birdBody = (bx: number, by: number) => {
-  const b = bird(19.8);
-  const p = rotP(pt(bx * BIRD_K, by * BIRD_K), b.ang);
-  return pt(b.o.x + p.x, b.o.y + p.y);
+const headCam = (wv: number, dx = 0, dy = 0) => (t: number): [number, number, number] => {
+  const h = birdPoints(bird(t)).headC;
+  return [h.x + dx, h.y + dy, wv];
 };
-const IN1 = birdBody(18.4, 6.6), IN2 = birdBody(20.4, 6.9);
 const KEYS: Key[] = [
-  [0, hookCam],
-  [2.1, hookCam],
-  [2.55, (t) => stalkCam(t, 9.6)],
-  [T.bait0 - 0.1, (t) => stalkCam(t, 4.3)],
-  [EV.dive0, (t) => stalkCam(t, 4.0)],
-  [EV.swap, diveCam],
-  [EV.swap + 0.0001, C(EGG_B.x, EGG_B.y, 0.11)],
-  [5.4, C(1.6, -1.9, 6.6)],
-  [EV.xray0 + 0.05, C(1.2, -2.1, 7.2)],
-  [6.35, C(-4.6, -4.4, 16.5)],
-  [T.fills - 0.05, C(-3.6, -5.2, 15.0)],
-  [EV.xrayOut + 0.2, C(0.0, -8.6, 12.0)],
-  [T.they - 0.2, C(0.7, -9.0, 9.4)],
-  [T.tiny + 0.1, C(-5.2, -11.4, 17.5)],
-  [T.catsEnd + 0.1, C(-4.6, -11.0, 15.8)],
-  [T.and + 0.42, C(0.3, -10.5, 11.8)],
-  [EV.land0 - 0.25, C(0.6, -10.8, 12.6)],
-  [EV.land1 - 0.05, C(11, -20, 50)],
-  [T.because, C(11.5, -20.5, 46)],
-  [T.spots + 0.3, C(6.5, -22, 27)],
-  [EV.lunge, C(5.5, -19.5, 25)],
-  [EV.yank + 0.3, C(5, -18, 24)],
-  [EV.birdX + 0.25, C(20, -24, 72)],
-  [19.3, C(24, -21, 60)],
-  [19.95, () => [IN1.x, IN1.y, 10]],
-  [21.2, () => [IN2.x, IN2.y, 9]],
+  [0, ecu1],
+  [EV.pull0, ecu1],
+  [EV.push0, snailWide],
+  [T.it + 0.75, S1(0.45, 9.5)],
+  [EV.cut0 + 0.35, S1(0.55, 6.4)],
+  [EV.bodyCut0 + 0.1, S1(0.5, 6.0)],
+  [EV.bodyCut0 + 0.55, S1(0.05, 7.2)],
+  [T.grows + 0.35, (t) => [x1(t) - 9.6, -2.2, 9]],
+  [T.body + 0.25, (t) => [x1(t) - 6.4, -2.4, 8.6]],
+  [T.fills - 0.05, (t) => [x1(t) - 2.4, -3.6, 8.8]],
+  [T.eyestalks + 0.4, S1(0.55, 5.6)],
+  [EV.cutClose + 0.2, S1(0.5, 7.2)],
+  [T.pulsing + 0.75, (t) => [x1(t) + 0.2, -8.6, 8.8]],
+  [T.sacsEnd + 0.1, (t) => [x1(t) - 0.4, -8.0, 9.6]],
+  [T.tiny, (t) => [x1(t) + 1.5, -11.5, 21]],
+  [T.catsEnd + 0.15, (t) => [x1(t) - 1.5, -16, 34]],
+  [EV.land0 - 0.1, () => [XT + 3, -20, 56]],
+  [EV.land1 + 0.15, () => [XT + 6, -24, 62]],
+  [T.because - 0.05, () => [XT + 5, -22, 54]],
+  [T.spots - 0.15, headCam(17, -1.5, 1)],
+  [T.spots + 0.45, headCam(17, -2, 1.5)],
+  [EV.lunge, (t) => {
+    const h = birdPoints(bird(t)).headC;
+    return [(h.x + PECK_TARGET.x) / 2, (h.y + PECK_TARGET.y) / 2, 27];
+  }],
+  [EV.yank + 0.25, (t) => {
+    const h = birdPoints(bird(t)).headC;
+    return [(h.x + PECK_TARGET.x) / 2 + 1, (h.y + PECK_TARGET.y) / 2 - 1, 27];
+  }],
+  [EV.swallow + 0.3, headCam(24, 4, 6)],
+  [EV.intoBird + 0.2, sacCam(15)],
+  [EV.inside0 + 0.3, sacCam(11)],
+  [EV.burst - 0.05, sacCam(9.5)],
+  [T.eggs - 0.2, BIN(18.6, 7.6, 7.2)],
+  [EV.inside1 - 0.1, BIN(21.0, 7.5, 7.6)],
+  [EV.release + 0.02, BIN(21.5, 7.8, 30)],
   [EV.release + 0.05, dropCam],
   [EV.landDrop, dropCam],
-  [EV.landDrop + 0.7, C(40.5, 34.6, 24)],
-  [DUR, (t) => [xA(t) + 0.55, 32.55, 11]],
+  [EV.touch + 0.35, (t) => [x2(t) + 2.6, -2.6, 14]],
+  [DUR, ecu2],
 ];
 const logLerp = (a: number, b: number, u: number) => Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * u);
 export const camAt = (t: number): Cam => {
   let k = 0;
   while (k < KEYS.length - 2 && t >= KEYS[k + 1][0]) k++;
   const [t0, f0] = KEYS[k], [t1, f1] = KEYS[k + 1];
-  // the hold segments (same function at both ends) simply follow it
   const u = ss5(t, t0, t1);
   const A = f0(t), B = f1(t);
-  let wv = logLerp(A[2], B[2], u);
-  // the dive accelerates into the sac (ease-in); the swap pulls out with an ease-out
-  if (t0 === EV.dive0) wv = logLerp(A[2], B[2], Math.pow(clamp((t - t0) / (t1 - t0)), 1.6));
-  if (t0 === EV.swap + 0.0001) wv = logLerp(A[2], B[2], 1 - Math.pow(1 - clamp((t - t0) / (t1 - t0)), 1.7));
-  // keep the subject centred while the field width changes by a large factor (zoom about the subject)
+  const wv = logLerp(A[2], B[2], u);
   let x = lerp(A[0], B[0], u), y = lerp(A[1], B[1], u);
-  if (Math.abs(Math.log(A[2] / B[2])) > 1.2) {
+  if (Math.abs(Math.log(A[2] / B[2])) > 1.0) {
     // a large zoom: hold the detail end's centre (the anchor) on a straight screen path, so it never slips out
     const zu = (Math.log(wv) - Math.log(A[2])) / (Math.log(B[2]) - Math.log(A[2]));
     const an = A[2] < B[2] ? A : B;
@@ -316,8 +364,8 @@ export const camAt = (t: number): Cam => {
     x = an[0] - lerp(s0x, s1x, zu) * wv;
     y = an[1] - lerp(s0y, s1y, zu) * wv;
   }
-  const focus = CAT_DELTA * (ss(t, T.tiny - 0.05, T.tiny + 0.35) - ss(t, T.cats + 0.35, T.cats + 0.75));
+  const focus = CAT_DELTA * (ss(t, T.tiny + 0.1, T.tiny + 0.45) - ss(t, T.cats + 0.45, T.cats + 0.8));
   return {x, y, w: wv, focus};
 };
-/** the scene's light: a sun patch brightens as the infected snail climbs into the open */
-export const lightAt = (t: number) => 1 + 0.35 * ss(t, T.and, T.and + 1.2) * (1 - ss(t, 17.5, 18.5));
+/** the scene's light: the sun patch at T brightens as the snail climbs into the open */
+export const lightAt = (t: number) => 1 + 0.4 * ss(t, EV.climb1 - 1.2, EV.climb1) * (1 - ss(t, EV.intoBird, EV.intoBird + 0.6));

@@ -21,6 +21,7 @@ export type BirdState = {
   xray?: number;
   interior?: () => React.ReactNode; // drawn in body coordinates inside the glassy body
   inBeak?: React.ReactNode; // drawn at the beak tip (head coordinates)
+  inside?: number; // 0..1: the camera is inside the body; tissue fills the frame and the outside is hidden
   perch?: boolean;
   k?: number;
 };
@@ -75,7 +76,8 @@ export const Bird: React.FC<{b: BirdState}> = ({b}) => {
     .map((p) => add(sh, mul(rot(p, -0.25 - 1.15 * (b.wingBeat ?? 0)), clamp(wing * 2.2))));
   const wingD = closed(wingPts, 0.9);
   const spreadD = wing > 0.01 ? closed(spread, 0.5) : null;
-  const glass = 1 - 0.8 * xr;
+  const ins = b.inside ?? 0;
+  const glass = (1 - 0.8 * xr) * (1 - ins);
   // beak
   const open_ = b.beak;
   const upper = [pt(-8.6, -1.6), pt(-15, -0.4), pt(-22.5, 1.9), pt(-21.5, 2.7), pt(-15, 2.4), pt(-8.4, 2.4)];
@@ -147,10 +149,11 @@ export const Bird: React.FC<{b: BirdState}> = ({b}) => {
         </g>
       </g>
       {/* gut, seen through the glassy body */}
+      {ins > 0.01 && <rect x={-400} y={-400} width={800} height={800} fill="#3A1414" opacity={ins} />}
       {xr > 0.01 && b.interior && (
         <g opacity={sm(xr)}>
-          <g clipPath={`url(#${id}c)`}>{b.interior()}</g>
-          <path d={closed(BODY_PTS, 0.95)} fill="none" stroke="#F3EDE0" strokeWidth={0.5} strokeOpacity={0.6 * xr} />
+          <g clipPath={ins > 0.5 ? undefined : `url(#${id}c)`}>{b.interior()}</g>
+          <path d={closed(BODY_PTS, 0.95)} fill="none" stroke="#F3EDE0" strokeWidth={0.5} strokeOpacity={0.6 * xr * (1 - ins)} />
         </g>
       )}
       <g opacity={glass}>
@@ -169,23 +172,21 @@ export const Bird: React.FC<{b: BirdState}> = ({b}) => {
         <path d={closed(neck.outline, 0.9)} fill={`url(#${id}n)`} />
         {/* head */}
         <g transform={`translate(${hd.x} ${hd.y}) rotate(${(ha * 180) / Math.PI})`}>
-          <ellipse cx={1.5} cy={0.5} rx={11.2} ry={10.2} fill={`url(#${id}h)`} />
+          <ellipse cx={1.5} cy={0.5} rx={10.2} ry={9.2} fill={`url(#${id}h)`} />
           <path d="M-9 1.5 C-7 7 -1 10.5 6 9 C3 10.5 -4 11 -8.5 7 Z" fill="#E8D3A8" />
           <path d="M-6 6.5 C-3 8.6 0 9 2.6 8.8" fill="none" stroke="#3E2A16" strokeWidth={0.9} strokeOpacity={0.7} />
-          <path d="M-8 3 C-4 4.5 1 4.4 5 3.2" fill="none" stroke="#E9D9B5" strokeWidth={1.2} strokeOpacity={0.6} />
-          <path d="M-4 -2.6 C-1 -4.6 3 -4.4 7 -2.2" fill="none" stroke="#D9BE90" strokeWidth={0.9} strokeOpacity={0.55} />
+
           {Array.from({length: 22}, (_, i) => {
             const x = -6 + hash(i * 2.9 + 1) * 15;
             const y = -8.5 + hash(i * 6.3 + 2) * 9;
             return <path key={i} d={`M${x - 1.1} ${y} Q${x} ${y + 0.8} ${x + 1.1} ${y}`} fill="none" stroke="#3E2A14" strokeWidth={0.28} strokeOpacity={0.4} />;
           })}
           {/* eye */}
-          <ellipse cx={0} cy={0} rx={3.25} ry={3.15} fill="#D9C7A0" />
-          <circle cx={0} cy={0} r={2.85} fill="#0D0A07" />
-          <circle cx={0} cy={0} r={2.85} fill="none" stroke="#3A2A18" strokeWidth={0.3} />
-          <ellipse cx={-1.0} cy={-1.0} rx={0.75} ry={0.6} fill="#FFFFFF" opacity={0.85} />
-          <circle cx={0.9} cy={1.0} r={0.3} fill="#FFFFFF" opacity={0.3} />
-          {blink > 0.02 && <ellipse cx={0} cy={-3.3 + 3.3 * blink} rx={3.4} ry={3.3 * blink} fill="#6E4F2B" />}
+          <circle cx={0} cy={0} r={2.75} fill="#B9A27A" />
+          <circle cx={0} cy={0} r={2.35} fill="#0B0806" />
+          <circle cx={-0.2} cy={-0.1} r={1.6} fill="#2A1A10" opacity={0.6} />
+          <ellipse cx={-0.85} cy={-0.85} rx={0.5} ry={0.4} fill="#FFFFFF" opacity={0.7} />
+          {blink > 0.02 && <ellipse cx={0} cy={-2.8 + 2.8 * blink} rx={2.9} ry={2.8 * blink} fill="#6E4F2B" />}
           {/* beak */}
           <path d={closed(lower, 0.6)} fill="#C2A27A" />
           <path d={closed(upper, 0.6)} fill="#4A3A2A" />

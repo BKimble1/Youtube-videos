@@ -6,7 +6,7 @@ import {Caption, CAPTIONS, clamp} from './lib';
 
 export const CAP_Y: [string, number][] = [
   ['If this', 330], ['it can', 330], ['into moving', 330], ['The worm', 1560], ['and fills', 1560], ['with pulsing,', 1600], ['They start', 1580],
-  ['tiny caterpillars.', 1580], ['And that\'s', 330], ['Because when', 250], ['and eats', 1250], ['the parasite', 1640], ['Then its', 1600], ['through the', 1600],
+  ['tiny caterpillars.', 1580], ['And that\'s', 330], ['Because when', 1640], ['and eats', 1720], ['the parasite', 1640], ['Then its', 1600], ['through the', 1600],
   ['ready to', 330],
 ];
 export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);
@@ -20,7 +20,7 @@ export const Captions: React.FC<{t: number}> = ({t}) => {
   if (i < 0) return null;
   // keyed per caption, in its own composited layer: a new caption replaces the old element outright (headless Chrome
   // otherwise left fragments of the previous caption in a few frames when they were only partly repainted)
-  return <CaptionLine key={i} c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - CAPTIONS[i].show) / 0.067)} {...(CAPTIONS[i].text.startsWith('and eats') ? {left: 420, width: 560} : {})} />;
+  return <CaptionLine key={i} c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - CAPTIONS[i].show) / 0.067)} {...(CAPTIONS[i].text.startsWith('and eats') ? {left: 440, width: 560} : {})} />;
 };
 /** one caption, centred on y, kept clear of the right-hand action buttons */
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; left?: number; width?: number}> = ({c, y, a, left = 110, width = 760}) => {

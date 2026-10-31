@@ -1,6 +1,24 @@
 # Future Got Weird Short 2: The Zombie Snail Parasite
 
-## V1 (current)
+## V2 (current, release candidate)
+
+**Deliverable.** `exports/FGW_Zombie_Snail_V2_1080x1920.mp4`: 1080×1920, 30 fps, 746 frames, 24.875 s.
+**It is not published.** It is not marked final until someone watches it in real time.
+
+**Report and QC.** `production/V2_REPORT.md`, with evidence in `qa/v2/`.
+
+**What V2 changes.** It is a major visual and retention upgrade over V1:
+- a startling extreme close-up as the first frame;
+- anatomical cutaways of the eyestalk and the body;
+- a fast, foot-anchored bird strike;
+- a camera that follows the parasite through the bird;
+- another snail that touches the dropping, then blooms into frame 0.
+
+**Unchanged.** The narration and word timings.
+
+**Source.** `source/src/`, composition `ZombieSnailV2`; mix `mix_v2`.
+
+## V1 (superseded)
 
 **Deliverable.** `exports/FGW_Zombie_Snail_V1_1080x1920.mp4`: native 1080×1920, 30 fps, 746 frames, 24.875 s,
 H.264 CRF 16, AAC 320 kb/s. **It is not published.**
@@ -15,7 +33,7 @@ and an every-second overview.
 **Narration.** One ElevenLabs run (two takes) with the channel narrator voice. The take is used untouched. Its provenance
 is in `audio/narration/voice_provenance.json`.
 
-**Source.** Remotion, in `source/src/`, composition `ZombieSnailV1`.
+**Source.** Remotion, at commit `902b269`, composition `ZombieSnailV1`. The source tree now holds V2.
 
 | Path | What it holds |
 |---|---|

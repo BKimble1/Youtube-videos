@@ -10,6 +10,7 @@ effects placed from the picture's own events and pulse envelope (audio/cues.json
 No horror stingers, no whooshes on camera moves.
 Levels: voice about -16 LUFS; the whole about -14 LUFS integrated; true peak below -1.5 dBTP (4x oversampled).
 usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)
+V2: re-cued to the V2 picture (cutaways, the climb, the strike, inside the bird, the second snail and the bloom).
 Outputs: source/public/audio/<mix>.wav, audio/mix/FGW_Zombie_Snail_<MIX>.wav, audio/mix/mix_measure_<mix>.json, audio/sfx_log_<mix>.json"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
@@ -174,40 +175,54 @@ while tc < DUR:
         place(sfx, throb(0.22), tc, 'sac pulsation (per contraction)' if k == 0 else None, -27 + 4 * min(1.2, p))
         k += 1
     tc += 1 / PHZ
-# ---- the bird's shadow crossing: three soft wingbeats passing over
-for i in range(3):
-    place(sfx, flap(0.17), E('shadow0') + 0.18 + i * 0.2, 'wingbeats overhead (shadow)' if i == 0 else None, -21 - 2 * abs(i - 1))
-place(sfx, lp(noise(int(0.9 * SR)), 500) * env(int(0.9 * SR), 0.35, 0.45) * 0.6, E('shadow0') + 0.05, 'air of the pass', -33)
-# ---- the dive through the sac wall: a soft wet sink
-place(sfx, squelch(0.6, 180, 1200), E('dive0'), 'dive through the sac wall (wet)', -25)
-place(sfx, swell(0.7, 52), E('dive0') + 0.05, None, -30)
-# ---- the snail rasps the dropping and swallows the egg
-place(sfx, crackle(0.45, 55, 2500, 8000), E('rasp0'), 'radula rasping', -37)
-place(sfx, pop(0.08, 380), E('swallowEgg'), 'egg swallowed (tiny)', -36)
-# ---- the larva hatches, the sporocyst grows, the sacs fill the stalks
-place(sfx, tick(0.03, 3000), E('hatch'), 'larva hatches', -36)
-place(sfx, creep(E('fill0') + 0.6 - E('grow0')), E('grow0'), 'sporocyst growing (organic creep)', -26)
-place(sfx, swell(1.1, 60), E('fill0') - 0.1, 'stalks filling (low swell)', -29)
-# ---- the bird arrives: a flutter of wingbeats, the feet take the twig
-nfl = 8
-for i in range(nfl):
-    place(sfx, flap(0.09), E('land0') + 0.05 + i * 0.085, 'landing flutter' if i == 0 else None, -21 - 0.5 * i)
+def squirm(dur=1.0, density=26):
+    """the larvae shifting inside the sac: a bed of tiny soft wet clicks, very quiet"""
+    n = int(dur * SR); x = np.zeros(n)
+    for _ in range(int(dur * density)):
+        i = rng.integers(0, max(1, n - 900)); m = 900
+        f = 500 + 900 * rng.random()
+        x[i:i + m] += np.sin(2 * np.pi * f * np.arange(m) / SR) * np.exp(-np.arange(m) / SR / 0.004) * (0.3 + 0.7 * rng.random())
+    return norm(bp(x, 300, 2500) + 0.3 * bp(noise(n), 200, 900)) * env(n, dur * 0.2, dur * 0.25)
+def slither(dur=4.0):
+    """a snail gliding: a soft, sticky, faintly crackling slide"""
+    n = int(dur * SR); tt = np.arange(n) / SR
+    x = bp(noise(n), 900, 4200) * (0.6 + 0.4 * np.sin(2 * np.pi * 1.3 * tt)) + 0.4 * crackle(dur, 25, 3000, 9000)
+    return norm(x) * env(n, 0.5, 0.6)
+# ---- the push in: the stalk writhes
+place(sfx, creak(0.55, 140, 210, 34), T['it'] + 0.05, 'stalk writhes (wet stretch)', -26)
+# ---- the cutaway opens the stalk; the larvae inside
+place(sfx, squelch(0.5, 220, 1600), E('cut0'), 'cutaway opens the stalk (soft wet peel)', -24)
+place(sfx, squirm(E('cutClose') - E('cut0') + 0.3), E('cut0') + 0.15, 'larvae shifting inside the sac', -29)
+# ---- the body cutaway; the sporocyst grows; material pumps into the stalk
+place(sfx, squelch(0.45, 180, 1200), E('bodyCut0'), 'cutaway opens the body', -26)
+place(sfx, creep(E('stalkBack') - T['worm'] + 0.3), T['worm'] - 0.1, 'sporocyst growing (organic creep)', -24)
+place(sfx, swell(1.4, 58), E('stalkBack'), 'sac swelling (low)', -26)
+place(sfx, squelch(0.35, 250, 1400), E('cutClose'), 'skin closes', -29)
+# ---- the climb into the open
+place(sfx, slither(E('climb1') - E('climb0')), E('climb0'), 'snail gliding up the leaf', -32)
+# ---- the bird arrives: a flutter of wingbeats, the toes take the twig
+for i in range(8):
+    place(sfx, flap(0.09), E('land0') + 0.05 + i * 0.1, 'landing flutter' if i == 0 else None, -21 - 0.5 * i)
 place(sfx, creak(0.3, 210, 140, 60), E('land1') - 0.02, 'twig takes the weight', -27)
-place(sfx, tick(0.02, 2600), E('land1') - 0.03, None, -33)
-# ---- the peck: restrained beak contact, a short soft tear
-place(sfx, tick(0.025, 3400), E('peck') - 0.01, 'beak contact (peck)', -17)
-place(sfx, squelch(0.16, 600, 3200), E('peck') + 0.04, 'the stalk tears (soft, wet)', -22)
-place(sfx, rustle(0.25, 2000, 6000), E('lunge'), 'feathers on the lunge', -36)
-# ---- the swallow
+place(sfx, tick(0.02, 2600), E('land1') - 0.03, None, -31)
+# ---- the strike: feathers, a hard beak snap, a short soft tear
+place(sfx, rustle(0.22, 2000, 6500), E('lunge'), 'feathers on the lunge', -29)
+place(sfx, tick(0.025, 3400), E('peck') - 0.01, 'beak snap (strike)', -16)
+place(sfx, squelch(0.16, 600, 3200), E('peck') + 0.03, 'the stalk tears (soft, wet)', -21)
+# ---- the swallow, then inside the bird
 place(sfx, pop(0.14, 160), E('swallow') + 0.3, 'swallow (gulp)', -23)
-# ---- inside the bird: muffled body tone, the sac bursting, the eggs released
-body = lp(noise(int((21.4 - E('birdX')) * SR)), 220) * env(int((21.4 - E('birdX')) * SR), 0.5, 0.5)
-place(sfx, norm(body), E('birdX'), 'inside the bird (muffled)', -31)
-place(sfx, squelch(0.3, 300, 1500), E('burst'), 'sac bursts', -27)
-for i in range(14):
-    place(sfx, pop(0.05, 700 + 300 * rng.random()), T['eggs'] + 0.05 + i * 0.065 + 0.02 * rng.random(), 'eggs released (tiny bubbles)' if i == 0 else None, -38 - 2 * (i % 3))
-# ---- the dropping lands softly beside snail A
+ib = E('inside1') + 0.2 - E('intoBird')
+place(sfx, norm(lp(noise(int(ib * SR)), 220)) * env(int(ib * SR), 0.4, 0.4), E('intoBird'), 'inside the bird (muffled)', -28)
+for i, tq in enumerate([18.35, 18.9, 19.3]):
+    place(sfx, squelch(0.3, 160, 900), tq, 'peristalsis squeeze' if i == 0 else None, -30)
+place(sfx, squelch(0.3, 300, 1500), E('burst'), 'sac bursts', -26)
+place(sfx, squirm(0.9, 30), E('burst') + 0.15, 'larvae settling', -31)
+for i in range(16):
+    place(sfx, pop(0.05, 700 + 300 * rng.random()), T['eggs'] + 0.05 + i * 0.055 + 0.02 * rng.random(), 'eggs released (tiny bubbles)' if i == 0 else None, -36 - 2 * (i % 3))
+# ---- the dropping lands; snail 2 touches it; its stalk blooms into the loop
 place(sfx, squelch(0.12, 300, 2000), E('landDrop'), 'dropping lands (soft)', -23)
+place(sfx, crackle(0.45, 55, 2500, 8000), E('touch') - 0.1, 'snail rasps the dropping', -32)
+place(sfx, swell(0.9, 56), E('bloom0') - 0.1, 'stalk blooms (low swell into the loop)', -27)
 
 # ---------------- beds ----------------
 def circ(f, x): return f(np.concatenate([x, x, x]))[2 * len(x):]
@@ -237,7 +252,8 @@ def pad(freqs):
         out += a * lfo * (np.sin(2 * np.pi * f * t) + 0.1 * np.sin(2 * np.pi * f * 2.004 * t))
     return circ(lambda x: lp(x, 700), out)
 bed = norm(pad([(49.0, 0.5), (98.0, 0.3), (116.5, 0.14), (146.8, 0.08), (103.8, 0.05)]))
-tension = 0.75 + 0.25 * np.clip((t - 14) / 3, 0, 1) - 0.15 * np.clip((t - 21.5) / 1.5, 0, 1)
+inside_v = ((t > 3.1) & (t < 7.9)) | ((t > 17.7) & (t < 21.3))
+tension = 0.75 + 0.25 * np.clip((t - 14) / 3, 0, 1) - 0.15 * np.clip((t - 21.5) / 1.5, 0, 1) + 0.3 * lp(inside_v.astype(float), 2)
 bed *= tension
 
 # ---------------- voice and mix ----------------

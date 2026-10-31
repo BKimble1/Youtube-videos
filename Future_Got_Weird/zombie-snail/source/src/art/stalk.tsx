@@ -30,6 +30,9 @@ export type StalkState = {
   xray?: number; // 0..1: the skin turns glassy (inside view)
   vivid?: number; // 0..1: extra colour saturation (the lure at full strength)
   skin?: string;
+  cut?: number; // 0..1: a lengthwise cutaway opens from the tip down, showing the sac and its larvae
+  dev?: number; // 0..1: the larvae inside the sac develop (germ balls -> larvae)
+  bulge?: number; // strength of the travelling contraction bulge (default = pulse)
 };
 
 export const SKIN = '#9C9583';
@@ -63,6 +66,10 @@ export const stalkGeom = (st: StalkState) => {
   const pulse = st.pulse;
   // local swelling: from the base upward
   const sw = (u: number) => sm(clamp((S * 1.45 - 0.45 * u) / 1.0));
+  // a contraction bulge travelling from the base to the tip once per beat
+  const bulgeK = (st.bulge ?? pulse) * 1;
+  const uw = ((((f * st.t + ph / (2 * Math.PI)) % 1) + 1) % 1) * 1.3 - 0.15;
+  const bulgeAt = (u: number) => bulgeK * Math.exp(-Math.pow((u - uw) / 0.11, 2));
   const C: P[] = [];
   const R: number[] = [];
   let p = st.base;
@@ -71,21 +78,23 @@ export const stalkGeom = (st: StalkState) => {
     const u = i / (N - 1);
     // twitch and an inching wave along the tentacle
     const wig = pulse * (0.07 * Math.sin(w - 3.2 * u) * u + 0.035 * Math.sin(2 * w + 1.3));
-    const a = st.ang + st.bend * u + wig * sw(u);
+    // the bulge pushes the tentacle sideways as it passes (asymmetric, organic)
+    const bz = bulgeAt(u);
+    const a = st.ang + st.bend * u + wig * sw(u) + 0.16 * bulgeK * Math.cos(Math.PI * 2 * (u - uw)) * Math.exp(-Math.pow((u - uw) / 0.22, 2)) * sw(u) + 0.0 * bz;
     if (i > 0) p = add(p, mul(dir(a), d0));
     C.push(p);
     const rn = lerp(st.rn, st.rn * 0.78, u) + st.rn * 0.3 * sm((u - 0.84) / 0.16) - st.rn * 0.25 * sm((u - 0.97) / 0.03);
     const bump = Math.pow(Math.sin(Math.PI * (0.09 + 0.83 * u)), 0.55);
     const baseNeck = lerp(0.5, 1, sm(u / 0.16));
-    const contraction = 1 + pulse * 0.13 * Math.sin(w - 2 * Math.PI * 1.1 * u) + pulse * 0.05 * Math.sin(2 * w);
+    const contraction = 1 + pulse * 0.07 * Math.sin(w - 2 * Math.PI * 1.1 * u) + pulse * 0.04 * Math.sin(2 * w) + 0.24 * bulgeAt(u) - 0.06 * bulgeK * Math.exp(-Math.pow((u - uw + 0.2) / 0.1, 2));
     const rs = st.rmax * (0.36 + 0.64 * bump) * baseNeck * contraction;
     R.push(Math.max(0.05, lerp(rn, rs, sw(u))));
   }
   if (wound > 0) for (let i = 0; i < N; i++) R[i] = lerp(R[i], st.rn * 1.25 * (1 - 0.35 * (i / (N - 1))), wound);
   const tb = tube(C, R, true, false);
   // ring coordinate: the rings bunch toward the base on each contraction and stretch on the release
-  const vOf = (u: number) => clamp(u + pulse * 0.035 * Math.sin(w - 2.5 * u) * Math.sin(Math.PI * u), 0, 1);
-  return {tb, L, sw, vOf, w, N};
+  const vOf = (u: number) => clamp(u + pulse * 0.03 * Math.sin(w - 2.5 * u) * Math.sin(Math.PI * u) - 0.025 * bulgeK * Math.sin(Math.PI * clamp((u - uw + 0.15) / 0.3)) * (u > uw - 0.15 && u < uw + 0.15 ? 1 : 0), 0, 1);
+  return {tb, L, sw, vOf, w, N, uw, bulgeK};
 };
 
 /** interpolated point across the tube at fractional position u (0 base .. 1 tip), s in [-1, 1] */
@@ -113,6 +122,7 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
   const rmean = tb.rad.reduce((a, b) => a + b, 0) / tb.rad.length;
   const band = clamp(st.band) * (1 - (st.wound ?? 0));
   const xr = st.xray ?? 0;
+  const cut = st.cut ?? 0;
   const vivid = st.vivid ?? 0;
   const skin = st.skin ?? SKIN;
   const outline = closed(tb.outline, 0.9);
@@ -185,7 +195,7 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
           <stop offset="1" stopColor="#06120A" stopOpacity={st.far ? 0.62 : 0.5} />
         </linearGradient>
         <filter id={`${id}b`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation={Math.max(0.006, rmean * 0.05)} />
+          <feGaussianBlur stdDeviation={Math.max(0.004, rmean * 0.022)} />
         </filter>
         <filter id={`${id}s`} x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation={Math.max(0.01, rmean * 0.28)} />
@@ -225,6 +235,61 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
         <path d={open(hl.slice(8, 24))} fill="none" stroke="#FFFFFF" strokeWidth={rmean * 0.07} strokeOpacity={0.4 + 0.25 * band} strokeLinecap="round" filter={`url(#${id}h)`} />
       </g>
       {glass > 0.01 && <path d={outline} fill="none" stroke="#E8F4F6" strokeWidth={rmean * 0.06} strokeOpacity={glass} />}
+      {/* the contraction bulge: a bright ring of stretched skin travelling up the sac */}
+      {band > 0.2 && g.bulgeK > 0.05 && g.uw > 0.05 && g.uw < 0.95 && (
+        <g clipPath={`url(#${id}c)`}>
+          <path d={open(ringEdge(g, g.uw, bowK))} fill="none" stroke="#FFFFF0" strokeWidth={rmean * 0.3} strokeOpacity={0.22 * g.bulgeK * band} filter={`url(#${id}h)`} />
+        </g>
+      )}
+      {cut > 0.01 && (() => {
+        // the cutaway window: the near half of the skin and of the sac wall removed, from the tip down
+        const u0 = lerp(0.97, 0.07, sm(cut)), u1 = 0.965;
+        const S0 = 0.74;
+        const edge = (sv: number, a: number, b: number) => Array.from({length: 13}, (_, q) => at(g, a + ((b - a) * q) / 12, sv));
+        const win = [...edge(S0, u0, u1), ...edge(-S0, u0, u1).reverse()];
+        const lum = [...edge(0.62, u0 + 0.01, u1 - 0.01), ...edge(-0.62, u0 + 0.01, u1 - 0.01).reverse()];
+        const dv = clamp(st.dev ?? 1);
+        const lar: React.ReactNode[] = [];
+        // larvae packed in rows; they shuffle up the sac with every contraction
+        for (let row = 0; row < 19; row++) {
+          for (let col = 0; col < 3; col++) {
+            const k = row * 3 + col;
+            let u = 0.1 + row * 0.046 + (col % 2) * 0.023 + 0.012 * Math.sin(g.w - 6 * (0.1 + row * 0.046)) + 0.004 * Math.sin(st.t * 5 + k);
+            if (u < u0 + 0.02 || u > u1 - 0.03) continue;
+            const sv = -0.36 + col * 0.36 + 0.06 * Math.sin(k * 2.3 + st.t * 3);
+            const c = at(g, u, sv);
+            const tA = at(g, Math.min(1, u + 0.01), sv);
+            const ang = (Math.atan2(tA.y - c.y, tA.x - c.x) * 180) / Math.PI + 18 * Math.sin(k * 1.7 + st.t * 4);
+            const ri = at(g, u, 0).x - at(g, u, 1).x, rj = at(g, u, 0).y - at(g, u, 1).y;
+            const rr = Math.hypot(ri, rj);
+            const L = rr * (0.18 + 0.12 * dv) * (0.85 + 0.25 * ((k * 0.37) % 1));
+            lar.push(
+              <g key={k} transform={`translate(${c.x} ${c.y}) rotate(${ang})`}>
+                <ellipse rx={L} ry={L * (0.62 - 0.12 * dv)} fill={mix('#CFE58A', '#F7F0D0', dv)} stroke="#6B5A1E" strokeWidth={L * 0.07} />
+                {dv > 0.3 && <ellipse cx={-L * 0.05} rx={L * 0.62} ry={L * 0.34} fill="#D9A94E" opacity={0.75 * dv} />}
+                {dv > 0.3 && <circle cx={L * 0.55} r={L * 0.17} fill="#8A5A1E" opacity={dv} />}
+                {dv > 0.5 && <circle cx={-L * 0.1} r={L * 0.2} fill="#8A5A1E" opacity={0.8 * dv} />}
+              </g>,
+            );
+          }
+        }
+        const musc = Array.from({length: 13}, (_, q) => at(g, u0 + ((u1 - 0.04 - u0) * q) / 12, -0.08 + 0.05 * Math.sin(q + st.t * 2)));
+        return (
+          <g opacity={sm(clamp(cut * 3))}>
+            <path d={poly(win)} fill="#13200F" />
+            <path d={poly(lum)} fill="#3E6E22" />
+            <path d={poly(lum)} fill="#0C1A08" opacity={0.25} />
+            <path d={open(musc)} fill="none" stroke="#B5605A" strokeWidth={rmean * 0.12} strokeOpacity={0.8} strokeLinecap="round" />
+            <path d={open(musc)} fill="none" stroke="#E79A88" strokeWidth={rmean * 0.04} strokeOpacity={0.7} strokeDasharray={`${rmean * 0.05} ${rmean * 0.05}`} />
+            {lar}
+            {/* cut edges: the sac wall (lime) and the skin (fleshy grey-pink) */}
+            <path d={open(edge(0.62, u0 + 0.01, u1 - 0.01))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+            <path d={open(edge(-0.62, u0 + 0.01, u1 - 0.01))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+            <path d={poly(win)} fill="none" stroke="#C9A497" strokeWidth={rmean * 0.13} />
+            <path d={poly(win)} fill="none" stroke="#5E3A30" strokeWidth={rmean * 0.035} />
+          </g>
+        );
+      })()}
       {/* the eye at the tip */}
       {(st.wound ?? 0) < 0.5 && (
         <g>

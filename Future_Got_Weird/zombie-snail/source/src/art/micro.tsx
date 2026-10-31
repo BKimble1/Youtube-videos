@@ -27,68 +27,67 @@ const resample = (ps: P[], n: number) => Array.from({length: n + 1}, (_, i) => a
 
 // ---------------------------------------------------------------- snail interior (snail-local coordinates)
 export const GUT_SNAIL: P[] = [pt(2.0, -0.95), pt(1.0, -1.55), pt(-0.6, -2.0), pt(-2.6, -2.25), pt(-4.6, -2.65), pt(-6.6, -3.35), pt(-8.4, -4.2)];
-const SPORO_MAIN: P[] = [pt(-9.2, -4.6), pt(-7.4, -3.9), pt(-5.4, -3.55), pt(-3.6, -3.6), pt(-2.3, -3.95), pt(-1.4, -4.3)];
-const SPORO_FAR: P[] = [pt(-3.6, -3.6), pt(-2.9, -4.05), pt(-2.3, -4.45)];
+// the sporocyst: a trunk from the visceral mass (under the shell) forward through the body into both eyestalk bases
+const SPORO_MAIN: P[] = [pt(-14.5, -1.6), pt(-11.6, -1.7), pt(-9.0, -2.0), pt(-6.8, -2.2), pt(-4.8, -2.4), pt(-3.2, -3.0), pt(-2.0, -3.8), pt(-1.05, -4.5)];
+const SPORO_FAR: P[] = [pt(-3.2, -3.0), pt(-2.7, -3.8), pt(-2.2, -4.55)];
 const SPORO_SIDE: P[][] = [
-  [pt(-7.4, -3.9), pt(-8.0, -2.6), pt(-9.6, -1.9)],
-  [pt(-5.4, -3.55), pt(-5.0, -2.3), pt(-6.0, -1.3)],
-  [pt(-9.2, -4.6), pt(-11.4, -5.0), pt(-13.0, -6.2)],
-  [pt(-9.2, -4.6), pt(-10.6, -3.4), pt(-12.4, -2.6)],
-  [pt(-3.6, -3.6), pt(-3.2, -2.5), pt(-2.0, -1.8)],
+  [pt(-11.6, -1.7), pt(-11.0, -0.8), pt(-12.6, -0.5)],
+  [pt(-9.0, -2.0), pt(-8.6, -1.0), pt(-9.6, -0.5)],
+  [pt(-6.8, -2.2), pt(-6.2, -1.2), pt(-7.0, -0.6)],
+  [pt(-4.8, -2.4), pt(-4.4, -1.4), pt(-3.2, -0.9)],
+  [pt(-14.5, -1.6), pt(-16.4, -1.0), pt(-17.6, -0.5)],
+  [pt(-9.0, -2.0), pt(-10.0, -2.7), pt(-11.6, -2.7)],
 ];
-export type SnailInside = {eggU: number; hatch: number; grow: number; glow: number; t: number};
-/** g: 0..1 growth of the sporocyst network; eggU: the egg's progress down the gut (0 mouth .. 1 stomach) */
+export type SnailInside = {grow: number; flow: number; t: number};
+const MUSC = Array.from({length: 26}, (_, i) => ({y: -0.6 - (i % 7) * 0.55, x0: -19 + hash(i * 3.1) * 8, len: 6 + hash(i * 1.7) * 9}));
 export const snailInterior = (s: SnailInside) => (bend: (p: P) => P) => {
   const B = (ps: P[]) => ps.map(bend);
   const gut = tube(B(resample(GUT_SNAIL, 30)), Array.from({length: 31}, (_, i) => 0.42 + 0.12 * Math.sin(i * 0.7)), true, true);
+  const g = s.grow;
   const tubeEl = (ps: P[], u: number, r: number, key: string) => {
     if (u <= 0.01) return null;
-    const pp = B(partial(ps, u, 20));
-    const R = pp.map((_, i) => r * (0.75 + 0.25 * Math.sin(i * 0.9 + s.t * 3)) * (i === pp.length - 1 ? 0.8 : 1));
+    const pp = B(partial(ps, u, 22));
+    const R = pp.map((_, i) => r * (0.82 + 0.18 * Math.sin(i * 0.9 - s.t * 6)) * (i === pp.length - 1 ? 0.75 : 1));
     const tb = tube(pp, R, true, true);
+    // germ balls riding the tube toward the head
+    const balls: React.ReactNode[] = [];
+    const L = plen(pp);
+    for (let k = 0; k < Math.floor(L / 0.7); k++) {
+      const q = ((k * 0.7 + s.t * 1.6 * s.flow) % L) / L;
+      if (q > u) continue;
+      const c = along(pp, q);
+      balls.push(<circle key={k} cx={c.x} cy={c.y} r={r * 0.42} fill="#F2FFB8" opacity={0.85} />);
+    }
     return (
       <g key={key}>
-        <path d={closed(tb.outline, 0.9)} fill="#8FD14A" fillOpacity={0.85} stroke="#2F6A1A" strokeWidth={0.07} />
-        <path d={open(pp)} fill="none" stroke="#DDF7A0" strokeWidth={r * 0.45} strokeOpacity={0.7} strokeDasharray={`${r * 0.6} ${r * 0.9}`} />
+        <path d={closed(tb.outline, 0.9)} fill="#A6F046" opacity={0.25} transform="" />
+        <path d={closed(tb.outline, 0.9)} fill="#6FC52E" stroke="#163E0C" strokeWidth={0.08} />
+        <path d={open(pp.map((p, i) => add(p, mul(tb.N[i], 0.4 * R[i]))))} fill="none" stroke="#D8FF8A" strokeWidth={r * 0.28} strokeOpacity={0.75} strokeLinecap="round" />
+        {balls}
       </g>
     );
   };
-  const g = s.grow;
-  const egg = bend(along(GUT_SNAIL, s.eggU));
-  const hatch = s.hatch;
-  const miraP = lerpP(bend(pt(-8.4, -4.2)), bend(pt(-9.2, -4.6)), sm(clamp((hatch - 0.3) / 0.7)));
   return (
     <g>
-      {/* tissue tint and organs */}
-      <rect x={-22} y={-8} width={26} height={9} fill="#D8C6A0" opacity={0.35} />
-      <ellipse cx={bend(pt(-13.5, -6.2)).x} cy={bend(pt(-13.5, -6.2)).y} rx={4.6} ry={2.4} fill="#7A4A26" opacity={0.75} />
-      {[0, 1, 2, 3].map((i) => {
-        const c = bend(pt(-15 + i * 1.6, -6.6 + (i % 2) * 0.9));
-        return <ellipse key={i} cx={c.x} cy={c.y} rx={1.4} ry={0.9} fill="#5E351A" opacity={0.55} />;
+      {/* dark wet tissue, muscle fibres running along the foot */}
+      <rect x={-22} y={-9} width={28} height={10} fill="#3A1A16" />
+      <rect x={-22} y={-9} width={28} height={10} fill="#6A2E26" opacity={0.55} />
+      {MUSC.map((m, i) => {
+        const p0 = bend(pt(m.x0, m.y)), p1 = bend(pt(m.x0 + m.len, m.y - 0.2));
+        return <path key={i} d={`M${p0.x} ${p0.y} L${p1.x} ${p1.y}`} stroke="#9A4A3C" strokeWidth={0.14} strokeOpacity={0.55} />;
       })}
-      <path d={closed(gut.outline, 0.9)} fill="#E7A99A" fillOpacity={0.8} stroke="#A3584A" strokeWidth={0.06} />
-      <ellipse cx={bend(pt(-8.6, -4.3)).x} cy={bend(pt(-8.6, -4.3)).y} rx={1.5} ry={1.0} fill="#D98E80" opacity={0.85} />
-      <ellipse cx={bend(pt(1.0, -1.55)).x} cy={bend(pt(1.0, -1.55)).y} rx={0.75} ry={0.6} fill="#C77E70" opacity={0.85} />
+      {/* digestive gland (dark brown lobes) and gut */}
+      {[0, 1, 2, 3, 4].map((i) => {
+        const c = bend(pt(-17.5 + i * 1.7, -2.6 - (i % 2) * 0.9));
+        return <ellipse key={i} cx={c.x} cy={c.y} rx={1.5} ry={1.0} fill="#4A2810" stroke="#1E0E06" strokeWidth={0.06} />;
+      })}
+      <path d={closed(gut.outline, 0.9)} fill="#D9877A" stroke="#7A3328" strokeWidth={0.07} />
+      <path d={open(gut.C)} fill="none" stroke="#F5B7A8" strokeWidth={0.12} strokeOpacity={0.7} />
+      <ellipse cx={bend(pt(1.0, -1.55)).x} cy={bend(pt(1.0, -1.55)).y} rx={0.75} ry={0.6} fill="#B9685A" stroke="#7A3328" strokeWidth={0.06} />
       {/* the sporocyst network */}
-      <g opacity={sm(clamp(g * 4))}>
-        {SPORO_SIDE.map((ps, i) => tubeEl(ps, clamp((g - 0.15 - i * 0.06) / 0.55), 0.26, `s${i}`))}
-        {tubeEl(SPORO_MAIN, clamp(g / 0.8), 0.36, 'm')}
-        {tubeEl(SPORO_FAR, clamp((g - 0.55) / 0.35), 0.3, 'f')}
-        <circle cx={bend(pt(-9.2, -4.6)).x} cy={bend(pt(-9.2, -4.6)).y} r={0.55 * sm(clamp(g * 5))} fill="#9BDC52" stroke="#2F6A1A" strokeWidth={0.07} />
-      </g>
-      {/* the egg going down, then the larva hatching */}
-      {s.eggU > 0 && hatch < 1 && (
-        <g>
-          <circle cx={egg.x} cy={egg.y} r={0.55} fill="#FFD27A" opacity={0.35 * s.glow} />
-          <ellipse cx={egg.x} cy={egg.y} rx={0.26} ry={0.17} fill="#C88A2E" stroke="#5A3A10" strokeWidth={0.04} opacity={1 - sm(clamp((hatch - 0.2) / 0.5))} />
-        </g>
-      )}
-      {hatch > 0.15 && g < 0.25 && (
-        <g opacity={1 - sm(clamp(g * 4))}>
-          <ellipse cx={miraP.x} cy={miraP.y} rx={0.34} ry={0.18} fill="#E9F6C0" stroke="#5C8A2A" strokeWidth={0.04} />
-          <circle cx={miraP.x} cy={miraP.y} r={0.6} fill="#CFF58A" opacity={0.3 * s.glow} />
-        </g>
-      )}
+      {SPORO_SIDE.map((ps, i) => tubeEl(ps, clamp((g - 0.12 - i * 0.09) / 0.45), 0.33, `s${i}`))}
+      {tubeEl(SPORO_MAIN, clamp(0.25 + g * 0.75 * 1.4), 0.5, 'm')}
+      {tubeEl(SPORO_FAR, clamp((g - 0.35) / 0.35), 0.4, 'f')}
     </g>
   );
 };
@@ -175,96 +174,95 @@ export const SacInterior: React.FC<{z: number; t: number; a: number}> = ({z, t, 
 // ---------------------------------------------------------------- bird interior (bird body coordinates)
 export const GUT_BIRD: P[] = [pt(-19, -16), pt(-18.5, -9), pt(-16, -3), pt(-10, 0), pt(-3, 2.5), pt(2, 4), pt(5, 1), pt(9, -1), pt(12, 2), pt(9, 6), pt(5, 8), pt(9, 10), pt(14, 9), pt(18, 7.5), pt(21.5, 7.8)];
 export type BirdInside = {sacU: number; burst: number; flukes: number; eggs: number; t: number; closeUp: number};
-const FLUKES = [pt(18.2, 6.6), pt(19.3, 8.6), pt(20.2, 6.9), pt(17.4, 8.4), pt(19.6, 7.7)];
+const FLUKES = [pt(17.6, 6.7), pt(19.0, 8.7), pt(20.3, 6.8), pt(16.6, 8.5), pt(19.6, 7.7)];
+const FANG = [-25, 20, -8, 35, 5];
 export const birdInterior = (s: BirdInside) => () => {
   const gutP = resample(GUT_BIRD, 60);
-  const R = gutP.map((p, i) => {
+  const R = gutP.map((_, i) => {
     const u = i / 60;
-    return u < 0.22 ? 1.4 : u < 0.36 ? 1.7 : u < 0.5 ? 2.6 : u > 0.86 ? 1.9 + 1.4 * sm((u - 0.9) / 0.1) : 1.25;
+    return u < 0.22 ? 1.4 : u < 0.36 ? 1.8 : u < 0.5 ? 2.6 : u > 0.86 ? 2.0 + 1.5 * sm((u - 0.9) / 0.1) : 1.3;
   });
   const gut = tube(gutP, R, true, true);
   const sacP = along(GUT_BIRD, s.sacU);
   const sacT = nrm(sub(along(GUT_BIRD, Math.min(1, s.sacU + 0.01)), along(GUT_BIRD, Math.max(0, s.sacU - 0.01))));
   const sacA = (Math.atan2(sacT.y, sacT.x) * 180) / Math.PI;
+  // the gut squeezes round the sac as it passes (peristalsis)
+  const squeeze = (i: number) => 1 + 0.35 * Math.exp(-Math.pow((i / 60 - s.sacU) / 0.03, 2)) * (s.sacU > 0 && s.burst < 0.5 ? 1 : 0);
+  const gutS = tube(gutP, R.map((r, i) => r * squeeze(i)), true, true);
   const id = uid('bi');
   const flukes = FLUKES.map((f, i) => {
-    const grow = sm(clamp((s.flukes - i * 0.08) / 0.6));
+    const grow = sm(clamp((s.flukes - i * 0.07) / 0.55));
     if (grow < 0.01) return null;
-    const src = lerpP(pt(17.5, 7.4), f, sm(clamp(s.flukes * 1.6 - i * 0.1)));
-    const L = lerp(0.35, 1.8, grow), Wd = lerp(0.18, 0.75, grow);
-    const wob = 6 * Math.sin(s.t * 4 + i * 1.7);
+    const src = lerpP(pt(17.8, 7.4), f, sm(clamp(s.flukes * 1.5 - i * 0.1)));
+    const L = lerp(0.4, 2.1, grow), Wd = lerp(0.2, 0.85, grow);
+    const wob = 7 * Math.sin(s.t * 3.4 + i * 1.7);
+    const ut = Array.from({length: 9}, (_, k) => pt(-L * 0.25 + (k / 8) * L * 0.6, Wd * 0.22 * Math.sin(k * 1.9 + i)));
+    const full = sm(clamp((s.flukes - 0.55) / 0.3)) * (1 - 0.6 * sm(s.eggs));
     return (
-      <g key={i} transform={`translate(${src.x} ${src.y}) rotate(${-20 + i * 37 + wob})`}>
-        <ellipse rx={L / 2} ry={Wd / 2} fill="#EBC3A8" stroke="#9A5A40" strokeWidth={0.05} />
-        <circle cx={-L * 0.36} cy={0} r={Wd * 0.18} fill="#C9826A" />
-        <circle cx={-L * 0.05} cy={0} r={Wd * 0.26} fill="#C9826A" />
-        <path d={`M${-L * 0.1} ${-Wd * 0.25} C${L * 0.1} ${Wd * 0.3} ${L * 0.2} ${-Wd * 0.3} ${L * 0.38} ${Wd * 0.1}`} fill="none" stroke="#8A5A1C" strokeWidth={Wd * 0.14} opacity={0.8 * grow} />
+      <g key={i} transform={`translate(${src.x} ${src.y}) rotate(${FANG[i] + wob})`}>
+        <ellipse rx={L / 2} ry={Wd / 2} fill="#F0CDB4" stroke="#7E3E2A" strokeWidth={0.07} />
+        <ellipse rx={L / 2.4} ry={Wd / 3} fill="#E5AE90" opacity={0.6} />
+        <circle cx={-L * 0.38} cy={0} r={Wd * 0.17} fill="#B66650" stroke="#7E3E2A" strokeWidth={0.04} />
+        <circle cx={-L * 0.08} cy={0} r={Wd * 0.24} fill="#B66650" stroke="#7E3E2A" strokeWidth={0.04} />
+        {full > 0.01 && <path d={open(ut)} fill="none" stroke="#6E3E12" strokeWidth={Wd * 0.22} strokeLinecap="round" opacity={full} />}
+        {full > 0.01 && ut.map((q, k) => <circle key={k} cx={q.x} cy={q.y} r={Wd * 0.075} fill="#D89A40" opacity={full} />)}
       </g>
     );
   });
-  // eggs streaming from the flukes toward the vent
   const eggs: React.ReactNode[] = [];
   if (s.eggs > 0) {
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 90; i++) {
       const src = FLUKES[i % FLUKES.length];
-      const ph = clamp((s.eggs * 1.6 - (i / 70) * 0.8));
+      const ph = clamp(s.eggs * 1.7 - (i / 90) * 0.85);
       if (ph <= 0) continue;
-      const end = pt(22.6 + hash(i) * 0.8, 7.2 + (hash(i * 3) - 0.5) * 1.2);
+      const end = pt(22.4 + hash(i) * 1.6, 7.0 + (hash(i * 3) - 0.5) * 1.6);
       const p = lerpP(src, end, sm(ph));
-      const off = (hash(i * 7) - 0.5) * 0.7 * (1 - ph);
-      eggs.push(<ellipse key={i} cx={p.x} cy={p.y + off} rx={0.11} ry={0.07} fill="#B07A2A" stroke="#5A3A10" strokeWidth={0.02} opacity={0.95} />);
+      const off = (hash(i * 7) - 0.5) * 0.8 * Math.sin(Math.PI * ph);
+      eggs.push(<ellipse key={i} cx={p.x} cy={p.y + off} rx={0.13} ry={0.085} fill="#C88A34" stroke="#4A2A08" strokeWidth={0.025} />);
     }
   }
-  // larvae spilling out of the burst sac
   const larvae: React.ReactNode[] = [];
-  if (s.burst > 0 && s.flukes < 0.4) {
-    for (let i = 0; i < 9; i++) {
-      const a = (i / 9) * Math.PI * 2;
-      const p = add(sacP, mul({x: Math.cos(a), y: Math.sin(a) * 0.6}, 1.2 * sm(s.burst)));
-      larvae.push(<ellipse key={i} cx={p.x} cy={p.y} rx={0.3} ry={0.2} fill="#F6EFD2" stroke="#B9772E" strokeWidth={0.04} opacity={1 - sm(clamp(s.flukes * 3))} />);
+  if (s.burst > 0 && s.flukes < 0.45) {
+    for (let i = 0; i < 10; i++) {
+      const a = (i / 10) * Math.PI * 2;
+      const p = add(sacP, mul({x: Math.cos(a), y: Math.sin(a) * 0.55}, 1.5 * sm(s.burst)));
+      larvae.push(<ellipse key={i} cx={p.x} cy={p.y} rx={0.32} ry={0.2} fill="#F6EFD2" stroke="#8A5A1E" strokeWidth={0.04} opacity={1 - sm(clamp(s.flukes * 2.5))} />);
     }
   }
-  const villi: React.ReactNode[] = [];
-  if (s.closeUp > 0.01) {
-    for (let i = 46; i < 60; i++) {
-      for (const side of [1, -1]) {
-        for (let k = 0; k < 3; k++) {
-          const u = i + k / 3;
-          const j = Math.min(59, Math.floor(u));
-          const p = lerpP(gut.C[j], gut.C[j + 1], u - j);
-          const nn = gut.N[j];
-          const r = R[j];
-          const base = add(p, mul(nn, side * r * 0.95));
-          const tip = add(p, mul(nn, side * r * (0.55 + 0.1 * Math.sin(s.t * 2 + u))));
-          villi.push(<path key={`${i}${side}${k}`} d={`M${base.x} ${base.y} L${tip.x} ${tip.y}`} stroke="#D27C84" strokeWidth={0.22} strokeLinecap="round" opacity={0.8 * s.closeUp} />);
-        }
-      }
+  // folds of the gut lining (always on: they give the tube its organic texture)
+  const folds: React.ReactNode[] = [];
+  for (let i = 1; i < 60; i++) {
+    for (const side of [1, -1]) {
+      const p = gutS.C[i], nn = gutS.N[i], r = gutS.rad[i];
+      const base = add(p, mul(nn, side * r * 0.92));
+      const tip = add(p, mul(nn, side * r * (0.55 + 0.08 * Math.sin(s.t * 2.2 + i))));
+      folds.push(<path key={`${i}${side}`} d={`M${base.x} ${base.y} L${tip.x} ${tip.y}`} stroke="#B9425A" strokeWidth={0.26} strokeLinecap="round" opacity={0.75} />);
     }
   }
   return (
     <g>
       <defs>
         <clipPath id={`${id}c`}>
-          <path d={closed(gut.outline, 0.9)} />
+          <path d={closed(gutS.outline, 0.9)} />
         </clipPath>
       </defs>
-      <rect x={-30} y={-20} width={62} height={40} fill="#E2C8B2" opacity={0.4} />
-      {/* liver, heart, lungs: faint, for context */}
-      <ellipse cx={-12} cy={-3} rx={6} ry={4.5} fill="#8E3A32" opacity={0.35} />
-      <ellipse cx={-16} cy={-6} rx={3.2} ry={2.6} fill="#B5323A" opacity={0.35} />
-      <ellipse cx={-4} cy={-8} rx={9} ry={3} fill="#E59AA0" opacity={0.3} />
-      <path d={closed(gut.outline, 0.9)} fill="#EFA8A8" fillOpacity={0.9} stroke="#A84E58" strokeWidth={0.25} />
-      <ellipse cx={0} cy={3.4} rx={4.2} ry={3.2} fill="#9A4A42" opacity={0.85} />
+      <rect x={-30} y={-20} width={62} height={40} fill="#3A1414" opacity={0.85} />
+      {/* liver, heart, lungs */}
+      <ellipse cx={-12} cy={-3} rx={6} ry={4.5} fill="#6E1E1E" opacity={0.8} />
+      <ellipse cx={-16} cy={-6} rx={3.2} ry={2.6} fill="#A82230" opacity={0.75} />
+      <ellipse cx={-4} cy={-8} rx={9} ry={3} fill="#C76A74" opacity={0.45} />
+      <path d={closed(gutS.outline, 0.9)} fill="#E77E86" stroke="#6E1A28" strokeWidth={0.3} />
       <g clipPath={`url(#${id}c)`}>
-        <path d={open(gutP)} fill="none" stroke="#F8D0CC" strokeWidth={0.6} strokeOpacity={0.6} />
-        {villi}
+        <path d={open(gutP)} fill="none" stroke="#FFC2B8" strokeWidth={0.7} strokeOpacity={0.45} />
+        {folds}
       </g>
-      {/* the sac on its way down, then burst */}
+      <ellipse cx={0} cy={3.4} rx={4.2} ry={3.2} fill="#7A2A22" stroke="#3A0E0A" strokeWidth={0.25} />
+      <path d="M-3 3.4 C-1 2.4 1 2.4 3 3.4" fill="none" stroke="#D9B4A0" strokeWidth={0.35} opacity={0.6} />
       {s.sacU > 0 && s.burst < 1 && (
         <g transform={`translate(${sacP.x} ${sacP.y}) rotate(${sacA})`} opacity={1 - sm(clamp(s.burst * 2))}>
-          <ellipse rx={3.2} ry={1.15} fill="#9BC93E" />
-          {[-2, -1, 0, 1, 2].map((k) => <rect key={k} x={k * 1.1 - 0.25} y={-1.1} width={0.5} height={2.2} fill={k % 2 ? '#F3EFCF' : '#1F431B'} opacity={0.85} />)}
-          <circle r={2.2} fill="#FFF3A0" opacity={0.25} />
+          <circle r={2.4} fill="#E8FF7A" opacity={0.18} />
+          <ellipse rx={3.2} ry={1.15} fill="#8FCB34" stroke="#1F431B" strokeWidth={0.12} />
+          {[-2, -1, 0, 1, 2].map((k) => <rect key={k} x={k * 1.1 - 0.25} y={-1.05} width={0.5} height={2.1} fill={k % 2 ? '#F3EFCF' : '#1A3A14'} />)}
         </g>
       )}
       {larvae}
@@ -273,4 +271,3 @@ export const birdInterior = (s: BirdInside) => () => {
     </g>
   );
 };
-void perp; void lerp;

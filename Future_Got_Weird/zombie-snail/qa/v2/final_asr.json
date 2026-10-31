@@ -1,0 +1,34 @@
+{
+ "zipformer": {
+  "transcript": "IF THIS PARASITE GETS INSIDE A SNAIL IT CAN TURN ITS EYES INTO MOVING BAIT THE WORM GROWS THROUGH ITS BODY AND FILLS ITS EYE STALKS WITH PULSING COLORFUL SACKS THEY START LOOKING LIKE TINY CATERPILLARS AND THAT'S EXACTLY WHAT THE PARASITE WANTS BECAUSE WHEN A BIRD SPOTS ONE AND EATS IT THE PARASITE GETS INSIDE THE BIRD THEN ITS EGGS SPREAD THROUGH THE BIRD'S DROPPINGS READY TO INFECT ANOTHER SNAIL",
+  "wer": 0.043,
+  "diffs": [
+   [
+    "replace",
+    "eyestalks",
+    "eye stalks"
+   ],
+   [
+    "replace",
+    "sacs",
+    "sacks"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If this parasite gets inside a snail, it can turn its eyes into moving bait! The worm grows through its body and fills its eye stalks with pulsing, colorful sacks. They start looking like tiny caterpillars. And that's exactly what the parasite wants. Because when a bird spots one and eats it, the parasite gets inside the bird. Then its eggs spread through the bird's droppings, ready to infect another snail.",
+  "wer": 0.043,
+  "diffs": [
+   [
+    "replace",
+    "eyestalks",
+    "eye stalks"
+   ],
+   [
+    "replace",
+    "sacs",
+    "sacks"
+   ]
+  ]
+ }
+}

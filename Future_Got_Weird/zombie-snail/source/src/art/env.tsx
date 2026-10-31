@@ -111,11 +111,11 @@ export const Dropping: React.FC<{c: P; k: number; t: number; land?: number; eggs
   for (let i = 0; i < 16; i++) {
     const a = (i / 16) * Math.PI * 2;
     const rr = 1 + 0.18 * Math.sin(a * 3 + 1) + 0.12 * Math.sin(a * 5 + 2);
-    const sx = lerp(0.75, 2.4, spl) * rr, sy = lerp(1.05, 0.55, spl) * rr;
+    const sx = lerp(0.6, 2.4, spl) * rr * (1 + (1 - spl) * 0.25 * Math.sin(a * 2 + 0.7)), sy = lerp(1.25, 0.55, spl) * rr;
     const rr2 = lerp(1, rr, spl);
     pts.push(pt(c.x + Math.cos(a) * (sx / rr) * rr2 * k, c.y + (Math.sin(a) * (sy / rr) * rr2) * k - 0.35 * spl * k));
   }
-  const core: P[] = pts.map((p) => lerpP(c, p, 0.5)).map((p) => add(p, pt(0.25 * k, -0.1 * k)));
+  const core: P[] = pts.map((p) => lerpP(c, p, lerp(0.38, 0.5, spl))).map((p) => add(p, pt(lerp(0.12, 0.25, spl) * k, lerp(0.32, -0.1, spl) * k)));
   const E = Array.from({length: 14}, (_, i) => pt(c.x + (hash(i * 2.1) - 0.5) * 3.6 * k * lerp(0.4, 1, spl), c.y - 0.35 * k * spl + (hash(i * 4.7) - 0.5) * 0.7 * k));
   return (
     <g>
@@ -139,8 +139,8 @@ export const Dropping: React.FC<{c: P; k: number; t: number; land?: number; eggs
           <rect x={c.x - 3 * k} y={c.y - 2 * k} width={6 * k} height={3 * k} filter={`url(#${id}m)`} clipPath={`url(#${id}mc)`} />
         </g>
       )}
-      <path d={closed(core, 0.9)} fill="#3B3020" opacity={0.85} />
-      <path d={closed(core.map((p) => lerpP(add(c, pt(0.3 * k, -0.15 * k)), p, 0.55)), 0.9)} fill="#5A4A2E" opacity={0.6} />
+      <path d={closed(core, 0.9)} fill="#3B3020" opacity={0.85 * spl + 0.25 * (1 - spl)} />
+      <path d={closed(core.map((p) => lerpP(add(c, pt(0.3 * k, -0.15 * k)), p, 0.55)), 0.9)} fill="#5A4A2E" opacity={0.6 * spl} />
       <ellipse cx={c.x - 0.7 * k} cy={c.y - 0.75 * k * lerp(1, 0.6, spl)} rx={0.5 * k} ry={0.22 * k} fill="#FFFFFF" opacity={0.85} />
       {eggs && E.map((e, i) => <ellipse key={i} cx={e.x} cy={e.y} rx={0.045 * k} ry={0.028 * k} fill="#C38B34" stroke="#5A3A10" strokeWidth={0.005 * k} opacity={0.9} />)}
     </g>
@@ -198,14 +198,14 @@ export const FarForest: React.FC<{light: number}> = ({light}) => {
     <g>
       <defs>
         <linearGradient id={`${id}g`} x1="0" y1="-700" x2="0" y2="700" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor={mix('#9DBB66', '#DDE8A0', 0.3 * light)} />
-          <stop offset="0.45" stopColor="#4F7436" />
-          <stop offset="1" stopColor="#1D3318" />
+          <stop offset="0" stopColor={mix('#58783A', '#B9C978', 0.3 * light)} />
+          <stop offset="0.45" stopColor="#20401E" />
+          <stop offset="1" stopColor="#07120A" />
         </linearGradient>
       </defs>
       <rect x={-900} y={-900} width={1900} height={1900} fill={`url(#${id}g)`} />
       {spots.map((s, i) => (
-        <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={s.c > 0.66 ? '#E9F0B0' : s.c > 0.33 ? '#6E9A44' : '#22401C'} opacity={s.c > 0.66 ? 0.22 * (0.6 + 0.4 * light) : 0.28} />
+        <circle key={i} cx={s.x} cy={s.y} r={s.r} fill={s.c > 0.66 ? '#F2E6A6' : s.c > 0.33 ? '#3F6E2C' : '#0C1E0E'} opacity={s.c > 0.66 ? 0.2 * (0.6 + 0.4 * light) : 0.35} />
       ))}
     </g>
   );
@@ -222,7 +222,7 @@ export const MidPlants: React.FC<{seed: number; n: number; spread: [number, numb
     const nn = perp(nrm(sub(tipP, pt(x, y))));
     const m = lerpP(pt(x, y), tipP, 0.45);
     const wv = L * 0.28;
-    const col = mix('#3F6A2C', '#0F2210', dark * (0.5 + 0.5 * hash(i * 9.1 + seed)));
+    const col = mix('#2F5A22', '#050E06', dark * (0.5 + 0.5 * hash(i * 9.1 + seed)));
     items.push(<path key={i} d={closed([pt(x, y), add(m, mul(nn, wv)), tipP, add(m, mul(nn, -wv))], 0.9)} fill={col} />);
     if (i % 3 === 0) items.push(<path key={`s${i}`} d={`M${x} ${y} Q${x + (hash(i) - 0.5) * scale} ${y + scale * 1.2} ${x + (hash(i) - 0.5) * scale * 1.5} ${y + scale * 2.5}`} fill="none" stroke={col} strokeWidth={scale * 0.12} opacity={0.7} />);
   }

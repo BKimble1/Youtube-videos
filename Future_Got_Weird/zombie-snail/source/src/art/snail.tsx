@@ -2,7 +2,7 @@
 // front. World millimetres: about 21 mm from tail to snout, a thin amber shell on the back, a pale grey body with
 // darker grooves and tubercles, two upper tentacles (the eyestalks) and two short lower tentacles.
 // The front of the body bends (head lift, head dip while feeding) without sliding the sole; pedal waves run forward
-// along the foot fringe while it crawls. With xray > 0 the body and shell turn glassy and the interior shows.
+// along the foot fringe while it crawls. With xray > 0 a cutaway opens along the side of the body, from the head back, and the interior shows.
 import React from 'react';
 import {add, closed, dir, open, P, pt, rot, sub, tube} from '../core/geo';
 import {uid} from '../core/ids';
@@ -23,6 +23,7 @@ export type SnailState = {
   far: StalkParams;
   lowRetract?: number;
   xray?: number;
+  cutAlpha?: number; // the body cutaway fades closed (1 open .. 0 closed)
   interior?: (local: (p: P) => P) => React.ReactNode; // drawn inside the glassy body, in snail-local coordinates
   shellAng?: number;
   light?: number;
@@ -144,7 +145,8 @@ export const Snail: React.FC<{st: SnailState}> = ({st}) => {
   const shellA = st.shellAng ?? 0;
   const shellC = bend(pt(-10.4, -6.0));
   const SH = shellPath(shellC, shellA);
-  const glass = 1 - 0.78 * xr;
+  const glass = 1;
+  const cutX = lerp(2.6, -15.5, sm(xr));
   return (
     <g transform={`translate(${st.o.x} ${st.o.y}) scale(${k})`}>
       <defs>
@@ -223,13 +225,25 @@ export const Snail: React.FC<{st: SnailState}> = ({st}) => {
       </g>
       {/* the interior, inside the glassy body */}
       {xr > 0.01 && st.interior && (
-        <g opacity={sm(xr)}>
-          <g clipPath={`url(#${id}c)`}>{st.interior(bend)}</g>
-          <path d={bodyD} fill="none" stroke="#E6F0EC" strokeWidth={0.08} strokeOpacity={0.55 * xr} />
+        <g opacity={st.cutAlpha ?? 1}>
+          <defs>
+            <clipPath id={`${id}w`}>
+              <path d={`M6 -9.5 L${cutX + 0.3} -9.5 ${Array.from({length: 13}, (_, q) => `L${(cutX + 0.35 * Math.sin(q * 1.3) + 0.2 * Math.sin(q * 3.1)).toFixed(3)} ${(-9.5 + q * 0.85).toFixed(3)}`).join(' ')} L6 1.2 Z`} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id}c)`}>
+            <g clipPath={`url(#${id}w)`}>
+              {st.interior(bend)}
+              {/* the cut skin: a fleshy rim inside the outline and along the cut */}
+              <path d={bodyD} fill="none" stroke="#B88C7E" strokeWidth={0.55} />
+              <path d={bodyD} fill="none" stroke="#5A3A30" strokeWidth={0.16} />
+            </g>
+            <path d={`M${cutX + 0.3} -9.5 ${Array.from({length: 13}, (_, q) => `L${(cutX + 0.35 * Math.sin(q * 1.3) + 0.2 * Math.sin(q * 3.1)).toFixed(3)} ${(-9.5 + q * 0.85).toFixed(3)}`).join(' ')}`} fill="none" stroke="#B88C7E" strokeWidth={0.3} opacity={xr < 0.99 ? 1 : 0} />
+          </g>
         </g>
       )}
       {/* shell (the visceral mass shows through its thin wall) */}
-      <g opacity={1 - 0.6 * xr}>
+      <g opacity={1 - 0.62 * xr * (st.cutAlpha ?? 1)}>
         <path d={SH.d} fill="#3A2E1E" opacity={0.75} />
         <path d={SH.inner} fill="#2E2416" opacity={0.5} filter={`url(#${id}sb)`} />
         <path d={SH.d} fill={`url(#${id}sg)`} opacity={0.72} />
