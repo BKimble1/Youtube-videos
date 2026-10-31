@@ -108,13 +108,16 @@ export const openingState = (c: Cam, tp: number) => {
   const shadows: React.ReactNode[] = [];
   if (!figGone) {
     const shrink = 1 - ss(tp, TP.slump1 - 0.1, TP.esc0 + 0.35);
+    // the whole figure as ONE flat slab of liquid (a union, so overlapping parts don't stack into rings)
+    const ds: string[] = [];
+    let bx = {x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9};
     for (const p of deformed) {
       const pts = p.pts.map((q) => ({x: q.x * shrink, y: q.y * shrink}));
       const sp = pts.map((q) => ap(Afig, q));
-      const b = {x0: Math.min(...sp.map((q) => q.x)), x1: Math.max(...sp.map((q) => q.x)), y0: Math.min(...sp.map((q) => q.y)) - 40, y1: Math.max(...sp.map((q) => q.y))};
-      items.push({k: 'p', d: pathScreen(Afig, pts), g: 'dome', b});
-      items.push({k: 'p', d: pathScreen(Afig, pts, {x: sweepFig.x * 0.6, y: sweepFig.y * 0.6}), g: 'dome', b});
+      bx = {x0: Math.min(bx.x0, ...sp.map((q) => q.x)), x1: Math.max(bx.x1, ...sp.map((q) => q.x)), y0: Math.min(bx.y0, ...sp.map((q) => q.y)) - 40, y1: Math.max(bx.y1, ...sp.map((q) => q.y))};
+      ds.push(pathScreen(Afig, pts, {x: sweepFig.x * 0.3, y: sweepFig.y * 0.3}));
     }
+    items.push({k: 'u', ds, a: 0.56, b: bx});
     for (const dr of DRIPS) {
       const u = clamp((tp - dr.t0) / dr.d);
       if (u <= 0 || u >= 1) continue;

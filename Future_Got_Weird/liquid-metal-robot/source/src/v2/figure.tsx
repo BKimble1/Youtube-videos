@@ -109,30 +109,29 @@ export const FigureArt: React.FC<{
   warm?: number;
 }> = ({id, parts, sweep, ink, grain = 1, warm = 0}) => {
   const base = warm > 0 ? mix(BASE, '#C9A88A', 0.35 * warm) : BASE;
-  const top = lit(base, 0.2);
-  const steps = 10;
+  const top = mix(lit(base, 0.2), '#9FB3BE', 0.2);
+  const steps = 8;
+  const sk = 0.38;
   const sw = Math.hypot(sweep.x, sweep.y) > 0.004;
   return (
     <g>
       <defs>
         <linearGradient id={`${id}-lg`} x1="0" y1="1" x2="1" y2="0">
-          <stop offset="0" stopColor={lit(base, 0.5)} />
-          <stop offset="0.3" stopColor={lit(base, 0.12)} />
-          <stop offset="0.52" stopColor={shade(base, 0.38)} />
-          <stop offset="0.7" stopColor={mix(base, '#9FB8C0', 0.35)} />
-          <stop offset="1" stopColor={shade(base, 0.6)} />
+          <stop offset="0" stopColor={lit(base, 0.42)} />
+          <stop offset="0.35" stopColor={lit(base, 0.1)} />
+          <stop offset="0.7" stopColor={mix(base, '#7E97A6', 0.3)} />
+          <stop offset="1" stopColor={shade(base, 0.5)} />
         </linearGradient>
         <linearGradient id={`${id}-tg`} x1="0" y1="1" x2="1" y2="0">
           <stop offset="0" stopColor={lit(top, 0.3)} />
           <stop offset="1" stopColor={shade(top, 0.25)} />
         </linearGradient>
-        <linearGradient id={`${id}-env`} x1="0" y1="1" x2="0" y2="0">
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.3} />
-          <stop offset="0.22" stopColor="#FFFFFF" stopOpacity={0.04} />
-          <stop offset="0.42" stopColor="#1C2933" stopOpacity={0.3} />
-          <stop offset="0.5" stopColor="#1C2933" stopOpacity={0.08} />
-          <stop offset="0.82" stopColor="#BFD6DB" stopOpacity={0.12} />
-          <stop offset="1" stopColor="#0F1A22" stopOpacity={0.3} />
+        <linearGradient id={`${id}-env`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+          <stop offset="0.26" stopColor="#FFFFFF" stopOpacity={0} />
+          <stop offset="0.33" stopColor="#FFFFFF" stopOpacity={0.2} />
+          <stop offset="0.4" stopColor="#FFFFFF" stopOpacity={0} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
         </linearGradient>
         <pattern id={`${id}-br`} patternUnits="userSpaceOnUse" width="0.05" height="0.6">
           <line x1="0.012" y1="0" x2="0.012" y2="0.6" stroke="#FFFFFF" strokeWidth="0.006" opacity="0.16" />
@@ -148,10 +147,17 @@ export const FigureArt: React.FC<{
         {sw &&
           parts.map((p) =>
             Array.from({length: steps}, (_, k) => {
-              const f = (k + 1) / steps;
+              const f = ((k + 1) / steps) * sk;
               return <InkPath key={`${p.name}-s${k}`} d={partPath(p.pts)} fill={top} transform={`translate(${(sweep.x * f).toFixed(4)} ${(sweep.y * f).toFixed(4)})`} />;
             }),
           )}
+        {sw && (
+          <Deco>
+            {parts.map((p) => (
+              <path key={`tg-${p.name}`} d={partPath(p.pts)} fill={`url(#${id}-gr)`} opacity={grain} transform={`translate(${(sweep.x * sk).toFixed(4)} ${(sweep.y * sk).toFixed(4)})`} />
+            ))}
+          </Deco>
+        )}
         {parts.map((p) => (
           <InkPath key={p.name} d={partPath(p.pts)} fill={p.tone ? (p.tone > 0 ? `url(#${id}-lg)` : `url(#${id}-lg)`) : `url(#${id}-lg)`} />
         ))}
@@ -185,7 +191,7 @@ const GRAIN: [number, number, number, number][] = (() => {
 })();
 
 /** soft sheen strips on the solid figure (left edges catch the key light) */
-export const FigureSheen: React.FC<{parts: {name: string; pts: P2[]}[]; a: number}> = ({parts, a}) => (
+export const FigureSheen: React.FC<{parts: {name: string; pts: P2[]}[]; a: number}> = ({parts, a}) => (a <= 0 ? null :
   <Deco>
     {parts
       .filter((p) => ['torso', 'head', 'legL', 'legR', 'armL', 'armR'].includes(p.name))

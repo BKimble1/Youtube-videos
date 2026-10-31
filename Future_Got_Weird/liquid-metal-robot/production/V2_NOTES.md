@@ -93,3 +93,21 @@ The mix is −16.21 LUFS integrated, with a −0.94 dBFS peak.
   - transition strips at 8.7–11 s, 10.3–11.7 s, 12–14 s, 18.7–21.3 s and 23–26 s;
   - all the sample times.
   See `V2_QA_REPORT.md`.
+- **Render 4 (coordinator's opacity fix, final):** the solid figure rendered semi-transparent. Causes found and fixed:
+  1. **Solid/liquid blending by alpha.**
+     - The solid art faded out through a soft gradient mask at the melt front (a 0.16 cm alpha ramp) and a group opacity (`1 − ss(slump, 0.2, 0.55)`). The liquid twin and the background showed through, and a hard seam appeared at the hips.
+     - Now the solid is always fully opaque. It is cut by a hard, rippling melt-front mask, and a bright wet rim line sits on the boundary (`MeltingArt`, used for both the opening and the 8–10 s melt). The solid only disappears when it is entirely below the front.
+  2. **Glass-like overlays.**
+     - The V2 environment-reflection gradient had horizontal light and dark bands, including a pale band that matched the coil rim and read as see-through banding.
+     - The `FigureSheen` vertical ellipses read as glass.
+     - Fix: the environment layer is now one soft diagonal streak (alpha ≤ 0.2), the sheen ellipses are removed, and the front gradient is smooth (lit → base → cool → shade).
+  3. **Ghost head outline.**
+     - The thickness sweep (top faces) was a flat pale fill offset 0.6 of the projected depth, so it read as a second, offset head.
+     - Now it is drawn at 0.38 depth, in a darker cool tone close to the front faces, with grain. It reads as a narrow bevel.
+  4. **"O" ring in the collapsing torso.**
+     - The liquid twin was built per part with radial domes, plus an offset duplicate, and the puddle's five rim lumps sat over the torso. The overlaps lit as a crater or ring.
+     - Now the figure's liquid is one flat union slab (a new `'u'` goo kind). The puddle and its rim only grow once the figure has mostly slumped. Diffuse and specular lighting blur now scale with the blur radius, which removes contour terracing in close-ups.
+  5. **Grip "face".**
+     - The four fingers left two symmetric blue gaps flanking a central finger.
+     - Now there are six fingers (40°, 112°, 172°, −10°, −70°, −130° from the slug side). They cover the ball's front except one off-centre window.
+  - Everything else (timing, camera, audio, the cool-gallium palette) is unchanged.

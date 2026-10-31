@@ -9,7 +9,8 @@ import {Ell} from './cam';
 
 export type Goo =
   | {k: 'e'; e: Ell; g?: 'dome' | 'flat'; a?: number}
-  | {k: 'p'; d: string; g?: 'dome' | 'flat'; a?: number; tf?: string; b?: Box};
+  | {k: 'p'; d: string; g?: 'dome' | 'flat'; a?: number; tf?: string; b?: Box}
+  | {k: 'u'; ds: string[]; a: number; b: Box};
 
 export type Box = {x0: number; y0: number; x1: number; y1: number};
 export const gooBox = (items: Goo[], pad: number, extra?: Box): Box => {
@@ -21,11 +22,12 @@ export const gooBox = (items: Goo[], pad: number, extra?: Box): Box => {
       x1 = Math.max(x1, it.e.cx + r);
       y0 = Math.min(y0, it.e.cy - r);
       y1 = Math.max(y1, it.e.cy + r);
-    } else if (it.b) {
-      x0 = Math.min(x0, it.b.x0);
-      x1 = Math.max(x1, it.b.x1);
-      y0 = Math.min(y0, it.b.y0);
-      y1 = Math.max(y1, it.b.y1);
+    } else if (it.k === 'u' || it.b) {
+      const bb = it.b!;
+      x0 = Math.min(x0, bb.x0);
+      x1 = Math.max(x1, bb.x1);
+      y0 = Math.min(y0, bb.y0);
+      y1 = Math.max(y1, bb.y1);
     }
   }
   if (extra) {
@@ -96,7 +98,7 @@ export const GooLayer: React.FC<{
           <feDiffuseLighting in="b" surfaceScale={S.toFixed(2)} diffuseConstant="1" lightingColor="#FFFFFF" result="dif">
             <feDistantLight azimuth="235" elevation="36" />
           </feDiffuseLighting>
-          <feGaussianBlur in="dif" stdDeviation="2.6" result="difs" />
+          <feGaussianBlur in="dif" stdDeviation={Math.max(2.6, sigma * 0.2).toFixed(2)} result="difs" />
           <feComponentTransfer in="difs" result="env">
             <feFuncR type="table" tableValues={ramp.r.map((x) => x.toFixed(3)).join(' ')} />
             <feFuncG type="table" tableValues={ramp.g.map((x) => x.toFixed(3)).join(' ')} />
@@ -105,7 +107,7 @@ export const GooLayer: React.FC<{
           <feSpecularLighting in="b" surfaceScale={S.toFixed(2)} specularConstant={(1.25 * spec * (1 - 0.8 * solid)).toFixed(3)} specularExponent={(30 - 20 * solid).toFixed(1)} lightingColor="#FFFFFF" result="spc0">
             <feDistantLight azimuth="235" elevation="52" />
           </feSpecularLighting>
-          <feGaussianBlur in="spc0" stdDeviation="1.4" result="spc" />
+          <feGaussianBlur in="spc0" stdDeviation={Math.max(1.4, sigma * 0.12).toFixed(2)} result="spc" />
           <feComposite in="spc" in2="env" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="lit" />
           <feComposite in="lit" in2="shape" operator="in" result="metal" />
           <feMorphology in="shape" operator="dilate" radius={ink.toFixed(2)} result="dil" />
@@ -122,6 +124,12 @@ export const GooLayer: React.FC<{
           it.k === 'e' ? (
             <ellipse key={i} cx={it.e.cx.toFixed(1)} cy={it.e.cy.toFixed(1)} rx={it.e.rx.toFixed(1)} ry={it.e.ry.toFixed(1)}
               transform={`rotate(${it.e.rot.toFixed(2)} ${it.e.cx.toFixed(1)} ${it.e.cy.toFixed(1)})`} fill={`url(#${id}-${it.g ?? 'dome'})`} opacity={it.a} />
+          ) : it.k === 'u' ? (
+            <g key={i} opacity={it.a}>
+              {it.ds.map((d, j) => (
+                <path key={j} d={d} fill="#FFF" />
+              ))}
+            </g>
           ) : (
             <path key={i} d={it.d} transform={it.tf} fill={`url(#${id}-${it.g ?? 'dome'})`} opacity={it.a} />
           ),

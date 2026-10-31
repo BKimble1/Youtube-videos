@@ -117,14 +117,14 @@ const surfZ = (x: number, y: number) =>
   Math.hypot(x, y) <= RP || (x >= MOULD.x0 && x <= MOULD.x1 && y >= MOULD.y0 && y <= MOULD.y1) || (x >= STAGE.x0 && x <= STAGE.x1 && y >= STAGE.y0 && y <= STAGE.y1) ? ZT : 0;
 
 /** a puddle of the figure's volume: a flat body with a lumpy rim; tw drives the wobble (frozen when solid) */
-const puddle = (c: Cam, P: V3, r: number, tw: number, stretch = 0, sang = 0, att = 0, aang = 0): Goo[] => {
+const puddle = (c: Cam, P: V3, r: number, tw: number, stretch = 0, sang = 0, att = 0, aang = 0, rim = 1): Goo[] => {
   const out: Goo[] = [];
   const wob = 1 + 0.05 * Math.sin(tw * 9.5);
   out.push({k: 'e', e: lump(c, P, r * (1 + 0.35 * stretch) * wob, (r * (1 - 0.18 * stretch)) / wob, 0.3, sang), g: 'flat'});
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < (rim > 0.02 ? 5 : 0); i++) {
     const a = (i / 5) * Math.PI * 2 + 0.7 + 0.2 * Math.sin(tw * 2.1 + i);
     const rr = r * (0.55 + 0.05 * Math.sin(tw * 3.3 + i * 1.9));
-    out.push({k: 'e', e: lump(c, v3(P.x + rr * Math.cos(a), P.y + rr * Math.sin(a), ZT), r * 0.42, r * 0.36, 0.24, a), g: 'dome'});
+    out.push({k: 'e', e: lump(c, v3(P.x + rr * Math.cos(a), P.y + rr * Math.sin(a), ZT), r * 0.42 * rim, r * 0.36 * rim, 0.24, a), g: 'dome'});
   }
   if (att > 0.02) {
     const tq = v3(P.x + Math.cos(aang) * r * 0.7 * att, P.y + Math.sin(aang) * r * 0.7 * att, ZT);
@@ -167,7 +167,7 @@ const collar = (c: Cam, B: V3, w: number, tw: number): {items: Goo[]; front: boo
         push({k: 'e', e: lump(c, q, r, r * 0.85, 0.15 + 0.03 * tip, phi), g: 'dome'}, v3(q.x, q.y, ZT + 0.08));
       }
   // four fingers climbing the sphere and closing over the top
-  const fingers = [50, 130, -50, -130];
+  const fingers = [40, 112, 172, -10, -70, -130];
   for (const fd of fingers) {
     const phi = PHI0 + (fd * Math.PI) / 180;
     const reach = ss(w, 0.3 + Math.abs(fd) / 900, 0.92); // the near fingers start first
@@ -179,7 +179,7 @@ const collar = (c: Cam, B: V3, w: number, tw: number): {items: Goo[]; front: boo
       const ph2 = phi + (over > 0 ? Math.PI : 0);
       const la2 = over > 0 ? ((90 - over) * Math.PI) / 180 : la;
       const tipF = ss(lat - L, 0, 20);
-      const r = (0.045 + 0.03 * tipF) * (1 + 0.05 * Math.sin(tw * 9 + L * 0.1 + fd));
+      const r = (0.06 + 0.035 * tipF) * (1 + 0.05 * Math.sin(tw * 9 + L * 0.1 + fd));
       const rr = BALL_R + 0.03;
       const q = v3(B.x + Math.cos(ph2) * Math.cos(la2) * rr, B.y + Math.sin(ph2) * Math.cos(la2) * rr, B.z + Math.sin(la2) * rr);
       push({k: 'e', e: ellipsoid(c, q, [v3(r, 0, 0), v3(0, r, 0), v3(0, 0, r)]), g: 'dome'}, q);
@@ -305,13 +305,16 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     // the figure melting into a puddle on the coil, then the puddle steered, frozen and pulled as a slug
     if (t < T.slump1 + 0.4) {
       const shrink = 1 - ss(t, T.slump1 - 0.1, T.slump1 + 0.38);
+      // the whole figure as ONE flat slab of liquid (a union, so overlapping parts don't stack into rings)
+      const ds: string[] = [];
+      let bx = {x0: 1e9, x1: -1e9, y0: 1e9, y1: -1e9};
       for (const p of deformed2) {
         const pts = p.pts.map((q) => ({x: q.x * shrink, y: q.y * shrink}));
         const sp = pts.map((q) => ap(Acast, q));
-        const b = {x0: Math.min(...sp.map((q) => q.x)), x1: Math.max(...sp.map((q) => q.x)), y0: Math.min(...sp.map((q) => q.y)) - 40, y1: Math.max(...sp.map((q) => q.y))};
-        F.push({k: 'p', d: pathScreen(Acast, pts), g: 'dome', b});
-        F.push({k: 'p', d: pathScreen(Acast, pts, {x: sweepCast0.x * 0.6, y: sweepCast0.y * 0.6}), g: 'dome', b});
+        bx = {x0: Math.min(bx.x0, ...sp.map((q) => q.x)), x1: Math.max(bx.x1, ...sp.map((q) => q.x)), y0: Math.min(bx.y0, ...sp.map((q) => q.y)) - 40, y1: Math.max(bx.y1, ...sp.map((q) => q.y))};
+        ds.push(pathScreen(Acast, pts, {x: sweepCast0.x * 0.3, y: sweepCast0.y * 0.3}));
       }
+      F.push({k: 'u', ds, a: 0.56, b: bx});
     }
     const rp = 0.12 + 0.38 * ss(t, T.melt0 + 0.1, T.slump1 + 0.2);
     const tw = Math.min(t, T.freeze0);
@@ -327,7 +330,9 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       aang = Math.atan2(dmy, dmx);
       if (stretch < 0.02) sang = aang;
     }
-    F.push(...puddle(c, P, rp, tw, stretch, sang, att, aang));
+    // the pool under the figure only grows once the figure has mostly slumped (its rim would otherwise ring the torso)
+    const grow = t < T.slump1 + 0.4 ? ss(slump2, 0.45, 0.9) : 1;
+    if (rp * grow > 0.03) F.push(...puddle(c, P, rp * grow, tw, stretch, sang, att, aang, ss(slump2, 0.6, 0.95)));
     pSolid = t < T.wrap0 - 0.2 ? ss(t, T.freeze0, T.freeze1) : 1;
     pDir = [1, 0];
     const pp = project(c, P);
@@ -452,7 +457,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
           {cg.back}
           <GooLayer id="liqA" items={O.items} sigma={sigma} box={box} ink={gooInk} />
           {!O.figGone && 1 - ss(O.ms.slump, 0.2, 0.55) > 0.01 && (
-            <MeltingArt id="A" A={O.Afig} parts={O.deformed} sweep={O.sweepFig} ink={ink / O.kf} frontV={O.ms.front * (1 - 0.86 * Math.pow(O.ms.slump, 1.1))} opacity={1 - ss(O.ms.slump, 0.2, 0.55)} warm={O.power} />
+            <MeltingArt id="A" A={O.Afig} parts={O.deformed} sweep={O.sweepFig} ink={ink / O.kf} frontV={O.ms.front * (1 - 0.86 * Math.pow(O.ms.slump, 1.1))} opacity={O.ms.slump < 0.995 ? 1 : 0} warm={O.power} t={tp} />
           )}
           {cg.front}
           <GooLayer id="liqB" items={O.items} sigma={sigma} box={box} ink={gooInk} mask="url(#liqBm)" />
@@ -471,7 +476,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
           )}
           {melting ? (
             <>
-              <MeltingArt id="C2" A={Acast} parts={deformed2} sweep={sweepCast} ink={ink / kc} frontV={frontV2} opacity={solidA2} warm={power1} />
+              <MeltingArt id="C2" A={Acast} parts={deformed2} sweep={sweepCast} ink={ink / kc} frontV={frontV2} opacity={slump2 < 0.995 ? 1 : 0} warm={power1} t={t} />
               {cutWin && <g transform={affStr(Acast)}>{cutWin}</g>}
             </>
           ) : (
@@ -487,7 +492,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
               </defs>
               <g mask={tp < TP.freeze1 + 0.02 ? 'url(#frz-mask)' : undefined}>
                 <FigureArt id="figC" parts={PARTS} sweep={sweepCast} ink={ink / kc} grain={1} />
-                <FigureSheen parts={PARTS} a={1} />
+                <FigureSheen parts={PARTS} a={0} />
               </g>
               {cutWin}
             </g>
@@ -515,18 +520,33 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   );
 };
 
-/** solid figure art over its liquid twin, cut away below the rising melt front */
-const MeltingArt: React.FC<{id: string; A: ReturnType<typeof affine>; parts: {name: string; tone?: number; pts: {x: number; y: number}[]}[]; sweep: {x: number; y: number}; ink: number; frontV: number; opacity: number; warm: number}> = ({id, A, parts, sweep, ink, frontV, opacity, warm}) =>
-  opacity <= 0.01 ? null : (
-    <g transform={affStr(A)} opacity={opacity}>
+/** solid figure art above its liquid twin: fully opaque, cut by a hard, rippling melt front (V2 fix: no opacity
+ *  blending between solid and liquid; the liquid below is opaque goo, the boundary carries a bright wet rim) */
+const meltEdge = (frontV: number, t: number) => {
+  const pts: string[] = [];
+  for (let i = 0; i <= 60; i++) {
+    const x = -1.5 + (3 * i) / 60;
+    const y = frontV + 0.035 * Math.sin(9 * x + 5 * t) + 0.02 * Math.sin(23 * x - 7 * t) - 0.05 * Math.max(0, Math.sin(13 * x + 1.3)) ** 6;
+    pts.push(`${x.toFixed(3)},${y.toFixed(4)}`);
+  }
+  return pts;
+};
+const MeltingArt: React.FC<{id: string; A: ReturnType<typeof affine>; parts: {name: string; tone?: number; pts: {x: number; y: number}[]}[]; sweep: {x: number; y: number}; ink: number; frontV: number; opacity: number; warm: number; t?: number}> = ({id, A, parts, sweep, ink, frontV, opacity, warm, t = 0}) => {
+  if (opacity <= 0.01) return null;
+  const edge = meltEdge(frontV, t);
+  const below = `M-3,-1 L${edge.join(' L')} L3,${edge[edge.length - 1].split(',')[1]} L3,-1 Z`;
+  return (
+    <g transform={affStr(A)}>
       <defs>
-        <linearGradient id={`${id}-mm`} gradientUnits="userSpaceOnUse" x1="0" y1={(frontV - 0.07).toFixed(3)} x2="0" y2={(frontV + 0.09).toFixed(3)}>
-          <stop offset="0" stopColor="#000" />
-          <stop offset="1" stopColor="#FFF" />
-        </linearGradient>
         <mask id={`${id}-mask`} maskUnits="userSpaceOnUse" x="-3" y="-1" width="6" height="5">
-          <rect x="-3" y="-1" width="6" height="5" fill={`url(#${id}-mm)`} />
+          <rect x="-3" y="-1" width="6" height="5" fill="#FFF" />
+          <path d={below} fill="#000" />
         </mask>
+        <clipPath id={`${id}-fc`}>
+          {parts.map((p) => (
+            <path key={p.name} d={partPath(p.pts)} />
+          ))}
+        </clipPath>
         <linearGradient id={`${id}-warm`} gradientUnits="userSpaceOnUse" x1="0" y1={(frontV - 0.02).toFixed(3)} x2="0" y2={(frontV + 0.22).toFixed(3)}>
           <stop offset="0" stopColor="#FFB869" stopOpacity={0.55} />
           <stop offset="1" stopColor="#FFB869" stopOpacity={0} />
@@ -536,13 +556,18 @@ const MeltingArt: React.FC<{id: string; A: ReturnType<typeof affine>; parts: {na
         <FigureArt id={`fig${id}`} parts={parts} sweep={sweep} ink={ink} grain={1} />
         <g>
           {parts.map((p) => (
-            <path key={p.name} d={partPath(p.pts)} fill={`url(#${id}-warm)`} opacity={warm * 0.45} />
+            <path key={p.name} d={partPath(p.pts)} fill={`url(#${id}-warm)`} opacity={warm * 0.22} />
           ))}
         </g>
-        <FigureSheen parts={parts} a={1} />
+      </g>
+      {/* the wet rim where solid turns liquid: a bright line along the front, inside the figure */}
+      <g clipPath={`url(#${id}-fc)`}>
+        <polyline points={edge.join(' ')} fill="none" stroke="#17222C" strokeWidth={0.03} strokeLinejoin="round" opacity={0.6} />
+        <polyline points={edge.join(' ')} fill="none" stroke="#F4F8FB" strokeWidth={0.014} strokeLinejoin="round" transform="translate(0 -0.012)" />
       </g>
     </g>
   );
+};
 
 export const Film: React.FC<HookProps> = (props) => (
   <FilmFrame W={W} bg="#1C3634" capY={300} breaks={BREAKS} props={props}>
