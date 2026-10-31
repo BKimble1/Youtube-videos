@@ -1,0 +1,160 @@
+{
+ "file": "FGW_Parasite_Tongue_FINAL_1080x1920.mp4",
+ "bytes": 26742816,
+ "duration_s": 24.0,
+ "video": {
+  "codec": "h264",
+  "profile": "High",
+  "size": "1080x1920",
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 720,
+  "color_space": "bt709"
+ },
+ "audio": {
+  "codec": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "integrated": "I:         -13.5 LUFS",
+  "true_peak": "Peak:       -1.6 dBFS"
+ },
+ "motion": {
+  "median_frame_diff": 3.44,
+  "longest_still_run_frames": 0,
+  "per_second": [
+   {
+    "s": 0,
+    "mean_motion": 5.52,
+    "min_motion": 0.865
+   },
+   {
+    "s": 1,
+    "mean_motion": 13.41,
+    "min_motion": 0.651
+   },
+   {
+    "s": 2,
+    "mean_motion": 19.21,
+    "min_motion": 6.913
+   },
+   {
+    "s": 3,
+    "mean_motion": 7.37,
+    "min_motion": 4.23
+   },
+   {
+    "s": 4,
+    "mean_motion": 6.92,
+    "min_motion": 3.36
+   },
+   {
+    "s": 5,
+    "mean_motion": 15.28,
+    "min_motion": 9.118
+   },
+   {
+    "s": 6,
+    "mean_motion": 4.07,
+    "min_motion": 0.385
+   },
+   {
+    "s": 7,
+    "mean_motion": 0.6,
+    "min_motion": 0.386
+   },
+   {
+    "s": 8,
+    "mean_motion": 0.95,
+    "min_motion": 0.353
+   },
+   {
+    "s": 9,
+    "mean_motion": 3.22,
+    "min_motion": 0.976
+   },
+   {
+    "s": 10,
+    "mean_motion": 1.23,
+    "min_motion": 0.694
+   },
+   {
+    "s": 11,
+    "mean_motion": 1.66,
+    "min_motion": 0.538
+   },
+   {
+    "s": 12,
+    "mean_motion": 3.87,
+    "min_motion": 3.493
+   },
+   {
+    "s": 13,
+    "mean_motion": 6.19,
+    "min_motion": 3.029
+   },
+   {
+    "s": 14,
+    "mean_motion": 4.64,
+    "min_motion": 3.349
+   },
+   {
+    "s": 15,
+    "mean_motion": 1.88,
+    "min_motion": 1.05
+   },
+   {
+    "s": 16,
+    "mean_motion": 2.38,
+    "min_motion": 1.005
+   },
+   {
+    "s": 17,
+    "mean_motion": 4.73,
+    "min_motion": 2.177
+   },
+   {
+    "s": 18,
+    "mean_motion": 3.18,
+    "min_motion": 1.074
+   },
+   {
+    "s": 19,
+    "mean_motion": 3.31,
+    "min_motion": 1.635
+   },
+   {
+    "s": 20,
+    "mean_motion": 4.88,
+    "min_motion": 2.168
+   },
+   {
+    "s": 21,
+    "mean_motion": 2.81,
+    "min_motion": 2.204
+   },
+   {
+    "s": 22,
+    "mean_motion": 3.23,
+    "min_motion": 2.669
+   },
+   {
+    "s": 23,
+    "mean_motion": 1.92,
+    "min_motion": 0.918
+   }
+  ]
+ },
+ "loop_seam": {
+  "last_vs_first_mean_abs": 0.96,
+  "typical_consecutive_frame_diff": 3.44
+ },
+ "black_frames": [],
+ "asr_on_mux": [
+  "== zipformer  WER 0.034",
+  "IF THIS PARASITE GETS INSIDE A FISH IT CAN REPLACE ITS ENTIRE TONGUE IT CRAWLS THROUGH THE GILLS LATCHES ON TO THE TONGUE AND STARTS STEALING ITS BLOOD EVENTUALLY THE TONGUE WITHERS AWAY BUT HERE'S THE DISGUSTING PART THE PARASITE STAYS ATTACHED BECOMING THE FISH'S NEW TONGUE AND THE FISH KEEPS EATING WITH A LIVING PARASITE INSIDE ITS MOUTH",
+  "  diffs: [('replace', 'onto', 'on to')]",
+  "== whisper  WER 0.000",
+  "If this parasite gets inside a fish, it can replace its entire tongue. It crawls through the gills, latches onto the tongue, and starts stealing its blood. Eventually, the tongue withers away. But here's the disgusting part. The parasite stays attached, becoming the fish's new tongue. And the fish keeps eating, with a living parasite inside its mouth.",
+  "  diffs: []"
+ ]
+}
