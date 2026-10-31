@@ -7,7 +7,7 @@
 
 **Contact sheet** (0.0, 0.5, 1.0, 2.0, 3.0, 5.0, 8.0, 11.0, 14.0, 17.0, 20.0, 24.0 s): `qa/v3/FGW_Zombie_Snail_V3_contact_sheet.png`
 
-**Baseline.** V2 at commit `9dcb6ba`.
+**Baseline.** V2 at commit `7a04929`.
 
 **Unchanged:**
 - **Narration:** the approved words, the same ElevenLabs master (not regenerated), the same timings.

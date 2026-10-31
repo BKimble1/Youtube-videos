@@ -36,7 +36,7 @@
 
 **Unchanged.** The narration and word timings.
 
-**Source.** At commit `9dcb6ba`, composition `ZombieSnailV2`; mix `mix_v2`.
+**Source.** At commit `7a04929`, composition `ZombieSnailV2`; mix `mix_v2`.
 
 ## V1 (superseded)
 
