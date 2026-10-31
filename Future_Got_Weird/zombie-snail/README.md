@@ -1,6 +1,18 @@
 # Future Got Weird Short 2: The Zombie Snail Parasite
 
-## V3 (current, final review)
+## V4 (current, hook-only fix)
+
+**Deliverable.** `exports/FGW_Zombie_Snail_V4_HOOK_FINAL_1080x1920.mp4`.
+
+**Hook preview.** `exports/FGW_Zombie_Snail_V4_HOOK_PREVIEW_0-3s_1080x1920.mp4`.
+
+**Report.** `production/V4_HOOK_REPORT.md`, with evidence in `qa/v4/`.
+
+**What changed.** Only 0–2.5 s. The infected stalk convulses from the first frame, the head recoils, and the camera pushes in as the skin turns translucent over the living larvae. From 5.13 s onward the video is V3's own stream copied, and the audio is V3's, bit-identical.
+
+**Source.** Composition `ZombieSnailV4`.
+
+## V3 (superseded by V4's hook; final review)
 
 **Deliverable.** `exports/FGW_Zombie_Snail_V3_FINAL_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 746 frames, 24.875 s.
 **It is not published.**

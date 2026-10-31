@@ -112,30 +112,40 @@ const pulseK = (t: number) => 1 + 0.35 * ss(t, T.it, T.it + 0.3) * (1 - ss(t, T.
 /** the snail's body answers each contraction of the sac: the head bobs slightly and the lower tentacles twitch */
 const bodyReact = (t: number) => 0.025 * Math.sin(2 * Math.PI * 1.55 * t);
 const lowTwitch = (t: number) => 0.3 * Math.max(0, Math.sin(2 * Math.PI * 1.55 * t - 0.6)) ** 3;
+// ---- V4 hook (0-2.2 s only; from 2.2 s every value equals V3, and at t = 0 every value equals V3's frame 0,
+// so the loop from the unchanged last frame still closes)
+const HOOK_END = 2.2;
+/** the travelling bulge grows to nearly twice its strength in the first quarter second, then settles back */
+const hookBulge = (t: number) => (t < HOOK_END ? 1 + 0.95 * ss(t, 0.04, 0.24) * (1 - ss(t, 1.6, HOOK_END)) : 1);
+/** the skin turns translucent as the camera pushes in, then gives way to the V3 opening */
+const hookGlass = (t: number) => (t < HOOK_END ? ss(t, 0.72, 1.2) * (1 - ss(t, 1.55, 2.0)) : 0);
+/** the head answers the hard contractions: a small recoil and a bob in time with the beat */
+const hookFlinch = (t: number) => (t < HOOK_END ? 0.2 * ss(t, 0.26, 0.4) * (1 - ss(t, 0.5, 0.85)) + 0.12 * ss(t, 0.92, 1.04) * (1 - ss(t, 1.1, 1.4)) : 0);
+const hookReact = (t: number) => (t < HOOK_END ? 0.035 * Math.sin(2 * Math.PI * 1.55 * t - 0.5) * ss(t, 0, 0.2) * (1 - ss(t, 1.6, HOOK_END)) : 0);
 export const snail1 = (t: number): SnailState => {
   const wound = ss(t, EV.peck, EV.peck + 0.08);
   const fill = ss(t, T.it, T.baitEnd);
-  const cut = ss(t, EV.cut0, EV.cut0 + 0.6) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
+  const cut = (t < HOOK_END ? ss(t, 1.4, 1.95) : ss(t, EV.cut0, EV.cut0 + 0.6)) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
   const dev = 0.55 + 0.45 * ss(t, EV.stalkBack, EV.farFill1);
   const farS = ss(t, EV.farFill0, EV.farFill1);
   const farCut = ss(t, EV.stalkBack, EV.stalkBack + 0.45) * (1 - ss(t, EV.cutClose, EV.cutClose + 0.45));
   const vivid = 0.35 + 0.65 * ss(t, T.they, T.cats);
   const pk = pulseK(t) * (1 - wound);
-  const near: StalkParams = {...NEAR0, S: lerp(S0, 1, fill), band: 1 - wound, pulse: pk, vivid, wound, retract: 0.45 * ss(t, EV.peck + 0.04, EV.peck + 0.45), cut, dev};
+  const near: StalkParams = {...NEAR0, S: lerp(S0, 1, fill), band: 1 - wound, pulse: pk, vivid, wound, ...(t < HOOK_END ? {bulge: pk * hookBulge(t), glass: hookGlass(t)} : {}), retract: 0.45 * ss(t, EV.peck + 0.04, EV.peck + 0.45), cut, dev};
   const far: StalkParams = {...FAR0, S: farS, band: ss(t, EV.farFill0 + 0.1, EV.farFill1), pulse: pulseK(t) * ss(t, EV.farFill0 + 0.3, EV.farFill1 + 0.3) * (1 - 0.5 * ss(t, EV.peck, EV.peck + 0.4)), phase: 1.9, vivid,
     cut: farCut, dev: ss(t, EV.farFill0, EV.farFill1 + 0.3),
     retract: 0.7 * ss(t, EV.peck + 0.05, EV.peck + 0.4) * (1 - 0.6 * ss(t, 18.4, 19.6))};
   const cutAlpha = 1 - ss(t, EV.cutClose - 0.2, EV.cutClose + 0.3);
   const xr = cutAlpha > 0.001 ? ss(t, EV.bodyCut0, EV.bodyCut0 + 0.9) : 0;
   const climbing = ss(t, EV.climb0, EV.climb0 + 0.4) * (1 - ss(t, EV.climb1 - 0.4, EV.climb1));
-  const lift = 0.05 + 0.2 * ss(t, EV.climb1 - 0.6, EV.climb1 + 0.4) + 0.02 * Math.sin(t * 2.1) + bodyReact(t) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
+  const lift = 0.05 + 0.2 * ss(t, EV.climb1 - 0.6, EV.climb1 + 0.4) + 0.02 * Math.sin(t * 2.1) + bodyReact(t) + hookReact(t) - 0.12 * ss(t, EV.peck, EV.peck + 0.25);
   return {
     o: pt(x1(t), 0),
     k: 1,
     t,
     crawl: x1(t) * (1 + 0.6 * climbing),
     lift,
-    flinch: ss(t, EV.peck, EV.peck + 0.12) - 0.65 * ss(t, EV.peck + 0.5, EV.peck + 1.6),
+    flinch: ss(t, EV.peck, EV.peck + 0.12) - 0.65 * ss(t, EV.peck + 0.5, EV.peck + 1.6) + hookFlinch(t),
     near,
     far,
     xray: xr,
@@ -310,8 +320,8 @@ const headCam = (wv: number, dx = 0, dy = 0) => (t: number): [number, number, nu
 };
 const KEYS: Key[] = [
   [0, frame0],
-  [0.3, frame0],
-  [EV.cut0 + 0.05, S1(0.56, 5.2)],
+  [0.7, (t) => [x1(t) - 0.05, -7.0, 8.4]],
+  [1.4, S1(0.56, 4.5)],
   [2.2, S1(0.6, 3.3)],
   [T.into - 0.05, S1(0.05, 5.0)],
   [T.baitEnd - 0.1, (t) => [x1(t) - 0.8, -5.8, 8.4]],

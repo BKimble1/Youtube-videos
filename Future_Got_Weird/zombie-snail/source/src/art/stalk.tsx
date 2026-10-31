@@ -33,6 +33,7 @@ export type StalkState = {
   cut?: number; // 0..1: a lengthwise cutaway opens from the tip down, showing the sac and its larvae
   dev?: number; // 0..1: the larvae inside the sac develop (germ balls -> larvae)
   bulge?: number; // strength of the travelling contraction bulge (default = pulse)
+  glass?: number; // 0..1: the skin turns translucent and the sac's living interior shows through (V4 hook)
 };
 
 export const SKIN = '#9C9583';
@@ -123,6 +124,7 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
   const band = clamp(st.band) * (1 - (st.wound ?? 0));
   const xr = st.xray ?? 0;
   const cut = st.cut ?? 0;
+  const trans = st.glass ?? 0;
   const vivid = st.vivid ?? 0;
   const skin = st.skin ?? SKIN;
   const outline = closed(tb.outline, 0.9);
@@ -182,6 +184,69 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
   const tipC = tb.C[tip];
   const mA = across(tb, mid, 1.0), mB = across(tb, mid, -1.0);
   const lA = side > 0 ? mA : mB, dB = side > 0 ? mB : mA;
+  const drawInterior = (cv: number, alpha: number, edges: boolean, key: string) => {
+        // the cutaway window: the near half of the skin and of the sac wall removed, from the tip down
+        const u0 = lerp(0.58, 0.07, sm(cv)), u1 = lerp(0.6, 0.965, sm(cv));
+        const S0 = 0.74;
+        // a lens-shaped opening: a slit that widens, round-ended (never a box)
+        const uc = (u0 + u1) / 2, hw = Math.max(1e-3, (u1 - u0) / 2);
+        const lens = (u: number) => Math.min(1, lerp(0.75, 1.8, sm(cv)) * Math.sqrt(Math.max(0, 1 - Math.pow((u - uc) / hw, 2))));
+        const edge = (sv: number, a: number, b: number) => Array.from({length: 25}, (_, q) => {
+          const u = a + ((b - a) * q) / 24;
+          return at(g, u, sv * lens(u));
+        });
+        const win = [...edge(S0, u0, u1), ...edge(-S0, u0, u1).reverse()];
+        const lum = [...edge(0.62, u0, u1), ...edge(-0.62, u0, u1).reverse()];
+        const dv = clamp(st.dev ?? 1);
+        const lar: React.ReactNode[] = [];
+        // larvae packed in rows; they shuffle up the sac with every contraction
+        for (let row = 0; row < 19; row++) {
+          for (let col = 0; col < 3; col++) {
+            const k = row * 3 + col;
+            let u = 0.1 + row * 0.046 + (col % 2) * 0.023 + 0.012 * Math.sin(g.w - 6 * (0.1 + row * 0.046)) + 0.004 * Math.sin(st.t * 5 + k);
+            if (u < u0 + 0.02 || u > u1 - 0.03) continue;
+            const sv = -0.36 + col * 0.36 + 0.06 * Math.sin(k * 2.3 + st.t * 3);
+            const c = at(g, u, sv);
+            const tA = at(g, Math.min(1, u + 0.01), sv);
+            const ang = (Math.atan2(tA.y - c.y, tA.x - c.x) * 180) / Math.PI + 18 * Math.sin(k * 1.7 + st.t * 4);
+            const ri = at(g, u, 0).x - at(g, u, 1).x, rj = at(g, u, 0).y - at(g, u, 1).y;
+            const rr = Math.hypot(ri, rj);
+            const L = rr * (0.18 + 0.12 * dv) * (0.85 + 0.25 * ((k * 0.37) % 1));
+            lar.push(
+              <g key={k} transform={`translate(${c.x} ${c.y}) rotate(${ang})`}>
+                <ellipse rx={L} ry={L * (0.62 - 0.12 * dv)} fill={mix('#CFE58A', '#F7F0D0', dv)} stroke="#6B5A1E" strokeWidth={L * 0.07} />
+                {dv > 0.3 && <ellipse cx={-L * 0.05} rx={L * 0.62} ry={L * 0.34} fill="#D9A94E" opacity={0.75 * dv} />}
+                {dv > 0.3 && <circle cx={L * 0.55} r={L * 0.17} fill="#8A5A1E" opacity={dv} />}
+                {dv > 0.5 && <circle cx={-L * 0.1} r={L * 0.2} fill="#8A5A1E" opacity={0.8 * dv} />}
+              </g>,
+            );
+          }
+        }
+        const musc = Array.from({length: 13}, (_, q) => at(g, u0 + ((u1 - 0.04 - u0) * q) / 12, -0.08 + 0.05 * Math.sin(q + st.t * 2)));
+        return (
+          <g key={key} opacity={alpha}>
+            <path d={poly(win)} fill="#13200F" />
+            <path d={poly(lum)} fill="#3E6E22" />
+            <path d={poly(lum)} fill="#0C1A08" opacity={0.25} />
+            <path d={open(musc)} fill="none" stroke="#B5605A" strokeWidth={rmean * 0.12} strokeOpacity={0.8} strokeLinecap="round" />
+            <path d={open(musc)} fill="none" stroke="#E79A88" strokeWidth={rmean * 0.04} strokeOpacity={0.7} strokeDasharray={`${rmean * 0.05} ${rmean * 0.05}`} />
+            <clipPath id={`${id}lw${key}`}>
+              <path d={poly(lum)} />
+            </clipPath>
+            <g clipPath={`url(#${id}lw${key})`}>{lar}</g>
+            {edges && (
+              <g>
+                {/* cut edges: the sac wall (lime) and the skin (fleshy grey-pink) */}
+                <path d={open(edge(0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+                <path d={open(edge(-0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
+                <path d={poly(win)} fill="#E9F3D6" opacity={0.1} />
+                <path d={poly(win)} fill="none" stroke="#D8E6C4" strokeWidth={rmean * 0.16} strokeOpacity={0.45} filter={`url(#${id}h)`} />
+                <path d={poly(win)} fill="none" stroke="#C9A497" strokeWidth={rmean * 0.06} strokeOpacity={0.8} />
+              </g>
+            )}
+          </g>
+        );
+      };
   return (
     <g opacity={st.far ? 0.96 : 1}>
       <defs>
@@ -241,65 +306,14 @@ export const Stalk: React.FC<{st: StalkState; light?: P}> = ({st, light = {x: -0
           <path d={open(ringEdge(g, g.uw, bowK))} fill="none" stroke="#FFFFF0" strokeWidth={rmean * 0.3} strokeOpacity={0.22 * g.bulgeK * band} filter={`url(#${id}h)`} />
         </g>
       )}
-      {cut > 0.01 && (() => {
-        // the cutaway window: the near half of the skin and of the sac wall removed, from the tip down
-        const u0 = lerp(0.58, 0.07, sm(cut)), u1 = lerp(0.6, 0.965, sm(cut));
-        const S0 = 0.74;
-        // a lens-shaped opening: a slit that widens, round-ended (never a box)
-        const uc = (u0 + u1) / 2, hw = Math.max(1e-3, (u1 - u0) / 2);
-        const lens = (u: number) => Math.min(1, lerp(0.75, 1.8, sm(cut)) * Math.sqrt(Math.max(0, 1 - Math.pow((u - uc) / hw, 2))));
-        const edge = (sv: number, a: number, b: number) => Array.from({length: 25}, (_, q) => {
-          const u = a + ((b - a) * q) / 24;
-          return at(g, u, sv * lens(u));
-        });
-        const win = [...edge(S0, u0, u1), ...edge(-S0, u0, u1).reverse()];
-        const lum = [...edge(0.62, u0, u1), ...edge(-0.62, u0, u1).reverse()];
-        const dv = clamp(st.dev ?? 1);
-        const lar: React.ReactNode[] = [];
-        // larvae packed in rows; they shuffle up the sac with every contraction
-        for (let row = 0; row < 19; row++) {
-          for (let col = 0; col < 3; col++) {
-            const k = row * 3 + col;
-            let u = 0.1 + row * 0.046 + (col % 2) * 0.023 + 0.012 * Math.sin(g.w - 6 * (0.1 + row * 0.046)) + 0.004 * Math.sin(st.t * 5 + k);
-            if (u < u0 + 0.02 || u > u1 - 0.03) continue;
-            const sv = -0.36 + col * 0.36 + 0.06 * Math.sin(k * 2.3 + st.t * 3);
-            const c = at(g, u, sv);
-            const tA = at(g, Math.min(1, u + 0.01), sv);
-            const ang = (Math.atan2(tA.y - c.y, tA.x - c.x) * 180) / Math.PI + 18 * Math.sin(k * 1.7 + st.t * 4);
-            const ri = at(g, u, 0).x - at(g, u, 1).x, rj = at(g, u, 0).y - at(g, u, 1).y;
-            const rr = Math.hypot(ri, rj);
-            const L = rr * (0.18 + 0.12 * dv) * (0.85 + 0.25 * ((k * 0.37) % 1));
-            lar.push(
-              <g key={k} transform={`translate(${c.x} ${c.y}) rotate(${ang})`}>
-                <ellipse rx={L} ry={L * (0.62 - 0.12 * dv)} fill={mix('#CFE58A', '#F7F0D0', dv)} stroke="#6B5A1E" strokeWidth={L * 0.07} />
-                {dv > 0.3 && <ellipse cx={-L * 0.05} rx={L * 0.62} ry={L * 0.34} fill="#D9A94E" opacity={0.75 * dv} />}
-                {dv > 0.3 && <circle cx={L * 0.55} r={L * 0.17} fill="#8A5A1E" opacity={dv} />}
-                {dv > 0.5 && <circle cx={-L * 0.1} r={L * 0.2} fill="#8A5A1E" opacity={0.8 * dv} />}
-              </g>,
-            );
-          }
-        }
-        const musc = Array.from({length: 13}, (_, q) => at(g, u0 + ((u1 - 0.04 - u0) * q) / 12, -0.08 + 0.05 * Math.sin(q + st.t * 2)));
-        return (
-          <g opacity={sm(clamp(cut * 3))}>
-            <path d={poly(win)} fill="#13200F" />
-            <path d={poly(lum)} fill="#3E6E22" />
-            <path d={poly(lum)} fill="#0C1A08" opacity={0.25} />
-            <path d={open(musc)} fill="none" stroke="#B5605A" strokeWidth={rmean * 0.12} strokeOpacity={0.8} strokeLinecap="round" />
-            <path d={open(musc)} fill="none" stroke="#E79A88" strokeWidth={rmean * 0.04} strokeOpacity={0.7} strokeDasharray={`${rmean * 0.05} ${rmean * 0.05}`} />
-            <clipPath id={`${id}lw`}>
-              <path d={poly(lum)} />
-            </clipPath>
-            <g clipPath={`url(#${id}lw)`}>{lar}</g>
-            {/* cut edges: the sac wall (lime) and the skin (fleshy grey-pink) */}
-            <path d={open(edge(0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
-            <path d={open(edge(-0.62, u0, u1))} fill="none" stroke="#B8F04A" strokeWidth={rmean * 0.06} />
-            <path d={poly(win)} fill="#E9F3D6" opacity={0.1} />
-            <path d={poly(win)} fill="none" stroke="#D8E6C4" strokeWidth={rmean * 0.16} strokeOpacity={0.45} filter={`url(#${id}h)`} />
-            <path d={poly(win)} fill="none" stroke="#C9A497" strokeWidth={rmean * 0.06} strokeOpacity={0.8} />
-          </g>
-        );
-      })()}
+      {/* V4 hook: the skin turns translucent and the living sac shows through, still banded */}
+      {trans > 0.01 && (
+        <g clipPath={`url(#${id}c)`}>
+          {drawInterior(1, 0.62 * sm(trans), false, 'g')}
+          <path d={outline} fill={skin} opacity={0.1 * trans} />
+        </g>
+      )}
+      {cut > 0.01 && drawInterior(cut, sm(clamp(cut * 3)), true, 'c')}
       {/* the eye at the tip */}
       {(st.wound ?? 0) < 0.5 && (
         <g>
