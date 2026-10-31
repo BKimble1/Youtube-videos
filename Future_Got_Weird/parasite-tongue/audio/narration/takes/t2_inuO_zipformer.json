@@ -1,0 +1,338 @@
+{
+ "audio": "audio/narration/takes/t2_inuO.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.97,
+   2.14
+  ],
+  [
+   4.0,
+   4.42
+  ],
+  [
+   5.61,
+   5.77
+  ],
+  [
+   8.42,
+   9.0
+  ],
+  [
+   9.7,
+   9.93
+  ],
+  [
+   11.14,
+   11.69
+  ],
+  [
+   13.23,
+   13.65
+  ],
+  [
+   15.14,
+   15.35
+  ],
+  [
+   16.89,
+   17.31
+  ],
+  [
+   18.59,
+   18.84
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.11
+  },
+  {
+   "word": "this",
+   "start": 0.12,
+   "end": 0.31
+  },
+  {
+   "word": "parasite",
+   "start": 0.32,
+   "end": 0.87
+  },
+  {
+   "word": "gets",
+   "start": 0.88,
+   "end": 1.12
+  },
+  {
+   "word": "inside",
+   "start": 1.12,
+   "end": 1.48
+  },
+  {
+   "word": "a",
+   "start": 1.48,
+   "end": 1.67
+  },
+  {
+   "word": "fish,",
+   "start": 1.68,
+   "end": 1.97
+  },
+  {
+   "word": "it",
+   "start": 2.14,
+   "end": 2.19
+  },
+  {
+   "word": "can",
+   "start": 2.18,
+   "end": 2.29
+  },
+  {
+   "word": "replace",
+   "start": 2.295,
+   "end": 2.73
+  },
+  {
+   "word": "its",
+   "start": 2.735,
+   "end": 2.97
+  },
+  {
+   "word": "entire",
+   "start": 2.975,
+   "end": 3.53
+  },
+  {
+   "word": "tongue.",
+   "start": 3.535,
+   "end": 4.0
+  },
+  {
+   "word": "It",
+   "start": 4.42,
+   "end": 4.47
+  },
+  {
+   "word": "crawls",
+   "start": 4.46,
+   "end": 4.89
+  },
+  {
+   "word": "through",
+   "start": 4.89,
+   "end": 5.04
+  },
+  {
+   "word": "the",
+   "start": 5.05,
+   "end": 5.16
+  },
+  {
+   "word": "gills,",
+   "start": 5.17,
+   "end": 5.61
+  },
+  {
+   "word": "latches",
+   "start": 5.77,
+   "end": 6.12
+  },
+  {
+   "word": "onto",
+   "start": 6.13,
+   "end": 6.4
+  },
+  {
+   "word": "the",
+   "start": 6.41,
+   "end": 6.48
+  },
+  {
+   "word": "tongue,",
+   "start": 6.49,
+   "end": 6.84
+  },
+  {
+   "word": "and",
+   "start": 6.85,
+   "end": 6.9
+  },
+  {
+   "word": "starts",
+   "start": 6.97,
+   "end": 7.36
+  },
+  {
+   "word": "stealing",
+   "start": 7.37,
+   "end": 7.8
+  },
+  {
+   "word": "its",
+   "start": 7.81,
+   "end": 8.13
+  },
+  {
+   "word": "blood.",
+   "start": 8.13,
+   "end": 8.42
+  },
+  {
+   "word": "Eventually,",
+   "start": 9.0,
+   "end": 9.7
+  },
+  {
+   "word": "the",
+   "start": 9.93,
+   "end": 9.98
+  },
+  {
+   "word": "tongue",
+   "start": 9.975,
+   "end": 10.33
+  },
+  {
+   "word": "withers",
+   "start": 10.335,
+   "end": 10.89
+  },
+  {
+   "word": "away.",
+   "start": 10.895,
+   "end": 11.14
+  },
+  {
+   "word": "But",
+   "start": 11.69,
+   "end": 11.74
+  },
+  {
+   "word": "here\u2019s",
+   "start": 11.73,
+   "end": 12.05
+  },
+  {
+   "word": "the",
+   "start": 12.055,
+   "end": 12.21
+  },
+  {
+   "word": "disgusting",
+   "start": 12.215,
+   "end": 13.01
+  },
+  {
+   "word": "part.",
+   "start": 13.015,
+   "end": 13.23
+  },
+  {
+   "word": "The",
+   "start": 13.65,
+   "end": 13.7
+  },
+  {
+   "word": "parasite",
+   "start": 13.69,
+   "end": 14.23
+  },
+  {
+   "word": "stays",
+   "start": 14.24,
+   "end": 14.59
+  },
+  {
+   "word": "attached,",
+   "start": 14.6,
+   "end": 15.14
+  },
+  {
+   "word": "becoming",
+   "start": 15.35,
+   "end": 15.6
+  },
+  {
+   "word": "the",
+   "start": 15.605,
+   "end": 15.72
+  },
+  {
+   "word": "fish\u2019s",
+   "start": 15.725,
+   "end": 16.24
+  },
+  {
+   "word": "new",
+   "start": 16.245,
+   "end": 16.52
+  },
+  {
+   "word": "tongue.",
+   "start": 16.525,
+   "end": 16.89
+  },
+  {
+   "word": "And",
+   "start": 17.31,
+   "end": 17.36
+  },
+  {
+   "word": "the",
+   "start": 17.35,
+   "end": 17.41
+  },
+  {
+   "word": "fish",
+   "start": 17.42,
+   "end": 17.78
+  },
+  {
+   "word": "keeps",
+   "start": 17.78,
+   "end": 18.1
+  },
+  {
+   "word": "eating,",
+   "start": 18.14,
+   "end": 18.59
+  },
+  {
+   "word": "with",
+   "start": 18.84,
+   "end": 18.89
+  },
+  {
+   "word": "a",
+   "start": 18.88,
+   "end": 18.99
+  },
+  {
+   "word": "living",
+   "start": 18.995,
+   "end": 19.39
+  },
+  {
+   "word": "parasite",
+   "start": 19.395,
+   "end": 19.99
+  },
+  {
+   "word": "inside",
+   "start": 19.995,
+   "end": 20.35
+  },
+  {
+   "word": "its",
+   "start": 20.355,
+   "end": 20.63
+  },
+  {
+   "word": "mouth.",
+   "start": 20.635,
+   "end": 20.92
+  }
+ ]
+}

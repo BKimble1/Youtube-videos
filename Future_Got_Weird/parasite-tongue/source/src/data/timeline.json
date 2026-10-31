@@ -1,0 +1,354 @@
+{
+ "fps": 30,
+ "frames": 720,
+ "duration": 24.0,
+ "captions": [
+  {
+   "text": "If this parasite gets inside a fish,",
+   "start": 0.0,
+   "end": 1.92
+  },
+  {
+   "text": "it can replace its entire tongue.",
+   "start": 2.2,
+   "end": 3.96
+  },
+  {
+   "text": "It crawls through the gills,",
+   "start": 4.46,
+   "end": 5.6
+  },
+  {
+   "text": "latches onto the tongue,",
+   "start": 5.77,
+   "end": 6.88
+  },
+  {
+   "text": "and starts stealing its blood.",
+   "start": 7.03,
+   "end": 8.47
+  },
+  {
+   "text": "Eventually, the tongue withers away.",
+   "start": 9.05,
+   "end": 11.18
+  },
+  {
+   "text": "But here\u2019s the disgusting part.",
+   "start": 11.84,
+   "end": 13.4
+  },
+  {
+   "text": "The parasite stays attached,",
+   "start": 14.02,
+   "end": 15.5
+  },
+  {
+   "text": "becoming the fish\u2019s new tongue.",
+   "start": 15.77,
+   "end": 17.29
+  },
+  {
+   "text": "And the fish keeps eating,",
+   "start": 17.89,
+   "end": 19.09
+  },
+  {
+   "text": "with a living parasite inside its mouth.",
+   "start": 19.38,
+   "end": 21.29
+  }
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.11
+  },
+  {
+   "word": "this",
+   "start": 0.12,
+   "end": 0.31
+  },
+  {
+   "word": "parasite",
+   "start": 0.32,
+   "end": 0.87
+  },
+  {
+   "word": "gets",
+   "start": 0.88,
+   "end": 1.12
+  },
+  {
+   "word": "inside",
+   "start": 1.12,
+   "end": 1.43
+  },
+  {
+   "word": "a",
+   "start": 1.44,
+   "end": 1.63
+  },
+  {
+   "word": "fish,",
+   "start": 1.64,
+   "end": 1.92
+  },
+  {
+   "word": "it",
+   "start": 2.2,
+   "end": 2.25
+  },
+  {
+   "word": "can",
+   "start": 2.24,
+   "end": 2.37
+  },
+  {
+   "word": "replace",
+   "start": 2.38,
+   "end": 2.77
+  },
+  {
+   "word": "its",
+   "start": 2.78,
+   "end": 3.01
+  },
+  {
+   "word": "entire",
+   "start": 3.02,
+   "end": 3.57
+  },
+  {
+   "word": "tongue.",
+   "start": 3.58,
+   "end": 3.96
+  },
+  {
+   "word": "It",
+   "start": 4.46,
+   "end": 4.51
+  },
+  {
+   "word": "crawls",
+   "start": 4.5,
+   "end": 4.93
+  },
+  {
+   "word": "through",
+   "start": 4.935,
+   "end": 5.05
+  },
+  {
+   "word": "the",
+   "start": 5.055,
+   "end": 5.21
+  },
+  {
+   "word": "gills,",
+   "start": 5.215,
+   "end": 5.6
+  },
+  {
+   "word": "latches",
+   "start": 5.77,
+   "end": 6.16
+  },
+  {
+   "word": "onto",
+   "start": 6.165,
+   "end": 6.4
+  },
+  {
+   "word": "the",
+   "start": 6.405,
+   "end": 6.5
+  },
+  {
+   "word": "tongue,",
+   "start": 6.525,
+   "end": 6.88
+  },
+  {
+   "word": "and",
+   "start": 7.03,
+   "end": 7.08
+  },
+  {
+   "word": "starts",
+   "start": 7.07,
+   "end": 7.43
+  },
+  {
+   "word": "stealing",
+   "start": 7.435,
+   "end": 7.91
+  },
+  {
+   "word": "its",
+   "start": 7.915,
+   "end": 8.19
+  },
+  {
+   "word": "blood.",
+   "start": 8.195,
+   "end": 8.47
+  },
+  {
+   "word": "Eventually,",
+   "start": 9.05,
+   "end": 9.79
+  },
+  {
+   "word": "the",
+   "start": 9.96,
+   "end": 10.03
+  },
+  {
+   "word": "tongue",
+   "start": 10.035,
+   "end": 10.35
+  },
+  {
+   "word": "withers",
+   "start": 10.355,
+   "end": 10.91
+  },
+  {
+   "word": "away.",
+   "start": 10.915,
+   "end": 11.18
+  },
+  {
+   "word": "But",
+   "start": 11.84,
+   "end": 11.89
+  },
+  {
+   "word": "here\u2019s",
+   "start": 11.88,
+   "end": 12.22
+  },
+  {
+   "word": "the",
+   "start": 12.225,
+   "end": 12.38
+  },
+  {
+   "word": "disgusting",
+   "start": 12.385,
+   "end": 13.14
+  },
+  {
+   "word": "part.",
+   "start": 13.145,
+   "end": 13.4
+  },
+  {
+   "word": "The",
+   "start": 14.02,
+   "end": 14.07
+  },
+  {
+   "word": "parasite",
+   "start": 14.06,
+   "end": 14.64
+  },
+  {
+   "word": "stays",
+   "start": 14.645,
+   "end": 14.96
+  },
+  {
+   "word": "attached,",
+   "start": 14.965,
+   "end": 15.5
+  },
+  {
+   "word": "becoming",
+   "start": 15.77,
+   "end": 16.03
+  },
+  {
+   "word": "the",
+   "start": 16.035,
+   "end": 16.15
+  },
+  {
+   "word": "fish\u2019s",
+   "start": 16.155,
+   "end": 16.63
+  },
+  {
+   "word": "new",
+   "start": 16.635,
+   "end": 16.91
+  },
+  {
+   "word": "tongue.",
+   "start": 16.915,
+   "end": 17.29
+  },
+  {
+   "word": "And",
+   "start": 17.89,
+   "end": 17.94
+  },
+  {
+   "word": "the",
+   "start": 17.93,
+   "end": 17.98
+  },
+  {
+   "word": "fish",
+   "start": 17.975,
+   "end": 18.33
+  },
+  {
+   "word": "keeps",
+   "start": 18.335,
+   "end": 18.66
+  },
+  {
+   "word": "eating,",
+   "start": 18.695,
+   "end": 19.09
+  },
+  {
+   "word": "with",
+   "start": 19.38,
+   "end": 19.43
+  },
+  {
+   "word": "a",
+   "start": 19.42,
+   "end": 19.47
+  },
+  {
+   "word": "living",
+   "start": 19.475,
+   "end": 19.87
+  },
+  {
+   "word": "parasite",
+   "start": 19.875,
+   "end": 20.47
+  },
+  {
+   "word": "inside",
+   "start": 20.475,
+   "end": 20.83
+  },
+  {
+   "word": "its",
+   "start": 20.835,
+   "end": 21.11
+  },
+  {
+   "word": "mouth.",
+   "start": 21.115,
+   "end": 21.29
+  }
+ ]
+}

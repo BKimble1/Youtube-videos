@@ -1,0 +1,147 @@
+[
+ {
+  "t": 23.92,
+  "sfx": "tongue wriggle",
+  "gain_db": -26
+ },
+ {
+  "t": 0.42,
+  "sfx": "segments separate",
+  "gain_db": -24
+ },
+ {
+  "t": 0.622,
+  "sfx": "seven pairs of claws grip",
+  "gain_db": -30
+ },
+ {
+  "t": 1.0,
+  "sfx": "jaw flex as the mouth gapes",
+  "gain_db": -32
+ },
+ {
+  "t": 1.45,
+  "sfx": "water drawn through the gills (one soft swell)",
+  "gain_db": -25
+ },
+ {
+  "t": 2.378,
+  "sfx": "bubbles out of the gill opening",
+  "gain_db": -34
+ },
+ {
+  "t": 2.9,
+  "sfx": "juvenile swims (pleopod beats)",
+  "gain_db": -40
+ },
+ {
+  "t": 4.55,
+  "sfx": "slips under the gill cover",
+  "gain_db": -29
+ },
+ {
+  "t": 4.8,
+  "sfx": "claws on the gill arches",
+  "gain_db": -38.24717739326763
+ },
+ {
+  "t": 6.525,
+  "sfx": "latches onto the tongue",
+  "gain_db": -22
+ },
+ {
+  "t": 7.02,
+  "sfx": "feeding pulses (with the blood pulse)",
+  "gain_db": -27
+ },
+ {
+  "t": 9.05,
+  "sfx": "tongue withers (slow descending tissue creak)",
+  "gain_db": -27
+ },
+ {
+  "t": 9.25,
+  "sfx": "parasite grows (wet shifts)",
+  "gain_db": -34
+ },
+ {
+  "t": 11.95,
+  "sfx": "legs shift on the stub",
+  "gain_db": -33
+ },
+ {
+  "t": 14.15,
+  "sfx": "wet gape",
+  "gain_db": -28
+ },
+ {
+  "t": 14.5,
+  "sfx": "segments flex",
+  "gain_db": -33
+ },
+ {
+  "t": 15.95,
+  "sfx": "wet gape",
+  "gain_db": -28
+ },
+ {
+  "t": 16.3,
+  "sfx": "segments flex",
+  "gain_db": -33
+ },
+ {
+  "t": 17.3,
+  "sfx": "shrimp flicks",
+  "gain_db": -38
+ },
+ {
+  "t": 18.745,
+  "sfx": "jaws snap shut",
+  "gain_db": -17
+ },
+ {
+  "t": 19.1,
+  "sfx": "chewing",
+  "gain_db": -27
+ },
+ {
+  "t": 19.2,
+  "sfx": "the parasite pushes the food back",
+  "gain_db": -29
+ },
+ {
+  "t": 19.95,
+  "sfx": "swallow",
+  "gain_db": -19
+ },
+ {
+  "t": 20.4,
+  "sfx": "jaws unstick and reopen",
+  "gain_db": -28
+ },
+ {
+  "t": 20.75,
+  "sfx": "claws re-grip",
+  "gain_db": -33
+ },
+ {
+  "t": 21.67,
+  "sfx": "wriggle as it settles back (loop)",
+  "gain_db": -27
+ },
+ {
+  "t": 22.85,
+  "sfx": "legs fold under",
+  "gain_db": -34
+ },
+ {
+  "t": 21.45,
+  "sfx": "the fish breathes (water over the gills)",
+  "gain_db": -31
+ },
+ {
+  "t": 22.2,
+  "sfx": "jaw flex",
+  "gain_db": -31
+ }
+]

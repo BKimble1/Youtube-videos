@@ -1,0 +1,34 @@
+{
+ "zipformer": {
+  "transcript": "IF THIS PARASITE GETS INSIDE OF FISH IT CAN REPLACE ITS ENTIRE TONGUE IT CRAWLS THROUGH THE GILLS LATCHES ON TO THE TONGUE AND STARTS STEALING ITS BLOOD EVENTUALLY THE TONGUE WITHERS AWAY BUT HERE'S THE DISGUSTING PART THE PARASITE STAYS ATTACHED BECOMING THE FISH'S NEW TONGUE AND THE FISH KEEPS EATING WITH A LIVING PARASITE INSIDE ITS MOUTH I",
+  "wer": 0.069,
+  "diffs": [
+   [
+    "replace",
+    "a",
+    "of"
+   ],
+   [
+    "replace",
+    "onto",
+    "on to"
+   ],
+   [
+    "insert",
+    "",
+    "i"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If this parasite gets inside a fish, it can replace its entire tongue. It crawls through the gills, latches onto the tongue, and starts stealing its blood. // Eventually, the tongue withers away. But here's the disgusting part. The parasite stays attached, becoming the fish's new tongue. And the fish keeps eating with a living parasite inside its mouth. [The End]",
+  "wer": 0.034,
+  "diffs": [
+   [
+    "insert",
+    "",
+    "the end"
+   ]
+  ]
+ }
+}

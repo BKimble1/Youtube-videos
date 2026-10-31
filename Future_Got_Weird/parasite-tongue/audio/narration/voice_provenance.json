@@ -1,0 +1,19 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Zombie Ant, Dead Spider, Cyborg Cockroach); confirmed with creative_list_voices on 2026-10-31"},
+ "model_id": "eleven_v4",
+ "flow_id": "6L1KW30P8qEtyQdX7evv",
+ "prompt": "[curious, urgent, conversational] If this parasite gets inside a fish, it can replace its entire tongue. [brisk, explaining] It crawls through the gills, latches onto the tongue, and starts stealing its blood. [quieter, uneasy] Eventually, the tongue withers away. [leaning in, slightly disturbed] But here's the disgusting part. The parasite stays attached, becoming the fish's new tongue. [unsettled, matter-of-fact] And the fish keeps eating, with a living parasite inside its mouth.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). The bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 485.95 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_pGZq.mp3", "generation_id": "pGZqub5fGqRJdKGB7RRI", "duration_s": 20.8, "chosen": true,
+   "asr": {"whisper_base_en": "0 differences", "zipformer_en": "spellings only: 'inside of fish' for 'inside a fish', 'on to' for 'onto'"},
+   "why": "both takes transcribe clean; this one is 0.3 s tighter (the brief asks for urgency)"},
+  {"file": "audio/narration/takes/t2_inuO.mp3", "generation_id": "inuORw5rRDKTdBuSMwp3", "duration_s": 21.12, "chosen": false}
+ ],
+ "edits": "Speech untouched (no splice inside a word, no time-stretch, no pitch change). Five sentence-end gaps lengthened with the take's own room tone (< -45 dBFS): after 'tongue.' 0.41 -> 0.50 s, 'blood.' 0.50 -> 0.58, 'away.' 0.51 -> 0.66, 'part.' 0.35 -> 0.62, 'new tongue.' 0.47 -> 0.60; 0.72 s added in total; no gap longer than 0.66 s. Mix: gentle compressor and a look-ahead limiter on the voice.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps, snapped to measured pause onsets (tools/align_zipformer.py)",
+ "final": {"file": "audio/narration/FGW_Parasite_Tongue_narration.wav", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 21.29], "film_s": 24.0, "asr_on_master": "whisper base.en: 0 differences in the speech (a hallucinated 'the end' on the digital-silence tail disappears when the tail is trimmed)"},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause measurement and level."
+}
