@@ -32,7 +32,10 @@ PLANNED = [(1.8, 2.5, 'dive into the muscle'), (7.4, 7.9, 'collagen sheet (human
 PLANNED_V3 = [(3.2, 4.1, 'dive into the biceps'), (7.40, 7.46, 'match cut: braked human fibre -> brake-free bull fibre'), (8.4, 9.5, 'pull-out through the bull shoulder'),
               (10.4, 11.4, 'sweep along the bull'), (12.5, 12.56, 'cut to the lab'), (13.7, 14.3, 'into the sample'), (14.9, 14.97, 'deliberate cut: "in humans"'), (18.1, 18.7, 'into the elbow'), (19.5, 20.6, 'out of the elbow'), (23.1, 24.6, 'flex into the loop framing')]
 if 'V2' in os.path.basename(src): PLANNED = PLANNED_V2
+PLANNED_V4 = [(1.0, 1.85, 'through the skin into the muscle'), (7.40, 7.46, 'match cut: braked human fibre -> brake-free fibre'), (8.4, 9.1, 'the bundle turns into a cross-section'), (9.0, 10.4, 'out of the cross-section to the cow'),
+              (12.5, 12.56, 'cut to the lab'), (13.6, 14.3, 'down the needle into the sample'), (14.9, 14.97, 'deliberate cut: "in humans"'), (18.1, 18.7, 'into the elbow'), (19.5, 20.6, 'out of the elbow'), (22.9, 24.6, 'face, raise and flex into the loop framing')]
 if 'V3' in os.path.basename(src): PLANNED = PLANNED_V3
+if 'V4' in os.path.basename(src): PLANNED = PLANNED_V4
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

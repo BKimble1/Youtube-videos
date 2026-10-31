@@ -1,0 +1,191 @@
+{
+ "file": "FGW_Myostatin_V4_REVIEW_1080x1920.mp4",
+ "size_mb": 29.15,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 737,
+  "duration_s": 24.567
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 7.53,
+ "large_changes": [
+  {
+   "frame": 38,
+   "t": 1.267,
+   "mad": 40.95,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 39,
+   "t": 1.3,
+   "mad": 46.56,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 40,
+   "t": 1.333,
+   "mad": 51.86,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 41,
+   "t": 1.367,
+   "mad": 44.57,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 42,
+   "t": 1.4,
+   "mad": 59.11,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 43,
+   "t": 1.433,
+   "mad": 57.75,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 44,
+   "t": 1.467,
+   "mad": 49.28,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 45,
+   "t": 1.5,
+   "mad": 48.47,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 46,
+   "t": 1.533,
+   "mad": 44.26,
+   "planned": "through the skin into the muscle"
+  },
+  {
+   "frame": 254,
+   "t": 8.467,
+   "mad": 40.1,
+   "planned": "the bundle turns into a cross-section"
+  },
+  {
+   "frame": 270,
+   "t": 9.0,
+   "mad": 44.35,
+   "planned": "the bundle turns into a cross-section"
+  },
+  {
+   "frame": 278,
+   "t": 9.267,
+   "mad": 39.05,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 279,
+   "t": 9.3,
+   "mad": 39.21,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 280,
+   "t": 9.333,
+   "mad": 42.39,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 281,
+   "t": 9.367,
+   "mad": 43.8,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 282,
+   "t": 9.4,
+   "mad": 56.23,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 283,
+   "t": 9.433,
+   "mad": 49.3,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 284,
+   "t": 9.467,
+   "mad": 39.32,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 286,
+   "t": 9.533,
+   "mad": 38.26,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 289,
+   "t": 9.633,
+   "mad": 38.06,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 291,
+   "t": 9.7,
+   "mad": 50.94,
+   "planned": "out of the cross-section to the cow"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 55.95,
+   "planned": "cut to the lab"
+  },
+  {
+   "frame": 417,
+   "t": 13.9,
+   "mad": 42.6,
+   "planned": "down the needle into the sample"
+  },
+  {
+   "frame": 418,
+   "t": 13.933,
+   "mad": 46.15,
+   "planned": "down the needle into the sample"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 57.21,
+   "planned": "down the needle into the sample"
+  },
+  {
+   "frame": 420,
+   "t": 14.0,
+   "mad": 72.82,
+   "planned": "down the needle into the sample"
+  },
+  {
+   "frame": 448,
+   "t": 14.933,
+   "mad": 74.37,
+   "planned": "deliberate cut: \"in humans\""
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 6,
+ "longest_near_static_run_starts_s": 23.03,
+ "loop_last_vs_first_mad": 4.62
+}

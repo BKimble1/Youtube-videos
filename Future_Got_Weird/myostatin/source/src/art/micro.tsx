@@ -28,6 +28,12 @@ export type MicroState = {
   abs: Ab[];
   sig: {p: P; op: number}[];
   sheet?: number;  // collagen sheet crossing the lens: its centre, in screen heights (undefined when off)
+  // V4: distinct physical events
+  lead?: {p: P; ang: number; depth: number; op: number}; // the one myostatin the camera follows (depth 1 = far, blurred)
+  dome?: {x: number; h: number};                          // the membrane tries to bulge out here (restrained)
+  wave?: {x: number; u: number};                          // the brake signal spreading from a receptor (u 0..1)
+  bad?: {p: P; ang: number; op: number}[];               // misshapen, inactive myostatin (the Belgian Blue mutation)
+  grip?: number;                                          // 0..1 how tightly the receptor's arms close on the lead
 };
 
 export const PITCH = 90, R0 = 30, FASC = 1100;
@@ -77,12 +83,21 @@ export const Myostatin: React.FC<{p: P; ang: number; op?: number; s?: number}> =
     <ellipse cx={0} cy={0} rx={1.5} ry={1.3} fill="#C21866" stroke="#4E0727" strokeWidth={0.4} />
   </g>
 );
+/** inactive myostatin (the Belgian Blue mutation): a truncated, misfolded dimer, greyed */
+export const BadMyostatin: React.FC<{p: P; ang: number; op?: number}> = ({p, ang, op = 1}) => (
+  <g transform={`translate(${p.x} ${p.y}) rotate(${(ang * 180) / Math.PI}) scale(${MYO_S * 1.45})`} opacity={op}>
+    <path d="M0.6 -0.8 C3 -4.2 7.2 -4.6 8.4 -1.8 C9.2 0.2 7.6 2.6 5.2 2.4 C3.4 2.2 2.4 1.0 0.6 0.9 Z" fill="#9C7A8C" stroke="#3A2230" strokeWidth={0.5} />
+    <path d="M-0.6 -0.6 C-1.8 -2.2 -3.6 -2.0 -3.8 -0.6 C-3.6 0.8 -2 1.2 -0.6 0.8 Z" fill="#7E6070" stroke="#3A2230" strokeWidth={0.5} />
+    <path d="M-3.6 1.6 l-1.4 1.4 M-2.8 2.2 l-0.6 1.8" stroke="#3A2230" strokeWidth={0.4} />
+    <ellipse cx={0} cy={0} rx={1.2} ry={1.0} fill="#6E5262" stroke="#3A2230" strokeWidth={0.35} />
+  </g>
+);
 /** the receptor pair in the membrane: a stem through it, two arms out into the fluid */
 const Receptor: React.FC<{x: number; y: number; act: number; up: boolean}> = ({x, y, act, up}) => {
   const s = up ? 1 : -1;
   const c = mix('#3C72F0', '#9CC4FF', act);
   return (
-    <g transform={`translate(${x} ${y}) scale(${REC_S} ${s * REC_S})`}>
+    <g transform={`translate(${x} ${y}) scale(${REC_S * (1 - 0.22 * act)} ${s * REC_S})`}>
       {act > 0.02 && <circle cx={0} cy={-6} r={7 + 3 * act} fill="#7FB4FF" opacity={0.28 * act} />}
       <path d="M-1.1 3 L-1.1 -4.2 L-4.6 -8.6 L-3.2 -9.6 L0 -5.8 L3.2 -9.6 L4.6 -8.6 L1.1 -4.2 L1.1 3 Z" fill={c} stroke="#0E1F55" strokeWidth={0.45} strokeLinejoin="round" />
       <path d="M-0.4 2 L-0.4 -4.4" stroke="#C9DCFF" strokeWidth={0.4} opacity={0.8} />
@@ -111,16 +126,17 @@ export const Antibody: React.FC<{p: P; ang: number; op?: number; grip?: number}>
 };
 
 /** the field of fascicles and fibres, coarse to fine */
-export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
+export const MicroWorld: React.FC<{s: MicroState; cam: Cam; bg?: boolean}> = ({s, cam, bg = true}) => {
   const pal = PAL[s.variant];
   const sc = 1080 / cam.w;
   const vx0 = cam.x - cam.w * 0.62, vx1 = cam.x + cam.w * 0.62;
   const vh = cam.w * (1920 / 1080);
   const vy0 = cam.y - vh * 0.56, vy1 = cam.y + vh * 0.56;
-  const idS = uid('str'), idF = uid('fg'), idFl = uid('fl'), idH = uid('hg'), idM = uid('mf'), idN = uid('ng');
+  const idS = uid('str'), idF = uid('fg'), idFl = uid('fl'), idH = uid('hg'), idM = uid('mf'), idN = uid('ng'), idLB = uid('lb');
   const fibOp = clamp((PITCH * sc - 2.2) / 3);      // individual fibres
   const strOp = clamp((10 * sc - 2.5) / 3);         // striations
   const detOp = clamp((cam.w < 1 ? 1 : (1700 - cam.w) / 600));  // hero detail
+  const cueOp = clamp((PITCH * sc - 6) / 6);                     // nuclei and capillaries
   const j0 = Math.floor(vy0 / FASC) - 1, j1 = Math.ceil(vy1 / FASC) + 1;
   const fasc: React.ReactNode[] = [];
   const rowsH = heroRows(s);
@@ -133,7 +149,7 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
       const xs = Array.from({length: 13}, (_, k) => vx0 + ((vx1 - vx0) * k) / 12);
       return closed([...xs.map((x) => pt(x, y0 + wave(x, ph))), ...[...xs].reverse().map((x) => pt(x, y1 + wave(x, ph + 0.4)))], 0.5);
     };
-    fasc.push(<path key={`fb${j}`} d={band(top, bot, 0)} fill={mix(mix(pal.fib, pal.fibDk, tone), pal.fluid, fibOp * 0.92)} />);
+    fasc.push(<path key={`fb${j}`} d={band(top, bot, 0)} fill={mix(mix(pal.fib, pal.fibDk, tone), pal.fluid, fibOp * 0.92)} opacity={bg ? 1 : 1 - 0.95 * fibOp} />);
     fasc.push(<path key={`fh${j}`} d={band(top + 40, top + (bot - top) * 0.32, 0.1)} fill={pal.fibLit} opacity={0.32 * (1 - fibOp)} />);
     fasc.push(<path key={`fd${j}`} d={band(bot - (bot - top) * 0.22, bot, 0.2)} fill={pal.fibDk} opacity={0.5 * (1 - fibOp)} />);
     fasc.push(<path key={`pm${j}`} d={band(Y + FASC / 2 - 34, Y + FASC / 2 + 34, 0.3)} fill={pal.peri} opacity={0.9} />);
@@ -155,6 +171,17 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
             <rect x={vx0} y={rw.y - rw.r} width={vx1 - vx0} height={2 * rw.r} fill={`url(#${hero ? idH : idF})`} />
             {strOp > 0.01 && <rect x={vx0} y={rw.y - rw.r} width={vx1 - vx0} height={2 * rw.r} fill={`url(#${idS})`} opacity={strOp * (hero ? 0.18 : 0.42)} />}
             <rect x={vx0} y={rw.y - rw.r} width={vx1 - vx0} height={Math.max(1.2, rw.r * 0.08)} fill="#FFD3CF" opacity={0.55} />
+            {!hero && cueOp > 0.01 && (() => {
+              const cues: React.ReactNode[] = [];
+              const step = 170;
+              for (let n = Math.floor(vx0 / step) - 1; n <= Math.ceil(vx1 / step); n++) {
+                const x = n * step + 60 * hash(n * 1.7 + rw.i * 3.1);
+                const side = hash(n * 2.3 + rw.i) > 0.5 ? -1 : 1;
+                cues.push(<ellipse key={`n${n}`} cx={x} cy={rw.y + side * rw.r * 0.62} rx={13} ry={4.2} fill="#7C4CC8" opacity={0.55 * cueOp} />);
+                if (hash(n * 5.1 + rw.i * 1.3) > 0.55) cues.push(<path key={`c${n}`} d={`M${x + 40} ${rw.y + rw.r + 2} q20 ${8} 46 ${16}`} stroke="#8E1622" strokeWidth={5} fill="none" opacity={0.8 * cueOp} strokeLinecap="round" />);
+              }
+              return cues;
+            })()}
             {!hero && detOp > 0.01 && <rect x={vx0} y={rw.y - rw.r} width={vx1 - vx0} height={2 * rw.r} fill="#1A0208" opacity={0.32 * detOp} />}
           </g>,
         );
@@ -201,7 +228,25 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
       </g>,
     );
     // the membrane: a translucent skin over the myofibrils, catching light
+    if (s.dome && s.dome.h > 0.2) {
+      // the fibre pushes out here and is pulled back: a dome of fibre under a stretched membrane
+      const {x: dx, h} = s.dome;
+      const pts = Array.from({length: 13}, (_, i) => {
+        const u = i / 12;
+        return pt(dx - 46 + 92 * u, -rh - h * Math.sin(Math.PI * u) ** 1.6);
+      });
+      hero.push(<path key="dome" d={`${open(pts)} L${dx + 46} ${-rh + 6} L${dx - 46} ${-rh + 6} Z`} fill={pal.fib} />);
+      hero.push(<path key="domeM" d={open(pts)} stroke="#FFC9C6" strokeWidth={3.2} fill="none" opacity={0.85} />);
+      hero.push(<path key="domeT" d={open(pts.slice(3, 10))} stroke="#FFFFFF" strokeWidth={1} fill="none" opacity={0.25 + 0.04 * h} />);
+    }
     hero.push(<rect key="memT" x={vx0} y={-rh} width={vx1 - vx0} height={3.2} fill="#FFC9C6" opacity={0.75} />);
+    if (s.wave && s.wave.u > 0 && s.wave.u < 1) {
+      // the brake signal: a bright pulse runs both ways along the membrane and a ripple runs inward
+      const {x: wx, u} = s.wave;
+      const d = 30 + 260 * u, fade = 1 - u;
+      [-1, 1].forEach((k) => hero.push(<rect key={`wv${k}`} x={wx + k * d - 22} y={-rh - 2} width={44} height={6} rx={3} fill="#FFC45E" opacity={0.85 * fade} />));
+      hero.push(<ellipse key="wvi" cx={wx} cy={-rh + 4} rx={20 + 200 * u} ry={6 + 40 * u} fill="none" stroke="#FFB347" strokeWidth={2.4 * fade + 0.3} opacity={0.6 * fade} />);
+    }
     hero.push(<rect key="memT2" x={vx0} y={-rh + 3.2} width={vx1 - vx0} height={rh * 0.5} fill="#FFE2DC" opacity={0.1} />);
     hero.push(<rect key="memT3" x={vx0} y={-rh + 3.2} width={vx1 - vx0} height={2.2} fill="#FFFFFF" opacity={0.25} />);
     hero.push(<rect key="memB" x={vx0} y={rh - 3.2} width={vx1 - vx0} height={3.2} fill="#FFC9C6" opacity={0.6} />);
@@ -219,6 +264,16 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
     s.sig.forEach((g, i) => g.op > 0.01 && ahead.push(<g key={`s${i}`} opacity={g.op}><circle cx={g.p.x} cy={g.p.y} r={4.2} fill="#FFB347" opacity={0.3} /><circle cx={g.p.x} cy={g.p.y} r={1.9} fill="#FFC45E" stroke="#7A4300" strokeWidth={0.3} /></g>));
     s.abs.forEach((a, i) => a.op > 0.01 && ahead.push(<Antibody key={`a${i}`} p={a.p} ang={a.ang} op={a.op} grip={a.grip} />));
     s.myo.forEach((m, i) => m.op > 0.01 && ahead.push(<Myostatin key={`y${i}`} p={m.p} ang={m.ang} op={m.op} />));
+    (s.bad ?? []).forEach((m, i) => m.op > 0.01 && ahead.push(<BadMyostatin key={`bd${i}`} p={m.p} ang={m.ang} op={m.op} />));
+    if (s.lead && s.lead.op > 0.01) {
+      const L = s.lead;
+      const blur = 3.2 * L.depth;
+      ahead.push(
+        <g key="lead" opacity={L.op} filter={blur > 0.3 ? `url(#${idLB})` : undefined}>
+          <Myostatin p={L.p} ang={L.ang} s={MYO_S * (1.25 - 0.55 * L.depth)} />
+        </g>,
+      );
+    }
   }
   // drifting debris in the fluid gives the close views depth (very near the lens: large, soft, slow)
   const motes: React.ReactNode[] = [];
@@ -260,12 +315,13 @@ export const MicroWorld: React.FC<{s: MicroState; cam: Cam}> = ({s, cam}) => {
           <stop offset={0} stopColor={mix('#5E4A7A', '#E2B8FF', s.nuc)} />
           <stop offset={1} stopColor={mix('#3A2A55', '#8A4FE0', s.nuc)} />
         </radialGradient>
+        <filter id={idLB} x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={3.2 * (s.lead?.depth ?? 0) + 0.01} /></filter>
         <radialGradient id={idFl} cx="0.4" cy="0.3" r="0.8">
           <stop offset={0} stopColor={pal.fluid2} />
           <stop offset={1} stopColor={pal.fluid} />
         </radialGradient>
       </defs>
-      <rect x={vx0} y={vy0} width={vx1 - vx0} height={vy1 - vy0} fill={pal.fluid} />
+      {bg && <rect x={vx0} y={vy0} width={vx1 - vx0} height={vy1 - vy0} fill={pal.fluid} />}
       {fasc}
       {detOp > 0.01 && <g opacity={detOp}>{hero}</g>}
       {ahead.length > 0 && <g opacity={detOp}>{ahead}</g>}

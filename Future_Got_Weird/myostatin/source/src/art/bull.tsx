@@ -19,6 +19,8 @@ export type BullState = {
   headNod: number;
   anat?: number;      // 0 coat .. 1 translucent hide over red muscle
   view?: number;      // 0 side .. 1 the camera has moved toward the rear (the far round shows more)
+  walk?: number;      // gait phase (cycles); undefined = standing
+  bob?: number;       // body bob with the steps (cm)
   cut?: {r: number};
   t: number;
 };
@@ -112,12 +114,29 @@ const PANELS: {name: string; pts: Pl; fas: number}[] = [
 for (const pn of PANELS) pn.pts = pn.pts.map((q) => (Object.values(CR).some((c) => c.includes(q)) || Math.abs(q[0]) === 165 ? q : kx(q)));
 
 export const Bull: React.FC<{b: BullState}> = ({b}) => {
-  const sh = pt(b.x, b.breathe * 0.5);
+  const sh = pt(b.x, b.breathe * 0.5 + (b.bob ?? 0));
   const anat = clamp(b.anat ?? 0);
   const view = clamp(b.view ?? 0);
   const sl = b.load;
   const wob = ring(b.plantT, 0, 7, 0.12) * (b.plantT > 0 ? 1 : 0);
-  const fl = foreleg(pt(56, 0), b.step);
+  // the walk: a four-beat gait (near hind, near fore, far hind, far fore); each hoof stays planted while the body
+  // travels over it, then swings forward. Standing, every leg sits at its rest position.
+  const STRIDE = 52;
+  const gait = (off: number) => {
+    if (b.walk === undefined) return {rel: 0, lift: 0, swing: 0};
+    const p = (((b.walk + off) % 1) + 1) % 1;
+    if (p < 0.62) return {rel: STRIDE * (0.31 - p), lift: 0, swing: 0};
+    const q = (p - 0.62) / 0.38;
+    return {rel: STRIDE * (-0.31 + 0.62 * ss(q, 0, 1)), lift: 13 * Math.sin(Math.PI * q), swing: Math.sin(Math.PI * q)};
+  };
+  const gNH = gait(0), gNF = gait(0.25), gFH = gait(0.5), gFF = gait(0.75);
+  const fl = b.walk === undefined ? foreleg(pt(56, 0), b.step) : (() => {
+    const hx = 61 + gNF.rel;
+    const top = pt(56 + 0.15 * gNF.rel, -80);
+    const knee = pt(57 + 0.45 * gNF.rel + 8 * gNF.swing, -38 - 8 * gNF.swing);
+    const fet = pt(59 + 0.85 * gNF.rel - 2 * gNF.swing, -11 - gNF.lift);
+    return {top, knee, fet, hoof: pt(hx, -gNF.lift * 0.85), lift: gNF.swing};
+  })();
   const T = (p: P) => add(p, pt(b.x, 0));
   const ms = SHADE_MASSES.map((m) => (m.name === 'shoulder' ? {...m, rx: m.rx * (1 + 0.05 * sl + 0.025 * wob), ry: m.ry * (1 + 0.03 * sl - 0.02 * wob)} : m));
   // the shoulder outline swells a little when the leg takes the weight
@@ -126,9 +145,11 @@ export const Bull: React.FC<{b: BullState}> = ({b}) => {
     return add(pt(x, y - k), sh);
   }), 0.8);
   const nearFore = tube([T(add(fl.top, pt(-1, -10))), T(fl.top), T(add(fl.top, pt(0.5, 14))), T(add(fl.top, pt(1, 26))), T(fl.knee), T(fl.fet)], [19, 19 + sl, 16 + sl, 11, 6, 4.6]);
-  const nearHind = tube([T(pt(-84, -72)), T(pt(-86, -58)), T(pt(-87, -48)), T(pt(-86, -38)), T(pt(-80, -11))], [21, 17, 12, 6.2, 4.6]);
-  const farFore = tube([T(pt(40, -84)), T(pt(40, -60)), T(pt(40, -48)), T(pt(40, -36)), T(pt(40, -11))], [16, 14, 10, 5.4, 4.2]);
-  const farHind = tube([T(pt(-64, -84)), T(pt(-69, -60)), T(pt(-70, -50)), T(pt(-71, -40)), T(pt(-66, -11))], [19, 15, 10, 5.6, 4.2]);
+  const hind = (x0: number, g: {rel: number; lift: number; swing: number}) => [T(pt(x0, -72)), T(pt(x0 - 2 + 0.2 * g.rel, -58)), T(pt(x0 - 3 + 0.35 * g.rel, -48)), T(pt(x0 - 2 + 0.55 * g.rel - 5 * g.swing, -38 - 5 * g.swing)), T(pt(x0 + 4 + 0.95 * g.rel, -11 - g.lift))];
+  const fore = (x0: number, g: {rel: number; lift: number; swing: number}) => [T(pt(x0, -84)), T(pt(x0 + 0.15 * g.rel, -60)), T(pt(x0 + 0.3 * g.rel + 3 * g.swing, -48 - 3 * g.swing)), T(pt(x0 + 0.5 * g.rel + 6 * g.swing, -36 - 7 * g.swing)), T(pt(x0 + 0.9 * g.rel - 1 * g.swing, -11 - g.lift))];
+  const nearHind = tube(hind(-84, gNH), [21, 17, 12, 6.2, 4.6]);
+  const farFore = tube(fore(40, gFF), [16, 14, 10, 5.4, 4.2]);
+  const farHind = tube(hind(-64, gFH), [19, 15, 10, 5.6, 4.2]);
   const farRound = ell(M(-110 - 9 * view, -98, 13 + 5 * view, 34, 4, 0, 0, 'far round'), sh);
   const ids = {coat: uid('bc'), clip: uid('bk'), hl: uid('bh'), sh: uid('bs'), blur: uid('bb'), leg: uid('bl')};
   const outline = [body, nearFore, nearHind];
@@ -173,8 +194,8 @@ export const Bull: React.FC<{b: BullState}> = ({b}) => {
         <path d={farHind} fill={COAT.shade} stroke={COAT.ink} strokeWidth={0.9} />
         <path d={farRound} fill={mix(COAT.shade, '#4A566E', 0.35)} stroke={COAT.ink} strokeWidth={1} />
       </g>
-      <Hoof p={T(pt(42, 0))} dark />
-      <Hoof p={T(pt(-64, 0))} dark />
+      <Hoof p={T(pt(42 + 0.95 * gFF.rel, -gFF.lift * 0.85))} ang={-20 * gFF.swing} dark />
+      <Hoof p={T(pt(-62 + 0.95 * gFH.rel, -gFH.lift * 0.85))} ang={-20 * gFH.swing} dark />
       <path d={open([T(pt(-90, -152)), T(pt(-106 - 4 * view, -122)), T(pt(-110 - 5 * view, -82)), T(pt(-109 - 5 * view, -46))])} stroke={COAT.shade} strokeWidth={3} fill="none" strokeLinecap="round" opacity={coatOp} />
       <path d={`M${-113 - 5 * view + b.x} -48 q4 -8 8 0 q-1 10 -4 12 q-4 -3 -4 -12Z`} fill={COAT.roanDk} opacity={coatOp} />
       {/* one outline: strokes under, fills over */}
@@ -249,7 +270,7 @@ export const Bull: React.FC<{b: BullState}> = ({b}) => {
         <path d={open([T(add(fl.top, pt(-5, 0))), T(add(fl.top, pt(-2, 16)))])} stroke={COAT.deep} strokeWidth={1.7} fill="none" opacity={0.55 * coatOp} />
         <path d={open([T(pt(-78, -72)), T(pt(-82, -56)), T(pt(-84, -44))])} stroke={COAT.deep} strokeWidth={1.7} fill="none" opacity={0.55 * coatOp} />
       </g>
-      <Hoof p={T(pt(-80, 0))} />
+      <Hoof p={T(pt(-78 + 0.95 * gNH.rel, -gNH.lift * 0.85))} ang={-20 * gNH.swing} />
       <Hoof p={T(fl.hoof)} ang={-28 * fl.lift} />
       <g transform={`rotate(${b.headNod * 0.8} ${94 + b.x} -100) translate(${120 + H0.x} ${-130 + H0.y}) scale(1.22) translate(${-(120 + H0.x)} ${-(-130 + H0.y)})`} opacity={1 - 0.75 * anat}>
         <path d={head} fill={COAT.white} stroke={COAT.ink} strokeWidth={1.1} strokeLinejoin="round" />

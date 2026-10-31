@@ -12,7 +12,7 @@ export const SAMPLE: P = pt(14, -3.3);     // centre of the tissue sample
 export const SAMPLE_RX = 2.6, SAMPLE_RY = 1.0;
 export const PIP_TIP = (press: number): P => pt(14.2, -16 + 0 * press);
 
-export type LabState = {t: number; press: number; drop: number; dropY: number; ripple: number; look: number; dim: number};
+export type LabState = {t: number; press: number; drop: number; dropY: number; ripple: number; look: number; dim: number; lift?: number; tap?: number; glow?: number};
 
 export const LabBack: React.FC<{s: LabState}> = ({s}) => {
   const id = uid('lw'), id2 = uid('lwin');
@@ -69,7 +69,8 @@ export const Researcher: React.FC<{s: LabState}> = ({s}) => {
   const h = pt(-26, -56);
   const look = s.look;
   const press = s.press;
-  const hand = pt(10.5, -26.5 + 0.6 * press);
+  const lift = s.lift ?? 0, tap = s.tap ?? 0;
+  const hand = pt(12.6 + 0.3 * tap, -20.5 - lift + 0.2 * tap);
   return (
     <g>
       {/* torso in the coat, behind the bench */}
@@ -101,15 +102,56 @@ export const Researcher: React.FC<{s: LabState}> = ({s}) => {
       <path d={open([pt(-15, -20), pt(hand.x - 6, hand.y + 0.6)])} stroke={coatS} strokeWidth={0.9} fill="none" />
       <rect x={hand.x - 5.6} y={hand.y - 2.6} width={2.4} height={5.4} rx={0.8} fill={coatS} stroke={coatInk} strokeWidth={0.4} transform={`rotate(-8 ${hand.x - 4.4} ${hand.y})`} />
       <path d={closed([pt(hand.x - 3.4, hand.y - 1.8), pt(hand.x - 0.5, hand.y - 2.0), pt(hand.x - 0.6, hand.y + 2.4), pt(hand.x - 3.4, hand.y + 2.2)], 0.6)} fill={glove} stroke="#2E2060" strokeWidth={0.35} />
-      <Pipette s={s} />
+      <Syringe s={s} />
       <path d={closed([pt(hand.x - 1, hand.y - 2.2), pt(hand.x + 2.4, hand.y - 2.6), pt(hand.x + 5.4, hand.y - 0.4), pt(hand.x + 5.2, hand.y + 3.6), pt(hand.x + 2.2, hand.y + 4.6), pt(hand.x - 1, hand.y + 2.6)], 0.8)} fill={glove} stroke="#2E2060" strokeWidth={0.4} />
       {[0.6, 1.9, 3.2].map((dy, i) => <path key={i} d={`M${hand.x + 4.6} ${hand.y + dy} h1.4`} stroke={gloveS} strokeWidth={0.5} strokeLinecap="round" />)}
       {/* thumb on the plunger */}
-      <path d={`M${hand.x + 3} ${hand.y - 1.6} Q${hand.x + 4.2} ${hand.y - 4.4 + 0.6 * press} ${hand.x + 4.4} ${hand.y - 5.4 + 0.6 * press}`} stroke={glove} strokeWidth={1.8} strokeLinecap="round" fill="none" />
+      <path d={`M${hand.x + 1.6} ${hand.y - 1.4} Q${hand.x + 2.4} ${hand.y - 6 + 9.5 * press} ${hand.x + 1.4} ${hand.y - 9.6 + 9.5 * press}`} stroke={glove} strokeWidth={1.8} strokeLinecap="round" fill="none" />
     </g>
   );
 };
 
+/** the syringe: a barrel of glowing treatment (antibody molecules drift inside it), plunger, needle down to the sample */
+export const SYR_TIP = (s: LabState): P => pt(14, -3.6 - (s.lift ?? 0));
+export const Syringe: React.FC<{s: LabState}> = ({s}) => {
+  const tip = SYR_TIP(s);
+  const tap = s.tap ?? 0;
+  const x = tip.x + 0.25 * tap;
+  const b0 = tip.y - 6.2, b1 = b0 - 13;           // barrel from b0 (bottom) up to b1
+  const level = b1 + 1.2 + 9.5 * s.press;          // the liquid's top drops as the plunger goes in
+  const pl = level - 0.4;
+  const id = uid('syr');
+  return (
+    <g>
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="1" y2="0">
+          <stop offset={0} stopColor="#2FE0C6" stopOpacity={0.55} />
+          <stop offset={0.4} stopColor="#9FFFF0" stopOpacity={0.75} />
+          <stop offset={1} stopColor="#1FB8A3" stopOpacity={0.6} />
+        </linearGradient>
+      </defs>
+      {/* needle */}
+      <path d={`M${x - 0.12} ${b0 + 1.2} L${x - 0.05} ${tip.y} L${x + 0.05} ${tip.y} L${x + 0.12} ${b0 + 1.2} Z`} fill="#C9D3DD" stroke="#5E6F82" strokeWidth={0.08} />
+      <rect x={x - 0.45} y={b0} width={0.9} height={1.4} rx={0.25} fill="#9FB2C4" stroke="#5E6F82" strokeWidth={0.1} />
+      {/* barrel and its glowing liquid */}
+      <rect x={x - 1.15} y={b1} width={2.3} height={b0 - b1} rx={0.4} fill="#EAF6FF" opacity={0.5} stroke="#7F95AA" strokeWidth={0.14} />
+      <rect x={x - 1.0} y={level} width={2.0} height={Math.max(0, b0 - level - 0.15)} rx={0.3} fill={`url(#${id})`} />
+      {Array.from({length: 12}, (_, i) => {
+        const yy = level + 0.5 + ((i * 0.618 + s.t * 0.25) % 1) * Math.max(0.1, b0 - level - 1);
+        const xx = x - 0.7 + 1.4 * ((i * 0.37) % 1);
+        return <path key={i} d={`M${xx} ${yy} l0 0.32 M${xx} ${yy} l-0.2 -0.22 M${xx} ${yy} l0.2 -0.22`} stroke="#0B5E54" strokeWidth={0.07} strokeLinecap="round" opacity={0.8} />;
+      })}
+      {tap > 0.05 && [0, 1, 2].map((k) => <circle key={k} cx={x - 0.4 + 0.4 * k} cy={level + 1.5 - 1.2 * tap - 0.3 * k} r={0.18} fill="#FFFFFF" opacity={0.7 * tap} />)}
+      {[0.25, 0.5, 0.75].map((k, i) => <path key={i} d={`M${x + 0.6} ${b1 + (b0 - b1) * k} h0.5`} stroke="#5E6F82" strokeWidth={0.08} />)}
+      <rect x={x - 1.05} y={b1 + 0.3} width={0.35} height={b0 - b1 - 0.6} rx={0.17} fill="#FFFFFF" opacity={0.35} />
+      {/* plunger: rubber stopper at the liquid's top, rod up to the thumb pad; the flange */}
+      <rect x={x - 1.0} y={pl - 0.5} width={2.0} height={0.6} fill="#3A3F4E" />
+      <rect x={x - 0.22} y={pl - 6.2} width={0.44} height={5.8} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.08} />
+      <rect x={x - 1.1} y={pl - 6.7} width={2.2} height={0.55} rx={0.25} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.1} />
+      <rect x={x - 2.0} y={b1 - 0.25} width={4.0} height={0.5} rx={0.25} fill="#D9E1EA" stroke="#7F95AA" strokeWidth={0.1} />
+    </g>
+  );
+};
 export const Pipette: React.FC<{s: LabState}> = ({s}) => {
   const tip = PIP_TIP(s.press);
   const top = -30;
@@ -150,7 +192,8 @@ export const Dish: React.FC<{s: LabState; inSample?: React.ReactNode}> = ({s, in
       {s.ripple > 0 && s.ripple < 1 && <ellipse cx={SAMPLE.x + 0.2} cy={SAMPLE.y - 0.1} rx={0.4 + 3.6 * s.ripple} ry={0.15 + 1.2 * s.ripple} fill="none" stroke="#FFFFFF" strokeWidth={0.12} opacity={1 - s.ripple} />}
       <path d={`M${c.x - 6} ${c.y} A6 2 0 0 1 ${c.x + 6} ${c.y}`} fill="none" stroke="#FFFFFF" strokeWidth={0.3} opacity={0.8} />
       <path d={`M${c.x - 6.4} ${c.y + 1.2} A6.4 2.2 0 0 0 ${c.x + 6.4} ${c.y + 1.2}`} fill="none" stroke="#FFFFFF" strokeWidth={0.2} opacity={0.6} />
-      {s.drop > 0 && (
+      {(s.glow ?? 0) > 0.01 && <ellipse cx={SAMPLE.x} cy={SAMPLE.y} rx={0.3 + 2.4 * (s.glow ?? 0)} ry={0.12 + 0.9 * (s.glow ?? 0)} fill="#7FF0DD" opacity={0.5 * (1 - 0.4 * (s.glow ?? 0))} />}
+      {false && s.drop > 0 && (
         <g>
           <ellipse cx={tip.x} cy={lerp(tip.y + 0.35 * s.drop, s.dropY, 1)} rx={0.32 * s.drop} ry={0.4 * s.drop} fill="#7FF0DD" stroke="#0E6E62" strokeWidth={0.06} opacity={0.95} />
           <circle cx={tip.x - 0.1} cy={s.dropY - 0.12} r={0.1 * s.drop} fill="#FFFFFF" />

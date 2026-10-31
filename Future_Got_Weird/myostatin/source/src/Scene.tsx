@@ -12,7 +12,8 @@ import {CollagenSheet, MicroWorld} from './art/micro';
 import {Bull, Dust, Fence, Grass, PastureSky} from './art/bull';
 import {BenchTop, Dish, LabBack, Researcher, SAMPLE, SAMPLE_RX, SAMPLE_RY} from './art/lab';
 import {Cam} from './art/micro';
-import {BULL_NEST, EV, K_ARM, K_BULL, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro} from './story';
+import {COW_NEST, EV, K_ARM, K_COW, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro, yawAt} from './story';
+import {Bundle3D, CrossSection, FarFibres, NearFibres} from './art/micro3d';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -41,22 +42,37 @@ const covers = (c: Cam, p: P, r: number, ry = r) => {
 
 const MicroOnly: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   const ms = microAt(t);
-  const sheetU = t > EV.wipe1 - 0.05 && t < EV.wipe1End + 0.05 ? (t - EV.wipe1) / (EV.wipe1End - EV.wipe1) : t > EV.wipe2 - 0.05 && t < EV.wipe2End + 0.05 ? (t - EV.wipe2) / (EV.wipe2End - EV.wipe2) : undefined;
+  // depth: a far layer of fibres seen through the gaps, and soft near fibres passing the lens (fade in after a dive)
+  const depthOp = t < EV.dive1 + 0.35 ? ss(t, EV.dive1, EV.dive1 + 0.35) : t > EV.labIn1 - 0.05 && t < EV.labIn1 + 0.3 ? ss(t, EV.labIn1, EV.labIn1 + 0.3) : 1;
+  const kF = 0.6, kN = 1.7;
+  const g = (k: number) => `translate(540 960) scale(${(1080 / c.w) * k}) translate(${-c.x} ${-c.y})`;
   return (
     <>
+      <div style={{position: 'absolute', inset: 0, background: '#2A0A17'}} />
+      <div style={{position: 'absolute', inset: 0, filter: 'blur(5px)', opacity: depthOp}}>
+        <svg width={1080} height={1920}><g transform={g(kF)}><FarFibres cam={{...c, w: c.w / kF}} t={t} /></g></svg>
+      </div>
       <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
-        <g transform={`translate(540 960) scale(${1080 / c.w}) translate(${-c.x} ${-c.y})`}>
-          <MicroWorld s={ms} cam={c} />
+        <g transform={g(1)}>
+          <MicroWorld s={ms} cam={c} bg={depthOp < 0.99} />
         </g>
       </svg>
-      {sheetU !== undefined && (
-        <div style={{position: 'absolute', inset: 0, filter: 'blur(6px)'}}>
-          <svg width={1080} height={1920}>
-            <CollagenSheet y={1.45 - 2.9 * clamp(sheetU)} />
-          </svg>
-        </div>
-      )}
+      <div style={{position: 'absolute', inset: 0, filter: 'blur(14px)', opacity: 0.75 * depthOp}}>
+        <svg width={1080} height={1920}><g transform={g(kN)}><NearFibres cam={{...c, w: c.w / kN}} t={t} /></g></svg>
+      </div>
     </>
+  );
+};
+const CrossOnly: React.FC<{t: number; c: Cam}> = ({t, c}) => {
+  const ms = microAt(t);
+  const th = yawAt(t);
+  const b = {theta: th, g: ms.g, gN: ms.gN, t};
+  return (
+    <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
+      <g transform={`translate(540 960) scale(${1080 / c.w}) translate(${-c.x} ${-c.y})`}>
+        {th < 0.999 ? <Bundle3D b={b} cam={c} /> : <CrossSection b={b} cam={c} />}
+      </g>
+    </svg>
   );
 };
 const nestedMicro = (t: number, host: Cam, origin: P, k: number) => {
@@ -115,12 +131,16 @@ const BullWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
           <g>
             <defs>
               <clipPath id={`bcut${Math.round(t * 30)}`}>
-                <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r} />
+                <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r} />
               </clipPath>
             </defs>
-            <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r + 0.9} fill="#F3ECEE" opacity={0.9} />
-            <g clipPath={`url(#bcut${Math.round(t * 30)})`}>{nestedMicro(t, c, BULL_NEST, K_BULL)}</g>
-            <circle cx={BULL_NEST.x} cy={BULL_NEST.y} r={b.cut.r + 0.3} fill="none" stroke="rgba(255,210,220,0.9)" strokeWidth={0.7} />
+            <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r + 0.9} fill="#F3ECEE" opacity={0.9} />
+            <g clipPath={`url(#bcut${Math.round(t * 30)})`}>
+              <g transform={`translate(${COW_NEST.x + b.x} ${COW_NEST.y}) scale(${K_COW})`}>
+                <CrossSection cam={toMicro(c, pt(COW_NEST.x + b.x, COW_NEST.y), K_COW)} b={{theta: 1, g: microAt(t).g, gN: microAt(t).gN, t}} />
+              </g>
+            </g>
+            <circle cx={COW_NEST.x + b.x} cy={COW_NEST.y} r={b.cut.r + 0.3} fill="none" stroke="rgba(255,210,220,0.9)" strokeWidth={0.7} />
           </g>
         )}
         <Dust p={pt(64 + b.x, 0)} a={(t - EV.plant) / 0.6} />
@@ -151,6 +171,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
   const c: Cam = {x: wc.x, y: wc.y, w: wc.w};
   let body: React.ReactNode;
   if (wc.world === 'micro') body = <MicroOnly t={t} c={c} />;
+  else if (wc.world === 'cross') body = <CrossOnly t={t} c={c} />;
   else if (wc.world === 'arm') {
     const a = armAt(t);
     const Wc = hookWindow();
@@ -158,7 +179,8 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     else body = <ArmWorld t={t} c={c} />;
   } else if (wc.world === 'bull') {
     const b = bullAt(t);
-    if (b.cut && covers(c, BULL_NEST, b.cut.r)) body = <MicroOnly t={t} c={toMicro(c, BULL_NEST, K_BULL)} />;
+    const O = pt(COW_NEST.x + b.x, COW_NEST.y);
+    if (b.cut && covers(c, O, b.cut.r)) body = <CrossOnly t={Math.max(t, EV.yaw1)} c={toMicro(c, O, K_COW)} />;
     else body = <BullWorld t={t} c={c} />;
   } else {
     if (covers(c, SAMPLE, SAMPLE_RX, SAMPLE_RY)) body = <MicroOnly t={t} c={toMicro(c, SAMPLE, K_LAB)} />;

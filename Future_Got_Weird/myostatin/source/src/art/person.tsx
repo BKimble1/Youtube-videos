@@ -479,13 +479,13 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
 };
 
 // ------------------------------------------------------------------ the rest of the character
-export type Face = {brow: number; eyes: number; mouth: number; strain: number; look: P; smile?: number};
-export type PersonState = {arm: ArmState; hip: P; lean: number; head: P; headTilt: number; face: Face; t: number; xray: number; farArm: number};
+export type Face = {brow: number; eyes: number; mouth: number; strain: number; look: P; smile?: number; grin?: number; concern?: number; quiz?: number};
+export type PersonState = {arm: ArmState; hip: P; lean: number; head: P; headTilt: number; face: Face; t: number; xray: number; farArm: number; build?: number};
 
 /** torso (turned three-quarters toward the camera), legs, head and the far arm, drawn behind the near arm */
 export const Body: React.FC<{p: PersonState}> = ({p}) => {
   const {arm} = p;
-  const m = arm.m;
+  const m = p.build ?? arm.m; // the body's build (constant): only the arm swells
   const S = arm.S;
   const H = p.hip;
   const K = pt(H.x + 40, H.y - 9), A = pt(H.x + 45, -9), toe = pt(H.x + 60, -1.5), heel = pt(H.x + 41, -1.5);
@@ -600,9 +600,15 @@ export const Head: React.FC<{p: PersonState}> = ({p}) => {
   };
   // brows: attached to the brow ridge; they lift, lower and pinch, and never leave it
   const bl = 1.5 * F.brow - 1.0 * F.strain;
-  const brow = (x0: number, x1: number, y: number, w: number, inner: number) => (
-    <path d={open([P_(x0, y - bl * 0.75 + inner), P_((x0 + x1) / 2, y - bl - 0.5), P_(x1, y - bl * 0.85)])} stroke="#2B1C14" strokeWidth={w} fill="none" strokeLinecap="round" />
-  );
+  const cn = F.concern ?? 0, qz = F.quiz ?? 0;
+  /** one brow on the ridge: its inner end (toward the nose) lifts with concern and drops with strain */
+  const brow = (x0: number, x1: number, y: number, w: number, innerAtEnd: boolean, extra: number) => {
+    const lift = bl + extra;
+    const inn = -1.1 * cn + 0.55 * F.strain, out = 0.25 * cn;
+    const yA = y - lift * 0.8 + (innerAtEnd ? out : inn), yB = y - lift * 0.8 + (innerAtEnd ? inn : out);
+    return <path d={open([P_(x0, yA), P_((x0 + x1) / 2, y - lift - 0.5 + 0.15 * cn), P_(x1, yB)])} stroke="#2B1C14" strokeWidth={w} fill="none" strokeLinecap="round" />;
+  };
+  const grin = F.grin ?? 0;
   const mo = F.mouth;
   const mC = P_(4.9, 6.0);
   return (
@@ -632,14 +638,21 @@ export const Head: React.FC<{p: PersonState}> = ({p}) => {
       {/* eyes (the far one foreshortened beside the nose bridge) */}
       {eye(1.1, -1.5, 1.85, 1.3, 0)}
       {eye(6.9, -1.7, 1.15, 1.22, 1)}
-      {brow(-1.0, 3.0, -4.0, 0.95, 0.3 * F.strain)}
-      {brow(5.7, 8.3, -4.2, 0.75, -0.3 * F.strain)}
+      {brow(-1.0, 3.0, -4.0, 0.95, true, 1.2 * qz)}
+      {brow(5.7, 8.3, -4.2, 0.75, false, -0.2 * qz)}
       {/* nose: the bridge, the tip just inside the far cheek, the shadowed underside */}
       <path d={open([P_(5.2, -1.4), P_(6.4, 1.2), P_(7.5, 2.8), P_(6.6, 3.7), P_(5.2, 3.5)])} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinejoin="round" strokeLinecap="round" />
       <path d={closed([P_(5.0, -1.0), P_(6.1, 1.4), P_(5.0, 3.2), P_(4.3, 1.6)], 0.8)} fill={SKIN.shade} opacity={0.35} />
       <ellipse cx={c.x + 6.2} cy={c.y + 3.5} rx={0.45} ry={0.25} fill={SKIN.deep} />
       {/* mouth: a set line, a grin, gritted teeth when straining, a small open "o" in surprise */}
-      {mo > 0.05 ? (
+      {grin > 0.25 ? (
+        <g>
+          {/* an open grin: upturned corners, top teeth */}
+          <path d={closed([P_(2.6, 5.4 - 0.4 * grin), P_(4.8, 5.8), P_(7.1, 5.0 - 0.5 * grin), P_(6.4, 6.6 + 0.9 * grin), P_(4.8, 7.4 + 1.3 * grin), P_(3.2, 6.6 + 0.8 * grin)], 0.7)} fill="#5A1E1E" stroke={SKIN.ink} strokeWidth={0.32} />
+          <path d={closed([P_(3.0, 5.6 - 0.3 * grin), P_(4.8, 6.0), P_(6.8, 5.3 - 0.4 * grin), P_(6.5, 6.2), P_(4.8, 6.7), P_(3.2, 6.3)], 0.6)} fill="#FFFFFF" />
+          <path d={open([P_(1.8, 4.6 - 0.3 * grin), P_(2.4, 5.6)])} stroke={SKIN.shade} strokeWidth={0.3} fill="none" opacity={0.7} />
+        </g>
+      ) : mo > 0.05 ? (
         <path d={closed([P_(3.3, 6.0), P_(4.9, 5.6 - 0.1 * mo), P_(6.7, 5.8), P_(6.3, 6.3 + 1.6 * mo), P_(4.8, 6.6 + 2.0 * mo), P_(3.6, 6.3 + 1.2 * mo)], 0.8)} fill="#5A1E1E" stroke={SKIN.ink} strokeWidth={0.3} />
       ) : F.strain > 0.3 ? (
         <g>
@@ -648,7 +661,7 @@ export const Head: React.FC<{p: PersonState}> = ({p}) => {
           {[4.0, 5.0, 6.0].map((x, i) => <path key={i} d={open([P_(x, 5.5), P_(x, 7.0)])} stroke={SKIN.shade} strokeWidth={0.12} />)}
         </g>
       ) : (
-        <path d={open([P_(2.9, 6.0 - 0.3 * smile), mC, P_(6.9, 5.6 - 0.6 * smile)].map((q, i) => (i === 1 ? pt(q.x, q.y + 0.35 * smile) : q)))} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinecap="round" />
+        <path d={open([P_(2.9 + 0.5 * cn, 6.0 - 0.3 * smile + 0.6 * cn), pt(mC.x, mC.y - 0.25 * cn), P_(6.9 - 0.4 * cn, 5.6 - 0.6 * smile + 0.6 * cn)].map((q, i) => (i === 1 ? pt(q.x, q.y + 0.35 * smile) : q)))} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinecap="round" />
       )}
       {/* jaw line and chin */}
       <path d={open([P_(-4.6, 6.2), P_(-0.6, 9.4), P_(2.6, 10.3)])} stroke={SKIN.shade} strokeWidth={0.5} fill="none" opacity={0.55} />

@@ -1,0 +1,49 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU BLOCKED THIS ONE PROTEIN YOUR MUSCLES COULD GROW WAY BIGGER IT'S CALLED MAYOSTATETEN AND IT ACTS LIKE A BREAK ON MUSCLE GROWTH BUT SOME ANIMALS ARE BORN WITHOUT THAT BREAK AND THEIR MUSCLES GROW FREAKISHLY HUGE SCIENTISTS ARE EVEN DEVELOPING DRUGS THAT BLOCK IT IN HUMANS BUT HERE'S THE WEIRD PART BIGGER MUSCLES DON'T ALWAYS MEAN MORE STRENGTH SO YOU COULD END UP LOOKING SUPERHUMAN WITHOUT ACTUALLY BEING SUPERSTRONG",
+  "wer": 0.069,
+  "diffs": [
+   [
+    "replace",
+    "myostatin",
+    "mayostateten"
+   ],
+   [
+    "replace",
+    "brake",
+    "break"
+   ],
+   [
+    "replace",
+    "brake",
+    "break"
+   ],
+   [
+    "replace",
+    "super strong",
+    "superstrong"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you blocked this one protein, your muscles could grow way bigger! It's called myostatin, and it acts like a break on muscle growth. But some animals are born without that break, and their muscles grow freakishly huge! Scientists are even developing drugs that block it in humans. But here's the weird part. Bigger muscles don't always mean more strength, so you could end up looking super human without actually being super strong.",
+  "wer": 0.056,
+  "diffs": [
+   [
+    "replace",
+    "brake",
+    "break"
+   ],
+   [
+    "replace",
+    "brake",
+    "break"
+   ],
+   [
+    "replace",
+    "superhuman",
+    "super human"
+   ]
+  ]
+ }
+}
