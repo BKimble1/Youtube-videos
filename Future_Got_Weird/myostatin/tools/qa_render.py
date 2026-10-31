@@ -24,9 +24,12 @@ fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3).astype(np.float32)
 n = len(fr)
 fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
+PLANNED_V2 = [(3.2, 4.1, 'dive into the biceps'), (6.5, 7.4, 'back out to the biceps'), (7.78, 7.84, 'match cut: human biceps -> bull muscles'), (7.8, 9.3, 'pull-out to the bull'),
+              (12.5, 12.56, 'cut to the lab'), (13.7, 14.3, 'into the sample'), (14.9, 14.97, 'deliberate cut: "in humans"'), (18.1, 18.7, 'into the elbow'), (19.5, 20.6, 'out of the elbow'), (23.1, 24.6, 'flex into the loop framing')]
 PLANNED = [(1.8, 2.5, 'dive into the muscle'), (7.4, 7.9, 'collagen sheet (human -> bull)'), (8.4, 9.5, 'pull-out to the bull'),
            (11.9, 12.85, 'into the shoulder, collagen sheet (bull -> dish)'), (12.8, 13.45, 'pull-out to the lab'), (13.7, 14.3, 'into the sample'),
            (14.9, 14.97, 'deliberate cut: "in humans"'), (17.8, 18.5, 'into the elbow'), (19.7, 20.7, 'pull-out from the elbow'), (22.1, 24.6, 'push into the loop framing')]
+if 'V2' in os.path.basename(src): PLANNED = PLANNED_V2
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

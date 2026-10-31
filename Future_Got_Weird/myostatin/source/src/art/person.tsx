@@ -26,7 +26,9 @@ export type ArmState = {
   tear: number;   // sleeve seam split 0..1
   stretch: number; // sleeve tension 0..1
   xray: number;   // 0 opaque skin .. 1 translucent anatomical view
-  cut?: {r: number; s: number; v: number}; // circular skin cutaway on the biceps: radius (cm), position along/across the arm
+  cut?: {r: number; s: number; v: number; c?: P}; // circular skin cutaway on the biceps: radius (cm), position along/across the arm (or a fixed centre)
+  pops?: number;  // 0..1 progress of a burst of stitches popping off the straining seam (no split)
+  gripK?: number; // how hard the hand squeezes the handle
   elbowCut?: number; // 0..1: the elbow cutaway (muscle, tendon, bone)
   grip: boolean;  // holding the dumbbell handle
   fibreGlow?: number; // activation along the biceps fascicles (elbow cutaway)
@@ -141,14 +143,14 @@ export const ArmAnatomy: React.FC<{a: ArmState; g: ArmFrame; mode: 'cut' | 'xray
 /** the fitted t-shirt sleeve over the upper arm, with a stitched seam that pops and splits */
 const Sleeve: React.FC<{a: ArmState; g: ArmFrame}> = ({a, g}) => {
   const {UA} = g;
-  const sH = 0.31; // hem position along the upper arm
+  const sH = 0.31 - 0.045 * a.stretch; // hem position along the upper arm: it rides up as the sleeve tightens
   const gap = lerp(0.32, 0.1, a.stretch);
   const off = (s: number, v: number) => {
     const p = UA(s, v);
     return add(p, mul(v >= 0 ? g.an : mul(g.an, -1), gap));
   };
-  const ant = lin(-0.2, sH, 8).map((s) => off(s, 1));
-  const post = lin(sH, -0.2, 8).map((s) => off(s, -1));
+  const ant = lin(-0.34, sH, 9).map((s) => off(s, 1));
+  const post = lin(sH, -0.34, 9).map((s) => off(s, -1));
   const outline = [...ant, ...post];
   const tear = a.tear;
   // the seam runs from the hem up the outer face of the sleeve; the split opens along it as a V, widest at the hem
@@ -198,13 +200,17 @@ const Sleeve: React.FC<{a: ArmState; g: ArmFrame}> = ({a, g}) => {
         )}
       </defs>
       <g mask={tear > 0 ? `url(#${mk})` : undefined}>
-        <path d={closed(outline, 0.9)} fill={`url(#${id})`} stroke={SHIRT.ink} strokeWidth={0.32} strokeLinejoin="round" />
+        <path d={closed(outline, 0.9)} fill={`url(#${id})`} />
+        {/* only the sleeve's top and bottom edges and its hem are inked: its back end merges into the shirt */}
+        <path d={open(lin(-0.02, sH, 6).map((s) => off(s, 1)))} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
+        <path d={open(lin(-0.02, sH, 6).map((s) => off(s, -1)))} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
+        <path d={open([off(sH, 1), ...lin(0.9, -0.9, 5).map((v) => add(UA(sH, v), mul(v >= 0 ? g.an : mul(g.an, -1), gap))), off(sH, -1)])} stroke={SHIRT.ink} strokeWidth={0.32} fill="none" strokeLinecap="round" />
         {/* hem band */}
         <path d={open(lin(-1, 1, 7).map((v) => UA(sH - 0.012, v)))} stroke={SHIRT.shade} strokeWidth={0.9} fill="none" opacity={0.6} />
         <path d={open(hemSt)} stroke={SHIRT.seam} strokeWidth={0.12} strokeDasharray="0.35 0.3" fill="none" opacity={0.9} />
         {/* the stitched seam */}
         <path d={open(stitches)} stroke={SHIRT.shade} strokeWidth={0.32} fill="none" opacity={0.8} />
-        <path d={open(stitches)} stroke={SHIRT.seam} strokeWidth={0.11} strokeDasharray="0.4 0.32" fill="none" />
+        <path d={open(stitches)} stroke={SHIRT.seam} strokeWidth={0.11} strokeDasharray={`0.4 ${(0.32 + 0.45 * a.stretch).toFixed(2)}`} fill="none" />
         {folds > 0.02 &&
           [0.15, 0.45, 0.75].map((k, i) => {
             const p0 = seam(k);
@@ -244,11 +250,11 @@ const Sleeve: React.FC<{a: ArmState; g: ArmFrame}> = ({a, g}) => {
         return <path key={`fr${i}`} d={open([p, q])} stroke="#B9CBF5" strokeWidth={0.12} strokeLinecap="round" opacity={0.85} />;
       })}
       {/* popped stitches flying off the seam */}
-      {tear > 0.01 && tear < 0.75 &&
+      {((tear > 0.01 && tear < 0.75) || (a.pops ?? 0) > 0) &&
         Array.from({length: 10}, (_, i) => {
-          const k = (i + 0.5) / 10 * Math.min(1, len + 0.1);
+          const k = (i + 0.5) / 10 * Math.min(1, Math.max(len, 0.7) + 0.1);
           const p0 = seam(k);
-          const u = clamp(tear * 2.2 - i * 0.05);
+          const u = clamp(((a.pops ?? 0) > 0 ? (a.pops ?? 0) * 1.4 : tear * 2.2) - i * 0.05);
           if (u <= 0) return null;
           const v = add(mul(g.an, 2.4 + 2.2 * ((i * 0.618) % 1)), mul(g.u, (i % 2 ? 1 : -1) * 1.6));
           const p1 = add(add(p0, mul(v, u * 2.6)), pt(0, 3.2 * u * u));
@@ -326,7 +332,7 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
   const crease = [FA(0.02, 0.82), FA(0.1, 1.02), FA(0.22, 1.08)];
   const peak = UA(0.56 + 0.05 * a.c, 0.72);
   const cut = a.cut && a.cut.r > 0.01 ? a.cut : undefined;
-  const cutC = cut ? UA(cut.s, cut.v) : undefined;
+  const cutC = cut ? cut.c ?? UA(cut.s, cut.v) : undefined;
   const ec = a.elbowCut ?? 0;
   const ecC = add(UA(0.86, 0.15), mul(f, 1.2));
   const ecR = (12 + 2 * m) * ss(ec, 0, 1);
@@ -453,131 +459,181 @@ export const Arm: React.FC<{a: ArmState; behindHand?: React.ReactNode; inCut?: R
 };
 
 // ------------------------------------------------------------------ the rest of the character
-export type Face = {brow: number; eyes: number; mouth: number; strain: number; look: P};
+export type Face = {brow: number; eyes: number; mouth: number; strain: number; look: P; smile?: number};
 export type PersonState = {arm: ArmState; hip: P; lean: number; head: P; headTilt: number; face: Face; t: number; xray: number; farArm: number};
 
-/** torso, legs, head and the far arm, drawn behind the near arm */
+/** torso (turned three-quarters toward the camera), legs, head and the far arm, drawn behind the near arm */
 export const Body: React.FC<{p: PersonState}> = ({p}) => {
   const {arm} = p;
   const m = arm.m;
   const S = arm.S;
   const H = p.hip;
   const K = pt(H.x + 40, H.y - 9), A = pt(H.x + 45, -9), toe = pt(H.x + 60, -1.5), heel = pt(H.x + 41, -1.5);
-  const chestF = 11 + 9.5 * m, backR = 10 + 8 * m;
-  // torso silhouette: chest and back profile from the hips up to the neck
-  const neck = pt(S.x - 2, S.y - 9);
+  const K2 = pt(K.x + 7, K.y - 3);
+  const cw = 19 + 9 * m;                   // chest width across, near shoulder to far shoulder
+  const backR = 8 + 6 * m;
+  const FS = pt(S.x + cw, S.y + 1.5);      // far shoulder joint
+  const neck = pt(S.x + cw * 0.38, S.y - 8.5);
+  const stern = S.x + cw * 0.5;
   const torso = closed([
-    pt(H.x - 10, H.y + 2), pt(H.x - 12, H.y - 14), pt(S.x - backR - 2, S.y + 16), pt(S.x - backR - 1, S.y + 3), pt(S.x - backR * 0.6, S.y - 5), pt(neck.x - 5, neck.y + 1),
-    pt(neck.x + 4, neck.y + 1.5), pt(S.x + chestF * 0.5, S.y - 1), pt(S.x + chestF, S.y + 8), pt(S.x + chestF * 0.95, S.y + 17), pt(S.x + chestF * 0.6, S.y + 26), pt(H.x + 13, H.y - 8), pt(H.x + 14, H.y + 3),
-  ], 0.9);
+    pt(H.x - 9, H.y + 2), pt(H.x - 11, H.y - 13), pt(S.x - backR, S.y + 16), pt(S.x - backR * 0.85, S.y + 4), pt(S.x - backR * 0.35, S.y - 4.5),
+    pt(neck.x - 6.5, neck.y + 2.5), pt(neck.x + 6.5, neck.y + 2.8), pt(FS.x - 4, FS.y - 6.5 - 1.5 * m), pt(FS.x + 3 + 2 * m, FS.y - 2.5), pt(FS.x + 5 + 2.5 * m, FS.y + 6),
+    pt(FS.x + 2 + 1.5 * m, FS.y + 18), pt(H.x + 22 + 4 * m, H.y - 14), pt(H.x + 20, H.y + 3),
+  ], 0.85);
   const thigh = closed([pt(H.x - 6, H.y + 6), pt(H.x - 6, H.y - 8), pt(K.x - 2, K.y - 7.5 - 1.5 * m), pt(K.x + 5, K.y - 1), pt(K.x + 4, K.y + 6), pt(H.x + 10, H.y + 9)], 0.9);
+  const thigh2 = closed([pt(H.x + 6, H.y + 2), pt(H.x + 6, H.y - 10), pt(K2.x - 2, K2.y - 7.5 - 1.5 * m), pt(K2.x + 5, K2.y - 1), pt(K2.x + 4, K2.y + 6), pt(H.x + 16, H.y + 6)], 0.9);
   const shin = closed([pt(K.x - 3.5, K.y), pt(K.x + 5, K.y), pt(A.x + 3.2, A.y - 2), pt(A.x - 3, A.y - 1), pt(K.x - 4.8, K.y + 14)], 0.9);
-  const shoe = closed([pt(heel.x - 1, heel.y + 1.5), pt(heel.x - 1.5, heel.y - 6), pt(A.x + 4, A.y - 4), pt(toe.x - 3, toe.y - 4.5), pt(toe.x + 1, toe.y - 1), pt(toe.x, toe.y + 1.5)], 0.8);
-  const idT = uid('tg'), idL = uid('lg');
-  const xr = p.xray;
+  const shin2 = closed([pt(K2.x - 3.5, K2.y), pt(K2.x + 5, K2.y), pt(A.x + 10, A.y - 4), pt(A.x + 4.5, A.y - 3), pt(K2.x - 4.4, K2.y + 14)], 0.9);
+  const shoe = (h: P, a: P, tt: P) => closed([pt(h.x - 1, h.y + 1.5), pt(h.x - 1.5, h.y - 6), pt(a.x + 4, a.y - 4), pt(tt.x - 3, tt.y - 4.5), pt(tt.x + 1, tt.y - 1), pt(tt.x, tt.y + 1.5)], 0.8);
+  const idT = uid('tg'), idL = uid('lg'), idC = uid('tc');
+  // the far arm: from the far shoulder down to a hand resting on the far knee
+  const fe = pt(FS.x + 4 + 2 * m, FS.y + 25), fh = pt(K2.x - 1, K2.y - 6);
+  const r1 = 4.4 + 3.6 * m, r2 = 3.2 + 1.8 * m;
+  const n1 = rot(nrm(sub(fe, FS)), PI / 2), n2 = rot(nrm(sub(fh, fe)), PI / 2);
+  const farArm = closed([add(FS, mul(n1, r1 * 1.1)), add(lerpP(FS, fe, 0.45), mul(n1, r1 * 1.15)), add(fe, mul(n1, r2)), add(fe, mul(n2, r2)), add(fh, mul(n2, 2.3)), add(fh, mul(n2, -2.3)), add(fe, mul(n2, -r2)), add(lerpP(FS, fe, 0.45), mul(n1, -r1)), add(FS, mul(n1, -r1))], 0.85);
+  const farSkin = mix(SKIN.shade, '#2A3550', 0.18);
   return (
     <g>
       <defs>
-        <linearGradient id={idT} x1="0" y1="0" x2="1" y2="0.3">
+        <linearGradient id={idT} x1="0" y1="0" x2="1" y2="0.25">
           <stop offset={0} stopColor={SHIRT.shade} />
-          <stop offset={0.55} stopColor={SHIRT.base} />
-          <stop offset={1} stopColor={SHIRT.lit} />
+          <stop offset={0.45} stopColor={SHIRT.base} />
+          <stop offset={0.72} stopColor={SHIRT.lit} />
+          <stop offset={1} stopColor={SHIRT.base} />
         </linearGradient>
         <linearGradient id={idL} x1="0" y1="0" x2="0" y2="1">
           <stop offset={0} stopColor="#3A3F4E" />
           <stop offset={1} stopColor="#1E2230" />
         </linearGradient>
+        <clipPath id={idC}><path d={torso} /></clipPath>
       </defs>
-      {/* far arm resting on the far knee */}
-      {(() => {
-        const fs = pt(S.x - 4, S.y + 1), fe = pt(S.x + 4 + 2 * m, S.y + 27), fh = pt(K.x - 3, K.y - 6);
-        const r1 = 4.2 + 3 * m, r2 = 3.0 + 1.6 * m;
-        const n1 = rot(nrm(sub(fe, fs)), PI / 2), n2 = rot(nrm(sub(fh, fe)), PI / 2);
-        return (
-          <g>
-            <path d={closed([add(fs, mul(n1, r1)), add(lerpP(fs, fe, 0.5), mul(n1, r1 * 1.1)), add(fe, mul(n1, r2)), add(fe, mul(n2, r2)), add(fh, mul(n2, 2.2)), add(fh, mul(n2, -2.2)), add(fe, mul(n2, -r2)), add(lerpP(fs, fe, 0.5), mul(n1, -r1)), add(fs, mul(n1, -r1))], 0.85)} fill={mix(SKIN.shade, '#2A3550', 0.25)} stroke={SKIN.ink} strokeWidth={0.5} />
-            <ellipse cx={fh.x + 1} cy={fh.y} rx={4} ry={3.2} fill={mix(SKIN.shade, '#2A3550', 0.25)} stroke={SKIN.ink} strokeWidth={0.45} />
-          </g>
-        );
-      })()}
-      {/* legs: shorts and shins */}
+      {/* far leg, far arm */}
+      <path d={shin2} fill={mix(SKIN.mid, '#2A3550', 0.2)} stroke={SKIN.ink} strokeWidth={0.5} />
+      <path d={shoe(pt(heel.x + 6, heel.y - 2), pt(A.x + 7, A.y - 2), pt(toe.x + 6, toe.y - 2))} fill="#C9CED8" stroke="#2A2F3C" strokeWidth={0.5} />
+      <path d={thigh2} fill="#1A1D28" stroke="#0E1018" strokeWidth={0.5} />
+      <path d={farArm} fill={farSkin} stroke={SKIN.ink} strokeWidth={0.5} />
+      <ellipse cx={fh.x + 1.2} cy={fh.y} rx={4.2} ry={3.3} fill={farSkin} stroke={SKIN.ink} strokeWidth={0.45} />
+      {/* near leg */}
       <path d={shin} fill={SKIN.mid} stroke={SKIN.ink} strokeWidth={0.5} />
-      <path d={shoe} fill="#E9ECF2" stroke="#2A2F3C" strokeWidth={0.5} />
+      <path d={shoe(heel, A, toe)} fill="#E9ECF2" stroke="#2A2F3C" strokeWidth={0.5} />
       <path d={open([pt(heel.x - 1, heel.y), pt(toe.x, toe.y)])} stroke="#C23B3B" strokeWidth={1.2} />
       <path d={thigh} fill={`url(#${idL})`} stroke="#0E1018" strokeWidth={0.5} />
+      {/* torso in the fitted tee: chest toward the camera, the far shoulder cap on the right */}
       <path d={torso} fill={`url(#${idT})`} stroke={SHIRT.ink} strokeWidth={0.55} strokeLinejoin="round" />
-      {/* pectoral fold and a few shirt wrinkles */}
-      <path d={open([pt(S.x + 2, S.y + 6), pt(S.x + chestF * 0.7, S.y + 12), pt(S.x + chestF * 0.62, S.y + 18)])} stroke={SHIRT.shade} strokeWidth={0.6} fill="none" opacity={0.7} />
-      <path d={open([pt(S.x - 4, S.y + 20), pt(S.x + 3, S.y + 24), pt(S.x + 9, S.y + 23)])} stroke={SHIRT.shade} strokeWidth={0.45} fill="none" opacity={0.6} />
-      {/* neck */}
-      <path d={closed([pt(neck.x - 4.2, neck.y + 3), pt(neck.x - 3.5, neck.y - 6), pt(neck.x + 4.5, neck.y - 6), pt(neck.x + 5, neck.y + 3)], 0.6)} fill={SKIN.mid} stroke={SKIN.ink} strokeWidth={0.45} />
+      <g clipPath={`url(#${idC})`}>
+        {/* pecs: the near one broad, the far one foreshortened; the sternum line between them */}
+        <path d={open([pt(S.x + 1, S.y + 3), pt(S.x + cw * 0.3, S.y + 12 + 2 * m), pt(stern - 1, S.y + 13 + 2 * m)])} stroke={SHIRT.shade} strokeWidth={0.75} fill="none" opacity={0.75} strokeLinecap="round" />
+        <path d={open([pt(stern + 0.5, S.y + 13 + 2 * m), pt(stern + cw * 0.28, S.y + 12 + 1.5 * m), pt(FS.x - 1, FS.y + 5)])} stroke={SHIRT.shade} strokeWidth={0.65} fill="none" opacity={0.7} strokeLinecap="round" />
+        <path d={open([pt(stern, S.y - 2), pt(stern - 0.4, S.y + 12)])} stroke={SHIRT.shade} strokeWidth={0.5} fill="none" opacity={0.55} />
+        <ellipse cx={S.x + cw * 0.32} cy={S.y + 6} rx={cw * 0.2} ry={4 + m} fill={SHIRT.lit} opacity={0.35} />
+        <ellipse cx={stern + cw * 0.22} cy={S.y + 6} rx={cw * 0.14} ry={3.4 + m} fill={SHIRT.lit} opacity={0.25} />
+        {/* abs under the stretched shirt, and the far deltoid's edge */}
+        {[0, 1, 2].map((k) => <path key={k} d={open([pt(stern - 3.2, S.y + 19 + k * 5.2), pt(stern + 3.4, S.y + 19.4 + k * 5.2)])} stroke={SHIRT.shade} strokeWidth={0.4} fill="none" opacity={0.35 * m} />)}
+        <path d={open([pt(FS.x - 5, FS.y - 4), pt(FS.x - 1.5, FS.y + 4), pt(FS.x + 1, FS.y + 10)])} stroke={SHIRT.shade} strokeWidth={0.55} fill="none" opacity={0.6} />
+        <path d={open([pt(S.x - backR * 0.6, S.y + 20), pt(S.x, S.y + 24), pt(S.x + 8, S.y + 23.5)])} stroke={SHIRT.shade} strokeWidth={0.45} fill="none" opacity={0.5} />
+      </g>
+      {/* neck: thick, with the near sternomastoid; a crew collar in three-quarters */}
+      <path d={closed([pt(neck.x - 6, neck.y + 3.2), pt(neck.x - 5.6, neck.y - 7), pt(neck.x + 5, neck.y - 8), pt(neck.x + 6.2, neck.y + 3.4)], 0.6)} fill={SKIN.mid} stroke={SKIN.ink} strokeWidth={0.45} />
+      <path d={open([pt(neck.x - 3.5, neck.y - 6), pt(neck.x + 0.5, neck.y + 1), pt(neck.x + 2.5, neck.y + 3)])} stroke={SKIN.shade} strokeWidth={0.5} fill="none" opacity={0.7} />
+      <path d={`M${neck.x - 6.6} ${neck.y + 2.6} Q${neck.x} ${neck.y + 6.4} ${neck.x + 6.8} ${neck.y + 2.9}`} stroke={SHIRT.shade} strokeWidth={1.3} fill="none" strokeLinecap="round" />
       <Head p={p} />
-      {void xr}
     </g>
   );
 };
 
-/** the head in three-quarter view, turned toward screen right; brows, eyes and mouth carry the expression */
+/** where the head sits for a given near-shoulder position (the neck is part of the torso) */
+export const headFor = (S: P, m: number) => pt(S.x + (19 + 9 * m) * 0.38 - 1.5, S.y - 22.5);
+
+/** the head in a fixed three-quarter view (turned toward screen right). The face is one rigid design: brows, eyes and
+ *  mouth sit on the face plane and only open, close or lift; the whole head tilts as one piece; the pupils move inside
+ *  the eyes. Both eyes stay inside the silhouette, the far one foreshortened beside the bridge of the nose. */
 export const Head: React.FC<{p: PersonState}> = ({p}) => {
   const c = p.head;
   const F = p.face;
-  const r = 10.2;
-  const id = uid('hd');
-  const tilt = p.headTilt;
-  const eyeY = c.y - 0.6 - 0.4 * F.eyes;
-  const near = pt(c.x + 5.6, eyeY), far = pt(c.x + 0.4, eyeY - 0.2);
-  const look = F.look;
-  const eye = (e: P, s: number, k: number) => (
-    <g key={k}>
-      <ellipse cx={e.x} cy={e.y} rx={1.55 * s} ry={(1.05 + 0.75 * F.eyes) * s} fill="#FFFFFF" stroke={SKIN.ink} strokeWidth={0.22} />
-      <circle cx={e.x + look.x * 0.72 * s} cy={e.y + look.y * 0.5 * s} r={0.82 * s} fill="#3B2716" />
-      <circle cx={e.x + look.x * 0.72 * s} cy={e.y + look.y * 0.5 * s} r={0.42 * s} fill="#0B0705" />
-      <circle cx={e.x + look.x * 0.72 * s - 0.3 * s} cy={e.y + look.y * 0.5 * s - 0.32 * s} r={0.24 * s} fill="#FFFFFF" />
-      {/* lids: strain narrows them */}
-      <path d={`M${e.x - 1.7 * s} ${e.y - (0.4 + 0.65 * F.eyes) * s + F.strain * 0.7 * s} Q${e.x} ${e.y - (1.5 + 0.75 * F.eyes) * s + F.strain * 0.8 * s} ${e.x + 1.7 * s} ${e.y - (0.4 + 0.65 * F.eyes) * s + F.strain * 0.7 * s}`} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinecap="round" />
-    </g>
+  const id = uid('hd'), idC = uid('hc');
+  const smile = F.smile ?? 0;
+  const P_ = (x: number, y: number) => pt(c.x + x, c.y + y);
+  const skull = closed([P_(-8.7, -1.6), P_(-7.6, -7.6), P_(-3.2, -11.2), P_(2.6, -11.6), P_(7.2, -9.0), P_(9.0, -4.4), P_(9.3, 0.4), P_(8.7, 4.6), P_(7.4, 8.0), P_(4.6, 10.3), P_(1.6, 10.5), P_(-2.8, 8.4), P_(-6.0, 4.9), P_(-8.1, 1.8)], 0.9);
+  const open_ = clamp(0.25 + 0.75 * F.eyes - 0.35 * F.strain);
+  const lk = pt(clamp(F.look.x, -1, 1), clamp(F.look.y, -1, 1));
+  const eye = (cx: number, cy: number, rx: number, ry: number, k: number) => {
+    const e = P_(cx, cy);
+    const ryo = ry * (0.35 + 0.65 * open_);
+    const px = e.x + lk.x * rx * 0.38, py = e.y + lk.y * ryo * 0.3;
+    const ir = Math.min(rx, ry) * 0.62;
+    const idE = `${id}e${k}`;
+    return (
+      <g key={k}>
+        <defs><clipPath id={idE}><ellipse cx={e.x} cy={e.y} rx={rx} ry={ryo} /></clipPath></defs>
+        <ellipse cx={e.x} cy={e.y} rx={rx} ry={ryo} fill="#FFFFFF" />
+        <g clipPath={`url(#${idE})`}>
+          <circle cx={px} cy={py} r={ir} fill="#4A3220" />
+          <circle cx={px} cy={py} r={ir * 0.52} fill="#0B0705" />
+          <circle cx={px - ir * 0.35} cy={py - ir * 0.4} r={ir * 0.28} fill="#FFFFFF" />
+          {/* upper lid shadow */}
+          <ellipse cx={e.x} cy={e.y - ryo * 1.05} rx={rx * 1.1} ry={ryo * 0.45} fill={SKIN.shade} opacity={0.35} />
+        </g>
+        <path d={`M${e.x - rx * 1.08} ${e.y + ryo * 0.1} Q${e.x} ${e.y - ryo * 1.5} ${e.x + rx * 1.08} ${e.y - ryo * 0.05}`} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinecap="round" />
+        <path d={`M${e.x - rx * 0.8} ${e.y + ryo * 0.75} Q${e.x} ${e.y + ryo * 1.12} ${e.x + rx * 0.85} ${e.y + ryo * 0.6}`} stroke={SKIN.shade} strokeWidth={0.22} fill="none" opacity={0.8} />
+      </g>
+    );
+  };
+  // brows: attached to the brow ridge; they lift, lower and pinch, and never leave it
+  const bl = 1.5 * F.brow - 1.0 * F.strain;
+  const brow = (x0: number, x1: number, y: number, w: number, inner: number) => (
+    <path d={open([P_(x0, y - bl * 0.75 + inner), P_((x0 + x1) / 2, y - bl - 0.5), P_(x1, y - bl * 0.85)])} stroke="#2B1C14" strokeWidth={w} fill="none" strokeLinecap="round" />
   );
-  const browY = (k: number) => eyeY - 2.4 - 1.5 * F.brow + 0.9 * F.strain - (k ? 0.2 : 0);
-  const mouthC = pt(c.x + 5.2, c.y + 5.2);
-  const mo = F.mouth; // 0 closed .. 1 open in surprise
+  const mo = F.mouth;
+  const mC = P_(4.9, 6.0);
   return (
-    <g transform={`rotate(${tilt} ${c.x} ${c.y + 8})`}>
+    <g transform={`rotate(${p.headTilt} ${c.x + 1} ${c.y + 9})`}>
       <defs>
-        <radialGradient id={id} cx="0.62" cy="0.38" r="0.75">
+        <radialGradient id={id} cx="0.66" cy="0.38" r="0.8">
           <stop offset={0} stopColor={SKIN.lit} />
-          <stop offset={0.6} stopColor={SKIN.mid} />
+          <stop offset={0.55} stopColor={SKIN.mid} />
           <stop offset={1} stopColor={SKIN.shade} />
         </radialGradient>
+        <clipPath id={idC}><path d={skull} /></clipPath>
       </defs>
-      {/* skull, cheek and jaw: the jaw line comes forward to a chin on the right */}
-      <path d={closed([pt(c.x - 8.8, c.y - 3), pt(c.x - 5.5, c.y - 9.5), pt(c.x + 2, c.y - 11), pt(c.x + 8.2, c.y - 7), pt(c.x + 9.4, c.y - 1.2), pt(c.x + 9.9, c.y + 1.6), pt(c.x + 8.9, c.y + 4.8), pt(c.x + 8.6, c.y + 7.6), pt(c.x + 5.5, c.y + 9.8), pt(c.x + 0.5, c.y + 9.2), pt(c.x - 4.5, c.y + 5.5), pt(c.x - 8.6, c.y + 2)], 0.9)} fill={`url(#${id})`} stroke={SKIN.ink} strokeWidth={0.45} strokeLinejoin="round" />
-      {/* ear */}
-      <path d={closed([pt(c.x - 4.6, c.y - 2.4), pt(c.x - 2.4, c.y - 2.8), pt(c.x - 2.0, c.y + 1.2), pt(c.x - 3.6, c.y + 2.8), pt(c.x - 5.2, c.y + 0.8)], 0.9)} fill={SKIN.mid} stroke={SKIN.ink} strokeWidth={0.35} />
-      <path d={open([pt(c.x - 3.9, c.y - 1.5), pt(c.x - 3.1, c.y - 0.5), pt(c.x - 3.6, c.y + 1.3)])} stroke={SKIN.shade} strokeWidth={0.35} fill="none" />
-      {/* hair: short and dark, swept up */}
-      <path d={closed([pt(c.x - 9.2, c.y - 1.5), pt(c.x - 9.6, c.y - 7), pt(c.x - 5.5, c.y - 12), pt(c.x + 1.5, c.y - 13.2), pt(c.x + 7.5, c.y - 11.2), pt(c.x + 9.4, c.y - 7.6), pt(c.x + 6.5, c.y - 8.2), pt(c.x + 2, c.y - 8.6), pt(c.x - 2.5, c.y - 7.6), pt(c.x - 5.2, c.y - 5.5), pt(c.x - 6.6, c.y - 1.8)], 0.85)} fill="#2B1C14" stroke="#120A06" strokeWidth={0.4} />
-      <path d={open([pt(c.x - 4.5, c.y - 11), pt(c.x + 0.5, c.y - 12.2), pt(c.x + 5.5, c.y - 10.8)])} stroke="#5A4232" strokeWidth={0.5} fill="none" strokeLinecap="round" />
-      {/* nose in profile at the right edge */}
-      <path d={open([pt(c.x + 8.7, c.y - 2.6), pt(c.x + 10.8, c.y + 1.9), pt(c.x + 9.2, c.y + 2.9)])} stroke={SKIN.ink} strokeWidth={0.42} fill={SKIN.mid} strokeLinejoin="round" />
-      {eye(far, 0.78, 0)}
-      {eye(near, 1, 1)}
-      {/* brows */}
-      <path d={open([pt(far.x - 1.4, browY(0) + 0.3), pt(far.x + 0.2, browY(0) - 0.5), pt(far.x + 1.5, browY(0) + 0.1 + F.strain * 0.5)])} stroke="#2B1C14" strokeWidth={0.75} fill="none" strokeLinecap="round" />
-      <path d={open([pt(near.x - 1.9, browY(1) + 0.2 + F.strain * 0.6), pt(near.x, browY(1) - 0.6), pt(near.x + 1.9, browY(1) + 0.2)])} stroke="#2B1C14" strokeWidth={0.9} fill="none" strokeLinecap="round" />
-      {/* mouth: a straight determined line, gritted when straining, a small open "o" in surprise */}
+      <path d={skull} fill={`url(#${id})`} stroke={SKIN.ink} strokeWidth={0.45} strokeLinejoin="round" />
+      <g clipPath={`url(#${idC})`}>
+        {/* the near side of the face turns away from the light: cheek and jaw plane */}
+        <path d={closed([P_(-9, -2), P_(-5, -3), P_(-2.5, 3.8), P_(-0.5, 8.4), P_(-3, 11), P_(-9, 6)], 0.8)} fill={SKIN.shade} opacity={0.22} />
+        {/* hair: short, dark, a side part; hairline over the forehead to a sideburn by the ear */}
+        <path d={closed([P_(-9.2, 0.6), P_(-9.2, -7), P_(-4.8, -12.4), P_(2.6, -13.2), P_(8.2, -10.6), P_(9.6, -6.4), P_(7.6, -6.6), P_(4.6, -7.6), P_(1.0, -7.4), P_(-2.6, -6.0), P_(-3.8, -3.2), P_(-4.3, 0.6), P_(-5.8, 1.2)], 0.85)} fill="#2B1C14" />
+        <path d={open([P_(-5.4, -10.4), P_(0.2, -11.4), P_(5.4, -10.4)])} stroke="#5A4232" strokeWidth={0.55} fill="none" strokeLinecap="round" />
+        <path d={open([P_(1.6, -12.4), P_(3.2, -9.4)])} stroke="#140C08" strokeWidth={0.35} fill="none" />
+        {/* cheek warmth */}
+        <ellipse cx={c.x + 1.6} cy={c.y + 3.6} rx={2.4} ry={1.4} fill="#F08C78" opacity={0.22} />
+      </g>
+      {/* near ear */}
+      <path d={closed([P_(-4.6, -2.4), P_(-6.6, -3.0), P_(-7.6, -0.6), P_(-7.0, 2.6), P_(-5.0, 3.4), P_(-4.4, 1.2)], 0.9)} fill={SKIN.mid} stroke={SKIN.ink} strokeWidth={0.35} />
+      <path d={open([P_(-5.4, -1.6), P_(-6.6, -0.2), P_(-5.6, 2.2)])} stroke={SKIN.shade} strokeWidth={0.4} fill="none" />
+      {/* eyes (the far one foreshortened beside the nose bridge) */}
+      {eye(1.1, -1.5, 1.85, 1.3, 0)}
+      {eye(6.9, -1.7, 1.15, 1.22, 1)}
+      {brow(-1.0, 3.0, -4.0, 0.95, 0.3 * F.strain)}
+      {brow(5.7, 8.3, -4.2, 0.75, -0.3 * F.strain)}
+      {/* nose: the bridge, the tip just inside the far cheek, the shadowed underside */}
+      <path d={open([P_(5.2, -1.4), P_(6.4, 1.2), P_(7.5, 2.8), P_(6.6, 3.7), P_(5.2, 3.5)])} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+      <path d={closed([P_(5.0, -1.0), P_(6.1, 1.4), P_(5.0, 3.2), P_(4.3, 1.6)], 0.8)} fill={SKIN.shade} opacity={0.35} />
+      <ellipse cx={c.x + 6.2} cy={c.y + 3.5} rx={0.45} ry={0.25} fill={SKIN.deep} />
+      {/* mouth: a set line, a grin, gritted teeth when straining, a small open "o" in surprise */}
       {mo > 0.05 ? (
-        <ellipse cx={mouthC.x} cy={mouthC.y + 0.4 * mo} rx={1.25 + 0.4 * mo - 0.4 * F.strain} ry={0.35 + 1.1 * mo} fill="#5A1E1E" stroke={SKIN.ink} strokeWidth={0.3} />
+        <path d={closed([P_(3.3, 6.0), P_(4.9, 5.6 - 0.1 * mo), P_(6.7, 5.8), P_(6.3, 6.3 + 1.6 * mo), P_(4.8, 6.6 + 2.0 * mo), P_(3.6, 6.3 + 1.2 * mo)], 0.8)} fill="#5A1E1E" stroke={SKIN.ink} strokeWidth={0.3} />
       ) : F.strain > 0.3 ? (
         <g>
-          <rect x={mouthC.x - 2} y={mouthC.y - 0.55} width={3.6} height={1.1} rx={0.4} fill="#FFFFFF" stroke={SKIN.ink} strokeWidth={0.3} />
-          <path d={`M${mouthC.x - 2} ${mouthC.y} L${mouthC.x + 1.6} ${mouthC.y}`} stroke={SKIN.shade} strokeWidth={0.15} />
+          <path d={closed([P_(2.9, 5.6), P_(7.0, 5.3), P_(6.8, 6.9), P_(3.1, 7.1)], 0.4)} fill="#FFFFFF" stroke={SKIN.ink} strokeWidth={0.32} />
+          <path d={open([P_(3.0, 6.25), P_(6.9, 6.05)])} stroke={SKIN.shade} strokeWidth={0.16} fill="none" />
+          {[4.0, 5.0, 6.0].map((x, i) => <path key={i} d={open([P_(x, 5.5), P_(x, 7.0)])} stroke={SKIN.shade} strokeWidth={0.12} />)}
         </g>
       ) : (
-        <path d={open([pt(mouthC.x - 2, mouthC.y - 0.1), pt(mouthC.x, mouthC.y + 0.2), pt(mouthC.x + 1.7, mouthC.y - 0.15)])} stroke={SKIN.ink} strokeWidth={0.4} fill="none" strokeLinecap="round" />
+        <path d={open([P_(2.9, 6.0 - 0.3 * smile), mC, P_(6.9, 5.6 - 0.6 * smile)].map((q, i) => (i === 1 ? pt(q.x, q.y + 0.35 * smile) : q)))} stroke={SKIN.ink} strokeWidth={0.42} fill="none" strokeLinecap="round" />
       )}
-      <ellipse cx={c.x + 2.5} cy={c.y + 3.4} rx={2.4} ry={1.4} fill="#F08C78" opacity={0.25} />
-      {/* strain sweat bead */}
-      {F.strain > 0.5 && <path d={`M${c.x + 6.5} ${c.y - 6.5} q0.6 1.4 0 2.0 q-0.6 -0.6 0 -2.0Z`} fill="#CDEBFF" opacity={(F.strain - 0.5) * 1.6} stroke="#6E9AB8" strokeWidth={0.1} />}
+      {/* jaw line and chin */}
+      <path d={open([P_(-4.6, 6.2), P_(-0.6, 9.4), P_(2.6, 10.3)])} stroke={SKIN.shade} strokeWidth={0.5} fill="none" opacity={0.55} />
+      <path d={open([P_(3.4, 9.6), P_(5.0, 9.9), P_(6.2, 9.2)])} stroke={SKIN.shade} strokeWidth={0.35} fill="none" opacity={0.6} />
+      {F.strain > 0.5 && <path d={`M${c.x + 4.8} ${c.y - 7.6} q0.6 1.4 0 2.0 q-0.6 -0.6 0 -2.0Z`} fill="#CDEBFF" opacity={(F.strain - 0.5) * 1.6} stroke="#6E9AB8" strokeWidth={0.1} />}
     </g>
   );
 };

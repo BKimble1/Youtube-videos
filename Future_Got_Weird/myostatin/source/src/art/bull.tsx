@@ -1,265 +1,274 @@
-// The Belgian Blue bull in a late-afternoon pasture, side view facing right (cm, ground at y = 0). The body is one
-// silhouette from a point list. A matching point list gives an ordinary bovine of the same frame and pose, used only for
-// the comparison overlay: the region between the two outlines (an even-odd fill of both) is exactly the extra muscle.
-// The bull itself never changes shape. Its near foreleg can take one heavy step that loads the shoulder.
+// V2 Belgian Blue: a double-muscled bull in a late-afternoon pasture, side view facing right with a three-quarter-rear
+// cue (cm, ground at y = 0). The body is built from the masses that make the breed recognisable: the bulging shoulder
+// and triceps, the loin along the top line, and the rounded hindquarters (gluteal, biceps femoris, semitendinosus)
+// that swell past the tail and down toward the hock. They are drawn as one outlined silhouette (strokes under, fills
+// over), each mass with its own crease and highlight. Coat: blue roan. In 'anat' the hide goes translucent and the same
+// masses read as red muscle, matching the translucent human arm it cuts from. The bull never changes shape.
 import React from 'react';
-import {P, add, closed, lerpP, mul, nrm, open, pt, rot, sub} from '../core/geo';
+import {P, add, closed, mul, nrm, open, pt, rot, sub} from '../core/geo';
 import {mix} from '../core/color';
 import {uid} from '../core/ids';
-import {clamp, hash, lerp, ring, ss} from '../lib';
-
-// body outline, from the neck crest back along the top line, round the rump, along the belly and up the chest.
-// region tags: s shoulder, b back, h hindquarters, - shared
-type K = [number, number, number, number, string];
-const BODY: K[] = [
-  // x(BB), y(BB), x(normal), y(normal), region — from the neck crest back along the top line, round the rump, along
-  // the belly, down the chest and up the throat to the jaw
-  [78, -151, 78, -144, 's'],
-  [54, -156, 52, -146, 's'],
-  [30, -150, 30, -144, 's'],
-  [10, -150, 10, -142, 'b'],
-  [-14, -156, -14, -142, 'b'],
-  [-40, -158, -40, -143, 'b'],
-  [-64, -155, -64, -144, 'b'],
-  [-84, -157, -84, -145, 'h'],
-  [-104, -150, -100, -143, 'h'],
-  [-118, -149, -108, -139, 'h'],
-  [-138, -132, -114, -126, 'h'],
-  [-149, -112, -118, -108, 'h'],
-  [-145, -97, -118, -96, 'h'],
-  [-149, -82, -116, -84, 'h'],
-  [-137, -66, -112, -72, 'h'],
-  [-127, -52, -106, -60, 'h'],
-  [-116, -46, -100, -54, 'h'],
-  [-100, -58, -92, -62, 'h'],
-  [-80, -68, -78, -68, '-'],
-  [-48, -64, -48, -67, '-'],
-  [-16, -60, -16, -64, '-'],
-  [16, -60, 16, -64, 's'],
-  [40, -62, 42, -66, 's'],
-  [58, -56, 60, -63, 's'],
-  [86, -62, 80, -68, 's'],
-  [108, -78, 94, -82, 's'],
-  [119, -90, 106, -90, 's'],
-  [132, -88, 126, -88, '-'],
-  [136, -104, 132, -104, '-'],
-  [126, -124, 124, -124, '-'],
-  [104, -142, 102, -136, 's'],
-];
-export const bodyPts = (k: number, sh: P = pt(0, 0), wob = 0) =>
-  BODY.map(([bx, by, nx, ny, r]) => {
-    const p = pt(lerp(nx, bx, k), lerp(ny, by, k));
-    const w = r === 's' ? wob : 0;
-    return add(p, pt(sh.x + w * 0.6, sh.y - w * Math.max(0, -(by + 100)) / 50));
-  });
-export const REGIONS = BODY.map((b) => b[4]);
+import {clamp, hash, ring, ss} from '../lib';
 
 export type BullState = {
   x: number;          // body shift (the step carries it forward)
   step: number;       // 0..1 near foreleg step
-  load: number;       // shoulder loading after the plant (contraction)
-  plantT: number;     // time since the plant (s), for the muscle's settle
-  breathe: number;    // -1..1
+  load: number;       // shoulder loading after the plant
+  plantT: number;     // time since the plant (s)
+  breathe: number;
   headNod: number;
-  cut?: {r: number};  // hide cutaway on the shoulder
+  anat?: number;      // 0 coat .. 1 translucent hide over red muscle
+  view?: number;      // 0 side .. 1 the camera has moved toward the rear (the far round shows more)
+  cut?: {r: number};
   t: number;
 };
 export const SHOULDER_CUT: P = pt(70, -108);
+const COAT = {base: '#D5DCE6', white: '#F6F7F4', roan: '#8E9BB0', roanDk: '#56627A', shade: '#8F9CB2', deep: '#5E6A82', ink: '#232A3A'};
+const MUS = {base: '#C2303C', lit: '#E8616A', dk: '#7A1622', ink: '#3C0810', fas: '#F3989A'};
 
-const COAT = {white: '#F4F3EE', cool: '#D3D9E3', shade: '#9AA6B8', deep: '#6F7C90', roan: '#7D8BA0', roanDk: '#4E5B72', ink: '#252C3B', muzzle: '#2F3646'};
-
-const leg = (pts: P[], r: number[], fill: string, stroke: string, key: string) => {
-  const n = pts.length;
-  const T = pts.map((_, i) => nrm(sub(pts[Math.min(n - 1, i + 1)], pts[Math.max(0, i - 1)])));
-  const N = T.map((x) => rot(x, Math.PI / 2));
-  const L = pts.map((p, i) => add(p, mul(N[i], r[i]))), R = pts.map((p, i) => add(p, mul(N[i], -r[i])));
-  return <path key={key} d={closed([...L, ...R.reverse()], 0.75)} fill={fill} stroke={stroke} strokeWidth={0.9} strokeLinejoin="round" />;
+// muscle masses: [cx, cy, rx, ry, rotation (deg), highlight dx, dy]
+type Mass = {c: P; rx: number; ry: number; rot: number; hl: P; name: string};
+const M = (x: number, y: number, rx: number, ry: number, r: number, hx: number, hy: number, name: string): Mass => ({c: pt(x, y), rx, ry, rot: r, hl: pt(hx, hy), name});
+const MASSES: Mass[] = [
+  M(-6, -104, 84, 40, -2, 0, -14, 'barrel'),
+  M(-22, -138, 62, 17, -1, -6, -6, 'loin'),
+  M(104, -124, 30, 22, -32, 4, -6, 'neck'),
+  M(66, -110, 31, 37, 8, -4, -12, 'shoulder'),
+  M(84, -82, 18, 18, 0, -2, -6, 'brisket'),
+  M(-88, -132, 30, 18, -8, -4, -6, 'gluteal'),
+  M(-104, -104, 35, 39, 4, -8, -12, 'biceps femoris'),
+  M(-76, -92, 20, 27, 10, -2, -8, 'quadriceps'),
+  M(-130, -92, 15, 35, 8, -3, -10, 'semitendinosus'),
+];
+const ell = (m: Mass, sh: P, k = 1) => {
+  const pts: P[] = [];
+  for (let i = 0; i < 28; i++) {
+    const a = (i / 28) * 2 * Math.PI;
+    const p = rot(pt(Math.cos(a) * m.rx * k, Math.sin(a) * m.ry * k), (m.rot * Math.PI) / 180);
+    pts.push(add(add(m.c, p), sh));
+  }
+  return closed(pts, 1);
 };
+const tube = (pts: P[], r: number[]) => {
+  const n = pts.length;
+  const Tn = pts.map((_, i) => nrm(sub(pts[Math.min(n - 1, i + 1)], pts[Math.max(0, i - 1)])));
+  const N = Tn.map((x) => rot(x, Math.PI / 2));
+  return closed([...pts.map((p, i) => add(p, mul(N[i], r[i]))), ...[...pts].reverse().map((p, i) => add(p, mul(N[n - 1 - i], -r[n - 1 - i])))], 0.75);
+};
+/** a cloven hoof with its dewclaw */
 const Hoof: React.FC<{p: P; ang?: number; dark?: boolean}> = ({p, ang = 0, dark}) => (
   <g transform={`translate(${p.x} ${p.y}) rotate(${ang})`}>
-    <path d="M-6.2 -7 L5.4 -7 L8.4 0 L-7 0 Z" fill={dark ? '#1A1E28' : '#2B303C'} stroke={COAT.ink} strokeWidth={0.8} strokeLinejoin="round" />
-    <path d="M0.8 -7 L1.4 0" stroke="#4A5160" strokeWidth={0.7} />
+    <path d="M-6 -7 L5.6 -7 L8.6 0 L-6.8 0 Z" fill={dark ? '#1A1E28' : '#2E3340'} stroke={COAT.ink} strokeWidth={0.8} strokeLinejoin="round" />
+    <path d="M1.2 -6.6 L1.9 0" stroke="#0E1016" strokeWidth={1} />
+    <ellipse cx={-5.6} cy={-9.4} rx={1.6} ry={1.2} fill="#2E3340" />
   </g>
 );
-
-/** one heavy step: the knee folds forward and up, the hoof swings and plants about 24 cm ahead */
 const foreleg = (base: P, step: number) => {
   const lift = Math.sin(Math.PI * clamp(step));
   const fwd = 24 * ss(step, 0.05, 0.95);
-  const top = pt(base.x + fwd * 0.25, -76);
+  const top = pt(base.x + fwd * 0.25, -80);
   const knee = pt(base.x + 2 + fwd * 0.55 + 9 * lift, -38 - 10 * lift);
   const fet = pt(base.x + 3 + fwd * 0.9 - 2 * lift, -11 - 16 * lift);
   const hoof = pt(base.x + 5 + fwd, -16 * lift);
   return {top, knee, fet, hoof, lift};
 };
 
+// the silhouette (one closed outline) — every bulge the breed is known for is in the outline itself
+const OUT: [number, number][] = [
+  [80, -150], [60, -158], [40, -155], [24, -148], [4, -150], [-20, -156], [-44, -158], [-66, -155], [-84, -158], [-102, -156],
+  [-116, -150], [-134, -142], [-150, -124], [-159, -106], [-155, -94], [-160, -78], [-152, -61], [-136, -50], [-118, -47],
+  [-106, -57], [-92, -68], [-80, -72], [-50, -66], [-16, -62], [16, -62], [40, -64], [56, -57], [84, -61], [102, -77],
+  [114, -92], [124, -100], [133, -108], [129, -126], [108, -142],
+];
+const SHADE_MASSES = MASSES.filter((m) => m.name !== 'barrel');
+export const KX = 0.74; // body length factor: a compact, massive bull
+const kx = (q: [number, number]): [number, number] => [q[0] * KX, q[1]];
+// the muscle map: creases between the masses (polylines), and the panels they bound (painted back to front, clipped
+// to the silhouette). Fascicle direction per panel for the anatomical view.
+type Pl = [number, number][];
+const CR: Record<string, Pl> = {
+  A: [[104, -152], [114, -136], [116, -118], [110, -98]],
+  B: [[50, -162], [36, -140], [32, -118], [38, -96], [54, -58]],
+  C: [[102, -132], [86, -118], [66, -114], [48, -118]],
+  E: [[44, -140], [10, -138], [-30, -140], [-62, -143], [-82, -150]],
+  D: [[-70, -152], [-74, -130], [-84, -110], [-88, -90], [-82, -66]],
+  F: [[-76, -134], [-92, -126], [-108, -127], [-130, -138]],
+  G: [[-96, -128], [-110, -110], [-113, -88], [-106, -62]],
+  H: [[-124, -148], [-142, -126], [-148, -104], [-146, -80], [-132, -54]],
+};
+for (const k of Object.keys(CR)) CR[k] = CR[k].map(kx);
+const rev = (a: Pl) => [...a].reverse();
+const PANELS: {name: string; pts: Pl; fas: number}[] = [
+  {name: 'shoulder', pts: [[50, -175], [104, -175], ...CR.A, [100, -90], [84, -56], [54, -56], ...rev(CR.B)], fas: 75},
+  {name: 'triceps', pts: [...CR.C, [42, -110], [40, -100], [54, -56], [84, -56], [104, -92], [112, -98]], fas: 60},
+  {name: 'neck', pts: [[104, -175], [175, -175], [175, -80], [112, -98], ...rev(CR.A)], fas: 30},
+  {name: 'loin', pts: [[52, -175], ...CR.E, [-80, -175]], fas: 0},
+  {name: 'gluteal', pts: [[-72, -175], [-72, -152], ...CR.F, [-130, -150], [-130, -175]], fas: 10},
+  {name: 'quadriceps', pts: [...CR.D, [-84, -50], [-104, -50], ...rev(CR.G), [-90, -131]], fas: 80},
+  {name: 'round', pts: [...CR.G, [-104, -46], [-126, -46], ...rev(CR.H), [-110, -134]], fas: 85},
+  {name: 'rear', pts: [...CR.H, [-128 * KX, -40], [-165, -40], [-165, -160], [-124 * KX, -152]], fas: 80},
+];
+// panel corner points that are not on a crease are scaled too (crease points already were)
+for (const pn of PANELS) pn.pts = pn.pts.map((q) => (Object.values(CR).some((c) => c.includes(q)) || Math.abs(q[0]) === 165 ? q : kx(q)));
+
 export const Bull: React.FC<{b: BullState}> = ({b}) => {
-  const sh = pt(b.x, 0);
-  const wob = b.load * 2.2 + ring(b.plantT, 0, 7, 0.12) * 1.6 * (b.plantT > 0 ? 1 : 0);
-  const body = bodyPts(1, pt(b.x, b.breathe * 0.6), wob);
-  const d = closed(body, 0.8);
-  const idB = uid('bb'), idC = uid('bc'), idR = uid('br'), idHl = uid('bh'), idBl = uid('bl'), idL = uid('blg');
-  const fl = foreleg(pt(72, 0), b.step);
-  const T = (p: P) => add(p, sh);
-  const cut = b.cut && b.cut.r > 0.05 ? b.cut : undefined;
-  const cc = T(SHOULDER_CUT);
+  const sh = pt(b.x, b.breathe * 0.5);
+  const anat = clamp(b.anat ?? 0);
+  const view = clamp(b.view ?? 0);
   const sl = b.load;
-  const tube = (pts: P[], r: number[]) => {
-    const n = pts.length;
-    const Tn = pts.map((_, i) => nrm(sub(pts[Math.min(n - 1, i + 1)], pts[Math.max(0, i - 1)])));
-    const N = Tn.map((x) => rot(x, Math.PI / 2));
-    return closed([...pts.map((p, i) => add(p, mul(N[i], r[i]))), ...[...pts].reverse().map((p, i) => add(p, mul(N[n - 1 - i], -r[n - 1 - i])))], 0.75);
-  };
-  const nearFore = tube([T(add(fl.top, pt(0, -8))), T(fl.top), T(lerpP(fl.top, fl.knee, 0.5)), T(fl.knee), T(fl.fet)], [17, 17 + sl, 14 + sl, 6, 4.8]);
-  const nearHind = tube([T(pt(-104, -80)), T(pt(-106, -60)), T(pt(-108, -40)), T(pt(-100, -11))], [21, 17, 6.2, 4.8]);
-  const farFore = tube([T(pt(48, -82)), T(pt(48, -58)), T(pt(48, -36)), T(pt(48, -11))], [15, 12, 5.4, 4.4]);
-  const farHind = tube([T(pt(-80, -82)), T(pt(-86, -60)), T(pt(-88, -40)), T(pt(-82, -11))], [19, 15, 5.8, 4.4]);
-  // the head: broad forehead, a straight face to a square dark muzzle, a deep jaw
-  const H0 = pt(b.x + 8, b.breathe * 0.4 + b.headNod + 20);
+  const wob = ring(b.plantT, 0, 7, 0.12) * (b.plantT > 0 ? 1 : 0);
+  const fl = foreleg(pt(56, 0), b.step);
+  const T = (p: P) => add(p, pt(b.x, 0));
+  const ms = SHADE_MASSES.map((m) => (m.name === 'shoulder' ? {...m, rx: m.rx * (1 + 0.05 * sl + 0.025 * wob), ry: m.ry * (1 + 0.03 * sl - 0.02 * wob)} : m));
+  // the shoulder outline swells a little when the leg takes the weight
+  const body = closed(OUT.map(kx).map(([x, y]) => {
+    const k = x > 22 && x < 88 && y < -90 ? (0.9 * sl + 0.6 * wob) * Math.exp(-(((x - 49) / 22) ** 2)) : 0;
+    return add(pt(x, y - k), sh);
+  }), 0.8);
+  const nearFore = tube([T(add(fl.top, pt(-1, -10))), T(fl.top), T(add(fl.top, pt(0.5, 14))), T(add(fl.top, pt(1, 26))), T(fl.knee), T(fl.fet)], [19, 19 + sl, 16 + sl, 11, 6, 4.6]);
+  const nearHind = tube([T(pt(-84, -72)), T(pt(-86, -58)), T(pt(-87, -48)), T(pt(-86, -38)), T(pt(-80, -11))], [21, 17, 12, 6.2, 4.6]);
+  const farFore = tube([T(pt(40, -84)), T(pt(40, -60)), T(pt(40, -48)), T(pt(40, -36)), T(pt(40, -11))], [16, 14, 10, 5.4, 4.2]);
+  const farHind = tube([T(pt(-64, -84)), T(pt(-69, -60)), T(pt(-70, -50)), T(pt(-71, -40)), T(pt(-66, -11))], [19, 15, 10, 5.6, 4.2]);
+  const farRound = ell(M(-110 - 9 * view, -98, 13 + 5 * view, 34, 4, 0, 0, 'far round'), sh);
+  const ids = {coat: uid('bc'), clip: uid('bk'), hl: uid('bh'), sh: uid('bs'), blur: uid('bb'), leg: uid('bl')};
+  const outline = [body, nearFore, nearHind];
+  const H0 = pt(b.x + 4 - 34, b.breathe * 0.4 + b.headNod + 14);
   const hp = (x: number, y: number) => add(pt(x, y), H0);
-  const head = closed([hp(122, -136), hp(136, -140), hp(150, -132), hp(164, -112), hp(176, -94), hp(178, -80), hp(170, -72), hp(154, -72), hp(138, -80), hp(126, -96), hp(122, -116)], 0.8);
-  // blue roan: soft clouds and fine speckles, densest on the neck, shoulder and round
-  const clouds: [number, number, number, number][] = [[86, -124, 26, 22], [44, -104, 20, 28], [-114, -104, 22, 34], [-60, -116, 26, 18], [-6, -132, 22, 12], [108, -104, 14, 18]];
-  const dens = (x: number) => 0.3 + 0.7 * Math.max(Math.exp(-(((x - 84) / 40) ** 2)), Math.exp(-(((x + 112) / 30) ** 2)));
-  const speck: React.ReactNode[] = [];
-  for (let i = 0; i < 560; i++) {
-    const x = -142 + hash(i * 9.7) * 270, y = -158 + hash(i * 2.3) * 100;
-    if (hash(i * 6.1) > dens(x)) continue;
-    speck.push(<ellipse key={i} cx={x + b.x} cy={y} rx={0.7 + hash(i * 4.4) * 1.5} ry={0.5 + hash(i * 3.4) * 0.9} fill={hash(i * 7.2) > 0.6 ? COAT.roanDk : COAT.roan} opacity={0.55} />);
-  }
-  // muscle forms: a soft cel shadow under each bulging mass and a highlight on top of it
-  const forms: [P[], number][] = [
-    [[pt(44, -148), pt(36, -124), pt(40, -98), pt(48, -70)], 1],      // behind the shoulder (triceps)
-    [[pt(92, -136), pt(102, -116), pt(106, -94)], 0.8],               // front of the shoulder
-    [[pt(62, -134), pt(68, -110), pt(64, -86)], 0.8],                 // between the shoulder heads
-    [[pt(22, -142), pt(-18, -145), pt(-62, -145)], 0.7],              // the loin's lower edge
-    [[pt(-72, -152), pt(-80, -122), pt(-86, -92), pt(-88, -72)], 1],  // the hip to the stifle
-    [[pt(-106, -152), pt(-116, -120), pt(-120, -90), pt(-114, -60)], 1.1], // the deep crease of the round
-    [[pt(-92, -150), pt(-100, -120), pt(-102, -90)], 0.7],
-    [[pt(110, -134), pt(116, -112), pt(118, -100)], 0.6],             // neck into the shoulder
+  const head = closed([hp(118, -138), hp(134, -142), hp(148, -134), hp(160, -114), hp(170, -96), hp(172, -82), hp(164, -73), hp(150, -72), hp(136, -78), hp(124, -92), hp(116, -112)], 0.8);
+  // coat: white with big blue-black patches (the classic Belgian Blue pied coat) and blue roan ticking at their edges
+  const patch = (pts: [number, number][], k: string, dark = true) => (
+    <path key={k} d={closed(pts.map(([x, y]) => add(pt(x * KX, y), sh)), 0.9)} fill={dark ? '#3E4860' : COAT.roan} opacity={dark ? 0.92 : 0.6} />
+  );
+  const mottle: React.ReactNode[] = [
+    patch([[96, -150], [120, -142], [132, -118], [124, -100], [108, -100], [96, -118], [88, -138]], 'p1'),
+    patch([[-148, -98], [-138, -90], [-140, -70], [-150, -70]], 'p5', false),
+    patch([[20, -96], [44, -96], [44, -80], [22, -74]], 'p6', false),
   ];
-  const hl: [number, number, number, number][] = [[70, -116, 18, 24], [-24, -152, 38, 6], [-94, -122, 14, 26], [-128, -106, 9, 24], [4, -128, 22, 10], [90, -96, 8, 14], [100, -138, 14, 7]];
+  const tick: React.ReactNode[] = [];
+  for (let i = 0; i < 700; i++) tick.push(<circle key={i} cx={(-150 + hash(i * 9.7) * 290) * KX + sh.x} cy={-160 + hash(i * 2.3) * 110 + sh.y} r={0.35 + hash(i * 4.4) * 0.6} fill={hash(i * 3.7) > 0.5 ? COAT.roanDk : COAT.roan} opacity={0.4} />);
+  const coatOp = 1 - 0.85 * anat;
+  const muscleFill = 'rgba(255,90,110,0.5)';
   return (
     <g>
       <defs>
-        <linearGradient id={idB} x1="0" y1="0" x2="0.12" y2="1">
+        <linearGradient id={ids.coat} x1="0" y1="0" x2="0.1" y2="1">
           <stop offset={0} stopColor={COAT.white} />
-          <stop offset={0.55} stopColor={COAT.cool} />
+          <stop offset={0.45} stopColor={COAT.base} />
           <stop offset={1} stopColor={COAT.shade} />
         </linearGradient>
-        <linearGradient id={idL} x1="0" y1="0" x2="0" y2="1">
-          <stop offset={0} stopColor={COAT.cool} />
+        <linearGradient id={ids.leg} x1="0" y1="0" x2="0" y2="1">
+          <stop offset={0} stopColor={COAT.base} />
           <stop offset={1} stopColor={COAT.shade} />
         </linearGradient>
-        <clipPath id={idC}>
-          <path d={d} />
-          <path d={nearFore} />
-          <path d={nearHind} />
-        </clipPath>
-        <radialGradient id={idHl}>
-          <stop offset={0} stopColor="#FFFFFF" stopOpacity={0.9} />
-          <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
-        </radialGradient>
-        <radialGradient id={idR} cx="0.5" cy="0.5" r="0.5">
-          <stop offset={0} stopColor="#000000" stopOpacity={0.32} />
+        <clipPath id={ids.clip}>{outline.map((d, i) => <path key={i} d={d} />)}</clipPath>
+        <radialGradient id={ids.sh} cx="0.5" cy="0.5" r="0.5">
+          <stop offset={0} stopColor="#000000" stopOpacity={0.34} />
           <stop offset={1} stopColor="#000000" stopOpacity={0} />
         </radialGradient>
-        <filter id={idBl} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation={2.2} />
-        </filter>
+        <filter id={ids.blur} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={4} /></filter>
       </defs>
-      <ellipse cx={-4 + b.x} cy={1} rx={150} ry={9} fill={`url(#${idR})`} />
-      {/* far legs, in shade */}
-      <path d={farFore} fill={COAT.shade} stroke={COAT.ink} strokeWidth={0.9} />
-      <Hoof p={T(pt(50, 0))} dark />
-      <path d={farHind} fill={COAT.shade} stroke={COAT.ink} strokeWidth={0.9} />
-      <Hoof p={T(pt(-80, 0))} dark />
-      {/* tail, set high */}
-      <path d={open([T(pt(-114, -146)), T(pt(-128, -116)), T(pt(-131, -74)), T(pt(-130, -44))])} stroke={COAT.shade} strokeWidth={3} fill="none" strokeLinecap="round" />
-      <path d={`M${-134 + b.x} -46 q4 -8 8 0 q-1 10 -4 12 q-4 -3 -4 -12Z`} fill={COAT.roanDk} />
-      {/* one outline round body and near legs: strokes under, fills over */}
-      <path d={d} fill={COAT.ink} stroke={COAT.ink} strokeWidth={2.2} strokeLinejoin="round" />
-      <path d={nearFore} fill={COAT.ink} stroke={COAT.ink} strokeWidth={2.2} />
-      <path d={nearHind} fill={COAT.ink} stroke={COAT.ink} strokeWidth={2.2} />
-      <path d={nearFore} fill={`url(#${idL})`} />
-      <path d={nearHind} fill={`url(#${idL})`} />
-      <path d={d} fill={`url(#${idB})`} />
-      <g clipPath={`url(#${idC})`}>
-        {clouds.map(([x, y, rx, ry], i) => <ellipse key={i} cx={x + b.x} cy={y} rx={rx} ry={ry} fill={COAT.roan} opacity={0.3} />)}
-        {speck}
-        <rect x={-150 + b.x} y={-84} width={300} height={34} fill={COAT.shade} opacity={0.4} />
-        <g filter={`url(#${idBl})`}>
-          {forms.map(([g, k], i) => <path key={i} d={open(g.map((p) => add(p, pt(b.x + (i < 3 ? 0.8 * sl : 0), 0))))} stroke={COAT.deep} strokeWidth={(6 + (i < 3 ? 3 * sl : 0)) * k} fill="none" opacity={0.55} strokeLinecap="round" />)}
-          {hl.map(([x, y, rx, ry], i) => (
-            <ellipse key={i} cx={x + b.x + (i === 0 ? 1.5 * sl : 0)} cy={y - (i === 0 ? 1.5 * sl : 0)} rx={rx * (i === 0 ? 1 - 0.1 * sl : 1)} ry={ry * (i === 0 ? 1 + 0.08 * sl : 1)} fill="#FFFFFF" opacity={0.42 + (i === 0 ? 0.25 * sl : 0)} />
-          ))}
-        </g>
-        {forms.map(([g], i) => <path key={i} d={open(g.map((p) => add(p, pt(b.x + (i < 3 ? 0.8 * sl : 0), 0))))} stroke={COAT.deep} strokeWidth={1.1} fill="none" opacity={0.5} strokeLinecap="round" />)}
-        {/* the spine's groove between the two loin bulges, just under the top line */}
-        <path d={open([pt(34 + b.x, -150), pt(-14 + b.x, -152), pt(-64 + b.x, -152), pt(-102 + b.x, -150)])} stroke={COAT.shade} strokeWidth={2.2} fill="none" opacity={0.5} />
-        {/* forearm and gaskin muscle edges */}
-        <path d={open([T(add(fl.top, pt(-4, 2))), T(lerpP(fl.top, fl.knee, 0.6))])} stroke={COAT.deep} strokeWidth={1.6} fill="none" opacity={0.55} />
-        <path d={open([T(pt(-98, -78)), T(pt(-104, -56)), T(pt(-108, -44))])} stroke={COAT.deep} strokeWidth={1.6} fill="none" opacity={0.55} />
+      <ellipse cx={-6 + b.x} cy={1} rx={160} ry={10} fill={`url(#${ids.sh})`} />
+      <g opacity={coatOp + 0.4 * anat}>
+        <path d={farFore} fill={COAT.shade} stroke={COAT.ink} strokeWidth={0.9} />
+        <path d={farHind} fill={COAT.shade} stroke={COAT.ink} strokeWidth={0.9} />
+        <path d={farRound} fill={mix(COAT.shade, '#4A566E', 0.35)} stroke={COAT.ink} strokeWidth={1} />
       </g>
-      <Hoof p={T(pt(-100, 0))} />
+      <Hoof p={T(pt(42, 0))} dark />
+      <Hoof p={T(pt(-64, 0))} dark />
+      <path d={open([T(pt(-90, -152)), T(pt(-106 - 4 * view, -122)), T(pt(-110 - 5 * view, -82)), T(pt(-109 - 5 * view, -46))])} stroke={COAT.shade} strokeWidth={3} fill="none" strokeLinecap="round" opacity={coatOp} />
+      <path d={`M${-113 - 5 * view + b.x} -48 q4 -8 8 0 q-1 10 -4 12 q-4 -3 -4 -12Z`} fill={COAT.roanDk} opacity={coatOp} />
+      {/* one outline: strokes under, fills over */}
+      {outline.map((d, i) => <path key={`o${i}`} d={d} fill={COAT.ink} stroke={anat > 0.5 ? '#7FCBFF' : COAT.ink} strokeWidth={2.4} strokeLinejoin="round" opacity={anat > 0.5 ? 0.6 : 1} />)}
+      <g opacity={coatOp}>
+        <path d={nearFore} fill={`url(#${ids.leg})`} />
+        <path d={nearHind} fill={`url(#${ids.leg})`} />
+        <path d={body} fill={`url(#${ids.coat})`} />
+      </g>
+      {anat > 0.01 && <g opacity={anat}>{outline.map((d, i) => <path key={`a${i}`} d={d} fill="rgba(10,24,44,0.92)" />)}</g>}
+      <g clipPath={`url(#${ids.clip})`}>
+        <g opacity={coatOp}>
+          {mottle}
+          {tick}
+          <rect x={-130 + b.x} y={-84} width={260} height={40} fill={COAT.shade} opacity={0.32} />
+        </g>
+        {PANELS.map((pn, i) => {
+          const d = closed(pn.pts.map(([x, y]) => add(pt(x, y - (pn.name === 'shoulder' || pn.name === 'triceps' ? 1.2 * sl + 0.8 * wob : 0)), sh)), 0.55);
+          const xs = pn.pts.map((q) => q[0]), ys = pn.pts.map((q) => q[1]);
+          const x0 = Math.max(-118, Math.min(...xs)), x1 = Math.min(99, Math.max(...xs)), y0 = Math.max(-158, Math.min(...ys)), y1 = Math.min(-46, Math.max(...ys));
+          const cx = (x0 + x1) / 2 + sh.x, cy = (y0 + y1) / 2 + sh.y;
+          const fa = (pn.fas * Math.PI) / 180;
+          const fasc = [-0.5, -0.25, 0, 0.25, 0.5].map((k) => {
+            const n = rot(pt(0, 1), fa), dv = rot(pt(1, 0), fa);
+            const c0 = add(pt(cx, cy), mul(n, k * (y1 - y0) * 0.8));
+            return open([add(c0, mul(dv, -70)), add(c0, mul(dv, 70))]);
+          });
+          const gid = `${ids.coat}p${i}`;
+          return (
+            <g key={i}>
+              <defs>
+                <radialGradient id={gid} gradientUnits="userSpaceOnUse" cx={x0 + 0.4 * (x1 - x0) + sh.x} cy={y0 + 0.34 * (y1 - y0) + sh.y} r={0.68 * Math.max(x1 - x0, y1 - y0)}>
+                  <stop offset={0} stopColor="#FBFCFD" />
+                  <stop offset={0.45} stopColor="#D6DDE8" />
+                  <stop offset={0.85} stopColor="#8B98AE" />
+                  <stop offset={1} stopColor="#6E7B92" />
+                </radialGradient>
+                <clipPath id={`${gid}c`}><path d={d} /></clipPath>
+              </defs>
+              <path d={d} fill={`url(#${gid})`} opacity={coatOp} />
+              <g clipPath={`url(#${gid}c)`} opacity={coatOp}>
+                <path d={d} fill="none" stroke="#5E6B84" strokeWidth={16} opacity={0.55} filter={`url(#${ids.blur})`} />
+                <ellipse cx={x0 + 0.42 * (x1 - x0) + sh.x} cy={y0 + 0.36 * (y1 - y0) + sh.y} rx={0.28 * (x1 - x0)} ry={0.22 * (y1 - y0)} fill="#FFFFFF" opacity={0.55} filter={`url(#${ids.blur})`} />
+              </g>
+              {anat > 0.01 && (
+                <g opacity={anat}>
+                  <path d={d} fill={muscleFill} stroke="rgba(255,200,210,0.9)" strokeWidth={0.9} />
+                  <g clipPath={`url(#${gid}c)`}>{fasc.map((f, k) => <path key={k} d={f} stroke="rgba(255,210,220,0.7)" strokeWidth={1.1} fill="none" />)}</g>
+                </g>
+              )}
+            </g>
+          );
+        })}
+        <g opacity={coatOp}>
+          <ellipse cx={-6 + sh.x} cy={-70 + sh.y} rx={92} ry={26} fill="#5E6B84" opacity={0.35} filter={`url(#${ids.blur})`} />
+          <ellipse cx={-8 + sh.x} cy={-112 + sh.y} rx={40} ry={18} fill="#FFFFFF" opacity={0.3} filter={`url(#${ids.blur})`} />
+          {[-28, -14, 0, 14].map((x, k) => <path key={k} d={open([pt(x + sh.x, -124 + sh.y), pt(x - 3 + sh.x, -102 + sh.y), pt(x - 2 + sh.x, -82 + sh.y)])} stroke="#6E7B92" strokeWidth={3} fill="none" opacity={0.18} filter={`url(#${ids.blur})`} />)}
+          {mottle}
+          {tick}
+        </g>
+        {Object.values(CR).map((pl, i) => {
+          const pts = pl.map(([x, y]) => add(pt(x, y), sh));
+          return (
+            <g key={`c${i}`}>
+              <path d={open(pts)} stroke="#3A4560" strokeWidth={7} fill="none" opacity={0.45 * coatOp} strokeLinecap="round" filter={`url(#${ids.blur})`} />
+              <path d={open(pts)} stroke="#FFFFFF" strokeWidth={1.6} fill="none" opacity={0.5 * coatOp} transform="translate(1.8 1.5)" strokeLinecap="round" />
+              <path d={open(pts)} stroke={anat > 0.5 ? 'rgba(255,220,228,0.9)' : '#2A3246'} strokeWidth={1.3} fill="none" opacity={anat > 0.5 ? 0.85 : 0.6} strokeLinecap="round" />
+            </g>
+          );
+        })}
+        <path d={open([pt(27 + b.x, -152), pt(-12 + b.x, -154), pt(-49 + b.x, -153), pt(-77 + b.x, -150)])} stroke={COAT.shade} strokeWidth={2.2} fill="none" opacity={0.5 * coatOp} />
+        <path d={open([T(add(fl.top, pt(-5, 0))), T(add(fl.top, pt(-2, 16)))])} stroke={COAT.deep} strokeWidth={1.7} fill="none" opacity={0.55 * coatOp} />
+        <path d={open([T(pt(-78, -72)), T(pt(-82, -56)), T(pt(-84, -44))])} stroke={COAT.deep} strokeWidth={1.7} fill="none" opacity={0.55 * coatOp} />
+      </g>
+      <Hoof p={T(pt(-80, 0))} />
       <Hoof p={T(fl.hoof)} ang={-28 * fl.lift} />
-      {/* head, in front of the chest */}
-      <g transform={`rotate(${10 + b.headNod * 0.8} ${130 + b.x} -100)`}>
+      <g transform={`rotate(${b.headNod * 0.8} ${94 + b.x} -100) translate(${120 + H0.x} ${-130 + H0.y}) scale(1.22) translate(${-(120 + H0.x)} ${-(-130 + H0.y)})`} opacity={1 - 0.75 * anat}>
         <path d={head} fill={COAT.white} stroke={COAT.ink} strokeWidth={1.1} strokeLinejoin="round" />
-        <path d={closed([hp(128, -98), hp(142, -84), hp(156, -76), hp(140, -76), hp(128, -88)], 0.8)} fill={COAT.cool} opacity={0.85} />
-        <path d={closed([hp(160, -112), hp(174, -98), hp(179, -84), hp(172, -72), hp(158, -74), hp(156, -94)], 0.8)} fill={COAT.muzzle} />
-        <path d={`M${172 + H0.x} ${-92 + H0.y} q4 1 4 5 q-3 2 -6 0 Z`} fill="#0B0D12" />
-        <path d={open([hp(160, -76), hp(171, -77)])} stroke="#151820" strokeWidth={1} />
-        {Array.from({length: 50}, (_, i) => <circle key={i} cx={126 + hash(i * 3.3) * 34 + H0.x} cy={-136 + hash(i * 7.1) * 44 + H0.y} r={0.6 + hash(i) * 0.9} fill={COAT.roan} opacity={0.55} />)}
-        <ellipse cx={142 + H0.x} cy={-121 + H0.y} rx={5.4} ry={4.2} fill={COAT.roanDk} opacity={0.85} />
-        <ellipse cx={142.6 + H0.x} cy={-121 + H0.y} rx={2.5} ry={2.1} fill="#120E0C" />
-        <circle cx={141.8 + H0.x} cy={-121.8 + H0.y} r={0.7} fill="#FFFFFF" />
-        <path d={open([hp(137, -125.5), hp(142, -127), hp(147, -125)])} stroke={COAT.ink} strokeWidth={0.9} fill="none" />
-        {/* ear out to the side, under a short horn */}
-        <path d={closed([hp(132, -132), hp(116, -142), hp(108, -142), hp(112, -134), hp(126, -126)], 0.8)} fill={COAT.cool} stroke={COAT.ink} strokeWidth={0.9} />
-        <path d={closed([hp(128, -131), hp(116, -139), hp(112, -138), hp(124, -128)], 0.8)} fill={COAT.roanDk} opacity={0.7} />
-        <path d={`M${128 + H0.x} ${-138 + H0.y} q3 -8 10 -9 q-2 4 -3 9 Z`} fill="#E8DCC0" stroke={COAT.ink} strokeWidth={0.7} />
+        <path d={closed([hp(124, -100), hp(138, -84), hp(152, -76), hp(138, -77), hp(124, -88)], 0.8)} fill={COAT.base} opacity={0.9} />
+        {Array.from({length: 60}, (_, i) => <circle key={i} cx={120 + hash(i * 3.3) * 36 + H0.x} cy={-140 + hash(i * 7.1) * 44 + H0.y} r={0.4 + hash(i) * 0.7} fill={hash(i * 2.2) > 0.5 ? COAT.roanDk : COAT.roan} opacity={0.4} />)}
+        <path d={closed([hp(156, -110), hp(169, -98), hp(174, -84), hp(167, -73), hp(154, -74), hp(152, -92)], 0.8)} fill="#C8A6A2" stroke={COAT.ink} strokeWidth={0.8} />
+        <path d={`M${168 + H0.x} ${-93 + H0.y} q4 1 4 5 q-3 2 -6 0 Z`} fill="#3A2224" />
+        <path d={open([hp(155, -76), hp(167, -77)])} stroke="#6A4A4A" strokeWidth={1} />
+        <ellipse cx={138 + H0.x} cy={-122 + H0.y} rx={5.6} ry={4.4} fill={COAT.roanDk} opacity={0.9} />
+        <ellipse cx={138.6 + H0.x} cy={-122 + H0.y} rx={2.6} ry={2.2} fill="#140F0D" />
+        <circle cx={137.8 + H0.x} cy={-122.8 + H0.y} r={0.75} fill="#FFFFFF" />
+        <path d={open([hp(133, -126.5), hp(138, -128.2), hp(143.5, -126)])} stroke={COAT.ink} strokeWidth={0.9} fill="none" />
+        <path d={closed([hp(126, -132), hp(106, -144), hp(96, -142), hp(102, -134), hp(120, -126)], 0.8)} fill={COAT.base} stroke={COAT.ink} strokeWidth={0.9} />
+        <path d={closed([hp(122, -131), hp(106, -140), hp(101, -139), hp(116, -128)], 0.8)} fill="#E6C4C0" opacity={0.9} />
+        <path d={`M${121 + H0.x} ${-138 + H0.y} q2 -12 14 -16 q2 0 2 2 q-8 4 -10 15 Z`} fill="#EDE2C8" stroke={COAT.ink} strokeWidth={0.7} />
+        <path d={`M${135 + H0.x} ${-154 + H0.y} q2 0 2 2 l-3 1 Z`} fill="#4A4032" />
+        <path d={closed([hp(122, -140), hp(130, -146), hp(140, -142), hp(136, -136), hp(128, -134)], 0.8)} fill="#3E4860" opacity={0.85} />
+        <path d={open([hp(118, -142), hp(126, -146), hp(134, -144)])} stroke={COAT.roanDk} strokeWidth={2.4} fill="none" opacity={0.55} strokeLinecap="round" />
       </g>
-      {/* hide cutaway on the shoulder: hide, a thin fat layer, then muscle */}
-      {cut && (
-        <g clipPath={`url(#${idC})`}>
-          <circle cx={cc.x} cy={cc.y} r={cut.r + 1.6} fill="#E7E2D8" stroke={COAT.ink} strokeWidth={0.5} />
-          <circle cx={cc.x} cy={cc.y} r={cut.r + 0.9} fill="#F0D79A" />
-          <circle cx={cc.x} cy={cc.y} r={cut.r + 0.3} fill="#F3ECEE" />
-        </g>
-      )}
-    </g>
-  );
-};
-
-/** the comparison overlay: an ordinary bovine silhouette in registration, and the extra muscle between the outlines */
-export const Compare: React.FC<{b: BullState; draw: number; glow: Record<string, number>; fade: number}> = ({b, draw, glow, fade}) => {
-  if (fade <= 0.001) return null;
-  const bb = closed(bodyPts(1, pt(b.x, b.breathe * 0.6)), 0.8);
-  const nd = closed(bodyPts(0, pt(b.x, b.breathe * 0.6)), 0.8);
-  const idG = uid('cg');
-  // shoulder (front), back (middle, above the belly), hindquarters (rear): clip bands over the even-odd difference
-  const bands: Record<string, [number, number, number, number]> = {s: [22, -170, 140, 130], b: [-66, -170, 88, 40], h: [-170, -170, 104, 140]};
-  return (
-    <g opacity={fade}>
-      <defs>
-        <filter id={idG} x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation={1.6} />
-        </filter>
-        {Object.entries(bands).map(([r, [x, y, w_, h]]) => (
-          <clipPath key={r} id={`${idG}${r}`}>
-            <rect x={x + b.x} y={y} width={w_} height={h} />
-          </clipPath>
-        ))}
-      </defs>
-      {Object.keys(bands).map((r) => (
-        <g key={r} clipPath={`url(#${idG}${r})`} opacity={glow[r] ?? 0}>
-          <path d={`${bb} ${nd}`} fillRule="evenodd" fill="#FFB43C" opacity={0.62} />
-          <path d={bb} fill="none" stroke="#FFE7A8" strokeWidth={1.8} />
-        </g>
-      ))}
-      <path d={nd} fill="none" stroke="#FFFFFF" strokeWidth={3.4} opacity={0.4} filter={`url(#${idG})`} strokeDasharray={`${draw * 1000} 1000`} />
-      <path d={nd} fill="none" stroke="#FFFFFF" strokeWidth={1.4} strokeDasharray={`${draw * 1000} 1000`} strokeLinecap="round" />
     </g>
   );
 };
@@ -286,6 +295,7 @@ export const PastureSky: React.FC = () => {
       {[[-900, -260, 700, 150, '#7FA38E'], [-100, -230, 900, 130, '#6F967E'], [700, -250, 800, 160, '#7AA089']].map(([x, y, rx, ry, c], i) => (
         <ellipse key={i} cx={x as number} cy={(y as number) + 200} rx={rx as number} ry={ry as number} fill={c as string} />
       ))}
+      <rect x={-2000} y={-70} width={4000} height={2000} fill="#557D5F" />
       {Array.from({length: 9}, (_, i) => {
         const x = -900 + i * 230 + hash(i) * 80;
         return <ellipse key={i} cx={x} cy={-90 - hash(i * 3) * 30} rx={40 + hash(i * 7) * 30} ry={32 + hash(i * 2) * 20} fill="#557D5F" opacity={0.9} />;

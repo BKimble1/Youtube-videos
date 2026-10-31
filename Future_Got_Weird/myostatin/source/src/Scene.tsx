@@ -9,10 +9,10 @@ import {clamp, ss} from './lib';
 import {Arm, Bench, Body, Dumbbell} from './art/person';
 import {GymFloor, GymWall} from './art/gym';
 import {CollagenSheet, MicroWorld} from './art/micro';
-import {Bull, Compare, Dust, Fence, Grass, PastureSky} from './art/bull';
+import {Bull, Dust, Fence, Grass, PastureSky} from './art/bull';
 import {BenchTop, Dish, LabBack, Researcher, SAMPLE, SAMPLE_RX, SAMPLE_RY} from './art/lab';
 import {Cam} from './art/micro';
-import {EV, K_ARM, K_BULL, K_LAB, T, WCam, armAt, bullAt, bullShoulder, camAt, compareAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro} from './story';
+import {EV, K_ARM, K_LAB, T, WCam, armAt, bullAt, camAt, dumbbellAt, hookWindow, inHook, labAt, microAt, personAt, toMicro} from './story';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -74,7 +74,7 @@ const ArmWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   const hook = inHook(t);
   const Wc = hookWindow();
   const db = dumbbellAt(t, a);
-  const dim = ss(t, T.weird - 0.15, T.weird + 0.2) * (1 - ss(t, T.bigger2 + 0.4, T.bigger2 + 1.2)) * 0.6;
+  const dim = ss(t, T.weird - 0.15, T.weird + 0.2) * (1 - ss(t, T.bigger2 + 0.4, T.bigger2 + 1.2)) * 0.6 + 0.55 * a.xray * (hook ? 1 : 0);
   const inCut = hook && a.cut ? nestedMicro(t, c, Wc, K_ARM) : undefined;
   return (
     <>
@@ -98,11 +98,8 @@ const ArmWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
   );
 };
 const BullWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
-  const b = bullAt(t);
-  const cmp = compareAt(t);
-  const O = bullShoulder(t);
-  const r = b.cut?.r ?? 0;
-  const dimC = cmp.fade * 0.35;
+  const b = {...bullAt(t), view: clamp((4 - c.x) / 54)};
+  const an = b.anat ?? 0;
   return (
     <>
       <Layer c={c} delta={2600} min={3}>
@@ -114,21 +111,9 @@ const BullWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
       <Layer c={c} delta={0} max={20}>
         <Grass />
         <Bull b={b} />
-        {r > 0.05 && (
-          <g>
-            <defs>
-              <clipPath id={`bcut${Math.round(t * 30)}`}>
-                <circle cx={O.x} cy={O.y} r={r} />
-              </clipPath>
-            </defs>
-            <g clipPath={`url(#bcut${Math.round(t * 30)})`}>{nestedMicro(t, c, O, K_BULL)}</g>
-            <circle cx={O.x - 0.3} cy={O.y - 0.5} r={r + 0.2} fill="none" stroke="rgba(30,0,6,0.5)" strokeWidth={0.9} />
-          </g>
-        )}
-        {dimC > 0 && <rect x={-2000} y={-2000} width={4000} height={4000} fill="#0A1426" opacity={dimC} />}
-        <Compare b={b} draw={cmp.draw} glow={cmp.glow} fade={cmp.fade} />
-        <Dust p={pt(80 + b.x, 0)} a={(t - EV.plant) / 0.6} />
+        <Dust p={pt(64 + b.x, 0)} a={(t - EV.plant) / 0.6} />
       </Layer>
+      {an > 0.01 && <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 50%, rgba(6,20,40,0.15) 30%, rgba(4,12,28,0.75) 100%)', opacity: an}} />}
     </>
   );
 };
@@ -160,10 +145,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     if (inHook(t) && a.cut && covers(c, Wc, a.cut.r)) body = <MicroOnly t={t} c={toMicro(c, Wc, K_ARM)} />;
     else body = <ArmWorld t={t} c={c} />;
   } else if (wc.world === 'bull') {
-    const b = bullAt(t);
-    const O = bullShoulder(t);
-    if (b.cut && covers(c, O, b.cut.r)) body = <MicroOnly t={t} c={toMicro(c, O, K_BULL)} />;
-    else body = <BullWorld t={t} c={c} />;
+    body = <BullWorld t={t} c={c} />;
   } else {
     if (covers(c, SAMPLE, SAMPLE_RX, SAMPLE_RY)) body = <MicroOnly t={t} c={toMicro(c, SAMPLE, K_LAB)} />;
     else body = <LabWorld t={t} c={c} />;

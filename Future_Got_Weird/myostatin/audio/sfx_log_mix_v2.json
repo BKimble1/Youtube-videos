@@ -1,0 +1,217 @@
+[
+ {
+  "t": 0.0,
+  "sfx": "organic muscle swelling (follows the mass)",
+  "gain_db": -14
+ },
+ {
+  "t": 0.0,
+  "sfx": "wet tissue stretch",
+  "gain_db": -28
+ },
+ {
+  "t": 0.0,
+  "sfx": "surge (low squeeze)",
+  "gain_db": -18
+ },
+ {
+  "t": 0.02,
+  "sfx": "surge creak",
+  "gain_db": -25
+ },
+ {
+  "t": 0.05,
+  "sfx": "the sleeve tightens (fabric strain)",
+  "gain_db": -27
+ },
+ {
+  "t": 1.25,
+  "sfx": "stitches pop",
+  "gain_db": -21
+ },
+ {
+  "t": 3.22,
+  "sfx": "through the biceps (wet slice)",
+  "gain_db": -23
+ },
+ {
+  "t": 3.3,
+  "sfx": "into the muscle (microscopic shimmer)",
+  "gain_db": -29
+ },
+ {
+  "t": 3.4,
+  "sfx": "into the muscle (low)",
+  "gain_db": -24
+ },
+ {
+  "t": 0.0,
+  "sfx": "myofibrils zipping in (follows the growth)",
+  "gain_db": -21
+ },
+ {
+  "t": 4.23,
+  "sfx": "myofibril completes",
+  "gain_db": -27
+ },
+ {
+  "t": 4.96,
+  "sfx": "myostatin docks in its receptor",
+  "gain_db": -19
+ },
+ {
+  "t": 5.01,
+  "sfx": "signal runs to the nucleus (electrical blip)",
+  "gain_db": -27
+ },
+ {
+  "t": 6.12,
+  "sfx": "the brake: assembly powers down",
+  "gain_db": -19
+ },
+ {
+  "t": 6.52,
+  "sfx": "back out to the biceps (rising shimmer)",
+  "gain_db": -29
+ },
+ {
+  "t": 7.08,
+  "sfx": "the cutaway closes",
+  "gain_db": -27
+ },
+ {
+  "t": 7.42,
+  "sfx": "translucent view (glassy tone)",
+  "gain_db": -30
+ },
+ {
+  "t": 7.8,
+  "sfx": "the bull (low presence)",
+  "gain_db": -20
+ },
+ {
+  "t": 7.9,
+  "sfx": "pull-out to the pasture",
+  "gain_db": -31
+ },
+ {
+  "t": 9.15,
+  "sfx": "the bull snorts",
+  "gain_db": -26
+ },
+ {
+  "t": 9.6,
+  "sfx": "grass under the camera glide",
+  "gain_db": -34
+ },
+ {
+  "t": 11.5,
+  "sfx": "the hoof lifts",
+  "gain_db": -30
+ },
+ {
+  "t": 11.85,
+  "sfx": "deep bovine footstep",
+  "gain_db": -12
+ },
+ {
+  "t": 11.88,
+  "sfx": "shoulder muscles load",
+  "gain_db": -24
+ },
+ {
+  "t": 13.46,
+  "sfx": "pipette plunger click",
+  "gain_db": -20
+ },
+ {
+  "t": 13.77,
+  "sfx": "the drop lands",
+  "gain_db": -21
+ },
+ {
+  "t": 13.77,
+  "sfx": "into the sample",
+  "gain_db": -30
+ },
+ {
+  "t": 14.34,
+  "sfx": "antibody clamps a myostatin",
+  "gain_db": -21
+ },
+ {
+  "t": 14.62,
+  "sfx": "assembly powers back up",
+  "gain_db": -23
+ },
+ {
+  "t": 14.925,
+  "sfx": "speculative view (glassy tone)",
+  "gain_db": -29
+ },
+ {
+  "t": 15.025,
+  "sfx": "fibres thickening",
+  "gain_db": -27
+ },
+ {
+  "t": 16.44,
+  "sfx": "eerie cue before the twist",
+  "gain_db": -18
+ },
+ {
+  "t": 16.9,
+  "sfx": "the grip tightens on the handle",
+  "gain_db": -27
+ },
+ {
+  "t": 17.5,
+  "sfx": "dumbbell tension",
+  "gain_db": -22
+ },
+ {
+  "t": 17.5,
+  "sfx": "the biceps strains",
+  "gain_db": -24
+ },
+ {
+  "t": 17.7,
+  "sfx": "the weight trembles, barely off the floor",
+  "gain_db": -29
+ },
+ {
+  "t": 18.3,
+  "sfx": "the elbow cutaway opens",
+  "gain_db": -26
+ },
+ {
+  "t": 18.6,
+  "sfx": "contraction pulse",
+  "gain_db": -22
+ },
+ {
+  "t": 22.5,
+  "sfx": "the arm gives out",
+  "gain_db": -24
+ },
+ {
+  "t": 23.02,
+  "sfx": "the dumbbell settles back on the floor",
+  "gain_db": -15
+ },
+ {
+  "t": 23.27,
+  "sfx": "the arm comes up (cloth)",
+  "gain_db": -27
+ },
+ {
+  "t": 23.85,
+  "sfx": "the flex",
+  "gain_db": -24
+ },
+ {
+  "t": 23.767,
+  "sfx": "swell into the loop (the opening swell)",
+  "gain_db": -16
+ }
+]

@@ -169,80 +169,156 @@ def rustle(dur=0.5, lo=1500, hi=7000):
 
 sfx = np.zeros(N)
 E = EV.get
-# ---- hook: swelling that follows the mass, the sleeve strains, stitches pop, the fabric tears, a sub hit
-mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
-sw = swell(1.25, 44, 1.2)
-place(sfx, sw * (0.45 + 0.55 * np.clip(mrate[:len(sw)] / (mrate[:len(sw)].max() + 1e-9), 0, 1)), 0.0, 'organic muscle swelling (follows the mass)', -15)
-place(sfx, squelch(1.0, 160, 900, 22), 0.0, 'wet tissue stretch', -27)
-place(sfx, fabric_strain(0.55), E('tear0') - 0.5, 'fabric straining', -25)
-for i, dt_ in enumerate([0.0, 0.05, 0.11, 0.16, 0.24, 0.3]):
-    place(sfx, tick(0.02, 2600 + 700 * (i % 3)), E('tear0') + dt_, 'seam stitches popping' if i == 0 else None, -17 - (i % 2) * 3)
-place(sfx, rip(0.42, 1.0), E('tear0') + 0.02, 'fabric tears along the seam', -15)
-place(sfx, rip(0.32, 1.3), E('tear1') - 0.02, 'the split runs further', -16)
-place(sfx, thump(0.6, 66, 32), E('tear1') - 0.01, 'subtle bass impact', -14)
-place(sfx, creak(0.35, 130, 40), E('flex') - 0.05, 'the flex (muscle creak)', -25)
-place(sfx, squelch(0.28, 300, 2200, 40), E('cut0'), 'the cutaway opens (wet slice)', -23)
-place(sfx, shimmer(0.75, 5200, 1500), E('dive0'), 'into the muscle (microscopic shimmer)', -29)
-place(sfx, swell(0.7, 38, -0.4), E('dive0') + 0.1, 'into the muscle (low)', -24)
-# ---- micro: cellular pulse bed in every micro view, assembly crackle, docking, signals, the brake
-micro = np.array([1.0 if w == 'micro' else 0.0 for w in WORLD])
-mic = lp(sig100(micro), 6)
-pulse = np.zeros(N)
-for k in range(int(DUR * 1.3)):
-    place(pulse, thump(0.35, 62, 40), k / 1.3 + 0.05)
-qa = sig100(Q)
-dq = np.clip(np.gradient(qa) * SR, 0, None)
-zip_ = crackle(DUR, 80, 1800, 7000) * np.clip(dq / 4.0, 0, 1) * mic
-place(sfx, zip_, 0.0, 'myofibrils zipping in (crackle follows the growth)', -22)
-# row completions: a soft click each time a new myofibril finishes
-rows = np.floor(Q)
-for i in range(1, len(rows)):
-    if rows[i] > rows[i - 1] and micro[i] > 0.5:
-        place(sfx, lock(0.08), i / 100, 'myofibril completes' if not any(l['sfx'] == 'myofibril completes' for l in LOG) else None, -27)
-docks = [T['myoEnd'] - 0.02, T['myoEnd'] + 0.22, T['acts'] + 0.05, T['brake'] - 0.12]
-for i, td in enumerate(docks):
-    place(sfx, lock(), td, 'myostatin docks in its receptor' if i == 0 else None, -19)
+V2 = 'out0' in EV
+if V2:
+    # ---- hook: the swelling follows the mass; each surge lands with a low squeeze; the sleeve tightens and stitches pop
+    mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
+    hookN = int(3.7 * SR)
+    sw = swell(3.7, 42, 1.4)
+    place(sfx, sw * (0.35 + 0.65 * np.clip(mrate[:hookN] / (np.percentile(mrate[:hookN], 99) + 1e-9), 0, 1)), 0.0, 'organic muscle swelling (follows the mass)', -14)
+    place(sfx, squelch(3.4, 160, 900, 18), 0.0, 'wet tissue stretch', -28)
+    for i, ts in enumerate([0.0, T['protein'] - 0.05, T['way'] - 0.06, T['bigger']]):
+        place(sfx, thump(0.45, 64, 34), ts, 'surge (low squeeze)' if i == 0 else None, -17 - (1 if i == 0 else 0))
+        place(sfx, creak(0.4, 120 + 15 * i, 40), ts + 0.02, 'surge creak' if i == 0 else None, -25)
+    st = fabric_strain(3.3)
+    place(sfx, st, 0.05, 'the sleeve tightens (fabric strain)', -27)
+    for k0 in [T['protein'], T['way']]:
+        for i, dt_ in enumerate([0.0, 0.06, 0.13, 0.2, 0.3]):
+            place(sfx, tick(0.02, 2600 + 700 * (i % 3)), k0 + 0.05 + dt_, 'stitches pop' if k0 == T['protein'] and i == 0 else None, -21 - (i % 2) * 3)
+    place(sfx, squelch(0.28, 300, 2200, 40), E('cut0'), 'through the biceps (wet slice)', -23)
+    place(sfx, shimmer(0.75, 5200, 1500), E('dive0'), 'into the muscle (microscopic shimmer)', -29)
+    place(sfx, swell(0.7, 38, -0.4), E('dive0') + 0.1, 'into the muscle (low)', -24)
+    # ---- micro: pulse bed, assembly crackle, docking, signals, the brake; then back out
+    micro = np.array([1.0 if w == 'micro' else 0.0 for w in WORLD])
+    mic = lp(sig100(micro), 6)
+    pulse = np.zeros(N)
+    for k in range(int(DUR * 1.3)):
+        place(pulse, thump(0.35, 62, 40), k / 1.3 + 0.05)
+    dq = np.clip(np.gradient(sig100(Q)) * SR, 0, None)
+    place(sfx, crackle(DUR, 80, 1800, 7000) * np.clip(dq / 4.0, 0, 1) * mic, 0.0, 'myofibrils zipping in (follows the growth)', -21)
+    rows = np.floor(Q)
+    first = True
+    for i in range(1, len(rows)):
+        if rows[i] > rows[i - 1] and micro[i] > 0.5:
+            place(sfx, lock(0.08), i / 100, 'myofibril completes' if first else None, -27); first = False
+    for i, td in enumerate([T['myostatin'] + 0.42, T['myostatin'] + 0.62, T['acts'] - 0.05, T['brake'] - 0.12]):
+        place(sfx, lock(), td, 'myostatin docks in its receptor' if i == 0 else None, -19)
+        for k in range(3):
+            place(sfx, blip(2600 - 300 * k, 800, 0.09), td + 0.05 + 0.09 * k, 'signal runs to the nucleus (electrical blip)' if i == 0 and k == 0 else None, -27)
+    place(sfx, power(0.6, 360, 70), T['brake'] - 0.02, 'the brake: assembly powers down', -19)
+    place(sfx, shimmer(0.85, 1500, 5200), E('out0'), 'back out to the biceps (rising shimmer)', -29)
+    place(sfx, squelch(0.3, 260, 1600, 30), E('out1') - 0.3, 'the cutaway closes', -27)
+    place(sfx, chime(659.3, 0.8) * 0.6 + chime(987.8, 0.8) * 0.4, E('xr0'), 'translucent view (glassy tone)', -30)
+    # ---- bull
+    place(sfx, thump(0.7, 52, 30), E('cutBull'), 'the bull (low presence)', -20)
+    place(sfx, shimmer(1.0, 4800, 1600), E('cutBull') + 0.1, 'pull-out to the pasture', -31)
+    place(sfx, snort(0.45), E('bullOut1') - 0.1, 'the bull snorts', -26)
+    place(sfx, rustle(1.2, 500, 2500), E('rear0'), 'grass under the camera glide', -34)
+    place(sfx, rustle(0.35, 600, 3000), E('step0'), 'the hoof lifts', -30)
+    place(sfx, hoof(), E('plant') - 0.01, 'deep bovine footstep', -12)
+    place(sfx, creak(0.4, 95, 30), E('plant') + 0.02, 'shoulder muscles load', -24)
+    # ---- lab
+    place(sfx, tick(0.03, 3100), E('press'), 'pipette plunger click', -20)
+    place(sfx, plip(), E('dropLand') - 0.01, 'the drop lands', -21)
+    place(sfx, shimmer(0.5, 5200, 1500), E('labIn0') + 0.05, 'into the sample', -30)
+    for i, tc in enumerate([E('catch1'), E('catch2'), E('catch3')]):
+        place(sfx, lock(0.1), tc, 'antibody clamps a myostatin' if i == 0 else None, -18 if i == 1 else -21)
+    place(sfx, power(0.4, 90, 380), E('release'), 'assembly powers back up', -23)
+    # ---- the speculative arm, the twist, the controlled curl that fails, the flex into the loop
+    place(sfx, chime(659.3, 1.2) * 0.6 + chime(987.8, 1.2) * 0.4, E('cutX'), 'speculative view (glassy tone)', -29)
+    place(sfx, creak(0.9, 110, 28), E('cutX') + 0.1, 'fibres thickening', -27)
+    place(sfx, eerie(1.0), T['weird'] - 0.32, 'eerie cue before the twist', -18)
+    place(sfx, creak(0.25, 260, 80), E('grip'), 'the grip tightens on the handle', -27)
+    place(sfx, iron_creak(0.6), E('curl0'), 'dumbbell tension', -22)
+    place(sfx, creak(1.2, 120, 46), E('curl0'), 'the biceps strains', -24)
+    tr_len = E('sink0') - E('curl0') - 0.2
+    place(sfx, rattle(tr_len, 14) * np.linspace(0.6, 1, int(tr_len * SR)), E('curl0') + 0.2, 'the weight trembles, barely off the floor', -29)
+    place(sfx, squelch(0.3, 280, 1800, 30), E('elbowIn0') + 0.15, 'the elbow cutaway opens', -26)
+    for k in range(2):
+        place(sfx, thump(0.3, 80, 45), E('elbowIn1') + k / 1.4, 'contraction pulse' if k == 0 else None, -22)
+        place(sfx, creak(0.25, 300, 60), E('elbowIn1') + k / 1.4 + 0.02, None, -28)
+    place(sfx, creak(0.9, 100, 30), E('sink0'), 'the arm gives out', -24)
+    place(sfx, clunk(), E('sink1') - 0.03, 'the dumbbell settles back on the floor', -15)
+    place(sfx, rustle(0.55, 900, 5000), E('raise0') + 0.05, 'the arm comes up (cloth)', -27)
+    place(sfx, creak(0.35, 125, 40), E('raise1') - 0.1, 'the flex', -24)
+    tail = swell(0.8, 42, 0.6)
+    place(sfx, tail * np.linspace(0, 1, len(tail)) ** 1.5, DUR - 0.8, 'swell into the loop (the opening swell)', -16)
+else:
+    # ---- hook: swelling that follows the mass, the sleeve strains, stitches pop, the fabric tears, a sub hit
+    mrate = np.clip(np.gradient(sig100(M)) * SR, 0, None)
+    sw = swell(1.25, 44, 1.2)
+    place(sfx, sw * (0.45 + 0.55 * np.clip(mrate[:len(sw)] / (mrate[:len(sw)].max() + 1e-9), 0, 1)), 0.0, 'organic muscle swelling (follows the mass)', -15)
+    place(sfx, squelch(1.0, 160, 900, 22), 0.0, 'wet tissue stretch', -27)
+    place(sfx, fabric_strain(0.55), E('tear0') - 0.5, 'fabric straining', -25)
+    for i, dt_ in enumerate([0.0, 0.05, 0.11, 0.16, 0.24, 0.3]):
+        place(sfx, tick(0.02, 2600 + 700 * (i % 3)), E('tear0') + dt_, 'seam stitches popping' if i == 0 else None, -17 - (i % 2) * 3)
+    place(sfx, rip(0.42, 1.0), E('tear0') + 0.02, 'fabric tears along the seam', -15)
+    place(sfx, rip(0.32, 1.3), E('tear1') - 0.02, 'the split runs further', -16)
+    place(sfx, thump(0.6, 66, 32), E('tear1') - 0.01, 'subtle bass impact', -14)
+    place(sfx, creak(0.35, 130, 40), E('flex') - 0.05, 'the flex (muscle creak)', -25)
+    place(sfx, squelch(0.28, 300, 2200, 40), E('cut0'), 'the cutaway opens (wet slice)', -23)
+    place(sfx, shimmer(0.75, 5200, 1500), E('dive0'), 'into the muscle (microscopic shimmer)', -29)
+    place(sfx, swell(0.7, 38, -0.4), E('dive0') + 0.1, 'into the muscle (low)', -24)
+    # ---- micro: cellular pulse bed in every micro view, assembly crackle, docking, signals, the brake
+    micro = np.array([1.0 if w == 'micro' else 0.0 for w in WORLD])
+    mic = lp(sig100(micro), 6)
+    pulse = np.zeros(N)
+    for k in range(int(DUR * 1.3)):
+        place(pulse, thump(0.35, 62, 40), k / 1.3 + 0.05)
+    qa = sig100(Q)
+    dq = np.clip(np.gradient(qa) * SR, 0, None)
+    zip_ = crackle(DUR, 80, 1800, 7000) * np.clip(dq / 4.0, 0, 1) * mic
+    place(sfx, zip_, 0.0, 'myofibrils zipping in (crackle follows the growth)', -22)
+    # row completions: a soft click each time a new myofibril finishes
+    rows = np.floor(Q)
+    for i in range(1, len(rows)):
+        if rows[i] > rows[i - 1] and micro[i] > 0.5:
+            place(sfx, lock(0.08), i / 100, 'myofibril completes' if not any(l['sfx'] == 'myofibril completes' for l in LOG) else None, -27)
+    docks = [T['myoEnd'] - 0.02, T['myoEnd'] + 0.22, T['acts'] + 0.05, T['brake'] - 0.12]
+    for i, td in enumerate(docks):
+        place(sfx, lock(), td, 'myostatin docks in its receptor' if i == 0 else None, -19)
+        for k in range(3):
+            place(sfx, blip(2600 - 300 * k, 800, 0.09), td + 0.06 + 0.1 * k, 'signal runs to the nucleus (electrical blip)' if i == 0 and k == 0 else None, -27)
+    place(sfx, power(0.7, 360, 70), T['brake'] - 0.02, 'the brake: assembly powers down', -19)
+    place(sfx, squelch(0.44, 250, 1400, 26), E('wipe1'), 'collagen sheet passes the lens', -27)
+    place(sfx, squelch(0.3, 250, 1400, 26), E('wipe2'), 'collagen sheet passes the lens (2)', -28)
+    place(sfx, shimmer(1.0, 1500, 5200), E('bullOut0'), 'out of the muscle (rising shimmer)', -29)
+    # ---- bull
+    place(sfx, snort(0.45), E('bullOut1') + 0.25, 'the bull snorts', -27)
+    for i, (k, f) in enumerate([('s', 392.0), ('b', 440.0), ('h', 523.3)]):
+        tk = {'s': 10.22, 'b': 10.6, 'h': T['freak'] + 0.1}[k]
+        place(sfx, chime(f, 0.9), tk, 'extra muscle lights up (soft tone)' if i == 0 else None, -30)
+    place(sfx, rustle(0.35, 600, 3000), E('step0'), 'the hoof lifts', -30)
+    place(sfx, hoof(), E('plant') - 0.01, 'deep bovine footstep', -12)
+    place(sfx, creak(0.4, 95, 30), E('plant') + 0.02, 'shoulder muscles load', -24)
+    place(sfx, squelch(0.4, 200, 1200, 30), E('bullIn0') + 0.15, 'into the shoulder', -26)
+    place(sfx, shimmer(0.48, 5200, 1500), E('bullIn0'), 'into the shoulder (shimmer)', -30)
+    # ---- lab
+    place(sfx, shimmer(0.6, 1500, 4800), E('labOut0'), 'out to the lab', -31)
+    place(sfx, tick(0.03, 3100), E('press'), 'pipette plunger click', -20)
+    place(sfx, plip(), E('dropLand') - 0.01, 'the drop lands', -21)
+    place(sfx, shimmer(0.5, 5200, 1500), E('labIn0') + 0.05, 'into the sample', -30)
+    for i, tc in enumerate([E('catch1'), E('catch2'), E('catch3')]):
+        place(sfx, lock(0.1), tc, 'antibody clamps a myostatin' if i == 0 else None, -18 if i == 1 else -21)
+    place(sfx, power(0.5, 90, 380), E('release'), 'assembly powers back up', -22)
+    # ---- the speculative arm, the twist, the curl
+    place(sfx, chime(659.3, 1.2) * 0.6 + chime(987.8, 1.2) * 0.4, E('cutX'), 'speculative view (glassy tone)', -29)
+    place(sfx, creak(0.9, 110, 28), E('cutX') + 0.1, 'fibres thickening', -27)
+    place(sfx, eerie(1.0), T['weird'] - 0.32, 'eerie cue before the twist', -18)
+    place(sfx, iron_creak(0.6), E('curl0'), 'dumbbell tension', -22)
+    place(sfx, rattle(0.7, 14), E('curl0') + 0.2, 'the weight trembles just off the floor', -26)
+    place(sfx, creak(0.7, 120, 46), E('curl0'), 'the biceps strains', -24)
+    place(sfx, squelch(0.3, 280, 1800, 30), E('elbowIn0') + 0.22, 'the elbow cutaway opens', -26)
     for k in range(3):
-        place(sfx, blip(2600 - 300 * k, 800, 0.09), td + 0.06 + 0.1 * k, 'signal runs to the nucleus (electrical blip)' if i == 0 and k == 0 else None, -27)
-place(sfx, power(0.7, 360, 70), T['brake'] - 0.02, 'the brake: assembly powers down', -19)
-place(sfx, squelch(0.44, 250, 1400, 26), E('wipe1'), 'collagen sheet passes the lens', -27)
-place(sfx, squelch(0.3, 250, 1400, 26), E('wipe2'), 'collagen sheet passes the lens (2)', -28)
-place(sfx, shimmer(1.0, 1500, 5200), E('bullOut0'), 'out of the muscle (rising shimmer)', -29)
-# ---- bull
-place(sfx, snort(0.45), E('bullOut1') + 0.25, 'the bull snorts', -27)
-for i, (k, f) in enumerate([('s', 392.0), ('b', 440.0), ('h', 523.3)]):
-    tk = {'s': 10.22, 'b': 10.6, 'h': T['freak'] + 0.1}[k]
-    place(sfx, chime(f, 0.9), tk, 'extra muscle lights up (soft tone)' if i == 0 else None, -30)
-place(sfx, rustle(0.35, 600, 3000), E('step0'), 'the hoof lifts', -30)
-place(sfx, hoof(), E('plant') - 0.01, 'deep bovine footstep', -12)
-place(sfx, creak(0.4, 95, 30), E('plant') + 0.02, 'shoulder muscles load', -24)
-place(sfx, squelch(0.4, 200, 1200, 30), E('bullIn0') + 0.15, 'into the shoulder', -26)
-place(sfx, shimmer(0.48, 5200, 1500), E('bullIn0'), 'into the shoulder (shimmer)', -30)
-# ---- lab
-place(sfx, shimmer(0.6, 1500, 4800), E('labOut0'), 'out to the lab', -31)
-place(sfx, tick(0.03, 3100), E('press'), 'pipette plunger click', -20)
-place(sfx, plip(), E('dropLand') - 0.01, 'the drop lands', -21)
-place(sfx, shimmer(0.5, 5200, 1500), E('labIn0') + 0.05, 'into the sample', -30)
-for i, tc in enumerate([E('catch1'), E('catch2'), E('catch3')]):
-    place(sfx, lock(0.1), tc, 'antibody clamps a myostatin' if i == 0 else None, -18 if i == 1 else -21)
-place(sfx, power(0.5, 90, 380), E('release'), 'assembly powers back up', -22)
-# ---- the speculative arm, the twist, the curl
-place(sfx, chime(659.3, 1.2) * 0.6 + chime(987.8, 1.2) * 0.4, E('cutX'), 'speculative view (glassy tone)', -29)
-place(sfx, creak(0.9, 110, 28), E('cutX') + 0.1, 'fibres thickening', -27)
-place(sfx, eerie(1.0), T['weird'] - 0.32, 'eerie cue before the twist', -18)
-place(sfx, iron_creak(0.6), E('curl0'), 'dumbbell tension', -22)
-place(sfx, rattle(0.7, 14), E('curl0') + 0.2, 'the weight trembles just off the floor', -26)
-place(sfx, creak(0.7, 120, 46), E('curl0'), 'the biceps strains', -24)
-place(sfx, squelch(0.3, 280, 1800, 30), E('elbowIn0') + 0.22, 'the elbow cutaway opens', -26)
-for k in range(3):
-    place(sfx, thump(0.3, 80, 45), E('elbowIn1') + k / 1.4, 'contraction pulse' if k == 0 else None, -22)
-    place(sfx, creak(0.25, 300, 60), E('elbowIn1') + k / 1.4 + 0.02, None, -28)
-place(sfx, clunk(), E('setDown1') - 0.04, 'the dumbbell settles back on the floor', -15)
-place(sfx, rustle(0.55, 900, 5000), E('raise0') + 0.05, 'the arm comes up (cloth)', -27)
-place(sfx, creak(0.4, 125, 40), E('flexPulse') - 0.15, 'the flex', -24)
-# the swell into the loop: the same swell that opens the film, so the seam is one movement
-tail = swell(0.8, 44, 0.6)
-place(sfx, tail * np.linspace(0, 1, len(tail)) ** 1.5, DUR - 0.8, 'swell into the loop', -17)
+        place(sfx, thump(0.3, 80, 45), E('elbowIn1') + k / 1.4, 'contraction pulse' if k == 0 else None, -22)
+        place(sfx, creak(0.25, 300, 60), E('elbowIn1') + k / 1.4 + 0.02, None, -28)
+    place(sfx, clunk(), E('setDown1') - 0.04, 'the dumbbell settles back on the floor', -15)
+    place(sfx, rustle(0.55, 900, 5000), E('raise0') + 0.05, 'the arm comes up (cloth)', -27)
+    place(sfx, creak(0.4, 125, 40), E('flexPulse') - 0.15, 'the flex', -24)
+    # the swell into the loop: the same swell that opens the film, so the seam is one movement
+    tail = swell(0.8, 44, 0.6)
+    place(sfx, tail * np.linspace(0, 1, len(tail)) ** 1.5, DUR - 0.8, 'swell into the loop', -17)
+
 
 # ---------------- music: a quiet rhythmic pulse, period dividing the film exactly
 BEATS = 40
@@ -336,7 +412,7 @@ mix2 = np.stack([mix, mix], 1)
 os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
-sf.write(os.path.join(EP, f'audio/mix/FGW_Myostatin_{NAME.upper()}.wav'), mix2, SR, subtype='PCM_24')
+sf.write(os.path.join(EP, f'audio/mix/FGW_Myostatin_{NAME.upper()}.wav'), mix2, SR, subtype='PCM_24')  # V1: mix_v1, V2: mix_v2
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG),
