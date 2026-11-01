@@ -1,6 +1,25 @@
 # Future Got Weird: The Frog That Freezes and Revives
 
-## V2 (review, current)
+## V3 (final polish, current)
+
+**Deliverable.** `exports/FGW_Frozen_Frog_V3_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 735 frames, 24.5 s.
+**It is not published.**
+
+**Report.** `production/V3_REPORT.md`, with evidence in `qa/v3/`; the shot plan is `production/SHOT_PLAN_V3.md`.
+The source is composition `FrozenFrogV3`, mix `mix_v3`. The narration is unchanged.
+
+**What changed from V2.**
+- Frozen by 0.65 s and inside the chest by 0.95 s.
+- The last heartbeat on "HEART", then silence, then the ice locking on "STOPS".
+- Fern frost on the heart.
+- Three distinct cell steps.
+- A glow and streaks showing the glucose's direction.
+- Snow that piles high and melts.
+- A forceful first beat (a shockwave, the ice blown out, a camera punch).
+- The whole frog coming alive.
+- Two animated hops into frame 0.
+
+## V2 (review, superseded; commit `4a9e1df`)
 
 **Deliverable.** `exports/FGW_Frozen_Frog_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 735 frames, 24.5 s.
 **It is not published.**
