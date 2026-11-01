@@ -1,6 +1,25 @@
 # Future Got Weird: The Frog That Freezes and Revives
 
-## V1 (review)
+## V2 (review, current)
+
+**Deliverable.** `exports/FGW_Frozen_Frog_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 735 frames, 24.5 s.
+**It is not published.**
+
+**Report.** `production/V2_REPORT.md`, with evidence in `qa/v2/`. The brief-by-brief changes and the transition list
+are in `production/SHOT_PLAN_V2.md`. The source is composition `FrozenFrogV2`, mix `mix_v2`
+(`python3 tools/make_audio.py mix_v2`). The narration is unchanged.
+
+**What changed.**
+- A living, moving opening with a sweeping ice wave.
+- The final heartbeat at 1.336 s, followed by a hard audio cut.
+- An ice spear threatening one cell.
+- A bloodstream view of glowing glucose and the same cell's protection, in a new composition.
+- A legible passage of days.
+- A powerful first pulse, with circulation racing back out.
+- The eyes opening.
+- A leap toward the camera that lands in frame 0's composition.
+
+## V1 (review, superseded; commit `7398f50`)
 
 **Deliverable.** `exports/FGW_Frozen_Frog_V1_REVIEW_1080x1920.mp4`: native 1080×1920, 30 fps, 735 frames, 24.5 s,
 H.264 (CRF 16, yuv420p, BT.709) with AAC 320 kb/s audio. **It is not published.**

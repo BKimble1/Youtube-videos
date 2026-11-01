@@ -10,7 +10,7 @@ The source is composition `FrozenFrogV2`, mix `mix_v2`; V1 is at commit `7398f50
 
 | Check | Result | Evidence |
 |---|---|---|
-| Format | 1080×1920, 30 fps, H.264 yuv420p (BT.709, CRF 16), 735 frames, 24.5 s; AAC 48 kHz stereo, 317 kb/s | `qa/v2/render_qa.json` |
+| Format | 1080×1920, 30 fps, H.264 yuv420p (BT.709, CRF 16), 735 frames, 24.5 s; AAC 48 kHz stereo, 317 kb/s; 46.0 MB | `qa/v2/render_qa.json` |
 | Full decode | no errors | `qa/v2/render_qa.json` |
 | Narration in the final file | Whisper base.en: word-perfect. Zipformer: one homophone ("its cells" → "itselves"). | `qa/v2/final_asr.json` |
 | Loudness | −14.0 LUFS integrated, −1.6 dBTP true peak (4× oversampled); the voice at about −17 LUFS in the mix | `qa/v2/mix_measure_mix_v2.json`, re-measured on the delivered file |
@@ -18,7 +18,7 @@ The source is composition `FrozenFrogV2`, mix `mix_v2`; V1 is at commit `7398f50
 | The restart | The twitch at 19.18 s is a small pulse. The first full beat at 19.60 s is the loudest beat of the revival (−14 dB low band against −22 dB around it), followed by a low rush of returning circulation. | measured, this report |
 | Single-frame jumps | None unplanned | `qa/v2/render_qa.json` |
 | Static holds | None; the longest near-static run is 0 frames | `qa/v2/render_qa.json` |
-| Loop seam | The last frame and frame 0 show the same picture: the same frog spot, pose, cutaway and heart, the cold edge and the light (the sun disc clouds over before the end). | `qa/v2/loop_seam_last3_first3.png`, `qa/v2/render_qa.json` |
+| Loop seam | The last frame and frame 0 show the same picture: the same frog spot, pose, cutaway and heart, the cold edge and the light. Their mean difference is 3.97/255 (the median frame-to-frame change in the film is 13.45). By region: about 1/255 in the sky and the litter; about 4.5/255 over the frog (the head lift and heartbeat in progress); about 15/255 in the caption band (the first caption appears on frame 0). The first V2 render left the spring sun in the last frames; it now clouds over as the cold returns. | `qa/v2/loop_seam_last3_first3.png`, `qa/v2/render_qa.json` |
 
 Sheets: `qa/v2/contact_every_0.5s.png` and `qa/v2/hook_0-2.5s_every_3rd_frame.png`.
 
