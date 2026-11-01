@@ -40,6 +40,9 @@ PLANNED_V3 = [(0.05, 1.0, 'the ice wave and the push into the chest'), (1.55, 2.
               (14.8, 16.95, 'days pass: the camera rises, the sky turns; the snow melts'), (16.85, 18.65, 'spring; into the chest'),
               (19.55, 20.9, 'the first heartbeat, circulation, out to the whole frog'), (20.85, 23.45, 'the two hops and the landing')]
 if 'V3' in os.path.basename(src): PLANNED = PLANNED_V3
+# V4: the V3 windows mapped into the V4 narration's time (source/src/warp.ts)
+PLANNED_V4 = [(0.06, 1.21, 'the ice wave and the push into the chest'), (1.87, 3.13, 'ice bursts round the stopped heart; the lock'), (3.42, 4.27, 'the window opens over the trunk'), (4.18, 5.08, 'dive into the tissue'), (8.17, 9.00, 'pull out to the liver'), (10.14, 11.15, 'follow the sugar into the vessel'), (11.81, 12.52, 'from the vessel to the cell'), (14.26, 15.32, 'out to the frozen frog under snow'), (15.22, 17.31, 'one continuous seasonal move: snow piles and melts'), (17.21, 19.03, 'spring; into the chest'), (19.88, 21.29, 'the first heartbeat, circulation, out to the whole frog'), (21.23, 23.74, 'the two hops and the landing')]
+if 'V4' in os.path.basename(src): PLANNED = PLANNED_V4
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

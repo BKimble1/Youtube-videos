@@ -46,5 +46,44 @@
   ],
   "film_s": 24.5
  },
- "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement.",
+ "v4": {
+  "why": "The V4 brief asks for a calmer read with the same voice identity: controlled amazement, slight eeriness, natural pacing, selective emphasis, no shouting of STOPS, DEAD, WEEKS or FREEZES.",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "model_id": "eleven_v4",
+  "flow_id": "g0bdiuT4TnU5dp3gRIao",
+  "prompt": "[controlled amazement, slightly eerie, natural conversational pace] If you freeze this frog, its heart completely stops. [low, steady, a little eerie] Ice spreads through its body, it stops breathing, and it looks completely dead. [curious, quietly building] But its liver releases massive amounts of sugar, protecting its cells while the rest of its body freezes. [calm wonder] It can survive like this for weeks. [warmer, gently rising] And when spring arrives, the ice melts, its heart starts beating again… [light, amused, natural] And it just hops away like nothing happened.",
+  "prompt_note": "The same 67 approved words in the same order. To avoid a shouted delivery, the emphasis words are written in normal case and the exclamation marks as full stops in the TTS prompt only; the subtitles keep the approved text, capitals and punctuation. The bracket tags direct delivery and are not spoken.",
+  "generated_once": "One run of two variations, 2 x 579.9 credits. No regeneration.",
+  "takes": [
+   {
+    "file": "audio/narration/takes/v4_t1_ayeD.mp3",
+    "generation_id": "ayeD3Yusy565mxaKril1",
+    "duration_s": 24.24,
+    "chosen": false,
+    "why_not": "whisper hears an inserted 'buzzer buzzes' (an artefact) and 'it's'; 'HOPS AWAY' at +6.3/+8.7 dB is the most pushed word of all"
+   },
+   {
+    "file": "audio/narration/takes/v4_t2_aw3a.mp3",
+    "generation_id": "aw3adgeKoGoDVBdmZe2a",
+    "duration_s": 24.08,
+    "chosen": true,
+    "asr": "whisper base.en: word-perfect; zipformer: 'its cells' heard as 'itselves'",
+    "emphasis_note": "measured over the median word: 'STOPS' +2.7 dB, 'dead' -5.6, 'freezes' -4.0, 'weeks' -3.2 (none shouted); the strongest emphasis is on the payoff, 'hops away' (+6 dB)"
+   }
+  ],
+  "edits": "The four longest silent gaps (0.43-0.64 s, before 'Ice', 'But', 'It' and 'And') were shortened to 0.34 s, 0.77 s in all, each cut in the middle of the silence with a 12 ms crossfade. Every word is used sample for sample. tools/make_narration_v4.py",
+  "final": {
+   "file": "audio/narration/FGW_Frozen_Frog_narration_V4.wav",
+   "sha256": "b71d8fb0f21e90eafe35ac534c00a365c958994f9587598096346ce198f80527",
+   "format": "48 kHz, 24-bit, mono",
+   "speech_s": [
+    0.0,
+    23.08
+   ],
+   "film_s": 24.8
+  },
+  "picture_timing": "The V3 picture is keyed to the V1 word times; source/src/warp.ts maps V4 time onto that clock through 25 word anchors with a smooth monotone curve, so every event lands on the new voice.",
+  "listening": "Not listened to in real time (no audio playback in this environment). Selection by two ASR models and level measurement."
+ }
 }

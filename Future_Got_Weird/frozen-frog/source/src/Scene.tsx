@@ -11,8 +11,9 @@ import {Frog, Leaf, MICRO_B, SIT, toWorld} from './art/frog';
 import {Anatomy} from './art/anatomy';
 import {Micro, microBounds} from './art/micro';
 import {Drips, Falling, Far, Ground, Mid, PocketFloor, Shoots, SnowPack} from './art/forest';
-import {Cam, EV, K_MICRO, M, airborne, MICRO_ROLL, MICRO_ROT_B, MW, Place, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
+import {Cam, EV, K_MICRO, M, airborne, kicks, MICRO_ROLL, MICRO_ROT_B, MW, Place, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
 import {Captions} from './Captions';
+import {toOld} from './warp';
 
 const F = 3600;
 const layerScale = (c: Cam, delta: number) => {
@@ -166,6 +167,20 @@ const FrogWorld: React.FC<{t: number; c: Cam; local: Cam; place: Place}> = ({t, 
               <SnowPack e={e} x0={toLocal(x0)} x1={toLocal(x1)} />
               <Drips e={e} t={t} />
             </g>
+            {/* leaf litter kicked up by each push-off and landing */}
+            {kicks().map(([tk, pl, o], k) => {
+              const dt = t - tk;
+              if (dt < 0 || dt > 0.7) return null;
+              return (
+                <g key={`kick${k}`} transform={`translate(${pl.x} ${pl.y}) scale(${pl.s})`} opacity={1 - ss(dt, 0.45, 0.7)}>
+                  {Array.from({length: 8}, (_, i) => {
+                    const vx = (hash(i * 3.1 + k) - 0.65) * 60, vy = -(25 + 35 * hash(i * 5.7 + k));
+                    const q = pt(o.x + vx * dt, Math.min(-0.5, o.y + vy * dt + 90 * dt * dt));
+                    return <Leaf key={i} c={q} ang={hash(i * 7.3 + k) * 360 + 400 * dt * (i % 2 ? 1 : -1)} len={3 + 3 * hash(i * 1.9 + k)} col={['#8A5A2B', '#A3672F', '#6E4424', '#B9853F'][i % 4]} />;
+                  })}
+                </g>
+              );
+            })}
             <Falling e={e} x0={x0} x1={x1} y0={y0} y1={y1} />
           </>
         )}
@@ -174,8 +189,9 @@ const FrogWorld: React.FC<{t: number; c: Cam; local: Cam; place: Place}> = ({t, 
   );
 };
 
-export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t, fkey, captions = true}) => {
+export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t: tNew, fkey, captions = true}) => {
   resetIds(fkey);
+  const t = toOld(tNew); // the picture runs on the V3 clock; the subtitles on the V4 narration's own times
   const wc: WCam = camAt(t);
   const c: Cam = {x: wc.x, y: wc.y, w: wc.w};
   let body: React.ReactNode;
@@ -194,7 +210,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
       <div style={{position: 'absolute', inset: 0, opacity: warm, background: 'radial-gradient(ellipse at 18% 12%, rgba(255,214,130,0.38) 0%, rgba(255,190,110,0.12) 45%, rgba(255,180,90,0) 75%)', mixBlendMode: 'screen'}} />
       <EdgeFrost k={edgeFrostAt(t) * ext} />
       <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 55%, rgba(4,4,10,0.42) 100%)'}} />
-      {captions && <Captions t={t} />}
+      {captions && <Captions t={tNew} />}
     </div>
   );
 };

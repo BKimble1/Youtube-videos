@@ -32,6 +32,7 @@ export type AnatomyState = {
   shatter?: number; // 0..1 the last pericardial ice blown outward by the first pulse
   veinGlow?: number; // 0..1 the sugar's glow travelling down the vein from the liver toward the tissue
   camW?: number;    // the camera's width (mm): organ-scale specks fade as the camera reaches cell scale
+  hint?: number;    // 0..1 the liver stirring early (a faint amber pulse as the freeze takes hold)
   t: number;
 };
 
@@ -249,10 +250,11 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
   const id = {peri: uid('ap'), liv: uid('al'), lung: uid('ag'), wall: uid('aw'), glow: uid('ao'), blur: uid('ab')};
   const fz = clamp(a.frozen);
   const col = (c: string) => mix(c, '#8E8592', 0.5 * fz);
-  const colL = (c: string) => mix(c, '#8E8592', 0.5 * fz * (1 - 0.85 * clamp(a.sugar)));
+  const colL = (c: string) => mix(c, '#8E8592', 0.5 * fz * (1 - 0.85 * Math.max(clamp(a.sugar), clamp(a.hint ?? 0))));
   const ice = clamp(a.ice) * (1 - clamp(a.melt));
   const shardG = (s: Shard) => clamp((ice - s.th * 0.55) / 0.45) * ss(s.p.x - a.iceFront, -3, 2.5);
   const sug = clamp(a.sugar) * ss(a.camW ?? 99, 4, 9);
+  const lg = Math.max(sug, clamp(a.hint ?? 0)); // the liver's own glow
   const lungK = 1 + 0.07 * a.breathe;
   // specks of sugar travelling out of the liver along the vein (and into the body generally)
   const specks: React.ReactNode[] = [];
@@ -281,8 +283,8 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
     <g>
       <defs>
         <linearGradient id={id.liv} x1="0.2" y1="0" x2="0.5" y2="1">
-          <stop offset={0} stopColor={colL(mix('#A84A3C', '#F2A24E', 0.8 * sug))} />
-          <stop offset={0.6} stopColor={colL(mix('#7A2A22', '#B8602E', 0.65 * sug))} />
+          <stop offset={0} stopColor={colL(mix('#A84A3C', '#F2A24E', 0.8 * lg))} />
+          <stop offset={0.6} stopColor={colL(mix('#7A2A22', '#B8602E', 0.65 * lg))} />
           <stop offset={1} stopColor={colL('#45140F')} />
         </linearGradient>
         <linearGradient id={id.lung} x1="0" y1="0" x2="0" y2="1">
@@ -335,7 +337,7 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       <path d={closed(LIVER_MAIN, 0.8)} fill={`url(#${id.liv})`} stroke="#22080A" strokeWidth={0.24} />
       <path d={open([pt(15, 0.2), pt(18.5, -0.8), pt(22.5, -0.4)])} stroke="#FFFFFF" strokeWidth={0.5} fill="none" opacity={0.18 * (1 - fz * 0.6)} filter={`url(#${id.blur})`} />
       <ellipse cx={16.8} cy={4.6} rx={0.95} ry={0.75} fill={col('#5E8A3C')} stroke="#1E2A0E" strokeWidth={0.14} />
-      {sug > 0.01 && <ellipse cx={19.5} cy={2.6} rx={8.5 + 1.5 * sug} ry={4.8 + sug} fill={`url(#${id.glow})`} opacity={sug * (0.85 + 0.15 * Math.sin(a.t * 7))} />}
+      {lg > 0.01 && <ellipse cx={19.5} cy={2.6} rx={8.5 + 1.5 * lg} ry={4.8 + lg} fill={`url(#${id.glow})`} opacity={lg * (0.85 + 0.15 * Math.sin(a.t * 7))} />}
       {/* the heart in its pericardium */}
       <ellipse cx={HEART_B.x} cy={HEART_B.y - 0.6} rx={5.0} ry={6.3} fill={col('#5A1A26')} stroke={rgba('#E8B8C0', 0.35)} strokeWidth={0.2} transform={`rotate(${HEART_ROT} ${HEART_B.x} ${HEART_B.y})`} />
       <clipPath id={id.peri}><ellipse cx={HEART_B.x} cy={HEART_B.y - 0.6} rx={5.0} ry={6.3} transform={`rotate(${HEART_ROT} ${HEART_B.x} ${HEART_B.y})`} /></clipPath>

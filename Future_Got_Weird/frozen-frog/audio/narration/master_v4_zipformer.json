@@ -1,0 +1,387 @@
+{
+ "audio": "audio/narration/FGW_Frozen_Frog_narration_V4.wav",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.46,
+   1.77
+  ],
+  [
+   3.63,
+   3.96
+  ],
+  [
+   5.36,
+   5.7
+  ],
+  [
+   6.7,
+   6.99
+  ],
+  [
+   8.49,
+   8.8
+  ],
+  [
+   11.28,
+   11.59
+  ],
+  [
+   14.31,
+   14.63
+  ],
+  [
+   16.45,
+   16.78
+  ],
+  [
+   17.83,
+   18.09
+  ],
+  [
+   18.92,
+   19.21
+  ],
+  [
+   20.59,
+   20.98
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.1
+  },
+  {
+   "word": "you",
+   "start": 0.12,
+   "end": 0.31
+  },
+  {
+   "word": "freeze",
+   "start": 0.32,
+   "end": 0.79
+  },
+  {
+   "word": "this",
+   "start": 0.8,
+   "end": 1.0
+  },
+  {
+   "word": "frog,",
+   "start": 1.04,
+   "end": 1.46
+  },
+  {
+   "word": "its",
+   "start": 1.77,
+   "end": 1.93
+  },
+  {
+   "word": "HEART",
+   "start": 1.935,
+   "end": 2.22
+  },
+  {
+   "word": "completely",
+   "start": 2.255,
+   "end": 3.05
+  },
+  {
+   "word": "STOPS!",
+   "start": 3.055,
+   "end": 3.63
+  },
+  {
+   "word": "Ice",
+   "start": 3.96,
+   "end": 4.19
+  },
+  {
+   "word": "spreads",
+   "start": 4.195,
+   "end": 4.59
+  },
+  {
+   "word": "through",
+   "start": 4.595,
+   "end": 4.79
+  },
+  {
+   "word": "its",
+   "start": 4.795,
+   "end": 5.03
+  },
+  {
+   "word": "body,",
+   "start": 5.035,
+   "end": 5.36
+  },
+  {
+   "word": "it",
+   "start": 5.7,
+   "end": 5.75
+  },
+  {
+   "word": "stops",
+   "start": 5.74,
+   "end": 6.13
+  },
+  {
+   "word": "breathing,",
+   "start": 6.17,
+   "end": 6.7
+  },
+  {
+   "word": "and",
+   "start": 6.99,
+   "end": 7.04
+  },
+  {
+   "word": "it",
+   "start": 7.03,
+   "end": 7.16
+  },
+  {
+   "word": "looks",
+   "start": 7.165,
+   "end": 7.44
+  },
+  {
+   "word": "completely",
+   "start": 7.445,
+   "end": 8.14
+  },
+  {
+   "word": "dead.",
+   "start": 8.165,
+   "end": 8.49
+  },
+  {
+   "word": "But",
+   "start": 8.8,
+   "end": 8.85
+  },
+  {
+   "word": "its",
+   "start": 8.84,
+   "end": 9.04
+  },
+  {
+   "word": "liver",
+   "start": 9.045,
+   "end": 9.36
+  },
+  {
+   "word": "releases",
+   "start": 9.365,
+   "end": 9.92
+  },
+  {
+   "word": "massive",
+   "start": 9.925,
+   "end": 10.4
+  },
+  {
+   "word": "amounts",
+   "start": 10.405,
+   "end": 10.8
+  },
+  {
+   "word": "of",
+   "start": 10.805,
+   "end": 10.96
+  },
+  {
+   "word": "sugar,",
+   "start": 10.965,
+   "end": 11.28
+  },
+  {
+   "word": "protecting",
+   "start": 11.59,
+   "end": 11.99
+  },
+  {
+   "word": "its",
+   "start": 11.995,
+   "end": 12.045
+  },
+  {
+   "word": "cells",
+   "start": 12.035,
+   "end": 12.51
+  },
+  {
+   "word": "while",
+   "start": 12.515,
+   "end": 12.67
+  },
+  {
+   "word": "the",
+   "start": 12.675,
+   "end": 12.79
+  },
+  {
+   "word": "rest",
+   "start": 12.795,
+   "end": 13.07
+  },
+  {
+   "word": "of",
+   "start": 13.075,
+   "end": 13.15
+  },
+  {
+   "word": "its",
+   "start": 13.155,
+   "end": 13.31
+  },
+  {
+   "word": "body",
+   "start": 13.355,
+   "end": 13.65
+  },
+  {
+   "word": "freezes!",
+   "start": 13.715,
+   "end": 14.31
+  },
+  {
+   "word": "It",
+   "start": 14.63,
+   "end": 14.68
+  },
+  {
+   "word": "can",
+   "start": 14.67,
+   "end": 14.78
+  },
+  {
+   "word": "survive",
+   "start": 14.79,
+   "end": 15.3
+  },
+  {
+   "word": "like",
+   "start": 15.31,
+   "end": 15.45
+  },
+  {
+   "word": "this",
+   "start": 15.51,
+   "end": 15.69
+  },
+  {
+   "word": "for",
+   "start": 15.71,
+   "end": 15.95
+  },
+  {
+   "word": "weeks!",
+   "start": 15.95,
+   "end": 16.45
+  },
+  {
+   "word": "And",
+   "start": 16.78,
+   "end": 16.83
+  },
+  {
+   "word": "when",
+   "start": 16.82,
+   "end": 16.93
+  },
+  {
+   "word": "spring",
+   "start": 16.935,
+   "end": 17.33
+  },
+  {
+   "word": "arrives,",
+   "start": 17.335,
+   "end": 17.83
+  },
+  {
+   "word": "the",
+   "start": 18.09,
+   "end": 18.14
+  },
+  {
+   "word": "ice",
+   "start": 18.13,
+   "end": 18.41
+  },
+  {
+   "word": "melts,",
+   "start": 18.44,
+   "end": 18.92
+  },
+  {
+   "word": "its",
+   "start": 19.21,
+   "end": 19.3
+  },
+  {
+   "word": "heart",
+   "start": 19.305,
+   "end": 19.54
+  },
+  {
+   "word": "starts",
+   "start": 19.545,
+   "end": 19.88
+  },
+  {
+   "word": "beating",
+   "start": 19.905,
+   "end": 20.34
+  },
+  {
+   "word": "again\u2026",
+   "start": 20.345,
+   "end": 20.59
+  },
+  {
+   "word": "And",
+   "start": 20.98,
+   "end": 21.03
+  },
+  {
+   "word": "it",
+   "start": 21.025,
+   "end": 21.26
+  },
+  {
+   "word": "just",
+   "start": 21.265,
+   "end": 21.5
+  },
+  {
+   "word": "HOPS",
+   "start": 21.505,
+   "end": 21.86
+  },
+  {
+   "word": "AWAY",
+   "start": 21.865,
+   "end": 22.14
+  },
+  {
+   "word": "like",
+   "start": 22.145,
+   "end": 22.38
+  },
+  {
+   "word": "nothing",
+   "start": 22.385,
+   "end": 22.74
+  },
+  {
+   "word": "happened!",
+   "start": 22.745,
+   "end": 23.08
+  }
+ ]
+}

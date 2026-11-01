@@ -32,13 +32,22 @@
 //   22.98-24.50 the landing settles into frame 0's framing; the cutaway reopens on the beat; the cold creeps back in;
 //              the head lifts and a foot steps on into frame 0
 import {P, add, mul, pt, sub} from './core/geo';
-import {FPS, FRAMES, clamp, lerp, noise1, ss, ss5, word} from './lib';
+import {clamp, lerp, noise1, ss, ss5} from './lib';
+import TL1 from './data/timeline_v1.json';
+import {FrogState as FS_, hindLeg} from './art/frog';
 import {FrogState, HEART_B, MICRO_B, SIT, toWorld} from './art/frog';
 import {AnatomyState, HeartState} from './art/anatomy';
 import {MicroState, HERO, capY} from './art/micro';
 import {EnvState} from './art/forest';
 
-const w = word;
+// This file runs on the V3 picture's own clock (keyed to the V1 narration's word times, loop at 24.5 s). V4's calmer
+// narration is mapped onto it by warp.ts, so every event lands on the new voice without re-keying the picture.
+const k1 = (x: string) => x.toLowerCase().replace(/[^a-z']/g, '');
+const w = (s: string, n = 0) => {
+  const hit = (TL1.words as {word: string; start: number; end: number}[]).filter((x) => k1(x.word.replace('’', "'")) === k1(s))[n];
+  if (!hit) throw new Error(`word not in V1 narration: ${s}`);
+  return hit;
+};
 export const T = {
   freeze: w('freeze').start, heart: w('HEART').start, stops: w('STOPS!').start, stopsEnd: w('STOPS!').end,
   ice: w('Ice').start, body: w('body,').start, breathing: w('breathing,').start, dead: w('dead.').start, deadEnd: w('dead.').end,
@@ -48,7 +57,7 @@ export const T = {
   spring: w('spring').start, melts: w('melts,').start, meltsEnd: w('melts,').end, heart2: w('heart').start, starts: w('starts').start,
   beating: w('beating').start, again: w('again…').start, hops: w('HOPS').start, away: w('AWAY').start, happened: w('happened!').start, happenedEnd: w('happened!').end,
 };
-export const LOOP_T = FRAMES / FPS;
+export const LOOP_T = 24.5; // the V3 clock's loop point
 /** the heartbeat period: LOOP_T - 11 * PERIOD = 19.60 s (the first beat of the revival, on "beating"), and frame 0 is a
  * beat. The opening's last beat is not on this grid: it falls on the narration's "HEART". */
 export const PERIOD = 4.9 / 11;
@@ -64,7 +73,7 @@ export const EV = {
   crouch2: 22.12, launch2: 22.38, land2: 22.98, settle2: 23.35,
   reopen0: 23.3, reopen1: 24.2, cold0: 23.0,
 };
-const PUSH = 0.12; // the push-off: the hind legs extend against the ground before the frog leaves it
+const PUSH = 0.18; // the push-off: the hind legs extend against the planted feet before the frog leaves the ground
 /** is the frog in the air (its contact shadow stays on the ground)? */
 export const airborne = (t: number) => (t > EV.launch + PUSH && t < EV.land) || (t > EV.launch2 + PUSH && t < EV.land2);
 
@@ -114,13 +123,10 @@ export const Q: Place = {x: -25, y: -6, s: 0.74};
 /** one hop's placement: a short push (the body moves a little as the legs extend), then a ballistic arc */
 const hopPlace = (t: number, t0: number, t1: number, A: Place, B: Place, h: number): Place => {
   const tp = t0 + PUSH;
-  if (t < tp) {
-    const k = 0.07 * ss(t, t0, tp);
-    return {x: lerp(A.x, B.x, k), y: lerp(A.y, B.y, k) - 2.5 * ss(t, t0, tp), s: lerp(A.s, B.s, k)};
-  }
+  if (t < tp) return A;
   const u = clamp((t - tp) / (t1 - tp));
-  const k = 0.07 + 0.93 * u;
-  return {x: lerp(A.x, B.x, k), y: lerp(A.y, B.y, k) - 2.5 * (1 - u) - h * 4 * u * (1 - u), s: lerp(A.s, B.s, k ** 1.15)};
+  const k = u;
+  return {x: lerp(A.x, B.x, k), y: lerp(A.y, B.y, k) - h * 4 * u * (1 - u), s: lerp(A.s, B.s, k ** 1.15)};
 };
 export const placeAt = (t: number): Place => {
   if (t < EV.out2a) return N;
@@ -192,17 +198,43 @@ export const frogAt = (t: number): FrogState => {
   const wet = t < 12 ? 0 : ss(t, EV.thaw0, EV.thaw1) * (1 - ss(t, 21.9, 23.3));
   const look = t > 20.4 && t < 23.35 ? 0.8 * ss(t, 20.45, 20.75) * (1 - ss(t, 22.6, 23.3)) : live.look;
   const leaves = t > 14 && t < EV.launch ? ss(t, 14.45, 14.8) : 0;
-  return {
+  const base = {
     root: pt(SIT.root.x, SIT.root.y + L.crouch * 1.4 - lift * 2), pitch: L.pitch + live.dPitch - 5 * lift, hind: Math.max(L.hind, stretch), fore: Math.max(L.fore, live.fore + lift), crouch: L.crouch,
     frost, pale, cloud, blink: clamp(Math.max(lid, live.blink)), throat, wet, look, pupil, cut: cutAt(t), leaves, t,
   };
+  return {...base, root: add(base.root, plantOffset(t))};
 };
+/** the toe of the hind foot for a pose (frog space) */
+const toeOf = (t: number) => {
+  const L = leapPose(t);
+  const s = {root: pt(SIT.root.x, SIT.root.y + L.crouch * 1.4), pitch: L.pitch, hind: L.hind, fore: L.fore, crouch: L.crouch} as FS_;
+  const c = hindLeg(s);
+  return c.pts[c.pts.length - 1];
+};
+/** during each push-off the body is carried so the toes stay planted; in the flight that offset eases away */
+export const plantOffset = (t: number) => {
+  for (const [t0, t1] of [[EV.launch, EV.land], [EV.launch2, EV.land2]]) {
+    const tp = t0 + PUSH;
+    if (t >= t0 && t < tp) return sub(toeOf(t0), toeOf(t));
+    if (t >= tp && t < t1) {
+      const o = sub(toeOf(t0), toeOf(tp));
+      const u = clamp((t - tp) / (t1 - tp));
+      return mul(o, 1 - ss(u, 0, 0.45));
+    }
+  }
+  return pt(0, 0);
+};
+/** leaf litter kicked up at each push-off and landing: [time, place, origin in frog space] */
+export const kicks = (): [number, Place, P][] => [
+  [EV.launch + 0.05, M, toeOf(EV.launch)], [EV.land, Q, toeOf(EV.land + 0.01)], [EV.launch2 + 0.05, Q, toeOf(EV.launch2)], [EV.land2, N, toeOf(EV.land2 + 0.01)],
+];
 /** the leaves that were on its back, sliding off at take-off (they stay at the wintering spot) */
 export const fallenLeavesAt = (t: number) => (t < EV.launch ? 0 : clamp((t - EV.launch) / 0.55));
 
 // ---------------------------------------------------------------- anatomy and tissue
 export const anatomyAt = (t: number): AnatomyState => {
-  const iceA = ss(t, EV.finalBeat + 0.05, 2.5);
+  // ice creeps in round the labouring heart before its last beat, then bursts through the pericardium after it
+  const iceA = Math.max(0.5 * ss(t, 0.75, EV.finalBeat), ss(t, EV.finalBeat + 0.05, 2.5));
   return {
     heart: heartAt(t),
     ice: t < 15 ? iceA : 1,
@@ -217,6 +249,7 @@ export const anatomyAt = (t: number): AnatomyState => {
     shock: t > 15 ? clamp((t - EV.beat0) / 0.45) : 0,
     shatter: t > 15 ? ss(t, EV.beat0, EV.beat0 + 0.35) : 0,
     veinGlow: t < 15 ? ss(t, EV.sugar0 + 0.05, 10.05) : 0,
+    hint: t < 15 ? 0.35 * ss(t, 2.2, 3.2) * (1 - ss(t, 4.3, 4.9)) * (0.75 + 0.25 * Math.sin(t * 9)) : 0,
     t,
   };
 };
@@ -322,6 +355,9 @@ const MC2b: Cam = vesselAt(HERO.c.x + 40, 320);
 const MC3: Cam = {x: HERO.c.x - 5, y: HERO.c.y - 45, w: 330};
 const MC3b: Cam = {x: HERO.c.x + 12, y: HERO.c.y - 5, w: 270};
 const WA: Cam = {x: 5, y: -26, w: 62};
+const W_START: Cam = {x: -9, y: -60, w: 146};
+const W_MID: Cam = {x: -3, y: -42, w: 104};
+void WA;
 const WB: Cam = {x: 0, y: -66, w: 150};
 const WC: Cam = {x: -2, y: -44, w: 118};
 const WD: Cam = {x: 2, y: -26, w: 72};
@@ -349,8 +385,8 @@ const localCam = (t: number): {c: Cam; micro: boolean} => {
   if (t < EV.track1) return m(move(t, MC2, MC2b, [[EV.entry2b, 0], [EV.track1, 1]]));
   if (t < EV.toCell) return m(move(t, MC2b, MC3, [[EV.track1, 0], [EV.toCell, 1]]));
   if (t < EV.out2a) return m(move(t, MC3, MC3b, [[EV.toCell, 0], [EV.out2a, 1]]));
-  if (t < EV.out2b) return f(move(t, toHost(MC3b), WA, [[EV.out2a, 0], [EV.out2b, 1]]));
-  if (t < EV.chest) return f(glide(t, [[EV.out2b, WA], [15.55, WB], [EV.spring0, WC], [EV.chest, WD]]));
+  if (t < EV.out2b) return f(move(t, toHost(MC3b), W_START, [[EV.out2a, 0], [EV.out2b, 1]]));
+  if (t < EV.chest) return f(glide(t, [[EV.out2b, W_START], [EV.spring0, W_MID], [EV.chest, WD]]));
   if (t < EV.heartIn0) return f(move(t, WD, CHEST, [[EV.chest, 0], [EV.heartIn0, 1]]));
   if (t < EV.heartIn1) return f(move(t, CHEST, HEART2, [[EV.heartIn0, 0], [EV.heartIn1, 1]]));
   if (t < EV.circ0) return f(move(t, HEART2, {...HEART2, w: 12.2}, [[EV.heartIn1, 0], [EV.circ0, 1]]));

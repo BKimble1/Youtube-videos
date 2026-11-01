@@ -301,7 +301,7 @@ amb = (0.55 * wind * lp(EXT * (0.4 + 0.6 * COLD), 3) + 0.35 * air * lp(EXT * spr
 mus = 0.6 * drone * lp(np.clip(COLD, 0, 1) * (1 - 0.6 * np.clip(MIC, 0, 1)), 2) + 0.45 * warm * lp(spring * (t < 23.2), 2) + 0.35 * warm * lp(S('sugar') * (t < 14), 2)
 
 # ---------------- voice and mix
-v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Frozen_Frog_narration_V1.wav'))
+v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Frozen_Frog_narration_V4.wav' if NAME >= 'mix_v4' else 'audio/narration/FGW_Frozen_Frog_narration_V1.wav'))
 assert vsr == SR and len(v) == N, (vsr, len(v), N)
 meter = pyln.Meter(SR)
 def compress(x, thr_db=-20.0, ratio=3.0, att=0.004, rel=0.09):
