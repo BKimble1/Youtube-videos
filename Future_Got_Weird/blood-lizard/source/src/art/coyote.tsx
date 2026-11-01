@@ -28,6 +28,7 @@ export type CoyoteHead = {
 };
 export type CoyoteState = {
   x: number; y: number;  // near forepaw ground point (world)
+  dir: number;           // +1 faces screen right, -1 faces screen left (the rig is mirrored about x)
   J: P;                  // jaw hinge, body local
   ang: number;           // head pitch (rad, + = nose down)
   hd: CoyoteHead;
@@ -225,7 +226,7 @@ export const Coyote: React.FC<{c: CoyoteState; sw?: number; inMouth?: React.Reac
     const st = f < 0.6;
     const u = st ? f / 0.6 : (f - 0.6) / 0.4;
     const dx = st ? lerp(c.stride / 2, -c.stride / 2, u) : lerp(-c.stride / 2, c.stride / 2, u * u * (3 - 2 * u));
-    const lift = st ? 0 : 3.5 * Math.sin(Math.PI * u) * clamp(c.stride / 6);
+    const lift = st ? 0 : Math.min(9, 0.3 * c.stride + 1) * Math.sin(Math.PI * u) * clamp(c.stride / 6);
     return pt(base + dx, -lift);
   };
   const pNF = step(c.walk, 0), pFF = step(c.walk + 0.5, 4.5), pNH = step(c.walk + 0.25, -59), pFH = step(c.walk + 0.75, -54);
@@ -277,7 +278,7 @@ export const Coyote: React.FC<{c: CoyoteState; sw?: number; inMouth?: React.Reac
           <stop offset={1} stopColor="#2A1608" stopOpacity={0} />
         </radialGradient>
       </defs>
-      <g transform={`translate(${c.x} ${c.y})`}>
+      <g transform={`translate(${c.x} ${c.y}) scale(${c.dir} 1)`}>
         {shadow && <ellipse cx={-28} cy={1.5} rx={48} ry={5} fill={`url(#${ids.sh})`} />}
         {/* far legs */}
         <path d={legD(fh, [4.6, 3.6, 2.4, 1.8, 1.6])} fill={legFillFar} stroke={CY.ink} strokeWidth={sw} />
@@ -313,6 +314,6 @@ export const Coyote: React.FC<{c: CoyoteState; sw?: number; inMouth?: React.Reac
 };
 /** head-local -> world */
 export const coyoteHeadWorld = (c: CoyoteState, q: P) => {
-  const Jw = pt(c.x + c.J.x, c.y + c.J.y + c.crouch * clamp((c.J.x + 60) / 60));
-  return add(Jw, rot(mul(q, HEAD_K), c.ang));
+  const l = add(pt(c.J.x, c.J.y + c.crouch * clamp((c.J.x + 60) / 60)), rot(mul(q, HEAD_K), c.ang));
+  return pt(c.x + c.dir * l.x, c.y + l.y);
 };

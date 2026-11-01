@@ -1,333 +1,262 @@
-// The Blood Lizard timeline. Every beat is keyed to the measured narration (data/timeline.json via word()).
-// One world (the desert floor, cm), one lizard, one coyote, one camera.
+// Blood Lizard V2 timeline. Every beat is keyed to the measured narration (data/timeline.json via word()), which is
+// unchanged from V1. One desert world (cm), one horned lizard, one coyote (facing screen left), one camera. No cuts.
 //
-//   A  0.00-2.90  hook: the coyote's open mouth is already over the lizard; 0.35 a narrow jet leaves the rear corner of
-//                 the lizard's eye and lands in the mouth by 0.50; 0.88 the coyote jerks back in disgust; from 0.90 the
-//                 camera moves smoothly in on the eye
-//   B  2.90-9.16  the skin thins away round the eye: eyeball, sinus, artery in, vein out with its muscle band.
-//                 "When a predator attacks": the predator's shadow, a flinch, the muscle squeezes the vein shut and the
-//                 outflow stops. "pressure builds": every heartbeat pushes more blood in; the sinus and the tiny vessels
-//                 swell, the walls stretch thin and glossy, the cells crowd; a blister bulges toward the pore
-//   C  9.16-12.9  "BURST": the blister tears; the jet leaves through the pore and the camera pulls out with it, out of
-//                 the head (the skin closes back) to the coyote lunging in; a brief slow-motion accent as the stream hits
-//                 the mouth; the jaws snap shut on the lizard's back half
-//   D 12.9-17.6   the coyote lifts its head with the lizard, steps back, and its face fills with disgust ("disgusting");
-//                 it shakes its head, then spits the lizard out ("spit"); the lizard drops to the ground; the coyote
-//                 gags, tongue out, pawing at its muzzle
-//   E 17.6-21.0   "Leaving it alive": the lizard scrambles away to the right; the camera follows and closes in; a muzzle
-//                 comes in from the upper left; the lizard stops, raises its head, its lids swell: frame 0 again
+//   0.00-1.05  the coyote charges in from the right and lunges, jaws open; the camera rushes in until the lizard's eye
+//              fills the frame; 0.42 a jet leaves the FRONT corner of the lids; the camera races along it to the muzzle
+//   1.05-2.9   the blood hits the mouth and muzzle; the coyote jerks its head up and back and backpedals, shaking
+//   2.9-3.9    the squirt loses pressure: where the stream lands moves back toward the lizard; the camera follows the
+//              blood back into the eye
+//   3.6-9.16   a clean cutaway opens round the eye: the sinus ring, artery in, vein out through its muscle. "When a
+//              predator attacks": its shadow, the muscle squeezes the vein shut. Each heartbeat swells the ring; the lid
+//              vessel balloons at the front corner. "BURST": it tears at the pore
+//   9.16-12.4  the camera pulls back with the new jet to the whole lizard; the coyote is lunging again; the stream lands
+//              in its mouth on "mouth"
+//   12.4-16.2  the coyote jerks its head away, backs off, grimaces ("disgusting"), shakes its head and spits ("spit")
+//   15.75-19.0 the lizard pivots and scurries away left across the sand; the coyote stays repelled (pawing, rubbing
+//              its muzzle)
+//   19.0-21.0  the lizard pivots back to face the danger as the coyote turns back and charges; the camera pushes toward
+//              the lizard's eye: frame 0 again, one PERIOD (45 cm) to the left (the desert layers are periodic)
 import {P, add, mul, nrm, pt, rot, sub} from './core/geo';
-import {DUR, FPS, FRAMES, clamp, easeOut, hash, keyS, lerp, noise1, ring, ss, ss5, word} from './lib';
-import {LizardState, backWorld, eyeWorld, headToWorld, poreDirWorld, poreWorld} from './art/lizard';
+import {DUR, FPS, FRAMES, clamp, easeOut, keyS, lerp, noise1, ring, ss, ss5, word} from './lib';
+import {LizardState, eyeWorld, poreDirWorld, poreWorld} from './art/lizard';
 import {CoyoteHead, CoyoteState, HEAD_K, coyoteHeadWorld, mouthTarget} from './art/coyote';
-import {RUPTURE_A, SinusState} from './art/sinus';
+import {SectionState} from './art/section';
 import {JetState, jetPoint} from './art/jet';
-import {EYE_L, EYE_R} from './art/lizard';
+import {PERIOD} from './art/desert';
 
 const w = word;
 export const T = {
-  lizard: w('lizard').start, shoot: w('SHOOT').start, eyesEnd: w('eyes!').end,
-  when: w('When').start, attacks: w('attacks').start, pressure: w('pressure').start, builds: w('builds').start, tiny: w('tiny').start,
-  until: w('Until').start, burst: w('BURST').start, launching: w('launching').start, into: w('into').start, mouth: w('mouth!').start, mouthEnd: w('mouth!').end,
-  and: w('And').start, tastes: w('tastes').start, disgusting: w('disgusting').start, disgustingEnd: w('disgusting').end,
-  spit: w('spit').start, out: w('out', 1).start, leaving: w('Leaving').start, alive: w('alive').start, same: w('same').start, again: w('again.').start, againEnd: w('again.').end,
+  lizard: w('lizard').start, shoot: w('SHOOT').start, eyesEnd: w('eyes!').end, when: w('When').start, attacks: w('attacks').start,
+  pressure: w('pressure').start, until: w('Until').start, burst: w('BURST').start, launching: w('launching').start, into: w('into').start,
+  mouth: w('mouth!').start, mouthEnd: w('mouth!').end, and: w('And').start, tastes: w('tastes').start, disgusting: w('disgusting').start,
+  disgustingEnd: w('disgusting').end, spit: w('spit').start, out: w('out', 1).start, leaving: w('Leaving').start, alive: w('alive').start,
+  again: w('again.').start, againEnd: w('again.').end,
 };
 export const LOOP_T = FRAMES / FPS;
+export const DX = PERIOD;
+export const speedAt = (_t: number) => 1;
+export const vOf = (t: number) => t;
+export const tOfV = (v: number) => v;
 
-// ---------------------------------------------------------------- the visual clock (slow motion at the impact only)
-const SLOW0 = T.mouth - 0.36, SLOW1 = T.mouth + 0.3, SLOWK = 0.74;
-const bump = (t: number) => ss(t, SLOW0, SLOW0 + 0.14) * (1 - ss(t, SLOW1 - 0.16, SLOW1));
-const VDT = 1 / 600;
-const VT: number[] = [0];
-for (let i = 1; i <= Math.ceil((DUR + 2) / VDT); i++) VT.push(VT[i - 1] + VDT * (1 - SLOWK * bump((i - 0.5) * VDT)));
-/** visual time for real time t */
-export const vOf = (t: number) => {
-  if (t <= 0) return t;
-  const x = t / VDT, i = Math.min(VT.length - 2, Math.floor(x));
-  return VT[i] + (VT[i + 1] - VT[i]) * (x - i);
-};
-/** how fast the picture runs (1 normal, < 1 slow motion) */
-export const speedAt = (t: number) => 1 - SLOWK * bump(t);
-const V = vOf;
-export const DELAY = DUR + 1 - vOf(DUR + 1);
-
-// event times in visual time
 export const EV = {
-  jetA0: 0.35, jetAHit: 0.5, jetAEnd: 0.8, recoil0: 0.88, recoil1: 1.45, push0: 0.9,
-  reveal0: 2.7, reveal1: 3.55, shadow0: T.when - 0.05, flinch: T.when + 0.12, sq0: T.when + 0.36, sq1: T.attacks + 0.25,
-  p0: T.pressure, p1: T.until + 0.2, tremble0: T.until, burst: T.burst + 0.02,
-  revealOut0: T.burst + 0.42, revealOut1: T.launching + 0.55, lunge0: T.into - 0.7,
-  imp: V(T.mouth - 0.1), bite: V(T.mouth + 0.2), streamEnd: V(T.mouth - 0.02),
-  lift0: V(T.mouthEnd + 0.05), lift1: V(T.tastes + 0.25), walk0: V(T.and), walk1: V(T.disgustingEnd + 0.3),
-  grim0: V(T.tastes), grim1: V(T.disgusting + 0.3), shake0: V(T.disgustingEnd + 0.1), shake1: V(T.spit - 0.05),
-  spit: V(T.spit + 0.1), gag0: V(T.spit + 0.35), paw0: V(T.out - 0.1), paw1: V(T.leaving + 0.2),
-  run0: V(T.leaving - 0.02), run1: V(T.againEnd + 0.06), c2: V(19.55),
+  jetA0: 0.42, hitA: 1.02, recoil1: 1.7, shake0: 1.85, shake1: 2.6, drop0: 2.9, drop1: 3.75,
+  reveal0: 3.55, reveal1: 4.3, shadow0: T.when - 0.05, flinch: T.when + 0.15, sq0: T.when + 0.4, sq1: T.attacks + 0.3,
+  p0: T.attacks + 0.15, p1: T.until + 0.25, tremble0: T.until, burst: T.burst + 0.02,
+  revealOut0: T.burst + 0.3, revealOut1: T.launching + 0.2, stalk0: 9.9, lunge0: T.into - 0.3, hitB: T.mouth - 0.03, streamEnd: T.mouth + 0.3,
+  jerk1: T.mouth + 0.6, back0: T.and, back1: T.disgusting + 0.6, grim0: T.tastes - 0.2, shakeB0: T.disgustingEnd, shakeB1: T.spit - 0.1,
+  spit: T.spit + 0.05, paw0: T.spit + 0.55, paw1: T.out + 0.55, rub0: T.leaving + 0.1, rub1: 19.1, look: 19.2,
+  pivot0: T.disgustingEnd + 0.75, pivot1: T.spit + 0.25, run0: T.spit + 0.2, run1: 19.05, pivotB0: 19.05, pivotB1: 19.85,
+  charge0: LOOP_T - 1.6,
 };
-const runEnd = EV.run1;
 
 // ---------------------------------------------------------------- the lizard
-const L0: LizardState = {x: 0, y: 0, rot: 0, head: -0.32, puff: 0.5, gait: 0, run: 0, dangle: 0, flinch: 0, eye: {look: -0.3, blink: 0, bulge: 0, blood: 0, wet: 0}, t: 0};
+const L0: LizardState = {x: 0, y: 0, yaw: 0, head: -0.3, puff: 0.5, gait: 0, run: 0, flinch: 0, eye: {look: 0.6, blink: 0, bulge: 0, blood: 0, wet: 0}, t: 0};
 export const EYE0 = eyeWorld(L0);
 export const PORE0 = poreWorld(L0);
-/** the lizard in the hook (tau = film time, or film time minus the loop length at the end) */
-const hookLizard = (tau: number): LizardState => {
-  const head = lerp(-0.04, -0.32, ss(tau, -0.95, -0.25)) - 0.03 * Math.sin(Math.PI * clamp((tau - 0.33) / 0.3));
-  const puff = lerp(0.1, 0.5, ss(tau, -0.9, -0.2));
-  const bulge = 0.75 * ss(tau, -0.8, 0.25) * (1 - 0.65 * ss(tau, 0.36, 0.7));
-  const blood = 0.8 * ss(tau, 0.55, 1.3);
-  const wet = ss(tau, 0.3, 0.37) * (1 - 0.5 * ss(tau, 0.9, 1.6));
-  return {...L0, head, puff, eye: {look: -0.6 * ss(tau, -0.6, 0), blink: blinkAt(tau, [1.25, 2.4]), bulge, blood, wet}, t: tau};
-};
 const blinkAt = (t: number, ts: number[]) => Math.max(0, ...ts.map((b) => Math.max(0, 1 - Math.abs(t - b) / 0.07)));
-
-// held, dropped, running
-let biteRel: {p: P; a: number} | null = null;
-const coyHeadFrame = (v: number) => {
-  const c = coyoteAtV(v);
-  return {o: coyoteHeadWorld(c, pt(0, 0)), a: c.ang};
+/** the lizard facing the attack (tau: film time, or film time minus the loop length at the end; x0: where it stands) */
+const hookLizard = (tau: number, x0: number): LizardState => {
+  const bulge = 0.75 * ss(tau, -0.9, 0.38) * (1 - 0.7 * ss(tau, 0.45, 1.0));
+  return {...L0, x: x0, head: -0.3 - 0.03 * Math.sin(Math.PI * clamp((tau - 0.4) / 0.3)), puff: lerp(0.15, 0.5, ss(tau, -1.1, -0.2)),
+    eye: {look: 0.6, blink: blinkAt(tau, [2.3]), bulge, blood: 0.7 * ss(tau, 0.6, 1.6), wet: ss(tau, 0.38, 0.44) * (1 - 0.4 * ss(tau, 3.4, 4.0))}, t: tau};
 };
-const heldPose = (v: number) => {
-  if (!biteRel) {
-    const f = coyHeadFrame(EV.bite);
-    const lz = groundLizard(EV.bite);
-    biteRel = {p: rot(sub(pt(lz.x, lz.y), f.o), -f.a), a: lz.rot - f.a};
-  }
-  const f = coyHeadFrame(v);
-  return {p: add(f.o, rot(biteRel.p, f.a)), a: f.a + biteRel.a};
-};
-const groundLizard = (v: number): LizardState => {
-  const base = hookLizard(Math.min(v, 2.6));
-  const fl = Math.max(0, ring(v, EV.flinch, 3.5, 0.18)) + 0.6 * Math.exp(-Math.max(0, v - EV.flinch) / 0.15) * (v > EV.flinch ? 1 : 0);
-  const bulge = v < EV.reveal1 ? base.eye.bulge : v < EV.revealOut1 ? 0.6 : lerp(0.55, 0.3, ss(v, EV.revealOut1, EV.imp));
-  const wet = v < EV.burst ? base.eye.wet : 1;
-  const blood = v < EV.burst ? base.eye.blood : Math.max(base.eye.blood, ss(v, EV.burst + 0.2, EV.burst + 1.6));
-  return {...base, head: base.head + 0.05 * Math.sin(Math.PI * clamp((v - EV.flinch) / 0.25)), flinch: clamp(fl), eye: {...base.eye, bulge, wet, blood, look: -0.6}, t: v};
-};
-const SPIT_THROW = pt(26, -40);
-const G = 980;
-const fallAt = (v: number) => {
-  const h0 = heldPose(EV.spit), h1 = heldPose(EV.spit + 0.02);
-  const vel = add(mul(sub(h1.p, h0.p), 1 / 0.02), SPIT_THROW);
-  // solve the landing: y(t) = y0 + vy t + G t^2 / 2 = 0
-  const tl = (-vel.y + Math.sqrt(vel.y * vel.y - 2 * G * h0.p.y)) / G;
-  const dt = Math.min(v - EV.spit, tl);
-  return {p: pt(h0.p.x + vel.x * dt, h0.p.y + vel.y * dt + 0.5 * G * dt * dt), a: lerp(h0.a, 0, ss(dt / tl, 0, 1)), land: EV.spit + tl, x: h0.p.x + vel.x * tl};
-};
-let landMemo: ReturnType<typeof fallAt> | null = null;
-export const LAND = () => landMemo ?? (landMemo = fallAt(EV.spit + 1));
 const STRIDE = 2.4;
-const runX = (v: number) => {
-  const xl = LAND().x;
-  return lerp(xl + 1.2 * ss(v, LAND().land, LAND().land + 0.25), 0, ss5(v, EV.run0, runEnd));
-};
+const runX = (t: number) => -DX * ss5(t, EV.run0, EV.run1);
+const pivotYaw = (t: number) => Math.PI * ss(t, EV.pivot0, EV.pivot1) * (1 - ss(t, EV.pivotB0, EV.pivotB1));
 export const lizardAt = (t: number): LizardState => {
-  const v = vOf(t);
   const tau = t - LOOP_T;
-  if (v < EV.bite) return groundLizard(v);
-  if (v < EV.spit) {
-    const h = heldPose(v);
-    const g = groundLizard(v);
-    return {...g, x: h.p.x, y: h.p.y, rot: h.a, dangle: ss(v, EV.bite, EV.bite + 0.25), head: -0.1 + 0.15 * Math.sin(v * 7), puff: 0.7,
-      eye: {...g.eye, blink: blinkAt(v, [EV.grim0 + 0.3, EV.shake0 + 0.4]), look: 0.2}, t: v};
+  if (tau > -1.15) {
+    const h = hookLizard(tau, -DX);
+    const k = ss(tau, -1.15, -0.9);
+    const b = escapeLizard(LOOP_T - 1.15);
+    return {...h, head: lerp(b.head, h.head, k), puff: lerp(b.puff, h.puff, k), gait: b.gait + 2.4 * (tau + 1.15) * (1 - k), run: lerp(b.run, 0, ss(tau, -1.15, -0.95)),
+      eye: {...h.eye, blood: lerp(b.eye.blood, 0, k), wet: lerp(b.eye.wet, 0, k)}};
   }
-  const lz = LAND();
-  if (v < lz.land) {
-    const f = fallAt(v);
-    return {...groundLizard(v), x: f.p.x, y: f.p.y, rot: f.a, dangle: 1 - 0.6 * ss(v, EV.spit, lz.land), head: -0.1, puff: 0.6, t: v};
+  if (t < EV.pivot0) {
+    const h = hookLizard(Math.min(t, 4.0), 0);
+    const fl = clamp(Math.max(0, ring(t, EV.flinch, 3.5, 0.18)) + (t > EV.flinch ? 0.6 * Math.exp(-(t - EV.flinch) / 0.15) : 0))
+      + clamp(t > EV.hitB ? 0.5 * Math.exp(-(t - EV.hitB) / 0.2) : 0);
+    const bulge = t < EV.reveal1 ? h.eye.bulge : t < EV.revealOut1 ? 0.75 : lerp(0.55, 0.1, ss(t, EV.revealOut1, EV.hitB + 1));
+    const blood = t < EV.burst ? h.eye.blood * (1 - ss(t, 4.5, 6)) : ss(t, EV.burst + 0.2, EV.burst + 1.4);
+    const wet = t < EV.burst ? h.eye.wet : 1 - 0.5 * ss(t, EV.streamEnd, EV.streamEnd + 1);
+    const puff = t < EV.hitB ? h.puff : lerp(0.5, 0.65, ss(t, EV.hitB, EV.hitB + 0.4));
+    return {...h, x: 0, flinch: clamp(fl), puff, eye: {...h.eye, bulge, blood, wet, blink: blinkAt(t, [2.3, 6.9, EV.back0 + 0.5])}, t};
   }
-  // on the ground again: the landing squash, a shake of the head, then the scramble
-  const x = runX(v);
-  const sp = (runX(v + 0.01) - runX(v - 0.01)) / 0.02;
-  const run = clamp(sp / 9);
-  const landK = Math.max(0, ring(v, lz.land, 3, 0.16));
-  const base: LizardState = {
-    ...L0, x, y: 0, rot: 0.04 * Math.sin(Math.PI * clamp((v - lz.land) / 0.2)),
-    head: -0.06 + 0.06 * Math.sin(Math.PI * 2 * 3 * clamp((v - lz.land - 0.35) / 0.5)) * (v > lz.land + 0.35 && v < lz.land + 0.85 ? 1 : 0),
-    puff: lerp(0.6, 0.12, ss(v, lz.land, EV.run0)), gait: (x - lz.x) / STRIDE, run, dangle: 0, flinch: clamp(landK + 0.8 * Math.exp(-(v - lz.land) / 0.08)),
-    eye: {look: 0.2, blink: blinkAt(v, [lz.land + 0.05, EV.run0 + 1.2]), bulge: lerp(0.3, 0, ss(v, lz.land, EV.run0 + 1)), blood: 1 - ss(v, EV.run0 + 0.6, EV.run0 + 1.8), wet: 1 - ss(v, lz.land, EV.run0 + 1.2)}, t: v,
+  return escapeLizard(t);
+};
+/** pivot left, scurry, pivot back */
+const escapeLizard = (t: number): LizardState => {
+  const x = runX(t);
+  const sp = Math.abs(runX(t + 0.01) - runX(t - 0.01)) / 0.02;
+  const pivoting = Math.max(Math.sin(Math.PI * clamp((t - EV.pivot0) / (EV.pivot1 - EV.pivot0))), Math.sin(Math.PI * clamp((t - EV.pivotB0) / (EV.pivotB1 - EV.pivotB0))));
+  const run = clamp(Math.max(sp / 14, 0.55 * pivoting));
+  const gait = Math.abs(x) / STRIDE + 2.2 * Math.max(0, Math.min(t, EV.pivot1) - EV.pivot0) + 2.2 * Math.max(0, Math.min(t, EV.pivotB1) - EV.pivotB0);
+  return {
+    ...L0, x, yaw: pivotYaw(t), head: lerp(-0.25, -0.05, ss(t, EV.pivot0, EV.run0 + 0.3)) - 0.2 * ss(t, EV.pivotB0, EV.pivotB1), puff: lerp(0.6, 0.15, ss(t, EV.pivot0, EV.run0 + 0.6)),
+    gait, run, flinch: 0,
+    eye: {look: 0.2, blink: blinkAt(t, [EV.run0 + 1.3]), bulge: 0.1 * (1 - ss(t, EV.pivot0, EV.run0)), blood: 1 - ss(t, EV.run0 + 0.4, EV.run0 + 1.8), wet: 0.5 * (1 - ss(t, EV.pivot0, EV.run0 + 0.8))}, t,
   };
-  if (tau > -1.0) {
-    // the end of the run settles into the hook's state (its head rises, the lids swell), continuous into frame 0
-    const h = hookLizard(tau);
-    const k = ss(tau, -1.0, -0.75);
-    return {...h, x: base.x, gait: base.gait, run: base.run, head: lerp(base.head, h.head, k), puff: lerp(base.puff, h.puff, k),
-      eye: {...h.eye, blood: lerp(base.eye.blood, h.eye.blood, k), wet: lerp(base.eye.wet, h.eye.wet, k), look: lerp(base.eye.look, h.eye.look, k)}};
-  }
-  return base;
 };
 
-// ---------------------------------------------------------------- the coyote
-const ATK: CoyoteHead = {jaw: 0.32, ears: 0, squint: 0, lip: 0.4, wrinkle: 0.45, tongue: 0, blood: 0, look: 0.7, shake: 0};
-const M_A = add(EYE0, pt(-6.6, -5.0));   // the mouth, inches from the lizard's head
-const ANG_A = 0.4;
-const CROUCH = 12;
-const JL_X = 16;
-const jFromMouth = (M: P, ang: number, jaw: number) => sub(M, rot(mul(mouthTarget(jaw), HEAD_K), ang));
-const BODY0 = jFromMouth(M_A, ANG_A, ATK.jaw).x - JL_X;
-/** a coyote whose mouth is at M (world) with pitch ang */
-const mouthCoyote = (M: P, ang: number, hd: CoyoteHead, bodyX: number, t: number, crouch = CROUCH): CoyoteState => {
-  const J = jFromMouth(M, ang, hd.jaw);
-  return {x: bodyX, y: 0, J: pt(J.x - bodyX, J.y - crouch), ang, hd, crouch, walk: 0, stride: 0, paw: 0, t};
-};
+// ---------------------------------------------------------------- the coyote (dir -1: faces screen left)
+const ATK: CoyoteHead = {jaw: 0.5, ears: 0, squint: 0, lip: 0.45, wrinkle: 0.45, tongue: 0, blood: 0, look: 0.8, shake: 0};
+const DIS: CoyoteHead = {jaw: 0.35, ears: 0.9, squint: 0.85, lip: 0.85, wrinkle: 1, tongue: 0.55, blood: 0.7, look: 0.1, shake: 0};
 const mixHead = (a: CoyoteHead, b: CoyoteHead, u: number): CoyoteHead => {
   const o: any = {};
   for (const k of Object.keys(a)) o[k] = lerp((a as any)[k], (b as any)[k], u);
   return o;
 };
-const hookCoyote = (tau: number): CoyoteState => {
-  const q = clamp((tau + 1.5) / 1.8);
-  const off = mul(pt(-24, -22), (1 - q) ** 3);
-  const jolt = Math.max(0, ring(tau, EV.jetAHit, 2.5, 0.12)) * 0.6;
-  const rc = ss5(tau, EV.recoil0, EV.recoil1);
-  const M = add(add(add(M_A, off), mul(pt(-0.7, -0.6), jolt + 0.4 * ss(tau, -0.2, 0.4))), mul(pt(-4.5, -7), rc));
-  const disgust: CoyoteHead = {jaw: 0.3, ears: 0.85, squint: 0.75, lip: 0.7, wrinkle: 1, tongue: 0.25, blood: 0.45, look: 0.2, shake: 0};
-  const hd = mixHead({...ATK, jaw: ATK.jaw + 0.04 * Math.sin(tau * 9) + 0.06 * ss(tau, -0.3, 0.3), blood: 0.5 * ss(tau, EV.jetAHit, EV.jetAHit + 0.1)}, disgust, ss(tau, EV.jetAHit + 0.25, EV.recoil1));
-  return mouthCoyote(M, ANG_A - 0.35 * rc, hd, BODY0, tau);
+const MOUTH_AT = add(EYE0, pt(6.6, -3.2));
+const JL_LUNGE = pt(31, -17), ANG_LUNGE = 0.42, CROUCH_LUNGE = 9;
+/** the body x that puts the mouth at M (world) for a given head pose */
+const bodyForMouth = (M: P, Jl: P, ang: number, jaw: number, crouch: number) => {
+  const l = add(pt(Jl.x, Jl.y + crouch), rot(mul(mouthTarget(jaw), HEAD_K), ang));
+  return {x: M.x + l.x, dy: M.y - l.y};
 };
-/** while the camera is inside the head the coyote comes back and hangs over the lizard */
-const M_HOVER = add(M_A, pt(-1.4, -2.6));
-const M_C = add(M_A, pt(-0.2, -0.1));
-const BITE_AT = () => add(backWorld(L0, -1.2), pt(0, -0.2));
-const coyoteAtV = (v: number): CoyoteState => {
-  if (v < 2.6) return hookCoyote(v);
-  const attack = ss5(v, EV.shadow0 - 0.25, EV.sq1);
-  const lunge = ss5(v, V(EV.lunge0), EV.imp);
-  const breath = pt(0.3 * Math.sin(v * 2.1), 0.25 * Math.sin(v * 2.9));
-  const hdIdle: CoyoteHead = {...ATK, ears: 0.2, lip: 0.5, blood: 0.35, jaw: 0.5 + 0.05 * Math.sin(v * 3.1)};
-  const back = hookCoyote(2.6);
-  if (v < EV.imp) {
-    const M = add(lerpP(lerpP(coyoteHeadMouth(back), M_HOVER, attack), M_C, lunge), mul(breath, 1 - lunge));
-    const hd = mixHead(mixHead(back.hd, hdIdle, attack), {...ATK, jaw: 0.42, blood: 0.35, lip: 0.6}, lunge);
-    return mouthCoyote(M, lerp(lerp(back.ang, ANG_A, attack), ANG_A + 0.05, lunge), hd, BODY0, v);
-  }
-  // impact -> bite: the jaws come down on the lizard's back half
-  const hit: CoyoteHead = {...ATK, jaw: 0.42, blood: 0.35 + 0.55 * ss(v, EV.imp, EV.imp + 0.08), squint: 0.55 * ss(v, EV.imp, EV.imp + 0.05), lip: 0.6, ears: 0.3 * ss(v, EV.imp, EV.bite)};
-  const bk = ss5(v, EV.imp + 0.04, EV.bite);
-  if (v < EV.bite + 0.001) {
-    const M = lerpP(M_C, BITE_AT(), bk);
-    return mouthCoyote(M, lerp(ANG_A + 0.05, 0.36, bk), {...hit, jaw: lerp(0.42, 0.2, ss(v, EV.bite - 0.07, EV.bite)) + 0.18 * Math.sin(Math.PI * clamp((v - EV.imp - 0.02) / (EV.bite - EV.imp - 0.06)))}, BODY0, v);
-  }
-  return heldCoyote(v);
+const LUNGE = bodyForMouth(MOUTH_AT, JL_LUNGE, ANG_LUNGE, ATK.jaw, CROUCH_LUNGE);
+const BODY_LUNGE = LUNGE.x;              // ~ +40: where the forepaws stand at the lunge
+const JL_LUNGE_Y = JL_LUNGE.y + LUNGE.dy; // so the mouth height matches too
+const BODY_FAR = BODY_LUNGE + 12;          // where it backs off to
+const CHARGE_FROM = BODY_FAR - 0;          // the next charge starts where it stood (one PERIOD left of here is the hook's)
+const coy = (x: number, J: P, ang: number, hd: CoyoteHead, crouch: number, walkX: number, stride: number, t: number, paw = 0): CoyoteState => (
+  {x, y: 0, dir: -1, J, ang, hd, crouch, walk: walkX / 20, stride, paw, t}
+);
+const strideFor = (v: number) => clamp(Math.abs(v) * 0.42, 0, 26);
+/** charge and lunge, hit, recoil (tau relative to the hook; x0 = where the lizard stands) */
+const hookCoyote = (tau: number, x0: number): CoyoteState => {
+  const bx = (tt: number) => x0 + keyS(tt, [[-1.6, CHARGE_FROM + DX], [-0.55, BODY_LUNGE + 4], [0.42, BODY_LUNGE], [EV.hitA, BODY_LUNGE + 0.5], [EV.recoil1 + 0.4, BODY_LUNGE + 8]]);
+  const x = bx(tau);
+  const v = (bx(tau + 0.01) - bx(tau - 0.01)) / 0.02;
+  const lunge = ss5(tau, -0.65, 0.1);
+  const rec = ss5(tau, EV.hitA + 0.02, EV.recoil1);
+  const settle = ss5(tau, EV.shake1, EV.drop1);
+  const J = pt(lerp(lerp(24, JL_LUNGE.x, lunge), lerp(15, 22, settle), rec), lerp(lerp(-30, JL_LUNGE_Y, lunge), lerp(-36, -22, settle), rec));
+  const ang = lerp(lerp(0.22, ANG_LUNGE, lunge), lerp(-0.3, 0.6, settle), rec);
+  const shake = Math.sin(2 * Math.PI * 3.3 * (tau - EV.shake0)) * ss(tau, EV.shake0, EV.shake0 + 0.12) * (1 - ss(tau, EV.shake1 - 0.2, EV.shake1));
+  const charge: CoyoteHead = {...ATK, jaw: 0.15 + 0.35 * lunge + 0.04 * Math.sin(tau * 11), blood: 0};
+  const hit = mixHead(charge, {...DIS, blood: 0.75 * ss(tau, EV.hitA, EV.hitA + 0.08)}, ss(tau, EV.hitA, EV.hitA + 0.25));
+  return coy(x, J, ang + 0.05 * shake, {...hit, shake, jaw: hit.jaw + 0.15 * Math.sin(Math.PI * clamp((tau - EV.hitA) / 0.3))}, lerp(lerp(3, CROUCH_LUNGE, lunge), lerp(2, 6, settle), rec), x, strideFor(v), tau);
 };
-const coyoteHeadMouth = (c: CoyoteState) => coyoteHeadWorld(c, mouthTarget(c.hd.jaw));
-const lerpP = (a: P, b: P, u: number) => pt(lerp(a.x, b.x, u), lerp(a.y, b.y, u));
-let biteC: CoyoteState | null = null;
-const BACK_DX = -36;
-const heldCoyote = (v: number): CoyoteState => {
-  if (!biteC) {
-    const M = BITE_AT();
-    biteC = mouthCoyote(M, 0.36, {...ATK, jaw: 0.2}, BODY0, EV.bite);
-  }
-  const J0 = biteC.J;
-  // body: two steps back while the head comes up with the lizard
-  const bx = BODY0 + BACK_DX * ss(v, EV.walk0, EV.walk1);
-  const walk = (BACK_DX * ss(v, EV.walk0, EV.walk1)) / 18;
-  const stride = 18 * Math.sin(Math.PI * clamp((v - EV.walk0) / (EV.walk1 - EV.walk0)));
-  const crouch = lerp(CROUCH, 3, ss(v, EV.lift0, EV.lift1)) + 6 * ss(v, EV.gag0, EV.gag0 + 0.4);
-  const jx = keyS(v, [[EV.bite, J0.x], [EV.lift1, 19], [EV.spit - 0.15, 20], [EV.spit + 0.1, 17], [EV.gag0 + 0.4, 21]]);
-  const jy0 = keyS(v, [[EV.bite, J0.y], [EV.lift1, -34], [EV.spit - 0.15, -35], [EV.spit + 0.1, -41], [EV.gag0 + 0.4, -22]]);
-  const shake = Math.sin(2 * Math.PI * 3.2 * (v - EV.shake0)) * ss(v, EV.shake0, EV.shake0 + 0.12) * (1 - ss(v, EV.shake1 - 0.15, EV.shake1));
-  const gag = ss(v, EV.gag0, EV.gag0 + 0.2);
-  const ang = keyS(v, [[EV.bite, 0.36], [EV.lift1, 0.12], [EV.spit - 0.15, 0.1], [EV.spit + 0.1, -0.2], [EV.gag0 + 0.4, 0.55]]) + 0.06 * Math.sin(v * 5) * gag + 0.05 * shake;
-  const grim = ss(v, EV.grim0, EV.grim1);
-  const hd: CoyoteHead = {
-    jaw: v < EV.spit - 0.08 ? 0.2 + 0.03 * Math.sin(v * 13) * grim : lerp(0.2, 0.85, ss(v, EV.spit - 0.08, EV.spit + 0.05)) - 0.35 * gag + 0.18 * gag * Math.sin(2 * Math.PI * 3.4 * (v - EV.gag0)),
-    ears: lerp(0.3, 1, grim), squint: lerp(0.55, 0.95, grim), lip: lerp(0.6, 0.95, grim), wrinkle: lerp(0.5, 1, grim),
-    tongue: ss(v, EV.spit, EV.gag0 + 0.2) * (0.85 + 0.15 * Math.sin(v * 7)), blood: 0.9 - 0.2 * gag, look: 0.2 - 0.5 * gag, shake,
-  };
-  const paw = 0 * ss(v, EV.paw0, EV.paw0 + 0.25) * (1 - ss(v, EV.paw1 - 0.25, EV.paw1)) * (0.85 + 0.15 * Math.sin(2 * Math.PI * 2.5 * (v - EV.paw0)));
-  return {x: bx, y: 0, J: pt(jx, jy0), ang, hd, crouch, walk, stride, paw, t: v};
+/** after the first hit: off screen while the camera is in the eye, back again, the second hit, repelled */
+const midCoyote = (t: number): CoyoteState => {
+  const h = hookCoyote(EV.drop1, 0);
+  const bx = (tt: number) => keyS(tt, [[EV.drop1, h.x], [EV.stalk0, BODY_LUNGE + 10], [EV.lunge0, BODY_LUNGE + 5], [EV.hitB, BODY_LUNGE], [EV.jerk1, BODY_LUNGE + 3], [EV.back1, BODY_FAR]]);
+  const x = bx(t);
+  const v = (bx(t + 0.01) - bx(t - 0.01)) / 0.02;
+  const lunge = ss5(t, EV.lunge0, EV.hitB);
+  const jerk = ss5(t, EV.hitB + 0.03, EV.jerk1);
+  const Jx = keyS(t, [[EV.drop1, h.J.x], [EV.stalk0, 24], [EV.lunge0, 26], [EV.hitB, JL_LUNGE.x], [EV.jerk1, 14], [EV.grim0, 15], [EV.shakeB0, 22], [EV.spit, 27], [EV.paw0, 20], [EV.rub0, 25], [EV.rub1, 26], [EV.look + 0.2, 22]]);
+  const Jy = keyS(t, [[EV.drop1, h.J.y], [EV.stalk0, -30], [EV.lunge0, -27], [EV.hitB, JL_LUNGE_Y], [EV.jerk1, -38], [EV.grim0, -34], [EV.shakeB0, -26], [EV.spit, -16], [EV.paw0, -22], [EV.rub0, -15], [EV.rub1, -15], [EV.look + 0.2, -30]]);
+  const ang = keyS(t, [[EV.drop1, h.ang], [EV.stalk0, 0.25], [EV.lunge0, 0.3], [EV.hitB, ANG_LUNGE], [EV.jerk1, -0.32], [EV.grim0, -0.15], [EV.shakeB0, 0.45], [EV.spit, 0.8], [EV.paw0, 0.55], [EV.rub0, 0.78], [EV.rub1, 0.78], [EV.look + 0.2, 0.22]]);
+  const shake = Math.sin(2 * Math.PI * 3.4 * (t - EV.shakeB0)) * ss(t, EV.shakeB0, EV.shakeB0 + 0.12) * (1 - ss(t, EV.shakeB1 - 0.2, EV.shakeB1));
+  const rub = Math.sin(2 * Math.PI * 1.6 * (t - EV.rub0)) * ss(t, EV.rub0, EV.rub0 + 0.3) * (1 - ss(t, EV.rub1 - 0.3, EV.rub1));
+  const stalkHead: CoyoteHead = {...ATK, jaw: 0.12 + 0.38 * lunge, blood: 0.3, ears: 0.15, lip: 0.6};
+  const disg = mixHead(stalkHead, {...DIS, blood: 0.85}, ss(t, EV.hitB, EV.hitB + 0.25));
+  const spitOpen = Math.sin(Math.PI * clamp((t - EV.spit + 0.05) / 0.35));
+  const looking = ss(t, EV.look - 0.1, EV.look + 0.4);
+  const hd: CoyoteHead = mixHead({...disg, tongue: disg.tongue + 0.45 * ss(t, EV.grim0, EV.grim0 + 0.6), jaw: disg.jaw + 0.45 * spitOpen + 0.1 * Math.sin(t * 9) * ss(t, EV.paw0, EV.rub1) - 0.2 * ss(t, EV.grim0, EV.shakeB0) * (1 - spitOpen), shake},
+    {...ATK, jaw: 0.2, blood: 0.4, look: 1}, looking);
+  const paw = ss(t, EV.paw0, EV.paw0 + 0.25) * (1 - ss(t, EV.paw1 - 0.25, EV.paw1)) * (0.85 + 0.15 * Math.sin(2 * Math.PI * 2.5 * (t - EV.paw0)));
+  const crouch = keyS(t, [[EV.drop1, h.crouch], [EV.stalk0, 6], [EV.hitB, CROUCH_LUNGE], [EV.jerk1, 2], [EV.rub0, 12], [EV.rub1, 12], [EV.look + 0.2, 4]]);
+  return coy(x, pt(Jx + 1.5 * rub, Jy), ang + 0.05 * shake + 0.06 * rub, hd, crouch, x, strideFor(v), t, paw);
 };
 export const coyoteAt = (t: number): CoyoteState => {
-  const v = vOf(t);
   const tau = t - LOOP_T;
-  if (v >= EV.c2) return hookCoyote(tau); // the next attacker, coming in from the upper left
-  return coyoteAtV(v);
+  if (tau >= -1.6) return hookCoyote(tau, -DX);
+  if (t < EV.drop1) return hookCoyote(t, 0);
+  return midCoyote(t);
 };
-/** is the lizard inside the coyote's mouth? */
-export const heldAt = (t: number) => {
-  const v = vOf(t);
-  return v >= EV.bite && v < EV.spit;
-};
+export const mouthWorld = (c: CoyoteState) => coyoteHeadWorld(c, mouthTarget(c.hd.jaw));
 
 // ---------------------------------------------------------------- the jets
 const JW = 0.27;
 export const jetAt = (t: number): JetState | null => {
-  const v = vOf(t);
   const tau = t - LOOP_T;
-  if (v < 3 || tau > -1) {
-    const tt = v < 3 ? v : tau;
-    if (tt < EV.jetA0 || tt > 1.4) return null;
-    const lz = hookLizard(tt);
-    const c = hookCoyote(tt);
-    const u1 = easeOut((tt - EV.jetA0) / (EV.jetAHit - EV.jetA0));
-    const u0 = clamp((tt - EV.jetAEnd) / 0.14) ** 1.5;
-    const splash = clamp((tt - EV.jetAHit) / 0.3) * (1 - ss(tt, 0.98, 1.3));
-    return {from: poreWorld(lz), dir: poreDirWorld(lz), to: coyoteHeadMouth(c), u0, u1, w: JW, splash, t: tt};
+  if (t < 4.0 || tau > -1) {
+    const tt = t < 4.0 ? t : tau;
+    if (tt < EV.jetA0 || tt > EV.drop1) return null;
+    const lz = lizardAt(t);
+    const c = coyoteAt(t);
+    const from = poreWorld(lz);
+    // where the stream lands: the mouth while it is there; then, as the squirt weakens, the sand nearer and nearer
+    const mouth = mouthWorld(hookCoyote(Math.min(tt, EV.hitA + 0.12), 0));
+    const sand = (k: number) => pt(EYE0.x + lerp(9.5, 1.2, k), 0.4);
+    const to = tt < EV.hitA + 0.12 ? mouthWorld(c) : (() => {
+      const k = ss(tt, EV.hitA + 0.12, EV.hitA + 0.6);
+      const far = sand(ss(tt, EV.drop0, EV.drop1));
+      return pt(lerp(mouth.x, far.x, k), lerp(mouth.y, far.y, k));
+    })();
+    const u1 = easeOut(clamp((tt - EV.jetA0) / (EV.hitA - EV.jetA0)) ** 0.85);
+    const u0 = clamp((tt - (EV.drop1 - 0.25)) / 0.25);
+    const splash = clamp((tt - EV.hitA) / 0.25) * (1 - ss(tt, EV.hitA + 0.4, EV.hitA + 0.9)) + 0.6 * clamp((tt - EV.hitA - 0.6) / 0.3) * (1 - ss(tt, EV.drop0, EV.drop1));
+    return {from, dir: poreDirWorld(lz), to, u0, u1, w: JW * (1 - 0.55 * ss(tt, EV.hitA + 0.4, EV.drop1)), splash, t: tt};
   }
-  if (v < EV.burst || v > EV.streamEnd + 0.6) return null;
+  if (t < EV.burst || t > EV.streamEnd + 0.4) return null;
   const lz = lizardAt(t);
   const c = coyoteAt(t);
-  const s = clamp((v - EV.burst - 0.04) / (EV.imp - EV.burst - 0.04));
-  const k = 3.4;
+  const s = clamp((t - EV.burst - 0.04) / (EV.hitB - EV.burst - 0.04));
+  const k = 3.2;
   const u1 = (Math.exp(k * s) - 1) / (Math.exp(k) - 1);
-  const u0 = clamp((v - EV.streamEnd) / 0.07) ** 1.4;
-  const splash = clamp((v - EV.imp) / 0.08) * (1 - ss(v, EV.imp + 0.06, EV.bite));
-  return {from: poreWorld(lz), dir: poreDirWorld(lz), to: coyoteHeadMouth(c), u0, u1, w: JW * (1 + 0.15 * ss(v, EV.burst, EV.burst + 0.3)), splash, t: v};
+  const u0 = clamp((t - EV.streamEnd) / 0.25) ** 1.4;
+  const splash = clamp((t - EV.hitB) / 0.2) * (1 - ss(t, EV.streamEnd, EV.streamEnd + 0.4));
+  return {from: poreWorld(lz), dir: poreDirWorld(lz), to: mouthWorld(c), u0, u1, w: JW, splash, t};
+};
+/** the coyote spits: a few drops of bloody saliva thrown from its mouth, falling to the sand */
+export const spitAt = (t: number): {p: P; r: number}[] => {
+  if (t < EV.spit || t > EV.spit + 0.7) return [];
+  const c = coyoteAt(EV.spit + 0.05);
+  const m = mouthWorld(c);
+  return [0, 1, 2, 3, 4].map((i) => {
+    const dt = t - EV.spit - i * 0.03;
+    if (dt < 0) return null;
+    const vx = -(40 + 18 * i), vy = -20 + 12 * i;
+    const y = Math.min(0.2, m.y + vy * dt + 0.5 * 980 * dt * dt);
+    return {p: pt(m.x + vx * Math.min(dt, 0.4), y), r: 0.35 - 0.05 * i};
+  }).filter((d): d is {p: P; r: number} => !!d && t - EV.spit < 0.6);
 };
 
-// ---------------------------------------------------------------- inside the head
-const BEAT0 = 2.2, BEAT_SLOW = 0.5, BEAT_FAST = 0.34;
+// ---------------------------------------------------------------- the cross-section
+const BEAT_SLOW = 0.5, BEAT_FAST = 0.34;
 export const beatTimes: number[] = [];
-for (let b = BEAT0; b < 14; ) {
+for (let b = 3.2; b < 11; ) {
   beatTimes.push(b);
   b += b < EV.p0 - 0.2 ? BEAT_SLOW : BEAT_FAST;
 }
-const beatAt = (v: number) => {
+const beatAt = (t: number) => {
   let last = -10;
-  for (const b of beatTimes) if (b <= v) last = b;
-  return Math.exp(-(v - last) / 0.11);
+  for (const b of beatTimes) if (b <= t) last = b;
+  return Math.exp(-(t - last) / 0.11);
 };
-const pressureAt = (v: number) => {
-  if (v < EV.p0) return 0;
-  const n = (EV.p1 - EV.p0) / BEAT_FAST;
-  const c = (v - EV.p0) / BEAT_FAST;
+const pressureAt = (t: number) => {
+  if (t < EV.p0) return 0;
+  const n = (EV.p1 - EV.p0) / BEAT_FAST, c = (t - EV.p0) / BEAT_FAST;
   return clamp((Math.floor(c) + ss(c - Math.floor(c), 0, 0.4)) / n);
 };
-// flow phases: integrate the speeds
 const PH: {a: number; v: number}[] = [];
 {
   let a = 0, vv = 0;
   for (let i = 0; i <= 1400; i++) {
     const t = i / 100;
     PH.push({a, v: vv});
-    const sq = ss(t, EV.sq0, EV.sq1) * (1 - ss(t, EV.burst + 0.6, EV.burst + 1.6));
-    a += (0.42 + 0.35 * beatAt(t)) / 100 * (1 - 0.55 * pressureAt(t));
-    vv += 0.38 / 100 * (1 - sq);
+    const sq = ss(t, EV.sq0, EV.sq1);
+    a += ((0.42 + 0.35 * beatAt(t)) / 100) * (1 - 0.55 * pressureAt(t));
+    vv += (0.38 / 100) * (1 - sq);
   }
 }
-export const sinusAt = (t: number): SinusState => {
-  const v = vOf(t);
-  const i = clamp(v * 100, 0, 1399), i0 = Math.floor(i), f = i - i0;
-  const ph = {a: lerp(PH[i0].a, PH[i0 + 1].a, f), v: lerp(PH[i0].v, PH[i0 + 1].v, f)};
+export const sectionAt = (t: number): SectionState => {
+  const i = clamp(t * 100, 0, 1399), i0 = Math.floor(i), f = i - i0;
   return {
-    reveal: ss(v, EV.reveal0, EV.reveal1) * (1 - ss(v, EV.revealOut0, EV.revealOut1)),
-    squeeze: ss(v, EV.sq0, EV.sq1) * (1 - ss(v, EV.burst + 0.6, EV.burst + 1.6)),
-    p: pressureAt(v), beat: beatAt(v), aPhase: ph.a, vPhase: ph.v, burst: v >= EV.burst ? v - EV.burst : -1,
-    shadow: ss(v, EV.shadow0, EV.shadow0 + 0.35) * (1 - ss(v, EV.revealOut0, EV.revealOut1)) * (0.75 + 0.25 * Math.sin(v * 2)), t: v,
+    reveal: ss(t, EV.reveal0, EV.reveal1) * (1 - ss(t, EV.revealOut0, EV.revealOut1)),
+    squeeze: ss(t, EV.sq0, EV.sq1), p: pressureAt(t), beat: beatAt(t),
+    aPhase: lerp(PH[i0].a, PH[i0 + 1].a, f), vPhase: lerp(PH[i0].v, PH[i0 + 1].v, f), burst: t >= EV.burst ? t - EV.burst : -1,
+    shadow: ss(t, EV.shadow0, EV.shadow0 + 0.35) * (1 - ss(t, EV.revealOut0, EV.revealOut1)) * (0.75 + 0.25 * Math.sin(t * 2)), t,
   };
 };
-export const revealAt = (t: number) => sinusAt(t).reveal;
 
 // ---------------------------------------------------------------- the camera
 export type Cam = {x: number; y: number; w: number};
-const HOOK = {x: -2.4, y: -6.4, w: 14.6};
-const hookCam = (tau: number): Cam => ({x: HOOK.x + 0.16 * tau, y: HOOK.y + 0.05 * tau, w: HOOK.w * Math.exp(-0.02 * tau)});
-const insideC = headToWorld(L0, pt(0.15, 0.2));
-const ruptW = headToWorld(L0, add(EYE_L, pt(Math.cos(RUPTURE_A) * EYE_R * 1.5, Math.sin(RUPTURE_A) * EYE_R * 1.5)));
-type K = [number, number, number, number]; // t, x, y, w
-/** Catmull-Rom through keys in (x, y, log w); the first and last keys may carry fixed velocities */
-const spline = (t: number, keys: K[], v0?: [number, number, number], v1?: [number, number, number]): Cam => {
+type K = [number, number, number, number];
+const spline = (t: number, keys: K[]): Cam => {
   const n = keys.length;
   const val = (k: K) => [k[1], k[2], Math.log(k[3])];
   if (t <= keys[0][0]) return {x: keys[0][1], y: keys[0][2], w: keys[0][3]};
@@ -335,91 +264,71 @@ const spline = (t: number, keys: K[], v0?: [number, number, number], v1?: [numbe
   let i = 0;
   while (keys[i + 1][0] < t) i++;
   const tan = (j: number) => {
-    if (j === 0 && v0) return v0;
-    if (j === n - 1 && v1) return v1;
     if (j === 0 || j === n - 1) return [0, 0, 0];
     const a = val(keys[j - 1]), b = val(keys[j + 1]);
-    const dt = keys[j + 1][0] - keys[j - 1][0];
-    return a.map((x, m) => (b[m] - x) / dt);
+    return a.map((x, m) => (b[m] - x) / (keys[j + 1][0] - keys[j - 1][0]));
   };
-  const t0 = keys[i][0], t1 = keys[i + 1][0], h = t1 - t0, u = (t - t0) / h;
+  const t0 = keys[i][0], h = keys[i + 1][0] - t0, u = (t - t0) / h;
   const p0 = val(keys[i]), p1 = val(keys[i + 1]), m0 = tan(i), m1 = tan(i + 1);
   const h00 = 2 * u ** 3 - 3 * u ** 2 + 1, h10 = u ** 3 - 2 * u ** 2 + u, h01 = -2 * u ** 3 + 3 * u ** 2, h11 = u ** 3 - u ** 2;
   const r = p0.map((_, m) => h00 * p0[m] + h10 * h * m0[m] + h01 * p1[m] + h11 * h * m1[m]);
   return {x: r[0], y: r[1], w: Math.exp(r[2])};
 };
-const camAB = (v: number): Cam => {
-  if (v <= EV.push0) return hookCam(v);
-  const h = hookCam(EV.push0);
-  const hv: [number, number, number] = [0.22, 0.08, -0.02];
-  return spline(v, [
-    [EV.push0, h.x, h.y, h.w],
-    [1.9, EYE0.x - 0.9, EYE0.y - 0.6, 8.5],
-    [EV.reveal1 - 0.2, insideC.x, insideC.y, 3.25],
-    [EV.p0, insideC.x + 0.05, insideC.y + 0.02, 3.0],
-    [EV.p1 - 0.3, ruptW.x + 0.12, ruptW.y + 0.22, 1.8],
-    [EV.burst, PORE0.x + 0.02, PORE0.y + 0.05, 1.7],
-  ], hv);
-};
-const camC = (v: number): Cam => {
-  const j = jetAt(tOfV(Math.min(v, EV.imp)));
-  const pore = PORE0;
-  const front = j ? jetPoint(j, clamp(j.u1)) : pore;
-  const mouth = coyoteHeadMouth(coyoteAtV(Math.min(v, EV.imp)));
-  const d = Math.hypot(front.x - pore.x, front.y - pore.y);
-  const two = ss(v, V(T.into - 0.3), EV.imp);
-  const c = lerpP(lerpP(add(pore, pt(0.02, 0.05)), front, 0.5), add(lerpP(pore, mouth, 0.58), pt(-0.3, -0.4)), two);
-  return {x: c.x, y: c.y, w: 1.7 + 1.55 * d + 1.2 * two};
-};
-// real time of a visual time (inverse of vOf, by search)
-export const tOfV = (v: number) => {
-  if (v <= SLOW0 - 0.05) return v;
-  if (v >= vOf(SLOW1 + 0.05)) return v + DELAY;
-  let a = SLOW0 - 0.1, b = SLOW1 + 0.1;
-  for (let k = 0; k < 40; k++) {
-    const m = (a + b) / 2;
-    if (vOf(m) < v) a = m;
-    else b = m;
-  }
-  return (a + b) / 2;
-};
-const followD = (v: number): Cam => {
-  // a low-passed point between the held lizard and the coyote's eye, widening to show the coyote
-  let x = 0, y = 0;
-  const N = 6;
-  for (let i = 0; i < N; i++) {
-    const vv = v - (i / N) * 0.45;
-    const lz = lizardAt(tOfV(vv));
-    const c = coyoteAtV(Math.max(EV.bite + 0.001, vv));
-    const e = coyoteHeadWorld(c, pt(2, -4));
-    x += lerp(lz.x, e.x, 0.62);
-    y += lerp(lz.y, e.y, 0.5);
-  }
-  const wv = keyS(v, [[EV.bite, 18], [EV.lift1, 29], [EV.spit, 32], [EV.gag0 + 0.6, 36]]);
-  return {x: x / N + 0.5, y: y / N + 2.5 + 0.08 * (wv - 18), w: wv};
-};
-const followE = (v: number): Cam => {
-  const lx = runX(v);
-  const s = ss5(v, EV.run0 - 0.3, runEnd + 0.2);
-  return {x: lerp(LAND().x - 5, lx + HOOK.x, ss5(v, EV.run0 - 0.4, EV.run0 + 0.9)), y: lerp(-10, HOOK.y, s), w: 36 * Math.pow(HOOK.w / 36, s)};
-};
 const mixCam = (a: Cam, b: Cam, u: number): Cam => ({x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u), w: Math.exp(lerp(Math.log(a.w), Math.log(b.w), u))});
+const SECT = add(EYE0, pt(-0.85, 0.2));
+const MOUTH_HIT = mouthWorld(hookCoyote(EV.hitA, 0));
+const MID_A = add(EYE0, pt(4.6, -2.2));
+/** the hook, relative to where the lizard stands (x0): charge, rush onto the eye, race along the jet, pull back */
+const hookCam = (tau: number, x0: number): Cam => {
+  const c = spline(tau, [
+    [-1.3, 9, -15, 46], [-0.55, 7.5, -9, 24], [0.0, 6.8, -6.5, 17], [0.42, EYE0.x + 0.35, EYE0.y - 0.15, 2.7],
+    [0.75, lerp(EYE0.x, MOUTH_HIT.x, 0.55), lerp(EYE0.y, MOUTH_HIT.y, 0.55) - 0.3, 7.5], [EV.hitA + 0.05, MOUTH_HIT.x - 1.2, MOUTH_HIT.y + 0.3, 11.5],
+    [1.55, 15.5, -16, 40], [2.4, 18, -19, 48], [EV.drop0, 15, -14, 42], [3.35, EYE0.x + 2.4, EYE0.y - 0.6, 9],
+    [EV.reveal1 - 0.1, SECT.x, SECT.y, 3.6], [EV.p0, SECT.x + 0.05, SECT.y, 3.45],
+  ]);
+  return {...c, x: c.x + x0};
+};
+const PORE_CAM = add(PORE0, pt(-0.2, 0.15));
+const camSection = (t: number): Cam => spline(t, [[EV.p0, SECT.x + 0.05, SECT.y, 3.45], [EV.p1 - 0.2, PORE_CAM.x, PORE_CAM.y, 2.1], [EV.burst, PORE_CAM.x + 0.02, PORE_CAM.y, 2.05]]);
+const camC = (t: number): Cam => {
+  const j = jetAt(Math.min(t, EV.hitB));
+  const front = j ? jetPoint(j, clamp(j.u1)) : PORE0;
+  const d = Math.hypot(front.x - PORE0.x, front.y - PORE0.y);
+  const two = ss(t, T.into - 0.6, EV.hitB + 0.2);
+  const lz = lizardAt(t), m = mouthWorld(coyoteAt(Math.min(t, EV.hitB)));
+  const c0 = lerp(PORE_CAM.x, lerp(PORE0.x, front.x, 0.5), ss(t, EV.burst, EV.burst + 0.5));
+  const c1 = lerp(PORE_CAM.y, lerp(PORE0.y, front.y, 0.5), ss(t, EV.burst, EV.burst + 0.5));
+  return {x: lerp(c0, lerp(lz.x, m.x, 0.5) + 1, two), y: lerp(c1, -8, two), w: 2.05 + 1.7 * d + 14 * two};
+};
+const smooth = (f: (t: number) => P, t: number, span = 0.5, n = 6) => {
+  let x = 0, y = 0;
+  for (let i = 0; i < n; i++) {
+    const q = f(t - (i / (n - 1)) * span);
+    x += q.x; y += q.y;
+  }
+  return pt(x / n, y / n);
+};
+const camD = (t: number): Cam => spline(t, [
+  [EV.hitB + 0.3, 13, -13, 36], [EV.jerk1 + 0.2, 19, -23, 56], [EV.back1, 25, -24, 64], [EV.spit, 24, -23, 64], [EV.run0 + 0.5, 20, -20, 60],
+]);
+const camE = (t: number): Cam => {
+  const lx = runX(t);
+  const s = ss5(t, EV.run0, EV.run1 + 0.4);
+  return {x: lerp(20, lx - 4, ss5(t, EV.run0 + 0.2, EV.run0 + 2.0)), y: lerp(-20, -11, s), w: Math.exp(lerp(Math.log(60), Math.log(30), s))};
+};
 export const camAt = (t: number): Cam => {
-  const v = vOf(t);
   const tau = t - LOOP_T;
   let c: Cam;
-  if (v < EV.burst) c = camAB(v);
-  else if (v < EV.bite) c = camC(v);
-  else if (v < EV.bite + 0.6) c = mixCam(camC(Math.min(v, EV.bite + 0.6)), followD(v), ss5(v, EV.bite, EV.bite + 0.6));
-  else if (v < EV.run0 - 0.6) c = followD(v);
-  else if (v < EV.run0 + 0.5) c = mixCam(followD(v), followE(v), ss5(v, EV.run0 - 0.6, EV.run0 + 0.5));
-  else c = followE(v);
-  if (tau > -1.3) c = mixCam(c, hookCam(tau), ss5(tau, -1.3, -0.35));
-  // small camera shakes: the rupture, the impact, the landing
-  const sh = 0.05 * Math.exp(-Math.max(0, v - EV.burst) / 0.15) * (v > EV.burst ? 1 : 0) + 0.025 * Math.exp(-Math.max(0, v - EV.imp) / 0.2) * (v > EV.imp ? 1 : 0) +
-    0.012 * ss(v, EV.tremble0, EV.burst) * (v < EV.burst ? 1 : 0);
+  if (t < EV.p0) c = hookCam(t, 0);
+  else if (t < EV.burst) c = camSection(t);
+  else if (t < EV.hitB + 0.3) c = camC(t);
+  else if (t < EV.hitB + 0.9) c = mixCam(camC(EV.hitB + 0.3), camD(t), ss5(t, EV.hitB + 0.3, EV.hitB + 0.9));
+  else if (t < EV.run0 - 0.5) c = camD(t);
+  else if (t < EV.run0 + 0.8) c = mixCam(camD(t), camE(t), ss5(t, EV.run0 - 0.5, EV.run0 + 0.8));
+  else c = camE(t);
+  if (tau > -1.9) c = mixCam(c, hookCam(tau, -DX), ss5(tau, -1.9, -1.15));
+  const sh = 0.035 * Math.exp(-Math.max(0, t - EV.burst) / 0.15) * (t > EV.burst ? 1 : 0) + 0.02 * Math.exp(-Math.max(0, t - EV.hitB) / 0.2) * (t > EV.hitB ? 1 : 0)
+    + 0.02 * Math.exp(-Math.max(0, t - EV.hitA) / 0.2) * (t > EV.hitA && t < 3 ? 1 : 0) + 0.01 * ss(t, EV.tremble0, EV.burst) * (t < EV.burst ? 1 : 0);
   return {x: c.x + sh * c.w * noise1(t * 40, 1), y: c.y + sh * c.w * noise1(t * 40, 2), w: c.w};
 };
-/** the coyote's head shadow on the ground (lower right of the head: the sun is upper left) */
-export const SUN = nrm(pt(0.55, 1));
-void hash;
+void nrm; void sub; void DUR;

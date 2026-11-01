@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Effects, music bed and mix for the Blood Lizard Short.
+"""Effects, music bed and mix for the Blood Lizard Short (V2: mix_v2 reads audio/cues_v2.json; the V1 effect list is
+in git history, commit 58a3cce).
 
 Sources:
   - narration: the ElevenLabs master (audio/narration/FGW_Blood_Lizard_narration_V1.wav), used sample for sample
@@ -21,7 +22,7 @@ from scipy.signal import butter, sosfilt, resample_poly
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
 NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v1'
-cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
+cj = json.load(open(os.path.join(EP, 'audio/cues_v2.json' if NAME == 'mix_v2' else 'audio/cues.json')))
 DUR, EV, T = cj['DUR'], cj['EV'], cj['T']
 N = int(round(DUR * SR))
 t = np.arange(N) / SR
@@ -129,72 +130,77 @@ gag = load('gag_a_ucTH.mp3')
 squirtA, squirtB = load('squirt_a_NIZT.mp3'), load('squirt_b_l35W.mp3')
 scramble = load('scramble_a_iRJF.mp3')
 
-# --- A: the hook (the snarl that opens the film is the next coyote's approach at the end: it wraps across the loop)
-place(sfx, trim(snarlA, 0.0, 2.2, 0.3, 0.4), DUR - 1.05, 'coyote snarling breath, over the loop seam (generated)', -9, wrap=True)
-place(sfx, creak(0.25, 260, 90), 0.12, 'the lids swell (tiny creak)', -30)
-place(sfx, trim(squirtB, 0.0, 0.7, 0.002, 0.2), EV['jetA0'] - 0.01, 'blood squirt from the eye (generated)', -5)
-place(sfx, squelch(0.18, 400, 2600, 70), EV['jetAHit'], 'blood hits the mouth (wet splat)', -18)
-place(sfx, trim(snortA, 0.0, 1.6, 0.005, 0.3), EV['recoil0'] - 0.05, 'coyote recoils: snort and lip licking (generated)', -6)
-place(sfx, crunch(0.15), EV['recoil0'] + 0.1, 'paws skid on sand', -24)
-# --- B: inside the head
+# ===================== V2 =====================
+def footfalls(name, gain, wrap=False, bright=0.8):
+    """a paw crunch every time the coyote's walk phase crosses a half step (its stride sets the level)"""
+    wv = sig100(np.array(cj['cwalk'])); sv = sig100(np.array(cj['cstride']))
+    ph = np.floor(wv * 2)
+    hits = np.where(np.diff(ph) != 0)[0]
+    for k, i in enumerate(hits):
+        lv = float(np.clip(sv[i] / 20, 0.15, 1))
+        place(sfx, crunch(0.14, bright) * lv, i / SR, name if k == 0 else None, gain, wrap=wrap)
 reveal = sig100(np.array(cj['reveal']))
 inside = lp(reveal, 4)
-place(sfx, squelch(0.6, 160, 1200, 22), EV['reveal0'] + 0.2, 'the skin thins away (soft wet tissue)', -16)
+P = sig100(np.array(cj['p']))
+# --- the charge (it begins at 19.4 s and runs over the loop seam into the hook), growl over the seam
+footfalls('coyote paws on sand (charge, steps back, all footfalls)', -17)
+place(sfx, trim(snarlA, 0.0, 2.6, 0.3, 0.3), EV['charge0'] + 0.15, 'the coyote charges back in: growl over the loop seam (generated)', -7, wrap=True)
+place(sfx, creak(0.25, 260, 90), DUR - 0.4, 'the lids swell (tiny creak, over the seam)', -28, wrap=True)
+# --- A: the squirt and the hit
+place(sfx, trim(squirtB, 0.0, 0.7, 0.002, 0.2), EV['jetA0'] - 0.01, 'blood fires from the eye (generated squirt)', -3)
+place(sfx, hiss(0.6) * env(int(0.6 * SR), 0.01, 0.3), EV['jetA0'] + 0.05, 'the stream in flight', -24)
+place(sfx, thump(0.35, 120, 60), EV['hitA'], 'sharp impact on the muzzle', -10)
+place(sfx, squelch(0.25, 400, 2800, 70), EV['hitA'], 'wet splat on the lips', -13)
+place(sfx, trim(snortA, 0.0, 1.6, 0.005, 0.3), EV['hitA'] + 0.06, 'the coyote recoils: startled snort, lip licking (generated)', -4)
+place(sfx, flaps(EV['shake1'] - EV['shake0'], 6.6), EV['shake0'], 'head shake: ears and jowls flapping', -6)
+hs = hiss(DUR)
+jet = sig100(np.array(cj['jet']))
+place(sfx, hs * lp((jet > 0.01).astype(float), 8) * (0.5 + 0.5 * (t < EV['drop1'])), 0, 'the stream (hiss while it flows, both squirts)', -26)
+place(sfx, squelch(0.9, 300, 2000, 25) * np.linspace(1, 0.2, int(0.9 * SR)), EV['drop0'], 'the squirt weakens: patter on the sand', -22)
+# --- B: inside the head
+place(sfx, squelch(0.6, 160, 1200, 22), EV['reveal0'] + 0.25, 'the cutaway opens (soft wet tissue)', -16)
 for b in cj['beats']:
     if b < EV['burst'] + 0.6:
         p = float(np.interp(b, np.arange(len(cj['p'])) / 100, cj['p']))
-        place(sfx, heartbeat(), b, 'heartbeat' if b == cj['beats'][0] else None, -21 + 7 * p)
-place(sfx, lp(trim(snarlB, 0.2, 2.4, 0.3, 0.6), 900), EV['shadow0'] - 0.1, 'the predator looms (snarl heard through the body, generated)', -11)
-place(sfx, thump(0.3, 90, 50), EV['flinch'], 'flinch', -20)
-place(sfx, creak(0.6, 110, 55), EV['sq0'], 'the muscle squeezes the vein', -17)
-place(sfx, squelch(0.4, 120, 700, 25), EV['sq0'] + 0.25, 'the vein pinched shut', -21)
-# pressure: a stretching vessel sound that rises in pitch and level with p, plus a creak on every beat
-P = sig100(np.array(cj['p']))
-dur_p = EV['burst'] - EV['p0']
-st = stretch(dur_p, 90, 420)
-place(sfx, st * np.interp(np.arange(len(st)) / SR + EV['p0'], t, 0.25 + 0.75 * P), EV['p0'], 'vessel walls stretching (rises with the pressure)', -17)
+        place(sfx, heartbeat(), b, 'heartbeat' if b == cj['beats'][0] else None, -21 + 4 * p)
+place(sfx, lp(trim(snarlB, 0.2, 2.4, 0.3, 0.6), 900), EV['shadow0'] - 0.1, 'the predator attacks again (growl heard through the body, generated)', -9)
+place(sfx, thump(0.3, 90, 50), EV['flinch'], 'flinch', -18)
+place(sfx, creak(0.6, 110, 55), EV['sq0'], 'the muscle squeezes the vein', -15)
+place(sfx, squelch(0.4, 120, 700, 25), EV['sq0'] + 0.25, 'the vein pinched shut', -19)
+st = stretch(EV['burst'] - EV['p0'], 90, 420)
+place(sfx, st * np.interp(np.arange(len(st)) / SR + EV['p0'], t, 0.25 + 0.75 * P), EV['p0'], 'vessel pressure: walls stretching (rises with the pressure)', -22)
 for b in cj['beats']:
     if EV['p0'] < b < EV['burst']:
         p = float(np.interp(b, np.arange(len(cj['p'])) / 100, cj['p']))
-        place(sfx, creak(0.18, 180 + 300 * p, 80), b + 0.05, None, -27 + 8 * p)
+        place(sfx, creak(0.18, 180 + 300 * p, 80), b + 0.05, None, -29 + 6 * p)
 tn = int((EV['burst'] - EV['tremble0']) * SR); tt = np.arange(tn) / SR
-place(sfx, norm(np.sin(2 * np.pi * np.cumsum(900 + 900 * tt / tt[-1]) / SR) * (tt / tt[-1]) ** 2), EV['tremble0'], 'tension whine before the burst', -27)
-# --- C: the burst and the stream
-place(sfx, pop(), EV['burst'], 'the vessel bursts (wet pop)', -8)
+place(sfx, norm(np.sin(2 * np.pi * np.cumsum(900 + 900 * tt / tt[-1]) / SR) * (tt / tt[-1]) ** 2), EV['tremble0'], 'tension whine before the burst', -30)
+# --- C: the release and the second hit
+place(sfx, pop(), EV['burst'], 'the vessel bursts (sudden release)', -8)
 place(sfx, trim(squirtA, 0.0, 2.0, 0.002, 0.3), EV['burst'] + 0.01, 'blood squirts out through the pore (generated)', -9)
-jet = sig100(np.array(cj['jet']))
-hs = hiss(DUR)
-place(sfx, hs * lp((jet > 0.01).astype(float), 8) * (t > EV['burst'] + 1.2), 0, 'the stream (steady hiss while it flows)', -27)
-place(sfx, trim(snarlB, 0.0, 2.8, 0.2, 0.5), EV['lunge0'], 'the coyote lunges in (generated snarl)', -9)
-place(sfx, thump(1.0, 52, 26), EV['imp'] - 0.02, 'impact boom (slow motion)', -14)
-place(sfx, lp(squelch(0.7, 200, 2000, 30), 2400), EV['imp'], 'blood hits the mouth (slowed splat)', -15)
-place(sfx, snap(), EV['bite'] - 0.04, 'the jaws snap shut', -12)
-# --- D: disgust
-place(sfx, trim(snortB, 0.0, 1.0, 0.005, 0.2), EV['grim0'] - 0.15, 'disgusted snort (generated)', -8)
-walk = np.array(cj['walk'])
-wv = np.interp(t, np.arange(len(walk)) / 100, walk)
-for k in range(1, 4):
-    for half in (0, 0.5):
-        target = -(k - 1) - half - 0.3
-        hits = np.where((wv[:-1] > target) & (wv[1:] <= target))[0]
-        if len(hits): place(sfx, crunch(0.16, 0.8), hits[0] / SR, 'paws on sand (steps back)' if k == 1 and half == 0 else None, -22)
-place(sfx, flaps(EV['shake1'] - EV['shake0'], 6.4), EV['shake0'], 'head shake: ears and jowls flapping', -4)
-place(sfx, gag, EV['spit'] - 0.12, 'gag, spit, head shake (generated)', -8)
-place(sfx, thump(0.25, 110, 60), EV['land'], 'the lizard lands on the sand', -16)
-place(sfx, crunch(0.2, 1.0), EV['land'] + 0.01, 'sand scatter', -20)
-# --- E: the escape
+place(sfx, trim(snarlB, 0.0, 2.8, 0.2, 0.5), EV['lunge0'] - 0.3, 'the coyote lunges again (generated growl)', -8)
+place(sfx, thump(0.4, 110, 55), EV['hitB'], 'sharp impact: the stream hits the mouth', -15)
+place(sfx, squelch(0.3, 400, 2800, 70), EV['hitB'], 'wet splat', -17)
+# --- D: repelled
+place(sfx, trim(snortB, 0.0, 1.0, 0.005, 0.2), EV['hitB'] + 0.1, 'it jerks its head away: snort (generated)', -10)
+place(sfx, trim(snortA, 0.0, 1.6, 0.005, 0.3), EV['grim0'] + 0.3, 'disgusted snort and lip licking (generated)', -9)
+place(sfx, flaps(EV['shakeB1'] - EV['shakeB0'], 6.8), EV['shakeB0'], 'head shake: ears and jowls flapping', -5)
+place(sfx, gag, EV['spit'] - 0.35, 'gag, spit, head shake (generated)', -6)
+place(sfx, squelch(0.15, 600, 3500, 90), EV['spit'] + 0.02, 'the spit', -10)
+place(sfx, lp(crunch(0.9, 0.5), 3500), EV['paw0'], 'pawing at its muzzle', -20)
+rb = crunch(EV['rub1'] - EV['rub0'], 0.4) * (0.6 + 0.4 * np.sin(2 * np.pi * 1.6 * np.arange(int((EV['rub1'] - EV['rub0']) * SR)) / SR) ** 2)
+place(sfx, lp(rb, 3000), EV['rub0'], 'muzzle rubbed in the sand', -18)
+# --- E: the escape and the pivots
 run = sig100(np.array(cj['run']))
+yr = sig100(np.array(cj['yawRate']))
 sc = scramble[: int(min(len(scramble) / SR, EV['run1'] - EV['run0'] + 0.3) * SR)]
 place(sfx, sc * np.interp(np.arange(len(sc)) / SR + EV['run0'], t, np.clip(run * 1.4, 0, 1)), EV['run0'], 'lizard claws scrambling on sand (generated)', 0)
-# claws: a tick for every foot plant (four feet, diagonal pairs) at the gait rate while it runs
 rph = np.cumsum(9.0 * np.clip(run * 1.3, 0, 1)) / SR
 plants = np.where(np.diff(np.floor(rph)) > 0)[0]
 for k, i in enumerate(plants):
-    place(sfx, crunch(0.05, 1.3) * (0.6 + 0.4 * rng.random()), i / SR, 'claw ticks on gravel (one per foot plant)' if k == 0 else None, -13)
-for k, at in enumerate((EV['c2'] + 0.15, EV['c2'] + 0.5, EV['c2'] + 0.85)):
-    place(sfx, crunch(0.14, 0.7), at, 'the next coyote: paws on sand' if k == 0 else None, -25 + 2 * k)
-place(sfx, creak(0.3, 240, 80), DUR - 0.35, 'the lids swell again (tiny creak)', -30)
-
+    place(sfx, crunch(0.05, 1.3) * (0.6 + 0.4 * rng.random()), i / SR, 'claw ticks on gravel (one per foot plant, runs and pivots)' if k == 0 else None, -12)
+for at in (EV['pivot0'], EV['pivotB0']):
+    place(sfx, lp(crunch(0.5, 0.6), 4000), at + 0.05, 'the lizard pivots (sand shuffle)', -18)
 # ---------------- music: restrained, tense; the tempo's period divides the film exactly, wrapped round the loop
 BEATS = 36
 beat = DUR / BEATS
@@ -225,7 +231,7 @@ mus += 0.45 * trem * np.clip(lp(P * 1.2 + 0.1 * (P > 0), 3), 0, 1) * (t < EV['bu
 # shape: drop out at the burst, only the boom through the slow motion, back for D/E
 shape = np.ones(N)
 shape *= 1 - 0.95 * np.clip((t - EV['burst']) / 0.02, 0, 1) * (1 - np.clip((t - (EV['burst'] + 0.5)) / 0.6, 0, 1))
-shape *= 1 - 0.8 * np.clip((t - (EV['imp'] - 0.2)) / 0.1, 0, 1) * (1 - np.clip((t - (EV['bite'] + 0.2)) / 0.4, 0, 1))
+shape *= 1 - 0.7 * np.clip((t - (EV['hitB'] - 0.05)) / 0.05, 0, 1) * (1 - np.clip((t - (EV['hitB'] + 0.35)) / 0.4, 0, 1))
 shape *= 0.75 + 0.25 * np.clip((t - 1.0) / 2, 0, 1) * (1 - np.clip((t - 10) / 1, 0, 1)) + 0.25 * np.clip((t - 17.5) / 2.5, 0, 1)
 mus *= shape
 

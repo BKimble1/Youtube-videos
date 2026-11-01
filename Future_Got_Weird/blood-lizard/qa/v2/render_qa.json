@@ -1,0 +1,161 @@
+{
+ "file": "FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4",
+ "size_mb": 15.4,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 630,
+  "duration_s": 21.0
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317380"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 2.84,
+ "large_changes": [
+  {
+   "frame": 3,
+   "t": 0.1,
+   "mad": 15.22,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 4,
+   "t": 0.133,
+   "mad": 16.67,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 5,
+   "t": 0.167,
+   "mad": 20.09,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 6,
+   "t": 0.2,
+   "mad": 24.64,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 7,
+   "t": 0.233,
+   "mad": 28.89,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 8,
+   "t": 0.267,
+   "mad": 29.53,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 9,
+   "t": 0.3,
+   "mad": 24.46,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 17,
+   "t": 0.567,
+   "mad": 14.83,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 18,
+   "t": 0.6,
+   "mad": 19.55,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 19,
+   "t": 0.633,
+   "mad": 28.13,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 20,
+   "t": 0.667,
+   "mad": 29.42,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 21,
+   "t": 0.7,
+   "mad": 28.18,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 22,
+   "t": 0.733,
+   "mad": 24.57,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 23,
+   "t": 0.767,
+   "mad": 20.99,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 24,
+   "t": 0.8,
+   "mad": 15.22,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 30,
+   "t": 1.0,
+   "mad": 14.21,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 31,
+   "t": 1.033,
+   "mad": 17.18,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 18.65,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "mad": 19.05,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 34,
+   "t": 1.133,
+   "mad": 17.98,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 37,
+   "t": 1.233,
+   "mad": 14.9,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  },
+  {
+   "frame": 38,
+   "t": 1.267,
+   "mad": 14.79,
+   "planned": "the opening rush onto the eye, the race along the jet to the muzzle, the recoil"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 3,
+ "longest_near_static_run_starts_s": 19.0,
+ "loop_last_vs_first_mad": 8.5
+}

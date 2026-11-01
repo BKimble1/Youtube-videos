@@ -1,6 +1,23 @@
 # Future Got Weird: the blood-shooting horned lizard
 
-## V1 (current)
+## V2 (rebuild, current)
+
+**Deliverable.** `exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, H.264 + AAC, 630 frames,
+21.000 s. **It is not published.** The report is `production/V2_REPORT.md`, with evidence in `qa/v2/`. The source is
+composition `BloodLizardV2`, mix `mix_v2` (cues from `audio/cues_v2.json`).
+
+V2 is a predator-versus-prey rebuild on the same narration master. The coyote charges and the eye fires. The stream
+hits the muzzle and the coyote recoils. The camera follows the blood back into a clean cutaway: the sinus ring swells
+and bursts at the front corner of the lids. The second jet hits the lunging coyote; it never bites, and backs off in
+disgust. The lizard pivots, escapes and turns back, and the film loops exactly.
+
+The V2 rigs:
+- `lizard.tsx`: full 3D with yaw.
+- `section.tsx`: the cutaway.
+- `coyote.tsx`: mirrored and running.
+- `desert.tsx`: periodic layers.
+
+## V1 (superseded; source at commit `58a3cce`)
 
 **Deliverable.** `exports/FGW_Blood_Lizard_V1_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, H.264 + AAC, 630 frames,
 21.000 s. **It is not published.**
@@ -33,10 +50,10 @@ depth layers through one pinhole camera.
     python3 -m pip install numpy scipy soundfile pyloudnorm sherpa-onnx pillow
     python3 tools/make_narration.py                 # take -> narration master (one gap edit) and word timeline
     (cd source && npm ci)
-    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
-    python3 tools/make_audio.py mix_v1              # effects + music + mix -> source/public/audio/mix_v1.wav
-    (cd source && npx remotion render src/index.ts BloodLizardV1 ../exports/FGW_Blood_Lizard_V1_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v1"}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
-    python3 tools/qa_render.py exports/FGW_Blood_Lizard_V1_REVIEW_1080x1920.mp4 qa/v1
+    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues_v2.json
+    python3 tools/make_audio.py mix_v2              # effects + music + mix -> source/public/audio/mix_v2.wav
+    (cd source && npx remotion render src/index.ts BloodLizardV2 ../exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2"}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/qa_render.py exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4 qa/v2
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [cols]`. Rig stills: composition `Test`.
 
