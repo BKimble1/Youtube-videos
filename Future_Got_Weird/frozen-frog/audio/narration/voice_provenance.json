@@ -1,0 +1,50 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Zombie Ant, Zombie Snail and Myostatin); confirmed with creative_list_voices on 2026-11-01"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "leEAA8BrUIlxiBSHMfF2",
+ "prompt": "[eerie, intense, urgent] If you freeze this frog, its HEART completely STOPS! [low, eerie, deliberate] Ice spreads through its body, it stops breathing, and it looks completely dead. [brisk, intrigued, building] But its liver releases massive amounts of sugar, protecting its cells while the rest of its body freezes! [amazed] It can survive like this for weeks! [hushed wonder, building] And when spring arrives, the ice melts, its heart starts beating again… [astonished, delighted] And it just HOPS AWAY like nothing happened!",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt), with the brief's capitals. The bracket tags direct delivery (eerie and intense at first, increasingly astonished through the revival) and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 528.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_SaMt.mp3",
+   "generation_id": "SaMtT39665z643znoSXB",
+   "duration_s": 23.76,
+   "chosen": false,
+   "why_not": "weaker emphasis on 'freeze' (+1.3 dB) and 'STOPS' (+1.6 dB) over the median word, and 'again…' trails off to -14.5 dB; whisper hears \"It's heart\""
+  },
+  {
+   "file": "audio/narration/takes/t2_9W1t.mp3",
+   "generation_id": "9W1tipfkkC2vXopJFbOo",
+   "duration_s": 23.04,
+   "chosen": true,
+   "asr": "whisper base.en: word-perfect; zipformer: only 'its cells' heard as 'itselves'",
+   "emphasis_db_vs_median_word": {
+    "freeze": 3.6,
+    "HEART": 4.7,
+    "STOPS": 3.1,
+    "weeks": 3.1,
+    "HOPS": 2.5,
+    "AWAY": 2.1
+   }
+  }
+ ],
+ "edits": "None. The take's sentence gaps are already 0.21-0.51 s, so it is used sample for sample: no gap edits, no time-stretch, no pitch or gain change. A 1.62 s tail after the last word carries the hop, the landing and the cold returning into the loop.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps snapped to measured pause onsets (tools/align_zipformer.py -> audio/narration/master_zipformer.json)",
+ "final": {
+  "file": "audio/narration/FGW_Frozen_Frog_narration_V1.wav",
+  "sha256": "2c4055a3582580b6e68341d40ae08ce1299579546177d05e459bc7a26f2523b8",
+  "format": "48 kHz, 24-bit, mono",
+  "speech_s": [
+   0.0,
+   22.88
+  ],
+  "film_s": 24.5
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+}

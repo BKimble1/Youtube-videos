@@ -1,0 +1,18 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU FREEZE THIS FROG ITS HEART COMPLETELY STOPS ICE SPREADS THROUGH ITS BODY IT STOPS BREATHING AND IT LOOKS COMPLETELY DEAD BUT ITS LIVER RELEASES MASSIVE AMOUNTS OF SUGAR PROTECTING ITSELVES WHILE THE REST OF ITS BODY FREEZES IT CAN SURVIVE LIKE THIS FOR WEEKS AND WHEN SPRING ARRIVES THE ICE MELTS ITS HEART STARTS BEATING AGAIN AND IT JUST HOPS AWAY LIKE NOTHING HAPPENED",
+  "wer": 0.03,
+  "diffs": [
+   [
+    "replace",
+    "its cells",
+    "itselves"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you freeze this frog, its heart completely stops! Ice spreads through its body. It stops breathing. and it looks completely dead. But its liver releases massive amounts of sugar, protecting its cells while the rest of its body freezes. It can survive like this for weeks. And when spring arrives, the ice melts. Its heart starts beating again? And it just hops away like nothing happened",
+  "wer": 0.0,
+  "diffs": []
+ }
+}
