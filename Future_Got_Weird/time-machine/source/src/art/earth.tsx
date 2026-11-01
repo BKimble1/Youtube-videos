@@ -116,7 +116,7 @@ export const CloudPass: React.FC<{p: number}> = ({p}) => {
         const x = 540 + Math.cos(q.a) * q.d * 300 * g, y = 960 + Math.sin(q.a) * q.d * 520 * g;
         const rr = 60 * q.s * (1 + g * 2.4);
         return (
-          <g key={k} opacity={sm(u * 4) * (1 - sm((u - 0.75) * 4))}>
+          <g key={k} opacity={sm(u * 4) * (1 - sm((u - 0.6) * 5)) * (1 - ss(p, 0.52, 0.7))}>
             <circle cx={x} cy={y} r={rr} fill="#FFFFFF" />
             <circle cx={x + rr * 0.7} cy={y + rr * 0.2} r={rr * 0.75} fill="#FFFFFF" />
             <circle cx={x - rr * 0.6} cy={y + rr * 0.3} r={rr * 0.65} fill="#EAF2FA" />

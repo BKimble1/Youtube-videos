@@ -1,13 +1,14 @@
 // One frame of the film: pick the world for time t, draw it through the camera, with any portal drawing the next
 // world inside it; captions in screen space on top.
 import React from 'react';
+import {continueRender, delayRender, staticFile} from 'remotion';
 import {clamp, lerp, ss, word, keyS} from './lib';
 import {resetIds} from './core/ids';
 import * as St from './story';
 import {Cam, camT, S} from './story';
 import {Street} from './art/city';
 import {Astronaut, AstroPose, ASTRO_IDLE, astroReach, Friend, FriendPose, reach} from './art/figures';
-import {BlackHole, LightRays, orbitAngle, orbitPos, Ship, TinyEarth, WallClock} from './art/space';
+import {bhFrame, BlackHole, hasWide, LightRays, orbitAngle, orbitPos, Ship, TinyEarth, WallClock} from './art/space';
 import {CloudPass, Globe} from './art/earth';
 import {Capsule, Car, Dust, G, Neighbourhood} from './art/house';
 import {FLOOR, Hallway} from './art/interior';
@@ -222,8 +223,37 @@ function eyeContent(t: number, k: string) {
 }
 
 // ---------------------------------------------------------------------------------------------------------------------------------
+/** SVG <image> is not tracked by Remotion's render wait, so the frame's black-hole images are loaded and decoded
+ *  first (delayRender) and only then is the frame captured; otherwise a frame could be captured before it paints. */
+const decoded = new Set<string>();
+const useImages = (urls: string[]) => {
+  const key = urls.join('|');
+  React.useLayoutEffect(() => {
+    const todo = urls.filter((u) => !decoded.has(u));
+    if (!todo.length) return;
+    const h = delayRender('black hole frames ' + key);
+    Promise.all(todo.map((u) => new Promise<void>((res) => {
+      const im = new Image();
+      im.onload = () => im.decode().then(() => res(), () => res());
+      im.onerror = () => res();
+      im.src = u;
+    }))).then(() => {
+      todo.forEach((u) => decoded.add(u));
+      requestAnimationFrame(() => requestAnimationFrame(() => continueRender(h)));
+    });
+  }, [key]);
+};
+const bhUrls = (t: number) => {
+  const n = bhFrame(t);
+  const f4 = String(n).padStart(4, '0');
+  const spaceVisible = t < S.B1 + 0.05 || t >= 18.1 || t >= S.H1;
+  if (!spaceVisible) return [];
+  return [staticFile(`bh/f_${f4}.jpg`), ...(hasWide(n) ? [staticFile(`bhw/f_${f4}.jpg`)] : [])];
+};
+
 export const Scene: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {
   resetIds(fkey);
+  useImages(bhUrls(t));
   let body: React.ReactNode;
   let overlay: React.ReactNode = null;
   if (t < S.A1 || t >= S.H1) {

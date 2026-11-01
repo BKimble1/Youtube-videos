@@ -41,6 +41,16 @@ for i, s in enumerate(static):
     run = run + 1 if s else 0
     if run > best: best, best_at = run, i - run + 2
 loop = float(np.abs(fr[-1] - fr[0]).mean())
+# one-frame glitches (e.g. an image that failed to paint): on a 27x48 area-averaged copy (fine texture removed), a
+# frame far from the average of its two neighbours, relative to how much those neighbours differ (V1 calibration:
+# the three known bad frames scored 3.7 and 2.5; the busiest legitimate motion scores <= 1.6)
+lo = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', src, '-vf', 'scale=27:48:flags=area', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True).stdout, np.uint8).reshape(-1, 48, 27, 3).astype(np.float32)
+spikes = []
+for i in range(1, len(lo) - 1):
+    r = float(np.abs(lo[i] - (lo[i - 1] + lo[i + 1]) / 2).mean()); skip = float(np.abs(lo[i + 1] - lo[i - 1]).mean())
+    score = r / (skip / 2 + 2)
+    if score > 2.0:
+        spikes.append({'frame': i, 't': round(i / fps, 3), 'score': round(score, 2)})
 res = {
     'file': os.path.basename(src), 'size_mb': round(os.path.getsize(src) / 1e6, 2),
     'video': {'codec': vs['codec_name'], 'w': vs['width'], 'h': vs['height'], 'fps': vs['r_frame_rate'], 'pix_fmt': vs['pix_fmt'], 'frames_decoded': n, 'duration_s': round(n / fps, 3)},
@@ -51,6 +61,7 @@ res = {
     'unplanned_large_changes': [j for j in jumps if not j['planned']],
     'longest_near_static_run_frames': best, 'longest_near_static_run_starts_s': round(best_at / fps, 2),
     'loop_last_vs_first_mad': round(loop, 2),
+    'one_frame_glitches': spikes,
 }
 json.dump(res, open(os.path.join(out, 'render_qa.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))
