@@ -161,11 +161,11 @@ const hopPose = (t: number, c0: number, t0: number, t1: number, ts: number) => {
   if (t < t0) return {crouch, pitch: -24 - 8 * crouch, hind: 0, fore: 0, active: t > c0};
   if (t < tp) {
     const k = ss(t, t0, tp);
-    return {crouch: 0, pitch: lerp(-30, -44, k), hind: 0.85 * k, fore: 0.25 * k, active: true};
+    return {crouch: 0, pitch: lerp(-30, -42, k), hind: 0.42 * k, fore: 0.25 * k, active: true};
   }
   if (t < t1) {
     const u = (t - tp) / (t1 - tp);
-    return {crouch: 0, pitch: lerp(-44, 12, ss(u, 0.0, 0.95)), hind: lerp(0.85, 1, ss(u, 0, 0.2)) * (1 - 0.85 * ss(u, 0.45, 0.95)), fore: ss(u, 0.05, 0.4) * (1 - 0.55 * ss(u, 0.8, 1)), active: true};
+    return {crouch: 0, pitch: lerp(-42, 12, ss(u, 0.0, 0.95)), hind: lerp(0.42, 1, ss(u, 0, 0.22)) * (1 - 0.85 * ss(u, 0.45, 0.95)), fore: ss(u, 0.05, 0.4) * (1 - 0.55 * ss(u, 0.8, 1)), active: true};
   }
   return {crouch, pitch: -24 + 12 * (1 - ss(t, t1, ts)) * ss(t, t1, t1 + 0.05), hind: 0.2 * (1 - ss(t, t1, t1 + 0.25)), fore: 0.45 * (1 - ss(t, t1, t1 + 0.22)), active: t < ts};
 };
@@ -219,7 +219,7 @@ export const plantOffset = (t: number) => {
     if (t >= tp && t < t1) {
       const o = sub(toeOf(t0), toeOf(tp));
       const u = clamp((t - tp) / (t1 - tp));
-      return mul(o, 1 - ss(u, 0, 0.45));
+      return mul(o, 1 - u); // the arc runs straight on from where the push left the body
     }
   }
   return pt(0, 0);
@@ -396,12 +396,14 @@ const localCam = (t: number): {c: Cam; micro: boolean} => {
 const W_M = mapP(WHOLE, M);
 const LEAP_KEYS: [number, number, number, number][] = [
   [EV.whole1, W_M.x, W_M.y, W_M.w],
-  [EV.launch, -49, -22, W_M.w * 1.1],
-  [21.4, -37, -27, 50],
-  [EV.land, -26, -20, 48],
-  [EV.launch2, -24, -20, 48],
-  [22.68, -12, -26, 52],
-  [EV.land2, 0, -20, 47],
+  [EV.launch, -48, -25, W_M.w * 1.3],
+  [EV.launch + 0.18, -44, -31, 52],
+  [21.47, -35, -30, 55],
+  [EV.land, -26, -21, 50],
+  [EV.launch2, -23, -23, 53],
+  [EV.launch2 + 0.18, -19, -31, 60],
+  [22.76, -10, -28, 57],
+  [EV.land2, 0, -21, 48],
   [LOOP_T, C0.x, C0.y, C0.w],
 ];
 export const camAt = (t: number): WCam => {

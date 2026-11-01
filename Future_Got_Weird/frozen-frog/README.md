@@ -1,6 +1,26 @@
 # Future Got Weird: The Frog That Freezes and Revives
 
-## V3 (final polish, current)
+## V4 (final pass, current)
+
+**Deliverable.** `exports/FGW_Frozen_Frog_V4_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 744 frames, 24.8 s.
+**It is not published.**
+
+**Report.** `production/V4_REPORT.md`, with evidence in `qa/v4/`; the shot plan is `production/SHOT_PLAN_V4.md`.
+The source is composition `FrozenFrogV4`, mix `mix_v4`.
+
+**Narration.** A calmer take in the same voice: the same approved words, delivered with no shouting, built by
+`tools/make_narration_v4.py`. The picture is mapped onto it by `source/src/warp.ts`. The proposed alternative hook is
+**not** used; it is waiting for approval.
+
+**What changed from V3.**
+- A calmer narration.
+- Ice creeping in round the heart before its last beat.
+- A liver foreshadow.
+- One continuous seasonal move.
+- Planted-foot push-offs with leaf kicks.
+- A forward-only flight and a wider camera through both hops.
+
+## V3 (final polish, superseded; commit `cba7e1c`)
 
 **Deliverable.** `exports/FGW_Frozen_Frog_V3_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 735 frames, 24.5 s.
 **It is not published.**
