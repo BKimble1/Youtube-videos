@@ -1,0 +1,28 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU TRY TO EAT THIS LIZARD IT CAN SHOOT BLOOD STRAIGHT OUT OF ITS EYES WHEN A PREDITOR ATTACKS PRESSURE BUILDS INSIDE TINY BLOOD VESSELS BEHIND ITS EYES UNTIL THEY BURST LAUNCHING A STREAM OF BLOOD RIGHT INTO THE CREDITOR'S MOUTH AND THE BLOOD TASTES SO DISGUSTING TO SOME CREDITORS THAT THEY SPIT THE LIZARD OUT LEAVING IT ALIVE TO DO THE EXACT SAME THING AGAIN",
+  "wer": 0.045,
+  "diffs": [
+   [
+    "replace",
+    "predator",
+    "preditor"
+   ],
+   [
+    "replace",
+    "predator's",
+    "creditor's"
+   ],
+   [
+    "replace",
+    "predators",
+    "creditors"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you try to eat this lizard, it can shoot blood straight out of its eyes. When a predator attacks, pressure builds inside tiny blood vessels behind its eyes. Until they burst, launching a stream of blood right into the predator's mouth. And the blood tastes so disgusting to some predators that they spit the lizard out! Leaving it alive to do the exact same thing again.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

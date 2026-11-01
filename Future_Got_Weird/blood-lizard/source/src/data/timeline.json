@@ -1,0 +1,342 @@
+{
+ "fps": 30,
+ "frames": 630,
+ "duration": 21.0,
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.23
+  },
+  {
+   "word": "try",
+   "start": 0.24,
+   "end": 0.43
+  },
+  {
+   "word": "to",
+   "start": 0.44,
+   "end": 0.56
+  },
+  {
+   "word": "eat",
+   "start": 0.56,
+   "end": 0.79
+  },
+  {
+   "word": "this",
+   "start": 0.8,
+   "end": 0.95
+  },
+  {
+   "word": "lizard,",
+   "start": 0.96,
+   "end": 1.41
+  },
+  {
+   "word": "it",
+   "start": 1.44,
+   "end": 1.59
+  },
+  {
+   "word": "can",
+   "start": 1.6,
+   "end": 1.75
+  },
+  {
+   "word": "SHOOT",
+   "start": 1.76,
+   "end": 2.03
+  },
+  {
+   "word": "BLOOD",
+   "start": 2.04,
+   "end": 2.44
+  },
+  {
+   "word": "straight",
+   "start": 2.44,
+   "end": 2.79
+  },
+  {
+   "word": "out",
+   "start": 2.8,
+   "end": 2.96
+  },
+  {
+   "word": "of",
+   "start": 2.96,
+   "end": 3.07
+  },
+  {
+   "word": "its",
+   "start": 3.08,
+   "end": 3.35
+  },
+  {
+   "word": "eyes!",
+   "start": 3.36,
+   "end": 3.7
+  },
+  {
+   "word": "When",
+   "start": 4.06,
+   "end": 4.11
+  },
+  {
+   "word": "a",
+   "start": 4.1,
+   "end": 4.19
+  },
+  {
+   "word": "predator",
+   "start": 4.2,
+   "end": 4.71
+  },
+  {
+   "word": "attacks,",
+   "start": 4.72,
+   "end": 5.24
+  },
+  {
+   "word": "pressure",
+   "start": 5.43,
+   "end": 5.69
+  },
+  {
+   "word": "builds",
+   "start": 5.695,
+   "end": 6.05
+  },
+  {
+   "word": "inside",
+   "start": 6.055,
+   "end": 6.37
+  },
+  {
+   "word": "tiny",
+   "start": 6.375,
+   "end": 6.73
+  },
+  {
+   "word": "blood",
+   "start": 6.735,
+   "end": 7.01
+  },
+  {
+   "word": "vessels",
+   "start": 7.015,
+   "end": 7.43
+  },
+  {
+   "word": "behind",
+   "start": 7.455,
+   "end": 7.77
+  },
+  {
+   "word": "its",
+   "start": 7.775,
+   "end": 8.05
+  },
+  {
+   "word": "eyes.",
+   "start": 8.055,
+   "end": 8.27
+  },
+  {
+   "word": "Until",
+   "start": 8.62,
+   "end": 8.84
+  },
+  {
+   "word": "they",
+   "start": 8.845,
+   "end": 9.15
+  },
+  {
+   "word": "BURST,",
+   "start": 9.165,
+   "end": 9.7
+  },
+  {
+   "word": "launching",
+   "start": 9.92,
+   "end": 10.2
+  },
+  {
+   "word": "a",
+   "start": 10.21,
+   "end": 10.37
+  },
+  {
+   "word": "stream",
+   "start": 10.37,
+   "end": 10.72
+  },
+  {
+   "word": "of",
+   "start": 10.73,
+   "end": 10.84
+  },
+  {
+   "word": "blood",
+   "start": 10.85,
+   "end": 11.2
+  },
+  {
+   "word": "right",
+   "start": 11.21,
+   "end": 11.44
+  },
+  {
+   "word": "into",
+   "start": 11.45,
+   "end": 11.64
+  },
+  {
+   "word": "the",
+   "start": 11.65,
+   "end": 11.79
+  },
+  {
+   "word": "predator\u2019s",
+   "start": 11.81,
+   "end": 12.4
+  },
+  {
+   "word": "mouth!",
+   "start": 12.41,
+   "end": 12.57
+  },
+  {
+   "word": "And",
+   "start": 13.05,
+   "end": 13.1
+  },
+  {
+   "word": "the",
+   "start": 13.09,
+   "end": 13.2
+  },
+  {
+   "word": "blood",
+   "start": 13.21,
+   "end": 13.6
+  },
+  {
+   "word": "tastes",
+   "start": 13.61,
+   "end": 14.0
+  },
+  {
+   "word": "so",
+   "start": 14.01,
+   "end": 14.29
+  },
+  {
+   "word": "disgusting",
+   "start": 14.29,
+   "end": 15.01
+  },
+  {
+   "word": "to",
+   "start": 15.01,
+   "end": 15.16
+  },
+  {
+   "word": "some",
+   "start": 15.17,
+   "end": 15.36
+  },
+  {
+   "word": "predators",
+   "start": 15.37,
+   "end": 15.84
+  },
+  {
+   "word": "that",
+   "start": 15.85,
+   "end": 15.95
+  },
+  {
+   "word": "they",
+   "start": 16.01,
+   "end": 16.16
+  },
+  {
+   "word": "spit",
+   "start": 16.17,
+   "end": 16.42
+  },
+  {
+   "word": "the",
+   "start": 16.45,
+   "end": 16.56
+  },
+  {
+   "word": "lizard",
+   "start": 16.57,
+   "end": 17.04
+  },
+  {
+   "word": "out!",
+   "start": 17.05,
+   "end": 17.26
+  },
+  {
+   "word": "Leaving",
+   "start": 17.65,
+   "end": 17.89
+  },
+  {
+   "word": "it",
+   "start": 17.895,
+   "end": 18.01
+  },
+  {
+   "word": "alive",
+   "start": 18.015,
+   "end": 18.41
+  },
+  {
+   "word": "to",
+   "start": 18.415,
+   "end": 18.53
+  },
+  {
+   "word": "do",
+   "start": 18.535,
+   "end": 18.69
+  },
+  {
+   "word": "the",
+   "start": 18.695,
+   "end": 18.85
+  },
+  {
+   "word": "exact",
+   "start": 18.855,
+   "end": 19.33
+  },
+  {
+   "word": "same",
+   "start": 19.335,
+   "end": 19.61
+  },
+  {
+   "word": "thing",
+   "start": 19.615,
+   "end": 19.93
+  },
+  {
+   "word": "again.",
+   "start": 19.935,
+   "end": 20.21
+  }
+ ]
+}

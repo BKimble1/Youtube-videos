@@ -1,0 +1,371 @@
+{
+ "audio": "audio/narration/takes/t2_REhD.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.43,
+   1.58
+  ],
+  [
+   3.88,
+   4.38
+  ],
+  [
+   5.55,
+   5.75
+  ],
+  [
+   8.59,
+   8.92
+  ],
+  [
+   10.0,
+   10.21
+  ],
+  [
+   12.88,
+   13.37
+  ],
+  [
+   17.66,
+   18.02
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.23
+  },
+  {
+   "word": "try",
+   "start": 0.24,
+   "end": 0.43
+  },
+  {
+   "word": "to",
+   "start": 0.44,
+   "end": 0.59
+  },
+  {
+   "word": "eat",
+   "start": 0.6,
+   "end": 0.76
+  },
+  {
+   "word": "this",
+   "start": 0.8,
+   "end": 1.03
+  },
+  {
+   "word": "lizard,",
+   "start": 1.04,
+   "end": 1.43
+  },
+  {
+   "word": "it",
+   "start": 1.58,
+   "end": 1.66
+  },
+  {
+   "word": "can",
+   "start": 1.665,
+   "end": 1.82
+  },
+  {
+   "word": "SHOOT",
+   "start": 1.825,
+   "end": 2.14
+  },
+  {
+   "word": "BLOOD",
+   "start": 2.145,
+   "end": 2.54
+  },
+  {
+   "word": "straight",
+   "start": 2.545,
+   "end": 2.94
+  },
+  {
+   "word": "out",
+   "start": 2.945,
+   "end": 3.1
+  },
+  {
+   "word": "of",
+   "start": 3.105,
+   "end": 3.22
+  },
+  {
+   "word": "its",
+   "start": 3.225,
+   "end": 3.5
+  },
+  {
+   "word": "eyes!",
+   "start": 3.505,
+   "end": 3.88
+  },
+  {
+   "word": "When",
+   "start": 4.38,
+   "end": 4.43
+  },
+  {
+   "word": "a",
+   "start": 4.42,
+   "end": 4.52
+  },
+  {
+   "word": "predator",
+   "start": 4.53,
+   "end": 5.0
+  },
+  {
+   "word": "attacks,",
+   "start": 5.01,
+   "end": 5.55
+  },
+  {
+   "word": "pressure",
+   "start": 5.75,
+   "end": 6.04
+  },
+  {
+   "word": "builds",
+   "start": 6.05,
+   "end": 6.36
+  },
+  {
+   "word": "inside",
+   "start": 6.37,
+   "end": 6.72
+  },
+  {
+   "word": "tiny",
+   "start": 6.73,
+   "end": 7.08
+  },
+  {
+   "word": "blood",
+   "start": 7.09,
+   "end": 7.36
+  },
+  {
+   "word": "vessels",
+   "start": 7.37,
+   "end": 7.8
+  },
+  {
+   "word": "behind",
+   "start": 7.81,
+   "end": 8.09
+  },
+  {
+   "word": "its",
+   "start": 8.09,
+   "end": 8.37
+  },
+  {
+   "word": "eyes.",
+   "start": 8.37,
+   "end": 8.59
+  },
+  {
+   "word": "Until",
+   "start": 8.92,
+   "end": 9.15
+  },
+  {
+   "word": "they",
+   "start": 9.155,
+   "end": 9.46
+  },
+  {
+   "word": "BURST,",
+   "start": 9.475,
+   "end": 10.0
+  },
+  {
+   "word": "launching",
+   "start": 10.21,
+   "end": 10.5
+  },
+  {
+   "word": "a",
+   "start": 10.505,
+   "end": 10.62
+  },
+  {
+   "word": "stream",
+   "start": 10.625,
+   "end": 10.94
+  },
+  {
+   "word": "of",
+   "start": 10.945,
+   "end": 11.1
+  },
+  {
+   "word": "blood",
+   "start": 11.105,
+   "end": 11.46
+  },
+  {
+   "word": "right",
+   "start": 11.465,
+   "end": 11.7
+  },
+  {
+   "word": "into",
+   "start": 11.705,
+   "end": 11.9
+  },
+  {
+   "word": "the",
+   "start": 11.905,
+   "end": 12.02
+  },
+  {
+   "word": "predator\u2019s",
+   "start": 12.025,
+   "end": 12.66
+  },
+  {
+   "word": "mouth!",
+   "start": 12.665,
+   "end": 12.88
+  },
+  {
+   "word": "And",
+   "start": 13.37,
+   "end": 13.42
+  },
+  {
+   "word": "the",
+   "start": 13.41,
+   "end": 13.52
+  },
+  {
+   "word": "blood",
+   "start": 13.525,
+   "end": 13.92
+  },
+  {
+   "word": "tastes",
+   "start": 13.925,
+   "end": 14.32
+  },
+  {
+   "word": "so",
+   "start": 14.325,
+   "end": 14.56
+  },
+  {
+   "word": "disgusting",
+   "start": 14.565,
+   "end": 15.28
+  },
+  {
+   "word": "to",
+   "start": 15.285,
+   "end": 15.44
+  },
+  {
+   "word": "some",
+   "start": 15.445,
+   "end": 15.6
+  },
+  {
+   "word": "predators",
+   "start": 15.605,
+   "end": 16.15
+  },
+  {
+   "word": "that",
+   "start": 16.165,
+   "end": 16.32
+  },
+  {
+   "word": "they",
+   "start": 16.325,
+   "end": 16.48
+  },
+  {
+   "word": "spit",
+   "start": 16.485,
+   "end": 16.8
+  },
+  {
+   "word": "the",
+   "start": 16.805,
+   "end": 16.96
+  },
+  {
+   "word": "lizard",
+   "start": 16.965,
+   "end": 17.44
+  },
+  {
+   "word": "out!",
+   "start": 17.445,
+   "end": 17.66
+  },
+  {
+   "word": "Leaving",
+   "start": 18.02,
+   "end": 18.23
+  },
+  {
+   "word": "it",
+   "start": 18.24,
+   "end": 18.4
+  },
+  {
+   "word": "alive",
+   "start": 18.4,
+   "end": 18.79
+  },
+  {
+   "word": "to",
+   "start": 18.8,
+   "end": 18.91
+  },
+  {
+   "word": "do",
+   "start": 18.92,
+   "end": 19.08
+  },
+  {
+   "word": "the",
+   "start": 19.08,
+   "end": 19.23
+  },
+  {
+   "word": "exact",
+   "start": 19.24,
+   "end": 19.71
+  },
+  {
+   "word": "same",
+   "start": 19.72,
+   "end": 19.98
+  },
+  {
+   "word": "thing",
+   "start": 20.0,
+   "end": 20.28
+  },
+  {
+   "word": "again.",
+   "start": 20.28,
+   "end": 20.57
+  }
+ ]
+}
