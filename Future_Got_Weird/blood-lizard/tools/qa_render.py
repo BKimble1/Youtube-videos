@@ -26,8 +26,8 @@ n = len(fr)
 fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # planned fast moments (a large frame-to-frame change here is intended): (start s, end s, what)
-PLANNED = [(0.0, 1.35, 'the opening rush onto the eye, the race along the jet to the muzzle, the recoil'), (9.1, 9.5, 'the rupture'),
-           (12.3, 13.2, 'second hit and the head jerk'), (16.0, 16.6, 'the spit'), (19.5, 21.0, 'the charge back in, the push toward the eye')]
+PLANNED = [(0.0, 1.2, 'the squirt, the hit and the snap back'), (3.7, 4.7, 'the push onto the eye'), (9.1, 10.0, 'the burst and out of the head'),
+           (12.2, 13.3, 'the second hit and the yank away'), (16.0, 16.6, 'the spit'), (18.9, 21.0, 'the turn back and the push into the opening')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

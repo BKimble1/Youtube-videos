@@ -1,8 +1,9 @@
 // Export the picture's event times (s) and continuous signals for the mix (tools/make_audio.py places every effect
-// from these, so sound and picture share one timeline). V2.
+// from these, so sound and picture share one timeline). V3.
 import * as fs from 'fs';
 import {DUR} from '../source/src/lib';
 import {EV, T, beatTimes, coyoteAt, jetAt, lizardAt, sectionAt} from '../source/src/story';
+import {jetSpan} from '../source/src/art/jet';
 
 const n = Math.round(DUR * 100);
 const sig: Record<string, number[]> = {p: [], reveal: [], run: [], yawRate: [], cwalk: [], cstride: [], jet: [], shadow: [], shake: [], paw: []};
@@ -18,7 +19,7 @@ for (let i = 0; i <= n; i++) {
   lastYaw = lz.yaw;
   sig.cwalk.push(+c.walk.toFixed(4));
   sig.cstride.push(+c.stride.toFixed(2));
-  sig.jet.push(j ? +Math.max(0, j.u1 - j.u0).toFixed(3) : 0);
+  sig.jet.push(j ? +(j.t >= j.t0 && j.t <= j.t1 + j.flight ? 1 : 0) * (j.ground ? 0.5 : 1) : 0);
   sig.shake.push(+c.hd.shake.toFixed(3));
   sig.paw.push(+c.paw.toFixed(3));
 }

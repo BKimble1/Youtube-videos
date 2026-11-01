@@ -123,7 +123,7 @@ export const Section: React.FC<{s: SectionState; g: SectionGeom; sw: number; lay
   const ringD = `${closed(outer, 0.8)} ${closed([...inner].reverse(), 0.8)}`;
   const wallW = swL * (1.7 - 1.1 * pe);
   const wallC = mix(C.wall, '#E8737A', 0.6 * pe);
-  const ra = (u: number) => (0.045 + 0.007 * s.beat) * (1 + 0.15 * pe);
+  const ra = (u: number) => (0.045 + 0.012 * s.beat) * (1 + 0.35 * pe);
   const pinch = (u: number) => 1 - sq * 0.9 * Math.exp(-(((u - MUSCLE_AT) / 0.05) ** 2));
   const rv = (u: number) => 0.055 * pinch(u) * (u < MUSCLE_AT ? 1 + 0.3 * pe : 1 - 0.15 * sq);
   const cells: React.ReactNode[] = [];
@@ -192,6 +192,12 @@ export const Section: React.FC<{s: SectionState; g: SectionGeom; sw: number; lay
             {/* the ring */}
             <path d={ringD} fill={C.blood} fillRule="evenodd" stroke={wallC} strokeWidth={wallW} />
             <circle cx={0} cy={0} r={RIN + 0.15 * (1 + 1.5 * pe)} fill={`url(#${ids.glow})`} opacity={pe} />
+            {/* a pressure wave runs through the ring on every heartbeat */}
+            {s.beat > 0.05 && [0].map((i) => {
+              const ph = clamp(1 - s.beat);
+              const r = RIN + 0.01 + (thick(0, pe) - 0.02) * ph;
+              return <circle key={i} cx={0} cy={0} r={r} fill="none" stroke="#FF9C90" strokeWidth={0.03 * (1 - ph) + 0.006} opacity={0.8 * s.beat} />;
+            })}
             {cells}
             {glints}
             {/* muscle band round the vein */}

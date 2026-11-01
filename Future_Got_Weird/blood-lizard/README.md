@@ -1,6 +1,19 @@
 # Future Got Weird: the blood-shooting horned lizard
 
-## V2 (rebuild, current)
+## V3 (hook and retention rebuild, current)
+
+**Deliverable.** `exports/FGW_Blood_Lizard_V3_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, H.264 + AAC, 630 frames,
+21.000 s. **It is not published.** The report is `production/V3_REPORT.md`, with evidence in `qa/v3/`. The source is
+composition `BloodLizardV3`, mix `mix_v3` (cues from `audio/cues_v3.json`).
+
+The changes from V2:
+- **Opening.** The squirt fires at 0.15 s from a large three-quarter-view lizard in the foreground.
+- **Blood.** A new liquid stream with droplets, break-up and splash (`art/jet.tsx`).
+- **Cross-section.** The camera travels continuously through it (muscle → ring → pore), with heartbeat pressure waves.
+- **Second spray.** A trajectory shot: it falls short on the sand until the coyote lunges into it on "mouth".
+- **Framing.** Tighter two-shots, a low tracking shot on the escape, and a turn to the camera into an exact loop.
+
+## V2 (rebuild, superseded; source at commit `af217bb`)
 
 **Deliverable.** `exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, H.264 + AAC, 630 frames,
 21.000 s. **It is not published.** The report is `production/V2_REPORT.md`, with evidence in `qa/v2/`. The source is
@@ -50,10 +63,10 @@ depth layers through one pinhole camera.
     python3 -m pip install numpy scipy soundfile pyloudnorm sherpa-onnx pillow
     python3 tools/make_narration.py                 # take -> narration master (one gap edit) and word timeline
     (cd source && npm ci)
-    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues_v2.json
-    python3 tools/make_audio.py mix_v2              # effects + music + mix -> source/public/audio/mix_v2.wav
-    (cd source && npx remotion render src/index.ts BloodLizardV2 ../exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2"}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
-    python3 tools/qa_render.py exports/FGW_Blood_Lizard_V2_REVIEW_1080x1920.mp4 qa/v2
+    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues_v3.json
+    python3 tools/make_audio.py mix_v3              # effects + music + mix -> source/public/audio/mix_v3.wav
+    (cd source && npx remotion render src/index.ts BloodLizardV3 ../exports/FGW_Blood_Lizard_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3"}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/qa_render.py exports/FGW_Blood_Lizard_V3_REVIEW_1080x1920.mp4 qa/v3
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [cols]`. Rig stills: composition `Test`.
 
