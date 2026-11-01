@@ -25,6 +25,7 @@ export type EnvState = {
   pocket: P;       // the frog's wintering spot (pocket centre, frog space)
   frostX?: number; // the ice wave's front across the litter (world x); leaves left of it are frosted
   sun?: number;    // the sky's clock in days (the sun and moon arc across: time passing); undefined = no disc
+  sunOp?: number;  // the disc's opacity (it clouds over as the cold returns)
 };
 const LEAF_COLS = ['#8A5A2B', '#A3672F', '#6E4424', '#B9853F', '#5E3B22', '#94512A', '#7C4A26'];
 const tiles = (x0: number, x1: number) => {
@@ -96,8 +97,8 @@ export const Far: React.FC<{e: EnvState; x0: number; x1: number; y0?: number; y1
         const top = Math.max(y0 + 40, -260), hor = Math.min(-40, y1 - 60);
         const x = cx - span / 2 + span * u, y = hor - (hor - top) * Math.sin(Math.PI * u);
         return day
-          ? <g><circle cx={x} cy={y} r={34} fill="#FFF2C2" opacity={0.35} /><circle cx={x} cy={y} r={20} fill="#FFF6D8" /></g>
-          : <g><circle cx={x} cy={y} r={16} fill="#E8EEF6" /><circle cx={x + 6} cy={y - 3} r={13} fill={p.skyTop} opacity={0.9} /></g>;
+          ? <g opacity={e.sunOp ?? 1}><circle cx={x} cy={y} r={34} fill="#FFF2C2" opacity={0.35} /><circle cx={x} cy={y} r={20} fill="#FFF6D8" /></g>
+          : <g opacity={e.sunOp ?? 1}><circle cx={x} cy={y} r={16} fill="#E8EEF6" /><circle cx={x + 6} cy={y - 3} r={13} fill={p.skyTop} opacity={0.9} /></g>;
       })()}
       {trunks}
       {/* far snow on the ground line in winter */}

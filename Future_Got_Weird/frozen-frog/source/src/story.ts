@@ -233,6 +233,7 @@ export const envAt = (t: number): EnvState => {
     shoots: t > 16 && t < 21.3 ? ss(t, 16.9, 18.2) : 0,
     pocket: POCKET,
     sun,
+    sunOp: 1 - ss(t, EV.cold0, LOOP_T - 0.25),
   };
 };
 /** screen-edge frost (the cold entering the frame) and the spring warmth */
