@@ -1,0 +1,122 @@
+[
+ {
+  "t": 22.45,
+  "sfx": "time-warp (loop tail -> frame 0 -> ageing)",
+  "gain_db": -4.0
+ },
+ {
+  "t": 1.35,
+  "sfx": "into the visor reflection",
+  "gain_db": -15.0
+ },
+ {
+  "t": 1.5,
+  "sfx": "black hole rumble",
+  "gain_db": -6.0
+ },
+ {
+  "t": 3.75,
+  "sfx": "ship engine approaching",
+  "gain_db": -14.0
+ },
+ {
+  "t": 4.7,
+  "sfx": "through the porthole",
+  "gain_db": -18.0
+ },
+ {
+  "t": 5.0,
+  "sfx": "watch tick",
+  "gain_db": -17.0
+ },
+ {
+  "t": 6.0,
+  "sfx": "watch tick",
+  "gain_db": -17.0
+ },
+ {
+  "t": 7.0,
+  "sfx": "watch tick",
+  "gain_db": -17.0
+ },
+ {
+  "t": 8.35,
+  "sfx": "cloud pass",
+  "gain_db": -12.0
+ },
+ {
+  "t": 11.0,
+  "sfx": "capsule descent roar",
+  "gain_db": -10.0
+ },
+ {
+  "t": 12.55,
+  "sfx": "capsule landing thud",
+  "gain_db": -6.0
+ },
+ {
+  "t": 12.57,
+  "sfx": "landing dust",
+  "gain_db": -18.0
+ },
+ {
+  "t": 12.7,
+  "sfx": "hatch release",
+  "gain_db": -20.0
+ },
+ {
+  "t": 12.92,
+  "sfx": "hatch clunk",
+  "gain_db": -18.0
+ },
+ {
+  "t": 13.0,
+  "sfx": "step",
+  "gain_db": -20.0
+ },
+ {
+  "t": 14.4,
+  "sfx": "run",
+  "gain_db": -18.0
+ },
+ {
+  "t": 14.85,
+  "sfx": "door creak",
+  "gain_db": -20.0
+ },
+ {
+  "t": 15.35,
+  "sfx": "footsteps (wood)",
+  "gain_db": -21.0
+ },
+ {
+  "t": 18.2,
+  "sfx": "swell into the eye",
+  "gain_db": -14.0
+ },
+ {
+  "t": 18.75,
+  "sfx": "black hole rumble (explanation)",
+  "gain_db": -8.0
+ },
+ {
+  "t": 19.2,
+  "sfx": "bending light",
+  "gain_db": -27.0
+ },
+ {
+  "t": 19.3,
+  "sfx": "his watch: normal ticking",
+  "gain_db": -19.0
+ },
+ {
+  "t": 0,
+  "sfx": "Earth clock racing (fast distant clatter)",
+  "gain_db": -26.0
+ },
+ {
+  "t": 21.85,
+  "sfx": "toward the visor",
+  "gain_db": -16.0
+ }
+]

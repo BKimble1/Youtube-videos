@@ -1,0 +1,47 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Zombie Ant, Zombie Snail and Myostatin); confirmed with creative_list_voices on 2026-11-01"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "ioo3uu3Mc86dmHd2Ot3Z",
+ "prompt": "[controlled, curious, slightly eerie] If you flew close enough to a black hole, you could travel into the future. [calm, measured] You'd watch your clock tick for just one hour. [lower, unsettling] But back on Earth, years could be passing. [quiet, building dread] And when you finally returned, your friends would be old. [soft, haunting] Your family might already be gone. [steady, like a realisation] Because you didn't just travel through space. [eerie, landing it] You traveled through time.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). The bracket tags direct delivery (controlled, slightly eerie, increasingly unsettling) and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 495.95 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_Nb5g.mp3",
+   "generation_id": "Nb5gzZ5T3vGFLmAPFkGl",
+   "duration_s": 19.96,
+   "chosen": false,
+   "asr_wer": {
+    "zipformer": 0.017,
+    "whisper": 0.0
+   },
+   "why_not": "slightly quicker read; 'time.' lands softer (-4.5 dB vs the median word) than in take 2 (-2.6 dB)"
+  },
+  {
+   "file": "audio/narration/takes/t2_aRMY.mp3",
+   "generation_id": "aRMYh1a4eiocSvfHlLlU",
+   "duration_s": 20.19,
+   "chosen": true,
+   "asr_wer": {
+    "zipformer": 0.017,
+    "whisper": 0.0
+   },
+   "asr_note": "Whisper base.en: exact. Zipformer: 'travelled' for 'traveled' (spelling only).",
+   "why": "more controlled pacing with longer natural pauses; 'old.' is quiet (-7.4 dB vs the median word), which suits the brief's quiet, haunting turn; the final 'time.' lands firmer"
+  }
+ ],
+ "edits": "Six sentence gaps (measured below -45 dBFS) LENGTHENED: +0.25 s before 'You'd', +0.25 s before 'But', +0.30 s before 'And', +0.35 s before 'Your', +0.60 s before 'Because', +0.35 s before the final 'You' (2.10 s in all), each inserted as digital silence in the middle of a silent run with a 12 ms equal-power crossfade; plus a 0.15 s lead-in so the time-warp hit owns frame 0. Every word is used sample for sample: no time-stretch, no pitch or gain change. See tools/make_narration.py.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps snapped to measured pause onsets, re-measured on the edited master (tools/align_zipformer.py -> audio/narration/master_zipformer.json)",
+ "final": {
+  "file": "audio/narration/FGW_TimeMachine_narration_V1.wav",
+  "sha256": "3163b0522d596009ebe682d360e26e2233b196217da4460cb1d11316b0e07069",
+  "format": "48 kHz, 24-bit, mono",
+  "film_s": 23.533
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+}

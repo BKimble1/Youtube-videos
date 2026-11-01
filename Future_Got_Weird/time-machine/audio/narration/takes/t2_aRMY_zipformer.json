@@ -1,0 +1,339 @@
+{
+ "audio": "audio/narration/takes/t2_aRMY.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   2.23,
+   2.61
+  ],
+  [
+   4.11,
+   4.6
+  ],
+  [
+   7.08,
+   7.63
+  ],
+  [
+   8.57,
+   8.87
+  ],
+  [
+   10.06,
+   10.64
+  ],
+  [
+   11.91,
+   12.34
+  ],
+  [
+   13.47,
+   14.09
+  ],
+  [
+   15.63,
+   16.17
+  ],
+  [
+   18.17,
+   18.68
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.28
+  },
+  {
+   "word": "flew",
+   "start": 0.28,
+   "end": 0.59
+  },
+  {
+   "word": "close",
+   "start": 0.64,
+   "end": 1.0
+  },
+  {
+   "word": "enough",
+   "start": 1.0,
+   "end": 1.24
+  },
+  {
+   "word": "to",
+   "start": 1.24,
+   "end": 1.36
+  },
+  {
+   "word": "a",
+   "start": 1.36,
+   "end": 1.51
+  },
+  {
+   "word": "black",
+   "start": 1.52,
+   "end": 1.91
+  },
+  {
+   "word": "hole,",
+   "start": 1.92,
+   "end": 2.23
+  },
+  {
+   "word": "you",
+   "start": 2.61,
+   "end": 2.66
+  },
+  {
+   "word": "could",
+   "start": 2.65,
+   "end": 2.81
+  },
+  {
+   "word": "travel",
+   "start": 2.82,
+   "end": 3.25
+  },
+  {
+   "word": "into",
+   "start": 3.26,
+   "end": 3.45
+  },
+  {
+   "word": "the",
+   "start": 3.46,
+   "end": 3.52
+  },
+  {
+   "word": "future.",
+   "start": 3.62,
+   "end": 4.11
+  },
+  {
+   "word": "You'd",
+   "start": 4.6,
+   "end": 4.71
+  },
+  {
+   "word": "watch",
+   "start": 4.715,
+   "end": 4.99
+  },
+  {
+   "word": "your",
+   "start": 4.995,
+   "end": 5.15
+  },
+  {
+   "word": "clock",
+   "start": 5.155,
+   "end": 5.47
+  },
+  {
+   "word": "tick",
+   "start": 5.475,
+   "end": 5.79
+  },
+  {
+   "word": "for",
+   "start": 5.835,
+   "end": 6.03
+  },
+  {
+   "word": "just",
+   "start": 6.035,
+   "end": 6.33
+  },
+  {
+   "word": "one",
+   "start": 6.355,
+   "end": 6.75
+  },
+  {
+   "word": "hour.",
+   "start": 6.755,
+   "end": 7.08
+  },
+  {
+   "word": "But",
+   "start": 7.63,
+   "end": 7.68
+  },
+  {
+   "word": "back",
+   "start": 7.675,
+   "end": 7.94
+  },
+  {
+   "word": "on",
+   "start": 7.955,
+   "end": 8.15
+  },
+  {
+   "word": "Earth,",
+   "start": 8.155,
+   "end": 8.57
+  },
+  {
+   "word": "years",
+   "start": 8.87,
+   "end": 9.23
+  },
+  {
+   "word": "could",
+   "start": 9.24,
+   "end": 9.43
+  },
+  {
+   "word": "be",
+   "start": 9.44,
+   "end": 9.67
+  },
+  {
+   "word": "passing.",
+   "start": 9.68,
+   "end": 10.06
+  },
+  {
+   "word": "And",
+   "start": 10.64,
+   "end": 10.69
+  },
+  {
+   "word": "when",
+   "start": 10.68,
+   "end": 10.73
+  },
+  {
+   "word": "you",
+   "start": 10.72,
+   "end": 10.86
+  },
+  {
+   "word": "finally",
+   "start": 10.87,
+   "end": 11.47
+  },
+  {
+   "word": "returned,",
+   "start": 11.47,
+   "end": 11.91
+  },
+  {
+   "word": "your",
+   "start": 12.34,
+   "end": 12.4
+  },
+  {
+   "word": "friends",
+   "start": 12.405,
+   "end": 12.8
+  },
+  {
+   "word": "would",
+   "start": 12.805,
+   "end": 13.0
+  },
+  {
+   "word": "be",
+   "start": 13.005,
+   "end": 13.24
+  },
+  {
+   "word": "old.",
+   "start": 13.245,
+   "end": 13.47
+  },
+  {
+   "word": "Your",
+   "start": 14.09,
+   "end": 14.14
+  },
+  {
+   "word": "family",
+   "start": 14.13,
+   "end": 14.49
+  },
+  {
+   "word": "might",
+   "start": 14.5,
+   "end": 14.69
+  },
+  {
+   "word": "already",
+   "start": 14.7,
+   "end": 15.17
+  },
+  {
+   "word": "be",
+   "start": 15.18,
+   "end": 15.37
+  },
+  {
+   "word": "gone.",
+   "start": 15.38,
+   "end": 15.63
+  },
+  {
+   "word": "Because",
+   "start": 16.17,
+   "end": 16.22
+  },
+  {
+   "word": "you",
+   "start": 16.22,
+   "end": 16.41
+  },
+  {
+   "word": "didn't",
+   "start": 16.42,
+   "end": 16.77
+  },
+  {
+   "word": "just",
+   "start": 16.78,
+   "end": 16.99
+  },
+  {
+   "word": "travel",
+   "start": 17.02,
+   "end": 17.41
+  },
+  {
+   "word": "through",
+   "start": 17.42,
+   "end": 17.69
+  },
+  {
+   "word": "space.",
+   "start": 17.7,
+   "end": 18.17
+  },
+  {
+   "word": "You",
+   "start": 18.68,
+   "end": 18.74
+  },
+  {
+   "word": "traveled",
+   "start": 18.745,
+   "end": 19.23
+  },
+  {
+   "word": "through",
+   "start": 19.265,
+   "end": 19.62
+  },
+  {
+   "word": "time.",
+   "start": 19.625,
+   "end": 19.9
+  }
+ ]
+}
