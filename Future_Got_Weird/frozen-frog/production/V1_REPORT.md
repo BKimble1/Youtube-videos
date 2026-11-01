@@ -9,14 +9,14 @@ the rest carries the hop, the landing and the return to the opening's framing.
 
 | Check | Result | Evidence |
 |---|---|---|
-| Format | 1080×1920, 30 fps, H.264 yuv420p (BT.709, CRF 16), 735 frames, 24.5 s; AAC 48 kHz stereo | `qa/v1/render_qa.json` |
+| Format | 1080×1920, 30 fps, H.264 yuv420p (BT.709, CRF 16), 735 frames, 24.5 s; AAC 48 kHz stereo, 317 kb/s; 45.1 MB | `qa/v1/render_qa.json` |
 | Full decode | no errors | `qa/v1/render_qa.json` |
 | Narration in the final file | Whisper base.en: word-perfect against the locked text. Zipformer: one homophone ("its cells" → "itselves"). | `qa/v1/final_asr.json` |
-| Loudness | −14.5 LUFS integrated, −1.6 dBTP true peak (4× oversampled). The voice sits at about −17.5 LUFS in the mix. | `qa/v1/mix_measure_mix_v1.json` |
-| Heartbeat | Low band (<110 Hz) at the opening beats is about 18 dB above the gaps between them. After the final beat (0.89 s) it falls to the floor (−38 to −44 dB). The restart beat (20.05 s) is the loudest beat in the film. | measured from the mix, this report |
+| Loudness (final file) | −14.5 LUFS integrated, −1.6 dBTP true peak (4× oversampled). The voice sits at about −17.5 LUFS in the mix. | `qa/v1/mix_measure_mix_v1.json`, re-measured on the delivered file |
+| Heartbeat | Low band (<110 Hz) at the opening beats is about 18 dB above the gaps between them. After the final beat (0.89 s) it falls to the floor (−38 to −44 dB). The two revival twitches read as small pulses (+4 dB and +15 dB over their gaps). The restart beat (20.05 s) is the loudest beat in the film. | measured on the delivered file, this report |
 | Single-frame jumps | None unplanned. Every large frame-to-frame change falls inside a listed camera move (the dives and pull-outs). | `qa/v1/render_qa.json` |
 | Static holds | No near-static run; the longest is 0 frames. | `qa/v1/render_qa.json` |
-| Loop seam | The last frame and frame 0 show the same picture (mean absolute difference about 3/255). The music beds are circular and the heartbeat schedule is anchored to the loop point. | `qa/v1/loop_seam_last3_first3.png` |
+| Loop seam | The last frame and frame 0 show the same picture (mean absolute difference 3.1/255; the only visible difference is that the first caption appears at frame 0). The music beds are circular and the heartbeat schedule is anchored to the loop point. | `qa/v1/loop_seam_last3_first3.png` |
 
 Sheets: `qa/v1/contact_every_0.5s.png` (the whole film) and `qa/v1/hook_0-2.5s_every_3rd_frame.png`.
 

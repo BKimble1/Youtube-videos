@@ -1,6 +1,6 @@
 {
  "file": "FGW_Frozen_Frog_V1_REVIEW_1080x1920.mp4",
- "size_mb": 45.31,
+ "size_mb": 45.09,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,11 +15,11 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "260165"
+   "bitrate": "317375"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 9.79,
+ "frame_change_median": 9.83,
  "large_changes": [
   {
    "frame": 259,
@@ -42,43 +42,43 @@
   {
    "frame": 262,
    "t": 8.733,
-   "mad": 52.39,
+   "mad": 52.38,
    "planned": "pull out to the trunk"
   },
   {
    "frame": 263,
    "t": 8.767,
-   "mad": 52.02,
+   "mad": 52.01,
    "planned": "pull out to the trunk"
   },
   {
    "frame": 264,
    "t": 8.8,
-   "mad": 52.85,
+   "mad": 52.86,
    "planned": "pull out to the trunk"
   },
   {
    "frame": 265,
    "t": 8.833,
-   "mad": 51.9,
+   "mad": 51.88,
    "planned": "pull out to the trunk"
   },
   {
    "frame": 266,
    "t": 8.867,
-   "mad": 50.86,
+   "mad": 50.69,
    "planned": "pull out to the trunk"
   },
   {
    "frame": 327,
    "t": 10.9,
-   "mad": 50.98,
+   "mad": 50.84,
    "planned": "follow the sugar back into the tissue"
   },
   {
    "frame": 328,
    "t": 10.933,
-   "mad": 50.49,
+   "mad": 50.47,
    "planned": "follow the sugar back into the tissue"
   },
   {
@@ -108,7 +108,7 @@
   {
    "frame": 333,
    "t": 11.1,
-   "mad": 54.34,
+   "mad": 54.35,
    "planned": "follow the sugar back into the tissue"
   },
   {
@@ -126,37 +126,37 @@
   {
    "frame": 422,
    "t": 14.067,
-   "mad": 55.12,
+   "mad": 55.13,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 423,
    "t": 14.1,
-   "mad": 57.12,
+   "mad": 57.13,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 424,
    "t": 14.133,
-   "mad": 56.42,
+   "mad": 56.43,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 425,
    "t": 14.167,
-   "mad": 56.94,
+   "mad": 56.95,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 426,
    "t": 14.2,
-   "mad": 54.16,
+   "mad": 54.19,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 427,
    "t": 14.233,
-   "mad": 52.44,
+   "mad": 52.45,
    "planned": "out through the body to the winter scene"
   },
   {
@@ -174,13 +174,13 @@
   {
    "frame": 430,
    "t": 14.333,
-   "mad": 50.01,
+   "mad": 49.97,
    "planned": "out through the body to the winter scene"
   },
   {
    "frame": 434,
    "t": 14.467,
-   "mad": 53.6,
+   "mad": 54.17,
    "planned": "out through the body to the winter scene"
   }
  ],
