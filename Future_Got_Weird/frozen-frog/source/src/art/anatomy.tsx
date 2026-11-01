@@ -169,7 +169,7 @@ const GUT: P[][] = [
   [pt(3.4, 1.9), pt(1.4, 0.2), pt(1.2, -2.4), pt(2.6, -4.6)],
 ];
 const inEllipse = (p: P, c: P, rx: number, ry: number) => ((p.x - c.x) / rx) ** 2 + ((p.y - c.y) / ry) ** 2 < 1;
-const SHARDS = mkShards(70, 11, [-1, -11, 34, 7.5], (p) => inEllipse(p, HEART_B, 4.2, 5.4) || inEllipse(p, pt(19.2, 2.4), 6.2, 3.6) || inEllipse(p, pt(22.5, -7.2), 7.4, 2.6));
+const SHARDS = mkShards(70, 11, [-1, -11, 34, 7.5], (p) => inEllipse(p, HEART_B, 4.2, 5.4) || inEllipse(p, pt(20.5, 3.0), 9.0, 4.8) || inEllipse(p, pt(22.5, -7.2), 7.4, 2.6));
 const PERI = mkShards(26, 3, [HEART_B.x - 6.5, HEART_B.y - 7.5, HEART_B.x + 6.5, HEART_B.y + 7.5], (p) => inEllipse(p, HEART_B, 4.0, 5.2) || !inEllipse(p, HEART_B, 6.4, 7.4));
 
 const tubeStroke = (pts: P[], w: number, c: string, ink = '#1E0A14', key?: string | number) => (
@@ -209,6 +209,7 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
   const id = {peri: uid('ap'), liv: uid('al'), lung: uid('ag'), wall: uid('aw'), glow: uid('ao'), blur: uid('ab')};
   const fz = clamp(a.frozen);
   const col = (c: string) => mix(c, '#8E8592', 0.5 * fz);
+  const colL = (c: string) => mix(c, '#8E8592', 0.5 * fz * (1 - 0.85 * clamp(a.sugar)));
   const ice = clamp(a.ice) * (1 - clamp(a.melt));
   const shardG = (s: Shard) => clamp((ice - s.th * 0.55) / 0.45) * ss(s.p.x - a.iceFront, -3, 2.5);
   const sug = clamp(a.sugar);
@@ -224,22 +225,22 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       specks.push(<Glucose key={`v${i}`} p={p} r={0.5} a={i} op={born * clamp(u * 8) * clamp((1 - u) * 6)} />);
     }
     // specks leaving the liver's surface into the surrounding vessels
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 44; i++) {
       const st = LIVER_MAIN[i % LIVER_MAIN.length];
       const ph = (a.flow * 0.6 + hash(i * 3.1)) % 1;
       const born = clamp((sug * 1.4 - hash(i * 1.7)) * 3);
       if (born <= 0) continue;
       const out = add(st, mul(dir(hash(i * 4.4) * Math.PI * 2), 0.6 + 2.6 * ph));
-      specks.push(<Glucose key={`l${i}`} p={out} r={0.4} a={i} op={born * Math.sin(Math.PI * ph)} />);
+      specks.push(<Glucose key={`l${i}`} p={out} r={0.55} a={i} op={born * Math.sin(Math.PI * ph)} />);
     }
   }
   return (
     <g>
       <defs>
         <linearGradient id={id.liv} x1="0.2" y1="0" x2="0.5" y2="1">
-          <stop offset={0} stopColor={col(mix('#A84A3C', '#D9894A', 0.5 * sug))} />
-          <stop offset={0.6} stopColor={col(mix('#7A2A22', '#A2522C', 0.4 * sug))} />
-          <stop offset={1} stopColor={col('#45140F')} />
+          <stop offset={0} stopColor={colL(mix('#A84A3C', '#F2A24E', 0.8 * sug))} />
+          <stop offset={0.6} stopColor={colL(mix('#7A2A22', '#B8602E', 0.65 * sug))} />
+          <stop offset={1} stopColor={colL('#45140F')} />
         </linearGradient>
         <linearGradient id={id.lung} x1="0" y1="0" x2="0" y2="1">
           <stop offset={0} stopColor={col('#F1B9BA')} />
@@ -285,12 +286,13 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       </g>
       {/* gut coils */}
       {GUT.map((g, i) => tubeStroke(g, 2.1 - 0.3 * i, col(i ? '#D8A48C' : '#E2B39A'), '#3A1A12', `g${i}`))}
+      {ice > 0.01 && <g opacity={0.8}>{SHARDS.map((s, i) => <IceShard key={i} s={s} g={shardG(s) * 0.8} melt={0} />)}</g>}
       {/* liver: big dark lobes, a sheen, the gall bladder */}
       <path d={closed(LIVER_LOBE, 0.8)} fill={`url(#${id.liv})`} stroke="#22080A" strokeWidth={0.24} />
       <path d={closed(LIVER_MAIN, 0.8)} fill={`url(#${id.liv})`} stroke="#22080A" strokeWidth={0.24} />
       <path d={open([pt(15, 0.2), pt(18.5, -0.8), pt(22.5, -0.4)])} stroke="#FFFFFF" strokeWidth={0.5} fill="none" opacity={0.18 * (1 - fz * 0.6)} filter={`url(#${id.blur})`} />
       <ellipse cx={16.8} cy={4.6} rx={0.95} ry={0.75} fill={col('#5E8A3C')} stroke="#1E2A0E" strokeWidth={0.14} />
-      {sug > 0.01 && <ellipse cx={19.5} cy={2.6} rx={8.5 + 1.5 * sug} ry={4.8 + sug} fill={`url(#${id.glow})`} opacity={0.7 * sug} />}
+      {sug > 0.01 && <ellipse cx={19.5} cy={2.6} rx={8.5 + 1.5 * sug} ry={4.8 + sug} fill={`url(#${id.glow})`} opacity={sug * (0.85 + 0.15 * Math.sin(a.t * 7))} />}
       {/* the heart in its pericardium */}
       <ellipse cx={HEART_B.x} cy={HEART_B.y - 0.6} rx={5.0} ry={6.3} fill={col('#5A1A26')} stroke={rgba('#E8B8C0', 0.35)} strokeWidth={0.2} transform={`rotate(${HEART_ROT} ${HEART_B.x} ${HEART_B.y})`} />
       <clipPath id={id.peri}><ellipse cx={HEART_B.x} cy={HEART_B.y - 0.6} rx={5.0} ry={6.3} transform={`rotate(${HEART_ROT} ${HEART_B.x} ${HEART_B.y})`} /></clipPath>
@@ -301,8 +303,7 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       {tubeStroke([pt(16.2, 5.4), pt(15.6, 3.4)], 0.8, col('#5B3A78'))}
       {specks}
       {/* ice in the spaces: around the organs and in the pericardial space */}
-      {ice > 0.01 && <g opacity={0.8}>{SHARDS.map((s, i) => <IceShard key={i} s={s} g={shardG(s) * 0.8} melt={0} />)}</g>}
-      {ice > 0.01 && PERI.map((s, i) => <IceShard key={`p${i}`} s={s} g={clamp((ice - s.th * 0.4) / 0.5)} />)}
+      {ice > 0.01 && <g clipPath={`url(#${id.peri})`}>{PERI.map((s, i) => <IceShard key={`p${i}`} s={s} g={clamp((ice - s.th * 0.4) / 0.5)} />)}</g>}
       {/* where the camera enters the tissue (a hint of the cells to come) */}
       
     </g>

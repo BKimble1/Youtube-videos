@@ -12,7 +12,12 @@
  {
   "t": 19.2,
   "sfx": "revival twitch (small)",
-  "gain_db": -16
+  "gain_db": -14
+ },
+ {
+  "t": 19.62,
+  "sfx": "revival twitch (stronger)",
+  "gain_db": -14
  },
  {
   "t": 20.05,

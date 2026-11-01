@@ -5,7 +5,7 @@
  "voice_gain_db": 6.11,
  "voice_max_gain_reduction_db": -10.29,
  "duration_s": 24.5,
- "effects": 38,
+ "effects": 39,
  "voice_lufs_in_mix": -17.54,
  "loop_seam_jump": 0.002
 }

@@ -1,0 +1,191 @@
+{
+ "file": "FGW_Frozen_Frog_V1_REVIEW_1080x1920.mp4",
+ "size_mb": 45.31,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 735,
+  "duration_s": 24.5
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "260165"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 9.79,
+ "large_changes": [
+  {
+   "frame": 259,
+   "t": 8.633,
+   "mad": 51.97,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "mad": 54.83,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "mad": 54.44,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 262,
+   "t": 8.733,
+   "mad": 52.39,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 263,
+   "t": 8.767,
+   "mad": 52.02,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 264,
+   "t": 8.8,
+   "mad": 52.85,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 265,
+   "t": 8.833,
+   "mad": 51.9,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 266,
+   "t": 8.867,
+   "mad": 50.86,
+   "planned": "pull out to the trunk"
+  },
+  {
+   "frame": 327,
+   "t": 10.9,
+   "mad": 50.98,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 328,
+   "t": 10.933,
+   "mad": 50.49,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 329,
+   "t": 10.967,
+   "mad": 51.61,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 330,
+   "t": 11.0,
+   "mad": 51.04,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 331,
+   "t": 11.033,
+   "mad": 52.22,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 332,
+   "t": 11.067,
+   "mad": 54.53,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 333,
+   "t": 11.1,
+   "mad": 54.34,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 334,
+   "t": 11.133,
+   "mad": 53.89,
+   "planned": "follow the sugar back into the tissue"
+  },
+  {
+   "frame": 421,
+   "t": 14.033,
+   "mad": 52.06,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "mad": 55.12,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 423,
+   "t": 14.1,
+   "mad": 57.12,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 424,
+   "t": 14.133,
+   "mad": 56.42,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 425,
+   "t": 14.167,
+   "mad": 56.94,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 426,
+   "t": 14.2,
+   "mad": 54.16,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 427,
+   "t": 14.233,
+   "mad": 52.44,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 428,
+   "t": 14.267,
+   "mad": 51.16,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 429,
+   "t": 14.3,
+   "mad": 51.22,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 430,
+   "t": 14.333,
+   "mad": 50.01,
+   "planned": "out through the body to the winter scene"
+  },
+  {
+   "frame": 434,
+   "t": 14.467,
+   "mad": 53.6,
+   "planned": "out through the body to the winter scene"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 0,
+ "longest_near_static_run_starts_s": 0.0,
+ "loop_last_vs_first_mad": 3.12
+}
