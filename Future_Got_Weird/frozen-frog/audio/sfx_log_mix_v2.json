@@ -1,0 +1,237 @@
+[
+ {
+  "t": 0,
+  "sfx": "heartbeat",
+  "gain_db": -12
+ },
+ {
+  "t": 1.336,
+  "sfx": "the final, strained heartbeat (then everything cuts out)",
+  "gain_db": -9
+ },
+ {
+  "t": 19.18,
+  "sfx": "revival twitch",
+  "gain_db": -15
+ },
+ {
+  "t": 19.6,
+  "sfx": "the heart restarts: the powerful first pulse",
+  "gain_db": -6
+ },
+ {
+  "t": 19.63,
+  "sfx": "circulation surges back (low rush)",
+  "gain_db": -24
+ },
+ {
+  "t": 20.045,
+  "sfx": "heartbeat resumes",
+  "gain_db": -13
+ },
+ {
+  "t": 20.095,
+  "sfx": "blood flowing again (soft pulse of fluid)",
+  "gain_db": -30
+ },
+ {
+  "t": 0.02,
+  "sfx": "a bird (the living forest)",
+  "gain_db": -34
+ },
+ {
+  "t": 0.25,
+  "sfx": "the ice wave sweeps over the frog (aggressive crystalline crackle)",
+  "gain_db": -14
+ },
+ {
+  "t": 0.7,
+  "sfx": "the limbs lock (a crunch of ice)",
+  "gain_db": -20
+ },
+ {
+  "t": 1.92,
+  "sfx": "ice crystals burst into the pericardium (glassy)",
+  "gain_db": -27
+ },
+ {
+  "t": 2.6,
+  "sfx": "ice spreads through the body (a sweeping crackle)",
+  "gain_db": -23
+ },
+ {
+  "t": 2.6,
+  "sfx": "the window opens over the trunk (low swell)",
+  "gain_db": -27
+ },
+ {
+  "t": 3.5,
+  "sfx": "the lungs sag (a low exhale tone)",
+  "gain_db": -28
+ },
+ {
+  "t": 4.4,
+  "sfx": "dive into the tissue (low swell)",
+  "gain_db": -24
+ },
+ {
+  "t": 4.75,
+  "sfx": "into the cells (soft shimmer)",
+  "gain_db": -31
+ },
+ {
+  "t": 5.3,
+  "sfx": "ice plates grow between the cells (crystalline)",
+  "gain_db": -31
+ },
+ {
+  "t": 5.6,
+  "sfx": "water drawn out of the cells (quiet fluid movement)",
+  "gain_db": -29
+ },
+ {
+  "t": 6.8,
+  "sfx": "an ice spear drives into a cell (rising strained creak)",
+  "gain_db": -24
+ },
+ {
+  "t": 7.6,
+  "sfx": "the membrane dents (a sharp crunch)",
+  "gain_db": -24
+ },
+ {
+  "t": 7.6,
+  "sfx": "the cell buckles (a soft strain)",
+  "gain_db": -28
+ },
+ {
+  "t": 8.45,
+  "sfx": "pull out to the trunk (low swell)",
+  "gain_db": -26
+ },
+ {
+  "t": 9.2,
+  "sfx": "the liver releases sugar (warm bloom)",
+  "gain_db": -21
+ },
+ {
+  "t": 9.6,
+  "sfx": "glucose flowing through the bloodstream (fluid rush with a fine fizz)",
+  "gain_db": -28
+ },
+ {
+  "t": 10.15,
+  "sfx": "follow the sugar into the vessel",
+  "gain_db": -25
+ },
+ {
+  "t": 11.6,
+  "sfx": "glucose passes the membrane (tiny soft ticks)",
+  "gain_db": -32
+ },
+ {
+  "t": 12.35,
+  "sfx": "the cell rounds out and holds (warm tones)",
+  "gain_db": -27
+ },
+ {
+  "t": 12.4,
+  "sfx": "ice needles press on the membrane (crystalline creak)",
+  "gain_db": -28
+ },
+ {
+  "t": 13.4,
+  "sfx": "they stop dead at the membrane (a glassy halt)",
+  "gain_db": -22
+ },
+ {
+  "t": 13.9,
+  "sfx": "out through the body to the winter scene",
+  "gain_db": -22
+ },
+ {
+  "t": 14.7,
+  "sfx": "winter (eerie cold cue)",
+  "gain_db": -27
+ },
+ {
+  "t": 16.45,
+  "sfx": "spring light (warm rising tones)",
+  "gain_db": -28
+ },
+ {
+  "t": 16.75,
+  "sfx": "meltwater drips",
+  "gain_db": -31
+ },
+ {
+  "t": 17.7,
+  "sfx": "the frost on the frog melts (wet crackle, trickle)",
+  "gain_db": -27
+ },
+ {
+  "t": 17.35,
+  "sfx": "a bird, far off",
+  "gain_db": -35
+ },
+ {
+  "t": 18.3,
+  "sfx": "into the chest",
+  "gain_db": -27
+ },
+ {
+  "t": 18.5,
+  "sfx": "the ice round the heart melts",
+  "gain_db": -28
+ },
+ {
+  "t": 20.42,
+  "sfx": "the eyes open (a tiny wet click)",
+  "gain_db": -29
+ },
+ {
+  "t": 20.5,
+  "sfx": "the legs stretch (leaves)",
+  "gain_db": -29
+ },
+ {
+  "t": 20.82,
+  "sfx": "the crouch (leaves)",
+  "gain_db": -28
+ },
+ {
+  "t": 21.08,
+  "sfx": "the leap: push-off (leaves, a soft push)",
+  "gain_db": -20
+ },
+ {
+  "t": 21.13,
+  "sfx": "through the air toward us (one soft air movement)",
+  "gain_db": -31
+ },
+ {
+  "t": 21.85,
+  "sfx": "the landing (leaves)",
+  "gain_db": -22
+ },
+ {
+  "t": 21.85,
+  "sfx": "the landing (a light thud)",
+  "gain_db": -21
+ },
+ {
+  "t": 22.2,
+  "sfx": "a bird (the air lightens)",
+  "gain_db": -33
+ },
+ {
+  "t": 23.1,
+  "sfx": "the cold creeps back in (faint crackle, into frame 0)",
+  "gain_db": -27
+ },
+ {
+  "t": 1.426,
+  "sfx": "HARD CUT: forest, music and effects fall silent under the voice until 1.9 s",
+  "gain_db": 0
+ }
+]

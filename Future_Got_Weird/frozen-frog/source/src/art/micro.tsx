@@ -24,6 +24,8 @@ export type MicroState = {
   sc: number;       // seconds since the glucose began arriving
   hold: number;     // 0..1 the hero cell protected: rounded out, its interior liquid
   spikes: number;   // 0..1 ice needles pressing on the hero cell's membrane (they stop at it)
+  dent?: number;    // 0..1 an ice spear driving into the hero cell's side, denting the membrane inward
+  spear?: number;   // 0..1 the spear's growth
   blood: number;    // 0..1 plasma flow speed in the capillary
   melt: number;     // 0..1 ice gone
 };
@@ -31,8 +33,8 @@ export const FRONT = nrm(pt(0.55, 0.84));
 const SP = 150;
 // the capillary: a gently curved channel across the field (flow from +x toward -x)
 export const CAP: P[] = [pt(1900, -40), pt(900, 10), pt(300, -30), pt(-200, -110), pt(-700, -150), pt(-1900, -120)];
-const CAP_R = 34;
-const capY = (x: number) => {
+const CAP_R = 56;
+export const capY = (x: number) => {
   for (let i = 1; i < CAP.length; i++) {
     const a = CAP[i - 1], b = CAP[i];
     if (x <= a.x && x >= b.x) return lerp(a.y, b.y, (a.x - x) / (a.x - b.x));
@@ -104,7 +106,10 @@ const CELLS: Cell[] = (() => {
   return out;
 })();
 /** the cell the story follows: just below the capillary near the frame centre */
-export const HERO = (() => CELLS.reduce((b, c) => (len(sub(c.c, pt(60, 120))) < len(sub(b.c, pt(60, 120))) ? c : b), CELLS[0]))();
+const HERO_AT = pt(60, capY(60) + CAP_R + 95);
+export const HERO = (() => CELLS.reduce((b, c) => (len(sub(c.c, HERO_AT)) < len(sub(b.c, HERO_AT)) ? c : b), CELLS[0]))();
+/** the ice spear that threatens the hero cell comes in from the lower right */
+export const SPEAR_A = 0.75;
 const NEIGH = CELLS.filter((c) => c !== HERO && len(sub(c.c, HERO.c)) < SP * 2.4 && c.c.y > capY(c.c.x));
 // transporters: on the hero and its neighbours, on the side facing the capillary
 type Port = {cell: Cell; p: P; n: P};
@@ -134,7 +139,12 @@ const cellShape = (c: Cell, m: MicroState, gap: number) => {
     const ang = (q / NA) * Math.PI * 2;
     let r = Math.max(0, c.rad[q] - gap);
     r = lerp(r, c.r * 0.98, round * 0.6) * k;
-    if (hero && m.crumple > 0) r *= 1 - 0.09 * m.crumple * (1 - m.hold) * (0.5 + 0.5 * Math.sin(ang * 6 + 1.3 + 0.8 * Math.sin(ang * 3)));
+    if (hero && m.crumple > 0) r *= 1 - 0.11 * m.crumple * (1 - m.hold) * (0.5 + 0.5 * Math.sin(ang * 6 + 1.3 + 0.8 * Math.sin(ang * 3)));
+    if (hero && (m.dent ?? 0) > 0) {
+      let da = ang - SPEAR_A;
+      da = Math.atan2(Math.sin(da), Math.cos(da));
+      r *= 1 - 0.34 * (m.dent ?? 0) * Math.exp(-((da / 0.36) ** 2));
+    }
     pts.push(add(c.c, mul(dir(ang), r)));
   }
   return pts;
@@ -183,7 +193,7 @@ const ringPos = (r: Ring, sc: number, i: number, m: MicroState, gap: number): {p
   const tau = sc - r.t0;
   if (tau < 0) return null;
   const lane = (hash(i * 4.4) - 0.5) * CAP_R * 1.2;
-  const x0 = 700;
+  const x0 = 900;
   const x = x0 - CAP_V * tau;
   if (!r.port || x > r.exitX) {
     if (x < -1900) return null;
@@ -305,6 +315,7 @@ export const Micro: React.FC<{m: MicroState; view: {x0: number; y0: number; x1: 
             <path d={d} fill={c === HERO ? `url(#${id.heroIn})` : `url(#${id.cell})`} stroke="#2A0710" strokeWidth={4.5} />
             <path d={d} fill={`url(#${id.stip})`} />
             <path d={d} fill="none" stroke="#F5A3A8" strokeWidth={2.2} opacity={0.75} transform={`translate(${c.c.x} ${c.c.y}) scale(0.965) translate(${-c.c.x} ${-c.c.y})`} />
+            {c === HERO && <path d={d} fill="none" stroke="#FFC7C9" strokeWidth={2} opacity={0.9} transform={`translate(${c.c.x} ${c.c.y}) scale(1.035) translate(${-c.c.x} ${-c.c.y})`} />}
             <ellipse cx={nuc.x} cy={nuc.y} rx={c.r * 0.26} ry={c.r * 0.15} transform={`rotate(${(c.nucA * 180) / Math.PI + 90} ${nuc.x} ${nuc.y})`} fill="#5B3480" stroke="#21102E" strokeWidth={2} />
           </g>
         );
@@ -322,6 +333,23 @@ export const Micro: React.FC<{m: MicroState; view: {x0: number; y0: number; x1: 
         );
       })}
       {water}
+      {(m.spear ?? 0) > 0.01 && (() => {
+        // a long hexagonal ice prism grown through the gap; its tip rests on the (dented) membrane
+        const v = dir(SPEAR_A);
+        const tipR = len(sub(heroPts[Math.round((SPEAR_A / (Math.PI * 2)) * heroPts.length) % heroPts.length], HERO.c));
+        const tip = add(HERO.c, mul(v, tipR + 4));
+        const L = 40 + 150 * clamp(m.spear ?? 0);
+        const base = add(tip, mul(v, L));
+        const n = mul(pt(-v.y, v.x), 15);
+        const ptsS = [tip, add(add(tip, mul(v, 14)), n), add(base, n), add(base, mul(v, 12)), sub(base, n), sub(add(tip, mul(v, 14)), n)];
+        const dS = 'M' + ptsS.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join('L') + 'Z';
+        return (
+          <g>
+            <path d={dS} fill="#DDF3FF" stroke="#FFFFFF" strokeWidth={3} strokeLinejoin="round" opacity={0.95} />
+            <path d={`M${(tip.x + v.x * 14).toFixed(1)} ${(tip.y + v.y * 14).toFixed(1)}L${base.x.toFixed(1)} ${base.y.toFixed(1)}`} stroke="#9CC9E6" strokeWidth={3} />
+          </g>
+        );
+      })()}
       {spikes}
       {rings}
     </g>

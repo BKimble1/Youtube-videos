@@ -15,6 +15,7 @@ export type HeartState = {
   atria: number;  // 0..1 atrial contraction (leads the ventricle)
   frozen: number; // 0..1 tissue pallor and frost glaze
   twitch: number; // a small shiver of the wall (revival)
+  kick?: number;  // 0..1 the powerful first pulse: the whole heart swells and snaps
 };
 export type AnatomyState = {
   heart: HeartState;
@@ -25,6 +26,8 @@ export type AnatomyState = {
   sugar: number;    // 0..1 the liver's release: its glow and the specks leaving it
   flow: number;     // seconds of flow (the specks' travel clock)
   melt: number;     // 0..1 the ice gone to water (spring)
+  circ?: number;    // 0..1 circulation returning: vessels flush red
+  pulses?: number[]; // the times of the heartbeats so far (each sends a red pulse out along the vessels)
   t: number;
 };
 
@@ -42,7 +45,7 @@ export const Heart: React.FC<{h: HeartState; size?: number}> = ({h, size = 1.18}
   const at = (x: number, y: number) => `translate(${x} ${y}) scale(${1 - 0.16 * ca}) translate(${-x} ${-y})`;
   const fibres = [0, 1, 2, 3].map((k) => open([pt(-2.6 + k * 0.2, -0.8 + k * 1.1), pt(-0.8, 0.6 + k * 1.0), pt(1.2, -0.2 + k * 1.05), pt(2.7, -0.9 + k * 0.9)]));
   return (
-    <g transform={`translate(${HEART_B.x} ${HEART_B.y}) rotate(${HEART_ROT}) scale(${size})`}>
+    <g transform={`translate(${HEART_B.x} ${HEART_B.y}) rotate(${HEART_ROT}) scale(${size * (1 + 0.12 * (h.kick ?? 0))})`}>
       <defs>
         <radialGradient id={id.v} cx="0.36" cy="0.3" r="0.8">
           <stop offset={0} stopColor={col(mix('#E25B66', '#F48A8A', 0.35 * c))} />
@@ -179,6 +182,19 @@ const tubeStroke = (pts: P[], w: number, c: string, ink = '#1E0A14', key?: strin
     <path d={open(pts)} stroke="#FFFFFF" strokeWidth={w * 0.22} fill="none" strokeLinecap="round" opacity={0.25} transform={`translate(${-w * 0.18} ${-w * 0.22})`} />
   </g>
 );
+/** the main arteries out of the heart (body frame): the aorta back under the spine to the hind leg, the carotid
+ * forward to the head, a branch down into the liver and gut */
+export const ARTERIES: P[][] = [
+  [pt(29.8, -5.6), pt(27.5, -8.6), pt(22, -10), pt(12, -9.9), pt(4, -9.2), pt(1.2, -6.5), pt(0.6, -2.5)],
+  [pt(29.8, -5.6), pt(33, -7.4), pt(37.5, -6.8), pt(42, -5.2)],
+  [pt(22, -10), pt(20.2, -6), pt(18.6, -2.2), pt(16.5, 0.6)],
+  [pt(12, -9.9), pt(10.5, -5.5), pt(8.4, -2.4)],
+];
+const polyLen = (pts: P[]) => pts.slice(1).reduce((acc, q, i) => acc + Math.hypot(q.x - pts[i].x, q.y - pts[i].y), 0);
+const subPath = (pts: P[], u0: number, u1: number) => {
+  const n = 10;
+  return open(Array.from({length: n + 1}, (_, k) => along(pts, lerp(clamp(u0), clamp(u1), k / n))));
+};
 /** a point along a polyline at fraction u (by length) */
 export const along = (pts: P[], u: number): P => {
   const L: number[] = [0];
@@ -198,7 +214,9 @@ export const Glucose: React.FC<{p: P; r: number; a?: number; op?: number}> = ({p
   const d = 'M' + pts.map((q) => `${q.x.toFixed(3)} ${q.y.toFixed(3)}`).join('L') + 'Z';
   return (
     <g opacity={op}>
-      <path d={d} fill="rgba(255,196,72,0.32)" stroke="#2A1606" strokeWidth={r * 0.62} strokeLinejoin="round" />
+      <circle cx={p.x} cy={p.y} r={r * 2.6} fill="#FFC24A" opacity={0.14} />
+      <circle cx={p.x} cy={p.y} r={r * 1.7} fill="#FFD27A" opacity={0.26} />
+      <path d={d} fill="rgba(255,214,110,0.55)" stroke="#2A1606" strokeWidth={r * 0.62} strokeLinejoin="round" />
       <path d={d} fill="none" stroke="#FFC24A" strokeWidth={r * 0.34} strokeLinejoin="round" />
       <circle cx={pts[0].x} cy={pts[0].y} r={r * 0.2} fill="#FFE7A8" />
     </g>
@@ -301,6 +319,21 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       {/* the vein along the belly wall (its blood dark; amber specks ride it) */}
       {tubeStroke(VEIN, 0.95, col(mix('#5B3A78', '#B07A3A', 0.35 * sug)))}
       {tubeStroke([pt(16.2, 5.4), pt(15.6, 3.4)], 0.8, col('#5B3A78'))}
+      {/* circulation returning: the arteries flush red; each beat sends a bright pulse out along every vessel */}
+      {(a.circ ?? 0) > 0.01 && (
+        <g>
+          {ARTERIES.map((v, i) => tubeStroke(v, 0.8 - 0.12 * Math.min(i, 2), mix('#6E3A44', '#E0303E', a.circ ?? 0), '#1E0A14', `ar${i}`))}
+          {(a.pulses ?? []).flatMap((b, k) => {
+            const dt = a.t - b;
+            if (dt < 0 || dt > 0.9) return [];
+            return [...ARTERIES, VEIN].map((v, i) => {
+              const u = dt * (34 / polyLen(v)) * (i === 4 ? 0.6 : 1);
+              if (u > 1.15) return null;
+              return <path key={`pu${k}_${i}`} d={subPath(v, u - 0.22, u)} stroke="#FF6A5A" strokeWidth={1.25} strokeLinecap="round" fill="none" opacity={0.9 * (1 - dt / 0.9)} />;
+            });
+          })}
+        </g>
+      )}
       {specks}
       {/* ice in the spaces: around the organs and in the pericardial space */}
       {ice > 0.01 && <g clipPath={`url(#${id.peri})`}>{PERI.map((s, i) => <IceShard key={`p${i}`} s={s} g={clamp((ice - s.th * 0.4) / 0.5)} />)}</g>}

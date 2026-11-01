@@ -15,7 +15,7 @@ for (let i = 0; i <= n; i++) {
   sig.ext.push(r3(extAt(t)));
   sig.frost.push(r3(f.frost));
   sig.ice.push(r3(m.ice));
-  sig.micro.push(c.world === 'micro' || (c.world === 'frog' && c.w < 2.6) ? 1 : 0);
+  sig.micro.push(c.world === 'micro' || c.local.w < 2.6 ? 1 : 0);
   sig.logw.push(r3(Math.log(c.w)));
   sig.cold.push(r3(e.cold));
   sig.snow.push(r3(e.snow * (1 - e.melt)));

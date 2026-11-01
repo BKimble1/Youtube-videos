@@ -22,7 +22,9 @@ export type EnvState = {
   melt: number;    // 0..1 the snowpack melting away
   wet: number;     // 0..1 wet, glistening litter
   shoots: number;  // 0..1 spring shoots near the wintering spot
-  pocket: P;       // the frog's wintering spot (pocket centre)
+  pocket: P;       // the frog's wintering spot (pocket centre, frog space)
+  frostX?: number; // the ice wave's front across the litter (world x); leaves left of it are frosted
+  sun?: number;    // the sky's clock in days (the sun and moon arc across: time passing); undefined = no disc
 };
 const LEAF_COLS = ['#8A5A2B', '#A3672F', '#6E4424', '#B9853F', '#5E3B22', '#94512A', '#7C4A26'];
 const tiles = (x0: number, x1: number) => {
@@ -39,6 +41,7 @@ const mkLeaves = (n: number, y0: number, y1: number, len0: number, len1: number,
       col: LEAF_COLS[Math.floor(hash(i * 7.7 + seed) * LEAF_COLS.length)], sy: 0.42 + 0.25 * depth, i};
   }).sort((a, b) => a.y - b.y);
 const NEAR = mkLeaves(120, -5, 46, 9, 26, 3);
+const NEAR_BACK = mkLeaves(70, -15, -5, 5, 9, 29);
 const BACK = mkLeaves(70, -16, -4, 5, 9, 17);
 
 const pal = (e: EnvState) => {
@@ -56,7 +59,7 @@ const Leaves: React.FC<{ls: L[]; e: EnvState; x0: number; x1: number; dark?: num
         <g key={ox} transform={`translate(${ox} 0)`}>
           {ls.filter((l) => l.x + ox > x0 - 30 && l.x + ox < x1 + 30).map((l) => (
             <g key={l.i} transform={`translate(${l.x} ${l.y}) scale(1 ${l.sy})`}>
-              <Leaf c={pt(0, 0)} ang={l.ang} len={l.len} col={mix(mix(l.col, '#3A4656', 0.35 * c + dark), '#20160E', 0.0)} frost={e.frost * 0.9} />
+              <Leaf c={pt(0, 0)} ang={l.ang} len={l.len} col={mix(mix(l.col, '#3A4656', 0.35 * c + dark), '#20160E', 0.0)} frost={e.frost * 0.9 * (e.frostX === undefined ? 1 : ss(e.frostX - (l.x + ox), -14, 10))} />
             </g>
           ))}
         </g>
@@ -65,7 +68,7 @@ const Leaves: React.FC<{ls: L[]; e: EnvState; x0: number; x1: number; dark?: num
   );
 };
 
-export const Far: React.FC<{e: EnvState; x0: number; x1: number}> = ({e, x0, x1}) => {
+export const Far: React.FC<{e: EnvState; x0: number; x1: number; y0?: number; y1?: number}> = ({e, x0, x1, y0 = -300, y1 = 100}) => {
   const p = pal(e);
   const id = uid('sk');
   const trunks: React.ReactNode[] = [];
@@ -85,6 +88,17 @@ export const Far: React.FC<{e: EnvState; x0: number; x1: number}> = ({e, x0, x1}
         </linearGradient>
       </defs>
       <rect x={x0 - 400} y={-700} width={x1 - x0 + 800} height={720} fill={`url(#${id})`} />
+      {e.sun !== undefined && (() => {
+        // one day = the sun crossing, one night = the moon crossing (each over half a day)
+        const ph = ((e.sun % 1) + 1) % 1;
+        const day = ph < 0.5, u = day ? ph / 0.5 : (ph - 0.5) / 0.5;
+        const cx = (x0 + x1) / 2, span = (x1 - x0) * 0.62;
+        const top = Math.max(y0 + 40, -260), hor = Math.min(-40, y1 - 60);
+        const x = cx - span / 2 + span * u, y = hor - (hor - top) * Math.sin(Math.PI * u);
+        return day
+          ? <g><circle cx={x} cy={y} r={34} fill="#FFF2C2" opacity={0.35} /><circle cx={x} cy={y} r={20} fill="#FFF6D8" /></g>
+          : <g><circle cx={x} cy={y} r={16} fill="#E8EEF6" /><circle cx={x + 6} cy={y - 3} r={13} fill={p.skyTop} opacity={0.9} /></g>;
+      })()}
       {trunks}
       {/* far snow on the ground line in winter */}
       <rect x={x0 - 400} y={-30} width={x1 - x0 + 800} height={60} fill={mix(p.soil, '#DCE6EE', 0.85 * e.snow * (1 - e.melt))} opacity={0.9} />
@@ -121,10 +135,20 @@ export const Ground: React.FC<{e: EnvState; x0: number; x1: number}> = ({e, x0, 
           <stop offset={1} stopColor={p.soil} />
         </linearGradient>
       </defs>
-      <rect x={x0 - 200} y={-6} width={x1 - x0 + 400} height={120} fill={`url(#${id})`} />
+      <rect x={x0 - 200} y={-16} width={x1 - x0 + 400} height={130} fill={`url(#${id})`} />
+      <Leaves ls={NEAR_BACK} e={e} x0={x0} x1={x1} dark={0.1} />
       <Leaves ls={NEAR} e={e} x0={x0} x1={x1} />
+      {/* snow over the floor in winter */}
+      {e.snow > 0.01 && (
+        <g opacity={e.snow * (1 - ss(e.melt, 0.3, 1))}>
+          <rect x={x0 - 200} y={-17} width={x1 - x0 + 400} height={131} fill="#E6EEF5" />
+          {Array.from({length: 30}, (_, i) => (
+            <ellipse key={i} cx={x0 + hash(i * 3.9) * (x1 - x0)} cy={-12 + hash(i * 6.1) * 50} rx={6 + 10 * hash(i)} ry={1.2} fill="#C7D5E2" opacity={0.6} />
+          ))}
+        </g>
+      )}
       {/* rime haze over the litter */}
-      {e.frost > 0.01 && <rect x={x0 - 200} y={-6} width={x1 - x0 + 400} height={120} fill="#D8E8F2" opacity={0.18 * e.frost} />}
+      {e.frost > 0.01 && <rect x={x0 - 200} y={-16} width={x1 - x0 + 400} height={130} fill="#D8E8F2" opacity={0.18 * e.frost} />}
       {/* wet sheen (spring) */}
       {e.wet > 0.01 && Array.from({length: 24}, (_, i) => (
         <ellipse key={i} cx={x0 + hash(i * 3.1) * (x1 - x0)} cy={2 + hash(i * 7.3) * 30} rx={2 + 3 * hash(i)} ry={0.5} fill="#FFFFFF" opacity={0.35 * e.wet} />
@@ -188,6 +212,26 @@ export const SnowPack: React.FC<{e: EnvState; x0: number; x1: number}> = ({e, x0
       </g>
       {/* the pocket's rim */}
       <ellipse cx={P0.x} cy={P0.y} rx={rx} ry={ry} stroke="#8EA6BE" strokeWidth={0.8} fill="none" />
+    </g>
+  );
+};
+/** the pocket's floor: the leaf litter the frog sits in under the snow (frog space; drawn beneath the frog) */
+export const PocketFloor: React.FC<{e: EnvState}> = ({e}) => {
+  if (e.snow <= 0.01) return null;
+  const P0 = e.pocket;
+  const rx = 37 + 4 * e.melt, ry = 26 + 6 * e.melt;
+  const id = uid('pf');
+  return (
+    <g opacity={e.snow}>
+      <clipPath id={id}><ellipse cx={P0.x} cy={P0.y} rx={rx} ry={ry} /></clipPath>
+      <g clipPath={`url(#${id})`}>
+        <rect x={P0.x - rx} y={-3} width={rx * 2} height={ry + 20} fill="#4A3524" />
+        {Array.from({length: 14}, (_, i) => (
+          <g key={i} transform={`translate(${P0.x - rx + hash(i * 2.7) * rx * 2} ${-1 + hash(i * 5.3) * 9}) scale(1 0.5)`}>
+            <Leaf c={pt(0, 0)} ang={(hash(i) - 0.5) * 120} len={9 + 6 * hash(i * 1.7)} col={LEAF_COLS[i % LEAF_COLS.length]} frost={0.6 * (1 - e.melt)} />
+          </g>
+        ))}
+      </g>
     </g>
   );
 };

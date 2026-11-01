@@ -126,6 +126,20 @@ const flakePath = (f: Flake, k: number) => {
   return d;
 };
 
+// ---------------------------------------------------------------- the ice wave
+/** the freezing front sweeps the body from the ground and rear up over the head: q rises along WAVE_N */
+export const WAVE_N = pt(0.8, -0.6);
+export const waveQ = (p: P) => p.x * WAVE_N.x + p.y * WAVE_N.y;
+export const waveF = (frost: number) => lerp(4, 47, clamp(frost));
+/** how far the front has passed a point (0 not yet .. 1 well behind the front) */
+export const frozenAt = (frost: number, p: P, soft = 6) => clamp((waveF(frost) - waveQ(p)) / soft);
+const halfPlane = (F: number, back: number) => {
+  const tg = pt(0.6, 0.8);
+  const p0 = mul(WAVE_N, F), p1 = mul(WAVE_N, F - back);
+  const a = add(p0, mul(tg, 120)), b = add(p0, mul(tg, -120)), c = add(p1, mul(tg, -120)), d = add(p1, mul(tg, 120));
+  return `M${a.x} ${a.y}L${b.x} ${b.y}L${c.x} ${c.y}L${d.x} ${d.y}Z`;
+};
+
 // ---------------------------------------------------------------- the frog
 export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?: boolean}> = ({s, anatomy}) => {
   const ids = {skin: uid('fs'), belly: uid('fb'), clip: uid('fc'), cut: uid('fk'), soft: uid('fo'), leg: uid('fl'), rim: uid('fr'), eye: uid('fe'), frost: uid('ff'), sh: uid('fh'), cav: uid('fv')};
@@ -187,6 +201,8 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
       );
     });
   };
+  // the front reaches the hind legs first (low and at the rear), the forelegs later
+  const legAt = (key: string) => (key.startsWith('h') ? (key.endsWith('th') ? 0.24 : 0.14) : key.endsWith('ua') ? 0.6 : 0.52);
   const segDraw = (a: P, b: P, ra: number, rb: number, far: boolean, key: string, nb: number) => {
     const d = seg(a, b, ra, rb);
     const cid = `${ids.leg}${key}`;
@@ -199,7 +215,7 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
           {nb > 0 && <g opacity={far ? 0.6 : 1}>{bars(a, b, ra, rb, key, nb)}</g>}
           {/* top light along the upper edge */}
           {!far && <path d={seg(add(a, pt(0, -ra * 0.45)), add(b, pt(0, -rb * 0.45)), ra * 0.45, rb * 0.45)} fill={skin(SKIN.lt)} opacity={0.35} />}
-          {fr > 0.05 && <rect x={Math.min(a.x, b.x) - 8} y={Math.min(a.y, b.y) - 8} width={Math.abs(a.x - b.x) + 16} height={Math.abs(a.y - b.y) + 16} fill={FROST.base} opacity={0.45 * ss(fr, 0.02, 0.5)} />}
+          {fr > 0.02 && <rect x={Math.min(a.x, b.x) - 8} y={Math.min(a.y, b.y) - 8} width={Math.abs(a.x - b.x) + 16} height={Math.abs(a.y - b.y) + 16} fill={FROST.base} opacity={0.5 * ss(fr, legAt(key) - 0.06, legAt(key) + 0.1)} />}
         </g>
       </g>
     );
@@ -228,8 +244,9 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
   const eyeC = EYE;
   const lid = clamp(s.blink);
   // frost crystals (body frame)
-  const flakes = FLAKES.filter((f) => f.th < fr * 1.15).map((f, i) => {
-    const g = clamp((fr * 1.15 - f.th) / 0.25);
+  const F = waveF(fr);
+  const flakes = FLAKES.filter((f) => waveQ(f.p) + f.th * 5 < F).map((f, i) => {
+    const g = clamp((F - waveQ(f.p) - f.th * 5) / 5);
     return (
       <g key={i}>
         <path d={flakePath(f, 0.3 + 0.7 * g)} stroke={FROST.lt} strokeWidth={0.07 + 0.04 * g} strokeLinecap="round" opacity={0.85 * g} />
@@ -344,6 +361,8 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
               transform={`translate(0 ${(1 - lid) * (EYE_R * 2 + 0.4)})`} fill={skin(SKIN.mask)} stroke={SKIN.ink} strokeWidth={0.25} clipPath={undefined} opacity={1} />
           </g>
         )}
+        {/* fallen leaves draped over the back */}
+        {(s.leaves ?? 0) > 0.01 && <BackLeaves k={s.leaves!} />}
         {/* the chest cutaway: a cleanly cut window through the skin layers into the body */}
         {cut && (
           <g>
@@ -363,13 +382,14 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
         {/* frost: pale glaze, then crystals */}
         {fr > 0.01 && (
           <g clipPath={`url(#${ids.clip})`} mask={cut ? `url(#${ids.frost})` : undefined}>
-            <rect x={-4} y={-16} width={60} height={26} fill={FROST.base} opacity={0.3 * ss(fr, 0, 0.7) * (cut ? 0.85 : 1)} />
+            {/* behind the front: a frosted glaze; at the front: a bright advancing edge */}
+            <path d={halfPlane(F - 1.5, 200)} fill={FROST.base} opacity={0.34 * (cut ? 0.85 : 1)} />
+            {fr < 0.995 && <path d={halfPlane(F + 1.2, 6)} fill="#F2FBFF" opacity={0.6} filter={`url(#${ids.soft})`} />}
+            {fr < 0.995 && <path d={halfPlane(F, 0.5)} fill="#FFFFFF" opacity={0.85} />}
             <g>{flakes}</g>
           </g>
         )}
         {beads.length > 0 && <g clipPath={`url(#${ids.clip})`} mask={cut ? `url(#${ids.frost})` : undefined}>{beads}</g>}
-        {/* fallen leaves draped over the back */}
-        {(s.leaves ?? 0) > 0.01 && <BackLeaves k={s.leaves!} />}
       </g>
       {/* near limbs (cut away inside the window, like everything in front of the cut plane) */}
       {cutW ? (

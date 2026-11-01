@@ -10,8 +10,8 @@ import {clamp, hash, ss} from './lib';
 import {Frog, Leaf, MICRO_B, SIT, toWorld} from './art/frog';
 import {Anatomy} from './art/anatomy';
 import {Micro, microBounds} from './art/micro';
-import {Drips, Falling, Far, Ground, JUMP, Mid, Shoots, SnowPack} from './art/forest';
-import {Cam, EV, K_MICRO, MICRO_ROLL, MICRO_ROT_B, MW, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
+import {Drips, Falling, Far, Ground, Mid, PocketFloor, Shoots, SnowPack} from './art/forest';
+import {Cam, EV, K_MICRO, M, MICRO_ROLL, MICRO_ROT_B, MW, Place, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -123,37 +123,49 @@ const EdgeFrost: React.FC<{k: number}> = ({k}) => {
 };
 /** how much the camera is outside the body (light grades apply only there) */
 export const extAt = (t: number) => {
-  if (t < 12) return 1 - ss(t, 1.0, 1.9);
+  if (t < 12) return 1 - ss(t, 0.85, 1.3);
   if (t < 17) return ss(t, 14.3, 14.8);
-  if (t < 20) return 1 - ss(t, 18.5, 18.95);
-  return ss(t, 20.2, 20.6);
+  if (t < 20) return 1 - ss(t, 18.45, 18.9);
+  return ss(t, 20.3, 20.7);
 };
 
-const FrogWorld: React.FC<{t: number; c: Cam}> = ({t, c}) => {
+const inDive = (t: number) => (t > 4.2 && t < 9.4) || (t > 10.0 && t < 14.6);
+const FrogWorld: React.FC<{t: number; c: Cam; local: Cam; place: Place}> = ({t, c, local, place}) => {
   const e = envAt(t);
   const f = frogAt(t);
   const a = anatomyAt(t);
-  const r = microReveal(c);
-  const nested = r > 0.02 && ((t > 4.8 && t < 9.4) || (t > 10.3 && t < 14.6)) ? <NestedMicro t={t} c={c} r={r} /> : null;
+  const r = microReveal(local);
+  const nested = r > 0.02 && inDive(t) ? <NestedMicro t={t} c={local} r={r} /> : null;
   const fl = fallenLeavesAt(t);
   const leafStart = [toWorld({...SIT} as never, pt(12, -12.6)), toWorld({...SIT} as never, pt(-0.5, -10))];
+  const P = place;
+  const toLocal = (x: number) => (x - P.x) / P.s;
   return (
     <>
-      <Layer c={c} delta={700} min={6} max={30}>{(x0, x1) => <Far e={e} x0={x0} x1={x1} />}</Layer>
+      <Layer c={c} delta={700} min={6} max={30}>{(x0, x1, y0, y1) => <Far e={e} x0={x0} x1={x1} y0={y0} y1={y1} />}</Layer>
       <Layer c={c} delta={110} min={1.5} max={22}>{(x0, x1) => <Mid e={e} x0={x0} x1={x1} />}</Layer>
       <Layer c={c} delta={0} max={18}>
         {(x0, x1, y0, y1) => (
           <>
             <Ground e={e} x0={x0} x1={x1} />
-            <Shoots e={e} />
-            <ellipse cx={f.root.x + 22} cy={0.6} rx={30} ry={2.4} fill="#000" opacity={0.35 * clamp(1 - (-f.root.y - 7.2) / 30)} />
-            <Frog s={f} anatomy={<><Anatomy a={a} />{nested}</>} />
-            {fl > 0 && leafStart.map((p, i) => {
-              const q = pt(p.x - 8 * fl - 4 * i, p.y + (-p.y - 1.5) * fl * fl);
-              return <Leaf key={i} c={q} ang={[-8, -62][i] + 70 * fl * (i ? -1 : 1)} len={[17, 13][i]} col={['#8A5A2B', '#6E4424'][i]} />;
-            })}
-            <SnowPack e={e} x0={x0} x1={x1} />
-            <Drips e={e} t={t} />
+            {/* the leaves that slid off its back stay at the wintering spot */}
+            {fl > 0 && (
+              <g transform={`translate(${M.x} ${M.y}) scale(${M.s})`}>
+                {leafStart.map((p, i) => {
+                  const q = pt(p.x - 8 * fl - 4 * i, p.y + (-p.y - 1.5) * fl * fl);
+                  return <Leaf key={i} c={q} ang={[-8, -62][i] + 70 * fl * (i ? -1 : 1)} len={[17, 13][i]} col={['#8A5A2B', '#6E4424'][i]} />;
+                })}
+              </g>
+            )}
+            <g transform={`translate(${P.x} ${P.y}) scale(${P.s})`}>
+              <PocketFloor e={e} />
+              <Shoots e={e} />
+              {/* the contact shadow (it stays on the ground while the frog is in the air) */}
+              <ellipse cx={f.root.x + 22} cy={0.6 + (place.y < 0 && t > EV.launch && t < EV.land ? -place.y / place.s * 0.0 : 0)} rx={30} ry={2.4} fill="#000" opacity={0.35 * (t > EV.launch && t < EV.land ? 0 : 1)} />
+              <Frog s={f} anatomy={<><Anatomy a={a} />{nested}</>} />
+              <SnowPack e={e} x0={toLocal(x0)} x1={toLocal(x1)} />
+              <Drips e={e} t={t} />
+            </g>
             <Falling e={e} x0={x0} x1={x1} y0={y0} y1={y1} />
           </>
         )}
@@ -168,8 +180,8 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
   const c: Cam = {x: wc.x, y: wc.y, w: wc.w};
   let body: React.ReactNode;
   if (wc.world === 'micro') body = <MicroFull t={t} c={c} roll={MICRO_ROLL} />;
-  else if (covers(c, MW, microReveal(c) * 0.8) && microReveal(c) > 0.02 && ((t > 4.8 && t < 9.4) || (t > 10.3 && t < 14.6))) body = <MicroFull t={t} c={toMicro(c)} roll={MICRO_ROLL} />;
-  else body = <FrogWorld t={t} c={c} />;
+  else if (covers(wc.local, MW, microReveal(wc.local) * 0.8) && microReveal(wc.local) > 0.02 && inDive(t)) body = <MicroFull t={t} c={toMicro(wc.local)} roll={MICRO_ROLL} />;
+  else body = <FrogWorld t={t} c={c} local={wc.local} place={wc.place} />;
   const e = envAt(t);
   const ext = extAt(t);
   const warm = warmAt(t) * ext;
@@ -186,4 +198,4 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     </div>
   );
 };
-void JUMP; void EV;
+void EV;
