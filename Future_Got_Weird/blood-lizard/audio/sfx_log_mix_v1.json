@@ -1,0 +1,157 @@
+[
+ {
+  "t": 19.95,
+  "sfx": "coyote snarling breath, over the loop seam (generated)",
+  "gain_db": -9
+ },
+ {
+  "t": 0.12,
+  "sfx": "the lids swell (tiny creak)",
+  "gain_db": -30
+ },
+ {
+  "t": 0.34,
+  "sfx": "blood squirt from the eye (generated)",
+  "gain_db": -5
+ },
+ {
+  "t": 0.5,
+  "sfx": "blood hits the mouth (wet splat)",
+  "gain_db": -18
+ },
+ {
+  "t": 0.83,
+  "sfx": "coyote recoils: snort and lip licking (generated)",
+  "gain_db": -6
+ },
+ {
+  "t": 0.98,
+  "sfx": "paws skid on sand",
+  "gain_db": -24
+ },
+ {
+  "t": 2.9,
+  "sfx": "the skin thins away (soft wet tissue)",
+  "gain_db": -16
+ },
+ {
+  "t": 2.2,
+  "sfx": "heartbeat",
+  "gain_db": -21.0
+ },
+ {
+  "t": 3.91,
+  "sfx": "the predator looms (snarl heard through the body, generated)",
+  "gain_db": -11
+ },
+ {
+  "t": 4.18,
+  "sfx": "flinch",
+  "gain_db": -20
+ },
+ {
+  "t": 4.42,
+  "sfx": "the muscle squeezes the vein",
+  "gain_db": -17
+ },
+ {
+  "t": 4.67,
+  "sfx": "the vein pinched shut",
+  "gain_db": -21
+ },
+ {
+  "t": 5.43,
+  "sfx": "vessel walls stretching (rises with the pressure)",
+  "gain_db": -17
+ },
+ {
+  "t": 8.62,
+  "sfx": "tension whine before the burst",
+  "gain_db": -27
+ },
+ {
+  "t": 9.185,
+  "sfx": "the vessel bursts (wet pop)",
+  "gain_db": -8
+ },
+ {
+  "t": 9.195,
+  "sfx": "blood squirts out through the pore (generated)",
+  "gain_db": -9
+ },
+ {
+  "t": 0,
+  "sfx": "the stream (steady hiss while it flows)",
+  "gain_db": -27
+ },
+ {
+  "t": 10.75,
+  "sfx": "the coyote lunges in (generated snarl)",
+  "gain_db": -9
+ },
+ {
+  "t": 12.29,
+  "sfx": "impact boom (slow motion)",
+  "gain_db": -14
+ },
+ {
+  "t": 12.31,
+  "sfx": "blood hits the mouth (slowed splat)",
+  "gain_db": -15
+ },
+ {
+  "t": 12.57,
+  "sfx": "the jaws snap shut",
+  "gain_db": -12
+ },
+ {
+  "t": 13.46,
+  "sfx": "disgusted snort (generated)",
+  "gain_db": -8
+ },
+ {
+  "t": 13.602,
+  "sfx": "paws on sand (steps back)",
+  "gain_db": -22
+ },
+ {
+  "t": 15.11,
+  "sfx": "head shake: ears and jowls flapping",
+  "gain_db": -4
+ },
+ {
+  "t": 16.15,
+  "sfx": "gag, spit, head shake (generated)",
+  "gain_db": -8
+ },
+ {
+  "t": 16.656,
+  "sfx": "the lizard lands on the sand",
+  "gain_db": -16
+ },
+ {
+  "t": 16.666,
+  "sfx": "sand scatter",
+  "gain_db": -20
+ },
+ {
+  "t": 17.63,
+  "sfx": "lizard claws scrambling on sand (generated)",
+  "gain_db": 0
+ },
+ {
+  "t": 16.806,
+  "sfx": "claw ticks on gravel (one per foot plant)",
+  "gain_db": -13
+ },
+ {
+  "t": 19.7,
+  "sfx": "the next coyote: paws on sand",
+  "gain_db": -25
+ },
+ {
+  "t": 20.65,
+  "sfx": "the lids swell again (tiny creak)",
+  "gain_db": -30
+ }
+]

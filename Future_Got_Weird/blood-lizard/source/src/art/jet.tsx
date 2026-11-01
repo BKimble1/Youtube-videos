@@ -41,9 +41,9 @@ export const Jet: React.FC<{j: JetState; sw: number}> = ({j, sw}) => {
   const front = jetPoint(j, u1);
   const fd = nrm(sub(front, jetPoint(j, Math.max(0, u1 - 0.02))));
   const fw = j.w * (0.55 + 0.75 * u1) * 0.62;
-  const drops = [0.035, 0.07].map((k, i) => {
+  const drops = [0.03, 0.06].map((k, i) => {
     const q = jetPoint(j, Math.max(u0, u1 - k));
-    return <circle key={i} cx={q.x + perp(fd).x * fw * 0.9 * (i ? -1 : 1)} cy={q.y + perp(fd).y * fw * 0.9 * (i ? -1 : 1)} r={fw * (0.42 - i * 0.1)} fill={B.core} stroke={B.ink} strokeWidth={sw * 0.5} />;
+    return <circle key={i} cx={q.x + perp(fd).x * fw * 0.75 * (i ? -1 : 1)} cy={q.y + perp(fd).y * fw * 0.75 * (i ? -1 : 1)} r={fw * (0.3 - i * 0.08)} fill={B.core} />;
   });
   const sp = clamp(j.splash);
   return (
@@ -61,8 +61,11 @@ export const Jet: React.FC<{j: JetState; sw: number}> = ({j, sw}) => {
           {u1 < 0.995 && (
             <g>
               {drops}
-              <ellipse cx={front.x} cy={front.y} rx={fw} ry={fw * 0.86} transform={`rotate(${(Math.atan2(fd.y, fd.x) * 180) / Math.PI} ${front.x} ${front.y})`} fill={B.core} stroke={B.ink} strokeWidth={sw * 0.7} />
-              <circle cx={front.x - fw * 0.3} cy={front.y - fw * 0.3} r={fw * 0.25} fill={B.lit} opacity={0.8} />
+              {/* the leading slug of liquid: a teardrop drawn back along the stream */}
+              <g transform={`translate(${front.x} ${front.y}) rotate(${(Math.atan2(fd.y, fd.x) * 180) / Math.PI})`}>
+                <path d={`M${fw * 0.9} 0 C${fw * 0.9} ${-fw * 0.75} ${-fw * 0.4} ${-fw * 0.72} ${-fw * 2.6} ${-fw * 0.36} L${-fw * 2.6} ${fw * 0.36} C${-fw * 0.4} ${fw * 0.72} ${fw * 0.9} ${fw * 0.75} ${fw * 0.9} 0 Z`} fill={B.core} stroke={B.ink} strokeWidth={sw * 0.7} />
+                <path d={`M${fw * 0.3} ${-fw * 0.42} Q${-fw * 0.8} ${-fw * 0.5} ${-fw * 1.9} ${-fw * 0.24}`} stroke={B.lit} strokeWidth={fw * 0.16} fill="none" strokeLinecap="round" opacity={0.85} />
+              </g>
             </g>
           )}
         </>

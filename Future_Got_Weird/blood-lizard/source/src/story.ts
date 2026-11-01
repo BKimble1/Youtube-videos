@@ -57,7 +57,7 @@ export const EV = {
   reveal0: 2.7, reveal1: 3.55, shadow0: T.when - 0.05, flinch: T.when + 0.12, sq0: T.when + 0.36, sq1: T.attacks + 0.25,
   p0: T.pressure, p1: T.until + 0.2, tremble0: T.until, burst: T.burst + 0.02,
   revealOut0: T.burst + 0.42, revealOut1: T.launching + 0.55, lunge0: T.into - 0.7,
-  imp: V(T.mouth - 0.1), bite: V(T.mouth + 0.2), streamEnd: V(T.mouth + 0.42),
+  imp: V(T.mouth - 0.1), bite: V(T.mouth + 0.2), streamEnd: V(T.mouth - 0.02),
   lift0: V(T.mouthEnd + 0.05), lift1: V(T.tastes + 0.25), walk0: V(T.and), walk1: V(T.disgustingEnd + 0.3),
   grim0: V(T.tastes), grim1: V(T.disgusting + 0.3), shake0: V(T.disgustingEnd + 0.1), shake1: V(T.spit - 0.05),
   spit: V(T.spit + 0.1), gag0: V(T.spit + 0.35), paw0: V(T.out - 0.1), paw1: V(T.leaving + 0.2),
@@ -186,7 +186,7 @@ const hookCoyote = (tau: number): CoyoteState => {
 };
 /** while the camera is inside the head the coyote comes back and hangs over the lizard */
 const M_HOVER = add(M_A, pt(-1.4, -2.6));
-const M_C = add(M_A, pt(0.4, 0.5));
+const M_C = add(M_A, pt(-0.2, -0.1));
 const BITE_AT = () => add(backWorld(L0, -1.2), pt(0, -0.2));
 const coyoteAtV = (v: number): CoyoteState => {
   if (v < 2.6) return hookCoyote(v);
@@ -197,15 +197,15 @@ const coyoteAtV = (v: number): CoyoteState => {
   const back = hookCoyote(2.6);
   if (v < EV.imp) {
     const M = add(lerpP(lerpP(coyoteHeadMouth(back), M_HOVER, attack), M_C, lunge), mul(breath, 1 - lunge));
-    const hd = mixHead(mixHead(back.hd, hdIdle, attack), {...ATK, jaw: 0.66, blood: 0.35, lip: 0.6}, lunge);
+    const hd = mixHead(mixHead(back.hd, hdIdle, attack), {...ATK, jaw: 0.42, blood: 0.35, lip: 0.6}, lunge);
     return mouthCoyote(M, lerp(lerp(back.ang, ANG_A, attack), ANG_A + 0.05, lunge), hd, BODY0, v);
   }
   // impact -> bite: the jaws come down on the lizard's back half
-  const hit: CoyoteHead = {...ATK, jaw: 0.66, blood: 0.35 + 0.55 * ss(v, EV.imp, EV.imp + 0.08), squint: 0.55 * ss(v, EV.imp, EV.imp + 0.05), lip: 0.6, ears: 0.3 * ss(v, EV.imp, EV.bite)};
+  const hit: CoyoteHead = {...ATK, jaw: 0.42, blood: 0.35 + 0.55 * ss(v, EV.imp, EV.imp + 0.08), squint: 0.55 * ss(v, EV.imp, EV.imp + 0.05), lip: 0.6, ears: 0.3 * ss(v, EV.imp, EV.bite)};
   const bk = ss5(v, EV.imp + 0.04, EV.bite);
   if (v < EV.bite + 0.001) {
     const M = lerpP(M_C, BITE_AT(), bk);
-    return mouthCoyote(M, lerp(ANG_A + 0.05, 0.36, bk), {...hit, jaw: lerp(0.66, 0.2, ss(v, EV.bite - 0.07, EV.bite))}, BODY0, v);
+    return mouthCoyote(M, lerp(ANG_A + 0.05, 0.36, bk), {...hit, jaw: lerp(0.42, 0.2, ss(v, EV.bite - 0.07, EV.bite)) + 0.18 * Math.sin(Math.PI * clamp((v - EV.imp - 0.02) / (EV.bite - EV.imp - 0.06)))}, BODY0, v);
   }
   return heldCoyote(v);
 };
@@ -271,14 +271,14 @@ export const jetAt = (t: number): JetState | null => {
   const s = clamp((v - EV.burst - 0.04) / (EV.imp - EV.burst - 0.04));
   const k = 3.4;
   const u1 = (Math.exp(k * s) - 1) / (Math.exp(k) - 1);
-  const u0 = clamp((v - EV.streamEnd) / 0.22) ** 1.4;
-  const splash = clamp((v - EV.imp) / 0.25) * (1 - ss(v, EV.streamEnd + 0.1, EV.streamEnd + 0.5));
+  const u0 = clamp((v - EV.streamEnd) / 0.07) ** 1.4;
+  const splash = clamp((v - EV.imp) / 0.08) * (1 - ss(v, EV.imp + 0.06, EV.bite));
   return {from: poreWorld(lz), dir: poreDirWorld(lz), to: coyoteHeadMouth(c), u0, u1, w: JW * (1 + 0.15 * ss(v, EV.burst, EV.burst + 0.3)), splash, t: v};
 };
 
 // ---------------------------------------------------------------- inside the head
 const BEAT0 = 2.2, BEAT_SLOW = 0.5, BEAT_FAST = 0.34;
-const beatTimes: number[] = [];
+export const beatTimes: number[] = [];
 for (let b = BEAT0; b < 14; ) {
   beatTimes.push(b);
   b += b < EV.p0 - 0.2 ? BEAT_SLOW : BEAT_FAST;
@@ -362,14 +362,14 @@ const camAB = (v: number): Cam => {
   ], hv);
 };
 const camC = (v: number): Cam => {
-  const j = jetAt(tOfV(v));
+  const j = jetAt(tOfV(Math.min(v, EV.imp)));
   const pore = PORE0;
   const front = j ? jetPoint(j, clamp(j.u1)) : pore;
   const mouth = coyoteHeadMouth(coyoteAtV(Math.min(v, EV.imp)));
   const d = Math.hypot(front.x - pore.x, front.y - pore.y);
   const two = ss(v, V(T.into - 0.3), EV.imp);
-  const c = lerpP(lerpP(add(pore, pt(0.02, 0.05)), front, 0.5), lerpP(lerpP(pore, mouth, 0.5), add(lerpP(pore, mouth, 0.5), pt(-1.6, -1.6)), 1), two);
-  return {x: c.x, y: c.y, w: 1.7 + 2.0 * d + 6.5 * two};
+  const c = lerpP(lerpP(add(pore, pt(0.02, 0.05)), front, 0.5), add(lerpP(pore, mouth, 0.58), pt(-0.3, -0.4)), two);
+  return {x: c.x, y: c.y, w: 1.7 + 1.55 * d + 1.2 * two};
 };
 // real time of a visual time (inverse of vOf, by search)
 export const tOfV = (v: number) => {

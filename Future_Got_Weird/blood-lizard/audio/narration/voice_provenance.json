@@ -1,0 +1,21 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Myostatin, Zombie Ant and Zombie Snail); confirmed with creative_list_voices on 2026-11-01"},
+ "model_id": "eleven_v4",
+ "flow_id": "VD9967JzaChlWkeN9gSe",
+ "prompt": "[excited, urgent] If you try to eat this lizard, it can SHOOT BLOOD straight out of its eyes! [brisk, explaining] When a predator attacks, pressure builds inside tiny blood vessels behind its eyes. [building, intense] Until they BURST, launching a stream of blood right into the predator's mouth! [amused, grossed out] And the blood tastes so DISGUSTING to some predators that they spit the lizard out! [knowing, quick] Leaving it alive to do the exact same thing again.",
+ "prompt_note": "The locked words, verbatim (production/NARRATION_LOCKED.txt). Capitals mark the brief's emphasis words (SHOOT BLOOD, BURST, disgusting); the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 469.95 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_kkYG.mp3", "generation_id": "kkYGSAwanHJca8556V2r", "duration_s": 20.48, "chosen": true,
+   "asr": "whisper base.en WER 0.000; zipformer only misspells predator/predators",
+   "emphasis_db_vs_median_word": {"SHOOT": 2.5, "BLOOD": 0.9, "BURST": 2.5, "disgusting": -1.7},
+   "note": "'disgusting' is stressed by length (0.71 s, the longest word in the take) rather than level"},
+  {"file": "audio/narration/takes/t2_REhD.mp3", "generation_id": "REhDwUsrBc42TkzXnltX", "duration_s": 20.72, "chosen": false,
+   "why_not": "weaker hook: 'SHOOT' +1.2 dB over the median word against +2.5 dB in take 1; otherwise equivalent"}
+ ],
+ "edits": "One gap edit: the 0.50 s breath after the hook line shortened to 0.38 s (0.12 s removed, cut in the middle of the silent run with a 12 ms equal-power crossfade). Every word is used sample for sample: no time-stretch, pitch or gain change. See tools/make_narration.py.",
+ "word_timing": "local sherpa-onnx Zipformer token timestamps snapped to measured pause onsets, re-measured on the edited master (tools/align_zipformer.py -> audio/narration/master_zipformer.json -> source/src/data/timeline.json)",
+ "final": {"file": "audio/narration/FGW_Blood_Lizard_narration_V1.wav", "sha256": "0ec260198e82e13359297aa9ab0e282dcc2733c34eb6384eb6651d24d14d41a3", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 20.21], "film_s": 21.0},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause and level measurement."
+}
