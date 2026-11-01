@@ -24,6 +24,7 @@ export type FrogState = {
   throat: number;   // 0..1 the throat's breathing pump (inflation)
   wet: number;      // 0..1 meltwater beads on the skin
   look: number;     // -1..1 eye roll (pupil shift forward/back)
+  pupil?: number;   // 0..1 the pupil dilating (the revival: the eyes come alive)
   cut?: {c: P; r: number; layers: number}; // the chest cutaway (body frame), radius mm, rim layers 0..1
   leaves?: number;  // 0..1 fallen leaves resting on the back (winter)
   t: number;
@@ -249,7 +250,7 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
     const g = clamp((F - waveQ(f.p) - f.th * 5) / 5);
     return (
       <g key={i}>
-        <path d={flakePath(f, 0.3 + 0.7 * g)} stroke={FROST.lt} strokeWidth={0.07 + 0.04 * g} strokeLinecap="round" opacity={0.85 * g} />
+        <path d={flakePath(f, 0.3 + 0.7 * g + 1.1 * Math.exp(-((((F - waveQ(f.p) - f.th * 5) - 2) / 2.4) ** 2)) * (fr < 0.995 ? 1 : 0))} stroke={FROST.lt} strokeWidth={0.07 + 0.05 * g} strokeLinecap="round" opacity={0.9 * g} />
         <circle cx={f.p.x} cy={f.p.y} r={0.07 + 0.05 * g} fill="#FFFFFF" opacity={0.8 * g} />
       </g>
     );
@@ -349,7 +350,7 @@ export const Frog: React.FC<{s: FrogState; anatomy?: React.ReactNode; legsOnly?:
           const p1 = add(eyeC, mul(dir(a), 1.9)), p2 = add(eyeC, mul(dir(a + 0.08), 3.6));
           return <path key={i} d={`M${p1.x} ${p1.y}L${p2.x} ${p2.y}`} stroke={mix(SKIN.irisDk, '#9AA6B0', s.cloud)} strokeWidth={0.18} opacity={0.5} />;
         })}
-        <ellipse cx={eyeC.x + 0.45 * s.look} cy={eyeC.y + 0.1} rx={2.3} ry={1.15} fill={mix('#0B0705', '#5C6670', s.cloud * 0.7)} />
+        <ellipse cx={eyeC.x + 0.45 * s.look} cy={eyeC.y + 0.1} rx={2.3 + 0.55 * (s.pupil ?? 0)} ry={1.15 + 0.8 * (s.pupil ?? 0)} fill={mix('#0B0705', '#5C6670', s.cloud * 0.7)} />
         {/* the frozen lens: a milky film */}
         <circle cx={eyeC.x} cy={eyeC.y} r={EYE_R - 0.1} fill="#EEF4F8" opacity={0.62 * s.cloud} />
         <ellipse cx={eyeC.x - 1.4} cy={eyeC.y - 1.6} rx={1.15} ry={0.75} fill="#FFFFFF" opacity={0.95 - 0.4 * s.cloud} transform={`rotate(-30 ${eyeC.x - 1.4} ${eyeC.y - 1.6})`} />

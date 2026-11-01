@@ -240,17 +240,24 @@ export const Micro: React.FC<{m: MicroState; view: {x0: number; y0: number; x1: 
   const rings = m.sugar > 0 ? RINGS.map((r, i) => {
     const q = ringPos(r, m.sc, i, m, gap);
     if (!q || !vis(q.p, 20)) return null;
-    return <Glucose key={i} p={q.p} r={9.5} a={r.a + m.t * (0.6 + hash(i) * 0.6)} op={q.op * clamp(m.sugar * 2)} />;
+    const pr = ringPos(r, m.sc - 0.06, i, m, gap);
+    const op = q.op * clamp(m.sugar * 2);
+    return (
+      <g key={i}>
+        {pr && <path d={`M${pr.p.x} ${pr.p.y}L${q.p.x} ${q.p.y}`} stroke="#FFD27A" strokeWidth={7} strokeLinecap="round" opacity={0.35 * op} />}
+        <Glucose p={q.p} r={9.5} a={r.a + m.t * (0.6 + hash(i) * 0.6)} op={op} />
+      </g>
+    );
   }) : null;
   // water leaving the cells (blue beads crossing outward through the membrane)
   const water: React.ReactNode[] = [];
   if (m.water > 0.01) {
     cells.forEach((c) => {
-      for (let q = 0; q < 2; q++) {
+      for (let q = 0; q < 3; q++) {
         const ph = (m.t * 0.8 + hash(c.i * 3.1 + q)) % 1;
         const a = hash(c.i * 7.7 + q * 2.2) * Math.PI * 2;
         const p = add(c.c, mul(dir(a), c.r * (0.45 + 0.85 * ph)));
-        water.push(<circle key={`${c.i}_${q}`} cx={p.x} cy={p.y} r={9 * (1 - 0.4 * ph)} fill="#9EDCFF" stroke="#13304E" strokeWidth={2} opacity={m.water * Math.sin(Math.PI * ph)} />);
+        water.push(<circle key={`${c.i}_${q}`} cx={p.x} cy={p.y} r={13 * (1 - 0.4 * ph)} fill="#9EDCFF" stroke="#13304E" strokeWidth={2.4} opacity={m.water * Math.sin(Math.PI * ph)} />);
       }
     });
   }

@@ -11,7 +11,7 @@ import {Frog, Leaf, MICRO_B, SIT, toWorld} from './art/frog';
 import {Anatomy} from './art/anatomy';
 import {Micro, microBounds} from './art/micro';
 import {Drips, Falling, Far, Ground, Mid, PocketFloor, Shoots, SnowPack} from './art/forest';
-import {Cam, EV, K_MICRO, M, MICRO_ROLL, MICRO_ROT_B, MW, Place, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
+import {Cam, EV, K_MICRO, M, airborne, MICRO_ROLL, MICRO_ROT_B, MW, Place, WCam, anatomyAt, camAt, edgeFrostAt, envAt, fallenLeavesAt, frogAt, microAt, microReveal, toMicro, warmAt} from './story';
 import {Captions} from './Captions';
 
 const F = 3600;
@@ -123,13 +123,13 @@ const EdgeFrost: React.FC<{k: number}> = ({k}) => {
 };
 /** how much the camera is outside the body (light grades apply only there) */
 export const extAt = (t: number) => {
-  if (t < 12) return 1 - ss(t, 0.85, 1.3);
-  if (t < 17) return ss(t, 14.3, 14.8);
-  if (t < 20) return 1 - ss(t, 18.45, 18.9);
+  if (t < 12) return 1 - ss(t, 0.5, 0.95);
+  if (t < 17) return ss(t, 14.2, 14.7);
+  if (t < 20) return 1 - ss(t, 18.2, 18.6);
   return ss(t, 20.3, 20.7);
 };
 
-const inDive = (t: number) => (t > 4.2 && t < 9.4) || (t > 10.0 && t < 14.6);
+const inDive = (t: number) => (t > 3.7 && t < 9.0) || (t > 9.7 && t < 14.6);
 const FrogWorld: React.FC<{t: number; c: Cam; local: Cam; place: Place}> = ({t, c, local, place}) => {
   const e = envAt(t);
   const f = frogAt(t);
@@ -161,8 +161,8 @@ const FrogWorld: React.FC<{t: number; c: Cam; local: Cam; place: Place}> = ({t, 
               <PocketFloor e={e} />
               <Shoots e={e} />
               {/* the contact shadow (it stays on the ground while the frog is in the air) */}
-              <ellipse cx={f.root.x + 22} cy={0.6 + (place.y < 0 && t > EV.launch && t < EV.land ? -place.y / place.s * 0.0 : 0)} rx={30} ry={2.4} fill="#000" opacity={0.35 * (t > EV.launch && t < EV.land ? 0 : 1)} />
-              <Frog s={f} anatomy={<><Anatomy a={a} />{nested}</>} />
+              <ellipse cx={f.root.x + 22} cy={0.6 + (place.y < 0 && t > EV.launch && t < EV.land ? -place.y / place.s * 0.0 : 0)} rx={30} ry={2.4} fill="#000" opacity={0.35 * (airborne(t) ? 0 : 1)} />
+              <Frog s={f} anatomy={<><Anatomy a={{...a, camW: local.w}} />{nested}</>} />
               <SnowPack e={e} x0={toLocal(x0)} x1={toLocal(x1)} />
               <Drips e={e} t={t} />
             </g>

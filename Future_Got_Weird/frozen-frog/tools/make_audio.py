@@ -201,80 +201,85 @@ PER = cj['PERIOD']
 # ---- the heartbeat (from the picture's schedule)
 for b, s_ in cj['BEATS']:
     if b < 0 or b >= DUR: continue
-    if b < 2:
-        final = abs(b - EV['finalBeat']) < 1e-3
-        place(sfx, heart_thump(1.0, 0.7 if final else 0.18), b, 'heartbeat' if b == 0 else ('the final, strained heartbeat (then everything cuts out)' if final else None), -9 if final else -12)
-        if final: place(sfx, thump(0.6, 48, 30), b + 0.02, None, -17)
+    final = abs(b - EV['finalBeat']) < 1e-3
+    if b < 3:
+        place(sfx, heart_thump(1.0, 0.75 if final else 0.18), b, 'heartbeat' if b == 0 else ('the last, strained heartbeat on "HEART" (then silence)' if final else None), -8 if final else -12)
+        if final: place(sfx, thump(0.7, 46, 28), b + 0.02, None, -15)
     elif abs(b - EV['twitch']) < 1e-3:
-        place(sfx, heart_thump(1.0, 0.05) * 0.7, b, 'revival twitch', -15)
+        place(sfx, heart_thump(1.0, 0.05) * 0.7, b, 'revival twitch on "starts"', -15)
     elif abs(b - EV['beat0']) < 1e-3:
-        place(sfx, heart_thump(1.0, 0.5), b, 'the heart restarts: the powerful first pulse', -6)
-        place(sfx, thump(0.9, 46, 26), b, None, -10)
-        surge = lp(noise(int(0.9 * SR)), 900) * np.linspace(1, 0, int(0.9 * SR)) ** 1.5
-        place(sfx, norm(surge), b + 0.03, 'circulation surges back (low rush)', -24)
+        place(sfx, heart_thump(1.0, 0.6), b, 'the first heartbeat on "beating": a forceful boom', -5)
+        place(sfx, thump(1.1, 44, 24), b, None, -8)
+        place(sfx, addm(crackle(0.35, 600, 2500, 11000), 0.6 * shimmer(0.5, 6000, 2500)), b + 0.01, 'the last pericardial ice shatters outward', -18)
+        surge = lp(noise(int(1.0 * SR)), 900) * np.linspace(1, 0, int(1.0 * SR)) ** 1.5
+        place(sfx, norm(surge), b + 0.03, 'circulation surges back (low rush)', -21)
     else:
-        inside = b < 20.8 or b > 22.6
-        place(sfx, heart_thump(1.0), b, 'heartbeat resumes' if abs(b - EV['beat0'] - PER) < 1e-3 else None, -13 if inside else -16)
+        inside = b < 20.8 or b > 23.4
+        place(sfx, heart_thump(1.0), b, 'heartbeat resumes' if abs(b - EV['beat0'] - PER) < 1e-3 else None, -12 if inside else -16)
         if b < 20.8:
-            place(sfx, squelch(0.3, 150, 700, 18), b + 0.05, 'blood flowing again (soft pulse of fluid)' if abs(b - EV['beat0'] - PER) < 1e-3 else None, -30)
+            place(sfx, squelch(0.3, 150, 700, 18), b + 0.05, 'blood flowing again (soft pulse of fluid)' if abs(b - EV['beat0'] - PER) < 1e-3 else None, -29)
 
-# ---- the opening: alive, then the ice wave
-place(sfx, bird(4100), 0.02, 'a bird (the living forest)', -34)
-wave = crackle(0.75, 520, 2200, 11000) * np.linspace(0.35, 1, int(0.75 * SR)) ** 1.5
-place(sfx, wave, EV['wave0'], 'the ice wave sweeps over the frog (aggressive crystalline crackle)', -14)
-place(sfx, rip(0.6, 0.5) * 0.6, EV['wave0'] + 0.1, None, -24)
-place(sfx, shimmer(0.7, 7000, 2500), EV['wave0'] + 0.05, None, -26)
-place(sfx, crackle(0.5, 200, 1500, 6000), EV['wave1'] - 0.15, 'the limbs lock (a crunch of ice)', -20)
-# (1.43-1.9 s: silence under the voice; see the gate below)
-for k, at in enumerate([1.92, 2.08, 2.3, 2.55]):
-    place(sfx, tinkle(2400 + 300 * k, 0.6), at, 'ice crystals burst into the pericardium (glassy)' if k == 0 else None, -27)
-place(sfx, crackle(1.6, 140, 2000, 8000), EV['wide0'], 'ice spreads through the body (a sweeping crackle)', -23)
-place(sfx, swell(1.3, 40, 0.3), EV['wide0'], 'the window opens over the trunk (low swell)', -27)
-place(sfx, power(0.9, 160, 60), EV['lungs0'], 'the lungs sag (a low exhale tone)', -28)
-place(sfx, swell(0.9, 44, 0.5), EV['dive0'], 'dive into the tissue (low swell)', -24)
-place(sfx, shimmer(0.7, 4600, 1500), EV['dive1'] - 0.4, 'into the cells (soft shimmer)', -31)
-# the danger
-for k in range(8):
-    at = 5.3 + k * 0.2 + 0.05 * np.sin(k * 3.1)
-    place(sfx, tinkle(2800 + 500 * ((k * 7) % 5), 0.5), at, 'ice plates grow between the cells (crystalline)' if k == 0 else None, -31 - (k % 3))
-place(sfx, squelch(1.6, 180, 1100, 14), EV['water0'], 'water drawn out of the cells (quiet fluid movement)', -29)
-spear = creak(1.1, 700, 45) * np.linspace(0.3, 1, int(1.1 * SR)) ** 1.5
-place(sfx, spear, EV['spear0'], 'an ice spear drives into a cell (rising strained creak)', -24)
-place(sfx, crackle(0.4, 260, 2500, 9000), EV['dent0'] + 0.5, 'the membrane dents (a sharp crunch)', -24)
-place(sfx, creak(0.8, 230, 25), EV['crumple0'] + 0.4, 'the cell buckles (a soft strain)', -28)
+# ---- the opening: alive, then the ice overtakes it
+place(sfx, bird(4100), 0.0, 'a bird (the living forest)', -34)
+wave = crackle(0.6, 620, 2200, 11000) * np.linspace(0.4, 1, int(0.6 * SR)) ** 1.3
+place(sfx, wave, EV['wave0'], 'the ice wave overtakes the frog (aggressive crystalline crackle)', -13)
+groan = creak(0.75, 95, 22) * np.linspace(0.5, 1, int(0.75 * SR))
+place(sfx, groan, EV['wave0'] + 0.03, 'the body seizes (a deep ice groan)', -20)
+place(sfx, shimmer(0.6, 7500, 2600), EV['wave0'], None, -25)
+place(sfx, crackle(0.45, 220, 1500, 6000), EV['wave1'] - 0.12, 'the limbs lock (a crunch of ice)', -20)
+place(sfx, swell(0.7, 48, 0.6), 0.25, 'the push into the chest (low swell)', -26)
+for k, at in enumerate([0.98, 1.18, 1.38]):
+    place(sfx, tinkle(2600 + 300 * k, 0.4), at, 'ice closing round the labouring heart' if k == 0 else None, -31)
+# (cut to silence after the last beat, until "STOPS")
+lockfx = addm(crackle(0.25, 900, 1800, 9000), 0.9 * thump(0.8, 60, 30), 0.5 * rip(0.3, 0.8))
+place(sfx, lockfx, EV['lock'], 'on "STOPS": the ice locks shut round the heart (a sharp, deep crack)', -11)
+ring_ = tinkle(1850, 1.6) * 0.6
+place(sfx, ring_, EV['lock'] + 0.05, 'a frozen ringing tone', -29)
+place(sfx, crackle(1.0, 140, 2000, 8000), EV['wide0'], 'ice spreads through the body (a sweeping crackle)', -23)
+place(sfx, swell(1.0, 40, 0.3), EV['wide0'], 'the window opens over the trunk (low swell)', -27)
+place(sfx, power(0.8, 160, 60), EV['lungs0'], 'the lungs sag (a low exhale tone)', -28)
+place(sfx, swell(0.8, 44, 0.5), EV['wide1'], 'dive into the tissue (low swell)', -24)
+# the three cell steps
+for k in range(5):
+    place(sfx, tinkle(2800 + 500 * ((k * 7) % 5), 0.45), EV['dive1'] + k * 0.17, 'step 1: ice plates form between the cells (crystalline)' if k == 0 else None, -30 - (k % 3))
+place(sfx, squelch(1.0, 180, 1100, 18), EV['water0'], 'step 2: water drawn out of the cells (fluid movement)', -26)
+spear = creak(1.0, 700, 45) * np.linspace(0.3, 1, int(1.0 * SR)) ** 1.5
+place(sfx, spear, EV['spear0'], 'step 3: an ice spear drives into a cell (rising strained creak)', -23)
+place(sfx, crackle(0.35, 260, 2500, 9000), EV['dent0'] + 0.45, 'the membrane dents (a sharp crunch)', -23)
 # the sugar
-place(sfx, swell(0.9, 46, -0.3), EV['out1a'], 'pull out to the trunk (low swell)', -26)
-place(sfx, addm(swell(1.3, 55, 0.8) * 0.8, 0.3 * shimmer(1.3, 2600, 1200)), EV['sugar0'], 'the liver releases sugar (warm bloom)', -21)
+place(sfx, swell(0.9, 46, -0.3), EV['out1a'], 'pull out to the liver (low swell)', -26)
+place(sfx, addm(swell(1.3, 55, 0.8) * 0.8, 0.3 * shimmer(1.3, 2600, 1200)), EV['sugar0'], 'the liver releases sugar (warm bloom)', -20)
 flow = addm(fizz(2.4, 300) * 0.6, norm(lp(noise(int(2.4 * SR)), 400)) * 0.6) * np.linspace(0.4, 1, int(2.4 * SR)) ** 0.5
-place(sfx, flow, 9.6, 'glucose flowing through the bloodstream (fluid rush with a fine fizz)', -28)
+place(sfx, flow, 9.4, 'glucose rushing through the bloodstream (fluid rush with a fine fizz)', -27)
 place(sfx, swell(0.8, 46, 0.5), EV['entry2a'], 'follow the sugar into the vessel', -25)
 for k in range(12):
-    at = EV['track1'] + k * 0.09 + 0.03 * np.sin(k * 2.3)
-    place(sfx, plip() * 0.6, at, 'glucose passes the membrane (tiny soft ticks)' if k == 0 else None, -32 - (k % 3))
-place(sfx, addm(chime(523.25, 1.3) * 0.6, chime(659.25, 1.3) * 0.4), EV['hold0'] + 0.35, 'the cell rounds out and holds (warm tones)', -27)
+    place(sfx, plip() * 0.6, EV['track1'] + k * 0.09 + 0.03 * np.sin(k * 2.3), 'glucose passes the membrane (tiny soft ticks)' if k == 0 else None, -31 - (k % 3))
+place(sfx, addm(chime(523.25, 1.3) * 0.6, chime(659.25, 1.3) * 0.4), EV['hold0'] + 0.35, 'the cell rounds out and holds (warm tones)', -26)
 press = creak(1.2, 900, 60) * np.linspace(0.4, 1, int(1.2 * SR))
-place(sfx, press, EV['spikes0'], 'ice needles press on the membrane (crystalline creak)', -28)
-place(sfx, lock(0.14), EV['spikes1'] - 0.2, 'they stop dead at the membrane (a glassy halt)', -22)
-# winter, days, spring
-place(sfx, swell(1.3, 38, -0.4), EV['out2a'], 'out through the body to the winter scene', -22)
-place(sfx, eerie(1.6), 14.7, 'winter (eerie cold cue)', -27)
-place(sfx, addm(chime(392.0, 1.6) * 0.5, chime(587.33, 1.6) * 0.35), EV['spring0'], 'spring light (warm rising tones)', -28)
-for k in range(10):
-    place(sfx, plip(), 16.75 + k * 0.17 + 0.05 * np.sin(k * 1.7), 'meltwater drips' if k == 0 else None, -31 - (k % 3))
-place(sfx, addm(crackle(0.9, 70, 1500, 6000), 0.5 * squelch(0.9, 300, 2000, 12)), EV['thaw0'], 'the frost on the frog melts (wet crackle, trickle)', -27)
-place(sfx, bird(3900), 17.35, 'a bird, far off', -35)
+place(sfx, press, EV['spikes0'], 'ice needles press on the membrane (crystalline creak)', -27)
+place(sfx, lock(0.14), EV['spikes1'] - 0.2, 'they stop dead at the membrane (a glassy halt)', -21)
+# winter, days, the thaw
+place(sfx, swell(1.2, 38, -0.4), EV['out2a'], 'out through the body to the winter scene', -22)
+place(sfx, eerie(1.5), 14.6, 'winter (eerie cold cue)', -27)
+place(sfx, addm(chime(392.0, 1.5) * 0.5, chime(587.33, 1.5) * 0.35), EV['spring0'], 'spring light (warm rising tones)', -27)
+slump = addm(norm(lp(noise(int(0.9 * SR)), 500)) * np.linspace(1, 0, int(0.9 * SR)), 0.4 * crackle(0.9, 60, 1200, 5000))
+place(sfx, slump, EV['melt0'] + 0.1, 'the snowpack slumps and melts (soft wet rush)', -24)
+for k in range(12):
+    place(sfx, plip(), 16.6 + k * 0.13 + 0.04 * np.sin(k * 1.7), 'meltwater drips' if k == 0 else None, -29 - (k % 3))
+place(sfx, addm(crackle(0.8, 80, 1500, 6000), 0.5 * squelch(0.8, 300, 2000, 12)), EV['thaw0'], 'the frost on the frog melts (wet crackle, trickle)', -25)
+place(sfx, bird(3900), 17.2, 'a bird, far off', -34)
 place(sfx, swell(0.6, 44, 0.5), EV['heartIn0'], 'into the chest', -27)
-place(sfx, addm(crackle(0.7, 60, 1500, 5000), 0.4 * squelch(0.7, 300, 1500, 10)), 18.5, 'the ice round the heart melts', -28)
-# eyes, legs, the leap
-place(sfx, addm(tick(0.02, 2600) * 0.5, 0.3 * squelch(0.12, 400, 2000, 40)), EV['eyes0'], 'the eyes open (a tiny wet click)', -29)
-place(sfx, rustle(0.4, 900, 5000), 20.5, 'the legs stretch (leaves)', -29)
-place(sfx, rustle(0.4, 900, 5000), EV['crouch0'], 'the crouch (leaves)', -28)
-place(sfx, addm(rustle(0.4, 1200, 6000), 0.6 * thump(0.25, 90, 60)), EV['launch'], 'the leap: push-off (leaves, a soft push)', -20)
-air = bp(noise(int(0.7 * SR)), 300, 2500) * np.sin(np.pi * np.linspace(0, 1, int(0.7 * SR))) ** 2
-place(sfx, norm(air), EV['launch'] + 0.05, 'through the air toward us (one soft air movement)', -31)
-place(sfx, rustle(0.6, 900, 4000), EV['land'], 'the landing (leaves)', -22)
-place(sfx, thump(0.3, 80, 50), EV['land'], 'the landing (a light thud)', -21)
-place(sfx, bird(4300), 22.2, 'a bird (the air lightens)', -33)
+place(sfx, addm(crackle(0.9, 70, 1500, 5000), 0.4 * squelch(0.9, 300, 1500, 10)), 18.45, 'the ice round the heart melts (wet crackle)', -26)
+# the frog comes alive, the hops
+place(sfx, addm(tick(0.02, 2600) * 0.5, 0.3 * squelch(0.12, 400, 2000, 40)), EV['eyes0'], 'the eyes open (a tiny wet click)', -28)
+place(sfx, rustle(0.45, 900, 5000), 20.45, 'the legs stretch (leaves)', -27)
+for k, (c0, l0, ld) in enumerate([(EV['crouch0'], EV['launch'], EV['land']), (EV['crouch2'], EV['launch2'], EV['land2'])]):
+    place(sfx, rustle(0.3, 900, 5000), c0, 'the crouch (leaves)' if k == 0 else None, -29)
+    place(sfx, addm(rustle(0.35, 1200, 6000), 0.7 * thump(0.25, 95, 60)), l0, f'hop {k + 1}: the push-off (leaves, a firm push)', -18)
+    air = bp(noise(int(0.5 * SR)), 300, 2500) * np.sin(np.pi * np.linspace(0, 1, int(0.5 * SR))) ** 2
+    place(sfx, norm(air), l0 + 0.12, None, -32)
+    place(sfx, addm(rustle(0.5, 900, 4000), thump(0.3, 80, 50)), ld, f'hop {k + 1}: the landing (a light thud, leaves)', -19)
+place(sfx, bird(4300), 22.1, 'a bird (the air lightens)', -33)
 place(sfx, bird(3600), 22.7, None, -35)
 cc = crackle(1.4, 70, 3000, 9500) * np.linspace(0, 1, int(1.4 * SR)) ** 2
 place(sfx, cc, DUR - 1.4, 'the cold creeps back in (faint crackle, into frame 0)', -27)
@@ -325,12 +330,18 @@ venv = lp(np.abs(voice), 6); venv = venv / (venv.max() + 1e-9)
 duck = 1 - 0.5 * np.clip(venv * 3, 0, 1)
 cut0 = EV['cut']
 gate = np.ones(N)
-gate[(t >= cut0) & (t < 1.9)] = 0.0
-ramp_in = (t >= 1.9) & (t < 2.3)
-gate[ramp_in] = ((t[ramp_in] - 1.9) / 0.4) ** 2
+lock0 = EV.get('lock', 1.9)
+gate[(t >= cut0) & (t < lock0)] = 0.0
+ramp_in = (t >= lock0 + 0.4) & (t < lock0 + 1.0)
+gate[(t >= lock0) & (t < lock0 + 0.4)] = 0.0
+gate[ramp_in] = ((t[ramp_in] - lock0 - 0.4) / 0.6) ** 2
 i0 = int(cut0 * SR); gate[i0:i0 + int(0.006 * SR)] = np.linspace(1, 0, int(0.006 * SR))  # a 6 ms cut, no click
-LOG.append({'t': round(cut0, 3), 'sfx': 'HARD CUT: forest, music and effects fall silent under the voice until 1.9 s', 'gain_db': 0})
-sfx = sfx * gate; amb = amb * gate; mus = mus * gate
+LOG.append({'t': round(cut0, 3), 'sfx': 'HARD CUT: forest, music and effects fall silent under the voice; only the ice lock (on STOPS) and its ringing break the silence', 'gain_db': 0})
+sfx_g = sfx * gate
+# the ice lock and its ring are not gated: they are the only sound in the silence
+i1, i2 = int(lock0 * SR), int((lock0 + 1.7) * SR)
+sfx_g[i1:i2] = sfx[i1:i2] * np.where(t[i1:i2] < lock0 + 1.0, 1.0, gate[i1:i2])
+sfx = sfx_g; amb = amb * gate; mus = mus * gate
 mix = voice + sfx * (1 - 0.22 * np.clip(venv * 3, 0, 1)) + db(-28) * amb * duck + db(-33) * norm(mus) * duck
 peak = np.max(np.abs(resample_poly(mix, 4, 1)))
 lufs = meter.integrated_loudness(mix)

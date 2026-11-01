@@ -28,6 +28,10 @@ export type AnatomyState = {
   melt: number;     // 0..1 the ice gone to water (spring)
   circ?: number;    // 0..1 circulation returning: vessels flush red
   pulses?: number[]; // the times of the heartbeats so far (each sends a red pulse out along the vessels)
+  shock?: number;   // 0..1 the first pulse's shockwave through the cavity
+  shatter?: number; // 0..1 the last pericardial ice blown outward by the first pulse
+  veinGlow?: number; // 0..1 the sugar's glow travelling down the vein from the liver toward the tissue
+  camW?: number;    // the camera's width (mm): organ-scale specks fade as the camera reaches cell scale
   t: number;
 };
 
@@ -88,6 +92,24 @@ export const Heart: React.FC<{h: HeartState; size?: number}> = ({h, size = 1.18}
             return <circle key={i} cx={p.x} cy={p.y} r={0.05 + 0.08 * hash(i * 5.5)} fill="#F4FBFF" opacity={0.8} />;
           })}
           <path d={open([pt(-2.6, -1.2), pt(-2.9, 0.6), pt(-2.2, 2.4)])} stroke="#F4FBFF" strokeWidth={0.18} fill="none" opacity={0.7} transform={vt} />
+          {/* fern frost creeping in from the edges of the ventricle */}
+          <g transform={vt}>
+            {VENT.map((q, i) => {
+              const c0 = pt(0.1, 1.0);
+              const L = clamp(fz * 1.4 - (i % 3) * 0.15) * 2.2;
+              const d0 = pt(c0.x - q.x, c0.y - q.y), n0 = Math.hypot(d0.x, d0.y), u = pt(d0.x / n0, d0.y / n0);
+              const e = add(q, mul(u, L));
+              let dd = `M${q.x} ${q.y}L${e.x} ${e.y}`;
+              for (const b of [0.3, 0.55, 0.8]) {
+                const m = add(q, mul(u, L * b));
+                for (const sg of [-1, 1]) {
+                  const v = add(m, mul(pt(u.x * 0.6 - sg * u.y * 0.8, u.y * 0.6 + sg * u.x * 0.8), L * 0.25));
+                  dd += `M${m.x} ${m.y}L${v.x} ${v.y}`;
+                }
+              }
+              return <path key={i} d={dd} stroke="#F4FBFF" strokeWidth={0.1} strokeLinecap="round" fill="none" opacity={0.9} />;
+            })}
+          </g>
         </g>
       )}
     </g>
@@ -230,7 +252,7 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
   const colL = (c: string) => mix(c, '#8E8592', 0.5 * fz * (1 - 0.85 * clamp(a.sugar)));
   const ice = clamp(a.ice) * (1 - clamp(a.melt));
   const shardG = (s: Shard) => clamp((ice - s.th * 0.55) / 0.45) * ss(s.p.x - a.iceFront, -3, 2.5);
-  const sug = clamp(a.sugar);
+  const sug = clamp(a.sugar) * ss(a.camW ?? 99, 4, 9);
   const lungK = 1 + 0.07 * a.breathe;
   // specks of sugar travelling out of the liver along the vein (and into the body generally)
   const specks: React.ReactNode[] = [];
@@ -240,7 +262,10 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       const born = clamp((sug * 1.35 - i / 26) * 3);
       if (born <= 0) continue;
       const p = add(along(VEIN, u), pt(0.35 * Math.sin(i * 2.7), 0.25 * Math.cos(i * 1.9)));
-      specks.push(<Glucose key={`v${i}`} p={p} r={0.5} a={i} op={born * clamp(u * 8) * clamp((1 - u) * 6)} />);
+      const op = born * clamp(u * 8) * clamp((1 - u) * 6);
+      const back = add(along(VEIN, Math.max(0, u - 0.06)), pt(0.35 * Math.sin(i * 2.7), 0.25 * Math.cos(i * 1.9)));
+      specks.push(<path key={`vt${i}`} d={`M${back.x} ${back.y}L${p.x} ${p.y}`} stroke="#FFD27A" strokeWidth={0.35} strokeLinecap="round" opacity={0.5 * op} />);
+      specks.push(<Glucose key={`v${i}`} p={p} r={0.5} a={i} op={op} />);
     }
     // specks leaving the liver's surface into the surrounding vessels
     for (let i = 0; i < 44; i++) {
@@ -319,6 +344,13 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       {/* the vein along the belly wall (its blood dark; amber specks ride it) */}
       {tubeStroke(VEIN, 0.95, col(mix('#5B3A78', '#B07A3A', 0.35 * sug)))}
       {tubeStroke([pt(16.2, 5.4), pt(15.6, 3.4)], 0.8, col('#5B3A78'))}
+      {(a.shock ?? 0) > 0.001 && (a.shock ?? 0) < 0.999 && (
+        <g>
+          <circle cx={HEART_B.x} cy={HEART_B.y} r={3 + 22 * (a.shock ?? 0)} fill="none" stroke="#FF5A4A" strokeWidth={1.4 * (1 - (a.shock ?? 0))} opacity={0.85 * (1 - (a.shock ?? 0))} />
+          <circle cx={HEART_B.x} cy={HEART_B.y} r={2 + 14 * (a.shock ?? 0)} fill="none" stroke="#FFB0A0" strokeWidth={0.6 * (1 - (a.shock ?? 0))} opacity={0.7 * (1 - (a.shock ?? 0))} />
+        </g>
+      )}
+      {(a.veinGlow ?? 0) > 0.01 && <path d={subPath(VEIN, 0, a.veinGlow ?? 0)} stroke="#FFC24A" strokeWidth={2.4} strokeLinecap="round" fill="none" opacity={0.35} />}
       {/* circulation returning: the arteries flush red; each beat sends a bright pulse out along every vessel */}
       {(a.circ ?? 0) > 0.01 && (
         <g>
@@ -336,7 +368,12 @@ export const Anatomy: React.FC<{a: AnatomyState; detail?: number}> = ({a}) => {
       )}
       {specks}
       {/* ice in the spaces: around the organs and in the pericardial space */}
-      {ice > 0.01 && <g clipPath={`url(#${id.peri})`}>{PERI.map((s, i) => <IceShard key={`p${i}`} s={s} g={clamp((ice - s.th * 0.4) / 0.5)} />)}</g>}
+      {ice > 0.01 && <g clipPath={`url(#${id.peri})`}>{PERI.map((s, i) => {
+        const sh = clamp(a.shatter ?? 0);
+        const v = pt(s.p.x - HEART_B.x, s.p.y - HEART_B.y), n = Math.hypot(v.x, v.y) || 1;
+        const s2 = sh > 0 ? {...s, p: add(s.p, mul(pt(v.x / n, v.y / n), 9 * sh)), a: s.a + sh * 2} : s;
+        return <g key={`p${i}`} opacity={1 - sh}><IceShard s={s2} g={clamp((ice - s.th * 0.4) / 0.5)} /></g>;
+      })}</g>}
       {/* where the camera enters the tissue (a hint of the cells to come) */}
       
     </g>

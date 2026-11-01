@@ -34,6 +34,12 @@ PLANNED_V2 = [(0.25, 1.3, 'the ice wave and the push through the chest to the he
               (15.0, 16.75, 'days pass: the camera rises, the sky turns'), (16.4, 18.95, 'spring; into the chest'),
               (19.55, 20.85, 'the first pulse, circulation, out to the face'), (20.8, 22.95, 'the leap toward the camera and the landing')]
 if 'V2' in os.path.basename(src): PLANNED = PLANNED_V2
+PLANNED_V3 = [(0.05, 1.0, 'the ice wave and the push into the chest'), (1.55, 2.6, 'ice bursts round the stopped heart; the lock'),
+              (2.95, 3.95, 'the window opens over the trunk'), (3.85, 4.75, 'dive into the tissue'), (7.8, 8.8, 'pull out to the liver'),
+              (9.9, 10.8, 'follow the sugar into the vessel'), (11.35, 12.05, 'from the vessel to the cell'), (13.8, 14.9, 'out to the frozen frog under snow'),
+              (14.8, 16.95, 'days pass: the camera rises, the sky turns; the snow melts'), (16.85, 18.65, 'spring; into the chest'),
+              (19.55, 20.9, 'the first heartbeat, circulation, out to the whole frog'), (20.85, 23.45, 'the two hops and the landing')]
+if 'V3' in os.path.basename(src): PLANNED = PLANNED_V3
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []
