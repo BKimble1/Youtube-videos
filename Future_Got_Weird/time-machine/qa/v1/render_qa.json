@@ -1,6 +1,6 @@
 {
  "file": "FGW_TimeMachine_V1_REVIEW_1080x1920.mp4",
- "size_mb": 33.33,
+ "size_mb": 33.18,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -19,7 +19,7 @@
   }
  ],
  "decode_errors": null,
- "frame_change_median": 14.72,
+ "frame_change_median": 14.89,
  "large_changes": [
   {
    "frame": 629,
@@ -29,7 +29,8 @@
   }
  ],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 1,
- "longest_near_static_run_starts_s": 1.87,
- "loop_last_vs_first_mad": 26.33
+ "longest_near_static_run_frames": 0,
+ "longest_near_static_run_starts_s": 0.0,
+ "loop_last_vs_first_mad": 26.33,
+ "one_frame_glitches": []
 }

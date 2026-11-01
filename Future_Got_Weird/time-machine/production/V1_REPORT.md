@@ -41,9 +41,36 @@ publish-ready.** Measured facts are in `qa/v1/render_qa.json`, `qa/v1/final_asr.
 
 ## Measured checks (V1 render)
 
-See `qa/v1/render_qa.json` (filled in from the final measurement below).
+| Check | Result |
+|---|---|
+| Format | 1080×1920, 30/1 fps, 706 frames, 23.533 s, h264 yuv420p, AAC 48000 Hz stereo; 33.18 MB |
+| Full decode | no errors |
+| One-frame glitches (calibrated detector) | 0 (the first render had 3, at 18.93 s, 22.80 s and 22.87 s; fixed and confirmed by eye) |
+| Large frame-to-frame changes | only the planned watch match at 20.97 s; 0 unplanned |
+| Longest near-static run | 0 frames (the brief: no stationary composition over 1 s) |
+| Loop seam (last vs first frame, mean abs. difference at 270×480) | 26.33: same composition, the camera within a few percent, the friend's age 0.41 vs 0.42; the first caption appears on frame 0 |
+| Final-mix ASR vs the locked script | Zipformer WER 0.0, Whisper base.en WER 0.0: word for word |
+| Loudness | -14.42 LUFS integrated, true peak -1.6 dBTP (4×), voice -17.27 LUFS in the mix |
+| Family reveal (16.0–17.7 s) effects level | -59.65 LUFS (the sound design drops away) |
+| Audio loop seam step | 0.0039 |
 
-RESULTS_PLACEHOLDER
+Review sheets: `qa/v1/contact_every_0.5s.png`, `qa/v1/hook_0-2.5s_every_3rd_frame.png`,
+`qa/v1/loop_last1s_first0.5s.png`, `qa/v1/loop_seam_last3_first3.png`.
+
+**Against the brief's final checklist.** These were checked on the rendered file by eye on the contact sheets and by
+the measurements above, not by real-time viewing at phone size.
+1. Frame 0 shows ageing in progress: greying temples, lines, rising towers, the racing sun, both characters reacting. Yes.
+2. The first two seconds show the consequence, then its cause (the visor reflection into the black hole). Yes.
+3. The black hole reveal: ray-traced lensing, filling the frame at 2 s. Yes; judge the beauty on review.
+4. Narration and action: beats are keyed to measured word times (clock on "clock", Earth on "Earth", the capsule on
+   "returned", the recognition on "old", the memorial on "gone", the pupil-shadow on "space", the hand on "time"). Yes.
+5. Faces and hands: no duplicated eyes or extra limbs were found on the sheets. The friend's raised forearm crosses
+   his body in the hook, which is intended but worth a look.
+6. Every major scene adds information (see the transition list in `SHOT_PLAN_V1.md`). Yes.
+7. Transitions are spatial portals or a match; one brief cloud pass. Yes.
+8. The final frame continues into frame 0 (pictured above). Yes.
+9. Captions sit low, clear of faces and the black hole. Yes.
+10. No narration or script changes. ASR: exact. Yes.
 
 ## Fixed during V1 review
 
