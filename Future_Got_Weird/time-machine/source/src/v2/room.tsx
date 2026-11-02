@@ -290,7 +290,7 @@ const FamilyPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) =
     <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
     {/* a dark hedge and a tree trunk at the right edge (the side where a reflection on the glass reads best) */}
     <rect x={w - 20} y={0} width={10} height={h * 0.2} fill="#5A3E30" stroke={INK} strokeWidth={1.6} />
-    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#3B6446" stroke={INK} strokeWidth={2} />
+    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#24382C" stroke={INK} strokeWidth={2} />
     <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#5C8A62" strokeWidth={3} strokeLinecap="round" />
     {Array.from({length: 12}, (_, k) => (
       <path key={k} d={`M ${k * 14 + 2} ${h * 0.64} L ${k * 14 + 2} ${h * 0.5} L ${k * 14 + 6} ${h * 0.46} L ${k * 14 + 10} ${h * 0.5} L ${k * 14 + 10} ${h * 0.64} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.4} />

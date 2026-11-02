@@ -103,11 +103,14 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
 /** the pass around the hole (space units M; hole at origin; the lensed disk reaches x +-17.5, y -9..+9 around the
  *  shadow): an arc centred on the hole, radius 26 M, from the left (175 deg) over the top (270) to the right (365),
  *  >= 8 M from any disk pixel. ang = heading (deg, screen), nose leads; scale = capsule height in M. */
-export const FLIGHT = {cx: 0, cy: 0.5, r: 24, th0: 175, th1: 365, scale: 8.4};
+/** the flight around the hole (M; the hole at the origin): an elliptical arc over the top of the hole, clear of the shadow
+ *  and the disk, small enough to stay inside the 9:16 frame at the space camera's ~40 px/M (rx 420 px, ry 600 px).
+ *  u 0.12 enters at the left above the disk, u ~0.4 crosses over the top, u 0.66 is on the right where the approach begins. */
+export const FLIGHT = {cx: 0, cy: -5, rx: 10.5, ry: 15, th0: 163.9, th1: 423.2, scale: 8.4};
 export const flightPath = (u: number) => {
   const th = rad(lerp(FLIGHT.th0, FLIGHT.th1, u));
-  const x = FLIGHT.cx + FLIGHT.r * Math.cos(th), y = FLIGHT.cy + FLIGHT.r * Math.sin(th);
-  const heading = (th * 180) / Math.PI + 90; // tangent, increasing theta (clockwise on screen)
+  const x = FLIGHT.cx + FLIGHT.rx * Math.cos(th), y = FLIGHT.cy + FLIGHT.ry * Math.sin(th);
+  const heading = (Math.atan2(FLIGHT.ry * Math.cos(th), -FLIGHT.rx * Math.sin(th)) * 180) / Math.PI; // tangent, increasing theta (clockwise on screen)
   return {x, y, ang: heading, scale: FLIGHT.scale};
 };
 /** rotation to apply to Capsule2 so its nose points along a heading (deg) */

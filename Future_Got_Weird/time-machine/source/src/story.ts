@@ -26,12 +26,21 @@ export const mixCam = (a: Cam, b: Cam, u: number): Cam => ({x: lerp(a.x, b.x, u)
 /** keyed camera path. The zoom (log z) is a C1 Hermite spline through the keys (the camera never stops at an inner
  *  key unless that key is marked 'stop'); x/y follow the zoom within each segment so a push stays locked on its
  *  target ("zoom to point"). End keys have zero velocity. */
-export const keyCam = (t: number, keys: ([number, Cam] | [number, Cam, 'stop'])[]): Cam => {
+/** monotone tangent (Fritsch-Carlson style): zero at a local extremum, never more than 3x either neighbouring slope,
+ *  so a key is never overshot (no zoom-in-then-out wobble) */
+const monoTan = (v: number[], ts: number[], i: number) => {
+  const d0 = (v[i] - v[i - 1]) / (ts[i] - ts[i - 1]), d1 = (v[i + 1] - v[i]) / (ts[i + 1] - ts[i]);
+  if (d0 * d1 <= 0) return 0;
+  const m = (v[i + 1] - v[i - 1]) / (ts[i + 1] - ts[i - 1]);
+  return Math.sign(m) * Math.min(Math.abs(m), 3 * Math.abs(d0), 3 * Math.abs(d1));
+};
+export const keyCam = (t: number, keys: ([number, Cam] | [number, Cam, 'stop'])[], monotone = false): Cam => {
   const n = keys.length;
   if (t <= keys[0][0]) return keys[0][1];
   if (t >= keys[n - 1][0]) return keys[n - 1][1];
   const L = keys.map((k) => Math.log(k[1].z));
-  const tan = keys.map((k, i) => (i === 0 || i === n - 1 || k[2] === 'stop' ? 0 : (L[i + 1] - L[i - 1]) / (keys[i + 1][0] - keys[i - 1][0])));
+  const TS = keys.map((k) => k[0]);
+  const tan = keys.map((k, i) => (i === 0 || i === n - 1 || k[2] === 'stop' ? 0 : monotone ? monoTan(L, TS, i) : (L[i + 1] - L[i - 1]) / (keys[i + 1][0] - keys[i - 1][0])));
   let i = 1;
   while (t > keys[i][0]) i++;
   const [t0, a] = keys[i - 1], [t1, b] = keys[i];
@@ -41,7 +50,7 @@ export const keyCam = (t: number, keys: ([number, Cam] | [number, Cam, 'stop'])[
   const z = Math.exp(lz);
   if (Math.abs(L[i] - L[i - 1]) < 0.3) {
     // a pan or gentle push: x/y on their own C1 spline
-    const tv = (f: (c: Cam) => number) => keys.map((k, j) => (j === 0 || j === n - 1 || k[2] === 'stop' ? 0 : (f(keys[j + 1][1]) - f(keys[j - 1][1])) / (keys[j + 1][0] - keys[j - 1][0])));
+    const tv = (f: (c: Cam) => number) => keys.map((k, j) => (j === 0 || j === n - 1 || k[2] === 'stop' ? 0 : monotone ? monoTan(keys.map((q) => f(q[1])), TS, j) : (f(keys[j + 1][1]) - f(keys[j - 1][1])) / (keys[j + 1][0] - keys[j - 1][0])));
     const TX = tv((c) => c.x), TY = tv((c) => c.y);
     return {x: h00 * a.x + h10 * h * TX[i - 1] + h01 * b.x + h11 * h * TX[i], y: h00 * a.y + h10 * h * TY[i - 1] + h01 * b.y + h11 * h * TY[i], z};
   }

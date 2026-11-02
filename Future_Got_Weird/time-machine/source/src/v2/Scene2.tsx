@@ -114,6 +114,17 @@ const roomAstroE = (t: number): Expr => {
     mouth: grief > 0.4 ? 'tremble' : 'flat', blink: t > 17.3 && t < 17.38 ? 0.12 : 1,
   };
 };
+const HEAD_Y_RIG = -372;
+/** his reflected face: grief as he finds the family; a slow blink; it settles to understanding (no smile); his eyes drop to the watch */
+const reflE = (t: number): Expr => {
+  const settle = ss(t, 18.75, 19.9);
+  const toWatch = ss(t, V2.watchBeside - 0.25, V2.watchBeside + 0.2);
+  return {
+    turn: 0.12 * (1 - settle), lookX: lerp(lerp(0.55, 0.05, settle), 0.35, toWatch), lookY: lerp(lerp(0.15, 0, settle), 0.75, toWatch),
+    sad: lerp(0.85, 0.3, settle), brows: lerp(0.15, -0.1, settle), mouth: settle < 0.35 ? 'tremble' : 'flat',
+    blink: t > 18.55 && t < 18.71 ? 0.1 : 1,
+  };
+};
 function roomPresentWorld(t: number, k: string) {
   const x = St.roomAstroX(t);
   const moving = St.roomWalking(t) ? 1 : 0;
@@ -135,25 +146,22 @@ function roomPresentWorld(t: number, k: string) {
     armL: {a: 10 + swing, b: 16}, armR: reachU > 0.01 ? armR : {a: 10 - swing, b: 16},
     e: roomAstroE(t), bob: walkBob(dist, moving),
   };
-  // his reflection on the family photo's glass: his face beside the faces in the print, the window's towers behind him.
-  // Drawn over the room (normal blend, cool and translucent), clipped to the glass.
+  // his reflection on the family photo's glass: the astronaut himself (helmet, collar, shoulders) at reflection scale,
+  // screen-blended so it adds light like real glass: bright over the print's dark hedge, faint over the light sky and faces.
   const ro = St.reflOpRoom(t);
   const G = ROOM.photoFamily.glass;
   const RSp = ROOM.photoFamily.reflSpot;
-  const hs = (RSp.r * 1.05) / 58; // his reflected head at the photo faces' size
+  const hs = St.REFL_S;
+  const rb = 1.6 * Math.sin(t * 2.4); // breathing
   const reflNode = ro > 0.001 ? (
     <g>
       <clipPath id={`${k}rgl`}><rect x={G.x} y={G.y} width={G.w} height={G.h} /></clipPath>
-      <g clipPath={`url(#${k}rgl)`} opacity={ro}>
-        {/* the window behind him, with the changed skyline (towers), reflected around his head */}
-        <rect x={RSp.x - RSp.r * 1.7} y={G.y - 2} width={RSp.r * 3.6} height={G.h * 0.58} fill="#CFE6F2" opacity={0.42} />
-        {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - RSp.r * 1.5 + i * RSp.r * 1.15} y={G.y + 6 + 8 * (i % 2)} width={RSp.r * 0.45} height={G.h * 0.5} rx={2} fill="#9FC4DA" opacity={0.55} />)}
-        <g transform={`translate(${RSp.x} ${RSp.y}) scale(${hs})`}>
-          <g opacity={0.92}>
-            <Head skin={'#E8D5CF'} hair="spiky" hairColor={'#B9646C'} id={`${k}rh`} cheeks={false} e={{...roomAstroE(Math.max(t, V2.faceTurn + 0.4)), turn: -0.25, lookX: -0.4, lookY: 0.1}} />
-          </g>
-          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="#DCEFFF" opacity={0.16} />
-          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="none" stroke="#F4FBFF" strokeWidth={7} opacity={0.75} />
+      <g clipPath={`url(#${k}rgl)`} style={{mixBlendMode: 'screen'}} opacity={ro}>
+        {/* the room's window behind him, with the changed skyline (towers), reflected around his head */}
+        <rect x={RSp.x - 70} y={G.y - 2} width={120} height={G.h * 0.5} fill="#6F8796" opacity={0.5} />
+        {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - 62 + i * 36} y={G.y + 10 + 9 * (i % 2)} width={13} height={G.h * 0.42} rx={2} fill="#7F9DB0" opacity={0.6} />)}
+        <g transform={`translate(${RSp.x + St.REFL_DX} ${RSp.y + St.REFL_DY - HEAD_Y_RIG * hs + rb}) scale(${hs})`}>
+          <Astronaut pose={{armL: {a: 6, b: 8}, armR: {a: 6, b: 8}, e: reflE(t)}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} shadow={false} />
         </g>
       </g>
     </g>
@@ -172,8 +180,8 @@ function roomPresentWorld(t: number, k: string) {
         </g>
       )}
       {wb > 0.001 && (
-        <g transform={`translate(${St.FAM.x - 150 + 20 * wb} ${St.FAM.y + 230 - 105 * wb})`}>
-          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.3} rot={22} />
+        <g transform={`translate(${St.WATCH_BESIDE.x - 150 * (1 - wb)} ${St.WATCH_BESIDE.y + 120 * (1 - wb)})`}>
+          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={St.WATCH_BESIDE.s} rot={St.WATCH_BESIDE.rot} />
         </g>
       )}
     </g>
@@ -216,9 +224,12 @@ function decadesWorld(t: number, k: string) {
   const f = St.friendYard(t);
   const st = St.yardStage(t);
   const e: Expr = st === 0 ? {mouth: 'soft', lookX: 0.2, lookY: lerp(0.1, -0.9, ss(t, V2.windowCover + 0.15, V2.windowCover + 0.45))} : st === 1 ? {mouth: 'flat', lookX: 0.6, lookY: 0.1} : {mouth: 'soft', lookX: -0.6, lookY: lerp(0.1, -1, ss(t, V2.lookUp, V2.lookUp + 0.2))};
+  // the young friend waves up at the sky, where the rocket went (stage A); later stages keep their arms down
+  const wave = st === 0 ? ss(t, V2.windowCover + 0.12, V2.windowCover + 0.32) * (1 - ss(t, V2.wipe1 - 0.2, V2.wipe1 - 0.04)) : 0;
+  const waveArm = {a: lerp(8, 150, wave), b: lerp(10, 22 + 18 * Math.sin((t - V2.windowCover) * 15), wave)};
   const fig = (
     <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
-      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
+      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: waveArm, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
     </g>
   );
   const behind = f.y < FENCE_Y;

@@ -133,7 +133,11 @@ export const dustWipeAt = (t: number) => WIPE_MAX * ss(t, V2.dustWipe - 0.12, V2
 export const FAM = {x: ROOM.photoFamily.print.x + ROOM.photoFamily.print.w / 2, y: ROOM.photoFamily.print.y + ROOM.photoFamily.print.h / 2};
 export const FRI = {x: ROOM.photoFriend.print.x + ROOM.photoFriend.print.w / 2, y: ROOM.photoFriend.print.y + ROOM.photoFriend.print.h / 2};
 export const Z_PRINT = 1080 / ROOM.photoFriend.print.w;
+/** the father's portrait centre (room px) */
+export const PAR = {x: ROOM.photoParent.print.x + ROOM.photoParent.print.w / 2, y: ROOM.photoParent.print.y + ROOM.photoParent.print.h / 2};
 const HEAD_R = {x: ROOM_STOP_X, y: ROOM.floor - 372 * RS};
+/** where his watch comes to rest beside (below-left of) the family photograph: the watch centre, room px */
+export const WATCH_BESIDE = {x: FAM.x - 40, y: FAM.y + 142, s: 0.3, rot: 22};
 export const camRoomOwn = (t: number): Cam =>
   keyCam(t, [
     [V2.doorPassEnd, {x: roomAstroX(V2.doorPassEnd) + 120, y: 1100, z: 1.0}],
@@ -141,18 +145,21 @@ export const camRoomOwn = (t: number): Cam =>
     [V2.reach, {x: 1150, y: 1120, z: 1.25}],
     [V2.dustWipe + 0.2, {x: 1235, y: 1130, z: 1.9}],
     [V2.faceTurn + 0.25, {x: (HEAD_R.x + FAM.x) / 2 + 10, y: HEAD_R.y + 30, z: 2.05}],
-    [V2.photoClose, {x: FAM.x + 6, y: FAM.y - 4, z: 3.85}],
-    [V2.watchBeside - 0.4, {x: ROOM.photoFamily.reflSpot.x - 46, y: FAM.y - 8, z: 4.7}],
-    [V2.watchBeside + 0.3, {x: FAM.x - 10, y: FAM.y + 34, z: 4.0}],
-    [V2.photoMove, {x: FAM.x + 50, y: FAM.y + 10, z: 3.6}],
-    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.55}],
+    [V2.photoClose, {x: FAM.x + 6, y: FAM.y - 4, z: 3.7}],
+    [V2.watchBeside - 0.4, {x: FAM.x + 40, y: FAM.y - 6, z: 4.5}],
+    [V2.watchBeside + 0.35, {x: FAM.x + 2, y: FAM.y + 50, z: 4.2}],
+    [V2.photoMove, {x: FAM.x + 60, y: FAM.y + 16, z: 3.9}],
+    [V2.ribbonPass, {x: PAR.x + 10, y: (FAM.y + 16 + FRI.y) / 2, z: 3.85}],
+    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.8}],
     [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT}, 'stop'],
-  ]);
+  ], true);
 /** the print's tint and glass fade out as it fills the frame (the last frame equals frame 0) */
 export const printTint = (t: number) => 0.35 * (1 - ss(t, V2.photoPush + 0.6, DUR - 1 / 30 - 0.12));
 export const printGlass = (t: number) => 1 - ss(t, V2.photoPush + 0.5, DUR - 1 / 30 - 0.2);
+/** his reflection on the family photo's glass: rig scale and offset of his head from ROOM.photoFamily.reflSpot */
+export const REFL_S = 0.5, REFL_DX = 4, REFL_DY = 6;
 /** his reflection on the family photo's glass */
-export const reflOpRoom = (t: number) => 0.55 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
+export const reflOpRoom = (t: number) => 0.9 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
 
 // ---- 6: decades in the yard ---------------------------------------------------------------------------------------------
 // The camera trucks right across the same yard; the foreground trunk and leaves pass the lens and hide each jump.
