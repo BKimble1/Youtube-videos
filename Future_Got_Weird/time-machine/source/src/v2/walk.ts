@@ -1,6 +1,6 @@
 // A front-view walk with planted feet: each foot stays fixed on the ground while the body passes over it, then swings
 // forward with a small lift. dist = distance travelled (character-local units, +x = direction of travel).
-export const STEP = 58; // half stride, local units
+export const STEP = 100; // one step (half a stride), local units: about 0.6 of the leg
 export const walkFeet = (dist: number, moving: number) => {
   const p = dist / (2 * STEP);
   const foot = (ph: number, hx: number) => {
@@ -16,7 +16,7 @@ export const walkFeet = (dist: number, moving: number) => {
   return {lx: l.x, ly: l.y - 6, rx: r.x, ry: r.y - 6};
 };
 /** body bob for the walk (local units, negative = up) */
-export const walkBob = (dist: number, moving: number) => -Math.abs(Math.sin((Math.PI * dist) / STEP)) * 7 * moving;
+export const walkBob = (dist: number, moving: number) => -Math.abs(Math.sin((Math.PI * dist) / STEP)) * 9 * moving;
 /** times (s) when a foot lands, for the footstep sounds: every STEP of travel */
 export const footfalls = (xAt: (t: number) => number, t0: number, t1: number, scale: number) => {
   const out: number[] = [];

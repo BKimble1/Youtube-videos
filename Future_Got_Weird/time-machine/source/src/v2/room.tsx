@@ -42,7 +42,7 @@ const WIN_MULL = {x: 830, w: 16}; // vertical mullion (centre x, width)
 const WIN_TRANSOM = {y: 840, h: 14}; // horizontal transom (centre y, height)
 const WIN_CASING = 22;
 const SILL = {x0: 600, x1: 1060, y0: 1200, y1: 1224};
-const CURTAIN = {rodY: 634, x0: 560, x1: 1100, left: [566, 676] as [number, number], right: [984, 1094] as [number, number], bottom: 1274};
+const CURTAIN = {rodY: 634, x0: 552, x1: 1108, left: [558, 664] as [number, number], right: [996, 1102] as [number, number], bottom: 1274};
 const DOOR = {x0: -200, x1: 60, y0: 830, y1: F, casing: 26};
 const SB = {x0: 1146, x1: 1736, topBack: 1234, topFront: 1252, edge: 1268, body1: 1500, y1: F};
 const SHELF = {x0: 1220, x1: 1680, y: 760, h: 18};
@@ -581,7 +581,7 @@ const Sideboard: React.FC<{ctx: Ctx}> = ({ctx}) => {
 };
 
 const Shelf: React.FC<{ctx: Ctx}> = ({ctx}) => {
-  const {L, e, id} = ctx;
+  const {L, e} = ctx;
   const wood = L('#B07650');
   const {x0, x1, y, h} = SHELF;
   const books = [
@@ -661,7 +661,6 @@ const Shelf: React.FC<{ctx: Ctx}> = ({ctx}) => {
       <rect x={x0} y={y} width={x1 - x0} height={h} rx={3} fill={wood} stroke={INK} strokeWidth={OUT} />
       <rect x={x0 + 2} y={y + h - 6} width={x1 - x0 - 4} height={4} fill={shade(wood, 0.3)} />
       <DustTop x0={bx + 30} x1={x1 - 4} y={y - 3} e={e} h={4} />
-      <clipPath id={`${id}-shelfclip`}><rect x={x0} y={y - 200} width={x1 - x0} height={200} /></clipPath>
     </g>
   );
 };
@@ -859,7 +858,7 @@ const Window: React.FC<{ctx: Ctx; view?: React.ReactNode}> = ({ctx, view}) => {
     const inner = side < 0 ? xb : xa, outer = side < 0 ? xa : xb;
     const sway = (1 - e) * 2.5 * Math.sin(t * 0.9 + side);
     const bottom = CURTAIN.bottom;
-    const innerB = inner - side * 10 + sway;
+    const innerB = inner + side * 8 + sway;
     const hem = Array.from({length: 5}, (_, k) => {
       const u = (k + 1) / 5;
       const x = innerB + (outer - innerB) * u;

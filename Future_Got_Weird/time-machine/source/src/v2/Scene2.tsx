@@ -128,7 +128,7 @@ function roomPresentWorld(t: number, k: string) {
   const tgt = {x: (wp.x - x) / St.RS, y: (wp.y - ROOM.floor) / St.RS};
   const arm = astroReach(tgt.x, tgt.y, 1, 1);
   const armR = {a: lerp(10, arm.a, reachU), b: lerp(14, arm.b, reachU)};
-  const swing = moving * Math.sin((Math.PI * dist) / 58) * 14;
+  const swing = moving * Math.sin((Math.PI * dist) / 100) * 14;
   const pose = {
     armL: {a: 10 + swing, b: 16}, armR: reachU > 0.01 ? armR : {a: 10 - swing, b: 16},
     e: roomAstroE(t), bob: walkBob(dist, moving),
@@ -256,7 +256,7 @@ function doorWorld(t: number, k: string) {
   const gestureArm = {a: lerp(30, 72, g), b: lerp(30, 10, g)};
   const fe: Expr = {mouth: 'soft', lookX: lerp(-0.7, 0.8, g), lookY: -0.1, turn: 0.3 * g, brows: 0.15, sad: 0.2};
   const ae: Expr = {lookX: lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), lookY: lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), turn: 0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), sad: 0.35, brows: 0.25, mouth: 'flat'};
-  const swing = walking ? Math.sin((Math.PI * dist) / 58) * 14 : 0;
+  const swing = walking ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
   return (
     <g>
       <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} doorOpen={ss(t, V2.walkStart, V2.doorPass)} />

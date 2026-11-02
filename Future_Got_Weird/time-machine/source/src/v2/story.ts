@@ -173,7 +173,7 @@ export const friendYard = (t: number) => {
   if (st === 0) return {age: 0.06 + 0.04 * ss(t, V2.windowCover, V2.wipe1), x: 960, walk: 0, stride: 0};
   if (st === 1) {
     const u = ss(t, V2.wipe1 + 0.02, V2.wipe2 - 0.02);
-    return {age: 0.48 + 0.06 * u, x: lerp(1030, 1170, u), walk: (lerp(1030, 1170, u) - 1030) / (YS * 58) * Math.PI, stride: 1};
+    return {age: 0.48 + 0.06 * u, x: lerp(1030, 1170, u), walk: ((lerp(1030, 1170, u) - 1030) / (YS * 100)) * Math.PI, stride: 1};
   }
   return {age: 1, x: TS.fx, walk: 0, stride: 0};
 };

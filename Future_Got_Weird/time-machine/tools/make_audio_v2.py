@@ -189,7 +189,7 @@ place(fabric(0.4), e['gesture'], 'sleeve (gesture)', -26.0, pan=0.2)
 for k2, at in enumerate(e['doorSteps']): place(step(0.6), at, 'footsteps to the door' if k2 == 0 else None, -21.0, pan=0.2)
 place(creak(0.45, 200), e['doorPass'] - 0.15, 'door', -21.0, pan=0.3)
 # ---- family room: quiet
-room = lp(hp(noise(N), 80), 600) * win(e['doorPass'], DUR, 0.2, 0.0)
+room = lp(hp(noise(N), 80), 600) * win(e['doorPass'], DUR, 0.2, 0.05)
 for k2, at in enumerate(e['roomSteps']): place(step(0.5, wood=True), at, 'footsteps on wood' if k2 == 0 else None, -23.0 - 2 * k2, pan=0.1)
 tc = e['doorPass'] + 0.4; k = 0
 while tc < DUR - 0.05:

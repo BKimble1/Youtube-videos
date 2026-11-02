@@ -168,6 +168,37 @@ const ClockAlone: React.FC = () => (
   </Svg>
 );
 
+/** registration of the photo rects (frames red, prints yellow/green), wipe path, faces, reflection spot */
+const TestPhotos: React.FC = () => (
+  <Svg>
+    <Cam cx={1445} cy={1100} s={1080 / 640}>
+      <Room t={0} id="rtp" era={1} clockMinutes={0} photoTint={0} photoGlass={0} photoView={<OpeningPlaceholder />} />
+      <Box r={ROOM.photoFamily} c="#F00" />
+      <Box r={ROOM.photoFamily.glass} c="#FF0" />
+      <Box r={ROOM.photoParent} c="#F00" />
+      <Box r={ROOM.photoParent.print} c="#FF0" />
+      <Box r={ROOM.photoFriend} c="#F00" />
+      <Box r={ROOM.photoFriend.print} c="#0F0" />
+      <line x1={ROOM.sideboard.x0} y1={ROOM.sideboard.topBack} x2={ROOM.sideboard.x1} y2={ROOM.sideboard.topBack} stroke="#F80" strokeWidth={2} />
+      <line x1={ROOM.sideboard.x0} y1={ROOM.sideboard.topFront} x2={ROOM.sideboard.x1} y2={ROOM.sideboard.topFront} stroke="#F80" strokeWidth={2} />
+      <path d={Array.from({length: 21}, (_, k) => wipeAt(k / 20)).map((p, k) => `${k ? 'L' : 'M'} ${p.x} ${p.y}`).join(' ')} fill="none" stroke="#0F0" strokeWidth={1.5} />
+      <Pt x={ROOM.wipePoint.x} y={ROOM.wipePoint.y} c="#0F0" />
+      {ROOM.photoFamily.faces.map((f, k) => <circle key={k} cx={f.x} cy={f.y} r={f.r} fill="none" stroke="#0FF" strokeWidth={1.5} />)}
+      <circle cx={ROOM.photoParent.face.x} cy={ROOM.photoParent.face.y} r={ROOM.photoParent.face.r} fill="none" stroke="#0FF" strokeWidth={1.5} />
+      <circle cx={ROOM.photoFamily.reflSpot.x} cy={ROOM.photoFamily.reflSpot.y} r={ROOM.photoFamily.reflSpot.r} fill="none" stroke="#F0F" strokeWidth={2} strokeDasharray="5 3" />
+    </Cam>
+  </Svg>
+);
+
+/** the window and clock as the 8.2 s pan sees them (era 0, placeholder yard through the glass) */
+const WindowC: React.FC = () => (
+  <Svg>
+    <Cam cx={(ROOM.clock.x + ROOM.win.cx) / 2 + 60} cy={ROOM.win.cy + 40} s={1080 / 1000}>
+      <Room t={0} id="rwin" era={0} clockMinutes={10 * 60 + 8} windowView={<YardPlaceholder />} />
+    </Cam>
+  </Svg>
+);
+
 /** the left of the room in the present with him walking in at the suggested scale (doorway, chair, clock) */
 const Entry: React.FC = () => (
   <Svg>
@@ -192,6 +223,8 @@ const Root: React.FC = () => (
     {comp('RoomFamily', Family)}
     {comp('RoomClockSheet', ClockAlone)}
     {comp('RoomEntry', Entry)}
+    {comp('RoomTestPhotos', TestPhotos)}
+    {comp('RoomWindow', WindowC)}
   </>
 );
 registerRoot(Root);

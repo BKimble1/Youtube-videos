@@ -1,0 +1,167 @@
+[
+ {
+  "t": 22.633,
+  "sfx": "temporal swell (loop tail -> frame 0 -> ageing)",
+  "gain_db": -9.0
+ },
+ {
+  "t": 0.5,
+  "sfx": "glove creak",
+  "gain_db": -26.0
+ },
+ {
+  "t": 1.12,
+  "sfx": "suit fabric (head turns to the visor)",
+  "gain_db": -24.0
+ },
+ {
+  "t": 1.3,
+  "sfx": "reflection shimmer",
+  "gain_db": -28.0
+ },
+ {
+  "t": 2.05,
+  "sfx": "black hole rumble (on the cut)",
+  "gain_db": -7.0
+ },
+ {
+  "t": 2.12,
+  "sfx": "capsule engine pass (panned with the flight)",
+  "gain_db": -12.0
+ },
+ {
+  "t": 4.5,
+  "sfx": "window frame passes the lens",
+  "gain_db": -17.0
+ },
+ {
+  "t": 4.8,
+  "sfx": "watch tick",
+  "gain_db": -19.0
+ },
+ {
+  "t": 7.145,
+  "sfx": "the hour lands",
+  "gain_db": -15.0
+ },
+ {
+  "t": 7.195,
+  "sfx": "wrist lowers",
+  "gain_db": -25.0
+ },
+ {
+  "t": 7.78,
+  "sfx": "wrist rises",
+  "gain_db": -25.0
+ },
+ {
+  "t": 8.2,
+  "sfx": "home clock racing",
+  "gain_db": -20.0
+ },
+ {
+  "t": 9.21,
+  "sfx": "through the window",
+  "gain_db": -20.0
+ },
+ {
+  "t": 9.78,
+  "sfx": "leaf swish (foreground wipe)",
+  "gain_db": -19.0
+ },
+ {
+  "t": 10.38,
+  "sfx": "leaf swish (foreground wipe)",
+  "gain_db": -19.0
+ },
+ {
+  "t": 10.15,
+  "sfx": "friend steps",
+  "gain_db": -27.0
+ },
+ {
+  "t": 11.22,
+  "sfx": "light passes overhead",
+  "gain_db": -21.0
+ },
+ {
+  "t": 11.5,
+  "sfx": "capsule retro roar",
+  "gain_db": -11.0
+ },
+ {
+  "t": 12.32,
+  "sfx": "landing contact",
+  "gain_db": -7.0
+ },
+ {
+  "t": 12.34,
+  "sfx": "landing dust",
+  "gain_db": -19.0
+ },
+ {
+  "t": 12.4,
+  "sfx": "hatch release",
+  "gain_db": -21.0
+ },
+ {
+  "t": 12.6,
+  "sfx": "hatch clunk",
+  "gain_db": -19.0
+ },
+ {
+  "t": 12.7,
+  "sfx": "boots on the pavement",
+  "gain_db": -21.0
+ },
+ {
+  "t": 13.5,
+  "sfx": "hands meet the glove",
+  "gain_db": -24.0
+ },
+ {
+  "t": 14.6,
+  "sfx": "sleeve (gesture)",
+  "gain_db": -26.0
+ },
+ {
+  "t": 14.865,
+  "sfx": "footsteps to the door",
+  "gain_db": -21.0
+ },
+ {
+  "t": 15.07,
+  "sfx": "door",
+  "gain_db": -21.0
+ },
+ {
+  "t": 15.575,
+  "sfx": "footsteps on wood",
+  "gain_db": -23.0
+ },
+ {
+  "t": 15.62,
+  "sfx": "home clock (normal time)",
+  "gain_db": -31.0
+ },
+ {
+  "t": 16.58,
+  "sfx": "glove brushes the dusty frame",
+  "gain_db": -22.0
+ },
+ {
+  "t": 16.73,
+  "sfx": "dust puff",
+  "gain_db": -32.0
+ },
+ {
+  "t": 20.72,
+  "sfx": "his watch beside the photo",
+  "gain_db": -25.0
+ },
+ {
+  "t": 22.1,
+  "sfx": "into the photograph",
+  "gain_db": -16.0
+ }
+]
