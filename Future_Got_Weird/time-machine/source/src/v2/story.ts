@@ -152,7 +152,7 @@ export const dayCycle = (t: number) => {
 
 // ---- 10-12: the family room (present) ---------------------------------------------------------------------------------
 export const RS = ROOM.figScale; // astronaut scale in the room
-export const ROOM_STOP_X = 1080;
+export const ROOM_STOP_X = 1010; // an arm's length from the family photo: the glove sweeps outward across the glass
 /** his x in the room: walking in (continuing his walk from the yard, left to right), slowing to a stop by the sideboard */
 export const roomAstroX = (t: number) => keyS(t, [[V2.doorPass - 0.3, 470 - 330], [V2.roomStop, ROOM_STOP_X]], (x) => 1 - (1 - x) * (1 - x) * (1 - 0.35 * x));
 export const roomWalking = (t: number) => t < V2.roomStop - 0.05;
