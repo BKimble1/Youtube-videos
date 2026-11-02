@@ -44,7 +44,8 @@ if 'V3' in os.path.basename(src):
                (8.15, 8.25, 'match cut: watch -> home wall clock'), (8.3, 9.38, 'one eased move: wall clock -> window'),
                (9.36, 9.44, 'match cut: the window from inside -> from outside'), (9.44, 10.75, 'continuous pull-back from the house window to the garden'),
                (11.4, 12.3, 'capsule descent, landing, hatch'), (16.15, 16.25, 'cut: front door outside -> the room inside'),
-               (17.3, 18.05, 'push from him to the photograph'), (18.5, 19.35, 'from the young faces in the photograph to his face'),
+               (17.4, 18.52, 'one eased push from him into the young faces in the photograph'), (18.58, 19.32, 'from the young faces in the photograph to his face'),
+               (14.45, 16.2, 'one continuous move from the faces to the front door'),
                (21.65, 22.69, 'eased push into the watch face'), (22.69, 22.73, 'match cut: watch face -> ship window'), (22.73, 23.55, 'eased pull-back out of the window to the opening frame'),
                (0.0, 0.2, 'loop seam')]
 med = float(np.median(d))
