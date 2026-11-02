@@ -66,12 +66,14 @@ export const camSpace = (t: number): Cam =>
     [V2.windowPass + 0.3, {x: 3.2, y: -6.8, z: 40.5}],
   ]);
 /** the capsule in space: on the arc, then turning toward the camera and coming close (its window to the screen centre) */
-export const APPROACH_GAIN = 70;
+// sized so the push through the window lands exactly on the cockpit's own framing (z 1.0) and eases to a stop there
+export const APPROACH_GAIN = 70 / 1.678;
 export const capsuleSpace = (t: number) => {
   const u = flightU(t);
   const p = flightPath(Math.min(u, 0.66));
   const g = ss(t, V2.approach, V2.windowPass);
-  const k = Math.exp(Math.log(APPROACH_GAIN) * Math.pow(g, 1.9)); // perspective growth as it nears the camera
+  const ge = 1 - (1 - g) * (1 - g) * (1 - g); // eased out: the growth decelerates into the hand-off (no overshoot)
+  const k = Math.exp(Math.log(APPROACH_GAIN) * Math.pow(ge, 2.6)); // perspective growth as it nears the camera
   const cam = camSpace(t);
   const sM = p.scale / CAPSULE2.height; // M per capsule unit
   // wrap the nose angle to (-180, 180] so the turn toward camera is one short banking turn, never a spin
@@ -173,19 +175,27 @@ export const camRoomOwn = (t: number): Cam =>
     [V2.reach, {x: 1150, y: 1120, z: 1.25}],
     [V2.dustWipe + 0.2, {x: 1235, y: 1130, z: 1.9}],
     [V2.faceTurn + 0.25, {x: (HEAD_R.x + FAM.x) / 2 + 10, y: HEAD_R.y + 30, z: 2.05}],
-    [V2.photoClose, {x: FAM.x + 6, y: FAM.y - 4, z: 3.7}],
-    [V2.watchBeside - 0.4, {x: FAM.x + 40, y: FAM.y - 6, z: 4.5}],
+    // the family first (grief), a slow push across them, then a rack onto his reflection beside his younger self
+    [V2.photoClose, {x: FAM.x - 8, y: FAM.y - 4, z: 3.7}],
+    [19.3, {x: FAM.x + 18, y: FAM.y - 6, z: 3.95}],
+    [V2.watchBeside - 0.4, {x: FAM.x + 52, y: FAM.y + 2, z: 4.4}],
+    // tilt down to his watch beside the photograph
     [V2.watchBeside + 0.35, {x: FAM.x + 2, y: FAM.y + 50, z: 4.2}],
-    [V2.photoMove, {x: FAM.x + 60, y: FAM.y + 16, z: 3.9}],
-    [V2.ribbonPass, {x: PAR.x + 10, y: (FAM.y + 16 + FRI.y) / 2, z: 3.85}],
-    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.8}],
-    [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT}, 'stop'],
+    // an eased pan (peak ~50 px a frame) that settles on the father's portrait with the black ribbon
+    [V2.photoMove, {x: FAM.x + 40, y: FAM.y + 30, z: 3.95}],
+    [V2.ribbonPass, {x: PAR.x + 4, y: (FAM.y + FRI.y) / 2 + 10, z: 3.6}],
+    [V2.photoPush, {x: PAR.x + 18, y: (FAM.y + FRI.y) / 2 + 4, z: 3.62}],
+    // then the glide into the pre-departure print until it fills the frame (a hair past exact fill: no border remnant)
+    [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT * 1.004}, 'stop'],
   ], true);
+/** the camera passes his shoulder into the photograph: he slides out of frame left (room px) and is off screen before
+ *  he stops being drawn */
+export const passOffset = (t: number) => 360 * ss(t, V2.faceTurn + 0.3, V2.photoClose + 0.12) ** 1.4;
 /** the print's tint and glass fade out as it fills the frame (the last frame equals frame 0) */
 export const printTint = (t: number) => 0.35 * (1 - ss(t, V2.photoPush + 0.6, DUR - 1 / 30 - 0.12));
 export const printGlass = (t: number) => 1 - ss(t, V2.photoPush + 0.5, DUR - 1 / 30 - 0.2);
 /** his reflection on the family photo's glass: rig scale and offset of his head from ROOM.photoFamily.reflSpot */
-export const REFL_S = 0.5, REFL_DX = 4, REFL_DY = 6;
+export const REFL_S = 0.6, REFL_DX = -8, REFL_DY = 45;
 /** his reflection on the family photo's glass */
 export const reflOpRoom = (t: number) => 0.78 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
 

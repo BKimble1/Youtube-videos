@@ -10,7 +10,7 @@
 import React from 'react';
 import {mix} from '../core/color';
 import {closed, P} from '../core/geo';
-import {clamp, sm} from '../lib';
+import {clamp, lerp, sm} from '../lib';
 
 export const INK = '#162A32';
 export const C = {
@@ -97,14 +97,17 @@ export const Head: React.FC<{
       return <path d={`M ${-r - 10} ${cy + 26 - lift} L ${-r - 10} ${cy - 10} Q ${-r - 6} ${cy - r - 20} 0 ${cy - r - 18 + thin * 4} Q ${r + 6} ${cy - r - 20} ${r + 10} ${cy - 10} L ${r + 10} ${cy + 26 - lift} L ${r - 6} ${cy + 26 - lift} L ${r - 6} ${cy - 20} Q ${r * 0.5} ${cy - r * 0.6} 0 ${cy - r * 0.62} Q ${-r * 0.5} ${cy - r * 0.6} ${-r + 6} ${cy - 20} L ${-r + 6} ${cy + 26 - lift} Z`} {...st} />;
     }
     // swoop: the crest flattens and the front edge recedes; by old age only side hair and a thin wisp remain
-    const top = r + 24 - 18 * thin; // crest height above centre
-    const front = 2 + 22 * thin; // how far the hairline has moved back
-    const sideTop = cy - 4 - 10 * thin;
     const crest = (1 - ss(a, 0.62, 0.95)); // crest volume
+    // as the crest goes, the hair RECEDES (shape, full opacity): its top sinks onto the scalp and the hairline climbs to
+    // meet it, so the mass shrinks back into the side hair instead of fading through the bald head
+    const cv = Math.pow(crest, 0.8);
+    const top = lerp(r + 1, r + 24 - 18 * thin, cv); // crest height above centre
+    const front = lerp(-2, 2 + 22 * thin, cv); // how far the hairline has moved back
+    const sideTop = cy - 4 - 10 * thin;
     return (
       <g>
-        {crest > 0.02 && (
-          <path d={`M ${-r - 4} ${sideTop} Q ${-r - 6} ${cy - top} ${-10} ${cy - top + 4 * (1 - crest)} Q ${r + 10} ${cy - top - 10 * crest} ${r + 8} ${cy - r + 10 + front * 0.4} Q ${r - 10} ${cy - r - 2 + front} ${20} ${cy - r + 2 + front} Q ${-20} ${cy - r + 4 + front} ${-r - 4} ${sideTop} Z`} {...st} opacity={clamp(crest * 1.6)} />
+        {crest > 0.06 && (
+          <path d={`M ${-r - 4} ${sideTop} Q ${-r - 6} ${cy - top} ${-10} ${cy - top + 4 * (1 - crest)} Q ${r + 10} ${cy - top - 10 * crest} ${r + 8} ${cy - r + 10 + front * 0.4} Q ${r - 10} ${cy - r - 2 + front} ${20} ${cy - r + 2 + front} Q ${-20} ${cy - r + 4 + front} ${-r - 4} ${sideTop} Z`} {...st} />
         )}
         {/* side hair (stays, whitens; the temples grey first) */}
         <path d={`M ${-r - 3} ${cy + 8} Q ${-r - 7} ${cy - 22} ${-r + 10} ${cy - 40 + 8 * thin} L ${-r + 16} ${cy - 30} Q ${-r + 6} ${cy - 12} ${-r + 4} ${cy + 10} Z`} {...st} fill={hairAt(hairColor, Math.min(1, a + 0.22))} />
@@ -207,7 +210,7 @@ export const Head: React.FC<{
       </g>
       {/* glasses (appear in later life) */}
       {glasses > 0.01 && (
-        <g fill="none" stroke={INK} strokeWidth={3.5} opacity={clamp(glasses * 1.5)} transform={`translate(${tx} ${-8 * (1 - glasses)})`}>
+        <g fill="none" stroke={INK} strokeWidth={3.5} opacity={glasses > 0.5 ? 1 : 0} transform={`translate(${tx} ${-8 * (1 - glasses)})`}>
           <circle cx={-21} cy={eyeY} r={17} fill="rgba(220,236,255,0.18)" />
           <circle cx={21} cy={eyeY} r={17} fill="rgba(220,236,255,0.18)" />
           <line x1={-4} y1={eyeY - 2} x2={4} y2={eyeY - 2} />

@@ -151,26 +151,33 @@ function outPresentWorld(t: number, k: string) {
 
 // ---- 10-12: the family room, present -----------------------------------------------------------------------------------------
 const roomAstroE = (t: number): Expr => {
+  // he notices the photographs, reaches, wipes; then turns three-quarters to the family photo, brows knitted, mouth
+  // trembling, eyes on the print (not on the camera) as the camera moves past his shoulder
   const look = ss(t, V2.notice - 0.1, V2.notice + 0.2);
-  const face = ss(t, V2.faceTurn, V2.faceTurn + 0.4);
-  const grief = ss(t, V2.faceTurn + 0.2, V2.faceTurn + 1.2);
+  const face = ss(t, V2.faceTurn - 0.05, V2.faceTurn + 0.3);
+  const grief = ss(t, V2.faceTurn, V2.faceTurn + 0.4);
   return {
-    turn: lerp(0.3, 0.45, look), lookX: lerp(0.5, 0.85, look) * (1 - 0.6 * face), lookY: lerp(0, 0.15, look) + 0.25 * face,
-    wide: 0.3 * look * (1 - grief), brows: 0.25 * look * (1 - grief), sad: 0.25 * look + 0.6 * grief,
-    mouth: grief > 0.4 ? 'tremble' : 'flat', blink: t > 17.3 && t < 17.38 ? 0.12 : 1,
+    turn: lerp(lerp(0.3, 0.45, look), 0.5, face), lookX: lerp(lerp(0.5, 0.85, look), 0.9, face), lookY: lerp(lerp(0, 0.15, look), 0.22, face),
+    wide: 0.3 * look * (1 - grief), brows: lerp(0.25 * look, 0.35, grief), sad: lerp(0.25 * look, 0.8, grief),
+    mouth: grief > 0.35 ? 'tremble' : 'flat', blink: t > 16.5 && t < 16.57 ? 0.12 : 1,
   };
 };
 const HEAD_Y_RIG = -372;
 /** his reflected face: grief as he finds the family; a slow blink; it settles to understanding (no smile); his eyes drop to the watch */
 const reflE = (t: number): Expr => {
-  const settle = ss(t, 18.75, 19.9);
-  const toWatch = ss(t, V2.watchBeside - 0.25, V2.watchBeside + 0.2);
+  // grief as he finds them; a slow blink; his eyes go to his younger self in the print (left); brows relax, mouth flat
+  // (understanding, no smile); his eyes drop to the watch
+  const toSelf = ss(t, 18.85, 19.25) * (1 - ss(t, 19.75, 20.05));
+  const settle = ss(t, 19.45, 20.0);
+  const toWatch = ss(t, V2.watchBeside - 0.25, V2.watchBeside + 0.15);
   return {
-    turn: 0.12 * (1 - settle), lookX: lerp(lerp(0.55, 0.05, settle), 0.35, toWatch), lookY: lerp(lerp(0.15, 0, settle), 0.75, toWatch),
-    sad: lerp(0.85, 0.3, settle), brows: lerp(0.15, -0.1, settle), mouth: settle < 0.35 ? 'tremble' : 'flat',
-    blink: t > 18.55 && t < 18.71 ? 0.1 : 1,
+    turn: -0.12 * toSelf, lookX: lerp(lerp(0.15, -0.85, toSelf), 0.3, toWatch), lookY: lerp(lerp(0.12, 0.05, toSelf), 0.75, toWatch),
+    sad: lerp(0.85, 0.28, settle), brows: lerp(0.3, -0.12, settle), mouth: settle < 0.4 ? 'tremble' : 'flat',
+    blink: (t > 18.5 && t < 18.66) || (t > 19.95 && t < 20.02) ? 0.1 : 1,
   };
 };
+/** his small nod as it settles (reflection px, room units) */
+const reflNod = (t: number) => 5 * Math.sin(Math.PI * clamp((t - 19.62) / 0.36));
 function roomPresentWorld(t: number, k: string) {
   const x = St.roomAstroX(t);
   const moving = St.roomWalking(t) ? 1 : 0;
@@ -199,14 +206,20 @@ function roomPresentWorld(t: number, k: string) {
   const RSp = ROOM.photoFamily.reflSpot;
   const hs = St.REFL_S;
   const rb = 1.6 * Math.sin(t * 2.4); // breathing
+  // parallax: the reflection drifts a little against the print as the camera moves (it is not printed on it)
+  const px = -0.16 * (St.camRoom(t).x - St.FAM.x);
   const reflNode = ro > 0.001 ? (
     <g>
       <clipPath id={`${k}rgl`}><rect x={G.x} y={G.y} width={G.w} height={G.h} /></clipPath>
       <g style={{mixBlendMode: 'screen'}} opacity={ro}><g clipPath={`url(#${k}rgl)`}>
-        {/* the room's window behind him, with the changed skyline (towers), reflected around his head */}
-        <rect x={RSp.x - 70} y={G.y - 2} width={120} height={G.h * 0.5} fill="#6F8796" opacity={0.5} />
-        {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - 62 + i * 36} y={G.y + 10 + 9 * (i % 2)} width={13} height={G.h * 0.42} rx={2} fill="#7F9DB0" opacity={0.6} />)}
-        <g transform={`translate(${RSp.x + St.REFL_DX} ${RSp.y + St.REFL_DY - HEAD_Y_RIG * hs + rb}) scale(${hs})`}>
+        {/* the room's window reflected behind him: a pale pane with its mullion and transom, the towers in it */}
+        <g transform={`translate(${px} 0)`}>
+          <rect x={RSp.x - 30} y={G.y - 4} width={96} height={G.h * 0.62} fill="#8FA7B6" opacity={0.42} />
+          {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - 22 + i * 30} y={G.y + 14 + 9 * (i % 2)} width={12} height={G.h * 0.48} rx={2} fill="#A9C2D2" opacity={0.55} />)}
+          <rect x={RSp.x + 16} y={G.y - 4} width={5} height={G.h * 0.62} fill="#C9D7E0" opacity={0.6} />
+          <rect x={RSp.x - 30} y={G.y + G.h * 0.24} width={96} height={4} fill="#C9D7E0" opacity={0.6} />
+        </g>
+        <g transform={`translate(${RSp.x + St.REFL_DX + px} ${RSp.y + St.REFL_DY - HEAD_Y_RIG * hs + rb + reflNod(t)}) scale(${hs})`}>
           <Astronaut pose={{armL: {a: 6, b: 8}, armR: {a: 6, b: 8}, e: reflE(t)}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} shadow={false} />
         </g>
       </g></g>
@@ -220,8 +233,8 @@ function roomPresentWorld(t: number, k: string) {
     <g>
       <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={<g transform={`translate(${St.WIN_CENTRE.x - 540 * St.WIN_SC} ${St.WIN_CENTRE.y - 960 * St.WIN_SC}) scale(${St.WIN_SC})`}>{outPresentWorld(t, k + 'wv')}</g>} />
       {reflNode}
-      {(t < V2.photoClose + 0.2) && (
-        <g transform={`translate(${x} ${ROOM.floor}) scale(${St.RS})`}>
+      {(t < V2.photoClose + 0.35) && (
+        <g transform={`translate(${x - St.passOffset(t)} ${ROOM.floor}) scale(${St.RS})`}>
           <Astronaut pose={pose} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, moving)} />
         </g>
       )}

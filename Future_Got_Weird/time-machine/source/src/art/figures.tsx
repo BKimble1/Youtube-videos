@@ -281,9 +281,9 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
         <ellipse cx={footR.x - 4} cy={footR.y + 4} rx={30} ry={13} fill="#2B2B33" stroke={INK} strokeWidth={OUT} />
         <path d={torso} fill={shirt} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
         {cardi > 0.01 && (
-          <path d={`M -76 ${shY + 2} Q -82 ${shY - 18} -52 ${shY - 22} L ${-52 + 30 * cardi} ${shY - 22} L ${-66 + 56 * cardi} -150 L -66 -150 Z M 76 ${shY + 2} Q 82 ${shY - 18} 52 ${shY - 22} L ${52 - 30 * cardi} ${shY - 22} L ${66 - 56 * cardi} -150 L 66 -150 Z`} fill={cardColor} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" opacity={clamp(cardi * 3)} />
+          <path d={`M -76 ${shY + 2} Q -82 ${shY - 18} -52 ${shY - 22} L ${-52 + 30 * cardi} ${shY - 22} L ${-66 + 56 * cardi} -150 L -66 -150 Z M 76 ${shY + 2} Q 82 ${shY - 18} 52 ${shY - 22} L ${52 - 30 * cardi} ${shY - 22} L ${66 - 56 * cardi} -150 L 66 -150 Z`} fill={cardColor} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
         )}
-        {cardi > 0.6 && [0, 1, 2].map((k) => <circle key={k} cx={-12} cy={shY + 30 + k * 34} r={4} fill="#5A3E30" opacity={(cardi - 0.6) * 2.5} />)}
+        {cardi > 0.7 && [0, 1, 2].map((k) => <circle key={k} cx={-12} cy={shY + 30 + k * 34} r={4} fill="#5A3E30" />)}
         {/* neck */}
         <rect x={-16} y={headY + 40} width={32} height={34 - 6 * s} fill={mix(HONEST.skin, '#DCC2B2', 0.2 * s)} stroke={INK} strokeWidth={OUT} />
         {s > 0.2 && <path d={`M -8 ${headY + 52} q 8 4 16 0 M -8 ${headY + 60} q 8 4 16 0`} fill="none" stroke={INK} strokeWidth={2} opacity={0.5 * s} />}
