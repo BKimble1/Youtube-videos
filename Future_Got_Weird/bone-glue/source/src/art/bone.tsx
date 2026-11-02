@@ -53,7 +53,7 @@ const atS = (p: Path, s: number): P => {
 /** the bead runs along C1 (ulnar -> radial border), hops to the radial end of C3 and follows it back to C1, then hops
  *  to the C2 junction and runs up C2 toward the joint */
 const C3R = [...C3].reverse();
-export const BEAD_SEGS: Path[] = [mk(smoothSample(C1)), mk(smoothSample(C3R)), mk(smoothSample(C2))];
+export const BEAD_SEGS: Path[] = [mk(smoothSample(C1)), mk(smoothSample(C3R)), mk(smoothSample(C2.slice(0, 7)))];
 const HOP = 4; // mm of "laid" budget used by each hop (the tip lifts and moves; no glue)
 export const SEG_START = (() => {
   const o = [0];
@@ -61,6 +61,17 @@ export const SEG_START = (() => {
   return o;
 })();
 export const BEAD_TOTAL = SEG_START[SEG_START.length - 1] + BEAD_SEGS[BEAD_SEGS.length - 1].L;
+/** the part the applicator lays inside the incision (the styloid crack's bead stops where the incision's lip covers it;
+ *  the rest of that crack fills by seepage in the cutaway) */
+export const BEAD_VISIBLE = (() => {
+  const g = BEAD_SEGS[2];
+  let s = 0;
+  while (s < g.L && atS(g, s).y > -16.5) s += 0.1;
+  return SEG_START[2] + s;
+})();
+/** the reduction: the distal fragments (above the transverse crack) seat onto the shaft by a small rotation about the
+ *  ulnar end of the crack, driven by the clamp (the glue never pulls anything) */
+export const HINGE = pt(-12.6, 1.4);
 /** where the applicator tip is for a laid length, and whether it is mid-hop (lift 0..1) */
 export const beadTip = (laid: number): {p: P; dir: P; lift: number; seg: number} => {
   for (let i = BEAD_SEGS.length - 1; i >= 0; i--) {
@@ -90,6 +101,7 @@ export type BoneState = {
   /** glue fill seeping along the cracks beyond the bead (0..1, for the cutaway, so every crack is full) */
   seep: number;
   set: number;   // 0 fresh, glossy .. 1 set (satin)
+  reduce?: number; // rotation (rad) of the distal fragments about HINGE still to be closed by the clamp (0 = seated)
   wet: number;   // 0..1 the blood-tinted fluid film (macro beat)
   heal: Heal;
   px: number;    // world mm per screen pixel (line widths)
@@ -249,6 +261,7 @@ const Bead: React.FC<{st: BoneState; ribbons: Ribbon[]}> = ({st, ribbons}) => {
   const base = mix(C.glue, C.glueDeep, 0.12 * st.set);
   const fade = 1 - ss(st.heal.resorb, 0.82, 1);
   const keys: React.ReactNode[] = [];
+  const keyA = clamp((0.014 - px) / 0.005);
   if (px < 0.014) {
     // where the gel meets the bone it flows into the surface pores: tiny keyed lobes along both contact edges
     ribbons.forEach((rb, i) => {
@@ -260,7 +273,7 @@ const Bead: React.FC<{st: BoneState; ribbons: Ribbon[]}> = ({st, ribbons}) => {
           const out = mul(perp(t), e === 0 ? 1 : -1);
           const r = 0.05 + 0.07 * hash(k * 1.3 + e);
           const c = add(edge[k], mul(out, r * 0.6));
-          keys.push(<circle key={`k${i}_${e}_${k}`} cx={c.x} cy={c.y} r={r} fill={C.glue} stroke={C.glueDeep} strokeWidth={Math.max(0.01, 1.1 * px)} opacity={0.95} />);
+          keys.push(<circle key={`k${i}_${e}_${k}`} cx={c.x} cy={c.y} r={r} fill={C.glue} stroke={C.glueDeep} strokeWidth={Math.max(0.01, 1.1 * px)} opacity={0.95 * keyA} />);
         }
       });
     });
@@ -312,80 +325,93 @@ export const beadEdgeBelow = (x: number, st: BoneState): P => {
 };
 
 // ---------------------------------------------------------------- the wet wound film (macro)
-/** the wet wound: a thin, slightly red-tinted film with a moving sheen, a few translucent puddles of blood drifting down
- *  over bone and bead (they deform as they flow), and small drops sliding. Restrained: the bead stays readable through
- *  it, and its sealed contact edges are redrawn on top (BeadEdges) so the bond reads as holding in the wet. */
-const FluidFilm: React.FC<{st: BoneState; view: [number, number, number, number]}> = ({st, view}) => {
+/** the y of the transverse bead's upper (side -1) or lower (side +1) contact edge at x (full width) */
+const beadEdgeY = (x: number, side: number) => {
+  const g = BEAD_SEGS[0];
+  let best = 0, bd = 1e9;
+  for (let s = 0; s <= g.L; s += 0.2) {
+    const d = Math.abs(atS(g, s).x - x);
+    if (d < bd) { bd = d; best = s; }
+  }
+  return atS(g, best).y + side * (beadHW(5, best, 0) + 0.05);
+};
+/** the wet wound, anchored to the bone (it scales and travels with the camera): dark, glossy blood running down the
+ *  bone in rivulets that pool against the bead's sealed upper edge and run on below it, drops that bead up on the gel
+ *  and slide off, and around "wet, bloody" a surge of fluid that washes over everything while the bead stays put. */
+const WET = {x0: -11, x1: 6, y0: -8, y1: 11};
+const FluidFilm: React.FC<{st: BoneState}> = ({st}) => {
   if (st.wet <= 0.001) return null;
-  const [x0, y0, x1, y1] = view;
-  const W = x1 - x0, H = y1 - y0;
   const t = st.t;
   const px = st.px;
-  const gid = uid('sheen');
-  const puddles: React.ReactNode[] = [];
-  for (let k = 0; k < 6; k++) {
-    const speed = 0.045 + 0.02 * hash(k * 7.3);
-    const ph = ((t * speed + hash(k * 2.1)) % 1 + 1) % 1;
-    const cx = x0 + (0.1 + 0.8 * hash(k * 5.7)) * W + 0.04 * W * Math.sin(t * 0.7 + k);
-    const cy = y0 - 0.15 * H + ph * 1.3 * H;
-    const R = (0.09 + 0.07 * hash(k * 3.3)) * W;
+  const {x0, x1, y0, y1} = WET;
+  const W = x1 - x0, H = y1 - y0;
+  const out: React.ReactNode[] = [];
+  // rivulets: from the top, down to the bead's upper edge, pooling there; and from the bead's lower edge on down
+  for (let k = 0; k < 7; k++) {
+    const x = x0 + (0.06 + 0.88 * ((k * 0.381 + 0.17) % 1)) * W;
+    const top = beadEdgeY(x, -1), bot = beadEdgeY(x, 1);
+    const ph = ((t * (0.11 + 0.03 * hash(k * 2.3)) + hash(k * 7.7)) % 1 + 1) % 1;
+    const above = k % 2 === 0;
+    const ya = above ? y0 : bot + 0.05, yb = above ? top - 0.05 : y1;
+    const head = ya + (yb - ya) * Math.min(1, ph * 1.6);
+    const wdt = 0.32 + 0.18 * hash(k * 5.1);
     const pts: P[] = [];
-    for (let i = 0; i < 14; i++) {
-      const a = (i / 14) * Math.PI * 2;
-      const r = R * (1 + 0.28 * noise1(i * 0.9 + t * 0.6, k + 11)) * (1 + 0.35 * Math.max(0, Math.sin(a)));
-      pts.push(pt(cx + r * Math.cos(a) * 0.8, cy + r * Math.sin(a) * 1.15));
+    for (let i = 0; i <= 16; i++) {
+      const y = ya + ((head - ya) * i) / 16;
+      pts.push(pt(x + 0.18 * Math.sin(y * 1.3 + k), y));
     }
-    const fade = Math.sin(Math.PI * ph);
-    const d = closed(pts, 0.9);
-    const pg = uid('pud');
-    puddles.push(
-      <g key={k} opacity={st.wet * (0.35 + 0.65 * fade)}>
-        <defs>
-          <radialGradient id={pg} gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={R * 1.35}>
-            <stop offset={0} stopColor={C.blood} stopOpacity={0.42} />
-            <stop offset={0.65} stopColor={C.blood} stopOpacity={0.3} />
-            <stop offset={1} stopColor={C.bloodLit} stopOpacity={0.05} />
-          </radialGradient>
-        </defs>
-        <path d={d} fill={`url(#${pg})`} />
-        <ellipse cx={cx - R * 0.3} cy={cy - R * 0.45} rx={R * 0.32} ry={R * 0.12} fill="#FFFFFF" opacity={0.5} transform={`rotate(-20 ${cx - R * 0.3} ${cy - R * 0.45})`} />
+    const d = open(pts, 0.6);
+    const f = Math.min(1, ph * 6) * (1 - Math.max(0, (ph - 0.85) / 0.15));
+    out.push(
+      <g key={`r${k}`} opacity={f}>
+        <path d={d} stroke={C.blood} strokeWidth={wdt} fill="none" strokeLinecap="round" opacity={0.62} />
+        <path d={d} stroke={C.bloodLit} strokeWidth={wdt * 0.45} fill="none" strokeLinecap="round" opacity={0.5} />
+        <path d={d} stroke="#FFF1F3" strokeWidth={Math.max(0.01, wdt * 0.1)} fill="none" strokeLinecap="round" opacity={0.75} transform={`translate(${-wdt * 0.22} 0)`} />
+        <ellipse cx={pts[pts.length - 1].x} cy={pts[pts.length - 1].y} rx={wdt * (above && ph > 0.6 ? 0.9 + 0.8 * (ph - 0.6) : 0.62)} ry={wdt * 0.7} fill={C.blood} opacity={0.75} />
       </g>,
     );
   }
-  const drops: React.ReactNode[] = [];
-  for (let k = 0; k < 4; k++) {
-    const ph = ((t * (0.16 + 0.05 * hash(k * 1.7)) + 0.31 * k) % 1 + 1) % 1;
-    const x = x0 + (0.15 + 0.7 * hash(k * 9.3)) * W, y = y0 + ph * H;
-    const r = 0.022 * W * (0.8 + 0.5 * hash(k * 4.1));
-    drops.push(
-      <g key={`d${k}`} opacity={st.wet * Math.sin(Math.PI * ph)}>
-        <path d={`M${x} ${y - r * 2.6}Q${x + r} ${y - r} ${x + r} ${y}A${r} ${r} 0 1 1 ${x - r} ${y}Q${x - r} ${y - r} ${x} ${y - r * 2.6}Z`} fill={C.bloodLit} opacity={0.55} />
-        <ellipse cx={x - r * 0.35} cy={y - r * 0.3} rx={r * 0.28} ry={r * 0.2} fill="#FFFFFF" opacity={0.85} />
+  // a thin dark pool lying along the bead's upper edge (the fluid stops at the sealed edge)
+  const poolPts: P[] = [];
+  for (let x = x0; x <= x1; x += 0.4) poolPts.push(pt(x, beadEdgeY(x, -1) - 0.12));
+  out.push(<path key="pool" d={open(poolPts, 0.5)} stroke={C.blood} strokeWidth={0.32} fill="none" opacity={0.55} strokeLinecap="round" />);
+  // drops beading up on the gel, sliding across it and off its lower edge
+  for (let k = 0; k < 3; k++) {
+    const ph = ((t * 0.28 + k * 0.37) % 1 + 1) % 1;
+    const x = x0 + (0.2 + 0.28 * k) * W + 0.4 * Math.sin(t + k);
+    const yt = beadEdgeY(x, -1), yb = beadEdgeY(x, 1);
+    const y = yt + (yb - yt + 0.8) * ph;
+    const r = 0.28 + 0.06 * k;
+    out.push(
+      <g key={`d${k}`} opacity={Math.sin(Math.PI * ph)}>
+        <ellipse cx={x} cy={y} rx={r} ry={r * 1.12} fill={C.bloodLit} opacity={0.8} stroke={C.bloodDeep} strokeWidth={Math.max(0.01, 1.4 * px)} />
+        <ellipse cx={x - r * 0.33} cy={y - r * 0.38} rx={r * 0.3} ry={r * 0.2} fill="#FFFFFF" opacity={0.9} />
       </g>,
     );
   }
-  const sx = x0 + ((t * 0.12) % 1) * W * 1.4 - 0.2 * W;
-  return (
-    <g>
-      <defs>
-        <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={sx - 0.25 * W} y1={y0} x2={sx + 0.25 * W} y2={y1}>
-          <stop offset={0} stopColor="#FFFFFF" stopOpacity={0} />
-          <stop offset={0.5} stopColor="#FFFFFF" stopOpacity={0.16} />
-          <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
-        </linearGradient>
-      </defs>
-      <rect x={x0} y={y0} width={W} height={H} fill={C.blood} opacity={0.06 * st.wet} />
-      {puddles}
-      {drops}
-      <rect x={x0} y={y0} width={W} height={H} fill={`url(#${gid})`} opacity={st.wet} />
-    </g>
-  );
+  // the surge: a sheet of fluid washes down over bone and bead
+  const su = clamp((t - SURGE0) / 0.9);
+  if (su > 0 && su < 1) {
+    const front = y0 - 2 + (H + 6) * ss(su, 0, 1);
+    const pts: P[] = [];
+    for (let x = x0 - 1; x <= x1 + 1; x += 0.5) pts.push(pt(x, front + 0.5 * Math.sin(x * 0.9 + t * 3)));
+    const sheet = closed([pt(x0 - 1, front - 9), pt(x1 + 1, front - 9), ...[...pts].reverse()], 0.3);
+    out.push(
+      <g key="surge" opacity={Math.sin(Math.PI * su) ** 0.6}>
+        <path d={sheet} fill={C.blood} opacity={0.22} />
+        <path d={open(pts, 0.5)} stroke={C.bloodLit} strokeWidth={0.35} fill="none" opacity={0.7} />
+        <path d={open(pts.map((p) => pt(p.x, p.y - 0.25)), 0.5)} stroke="#FFFFFF" strokeWidth={Math.max(0.01, 2 * px)} fill="none" opacity={0.7} />
+      </g>,
+    );
+  }
+  return <g opacity={st.wet}>{out}</g>;
 };
+export const SURGE0 = 11.55;
 /** the bead's contact edges redrawn over the wet film: crisp, sealed */
 const BeadEdges: React.FC<{st: BoneState}> = ({st}) => {
   if (st.wet <= 0.001) return null;
   const ribbons = computeRibbons(st);
-  const w = Math.max(0.01, 2.6 * st.px);
+  const w = Math.max(0.01, 2.6 * st.px) * (1 + 0.8 * Math.sin(Math.PI * clamp((st.t - SURGE0 - 0.25) / 0.7)));
   return (
     <g opacity={st.wet}>
       {ribbons.map((rb, i) => (
@@ -501,6 +527,18 @@ const Cuff: React.FC<{h: Heal; px: number}> = ({h, px}) => {
     </g>
   );
 };
+const narrow = (rb: Ribbon, k: number): Pick<Ribbon, 'L' | 'R' | 'hw'> => {
+  const n = rb.C.length;
+  const hw = rb.hw.map((w) => w * k);
+  const L: P[] = [], R: P[] = [];
+  for (let i = 0; i < n; i++) {
+    const tt = nrm(sub(rb.C[Math.min(n - 1, i + 1)], rb.C[Math.max(0, i - 1)]));
+    const nn = perp(tt);
+    L.push(add(rb.C[i], mul(nn, hw[i])));
+    R.push(add(rb.C[i], mul(nn, -hw[i])));
+  }
+  return {L, R, hw};
+};
 /** woven new bone growing into the space the adhesive occupied: revealed as the bead shrinks, then remodelled away */
 const NewBoneFill: React.FC<{st: BoneState; px: number}> = ({st, px}) => {
   const h = st.heal;
@@ -513,14 +551,15 @@ const NewBoneFill: React.FC<{st: BoneState; px: number}> = ({st, px}) => {
       for (let k = 1; k < rb.C.length - 1; k += 2) {
         const hh = hash(k * 2.3 + i * 7.7);
         const t = nrm(sub(rb.C[k + 1], rb.C[k - 1]));
-        const q = add(rb.C[k], mul(perp(t), (hh * 2 - 1) * rb.hw[k] * 0.75));
+        const q = add(rb.C[k], mul(perp(t), (hh * 2 - 1) * rb.hw[k] * 0.5));
         pores.push(<ellipse key={`${i}_${k}`} cx={q.x} cy={q.y} rx={0.11 + 0.1 * hash(k * 1.1 + i)} ry={0.08 + 0.06 * hash(k * 3.1)} fill={C.newBonePore} opacity={0.9} />);
       }
     });
   }
   return (
     <g opacity={a}>
-      {geo.map((rb, i) => <path key={i} d={ribbonOutline(rb)} fill={C.newBone} stroke={mix(C.newBonePore, C.boneShade, 0.3)} strokeWidth={Math.max(0.04, 1.6 * px)} />)}
+      {geo.map((rb, i) => <path key={`w${i}`} d={ribbonOutline({...rb, ...narrow(rb, 0.95)})} fill={C.newBone} opacity={0.45} />)}
+      {geo.map((rb, i) => <path key={i} d={ribbonOutline({...rb, ...narrow(rb, 0.62)})} fill={C.newBone} />)}
       {pores}
     </g>
   );
@@ -528,6 +567,7 @@ const NewBoneFill: React.FC<{st: BoneState; px: number}> = ({st, px}) => {
 
 // ---------------------------------------------------------------- the radius
 const CRACKS_J = [jag(C1, 0.28, 0.5, 1), jag(C2, 0.26, 0.5, 2), jag(C3, 0.24, 0.5, 3)];
+const C1J = CRACKS_J[0];
 export const Radius: React.FC<{st: BoneState; view: [number, number, number, number]}> = ({st, view}) => {
   const px = st.px;
   const gid = uid('rad');
@@ -545,7 +585,7 @@ export const Radius: React.FC<{st: BoneState; view: [number, number, number, num
   for (let k = 0; k < 7; k++) {
     const xk = -9 + k * 3.0 + 0.6 * hash(k * 2.2);
     const yTop = -14 + 6 * hash(k * 5.1), yBot = 60 + 40 * hash(k * 1.3);
-    lamellae.push(<path key={k} d={open([pt(xk, yTop), pt(xk * 0.92 + 0.2, (yTop + yBot) / 2), pt(xk * 0.78, yBot)], 0.6)} stroke={C.boneShade} strokeWidth={Math.max(0.05, 1.3 * px)} fill="none" opacity={0.3} />);
+    lamellae.push(<path key={k} d={open([pt(xk, yTop), pt(xk * 0.92 + 0.2, (yTop + yBot) / 2), pt(xk * 0.78, yBot)], 0.6)} stroke={C.boneShade} strokeWidth={Math.max(0.05, 1.3 * px)} fill="none" opacity={0.3 * clamp((px - 0.012) / 0.02)} />);
   }
   const glueInGap = mix('#0E5A51', C.newBone, fill);
   return (
@@ -561,23 +601,52 @@ export const Radius: React.FC<{st: BoneState; view: [number, number, number, num
           <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
         </linearGradient>
       </defs>
+      {(() => {
+        const body = (
+          <>
       <path d={RAD_PATH} fill={`url(#${gid})`} stroke={C.boneInk} strokeWidth={ink} strokeLinejoin="round" />
-      <g clipPath={`url(#${clipId})`}>
-        {/* a long wet sheen down the lit side of the shaft */}
-        <rect x={-14} y={-40} width={13} height={300} fill={`url(#${sheenId})`} />
-        {lamellae}
-        <path d={open(RADIUS.slice(0, 9), 0.55)} stroke="#EEF3F2" strokeWidth={1.6} fill="none" opacity={0.9} />
-        <Pores view={view} px={px} healed={healed} />
-        {CRACKS_J.map((c, i) => <CrackBand key={i} ps={c} px={px} fill={fill} fade={crackFade} />)}
-        {/* where the bead has been laid, the gap itself is full of gel: the adhesive bridges the fracture */}
-        <g clipPath={`url(#${glueClip})`} opacity={1 - crackFade}>
-          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke={glueInGap} strokeWidth={1.05} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
-        </g>
-        <path d={open(RADIUS.slice(37), 0.55)} stroke={C.boneLit} strokeWidth={Math.max(0.12, 6 * px)} fill="none" opacity={0.5} transform="translate(0.5 0)" />
-      </g>
+            <g clipPath={`url(#${clipId})`}>
+              {/* a long wet sheen down the lit side of the shaft */}
+              <rect x={-14} y={-40} width={13} height={300} fill={`url(#${sheenId})`} />
+              {lamellae}
+              <path d={open(RADIUS.slice(0, 9), 0.55)} stroke="#EEF3F2" strokeWidth={1.6} fill="none" opacity={0.9} />
+              <Pores view={view} px={px} healed={healed} />
+              {CRACKS_J.map((c, i) => <CrackBand key={i} ps={c} px={px} fill={fill} fade={crackFade} />)}
+              {/* where the bead has been laid, the gap itself is full of gel: the adhesive bridges the fracture */}
+              <g clipPath={`url(#${glueClip})`} opacity={1 - crackFade}>
+                {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke={glueInGap} strokeWidth={1.05} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+              </g>
+              <path d={open(RADIUS.slice(37), 0.55)} stroke={C.boneLit} strokeWidth={Math.max(0.12, 6 * px)} fill="none" opacity={0.5} transform="translate(0.5 0)" />
+            </g>
+      
+          </>
+        );
+        const th = st.reduce ?? 0;
+        if (Math.abs(th) < 1e-5) return body;
+        const above = closed([pt(-40, -80), pt(40, -80), pt(40, C1J[C1J.length - 1].y), ...[...C1J].reverse(), pt(-40, C1J[0].y)], 0);
+        const below = closed([...C1J, pt(40, C1J[C1J.length - 1].y), pt(40, 300), pt(-40, 300), pt(-40, C1J[0].y)], 0);
+        const ca = uid('fa'), cb = uid('fb');
+        return (
+          <>
+            <defs>
+              <clipPath id={ca}><path d={above} /></clipPath>
+              <clipPath id={cb}><path d={below} /></clipPath>
+            </defs>
+            <g clipPath={`url(#${cb})`}>{body}</g>
+            <g transform={`rotate(${((th * 180) / Math.PI).toFixed(4)} ${HINGE.x} ${HINGE.y})`}>
+              <g clipPath={`url(#${ca})`}>{body}</g>
+            </g>
+          </>
+        );
+      })()}
       <NewBoneFill st={st} px={px} />
       <Hematoma h={h} />
       <Bead st={st} ribbons={ribbons} />
+      {px < 0.03 && h.resorb < 0.05 && (
+        <g clipPath={`url(#${glueClip})`} opacity={0.5 * clamp((0.03 - px) / 0.012)}>
+          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke="#0B3F39" strokeWidth={0.42} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+        </g>
+      )}
       <Cuff h={h} px={px} />
     </g>
   );
@@ -650,7 +719,7 @@ export const BoneInside: React.FC<{st: BoneState; view: [number, number, number,
   <g>
     <FieldDetail st={st} t={st.t} />
     <Radius st={st} view={view} />
-    <FluidFilm st={st} view={view} />
+    <FluidFilm st={st} />
     <BeadEdges st={st} />
   </g>
 );

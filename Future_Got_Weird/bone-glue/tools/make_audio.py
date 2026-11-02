@@ -134,7 +134,7 @@ def tone(f, dur, partials=((1, 1, 0.6), (2.0, 0.3, 0.4), (3.0, 0.12, 0.25))):
 
 sfx = np.zeros(N)
 SPEED = sig100(cj['speed'])
-W_O = np.array([1.0 if w in ('oyster',) else 0.6 if w in ('match', 'match2') else 0.0 for w in WORLD])
+W_O = np.array([1.0 if w in ('oyster',) else 0.0 for w in WORLD])
 ow = lp(sig100(W_O), 5)
 
 # ---------------- application: a soft wet extrusion that follows the bead (and its pre-roll before the loop)
@@ -156,8 +156,8 @@ place(sfx, steel(0.12, 2900), EV['appLift0'] + 0.08, 'applicator lifts off', -31
 
 # ---------------- dives and matches
 place(sfx, sweep(1.7, 300, 120, 2500, 900), EV['dive0'] + 0.15, 'push down into the incision', -28)
-place(sfx, sweep(0.6, 200, 90, 1800, 500), EV['match0'] - 0.05, 'match into the water (muffled)', -27)
-place(sfx, sweep(0.55, 150, 200, 900, 2400), EV['back0'] - 0.05, 'match back to the bone', -28)
+place(sfx, sweep(0.5, 200, 90, 1800, 500), EV['cutIn'] - 0.12, 'match cut into the water (muffled)', -27)
+place(sfx, sweep(0.5, 150, 200, 900, 2400), EV['cutOut'] - 0.25, 'match cut back to the bone', -28)
 place(sfx, sweep(1.6, 120, 300, 900, 2600), EV['pull0'] + 0.1, 'pull out to the cutaway', -30)
 place(sfx, sweep(1.0, 260, 120, 2400, 800), EV['dive2a'], 'move back into the fracture', -31)
 place(sfx, sweep(0.9, 140, 260, 900, 2200), EV['out0'] + 0.1, 'ease out to the wrist', -32)
@@ -177,6 +177,7 @@ WET = lp(sig100(cj['wet']), 5)
 trick = circ(lambda x: bp(x, 900, 4500), noise(N)) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 3.1 * t + 2 * np.sin(2 * np.pi * 0.9 * t))))
 sfx += db(-30) * norm(trick) * WET
 place(sfx, soft_knock(150, 0.25), T['grips'] + 0.05, 'the bond holds (soft knock)', -30)
+place(sfx, sweep(0.9, 300, 600, 1500, 4000), 11.55, 'the fluid surge washes over the bead', -30)
 
 # ---------------- withdrawal and setting
 place(sfx, slide(0.45), EV['appOut0'] + 0.1, 'cannula slides out', -30)
@@ -196,9 +197,10 @@ place(sfx, crackle(1.8, 40, 2200, 7000), EV['res0'] + 0.6, 'new bone filling in'
 place(sfx, tone(220, 1.4), EV['rem1'] - 0.55, 'restored (a settling tone)', -34)
 
 # ---------------- the ending: the fingers curl, then the push back in, into frame 0
-place(sfx, rustle(0.6, 1200, 5000), EV['curl0'] + 0.05, 'skin as the fingers curl', -31)
+place(sfx, rustle(0.6, 1200, 5000), EV['curl0'] + 0.05, 'skin as the fingers spread', -31)
 place(sfx, rustle(0.5, 1000, 4500), EV['curlPeak'] + 0.15, 'the fingers relax', -34)
-place(sfx, sweep(0.75, 600, 160, 5000, 1100), EV['loop0'], 'push back through the skin (into frame 0)', -27)
+place(sfx, sweep(0.55, 900, 250, 6000, 1600), EV['wipe0'] + 0.02, 'the sleeve sweeps past the lens (cloth whoosh, into frame 0)', -27)
+place(sfx, rustle(0.4, 1500, 6000), EV['wipe0'] + 0.1, 'gown fabric', -31)
 
 # ---------------- music: a quiet pulse whose period divides the film exactly
 BEATS = int(round(DUR * 98 / 60))

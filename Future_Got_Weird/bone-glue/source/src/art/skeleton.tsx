@@ -336,10 +336,10 @@ const MC_BASE: P[][] = [
 const MC1_BASE = offsetPL(CMC1, -G).slice(1, -1);
 
 /** all the long bones of the hand for a finger curl and a thumb flexion */
-export const handBones = (curl: number, thumb: number) => {
+export const handBones = (curl: number, thumb: number, spread = 0) => {
   const mcs: Long[] = [], phal: Long[][] = [[], [], []];
   FINGERS.forEach((d: Digit, i) => {
-    const ch = fingerChain(d, curl);
+    const ch = fingerChain(d, curl, spread);
     const w = d.w;
     const uMc = nrm(sub(d.head, d.base));
     mcs.push(longBone({base: MC_BASE[i], end: add(d.head, mul(uMc, -0.7)), ws: 0.45 * w, wh: 0.7 * w}));
@@ -361,7 +361,7 @@ export const handBones = (curl: number, thumb: number) => {
     }
   });
   // the thumb: first metacarpal on the trapezium saddle, then two phalanges
-  const tc = thumbChain(thumb);
+  const tc = thumbChain(thumb, spread);
   const ut = nrm(sub(tc[2], tc[0]));
   const w = THUMB.w;
   const mc1 = longBone({base: MC1_BASE, end: add(THUMB.head, mul(A1, -0.7)), ws: 0.5 * w, wh: 0.7 * w});
@@ -487,9 +487,9 @@ const Ulna: React.FC<{id: string; detail: number}> = ({id, detail}) => {
 };
 
 /** the ulna, carpals, metacarpals and phalanges (not the radius), back to front */
-export const Skeleton: React.FC<{id: string; curl: number; thumb: number; detail?: number}> = ({id, curl, thumb, detail = 1}) => {
+export const Skeleton: React.FC<{id: string; curl: number; thumb: number; detail?: number; spread?: number}> = ({id, curl, thumb, detail = 1, spread = 0}) => {
   const dt = clamp(detail);
-  const h = handBones(curl, thumb);
+  const h = handBones(curl, thumb, spread);
   const ses = [-1, 1].map((k) => ({pts: ellipsePts(add(add(THUMB.head, mul(A1, -3.6)), mul(N1, 2.4 * k)), 1.3, 1.65, (Math.atan2(A1.y, A1.x) * 180) / Math.PI + 90, 20), art: new Array(20).fill(false)}));
   const order = ['lunate', 'scaphoid', 'capitate', 'trapezoid', 'trapezium', 'hamate', 'triquetrum'];
   return (

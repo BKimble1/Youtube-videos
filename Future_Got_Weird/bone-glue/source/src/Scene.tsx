@@ -13,9 +13,9 @@ import {DrapeOverArm, HandTable, RoomBack} from './art/room';
 import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
 import {P, pt} from './core/geo';
-import {armAt, boneAt, camAt, instrAt, openTau, passAt, skinVeil, surgeonOn, tableVariant} from './story';
+import {armAt, boneAt, camAt, instrAt, openTau, skinVeil, surgeonOn, tableVariant, wipeAt} from './story';
 import {Captions} from './Captions';
-import {PassThrough} from './PassThrough';
+import {GloveWipe} from './GloveWipe';
 
 const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = -6, Z_TABLE = 40, Z_ROOM = 600;
 
@@ -66,7 +66,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
         </defs>
         <g clipPath={`url(#${clipId})`}>
           <DeepTissue id={`${fkey}deep`} s={arm} />
-          <Skeleton id={`${fkey}skel`} curl={arm.curl} thumb={arm.thumb} detail={px < 0.1 ? 1 : 0.6} />
+          <Skeleton id={`${fkey}skel`} curl={arm.curl} thumb={arm.thumb} spread={arm.spread} detail={px < 0.1 ? 1 : 0.6} />
           <BoneInside st={bone} view={view} />
         </g>
       </Layer>
@@ -77,9 +77,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
             <ArmSkin id={`${fkey}veil`} s={arm} noWindow />
           </g>
         )}
-        <g opacity={0.5 + 0.5 * Math.min(1, Math.max(0, (c.w - 28) / 30))}>
-          <IncisionRim id={`${fkey}rim`} s={arm} />
-        </g>
+        <IncisionRim id={`${fkey}rim`} s={arm} />
         {tableVariant(t) === 'drape' && <DrapeOverArm id={`${fkey}dro`} />}
       </Layer>
       {(showSurgeon || c.w <= 70) && (ins.appOn > 0.01 || ins.clampOn > 0.01) && (
@@ -113,7 +111,7 @@ export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({
     <div style={{position: 'absolute', inset: 0, filter: 'contrast(1.04) saturate(1.05)'}}>
       {body}
       <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 58%, rgba(4,4,10,0.36) 100%)'}} />
-      <PassThrough p={passAt(t)} fkey={fkey} />
+      <GloveWipe u={wipeAt(t)} fkey={fkey} />
       {captions && <Captions t={t} />}
     </div>
   );

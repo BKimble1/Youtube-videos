@@ -109,12 +109,16 @@ export const THUMB: Digit = {base: pt(22.0, -69), head: pt(41.0, -104), w: 8.2, 
 /** Joint points of a finger for a flexion amount (0 straight .. 1 a loose fist). The palm faces the camera, so a
  *  flexing finger rises toward the lens: each phalanx shortens by the cosine of its accumulated flexion, and the
  *  chain also drifts slightly toward the thumb side. Returns [MCP (metacarpal head), PIP, DIP, tip]. */
-export const fingerChain = (d: Digit, curl: number): P[] => {
+/** spread: in-plane abduction 0..1 (the fingers fan apart; the index toward the thumb, the little finger away) */
+const SPREAD_K = [0.13, 0.03, -0.07, -0.15];
+export const fingerChain = (d: Digit, curl: number, spread = 0): P[] => {
   const ang = [0.42 * curl + 0.18, 0.95 * curl + 0.22, 0.6 * curl + 0.12]; // per-joint flexion (rad): a relaxed hand at curl 0.25
   const pts: P[] = [d.head];
   let acc = 0;
   let p = d.head;
-  const along = {x: Math.cos(d.dir), y: Math.sin(d.dir)};
+  const di = FINGERS.indexOf(d);
+  const dirA = d.dir + spread * (di >= 0 ? SPREAD_K[di] : 0);
+  const along = {x: Math.cos(dirA), y: Math.sin(dirA)};
   for (let i = 0; i < d.phal.length; i++) {
     acc += ang[i] ?? 0;
     const L = d.phal[i] * Math.cos(Math.min(acc, 1.45));
@@ -124,8 +128,8 @@ export const fingerChain = (d: Digit, curl: number): P[] => {
   return pts;
 };
 /** the thumb chain [MCP (first metacarpal head), IP, tip] for an opposition / flexion amount 0..1 */
-export const thumbChain = (curl: number): P[] => {
-  const dir = THUMB.dir - 0.45 * curl; // swings toward the palm as it flexes
+export const thumbChain = (curl: number, spread = 0): P[] => {
+  const dir = THUMB.dir - 0.45 * curl + 0.12 * spread; // swings toward the palm as it flexes, out as the hand opens
   const along = {x: Math.cos(dir), y: Math.sin(dir)};
   const a1 = 0.15 + 0.4 * curl, a2 = 0.25 + 0.6 * curl;
   const p1 = add(THUMB.head, mul(along, THUMB.phal[0] * Math.cos(a1)));

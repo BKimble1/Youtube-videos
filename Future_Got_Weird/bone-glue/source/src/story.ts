@@ -22,7 +22,7 @@
 import {P, pt} from './core/geo';
 import {FPS, FRAMES, clamp, keyS, lerp, ss, ss5, word} from './lib';
 import {Cam, Key, glide, travel, zoomAbout} from './camera';
-import {BEAD_TOTAL, BoneState, HEAL0, Heal, beadEdgeBelow, beadTip} from './art/bone';
+import {BEAD_TOTAL, BEAD_VISIBLE, BoneState, HEAL0, HINGE, Heal, beadEdgeBelow, beadTip} from './art/bone';
 
 const w = word;
 export const T = {
@@ -46,7 +46,7 @@ export const EV = {
   appLift0: 4.95, appLift1: 5.55,
   // the dive to the match and the oyster
   dive0: Math.max(5.9, T.they - 0.05), match0: T.inspired + 0.06, match1: T.inspired + 0.42,
-  back0: T.rocksEnd - 0.3, back1: T.rocksEnd + 0.08,
+  back0: T.rocksEnd - 0.3, back1: T.rocksEnd + 0.08, cutIn: T.inspired + 0.18, cutOut: T.rocksEnd + 0.08,
   // the wet macro and the pull-out
   pull0: T.woundEnd - 0.02, pull1: T.surgeons - 0.05, window0: T.woundEnd + 0.25, window1: T.surgeons + 0.1,
   touch0: T.surgeons, appOut0: T.secured, appOut1: T.secured + 0.95, clampOpen0: T.pieces - 0.15, clampOpen1: T.pieces + 0.2,
@@ -55,10 +55,11 @@ export const EV = {
   close0: T.minutesEnd - 0.4, close1: T.fracture + 0.35, sut0: T.fracture, sut1: T.fracture + 0.55,
   dive2a: T.fracture - 0.1, dive2b: T.needed + 0.15,
   hem0: T.fracture + 0.35, hem1: T.needed + 0.15, soft0: T.needed + 0.1, soft1: T.months + 0.45, hard0: T.months + 0.4, hard1: T.healEnd + 0.3,
-  res0: T.but + 0.25, res1: T.disappearsEnd - 0.15, rem0: T.disappearsEnd - 0.3, rem1: T.replaces + 0.15,
+  res0: T.but + 0.05, res1: T.disappearsEnd - 0.15, rem0: T.disappearsEnd - 0.3, rem1: T.replaces + 0.15,
   // the ending
-  out0: T.replaces - 0.15, out1: T.holding - 0.15, curl0: T.stuff - 0.05, curlPeak: T.holding + 0.25, curl1: T.togetherEnd2 - 0.05,
-  loop0: Math.max(T.togetherEnd2 - 0.05, LOOP_T - 0.66),
+  out0: T.replaces - 0.15, out1: T.holding - 0.15, curl0: T.stuff - 0.15, curlPeak: T.holding + 0.2, curl1: T.togetherEnd2 - 0.1,
+  // the loop: the surgeon's sleeve sweeps across the lens; the reset happens while it covers the frame
+  wipe0: Math.max(T.togetherEnd2 + 0.0, LOOP_T - 0.55), wipe1: LOOP_T - 1 / 30, reset: 0,
 };
 
 // ---------------------------------------------------------------- the bead: laid length over time
@@ -76,14 +77,14 @@ const LAID_TAB = (() => {
   // rescale so laid(0) = laid0 and the bead completes exactly at beadEnd
   const i0 = Math.round(-t0 / dt), iE = Math.round((EV.beadEnd - t0) / dt);
   const a = ls[i0], b = ls[iE];
-  const k = (BEAD_TOTAL - EV.laid0) / (b - a);
+  const k = (BEAD_VISIBLE - EV.laid0) / (b - a);
   return {ts, ls: ls.map((x) => EV.laid0 + (x - a) * k), dt, t0};
 })();
 export const laidAt = (t: number) => {
   const {ts, ls, dt, t0} = LAID_TAB;
   const i = Math.max(0, Math.min(ts.length - 2, Math.floor((t - t0) / dt)));
   const u = clamp((t - ts[i]) / dt);
-  return Math.min(BEAD_TOTAL, Math.max(0, lerp(ls[i], ls[i + 1], u)));
+  return Math.min(BEAD_VISIBLE, Math.max(0, lerp(ls[i], ls[i + 1], u)));
 };
 /** the time at which a bead length was laid (inverse of laidAt) */
 export const timeOfLaid = (s: number) => {
@@ -99,8 +100,17 @@ export const timeOfLaid = (s: number) => {
 
 // ---------------------------------------------------------------- the loop's clock
 /** the opening's clock: film time, except in the loop pre-roll at the end (t - LOOP_T, negative) */
-export const openTau = (t: number) => (t >= EV.loop0 + 0.3 ? t - LOOP_T : t);
-export const inOpening = (t: number) => t < EV.dive0 || t >= EV.loop0 + 0.3;
+EV.reset = EV.wipe0 + 0.51 * (EV.wipe1 - EV.wipe0);
+export const openTau = (t: number) => (t >= EV.reset ? t - LOOP_T : t);
+export const inOpening = (t: number) => t < EV.dive0 || t >= EV.reset;
+
+// ---------------------------------------------------------------- the reduction (the clamp seats the distal fragments)
+const REDUCE0 = -0.028;
+export const reduceAt = (tau: number) => REDUCE0 * (1 - ss(tau, 0.04, 0.55));
+const rotAbout = (p: P, th: number, c: P): P => {
+  const cs = Math.cos(th), sn = Math.sin(th);
+  return pt(c.x + (p.x - c.x) * cs - (p.y - c.y) * sn, c.y + (p.x - c.x) * sn + (p.y - c.y) * cs);
+};
 
 // ---------------------------------------------------------------- bone state
 const healAt = (t: number): Heal => {
@@ -109,19 +119,20 @@ const healAt = (t: number): Heal => {
     hem: ss(t, EV.hem0, EV.hem1),
     soft: ss(t, EV.soft0, EV.soft1),
     hard: ss(t, EV.hard0, EV.hard1),
-    resorb: ss(t, EV.res0, EV.res1),
+    resorb: clamp((t - EV.res0) / (EV.res1 - EV.res0)) ** 0.85 * (t > EV.res0 ? 1 : 0),
     remodel: ss(t, EV.rem0, EV.rem1),
   };
 };
 export const boneAt = (t: number, px: number): BoneState => {
   const tau = openTau(t);
   const opening = inOpening(t) && tau < EV.dive0;
-  const laid = opening ? laidAt(tau) : BEAD_TOTAL;
+  const laid = opening ? laidAt(tau) : BEAD_VISIBLE;
   return {
     t: opening ? tau : t,
     laid,
     laidAt: (s: number) => timeOfLaid(s),
     seep: opening ? 0 : ss(t, EV.dive0, EV.dive0 + 0.6),
+    reduce: opening ? reduceAt(tau) : 0,
     set: opening ? 0 : ss(t, EV.set0, EV.set1),
     wet: opening ? 0 : ss(t, EV.back0, EV.back1 + 0.4) * (1 - ss(t, EV.pull0 + 0.3, EV.pull1)),
     heal: healAt(t),
@@ -138,7 +149,7 @@ export type InstrState = {
   lean: number;
 };
 const APP_ANG = -0.42;
-const CLAMP_A = pt(8.6, -6.6), CLAMP_B = pt(8.1, 13.0);
+const CLAMP_A = pt(7.5, -5.5), CLAMP_B = pt(6.5, 5.5);
 const blinkAt = (t: number) => {
   // two blinks over the clinical shots
   const b = (c: number) => Math.max(0, 1 - Math.abs(t - c) / 0.07);
@@ -149,11 +160,12 @@ export const instrAt = (t: number): InstrState => {
   const opening = inOpening(t) && tau < EV.dive0;
   const tt = opening ? tau : t;
   const tip = beadTip(laidAt(tt));
+  const red = opening ? reduceAt(tau) : 0;
   // after the bead: lift off the end of the styloid crack and hold, then (in the cutaway) touch the wedge once and
   // withdraw up and away
   const lift = ss(tt, EV.appLift0, EV.appLift1);
-  const end = beadTip(BEAD_TOTAL).p;
-  const hover = pt(end.x + 9, end.y - 4);
+  const end = beadTip(BEAD_VISIBLE).p;
+  const hover = pt(end.x + 3.2 * Math.cos(APP_ANG), end.y + 3.2 * Math.sin(APP_ANG));
   const touch = beadTip(30 + 6).p; // a point on the wedge crack
   let p = tip.p, ang = APP_ANG + 0.04 * Math.sin(tt * 1.3), press = 0.15 + 0.6 * clamp(laidAt(tt) / BEAD_TOTAL), gel = 1 - lift;
   if (tt >= EV.appLift0) {
@@ -177,7 +189,7 @@ export const instrAt = (t: number): InstrState => {
   const smile = opening ? ss(tt, T.did - 0.2, T.did + 0.2) * (1 - ss(tt, EV.dive0 - 0.2, EV.dive0 + 0.3)) : 0.25 * ss(t, EV.set0, EV.set1);
   return {
     app: {tip: p, ang, press, gel},
-    clamp: {a: CLAMP_A, b: CLAMP_B, open, lift: clampLift},
+    clamp: {a: rotAbout(CLAMP_A, red, HINGE), b: CLAMP_B, open: Math.max(open, opening ? 0.12 * (red / REDUCE0) : 0), lift: clampLift},
     appHeld: 1, clampHeld: 1,
     appOn: opening ? 1 : t < EV.pull0 ? 1 : 1 - ss(t, EV.appOut1 - 0.1, EV.appOut1 + 0.2),
     clampOn: opening ? 1 : 1 - ss(t, EV.clampOut1 - 0.1, EV.clampOut1 + 0.2),
@@ -187,25 +199,32 @@ export const instrAt = (t: number): InstrState => {
 };
 
 // ---------------------------------------------------------------- the patient's arm
-export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null};
+export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null; spread: number};
 export const WINDOW_C = pt(-5, -24);
 export const armAt = (t: number): ArmS => {
   const tau = openTau(t);
   const opening = inOpening(t) && tau < EV.dive0;
-  if (opening) return {curl: 0.25 + 0.03 * Math.sin(tau * 0.9), thumb: 0.2, incision: 1, sutures: 0, scar: 0, window: null};
+  if (opening) return {curl: 0.25 + 0.03 * Math.sin(tau * 0.9), thumb: 0.2, incision: 1, sutures: 0, scar: 0, window: null, spread: 0};
+  const relax = 0.38 * ss(t, EV.pull0 + 0.2, EV.pull0 + 0.75); // retractors out: the lips relax a little
   const closing = ss(t, EV.close0, EV.close1);
   const sut = ss(t, EV.sut0, EV.sut1) * (1 - ss(t, EV.hard0, EV.hard1));
   const scar = ss(t, EV.hard0, EV.rem1);
-  // the cutaway: it opens out from the incision during the pull-out, holds over the healing, and closes as the
-  // camera eases out at the end (the skin heals back over)
   const r0 = 16, rF = 62, rHeal = 95;
   let r = lerp(r0, rF, ss5(t, EV.window0, EV.window1));
-  if (t > EV.close0) r = lerp(rF, rHeal, ss(t, EV.close0, EV.dive2b));
-  r *= 1 - ss5(t, EV.out0 + 0.15, EV.out1 - 0.05);
-  const win = t >= EV.window0 && r > 0.3 ? {c: WINDOW_C, r, soft: 0.38} : null;
-  const curl = 0.25 + 0.3 * Math.sin(Math.PI * clamp((t - EV.curl0) / (EV.curl1 - EV.curl0))) ** 1.4 * (t > EV.curl0 && t < EV.curl1 ? 1 : 0)
-    + 0.04 * ss(t, EV.curlPeak, EV.curl1);
-  return {curl, thumb: 0.2 + 0.25 * (curl - 0.25), incision: 1 - closing, sutures: sut, scar, window: win};
+  let c = WINDOW_C;
+  if (t > EV.dive2b - 0.2) r = lerp(rF, rHeal, ss(t, EV.dive2b - 0.2, EV.dive2b + 0.3));
+  // the ending: the cutaway closes inward onto the healed fracture as the camera eases out
+  const shut = ss5(t, EV.out0 + 0.05, EV.out1 - 0.1);
+  if (shut > 0) {
+    r *= 1 - shut;
+    c = pt(lerp(WINDOW_C.x, 0, shut), lerp(WINDOW_C.y, 0, shut));
+  }
+  const win = t >= EV.window0 && r > 0.3 ? {c, r, soft: 0.38} : null;
+  // one small natural movement: the fingers spread a little and flex gently, then relax
+  const mv = t > EV.curl0 && t < EV.curl1 ? Math.sin(Math.PI * clamp((t - EV.curl0) / (EV.curl1 - EV.curl0))) : 0;
+  const curl = 0.25 + 0.12 * mv;
+  const spread = 1.0 * mv;
+  return {curl, thumb: 0.2 + 0.35 * mv, incision: (1 - relax) * (1 - closing), sutures: sut, scar, window: win, spread};
 };
 
 // ---------------------------------------------------------------- the camera
@@ -225,11 +244,11 @@ const MATCH_W = 7.5;
 const matchCam = (wv: number): Cam => ({x: edgeB.x, y: edgeB.y - (MATCH_SCREEN_Y - 960) * (wv / 1080), w: wv, k: 1, focus: 0});
 const M_IN = matchCam(MATCH_W);
 /** oyster world <-> wrist world at the match: (0,0) on the oyster's seam <-> the bead's contact edge, R mm per mm */
-export const R_IN = 20, R_OUT = 4.8;
+export const R_IN = 12.67, R_OUT = 32 / 7.5;
 export const toOyster = (c: Cam, R: number): Cam => ({x: (c.x - edgeB.x) * R, y: (c.y - edgeB.y) * R, w: c.w * R, k: 1});
 export const fromOyster = (o: Cam, R: number): Cam => ({x: edgeB.x + o.x / R, y: edgeB.y + o.y / R, w: o.w / R, k: 1, focus: 0});
-const O_HOLD: Cam = {x: 4, y: -24, w: 108};
-const O_SEAM: Cam = {x: 0, y: -2.2, w: 36};
+const O_HOLD: Cam = {x: 2, y: -15, w: 80};
+const O_SEAM: Cam = {x: 0, y: -3.9, w: 32};
 const WET0 = fromOyster(O_SEAM, R_OUT);
 const WET1: Cam = {x: 0.6, y: -0.9, w: 7.6, k: 1, focus: 0};
 const CUTAWAY: Cam = {x: -10, y: -52, w: 250, k: 0.9, focus: -8};
@@ -267,7 +286,11 @@ const V0: CV = {x: 0, y: 0, lw: 0};
 const V_TRACK: CV = {x: 6.0, y: -0.4, lw: -0.04};
 /** the opening's camera on its own clock (tau may be negative: the loop's push back into the wrist) */
 const openCam = (tau: number): Cam => {
-  if (tau < 0) return zoomH(tau, EV.loop0 - LOOP_T, FOLLOW_B, 0, CAM0, LV_DRIFT, V_TRACK.lw, pt(V_TRACK.x, V_TRACK.y));
+  if (tau < 0) {
+    const pre = EV.reset - LOOP_T - 0.05;
+    const A: Cam = {...CAM0, x: CAM0.x + V_TRACK.x * pre, y: CAM0.y + V_TRACK.y * pre, w: CAM0.w * Math.exp(V_TRACK.lw * pre)};
+    return hermite(tau, pre, A, V_TRACK, 0, CAM0, V_TRACK);
+  }
   if (tau < 1.2) return hermite(tau, 0, CAM0, V_TRACK, 1.2, TRACK1, {x: 2.0, y: -1.5, lw: 0.4});
   if (tau < T.togetherEnd) return hermite(tau, 1.2, TRACK1, {x: 2.0, y: -1.5, lw: 0.4}, T.togetherEnd, REVEAL, {x: 45, y: -14, lw: 0.55});
   if (tau < T.did + 0.1) return hermite(tau, T.togetherEnd, REVEAL, {x: 45, y: -14, lw: 0.55}, T.did + 0.1, CLINIC, {x: -3, y: 2, lw: -0.02});
@@ -283,46 +306,41 @@ const afterMatch = (t: number) => {
   return matchCam(Math.exp(lw));
 };
 /** the oyster camera after the match: continues from the matched framing, drifts, then pushes onto the seam */
-const O_START = toOyster(afterMatch(EV.match1), R_IN);
 const oysterCam = (t: number): Cam => {
-  if (t < EV.match1) return toOyster(afterMatch(t), R_IN);
-  const vIn: CV = {x: 0, y: 0, lw: -0.3};
-  if (t < EV.back0) return hermite(t, EV.match1, O_START, vIn, EV.back0, O_HOLD, {x: 0, y: 1, lw: -0.5});
-  return zoomH(t, EV.back0, O_HOLD, EV.back1, O_SEAM, -0.5, -0.9);
+  const O_START = toOyster(afterMatch(EV.cutIn), R_IN);
+  const vIn: CV = {x: 0, y: 0, lw: -0.12};
+  if (t < EV.back0) return hermite(t, EV.cutIn, O_START, vIn, EV.back0, O_HOLD, {x: 0, y: 0.5, lw: -0.4});
+  return zoomH(t, EV.back0, O_HOLD, EV.cutOut, O_SEAM, -0.4, -0.9);
 };
 /** the wet macro: from the matched seam framing, across the bead, then the long pull-out to the cutaway */
 const wetCam = (t: number): Cam => {
-  if (t < EV.back1) return fromOyster(oysterCam(t), R_OUT);
-  if (t < EV.pull0) return hermite(t, EV.back1, WET0, {x: 0.8, y: 4 / R_OUT, lw: -0.5}, EV.pull0, WET1, {x: 1.6, y: -0.3, lw: 0.02});
+  if (t < EV.pull0) return hermite(t, EV.cutOut, WET0, {x: 0.8, y: 4 / R_OUT, lw: -0.5}, EV.pull0, WET1, {x: 1.6, y: -0.3, lw: 0.02});
   if (t < EV.pull1) return zoomH(t, EV.pull0, WET1, EV.pull1, CUTAWAY, 0.02, 0.04, pt(1, 2), pt(1.6, -0.3));
   if (t < EV.dive2a) return hermite(t, EV.pull1, CUTAWAY, {x: 1, y: 2, lw: 0.04}, EV.dive2a, CUTAWAY2, {x: 2, y: 6, lw: -0.12});
   if (t < EV.dive2b) return zoomH(t, EV.dive2a, CUTAWAY2, EV.dive2b, HEAL_A, -0.12, -0.02, pt(0.8, -0.1), pt(2, 6));
   if (t < EV.out0) return hermite(t, EV.dive2b, HEAL_A, {x: 0.8, y: -0.1, lw: -0.02}, EV.out0, HEAL_B, {x: 0.8, y: -0.1, lw: 0.02});
   if (t < EV.out1) return zoomH(t, EV.out0, HEAL_B, EV.out1, FOLLOW, 0.02, LV_DRIFT, pt(0, 0), pt(0.8, -0.1));
-  return zoomH(t, EV.out1, FOLLOW, EV.loop0, FOLLOW_B, LV_DRIFT, LV_DRIFT);
+  return zoomH(t, EV.out1, FOLLOW, EV.reset, FOLLOW_B, LV_DRIFT, LV_DRIFT);
 };
 
 export const camAt = (t: number): WCam => {
   if (t < EV.dive0) return {world: 'wrist', cam: openCam(t)};
-  if (t >= EV.loop0) return {world: 'wrist', cam: openCam(t - LOOP_T)};
+  if (t >= EV.reset) return {world: 'wrist', cam: openCam(t - LOOP_T)};
   if (t < EV.match0) return {world: 'wrist', cam: diveCam(t)};
-  if (t < EV.match1) {
-    const c = afterMatch(t);
-    return {world: 'match', cam: c, cam2: toOyster(c, R_IN), mix: ss(t, EV.match0, EV.match1)};
-  }
-  if (t < EV.back0) return {world: 'oyster', cam: oysterCam(t)};
-  if (t < EV.back1) {
-    const o = oysterCam(t);
-    return {world: 'match2', cam: fromOyster(o, R_OUT), cam2: o, mix: 1 - ss(t, EV.back0 + 0.04, EV.back1)};
-  }
+  // hard match cuts: the glue's lower contact edge and the oyster's cement edge sit on the same screen line, and the
+  // push-in carries on through both cuts
+  if (t < EV.cutIn) return {world: 'wrist', cam: afterMatch(t)};
+  if (t < EV.cutOut) return {world: 'oyster', cam: oysterCam(t)};
   return {world: 'wrist', cam: wetCam(t)};
 };
 /** the ending: the skin regrows over the restored bone as a thickening veil while the camera eases out */
-export const skinVeil = (t: number) => (inOpening(t) ? 0 : ss(t, EV.out0 + 0.05, EV.out0 + 0.75));
+export const skinVeil = (t: number) => (inOpening(t) ? 0 : 0.34 * ss(t, EV.window0, EV.window0 + 0.6) * (1 - ss(t, EV.dive2a + 0.3, EV.dive2b)));
 export const tableVariant = (t: number): 'drape' | 'followup' => (inOpening(t) || t < EV.hem1 ? 'drape' : 'followup');
 /** the surgeon is in the room until the incision closes */
 export const surgeonOn = (t: number) => inOpening(t) || t < EV.close1;
 /** the loop's pass through the skin layers (0 = none; rises to cover; 1 = gone past the camera) */
-export const passAt = (t: number) => (t < EV.loop0 ? 0 : clamp((t - EV.loop0) / (LOOP_T - EV.loop0)));
+/** the loop wipe's progress (0 none .. 1 gone below the frame) */
+export const wipeAt = (t: number) => (t < EV.wipe0 || t > EV.wipe1 ? 0 : (t - EV.wipe0) / (EV.wipe1 - EV.wipe0));
+export const passAt = (_t: number) => 0;
 void ss5; void keyS; void glide; void travel; void zoomAbout;
 export type {Key};

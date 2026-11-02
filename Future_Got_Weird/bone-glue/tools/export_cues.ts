@@ -3,7 +3,7 @@
 // the healing stages, the hand's curl and the loop pass.
 import * as fs from 'fs';
 import {DUR} from '../source/src/lib';
-import {EV, T, LAST, LOOP_T, camAt, laidAt, openTau, inOpening, boneAt, armAt, passAt, instrAt} from '../source/src/story';
+import {EV, T, LAST, LOOP_T, camAt, laidAt, openTau, inOpening, boneAt, armAt, wipeAt, instrAt} from '../source/src/story';
 
 const sig: Record<string, number[]> = {speed: [], logw: [], hem: [], soft: [], hard: [], resorb: [], remodel: [], curl: [], pass: [], wet: [], appOut: [], clampOpen: []};
 const world: string[] = [];
@@ -20,7 +20,7 @@ for (let i = 0; i <= Math.round(DUR * 100); i++) {
   sig.hem.push(r3(b.heal.hem)); sig.soft.push(r3(b.heal.soft)); sig.hard.push(r3(b.heal.hard));
   sig.resorb.push(r3(b.heal.resorb)); sig.remodel.push(r3(b.heal.remodel)); sig.wet.push(r3(b.wet));
   sig.curl.push(r3(armAt(t).curl));
-  sig.pass.push(r3(passAt(t)));
+  sig.pass.push(r3(wipeAt(t)));
   const ins = instrAt(t);
   sig.clampOpen.push(r3(ins.clamp.open));
   sig.appOut.push(r3(1 - ins.appOn));

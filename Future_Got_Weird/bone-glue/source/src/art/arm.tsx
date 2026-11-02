@@ -14,7 +14,7 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C, INK} from './palette';
 import {Digit, FINGERS, INCISION, THUMB, WRIST_CREASE_Y, fingerChain, skinBorders, thumbChain} from './anatomy';
 
-export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null};
+export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null; spread?: number};
 type Win = {c: P; r: number; soft: number};
 
 const NS = 'non-scaling-stroke' as const;
@@ -137,12 +137,12 @@ const crotchOf = (A: Fg, B: Fg, wA: number, wB: number): Crotch => {
 export type ArmGeo = {outline: P[]; fingers: Fg[]; thumb: Fg; crotch: Crotch[]; webIdx: number; sIdx: number; sThumb: number};
 const cache = new Map<string, ArmGeo>();
 const S_INDEX_WEB = 9.5, S_THUMB_WEB = 7;
-export const armGeo = (curl: number, thumb: number): ArmGeo => {
-  const key = `${curl.toFixed(4)}_${thumb.toFixed(4)}`;
+export const armGeo = (curl: number, thumb: number, spread = 0): ArmGeo => {
+  const key = `${curl.toFixed(4)}_${thumb.toFixed(4)}_${spread.toFixed(4)}`;
   const hit = cache.get(key);
   if (hit) return hit;
-  const fingers = FINGERS.map((d: Digit) => mkFg(fingerChain(d, curl), d.w, 1.08, [0.93, 0.86, 0.8]));
-  const th = mkFg(thumbChain(thumb), THUMB.w, 1.16, [1.02, 0.95]);
+  const fingers = FINGERS.map((d: Digit) => mkFg(fingerChain(d, curl, spread), d.w, 1.08, [0.93, 0.86, 0.8]));
+  const th = mkFg(thumbChain(thumb, spread), THUMB.w, 1.16, [1.02, 0.95]);
   const [I, M, R, Li] = fingers;
   const crotch = [crotchOf(Li, R, 13, 5), crotchOf(R, M, 12, 12), crotchOf(M, I, 12, 12)];
   const out: P[] = [];
@@ -179,7 +179,7 @@ export const armGeo = (curl: number, thumb: number): ArmGeo => {
 };
 
 /** the closed silhouette of forearm + hand + fingers (world mm) — the film clips the inside layer to it */
-export const armOutlinePath = (s: ArmState): string => poly(armGeo(s.curl, s.thumb).outline);
+export const armOutlinePath = (s: ArmState): string => poly(armGeo(s.curl, s.thumb, s.spread ?? 0).outline);
 
 // ---------------------------------------------------------------- the incision opening
 /** the opening's half-width for an incision state (0 closed .. 1 fully retracted) */
@@ -510,7 +510,7 @@ const IncisionSkin: React.FC<{id: string; s: ArmState; part: 'under' | 'over'}> 
 
 // ---------------------------------------------------------------- ArmSkin
 export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = ({id, s, noWindow}) => {
-  const g = armGeo(s.curl, s.thumb);
+  const g = armGeo(s.curl, s.thumb, s.spread ?? 0);
   const outD = poly(g.outline);
   const a = holeA(s.incision);
   const hole = s.incision > 0.004 ? holePts(a) : null;
