@@ -26,7 +26,7 @@ const FarStars: React.FC = () => {
 /** the black hole at film time t (image frame), in M units */
 /** wide-field frames exist for the shots that pull back or reflect a large view (tools/blackhole.py, BH_WIDE=1) */
 const WXW = 48, WYW = (48 * BH.HPX) / BH.WPX;
-export const hasWide = (n: number) => (n >= 0 && n <= 56) || (n >= 564 && n <= 708);
+export const hasWide = (n: number) => (n >= 0 && n <= 144) || (n >= 564 && n <= 708);
 export const BlackHole: React.FC<{t: number; edge?: boolean}> = ({t}) => {
   const n = bhFrame(t);
   const f4 = String(n).padStart(4, '0');
