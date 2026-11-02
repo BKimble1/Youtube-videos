@@ -104,9 +104,61 @@ const LAWN_KEYS: [number, string][] = [
 const HEDGE_KEYS: [number, string][] = [[0, '#4E9455'], [0.3, '#3E8049'], [0.55, '#5C8A44'], [0.8, '#3B6B4A'], [1, '#4E9455']];
 const AUT = ['#F2C14E', '#E8892C', '#D0542A'];
 
-/** everything the season drives, as continuous weights and colours */
-export const seasonLook = (season: number, smooth = 1) => {
+/** V3: the tree's year as phases on the season circle (0 = spring blossom). Every change is a ramp of >= 0.15 of a
+ *  cycle, and nothing appears, vanishes or detaches abruptly: buds scale up on the twig tips into blossom, fresh green
+ *  clumps grow from the branches while the blossom drops, the full crown turns colour in place, then thins from its
+ *  edges while its leaves fall to the lawn, the bare branches take snow, the snow melts, the buds come again. */
+export const PH3 = {
+  bud0: 0.8, bud1: 1.02, // buds grow into blossom on the twig tips
+  drop0: 0.12, drop1: 0.28, // the blossom drops
+  green0: 0.08, green1: 0.26, // fresh green clumps grow from the branches
+  turn0: 0.36, turn1: 0.54, // the crown turns yellow, orange, red in place
+  thin0: 0.5, thin1: 0.8, // the crown thins from its edges; the leaves fall
+  snow0: 0.7, snowPk: 0.84, snow1: 0.98, // snow settles on the bare branches, then melts
+  fall: 0.1, // how long (in season) a falling leaf takes to reach the ground
+};
+/** 0 before a, smooth up to 1 at b, 1 until c, smooth down to 0 at d (positions on the season circle, in that order) */
+const win4 = (s: number, a: number, b: number, c: number, d: number, ease: (x: number) => number = sm) => {
+  const x = wrap01(s - a), B = wrap01(b - a), Cc = wrap01(c - a), Dd = wrap01(d - a);
+  if (x < B) return ease(x / B);
+  if (x <= Cc) return 1;
+  if (x < Dd) return 1 - ease((x - Cc) / (Dd - Cc));
+  return 0;
+};
+/** an even-paced ease (half smoothstep, half linear) for the crown filling in and thinning, and its inverse */
+const easeL = (x: number) => 0.5 * (sm(x) + clamp(x));
+const easeLInv = (y: number) => {
+  let a = 0, b = 1;
+  for (let i = 0; i < 24; i++) {
+    const m = (a + b) / 2;
+    if (easeL(m) < y) a = m;
+    else b = m;
+  }
+  return (a + b) / 2;
+};
+/** V3 leaf colours: fresh spring green, deep summer green, then yellow, orange, red and brown before the leaves drop */
+const LEAF_KEYS_V3: [number, string][] = [
+  [0, '#A8D373'], [0.12, '#A3CF6E'], [0.26, '#7DBB5A'], [0.36, '#5AA350'], [0.42, '#4E9A4A'], [0.47, '#A0B83F'], [0.51, '#E3B53A'],
+  [0.55, '#E8892C'], [0.6, '#CC5B2A'], [0.68, '#A85A33'], [0.76, '#9A5B36'], [0.86, '#9A5B36'], [0.92, '#A8D373'], [1, '#A8D373'],
+];
+
+/** everything the season drives, as continuous weights and colours. v3: the V3 year (PH3) with the V3 tree */
+export const seasonLook = (season: number, smooth = 1, v3 = false) => {
   const s = wrap01(season);
+  if (v3) {
+    const P = PH3;
+    const blossom = BUD_COVER.inv(win4(s, P.bud0, P.bud1, P.drop0, P.drop1, easeL));
+    // the crown's (and the blossom's) visible cover follows the season evenly (the cover tables undo the clumps' overlap)
+    const leafAmt = LEAF_COVER.inv(win4(s, P.green0, P.green1, P.thin0, P.thin1, easeL));
+    const snow = win4(s, P.snow0, P.snowPk, P.snowPk, P.snow1);
+    const autumn = win4(s, P.turn0, P.turn1, P.thin1, P.thin1 + 0.12);
+    const leaf = cyc(s, LEAF_KEYS_V3);
+    return {
+      s, blossom, bare: 1 - leafAmt, leafAmt, snow, autumn, falling: 0, fallen: 0, leaf,
+      leafDark: shade(leaf, 0.32), leafLight: mix(leaf, '#FFF7E6', 0.28),
+      lawn: cyc(s, LAWN_KEYS), hedge: cyc(s, HEDGE_KEYS), v3: true as boolean,
+    };
+  }
   // smooth > 1 widens every season's ramps (a time-lapse that runs fast but never pops)
   const bz = (c: number, full: number, zero: number) => bump(s, c, full, full + (zero - full) * smooth);
   const blossom = bz(0.05, 0.07, 0.17);
@@ -119,7 +171,7 @@ export const seasonLook = (season: number, smooth = 1) => {
   return {
     s, blossom, bare, leafAmt: 1 - bare, snow, autumn, falling, fallen, leaf,
     leafDark: mix(shade(leaf, 0.32), '#C47A93', blossom), leafLight: mix(mix(leaf, '#FFF7E6', 0.28), '#FCD9E4', blossom),
-    lawn: cyc(s, LAWN_KEYS), hedge: cyc(s, HEDGE_KEYS),
+    lawn: cyc(s, LAWN_KEYS), hedge: cyc(s, HEDGE_KEYS), v3: false as boolean,
   };
 };
 export type Season = ReturnType<typeof seasonLook>;
@@ -209,15 +261,211 @@ const branchPath = (b: Br, k: number, wk: number, ox: number, oy: number) => {
 
 const BARK = '#8A5A3B', BARK_SH = '#6A4330';
 
+// ---- V3 crown --------------------------------------------------------------------------------------------------------
+// Leaf clumps and blossom clusters sit ON the branch skeleton (twig tips, branch tips, points along the limbs), so they
+// only ever grow or shrink in place and never float free. Clumps nearer the crown's edge go first in autumn.
+type Clump = {x: number; y: number; r: number; e: number; h: number; i: number};
+const CANOPY_E = {x: 0, y: -760, rx: 465, ry: 320};
+const canopyDepth = (x: number, y: number) => Math.max(...CANOPY.map(([bx, by, r]) => r - Math.hypot(x - bx, y - by)));
+const edgeOf = (x: number, y: number, i: number) => clamp(0.88 * Math.hypot((x - CANOPY_E.x) / CANOPY_E.rx, (y - CANOPY_E.y) / CANOPY_E.ry) + (hash(i * 4.7 + 2) - 0.5) * 0.24);
+const V3_CLUMPS: Clump[] = (() => {
+  const pts: P[] = [];
+  BRANCHES.forEach((b) => {
+    const us = b.lvl === 3 ? [1] : b.lvl === 2 ? [0.55, 1] : b.lvl === 1 ? [0.7, 1] : [];
+    us.forEach((u) => pts.push(qpt(b.a, b.c, b.b, u)));
+  });
+  // e: how far the clump reaches toward the crown's outline (its far side, in the crown's ellipse metric), so the
+  // clumps that make the outline go first and the crown visibly thins from its edges
+  const raw = pts.map((p, i) => {
+    const r = clamp(52 + 0.62 * canopyDepth(p.x, p.y), 50, 150);
+    const dx = p.x - CANOPY_E.x, dy = p.y - CANOPY_E.y, dl = Math.hypot(dx, dy) || 1;
+    const reach = Math.hypot((dx + (r * dx) / dl) / CANOPY_E.rx, (dy + (r * dy) / dl) / CANOPY_E.ry);
+    return {x: p.x, y: p.y, r, reach, h: hash(i * 2.9 + 5), i};
+  });
+  const lo = Math.min(...raw.map((q) => q.reach)), hi = Math.max(...raw.map((q) => q.reach));
+  return raw
+    .map(({reach, ...q}) => ({...q, e: clamp(0.04 + 0.92 * (0.7 * ((reach - lo) / (hi - lo)) + 0.3 * hash(q.i * 4.7 + 2)))}))
+    .sort((a, b) => a.e - b.e); // inner clumps first (behind); the crown's edge is drawn last, over them
+})();
+/** blossom clusters: on every twig tip and branch tip */
+const V3_BUDS: Clump[] = (() => {
+  const out: Clump[] = [];
+  BRANCHES.forEach((b) => {
+    if (b.lvl < 2) return;
+    const p = qpt(b.a, b.c, b.b, 1);
+    const i = out.length;
+    out.push({x: p.x, y: p.y, r: b.lvl === 2 ? 74 : 62, e: edgeOf(p.x, p.y, i + 40), h: hash(i * 3.7 + 11), i});
+  });
+  return out.sort((a, b) => a.y - b.y);
+})();
+/** inverse of the smoothstep sm on 0..1 */
+const smInv = (y: number) => 0.5 - Math.sin(Math.asin(clamp(1 - 2 * y, -1, 1)) / 3);
+/** the part of circle (x, y, r) outside the same circle shifted by m*r toward angle ang (degrees): a cel crescent on the
+ *  side opposite ang */
+const crescent = (x: number, y: number, r: number, ang: number, m: number) => {
+  const vx = Math.cos(rad(ang)) * m * r, vy = Math.sin(rad(ang)) * m * r;
+  const h = Math.sqrt(Math.max(0, r * r - (m * r * m * r) / 4));
+  const nx = -Math.sin(rad(ang)), ny = Math.cos(rad(ang));
+  const p1 = {x: x + vx / 2 + h * nx, y: y + vy / 2 + h * ny}, p2 = {x: x + vx / 2 - h * nx, y: y + vy / 2 - h * ny};
+  return `M ${f1(p1.x)} ${f1(p1.y)} A ${f1(r)} ${f1(r)} 0 1 1 ${f1(p2.x)} ${f1(p2.y)} A ${f1(r)} ${f1(r)} 0 0 0 ${f1(p1.x)} ${f1(p1.y)} Z`;
+};
+/** a clump's size (0..1) for the crown's leaf amount: the edge goes first as it thins, the inside first as it fills */
+const CL_SPREAD = 0.75, CL_W = 0.25;
+const clumpSize = (c: Clump, leafAmt: number) => sm(clamp((leafAmt - CL_SPREAD * c.e) / CL_W));
+/** all clumps also slim a little as the crown thins, so gaps open between them from the start */
+const crownSlim = (leafAmt: number) => lerp(0.62, 1, leafAmt);
+/** how much of the crown (or the blossom) shows, as a strictly increasing function of its amount, sampled once on a
+ *  coarse grid; with its inverse. The clumps overlap, so their first shrinking hides behind their neighbours: the
+ *  season drives this visible cover evenly, not the raw amount. */
+const coverTable = (circles: (L: number) => {x: number; y: number; r: number}[]) => {
+  const N = 40;
+  const pts: P[] = [];
+  for (let y = -1110; y <= -400; y += 22) for (let x = -540; x <= 540; x += 22) pts.push({x, y});
+  const counts = Array.from({length: N + 1}, (_, j) => {
+    const cs = circles(j / N).filter((c) => c.r > 0);
+    return pts.reduce((n, p) => n + (cs.some((c) => (p.x - c.x) ** 2 + (p.y - c.y) ** 2 < c.r * c.r) ? 1 : 0), 0);
+  });
+  const T = counts.map((n, j) => 0.85 * (n / counts[N]) + 0.15 * (j / N));
+  const of = (L: number) => {
+    const x = clamp(L) * N, i = Math.min(N - 1, Math.floor(x));
+    return lerp(T[i], T[i + 1], x - i);
+  };
+  const inv = (cv: number) => {
+    if (cv <= 0) return 0;
+    if (cv >= 1) return 1;
+    let a = 0, b = 1;
+    for (let i = 0; i < 26; i++) {
+      const m = (a + b) / 2;
+      if (of(m) < cv) a = m;
+      else b = m;
+    }
+    return (a + b) / 2;
+  };
+  return {of, inv};
+};
+const LEAF_COVER = coverTable((L) => V3_CLUMPS.map((c) => ({x: c.x, y: c.y, r: c.r * crownSlim(L) * clumpSize(c, L)})));
+/** a blossom cluster's size (0..1, its radius) for the blossom amount: its area grows evenly from a bud */
+const BUD_SPREAD = 0.3;
+const budSize = (c: Clump, blossom: number) => Math.sqrt(sm(clamp((blossom - BUD_SPREAD * c.h) / (1 - BUD_SPREAD))));
+const BUD_COVER = coverTable((B) => V3_BUDS.map((c) => ({x: c.x, y: c.y, r: c.r * 0.95 * budSize(c, B)})));
+const clumpColour = (c: Clump, s: number) => cyc(s + (c.h - 0.5) * 0.07, LEAF_KEYS_V3);
+const BUD = '#C9547E', PINK = '#F5AFC6', PINK_LT = '#FCDDE7', PINK_SH = '#DE8AA6';
+const LEAF_D = 'M 0 -11 Q 9 -2 0 11 Q -9 -2 0 -11 Z';
+
+/** V3: the crown for this season (clumps, blossom), in world coords for the tree at (ox, oy) scaled by k */
+const CrownV3: React.FC<{sl: Season; k: number; ox: number; oy: number; ow: number}> = ({sl, k, ox, oy, ow}) => {
+  const X = (c: Clump) => ox + c.x * k, Y = (c: Clump) => oy + c.y * k;
+  const slim = crownSlim(sl.leafAmt);
+  const clumps = sl.leafAmt > 0.001 ? V3_CLUMPS.map((c) => ({c, r: c.r * k * slim * clumpSize(c, sl.leafAmt)})).filter((q) => q.r > 0.4) : [];
+  const buds = sl.blossom > 0.001 ? V3_BUDS.map((c) => ({c, q: budSize(c, sl.blossom)})).filter((b) => b.q * b.c.r * k > 0.4) : [];
+  return (
+    <g>
+      {/* leaf clumps: one ink silhouette under all, then each clump with its own cel shadow and light crescent */}
+      {clumps.map(({c, r}) => <circle key={`o${c.i}`} cx={f1(X(c))} cy={f1(Y(c))} r={f1(r)} fill={INK} stroke={INK} strokeWidth={ow * 2} />)}
+      {clumps.map(({c, r}) => {
+        const col = clumpColour(c, sl.s);
+        const x = X(c), y = Y(c);
+        return (
+          <g key={`c${c.i}`}>
+            <circle cx={f1(x)} cy={f1(y)} r={f1(r)} fill={col} />
+            {r > 3 && <path d={crescent(x, y, r, 225, 0.42)} fill={shade(col, 0.2)} />}
+            {r > 3 && c.y < -560 && <path d={crescent(x, y, r * 0.86, 45, 0.36)} transform={`translate(${f1(-r * 0.1)} ${f1(-r * 0.1)})`} fill={mix(col, '#FFF7E6', 0.26)} />}
+            {r > 16 && <path d={`M ${f1(x + r * 0.9 * Math.cos(rad(15)))} ${f1(y + r * 0.9 * Math.sin(rad(15)))} A ${f1(r * 0.9)} ${f1(r * 0.9)} 0 0 1 ${f1(x + r * 0.9 * Math.cos(rad(105)))} ${f1(y + r * 0.9 * Math.sin(rad(105)))}`} fill="none" stroke={INK} strokeWidth={2.2} opacity={0.3} strokeLinecap="round" />}
+          </g>
+        );
+      })}
+      {/* blossom: buds scale up on the twig tips into pink clusters (opaque), and shrink away as the leaves come */}
+      {buds.length > 0 && (() => {
+        const lobes = buds.map(({c, q}) => {
+          const R = c.r * k * q;
+          const a0 = c.h * Math.PI * 2;
+          const L = [0, 1, 2].map((j) => ({x: X(c) + Math.cos(a0 + (j * 2 * Math.PI) / 3) * R * 0.42, y: Y(c) + Math.sin(a0 + (j * 2 * Math.PI) / 3) * R * 0.42, r: R * 0.6}));
+          return {c, q, R, L: [...L, {x: X(c), y: Y(c), r: R * 0.55}]};
+        });
+        return (
+          <g>
+            {lobes.map(({c, L}) => L.map((l, j) => <circle key={`bo${c.i}-${j}`} cx={f1(l.x)} cy={f1(l.y)} r={f1(l.r)} fill={INK} stroke={INK} strokeWidth={ow * 1.5} />))}
+            {lobes.map(({c, q, R, L}) => {
+              const col = mix(BUD, PINK, ss(q, 0.15, 0.7));
+              return (
+                <g key={`b${c.i}`}>
+                  {L.map((l, j) => <circle key={j} cx={f1(l.x)} cy={f1(l.y)} r={f1(l.r)} fill={col} />)}
+                  {R > 4 && L.map((l, j) => <path key={`s${j}`} d={crescent(l.x, l.y, l.r, 225, 0.45)} fill={mix(col, PINK_SH, 0.6)} />)}
+                  {R > 4 && <path d={crescent(X(c), Y(c) - R * 0.12, R * 0.5, 45, 0.4)} fill={mix(col, PINK_LT, ss(q, 0.3, 0.8))} />}
+                  {q > 0.4 && [0, 1, 2, 3].map((j) => {
+                    const a = c.h * 9 + j * 1.9, d = R * (0.2 + 0.18 * (j % 2));
+                    const fr = R * 0.12 * ss(q, 0.4, 0.9);
+                    return <circle key={`f${j}`} cx={f1(X(c) + Math.cos(a) * d)} cy={f1(Y(c) + Math.sin(a) * d)} r={f1(fr)} fill={j === 3 ? '#E9A91C' : '#FFF4F7'} />;
+                  })}
+                </g>
+              );
+            })}
+          </g>
+        );
+      })()}
+    </g>
+  );
+};
+
+/** V3: leaves that leave the thinning crown and fall to the lawn under gravity, lie there until the snow takes them,
+ *  and blossom petals that drop as the leaves come (world coords; all a function of the season and the tree size) */
+const FallV3: React.FC<{sl: Season; k: number; ox: number; oy: number}> = ({sl, k, ox, oy}) => {
+  const P = PH3, s = sl.s;
+  const out: React.ReactNode[] = [];
+  const ls = 0.55 + 0.5 * k;
+  const groundY = (h: number) => HB + 16 + h * (FB - HB - 38);
+  const fallTo = (key: string, x0: number, y0: number, sd: number, h: number, fill: string, decay: number, sc: number, edge = INK) => {
+    const tau = clamp((s - sd) / P.fall);
+    if (s < sd || decay <= 0.01) return;
+    const x1 = x0 + (h - 0.3) * 110 * k, y1 = groundY(hash(h * 91.7));
+    const x = lerp(x0, x1, sm(tau)) + Math.sin(tau * 8 + h * 20) * 9 * ls * (1 - tau);
+    const y = y0 + (y1 - y0) * tau * tau;
+    const flat = 1 - 0.5 * ss(tau, 0.8, 1);
+    const rot = h * 360 + tau * (h > 0.5 ? 380 : -380);
+    out.push(
+      <g key={key} transform={`translate(${f1(x)} ${f1(y)}) rotate(${f1(rot)}) scale(${f1(sc * ls * decay)} ${f1(sc * ls * decay * flat)})`}>
+        <path d={LEAF_D} fill={fill} stroke={edge} strokeWidth={1.8} strokeLinejoin="round" />
+      </g>,
+    );
+  };
+  // autumn leaves: each clump lets go of two leaves as it shrinks (at sizes 0.75 and 0.35)
+  if (s > P.thin0 - 0.01 && s < 0.97) {
+    const decay = 1 - ss(s, 0.84, 0.95);
+    V3_CLUMPS.forEach((c) => {
+      [0.75, 0.35].forEach((th, j) => {
+        const L = CL_SPREAD * c.e + CL_W * smInv(th);
+        if (L >= 1) return;
+        const sd = P.thin0 + (P.thin1 - P.thin0) * easeLInv(1 - LEAF_COVER.of(L));
+        const h = hash(c.i * 7.1 + j * 3.3);
+        const a = h * Math.PI * 2, rr = c.r * k * th * crownSlim(L) * 0.6;
+        fallTo(`l${c.i}-${j}`, ox + c.x * k + Math.cos(a) * rr, oy + c.y * k + Math.sin(a) * rr, sd, h, cyc(sd + (c.h - 0.5) * 0.07, LEAF_KEYS_V3), decay, 1);
+      });
+    });
+  }
+  // spring petals: one from each cluster as it shrinks; they wither on the grass
+  if (s > P.drop0 - 0.01 && s < P.drop1 + P.fall + 0.08) {
+    V3_BUDS.forEach((c) => {
+      const B = BUD_SPREAD * c.h + (1 - BUD_SPREAD) * smInv(0.25);
+      if (B >= 1) return;
+      const sd = P.drop0 + (P.drop1 - P.drop0) * easeLInv(1 - BUD_COVER.of(B));
+      const h = hash(c.i * 5.3 + 1.7);
+      fallTo(`p${c.i}`, ox + c.x * k, oy + c.y * k, sd, h, PINK_LT, 1 - ss(s, sd + P.fall, sd + P.fall + 0.05), 0.85, PINK_SH);
+    });
+  }
+  return <g>{out}</g>;
+};
+
 export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> = ({D, sl, t, id}) => {
   const T = yardTree(D);
   const {k, wk, x: ox, y: oy} = T;
   const bareVis = sl.bare;
   const leafVis = clamp(sl.leafAmt * 2);
+  const v3 = sl.v3;
   const brs = BRANCHES.filter((b) => b.lvl < 3);
   const paths = brs.map((b) => branchPath(b, k, wk, ox, oy));
-  // twigs show only while the tree is (nearly) bare, so they never poke out of a full canopy
-  const twigVis = clamp((1 - sl.leafAmt) * 2.5) * ss(T.g, 0.05, 0.25);
+  // twigs show only while the tree is (nearly) bare, so they never poke out of a full canopy (V3: always there, under
+  // the crown, which covers them; they carry the blossom and the leaf clumps)
+  const twigVis = v3 ? 1 : clamp((1 - sl.leafAmt) * 2.5) * ss(T.g, 0.05, 0.25);
   const twigs = twigVis > 0.01 ? BRANCHES.filter((b) => b.lvl === 3).map((b) => branchPath(b, k, wk, ox, oy)) : [];
   const tw = 78 * wk;
   const flare = `M ${f1(ox - tw * 0.95)} ${f1(oy + 3)} Q ${f1(ox - tw * 0.52)} ${f1(oy - 6)} ${f1(ox - tw * 0.48)} ${f1(oy - 46 * k)} L ${f1(ox + tw * 0.42)} ${f1(oy - 46 * k)} Q ${f1(ox + tw * 0.5)} ${f1(oy - 6)} ${f1(ox + tw * 0.9)} ${f1(oy + 3)} Z`;
@@ -270,14 +518,23 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
         }))} fill="none" stroke={BARK_SH} strokeWidth={Math.max(1.5, b.w1 * wk * 0.9)} strokeLinecap="round" opacity={0.85 * clamp((b.w0 * wk - 4) / 4)} />
       ) : null)}
       {/* snow along the branch tops (bare tree) */}
-      {sl.snow * bareVis > 0.01 && brs.map((b, i) => (b.lvl <= 2 && Math.abs(Math.sin(rad(b.ang))) > 0.3 ? (
+      {!v3 && sl.snow * bareVis > 0.01 && brs.map((b, i) => (b.lvl <= 2 && Math.abs(Math.sin(rad(b.ang))) > 0.3 ? (
         <path key={`n${i}`} d={open([0.15, 0.45, 0.75, 0.95].map((u) => {
           const p = qpt(b.a, b.c, b.b, u);
           return {x: ox + p.x * k, y: oy + p.y * k - 0.42 * lerp(b.w0, b.w1, u) * wk};
         }))} fill="none" stroke="#F6FAFD" strokeWidth={Math.max(2.5, b.w1 * wk * 0.8 + 2)} strokeLinecap="round" opacity={sl.snow * bareVis} />
       ) : null))}
+      {/* V3: opaque snow that builds up along the branch tops, then melts away (its thickness follows the season) */}
+      {v3 && sl.snow > 0.02 && brs.map((b, i) => (b.lvl <= 2 && Math.abs(Math.sin(rad(b.ang))) > 0.3 ? (
+        <path key={`n${i}`} d={open([0.15, 0.45, 0.75, 0.95].map((u) => {
+          const p = qpt(b.a, b.c, b.b, u);
+          return {x: ox + p.x * k, y: oy + p.y * k - 0.42 * lerp(b.w0, b.w1, u) * wk};
+        }))} fill="none" stroke="#F6FAFD" strokeWidth={f1(Math.max(2.5, b.w1 * wk * 0.8 + 2.5) * sm(sl.snow))} strokeLinecap="round" />
+      ) : null))}
+      {v3 && <CrownV3 sl={sl} k={k} ox={ox} oy={oy} ow={ow} />}
+      {v3 && <FallV3 sl={sl} k={k} ox={ox} oy={oy} />}
       {/* canopy: union silhouette with one ink outline, one cel shadow, highlights, clump arcs, blossom */}
-      {blobs.length > 0 && leafVis > 0.01 && (
+      {!v3 && blobs.length > 0 && leafVis > 0.01 && (
         <g opacity={leafVis}>
           <defs>
             <clipPath id={`${id}-can`}>{blobs.map((b) => <circle key={b.i} cx={b.x} cy={b.y} r={b.r} />)}</clipPath>
@@ -321,7 +578,8 @@ const Drift: React.FC<{D: number; sl: Season; t: number}> = ({D, sl, t}) => {
   const T = yardTree(D);
   const cc = T.canopy;
   const out: React.ReactNode[] = [];
-  const fallW = Math.max(sl.falling, sl.blossom * 0.6);
+  // (V3: the tree itself drops its leaves and petals, see FallV3)
+  const fallW = sl.v3 ? 0 : Math.max(sl.falling, sl.blossom * 0.6);
   if (fallW > 0.01) {
     const n = 14;
     for (let i = 0; i < n; i++) {
@@ -367,6 +625,57 @@ const INSIDE = '#33405A';
 const LIT = '#F6D58A';
 const SNOW = '#F5F9FC';
 
+/** the room's curtain colour and its terracotta armchair (src/v2/room.tsx), for the V3 inside/outside match */
+const ROOM_CURTAIN = '#E9B653', ROOM_CHAIR = '#C46A4E';
+/** the room's drapes overlap the glass by 24 of its 380 px on each side; its armchair's back rises to 86% of the glass
+ *  height and (seen from outside, mirrored) spans the left 56% of the glass */
+const V3_DRAPE = 24 / 380, V3_CHAIR_TOP = 0.86, V3_CHAIR_W = 0.56;
+
+/** V3: the family room seen from outside through the glass, matching the room (dim): plain yellow drapes hanging just
+ *  inside the glass on both sides (their rod is above the glass, behind the wall), the far wall in shadow, and the
+ *  terracotta armchair seen from behind at the lower left. No valance, no tie-backs, no lamp. */
+const WindowInsideV3: React.FC<{Wn: {x0: number; x1: number; y0: number; y1: number}; wear: number; light: number; inside: string}> = ({Wn, wear, light, inside}) => {
+  const ww = Wn.x1 - Wn.x0, wh = Wn.y1 - Wn.y0;
+  const dw = ww * V3_DRAPE;
+  const cur = mix(mix(ROOM_CURTAIN, '#CBBE9F', 0.6 * wear), shade(ROOM_CURTAIN, 0.1), 0.25 * (1 - light));
+  const curS = shade(cur, 0.22);
+  const drape = (side: -1 | 1) => {
+    const e = side < 0 ? Wn.x0 : Wn.x1; // the glass edge the drape hangs over
+    const inner = e - side * dw;
+    const d = `M ${f1(e + side * 4)} ${Wn.y0 - 4} L ${f1(inner)} ${Wn.y0 - 4} Q ${f1(inner - side * 1.6)} ${f1(Wn.y0 + wh * 0.55)} ${f1(inner + side * 0.6)} ${Wn.y1 + 6} L ${f1(e + side * 4)} ${Wn.y1 + 6} Z`;
+    const fx = e - side * dw * 0.45;
+    return (
+      <g key={side}>
+        <path d={d} fill={cur} />
+        <path d={`M ${f1(fx)} ${Wn.y0 - 4} Q ${f1(fx - side * 1.2)} ${f1(Wn.y0 + wh * 0.5)} ${f1(fx + side * 0.4)} ${Wn.y1 + 6} L ${f1(fx + side * 3.2)} ${Wn.y1 + 6} Q ${f1(fx + side * 2)} ${f1(Wn.y0 + wh * 0.5)} ${f1(fx + side * 3)} ${Wn.y0 - 4} Z`} fill={curS} />
+        <path d={d} fill="none" stroke={INK} strokeWidth={2.2} strokeLinejoin="round" />
+      </g>
+    );
+  };
+  // the armchair, seen from behind: a wing-back with two rounded shoulders
+  const cx0 = Wn.x0 - 6, cx1 = Wn.x0 + ww * V3_CHAIR_W, cy = Wn.y0 + wh * V3_CHAIR_TOP, cwid = cx1 - cx0;
+  const chair = mix(mix(ROOM_CHAIR, inside, 0.3), ROOM_CHAIR, 0.6 * light);
+  const chairD = `M ${f1(cx0)} ${Wn.y1 + 8} L ${f1(cx0)} ${f1(cy + 9)} Q ${f1(cx0)} ${f1(cy)} ${f1(cx0 + cwid * 0.12)} ${f1(cy)} Q ${f1(cx0 + cwid * 0.3)} ${f1(cy)} ${f1(cx0 + cwid * 0.36)} ${f1(cy + 5)} L ${f1(cx0 + cwid * 0.64)} ${f1(cy + 5)} Q ${f1(cx0 + cwid * 0.7)} ${f1(cy)} ${f1(cx0 + cwid * 0.88)} ${f1(cy)} Q ${f1(cx1)} ${f1(cy)} ${f1(cx1)} ${f1(cy + 9)} L ${f1(cx1)} ${Wn.y1 + 8} Z`;
+  return (
+    <g>
+      {/* the far wall in shadow, its dado a little darker */}
+      <rect x={Wn.x0} y={Wn.y0 + wh * 0.62} width={ww} height={wh * 0.4} fill={shade(inside, 0.14)} />
+      <line x1={Wn.x0} y1={Wn.y0 + wh * 0.62} x2={Wn.x1} y2={Wn.y0 + wh * 0.62} stroke={INK} strokeWidth={1.6} opacity={0.35} />
+      {/* the armchair's back */}
+      <path d={chairD} fill={chair} />
+      <path d={`M ${f1(cx0 + cwid * 0.64)} ${f1(cy + 5)} Q ${f1(cx0 + cwid * 0.7)} ${f1(cy)} ${f1(cx0 + cwid * 0.88)} ${f1(cy)} Q ${f1(cx1)} ${f1(cy)} ${f1(cx1)} ${f1(cy + 9)} L ${f1(cx1)} ${Wn.y1 + 8} L ${f1(cx0 + cwid * 0.7)} ${Wn.y1 + 8} Z`} fill={shade(chair, 0.18)} />
+      <path d={`M ${f1(cx0 + cwid * 0.5)} ${f1(cy + 8)} L ${f1(cx0 + cwid * 0.5)} ${Wn.y1 + 8}`} stroke={INK} strokeWidth={1.4} opacity={0.3} />
+      <path d={chairD} fill="none" stroke={INK} strokeWidth={2.2} strokeLinejoin="round" />
+      {/* the drapes, just inside the glass */}
+      {drape(-1)}
+      {drape(1)}
+      {/* glass glints */}
+      <path d={`M ${Wn.x0 + 60} ${Wn.y1} L ${Wn.x0 + 130} ${Wn.y0} L ${Wn.x0 + 160} ${Wn.y0} L ${Wn.x0 + 90} ${Wn.y1} Z`} fill="#FFFFFF" opacity={0.16} />
+      <path d={`M ${Wn.x0 + 112} ${Wn.y1} L ${Wn.x0 + 182} ${Wn.y0} L ${Wn.x0 + 194} ${Wn.y0} L ${Wn.x0 + 124} ${Wn.y1} Z`} fill="#FFFFFF" opacity={0.14} />
+    </g>
+  );
+};
+
 const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: number; light: number; v3?: boolean}> = ({D, sl, t, id, doorOpen, light, v3 = false}) => {
   const H = YARD.house, Dr = YARD.door, Wn = v3 ? YARD.windowV3 : YARD.window;
   const ww = Wn.x1 - Wn.x0, cw = v3 ? 40 : 64;
@@ -402,6 +711,21 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
   const upperWins = [1515, 1760];
   const blind = [lerp(0.18, 0.5, ss(D, 0.3, 1)), lerp(0.12, 0.78, ss(D, 0.5, 1))];
   const smoke = sl.snow * (1 - ss(D, 0.45, 0.75));
+  // V3: the crack runs down the siding left of the porch light (clear of the fixture, whichever one is up)
+  const crackD = v3
+    ? `M 1362 ${floor + 14} L 1371 ${floor + 50} L 1358 ${floor + 88} L 1372 ${floor + 132} L 1361 ${floor + 176} M 1371 ${floor + 50} L 1352 ${floor + 66}`
+    : `M 1372 ${floor + 14} L 1385 ${floor + 50} L 1371 ${floor + 88} L 1393 ${floor + 132} L 1380 ${floor + 176} M 1385 ${floor + 50} L 1404 ${floor + 64}`;
+  const wearMarks = (
+    <g>
+      <path d={crackD} fill="none" stroke={INK} strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={`${f1(200 * crack)} 400`} opacity={0.75 * clamp(crack * 3)} />
+      {wear > 0.2 && [Wn.x0 - 10, Wn.x1 + 4, 1440, 1590].map((sx, j) => (
+        <path key={j} d={`M ${sx} ${j < 2 ? Wn.y1 + 26 : wallTop + 290} q 4 22 -2 40 q 4 14 0 28`} fill="none" stroke={shade(wall, 0.45)} strokeWidth={7} strokeLinecap="round" opacity={0.3 * ss(D, 0.3, 1)} />
+      ))}
+      {peel > 0.01 && [[1866, floor - 120], v3 ? [1452, wallTop + 300] : [1424, wallTop + 330], [1906, floor + 200]].map(([px, py], j) => (
+        <path key={j} d={`M ${px} ${py} l 12 -5 l 8 6 l -3 9 l -11 3 l -8 -6 Z`} fill={mix(wall, '#FFFFFF', 0.3)} stroke={shade(wall, 0.45)} strokeWidth={1.6} opacity={peel * 0.8} />
+      ))}
+    </g>
+  );
   return (
     <g>
       {/* chimney (behind the roof) with the old TV antenna */}
@@ -492,7 +816,12 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
         <rect x={Wn.x0 - 14} y={Wn.y0 - 14} width={Wn.x1 - Wn.x0 + 28} height={Wn.y1 - Wn.y0 + 28} fill={trim} stroke={INK} strokeWidth={3} />
         <rect x={Wn.x0} y={Wn.y0} width={Wn.x1 - Wn.x0} height={Wn.y1 - Wn.y0} fill={inside} stroke={INK} strokeWidth={2.5} />
         <clipPath id={`${id}-fw`}><rect x={Wn.x0} y={Wn.y0} width={Wn.x1 - Wn.x0} height={Wn.y1 - Wn.y0} /></clipPath>
-        <g clipPath={`url(#${id}-fw)`}>
+        {v3 && (
+          <g clipPath={`url(#${id}-fw)`}>
+            <WindowInsideV3 Wn={Wn} wear={wear} light={light} inside={inside} />
+          </g>
+        )}
+        {!v3 && <g clipPath={`url(#${id}-fw)`}>
           <rect x={Wn.x0} y={Wn.y1 - 52} width={Wn.x1 - Wn.x0} height={60} fill={mix(shade(INSIDE, 0.25), '#D9A85A', light)} />
           {/* armchair back and a lamp */}
           {(() => {
@@ -521,7 +850,7 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
           {/* glass glints */}
           <path d={`M ${Wn.x0 + 60} ${Wn.y1} L ${Wn.x0 + 130} ${Wn.y0} L ${Wn.x0 + 160} ${Wn.y0} L ${Wn.x0 + 90} ${Wn.y1} Z`} fill="#FFFFFF" opacity={0.16} />
           <path d={`M ${Wn.x0 + 112} ${Wn.y1} L ${Wn.x0 + 182} ${Wn.y0} L ${Wn.x0 + 194} ${Wn.y0} L ${Wn.x0 + 124} ${Wn.y1} Z`} fill="#FFFFFF" opacity={0.14} />
-        </g>
+        </g>}
         {(v3 ? [Wn.cx] : [1720, 1800]).map((mx) => (
           <g key={mx}>
             <line x1={mx} y1={Wn.y0} x2={mx} y2={Wn.y1} stroke={INK} strokeWidth={11} />
@@ -539,6 +868,7 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
         <rect x={Wn.x0 - 20} y={Wn.y1 + 16} width={Wn.x1 - Wn.x0 + 40} height={9} fill={wallSh} />
         {sl.snow > 0.01 && <rect x={Wn.x0 - 24} y={Wn.y1 - 3} width={Wn.x1 - Wn.x0 + 48} height={7} rx={3.5} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
       </g>
+      {v3 && wearMarks}
       {/* foundation */}
       <rect x={x0} y={base - 28} width={x1 - x0} height={28} fill={mix('#A8A196', '#9A968E', wear)} stroke={INK} strokeWidth={3} />
       {Array.from({length: 11}, (_, j) => <line key={j} x1={x0 + 30 + j * 60} y1={base - 26} x2={x0 + 30 + j * 60} y2={base - 2} stroke={INK} strokeWidth={2} opacity={0.3} />)}
@@ -576,6 +906,29 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
       {(() => {
         const f = ss(D, 0.55, 0.8);
         const lx = 1396, ly = Dr.y0 + 50;
+        // V3: never both at once: the lantern shrinks into its wall bracket, then the strip grows from its centre
+        const fo = ss(D, 0.55, 0.65), fi = ss(D, 0.67, 0.8);
+        const lantern = (
+          <g>
+            <path d={`M ${lx + 30} ${ly - 8} L ${lx} ${ly - 8} L ${lx} ${ly}`} fill="none" stroke={INK} strokeWidth={5} />
+            <path d={`M ${lx - 11} ${ly + 4} L ${lx + 11} ${ly + 4} L ${lx + 14} ${ly + 40} L ${lx - 14} ${ly + 40} Z`} fill={mix('#F3E3B0', '#FFE27A', light)} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+            <path d={`M ${lx - 15} ${ly + 4} L ${lx} ${ly - 8} L ${lx + 15} ${ly + 4} Z`} fill="#3F5560" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+            <rect x={lx - 16} y={ly + 38} width={32} height={7} rx={2} fill="#3F5560" stroke={INK} strokeWidth={2.5} />
+          </g>
+        );
+        if (v3) {
+          return (
+            <g>
+              {light > 0.01 && <circle cx={lx} cy={ly + 20} r={58} fill="#FFF6D2" opacity={0.45 * light} />}
+              {fo < 0.999 && <g transform={`translate(${lx + 30} ${ly - 8}) scale(${Math.max(0.001, 1 - fo).toFixed(3)}) translate(${-(lx + 30)} ${-(ly - 8)})`}>{lantern}</g>}
+              {fi > 0.001 && (
+                <g transform={`translate(${lx} ${ly + 18}) scale(${fi.toFixed(3)}) translate(${-lx} ${-(ly + 18)})`}>
+                  <rect x={lx - 6} y={ly - 24} width={12} height={84} rx={6} fill={mix('#DDEFF2', '#BFF4F0', light)} stroke={INK} strokeWidth={3} />
+                </g>
+              )}
+            </g>
+          );
+        }
         return (
           <g>
             {light > 0.01 && <circle cx={lx} cy={ly + 20} r={58} fill="#FFF6D2" opacity={0.45 * light} />}
@@ -595,14 +948,8 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
       <path d={`M ${x0 - OV} ${wallTop + 2} Q ${(x0 + x1) / 2} ${wallTop + 2 + sag * 2} ${x1 + OV} ${wallTop + 2} L ${x1 + OV} ${wallTop + 14} Q ${(x0 + x1) / 2} ${wallTop + 14 + sag * 2} ${x0 - OV} ${wallTop + 14} Z`} fill="#9AA3AD" stroke={INK} strokeWidth={2.5} />
       <rect x={x1 - 30} y={wallTop + 14} width={12} height={base - wallTop - 22} fill="#9AA3AD" stroke={INK} strokeWidth={2.5} />
       {[0.25, 0.6, 0.9].map((u, j) => <rect key={j} x={x1 - 33} y={wallTop + 14 + (base - wallTop) * u} width={18} height={6} fill="#7D8792" stroke={INK} strokeWidth={1.8} />)}
-      {/* wear: crack, stains, peeling, moss, ivy */}
-      <path d={`M 1372 ${floor + 14} L 1385 ${floor + 50} L 1371 ${floor + 88} L 1393 ${floor + 132} L 1380 ${floor + 176} M 1385 ${floor + 50} L 1404 ${floor + 64}`} fill="none" stroke={INK} strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={`${f1(200 * crack)} 400`} opacity={0.75 * clamp(crack * 3)} />
-      {wear > 0.2 && [Wn.x0 - 10, Wn.x1 + 4, 1440, 1590].map((sx, j) => (
-        <path key={j} d={`M ${sx} ${j < 2 ? Wn.y1 + 26 : wallTop + 290} q 4 22 -2 40 q 4 14 0 28`} fill="none" stroke={shade(wall, 0.45)} strokeWidth={7} strokeLinecap="round" opacity={0.3 * ss(D, 0.3, 1)} />
-      ))}
-      {peel > 0.01 && [[1866, floor - 120], [1424, wallTop + 330], [1906, floor + 200]].map(([px, py], j) => (
-        <path key={j} d={`M ${px} ${py} l 12 -5 l 8 6 l -3 9 l -11 3 l -8 -6 Z`} fill={mix(wall, '#FFFFFF', 0.3)} stroke={shade(wall, 0.45)} strokeWidth={1.6} opacity={peel * 0.8} />
-      ))}
+      {/* wear: crack, stains, peeling (V3: drawn earlier, behind the porch and the door casing), moss, ivy */}
+      {!v3 && wearMarks}
       {moss > 0.01 && (
         <g opacity={moss}>
           {Array.from({length: 9}, (_, j) => {
@@ -622,7 +969,8 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
           <g>
             <path d={open(stem)} fill="none" stroke={shade('#6A4A30', 0.1)} strokeWidth={3} />
             {stem.slice(1, -1).map((p, j) => {
-              const g = clamp((1 - 0.65 * sl.bare - hash(j * 2.9)) / 0.1) * clamp((n - (j + 1)) * 0.8);
+              // (V3: each leaf grows / shrinks over a wider stretch of the season, so none pops)
+              const g = (v3 ? clamp((1.3 - 0.7 * sl.bare - hash(j * 2.9)) / 0.3) : clamp((1 - 0.65 * sl.bare - hash(j * 2.9)) / 0.1)) * clamp((n - (j + 1)) * 0.8);
               return g > 0.02 ? (
                 <ellipse key={j} cx={p.x + (j % 2 ? 9 : -9)} cy={p.y} rx={10 * g} ry={7 * g} fill={j % 3 ? ivyC : shade(ivyC, 0.2)} stroke={INK} strokeWidth={2} transform={`rotate(${j % 2 ? 30 : -30} ${p.x + (j % 2 ? 9 : -9)} ${p.y})`} />
               ) : null;
@@ -950,6 +1298,28 @@ const FAR_ROW: Far[] = (() => {
   return out;
 })();
 
+const hex01 = (c: string): [number, number, number] => {
+  const v = parseInt(c.replace('#', ''), 16);
+  return [((v >> 16) & 255) / 255, ((v >> 8) & 255) / 255, (v & 255) / 255];
+};
+/** atmospheric perspective for distant city layers: the children are drawn OPAQUE (so towers never ghost through each
+ *  other), then every colour is pulled toward the sky colour `c` by `h` (0..1), lowering contrast and saturation */
+const Haze: React.FC<{id: string; c: string; h: number; children: React.ReactNode}> = ({id, c, h, children}) => {
+  if (h <= 0.001) return <g>{children}</g>;
+  const [r, g, b] = hex01(c);
+  const k = 1 - h;
+  return (
+    <g>
+      <defs>
+        <filter id={id} x="-5%" y="-30%" width="110%" height="160%" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={`${k.toFixed(4)} 0 0 0 ${(h * r).toFixed(4)} 0 ${k.toFixed(4)} 0 0 ${(h * g).toFixed(4)} 0 0 ${k.toFixed(4)} 0 ${(h * b).toFixed(4)} 0 0 0 1 0`} />
+        </filter>
+      </defs>
+      <g filter={`url(#${id})`}>{children}</g>
+    </g>
+  );
+};
+
 const Cloud: React.FC<{x: number; y: number; s: number}> = ({x, y, s}) => (
   <g transform={`translate(${f1(x)} ${f1(y)}) scale(${s})`}>
     <path d="M -150 30 Q -160 -10 -110 -14 Q -100 -60 -40 -52 Q -10 -96 50 -70 Q 110 -80 118 -24 Q 168 -18 156 30 Z" fill="#EAF2F7" />
@@ -1028,7 +1398,7 @@ const Neighbours: React.FC<{D: number; sl: Season; light: number}> = ({D, sl, li
  *  'front' = the pavement, fence, gate, lamp, street, car (drawn after those figures); 'all' = both */
 export const Yard: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; doorOpen?: number; light?: number; layer?: 'all' | 'back' | 'front'; v3?: boolean}> = ({D: D0, season, t, id, gateOpen = 0, doorOpen = 0, light = 0, layer = 'all', v3 = false}) => {
   const D = clamp(D0);
-  const sl = seasonLook(season, v3 ? 2.2 : 1);
+  const sl = seasonLook(season, v3 ? 2.2 : 1, v3);
   const fSky = Math.pow(clamp((D - 0.06) / 0.94), 1.45);
   const top = mix(skyTop(0.7 * D), '#A9B7C4', 0.35 * sl.snow);
   const bot = mix(skyBot(0.7 * D), '#E6EAEE', 0.3 * sl.snow);
@@ -1048,7 +1418,12 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       </defs>
       <rect x={WX0 - 2000} y={-4000} width={WX1 - WX0 + 4000} height={4000 + G} fill={`url(#${id}-sky)`} />
       {/* the city beyond the rooftops: low blocks rise into slender towers */}
-      <g opacity={v3 ? 0.32 : 0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
+      {v3 ? (
+        // V3: solid distant buildings in atmospheric tint (opaque, so the towers never ghost through each other)
+        <Haze id={`${id}-hzf`} c={mix(top, bot, 0.85)} h={0.68}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</Haze>
+      ) : (
+        <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
+      )}
       {/* clouds */}
       {[[-300, 140, 1.2], [520, -160, 0.9], [1250, 250, 1.35], [1950, 30, 1.0], [2650, 290, 1.15], [900, -480, 1.1], [-900, -260, 1.0], [3300, -120, 1.1]].map(([cx, cy, s], k) => (
         <Cloud key={k} x={wrapR(cx + t * (10 + 4 * (k % 3)), WX0, WX1)} y={cy} s={s} />
@@ -1058,7 +1433,11 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
           <Pod x={wrapR(x0 + t * sp, WX0, WX1)} y={y} s={s} c={c} dir={sp > 0 ? 1 : -1} />
         </g>
       ))}
-      <g opacity={v3 ? 0.55 : 0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>
+      {v3 ? (
+        <Haze id={`${id}-hzm`} c={mix(top, bot, 0.88)} h={0.46}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</Haze>
+      ) : (
+        <g opacity={0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>
+      )}
       {/* the neighbourhood behind: low houses and trees */}
       <g opacity={0.92}>
         {FAR_ROW.map((h, i) => {
@@ -1104,7 +1483,7 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       <FrontGarden D={D} sl={sl} />
       <YardTree D={D} sl={sl} t={t} id={`${id}-t`} />
       {/* fallen leaves on the lawn */}
-      {sl.fallen * (1 - sl.snow) > 0.01 && Array.from({length: 46}, (_, k) => {
+      {!sl.v3 && sl.fallen * (1 - sl.snow) > 0.01 && Array.from({length: 46}, (_, k) => {
         const lx = T.x + (hash(k * 2.3) - 0.5) * T.canopy.rx * 2.4 + 20, ly = HB + 18 + hash(k * 4.1) * (FB - HB - 14);
         return <ellipse key={k} cx={f1(lx)} cy={f1(ly)} rx={8} ry={4} fill={AUT[k % 3]} stroke={INK} strokeWidth={1.6} opacity={sl.fallen * (1 - sl.snow)} transform={`rotate(${f1(hash(k) * 180)} ${f1(lx)} ${f1(ly)})`} />;
       })}
@@ -1172,13 +1551,73 @@ export const YOUT = {
   /** the capsule parked on the road in the present */
   capsule: {x: 255, y: 1258, s: 0.36},
 };
-export const YardOut: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; light?: number; beyondFence?: React.ReactNode; onLawn?: React.ReactNode}> = ({D: D0, season, t, id, gateOpen = 0, light = 0, beyondFence, onLawn}) => {
+/** YardOut's garden path (doorPath), in YardOut view coords: from the porch step outside the front door (the door is at
+ *  x_view = mirror - door.cx = 325; the step's front edge at y 1578, about where a doorway view's threshold sits) it
+ *  leads away, bends toward the gate and runs straight into the open gate on the fence line (y ~1322, x 665).
+ *  DOOR_PATH gives the key points for framing a doorway view. */
+const OUT_KD = 1.35;
+const STEP_Y0 = YOUT.fenceY + (FB - (HB + 24)) * OUT_KD;
+const OUT_PATH: P[] = [{x: YOUT.mirror - YARD.gate.cx, y: YOUT.fenceY - 8}, {x: YOUT.mirror - YARD.gate.cx, y: 1470}, {x: YOUT.mirror - YARD.door.cx + 20, y: 1440}, {x: YOUT.mirror - YARD.door.cx, y: STEP_Y0 + 4}];
+export const DOOR_PATH = {
+  /** the porch step outside the front door (x0..x1, its front edge y0; it runs on below the frame) */
+  step: {x0: YOUT.mirror - YARD.porch.x1, x1: YOUT.mirror - YARD.porch.x0, y0: STEP_Y0},
+  /** where the path leaves the step, the middle of its bend toward the gate, and its end in the open gate */
+  start: OUT_PATH[3], turn: cpt(OUT_PATH[0], OUT_PATH[1], OUT_PATH[2], OUT_PATH[3], 0.5), end: OUT_PATH[0],
+  /** the gate in the fence: post centres (view x), the hinge (the panel folds back against it), the arch's top */
+  gate: {postL: YOUT.mirror - (YARD.gate.x + YARD.gate.w + GPW / 2), postR: YOUT.mirror - (YARD.gate.x - GPW / 2), hingeX: YOUT.mirror - YARD.gate.hingeX, cx: YOUT.mirror - YARD.gate.cx, y: YOUT.fenceY, archTop: YOUT.fenceY - 330 - 81},
+};
+const DoorPathOut: React.FC<{D: number; sl: Season}> = ({D, sl}) => {
+  const wear = ss(D, 0.1, 1);
+  const [P0, P1, P2, P3] = OUT_PATH;
+  const N = 18;
+  const scaleAt = (y: number) => 1 + (y - YOUT.fenceY) * (0.18 / 255); // the view's mild perspective (fence 1, tree 1.18)
+  const SZ = 35 * OUT_KD, HW = 0.36;
+  const Lp: P[] = [], Rp: P[] = [];
+  for (let i = 0; i <= N; i++) {
+    const u = i / N;
+    const p = cpt(P0, P1, P2, P3, u);
+    const q = cpt(P0, P1, P2, P3, Math.min(1, u + 0.01)), q0 = cpt(P0, P1, P2, P3, Math.max(0, u - 0.01));
+    const SX = 156 * scaleAt(p.y);
+    const gx = (q.x - q0.x) / SX, gz = (q.y - q0.y) / SZ;
+    const gl = Math.hypot(gx, gz) || 1;
+    const nx = -gz / gl, nz = gx / gl;
+    Lp.push({x: p.x + nx * HW * SX, y: p.y + nz * HW * SZ});
+    Rp.push({x: p.x - nx * HW * SX, y: p.y - nz * HW * SZ});
+  }
+  const pathD = `M ${Lp.map((p) => `${f1(p.x)} ${f1(p.y)}`).join(' L ')} L ${[...Rp].reverse().map((p) => `${f1(p.x)} ${f1(p.y)}`).join(' L ')} Z`;
+  const stone = mix('#E8DCC4', '#D7D0C2', wear);
+  const St = DOOR_PATH.step;
+  return (
+    <g>
+      <path d={pathD} fill={stone} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+      {Array.from({length: N - 1}, (_, i) => (i % 2 === 1 ? <line key={i} x1={Lp[i + 1].x} y1={Lp[i + 1].y} x2={Rp[i + 1].x} y2={Rp[i + 1].y} stroke={INK} strokeWidth={2} opacity={0.3} /> : null))}
+      {sl.snow > 0.01 && <path d={pathD} fill={SNOW} opacity={sl.snow * 0.85} />}
+      {/* the porch step right outside the door, seen from above: a stone slab, its far edge toward the path */}
+      <rect x={St.x0 + 6} y={St.y0 - 5} width={St.x1 - St.x0 - 12} height={8} fill={C.shadow} />
+      <rect x={St.x0} y={St.y0} width={St.x1 - St.x0} height={260} fill={mix('#D6D0C2', '#C9C4B8', wear)} stroke={INK} strokeWidth={3} />
+      <rect x={St.x0 + 2} y={St.y0 + 2} width={St.x1 - St.x0 - 4} height={6} fill={mix('#ECE7DC', '#DEDAD0', wear)} />
+      {[0.34, 0.68].map((u) => <line key={u} x1={St.x0 + (St.x1 - St.x0) * u} y1={St.y0 + 3} x2={St.x0 + (St.x1 - St.x0) * u - 6} y2={St.y0 + 260} stroke={INK} strokeWidth={2} opacity={0.25} />)}
+      {sl.snow > 0.01 && <rect x={St.x0} y={St.y0} width={St.x1 - St.x0} height={260} fill={SNOW} opacity={sl.snow * 0.85} />}
+    </g>
+  );
+};
+
+export const YardOut: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; light?: number; beyondFence?: React.ReactNode; onLawn?: React.ReactNode;
+  /** V3: the V3 year and tree (see PH3), and solid (opaque, sky-tinted) city towers */
+  v3?: boolean;
+  /** draw the garden path from the front door's step to the gate (positions: DOOR_PATH) */
+  doorPath?: boolean;
+  /** 0..1: pull the far city's colours toward the sky (less contrast and saturation) */
+  skylineHaze?: number;
+}> = ({D: D0, season, t, id, gateOpen = 0, light = 0, beyondFence, onLawn, v3 = false, doorPath = false, skylineHaze = 0}) => {
   const D = clamp(D0);
-  const sl = seasonLook(season);
+  const sl = seasonLook(season, 1, v3);
   const fSky = Math.pow(clamp((D - 0.06) / 0.94), 1.45);
   const fut = ss(D, 0.6, 0.9);
   const pave = mix('#D9D2C3', '#E3E6EA', fut);
   const asphalt = mix('#6E7884', '#5E6E86', fut);
+  const haze = clamp(skylineHaze) * 0.85;
+  const skyC = mix(skyTop(0.7 * D), skyBot(0.7 * D), 0.82);
   return (
     <g>
       <defs>
@@ -1193,8 +1632,18 @@ export const YardOut: React.FC<{D: number; season: number; t: number; id: string
       ))}
       {/* the city beyond the houses across the road */}
       <g transform={`translate(-640 ${1020 - (HB - 70)})`}>
-        <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
-        <g opacity={0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>
+        {v3 ? (
+          // V3: opaque layers in the sky tint the old opacities gave (so the towers never ghost through each other)
+          <g>
+            <Haze id={`${id}-ohf`} c={skyC} h={1 - 0.5 * (1 - haze)}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</Haze>
+            <Haze id={`${id}-ohm`} c={skyC} h={1 - 0.82 * (1 - haze)}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</Haze>
+          </g>
+        ) : (
+          <Haze id={`${id}-oh`} c={skyC} h={haze}>
+            <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
+            <g opacity={0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>
+          </Haze>
+        )}
       </g>
       {/* the houses across the road (a little nearer than the street-side view's back row) */}
       <g transform={`translate(540 ${YOUT.farPave}) scale(1.35) translate(-1240 ${-(HB - 66)})`}>
@@ -1235,6 +1684,7 @@ export const YardOut: React.FC<{D: number; season: number; t: number; id: string
         const gx = -300 + k * 62 + 30 * hash(k * 1.3), gy = YOUT.fenceY + 60 + 420 * hash(k * 2.7);
         return <path key={k} d={`M ${f1(gx - 9)} ${f1(gy)} L ${f1(gx - 4)} ${f1(gy - 14)} L ${f1(gx)} ${f1(gy)} L ${f1(gx + 5)} ${f1(gy - 16)} L ${f1(gx + 9)} ${f1(gy)}`} fill="none" stroke={shade(sl.lawn, 0.4)} strokeWidth={3} strokeLinejoin="round" opacity={0.7} />;
       })}
+      {doorPath && <DoorPathOut D={D} sl={sl} />}
       {/* the fence and the rose arbour, seen from the house side (mirrored) */}
       <g transform={`translate(${YOUT.mirror} ${YOUT.fenceY - FB}) scale(-1 1)`}>
         <Fence D={D} sl={sl} gateOpen={gateOpen} />
