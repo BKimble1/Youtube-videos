@@ -2,8 +2,10 @@
 
 ## V1 (first complete review cut, current)
 
-**Deliverable.** `exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4` — see `production/V1_REPORT.md` for its exact
-format, measurements and status (including the narration status). **It is not published.**
+**Deliverable.** `exports/FGW_Bone_Glue_V1_REVIEW_NO_NARRATION_1080x1920.mp4`: the complete picture, captions, effects and
+music, **without the narration** (the take files are served from a host this environment's network policy blocks).
+With the narration it becomes `exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4` (steps below). See
+`production/V1_REPORT.md` for the exact format, measurements and status. **It is not published.**
 
 **Report.** `production/V1_REPORT.md`, with evidence in `qa/v1/`. The shot plan and the transition list are in
 `production/SHOT_PLAN_V1.md`; the builders' contracts are in `production/BUILD_BRIEF.md`.
@@ -33,12 +35,14 @@ drawn as depth layers through a pinhole dolly (`source/src/camera.tsx`), plus on
 
     python3 -m pip install numpy scipy soundfile pyloudnorm sherpa-onnx pillow
     # ASR models (k2-fsa releases): sherpa-onnx-zipformer-en-2023-06-26 and sherpa-onnx-whisper-base.en into /tmp/asr
+    # download the takes (flow vPJoRVyy04Q4iSyAc8Cy) to audio/narration/takes/t1_tsOx.mp3, t2_RlHD.mp3
     python3 tools/make_narration.py                 # take -> narration master, timeline, captions, SRT
                                                     # (--provisional: timeline from the take's Scribe word times)
     source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
     python3 tools/make_audio.py mix_v1              # effects + music + mix -> source/public/audio/mix_v1.wav
     (cd source && npm ci && npx remotion render src/index.ts BoneGlueV1 ../exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v1","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
     python3 tools/qa_render.py exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4 qa/v1
+    # current no-narration cut: FGW_NO_VOICE=1 python3 tools/make_audio.py mix_v1_novoice, render with "audio":"mix_v1_novoice"
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`. Module test entries:
 `source/src/test/*.entry.tsx` (`npx remotion still src/test/<name>.entry.tsx <Comp> out.png`).
