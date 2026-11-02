@@ -243,7 +243,7 @@ export type FriendPose = {armL: ArmA; armR: ArmA; e?: Parameters<typeof Head>[0]
 /** V2: the friend's signature green. As he ages the green shirt gives way to a green cardigan over a cream shirt, so
  *  the green stays the dominant colour at every age. green = false keeps the V1 brown cardigan. */
 export const FRIEND_CARDIGAN = '#3E7A52';
-export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing?: -1 | 1; shadow?: boolean; hideHands?: 'L' | 'R' | 'both'; green?: boolean}> = ({age, pose, id, facing = -1, shadow = true, hideHands, green = false}) => {
+export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing?: -1 | 1; shadow?: boolean; hideHands?: 'L' | 'R' | 'both'; green?: boolean; /** V2: forearm colour override (long sleeves) */ forearm?: string; /** V2: upper-arm sleeve colour override */ sleeveC?: string}> = ({age, pose, id, facing = -1, shadow = true, hideHands, green = false, forearm, sleeveC}) => {
   const a = clamp(age);
   const s = ss(a, 0.45, 1); // stoop
   const shirt = mix(HONEST.shirt, '#E8E2D2', ss(a, 0.4, 0.9));
@@ -265,7 +265,7 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
       {shadow && <ellipse cx={0} cy={2} rx={92} ry={14} fill={C.shadow} />}
       {/* drawn facing screen-left; facing = 1 mirrors it. Stoop leans the top toward the face side */}
       <g transform={`rotate(${-(pose.lean ?? 0) - 7 * s} 0 -150)`}>
-        <ArmF P={R} side={1} sleeve={cardi > 0.5 ? cardColor : shirt} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'R'} />
+        <ArmF P={R} side={1} sleeve={sleeveC ?? (cardi > 0.5 ? cardColor : shirt)} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'R'} fore={forearm} />
         {pose.cane && <Cane P={R} />}
         {/* legs (knees soften with age) */}
         <path d={`M -52 -170 L ${(-52 + footL.x) / 2 - 2} ${-90 + knee} L ${footL.x} ${footL.y}`} fill="none" stroke={INK} strokeWidth={38 + OUT * 2} strokeLinecap="round" strokeLinejoin="round" />
@@ -282,7 +282,7 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
         {/* neck */}
         <rect x={-16} y={headY + 40} width={32} height={34 - 6 * s} fill={mix(HONEST.skin, '#DCC2B2', 0.2 * s)} stroke={INK} strokeWidth={OUT} />
         {s > 0.2 && <path d={`M -8 ${headY + 52} q 8 4 16 0 M -8 ${headY + 60} q 8 4 16 0`} fill="none" stroke={INK} strokeWidth={2} opacity={0.5 * s} />}
-        <ArmF P={L} side={-1} sleeve={cardi > 0.5 ? cardColor : shirt} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'L'} />
+        <ArmF P={L} side={-1} sleeve={sleeveC ?? (cardi > 0.5 ? cardColor : shirt)} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'L'} fore={forearm} />
         <g transform={`translate(${-14 * s} ${headY})`}>
           <Head skin={HONEST.skin} hair="swoop" hairColor={HONEST.hair} age={a} e={pose.e} glasses={ss(a, 0.6, 0.72)} id={`${id}-h`} />
         </g>
@@ -290,9 +290,9 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
     </g>
   );
 };
-const ArmF: React.FC<{P: ReturnType<typeof handPos>; side: -1 | 1; sleeve: string; skin: string; age: number; hide?: boolean}> = ({P, side, sleeve, skin, age, hide}) => (
+const ArmF: React.FC<{P: ReturnType<typeof handPos>; side: -1 | 1; sleeve: string; skin: string; age: number; hide?: boolean; fore?: string}> = ({P, side, sleeve, skin, age, hide, fore}) => (
   <g>
-    <Limb pts={[[P.sx, P.sy], [P.ex, P.ey], [P.hx, P.hy]]} w={30} colors={[sleeve, age > 0.55 ? sleeve : skin]} />
+    <Limb pts={[[P.sx, P.sy], [P.ex, P.ey], [P.hx, P.hy]]} w={30} colors={[sleeve, fore ?? (age > 0.55 ? sleeve : skin)]} />
     {!hide && (
       <g transform={`translate(${P.hx} ${P.hy}) rotate(${P.angle})`}>
         <Mitt skin={skin} age={age} side={side} />
