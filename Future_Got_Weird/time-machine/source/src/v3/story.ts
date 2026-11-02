@@ -201,24 +201,25 @@ export const LAND = {x: 960, y: FEET + 62};
 export const CAP_S = 0.93;
 /** the two faces together (heads at y ~1399) */
 const CAM_FACES: Cam = {x: (FRIEND_X + ASTRO_MEET_X) / 2, y: 1470, z: 2.75};
+const PULL = 1.6; // the pull-back from the house window to the garden (s)
 export const camYard = (t: number): Cam => {
-  if (t < T3.windowMatch + 0.75) {
-    // pull back from the house's window to the garden (zoom to point)
-    const u = clamp((t - T3.windowMatch) / 0.75);
-    const e = 1 - (1 - u) ** 3;
+  if (t < T3.windowMatch + PULL) {
+    // pull back from the house's window to the garden (zoom to point), starting and ending gently
+    const u = clamp((t - T3.windowMatch) / PULL);
+    const e = u * u * u * (u * (u * 6 - 15) + 10);
     const z = Math.exp(lerp(lg(CAM_EXT.z), lg(CAM_YEARS.z), e));
     const w = (1 / CAM_EXT.z - 1 / z) / (1 / CAM_EXT.z - 1 / CAM_YEARS.z);
     return {x: lerp(CAM_EXT.x, CAM_YEARS.x, w), y: lerp(CAM_EXT.y, CAM_YEARS.y, w), z};
   }
   const a = astroDoor(t);
   return keyCam(t, [
-    [T3.windowMatch + 0.75, CAM_YEARS],
+    [T3.windowMatch + PULL, CAM_YEARS],
     [T3.yearsEnd, CAM_YEARS_END],
     [T3.landing + 0.1, {x: 1170, y: 1330, z: 1.05}],
     [T3.arrive - 0.1, {x: 1200, y: 1420, z: 1.5}],
     [T3.faces + 0.4, CAM_FACES],
     [T3.turnToHouse, {...CAM_FACES, x: CAM_FACES.x + 6, z: CAM_FACES.z * 1.02}],
-    [T3.turnToHouse + 0.35, {x: a.x + 40, y: a.y - 200, z: 1.75}],
+    [T3.turnToHouse + 0.62, {x: a.x + 40, y: a.y - 200, z: 1.75}],
     [T3.inside, {x: YARD.door.cx + 10, y: YARD.door.y0 + 150, z: 2.25}],
   ], true);
 };
@@ -290,7 +291,7 @@ export const camRoomPresent = (t: number): Cam => {
       [T3.realise + 0.2, {x: (STOP3 + PHOTO3.cx) / 2, y: 1170, z: 1.75}],
       [T3.photoClose, {x: PHOTO3.cx - 30, y: PHOTO3.cy - 4, z: 4.4}],
       [T3.toFace, {x: (SON.x + FR.x) / 2, y: (SON.y + FR.y) / 2, z: 5.2}],
-      [T3.toFace + 0.75, {x: ASTRO_HEAD.x - 10, y: ASTRO_HEAD.y + 30, z: 2.9}],
+      [T3.toFace + 1.0, {x: ASTRO_HEAD.x - 10, y: ASTRO_HEAD.y + 30, z: 2.9}],
       [T3.friendIn + 0.75, {x: 1648, y: 1215, z: 1.38}],
       [T3.loopPush - 0.15, {x: 1634, y: 1222, z: 1.43}],
     ], true);

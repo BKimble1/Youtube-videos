@@ -41,7 +41,7 @@ if 'V2' in os.path.basename(src):
 # match from inside to outside, the landing, the cut from the front door to the room, the loop cut (watch -> ship window)
 if 'V3' in os.path.basename(src):
     PLANNED = [(2.7, 4.6, "push to the ship, through its window into the cockpit"), (5.1, 6.1, 'push into the watch (camera roll)'),
-               (8.15, 8.3, 'match cut: watch -> home wall clock'), (9.2, 9.32, 'match cut: the window from inside -> from outside'),
+               (8.15, 8.3, 'match cut: watch -> home wall clock'), (9.2, 9.32, 'match cut: the window from inside -> from outside'), (9.32, 10.9, 'continuous pull-back from the house window to the garden'),
                (11.4, 12.6, 'capsule descent, landing, hatch'), (15.8, 15.92, 'cut: front door outside -> the room inside'),
                (22.7, 23.1, 'push into the watch face, match cut to the ship window'), (0.0, 0.2, 'loop seam')]
 med = float(np.median(d))
