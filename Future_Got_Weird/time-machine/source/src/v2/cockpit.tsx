@@ -8,7 +8,7 @@ import React from 'react';
 import {getStaticFiles, staticFile} from 'remotion';
 import {closed, P} from '../core/geo';
 import {mix} from '../core/color';
-import {clamp, sm} from '../lib';
+import {clamp, sm, ss} from '../lib';
 import {C, INK, OUT} from '../art/crew';
 import {AstroPose, GLOVE, HEAD_Y, HELMET, SHOULDER_Y, SUIT, SUIT_DEEP} from '../art/figures';
 import {BlackHole, bhFrame, hasWide} from '../art/space';
@@ -168,9 +168,6 @@ export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?:
       {!soft && b > 0.01 && disc < 0.999 && [1, 2, 3, 4, 5].map((i) => (
         <path key={i} d={wedge(88, A.second - (Math.max(fan, 4) * i) / 5, A.second)} fill={W.coral} opacity={0.07 * (1 - disc)} />
       ))}
-      {soft && b > 0.01 && Array.from({length: 10}, (_, i) => (
-        <path key={i} d={wedge(86, A.second - (Math.min(Math.max(fan, 4), 300) * (i + 1)) / 10, A.second)} fill={W.coral} opacity={0.022 * (1 - 0.6 * disc)} />
-      ))}
       {!soft && disc > 0.001 && (
         <g opacity={disc}>
           <circle r={88} fill={W.coral} opacity={0.085} />
@@ -178,7 +175,9 @@ export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?:
           <circle r={17} fill="none" stroke={W.coral} strokeWidth={7} opacity={0.14} />
         </g>
       )}
-      <g transform={`rotate(${A.second})`} opacity={1 - 0.78 * b}>
+      {/* (soft: while its travel per frame is too fast to read, the seconds hand is simply not drawn - no fan, no strobe -
+          and it fades back in as it slows below ~20 degrees a frame) */}
+      <g transform={`rotate(${A.second})`} opacity={soft ? 1 - ss(b, 0.025, 0.07) : 1 - 0.78 * b}>
         <line x1={0} y1={24} x2={0} y2={-88} stroke={W.coral} strokeWidth={2.1} strokeLinecap="round" />
         <circle cy={17} r={4.6} fill={W.coral} stroke={INK} strokeWidth={1} />
       </g>

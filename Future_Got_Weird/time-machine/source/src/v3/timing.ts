@@ -33,26 +33,26 @@ export const T3 = {
   // 6 the pull-back lands on the garden and holds: seasons, the tree grows, the friend ages in his place
   pullEnd: 10.72,
   yearsEnd: 11.5,
-  // 7 the ship returns to the street; the hatch; he steps out and walks to his friend at the gate
+  // 7 the ship returns to the street; the hatch; he climbs down (fold-down step, road) and walks to his friend at the gate
   descent: 11.42,
   landing: 12.0,
-  hatch: 12.1,
-  stepOut: 12.22,
-  stepDown: 12.38,
-  arrive: 13.8,
+  hatch: 12.06,
+  stepOut: 12.2,
+  stepDown: 12.58,
+  arrive: 13.92,
   // 8 their faces together: he searches the old face, recognises him
-  faces: 13.8,
-  recognise: 14.02,
+  faces: 13.86,
+  recognise: 14.06,
   // 9 he turns in place, walks through the gate, up the path, through the front door (seen outside), into the room
-  turnToHouse: 14.38,
-  walk: 14.58,
+  turnToHouse: 14.42,
+  walk: 14.64,
   atDoor: 16.08,
   inside: 16.2,
-  roomStop: 16.56,
+  roomStop: 16.8,
   // 10 the photograph; the change in him on 'gone' (held on his face before the camera goes to the photo)
   seePhoto: 16.44,
   realise: 16.66,
-  photoPush: 17.32,
+  photoPush: 17.42,
   photoClose: 18.0,
   // 11 from the young faces in the photograph to his still-young face; his old friend steps into the doorway
   toFace: 18.5,

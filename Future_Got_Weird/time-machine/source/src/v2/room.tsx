@@ -1111,7 +1111,7 @@ const Beam: React.FC<{e: number; t: number}> = ({e, t}) => {
 // ribbon; and the doorway as the FRONT door, opening onto the garden (the caller draws the outside)
 // =====================================================================================================================
 /** V3 moves the side table this far (unmirrored room px) so his raised watch stays clear of the photograph */
-export const V3_DX = 150;
+export const V3_DX = 196;
 /** V3: the armchair moves over with the side table (it stays clear of it) */
 const V3_CHAIR_DX = 60;
 const V3_FRAME: RoomRect = {x: TABLE.cx + V3_DX - 96, y: TABLE.top - 124, w: 156, h: 122};
@@ -1119,8 +1119,8 @@ const V3_M = 11;
 const V3_PRINT: RoomRect = {x: V3_FRAME.x + V3_M, y: V3_FRAME.y + V3_M, w: V3_FRAME.w - 2 * V3_M, h: V3_FRAME.h - 2 * V3_M};
 // the parents stand behind (taller), the two boys in front of them, a head shorter: him (left) and his friend (right)
 const V3_PEOPLE: Person[] = [
-  {key: 'dad', x: 30, y: 30, s: 0.215, ...DAD},
-  {key: 'mom', x: 104, y: 33, s: 0.2, ...MOM, age: 0.42},
+  {key: 'dad', x: 30, y: 30, s: 0.215, ...DAD, age: 0.1},
+  {key: 'mom', x: 104, y: 33, s: 0.2, ...MOM, age: 0.08},
   {key: 'son', x: 52, y: 56, s: 0.165, ...SON},
   {key: 'fr', x: 84, y: 58, s: 0.16, skin: HONEST.skin, hair: 'swoop', hairColor: HONEST.hair, age: 0.05, shirt: HONEST.shirt},
 ];
@@ -1156,7 +1156,8 @@ const V3Memorial: React.FC<{ctx: Ctx; candle: number}> = ({ctx, candle}) => {
         <g transform={`translate(${Pr.x} ${Pr.y})`}><V3Print id={`${id}-v3pr`} w={Pr.w} h={Pr.h} /></g>
         {/* the print has faded a little; glass sheen */}
         <rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} fill="#E8DCC4" opacity={0.12 + 0.1 * e} />
-        <path d={`M ${Pr.x + 18} ${Pr.y + Pr.h} L ${Pr.x + 58} ${Pr.y} L ${Pr.x + 74} ${Pr.y} L ${Pr.x + 34} ${Pr.y + Pr.h} Z`} fill="#FFFFFF" opacity={0.12} />
+        <linearGradient id={`${id}-v3gl`} x1="0" y1="1" x2="1" y2="0"><stop offset="0.15" stopColor="#FFFFFF" stopOpacity={0} /><stop offset="0.4" stopColor="#FFFFFF" stopOpacity={0.1} /><stop offset="0.65" stopColor="#FFFFFF" stopOpacity={0} /></linearGradient>
+        <rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} fill={`url(#${id}-v3gl)`} />
       </g>
       <rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} fill="none" stroke={INK} strokeWidth={2.5} />
       {/* black ribbon across the top-left corner */}
@@ -1168,7 +1169,8 @@ const V3Memorial: React.FC<{ctx: Ctx; candle: number}> = ({ctx, candle}) => {
       <line x1={Cn.x} y1={Cn.y - Cn.h} x2={Cn.x} y2={Cn.y - Cn.h - 6} stroke={INK} strokeWidth={2} />
       {candle > 0.01 && (
         <g opacity={candle}>
-          <circle cx={Cn.x} cy={Cn.y - Cn.h - 14} r={26} fill="#FFD98A" opacity={0.18} />
+          <radialGradient id={`${id}-cglow`}><stop offset="0" stopColor="#FFD98A" stopOpacity={0.5} /><stop offset="0.45" stopColor="#FFD98A" stopOpacity={0.2} /><stop offset="1" stopColor="#FFD98A" stopOpacity={0} /></radialGradient>
+          <circle cx={Cn.x} cy={Cn.y - Cn.h - 14} r={40} fill={`url(#${id}-cglow)`} />
           <path d={`M ${Cn.x} ${Cn.y - Cn.h - 4} q ${-7 * fl} ${-8 * fl} 0 ${-22 * fl} q ${7 * fl} ${14 * fl} 0 ${22 * fl} Z`} fill="#FFC24A" stroke={INK} strokeWidth={1.6} />
           <path d={`M ${Cn.x} ${Cn.y - Cn.h - 5} q ${-3 * fl} ${-4 * fl} 0 ${-11 * fl} q ${3 * fl} ${7 * fl} 0 ${11 * fl} Z`} fill="#FFF3C4" />
         </g>
@@ -1187,7 +1189,7 @@ const V3FrontDoor: React.FC<{ctx: Ctx; open: number; outside?: React.ReactNode}>
   // V3 draws the room mirrored: hinged on its x1 edge (the window side once mirrored, as it is from outside), swinging into
   // the room (toward us): the free edge comes round toward the hinge side and grows a little (nearer)
   const fx = x1 - (x1 - x0) * Math.cos(th);
-  const up = 24 * Math.sin(th), dn = 26 * Math.sin(th);
+  const up = 24 * Math.sin(th), dn = 4 * Math.sin(th);
   const at = (u: number, v: number) => {
     // u 0 = hinge .. 1 = free edge; v 0 = top .. 1 = bottom (the free edge is taller: nearer the camera)
     const x = x1 + (fx - x1) * u;

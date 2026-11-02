@@ -40,6 +40,12 @@ export type Expr = {
   blink?: number; // 1 open
   turn?: number; // -1..1, features shift sideways (3/4 turn)
   sad?: number; // 0..1 inner brows up
+  /** V3: concern - both inner brow ends lift and draw together (symmetric), the outer ends dip */
+  knit?: number;
+  /** V3: brows a little lower on the forehead (+ = down) */
+  browDy?: number;
+  /** V3: the spiky fringe sits higher on the forehead (+ = up), so the brows sit on skin, clear of the hairline */
+  fringe?: number;
 };
 
 /** hair colour by age: own colour, then salt-and-pepper, then white */
@@ -85,7 +91,9 @@ export const Head: React.FC<{
   const brows = e.brows ?? 0;
   const sad = e.sad ?? 0;
   const lx = (e.lookX ?? 0) * 5, ly = (e.lookY ?? 0) * 4;
-  const browY = eyeY - 22 - brows * 6 - wide * 5;
+  const knit = e.knit ?? 0;
+  const browY = eyeY - 22 - brows * 6 - wide * 5 + (e.browDy ?? 0);
+  const fr = e.fringe ?? 0;
   const browW = 5 + 3 * ss(a, 0.45, 1);
   const earRy = 12 * (1 + 0.28 * ss(a, 0.3, 1));
   const noseS = 1 + 0.22 * ss(a, 0.3, 1);
@@ -99,7 +107,7 @@ export const Head: React.FC<{
     const r = HEAD_R, cy = 0;
     const st = {fill: hc, stroke: INK, strokeWidth: OUT, strokeLinejoin: 'round' as const};
     if (hair === 'spiky')
-      return <path d={`M ${-r} ${cy - 12} L ${-r + 4} ${cy - r - 22} L ${-28} ${cy - r - 4} L ${-14} ${cy - r - 34} L 0 ${cy - r - 6} L 14 ${cy - r - 36} L 28 ${cy - r - 4} L ${r - 4} ${cy - r - 22} L ${r} ${cy - 12} Q ${r * 0.6} ${cy - r * 0.55} 0 ${cy - r * 0.6} Q ${-r * 0.6} ${cy - r * 0.55} ${-r} ${cy - 12} Z`} {...st} />;
+      return <path d={`M ${-r} ${cy - 12} L ${-r + 4} ${cy - r - 22} L ${-28} ${cy - r - 4} L ${-14} ${cy - r - 34} L 0 ${cy - r - 6} L 14 ${cy - r - 36} L 28 ${cy - r - 4} L ${r - 4} ${cy - r - 22} L ${r} ${cy - 12} Q ${r * 0.6} ${cy - r * 0.55 - fr} 0 ${cy - r * 0.6 - fr} Q ${-r * 0.6} ${cy - r * 0.55 - fr} ${-r} ${cy - 12} Z`} {...st} />;
     if (hair === 'bob') {
       const lift = thin * 6;
       return <path d={`M ${-r - 10} ${cy + 26 - lift} L ${-r - 10} ${cy - 10} Q ${-r - 6} ${cy - r - 20} 0 ${cy - r - 18 + thin * 4} Q ${r + 6} ${cy - r - 20} ${r + 10} ${cy - 10} L ${r + 10} ${cy + 26 - lift} L ${r - 6} ${cy + 26 - lift} L ${r - 6} ${cy - 20} Q ${r * 0.5} ${cy - r * 0.6} 0 ${cy - r * 0.62} Q ${-r * 0.5} ${cy - r * 0.6} ${-r + 6} ${cy - 20} L ${-r + 6} ${cy + 26 - lift} Z`} {...st} />;
@@ -169,7 +177,11 @@ export const Head: React.FC<{
           <g key={s}>
             {/* eye bags */}
             <Grow d={`M ${ex - 10} ${eyeY + 15} Q ${ex} ${eyeY + 21} ${ex + 10} ${eyeY + 15}`} u={ss(a, 0.22, 0.8)} w={2.4} len={26} op={0.5} />
-            <ellipse cx={ex} cy={eyeY} rx={eyeRx} ry={Math.max(0.6, eyeRy * bl)} fill={C.white} stroke={INK} strokeWidth={3} />
+            {bl < 0.12 ? (
+              <path d={`M ${ex - eyeRx} ${eyeY} Q ${ex} ${eyeY + 5} ${ex + eyeRx} ${eyeY}`} fill="none" stroke={INK} strokeWidth={3.2} strokeLinecap="round" />
+            ) : (
+              <ellipse cx={ex} cy={eyeY} rx={eyeRx} ry={Math.max(0.6, eyeRy * bl)} fill={C.white} stroke={INK} strokeWidth={3} />
+            )}
             {eyeRefl && eyeRefl.side === s && eyeRefl.op > 0.001 && (
               <g>
                 <clipPath id={`${id}-eye${s}`}><ellipse cx={ex} cy={eyeY} rx={eyeRx - 1.4} ry={Math.max(0.6, eyeRy * bl - 1.4)} /></clipPath>
@@ -185,7 +197,7 @@ export const Head: React.FC<{
             {/* crow's feet */}
             {[0, 1].map((k) => <Grow key={k} d={`M ${ex + s * (eyeRx + 3)} ${eyeY - 3 + k * 7} l ${s * 8} ${-4 + k * 7}`} u={ss(a, 0.45 + 0.08 * k, 0.9)} w={2.2} len={10} op={0.6} />)}
             {/* brow */}
-            <path d={`M ${ex - s * 12} ${browY + 6 * ss(a, 0.5, 1) * 0 - bw} Q ${ex} ${browY - 4 - brows * 2} ${ex + s * 12} ${browY + 4 * ss(a, 0.45, 1) + (brows < 0 ? -brows * 4 : 0)}`} fill="none" stroke={a > 0.3 ? mix(INK, hc, ss(a, 0.4, 0.9) * 0.85) : INK} strokeWidth={browW} strokeLinecap="round" />
+            <path d={`M ${ex - s * (12 - 2.5 * knit)} ${browY + 6 * ss(a, 0.5, 1) * 0 - bw - 6 * knit} Q ${ex} ${browY - 4 - brows * 2 + 1.5 * knit} ${ex + s * 12} ${browY + 4 * ss(a, 0.45, 1) + (brows < 0 ? -brows * 4 : 0) + 2.5 * knit}`} fill="none" stroke={a > 0.3 ? mix(INK, hc, ss(a, 0.4, 0.9) * 0.85) : INK} strokeWidth={browW} strokeLinecap="round" />
           </g>
         );
       })}

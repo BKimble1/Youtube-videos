@@ -11,9 +11,10 @@ import {Astronaut, Friend, GLOVE, astroReach, ArmA} from '../art/figures';
 import {C, Expr, InkK, INK, OUT} from '../art/crew';
 import {Room, ROOM} from '../v2/room';
 import {Yard, YARD, YardOut, YOUT} from '../v2/yard';
-import {walkFeetDir, walkBob} from '../v2/walk';
+import {armSwing} from './gait';
 import {useImages} from '../v2/preload';
 import {Captions2} from '../v2/Captions2';
+import {CaptionLine} from '../Captions';
 import {CAPTIONS} from '../lib';
 import * as S from './story';
 import {T3, bhT3, spaceTau} from './timing';
@@ -63,12 +64,12 @@ const CloseStars: React.FC<{cam: Cam; op: number}> = ({cam, op}) => {
   if (op < 0.01) return null;
   const view = 1300 / cam.z; // generous: the camera may be rolled
   const out: React.ReactNode[] = [];
-  for (const [cell, seed, rPx, a] of [[2.0, 11, 2.2, 0.75], [0.5, 23, 1.7, 0.6], [0.14, 37, 1.5, 0.5]] as [number, number, number, number][]) {
+  for (const [cell, seed, rPx, a] of [[2.0, 11, 2.6, 0.9], [1.0, 17, 2.1, 0.75], [0.5, 23, 1.8, 0.65], [0.14, 37, 1.5, 0.5]] as [number, number, number, number][]) {
     const n = view / cell;
-    if (n > 24 || n < 1.5) continue;
+    if (n > 30 || n < 1.5) continue;
     const x0 = Math.floor((cam.x - view) / cell), x1 = Math.ceil((cam.x + view) / cell);
     const y0 = Math.floor((cam.y - view) / cell), y1 = Math.ceil((cam.y + view) / cell);
-    const fade = ss(24 - n, 0, 8) * ss(n, 1.5, 4);
+    const fade = ss(30 - n, 0, 8) * ss(n, 1.5, 4);
     for (let i = x0; i <= x1; i++) for (let j = y0; j <= y1; j++) {
       const h = hash(i * 12.9898 + j * 78.233 + seed);
       if (h > 0.55) continue;
@@ -85,14 +86,18 @@ const SpaceDust: React.FC<{cam: Cam}> = ({cam}) => {
   const P = 4.2, c0 = S.CAM_OPEN;
   const vx = -0.55 * cam.z * P / 30, vy = 1.55 * cam.z * P / 30; // px per frame
   const L = Math.hypot(vx, vy), ux = vx / L, uy = vy / L;
+  // two depth layers: fewer, readable motes - near ones as short soft streaks along the heading, far ones as soft dots
   return (
     <g>
-      {Array.from({length: 30}, (_, i) => {
-        const x = (((hash(i * 4.7) * 1180 - (cam.x - c0.x) * cam.z * P) % 1180) + 1180) % 1180 - 50;
-        const y = (((hash(i * 8.3) * 2020 - (cam.y - c0.y) * cam.z * P) % 2020) + 2020) % 2020 - 50;
-        const r = 1.3 + 1.4 * hash(i * 2.9);
-        return <line key={i} x1={x} y1={y} x2={x - ux * L * 1.4} y2={y - uy * L * 1.4} stroke="#FFF6E0" strokeWidth={r} strokeLinecap="round" opacity={a * (0.35 + 0.4 * hash(i * 6.1))} />;
-      })}
+      {[{n: 9, p: P, len: 2.8, w: 3.4, op: 0.62, sd: 0}, {n: 14, p: P * 0.55, len: 1.2, w: 2.6, op: 0.5, sd: 50}].map((ly) =>
+        Array.from({length: ly.n}, (_, j) => {
+          const i = j + ly.sd;
+          const x = (((hash(i * 4.7) * 1180 - (cam.x - c0.x) * cam.z * ly.p) % 1180) + 1180) % 1180 - 50;
+          const y = (((hash(i * 8.3) * 2020 - (cam.y - c0.y) * cam.z * ly.p) % 2020) + 2020) % 2020 - 50;
+          const Lp = L * (ly.p / P) * ly.len;
+          return <line key={i} x1={x} y1={y} x2={x - ux * Lp} y2={y - uy * Lp} stroke="#FFF6E0" strokeWidth={ly.w * (0.8 + 0.4 * hash(i * 2.9))} strokeLinecap="round" opacity={a * ly.op * (0.75 + 0.25 * hash(i * 6.1))} />;
+        }),
+      )}
     </g>
   );
 };
@@ -100,20 +105,22 @@ function spaceWorld(t: number, k: string, cam: Cam) {
   const tau = spaceTau(t);
   const p = S.shipPos(tau), rot = S.shipRot(tau);
   const winPx = S.WIN_R * cam.z;
-  const showCabin = winPx > 34;
+  // the cabin is drawn once the porthole is ~31 px across, behind solid navy glass that clears as we close in (no pop)
+  const showCabin = winPx > 31;
   const mag = S.bhMag(cam);
   return (
     <g>
-      <BlackHole t={bhT3(t)} imgOp={1 - ss(mag, 2.6, 4.4)} />
-      <CloseStars cam={cam} op={ss(mag, 2.2, 3.8)} />
+      {/* the ray-traced frames hand over to vector stars over ~8 frames, before they are magnified past their resolution */}
+      <BlackHole t={bhT3(t)} imgOp={1 - ss(mag, 1.7, 4.6)} />
+      <CloseStars cam={cam} op={ss(mag, 1.5, 3.2)} />
       <g transform={`translate(${p.x} ${p.y}) rotate(${rot}) scale(${S.SM})`}>
-        <Capsule2 t={t} id={`${k}cap`} flame={0.8} flameA={1} glow={1}
+        <Capsule2 t={t} id={`${k}cap`} flame={0.8} flameA={1} glow={1} glint={1 - ss(winPx, 180, 560)}
           win={showCabin ? (
             <g>
               <g transform={`translate(0 ${CAPSULE2.win.y}) scale(${CAPSULE2.win.r / S.COCKPIT_VIEW.r}) translate(${-S.COCKPIT_VIEW.x} ${-S.COCKPIT_VIEW.y})`}>{cockpitWorld(t, k + 'ck', 1)}</g>
               {/* far away the cabin reads as a lit porthole; it resolves as we close in. Out of the loop cut the glass starts
                   dark navy (the watch dial it matches) and clears as the camera pulls back */}
-              <circle cx={0} cy={CAPSULE2.win.y} r={CAPSULE2.win.r + 6} fill="#13213A" opacity={Math.max(0.75 * (1 - ss(winPx, 40, 150)), tau < 0 ? 0.8 * (1 - ss((tau - (T3.loopCut - T3.dur)) / (T3.dur - T3.loopCut), 0.08, 0.6)) : 0)} />
+              <circle cx={0} cy={CAPSULE2.win.y} r={CAPSULE2.win.r + 6} fill="#13213A" opacity={Math.max(1 - 0.25 * ss(winPx, 31, 45) - 0.75 * ss(winPx, 45, 150), tau < 0 ? 0.8 * (1 - ss((tau - (T3.loopCut - T3.dur)) / (T3.dur - T3.loopCut), 0.08, 0.6)) : 0)} />
             </g>
           ) : undefined} />
       </g>
@@ -168,138 +175,174 @@ function roomPastWorld(t: number, k: string) {
 }
 
 // ---- 6-9 the garden and the house front -------------------------------------------------------------------------------
-/** the friend: waiting (now and then he looks up at the sky); the capsule; the blast; he meets his friend; recognition */
+/** the friend: waiting (now and then he looks up at the sky); the capsule; the blast; he watches his friend come to him;
+ *  recognition. (He is drawn mirrored - facing screen-right - so a screen direction is the negative of his lookX.) */
 const friendYardFace = (t: number): Expr => {
   const up1 = ss(t, 9.95, 10.08) * (1 - ss(t, 10.3, 10.44));
   const up2 = ss(t, 10.8, 10.93) * (1 - ss(t, 11.06, 11.18));
   const look = ss(t, T3.descent - 0.15, T3.descent + 0.1);
   const follow = ss(t, T3.descent + 0.25, T3.landing);
-  const meet = ss(t, T3.stepDown + 0.2, T3.arrive - 0.2);
-  const rec = ss(t, T3.recognise + 0.08, T3.recognise + 0.4);
+  const watchHim = ss(t, T3.stepOut, T3.stepOut + 0.25);
+  const search = ss(t, T3.arrive - 0.25, T3.arrive + 0.02) * (1 - ss(t, T3.recognise + 0.06, T3.recognise + 0.24));
+  const rec = ss(t, T3.recognise + 0.04, T3.recognise + 0.24);
   const watchGo = ss(t, T3.turnToHouse + 0.1, T3.walk + 0.3);
   const upAll = Math.max(up1, up2, look * (1 - follow));
   const flinch = ss(t, T3.landing - 0.25, T3.landing - 0.05) * (1 - ss(t, T3.landing + 0.15, T3.landing + 0.45));
-  return {
-    // the capsule is to his left (screen-left), the astronaut walks in from the left and stops on his right
-    ...S.mouthAt(t, [[0, 'soft'], [T3.landing - 0.18, 'o'], [T3.landing + 0.42, 'soft'], [T3.recognise + 0.34, 'smile'], [T3.walk + 0.5, 'soft']], 0.14),
-    open: 0.25,
-    lookX: lerp(lerp(lerp(-0.2, -0.35, upAll), -0.8, follow * (1 - meet)), lerp(0.75, 0.55, watchGo), meet),
-    lookY: lerp(lerp(lerp(0.1, -0.95, upAll), 0.05, follow), lerp(0.08, -0.25, watchGo), meet),
-    brows: 0.35 * look * (1 - meet) + 0.35 * flinch + 0.25 * meet * (1 - rec) + 0.12 * rec,
-    sad: 0.3 * rec, turn: 0.3 * meet, wide: 0.3 * look * (1 - meet) + 0.25 * flinch,
-    blink: 1 - 0.85 * Math.max(Math.sin(Math.PI * clamp((t - 10.62) / 0.13)), Math.sin(Math.PI * clamp((t - (T3.recognise + 0.18)) / 0.14))) ** 2,
-  };
+  // where his friend is, on screen, from his face: x (+ right), y (+ below)
+  const r = t > T3.hatch ? S.astroReturn(Math.min(t, T3.arrive)) : {x: S.ASTRO_MEET.x, y: S.ASTRO_MEET.y};
+  const ax = clamp((r.x - S.FRIEND.x) / 110, -1, 1) * 0.8, ay = clamp((r.y - S.FRIEND.y) / 240, -0.3, 0.6);
+  const screenX = lerp(lerp(lerp(0.2, 0.35, upAll), -0.8, follow), lerp(ax, 0.6, watchGo), watchHim);
+  const screenY = lerp(lerp(lerp(0.1, -0.95, upAll), 0.05, follow), lerp(ay, -0.25, watchGo), watchHim);
+  return S.v3Face({
+    ...S.mouthAt(t, [[0, 'soft'], [T3.landing - 0.18, 'o'], [T3.landing + 0.42, 'soft'], [T3.recognise + 0.12, 'smile'], [T3.walk + 0.5, 'soft']], 0.14),
+    open: 0.25, lookX: -screenX, lookY: screenY,
+    brows: 0.35 * look * (1 - watchHim) + 0.35 * flinch + 0.3 * search + 0.12 * rec,
+    sad: 0.3 * rec, turn: -0.35 * watchHim * ax, wide: 0.3 * look * (1 - watchHim) + 0.25 * flinch + 0.4 * search,
+    blink: 1 - 0.96 * Math.max(Math.sin(Math.PI * clamp((t - 10.62) / 0.13)), Math.sin(Math.PI * clamp((t - (T3.recognise + 0.3)) / 0.14))) ** 2,
+  });
 };
-/** the astronaut's face on the way to his friend and through the recognition */
-const astroYardFace = (t: number, house: number): Expr => {
-  const meet = ss(t, T3.arrive - 0.45, T3.arrive);
+/** the astronaut's face: up at his house as he climbs down, then his friend (wherever he is), the search, recognition */
+const astroYardFace = (t: number, house: number, ax: number, ay: number): Expr => {
+  const meet = ss(t, T3.stepDown + 0.3, T3.stepDown + 0.6);
   const search = ss(t, T3.faces + 0.05, T3.recognise) * (1 - ss(t, T3.recognise, T3.recognise + 0.15));
   const rec = ss(t, T3.recognise, T3.recognise + 0.3);
   const sacc = search * Math.sin((t - T3.faces) * 20) * 0.15;
-  return {
-    ...S.mouthAt(t, [[0, 'soft'], [T3.stepDown + 0.05, 'o'], [T3.stepDown + 0.4, 'soft'], [T3.recognise + 0.1, 'flat']], 0.14),
+  const fx = clamp((S.FRIEND.x - ax) / 110, -1, 1) * 0.8, fy = clamp((S.FRIEND.y - ay) / 240, -0.7, 0.2);
+  return S.v3Face({
+    ...S.mouthAt(t, [[0, 'soft'], [T3.stepDown - 0.1, 'o'], [T3.stepDown + 0.35, 'soft'], [T3.recognise + 0.1, 'flat']], 0.14),
     open: 0.2,
-    // he looks up at his house as he steps down, then at his friend (left), level with his eyes
-    lookX: lerp(lerp(0.15, 0.4, house), -0.75 + sacc, meet), lookY: lerp(lerp(-0.1, -0.85, house), 0.12 + sacc * 0.4, meet),
+    lookX: lerp(lerp(0.15, 0.4, house), fx + sacc, meet), lookY: lerp(lerp(-0.1, -0.85, house), fy + 0.12 + sacc * 0.4, meet),
     wide: 0.3 + 0.3 * house + 0.18 * search - 0.25 * rec, brows: 0.3 + 0.3 * house + 0.2 * search + 0.2 * rec, sad: 0.5 * rec,
-    turn: -0.25 * meet, blink: 1 - 0.85 * Math.sin(Math.PI * clamp((t - (T3.recognise + 0.26)) / 0.14)) ** 2,
-  };
+    turn: lerp(0, fx * 0.3, meet), blink: 1 - 0.96 * Math.sin(Math.PI * clamp((t - (T3.recognise + 0.26)) / 0.14)) ** 2,
+  });
 };
 function yardWorld(t: number, k: string) {
   const D = S.yardD(t), season = S.yardSeason(t);
   const cap = S.capsuleYard(t);
   const age = S.friendAge(t);
   const turning = t >= T3.turnToHouse;
-  // the astronaut: hatch -> road -> his friend -> (later) turns in place, through the gate, up the path, seen from behind
+  const phase = S.hatchPhase(t);
+  // the astronaut: inside the hatch -> down the step to the road -> his friend -> (later) turns in place, through the gate,
+  // up the path, seen from behind
   let astro: React.ReactNode = null;
-  let astroBehind = false;
+  let astroY = 0;
   let astroShadow: React.ReactNode = null;
-  if (t >= T3.hatch + 0.05 && !turning) {
+  let hatchOver: React.ReactNode = null;
+  if (phase >= 0 && !turning) {
     const r = S.astroReturn(t);
-    const settle = 1 - ss(t, T3.arrive - 0.22, T3.arrive + 0.02);
-    const house = ss(t, T3.stepDown - 0.06, T3.stepDown + 0.06) * (1 - ss(t, T3.stepDown + 0.3, T3.stepDown + 0.48));
-    const dist = r.s / S.YS + 46 * ss(t, T3.stepOut, T3.stepDown);
-    const amp = r.walking ? settle : 0;
-    const fd = walkFeetDir(dist, amp, S.RET_STEP, r.dx, r.dy);
-    const sw = Math.sin((Math.PI * dist) / S.RET_STEP) * 12 * amp;
+    const g = r.g;
+    const house = ss(t, T3.stepDown - 0.16, T3.stepDown - 0.02) * (1 - ss(t, T3.stepDown + 0.2, T3.stepDown + 0.4));
+    const moving = t > T3.stepOut && t < T3.arrive ? 1 : 0;
+    const sw = armSwing(g, r.dx, r.dy) * 9 * moving;
+    // he ducks under the hatch's low top while inside and climbing out (knees bent), straightening on the road
+    const duck = 34 * (1 - ss(t, T3.stepDown - 0.14, T3.stepDown + 0.06));
+    astroY = r.y;
     const el = (
       <g transform={`translate(${r.x} ${r.y}) scale(${S.YS})`}>
-        <Astronaut pose={{armL: {a: 9 - sw, b: 12}, armR: {a: 9 + sw, b: 12}, e: astroYardFace(t, house), bob: walkBob(dist, amp, S.RET_STEP), frontL: true}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE}
-          watchEl={watchEl(t, k + 'a')} watchAt={S.WATCH_AT} feet={fd} nearLeg={fd.nearR ? 'R' : 'L'} shadow={false} />
+        <Astronaut pose={{armL: {a: 9 + sw, b: 12}, armR: {a: 9 - sw, b: 12}, e: astroYardFace(t, house, r.x, r.y), bob: g.bob + duck, frontL: true}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE}
+          watchEl={watchEl(t, k + 'a')} watchAt={S.WATCH_AT} feet={g.feet} nearLeg={g.nearLeg} legStretch={1.3} shadow={false} />
       </g>
     );
-    if (S.inHatch(t)) {
-      const H = S.HATCH_W;
+    const H = S.HATCH_W;
+    if (phase === 0) {
       astro = (
         <g>
           <clipPath id={`${k}hc`}><ellipse cx={H.x} cy={H.y + cap.dip} rx={H.rx - 3} ry={H.ry - 3} /></clipPath>
           <g clipPath={`url(#${k}hc)`}>{el}</g>
-          <g transform={`translate(${cap.x} ${cap.y}) scale(${S.CAP_S})`}><HatchFront hatch={cap.hatch} /></g>
         </g>
       );
-    } else {
-      astro = el;
-      astroShadow = <Shadow x={r.x} y={r.y} s={S.YS} a={ss(r.y, S.SILL_Y + 20, S.ROAD_Y)} />;
-    }
+      hatchOver = <g transform={`translate(${cap.x} ${cap.y}) scale(${S.CAP_S})`}><HatchFront hatch={cap.hatch} /></g>;
+    } else if (phase === 1) {
+      // coming out: the opening, plus the space in front of the capsule (the lead side lower down, everything below the
+      // sill's lip); his trailing foot stays hidden behind the sill until it swings out
+      const yb = H.y + cap.dip + H.ry;
+      astro = (
+        <g>
+          <clipPath id={`${k}hc`}>
+            <ellipse cx={H.x} cy={H.y + cap.dip} rx={H.rx - 3} ry={H.ry - 3} />
+            <rect x={H.x + 5} y={yb - 22} width={600} height={600} />
+            <rect x={H.x - 600} y={S.B0.y + 12} width={1200} height={600} />
+          </clipPath>
+          <g clipPath={`url(#${k}hc)`}>{el}</g>
+        </g>
+      );
+    } else astro = el;
+    astroShadow = <Shadow x={r.x} y={r.y} s={S.YS} a={ss(t, T3.stepDown - 0.12, T3.stepDown + 0.02)} />;
   } else if (turning) {
     const a = S.astroDoor(t);
-    // the turn in place: features turn away, a squash as the back view takes over, feet planted
+    const g = a.g;
+    // the turn in place: his features turn away first, then the figure narrows (a turn seen edge-on) and widens again as
+    // the back view; a small dip on the narrow frames; feet planted
     const tk = ss(t, T3.turnToHouse, T3.walk);
     const back = tk > 0.5;
-    const squash = 1 - 0.22 * Math.sin(Math.PI * tk);
+    const narrow = 0.66 + 0.34 * Math.abs(Math.cos(Math.PI * tk));
     const walking = t > T3.walk;
-    const dist = a.dist / a.s;
-    const amp = walking ? ss(t, T3.walk, T3.walk + 0.12) : 0;
-    const swing = Math.sin((Math.PI * dist) / S.PATH_STEP) * 14 * amp;
-    const ae: Expr = {lookX: 0.8, lookY: -0.1, turn: 0.9 * clamp(tk * 2), sad: 0.4, brows: 0.3, mouth: 'flat'};
-    astroBehind = a.y < YARD.fenceY + 2;
+    const sw = walking ? armSwing(g, a.dx, a.dy) * 6 : 0;
+    const ae: Expr = S.v3Face({lookX: 0.8, lookY: -0.1, turn: 0.95 * clamp(tk * 2.4), sad: 0.4, brows: 0.3, mouth: 'flat'});
+    astroY = a.y;
     astro = (
-      <g transform={`translate(${a.x} ${a.y}) scale(${a.s * squash} ${a.s})`}>
-        <Astronaut pose={{armL: {a: 9 + swing, b: 14}, armR: {a: 9 - swing, b: 14}, e: ae, bob: walkBob(dist, amp, S.PATH_STEP), frontL: !back}} id={`${k}ad`} frame={Math.round(t * 30)} glove={GLOVE}
-          watchEl={watchEl(t, k + 'd')} watchAt={S.WATCH_AT} feet={walkFeetDir(dist, amp, S.PATH_STEP, a.dx, a.dy)} nearLeg={walkFeetDir(dist, amp, S.PATH_STEP, a.dx, a.dy).nearR ? 'R' : 'L'} back={back} shadow={false} />
+      <g transform={`translate(${a.x} ${a.y}) scale(${a.s * narrow} ${a.s})`}>
+        <Astronaut pose={{armL: {a: 8 - sw, b: 12}, armR: {a: 8 + sw, b: 12}, e: ae, bob: g.bob + 10 * Math.sin(Math.PI * tk), frontL: !back}} id={`${k}ad`} frame={Math.round(t * 30)} glove={GLOVE}
+          watchEl={watchEl(t, k + 'd')} watchAt={S.WATCH_AT} feet={g.feet} nearLeg={g.nearLeg} back={back} legStretch={1.3} shadow={false} />
       </g>
     );
     astroShadow = <Shadow x={a.x} y={a.y} s={a.s} a={1} />;
   }
-  // the friend: in the same place all through the years, ageing; at the landing he flinches from the blast
+  const astroBehindFence = astro !== null && turning && astroY < YARD.fenceY + 2;
+  const astroBehindFriend = astro !== null && !astroBehindFence && astroY < S.FRIEND.y;
+  // the friend: in the same place all through the years, ageing; at the landing he turns his face from the blast behind
+  // his raised forearm (his near arm folds up across his face) and leans away
   const blast = ss(t, T3.landing - 0.25, T3.landing - 0.05) * (1 - ss(t, T3.landing + 0.15, T3.landing + 0.5));
-  const shield = blast;
   const friend = (
     <g transform={`translate(${S.FRIEND.x} ${S.FRIEND.y}) scale(${S.YS})`}>
-      <Friend age={age} pose={{armL: {a: 7, b: 9}, armR: {a: lerp(7, 62, shield), b: lerp(9, 78, shield)}, e: friendYardFace(t), lean: -10 * blast, bob: 1.2 * Math.sin(t * 2.2)}} id={`${k}fr`} facing={1} green />
+      <Friend age={age} pose={{armL: {a: 7, b: 9}, armR: {a: lerp(7, 28, blast), b: lerp(9, 128, blast)}, e: friendYardFace(t), lean: 8 * blast, bob: 1.2 * Math.sin(t * 2.2)}} id={`${k}fr`} facing={1} green />
     </g>
   );
-  // landing dust: soft clouds (no outlines) that bloom at touchdown, roll outward and rise, fading as one
-  const puff = clamp((t - T3.landing + 0.06) / 0.6);
-  const dustA = ss(puff, 0, 0.12) * (1 - ss(puff, 0.35, 1));
+  // landing dust: soft, round clouds (each fades out to its rim) that bloom at touchdown, roll outward and rise; drawn
+  // behind the capsule, so nothing of it shows through
+  const puff = clamp((t - T3.landing + 0.06) / 0.7);
   const sh = ss(t, T3.descent, T3.landing);
   const gate = ss(t, S.T_GATE - 0.3, S.T_GATE - 0.02);
   const doorOpen = ss(t, T3.inside - 0.46, T3.inside - 0.12);
   const yd = {D, season, t, v3: true, gateOpen: gate, doorOpen};
+  const shadowAndAstro = <g>{astroShadow}{astro}</g>;
   return (
     <g>
+      <defs>
+        <radialGradient id={`${k}dust`}>
+          <stop offset="0" stopColor="#D2C8B6" stopOpacity={0.95} />
+          <stop offset="0.55" stopColor="#D2C8B6" stopOpacity={0.6} />
+          <stop offset="1" stopColor="#D2C8B6" stopOpacity={0} />
+        </radialGradient>
+        <clipPath id={`${k}grd`}><rect x={-2000} y={-3000} width={6000} height={3000 + S.LAND.y + 14} /></clipPath>
+      </defs>
       <Yard {...yd} id={`${k}yd`} layer="back" />
-      {astroBehind && astroShadow}
-      {astroBehind && astro}
+      {astroBehindFence && shadowAndAstro}
       <Yard {...yd} id={`${k}yf`} layer="front" />
       {t > T3.descent && <ellipse cx={S.LAND.x} cy={S.LAND.y + 4} rx={lerp(60, 250, sh)} ry={lerp(10, 32, sh)} fill="#1B2A33" opacity={0.08 + 0.2 * sh} />}
+      {astroBehindFriend && shadowAndAstro}
       {friend}
-      {t > T3.descent - 0.1 && (
-        <g transform={`translate(${cap.x} ${cap.y}) scale(${S.CAP_S})`}>
-          <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} legSpread={S.LEG_SPREAD} />
-        </g>
-      )}
-      {dustA > 0.01 && (
-        <g opacity={0.7 * dustA}>
-          {[-1, 1].map((sd) => [0, 1, 2, 3].map((q) => {
-            const reach = 120 + 230 * (1 - (1 - puff) * (1 - puff));
-            const px = S.LAND.x + sd * reach * (0.5 + 0.17 * q), py = S.LAND.y + 6 - (14 + 9 * q) * puff;
-            return <ellipse key={`${sd}${q}`} cx={px} cy={py} rx={(30 + 10 * q) * (0.7 + 0.9 * puff)} ry={(18 + 6 * q) * (0.7 + 0.8 * puff)} fill={q % 2 ? '#D6CDBD' : '#C9BFAD'} />;
+      {puff > 0 && puff < 1 && (
+        <g>
+          {[-1, 1].map((sd) => [0, 1, 2, 3, 4].map((q) => {
+            const born = 0.04 * q, life = clamp((puff - born) / (1 - born));
+            if (life <= 0 || life >= 1) return null;
+            const reach = (110 + 60 * q) * (1 - (1 - life) * (1 - life));
+            const op = ss(life, 0, 0.12) * (1 - ss(life, 0.35, 1));
+            const px = S.LAND.x + sd * (150 + reach), py = S.LAND.y + 2 - (10 + 8 * q) * life;
+            return <ellipse key={`${sd}${q}`} cx={px} cy={py} rx={(46 + 12 * q) * (0.6 + 0.9 * life)} ry={(26 + 6 * q) * (0.6 + 0.8 * life)} fill={`url(#${k}dust)`} opacity={0.85 * op} />;
           }))}
         </g>
       )}
-      {!astroBehind && astroShadow}
-      {!astroBehind && astro}
+      {t > T3.descent - 0.1 && (
+        <g clipPath={`url(#${k}grd)`}>
+          <g transform={`translate(${cap.x} ${cap.y}) scale(${S.CAP_S})`}>
+            <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} legSpread={S.LEG_SPREAD} step={cap.step} />
+          </g>
+        </g>
+      )}
+      {!astroBehindFence && !astroBehindFriend && shadowAndAstro}
+      {hatchOver}
     </g>
   );
 }
@@ -324,34 +367,34 @@ const roomAstroFace = (t: number): Expr => {
   const see = ss(t, T3.seePhoto - 0.1, T3.seePhoto + 0.15);
   const real = ss(t, T3.realise, T3.realise + 0.32);
   const toFriend = ss(t, T3.friendIn + 0.3, T3.friendIn + 0.6) * (1 - ss(t, T3.watchUp + 0.05, T3.watchUp + 0.3));
-  const atWatch = ss(t, T3.watchUp + 0.1, T3.watchUp + 0.35) * (1 - ss(t, 21.2, 21.45));
-  const back = ss(t, 21.25, 21.55);
+  const atWatch = ss(t, T3.watchUp + 0.1, T3.watchUp + 0.35) * (1 - ss(t, 21.0, 21.2));
+  const back = ss(t, 21.05, 21.3);
   const settle = ss(t, 19.0, 19.6);
-  return {
-    ...S.mouthAt(t, [[0, 'flat'], [T3.realise + 0.12, 'tremble'], [19.35, 'flat'], [21.5, 'soft']], 0.14),
+  return S.v3Face({
+    ...S.mouthAt(t, [[0, 'flat'], [T3.realise + 0.12, 'tremble'], [19.35, 'flat'], [21.32, 'soft']], 0.14),
     turn: lerp(lerp(-0.1, -0.35, see), 0.4, Math.max(toFriend, back)), lookX: lerp(lerp(-0.3, -0.75, see), 0.8, Math.max(toFriend, back)) * (1 - atWatch) - 0.6 * atWatch,
     lookY: lerp(lerp(0.0, 0.7, see), 0.0, Math.max(toFriend, back, settle * 0.6)) * (1 - atWatch) + 0.85 * atWatch,
-    wide: 0.25 * see * (1 - real), brows: lerp(0.2 * see, 0.55, real) * (1 - 0.5 * settle), sad: 0.8 * real * (1 - 0.35 * settle),
-    blink: 1 - 0.85 * Math.max(Math.sin(Math.PI * clamp((t - 17.15) / 0.14)), Math.sin(Math.PI * clamp((t - 21.62) / 0.14))) ** 2,
-  };
+    wide: 0.25 * see * (1 - real), brows: lerp(0.2 * see, 0.45, real) * (1 - 0.5 * settle), sad: 0.85 * real * (1 - 0.35 * settle),
+    // blinks: one as he comes in (before he sees the photograph), one as the push into the watch begins
+    blink: 1 - 0.96 * Math.max(Math.sin(Math.PI * clamp((t - 16.3) / 0.14)), Math.sin(Math.PI * clamp((t - 21.62) / 0.14))) ** 2,
+  });
 };
-/** his old friend in the doorway: he watches him, blinks, looks at the watch, and softens into a small nod */
+/** his old friend in the doorway: he watches him, blinks, looks down at the watch, and softens into a small smile and a
+ *  nod - all in the held two-shot, before the push into the watch (he is drawn unmirrored: lookX + is screen-right) */
 const roomFriendFace = (t: number): Expr => {
-  const watch = ss(t, T3.watchUp + 0.2, T3.watchUp + 0.45) * (1 - ss(t, 21.2, 21.45));
-  return {
-    ...S.mouthAt(t, [[0, 'flat'], [21.5, 'soft'], [21.95, 'smile']], 0.16),
-    lookX: lerp(-0.75, -0.55, watch), lookY: lerp(0.05, 0.6, watch), turn: -0.35, sad: 0.3 * (1 - ss(t, 21.4, 21.9)), brows: 0.15 + 0.15 * watch,
-    wide: 0.18 * watch,
-    blink: 1 - 0.85 * Math.max(Math.sin(Math.PI * clamp((t - 20.32) / 0.14)), Math.sin(Math.PI * clamp((t - 21.32) / 0.14))) ** 2,
-  };
+  const watch = ss(t, T3.watchUp + 0.12, T3.watchUp + 0.36) * (1 - ss(t, 21.04, 21.24));
+  return S.v3Face({
+    ...S.mouthAt(t, [[0, 'flat'], [21.12, 'soft'], [21.36, 'smile']], 0.16),
+    lookX: lerp(-0.75, -0.5, watch), lookY: lerp(0.05, 0.95, watch), turn: -0.35, sad: 0.3 * (1 - ss(t, 21.0, 21.36)), brows: 0.15 + 0.15 * watch,
+    wide: 0.35 * watch,
+    blink: 1 - 0.96 * Math.max(Math.sin(Math.PI * clamp((t - 20.32) / 0.14)), Math.sin(Math.PI * clamp((t - 20.98) / 0.14))) ** 2,
+  });
 };
 function roomPresentWorld(t: number, k: string, cam: Cam) {
-  const x = S.roomAstroX(t);
-  const dist = (S.DOOR3.cx - 10 - x) / S.RS;
-  // the walk winds down into the stand over the last few frames (the lifted foot comes down, the bob settles)
-  const amp = 1 - ss(t, T3.roomStop - 0.2, T3.roomStop + 0.02);
-  const feet = walkFeetDir(dist, amp, 100, -1, 0); // walking to screen-left
-  const swing = Math.sin((Math.PI * dist) / 100) * 12 * amp;
+  const g = S.roomAstro(t);
+  const x = g.body.x;
+  const walking = t < T3.roomStop;
+  const swing = walking ? armSwing(g, -1, 0) * 9 : 0;
   // the watch comes up for the last beat (the same raise as in the cockpit)
   const wu = clamp((t - T3.watchUp) / 0.6);
   const st = ss(t, T3.roomStop - 0.1, T3.roomStop + 0.3); // standing still: the arms hang closer to the suit
@@ -362,7 +405,7 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
   const fu = ss(t, T3.friendIn, T3.friendIn + 0.7);
   const fx = lerp(S.DOOR3.x1 + 90, S.FRIEND_DOOR_X, fu);
   const fWalk = t > T3.friendIn && t < T3.friendIn + 0.7;
-  const nod = 3 * Math.sin(Math.PI * clamp((t - 21.55) / 0.5));
+  const nod = 4 * Math.sin(Math.PI * clamp((t - 21.1) / 0.45));
   return (
     <g>
       <Mirror>
@@ -375,14 +418,16 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
           <clipPath id={`${k}fdc`}><rect x={S.DOOR3.x0} y={S.DOOR3.y0 - 40} width={S.DOOR3.x1 - S.DOOR3.x0} height={S.F3 - S.DOOR3.y0 + 80} /></clipPath>
           <g clipPath={`url(#${k}fdc)`}>
             <g transform={`translate(${fx} ${S.F3}) scale(${S.RS})`}>
-              <Friend age={1} pose={{armL: {a: lerp(7, 3, fu), b: lerp(9, 6, fu)}, armR: {a: 7, b: 9}, e: roomFriendFace(t), walk: fWalk ? fu * 7 : 0, stride: fWalk ? 1 - ss(fu, 0.75, 1) : 0, lean: nod, bob: 1.0 * Math.sin(t * 2.0)}} id={`${k}rf`} facing={-1} green />
+              {/* (his near hand tucked in against his side once he stands in the doorway) */}
+              <Friend age={1} pose={{armL: {a: lerp(7, 1, fu), b: lerp(9, 4, fu)}, armR: {a: 7, b: 9}, e: roomFriendFace(t), walk: fWalk ? fu * 7 : 0, stride: fWalk ? 1 - ss(fu, 0.75, 1) : 0, lean: nod, bob: 1.0 * Math.sin(t * 2.0)}} id={`${k}rf`} facing={-1} green />
             </g>
           </g>
         </g>
       )}
+      <Shadow x={x} y={S.F3} s={S.RS} a={1} />
       <InkK.Provider value={S.inkFor(cam.z)}>
         <g transform={`translate(${x} ${S.F3}) scale(${S.RS})`}>
-          <Astronaut pose={{armL, armR: {a: lerp(restA, 3, ss(t, T3.friendIn, T3.friendIn + 0.5)) - swing, b: restB}, e: roomAstroFace(t), bob: walkBob(dist, amp), frontL: true}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={watchEl(t, k + 'r')} watchAt={S.WATCH_AT} feet={feet} nearLeg={feet.nearR ? 'R' : 'L'} />
+          <Astronaut pose={{armL, armR: {a: lerp(restA, 2, ss(t, T3.friendIn, T3.friendIn + 0.5)) - swing, b: restB}, e: roomAstroFace(t), bob: g.bob, frontL: true}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={watchEl(t, k + 'r')} watchAt={S.WATCH_AT} feet={g.feet} nearLeg={g.nearLeg} legStretch={1.3} shadow={false} />
         </g>
       </InkK.Provider>
     </g>
@@ -390,8 +435,12 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
 }
 
 // ---- captions: only the narration, clear of faces, the watch and the photograph -----------------------------------------
-// (in the cockpit the resting watch sits low in frame: those two captions go a little lower, over the console face)
-const capY = (i: number) => (i === 1 || i === 2 ? 1792 : 1716);
+// Every block sits above the bottom band a Shorts player covers (title, channel, sound ticker): its bottom edge at about
+// 1640 (74 px per line; the first caption is three lines, 'But back on EARTH' and 'years could be passing' one).
+const CAP_LINES = [3, 2, 2, 1, 2, 2, 2, 2, 2, 2];
+// (the exception: 'You'd watch your clock...' starts while his watch still rests in his lap, low in the cockpit frame, so
+// it sits just below the watch)
+const capY = (i: number) => (i === 2 ? 1746 : 1640 - 37 * (CAP_LINES[i] ?? 2));
 const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.35 : CAPTIONS[i].hide);
 
 export const Scene3: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {
@@ -426,6 +475,8 @@ export const Scene3: React.FC<{t: number; fkey: string; captions: boolean}> = ({
         {body}
       </svg>
       {captions && <Captions2 t={t} y={capY} hide={capHide} />}
+      {/* the loop: the first caption fades in over the last frames, so it is already on as the film starts again */}
+      {captions && t > T3.dur - 3.5 / 30 && <CaptionLine c={CAPTIONS[0]} y={capY(0)} a={clamp((t - (T3.dur - 3.5 / 30)) / 0.1)} />}
     </>
   );
 };

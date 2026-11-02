@@ -1067,7 +1067,7 @@ const GPW = 26;
 const ARB_Y = FB - 330; // where the posts meet the arch (the arch's centre line)
 const ARB_RO = 81, ARB_RI = 55;
 
-const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: number; gR: number}> = ({D, sl, paint, pSh, gL, gR}) => {
+const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: number; gR: number; v3?: boolean}> = ({D, sl, paint, pSh, gL, gR, v3}) => {
   const cx = (gL + gR) / 2;
   const wear = ss(D, 0.15, 1);
   const arch = `M ${cx - ARB_RO} ${ARB_Y} A ${ARB_RO} ${ARB_RO} 0 0 1 ${cx + ARB_RO} ${ARB_Y} L ${cx + ARB_RI} ${ARB_Y} A ${ARB_RI} ${ARB_RI} 0 0 0 ${cx - ARB_RI} ${ARB_Y} Z`;
@@ -1082,14 +1082,16 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
       const r = (ARB_RO + ARB_RI) / 2 + 9 * Math.sin(a * 7);
       return {x: cx + Math.cos(a) * r, y: ARB_Y + Math.sin(a) * r};
     }
-    const y = lerp(ARB_Y, ARB_Y + 230, (v - 0.75) / 0.25);
+    // (V3: on the right post the rose only wraps the top - he walks up the path just behind that post)
+    const y = lerp(ARB_Y, ARB_Y + (v3 ? 70 : 230), (v - 0.75) / 0.25);
     return {x: gR - 9 * Math.sin(y / 23), y};
   };
   const grown = lerp(0.42, 1, ss(D, 0, 0.75));
   const dens = lerp(0.55, 1, ss(D, 0, 0.8));
   // the rose's leaves stay brown from autumn until they drop (never green again in late autumn)
   const leafC = mix(mix('#4F8A50', '#62A55A', 0.4), '#C2502E', 0.8 * Math.max(sl.autumn, bump(sl.s, 0.68, 0.12, 0.2)));
-  const leafVis = 1 - sl.bare;
+  // (V3: the climbing rose keeps some leaves all year, so its stems never read as bare wires)
+  const leafVis = v3 ? Math.max(0.75, 1 - sl.bare) : 1 - sl.bare;
   const rose = Math.max(bump(sl.s, 0.3, 0.12, 0.22), sl.blossom * 0.5) * leafVis;
   const N = 90;
   const tip = N * grown;
@@ -1130,7 +1132,7 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
     </g>
   );
 };
-const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gateOpen}) => {
+const Fence: React.FC<{D: number; sl: Season; gateOpen: number; v3?: boolean}> = ({D, sl, gateOpen, v3}) => {
   const Fc = YARD.fence, Gt = YARD.gate;
   const wear = ss(D, 0.15, 1);
   const paint = mix('#FFFBF0', '#E3DDCF', 0.75 * wear);
@@ -1230,7 +1232,7 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gate
         </g>
       )))}
       {/* the rose arbour over the gate: two tall posts carry a lattice arch; a climbing rose grows over it with the years */}
-      <Arbour D={D} sl={sl} paint={paint} pSh={pSh} gL={gL} gR={gR} />
+      <Arbour D={D} sl={sl} paint={paint} pSh={pSh} gL={gL} gR={gR} v3={v3} />
     </g>
   );
 };
@@ -1498,7 +1500,7 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       <rect x={WX0} y={FB} width={WX1 - WX0} height={G + 40 - FB} fill={pave} stroke={INK} strokeWidth={3} />
       {Array.from({length: 50}, (_, k) => <line key={k} x1={WX0 + 40 + k * 120} y1={FB + 3} x2={WX0 + 40 + k * 120 - 6} y2={G + 28} stroke={INK} strokeWidth={2} opacity={0.16} />)}
       {sl.snow > 0.01 && <rect x={WX0} y={FB + 1} width={WX1 - WX0} height={9} fill={SNOW} opacity={sl.snow * 0.9} />}
-      <Fence D={D} sl={sl} gateOpen={gateOpen} />
+      <Fence D={D} sl={sl} gateOpen={gateOpen} v3={v3} />
       {!v3 && <Lamp x={YARD.lamp.x} D={D} light={light} snow={sl.snow} />}
       {/* kerb and street */}
       <rect x={WX0} y={G + 26} width={WX1 - WX0} height={16} fill={mix('#CFCAC0', '#D9DCE0', fut)} stroke={INK} strokeWidth={3} />

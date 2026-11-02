@@ -60,32 +60,32 @@
   "gain_db": -19.0
  },
  {
-  "t": 12.1,
+  "t": 12.06,
   "sfx": "hatch release",
   "gain_db": -21.0
  },
  {
-  "t": 12.3,
+  "t": 12.26,
   "sfx": "hatch clunk",
   "gain_db": -19.0
  },
  {
-  "t": 12.38,
+  "t": 12.3,
   "sfx": "boots on the pavement",
   "gain_db": -21.0
  },
  {
-  "t": 14.02,
+  "t": 14.06,
   "sfx": "sleeve (recognition)",
   "gain_db": -27.0
  },
  {
-  "t": 14.68,
+  "t": 14.932,
   "sfx": "footsteps up the path",
   "gain_db": -21.0
  },
  {
-  "t": 14.688,
+  "t": 14.765,
   "sfx": "garden gate",
   "gain_db": -25.0
  },
@@ -95,7 +95,7 @@
   "gain_db": -21.0
  },
  {
-  "t": 16.22,
+  "t": 16.342,
   "sfx": "footsteps on wood",
   "gain_db": -24.0
  },

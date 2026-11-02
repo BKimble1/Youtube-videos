@@ -5,20 +5,16 @@
 import * as fs from 'fs';
 import {T3} from '../source/src/v3/timing';
 import * as S from '../source/src/v3/story';
-import {footfalls} from '../source/src/v2/walk';
 
-// footsteps land every step of travel (the same step lengths the scene's feet use)
-const astroSteps = [T3.stepDown, ...footfalls((t) => S.astroReturn(t).s, T3.stepDown + 0.05, T3.arrive, S.YS, S.RET_STEP)];
-const pathSteps = footfalls((t) => {
-  const a = S.astroDoor(t);
-  return a.dist / a.s;
-}, T3.walk + 0.02, T3.inside - 0.01, 1, S.PATH_STEP);
-const roomSteps = footfalls((t) => (S.DOOR3.cx - 10 - S.roomAstroX(t)) / S.RS, T3.inside, T3.roomStop + 0.05, 1, 100);
+// footsteps land when each planted foot comes down (the same gait the scene draws)
+const astroSteps = S.returnSteps();
+const pathSteps = S.doorWalkSteps();
+const roomSteps = S.roomWalkSteps();
 const EV = {
   ...T3,
   gate: S.T_GATE - 0.25,
   doorOpen: T3.inside - 0.46,
-  astroSteps, doorSteps: [T3.walk + 0.1, ...pathSteps], roomSteps: [T3.inside + 0.02, ...roomSteps],
+  astroSteps, doorSteps: pathSteps, roomSteps,
   friendSteps: [T3.friendIn + 0.15, T3.friendIn + 0.45],
 };
 fs.writeFileSync(process.argv[2], JSON.stringify({EV}, null, 1));

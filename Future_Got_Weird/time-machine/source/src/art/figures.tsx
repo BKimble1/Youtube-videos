@@ -118,7 +118,10 @@ export const Astronaut: React.FC<{
   back?: boolean;
   /** V3: which leg is nearer the camera (drawn in front); default the right */
   nearLeg?: 'L' | 'R';
-}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false, watchAt = 0.66, nearLeg = 'R'}) => {
+  /** V3: planted feet may lie a little beyond the legs' reach (a foot nearer the camera sits lower on screen): the leg
+   *  lengthens up to this factor instead of pulling the foot off its spot, and feet may go below the body's ground line */
+  legStretch?: number;
+}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false, watchAt = 0.66, nearLeg = 'R', legStretch}) => {
   const ik = React.useContext(InkK);
   const lean = pose.lean ?? 0;
   const stride = pose.stride ?? 0, ph = pose.legs ?? 0;
@@ -132,9 +135,11 @@ export const Astronaut: React.FC<{
     const fx = kx + Math.sin(rad(sw - kn)) * 80, fy = ky + Math.cos(rad(sw - kn)) * 80;
     return {hx, kx, ky, fx, fy: Math.min(fy, -8)};
   };
-  const legIK = (side: -1 | 1, fx: number, fy: number) => {
+  const legIK = (side: -1 | 1, fx: number, fy0: number) => {
     const hx = side * 32;
-    const k = ik2(hx, hipY, fx, Math.min(fy, -8), 82, 80, side < 0 ? 1 : -1);
+    const fy = legStretch ? fy0 : Math.min(fy0, -8);
+    const st = legStretch ? clamp(Math.hypot(fx - hx, fy - hipY) / 161.5, 1, legStretch) : 1;
+    const k = ik2(hx, hipY, fx, fy, 82 * st, 80 * st, side < 0 ? 1 : -1);
     return {hx, kx: k.jx, ky: k.jy, fx: k.ex, fy: k.ey};
   };
   const lg = feet ? [legIK(-1, feet.lx, feet.ly), legIK(1, feet.rx, feet.ry)] : [leg(-1, ph), leg(1, ph + Math.PI)];
@@ -151,7 +156,7 @@ export const Astronaut: React.FC<{
       {!(hideHands === 'both' || (hideHands === 'L' && side < 0) || (hideHands === 'R' && side > 0)) && (
         <g transform={`translate(${P.hx} ${P.hy}) rotate(${P.angle})`}>
           <Mitt skin={glove ?? GUESSER.skin} side={side} />
-          {glove && <path d="M -19 -8 Q 0 -14 19 -8" fill="none" stroke={INK} strokeWidth={2 * ik} opacity={0.35} />}
+          {glove && <path d="M -13 -6 Q 0 -11 13 -6" fill="none" stroke={INK} strokeWidth={2 * ik} opacity={0.35} />}
         </g>
       )}
       {withWatch && watchEl && watchEl({x: P.ex + (P.hx - P.ex) * watchAt, y: P.ey + (P.hy - P.ey) * watchAt, angle: P.angle, ik})}

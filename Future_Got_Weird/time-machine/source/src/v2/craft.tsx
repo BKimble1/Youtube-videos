@@ -22,7 +22,11 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
   flameA?: number;
   /** V3: landing legs fold out from behind the heat shield, fully opaque, to this spread (0 = feet at the base edge) */
   legSpread?: number;
-}> = ({t, id, flame = 0, retro = 0, hatch = 0, legs = 0, win, bank = 0, glow = 0, flameA, legSpread}) => {
+  /** V3: the window glint's opacity (faded out as the camera goes through the glass, so it never fills the frame) */
+  glint?: number;
+  /** V3: a small fold-down step under the hatch (0 stowed .. 1 down), for climbing out */
+  step?: number;
+}> = ({t, id, flame = 0, retro = 0, hatch = 0, legs = 0, win, bank = 0, glow = 0, flameA, legSpread, glint = 1, step = 0}) => {
   const b = clamp(bank, -1, 1);
   const sq = 1 - 0.1 * Math.abs(b); // a 2.5D turn: slight squash, details slide toward the turning side
   const off = b * 46;
@@ -91,6 +95,18 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
           <rect x={H.x + H.rx - 34} y={H.y - 14} width={14} height={28} rx={5} fill={SHIELD} stroke={INK} strokeWidth={2.5} opacity={1 - hatch} />
         </g>
       </g>
+      {/* V3: the fold-down step under the hatch (hinged at the sill; tread just above the ground when down) */}
+      {step > 0.01 && (() => {
+        const yt = lerp(W.sill, -6, step);
+        return (
+          <g transform={`translate(${off * 0.7} 0)`}>
+            {[-1, 1].map((sd) => <path key={sd} d={`M ${H.x + sd * 40} ${W.sill} L ${H.x + sd * 46} ${yt}`} stroke={INK} strokeWidth={9} strokeLinecap="round" />)}
+            {[-1, 1].map((sd) => <path key={`i${sd}`} d={`M ${H.x + sd * 40} ${W.sill} L ${H.x + sd * 46} ${yt}`} stroke={STEEL} strokeWidth={4} strokeLinecap="round" />)}
+            <path d={`M ${H.x - 52} ${yt - 10 * step} L ${H.x + 52} ${yt - 10 * step} L ${H.x + 60} ${yt - 2} L ${H.x - 60} ${yt - 2} Z`} fill={HULL} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+            <rect x={H.x - 60} y={yt - 2} width={120} height={10} rx={2} fill={STEEL} stroke={INK} strokeWidth={3} />
+          </g>
+        );
+      })()}
       {/* cockpit window: rim, glass clip (portal), glint */}
       <g transform={`translate(${off} 0)`}>
         <circle cx={W.win.x} cy={W.win.y} r={W.win.r + 18} fill={STEEL} stroke={INK} strokeWidth={OUT} />
@@ -101,7 +117,7 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
         <circle cx={W.win.x} cy={W.win.y} r={W.win.r} fill="#13213A" stroke={INK} strokeWidth={3} />
         <clipPath id={`${id}-win`}><circle cx={W.win.x} cy={W.win.y} r={W.win.r} /></clipPath>
         {win && <g clipPath={`url(#${id}-win)`}>{win}</g>}
-        <path d={`M ${W.win.x - 34} ${W.win.y - 14} A 38 38 0 0 1 ${W.win.x - 10} ${W.win.y - 38}`} fill="none" stroke="#FFFFFF" strokeWidth={6} strokeLinecap="round" opacity={0.6} />
+        {glint > 0.01 && <path d={`M ${W.win.x - 34} ${W.win.y - 14} A 38 38 0 0 1 ${W.win.x - 10} ${W.win.y - 38}`} fill="none" stroke="#FFFFFF" strokeWidth={6} strokeLinecap="round" opacity={0.6 * glint} />}
       </g>
       {/* warm rim light from the disk (flight only) */}
       {glow > 0.01 && <path d={`M ${-W.baseHalf + 4} -40 L ${-W.topHalf + 4} -540`} fill="none" stroke="#FF9A55" strokeWidth={6} opacity={0.8 * glow} />}
