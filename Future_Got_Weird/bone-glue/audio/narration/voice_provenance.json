@@ -1,0 +1,16 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Myostatin, Zombie Snail, Zombie Ant, Dead Spider and Cyborg Cockroach); confirmed with creative_list_voices on 2026-11-02"},
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "vPJoRVyy04Q4iSyAc8Cy",
+ "prompt": "[curious, energetic] If you shattered your wrist, imagine gluing the bones back together. [brisk, excited] Researchers actually DID it. [brisk, explaining] They developed an experimental glue inspired by OYSTERS sticking to rocks. [intrigued] It grips bone even inside a wet, bloody wound. [building] In one reported wrist case, surgeons secured the broken pieces in just THREE MINUTES. [grounded, quick] The fracture still needed months to heal. [curious, building] But as new bone grows, the glue gradually DISAPPEARS. [wry, full of wonder] Your body replaces the stuff holding you together.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). Capitals mark emphasis only; the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 592.9 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_tsOx.mp3", "generation_id": "tsOxXmGGLacGEF45QQNT", "duration_s": 27.76, "scribe_words": "audio/narration/takes/t1_tsOx_scribe.json"},
+  {"file": "audio/narration/takes/t2_RlHD.mp3", "generation_id": "RlHDesyVXwTA5yPZ52TN", "duration_s": 27.36, "scribe_words": "audio/narration/takes/t2_RlHD_scribe.json"}
+ ],
+ "scribe": "eleven_scribe_v1 transcribed both takes on the flow (it echoes the prompt text, so it is a timing reference, not an independent ASR check)",
+ "download_status": "PENDING: the take MP3s are served from elevenlabsusercontent.com, which this environment's network policy denies (proxy 403 on 2026-11-02). The picture was built against take 2's Scribe word timings (source/src/data/timeline.json 'provisional': true) until the takes can be downloaded, measured and aligned."
+}

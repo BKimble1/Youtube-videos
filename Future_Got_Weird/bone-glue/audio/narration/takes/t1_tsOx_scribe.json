@@ -1,0 +1,370 @@
+{
+ "source": "eleven_scribe_v1 via connector (timing reference only; it echoes the prompt)",
+ "words": [
+  {
+   "word": "If",
+   "start": 0.142,
+   "end": 0.151
+  },
+  {
+   "word": "you",
+   "start": 0.16,
+   "end": 0.32
+  },
+  {
+   "word": "shattered",
+   "start": 0.4,
+   "end": 0.72
+  },
+  {
+   "word": "your",
+   "start": 0.8,
+   "end": 0.96
+  },
+  {
+   "word": "wrist,",
+   "start": 1.093,
+   "end": 1.6
+  },
+  {
+   "word": "imagine",
+   "start": 1.76,
+   "end": 2.16
+  },
+  {
+   "word": "gluing",
+   "start": 2.24,
+   "end": 2.56
+  },
+  {
+   "word": "the",
+   "start": 2.64,
+   "end": 2.72
+  },
+  {
+   "word": "bones",
+   "start": 2.88,
+   "end": 3.04
+  },
+  {
+   "word": "back",
+   "start": 3.12,
+   "end": 3.28
+  },
+  {
+   "word": "together.",
+   "start": 3.32,
+   "end": 3.88
+  },
+  {
+   "word": "Researchers",
+   "start": 4.24,
+   "end": 4.8
+  },
+  {
+   "word": "actually",
+   "start": 4.96,
+   "end": 5.36
+  },
+  {
+   "word": "did",
+   "start": 5.44,
+   "end": 5.6
+  },
+  {
+   "word": "it.",
+   "start": 5.68,
+   "end": 5.96
+  },
+  {
+   "word": "They",
+   "start": 6.24,
+   "end": 6.32
+  },
+  {
+   "word": "developed",
+   "start": 6.48,
+   "end": 6.72
+  },
+  {
+   "word": "an",
+   "start": 6.76,
+   "end": 6.8
+  },
+  {
+   "word": "experimental",
+   "start": 7.16,
+   "end": 7.52
+  },
+  {
+   "word": "glue",
+   "start": 7.6,
+   "end": 7.92
+  },
+  {
+   "word": "inspired",
+   "start": 8.0,
+   "end": 8.48
+  },
+  {
+   "word": "by",
+   "start": 8.6,
+   "end": 8.72
+  },
+  {
+   "word": "oysters",
+   "start": 8.8,
+   "end": 9.28
+  },
+  {
+   "word": "sticking",
+   "start": 9.36,
+   "end": 9.6
+  },
+  {
+   "word": "to",
+   "start": 9.68,
+   "end": 9.76
+  },
+  {
+   "word": "rocks.",
+   "start": 9.84,
+   "end": 10.65
+  },
+  {
+   "word": "It",
+   "start": 10.72,
+   "end": 10.8
+  },
+  {
+   "word": "grips",
+   "start": 10.88,
+   "end": 11.2
+  },
+  {
+   "word": "bone",
+   "start": 11.4,
+   "end": 11.6
+  },
+  {
+   "word": "even",
+   "start": 11.68,
+   "end": 11.84
+  },
+  {
+   "word": "inside",
+   "start": 12.0,
+   "end": 12.16
+  },
+  {
+   "word": "a",
+   "start": 12.4,
+   "end": 12.427
+  },
+  {
+   "word": "wet,",
+   "start": 12.453,
+   "end": 12.72
+  },
+  {
+   "word": "bloody",
+   "start": 12.8,
+   "end": 13.12
+  },
+  {
+   "word": "wound.",
+   "start": 13.2,
+   "end": 14.04
+  },
+  {
+   "word": "In",
+   "start": 14.208,
+   "end": 14.24
+  },
+  {
+   "word": "one",
+   "start": 14.32,
+   "end": 14.4
+  },
+  {
+   "word": "reported",
+   "start": 14.6,
+   "end": 14.8
+  },
+  {
+   "word": "wrist",
+   "start": 14.88,
+   "end": 15.12
+  },
+  {
+   "word": "case,",
+   "start": 15.4,
+   "end": 15.72
+  },
+  {
+   "word": "surgeons",
+   "start": 15.76,
+   "end": 16.08
+  },
+  {
+   "word": "secured",
+   "start": 16.16,
+   "end": 16.48
+  },
+  {
+   "word": "the",
+   "start": 16.56,
+   "end": 16.64
+  },
+  {
+   "word": "broken",
+   "start": 16.8,
+   "end": 16.96
+  },
+  {
+   "word": "pieces",
+   "start": 17.04,
+   "end": 17.36
+  },
+  {
+   "word": "in",
+   "start": 17.44,
+   "end": 17.52
+  },
+  {
+   "word": "just",
+   "start": 17.6,
+   "end": 17.84
+  },
+  {
+   "word": "three",
+   "start": 17.92,
+   "end": 18.24
+  },
+  {
+   "word": "minutes.",
+   "start": 18.32,
+   "end": 19.08
+  },
+  {
+   "word": "The",
+   "start": 19.191,
+   "end": 19.2
+  },
+  {
+   "word": "fracture",
+   "start": 19.28,
+   "end": 19.68
+  },
+  {
+   "word": "still",
+   "start": 19.76,
+   "end": 19.92
+  },
+  {
+   "word": "needed",
+   "start": 20.08,
+   "end": 20.24
+  },
+  {
+   "word": "months",
+   "start": 20.32,
+   "end": 20.56
+  },
+  {
+   "word": "to",
+   "start": 20.64,
+   "end": 20.72
+  },
+  {
+   "word": "heal.",
+   "start": 20.8,
+   "end": 21.48
+  },
+  {
+   "word": "But",
+   "start": 21.59,
+   "end": 21.6
+  },
+  {
+   "word": "as",
+   "start": 21.68,
+   "end": 21.76
+  },
+  {
+   "word": "new",
+   "start": 21.84,
+   "end": 22.0
+  },
+  {
+   "word": "bone",
+   "start": 22.12,
+   "end": 22.24
+  },
+  {
+   "word": "grows,",
+   "start": 22.32,
+   "end": 22.92
+  },
+  {
+   "word": "the",
+   "start": 22.96,
+   "end": 23.04
+  },
+  {
+   "word": "glue",
+   "start": 23.12,
+   "end": 23.36
+  },
+  {
+   "word": "gradually",
+   "start": 23.44,
+   "end": 23.92
+  },
+  {
+   "word": "disappears.",
+   "start": 24.0,
+   "end": 25.08
+  },
+  {
+   "word": "Your",
+   "start": 25.342,
+   "end": 25.36
+  },
+  {
+   "word": "body",
+   "start": 25.52,
+   "end": 25.68
+  },
+  {
+   "word": "replaces",
+   "start": 25.76,
+   "end": 26.24
+  },
+  {
+   "word": "the",
+   "start": 26.32,
+   "end": 26.4
+  },
+  {
+   "word": "stuff",
+   "start": 26.48,
+   "end": 26.64
+  },
+  {
+   "word": "holding",
+   "start": 26.72,
+   "end": 26.96
+  },
+  {
+   "word": "you",
+   "start": 27.0,
+   "end": 27.04
+  },
+  {
+   "word": "together.",
+   "start": 27.12,
+   "end": 27.84
+  }
+ ]
+}

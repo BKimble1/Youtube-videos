@@ -1,0 +1,529 @@
+{
+ "fps": 30,
+ "frames": 840,
+ "duration": 28.0,
+ "provisional": true,
+ "take": "t2_RlHD",
+ "captions": [
+  {
+   "text": "If you shattered your wrist,",
+   "emph": [
+    "shattered"
+   ],
+   "start": 0.15,
+   "end": 1.6,
+   "show": 0.11,
+   "hide": 1.64
+  },
+  {
+   "text": "imagine gluing the bones back together.",
+   "emph": [
+    "gluing"
+   ],
+   "start": 1.68,
+   "end": 4.0,
+   "show": 1.64,
+   "hide": 4.04
+  },
+  {
+   "text": "Researchers actually did it.",
+   "emph": [
+    "did"
+   ],
+   "start": 4.08,
+   "end": 5.927,
+   "show": 4.04,
+   "hide": 5.96
+  },
+  {
+   "text": "They developed an experimental glue",
+   "emph": [
+    "experimental"
+   ],
+   "start": 6.0,
+   "end": 7.68,
+   "show": 5.96,
+   "hide": 7.76
+  },
+  {
+   "text": "inspired by oysters sticking to rocks.",
+   "emph": [
+    "oysters"
+   ],
+   "start": 7.8,
+   "end": 10.25,
+   "show": 7.76,
+   "hide": 10.28
+  },
+  {
+   "text": "It grips bone even inside",
+   "emph": [
+    "grips"
+   ],
+   "start": 10.32,
+   "end": 11.76,
+   "show": 10.28,
+   "hide": 11.96
+  },
+  {
+   "text": "a wet, bloody wound.",
+   "emph": [
+    "wet",
+    "bloody"
+   ],
+   "start": 12.0,
+   "end": 13.613,
+   "show": 11.96,
+   "hide": 13.64
+  },
+  {
+   "text": "In one reported wrist case,",
+   "emph": [
+    "wrist"
+   ],
+   "start": 13.68,
+   "end": 15.28,
+   "show": 13.64,
+   "hide": 15.32
+  },
+  {
+   "text": "surgeons secured the broken pieces",
+   "emph": [
+    "secured"
+   ],
+   "start": 15.36,
+   "end": 16.96,
+   "show": 15.32,
+   "hide": 17.0
+  },
+  {
+   "text": "in just three minutes.",
+   "emph": [
+    "three",
+    "minutes"
+   ],
+   "start": 17.04,
+   "end": 18.72,
+   "show": 17.0,
+   "hide": 18.76
+  },
+  {
+   "text": "The fracture still needed months to heal.",
+   "emph": [
+    "months"
+   ],
+   "start": 18.8,
+   "end": 21.04,
+   "show": 18.76,
+   "hide": 21.08
+  },
+  {
+   "text": "But as new bone grows,",
+   "emph": [
+    "new",
+    "bone"
+   ],
+   "start": 21.12,
+   "end": 22.613,
+   "show": 21.08,
+   "hide": 22.627
+  },
+  {
+   "text": "the glue gradually disappears.",
+   "emph": [
+    "disappears"
+   ],
+   "start": 22.667,
+   "end": 24.726,
+   "show": 22.627,
+   "hide": 24.76
+  },
+  {
+   "text": "Your body replaces",
+   "emph": [
+    "body"
+   ],
+   "start": 24.8,
+   "end": 25.92,
+   "show": 24.76,
+   "hide": 25.96
+  },
+  {
+   "text": "the stuff holding you together.",
+   "emph": [
+    "together"
+   ],
+   "start": 26.0,
+   "end": 27.44,
+   "show": 25.96,
+   "hide": 28.0
+  }
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.15,
+   "end": 0.16
+  },
+  {
+   "word": "you",
+   "start": 0.28,
+   "end": 0.4
+  },
+  {
+   "word": "shattered",
+   "start": 0.44,
+   "end": 0.72
+  },
+  {
+   "word": "your",
+   "start": 0.8,
+   "end": 0.96
+  },
+  {
+   "word": "wrist,",
+   "start": 1.0,
+   "end": 1.6
+  },
+  {
+   "word": "imagine",
+   "start": 1.68,
+   "end": 2.16
+  },
+  {
+   "word": "gluing",
+   "start": 2.2,
+   "end": 2.48
+  },
+  {
+   "word": "the",
+   "start": 2.56,
+   "end": 2.64
+  },
+  {
+   "word": "bones",
+   "start": 2.8,
+   "end": 2.96
+  },
+  {
+   "word": "back",
+   "start": 3.04,
+   "end": 3.2
+  },
+  {
+   "word": "together.",
+   "start": 3.24,
+   "end": 4.0
+  },
+  {
+   "word": "Researchers",
+   "start": 4.08,
+   "end": 4.56
+  },
+  {
+   "word": "actually",
+   "start": 4.72,
+   "end": 5.12
+  },
+  {
+   "word": "did",
+   "start": 5.2,
+   "end": 5.36
+  },
+  {
+   "word": "it.",
+   "start": 5.44,
+   "end": 5.927
+  },
+  {
+   "word": "They",
+   "start": 6.0,
+   "end": 6.08
+  },
+  {
+   "word": "developed",
+   "start": 6.24,
+   "end": 6.48
+  },
+  {
+   "word": "an",
+   "start": 6.52,
+   "end": 6.56
+  },
+  {
+   "word": "experimental",
+   "start": 6.92,
+   "end": 7.28
+  },
+  {
+   "word": "glue",
+   "start": 7.36,
+   "end": 7.68
+  },
+  {
+   "word": "inspired",
+   "start": 7.8,
+   "end": 8.16
+  },
+  {
+   "word": "by",
+   "start": 8.28,
+   "end": 8.4
+  },
+  {
+   "word": "oysters",
+   "start": 8.48,
+   "end": 8.96
+  },
+  {
+   "word": "sticking",
+   "start": 9.0,
+   "end": 9.28
+  },
+  {
+   "word": "to",
+   "start": 9.36,
+   "end": 9.44
+  },
+  {
+   "word": "rocks.",
+   "start": 9.52,
+   "end": 10.25
+  },
+  {
+   "word": "It",
+   "start": 10.32,
+   "end": 10.48
+  },
+  {
+   "word": "grips",
+   "start": 10.52,
+   "end": 10.8
+  },
+  {
+   "word": "bone",
+   "start": 10.88,
+   "end": 11.2
+  },
+  {
+   "word": "even",
+   "start": 11.28,
+   "end": 11.44
+  },
+  {
+   "word": "inside",
+   "start": 11.6,
+   "end": 11.76
+  },
+  {
+   "word": "a",
+   "start": 12.0,
+   "end": 12.027
+  },
+  {
+   "word": "wet,",
+   "start": 12.053,
+   "end": 12.28
+  },
+  {
+   "word": "bloody",
+   "start": 12.32,
+   "end": 12.72
+  },
+  {
+   "word": "wound.",
+   "start": 12.8,
+   "end": 13.613
+  },
+  {
+   "word": "In",
+   "start": 13.68,
+   "end": 13.84
+  },
+  {
+   "word": "one",
+   "start": 13.92,
+   "end": 14.0
+  },
+  {
+   "word": "reported",
+   "start": 14.2,
+   "end": 14.4
+  },
+  {
+   "word": "wrist",
+   "start": 14.48,
+   "end": 14.64
+  },
+  {
+   "word": "case,",
+   "start": 14.72,
+   "end": 15.28
+  },
+  {
+   "word": "surgeons",
+   "start": 15.36,
+   "end": 15.68
+  },
+  {
+   "word": "secured",
+   "start": 15.88,
+   "end": 16.08
+  },
+  {
+   "word": "the",
+   "start": 16.16,
+   "end": 16.24
+  },
+  {
+   "word": "broken",
+   "start": 16.4,
+   "end": 16.56
+  },
+  {
+   "word": "pieces",
+   "start": 16.76,
+   "end": 16.96
+  },
+  {
+   "word": "in",
+   "start": 17.04,
+   "end": 17.12
+  },
+  {
+   "word": "just",
+   "start": 17.28,
+   "end": 17.44
+  },
+  {
+   "word": "three",
+   "start": 17.52,
+   "end": 17.84
+  },
+  {
+   "word": "minutes.",
+   "start": 17.92,
+   "end": 18.72
+  },
+  {
+   "word": "The",
+   "start": 18.8,
+   "end": 18.88
+  },
+  {
+   "word": "fracture",
+   "start": 18.92,
+   "end": 19.28
+  },
+  {
+   "word": "still",
+   "start": 19.36,
+   "end": 19.52
+  },
+  {
+   "word": "needed",
+   "start": 19.68,
+   "end": 19.84
+  },
+  {
+   "word": "months",
+   "start": 19.92,
+   "end": 20.16
+  },
+  {
+   "word": "to",
+   "start": 20.24,
+   "end": 20.32
+  },
+  {
+   "word": "heal.",
+   "start": 20.36,
+   "end": 21.04
+  },
+  {
+   "word": "But",
+   "start": 21.12,
+   "end": 21.2
+  },
+  {
+   "word": "as",
+   "start": 21.28,
+   "end": 21.36
+  },
+  {
+   "word": "new",
+   "start": 21.44,
+   "end": 21.6
+  },
+  {
+   "word": "bone",
+   "start": 21.72,
+   "end": 21.84
+  },
+  {
+   "word": "grows,",
+   "start": 21.92,
+   "end": 22.613
+  },
+  {
+   "word": "the",
+   "start": 22.667,
+   "end": 22.72
+  },
+  {
+   "word": "glue",
+   "start": 22.8,
+   "end": 23.04
+  },
+  {
+   "word": "gradually",
+   "start": 23.2,
+   "end": 23.6
+  },
+  {
+   "word": "disappears.",
+   "start": 23.68,
+   "end": 24.726
+  },
+  {
+   "word": "Your",
+   "start": 24.8,
+   "end": 25.04
+  },
+  {
+   "word": "body",
+   "start": 25.2,
+   "end": 25.36
+  },
+  {
+   "word": "replaces",
+   "start": 25.44,
+   "end": 25.92
+  },
+  {
+   "word": "the",
+   "start": 26.0,
+   "end": 26.08
+  },
+  {
+   "word": "stuff",
+   "start": 26.2,
+   "end": 26.32
+  },
+  {
+   "word": "holding",
+   "start": 26.4,
+   "end": 26.64
+  },
+  {
+   "word": "you",
+   "start": 26.68,
+   "end": 26.72
+  },
+  {
+   "word": "together.",
+   "start": 26.8,
+   "end": 27.44
+  }
+ ]
+}
