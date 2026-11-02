@@ -1,0 +1,127 @@
+[
+ {
+  "t": 20.072,
+  "sfx": "black hole rumble (loop cut -> frame 0 -> window)",
+  "gain_db": -7.0
+ },
+ {
+  "t": 20.072,
+  "sfx": "capsule engine (steady, across the seam)",
+  "gain_db": -15.0
+ },
+ {
+  "t": 2.977,
+  "sfx": "through the cockpit window",
+  "gain_db": -17.0
+ },
+ {
+  "t": 4.036,
+  "sfx": "watch tick",
+  "gain_db": -19.0
+ },
+ {
+  "t": 6.664,
+  "sfx": "the hour lands",
+  "gain_db": -15.0
+ },
+ {
+  "t": 4.523,
+  "sfx": "wrist rises",
+  "gain_db": -24.0
+ },
+ {
+  "t": 7.464,
+  "sfx": "home clock racing",
+  "gain_db": -20.0
+ },
+ {
+  "t": 8.365,
+  "sfx": "through the window (inside -> outside)",
+  "gain_db": -21.0
+ },
+ {
+  "t": 8.766,
+  "sfx": "birds",
+  "gain_db": -30.26576943005767
+ },
+ {
+  "t": 10.344,
+  "sfx": "capsule retro roar",
+  "gain_db": -11.0
+ },
+ {
+  "t": 10.855,
+  "sfx": "landing contact",
+  "gain_db": -7.0
+ },
+ {
+  "t": 10.875,
+  "sfx": "landing dust",
+  "gain_db": -19.0
+ },
+ {
+  "t": 10.91,
+  "sfx": "hatch release",
+  "gain_db": -21.0
+ },
+ {
+  "t": 11.11,
+  "sfx": "hatch clunk",
+  "gain_db": -19.0
+ },
+ {
+  "t": 11.066,
+  "sfx": "boots on the pavement",
+  "gain_db": -21.0
+ },
+ {
+  "t": 12.832,
+  "sfx": "sleeve (recognition)",
+  "gain_db": -27.0
+ },
+ {
+  "t": 13.436,
+  "sfx": "footsteps up the path",
+  "gain_db": -21.0
+ },
+ {
+  "t": 13.381,
+  "sfx": "garden gate",
+  "gain_db": -25.0
+ },
+ {
+  "t": 14.082,
+  "sfx": "front door",
+  "gain_db": -21.0
+ },
+ {
+  "t": 14.725,
+  "sfx": "footsteps on wood",
+  "gain_db": -24.0
+ },
+ {
+  "t": 14.985,
+  "sfx": "home clock (normal time)",
+  "gain_db": -31.0
+ },
+ {
+  "t": 17.408,
+  "sfx": "his friend's steps in the doorway",
+  "gain_db": -27.0
+ },
+ {
+  "t": 18.005,
+  "sfx": "wrist rises (the room)",
+  "gain_db": -25.0
+ },
+ {
+  "t": 18.355,
+  "sfx": "his watch (one hour) against the home clock",
+  "gain_db": -24.0
+ },
+ {
+  "t": 18.806,
+  "sfx": "into the watch face (to the opening)",
+  "gain_db": -15.0
+ }
+]

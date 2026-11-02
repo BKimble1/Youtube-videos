@@ -1,7 +1,7 @@
 {
  "fps": 30,
- "frames": 706,
- "duration": 23.533,
+ "frames": 625,
+ "duration": 20.833,
  "captions": [
   {
    "text": "If you flew close enough to a black hole,",
@@ -10,19 +10,19 @@
     "hole"
    ],
    "start": 0.0,
-   "end": 2.38,
+   "end": 2.35,
    "show": 0.0,
-   "hide": 2.72
+   "hide": 2.59
   },
   {
    "text": "you could travel into the future.",
    "emph": [
     "future"
    ],
-   "start": 2.76,
-   "end": 4.26,
-   "show": 2.72,
-   "hide": 4.93
+   "start": 2.63,
+   "end": 4.14,
+   "show": 2.59,
+   "hide": 4.5
   },
   {
    "text": "You'd watch your clock tick for just one hour.",
@@ -30,80 +30,80 @@
     "one",
     "hour"
    ],
-   "start": 4.97,
-   "end": 7.45,
-   "show": 4.93,
-   "hide": 8.19
+   "start": 4.54,
+   "end": 7.02,
+   "show": 4.5,
+   "hide": 7.45
   },
   {
    "text": "But back on Earth,",
    "emph": [
     "earth"
    ],
-   "start": 8.23,
-   "end": 9.17,
-   "show": 8.19,
-   "hide": 9.43
+   "start": 7.49,
+   "end": 8.44,
+   "show": 7.45,
+   "hide": 8.69
   },
   {
    "text": "years could be passing.",
    "emph": [
     "years"
    ],
-   "start": 9.47,
-   "end": 10.67,
-   "show": 9.43,
-   "hide": 11.48
+   "start": 8.73,
+   "end": 9.93,
+   "show": 8.69,
+   "hide": 10.39
   },
   {
    "text": "And when you finally returned,",
    "emph": [
     "returned"
    ],
-   "start": 11.52,
-   "end": 12.79,
-   "show": 11.48,
-   "hide": 13.18
+   "start": 10.43,
+   "end": 11.7,
+   "show": 10.39,
+   "hide": 11.95
   },
   {
    "text": "your friends would be old.",
    "emph": [
     "old"
    ],
-   "start": 13.22,
-   "end": 14.34,
-   "show": 13.18,
-   "hide": 14.94
+   "start": 11.99,
+   "end": 13.11,
+   "show": 11.95,
+   "hide": 13.62
   },
   {
    "text": "Your family might already be gone.",
    "emph": [
     "gone"
    ],
-   "start": 15.29,
-   "end": 16.83,
-   "show": 15.25,
-   "hide": 17.43
+   "start": 13.66,
+   "end": 15.19,
+   "show": 13.62,
+   "hide": 15.7
   },
   {
    "text": "Because you didn't just travel through space.",
    "emph": [
     "space"
    ],
-   "start": 17.95,
-   "end": 19.95,
-   "show": 17.91,
-   "hide": 20.75
+   "start": 15.74,
+   "end": 17.74,
+   "show": 15.7,
+   "hide": 18.19
   },
   {
    "text": "You traveled through time.",
    "emph": [
     "time"
    ],
-   "start": 20.79,
-   "end": 22.01,
-   "show": 20.75,
-   "hide": 22.61
+   "start": 18.23,
+   "end": 19.45,
+   "show": 18.19,
+   "hide": 19.9
   }
  ],
  "words": [
@@ -120,287 +120,287 @@
   {
    "word": "flew",
    "start": 0.4,
-   "end": 0.74
+   "end": 0.71
   },
   {
    "word": "close",
-   "start": 0.76,
-   "end": 1.15
+   "start": 0.72,
+   "end": 1.12
   },
   {
    "word": "enough",
-   "start": 1.16,
-   "end": 1.39
+   "start": 1.12,
+   "end": 1.36
   },
   {
    "word": "to",
-   "start": 1.4,
-   "end": 1.51
+   "start": 1.36,
+   "end": 1.48
   },
   {
    "word": "a",
-   "start": 1.52,
-   "end": 1.66
+   "start": 1.48,
+   "end": 1.63
   },
   {
    "word": "black",
-   "start": 1.68,
-   "end": 2.03
+   "start": 1.64,
+   "end": 2.0
   },
   {
    "word": "hole,",
-   "start": 2.04,
-   "end": 2.38
+   "start": 2.0,
+   "end": 2.35
   },
   {
    "word": "you",
-   "start": 2.76,
-   "end": 2.81
+   "start": 2.63,
+   "end": 2.68
   },
   {
    "word": "could",
-   "start": 2.8,
-   "end": 2.96
+   "start": 2.67,
+   "end": 2.88
   },
   {
    "word": "travel",
-   "start": 2.97,
-   "end": 3.4
+   "start": 2.89,
+   "end": 3.28
   },
   {
    "word": "into",
-   "start": 3.41,
-   "end": 3.6
+   "start": 3.29,
+   "end": 3.49
   },
   {
    "word": "the",
-   "start": 3.61,
-   "end": 3.67
+   "start": 3.49,
+   "end": 3.55
   },
   {
    "word": "future.",
-   "start": 3.77,
-   "end": 4.26
+   "start": 3.61,
+   "end": 4.14
   },
   {
    "word": "You'd",
-   "start": 4.97,
-   "end": 5.09
+   "start": 4.54,
+   "end": 4.69
   },
   {
    "word": "watch",
-   "start": 5.095,
-   "end": 5.37
+   "start": 4.7,
+   "end": 4.91
   },
   {
    "word": "your",
-   "start": 5.375,
-   "end": 5.53
+   "start": 4.94,
+   "end": 5.13
   },
   {
    "word": "clock",
-   "start": 5.535,
-   "end": 5.87
+   "start": 5.14,
+   "end": 5.44
   },
   {
    "word": "tick",
-   "start": 5.895,
-   "end": 6.17
+   "start": 5.46,
+   "end": 5.74
   },
   {
    "word": "for",
-   "start": 6.215,
-   "end": 6.41
+   "start": 5.78,
+   "end": 5.97
   },
   {
    "word": "just",
-   "start": 6.415,
-   "end": 6.77
+   "start": 5.98,
+   "end": 6.34
   },
   {
    "word": "one",
-   "start": 6.775,
-   "end": 7.13
+   "start": 6.34,
+   "end": 6.65
   },
   {
    "word": "hour.",
-   "start": 7.135,
-   "end": 7.45
+   "start": 6.66,
+   "end": 7.02
   },
   {
    "word": "But",
-   "start": 8.23,
-   "end": 8.28
+   "start": 7.49,
+   "end": 7.54
   },
   {
    "word": "back",
-   "start": 8.27,
-   "end": 8.52
+   "start": 7.53,
+   "end": 7.8
   },
   {
    "word": "on",
-   "start": 8.52,
-   "end": 8.75
+   "start": 7.815,
+   "end": 8.05
   },
   {
    "word": "Earth,",
-   "start": 8.76,
-   "end": 9.17
+   "start": 8.055,
+   "end": 8.44
   },
   {
    "word": "years",
-   "start": 9.47,
-   "end": 9.83
+   "start": 8.73,
+   "end": 9.1
   },
   {
    "word": "could",
-   "start": 9.84,
-   "end": 10.03
+   "start": 9.105,
+   "end": 9.3
   },
   {
    "word": "be",
-   "start": 10.04,
-   "end": 10.27
+   "start": 9.305,
+   "end": 9.54
   },
   {
    "word": "passing.",
-   "start": 10.28,
-   "end": 10.67
+   "start": 9.545,
+   "end": 9.93
   },
   {
    "word": "And",
-   "start": 11.52,
-   "end": 11.57
+   "start": 10.43,
+   "end": 10.48
   },
   {
    "word": "when",
-   "start": 11.56,
-   "end": 11.61
+   "start": 10.47,
+   "end": 10.52
   },
   {
    "word": "you",
-   "start": 11.6,
-   "end": 11.73
+   "start": 10.51,
+   "end": 10.65
   },
   {
    "word": "finally",
-   "start": 11.735,
-   "end": 12.33
+   "start": 10.66,
+   "end": 11.25
   },
   {
    "word": "returned,",
-   "start": 12.335,
-   "end": 12.79
+   "start": 11.26,
+   "end": 11.7
   },
   {
    "word": "your",
-   "start": 13.22,
-   "end": 13.28
+   "start": 11.99,
+   "end": 12.08
   },
   {
    "word": "friends",
-   "start": 13.285,
-   "end": 13.68
+   "start": 12.085,
+   "end": 12.48
   },
   {
    "word": "would",
-   "start": 13.685,
-   "end": 13.88
+   "start": 12.485,
+   "end": 12.64
   },
   {
    "word": "be",
-   "start": 13.885,
-   "end": 14.12
+   "start": 12.645,
+   "end": 12.88
   },
   {
    "word": "old.",
-   "start": 14.125,
-   "end": 14.34
+   "start": 12.885,
+   "end": 13.11
   },
   {
    "word": "Your",
-   "start": 15.29,
-   "end": 15.34
+   "start": 13.66,
+   "end": 13.71
   },
   {
    "word": "family",
-   "start": 15.33,
-   "end": 15.73
+   "start": 13.7,
+   "end": 14.1
   },
   {
    "word": "might",
-   "start": 15.735,
-   "end": 15.89
+   "start": 14.105,
+   "end": 14.26
   },
   {
    "word": "already",
-   "start": 15.895,
-   "end": 16.37
+   "start": 14.265,
+   "end": 14.74
   },
   {
    "word": "be",
-   "start": 16.375,
-   "end": 16.61
+   "start": 14.745,
+   "end": 14.94
   },
   {
    "word": "gone.",
-   "start": 16.615,
-   "end": 16.83
+   "start": 14.945,
+   "end": 15.19
   },
   {
    "word": "Because",
-   "start": 17.95,
-   "end": 18.0
+   "start": 15.74,
+   "end": 15.79
   },
   {
    "word": "you",
-   "start": 17.99,
-   "end": 18.18
+   "start": 15.785,
+   "end": 15.98
   },
   {
    "word": "didn't",
-   "start": 18.19,
-   "end": 18.54
+   "start": 15.985,
+   "end": 16.34
   },
   {
    "word": "just",
-   "start": 18.55,
-   "end": 18.77
+   "start": 16.345,
+   "end": 16.56
   },
   {
    "word": "travel",
-   "start": 18.79,
-   "end": 19.18
+   "start": 16.585,
+   "end": 16.98
   },
   {
    "word": "through",
-   "start": 19.19,
-   "end": 19.46
+   "start": 16.985,
+   "end": 17.26
   },
   {
    "word": "space.",
-   "start": 19.47,
-   "end": 19.95
+   "start": 17.265,
+   "end": 17.74
   },
   {
    "word": "You",
-   "start": 20.79,
-   "end": 20.84
+   "start": 18.23,
+   "end": 18.28
   },
   {
    "word": "traveled",
-   "start": 20.83,
-   "end": 21.33
+   "start": 18.27,
+   "end": 18.77
   },
   {
    "word": "through",
-   "start": 21.37,
-   "end": 21.68
+   "start": 18.825,
+   "end": 19.14
   },
   {
    "word": "time.",
-   "start": 21.69,
-   "end": 22.01
+   "start": 19.145,
+   "end": 19.45
   }
  ]
 }
