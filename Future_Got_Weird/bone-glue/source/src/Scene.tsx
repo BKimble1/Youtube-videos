@@ -50,9 +50,11 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
           <RoomBack id={`${fkey}room`} t={t} />
         </Layer>
       )}
-      <Layer c={c} z={Z_TABLE} maxBlur={18}>
-        <HandTable id={`${fkey}tab`} variant={tableVariant(t)} />
-      </Layer>
+      {c.w > 70 && (
+        <Layer c={c} z={Z_TABLE} maxBlur={18}>
+          <HandTable id={`${fkey}tab`} variant={tableVariant(t)} />
+        </Layer>
+      )}
       {showSurgeon && (
         <Layer c={c} z={Z_INSTR} maxBlur={20}>
           <SurgeonBack id={`${fkey}sb`} s={sIns} />

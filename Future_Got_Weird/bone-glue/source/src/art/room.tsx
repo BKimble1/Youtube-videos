@@ -55,7 +55,7 @@ export const RoomBack: React.FC<{id: string; t: number}> = ({id, t}) => {
           <stop offset="0.3" stopColor={C.lamp} stopOpacity={0.28} />
           <stop offset="1" stopColor={C.lamp} stopOpacity={0} />
         </radialGradient>
-        <filter id={`${id}-bl`} filterUnits="userSpaceOnUse" x={-BIG} y={-BIG} width={BIG * 2} height={BIG * 2}>
+        <filter id={`${id}-bl`} x="-25%" y="-25%" width="150%" height="150%">
           <feGaussianBlur stdDeviation="40" />
         </filter>
       </defs>
@@ -80,7 +80,7 @@ export const RoomBack: React.FC<{id: string; t: number}> = ({id, t}) => {
 
 // ------------------------------------------------------------------------------------------------ shared bits
 const blurF = (id: string, sd: number) => (
-  <filter id={id} filterUnits="userSpaceOnUse" x="-4000" y="-4000" width="8000" height="8000">
+  <filter id={id} x="-25%" y="-25%" width="150%" height="150%">
     <feGaussianBlur stdDeviation={f(sd)} />
   </filter>
 );

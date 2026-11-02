@@ -211,7 +211,7 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
     return (
       <g>
         <defs>
-          <filter id={id_('shf')} filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="4000" height="4000">
+          <filter id={id_('shf')} x="-25%" y="-25%" width="150%" height="150%">
             <feGaussianBlur stdDeviation={f(0.45)} />
           </filter>
           <linearGradient id={id_('shg')} gradientUnits="userSpaceOnUse" x1={f(g0.x)} y1={f(g0.y)} x2={f(g1.x)} y2={f(g1.y)}>
@@ -550,7 +550,7 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const shadowEl = shadow ? (
     <g>
       <defs>
-        <filter id={`${id}-sf`} filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="4000" height="4000">
+        <filter id={`${id}-sf`} x="-25%" y="-25%" width="150%" height="150%">
           <feGaussianBlur stdDeviation="0.9" />
         </filter>
       </defs>
