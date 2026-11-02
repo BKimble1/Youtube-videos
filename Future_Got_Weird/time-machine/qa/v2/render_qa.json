@@ -1,0 +1,36 @@
+{
+ "file": "FGW_TimeMachine_V2_REVIEW_1080x1920.mp4",
+ "size_mb": 26.6,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 706,
+  "duration_s": 23.533
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 16.08,
+ "large_changes": [
+  {
+   "frame": 246,
+   "t": 8.2,
+   "mad": 110.93,
+   "planned": "match cut: watch -> home wall clock"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 6,
+ "longest_near_static_run_starts_s": 13.67,
+ "loop_last_vs_first_mad": 6.99,
+ "one_frame_glitches": []
+}

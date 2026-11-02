@@ -1,6 +1,28 @@
 # Future Got Weird: This Time Machine Actually Works
 
-## V1 (initial review render, current)
+## V2 (review render, current)
+
+**Deliverable.** `exports/FGW_TimeMachine_V2_REVIEW_1080x1920.mp4`: a genuine 1080×1920 export, 30 fps, 706 frames,
+23.533 s, H.264 CRF 16 with AAC 320 kb/s. **This is V2 for review. It is not final and not publish-ready.**
+
+**Report and QA.** `production/V2_REPORT.md` (what changed from V1, the review rounds, measured QA, known limitations),
+with evidence in `qa/v2/`. The storyboard and module contracts are in `production/V2_PLAN.md`.
+
+**What V2 is.** The same approved narration and voice recording, restaged around one astronaut, one recognisable friend
+(the same face, skin and green garment at every age) and one home: he lives one hour while his friend lives decades.
+The opening two-shot ages the friend while he holds the astronaut's glove; the visor reflection cuts to the real black
+hole; the capsule arcs around it and the camera flies through its window; a physical watch counts one hour; a match cut
+to the wall clock at home; the view out of the house's window and the yard through the years; the return, the
+reunion in the opening's composition, the walk into the house; the family room, his reflection in the family photo's
+glass, his watch beside it, and a push into the pre-departure photograph that loops to frame 0.
+
+**Code.** V2 lives in `source/src/v2/` (`timing.ts` the timeline, `story.ts` states and cameras, `Scene2.tsx` one
+frame, plus `twoShot`, `clasp`, `craft`, `cockpit`, `yard` (street side and the reverse angle), `room`, `walk`).
+Render: `cd source && npx remotion render src/index.ts TimeMachineV2 ../exports/FGW_TimeMachine_V2_REVIEW_1080x1920.mp4
+--props='{"audio":"mix_v2","captions":true}' --crf=16 --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac
+--audio-bitrate=320k`. Sound: `tools/export_cues_v2.ts` then `tools/make_audio_v2.py`. QA: `tools/qa_render.py`.
+
+## V1 (initial review render)
 
 **Deliverable.** `exports/FGW_TimeMachine_V1_REVIEW_1080x1920.mp4`: 1080×1920, 30 fps, 706 frames, 23.533 s, H.264
 CRF 16 with AAC 320 kb/s. **This is V1 for review. It is not final and not publish-ready.**
