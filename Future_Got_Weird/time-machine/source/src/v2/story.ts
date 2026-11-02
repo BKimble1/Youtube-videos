@@ -120,17 +120,25 @@ export const WIN_CENTRE = {x: ROOM.win.cx, y: ROOM.win.cy};
  *  no window frame */
 export const PANE = {x: 743, y: (ROOM.win.transomY + 7 + ROOM.win.y1) / 2 - 12};
 export const Z_PANE = 7.3;
-export const camRoomPast = (t: number): Cam =>
+const camRoomPastExt = (t: number): Cam =>
   keyCam(t, [
     [V2.matchCut, CAM_CLOCK],
     [V2.panToWindow, {...CAM_CLOCK, z: ZC * 0.97}],
     [V2.windowPush, {x: (WIN_CENTRE.x + PANE.x) / 2, y: (WIN_CENTRE.y + PANE.y) / 2, z: 2.3}],
     [V2.windowCover, {x: PANE.x, y: PANE.y, z: Z_PANE}],
+    // the push carries on through the glass and eases out in the view beyond (no slam stop at the hand-off)
+    [V2.windowCover + 0.4, {x: PANE.x + 4, y: PANE.y - 3, z: Z_PANE * 1.28}, 'stop'],
   ]);
+export const camRoomPast = (t: number): Cam => camRoomPastExt(Math.min(t, V2.windowCover));
 /** the view out of the window (YardOut view coords): the camera that continues the push's last frame exactly, then
  *  drifts gently while the young friend waves at the sky */
-const CAM_OUT0: Cam = {x: (PANE.x - (WIN_CENTRE.x - 540 * WIN_SC)) / WIN_SC, y: (PANE.y - (WIN_CENTRE.y - 960 * WIN_SC)) / WIN_SC, z: Z_PANE * WIN_SC};
-export const camOut = (t: number): Cam => keyCam(t, [[V2.windowCover, CAM_OUT0], [V2.wipe1 + 0.05, {x: CAM_OUT0.x + 70, y: CAM_OUT0.y - 24, z: CAM_OUT0.z * 1.05}]]);
+/** the window as a portal: view point q = (540, 960) sits at the glass centre, scaled by WIN_SC */
+const WIN_MAP = {o: WIN_CENTRE, s: WIN_SC, q: {x: 540, y: 960}};
+export const camOut = (t: number): Cam => {
+  const c = toInner(camRoomPastExt(Math.min(t, V2.windowCover + 0.4)), WIN_MAP);
+  const d = ss(t, V2.windowCover + 0.3, V2.wipe1 + 0.05);
+  return {x: c.x + 60 * d, y: c.y - 18 * d, z: c.z};
+};
 /** the young friend in the view out of the window: on the lawn below the window, just inside the fence */
 export const OUT_FRIEND = {x: 205, y: 1615, s: 0.62 * 1.3};
 /** the tree trunk that crosses the lens at the cut from the window's view to the street side (screen x of its centre):
@@ -209,17 +217,19 @@ export const FEET = TS.feet;
 export const C_A: Cam = {x: 1000, y: 1300, z: 1.62};
 /** stage of the friend's life: 0 young (spring), 1 middle-aged (autumn), 2 elderly (winter -> spring) */
 export const yardStage = (t: number) => (t < V2.wipe1 ? 0 : t < V2.wipe2 ? 1 : 2);
-export const yardD = (t: number) => lerp(0.04, 1, ss(t, V2.windowCover - 0.1, 11.0));
+// the neighbourhood develops by STAGE (swapped only at the wipes, which cover the frame), with a small drift inside each
+// stage: no lamp model, lane colour or crack ever crossfades in view
+export const yardD = (t: number) => (t < V2.wipe1 ? lerp(0.04, 0.08, ss(t, V2.windowCover - 0.1, V2.wipe1)) : t < V2.wipe2 ? lerp(0.44, 0.48, ss(t, V2.wipe1, V2.wipe2)) : lerp(0.96, 1, ss(t, V2.wipe2, 11.0)));
 export const yardSeason = (t: number) => {
   // A: blossom into fresh green; B (from the trunk wipe, which only covers the frame centre, so its season continues A's)
   // summer turning to autumn, leaves falling; C (from the leaf-mass wipe, which covers the whole frame) the spring of
   // his return. Never bare or snowy: no season ever pops or dissolves in view.
   if (t < V2.wipe1) return lerp(0.05, 0.2, ss(t, V2.windowCover - 0.1, V2.wipe1));
-  if (t < V2.wipe2) return lerp(0.21, 0.63, ss(t, V2.wipe1, V2.wipe2 - 0.02));
+  if (t < V2.wipe2) return lerp(0.57, 0.63, ss(t, V2.wipe1, V2.wipe2 - 0.02)); // autumn from its first frame, leaves falling
   return lerp(0.1, 0.16, ss(t, V2.wipe2, 11.1));
 };
 /** the foreground pieces keep one season for their whole pass (no colour change while they fill the frame) */
-export const fgSeason = (t: number) => (t < (V2.wipe1 + V2.wipe2) / 2 ? 0.2 : 0.6);
+export const fgSeason = (t: number) => (t < (V2.wipe1 + V2.wipe2) / 2 ? 0.26 : 0.6);
 /** the friend through the decades: age, x, walking */
 export const LAWN_Y = 1478; // feet on the lawn near the tree (behind the fence line)
 export const friendYard = (t: number) => {
@@ -243,7 +253,7 @@ export const LAND = {x: 850, y: FEET + 62};
 export const capsuleYard = (t: number) => {
   const u = clamp((t - V2.descentStart) / (V2.landing - V2.descentStart));
   const y = lerp(LAND.y - 2300, LAND.y, 1 - (1 - u) * (1 - u) * (1 - u) * 0.15 - (1 - u) * (1 - u) * 0.85);
-  return {x: LAND.x, y: t < V2.descentStart ? LAND.y - 2600 : y, retro: t < V2.landing ? 1 : 1 - ss(t, V2.landing, V2.landing + 0.25), legs: ss(t, V2.landing - 0.5, V2.landing - 0.15), hatch: ss(t, V2.hatch, V2.hatch + 0.2)};
+  return {x: LAND.x, y: t < V2.descentStart ? LAND.y - 2600 : y, retro: 1 - ss(t, V2.landing - 0.1, V2.landing + 0.02), legs: ss(t, V2.landing - 0.5, V2.landing - 0.15), hatch: ss(t, V2.hatch, V2.hatch + 0.2)};
 };
 export const HATCH_W = {x: LAND.x + CAPSULE2.hatch.x * CAP_S, y: LAND.y + CAPSULE2.hatch.y * CAP_S, rx: CAPSULE2.hatch.rx * CAP_S, ry: CAPSULE2.hatch.ry * CAP_S};
 /** the astronaut steps out of the hatch, down to the pavement, and walks to his friend (feet y follows the ground) */
@@ -258,7 +268,7 @@ export const inHatch = (t: number) => t < V2.stepOut + 0.06;
 export const camReturn = (t: number): Cam => {
   const cy = capsuleYard(t).y;
   return keyCam(t, [
-    [V2.lightPass, {x: 1240, y: 1330, z: 1.5}],
+    [V2.lightPass, camDecades(V2.lightPass)],
     [V2.lookUp + 0.45, {x: 1150, y: 640, z: 1.05}],
     [12.05, {x: 1060, y: Math.min(1340, cy - 260), z: 1.02}],
     [V2.landing + 0.1, {x: 1030, y: 1345, z: 1.05}],

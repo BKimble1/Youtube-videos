@@ -16,7 +16,7 @@ import {Astronaut, Friend, GLOVE} from '../art/figures';
 import {useImages} from './preload';
 import {Captions2} from './Captions2';
 import {CAPTIONS} from '../lib';
-import {Expr} from '../art/crew';
+import {Expr, INK} from '../art/crew';
 import {YardWorld, YardFore, FENCE_Y} from './backgrounds';
 import {Room, ROOM} from './room';
 import {YardOut, YOUT, NearTrunk} from './yard';
@@ -306,7 +306,7 @@ function decadesWorld(t: number, k: string) {
   const waveArm = {a: lerp(8, 150, wave), b: lerp(10, 22 + 18 * Math.sin((t - V2.windowCover) * 15), wave)};
   const fig = (
     <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
-      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: waveArm, e, walk: f.walk, stride: f.stride, lean: st === 2 ? -6 * ss(t, V2.lookUp - 0.04, V2.lookUp + 0.16) : 0}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
+      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: waveArm, e, walk: f.walk, stride: f.stride, lean: st === 2 ? -12 * ss(t, V2.lookUp - 0.04, V2.lookUp + 0.18) : 0}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
     </g>
   );
   const behind = f.y < FENCE_Y;
@@ -330,8 +330,8 @@ function returnWorld(t: number, k: string) {
   const fe: Expr = {mouth: meet > 0.5 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet + 0.3 * blast, brows: 0.6 * meet + 0.4 * blast, blink: blast > 0.6 ? 0.25 : 1};
   const ax = St.astroReturnX(t);
   const out = t >= V2.hatch + 0.05;
-  const walking = t > V2.stepDown && t < V2.arrive;
-  const dist = (ax - St.HATCH_W.x) / St.YS;
+  const walking = t > V2.stepOut + 0.04 && t < V2.arrive;
+  const dist = (ax - St.HATCH_W.x) / St.YS + 40 * ss(t, V2.stepOut + 0.04, V2.stepDown);
   // he looks up at the house and the changed street (recognition) before his eyes find his friend
   const house = ss(t, V2.stepDown - 0.04, V2.stepDown + 0.06) * (1 - ss(t, V2.stepDown + 0.2, V2.stepDown + 0.32));
   const ae: Expr = {lookX: lerp(lerp(0.3, 0.55, house), 0.8, meet), lookY: lerp(lerp(-0.2, -0.9, house), 0.05, meet), wide: 0.35 + 0.3 * house, brows: 0.3 + 0.35 * house, mouth: house > 0.5 ? 'o' : 'soft', open: 0.2, turn: 0.2};
@@ -353,9 +353,11 @@ function returnWorld(t: number, k: string) {
       <g transform={capT}>
         <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} />
       </g>
-      {puff > 0 && puff < 1 && [-1, 1].map((sd) => [0, 1, 2, 3].map((q) => {
-        const px = St.LAND.x + sd * (190 + 40 * q * puff), py = St.LAND.y + 10 - 26 * q * puff * (1 - 0.4 * q);
-        return <circle key={`${sd}${q}`} cx={px} cy={py} r={(18 + 10 * q) * (0.4 + puff)} fill={q === 3 ? '#F4B7C8' : '#D8D2C6'} opacity={0.55 * (1 - puff)} />;
+      {puff > 0 && puff < 1 && [-1, 1].map((sd) => [0, 1, 2, 3, 4].map((q) => {
+        // touchdown dust: low opaque clouds rolling out sideways along the road, ~1.8x the capsule's width, fading
+        const reach = 150 + 270 * (1 - (1 - puff) * (1 - puff));
+        const px = St.LAND.x + sd * (reach * (0.45 + 0.14 * q)), py = St.LAND.y + 8 - 10 * q * puff;
+        return <ellipse key={`${sd}${q}`} cx={px} cy={py} rx={(30 + 9 * q) * (0.6 + puff)} ry={(18 + 5 * q) * (0.6 + 0.6 * puff)} fill={q % 2 ? '#CFC6B6' : '#BDB3A2'} stroke={INK} strokeWidth={2.5} opacity={0.9 * (1 - ss(puff, 0.45, 1))} />;
       }))}
       {St.inHatch(t) && astro && (
         <g>
@@ -466,7 +468,7 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     overlay = (
       <g>
         <YardFore t={t} camX={cd.x} zoom={St.FG_ZOOM} D={St.yardD(t)} season={St.fgSeason(t)} trunkX={St.FG_TRUNK_X} leavesX={St.FG_LEAVES_X} />
-        {nx > -800 && nx < 1880 && <NearTrunk cx={nx} D={St.yardD(t)} season={0.2} id={`${fkey}nt`} />}
+        {nx > -800 && nx < 1880 && <NearTrunk cx={nx} D={St.yardD(t)} season={0.26} id={`${fkey}nt`} />}
       </g>
     );
   } else if (t < V2.arrive) {
