@@ -271,22 +271,23 @@ const Bead: React.FC<{st: BoneState; ribbons: Ribbon[]}> = ({st, ribbons}) => {
       {ribbons.map((rb, i) => (
         <path key={`s${i}`} d={ribbonOutline(rb)} transform="translate(0.16 0.26)" fill={rgba('#4A3320', 0.28 * (1 - st.heal.resorb))} />
       ))}
+      {/* one merged gel body: an ink pass of every ribbon, then every fill on top (the ribbons union at junctions);
+          translucent as a whole so the gel-filled gap shows through */}
+      <g opacity={0.8}>
+        {ribbons.map((rb, i) => <path key={`o${i}`} d={ribbonOutline(rb)} fill={C.glueInk} stroke={C.glueInk} strokeWidth={Math.max(0.05, 4.8 * px)} strokeLinejoin="round" />)}
+        {ribbons.map((rb, i) => <path key={`f${i}`} d={ribbonOutline(rb)} fill={base} />)}
+      </g>
       {ribbons.map((rb, i) => {
-        const d = ribbonOutline(rb);
         const deep = offsetLine(rb.C, (k, n) => -dotL(n) * rb.hw[k] * 0.48);
         const hi = offsetLine(rb.C, (k, n) => dotL(n) * rb.hw[k] * 0.42);
         const shine = offsetLine(rb.C, (k, n) => dotL(n) * rb.hw[k] * 0.55);
         const meanW = rb.hw.reduce((a, b) => a + b, 0) / rb.hw.length;
         return (
           <g key={`b${i}`}>
-            <path d={d} fill={base} fillOpacity={0.8} stroke={C.glueInk} strokeWidth={Math.max(0.05, 2.4 * px)} strokeLinejoin="round" />
-            <path d={open(deep, 0.5)} stroke={C.glueDeep} strokeWidth={meanW * 0.62} fill="none" strokeLinecap="round" opacity={0.42} />
-            <path d={open(hi, 0.5)} stroke={C.glueLit} strokeWidth={meanW * 0.5} fill="none" strokeLinecap="round" opacity={0.45 + 0.2 * gloss} />
+            <path d={open(deep, 0.5)} stroke={C.glueDeep} strokeWidth={meanW * 0.62} fill="none" strokeLinecap="round" opacity={0.36} />
+            <path d={open(hi, 0.5)} stroke={C.glueLit} strokeWidth={meanW * 0.5} fill="none" strokeLinecap="round" opacity={0.4 + 0.2 * gloss} />
             <path d={open(shine, 0.5)} stroke={C.glueShine} strokeWidth={Math.max(0.06, meanW * 0.16)} fill="none" strokeLinecap="round"
               strokeDasharray={`${(meanW * 2.6).toFixed(3)} ${(meanW * 0.9).toFixed(3)}`} opacity={0.85 * gloss} />
-            {/* the contact edges: a thin darker meniscus where the gel meets the bone */}
-            <path d={open(rb.L, 0.5)} stroke={C.glueDeep} strokeWidth={Math.max(0.04, 1.4 * px)} fill="none" opacity={0.7} />
-            <path d={open(rb.R, 0.5)} stroke={C.glueDeep} strokeWidth={Math.max(0.04, 1.4 * px)} fill="none" opacity={0.7} />
           </g>
         );
       })}
@@ -546,7 +547,7 @@ export const Radius: React.FC<{st: BoneState; view: [number, number, number, num
     const yTop = -14 + 6 * hash(k * 5.1), yBot = 60 + 40 * hash(k * 1.3);
     lamellae.push(<path key={k} d={open([pt(xk, yTop), pt(xk * 0.92 + 0.2, (yTop + yBot) / 2), pt(xk * 0.78, yBot)], 0.6)} stroke={C.boneShade} strokeWidth={Math.max(0.05, 1.3 * px)} fill="none" opacity={0.3} />);
   }
-  const glueInGap = mix(C.glueDeep, C.newBone, fill);
+  const glueInGap = mix('#0E5A51', C.newBone, fill);
   return (
     <g>
       <defs>
@@ -570,7 +571,7 @@ export const Radius: React.FC<{st: BoneState; view: [number, number, number, num
         {CRACKS_J.map((c, i) => <CrackBand key={i} ps={c} px={px} fill={fill} fade={crackFade} />)}
         {/* where the bead has been laid, the gap itself is full of gel: the adhesive bridges the fracture */}
         <g clipPath={`url(#${glueClip})`} opacity={1 - crackFade}>
-          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke={glueInGap} strokeWidth={0.9} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke={glueInGap} strokeWidth={1.05} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
         </g>
         <path d={open(RADIUS.slice(37), 0.55)} stroke={C.boneLit} strokeWidth={Math.max(0.12, 6 * px)} fill="none" opacity={0.5} transform="translate(0.5 0)" />
       </g>

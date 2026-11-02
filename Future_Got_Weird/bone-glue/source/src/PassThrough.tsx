@@ -41,7 +41,7 @@ const stream = (k: number, seed: number, p: number, speed: number) => {
 export const PassThrough: React.FC<{p: number; fkey: string}> = ({p, fkey}) => {
   if (p <= 0.001 || p >= 0.999) return null;
   const cover = ss(p, 0.3, 0.45);
-  const rSkin = hole(p, 0.5, 0.9), rFat = hole(p, 0.525, 0.95), rMus = hole(p, 0.55, 0.995);
+  const rSkin = hole(p, 0.5, 0.84), rFat = hole(p, 0.525, 0.88), rMus = hole(p, 0.55, 0.92);
   // muscle (deepest), fat, skin (nearest): each fills everything outside its opening
   const tex = (layer: 'muscle' | 'fat' | 'skin', r: number) => {
     const out: React.ReactNode[] = [];

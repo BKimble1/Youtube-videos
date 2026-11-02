@@ -231,12 +231,15 @@ export const fromOyster = (o: Cam, R: number): Cam => ({x: edgeB.x + o.x / R, y:
 const O_HOLD: Cam = {x: 4, y: -24, w: 108};
 const O_SEAM: Cam = {x: 0, y: -2.2, w: 36};
 const WET0 = fromOyster(O_SEAM, R_OUT);
-const WET1: Cam = {x: -6.4, y: 0.6, w: 6.6, k: 1, focus: 0};
+const WET1: Cam = {x: 0.6, y: -0.9, w: 7.6, k: 1, focus: 0};
 const CUTAWAY: Cam = {x: -10, y: -52, w: 250, k: 0.9, focus: -8};
 const CUTAWAY2: Cam = {x: -6, y: -40, w: 210, k: 0.9, focus: -8};
 const HEAL_A: Cam = {x: -2.5, y: 2.0, w: 46, k: 1, focus: 0};
 const HEAL_B: Cam = {x: 2.0, y: 1.0, w: 42, k: 1, focus: 0};
 const FOLLOW: Cam = {x: -8, y: -74, w: 182, k: 1, focus: -10};
+/** the hold on the healed hand drifts gently in (no static frames), straight into the loop's push */
+const FOLLOW_B: Cam = {x: -7, y: -70, w: 172, k: 1, focus: -10};
+const LV_DRIFT = -0.05;
 
 /** a cubic Hermite in (x, y, log w) between two cameras with end velocities (per second) */
 type CV = {x: number; y: number; lw: number};
@@ -264,7 +267,7 @@ const V0: CV = {x: 0, y: 0, lw: 0};
 const V_TRACK: CV = {x: 6.0, y: -0.4, lw: -0.04};
 /** the opening's camera on its own clock (tau may be negative: the loop's push back into the wrist) */
 const openCam = (tau: number): Cam => {
-  if (tau < 0) return zoomH(tau, EV.loop0 - LOOP_T, FOLLOW, 0, CAM0, 0, V_TRACK.lw, pt(V_TRACK.x, V_TRACK.y));
+  if (tau < 0) return zoomH(tau, EV.loop0 - LOOP_T, FOLLOW_B, 0, CAM0, LV_DRIFT, V_TRACK.lw, pt(V_TRACK.x, V_TRACK.y));
   if (tau < 1.2) return hermite(tau, 0, CAM0, V_TRACK, 1.2, TRACK1, {x: 2.0, y: -1.5, lw: 0.4});
   if (tau < T.togetherEnd) return hermite(tau, 1.2, TRACK1, {x: 2.0, y: -1.5, lw: 0.4}, T.togetherEnd, REVEAL, {x: 45, y: -14, lw: 0.55});
   if (tau < T.did + 0.1) return hermite(tau, T.togetherEnd, REVEAL, {x: 45, y: -14, lw: 0.55}, T.did + 0.1, CLINIC, {x: -3, y: 2, lw: -0.02});
@@ -290,13 +293,13 @@ const oysterCam = (t: number): Cam => {
 /** the wet macro: from the matched seam framing, across the bead, then the long pull-out to the cutaway */
 const wetCam = (t: number): Cam => {
   if (t < EV.back1) return fromOyster(oysterCam(t), R_OUT);
-  if (t < EV.pull0) return hermite(t, EV.back1, WET0, {x: 0, y: 4 / R_OUT, lw: -0.5}, EV.pull0, WET1, {x: 0, y: -0.25, lw: -0.02});
-  if (t < EV.pull1) return zoomH(t, EV.pull0, WET1, EV.pull1, CUTAWAY, -0.02, 0.04, pt(1, 2), pt(0, -0.25));
+  if (t < EV.pull0) return hermite(t, EV.back1, WET0, {x: 0.8, y: 4 / R_OUT, lw: -0.5}, EV.pull0, WET1, {x: 1.6, y: -0.3, lw: 0.02});
+  if (t < EV.pull1) return zoomH(t, EV.pull0, WET1, EV.pull1, CUTAWAY, 0.02, 0.04, pt(1, 2), pt(1.6, -0.3));
   if (t < EV.dive2a) return hermite(t, EV.pull1, CUTAWAY, {x: 1, y: 2, lw: 0.04}, EV.dive2a, CUTAWAY2, {x: 2, y: 6, lw: -0.12});
   if (t < EV.dive2b) return zoomH(t, EV.dive2a, CUTAWAY2, EV.dive2b, HEAL_A, -0.12, -0.02, pt(0.8, -0.1), pt(2, 6));
   if (t < EV.out0) return hermite(t, EV.dive2b, HEAL_A, {x: 0.8, y: -0.1, lw: -0.02}, EV.out0, HEAL_B, {x: 0.8, y: -0.1, lw: 0.02});
-  if (t < EV.out1) return zoomH(t, EV.out0, HEAL_B, EV.out1, FOLLOW, 0.02, 0, pt(0, 0), pt(0.8, -0.1));
-  return FOLLOW;
+  if (t < EV.out1) return zoomH(t, EV.out0, HEAL_B, EV.out1, FOLLOW, 0.02, LV_DRIFT, pt(0, 0), pt(0.8, -0.1));
+  return zoomH(t, EV.out1, FOLLOW, EV.loop0, FOLLOW_B, LV_DRIFT, LV_DRIFT);
 };
 
 export const camAt = (t: number): WCam => {
