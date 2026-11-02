@@ -1,12 +1,13 @@
 // The surgeon's two instruments, drawn in wrist-plane millimetres (the world of anatomy.ts: x right, y down, origin at
 // the fracture centre).
 //
-//   Applicator: a slim syringe-type applicator for the teal adhesive (NOT a consumer glue tube): blunt steel cannula
-//     (38 mm, 1.3 mm diameter, a slight bend 6 mm from the tip), clear barrel (11 x 62 mm) showing the gel whose level
-//     drops with the plunger travel, finger flange, white plunger rod and thumb pad, dark rubber stopper.
+//   Applicator: a compact syringe-type applicator for the teal adhesive (NOT a consumer glue tube): blunt steel cannula
+//     (32 mm, 1.3 mm diameter, a slight bend 6 mm from the tip), clear barrel (10.4 x 40 mm) showing the gel whose level
+//     drops with the plunger travel, finger flange, white plunger rod and thumb pad, dark rubber stopper. The surgeon
+//     holds it in a syringe grip: the index curled round the flange, the thumb on the pad.
 //   Clamp: a pointed reduction clamp (Weber type): two curved jaws bowing out to the right of the bone and ending in
-//     small points, a box joint 35 mm from the tips, two handles with finger rings and a ratchet, angled down-right
-//     toward the surgeon's near hand.
+//     small points, a box joint 35 mm from the tips, two handles running down-right to a pair of finger rings (thumb in
+//     the upper ring, ring finger in the lower one) with a ratchet between them.
 //
 // Weird Crew finish: navy ink contours (constant on-screen width: non-scaling strokes, so the same art is crisp from
 // the extreme close-up of the cannula tip to the wide clinical shot), cel gradients lit from the upper left (LIGHT),
@@ -23,8 +24,9 @@ const LIGHT: P = nrm(pt(-0.62, -0.78));
 const f = (n: number) => (Math.abs(n) < 1e-6 ? '0' : n.toFixed(3));
 const Pf = (p: P) => `${f(p.x)} ${f(p.y)}`;
 const deg = (r: number) => (r * 180) / Math.PI;
-/** contour width in screen pixels (non-scaling strokes): a 1.5-1.7 px line shows outside each silhouette */
-export const INST_INK = 4.0;
+/** contour width in screen pixels (non-scaling strokes): half of it (2.8 px) shows outside each silhouette, the same
+ *  weight as the patient's skin and the surgeon's contours */
+export const INST_INK = 5.6;
 const NS = 'non-scaling-stroke' as const;
 
 /** the ink underlay of a silhouette: filled navy plus a constant-width navy stroke */
@@ -73,23 +75,23 @@ export type AppState = {tip: P; ang: number; press: number; gel: number};
 export const APP = {
   tipSeg: 6, // the bent tip segment
   bend: -0.24, // the tip segment's turn from the main axis (rad): it hooks a little toward the wound
-  cannula: 38,
+  cannula: 32,
   r: 0.65, // cannula radius
-  ferrule: 40,
-  hub: 47,
-  cone: 51, // barrel front shoulder ends
-  barrelEnd: 113,
-  flangeEnd: 115.6,
-  rB: 5.5, // barrel outer radius
-  rIn: 4.65, // inner radius
-  in0: 52, // inner usable length starts
-  inLen: 56,
-  stopT: 6,
-  rod: 62, // rod length from the stopper's back face to the pad
-  rodW: 3.5,
-  padR: 8.4,
+  ferrule: 34,
+  hub: 40,
+  cone: 44, // barrel front shoulder ends
+  barrelEnd: 84,
+  flangeEnd: 86.6,
+  rB: 5.2, // barrel outer radius
+  rIn: 4.4, // inner radius
+  in0: 45, // inner usable length starts
+  inLen: 35,
+  stopT: 5,
+  rod: 40, // rod length from the stopper's back face to the pad
+  rodW: 3.2,
+  padR: 8.0,
   padT: 2.6,
-  flangeW: 11.6,
+  flangeW: 11,
 };
 
 /** the applicator's axis: a point at arc length s from the tip, the bend point, the two directions */
@@ -103,14 +105,15 @@ export const appAxis = (st: AppState) => {
 /** the stopper's front face (s) for a plunger travel */
 const stopperS = (press: number) => APP.in0 + APP.inLen * (1 - clamp(press));
 
-/** Where and how the surgeon's right hand holds the applicator (a syringe grip seen from above): p = the centre of the
- *  finger flange, which sits between the index and middle fingers just behind their first joints; ang = the hand axis
- *  (wrist -> fingers, radians, atan2 convention, y down), along the barrel toward the tip: the palm lies over the
- *  plunger rod and the thumb on the pad. */
-export const APP_GRIP = {s: (APP.barrelEnd + APP.flangeEnd) / 2, turn: 0.04};
-export const appGrip = (st: AppState): {p: P; ang: number} => {
+/** Where the surgeon's right hand holds the applicator (a syringe grip seen from above): p = the centre of the finger
+ *  flange (the index curls round its inner wing), ang = the instrument's direction from the back toward the tip
+ *  (radians, atan2 convention, y down; the hand's axis lies along it); padBack = the centre of the thumb pad's back
+ *  face, where the thumb presses; flangeS / padBackS = their arc lengths from the tip. */
+export const APP_GRIP = {s: (APP.barrelEnd + APP.flangeEnd) / 2};
+export const appGrip = (st: AppState): {p: P; ang: number; padBack: P; flangeS: number; padBackS: number} => {
   const ax = appAxis(st);
-  return {p: ax.at(APP_GRIP.s), ang: st.ang + Math.PI + APP_GRIP.turn};
+  const sPB = stopperS(st.press) + APP.stopT + APP.rod + APP.padT;
+  return {p: ax.at(APP_GRIP.s), ang: st.ang + Math.PI, padBack: ax.at(sPB), flangeS: APP_GRIP.s, padBackS: sPB};
 };
 
 export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> = ({id, s: st, shadow = true}) => {
@@ -291,8 +294,8 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
         <path d={rect(u(APP.cone) + 1, u(APP.barrelEnd) - 0.6, vs * APP.rB * 0.84 - 0.42, vs * APP.rB * 0.84 + 0.42)} fill="#FFFFFF" opacity={0.92} />
         <path d={rect(u(APP.cone) + 3, u(APP.barrelEnd) - 3, -vs * APP.rB * 0.8 - 0.22, -vs * APP.rB * 0.8 + 0.22)} fill="#FFFFFF" opacity={0.4} />
         {/* faint graduation ticks (no numbers) */}
-        {Array.from({length: 9}).map((_, i) => {
-          const uu = u(APP.cone) + 6 + i * 6;
+        {Array.from({length: Math.floor((APP.barrelEnd - APP.cone - 8) / 5)}).map((_, i) => {
+          const uu = u(APP.cone) + 5 + i * 5;
           const L = i % 3 === 0 ? 2.6 : 1.5;
           // short ticks from the wall on the shadow side, inward
           return <path key={i} d={rect(uu - 0.14, uu + 0.14, -vs * (APP.rB - 0.4), -vs * (APP.rB - 0.4 - L))} fill={C.steelDeep} opacity={0.35} />;
@@ -343,10 +346,11 @@ export type ClampState = {a: P; b: P; open: number; lift: number};
 /** clamp dimensions (mm) */
 export const CLAMP = {
   joint: 35, // tips -> box joint
-  bendHandle: 1.2, // the handles' turn (rad) from the jaws' axis, so they run down-right to the near hand
-  handle: 74, // joint -> ring centres along the handles
-  ringR: 8.4,
-  ringIn: 5.7,
+  bendHandle: 0.36, // the handles' turn (rad) from the jaws' axis, so they run down-right (shallow) to the near hand
+  handle: 62, // joint -> ring centres along the handles
+  ringOff: 15.5, // each ring centre's offset across the handles' midline
+  ringR: 11.6,
+  ringIn: 8.6, // a gloved thumb / finger fits through
   openMax: 0.24, // jaw rotation at open = 1 (rad)
   liftDist: 135,
 };
@@ -363,17 +367,75 @@ const clampFrame = (st: ClampState) => {
   const W = (q: P): P => add(m, add(mul(ax, q.x), mul(ab, q.y)));
   return {ab, ax, h, hd, hdW, m, W};
 };
-
-/** Where and how the surgeon's left hand holds the clamp: p = the grip point between the handles (ahead of the rings);
- *  ang = the hand axis (wrist -> fingers, radians). The fist closes across both handles: the joint and jaws leave the
- *  fist on the thumb side, the rings on the little-finger side. */
-export const CLAMP_GRIP = {d: 46, turn: -1.27};
-export const clampGrip = (st: ClampState): {p: P; ang: number} => {
+const rotAbout = (q: P, c: P, a: number) => {
+  const d = sub(q, c);
+  return add(c, pt(d.x * Math.cos(a) - d.y * Math.sin(a), d.x * Math.sin(a) + d.y * Math.cos(a)));
+};
+/** the rings' centres in the world (with the jaws' opening): `upper` belongs to jaw b's piece (the thumb's ring, on the
+ *  far side of the handles), `lower` to jaw a's piece (the ring finger's); `hd` = the handles' direction from the joint
+ *  toward the rings; `joint` = the box joint */
+export const clampRings = (st: ClampState) => {
   const F = clampFrame(st);
+  const th = CLAMP.openMax * clamp(st.open);
   const J = pt(CLAMP.joint, 0);
-  const p = F.W(add(J, mul(F.hd, CLAMP_GRIP.d)));
-  const back = Math.atan2(-F.hdW.y, -F.hdW.x); // along the handles toward the joint
-  return {p, ang: back + CLAMP_GRIP.turn};
+  const hn = perp(F.hd);
+  const ringAt = (sg: number) => {
+    // piece of jaw a (sg -1) carries the ring on the +hn side, and rotates by +th when opening
+    const a = th * (sg < 0 ? 1 : -1);
+    return F.W(rotAbout(add(J, add(mul(F.hd, CLAMP.handle), mul(hn, CLAMP.ringOff * -sg))), J, a));
+  };
+  const lower = ringAt(-1);
+  const upper = ringAt(1);
+  return {upper, lower, hd: F.hdW, joint: F.W(J), mid: lerpP(upper, lower, 0.5)};
+};
+
+/** Where the surgeon's left hand holds the clamp (a ring grip seen from above): p = midway between the two finger rings,
+ *  ang = the handles' direction from the rings toward the box joint (radians); the thumb goes through the upper ring,
+ *  the ring finger through the lower one, the index lies along the shank toward the joint. */
+export const clampGrip = (st: ClampState): {p: P; ang: number; upper: P; lower: P} => {
+  const R = clampRings(st);
+  return {p: R.mid, ang: Math.atan2(-R.hd.y, -R.hd.x), upper: R.upper, lower: R.lower};
+};
+/** the ring's two concentric outlines (annulus, even-odd) */
+const ringPath = (c: P, R1: number, R0: number) =>
+  `M${f(c.x + R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x - R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x + R1)} ${f(c.y)}Z M${f(c.x + R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x - R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x + R0)} ${f(c.y)}Z`;
+/** one finger ring redrawn over a digit that passes down through it: the ring's half on the far side of the line
+ *  through its centre perpendicular to `toward` (the half the digit's tip dips under) */
+export const ClampRingOver: React.FC<{id: string; c: P; toward: P; near?: {c: P; r: number}}> = ({id, c, toward, near}) => {
+  const t = nrm(toward);
+  const n = perp(t);
+  const B = 60;
+  const half = `M${Pf(add(c, mul(n, B)))}L${Pf(add(add(c, mul(n, B)), mul(t, B)))}L${Pf(add(add(c, mul(n, -B)), mul(t, B)))}L${Pf(add(c, mul(n, -B)))}Z`;
+  // only round the digit's tip (`near`), so neighbouring digits that lie over the ring keep their place
+  const nearD = near ? `M${f(near.c.x + near.r)} ${f(near.c.y)}A${f(near.r)} ${f(near.r)} 0 1 0 ${f(near.c.x - near.r)} ${f(near.c.y)}A${f(near.r)} ${f(near.r)} 0 1 0 ${f(near.c.x + near.r)} ${f(near.c.y)}Z` : null;
+  const d = ringPath(c, CLAMP.ringR, CLAMP.ringIn);
+  return (
+    <g>
+      <defs>
+        <clipPath id={`${id}-c`}>
+          <path d={half} />
+        </clipPath>
+        {nearD && (
+          <clipPath id={`${id}-n`}>
+            <path d={nearD} />
+          </clipPath>
+        )}
+        <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={f(c.x - CLAMP.ringR * 0.7)} y1={f(c.y - CLAMP.ringR * 0.8)} x2={f(c.x + CLAMP.ringR * 0.7)} y2={f(c.y + CLAMP.ringR * 0.8)}>
+          <stop offset="0" stopColor={C.steelLit} />
+          <stop offset="0.35" stopColor={C.steel} />
+          <stop offset="0.75" stopColor={C.steelDeep} />
+          <stop offset="1" stopColor={mix(C.steelDeep, C.steel, 0.5)} />
+        </linearGradient>
+      </defs>
+      <g clipPath={nearD ? `url(#${id}-n)` : undefined}>
+      <g clipPath={`url(#${id}-c)`}>
+        <Under d={d} fillRule="evenodd" />
+        <path d={d} fill={`url(#${id}-g)`} fillRule="evenodd" />
+        <path d={`M${Pf(add(c, mul(dir(-2.75), CLAMP.ringR * 0.86)))}A${f(CLAMP.ringR * 0.86)} ${f(CLAMP.ringR * 0.86)} 0 0 1 ${Pf(add(c, mul(dir(-1.35), CLAMP.ringR * 0.86)))}`} fill="none" stroke="#FFFFFF" strokeWidth={f(0.8)} strokeLinecap="round" />
+      </g>
+      </g>
+    </g>
+  );
 };
 
 /** a curved tapered bar from a centreline with half widths: outline and the lit / shadow bands (a steel rod's form) */
@@ -410,10 +472,6 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const h = F.h;
   const th = CLAMP.openMax * clamp(st.open);
   const J = pt(CLAMP.joint, 0);
-  const rotAbout = (q: P, c: P, a: number) => {
-    const d = sub(q, c);
-    return add(c, pt(d.x * Math.cos(a) - d.y * Math.sin(a), d.x * Math.sin(a) + d.y * Math.cos(a)));
-  };
   // jaw centrelines in the frame (u toward the joint, v along a -> b), for the closed clamp, from the joint to the tip
   const jaw = (sg: number): P[] => [
     pt(CLAMP.joint + 2, sg * 1.4),
@@ -430,10 +488,10 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const hn = perp(F.hd);
   const handle = (sg: number): P[] => {
     const at = (d: number, o: number) => add(J, add(mul(F.hd, d), mul(hn, o * sg)));
-    return [at(-3, 0), at(10, 2.2), at(30, 4.6), at(52, 6.8), at(CLAMP.handle - CLAMP.ringR + 0.6, 8.0)];
+    return [at(-3, 0), at(10, 2.6), at(26, 6.4), at(40, 10.2), at(CLAMP.handle - CLAMP.ringR * 0.92, CLAMP.ringOff - 2.6)];
   };
-  const ringC = (sg: number) => add(J, add(mul(F.hd, CLAMP.handle), mul(hn, 8.6 * sg)));
-  const handleW = [2.3, 2.3, 2.1, 2.0, 1.9];
+  const ringC = (sg: number) => add(J, add(mul(F.hd, CLAMP.handle), mul(hn, CLAMP.ringOff * sg)));
+  const handleW = [2.4, 2.4, 2.25, 2.1, 2.0];
   // world mapping (with each piece's rotation for the opening)
   const piece = (sg: number) => {
     const a = th * (sg < 0 ? 1 : -1); // jaw a (sg -1) rotates +th
@@ -447,18 +505,17 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const p2 = piece(1);
   const jawBar = (pc: typeof p1) => bar(pc.jc, jawW, LIGHT, true);
   const handleBar = (pc: typeof p1) => bar(pc.hc, handleW, LIGHT);
-  const ringD = (c: P, R1: number, R0: number) =>
-    `M${f(c.x + R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x - R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x + R1)} ${f(c.y)}Z M${f(c.x + R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x - R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x + R0)} ${f(c.y)}Z`;
+  const ringD = ringPath;
   // ratchet: a toothed bar on each handle reaching across to the other one, ahead of the rings
   const ratchet = (pc: typeof p1, sg: number) => {
     const base = (d: number, o: number) => {
       const q = add(J, add(mul(F.hd, d), mul(hn, o * sg)));
       return F.W(rotAbout(q, J, pc.a));
     };
-    const d0 = 55;
-    const outline = [base(d0, 6.4), base(d0, -3.0), base(d0 + 2.4, -3.0), base(d0 + 2.4, 6.4)];
+    const d0 = 41;
+    const outline = [base(d0, 9.8), base(d0, -3.4), base(d0 + 2.4, -3.4), base(d0 + 2.4, 9.8)];
     const teeth: P[] = [];
-    for (let i = 0; i <= 5; i++) teeth.push(base(d0 + (sg > 0 ? 2.4 : 0) + (sg > 0 ? 0.55 : -0.55), 5.6 - i * 1.6), base(d0 + (sg > 0 ? 2.4 : 0), 5.0 - i * 1.6));
+    for (let i = 0; i <= 5; i++) teeth.push(base(d0 + (sg > 0 ? 2.4 : 0) + (sg > 0 ? 0.55 : -0.55), 8.8 - i * 1.6), base(d0 + (sg > 0 ? 2.4 : 0), 8.2 - i * 1.6));
     return {d: `M${outline.map(Pf).join('L')}Z`, teeth: `M${teeth.map(Pf).join('L')}`};
   };
   const r1 = ratchet(p1, -1);
@@ -482,7 +539,7 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
         <path d={rt.teeth} fill="none" stroke={C.steelDeep} strokeWidth={INST_INK * 0.35} vectorEffect={NS} />
         <path d={ringD(pc.rc, CLAMP.ringR, CLAMP.ringIn)} fill={`url(#${id}-rg)`} fillRule="evenodd" />
         {/* ring gloss: a crisp arc on the lit upper-left and a soft one on the inner lower-right */}
-        <path d={`M${Pf(add(pc.rc, mul(dir(-2.75), CLAMP.ringR * 0.83)))}A${f(CLAMP.ringR * 0.83)} ${f(CLAMP.ringR * 0.83)} 0 0 1 ${Pf(add(pc.rc, mul(dir(-1.35), CLAMP.ringR * 0.83)))}`} fill="none" stroke="#FFFFFF" strokeWidth={f(0.75)} strokeLinecap="round" />
+        <path d={`M${Pf(add(pc.rc, mul(dir(-2.75), CLAMP.ringR * 0.86)))}A${f(CLAMP.ringR * 0.86)} ${f(CLAMP.ringR * 0.86)} 0 0 1 ${Pf(add(pc.rc, mul(dir(-1.35), CLAMP.ringR * 0.86)))}`} fill="none" stroke="#FFFFFF" strokeWidth={f(0.8)} strokeLinecap="round" />
         <path d={`M${Pf(add(pc.rc, mul(dir(0.15), CLAMP.ringIn * 1.12)))}A${f(CLAMP.ringIn * 1.12)} ${f(CLAMP.ringIn * 1.12)} 0 0 1 ${Pf(add(pc.rc, mul(dir(1.5), CLAMP.ringIn * 1.12)))}`} fill="none" stroke={C.steelLit} strokeWidth={f(0.6)} strokeLinecap="round" opacity={0.8} />
       </g>
     );

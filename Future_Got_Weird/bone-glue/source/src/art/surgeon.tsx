@@ -1,30 +1,31 @@
-// The surgeon: a seated Weird Crew surgeon at the RIGHT side of the hand table, facing screen-left in 3/4, in a scrub
-// cap, a surgical mask, a gown with long sleeves and light-blue gloves. Right-handed: his far RIGHT hand holds the
-// applicator (barrel up-right of the cannula tip), his near LEFT hand holds the pointed reduction clamp's handles
-// (down-right of the wrist).
+// The surgeon: a seated Weird Crew surgeon at the RIGHT side of the hand table, turned in a 3/4 profile toward
+// screen-left and leaning over the wrist, in a scrub cap, a surgical mask, an opaque gown with long sleeves and
+// light-blue gloves. Right-handed: his far RIGHT hand holds the applicator in a syringe grip (the index curled round the
+// flange, the thumb on the plunger pad, the rest of the fingers closed), his near LEFT hand holds the pointed reduction
+// clamp by its handles (thumb through the upper ring, ring finger through the lower one, the index along the shank).
 //
-// Construction (dc lineage: Death Clock -> Real Web Fluid -> Glass Climbing): a custom bust (head + neck + gowned
-// torso), dc Limb sleeves, gloved fists adapted from dc Hand (the glove's cuff joins the palm in one contour group, the
-// curled fingers tuck under like a fist seen from the back, and the instrument passes under the fist so it shows on
-// both sides of the grip), a head adapted from dc Head (the crew's eyes and brows; the cap replaces the hair, the mask
-// covers the nose, mouth and chin).
+// Construction (dc lineage: Death Clock -> Real Web Fluid -> Glass Climbing): an upright bust (head adapted from dc
+// Head: the crew's eyes and brows, the cap replaces the hair, the mask covers the nose, mouth and chin), dc Limb
+// sleeves (shoulder -> bent elbow -> wrist, the far arm behind the torso, the near arm in front of it), and gloved hands
+// adapted from dc Hand (the same palm and knuckle layout, slimmer life-size fingers, and an explicit pose per joint so
+// each digit can wrap the instrument; the instrument is sandwiched between the digits that pass behind it and the
+// palm and digits in front of it; digits that go down through the clamp's rings get the ring's far half drawn back
+// over their tips).
 //
 // Space: the wrist plane in millimetres (anatomy.ts). The scene draws that plane with scale(s, s*k) (camera k: the
 // table squash of the high three-quarter view). The upright body is drawn with an inverse vertical scale 1/k about
 // his table-level anchor, so his proportions never squash; his hands and the instruments stay in the table plane.
 //
-// Silhouette contours and the hands' lines are constant on-screen width (non-scaling strokes), so the art reads the
-// same from the wrist close-up to the wide clinical shot; the face's features scale with the face. No text or glyphs.
-// Deterministic.
+// Every contour is a constant on-screen width (non-scaling strokes, 2.8 px showing, the weight of the patient's skin
+// line and the instruments); the face's drawn features scale with the face. No text or glyphs. Deterministic.
 import React from 'react';
 import {C, INK} from './palette';
 import {Deco, Inked, InkLine, InkPath, useInk} from '../dc/ink';
 import {Blob, Capsule, LIGHT, Lin} from '../dc/shade';
 import {Limb} from '../dc/limb';
-import {HandPose, mixHand} from '../dc/Hand';
 import {lit, mix, shade} from '../dc/color';
 import {add, clamp, dot, fmt, len, lerpV, mul, norm, P as Pf, perp, rad, rot, sub, V} from '../dc/math';
-import {AppState, Applicator, ClampState, Clamp, appGrip, clampGrip} from './instruments';
+import {AppState, Applicator, ClampRingOver, ClampState, Clamp, appGrip, clampGrip} from './instruments';
 
 // ------------------------------------------------------------------------------------------------ state
 export type SurgeonFace = {focus: number; smile: number; gx: number; gy: number; blink: number};
@@ -36,35 +37,42 @@ export type SurgeonState = {
   /** 1 = the left hand grips the clamp; 0 = released and moved back toward the body */
   clampHeld: number;
   /** focus: concentration (brows lowered, eyes narrowed); smile: eye-smile above the mask (cheeks lift, lower lids
-   *  rise); gx, gy: gaze offset -1..1 (+ = screen right / down; looking at the wrist is about gx -0.45, gy 0.75);
+   *  rise); gx, gy: gaze offset -1..1 (+ = screen right / down; looking at the wrist is about gx -0.5, gy 0.6);
    *  blink 0..1 */
   face: SurgeonFace;
   /** the camera's table squash (the scene draws the wrist plane with scale(s, s*k)) */
   k: number;
   /** small body lean in degrees: + leans his upper body toward the table (screen-left), - sits back (about -8..8) */
   lean: number;
+  /** optional (the story's instrument visibility); the hands stay on the instruments, so these are informational */
+  appOn?: number;
+  clampOn?: number;
 };
 
-// ------------------------------------------------------------------------------------------------ colours, sizes
+// ------------------------------------------------------------------------------------------------ sizes, ink
 export const SURGEON = {
   skin: '#C98B5E',
-  /** gloved hand: wrist to the straight middle fingertip (mm) */
-  hand: 165,
-  /** head radius (the head is ~200 mm wide) */
-  headR: 100,
+  /** gloved hand: wrist crease to the straight middle fingertip (mm), life size */
+  hand: 172,
+  /** head radius (the cartoon head is ~150 mm wide, a little larger than life) */
+  headR: 76,
   /** his table-level anchor (wrist-plane mm): the inverse 1/k body scale is about this point */
-  anchor: {x: 228, y: 6} as V,
+  anchor: {x: 300, y: 6} as V,
 };
-/** contour widths in screen pixels (the ink underlays are non-scaling strokes inside the surgeon's groups) */
-const OUT = 6.4; // body / head silhouette
-const IN = 5.4; // inner occlusion contours
-const HAND_INK = 5.4;
-const HAND_LINE = 3.0; // finger separations, cuff rim (px)
+/** the whole body's horizontal shift from its designed place (kept for compatibility; the body is designed in place) */
+export const SURGEON_DX = 0;
+
+/** Inked group width: dc draws a navy underlay stroked at w * 0.72; the surgeon's underlays are non-scaling strokes, so
+ *  2.8 px of navy shows outside every silhouette and occlusion edge (as the patient's skin line and the instruments) */
+const OUT = 7.8;
+/** finger separations and seams (screen px) */
+const SEP_PX = 2.2;
+const CREASE_PX = 1.5;
+/** the eyes' own contour (Inked width; non-scaling) */
+const EYE_INK = 6.4;
 
 const NSCLASS = 'bgsurg-ns';
 const NSLINE = 'bgsurg-nsl';
-/** the ink underlays (filled navy + navy stroke) of the dc primitives become constant-width on screen; inside the
- *  hands, the drawn ink lines too */
 const NsStyle: React.FC = () => (
   <style>{`.${NSCLASS} path[fill="${INK}"],.${NSCLASS} ellipse[fill="${INK}"],.${NSCLASS} circle[fill="${INK}"],.${NSLINE} path[fill="none"]{vector-effect:non-scaling-stroke}`}</style>
 );
@@ -74,10 +82,7 @@ const A0 = SURGEON.anchor;
 const toLocal = (p: V, k: number): V => ({x: p.x, y: A0.y + (p.y - A0.y) * k});
 const fromLocal = (p: V, k: number): V => ({x: p.x, y: A0.y + (p.y - A0.y) / k});
 const bodyT = (k: number) => `translate(${fmt(A0.x)} ${fmt(A0.y)}) scale(1 ${(1 / k).toFixed(5)}) translate(${fmt(-A0.x)} ${fmt(-A0.y)})`;
-const dirA = (a: number): V => ({x: Math.cos(a), y: Math.sin(a)});
 const degOf = (d: V) => (Math.atan2(d.y, d.x) * 180) / Math.PI;
-/** a world direction (deg) seen in the unsquashed local frame (deg) */
-const angLocal = (a: number, k: number) => (Math.atan2(Math.sin(rad(a)) * k, Math.cos(rad(a))) * 180) / Math.PI;
 const ease = (x: number) => {
   const t = clamp(x);
   return t * t * (3 - 2 * t);
@@ -97,39 +102,55 @@ const smooth = (pts: V[], closedPath = true, tension = 1) => {
   }
   return closedPath ? d + ' Z' : d;
 };
-
-// ------------------------------------------------------------------------------------------------ gloved hand
-// Adapted from dc/Hand (same palm, knuckle layout and thumb). Changes: a curled finger tucks its middle and distal
-// segments under (a fist seen from the back shows the proximal phalanges ending in rounded knuckles); the glove's cuff
-// is part of the palm's contour group (no line at the wrist); a latex finish (soft sheen, small glosses); the held
-// object passes under the fist (palm and front digits drawn over it).
-const FINGERS = [
-  {v: 0.185, u: 0.44, len: 0.4, r: 0.074, fan: 9},
-  {v: 0.062, u: 0.465, len: 0.45, r: 0.077, fan: 2},
-  {v: -0.062, u: 0.45, len: 0.42, r: 0.073, fan: -6},
-  {v: -0.175, u: 0.41, len: 0.33, r: 0.064, fan: -14},
-];
-const SEG = [0.45, 0.31, 0.24];
-/** finger radius relative to dc (a glove's fingers are a little slimmer than the crew's cartoon fingers) */
-const FR = 0.9;
-/** Seen from the back, a flexing finger's segments turn down away from the viewer: each shows the cosine of its
- *  cumulative flexion (MCP 85, PIP 105, DIP 75 degrees at full curl); a segment turned past vertical is tucked under,
- *  so a curled finger ends at its rounded knuckle. */
-const segFore = (c: number): number[] => {
-  const phi = [85 * c, 190 * c, 265 * c];
-  const out: number[] = [];
-  let tucked = false;
-  for (const a of phi) {
-    const v = Math.cos(rad(Math.min(a, 180)));
-    if (tucked || v < 0.06) {
-      tucked = true;
-      out.push(0);
-    } else out.push(v);
+/** the closest point to p on a polyline, and its distance */
+const nearestOn = (p: V, ps: V[]) => {
+  let best = {q: ps[0], d: len(sub(p, ps[0]))};
+  for (let i = 0; i < ps.length - 1; i++) {
+    const a = ps[i], b = ps[i + 1];
+    const ab = sub(b, a);
+    const l2 = dot(ab, ab) || 1e-9;
+    const t = clamp(dot(sub(p, a), ab) / l2);
+    const q = add(a, mul(ab, t));
+    const d = len(sub(p, q));
+    if (d < best.d) best = {q, d};
   }
-  return out;
+  return best;
 };
 
-type Hold = {front: (number | 't')[]; obj: React.ReactNode; palmFront?: boolean};
+// ------------------------------------------------------------------------------------------------ gloved hand
+// Hand coordinates (as dc Hand): u along the hand's axis from the wrist (in units of the hand length L), v across it,
+// positive toward the thumb. A digit is its joint chain in hand coordinates (MCP, PIP, DIP, tip; the thumb: CMC, MCP,
+// IP, tip) with a radius at each joint; seen from above, a flexed phalanx is simply a shorter (foreshortened) segment.
+// Each segment is drawn in front of the held object ('f') or behind it ('b').
+type Lay = 'b' | 'f';
+type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]};
+export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean};
+
+/** the back of the hand (dc palm, a touch slimmer: a life-size glove) */
+const PALM: [number, number][] = [
+  [-0.03, -0.162],
+  [0.2, -0.222],
+  [0.4, -0.212],
+  [0.468, -0.118],
+  [0.482, 0.0],
+  [0.468, 0.128],
+  [0.43, 0.232],
+  [0.27, 0.268],
+  [0.12, 0.258],
+  [-0.03, 0.162],
+];
+/** knuckle (MCP) positions and base radii: index, middle, ring, little */
+const MCP: [number, number][] = [
+  [0.44, 0.182],
+  [0.462, 0.06],
+  [0.448, -0.062],
+  [0.408, -0.172],
+];
+const FR = [0.05, 0.053, 0.049, 0.043];
+const TAPER = [1, 0.95, 0.9, 0.86];
+const fingerR = (i: number) => TAPER.map((t) => FR[i] * t);
+const THUMB_R = [0.084, 0.062, 0.057, 0.052];
+
 type GloveProps = {
   id: string;
   wrist: V;
@@ -138,211 +159,258 @@ type GloveProps = {
   L: number;
   /** +1: thumb on the clockwise side of the hand axis (his left hand from the back), -1 anticlockwise (right hand) */
   ts: 1 | -1;
-  pose: HandPose;
+  pose: GripPose;
   color: string;
-  /** the cuff: from just inside the palm back along the forearm to `back`, radius at the wrist and at the rim */
-  cuff?: {back: V; r0: number; r1: number};
-  hold?: Hold;
+  /** the glove's cuff over the gown sleeve: unit direction from the wrist toward the elbow (world), length, radii */
+  cuff: {dir: V; len: number; r0: number; r1: number};
+  /** the held object (drawn between the 'b' and 'f' digits) */
+  obj?: React.ReactNode;
+  /** drawn right after the thumb (a clamp ring's far half over the thumb's tip) */
+  thumbOverlay?: React.ReactNode;
+  /** drawn last (a clamp ring's far half over a finger that passes through it) */
+  over?: React.ReactNode;
 };
 
-const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cuff, hold}) => {
-  const iw = HAND_INK;
+const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cuff, obj, thumbOverlay, over}) => {
   const dir = {x: Math.cos(rad(ang)), y: Math.sin(rad(ang))};
   const n = perp(dir);
-  const W = (u: number, vv: number): V => add(wrist, add(mul(dir, u * L), mul(n, vv * L * ts)));
-  const palmPts: [number, number][] = [
-    [-0.03, -0.17],
-    [0.2, -0.235],
-    [0.4, -0.225],
-    [0.475, -0.12],
-    [0.49, 0.0],
-    [0.475, 0.13],
-    [0.43, 0.245],
-    [0.27, 0.28],
-    [0.12, 0.27],
-    [-0.03, 0.17],
-  ];
-  const palmD = smooth(palmPts.map(([u, vv]) => W(u, vv)));
+  const W = (u: number, v: number): V => add(wrist, add(mul(dir, u * L), mul(n, v * L * ts)));
+  const palmD = smooth(PALM.map(([u, v]) => W(u, v)));
   const palmC = W(0.24, 0.02);
+  const deep = shade(color, 0.42);
+  const hi = lit(color, 0.55);
 
-  const fingerEls: React.ReactNode[] = [];
-  const fingerIdx: number[] = [];
-  const sepLines: React.ReactNode[] = [];
-  [3, 2, 1, 0].forEach((fi) => {
-    const F = FINGERS[fi];
-    const c = pose.curl[fi];
-    const fan = F.fan * pose.spread * ts;
-    let fd = rot(dir, fan);
-    let p = W(F.u, F.v);
-    const segs: {a: V; b: V; ra: number; rb: number}[] = [];
-    let r = F.r * L * FR;
-    const fore = segFore(c);
-    SEG.forEach((sg, si) => {
-      const l = F.len * sg * L * fore[si];
-      fd = rot(fd, -fan * 0.12 * si);
-      const b = add(p, mul(fd, Math.max(0.001, l)));
-      const rb = r * [0.97, 0.95, 0.92][si];
-      segs.push({a: p, b, ra: r, rb});
-      p = b;
-      r = rb;
-    });
-    const vis = segs.filter((_, si) => si === 0 || fore[si] > 0);
-    fingerIdx.push(fi);
-    fingerEls.push(
-      <g key={fi}>
-        {vis.map((sg, si) => (
-          <Capsule key={si} id={`${id}-f${fi}s${si}`} a={sg.a} b={sg.b} ra={sg.ra} rb={sg.rb} color={si === 0 ? color : mix(color, shade(color, 0.1), 0.5)} spec={si === 0 ? 0.2 : 0.12} k={1.45} />
-        ))}
-      </g>,
-    );
-    if (fi < 3) {
-      const side = mul(n, -ts);
-      const last = vis[vis.length - 1];
-      const pts = [add(vis[0].a, add(mul(side, vis[0].ra * 0.92), mul(dir, vis[0].ra * 0.25))), ...vis.map((sg) => add(sg.b, mul(side, sg.rb * 0.9)))];
-      const ld = norm(sub(last.b, last.a));
-      pts[pts.length - 1] = add(pts[pts.length - 1], mul(ld, -last.rb * 0.45));
-      sepLines.push(<path key={fi} d={`M${pts.map((q) => Pf(q)).join(' L')}`} fill="none" stroke={INK} strokeWidth={HAND_LINE} strokeLinecap="round" strokeLinejoin="round" />);
-    }
-    // the bend: a soft crease across a curled finger just before its knuckle turns down
-    if (fore[1] === 0) {
-      const q0 = vis[0];
-      const ax = norm(sub(q0.b, q0.a));
-      const q = add(q0.b, mul(ax, -q0.rb * 0.15));
-      const nn = perp(ax);
-      sepLines.push(<path key={`c${fi}`} d={`M${Pf(add(q, mul(nn, q0.rb * 0.7)))} Q${Pf(add(q, mul(ax, q0.rb * 0.42)))} ${Pf(add(q, mul(nn, -q0.rb * 0.7)))}`} fill="none" stroke={shade(color, 0.45)} strokeWidth={HAND_LINE * 0.7} strokeLinecap="round" opacity={0.6} />);
-    }
-    // latex finish: a gloss on the knuckle that ends the finger (or near a straight fingertip) and on the base knuckle
-    const lastV = vis[vis.length - 1];
-    const knuckle = vis.length < 3 ? lastV.b : add(lastV.a, mul(sub(lastV.b, lastV.a), 0.62));
-    const kr = lastV.rb;
-    const ta = degOf(sub(vis[0].b, vis[0].a));
-    const k0 = segs[0].a;
-    sepLines.push(
-      <g key={`g${fi}`}>
-        <ellipse cx={fmt(knuckle.x + LIGHT.x * kr * 0.35)} cy={fmt(knuckle.y + LIGHT.y * kr * 0.35)} rx={fmt(kr * 0.36)} ry={fmt(kr * 0.17)} transform={`rotate(${fmt(ta + 90)} ${fmt(knuckle.x + LIGHT.x * kr * 0.35)} ${fmt(knuckle.y + LIGHT.y * kr * 0.35)})`} fill="#FFFFFF" opacity={0.62} />
-        <ellipse cx={fmt(k0.x + LIGHT.x * segs[0].ra * 0.3)} cy={fmt(k0.y + LIGHT.y * segs[0].ra * 0.3)} rx={fmt(segs[0].ra * 0.36)} ry={fmt(segs[0].ra * 0.18)} transform={`rotate(${fmt(ta)} ${fmt(k0.x + LIGHT.x * segs[0].ra * 0.3)} ${fmt(k0.y + LIGHT.y * segs[0].ra * 0.3)})`} fill="#FFFFFF" opacity={0.3} />
-      </g>,
-    );
-  });
+  // --- digits to world segments
+  type Seg = {a: V; b: V; ra: number; rb: number; lay: Lay; si: number};
+  const digitSegs = (dg: Digit): Seg[] => {
+    const pts = dg.j.map(([u, v]) => W(u, v));
+    const out: Seg[] = [];
+    for (let i = 0; i < pts.length - 1; i++) out.push({a: pts[i], b: pts[i + 1], ra: dg.r[i] * L, rb: dg.r[i + 1] * L, lay: dg.lay?.[i] ?? 'f', si: i});
+    return out;
+  };
+  const fingers = pose.fingers.map(digitSegs);
+  const thumb = digitSegs(pose.thumb);
+  const segCol = (si: number) => (si === 0 ? color : mix(color, shade(color, 0.1), 0.35 + 0.25 * si));
+  const capsules = (segs: Seg[], key: string, lay: Lay) =>
+    segs
+      .filter((s) => s.lay === lay)
+      .map((s) => <Capsule key={`${key}${s.si}`} id={`${id}-${key}${s.si}`} a={s.a} b={len(sub(s.b, s.a)) < 0.01 ? add(s.a, mul(dir, 0.01)) : s.b} ra={s.ra} rb={s.rb} color={segCol(s.si)} spec={s.si === 0 ? 0.16 : 0.1} k={1.25} />);
 
-  // thumb: thenar pad + two segments
-  const tBase = W(0.1, 0.19);
-  const tDir = rot(dir, pose.thumb * ts);
-  const t1 = add(tBase, mul(tDir, 0.2 * L));
-  const tDir2 = rot(tDir, -pose.thumbCurl * 38 * ts);
-  const t2 = add(t1, mul(tDir2, 0.15 * L * (1 - pose.thumbCurl * 0.35)));
-  const tDir3 = rot(tDir2, -pose.thumbCurl * 30 * ts);
-  const t3 = add(t2, mul(tDir3, 0.12 * L * (1 - pose.thumbCurl * 0.45)));
-  const thumbEl = (
+  // --- the cuff: a tube from under the palm back along the forearm, its open end rolled
+  const c0 = W(0.05, 0);
+  const cd = norm(cuff.dir);
+  const c1 = add(c0, mul(cd, cuff.len));
+  const cn = perp(cd);
+  const cAng = degOf(cd);
+  const cuffD = `M${Pf(add(c0, mul(cn, cuff.r0)))} L${Pf(add(c1, mul(cn, cuff.r1)))} A${fmt(cuff.r1 * 0.32)} ${fmt(cuff.r1)} ${fmt(cAng)} 0 1 ${Pf(add(c1, mul(cn, -cuff.r1)))} L${Pf(add(c0, mul(cn, -cuff.r0)))} Z`;
+  let ln = cn;
+  if (dot(ln, LIGHT) < 0) ln = mul(ln, -1);
+  const cm = lerpV(c0, c1, 0.5);
+  const rimIn = add(c1, mul(cd, -cuff.r1 * 0.2));
+  const cuffBody = (
+    <Lin key="cuff" id={`${id}-cf`} d={cuffD} from={add(cm, mul(ln, cuff.r0))} to={add(cm, mul(ln, -cuff.r0))} stops={[[0, lit(color, 0.26)], [0.3, lit(color, 0.08)], [0.62, color], [0.9, shade(color, 0.26)], [1, shade(color, 0.16)]]} />
+  );
+  const cuffDeco = (
     <g>
-      <Inked w={iw}>
-        <Capsule id={`${id}-t0`} a={tBase} b={t1} ra={0.1 * L} rb={0.078 * L * FR} color={color} spec={0.14} k={1.35} />
-        <Capsule id={`${id}-t1`} a={t1} b={t2} ra={0.076 * L * FR} rb={0.07 * L * FR} color={color} spec={0.16} k={1.35} />
-        <Capsule id={`${id}-t2`} a={t2} b={t3} ra={0.07 * L * FR} rb={0.064 * L * FR} color={lit(color, 0.04)} spec={0.16} k={1.35} />
-      </Inked>
-      <ellipse cx={fmt((t2.x + t3.x * 2) / 3 + LIGHT.x * 0.025 * L)} cy={fmt((t2.y + t3.y * 2) / 3 + LIGHT.y * 0.025 * L)} rx={fmt(0.03 * L)} ry={fmt(0.014 * L)} transform={`rotate(${fmt(degOf(sub(t3, t2)))} ${fmt((t2.x + t3.x * 2) / 3 + LIGHT.x * 0.025 * L)} ${fmt((t2.y + t3.y * 2) / 3 + LIGHT.y * 0.025 * L)})`} fill="#FFFFFF" opacity={0.6} />
+      <path d={`M${Pf(add(rimIn, mul(cn, cuff.r1 * 0.95)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.95)} ${fmt(cAng)} 0 1 ${Pf(add(rimIn, mul(cn, -cuff.r1 * 0.95)))}`} fill="none" stroke={lit(color, 0.45)} strokeWidth={fmt(cuff.r1 * 0.2)} opacity={0.8} />
+      <path d={`M${Pf(add(add(rimIn, mul(cd, -cuff.r1 * 0.16)), mul(cn, cuff.r1 * 0.9)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.9)} ${fmt(cAng)} 0 1 ${Pf(add(add(rimIn, mul(cd, -cuff.r1 * 0.16)), mul(cn, -cuff.r1 * 0.9)))}`} fill="none" stroke={INK} strokeWidth={CREASE_PX} opacity={0.5} />
+      <ellipse cx={fmt(add(cm, mul(ln, cuff.r0 * 0.5)).x)} cy={fmt(add(cm, mul(ln, cuff.r0 * 0.5)).y)} rx={fmt(cuff.len * 0.3)} ry={fmt(cuff.r0 * 0.08)} transform={`rotate(${fmt(cAng)} ${fmt(add(cm, mul(ln, cuff.r0 * 0.5)).x)} ${fmt(add(cm, mul(ln, cuff.r0 * 0.5)).y)})`} fill="#FFFFFF" opacity={0.32} />
+      {/* latex wrinkles round the wrist */}
+      {[0.32, 0.62].map((t, i) => {
+        const p = lerpV(c0, c1, t);
+        return <path key={i} d={`M${Pf(add(p, mul(cn, cuff.r0 * 0.75)))} Q${Pf(add(p, mul(cd, -cuff.r0 * 0.18)))} ${Pf(add(p, mul(cn, -cuff.r0 * 0.5)))}`} fill="none" stroke={deep} strokeWidth={CREASE_PX} strokeLinecap="round" opacity={0.3} />;
+      })}
     </g>
   );
 
-  // the cuff: a tube over the sleeve whose open end flares into a rolled rim
-  const cuffEls = cuff
-    ? (() => {
-        const a = W(0.08, 0);
-        const b = cuff.back;
-        const ax = norm(sub(b, a));
-        const nn = perp(ax);
-        const aDeg = degOf(ax);
-        const d = `M${Pf(add(a, mul(nn, cuff.r0)))} L${Pf(add(b, mul(nn, cuff.r1)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1)} ${fmt(aDeg)} 0 1 ${Pf(add(b, mul(nn, -cuff.r1)))} L${Pf(add(a, mul(nn, -cuff.r0)))} Z`;
-        let ln = nn;
-        if (dot(ln, LIGHT) < 0) ln = mul(ln, -1);
-        const mid = lerpV(a, b, 0.5);
-        const rimIn = add(b, mul(ax, -cuff.r1 * 0.22));
-        const hl = add(mid, mul(ln, cuff.r0 * 0.55));
-        return {
-          body: <Lin key="cf" id={`${id}-cf`} d={d} from={add(mid, mul(ln, cuff.r0))} to={add(mid, mul(ln, -cuff.r0))} stops={[[0, lit(color, 0.26)], [0.3, lit(color, 0.08)], [0.62, color], [0.9, shade(color, 0.28)], [1, shade(color, 0.18)]]} />,
-          deco: (
-            <g key="rim">
-              {/* the rolled rim: a lighter band just inside the cuff's open end, and the fold line behind it */}
-              <path d={`M${Pf(add(rimIn, mul(nn, cuff.r1 * 0.96)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.96)} ${fmt(aDeg)} 0 1 ${Pf(add(rimIn, mul(nn, -cuff.r1 * 0.96)))}`} fill="none" stroke={lit(color, 0.4)} strokeWidth={fmt(cuff.r1 * 0.22)} opacity={0.85} />
-              <path d={`M${Pf(add(add(rimIn, mul(ax, -cuff.r1 * 0.14)), mul(nn, cuff.r1 * 0.92)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.92)} ${fmt(aDeg)} 0 1 ${Pf(add(add(rimIn, mul(ax, -cuff.r1 * 0.14)), mul(nn, -cuff.r1 * 0.92)))}`} fill="none" stroke={INK} strokeWidth={HAND_LINE * 0.8} opacity={0.55} />
-              <ellipse cx={fmt(hl.x)} cy={fmt(hl.y)} rx={fmt(len(sub(b, a)) * 0.3)} ry={fmt(cuff.r0 * 0.09)} transform={`rotate(${fmt(aDeg)} ${fmt(hl.x)} ${fmt(hl.y)})`} fill="#FFFFFF" opacity={0.35} />
-            </g>
-          ),
-        };
-      })()
-    : null;
-
-  const palm = <Blob id={`${id}-palm`} d={palmD} c={palmC} r={0.44 * L} color={color} k={1.0} />;
-  // the back of the glove: soft tendon ridges, a broad sheen
+  // --- the palm (the back of the glove)
+  const palm = <Blob key="palm" id={`${id}-palm`} d={palmD} c={palmC} r={0.46 * L} color={color} k={0.9} />;
   const palmDeco = (
     <g>
-      {[0.15, 0.05, -0.06, -0.16].map((vv, i) => (
-        <path key={i} d={`M${Pf(W(0.14, vv * 0.55))} Q${Pf(W(0.3, vv * 0.85 + 0.01))} ${Pf(W(0.42, vv))}`} fill="none" stroke={lit(color, 0.45)} strokeWidth={fmt(L * 0.011)} strokeLinecap="round" opacity={0.28} />
+      {/* extensor tendons fanning to the knuckles, and the knuckles' bumps */}
+      {MCP.map(([u, v], i) => (
+        <path key={i} d={`M${Pf(W(0.1, v * 0.4))} Q${Pf(W(0.26, v * 0.75))} ${Pf(W(u - 0.05, v))}`} fill="none" stroke={hi} strokeWidth={fmt(L * 0.012)} strokeLinecap="round" opacity={0.22} />
       ))}
-      <ellipse cx={fmt(W(0.24, 0.1).x)} cy={fmt(W(0.24, 0.1).y)} rx={fmt(0.11 * L)} ry={fmt(0.045 * L)} transform={`rotate(${fmt(ang + 12 * ts)} ${fmt(W(0.24, 0.1).x)} ${fmt(W(0.24, 0.1).y)})`} fill="#FFFFFF" opacity={0.2} />
+      {MCP.map(([u, v], i) => {
+        const p = add(W(u - 0.03, v), mul(LIGHT, FR[i] * L * 0.3));
+        return <ellipse key={`k${i}`} cx={fmt(p.x)} cy={fmt(p.y)} rx={fmt(FR[i] * L * 0.42)} ry={fmt(FR[i] * L * 0.22)} transform={`rotate(${fmt(ang + 90)} ${fmt(p.x)} ${fmt(p.y)})`} fill="#FFFFFF" opacity={0.26} />;
+      })}
+      <ellipse cx={fmt(W(0.22, 0.06).x)} cy={fmt(W(0.22, 0.06).y)} rx={fmt(0.12 * L)} ry={fmt(0.045 * L)} transform={`rotate(${fmt(ang + 10 * ts)} ${fmt(W(0.22, 0.06).x)} ${fmt(W(0.22, 0.06).y)})`} fill="#FFFFFF" opacity={0.18} />
     </g>
   );
-  if (hold) {
-    const isFront = (fi: number) => hold.front.includes(fi);
-    const rear = fingerEls.filter((_, i) => !isFront(fingerIdx[i]));
-    const front = fingerEls.filter((_, i) => isFront(fingerIdx[i]));
-    const thumbFront = hold.front.includes('t');
-    return (
-      <g className={NSLINE}>
-        {!thumbFront && thumbEl}
-        {(rear.length > 0 || !hold.palmFront) && (
-          <Inked w={iw}>
-            {!hold.palmFront && cuffEls?.body}
-            {!hold.palmFront && palm}
-            {rear}
-          </Inked>
-        )}
-        {!hold.palmFront && cuffEls?.deco}
-        {!hold.palmFront && palmDeco}
-        {hold.obj}
-        {(front.length > 0 || hold.palmFront) && (
-          <Inked w={iw}>
-            {hold.palmFront && cuffEls?.body}
-            {hold.palmFront && palm}
-            {front}
-          </Inked>
-        )}
-        {hold.palmFront && cuffEls?.deco}
-        {hold.palmFront && palmDeco}
-        {sepLines}
-        {thumbFront && thumbEl}
-      </g>
-    );
-  }
+
+  // --- finger deco: separations where neighbours touch, joint creases, knuckle glosses
+  const sepFor = (i: number, lay: Lay) => {
+    const A = fingers[i].filter((s) => s.lay === lay);
+    const B = fingers[i + 1]?.filter((s) => s.lay === lay);
+    if (!A.length || !B?.length) return null;
+    const bPts = [B[0].a, ...B.map((s) => s.b)];
+    const runs: V[][] = [];
+    let cur: V[] = [];
+    A.forEach((s) => {
+      for (let k = 0; k <= 6; k++) {
+        const t = k / 6;
+        const p = lerpV(s.a, s.b, t);
+        const r = s.ra + (s.rb - s.ra) * t;
+        const nb = nearestOn(p, bPts);
+        const rB = B[0].ra;
+        if (nb.d < (r + rB) * 1.05 && nb.d > 1e-6) cur.push(add(p, mul(norm(sub(nb.q, p)), r * 0.9)));
+        else if (cur.length) {
+          runs.push(cur);
+          cur = [];
+        }
+      }
+    });
+    if (cur.length) runs.push(cur);
+    return runs
+      .filter((rn) => rn.length > 1)
+      .map((rn, k) => <path key={`s${i}${lay}${k}`} d={`M${rn.map((q) => Pf(q)).join(' L')}`} fill="none" stroke={INK} strokeWidth={SEP_PX} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />);
+  };
+  const jointDeco = (segs: Seg[], key: string, lay: Lay) => {
+    const els: React.ReactNode[] = [];
+    segs.forEach((s, i) => {
+      if (s.lay !== lay) return;
+      const ax = norm(sub(s.b, s.a));
+      const sl = len(sub(s.b, s.a));
+      const nn = perp(ax);
+      // a crease across the joint at the segment's start (PIP, DIP), when the previous segment is drawn too
+      if (i > 0 && segs[i - 1].lay === lay) {
+        const q = add(s.a, mul(ax, Math.min(sl * 0.3, s.ra * 0.35)));
+        els.push(
+          <path key={`${key}c${i}`} d={`M${Pf(add(q, mul(nn, s.ra * 0.62)))} Q${Pf(add(q, mul(ax, s.ra * 0.25)))} ${Pf(add(q, mul(nn, -s.ra * 0.62)))}`} fill="none" stroke={deep} strokeWidth={CREASE_PX} strokeLinecap="round" opacity={0.42} />,
+        );
+      }
+      // a gloss on the segment's lit side (the knuckle top for a short, flexed segment)
+      const g = add(lerpV(s.a, s.b, sl < s.ra * 1.2 ? 0.5 : 0.62), mul(LIGHT, s.ra * 0.42));
+      const ga = sl < s.ra * 1.2 ? degOf(ax) + 90 : degOf(ax);
+      els.push(<ellipse key={`${key}g${i}`} cx={fmt(g.x)} cy={fmt(g.y)} rx={fmt(Math.max(s.ra * 0.32, Math.min(sl * 0.32, s.ra * 0.75)))} ry={fmt(s.ra * 0.15)} transform={`rotate(${fmt(ga)} ${fmt(g.x)} ${fmt(g.y)})`} fill="#FFFFFF" opacity={0.5} />);
+    });
+    return els;
+  };
+
+  const thumbGroup = (
+    <g>
+      <Inked w={OUT}>{capsules(thumb.map((s) => ({...s, lay: pose.thumbLay})), 't', pose.thumbLay)}</Inked>
+      {jointDeco(thumb.map((s) => ({...s, lay: pose.thumbLay})), 'tj', pose.thumbLay)}
+      {thumbOverlay}
+    </g>
+  );
+  const fingerCaps = (lay: Lay) => fingers.flatMap((segs, i) => capsules(segs, `f${i}s`, lay)).reverse();
+  const fingerDeco = (lay: Lay) => (
+    <g>
+      {[0, 1, 2].map((i) => sepFor(i, lay))}
+      {fingers.map((segs, i) => jointDeco(segs, `f${i}`, lay))}
+    </g>
+  );
+  const hasBack = fingers.some((sg) => sg.some((s) => s.lay === 'b'));
   return (
     <g className={NSLINE}>
-      <Inked w={iw}>
-        {cuffEls?.body}
+      {hasBack && (
+        <g>
+          <Inked w={OUT}>{fingerCaps('b')}</Inked>
+          {fingerDeco('b')}
+        </g>
+      )}
+      {pose.thumbLay === 'b' && thumbGroup}
+      {obj}
+      {pose.thumbLay === 'f' && !pose.thumbOver && thumbGroup}
+      <Inked w={OUT}>
+        {cuffBody}
         {palm}
-        {fingerEls}
+        {fingerCaps('f')}
       </Inked>
-      {cuffEls?.deco}
+      {cuffDeco}
       {palmDeco}
-      {sepLines}
-      {thumbEl}
+      {fingerDeco('f')}
+      {pose.thumbLay === 'f' && pose.thumbOver && thumbGroup}
+      {over}
     </g>
   );
 };
 
-/** where the held object sits in each grip (hand units: u along the hand axis from the wrist, v toward the thumb):
- *  the applicator's flange between the index and middle fingers, the clamp's handles across the fist */
-const GRIP_UV = {app: {u: 0.535, v: 0.128}, clamp: {u: 0.57, v: 0.02}};
-/** the wrist that puts a grip point on `grip` with the hand axis at `ang` (deg) */
-const wristFor = (grip: V, ang: number, L: number, ts: 1 | -1, uv: {u: number; v: number}) => {
-  const d = dirA(rad(ang));
-  return sub(sub(grip, mul(d, uv.u * L)), mul(perp(d), uv.v * L * ts));
+// ------------------------------------------------------------------------------------------------ the two grips
+const L_H = SURGEON.hand;
+const dirDeg = (a: number): V => ({x: Math.cos(rad(a)), y: Math.sin(rad(a))});
+/** world -> hand coordinates for a hand placed at (wrist, ang, ts) */
+const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
+  const d = dirDeg(ang);
+  const n = perp(d);
+  const q = sub(p, wrist);
+  return [dot(q, d) / L_H, dot(q, n) / (L_H * ts)];
+};
+const handPt = (wrist: V, ang: number, ts: 1 | -1, u: number, v: number): V => {
+  const d = dirDeg(ang);
+  return add(wrist, add(mul(d, u * L_H), mul(perp(d), v * L_H * ts)));
 };
 
-// grip poses (index and middle hooked over the flange; a fist across the handles), the opening grip, a relaxed rest
-const P_APP: HandPose = {curl: [0.42, 0.5, 0.78, 0.86], spread: 0.5, thumb: -4, thumbCurl: 0.4};
-const P_CLAMP: HandPose = {curl: [0.82, 0.88, 0.9, 0.93], spread: 0.03, thumb: 16, thumbCurl: 0.66};
-const P_OPEN: HandPose = {curl: [0.34, 0.38, 0.42, 0.46], spread: 0.3, thumb: 36, thumbCurl: 0.25};
-const P_REST: HandPose = {curl: [0.44, 0.5, 0.56, 0.62], spread: 0.18, thumb: 24, thumbCurl: 0.45};
+/** Syringe grip (right hand, back of the hand up, ts -1): the applicator runs along the hand's thumb-side groove
+ *  (v 0.27), its flange at u 0.6 under the index's middle joint. The index curls round the flange's inner wing (its
+ *  last joint passing under the barrel, the tip showing beyond it), the middle finger curls in beside it, the ring and
+ *  little fingers close loosely; the thumb lies along the near side of the plunger rod with its pad on the plunger's
+ *  thumb pad, ready to press. */
+const FAR_UV = {u: 0.6, v: 0.27};
+const farPose = (thumbTip: [number, number]): GripPose => {
+  const base: [number, number] = [0.1, 0.19];
+  const tt = thumbTip;
+  const L3 = (a: [number, number], b: [number, number], t: number, dv: number): [number, number] => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t + dv];
+  return {
+    fingers: [
+      {j: [MCP[0], [0.585, 0.205], [0.628, 0.236], [0.62, 0.302]], r: fingerR(0), lay: ['f', 'f', 'b']},
+      {j: [MCP[1], [0.598, 0.094], [0.632, 0.13], [0.618, 0.166]], r: fingerR(1), lay: ['f', 'f', 'b']},
+      {j: [MCP[2], [0.572, -0.04], [0.598, -0.008]], r: fingerR(2)},
+      {j: [MCP[3], [0.505, -0.152], [0.53, -0.122]], r: fingerR(3)},
+    ],
+    thumb: {j: [base, L3(base, tt, 0.42, 0.05), L3(base, tt, 0.74, 0.024), tt], r: THUMB_R},
+    thumbLay: 'f',
+    thumbOver: true,
+  };
+};
+
+/** Ring grip (left hand, back of the hand up, ts +1): the clamp's handles run along the hand toward the box joint; the
+ *  thumb's tip goes down through the upper ring, the ring finger through the lower ring, the middle finger curls
+ *  between them, the index lies along the shank toward the joint and the little finger closes under. */
+const NEAR_MID = {u: 0.6, v: 0.0815};
+const nearPose = (upper: [number, number], lower: [number, number]): GripPose => {
+  const base: [number, number] = [0.1, 0.19];
+  const tt: [number, number] = [upper[0] - 0.012, upper[1] + 0.012];
+  return {
+    fingers: [
+      {j: [MCP[0], [0.62, 0.118], [0.752, 0.094], [0.848, 0.084]], r: fingerR(0)},
+      {j: [MCP[1], [0.585, 0.072], [0.616, 0.086]], r: fingerR(1)},
+      {j: [MCP[2], [lower[0] - 0.035, lower[1] - 0.03], [lower[0], lower[1]]], r: fingerR(2)},
+      {j: [MCP[3], [0.5, -0.15], [0.524, -0.12]], r: fingerR(3)},
+    ],
+    thumb: {j: [base, [0.28, 0.268], [0.45, tt[1] + 0.07], tt], r: THUMB_R},
+    thumbLay: 'f',
+    thumbOver: false,
+  };
+};
+
+type GripSolve = {wrist: V; ang: number; pose: GripPose; ts: 1 | -1; tipT: V; tipR?: V; ringU?: V; ringL?: V; toward?: V};
+const solveFar = (st: SurgeonState): GripSolve => {
+  const g = appGrip(st.app);
+  const ts: 1 | -1 = -1;
+  const ang = (g.ang * 180) / Math.PI;
+  const d = dirDeg(ang);
+  const wrist = sub(sub(g.p, mul(d, FAR_UV.u * L_H)), mul(perp(d), FAR_UV.v * L_H * ts));
+  // the thumb's pulp on the pad's back face
+  const tipW = sub(g.padBack, mul(d, 0.046 * L_H));
+  const tipH = toHand(tipW, wrist, ang, ts);
+  return {wrist, ang, ts, pose: farPose(tipH), tipT: tipW};
+};
+const solveNear = (st: SurgeonState): GripSolve => {
+  const g = clampGrip(st.clamp);
+  const ts: 1 | -1 = 1;
+  const nv = norm(sub(g.upper, g.lower));
+  const d = {x: nv.y, y: -nv.x};
+  const ang = degOf(d);
+  const wrist = sub(sub(g.p, mul(d, NEAR_MID.u * L_H)), mul(perp(d), NEAR_MID.v * L_H * ts));
+  const up = toHand(g.upper, wrist, ang, ts);
+  const lo = toHand(g.lower, wrist, ang, ts);
+  const pose = nearPose(up, lo);
+  const tipT = handPt(wrist, ang, ts, pose.thumb.j[3][0], pose.thumb.j[3][1]);
+  return {wrist, ang, ts, pose, tipT, tipR: g.lower, ringU: g.upper, ringL: g.lower, toward: d};
+};
 
 // ------------------------------------------------------------------------------------------------ head
 const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: number; face: SurgeonFace; skin: string}> = ({id, c, R, roll, turn: t, face, skin}) => {
@@ -350,7 +418,7 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
   const s = R / 100;
   const Lc = rot(LIGHT, -roll);
   const xf = -30 * t;
-  const fw = 5.4; // feature line width (head units)
+  const fw = 4.6; // feature line width (head units)
   const focus = clamp(face.focus);
   const sm = clamp(face.smile);
   const gy = clamp(face.gy, -1, 1);
@@ -438,7 +506,7 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
           ])}
         </defs>
         <g clipPath={sq > 0.02 ? `url(#${id}-el${k})` : undefined}>
-        <Inked w={IN * 0.8}>
+        <Inked w={EYE_INK}>
           <InkPath d={eyeD} fill={`url(#${id}-ew${k})`} />
         </Inked>
         {pass !== 'ink' && (
@@ -479,7 +547,7 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
   // --- the mask: from under the eyes over the nose to below the chin, round the far cheek, back toward the ear
   const cheekUp = 5 * sm; // the eye-smile lifts the cheeks and the mask's top edge under the eyes
   const mTop: V[] = [
-    {x: -101, y: 18 - cheekUp * 0.5},
+    {x: -103 - 6 * t, y: 19 - cheekUp * 0.5},
     {x: farX - 2, y: 21 - cheekUp},
     {x: xf - 10, y: 12 - cheekUp * 0.4},
     {x: nearX - 2, y: 22 - cheekUp},
@@ -492,7 +560,7 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
     {x: 8, y: 120},
     {x: -42, y: 114},
     {x: -84, y: 84},
-    {x: -104, y: 46},
+    {x: -108 - 8 * t, y: 50},
   ];
   const maskD = `${smooth(mTop, false, 0.9)} ${smooth(mBot, false, 0.9).replace(/^M/, 'L')} Z`;
   // pleats: three folds across, bowing down with the face's curvature
@@ -609,8 +677,8 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
             [{x: 84, y: 60}, {x: 98, y: 60}, {x: 108, y: 50}],
           ].map(([a, m, b], i) => (
             <g key={i}>
-              <path d={Q(a, m, b)} fill="none" stroke={INK} strokeWidth={5} strokeLinecap="round" opacity={0.8} />
-              <path d={Q(a, m, b)} fill="none" stroke={mix(C.mask, '#9FB2C8', 0.35)} strokeWidth={2.4} strokeLinecap="round" />
+              <path d={Q(a, m, b)} fill="none" stroke={INK} strokeWidth={3.6} strokeLinecap="round" opacity={0.8} />
+              <path d={Q(a, m, b)} fill="none" stroke={mix(C.mask, '#9FB2C8', 0.35)} strokeWidth={1.8} strokeLinecap="round" />
             </g>
           ))}
           {/* the cheek under the eye lifts with the smile: a soft shade above the mask's edge */}
@@ -628,203 +696,192 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
   return <g transform={`translate(${fmt(c.x)} ${fmt(c.y)}) rotate(${fmt(roll)}) scale(${fmt(s)})`}>{body}</g>;
 };
 
+
 // ------------------------------------------------------------------------------------------------ body geometry
-/** the body's key points in his local (unsquashed) frame for a lean: head, neck, shoulders, the gown's outline.
- *  Local = world x, and y scaled by k about the anchor (see toLocal). Designed for camera B (x 110, y -80, w 470,
- *  k 0.86): the head in the upper right, the gowned chest down the right edge, the shoulders just under the mask. */
-/** Bone Glue scene: the whole body sits this far left of its designed place (closer to the wrist, for a tighter shot) */
-export const SURGEON_DX = -26;
+/** The bust in his local (unsquashed) frame: local = world x, and y scaled by k about the anchor (toLocal). Designed
+ *  for the clinical camera (x 92, y -100, w 405, k 0.86): the head leans in at the top right over the wrist, the far
+ *  shoulder tucked behind the chin, the near shoulder at the frame's right edge; the gown runs down the right side.
+ *  At the cutaway camera (x -10, w 250) all of the body is beyond the right edge (only the gloves and sleeves enter). */
 const bodyGeo = (lean: number) => {
-  const pivot = {x: 300 + SURGEON_DX, y: 330};
-  const R = (p: V, k = 0.9) => rot(p, -lean * k, pivot);
-  const o = (x: number, y: number) => R({x: x + SURGEON_DX, y});
-  const head = rot(o(222, -303), -lean * 0.5, o(255, -200)); // the head cranes a little further forward
+  const pivot = {x: 330, y: 140};
+  const R = (x: number, y: number, k = 1) => rot({x, y}, -lean * 0.9 * k, pivot);
   return {
-    head,
-    roll: -14 - lean * 1.4,
-    neckTop: o(236, -222),
-    neckBot: o(258, -168),
-    collar: o(256, -176),
-    rS: o(190, -150), // far (right) shoulder
-    lS: o(340, -158), // near (left) shoulder
+    head: R(246, -352, 1.15),
+    roll: -12 - lean * 1.2,
+    collar: R(272, -262),
+    neckBot: R(286, -258),
+    neckTop: R(268, -318),
+    farS: R(246, -246),
+    nearS: R(334, -234),
     torso: [
-      o(214, -194),
-      o(182, -180),
-      o(156, -152),
-      o(142, -104),
-      o(138, -30),
-      o(146, 70),
-      o(166, 190),
-      o(200, 330),
-      o(240, 520),
-      o(540, 520),
-      o(480, 300),
-      o(440, 100),
-      o(418, -80),
-      o(396, -160),
-      o(354, -200),
-      o(302, -214),
-      o(268, -210),
+      R(236, -264),
+      R(241, -236),
+      R(248, -184),
+      R(253, -120),
+      R(258, -50),
+      R(264, 30),
+      R(270, 120),
+      R(275, 230),
+      R(280, 380),
+      R(520, 380),
+      R(500, 220),
+      R(482, 80),
+      R(466, -60),
+      R(448, -160),
+      R(420, -232),
+      R(380, -268),
+      R(332, -284),
+      R(290, -282),
     ],
-    /** where each hand rests when it has let go (local), and the hand angle there (deg, world) */
-    restApp: {p: o(188, -52), ang: 196},
-    restClamp: {p: o(196, 56), ang: 184},
   };
 };
 
 // ------------------------------------------------------------------------------------------------ arms
-type ArmSolve = {S: V; E: V; W: V; Ww: V; handAng: number; pose: HandPose; holding: boolean; cuffBack: V};
+/** two-bone arm: the elbow on the clockwise (side -1) or anticlockwise side of the shoulder -> wrist line; an arm
+ *  that cannot reach straightens (the forearm is foreshortened toward the lens, so its drawn length is free) */
+const ik = (S: V, Wr: V, Lu: number, Lf: number, side: 1 | -1): V => {
+  const dv = sub(Wr, S);
+  const c = Math.max(1e-3, len(dv));
+  let a = Lu, b = Lf;
+  if (c > a + b - 1) {
+    const kk = (c + 1) / (a + b);
+    a *= kk;
+    b *= kk;
+  }
+  const cc = Math.max(c, Math.abs(a - b) + 1);
+  const A = Math.acos(clamp((a * a + cc * cc - b * b) / (2 * a * cc), -1, 1));
+  const base = Math.atan2(dv.y, dv.x);
+  const ang = base + side * A;
+  return add(S, {x: Math.cos(ang) * a, y: Math.sin(ang) * a});
+};
+const ARM = {
+  far: {Lu: 84, Lf: 108, side: -1 as const},
+  near: {Lu: 262, Lf: 130, side: -1 as const},
+};
+/** sleeve radii: shoulder, elbow, wrist (the glove's cuff covers the wrist end) */
+const SLV = {s: 40, e: 33, w: 28};
+const CUFF = {len: 54, r0: 0.168 * SURGEON.hand, r1: 31};
 
-/** Forearm-first arm: the forearm leaves the wrist at the hand's angle less a small wrist deviation, so the wrist
- *  never kinks; the upper arm joins the shoulder to that elbow (its length kept within a natural range: a reach toward
- *  the lens foreshortens it). His elbows sit back at his sides, below the shoulders. */
-const solveArm = (st: SurgeonState, which: 'app' | 'clamp'): ArmSolve => {
+type ArmSolve = {grip: GripSolve; S: V; E: V; Wl: V; wrist: V; cuffDir: V; held: number};
+const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
   const k = st.k;
   const g = bodyGeo(st.lean);
-  const L = SURGEON.hand;
-  const isApp = which === 'app';
-  const held = clamp(isApp ? st.appHeld : st.clampHeld);
-  const grip = isApp ? appGrip(st.app) : clampGrip(st.clamp);
-  const ts: 1 | -1 = isApp ? -1 : 1;
-  const gripPose = isApp ? P_APP : P_CLAMP;
-  // release: the grip opens first, then the hand travels back toward the body
-  const opening = ease((1 - held) / 0.4);
-  const travel = ease((1 - held - 0.25) / 0.75);
-  const pose = mixHand(mixHand(gripPose, P_OPEN, opening), P_REST, travel);
-  const angG = (grip.ang * 180) / Math.PI;
-  const wG = wristFor(grip.p, angG, L, ts, isApp ? GRIP_UV.app : GRIP_UV.clamp);
-  const rest = isApp ? g.restApp : g.restClamp;
-  const restW = fromLocal(rest.p, k);
-  const ang = angG + (((rest.ang - angG + 540) % 360) - 180) * travel;
-  const Ww = lerpV(wG, restW, travel);
-  const Wl = toLocal(Ww, k);
-  const S = isApp ? g.rS : g.lS;
-  const angL = angLocal(ang, k);
-  const dev = isApp ? -14 : -4;
-  const Lf = isApp ? 124 : 142;
-  let E = sub(Wl, mul(dirA(rad(angL - dev)), Lf));
-  const dSE = len(sub(E, S));
-  const LuMax = 215, LuMin = 120;
-  if (dSE > LuMax) E = add(S, mul(norm(sub(E, S)), LuMax));
-  if (dSE < LuMin) E = add(S, mul(norm(sub(E, S)), LuMin));
-  // the cuff runs back from the wrist along the forearm (world)
-  const Ew = fromLocal(E, k);
-  const cuffBack = add(Ww, mul(norm(sub(Ew, Ww)), 50));
-  return {S, E, W: Wl, Ww, handAng: ang, pose, holding: travel < 0.06, cuffBack};
+  const grip = which === 'far' ? solveFar(st) : solveNear(st);
+  const held = clamp(which === 'far' ? st.appHeld : st.clampHeld);
+  const S = which === 'far' ? g.farS : g.nearS;
+  const P = ARM[which];
+  let Wl = toLocal(grip.wrist, k);
+  let E = ik(S, Wl, P.Lu, P.Lf, P.side);
+  let cuffDir = norm(sub(fromLocal(E, k), grip.wrist));
+  let wrist = grip.wrist;
+  if (held < 0.999) {
+    // a released hand draws back along the forearm, toward the body
+    wrist = add(grip.wrist, mul(cuffDir, 80 * ease(1 - held)));
+    Wl = toLocal(wrist, k);
+    E = ik(S, Wl, P.Lu, P.Lf, P.side);
+    cuffDir = norm(sub(fromLocal(E, k), wrist));
+  }
+  return {grip, S, E, Wl, wrist, cuffDir, held};
 };
 
-/** the sleeve radii: shoulder, elbow, wrist (the glove's cuff covers the wrist end) */
-const SLV = {s: 46, e: 37, w: 26};
-
 const SleeveArm: React.FC<{id: string; a: ArmSolve; far: boolean; k: number}> = ({id, a, far, k}) => {
-  const col = far ? shade(C.gown, 0.12) : C.gown;
-  // the sleeve ends a little past the wrist, under the glove's cuff
-  const Wend = add(a.W, mul(norm(sub(a.E, a.W)), 8));
+  const col = far ? shade(C.gown, 0.14) : C.gown;
   const u1 = norm(sub(a.E, a.S));
-  const u2 = norm(sub(Wend, a.E));
+  const u2 = norm(sub(a.Wl, a.E));
+  const n1 = perp(u1);
   const n2 = perp(u2);
-  const fold = (t: number, w: number, o: number) => {
-    const p = lerpV(a.E, Wend, t);
-    return `M${Pf(add(p, mul(n2, w)))} Q${Pf(add(p, mul(u2, o)))} ${Pf(add(p, mul(n2, -w * 0.6)))}`;
-  };
+  const lf = len(sub(a.Wl, a.E));
+  const lu = len(sub(a.E, a.S));
+  // the inside of the elbow is on the side the forearm turns toward
+  const inSide = dot(n1, u2) > 0 ? 1 : -1;
+  const fold = (p: V, nn: V, ax: V, w: number, o: number) => `M${Pf(add(p, mul(nn, w)))} Q${Pf(add(add(p, mul(ax, o)), mul(nn, w * 0.1)))} ${Pf(add(p, mul(nn, -w * 0.55)))}`;
+  const deep = shade(col, 0.32);
   return (
     <g transform={bodyT(k)}>
-      <Inked w={IN} id={`${id}-ik`} fade={[{c: a.S, r: 50}]}>
-        <Limb id={`${id}-lb`} A={a.S} B={a.E} C={Wend} rA={SLV.s} rB={SLV.e} rC={SLV.w} color={col} spec={0.14} crease={0} capA="round" capC="flat" />
+      <Inked w={OUT} id={`${id}-ik`} fade={far ? undefined : [{c: a.S, r: 44}]}>
+        <Limb id={`${id}-lb`} A={a.S} B={a.E} C={a.Wl} rA={SLV.s} rB={SLV.e} rC={SLV.w} color={col} spec={0.12} crease={0} capA="round" capC="flat" />
       </Inked>
       <Deco>
-        <path d={fold(0.32, 24, -12)} fill="none" stroke={shade(col, 0.3)} strokeWidth={3.6} strokeLinecap="round" opacity={0.42} />
-        <path d={fold(0.62, 20, -9)} fill="none" stroke={shade(col, 0.3)} strokeWidth={3.2} strokeLinecap="round" opacity={0.36} />
-        <path d={`M${Pf(add(lerpV(a.S, a.E, 0.5), mul(perp(u1), 30)))} Q${Pf(add(lerpV(a.S, a.E, 0.66), mul(u1, 8)))} ${Pf(add(lerpV(a.S, a.E, 0.78), mul(perp(u1), -18)))}`} fill="none" stroke={shade(col, 0.3)} strokeWidth={3.4} strokeLinecap="round" opacity={0.34} />
+        {/* the sleeve's folds: bunched cloth inside the elbow, a long pull along the forearm and the upper arm */}
+        <path d={`M${Pf(add(a.E, add(mul(n1, inSide * SLV.e * 0.7), mul(u1, -SLV.e * 0.9))))} Q${Pf(add(a.E, mul(n1, inSide * SLV.e * 0.2)))} ${Pf(add(a.E, add(mul(n2, inSide * SLV.e * 0.75), mul(u2, SLV.e * 0.8))))}`} fill="none" stroke={deep} strokeWidth={3.2} strokeLinecap="round" opacity={0.45} />
+        {lf > 70 && <path d={fold(lerpV(a.E, a.Wl, 0.42), n2, u2, SLV.w * 0.85, -7)} fill="none" stroke={deep} strokeWidth={3} strokeLinecap="round" opacity={0.36} />}
+        {lu > 120 && <path d={fold(lerpV(a.S, a.E, 0.55), n1, u1, SLV.e * 0.85, -9)} fill="none" stroke={deep} strokeWidth={3} strokeLinecap="round" opacity={0.32} />}
       </Deco>
     </g>
   );
 };
 
-const GlovedHandOf: React.FC<{id: string; a: ArmSolve; far: boolean; obj?: React.ReactNode}> = ({id, a, far, obj}) => (
-  // the syringe grip (far hand) tucks the thumb under the palm onto the plunger pad; the fist (near hand) closes the
-  // thumb over the handles
-  <GloveHand
-    id={id}
-    wrist={a.Ww}
-    ang={a.handAng}
-    L={SURGEON.hand}
-    ts={far ? -1 : 1}
-    pose={a.pose}
-    color={far ? shade(C.glove, 0.07) : C.glove}
-    cuff={{back: a.cuffBack, r0: 0.168 * SURGEON.hand, r1: 31}}
-    hold={obj ? {front: far ? [0, 1, 2, 3] : [0, 1, 2, 3, 't'], obj, palmFront: true} : undefined}
-  />
-);
+const GloveOf: React.FC<{id: string; a: ArmSolve; far: boolean; obj: React.ReactNode; thumbOverlay?: React.ReactNode; over?: React.ReactNode}> = ({id, a, far, obj, thumbOverlay, over}) => {
+  const holding = a.held > 0.999;
+  return (
+    <g>
+      {!holding && obj}
+      <GloveHand
+        id={id}
+        wrist={a.wrist}
+        ang={a.grip.ang}
+        L={SURGEON.hand}
+        ts={a.grip.ts}
+        pose={a.grip.pose}
+        color={far ? shade(C.glove, 0.06) : C.glove}
+        cuff={{dir: a.cuffDir, len: CUFF.len, r0: CUFF.r0, r1: CUFF.r1}}
+        obj={holding ? obj : undefined}
+        thumbOverlay={holding ? thumbOverlay : undefined}
+        over={holding ? over : undefined}
+      />
+    </g>
+  );
+};
 
 // ------------------------------------------------------------------------------------------------ the two passes
-/** Head, torso and the far (right) arm: draw BEFORE the patient's arm. */
+/** Head, gowned torso and the far (right) arm's sleeve: draw BEFORE the patient's arm. */
 export const SurgeonBack: React.FC<{id: string; s: SurgeonState}> = ({id, s: st}) => {
   const k = st.k;
   const g = bodyGeo(st.lean);
-  const far = solveArm(st, 'app');
+  const far = solveArm(st, 'far');
   const torsoD = smooth(g.torso, true, 0.9);
-  const tc = add(g.collar, {x: -60, y: 110});
-  const Wend = add(far.W, mul(norm(sub(far.E, far.W)), 8));
-  const farCol = shade(C.gown, 0.12);
+  const c = g.collar;
+  const gown = C.gown;
   return (
     <g className={NSCLASS}>
       <NsStyle />
-      {/* the far arm, behind the torso */}
+      {/* the far arm hangs behind the chest: the gown covers its shoulder and the inside of its elbow */}
       <SleeveArm id={`${id}-fa`} a={far} far k={k} />
       <g transform={bodyT(k)}>
+        {/* the neck behind the collar and the chin */}
         <Inked w={OUT}>
-          {/* neck behind the collar */}
-          <Inked w={IN}>
-            <Capsule id={`${id}-nk`} a={g.neckBot} b={g.neckTop} ra={40} rb={38} color={shade(SURGEON.skin, 0.14)} />
-          </Inked>
-          {/* gown */}
-          <Inked w={IN}>
-            <Blob id={`${id}-tor`} d={torsoD} c={tc} r={360} color={C.gown} k={1} stops={[[0, lit(C.gown, 0.26)], [0.42, lit(C.gown, 0.06)], [0.74, C.gown], [1, C.gownDeep]]} />
-          </Inked>
-          <Deco>
-            <defs>
-              <clipPath id={`${id}-tclip`}>
-                <path d={torsoD} />
-              </clipPath>
-            </defs>
-            <g clipPath={`url(#${id}-tclip)`}>
-              {/* form: the back turns away into the deep blue */}
-              <Lin id={`${id}-tf`} d={torsoD} from={add(g.collar, {x: -90, y: 40})} to={add(g.collar, {x: 170, y: 90})} stops={[[0, '#FFFFFF', 0.14], [0.35, '#FFFFFF', 0], [0.6, C.gownDeep, 0], [1, C.gownDeep, 0.55]]} />
-              {/* the far shoulder's seam and the drape folds down the chest */}
-              <path d={`M${Pf(add(g.collar, {x: -44, y: -8}))} Q${Pf(add(g.collar, {x: -78, y: 10}))} ${Pf(add(g.collar, {x: -98, y: 52}))}`} fill="none" stroke={C.gownDeep} strokeWidth={3.4} strokeLinecap="round" opacity={0.45} />
-              {[
-                [-96, 70, -104, 250, 0.34],
-                [-40, 30, -60, 230, 0.26],
-                [40, 40, 60, 260, 0.3],
-              ].map(([x0, y0, x1, y1, o], i) => {
-                const a = add(g.collar, {x: x0, y: y0});
-                const b = add(g.collar, {x: x1, y: y1});
-                return <path key={i} d={`M${Pf(a)} Q${Pf(add(lerpV(a, b, 0.5), {x: 14, y: 0}))} ${Pf(b)}`} fill="none" stroke={C.gownDeep} strokeWidth={4} strokeLinecap="round" opacity={o} />;
-              })}
-              <ellipse cx={fmt(g.collar.x - 74)} cy={fmt(g.collar.y + 96)} rx={52} ry={15} transform={`rotate(-70 ${fmt(g.collar.x - 74)} ${fmt(g.collar.y + 96)})`} fill="#FFFFFF" opacity={0.15} />
-            </g>
-          </Deco>
-          {/* the gown's round collar band */}
-          <Inked w={IN}>
-            <InkPath d={smooth([add(g.collar, {x: -46, y: -12}), add(g.collar, {x: -14, y: 12}), add(g.collar, {x: 36, y: 10}), add(g.collar, {x: 62, y: -16}), add(g.collar, {x: 40, y: -4}), add(g.collar, {x: -10, y: -2}), add(g.collar, {x: -34, y: -22})], true, 0.8)} fill={lit(C.gown, 0.14)} />
-          </Inked>
-          {/* the far forearm crosses in front of the gown (only where it overlaps the torso; elsewhere the copy
-              behind shows) */}
-          <Deco>
-            <defs>
-              <mask id={`${id}-fm`}>
-                <path d={torsoD} fill="#FFF" stroke="#FFF" strokeWidth={8} />
-              </mask>
-            </defs>
-          </Deco>
-          <g mask={`url(#${id}-fm)`}>
-            <Inked w={IN}>
-              <Capsule id={`${id}-ffa`} a={far.E} b={Wend} ra={SLV.e} rb={SLV.w} color={farCol} spec={0.12} />
-            </Inked>
-          </g>
-          <SurgeonHead id={`${id}-hd`} c={g.head} R={SURGEON.headR} roll={g.roll} turn={0.72} face={st.face} skin={SURGEON.skin} />
+          <Capsule id={`${id}-nk`} a={g.neckBot} b={g.neckTop} ra={36} rb={34} color={shade(SURGEON.skin, 0.16)} />
         </Inked>
+        {/* the gown: one opaque body, cel-shaded from the upper left, its back turning into shadow */}
+        <Inked w={OUT}>
+          <Blob id={`${id}-tor`} d={torsoD} c={add(c, {x: -40, y: 110})} r={380} color={gown} k={1} stops={[[0, lit(gown, 0.24)], [0.4, lit(gown, 0.06)], [0.72, gown], [1, C.gownDeep]]} />
+        </Inked>
+        <Deco>
+          <defs>
+            <clipPath id={`${id}-tclip`}>
+              <path d={torsoD} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id}-tclip)`}>
+            <Lin id={`${id}-tf`} d={torsoD} from={add(c, {x: -40, y: 60})} to={add(c, {x: 190, y: 120})} stops={[[0, gown, 0], [0.45, gown, 0], [1, C.gownDeep, 0.6]]} />
+            {/* the near arm's raglan seam, the chest's soft folds and the lit front edge */}
+            <path d={`M${Pf(add(c, {x: 22, y: -14}))} Q${Pf(add(c, {x: 54, y: 30}))} ${Pf(add(c, {x: 60, y: 104}))}`} fill="none" stroke={C.gownDeep} strokeWidth={3.4} strokeLinecap="round" opacity={0.5} />
+            {[
+              [-10, 70, -2, 250, 0.32],
+              [26, 120, 40, 330, 0.26],
+            ].map(([x0, y0, x1, y1, o], i) => {
+              const a = add(c, {x: x0, y: y0});
+              const b = add(c, {x: x1, y: y1});
+              return <path key={i} d={`M${Pf(a)} Q${Pf(add(lerpV(a, b, 0.5), {x: 12, y: 0}))} ${Pf(b)}`} fill="none" stroke={C.gownDeep} strokeWidth={4} strokeLinecap="round" opacity={o} />;
+            })}
+            <path d={smooth([add(c, {x: -26, y: 22}), add(c, {x: -20, y: 120}), add(c, {x: -10, y: 240})], false)} fill="none" stroke={lit(gown, 0.4)} strokeWidth={9} strokeLinecap="round" opacity={0.35} />
+          </g>
+        </Deco>
+        {/* the gown's round collar band */}
+        <Inked w={OUT}>
+          <InkPath d={smooth([add(c, {x: -40, y: -6}), add(c, {x: -12, y: 12}), add(c, {x: 30, y: 12}), add(c, {x: 58, y: -10}), add(c, {x: 36, y: 0}), add(c, {x: -8, y: 0}), add(c, {x: -30, y: -16})], true, 0.8)} fill={lit(gown, 0.16)} />
+        </Inked>
+        <SurgeonHead id={`${id}-hd`} c={g.head} R={SURGEON.headR} roll={g.roll} turn={0.92} face={st.face} skin={SURGEON.skin} />
       </g>
     </g>
   );
@@ -833,29 +890,35 @@ export const SurgeonBack: React.FC<{id: string; s: SurgeonState}> = ({id, s: st}
 /** His near (left) arm, both gloved hands and both instruments: draw AFTER (over) the patient's arm. */
 export const SurgeonFront: React.FC<{id: string; s: SurgeonState}> = ({id, s: st}) => {
   const k = st.k;
-  const far = solveArm(st, 'app');
-  const near = solveArm(st, 'clamp');
-  const clampEl = <Clamp id={`${id}-cl`} s={st.clamp} />;
-  const appEl = <Applicator id={`${id}-ap`} s={st.app} />;
+  const far = solveArm(st, 'far');
+  const near = solveArm(st, 'near');
+  const fingerTipR = fingerR(2)[3] * SURGEON.hand * 1.25;
+  const thumbTipR = THUMB_R[3] * SURGEON.hand * 1.25;
+  const ng = near.grip;
   return (
     <g className={NSCLASS}>
       <NsStyle />
       <SleeveArm id={`${id}-na`} a={near} far={false} k={k} />
-      {!near.holding && clampEl}
-      <GlovedHandOf id={`${id}-nh`} a={near} far={false} obj={near.holding ? clampEl : undefined} />
-      {!far.holding && appEl}
-      <GlovedHandOf id={`${id}-fh`} a={far} far obj={far.holding ? appEl : undefined} />
+      <GloveOf
+        id={`${id}-nh`}
+        a={near}
+        far={false}
+        obj={<Clamp id={`${id}-cl`} s={st.clamp} />}
+        thumbOverlay={ng.ringU && <ClampRingOver id={`${id}-ru`} c={ng.ringU} toward={ng.toward!} near={{c: ng.tipT, r: thumbTipR}} />}
+        over={ng.ringL && <ClampRingOver id={`${id}-rl`} c={ng.ringL} toward={ng.toward!} near={{c: ng.ringL, r: fingerTipR}} />}
+      />
+      <GloveOf id={`${id}-fh`} a={far} far obj={<Applicator id={`${id}-ap`} s={st.app} />} />
     </g>
   );
 };
 
-/** default instrument states and face the staging was designed around */
+/** default instrument states and face the staging was designed around (the clinical shot) */
 export const SURGEON_DEFAULT: SurgeonState = {
-  app: {tip: {x: -5.0, y: 0.8}, ang: -0.42, press: 0.35, gel: 1},
-  clamp: {a: {x: 11.5, y: -6.0}, b: {x: 10.8, y: 14.0}, open: 0, lift: 0},
+  app: {tip: {x: 5.5, y: -17.9}, ang: -0.39, press: 0.68, gel: 0},
+  clamp: {a: {x: 7.5, y: -5.5}, b: {x: 6.5, y: 5.5}, open: 0, lift: 0},
   appHeld: 1,
   clampHeld: 1,
-  face: {focus: 0.6, smile: 0, gx: -0.45, gy: 0.75, blink: 0},
+  face: {focus: 0.55, smile: 0, gx: -0.5, gy: 0.55, blink: 0},
   k: 0.86,
   lean: 0,
 };

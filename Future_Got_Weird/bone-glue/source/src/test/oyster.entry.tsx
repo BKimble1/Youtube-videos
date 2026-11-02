@@ -1,14 +1,20 @@
-// Test sheet for the oyster comparison (src/art/oyster.tsx). mode 'sheet': a 3×3 grid of phone-size (360×640)
-// frames along the film's camera path; mode 'single': one full-size frame at t (camera from the path, or x/y/w).
+// Test sheet for the oyster comparison (src/art/oyster.tsx). mode 'sheet': a 3×3 grid of phone-size (360×640) frames
+// along the film's camera path (match-in 7.95 -> slow push to 9.95 -> push to the match-out 10.33); mode 'single': one
+// full-size frame at t (camera from the path, or x/y/w). guide: a magenta cross at world (0,0) and a cyan line at
+// screen y = 1090 (where both match framings put the cement's contact edge).
 import React from 'react';
 import {Composition, registerRoot} from 'remotion';
 import {OysterWorld} from '../art/oyster';
-import {Cam, Key, glide, travel, zoomAbout} from '../camera';
+import {Cam, Key, glide, travel, zoomAbout, toScreen} from '../camera';
+import {pt} from '../core/geo';
 
+const MATCH_IN: Cam = {x: 0, y: -12.0, w: 95};
+const HOLD_END: Cam = {x: 2, y: -15, w: 80};
+const MATCH_OUT: Cam = {x: 0, y: -3.9, w: 32};
 const KEYS: Key[] = [
-  [8.0, {x: 0, y: -18, w: 150}],
-  [9.8, {x: 4, y: -26, w: 115}, travel],
-  [10.3, {x: 0, y: -2, w: 34}, zoomAbout],
+  [7.95, MATCH_IN],
+  [9.95, HOLD_END, (u, a, b) => travel(u, a, b, (x) => x)],
+  [10.33, MATCH_OUT, zoomAbout],
 ];
 const pathCam = (t: number): Cam => glide(t, KEYS);
 
@@ -21,12 +27,14 @@ const Frame: React.FC<{id: string; t: number; cam: Cam; scale: number; left: num
       {guide && (
         <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
           {(() => {
-            const s = 1080 / cam.w;
-            const X = 540 + s * (0 - cam.x), Y = 960 + s * (0 - cam.y);
+            const o = toScreen(cam, pt(0, 0));
             return (
-              <g stroke="#FF2D9A" strokeWidth={3} fill="none">
-                <line x1={X - 30} y1={Y} x2={X + 30} y2={Y} />
-                <line x1={X} y1={Y - 30} x2={X} y2={Y + 30} />
+              <g fill="none">
+                <line x1={0} y1={1090} x2={1080} y2={1090} stroke="#22E0FF" strokeWidth={2} strokeDasharray="12 10" />
+                <g stroke="#FF2D9A" strokeWidth={3}>
+                  <line x1={o.x - 30} y1={o.y} x2={o.x + 30} y2={o.y} />
+                  <line x1={o.x} y1={o.y - 30} x2={o.x} y2={o.y + 30} />
+                </g>
               </g>
             );
           })()}
@@ -45,7 +53,7 @@ const Sheet: React.FC<Props> = ({mode, t, x, y, w, ts, guide}) => {
       </div>
     );
   }
-  const times = ts ?? [8.0, 8.45, 8.9, 9.35, 9.8, 10.0, 10.12, 10.22, 10.3];
+  const times = ts ?? [7.95, 8.4, 8.9, 9.2, 9.4, 9.7, 9.95, 10.15, 10.33];
   return (
     <div style={{position: 'absolute', inset: 0, background: '#000'}}>
       {times.map((tt, i) => (
