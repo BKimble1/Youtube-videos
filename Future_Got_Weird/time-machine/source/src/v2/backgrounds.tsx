@@ -23,7 +23,9 @@ export const HookBackground: React.FC<{D: number; t: number; id: string}> = ({D,
 
 import {Yard, YardForeground} from './yard';
 /** the yard at the reunion spot (the opening's background advances with D) */
-export const YardWorld: React.FC<{D: number; season: number; t: number; id: string; doorOpen?: number; gateOpen?: number}> = (p) => <Yard {...p} />;
+export const YardWorld: React.FC<{D: number; season: number; t: number; id: string; doorOpen?: number; gateOpen?: number; layer?: 'all' | 'back' | 'front'}> = (p) => <Yard {...p} />;
+/** figures whose feet are behind the fence line (on the lawn or the garden path) are drawn between the layers */
+export const FENCE_Y = 1588;
 export const YardFore: React.FC<{t: number; camX: number; zoom: number; D: number; season: number; trunkX: number; leavesX: number}> = ({t, camX, zoom, D, season, trunkX, leavesX}) => (
   <YardForeground camX={camX} t={t} D={D} season={season} id="yfg" zoom={zoom} trunkX={trunkX} leavesX={leavesX} />
 );

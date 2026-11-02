@@ -1005,7 +1005,9 @@ const Neighbours: React.FC<{D: number; sl: Season; light: number}> = ({D, sl, li
 // =====================================================================================================================
 // Yard
 // =====================================================================================================================
-export const Yard: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; doorOpen?: number; light?: number}> = ({D: D0, season, t, id, gateOpen = 0, doorOpen = 0, light = 0}) => {
+/** layer: 'back' = sky .. lawn, house, tree (figures standing on the lawn or the garden path go after it);
+ *  'front' = the pavement, fence, gate, lamp, street, car (drawn after those figures); 'all' = both */
+export const Yard: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; doorOpen?: number; light?: number; layer?: 'all' | 'back' | 'front'}> = ({D: D0, season, t, id, gateOpen = 0, doorOpen = 0, light = 0, layer = 'all'}) => {
   const D = clamp(D0);
   const sl = seasonLook(season);
   const fSky = Math.pow(clamp((D - 0.06) / 0.94), 1.45);
@@ -1017,7 +1019,7 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
   const pave = mix('#D9D2C3', '#E3E6EA', fut);
   const asphalt = mix('#6E7884', '#5E6E86', fut);
   const S = YARD.street;
-  return (
+  const back = (
     <g>
       <defs>
         <linearGradient id={`${id}-sky`} gradientUnits="userSpaceOnUse" x1="0" y1="-700" x2="0" y2="1350">
@@ -1087,6 +1089,10 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
         const lx = T.x + (hash(k * 2.3) - 0.5) * T.canopy.rx * 2.4 + 20, ly = HB + 18 + hash(k * 4.1) * (FB - HB - 14);
         return <ellipse key={k} cx={f1(lx)} cy={f1(ly)} rx={8} ry={4} fill={AUT[k % 3]} stroke={INK} strokeWidth={1.6} opacity={sl.fallen * (1 - sl.snow)} transform={`rotate(${f1(hash(k) * 180)} ${f1(lx)} ${f1(ly)})`} />;
       })}
+    </g>
+  );
+  const front = (
+    <g>
       {/* front hedges of the neighbours */}
       <Hedge x0={WX0} x1={455} base={FB + 2} h={80} sl={sl} seed={31} />
       <Hedge x0={2006} x1={WX1} base={FB + 2} h={80} sl={sl} seed={47} />
@@ -1118,6 +1124,14 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       {sl.snow > 0.01 && <rect x={WX0} y={S.y1 + 101} width={WX1 - WX0} height={3000} fill={SNOW} opacity={sl.snow * 0.85} />}
       <Car D={D} x={YARD.car.x} t={t} />
       <Drift D={D} sl={sl} t={t} />
+    </g>
+  );
+  if (layer === 'back') return back;
+  if (layer === 'front') return front;
+  return (
+    <g>
+      {back}
+      {front}
     </g>
   );
 };
@@ -1220,7 +1234,7 @@ const FgTrunk: React.FC<{cx: number; D: number; sl: Season; id: string}> = ({cx,
   const tw = tube([{x: cx + hw + 300, y: 220}, {x: cx + hw + 420, y: 340}, {x: cx + hw + 540, y: 420}], [26, 18, 12], true, false);
   const twD = closed(tw.outline, 0.8);
   const leafSpots: [number, number, number][] = [[560, 470, 30], [470, 360, -40], [640, 360, 80], [700, 120, 20], [860, 60, 70], [600, -20, -20], [800, 230, 120], [950, -70, 40]];
-  const moss = 0.35 + 0.65 * ss(D, 0, 1);
+  const moss = lerp(0.35, 1, ss(D, 0, 1));
   return (
     <g>
       {/* branch (behind the trunk) and its leaves */}
@@ -1258,11 +1272,12 @@ const FgTrunk: React.FC<{cx: number; D: number; sl: Season; id: string}> = ({cx,
         <ellipse cx={cx - 64} cy={1206} rx={28} ry={42} fill="#2A1D16" stroke={INK} strokeWidth={4} />
         <path d={`M ${cx - 140} 1110 Q ${cx - 70} 1060 ${cx} 1110`} fill="none" stroke={INK} strokeWidth={4} opacity={0.5} />
         {/* moss on the lower left */}
-        <g opacity={moss}>
+        <g>
           {(() => {
-            const ys2 = Array.from({length: 12}, (_, j) => 1380 + j * 56);
-            const edge = ys2.map((y, j) => ({x: cx - hw + 40 + 46 * Math.abs(Math.sin(j * 1.3)) + 60 * ss(y, 1380, 1900), y}));
-            const d = closed([{x: cx - hw - 80, y: 1360}, ...edge, {x: cx - hw + 160, y: 2100}, {x: cx - hw - 80, y: 2100}], 0.9);
+            const top = 2000 - 640 * moss;
+            const ys2 = Array.from({length: 12}, (_, j) => lerp(top, 2040, j / 11));
+            const edge = ys2.map((y, j) => ({x: cx - hw + 34 + 40 * Math.abs(Math.sin(j * 1.3)) + 70 * ss(y, top, 2000), y}));
+            const d = closed([{x: cx - hw - 80, y: top - 20}, ...edge, {x: cx - hw + 160, y: 2100}, {x: cx - hw - 80, y: 2100}], 0.9);
             return (
               <g>
                 <path d={d} fill="#6F9A4A" stroke={INK} strokeWidth={5} strokeLinejoin="round" />

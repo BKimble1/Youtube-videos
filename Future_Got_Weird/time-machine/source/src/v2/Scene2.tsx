@@ -17,7 +17,7 @@ import {useImages} from './preload';
 import {Captions2} from './Captions2';
 import {CAPTIONS} from '../lib';
 import {Expr} from '../art/crew';
-import {YardWorld, YardFore} from './backgrounds';
+import {YardWorld, YardFore, FENCE_Y} from './backgrounds';
 import {Room, ROOM} from './room';
 import {walkFeet, walkBob} from './walk';
 import {Head} from '../art/crew';
@@ -216,12 +216,18 @@ function decadesWorld(t: number, k: string) {
   const f = St.friendYard(t);
   const st = St.yardStage(t);
   const e: Expr = st === 0 ? {mouth: 'soft', lookX: 0.2, lookY: lerp(0.1, -0.9, ss(t, V2.windowCover + 0.15, V2.windowCover + 0.45))} : st === 1 ? {mouth: 'flat', lookX: 0.6, lookY: 0.1} : {mouth: 'soft', lookX: -0.6, lookY: lerp(0.1, -1, ss(t, V2.lookUp, V2.lookUp + 0.2))};
+  const fig = (
+    <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
+      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
+    </g>
+  );
+  const behind = f.y < FENCE_Y;
   return (
     <g>
-      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} />
-      <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
-        <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
-      </g>
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} layer="back" />
+      {behind && fig}
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yf`} layer="front" />
+      {!behind && fig}
       {overheadSign(t)}
     </g>
   );
@@ -292,15 +298,22 @@ function doorWorld(t: number, k: string) {
   const fe: Expr = {mouth: 'soft', lookX: lerp(-0.7, 0.8, g), lookY: -0.1, turn: 0.3 * g, brows: 0.15, sad: 0.2};
   const ae: Expr = {lookX: lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), lookY: lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), turn: 0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), sad: 0.35, brows: 0.25, mouth: 'flat'};
   const swing = walking ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
-  return (
-    <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} doorOpen={ss(t, V2.walkStart + 0.2, V2.doorPass)} gateOpen={ss(t, V2.gesture, V2.walkStart + 0.15)} />
-      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
-        <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
-      </g>
+  const astroBehind = a.y < FENCE_Y;
+  const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.walkStart + 0.2, V2.doorPass), gateOpen: ss(t, V2.gesture, V2.walkStart + 0.15)};
+  const astro = (
       <g transform={`translate(${ax} ${a.y}) scale(${a.s})`}>
         <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: 10 - swing, b: 16}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
       </g>
+  );
+  return (
+    <g>
+      <YardWorld {...yd} id={`${k}yd`} layer="back" />
+      {astroBehind && astro}
+      <YardWorld {...yd} id={`${k}yf`} layer="front" />
+      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
+      </g>
+      {!astroBehind && astro}
     </g>
   );
 }

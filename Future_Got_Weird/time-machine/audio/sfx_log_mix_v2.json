@@ -75,7 +75,7 @@
   "gain_db": -19.0
  },
  {
-  "t": 10.15,
+  "t": 10.117,
   "sfx": "friend steps",
   "gain_db": -27.0
  },
@@ -120,27 +120,27 @@
   "gain_db": -24.0
  },
  {
-  "t": 14.6,
+  "t": 14.45,
   "sfx": "sleeve (gesture)",
   "gain_db": -26.0
  },
  {
-  "t": 14.865,
+  "t": 14.862,
   "sfx": "footsteps to the door",
   "gain_db": -21.0
  },
  {
-  "t": 15.07,
+  "t": 15.13,
   "sfx": "door",
   "gain_db": -21.0
  },
  {
-  "t": 15.575,
+  "t": 15.593,
   "sfx": "footsteps on wood",
   "gain_db": -23.0
  },
  {
-  "t": 15.62,
+  "t": 15.68,
   "sfx": "home clock (normal time)",
   "gain_db": -31.0
  },
