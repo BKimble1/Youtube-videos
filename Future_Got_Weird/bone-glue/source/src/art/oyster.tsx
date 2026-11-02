@@ -1,7 +1,7 @@
 // The oyster comparison (film t ≈ 8.0–10.4 s): a Pacific-type oyster cemented to a rounded boulder underwater, seen in
 // side profile. World units are millimetres, x right, y down. The rock's surface runs along y = 0 under the oyster
-// (rock below, y > 0). MATCH POINT = (0, 0): the cement's contact edge on the rock, a horizontal boundary across
-// x ≈ [-33, 33] (shell base ≈ [-29.5, 29.5]).
+// (rock below, y > 0). MATCH POINT = (0, 0): the cement's contact edge on the rock, a horizontal ink line along y = 0
+// across x ≈ [-32, 32] (the shell's cemented skirt spans x ≈ [-28.5, 28.5] just above it). See OYSTER_MATCH.
 //
 // Science: the oyster cements its LEFT valve (the larger, deeper, cupped one) to the rock; the RIGHT valve is the
 // flatter lid on top (closed). The cement is mostly calcium carbonate: a pale seam where the cupped lower valve is
@@ -16,7 +16,7 @@ import {C} from './palette';
 import {P, pt, add, mul, nrm, perp, sub, line, closed, open, tube, n4} from '../core/geo';
 import {mix, rgba} from '../core/color';
 import {clamp, ss, lerp, noise1, hash} from '../lib';
-import {Inked, Deco, InkPath, InkLine, OUTLINE_K, FEATURE_K} from '../dc/ink';
+import {Inked, Deco, InkPath, InkLine, INK, OUTLINE_K, FEATURE_K} from '../dc/ink';
 
 const f = n4;
 const TAU = Math.PI * 2;
@@ -24,9 +24,9 @@ const TAU = Math.PI * 2;
 // ------------------------------------------------------------------ colours (underwater grading of the episode palette)
 const tint = (c: string, k: number) => mix(c, C.sea, k);
 const K = {
-  rock: tint(C.rock, 0.1),
-  rockLit: tint(C.rockLit, 0.05),
-  rockDeep: tint(C.rockDeep, 0.2),
+  rock: tint(C.rock, 0.24),
+  rockLit: tint(C.rockLit, 0.12),
+  rockDeep: tint(C.rockDeep, 0.32),
   shell: tint(C.shell, 0.03),
   shellLit: tint(C.shellLit, 0.02),
   shellDeep: tint(C.shellDeep, 0.05),
@@ -131,70 +131,97 @@ const shift = (ps: P[], dx: number, dy: number) => ps.map((p) => pt(p.x + dx, p.
 // foot (x ≈ [-28, 29]); its growth lamellae fan out from the hinge.
 type Band = {d: string; top: string; topPts: P[]; k: number};
 const buildOyster = () => {
-  const LV_L = spline([pt(-41.4, -17.2), pt(-40.4, -14.2), pt(-38.4, -11.0), pt(-35.2, -8.0), pt(-31.2, -5.6), pt(-27.6, -4.3), pt(-26.6, -3.0)]);
-  const LV_R = spline([pt(40.4, -33.4), pt(41.0, -29.5), pt(40.8, -25), pt(39.4, -20), pt(37.0, -15), pt(33.6, -10.4), pt(29.8, -6.6), pt(27.2, -4.5), pt(26.6, -3.0)]);
+  const LV_L = spline([pt(-35.8, -15.2), pt(-35.3, -12), pt(-33.8, -9), pt(-30.6, -6.6), pt(-27.6, -4.8), pt(-26.3, -3.6), pt(-26.0, -2.8)]);
+  const LV_R = spline([pt(35.0, -30.8), pt(35.8, -27), pt(35.6, -23), pt(34.6, -18.6), pt(33.0, -14.2), pt(30.6, -10.2), pt(28.0, -6.8), pt(26.1, -4.4), pt(25.6, -2.8)]);
 
-  const HINGE = pt(-41.9, -17.6), BILL = pt(41.2, -33.8);
-  const commBase = edge(HINGE.x, BILL.x, (u) => lerp(HINGE.y, BILL.y, u) + 1.7 * Math.sin(Math.PI * u) + 0.8 * Math.sin(TAU * 1.7 * u + 0.4) * Math.sin(Math.PI * u));
-  const comm = frill(commBase, 1, [1.5, 2.7], [4.2, 6.8], 11, {mode: 'tooth', taper: 2.5, ampK: (u) => 0.45 + 0.55 * u});
+  const HINGE = pt(-36.2, -15.6), BILL = pt(35.4, -31.2);
+  const commBase = edge(HINGE.x, BILL.x, (u) => lerp(HINGE.y, BILL.y, u) + 1.5 * Math.sin(Math.PI * u) + 0.9 * Math.sin(TAU * 1.6 * u + 0.4) * Math.sin(Math.PI * u));
+  const comm = frill(commBase, 1, [1.7, 3.0], [4.4, 7.2], 11, {mode: 'tooth', taper: 2.2, ampK: (u) => 0.4 + 0.6 * u});
 
   // lower valve lamellae: 0 = newest (at the margin, under the lid's teeth) .. 3 = oldest, the cemented skirt.
   // Older layers sit outside (nested flower pots): each lower band is drawn over the one above, its free frilly edge
   // pointing up toward the commissure, and steps out a little further (more on the bill side).
   const SPEC = [
     {yl: 0, yr: 0, sag: 0, sl: 0, sr: 0, amp: [0, 0] as [number, number], seed: 0},
-    {yl: -14.4, yr: -27.0, sag: 2.2, sl: 0.5, sr: 1.0, amp: [0.8, 1.7] as [number, number], seed: 21},
-    {yl: -10.6, yr: -19.6, sag: 1.9, sl: 1.0, sr: 1.9, amp: [0.8, 1.7] as [number, number], seed: 31},
-    {yl: -6.6, yr: -12.2, sag: 1.0, sl: 1.4, sr: 2.6, amp: [0.7, 1.4] as [number, number], seed: 41},
+    {yl: -13.0, yr: -24.6, sag: 1.6, sl: 0.6, sr: 1.4, amp: [1.0, 2.1] as [number, number], seed: 21},
+    {yl: -9.8, yr: -16.6, sag: 1.5, sl: 1.1, sr: 2.4, amp: [1.0, 2.0] as [number, number], seed: 31},
+    {yl: -7.0, yr: -10.2, sag: 0.7, sl: 1.5, sr: 2.5, amp: [0.8, 1.6] as [number, number], seed: 41},
   ];
-  const SKIRT_Y = -4.0;
-  const skirtFrill = (xr: number, xl: number) => frill(edge(xr, xl, () => SKIRT_Y), 1, [0.8, 1.6], [2.6, 4.8], 51, {taper: 0.8, sharp: 0.7});
+  const SKIRT_Y = -4.7;
+  const skirtFrill = (xr: number, xl: number) => frill(edge(xr, xl, (u, x) => SKIRT_Y + 0.35 * noise1(x * 0.3, 8)), 1, [0.5, 1.5], [3.4, 7.0], 51, {taper: 0.8, sharp: 0.42});
+  const baseLines: P[][] = [];
   const bands: Band[] = SPEC.map((b, k) => {
     let topPts: P[];
     if (k === 0) {
       topPts = shift(commBase, 0, -1.0);
     } else {
       const xl = xAtY(LV_L, b.yl) - b.sl, xr = xAtY(LV_R, b.yr) + b.sr;
-      const base = edge(xl, xr, (u, x) => lerp(b.yl, b.yr, u) + b.sag * Math.sin(Math.PI * u) + 0.35 * noise1(x * 0.16, b.seed));
-      topPts = frill(base, -1, b.amp, [3.2, 6.8], b.seed, {taper: 1.2, ampK: (u) => 0.45 + 0.75 * u});
+      const base = edge(xl, xr, (u, x) => lerp(b.yl, b.yr, u) + b.sag * Math.sin(Math.PI * u) + 0.5 * noise1(x * 0.16, b.seed));
+      baseLines[k] = base;
+      topPts = frill(base, -1, b.amp, [4.0, 8.4], b.seed, {taper: 1.2, ampK: (u) => Math.max(0.12, (0.35 + 0.85 * u) * (0.62 + 0.55 * noise1(u * 5.5 + b.seed, 7)))});
     }
-    const yb = k === 3 ? SKIRT_Y : -3.2;
-    const yR = topPts[topPts.length - 1].y, yL = topPts[0].y;
+    const yb = k === 3 ? SKIRT_Y : -6.2; // the newer lamellae end under the skirt (never below its scallops)
+    // flaky shelf lips: each older lamella's free edge sticks out past the wall (more on the bill side) and curls down
+    const FR = [0, 1.7, 1.5, 1.2][k], FL = [0, 0.6, 0.5, 0.45][k];
+    if (k > 0) {
+      const a = topPts[0], z = topPts[topPts.length - 1];
+      topPts = [pt(a.x - 0.75 * FL, a.y + 1.3), pt(a.x - FL, a.y + 0.35), ...topPts, pt(z.x + 0.65 * FR, z.y - 0.2), pt(z.x + FR, z.y + 0.9), pt(z.x + 0.8 * FR, z.y + 2.0)];
+    }
+    const yR = topPts[topPts.length - 1].y + (k > 0 ? 0.8 : 0), yL = topPts[0].y + (k > 0 ? 0.6 : 0);
     const right = range(yR, yb, 0.4).map((y) => pt(xAtY(LV_R, y) + b.sr, y));
     const left = range(yb, yL, 0.4).map((y) => pt(xAtY(LV_L, y) - b.sl, y));
     const bottom = k === 3 ? skirtFrill(right[right.length - 1].x, left[0].x) : [pt(right[right.length - 1].x, yb), pt(left[0].x, yb)];
     return {d: line([...topPts, ...right, ...bottom, ...left]) + 'Z', top: line(topPts), topPts, k};
   });
   const skirtBottom = skirtFrill(xAtY(LV_R, SKIRT_Y) + SPEC[3].sr, xAtY(LV_L, SKIRT_Y) - SPEC[3].sl);
+  // partial lamellae: short frilly ridges that start and end inside a band (growth is never perfectly regular)
+  const partial = (k: number, x0: number, x1: number, frac: number, seed: number) => {
+    const below = k < 3 ? baseLines[k + 1] : null;
+    const base = edge(x0, x1, (u, x) => lerp(yAtX(baseLines[k], x), below ? yAtX(below, x) : SKIRT_Y, frac) + 0.3 * noise1(x * 0.3, seed));
+    return frill(base, -1, [0.5, 1.3], [3.4, 6.0], seed, {taper: 4});
+  };
+  const partials: {k: number; pts: P[]}[] = [
+    {k: 1, pts: partial(1, -6, 27, 0.5, 81)},
+    {k: 2, pts: partial(2, -22, 8, 0.52, 82)},
+    {k: 2, pts: partial(2, 14, 30, 0.45, 83)},
+    {k: 3, pts: partial(3, -10, 20, 0.5, 84)},
+  ];
 
   // the lid (right valve): flat plates stacked, the oldest (smallest) on top, frilly edges pointing down
   const DOME = spline(
-    [BILL, pt(40.7, -36.6), pt(38.6, -39.6), pt(34.5, -41.8), pt(27, -43.1), pt(18, -43.0), pt(8, -41.7), pt(-3, -39.3), pt(-14, -35.8), pt(-24, -31.5), pt(-32, -26.6), pt(-37.6, -22.2), pt(-40.6, -19.5), HINGE].map(
-      (p, i, a) => (i === 0 || i === a.length - 1 ? p : pt(p.x, p.y + 0.45 * noise1(i * 1.7, 5))),
+    [BILL, pt(35.6, -33.8), pt(33.8, -36.6), pt(29.8, -38.8), pt(23, -40.0), pt(15, -39.4), pt(9, -39.2), pt(3, -37.8), pt(-3.5, -36.6), pt(-13, -32.8), pt(-21, -28.9), pt(-27.5, -24.0), pt(-32.2, -19.8), pt(-34.9, -17.0), HINGE].map(
+      (p, i, a) => (i === 0 || i === a.length - 1 ? p : pt(p.x, p.y + 0.7 * noise1(i * 1.7, 5))),
     ),
   );
   const domeByX = [...DOME].reverse();
   const domeY = (x: number) => yAtX(domeByX, x);
   const commY = (x: number) => yAtX(commBase, x);
-  const lidPlate = (up: [number, number], seed: number, amp: [number, number]) => {
-    const base = edge(HINGE.x, BILL.x, (u, x) => commY(x) - lerp(up[0], up[1], u) + 0.3 * noise1(x * 0.2, seed)).filter((p) => p.y > domeY(p.x) + 0.9);
-    const lip = frill(base, 1, amp, [3.0, 6.0], seed, {taper: 1.4, ampK: (u) => 0.5 + 0.6 * u});
-    const xa = lip[0].x, xb = lip[lip.length - 1].x;
+  const lidPlate = (up: [number, number], seed: number, amp: [number, number], rise = -99, flake = 1.4) => {
+    // left of `rise` the plate's edge curves up into the dome, so a short plate starts without a step
+    const base = edge(HINGE.x, BILL.x, (u, x) => commY(x) - lerp(up[0], up[1], u) - 0.08 * Math.max(0, rise - x) ** 2 + 0.3 * noise1(x * 0.2, seed)).filter(
+      (p) => p.y > domeY(p.x) + 0.9,
+    );
+    const fr = frill(base, 1, amp, [3.0, 6.0], seed, {taper: 1.4, ampK: (u) => 0.5 + 0.6 * u});
+    const xa = fr[0].x, xb = fr[fr.length - 1].x;
+    // the plate's free edge flakes out past the profile at the bill end, so the silhouette steps
+    const z = fr[fr.length - 1];
+    const lip = [...fr, pt(z.x + 0.9 * flake, z.y - 0.2), pt(z.x + 1.25 * flake, z.y + 0.75), pt(z.x + 0.9 * flake, z.y + 1.5)];
     const top = DOME.filter((p) => p.x < xb && p.x > xa);
     return {d: line([...lip, ...top]) + 'Z', lip, lipD: line(lip)};
   };
   const L0 = {d: line([...comm, ...DOME.slice(1, -1)]) + 'Z', lip: comm, lipD: line(comm)};
-  const L1 = lidPlate([2.6, 4.8], 61, [0.6, 1.3]);
-  const L2 = lidPlate([5.6, 8.9], 71, [0.5, 1.1]);
+  const L1 = lidPlate([2.6, 4.6], 61, [0.6, 1.4], -99, 1.6);
+  const L2 = lidPlate([5.8, 8.6], 71, [0.5, 1.1], -4, 1.3);
 
   // the cement: a pale calcium-carbonate seam under the skirt, its contact edge exactly on y = 0, meniscus fillets
   const skL = skirtBottom[skirtBottom.length - 1].x, skR = skirtBottom[0].x;
-  const filL = spline([pt(skL + 1.0, -4.5), pt(skL - 0.1, -3.2), pt(skL - 1.0, -1.5), pt(skL - 2.8, 0)], 0.12);
-  const filR = spline([pt(skR + 3.0, 0), pt(skR + 1.1, -1.5), pt(skR + 0.15, -3.2), pt(skR - 1.0, -4.5)], 0.12);
+  // convex beads at the ends (cement squeezed out from under the shell), thin feathered toes on the rock
+  const filL = spline([pt(skL + 1.0, -5.3), pt(skL - 0.5, -4.0), pt(skL - 1.6, -2.4), pt(skL - 2.1, -1.0), pt(skL - 2.6, -0.25), pt(skL - 3.3, 0)], 0.12);
+  const filR = spline([pt(skR + 3.4, 0), pt(skR + 2.7, -0.25), pt(skR + 2.2, -1.0), pt(skR + 1.7, -2.4), pt(skR + 0.5, -4.0), pt(skR - 1.0, -5.3)], 0.12);
   const cement = line([...filL, ...filR]) + 'Z';
-  const cementFoot: [number, number] = [skL - 2.8, skR + 3.0];
+  const cementFoot: [number, number] = [skL - 3.3, skR + 3.4];
 
-  return {bands, comm, L0, L1, L2, cement, cementFoot, skirtBottom, base: [skL, skR] as [number, number], HINGE, BILL};
+  return {bands, partials, comm, L0, L1, L2, cement, cementFoot, skirtBottom, base: [skL, skR] as [number, number], HINGE, BILL};
 };
 const OY = buildOyster();
 
@@ -211,19 +238,19 @@ const ray = (from: P, to: P, w0: number, w1: number, bow: number) => {
   }
   return line([...ps, ...qs.reverse()]) + 'Z';
 };
-const H0 = pt(-42.4, -17.8);
+const H0 = pt(-36.8, -15.8);
 const RAYS_LOW = [
-  ray(H0, pt(-24, 6), 0.25, 2.6, 0.08),
-  ray(H0, pt(-4, 5), 0.25, 3.2, 0.06),
-  ray(H0, pt(14, 2), 0.25, 2.4, 0.04),
-  ray(H0, pt(29, -5), 0.25, 3.0, 0.02),
-  ray(H0, pt(41, -18), 0.2, 2.2, -0.01),
+  ray(H0, pt(-20, 6), 0.25, 2.6, 0.08),
+  ray(H0, pt(-3, 5), 0.25, 3.4, 0.06),
+  ray(H0, pt(13, 2), 0.25, 2.4, 0.04),
+  ray(H0, pt(26, -4), 0.25, 3.2, 0.02),
+  ray(H0, pt(36, -17), 0.2, 2.2, -0.01),
 ];
 const RAYS_LID = [
-  ray(H0, pt(-18, -40), 0.2, 2.0, -0.04),
-  ray(H0, pt(4, -46), 0.2, 2.8, -0.03),
-  ray(H0, pt(25, -47), 0.2, 2.2, -0.02),
-  ray(H0, pt(43, -40), 0.2, 1.8, 0.0),
+  ray(H0, pt(-14, -37), 0.2, 2.0, -0.04),
+  ray(H0, pt(4, -43), 0.2, 2.8, -0.03),
+  ray(H0, pt(22, -44), 0.2, 2.2, -0.02),
+  ray(H0, pt(37, -37), 0.2, 1.8, 0.0),
 ];
 
 // ------------------------------------------------------------------ the rock (static)
@@ -243,11 +270,7 @@ const CRACKS: P[][] = [
   [pt(-67.4, 25), pt(-62.5, 28), pt(-60.4, 32.5)],
   [pt(52, 8.5), pt(50.4, 14.5), pt(53.4, 20), pt(51.8, 27), pt(54.6, 34), pt(53.2, 41)],
   [pt(-12, 30), pt(-9.4, 34.5), pt(-10.6, 39), pt(-7.4, 44)],
-];
-const BUMPS = [
-  {c: pt(-40, 34), rx: 13, ry: 7.5, r: -6},
-  {c: pt(30, 52), rx: 15, ry: 8, r: 8},
-  {c: pt(80, 46), rx: 9, ry: 6, r: 20},
+  [pt(10.5, 7.5), pt(12.2, 10.5), pt(11.4, 13.6), pt(13.4, 17)],
 ];
 
 // ------------------------------------------------------------------ the water
@@ -257,9 +280,9 @@ const flowV = (t: number) => 7.5 + 1.17 * Math.cos(0.9 * t);
 
 type Motes = {z: number; cell: number; dens: number; r: [number, number]; a: number; seed: number; blurK: number; maxBlur: number; color: string};
 const MOTES: Motes[] = [
-  {z: 300, cell: 16, dens: 0.5, r: [0.9, 1.7], a: 0.42, seed: 1, blurK: 9, maxBlur: 6, color: mix(K.mote, C.seaLit, 0.45)},
-  {z: 130, cell: 12, dens: 0.42, r: [0.5, 0.95], a: 0.5, seed: 2, blurK: 9, maxBlur: 5, color: mix(K.mote, C.seaLit, 0.25)},
-  {z: 45, cell: 10, dens: 0.36, r: [0.3, 0.6], a: 0.6, seed: 3, blurK: 8, maxBlur: 4, color: K.mote},
+  {z: 300, cell: 16, dens: 0.38, r: [0.9, 1.7], a: 0.42, seed: 1, blurK: 9, maxBlur: 6, color: mix(K.mote, C.seaLit, 0.45)},
+  {z: 130, cell: 12, dens: 0.32, r: [0.5, 0.95], a: 0.5, seed: 2, blurK: 9, maxBlur: 5, color: mix(K.mote, C.seaLit, 0.25)},
+  {z: 45, cell: 10, dens: 0.28, r: [0.3, 0.6], a: 0.6, seed: 3, blurK: 8, maxBlur: 4, color: K.mote},
   {z: 0, cell: 9, dens: 0.3, r: [0.15, 0.32], a: 0.75, seed: 4, blurK: 0, maxBlur: 0, color: K.mote},
   {z: -15, cell: 15, dens: 0.34, r: [0.42, 0.8], a: 0.45, seed: 5, blurK: 50, maxBlur: 14, color: K.mote},
   {z: -32, cell: 26, dens: 0.24, r: [1.0, 1.7], a: 0.26, seed: 6, blurK: 60, maxBlur: 26, color: K.mote},
@@ -381,30 +404,15 @@ const inkW = (cam: Cam, px = 4.2) => (px * grow(cam)) / pxPerMm(cam) / OUTLINE_K
 const lineW = (cam: Cam, px: number) => (px * grow(cam)) / pxPerMm(cam) / FEATURE_K;
 
 // ------------------------------------------------------------------ main layer pieces
-const TERM = [pt(-220, 170), pt(-110, 128), pt(-30, 104), pt(40, 76), pt(84, 44), pt(112, 34), pt(220, 70)];
-const RockBody: React.FC<{id: string; t: number; cam: Cam; iw: number; lw: number}> = ({id, t, cam, iw, lw}) => {
-  const [x0, , x1] = viewRect(cam, 0, 1.15);
-  // caustics: a thin bright web between drifting rounded cells (rows foreshortened toward the back of the top)
-  const cells: string[] = [];
-  const sx = 6.4;
-  const rowY = (j: number) => -5.4 + 1.7 * j + 0.3 * j * j;
-  for (let j = 0; j < 9; j++) {
-    const y = rowY(j), sy = rowY(j + 1) - y;
-    for (let i = Math.floor(x0 / sx) - 1; i <= Math.ceil(x1 / sx) + 1; i++) {
-      const h = hash(i * 13.1 + j * 7.7), h2 = hash(i * 5.3 + j * 19.1);
-      const cx = (i + (j % 2) * 0.5 + 0.3 * (h2 - 0.5)) * sx + 0.7 * Math.sin(1.25 * t + h * TAU) + 0.4 * noise1(t * 0.8 + i * 0.37, j);
-      const cy = y + sy * (0.5 + 0.1 * Math.sin(1.05 * t + h * 17));
-      const rx = sx * (0.48 + 0.04 * Math.sin(1.6 * t + i * 1.3 + j));
-      const ry = sy * (0.5 + 0.05 * Math.cos(1.4 * t + i * 0.7 + j * 1.9));
-      const ps: P[] = [];
-      for (let k = 0; k < 6; k++) {
-        const a = (k / 6) * TAU + h * 2;
-        const rr = 1 + 0.13 * Math.sin(1.3 * t + k * 2.1 + h * 9);
-        ps.push(pt(cx + Math.cos(a) * rx * rr, cy + Math.sin(a) * ry * rr));
-      }
-      cells.push(closed(ps, 1));
-    }
-  }
+const TERM = [pt(-220, 170), pt(-120, 132), pt(-40, 112), pt(30, 88), pt(76, 54), pt(104, 38), pt(220, 64)];
+const FACET = [pt(-160, 130), pt(-134, 76), pt(-108, 46), pt(-84, 28), pt(-60, 19), pt(-40, 18), pt(-24, 22), pt(-34, 40), pt(-62, 62), pt(-100, 92), pt(-136, 132)];
+const BUMPS = [
+  {c: pt(-34, 42), rx: 10, ry: 5.2},
+  {c: pt(44, 30), rx: 7.5, ry: 4.0},
+  {c: pt(-74, 40), rx: 6, ry: 3.4},
+];
+const PITS = [pt(-44, 46), pt(-38.5, 49), pt(18, 30), pt(62, 70), pt(-92, 70), pt(-10.5, 21), pt(-7.8, 22.2)];
+const RockBody: React.FC<{id: string; iw: number; lw: number}> = ({id, iw, lw}) => {
   const term = open(TERM, 1);
   return (
     <>
@@ -413,35 +421,25 @@ const RockBody: React.FC<{id: string; t: number; cam: Cam; iw: number; lw: numbe
           <path d={ROCK_D} />
         </clipPath>
         <linearGradient id={`${id}-rg`} gradientUnits="userSpaceOnUse" x1="0" y1="-5" x2="0" y2="150">
-          <stop offset="0" stopColor={K.rockLit} />
-          <stop offset="0.06" stopColor={mix(K.rockLit, K.rock, 0.5)} />
-          <stop offset="0.2" stopColor={K.rock} />
-          <stop offset="0.6" stopColor={mix(K.rock, K.rockDeep, 0.7)} />
+          <stop offset="0" stopColor={mix(K.rockLit, '#FFFFFF', 0.08)} />
+          <stop offset="0.055" stopColor={K.rockLit} />
+          <stop offset="0.13" stopColor={K.rock} />
+          <stop offset="0.6" stopColor={mix(K.rock, K.rockDeep, 0.65)} />
           <stop offset="1" stopColor={K.rockDeep} />
         </linearGradient>
-        <radialGradient id={`${id}-rs`} gradientUnits="userSpaceOnUse" cx="-18" cy="6" r="150" fx="-40" fy="-10">
+        <radialGradient id={`${id}-rs`} gradientUnits="userSpaceOnUse" cx="-18" cy="10" r="150" fx="-40" fy="-10">
           <stop offset="0" stopColor={K.rockDeep} stopOpacity={0} />
           <stop offset="0.55" stopColor={K.rockDeep} stopOpacity={0} />
           <stop offset="1" stopColor={K.rockDeep} stopOpacity={0.85} />
         </radialGradient>
-        <linearGradient id={`${id}-cf`} gradientUnits="userSpaceOnUse" x1="0" y1="-6" x2="0" y2="22">
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
-          <stop offset="0.35" stopColor="#FFFFFF" stopOpacity={0.6} />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
-        </linearGradient>
-        <mask id={`${id}-cm`} maskUnits="userSpaceOnUse" x="-400" y="-20" width="800" height="70">
-          <rect x="-400" y="-20" width="800" height="70" fill={`url(#${id}-cf)`} />
-          {cells.map((d, i) => (
-            <path key={i} d={d} fill="#000" />
-          ))}
-        </mask>
+      </defs>
+      <defs>
         {BUMPS.map((b, i) => (
-          <radialGradient key={i} id={`${id}-bump${i}`} gradientUnits="userSpaceOnUse" cx={f(b.c.x)} cy={f(b.c.y)} r={f(b.rx)} fx={f(b.c.x - b.rx * 0.5)} fy={f(b.c.y - b.ry * 0.7)}>
-            <stop offset="0" stopColor={K.rockLit} stopOpacity={0.5} />
-            <stop offset="0.45" stopColor={K.rockLit} stopOpacity={0.12} />
-            <stop offset="0.75" stopColor={K.rockDeep} stopOpacity={0} />
-            <stop offset="1" stopColor={K.rockDeep} stopOpacity={0.4} />
-          </radialGradient>
+          <linearGradient key={i} id={`${id}-bu${i}`} gradientUnits="userSpaceOnUse" x1={f(b.c.x - b.rx * 0.6)} y1={f(b.c.y - b.ry)} x2={f(b.c.x + b.rx * 0.5)} y2={f(b.c.y + b.ry)}>
+            <stop offset="0" stopColor={K.rockLit} stopOpacity={0.55} />
+            <stop offset="0.55" stopColor={K.rock} stopOpacity={0.6} />
+            <stop offset="1" stopColor={K.rock} stopOpacity={0.15} />
+          </linearGradient>
         ))}
       </defs>
       <Inked w={iw}>
@@ -449,27 +447,89 @@ const RockBody: React.FC<{id: string; t: number; cam: Cam; iw: number; lw: numbe
       </Inked>
       <g clipPath={`url(#${id}-rclip)`}>
         <rect x="-220" y="-10" width="440" height="570" fill={`url(#${id}-rs)`} />
-        {/* the shadow side of the boulder: a cel terminator sweeping down to the lower right */}
-        <path d={term + 'L220 560L-220 560Z'} fill={K.rockDeep} opacity={0.3} />
-        {/* soft relief bumps on the face */}
+        {/* cel planes: a lit facet on the upper left, a small one on the right shoulder, the shadow side lower right */}
+        <path d={closed(FACET, 0.55)} fill={K.rockLit} opacity={0.16} />
+        <path d={term + 'L220 560L-220 560Z'} fill={K.rockDeep} opacity={0.42} />
+        <path d={open(shift(ROCK_TOP.filter((p) => p.x > -118 && p.x < -36), 0, 1.6), 1)} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.35)} strokeWidth="1.3" strokeLinecap="round" opacity={0.55} />
+        {/* raised bumps: a shadow crescent to the lower right, a lit cap to the upper left */}
         {BUMPS.map((b, i) => (
-          <ellipse key={i} cx={f(b.c.x)} cy={f(b.c.y)} rx={f(b.rx)} ry={f(b.ry)} transform={`rotate(${b.r} ${f(b.c.x)} ${f(b.c.y)})`} fill={`url(#${id}-bump${i})`} />
+          <g key={`b${i}`}>
+            <ellipse cx={f(b.c.x + b.rx * 0.12)} cy={f(b.c.y + b.ry * 0.3)} rx={f(b.rx)} ry={f(b.ry)} fill={K.rockDeep} opacity={0.32} />
+            <ellipse cx={f(b.c.x)} cy={f(b.c.y)} rx={f(b.rx)} ry={f(b.ry)} fill={`url(#${id}-bu${i})`} />
+            <path d={`M${f(b.c.x - b.rx * 0.92)} ${f(b.c.y + b.ry * 0.1)}A${f(b.rx)} ${f(b.ry)} 0 0 1 ${f(b.c.x + b.rx * 0.2)} ${f(b.c.y - b.ry * 0.98)}`} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.3)} strokeWidth={f(lw * 0.9)} strokeLinecap="round" opacity={0.55} />
+          </g>
         ))}
         {/* a faint green film of algae on the shaded lower face */}
-        <ellipse cx="-78" cy="64" rx="34" ry="12" transform="rotate(-24 -78 64)" fill={K.weedDeep} opacity={0.13} />
-        <ellipse cx="96" cy="58" rx="26" ry="9" transform="rotate(30 96 58)" fill={K.weedDeep} opacity={0.12} />
+        <ellipse cx="-80" cy="76" rx="30" ry="10" transform="rotate(-24 -80 76)" fill={K.weedDeep} opacity={0.14} />
+        <ellipse cx="96" cy="64" rx="24" ry="8" transform="rotate(30 96 64)" fill={K.weedDeep} opacity={0.13} />
+        {/* pits: a dark hollow with a lit lower lip */}
+        {PITS.map((q, i) => {
+          const r = i >= 5 ? 0.45 + 0.35 * hash(i * 3.7) : 1.1 + 0.9 * hash(i * 3.7);
+          return (
+            <g key={i}>
+              <ellipse cx={f(q.x + 0.25 * r)} cy={f(q.y + 0.3 * r)} rx={f(r * 1.05)} ry={f(r * 0.72)} fill={mix(K.rockLit, '#FFFFFF', 0.1)} opacity={0.35} />
+              <ellipse cx={f(q.x)} cy={f(q.y)} rx={f(r)} ry={f(r * 0.62)} fill={mix(K.rockDeep, C.seaDeep, 0.45)} opacity={0.75} />
+            </g>
+          );
+        })}
         {/* cracks: a dark groove with a lit lower-right lip */}
         {CRACKS.map((c, i) => (
           <g key={i}>
-            <path d={open(shift(c, 0.4, 0.4), 0.6)} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.15)} strokeWidth={f(lw * 0.8)} strokeLinecap="round" strokeLinejoin="round" opacity={0.45} />
+            <path d={open(shift(c, 0.4, 0.4), 0.6)} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.15)} strokeWidth={f(lw * 0.8)} strokeLinecap="round" strokeLinejoin="round" opacity={0.4} />
             <path d={open(c, 0.6)} fill="none" stroke={mix(K.rockDeep, C.seaDeep, 0.55)} strokeWidth={f(lw * 0.9)} strokeLinecap="round" strokeLinejoin="round" opacity={0.8} />
           </g>
         ))}
-        {/* cool light bouncing up from the water along the shaded flank */}
-        <path d={line(ROCK_TOP.filter((p) => p.x > 60))} fill="none" stroke={C.seaLit} strokeWidth="5" opacity={0.18} />
-        <path d={line(ROCK_TOP.filter((p) => p.x < -70))} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.3)} strokeWidth="3.5" opacity={0.3} />
-        {/* caustic shimmer on the top */}
-        <rect x="-400" y="-20" width="800" height="70" fill={K.caustic} opacity={0.5} mask={`url(#${id}-cm)`} />
+        {/* cool light bouncing up from the water along the shaded flank, warm light on the lit shoulder */}
+        <path d={line(ROCK_TOP.filter((p) => p.x > 58))} fill="none" stroke={C.seaLit} strokeWidth="5" opacity={0.2} />
+        <path d={line(ROCK_TOP.filter((p) => p.x < -60))} fill="none" stroke={mix(K.rockLit, '#FFFFFF', 0.3)} strokeWidth="3.5" opacity={0.3} />
+      </g>
+    </>
+  );
+};
+
+/** caustic shimmer on the top of the rock (its own softly blurred layer) */
+const Caustics: React.FC<{id: string; t: number; cam: Cam; lw: number}> = ({id, t, cam, lw}) => {
+  const [x0, , x1] = viewRect(cam, 0, 1.15);
+  // caustics: thin bright wobbly loops that overlap into a shifting net, foreshortened toward the back of the top
+  const loops: string[] = [];
+  const sx = 10;
+  const rowY = (j: number) => -5.2 + 1.9 * j + 0.32 * j * j;
+  for (let j = 0; j < 8; j++) {
+    const y = rowY(j), sy = rowY(j + 1) - y;
+    for (let i = Math.floor(x0 / sx) - 1; i <= Math.ceil(x1 / sx) + 1; i++) {
+      const h = hash(i * 13.1 + j * 7.7), h2 = hash(i * 5.3 + j * 19.1);
+      const cx = (i + (j % 2) * 0.5 + 0.4 * (h2 - 0.5)) * sx + 0.8 * Math.sin(1.2 * t + h * TAU) + 0.5 * noise1(t * 0.8 + i * 0.37, j);
+      const cy = y + sy * (0.5 + 0.12 * Math.sin(1.0 * t + h * 17));
+      const rx = sx * (0.6 + 0.08 * Math.sin(1.5 * t + i * 1.3 + j) + 0.1 * h2);
+      const ry = sy * (0.62 + 0.08 * Math.cos(1.3 * t + i * 0.7 + j * 1.9));
+      const ps: P[] = [];
+      for (let k = 0; k < 7; k++) {
+        const a = (k / 7) * TAU + h * 2;
+        const rr = 1 + 0.2 * Math.sin(1.2 * t + k * 2.1 + h * 9);
+        ps.push(pt(cx + Math.cos(a) * rx * rr, cy + Math.sin(a) * ry * rr));
+      }
+      loops.push(closed(ps, 1));
+    }
+  }
+  return (
+    <>
+      <defs>
+        <clipPath id={`${id}-rclip`}>
+          <path d={ROCK_D} />
+        </clipPath>
+        <linearGradient id={`${id}-cf`} gradientUnits="userSpaceOnUse" x1="0" y1="-6" x2="0" y2="20">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
+          <stop offset="0.4" stopColor="#FFFFFF" stopOpacity={0.55} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </linearGradient>
+        <mask id={`${id}-cm`} maskUnits="userSpaceOnUse" x="-400" y="-20" width="800" height="70">
+          <rect x="-400" y="-20" width="800" height="70" fill={`url(#${id}-cf)`} />
+        </mask>
+      </defs>
+      <g clipPath={`url(#${id}-rclip)`}>
+        <g mask={`url(#${id}-cm)`}>
+          <path d={loops.join('')} fill="none" stroke={K.caustic} strokeWidth="0.55" strokeLinejoin="round" opacity={0.36} />
+        </g>
       </g>
     </>
   );
@@ -496,65 +556,104 @@ const Shadows: React.FC<{id: string}> = ({id}) => (
   </>
 );
 
-const Cement: React.FC<{id: string; iw: number; lw: number}> = ({id, iw}) => {
+const Cement: React.FC<{id: string; iw: number}> = ({id, iw}) => {
   const [a, b] = OY.cementFoot;
   return (
     <>
       <defs>
-        <linearGradient id={`${id}-cg`} gradientUnits="userSpaceOnUse" x1="0" y1="-4.5" x2="0" y2="0">
+        <linearGradient id={`${id}-cg`} gradientUnits="userSpaceOnUse" x1="0" y1="-5.2" x2="0" y2="0">
           <stop offset="0" stopColor={K.cementLit} />
           <stop offset="0.5" stopColor={K.cement} />
           <stop offset="1" stopColor={mix(K.cement, K.cementShade, 0.75)} />
         </linearGradient>
         <linearGradient id={`${id}-cgx`} gradientUnits="userSpaceOnUse" x1={f(a)} y1="0" x2={f(b)} y2="0">
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.4} />
+          <stop offset="0" stopColor={K.rockLit} stopOpacity={0.85} />
+          <stop offset="0.06" stopColor={K.rockLit} stopOpacity={0.15} />
+          <stop offset="0.12" stopColor="#FFFFFF" stopOpacity={0.12} />
           <stop offset="0.3" stopColor="#FFFFFF" stopOpacity={0} />
-          <stop offset="0.72" stopColor={K.shadow} stopOpacity={0} />
-          <stop offset="1" stopColor={K.shadow} stopOpacity={0.25} />
+          <stop offset="0.75" stopColor={K.shadow} stopOpacity={0} />
+          <stop offset="0.93" stopColor={K.shadow} stopOpacity={0.14} />
+          <stop offset="1" stopColor={K.rock} stopOpacity={0.8} />
         </linearGradient>
       </defs>
-      <Inked w={iw * 0.85}>
-        <InkPath d={OY.cement} fill={`url(#${id}-cg)`} />
-        <Deco>
+      <g>
+        <path d={OY.cement} fill={`url(#${id}-cg)`} />
+        <g>
           <path d={OY.cement} fill={`url(#${id}-cgx)`} />
-          <ellipse cx={f(a + 1.5)} cy="-1.15" rx="0.95" ry="0.28" transform={`rotate(-46 ${f(a + 1.5)} -1.15)`} fill="#FFFFFF" opacity={0.9} />
-          <ellipse cx="-11" cy="-1.3" rx="1.5" ry="0.22" fill="#FFFFFF" opacity={0.55} />
-          <ellipse cx="9" cy="-1.25" rx="1.0" ry="0.2" fill="#FFFFFF" opacity={0.45} />
-        </Deco>
-      </Inked>
+          <ellipse cx={f(a + 1.75)} cy="-2.75" rx="0.95" ry="0.3" transform={`rotate(-58 ${f(a + 1.75)} -2.75)`} fill="#FFFFFF" opacity={0.9} />
+          <path d={`M${f(a + 3.4)} -0.5L${f(b - 3.4)} -0.5`} stroke={K.cementShade} strokeWidth="0.5" opacity={0.25} />
+        </g>
+        {/* the contact edge: one crisp ink line exactly along y = 0 */}
+        <path d={`M${f(a + 1.2)} 0L${f(b - 1.2)} 0`} stroke={INK} strokeWidth={f(iw * OUTLINE_K * 1.1)} strokeLinecap="round" />
+      </g>
     </>
   );
 };
 
+/** cement that has crept up over the skirt's lowest frills (drawn in front of the shell): one undulating bead whose
+ *  edge covers some frill tips and not others, so the shell reads as fused into it rather than perched on it */
+const BEAD = (() => {
+  const [l, r] = OY.base;
+  const xa = l + 1.2, xb = r - 1.2;
+  const top = edge(xa, xb, (u, x) => -(3.55 + 0.75 * Math.sin(x * 0.42 + 1.0) + 0.5 * noise1(x * 0.27, 3)) * (0.5 + 0.5 * ss(u, 0, 0.07) * ss(1 - u, 0, 0.07)), 0.15);
+  return {d: line([pt(xa, 0), ...top, pt(xb, 0)]) + 'Z', top, edgeD: line(top), hiD: line(shift(top, 0.05, 0.42).slice(4, -4))};
+})();
+const CementFront: React.FC<{id: string; lw: number}> = ({id, lw}) => (
+  <>
+    <defs>
+      <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1="0" y1="-3.8" x2="0" y2="0">
+        <stop offset="0" stopColor={K.cementLit} />
+        <stop offset="0.55" stopColor={K.cement} />
+        <stop offset="1" stopColor={mix(K.cement, K.cementShade, 0.75)} />
+      </linearGradient>
+    </defs>
+    <path d={BEAD.d} fill={`url(#${id}-g)`} />
+    <path d={BEAD.edgeD} fill="none" stroke={K.cementShade} strokeWidth={f(lw * 0.55)} strokeOpacity={0.7} strokeLinecap="round" />
+    <path d={BEAD.hiD} fill="none" stroke="#FFFFFF" strokeWidth={f(lw * 0.5)} strokeOpacity={0.7} strokeLinecap="round" />
+  </>
+);
+
 const Oyster: React.FC<{id: string; iw: number; lw: number}> = ({id, iw, lw}) => {
   const {bands, L0, L1, L2} = OY;
-  const g = `url(#${id}-og)`, gl = `url(#${id}-lg)`;
+  const dark = (k: number) => k % 2 === 1;
+  const LIGHTB = [mix(K.shellLit, K.shell, 0.22), mix(K.shellLit, K.shell, 0.62), mix(K.shell, K.shellDeep, 0.4)];
+  const DARKB = [mix(K.shell, K.streak, 0.1), mix(K.shell, K.streak, 0.36), mix(K.shellDeep, K.streak, 0.25)];
+  const lidC = [K.shellLit, mix(K.shellLit, K.shell, 0.45), mix(K.shellLit, K.shell, 0.85)];
+  const lidC1 = [mix(K.shellLit, K.shell, 0.25), mix(K.shell, K.streak, 0.18), mix(K.shell, K.streak, 0.35)];
   return (
     <>
       <defs>
-        <linearGradient id={`${id}-og`} gradientUnits="userSpaceOnUse" x1="-36" y1="-30" x2="32" y2="0">
-          <stop offset="0" stopColor={mix(K.shellLit, K.shell, 0.35)} />
-          <stop offset="0.32" stopColor={mix(K.shellLit, K.shell, 0.72)} />
-          <stop offset="0.62" stopColor={K.shell} />
-          <stop offset="1" stopColor={mix(K.shell, K.shellDeep, 0.8)} />
-        </linearGradient>
-        <linearGradient id={`${id}-lg`} gradientUnits="userSpaceOnUse" x1="-24" y1="-42" x2="26" y2="-24">
-          <stop offset="0" stopColor={K.shellLit} />
-          <stop offset="0.45" stopColor={mix(K.shellLit, K.shell, 0.4)} />
-          <stop offset="1" stopColor={mix(K.shellLit, K.shell, 0.85)} />
-        </linearGradient>
-        <linearGradient id={`${id}-tip`} gradientUnits="userSpaceOnUse" x1="0" y1="-6.5" x2="0" y2="-2.4">
+        {bands.map((b) => {
+          const c = dark(b.k) ? DARKB : LIGHTB;
+          return (
+            <linearGradient key={b.k} id={`${id}-og${b.k}`} gradientUnits="userSpaceOnUse" x1="-30" y1="-28" x2="30" y2="0">
+              <stop offset="0" stopColor={c[0]} />
+              <stop offset="0.45" stopColor={c[1]} />
+              <stop offset="1" stopColor={c[2]} />
+            </linearGradient>
+          );
+        })}
+        {[lidC, lidC1, lidC].map((c, i) => (
+          <linearGradient key={i} id={`${id}-lg${i}`} gradientUnits="userSpaceOnUse" x1="-20" y1="-39" x2="24" y2="-24">
+            <stop offset="0" stopColor={c[0]} />
+            <stop offset="0.45" stopColor={c[1]} />
+            <stop offset="1" stopColor={c[2]} />
+          </linearGradient>
+        ))}
+        <linearGradient id={`${id}-tip`} gradientUnits="userSpaceOnUse" x1="0" y1="-7.0" x2="0" y2="-2.4">
           <stop offset="0" stopColor={K.cement} stopOpacity={0} />
-          <stop offset="1" stopColor={K.cement} stopOpacity={0.8} />
+          <stop offset="1" stopColor={K.cement} stopOpacity={0.5} />
         </linearGradient>
         {bands.map((b) => (
           <clipPath key={b.k} id={`${id}-bc${b.k}`}>
             <path d={b.d} />
           </clipPath>
         ))}
-        <clipPath id={`${id}-lc`}>
-          <path d={L0.d} />
-        </clipPath>
+        {[L0, L1, L2].map((p, i) => (
+          <clipPath key={i} id={`${id}-lc${i}`}>
+            <path d={p.d} />
+          </clipPath>
+        ))}
       </defs>
       <Inked w={iw}>
         {/* the cupped lower valve, newest lamella first */}
@@ -562,57 +661,75 @@ const Oyster: React.FC<{id: string; iw: number; lw: number}> = ({id, iw, lw}) =>
           <g key={b.k}>
             {b.k > 0 && (
               <Deco>
-                {/* the crevice above this lamella's free edge */}
-                <path d={line(shift(b.topPts, 0, -0.7))} fill="none" stroke={K.shellDeep} strokeWidth="2.8" strokeOpacity={0.22} strokeLinejoin="round" />
-                <path d={line(shift(b.topPts, 0, -0.3))} fill="none" stroke={K.shellDeep} strokeWidth="1.2" strokeOpacity={0.32} strokeLinejoin="round" />
+                {/* the crevice above this lamella's free edge (on the lamella above) */}
+                <g clipPath={`url(#${id}-bc${b.k - 1})`}>
+                  <path d={line(shift(b.topPts, 0, -0.7))} fill="none" stroke={K.shellDeep} strokeWidth="2.8" strokeOpacity={0.22} strokeLinejoin="round" />
+                  <path d={line(shift(b.topPts, 0, -0.3))} fill="none" stroke={K.shellDeep} strokeWidth="1.2" strokeOpacity={0.32} strokeLinejoin="round" />
+                </g>
               </Deco>
             )}
-            <InkPath d={b.d} fill={g} />
+            <InkPath d={b.d} fill={`url(#${id}-og${b.k})`} />
             <Deco>
               <g clipPath={`url(#${id}-bc${b.k})`}>
                 {RAYS_LOW.map((r, i) => (
-                  <path key={i} d={r} fill={K.streak} opacity={0.36} />
+                  <path key={i} d={r} fill={dark(b.k) ? K.shellDeep : K.streak} opacity={dark(b.k) ? 0.3 : 0.34} />
                 ))}
                 {b.k > 0 && <path d={b.top} fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeOpacity={0.13} />}
                 {b.k === 3 && <path d={b.d} fill={`url(#${id}-tip)`} />}
+                {b.k > 0 && <path d={line(shift(b.topPts, 0.1, 0.45))} fill="none" stroke={K.shellLit} strokeWidth={f(lw * 0.75)} strokeOpacity={0.8} strokeLinejoin="round" />}
+                {b.k === 0 && (
+                  <>
+                    {/* the lid's teeth shade the cup just below the commissure */}
+                    <path d={line(shift(OY.comm, 0, 1.2))} fill="none" stroke={K.shellDeep} strokeWidth="3.4" strokeOpacity={0.45} strokeLinejoin="round" />
+                    <path d={line(shift(OY.comm, 0, 0.5))} fill="none" stroke={K.shellDeep} strokeWidth="1.4" strokeOpacity={0.4} strokeLinejoin="round" />
+                  </>
+                )}
               </g>
-              {b.k > 0 && <path d={line(shift(b.topPts, 0.1, 0.45))} fill="none" stroke={K.shellLit} strokeWidth={f(lw * 0.75)} strokeOpacity={0.8} strokeLinejoin="round" />}
             </Deco>
             {b.k > 0 && <InkLine d={b.top} w={lw} opacity={0.85} />}
+            {OY.partials
+              .filter((q) => q.k === b.k)
+              .map((q, i) => (
+                <g key={`p${i}`}>
+                  <Deco>
+                    <g clipPath={`url(#${id}-bc${b.k})`}>
+                      <path d={line(shift(q.pts, 0, -0.4))} fill="none" stroke={K.shellDeep} strokeWidth="1.5" strokeOpacity={0.22} strokeLinecap="round" />
+                      <path d={line(shift(q.pts, 0.1, 0.4))} fill="none" stroke={K.shellLit} strokeWidth={f(lw * 0.6)} strokeOpacity={0.6} strokeLinecap="round" />
+                    </g>
+                  </Deco>
+                  <InkLine d={line(q.pts)} w={lw * 0.75} opacity={0.65} />
+                </g>
+              ))}
           </g>
         ))}
-        {/* the lid's teeth shade the cup just below the commissure */}
-        <Deco>
-          <path d={line(shift(OY.comm, 0, 0.9))} fill="none" stroke={K.shellDeep} strokeWidth="2.8" strokeOpacity={0.4} strokeLinejoin="round" />
-        </Deco>
         {/* the flat lid: plates, oldest (smallest) on top */}
         {[L0, L1, L2].map((p, i) => (
           <g key={`l${i}`}>
             {i > 0 && (
               <Deco>
-                <path d={line(shift(p.lip, 0, 0.6))} fill="none" stroke={K.shellDeep} strokeWidth="1.5" strokeOpacity={0.3} strokeLinejoin="round" />
+                <g clipPath={`url(#${id}-lc${i - 1})`}>
+                  <path d={line(shift(p.lip, 0, 0.6))} fill="none" stroke={K.shellDeep} strokeWidth="1.5" strokeOpacity={0.3} strokeLinejoin="round" />
+                </g>
               </Deco>
             )}
-            <InkPath d={p.d} fill={gl} />
+            <InkPath d={p.d} fill={`url(#${id}-lg${i})`} />
             <Deco>
-              {i === 0 && (
-                <g clipPath={`url(#${id}-lc)`}>
-                  {RAYS_LID.map((r, j) => (
-                    <path key={j} d={r} fill={K.streak} opacity={0.3} />
-                  ))}
-                </g>
-              )}
-              <path d={line(shift(p.lip, 0, -0.5))} fill="none" stroke="#FFFFFF" strokeWidth={f(lw * 0.6)} strokeOpacity={0.5} strokeLinejoin="round" />
+              <g clipPath={`url(#${id}-lc${i})`}>
+                {RAYS_LID.map((r, j) => (
+                  <path key={j} d={r} fill={K.streak} opacity={0.28} />
+                ))}
+                <path d={line(shift(p.lip, 0, -0.5))} fill="none" stroke="#FFFFFF" strokeWidth={f(lw * 0.6)} strokeOpacity={0.5} strokeLinejoin="round" />
+              </g>
             </Deco>
-            <InkLine d={p.lipD} w={i === 0 ? lw * 1.45 : lw} opacity={0.9} />
+            <InkLine d={p.lipD} w={i === 0 ? lw * 1.75 : lw * 0.9} opacity={i === 0 ? 1 : 0.8} />
           </g>
         ))}
         {/* small wet glosses */}
         <Deco>
-          <ellipse cx="-12" cy="-36.2" rx="3.4" ry="0.6" transform="rotate(-21 -12 -36.2)" fill="#FFFFFF" opacity={0.85} />
-          <ellipse cx="-4.2" cy="-39.0" rx="1.0" ry="0.42" transform="rotate(-16 -4.2 -39)" fill="#FFFFFF" opacity={0.8} />
-          <ellipse cx="-30.5" cy="-14.6" rx="1.5" ry="0.34" transform="rotate(-30 -30.5 -14.6)" fill="#FFFFFF" opacity={0.6} />
-          <ellipse cx="-27" cy="-9.4" rx="1.1" ry="0.3" transform="rotate(-24 -27 -9.4)" fill="#FFFFFF" opacity={0.55} />
+          <ellipse cx="-9" cy="-34.4" rx="3.2" ry="0.6" transform="rotate(-21 -9 -34.4)" fill="#FFFFFF" opacity={0.85} />
+          <ellipse cx="-1.8" cy="-37.0" rx="1.0" ry="0.42" transform="rotate(-16 -1.8 -37)" fill="#FFFFFF" opacity={0.8} />
+          <ellipse cx="-26.5" cy="-12.6" rx="1.4" ry="0.34" transform="rotate(-30 -26.5 -12.6)" fill="#FFFFFF" opacity={0.6} />
+          <ellipse cx="-24" cy="-8.4" rx="1.0" ry="0.3" transform="rotate(-24 -24 -8.4)" fill="#FFFFFF" opacity={0.55} />
         </Deco>
       </Inked>
     </>
@@ -672,12 +789,6 @@ const Shafts: React.FC<{id: string; t: number}> = ({id, t}) => {
 const Reef: React.FC<{id: string; t: number}> = ({id, t}) => {
   const ridge = spline([pt(-460, 60), pt(-320, 22), pt(-240, 2), pt(-190, -8), pt(-150, 2), pt(-112, -12), pt(-70, -2), pt(-20, -6), pt(30, 4), pt(78, -10), pt(118, -26), pt(160, -30), pt(196, -12), pt(250, -2), pt(330, 16), pt(460, 50)], 2);
   const d = line([...ridge, pt(480, 800), pt(-480, 800)]) + 'Z';
-  const weeds = [
-    {x: -158, h: 70, w: 5},
-    {x: -146, h: 48, w: 4},
-    {x: 96, h: 64, w: 5},
-    {x: 172, h: 80, w: 6},
-  ];
   return (
     <>
       <defs>
@@ -686,11 +797,27 @@ const Reef: React.FC<{id: string; t: number}> = ({id, t}) => {
           <stop offset="1" stopColor={mix(C.seaDeep, '#08202E', 0.3)} />
         </linearGradient>
       </defs>
-      {weeds.map((w, i) => {
-        const tb = strand(pt(w.x, yAtX(ridge, w.x) + 3), w.h, w.w, -0.05, t, 30 + i);
-        return <path key={i} d={line(tb.outline) + 'Z'} fill={mix(C.sea, C.seaDeep, 0.45)} />;
-      })}
       <path d={d} fill={`url(#${id}-rf)`} />
+    </>
+  );
+};
+
+/** a dark, out-of-focus rock in the near foreground (lower left): depth and parallax on the wide framing */
+const NearRock: React.FC<{id: string}> = ({id}) => {
+  const d = closed([pt(-120, 76), pt(-96, 64), pt(-74, 61), pt(-56, 68), pt(-44, 82), pt(-40, 104), pt(-60, 140), pt(-120, 150)], 1);
+  const pebble = closed([pt(-38, 98), pt(-30, 92), pt(-22, 94), pt(-19, 102), pt(-26, 110), pt(-38, 108)], 1);
+  return (
+    <>
+      <defs>
+        <radialGradient id={`${id}-nr`} gradientUnits="userSpaceOnUse" cx="-70" cy="94" r="46" fx="-82" fy="72">
+          <stop offset="0" stopColor={mix(K.rockDeep, C.sea, 0.25)} />
+          <stop offset="0.7" stopColor={mix(K.rockDeep, C.seaDeep, 0.55)} />
+          <stop offset="1" stopColor={mix(C.seaDeep, '#06141C', 0.4)} />
+        </radialGradient>
+      </defs>
+      <path d={d} fill={`url(#${id}-nr)`} />
+      <path d={pebble} fill={mix(K.rockDeep, C.seaDeep, 0.45)} />
+      <path d={open([pt(-104, 68), pt(-84, 62.6), pt(-66, 63.6)], 1)} fill="none" stroke={mix(K.rockLit, C.seaLit, 0.4)} strokeWidth="2.2" strokeLinecap="round" opacity={0.45} />
     </>
   );
 };
@@ -730,9 +857,21 @@ export const OysterWorld: React.FC<{id: string; t: number; cam: Cam}> = ({id, t,
         <Bubbles t={t} cam={cam} z={45} seed={3} every={1.05} xs={[-95, 90]} y0={14} rr={[0.55, 1.2]} />
       </Layer>
       <Layer c={cam} z={0}>
-        <MainScene id={`${id}-m`} t={t} cam={cam} iw={iw} lw={lw} />
+        <BackScene id={`${id}-b`} t={t} iw={iw} lw={lw} />
       </Layer>
-      {motes((m) => m.z <= 0)}
+      <Layer c={cam} z={0} blurK={0} minBlur={0.3 * pxPerMm(cam)}>
+        <Caustics id={`${id}-k`} t={t} cam={cam} lw={lw} />
+      </Layer>
+      <Layer c={cam} z={0}>
+        <FrontScene id={`${id}-m`} t={t} iw={iw} lw={lw} />
+      </Layer>
+      {motes((m) => m.z <= 0 && m.z > -30)}
+      {d0 - 30 > 0.3 * d0 && (
+        <Layer c={cam} z={-30} blurK={90} maxBlur={12}>
+          <NearRock id={`${id}-nr`} />
+        </Layer>
+      )}
+      {motes((m) => m.z <= -30)}
       {d0 - 14 > 0.3 * d0 && (
         <Layer c={cam} z={-14} blurK={30} maxBlur={10}>
           <Bubbles t={t} cam={cam} z={-14} seed={17} every={2.3} xs={[30, 70]} y0={60} rr={[1.1, 1.7]} />
@@ -751,17 +890,22 @@ export const OysterWorld: React.FC<{id: string; t: number; cam: Cam}> = ({id, t,
   );
 };
 
-const MainScene: React.FC<{id: string; t: number; cam: Cam; iw: number; lw: number}> = ({id, t, cam, iw, lw}) => (
+const BackScene: React.FC<{id: string; t: number; iw: number; lw: number}> = ({id, t, iw, lw}) => (
   <>
     <Seaweed id={`${id}-w0`} t={t} base={pt(-66, surfY(-66) - 0.6)} len={46} wid={2.3} lean={-0.12} seed={2.1} iw={iw * 0.8} lw={lw} />
-    <RockBody id={`${id}-r`} t={t} cam={cam} iw={iw} lw={lw} />
+    <RockBody id={`${id}-r`} iw={iw} lw={lw} />
+  </>
+);
+const FrontScene: React.FC<{id: string; t: number; iw: number; lw: number}> = ({id, t, iw, lw}) => (
+  <>
     <Tuft t={t} c={pt(-80, surfY(-80) - 0.5)} n={6} size={4.2} seed={1} />
     <Tuft t={t} c={pt(-45, surfY(-45) - 0.4)} n={5} size={3.4} seed={2} />
     <Tuft t={t} c={pt(74, surfY(74) - 0.5)} n={6} size={4.0} seed={3} />
     <Seaweed id={`${id}-w1`} t={t} base={pt(-52, surfY(-52) - 0.2)} len={74} wid={3.0} lean={-0.2} seed={0.4} iw={iw * 0.85} lw={lw} />
     <Shadows id={`${id}-s`} />
-    <Cement id={`${id}-c`} iw={iw} lw={lw} />
+    <Cement id={`${id}-c`} iw={iw} />
     <Oyster id={`${id}-o`} iw={iw} lw={lw} />
+    <CementFront id={`${id}-cf`} lw={lw} />
     <Seaweed id={`${id}-w2`} t={t} base={pt(56, surfY(56) + 0.2)} len={60} wid={2.8} lean={0.05} seed={4.2} iw={iw * 0.85} lw={lw} />
   </>
 );

@@ -13,7 +13,7 @@
 // small white glosses. No text, numbers or glyphs. Deterministic.
 import React from 'react';
 import {P, pt, add, sub, mul, nrm, perp, dir, len, lerpP, open} from '../core/geo';
-import {mix, lit, shade, rgba} from '../core/color';
+import {mix, lit, shade} from '../core/color';
 import {C, INK} from './palette';
 import {clamp} from '../lib';
 
@@ -24,7 +24,7 @@ const f = (n: number) => (Math.abs(n) < 1e-6 ? '0' : n.toFixed(3));
 const Pf = (p: P) => `${f(p.x)} ${f(p.y)}`;
 const deg = (r: number) => (r * 180) / Math.PI;
 /** contour width in screen pixels (non-scaling strokes): a 1.5-1.7 px line shows outside each silhouette */
-export const INST_INK = 3.3;
+export const INST_INK = 4.0;
 const NS = 'non-scaling-stroke' as const;
 
 /** the ink underlay of a silhouette: filled navy plus a constant-width navy stroke */
@@ -72,7 +72,7 @@ export type AppState = {tip: P; ang: number; press: number; gel: number};
 /** applicator dimensions (mm along the instrument from the cannula tip, s) */
 export const APP = {
   tipSeg: 6, // the bent tip segment
-  bend: -0.3, // the tip segment's turn from the main axis (rad): it hooks a little toward the wound
+  bend: -0.24, // the tip segment's turn from the main axis (rad): it hooks a little toward the wound
   cannula: 38,
   r: 0.65, // cannula radius
   ferrule: 40,
@@ -103,17 +103,18 @@ export const appAxis = (st: AppState) => {
 /** the stopper's front face (s) for a plunger travel */
 const stopperS = (press: number) => APP.in0 + APP.inLen * (1 - clamp(press));
 
-/** Where and how the surgeon's right hand holds the applicator: p = the grip point on the barrel just in front of the
- *  finger flange; ang = the hand axis (wrist -> fingers, radians, atan2 convention, y down). The fingers wrap the
- *  barrel from above, the forearm comes from the surgeon (screen right). */
-export const APP_GRIP = {s: 97, turn: 0.62};
+/** Where and how the surgeon's right hand holds the applicator (a syringe grip seen from above): p = the centre of the
+ *  finger flange, which sits between the index and middle fingers just behind their first joints; ang = the hand axis
+ *  (wrist -> fingers, radians, atan2 convention, y down), along the barrel toward the tip: the palm lies over the
+ *  plunger rod and the thumb on the pad. */
+export const APP_GRIP = {s: (APP.barrelEnd + APP.flangeEnd) / 2, turn: 0.04};
 export const appGrip = (st: AppState): {p: P; ang: number} => {
   const ax = appAxis(st);
   return {p: ax.at(APP_GRIP.s), ang: st.ang + Math.PI + APP_GRIP.turn};
 };
 
 export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> = ({id, s: st, shadow = true}) => {
-  const {Bp, dTip, at} = appAxis(st);
+  const {Bp, dTip, dMain: dMainV, at} = appAxis(st);
   const r = APP.r;
   const angM = deg(st.ang);
   const angT = deg(st.ang + APP.bend);
@@ -133,8 +134,6 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
   const id_ = (k: string) => `${id}-${k}`;
 
   // --- silhouettes (main frame unless noted)
-  const shaftD = rect(0, u(APP.cannula) + 0.4, -r, r);
-  const tipD = `M${f(-APP.tipSeg + 0.02)} ${f(-r)}H0.2V${f(r)}H${f(-APP.tipSeg + 0.02)}A${f(r * 0.42)} ${f(r)} 0 0 1 ${f(-APP.tipSeg + 0.02)} ${f(-r)}Z`;
   const ferruleD = profile([
     [u(APP.cannula) - 0.2, 1.0],
     [u(APP.cannula) + 0.5, 1.12],
@@ -165,7 +164,25 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
     [u(APP.cone) + 0.2, APP.rIn],
     [u(sF) + 0.25, APP.rIn],
   ]);
-  const bulbR = 0.28 + 0.78 * gel;
+  const bulbR = 0.16 + 0.6 * gel;
+  // the cannula's centreline, from the ferrule to the tip, with a short smooth arc at the bend
+  const can = (() => {
+    const pts: P[] = [at(APP.cannula + 0.4), at(30), at(22), at(14), at(9.5), add(Bp, mul(dMainV, 1.8))];
+    const b0 = add(Bp, mul(dMainV, 1.8)), b2 = add(Bp, mul(dTip, -1.8));
+    for (const t of [0.25, 0.5, 0.75]) pts.push(add(add(mul(b0, (1 - t) * (1 - t)), mul(Bp, 2 * t * (1 - t))), mul(b2, t * t)));
+    pts.push(b2, add(st.tip, mul(dTip, 2.2)), add(st.tip, mul(dTip, 0.8)), st.tip);
+    const tb = bar(pts, pts.map(() => r), LIGHT, true);
+    // a thin reflected light along the shadow edge
+    const n = pts.length;
+    const T = pts.map((_, i) => nrm(sub(pts[Math.min(n - 1, i + 1)], pts[Math.max(0, i - 1)])));
+    const N = T.map(perp);
+    const sh = N.map((nn) => (nn.x * LIGHT.x + nn.y * LIGHT.y >= 0 ? -1 : 1));
+    const a1 = pts.map((p, i) => add(p, mul(N[i], r * 0.72 * sh[i])));
+    const a2 = pts.map((p, i) => add(p, mul(N[i], r * 0.86 * sh[i])));
+    return {...tb, rim: `${open(a1.slice(0, n - 3), 0.9)}L${open([...a2.slice(0, n - 3)].reverse(), 0.9).slice(1)}Z`};
+  })();
+  // the droplet, in the tip frame (x along the tip direction toward the barrel; the drop swells out on -x)
+  const dropD = `M${f(bulbR * 0.75)} ${f(-r * 0.62)}C${f(bulbR * 0.2)} ${f(-bulbR * 0.95)} ${f(-bulbR * 1.15)} ${f(-bulbR * 1.02)} ${f(-bulbR * 1.2)} 0C${f(-bulbR * 1.15)} ${f(bulbR * 1.02)} ${f(bulbR * 0.2)} ${f(bulbR * 0.95)} ${f(bulbR * 0.75)} ${f(r * 0.62)}Z`;
 
   // the cannula's shadow on the wound: converges to the tip (contact), softens and fades as the shaft rises
   const shadowEl = (() => {
@@ -176,8 +193,8 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
     const ws: number[] = [];
     for (let i = 0; i <= N; i++) {
       const s = (APP.cannula + 4) * (i / N);
-      pts.push(add(at(s), mul(away, 0.05 + s * 0.16)));
-      ws.push(r * (1 + s * 0.03));
+      pts.push(add(at(s), mul(away, 0.08 + s * 0.085)));
+      ws.push(r * (0.85 + s * 0.035));
     }
     const left: P[] = [], right: P[] = [];
     for (let i = 0; i <= N; i++) {
@@ -192,12 +209,13 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
       <g>
         <defs>
           <filter id={id_('shf')} filterUnits="userSpaceOnUse" x="-2000" y="-2000" width="4000" height="4000">
-            <feGaussianBlur stdDeviation={f(0.55)} />
+            <feGaussianBlur stdDeviation={f(0.45)} />
           </filter>
           <linearGradient id={id_('shg')} gradientUnits="userSpaceOnUse" x1={f(g0.x)} y1={f(g0.y)} x2={f(g1.x)} y2={f(g1.y)}>
-            <stop offset="0" stopColor="#0B1620" stopOpacity={0.42} />
-            <stop offset="0.45" stopColor="#0B1620" stopOpacity={0.2} />
-            <stop offset="1" stopColor="#0B1620" stopOpacity={0} />
+            <stop offset="0" stopColor="#2E1A10" stopOpacity={0.5} />
+            <stop offset="0.14" stopColor="#2E1A10" stopOpacity={0.3} />
+            <stop offset="0.38" stopColor="#2E1A10" stopOpacity={0.1} />
+            <stop offset="0.6" stopColor="#2E1A10" stopOpacity={0} />
           </linearGradient>
         </defs>
         <path d={d} fill={`url(#${id_('shg')})`} filter={`url(#${id_('shf')})`} />
@@ -209,8 +227,6 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
     <g>
       {shadowEl}
       <defs>
-        <CylGrad id={id_('cm')} r={r} vs={vs} stops={STEEL_STOPS} />
-        <CylGrad id={id_('ct')} r={r} vs={vt} stops={STEEL_STOPS} />
         <CylGrad id={id_('fe')} r={1.12} vs={vs} stops={STEEL_STOPS} />
         <CylGrad id={id_('hb')} r={3.7} vs={vs} stops={[[0, '#FFFFFF'], [0.25, lit(C.barrel, 0.5)], [0.6, C.barrel], [0.9, mix(C.barrel, C.steelDeep, 0.45)], [1, mix(C.barrel, C.steelDeep, 0.25)]]} />
         <CylGrad id={id_('br')} r={APP.rB} vs={vs} stops={[[0, '#FFFFFF', 0.85], [0.18, lit(C.barrel, 0.6), 0.55], [0.5, C.barrel, 0.3], [0.85, mix(C.barrel, C.steelDeep, 0.35), 0.45], [1, mix(C.barrel, C.steelDeep, 0.6), 0.7]]} />
@@ -219,10 +235,10 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
         <CylGrad id={id_('pd')} r={APP.padR} vs={vs} stops={[[0, '#FFFFFF'], [0.3, C.plunger], [0.8, mix(C.plunger, '#A9B6C1', 0.7)], [1, mix(C.plunger, '#8C9AA6', 0.8)]]} />
         <CylGrad id={id_('st')} r={APP.rIn} vs={vs} stops={[[0, lit(C.stopper, 0.35)], [0.3, C.stopper], [1, shade(C.stopper, 0.45)]]} />
         <CylGrad id={id_('fl')} r={APP.flangeW} vs={vs} stops={[[0, '#FFFFFF', 0.95], [0.3, lit(C.barrel, 0.4), 0.9], [0.7, C.barrel, 0.85], [1, mix(C.barrel, C.steelDeep, 0.5), 0.9]]} />
-        <radialGradient id={id_('bu')} gradientUnits="userSpaceOnUse" cx="0" cy="0" r={f(bulbR * 1.15)} fx={f(LIGHT.x * bulbR * 0.45)} fy={f(LIGHT.y * bulbR * 0.45)}>
-          <stop offset="0" stopColor={C.glueShine} />
-          <stop offset="0.3" stopColor={C.glueLit} />
-          <stop offset="0.68" stopColor={C.glue} />
+        <radialGradient id={id_('bu')} gradientUnits="userSpaceOnUse" cx={f(-bulbR * 0.3)} cy="0" r={f(bulbR * 1.3)} fx={f(-bulbR * 0.3 + Lt.x * bulbR * 0.5)} fy={f(Lt.y * bulbR * 0.5)}>
+          <stop offset="0" stopColor={C.glueLit} />
+          <stop offset="0.35" stopColor={mix(C.glueLit, C.glue, 0.6)} />
+          <stop offset="0.75" stopColor={C.glue} />
           <stop offset="1" stopColor={C.glueDeep} />
         </radialGradient>
         <clipPath id={id_('bc')}>
@@ -247,7 +263,6 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
         <Under d={flangeD} />
         <Under d={hubD} />
         <Under d={ferruleD} />
-        <Under d={shaftD} />
         {/* the barrel is clear: its contour is a line on top, not an underlay; an opaque pale base keeps it legible */}
         <path d={barrelD} fill={mix(C.barrel, '#8FA9B8', 0.18)} opacity={0.42} />
         {/* inside: the rod and stopper behind the gel, seen through the wall */}
@@ -279,7 +294,8 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
         {Array.from({length: 9}).map((_, i) => {
           const uu = u(APP.cone) + 6 + i * 6;
           const L = i % 3 === 0 ? 2.6 : 1.5;
-          return <path key={i} d={rect(uu - 0.14, uu + 0.14, -vs * APP.rB + 0.35, -vs * APP.rB + 0.35 + L * -vs * -1)} fill={C.steelDeep} opacity={0.35} />;
+          // short ticks from the wall on the shadow side, inward
+          return <path key={i} d={rect(uu - 0.14, uu + 0.14, -vs * (APP.rB - 0.4), -vs * (APP.rB - 0.4 - L))} fill={C.steelDeep} opacity={0.35} />;
         })}
         <Line d={barrelD} />
         {/* finger flange */}
@@ -293,44 +309,28 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
         {/* ferrule (crimped steel collar) */}
         <path d={ferruleD} fill={`url(#${id_('fe')})`} />
         <path d={rect(u(APP.cannula) + 0.9, u(APP.cannula) + 1.15, -1.1, 1.1)} fill={C.steelDeep} opacity={0.6} />
-        {/* cannula shaft */}
-        <path d={shaftD} fill={`url(#${id_('cm')})`} />
-        <path d={rect(0.15, u(APP.cannula) - 0.6, vs * r * 0.5 - r * 0.08, vs * r * 0.5 + r * 0.08)} fill="#FFFFFF" />
-        <path d={rect(1.2, u(APP.cannula) - 2, -vs * r * 0.74 - r * 0.05, -vs * r * 0.74 + r * 0.05)} fill={C.steelLit} opacity={0.45} />
       </g>
-      {/* the bend: a round joint between the two straight runs */}
-      <g transform={main}>
-        <circle cx="0" cy="0" r={f(r)} fill={INK} stroke={INK} strokeWidth={INST_INK} vectorEffect={NS} />
-      </g>
+      {/* the cannula: one smooth steel tube from the ferrule round the slight bend to the blunt tip */}
+      <Under d={can.outline} />
       <g transform={tipT}>
-        <Under d={tipD} />
+        <ellipse cx={f(-APP.tipSeg)} cy="0" rx={f(r * 0.42)} ry={f(r)} fill={INK} stroke={INK} strokeWidth={INST_INK} vectorEffect={NS} />
       </g>
-      <g transform={main}>
-        <circle cx="0" cy="0" r={f(r)} fill={`url(#${id_('cm')})`} />
-        <path d={rect(0, 0.3, vs * r * 0.5 - r * 0.08, vs * r * 0.5 + r * 0.08)} fill="#FFFFFF" />
-      </g>
-      {/* the bent tip segment, its blunt rounded end with the bore, the gel bulb */}
+      <SteelBar b={can} />
+      <path d={can.rim} fill={C.steelLit} opacity={0.5} />
+      {/* the blunt end: a bright rim round the bore (the end face looks up toward the light) */}
       <g transform={tipT}>
-        <path d={tipD} fill={`url(#${id_('ct')})`} />
-        <path d={rect(-APP.tipSeg + 0.35, 0.1, vt * r * 0.5 - r * 0.08, vt * r * 0.5 + r * 0.08)} fill="#FFFFFF" />
-        <circle cx="0" cy="0" r={f(r * 0.995)} fill={`url(#${id_('ct')})`} opacity={0.5} />
-        {/* the end face: a bright rim round the bore (the face looks up toward the light) */}
-        <ellipse cx={f(-APP.tipSeg + 0.02)} cy="0" rx={f(r * 0.4)} ry={f(r * 0.98)} fill={mix(C.steel, C.steelLit, 0.55)} />
-        <ellipse cx={f(-APP.tipSeg + 0.02)} cy="0" rx={f(r * 0.4)} ry={f(r * 0.98)} fill="none" stroke={INK} strokeWidth={INST_INK * 0.4} vectorEffect={NS} opacity={0.75} />
-        <ellipse cx={f(-APP.tipSeg)} cy={f(-vt * r * 0.04)} rx={f(r * 0.24)} ry={f(r * 0.58)} fill={gel > 0.02 ? C.glueDeep : '#1A2630'} />
-        {gel > 0.02 && <ellipse cx={f(-APP.tipSeg - 0.02)} cy={f(-vt * r * 0.04)} rx={f(r * 0.17)} ry={f(r * 0.45)} fill={C.glue} />}
+        <ellipse cx={f(-APP.tipSeg)} cy="0" rx={f(r * 0.42)} ry={f(r * 0.99)} fill={mix(C.steel, C.steelLit, 0.55)} />
+        <ellipse cx={f(-APP.tipSeg)} cy="0" rx={f(r * 0.42)} ry={f(r * 0.99)} fill="none" stroke={INK} strokeWidth={INST_INK * 0.35} vectorEffect={NS} opacity={0.6} />
+        <ellipse cx={f(-APP.tipSeg - 0.02)} cy={f(-vt * r * 0.04)} rx={f(r * 0.24)} ry={f(r * 0.58)} fill={gel > 0.02 ? C.glueDeep : '#1A2630'} />
+        {gel > 0.02 && <ellipse cx={f(-APP.tipSeg - 0.04)} cy={f(-vt * r * 0.04)} rx={f(r * 0.16)} ry={f(r * 0.44)} fill={C.glue} />}
       </g>
       {gel > 0.02 && (
-        <g transform={`translate(${Pf(add(st.tip, mul(dTip, -bulbR * 0.55)))})`}>
-          <g transform={`rotate(${f(angT)})`}>
-            <ellipse cx="0" cy="0" rx={f(bulbR * 1.12)} ry={f(bulbR)} fill={C.glueInk} stroke={C.glueInk} strokeWidth={INST_INK * 0.85} vectorEffect={NS} />
-          </g>
-          <g transform={`rotate(${f(angT)})`}>
-            <ellipse cx="0" cy="0" rx={f(bulbR * 1.12)} ry={f(bulbR)} fill={C.glue} />
-          </g>
-          <circle cx="0" cy="0" r={f(bulbR * 1.05)} fill={`url(#${id_('bu')})`} opacity={0.92} />
-          <ellipse cx={f(LIGHT.x * bulbR * 0.42)} cy={f(LIGHT.y * bulbR * 0.42)} rx={f(bulbR * 0.3)} ry={f(bulbR * 0.18)} transform={`rotate(-38 ${f(LIGHT.x * bulbR * 0.42)} ${f(LIGHT.y * bulbR * 0.42)})`} fill="#FFFFFF" opacity={0.95} />
-          <circle cx={f(-LIGHT.x * bulbR * 0.55)} cy={f(-LIGHT.y * bulbR * 0.55)} r={f(bulbR * 0.1)} fill="#FFFFFF" opacity={0.5} />
+        // a small droplet of gel swelling out of the bore: an oval along the tip's direction, a neck into the bore
+        <g transform={`translate(${Pf(add(st.tip, mul(dTip, -bulbR * 0.72)))}) rotate(${f(angT)})`}>
+          <path d={dropD} fill={C.glueInk} stroke={C.glueInk} strokeWidth={INST_INK * 0.8} vectorEffect={NS} strokeLinejoin="round" />
+          <path d={dropD} fill={`url(#${id_('bu')})`} />
+          <path d={dropD} fill="none" stroke={C.glueLit} strokeWidth={f(bulbR * 0.12)} opacity={0.5} transform={`translate(${f(-Lt.x * bulbR * 0.08)} ${f(-Lt.y * bulbR * 0.08)})`} />
+          <ellipse cx={f(Lt.x * bulbR * 0.38)} cy={f(Lt.y * bulbR * 0.42)} rx={f(bulbR * 0.34)} ry={f(bulbR * 0.13)} transform={`rotate(${f(deg(Math.atan2(Lt.y, Lt.x)) + 90)} ${f(Lt.x * bulbR * 0.38)} ${f(Lt.y * bulbR * 0.42)})`} fill="#FFFFFF" opacity={0.9} />
         </g>
       )}
     </g>
@@ -343,7 +343,7 @@ export type ClampState = {a: P; b: P; open: number; lift: number};
 /** clamp dimensions (mm) */
 export const CLAMP = {
   joint: 35, // tips -> box joint
-  bendHandle: 0.52, // the handles' turn (rad) from the jaws' axis, so they run down-right to the near hand
+  bendHandle: 1.2, // the handles' turn (rad) from the jaws' axis, so they run down-right to the near hand
   handle: 74, // joint -> ring centres along the handles
   ringR: 8.4,
   ringIn: 5.7,
@@ -365,8 +365,9 @@ const clampFrame = (st: ClampState) => {
 };
 
 /** Where and how the surgeon's left hand holds the clamp: p = the grip point between the handles (ahead of the rings);
- *  ang = the hand axis (wrist -> fingers, radians). The fingers wrap both handles; the jaws exit the thumb side. */
-export const CLAMP_GRIP = {d: 50, turn: -0.95};
+ *  ang = the hand axis (wrist -> fingers, radians). The fist closes across both handles: the joint and jaws leave the
+ *  fist on the thumb side, the rings on the little-finger side. */
+export const CLAMP_GRIP = {d: 46, turn: -1.27};
 export const clampGrip = (st: ClampState): {p: P; ang: number} => {
   const F = clampFrame(st);
   const J = pt(CLAMP.joint, 0);
@@ -409,8 +410,6 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const h = F.h;
   const th = CLAMP.openMax * clamp(st.open);
   const J = pt(CLAMP.joint, 0);
-  // light in the clamp frame
-  const Lc = pt(LIGHT.x * F.ax.x + LIGHT.y * F.ax.y, LIGHT.x * F.ab.x + LIGHT.y * F.ab.y);
   const rotAbout = (q: P, c: P, a: number) => {
     const d = sub(q, c);
     return add(c, pt(d.x * Math.cos(a) - d.y * Math.sin(a), d.x * Math.sin(a) + d.y * Math.cos(a)));
@@ -431,7 +430,7 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const hn = perp(F.hd);
   const handle = (sg: number): P[] => {
     const at = (d: number, o: number) => add(J, add(mul(F.hd, d), mul(hn, o * sg)));
-    return [at(-3, 0.6 * sg * 0), at(10, 2.2), at(30, 4.6), at(52, 6.8), at(CLAMP.handle - CLAMP.ringR + 0.6, 8.0)];
+    return [at(-3, 0), at(10, 2.2), at(30, 4.6), at(52, 6.8), at(CLAMP.handle - CLAMP.ringR + 0.6, 8.0)];
   };
   const ringC = (sg: number) => add(J, add(mul(F.hd, CLAMP.handle), mul(hn, 8.6 * sg)));
   const handleW = [2.3, 2.3, 2.1, 2.0, 1.9];
@@ -446,9 +445,8 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   };
   const p1 = piece(-1);
   const p2 = piece(1);
-  const LW = LIGHT;
-  const jawBar = (pc: typeof p1) => bar(pc.jc, jawW, LW, true);
-  const handleBar = (pc: typeof p1) => bar(pc.hc, handleW, LW);
+  const jawBar = (pc: typeof p1) => bar(pc.jc, jawW, LIGHT, true);
+  const handleBar = (pc: typeof p1) => bar(pc.hc, handleW, LIGHT);
   const ringD = (c: P, R1: number, R0: number) =>
     `M${f(c.x + R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x - R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x + R1)} ${f(c.y)}Z M${f(c.x + R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x - R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x + R0)} ${f(c.y)}Z`;
   // ratchet: a toothed bar on each handle reaching across to the other one, ahead of the rings
@@ -467,6 +465,8 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const r2 = ratchet(p2, 1);
   const Jw = F.W(J);
   const boxAng = deg(Math.atan2(F.ax.y, F.ax.x));
+  const ba = Math.atan2(F.ax.y, F.ax.x);
+  const Lb = pt(LIGHT.x * Math.cos(ba) + LIGHT.y * Math.sin(ba), -LIGHT.x * Math.sin(ba) + LIGHT.y * Math.cos(ba));
   const pieceEl = (pc: typeof p1, k: string, rt: ReturnType<typeof ratchet>) => {
     const jb = jawBar(pc);
     const hb = handleBar(pc);
@@ -500,10 +500,6 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
           <path key={i} d={open(pc.jc.map((q, j) => add(q, mul(LIGHT, -(0.6 + (pc.jc.length - 1 - j) * 0.25)))), 0.9)} fill="none" stroke="#0B1620" strokeWidth={f(3.2)} strokeLinecap="round" />
         ))}
       </g>
-      {[p1, p2].map((pc, i) => {
-        const tp = pc.jc[pc.jc.length - 1];
-        return <ellipse key={`t${i}`} cx={f(tp.x + 0.25)} cy={f(tp.y + 0.3)} rx={f(0.95)} ry={f(0.8)} fill="#0B1620" opacity={0.3 * (1 - clamp(st.lift * 4))} />;
-      })}
     </g>
   ) : null;
   return (
@@ -515,30 +511,28 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
           <stop offset="0.75" stopColor={C.steelDeep} />
           <stop offset="1" stopColor={mix(C.steelDeep, C.steel, 0.5)} />
         </linearGradient>
-        <linearGradient id={`${id}-bx`} gradientUnits="userSpaceOnUse" x1={f(Jw.x + LIGHT.x * 5)} y1={f(Jw.y + LIGHT.y * 5)} x2={f(Jw.x - LIGHT.x * 5)} y2={f(Jw.y - LIGHT.y * 5)}>
-          <stop offset="0" stopColor={C.steelLit} />
-          <stop offset="0.4" stopColor={C.steel} />
-          <stop offset="1" stopColor={C.steelDeep} />
-        </linearGradient>
       </defs>
       {shadowEl}
       {pieceEl(p2, 'p2', r2)}
       {pieceEl(p1, 'p1', r1)}
-      {/* the box joint over both pieces, with its pivot pin */}
-      <g transform={`translate(${Pf(Jw)}) rotate(${f(boxAng + deg(th * 0))})`}>
-        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={INK} stroke={INK} strokeWidth={INST_INK} vectorEffect={NS} />
-      </g>
+      {/* the box joint over both pieces, with its pivot pin (drawn in the joint's own frame, lit from the upper left) */}
       <g transform={`translate(${Pf(Jw)}) rotate(${f(boxAng)})`}>
-        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={`url(#${id}-bx)`} transform={`rotate(${f(-boxAng)}) rotate(${f(boxAng)})`} />
-        <path d={rrect(-3.6, 3.6, -3.9 + 0.8 * Math.sign(Lc.y || 1) * -1 * 0, -2.9, 0.8)} fill={C.steelLit} opacity={0.6} />
+        <defs>
+          <linearGradient id={`${id}-bx`} gradientUnits="userSpaceOnUse" x1={f(Lb.x * 5)} y1={f(Lb.y * 5)} x2={f(-Lb.x * 5)} y2={f(-Lb.y * 5)}>
+            <stop offset="0" stopColor={C.steelLit} />
+            <stop offset="0.45" stopColor={C.steel} />
+            <stop offset="1" stopColor={C.steelDeep} />
+          </linearGradient>
+        </defs>
+        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={INK} stroke={INK} strokeWidth={INST_INK} vectorEffect={NS} />
+        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={`url(#${id}-bx)`} />
+        <path d={`M${f(-3.4 + Lb.x * 0.6)} ${f(Lb.y > 0 ? 3.0 : -3.0)}L${f(3.4 + Lb.x * 0.6)} ${f(Lb.y > 0 ? 3.0 : -3.0)}`} stroke="#FFFFFF" strokeWidth={0.5} strokeLinecap="round" opacity={0.7} />
         <circle cx="0" cy="0" r="1.75" fill={C.steelDeep} />
         <circle cx="0" cy="0" r="1.75" fill="none" stroke={INK} strokeWidth={INST_INK * 0.45} vectorEffect={NS} />
-        <circle cx="-0.15" cy="-0.15" r="1.2" fill={C.steel} />
-        <circle cx={f(LIGHT.x * 0.55)} cy={f(LIGHT.y * 0.55)} r="0.45" fill="#FFFFFF" opacity={0.9} />
+        <circle cx={f(Lb.x * 0.18)} cy={f(Lb.y * 0.18)} r="1.25" fill={C.steel} />
+        <circle cx={f(Lb.x * 0.6)} cy={f(Lb.y * 0.6)} r="0.45" fill="#FFFFFF" opacity={0.9} />
       </g>
     </g>
   );
 };
 
-/** soft rgba helper re-export for scenes that tint instrument shadows */
-export const instShadow = (a: number) => rgba('#0B1620', a);

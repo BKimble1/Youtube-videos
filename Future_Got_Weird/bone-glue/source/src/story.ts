@@ -182,7 +182,7 @@ export const instrAt = (t: number): InstrState => {
     appOn: opening ? 1 : t < EV.pull0 ? 1 : 1 - ss(t, EV.appOut1 - 0.1, EV.appOut1 + 0.2),
     clampOn: opening ? 1 : 1 - ss(t, EV.clampOut1 - 0.1, EV.clampOut1 + 0.2),
     face: {focus, smile, gx: -0.5, gy: 0.55, blink: blinkAt(t)},
-    lean: opening ? 0.4 * ss(tt, 3.0, 4.6) - 0.3 * ss(tt, T.did - 0.3, T.did + 0.3) : 0,
+    lean: opening ? 3 * ss(tt, 2.6, 4.4) - 3.5 * ss(tt, T.did - 0.3, T.did + 0.35) : -1.5 * ss(t, EV.appOut0, EV.clampOut1),
   };
 };
 

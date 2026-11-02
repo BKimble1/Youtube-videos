@@ -76,7 +76,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
         {tableVariant(t) === 'drape' && <DrapeOverArm id={`${fkey}dro`} />}
       </Layer>
       {(showSurgeon || c.w <= 70) && (ins.appOn > 0.01 || ins.clampOn > 0.01) && (
-        <Layer c={c} z={Z_INSTR} maxBlur={20}>
+        <Layer c={c} z={Z_INSTR} maxBlur={c.w < 60 ? 1.5 : 20}>
           <SurgeonFront id={`${fkey}sf`} s={sIns} />
         </Layer>
       )}
