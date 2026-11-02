@@ -10,7 +10,11 @@ export const CAP_Y: [string, number][] = [
   ['It grips', 1500], ['a wet', 1500], ['In one', 1500], ['surgeons secured', 1500], ['in just', 1500],
   ['The fracture', 1510], ['But as', 1510], ['the glue', 1510], ['Your body', 1510], ['the stuff', 1500],
 ];
-export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < c.hide);
+/** caption timing adjustments for the picture: a caption that would start a frame or two before a hard cut starts on
+ *  the cut; the last caption leaves when the loop's wipe has reset the picture */
+let ADJ: {show: Record<number, number>; lastHide: number} = {show: {}, lastHide: 1e9};
+export const setCaptionAdjust = (a: typeof ADJ) => { ADJ = a; };
+export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : ADJ.show[k] ?? c.show) && t < (k === CAPTIONS.length - 1 ? Math.min(c.hide, ADJ.lastHide) : c.hide));
 export const capY = (i: number) => {
   const [first, y] = CAP_Y[i];
   if (!CAPTIONS[i].text.startsWith(first)) throw new Error(`caption table out of step at ${i}: ${CAPTIONS[i].text}`);
@@ -21,7 +25,7 @@ export const Captions: React.FC<{t: number}> = ({t}) => {
   if (i < 0) return null;
   // keyed per caption, in its own composited layer: a new caption replaces the old element outright (headless Chrome
   // otherwise left fragments of the previous caption in a few frames when they were only partly repainted)
-  return <CaptionLine key={i} c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - CAPTIONS[i].show) / 0.067)} />;
+  return <CaptionLine key={i} c={CAPTIONS[i]} y={capY(i)} a={i === 0 ? 1 : clamp((t - (ADJ.show[i] ?? CAPTIONS[i].show)) / 0.067)} />;
 };
 /** one caption, centred on y, kept clear of the right-hand action buttons */
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; left?: number; width?: number}> = ({c, y, a, left = 110, width = 760}) => {

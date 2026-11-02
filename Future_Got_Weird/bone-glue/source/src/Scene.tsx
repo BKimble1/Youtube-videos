@@ -14,7 +14,15 @@ import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
 import {P, pt} from './core/geo';
 import {armAt, boneAt, camAt, instrAt, openTau, skinVeil, surgeonOn, tableVariant, wipeAt} from './story';
-import {Captions} from './Captions';
+import {Captions, setCaptionAdjust} from './Captions';
+import {CAPTIONS} from './lib';
+import {EV} from './story';
+
+// captions that would start just before a hard cut start on the cut; the last caption ends at the loop's reset
+setCaptionAdjust({
+  show: Object.fromEntries(CAPTIONS.map((c, k) => [k, [EV.cutIn, EV.cutOut].find((cut) => c.show < cut && cut - c.show < 0.12) ?? c.show])),
+  lastHide: EV.reset,
+});
 import {GloveWipe} from './GloveWipe';
 
 const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = -6, Z_TABLE = 40, Z_ROOM = 600;
@@ -39,7 +47,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
     clamp: {...ins.clamp, a: reproject(c, ins.clamp.a, Z_INSTR), b: reproject(c, ins.clamp.b, Z_INSTR)},
     k: c.k ?? 1,
   };
-  const showSurgeon = surgeonOn(t) && c.w > 70;
+  const showSurgeon = surgeonOn(t);
   const clipId = `${fkey}armclip`;
   const rClip = layerScale(c, Z_SKIN) / layerScale(c, 0);
   void tau;
@@ -50,7 +58,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
           <RoomBack id={`${fkey}room`} t={t} />
         </Layer>
       )}
-      {c.w > 70 && (
+      {c.w > 24 && (
         <Layer c={c} z={Z_TABLE} maxBlur={18}>
           <HandTable id={`${fkey}tab`} variant={tableVariant(t)} />
         </Layer>
@@ -82,7 +90,7 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
         <IncisionRim id={`${fkey}rim`} s={arm} />
         {tableVariant(t) === 'drape' && <DrapeOverArm id={`${fkey}dro`} />}
       </Layer>
-      {(showSurgeon || c.w <= 70) && (ins.appOn > 0.01 || ins.clampOn > 0.01) && (
+      {showSurgeon && (ins.appOn > 0.01 || ins.clampOn > 0.01) && (
         <Layer c={c} z={Z_INSTR} maxBlur={c.w < 60 ? 1.5 : 20}>
           <SurgeonFront id={`${fkey}sf`} s={sIns} />
         </Layer>

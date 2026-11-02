@@ -237,7 +237,12 @@ inner = circ(lambda x: lp(x, 180), noise(N))
 amb = 0.6 * norm(air) * lp(room, 3) + 0.4 * hum * lp(room, 3) + 0.5 * norm(inner) * lp((1 - room) * (1 - ow), 3)
 
 # ---------------- voice and mix
-if os.environ.get('FGW_CODE_TEST'):
+NO_VOICE = os.environ.get('FGW_NO_VOICE') == '1'
+if NO_VOICE:
+    # the narration take could not be downloaded (network policy): effects, ambience and music only, at the levels
+    # they will have under the voice (no loudness normalisation to the voice-led target)
+    v = np.zeros(N); vsr = SR
+elif os.environ.get('FGW_CODE_TEST'):
     # code test only (never a deliverable): a stand-in noise 'voice' so the effects and levels can be exercised
     v = lp(noise(N), 3000) * (0.5 + 0.5 * np.sin(2 * np.pi * 3 * t) ** 2); vsr = SR
 else:
@@ -262,18 +267,22 @@ def limit(x, ceil_db, look=0.004, rel=0.06):
     for i in range(len(g)):
         y = g[i] if g[i] < y else a * y + (1 - a) * g[i]; out[i] = y
     return x * np.minimum(out, minimum_filter1d(need, size=3))
-v0 = v * db(-18.0 - meter.integrated_loudness(v))
-vc, grmin = compress(v0)
-vc = limit(vc, -9.0)
-vg = -16.0 - meter.integrated_loudness(vc)
-voice = vc * db(vg)
+if NO_VOICE:
+    voice = np.zeros(N); grmin = 0.0; vg = 0.0
+else:
+    v0 = v * db(-18.0 - meter.integrated_loudness(v))
+    vc, grmin = compress(v0)
+    vc = limit(vc, -9.0)
+    vg = -16.0 - meter.integrated_loudness(vc)
+    voice = vc * db(vg)
 venv = lp(np.abs(voice), 6); venv = venv / (venv.max() + 1e-9)
 duck = 1 - 0.5 * np.clip(venv * 3, 0, 1)
+sfx = sfx * db(10.0)  # the effects sit about 10-12 dB under the voice in each section
 sfx_d = sfx * (1 - 0.25 * np.clip(venv * 3, 0, 1))
-mix = voice + sfx_d + db(-31) * amb * duck + db(-30) * norm(mus) * duck
+mix = voice + sfx_d + db(-27) * amb * duck + db(-25) * norm(mus) * duck
 peak = np.max(np.abs(resample_poly(mix, 4, 1)))
 lufs = meter.integrated_loudness(mix)
-g = min(db(-14.0 - lufs), db(-1.6) / peak)
+g = min(db(-14.0 - lufs), db(-1.6) / peak) if not NO_VOICE else min(db(2.0), db(-1.6) / peak)
 mix *= g
 mix = limit(mix, -1.6)
 nr = int(0.004 * SR)
@@ -284,15 +293,15 @@ os.makedirs(os.path.join(EP, 'source/public/audio'), exist_ok=True)
 os.makedirs(os.path.join(EP, 'audio/mix/stems'), exist_ok=True)
 sf.write(os.path.join(EP, f'source/public/audio/{NAME}.wav'), mix2, SR, subtype='PCM_24')
 sf.write(os.path.join(EP, f'audio/mix/FGW_Bone_Glue_{NAME.upper()}.wav'), mix2, SR, subtype='PCM_24')
-for nm, x in [('voice', voice * g), ('sfx', sfx_d * g), ('amb', db(-31) * amb * duck * g), ('music', db(-30) * norm(mus) * duck * g)]:
+for nm, x in [('voice', voice * g), ('sfx', sfx_d * g), ('amb', db(-27) * amb * duck * g), ('music', db(-25) * norm(mus) * duck * g)]:
     sf.write(os.path.join(EP, f'audio/mix/stems/{NAME}_{nm}.wav'), x, SR, subtype='PCM_24')
 tp = 20 * np.log10(np.max(np.abs(resample_poly(mix, 4, 1))) + 1e-12)
 def lufs_of(x):
     try: return round(meter.integrated_loudness(x), 2)
     except Exception: return None
-res = {'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
+res = {'no_voice': NO_VOICE, 'integrated_lufs': round(meter.integrated_loudness(mix2), 2), 'true_peak_dbtp_4x': round(tp, 2), 'sample_peak_dbfs': round(20 * np.log10(np.max(np.abs(mix))), 2),
        'voice_gain_db': round(vg + 20 * np.log10(g), 2), 'voice_max_gain_reduction_db': round(grmin, 2), 'duration_s': DUR, 'effects': len(LOG),
-       'voice_lufs_in_mix': lufs_of(voice * g), 'sfx_lufs_in_mix': lufs_of(sfx_d * g), 'music_lufs_in_mix': lufs_of(db(-30) * norm(mus) * duck * g),
+       'voice_lufs_in_mix': None if NO_VOICE else lufs_of(voice * g), 'sfx_lufs_in_mix': lufs_of(sfx_d * g), 'music_lufs_in_mix': lufs_of(db(-25) * norm(mus) * duck * g),
        'music_bpm': round(bpm, 2), 'music_beats': BEATS, 'loop_seam_jump': round(float(abs(mix[0] - mix[-1])), 4)}
 json.dump(res, open(os.path.join(EP, f'audio/mix/mix_measure_{NAME}.json'), 'w'), indent=1)
 json.dump(LOG, open(os.path.join(EP, f'audio/sfx_log_{NAME}.json'), 'w'), indent=1)

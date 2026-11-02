@@ -618,7 +618,7 @@ const Rake: React.FC<{id: string; side: number; a: number; out: number}> = ({id,
   // the handle
   const hn = perp(hd);
   const h0 = add(pt(xh + side * 0.4, yc), dx);
-  const HL = 66;
+  const HL = 26; // short handles: the rakes never read as rods across the forearm
   const hw = (t: number) => 1.75 - 0.35 * t + 0.25 * Math.max(0, (t - 0.85) / 0.15) ** 2;
   const sideA: P[] = [], sideB: P[] = [];
   for (let k = 0; k <= 12; k++) {

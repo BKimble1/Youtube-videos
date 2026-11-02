@@ -351,8 +351,9 @@ const FluidFilm: React.FC<{st: BoneState}> = ({st}) => {
     const x = x0 + (0.06 + 0.88 * ((k * 0.381 + 0.17) % 1)) * W;
     const top = beadEdgeY(x, -1), bot = beadEdgeY(x, 1);
     const ph = ((t * (0.11 + 0.03 * hash(k * 2.3)) + hash(k * 7.7)) % 1 + 1) % 1;
-    const above = k % 2 === 0;
-    const ya = above ? y0 : bot + 0.05, yb = above ? top - 0.05 : y1;
+    const above = k % 3 !== 2; // most pool at the sealed upper edge; some run on over the gel and down past it
+    void bot;
+    const ya = y0, yb = above ? top - 0.05 : y1;
     const head = ya + (yb - ya) * Math.min(1, ph * 1.6);
     const wdt = 0.32 + 0.18 * hash(k * 5.1);
     const pts: P[] = [];
@@ -364,7 +365,7 @@ const FluidFilm: React.FC<{st: BoneState}> = ({st}) => {
     const f = Math.min(1, ph * 6) * (1 - Math.max(0, (ph - 0.85) / 0.15));
     out.push(
       <g key={`r${k}`} opacity={f}>
-        <path d={d} stroke={C.blood} strokeWidth={wdt} fill="none" strokeLinecap="round" opacity={0.62} />
+        <path d={d} stroke={C.blood} strokeWidth={wdt} fill="none" strokeLinecap="round" opacity={0.62} strokeDasharray={undefined} />
         <path d={d} stroke={C.bloodLit} strokeWidth={wdt * 0.45} fill="none" strokeLinecap="round" opacity={0.5} />
         <path d={d} stroke="#FFF1F3" strokeWidth={Math.max(0.01, wdt * 0.1)} fill="none" strokeLinecap="round" opacity={0.75} transform={`translate(${-wdt * 0.22} 0)`} />
         <ellipse cx={pts[pts.length - 1].x} cy={pts[pts.length - 1].y} rx={wdt * (above && ph > 0.6 ? 0.9 + 0.8 * (ph - 0.6) : 0.62)} ry={wdt * 0.7} fill={C.blood} opacity={0.75} />
@@ -389,18 +390,21 @@ const FluidFilm: React.FC<{st: BoneState}> = ({st}) => {
       </g>,
     );
   }
-  // the surge: a sheet of fluid washes down over bone and bead
+  // the surge: a band of fluid with wavy leading and trailing fronts washes down over bone and bead
   const su = clamp((t - SURGE0) / 0.9);
   if (su > 0 && su < 1) {
-    const front = y0 - 2 + (H + 6) * ss(su, 0, 1);
-    const pts: P[] = [];
-    for (let x = x0 - 1; x <= x1 + 1; x += 0.5) pts.push(pt(x, front + 0.5 * Math.sin(x * 0.9 + t * 3)));
-    const sheet = closed([pt(x0 - 1, front - 9), pt(x1 + 1, front - 9), ...[...pts].reverse()], 0.3);
+    const front = y0 - 1 + (H + 4) * ss(su, 0, 1);
+    const lead: P[] = [], trail: P[] = [];
+    for (let x = x0 - 1; x <= x1 + 1; x += 0.45) {
+      lead.push(pt(x, front + 0.55 * Math.sin(x * 1.1 + t * 3) + 0.35 * noise1(x * 0.7, 21)));
+      trail.push(pt(x, front - 2.6 - 0.8 * Math.sin(x * 0.8 + 1.3 + t * 2) - 0.5 * noise1(x * 0.6, 23)));
+    }
+    const sheet = closed([...trail, ...[...lead].reverse()], 0.5);
     out.push(
       <g key="surge" opacity={Math.sin(Math.PI * su) ** 0.6}>
-        <path d={sheet} fill={C.blood} opacity={0.22} />
-        <path d={open(pts, 0.5)} stroke={C.bloodLit} strokeWidth={0.35} fill="none" opacity={0.7} />
-        <path d={open(pts.map((p) => pt(p.x, p.y - 0.25)), 0.5)} stroke="#FFFFFF" strokeWidth={Math.max(0.01, 2 * px)} fill="none" opacity={0.7} />
+        <path d={sheet} fill={C.blood} opacity={0.24} />
+        <path d={open(lead, 0.5)} stroke={C.bloodLit} strokeWidth={0.3} fill="none" opacity={0.75} strokeLinecap="round" />
+        <path d={open(lead.map((p) => pt(p.x, p.y - 0.22)), 0.5)} stroke="#FFFFFF" strokeWidth={Math.max(0.01, 2 * px)} fill="none" opacity={0.75} />
       </g>,
     );
   }
@@ -542,7 +546,7 @@ const narrow = (rb: Ribbon, k: number): Pick<Ribbon, 'L' | 'R' | 'hw'> => {
 /** woven new bone growing into the space the adhesive occupied: revealed as the bead shrinks, then remodelled away */
 const NewBoneFill: React.FC<{st: BoneState; px: number}> = ({st, px}) => {
   const h = st.heal;
-  const a = ss(h.resorb, 0.02, 0.35) * (1 - ss(h.remodel, 0.15, 0.95));
+  const a = ss(h.resorb, 0.02, 0.3) * (1 - ss(h.resorb, 0.8, 1.0) * 0.85) * (1 - ss(h.remodel, 0.0, 0.4));
   if (a < 0.01) return null;
   const geo = computeRibbons({...st, heal: {...h, resorb: 0}, t: st.t + 10});
   const pores: React.ReactNode[] = [];
@@ -642,9 +646,9 @@ export const Radius: React.FC<{st: BoneState; view: [number, number, number, num
       <NewBoneFill st={st} px={px} />
       <Hematoma h={h} />
       <Bead st={st} ribbons={ribbons} />
-      {px < 0.03 && h.resorb < 0.05 && (
-        <g clipPath={`url(#${glueClip})`} opacity={0.5 * clamp((0.03 - px) / 0.012)}>
-          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke="#0B3F39" strokeWidth={0.42} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
+      {px < 0.03 && st.wet > 0.05 && h.resorb < 0.05 && (
+        <g clipPath={`url(#${glueClip})`} opacity={0.8 * st.wet}>
+          {CRACKS_J.map((c, i) => <path key={i} d={open(c, 0.4)} stroke="#0B3F39" strokeWidth={0.5} fill="none" strokeLinejoin="round" strokeLinecap="round" />)}
         </g>
       )}
       <Cuff h={h} px={px} />

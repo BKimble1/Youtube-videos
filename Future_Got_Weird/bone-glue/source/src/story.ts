@@ -54,8 +54,8 @@ export const EV = {
   // closing and healing
   close0: T.minutesEnd - 0.4, close1: T.fracture + 0.35, sut0: T.fracture, sut1: T.fracture + 0.55,
   dive2a: T.fracture - 0.1, dive2b: T.needed + 0.15,
-  hem0: T.fracture + 0.35, hem1: T.needed + 0.15, soft0: T.needed + 0.1, soft1: T.months + 0.45, hard0: T.months + 0.4, hard1: T.healEnd + 0.3,
-  res0: T.but + 0.05, res1: T.disappearsEnd - 0.15, rem0: T.disappearsEnd - 0.3, rem1: T.replaces + 0.15,
+  hem0: T.fracture + 0.3, hem1: T.needed, soft0: T.needed - 0.05, soft1: T.months + 0.3, hard0: T.months + 0.25, hard1: T.healEnd,
+  res0: T.but - 0.1, res1: T.disappearsEnd - 0.15, rem0: T.disappearsEnd - 0.3, rem1: T.replaces + 0.15,
   // the ending
   out0: T.replaces - 0.15, out1: T.holding - 0.15, curl0: T.stuff - 0.15, curlPeak: T.holding + 0.2, curl1: T.togetherEnd2 - 0.1,
   // the loop: the surgeon's sleeve sweeps across the lens; the reset happens while it covers the frame
@@ -119,7 +119,7 @@ const healAt = (t: number): Heal => {
     hem: ss(t, EV.hem0, EV.hem1),
     soft: ss(t, EV.soft0, EV.soft1),
     hard: ss(t, EV.hard0, EV.hard1),
-    resorb: clamp((t - EV.res0) / (EV.res1 - EV.res0)) ** 0.85 * (t > EV.res0 ? 1 : 0),
+    resorb: clamp((t - EV.res0) / (EV.res1 - EV.res0)) ** 0.62 * (t > EV.res0 ? 1 : 0),
     remodel: ss(t, EV.rem0, EV.rem1),
   };
 };
@@ -214,11 +214,9 @@ export const armAt = (t: number): ArmS => {
   let c = WINDOW_C;
   if (t > EV.dive2b - 0.2) r = lerp(rF, rHeal, ss(t, EV.dive2b - 0.2, EV.dive2b + 0.3));
   // the ending: the cutaway closes inward onto the healed fracture as the camera eases out
-  const shut = ss5(t, EV.out0 + 0.05, EV.out1 - 0.1);
-  if (shut > 0) {
-    r *= 1 - shut;
-    c = pt(lerp(WINDOW_C.x, 0, shut), lerp(WINDOW_C.y, 0, shut));
-  }
+  // the ending: the window stays open under the returning skin, then closes unseen once the skin is opaque again
+  if (t > EV.out1 - 0.1) r = 0;
+  void c;
   const win = t >= EV.window0 && r > 0.3 ? {c, r, soft: 0.38} : null;
   // one small natural movement: the fingers spread a little and flex gently, then relax
   const mv = t > EV.curl0 && t < EV.curl1 ? Math.sin(Math.PI * clamp((t - EV.curl0) / (EV.curl1 - EV.curl0))) : 0;
@@ -230,9 +228,9 @@ export const armAt = (t: number): ArmS => {
 // ---------------------------------------------------------------- the camera
 export type World = 'wrist' | 'match' | 'oyster' | 'match2';
 export type WCam = {world: World; cam: Cam; cam2?: Cam; mix?: number};
-const CAM0: Cam = {x: -0.6, y: -1.2, w: 26.5, k: 1, focus: 0};
-const TRACK1: Cam = {x: 6.0, y: -1.9, w: 25.5, k: 1, focus: 0};
-const REVEAL: Cam = {x: 10, y: -48, w: 175, k: 0.96, focus: -6};
+const CAM0: Cam = {x: 0.6, y: -1.2, w: 27.0, k: 1, focus: 0};
+const TRACK1: Cam = {x: 6.4, y: 2.2, w: 25.5, k: 1, focus: 0};
+const REVEAL: Cam = {x: 10, y: -30, w: 175, k: 0.96, focus: -6};
 const CLINIC: Cam = {x: 98, y: -122, w: 412, k: 0.86, focus: -10};
 const CLINIC2: Cam = {x: 94, y: -116, w: 398, k: 0.86, focus: -10};
 /** the bead's lower contact edge under the ulnar half of the transverse crack, where the match lands */
@@ -336,7 +334,7 @@ export const camAt = (t: number): WCam => {
   return {world: 'wrist', cam: wetCam(t)};
 };
 /** the ending: the skin regrows over the restored bone as a thickening veil while the camera eases out */
-export const skinVeil = (t: number) => (inOpening(t) ? 0 : 0.34 * ss(t, EV.window0, EV.window0 + 0.6) * (1 - ss(t, EV.dive2a + 0.3, EV.dive2b)));
+export const skinVeil = (t: number) => (inOpening(t) ? 0 : Math.max(0.34 * ss(t, EV.window0, EV.window0 + 0.6) * (1 - ss(t, EV.dive2a + 0.3, EV.dive2b)), 0.4 * ss(t, EV.out0 - 0.05, EV.out0 + 0.25) + 0.6 * ss(t, EV.out0 + 0.3, EV.out1 - 0.15)));
 export const tableVariant = (t: number): 'drape' | 'followup' => (inOpening(t) || t < EV.hem1 ? 'drape' : 'followup');
 /** the surgeon is in the room until the incision closes */
 export const surgeonOn = (t: number) => inOpening(t) || t < EV.close1;
