@@ -205,7 +205,7 @@ export const armAt = (t: number): ArmS => {
   const tau = openTau(t);
   const opening = inOpening(t) && tau < EV.dive0;
   if (opening) return {curl: 0.25 + 0.03 * Math.sin(tau * 0.9), thumb: 0.2, incision: 1, sutures: 0, scar: 0, window: null, spread: 0};
-  const relax = 0.38 * ss(t, EV.pull0 + 0.2, EV.pull0 + 0.75); // retractors out: the lips relax a little
+  const relax = 0.5 * ss(t, EV.pull0 + 0.2, EV.pull0 + 0.75); // retractors out: the lips relax a little
   const closing = ss(t, EV.close0, EV.close1);
   const sut = ss(t, EV.sut0, EV.sut1) * (1 - ss(t, EV.hard0, EV.hard1));
   const scar = ss(t, EV.hard0, EV.rem1);
@@ -251,8 +251,8 @@ const O_HOLD: Cam = {x: 2, y: -15, w: 80};
 const O_SEAM: Cam = {x: 0, y: -3.9, w: 32};
 const WET0 = fromOyster(O_SEAM, R_OUT);
 const WET1: Cam = {x: 0.6, y: -0.9, w: 7.6, k: 1, focus: 0};
-const CUTAWAY: Cam = {x: -10, y: -52, w: 250, k: 0.9, focus: -8};
-const CUTAWAY2: Cam = {x: -6, y: -40, w: 210, k: 0.9, focus: -8};
+const CUTAWAY: Cam = {x: -6, y: -44, w: 205, k: 0.9, focus: -8};
+const CUTAWAY2: Cam = {x: -4, y: -34, w: 178, k: 0.9, focus: -8};
 const HEAL_A: Cam = {x: -2.5, y: 2.0, w: 46, k: 1, focus: 0};
 const HEAL_B: Cam = {x: 2.0, y: 1.0, w: 42, k: 1, focus: 0};
 const FOLLOW: Cam = {x: -8, y: -74, w: 182, k: 1, focus: -10};
