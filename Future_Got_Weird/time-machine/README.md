@@ -1,6 +1,27 @@
 # Future Got Weird: This Time Machine Actually Works
 
-## V2 (review render, current)
+## V3 (review render, current)
+
+**Deliverable.** `exports/FGW_TimeMachine_V3_REVIEW_1080x1920.mp4`: a genuine 1080×1920 export (measured with ffprobe), 30 fps, 706
+frames, 23.55 s, H.264 CRF 16 with AAC 320 kb/s. **This is V3 for review. It is not final and not publish-ready.**
+
+**Report and QA.** `production/V3_REPORT.md` (the journey beat by beat, the character repair, the three review rounds,
+measured QA, known limitations), with evidence in `qa/v3/`.
+
+**What V3 is.** The same approved narration and voice recording as one connected journey built on V1's structure: the
+ship beside the hole, through its window into the cockpit, his wrist and watch, a match cut to the wall clock at home,
+the window seen from inside and then outside, the years in the garden, the ship's return, the old friend at the gate,
+the path through the rose arch to the front door, the family photograph, the friend in the doorway, and a push into
+the watch face that matches the ship's window and loops to frame 0.
+
+**Code.** V3 lives in `source/src/v3/`: `timing.ts` (the timeline, keyed to the measured narration), `story.ts`
+(positions, cameras, walks), `gait.ts` (walks with world-planted feet), `Scene3.tsx` (one frame), `Film3.tsx`. It reuses
+the V2 art modules in `source/src/v2/` (V3-only changes behind `v3` flags). Render: `cd source && npx remotion render
+src/index.ts TimeMachineV3 ../exports/FGW_TimeMachine_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true}'
+--crf=16 --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k`. Sound:
+`tools/export_cues_v3.ts` then `tools/make_audio_v3.py`. QA: `tools/qa_render.py`, `tools/asr_sherpa.py`.
+
+## V2 (review render)
 
 **Deliverable.** `exports/FGW_TimeMachine_V2_REVIEW_1080x1920.mp4`: a genuine 1080×1920 export, 30 fps, 706 frames,
 23.533 s, H.264 CRF 16 with AAC 320 kb/s. **This is V2 for review. It is not final and not publish-ready.**

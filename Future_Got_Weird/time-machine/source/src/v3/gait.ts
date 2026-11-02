@@ -76,9 +76,9 @@ export const gait = (R: Route, s: number, o: GaitOpts) => {
         continue;
       }
       if (s > e.s0 && e.s1 > e.s0) {
-        const u = clamp((s - e.s0) / (e.s1 - e.s0));
+        const u = clamp((s - e.s0) / (e.s1 - e.s0) / 0.85);
         const A = footAt(f, e.a), Bp = footAt(f, e.b), k = sm(u);
-        return {x: lerp(A.x, Bp.x, k), y: lerp(A.y, Bp.y, k), lift: lift * Math.sin(Math.PI * u), swing: true};
+        return {x: lerp(A.x, Bp.x, k), y: lerp(A.y, Bp.y, k), lift: lift * Math.sin(Math.PI * u), swing: u < 1};
       }
       break;
     }

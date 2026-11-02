@@ -7,7 +7,7 @@ import {CAPSULE2} from '../v2/craft';
 import {COCKPIT_ASTRO} from '../v2/cockpit';
 import {ArmA, astroHandLocal, HEAD_Y} from '../art/figures';
 import {ROOM, V3_PHOTO} from '../v2/room';
-import {YARD, yardPath} from '../v2/yard';
+import {YARD, yardPathV3} from '../v2/yard';
 import {evenPlants, gait, GaitOpts, landings, Pt, Route} from './gait';
 
 export const e5 = (x: number) => {
@@ -109,7 +109,7 @@ export const raiseArm = (u0: number): ArmA => {
 };
 export const cockpitArm = (t: number): ArmA => raiseArm((t - T3.raise) / (T3.raiseEnd - T3.raise));
 /** the watch: a little behind the cuff (WATCH_AT along the forearm), as the rig draws it */
-export const WATCH_AT = 0.46; // (the case and crown clear the glove; a band of the cuff shows between them)
+export const WATCH_AT = 0.43; // (the case and crown clear the glove; a band of the cuff shows between them)
 export const WATCH_R = 16.5; // Watch2 r (rig units): the case a little narrower than the sleeve, the strap wraps it
 export const watchLocal = (arm: ArmA) => {
   const P = handAt(arm);
@@ -162,7 +162,7 @@ export const mouthAt = (t: number, keys: [number, M][], d = 0.12) => {
 };
 /** his face in the cockpit: the porthole (wonder), concern creeping in, then down at his wrist, held until the raise */
 /** V3 faces: the spiky fringe a little higher and the brows on the skin below it; 'sad' drawn as a symmetric knit */
-export const v3Face = <E extends {sad?: number; knit?: number}>(e: E): E & {fringe: number; browDy: number} => ({fringe: 9, browDy: 1, ...e, knit: Math.max(e.knit ?? 0, e.sad ?? 0), sad: 0});
+export const v3Face = <E extends {sad?: number; knit?: number}>(e: E): E & {fringe: number; browDy: number} => ({fringe: 11, browDy: 1, ...e, knit: Math.max(e.knit ?? 0, e.sad ?? 0), sad: 0});
 export const cockpitFace = (t: number) => {
   const down = ss(t, T3.glance, T3.glance + 0.16);
   const concern = ss(t, 3.95, 4.2);
@@ -171,7 +171,7 @@ export const cockpitFace = (t: number) => {
   return v3Face({
     // concern: the mouth closes from the 'o' of wonder to a line whose corners turn down a little
     ...(t >= 4.15 ? {mouth: 'flat' as M, mouthTo: 'frown' as M, mouthK: 0.4 * ss(t, 4.15, 4.31)} : m), open: 0.22,
-    wide: 0.45 * (1 - concern) + 0.12, brows: 0.4 * (1 - concern) - 0.05 * concern,
+    wide: 0.45 * (1 - concern) + 0.12, brows: 0.22 * (1 - concern) - 0.05 * concern,
     knit: concern * (1 - 0.3 * raised), turn: lerp(-0.35, -0.5, down * (1 - raised)), lookX: lerp(lerp(-0.85, -0.6, concern), lerp(-1.05, -0.7, raised), down),
     lookY: lerp(-0.7, lerp(1.25, 1.0, raised), down),
     // a 4-frame blink as the eyes drop to the wrist (closed on the middle frame); the lids stay lowered while he looks down
@@ -189,12 +189,8 @@ const CAM_CLOCK3: Cam = {x: CLOCK3.x - (WATCH_SCREEN.x - 540) / ZC, y: CLOCK3.y 
 /** at the match from inside to outside, the window glass spans this screen height (the same for the house front) */
 export const WIN_MATCH = {cx: 540, cy: 960, h: 820};
 const ZWIN = WIN_MATCH.h / ROOM.win.h;
-export const camRoomPast = (t: number): Cam =>
-  keyCam(t, [
-    [T3.match, CAM_CLOCK3],
-    [T3.toWindow, {...CAM_CLOCK3, z: ZC * 0.985}],
-    [T3.windowMatch, {x: ROOM.win.cx, y: ROOM.win.cy, z: ZWIN}],
-  ], true);
+/** one eased move from the clock (at rest on the match) to the window (at rest on the next match): no second start */
+export const camRoomPast = (t: number): Cam => move(CAM_CLOCK3, {x: ROOM.win.cx, y: ROOM.win.cy, z: ZWIN}, (t - T3.match) / (T3.windowMatch - T3.match));
 /** the wall clock races from the match (11:00): the minute hand steps clockwise, at most ~33 deg a frame (readable) */
 export const homeClockMinutes = (t: number) => {
   const x = Math.max(0, t - T3.match);
@@ -212,23 +208,24 @@ const CAM_EXT: Cam = {x: WV.cx, y: (WV.y0 + WV.y1) / 2, z: ZEXT};
 /** the years: the house front (window, door), the garden and tree, the fence and gate, the friend, the landing spot */
 export const CAM_YEARS: Cam = {x: 1215, y: 1265, z: 0.9};
 export const YS = 0.62; // figure scale in the garden (the V2 two-shot scale)
-/** the friend waits on the pavement LEFT of the gate, clear of its opening (the way to the door never passes him) */
-export const FRIEND = {x: 1030, y: 1610};
+/** the friend waits on the pavement LEFT of the gate (V3: the gate and its rose arch stand straight in front of the front
+ *  door), clear of the arch's post */
+export const FRIEND = {x: 1335, y: 1610};
 export const FRIEND_X = FRIEND.x;
 export const FEET = 1630; // the pavement line
-/** where he stops: in front of the right half of the gate, a step nearer the camera than his friend */
-export const ASTRO_MEET = {x: 1200, y: 1650};
+/** where he stops: in front of the gate, a step nearer the camera than his friend */
+export const ASTRO_MEET = {x: YARD.gateV3.cx, y: 1650};
 export const ASTRO_MEET_X = ASTRO_MEET.x;
 /** the ship lands in the street left of them, well clear of the friend (hull, legs and retro jets) */
-export const LAND = {x: 665, y: FEET + 62};
+export const LAND = {x: 960, y: FEET + 62};
 export const CAP_S = 0.93;
 export const LEG_SPREAD = 0;
 /** the two faces together */
 const HEADY = (feetY: number) => feetY + (HEAD_Y + 6) * YS;
 const CAM_FACES: Cam = {x: (FRIEND.x + ASTRO_MEET.x) / 2 + 4, y: (HEADY(FRIEND.y) + HEADY(ASTRO_MEET.y)) / 2 + 66, z: 2.4};
-const CAM_LAND: Cam = {x: 930, y: 1330, z: 1.04};
+const CAM_LAND: Cam = {x: 1228, y: 1400, z: 1.04};
 /** the walk to the door ends on a framing that holds the path and the door */
-const CAM_DOOR: Cam = {x: 1480, y: 1250, z: 1.6};
+const CAM_DOOR: Cam = {x: 1515, y: 1262, z: 1.6};
 const T_PULL = T3.turnToHouse + 0.05;
 export const camYard = (t: number): Cam => {
   if (t < T3.pullEnd) {
@@ -244,7 +241,7 @@ export const camYard = (t: number): Cam => {
     // in the first 60% of it (no stop between the pull-out and the track)
     const u = clamp((t - T_PULL) / (T3.inside - T_PULL));
     const ep = e5(u), ez = e5(clamp(u / 0.6));
-    const a = {...CAM_FACES, x: CAM_FACES.x + 4};
+    const a = CAM_FACES;
     return {x: lerp(a.x, CAM_DOOR.x, ep), y: lerp(a.y, CAM_DOOR.y, ep), z: Math.exp(lerp(lg(a.z), lg(CAM_DOOR.z), ez))};
   }
   return keyCam(t, [
@@ -252,7 +249,7 @@ export const camYard = (t: number): Cam => {
     [T3.descent, CAM_YEARS],
     [T3.landing + 0.08, CAM_LAND],
     [T3.faces + 0.12, CAM_FACES],
-    [T_PULL, {...CAM_FACES, x: CAM_FACES.x + 4}],
+    [T_PULL, CAM_FACES],
   ], true);
 };
 /** seasons cycle (twice, spring to spring), the tree grows, the neighbourhood changes, the friend ages - in view */
@@ -330,14 +327,19 @@ const timesAt = (sAt: (t: number) => number, t0: number, t1: number, arcs: numbe
  *  the road in front of his friend - low, nearer the camera, so his helmet passes below his friend's face - and up to
  *  the kerb at the gate */
 /** standing inside the hatch: feet behind its sill (hidden by the rim) */
-export const B0 = {x: HATCH_W.x, y: HATCH_W.y + HATCH_W.ry - 6};
-const B1 = {x: HATCH_W.x + 14, y: STEP_TREAD};
-const B2 = {x: HATCH_W.x + 46, y: ROAD_Y + 6};
-const RET = route([B0, B1, ...bez(B2, {x: 1070, y: 1842}, ASTRO_MEET, 30)]);
-const ARC_B1 = segLen(B0, B1);
+const HATCH_BOT = HATCH_W.y + HATCH_W.ry;
+export const B0 = {x: HATCH_W.x, y: HATCH_BOT - 6};
+/** up onto the threshold: both feet in the opening, his whole figure inside it (so nothing pops as he comes out) */
+const BT = {x: HATCH_W.x, y: HATCH_BOT - 28};
+/** the fold-down step's tread, then the road, straight below the hatch (feet never cross) */
+const B1 = {x: HATCH_W.x, y: STEP_TREAD};
+const B2 = {x: HATCH_W.x, y: ROAD_Y + 10};
+const RET = route([B0, BT, B1, B2, ...bez(B2, {x: FRIEND.x + 40, y: 1842}, ASTRO_MEET, 30).slice(1)]);
+const ARC_BT = segLen(B0, BT);
+const ARC_B1 = ARC_BT + segLen(BT, B1);
 const ARC_B2 = ARC_B1 + segLen(B1, B2);
 export const RET_STEP = 175; // rig units per step on the way to his friend (a hurried walk)
-export const RET_PLANTS = evenPlants(ARC_B2, RET.total, RET_STEP * YS, [0, ARC_B1]);
+export const RET_PLANTS = evenPlants(ARC_B2, RET.total, RET_STEP * YS, [0, ARC_BT, ARC_BT, ARC_B1]);
 export const RET_GAIT: GaitOpts = {plants: RET_PLANTS, first: 1, scale: YS, lane: 12, near: 0, lift: 20, bend: 3};
 /** body arc length along the way back: the climb-down (slow, eased), then the walk (accelerates, settles at his friend) */
 export const retArc = (t: number) =>
@@ -351,28 +353,24 @@ export const astroReturnX = (t: number) => astroReturn(t).x;
 /** the climb-down's phases: inside the hatch (behind its rim), coming out over the sill, out in front of the capsule */
 // -1 not yet visible; 0 standing inside (clipped to the opening, rim drawn over him); 1 climbing down (the opening plus
 // the space in front of the capsule: his trailing foot stays hidden behind the sill until it swings out); 2 out
-const HATCH_OUT = (ARC_B1 + ARC_B2) / 2; // the trailing foot has landed on the road
-export const hatchPhase = (t: number) => (t < T3.hatch + 0.05 ? -1 : t < T3.stepOut ? 0 : retArc(t) < HATCH_OUT ? 1 : 2);
+export const hatchPhase = (t: number) => (t < T3.hatch + 0.05 ? -1 : retArc(t) < ARC_BT - 0.01 ? 0 : 2);
 export const inHatch = (t: number) => hatchPhase(t) <= 0;
 export const returnSteps = () => timesAt(retArc, T3.stepOut, T3.arrive + 0.3, landings(RET_PLANTS, 1));
 /** up the path to the front door: straight up from where he stood through the right half of the gate (clear of his
  *  friend), then along the path (a little smaller with depth) */
-const DOOR_PATH = route([ASTRO_MEET, {x: 1198, y: YARD.fenceY + 8}, ...Array.from({length: 40}, (_, k) => {
-  const u = 0.06 + (0.94 * k) / 39;
-  const p = yardPath(u);
-  return {x: p.x + 22 * (1 - ss(u, 0.05, 0.5)), y: p.y};
-})]);
-export const PATH_STEP = 200;
+const DOOR_PATH = route([ASTRO_MEET, {x: ASTRO_MEET.x, y: YARD.fenceY + 8}, yardPathV3(0.06), yardPathV3(1)]);
+export const PATH_STEP = 150;
 export const DOOR_PLANTS = evenPlants(0, DOOR_PATH.total, PATH_STEP * YS * 0.97);
 export const DOOR_GAIT: GaitOpts = {plants: DOOR_PLANTS, first: 1, scale: YS, lane: 10, near: 0, lift: 22, back: true, bend: 3};
 export const doorArc = (t: number) => DOOR_PATH.total * trap2(t, T3.walk, T3.inside, 0.2, 0.06);
 export const astroDoor = (t: number) => {
   // an even walk that carries him over the doorstep at the cut (the door has swung open in front of him)
   const s = doorArc(t);
-  const g = gait(DOOR_PATH, s, DOOR_GAIT);
-  const p = g.body;
+  const p0 = DOOR_PATH.at(s);
   // depth scale from the path (1 at the gate .. ~0.94 at the door)
-  const depth = lerp(1, 0.938, clamp((YARD.fenceY - p.y) / (YARD.fenceY - YARD.door.y1 - 26)));
+  const depth = lerp(1, 0.938, clamp((YARD.fenceY - p0.y) / (YARD.fenceY - YARD.door.y1 - 26)));
+  const g = gait(DOOR_PATH, s, {...DOOR_GAIT, scale: YS * depth});
+  const p = g.body;
   return {x: p.x, y: p.y, s: YS * depth, dist: s, g, ...DOOR_PATH.dir(s)};
 };
 export const doorWalkSteps = () => timesAt(doorArc, T3.walk, T3.inside, landings(DOOR_PLANTS, 1)).filter((t) => t < T3.inside - 0.01);
@@ -386,9 +384,9 @@ export const T_GATE = (() => {
 export const RS = ROOM.figScale; // 1.4
 export const F3 = ROOM.floor;
 export const DOOR3 = {x0: rx(60), x1: rx(-200), cx: rx(-70), y0: 830};
-export const STOP3 = 1440; // where he stands, an arm's length from the photograph on the table (clear of the doorway)
+export const STOP3 = 1425; // where he stands, an arm's length from the photograph on the table (clear of the doorway)
 /** his old friend stands in the open doorway, on the threshold, wholly inside the opening (the leaf is on the other jamb) */
-export const FRIEND_DOOR_X = DOOR3.cx + 30;
+export const FRIEND_DOOR_X = DOOR3.cx - 8;
 /** he comes in over the threshold mid-stride (walking left, into the room) and stops by the table: planted feet along a
  *  straight line from the porch, decelerating over his last steps */
 const ROOM_ROUTE = route([{x: DOOR3.cx + 90, y: F3}, {x: STOP3, y: F3}]);
@@ -408,7 +406,9 @@ const ASTRO_HEAD = {x: STOP3, y: F3 + (HEAD_Y + 0) * RS};
 /** his watch in the room (raised pose) */
 export const roomWatchWorld = () => {
   const w = watchLocal(RAISED);
-  return {x: STOP3 + w.x * RS, y: F3 + w.y * RS};
+  // (his stance's small knee bend lowers the figure: the push lands on the dial where it is actually drawn)
+  const bob = roomAstro(T3.loopCut).bob;
+  return {x: STOP3 + w.x * RS, y: F3 + (w.y + bob) * RS};
 };
 const ZLOOP = LOOP_WIN.r / (WATCH_DIAL * RS);
 /** an eased move between two cameras at rest: log zoom on e5, position on the zoom-to-point path (pans when the zoom
@@ -435,20 +435,22 @@ const chain = (t: number, keys: [number, number, Cam][]): Cam => {
 /** the room shots: the frame holds while he walks in and stops; a slow drift toward him and the photograph while the
  *  change comes over him; one eased push into the young faces in the photograph; out to his face, held; out to the
  *  two-shot as his old friend steps into the doorway */
-const ROOM_IN: Cam = {x: 1566, y: 1162, z: 1.36};
-const ROOM_HIM: Cam = {x: 1408, y: 1182, z: 1.75};
+// (framed so his feet stay above the caption while he walks in and stops)
+const ROOM_IN: Cam = {x: 1560, y: 1240, z: 1.36};
+const ROOM_HIM: Cam = {x: 1392, y: 1238, z: 1.58};
 const YOUNG: Cam = {x: (SON.x + FR.x) / 2, y: (SON.y + FR.y) / 2, z: 5.0};
 // (his face high in frame, so his hanging hands and the watch stay above the caption)
-const FACE: Cam = {x: ASTRO_HEAD.x - 6, y: ASTRO_HEAD.y + 112, z: 2.05};
+const FACE: Cam = {x: ASTRO_HEAD.x - 6, y: ASTRO_HEAD.y + 146, z: 2.0};
 const TWO_SHOT: Cam = {x: 1546, y: 1150, z: 1.1};
 const roomMain = (t: number): Cam =>
   chain(t, [
+    // the frame holds while he walks in; it starts to drift only as he plants his last step
     [T3.inside, T3.inside, ROOM_IN],
-    [T3.inside, T3.photoPush, ROOM_HIM],
+    [T3.roomStop - 0.08, T3.photoPush, ROOM_HIM],
     [T3.photoPush, T3.toFace, YOUNG],
-    [T3.toFace + 0.1, T3.faceHold, FACE],
-    [T3.faceHold + 0.2, T3.friendIn + 0.85, TWO_SHOT],
-    [T3.friendIn + 0.85, T3.loopPush, {...TWO_SHOT, x: TWO_SHOT.x - 8, z: 1.17}],
+    // a held look at the young faces, out to his face, held, then out to the two-shot, which holds still for the reaction
+    [T3.toFace + 0.24, T3.faceHold + 0.06, FACE],
+    [T3.faceHold + 0.36, T3.friendIn + 0.95, TWO_SHOT],
   ]);
 export const camRoomPresent = (t: number): Cam => {
   if (t < T3.loopPush) return roomMain(t);

@@ -3,7 +3,7 @@
  "true_peak_dbtp_4x": -1.32,
  "voice_lufs_in_mix": -13.86,
  "voice_max_gain_reduction_db": -12.04,
- "family_room_effects_lufs": -60.21,
+ "family_room_effects_lufs": -60.22,
  "effects": 25,
  "duration_s": 23.533,
  "loop_seam_jump": 0.0021

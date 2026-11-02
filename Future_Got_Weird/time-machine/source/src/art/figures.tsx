@@ -139,7 +139,8 @@ export const Astronaut: React.FC<{
     const hx = side * 32;
     const fy = legStretch ? fy0 : Math.min(fy0, -8);
     const st = legStretch ? clamp(Math.hypot(fx - hx, fy - hipY) / 161.5, 1, legStretch) : 1;
-    const k = ik2(hx, hipY, fx, fy, 82 * st, 80 * st, side < 0 ? 1 : -1);
+    // (V3: knees bend outward, so a crouch or a long stride never reads as knock-kneed / crossed legs)
+    const k = ik2(hx, hipY, fx, fy, 82 * st, 80 * st, legStretch ? (side < 0 ? -1 : 1) : side < 0 ? 1 : -1);
     return {hx, kx: k.jx, ky: k.jy, fx: k.ex, fy: k.ey};
   };
   const lg = feet ? [legIK(-1, feet.lx, feet.ly), legIK(1, feet.rx, feet.ry)] : [leg(-1, ph), leg(1, ph + Math.PI)];

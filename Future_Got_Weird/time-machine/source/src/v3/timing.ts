@@ -37,8 +37,8 @@ export const T3 = {
   descent: 11.42,
   landing: 12.0,
   hatch: 12.06,
-  stepOut: 12.2,
-  stepDown: 12.58,
+  stepOut: 12.14,
+  stepDown: 12.64,
   arrive: 13.92,
   // 8 their faces together: he searches the old face, recognises him
   faces: 13.86,

@@ -26,7 +26,7 @@ const bhUrls = (bt: number) => {
   const n = bhFrame(bt), f4 = String(n).padStart(4, '0');
   return [staticFile(`bh/f_${f4}.jpg`), ...(hasWide(n) ? [staticFile(`bhw/f_${f4}.jpg`)] : [])];
 };
-const REST_R: ArmA = {a: 14, b: 18};
+const REST_R: ArmA = {a: 12, b: 30};
 /** a contact shadow under a figure (drawn by the scene, so it can fade in as the feet reach the ground) */
 const Shadow: React.FC<{x: number; y: number; s: number; a: number}> = ({x, y, s, a}) => (a > 0.01 ? <ellipse cx={x} cy={y + 2 * s} rx={100 * s} ry={15 * s} fill={C.shadow} opacity={a} /> : null);
 
@@ -53,7 +53,8 @@ const watchEl = (t: number, k: string) => (p: {x: number; y: number; angle: numb
         <line x1={-50} y1={hw - (2 * ik) / kk} x2={50} y2={hw - (2 * ik) / kk} stroke={INK} strokeWidth={(OUT * ik) / kk} />
       </g>
       <Watch2 r={S.WATCH_R} minutes={watchMinutes(t)} id={`${k}w`} strap={false} soft
-        secBlur={t > T3.hourStart && t < T3.hourEnd ? secBlurAt((t - T3.hourStart) / (T3.hourEnd - T3.hourStart), T3.hourEnd - T3.hourStart) : 0} />
+        secBlur={t > T3.hourStart && t < T3.hourEnd ? secBlurAt((t - T3.hourStart) / (T3.hourEnd - T3.hourStart), T3.hourEnd - T3.hourStart) : 0}
+        secA={1 - ss(t, T3.hourStart, T3.hourStart + 0.06) + ss(t, T3.hourEnd - 0.3, T3.hourEnd - 0.02)} />
     </g>
   );
 };
@@ -216,6 +217,8 @@ const astroYardFace = (t: number, house: number, ax: number, ay: number): Expr =
     turn: lerp(0, fx * 0.3, meet), blink: 1 - 0.96 * Math.sin(Math.PI * clamp((t - (T3.recognise + 0.26)) / 0.14)) ** 2,
   });
 };
+/** the friend's shield from the landing blast (his near arm; the elbow leads, the forearm ends across his brow) */
+const SHIELD = {a: 70, b: 150, lean: 10};
 function yardWorld(t: number, k: string) {
   const D = S.yardD(t), season = S.yardSeason(t);
   const cap = S.capsuleYard(t);
@@ -234,17 +237,21 @@ function yardWorld(t: number, k: string) {
     const house = ss(t, T3.stepDown - 0.16, T3.stepDown - 0.02) * (1 - ss(t, T3.stepDown + 0.2, T3.stepDown + 0.4));
     const moving = t > T3.stepOut && t < T3.arrive ? 1 : 0;
     const sw = armSwing(g, r.dx, r.dy) * 9 * moving;
-    // he ducks under the hatch's low top while inside and climbing out (knees bent), straightening on the road
-    const duck = 34 * (1 - ss(t, T3.stepDown - 0.14, T3.stepDown + 0.06));
+    // he ducks under the hatch's low top while inside and climbing out (knees bent), straightening on the road; the feet
+    // stay on their planted spots (the duck is taken out of them)
+    const duck = 40 * (1 - ss(t, T3.stepDown - 0.16, T3.stepDown + 0.08));
+    const feet = {...g.feet, ly: g.feet.ly - duck, ry: g.feet.ry - duck};
     astroY = r.y;
     const el = (
       <g transform={`translate(${r.x} ${r.y}) scale(${S.YS})`}>
         <Astronaut pose={{armL: {a: 9 + sw, b: 12}, armR: {a: 9 - sw, b: 12}, e: astroYardFace(t, house, r.x, r.y), bob: g.bob + duck, frontL: true}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE}
-          watchEl={watchEl(t, k + 'a')} watchAt={S.WATCH_AT} feet={g.feet} nearLeg={g.nearLeg} legStretch={1.3} shadow={false} />
+          watchEl={watchEl(t, k + 'a')} watchAt={S.WATCH_AT} feet={feet} nearLeg={g.nearLeg} legStretch={1.3} shadow={false} />
       </g>
     );
     const H = S.HATCH_W;
     if (phase === 0) {
+      // inside: seen through the opening, the rim and the folded door drawn over him; he steps up onto the threshold, and
+      // only once his whole figure is inside the opening is he drawn in front of the capsule (no pop)
       astro = (
         <g>
           <clipPath id={`${k}hc`}><ellipse cx={H.x} cy={H.y + cap.dip} rx={H.rx - 3} ry={H.ry - 3} /></clipPath>
@@ -252,20 +259,6 @@ function yardWorld(t: number, k: string) {
         </g>
       );
       hatchOver = <g transform={`translate(${cap.x} ${cap.y}) scale(${S.CAP_S})`}><HatchFront hatch={cap.hatch} /></g>;
-    } else if (phase === 1) {
-      // coming out: the opening, plus the space in front of the capsule (the lead side lower down, everything below the
-      // sill's lip); his trailing foot stays hidden behind the sill until it swings out
-      const yb = H.y + cap.dip + H.ry;
-      astro = (
-        <g>
-          <clipPath id={`${k}hc`}>
-            <ellipse cx={H.x} cy={H.y + cap.dip} rx={H.rx - 3} ry={H.ry - 3} />
-            <rect x={H.x + 5} y={yb - 22} width={600} height={600} />
-            <rect x={H.x - 600} y={S.B0.y + 12} width={1200} height={600} />
-          </clipPath>
-          <g clipPath={`url(#${k}hc)`}>{el}</g>
-        </g>
-      );
     } else astro = el;
     astroShadow = <Shadow x={r.x} y={r.y} s={S.YS} a={ss(t, T3.stepDown - 0.12, T3.stepDown + 0.02)} />;
   } else if (turning) {
@@ -295,7 +288,7 @@ function yardWorld(t: number, k: string) {
   const blast = ss(t, T3.landing - 0.25, T3.landing - 0.05) * (1 - ss(t, T3.landing + 0.15, T3.landing + 0.5));
   const friend = (
     <g transform={`translate(${S.FRIEND.x} ${S.FRIEND.y}) scale(${S.YS})`}>
-      <Friend age={age} pose={{armL: {a: 7, b: 9}, armR: {a: lerp(7, 28, blast), b: lerp(9, 128, blast)}, e: friendYardFace(t), lean: 8 * blast, bob: 1.2 * Math.sin(t * 2.2)}} id={`${k}fr`} facing={1} green />
+      <Friend age={age} pose={{armL: {a: 7, b: 9}, armR: {a: lerp(7, SHIELD.a, blast), b: lerp(9, SHIELD.b, ss(blast, 0, 0.6))}, e: friendYardFace(t), lean: SHIELD.lean * blast, bob: 1.2 * Math.sin(t * 2.2)}} id={`${k}fr`} facing={1} green />
     </g>
   );
   // landing dust: soft, round clouds (each fades out to its rim) that bloom at touchdown, roll outward and rise; drawn
@@ -390,7 +383,7 @@ const roomFriendFace = (t: number): Expr => {
   const watch = ss(t, T3.watchUp + 0.12, T3.watchUp + 0.36) * (1 - ss(t, 21.04, 21.24));
   return S.v3Face({
     ...S.mouthAt(t, [[0, 'flat'], [21.12, 'soft'], [21.36, 'smile']], 0.16),
-    lookX: lerp(-0.75, -0.5, watch), lookY: lerp(0.05, 0.95, watch), turn: -0.35, sad: 0.3 * (1 - ss(t, 21.0, 21.36)), brows: 0.15 + 0.15 * watch,
+    lookX: lerp(-0.75, -0.95, watch), lookY: lerp(0.05, 1.0, watch), turn: -0.35, sad: 0.3 * (1 - ss(t, 21.0, 21.36)), brows: 0.15 + 0.15 * watch,
     wide: 0.35 * watch,
     blink: 1 - 0.96 * Math.max(Math.sin(Math.PI * clamp((t - 20.32) / 0.14)), Math.sin(Math.PI * clamp((t - 20.98) / 0.14))) ** 2,
   });
@@ -410,7 +403,11 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
   const fu = ss(t, T3.friendIn, T3.friendIn + 0.7);
   const fx = lerp(S.DOOR3.x1 + 90, S.FRIEND_DOOR_X, fu);
   const fWalk = t > T3.friendIn && t < T3.friendIn + 0.7;
-  const nod = 4 * Math.sin(Math.PI * clamp((t - 21.1) / 0.45));
+  // (the walk phase follows the distance he has covered, so a planted foot holds still; one full stride brings his feet
+  // together exactly where he stops)
+  const fPhase = -(S.DOOR3.x1 + 90 - fx) / S.RS / 26;
+  const watchDip = 3 * ss(t, T3.watchUp + 0.12, T3.watchUp + 0.36) * (1 - ss(t, 21.04, 21.24));
+  const nod = 4 * Math.sin(Math.PI * clamp((t - 21.1) / 0.45)) + watchDip;
   return (
     <g>
       <Mirror>
@@ -421,10 +418,10 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
         <g>
           {/* seen only within the door opening (he is outside the jamb until he steps onto the threshold) */}
           <clipPath id={`${k}fdc`}><rect x={S.DOOR3.x0} y={S.DOOR3.y0 - 40} width={S.DOOR3.x1 - S.DOOR3.x0} height={S.F3 - S.DOOR3.y0 + 80} /></clipPath>
-          <g clipPath={`url(#${k}fdc)`}>
+          <g clipPath={fu < 0.999 ? `url(#${k}fdc)` : undefined}>
             <g transform={`translate(${fx} ${S.F3}) scale(${S.RS})`}>
               {/* (his near hand tucked in against his side once he stands in the doorway) */}
-              <Friend age={1} pose={{armL: {a: lerp(7, 1, fu), b: lerp(9, 4, fu)}, armR: {a: 7, b: 9}, e: roomFriendFace(t), walk: fWalk ? fu * 7 : 0, stride: fWalk ? 1 - ss(fu, 0.75, 1) : 0, lean: nod, bob: 1.0 * Math.sin(t * 2.0)}} id={`${k}rf`} facing={-1} green />
+              <Friend age={1} pose={{armL: {a: lerp(7, 1, fu), b: lerp(9, 4, fu)}, armR: {a: lerp(7, 2, fu), b: lerp(9, 5, fu)}, e: roomFriendFace(t), walk: fWalk ? fPhase : 0, stride: fWalk ? 1 : 0, lean: nod, bob: 1.0 * Math.sin(t * 2.0)}} id={`${k}rf`} facing={-1} green />
             </g>
           </g>
         </g>

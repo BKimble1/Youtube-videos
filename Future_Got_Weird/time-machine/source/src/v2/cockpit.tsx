@@ -77,7 +77,7 @@ const MIN_FACET = 'M 0 17 L 0 -82 L 3.2 -71 L 5.2 0 L 4.4 17 Z';
 
 export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?: number; /** draw the short strap stubs (ForeArm draws its own full strap) */ strap?: boolean;
   /** V3: a fainter seconds blur (a graded fan that fades away from the hand, no rings), so the navy dial never tints */
-  soft?: boolean}> = ({r, minutes, id, secBlur = 0, strap = true, soft = false}) => {
+  soft?: boolean; /** V3: the seconds hand's opacity, overriding the soft fade */ secA?: number}> = ({r, minutes, id, secBlur = 0, strap = true, soft = false, secA}) => {
   const k = r / 100;
   const A = watchAngles(minutes);
   const b = clamp(secBlur);
@@ -177,7 +177,7 @@ export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?:
       )}
       {/* (soft: while its travel per frame is too fast to read, the seconds hand is simply not drawn - no fan, no strobe -
           and it fades back in as it slows below ~20 degrees a frame) */}
-      <g transform={`rotate(${A.second})`} opacity={soft ? 1 - ss(b, 0.025, 0.07) : 1 - 0.78 * b}>
+      <g transform={`rotate(${A.second})`} opacity={secA !== undefined ? secA : soft ? 1 - ss(b, 0.025, 0.07) : 1 - 0.78 * b}>
         <line x1={0} y1={24} x2={0} y2={-88} stroke={W.coral} strokeWidth={2.1} strokeLinecap="round" />
         <circle cy={17} r={4.6} fill={W.coral} stroke={INK} strokeWidth={1} />
       </g>

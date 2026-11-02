@@ -49,6 +49,8 @@ export const YARD = {
   tree: {x: 860, y: HB + 62},
   /** the gate panel spans x .. x + w on the fence line; hinged on its left edge, swings into the yard */
   gate: {x: 1120, w: 110, h: FENCE_H, y: FB, hingeX: 1120, cx: 1175, postL: 1107, postR: 1243, archY: FB - 330, archTop: FB - 330 - 81},
+  /** V3: the gate and its rose arch stand straight in front of the front door (the path runs straight up to the step) */
+  gateV3: {x: 1460, w: 110, h: FENCE_H, y: FB, hingeX: 1460, cx: 1515, postL: 1447, postR: 1583, archY: FB - 330, archTop: FB - 330 - 81},
   fence: {x0: 470, x1: 1990, y: FB, h: FENCE_H},
   /** the garden path: gate threshold -> porch step (feet positions along it: yardPath(u)) */
   path: {x0: 1175, y0: G, x1: 1515, y1: HB + 26},
@@ -147,7 +149,8 @@ export const seasonLook = (season: number, smooth = 1, v3 = false) => {
   const s = wrap01(season);
   if (v3) {
     const P = PH3;
-    const blossom = BUD_COVER.inv(win4(s, P.bud0, P.bud1, P.drop0, P.drop1, easeL));
+    const wB = win4(s, P.bud0, P.bud1, P.drop0, P.drop1, easeL);
+    const blossom = Math.min(BUD_COVER.inv(wB), 1.4 * wB); // (from tiny buds: never a burst of half-grown clusters)
     // the crown's (and the blossom's) visible cover follows the season evenly (the cover tables undo the clumps' overlap)
     const leafAmt = LEAF_COVER.inv(win4(s, P.green0, P.green1, P.thin0, P.thin1, easeL));
     const snow = win4(s, P.snow0, P.snowPk, P.snowPk, P.snow1);
@@ -995,11 +998,12 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
 };
 
 /** front-garden bits: path, flower beds, porch step, potted plant */
-const FrontGarden: React.FC<{D: number; sl: Season}> = ({D, sl}) => {
+const FrontGarden: React.FC<{D: number; sl: Season; v3?: boolean}> = ({D, sl, v3}) => {
   const Pr = YARD.porch;
   const wear = ss(D, 0.1, 1);
   // the path: a ground band around a centre curve (anisotropic offset: depth is foreshortened)
-  const P0 = {x: 1175, y: FB + 2}, P1 = {x: 1180, y: HB + 92}, P2 = {x: 1370, y: HB + 40}, P3 = {x: 1515, y: HB + 30};
+  // (V3: straight from the gate to the porch step)
+  const P0 = v3 ? {x: 1515, y: FB + 2} : {x: 1175, y: FB + 2}, P1 = v3 ? {x: 1515, y: FB - 70} : {x: 1180, y: HB + 92}, P2 = v3 ? {x: 1515, y: HB + 70} : {x: 1370, y: HB + 40}, P3 = {x: 1515, y: HB + 30};
   const SX = 156, SZ = 35, HW = 0.36; // px per metre across, px per metre in depth, half width (m)
   const N = 16;
   const Lp: P[] = [], Rp: P[] = [];
@@ -1133,12 +1137,12 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
   );
 };
 const Fence: React.FC<{D: number; sl: Season; gateOpen: number; v3?: boolean}> = ({D, sl, gateOpen, v3}) => {
-  const Fc = YARD.fence, Gt = YARD.gate;
+  const Fc = YARD.fence, Gt = v3 ? YARD.gateV3 : YARD.gate;
   const wear = ss(D, 0.15, 1);
   const paint = mix('#FFFBF0', '#E3DDCF', 0.75 * wear);
   const pSh = shade(paint, 0.2);
   const gL = Gt.x - GPW / 2, gR = Gt.x + Gt.w + GPW / 2; // gate post centres
-  const posts = [Fc.x0, 712, 956, gL, gR, 1498, 1744, Fc.x1];
+  const posts = v3 ? [Fc.x0, 760, 1105, gL, gR, 1744, Fc.x1] : [Fc.x0, 712, 956, gL, gR, 1498, 1744, Fc.x1];
   const half = (i: number) => (i === 3 || i === 4 ? GPW / 2 : 9);
   const railY = [FB - 36, FB - 88];
   const pickets: {x: number; lean: number; j: number}[] = [];
@@ -1201,12 +1205,13 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number; v3?: boolean}> =
         <path d={gpath([[4, FB - 30], [12, FB - 34], [Gt.w - 4, arch(Gt.w - 4) + 26], [Gt.w - 12, arch(Gt.w - 12) + 32]])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
         {gPick.map((u, q) => {
           const top = arch(u + GPWk / 2);
+          const inkW = 3 * (0.35 + 0.65 * Math.cos(th)); // (thinner ink as the leaf turns edge-on, so it never goes black)
           const pts: [number, number][] = [[u, FB - 2], [u, top + 9], [u + GPWk / 2, top], [u + GPWk, top + 9], [u + GPWk, FB - 2]];
           return (
             <g key={q}>
               <path d={gpath(pts)} fill={paint} />
               <path d={gpath([[u + GPWk - 4, top + 9], [u + GPWk, top + 9], [u + GPWk, FB - 2], [u + GPWk - 4, FB - 2]])} fill={pSh} />
-              <path d={gpath(pts)} fill="none" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+              <path d={gpath(pts)} fill="none" stroke={INK} strokeWidth={inkW} strokeLinejoin="round" />
               {sl.snow > 0.01 && <path d={gpath([[u - 1, top + 10], [u + GPWk / 2, top - 3], [u + GPWk + 1, top + 10], [u + GPWk / 2, top + 6]])} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
             </g>
           );
@@ -1482,7 +1487,7 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       <ellipse cx={T.x + T.canopy.rx * 0.12} cy={T.y + 6} rx={Math.max(40, T.canopy.rx * 0.95)} ry={16 + 8 * T.k} fill={C.shadow} opacity={lerp(0.5, 1, sl.leafAmt)} />
       <Neighbours D={D} sl={sl} light={light} />
       <Home D={D} sl={sl} t={t} id={`${id}-h`} doorOpen={doorOpen} light={light} v3={v3} />
-      <FrontGarden D={D} sl={sl} />
+      <FrontGarden D={D} sl={sl} v3={v3} />
       <YardTree D={D} sl={sl} t={t} id={`${id}-t`} />
       {/* fallen leaves on the lawn */}
       {!sl.v3 && sl.fallen * (1 - sl.snow) > 0.01 && Array.from({length: 46}, (_, k) => {
@@ -1559,14 +1564,15 @@ export const YOUT = {
  *  DOOR_PATH gives the key points for framing a doorway view. */
 const OUT_KD = 1.35;
 const STEP_Y0 = YOUT.fenceY + (FB - (HB + 24)) * OUT_KD;
-const OUT_PATH: P[] = [{x: YOUT.mirror - YARD.gate.cx, y: YOUT.fenceY - 8}, {x: YOUT.mirror - YARD.gate.cx, y: 1470}, {x: YOUT.mirror - YARD.door.cx + 20, y: 1440}, {x: YOUT.mirror - YARD.door.cx, y: STEP_Y0 + 4}];
+// (V3: the gate stands straight out from the front door, so the path runs straight)
+const OUT_PATH: P[] = [{x: YOUT.mirror - YARD.gateV3.cx, y: YOUT.fenceY - 8}, {x: YOUT.mirror - YARD.gateV3.cx, y: YOUT.fenceY + 50}, {x: YOUT.mirror - YARD.door.cx, y: STEP_Y0 - 50}, {x: YOUT.mirror - YARD.door.cx, y: STEP_Y0 + 4}];
 export const DOOR_PATH = {
   /** the porch step outside the front door (x0..x1, its front edge y0; it runs on below the frame) */
   step: {x0: YOUT.mirror - YARD.porch.x1, x1: YOUT.mirror - YARD.porch.x0, y0: STEP_Y0},
   /** where the path leaves the step, the middle of its bend toward the gate, and its end in the open gate */
   start: OUT_PATH[3], turn: cpt(OUT_PATH[0], OUT_PATH[1], OUT_PATH[2], OUT_PATH[3], 0.5), end: OUT_PATH[0],
   /** the gate in the fence: post centres (view x), the hinge (the panel folds back against it), the arch's top */
-  gate: {postL: YOUT.mirror - (YARD.gate.x + YARD.gate.w + GPW / 2), postR: YOUT.mirror - (YARD.gate.x - GPW / 2), hingeX: YOUT.mirror - YARD.gate.hingeX, cx: YOUT.mirror - YARD.gate.cx, y: YOUT.fenceY, archTop: YOUT.fenceY - 330 - 81},
+  gate: {postL: YOUT.mirror - (YARD.gateV3.x + YARD.gateV3.w + GPW / 2), postR: YOUT.mirror - (YARD.gateV3.x - GPW / 2), hingeX: YOUT.mirror - YARD.gateV3.hingeX, cx: YOUT.mirror - YARD.gateV3.cx, y: YOUT.fenceY, archTop: YOUT.fenceY - 330 - 81},
 };
 const DoorPathOut: React.FC<{D: number; sl: Season}> = ({D, sl}) => {
   const wear = ss(D, 0.1, 1);
@@ -1689,7 +1695,7 @@ export const YardOut: React.FC<{D: number; season: number; t: number; id: string
       {doorPath && <DoorPathOut D={D} sl={sl} />}
       {/* the fence and the rose arbour, seen from the house side (mirrored) */}
       <g transform={`translate(${YOUT.mirror} ${YOUT.fenceY - FB}) scale(-1 1)`}>
-        <Fence D={D} sl={sl} gateOpen={gateOpen} />
+        <Fence D={D} sl={sl} gateOpen={gateOpen} v3={v3} />
       </g>
       {/* the old tree, close to the window on the right */}
       <g transform={`translate(${YOUT.tree.x} ${YOUT.tree.y}) scale(${-YOUT.tree.s} ${YOUT.tree.s}) translate(${-YARD.tree.x} ${-YARD.tree.y})`}>
@@ -1704,6 +1710,12 @@ export const NearTrunk: React.FC<{cx: number; D: number; season: number; id: str
   <FgTrunk cx={cx} D={D} sl={seasonLook(season)} id={id} w={w} />
 );
 
+/** V3: the straight garden path, gate threshold -> porch step */
+export const yardPathV3 = (u: number) => {
+  const Pp = YARD.path, x = YARD.gateV3.cx;
+  const p = {x, y: lerp(Pp.y0, Pp.y1, clamp(u))};
+  return {x: p.x, y: p.y, depth: lerp(1, 0.93, clamp((G - p.y) / (G - HB)))};
+};
 export const yardPath = (u: number) => {
   const Pp = YARD.path;
   const p = cpt({x: Pp.x0, y: Pp.y0}, {x: Pp.x0, y: HB + 70}, {x: 1400, y: HB + 34}, {x: Pp.x1, y: Pp.y1}, clamp(u));

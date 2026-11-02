@@ -1,6 +1,6 @@
 {
  "file": "FGW_TimeMachine_V3_REVIEW_1080x1920.mp4",
- "size_mb": 26.1,
+ "size_mb": 25.3,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -19,18 +19,24 @@
   }
  ],
  "decode_errors": null,
- "frame_change_median": 14.36,
+ "frame_change_median": 12.41,
  "large_changes": [
   {
    "frame": 246,
    "t": 8.2,
-   "mad": 82.41,
+   "mad": 82.24,
    "planned": "match cut: watch -> home wall clock"
+  },
+  {
+   "frame": 282,
+   "t": 9.4,
+   "mad": 67.75,
+   "planned": "match cut: the window from inside -> from outside"
   },
   {
    "frame": 681,
    "t": 22.7,
-   "mad": 92.84,
+   "mad": 91.84,
    "planned": "match cut: watch face -> ship window"
   }
  ],
