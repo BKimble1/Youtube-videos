@@ -143,7 +143,7 @@ place(glass(2349.3, 1.0), e['reflection'], 'reflection shimmer', -28.0, pan=-0.2
 # ---- space
 place(rumble(e['windowPass'] - e['spaceCut'] + 0.6), e['spaceCut'], 'black hole rumble (on the cut)', -7.0)
 place(engine(e['flightEnd'] - e['flightStart']), e['flightStart'], 'capsule engine pass (panned with the flight)', -12.0, pan_track='capsule')
-place(whoosh(0.45, 400, 2000), e['windowPass'] - 0.2, 'window frame passes the lens', -17.0)
+place(whoosh(0.45, 400, 2000), e['windowPass'] - 0.48, 'window frame passes the lens', -17.0)  # the rim crosses the lens ~4.2-4.4 s
 # ---- cockpit: his watch, the time-compressed hour
 cab = lp(hp(noise(N), 50), 300) * win(e['windowPass'], e['matchCut'], 0.15, 0.05)
 tk = e['windowPass'] + 0.1; k = 0

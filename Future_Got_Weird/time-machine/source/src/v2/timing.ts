@@ -69,8 +69,8 @@ export const V2 = {
   photoClose: 17.55,
   // 12 the watch beside the photograph, then into the pre-departure print
   watchBeside: 20.45,
-  photoMove: 21.25,
+  photoMove: 21.15,
   // the pan settles on the father's portrait (black ribbon), then glides into the pre-departure print
-  ribbonPass: 21.6,
-  photoPush: 21.86,
+  ribbonPass: 21.62,
+  photoPush: 21.9,
 };

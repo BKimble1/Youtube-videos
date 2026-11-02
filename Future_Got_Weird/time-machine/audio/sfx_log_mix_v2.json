@@ -30,7 +30,7 @@
   "gain_db": -12.0
  },
  {
-  "t": 4.5,
+  "t": 4.22,
   "sfx": "window frame passes the lens",
   "gain_db": -17.0
  },
@@ -165,7 +165,7 @@
   "gain_db": -25.0
  },
  {
-  "t": 22.16,
+  "t": 22.2,
   "sfx": "into the photograph",
   "gain_db": -16.0
  }

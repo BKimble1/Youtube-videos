@@ -191,11 +191,11 @@ export const camRoomOwn = (t: number): Cam =>
     [19.3, {x: FAM.x + 18, y: FAM.y - 6, z: 3.95}],
     [V2.watchBeside - 0.4, {x: FAM.x + 52, y: FAM.y + 2, z: 4.4}],
     // tilt down to his watch beside the photograph
-    [V2.watchBeside + 0.35, {x: FAM.x + 2, y: FAM.y + 50, z: 4.2}],
-    // an eased pan (peak ~50 px a frame) that settles on the father's portrait with the black ribbon
-    [V2.photoMove, {x: FAM.x + 40, y: FAM.y + 30, z: 3.95}],
-    [V2.ribbonPass, {x: PAR.x + 4, y: (FAM.y + FRI.y) / 2 + 10, z: 3.6}],
-    [V2.photoPush, {x: PAR.x + 18, y: (FAM.y + FRI.y) / 2 + 4, z: 3.62}],
+    [V2.watchBeside + 0.35, {x: FAM.x + 2, y: FAM.y + 50, z: 4.15}],
+    // an eased pan (peak ~50 px a frame) that settles and holds on the father's portrait with the black ribbon
+    [V2.photoMove, {x: FAM.x + 30, y: FAM.y + 34, z: 3.95}],
+    [V2.ribbonPass, {x: PAR.x + 4, y: (FAM.y + FRI.y) / 2 + 10, z: 3.75}],
+    [V2.photoPush, {x: PAR.x + 10, y: (FAM.y + FRI.y) / 2 + 6, z: 3.76}, 'stop'],
     // then the glide into the pre-departure print until it fills the frame (a hair past exact fill: no border remnant)
     [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT * 1.004}, 'stop'],
   ], true);

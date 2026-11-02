@@ -177,13 +177,13 @@ const reflE = (t: number): Expr => {
   const settle = ss(t, 19.45, 20.0);
   const toWatch = ss(t, V2.watchBeside - 0.25, V2.watchBeside + 0.15);
   return {
-    turn: -0.12 * toSelf, lookX: lerp(lerp(0.15, -0.85, toSelf), 0.3, toWatch), lookY: lerp(lerp(0.12, 0.05, toSelf), 0.75, toWatch),
+    turn: -0.18 * toSelf, lookX: lerp(lerp(0.15, -0.85, toSelf), 0.3, toWatch), lookY: lerp(lerp(0.12, -0.45, toSelf), 0.75, toWatch),
     sad: lerp(0.85, 0.28, settle), brows: lerp(0.3, -0.12, settle), mouth: settle < 0.4 ? 'tremble' : 'flat',
     blink: (t > 18.5 && t < 18.66) || (t > 19.95 && t < 20.02) ? 0.1 : 1,
   };
 };
 /** his small nod as it settles (reflection px, room units) */
-const reflNod = (t: number) => 5 * Math.sin(Math.PI * clamp((t - 19.62) / 0.36));
+const reflNod = (t: number) => 11 * Math.sin(Math.PI * clamp((t - 19.62) / 0.36));
 function roomPresentWorld(t: number, k: string) {
   const x = St.roomAstroX(t);
   const moving = St.roomWalking(t) ? 1 : 0;
@@ -225,6 +225,7 @@ function roomPresentWorld(t: number, k: string) {
           <rect x={RSp.x + 16} y={G.y - 4} width={5} height={G.h * 0.62} fill="#C9D7E0" opacity={0.6} />
           <rect x={RSp.x - 30} y={G.y + G.h * 0.24} width={96} height={4} fill="#C9D7E0" opacity={0.6} />
         </g>
+        <ellipse cx={RSp.x + St.REFL_DX + px} cy={RSp.y + St.REFL_DY + 4} rx={30} ry={34} fill="#B9C2C8" opacity={0.55 * ss(t, V2.photoClose - 0.35, V2.photoClose + 0.05)} />
         <g transform={`translate(${RSp.x + St.REFL_DX + px} ${RSp.y + St.REFL_DY - HEAD_Y_RIG * hs + rb + reflNod(t)}) scale(${hs})`}>
           <Astronaut pose={{armL: {a: 6, b: 8}, armR: {a: 6, b: 8}, e: reflE(t)}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} shadow={false} />
         </g>
@@ -245,7 +246,7 @@ function roomPresentWorld(t: number, k: string) {
         </g>
       )}
       {wb > 0.001 && (
-        <g transform={`translate(${St.WATCH_BESIDE.x - 150 * (1 - wb)} ${St.WATCH_BESIDE.y + 120 * (1 - wb)})`}>
+        <g transform={`translate(${St.WATCH_BESIDE.x - 260 * (1 - wb)} ${St.WATCH_BESIDE.y + 10 * (1 - wb)})`}>
           <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={St.WATCH_BESIDE.s} rot={St.WATCH_BESIDE.rot} />
         </g>
       )}
@@ -446,7 +447,10 @@ const Jamb: React.FC<{x: number}> = ({x}) => (
 // 'And when you finally returned,' rides the top band: the tilt up to the returning capsule carries the elderly friend's
 // face down through the bottom band
 const capY = (i: number) => (i === 5 ? 330 : 1716);
-const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : CAPTIONS[i].hide);
+// 'Your family might already be gone.' leaves before his lowering glove reaches the band
+const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : i === 7 ? 17.28 : CAPTIONS[i].hide);
+// the first caption sits a little left, clear of the clasped hands as the camera rises to the visor
+const capLeft = (i: number) => (i === 0 ? 40 : 110);
 
 export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {
   resetIds(fkey);
@@ -501,7 +505,7 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
         {body}
         {overlay}
       </svg>
-      {captions && <Captions2 t={t} y={capY} hide={capHide} />}
+      {captions && <Captions2 t={t} y={capY} hide={capHide} left={capLeft} />}
     </>
   );
 };

@@ -292,7 +292,8 @@ const FamilyPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) =
     <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
     {/* deep shade under the trees at the right edge, a neutral dark (not green): where his reflection on the glass reads best */}
     <rect x={w - 20} y={0} width={10} height={h * 0.2} fill="#5A3E30" stroke={INK} strokeWidth={1.6} />
-    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.46} ${[0, 1, 2, 3, 4].map((k) => `Q ${w - REFL_W + 6 + k * 14} ${h * (0.2 + 0.08 * (k % 2))} ${w - REFL_W + 14 + k * 14} ${h * (0.3 - 0.1 * (k % 2))}`).join(' ')} Q ${w + 8} ${h * 0.2} ${w + 10} ${h * 0.32} L ${w + 10} ${h} Z`} fill="#2D3631" stroke={INK} strokeWidth={2} />
+    {/* a low, wide shrub in deep shade (its leafy top stays below the printed heads): the dark his reflected face reads on */}
+    <path d={`M ${w - REFL_W - 18} ${h} L ${w - REFL_W - 18} ${h * 0.66} ${[0, 1, 2, 3, 4, 5].map((k) => `Q ${w - REFL_W - 12 + k * 15} ${h * (0.5 + 0.05 * (k % 2))} ${w - REFL_W - 4 + k * 15} ${h * (0.58 - 0.05 * (k % 2))}`).join(' ')} Q ${w + 8} ${h * 0.52} ${w + 10} ${h * 0.6} L ${w + 10} ${h} Z`} fill="#2D3631" stroke={INK} strokeWidth={2} />
     <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#454C57" strokeWidth={3} strokeLinecap="round" />
     {Array.from({length: 12}, (_, k) => (
       <path key={k} d={`M ${k * 14 + 2} ${h * 0.64} L ${k * 14 + 2} ${h * 0.5} L ${k * 14 + 6} ${h * 0.46} L ${k * 14 + 10} ${h * 0.5} L ${k * 14 + 10} ${h * 0.64} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.4} />
