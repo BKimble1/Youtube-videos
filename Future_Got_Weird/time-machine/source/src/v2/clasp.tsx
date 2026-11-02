@@ -40,7 +40,8 @@ const OVER = {wx: 7.05, wy: -33.9, dir: 118}; // over hand: wrist point, directi
 const UNDER = {wx: 66, wy: 38, dir: 192}; // under hand: wrist point, direction the hand points (toward the glove)
 const OVER_GRIP: P = {x: -2, y: -6}; // pivots for overAngle / underAngle changes
 const UNDER_GRIP: P = {x: 30, y: 26};
-const ATTACH_BACK = 10; // the friend attach point sits this far up the forearm from the wrist (inside the cuff band)
+const ATTACH_BACK = 18; // the friend attach point sits this far up the forearm from the wrist (under the cuff band, so the
+// rig's round forearm end stays hidden under the cuff)
 
 const rad = (d: number) => (d * Math.PI) / 180;
 const rotP = (p: P, deg: number, c: P = {x: 0, y: 0}): P => {
@@ -68,9 +69,12 @@ export const claspAttach = (astroAngle = CLASP_DEFAULTS.astroAngle, overAngle = 
 };
 /** wrist points at the default angles (screen frame, relative to the clasp centre) */
 export const CLASP_ATTACH = claspAttach();
-/** bounding box of the drawing at default angles and stubs (units, clasp centre at 0,0) and its overall size */
-export const CLASP_BOX = {x0: -128, y0: -86, x1: 106, y1: 96};
+/** bounding box of the drawing (ink included) at default angles with the default stubs (units, clasp centre at 0,0),
+ *  measured from renders, and its overall size */
+export const CLASP_BOX = {x0: -107, y0: -71, x1: 94, y1: 96};
 export const CLASP_SIZE = {w: CLASP_BOX.x1 - CLASP_BOX.x0, h: CLASP_BOX.y1 - CLASP_BOX.y0};
+/** the same with stub = 0 (hands, glove and cuffs only) */
+export const CLASP_CORE_BOX = {x0: -75, y0: -55, x1: 74, y1: 84};
 
 /** the friend's sleeve colours at an age (so the integrator can match the rig's forearm to the stub) */
 export const claspSleeve = (age: number) => {
@@ -291,7 +295,7 @@ const OverHand: React.FC<{id: string; age: number; rot: number; squeeze: number}
 };
 
 // ---------------------------------------------------------------------------------------------------------------------
-// the glove (design frame: cuff ring at x = -60..-46, fingers toward +x, back of the glove to camera)
+// the glove (design frame: cuff ring at x = -64..-50, fingers toward +x, back of the glove to camera)
 const GLOVE_PTS: P[] = [
   {x: -47, y: -23}, {x: -24, y: -29}, {x: 2, y: -31}, {x: 25, y: -28}, {x: 38, y: -18}, {x: 42.5, y: 0}, {x: 38.5, y: 18},
   {x: 25, y: 28.5}, {x: 2, y: 31}, {x: -24, y: 29}, {x: -47, y: 24},

@@ -2,7 +2,7 @@
 // (attach points, angle and squeeze variations).
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
-import {Clasp, CLASP_ATTACH, CLASP_BOX, claspAttach} from '../clasp';
+import {Clasp, CLASP_ATTACH, CLASP_BOX, CLASP_SIZE, claspAttach} from '../clasp';
 
 const BG = '#E4EDF1';
 const Ages: React.FC = () => {
@@ -18,7 +18,7 @@ const Ages: React.FC = () => {
         {ages.map((a, i) => (
           <g key={i} clipPath={`url(#band${i})`}>
             <rect x={0} y={i * band + 2} width={1080} height={band - 4} fill={i % 2 ? '#DCE7EC' : BG} />
-            <g transform={`translate(${520} ${i * band + band / 2 + 6}) scale(${s})`}>
+            <g transform={`translate(${540 - ((CLASP_BOX.x0 + CLASP_BOX.x1) / 2) * s} ${i * band + band / 2 + 6}) scale(${s})`}>
               <Clasp age={a} id={`ca${i}`} />
             </g>
           </g>
@@ -27,18 +27,24 @@ const Ages: React.FC = () => {
     </AbsoluteFill>
   );
 };
-const Hero: React.FC = () => (
-  <AbsoluteFill style={{background: BG}}>
-    <svg width={1080} height={1920} viewBox="0 0 1080 1920">
-      <g transform="translate(560 560) scale(4.4)">
-        <Clasp age={1} id="h1" />
-      </g>
-      <g transform="translate(560 1420) scale(4.4)">
-        <Clasp age={0} id="h0" />
-      </g>
-    </svg>
-  </AbsoluteFill>
-);
+const Hero: React.FC = () => {
+  // scale so the age-1 clasp (with its sleeve stubs) spans the frame width, centred on its measured box
+  const s = 5.1;
+  const cx = 540 - ((CLASP_BOX.x0 + CLASP_BOX.x1) / 2) * s;
+  const top1 = 50, top2 = top1 + CLASP_SIZE.h * s + 70;
+  return (
+    <AbsoluteFill style={{background: BG}}>
+      <svg width={1080} height={1920} viewBox="0 0 1080 1920">
+        <g transform={`translate(${cx} ${top1 - CLASP_BOX.y0 * s}) scale(${s})`}>
+          <Clasp age={1} id="h1" />
+        </g>
+        <g transform={`translate(${cx} ${top2 - CLASP_BOX.y0 * s}) scale(${s})`}>
+          <Clasp age={0} id="h0" />
+        </g>
+      </svg>
+    </AbsoluteFill>
+  );
+};
 const Mark: React.FC<{x: number; y: number; c: string}> = ({x, y, c}) => (
   <g>
     <circle cx={x} cy={y} r={4} fill={c} stroke="#000" strokeWidth={1} />
