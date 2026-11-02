@@ -9,7 +9,7 @@ import {BlackHole, bhFrame, hasWide} from '../art/space';
 import * as St from './story';
 import {V2} from './story';
 import {TwoShot, TS} from './twoShot';
-import {Capsule2, Trail} from './craft';
+import {Capsule2, HatchFront, Trail} from './craft';
 import {Cockpit, CockpitFront, COCKPIT_ASTRO, ForeArm, cockpitBhT, cockpitBhUrls} from './cockpit';
 import {cockpitPoseAt, forearmAt, secBlurAtT, watchMinutesAt} from './cockpitShot';
 import {Astronaut, Friend, GLOVE} from '../art/figures';
@@ -19,6 +19,7 @@ import {CAPTIONS} from '../lib';
 import {Expr} from '../art/crew';
 import {YardWorld, YardFore, FENCE_Y} from './backgrounds';
 import {Room, ROOM} from './room';
+import {YardOut, YOUT, NearTrunk} from './yard';
 import {walkFeet, walkBob} from './walk';
 import {Head} from '../art/crew';
 import {GUESSER, HELMET, astroReach, astroHandLocal} from '../art/figures';
@@ -31,15 +32,17 @@ const bhUrls = (t: number) => {
 
 // ---- 1-2: the opening two-shot, the gaze to the visor ------------------------------------------------------------------
 const hookAstroE = (t: number): Expr => {
-  // smile (the photo) -> surprise as his friend ages -> concern at the old hands -> curiosity as he looks up to the visor
+  // smile (the photo) -> surprise as his friend ages -> he looks DOWN at the old hand on his glove (concern) -> his gaze
+  // rises to the visor with the head (awe, not a smile); his blink goes with the head turn
   const sur = ss(t, 0.14, 0.42) * (1 - ss(t, V2.lookHands - 0.05, V2.lookHands + 0.2));
-  const down = ss(t, V2.lookHands - 0.1, V2.lookHands + 0.18) * (1 - ss(t, V2.headTurn, V2.headTurn + 0.3));
+  const down = St.lookDown(t);
   const up = ss(t, V2.headTurn, V2.headTurn + 0.35);
-  const mouth: Expr['mouth'] = t < 0.16 ? 'smile' : sur > 0.4 ? 'o' : up > 0.5 ? 'soft' : 'flat';
+  const mouth: Expr['mouth'] = t < 0.16 ? 'smile' : sur > 0.4 ? 'o' : up > 0.4 ? 'o' : 'flat';
   return {
-    mouth, open: 0.2 + 0.35 * sur,
-    wide: 0.75 * sur + 0.25 * up, brows: 0.9 * sur + 0.45 * up - 0.1 * down, sad: 0.45 * down,
-    lookX: lerp(lerp(0.75, 0.4, down), -0.25, up), lookY: lerp(lerp(0.05, 0.9, down), -1, up), blink: t > 0.9 && t < 0.96 ? 0.15 : 1,
+    mouth, open: sur > 0.4 ? 0.2 + 0.35 * sur : 0.18 * up,
+    wide: 0.75 * sur + 0.4 * up, brows: 0.9 * sur + 0.5 * up - 0.15 * down, sad: 0.5 * down * (1 - up),
+    turn: 0.15 * down * (1 - up), lookX: lerp(lerp(0.75, 0.95, down), -0.2, up), lookY: lerp(lerp(0.05, 1, down), -1, up),
+    blink: t > V2.headTurn + 0.02 && t < V2.headTurn + 0.09 ? 0.15 : 1,
   };
 };
 const hookFriendE = (t: number): Expr => ({mouth: t < 0.16 ? 'smile' : 'soft', lookX: -0.7, lookY: 0.05, brows: 0.1 * ss(t, 0.3, 0.7)});
@@ -95,12 +98,55 @@ function cockpitWorld(t: number, k: string) {
 // ---- 5: the home clock (past room) and the window --------------------------------------------------------------------------
 function roomPastWorld(t: number, k: string) {
   const sc = St.WIN_SC;
-  const view = <g transform={`translate(${St.WIN_CENTRE.x - 540 * sc} ${St.WIN_CENTRE.y - 960 * sc}) scale(${sc})`}>{yardViewA(t, k + 'wv')}</g>;
-  return <Room t={t} id={`${k}rm`} era={0} clockMinutes={St.homeClockMinutes(t)} clockBlur={St.homeClockBlur(t)} windowView={view} />;
+  const view = <g transform={`translate(${St.WIN_CENTRE.x - 540 * sc} ${St.WIN_CENTRE.y - 960 * sc}) scale(${sc})`}>{outPastWorld(t, k + 'wv')}</g>;
+  // days racing past: a window-shaped patch of sunlight sweeps the wall once a "day", and the room dims at each "night"
+  // (a gentle sweep and a low-amplitude dim, at most ~3 cycles a second: no strobing)
+  const dc = St.dayCycle(t);
+  const fr = dc.phase - Math.floor(dc.phase);
+  const px = lerp(1250, -500, fr);
+  const night = 0.5 - 0.5 * Math.cos(2 * Math.PI * dc.phase);
+  return (
+    <g>
+      <Room t={t} id={`${k}rm`} era={0} clockMinutes={St.homeClockMinutes(t)} clockBlur={St.homeClockBlur(t)} windowView={view} glassFade={ss(t, V2.windowPush + 0.02, V2.windowCover - 0.04)} />
+      {dc.k > 0.001 && (
+        <g>
+          <path d={`M ${px} 380 L ${px + 300} 380 L ${px + 120} 1300 L ${px - 180} 1300 Z M ${px + 340} 380 L ${px + 400} 380 L ${px + 220} 1300 L ${px + 160} 1300 Z`} fill="#FFF4D2" opacity={0.2 * dc.k * (1 - night)} />
+          <rect x={-400} y={-300} width={2800} height={2800} fill="#1A2342" opacity={0.16 * dc.k * night} />
+        </g>
+      )}
+    </g>
+  );
 }
-/** the yard through the window at the start of the decades: exactly the decades shot's first frame (camera C_A) */
-function yardViewA(t: number, k: string) {
-  return W(St.C_A, decadesWorld(Math.max(t, V2.windowCover - 0.001), k));
+/** the view out of the window in the past (YardOut view coords): the young friend on the lawn under the window, waving
+ *  up at the sky where the rocket went; the same picture through the glass and, after the push, filling the frame */
+function outPastWorld(t: number, k: string) {
+  const f = St.OUT_FRIEND;
+  const wave = ss(t, V2.windowCover + 0.08, V2.windowCover + 0.28) * (1 - ss(t, V2.wipe1 - 0.18, V2.wipe1 - 0.02));
+  const e: Expr = {mouth: wave > 0.3 ? 'smile' : 'soft', lookX: 0.35, lookY: lerp(-0.2, -0.95, ss(t, V2.windowPush, V2.windowCover + 0.2))};
+  return (
+    <YardOut D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yo`}
+      onLawn={
+        <g transform={`translate(${f.x} ${f.y}) scale(${f.s})`}>
+          <Friend age={0.06 + 0.05 * ss(t, V2.windowCover, V2.wipe1)} pose={{armL: {a: 8, b: 10}, armR: {a: lerp(8, 150, wave), b: lerp(10, 22 + 18 * Math.sin((t - V2.windowCover) * 15), wave)}, e}} id={`${k}yf`} facing={1} green />
+        </g>
+      } />
+  );
+}
+/** the view out of the window in the present: the towers across the road, the capsule parked in the street, his old
+ *  friend waiting at the open gate */
+function outPresentWorld(t: number, k: string) {
+  const C = YOUT.capsule;
+  return (
+    <YardOut D={1} season={0.16} t={t} id={`${k}po`} gateOpen={1}
+      beyondFence={
+        <g>
+          <g transform={`translate(${C.x} ${C.y}) scale(${C.s})`}><Capsule2 t={t} id={`${k}pc`} legs={1} hatch={1} /></g>
+          <g transform={`translate(${YOUT.gateX} ${YOUT.fenceY - 6}) scale(${St.YS * 0.92})`}>
+            <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: {mouth: 'soft', lookX: 0.1, lookY: -0.1}}} id={`${k}pf`} facing={1} green />
+          </g>
+        </g>
+      } />
+  );
 }
 
 // ---- 10-12: the family room, present -----------------------------------------------------------------------------------------
@@ -156,14 +202,14 @@ function roomPresentWorld(t: number, k: string) {
   const reflNode = ro > 0.001 ? (
     <g>
       <clipPath id={`${k}rgl`}><rect x={G.x} y={G.y} width={G.w} height={G.h} /></clipPath>
-      <g clipPath={`url(#${k}rgl)`} style={{mixBlendMode: 'screen'}} opacity={ro}>
+      <g style={{mixBlendMode: 'screen'}} opacity={ro}><g clipPath={`url(#${k}rgl)`}>
         {/* the room's window behind him, with the changed skyline (towers), reflected around his head */}
         <rect x={RSp.x - 70} y={G.y - 2} width={120} height={G.h * 0.5} fill="#6F8796" opacity={0.5} />
         {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - 62 + i * 36} y={G.y + 10 + 9 * (i % 2)} width={13} height={G.h * 0.42} rx={2} fill="#7F9DB0" opacity={0.6} />)}
         <g transform={`translate(${RSp.x + St.REFL_DX} ${RSp.y + St.REFL_DY - HEAD_Y_RIG * hs + rb}) scale(${hs})`}>
           <Astronaut pose={{armL: {a: 6, b: 8}, armR: {a: 6, b: 8}, e: reflE(t)}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} shadow={false} />
         </g>
-      </g>
+      </g></g>
     </g>
   ) : null;
   // his watch beside the photograph (one hour on his wrist; a whole life in the frame)
@@ -172,7 +218,7 @@ function roomPresentWorld(t: number, k: string) {
   const photoView = W(St.CAM_CLOSE, hookWorld(0, k + 'pv', true));
   return (
     <g>
-      <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={yardPresentView(t, k + 'wv')} />
+      <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={<g transform={`translate(${St.WIN_CENTRE.x - 540 * St.WIN_SC} ${St.WIN_CENTRE.y - 960 * St.WIN_SC}) scale(${St.WIN_SC})`}>{outPresentWorld(t, k + 'wv')}</g>} />
       {reflNode}
       {(t < V2.photoClose + 0.2) && (
         <g transform={`translate(${x} ${ROOM.floor}) scale(${St.RS})`}>
@@ -208,36 +254,48 @@ function yardPresentView(t: number, k: string) {
 // ---- 6-9: the yard: decades, the return, the reunion, the way to the door ------------------------------------------------
 /** the capsule's glint crossing high overhead and its shadow sweeping over the friend (what makes him look up) */
 function overheadSign(t: number) {
-  const u = (t - (V2.lightPass - 0.12)) / 0.5;
+  const u = (t - (V2.lightPass - 0.1)) / 0.42;
   if (u <= 0 || u >= 1) return null;
   const sx = lerp(1700, 700, u), sy = lerp(260, 420, u);
   const shx = lerp(1550, 950, u);
+  const k = Math.sin(Math.PI * u);
+  // the returning capsule's shadow sweeps over the yard and over him (a broad soft band, ~20% darker), with a glint above
+  const bx = lerp(2000, 300, u);
   return (
     <g>
-      <path d={`M ${sx + 140} ${sy - 30} L ${sx} ${sy}`} stroke="#FFF3D6" strokeWidth={10} strokeLinecap="round" opacity={0.75 * Math.sin(Math.PI * u)} />
-      <circle cx={sx} cy={sy} r={14} fill="#FFFBF0" opacity={Math.sin(Math.PI * u)} />
-      <ellipse cx={shx} cy={St.FEET + 4} rx={230} ry={26} fill="#162A32" opacity={0.18 * Math.sin(Math.PI * u)} />
+      <defs>
+        <linearGradient id="ovh-band" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0" stopColor="#14222B" stopOpacity={0} />
+          <stop offset="0.5" stopColor="#14222B" stopOpacity={1} />
+          <stop offset="1" stopColor="#14222B" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect x={bx - 420} y={-600} width={840} height={2800} fill="url(#ovh-band)" opacity={0.24 * k} />
+      <ellipse cx={shx} cy={St.FEET + 4} rx={330} ry={34} fill="#162A32" opacity={0.22 * k} />
+      <path d={`M ${sx + 160} ${sy - 34} L ${sx} ${sy}`} stroke="#FFF3D6" strokeWidth={12} strokeLinecap="round" opacity={0.85 * k} />
+      <circle cx={sx} cy={sy} r={18} fill="#FFFBF0" opacity={k} />
+      <circle cx={sx} cy={sy} r={40} fill="#FFF3D6" opacity={0.35 * k} />
     </g>
   );
 }
 function decadesWorld(t: number, k: string) {
   const f = St.friendYard(t);
   const st = St.yardStage(t);
-  const e: Expr = st === 0 ? {mouth: 'soft', lookX: 0.2, lookY: lerp(0.1, -0.9, ss(t, V2.windowCover + 0.15, V2.windowCover + 0.45))} : st === 1 ? {mouth: 'flat', lookX: 0.6, lookY: 0.1} : {mouth: 'soft', lookX: -0.6, lookY: lerp(0.1, -1, ss(t, V2.lookUp, V2.lookUp + 0.2))};
+  const e: Expr = st === 0 ? {mouth: 'soft', lookX: 0.2, lookY: lerp(0.1, -0.9, ss(t, V2.windowCover + 0.15, V2.windowCover + 0.45))} : st === 1 ? {mouth: 'flat', lookX: 0.6, lookY: 0.1} : {mouth: ss(t, V2.lookUp, V2.lookUp + 0.15) > 0.5 ? 'o' : 'soft', open: 0.25, lookX: lerp(-0.6, -0.2, ss(t, V2.lookUp - 0.04, V2.lookUp + 0.16)), lookY: lerp(0.1, -1, ss(t, V2.lookUp - 0.04, V2.lookUp + 0.16)), brows: 0.6 * ss(t, V2.lookUp - 0.04, V2.lookUp + 0.16), wide: 0.4 * ss(t, V2.lookUp, V2.lookUp + 0.16)};
   // the young friend waves up at the sky, where the rocket went (stage A); later stages keep their arms down
   const wave = st === 0 ? ss(t, V2.windowCover + 0.12, V2.windowCover + 0.32) * (1 - ss(t, V2.wipe1 - 0.2, V2.wipe1 - 0.04)) : 0;
   const waveArm = {a: lerp(8, 150, wave), b: lerp(10, 22 + 18 * Math.sin((t - V2.windowCover) * 15), wave)};
   const fig = (
     <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
-      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: waveArm, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
+      <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: waveArm, e, walk: f.walk, stride: f.stride, lean: st === 2 ? -6 * ss(t, V2.lookUp - 0.04, V2.lookUp + 0.16) : 0}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
     </g>
   );
   const behind = f.y < FENCE_Y;
   return (
     <g>
-      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} layer="back" />
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} layer="back" gateOpen={st === 2 ? 1 : 0} />
       {behind && fig}
-      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yf`} layer="front" />
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yf`} layer="front" gateOpen={st === 2 ? 1 : 0} />
       {!behind && fig}
       {overheadSign(t)}
     </g>
@@ -247,32 +305,49 @@ function returnWorld(t: number, k: string) {
   const cap = St.capsuleYard(t);
   const look = ss(t, V2.lookUp, V2.lookUp + 0.2);
   const follow = ss(t, V2.descentStart + 0.3, V2.landing);
-  const meet = ss(t, V2.stepDown, V2.arrive);
-  const fe: Expr = {mouth: meet > 0.5 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet, brows: 0.6 * meet};
+  const meet = ss(t, V2.stepDown + 0.12, V2.arrive);
+  // the landing's blast: he leans back and half-turns from it (12.1-12.45)
+  const blast = ss(t, V2.landing - 0.22, V2.landing) * (1 - ss(t, V2.landing + 0.12, V2.landing + 0.4));
+  const fe: Expr = {mouth: meet > 0.5 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet + 0.3 * blast, brows: 0.6 * meet + 0.4 * blast, blink: blast > 0.6 ? 0.25 : 1};
   const ax = St.astroReturnX(t);
-  const out = t >= V2.stepOut - 0.12;
+  const out = t >= V2.hatch + 0.05;
   const walking = t > V2.stepDown && t < V2.arrive;
   const dist = (ax - St.HATCH_W.x) / St.YS;
-  const ae: Expr = {lookX: lerp(0.3, 0.8, meet), lookY: lerp(-0.4, 0.05, ss(t, V2.stepDown, V2.walkToFriend)), wide: 0.35, brows: 0.4 * (1 - meet) + 0.2, mouth: 'soft', turn: 0.2};
+  // he looks up at the house and the changed street (recognition) before his eyes find his friend
+  const house = ss(t, V2.stepDown - 0.04, V2.stepDown + 0.06) * (1 - ss(t, V2.stepDown + 0.2, V2.stepDown + 0.32));
+  const ae: Expr = {lookX: lerp(lerp(0.3, 0.55, house), 0.8, meet), lookY: lerp(lerp(-0.2, -0.9, house), 0.05, meet), wide: 0.35 + 0.3 * house, brows: 0.3 + 0.35 * house, mouth: house > 0.5 ? 'o' : 'soft', open: 0.2, turn: 0.2};
   const H = St.HATCH_W;
+  const astro = out ? (
+    <g transform={`translate(${ax} ${St.astroReturnFeet(t)}) scale(${St.YS})`}>
+      <Astronaut pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: ae}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(walking ? dist : 0, walking ? 1 : 0)} shadow={!St.inHatch(t)} />
+    </g>
+  ) : null;
+  const capT = `translate(${cap.x} ${cap.y}) scale(${St.CAP_S})`;
+  // contact shadow under the descending capsule, growing and darkening into the touchdown
+  const sh = ss(t, V2.descentStart, V2.landing);
+  // touchdown: a puff of dust and petals at the leg pads
+  const puff = clamp((t - V2.landing) / 0.4);
   return (
     <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} />
-      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
-        <Friend age={1} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e: fe}} id={`${k}fr`} facing={-1} green />
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={1} />
+      {t > V2.descentStart && <ellipse cx={St.LAND.x} cy={St.LAND.y + 4} rx={lerp(60, 260, sh)} ry={lerp(10, 34, sh)} fill="#1B2A33" opacity={0.08 + 0.22 * sh} />}
+      <g transform={capT}>
+        <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} />
       </g>
-      {out && (
+      {puff > 0 && puff < 1 && [-1, 1].map((sd) => [0, 1, 2, 3].map((q) => {
+        const px = St.LAND.x + sd * (190 + 40 * q * puff), py = St.LAND.y + 10 - 26 * q * puff * (1 - 0.4 * q);
+        return <circle key={`${sd}${q}`} cx={px} cy={py} r={(18 + 10 * q) * (0.4 + puff)} fill={q === 3 ? '#F4B7C8' : '#D8D2C6'} opacity={0.55 * (1 - puff)} />;
+      }))}
+      {St.inHatch(t) && astro && (
         <g>
-          <clipPath id={`${k}hc`}><ellipse cx={H.x} cy={H.y} rx={H.rx} ry={H.ry} /><rect x={H.x + H.rx * 0.2} y={-4000} width={8000} height={8000} /></clipPath>
-          <g clipPath={t < V2.stepDown + 0.1 ? `url(#${k}hc)` : undefined}>
-            <g transform={`translate(${ax} ${St.astroReturnFeet(t)}) scale(${St.YS})`}>
-              <Astronaut pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: ae}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(walking ? dist : 0, walking ? 1 : 0)} />
-            </g>
-          </g>
+          <clipPath id={`${k}hc`}><ellipse cx={H.x} cy={H.y} rx={H.rx - 3} ry={H.ry - 3} /></clipPath>
+          <g clipPath={`url(#${k}hc)`}>{astro}</g>
+          <g transform={capT}><HatchFront hatch={cap.hatch} /></g>
         </g>
       )}
-      <g transform={`translate(${cap.x} ${cap.y}) scale(${St.CAP_S})`}>
-        <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} />
+      {!St.inHatch(t) && astro}
+      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={1} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e: fe, lean: -5 * blast}} id={`${k}fr`} facing={-1} green />
       </g>
     </g>
   );
@@ -291,10 +366,11 @@ const reunionAstroE = (t: number): Expr => {
 };
 const reunionFriendE = (t: number): Expr => ({mouth: t > V2.recognise - 0.1 ? 'smile' : 'soft', lookX: -0.7, lookY: lerp(0, 0.6, ss(t, V2.toHands + 0.1, V2.toHands + 0.35)), brows: 0.15, sad: 0.25});
 function reunionWorld(t: number, k: string) {
-  const u = ss(t, V2.arrive - 0.05, V2.clasp);
+  // the friend reaches for the glove (~8 frames), holds, and lets go just before his gesture to the door (~6 frames)
+  const u = ss(t, V2.arrive - 0.12, V2.clasp + 0.02) * (1 - ss(t, V2.gesture - 0.2, V2.gesture));
   return (
     <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} />
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={1} />
       <TwoShot age={1} id={`${k}ts`} frame={Math.round(t * 30)} clasp={u} squeeze={ss(t, V2.recognise, V2.recognise + 0.3) * 0.7} astroE={reunionAstroE(t)} friendE={reunionFriendE(t)} />
     </g>
   );
@@ -305,26 +381,31 @@ function doorWorld(t: number, k: string) {
   const ax = a.x;
   const walking = t > V2.walkStart;
   const dist = Math.hypot(ax - TS.ax, a.y - St.FEET) / St.YS;
-  const gestureArm = {a: lerp(30, 72, g), b: lerp(30, 10, g)};
+  const gestureArm = {a: lerp(6, 72, g), b: lerp(8, 10, g)}; // from the rest pose the release ends in
   const fe: Expr = {mouth: 'soft', lookX: lerp(-0.7, 0.8, g), lookY: -0.1, turn: 0.3 * g, brows: 0.15, sad: 0.2};
-  const ae: Expr = {lookX: lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), lookY: lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), turn: 0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), sad: 0.35, brows: 0.25, mouth: 'flat'};
-  const swing = walking ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
+  // up the path he turns toward the door (face to the side: walking away, not backing in)
+  const away = ss(t, V2.walkStart + 0.15, V2.walkStart + 0.4);
+  const ae: Expr = {lookX: lerp(lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), 1, away), lookY: lerp(lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), -0.2, away), turn: lerp(0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), 0.9, away), sad: 0.35, brows: 0.25, mouth: 'flat'};
+  const swing = walking && t < V2.atDoor ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
+  // at the porch his right glove pushes the door; it swings in
+  const push = ss(t, V2.atDoor - 0.14, V2.atDoor) * (1 - ss(t, V2.doorPass, V2.doorPassEnd));
   const astroBehind = a.y < FENCE_Y;
-  const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.walkStart + 0.2, V2.doorPass), gateOpen: ss(t, V2.gesture, V2.walkStart + 0.15)};
+  const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.atDoor - 0.08, V2.doorPass + 0.04), gateOpen: 1};
   const astro = (
       <g transform={`translate(${ax} ${a.y}) scale(${a.s})`}>
-        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: 10 - swing, b: 16}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
+        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: lerp(10 - swing, -95, push), b: lerp(16, 30, push)}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
       </g>
   );
+  // draw order: the friend stays in front of the astronaut throughout (as in the two-shot), so nothing flips
   return (
     <g>
       <YardWorld {...yd} id={`${k}yd`} layer="back" />
       {astroBehind && astro}
       <YardWorld {...yd} id={`${k}yf`} layer="front" />
-      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
-        <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
-      </g>
       {!astroBehind && astro}
+      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={1} pose={{armL: {a: 6, b: 8}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
+      </g>
     </g>
   );
 }
@@ -358,9 +439,15 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
   } else if (t < V2.windowCover) {
     body = W(St.camRoomPast(t), roomPastWorld(t, 'D'));
   } else if (t < V2.lightPass) {
-    body = W(St.camDecades(t), decadesWorld(t, 'E'));
     const cd = St.camDecades(t);
-    overlay = <YardFore t={t} camX={cd.x} zoom={St.FG_ZOOM} D={St.yardD(t)} season={St.yardSeason(t)} trunkX={St.FG_TRUNK_X} leavesX={St.FG_LEAVES_X} />;
+    body = St.yardStage(t) === 0 ? W(St.camOut(t), outPastWorld(t, 'E')) : W(cd, decadesWorld(t, 'E'));
+    const nx = St.nearTrunkX(t);
+    overlay = (
+      <g>
+        <YardFore t={t} camX={cd.x} zoom={St.FG_ZOOM} D={St.yardD(t)} season={St.fgSeason(t)} trunkX={St.FG_TRUNK_X} leavesX={St.FG_LEAVES_X} />
+        {nx > -800 && nx < 1880 && <NearTrunk cx={nx} D={St.yardD(t)} season={0.2} id={`${fkey}nt`} />}
+      </g>
+    );
   } else if (t < V2.arrive) {
     body = W(St.camReturn(t), t < V2.descentStart ? decadesWorld(t, 'E') : returnWorld(t, 'G'));
   } else if (t < V2.gesture) {
@@ -371,10 +458,10 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     const xj = St.jambX(t);
     body = (
       <g>
-        <clipPath id="jl"><rect x={-10} y={-10} width={xj + 10} height={1940} /></clipPath>
-        <clipPath id="jr"><rect x={xj} y={-10} width={1200} height={1940} /></clipPath>
-        <g clipPath="url(#jl)">{W(St.camDoor(t), doorWorld(t, 'I'))}</g>
-        <g clipPath="url(#jr)">{W(St.camRoom(t), roomPresentWorld(t, 'F'))}</g>
+        <clipPath id={`${fkey}jl`}><rect x={-10} y={-10} width={xj + 10} height={1940} /></clipPath>
+        <clipPath id={`${fkey}jr`}><rect x={xj} y={-10} width={1200} height={1940} /></clipPath>
+        <g clipPath={`url(#${fkey}jl)`}>{W(St.camDoor(t), doorWorld(t, 'I'))}</g>
+        <g clipPath={`url(#${fkey}jr)`}>{W(St.camRoom(t), roomPresentWorld(t, 'F'))}</g>
         <Jamb x={xj} />
       </g>
     );

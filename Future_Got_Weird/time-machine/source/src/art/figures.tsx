@@ -174,6 +174,9 @@ export const Astronaut: React.FC<{
   );
 };
 
+/** above this reflection opacity the reflection also draws with normal blend (it becomes the view); kept close to 1 so the
+ *  dark shadow never sits half-transparent over his face for more than a couple of frames */
+export const REFL_OPAQUE = 0.97;
 /** clear bubble helmet: glass tint, the reflection (a portal into another world, clipped to the glass), highlights */
 export const Helmet: React.FC<{id: string; reflection?: React.ReactNode; reflOpacity?: number; tint?: number}> = ({id, reflection, reflOpacity = 0.45, tint = 1}) => {
   const {cx, cy, r} = HELMET;
@@ -182,13 +185,15 @@ export const Helmet: React.FC<{id: string; reflection?: React.ReactNode; reflOpa
       <circle cx={cx} cy={cy} r={r} fill={`rgba(190,225,255,${0.1 * tint})`} />
       {/* a reflection on glass adds light (screen blend: the dark sky reflects nothing, the bright disk does); near a
           portal hand-off it becomes the whole view (normal blend) */}
+      {/* blend on the outer group, clip on the inner one: with both on one element Chrome lets large images escape the
+          clip (the reflection's starfield leaked outside the glass) */}
       {reflection && reflOpacity < 0.999 && (
-        <g clipPath={`url(#${id}-glass)`} opacity={Math.min(1, reflOpacity * 1.6)} style={{mixBlendMode: 'screen'}}>
-          {reflection}
+        <g opacity={Math.min(1, reflOpacity * 1.6)} style={{mixBlendMode: 'screen'}}>
+          <g clipPath={`url(#${id}-glass)`}>{reflection}</g>
         </g>
       )}
-      {reflection && reflOpacity > 0.8 && (
-        <g clipPath={`url(#${id}-glass)`} opacity={Math.min(1, (reflOpacity - 0.8) / 0.2)}>
+      {reflection && reflOpacity > REFL_OPAQUE && (
+        <g clipPath={`url(#${id}-glass)`} opacity={Math.min(1, (reflOpacity - REFL_OPAQUE) / (1 - REFL_OPAQUE))}>
           {reflection}
         </g>
       )}

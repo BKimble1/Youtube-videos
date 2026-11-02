@@ -103,6 +103,20 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
 /** the pass around the hole (space units M; hole at origin; the lensed disk reaches x +-17.5, y -9..+9 around the
  *  shadow): an arc centred on the hole, radius 26 M, from the left (175 deg) over the top (270) to the right (365),
  *  >= 8 M from any disk pixel. ang = heading (deg, screen), nose leads; scale = capsule height in M. */
+/** the hatch's rim and its door (folded toward its hinge by `hatch`), capsule-local units: drawn over a figure standing in
+ *  the opening, so he is inside the capsule, in front of the dark interior and behind the rim */
+export const HatchFront: React.FC<{hatch: number}> = ({hatch}) => {
+  const H = CAPSULE2.hatch;
+  return (
+    <g>
+      <ellipse cx={H.x} cy={H.y} rx={H.rx} ry={H.ry} fill="none" stroke={INK} strokeWidth={OUT} />
+      <g transform={`translate(${H.x - H.rx} 0) scale(${1 - 0.9 * hatch} 1) translate(${-(H.x - H.rx)} 0)`}>
+        <ellipse cx={H.x} cy={H.y} rx={H.rx} ry={H.ry} fill={HULL_DEEP} stroke={INK} strokeWidth={OUT} />
+        <ellipse cx={H.x} cy={H.y} rx={H.rx - 16} ry={H.ry - 16} fill="none" stroke={INK} strokeWidth={2.5} opacity={0.45} />
+      </g>
+    </g>
+  );
+};
 /** the flight around the hole (M; the hole at the origin): an elliptical arc over the top of the hole, clear of the shadow
  *  and the disk, small enough to stay inside the 9:16 frame at the space camera's ~40 px/M (rx 420 px, ry 600 px).
  *  u 0.12 enters at the left above the disk, u ~0.4 crosses over the top, u 0.66 is on the right where the approach begins. */

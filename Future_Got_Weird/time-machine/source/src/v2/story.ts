@@ -24,7 +24,10 @@ export const hookAge = (t: number) => {
 /** the hook's background time (street advances subtly) */
 export const hookD = (t: number) => ss(t, 0.05, 0.85);
 /** head tilt as his gaze rises from the hands to the visor */
-export const headTilt = (t: number) => -9 * ss(t, V2.headTurn, V2.headTurn + 0.45);
+/** his look down at the aged hand on his glove (0..1), held until his head turns up */
+export const lookDown = (t: number) => ss(t, V2.lookHands - 0.08, V2.lookHands + 0.16) * (1 - ss(t, V2.headTurn, V2.headTurn + 0.3));
+/** head tilt (deg): toward the hand while he looks down, then back and up to the visor */
+export const headTilt = (t: number) => 7 * lookDown(t) - 9 * ss(t, V2.headTurn, V2.headTurn + 0.45);
 /** the visor reflection: head-local placement (helmet centre), scale (head units per M) chosen so the hole fills the
  *  glass and the following space shot starts at >= 30 px/M */
 export const VREFL = {rx: 0, ry: -8, k: 5.6};
@@ -71,7 +74,9 @@ export const capsuleSpace = (t: number) => {
   const k = Math.exp(Math.log(APPROACH_GAIN) * Math.pow(g, 1.9)); // perspective growth as it nears the camera
   const cam = camSpace(t);
   const sM = p.scale / CAPSULE2.height; // M per capsule unit
-  const rotation = lerp(noseRot(p.ang), 0, ss(t, V2.approach, V2.approach + 0.55));
+  // wrap the nose angle to (-180, 180] so the turn toward camera is one short banking turn, never a spin
+  const nr = ((((noseRot(p.ang) + 180) % 360) + 360) % 360) - 180;
+  const rotation = lerp(nr, 0, ss(t, V2.approach, V2.approach + 0.55));
   const bank = Math.sin(Math.PI * ss(t, V2.approach, V2.windowPass)) * 0.7;
   // the window glass slides to the screen centre as it grows
   const ra = (rotation * Math.PI) / 180;
@@ -105,20 +110,43 @@ const CAM_CLOCK: Cam = {x: ROOM.clock.x - (WATCH_SCREEN.x - 540) / ZC, y: ROOM.c
 /** the window glass as a portal: a 1080x1920 view of the yard scaled to the glass height, centred on the glass */
 export const WIN_SC = ROOM.win.h / 1920;
 export const WIN_CENTRE = {x: ROOM.win.cx, y: ROOM.win.cy};
+/** the push ends INSIDE the lower-left pane (the one his young friend is seen through): at Z_PANE the pane fills the
+ *  frame and the mullion, transom, casing and sill are all just off screen, so the hand-off to the view outside shows
+ *  no window frame */
+export const PANE = {x: 743, y: (ROOM.win.transomY + 7 + ROOM.win.y1) / 2 - 12};
+export const Z_PANE = 7.3;
 export const camRoomPast = (t: number): Cam =>
   keyCam(t, [
     [V2.matchCut, CAM_CLOCK],
     [V2.panToWindow, {...CAM_CLOCK, z: ZC * 0.97}],
-    [V2.windowPush, {x: WIN_CENTRE.x, y: WIN_CENTRE.y, z: 2.15}],
-    [V2.windowCover, {x: WIN_CENTRE.x, y: WIN_CENTRE.y, z: 1 / WIN_SC}],
+    [V2.windowPush, {x: (WIN_CENTRE.x + PANE.x) / 2, y: (WIN_CENTRE.y + PANE.y) / 2, z: 2.3}],
+    [V2.windowCover, {x: PANE.x, y: PANE.y, z: Z_PANE}],
   ]);
+/** the view out of the window (YardOut view coords): the camera that continues the push's last frame exactly, then
+ *  drifts gently while the young friend waves at the sky */
+const CAM_OUT0: Cam = {x: (PANE.x - (WIN_CENTRE.x - 540 * WIN_SC)) / WIN_SC, y: (PANE.y - (WIN_CENTRE.y - 960 * WIN_SC)) / WIN_SC, z: Z_PANE * WIN_SC};
+export const camOut = (t: number): Cam => keyCam(t, [[V2.windowCover, CAM_OUT0], [V2.wipe1 + 0.05, {x: CAM_OUT0.x + 70, y: CAM_OUT0.y - 24, z: CAM_OUT0.z * 1.05}]]);
+/** the young friend in the view out of the window: on the lawn below the window, just inside the fence */
+export const OUT_FRIEND = {x: 205, y: 1615, s: 0.62 * 1.3};
+/** the tree trunk that crosses the lens at the cut from the window's view to the street side (screen x of its centre):
+ *  centred on frame 300 (the first street-side frame), when its 1320 px fully covers the 1080 px frame */
+export const NEAR_TRUNK_T = 10.0;
+export const nearTrunkX = (t: number) => 540 - (t - NEAR_TRUNK_T) * 8100;
 /** the home clock races (years); minutes after 12:00 */
 export const homeClockMinutes = (t: number) => {
-  // matches the watch at the cut (11:00), then races: hour hand ~ one turn a second by the window (years)
+  // matches the watch at the cut (11:00), then races from the cut: the hour hand makes a full turn by +0.15 s and
+  // keeps accelerating to ~55 turns a second (smeared to discs) - years, against the watch's single hour
   const x = Math.max(0, t - V2.matchCut);
-  return 660 + 60 * (2.5 * x * x + 4 * Math.max(0, x - 0.25) ** 2);
+  const K = 720 / 0.15 ** 3;
+  return 660 + (x < 0.25 ? K * x ** 3 : K * 0.25 ** 3 + 3 * K * 0.25 ** 2 * (x - 0.25));
 };
-export const homeClockBlur = (t: number) => ss(t, V2.matchCut + 0.08, V2.matchCut + 0.45);
+export const homeClockBlur = (t: number) => ss(t, V2.matchCut + 0.05, V2.matchCut + 0.22);
+/** days racing past in the room: phase of the sun patch sweeping the wall (cycles), and the strength of the effect
+ *  (none at the cut, none again by the time the window view fills the frame, so both ends match their neighbours) */
+export const dayCycle = (t: number) => {
+  const x = Math.max(0, t - V2.matchCut - 0.08);
+  return {phase: 0.4 + 2.4 * x + 1.2 * x * x, k: ss(t, V2.matchCut + 0.08, V2.matchCut + 0.3) * (1 - ss(t, V2.windowPush - 0.15, V2.windowCover - 0.06))};
+};
 
 // ---- 10-12: the family room (present) ---------------------------------------------------------------------------------
 export const RS = ROOM.figScale; // astronaut scale in the room
@@ -159,7 +187,7 @@ export const printGlass = (t: number) => 1 - ss(t, V2.photoPush + 0.5, DUR - 1 /
 /** his reflection on the family photo's glass: rig scale and offset of his head from ROOM.photoFamily.reflSpot */
 export const REFL_S = 0.5, REFL_DX = 4, REFL_DY = 6;
 /** his reflection on the family photo's glass */
-export const reflOpRoom = (t: number) => 0.9 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
+export const reflOpRoom = (t: number) => 0.78 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
 
 // ---- 6: decades in the yard ---------------------------------------------------------------------------------------------
 // The camera trucks right across the same yard; the foreground trunk and leaves pass the lens and hide each jump.
@@ -170,10 +198,15 @@ export const C_A: Cam = {x: 1000, y: 1300, z: 1.62};
 export const yardStage = (t: number) => (t < V2.wipe1 ? 0 : t < V2.wipe2 ? 1 : 2);
 export const yardD = (t: number) => lerp(0.04, 1, ss(t, V2.windowCover - 0.1, 11.0));
 export const yardSeason = (t: number) => {
-  // spring -> summer -> autumn -> winter -> the spring of his return, one continuous cycle
-  const u = clamp((t - (V2.windowCover - 0.1)) / (11.1 - V2.windowCover + 0.1));
-  return ((lerp(0.0, 1.16, u) % 1) + 1) % 1;
+  // A: blossom into fresh green; B (from the trunk wipe, which only covers the frame centre, so its season continues A's)
+  // summer turning to autumn, leaves falling; C (from the leaf-mass wipe, which covers the whole frame) the spring of
+  // his return. Never bare or snowy: no season ever pops or dissolves in view.
+  if (t < V2.wipe1) return lerp(0.05, 0.2, ss(t, V2.windowCover - 0.1, V2.wipe1));
+  if (t < V2.wipe2) return lerp(0.21, 0.63, ss(t, V2.wipe1, V2.wipe2 - 0.02));
+  return lerp(0.1, 0.16, ss(t, V2.wipe2, 11.1));
 };
+/** the foreground pieces keep one season for their whole pass (no colour change while they fill the frame) */
+export const fgSeason = (t: number) => (t < (V2.wipe1 + V2.wipe2) / 2 ? 0.2 : 0.6);
 /** the friend through the decades: age, x, walking */
 export const LAWN_Y = 1478; // feet on the lawn near the tree (behind the fence line)
 export const friendYard = (t: number) => {
@@ -181,8 +214,9 @@ export const friendYard = (t: number) => {
   if (st === 0) return {age: 0.06 + 0.05 * ss(t, V2.windowCover, V2.wipe1), x: 965, y: LAWN_Y, walk: 0, stride: 0};
   if (st === 1) {
     const u = ss(t, V2.wipe1 + 0.02, V2.wipe2 - 0.02);
-    const x = lerp(1040, 1175, u);
-    return {age: 0.47 + 0.07 * u, x, y: lerp(LAWN_Y + 30, 1560, u), walk: ((x - 1040) / (YS * 100)) * Math.PI, stride: 1};
+    // across the lawn toward the gate, stopping short of the arbour's left post (x ~1107) so his face is never behind it
+    const x = lerp(905, 1052, u);
+    return {age: 0.47 + 0.07 * u, x, y: lerp(LAWN_Y + 24, LAWN_Y + 58, u), walk: ((x - 905) / (YS * 100)) * Math.PI, stride: 1 - ss(u, 0.85, 1)};
   }
   return {age: 0.97 + 0.03 * ss(t, V2.wipe2, 11.0), x: TS.fx, y: FEET, walk: 0, stride: 0};
 };
@@ -200,8 +234,14 @@ export const capsuleYard = (t: number) => {
 };
 export const HATCH_W = {x: LAND.x + CAPSULE2.hatch.x * CAP_S, y: LAND.y + CAPSULE2.hatch.y * CAP_S, rx: CAPSULE2.hatch.rx * CAP_S, ry: CAPSULE2.hatch.ry * CAP_S};
 /** the astronaut steps out of the hatch, down to the pavement, and walks to his friend (feet y follows the ground) */
-export const astroReturnX = (t: number) => keyS(t, [[V2.stepOut, HATCH_W.x - 10], [V2.stepDown, HATCH_W.x + 70], [V2.arrive, TS.ax]], (x) => x * x * (3 - 2 * x));
-export const astroReturnFeet = (t: number) => lerp(LAND.y + CAPSULE2.sill * CAP_S + 6, FEET, ss(t, V2.stepOut + 0.05, V2.walkToFriend + 0.1));
+/** he appears in the open hatch, steps forward over the sill and DOWN onto the road in front of the capsule, then walks
+ *  right and up onto the pavement to his friend */
+export const SILL_Y = LAND.y + CAPSULE2.sill * CAP_S + 6;
+export const ROAD_Y = LAND.y + 24;
+export const astroReturnX = (t: number) => keyS(t, [[V2.stepOut, HATCH_W.x], [V2.stepDown, HATCH_W.x + 46], [V2.arrive, TS.ax]], (x) => x * x * (3 - 2 * x));
+export const astroReturnFeet = (t: number) => t < V2.stepDown ? lerp(SILL_Y, ROAD_Y, ss(t, V2.stepOut + 0.06, V2.stepDown)) : lerp(ROAD_Y, FEET, ss(t, V2.stepDown + 0.04, V2.arrive - 0.06));
+/** inside the capsule (drawn within the hatch opening) until he steps forward past the hull */
+export const inHatch = (t: number) => t < V2.stepOut + 0.06;
 export const camReturn = (t: number): Cam => {
   const cy = capsuleYard(t).y;
   return keyCam(t, [
@@ -218,8 +258,9 @@ export const camReturn = (t: number): Cam => {
 import {yardPath} from './yard';
 /** his walk to the door: to the gate, then up the garden path (feet on the path, a little smaller with depth) */
 export const astroDoor = (t: number) => {
-  const u = ss(t, V2.walkStart, V2.doorPassEnd + 0.1) ** 0.9;
-  const p = yardPath(Math.min(0.92, u * 1.0));
+  // to the porch step by atDoor, then one more step into the doorway as the jamb passes
+  const u = t < V2.atDoor ? 0.97 * ss(t, V2.walkStart, V2.atDoor) ** 0.92 : lerp(0.97, 1, ss(t, V2.atDoor, V2.doorPassEnd));
+  const p = yardPath(u);
   const lead = clamp(u * 6); // the first steps take him from his spot onto the path
   return {x: lerp(TS.ax, p.x, lead), y: lerp(FEET, p.y, lead), s: YS * lerp(1, p.depth, lead), u};
 };
@@ -250,7 +291,7 @@ export const camRoom = (t: number): Cam => (t < V2.doorPassEnd ? camRoomMatched(
 import {footfalls} from './walk';
 export const FRIEND_STEPS = footfalls((t) => friendYard(t).x, V2.wipe1 + 0.02, V2.wipe2 - 0.02, YS);
 export const ASTRO_STEPS = [V2.stepDown, ...footfalls(astroReturnX, V2.stepDown + 0.05, V2.arrive, YS)];
-export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.doorPassEnd, YS * 0.96);
+export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.atDoor + 0.02, YS * 0.96);
 export const ROOM_STEPS = footfalls(roomAstroX, V2.doorPassEnd, V2.roomStop, RS);
 /** the capsule's screen side through the flight (-1 left .. 1 right) */
 export const capsulePanTrack = () => {
@@ -270,6 +311,7 @@ export const camDecades = (t: number): Cam =>
     [11.25, {x: 1250, y: 1360, z: 1.52}],
   ]);
 /** the foreground trunk and leaves are tied to the camera x at each wipe, so each fully covers the friend then */
-export const FG_TRUNK_X = camDecades(V2.wipe1).x, FG_LEAVES_X = camDecades(V2.wipe2).x;
+// the street-side foreground trunk is retired (the near trunk at the window-view cut replaces it): parked far off-world
+export const FG_TRUNK_X = -100000, FG_LEAVES_X = camDecades(V2.wipe2).x;
 /** the near-camera pieces' parallax gain: high, so each sweeps across the frame in ~0.4 s and covers only briefly */
 export const FG_ZOOM = 14;

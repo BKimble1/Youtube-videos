@@ -32,6 +32,7 @@ export const solveClasp = (age: number, u: number, p: TwoShotPos = TS) => {
   // two passes: aim at the default attach points, measure the forearm angles, aim again
   let ang = {...CLASP_DEFAULTS};
   let armR: ArmA = {a: 10, b: 12}, fL: ArmA = {a: 8, b: 10}, fR: ArmA = {a: 8, b: 10};
+  let aTl = {x: 0, y: 0}, oTl = {x: 0, y: 0}, uTl = {x: 0, y: 0}, shXl = SHOULDER_X, shYl = SHOULDER_Y;
   for (let pass = 0; pass < 2; pass++) {
     const at = claspAttach(ang.astroAngle, ang.overAngle, ang.underAngle);
     // astronaut right arm (rig side +1): local target
@@ -47,6 +48,15 @@ export const solveClasp = (age: number, u: number, p: TwoShotPos = TS) => {
     const uT = toF(c.x + S * at.underWrist.x, c.y + S * at.underWrist.y);
     fL = reach(oT.x, oT.y, -1, -1, shX, shY);
     fR = reach(uT.x, uT.y, 1, 1, shX, shY);
+    aTl = aT; oTl = oT; uTl = uT; shXl = shX; shYl = shY;
+    // during the reach the rig hands aim past the wrist points toward the middle of the clasp, where the clasp drawing's
+    // hands will be, so the contact frame does not jump (60% of the way from each wrist to the hands' centre)
+    const hc = {x: c.x, y: c.y + S * 12};
+    const ext = (w: {x: number; y: number}) => ({x: c.x + S * w.x + 0.6 * (hc.x - c.x - S * w.x), y: c.y + S * w.y + 0.6 * (hc.y - c.y - S * w.y)});
+    const aE = ext(at.astroWrist), oE = ext(at.overWrist), uE = ext(at.underWrist);
+    aTl = {x: (aE.x - p.ax) / S, y: (aE.y - p.feet) / S};
+    oTl = toF(oE.x, oE.y);
+    uTl = toF(uE.x, uE.y);
     const PO = friendHandLocal(fL, -1, age), PU = friendHandLocal(fR, 1, age);
     const wo = (P: {ex: number; ey: number; hx: number; hy: number}) => {
       const e = rot(P.ex, P.ey, -stoop, 0, -150), h = rot(P.hx, P.hy, -stoop, 0, -150);
@@ -55,11 +65,26 @@ export const solveClasp = (age: number, u: number, p: TwoShotPos = TS) => {
     const lim = (v: number, d: number) => clamp(v, d - 15, d + 15);
     ang = {astroAngle: lim(((aAng % 360) + 360) % 360, CLASP_DEFAULTS.astroAngle), overAngle: lim(wo(PO), CLASP_DEFAULTS.overAngle), underAngle: lim(wo(PU), CLASP_DEFAULTS.underAngle)};
   }
-  const mixA = (a: ArmA, b: ArmA): ArmA => ({a: lerp(a.a, b.a, u), b: lerp(a.b, b.b, u)});
+  if (u >= 1) return {armR, fL, fR, ang, c};
+  // the reach (and the release): the HANDS travel from rest to the clasp along a gentle arc and the arms are solved by
+  // IK each frame (interpolating joint angles swung the hands through the bodies); the first 15% blends from the exact
+  // rest angles so there is no elbow flip at the start
+  const REST_A: ArmA = {a: 10, b: 12}, REST_F: ArmA = {a: 6, b: 8};
+  const e = u * u * (3 - 2 * u);
+  const path = (p0: {x: number; y: number}, p1: {x: number; y: number}, lift: number) => {
+    const m = {x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 - lift};
+    return {x: (1 - e) * (1 - e) * p0.x + 2 * e * (1 - e) * m.x + e * e * p1.x, y: (1 - e) * (1 - e) * p0.y + 2 * e * (1 - e) * m.y + e * e * p1.y};
+  };
+  const A0 = astroHandLocal(REST_A, 1), O0 = friendHandLocal(REST_F, -1, age), U0 = friendHandLocal(REST_F, 1, age);
+  const aP = path({x: A0.hx, y: A0.hy}, aTl, 30), oP = path({x: O0.hx, y: O0.hy}, oTl, 30), uP = path({x: U0.hx, y: U0.hy}, uTl, 18);
+  const blend = (rest: ArmA, ik: ArmA): ArmA => {
+    const k = clamp(u / 0.15);
+    return {a: lerp(rest.a, ik.a, k), b: lerp(rest.b, ik.b, k)};
+  };
   return {
-    armR: mixA({a: 10, b: 12}, armR),
-    fL: mixA({a: 6, b: 8}, fL),
-    fR: mixA({a: 6, b: 8}, fR),
+    armR: blend(REST_A, astroReach(aP.x, aP.y, 1, 1)),
+    fL: blend(REST_F, reach(oP.x, oP.y, -1, -1, shXl, shYl)),
+    fR: blend(REST_F, reach(uP.x, uP.y, 1, 1, shXl, shYl)),
     ang, c,
   };
 };

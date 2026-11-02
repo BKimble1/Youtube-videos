@@ -55,8 +55,10 @@ export const V2 = {
   // 9 to the door
   gesture: 14.45,
   walkStart: 14.62,
-  doorPass: 15.28,
-  doorPassEnd: 15.56,
+  // he reaches the porch, pushes the door open (it swings in), and the doorframe passes the lens as he steps through
+  atDoor: 15.24,
+  doorPass: 15.34,
+  doorPassEnd: 15.62,
   // 10 the family room (present)
   roomStop: 15.95,
   notice: 15.98,

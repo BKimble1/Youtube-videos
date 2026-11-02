@@ -721,7 +721,8 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
   };
   const grown = lerp(0.42, 1, ss(D, 0, 0.75));
   const dens = lerp(0.55, 1, ss(D, 0, 0.8));
-  const leafC = mix(mix('#4F8A50', '#62A55A', 0.4), '#C2502E', 0.8 * sl.autumn);
+  // the rose's leaves stay brown from autumn until they drop (never green again in late autumn)
+  const leafC = mix(mix('#4F8A50', '#62A55A', 0.4), '#C2502E', 0.8 * Math.max(sl.autumn, bump(sl.s, 0.68, 0.12, 0.2)));
   const leafVis = 1 - sl.bare;
   const rose = Math.max(bump(sl.s, 0.3, 0.12, 0.22), sl.blossom * 0.5) * leafVis;
   const N = 90;
@@ -1138,6 +1139,101 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
 
 /** a point on the garden path for feet (u 0 = in front of the gate on G, u 1 = on the porch step), with a mild depth
  *  scale to multiply the figure scale by */
+// =====================================================================================================================
+// the reverse angle: the view OUT of the family-room window (view coords, a 1080x1920 frame; content spans x -200..1300)
+// the front lawn right under the window, the old tree close by on the right, the picket fence and rose arbour seen from
+// inside, the pavement and the street, the houses across the road and the city beyond (low in the past, towers by D 1)
+// =====================================================================================================================
+export const YOUT = {
+  /** the fence line (posts stand on it) and the mirror that maps street-side world x to view x (x_view = mirror - x) */
+  fenceY: 1330, mirror: 1840,
+  street: {y0: 1135, y1: 1275}, farPave: 1110, nearPave: 1275,
+  /** the gate's centre in the view, where his friend waits in the present */
+  gateX: 1840 - 1175,
+  tree: {x: 985, y: 1585, s: 1.18},
+  /** the capsule parked on the road in the present */
+  capsule: {x: 255, y: 1258, s: 0.36},
+};
+export const YardOut: React.FC<{D: number; season: number; t: number; id: string; gateOpen?: number; light?: number; beyondFence?: React.ReactNode; onLawn?: React.ReactNode}> = ({D: D0, season, t, id, gateOpen = 0, light = 0, beyondFence, onLawn}) => {
+  const D = clamp(D0);
+  const sl = seasonLook(season);
+  const fSky = Math.pow(clamp((D - 0.06) / 0.94), 1.45);
+  const fut = ss(D, 0.6, 0.9);
+  const pave = mix('#D9D2C3', '#E3E6EA', fut);
+  const asphalt = mix('#6E7884', '#5E6E86', fut);
+  return (
+    <g>
+      <defs>
+        <linearGradient id={`${id}-osky`} gradientUnits="userSpaceOnUse" x1="0" y1="-200" x2="0" y2="1120">
+          <stop offset="0" stopColor={skyTop(0.7 * D)} />
+          <stop offset="1" stopColor={skyBot(0.7 * D)} />
+        </linearGradient>
+      </defs>
+      <rect x={-1200} y={-1200} width={3600} height={2400} fill={`url(#${id}-osky)`} />
+      {[[60, 230, 1.0], [700, 120, 0.8], [1150, 300, 1.1], [-150, 520, 0.9]].map(([cx, cy, sc], k) => (
+        <Cloud key={k} x={wrapR(cx + t * (8 + 3 * k), -400, 1600)} y={cy} s={sc} />
+      ))}
+      {/* the city beyond the houses across the road */}
+      <g transform={`translate(-640 ${1020 - (HB - 70)})`}>
+        <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
+        <g opacity={0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>
+      </g>
+      {/* the houses across the road (a little nearer than the street-side view's back row) */}
+      <g transform={`translate(540 ${YOUT.farPave}) scale(1.35) translate(-1240 ${-(HB - 66)})`}>
+        {FAR_ROW.filter((h) => h.x > 400 && h.x < 2100).map((h, i) => {
+          const base = HB - 66;
+          if (h.kind === 'tree') {
+            const r = h.w * 0.34;
+            const tc = mix('#9DB8A8', sl.leaf, 0.35 * (1 - sl.bare));
+            return (
+              <g key={i}>
+                <rect x={h.x + h.w * 0.5 - 5} y={base - h.h * 0.6} width={10} height={h.h * 0.6 + 8} fill="#8E8A86" stroke={INK} strokeWidth={2} />
+                <circle cx={h.x + h.w * 0.38} cy={base - h.h * 0.9} r={r} fill={tc} stroke={INK} strokeWidth={2.5} />
+                <circle cx={h.x + h.w * 0.66} cy={base - h.h * 0.72} r={r * 0.82} fill={shade(tc, 0.1)} stroke={INK} strokeWidth={2.5} />
+              </g>
+            );
+          }
+          return (
+            <g key={i}>
+              <path d={`M ${h.x - 10} ${base - h.h} L ${h.x + h.w / 2} ${base - h.h - h.rh} L ${h.x + h.w + 10} ${base - h.h} Z`} fill={h.rc} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
+              <rect x={h.x} y={base - h.h} width={h.w} height={h.h + 10} fill={h.c} stroke={INK} strokeWidth={2.5} />
+              <rect x={h.x + h.w * 0.2} y={base - h.h + 18} width={22} height={24} fill={mix('#56647A', LIT, light)} stroke={INK} strokeWidth={2} />
+              <rect x={h.x + h.w * 0.6} y={base - h.h + 18} width={22} height={24} fill={mix('#56647A', LIT, light * hash(i))} stroke={INK} strokeWidth={2} />
+            </g>
+          );
+        })}
+      </g>
+      <Hedge x0={-400} x1={1600} base={YOUT.farPave + 2} h={34} sl={sl} seed={23} bumpW={46} />
+      {/* far pavement, the street, the near pavement */}
+      <rect x={-400} y={YOUT.farPave} width={2000} height={YOUT.street.y0 - YOUT.farPave} fill={pave} stroke={INK} strokeWidth={2} />
+      <rect x={-400} y={YOUT.street.y0} width={2000} height={YOUT.street.y1 - YOUT.street.y0} fill={asphalt} />
+      {Array.from({length: 12}, (_, k) => <rect key={k} x={-380 + k * 170} y={(YOUT.street.y0 + YOUT.street.y1) / 2 - 4} width={80} height={8} rx={4} fill={mix('#F2E6B8', '#9FE6EE', fut)} />)}
+      <rect x={-400} y={YOUT.street.y1} width={2000} height={YOUT.fenceY - YOUT.street.y1} fill={pave} stroke={INK} strokeWidth={2} />
+      {beyondFence}
+      {/* the front lawn under the window */}
+      <rect x={-400} y={YOUT.fenceY - 4} width={2000} height={900} fill={sl.lawn} />
+      <rect x={-400} y={YOUT.fenceY - 4} width={2000} height={12} fill={shade(sl.lawn, 0.22)} />
+      {Array.from({length: 26}, (_, k) => {
+        const gx = -300 + k * 62 + 30 * hash(k * 1.3), gy = YOUT.fenceY + 60 + 420 * hash(k * 2.7);
+        return <path key={k} d={`M ${f1(gx - 9)} ${f1(gy)} L ${f1(gx - 4)} ${f1(gy - 14)} L ${f1(gx)} ${f1(gy)} L ${f1(gx + 5)} ${f1(gy - 16)} L ${f1(gx + 9)} ${f1(gy)}`} fill="none" stroke={shade(sl.lawn, 0.4)} strokeWidth={3} strokeLinejoin="round" opacity={0.7} />;
+      })}
+      {/* the fence and the rose arbour, seen from the house side (mirrored) */}
+      <g transform={`translate(${YOUT.mirror} ${YOUT.fenceY - FB}) scale(-1 1)`}>
+        <Fence D={D} sl={sl} gateOpen={gateOpen} />
+      </g>
+      {/* the old tree, close to the window on the right */}
+      <g transform={`translate(${YOUT.tree.x} ${YOUT.tree.y}) scale(${-YOUT.tree.s} ${YOUT.tree.s}) translate(${-YARD.tree.x} ${-YARD.tree.y})`}>
+        <YardTree D={D} sl={sl} t={t} id={`${id}-otr`} />
+      </g>
+      {onLawn}
+    </g>
+  );
+};
+/** a tree trunk passing right across the lens (SCREEN coords): wide enough to cover the whole frame at its centre */
+export const NearTrunk: React.FC<{cx: number; D: number; season: number; id: string; w?: number}> = ({cx, D, season, id, w = 1320}) => (
+  <FgTrunk cx={cx} D={D} sl={seasonLook(season)} id={id} w={w} />
+);
+
 export const yardPath = (u: number) => {
   const Pp = YARD.path;
   const p = cpt({x: Pp.x0, y: Pp.y0}, {x: Pp.x0, y: HB + 70}, {x: 1400, y: HB + 34}, {x: Pp.x1, y: Pp.y1}, clamp(u));
@@ -1221,8 +1317,8 @@ const Blossom: React.FC<{x: number; y: number; r: number; op: number}> = ({x, y,
   </g>
 );
 
-const FgTrunk: React.FC<{cx: number; D: number; sl: Season; id: string}> = ({cx, D, sl, id}) => {
-  const hw = FG.trunkW / 2;
+const FgTrunk: React.FC<{cx: number; D: number; sl: Season; id: string; w?: number}> = ({cx, D, sl, id, w = FG.trunkW}) => {
+  const hw = w / 2;
   const ys = Array.from({length: 21}, (_, k) => -160 + k * 115);
   const Lp = ys.map((y) => ({x: cx - hw + 18 * noise1(y / 260 + 3.1, 3), y}));
   const Rp = ys.map((y) => ({x: cx + hw + 18 * noise1(y / 260 + 7.7, 9), y}));

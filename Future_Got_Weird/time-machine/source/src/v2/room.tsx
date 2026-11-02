@@ -58,9 +58,10 @@ const FRIEND_M = 10;
 const FRIEND_FRAME: RoomRect = {x: FRIEND_PRINT.x - FRIEND_M, y: FRIEND_PRINT.y - FRIEND_M, w: FRIEND_PRINT.w + 2 * FRIEND_M, h: FRIEND_PRINT.h + 2 * FRIEND_M};
 
 /** the family photo's people (print-local position of the head centre, Bust scale) */
-type Person = {key: string; x: number; y: number; s: number; skin: string; hair: 'spiky' | 'bob'; hairColor: string; age: number; shirt: string; stripes?: string};
+type Person = {key: string; x: number; y: number; s: number; skin: string; hair: 'spiky' | 'bob' | 'swoop'; hairColor: string; age: number; shirt: string; stripes?: string; tache?: string};
 const RED = GUESSER.hair;
-const DAD: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F2C9A8', hair: 'spiky', hairColor: RED, age: 0.32, shirt: '#2E3F5C'};
+// his father: unmistakably a parent, not a copy of him - a combed brown side part going grey, a moustache, older face
+const DAD: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F2C9A8', hair: 'swoop', hairColor: '#8A5A34', age: 0.42, shirt: '#2E3F5C', tache: '#6E4D33'};
 const MOM: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob', hairColor: '#B8743A', age: 0.3, shirt: '#E9876A'};
 const SON: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: GUESSER.skin, hair: 'spiky', hairColor: RED, age: 0, shirt: '#FFFFFF', stripes: C.saffron};
 const SIS: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob', hairColor: RED, age: 0, shirt: C.teal};
@@ -82,10 +83,10 @@ export const wipeAt = (u: number): RoomPt => {
   return {x: a * WIPE.from.x + b * c.x + d * WIPE.to.x, y: a * WIPE.from.y + b * c.y + d * WIPE.to.y};
 };
 
-const CHAIR_A = {cx: 300, color: '#C46A4E'};
+const CHAIR_A = {cx: 462, color: '#C46A4E'}; // in shot as he walks in (the room camera frames x ~425-1550), clear of the window
 const CHAIR_B = {cx: 1950, color: '#5D7FA6'};
 const CHAIR_W = {half: 170, top: 1150, seat: 1392};
-const TABLE = {cx: 550, top: 1330, rx: 72};
+const TABLE = {cx: 300, top: 1330, rx: 72};
 const LAMP = {x: 2200, top: 862};
 const PENDANT = {x: 1330, y: 404, rose: -250};
 /** the ceiling boards recede toward this point (below the room: we look up at the ceiling) */
@@ -266,6 +267,7 @@ const PhotoPerson: React.FC<{p: Person; id: string}> = ({p, id}) => {
       <path d={`M 34 66 Q 76 72 78 140 L 80 520 L 40 520 Z`} fill={shade(p.shirt, 0.22)} opacity={0.6} />
       <g clipPath={`url(#${id}-top)`}>
         <Bust skin={p.skin} hair={p.hair} hairColor={p.hairColor} age={p.age} shirt={p.shirt} id={`${id}-b`} e={{mouth: 'smile'}} />
+        {p.tache && <path d="M -24 24 Q -12 13 0 19 Q 12 13 24 24 Q 12 29 0 24 Q -12 29 -24 24 Z" fill={p.tache} stroke={INK} strokeWidth={3} strokeLinejoin="round" />}
       </g>
       {p.stripes && (
         <g clipPath={`url(#${id}-low)`}>
@@ -288,10 +290,10 @@ const FamilyPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) =
     <circle cx={-6} cy={h * 0.3} r={34} fill="#6FB36A" stroke={INK} strokeWidth={2} />
     <circle cx={22} cy={h * 0.2} r={22} fill="#7CC070" stroke={INK} strokeWidth={2} />
     <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
-    {/* a dark hedge and a tree trunk at the right edge (the side where a reflection on the glass reads best) */}
+    {/* deep shade under the trees at the right edge, a neutral dark (not green): where his reflection on the glass reads best */}
     <rect x={w - 20} y={0} width={10} height={h * 0.2} fill="#5A3E30" stroke={INK} strokeWidth={1.6} />
-    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#24382C" stroke={INK} strokeWidth={2} />
-    <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#5C8A62" strokeWidth={3} strokeLinecap="round" />
+    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#2C3139" stroke={INK} strokeWidth={2} />
+    <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#454C57" strokeWidth={3} strokeLinecap="round" />
     {Array.from({length: 12}, (_, k) => (
       <path key={k} d={`M ${k * 14 + 2} ${h * 0.64} L ${k * 14 + 2} ${h * 0.5} L ${k * 14 + 6} ${h * 0.46} L ${k * 14 + 10} ${h * 0.5} L ${k * 14 + 10} ${h * 0.64} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.4} />
     ))}
@@ -880,7 +882,7 @@ const DefaultWindowView: React.FC<{e: number}> = ({e}) => {
   );
 };
 
-const Window: React.FC<{ctx: Ctx; view?: React.ReactNode}> = ({ctx, view}) => {
+const Window: React.FC<{ctx: Ctx; view?: React.ReactNode; glassFade?: number}> = ({ctx, view, glassFade = 0}) => {
   const {L, e, id, t} = ctx;
   const {x0, y0, x1, y1} = WIN;
   const cw = WIN_CASING;
@@ -923,11 +925,13 @@ const Window: React.FC<{ctx: Ctx; view?: React.ReactNode}> = ({ctx, view}) => {
       <clipPath id={`${id}-glass`}><rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} /></clipPath>
       <g clipPath={`url(#${id}-glass)`}>
         {view ?? <DefaultWindowView e={e} />}
-        <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={mix('#DDEFFA', '#C9D3DC', e)} opacity={0.08 + 0.1 * e} />
-        <path d={`M ${x0} ${y0} L ${x1} ${y0} L ${x1} ${y0 + 12} L ${x0 + 12} ${y0 + 12} L ${x0 + 12} ${y1} L ${x0} ${y1} Z`} fill={C.shadow} />
-        {[0, 1].map((k) => (
-          <path key={k} d={`M ${x0 + 30 + k * 200} ${y1} L ${x0 + 210 + k * 200} ${y0} L ${x0 + 240 + k * 200} ${y0} L ${x0 + 60 + k * 200} ${y1} Z`} fill="#FFFFFF" opacity={0.07} />
-        ))}
+        <g opacity={1 - glassFade}>
+          <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={mix('#DDEFFA', '#C9D3DC', e)} opacity={0.08 + 0.1 * e} />
+          <path d={`M ${x0} ${y0} L ${x1} ${y0} L ${x1} ${y0 + 12} L ${x0 + 12} ${y0 + 12} L ${x0 + 12} ${y1} L ${x0} ${y1} Z`} fill={C.shadow} />
+          {[0, 1].map((k) => (
+            <path key={k} d={`M ${x0 + 30 + k * 200} ${y1} L ${x0 + 210 + k * 200} ${y0} L ${x0 + 240 + k * 200} ${y0} L ${x0 + 60 + k * 200} ${y1} Z`} fill="#FFFFFF" opacity={0.07} />
+          ))}
+        </g>
         {e > 0.01 && <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} fill={DUST} opacity={0.1 * e} />}
       </g>
       {/* mullion and transom */}
@@ -1195,7 +1199,10 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
             const p = wipeAt(w);
             return (
               <g clipPath={`url(#${id}-fframe)`}>
-                <ellipse cx={p.x + 24} cy={p.y + 4} rx={7} ry={WIPE.width * 0.44} fill={DUST_GLASS} opacity={0.6 * e} transform={`rotate(-8 ${p.x + 24} ${p.y + 4})`} />
+                {/* a low ridge of pushed dust at the end of the streak: a few small specks, faint */}
+                {[[-14, -10, 3.2], [-6, 6, 2.4], [4, -2, 2.8], [10, 12, 2.0], [-2, 18, 2.2]].map(([dx, dy, r], q) => (
+                  <circle key={q} cx={p.x + 20 + dx * 0.4} cy={p.y + 4 + dy} r={r} fill={DUST_GLASS} opacity={0.4 * e} />
+                ))}
               </g>
             );
           })()}
@@ -1297,7 +1304,9 @@ export const Room: React.FC<{
   photoGlass?: number;
   refl?: React.ReactNode;
   reflOp?: number;
-}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0}) => {
+  /** 0..1: fades the window glass's tint, edge shadow and sheen (when the camera pushes through the glass) */
+  glassFade?: number;
+}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0, glassFade = 0}) => {
   const e = clamp(era);
   const ctx: Ctx = {e, t, id, L: (c: string) => lightCol(c, e)};
   return (
@@ -1307,7 +1316,7 @@ export const Room: React.FC<{
       <SunPatch e={e} />
       <Doorway ctx={ctx} />
       <WallClock minutes={clockMinutes} blur={clockBlur} era={e} id={`${id}-clock`} />
-      <Window ctx={ctx} view={windowView} />
+      <Window ctx={ctx} view={windowView} glassFade={glassFade} />
       <Radiator ctx={ctx} />
       <Shelf ctx={ctx} />
       <Pendant ctx={ctx} />

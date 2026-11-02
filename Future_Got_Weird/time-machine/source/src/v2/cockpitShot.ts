@@ -11,7 +11,11 @@ export const FA = {
   rest: {x: 300, y: 2350, s: 1.5, rot: 8},
   mouth: {x: 430, y: 1580, s: 1.55, rot: -4},
   watch: {x: 540, y: 1000, s: 2.55, rot: 3},
-  low: {x: 320, y: 1880, s: 1.5, rot: 6},
+  // resting low while he looks out: the watch stays below the caption band (caption ~1650-1790)
+  low: {x: 320, y: 1990, s: 1.5, rot: 6},
+  // the final watch composition: same place as `watch`, rolled so the dial is upright (FOREARM.angle -24 + 24 = 0),
+  // matching the upright wall clock across the match cut
+  watchEnd: {x: 540, y: 1000, s: 2.55, rot: 24},
 };
 type FAP = typeof FA.rest;
 const mixFA = (a: FAP, b: FAP, u: number): FAP => ({x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u), s: lerp(a.s, b.s, u), rot: lerp(a.rot, b.rot, u)});
@@ -27,7 +31,7 @@ export const forearmAt = (t: number): FAP => {
   if (t < V2.wristDown) return FA.watch;
   if (t < V2.wristDownEnd) return mixFA(FA.watch, FA.low, e5((t - V2.wristDown) / (V2.wristDownEnd - V2.wristDown)));
   if (t < V2.wristUp2) return FA.low;
-  return mixFA(FA.low, FA.watch, e5((t - V2.wristUp2) / (V2.matchCut - V2.wristUp2)));
+  return mixFA(FA.low, FA.watchEnd, e5((t - V2.wristUp2) / (V2.matchCut - V2.wristUp2)));
 };
 export const watchMinutesAt = (t: number) => hourMinutes((t - V2.hourStart) / (V2.hourEnd - V2.hourStart)) + clamp((t - V2.hourEnd) / 60, 0, 1);
 export const secBlurAtT = (t: number) => secBlurAt((t - V2.hourStart) / (V2.hourEnd - V2.hourStart), V2.hourEnd - V2.hourStart);
