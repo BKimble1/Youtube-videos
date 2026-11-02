@@ -345,12 +345,12 @@ export type ClampState = {a: P; b: P; open: number; lift: number};
 
 /** clamp dimensions (mm) */
 export const CLAMP = {
-  joint: 35, // tips -> box joint
-  bendHandle: 0.36, // the handles' turn (rad) from the jaws' axis, so they run down-right (shallow) to the near hand
-  handle: 62, // joint -> ring centres along the handles
-  ringOff: 15.5, // each ring centre's offset across the handles' midline
-  ringR: 11.6,
-  ringIn: 8.6, // a gloved thumb / finger fits through
+  joint: 32, // tips -> box joint
+  bendHandle: -0.06, // the handles' turn (rad) from the jaws' axis: they run on to the right, about level, to the near hand
+  handle: 56, // joint -> ring centres along the handles
+  ringOff: 13.2, // each ring centre's offset across the handles' midline
+  ringR: 10.6,
+  ringIn: 8.0, // a gloved thumb / finger fits through
   openMax: 0.24, // jaw rotation at open = 1 (rad)
   liftDist: 135,
 };
@@ -392,6 +392,8 @@ export const clampRings = (st: ClampState) => {
 /** Where the surgeon's left hand holds the clamp (a ring grip seen from above): p = midway between the two finger rings,
  *  ang = the handles' direction from the rings toward the box joint (radians); the thumb goes through the upper ring,
  *  the ring finger through the lower one, the index lies along the shank toward the joint. */
+/** (kept for compatibility) the grip's distance from the box joint along the handles */
+export const CLAMP_GRIP = {d: CLAMP.handle, turn: 0};
 export const clampGrip = (st: ClampState): {p: P; ang: number; upper: P; lower: P} => {
   const R = clampRings(st);
   return {p: R.mid, ang: Math.atan2(-R.hd.y, -R.hd.x), upper: R.upper, lower: R.lower};
@@ -488,7 +490,7 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
   const hn = perp(F.hd);
   const handle = (sg: number): P[] => {
     const at = (d: number, o: number) => add(J, add(mul(F.hd, d), mul(hn, o * sg)));
-    return [at(-3, 0), at(10, 2.6), at(26, 6.4), at(40, 10.2), at(CLAMP.handle - CLAMP.ringR * 0.92, CLAMP.ringOff - 2.6)];
+    return [at(-3, 0), at(9, 2.4), at(23, 5.6), at(36, 8.6), at(CLAMP.handle - CLAMP.ringR * 0.92, CLAMP.ringOff - 2.4)];
   };
   const ringC = (sg: number) => add(J, add(mul(F.hd, CLAMP.handle), mul(hn, CLAMP.ringOff * sg)));
   const handleW = [2.4, 2.4, 2.25, 2.1, 2.0];
@@ -512,10 +514,10 @@ export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({
       const q = add(J, add(mul(F.hd, d), mul(hn, o * sg)));
       return F.W(rotAbout(q, J, pc.a));
     };
-    const d0 = 41;
-    const outline = [base(d0, 9.8), base(d0, -3.4), base(d0 + 2.4, -3.4), base(d0 + 2.4, 9.8)];
+    const d0 = 36.5;
+    const outline = [base(d0, 8.4), base(d0, -3.2), base(d0 + 2.3, -3.2), base(d0 + 2.3, 8.4)];
     const teeth: P[] = [];
-    for (let i = 0; i <= 5; i++) teeth.push(base(d0 + (sg > 0 ? 2.4 : 0) + (sg > 0 ? 0.55 : -0.55), 8.8 - i * 1.6), base(d0 + (sg > 0 ? 2.4 : 0), 8.2 - i * 1.6));
+    for (let i = 0; i <= 5; i++) teeth.push(base(d0 + (sg > 0 ? 2.3 : 0) + (sg > 0 ? 0.55 : -0.55), 7.6 - i * 1.5), base(d0 + (sg > 0 ? 2.3 : 0), 7.0 - i * 1.5));
     return {d: `M${outline.map(Pf).join('L')}Z`, teeth: `M${teeth.map(Pf).join('L')}`};
   };
   const r1 = ratchet(p1, -1);

@@ -233,8 +233,8 @@ export type WCam = {world: World; cam: Cam; cam2?: Cam; mix?: number};
 const CAM0: Cam = {x: -0.6, y: -1.2, w: 26.5, k: 1, focus: 0};
 const TRACK1: Cam = {x: 6.0, y: -1.9, w: 25.5, k: 1, focus: 0};
 const REVEAL: Cam = {x: 10, y: -48, w: 175, k: 0.96, focus: -6};
-const CLINIC: Cam = {x: 92, y: -100, w: 405, k: 0.86, focus: -10};
-const CLINIC2: Cam = {x: 88, y: -97, w: 392, k: 0.86, focus: -10};
+const CLINIC: Cam = {x: 98, y: -122, w: 412, k: 0.86, focus: -10};
+const CLINIC2: Cam = {x: 94, y: -116, w: 398, k: 0.86, focus: -10};
 /** the bead's lower contact edge under the ulnar half of the transverse crack, where the match lands */
 export const MATCH_X = -7;
 const edgeB = beadEdgeBelow(MATCH_X, {t: 99, laid: BEAD_TOTAL, laidAt: () => 0, seep: 0, set: 0, wet: 0, heal: HEAL0, px: 0.01});

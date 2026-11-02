@@ -53,7 +53,7 @@ export type SurgeonState = {
 export const SURGEON = {
   skin: '#C98B5E',
   /** gloved hand: wrist crease to the straight middle fingertip (mm), life size */
-  hand: 172,
+  hand: 165,
   /** head radius (the cartoon head is ~150 mm wide, a little larger than life) */
   headR: 76,
   /** his table-level anchor (wrist-plane mm): the inverse 1/k body scale is about this point */
@@ -122,7 +122,7 @@ const nearestOn = (p: V, ps: V[]) => {
 // positive toward the thumb. A digit is its joint chain in hand coordinates (MCP, PIP, DIP, tip; the thumb: CMC, MCP,
 // IP, tip) with a radius at each joint; seen from above, a flexed phalanx is simply a shorter (foreshortened) segment.
 // Each segment is drawn in front of the held object ('f') or behind it ('b').
-type Lay = 'b' | 'f';
+type Lay = 'b' | 'f' | 'F';
 type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]};
 export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean};
 
@@ -141,15 +141,15 @@ const PALM: [number, number][] = [
 ];
 /** knuckle (MCP) positions and base radii: index, middle, ring, little */
 const MCP: [number, number][] = [
-  [0.44, 0.182],
-  [0.462, 0.06],
-  [0.448, -0.062],
-  [0.408, -0.172],
+  [0.44, 0.166],
+  [0.46, 0.055],
+  [0.446, -0.056],
+  [0.408, -0.158],
 ];
-const FR = [0.05, 0.053, 0.049, 0.043];
+const FR = [0.05, 0.052, 0.049, 0.043];
 const TAPER = [1, 0.95, 0.9, 0.86];
 const fingerR = (i: number) => TAPER.map((t) => FR[i] * t);
-const THUMB_R = [0.084, 0.062, 0.057, 0.052];
+const THUMB_R = [0.072, 0.056, 0.052, 0.048];
 
 type GloveProps = {
   id: string;
@@ -190,7 +190,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   };
   const fingers = pose.fingers.map(digitSegs);
   const thumb = digitSegs(pose.thumb);
-  const segCol = (si: number) => (si === 0 ? color : mix(color, shade(color, 0.1), 0.35 + 0.25 * si));
+  const segCol = (si: number) => (si === 0 ? color : mix(color, shade(color, 0.16), 0.4 + 0.3 * si));
   const capsules = (segs: Seg[], key: string, lay: Lay) =>
     segs
       .filter((s) => s.lay === lay)
@@ -212,7 +212,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   );
   const cuffDeco = (
     <g>
-      <path d={`M${Pf(add(rimIn, mul(cn, cuff.r1 * 0.95)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.95)} ${fmt(cAng)} 0 1 ${Pf(add(rimIn, mul(cn, -cuff.r1 * 0.95)))}`} fill="none" stroke={lit(color, 0.45)} strokeWidth={fmt(cuff.r1 * 0.2)} opacity={0.8} />
+      <path d={`M${Pf(add(rimIn, mul(cn, cuff.r1 * 0.95)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.95)} ${fmt(cAng)} 0 1 ${Pf(add(rimIn, mul(cn, -cuff.r1 * 0.95)))}`} fill="none" stroke={lit(color, 0.45)} strokeWidth={4.5} opacity={0.8} />
       <path d={`M${Pf(add(add(rimIn, mul(cd, -cuff.r1 * 0.16)), mul(cn, cuff.r1 * 0.9)))} A${fmt(cuff.r1 * 0.3)} ${fmt(cuff.r1 * 0.9)} ${fmt(cAng)} 0 1 ${Pf(add(add(rimIn, mul(cd, -cuff.r1 * 0.16)), mul(cn, -cuff.r1 * 0.9)))}`} fill="none" stroke={INK} strokeWidth={CREASE_PX} opacity={0.5} />
       <ellipse cx={fmt(add(cm, mul(ln, cuff.r0 * 0.5)).x)} cy={fmt(add(cm, mul(ln, cuff.r0 * 0.5)).y)} rx={fmt(cuff.len * 0.3)} ry={fmt(cuff.r0 * 0.08)} transform={`rotate(${fmt(cAng)} ${fmt(add(cm, mul(ln, cuff.r0 * 0.5)).x)} ${fmt(add(cm, mul(ln, cuff.r0 * 0.5)).y)})`} fill="#FFFFFF" opacity={0.32} />
       {/* latex wrinkles round the wrist */}
@@ -224,7 +224,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   );
 
   // --- the palm (the back of the glove)
-  const palm = <Blob key="palm" id={`${id}-palm`} d={palmD} c={palmC} r={0.46 * L} color={color} k={0.9} />;
+  const palm = <Blob key="palm" id={`${id}-palm`} d={palmD} c={palmC} r={0.5 * L} color={color} stops={[[0, lit(color, 0.2)], [0.45, lit(color, 0.05)], [0.8, color], [1, shade(color, 0.22)]]} />;
   const palmDeco = (
     <g>
       {/* extensor tendons fanning to the knuckles, and the knuckles' bumps */}
@@ -241,8 +241,8 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
 
   // --- finger deco: separations where neighbours touch, joint creases, knuckle glosses
   const sepFor = (i: number, lay: Lay) => {
-    const A = fingers[i].filter((s) => s.lay === lay);
-    const B = fingers[i + 1]?.filter((s) => s.lay === lay);
+    const A = fingers[i].filter((s) => s.lay === lay && s.si === 0);
+    const B = fingers[i + 1]?.filter((s) => s.lay === lay && s.si === 0);
     if (!A.length || !B?.length) return null;
     const bPts = [B[0].a, ...B.map((s) => s.b)];
     const runs: V[][] = [];
@@ -263,7 +263,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
     });
     if (cur.length) runs.push(cur);
     return runs
-      .filter((rn) => rn.length > 1)
+      .filter((rn) => rn.length > 2)
       .map((rn, k) => <path key={`s${i}${lay}${k}`} d={`M${rn.map((q) => Pf(q)).join(' L')}`} fill="none" stroke={INK} strokeWidth={SEP_PX} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />);
   };
   const jointDeco = (segs: Seg[], key: string, lay: Lay) => {
@@ -280,6 +280,17 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
           <path key={`${key}c${i}`} d={`M${Pf(add(q, mul(nn, s.ra * 0.62)))} Q${Pf(add(q, mul(ax, s.ra * 0.25)))} ${Pf(add(q, mul(nn, -s.ra * 0.62)))}`} fill="none" stroke={deep} strokeWidth={CREASE_PX} strokeLinecap="round" opacity={0.42} />,
         );
       }
+      // where the next phalanx folds away, the glove creases over the bent knuckle: two short arcs near this end
+      const nx = segs[i + 1];
+      if (nx && nx.lay === lay) {
+        const ax2 = norm(sub(nx.b, nx.a));
+        if (dot(ax, ax2) < 0.86 || len(sub(nx.b, nx.a)) < nx.ra * 1.3) {
+          [0.42, 0.78].forEach((k, m) => {
+            const q = add(s.b, mul(ax, -s.rb * k));
+            els.push(<path key={`${key}w${i}${m}`} d={`M${Pf(add(q, mul(nn, s.rb * 0.55)))} Q${Pf(add(q, mul(ax, s.rb * 0.18)))} ${Pf(add(q, mul(nn, -s.rb * 0.55)))}`} fill="none" stroke={deep} strokeWidth={CREASE_PX} strokeLinecap="round" opacity={0.5 - 0.15 * m} />);
+          });
+        }
+      }
       // a gloss on the segment's lit side (the knuckle top for a short, flexed segment)
       const g = add(lerpV(s.a, s.b, sl < s.ra * 1.2 ? 0.5 : 0.62), mul(LIGHT, s.ra * 0.42));
       const ga = sl < s.ra * 1.2 ? degOf(ax) + 90 : degOf(ax);
@@ -290,8 +301,10 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
 
   const thumbGroup = (
     <g>
-      <Inked w={OUT}>{capsules(thumb.map((s) => ({...s, lay: pose.thumbLay})), 't', pose.thumbLay)}</Inked>
-      {jointDeco(thumb.map((s) => ({...s, lay: pose.thumbLay})), 'tj', pose.thumbLay)}
+      <g className={NSLINE}>
+        <Inked w={OUT}>{capsules(thumb.map((s) => ({...s, lay: pose.thumbLay})), 't', pose.thumbLay)}</Inked>
+        {jointDeco(thumb.map((s) => ({...s, lay: pose.thumbLay})), 'tj', pose.thumbLay)}
+      </g>
       {thumbOverlay}
     </g>
   );
@@ -303,10 +316,12 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
     </g>
   );
   const hasBack = fingers.some((sg) => sg.some((s) => s.lay === 'b'));
+  const hasTop = fingers.some((sg) => sg.some((s) => s.lay === 'F'));
+  // the hand's own lines are constant on-screen width (NSLINE); the held object and the ring overlays keep their own
   return (
-    <g className={NSLINE}>
+    <g>
       {hasBack && (
-        <g>
+        <g className={NSLINE}>
           <Inked w={OUT}>{fingerCaps('b')}</Inked>
           {fingerDeco('b')}
         </g>
@@ -314,15 +329,25 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
       {pose.thumbLay === 'b' && thumbGroup}
       {obj}
       {pose.thumbLay === 'f' && !pose.thumbOver && thumbGroup}
-      <Inked w={OUT}>
-        {cuffBody}
-        {palm}
-        {fingerCaps('f')}
-      </Inked>
-      {cuffDeco}
-      {palmDeco}
-      {fingerDeco('f')}
+      <g className={NSLINE}>
+        <Inked w={OUT}>
+          {cuffBody}
+          {palm}
+          {fingerCaps('f')}
+        </Inked>
+        {cuffDeco}
+        {palmDeco}
+        {fingerDeco('f')}
+      </g>
       {pose.thumbLay === 'f' && pose.thumbOver && thumbGroup}
+      {hasTop && (
+        <g className={NSLINE}>
+          <Inked w={OUT} id={`${id}-top`} fade={fingers.filter((sg) => sg.some((x) => x.lay === 'F')).map((sg) => ({c: sg[0].a, r: sg[0].ra * 1.5}))}>
+            {fingerCaps('F')}
+          </Inked>
+          {fingerDeco('F')}
+        </g>
+      )}
       {over}
     </g>
   );
@@ -348,17 +373,25 @@ const handPt = (wrist: V, ang: number, ts: 1 | -1, u: number, v: number): V => {
  *  last joint passing under the barrel, the tip showing beyond it), the middle finger curls in beside it, the ring and
  *  little fingers close loosely; the thumb lies along the near side of the plunger rod with its pad on the plunger's
  *  thumb pad, ready to press. */
-const FAR_UV = {u: 0.6, v: 0.27};
-const farPose = (thumbTip: [number, number]): GripPose => {
+const FAR_UV = {u: 0.64, v: 0.272};
+/** a curled finger: knuckle (MCP), the middle joint (PIP) and the middle phalanx folding down under it, which from the
+ *  high camera shows as a short, darker segment toward the bottom of the screen (`down`: screen-down in hand units) */
+const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075): Digit => ({
+  j: [MCP[i], pip, [pip[0] + down[0] * fold, pip[1] + down[1] * fold]],
+  r: fingerR(i).map((r) => r * 1.07),
+});
+const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
   const tt = thumbTip;
   const L3 = (a: [number, number], b: [number, number], t: number, dv: number): [number, number] => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t + dv];
   return {
     fingers: [
-      {j: [MCP[0], [0.585, 0.205], [0.628, 0.236], [0.62, 0.302]], r: fingerR(0), lay: ['f', 'f', 'b']},
-      {j: [MCP[1], [0.598, 0.094], [0.632, 0.13], [0.618, 0.166]], r: fingerR(1), lay: ['f', 'f', 'b']},
-      {j: [MCP[2], [0.572, -0.04], [0.598, -0.008]], r: fingerR(2)},
-      {j: [MCP[3], [0.505, -0.152], [0.53, -0.122]], r: fingerR(3)},
+      // the index lies along the barrel toward the tip; the middle finger wraps under the barrel in front of the flange
+      // (its tip shows on the near side); the ring and little fingers close into the palm
+      {j: [MCP[0], [0.616, 0.21], [0.73, 0.226], [0.818, 0.232]], r: fingerR(0)},
+      {j: [MCP[1], [0.612, 0.112], [0.676, 0.2], [0.678, 0.318]], r: fingerR(1), lay: ['f', 'b', 'b']},
+      curled(2, [0.542, -0.02], down, 0.06),
+      curled(3, [0.49, -0.11], down, 0.055),
     ],
     thumb: {j: [base, L3(base, tt, 0.42, 0.05), L3(base, tt, 0.74, 0.024), tt], r: THUMB_R},
     thumbLay: 'f',
@@ -369,23 +402,33 @@ const farPose = (thumbTip: [number, number]): GripPose => {
 /** Ring grip (left hand, back of the hand up, ts +1): the clamp's handles run along the hand toward the box joint; the
  *  thumb's tip goes down through the upper ring, the ring finger through the lower ring, the middle finger curls
  *  between them, the index lies along the shank toward the joint and the little finger closes under. */
-const NEAR_MID = {u: 0.6, v: 0.0815};
-const nearPose = (upper: [number, number], lower: [number, number]): GripPose => {
+const NEAR_MID = {u: 0.6, v: 0.06};
+const nearPose = (upper: [number, number], lower: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
   const tt: [number, number] = [upper[0] - 0.012, upper[1] + 0.012];
   return {
     fingers: [
-      {j: [MCP[0], [0.62, 0.118], [0.752, 0.094], [0.848, 0.084]], r: fingerR(0)},
-      {j: [MCP[1], [0.585, 0.072], [0.616, 0.086]], r: fingerR(1)},
-      {j: [MCP[2], [lower[0] - 0.035, lower[1] - 0.03], [lower[0], lower[1]]], r: fingerR(2)},
-      {j: [MCP[3], [0.5, -0.15], [0.524, -0.12]], r: fingerR(3)},
+      // the index runs between the two rings and along the shank toward the box joint
+      {j: [MCP[0], [0.62, 0.066], [0.745, 0.052], [0.838, 0.046]], r: fingerR(0), lay: ['F', 'F', 'F']},
+      // the middle finger curls down onto the lower ring's handle, the ring finger goes down through the lower ring
+      curled(1, [0.56, 0.01], down, 0.055),
+      {j: [MCP[2], [lower[0] - 0.05, lower[1] - 0.028], [lower[0], lower[1]]], r: fingerR(2)},
+      curled(3, [0.495, -0.132], down, 0.055),
     ],
-    thumb: {j: [base, [0.28, 0.268], [0.45, tt[1] + 0.07], tt], r: THUMB_R},
+    thumb: {j: [base, [0.3, 0.27], [0.47, (0.27 + tt[1]) / 2 + 0.02], tt], r: THUMB_R},
     thumbLay: 'f',
-    thumbOver: false,
+    thumbOver: true,
   };
 };
 
+/** the screen's downward direction in a hand's coordinates (the table plane is drawn squashed by k, so a drop in
+ *  height reads as a short step down the screen) */
+const screenDown = (ang: number, ts: 1 | -1, k: number): [number, number] => {
+  const d = dirDeg(ang);
+  const n = perp(d);
+  const dn = norm({x: 0, y: 1 / Math.max(0.5, k)});
+  return [dot(dn, d), dot(dn, n) * ts];
+};
 type GripSolve = {wrist: V; ang: number; pose: GripPose; ts: 1 | -1; tipT: V; tipR?: V; ringU?: V; ringL?: V; toward?: V};
 const solveFar = (st: SurgeonState): GripSolve => {
   const g = appGrip(st.app);
@@ -396,7 +439,7 @@ const solveFar = (st: SurgeonState): GripSolve => {
   // the thumb's pulp on the pad's back face
   const tipW = sub(g.padBack, mul(d, 0.046 * L_H));
   const tipH = toHand(tipW, wrist, ang, ts);
-  return {wrist, ang, ts, pose: farPose(tipH), tipT: tipW};
+  return {wrist, ang, ts, pose: farPose(tipH, screenDown(ang, ts, st.k)), tipT: tipW};
 };
 const solveNear = (st: SurgeonState): GripSolve => {
   const g = clampGrip(st.clamp);
@@ -407,7 +450,7 @@ const solveNear = (st: SurgeonState): GripSolve => {
   const wrist = sub(sub(g.p, mul(d, NEAR_MID.u * L_H)), mul(perp(d), NEAR_MID.v * L_H * ts));
   const up = toHand(g.upper, wrist, ang, ts);
   const lo = toHand(g.lower, wrist, ang, ts);
-  const pose = nearPose(up, lo);
+  const pose = nearPose(up, lo, screenDown(ang, ts, st.k));
   const tipT = handPt(wrist, ang, ts, pose.thumb.j[3][0], pose.thumb.j[3][1]);
   return {wrist, ang, ts, pose, tipT, tipR: g.lower, ringU: g.upper, ringL: g.lower, toward: d};
 };
@@ -703,35 +746,35 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
  *  shoulder tucked behind the chin, the near shoulder at the frame's right edge; the gown runs down the right side.
  *  At the cutaway camera (x -10, w 250) all of the body is beyond the right edge (only the gloves and sleeves enter). */
 const bodyGeo = (lean: number) => {
-  const pivot = {x: 330, y: 140};
+  const pivot = {x: 310, y: 140};
   const R = (x: number, y: number, k = 1) => rot({x, y}, -lean * 0.9 * k, pivot);
   return {
-    head: R(246, -352, 1.15),
+    head: R(222, -352, 1.15),
     roll: -12 - lean * 1.2,
-    collar: R(272, -262),
-    neckBot: R(286, -258),
-    neckTop: R(268, -318),
-    farS: R(246, -246),
-    nearS: R(334, -234),
+    collar: R(246, -262),
+    neckBot: R(258, -258),
+    neckTop: R(242, -318),
+    farS: R(232, -232),
+    nearS: R(272, -212),
     torso: [
-      R(236, -264),
-      R(241, -236),
-      R(248, -184),
-      R(253, -120),
-      R(258, -50),
-      R(264, 30),
-      R(270, 120),
-      R(275, 230),
-      R(280, 380),
-      R(520, 380),
-      R(500, 220),
-      R(482, 80),
-      R(466, -60),
-      R(448, -160),
-      R(420, -232),
-      R(380, -268),
-      R(332, -284),
-      R(290, -282),
+      R(208, -266),
+      R(213, -238),
+      R(224, -186),
+      R(234, -120),
+      R(238, -50),
+      R(238, 30),
+      R(244, 120),
+      R(250, 230),
+      R(256, 380),
+      R(480, 380),
+      R(462, 220),
+      R(446, 80),
+      R(430, -60),
+      R(412, -160),
+      R(384, -232),
+      R(344, -268),
+      R(298, -284),
+      R(258, -282),
     ],
   };
 };
@@ -755,12 +798,14 @@ const ik = (S: V, Wr: V, Lu: number, Lf: number, side: 1 | -1): V => {
   return add(S, {x: Math.cos(ang) * a, y: Math.sin(ang) * a});
 };
 const ARM = {
-  far: {Lu: 84, Lf: 108, side: -1 as const},
-  near: {Lu: 262, Lf: 130, side: -1 as const},
+  // the far arm hangs behind the chest; its forearm comes out past the chest, angling down to the applicator
+  far: {Lu: 92, Lf: 128, side: -1 as const},
+  // the near arm comes down from the near shoulder, bends at the elbow by his side, the forearm angles down-left
+  near: {Lu: 162, Lf: 110, side: -1 as const},
 };
 /** sleeve radii: shoulder, elbow, wrist (the glove's cuff covers the wrist end) */
-const SLV = {s: 40, e: 33, w: 28};
-const CUFF = {len: 54, r0: 0.168 * SURGEON.hand, r1: 31};
+const SLV = {s: 36, e: 31, w: 27};
+const CUFF = {len: 40, r0: 0.158 * SURGEON.hand, r1: 27.5};
 
 type ArmSolve = {grip: GripSolve; S: V; E: V; Wl: V; wrist: V; cuffDir: V; held: number};
 const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
