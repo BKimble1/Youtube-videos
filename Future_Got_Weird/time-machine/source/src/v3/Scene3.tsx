@@ -151,7 +151,7 @@ const inWindow = (n: React.ReactNode) => <g transform={`translate(${ROOM.win.cx 
 const OUT_FRIEND_X = YOUT.mirror - S.FRIEND.x; // (the view maps street x to mirror - x)
 function outPast(t: number, k: string) {
   return (
-    <YardOut D={0.05} season={0.06} t={t} id={`${k}yo`}
+    <YardOut D={0.05} season={0.06} t={t} id={`${k}yo`} v3
       beyondFence={
         <g transform={`translate(${OUT_FRIEND_X} ${YOUT.fenceY - 30}) scale(${S.YS * 0.96})`}>
           <Friend age={0.05} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e: {mouth: 'soft', lookX: -0.3, lookY: -0.3}}} id={`${k}yf`} facing={-1} green />
@@ -308,8 +308,7 @@ function yardWorld(t: number, k: string) {
 function outPresent(t: number, k: string, ship = true, door = false) {
   const C0 = {x: 255, y: 1258, s: 0.36};
   return (
-    <YardOut D={1} season={0.12} t={t} id={`${k}po`} gateOpen={1}
-      {...(door ? {doorPath: true, skylineHaze: 0.6} : {})}
+    <YardOut D={1} season={0.12} t={t} id={`${k}po`} gateOpen={1} v3 doorPath={door} skylineHaze={door ? 0.7 : 0}
       beyondFence={ship ? <g transform={`translate(${C0.x} ${C0.y}) scale(${C0.s})`}><Capsule2 t={t} id={`${k}pc`} legs={1} hatch={0.2} legSpread={S.LEG_SPREAD} /></g> : undefined} />
   );
 }
@@ -318,7 +317,8 @@ function doorOutside(t: number, k: string) {
   const x0 = S.DOOR3.x0, x1 = S.DOOR3.x1, y0 = S.DOOR3.y0, h = S.F3 - y0;
   const sc = h / 1920 * 1.5;
   const cx = (x0 + x1) / 2;
-  return <g transform={`translate(${cx - 360 * sc} ${y0 - 330 * sc}) scale(${sc})`}>{outPresent(t, k + 'do', false, true)}</g>;
+  // (centred a little right of straight out, so the step, the path's bend and the open gate are all in the doorway)
+  return <g transform={`translate(${cx - 505 * sc} ${y0 - 330 * sc}) scale(${sc})`}>{outPresent(t, k + 'do', false, true)}</g>;
 }
 const roomAstroFace = (t: number): Expr => {
   const see = ss(t, T3.seePhoto - 0.1, T3.seePhoto + 0.15);
@@ -382,7 +382,7 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
       )}
       <InkK.Provider value={S.inkFor(cam.z)}>
         <g transform={`translate(${x} ${S.F3}) scale(${S.RS})`}>
-          <Astronaut pose={{armL, armR: {a: restA - swing, b: restB}, e: roomAstroFace(t), bob: walkBob(dist, amp), frontL: true}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={watchEl(t, k + 'r')} watchAt={S.WATCH_AT} feet={feet} nearLeg={feet.nearR ? 'R' : 'L'} />
+          <Astronaut pose={{armL, armR: {a: lerp(restA, 3, ss(t, T3.friendIn, T3.friendIn + 0.5)) - swing, b: restB}, e: roomAstroFace(t), bob: walkBob(dist, amp), frontL: true}} id={`${k}ra`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={watchEl(t, k + 'r')} watchAt={S.WATCH_AT} feet={feet} nearLeg={feet.nearR ? 'R' : 'L'} />
         </g>
       </InkK.Provider>
     </g>

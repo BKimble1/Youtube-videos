@@ -341,9 +341,9 @@ export const T_GATE = (() => {
 export const RS = ROOM.figScale; // 1.4
 export const F3 = ROOM.floor;
 export const DOOR3 = {x0: rx(60), x1: rx(-200), cx: rx(-70), y0: 830};
-export const STOP3 = 1510; // where he stands, an arm's length from the photograph on the table
+export const STOP3 = 1488; // where he stands, an arm's length from the photograph on the table
 /** his old friend stands in the open doorway, on the threshold (the leaf is on the other jamb) */
-export const FRIEND_DOOR_X = DOOR3.cx + 50;
+export const FRIEND_DOOR_X = DOOR3.cx + 58;
 /** he steps in through the doorway (walking left, into the room) and stops by the table */
 export const roomAstroX = (t: number) => lerp(DOOR3.cx - 10, STOP3, trap2(t, T3.inside, T3.roomStop, 0.04, 0.42));
 /** the photograph (mirrored room coords): print rect, centre, the young faces */
