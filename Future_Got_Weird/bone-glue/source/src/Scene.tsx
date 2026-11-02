@@ -13,11 +13,11 @@ import {DrapeOverArm, HandTable, RoomBack} from './art/room';
 import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
 import {P, pt} from './core/geo';
-import {armAt, boneAt, camAt, instrAt, openTau, passAt, surgeonOn, tableVariant} from './story';
+import {armAt, boneAt, camAt, instrAt, openTau, passAt, skinVeil, surgeonOn, tableVariant} from './story';
 import {Captions} from './Captions';
 import {PassThrough} from './PassThrough';
 
-const Z_SKIN = -BONE_DEPTH, Z_INSTR = -8, Z_TABLE = 40, Z_ROOM = 600;
+const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = -6, Z_TABLE = 40, Z_ROOM = 600;
 
 /** a point at depth 0 drawn in a layer at depth z: where it must sit so it lands on the same screen point */
 const reproject = (c: Cam, p: P, z: number): P => {
@@ -72,7 +72,14 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
       </Layer>
       <Layer c={c} z={Z_SKIN} maxBlur={22}>
         <ArmSkin id={`${fkey}skin`} s={arm} />
-        <IncisionRim id={`${fkey}rim`} s={arm} />
+        {skinVeil(t) > 0.001 && (
+          <g opacity={skinVeil(t)}>
+            <ArmSkin id={`${fkey}veil`} s={arm} noWindow />
+          </g>
+        )}
+        <g opacity={0.5 + 0.5 * Math.min(1, Math.max(0, (c.w - 28) / 30))}>
+          <IncisionRim id={`${fkey}rim`} s={arm} />
+        </g>
         {tableVariant(t) === 'drape' && <DrapeOverArm id={`${fkey}dro`} />}
       </Layer>
       {(showSurgeon || c.w <= 70) && (ins.appOn > 0.01 || ins.clampOn > 0.01) && (

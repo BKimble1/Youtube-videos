@@ -632,10 +632,12 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
 /** the body's key points in his local (unsquashed) frame for a lean: head, neck, shoulders, the gown's outline.
  *  Local = world x, and y scaled by k about the anchor (see toLocal). Designed for camera B (x 110, y -80, w 470,
  *  k 0.86): the head in the upper right, the gowned chest down the right edge, the shoulders just under the mask. */
+/** Bone Glue scene: the whole body sits this far left of its designed place (closer to the wrist, for a tighter shot) */
+export const SURGEON_DX = -26;
 const bodyGeo = (lean: number) => {
-  const pivot = {x: 300, y: 330};
+  const pivot = {x: 300 + SURGEON_DX, y: 330};
   const R = (p: V, k = 0.9) => rot(p, -lean * k, pivot);
-  const o = (x: number, y: number) => R({x, y});
+  const o = (x: number, y: number) => R({x: x + SURGEON_DX, y});
   const head = rot(o(222, -303), -lean * 0.5, o(255, -200)); // the head cranes a little further forward
   return {
     head,

@@ -254,8 +254,8 @@ const egg = (c: P, rx: number, ry: number, rotDeg: number, k: number, n = 44) =>
     const r = (rotDeg * Math.PI) / 180;
     return pt(c.x + q.x * Math.cos(r) - q.y * Math.sin(r), c.y + q.x * Math.sin(r) + q.y * Math.cos(r));
   });
-const PISIFORM = egg(pt(-24.8, -46.6), 4.4, 5.3, -16, 0.14);
-const HOOK = smoothClosed({pts: [pt(-21.4, -58.4), pt(-19.4, -57.9), pt(-17.7, -59.2), pt(-17.0, -61.6), pt(-17.5, -64.3), pt(-19.0, -65.9), pt(-20.7, -66.0), pt(-21.9, -64.6), pt(-22.3, -62.2), pt(-22.2, -60.0)], art: new Array(10).fill(false)}, 0.3, 6).pts;
+const PISIFORM = egg(pt(-25.5, -47.2), 4.5, 5.5, -18, 0.12);
+const HOOK = smoothClosed({pts: [pt(-22.2, -57.8), pt(-20.4, -57.0), pt(-18.6, -58.2), pt(-17.4, -60.8), pt(-17.3, -63.8), pt(-18.2, -66.2), pt(-19.6, -66.8), pt(-20.5, -65.4), pt(-20.6, -62.8), pt(-21.4, -60.6), pt(-22.6, -59.2)], art: new Array(11).fill(false)}, 0.3, 8).pts;
 
 const built: Record<string, Built> = {};
 for (const k of Object.keys(edgesOf)) built[k] = smoothClosed(joinEdges(edgesOf[k]));
@@ -404,7 +404,16 @@ const Compact: React.FC<{id: string; b: Built; detail: number; shadow?: boolean}
         </linearGradient>
         <clipPath id={`${id}-c`}><path d={d} /></clipPath>
       </defs>
-      {shadow && <path d={d} fill={rgba('#2A0A10', 0.3)} transform="translate(0.45 0.7)" />}
+      {shadow && (
+        <g>
+          <defs>
+            <filter id={`${id}-sf`} x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation={0.45} />
+            </filter>
+          </defs>
+          <path d={d} fill={rgba('#3A1A10', 0.42)} transform="translate(0.55 0.8)" filter={`url(#${id}-sf)`} />
+        </g>
+      )}
       <path d={d} fill={`url(#${id}-g)`} />
       <g clipPath={`url(#${id}-c)`}>
         <path d={d} fill="none" stroke={`url(#${id}-r)`} strokeWidth={Math.min(2.2, r * 0.4)} />
@@ -481,7 +490,7 @@ const Ulna: React.FC<{id: string; detail: number}> = ({id, detail}) => {
 export const Skeleton: React.FC<{id: string; curl: number; thumb: number; detail?: number}> = ({id, curl, thumb, detail = 1}) => {
   const dt = clamp(detail);
   const h = handBones(curl, thumb);
-  const ses = [-1, 1].map((k) => ({pts: ellipsePts(add(add(THUMB.head, mul(A1, -3.4)), mul(N1, 2.5 * k)), 1.55, 1.9, (Math.atan2(A1.y, A1.x) * 180) / Math.PI + 90, 20), art: new Array(20).fill(false)}));
+  const ses = [-1, 1].map((k) => ({pts: ellipsePts(add(add(THUMB.head, mul(A1, -3.6)), mul(N1, 2.4 * k)), 1.3, 1.65, (Math.atan2(A1.y, A1.x) * 180) / Math.PI + 90, 20), art: new Array(20).fill(false)}));
   const order = ['lunate', 'scaphoid', 'capitate', 'trapezoid', 'trapezium', 'hamate', 'triquetrum'];
   return (
     <g>

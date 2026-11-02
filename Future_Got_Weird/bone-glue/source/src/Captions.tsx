@@ -6,7 +6,7 @@ import React from 'react';
 import {Caption, CAPTIONS, clamp} from './lib';
 
 export const CAP_Y: [string, number][] = [
-  ['If you', 1500], ['imagine gluing', 1500], ['Researchers actually', 1500], ['They developed', 330], ['inspired by', 330],
+  ['If you', 1500], ['imagine gluing', 1500], ['Researchers actually', 1500], ['They developed', 1500], ['inspired by', 330],
   ['It grips', 1500], ['a wet', 1500], ['In one', 1500], ['surgeons secured', 1500], ['in just', 1500],
   ['The fracture', 1510], ['But as', 1510], ['the glue', 1510], ['Your body', 1510], ['the stuff', 1500],
 ];

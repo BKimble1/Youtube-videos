@@ -311,53 +311,89 @@ export const beadEdgeBelow = (x: number, st: BoneState): P => {
 };
 
 // ---------------------------------------------------------------- the wet wound film (macro)
-/** blood-tinted fluid running over bone and bead: a faint wet sheen, a few rivulets that flow down across the bead and
- *  around it, and sliding glints. The bead's sealed edges stay crisp on top of everything except the rivulets' tint. */
+/** the wet wound: a thin, slightly red-tinted film with a moving sheen, a few translucent puddles of blood drifting down
+ *  over bone and bead (they deform as they flow), and small drops sliding. Restrained: the bead stays readable through
+ *  it, and its sealed contact edges are redrawn on top (BeadEdges) so the bond reads as holding in the wet. */
 const FluidFilm: React.FC<{st: BoneState; view: [number, number, number, number]}> = ({st, view}) => {
   if (st.wet <= 0.001) return null;
   const [x0, y0, x1, y1] = view;
   const W = x1 - x0, H = y1 - y0;
   const t = st.t;
   const px = st.px;
-  const riv: React.ReactNode[] = [];
-  for (let k = 0; k < 4; k++) {
-    const xs = x0 + (0.14 + 0.24 * k + 0.05 * hash(k * 2.9)) * W;
-    const speed = 0.16 + 0.05 * hash(k * 7.3);
-    const head = ((t * speed + 0.27 * k) % 1.35) - 0.2; // 0..1.15 down the frame
+  const gid = uid('sheen');
+  const puddles: React.ReactNode[] = [];
+  for (let k = 0; k < 6; k++) {
+    const speed = 0.045 + 0.02 * hash(k * 7.3);
+    const ph = ((t * speed + hash(k * 2.1)) % 1 + 1) % 1;
+    const cx = x0 + (0.1 + 0.8 * hash(k * 5.7)) * W + 0.04 * W * Math.sin(t * 0.7 + k);
+    const cy = y0 - 0.15 * H + ph * 1.3 * H;
+    const R = (0.09 + 0.07 * hash(k * 3.3)) * W;
     const pts: P[] = [];
-    for (let i = 0; i <= 30; i++) {
-      const v = i / 30;
-      if (v > head) break;
-      const y = y0 + v * H;
-      const x = xs + 0.035 * W * Math.sin(v * 7.1 + k * 2.3) + 0.02 * W * noise1(v * 5 + k * 3, 7);
-      pts.push(pt(x, y));
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2;
+      const r = R * (1 + 0.28 * noise1(i * 0.9 + t * 0.6, k + 11)) * (1 + 0.35 * Math.max(0, Math.sin(a)));
+      pts.push(pt(cx + r * Math.cos(a) * 0.8, cy + r * Math.sin(a) * 1.15));
     }
-    if (pts.length < 3) continue;
-    const wdt = (0.045 + 0.02 * hash(k * 1.9)) * W;
-    const d = open(pts, 0.6);
-    const tip = pts[pts.length - 1];
-    riv.push(
-      <g key={`r${k}`} opacity={st.wet}>
-        <path d={d} stroke={C.blood} strokeWidth={wdt * 1.35} fill="none" strokeLinecap="round" opacity={0.12} />
-        <path d={d} stroke={C.bloodLit} strokeWidth={wdt} fill="none" strokeLinecap="round" opacity={0.26} />
-        <path d={d} stroke="#FFE9EC" strokeWidth={Math.max(0.01, wdt * 0.1)} fill="none" strokeLinecap="round" opacity={0.6} transform={`translate(${-wdt * 0.25} 0)`} />
-        <ellipse cx={tip.x} cy={tip.y} rx={wdt * 0.58} ry={wdt * 0.72} fill={C.bloodLit} opacity={0.5} />
-        <ellipse cx={tip.x - wdt * 0.2} cy={tip.y - wdt * 0.25} rx={wdt * 0.18} ry={wdt * 0.13} fill="#FFFFFF" opacity={0.85} />
+    const fade = Math.sin(Math.PI * ph);
+    const d = closed(pts, 0.9);
+    const pg = uid('pud');
+    puddles.push(
+      <g key={k} opacity={st.wet * (0.35 + 0.65 * fade)}>
+        <defs>
+          <radialGradient id={pg} gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={R * 1.35}>
+            <stop offset={0} stopColor={C.blood} stopOpacity={0.42} />
+            <stop offset={0.65} stopColor={C.blood} stopOpacity={0.3} />
+            <stop offset={1} stopColor={C.bloodLit} stopOpacity={0.05} />
+          </radialGradient>
+        </defs>
+        <path d={d} fill={`url(#${pg})`} />
+        <ellipse cx={cx - R * 0.3} cy={cy - R * 0.45} rx={R * 0.32} ry={R * 0.12} fill="#FFFFFF" opacity={0.5} transform={`rotate(-20 ${cx - R * 0.3} ${cy - R * 0.45})`} />
       </g>,
     );
   }
-  const glints: React.ReactNode[] = [];
-  for (let k = 0; k < 8; k++) {
-    const ph = ((t * 0.25 + k * 0.125) % 1 + 1) % 1;
-    const x = x0 + (0.08 + 0.84 * hash(k * 4.1)) * W, y = y0 + ph * H;
-    const l = 0.05 * W * (0.6 + 0.6 * hash(k * 1.1));
-    glints.push(<path key={`g${k}`} d={`M${x - l} ${y}Q${x} ${y - l * 0.25} ${x + l} ${y}`} stroke="#FFFFFF" strokeWidth={Math.max(0.01, 2.2 * px)} fill="none" opacity={0.55 * st.wet * Math.sin(Math.PI * ph)} strokeLinecap="round" />);
+  const drops: React.ReactNode[] = [];
+  for (let k = 0; k < 4; k++) {
+    const ph = ((t * (0.16 + 0.05 * hash(k * 1.7)) + 0.31 * k) % 1 + 1) % 1;
+    const x = x0 + (0.15 + 0.7 * hash(k * 9.3)) * W, y = y0 + ph * H;
+    const r = 0.022 * W * (0.8 + 0.5 * hash(k * 4.1));
+    drops.push(
+      <g key={`d${k}`} opacity={st.wet * Math.sin(Math.PI * ph)}>
+        <path d={`M${x} ${y - r * 2.6}Q${x + r} ${y - r} ${x + r} ${y}A${r} ${r} 0 1 1 ${x - r} ${y}Q${x - r} ${y - r} ${x} ${y - r * 2.6}Z`} fill={C.bloodLit} opacity={0.55} />
+        <ellipse cx={x - r * 0.35} cy={y - r * 0.3} rx={r * 0.28} ry={r * 0.2} fill="#FFFFFF" opacity={0.85} />
+      </g>,
+    );
   }
+  const sx = x0 + ((t * 0.12) % 1) * W * 1.4 - 0.2 * W;
   return (
     <g>
-      <rect x={x0} y={y0} width={W} height={H} fill={C.blood} opacity={0.07 * st.wet} />
-      {riv}
-      {glints}
+      <defs>
+        <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={sx - 0.25 * W} y1={y0} x2={sx + 0.25 * W} y2={y1}>
+          <stop offset={0} stopColor="#FFFFFF" stopOpacity={0} />
+          <stop offset={0.5} stopColor="#FFFFFF" stopOpacity={0.16} />
+          <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect x={x0} y={y0} width={W} height={H} fill={C.blood} opacity={0.06 * st.wet} />
+      {puddles}
+      {drops}
+      <rect x={x0} y={y0} width={W} height={H} fill={`url(#${gid})`} opacity={st.wet} />
+    </g>
+  );
+};
+/** the bead's contact edges redrawn over the wet film: crisp, sealed */
+const BeadEdges: React.FC<{st: BoneState}> = ({st}) => {
+  if (st.wet <= 0.001) return null;
+  const ribbons = computeRibbons(st);
+  const w = Math.max(0.01, 2.6 * st.px);
+  return (
+    <g opacity={st.wet}>
+      {ribbons.map((rb, i) => (
+        <g key={i}>
+          <path d={open(rb.L, 0.5)} stroke={C.glueInk} strokeWidth={w} fill="none" />
+          <path d={open(rb.R, 0.5)} stroke={C.glueInk} strokeWidth={w} fill="none" />
+          <path d={open(offsetLine(rb.L, (_, n) => -n.y * 0.0 - 0.09), 0.5)} stroke={C.glueLit} strokeWidth={w * 0.8} fill="none" opacity={0.8} />
+        </g>
+      ))}
     </g>
   );
 };
@@ -614,5 +650,6 @@ export const BoneInside: React.FC<{st: BoneState; view: [number, number, number,
     <FieldDetail st={st} t={st.t} />
     <Radius st={st} view={view} />
     <FluidFilm st={st} view={view} />
+    <BeadEdges st={st} />
   </g>
 );

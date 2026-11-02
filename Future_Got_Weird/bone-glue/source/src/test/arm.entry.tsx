@@ -27,6 +27,14 @@ export const STATES: St[] = [
   {label: 'closing', cam: {x: 2, y: -6, w: 70, k: 1, focus: -10}, arm: {...A0, incision: 0.35, sutures: 0.4}},
   {label: 'window shrinking', cam: {x: -8, y: -60, w: 200, k: 1, focus: -10}, arm: {...A0, incision: 0, scar: 0.8, window: WIN(30)}},
   {label: 'skeleton', cam: {x: -4, y: -95, w: 150, k: 1, focus: 0}, arm: {...A0, window: WIN(200)}},
+  {label: 'skeleton curled', cam: {x: -4, y: -95, w: 150, k: 1, focus: 0}, arm: {...A0, curl: 0.55, thumb: 0.275, window: WIN(200)}},
+  {label: 'rim mid', cam: {x: 4, y: -4, w: 80, k: 1, focus: -10}, arm: A0, bone: {laid: 40, t: 2, seep: 0, set: 0}},
+  {label: 'close 0.75', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0.75}},
+  {label: 'close 0.5', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0.5}},
+  {label: 'close 0.25', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0.25, sutures: 0.15}},
+  {label: 'close 0.08', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0.08, sutures: 0.5}},
+  {label: 'close 0.0', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0, sutures: 0.8}},
+  {label: 'scar 0.5', cam: {x: 2, y: -4, w: 64, k: 1, focus: -10}, arm: {...A0, incision: 0, sutures: 0.5, scar: 0.5}},
 ];
 
 const Z_SKIN = -10;

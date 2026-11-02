@@ -113,13 +113,11 @@ type Crotch = {sa: number; sb: number; mid: P[]; touching: boolean; p: P};
 const crotchOf = (A: Fg, B: Fg, wA: number, wB: number): Crotch => {
   const st = 0.5;
   const ra = sideLine(A, -1, 0, A.s[3], st), lb = sideLine(B, 1, 0, B.s[3], st);
-  const nA = Math.round(A.s[3] / st) || 1, nB = Math.round(B.s[3] / st) || 1;
   for (let i = ra.length - 2; i >= 0; i--) {
     for (let j = 0; j < lb.length - 1; j++) {
       const h = segHit(ra[i], ra[i + 1], lb[j], lb[j + 1]);
       if (h) {
         const sa = ((i + h.t) / (ra.length - 1)) * A.s[3], sb = ((j + h.u) / (lb.length - 1)) * B.s[3];
-        void nA; void nB;
         if (sa > 2.5 && sb > 2.5) {
           const p = lerpP(ra[i], ra[i + 1], h.t);
           return {sa, sb, mid: [p], touching: true, p};
@@ -193,7 +191,8 @@ const holePts = (a: number, inset = 0, n = 96): P[] => {
   for (let i = 0; i < n; i++) {
     const t = (i / n) * Math.PI * 2;
     const ct = Math.cos(t), st = Math.sin(t);
-    const pinch = 1 - 0.2 * Math.abs(st) ** 6;
+    // pointed commissures at the incision's ends, the lips pulled out a little where the rakes grip
+    const pinch = (1 - 0.3 * Math.abs(st) ** 3) * (1 + 0.07 * Math.exp(-(((st + 0.04 * Math.sign(ct)) / 0.32) ** 2)));
     const ax = Math.max(0, a * pinch - inset * (0.55 + 0.45 * Math.abs(ct)) * clamp(a / 5));
     const by = Math.max(0, ry - inset * 0.5 * clamp(a / 5));
     out.push(pt(c.x + ax * ct, c.y + by * st));
@@ -212,8 +211,10 @@ const winPts = (w: Win, k: number, n = 72): P[] => {
   }
   return out;
 };
+/** the band of skin kept along the arm's outline inside a cutaway window (mm): the arm keeps its edge */
+const EDGE_BAND = 2.4;
 /** <mask id={`${id}-wm`}>: white everywhere, black (feathered) inside the window */
-const WindowDefs: React.FC<{id: string; w: Win}> = ({id, w}) => {
+const WindowDefs: React.FC<{id: string; w: Win; ghost?: number; edge?: string}> = ({id, w, ghost = 0, edge}) => {
   const sd = Math.max(0.02, (w.soft * w.r) / 4.4);
   const R = w.r * 1.6;
   return (
@@ -221,9 +222,15 @@ const WindowDefs: React.FC<{id: string; w: Win}> = ({id, w}) => {
       <filter id={`${id}-wf`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
         <feGaussianBlur stdDeviation={sd} />
       </filter>
+      {edge && (
+        <filter id={`${id}-ef`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
+          <feGaussianBlur stdDeviation={0.75} />
+        </filter>
+      )}
       <mask id={`${id}-wm`} maskUnits="userSpaceOnUse" x={-3000} y={-3000} width={6000} height={6000}>
         <rect x={-3000} y={-3000} width={6000} height={6000} fill="#FFFFFF" />
-        <path d={closed(winPts(w, 1 - w.soft * 0.5), 1)} fill="#000000" filter={`url(#${id}-wf)`} />
+        <path d={closed(winPts(w, 1 - w.soft * 0.5), 1)} fill="#000000" opacity={1 - ghost} filter={`url(#${id}-wf)`} />
+        {edge && <path d={edge} fill="none" stroke="#FFFFFF" strokeWidth={EDGE_BAND * 2} filter={`url(#${id}-ef)`} />}
       </mask>
     </>
   );
@@ -319,34 +326,49 @@ const acrossArc = (f: Fg, s: number, span = 0.78, bow = 0.6): P[] => {
   return [a, lerpP(lerpP(a, m, 0.5), m, 0.4), m, lerpP(lerpP(b, m, 0.5), m, 0.4), b];
 };
 
+/** accumulated flexion of each phalanx (rad), as in anatomy.fingerChain / thumbChain */
+const flexOf = (curl: number, thumb?: boolean) => {
+  if (thumb) return [0.15 + 0.4 * curl, 0.4 + curl];
+  const a = [0.42 * curl + 0.18, 0.95 * curl + 0.22, 0.6 * curl + 0.12];
+  return [a[0], a[0] + a[1], a[0] + a[1] + a[2]];
+};
 const Digit_: React.FC<{id: string; f: Fg; sBase: number; curl: number; thumb?: boolean}> = ({id, f, sBase, curl, thumb}) => {
+  const flex = flexOf(curl, thumb);
   const sT = f.s[f.s.length - 1];
   const tube = [...sideLine(f, 1, sBase - 14, sT), ...capPts(f), ...sideLine(f, -1, sT, sBase - 14)];
   const mid = f.at(Math.max(sBase, (sBase + sT) * 0.5), 0);
   const hwM = f.hw((sBase + sT) * 0.5);
   const A = add(mid, mul(f.nL, hwM)), B = add(mid, mul(f.nL, -hwM));
-  const m0 = f.at(sBase - 9, 0), m1 = f.at(sBase + 1.5, 0);
+  const m0 = f.at(sBase - 4.5, 0), m1 = f.at(sBase + 1.2, 0);
   const pads: React.ReactNode[] = [];
   const segs = f.s.length - 1;
+  // each phalanx's pad, and the flexed segments turning their pads away from the light (darker as they curl)
+  const turn: React.ReactNode[] = [];
   for (let k = 0; k < segs; k++) {
-    const a = Math.max(f.s[k], sBase - 2), b = f.s[k + 1];
+    const a = Math.max(f.s[k], sBase + 1), b = f.s[k + 1];
     if (b - a < 0.4) continue;
     const sm = (a + b) / 2 + (k === segs - 1 ? 0.15 * f.hw(b) : 0);
-    const c = add(f.at(sm, 0.12), mul(f.u, 0));
-    const ry = Math.max(f.hw(sm) * 0.55, (b - a) * 0.42);
-    pads.push(<RG key={k} id={`${id}-pd${k}`} c={c} rx={f.hw(sm) * 0.72} ry={ry} rot={deg(f.u) + 90} color={C.skinLight} a={0.55} fx={0.38} fy={0.4} />);
+    const c = f.at(sm, 0.16);
+    const ry = Math.max(f.hw(sm) * 0.5, (b - a) * 0.36);
+    pads.push(<RG key={k} id={`${id}-pd${k}`} c={c} rx={f.hw(sm) * 0.62} ry={ry} rot={deg(f.u) + 90} color={C.skinLight} a={0.38} fx={0.38} fy={0.4} />);
+    const acc = flex[k] ?? 0;
+    const dk = clamp((acc - 0.55) * 0.42, 0, 0.3);
+    if (dk > 0.01) {
+      const seg = [...sideLine(f, 1, f.s[k] + 0.4, b), ...(k === segs - 1 ? capPts(f) : []), ...sideLine(f, -1, b, f.s[k] + 0.4)];
+      turn.push(<path key={`t${k}`} d={poly(seg)} fill={C.skinDeep} opacity={dk} />);
+    }
   }
   // fingertip: pinker pad, glossy highlight
   const tipC = f.at(sT, 0.08);
   const r = f.hw(sT);
   const gl = add(add(tipC, mul(f.nL, r * 0.38)), mul(f.u, r * 0.2));
-  // flexion creases (deeper as the digit curls)
-  const ca = 0.42 + 0.45 * clamp(curl * 1.6);
-  const creases: P[][] = [];
+  // flexion creases, deeper as each joint bends
+  const jA = (k: number) => clamp(0.3 + 0.75 * (flex[k] - (k > 0 ? flex[k - 1] : 0)));
+  const creases: [P[], number][] = [];
   if (!thumb) {
-    creases.push(acrossArc(f, f.s[1] - 0.8, 0.8, 0.7), acrossArc(f, f.s[1] + 0.5, 0.7, 0.6), acrossArc(f, f.s[2], 0.72, 0.5), acrossArc(f, sBase + 2.2, 0.82, 0.9));
+    creases.push([acrossArc(f, f.s[1] - 0.8, 0.8, 0.7), jA(1)], [acrossArc(f, f.s[1] + 0.5, 0.7, 0.6), jA(1) * 0.8], [acrossArc(f, f.s[2], 0.72, 0.5), jA(2)], [acrossArc(f, sBase + 2.2, 0.82, 0.9), 0.45]);
   } else {
-    creases.push(acrossArc(f, f.s[1] - 0.3, 0.8, 0.8), acrossArc(f, 1.0, 0.75, 1.2));
+    creases.push([acrossArc(f, f.s[1] - 0.3, 0.8, 0.8), jA(1)], [acrossArc(f, 1.0, 0.75, 1.2), 0.45]);
   }
   // the thumbnail, seen edge-on along the radial side of the distal phalanx
   let nail: React.ReactNode = null;
@@ -393,8 +415,9 @@ const Digit_: React.FC<{id: string; f: Fg; sBase: number; curl: number; thumb?: 
         <path d={poly(tube)} fill={`url(#${id}-g)`} />
         {pads}
       </g>
+      {turn}
       <RG id={`${id}-tp`} c={tipC} rx={r * 0.8} ry={r * 0.75} rot={deg(f.u) + 90} color="#F2A893" a={0.32} />
-      {creases.map((p, i) => <Crease key={i} d={open(p, 0.8)} a={i === creases.length - 1 ? 0.45 : ca} lift={mul(f.u, 0.32)} />)}
+      {creases.map(([p, a], i) => <Crease key={i} d={open(p, 0.8)} a={a} lift={mul(f.u, 0.32)} />)}
       {nail}
       <ellipse cx={gl.x} cy={gl.y} rx={r * 0.34} ry={r * 0.16} transform={`rotate(${deg(f.u) + 90 - 25} ${gl.x} ${gl.y})`} fill="#FFFFFF" opacity={0.5} />
     </g>
@@ -405,8 +428,8 @@ const Digit_: React.FC<{id: string; f: Fg; sBase: number; curl: number; thumb?: 
 const LIFE: P[] = [pt(22.4, -121.5), pt(16.0, -113.0), pt(11.2, -101.0), pt(8.6, -87.0), pt(8.0, -73.0), pt(9.0, -60.0), pt(11.2, -48.5)];
 const HEAD: P[] = [pt(22.0, -121.0), pt(13.0, -118.2), pt(2.0, -114.0), pt(-10.0, -109.0), pt(-21.0, -104.6), pt(-29.0, -101.6)];
 const HEART: P[] = [pt(-42.5, -117.0), pt(-35.0, -120.2), pt(-25.0, -124.6), pt(-15.0, -128.8), pt(-6.0, -132.6), pt(0.2, -138.0), pt(3.0, -144.5)];
-const WRIST1: P[] = [pt(-35.5, -35.0), pt(-22.0, -36.6), pt(-8.0, -37.2), pt(6.0, -36.8), pt(18.5, -35.4)];
-const WRIST2: P[] = [pt(-34.0, -26.0), pt(-20.0, -27.2), pt(-6.0, -27.6), pt(8.0, -27.0), pt(17.0, -26.0)];
+const WRIST1: P[] = [[-28.0, 0.6], [-19.0, -0.6], [-8.0, -1.2], [2.5, -0.9], [11.5, 0.2]].map(([x, d]) => pt(x, WRIST_CREASE_Y + d));
+const WRIST2: P[] = [pt(-22.0, -28.2), pt(-12.0, -28.8), pt(-2.0, -28.8), pt(5.0, -28.2)];
 const HYPO: P[] = [pt(-31.0, -98.0), pt(-27.6, -84.0), pt(-27.4, -68.0), pt(-29.6, -54.0)];
 
 // ---------------------------------------------------------------- the incision as seen on the skin
@@ -511,11 +534,20 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
     <g>
       <defs>
         <clipPath id={`${id}-cl`}><path d={clipD} clipRule="evenodd" /></clipPath>
-        {win && <WindowDefs id={id} w={win} />}
+        {win && <WindowDefs id={id} w={win} edge={outD} />}
         <linearGradient id={`${id}-pt`} gradientUnits="userSpaceOnUse" x1={0} y1={-32} x2={0} y2={-62}>
           <stop offset={0} stopColor={PALM} stopOpacity={0} />
           <stop offset={1} stopColor={PALM} stopOpacity={1} />
         </linearGradient>
+        <linearGradient id={`${id}-wcg`} gradientUnits="userSpaceOnUse" x1={-29} y1={0} x2={12.5} y2={0}>
+          <stop offset={0} stopColor="#000000" />
+          <stop offset={0.4} stopColor="#FFFFFF" />
+          <stop offset={0.62} stopColor="#FFFFFF" />
+          <stop offset={1} stopColor="#000000" />
+        </linearGradient>
+        <mask id={`${id}-wcm`} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={60}>
+          <rect x={-60} y={-60} width={120} height={60} fill={`url(#${id}-wcg)`} />
+        </mask>
         <linearGradient id={`${id}-st`} gradientUnits="userSpaceOnUse" x1={0} y1={-26} x2={0} y2={190}>
           <stop offset={0} stopColor="#FFFFFF" stopOpacity={0} />
           <stop offset={0.12} stopColor="#FFFFFF" stopOpacity={0.55} />
@@ -535,7 +567,6 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
           <RG id={`${id}-thS`} c={add(thenarC, mul(n1, 7))} rx={10} ry={26} rot={deg(a1) + 90} color={C.skinDeep} a={0.32} />
           <RG id={`${id}-thL`} c={add(thenarC, mul(n1, -1.5))} rx={11} ry={22} rot={deg(a1) + 90} color={C.skinLight} a={0.8} fx={0.38} fy={0.36} />
           <RG id={`${id}-wr`} c={pt(-8, -33)} rx={30} ry={5} color={C.skinDeep} a={0.16} />
-          {fsh.map((f, i) => <RG key={`ip${i}`} id={`${id}-ip${i}`} c={f.at(-5, 0.15)} rx={f.w * 0.85} ry={f.w * 0.65} color={C.skinLight} a={0.45} />)}
           {/* the forearm's long gloss along its lit side */}
           <path d={open([pt(-33.6, -24), pt(-34.4, 10), pt(-36.2, 60), pt(-38.6, 120), pt(-40.6, 185)], 1)} fill="none" stroke={`url(#${id}-st)`} strokeWidth={2.6} strokeLinecap="round" />
           {/* digits */}
@@ -546,8 +577,10 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
           <Crease d={open(HEAD, 0.8)} a={0.55} />
           <Crease d={open(LIFE, 0.8)} a={0.62} lift={pt(-0.3, -0.2)} />
           <Crease d={open(HYPO, 0.8)} a={0.18} />
-          <Crease d={open(WRIST1, 0.8)} a={0.6} />
-          <Crease d={open(WRIST2, 0.8)} a={0.3} />
+          <g mask={`url(#${id}-wcm)`}>
+            <Crease d={open(WRIST1, 0.8)} a={0.62} />
+            <Crease d={open(WRIST2, 0.8)} a={0.32} />
+          </g>
           {/* small glosses */}
           <ellipse cx={thenarC.x - 4.5} cy={thenarC.y - 6} rx={3.2} ry={1.5} transform={`rotate(${deg(a1)} ${thenarC.x - 4.5} ${thenarC.y - 6})`} fill="#FFFFFF" opacity={0.42} />
           <ellipse cx={-37.5} cy={-90} rx={1.3} ry={4.2} transform="rotate(8 -37.5 -90)" fill="#FFFFFF" opacity={0.38} />
@@ -563,82 +596,72 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
 };
 
 // ---------------------------------------------------------------- the rim of the opening and the retractors
-const STEEL_INK = 1.9;
+const STEEL_INK = 1.8;
+/** a small blunt rake retractor: three hooked tines over the lip, a narrow head, a flat handle running off the arm
+ *  (left: down-left, right: down-right) that ends in a finger ring. `out` 0..1 withdraws it as the incision closes. */
 const Rake: React.FC<{id: string; side: number; a: number; out: number}> = ({id, side, a, out}) => {
   const {c, ry} = INCISION;
   const lipX = (y: number) => c.x + side * a * Math.sqrt(Math.max(0, 1 - ((y - c.y) / ry) ** 2));
-  const yc = c.y + side * 0.6;
-  const tys = [-4.7, -1.55, 1.55, 4.7].map((d) => yc + d);
-  const dx = side * out * 34;
+  const yc = c.y + side * 0.8;
+  const tys = [-3.3, 0, 3.3].map((d) => yc + d);
+  const ang = side < 0 ? (163 * Math.PI) / 180 : (11 * Math.PI) / 180;
+  const hd = pt(Math.cos(ang), Math.sin(ang));
+  const dx = mul(hd, out * 30);
   const lift = clamp(out * 1.6);
   const tines = tys.map((y) => {
     const x = lipX(y);
-    return {
-      p0: pt(x + side * 4.4 + dx, y),
-      pb: pt(x + side * 0.5 + dx, y - 0.25),
-      pt: pt(x - side * (1.9 - 1.6 * lift) + dx, y + 0.3),
-    };
+    return {p0: add(pt(x + side * 3.0, y), dx), pb: add(pt(x + side * 0.3, y - 0.2), dx), pt: add(pt(x - side * (1.05 - 0.9 * lift), y + 0.25), dx)};
   });
-  const xPlate = lipX(yc) + side * 4.9 + dx;
-  const plate = [pt(xPlate - 1.5 * side, tys[0] - 1.5), pt(xPlate + 1.5 * side, tys[0] - 1.9), pt(xPlate + 1.6 * side, tys[3] + 1.9), pt(xPlate - 1.5 * side, tys[3] + 1.5)];
-  const ang = side < 0 ? 0.1 : -0.07;
-  const hd = pt(Math.cos(ang) * side, Math.sin(ang));
+  // the head: a narrow bar along the lip joining the tines
+  const xh = lipX(yc) + side * 3.3;
+  const head = [pt(xh - side * 0.9, tys[0] - 1.25), pt(xh + side * 1.0, tys[0] - 1.45), pt(xh + side * 1.1, tys[2] + 1.45), pt(xh - side * 0.9, tys[2] + 1.25)].map((p) => add(p, dx));
+  // the handle
   const hn = perp(hd);
-  const h0 = add(pt(xPlate, yc), mul(hd, 1.2));
-  const HL = 96;
-  const hw = (t: number) => 2.3 - 0.5 * t;
-  const hp: P[] = [];
-  for (let k = 0; k <= 10; k++) {
-    const t = k / 10;
-    hp.push(add(add(h0, mul(hd, t * HL)), mul(hn, hw(t))));
-  }
-  const endC = add(h0, mul(hd, HL + 4.5));
-  const endPts: P[] = [];
+  const h0 = add(pt(xh + side * 0.4, yc), dx);
+  const HL = 66;
+  const hw = (t: number) => 1.75 - 0.35 * t + 0.25 * Math.max(0, (t - 0.85) / 0.15) ** 2;
+  const sideA: P[] = [], sideB: P[] = [];
   for (let k = 0; k <= 12; k++) {
-    const t = -Math.PI / 2 + (k / 12) * Math.PI;
-    endPts.push(add(endC, add(mul(hd, 6.5 * Math.cos(t)), mul(hn, 4.2 * Math.sin(t) * -1))));
+    const t = k / 12;
+    sideA.push(add(add(h0, mul(hd, t * HL)), mul(hn, hw(t))));
+    sideB.push(add(add(h0, mul(hd, t * HL)), mul(hn, -hw(t))));
   }
-  const hm: P[] = [];
-  for (let k = 10; k >= 0; k--) {
-    const t = k / 10;
-    hm.push(add(add(h0, mul(hd, t * HL)), mul(hn, -hw(t))));
+  const rc = add(h0, mul(hd, HL + 5.0));
+  const ringO: P[] = [], ringI: P[] = [];
+  for (let k = 0; k < 28; k++) {
+    const t = (k / 28) * Math.PI * 2;
+    ringO.push(add(rc, add(mul(hd, 6.2 * Math.cos(t)), mul(hn, 5.0 * Math.sin(t)))));
+    ringI.push(add(rc, add(mul(hd, 3.9 * Math.cos(t) + 0.3), mul(hn, 2.9 * Math.sin(t)))));
   }
-  const handle = [...hp, ...endPts.reverse(), ...hm];
-  const ring = [];
-  for (let k = 0; k < 20; k++) {
-    const t = (k / 20) * Math.PI * 2;
-    ring.push(add(endC, add(mul(hd, 3.6 * Math.cos(t) + 0.8), mul(hn, 1.9 * Math.sin(t)))));
-  }
-  const handleD = `${closed(handle, 0.5)}${closed(ring, 1)}`;
-  const g0 = add(h0, mul(hn, 2.4)), g1 = add(h0, mul(hn, -2.4));
-  const steel = (k: string) => (
-    <linearGradient id={k} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
-      <stop offset={0} stopColor={C.steelLit} />
-      <stop offset={0.35} stopColor={C.steel} />
-      <stop offset={0.75} stopColor={mix(C.steel, C.steelDeep, 0.5)} />
-      <stop offset={1} stopColor={C.steelDeep} />
-    </linearGradient>
-  );
-  const shadowOff = 'translate(1.3 1.8)';
+  const handleD = `${closed([...sideA, ...[...sideB].reverse()], 0.4)}${closed(ringO, 1)}${closed(ringI, 1)}`;
+  const g0 = add(h0, mul(hn, 2.0)), g1 = add(h0, mul(hn, -2.0));
+  const shadow = 'translate(1.4 2.0)';
   return (
-    <g opacity={1 - ss(out, 0.55, 1)}>
-      <defs>{steel(`${id}-s`)}</defs>
-      {/* soft shadow on the skin */}
-      <g opacity={0.24 * (1 - lift)} transform={shadowOff}>
-        <path d={handleD} fillRule="evenodd" fill="#3B1E14" />
-        <path d={closed(plate, 0.6)} fill="#3B1E14" />
+    <g opacity={1 - ss(out, 0.6, 1)}>
+      <defs>
+        <linearGradient id={`${id}-s`} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
+          <stop offset={0} stopColor={C.steelLit} />
+          <stop offset={0.4} stopColor={C.steel} />
+          <stop offset={0.78} stopColor={mix(C.steel, C.steelDeep, 0.5)} />
+          <stop offset={1} stopColor={C.steelDeep} />
+        </linearGradient>
+      </defs>
+      {/* contact shadow on the skin and the drape */}
+      <g opacity={0.26 * (1 - lift)} transform={shadow}>
+        <path d={handleD} fillRule="evenodd" fill="#2B140E" />
+        <path d={closed(head, 0.6)} fill="#2B140E" />
       </g>
-      <path d={handleD} fillRule="evenodd" fill={`url(#${id}-s)`} stroke={INK} strokeWidth={STEEL_INK} strokeLinejoin="round" vectorEffect={NS} />
-      <path d={open(hp.slice(1, 9).map((p) => add(p, mul(hn, -0.8))), 1)} fill="none" stroke="#FFFFFF" strokeWidth={0.55} opacity={0.75} strokeLinecap="round" />
       {tines.map((t, i) => (
         <g key={i}>
-          <path d={open([t.p0, t.pb, t.pt], 0.9)} fill="none" stroke={INK} strokeWidth={1.75} strokeLinecap="round" />
-          <path d={open([t.p0, t.pb, lerpP(t.pb, t.pt, 0.55)], 0.9)} fill="none" stroke={C.steel} strokeWidth={1.25} strokeLinecap="round" />
-          <path d={open([lerpP(t.pb, t.pt, 0.35), t.pt], 0.9)} fill="none" stroke={C.steelDeep} strokeWidth={1.2} strokeLinecap="round" />
-          <path d={open([lerpP(t.p0, t.pb, 0.15), lerpP(t.p0, t.pb, 0.75)], 0.9)} fill="none" stroke="#FFFFFF" strokeWidth={0.32} opacity={0.85} strokeLinecap="round" />
+          <path d={open([t.p0, t.pb, t.pt], 0.9)} fill="none" stroke={mix(INK, C.steelDeep, 0.3)} strokeWidth={1.05} strokeLinecap="round" />
+          <path d={open([t.p0, t.pb, lerpP(t.pb, t.pt, 0.5)], 0.9)} fill="none" stroke={C.steel} strokeWidth={0.72} strokeLinecap="round" />
+          <path d={open([lerpP(t.pb, t.pt, 0.3), t.pt], 0.9)} fill="none" stroke={mix(C.steel, C.steelDeep, 0.6)} strokeWidth={0.7} strokeLinecap="round" />
+          <path d={open([lerpP(t.p0, t.pb, 0.1), lerpP(t.p0, t.pb, 0.8)], 0.9)} fill="none" stroke="#FFFFFF" strokeWidth={0.22} opacity={0.9} strokeLinecap="round" />
         </g>
       ))}
-      <path d={closed(plate, 0.6)} fill={`url(#${id}-s)`} stroke={INK} strokeWidth={STEEL_INK} strokeLinejoin="round" vectorEffect={NS} />
+      <path d={closed(head, 0.6)} fill={`url(#${id}-s)`} stroke={INK} strokeWidth={STEEL_INK} strokeLinejoin="round" vectorEffect={NS} />
+      <path d={handleD} fillRule="evenodd" fill={`url(#${id}-s)`} stroke={INK} strokeWidth={STEEL_INK} strokeLinejoin="round" vectorEffect={NS} />
+      <path d={open(sideA.slice(1, 11).map((p) => add(p, mul(hn, -0.65))), 1)} fill="none" stroke="#FFFFFF" strokeWidth={0.45} opacity={0.8} strokeLinecap="round" />
     </g>
   );
 };
@@ -663,7 +686,7 @@ export const IncisionRim: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
     const ct = Math.cos(t), st = Math.sin(t);
     const band = 1.75 * (0.55 + 0.45 * Math.abs(ct)) * kb;
     const dd = 0.9 * kb + band * (0.3 + 0.4 * hash(k * 3.3));
-    const pinch = 1 - 0.2 * Math.abs(st) ** 6;
+    const pinch = (1 - 0.3 * Math.abs(st) ** 3) * (1 + 0.07 * Math.exp(-(((st + 0.04 * Math.sign(ct)) / 0.32) ** 2)));
     const p = pt(c.x + (a * pinch - dd * (0.55 + 0.45 * Math.abs(ct))) * ct, c.y + (INCISION.ry - dd * 0.5) * st);
     const r = band * (0.32 + 0.16 * hash(k * 5.1));
     if (r < 0.05) continue;
@@ -687,7 +710,7 @@ export const IncisionRim: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
     <g>
       <defs>
         <clipPath id={`${id}-h`}><path d={poly(H)} /></clipPath>
-        {win && <WindowDefs id={id} w={win} />}
+        {win && <WindowDefs id={id} w={win} ghost={0.3} />}
         <linearGradient id={`${id}-wl`} gradientUnits="userSpaceOnUse" x1={gA.x} y1={gA.y} x2={gB.x} y2={gB.y}>
           <stop offset={0} stopColor="#2A0A10" stopOpacity={0.4} />
           <stop offset={0.5} stopColor="#2A0A10" stopOpacity={0.05} />
@@ -697,8 +720,9 @@ export const IncisionRim: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
       <g mask={win ? `url(#${id}-wm)` : undefined}>
         <g clipPath={`url(#${id}-h)`}>
           {/* the lips' shadow on the floor of the wound (the light comes from the upper left) */}
-          <path d={`${poly(H)}${poly(shift(4.2, 5.4))}`} fillRule="evenodd" fill="#1E0408" opacity={0.22} />
-          <path d={`${poly(H)}${poly(shift(2.2, 2.8))}`} fillRule="evenodd" fill="#1E0408" opacity={0.3} />
+          <path d={`${poly(H)}${poly(shift(3.4, 4.3))}`} fillRule="evenodd" fill="#4A1410" opacity={0.1} />
+          <path d={`${poly(H)}${poly(shift(2.3, 2.9))}`} fillRule="evenodd" fill="#4A1410" opacity={0.12} />
+          <path d={`${poly(H)}${poly(shift(1.3, 1.6))}`} fillRule="evenodd" fill="#3A0B10" opacity={0.16} />
           {/* the cut wall: skin (dermis), subcutaneous fat, fascia */}
           <path d={ring(2.55, 3.0)} fillRule="evenodd" fill={C.fascia} opacity={0.9} />
           <path d={ring(0.85, 2.6)} fillRule="evenodd" fill={C.fat} />
@@ -721,27 +745,26 @@ export const IncisionRim: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
 // ---------------------------------------------------------------- the deep tissue bed (inside layer, under the bones)
 type Muscle = {pts: P[]; axis: [P, P]; fib: number; spacing?: number; tone?: number};
 const MUSCLES: Muscle[] = [
-  // pronator quadratus: transverse fibres between ulna and radius (the floor of the surgical field)
-  {pts: [pt(-36, -16), pt(-22, -20.5), pt(-4, -23.5), pt(14, -22), pt(21, -16), pt(21, 20), pt(8, 25), pt(-14, 25.5), pt(-37, 21)], axis: [pt(-36, 2), pt(21, 2)], fib: 0, spacing: 1.7},
   // the long flexor bellies (FDS / FDP), the ulnar flexor (FCU) and the radial group (FPL / brachioradialis)
-  {pts: [pt(-30, 24), pt(-18, 20), pt(6, 22), pt(14, 40), pt(16, 160), pt(10, 400), pt(-30, 400), pt(-34, 160), pt(-33, 50)], axis: [pt(-8, 400), pt(-8, 20)], fib: 1, spacing: 2.0},
-  {pts: [pt(-50, -10), pt(-40, -14), pt(-35, 20), pt(-35, 160), pt(-38, 400), pt(-56, 400), pt(-54, 160)], axis: [pt(-45, 400), pt(-40, -14)], fib: 1, spacing: 1.9, tone: 0.1},
-  {pts: [pt(14, 8), pt(24, 4), pt(34, 40), pt(36, 160), pt(36, 400), pt(16, 400), pt(15, 160), pt(13, 40)], axis: [pt(26, 400), pt(18, 6)], fib: 1, spacing: 1.9, tone: 0.15},
+  {pts: [pt(-29, 32), pt(-20, 25.5), pt(-7, 24.5), pt(5, 27), pt(12.5, 36), pt(14, 70), pt(13, 130), pt(9, 230), pt(-5, 330), pt(-22, 330), pt(-32, 230), pt(-34, 130), pt(-33, 64)], axis: [pt(-9, 330), pt(-9, 24)], fib: 1, spacing: 2.1},
+  {pts: [pt(-47, -12), pt(-41, -17), pt(-36.5, -6), pt(-35.5, 30), pt(-36.5, 120), pt(-40, 250), pt(-49, 330), pt(-56, 250), pt(-55.5, 120), pt(-52, 30)], axis: [pt(-46, 330), pt(-41, -16)], fib: 1, spacing: 2.0, tone: 0.1},
+  {pts: [pt(14.5, 30), pt(20, 24.5), pt(27, 28), pt(33, 52), pt(36, 140), pt(34, 300), pt(19, 300), pt(15.5, 140), pt(13.5, 64)], axis: [pt(26, 300), pt(19, 25)], fib: 1, spacing: 2.0, tone: 0.12},
+  // pronator quadratus: a broad sheet with transverse fibres between ulna and radius (the floor of the surgical field)
+  {pts: [pt(-36, -16), pt(-24, -21.5), pt(-8, -24.5), pt(8, -24), pt(18.5, -21), pt(22.5, -12), pt(23, 2), pt(22, 15), pt(17, 23.5), pt(3, 26.5), pt(-14, 27), pt(-30, 24.5), pt(-37.5, 15), pt(-38.5, 0)], axis: [pt(-38, 2), pt(23, 2)], fib: 0, spacing: 1.75, tone: 0.06},
   // thenar eminence muscles along the thumb ray, hypothenar muscles, adductor pollicis / first interosseous
-  {pts: [pt(16, -46), pt(26, -48), pt(38, -64), pt(48, -88), pt(50, -104), pt(42, -110), pt(30, -98), pt(19, -78), pt(14, -60)], axis: [pt(18, -50), pt(46, -106)], fib: 1, spacing: 1.7},
-  {pts: [pt(-29, -44), pt(-38, -42), pt(-46, -60), pt(-47, -96), pt(-44, -122), pt(-36, -126), pt(-30, -112), pt(-28, -80), pt(-27, -60)], axis: [pt(-34, -44), pt(-40, -124)], fib: 1, spacing: 1.7, tone: 0.08},
-  {pts: [pt(13, -78), pt(26, -92), pt(40, -108), pt(36, -120), pt(24, -132), pt(15, -140), pt(10, -120), pt(9, -96)], axis: [pt(9, -110), pt(40, -110)], fib: 0, spacing: 1.8, tone: 0.12},
+  {pts: [pt(16, -46), pt(25, -47.5), pt(36, -60), pt(46, -84), pt(50.5, -101), pt(45, -111), pt(33, -104), pt(22, -86), pt(15, -64)], axis: [pt(18, -50), pt(46, -106)], fib: 1, spacing: 1.8},
+  {pts: [pt(-29, -44), pt(-37, -42.5), pt(-45, -58), pt(-47.5, -92), pt(-45, -120), pt(-37, -127), pt(-30.5, -114), pt(-28, -84), pt(-27, -60)], axis: [pt(-34, -44), pt(-40, -124)], fib: 1, spacing: 1.8, tone: 0.06},
+  {pts: [pt(12, -80), pt(24, -90), pt(38, -106), pt(37, -119), pt(25, -132), pt(15, -139), pt(9.5, -122), pt(8.5, -98)], axis: [pt(9, -110), pt(40, -110)], fib: 0, spacing: 1.8, tone: 0.12},
   // interossei / lumbricals between the metacarpals
-  {pts: [pt(1, -80), pt(6, -82), pt(8, -140), pt(4, -146), pt(-1, -138)], axis: [pt(3, -80), pt(4, -144)], fib: 1, spacing: 1.6, tone: 0.18},
-  {pts: [pt(-11, -80), pt(-6, -80), pt(-7, -138), pt(-11, -142), pt(-14, -132)], axis: [pt(-9, -80), pt(-10, -140)], fib: 1, spacing: 1.6, tone: 0.18},
-  {pts: [pt(-20, -78), pt(-16, -79), pt(-20, -132), pt(-25, -128), pt(-26, -110)], axis: [pt(-19, -78), pt(-23, -130)], fib: 1, spacing: 1.6, tone: 0.18},
+  {pts: [pt(1, -80), pt(5.5, -81), pt(8, -112), pt(7, -140), pt(3.5, -146), pt(-0.5, -137), pt(-1.5, -110)], axis: [pt(3, -80), pt(4, -144)], fib: 1, spacing: 1.6, tone: 0.18},
+  {pts: [pt(-11, -80), pt(-6.5, -80), pt(-6, -110), pt(-7, -138), pt(-11, -142), pt(-14.5, -132), pt(-13, -106)], axis: [pt(-9, -80), pt(-10, -140)], fib: 1, spacing: 1.6, tone: 0.18},
+  {pts: [pt(-20.5, -77), pt(-16, -78.5), pt(-17.5, -104), pt(-20.5, -131), pt(-25.5, -127), pt(-26.5, -106), pt(-23.5, -88)], axis: [pt(-19, -78), pt(-23, -130)], fib: 1, spacing: 1.6, tone: 0.18},
 ];
 /** flexor tendons (silver-white), clear of the radius between y = -30 and +30 */
 const TENDONS: {pts: P[]; w: number}[] = [
-  {pts: [pt(-41, 140), pt(-40.5, 70), pt(-39.2, 20), pt(-37.0, -8), pt(-32.5, -28), pt(-27.5, -42)], w: 1.9},
-  {pts: [pt(-22, 150), pt(-21.2, 80), pt(-20.2, 36), pt(-19.6, 10), pt(-19.4, -12), pt(-18.4, -30), pt(-13, -44)], w: 1.6},
-  {pts: [pt(-16, 150), pt(-17.4, 80), pt(-17.8, 44), pt(-17.6, 30), pt(-16.6, 34)], w: 1.4},
-  {pts: [pt(22, 170), pt(19.5, 90), pt(15.5, 52), pt(10, 38), pt(5, 34)], w: 1.7},
+  {pts: [pt(-41, 140), pt(-40.5, 70), pt(-39.4, 20), pt(-37.4, -8), pt(-33.0, -28), pt(-27.5, -42)], w: 1.6},
+  {pts: [pt(-22, 150), pt(-20.2, 80), pt(-18.7, 36), pt(-17.9, 10), pt(-17.7, -10), pt(-17.6, -28), pt(-13, -44)], w: 1.3},
+  {pts: [pt(22, 170), pt(19.5, 90), pt(15.5, 52), pt(10, 38), pt(5, 34)], w: 1.5},
 ];
 const fibreLines = (m: Muscle): P[][] => {
   const [A, B] = m.axis;
@@ -812,27 +835,27 @@ export const DeepTissue: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
         let wHalf = 0;
         for (const p of m.pts) wHalf = Math.max(wHalf, Math.abs((p.x - mid.x) * nx.x + (p.y - mid.y) * nx.y));
         const g0 = add(mid, mul(nl, wHalf)), g1 = add(mid, mul(nl, -wHalf));
-        const base = mix(C.muscle, C.cavity, m.tone ?? 0);
-        const d = closed(m.pts, 0.7);
+        const base = mix(C.muscle, C.cavity, 0.14 + (m.tone ?? 0));
+        const d = closed(m.pts, 1);
         return (
           <g key={i}>
             <defs>
               <linearGradient id={`${id}-m${i}`} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
-                <stop offset={0} stopColor={mix(base, C.cavity, 0.35)} />
-                <stop offset={0.18} stopColor={mix(C.muscleLit, base, 0.35)} />
-                <stop offset={0.5} stopColor={base} />
-                <stop offset={0.85} stopColor={mix(base, C.cavity, 0.45)} />
-                <stop offset={1} stopColor={mix(base, C.cavity, 0.7)} />
+                <stop offset={0} stopColor={mix(base, C.cavity, 0.3)} />
+                <stop offset={0.16} stopColor={mix(C.muscleLit, base, 0.45)} />
+                <stop offset={0.45} stopColor={base} />
+                <stop offset={0.82} stopColor={mix(base, C.cavity, 0.4)} />
+                <stop offset={1} stopColor={mix(base, C.cavity, 0.72)} />
               </linearGradient>
               <clipPath id={`${id}-mc${i}`}><path d={d} /></clipPath>
             </defs>
             <path d={d} fill={`url(#${id}-m${i})`} />
             <g clipPath={`url(#${id}-mc${i})`}>
               {FIBRES[i].map((pts, k) => (
-                <path key={k} d={open(pts, 0.8)} fill="none" stroke={k % 2 ? mix(base, C.cavity, 0.5) : C.muscleFibre} strokeWidth={1.1} opacity={k % 2 ? 0.45 : 0.32} vectorEffect={NS} />
+                <path key={k} d={open(pts, 0.8)} fill="none" stroke={k % 2 ? mix(base, C.cavity, 0.55) : C.muscleFibre} strokeWidth={1.05} opacity={k % 2 ? 0.4 : 0.26} vectorEffect={NS} />
               ))}
+              <path d={d} fill="none" stroke={mix(C.cavity, '#000000', 0.3)} strokeWidth={2.4} opacity={0.45} />
             </g>
-            <path d={d} fill="none" stroke={mix(C.cavity, '#000000', 0.2)} strokeWidth={1.4} opacity={0.75} vectorEffect={NS} />
           </g>
         );
       })}
@@ -841,10 +864,10 @@ export const DeepTissue: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
         const hl = t.pts.map((p) => add(p, pt(-t.w * 0.35, 0)));
         return (
           <g key={`t${i}`}>
-            <path d={open(sh, 0.8)} fill="none" stroke="#1E0408" strokeWidth={t.w * 2.4} opacity={0.35} strokeLinecap="round" />
-            <path d={open(t.pts, 0.8)} fill="none" stroke={C.tendonShade} strokeWidth={t.w * 2} strokeLinecap="round" />
-            <path d={open(t.pts, 0.8)} fill="none" stroke={C.tendon} strokeWidth={t.w * 1.45} strokeLinecap="round" />
-            <path d={open(hl, 0.8)} fill="none" stroke="#FFFFFF" strokeWidth={t.w * 0.35} opacity={0.55} strokeLinecap="round" />
+            <path d={open(sh, 0.8)} fill="none" stroke="#1E0408" strokeWidth={t.w * 2.5} opacity={0.4} strokeLinecap="round" />
+            <path d={open(t.pts, 0.8)} fill="none" stroke={mix(C.tendonShade, C.muscle, 0.25)} strokeWidth={t.w * 2} strokeLinecap="round" />
+            <path d={open(t.pts, 0.8)} fill="none" stroke={mix(C.tendon, C.tendonShade, 0.35)} strokeWidth={t.w * 1.35} strokeLinecap="round" />
+            <path d={open(hl, 0.8)} fill="none" stroke="#FFF6F2" strokeWidth={t.w * 0.3} opacity={0.45} strokeLinecap="round" />
           </g>
         );
       })}
