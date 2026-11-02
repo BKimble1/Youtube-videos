@@ -182,7 +182,8 @@ for k2, at in enumerate(e['astroSteps']): place(step(0.6), at, 'boots on the pav
 place(fabric(0.3), e['recognise'], 'sleeve (recognition)', -27.0)
 # ---- the way in
 for k2, at in enumerate(e['doorSteps']): place(step(0.6), at, 'footsteps up the path' if k2 == 0 else None, -21.0, pan=0.1)
-place(creak(0.45, 200), e['atDoor'] - 0.12, 'front door', -21.0, pan=0.1)
+place(creak(0.3, 420), e['gate'], 'garden gate', -25.0, pan=0.05)
+place(creak(0.45, 200), e['doorOpen'], 'front door', -21.0, pan=0.1)
 # ---- family room: quiet
 room = lp(hp(noise(N), 80), 600) * win(e['inside'], e['loopCut'], 0.15, 0.05)
 for k2, at in enumerate(e['roomSteps']): place(step(0.5, wood=True), at, 'footsteps on wood' if k2 == 0 else None, -24.0 - 1.5 * k2, pan=0.2)
@@ -248,9 +249,9 @@ mixR = voice + db(-3) * R_ * fxd + musn
 st = np.stack([mixL, mixR], 1)
 peak = np.max(np.abs(resample_poly(st, 4, 1, axis=0)))
 lufs = meter.integrated_loudness(st)
-g = min(db(-14.0 - lufs), db(-1.6) / peak)
+g = min(db(-14.0 - lufs), db(-1.6 + 2.5) / peak)  # up to 2.5 dB of brick-wall limiting on the loudest transient
 st *= g
-st[:, 0] = limit(st[:, 0], -1.6); st[:, 1] = limit(st[:, 1], -1.6)
+st[:, 0] = limit(st[:, 0], -2.0); st[:, 1] = limit(st[:, 1], -2.0)  # sample ceiling a little under the -1.6 dBTP target (inter-sample overs)
 nr = int(0.004 * SR)
 for c in range(2):
     stepv = (st[0, c] - (st[1, c] - st[0, c])) - st[-1, c]

@@ -40,10 +40,13 @@ if 'V2' in os.path.basename(src):
 # V3 (src/v3/timing.ts): the push through the ship's window into the cockpit, the watch push, the match cut, the window
 # match from inside to outside, the landing, the cut from the front door to the room, the loop cut (watch -> ship window)
 if 'V3' in os.path.basename(src):
-    PLANNED = [(2.7, 4.6, "push to the ship, through its window into the cockpit"), (5.1, 6.1, 'push into the watch (camera roll)'),
-               (8.15, 8.3, 'match cut: watch -> home wall clock'), (9.2, 9.32, 'match cut: the window from inside -> from outside'), (9.32, 10.9, 'continuous pull-back from the house window to the garden'),
-               (11.4, 12.6, 'capsule descent, landing, hatch'), (15.8, 15.92, 'cut: front door outside -> the room inside'),
-               (22.7, 23.1, 'push into the watch face, match cut to the ship window'), (0.0, 0.2, 'loop seam')]
+    PLANNED = [(2.7, 4.3, "push to the ship, through its window into the cockpit (camera banks to the ship)"), (5.05, 6.4, 'push into the watch (camera roll)'),
+               (8.15, 8.25, 'match cut: watch -> home wall clock'), (8.3, 9.38, 'one eased move: wall clock -> window'),
+               (9.36, 9.44, 'match cut: the window from inside -> from outside'), (9.44, 10.75, 'continuous pull-back from the house window to the garden'),
+               (11.4, 12.3, 'capsule descent, landing, hatch'), (16.15, 16.25, 'cut: front door outside -> the room inside'),
+               (17.3, 18.05, 'push from him to the photograph'), (18.5, 19.35, 'from the young faces in the photograph to his face'),
+               (21.65, 22.69, 'eased push into the watch face'), (22.69, 22.73, 'match cut: watch face -> ship window'), (22.73, 23.55, 'eased pull-back out of the window to the opening frame'),
+               (0.0, 0.2, 'loop seam')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

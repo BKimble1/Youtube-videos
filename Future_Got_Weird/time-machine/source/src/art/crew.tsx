@@ -25,11 +25,16 @@ export const HEAD_R = 58;
 const ss = (x: number, a: number, b: number) => sm((x - a) / (b - a));
 
 export type Hair = 'spiky' | 'swoop' | 'bob';
+export type Mouth = 'smile' | 'flat' | 'o' | 'frown' | 'gasp' | 'soft' | 'tremble';
 export type Expr = {
   brows?: number; // -1 down .. 1 raised
   wide?: number; // 0..1 eyes widen (shock)
-  mouth?: 'smile' | 'flat' | 'o' | 'frown' | 'gasp' | 'soft' | 'tremble';
+  mouth?: Mouth;
   open?: number; // 0..1 for o / gasp
+  /** V3: blend toward a second mouth (k 0 = mouth, 1 = mouthTo): line mouths morph point by point; an 'o' closes to
+   *  a short line (or opens from one), so a change of mouth never pops in one frame */
+  mouthTo?: Mouth;
+  mouthK?: number;
   lookX?: number;
   lookY?: number;
   blink?: number; // 1 open
@@ -202,6 +207,36 @@ export const Head: React.FC<{
           const o = e.open ?? 0.6;
           const sag = 3 * j;
           const st = {fill: 'none', stroke: INK, strokeWidth: OUT * (1 - 0.15 * j), strokeLinecap: 'round' as const};
+          const k2 = clamp(e.mouthK ?? 0);
+          if (e.mouthTo && e.mouthTo !== m && k2 > 0.001) {
+            // V3 blend: five points (two quadratic halves) per line mouth
+            type Pt = [number, number];
+            const q3 = (L: Pt, c: Pt, R: Pt): Pt[] => [L, [(L[0] + c[0]) / 2, (L[1] + c[1]) / 2], [(L[0] + 2 * c[0] + R[0]) / 4, (L[1] + 2 * c[1] + R[1]) / 4], [(c[0] + R[0]) / 2, (c[1] + R[1]) / 2], R];
+            const pts = (mm: Mouth, sc = 1): Pt[] => {
+              const y = mouthY, w = mw * sc;
+              if (mm === 'smile') return q3([-w, y + sag * 0.5], [0, y + 14 * sc - sag], [w, y + sag * 0.5]);
+              if (mm === 'soft') return q3([-w * 0.8, y + 2 + sag * 0.5], [0, y + 2 + (6 - sag) * sc], [w * 0.8, y + 2 + sag * 0.5]);
+              if (mm === 'frown') return q3([-w, y + 7], [0, y + 7 - 11 * sc], [w, y + 7]);
+              if (mm === 'tremble') return [[-w * 0.9, y + 5], [-w * 0.4, y + 5 - 4 * sc], [0, y + 4], [w * 0.4, y + 5 - 4 * sc], [w * 0.9, y + 5]];
+              const fy = y + 3 + sag * 0.4; // flat (and the closed 'o')
+              return q3([-w * 0.85, fy], [0, fy], [w * 0.85, fy]);
+            };
+            const isO = (mm: Mouth) => mm === 'o' || mm === 'gasp';
+            const lineD = (P: Pt[]) => `M ${P[0][0]} ${P[0][1]} Q ${P[1][0]} ${P[1][1]} ${P[2][0]} ${P[2][1]} Q ${P[3][0]} ${P[3][1]} ${P[4][0]} ${P[4][1]}`;
+            const oEl = (mm: Mouth, s: number) => {
+              const w = (mm === 'gasp' ? 11 + 3 * o : 7 + 2 * o) * (0.55 + 0.45 * s), h = Math.max(1.6, ((mm === 'gasp' ? 9 : 6) + 10 * o) * s);
+              return <ellipse cx={0} cy={mouthY + 4} rx={w} ry={h} fill={INK} />;
+            };
+            const a0 = isO(m), a1 = isO(e.mouthTo);
+            if (!a0 && !a1) {
+              const A = pts(m), B = pts(e.mouthTo);
+              return <path d={lineD(A.map((p, i) => [lerp(p[0], B[i][0], k2), lerp(p[1], B[i][1], k2)] as Pt))} {...st} />;
+            }
+            // an 'o' closes to a short line, then the line opens to the target (or the reverse)
+            if (a0 && !a1) return k2 < 0.45 ? oEl(m, 1 - k2 / 0.45) : <path d={lineD(pts(e.mouthTo, 0.35 + 0.65 * sm((k2 - 0.45) / 0.55)))} {...st} />;
+            if (!a0 && a1) return k2 < 0.55 ? <path d={lineD(pts(m, 1 - 0.65 * sm(k2 / 0.55)))} {...st} /> : oEl(e.mouthTo, (k2 - 0.55) / 0.45);
+            return oEl(k2 < 0.5 ? m : e.mouthTo, k2 < 0.5 ? 1 - k2 : k2);
+          }
           if (m === 'smile') return <path d={`M ${-mw} ${mouthY + sag * 0.5} Q 0 ${mouthY + 14 - sag} ${mw} ${mouthY + sag * 0.5}`} {...st} />;
           if (m === 'soft') return <path d={`M ${-mw * 0.8} ${mouthY + 2 + sag * 0.5} Q 0 ${mouthY + 8 - sag} ${mw * 0.8} ${mouthY + 2 + sag * 0.5}`} {...st} />;
           if (m === 'flat') return <path d={`M ${-mw * 0.85} ${mouthY + 3 + sag * 0.4} L ${mw * 0.85} ${mouthY + 3 + sag * 0.4}`} {...st} />;
@@ -219,7 +254,7 @@ export const Head: React.FC<{
       </g>
       {/* glasses (appear in later life) */}
       {glasses > 0.01 && (
-        <g fill="none" stroke={INK} strokeWidth={3.5} opacity={glasses > 0.5 ? 1 : 0} transform={`translate(${tx} ${-8 * (1 - glasses)})`}>
+        <g fill="none" stroke={INK} strokeWidth={3.5} opacity={sm(clamp(glasses * 1.15))} transform={`translate(${tx} ${-8 * (1 - glasses)})`}>
           <circle cx={-21} cy={eyeY} r={17} fill="rgba(220,236,255,0.18)" />
           <circle cx={21} cy={eyeY} r={17} fill="rgba(220,236,255,0.18)" />
           <line x1={-4} y1={eyeY - 2} x2={4} y2={eyeY - 2} />

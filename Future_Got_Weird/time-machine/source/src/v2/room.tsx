@@ -173,7 +173,10 @@ const sector = (r0: number, r1: number, a0: number, a1: number) => {
 /** clock hand angles in degrees clockwise from twelve */
 export const clockAngles = (minutes: number) => ({hour: minutes * 0.5, minute: minutes * 6});
 
-export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: number; blur?: number; era?: number; id: string}> = ({x = CLOCK.x, y = CLOCK.y, r = CLOCK.r, minutes, blur = 0, era = 0, id}) => {
+export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: number; blur?: number; era?: number; id: string;
+  /** V3: the clock is drawn inside a mirrored room; flip only the hands (and their smear) so it reads true and runs
+   *  clockwise on screen, while the rim, shadow and lighting stay mirrored with the room */
+  mirrorHands?: boolean}> = ({x = CLOCK.x, y = CLOCK.y, r = CLOCK.r, minutes, blur = 0, era = 0, id, mirrorHands = false}) => {
   const e = clamp(era);
   const L = (c: string) => lightCol(c, e);
   const b = clamp(blur);
@@ -182,7 +185,11 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
   const face = R * 0.82;
   const rim = L('#C94A36');
   const faceC = L(mix('#FFF8E8', '#EFE2C2', 0.55 * e));
-  const {hour, minute} = clockAngles(minutes);
+  const ang = clockAngles(minutes);
+  const sg = mirrorHands ? -1 : 1;
+  const hour = sg * ang.hour, minute = sg * ang.minute;
+  // the smear trails behind each hand (behind = against its motion, which is reversed in the mirrored drawing)
+  const trail = (a: number, span: number, k: number, K: number): [number, number] => (sg > 0 ? [a - (span * (k + 1)) / K, a - (span * k) / K] : [a + (span * k) / K, a + (span * (k + 1)) / K]);
   const hourD = `M ${-0.058 * R} ${0.15 * R} L ${-0.036 * R} ${-0.44 * R} Q 0 ${-0.5 * R} ${0.036 * R} ${-0.44 * R} L ${0.058 * R} ${0.15 * R} Z`;
   const minD = `M ${-0.042 * R} ${0.17 * R} L ${-0.022 * R} ${-0.68 * R} Q 0 ${-0.73 * R} ${0.022 * R} ${-0.68 * R} L ${0.042 * R} ${0.17 * R} Z`;
   const handOp = 1 - 0.45 * b;
@@ -219,13 +226,13 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
       {b > 0.01 && (
         <g>
           {Array.from({length: K1}, (_, k) => (
-            <path key={`m${k}`} d={sector(R * 0.06, R * 0.7, minute - (span1 * (k + 1)) / K1, minute - (span1 * k) / K1)} fill={INK} opacity={0.3 * b * Math.pow(1 - k / K1, 1.6)} />
+            <path key={`m${k}`} d={sector(R * 0.06, R * 0.7, ...trail(minute, span1, k, K1))} fill={INK} opacity={0.3 * b * Math.pow(1 - k / K1, 1.6)} />
           ))}
           {Array.from({length: K2}, (_, k) => (
-            <path key={`h${k}`} d={sector(R * 0.06, R * 0.47, hour - (span2 * (k + 1)) / K2, hour - (span2 * k) / K2)} fill={INK} opacity={0.42 * b * Math.pow(1 - k / K2, 1.4)} />
+            <path key={`h${k}`} d={sector(R * 0.06, R * 0.47, ...trail(hour, span2, k, K2))} fill={INK} opacity={0.42 * b * Math.pow(1 - k / K2, 1.4)} />
           ))}
           {[0.1, 0.22].map((f, k) => (
-            <path key={`g${k}`} d={minD} fill={INK} opacity={0.3 * b * (1 - k * 0.4)} transform={`rotate(${minute - span1 * f})`} />
+            <path key={`g${k}`} d={minD} fill={INK} opacity={0.3 * b * (1 - k * 0.4)} transform={`rotate(${minute - sg * span1 * f})`} />
           ))}
         </g>
       )}
@@ -254,7 +261,7 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
 
 // ---------------------------------------------------------------------------------------------------------------------
 // people in photographs: the crew Bust with the shirt continued to the print's bottom edge (and a striped tee)
-const PhotoPerson: React.FC<{p: Person; id: string}> = ({p, id}) => {
+const PhotoPerson: React.FC<{p: Person; id: string; /** V3: flat shirts (no vertical shade bands) */ flat?: boolean}> = ({p, id, flat = false}) => {
   const shirt = `M -80 520 L -80 140 Q -84 70 -40 62 L 40 62 Q 84 70 80 140 L 80 520 Z`;
   return (
     <g transform={`translate(${p.x} ${p.y}) scale(${p.s})`}>
@@ -264,7 +271,10 @@ const PhotoPerson: React.FC<{p: Person; id: string}> = ({p, id}) => {
         <clipPath id={`${id}-low`}><rect x={-300} y={80} width={600} height={500} /></clipPath>
       </defs>
       <path d={shirt} fill={p.shirt} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
-      <path d={`M 34 66 Q 76 72 78 140 L 80 520 L 40 520 Z`} fill={shade(p.shirt, 0.22)} opacity={0.6} />
+      {flat ? (
+        // a soft shade that follows the far shoulder only
+        <path d={`M 40 63 Q 82 70 80 138 Q 66 118 52 96 Q 46 78 40 63 Z`} fill={shade(p.shirt, 0.18)} opacity={0.55} />
+      ) : <path d={`M 34 66 Q 76 72 78 140 L 80 520 L 40 520 Z`} fill={shade(p.shirt, 0.22)} opacity={0.6} />}
       <g clipPath={`url(#${id}-top)`}>
         <Bust skin={p.skin} hair={p.hair} hairColor={p.hairColor} age={p.age} shirt={p.shirt} id={`${id}-b`} e={{mouth: 'smile'}} />
         {p.tache && <path d="M -24 24 Q -12 13 0 19 Q 12 13 24 24 Q 12 29 0 24 Q -12 29 -24 24 Z" fill={p.tache} stroke={INK} strokeWidth={3} strokeLinejoin="round" />}
@@ -273,7 +283,7 @@ const PhotoPerson: React.FC<{p: Person; id: string}> = ({p, id}) => {
         <g clipPath={`url(#${id}-low)`}>
           <g clipPath={`url(#${id}-shirt)`}>
             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => <rect key={k} x={-100} y={88 + k * 30} width={200} height={14} fill={p.stripes} />)}
-            <path d={`M 34 66 Q 76 72 78 140 L 80 520 L 40 520 Z`} fill={shade('#FFFFFF', 0.3)} opacity={0.35} />
+            {!flat && <path d={`M 34 66 Q 76 72 78 140 L 80 520 L 40 520 Z`} fill={shade('#FFFFFF', 0.3)} opacity={0.35} />}
           </g>
           <path d={shirt} fill="none" stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
         </g>
@@ -353,7 +363,7 @@ const Sheen: React.FC<{r: RoomRect; op: number}> = ({r, op}) =>
 
 // ---------------------------------------------------------------------------------------------------------------------
 // furniture
-const Armchair: React.FC<{cx: number; color: string; ctx: Ctx; which: 'A' | 'B'}> = ({cx, color, ctx, which}) => {
+const Armchair: React.FC<{cx: number; color: string; ctx: Ctx; which: 'A' | 'B'; /** V3: keep the wall shadow off the window (glass, frame and sill) */ clearWindow?: boolean}> = ({cx, color, ctx, which, clearWindow = false}) => {
   const {L, e} = ctx;
   const c0 = L(mix(color, '#B8AFA2', 0.25 * e));
   const cS = shade(c0, 0.3);
@@ -367,8 +377,11 @@ const Armchair: React.FC<{cx: number; color: string; ctx: Ctx; which: 'A' | 'B'}
   return (
     <g>
       {/* cast shadows: on the wall (lower right) and on the floor */}
-      <path d={back} fill={C.shadow} transform="translate(22 14)" />
-      <path d={arm(1)} fill={C.shadow} transform="translate(20 10)" />
+      {clearWindow && <clipPath id={`${ctx.id}-chsh${which}`}><path clipRule="evenodd" d={`M -2000 -2000 L 4000 -2000 L 4000 4000 L -2000 4000 Z M ${ROOM.win.sill.x0} ${ROOM.win.casing.y0} L ${ROOM.win.sill.x0} ${ROOM.win.sill.y1} L ${ROOM.win.sill.x1} ${ROOM.win.sill.y1} L ${ROOM.win.sill.x1} ${ROOM.win.casing.y0} Z`} /></clipPath>}
+      <g clipPath={clearWindow ? `url(#${ctx.id}-chsh${which})` : undefined}>
+        <path d={back} fill={C.shadow} transform="translate(22 14)" />
+        <path d={arm(1)} fill={C.shadow} transform="translate(20 10)" />
+      </g>
       <ellipse cx={cx + 14} cy={F + 6} rx={196} ry={16} fill={C.shadow} />
       {/* legs */}
       {[-1, 1].map((s) => (
@@ -1104,11 +1117,12 @@ const V3_CHAIR_DX = 60;
 const V3_FRAME: RoomRect = {x: TABLE.cx + V3_DX - 96, y: TABLE.top - 124, w: 156, h: 122};
 const V3_M = 11;
 const V3_PRINT: RoomRect = {x: V3_FRAME.x + V3_M, y: V3_FRAME.y + V3_M, w: V3_FRAME.w - 2 * V3_M, h: V3_FRAME.h - 2 * V3_M};
+// the parents stand behind (taller), the two boys in front of them, a head shorter: him (left) and his friend (right)
 const V3_PEOPLE: Person[] = [
-  {key: 'dad', x: 21, y: 44, s: 0.205, ...DAD},
-  {key: 'mom', x: 49, y: 49, s: 0.19, ...MOM},
-  {key: 'son', x: 78, y: 42, s: 0.205, ...SON},
-  {key: 'fr', x: 107, y: 44, s: 0.2, skin: HONEST.skin, hair: 'swoop', hairColor: HONEST.hair, age: 0.05, shirt: HONEST.shirt},
+  {key: 'dad', x: 30, y: 30, s: 0.215, ...DAD},
+  {key: 'mom', x: 104, y: 33, s: 0.2, ...MOM, age: 0.42},
+  {key: 'son', x: 52, y: 56, s: 0.165, ...SON},
+  {key: 'fr', x: 84, y: 58, s: 0.16, skin: HONEST.skin, hair: 'swoop', hairColor: HONEST.hair, age: 0.05, shirt: HONEST.shirt},
 ];
 export const V3_PHOTO = {
   frame: {...V3_FRAME}, print: {...V3_PRINT},
@@ -1123,7 +1137,7 @@ const V3Print: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) => (
     {Array.from({length: 11}, (_, k) => (
       <path key={k} d={`M ${k * 12 + 2} ${h * 0.66} L ${k * 12 + 2} ${h * 0.52} L ${k * 12 + 5} ${h * 0.48} L ${k * 12 + 8} ${h * 0.52} L ${k * 12 + 8} ${h * 0.66} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.1} />
     ))}
-    {V3_PEOPLE.map((p) => <PhotoPerson key={p.key} p={p} id={`${id}-${p.key}`} />)}
+    {V3_PEOPLE.map((p) => <PhotoPerson key={p.key} p={p} id={`${id}-${p.key}`} flat />)}
   </g>
 );
 const V3Memorial: React.FC<{ctx: Ctx; candle: number}> = ({ctx, candle}) => {
@@ -1166,21 +1180,32 @@ const V3Memorial: React.FC<{ctx: Ctx; candle: number}> = ({ctx, candle}) => {
 const V3FrontDoor: React.FC<{ctx: Ctx; open: number; outside?: React.ReactNode}> = ({ctx, open, outside}) => {
   const {L, id} = ctx;
   const {x0, x1, y0} = DOOR;
-  const leaf = L('#B5523B');
+  // the same door as seen from the garden: its red paint (weathered) and the light-blue pane
+  const leaf = L(mix('#C94A36', '#A86454', 0.5));
+  const pane = L('#BFDDEB');
   const th = (Math.PI / 2) * 0.88 * clamp(open);
-  // hinged on its x0 edge, swinging into the room (toward us): the free edge moves outward and grows (nearer)
-  const fx = x0 + (x1 - x0) * Math.cos(th), grow = 1 + 0.22 * Math.sin(th);
-  const leafD = `M ${x0} ${y0} L ${fx} ${y0 - 24 * Math.sin(th)} L ${fx} ${F + 26 * Math.sin(th)} L ${x0} ${F} Z`;
-  void grow;
+  // V3 draws the room mirrored: hinged on its x1 edge (the window side once mirrored, as it is from outside), swinging into
+  // the room (toward us): the free edge comes round toward the hinge side and grows a little (nearer)
+  const fx = x1 - (x1 - x0) * Math.cos(th);
+  const up = 24 * Math.sin(th), dn = 26 * Math.sin(th);
+  const at = (u: number, v: number) => {
+    // u 0 = hinge .. 1 = free edge; v 0 = top .. 1 = bottom (the free edge is taller: nearer the camera)
+    const x = x1 + (fx - x1) * u;
+    const top = y0 - up * u, bot = F + dn * u;
+    return `${x.toFixed(1)} ${(top + (bot - top) * v).toFixed(1)}`;
+  };
+  const quad = (u0: number, u1: number, v0: number, v1: number) => `M ${at(u0, v0)} L ${at(u1, v0)} L ${at(u1, v1)} L ${at(u0, v1)} Z`;
   return (
     <g>
       <rect x={x0} y={y0} width={x1 - x0} height={F - y0} fill={L('#CFE6F2')} />
       <clipPath id={`${id}-fdo`}><rect x={x0} y={y0} width={x1 - x0} height={F - y0} /></clipPath>
       <g clipPath={`url(#${id}-fdo)`}>{outside}</g>
       <DoorCasing ctx={ctx} />
-      <path d={leafD} fill={leaf} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
-      {open < 0.6 && <circle cx={x0 + (fx - x0) * 0.86} cy={y0 + 300} r={7} fill={L(C.saffronDeep)} stroke={INK} strokeWidth={2} />}
-      {open < 0.7 && <path d={`M ${x0 + (fx - x0) * 0.14} ${y0 + 40} L ${x0 + (fx - x0) * 0.86} ${y0 + 40} L ${x0 + (fx - x0) * 0.86} ${y0 + 240} L ${x0 + (fx - x0) * 0.14} ${y0 + 240} Z`} fill={shade(leaf, 0.2)} stroke={INK} strokeWidth={2.5} />}
+      <path d={quad(0, 1, 0, 1)} fill={leaf} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
+      <path d={quad(0.62, 1, 0.006, 0.994)} fill={shade(leaf, 0.18)} />
+      <path d={quad(0.16, 0.84, 0.07, 0.3)} fill={pane} stroke={INK} strokeWidth={2.5} />
+      <path d={quad(0.16, 0.84, 0.4, 0.92)} fill="none" stroke={INK} strokeWidth={2.5} opacity={0.6} />
+      <circle cx={x1 + (fx - x1) * 0.88} cy={y0 + (F - y0) * 0.55} r={7} fill={L(C.saffronDeep)} stroke={INK} strokeWidth={2} />
     </g>
   );
 };
@@ -1414,14 +1439,14 @@ export const Room: React.FC<{
       <Floor ctx={ctx} />
       <SunPatch e={e} />
       {v3 ? <V3FrontDoor ctx={ctx} open={v3.doorOpen} outside={v3.outside} /> : <Doorway ctx={ctx} />}
-      <WallClock minutes={clockMinutes} blur={clockBlur} era={e} id={`${id}-clock`} />
+      <WallClock minutes={clockMinutes} blur={clockBlur} era={e} id={`${id}-clock`} mirrorHands={!!v3} />
       <Window ctx={ctx} view={windowView} glassFade={glassFade} />
       <Radiator ctx={ctx} />
       <Shelf ctx={ctx} />
       <Pendant ctx={ctx} />
       <Sideboard ctx={ctx} />
       {!v3 && <Photos ctx={ctx} dustWipe={dustWipe} refl={refl} reflOp={reflOp} />}
-      <Armchair cx={CHAIR_A.cx + (v3 ? V3_CHAIR_DX : 0)} color={CHAIR_A.color} ctx={ctx} which="A" />
+      <Armchair cx={CHAIR_A.cx + (v3 ? V3_CHAIR_DX : 0)} color={CHAIR_A.color} ctx={ctx} which="A" clearWindow={!!v3} />
       {v3 ? <g transform={`translate(${V3_DX} 0)`}><SideTable ctx={ctx} bare /></g> : <SideTable ctx={ctx} />}
       {v3 && v3.photo !== false && <V3Memorial ctx={ctx} candle={v3.candle} />}
       <Armchair cx={CHAIR_B.cx} color={CHAIR_B.color} ctx={ctx} which="B" />

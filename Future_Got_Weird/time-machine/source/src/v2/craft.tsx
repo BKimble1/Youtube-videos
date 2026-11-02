@@ -17,7 +17,12 @@ export const CAPSULE2 = {
 };
 const halfAt = (y: number) => lerp(CAPSULE2.baseHalf, CAPSULE2.topHalf, clamp(-y / 540));
 
-export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: number; hatch?: number; legs?: number; win?: React.ReactNode; bank?: number; glow?: number}> = ({t, id, flame = 0, retro = 0, hatch = 0, legs = 0, win, bank = 0, glow = 0}) => {
+export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: number; hatch?: number; legs?: number; win?: React.ReactNode; bank?: number; glow?: number;
+  /** V3: flame opacity (default = flame, as in V2); V3 draws an opaque flame so stars never show through it */
+  flameA?: number;
+  /** V3: landing legs fold out from behind the heat shield, fully opaque, to this spread (0 = feet at the base edge) */
+  legSpread?: number;
+}> = ({t, id, flame = 0, retro = 0, hatch = 0, legs = 0, win, bank = 0, glow = 0, flameA, legSpread}) => {
   const b = clamp(bank, -1, 1);
   const sq = 1 - 0.1 * Math.abs(b); // a 2.5D turn: slight squash, details slide toward the turning side
   const off = b * 46;
@@ -30,7 +35,7 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
     <g transform={`scale(${sq} 1)`}>
       {/* main engine flame (flight) */}
       {flame > 0.01 && (
-        <g opacity={flame}>
+        <g opacity={flameA ?? flame}>
           <path d={`M -96 2 Q 0 ${300 * fl * flame} 96 2 Z`} fill={C.saffron} />
           <path d={`M -58 2 Q 0 ${190 * fl * flame} 58 2 Z`} fill="#FFF3D6" />
         </g>
@@ -44,10 +49,14 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
       ))}
       {/* landing legs */}
       {[-1, 1].map((s) => {
-        const kx = s * (W.baseHalf - 30 + 70 * legs), ky = -40 + 30 * legs;
-        const fx = s * (W.baseHalf + 10 + 90 * legs), fy = -30 + 34 * legs;
+        const v3 = legSpread !== undefined;
+        const lu = clamp(legs);
+        // V3: stowed inside the shield's silhouette (hidden), swinging down and out to the ground
+        const kx = v3 ? s * (W.baseHalf - 70 + (40 + 40 * legSpread) * lu) : s * (W.baseHalf - 30 + 70 * legs), ky = v3 ? -52 + 26 * lu : -40 + 30 * legs;
+        const fx = v3 ? s * (W.baseHalf - 60 + (70 + 90 * legSpread) * lu) : s * (W.baseHalf + 10 + 90 * legs), fy = v3 ? -40 + 40 * lu : -30 + 34 * legs;
+        if (v3 && lu <= 0.001) return null;
         return (
-          <g key={s} opacity={clamp(legs * 4)}>
+          <g key={s} opacity={v3 ? 1 : clamp(legs * 4)}>
             <path d={`M ${s * (W.baseHalf - 70)} -70 L ${kx} ${ky} L ${fx} ${fy}`} fill="none" stroke={INK} strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" />
             <path d={`M ${s * (W.baseHalf - 70)} -70 L ${kx} ${ky} L ${fx} ${fy}`} fill="none" stroke={STEEL} strokeWidth={12} strokeLinecap="round" strokeLinejoin="round" />
             <ellipse cx={fx} cy={fy + 4} rx={30} ry={9} fill={STEEL} stroke={INK} strokeWidth={OUT} />

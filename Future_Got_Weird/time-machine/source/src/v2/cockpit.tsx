@@ -75,7 +75,9 @@ const HOUR_FACET = 'M 0 14 L 0 -54 L 4.6 -43 L 6.8 0 L 5.5 14 Z';
 const MIN_HAND = 'M -4.4 17 L -5.2 0 L -3.2 -71 L 0 -82 L 3.2 -71 L 5.2 0 L 4.4 17 Z';
 const MIN_FACET = 'M 0 17 L 0 -82 L 3.2 -71 L 5.2 0 L 4.4 17 Z';
 
-export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?: number; /** draw the short strap stubs (ForeArm draws its own full strap) */ strap?: boolean}> = ({r, minutes, id, secBlur = 0, strap = true}) => {
+export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?: number; /** draw the short strap stubs (ForeArm draws its own full strap) */ strap?: boolean;
+  /** V3: a fainter seconds blur (a graded fan that fades away from the hand, no rings), so the navy dial never tints */
+  soft?: boolean}> = ({r, minutes, id, secBlur = 0, strap = true, soft = false}) => {
   const k = r / 100;
   const A = watchAngles(minutes);
   const b = clamp(secBlur);
@@ -163,10 +165,13 @@ export const Watch2: React.FC<{r: number; minutes: number; id: string; secBlur?:
         <path d={MIN_HAND} fill="none" stroke={INK} strokeWidth={1.5} strokeLinejoin="round" />
       </g>
       {/* seconds hand: at speed it smears into a translucent coral fan, then a disc (never a strobe) */}
-      {b > 0.01 && disc < 0.999 && [1, 2, 3, 4, 5].map((i) => (
+      {!soft && b > 0.01 && disc < 0.999 && [1, 2, 3, 4, 5].map((i) => (
         <path key={i} d={wedge(88, A.second - (Math.max(fan, 4) * i) / 5, A.second)} fill={W.coral} opacity={0.07 * (1 - disc)} />
       ))}
-      {disc > 0.001 && (
+      {soft && b > 0.01 && Array.from({length: 10}, (_, i) => (
+        <path key={i} d={wedge(86, A.second - (Math.min(Math.max(fan, 4), 300) * (i + 1)) / 10, A.second)} fill={W.coral} opacity={0.022 * (1 - 0.6 * disc)} />
+      ))}
+      {!soft && disc > 0.001 && (
         <g opacity={disc}>
           <circle r={88} fill={W.coral} opacity={0.085} />
           <circle r={86} fill="none" stroke={W.coral} strokeWidth={4} opacity={0.28} />
@@ -552,7 +557,7 @@ export const Cockpit: React.FC<{t: number; id: string; /** override the black-ho
 /** foreground pieces drawn AFTER the Astronaut: the warm rim light from the window on his helmet and left shoulder
  *  (assumes he is drawn at COCKPIT_ASTRO with no lean or head tilt; rim = 0 to omit) and the console lip that hides
  *  his lap. */
-export const CockpitFront: React.FC<{t: number; id: string; rim?: number; console?: boolean}> = ({t, rim = 1, console = true}) => {
+export const CockpitFront: React.FC<{t: number; id: string; rim?: number; console?: boolean; /** V3: the shoulder's rim light (fades as that arm rises) */ shoulder?: number}> = ({t, rim = 1, console = true, shoulder = 1}) => {
   const Hm = COCKPIT_HELMET, A = COCKPIT_ASTRO;
   const toWin = (Math.atan2(COCKPIT_WIN.y - Hm.y, COCKPIT_WIN.x - Hm.x) * 180) / Math.PI;
   const arc = (r: number, a0: number, a1: number) => `M ${f2(Hm.x + r * Math.cos(rad(a0)))} ${f2(Hm.y + r * Math.sin(rad(a0)))} A ${r} ${r} 0 0 1 ${f2(Hm.x + r * Math.cos(rad(a1)))} ${f2(Hm.y + r * Math.sin(rad(a1)))}`;
@@ -564,7 +569,7 @@ export const CockpitFront: React.FC<{t: number; id: string; rim?: number; consol
           <path d={arc(Hm.r - 7, toWin - 46, toWin + 40)} fill="none" stroke={WALL.glowHot} strokeWidth={7} strokeLinecap="round" opacity={0.75} />
           <path d={arc(Hm.r - 16, toWin - 22, toWin + 16)} fill="none" stroke={WALL.glow} strokeWidth={4} strokeLinecap="round" opacity={0.45} />
           <g transform={`translate(${A.x} ${A.y}) scale(${A.s})`}>
-            <path d={`M -82 ${SHOULDER_Y + 2} Q -88 ${SHOULDER_Y - 18} -60 ${SHOULDER_Y - 24}`} fill="none" stroke={WALL.glowHot} strokeWidth={3.2} strokeLinecap="round" opacity={0.7} />
+            {shoulder > 0.01 && <path d={`M -82 ${SHOULDER_Y + 2} Q -88 ${SHOULDER_Y - 18} -60 ${SHOULDER_Y - 24}`} fill="none" stroke={WALL.glowHot} strokeWidth={3.2} strokeLinecap="round" opacity={0.7 * shoulder} />}
           </g>
         </g>
       )}

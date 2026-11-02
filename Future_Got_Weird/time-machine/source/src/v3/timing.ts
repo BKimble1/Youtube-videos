@@ -14,54 +14,58 @@ export const W3 = {
 
 export const T3 = {
   // 1 space: the ship already moving beside the hole; the camera follows it
-  // 2 toward its cockpit window and through it
+  // 2 toward its cockpit window and through it (the camera banks to the ship's heading on the way in)
   push: 2.72,
   windowIn: 4.25,
-  // 3 cockpit: he looks at the hole through the porthole, then glances down at his wrist
-  glance: 4.72,
-  // 4 one wrist raise; the camera closes in on the watch; one compressed hour; the watch composition
+  // 3 cockpit: he looks at the hole through the porthole, then glances down at his wrist (and holds the look)
+  glance: 4.6,
+  // 4 one wrist raise (the forearm swings up about the elbow); the camera closes in on the watch; one compressed hour
   raise: 4.95,
   raiseEnd: 5.6,
   pushWatch: 5.1,
-  watchClose: 6.05,
+  watchClose: 6.35,
   hourStart: 5.62,
   hourEnd: 7.14,
   match: 8.2,
-  // 5 the wall clock at home races; the camera goes to the window; the same window from outside
-  toWindow: 8.42,
-  windowMatch: 9.25,
-  // 6 years in the garden, locked off: seasons, the tree, the friend ageing in his place
-  yearsEnd: 11.35,
-  // 7 the ship returns to the street; the hatch; he steps out and walks to his friend
-  descent: 11.45,
-  landing: 12.3,
-  hatch: 12.42,
-  stepOut: 12.56,
-  stepDown: 12.74,
-  arrive: 13.34,
+  // 5 the wall clock at home races; one eased move to the window; the same window from outside (on 'years')
+  toWindow: 8.3,
+  windowMatch: 9.4,
+  // 6 the pull-back lands on the garden and holds: seasons, the tree grows, the friend ages in his place
+  pullEnd: 10.72,
+  yearsEnd: 11.5,
+  // 7 the ship returns to the street; the hatch; he steps out and walks to his friend at the gate
+  descent: 11.42,
+  landing: 12.0,
+  hatch: 12.1,
+  stepOut: 12.22,
+  stepDown: 12.38,
+  arrive: 13.8,
   // 8 their faces together: he searches the old face, recognises him
-  faces: 13.25,
-  recognise: 13.78,
-  // 9 up the path, through the front door (seen outside), into the room (seen inside)
-  turnToHouse: 14.42,
-  atDoor: 15.55,
-  inside: 15.86,
-  roomStop: 16.5,
-  // 10 the photograph; the change in him on 'gone'
-  seePhoto: 16.38,
-  realise: 16.64,
-  photoClose: 17.5,
-  // 11 from the young faces in the photograph to his still-young face; his old friend appears in the doorway
-  toFace: 18.55,
-  friendIn: 19.35,
-  // 12 his watch, his old friend; the push into the watch face; the match to the ship's window; the opening (loop)
+  faces: 13.8,
+  recognise: 14.02,
+  // 9 he turns in place, walks through the gate, up the path, through the front door (seen outside), into the room
+  turnToHouse: 14.38,
+  walk: 14.58,
+  atDoor: 16.08,
+  inside: 16.2,
+  roomStop: 16.56,
+  // 10 the photograph; the change in him on 'gone' (held on his face before the camera goes to the photo)
+  seePhoto: 16.44,
+  realise: 16.66,
+  photoPush: 17.32,
+  photoClose: 18.0,
+  // 11 from the young faces in the photograph to his still-young face; his old friend steps into the doorway
+  toFace: 18.5,
+  faceHold: 19.3,
+  friendIn: 19.5,
+  // 12 his watch, his old friend; the eased push into the watch face; the match to the ship's window; the opening (loop)
   watchUp: 20.5,
-  loopPush: 22.7,
-  loopCut: 23.0,
+  loopPush: 21.65,
+  loopCut: 22.7,
   dur: DUR,
 };
 /** the hole's own clock (disk rotation, image frames): offset so that the end of the film flows into frame 0 */
-export const BH_OFFSET = 0.6;
+export const BH_OFFSET = 0.6; // (just after the loop cut the hole is out of frame and its frames are faded out, so the clamp to frame 0 there is unseen)
 export const bhT3 = (t: number) => (t >= T3.loopCut ? t - DUR + BH_OFFSET : t + BH_OFFSET);
 /** the space timeline is periodic: after the loop cut, space time runs from -(DUR - loopCut) up to 0 at the last frame */
 export const spaceTau = (t: number) => (t >= T3.loopCut ? t - DUR : t);

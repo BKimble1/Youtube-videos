@@ -5,18 +5,21 @@
 import * as fs from 'fs';
 import {T3} from '../source/src/v3/timing';
 import * as S from '../source/src/v3/story';
-import {footfalls, DOOR_STEP} from '../source/src/v2/walk';
+import {footfalls} from '../source/src/v2/walk';
 
-const astroSteps = [T3.stepDown, ...footfalls(S.astroReturnX, T3.stepDown + 0.05, T3.arrive, S.YS)];
-const doorSteps = footfalls((t) => {
+// footsteps land every step of travel (the same step lengths the scene's feet use)
+const astroSteps = [T3.stepDown, ...footfalls((t) => S.astroReturn(t).s, T3.stepDown + 0.05, T3.arrive, S.YS, S.RET_STEP)];
+const pathSteps = footfalls((t) => {
   const a = S.astroDoor(t);
-  return Math.hypot(a.x - S.ASTRO_MEET_X, a.y - S.FEET);
-}, T3.turnToHouse + 0.12, T3.atDoor + 0.02, S.YS * 0.96, DOOR_STEP);
-const roomSteps = footfalls(S.roomAstroX, T3.inside, T3.roomStop + 0.05, S.RS);
+  return a.dist / a.s;
+}, T3.walk + 0.02, T3.inside - 0.01, 1, S.PATH_STEP);
+const roomSteps = footfalls((t) => (S.DOOR3.cx - 10 - S.roomAstroX(t)) / S.RS, T3.inside, T3.roomStop + 0.05, 1, 100);
 const EV = {
   ...T3,
-  astroSteps, doorSteps, roomSteps,
-  friendSteps: [T3.friendIn + 0.12, T3.friendIn + 0.42],
+  gate: S.T_GATE - 0.25,
+  doorOpen: T3.inside - 0.46,
+  astroSteps, doorSteps: [T3.walk + 0.1, ...pathSteps], roomSteps: [T3.inside + 0.02, ...roomSteps],
+  friendSteps: [T3.friendIn + 0.15, T3.friendIn + 0.45],
 };
 fs.writeFileSync(process.argv[2], JSON.stringify({EV}, null, 1));
-console.log('cues ->', process.argv[2], `(${astroSteps.length} return steps, ${doorSteps.length} path steps, ${roomSteps.length} room steps)`);
+console.log('cues ->', process.argv[2], `(${astroSteps.length} return steps, ${pathSteps.length} path steps, ${roomSteps.length} room steps)`, JSON.stringify({astroSteps, pathSteps, roomSteps}));

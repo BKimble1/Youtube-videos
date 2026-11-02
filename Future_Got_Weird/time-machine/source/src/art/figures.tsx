@@ -107,14 +107,18 @@ export const Astronaut: React.FC<{
   /** V2: glove colour (suit gloves with a saffron cuff); omitted = bare hands as in V1 */
   glove?: string;
   /** V2: draws the watch on the left wrist instead of the V1 watch (x, y = wrist centre, angle = forearm angle) */
-  watchEl?: (p: {x: number; y: number; angle: number}) => React.ReactNode;
+  watchEl?: (p: {x: number; y: number; angle: number; ik?: number}) => React.ReactNode;
+  /** V3: where the watch sits along the forearm (0 = elbow, 1 = hand); default 0.66 */
+  watchAt?: number;
   /** V2: leave a hand undrawn (a close-up draws the clasp itself) */
   hideHands?: 'L' | 'R' | 'both';
   /** V2: planted feet (character-local targets, ground = 0); overrides the walk-cycle legs */
   feet?: {lx: number; ly: number; rx: number; ry: number};
   /** V2: seen from behind (walking away): the back of his head in the helmet, a life-support pack instead of the chest unit */
   back?: boolean;
-}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false}) => {
+  /** V3: which leg is nearer the camera (drawn in front); default the right */
+  nearLeg?: 'L' | 'R';
+}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false, watchAt = 0.66, nearLeg = 'R'}) => {
   const ik = React.useContext(InkK);
   const lean = pose.lean ?? 0;
   const stride = pose.stride ?? 0, ph = pose.legs ?? 0;
@@ -150,7 +154,7 @@ export const Astronaut: React.FC<{
           {glove && <path d="M -19 -8 Q 0 -14 19 -8" fill="none" stroke={INK} strokeWidth={2 * ik} opacity={0.35} />}
         </g>
       )}
-      {withWatch && watchEl && watchEl({x: P.ex + (P.hx - P.ex) * 0.66, y: P.ey + (P.hy - P.ey) * 0.66, angle: P.angle})}
+      {withWatch && watchEl && watchEl({x: P.ex + (P.hx - P.ex) * watchAt, y: P.ey + (P.hy - P.ey) * watchAt, angle: P.angle, ik})}
       {withWatch && !watchEl && (fullWatch ? <Watch x={P.ex + (P.hx - P.ex) * 0.66} y={P.ey + (P.hy - P.ey) * 0.66} r={17} t={watchTime} rot={0} id={`${id}-w`} earth={earth} strap={P.angle} /> : <Watch x={P.ex + (P.hx - P.ex) * 0.66} y={P.ey + (P.hy - P.ey) * 0.66} r={17} t={watchTime} rot={P.angle} id={`${id}-w`} mini />)}
     </g>
   );
@@ -161,7 +165,7 @@ export const Astronaut: React.FC<{
         {/* the watch is on his right wrist: screen-left from the front, screen-right from behind */}
         {!pose.frontL && hand(L, -1, !back)}
         {/* legs */}
-        {lg.map((g, i) => (
+        {(nearLeg === 'L' ? [lg[1], lg[0]] : lg).map((g, i) => (
           <g key={i}>
             <Limb pts={[[g.hx, hipY], [g.kx, g.ky], [g.fx, g.fy]]} w={46} colors={[SUIT, SUIT]} />
             <ellipse cx={g.fx + 6} cy={g.fy + 2} rx={34} ry={15} fill="#5A6773" stroke={INK} strokeWidth={OUT * ik} />
@@ -303,7 +307,7 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
       {shadow && <ellipse cx={0} cy={2} rx={92} ry={14} fill={C.shadow} />}
       {/* drawn facing screen-left; facing = 1 mirrors it. Stoop leans the top toward the face side */}
       <g transform={`rotate(${-(pose.lean ?? 0) - 7 * s} 0 -150)`}>
-        <ArmF P={R} side={1} sleeve={sleeveC ?? (cardi > 0.5 ? cardColor : shirt)} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'R'} fore={forearm} />
+        <ArmF P={R} side={1} sleeve={sleeveC ?? mix(shirt, cardColor, ss(cardi, 0.38, 0.62))} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'R'} fore={forearm} />
         {pose.cane && <Cane P={R} />}
         {/* legs (knees soften with age) */}
         <path d={`M -52 -170 L ${(-52 + footL.x) / 2 - 2} ${-90 + knee} L ${footL.x} ${footL.y}`} fill="none" stroke={INK} strokeWidth={38 + OUT * 2} strokeLinecap="round" strokeLinejoin="round" />
@@ -316,11 +320,11 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
         {cardi > 0.01 && (
           <path d={`M -76 ${shY + 2} Q -82 ${shY - 18} -52 ${shY - 22} L ${-52 + 30 * cardi} ${shY - 22} L ${-66 + 56 * cardi} -150 L -66 -150 Z M 76 ${shY + 2} Q 82 ${shY - 18} 52 ${shY - 22} L ${52 - 30 * cardi} ${shY - 22} L ${66 - 56 * cardi} -150 L 66 -150 Z`} fill={cardColor} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
         )}
-        {cardi > 0.7 && [0, 1, 2].map((k) => <circle key={k} cx={-12} cy={shY + 30 + k * 34} r={4} fill="#5A3E30" />)}
+        {cardi > 0.55 && [0, 1, 2].map((k) => <circle key={k} cx={-12} cy={shY + 30 + k * 34} r={4 * ss(cardi, 0.55 + k * 0.06, 0.75 + k * 0.06)} fill="#5A3E30" />)}
         {/* neck */}
         <rect x={-16} y={headY + 40} width={32} height={34 - 6 * s} fill={mix(HONEST.skin, '#DCC2B2', 0.2 * s)} stroke={INK} strokeWidth={OUT} />
         {s > 0.2 && <path d={`M -8 ${headY + 52} q 8 4 16 0 M -8 ${headY + 60} q 8 4 16 0`} fill="none" stroke={INK} strokeWidth={2} opacity={0.5 * s} />}
-        <ArmF P={L} side={-1} sleeve={sleeveC ?? (cardi > 0.5 ? cardColor : shirt)} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'L'} fore={forearm} />
+        <ArmF P={L} side={-1} sleeve={sleeveC ?? mix(shirt, cardColor, ss(cardi, 0.38, 0.62))} skin={HONEST.skin} age={a} hide={hideHands === 'both' || hideHands === 'L'} fore={forearm} />
         <g transform={`translate(${-14 * s} ${headY})`}>
           <Head skin={HONEST.skin} hair="swoop" hairColor={HONEST.hair} age={a} e={pose.e} glasses={ss(a, 0.6, 0.72)} id={`${id}-h`} />
         </g>
@@ -330,7 +334,7 @@ export const Friend: React.FC<{age: number; pose: FriendPose; id: string; facing
 };
 const ArmF: React.FC<{P: ReturnType<typeof handPos>; side: -1 | 1; sleeve: string; skin: string; age: number; hide?: boolean; fore?: string}> = ({P, side, sleeve, skin, age, hide, fore}) => (
   <g>
-    <Limb pts={[[P.sx, P.sy], [P.ex, P.ey], [P.hx, P.hy]]} w={30} colors={[sleeve, fore ?? (age > 0.55 ? sleeve : skin)]} />
+    <Limb pts={[[P.sx, P.sy], [P.ex, P.ey], [P.hx, P.hy]]} w={30} colors={[sleeve, fore ?? mix(skin, sleeve, ss(age, 0.5, 0.62))]} />
     {!hide && (
       <g transform={`translate(${P.hx} ${P.hy}) rotate(${P.angle})`}>
         <Mitt skin={skin} age={age} side={side} />

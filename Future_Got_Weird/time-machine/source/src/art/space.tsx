@@ -27,7 +27,7 @@ const FarStars: React.FC = () => {
 /** wide-field frames exist for the shots that pull back or reflect a large view (tools/blackhole.py, BH_WIDE=1) */
 const WXW = 48, WYW = (48 * BH.HPX) / BH.WPX;
 export const hasWide = (n: number) => (n >= 0 && n <= 144) || (n >= 564 && n <= 708);
-export const BlackHole: React.FC<{t: number; edge?: boolean}> = ({t}) => {
+export const BlackHole: React.FC<{t: number; edge?: boolean; /** V3: opacity of the ray-traced frames (faded out when magnified past their resolution) */ imgOp?: number}> = ({t, imgOp = 1}) => {
   const n = bhFrame(t);
   const f4 = String(n).padStart(4, '0');
   return (
@@ -38,8 +38,12 @@ export const BlackHole: React.FC<{t: number; edge?: boolean}> = ({t}) => {
       </linearGradient>
       <rect x={-300} y={-400} width={600} height={800} fill="url(#bhbg)" />
       <FarStars />
-      {hasWide(n) && <image href={staticFile(`bhw/f_${f4}.jpg`)} x={-WXW} y={-WYW} width={2 * WXW} height={2 * WYW} preserveAspectRatio="none" />}
-      <image href={staticFile(`bh/f_${f4}.jpg`)} x={-XW} y={-YW} width={2 * XW} height={2 * YW} preserveAspectRatio="none" />
+      {imgOp > 0.002 && (
+        <g opacity={imgOp}>
+          {hasWide(n) && <image href={staticFile(`bhw/f_${f4}.jpg`)} x={-WXW} y={-WYW} width={2 * WXW} height={2 * WYW} preserveAspectRatio="none" />}
+          <image href={staticFile(`bh/f_${f4}.jpg`)} x={-XW} y={-YW} width={2 * XW} height={2 * YW} preserveAspectRatio="none" />
+        </g>
+      )}
     </g>
   );
 };

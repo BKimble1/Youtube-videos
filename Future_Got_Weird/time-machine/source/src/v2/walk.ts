@@ -31,3 +31,26 @@ export const footfalls = (xAt: (t: number) => number, t0: number, t1: number, sc
   }
   return out;
 };
+/** V3: planted feet along the actual direction of travel (dx, dy: unit vector in the figure's local frame). Walking away
+ *  up a path the feet alternate in depth (no crossing); walking sideways the forward foot also sits a little lower
+ *  (nearer), and `nearR` says which leg to draw in front. amp 0..1 winds the stride down to a square stance. */
+export const walkFeetDir = (dist: number, amp: number, step: number, dx: number, dy: number) => {
+  const p = dist / (2 * step);
+  const foot = (ph: number, hx: number) => {
+    const u = ((ph % 1) + 1) % 1;
+    let along: number, lift: number;
+    if (u < 0.5) {
+      along = step * (0.5 - 2 * u);
+      lift = 0;
+    } else {
+      const s = (u - 0.5) * 2;
+      along = step * (-0.5 + s);
+      lift = -16 * Math.sin(Math.PI * s);
+    }
+    along *= amp;
+    const depth = Math.abs(dx) * (along / step) * 10; // sideways: the leading foot a touch nearer the camera
+    return {x: hx + dx * along, y: dy * along + lift * amp + depth};
+  };
+  const l = foot(p, -30), r = foot(p + 0.5, 30);
+  return {lx: l.x, ly: l.y - 6, rx: r.x, ry: r.y - 6, nearR: r.y >= l.y};
+};

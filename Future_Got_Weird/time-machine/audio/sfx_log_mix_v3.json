@@ -1,11 +1,11 @@
 [
  {
-  "t": 23,
+  "t": 22.7,
   "sfx": "black hole rumble (loop cut -> frame 0 -> window)",
   "gain_db": -7.0
  },
  {
-  "t": 23,
+  "t": 22.7,
   "sfx": "capsule engine (steady, across the seam)",
   "gain_db": -15.0
  },
@@ -15,7 +15,7 @@
   "gain_db": -17.0
  },
  {
-  "t": 4.77,
+  "t": 4.65,
   "sfx": "watch tick",
   "gain_db": -19.0
  },
@@ -35,72 +35,77 @@
   "gain_db": -20.0
  },
  {
-  "t": 8.95,
+  "t": 9.1,
   "sfx": "through the window (inside -> outside)",
   "gain_db": -21.0
  },
  {
-  "t": 9.406,
+  "t": 9.557,
   "sfx": "birds",
-  "gain_db": -31.703418796498386
+  "gain_db": -29.535621052227064
  },
  {
-  "t": 11.45,
+  "t": 11.42,
   "sfx": "capsule retro roar",
   "gain_db": -11.0
  },
  {
-  "t": 12.3,
+  "t": 12,
   "sfx": "landing contact",
   "gain_db": -7.0
  },
  {
-  "t": 12.32,
+  "t": 12.02,
   "sfx": "landing dust",
   "gain_db": -19.0
  },
  {
-  "t": 12.42,
+  "t": 12.1,
   "sfx": "hatch release",
   "gain_db": -21.0
  },
  {
-  "t": 12.62,
+  "t": 12.3,
   "sfx": "hatch clunk",
   "gain_db": -19.0
  },
  {
-  "t": 12.74,
+  "t": 12.38,
   "sfx": "boots on the pavement",
   "gain_db": -21.0
  },
  {
-  "t": 13.78,
+  "t": 14.02,
   "sfx": "sleeve (recognition)",
   "gain_db": -27.0
  },
  {
-  "t": 14.798,
+  "t": 14.68,
   "sfx": "footsteps up the path",
   "gain_db": -21.0
  },
  {
-  "t": 15.43,
+  "t": 14.688,
+  "sfx": "garden gate",
+  "gain_db": -25.0
+ },
+ {
+  "t": 15.74,
   "sfx": "front door",
   "gain_db": -21.0
  },
  {
-  "t": 16.043,
+  "t": 16.22,
   "sfx": "footsteps on wood",
   "gain_db": -24.0
  },
  {
-  "t": 16.26,
+  "t": 16.6,
   "sfx": "home clock (normal time)",
   "gain_db": -31.0
  },
  {
-  "t": 19.47,
+  "t": 19.65,
   "sfx": "his friend's steps in the doorway",
   "gain_db": -27.0
  },
@@ -115,7 +120,7 @@
   "gain_db": -24.0
  },
  {
-  "t": 22.4,
+  "t": 21.35,
   "sfx": "into the watch face (to the opening)",
   "gain_db": -15.0
  }
