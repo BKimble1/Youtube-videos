@@ -60,7 +60,7 @@ const FRIEND_FRAME: RoomRect = {x: FRIEND_PRINT.x - FRIEND_M, y: FRIEND_PRINT.y 
 /** the family photo's people (print-local position of the head centre, Bust scale) */
 type Person = {key: string; x: number; y: number; s: number; skin: string; hair: 'spiky' | 'bob'; hairColor: string; age: number; shirt: string; stripes?: string};
 const RED = GUESSER.hair;
-const DAD: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F2C9A8', hair: 'spiky', hairColor: RED, age: 0.4, shirt: '#2E3F5C'};
+const DAD: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F2C9A8', hair: 'spiky', hairColor: RED, age: 0.32, shirt: '#2E3F5C'};
 const MOM: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob', hairColor: '#B8743A', age: 0.3, shirt: '#E9876A'};
 const SON: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: GUESSER.skin, hair: 'spiky', hairColor: RED, age: 0, shirt: '#FFFFFF', stripes: C.saffron};
 const SIS: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob', hairColor: RED, age: 0, shirt: C.teal};
@@ -87,7 +87,9 @@ const CHAIR_B = {cx: 1950, color: '#5D7FA6'};
 const CHAIR_W = {half: 170, top: 1150, seat: 1392};
 const TABLE = {cx: 550, top: 1330, rx: 72};
 const LAMP = {x: 2200, top: 862};
-const PENDANT = {x: 1330, y: 404};
+const PENDANT = {x: 1330, y: 404, rose: -250};
+/** the ceiling boards recede toward this point (below the room: we look up at the ceiling) */
+const CEIL_VP = {x: 1000, y: 2700};
 
 const faceRoom = (p: Person, print: RoomRect) => ({who: p.key, x: print.x + p.x, y: print.y + p.y, r: 62 * p.s});
 
@@ -126,11 +128,12 @@ export const ROOM = {
 // helpers
 const rad = (d: number) => (d * Math.PI) / 180;
 const DUST = '#D8D4CB';
+const DUST_GLASS = '#E2DED6';
 /** era lighting baked into every fill: a touch of warm sun (era 0) -> dusty, desaturated, cool (era 1) */
 const lightCol = (c: string, e: number) => {
   const warm = mix(c, '#FFE9C2', 0.05);
   if (e <= 0.001) return warm;
-  const cool = mix(mix(c, '#A6A39C', 0.34), '#3E4D66', 0.15);
+  const cool = mix(mix(c, '#A6A39C', 0.26), '#3E4D66', 0.2);
   return mix(warm, cool, e);
 };
 const rr = (x: number, y: number, w: number, h: number, r: number) =>
@@ -184,8 +187,8 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
       <circle r={R} fill={rim} stroke={INK} strokeWidth={OUT} />
       <clipPath id={`${id}-rim`}><circle r={R - 2} /></clipPath>
       <g clipPath={`url(#${id}-rim)`}>
-        <circle cx={-R * 0.16} cy={-R * 0.16} r={R} fill={shade(rim, 0.35)} />
-        <circle cx={-R * 0.24} cy={-R * 0.24} r={R} fill={rim} />
+        <circle r={R} fill={shade(rim, 0.35)} />
+        <circle cx={-R * 0.075} cy={-R * 0.075} r={R} fill={rim} />
       </g>
       <path d={`M ${-R * 0.86} ${-R * 0.2} A ${R * 0.9} ${R * 0.9} 0 0 1 ${-R * 0.2} ${-R * 0.86}`} fill="none" stroke={L('#F08A6E')} strokeWidth={R * 0.06} strokeLinecap="round" />
       {/* face */}
@@ -659,7 +662,7 @@ const Pendant: React.FC<{ctx: Ctx}> = ({ctx}) => {
   const sh = L(mix(C.teal, '#7E9A9A', 0.4 * e));
   return (
     <g>
-      <line x1={x} y1={-1000} x2={x} y2={y - 52} stroke={INK} strokeWidth={4} />
+      <line x1={x} y1={PENDANT.rose + 2} x2={x} y2={y - 52} stroke={INK} strokeWidth={4} />
       <rect x={x - 9} y={y - 62} width={18} height={14} rx={3} fill={L('#C9A24B')} stroke={INK} strokeWidth={2.5} />
       <circle cx={x} cy={y + 2} r={13} fill={L('#FFF6DA')} stroke={INK} strokeWidth={2.5} />
       <path d={`M ${x - 66} ${y} Q ${x - 66} ${y - 50} ${x} ${y - 52} Q ${x + 66} ${y - 50} ${x + 66} ${y} Z`} fill={sh} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
@@ -726,10 +729,10 @@ const Wall: React.FC<{ctx: Ctx}> = ({ctx}) => {
   const SKIRT = 1490;
   const sprig = (x: number, y: number, k: number) => (
     <g key={k} transform={`translate(${x} ${y})`}>
-      <ellipse cx={-9} cy={9} rx={6} ry={3} fill={wpLeaf} transform="rotate(-35 -9 9)" />
-      <ellipse cx={9} cy={9} rx={6} ry={3} fill={wpLeaf} transform="rotate(35 9 9)" />
-      {[0, 90, 180, 270].map((a) => <ellipse key={a} cx={0} cy={-6} rx={3.6} ry={6} fill={wpPetal} transform={`rotate(${a + 45})`} />)}
-      <circle r={2.8} fill={wpDot} />
+      <ellipse cx={-11} cy={10} rx={6} ry={3} fill={wpLeaf} transform="rotate(28 -11 10)" />
+      <ellipse cx={10} cy={12} rx={5} ry={2.6} fill={wpLeaf} transform="rotate(-24 10 12)" />
+      {[0, 72, 144, 216, 288].map((a) => <circle key={a} cx={Math.sin(rad(a)) * 5} cy={-Math.cos(rad(a)) * 5} r={3.6} fill={wpPetal} />)}
+      <circle r={2.4} fill={wpDot} />
     </g>
   );
   return (
@@ -746,8 +749,17 @@ const Wall: React.FC<{ctx: Ctx}> = ({ctx}) => {
           {sprig(48, 48, 4)}
         </pattern>
       </defs>
-      {/* ceiling band and cornice */}
-      <rect x={-900} y={-1000} width={3800} height={CEIL + 1000} fill={L('#E9DECB')} />
+      {/* ceiling plane: boards receding overhead (mild perspective), a little darker than the wall; then the cornice */}
+      <rect x={-900} y={-1000} width={3800} height={CEIL + 1000} fill={L(mix('#E6DAC5', '#D5CCBE', 0.4 * e))} />
+      {Array.from({length: 34}, (_, k) => {
+        const x = -900 + k * 120;
+        const xt = CEIL_VP.x + ((x - CEIL_VP.x) * (CEIL_VP.y + 1000)) / (CEIL_VP.y - (CEIL - 40));
+        return <line key={k} x1={x} y1={CEIL - 40} x2={xt} y2={-1000} stroke={INK} strokeWidth={2.5} opacity={0.09} />;
+      })}
+      <rect x={-900} y={CEIL - 90} width={3800} height={50} fill={C.shadow} opacity={0.5} />
+      {/* ceiling rose where the pendant hangs */}
+      <ellipse cx={PENDANT.x} cy={PENDANT.rose} rx={70} ry={16} fill={trim} stroke={INK} strokeWidth={3} />
+      <ellipse cx={PENDANT.x} cy={PENDANT.rose + 2} rx={44} ry={9} fill={shade(trim, 0.12)} stroke={INK} strokeWidth={2} />
       <rect x={-900} y={CEIL - 40} width={3800} height={22} fill={trim} stroke={INK} strokeWidth={3} />
       <rect x={-900} y={CEIL - 18} width={3800} height={18} fill={shade(trim, 0.12)} stroke={INK} strokeWidth={3} />
       {/* wallpaper */}
@@ -804,8 +816,8 @@ const Doorway: React.FC<{ctx: Ctx}> = ({ctx}) => {
       <path d={`M ${x1 + cw - 2} ${y0 - cw + 2} L ${x1 + cw - 2} ${F} L ${x1 + cw - 10} ${F} L ${x1 + cw - 10} ${y0 - cw + 10} Z`} fill={shade(trim, 0.18)} />
       <rect x={x1 + cw} y={y0 - cw + 8} width={14} height={F - y0 + cw - 8} fill={C.shadow} />
       {/* light switch (blank plate) */}
-      <rect x={118} y={1168} width={30} height={46} rx={5} fill={trim} stroke={INK} strokeWidth={3} />
-      <rect x={128} y={1180} width={10} height={20} rx={3} fill={shade(trim, 0.2)} stroke={INK} strokeWidth={2} />
+      <rect x={114} y={1170} width={40} height={40} rx={6} fill={trim} stroke={INK} strokeWidth={3} />
+      <rect x={126} y={1180} width={16} height={20} rx={4} fill={shade(trim, 0.18)} stroke={INK} strokeWidth={2} />
     </g>
   );
 };
@@ -1044,7 +1056,7 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
   const off = (dy: number) => 'M ' + pts.map((p) => `${p.x.toFixed(2)} ${(p.y + dy).toFixed(2)}`).join(' L ');
   const ribbonOp = clamp(e);
   const rc = {x: PFr.x + PFr.w, y: PFr.y};
-  const d1 = 24, d2 = 48;
+  const d1 = 17, d2 = 50;
   const ribbon = polyD([
     {x: rc.x - d2 - 4, y: rc.y - 4},
     {x: rc.x - d1 + 4, y: rc.y - 4},
@@ -1090,6 +1102,7 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
       {/* (1) the family photo (front row): walnut frame, the print, his reflection, dust (wiped), sheen */}
       <FrameMoulding r={FFr} m={FAMILY_M} wood="#7A4B30" ctx={ctx} />
       <clipPath id={`${id}-fp`}><rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} /></clipPath>
+      <clipPath id={`${id}-fframe`}><rect x={FFr.x} y={FFr.y} width={FFr.w} height={FFr.h} rx={3} /></clipPath>
       <g clipPath={`url(#${id}-fp)`}>
         <g transform={`translate(${FP.x} ${FP.y})`}><FamilyPrint id={`${id}-fpr`} w={FP.w} h={FP.h} /></g>
         <rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} fill="#E9C890" opacity={0.08 * e} />
@@ -1114,15 +1127,25 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
             )}
           </mask>
           <g mask={`url(#${id}-wipe)`}>
-            <rect x={FFr.x + 2} y={FFr.y + 2} width={FFr.w - 4} height={FFr.h - 4} rx={3} fill={DUST} opacity={0.22 * e} />
-            <rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} fill={DUST} opacity={0.3 * e} />
-            <Specks r={FP} n={60} seed={5} op={0.75 * e} />
+            <rect x={FFr.x + 2} y={FFr.y + 2} width={FFr.w - 4} height={FFr.h - 4} rx={3} fill={DUST} opacity={0.34 * e} />
+            <rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} fill={DUST_GLASS} opacity={0.5 * e} />
+            {/* old smears in the film */}
+            <path d={`M ${FP.x + 20} ${FP.y + FP.h - 30} Q ${FP.x + 80} ${FP.y + FP.h - 50} ${FP.x + 150} ${FP.y + FP.h - 26}`} fill="none" stroke="#F2EFE8" strokeWidth={14} strokeLinecap="round" opacity={0.3 * e} />
+            <Specks r={FP} n={70} seed={5} op={0.85 * e} />
+            <Specks r={{x: FFr.x, y: FFr.y, w: FFr.w, h: FAMILY_M}} n={16} seed={9} op={0.8 * e} size={1.3} />
             <DustTop x0={FFr.x + 3} x1={FFr.x + FFr.w - 3} y={FFr.y + 1} e={e} h={6} />
           </g>
           {/* the wiped glass shines a little */}
           {w > 0.001 && (
             <g clipPath={`url(#${id}-fp)`}>
               <path d={streak} fill="none" stroke="#FFFFFF" strokeWidth={WIPE.width * 0.3} strokeLinecap="round" opacity={0.12 * e} transform="translate(0 -12)" />
+            </g>
+          )}
+          {/* the dust pushed aside: thin ridges along both edges of the streak */}
+          {w > 0.02 && (
+            <g clipPath={`url(#${id}-fframe)`} opacity={0.75 * e}>
+              <path d={off(-WIPE.width / 2 - 1)} fill="none" stroke={DUST_GLASS} strokeWidth={3.5} strokeLinecap="round" />
+              <path d={off(WIPE.width / 2 + 1)} fill="none" stroke={DUST_GLASS} strokeWidth={3.5} strokeLinecap="round" />
             </g>
           )}
           {/* the dust pushed to the end of the streak */}
@@ -1171,7 +1194,7 @@ const PrintContent: React.FC<{ctx: Ctx; view?: React.ReactNode; tint: number; gl
 const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
   if (w <= 0.001 || w >= 0.999 || e < 0.05) return null;
   const fadeEnd = 1 - ss(w, 0.82, 1);
-  const n = 22;
+  const n = 34;
   return (
     <g opacity={fadeEnd * clamp(e * 1.5)}>
       {Array.from({length: n}, (_, k) => {
@@ -1179,12 +1202,16 @@ const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
         const age = (w - u0) / 0.32;
         if (age <= 0 || age >= 1) return null;
         const o = wipeAt(u0);
-        const big = k % 4 === 0;
-        const x = o.x + 20 + (hash(k * 3.3) - 0.3) * 50 * age + 6 * Math.sin(t * 2 + k);
-        const y = o.y - 24 - (40 + 80 * hash(k * 1.7)) * age;
-        const r = big ? 8 + 14 * age : 2 + 3 * hash(k * 5.5);
-        const op = (big ? 0.4 : 0.85) * Math.sin(Math.PI * Math.min(1, age * 1.2));
-        return <circle key={k} cx={x} cy={y} r={r} fill={big ? '#E8E4DC' : '#F4F1EA'} opacity={op} />;
+        const big = k % 5 === 0;
+        const x = o.x + 14 + (hash(k * 3.3) - 0.35) * 70 * age + 5 * Math.sin(t * 2 + k);
+        const y = o.y - 18 - (30 + 90 * hash(k * 1.7)) * age;
+        const r = big ? 7 + 12 * age : 1.3 + 2.2 * hash(k * 5.5);
+        const op = (big ? 0.2 : 0.9) * Math.sin(Math.PI * Math.min(1, age * 1.15));
+        return big ? (
+          <circle key={k} cx={x} cy={y} r={r} fill="#ECE8DF" stroke={INK} strokeWidth={1.5} strokeOpacity={0.35} opacity={op * 2.2} />
+        ) : (
+          <circle key={k} cx={x} cy={y} r={r} fill={k % 2 ? '#B8B0A0' : '#F3F0E8'} opacity={op} />
+        );
       })}
     </g>
   );

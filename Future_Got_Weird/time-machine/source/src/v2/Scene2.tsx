@@ -18,6 +18,10 @@ import {Captions2} from './Captions2';
 import {CAPTIONS} from '../lib';
 import {Expr} from '../art/crew';
 import {HookBackground} from './backgrounds';
+import {Room, ROOM} from './room';
+import {walkFeet, walkBob} from './walk';
+import {Head} from '../art/crew';
+import {GUESSER, HELMET, astroReach, astroHandLocal} from '../art/figures';
 
 const W = (c: Cam, children: React.ReactNode) => <g transform={camT(c)}>{children}</g>;
 const bhUrls = (t: number) => {
@@ -86,6 +90,96 @@ function cockpitWorld(t: number, k: string) {
   );
 }
 
+// ---- 5: the home clock (past room) and the window --------------------------------------------------------------------------
+function roomPastWorld(t: number, k: string) {
+  const sc = St.WIN_SC;
+  const view = <g transform={`translate(${St.WIN_CENTRE.x - 540 * sc} ${St.WIN_CENTRE.y - 960 * sc}) scale(${sc})`}>{yardViewA(t, k + 'wv')}</g>;
+  return <Room t={t} id={`${k}rm`} era={0} clockMinutes={St.homeClockMinutes(t)} clockBlur={St.homeClockBlur(t)} windowView={view} />;
+}
+/** the yard as seen at the start of the decades (camera C_A); placeholder until the yard module is wired */
+function yardViewA(t: number, k: string) {
+  return <rect width={1080} height={1920} fill="#9CC77E" />;
+}
+
+// ---- 10-12: the family room, present -----------------------------------------------------------------------------------------
+const roomAstroE = (t: number): Expr => {
+  const look = ss(t, V2.notice - 0.1, V2.notice + 0.2);
+  const face = ss(t, V2.faceTurn, V2.faceTurn + 0.4);
+  const grief = ss(t, V2.faceTurn + 0.2, V2.faceTurn + 1.2);
+  return {
+    turn: lerp(0.3, 0.45, look), lookX: lerp(0.5, 0.85, look) * (1 - 0.6 * face), lookY: lerp(0, 0.15, look) + 0.25 * face,
+    wide: 0.3 * look * (1 - grief), brows: 0.25 * look * (1 - grief), sad: 0.25 * look + 0.6 * grief,
+    mouth: grief > 0.4 ? 'tremble' : 'flat', blink: t > 17.3 && t < 17.38 ? 0.12 : 1,
+  };
+};
+function roomPresentWorld(t: number, k: string) {
+  const x = St.roomAstroX(t);
+  const moving = St.roomWalking(t) ? 1 : 0;
+  const dist = (x - 470) / St.RS;
+  // the reach: his right glove follows the wipe across the family photo's glass
+  const reachU = ss(t, V2.reach, V2.dustWipe - 0.1) * (1 - ss(t, V2.faceTurn, V2.faceTurn + 0.45));
+  const w = St.dustWipeAt(t);
+  const wp = (() => {
+    const W = ROOM.wipe;
+    const c = {x: 2 * W.via.x - (W.from.x + W.to.x) / 2, y: 2 * W.via.y - (W.from.y + W.to.y) / 2};
+    const a = (1 - w) * (1 - w), b = 2 * w * (1 - w), d = w * w;
+    return {x: a * W.from.x + b * c.x + d * W.to.x, y: a * W.from.y + b * c.y + d * W.to.y};
+  })();
+  const tgt = {x: (wp.x - x) / St.RS, y: (wp.y - ROOM.floor) / St.RS};
+  const arm = astroReach(tgt.x, tgt.y, 1, 1);
+  const armR = {a: lerp(10, arm.a, reachU), b: lerp(14, arm.b, reachU)};
+  const swing = moving * Math.sin((Math.PI * dist) / 58) * 14;
+  const pose = {
+    armL: {a: 10 + swing, b: 16}, armR: reachU > 0.01 ? armR : {a: 10 - swing, b: 16},
+    e: roomAstroE(t), bob: walkBob(dist, moving),
+  };
+  // his reflection on the family photo's glass: his face beside the faces in the print, the window's towers behind him.
+  // Drawn over the room (normal blend, cool and translucent), clipped to the glass.
+  const ro = St.reflOpRoom(t);
+  const G = ROOM.photoFamily.glass;
+  const reflNode = ro > 0.001 ? (
+    <g>
+      <clipPath id={`${k}rgl`}><rect x={G.x} y={G.y} width={G.w} height={G.h} /></clipPath>
+      <g clipPath={`url(#${k}rgl)`} opacity={ro}>
+        {/* the window behind him, with the changed skyline, reflected */}
+        <rect x={G.x + G.w * 0.5} y={G.y - 4} width={G.w * 0.52} height={G.h * 0.62} fill="#CFE6F2" opacity={0.55} />
+        {[0, 1, 2, 3].map((i) => <rect key={i} x={G.x + G.w * (0.54 + 0.11 * i)} y={G.y + G.h * (0.08 + 0.06 * (i % 2))} width={G.w * 0.07} height={G.h * 0.6} rx={2} fill="#9FC4DA" opacity={0.6} />)}
+        <g transform={`translate(${G.x + G.w * 0.8} ${G.y + G.h * 0.6}) scale(0.78)`}>
+          <g opacity={0.9}>
+            <Head skin={'#E3D2D0'} hair="spiky" hairColor={'#B2626A'} id={`${k}rh`} cheeks={false} e={{...roomAstroE(Math.max(t, V2.faceTurn + 0.4)), turn: -0.2, lookX: -0.35, lookY: 0.15}} />
+          </g>
+          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="#DCEFFF" opacity={0.18} />
+          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="none" stroke="#F4FBFF" strokeWidth={6} opacity={0.8} />
+        </g>
+        <rect x={G.x} y={G.y} width={G.w} height={G.h} fill="#BFD6E6" opacity={0.12} />
+      </g>
+    </g>
+  ) : null;
+  // his watch beside the photograph (one hour on his wrist; a whole life in the frame)
+  const wb = ss(t, V2.watchBeside, V2.watchBeside + 0.35) * (1 - ss(t, V2.photoMove + 0.1, V2.photoMove + 0.5));
+  const photoView = <g transform={`translate(${ROOM.photoFriend.print.x} ${ROOM.photoFriend.print.y}) scale(${ROOM.photoFriend.printScale})`}>{W(St.CAM_CLOSE, hookWorld(0, k + 'pv', true))}</g>;
+  return (
+    <g>
+      <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={yardPresentView(t, k + 'wv')} />
+      {reflNode}
+      {(t < V2.photoClose + 0.2) && (
+        <g transform={`translate(${x} ${ROOM.floor}) scale(${St.RS})`}>
+          <Astronaut pose={pose} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, moving)} />
+        </g>
+      )}
+      {wb > 0.001 && (
+        <g transform={`translate(${St.FAM.x - 150 + 80 * wb} ${St.FAM.y + 230 - 150 * wb})`}>
+          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.36} rot={-10} />
+        </g>
+      )}
+    </g>
+  );
+}
+function yardPresentView(t: number, k: string) {
+  void t; void k;
+  return <rect x={ROOM.win.x0} y={ROOM.win.y0} width={ROOM.win.w} height={ROOM.win.h} fill="#A8D8E6" />;
+}
+
 // ---- captions: heights clear of faces, hands, the watch and the photographs ------------------------------------------------
 const capY = (_i: number) => 1716;
 const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : CAPTIONS[i].hide);
@@ -103,8 +197,12 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     if (t > V2.approach + 0.3) urls.push(...cockpitBhUrls(cockpitBhT(t)));
   } else if (t < V2.matchCut) {
     body = W(St.camCockpit(t), cockpitWorld(t, 'C'));
-  } else {
+  } else if (t < V2.windowCover) {
+    body = W(St.camRoomPast(t), roomPastWorld(t, 'D'));
+  } else if (t < V2.doorPass) {
     body = <rect width={1080} height={1920} fill="#333" />;
+  } else {
+    body = W(St.camRoomOwn(t), roomPresentWorld(t, 'F'));
   }
   useImages(urls);
   return (

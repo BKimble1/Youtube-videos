@@ -93,3 +93,62 @@ export const windowMap = (t: number): Map2 => {
 export const camCockpit = (t: number): Cam => mixCam(toInner(camSpace(t), windowMap(t)), camCockpitOwn(t), ss(t, V2.windowPass, V2.windowPass + 0.4));
 
 export {keyS};
+
+// ---- 5: the home's wall clock (past) and the window -------------------------------------------------------------------
+import {ROOM} from './room';
+import {FA} from './cockpitShot';
+/** the watch's screen circle at the match cut (cockpit camera at matchCut, FA.watch placement, watch r = 100 * s) */
+const CK_END = camCockpitOwn(V2.matchCut);
+export const WATCH_SCREEN = {x: 540 + CK_END.z * (FA.watch.x - CK_END.x), y: 960 + CK_END.z * (FA.watch.y - CK_END.y), r: 100 * FA.watch.s * CK_END.z};
+const ZC = WATCH_SCREEN.r / ROOM.clock.r;
+const CAM_CLOCK: Cam = {x: ROOM.clock.x - (WATCH_SCREEN.x - 540) / ZC, y: ROOM.clock.y - (WATCH_SCREEN.y - 960) / ZC, z: ZC};
+/** the window glass as a portal: a 1080x1920 view of the yard scaled to the glass height, centred on the glass */
+export const WIN_SC = ROOM.win.h / 1920;
+export const WIN_CENTRE = {x: ROOM.win.cx, y: ROOM.win.cy};
+export const camRoomPast = (t: number): Cam =>
+  keyCam(t, [
+    [V2.matchCut, CAM_CLOCK],
+    [V2.panToWindow, {...CAM_CLOCK, z: ZC * 0.97}],
+    [V2.windowPush, {x: WIN_CENTRE.x, y: WIN_CENTRE.y, z: 2.15}],
+    [V2.windowCover, {x: WIN_CENTRE.x, y: WIN_CENTRE.y, z: 1 / WIN_SC}],
+  ]);
+/** the home clock races (years); minutes after 12:00 */
+export const homeClockMinutes = (t: number) => {
+  // matches the watch at the cut (11:00), then races: hour hand ~ one turn a second by the window (years)
+  const x = Math.max(0, t - V2.matchCut);
+  return 660 + 60 * (2.5 * x * x + 4 * Math.max(0, x - 0.25) ** 2);
+};
+export const homeClockBlur = (t: number) => ss(t, V2.matchCut + 0.08, V2.matchCut + 0.45);
+
+// ---- 10-12: the family room (present) ---------------------------------------------------------------------------------
+export const RS = ROOM.figScale; // astronaut scale in the room
+export const ROOM_STOP_X = 1080;
+/** his x in the room: walking in (continuing his walk from the yard, left to right), slowing to a stop by the sideboard */
+export const roomAstroX = (t: number) => keyS(t, [[V2.doorPass, 470], [V2.roomStop, ROOM_STOP_X]], (x) => 1 - (1 - x) * (1 - x) * (1 - 0.35 * x));
+export const roomWalking = (t: number) => t < V2.roomStop - 0.05;
+/** the wipe across the family photo's glass: 0..WIPE_MAX of ROOM.wipe (his reach) */
+export const WIPE_MAX = 0.62;
+export const dustWipeAt = (t: number) => WIPE_MAX * ss(t, V2.dustWipe - 0.12, V2.dustWipe + 0.38);
+/** the family print's centre and the pre-departure print's centre (room px) */
+export const FAM = {x: ROOM.photoFamily.print.x + ROOM.photoFamily.print.w / 2, y: ROOM.photoFamily.print.y + ROOM.photoFamily.print.h / 2};
+export const FRI = {x: ROOM.photoFriend.print.x + ROOM.photoFriend.print.w / 2, y: ROOM.photoFriend.print.y + ROOM.photoFriend.print.h / 2};
+export const Z_PRINT = 1080 / ROOM.photoFriend.print.w;
+const HEAD_R = {x: ROOM_STOP_X, y: ROOM.floor - 372 * RS};
+export const camRoomOwn = (t: number): Cam =>
+  keyCam(t, [
+    [V2.doorPassEnd, {x: roomAstroX(V2.doorPassEnd) + 120, y: 1100, z: 1.0}],
+    [V2.roomStop, {x: 1010, y: 1110, z: 1.0}],
+    [V2.reach, {x: 1150, y: 1120, z: 1.25}],
+    [V2.dustWipe + 0.2, {x: 1235, y: 1130, z: 1.9}],
+    [V2.faceTurn + 0.25, {x: (HEAD_R.x + FAM.x) / 2 + 10, y: HEAD_R.y + 30, z: 2.05}],
+    [V2.photoClose, {x: FAM.x + 6, y: FAM.y - 4, z: 3.0}],
+    [V2.watchBeside, {x: FAM.x - 10, y: FAM.y + 6, z: 3.35}],
+    [V2.photoMove, {x: FAM.x + 40, y: FAM.y, z: 2.9}],
+    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.2}],
+    [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT}, 'stop'],
+  ]);
+/** the print's tint and glass fade out as it fills the frame (the last frame equals frame 0) */
+export const printTint = (t: number) => 0.35 * (1 - ss(t, V2.photoPush + 0.6, DUR - 1 / 30 - 0.12));
+export const printGlass = (t: number) => 1 - ss(t, V2.photoPush + 0.5, DUR - 1 / 30 - 0.2);
+/** his reflection on the family photo's glass */
+export const reflOpRoom = (t: number) => 0.55 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
