@@ -19,7 +19,9 @@ Restrained, action-led details, one connected journey:
         gentle swell into the watch face that hands over to the black hole's rumble (loop).
 Music: a quiet minor pad (no beat), each tone completing whole cycles over the film so the end continues into the start.
 Levels: voice about -16 LUFS; whole about -14 LUFS integrated; true peak below -1.5 dBTP (4x oversampled).
-usage: python3 tools/make_audio_v3.py [mix_name]   (default mix_v3)"""
+usage: python3 tools/make_audio_v3.py [mix_name]   (default mix_v3)
+V4: FGW_TIMELINE=source/src/data/timeline_v4.json FGW_CUES=source/src/v4/cues.json
+    FGW_NARRATION=audio/narration/FGW_TimeMachine_narration_V4.wav python3 tools/make_audio_v3.py mix_v4"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
@@ -28,8 +30,8 @@ from scipy.ndimage import minimum_filter1d
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
 NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v3'
-TL = json.load(open(os.path.join(EP, 'source/src/data/timeline.json')))
-CJ = json.load(open(os.path.join(EP, 'source/src/v3/cues.json')))
+TL = json.load(open(os.path.join(EP, os.environ.get('FGW_TIMELINE', 'source/src/data/timeline.json'))))
+CJ = json.load(open(os.path.join(EP, os.environ.get('FGW_CUES', 'source/src/v3/cues.json'))))
 EV = CJ['EV']               # named event times (s)
 PAN = CJ.get('pan', {})     # named pan tracks: {"capsule": [[t, pan(-1..1)], ...]}
 DUR = TL['duration']
@@ -216,7 +218,7 @@ L_ += amb; R_ += amb
 quiet = 1 - 0.5 * win(e['inside'] + 0.4, e['toFace'], 0.4, 0.4)
 L_ *= quiet; R_ *= quiet
 
-v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_TimeMachine_narration_V1.wav'))
+v, vsr = sf.read(os.path.join(EP, os.environ.get('FGW_NARRATION', 'audio/narration/FGW_TimeMachine_narration_V1.wav')))
 assert vsr == SR and len(v) == N, (vsr, len(v), N)
 meter = pyln.Meter(SR)
 def compress(x, thr_db=-20.0, ratio=3.0, att=0.004, rel=0.09):
