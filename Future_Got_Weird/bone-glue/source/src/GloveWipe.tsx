@@ -14,9 +14,9 @@ export const GloveWipe: React.FC<{u: number; fkey: string}> = ({u, fkey}) => {
   if (u <= 0 || u >= 1) return null;
   // the band's centre sweeps from above the frame to below it; it grows a little as it passes nearest the lens
   const yc = -1500 + 4900 * ss(u, 0, 1) * 0.15 + 4900 * u * 0.85;
-  const sc = 1.15 + 0.35 * Math.sin(Math.PI * u);
+  const sc = 1.25 + 0.38 * Math.sin(Math.PI * u);
   const tilt = -16 + 8 * u; // the gloved hand (screen left) leads down into the frame
-  const H = 1500; // sleeve thickness (local units)
+  const H = 1750; // sleeve thickness (local units)
   const sleeve = `M-200 ${-H / 2}C200 ${-H / 2 - 60} 1400 ${-H / 2 - 40} 2600 ${-H / 2 + 20}L2600 ${H / 2 - 20}C1400 ${H / 2 + 40} 200 ${H / 2 + 60} -200 ${H / 2}Z`;
   const cuff = `M-360 ${-H * 0.3}C-300 ${-H * 0.36} -180 ${-H * 0.38} -100 ${-H * 0.34}L-60 ${H * 0.34}C-160 ${H * 0.39} -300 ${H * 0.36} -360 ${H * 0.3}Z`;
   const gid = `${fkey}gw-sl`;

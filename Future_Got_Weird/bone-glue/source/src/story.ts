@@ -100,7 +100,7 @@ export const timeOfLaid = (s: number) => {
 
 // ---------------------------------------------------------------- the loop's clock
 /** the opening's clock: film time, except in the loop pre-roll at the end (t - LOOP_T, negative) */
-EV.reset = EV.wipe0 + 0.51 * (EV.wipe1 - EV.wipe0);
+EV.reset = EV.wipe0 + 0.56 * (EV.wipe1 - EV.wipe0);
 export const openTau = (t: number) => (t >= EV.reset ? t - LOOP_T : t);
 export const inOpening = (t: number) => t < EV.dive0 || t >= EV.reset;
 
