@@ -239,14 +239,16 @@ const CLINIC2: Cam = {x: 88, y: -97, w: 392, k: 0.86, focus: -10};
 export const MATCH_X = -7;
 const edgeB = beadEdgeBelow(MATCH_X, {t: 99, laid: BEAD_TOTAL, laidAt: () => 0, seep: 0, set: 0, wet: 0, heal: HEAL0, px: 0.01});
 export const MATCH_B = edgeB;
+/** measured on the rendered bead: its drawn lower edge sits this far above the analytic edge point */
+const EDGE_FIX = -0.47;
 const MATCH_SCREEN_Y = 1090;
 const MATCH_W = 7.5;
-const matchCam = (wv: number): Cam => ({x: edgeB.x, y: edgeB.y - (MATCH_SCREEN_Y - 960) * (wv / 1080), w: wv, k: 1, focus: 0});
+const matchCam = (wv: number): Cam => ({x: edgeB.x, y: edgeB.y + EDGE_FIX - (MATCH_SCREEN_Y - 960) * (wv / 1080), w: wv, k: 1, focus: 0});
 const M_IN = matchCam(MATCH_W);
 /** oyster world <-> wrist world at the match: (0,0) on the oyster's seam <-> the bead's contact edge, R mm per mm */
 export const R_IN = 12.67, R_OUT = 32 / 7.5;
-export const toOyster = (c: Cam, R: number): Cam => ({x: (c.x - edgeB.x) * R, y: (c.y - edgeB.y) * R, w: c.w * R, k: 1});
-export const fromOyster = (o: Cam, R: number): Cam => ({x: edgeB.x + o.x / R, y: edgeB.y + o.y / R, w: o.w / R, k: 1, focus: 0});
+export const toOyster = (c: Cam, R: number): Cam => ({x: (c.x - edgeB.x) * R, y: (c.y - edgeB.y - EDGE_FIX) * R, w: c.w * R, k: 1});
+export const fromOyster = (o: Cam, R: number): Cam => ({x: edgeB.x + o.x / R, y: edgeB.y + EDGE_FIX + o.y / R, w: o.w / R, k: 1, focus: 0});
 const O_HOLD: Cam = {x: 2, y: -15, w: 80};
 const O_SEAM: Cam = {x: 0, y: -3.9, w: 32};
 const WET0 = fromOyster(O_SEAM, R_OUT);
