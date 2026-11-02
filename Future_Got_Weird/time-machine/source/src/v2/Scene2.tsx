@@ -17,7 +17,7 @@ import {useImages} from './preload';
 import {Captions2} from './Captions2';
 import {CAPTIONS} from '../lib';
 import {Expr} from '../art/crew';
-import {HookBackground, YardWorld, YardFore} from './backgrounds';
+import {YardWorld, YardFore} from './backgrounds';
 import {Room, ROOM} from './room';
 import {walkFeet, walkBob} from './walk';
 import {Head} from '../art/crew';
@@ -51,7 +51,7 @@ function hookWorld(t: number, k: string, forPrint = false) {
   ) : undefined;
   return (
     <g>
-      <HookBackground D={St.hookD(tt)} t={tt} id={`${k}bg`} />
+      <YardWorld D={St.hookD(tt)} season={lerp(0.1, 0.16, St.hookD(tt))} t={tt} id={`${k}bg`} />
       <TwoShot age={age} id={`${k}ts`} frame={Math.round(tt * 30)} clasp={1} squeeze={ss(tt, 0.35, 0.7) * 0.6} astroE={hookAstroE(tt)} friendE={hookFriendE(tt)} tilt={St.headTilt(tt)} reflection={reflection} reflOpacity={refl} />
     </g>
   );
@@ -96,9 +96,9 @@ function roomPastWorld(t: number, k: string) {
   const view = <g transform={`translate(${St.WIN_CENTRE.x - 540 * sc} ${St.WIN_CENTRE.y - 960 * sc}) scale(${sc})`}>{yardViewA(t, k + 'wv')}</g>;
   return <Room t={t} id={`${k}rm`} era={0} clockMinutes={St.homeClockMinutes(t)} clockBlur={St.homeClockBlur(t)} windowView={view} />;
 }
-/** the yard as seen at the start of the decades (camera C_A); placeholder until the yard module is wired */
+/** the yard through the window at the start of the decades: exactly the decades shot's first frame (camera C_A) */
 function yardViewA(t: number, k: string) {
-  return <rect width={1080} height={1920} fill="#9CC77E" />;
+  return W(St.C_A, decadesWorld(Math.max(t, V2.windowCover - 0.001), k));
 }
 
 // ---- 10-12: the family room, present -----------------------------------------------------------------------------------------
@@ -175,9 +175,22 @@ function roomPresentWorld(t: number, k: string) {
     </g>
   );
 }
+/** the present-day yard through the window: the towers of the changed skyline, his old friend waiting by the gate */
 function yardPresentView(t: number, k: string) {
-  void t; void k;
-  return <rect x={ROOM.win.x0} y={ROOM.win.y0} width={ROOM.win.w} height={ROOM.win.h} fill="#A8D8E6" />;
+  const sc = St.WIN_SC;
+  const cam = {x: 1180, y: 1060, z: 1.0};
+  return (
+    <g transform={`translate(${St.WIN_CENTRE.x - 540 * sc} ${St.WIN_CENTRE.y - 960 * sc}) scale(${sc})`}>
+      {W(cam, (
+        <g>
+          <YardWorld D={1} season={0.16} t={t} id={`${k}py`} doorOpen={1} gateOpen={1} />
+          <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+            <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: {mouth: 'soft', lookX: 0.6, lookY: -0.1}}} id={`${k}pf`} facing={1} green />
+          </g>
+        </g>
+      ))}
+    </g>
+  );
 }
 
 // ---- 6-9: the yard: decades, the return, the reunion, the way to the door ------------------------------------------------
@@ -188,7 +201,7 @@ function decadesWorld(t: number, k: string) {
   return (
     <g>
       <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} />
-      <g transform={`translate(${f.x} ${St.FEET}) scale(${St.YS})`}>
+      <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
         <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
       </g>
     </g>
@@ -250,20 +263,21 @@ function reunionWorld(t: number, k: string) {
 }
 function doorWorld(t: number, k: string) {
   const g = ss(t, V2.gesture, V2.gesture + 0.22);
-  const ax = St.astroDoorX(t);
+  const a = St.astroDoor(t);
+  const ax = a.x;
   const walking = t > V2.walkStart;
-  const dist = (ax - TS.ax) / St.YS;
+  const dist = Math.hypot(ax - TS.ax, a.y - St.FEET) / St.YS;
   const gestureArm = {a: lerp(30, 72, g), b: lerp(30, 10, g)};
   const fe: Expr = {mouth: 'soft', lookX: lerp(-0.7, 0.8, g), lookY: -0.1, turn: 0.3 * g, brows: 0.15, sad: 0.2};
   const ae: Expr = {lookX: lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), lookY: lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), turn: 0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), sad: 0.35, brows: 0.25, mouth: 'flat'};
   const swing = walking ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
   return (
     <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} doorOpen={ss(t, V2.walkStart, V2.doorPass)} />
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} doorOpen={ss(t, V2.walkStart + 0.2, V2.doorPass)} gateOpen={ss(t, V2.gesture, V2.walkStart + 0.15)} />
       <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
         <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
       </g>
-      <g transform={`translate(${ax} ${St.FEET}) scale(${St.YS})`}>
+      <g transform={`translate(${ax} ${a.y}) scale(${a.s})`}>
         <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: 10 - swing, b: 16}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
       </g>
     </g>
@@ -300,7 +314,8 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     body = W(St.camRoomPast(t), roomPastWorld(t, 'D'));
   } else if (t < V2.lightPass) {
     body = W(St.camDecades(t), decadesWorld(t, 'E'));
-    overlay = <YardFore t={t} camX={St.camDecades(t).x} />;
+    const cd = St.camDecades(t);
+    overlay = <YardFore t={t} camX={cd.x} zoom={St.FG_ZOOM} D={St.yardD(t)} season={St.yardSeason(t)} trunkX={St.FG_TRUNK_X} leavesX={St.FG_LEAVES_X} />;
   } else if (t < V2.arrive) {
     body = W(St.camReturn(t), t < V2.descentStart ? decadesWorld(t, 'E') : returnWorld(t, 'G'));
   } else if (t < V2.gesture) {

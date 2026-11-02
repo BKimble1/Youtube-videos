@@ -73,7 +73,7 @@ const FAMILY: Person[] = [
 const PARENT: Person = {key: 'dadp', x: 45, y: 60, s: 0.48, ...DAD};
 
 /** the glove's wipe across the family photo: a quadratic through from -> via -> to; the clean streak is `width` wide */
-const WIPE = {from: {x: 1150, y: 1127}, via: {x: 1292, y: 1138}, to: {x: 1434, y: 1150}, width: 66};
+const WIPE = {from: {x: 1156, y: 1127}, via: {x: 1274, y: 1137}, to: {x: 1392, y: 1147}, width: 66};
 /** glove contact point on the family photo at wipe progress u (0..1) */
 export const wipeAt = (u: number): RoomPt => {
   const k = clamp(u);
@@ -119,6 +119,8 @@ export const ROOM = {
   /** the dust puff starts here (glove contact at dustWipe 0.5); the wipe runs wipe.from -> via -> to (see wipeAt) */
   wipePoint: wipeAt(0.5),
   wipe: {...WIPE},
+  /** a suggested spot to stand (feet, at figScale) so his right glove reaches the whole wipe without covering the photo */
+  standAtPhoto: {x: 1064, y: F},
   /** two armchairs (front-facing, against the wall): outer bounds, seat height */
   chairs: [CHAIR_A, CHAIR_B].map((c) => ({x0: c.cx - CHAIR_W.half, x1: c.cx + CHAIR_W.half, y0: CHAIR_W.top, y1: F, cx: c.cx, seatY: CHAIR_W.seat})),
   sideTable: {cx: TABLE.cx, x0: TABLE.cx - TABLE.rx, x1: TABLE.cx + TABLE.rx, top: TABLE.top, y1: F},
@@ -131,13 +133,15 @@ export const ROOM = {
 const rad = (d: number) => (d * Math.PI) / 180;
 const DUST = '#D8D4CB';
 const DUST_GLASS = '#E2DED6';
-/** era lighting baked into every fill: a touch of warm sun (era 0) -> dusty, desaturated, cool (era 1) */
-const lightCol = (c: string, e: number) => {
+/** era lighting baked into every fill: a touch of warm sun (era 0) -> dusty, desaturated, cool (era 1).
+ *  Exported as roomTint so figures can be graded to match (e.g. a translucent overlay, or their colours). */
+export const roomTint = (c: string, era: number) => lightCol(c, clamp(era));
+function lightCol(c: string, e: number) {
   const warm = mix(c, '#FFE9C2', 0.05);
   if (e <= 0.001) return warm;
   const cool = mix(mix(c, '#A6A39C', 0.24), '#3E4D66', 0.25);
   return mix(warm, cool, e);
-};
+}
 const rr = (x: number, y: number, w: number, h: number, r: number) =>
   `M ${x + r} ${y} H ${x + w - r} Q ${x + w} ${y} ${x + w} ${y + r} V ${y + h - r} Q ${x + w} ${y + h} ${x + w - r} ${y + h} H ${x + r} Q ${x} ${y + h} ${x} ${y + h - r} V ${y + r} Q ${x} ${y} ${x + r} ${y} Z`;
 const polyD = (pts: RoomPt[]) => 'M ' + pts.map((p) => `${p.x.toFixed(2)} ${p.y.toFixed(2)}`).join(' L ') + ' Z';
@@ -820,13 +824,41 @@ const Doorway: React.FC<{ctx: Ctx}> = ({ctx}) => {
         {/* the room's light falls a little way into the opening */}
         <rect x={x0} y={y0} width={18} height={F - y0} fill={C.shadow} />
       </g>
-      {/* casing */}
-      <path d={`M ${x0 - cw} ${F} L ${x0 - cw} ${y0 - cw} L ${x1 + cw} ${y0 - cw} L ${x1 + cw} ${F} L ${x1} ${F} L ${x1} ${y0} L ${x0} ${y0} L ${x0} ${F} Z`} fill={trim} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
-      <path d={`M ${x1 + cw - 2} ${y0 - cw + 2} L ${x1 + cw - 2} ${F} L ${x1 + cw - 10} ${F} L ${x1 + cw - 10} ${y0 - cw + 10} Z`} fill={shade(trim, 0.18)} />
-      <rect x={x1 + cw} y={y0 - cw + 8} width={14} height={F - y0 + cw - 8} fill={C.shadow} />
+      <DoorCasing ctx={ctx} />
       {/* light switch (blank plate) */}
       <rect x={114} y={1170} width={40} height={40} rx={6} fill={trim} stroke={INK} strokeWidth={3} />
       <rect x={126} y={1180} width={16} height={20} rx={4} fill={shade(trim, 0.18)} stroke={INK} strokeWidth={2} />
+    </g>
+  );
+};
+
+const DoorCasing: React.FC<{ctx: Ctx}> = ({ctx}) => {
+  const {L, e} = ctx;
+  const {x0, x1, y0, casing: cw} = DOOR;
+  const trim = L('#F6EEDF');
+  return (
+    <g>
+      <path d={`M ${x0 - cw} ${F} L ${x0 - cw} ${y0 - cw} L ${x1 + cw} ${y0 - cw} L ${x1 + cw} ${F} L ${x1} ${F} L ${x1} ${y0} L ${x0} ${y0} L ${x0} ${F} Z`} fill={trim} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
+      <path d={`M ${x1 + cw - 2} ${y0 - cw + 2} L ${x1 + cw - 2} ${F} L ${x1 + cw - 10} ${F} L ${x1 + cw - 10} ${y0 - cw + 10} Z`} fill={shade(trim, 0.18)} />
+      <rect x={x1 + cw} y={y0 - cw + 8} width={14} height={F - y0 + cw - 8} fill={C.shadow} />
+      {e > 0.01 && <Cobweb x={x0 + 2} y={y0 + 2} r={66} dirX={1} dirY={1} op={0.5 * e} />}
+    </g>
+  );
+};
+
+/** The wall around the doorway and its casing, to draw OVER a figure who is still in the hall (so he is seen only
+ *  through the opening). Draw <Room/>, then the figure, then <RoomDoorFront/> with the same t / era (any id). Once he
+ *  is past x = ROOM.doorway.x1 + casing + 16 (= 102) in front of the wall, stop drawing it. */
+export const RoomDoorFront: React.FC<{t: number; id: string; era: number}> = ({t, id, era}) => {
+  const e = clamp(era);
+  const ctx: Ctx = {e, t, id: `${id}-df`, L: (c: string) => lightCol(c, e)};
+  const xr = DOOR.x1 + DOOR.casing + 16;
+  const d = `M -900 ${CEIL - 45} H ${xr} V ${F} H -900 Z M ${DOOR.x0} ${DOOR.y0} V ${F} H ${DOOR.x1} V ${DOOR.y0} Z`;
+  return (
+    <g>
+      <clipPath id={`${id}-dfclip`}><path d={d} clipRule="evenodd" /></clipPath>
+      <g clipPath={`url(#${id}-dfclip)`}><Wall ctx={ctx} /></g>
+      <DoorCasing ctx={ctx} />
     </g>
   );
 };
@@ -1160,7 +1192,11 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
           {/* the dust pushed to the end of the streak */}
           {w > 0.02 && (() => {
             const p = wipeAt(w);
-            return <ellipse cx={p.x + 26} cy={p.y + 4} rx={8} ry={WIPE.width * 0.44} fill={DUST} opacity={0.55 * e * (1 - ss(w, 0.9, 1) * 0.3)} transform={`rotate(-8 ${p.x + 26} ${p.y + 4})`} />;
+            return (
+              <g clipPath={`url(#${id}-fframe)`}>
+                <ellipse cx={p.x + 24} cy={p.y + 4} rx={7} ry={WIPE.width * 0.44} fill={DUST_GLASS} opacity={0.6 * e} transform={`rotate(-8 ${p.x + 24} ${p.y + 4})`} />
+              </g>
+            );
           })()}
         </g>
       )}
@@ -1270,7 +1306,6 @@ export const Room: React.FC<{
       <SunPatch e={e} />
       <Doorway ctx={ctx} />
       <WallClock minutes={clockMinutes} blur={clockBlur} era={e} id={`${id}-clock`} />
-      {e > 0.01 && <Cobweb x={DOOR.x0 + 2} y={DOOR.y0 + 2} r={66} dirX={1} dirY={1} op={0.5 * e} />}
       <Window ctx={ctx} view={windowView} />
       <Radiator ctx={ctx} />
       <Shelf ctx={ctx} />

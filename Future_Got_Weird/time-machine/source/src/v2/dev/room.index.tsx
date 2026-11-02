@@ -7,8 +7,8 @@
 //   RoomFamily              close on the family photo with a reflection (refl / reflOp)
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
-import {Room, ROOM, WallClock, wipeAt} from '../room';
-import {Astronaut, ASTRO_IDLE, Friend, Bust, GUESSER} from '../../art/figures';
+import {Room, RoomDoorFront, ROOM, WallClock, wipeAt} from '../room';
+import {Astronaut, ASTRO_IDLE, astroReach, Friend, Bust, GUESSER} from '../../art/figures';
 import {INK} from '../../art/crew';
 
 const Cam: React.FC<{cx: number; cy: number; s: number; children: React.ReactNode}> = ({cx, cy, s, children}) => (
@@ -204,12 +204,36 @@ const Entry: React.FC = () => (
   <Svg>
     <Cam cx={330} cy={1180} s={1080 / 1000}>
       <Room t={4} id="re" era={1} clockMinutes={130} />
-      <g transform={`translate(${-20} ${ROOM.floor}) scale(${ROOM.figScale})`}>
+      {/* he steps out of the hall: drawn behind the doorway front */}
+      <g transform={`translate(${-110} ${ROOM.floor}) scale(${ROOM.figScale})`}>
         <Astronaut pose={{...ASTRO_IDLE, stride: 0.6, legs: 0.8, e: {mouth: 'flat', lookX: 0.6}}} id="efig" frame={0} glove="#EEF2F5" />
       </g>
+      <RoomDoorFront t={4} id="redf" era={1} />
     </Cam>
   </Svg>
 );
+
+/** him at ROOM.standAtPhoto reaching the wipe (glove at wipeAt(0.5)), era 1, dustWipe 0.5 */
+const Reach: React.FC = () => {
+  const s = ROOM.figScale, P = ROOM.standAtPhoto;
+  const g = wipeAt(0.5);
+  const armR = astroReach((g.x - P.x) / s, (g.y - P.y) / s, 1, 1);
+  const g1 = wipeAt(1);
+  const armR1 = astroReach((g1.x - P.x) / s, (g1.y - P.y) / s, 1, 1);
+  return (
+    <Svg>
+      <Cam cx={1230} cy={1180} s={1080 / 820}>
+        <Room t={5} id="rr" era={1} clockMinutes={0} dustWipe={0.5} />
+        <g transform={`translate(${P.x} ${P.y}) scale(${s})`} opacity={0.35}>
+          <Astronaut pose={{...ASTRO_IDLE, armR: armR1, e: {mouth: 'flat', lookX: 1}}} id="rfig1" frame={0} glove="#EEF2F5" />
+        </g>
+        <g transform={`translate(${P.x} ${P.y}) scale(${s})`}>
+          <Astronaut pose={{...ASTRO_IDLE, armR, e: {mouth: 'flat', lookX: 1, lookY: 0.3}}} id="rfig" frame={0} glove="#EEF2F5" />
+        </g>
+      </Cam>
+    </Svg>
+  );
+};
 
 const comp = (id: string, c: React.FC) => <Composition key={id} id={id} component={c} durationInFrames={1} fps={30} width={1080} height={1920} />;
 const Root: React.FC = () => (
@@ -225,6 +249,7 @@ const Root: React.FC = () => (
     {comp('RoomEntry', Entry)}
     {comp('RoomTestPhotos', TestPhotos)}
     {comp('RoomWindow', WindowC)}
+    {comp('RoomReach', Reach)}
   </>
 );
 registerRoot(Root);

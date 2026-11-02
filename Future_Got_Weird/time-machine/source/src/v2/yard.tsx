@@ -93,8 +93,8 @@ const cpt = (a: P, b: P, c: P, d: P, u: number): P => {
 // seasons
 // =====================================================================================================================
 const LEAF_KEYS: [number, string][] = [
-  [0, '#F2A3BC'], [0.12, '#F2A3BC'], [0.2, '#8CC35E'], [0.3, '#56A04F'], [0.44, '#4E9A4A'], [0.5, '#E3B53A'], [0.57, '#E8892C'],
-  [0.66, '#C9592A'], [0.75, '#9A5B36'], [0.86, '#9A5B36'], [0.93, '#EDB0C2'], [1, '#F2A3BC'],
+  [0, '#A3CF6E'], [0.12, '#9CCB66'], [0.2, '#86C05A'], [0.3, '#56A04F'], [0.44, '#4E9A4A'], [0.5, '#E3B53A'], [0.57, '#E8892C'],
+  [0.66, '#C9592A'], [0.75, '#9A5B36'], [0.86, '#9A5B36'], [0.93, '#A8CF72'], [1, '#A3CF6E'],
 ];
 const LAWN_KEYS: [number, string][] = [
   [0, '#8DC765'], [0.25, '#74B55A'], [0.45, '#86B259'], [0.58, '#A9B35C'], [0.7, '#9EA56C'], [0.82, '#95A27E'], [0.92, '#86C063'], [1, '#8DC765'],
@@ -114,7 +114,7 @@ export const seasonLook = (season: number) => {
   const leaf = cyc(s, LEAF_KEYS);
   return {
     s, blossom, bare, leafAmt: 1 - bare, snow, autumn, falling, fallen, leaf,
-    leafDark: shade(leaf, 0.32), leafLight: mix(leaf, '#FFF7E6', 0.28),
+    leafDark: mix(shade(leaf, 0.32), '#C47A93', blossom), leafLight: mix(mix(leaf, '#FFF7E6', 0.28), '#FCD9E4', blossom),
     lawn: cyc(s, LAWN_KEYS), hedge: cyc(s, HEDGE_KEYS),
   };
 };
@@ -137,6 +137,10 @@ const BR_DEF: Bdef[] = [
   {p: 3, u: 0.55, ang: 84, len: 190, w0: 12, w1: 4, bend: -16, lvl: 2},
   {p: 3, u: 0.8, ang: 14, len: 160, w0: 10, w1: 3.5, bend: 10, lvl: 2},
   {p: 1, u: 0.95, ang: -10, len: 120, w0: 9, w1: 3, bend: 6, lvl: 2},
+  {p: 2, u: 0.3, ang: -20, len: 150, w0: 12, w1: 3.5, bend: 8, lvl: 2},
+  {p: 3, u: 0.3, ang: 22, len: 150, w0: 11, w1: 3.5, bend: -8, lvl: 2},
+  {p: 1, u: 0.25, ang: 58, len: 170, w0: 12, w1: 4, bend: 10, lvl: 2},
+  {p: 1, u: 0.82, ang: -48, len: 140, w0: 9, w1: 3, bend: -6, lvl: 2},
 ];
 type Br = {a: P; c: P; b: P; w0: number; w1: number; lvl: number; ang: number};
 const BRANCHES: Br[] = (() => {
@@ -151,14 +155,15 @@ const BRANCHES: Br[] = (() => {
     const {b, c} = mk(a, d.ang, d.len, d.bend);
     out.push({a, c, b, w0: d.w0, w1: d.w1, lvl: d.lvl, ang: d.ang});
   });
-  // twigs off every level-2 branch (seen when the tree is bare)
+  // twigs off the limbs and every level-2 branch (seen when the tree is bare)
   BR_DEF.forEach((d, i) => {
-    if (d.lvl !== 2) return;
+    if (d.lvl < 1) return;
     const br = out[i];
-    [[0.55, -32, 70], [1, 20, 62], [0.8, 38, 52]].forEach(([u, da, l], k) => {
+    const tw: number[][] = d.lvl === 1 ? [[0.4, 40, 80], [0.62, -38, 74], [0.85, 30, 66]] : [[0.4, 34, 54], [0.55, -32, 70], [1, 20, 62], [0.8, 38, 52], [0.95, -26, 48]];
+    tw.forEach(([u, da, l], k) => {
       const a = qpt(br.a, br.c, br.b, u);
       const {b, c} = mk(a, d.ang + da, l * (0.85 + 0.3 * hash(i * 5 + k)), 6 * (k % 2 ? 1 : -1));
-      out.push({a, c, b, w0: 3.6, w1: 1.4, lvl: 3, ang: d.ang + da});
+      out.push({a, c, b, w0: d.lvl === 1 ? 5 : 3.6, w1: 1.4, lvl: 3, ang: d.ang + da});
     });
   });
   return out;
@@ -205,8 +210,11 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
   const {k, wk, x: ox, y: oy} = T;
   const bareVis = sl.bare;
   const leafVis = clamp(sl.leafAmt * 2);
-  const brs = BRANCHES.filter((b) => b.lvl < 3 || T.g > 0.15);
+  const brs = BRANCHES.filter((b) => b.lvl < 3);
   const paths = brs.map((b) => branchPath(b, k, wk, ox, oy));
+  // twigs show only while the tree is (nearly) bare, so they never poke out of a full canopy
+  const twigVis = clamp((1 - sl.leafAmt) * 2.5) * ss(T.g, 0.05, 0.25);
+  const twigs = twigVis > 0.01 ? BRANCHES.filter((b) => b.lvl === 3).map((b) => branchPath(b, k, wk, ox, oy)) : [];
   const tw = 78 * wk;
   const flare = `M ${f1(ox - tw * 0.95)} ${f1(oy + 3)} Q ${f1(ox - tw * 0.52)} ${f1(oy - 6)} ${f1(ox - tw * 0.48)} ${f1(oy - 46 * k)} L ${f1(ox + tw * 0.42)} ${f1(oy - 46 * k)} Q ${f1(ox + tw * 0.5)} ${f1(oy - 6)} ${f1(ox + tw * 0.9)} ${f1(oy + 3)} Z`;
   const stake = 1 - ss(D, 0.1, 0.28);
@@ -226,9 +234,15 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
           <path d={`M ${ox + 22} ${oy - 150} Q ${ox + 8} ${oy - 144} ${ox - 2} ${oy - 150}`} fill="none" stroke="#4F7CC9" strokeWidth={3} strokeLinecap="round" />
         </g>
       )}
+      {twigs.length > 0 && (
+        <g opacity={twigVis}>
+          {twigs.map((d, i) => <path key={`to${i}`} d={d} fill={INK} stroke={INK} strokeWidth={ow * 1.1} strokeLinejoin="round" />)}
+          {twigs.map((d, i) => <path key={`tf${i}`} d={d} fill={BARK} />)}
+        </g>
+      )}
       {/* branches: one ink silhouette under, the bark fill over, so joints merge */}
       <path d={flare} fill={INK} stroke={INK} strokeWidth={ow * 2} strokeLinejoin="round" />
-      {paths.map((d, i) => <path key={`o${i}`} d={d} fill={INK} stroke={INK} strokeWidth={brs[i].lvl === 3 ? ow * 1.2 : ow * 2} strokeLinejoin="round" />)}
+      {paths.map((d, i) => <path key={`o${i}`} d={d} fill={INK} stroke={INK} strokeWidth={ow * 2} strokeLinejoin="round" />)}
       <path d={flare} fill={BARK} />
       {paths.map((d, i) => <path key={`f${i}`} d={d} fill={BARK} />)}
       <defs>
@@ -267,9 +281,14 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
           {blobs.map((b) => <circle key={`o${b.i}`} cx={b.x} cy={b.y} r={b.r} fill={INK} stroke={INK} strokeWidth={ow * 2} />)}
           {blobs.map((b) => <circle key={`f${b.i}`} cx={b.x} cy={b.y} r={b.r} fill={mix(sl.leaf, AUT[b.i % 3], 0.45 * sl.autumn)} />)}
           <g clipPath={`url(#${id}-can)`}>
-            <circle cx={cc.cx + cc.rx * 0.55} cy={cc.cy + cc.ry * 0.75} r={cc.rx * 1.02} fill={sl.leafDark} opacity={0.62} />
+            {/* blossom: pink clusters over the fresh green (never a pink/green colour blend) */}
+            {sl.blossom > 0.01 && blobs.map((b) => [[-0.3, -0.28], [0.32, -0.2], [0.02, 0.3], [-0.05, -0.02]].map(([dx, dy], q) => {
+              const s = sm(clamp(sl.blossom * 1.7 - hash(b.i * 4.1 + q * 1.7) * 0.7));
+              return s > 0.02 ? <circle key={`p${b.i}-${q}`} cx={b.x + dx * b.r} cy={b.y + dy * b.r} r={b.r * 0.62 * s} fill={q % 2 ? '#F4A9C0' : '#F7B8CB'} /> : null;
+            }))}
+            <circle cx={cc.cx + cc.rx * 0.55} cy={cc.cy + cc.ry * 0.75} r={cc.rx * 1.02} fill={sl.leafDark} opacity={0.55} />
             {blobs.filter((b) => b.y < cc.cy + cc.ry * 0.2).map((b) => (
-              <circle key={`h${b.i}`} cx={b.x - b.r * 0.28} cy={b.y - b.r * 0.34} r={b.r * 0.46} fill={sl.leafLight} opacity={0.75} />
+              <circle key={`h${b.i}`} cx={b.x - b.r * 0.28} cy={b.y - b.r * 0.34} r={b.r * 0.4} fill={sl.leafLight} opacity={0.55} />
             ))}
             {blobs.map((b) => b.r > 18 ? (
               <path key={`a${b.i}`} d={`M ${f1(b.x + b.r * 0.9 * Math.cos(rad(15)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(15)))} A ${f1(b.r * 0.9)} ${f1(b.r * 0.9)} 0 0 1 ${f1(b.x + b.r * 0.9 * Math.cos(rad(105)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(105)))}`} fill="none" stroke={INK} strokeWidth={2.4} opacity={0.3} strokeLinecap="round" />
@@ -537,7 +556,7 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
         const lx = 1396, ly = Dr.y0 + 50;
         return (
           <g>
-            {light > 0.01 && <circle cx={lx} cy={ly + 20} r={70} fill="#FFE7A6" opacity={0.25 * light} />}
+            {light > 0.01 && <circle cx={lx} cy={ly + 20} r={58} fill="#FFF6D2" opacity={0.45 * light} />}
             <g opacity={1 - f}>
               <path d={`M ${lx + 30} ${ly - 8} L ${lx} ${ly - 8} L ${lx} ${ly}`} fill="none" stroke={INK} strokeWidth={5} />
               <path d={`M ${lx - 11} ${ly + 4} L ${lx + 11} ${ly + 4} L ${lx + 14} ${ly + 40} L ${lx - 14} ${ly + 40} Z`} fill={mix('#F3E3B0', '#FFE27A', light)} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
@@ -560,7 +579,7 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
         <path key={j} d={`M ${sx} ${j < 2 ? Wn.y1 + 26 : wallTop + 290} q 4 22 -2 40 q 4 14 0 28`} fill="none" stroke={shade(wall, 0.45)} strokeWidth={7} strokeLinecap="round" opacity={0.3 * ss(D, 0.3, 1)} />
       ))}
       {peel > 0.01 && [[1866, floor - 120], [1424, wallTop + 330], [1906, floor + 200]].map(([px, py], j) => (
-        <path key={j} d={`M ${px} ${py} l 16 -6 l 10 8 l -4 12 l -14 4 l -10 -8 Z`} fill={mix(wall, '#F4EEE2', 0.7)} stroke={INK} strokeWidth={1.6} opacity={peel} transform={`scale(${1}) `} />
+        <path key={j} d={`M ${px} ${py} l 12 -5 l 8 6 l -3 9 l -11 3 l -8 -6 Z`} fill={mix(wall, '#FFFFFF', 0.3)} stroke={shade(wall, 0.45)} strokeWidth={1.6} opacity={peel * 0.8} />
       ))}
       {moss > 0.01 && (
         <g opacity={moss}>
@@ -769,8 +788,8 @@ const Lamp: React.FC<{x: number; D: number; light: number; snow: number}> = ({x,
   const pw = lerp(16, 11, f);
   const pole = mix('#2E4A4F', '#E8EEF2', f);
   const ax = lerp(78, 120, f), ay = lerp(16, 4, f);
-  const arm = `M ${x} ${ty} q ${f1(ax * 0.7)} ${f1(-ay * 1.4)} ${f1(ax)} ${f1(ay)}`;
-  const hx = x + ax, hy = ty + ay;
+  const arm = `M ${x} ${ty} q ${f1(-ax * 0.7)} ${f1(-ay * 1.4)} ${f1(-ax)} ${f1(ay)}`;
+  const hx = x - ax, hy = ty + ay;
   return (
     <g>
       {light > 0.01 && (
@@ -794,7 +813,7 @@ const Lamp: React.FC<{x: number; D: number; light: number; snow: number}> = ({x,
       </g>
       {/* future light blade */}
       <g opacity={f}>
-        <ellipse cx={hx - 6} cy={hy + 2} rx={36} ry={6} fill={mix('#DDEFF2', '#BFF4F0', light * 0.6 + 0.4)} stroke={INK} strokeWidth={3} />
+        <ellipse cx={hx + 6} cy={hy + 2} rx={36} ry={6} fill={mix('#DDEFF2', '#BFF4F0', light * 0.6 + 0.4)} stroke={INK} strokeWidth={3} />
       </g>
     </g>
   );
@@ -918,12 +937,12 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
         </linearGradient>
       </defs>
       <rect x={WX0 - 2000} y={-4000} width={WX1 - WX0 + 4000} height={4000 + G} fill={`url(#${id}-sky)`} />
+      {/* the city beyond the rooftops: low blocks rise into slender towers */}
+      <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
       {/* clouds */}
       {[[-300, 140, 1.2], [520, -160, 0.9], [1250, 250, 1.35], [1950, 30, 1.0], [2650, 290, 1.15], [900, -480, 1.1], [-900, -260, 1.0], [3300, -120, 1.1]].map(([cx, cy, s], k) => (
         <Cloud key={k} x={wrapR(cx + t * (10 + 4 * (k % 3)), WX0, WX1)} y={cy} s={s} />
       ))}
-      {/* the city beyond the rooftops: low blocks rise into slender towers */}
-      <g opacity={0.5}>{SKY_FAR.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 70} detail={0.55} light={light} />)}</g>
       {pods > 0.01 && [[300, 120, 0.7, C.coral], [700, -160, 0.55, C.saffron], [-200, 90, 0.85, C.teal], [500, 70, 0.5, C.blue], [880, 140, 0.65, C.coral]].map(([y, sp, s, c], k) => (
         <g key={k} opacity={pods}>
           <Pod x={wrapR(-600 + k * 900 + t * (sp as number), WX0, WX1)} y={y as number} s={s as number} c={c as string} dir={(sp as number) > 0 ? 1 : -1} />
@@ -935,11 +954,13 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
         {FAR_ROW.map((h, i) => {
           const base = HB - 66;
           if (h.kind === 'tree') {
-            const r = h.w * 0.42;
+            const r = h.w * 0.34;
+            const tc = mix('#9DB8A8', sl.leaf, 0.2 * (1 - sl.bare));
             return (
               <g key={i}>
-                <circle cx={h.x + h.w * 0.35} cy={base - h.h - r * 0.2} r={r} fill={mix('#8FAE8C', sl.leaf, 0.35)} stroke={INK} strokeWidth={2.5} />
-                <circle cx={h.x + h.w * 0.7} cy={base - h.h * 0.7} r={r * 0.85} fill={mix('#82A27F', sl.leaf, 0.35)} stroke={INK} strokeWidth={2.5} />
+                <rect x={h.x + h.w * 0.5 - 5} y={base - h.h * 0.6} width={10} height={h.h * 0.6 + 8} fill="#8E8A86" stroke={INK} strokeWidth={2} />
+                <circle cx={h.x + h.w * 0.38} cy={base - h.h * 0.9} r={r} fill={tc} stroke={INK} strokeWidth={2.5} />
+                <circle cx={h.x + h.w * 0.66} cy={base - h.h * 0.72} r={r * 0.82} fill={shade(tc, 0.1)} stroke={INK} strokeWidth={2.5} />
               </g>
             );
           }
@@ -1144,9 +1165,17 @@ const FgTrunk: React.FC<{cx: number; D: number; sl: Season; id: string}> = ({cx,
         <path d={`M ${cx - 140} 1110 Q ${cx - 70} 1060 ${cx} 1110`} fill="none" stroke={INK} strokeWidth={4} opacity={0.5} />
         {/* moss on the lower left */}
         <g opacity={moss}>
-          {[[-0.86, 1560, 70], [-0.7, 1680, 90], [-0.9, 1800, 80], [-0.55, 1880, 70], [-0.8, 1960, 100]].map(([u, y, r], k) => (
-            <ellipse key={k} cx={cx + u * hw} cy={y} rx={r} ry={r * 0.55} fill={k % 2 ? '#5E8A3E' : '#6F9A4A'} stroke={INK} strokeWidth={5} />
-          ))}
+          {(() => {
+            const ys2 = Array.from({length: 12}, (_, j) => 1380 + j * 56);
+            const edge = ys2.map((y, j) => ({x: cx - hw + 40 + 46 * Math.abs(Math.sin(j * 1.3)) + 60 * ss(y, 1380, 1900), y}));
+            const d = closed([{x: cx - hw - 80, y: 1360}, ...edge, {x: cx - hw + 160, y: 2100}, {x: cx - hw - 80, y: 2100}], 0.9);
+            return (
+              <g>
+                <path d={d} fill="#6F9A4A" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+                {edge.map((p, j) => (j % 2 ? <circle key={j} cx={p.x - 30} cy={p.y + 10} r={10} fill="#8DB660" /> : null))}
+              </g>
+            );
+          })()}
         </g>
       </g>
       <path d={body} fill="none" stroke={INK} strokeWidth={FG_OUT} strokeLinejoin="round" />
@@ -1197,8 +1226,8 @@ export const YardForeground: React.FC<{camX: number; t: number; D: number; seaso
   const tx = fgScreenX(trunkX, camX, zoom), lx = fgScreenX(leavesX, camX, zoom);
   return (
     <g>
-      {tx > -FG.trunkW / 2 - 40 && tx < 1080 + FG.trunkW / 2 + 40 + 0 ? <FgTrunk cx={tx} D={D} sl={sl} id={`${id}-tr`} /> : tx >= -1400 && tx < 0 ? <FgTrunk cx={tx} D={D} sl={sl} id={`${id}-tr`} /> : null}
-      {lx > -800 && lx < 1880 ? <FgLeaves cx={lx} sl={sl} t={t} /> : null}
+      {tx > -FG.trunkW / 2 - 1150 && tx < 1080 + FG.trunkW / 2 + 20 ? <FgTrunk cx={tx} D={D} sl={sl} id={`${id}-tr`} /> : null}
+      {lx > -760 && lx < 1840 ? <FgLeaves cx={lx} sl={sl} t={t} /> : null}
     </g>
   );
 };

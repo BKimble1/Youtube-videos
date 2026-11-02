@@ -50,13 +50,13 @@ export const V2 = {
   // 8 the reunion: the opening's composition
   clasp: 13.5,
   search: 13.58,
-  recognise: 13.88,
-  toHands: 14.2,
+  recognise: 13.82,
+  toHands: 14.1,
   // 9 to the door
-  gesture: 14.6,
-  walkStart: 14.84,
-  doorPass: 15.22,
-  doorPassEnd: 15.5,
+  gesture: 14.45,
+  walkStart: 14.62,
+  doorPass: 15.28,
+  doorPassEnd: 15.56,
   // 10 the family room (present)
   roomStop: 15.95,
   notice: 15.98,

@@ -157,26 +157,29 @@ export const reflOpRoom = (t: number) => 0.55 * ss(t, V2.photoClose - 0.2, V2.ph
 // The camera trucks right across the same yard; the foreground trunk and leaves pass the lens and hide each jump.
 export const YS = TS.s; // figure scale in the yard (as the two-shot)
 export const FEET = TS.feet;
-export const C_A: Cam = {x: 1010, y: 1330, z: 1.62};
+export const C_A: Cam = {x: 1000, y: 1300, z: 1.62};
 /** stage of the friend's life: 0 young (spring), 1 middle-aged (autumn), 2 elderly (winter -> spring) */
 export const yardStage = (t: number) => (t < V2.wipe1 ? 0 : t < V2.wipe2 ? 1 : 2);
-export const yardD = (t: number) => [0.04, 0.5, 1][yardStage(t)];
+export const yardD = (t: number) => lerp(0.04, 1, ss(t, V2.windowCover - 0.1, 11.0));
 export const yardSeason = (t: number) => {
-  const st = yardStage(t);
-  if (st === 0) return lerp(0.03, 0.22, ss(t, V2.windowCover, V2.wipe1));
-  if (st === 1) return lerp(0.5, 0.64, ss(t, V2.wipe1, V2.wipe2));
-  return ((lerp(0.82, 1.14, ss(t, V2.wipe2, V2.wipe2 + 0.7)) % 1) + 1) % 1; // winter melting into the spring of his return
+  // spring -> summer -> autumn -> winter -> the spring of his return, one continuous cycle
+  const u = clamp((t - (V2.windowCover - 0.1)) / (11.1 - V2.windowCover + 0.1));
+  return ((lerp(0.0, 1.16, u) % 1) + 1) % 1;
 };
 /** the friend through the decades: age, x, walking */
+export const LAWN_Y = 1478; // feet on the lawn near the tree (behind the fence line)
 export const friendYard = (t: number) => {
   const st = yardStage(t);
-  if (st === 0) return {age: 0.06 + 0.04 * ss(t, V2.windowCover, V2.wipe1), x: 960, walk: 0, stride: 0};
+  if (st === 0) return {age: 0.06 + 0.05 * ss(t, V2.windowCover, V2.wipe1), x: 965, y: LAWN_Y, walk: 0, stride: 0};
   if (st === 1) {
     const u = ss(t, V2.wipe1 + 0.02, V2.wipe2 - 0.02);
-    return {age: 0.48 + 0.06 * u, x: lerp(1030, 1170, u), walk: ((lerp(1030, 1170, u) - 1030) / (YS * 100)) * Math.PI, stride: 1};
+    const x = lerp(1040, 1175, u);
+    return {age: 0.47 + 0.07 * u, x, y: lerp(LAWN_Y + 30, 1560, u), walk: ((x - 1040) / (YS * 100)) * Math.PI, stride: 1};
   }
-  return {age: 1, x: TS.fx, walk: 0, stride: 0};
+  return {age: 0.97 + 0.03 * ss(t, V2.wipe2, 11.0), x: TS.fx, y: FEET, walk: 0, stride: 0};
 };
+/** depth scale for a figure whose feet are at y (the yard's cabinet 2.5D: the house front is 7% smaller) */
+export const depthAt = (y: number) => lerp(1, 0.93, clamp((1600 - y) / 220));
 
 // ---- 7: the return ----------------------------------------------------------------------------------------------------
 export const CAP_S = 0.93; // capsule scale in the yard (height ~560 px; hatch ~310 px for a ~300 px astronaut)
@@ -204,14 +207,22 @@ export const camReturn = (t: number): Cam => {
 };
 
 // ---- 9: to the door -------------------------------------------------------------------------------------------------------
-export const astroDoorX = (t: number) => keyS(t, [[V2.walkStart, TS.ax], [V2.doorPassEnd, 1430]], (x) => x * (1.6 - 0.6 * x));
+import {yardPath} from './yard';
+/** his walk to the door: to the gate, then up the garden path (feet on the path, a little smaller with depth) */
+export const astroDoor = (t: number) => {
+  const u = ss(t, V2.walkStart, V2.doorPassEnd + 0.1) ** 0.9;
+  const p = yardPath(Math.min(0.92, u * 1.0));
+  const lead = clamp(u * 6); // the first steps take him from his spot onto the path
+  return {x: lerp(TS.ax, p.x, lead), y: lerp(FEET, p.y, lead), s: YS * lerp(1, p.depth, lead), u};
+};
+export const astroDoorX = (t: number) => astroDoor(t).x;
 export const camDoor = (t: number): Cam => {
-  const ax = astroDoorX(t);
+  const a = astroDoor(t);
   return keyCam(t, [
     [V2.gesture, CAM_CLOSE],
     [V2.walkStart, {...CAM_CLOSE, x: CAM_CLOSE.x + 6}],
-    [V2.doorPass, {x: ax + 34, y: FEET - 168, z: 2.7}],
-    [V2.doorPassEnd, {x: ax + 40, y: FEET - 168, z: 2.6}],
+    [V2.doorPass, {x: a.x + 30, y: a.y - 170, z: 2.55}],
+    [V2.doorPassEnd, {x: a.x + 36, y: a.y - 170, z: 2.5}],
   ]);
 };
 /** the doorframe wipe: the jamb's screen x (it crosses the lens right to left as the camera passes the doorway) */
@@ -219,9 +230,9 @@ export const jambX = (t: number) => lerp(1200, -140, ss(t, V2.doorPass, V2.doorP
 /** the room camera that puts him at the same screen place and size as in the yard during the wipe */
 export const camRoomMatched = (t: number): Cam => {
   const cy = camDoor(t);
-  const ax = astroDoorX(t);
-  const sx = 540 + cy.z * (ax - cy.x), sy = 960 + cy.z * (FEET - cy.y);
-  const z = (YS * cy.z) / RS;
+  const a = astroDoor(t);
+  const sx = 540 + cy.z * (a.x - cy.x), sy = 960 + cy.z * (a.y - cy.y);
+  const z = (a.s * cy.z) / RS;
   const rx = roomAstroX(t);
   return {x: rx - (sx - 540) / z, y: ROOM.floor - (sy - 960) / z, z};
 };
@@ -231,7 +242,7 @@ export const camRoom = (t: number): Cam => (t < V2.doorPassEnd ? camRoomMatched(
 import {footfalls} from './walk';
 export const FRIEND_STEPS = footfalls((t) => friendYard(t).x, V2.wipe1 + 0.02, V2.wipe2 - 0.02, YS);
 export const ASTRO_STEPS = [V2.stepDown, ...footfalls(astroReturnX, V2.stepDown + 0.05, V2.arrive, YS)];
-export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.doorPassEnd, YS);
+export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.doorPassEnd, YS * 0.96);
 export const ROOM_STEPS = footfalls(roomAstroX, V2.doorPassEnd, V2.roomStop, RS);
 /** the capsule's screen side through the flight (-1 left .. 1 right) */
 export const capsulePanTrack = () => {
@@ -248,5 +259,9 @@ export const descentPanTrack = (): [number, number][] => [[V2.descentStart, -0.3
 export const camDecades = (t: number): Cam =>
   keyCam(t, [
     [V2.windowCover, C_A],
-    [11.25, {x: 1240, y: 1330, z: 1.5}],
+    [11.25, {x: 1250, y: 1360, z: 1.52}],
   ]);
+/** the foreground trunk and leaves are tied to the camera x at each wipe, so each fully covers the friend then */
+export const FG_TRUNK_X = camDecades(V2.wipe1).x, FG_LEAVES_X = camDecades(V2.wipe2).x;
+/** the near-camera pieces' parallax gain: high, so each sweeps across the frame in ~0.4 s and covers only briefly */
+export const FG_ZOOM = 14;
