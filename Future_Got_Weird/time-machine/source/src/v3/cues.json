@@ -1,11 +1,11 @@
 {
  "EV": {
-  "push": 2.72,
-  "windowIn": 4.25,
-  "glance": 4.6,
+  "push": 2.2,
+  "windowIn": 3.62,
+  "glance": 4.25,
   "raise": 4.95,
   "raiseEnd": 5.6,
-  "pushWatch": 5.1,
+  "pushWatch": 4.75,
   "watchClose": 6.35,
   "hourStart": 5.62,
   "hourEnd": 7.14,

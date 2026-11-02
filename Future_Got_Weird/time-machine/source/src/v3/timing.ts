@@ -15,14 +15,14 @@ export const W3 = {
 export const T3 = {
   // 1 space: the ship already moving beside the hole; the camera follows it
   // 2 toward its cockpit window and through it (the camera banks to the ship's heading on the way in)
-  push: 2.72,
-  windowIn: 4.25,
+  push: 2.2,
+  windowIn: 3.62,
   // 3 cockpit: he looks at the hole through the porthole, then glances down at his wrist (and holds the look)
-  glance: 4.6,
+  glance: 4.25,
   // 4 one wrist raise (the forearm swings up about the elbow); the camera closes in on the watch; one compressed hour
   raise: 4.95,
   raiseEnd: 5.6,
-  pushWatch: 5.1,
+  pushWatch: 4.75,
   watchClose: 6.35,
   hourStart: 5.62,
   hourEnd: 7.14,

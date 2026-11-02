@@ -46,6 +46,10 @@ export type Expr = {
   browDy?: number;
   /** V3: the spiky fringe sits higher on the forehead (+ = up), so the brows sit on skin, clear of the hairline */
   fringe?: number;
+  /** V3: heavy upper lids (0..1), sloping down toward the outer corners (grief) */
+  lids?: number;
+  /** V3: tears: 0..0.4 they well up along the lower lids; 0.4..1 one runs down his cheek (screen-left eye) */
+  tear?: number;
 };
 
 /** hair colour by age: own colour, then salt-and-pepper, then white */
@@ -190,6 +194,28 @@ export const Head: React.FC<{
             )}
             {bl > 0.25 && <circle cx={ex + lx} cy={eyeY + ly} r={5.5 * (1 - 0.12 * wide)} fill={eyeRefl && eyeRefl.side === s ? '#05060B' : INK} />}
             {bl > 0.25 && <circle cx={ex + lx + 2} cy={eyeY + ly - 2} r={1.6} fill={C.white} opacity={eyeRefl && eyeRefl.side === s ? 1 - clamp(eyeRefl.op * 1.4) : 1} />}
+            {/* V3 grief: a heavy upper lid, lower at the outer corner */}
+            {(e.lids ?? 0) > 0.01 && bl > 0.25 && (() => {
+              const ry = Math.max(0.6, eyeRy * bl), L = clamp(e.lids ?? 0);
+              const xi = ex - s * (eyeRx + 1.5), xo = ex + s * (eyeRx + 1.5);
+              const yi = eyeY - ry + 2 * ry * L * 0.62, yo = eyeY - ry + 2 * ry * L * 1.0;
+              return <path d={`M ${xi} ${eyeY} Q ${ex} ${eyeY - ry * 2.25} ${xo} ${eyeY} L ${xo} ${yo} Q ${ex} ${(yi + yo) / 2 + 1.5} ${xi} ${yi} Z`} fill={skin} stroke={INK} strokeWidth={2.8} strokeLinejoin="round" />;
+            })()}
+            {/* V3 tears: welling along the lower lid, then one drop running down the cheek */}
+            {(e.tear ?? 0) > 0.01 && bl > 0.25 && (() => {
+              const ry = Math.max(0.6, eyeRy * bl), tw = clamp((e.tear ?? 0) / 0.4), run = clamp(((e.tear ?? 0) - 0.4) / 0.6);
+              const y0 = eyeY + ry - 1.5;
+              const well = <path d={`M ${ex - eyeRx * 0.8} ${y0 - 1} Q ${ex} ${y0 + 4.5 * tw} ${ex + eyeRx * 0.8} ${y0 - 1} Q ${ex} ${y0 + 1.2} ${ex - eyeRx * 0.8} ${y0 - 1} Z`} fill="#CFEFFF" stroke="#4A86A8" strokeWidth={1.2} opacity={0.9 * tw * (run > 0 && s < 0 ? 1 - 0.4 * run : 1)} />;
+              if (s > 0 || run <= 0) return well;
+              const dx = ex + s * 3, dy = y0 + 3 + 34 * sm(run), op = 1 - ss(run, 0.82, 1);
+              return (
+                <g>
+                  {well}
+                  <path d={`M ${dx} ${y0 + 2} Q ${dx - 1.5} ${(y0 + dy) / 2} ${dx - 0.5} ${dy - 3}`} fill="none" stroke="#DDF4FF" strokeWidth={3.2} strokeLinecap="round" opacity={0.75 * op} />
+                  <path d={`M ${dx - 0.5} ${dy - 6} Q ${dx + 4} ${dy + 1} ${dx - 0.5} ${dy + 3.5} Q ${dx - 5} ${dy + 1} ${dx - 0.5} ${dy - 6} Z`} fill="#CFEFFF" stroke="#4A86A8" strokeWidth={1.3} opacity={op} />
+                </g>
+              );
+            })()}
             {/* drooping upper lid: a skin cap over the top of the eye that grows with age */}
             {a > 0.35 && bl > 0.25 && (
               <path d={`M ${ex - eyeRx - 1} ${eyeY - 1} Q ${ex} ${eyeY - eyeRy - 4} ${ex + eyeRx + 1} ${eyeY - 1} Q ${ex} ${eyeY - eyeRy + 6 * ss(a, 0.35, 1) * (1 - wide)} ${ex - eyeRx - 1} ${eyeY - 1} Z`} fill={skin} stroke={INK} strokeWidth={2.4} strokeLinejoin="round" opacity={ss(a, 0.35, 0.6)} />

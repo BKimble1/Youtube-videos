@@ -40,7 +40,7 @@ if 'V2' in os.path.basename(src):
 # V3 (src/v3/timing.ts): the push through the ship's window into the cockpit, the watch push, the match cut, the window
 # match from inside to outside, the landing, the cut from the front door to the room, the loop cut (watch -> ship window)
 if 'V3' in os.path.basename(src):
-    PLANNED = [(2.7, 4.3, "push to the ship, through its window into the cockpit (camera banks to the ship)"), (5.05, 6.4, 'push into the watch (camera roll)'),
+    PLANNED = [(2.15, 3.7, "push to the ship, through its window into the cockpit (camera banks to the ship)"), (5.05, 6.4, 'push into the watch (camera roll)'),
                (8.15, 8.25, 'match cut: watch -> home wall clock'), (8.3, 9.38, 'one eased move: wall clock -> window'),
                (9.36, 9.44, 'match cut: the window from inside -> from outside'), (9.44, 10.75, 'continuous pull-back from the house window to the garden'),
                (11.4, 12.3, 'capsule descent, landing, hatch'), (16.15, 16.25, 'cut: front door outside -> the room inside'),

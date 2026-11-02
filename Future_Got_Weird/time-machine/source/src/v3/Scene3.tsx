@@ -134,7 +134,7 @@ function cockpitWorld(t: number, k: string, z: number) {
   const inCockpit = t >= T3.windowIn - 0.6 && t < T3.match;
   const armL = inCockpit ? S.cockpitArm(t) : S.REST_L;
   const raised = clamp((t - T3.raise) / (T3.raiseEnd - T3.raise));
-  const tt = inCockpit ? t : 4.2;
+  const tt = inCockpit ? t : 3.6;
   const e: Expr = S.cockpitFace(tt);
   // a small tilt of the head toward the wrist while he looks down at it
   const tilt = -8 * ss(tt, T3.glance, T3.glance + 0.18) * (1 - 0.5 * ss(tt, T3.raise + 0.2, T3.raiseEnd));
@@ -370,11 +370,16 @@ const roomAstroFace = (t: number): Expr => {
   const atWatch = ss(t, T3.watchUp + 0.1, T3.watchUp + 0.35) * (1 - ss(t, 21.0, 21.2));
   const back = ss(t, 21.05, 21.3);
   const settle = ss(t, 19.0, 19.6);
+  const friendNow = Math.max(toFriend, back);
+  // grief on 'gone': the inner brows climb and knit, the outer ends and the upper lids droop, the mouth trembles and
+  // pulls down; tears well up, and one runs down his cheek while the camera holds on his face
+  const tear = 0.4 * ss(t, T3.realise + 0.2, T3.realise + 0.8) + 0.6 * ss(t, 19.0, 19.7);
   return S.v3Face({
-    ...S.mouthAt(t, [[0, 'flat'], [T3.realise + 0.12, 'tremble'], [19.35, 'flat'], [21.32, 'soft']], 0.14),
-    turn: lerp(lerp(-0.1, -0.35, see), 0.4, Math.max(toFriend, back)), lookX: lerp(lerp(-0.3, -0.75, see), 0.8, Math.max(toFriend, back)) * (1 - atWatch) - 0.6 * atWatch,
-    lookY: lerp(lerp(0.0, 0.7, see), 0.0, Math.max(toFriend, back, settle * 0.6)) * (1 - atWatch) + 0.85 * atWatch,
-    wide: 0.25 * see * (1 - real), brows: lerp(0.2 * see, 0.45, real) * (1 - 0.5 * settle), sad: 0.85 * real * (1 - 0.35 * settle),
+    ...S.mouthAt(t, [[0, 'flat'], [T3.realise + 0.12, 'tremble'], [T3.realise + 0.75, 'frown'], [19.8, 'flat'], [21.32, 'soft']], 0.16),
+    turn: lerp(lerp(-0.1, -0.35, see), 0.4, friendNow), lookX: lerp(lerp(-0.3, -0.75, see), 0.8, friendNow) * (1 - atWatch) - 0.6 * atWatch,
+    lookY: lerp(lerp(0.0, 0.7, see), 0.0, Math.max(friendNow, settle * 0.5)) * (1 - atWatch) + 0.85 * atWatch,
+    wide: 0.25 * see * (1 - real), brows: lerp(0.2 * see, -0.15, real) * (1 - 0.4 * settle), sad: 1.4 * real * (1 - 0.25 * settle) * (1 - 0.45 * friendNow),
+    lids: 0.5 * real * (1 - 0.7 * friendNow) * (1 - 0.6 * atWatch), tear: tear * (1 - ss(t, 20.1, 20.7)),
     // blinks: one as he comes in (before he sees the photograph), one as the push into the watch begins
     blink: 1 - 0.96 * Math.max(Math.sin(Math.PI * clamp((t - 16.3) / 0.14)), Math.sin(Math.PI * clamp((t - 21.62) / 0.14))) ** 2,
   });
@@ -438,9 +443,9 @@ function roomPresentWorld(t: number, k: string, cam: Cam) {
 // Every block sits above the bottom band a Shorts player covers (title, channel, sound ticker): its bottom edge at about
 // 1640 (74 px per line; the first caption is three lines, 'But back on EARTH' and 'years could be passing' one).
 const CAP_LINES = [3, 2, 2, 1, 2, 2, 2, 2, 2, 2];
-// (the exception: 'You'd watch your clock...' starts while his watch still rests in his lap, low in the cockpit frame, so
-// it sits just below the watch)
-const capY = (i: number) => (i === 2 ? 1746 : 1640 - 37 * (CAP_LINES[i] ?? 2));
+// (the exceptions: 'you could travel into the future' and 'You'd watch your clock...' play while his watch rests in his lap,
+// low in the cockpit frame, so they sit just below the watch)
+const capY = (i: number) => (i === 1 || i === 2 ? 1746 : 1640 - 37 * (CAP_LINES[i] ?? 2));
 const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.35 : CAPTIONS[i].hide);
 
 export const Scene3: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {

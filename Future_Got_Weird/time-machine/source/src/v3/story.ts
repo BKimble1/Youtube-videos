@@ -165,12 +165,12 @@ export const mouthAt = (t: number, keys: [number, M][], d = 0.12) => {
 export const v3Face = <E extends {sad?: number; knit?: number}>(e: E): E & {fringe: number; browDy: number} => ({fringe: 9, browDy: 1, ...e, knit: Math.max(e.knit ?? 0, e.sad ?? 0), sad: 0});
 export const cockpitFace = (t: number) => {
   const down = ss(t, T3.glance, T3.glance + 0.16);
-  const concern = ss(t, 4.3, 4.58);
+  const concern = ss(t, 3.95, 4.2);
   const raised = ss(t, T3.raise + 0.1, T3.raiseEnd);
-  const m = mouthAt(t, [[0, 'o'], [4.5, 'flat']], 0.14);
+  const m = mouthAt(t, [[0, 'o'], [4.15, 'flat']], 0.14);
   return v3Face({
     // concern: the mouth closes from the 'o' of wonder to a line whose corners turn down a little
-    ...(t >= 4.5 ? {mouth: 'flat' as M, mouthTo: 'frown' as M, mouthK: 0.4 * ss(t, 4.5, 4.66)} : m), open: 0.22,
+    ...(t >= 4.15 ? {mouth: 'flat' as M, mouthTo: 'frown' as M, mouthK: 0.4 * ss(t, 4.15, 4.31)} : m), open: 0.22,
     wide: 0.45 * (1 - concern) + 0.12, brows: 0.4 * (1 - concern) - 0.05 * concern,
     knit: concern * (1 - 0.3 * raised), turn: lerp(-0.35, -0.5, down * (1 - raised)), lookX: lerp(lerp(-0.85, -0.6, concern), lerp(-1.05, -0.7, raised), down),
     lookY: lerp(-0.7, lerp(1.25, 1.0, raised), down),
