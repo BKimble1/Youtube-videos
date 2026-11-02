@@ -20,7 +20,7 @@ import {Expr} from '../art/crew';
 import {YardWorld, YardFore, FENCE_Y} from './backgrounds';
 import {Room, ROOM} from './room';
 import {YardOut, YOUT, NearTrunk} from './yard';
-import {walkFeet, walkBob} from './walk';
+import {walkFeet, walkBob, DOOR_STEP} from './walk';
 import {Head} from '../art/crew';
 import {GUESSER, HELMET, astroReach, astroHandLocal} from '../art/figures';
 
@@ -399,14 +399,14 @@ function doorWorld(t: number, k: string) {
   // up the path he turns toward the door (face to the side: walking away, not backing in)
   const away = ss(t, V2.walkStart + 0.15, V2.walkStart + 0.4);
   const ae: Expr = {lookX: lerp(lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), 1, away), lookY: lerp(lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), -0.2, away), turn: lerp(0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), 0.9, away), sad: 0.35, brows: 0.25, mouth: 'flat'};
-  const swing = walking && t < V2.atDoor ? Math.sin((Math.PI * dist) / 100) * 14 : 0;
+  const swing = walking && t < V2.atDoor ? Math.sin((Math.PI * dist) / DOOR_STEP) * 18 : 0;
   // at the porch his right glove pushes the door; it swings in
   const push = ss(t, V2.atDoor - 0.14, V2.atDoor) * (1 - ss(t, V2.doorPass, V2.doorPassEnd));
   const astroBehind = a.y < FENCE_Y;
   const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.atDoor - 0.08, V2.doorPass + 0.04), gateOpen: 1};
   const astro = (
       <g transform={`translate(${ax} ${a.y}) scale(${a.s})`}>
-        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: lerp(10 - swing, -95, push), b: lerp(16, 30, push)}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
+        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: lerp(10 - swing, -95, push), b: lerp(16, 30, push)}, e: ae, bob: walkBob(dist, walking ? 1 : 0, DOOR_STEP)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0, DOOR_STEP)} />
       </g>
   );
   // draw order: the friend stays in front of the astronaut throughout (as in the two-shot), so nothing flips
@@ -432,7 +432,9 @@ const Jamb: React.FC<{x: number}> = ({x}) => (
 );
 
 // ---- captions: heights clear of faces, hands, the watch and the photographs ------------------------------------------------
-const capY = (_i: number) => 1716;
+// 'And when you finally returned,' rides the top band: the tilt up to the returning capsule carries the elderly friend's
+// face down through the bottom band
+const capY = (i: number) => (i === 5 ? 330 : 1716);
 const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : CAPTIONS[i].hide);
 
 export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {

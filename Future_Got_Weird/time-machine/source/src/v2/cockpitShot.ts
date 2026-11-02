@@ -9,7 +9,8 @@ import {Cam} from '../story';
 /** foreground forearm placements (world px; the cockpit is framed for 1080x1920 at z 1) */
 export const FA = {
   rest: {x: 300, y: 2350, s: 1.5, rot: 8},
-  mouth: {x: 430, y: 1580, s: 1.55, rot: -4},
+  // the first glance: the watch rises to chin height, its dial clear above the caption band (~1650-1790)
+  mouth: {x: 430, y: 1440, s: 1.55, rot: -4},
   watch: {x: 540, y: 1000, s: 2.55, rot: 3},
   // resting low while he looks out: the watch stays below the caption band (caption ~1650-1790)
   low: {x: 320, y: 1990, s: 1.5, rot: 6},

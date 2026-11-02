@@ -125,7 +125,7 @@
   "gain_db": -26.0
  },
  {
-  "t": 14.77,
+  "t": 14.778,
   "sfx": "footsteps to the door",
   "gain_db": -21.0
  },
@@ -135,6 +135,11 @@
   "gain_db": -21.0
  },
  {
+  "t": 15.373,
+  "sfx": "footsteps on wood",
+  "gain_db": -25.0
+ },
+ {
   "t": 15.74,
   "sfx": "home clock (normal time)",
   "gain_db": -31.0
@@ -142,7 +147,12 @@
  {
   "t": 16.58,
   "sfx": "glove brushes the dusty frame",
-  "gain_db": -22.0
+  "gain_db": -18.0
+ },
+ {
+  "t": 16.94,
+  "sfx": "glove drags off the glass",
+  "gain_db": -17.0
  },
  {
   "t": 16.73,

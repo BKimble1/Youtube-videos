@@ -298,11 +298,12 @@ export const camRoomMatched = (t: number): Cam => {
 export const camRoom = (t: number): Cam => (t < V2.doorPassEnd ? camRoomMatched(t) : mixCam(camRoomMatched(t), camRoomOwn(t), ss(t, V2.doorPassEnd, V2.doorPassEnd + 0.35)));
 
 // ---- sound cues (tools/export_cues_v2.ts) ---------------------------------------------------------------------------
-import {footfalls} from './walk';
+import {footfalls, DOOR_STEP} from './walk';
 export const FRIEND_STEPS = footfalls((t) => friendYard(t).x, V2.wipe1 + 0.02, V2.wipe2 - 0.02, YS);
 export const ASTRO_STEPS = [V2.stepDown, ...footfalls(astroReturnX, V2.stepDown + 0.05, V2.arrive, YS)];
-export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.atDoor + 0.02, YS * 0.96);
-export const ROOM_STEPS = footfalls(roomAstroX, V2.doorPassEnd, V2.roomStop, RS);
+export const DOOR_STEPS = footfalls((t) => { const a = astroDoor(t); return Math.hypot(a.x - TS.ax, a.y - FEET); }, V2.walkStart, V2.atDoor + 0.02, YS * 0.96, DOOR_STEP);
+// every visible plant of his walk into the room, from the doorframe wipe to his stop
+export const ROOM_STEPS = footfalls(roomAstroX, V2.doorPass, V2.roomStop + 0.05, RS);
 /** the capsule's screen side through the flight (-1 left .. 1 right) */
 export const capsulePanTrack = () => {
   const out: [number, number][] = [];

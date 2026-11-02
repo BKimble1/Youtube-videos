@@ -190,12 +190,14 @@ for k2, at in enumerate(e['doorSteps']): place(step(0.6), at, 'footsteps to the 
 place(creak(0.45, 200), e['doorPass'] - 0.15, 'door', -21.0, pan=0.3)
 # ---- family room: quiet
 room = lp(hp(noise(N), 80), 600) * win(e['doorPass'], DUR, 0.2, 0.05)
-for k2, at in enumerate(e['roomSteps']): place(step(0.5, wood=True), at, 'footsteps on wood' if k2 == 0 else None, -23.0 - 2 * k2, pan=0.1)
+for k2, at in enumerate(e['roomSteps']): place(step(0.5, wood=True), at, 'footsteps on wood' if k2 == 0 else None, -25.0 - 1.5 * k2, pan=0.1)
 tc = e['doorPass'] + 0.4; k = 0
 while tc < DUR - 0.05:
     place(tock(820 if k % 2 == 0 else 700, 0.05), tc, 'home clock (normal time)' if k == 0 else None, -31.0, pan=-0.25)
     tc += 1.0; k += 1
-place(brush(0.5), e['dustWipe'], 'glove brushes the dusty frame', -22.0, pan=0.1)
+place(brush(0.5), e['dustWipe'], 'glove brushes the dusty frame', -18.0, pan=0.1)
+# the glove's drag off the glass, in the gap after 'gone.' so the dusty-frame sound is heard
+place(brush(0.35), e['dustWipe'] + 0.36, 'glove drags off the glass', -17.0, pan=0.12)
 place(hiss(0.5, 3000, 9000), e['dustWipe'] + 0.15, 'dust puff', -32.0, pan=0.1)
 k = 0; tk = e['watchBeside']
 while tk < e['photoPush'] + 0.4:
