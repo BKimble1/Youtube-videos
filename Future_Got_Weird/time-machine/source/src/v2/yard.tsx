@@ -254,16 +254,16 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
       {/* trunk cel shading (shadow side right) and bark lines */}
       <g clipPath={`url(#${id}-trunk)`}>
         <rect x={ox + tw * 0.12} y={oy - 460 * k} width={tw} height={470 * k + 10} fill={BARK_SH} />
-        {tw > 26 && [-0.22, 0.05, 0.3].map((u, i) => (
-          <path key={i} d={open(Array.from({length: 6}, (_, j) => ({x: ox + u * tw + 4 * noise1(j * 0.9, i + 2) * wk - j * 1.2 * k, y: oy - 20 * k - j * 70 * k})))} fill="none" stroke={INK} strokeWidth={2.4} opacity={0.35} strokeLinecap="round" />
+        {tw > 20 && [-0.22, 0.05, 0.3].map((u, i) => (
+          <path key={i} d={open(Array.from({length: 6}, (_, j) => ({x: ox + u * tw + 4 * noise1(j * 0.9, i + 2) * wk - j * 1.2 * k, y: oy - 20 * k - j * 70 * k})))} fill="none" stroke={INK} strokeWidth={2.4} opacity={0.35 * clamp((tw - 20) / 12)} strokeLinecap="round" />
         ))}
       </g>
       {/* lower-side shadow along the limbs */}
-      {brs.map((b, i) => (b.lvl === 1 || b.lvl === 2) && b.w0 * wk > 5 ? (
+      {brs.map((b, i) => (b.lvl === 1 || b.lvl === 2) && b.w0 * wk > 4 ? (
         <path key={`s${i}`} d={open([0.1, 0.4, 0.7, 0.95].map((u) => {
           const p = qpt(b.a, b.c, b.b, u);
           return {x: ox + p.x * k + 0.22 * lerp(b.w0, b.w1, u) * wk * Math.cos(rad(b.ang)), y: oy + p.y * k + 0.22 * lerp(b.w0, b.w1, u) * wk * Math.abs(Math.sin(rad(b.ang)))};
-        }))} fill="none" stroke={BARK_SH} strokeWidth={Math.max(1.5, b.w1 * wk * 0.9)} strokeLinecap="round" opacity={0.85} />
+        }))} fill="none" stroke={BARK_SH} strokeWidth={Math.max(1.5, b.w1 * wk * 0.9)} strokeLinecap="round" opacity={0.85 * clamp((b.w0 * wk - 4) / 4)} />
       ) : null)}
       {/* snow along the branch tops (bare tree) */}
       {sl.snow * bareVis > 0.01 && brs.map((b, i) => (b.lvl <= 2 && Math.abs(Math.sin(rad(b.ang))) > 0.3 ? (
@@ -293,7 +293,7 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
             {blobs.map((b) => b.r > 18 ? (
               <path key={`a${b.i}`} d={`M ${f1(b.x + b.r * 0.9 * Math.cos(rad(15)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(15)))} A ${f1(b.r * 0.9)} ${f1(b.r * 0.9)} 0 0 1 ${f1(b.x + b.r * 0.9 * Math.cos(rad(105)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(105)))}`} fill="none" stroke={INK} strokeWidth={2.4} opacity={0.3} strokeLinecap="round" />
             ) : null)}
-            {sl.blossom > 0.01 && Array.from({length: Math.round(40 + 90 * k)}, (_, j) => {
+            {sl.blossom > 0.01 && Array.from({length: 130}, (_, j) => {
               const b = blobs[Math.floor(hash(j * 1.31 + 7) * blobs.length)];
               if (!b) return null;
               const a = hash(j * 2.71) * Math.PI * 2, rr = Math.sqrt(hash(j * 3.97)) * b.r * 0.9;
@@ -530,7 +530,8 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
       {doorOpen > 0.001 && (
         <g>
           <path d={`M ${Dr.x} ${Dr.y1} L ${Dr.x + 18} ${Dr.y1 - 34} L ${Dr.x + Dr.w - 6} ${Dr.y1 - 34} L ${Dr.x + Dr.w} ${Dr.y1} Z`} fill="#3A3340" />
-          <rect x={Dr.x + 40} y={Dr.y0 + 60} width={34} height={Dr.h - 94} fill={mix('#4A3E3A', '#E9B860', light)} opacity={0.7} />
+          <rect x={Dr.x + 30} y={Dr.y1 - 34 - 170} width={52} height={170} fill={mix('#4B4250', '#F2C46E', light)} stroke={INK} strokeWidth={2} />
+          <path d={`M ${Dr.x + 30} ${Dr.y1 - 34} L ${Dr.x + 82} ${Dr.y1 - 34} L ${Dr.x + 96} ${Dr.y1 - 4} L ${Dr.x + 18} ${Dr.y1 - 4} Z`} fill={mix('#4B4250', '#F2C46E', light)} opacity={0.45} />
         </g>
       )}
       <path d={dq(Dr.x, Dr.y0, Dr.x + Dr.w, Dr.y1)} fill={door} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
@@ -592,15 +593,19 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
       )}
       {ivy > 0.01 && (() => {
         const L = 600 * ivy;
-        const n = Math.floor(L / 18);
-        const stem = Array.from({length: Math.max(2, n + 1)}, (_, j) => ({x: x1 - 6 + 9 * Math.sin(j * 0.7), y: base - j * 18}));
+        const n = L / 18;
+        const ivyPt = (j: number) => ({x: x1 - 6 + 9 * Math.sin(j * 0.7), y: base - j * 18});
+        const stem = [...Array.from({length: Math.floor(n) + 1}, (_, j) => ivyPt(j)), ivyPt(n)];
         const ivyC = mix(mix('#4F8A50', '#6AA65E', 0.4), '#B5462E', 0.75 * sl.autumn);
         return (
           <g>
             <path d={open(stem)} fill="none" stroke={shade('#6A4A30', 0.1)} strokeWidth={3} />
-            {stem.slice(1).map((p, j) => (hash(j * 2.9) < 1 - 0.65 * sl.bare ? (
-              <ellipse key={j} cx={p.x + (j % 2 ? 9 : -9)} cy={p.y} rx={10} ry={7} fill={j % 3 ? ivyC : shade(ivyC, 0.2)} stroke={INK} strokeWidth={2} transform={`rotate(${j % 2 ? 30 : -30} ${p.x + (j % 2 ? 9 : -9)} ${p.y})`} />
-            ) : null))}
+            {stem.slice(1, -1).map((p, j) => {
+              const g = clamp((1 - 0.65 * sl.bare - hash(j * 2.9)) / 0.1) * clamp((n - (j + 1)) * 0.8);
+              return g > 0.02 ? (
+                <ellipse key={j} cx={p.x + (j % 2 ? 9 : -9)} cy={p.y} rx={10 * g} ry={7 * g} fill={j % 3 ? ivyC : shade(ivyC, 0.2)} stroke={INK} strokeWidth={2} transform={`rotate(${j % 2 ? 30 : -30} ${p.x + (j % 2 ? 9 : -9)} ${p.y})`} />
+              ) : null;
+            })}
           </g>
         );
       })()}
@@ -717,7 +722,8 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
   const leafVis = 1 - sl.bare;
   const rose = Math.max(bump(sl.s, 0.3, 0.12, 0.22), sl.blossom * 0.5) * leafVis;
   const N = 90;
-  const stem = Array.from({length: Math.max(2, Math.round(N * grown) + 1)}, (_, k) => vinePt(k / N));
+  const tip = N * grown;
+  const stem = [...Array.from({length: Math.floor(tip) + 1}, (_, k) => vinePt(k / N)), vinePt(tip / N)];
   return (
     <g>
       {[gL, gR].map((p, i) => (
@@ -725,7 +731,7 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
           <rect x={p - GPW / 2} y={ARB_Y - 2} width={GPW} height={FB - ARB_Y + 4} fill={paint} stroke={INK} strokeWidth={3.2} />
           <rect x={p + GPW / 2 - 8} y={ARB_Y + 2} width={6} height={FB - ARB_Y - 2} fill={pSh} />
           {i === 0 && [FB - 92, FB - 36].map((hy, q) => <rect key={q} x={p + 4} y={hy} width={18} height={8} rx={2} fill="#3F5560" stroke={INK} strokeWidth={1.8} />)}
-          {wear > 0.3 && <ellipse cx={p - 2} cy={FB - 2} rx={15} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
+          {D > 0.4 && <ellipse cx={p - 2} cy={FB - 2} rx={15} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
         </g>
       ))}
       <path d={arch} fill={paint} stroke={INK} strokeWidth={3.2} strokeLinejoin="round" />
@@ -738,14 +744,15 @@ const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: n
       {/* climbing rose */}
       <path d={open(stem)} fill="none" stroke={INK} strokeWidth={6.5} strokeLinecap="round" />
       <path d={open(stem)} fill="none" stroke="#6A5236" strokeWidth={3} strokeLinecap="round" />
-      {leafVis > 0.02 && stem.slice(1).map((p, k) => {
-        if (hash(k * 2.3 + 1) > dens) return null;
+      {leafVis > 0.02 && stem.slice(1, -1).map((p, k) => {
+        const g = clamp((dens - hash(k * 2.3 + 1)) / 0.1) * clamp((tip - (k + 1)) * 0.8) * leafVis;
+        if (g < 0.02) return null;
         const side = k % 2 ? 1 : -1;
         const lx = p.x + side * 8, ly = p.y + (k % 3) * 2;
-        return <ellipse key={k} cx={lx} cy={ly} rx={10 * leafVis} ry={6.5 * leafVis} fill={k % 3 ? leafC : shade(leafC, 0.2)} stroke={INK} strokeWidth={1.8} transform={`rotate(${side * 35 + 20 * Math.sin(k)} ${lx} ${ly})`} />;
+        return <ellipse key={k} cx={lx} cy={ly} rx={10 * g} ry={6.5 * g} fill={k % 3 ? leafC : shade(leafC, 0.2)} stroke={INK} strokeWidth={1.8} transform={`rotate(${side * 35 + 20 * Math.sin(k)} ${lx} ${ly})`} />;
       })}
-      {rose > 0.02 && stem.slice(2).map((p, k) => (k % 6 === 0 ? (
-        <g key={`r${k}`} opacity={rose}>
+      {rose > 0.02 && stem.slice(2, -1).map((p, k) => (k % 6 === 0 ? (
+        <g key={`r${k}`} opacity={rose * clamp((tip - (k + 2)) * 0.5)}>
           <circle cx={p.x + (k % 12 ? 6 : -6)} cy={p.y - 4} r={7.5} fill={k % 12 ? C.coral : '#F4A9C0'} stroke={INK} strokeWidth={2} />
           <circle cx={p.x + (k % 12 ? 6 : -6) + 1} cy={p.y - 5} r={2.6} fill={shade(k % 12 ? C.coral : '#F4A9C0', 0.3)} />
         </g>
@@ -811,7 +818,7 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gate
           <path d={picket(pk.x)} fill={paint} />
           <rect x={pk.x + PW - 5} y={tipY + 10} width={5} height={FB - tipY - 8} fill={pSh} />
           <path d={picket(pk.x)} fill="none" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
-          {wear > 0.4 && hash(pk.j * 5.3) > 0.7 && <path d={`M ${pk.x + 4} ${FB - 60 + 20 * hash(pk.j)} l 6 -4 l 4 6 l -6 4 Z`} fill="#BDB6A6" opacity={ss(D, 0.4, 1)} />}
+          {D > 0.5 && hash(pk.j * 5.3) > 0.7 && <path d={`M ${pk.x + 4} ${FB - 60 + 20 * hash(pk.j)} l 6 -4 l 4 6 l -6 4 Z`} fill="#BDB6A6" opacity={ss(D, 0.5, 1)} />}
           {sl.snow > 0.01 && <path d={`M ${pk.x - 1} ${tipY + 11} L ${pk.x + PW / 2} ${tipY - 3} L ${pk.x + PW + 1} ${tipY + 11} Q ${pk.x + PW / 2} ${tipY + 6} ${pk.x - 1} ${tipY + 11} Z`} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
         </g>
       ))}
@@ -849,7 +856,7 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gate
           <rect x={p + 3} y={FB - FENCE_H - 10} width={5} height={FENCE_H + 10} fill={pSh} />
           <path d={`M ${p - 12} ${FB - FENCE_H - 12} L ${p} ${FB - FENCE_H - 28} L ${p + 12} ${FB - FENCE_H - 12} Z`} fill={paint} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
           {sl.snow > 0.01 && <path d={`M ${p - 13} ${FB - FENCE_H - 11} L ${p} ${FB - FENCE_H - 32} L ${p + 13} ${FB - FENCE_H - 11} Q ${p} ${FB - FENCE_H - 17} ${p - 13} ${FB - FENCE_H - 11} Z`} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
-          {wear > 0.3 && <ellipse cx={p - 2} cy={FB - 2} rx={12} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
+          {D > 0.4 && <ellipse cx={p - 2} cy={FB - 2} rx={12} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
         </g>
       )))}
       {/* the rose arbour over the gate: two tall posts carry a lattice arch; a climbing rose grows over it with the years */}

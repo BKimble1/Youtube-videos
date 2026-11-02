@@ -198,6 +198,20 @@ function yardPresentView(t: number, k: string) {
 }
 
 // ---- 6-9: the yard: decades, the return, the reunion, the way to the door ------------------------------------------------
+/** the capsule's glint crossing high overhead and its shadow sweeping over the friend (what makes him look up) */
+function overheadSign(t: number) {
+  const u = (t - (V2.lightPass - 0.12)) / 0.5;
+  if (u <= 0 || u >= 1) return null;
+  const sx = lerp(1700, 700, u), sy = lerp(260, 420, u);
+  const shx = lerp(1550, 950, u);
+  return (
+    <g>
+      <path d={`M ${sx + 140} ${sy - 30} L ${sx} ${sy}`} stroke="#FFF3D6" strokeWidth={10} strokeLinecap="round" opacity={0.75 * Math.sin(Math.PI * u)} />
+      <circle cx={sx} cy={sy} r={14} fill="#FFFBF0" opacity={Math.sin(Math.PI * u)} />
+      <ellipse cx={shx} cy={St.FEET + 4} rx={230} ry={26} fill="#162A32" opacity={0.18 * Math.sin(Math.PI * u)} />
+    </g>
+  );
+}
 function decadesWorld(t: number, k: string) {
   const f = St.friendYard(t);
   const st = St.yardStage(t);
@@ -208,6 +222,7 @@ function decadesWorld(t: number, k: string) {
       <g transform={`translate(${f.x} ${f.y}) scale(${St.YS * St.depthAt(f.y)})`}>
         <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
       </g>
+      {overheadSign(t)}
     </g>
   );
 }

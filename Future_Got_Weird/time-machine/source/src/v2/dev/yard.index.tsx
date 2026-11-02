@@ -155,6 +155,48 @@ const Seasons: React.FC = () => {
   );
 };
 
+/** two panels around the lamp and the car (left of x 600), D 0 and D 1 */
+const Street: React.FC = () => (
+  <Svg>
+    {[0, 1].map((i) => (
+      <g key={i}>
+        <clipPath id={`st${i}`}><rect x={0} y={i * 960} width={1080} height={958} /></clipPath>
+        <g clipPath={`url(#st${i})`}>
+          <g transform={`translate(0 ${i * 960 - 480})`}>
+            <Cam x={560} y={1430} z={1.05}>
+              <Yard D={i} season={i ? 0.3 : 0.1} t={0.5} id={`ys${i}`} light={i ? 0.6 : 0} />
+              <rect x={YARD.street.clear.x0} y={YARD.street.y0} width={YARD.street.clear.x1 - YARD.street.clear.x0} height={YARD.street.y1 - YARD.street.y0} fill="none" stroke="#E00" strokeWidth={4} strokeDasharray="14 10" />
+            </Cam>
+          </g>
+        </g>
+      </g>
+    ))}
+    <rect x={0} y={957} width={1080} height={6} fill="#162A32" />
+  </Svg>
+);
+
+/** the close framing at the gate across D (the opening ageing: everything must change continuously) */
+const Ages: React.FC = () => {
+  const ds = [0, 0.25, 0.5, 0.75, 1];
+  const band = 1920 / 5;
+  return (
+    <Svg>
+      {ds.map((d, i) => (
+        <g key={i}>
+          <clipPath id={`ag${i}`}><rect x={0} y={i * band} width={1080} height={band - 4} /></clipPath>
+          <g clipPath={`url(#ag${i})`}>
+            <g transform={`translate(0 ${i * band + band / 2 - 960})`}>
+              <Cam x={1230} y={1300} z={1.0}>
+                <Yard D={d} season={0.1} t={0} id={`ya${i}`} />
+              </Cam>
+            </g>
+          </g>
+        </g>
+      ))}
+    </Svg>
+  );
+};
+
 const Root: React.FC = () => (
   <>
     <Composition id="YardD0" component={Wide} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{D: 0, season: 0.1}} />
@@ -167,6 +209,8 @@ const Root: React.FC = () => (
     <Composition id="YardClose" component={Close} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="YardDoorGate" component={DoorGate} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="YardSeasons" component={Seasons} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="YardStreet" component={Street} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="YardAges" component={Ages} durationInFrames={1} fps={30} width={1080} height={1920} />
   </>
 );
 registerRoot(Root);
