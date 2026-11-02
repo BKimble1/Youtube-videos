@@ -51,7 +51,7 @@ export const V2 = {
   clasp: 13.5,
   search: 13.58,
   recognise: 13.82,
-  toHands: 14.1,
+  toHands: 13.95,
   // 9 to the door
   gesture: 14.45,
   walkStart: 14.62,

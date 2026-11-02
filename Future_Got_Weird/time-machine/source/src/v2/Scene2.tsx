@@ -237,7 +237,7 @@ function roomPresentWorld(t: number, k: string) {
   const photoView = W(St.CAM_CLOSE, hookWorld(0, k + 'pv', true));
   return (
     <g>
-      <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={<g transform={`translate(${St.WIN_CENTRE.x - 540 * St.WIN_SC} ${St.WIN_CENTRE.y - 960 * St.WIN_SC}) scale(${St.WIN_SC})`}>{outPresentWorld(t, k + 'wv')}</g>} />
+      <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w} dustPuff={clamp((t - (V2.dustWipe - 0.12)) / 0.95)} dustMax={St.WIPE_MAX} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={<g transform={`translate(${St.WIN_CENTRE.x - 540 * St.WIN_SC} ${St.WIN_CENTRE.y - 960 * St.WIN_SC}) scale(${St.WIN_SC})`}>{outPresentWorld(t, k + 'wv')}</g>} />
       {reflNode}
       {(t < V2.photoClose + 0.35) && (
         <g transform={`translate(${x - St.passOffset(t)} ${ROOM.floor}) scale(${St.RS})`}>
@@ -312,9 +312,9 @@ function decadesWorld(t: number, k: string) {
   const behind = f.y < FENCE_Y;
   return (
     <g>
-      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} layer="back" gateOpen={st === 2 ? 1 : 0} />
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} layer="back" gateOpen={st === 2 ? 0.62 : 0} />
       {behind && fig}
-      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yf`} layer="front" gateOpen={st === 2 ? 1 : 0} />
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yf`} layer="front" gateOpen={st === 2 ? 0.62 : 0} />
       {!behind && fig}
       {overheadSign(t)}
     </g>
@@ -327,18 +327,19 @@ function returnWorld(t: number, k: string) {
   const meet = ss(t, V2.stepDown + 0.12, V2.arrive);
   // the landing's blast: he leans back and half-turns from it (12.1-12.45)
   const blast = ss(t, V2.landing - 0.22, V2.landing) * (1 - ss(t, V2.landing + 0.12, V2.landing + 0.4));
-  const fe: Expr = {mouth: meet > 0.5 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet + 0.3 * blast, brows: 0.6 * meet + 0.4 * blast, blink: blast > 0.6 ? 0.25 : 1};
+  const fe: Expr = {mouth: meet > 0.5 && t < V2.arrive - 0.12 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet + 0.3 * blast, brows: 0.6 * meet + 0.4 * blast, blink: blast > 0.6 ? 0.25 : 1};
   const ax = St.astroReturnX(t);
   const out = t >= V2.hatch + 0.05;
   const walking = t > V2.stepOut + 0.04 && t < V2.arrive;
+  const settle = 1 - ss(t, V2.arrive - 0.18, V2.arrive);
   const dist = (ax - St.HATCH_W.x) / St.YS + 40 * ss(t, V2.stepOut + 0.04, V2.stepDown);
   // he looks up at the house and the changed street (recognition) before his eyes find his friend
   const house = ss(t, V2.stepDown - 0.04, V2.stepDown + 0.06) * (1 - ss(t, V2.stepDown + 0.2, V2.stepDown + 0.32));
-  const ae: Expr = {lookX: lerp(lerp(0.3, 0.55, house), 0.8, meet), lookY: lerp(lerp(-0.2, -0.9, house), 0.05, meet), wide: 0.35 + 0.3 * house, brows: 0.3 + 0.35 * house, mouth: house > 0.5 ? 'o' : 'soft', open: 0.2, turn: 0.2};
+  const ae: Expr = {lookX: lerp(lerp(0.3, 0.55, house), 0.8, meet), lookY: lerp(lerp(-0.2, -0.9, house), 0.05, meet), wide: 0.35 + 0.3 * house, brows: 0.3 + 0.35 * house, mouth: house > 0.5 ? 'o' : t > V2.arrive - 0.12 ? 'flat' : 'soft', open: 0.2, turn: 0.2};
   const H = St.HATCH_W;
   const astro = out ? (
     <g transform={`translate(${ax} ${St.astroReturnFeet(t)}) scale(${St.YS})`}>
-      <Astronaut pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: ae}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(walking ? dist : 0, walking ? 1 : 0)} shadow={!St.inHatch(t)} />
+      <Astronaut pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: ae}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(walking ? dist : 0, walking ? settle : 0)} shadow={!St.inHatch(t)} />
     </g>
   ) : null;
   const capT = `translate(${cap.x} ${cap.y}) scale(${St.CAP_S})`;
@@ -348,7 +349,7 @@ function returnWorld(t: number, k: string) {
   const puff = clamp((t - V2.landing) / 0.4);
   return (
     <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={1} />
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={0.62} />
       {t > V2.descentStart && <ellipse cx={St.LAND.x} cy={St.LAND.y + 4} rx={lerp(60, 260, sh)} ry={lerp(10, 34, sh)} fill="#1B2A33" opacity={0.08 + 0.22 * sh} />}
       <g transform={capT}>
         <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} />
@@ -388,10 +389,10 @@ const reunionAstroE = (t: number): Expr => {
 const reunionFriendE = (t: number): Expr => ({mouth: t > V2.recognise - 0.1 ? 'smile' : 'soft', lookX: -0.7, lookY: lerp(0, 0.6, ss(t, V2.toHands + 0.1, V2.toHands + 0.35)), brows: 0.15, sad: 0.25});
 function reunionWorld(t: number, k: string) {
   // the friend reaches for the glove (~8 frames), holds, and lets go just before his gesture to the door (~6 frames)
-  const u = ss(t, V2.arrive - 0.12, V2.clasp + 0.02) * (1 - ss(t, V2.gesture - 0.2, V2.gesture));
+  const u = ss(t, V2.arrive, V2.clasp + 0.12) * (1 - ss(t, V2.gesture - 0.2, V2.gesture));
   return (
     <g>
-      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={1} />
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} gateOpen={0.62} />
       <TwoShot age={1} id={`${k}ts`} frame={Math.round(t * 30)} clasp={u} squeeze={ss(t, V2.recognise, V2.recognise + 0.3) * 0.7} astroE={reunionAstroE(t)} friendE={reunionFriendE(t)} />
     </g>
   );
@@ -410,11 +411,13 @@ function doorWorld(t: number, k: string) {
   const swing = walking && t < V2.atDoor ? Math.sin((Math.PI * dist) / DOOR_STEP) * 18 : 0;
   // at the porch his right glove pushes the door; it swings in
   const push = ss(t, V2.atDoor - 0.14, V2.atDoor) * (1 - ss(t, V2.doorPass, V2.doorPassEnd));
+  // the door's latch (left edge of the leaf, at hand height) in his local frame: his left glove goes to it
+  const latchArm = astroReach((1466 - ax) / a.s, (1242 - a.y) / a.s, -1, 1);
   const astroBehind = a.y < FENCE_Y;
-  const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.atDoor - 0.08, V2.doorPass + 0.04), gateOpen: 1};
+  const yd = {D: 1, season: 0.16, t, doorOpen: ss(t, V2.atDoor - 0.06, V2.doorPass + 0.06), gateOpen: 0.62};
   const astro = (
       <g transform={`translate(${ax} ${a.y}) scale(${a.s})`}>
-        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: lerp(10 - swing, -95, push), b: lerp(16, 30, push)}, e: ae, bob: walkBob(dist, walking ? 1 : 0, DOOR_STEP)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0, DOOR_STEP)} />
+        <Astronaut pose={{armL: push > 0.01 ? {a: lerp(10 + swing, latchArm.a, push), b: lerp(16, latchArm.b, push)} : {a: 10 + swing, b: 16}, armR: {a: 10 - swing, b: 16}, e: ae, bob: walkBob(dist, walking ? 1 : 0, DOOR_STEP), frontL: push > 0.01}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0, DOOR_STEP)} back={away > 0.5} />
       </g>
   );
   // draw order: the friend stays in front of the astronaut throughout (as in the two-shot), so nothing flips

@@ -52,7 +52,7 @@ export const solveClasp = (age: number, u: number, p: TwoShotPos = TS) => {
     // during the reach the rig hands aim past the wrist points toward the middle of the clasp, where the clasp drawing's
     // hands will be, so the contact frame does not jump (60% of the way from each wrist to the hands' centre)
     const hc = {x: c.x, y: c.y + S * 12};
-    const ext = (w: {x: number; y: number}) => ({x: c.x + S * w.x + 0.6 * (hc.x - c.x - S * w.x), y: c.y + S * w.y + 0.6 * (hc.y - c.y - S * w.y)});
+    const ext = (w: {x: number; y: number}) => ({x: c.x + S * w.x + 0.85 * (hc.x - c.x - S * w.x), y: c.y + S * w.y + 0.85 * (hc.y - c.y - S * w.y)});
     const aE = ext(at.astroWrist), oE = ext(at.overWrist), uE = ext(at.underWrist);
     aTl = {x: (aE.x - p.ax) / S, y: (aE.y - p.feet) / S};
     oTl = toF(oE.x, oE.y);
@@ -108,8 +108,9 @@ export const TwoShot: React.FC<{
       <g transform={`translate(${p.fx} ${p.feet}) scale(${S})`}>
         <Friend age={age} pose={fPose} id={`${id}fr`} facing={-1} green hideHands={joined ? 'both' : friendArmR ? 'L' : undefined} forearm={sl.sleeve} sleeveC={sl.sleeve} />
       </g>
-      {joined && (
-        <g transform={`translate(${sol.c.x} ${sol.c.y}) scale(${S})`}>
+      {/* the clasp drawing closes over the arriving hands in its last few frames (and opens from them on the release) */}
+      {(joined || (clasp > 0.8 && !friendArmR)) && (
+        <g transform={`translate(${sol.c.x} ${sol.c.y}) scale(${S})`} opacity={joined ? 1 : clamp((clasp - 0.8) / 0.18)}>
           <Clasp age={age} id={`${id}cl`} astroAngle={sol.ang.astroAngle} overAngle={sol.ang.overAngle} underAngle={sol.ang.underAngle} squeeze={squeeze} />
         </g>
       )}

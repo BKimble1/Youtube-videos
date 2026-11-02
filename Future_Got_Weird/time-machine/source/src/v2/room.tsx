@@ -83,7 +83,7 @@ export const wipeAt = (u: number): RoomPt => {
   return {x: a * WIPE.from.x + b * c.x + d * WIPE.to.x, y: a * WIPE.from.y + b * c.y + d * WIPE.to.y};
 };
 
-const CHAIR_A = {cx: 462, color: '#C46A4E'}; // in shot as he walks in (the room camera frames x ~425-1550), clear of the window
+const CHAIR_A = {cx: 640, color: '#C46A4E'}; // in full view as he walks in (the room camera frames x ~470-1550); below the pane the push ends in
 const CHAIR_B = {cx: 1950, color: '#5D7FA6'};
 const CHAIR_W = {half: 170, top: 1150, seat: 1392};
 const TABLE = {cx: 300, top: 1330, rx: 72};
@@ -292,7 +292,7 @@ const FamilyPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) =
     <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
     {/* deep shade under the trees at the right edge, a neutral dark (not green): where his reflection on the glass reads best */}
     <rect x={w - 20} y={0} width={10} height={h * 0.2} fill="#5A3E30" stroke={INK} strokeWidth={1.6} />
-    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#2C3139" stroke={INK} strokeWidth={2} />
+    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.46} ${[0, 1, 2, 3, 4].map((k) => `Q ${w - REFL_W + 6 + k * 14} ${h * (0.2 + 0.08 * (k % 2))} ${w - REFL_W + 14 + k * 14} ${h * (0.3 - 0.1 * (k % 2))}`).join(' ')} Q ${w + 8} ${h * 0.2} ${w + 10} ${h * 0.32} L ${w + 10} ${h} Z`} fill="#2D3631" stroke={INK} strokeWidth={2} />
     <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#454C57" strokeWidth={3} strokeLinecap="round" />
     {Array.from({length: 12}, (_, k) => (
       <path key={k} d={`M ${k * 14 + 2} ${h * 0.64} L ${k * 14 + 2} ${h * 0.5} L ${k * 14 + 6} ${h * 0.46} L ${k * 14 + 10} ${h * 0.5} L ${k * 14 + 10} ${h * 0.64} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.4} />
@@ -1244,7 +1244,7 @@ const PrintContent: React.FC<{ctx: Ctx; view?: React.ReactNode; tint: number; gl
 };
 
 /** the dust puff from the wipe: specks and soft clouds lift from the glove's path and drift up; gone at dustWipe 1 */
-const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
+const Puff: React.FC<{w: number; t: number; e: number; maxW?: number}> = ({w, t, e, maxW = 1}) => {
   if (w <= 0.001 || w >= 0.999 || e < 0.05) return null;
   const fadeEnd = 1 - ss(w, 0.82, 1);
   const n = 30;
@@ -1254,7 +1254,7 @@ const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
       {clouds.map((u0, k) => {
         const age = (w - u0) / 0.34;
         if (age <= 0 || age >= 1) return null;
-        const o = wipeAt(u0);
+        const o = wipeAt(Math.min(u0, maxW));
         const cx = o.x + 18 + 26 * age + 4 * Math.sin(t * 1.7 + k);
         const cy = o.y - 30 - 70 * age;
         const r = 7 + 9 * age;
@@ -1274,7 +1274,7 @@ const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
         const u0 = 0.04 + (k / n) * 0.72;
         const age = (w - u0) / 0.32;
         if (age <= 0 || age >= 1) return null;
-        const o = wipeAt(u0);
+        const o = wipeAt(Math.min(u0, maxW));
         const big = false;
         const x = o.x + 14 + (hash(k * 3.3) - 0.35) * 70 * age + 5 * Math.sin(t * 2 + k);
         const y = o.y - 18 - (30 + 90 * hash(k * 1.7)) * age;
@@ -1299,6 +1299,10 @@ export const Room: React.FC<{
   clockBlur?: number;
   windowView?: React.ReactNode;
   dustWipe?: number;
+  /** 0..1 progress of the dust puff (defaults to dustWipe); lets the puff finish after the wipe stops */
+  dustPuff?: number;
+  /** how far along the wipe path the glove actually went (puff clouds rise only from there) */
+  dustMax?: number;
   photoView?: React.ReactNode;
   photoTint?: number;
   photoGlass?: number;
@@ -1306,7 +1310,7 @@ export const Room: React.FC<{
   reflOp?: number;
   /** 0..1: fades the window glass's tint, edge shadow and sheen (when the camera pushes through the glass) */
   glassFade?: number;
-}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0, glassFade = 0}) => {
+}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, dustPuff, dustMax = 1, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0, glassFade = 0}) => {
   const e = clamp(era);
   const ctx: Ctx = {e, t, id, L: (c: string) => lightCol(c, e)};
   return (
@@ -1328,7 +1332,7 @@ export const Room: React.FC<{
       <FloorLamp ctx={ctx} />
       <Beam e={e} t={t} />
       <PrintContent ctx={ctx} view={photoView} tint={clamp(photoTint)} glass={clamp(photoGlass)} />
-      <Puff w={dustWipe} t={t} e={e} />
+      <Puff w={dustPuff ?? dustWipe} t={t} e={e} maxW={dustMax} />
     </g>
   );
 };

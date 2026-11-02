@@ -9,7 +9,7 @@
 import React from 'react';
 import {mix} from '../core/color';
 import {clamp, sm} from '../lib';
-import {C, Head, INK, Mitt, OUT} from './crew';
+import {C, Head, HEAD_R, INK, Mitt, OUT} from './crew';
 
 const ss = (x: number, a: number, b: number) => sm((x - a) / (b - a));
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -85,6 +85,21 @@ export const ik2 = (rx: number, ry: number, tx: number, ty: number, l1: number, 
 /** V2: hand / wrist positions in character-local coordinates for a given arm pose */
 export const astroHandLocal = (arm: ArmA, side: -1 | 1) => handPos(arm, side, ASTRO_ARM.sx, ASTRO_ARM.sy, ASTRO_ARM.up, ASTRO_ARM.fo);
 export const GLOVE = '#EEF2F5';
+/** the back of his head (seen from behind): ears, the nape, and his red spiky hair covering the crown */
+const BackHead: React.FC<{id: string}> = ({id}) => {
+  const r = HEAD_R;
+  const spikes = [-48, -26, -4, 18, 40].map((x, k) => `L ${x} ${-r - 26 - (k % 2) * 8} L ${x + 11} ${-r + 2}`).join(' ');
+  return (
+    <g>
+      {[-1, 1].map((sd) => <ellipse key={sd} cx={sd * (r + 2)} cy={6} rx={9} ry={12} fill={GUESSER.skin} stroke={INK} strokeWidth={OUT} />)}
+      <circle cx={0} cy={0} r={r} fill={GUESSER.skin} stroke={INK} strokeWidth={OUT} />
+      <clipPath id={`${id}-c`}><circle cx={0} cy={0} r={r - 1} /></clipPath>
+      <path d={`M ${-r - 6} 22 Q 0 34 ${r + 6} 22 L ${r + 6} ${-r - 10} L ${-r - 6} ${-r - 10} Z`} fill={GUESSER.hair} clipPath={`url(#${id}-c)`} />
+      <path d={`M ${-r + 4} ${-r * 0.55} L -56 ${-r + 4} ${spikes} L ${r - 4} ${-r * 0.55} Z`} fill={GUESSER.hair} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
+      <path d={`M ${-r + 6} 18 Q 0 30 ${r - 6} 18`} fill="none" stroke={INK} strokeWidth={3} opacity={0.6} />
+    </g>
+  );
+};
 export const Astronaut: React.FC<{
   pose: AstroPose; id: string; frame: number; reflection?: React.ReactNode; reflOpacity?: number; watchTime?: number; helmet?: boolean; shadow?: boolean;
   fullWatch?: boolean; earth?: React.ReactNode; eyeRefl?: Parameters<typeof Head>[0]['eyeRefl']; tint?: number;
@@ -96,7 +111,9 @@ export const Astronaut: React.FC<{
   hideHands?: 'L' | 'R' | 'both';
   /** V2: planted feet (character-local targets, ground = 0); overrides the walk-cycle legs */
   feet?: {lx: number; ly: number; rx: number; ry: number};
-}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet}) => {
+  /** V2: seen from behind (walking away): the back of his head in the helmet, a life-support pack instead of the chest unit */
+  back?: boolean;
+}> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false}) => {
   const lean = pose.lean ?? 0;
   const stride = pose.stride ?? 0, ph = pose.legs ?? 0;
   const L = handPos(pose.armL, -1, ASTRO_ARM.sx, ASTRO_ARM.sy, ASTRO_ARM.up, ASTRO_ARM.fo);
@@ -154,18 +171,30 @@ export const Astronaut: React.FC<{
           <rect x={-90} y={-196} width={180} height={14} fill={C.saffron} />
           <rect x={-90} y={-178} width={180} height={6} fill={C.saffron} />
         </g>
-        {/* chest unit */}
-        <rect x={-40} y={SHOULDER_Y + 18} width={80} height={52} rx={10} fill="#3F5560" stroke={INK} strokeWidth={OUT} />
-        <circle cx={-20} cy={SHOULDER_Y + 44} r={7} fill={C.saffron} stroke={INK} strokeWidth={2.5} />
-        <circle cx={0} cy={SHOULDER_Y + 44} r={7} fill={C.teal} stroke={INK} strokeWidth={2.5} />
-        <circle cx={20} cy={SHOULDER_Y + 44} r={7} fill={C.coral} stroke={INK} strokeWidth={2.5} />
+        {back ? (
+          <g>
+            {/* life-support pack on his back */}
+            <rect x={-56} y={SHOULDER_Y - 6} width={112} height={118} rx={18} fill="#DCE3E8" stroke={INK} strokeWidth={OUT} />
+            <rect x={-40} y={SHOULDER_Y + 14} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5} />
+            <rect x={-40} y={SHOULDER_Y + 40} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5} />
+            <rect x={-56} y={SHOULDER_Y + 82} width={112} height={10} fill={C.saffron} />
+          </g>
+        ) : (
+          <g>
+            {/* chest unit */}
+            <rect x={-40} y={SHOULDER_Y + 18} width={80} height={52} rx={10} fill="#3F5560" stroke={INK} strokeWidth={OUT} />
+            <circle cx={-20} cy={SHOULDER_Y + 44} r={7} fill={C.saffron} stroke={INK} strokeWidth={2.5} />
+            <circle cx={0} cy={SHOULDER_Y + 44} r={7} fill={C.teal} stroke={INK} strokeWidth={2.5} />
+            <circle cx={20} cy={SHOULDER_Y + 44} r={7} fill={C.coral} stroke={INK} strokeWidth={2.5} />
+          </g>
+        )}
         {/* collar ring */}
         <rect x={-62} y={HEAD_Y + 62} width={124} height={30} rx={14} fill={SUIT_SH} stroke={INK} strokeWidth={OUT} />
         <rect x={-62} y={HEAD_Y + 62} width={124} height={10} rx={5} fill={SUIT} opacity={0.8} />
         {hand(R, 1, false)}
         {/* head + helmet */}
         <g transform={`translate(0 ${HEAD_Y}) rotate(${pose.tilt ?? 0} 0 50)`}>
-          <Head skin={GUESSER.skin} hair="spiky" hairColor={GUESSER.hair} e={pose.e} id={`${id}-h`} eyeRefl={eyeRefl} />
+          {back ? <BackHead id={`${id}-bh`} /> : <Head skin={GUESSER.skin} hair="spiky" hairColor={GUESSER.hair} e={pose.e} id={`${id}-h`} eyeRefl={eyeRefl} />}
           {helmet && <Helmet id={id} reflection={reflection} reflOpacity={reflOpacity} tint={tint} />}
         </g>
         {pose.frontL && hand(L, -1, true)}
