@@ -1,0 +1,55 @@
+{
+ "file": "FGW_TimeMachine_V5_REVIEW_1080x1920.mp4",
+ "size_mb": 23.21,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 625,
+  "duration_s": 20.833
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317370"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 14.86,
+ "large_changes": [
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 82.17,
+   "planned": null
+  },
+  {
+   "frame": 603,
+   "t": 20.1,
+   "mad": 91.82,
+   "planned": null
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 82.17,
+   "planned": null
+  },
+  {
+   "frame": 603,
+   "t": 20.1,
+   "mad": 91.82,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 9,
+ "longest_near_static_run_starts_s": 12.8,
+ "loop_last_vs_first_mad": 6.34,
+ "one_frame_glitches": []
+}
