@@ -75,7 +75,7 @@
   "gain_db": -19.0
  },
  {
-  "t": 10.117,
+  "t": 10.15,
   "sfx": "friend steps",
   "gain_db": -27.0
  },
@@ -125,22 +125,17 @@
   "gain_db": -26.0
  },
  {
-  "t": 14.862,
+  "t": 14.77,
   "sfx": "footsteps to the door",
   "gain_db": -21.0
  },
  {
-  "t": 15.13,
+  "t": 15.19,
   "sfx": "door",
   "gain_db": -21.0
  },
  {
-  "t": 15.593,
-  "sfx": "footsteps on wood",
-  "gain_db": -23.0
- },
- {
-  "t": 15.68,
+  "t": 15.74,
   "sfx": "home clock (normal time)",
   "gain_db": -31.0
  },
@@ -155,12 +150,12 @@
   "gain_db": -32.0
  },
  {
-  "t": 20.72,
+  "t": 20.45,
   "sfx": "his watch beside the photo",
   "gain_db": -25.0
  },
  {
-  "t": 22.1,
+  "t": 22.16,
   "sfx": "into the photograph",
   "gain_db": -16.0
  }

@@ -1,10 +1,10 @@
 {
- "integrated_lufs": -14.51,
+ "integrated_lufs": -14.38,
  "true_peak_dbtp_4x": -1.6,
- "voice_lufs_in_mix": -14.46,
+ "voice_lufs_in_mix": -14.33,
  "voice_max_gain_reduction_db": -12.04,
- "family_room_effects_lufs": -51.59,
- "effects": 33,
+ "family_room_effects_lufs": -50.17,
+ "effects": 32,
  "duration_s": 23.533,
  "loop_seam_jump": 0.0005
 }
