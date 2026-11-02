@@ -29,6 +29,14 @@ PLANNED = [(1.3, 1.95, 'push into the visor reflection -> space'), (3.8, 5.15, '
            (8.2, 9.3, 'push to Earth, cloud pass, descent to the street'), (11.0, 12.7, 'tilt up, capsule descent and landing'), (14.3, 15.5, 'run to the door, through the doorway'),
            (17.4, 19.2, 'push to his face, into the eye, the pupil becomes the shadow'), (20.4, 21.1, 'push into the watch, match to his real watch'), (21.8, 23.54, 'visor push, the hole fills the frame, pull back to the opening'),
            (0.0, 0.2, 'loop seam')]
+# V2 (src/v2/timing.ts): the visor cut, the window hand-off, the match cut, the window push, the two foreground wipes,
+# the landing, the doorframe wipe and the push into the print
+if 'V2' in os.path.basename(src):
+    PLANNED = [(2.0, 2.15, 'cut: visor reflection -> real black hole'), (3.8, 4.85, 'capsule approach, through the cockpit window'),
+               (8.15, 8.3, 'match cut: watch -> home wall clock'), (9.0, 9.5, 'push through the room window into the yard'),
+               (9.9, 10.08, 'foreground trunk wipe (years pass)'), (10.5, 10.68, 'foreground leaves wipe (years pass)'),
+               (11.15, 12.8, 'light pass, capsule descent, landing, hatch'), (15.2, 15.65, 'doorframe passes the lens -> family room'),
+               (21.4, 23.54, 'push into the pre-departure print'), (0.0, 0.2, 'loop seam')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []
