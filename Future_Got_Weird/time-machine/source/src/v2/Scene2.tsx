@@ -72,7 +72,13 @@ function spaceWorld(t: number, k: string, withCockpit: boolean) {
       <Trail u={c.u} id={`${k}tr`} px={cam.z} />
       <g transform={`translate(${c.x} ${c.y}) rotate(${c.rot}) scale(${c.s})`}>
         <Capsule2 t={t} id={`${k}cap`} flame={c.flame} glow={1} bank={c.bank}
-          win={withCockpit ? <g transform={`translate(0 ${-468}) scale(${52 / St.COCKPIT_VIEW.r}) translate(${-St.COCKPIT_VIEW.x} ${-St.COCKPIT_VIEW.y})`}>{cockpitWorld(t, k + 'ck')}</g> : undefined} />
+          win={withCockpit ? (
+            <g>
+              <g transform={`translate(0 ${-468}) scale(${52 / St.COCKPIT_VIEW.r}) translate(${-St.COCKPIT_VIEW.x} ${-St.COCKPIT_VIEW.y})`}>{cockpitWorld(t, k + 'ck')}</g>
+              {/* the cabin brightens through the glass as the window turns toward us (no pop from dark to lit) */}
+              <circle cx={0} cy={-468} r={60} fill="#13213A" opacity={0.85 * (1 - ss(t, V2.approach, V2.approach + 0.3))} />
+            </g>
+          ) : undefined} />
       </g>
     </g>
   );
@@ -446,9 +452,9 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     body = W(St.camHook(t), hookWorld(t, 'A'));
     if (St.reflOpacity(t) > 0) urls.push(...bhUrls(t));
   } else if (t < V2.windowPass) {
-    body = W(St.camSpace(t), spaceWorld(t, 'B', t > V2.approach + 0.3));
+    body = W(St.camSpace(t), spaceWorld(t, 'B', t > V2.approach));
     urls.push(...bhUrls(t));
-    if (t > V2.approach + 0.3) urls.push(...cockpitBhUrls(cockpitBhT(t)));
+    if (t > V2.approach) urls.push(...cockpitBhUrls(cockpitBhT(t)));
   } else if (t < V2.matchCut) {
     body = W(St.camCockpit(t), cockpitWorld(t, 'C'));
   } else if (t < V2.windowCover) {

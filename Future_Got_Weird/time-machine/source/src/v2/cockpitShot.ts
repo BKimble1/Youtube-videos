@@ -27,8 +27,13 @@ const e5 = (x: number) => {
 
 export const forearmAt = (t: number): FAP => {
   if (t < V2.wristUp) return FA.rest;
-  if (t < V2.wristUpEnd) return mixFA(FA.rest, FA.mouth, e5((t - V2.wristUp) / (V2.wristUpEnd - V2.wristUp)));
-  if (t < V2.hourStart) return mixFA(FA.mouth, FA.watch, e5((t - V2.wristUpEnd) / (V2.hourStart - V2.wristUpEnd)));
+  if (t < V2.hourStart) {
+    // one continuous eased rise: rest -> past the chin -> the close-up (a quadratic through FA.mouth, no stall)
+    const u = e5((t - V2.wristUp) / (V2.hourStart - V2.wristUp));
+    const ctrl = {x: 2 * FA.mouth.x - (FA.rest.x + FA.watch.x) / 2, y: 2 * FA.mouth.y - (FA.rest.y + FA.watch.y) / 2, s: 2 * FA.mouth.s - (FA.rest.s + FA.watch.s) / 2, rot: 2 * FA.mouth.rot - (FA.rest.rot + FA.watch.rot) / 2};
+    const q = (a: number, b: number, d: number) => (1 - u) * (1 - u) * a + 2 * u * (1 - u) * b + u * u * d;
+    return {x: q(FA.rest.x, ctrl.x, FA.watch.x), y: q(FA.rest.y, ctrl.y, FA.watch.y), s: q(FA.rest.s, ctrl.s, FA.watch.s), rot: q(FA.rest.rot, ctrl.rot, FA.watch.rot)};
+  }
   if (t < V2.wristDown) return FA.watch;
   if (t < V2.wristDownEnd) return mixFA(FA.watch, FA.low, e5((t - V2.wristDown) / (V2.wristDownEnd - V2.wristDown)));
   if (t < V2.wristUp2) return FA.low;

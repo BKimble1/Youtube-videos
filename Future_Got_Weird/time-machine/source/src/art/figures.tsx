@@ -193,7 +193,7 @@ export const Helmet: React.FC<{id: string; reflection?: React.ReactNode; reflOpa
         </g>
       )}
       {reflection && reflOpacity > REFL_OPAQUE && (
-        <g clipPath={`url(#${id}-glass)`} opacity={Math.min(1, (reflOpacity - REFL_OPAQUE) / (1 - REFL_OPAQUE))}>
+        <g clipPath={`url(#${id}-glass)`}>
           {reflection}
         </g>
       )}

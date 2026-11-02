@@ -31,7 +31,8 @@ export const headTilt = (t: number) => 7 * lookDown(t) - 9 * ss(t, V2.headTurn, 
 /** the visor reflection: head-local placement (helmet centre), scale (head units per M) chosen so the hole fills the
  *  glass and the following space shot starts at >= 30 px/M */
 export const VREFL = {rx: 0, ry: -8, k: 5.6};
-export const reflOpacity = (t: number) => (t < V2.reflection ? 0 : t < V2.spaceCut ? lerp(0.12, 1, ss(t, V2.reflection, V2.spaceCut - 0.08)) : 1);
+// the reflection is fully formed by ~1.8 s so the matched hole holds in the visor for ~7 frames before the cut
+export const reflOpacity = (t: number) => (t < V2.reflection ? 0 : t < V2.spaceCut ? lerp(0.12, 1, ss(t, V2.reflection, 1.8)) : 1);
 /** camera: hold the two-shot, then follow his head up to the glass */
 const Z_VISOR = Z_CLOSE * 1.55;
 export const camHook = (t: number): Cam => {
@@ -63,7 +64,9 @@ export const camSpace = (t: number): Cam =>
     [V2.spaceCut, CAM_SPACE0],
     [2.75, {x: 0.0, y: -6.0, z: 40}],
     [V2.approach, {x: 2.6, y: -6.6, z: 40.5}],
-    [V2.windowPass + 0.3, {x: 3.2, y: -6.8, z: 40.5}],
+    // follow the capsule right as it turns toward camera, so its window slides to centre clear of the shadow
+    [V2.approach + 0.35, {x: 6.6, y: -6.9, z: 40.5}],
+    [V2.windowPass + 0.3, {x: 7.0, y: -7.0, z: 40.5}],
   ]);
 /** the capsule in space: on the arc, then turning toward the camera and coming close (its window to the screen centre) */
 // sized so the push through the window lands exactly on the cockpit's own framing (z 1.0) and eases to a stop there

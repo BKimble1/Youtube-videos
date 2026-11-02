@@ -107,7 +107,13 @@ export const Head: React.FC<{
     return (
       <g>
         {crest > 0.06 && (
-          <path d={`M ${-r - 4} ${sideTop} Q ${-r - 6} ${cy - top} ${-10} ${cy - top + 4 * (1 - crest)} Q ${r + 10} ${cy - top - 10 * crest} ${r + 8} ${cy - r + 10 + front * 0.4} Q ${r - 10} ${cy - r - 2 + front} ${20} ${cy - r + 2 + front} Q ${-20} ${cy - r + 4 + front} ${-r - 4} ${sideTop} Z`} {...st} />
+          <g>
+            {/* while it recedes the crest is held inside a cap that shrinks onto the skull (no stray tail beyond the head) */}
+            <clipPath id={`${clipId}-cr`}><circle cx={0} cy={cy} r={r + 8 + 40 * cv} /></clipPath>
+            <g clipPath={`url(#${clipId}-cr)`}>
+              <path d={`M ${-r - 4} ${sideTop} Q ${-r - 6} ${cy - top} ${-10} ${cy - top + 4 * (1 - crest)} Q ${r + 10} ${cy - top - 10 * crest} ${r + 8} ${cy - r + 10 + front * 0.4} Q ${r - 10} ${cy - r - 2 + front} ${20} ${cy - r + 2 + front} Q ${-20} ${cy - r + 4 + front} ${-r - 4} ${sideTop} Z`} {...st} />
+            </g>
+          </g>
         )}
         {/* side hair (stays, whitens; the temples grey first) */}
         <path d={`M ${-r - 3} ${cy + 8} Q ${-r - 7} ${cy - 22} ${-r + 10} ${cy - 40 + 8 * thin} L ${-r + 16} ${cy - 30} Q ${-r + 6} ${cy - 12} ${-r + 4} ${cy + 10} Z`} {...st} fill={hairAt(hairColor, Math.min(1, a + 0.22))} />
