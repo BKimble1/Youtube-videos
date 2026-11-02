@@ -119,7 +119,8 @@ export const ROOM = {
   /** the dust puff starts here (glove contact at dustWipe 0.5); the wipe runs wipe.from -> via -> to (see wipeAt) */
   wipePoint: wipeAt(0.5),
   wipe: {...WIPE},
-  /** a suggested spot to stand (feet, at figScale) so his right glove reaches the whole wipe without covering the photo */
+  /** a suggested spot to stand (feet, at figScale): his right glove (astroReach) reaches the whole wipe; his head stays clear
+   *  of the family frame, only the clear helmet bubble overlaps its left edge */
   standAtPhoto: {x: 1064, y: F},
   /** two armchairs (front-facing, against the wall): outer bounds, seat height */
   chairs: [CHAIR_A, CHAIR_B].map((c) => ({x0: c.cx - CHAIR_W.half, x1: c.cx + CHAIR_W.half, y0: CHAIR_W.top, y1: F, cx: c.cx, seatY: CHAIR_W.seat})),

@@ -31,13 +31,15 @@ const bhUrls = (t: number) => {
 
 // ---- 1-2: the opening two-shot, the gaze to the visor ------------------------------------------------------------------
 const hookAstroE = (t: number): Expr => {
-  const sur = ss(t, 0.14, 0.5);
+  // smile (the photo) -> surprise as his friend ages -> concern at the old hands -> curiosity as he looks up to the visor
+  const sur = ss(t, 0.14, 0.42) * (1 - ss(t, V2.lookHands - 0.05, V2.lookHands + 0.2));
   const down = ss(t, V2.lookHands - 0.1, V2.lookHands + 0.18) * (1 - ss(t, V2.headTurn, V2.headTurn + 0.3));
   const up = ss(t, V2.headTurn, V2.headTurn + 0.35);
+  const mouth: Expr['mouth'] = t < 0.16 ? 'smile' : sur > 0.4 ? 'o' : up > 0.5 ? 'soft' : 'flat';
   return {
-    mouth: t < 0.16 ? 'smile' : sur < 0.6 ? 'soft' : 'o', open: 0.25 + 0.25 * sur,
-    wide: 0.75 * sur * (1 - 0.4 * down), brows: 0.9 * sur - 0.2 * down,
-    lookX: lerp(lerp(0.75, 0.4, down), -0.25, up), lookY: lerp(lerp(0.05, 0.9, down), -1, up), blink: 1,
+    mouth, open: 0.2 + 0.35 * sur,
+    wide: 0.75 * sur + 0.25 * up, brows: 0.9 * sur + 0.45 * up - 0.1 * down, sad: 0.45 * down,
+    lookX: lerp(lerp(0.75, 0.4, down), -0.25, up), lookY: lerp(lerp(0.05, 0.9, down), -1, up), blink: t > 0.9 && t < 0.96 ? 0.15 : 1,
   };
 };
 const hookFriendE = (t: number): Expr => ({mouth: t < 0.16 ? 'smile' : 'soft', lookX: -0.7, lookY: 0.05, brows: 0.1 * ss(t, 0.3, 0.7)});
@@ -137,27 +139,29 @@ function roomPresentWorld(t: number, k: string) {
   // Drawn over the room (normal blend, cool and translucent), clipped to the glass.
   const ro = St.reflOpRoom(t);
   const G = ROOM.photoFamily.glass;
+  const RSp = ROOM.photoFamily.reflSpot;
+  const hs = (RSp.r * 1.05) / 58; // his reflected head at the photo faces' size
   const reflNode = ro > 0.001 ? (
     <g>
       <clipPath id={`${k}rgl`}><rect x={G.x} y={G.y} width={G.w} height={G.h} /></clipPath>
       <g clipPath={`url(#${k}rgl)`} opacity={ro}>
-        {/* the window behind him, with the changed skyline, reflected */}
-        <rect x={G.x + G.w * 0.5} y={G.y - 4} width={G.w * 0.52} height={G.h * 0.62} fill="#CFE6F2" opacity={0.55} />
-        {[0, 1, 2, 3].map((i) => <rect key={i} x={G.x + G.w * (0.54 + 0.11 * i)} y={G.y + G.h * (0.08 + 0.06 * (i % 2))} width={G.w * 0.07} height={G.h * 0.6} rx={2} fill="#9FC4DA" opacity={0.6} />)}
-        <g transform={`translate(${G.x + G.w * 0.8} ${G.y + G.h * 0.6}) scale(0.78)`}>
-          <g opacity={0.9}>
-            <Head skin={'#E3D2D0'} hair="spiky" hairColor={'#B2626A'} id={`${k}rh`} cheeks={false} e={{...roomAstroE(Math.max(t, V2.faceTurn + 0.4)), turn: -0.2, lookX: -0.35, lookY: 0.15}} />
+        {/* the window behind him, with the changed skyline (towers), reflected around his head */}
+        <rect x={RSp.x - RSp.r * 1.7} y={G.y - 2} width={RSp.r * 3.6} height={G.h * 0.58} fill="#CFE6F2" opacity={0.42} />
+        {[0, 1, 2].map((i) => <rect key={i} x={RSp.x - RSp.r * 1.5 + i * RSp.r * 1.15} y={G.y + 6 + 8 * (i % 2)} width={RSp.r * 0.45} height={G.h * 0.5} rx={2} fill="#9FC4DA" opacity={0.55} />)}
+        <g transform={`translate(${RSp.x} ${RSp.y}) scale(${hs})`}>
+          <g opacity={0.92}>
+            <Head skin={'#E8D5CF'} hair="spiky" hairColor={'#B9646C'} id={`${k}rh`} cheeks={false} e={{...roomAstroE(Math.max(t, V2.faceTurn + 0.4)), turn: -0.25, lookX: -0.4, lookY: 0.1}} />
           </g>
-          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="#DCEFFF" opacity={0.18} />
-          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="none" stroke="#F4FBFF" strokeWidth={6} opacity={0.8} />
+          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="#DCEFFF" opacity={0.16} />
+          <circle cx={HELMET.cx} cy={HELMET.cy} r={HELMET.r} fill="none" stroke="#F4FBFF" strokeWidth={7} opacity={0.75} />
         </g>
-        <rect x={G.x} y={G.y} width={G.w} height={G.h} fill="#BFD6E6" opacity={0.12} />
       </g>
     </g>
   ) : null;
   // his watch beside the photograph (one hour on his wrist; a whole life in the frame)
   const wb = ss(t, V2.watchBeside, V2.watchBeside + 0.35) * (1 - ss(t, V2.photoMove + 0.1, V2.photoMove + 0.5));
-  const photoView = <g transform={`translate(${ROOM.photoFriend.print.x} ${ROOM.photoFriend.print.y}) scale(${ROOM.photoFriend.printScale})`}>{W(St.CAM_CLOSE, hookWorld(0, k + 'pv', true))}</g>;
+  // the pre-departure print: the opening composition in screen coordinates (the room maps 1080x1920 onto the print)
+  const photoView = W(St.CAM_CLOSE, hookWorld(0, k + 'pv', true));
   return (
     <g>
       <Room t={t} id={`${k}rm`} era={1} clockMinutes={661 + (t - 15) / 60} dustWipe={w / St.WIPE_MAX > 0.999 ? 1 : w} photoView={photoView} photoTint={St.printTint(t)} photoGlass={St.printGlass(t)} windowView={yardPresentView(t, k + 'wv')} />
@@ -168,8 +172,8 @@ function roomPresentWorld(t: number, k: string) {
         </g>
       )}
       {wb > 0.001 && (
-        <g transform={`translate(${St.FAM.x - 150 + 80 * wb} ${St.FAM.y + 230 - 150 * wb})`}>
-          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.36} rot={-10} />
+        <g transform={`translate(${St.FAM.x - 205 + 50 * wb} ${St.FAM.y + 260 - 170 * wb})`}>
+          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.3} rot={-6} />
         </g>
       )}
     </g>
@@ -242,13 +246,15 @@ function returnWorld(t: number, k: string) {
   );
 }
 const reunionAstroE = (t: number): Expr => {
+  // eyes search his face -> recognition arrives (a small smile) -> attention drops to their joined hands (concern)
   const search = ss(t, V2.search, V2.recognise);
-  const rec = ss(t, V2.recognise, V2.recognise + 0.2);
+  const rec = ss(t, V2.recognise, V2.recognise + 0.18);
   const hands = ss(t, V2.toHands, V2.toHands + 0.2);
-  const sacc = search * (1 - rec) * Math.sin((t - V2.search) * 20) * 0.18;
+  const sacc = search * (1 - rec) * Math.sin((t - V2.search) * 22) * 0.2;
+  const mouth: Expr['mouth'] = rec < 0.5 ? 'flat' : hands < 0.5 ? 'smile' : 'flat';
   return {
-    lookX: lerp(0.7 + sacc, 0.45, hands), lookY: lerp(-0.05 + sacc * 0.5, 0.9, hands), wide: lerp(0.45 * search, 0.1, rec) + 0.15 * (1 - hands),
-    brows: lerp(0.3 * search, 0.55, rec) * (1 - 0.5 * hands), sad: 0.5 * hands, mouth: rec > 0.5 && hands < 0.5 ? 'soft' : hands > 0.5 ? 'flat' : 'o', open: 0.25, blink: t > 13.92 && t < 13.99 ? 0.12 : 1,
+    lookX: lerp(0.72 + sacc, 0.45, hands), lookY: lerp(-0.08 + sacc * 0.5, 0.9, hands), wide: 0.35 * search * (1 - rec) + 0.1,
+    brows: lerp(0.25 * search, 0.5, rec) * (1 - 0.6 * hands), sad: 0.15 * rec + 0.5 * hands, mouth, blink: t > 13.86 && t < 13.93 ? 0.12 : 1,
   };
 };
 const reunionFriendE = (t: number): Expr => ({mouth: t > V2.recognise - 0.1 ? 'smile' : 'soft', lookX: -0.7, lookY: lerp(0, 0.6, ss(t, V2.toHands + 0.1, V2.toHands + 0.35)), brows: 0.15, sad: 0.25});

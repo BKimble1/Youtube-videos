@@ -46,7 +46,7 @@ export const YARD = {
   /** the familiar tree (trunk base); its size for any D: yardTree(D) */
   tree: {x: 860, y: HB + 62},
   /** the gate panel spans x .. x + w on the fence line; hinged on its left edge, swings into the yard */
-  gate: {x: 1120, w: 110, h: FENCE_H, y: FB, hingeX: 1120, cx: 1175},
+  gate: {x: 1120, w: 110, h: FENCE_H, y: FB, hingeX: 1120, cx: 1175, postL: 1107, postR: 1243, archY: FB - 330, archTop: FB - 330 - 81},
   fence: {x0: 470, x1: 1990, y: FB, h: FENCE_H},
   /** the garden path: gate threshold -> porch step (feet positions along it: yardPath(u)) */
   path: {x0: 1175, y0: G, x1: 1515, y1: HB + 26},
@@ -286,9 +286,9 @@ export const YardTree: React.FC<{D: number; sl: Season; t: number; id: string}> 
               const s = sm(clamp(sl.blossom * 1.7 - hash(b.i * 4.1 + q * 1.7) * 0.7));
               return s > 0.02 ? <circle key={`p${b.i}-${q}`} cx={b.x + dx * b.r} cy={b.y + dy * b.r} r={b.r * 0.62 * s} fill={q % 2 ? '#F4A9C0' : '#F7B8CB'} /> : null;
             }))}
-            <circle cx={cc.cx + cc.rx * 0.55} cy={cc.cy + cc.ry * 0.75} r={cc.rx * 1.02} fill={sl.leafDark} opacity={0.55} />
+            <circle cx={cc.cx + cc.rx * 0.55} cy={cc.cy + cc.ry * 0.75} r={cc.rx * 1.02} fill="#22304E" opacity={0.2} />
             {blobs.filter((b) => b.y < cc.cy + cc.ry * 0.2).map((b) => (
-              <circle key={`h${b.i}`} cx={b.x - b.r * 0.28} cy={b.y - b.r * 0.34} r={b.r * 0.4} fill={sl.leafLight} opacity={0.55} />
+              <circle key={`h${b.i}`} cx={b.x - b.r * 0.28} cy={b.y - b.r * 0.34} r={b.r * 0.4} fill="#FFF7E6" opacity={0.3} />
             ))}
             {blobs.map((b) => b.r > 18 ? (
               <path key={`a${b.i}`} d={`M ${f1(b.x + b.r * 0.9 * Math.cos(rad(15)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(15)))} A ${f1(b.r * 0.9)} ${f1(b.r * 0.9)} 0 0 1 ${f1(b.x + b.r * 0.9 * Math.cos(rad(105)))} ${f1(b.y + b.r * 0.9 * Math.sin(rad(105)))}`} fill="none" stroke={INK} strokeWidth={2.4} opacity={0.3} strokeLinecap="round" />
@@ -688,18 +688,85 @@ const FrontGarden: React.FC<{D: number; sl: Season}> = ({D, sl}) => {
 // fence and gate
 // =====================================================================================================================
 const PW = 18, PITCH = 30;
+/** gate posts: wider than the fence posts; they rise into the arbour arch over the gate */
+const GPW = 26;
+const ARB_Y = FB - 330; // where the posts meet the arch (the arch's centre line)
+const ARB_RO = 81, ARB_RI = 55;
+
+const Arbour: React.FC<{D: number; sl: Season; paint: string; pSh: string; gL: number; gR: number}> = ({D, sl, paint, pSh, gL, gR}) => {
+  const cx = (gL + gR) / 2;
+  const wear = ss(D, 0.15, 1);
+  const arch = `M ${cx - ARB_RO} ${ARB_Y} A ${ARB_RO} ${ARB_RO} 0 0 1 ${cx + ARB_RO} ${ARB_Y} L ${cx + ARB_RI} ${ARB_Y} A ${ARB_RI} ${ARB_RI} 0 0 0 ${cx - ARB_RI} ${ARB_Y} Z`;
+  // the climbing rose: up the left post, over the arch, down the right post
+  const vinePt = (v: number): P => {
+    if (v < 0.4) {
+      const y = lerp(FB - 6, ARB_Y, v / 0.4);
+      return {x: gL + 9 * Math.sin(y / 23), y};
+    }
+    if (v < 0.75) {
+      const a = Math.PI * (1 + (v - 0.4) / 0.35);
+      const r = (ARB_RO + ARB_RI) / 2 + 9 * Math.sin(a * 7);
+      return {x: cx + Math.cos(a) * r, y: ARB_Y + Math.sin(a) * r};
+    }
+    const y = lerp(ARB_Y, ARB_Y + 230, (v - 0.75) / 0.25);
+    return {x: gR - 9 * Math.sin(y / 23), y};
+  };
+  const grown = lerp(0.42, 1, ss(D, 0, 0.75));
+  const dens = lerp(0.55, 1, ss(D, 0, 0.8));
+  const leafC = mix(mix('#4F8A50', '#62A55A', 0.4), '#C2502E', 0.8 * sl.autumn);
+  const leafVis = 1 - sl.bare;
+  const rose = Math.max(bump(sl.s, 0.3, 0.12, 0.22), sl.blossom * 0.5) * leafVis;
+  const N = 90;
+  const stem = Array.from({length: Math.max(2, Math.round(N * grown) + 1)}, (_, k) => vinePt(k / N));
+  return (
+    <g>
+      {[gL, gR].map((p, i) => (
+        <g key={i}>
+          <rect x={p - GPW / 2} y={ARB_Y - 2} width={GPW} height={FB - ARB_Y + 4} fill={paint} stroke={INK} strokeWidth={3.2} />
+          <rect x={p + GPW / 2 - 8} y={ARB_Y + 2} width={6} height={FB - ARB_Y - 2} fill={pSh} />
+          {i === 0 && [FB - 92, FB - 36].map((hy, q) => <rect key={q} x={p + 4} y={hy} width={18} height={8} rx={2} fill="#3F5560" stroke={INK} strokeWidth={1.8} />)}
+          {wear > 0.3 && <ellipse cx={p - 2} cy={FB - 2} rx={15} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
+        </g>
+      ))}
+      <path d={arch} fill={paint} stroke={INK} strokeWidth={3.2} strokeLinejoin="round" />
+      <path d={`M ${cx + ARB_RI + 1} ${ARB_Y - 1} A ${ARB_RI + 1} ${ARB_RI + 1} 0 0 0 ${cx} ${ARB_Y - ARB_RI - 1} L ${cx} ${ARB_Y - ARB_RI - 7} A ${ARB_RI + 7} ${ARB_RI + 7} 0 0 1 ${cx + ARB_RI + 7} ${ARB_Y - 1} Z`} fill={pSh} />
+      {[200, 225, 250, 270, 290, 315, 340].map((deg) => (
+        <line key={deg} x1={cx + Math.cos(rad(deg)) * ARB_RI} y1={ARB_Y + Math.sin(rad(deg)) * ARB_RI} x2={cx + Math.cos(rad(deg)) * ARB_RO} y2={ARB_Y + Math.sin(rad(deg)) * ARB_RO} stroke={INK} strokeWidth={2.5} />
+      ))}
+      {[gL, gR].map((p, i) => <rect key={`c${i}`} x={p - GPW / 2 - 4} y={ARB_Y - 6} width={GPW + 8} height={12} rx={2} fill={paint} stroke={INK} strokeWidth={3} />)}
+      {sl.snow > 0.01 && <path d={`M ${cx - ARB_RO - 2} ${ARB_Y - 8} A ${ARB_RO + 2} ${ARB_RO + 2} 0 0 1 ${cx + ARB_RO + 2} ${ARB_Y - 8}`} fill="none" stroke={SNOW} strokeWidth={9} strokeLinecap="round" opacity={sl.snow} />}
+      {/* climbing rose */}
+      <path d={open(stem)} fill="none" stroke={INK} strokeWidth={6.5} strokeLinecap="round" />
+      <path d={open(stem)} fill="none" stroke="#6A5236" strokeWidth={3} strokeLinecap="round" />
+      {leafVis > 0.02 && stem.slice(1).map((p, k) => {
+        if (hash(k * 2.3 + 1) > dens) return null;
+        const side = k % 2 ? 1 : -1;
+        const lx = p.x + side * 8, ly = p.y + (k % 3) * 2;
+        return <ellipse key={k} cx={lx} cy={ly} rx={10 * leafVis} ry={6.5 * leafVis} fill={k % 3 ? leafC : shade(leafC, 0.2)} stroke={INK} strokeWidth={1.8} transform={`rotate(${side * 35 + 20 * Math.sin(k)} ${lx} ${ly})`} />;
+      })}
+      {rose > 0.02 && stem.slice(2).map((p, k) => (k % 6 === 0 ? (
+        <g key={`r${k}`} opacity={rose}>
+          <circle cx={p.x + (k % 12 ? 6 : -6)} cy={p.y - 4} r={7.5} fill={k % 12 ? C.coral : '#F4A9C0'} stroke={INK} strokeWidth={2} />
+          <circle cx={p.x + (k % 12 ? 6 : -6) + 1} cy={p.y - 5} r={2.6} fill={shade(k % 12 ? C.coral : '#F4A9C0', 0.3)} />
+        </g>
+      ) : null))}
+    </g>
+  );
+};
 const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gateOpen}) => {
   const Fc = YARD.fence, Gt = YARD.gate;
   const wear = ss(D, 0.15, 1);
   const paint = mix('#FFFBF0', '#E3DDCF', 0.75 * wear);
   const pSh = shade(paint, 0.2);
-  const posts = [Fc.x0, 712, 956, Gt.x - 9, Gt.x + Gt.w + 9, 1498, 1744, Fc.x1];
+  const gL = Gt.x - GPW / 2, gR = Gt.x + Gt.w + GPW / 2; // gate post centres
+  const posts = [Fc.x0, 712, 956, gL, gR, 1498, 1744, Fc.x1];
+  const half = (i: number) => (i === 3 || i === 4 ? GPW / 2 : 9);
   const railY = [FB - 36, FB - 88];
   const pickets: {x: number; lean: number; j: number}[] = [];
   let j = 0;
   for (let i = 0; i < posts.length - 1; i++) {
     if (i === 3) continue; // the gate span
-    const a = posts[i] + 9 + 6, b = posts[i + 1] - 9 - 6;
+    const a = posts[i] + half(i) + 6, b = posts[i + 1] - half(i + 1) - 6;
     const n = Math.max(1, Math.round((b - a - PW) / PITCH) + 1);
     const step = n > 1 ? (b - a - PW) / (n - 1) : 0;
     for (let q = 0; q < n; q++) {
@@ -710,14 +777,19 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gate
   }
   const tipY = FB - FENCE_H;
   const picket = (x: number) => `M ${x} ${FB + 2} L ${x} ${tipY + 10} L ${x + PW / 2} ${tipY} L ${x + PW} ${tipY + 10} L ${x + PW} ${FB + 2} Z`;
-  // gate mapping: hinge on the left; u = distance from the hinge
+  // gate mapping: hinge on the left; u = distance from the hinge; the free edge recedes (rises, shortens) as it opens
   const th = rad(78 * clamp(gateOpen));
   const gm = (u: number, y: number): P => ({x: Gt.hingeX + u * Math.cos(th), y: y - (u / Gt.w) * Math.sin(th) * 16 - (y - FB) * 0.06 * Math.sin(th) * (u / Gt.w)});
-  const gpoly = (pts: [number, number][]) => `M ${pts.map(([u, y]) => {
+  const gpath = (pts: [number, number][], close = true) => `M ${pts.map(([u, y]) => {
     const p = gm(u, y);
     return `${f1(p.x)} ${f1(p.y)}`;
-  }).join(' L ')} Z`;
-  const gPick = [4, 33, 60, 88];
+  }).join(' L ')}${close ? ' Z' : ''}`;
+  // the gate: a swooping arched top, an arched top rail, a bottom rail and a diagonal brace, five close pickets
+  const GPWk = 15;
+  const gPick = [5, 27, 47.5, 68, 90];
+  const arch = (u: number) => FB - (FENCE_H - 10) - 26 * Math.sin(Math.PI * clamp(u / Gt.w));
+  const railTop = Array.from({length: 9}, (_, k) => [(k / 8) * Gt.w, arch((k / 8) * Gt.w) + 20] as [number, number]);
+  const railBot = [...railTop].reverse().map(([u, y]) => [u, y + 11] as [number, number]);
   return (
     <g>
       {/* soft cast shadow on the pavement */}
@@ -745,36 +817,43 @@ const Fence: React.FC<{D: number; sl: Season; gateOpen: number}> = ({D, sl, gate
       ))}
       {/* gate (hinge on the left post) */}
       <g>
-        {railY.map((ry, r) => <path key={r} d={gpoly([[0, ry], [Gt.w, ry], [Gt.w, ry + 10], [0, ry + 10]])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />)}
-        <path d={gpoly([[6, FB - 34], [12, FB - 40], [Gt.w - 6, FB - 82], [Gt.w - 12, FB - 76]])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
+        <path d={gpath([...railTop, ...railBot])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
+        <path d={gpath([[0, FB - 34], [Gt.w, FB - 34], [Gt.w, FB - 22], [0, FB - 22]])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
+        <path d={gpath([[4, FB - 30], [12, FB - 34], [Gt.w - 4, arch(Gt.w - 4) + 26], [Gt.w - 12, arch(Gt.w - 12) + 32]])} fill={pSh} stroke={INK} strokeWidth={2.5} strokeLinejoin="round" />
         {gPick.map((u, q) => {
-          const top = FB - (FENCE_H - 4) - 12 * Math.sin(Math.PI * ((u + PW / 2) / Gt.w));
-          const pts: [number, number][] = [[u, FB], [u, top + 10], [u + PW / 2, top], [u + PW, top + 10], [u + PW, FB]];
+          const top = arch(u + GPWk / 2);
+          const pts: [number, number][] = [[u, FB - 2], [u, top + 9], [u + GPWk / 2, top], [u + GPWk, top + 9], [u + GPWk, FB - 2]];
           return (
             <g key={q}>
-              <path d={gpoly(pts)} fill={paint} />
-              <path d={gpoly([[u + PW - 5, top + 10], [u + PW, top + 10], [u + PW, FB], [u + PW - 5, FB]])} fill={pSh} />
-              <path d={gpoly(pts)} fill="none" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
-              {sl.snow > 0.01 && <path d={gpoly([[u - 1, top + 11], [u + PW / 2, top - 3], [u + PW + 1, top + 11], [u + PW / 2, top + 7]])} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
+              <path d={gpath(pts)} fill={paint} />
+              <path d={gpath([[u + GPWk - 4, top + 9], [u + GPWk, top + 9], [u + GPWk, FB - 2], [u + GPWk - 4, FB - 2]])} fill={pSh} />
+              <path d={gpath(pts)} fill="none" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+              {sl.snow > 0.01 && <path d={gpath([[u - 1, top + 10], [u + GPWk / 2, top - 3], [u + GPWk + 1, top + 10], [u + GPWk / 2, top + 6]])} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
             </g>
           );
         })}
         {(() => {
-          const l = gm(Gt.w - 6, FB - 62);
-          return <circle cx={l.x} cy={l.y} r={5} fill="#3F5560" stroke={INK} strokeWidth={2} />;
+          const l = gm(Gt.w - 4, FB - 62);
+          return (
+            <g>
+              <path d={`M ${f1(l.x)} ${f1(l.y - 7)} L ${f1(l.x + 10 * Math.cos(th) + 6)} ${f1(l.y - 7)}`} stroke={INK} strokeWidth={5} strokeLinecap="round" />
+              <circle cx={l.x} cy={l.y + 2} r={6} fill="none" stroke="#3F5560" strokeWidth={3.5} />
+            </g>
+          );
         })()}
       </g>
-      {/* posts with caps */}
-      {posts.map((p, i) => (
+      {/* fence posts with caps */}
+      {posts.map((p, i) => (i === 3 || i === 4 ? null : (
         <g key={i}>
           <rect x={p - 9} y={FB - FENCE_H - 12} width={18} height={FENCE_H + 14} fill={paint} stroke={INK} strokeWidth={3} />
           <rect x={p + 3} y={FB - FENCE_H - 10} width={5} height={FENCE_H + 10} fill={pSh} />
           <path d={`M ${p - 12} ${FB - FENCE_H - 12} L ${p} ${FB - FENCE_H - 28} L ${p + 12} ${FB - FENCE_H - 12} Z`} fill={paint} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
-          {(i === 3) && [FB - 90, FB - 40].map((hy, q) => <rect key={q} x={p + 4} y={hy} width={14} height={7} rx={2} fill="#3F5560" stroke={INK} strokeWidth={1.8} />)}
           {sl.snow > 0.01 && <path d={`M ${p - 13} ${FB - FENCE_H - 11} L ${p} ${FB - FENCE_H - 32} L ${p + 13} ${FB - FENCE_H - 11} Q ${p} ${FB - FENCE_H - 17} ${p - 13} ${FB - FENCE_H - 11} Z`} fill={SNOW} stroke={INK} strokeWidth={1.5} opacity={sl.snow} />}
           {wear > 0.3 && <ellipse cx={p - 2} cy={FB - 2} rx={12} ry={5} fill="#6D9446" stroke={INK} strokeWidth={1.8} opacity={ss(D, 0.4, 1)} />}
         </g>
-      ))}
+      )))}
+      {/* the rose arbour over the gate: two tall posts carry a lattice arch; a climbing rose grows over it with the years */}
+      <Arbour D={D} sl={sl} paint={paint} pSh={pSh} gL={gL} gR={gR} />
     </g>
   );
 };
@@ -1015,6 +1094,11 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       {[[-260, 1870, 160], [1290, 1720, 120], [1740, 1960, 190], [2400, 1800, 140], [140, 1780, 90]].map(([px, py, w], k) => (
         <rect key={k} x={px} y={py} width={w} height={28 + 10 * (k % 2)} rx={10} fill={shade(asphalt, 0.18)} opacity={0.55} />
       ))}
+      {/* a drain grate at the kerb and a manhole cover (kept outside the landing zone) */}
+      <rect x={1290} y={S.y0 + 4} width={86} height={18} rx={3} fill={shade(asphalt, 0.45)} stroke={INK} strokeWidth={2.5} />
+      {[0, 1, 2, 3, 4].map((q) => <line key={q} x1={1300 + q * 16} y1={S.y0 + 7} x2={1300 + q * 16} y2={S.y0 + 19} stroke={mix(asphalt, '#FFFFFF', 0.25)} strokeWidth={3} />)}
+      <ellipse cx={1640} cy={G + 316} rx={70} ry={20} fill={shade(asphalt, 0.3)} stroke={INK} strokeWidth={3} />
+      <ellipse cx={1640} cy={G + 316} rx={52} ry={13} fill="none" stroke={mix(asphalt, '#FFFFFF', 0.2)} strokeWidth={2.5} />
       {Array.from({length: 30}, (_, k) => <rect key={k} x={WX0 + k * 200} y={G + 224} width={110} height={12} rx={6} fill={mix('#F3E6B5', '#7FE3DC', fut)} />)}
       {fut > 0.01 && [G + 112, G + 340].map((gy, k) => <rect key={k} x={WX0} y={gy} width={WX1 - WX0} height={5} fill="#7FE3DC" opacity={fut * 0.65} />)}
       {sl.snow > 0.01 && <rect x={WX0} y={S.y0 + 4} width={WX1 - WX0} height={10} fill={SNOW} opacity={sl.snow * 0.6} />}
