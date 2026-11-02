@@ -103,7 +103,7 @@ export const Capsule2: React.FC<{t: number; id: string; flame?: number; retro?: 
 /** the pass around the hole (space units M; hole at origin; the lensed disk reaches x +-17.5, y -9..+9 around the
  *  shadow): an arc centred on the hole, radius 26 M, from the left (175 deg) over the top (270) to the right (365),
  *  >= 8 M from any disk pixel. ang = heading (deg, screen), nose leads; scale = capsule height in M. */
-export const FLIGHT = {cx: 0, cy: 0.5, r: 26, th0: 175, th1: 365, scale: 6.6};
+export const FLIGHT = {cx: 0, cy: 0.5, r: 24, th0: 175, th1: 365, scale: 8.4};
 export const flightPath = (u: number) => {
   const th = rad(lerp(FLIGHT.th0, FLIGHT.th1, u));
   const x = FLIGHT.cx + FLIGHT.r * Math.cos(th), y = FLIGHT.cy + FLIGHT.r * Math.sin(th);
