@@ -18,6 +18,9 @@ export const C = {
   blue: '#4F7CC9', blueLight: '#D3E1F8', white: '#FFFFFF', cream: '#FFFBF0', shadow: 'rgba(22,42,50,0.16)',
 };
 export const OUT = 4;
+/** outline weight multiplier for a subtree (1 = normal). A camera push into a close-up sets it below 1 so line weight
+ *  grows more slowly than the zoom (a close-up drawn with close-up line weight, not fat zoomed-in outlines) */
+export const InkK = React.createContext(1);
 export const HEAD_R = 58;
 const ss = (x: number, a: number, b: number) => sm((x - a) / (b - a));
 
@@ -229,16 +232,17 @@ export const Head: React.FC<{
 
 /** mitt hand in the cast style (palm + thumb), with optional age (knuckle lines, spots, thinner) */
 export const Mitt: React.FC<{skin: string; age?: number; side?: 1 | -1; open?: number}> = ({skin, age = 0, side = 1, open = 0}) => {
+  const ik = React.useContext(InkK);
   const a = clamp(age);
   const sk = skinAt(skin, a);
   return (
     <g>
-      <ellipse cx={0} cy={6} rx={20 * (1 - 0.06 * a)} ry={18 + 4 * open} fill={sk} stroke={INK} strokeWidth={OUT} />
+      <ellipse cx={0} cy={6} rx={20 * (1 - 0.06 * a)} ry={18 + 4 * open} fill={sk} stroke={INK} strokeWidth={OUT * ik} />
       <g transform={`rotate(${side * (-30 - 25 * open)})`}>
-        <ellipse cx={side * -14} cy={-2} rx={8} ry={10} fill={sk} stroke={INK} strokeWidth={OUT} />
+        <ellipse cx={side * -14} cy={-2} rx={8} ry={10} fill={sk} stroke={INK} strokeWidth={OUT * ik} />
         <ellipse cx={side * -14} cy={-2} rx={6} ry={8} fill={sk} />
       </g>
-      {a > 0.3 && <path d={`M -10 ${14} q 4 3 8 0 M 2 ${15} q 4 3 8 0`} fill="none" stroke={INK} strokeWidth={2} opacity={0.5 * ss(a, 0.3, 0.8)} strokeLinecap="round" />}
+      {a > 0.3 && <path d={`M -10 ${14} q 4 3 8 0 M 2 ${15} q 4 3 8 0`} fill="none" stroke={INK} strokeWidth={2 * ik} opacity={0.5 * ss(a, 0.3, 0.8)} strokeLinecap="round" />}
       {a > 0.65 && <circle cx={6} cy={2} r={2.4 * ss(a, 0.65, 1)} fill="#B88866" opacity={0.6} />}
     </g>
   );

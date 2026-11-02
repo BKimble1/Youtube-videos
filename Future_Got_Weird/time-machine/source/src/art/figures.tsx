@@ -9,7 +9,7 @@
 import React from 'react';
 import {mix} from '../core/color';
 import {clamp, sm} from '../lib';
-import {C, Head, HEAD_R, INK, Mitt, OUT} from './crew';
+import {C, Head, HEAD_R, INK, InkK, Mitt, OUT} from './crew';
 
 const ss = (x: number, a: number, b: number) => sm((x - a) / (b - a));
 const rad = (d: number) => (d * Math.PI) / 180;
@@ -38,10 +38,11 @@ export const reach = (tx: number, ty: number, side: -1 | 1, elbow: 1 | -1 = 1, s
 };
 
 const Limb: React.FC<{pts: [number, number][]; w: number; colors: string[]}> = ({pts, w, colors}) => {
+  const ik = React.useContext(InkK);
   const pl = pts.map((p) => p.join(',')).join(' ');
   return (
     <g>
-      <polyline points={pl} fill="none" stroke={INK} strokeWidth={w + OUT * 2} strokeLinecap="round" strokeLinejoin="round" />
+      <polyline points={pl} fill="none" stroke={INK} strokeWidth={w + OUT * 2 * ik} strokeLinecap="round" strokeLinejoin="round" />
       {pts.slice(0, -1).map((p, i) => (
         <polyline key={i} points={`${p.join(',')} ${pts[i + 1].join(',')}`} fill="none" stroke={colors[Math.min(i, colors.length - 1)]} strokeWidth={w} strokeLinecap="round" />
       ))}
@@ -114,6 +115,7 @@ export const Astronaut: React.FC<{
   /** V2: seen from behind (walking away): the back of his head in the helmet, a life-support pack instead of the chest unit */
   back?: boolean;
 }> = ({pose, id, frame, reflection, reflOpacity = 0.45, watchTime = 0, helmet = true, shadow = true, fullWatch = false, earth, eyeRefl, tint = 1, glove, watchEl, hideHands, feet, back = false}) => {
+  const ik = React.useContext(InkK);
   const lean = pose.lean ?? 0;
   const stride = pose.stride ?? 0, ph = pose.legs ?? 0;
   const L = handPos(pose.armL, -1, ASTRO_ARM.sx, ASTRO_ARM.sy, ASTRO_ARM.up, ASTRO_ARM.fo);
@@ -141,11 +143,11 @@ export const Astronaut: React.FC<{
       <polyline points={`${P.sx + (P.ex - P.sx) * 0.42},${P.sy + (P.ey - P.sy) * 0.42} ${P.sx + (P.ex - P.sx) * 0.58},${P.sy + (P.ey - P.sy) * 0.58}`} stroke={C.saffron} strokeWidth={40} />
       {/* cuff */}
       <polyline points={`${P.ex + (P.hx - P.ex) * 0.8},${P.ey + (P.hy - P.ey) * 0.8} ${P.ex + (P.hx - P.ex) * 0.93},${P.ey + (P.hy - P.ey) * 0.93}`} stroke={C.saffron} strokeWidth={42} />
-      <polyline points={`${P.ex + (P.hx - P.ex) * 0.8},${P.ey + (P.hy - P.ey) * 0.8} ${P.ex + (P.hx - P.ex) * 0.93},${P.ey + (P.hy - P.ey) * 0.93}`} stroke={INK} strokeWidth={2.5} fill="none" opacity={0.7} />
+      <polyline points={`${P.ex + (P.hx - P.ex) * 0.8},${P.ey + (P.hy - P.ey) * 0.8} ${P.ex + (P.hx - P.ex) * 0.93},${P.ey + (P.hy - P.ey) * 0.93}`} stroke={INK} strokeWidth={2.5 * ik} fill="none" opacity={0.7} />
       {!(hideHands === 'both' || (hideHands === 'L' && side < 0) || (hideHands === 'R' && side > 0)) && (
         <g transform={`translate(${P.hx} ${P.hy}) rotate(${P.angle})`}>
           <Mitt skin={glove ?? GUESSER.skin} side={side} />
-          {glove && <path d="M -19 -8 Q 0 -14 19 -8" fill="none" stroke={INK} strokeWidth={2} opacity={0.35} />}
+          {glove && <path d="M -19 -8 Q 0 -14 19 -8" fill="none" stroke={INK} strokeWidth={2 * ik} opacity={0.35} />}
         </g>
       )}
       {withWatch && watchEl && watchEl({x: P.ex + (P.hx - P.ex) * 0.66, y: P.ey + (P.hy - P.ey) * 0.66, angle: P.angle})}
@@ -156,15 +158,16 @@ export const Astronaut: React.FC<{
     <g transform={`translate(0 ${pose.bob ?? 0})`}>
       {shadow && <ellipse cx={0} cy={2} rx={100} ry={15} fill={C.shadow} />}
       <g transform={`rotate(${lean} 0 -150)`}>
-        {!pose.frontL && hand(L, -1, true)}
+        {/* the watch is on his right wrist: screen-left from the front, screen-right from behind */}
+        {!pose.frontL && hand(L, -1, !back)}
         {/* legs */}
         {lg.map((g, i) => (
           <g key={i}>
             <Limb pts={[[g.hx, hipY], [g.kx, g.ky], [g.fx, g.fy]]} w={46} colors={[SUIT, SUIT]} />
-            <ellipse cx={g.fx + 6} cy={g.fy + 2} rx={34} ry={15} fill="#5A6773" stroke={INK} strokeWidth={OUT} />
+            <ellipse cx={g.fx + 6} cy={g.fy + 2} rx={34} ry={15} fill="#5A6773" stroke={INK} strokeWidth={OUT * ik} />
           </g>
         ))}
-        <path d={torso} fill={SUIT} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
+        <path d={torso} fill={SUIT} stroke={INK} strokeWidth={OUT * ik} strokeLinejoin="round" />
         <clipPath id={`${id}-torso`}><path d={torso} /></clipPath>
         <g clipPath={`url(#${id}-torso)`}>
           <path d={`M 40 ${SHOULDER_Y - 40} Q 100 -220 60 -130 L 110 -130 L 110 ${SHOULDER_Y - 40} Z`} fill={SUIT_SH} opacity={0.75} />
@@ -174,30 +177,30 @@ export const Astronaut: React.FC<{
         {back ? (
           <g>
             {/* life-support pack on his back */}
-            <rect x={-56} y={SHOULDER_Y - 6} width={112} height={118} rx={18} fill="#DCE3E8" stroke={INK} strokeWidth={OUT} />
-            <rect x={-40} y={SHOULDER_Y + 14} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5} />
-            <rect x={-40} y={SHOULDER_Y + 40} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5} />
+            <rect x={-56} y={SHOULDER_Y - 6} width={112} height={118} rx={18} fill="#DCE3E8" stroke={INK} strokeWidth={OUT * ik} />
+            <rect x={-40} y={SHOULDER_Y + 14} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5 * ik} />
+            <rect x={-40} y={SHOULDER_Y + 40} width={80} height={14} rx={6} fill="#A9B5BE" stroke={INK} strokeWidth={2.5 * ik} />
             <rect x={-56} y={SHOULDER_Y + 82} width={112} height={10} fill={C.saffron} />
           </g>
         ) : (
           <g>
             {/* chest unit */}
-            <rect x={-40} y={SHOULDER_Y + 18} width={80} height={52} rx={10} fill="#3F5560" stroke={INK} strokeWidth={OUT} />
-            <circle cx={-20} cy={SHOULDER_Y + 44} r={7} fill={C.saffron} stroke={INK} strokeWidth={2.5} />
-            <circle cx={0} cy={SHOULDER_Y + 44} r={7} fill={C.teal} stroke={INK} strokeWidth={2.5} />
-            <circle cx={20} cy={SHOULDER_Y + 44} r={7} fill={C.coral} stroke={INK} strokeWidth={2.5} />
+            <rect x={-40} y={SHOULDER_Y + 18} width={80} height={52} rx={10} fill="#3F5560" stroke={INK} strokeWidth={OUT * ik} />
+            <circle cx={-20} cy={SHOULDER_Y + 44} r={7} fill={C.saffron} stroke={INK} strokeWidth={2.5 * ik} />
+            <circle cx={0} cy={SHOULDER_Y + 44} r={7} fill={C.teal} stroke={INK} strokeWidth={2.5 * ik} />
+            <circle cx={20} cy={SHOULDER_Y + 44} r={7} fill={C.coral} stroke={INK} strokeWidth={2.5 * ik} />
           </g>
         )}
         {/* collar ring */}
-        <rect x={-62} y={HEAD_Y + 62} width={124} height={30} rx={14} fill={SUIT_SH} stroke={INK} strokeWidth={OUT} />
+        <rect x={-62} y={HEAD_Y + 62} width={124} height={30} rx={14} fill={SUIT_SH} stroke={INK} strokeWidth={OUT * ik} />
         <rect x={-62} y={HEAD_Y + 62} width={124} height={10} rx={5} fill={SUIT} opacity={0.8} />
-        {hand(R, 1, false)}
+        {hand(R, 1, back)}
         {/* head + helmet */}
         <g transform={`translate(0 ${HEAD_Y}) rotate(${pose.tilt ?? 0} 0 50)`}>
           {back ? <BackHead id={`${id}-bh`} /> : <Head skin={GUESSER.skin} hair="spiky" hairColor={GUESSER.hair} e={pose.e} id={`${id}-h`} eyeRefl={eyeRefl} />}
           {helmet && <Helmet id={id} reflection={reflection} reflOpacity={reflOpacity} tint={tint} />}
         </g>
-        {pose.frontL && hand(L, -1, true)}
+        {pose.frontL && hand(L, -1, !back)}
       </g>
     </g>
   );
@@ -208,6 +211,7 @@ export const Astronaut: React.FC<{
 export const REFL_OPAQUE = 0.97;
 /** clear bubble helmet: glass tint, the reflection (a portal into another world, clipped to the glass), highlights */
 export const Helmet: React.FC<{id: string; reflection?: React.ReactNode; reflOpacity?: number; tint?: number}> = ({id, reflection, reflOpacity = 0.45, tint = 1}) => {
+  const ik = React.useContext(InkK);
   const {cx, cy, r} = HELMET;
   return (
     <g>
@@ -228,11 +232,11 @@ export const Helmet: React.FC<{id: string; reflection?: React.ReactNode; reflOpa
       )}
       <clipPath id={`${id}-glass`}><circle cx={cx} cy={cy} r={r - 2} /></clipPath>
       {/* highlights */}
-      <path d={`M ${cx - r * 0.72} ${cy - r * 0.32} A ${r * 0.8} ${r * 0.8} 0 0 1 ${cx - r * 0.18} ${cy - r * 0.8}`} fill="none" stroke="#FFFFFF" strokeWidth={9} strokeLinecap="round" opacity={0.7} />
+      <path d={`M ${cx - r * 0.72} ${cy - r * 0.32} A ${r * 0.8} ${r * 0.8} 0 0 1 ${cx - r * 0.18} ${cy - r * 0.8}`} fill="none" stroke="#FFFFFF" strokeWidth={9 * ik} strokeLinecap="round" opacity={0.7} />
       <circle cx={cx - r * 0.5} cy={cy - r * 0.08} r={5} fill="#FFFFFF" opacity={0.65} />
-      <path d={`M ${cx + r * 0.62} ${cy + r * 0.5} A ${r * 0.8} ${r * 0.8} 0 0 1 ${cx + r * 0.25} ${cy + r * 0.76}`} fill="none" stroke="#FFFFFF" strokeWidth={5} strokeLinecap="round" opacity={0.35} />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={INK} strokeWidth={5} />
-      <circle cx={cx} cy={cy} r={r - 7} fill="none" stroke="#FFFFFF" strokeWidth={2} opacity={0.25} />
+      <path d={`M ${cx + r * 0.62} ${cy + r * 0.5} A ${r * 0.8} ${r * 0.8} 0 0 1 ${cx + r * 0.25} ${cy + r * 0.76}`} fill="none" stroke="#FFFFFF" strokeWidth={5 * ik} strokeLinecap="round" opacity={0.35} />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={INK} strokeWidth={5 * ik} />
+      <circle cx={cx} cy={cy} r={r - 7} fill="none" stroke="#FFFFFF" strokeWidth={2 * ik} opacity={0.25} />
     </g>
   );
 };

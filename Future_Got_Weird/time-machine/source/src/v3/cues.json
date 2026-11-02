@@ -1,0 +1,56 @@
+{
+ "EV": {
+  "push": 2.72,
+  "windowIn": 4.25,
+  "glance": 4.72,
+  "raise": 4.95,
+  "raiseEnd": 5.6,
+  "pushWatch": 5.1,
+  "watchClose": 6.05,
+  "hourStart": 5.62,
+  "hourEnd": 7.14,
+  "match": 8.2,
+  "toWindow": 8.42,
+  "windowMatch": 9.25,
+  "yearsEnd": 11.35,
+  "descent": 11.45,
+  "landing": 12.3,
+  "hatch": 12.42,
+  "stepOut": 12.56,
+  "stepDown": 12.74,
+  "arrive": 13.34,
+  "faces": 13.25,
+  "recognise": 13.78,
+  "turnToHouse": 14.42,
+  "atDoor": 15.55,
+  "inside": 15.86,
+  "roomStop": 16.5,
+  "seePhoto": 16.38,
+  "realise": 16.64,
+  "photoClose": 17.5,
+  "toFace": 18.55,
+  "friendIn": 19.35,
+  "watchUp": 20.5,
+  "loopPush": 22.7,
+  "loopCut": 23,
+  "dur": 23.533,
+  "astroSteps": [
+   12.74,
+   12.865,
+   13.09
+  ],
+  "doorSteps": [
+   14.798,
+   15.023,
+   15.232
+  ],
+  "roomSteps": [
+   16.043,
+   16.343
+  ],
+  "friendSteps": [
+   19.470000000000002,
+   19.770000000000003
+  ]
+ }
+}

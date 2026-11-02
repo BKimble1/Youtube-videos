@@ -37,6 +37,13 @@ if 'V2' in os.path.basename(src):
                (9.9, 10.08, 'foreground trunk wipe (years pass)'), (10.5, 10.68, 'foreground leaves wipe (years pass)'),
                (11.15, 12.8, 'light pass, capsule descent, landing, hatch'), (15.2, 15.65, 'doorframe passes the lens -> family room'),
                (21.4, 23.54, 'push into the pre-departure print'), (0.0, 0.2, 'loop seam')]
+# V3 (src/v3/timing.ts): the push through the ship's window into the cockpit, the watch push, the match cut, the window
+# match from inside to outside, the landing, the cut from the front door to the room, the loop cut (watch -> ship window)
+if 'V3' in os.path.basename(src):
+    PLANNED = [(2.7, 4.6, "push to the ship, through its window into the cockpit"), (5.1, 6.1, 'push into the watch (camera roll)'),
+               (8.15, 8.3, 'match cut: watch -> home wall clock'), (9.2, 9.32, 'match cut: the window from inside -> from outside'),
+               (11.4, 12.6, 'capsule descent, landing, hatch'), (15.8, 15.92, 'cut: front door outside -> the room inside'),
+               (22.7, 23.1, 'push into the watch face, match cut to the ship window'), (0.0, 0.2, 'loop seam')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

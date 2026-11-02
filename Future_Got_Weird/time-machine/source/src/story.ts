@@ -15,9 +15,9 @@ import {DUR, keyS, lerp, ss, ss5, word} from './lib';
 import {astroReach, astroWatchLocal, HEAD_Y, HELMET, SHIP_WIN_EXPORT} from './rigs';
 import {orbitAngle, orbitPos} from './art/space';
 
-export type Cam = {x: number; y: number; z: number};
+export type Cam = {x: number; y: number; z: number; /** V3: optional roll about the screen centre (degrees) */ r?: number};
 export const SW = 1080, SH = 1920;
-export const camT = (c: Cam) => `translate(540 960) scale(${c.z}) translate(${-c.x} ${-c.y})`;
+export const camT = (c: Cam) => (c.r ? `translate(540 960) rotate(${c.r}) scale(${c.z}) translate(${-c.x} ${-c.y})` : `translate(540 960) scale(${c.z}) translate(${-c.x} ${-c.y})`);
 /** affine portal map: outer = o + s * (inner - q) */
 export type Map2 = {o: {x: number; y: number}; s: number; q: {x: number; y: number}};
 export const toInner = (c: Cam, m: Map2): Cam => ({x: m.q.x + (c.x - m.o.x) / m.s, y: m.q.y + (c.y - m.o.y) / m.s, z: c.z * m.s});

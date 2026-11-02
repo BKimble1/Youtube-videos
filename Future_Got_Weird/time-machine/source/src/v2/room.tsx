@@ -20,7 +20,7 @@ import React from 'react';
 import {mix, shade} from '../core/color';
 import {clamp, hash, noise1, ss} from '../lib';
 import {C, INK, OUT} from '../art/crew';
-import {Bust, GUESSER} from '../art/figures';
+import {Bust, GUESSER, HONEST} from '../art/figures';
 
 export type RoomRect = {x: number; y: number; w: number; h: number};
 export type RoomPt = {x: number; y: number};
@@ -488,7 +488,7 @@ const Flowers: React.FC<{x: number; y: number; ctx: Ctx}> = ({x, y, ctx}) => {
   );
 };
 
-const SideTable: React.FC<{ctx: Ctx}> = ({ctx}) => {
+const SideTable: React.FC<{ctx: Ctx; bare?: boolean}> = ({ctx, bare = false}) => {
   const {L, e, t} = ctx;
   const {cx, top, rx} = TABLE;
   const wood = L('#8A5A3B');
@@ -512,7 +512,7 @@ const SideTable: React.FC<{ctx: Ctx}> = ({ctx}) => {
       <ellipse cx={cx} cy={top} rx={rx} ry={12} fill={mix(wood, '#FFF7E6', 0.12)} stroke={INK} strokeWidth={OUT} />
       {e > 0.01 && <ellipse cx={cx} cy={top} rx={rx - 6} ry={8} fill={DUST} opacity={0.5 * e} />}
       {/* mug */}
-      <g>
+      {!bare && <g>
         <ellipse cx={mugX + 6} cy={top + 2} rx={22} ry={5} fill={C.shadow} />
         <path d={`M ${mugX + 14} ${top - 30} q 16 0 16 12 q 0 12 -16 12`} fill="none" stroke={INK} strokeWidth={9} />
         <path d={`M ${mugX + 14} ${top - 30} q 16 0 16 12 q 0 12 -16 12`} fill="none" stroke={mug} strokeWidth={4} />
@@ -530,13 +530,13 @@ const SideTable: React.FC<{ctx: Ctx}> = ({ctx}) => {
             );
           })}
         {e > 0.01 && <rect x={mugX - 18} y={top - 42} width={34} height={4} rx={2} fill={DUST} opacity={0.6 * e} />}
-      </g>
+      </g>}
       {/* vase and flowers */}
-      <Flowers x={vaseX} y={top - 58} ctx={ctx} />
+      {!bare && <g><Flowers x={vaseX} y={top - 58} ctx={ctx} />
       <ellipse cx={vaseX + 6} cy={top + 2} rx={26} ry={5} fill={C.shadow} />
       <path d={`M ${vaseX - 14} ${top} Q ${vaseX - 30} ${top - 26} ${vaseX - 12} ${top - 46} L ${vaseX - 9} ${top - 60} L ${vaseX + 9} ${top - 60} L ${vaseX + 12} ${top - 46} Q ${vaseX + 30} ${top - 26} ${vaseX + 14} ${top} Z`} fill={vase} stroke={INK} strokeWidth={3} strokeLinejoin="round" />
       <path d={`M ${vaseX + 6} ${top - 44} Q ${vaseX + 26} ${top - 26} ${vaseX + 12} ${top - 2} L ${vaseX + 4} ${top - 2} Q ${vaseX + 14} ${top - 24} ${vaseX + 2} ${top - 44} Z`} fill={shade(vase, 0.3)} />
-      <path d={`M ${vaseX - 14} ${top - 36} Q ${vaseX - 20} ${top - 24} ${vaseX - 14} ${top - 12}`} fill="none" stroke="#FFFFFF" strokeWidth={3} strokeLinecap="round" opacity={0.5} />
+      <path d={`M ${vaseX - 14} ${top - 36} Q ${vaseX - 20} ${top - 24} ${vaseX - 14} ${top - 12}`} fill="none" stroke="#FFFFFF" strokeWidth={3} strokeLinecap="round" opacity={0.5} /></g>}
       {/* fallen petals */}
       {e > 0.3 &&
         [
@@ -1092,6 +1092,98 @@ const Beam: React.FC<{e: number; t: number}> = ({e, t}) => {
 
 // ---------------------------------------------------------------------------------------------------------------------
 // the three photographs on the sideboard
+
+// =====================================================================================================================
+// V3: one memorial photograph on the side table (his parents, him, his friend - the day he left), a candle and a black
+// ribbon; and the doorway as the FRONT door, opening onto the garden (the caller draws the outside)
+// =====================================================================================================================
+/** V3 moves the side table this far (unmirrored room px) so his raised watch stays clear of the photograph */
+export const V3_DX = 150;
+/** V3: the armchair moves over with the side table (it stays clear of it) */
+const V3_CHAIR_DX = 60;
+const V3_FRAME: RoomRect = {x: TABLE.cx + V3_DX - 96, y: TABLE.top - 124, w: 156, h: 122};
+const V3_M = 11;
+const V3_PRINT: RoomRect = {x: V3_FRAME.x + V3_M, y: V3_FRAME.y + V3_M, w: V3_FRAME.w - 2 * V3_M, h: V3_FRAME.h - 2 * V3_M};
+const V3_PEOPLE: Person[] = [
+  {key: 'dad', x: 21, y: 44, s: 0.205, ...DAD},
+  {key: 'mom', x: 49, y: 49, s: 0.19, ...MOM},
+  {key: 'son', x: 78, y: 42, s: 0.205, ...SON},
+  {key: 'fr', x: 107, y: 44, s: 0.2, skin: HONEST.skin, hair: 'swoop', hairColor: HONEST.hair, age: 0.05, shirt: HONEST.shirt},
+];
+export const V3_PHOTO = {
+  frame: {...V3_FRAME}, print: {...V3_PRINT},
+  faces: V3_PEOPLE.map((p) => faceRoom(p, V3_PRINT)),
+  candle: {x: TABLE.cx + V3_DX + 50, y: TABLE.top - 2, h: 40},
+};
+const V3Print: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) => (
+  <g>
+    <rect x={0} y={0} width={w} height={h} fill="#BFE0F0" />
+    <circle cx={w * 0.82} cy={h * 0.12} r={8} fill="#FFF3C4" />
+    <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
+    {Array.from({length: 11}, (_, k) => (
+      <path key={k} d={`M ${k * 12 + 2} ${h * 0.66} L ${k * 12 + 2} ${h * 0.52} L ${k * 12 + 5} ${h * 0.48} L ${k * 12 + 8} ${h * 0.52} L ${k * 12 + 8} ${h * 0.66} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.1} />
+    ))}
+    {V3_PEOPLE.map((p) => <PhotoPerson key={p.key} p={p} id={`${id}-${p.key}`} />)}
+  </g>
+);
+const V3Memorial: React.FC<{ctx: Ctx; candle: number}> = ({ctx, candle}) => {
+  const {L, e, t, id} = ctx;
+  const Fr = V3_FRAME, Pr = V3_PRINT, Cn = V3_PHOTO.candle;
+  const wood = L('#7A5236');
+  const fl = 1 + 0.08 * Math.sin(t * 23) + 0.05 * Math.sin(t * 37);
+  return (
+    <g>
+      {/* easel strut shadow, the frame, the print under glass */}
+      <path d={`M ${Fr.x + Fr.w * 0.62} ${Fr.y + Fr.h} L ${Fr.x + Fr.w + 26} ${Fr.y + Fr.h + 6} L ${Fr.x + Fr.w * 0.7} ${Fr.y + Fr.h * 0.3} Z`} fill={C.shadow} opacity={0.5} />
+      <rect x={Fr.x} y={Fr.y} width={Fr.w} height={Fr.h} rx={4} fill={wood} stroke={INK} strokeWidth={OUT} />
+      <rect x={Fr.x + 4} y={Fr.y + 4} width={Fr.w - 8} height={5} fill={shade(wood, -0.2)} opacity={0.5} />
+      <clipPath id={`${id}-v3p`}><rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} /></clipPath>
+      <g clipPath={`url(#${id}-v3p)`}>
+        <g transform={`translate(${Pr.x} ${Pr.y})`}><V3Print id={`${id}-v3pr`} w={Pr.w} h={Pr.h} /></g>
+        {/* the print has faded a little; glass sheen */}
+        <rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} fill="#E8DCC4" opacity={0.12 + 0.1 * e} />
+        <path d={`M ${Pr.x + 18} ${Pr.y + Pr.h} L ${Pr.x + 58} ${Pr.y} L ${Pr.x + 74} ${Pr.y} L ${Pr.x + 34} ${Pr.y + Pr.h} Z`} fill="#FFFFFF" opacity={0.12} />
+      </g>
+      <rect x={Pr.x} y={Pr.y} width={Pr.w} height={Pr.h} fill="none" stroke={INK} strokeWidth={2.5} />
+      {/* black ribbon across the top-left corner */}
+      <path d={`M ${Fr.x} ${Fr.y + 30} L ${Fr.x + 30} ${Fr.y} L ${Fr.x + 46} ${Fr.y} L ${Fr.x} ${Fr.y + 46} Z`} fill="#1B1D22" stroke={INK} strokeWidth={2} />
+      {/* the candle */}
+      <ellipse cx={Cn.x} cy={Cn.y + 1} rx={16} ry={4} fill={C.shadow} />
+      <rect x={Cn.x - 9} y={Cn.y - Cn.h} width={18} height={Cn.h} rx={3} fill={L('#F4EEDC')} stroke={INK} strokeWidth={2.5} />
+      <path d={`M ${Cn.x - 9} ${Cn.y - Cn.h + 5} q 4 6 2 12`} fill="none" stroke={L('#E6DCC2')} strokeWidth={3} />
+      <line x1={Cn.x} y1={Cn.y - Cn.h} x2={Cn.x} y2={Cn.y - Cn.h - 6} stroke={INK} strokeWidth={2} />
+      {candle > 0.01 && (
+        <g opacity={candle}>
+          <circle cx={Cn.x} cy={Cn.y - Cn.h - 14} r={26} fill="#FFD98A" opacity={0.18} />
+          <path d={`M ${Cn.x} ${Cn.y - Cn.h - 4} q ${-7 * fl} ${-8 * fl} 0 ${-22 * fl} q ${7 * fl} ${14 * fl} 0 ${22 * fl} Z`} fill="#FFC24A" stroke={INK} strokeWidth={1.6} />
+          <path d={`M ${Cn.x} ${Cn.y - Cn.h - 5} q ${-3 * fl} ${-4 * fl} 0 ${-11 * fl} q ${3 * fl} ${7 * fl} 0 ${11 * fl} Z`} fill="#FFF3C4" />
+        </g>
+      )}
+    </g>
+  );
+};
+/** the front door seen from inside: closed (0) .. open (1) inward; `outside` (room coords) shows in the opening */
+const V3FrontDoor: React.FC<{ctx: Ctx; open: number; outside?: React.ReactNode}> = ({ctx, open, outside}) => {
+  const {L, id} = ctx;
+  const {x0, x1, y0} = DOOR;
+  const leaf = L('#B5523B');
+  const th = (Math.PI / 2) * 0.88 * clamp(open);
+  // hinged on its x0 edge, swinging into the room (toward us): the free edge moves outward and grows (nearer)
+  const fx = x0 + (x1 - x0) * Math.cos(th), grow = 1 + 0.22 * Math.sin(th);
+  const leafD = `M ${x0} ${y0} L ${fx} ${y0 - 24 * Math.sin(th)} L ${fx} ${F + 26 * Math.sin(th)} L ${x0} ${F} Z`;
+  void grow;
+  return (
+    <g>
+      <rect x={x0} y={y0} width={x1 - x0} height={F - y0} fill={L('#CFE6F2')} />
+      <clipPath id={`${id}-fdo`}><rect x={x0} y={y0} width={x1 - x0} height={F - y0} /></clipPath>
+      <g clipPath={`url(#${id}-fdo)`}>{outside}</g>
+      <DoorCasing ctx={ctx} />
+      <path d={leafD} fill={leaf} stroke={INK} strokeWidth={OUT} strokeLinejoin="round" />
+      {open < 0.6 && <circle cx={x0 + (fx - x0) * 0.86} cy={y0 + 300} r={7} fill={L(C.saffronDeep)} stroke={INK} strokeWidth={2} />}
+      {open < 0.7 && <path d={`M ${x0 + (fx - x0) * 0.14} ${y0 + 40} L ${x0 + (fx - x0) * 0.86} ${y0 + 40} L ${x0 + (fx - x0) * 0.86} ${y0 + 240} L ${x0 + (fx - x0) * 0.14} ${y0 + 240} Z`} fill={shade(leaf, 0.2)} stroke={INK} strokeWidth={2.5} />}
+    </g>
+  );
+};
 const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; reflOp: number}> = ({ctx, dustWipe, refl, reflOp}) => {
   const {e, id} = ctx;
   const FP = FAMILY_PRINT, FFr = FAMILY_FRAME, PP = PARENT_PRINT, PFr = PARENT_FRAME;
@@ -1311,7 +1403,9 @@ export const Room: React.FC<{
   reflOp?: number;
   /** 0..1: fades the window glass's tint, edge shadow and sheen (when the camera pushes through the glass) */
   glassFade?: number;
-}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, dustPuff, dustMax = 1, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0, glassFade = 0}) => {
+  /** V3: the memorial photo + candle on the side table (no sideboard photos) and the doorway as the front door */
+  v3?: {doorOpen: number; outside?: React.ReactNode; candle: number; photo?: boolean};
+}> = ({t, id, era, clockMinutes, clockBlur = 0, windowView, dustWipe = 0, dustPuff, dustMax = 1, photoView, photoTint = 0.35, photoGlass = 1, refl, reflOp = 0, glassFade = 0, v3}) => {
   const e = clamp(era);
   const ctx: Ctx = {e, t, id, L: (c: string) => lightCol(c, e)};
   return (
@@ -1319,16 +1413,17 @@ export const Room: React.FC<{
       <Wall ctx={ctx} />
       <Floor ctx={ctx} />
       <SunPatch e={e} />
-      <Doorway ctx={ctx} />
+      {v3 ? <V3FrontDoor ctx={ctx} open={v3.doorOpen} outside={v3.outside} /> : <Doorway ctx={ctx} />}
       <WallClock minutes={clockMinutes} blur={clockBlur} era={e} id={`${id}-clock`} />
       <Window ctx={ctx} view={windowView} glassFade={glassFade} />
       <Radiator ctx={ctx} />
       <Shelf ctx={ctx} />
       <Pendant ctx={ctx} />
       <Sideboard ctx={ctx} />
-      <Photos ctx={ctx} dustWipe={dustWipe} refl={refl} reflOp={reflOp} />
-      <Armchair cx={CHAIR_A.cx} color={CHAIR_A.color} ctx={ctx} which="A" />
-      <SideTable ctx={ctx} />
+      {!v3 && <Photos ctx={ctx} dustWipe={dustWipe} refl={refl} reflOp={reflOp} />}
+      <Armchair cx={CHAIR_A.cx + (v3 ? V3_CHAIR_DX : 0)} color={CHAIR_A.color} ctx={ctx} which="A" />
+      {v3 ? <g transform={`translate(${V3_DX} 0)`}><SideTable ctx={ctx} bare /></g> : <SideTable ctx={ctx} />}
+      {v3 && v3.photo !== false && <V3Memorial ctx={ctx} candle={v3.candle} />}
       <Armchair cx={CHAIR_B.cx} color={CHAIR_B.color} ctx={ctx} which="B" />
       <FloorLamp ctx={ctx} />
       <Beam e={e} t={t} />
