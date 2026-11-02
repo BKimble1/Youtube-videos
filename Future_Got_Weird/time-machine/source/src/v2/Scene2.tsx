@@ -172,8 +172,8 @@ function roomPresentWorld(t: number, k: string) {
         </g>
       )}
       {wb > 0.001 && (
-        <g transform={`translate(${St.FAM.x - 205 + 50 * wb} ${St.FAM.y + 260 - 170 * wb})`}>
-          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.3} rot={-6} />
+        <g transform={`translate(${St.FAM.x - 150 + 20 * wb} ${St.FAM.y + 230 - 105 * wb})`}>
+          <ForeArm minutes={661 + (t - 15) / 60} secBlur={0} id={`${k}wf`} s={0.3} rot={22} />
         </g>
       )}
     </g>

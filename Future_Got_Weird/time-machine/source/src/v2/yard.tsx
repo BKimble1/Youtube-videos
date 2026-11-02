@@ -543,7 +543,10 @@ const Home: React.FC<{D: number; sl: Season; t: number; id: string; doorOpen: nu
         const k = dm(Dr.x + 16, Dr.y0 + 162);
         return <circle cx={k.x} cy={k.y} r={6.5} fill={C.saffron} stroke={INK} strokeWidth={2.5} />;
       })()}
-      {peel > 0.01 && <path d={dq(Dr.x + 20, Dr.y1 - 70, Dr.x + 44, Dr.y1 - 40)} fill={shade(door, -0.3)} opacity={peel * 0.6} />}
+      {peel > 0.01 && (() => {
+        const q = [[Dr.x + 22, Dr.y1 - 66], [Dr.x + 38, Dr.y1 - 72], [Dr.x + 46, Dr.y1 - 58], [Dr.x + 40, Dr.y1 - 44], [Dr.x + 26, Dr.y1 - 46]].map(([x, y]) => dm(x, y));
+        return <path d={`M ${q.map((p) => `${f1(p.x)} ${f1(p.y)}`).join(' L ')} Z`} fill={mix(door, '#E8D9C4', 0.45)} stroke={shade(door, 0.3)} strokeWidth={1.6} strokeLinejoin="round" opacity={peel * 0.75} />;
+      })()}
       {/* porch canopy */}
       <rect x={Dr.x - 26} y={Dr.y0 - 18} width={14} height={30} fill={trimSh} stroke={INK} strokeWidth={2.5} />
       <rect x={Dr.x + Dr.w + 12} y={Dr.y0 - 18} width={14} height={30} fill={trimSh} stroke={INK} strokeWidth={2.5} />
@@ -1029,9 +1032,9 @@ export const Yard: React.FC<{D: number; season: number; t: number; id: string; g
       {[[-300, 140, 1.2], [520, -160, 0.9], [1250, 250, 1.35], [1950, 30, 1.0], [2650, 290, 1.15], [900, -480, 1.1], [-900, -260, 1.0], [3300, -120, 1.1]].map(([cx, cy, s], k) => (
         <Cloud key={k} x={wrapR(cx + t * (10 + 4 * (k % 3)), WX0, WX1)} y={cy} s={s} />
       ))}
-      {pods > 0.01 && [[300, 120, 0.7, C.coral], [700, -160, 0.55, C.saffron], [-200, 90, 0.85, C.teal], [500, 70, 0.5, C.blue], [880, 140, 0.65, C.coral]].map(([y, sp, s, c], k) => (
+      {pods > 0.01 && ([[650, 300, 120, 0.7, C.coral], [1550, 620, -160, 0.55, C.saffron], [1150, -150, 90, 0.85, C.teal], [1850, 480, 70, 0.5, C.blue], [300, 820, 140, 0.6, C.coral], [-700, 160, -110, 0.75, C.teal], [2700, 40, 100, 0.65, C.saffron]] as [number, number, number, number, string][]).map(([x0, y, sp, s, c], k) => (
         <g key={k} opacity={pods}>
-          <Pod x={wrapR(-600 + k * 900 + t * (sp as number), WX0, WX1)} y={y as number} s={s as number} c={c as string} dir={(sp as number) > 0 ? 1 : -1} />
+          <Pod x={wrapR(x0 + t * sp, WX0, WX1)} y={y} s={s} c={c} dir={sp > 0 ? 1 : -1} />
         </g>
       ))}
       <g opacity={0.82}>{SKY_MID.map((b, i) => <Building key={i} b={b} f={fSky} base={HB - 60} detail={0.7} light={light} />)}</g>

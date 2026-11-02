@@ -141,10 +141,11 @@ export const camRoomOwn = (t: number): Cam =>
     [V2.reach, {x: 1150, y: 1120, z: 1.25}],
     [V2.dustWipe + 0.2, {x: 1235, y: 1130, z: 1.9}],
     [V2.faceTurn + 0.25, {x: (HEAD_R.x + FAM.x) / 2 + 10, y: HEAD_R.y + 30, z: 2.05}],
-    [V2.photoClose, {x: FAM.x + 30, y: FAM.y - 6, z: 3.9}],
-    [V2.watchBeside, {x: FAM.x + 40, y: FAM.y - 4, z: 4.35}],
-    [V2.photoMove, {x: FAM.x + 40, y: FAM.y, z: 2.9}],
-    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.2}],
+    [V2.photoClose, {x: FAM.x + 6, y: FAM.y - 4, z: 3.85}],
+    [V2.watchBeside - 0.4, {x: ROOM.photoFamily.reflSpot.x - 46, y: FAM.y - 8, z: 4.7}],
+    [V2.watchBeside + 0.3, {x: FAM.x - 10, y: FAM.y + 34, z: 4.0}],
+    [V2.photoMove, {x: FAM.x + 50, y: FAM.y + 10, z: 3.6}],
+    [V2.photoPush, {x: (FAM.x + FRI.x) / 2 + 80, y: FRI.y, z: 3.55}],
     [DUR - 1 / 30, {x: FRI.x, y: FRI.y, z: Z_PRINT}, 'stop'],
   ]);
 /** the print's tint and glass fade out as it fills the frame (the last frame equals frame 0) */

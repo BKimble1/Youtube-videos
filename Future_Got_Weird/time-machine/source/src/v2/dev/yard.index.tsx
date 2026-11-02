@@ -197,6 +197,15 @@ const Ages: React.FC = () => {
   );
 };
 
+/** looking up over the street (the capsule descent): towers, pods and clouds above the house, D 1 */
+const Sky: React.FC = () => (
+  <Svg>
+    <Cam x={YARD.street.landX + 200} y={700} z={0.9}>
+      <Yard D={1} season={0.3} t={1.5} id="ysk" />
+    </Cam>
+  </Svg>
+);
+
 const Root: React.FC = () => (
   <>
     <Composition id="YardD0" component={Wide} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{D: 0, season: 0.1}} />
@@ -211,6 +220,7 @@ const Root: React.FC = () => (
     <Composition id="YardSeasons" component={Seasons} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="YardStreet" component={Street} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="YardAges" component={Ages} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="YardSky" component={Sky} durationInFrames={1} fps={30} width={1080} height={1920} />
   </>
 );
 registerRoot(Root);
