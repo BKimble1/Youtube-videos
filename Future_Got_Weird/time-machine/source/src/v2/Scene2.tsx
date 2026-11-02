@@ -12,12 +12,12 @@ import {TwoShot, TS} from './twoShot';
 import {Capsule2, Trail} from './craft';
 import {Cockpit, CockpitFront, COCKPIT_ASTRO, ForeArm, cockpitBhT, cockpitBhUrls} from './cockpit';
 import {cockpitPoseAt, forearmAt, secBlurAtT, watchMinutesAt} from './cockpitShot';
-import {Astronaut, GLOVE} from '../art/figures';
+import {Astronaut, Friend, GLOVE} from '../art/figures';
 import {useImages} from './preload';
 import {Captions2} from './Captions2';
 import {CAPTIONS} from '../lib';
 import {Expr} from '../art/crew';
-import {HookBackground} from './backgrounds';
+import {HookBackground, YardWorld, YardFore} from './backgrounds';
 import {Room, ROOM} from './room';
 import {walkFeet, walkBob} from './walk';
 import {Head} from '../art/crew';
@@ -180,6 +180,104 @@ function yardPresentView(t: number, k: string) {
   return <rect x={ROOM.win.x0} y={ROOM.win.y0} width={ROOM.win.w} height={ROOM.win.h} fill="#A8D8E6" />;
 }
 
+// ---- 6-9: the yard: decades, the return, the reunion, the way to the door ------------------------------------------------
+function decadesWorld(t: number, k: string) {
+  const f = St.friendYard(t);
+  const st = St.yardStage(t);
+  const e: Expr = st === 0 ? {mouth: 'soft', lookX: 0.2, lookY: lerp(0.1, -0.9, ss(t, V2.windowCover + 0.15, V2.windowCover + 0.45))} : st === 1 ? {mouth: 'flat', lookX: 0.6, lookY: 0.1} : {mouth: 'soft', lookX: -0.6, lookY: lerp(0.1, -1, ss(t, V2.lookUp, V2.lookUp + 0.2))};
+  return (
+    <g>
+      <YardWorld D={St.yardD(t)} season={St.yardSeason(t)} t={t} id={`${k}yd`} />
+      <g transform={`translate(${f.x} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={f.age} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e, walk: f.walk, stride: f.stride}} id={`${k}fr`} facing={st === 1 ? 1 : -1} green />
+      </g>
+    </g>
+  );
+}
+function returnWorld(t: number, k: string) {
+  const cap = St.capsuleYard(t);
+  const look = ss(t, V2.lookUp, V2.lookUp + 0.2);
+  const follow = ss(t, V2.descentStart + 0.3, V2.landing);
+  const meet = ss(t, V2.stepDown, V2.arrive);
+  const fe: Expr = {mouth: meet > 0.5 ? 'o' : 'soft', open: 0.3, lookX: lerp(-0.6, -0.9, follow), lookY: lerp(lerp(0.1, -1, look), 0.15, follow), wide: 0.5 * meet, brows: 0.6 * meet};
+  const ax = St.astroReturnX(t);
+  const out = t >= V2.stepOut - 0.12;
+  const walking = t > V2.stepDown && t < V2.arrive;
+  const dist = (ax - St.HATCH_W.x) / St.YS;
+  const ae: Expr = {lookX: lerp(0.3, 0.8, meet), lookY: lerp(-0.4, 0.05, ss(t, V2.stepDown, V2.walkToFriend)), wide: 0.35, brows: 0.4 * (1 - meet) + 0.2, mouth: 'soft', turn: 0.2};
+  const H = St.HATCH_W;
+  return (
+    <g>
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} />
+      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={1} pose={{armL: {a: 8, b: 10}, armR: {a: 8, b: 10}, e: fe}} id={`${k}fr`} facing={-1} green />
+      </g>
+      {out && (
+        <g>
+          <clipPath id={`${k}hc`}><ellipse cx={H.x} cy={H.y} rx={H.rx} ry={H.ry} /><rect x={H.x + H.rx * 0.2} y={-4000} width={8000} height={8000} /></clipPath>
+          <g clipPath={t < V2.stepDown + 0.1 ? `url(#${k}hc)` : undefined}>
+            <g transform={`translate(${ax} ${St.astroReturnFeet(t)}) scale(${St.YS})`}>
+              <Astronaut pose={{armL: {a: 10, b: 14}, armR: {a: 10, b: 14}, e: ae}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(walking ? dist : 0, walking ? 1 : 0)} />
+            </g>
+          </g>
+        </g>
+      )}
+      <g transform={`translate(${cap.x} ${cap.y}) scale(${St.CAP_S})`}>
+        <Capsule2 t={t} id={`${k}cap`} retro={cap.retro} legs={cap.legs} hatch={cap.hatch} />
+      </g>
+    </g>
+  );
+}
+const reunionAstroE = (t: number): Expr => {
+  const search = ss(t, V2.search, V2.recognise);
+  const rec = ss(t, V2.recognise, V2.recognise + 0.2);
+  const hands = ss(t, V2.toHands, V2.toHands + 0.2);
+  const sacc = search * (1 - rec) * Math.sin((t - V2.search) * 20) * 0.18;
+  return {
+    lookX: lerp(0.7 + sacc, 0.45, hands), lookY: lerp(-0.05 + sacc * 0.5, 0.9, hands), wide: lerp(0.45 * search, 0.1, rec) + 0.15 * (1 - hands),
+    brows: lerp(0.3 * search, 0.55, rec) * (1 - 0.5 * hands), sad: 0.5 * hands, mouth: rec > 0.5 && hands < 0.5 ? 'soft' : hands > 0.5 ? 'flat' : 'o', open: 0.25, blink: t > 13.92 && t < 13.99 ? 0.12 : 1,
+  };
+};
+const reunionFriendE = (t: number): Expr => ({mouth: t > V2.recognise - 0.1 ? 'smile' : 'soft', lookX: -0.7, lookY: lerp(0, 0.6, ss(t, V2.toHands + 0.1, V2.toHands + 0.35)), brows: 0.15, sad: 0.25});
+function reunionWorld(t: number, k: string) {
+  const u = ss(t, V2.arrive - 0.05, V2.clasp);
+  return (
+    <g>
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} />
+      <TwoShot age={1} id={`${k}ts`} frame={Math.round(t * 30)} clasp={u} squeeze={ss(t, V2.recognise, V2.recognise + 0.3) * 0.7} astroE={reunionAstroE(t)} friendE={reunionFriendE(t)} />
+    </g>
+  );
+}
+function doorWorld(t: number, k: string) {
+  const g = ss(t, V2.gesture, V2.gesture + 0.22);
+  const ax = St.astroDoorX(t);
+  const walking = t > V2.walkStart;
+  const dist = (ax - TS.ax) / St.YS;
+  const gestureArm = {a: lerp(30, 72, g), b: lerp(30, 10, g)};
+  const fe: Expr = {mouth: 'soft', lookX: lerp(-0.7, 0.8, g), lookY: -0.1, turn: 0.3 * g, brows: 0.15, sad: 0.2};
+  const ae: Expr = {lookX: lerp(0.45, 0.95, ss(t, V2.gesture + 0.08, V2.gesture + 0.3)), lookY: lerp(0.8, 0, ss(t, V2.gesture, V2.gesture + 0.25)), turn: 0.35 * ss(t, V2.gesture + 0.1, V2.walkStart), sad: 0.35, brows: 0.25, mouth: 'flat'};
+  const swing = walking ? Math.sin((Math.PI * dist) / 58) * 14 : 0;
+  return (
+    <g>
+      <YardWorld D={1} season={0.16} t={t} id={`${k}yd`} doorOpen={ss(t, V2.walkStart, V2.doorPass)} />
+      <g transform={`translate(${TS.fx} ${St.FEET}) scale(${St.YS})`}>
+        <Friend age={1} pose={{armL: {a: 10, b: 14}, armR: gestureArm, e: fe}} id={`${k}fr`} facing={-1} green />
+      </g>
+      <g transform={`translate(${ax} ${St.FEET}) scale(${St.YS})`}>
+        <Astronaut pose={{armL: {a: 10 + swing, b: 16}, armR: {a: 10 - swing, b: 16}, e: ae, bob: walkBob(dist, walking ? 1 : 0)}} id={`${k}as`} frame={Math.round(t * 30)} glove={GLOVE} watchEl={() => null} feet={walkFeet(dist, walking ? 1 : 0)} />
+      </g>
+    </g>
+  );
+}
+/** the doorframe passing across the lens: yard on the left of the jamb, the room on the right */
+const Jamb: React.FC<{x: number}> = ({x}) => (
+  <g>
+    <rect x={x - 18} y={-20} width={120} height={1960} fill="#E9DCC3" stroke="#162A32" strokeWidth={6} />
+    <rect x={x + 26} y={-20} width={40} height={1960} fill="#C9B79A" />
+    <rect x={x - 30} y={-20} width={30} height={1960} fill="#F4EEE2" stroke="#162A32" strokeWidth={6} />
+  </g>
+);
+
 // ---- captions: heights clear of faces, hands, the watch and the photographs ------------------------------------------------
 const capY = (_i: number) => 1716;
 const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : CAPTIONS[i].hide);
@@ -187,6 +285,7 @@ const capHide = (i: number) => (i === CAPTIONS.length - 1 ? 22.3 : CAPTIONS[i].h
 export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({t, fkey, captions}) => {
   resetIds(fkey);
   let body: React.ReactNode = null;
+  let overlay: React.ReactNode = null;
   const urls: string[] = [];
   if (t < V2.spaceCut) {
     body = W(St.camHook(t), hookWorld(t, 'A'));
@@ -199,16 +298,35 @@ export const Scene2: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     body = W(St.camCockpit(t), cockpitWorld(t, 'C'));
   } else if (t < V2.windowCover) {
     body = W(St.camRoomPast(t), roomPastWorld(t, 'D'));
+  } else if (t < V2.lightPass) {
+    body = W(St.camDecades(t), decadesWorld(t, 'E'));
+    overlay = <YardFore t={t} camX={St.camDecades(t).x} />;
+  } else if (t < V2.arrive) {
+    body = W(St.camReturn(t), t < V2.descentStart ? decadesWorld(t, 'E') : returnWorld(t, 'G'));
+  } else if (t < V2.gesture) {
+    body = W(St.camReturn(t), reunionWorld(t, 'H'));
   } else if (t < V2.doorPass) {
-    body = <rect width={1080} height={1920} fill="#333" />;
+    body = W(St.camDoor(t), doorWorld(t, 'I'));
+  } else if (t < V2.doorPassEnd) {
+    const xj = St.jambX(t);
+    body = (
+      <g>
+        <clipPath id="jl"><rect x={-10} y={-10} width={xj + 10} height={1940} /></clipPath>
+        <clipPath id="jr"><rect x={xj} y={-10} width={1200} height={1940} /></clipPath>
+        <g clipPath="url(#jl)">{W(St.camDoor(t), doorWorld(t, 'I'))}</g>
+        <g clipPath="url(#jr)">{W(St.camRoom(t), roomPresentWorld(t, 'F'))}</g>
+        <Jamb x={xj} />
+      </g>
+    );
   } else {
-    body = W(St.camRoomOwn(t), roomPresentWorld(t, 'F'));
+    body = W(St.camRoom(t), roomPresentWorld(t, 'F'));
   }
   useImages(urls);
   return (
     <>
       <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
         {body}
+        {overlay}
       </svg>
       {captions && <Captions2 t={t} y={capY} hide={capHide} />}
     </>

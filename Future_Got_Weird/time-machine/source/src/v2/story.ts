@@ -124,7 +124,7 @@ export const homeClockBlur = (t: number) => ss(t, V2.matchCut + 0.08, V2.matchCu
 export const RS = ROOM.figScale; // astronaut scale in the room
 export const ROOM_STOP_X = 1080;
 /** his x in the room: walking in (continuing his walk from the yard, left to right), slowing to a stop by the sideboard */
-export const roomAstroX = (t: number) => keyS(t, [[V2.doorPass, 470], [V2.roomStop, ROOM_STOP_X]], (x) => 1 - (1 - x) * (1 - x) * (1 - 0.35 * x));
+export const roomAstroX = (t: number) => keyS(t, [[V2.doorPass - 0.3, 470 - 330], [V2.roomStop, ROOM_STOP_X]], (x) => 1 - (1 - x) * (1 - x) * (1 - 0.35 * x));
 export const roomWalking = (t: number) => t < V2.roomStop - 0.05;
 /** the wipe across the family photo's glass: 0..WIPE_MAX of ROOM.wipe (his reach) */
 export const WIPE_MAX = 0.62;
@@ -152,3 +152,101 @@ export const printTint = (t: number) => 0.35 * (1 - ss(t, V2.photoPush + 0.6, DU
 export const printGlass = (t: number) => 1 - ss(t, V2.photoPush + 0.5, DUR - 1 / 30 - 0.2);
 /** his reflection on the family photo's glass */
 export const reflOpRoom = (t: number) => 0.55 * ss(t, V2.photoClose - 0.2, V2.photoClose + 0.5) * (1 - ss(t, V2.photoMove, V2.photoMove + 0.4));
+
+// ---- 6: decades in the yard ---------------------------------------------------------------------------------------------
+// The camera trucks right across the same yard; the foreground trunk and leaves pass the lens and hide each jump.
+export const YS = TS.s; // figure scale in the yard (as the two-shot)
+export const FEET = TS.feet;
+export const C_A: Cam = {x: 1010, y: 1330, z: 1.62};
+/** stage of the friend's life: 0 young (spring), 1 middle-aged (autumn), 2 elderly (winter -> spring) */
+export const yardStage = (t: number) => (t < V2.wipe1 ? 0 : t < V2.wipe2 ? 1 : 2);
+export const yardD = (t: number) => [0.04, 0.5, 1][yardStage(t)];
+export const yardSeason = (t: number) => {
+  const st = yardStage(t);
+  if (st === 0) return lerp(0.03, 0.22, ss(t, V2.windowCover, V2.wipe1));
+  if (st === 1) return lerp(0.5, 0.64, ss(t, V2.wipe1, V2.wipe2));
+  return ((lerp(0.82, 1.14, ss(t, V2.wipe2, V2.wipe2 + 0.7)) % 1) + 1) % 1; // winter melting into the spring of his return
+};
+/** the friend through the decades: age, x, walking */
+export const friendYard = (t: number) => {
+  const st = yardStage(t);
+  if (st === 0) return {age: 0.06 + 0.04 * ss(t, V2.windowCover, V2.wipe1), x: 960, walk: 0, stride: 0};
+  if (st === 1) {
+    const u = ss(t, V2.wipe1 + 0.02, V2.wipe2 - 0.02);
+    return {age: 0.48 + 0.06 * u, x: lerp(1030, 1170, u), walk: (lerp(1030, 1170, u) - 1030) / (YS * 58) * Math.PI, stride: 1};
+  }
+  return {age: 1, x: TS.fx, walk: 0, stride: 0};
+};
+
+// ---- 7: the return ----------------------------------------------------------------------------------------------------
+export const CAP_S = 0.93; // capsule scale in the yard (height ~560 px; hatch ~310 px for a ~300 px astronaut)
+export const LAND = {x: 850, y: FEET + 62};
+/** capsule height above its landing spot: falls on retro jets, decelerating into the landing */
+export const capsuleYard = (t: number) => {
+  const u = clamp((t - V2.descentStart) / (V2.landing - V2.descentStart));
+  const y = lerp(LAND.y - 2300, LAND.y, 1 - (1 - u) * (1 - u) * (1 - u) * 0.15 - (1 - u) * (1 - u) * 0.85);
+  return {x: LAND.x, y: t < V2.descentStart ? LAND.y - 2600 : y, retro: t < V2.landing ? 1 : 1 - ss(t, V2.landing, V2.landing + 0.25), legs: ss(t, V2.landing - 0.5, V2.landing - 0.15), hatch: ss(t, V2.hatch, V2.hatch + 0.2)};
+};
+export const HATCH_W = {x: LAND.x + CAPSULE2.hatch.x * CAP_S, y: LAND.y + CAPSULE2.hatch.y * CAP_S, rx: CAPSULE2.hatch.rx * CAP_S, ry: CAPSULE2.hatch.ry * CAP_S};
+/** the astronaut steps out of the hatch, down to the pavement, and walks to his friend (feet y follows the ground) */
+export const astroReturnX = (t: number) => keyS(t, [[V2.stepOut, HATCH_W.x - 10], [V2.stepDown, HATCH_W.x + 70], [V2.arrive, TS.ax]], (x) => x * x * (3 - 2 * x));
+export const astroReturnFeet = (t: number) => lerp(LAND.y + CAPSULE2.sill * CAP_S + 6, FEET, ss(t, V2.stepOut + 0.05, V2.walkToFriend + 0.1));
+export const camReturn = (t: number): Cam => {
+  const cy = capsuleYard(t).y;
+  return keyCam(t, [
+    [V2.lightPass, {x: 1240, y: 1330, z: 1.5}],
+    [V2.lookUp + 0.45, {x: 1150, y: 640, z: 1.05}],
+    [12.05, {x: 1060, y: Math.min(1340, cy - 260), z: 1.02}],
+    [V2.landing + 0.1, {x: 1030, y: 1345, z: 1.05}],
+    [V2.walkToFriend, {x: 1060, y: 1345, z: 1.12}],
+    [V2.clasp + 0.05, CAM_CLOSE],
+  ]);
+};
+
+// ---- 9: to the door -------------------------------------------------------------------------------------------------------
+export const astroDoorX = (t: number) => keyS(t, [[V2.walkStart, TS.ax], [V2.doorPassEnd, 1430]], (x) => x * (1.6 - 0.6 * x));
+export const camDoor = (t: number): Cam => {
+  const ax = astroDoorX(t);
+  return keyCam(t, [
+    [V2.gesture, CAM_CLOSE],
+    [V2.walkStart, {...CAM_CLOSE, x: CAM_CLOSE.x + 6}],
+    [V2.doorPass, {x: ax + 34, y: FEET - 168, z: 2.7}],
+    [V2.doorPassEnd, {x: ax + 40, y: FEET - 168, z: 2.6}],
+  ]);
+};
+/** the doorframe wipe: the jamb's screen x (it crosses the lens right to left as the camera passes the doorway) */
+export const jambX = (t: number) => lerp(1200, -140, ss(t, V2.doorPass, V2.doorPassEnd));
+/** the room camera that puts him at the same screen place and size as in the yard during the wipe */
+export const camRoomMatched = (t: number): Cam => {
+  const cy = camDoor(t);
+  const ax = astroDoorX(t);
+  const sx = 540 + cy.z * (ax - cy.x), sy = 960 + cy.z * (FEET - cy.y);
+  const z = (YS * cy.z) / RS;
+  const rx = roomAstroX(t);
+  return {x: rx - (sx - 540) / z, y: ROOM.floor - (sy - 960) / z, z};
+};
+export const camRoom = (t: number): Cam => (t < V2.doorPassEnd ? camRoomMatched(t) : mixCam(camRoomMatched(t), camRoomOwn(t), ss(t, V2.doorPassEnd, V2.doorPassEnd + 0.35)));
+
+// ---- sound cues (tools/export_cues_v2.ts) ---------------------------------------------------------------------------
+import {footfalls} from './walk';
+export const FRIEND_STEPS = footfalls((t) => friendYard(t).x, V2.wipe1 + 0.02, V2.wipe2 - 0.02, YS);
+export const ASTRO_STEPS = [V2.stepDown, ...footfalls(astroReturnX, V2.stepDown + 0.05, V2.arrive, YS)];
+export const DOOR_STEPS = footfalls(astroDoorX, V2.walkStart, V2.doorPassEnd, YS);
+export const ROOM_STEPS = footfalls(roomAstroX, V2.doorPassEnd, V2.roomStop, RS);
+/** the capsule's screen side through the flight (-1 left .. 1 right) */
+export const capsulePanTrack = () => {
+  const out: [number, number][] = [];
+  for (let t = V2.flightStart; t <= V2.windowPass; t += 0.05) {
+    const c = capsuleSpace(t), cam = camSpace(t);
+    out.push([Math.round(t * 100) / 100, Math.max(-1, Math.min(1, (c.x - cam.x) * cam.z / 540))]);
+  }
+  return out;
+};
+export const descentPanTrack = (): [number, number][] => [[V2.descentStart, -0.35], [V2.landing, -0.3]];
+
+// ---- decades camera: trucks right; wipes at V2.wipe1 / V2.wipe2 (aligned to the foreground cover once the yard exists)
+export const camDecades = (t: number): Cam =>
+  keyCam(t, [
+    [V2.windowCover, C_A],
+    [11.25, {x: 1240, y: 1330, z: 1.5}],
+  ]);

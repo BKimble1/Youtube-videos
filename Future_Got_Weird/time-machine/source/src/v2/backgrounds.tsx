@@ -20,3 +20,16 @@ export const HookBackground: React.FC<{D: number; t: number; id: string}> = ({D,
     </g>
   );
 };
+
+/** provisional yard (until the yard module is wired): sky, skyline, lawn, a house and a tree */
+export const YardWorld: React.FC<{D: number; season: number; t: number; id: string; doorOpen?: number}> = ({D, t, id}) => (
+  <g>
+    <HookBackground D={D} t={t} id={id} />
+    <rect x={1330} y={900} width={650} height={730} fill="#D9E3EE" stroke={INK} strokeWidth={4} />
+    <rect x={1385} y={1330} width={130} height={300} fill="#7A4E3A" stroke={INK} strokeWidth={4} />
+    <rect x={820} y={1100} width={60} height={530} fill="#8A5A3B" stroke={INK} strokeWidth={4} />
+    <circle cx={850} cy={1050} r={200 + 100 * D} fill="#6FB36A" stroke={INK} strokeWidth={4} />
+    <rect x={0} y={1640} width={3000} height={500} fill="#6E7884" />
+  </g>
+);
+export const YardFore: React.FC<{t: number; camX: number}> = () => null;

@@ -44,16 +44,16 @@ const WIN_CASING = 22;
 const SILL = {x0: 600, x1: 1060, y0: 1200, y1: 1224};
 const CURTAIN = {rodY: 634, x0: 560, x1: 1100, left: [566, 676] as [number, number], right: [984, 1094] as [number, number], bottom: 1274};
 const DOOR = {x0: -200, x1: 60, y0: 830, y1: F, casing: 26};
-const SB = {x0: 1150, x1: 1740, topBack: 1234, topFront: 1252, edge: 1268, body1: 1500, y1: F};
+const SB = {x0: 1146, x1: 1736, topBack: 1234, topFront: 1252, edge: 1268, body1: 1500, y1: F};
 const SHELF = {x0: 1220, x1: 1680, y: 760, h: 18};
 
-const FAMILY_FRAME: RoomRect = {x: 1166, y: 1058, w: 244, h: 192};
+const FAMILY_FRAME: RoomRect = {x: 1162, y: 1058, w: 262, h: 192};
 const FAMILY_M = 16;
 const FAMILY_PRINT: RoomRect = {x: FAMILY_FRAME.x + FAMILY_M, y: FAMILY_FRAME.y + FAMILY_M, w: FAMILY_FRAME.w - 2 * FAMILY_M, h: FAMILY_FRAME.h - 2 * FAMILY_M};
-const PARENT_FRAME: RoomRect = {x: 1422, y: 1078, w: 126, h: 162};
+const PARENT_FRAME: RoomRect = {x: 1434, y: 1078, w: 116, h: 162};
 const PARENT_M = 13;
 const PARENT_PRINT: RoomRect = {x: PARENT_FRAME.x + PARENT_M, y: PARENT_FRAME.y + PARENT_M, w: PARENT_FRAME.w - 2 * PARENT_M, h: PARENT_FRAME.h - 2 * PARENT_M};
-const FRIEND_PRINT: RoomRect = {x: 1572, y: 974, w: 144, h: 256}; // 144 * 16 / 9 = 256 exactly
+const FRIEND_PRINT: RoomRect = {x: 1568, y: 974, w: 144, h: 256}; // 144 * 16 / 9 = 256 exactly
 const FRIEND_M = 10;
 const FRIEND_FRAME: RoomRect = {x: FRIEND_PRINT.x - FRIEND_M, y: FRIEND_PRINT.y - FRIEND_M, w: FRIEND_PRINT.w + 2 * FRIEND_M, h: FRIEND_PRINT.h + 2 * FRIEND_M};
 
@@ -65,15 +65,15 @@ const MOM: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob'
 const SON: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: GUESSER.skin, hair: 'spiky', hairColor: RED, age: 0, shirt: '#FFFFFF', stripes: C.saffron};
 const SIS: Omit<Person, 'x' | 'y' | 's' | 'key'> = {skin: '#F7D9C4', hair: 'bob', hairColor: RED, age: 0, shirt: C.teal};
 const FAMILY: Person[] = [
-  {key: 'dad', x: 44, y: 62, s: 0.44, ...DAD},
-  {key: 'mom', x: 101, y: 73, s: 0.41, ...MOM},
-  {key: 'son', x: 162, y: 61, s: 0.44, ...SON},
-  {key: 'sis', x: 131, y: 117, s: 0.3, ...SIS},
+  {key: 'dad', x: 36, y: 62, s: 0.44, ...DAD},
+  {key: 'mom', x: 92, y: 73, s: 0.41, ...MOM},
+  {key: 'son', x: 148, y: 61, s: 0.44, ...SON},
+  {key: 'sis', x: 121, y: 117, s: 0.3, ...SIS},
 ];
-const PARENT: Person = {key: 'dadp', x: 50, y: 60, s: 0.5, ...DAD};
+const PARENT: Person = {key: 'dadp', x: 45, y: 60, s: 0.48, ...DAD};
 
 /** the glove's wipe across the family photo: a quadratic through from -> via -> to; the clean streak is `width` wide */
-const WIPE = {from: {x: 1156, y: 1106}, via: {x: 1288, y: 1121}, to: {x: 1420, y: 1141}, width: 66};
+const WIPE = {from: {x: 1150, y: 1127}, via: {x: 1292, y: 1138}, to: {x: 1434, y: 1150}, width: 66};
 /** glove contact point on the family photo at wipe progress u (0..1) */
 export const wipeAt = (u: number): RoomPt => {
   const k = clamp(u);
@@ -109,7 +109,9 @@ export const ROOM = {
   sideboard: {x0: SB.x0, x1: SB.x1, w: SB.x1 - SB.x0, topBack: SB.topBack, topFront: SB.topFront, edge: SB.edge, y1: F},
   shelf: {...SHELF},
   /** family photo: frame outer rect (x, y, w, h), its glass (= print) rect, and the face centres (room px, radius) */
-  photoFamily: {...FAMILY_FRAME, glass: {...FAMILY_PRINT}, print: {...FAMILY_PRINT}, faces: FAMILY.map((p) => faceRoom(p, FAMILY_PRINT))},
+  photoFamily: {...FAMILY_FRAME, glass: {...FAMILY_PRINT}, print: {...FAMILY_PRINT}, faces: FAMILY.map((p) => faceRoom(p, FAMILY_PRINT)),
+    /** suggested centre / radius for his reflected face: over the dark hedge beside the family (head radius as the family's) */
+    reflSpot: {x: FAMILY_PRINT.x + FAMILY_PRINT.w - 28, y: FAMILY_PRINT.y + 64, r: 62 * 0.44}},
   /** father's portrait: frame rect, print rect, ribbon corner (top right) */
   photoParent: {...PARENT_FRAME, print: {...PARENT_PRINT}, face: faceRoom(PARENT, PARENT_PRINT), ribbonCorner: {x: PARENT_FRAME.x + PARENT_FRAME.w, y: PARENT_FRAME.y}},
   /** pre-departure 9:16 print: frame rect and print rect (h = w * 16 / 9 exactly); photoView is a 1080x1920 frame scaled by printScale */
@@ -133,7 +135,7 @@ const DUST_GLASS = '#E2DED6';
 const lightCol = (c: string, e: number) => {
   const warm = mix(c, '#FFE9C2', 0.05);
   if (e <= 0.001) return warm;
-  const cool = mix(mix(c, '#A6A39C', 0.26), '#3E4D66', 0.2);
+  const cool = mix(mix(c, '#A6A39C', 0.24), '#3E4D66', 0.25);
   return mix(warm, cool, e);
 };
 const rr = (x: number, y: number, w: number, h: number, r: number) =>
@@ -170,6 +172,7 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
   const L = (c: string) => lightCol(c, e);
   const b = clamp(blur);
   const R = r;
+  const k = R / CLOCK.r; // line weights scale with the clock (OUT at the room's own size)
   const face = R * 0.82;
   const rim = L('#C94A36');
   const faceC = L(mix('#FFF8E8', '#EFE2C2', 0.55 * e));
@@ -184,15 +187,15 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
       {/* cast shadow on the wall */}
       <circle cx={R * 0.1} cy={R * 0.13} r={R} fill={C.shadow} />
       {/* rim: red, a lighter rolled edge upper-left, one shadow crescent lower-right */}
-      <circle r={R} fill={rim} stroke={INK} strokeWidth={OUT} />
-      <clipPath id={`${id}-rim`}><circle r={R - 2} /></clipPath>
+      <circle r={R} fill={rim} stroke={INK} strokeWidth={OUT * k} />
+      <clipPath id={`${id}-rim`}><circle r={R - 2 * k} /></clipPath>
       <g clipPath={`url(#${id}-rim)`}>
         <circle r={R} fill={shade(rim, 0.35)} />
         <circle cx={-R * 0.075} cy={-R * 0.075} r={R} fill={rim} />
       </g>
       <path d={`M ${-R * 0.86} ${-R * 0.2} A ${R * 0.9} ${R * 0.9} 0 0 1 ${-R * 0.2} ${-R * 0.86}`} fill="none" stroke={L('#F08A6E')} strokeWidth={R * 0.06} strokeLinecap="round" />
       {/* face */}
-      <circle r={face} fill={faceC} stroke={INK} strokeWidth={OUT * 0.8} />
+      <circle r={face} fill={faceC} stroke={INK} strokeWidth={OUT * 0.8 * k} />
       <clipPath id={`${id}-face`}><circle r={face} /></clipPath>
       <g clipPath={`url(#${id}-face)`}>
         {/* the rim's shadow on the face (upper-left inner edge) */}
@@ -235,7 +238,7 @@ export const WallClock: React.FC<{x?: number; y?: number; r?: number; minutes: n
       {/* dust: a film on the face glass and a line on the rim top */}
       {e > 0.01 && (
         <g>
-          <circle r={face} fill={DUST} opacity={0.2 * e} />
+          <circle r={face} fill={DUST} opacity={0.12 * e} />
           <path d={`M ${-R * 0.7} ${-R * 0.62} A ${R * 0.93} ${R * 0.93} 0 0 1 ${R * 0.7} ${-R * 0.62}`} fill="none" stroke={DUST} strokeWidth={R * 0.05} strokeLinecap="round" opacity={0.8 * e} />
         </g>
       )}
@@ -276,17 +279,24 @@ const PhotoPerson: React.FC<{p: Person; id: string}> = ({p, id}) => {
 const FamilyPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) => (
   <g>
     <rect x={0} y={0} width={w} height={h} fill="#BFE0F0" />
-    <circle cx={w * 0.88} cy={h * 0.14} r={22} fill="#FFF3C4" />
+    <circle cx={w * 0.52} cy={h * 0.1} r={16} fill="#FFF3C4" />
     <circle cx={-6} cy={h * 0.3} r={34} fill="#6FB36A" stroke={INK} strokeWidth={2} />
     <circle cx={22} cy={h * 0.2} r={22} fill="#7CC070" stroke={INK} strokeWidth={2} />
     <rect x={0} y={h * 0.6} width={w} height={h * 0.4} fill="#8DC08A" />
-    {Array.from({length: 16}, (_, k) => (
+    {/* a dark hedge and a tree trunk at the right edge (the side where a reflection on the glass reads best) */}
+    <rect x={w - 20} y={0} width={10} height={h * 0.2} fill="#5A3E30" stroke={INK} strokeWidth={1.6} />
+    <path d={`M ${w - REFL_W} ${h} L ${w - REFL_W} ${h * 0.4} Q ${w - REFL_W + 2} ${h * 0.2} ${w - REFL_W + 22} ${h * 0.16} Q ${w - 24} ${h * 0.06} ${w - 6} ${h * 0.14} Q ${w + 6} ${h * 0.16} ${w + 10} ${h * 0.26} L ${w + 10} ${h} Z`} fill="#3B6446" stroke={INK} strokeWidth={2} />
+    <path d={`M ${w - REFL_W + 10} ${h * 0.34} Q ${w - REFL_W + 14} ${h * 0.24} ${w - REFL_W + 26} ${h * 0.22} M ${w - 22} ${h * 0.2} Q ${w - 14} ${h * 0.15} ${w - 6} ${h * 0.18}`} fill="none" stroke="#5C8A62" strokeWidth={3} strokeLinecap="round" />
+    {Array.from({length: 12}, (_, k) => (
       <path key={k} d={`M ${k * 14 + 2} ${h * 0.64} L ${k * 14 + 2} ${h * 0.5} L ${k * 14 + 6} ${h * 0.46} L ${k * 14 + 10} ${h * 0.5} L ${k * 14 + 10} ${h * 0.64} Z`} fill="#FFFBF0" stroke={INK} strokeWidth={1.4} />
     ))}
-    <rect x={0} y={h * 0.53} width={w} height={3} fill="#FFFBF0" stroke={INK} strokeWidth={1} />
+    <rect x={0} y={h * 0.53} width={w - REFL_W} height={3} fill="#FFFBF0" stroke={INK} strokeWidth={1} />
     {FAMILY.map((p) => <PhotoPerson key={p.key} p={p} id={`${id}-${p.key}`} />)}
   </g>
 );
+
+/** width of the dark hedge at the right edge of the family print, where his reflected face reads best */
+const REFL_W = 56;
 
 /** the father's studio portrait (print-local) */
 const ParentPrint: React.FC<{id: string; w: number; h: number}> = ({id, w, h}) => (
@@ -1083,7 +1093,7 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
         <Specks r={PP} n={30} seed={11} op={0.7 * e} />
       </g>
       <InnerLine r={PP} />
-      {e > 0.01 && <rect x={PFr.x + 2} y={PFr.y + 2} width={PFr.w - 4} height={PFr.h - 4} fill={DUST} opacity={0.2 * e} />}
+      {e > 0.01 && <path d={`M ${PFr.x + 2} ${PFr.y + 2} h ${PFr.w - 4} v ${PFr.h - 4} h ${-(PFr.w - 4)} Z M ${PP.x} ${PP.y} v ${PP.h} h ${PP.w} v ${-PP.h} Z`} fill={DUST} fillRule="evenodd" opacity={0.3 * e} />}
       <DustTop x0={PFr.x + 3} x1={PFr.x + PFr.w - 3} y={PFr.y + 1} e={e} h={5} />
       {ribbonOp > 0.005 && (
         <g opacity={ribbonOp}>
@@ -1127,8 +1137,8 @@ const Photos: React.FC<{ctx: Ctx; dustWipe: number; refl?: React.ReactNode; refl
             )}
           </mask>
           <g mask={`url(#${id}-wipe)`}>
-            <rect x={FFr.x + 2} y={FFr.y + 2} width={FFr.w - 4} height={FFr.h - 4} rx={3} fill={DUST} opacity={0.34 * e} />
-            <rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} fill={DUST_GLASS} opacity={0.5 * e} />
+            <path d={`M ${FFr.x + 2} ${FFr.y + 2} h ${FFr.w - 4} v ${FFr.h - 4} h ${-(FFr.w - 4)} Z M ${FP.x} ${FP.y} v ${FP.h} h ${FP.w} v ${-FP.h} Z`} fill={DUST} fillRule="evenodd" opacity={0.36 * e} />
+            <rect x={FP.x} y={FP.y} width={FP.w} height={FP.h} fill={DUST_GLASS} opacity={0.46 * e} />
             {/* old smears in the film */}
             <path d={`M ${FP.x + 20} ${FP.y + FP.h - 30} Q ${FP.x + 80} ${FP.y + FP.h - 50} ${FP.x + 150} ${FP.y + FP.h - 26}`} fill="none" stroke="#F2EFE8" strokeWidth={14} strokeLinecap="round" opacity={0.3 * e} />
             <Specks r={FP} n={70} seed={5} op={0.85 * e} />
@@ -1194,15 +1204,35 @@ const PrintContent: React.FC<{ctx: Ctx; view?: React.ReactNode; tint: number; gl
 const Puff: React.FC<{w: number; t: number; e: number}> = ({w, t, e}) => {
   if (w <= 0.001 || w >= 0.999 || e < 0.05) return null;
   const fadeEnd = 1 - ss(w, 0.82, 1);
-  const n = 34;
+  const n = 30;
+  const clouds = [0.1, 0.24, 0.38, 0.52, 0.66];
   return (
     <g opacity={fadeEnd * clamp(e * 1.5)}>
+      {clouds.map((u0, k) => {
+        const age = (w - u0) / 0.34;
+        if (age <= 0 || age >= 1) return null;
+        const o = wipeAt(u0);
+        const cx = o.x + 18 + 26 * age + 4 * Math.sin(t * 1.7 + k);
+        const cy = o.y - 30 - 70 * age;
+        const r = 7 + 9 * age;
+        const op = 0.75 * Math.sin(Math.PI * Math.min(1, age * 1.1));
+        return (
+          <g key={`c${k}`} opacity={op}>
+            {[[-0.9, 0.2, 0.8], [0, -0.35, 1], [0.95, 0.15, 0.75]].map(([dx, dy, rs], j) => (
+              <circle key={j} cx={cx + dx * r} cy={cy + dy * r} r={r * rs} fill="#E9E4DA" stroke={INK} strokeWidth={1.8} strokeOpacity={0.4} />
+            ))}
+            {[[-0.9, 0.2, 0.8], [0, -0.35, 1], [0.95, 0.15, 0.75]].map(([dx, dy, rs], j) => (
+              <circle key={`f${j}`} cx={cx + dx * r} cy={cy + dy * r} r={r * rs - 1.2} fill="#E9E4DA" />
+            ))}
+          </g>
+        );
+      })}
       {Array.from({length: n}, (_, k) => {
         const u0 = 0.04 + (k / n) * 0.72;
         const age = (w - u0) / 0.32;
         if (age <= 0 || age >= 1) return null;
         const o = wipeAt(u0);
-        const big = k % 5 === 0;
+        const big = false;
         const x = o.x + 14 + (hash(k * 3.3) - 0.35) * 70 * age + 5 * Math.sin(t * 2 + k);
         const y = o.y - 18 - (30 + 90 * hash(k * 1.7)) * age;
         const r = big ? 7 + 12 * age : 1.3 + 2.2 * hash(k * 5.5);

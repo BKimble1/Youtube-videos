@@ -49,8 +49,8 @@ const YardPlaceholder: React.FC = () => (
 
 /** his face as the integrator would pass it for the glass reflection (room coordinates, beside the family) */
 const FaceRefl: React.FC = () => (
-  <g transform={`translate(${ROOM.photoFamily.x + ROOM.photoFamily.w - 40} ${ROOM.photoFamily.y + 92}) scale(0.62)`}>
-    <Bust skin={GUESSER.skin} hair="spiky" hairColor={GUESSER.hair} age={0} shirt="#F4F6F8" id="rf" e={{mouth: 'flat', sad: 0.6, lookX: -0.6}} />
+  <g transform={`translate(${ROOM.photoFamily.reflSpot.x} ${ROOM.photoFamily.reflSpot.y}) scale(${ROOM.photoFamily.reflSpot.r / 62})`}>
+    <Bust skin={GUESSER.skin} hair="spiky" hairColor={GUESSER.hair} age={0} shirt="#F4F6F8" id="reflface" e={{mouth: 'flat', sad: 0.6, lookX: -0.6}} />
   </g>
 );
 
@@ -155,7 +155,7 @@ const Family: React.FC = () => {
   return (
     <Svg>
       <Cam cx={fr.x + fr.w / 2 + 20} cy={fr.y + fr.h / 2} s={1080 / 320}>
-        <Room t={3} id="rf" era={1} clockMinutes={0} dustWipe={1} refl={<FaceRefl />} reflOp={0.55} />
+        <Room t={3} id="rf" era={1} clockMinutes={0} dustWipe={1} refl={<FaceRefl />} reflOp={0.8} />
       </Cam>
     </Svg>
   );
@@ -165,6 +165,18 @@ const ClockAlone: React.FC = () => (
     {[0, 0.4, 0.8, 1].map((b, k) => (
       <WallClock key={k} x={270 + (k % 2) * 540} y={480 + Math.floor(k / 2) * 960} r={220} minutes={10 * 60 + 8 + k * 7} blur={b} era={k === 3 ? 1 : 0} id={`ca${k}`} />
     ))}
+  </Svg>
+);
+
+/** the left of the room in the present with him walking in at the suggested scale (doorway, chair, clock) */
+const Entry: React.FC = () => (
+  <Svg>
+    <Cam cx={330} cy={1180} s={1080 / 1000}>
+      <Room t={4} id="re" era={1} clockMinutes={130} />
+      <g transform={`translate(${-20} ${ROOM.floor}) scale(${ROOM.figScale})`}>
+        <Astronaut pose={{...ASTRO_IDLE, stride: 0.6, legs: 0.8, e: {mouth: 'flat', lookX: 0.6}}} id="efig" frame={0} glove="#EEF2F5" />
+      </g>
+    </Cam>
   </Svg>
 );
 
@@ -179,6 +191,7 @@ const Root: React.FC = () => (
     {comp('RoomWipe', Wipe)}
     {comp('RoomFamily', Family)}
     {comp('RoomClockSheet', ClockAlone)}
+    {comp('RoomEntry', Entry)}
   </>
 );
 registerRoot(Root);
