@@ -1,35 +1,40 @@
 # Future Got Weird: the oyster-inspired bone glue
 
-## V1 (first complete review cut, current)
+## V2 (current review cut)
 
-**Deliverable.** `exports/FGW_Bone_Glue_V1_REVIEW_NO_NARRATION_1080x1920.mp4`: the complete picture, captions, effects and
-music, **without the narration** (the take files are served from a host this environment's network policy blocks).
-With the narration it becomes `exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4` (steps below). See
-`production/V1_REPORT.md` for the exact format, measurements and status. **It is not published.**
+**Deliverable.** `exports/FGW_Bone_Glue_V2_REVIEW_NO_NARRATION_1080x1920.mp4` contains the complete picture, captions,
+effects and music, but **not the narration**. The take files are served from a host this environment's network policy
+blocks. Once the narration is added, the file becomes `exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4` (steps below).
+**It is not published.**
 
-**Report.** `production/V1_REPORT.md`, with evidence in `qa/v1/`. The shot plan and the transition list are in
-`production/SHOT_PLAN_V1.md`; the builders' contracts are in `production/BUILD_BRIEF.md`.
+**Report.** `production/V2_REPORT.md` covers the format, the measurements, the brief checklist and the remaining
+issues. Its evidence is in `qa/v2/`. The beat plan and the module contracts are in `production/V2_PLAN.md`. V1 and its
+report (`production/V1_REPORT.md`, `qa/v1/`) are kept for comparison.
 
-**Narration.** `production/NARRATION_LOCKED.txt`, word for word, in the channel narrator voice (ElevenLabs "Test
-Voice" `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, connector defaults, one run of two takes). Provenance and the download
-status are in `audio/narration/voice_provenance.json`.
+**Narration.** The text is `production/NARRATION_LOCKED.txt`, word for word, read in the channel narrator voice
+(ElevenLabs "Test Voice" `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, connector defaults, one run of two takes). Provenance
+and download status are in `audio/narration/voice_provenance.json`.
 
-**Picture.** Deterministic Remotion/SVG in the Weird Crew vector finish (navy ink, cel shading, upper-left key light).
-One wrist world in millimetres (the patient's right forearm, palm up, hand pointing up the frame; `source/src/art/anatomy.ts`),
-drawn as depth layers through a pinhole dolly (`source/src/camera.tsx`), plus one matched excursion to an oyster:
+**Picture.** The picture is deterministic Remotion/SVG in the Weird Crew vector finish (navy ink, cel shading,
+upper-left key light). It uses one wrist world in millimetres (the patient's right forearm, palm up;
+`source/src/art/anatomy.ts`), drawn as depth layers through a pinhole dolly (`source/src/camera.tsx`). The film makes
+one matched excursion to an oyster.
 
 | Module | What it draws | Source |
 |---|---|---|
-| bone | the fractured distal radius (four fragments, seated by the clamp), the adhesive bead that fills and bridges the cracks, the wet wound, hematoma → soft callus → hard callus → glue resorption → remodelling | `source/src/art/bone.tsx` |
-| arm, skeleton | the palm-up hand and forearm, the incision and its rim, the translucent/soft cutaway window, sutures and scar; ulna, carpals, metacarpals, phalanges | `source/src/art/arm.tsx`, `source/src/art/skeleton.tsx` |
-| surgeon, instruments, room | the Weird Crew surgeon (cap, mask, gown, gloved grips), the syringe-type applicator and the pointed reduction clamp, the draped arm board, the follow-up table, the room | `source/src/art/surgeon.tsx`, `instruments.tsx`, `room.tsx` |
-| oyster | an oyster cemented to a rock underwater, with a current surge | `source/src/art/oyster.tsx` |
-| loop | the surgeon's sleeve sweeping across the lens (the reset happens behind it) | `source/src/GloveWipe.tsx` |
+| fracture geometry | The three seams (transverse, styloid, the wedge's diagonal), their broken faces and gaps, the wedge fragment's pose, the glue band runs, and the new-bone growth fronts | `source/src/art/seams.ts` |
+| fracture and glue | The distal radius, the displaced wedge and its exposed bed, the probe seating it, and the adhesive filling the gap between the broken faces (gloss, then satin once set) | `source/src/art/fracture.tsx` |
+| healing | Hematoma, then soft callus, then pale woven bone advancing from both faces while the glue thins into islands and disappears, then remodelling to mature bone | `source/src/art/heal.tsx` |
+| wet wound | A translucent blood-tinted sheet and one stronger wash flowing across the bonded seam, with the glue edges redrawn sealed to both faces | `source/src/art/wet.tsx` |
+| surgeon and instruments | The gloved hands, the positioning probe (left hand) and the cannula applicator (right hand), with contact shadows | `source/src/art/surgeon.tsx`, `instruments.tsx` |
+| arm, skeleton, room | The palm-up hand and forearm, the incision, retractors, sutures, scar and cutaway window, the bones under the skin, the drape and follow-up table | `source/src/art/arm.tsx`, `skeleton.tsx`, `room.tsx` |
+| oyster | An oyster cemented to a boulder in a current, with a section window onto shell, cement and rock that matches the glue band | `source/src/art/oyster.tsx` |
 
-`source/src/story.ts` holds the timeline (every beat keyed to measured word times) and the one camera;
-`source/src/Scene.tsx` the depth layers.
+`source/src/story.ts` holds the timeline, with every beat keyed to the word times, and the single camera.
+`source/src/Scene.tsx` composes the depth layers. The loop is a push back into the opening's bone framing, then a cut to
+frame 0. There is no wipe.
 
-**Sound.** Everything is synthesised and placed from the picture's events (`tools/make_audio.py`, `audio/cues.json`).
+**Sound.** All sound is synthesised and placed from the picture's events (`tools/make_audio.py`, `audio/cues.json`).
 
 ## Rebuild
 
@@ -39,10 +44,13 @@ drawn as depth layers through a pinhole dolly (`source/src/camera.tsx`), plus on
     python3 tools/make_narration.py                 # take -> narration master, timeline, captions, SRT
                                                     # (--provisional: timeline from the take's Scribe word times)
     source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
-    python3 tools/make_audio.py mix_v1              # effects + music + mix -> source/public/audio/mix_v1.wav
-    (cd source && npm ci && npx remotion render src/index.ts BoneGlueV1 ../exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v1","captions":true}' --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
-    python3 tools/qa_render.py exports/FGW_Bone_Glue_V1_REVIEW_1080x1920.mp4 qa/v1
-    # current no-narration cut: FGW_NO_VOICE=1 python3 tools/make_audio.py mix_v1_novoice, render with "audio":"mix_v1_novoice"
+    python3 tools/make_audio.py mix_v2              # effects + music + mix -> source/public/audio/mix_v2.wav
+    (cd source && npm ci && npx remotion render src/index.ts BoneGlueV2 ../exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/qa_render.py exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4 qa/v2
+    # current no-narration cut: FGW_NO_VOICE=1 python3 tools/make_audio.py mix_v2_novoice, then render with "audio":"mix_v2_novoice"
 
-Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`. Module test entries:
-`source/src/test/*.entry.tsx` (`npx remotion still src/test/<name>.entry.tsx <Comp> out.png`).
+Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`.
+
+Module test entries are in `source/src/test/*.entry.tsx`. Render one with
+`npx remotion still src/test/<name>.entry.tsx <Comp> out.png`. `camtest.entry.tsx` draws the wrist world at any time
+through any camera, for framing studies.
