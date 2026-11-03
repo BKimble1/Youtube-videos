@@ -147,26 +147,47 @@ for k in range(int(DUR * 22)):
 gel_tex = norm(gel * (0.6 + 0.4 * np.sin(2 * np.pi * 7.3 * t)) + bub)
 sp = np.clip(SPEED / 15.0, 0, 1)
 sfx += db(-25) * gel_tex * lp(sp, 6)
-place(sfx, creak(0.5, 380, 40), 0.42, 'plunger creak', -34)
-place(sfx, creak(0.45, 360, 36), EV['c2a'] + 0.1, 'plunger creak', -36)
-# V2 opening: the probe pushes the small fragment home (a soft bony seat), the cannula hops, the instruments lift
-place(sfx, soft_knock(420, 0.12), EV['seat1'] - 0.02, 'the fragment seats (soft bony tock)', -27)
-place(sfx, tick(0.025, 3000), EV['seat1'], None, -33)
-place(sfx, tick(0.03, 3600), EV['hop1'], 'cannula touches the wedge seam', -31)
-place(sfx, steel(0.1, 3100), EV['c3b'] + 0.05, 'applicator lifts', -34)
-place(sfx, steel(0.14, 2400), EV['probeUp0'] + 0.08, 'probe eases off the fragment', -31)
-place(sfx, tick(0.03, 3400), EV['probeDown1'] - 0.1, 'probe settles on the styloid fragment', -32)
-place(sfx, tick(0.03, 3800), EV['appDown1'] - 0.1, 'cannula touches the styloid seam', -33)
-place(sfx, steel(0.12, 2900), EV['c2b'] + 0.08, 'applicator lifts off (stroke done)', -31)
+place(sfx, creak(0.45, 380, 40), EV['race0'] + 0.02, 'plunger creak (the injection)', -33)
+# ---------------- V3 hook: the glue races through the cracks, the forceps bite and close, the fragments seat
+place(sfx, sweep(0.7, 900, 2400, 4000, 9000, 0.7), EV['race0'], 'the glue shoots along the cracks (wet hiss)', -31)
+place(sfx, steel(0.1, 2600), EV['fIn1'] - 0.05, 'forceps jaws arrive', -33)
+place(sfx, ratchet(3, 0.05), EV['fBite1'] - 0.1, 'forceps bite: the ratchet clicks', -28)
+place(sfx, ratchet(2, 0.06), EV['reduce0'] + 0.35, 'forceps close further', -31)
+place(sfx, soft_knock(380, 0.16), EV['reduce1'] - 0.04, 'the fragments seat (a solid bony tock)', -25)
+place(sfx, tick(0.03, 3200), EV['reduce1'], None, -31)
+place(sfx, steel(0.14, 2400), EV['fOut0'] + 0.05, 'forceps release and withdraw', -31)
+place(sfx, steel(0.1, 3100), EV['appLiftH0'] + 0.05, 'applicator lifts', -34)
+place(sfx, sweep(0.9, 120, 300, 900, 2600), EV['pullH0'] + 0.05, 'fast pull-out to the arm', -29)
+place(sfx, rustle(0.5, 1200, 5000), EV['flex0'] + 0.05, 'the fingers flex', -33)
+place(sfx, sweep(0.75, 300, 120, 2500, 900), EV['pushH0'], 'fast push into the glue', -28)
+place(sfx, tick(0.03, 4200), EV['matchT'], 'match cut to the lab', -33)
+# ---------------- V3 lab: the bead, the press, the drop, the plunge into the sea
+place(sfx, rustle(0.4, 2000, 6000), EV['matchT'] + 0.6, 'glove on the specimen', -35)
+place(sfx, soft_knock(260, 0.2), 4.95, 'the specimen halves pressed (soft squeeze)', -32)
+place(sfx, plip(880), 6.08, 'the drop pinches off', -28)
+place(sfx, plip(420), 6.53, 'the drop hits the water', -25)
+place(sfx, sweep(0.6, 400, 150, 3000, 900), 6.5, 'splash, then muffled under the surface', -28)
+place(sfx, sweep(0.7, 200, 90, 1500, 500), EV['labDiss0'], 'into the sea (muffled)', -29)
+for k in range(5):
+    place(sfx, plip(600 + 300 * rng.random()), 6.62 + k * 0.09, None, -33 - 2 * rng.random())
 
 # ---------------- dives and matches
-place(sfx, sweep(1.7, 300, 120, 2500, 900), EV['dive0'] + 0.15, 'push down onto the glue band', -28)
-place(sfx, sweep(0.5, 200, 90, 1800, 500), EV['cutIn'] - 0.12, 'match cut into the water (muffled)', -27)
 place(sfx, sweep(0.6, 300, 150, 1500, 700), EV['reveal0'], 'the attachment window opens (soft)', -33)
-place(sfx, sweep(0.5, 150, 200, 900, 2400), EV['cutOut'] - 0.25, 'match cut back to the bone', -28)
-place(sfx, sweep(1.6, 120, 300, 900, 2600), EV['pull0'] + 0.1, 'pull out to the fixation framing', -30)
-place(sfx, sweep(1.0, 260, 120, 2400, 800), EV['dive2a'], 'move back into the fracture', -31)
+place(sfx, sweep(0.5, 150, 200, 900, 2400), EV['cutOut'] - 0.25, 'cement dissolves into the glue band', -28)
+place(sfx, sweep(1.4, 120, 300, 900, 2600), EV['pull0'] + 0.1, 'pull out to the surgical case', -30)
+place(sfx, sweep(1.0, 260, 120, 2400, 800), EV['dive2a'], 'move into the fracture (healing)', -31)
 place(sfx, sweep(0.9, 140, 260, 900, 2200), EV['out0'] + 0.1, 'ease out to the wrist', -32)
+# ---------------- V3 micro: the adhesive's front flows into the pores
+place(sfx, sweep(0.35, 300, 150, 2000, 700), EV['mic0'] - 0.16, 'push into the micro section', -31)
+mic = np.zeros(N); i0, i1 = int(EV['mic0'] * SR), int(EV['mic1'] * SR)
+mic[i0:i1] = crackle((i1 - i0) / SR, 70, 1500, 6000)[:i1 - i0] * env(i1 - i0, 0.08, 0.12)
+sfx += db(-29) * mic
+for k in range(4):
+    place(sfx, plip(300 + 200 * rng.random()), EV['mic0'] + 0.12 + k * 0.17, 'fluid pushed aside' if k == 0 else None, -32)
+# ---------------- V3 case: the probe seats the wedge, the glue runs, the probe lets go
+place(sfx, soft_knock(420, 0.12), EV['eSeat1'] - 0.02, 'the wedge seats (soft bony tock)', -27)
+place(sfx, tick(0.03, 3600), EV['eHop1'], 'cannula touches the wedge seam', -31)
+place(sfx, steel(0.12, 2900), EV['eC3b'] + 0.08, 'applicator lifts off', -31)
 
 # ---------------- underwater (the comparison only): low wash, current swish, bubble plips
 wash = circ(lambda x: lp(x, 260), noise(N))
@@ -204,9 +225,9 @@ place(sfx, fizz(2.4, 110), EV['bridge0'] + 0.25 * (EV['bridge1'] - EV['bridge0']
 place(sfx, tone(220, 1.4), EV['rem1'] - 0.55, 'restored (a settling tone)', -34)
 
 # ---------------- the ending: the fingers flex, then the push back into the bone, into frame 0
-place(sfx, rustle(0.6, 1200, 5000), EV['curl0'] + 0.05, 'skin as the fingers flex', -31)
-place(sfx, rustle(0.5, 1000, 4500), EV['curl0'] + 0.7, 'the fingers relax', -34)
-place(sfx, sweep(1.4, 200, 500, 1500, 5000, 0.8), EV['push0'], 'push back into the wrist (into frame 0)', -29)
+place(sfx, rustle(0.6, 1200, 5000), EV['bend0'] + 0.05, 'skin as the wrist bends', -31)
+place(sfx, rustle(0.5, 1000, 4500), EV['bend0'] + 0.75, 'the wrist bends back', -33)
+place(sfx, sweep(0.9, 200, 500, 1500, 5000, 0.8), EV['push0'], 'push back into the wrist (into frame 0)', -29)
 
 # ---------------- music: a quiet pulse whose period divides the film exactly
 BEATS = int(round(DUR * 98 / 60))

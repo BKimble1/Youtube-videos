@@ -8,17 +8,17 @@ import {EV, T, LAST, LOOP_T, camAt, boneAt, armAt, instrAt} from '../source/src/
 const sig: Record<string, number[]> = {speed: [], logw: [], hem: [], soft: [], bridge: [], hard: [], remodel: [], curl: [], wet: [], probe: [], app: [], reveal: []};
 const world: string[] = [];
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
-const frontS = (t: number) => {
-  // only while the cannula is laying (flow 1): the settling tail after a run ends makes no glue sound
-  const f = boneAt(t, 0.05).front;
-  return f && f.flow >= 0.999 ? f.s : null;
+// V3: the glue's extrusion rate = how fast the total glued length grows (the hook's racing fronts, the case's run)
+const glueLen = (t: number) => {
+  const g = boneAt(t, 0.05).glue;
+  return Object.values(g).reduce((a, sp) => a + Math.max(0, sp.b - sp.a), 0);
 };
 for (let i = 0; i <= Math.round(DUR * 100); i++) {
   const t = i / 100;
-  const a = frontS(t - 0.005), b = frontS(t + 0.005);
-  sig.speed.push(r3(a !== null && b !== null ? Math.abs(b - a) / 0.01 : 0));
+  const rate = (glueLen(t + 0.005) - glueLen(t - 0.005)) / 0.01;
+  sig.speed.push(r3(rate > 0.05 && rate < 400 ? rate : 0));
   const c = camAt(t);
-  world.push(c.world);
+  world.push(c.over && c.over.alpha > 0.5 ? c.over.world : c.world);
   sig.logw.push(r3(Math.log(c.cam.w)));
   sig.reveal.push(r3(c.reveal ?? 0));
   const bs = boneAt(t, 0.05);

@@ -1,0 +1,212 @@
+[
+ {
+  "t": 0.16,
+  "sfx": "plunger creak (the injection)",
+  "gain_db": -33
+ },
+ {
+  "t": 0.14,
+  "sfx": "the glue shoots along the cracks (wet hiss)",
+  "gain_db": -31
+ },
+ {
+  "t": 0.57,
+  "sfx": "forceps jaws arrive",
+  "gain_db": -33
+ },
+ {
+  "t": 0.7,
+  "sfx": "forceps bite: the ratchet clicks",
+  "gain_db": -28
+ },
+ {
+  "t": 1.15,
+  "sfx": "forceps close further",
+  "gain_db": -31
+ },
+ {
+  "t": 1.38,
+  "sfx": "the fragments seat (a solid bony tock)",
+  "gain_db": -25
+ },
+ {
+  "t": 1.53,
+  "sfx": "forceps release and withdraw",
+  "gain_db": -31
+ },
+ {
+  "t": 0.91,
+  "sfx": "applicator lifts",
+  "gain_db": -34
+ },
+ {
+  "t": 1.55,
+  "sfx": "fast pull-out to the arm",
+  "gain_db": -29
+ },
+ {
+  "t": 2.55,
+  "sfx": "the fingers flex",
+  "gain_db": -33
+ },
+ {
+  "t": 2.95,
+  "sfx": "fast push into the glue",
+  "gain_db": -28
+ },
+ {
+  "t": 3.72,
+  "sfx": "match cut to the lab",
+  "gain_db": -33
+ },
+ {
+  "t": 4.32,
+  "sfx": "glove on the specimen",
+  "gain_db": -35
+ },
+ {
+  "t": 4.95,
+  "sfx": "the specimen halves pressed (soft squeeze)",
+  "gain_db": -32
+ },
+ {
+  "t": 6.08,
+  "sfx": "the drop pinches off",
+  "gain_db": -28
+ },
+ {
+  "t": 6.53,
+  "sfx": "the drop hits the water",
+  "gain_db": -25
+ },
+ {
+  "t": 6.5,
+  "sfx": "splash, then muffled under the surface",
+  "gain_db": -28
+ },
+ {
+  "t": 6.95,
+  "sfx": "into the sea (muffled)",
+  "gain_db": -29
+ },
+ {
+  "t": 8.325,
+  "sfx": "the attachment window opens (soft)",
+  "gain_db": -33
+ },
+ {
+  "t": 9.23,
+  "sfx": "cement dissolves into the glue band",
+  "gain_db": -28
+ },
+ {
+  "t": 12.5,
+  "sfx": "pull out to the surgical case",
+  "gain_db": -30
+ },
+ {
+  "t": 17.3,
+  "sfx": "move into the fracture (healing)",
+  "gain_db": -31
+ },
+ {
+  "t": 22.99,
+  "sfx": "ease out to the wrist",
+  "gain_db": -32
+ },
+ {
+  "t": 10.225,
+  "sfx": "push into the micro section",
+  "gain_db": -31
+ },
+ {
+  "t": 10.505,
+  "sfx": "fluid pushed aside",
+  "gain_db": -32
+ },
+ {
+  "t": 14.46,
+  "sfx": "the wedge seats (soft bony tock)",
+  "gain_db": -27
+ },
+ {
+  "t": 15.02,
+  "sfx": "cannula touches the wedge seam",
+  "gain_db": -31
+ },
+ {
+  "t": 15.43,
+  "sfx": "applicator lifts off",
+  "gain_db": -31
+ },
+ {
+  "t": 7.427,
+  "sfx": "bubble",
+  "gain_db": -34.24154154625805
+ },
+ {
+  "t": 9.695,
+  "sfx": "the bond holds (soft knock)",
+  "gain_db": -30
+ },
+ {
+  "t": 11.215,
+  "sfx": "the wash sweeps over the seam",
+  "gain_db": -30
+ },
+ {
+  "t": 14.89,
+  "sfx": "probe lifts off (released)",
+  "gain_db": -29
+ },
+ {
+  "t": 15.28,
+  "sfx": "probe withdraws",
+  "gain_db": -32
+ },
+ {
+  "t": 16.79,
+  "sfx": "the gel sets (low, soft)",
+  "gain_db": -29
+ },
+ {
+  "t": 17.38,
+  "sfx": "suture pull",
+  "gain_db": -34
+ },
+ {
+  "t": 17.65,
+  "sfx": "hematoma: a low organic swell",
+  "gain_db": -28
+ },
+ {
+  "t": 18.075,
+  "sfx": "soft callus: fibrous creak",
+  "gain_db": -31
+ },
+ {
+  "t": 19.226,
+  "sfx": "the glue thins and disappears (whispering fizz)",
+  "gain_db": -34
+ },
+ {
+  "t": 22.43,
+  "sfx": "restored (a settling tone)",
+  "gain_db": -34
+ },
+ {
+  "t": 23.76,
+  "sfx": "skin as the wrist bends",
+  "gain_db": -31
+ },
+ {
+  "t": 24.46,
+  "sfx": "the wrist bends back",
+  "gain_db": -33
+ },
+ {
+  "t": 25.22,
+  "sfx": "push back into the wrist (into frame 0)",
+  "gain_db": -29
+ }
+]

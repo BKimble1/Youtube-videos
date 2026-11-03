@@ -18,7 +18,10 @@ import {DrapeOverArm, HandTable, RoomBack} from './art/room';
 import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
 import {P, pt} from './core/geo';
-import {EV, armAt, boneAt, camAt, cutBackBlend, instrAt, skinVeil, surgeonOn, tableMix, wristCamAt} from './story';
+import {EV, WCam, loopCam, World, armAt, boneAt, camAt, cutBackBlend, forcepsAt, instrAt, loopBlend, skinVeil, surgeonOn, tableMix, wristCamAt} from './story';
+import {LabWorld} from './art/lab';
+import {MicroWorld} from './art/micro';
+import {ForcepsShadow, ReductionForceps} from './art/forceps';
 import {Captions, setCaptionAdjust} from './Captions';
 import {CAPTIONS} from './lib';
 import {BoneState2, InstrState2} from './v2state';
@@ -55,6 +58,7 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
   const rClip = layerScale(c, Z_SKIN) / layerScale(c, 0);
   const veil = skinVeil(t);
   const tm = tableMix(t);
+  const fc = forcepsAt(t);
   return (
     <>
       {c.w > 90 && (
@@ -88,6 +92,7 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
           <WetFilm st={bone} />
           {showSurgeon && ins.probeOn > 0.01 && <ProbeShadow st={ins.probe} px={px} on={ins.probeOn} />}
           {showSurgeon && ins.appOn > 0.01 && <AppShadow st={ins.app} px={px} on={ins.appOn} />}
+          {fc && <ForcepsShadow st={fc} px={px} />}
         </g>
       </Layer>
       <Layer c={c} z={Z_SKIN} maxBlur={22}>
@@ -105,26 +110,37 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
           <SurgeonFront id={`${fkey}sf`} s={sIns} />
         </Layer>
       )}
+      {fc && (
+        <Layer c={c} z={Z_INSTR} maxBlur={c.w < 60 ? 1.5 : 20}>
+          <ReductionForceps id={`${fkey}fc`} st={{...fc, tipA: reproject(c, fc.tipA, Z_INSTR), tipB: reproject(c, fc.tipB, Z_INSTR)}} px={px} />
+        </Layer>
+      )}
     </>
   );
+};
+
+const WorldView: React.FC<{w: World; t: number; c: WCam | NonNullable<WCam['over']>; fkey: string}> = ({w, t, c, fkey}) => {
+  if (w === 'wrist') return <WristWorld t={t} c={c.cam} fkey={fkey} />;
+  if (w === 'oyster') return <OysterWorld id={`${fkey}oy`} t={t} cam={c.cam} reveal={c.reveal ?? 0} />;
+  if (w === 'lab') return <LabWorld id={`${fkey}lab`} t={t} cam={c.cam} st={(c as WCam).lab!} />;
+  return <MicroWorld id={`${fkey}mic`} t={t} cam={c.cam} st={c.micro!} />;
 };
 
 export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t, fkey, captions = true}) => {
   resetIds(fkey);
   const wc = camAt(t);
-  const cb = cutBackBlend(t);
-  const body = wc.world === 'wrist'
-    ? <WristWorld t={t} c={wc.cam} fkey={fkey} />
-    : (
-      <>
-        <OysterWorld id={`${fkey}oy`} t={t} cam={wc.cam} reveal={wc.reveal ?? 0} />
-        {/* the cut back: the glue band dissolves in over the cement band on the same screen line */}
-        {cb > 0.001 && <div style={{position: 'absolute', inset: 0, opacity: cb}}><WristWorld t={t} c={wristCamAt(t)} fkey={`${fkey}cb`} /></div>}
-      </>
-    );
+  const cb = wc.world === 'oyster' ? cutBackBlend(t) : 0;
+  const lb = loopBlend(t);
+  const over = wc.over;
   return (
     <div style={{position: 'absolute', inset: 0, filter: 'contrast(1.04) saturate(1.05)'}}>
-      {body}
+      <WorldView w={wc.world} t={t} c={wc} fkey={fkey} />
+      {/* the cut back: the glue band dissolves in over the cement band on the same screen line */}
+      {cb > 0.001 && <div style={{position: 'absolute', inset: 0, opacity: cb}}><WristWorld t={t} c={wristCamAt(t)} fkey={`${fkey}cb`} /></div>}
+      {/* dissolves between worlds (lab -> sea, macro <-> micro) */}
+      {over && over.alpha > 0.001 && <div style={{position: 'absolute', inset: 0, opacity: over.alpha}}><WorldView w={over.world} t={t} c={over} fkey={`${fkey}ov`} /></div>}
+      {/* the loop: the healed wrist's cutaway dissolves into frame 0's shattered one (same camera, same cutaway) */}
+      {lb > 0.001 && <div style={{position: 'absolute', inset: 0, opacity: lb}}><WristWorld t={0} c={loopCam(t)} fkey={`${fkey}lp`} /></div>}
       <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% 46%, rgba(0,0,0,0) 58%, rgba(4,4,10,0.36) 100%)'}} />
       {captions && <Captions t={t} />}
     </div>
