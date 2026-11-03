@@ -49,16 +49,6 @@ const crOpen = (cp: P[], per: number): P[] => {
   out.push(cp[n - 1]);
   return out;
 };
-/** the same for a closed loop (the curve geo.closed draws) */
-const crClosed = (cp: P[], per: number): P[] => {
-  const out: P[] = [];
-  const n = cp.length;
-  for (let i = 0; i < n; i++) {
-    const p0 = cp[(i - 1 + n) % n], p1 = cp[i], p2 = cp[(i + 1) % n], p3 = cp[(i + 2) % n];
-    for (let k = 0; k < per; k++) out.push(crPt(p0, p1, p2, p3, k / per));
-  }
-  return out;
-};
 const crPt = (p0: P, p1: P, p2: P, p3: P, t: number): P => {
   const t2 = t * t, t3 = t2 * t;
   const f = (a: number, b: number, c: number, d: number) => 0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
@@ -77,7 +67,6 @@ const offsetOpen = (ps: P[], d: number | ((i: number) => number)) => {
   const T = tangents(ps, false);
   return ps.map((p, i) => add(p, mul(perp(T[i]), typeof d === 'number' ? d : d(i))));
 };
-const bump = (x: number) => (x <= 0 || x >= 1 ? 0 : Math.sin(Math.PI * x));
 const P2 = (p: P) => `${n4(p.x)} ${n4(p.y)}`;
 
 // ---------------------------------------------------------------- the cutaway window
