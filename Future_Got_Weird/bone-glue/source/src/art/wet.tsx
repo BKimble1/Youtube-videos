@@ -12,7 +12,7 @@ import {clamp, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
 import {SEAM_IDS} from './seams';
-import {glueRuns} from './fracture';
+import {GLUE_EDGE_COLOR, GLUE_LIP_SIDE, GlueRun, glueRuns} from './fracture';
 import {BoneState2} from '../v2state';
 import {uid} from '../core/ids';
 
@@ -151,13 +151,35 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
     lipDown.push(pt(r.x, r.hi + 0.05));
   }
 
-  // the glue stays sealed to both faces: its exact outline redrawn crisp over the film
-  const edges: React.ReactNode[] = [];
-  SEAM_IDS.forEach((id) => {
-    glueRuns(id, st).forEach((r, i) => {
-      edges.push(<path key={`${id}${i}l`} d={open(r.lo, 0.5)} stroke={C.glueInk} strokeWidth={W(2.4, 0.008)} fill="none" opacity={0.85} />);
-      edges.push(<path key={`${id}${i}h`} d={open(r.hi, 0.5)} stroke={C.glueInk} strokeWidth={W(2.4, 0.008)} fill="none" opacity={0.85} />);
-    });
+  // the glue stays sealed to both faces: its exact outline redrawn crisp over the film, styled as FractureBone draws it
+  // (the shaded face's bone-ink lip on one side, the gel's own soft edge on the other). Each seam's edges are masked
+  // where another seam's gel lies, so at the T-junctions no edge line runs across the joined gel.
+  const all: GlueRun[] = SEAM_IDS.flatMap((id) => glueRuns(id, st));
+  const band = (r: GlueRun) => closed([...r.lo, ...[...r.hi].reverse()], 0.5);
+  const ids = [...new Set(all.map((r) => r.id))];
+  const mk = {x: -40, y: -40, width: 80, height: 80};
+  const masks: Record<string, string> = {};
+  ids.forEach((id) => { masks[id] = uid('wetem'); });
+  const edges: React.ReactNode[] = [
+    <defs key="em">
+      {ids.map((id) => (
+        <mask key={id} id={masks[id]} maskUnits="userSpaceOnUse" {...mk}>
+          <rect {...mk} fill="#FFFFFF" />
+          {all.map((r, i) => (r.id !== id ? <path key={i} d={band(r)} fill="#000000" stroke="#000000" strokeWidth={W(3.2, 0.01)} /> : null))}
+        </mask>
+      ))}
+    </defs>,
+  ];
+  all.forEach((r, i) => {
+    const lip = GLUE_LIP_SIDE[r.id];
+    const sides: [P[], boolean][] = [[r.lo, lip === -1], [r.hi, lip === 1]];
+    edges.push(
+      <g key={`e${i}`} mask={`url(#${masks[r.id]})`} fill="none" strokeLinejoin="round" strokeLinecap="round">
+        {sides.map(([ps, isLip], k) => (
+          <path key={k} d={open(ps, 0.5)} stroke={isLip ? C.boneInk : GLUE_EDGE_COLOR} strokeWidth={isLip ? W(1.8, 0.006) : W(1.25, 0.004)} opacity={0.9} />
+        ))}
+      </g>,
+    );
   });
 
   // the whole film: a faint blood tint over the bone, a touch redder after the wash

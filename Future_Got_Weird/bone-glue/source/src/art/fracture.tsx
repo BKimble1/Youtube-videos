@@ -1,18 +1,23 @@
 // V2 (B1): the fractured distal radius and the adhesive IN its seams. World millimetres at depth 0 (anatomy.ts); the
 // seam geometry, the moving wedge fragment and the glue band runs come from seams.ts. Back to front:
-//   1. the cavity bed (a dark gap wherever no bone covers the radius' outline: an opened seam, the wedge's vacated bed)
-//   2. the static bone (V1's cel-shaded radius: gradient lit from the upper left, sheen, lamellae, pores, outline ink)
-//   3. each static fragment's broken face: a narrow cancellous chamfer (spongy interior, lit or in shade by which way
-//      it faces) and a crisp bone-ink line on the face itself
-//   4. the gaps of all three seams between their CURRENT faces, as one dark union (it hides any face line or chamfer
-//      that runs across another seam's mouth, so junctions read as clean T's)
-//   5. the wedge fragment, carried by xfSvg(st.wedge), with its own faces, outline and (when out of place) a cast shadow
-//   6. the glue: per seam, the band between the two faces plus a slim meniscus over each; one inked union for every
-//      seam (junctions merge), a deeper core where it fills the gap, lighter lips where it wets the faces, a fine gloss
-//      line that settles to satin as it sets, a contact line keyed into both faces' pores at macro range, and a proud
-//      glossy fresh tail ending in a rounded bulb where it leaves the cannula (both scaled by front.flow)
-//   7. contact cues where the probe and the applicator tips touch the bone
+//   1. the cavity bed (dark, wherever no bone covers the radius' outline)
+//   2. while the wedge is out of place: its vacated BED, a shaded cancellous honeycomb floor (a few marrow-red cells),
+//      darker along the seams' walls
+//   3. the static bone (V1's cel-shaded radius: gradient lit from the upper left, sheen, lamellae, vascular pores
+//      elongated along the shaft, outline ink)
+//   4. each static fragment's broken face: a hard cancellous chamfer strip (faceted, with small pores, lit or in shade
+//      by which way it faces) with a crisp bone-ink outer edge, and the bone-ink face line itself
+//   5. the seams' gaps between the SEATED faces, as one dark union (narrow seams stay dark; junctions read as T's)
+//   6. the wedge fragment, carried by xfSvg(st.wedge): a hard cast shadow and its exposed side wall while it is out,
+//      then its body and its mitred faces
+//   7. the glue: per seam, the band between the two faces plus a meniscus over each (wider at macro for the oyster
+//      match, slimmer from CAM0 out so a sliver of chamfer shows on both sides). One inked union for every seam with
+//      lip-coloured fillets in the junctions' inside corners, three tones (a deep strip under the shaded face's lip, the
+//      core, a light meniscus on the lit face) and one highlight that runs continuous while fresh and shortens and
+//      fades as the glue sets to satin; the shaded face's bone-ink lip is drawn over the glue's edge so the gel reads as
+//      lying IN the seam. A proud, glossy fresh tail and a bulb where it leaves the cannula (scaled by front.flow).
 // Line widths are in screen pixels via st.px (mm per pixel), so the ink is even at every zoom. Deterministic; no filters.
+// The probe's and the applicator's contact spots and shadows belong to the instruments module.
 import React from 'react';
 import {P, add, closed, lerpP, len, mul, nrm, open, poly, pt, sub} from '../core/geo';
 import {mix} from '../core/color';
@@ -21,8 +26,8 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
 import {
-  S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, glueBand, growth, isWedgeSide, seamEdge, seamEdgeSeated, seamLength,
-  seamGap, seamNormal, xfSvg,
+  S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, glueBand, growth, seamEdgeSeated, seamGap,
+  seamLength, seamNearest, seamNormal, xfSvg,
 } from './seams';
 import {BoneState2} from '../v2state';
 
@@ -31,85 +36,228 @@ const LIGHT = nrm(pt(-0.62, -0.78)); // toward the key light (upper left)
 const dotL = (n: P) => n.x * LIGHT.x + n.y * LIGHT.y;
 const RAD_PATH = closed(RADIUS, 0.55);
 const LEN: Record<SeamId, number> = {C1: seamLength('C1'), C2: seamLength('C2'), C3: seamLength('C3')};
+const SEED: Record<SeamId, number> = {C1: 1, C2: 2, C3: 3};
 
-/** the glue's wetting overhang past each face (mm): the same 0.14 the wet film (wet.tsx) and the oyster match use */
+/** the glue's wetting overhang past each face (mm) at macro range (the wet beat and the oyster match:
+ *  production/v2_match_band.json is measured with it) */
 export const GLUE_OVER = 0.14;
+/** the overhang from CAM0 (w 26) out: slimmer, so a sliver of each face's chamfer shows beside the gel */
+export const GLUE_OVER_WIDE = 0.07;
+/** the overhang the glue is drawn with at a zoom (mm per screen px): GLUE_OVER up to w ~14 (the whole wet beat), easing
+ *  to GLUE_OVER_WIDE by w ~23. glueRuns() outlines use it; pass it to seams.glueBand to match them. */
+export const glueOver = (px: number) => GLUE_OVER + (GLUE_OVER_WIDE - GLUE_OVER) * ss(px, 0.013, 0.021);
 /** how much prouder (mm per side) the freshly laid gel stands near the applicator tip */
 const PROUD = 0.075;
 /** the fresh zone behind the tip (mm along the seam) */
 const FRESH_MM = 1.6;
 /** the glue's minimum on-screen width (px) at wide framings */
 const MIN_GLUE_PX = 5.5;
-/** contact cue radii (mm): probe tip, applicator cannula tip (1.3 mm cannula) */
-const PRESS_R = 0.95, APP_R = 0.8;
 
 // module-local colours
 const GAP = C.cavity;
-const LIP = mix(C.glue, C.glueLit, 0.4);
+const LIP = mix(C.glue, C.glueLit, 0.42);
 const CORE = mix(C.glue, C.glueDeep, 0.16);
+/** set (satin) glue: paler and greyer than the fresh gel */
+const SATIN_CORE = mix(mix(C.glue, '#A9BDB8', 0.5), '#FFFFFF', 0.08);
+const SATIN_LIP = mix(LIP, '#C9D6D2', 0.45);
+const FRESH_LIP = mix(C.glueLit, '#FFFFFF', 0.3);
+const GLUE_EDGE = mix(C.glueInk, C.glueDeep, 0.3); // the gel's own edge: softer than an outline
+const SHADOW = '#1E0A06';
 
-// ---------------------------------------------------------------- the broken faces (seated geometry, precomputed)
+// ---------------------------------------------------------------- small geometry helpers
+const inPoly = (p: P, ps: P[]) => {
+  let c = false;
+  for (let i = 0, j = ps.length - 1; i < ps.length; j = i++) {
+    const a = ps[i], b = ps[j];
+    if (a.y > p.y !== b.y > p.y && p.x < ((b.x - a.x) * (p.y - a.y)) / (b.y - a.y) + a.x) c = !c;
+  }
+  return c;
+};
+const segX = (a: P, b: P, c: P, d: P): number | null => {
+  const r = sub(b, a), q = sub(d, c);
+  const den = r.x * q.y - r.y * q.x;
+  if (Math.abs(den) < 1e-12) return null;
+  const ac = sub(c, a);
+  const u = (ac.x * q.y - ac.y * q.x) / den, v = (ac.x * r.y - ac.y * r.x) / den;
+  return u >= 0 && u <= 1 && v >= 0 && v <= 1 ? u : null;
+};
+/** first intersection of two polylines: segment indices and the point */
+const polyX = (A: P[], B: P[]): {i: number; j: number; p: P} | null => {
+  for (let i = 0; i < A.length - 1; i++) {
+    for (let j = 0; j < B.length - 1; j++) {
+      const u = segX(A[i], A[i + 1], B[j], B[j + 1]);
+      if (u !== null) return {i, j, p: lerpP(A[i], A[i + 1], u)};
+    }
+  }
+  return null;
+};
+/** walk d mm along a polyline from index i (dir +1/-1) */
+const walk = (ps: P[], i: number, dir: 1 | -1, d: number, from: P): P[] => {
+  const out: P[] = [];
+  let prev = from, acc = 0;
+  for (let k = dir > 0 ? i + 1 : i; k >= 0 && k < ps.length; k += dir) {
+    const l = len(sub(ps[k], prev));
+    if (acc + l >= d) {
+      out.push(lerpP(prev, ps[k], (d - acc) / (l || 1)));
+      return out;
+    }
+    acc += l;
+    out.push(ps[k]);
+    prev = ps[k];
+  }
+  return out;
+};
+const line = (ps: P[]) => (ps.length < 2 ? '' : 'M' + ps.map((p) => `${p.x.toFixed(4)} ${p.y.toFixed(4)}`).join('L'));
+
+// ---------------------------------------------------------------- the broken faces (seated geometry)
 type Face = {id: SeamId; side: 1 | -1; s0: number; s1: number; wedge: boolean};
+/** every fragment's broken faces. A face that meets another at a fragment's corner runs a little past it; the mitres
+ *  below trim both to the corner, so chamfers, edges and face lines turn it cleanly (no crossings, no hooks) */
 const FACES: Face[] = [
-  {id: 'C1', side: -1, s0: -0.8, s1: LEN.C1 + 0.8, wedge: false},
-  {id: 'C1', side: 1, s0: -0.8, s1: S_C3_ON_C1, wedge: false},
-  {id: 'C1', side: 1, s0: S_C3_ON_C1, s1: LEN.C1 + 0.8, wedge: true},
-  {id: 'C2', side: -1, s0: 0, s1: LEN.C2 + 0.8, wedge: false},
-  {id: 'C2', side: 1, s0: 0, s1: LEN.C2 + 0.8, wedge: false},
-  {id: 'C3', side: 1, s0: 0, s1: LEN.C3 + 0.8, wedge: false},
-  {id: 'C3', side: -1, s0: 0, s1: LEN.C3 + 0.8, wedge: true},
+  /* 0 */ {id: 'C1', side: -1, s0: -0.8, s1: S_C2_ON_C1 + 0.9, wedge: false}, // the lunate fragment's lower face
+  /* 1 */ {id: 'C1', side: -1, s0: S_C2_ON_C1 - 0.9, s1: LEN.C1 + 0.8, wedge: false}, // the styloid fragment's lower face
+  /* 2 */ {id: 'C1', side: 1, s0: -0.8, s1: S_C3_ON_C1 + 0.9, wedge: false}, // the shaft's upper face
+  /* 3 */ {id: 'C2', side: -1, s0: -0.7, s1: LEN.C2 + 0.8, wedge: false},
+  /* 4 */ {id: 'C2', side: 1, s0: -0.7, s1: LEN.C2 + 0.8, wedge: false},
+  /* 5 */ {id: 'C3', side: 1, s0: -0.7, s1: LEN.C3 + 0.8, wedge: false},
+  /* 6 */ {id: 'C1', side: 1, s0: S_C3_ON_C1 - 0.9, s1: LEN.C1 + 0.8, wedge: true}, // the wedge's upper face
+  /* 7 */ {id: 'C3', side: -1, s0: -0.7, s1: LEN.C3 + 0.8, wedge: true}, // the wedge's left face
 ];
-const SEED: Record<SeamId, number> = {C1: 1, C2: 2, C3: 3};
+/** the fragments' corners: [face, which end, face, which end] */
+const CORNERS: [number, 'start' | 'end', number, 'start' | 'end'][] = [[0, 'end', 3, 'start'], [1, 'start', 4, 'start'], [2, 'end', 5, 'start'], [6, 'start', 7, 'start']];
 type FaceArt = {
-  face: Face;
-  band: string; // the cancellous chamfer just inside the face
-  rim: string; // where the chamfer meets the intact surface
-  line: string; // the broken face itself
+  wedge: boolean;
+  /** the cancellous chamfer strip just inside the face */
+  band: string;
+  /** a few facets of it a shade lighter or darker (slightly angular broken surface) */
+  facets: {d: string; dark: boolean}[];
+  /** its outer edge, where it meets the intact surface: straight facet segments (joined round a corner) */
+  edge: string;
+  /** the broken face itself (joined round a corner) */
+  face: string;
   lit: boolean;
   tone: string;
-  pores: {x: number; y: number; rx: number; ry: number}[];
+  pores: {x: number; y: number; rx: number; ry: number; a: number}[];
 };
-const FACE_ART: FaceArt[] = FACES.map((f) => {
-  const STEP = 0.08;
-  const n = Math.max(1, Math.ceil((f.s1 - f.s0) / STEP));
-  const inner: P[] = [], outer: P[] = [];
+type Raw = {f: Face; inner: P[]; outer: P[]; faceL: P[]; wAt: (s: number) => number};
+const rawFace = (f: Face, base: number): Raw => {
   const seed = SEED[f.id] * 7 + (f.side > 0 ? 1 : 4);
-  const wAt = (s: number) => 0.27 * (0.72 + 0.4 * (0.5 + 0.5 * noise1(s * 1.15 + seed, seed)) + 0.12 * Math.sin(s * 5.3 + seed));
+  const wAt = (s: number) => base * (0.9 + 0.2 * (0.5 + 0.5 * noise1(s * 1.15 + seed, seed))) + 0.012 * Math.sin(s * 5.3 + seed);
+  const n = Math.max(1, Math.ceil((f.s1 - f.s0) / 0.06));
+  const inner: P[] = [], faceL: P[] = [];
   for (let i = 0; i <= n; i++) {
     const s = f.s0 + ((f.s1 - f.s0) * i) / n;
     inner.push(seamEdgeSeated(f.id, s, f.side, -0.03));
-    outer.push(seamEdgeSeated(f.id, s, f.side, wAt(s)));
+    faceL.push(seamEdgeSeated(f.id, s, f.side, 0));
   }
+  // facet vertices along the outer edge, irregularly spaced (straight segments between them)
+  const sK: number[] = [f.s0];
+  let s = f.s0;
+  while (s < f.s1) {
+    s += 0.26 * (0.7 + 0.6 * hash(s * 13.7 + seed));
+    sK.push(Math.min(s, f.s1));
+  }
+  const outer = sK.map((sk) => seamEdgeSeated(f.id, sk, f.side, wAt(sk)));
+  return {f, inner, outer, faceL, wAt};
+};
+const nearestIdx = (ps: P[], p: P) => {
+  let b = 0, bd = 1e9;
+  for (let i = 0; i < ps.length; i++) {
+    const d = (ps[i].x - p.x) ** 2 + (ps[i].y - p.y) ** 2;
+    if (d < bd) { bd = d; b = i; }
+  }
+  return b;
+};
+const artOf = (r: Raw): FaceArt => {
+  const f = r.f;
+  const seed = SEED[f.id] * 7 + (f.side > 0 ? 1 : 4);
   // the chamfer tilts from the intact surface down into the gap: it faces -side * n
   const nm = seamNormal(f.id, (Math.max(0, f.s0) + Math.min(LEN[f.id], f.s1)) / 2);
   const k = dotL(mul(nm, -f.side));
   const lit = k > 0;
-  const tone = mix(C.cancellous, lit ? C.boneLit : C.boneDeep, 0.12 + 0.36 * Math.abs(k));
-  // spongy pores in the chamfer (close range only)
-  const pores: FaceArt['pores'] = [];
-  for (let s = Math.max(f.s0, -0.3); s < f.s1; s += 0.11) {
-    const h = hash(s * 17.31 + seed * 3.7);
-    if (h > 0.5) continue;
-    const o = 0.05 + (wAt(s) - 0.1) * hash(s * 5.9 + seed);
-    const q = seamEdgeSeated(f.id, s, f.side, o);
-    const r = 0.028 + 0.042 * hash(s * 2.3 + seed * 1.1);
-    pores.push({x: q.x, y: q.y, rx: r * (1.1 + 0.5 * hash(s * 8.1)), ry: r});
+  const tone = mix(C.cancellous, lit ? C.boneLit : C.boneDeep, 0.1 + 0.34 * Math.abs(k));
+  const bandPts = [...r.inner, ...[...r.outer].reverse()];
+  // facets: quads between consecutive outer vertices and the face below them
+  const facets: FaceArt['facets'] = [];
+  for (let i = 0; i < r.outer.length - 1; i++) {
+    const h = hash(i * 7.3 + seed * 1.9);
+    if (h > 0.3 && h < 0.66) continue;
+    const a = r.outer[i], b = r.outer[i + 1];
+    const ia = nearestIdx(r.inner, a), ib = nearestIdx(r.inner, b);
+    const lo = Math.min(ia, ib), hi = Math.max(ia, ib);
+    facets.push({d: poly([a, b, ...r.inner.slice(lo, hi + 1).reverse()]), dark: h <= 0.3});
   }
-  return {
-    face: f,
-    band: poly([...inner, ...[...outer].reverse()]),
-    rim: open(outer, 0.4),
-    line: poly(inner.map((_, i) => seamEdgeSeated(f.id, f.s0 + ((f.s1 - f.s0) * i) / n, f.side, 0))).replace(/Z$/, ''),
-    lit,
-    tone,
-    pores,
-  };
-});
+  // small spongy pores in the strip, foreshortened along the face (only inside the trimmed strip)
+  const pores: FaceArt['pores'] = [];
+  for (let s = Math.max(f.s0, -0.3); s < f.s1; s += 0.075) {
+    const h = hash(s * 17.31 + seed * 3.7);
+    if (h > 0.55) continue;
+    const w = r.wAt(s);
+    const o = 0.04 + (w - 0.1) * hash(s * 5.9 + seed);
+    const q = seamEdgeSeated(f.id, s, f.side, o);
+    if (!inPoly(q, bandPts)) continue;
+    const t = seamNormal(f.id, s);
+    const rr = 0.012 + 0.016 * hash(s * 2.3 + seed * 1.1);
+    pores.push({x: q.x, y: q.y, rx: rr * (1.5 + 0.6 * hash(s * 8.1)), ry: rr * 0.85, a: (Math.atan2(t.x, -t.y) * 180) / Math.PI});
+  }
+  return {wedge: f.wedge, band: poly(bandPts), facets, edge: line(r.outer), face: line(r.faceL), lit, tone, pores};
+};
+/** trim two polylines that cross near their starts to begin at the crossing (a clean mitre) */
+const mitre = (A: P[], B: P[]): [P[], P[]] => {
+  const x = polyX(A, B);
+  if (!x) return [A, B];
+  return [[x.p, ...A.slice(x.i + 1)], [x.p, ...B.slice(x.j + 1)]];
+};
+/** mitre one end of each of two polylines (the ends that meet at the corner) */
+const mitreEnds = (A: P[], ea: 'start' | 'end', B: P[], eb: 'start' | 'end'): [P[], P[]] => {
+  const a = ea === 'start' ? A : [...A].reverse(), b = eb === 'start' ? B : [...B].reverse();
+  const [a2, b2] = mitre(a, b);
+  return [ea === 'start' ? a2 : a2.reverse(), eb === 'start' ? b2 : b2.reverse()];
+};
+/** a corner's two lines joined into one (A runs into the corner, B leaves it) */
+const joinAt = (A: P[], ea: 'start' | 'end', B: P[], eb: 'start' | 'end'): P[] => [
+  ...(ea === 'end' ? A : [...A].reverse()),
+  ...(eb === 'start' ? B : [...B].reverse()),
+];
+const ART_CACHE = new Map<number, FaceArt[]>();
+/** every face's art for a chamfer width class (mm), mitred at every fragment corner */
+const faceArts = (base: number): FaceArt[] => {
+  const key = Math.round(base * 200);
+  const hit = ART_CACHE.get(key);
+  if (hit) return hit;
+  const raws = FACES.map((f) => rawFace(f, key / 200));
+  for (const [ia, ea, ib, eb] of CORNERS) {
+    const A = raws[ia], B = raws[ib];
+    [A.inner, B.inner] = mitreEnds(A.inner, ea, B.inner, eb);
+    [A.outer, B.outer] = mitreEnds(A.outer, ea, B.outer, eb);
+    [A.faceL, B.faceL] = mitreEnds(A.faceL, ea, B.faceL, eb);
+  }
+  const out = raws.map(artOf);
+  // the corners' edges and face lines as single lines round the corner
+  for (const [ia, ea, ib, eb] of CORNERS) {
+    out[ia].edge = line(joinAt(raws[ia].outer, ea, raws[ib].outer, eb));
+    out[ib].edge = '';
+    out[ia].face = line(joinAt(raws[ia].faceL, ea, raws[ib].faceL, eb));
+    out[ib].face = '';
+  }
+  ART_CACHE.set(key, out);
+  return out;
+};
+/** the wedge's two faces (seated), mitred at the corner: C1's from the corner out, C3's from the corner down */
+const WEDGE_FACES = mitre(seamEdgeLineSeated('C1', S_C3_ON_C1 - 0.9, LEN.C1 + 0.8, 1), seamEdgeLineSeated('C3', -0.7, LEN.C3 + 0.8, -1));
+function seamEdgeLineSeated(id: SeamId, s0: number, s1: number, side: 1 | -1, out = 0, step = 0.06): P[] {
+  const n = Math.max(1, Math.ceil((s1 - s0) / step));
+  const ps: P[] = [];
+  for (let i = 0; i <= n; i++) ps.push(seamEdgeSeated(id, s0 + ((s1 - s0) * i) / n, side, out));
+  return ps;
+}
 
-/** the cancellous chamfers, the pores in them and the crisp face lines of the given faces (seated coordinates) */
+/** the chamfer strips, their facets and pores, their outer edges and the face lines (seated coordinates) */
 const Faces: React.FC<{arts: FaceArt[]; px: number; view: View; fade: number; inkFade: number}> = ({arts, px, view, fade, inkFade}) => {
   if (fade <= 0.001 && inkFade <= 0.001) return null;
-  const poreA = clamp((0.032 - px) / 0.012) * fade;
+  const poreA = clamp((0.036 - px) / 0.012) * fade;
+  const facetA = clamp((0.045 - px) / 0.025);
+  const macro = clamp((0.016 - px) / 0.007);
   const [x0, y0, x1, y1] = view;
   const lineW = 2 * 1.9 * px; // half of it is hidden under the gap (or the wedge's clip): ~1.9 px visible
   return (
@@ -117,23 +265,36 @@ const Faces: React.FC<{arts: FaceArt[]; px: number; view: View; fade: number; in
       {fade > 0.001 && (
         <g opacity={fade}>
           {arts.map((a, i) => <path key={`b${i}`} d={a.band} fill={a.tone} />)}
-          {arts.map((a, i) => (
-            <path key={`r${i}`} d={a.rim} fill="none" stroke={a.lit ? C.boneLit : C.boneShade} strokeWidth={(a.lit ? 1.5 : 1.2) * px} opacity={a.lit ? 0.9 : 0.7} strokeLinejoin="round" />
-          ))}
+          {facetA > 0.01 && (
+            <g opacity={facetA}>
+              {arts.flatMap((a, i) =>
+                a.facets.map((f, k) => (
+                  <path key={`f${i}_${k}`} d={f.d} fill={f.dark ? mix(a.tone, C.boneDeep, a.lit ? 0.16 : 0.22) : mix(a.tone, C.boneLit, a.lit ? 0.3 : 0.16)} opacity={0.75} />
+                )),
+              )}
+            </g>
+          )}
           {poreA > 0.01 && (
             <g opacity={poreA}>
               {arts.flatMap((a, i) =>
                 a.pores
-                  .filter((p) => p.x > x0 - 2 && p.x < x1 + 2 && p.y > y0 - 2 && p.y < y1 + 2)
-                  .map((p, k) => <ellipse key={`p${i}_${k}`} cx={p.x} cy={p.y} rx={p.rx} ry={p.ry} fill={C.cancellousPore} opacity={a.lit ? 0.75 : 0.9} />),
+                  .filter((p) => p.x > x0 - 1 && p.x < x1 + 1 && p.y > y0 - 1 && p.y < y1 + 1)
+                  .map((p, k) => (
+                    <ellipse key={`p${i}_${k}`} cx={p.x} cy={p.y} rx={p.rx} ry={p.ry} transform={`rotate(${p.a.toFixed(1)} ${p.x.toFixed(3)} ${p.y.toFixed(3)})`}
+                      fill={mix(C.cancellousPore, a.tone, 0.2)} opacity={a.lit ? 0.6 : 0.75} />
+                  )),
               )}
             </g>
           )}
+          {/* the chamfer's outer edge: crisp at macro, a soft line from CAM0 out */}
+          <g fill="none" stroke={C.boneInk} strokeWidth={(1.25 + 0.4 * macro) * px} strokeLinejoin="miter" strokeMiterlimit={3} opacity={0.5 + 0.38 * macro}>
+            {arts.map((a, i) => <path key={`e${i}`} d={a.edge} />)}
+          </g>
         </g>
       )}
       {inkFade > 0.001 && (
         <g opacity={inkFade}>
-          {arts.map((a, i) => <path key={`l${i}`} d={a.line} fill="none" stroke={C.boneInk} strokeWidth={lineW} strokeLinejoin="round" strokeLinecap="round" />)}
+          {arts.map((a, i) => (a.face ? <path key={`l${i}`} d={a.face} fill="none" stroke={C.boneInk} strokeWidth={lineW} strokeLinejoin="round" strokeLinecap="round" /> : null))}
         </g>
       )}
     </g>
@@ -141,33 +302,39 @@ const Faces: React.FC<{arts: FaceArt[]; px: number; view: View; fade: number; in
 };
 
 // ---------------------------------------------------------------- the bone drawing (shared by the static part and the wedge)
-const BoneShade: React.FC<{gid: string}> = ({gid}) => (
-  <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={-14} y1={-6} x2={16} y2={4}>
-    <stop offset={0} stopColor={C.boneLit} />
-    <stop offset={0.3} stopColor={mix(C.boneLit, C.bone, 0.55)} />
-    <stop offset={0.58} stopColor={C.bone} />
-    <stop offset={0.8} stopColor={C.boneShade} />
-    <stop offset={0.93} stopColor={mix(C.boneShade, C.boneDeep, 0.35)} />
-    <stop offset={1} stopColor={mix(C.boneShade, '#B8A7B4', 0.4)} />
+const SHADE_STOPS: [number, string][] = [
+  [0, C.boneLit],
+  [0.3, mix(C.boneLit, C.bone, 0.55)],
+  [0.58, C.bone],
+  [0.8, C.boneShade],
+  [0.93, mix(C.boneShade, C.boneDeep, 0.35)],
+  [1, mix(C.boneShade, '#B8A7B4', 0.4)],
+];
+const Grad: React.FC<{id: string; x1: number; y1: number; x2: number; y2: number}> = ({id, x1, y1, x2, y2}) => (
+  <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={x1} y1={y1} x2={x2} y2={y2}>
+    {SHADE_STOPS.map(([o, c], i) => <stop key={i} offset={o} stopColor={c} />)}
   </linearGradient>
 );
-/** vascular pores on the cortex, in view only (close-ups) */
+/** vascular pores on the cortex (canal openings, elongated along the shaft), in view only: from CAM0 in */
 const Pores: React.FC<{view: View; px: number}> = ({view, px}) => {
-  if (px > 0.024) return null;
-  const a = clamp((0.024 - px) / 0.012);
-  const cell = 0.55;
+  if (px > 0.036) return null;
+  const a = clamp((0.036 - px) / 0.012);
+  const cell = 0.5;
   const [x0, y0, x1, y1] = view;
   const out: React.ReactNode[] = [];
-  for (let gx = Math.floor(x0 / cell); gx <= Math.ceil(x1 / cell); gx++) {
-    for (let gy = Math.floor(y0 / cell); gy <= Math.ceil(y1 / cell); gy++) {
+  const col = mix(C.cancellousPore, C.boneShade, 0.25);
+  for (let gx = Math.floor(Math.max(-17, x0) / cell); gx <= Math.ceil(Math.min(19, x1) / cell); gx++) {
+    for (let gy = Math.floor(Math.max(-40, y0) / cell); gy <= Math.ceil(Math.min(60, y1) / cell); gy++) {
       const h = hash(gx * 91.7 + gy * 13.3);
-      if (h > 0.32) continue;
+      if (h > 0.34) continue;
       const x = (gx + 0.15 + 0.7 * hash(gx * 3.1 + gy * 7.7)) * cell, y = (gy + 0.15 + 0.7 * hash(gx * 5.3 + gy * 2.9)) * cell;
-      const rr = 0.025 + 0.04 * hash(gx * 1.7 + gy * 9.1);
-      out.push(<ellipse key={`${gx}_${gy}`} cx={x} cy={y} rx={rr * 1.6} ry={rr} fill={C.cancellousPore} />);
+      // a touch finer as the camera closes in (they stay small, quiet marks at macro)
+      const rr = (0.019 + 0.02 * hash(gx * 1.7 + gy * 9.1)) * (0.62 + 0.38 * ss(px, 0.008, 0.024));
+      out.push(<ellipse key={`${gx}_${gy}`} cx={x} cy={y} rx={rr} ry={rr * (2.1 + 1.3 * hash(gx * 4.1 + gy * 0.7))} />);
     }
   }
-  return <g opacity={0.36 * a}>{out}</g>;
+  // lower contrast at macro (bigger on screen), stronger at CAM0 (the opening frame must read as bone at once)
+  return <g fill={col} opacity={(0.3 + 0.24 * ss(px, 0.008, 0.024)) * a}>{out}</g>;
 };
 const LAMELLAE = Array.from({length: 7}, (_, k) => {
   const xk = -9 + k * 3.0 + 0.6 * hash(k * 2.2);
@@ -176,15 +343,15 @@ const LAMELLAE = Array.from({length: 7}, (_, k) => {
 });
 const ARTIC = open(RADIUS.slice(0, 9), 0.55);
 const ULNAR_LIT = open(RADIUS.slice(37), 0.55);
-type Ids = {shade: string; sheen: string; rad: string};
+type Ids = {shade: string; shadeH: string; ramp: string; rampM: string; sheen: string; rad: string};
 /** the radius' cel-shaded body (V1's look): fill, outline ink, sheen, lamellae, the articular rim, pores */
-const BoneBody: React.FC<{ids: Ids; px: number; view: View; outlineClip?: string; closeK?: number}> = ({ids, px, view, outlineClip, closeK = 0}) => (
+const BoneBody: React.FC<{ids: Ids; px: number; view: View; outlineClip?: string; closeK?: number; shaft?: boolean}> = ({ids, px, view, outlineClip, closeK = 0, shaft = true}) => (
   <>
     <path d={RAD_PATH} fill={`url(#${ids.shade})`} />
-    {/* the outline breaks where a seam opens onto the bone's edge; it closes again as the bone remodels */}
-    <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} strokeLinejoin="round" clipPath={outlineClip ? `url(#${outlineClip})` : undefined} />
-    {outlineClip && closeK > 0.001 && <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} strokeLinejoin="round" opacity={closeK} />}
     <g clipPath={`url(#${ids.rad})`}>
+      {/* down the shaft the light-to-shade gradient runs across the bone only (the tilted one would sink into its
+          last, mauve stop far down the shaft at wide framings) */}
+      {shaft && view[3] > 14 && <rect x={-20} y={13} width={40} height={250} fill={`url(#${ids.shadeH})`} mask={`url(#${ids.rampM})`} />}
       <rect x={-14} y={-40} width={13} height={300} fill={`url(#${ids.sheen})`} />
       {LAMELLAE.map((d, k) => (
         <path key={k} d={d} stroke={C.boneShade} strokeWidth={1.3 * px} fill="none" opacity={0.08 + 0.24 * clamp((px - 0.012) / 0.02)} />
@@ -193,32 +360,26 @@ const BoneBody: React.FC<{ids: Ids; px: number; view: View; outlineClip?: string
       <Pores view={view} px={px} />
       <path d={ULNAR_LIT} stroke={C.boneLit} strokeWidth={Math.max(0.12, 6 * px)} fill="none" opacity={0.5} transform="translate(0.5 0)" />
     </g>
+    {/* the outline breaks where a seam opens onto the bone's edge; it closes again as the bone remodels */}
+    <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} strokeLinejoin="round" clipPath={outlineClip ? `url(#${outlineClip})` : undefined} />
+    {outlineClip && closeK > 0.001 && <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} strokeLinejoin="round" opacity={closeK} />}
   </>
 );
 
-// ---------------------------------------------------------------- the gaps between the current faces
-/** one seam's gap polygons between its two CURRENT faces; `under` (mm) pushes the wedge's side of the gap under the
- *  wedge, so the wedge's anti-aliased edge blends with the dark gap, never with the bone beneath */
-const SEATED: WedgeX = {dx: 0, dy: 0, rot: 0};
-const gapPolys = (id: SeamId, w: WedgeX, under: number, split: boolean): P[][] => {
-  // [s0, s1, pose]: when split, C1's static stretch is drawn seated 0.35 mm past the wedge junction so the two
-  // polygons overlap (two dark fills meeting on one edge would leave a light anti-aliasing hairline)
-  const ranges: [number, number, WedgeX][] =
-    id === 'C1'
-      ? split ? [[-0.8, S_C3_ON_C1 + 0.35, SEATED], [S_C3_ON_C1, LEN.C1 + 0.8, w]] : [[-0.8, LEN.C1 + 0.8, w]]
-      : [[0, LEN[id] + 0.8, w]];
-  return ranges.map(([s0, s1, pose]) => {
-    const n = Math.max(1, Math.ceil((s1 - s0) / 0.08));
-    const lo: P[] = [], hi: P[] = [];
-    for (let i = 0; i <= n; i++) {
-      const s = s0 + ((s1 - s0) * i) / n;
-      lo.push(seamEdge(id, s, -1, pose, isWedgeSide(id, s, -1) ? under : -0.01));
-      hi.push(seamEdge(id, s, 1, pose, isWedgeSide(id, s, 1) ? under : -0.01));
-    }
-    return [...lo, ...[...hi].reverse()];
-  });
+// ---------------------------------------------------------------- the gaps between the seated faces
+const gapPoly = (id: SeamId): P[] => {
+  const s0 = id === 'C1' ? -0.8 : 0, s1 = LEN[id] + 0.8;
+  const n = Math.max(1, Math.ceil((s1 - s0) / 0.06));
+  const lo: P[] = [], hi: P[] = [];
+  for (let i = 0; i <= n; i++) {
+    const s = s0 + ((s1 - s0) * i) / n;
+    lo.push(seamEdgeSeated(id, s, -1, -0.01));
+    hi.push(seamEdgeSeated(id, s, 1, -0.01));
+  }
+  return [...lo, ...[...hi].reverse()];
 };
-const SEATED_GAPS = SEAM_IDS.flatMap((id) => gapPolys(id, {dx: 0, dy: 0, rot: 0}, -0.01, false)).map(poly);
+/** the seams' gaps between the seated faces: dark at every pose (the displaced wedge's bed shows beyond them) */
+const SEATED_GAPS = SEAM_IDS.map((id) => poly(gapPoly(id)));
 /** a darker-red core down the middle of each seated gap (blood in the crack, close range): the static seams' parts and
  *  the wedge's (which fade in as it seats, so nothing pops when it arrives) */
 const coreLine = (id: SeamId, s0: number, s1: number) => {
@@ -228,6 +389,62 @@ const coreLine = (id: SeamId, s0: number, s1: number) => {
 };
 const CORE_STATIC = [coreLine('C1', -0.8, S_C3_ON_C1 - 0.5), coreLine('C2', 0.5, LEN.C2 + 0.8)];
 const CORE_WEDGE = [coreLine('C1', S_C3_ON_C1 + 0.5, LEN.C1 + 0.8), coreLine('C3', 0.5, LEN.C3 + 0.8)];
+
+// ---------------------------------------------------------------- the wedge's vacated bed (a cancellous floor)
+type Cell = {d: string; dIn: string; red: boolean; c: P};
+const BED_CELLS: Cell[] = (() => {
+  const out: Cell[] = [];
+  const S = 0.4;
+  const xs = WEDGE_POLY.map((p) => p.x), ys = WEDGE_POLY.map((p) => p.y);
+  const bx0 = Math.min(...xs) - 0.5, by0 = Math.min(...ys) - 0.5, bx1 = 14, by1 = Math.min(13, Math.max(...ys));
+  for (let j = 0; by0 + j * S * 0.866 < by1; j++) {
+    for (let i = 0; bx0 + i * S < bx1; i++) {
+      const h = hash(i * 7.13 + j * 3.37);
+      const c = pt(bx0 + i * S + (j % 2) * 0.5 * S + (h - 0.5) * 0.09, by0 + j * S * 0.866 + (hash(i * 2.1 + j * 9.7) - 0.5) * 0.08);
+      if (!inPoly(c, WEDGE_POLY) || !inPoly(c, RADIUS)) {
+        // keep cells that straddle the bed's edge (the clip trims them)
+        const nearIn = [0, 1, 2, 3, 4, 5].some((k) => {
+          const q = add(c, pt(Math.cos(k * 1.047) * S * 0.5, Math.sin(k * 1.047) * S * 0.5));
+          return inPoly(q, WEDGE_POLY) && inPoly(q, RADIUS);
+        });
+        if (!nearIn) continue;
+      }
+      const r = S * (0.36 + 0.08 * hash(i * 5.5 + j * 1.3));
+      const vs: P[] = [];
+      for (let k = 0; k < 6; k++) {
+        const a = k * 1.047 + 0.52 + (hash(i * 3.3 + j * 7.1 + k) - 0.5) * 0.4;
+        const rk = r * (0.82 + 0.3 * hash(i * 1.9 + j * 4.3 + k * 2.7));
+        vs.push(add(c, pt(Math.cos(a) * rk, Math.sin(a) * rk * 0.92)));
+      }
+      // the pit's shadowed upper-left inner wall: the same cell shifted toward the light and shrunk
+      const sh = vs.map((v) => add(lerpP(c, v, 0.8), pt(-0.035, -0.045)));
+      out.push({d: closed(vs, 0.9), dIn: closed(sh, 0.9), red: hash(i * 11.7 + j * 5.9) > 0.88, c});
+    }
+  }
+  return out;
+})();
+/** the bed's walls along the seated seams (the floor is darker in their lee) */
+const BED_WALLS = line([...[...WEDGE_FACES[0]].reverse(), ...WEDGE_FACES[1]]);
+const WEDGE_D = poly(WEDGE_POLY as P[]);
+const Bed: React.FC<{px: number; view: View; k: number}> = ({px, view, k}) => {
+  const [x0, y0, x1, y1] = view;
+  const cells = BED_CELLS.filter((c) => c.c.x > x0 - 0.5 && c.c.x < x1 + 0.5 && c.c.y > y0 - 0.5 && c.c.y < y1 + 0.5);
+  const floor = mix(C.cancellous, C.boneDeep, 0.38);
+  const pit = mix(C.cancellousPore, C.cavity, 0.42);
+  const pitIn = mix(C.cancellousPore, C.cavity, 0.72);
+  return (
+    <g opacity={k}>
+      <path d={RAD_PATH} fill={floor} />
+      {cells.map((c, i) => <path key={`c${i}`} d={c.d} fill={c.red ? mix(C.marrow, C.blood, 0.3) : pit} />)}
+      {cells.map((c, i) => <path key={`s${i}`} d={c.dIn} fill={c.red ? mix(C.marrow, C.cavity, 0.5) : pitIn} />)}
+      {/* in the lee of the seams' walls */}
+      <path d={BED_WALLS} fill="none" stroke={SHADOW} strokeWidth={1.1} strokeLinejoin="round" opacity={0.38} />
+      <path d={BED_WALLS} fill="none" stroke={SHADOW} strokeWidth={0.45} strokeLinejoin="round" opacity={0.3} />
+      {/* the bed's lip at the bone's border */}
+      <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.2 * px} />
+    </g>
+  );
+};
 
 // ---------------------------------------------------------------- the glue
 export type GlueRun = {
@@ -246,12 +463,6 @@ export type GlueRun = {
   bulbA: boolean;
   bulbB: boolean;
 };
-/** the keyed contact line's outward reach (mm) at s on one face: sparse rounded bumps of 0.01-0.04 mm */
-const keyBump = (id: SeamId, s: number, side: 1 | -1) => {
-  const seed = SEED[id] * 13 + (side > 0 ? 5 : 9);
-  const v = noise1(s * 4.6 + seed, seed) * 0.75 + noise1(s * 11.3 + seed * 2, seed + 1) * 0.25;
-  return 0.055 * clamp((v - 0.22) / 0.5) ** 1.3;
-};
 const capPts = (p1: P, p2: P, tOut: P, k = 1): P[] => {
   const c = lerpP(p1, p2, 0.5);
   const r = len(sub(p1, p2)) / 2;
@@ -264,20 +475,23 @@ const capPts = (p1: P, p2: P, tOut: P, k = 1): P[] => {
   return out;
 };
 /** the glue in one seam as drawable runs (islands while healing), in world mm with the wedge in its current pose.
- *  The outer edges follow seams.glueBand(over = GLUE_OVER) exactly except near the fresh tip (a little proud) and at
- *  wide framings (held to a minimum on-screen width); healing insets are passed straight through to glueBand. */
+ *  The outer edges follow seams.glueBand(over = glueOver(st.px)) exactly, except near the fresh tip (a little proud)
+ *  and at wide framings (held to a minimum on-screen width); healing insets are passed straight through to glueBand.
+ *  A span that reaches a seam's end runs on past the bone's border (clipped there), so the gel fills the seam right to
+ *  the edge on both faces (heal.tsx stretches its glued span the same way). */
 export const glueRuns = (id: SeamId, st: BoneState2): GlueRun[] => {
   const g = st.glue[id];
   if (!g || g.b <= g.a) return [];
-  const a = Math.max(-0.5, g.a), b = Math.min(LEN[id] + 0.6, g.b);
+  let a = Math.max(-0.5, g.a), b = Math.min(LEN[id] + 0.6, g.b);
+  if (g.b >= LEN[id] - 0.01) b = LEN[id] + 0.7;
+  if (id === 'C1' && g.a <= 0.01) a = -0.7;
   if (b - a < 0.03) return [];
   const bridge = st.heal.bridge;
   const inset = bridge > 0 ? (side: 1 | -1, s: number) => growth(id, s, bridge, side) : undefined;
-  const step = st.px < 0.016 ? 0.04 : 0.08; // finer sampling in close-ups (keyed edge, smooth curves)
-  const outer = glueBand(id, a, b, st.wedge, GLUE_OVER, inset, step);
+  const step = st.px < 0.016 ? 0.04 : 0.08; // finer sampling in close-ups
+  const outer = glueBand(id, a, b, st.wedge, glueOver(st.px), inset, step);
   const core = glueBand(id, a, b, st.wedge, 0, inset, step);
   const fr = st.front && st.front.seam === id ? st.front : null;
-  const keyK = clamp((0.0125 - st.px) / 0.004) * (1 - clamp(bridge * 6));
   const out: GlueRun[] = [];
   outer.forEach((r, ri) => {
     const c = core[ri];
@@ -296,19 +510,18 @@ export const glueRuns = (id: SeamId, st: BoneState2): GlueRun[] => {
         const need = (MIN_GLUE_PX * st.px - (len(sub(r.hi[i], r.lo[i])) + eM + eP)) / 2;
         if (need > 0) { eM += need; eP += need; }
       }
-      // at macro range the gel's contact line is keyed into each face's pores: small irregular rounded bumps
-      if (keyK > 0 && f < 0.3) {
-        if (im <= 0) eM += keyK * keyBump(id, s, -1);
-        if (ip <= 0) eP += keyK * keyBump(id, s, 1);
-      }
       lo.push(add(r.lo[i], mul(dv, -eM)));
       hi.push(add(r.hi[i], mul(dv, eP)));
       fresh.push(f);
       ins.push(im > 0 || ip > 0);
     }
-    const capA = Math.abs(r.s[0] - a) < 1e-6, capB = Math.abs(r.s[r.s.length - 1] - b) < 1e-6;
+    let capA = Math.abs(r.s[0] - a) < 1e-6;
+    const capB = Math.abs(r.s[r.s.length - 1] - b) < 1e-6;
     const nearA = fr ? Math.abs(fr.s - a) : 1e9, nearB = fr ? Math.abs(fr.s - b) : 1e9;
     const bulbA = capA && nearA < 0.35 && nearA <= nearB, bulbB = capB && nearB < 0.35 && nearB < nearA;
+    // a branch seam's gel that starts inside C1's (its first 0.35 mm lie in C1's band) ends flat there: the two bands
+    // are one body, and a rounded end would poke across C1's far half
+    if (id !== 'C1' && capA && !bulbA && r.s[0] <= 0.35) capA = false;
     out.push({id, s: r.s, lo, hi, loC: c.lo, hiC: c.hi, fresh, inset: ins, capA, capB, bulbA, bulbB});
   });
   return out;
@@ -341,36 +554,59 @@ const runBulbs = (r: GlueRun, flow: number): Bulb[] => {
   if (r.bulbA) mk(0, 'a');
   return out;
 };
-/** which side of a seam faces the key light (the lit lip and the gloss sit on that side of the band) */
-const LIT_LO: Record<SeamId, boolean> = {
+/** which side of each seam is nearer the key light. That face's broken lip faces AWAY from the light (it is the shaded
+ *  wall of the trench): its bone-ink lip is drawn over the gel's edge and the gel lies in its shadow there. The far face
+ *  is the lit wall: the gel climbs it in a light meniscus and carries the highlight. */
+const NEAR_LO: Record<SeamId, boolean> = {
   C1: dotL(seamNormal('C1', LEN.C1 / 2)) < 0,
   C2: dotL(seamNormal('C2', LEN.C2 / 3)) < 0,
   C3: dotL(seamNormal('C3', LEN.C3 / 2)) < 0,
 };
-/** a strip inside the core between fractions f0..f1 measured across from the lit face */
-const strip = (r: GlueRun, f0: number, f1: number, i0 = 0, i1 = r.s.length - 1): P[] => {
-  const L_ = LIT_LO[r.id];
-  const A: P[] = [], B: P[] = [];
-  for (let i = i0; i <= i1; i++) {
-    const p = L_ ? r.loC[i] : r.hiC[i], q = L_ ? r.hiC[i] : r.loC[i];
-    A.push(lerpP(p, q, f0));
-    B.push(lerpP(p, q, f1));
+/** per seam, the side (-1 = GlueRun.lo, +1 = GlueRun.hi) whose outer glue edge carries the shaded face's bone-ink lip
+ *  (1.8 px C.boneInk); the other edge is the gel's own soft edge (1.25 px, GLUE_EDGE_COLOR). For overlays that redraw
+ *  the band's edges (wet.tsx). */
+export const GLUE_LIP_SIDE: Record<SeamId, 1 | -1> = {C1: NEAR_LO.C1 ? -1 : 1, C2: NEAR_LO.C2 ? -1 : 1, C3: NEAR_LO.C3 ? -1 : 1};
+export const GLUE_EDGE_COLOR = GLUE_EDGE;
+/** the seam junctions on C1: branch, its arc length on C1, the side of C1 it leaves from */
+const JUNCTIONS: {id: SeamId; s: number; side: 1 | -1}[] = [{id: 'C2', s: S_C2_ON_C1, side: -1}, {id: 'C3', s: S_C3_ON_C1, side: 1}];
+/** lip-coloured fillets in the inside corners where a branch's gel meets C1's (no ink spike in an acute corner) */
+const junctionFillets = (runs: GlueRun[], d: number): {pts: P[]; deep: boolean}[] => {
+  const out: {pts: P[]; deep: boolean}[] = [];
+  for (const J of JUNCTIONS) {
+    const main = runs.find((r) => r.id === 'C1' && r.s[0] < J.s - 0.5 && r.s[r.s.length - 1] > J.s + 0.5 && !r.inset.some((v, i) => v && Math.abs(r.s[i] - J.s) < 1.5));
+    const br = runs.find((r) => r.id === J.id && r.s[0] < 0.5 && !r.inset.slice(0, 30).some((v) => v));
+    if (!main || !br) continue;
+    // the fillets grow in as the branch's gel reaches into C1's (C3 is laid upward to the junction)
+    const dd = d * clamp((0.75 - br.s[0]) / 0.45);
+    if (dd < 0.01) continue;
+    // C1's edge on the branch's side, near the junction
+    const idx = main.s.map((s, i) => [s, i] as const).filter(([s]) => Math.abs(s - J.s) < 2.5).map(([, i]) => i);
+    if (idx.length < 3) continue;
+    const mEdge = (J.side < 0 ? main.lo : main.hi).slice(idx[0], idx[idx.length - 1] + 1);
+    for (const bSide of [-1, 1] as const) {
+      const bEdge = (bSide < 0 ? br.lo : br.hi).slice(0, Math.min(br.s.length, 60));
+      const x = polyX(bEdge, mEdge);
+      if (!x) continue;
+      // along the branch's edge away from C1, and along C1's edge away from the branch
+      const A = walk(bEdge, x.i, 1, dd, x.p);
+      const nB = seamNormal(J.id, br.s[Math.min(x.i, br.s.length - 1)]);
+      const probe = mEdge[Math.min(mEdge.length - 1, x.j + 3)];
+      const dirM: 1 | -1 = (probe.x - x.p.x) * nB.x + (probe.y - x.p.y) * nB.y > 0 === bSide > 0 ? 1 : -1;
+      const B = walk(mEdge, x.j, dirM, dd, x.p);
+      if (A.length === 0 || B.length === 0) continue;
+      const a = A[A.length - 1], b = B[B.length - 1];
+      const curve: P[] = [];
+      for (let k = 1; k < 8; k++) {
+        const t = k / 8;
+        curve.push(add(add(mul(a, (1 - t) ** 2), mul(x.p, 2 * t * (1 - t))), mul(b, t * t)));
+      }
+      // in the shaded corner (both edges the near-light ones) the fillet lies in the deep tone
+      const deep = (J.side < 0) === NEAR_LO.C1 && (bSide < 0) === NEAR_LO[J.id];
+      out.push({pts: [x.p, ...A, ...curve, ...[...B].reverse()], deep});
+    }
   }
-  return [...A, ...B.reverse()];
-};
-const line = (r: GlueRun, f: number, i0: number, i1: number): P[] => {
-  const L_ = LIT_LO[r.id];
-  const out: P[] = [];
-  for (let i = i0; i <= i1; i++) out.push(lerpP(L_ ? r.loC[i] : r.hiC[i], L_ ? r.hiC[i] : r.loC[i], f));
   return out;
 };
-/** the seam junctions: the branch seams leave C1 here (C2 above, side -1; C3 below, side +1). Surface details of one
- *  band (shade strips, gloss, the faces seen through the gel) stop where another seam's gel joins it, so the T reads as
- *  one continuous gel body. */
-const MOUTHS: {s: number; side: 1 | -1}[] = [{s: S_C2_ON_C1, side: -1}, {s: S_C3_ON_C1, side: 1}];
-const detailOk = (r: GlueRun, i: number, side: 1 | -1) =>
-  r.id === 'C1' ? !MOUTHS.some((m) => m.side === side && Math.abs(r.s[i] - m.s) < 0.62) : r.s[i] > 0.8;
-const litSide = (id: SeamId): 1 | -1 => (LIT_LO[id] ? -1 : 1);
 /** contiguous index ranges where pred holds */
 const ranges = (n: number, pred: (i: number) => boolean): [number, number][] => {
   const out: [number, number][] = [];
@@ -383,111 +619,132 @@ const ranges = (n: number, pred: (i: number) => boolean): [number, number][] => 
   return out;
 };
 
-const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string}> = ({st, runs, radClip, glueClip}) => {
+const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string; view: View; lineFade: number}> = ({st, runs, radClip, glueClip, view, lineFade}) => {
   if (runs.length === 0) return null;
   const px = st.px;
   const set = clamp(st.set);
-  const gloss = 1 - 0.65 * set;
-  const healA = 1 - clamp(st.heal.bridge * 6); // details that belong to the intact bond (keys, faces seen through)
-  const detA = clamp((0.075 - px) / 0.035); // surface shading needs a few pixels of band to read
+  const healA = 1 - clamp(st.heal.bridge * 6); // details that belong to the intact bond
   const flow = st.front ? clamp(st.front.flow) : 0;
   const outlines = runs.map((r) => poly(runOutline(r, 'outer')));
   const cores = runs.map((r) => poly(runOutline(r, 'core')));
   const bulbs = runs.flatMap((r) => runBulbs(r, flow));
-  const inkW = 2.3 * px;
-  const coreCol = mix(CORE, C.glueDeep, 0.22 * set);
-  const lipCol = mix(LIP, mix(C.glue, C.glueDeep, 0.05), 0.35 * set);
-  // at macro range the gel keys into both faces: its contact line has rounded lobes (built into the outline by
-  // glueRuns) and a few surface pores just past the lips are filled with gel
-  const keyA = clamp((0.0125 - px) / 0.004) * healA;
-  const keyed: {c: P; r: number}[] = [];
-  if (keyA > 0.01) {
-    runs.forEach((r) => {
-      for (let i = 2; i < r.s.length - 2; i += 5) {
-        if (r.inset[i] || r.fresh[i] > 0.3) continue;
-        const s = r.s[i];
-        const dv = nrm(sub(r.hiC[i], r.loC[i]));
-        for (const side of [-1, 1] as const) {
-          const h = hash(s * 31.7 + side * 5.3 + SEED[r.id] * 2.1);
-          if (h < 0.74) continue;
-          const edge = side < 0 ? r.lo[i] : r.hi[i];
-          keyed.push({c: add(edge, mul(dv, side * (0.045 + 0.08 * hash(s * 11.1 + side)))), r: 0.014 + 0.014 * hash(s * 3.9 - side)});
-        }
-      }
-    });
-  }
+  const fil = healA > 0.01 ? junctionFillets(runs, 0.24) : [];
+  const fillets = fil.map((f) => poly(f.pts));
+  const inkW = 1.25 * px;
+  const coreCol = mix(CORE, SATIN_CORE, 0.5 * set);
+  const lipCol = mix(LIP, SATIN_LIP, 0.5 * set);
+  const deepCol = mix(mix(C.glueDeep, mix(C.glueDeep, '#8FA8A3', 0.4), set), coreCol, 0.36 + 0.1 * set); // opaque: one tone
+  const [vx0, vy0, vx1, vy1] = view;
+  const mk = {x: vx0 - 2, y: vy0 - 2, width: vx1 - vx0 + 4, height: vy1 - vy0 + 4};
+  // per seam: a mask that hides its surface details where another seam's gel lies, so the T-junctions read as one
+  // continuous gel body: C1's shading stops at a branch's gel, a branch's runs on into C1's lip and stops at its core
+  const ids = [...new Set(runs.map((r) => r.id))];
+  const masks: Partial<Record<SeamId, string>> = {}, masksO: Partial<Record<SeamId, string>> = {};
+  ids.forEach((id) => { masks[id] = uid('fb_gm'); masksO[id] = uid('fb_go'); });
+  const c1Clip = uid('fb_c1');
+  const hasJ = runs.some((r) => r.id === 'C1') && runs.some((r) => r.id !== 'C1');
   return (
     <g>
+      <defs>
+        {ids.map((id) => (
+          <mask key={id} id={masks[id]} maskUnits="userSpaceOnUse" {...mk}>
+            <rect {...mk} fill="#FFFFFF" />
+            {runs.map((r, i) => (r.id !== id ? <path key={i} d={id === 'C1' ? outlines[i] : cores[i]} fill="#000000" /> : null))}
+          </mask>
+        ))}
+        {/* and one that hides the bone's lip line wherever another seam's gel (or a junction fillet) lies */}
+        {ids.map((id) => (
+          <mask key={`o${id}`} id={masksO[id]} maskUnits="userSpaceOnUse" {...mk}>
+            <rect {...mk} fill="#FFFFFF" />
+            {runs.map((r, i) => (r.id !== id ? <path key={i} d={outlines[i]} fill="#000000" stroke="#000000" strokeWidth={2.5 * inkW} /> : null))}
+            {fillets.map((d, i) => <path key={`f${i}`} d={d} fill="#000000" stroke="#000000" strokeWidth={2.5 * inkW} />)}
+          </mask>
+        ))}
+        {hasJ && <clipPath id={c1Clip}>{runs.map((r, i) => (r.id === 'C1' ? <path key={i} d={outlines[i]} /> : null))}</clipPath>}
+      </defs>
       <g clipPath={`url(#${radClip})`}>
-        {/* one inked union of every seam's gel: an ink pass of all shapes, then the fills on top */}
+        {/* one inked union of every seam's gel (and the junctions' fillets): an ink pass of all shapes, then the fills */}
         <g>
-          {outlines.map((d, i) => <path key={`i${i}`} d={d} fill={C.glueInk} stroke={C.glueInk} strokeWidth={2 * inkW} strokeLinejoin="round" />)}
-          {bulbs.map((b, i) => <circle key={`ib${i}`} cx={b.c.x} cy={b.c.y} r={b.r} fill={C.glueInk} stroke={C.glueInk} strokeWidth={2 * inkW} />)}
+          {outlines.map((d, i) => <path key={`i${i}`} d={d} fill={GLUE_EDGE} stroke={GLUE_EDGE} strokeWidth={2 * inkW} strokeLinejoin="round" />)}
+          {fillets.map((d, i) => <path key={`if${i}`} d={d} fill={GLUE_EDGE} stroke={GLUE_EDGE} strokeWidth={2 * inkW} strokeLinejoin="round" opacity={healA} />)}
+          {bulbs.map((b, i) => <circle key={`ib${i}`} cx={b.c.x} cy={b.c.y} r={b.r} fill={GLUE_EDGE} stroke={GLUE_EDGE} strokeWidth={2 * inkW} />)}
         </g>
-        {/* surface pores just past the lips, filled with gel (it keys into both faces) */}
-        {keyA > 0.01 && (
-          <g opacity={keyA}>
-            {keyed.map((k, i) => <circle key={`k${i}`} cx={k.c.x} cy={k.c.y} r={k.r} fill={C.glueDeep} />)}
-            {keyed.map((k, i) => <circle key={`kk${i}`} cx={k.c.x - k.r * 0.25} cy={k.c.y - k.r * 0.25} r={k.r * 0.5} fill={C.glue} />)}
-          </g>
-        )}
-        {/* the lips: thin gel wetting each face (light), then the core filling the gap between the faces (deeper) */}
+        {/* the lips (thin gel wetting each face, light), then the core filling the gap between the faces */}
         <g>
           {outlines.map((d, i) => <path key={`l${i}`} d={d} fill={lipCol} />)}
+          {fillets.map((d, i) => <path key={`lf${i}`} d={d} fill={fil[i].deep ? deepCol : lipCol} opacity={healA} />)}
           {bulbs.map((b, i) => <circle key={`lb${i}`} cx={b.c.x} cy={b.c.y} r={b.r} fill={lipCol} />)}
         </g>
         <g>
           {cores.map((d, i) => <path key={`c${i}`} d={d} fill={coreCol} />)}
           {bulbs.map((b, i) => <circle key={`cb${i}`} cx={b.c.x} cy={b.c.y} r={b.rc} fill={coreCol} />)}
-        </g>
-        {/* the broken faces seen through the gel (the band sits IN the crack) */}
-        {healA > 0.01 && detA > 0.01 && (
-          <g opacity={0.55 * healA * detA} fill="none" stroke={C.glueDeep} strokeWidth={1.4 * px} strokeLinejoin="round">
-            {runs.map((r, i) => (
-              <g key={`f${i}`}>
-                {([-1, 1] as const).flatMap((side) =>
-                  ranges(r.s.length, (k) => detailOk(r, k, side)).map(([a, b], k) => (
-                    <path key={`${side}_${k}`} d={poly((side < 0 ? r.loC : r.hiC).slice(a, b + 1)).replace(/Z$/, '')} />
-                  )),
-                )}
-              </g>
-            ))}
-          </g>
-        )}
-        {/* cel shading of the gel surface. Settled gel lies IN the crack, a little concave: the near wall shades the
-            light side, the surface climbs toward the light at the far face (a light strip and the gloss there). The fresh
-            tail is proud and convex: lit on the light's side, shaded on the far side, gloss on the light's side. */}
-        {detA > 0.01 && runs.map((r, i) => {
-          const ls = litSide(r.id);
-          return (
-            <g key={`s${i}`} opacity={detA}>
-              {ranges(r.s.length, (k) => detailOk(r, k, ls)).map(([a, b], k) => (
-                <path key={`d${k}`} d={poly(strip(r, 0.0, 0.24, a, b))} fill={C.glueDeep} opacity={0.46 + 0.12 * set} />
-              ))}
-              {ranges(r.s.length, (k) => detailOk(r, k, -ls as 1 | -1)).map(([a, b], k) => (
-                <path key={`l${k}`} d={poly(strip(r, 0.66, 0.9, a, b))} fill={C.glueLit} opacity={0.12 + 0.14 * gloss} />
-              ))}
+          {/* where a branch's gel lies in C1's, the two are one body: no lip between them */}
+          {hasJ && (
+            <g clipPath={`url(#${c1Clip})`}>
+              {runs.map((r, i) => (r.id !== 'C1' ? <path key={`j${i}`} d={outlines[i]} fill={coreCol} /> : null))}
             </g>
-          );
-        })}
-        {/* gloss: a fine broken highlight where the surface climbs the far face; continuous and brighter on the
-            fresh tail */}
-        {detA > 0.01 && runs.map((r, i) => {
+          )}
+        </g>
+        {runs.map((r, ri) => {
           const n = r.s.length;
-          const meanW = r.loC.reduce((acc, p, k) => acc + len(sub(r.hiC[k], p)), 0) / Math.max(1, n);
-          const sw = Math.max(1.5 * px, Math.min(meanW * 0.065, 5.5 * px));
-          const far = -litSide(r.id) as 1 | -1;
-          const settled = ranges(n, (k) => r.fresh[k] < 0.5 && detailOk(r, k, far));
-          const fresh = ranges(n, (k) => r.fresh[k] >= 0.35 && detailOk(r, k, far));
+          const nearLo = NEAR_LO[r.id];
+          const pN = nearLo ? r.lo : r.hi, pF = nearLo ? r.hi : r.lo; // outer edges: near the light / far
+          const cN = nearLo ? r.loC : r.hiC, cF = nearLo ? r.hiC : r.loC; // the faces
+          let wSum = 0;
+          for (let i = 0; i < n; i++) wSum += len(sub(pF[i], pN[i]));
+          const bandPx = wSum / Math.max(1, n) / px;
+          // surface detail needs a few pixels of band: full from 8 px wide (fixation framings included)
+          const detK = clamp((bandPx - 4) / 4) * healA;
+          if (detK < 0.01) return null;
+          const settledOk = (i: number) => !r.inset[i];
+          // 1. the deep strip: the gel in the shaded lip's lee (concave settled gel), narrowing to nothing on the proud
+          //    fresh tail
+          const deep: React.ReactNode[] = ranges(n, (i) => settledOk(i) && r.fresh[i] < 0.95).map(([a, b], k) => {
+            const A: P[] = [], B: P[] = [];
+            for (let i = a; i <= b; i++) {
+              const kk = 1 - r.fresh[i];
+              A.push(pN[i]);
+              B.push(lerpP(pN[i], lerpP(cN[i], cF[i], 0.26), kk));
+            }
+            return <path key={`d${k}`} d={poly([...A, ...B.reverse()])} fill={deepCol} opacity={detK} />;
+          });
+          // 2. fresh tail: proud and convex, a brighter lip on the light's side
+          const freshL: React.ReactNode[] = ranges(n, (i) => r.fresh[i] > 0.02 && !r.inset[i]).map(([a, b], k) => {
+            const A: P[] = [], B: P[] = [];
+            for (let i = a; i <= b; i++) {
+              A.push(pN[i]);
+              B.push(lerpP(pN[i], pF[i], 0.3 * r.fresh[i]));
+            }
+            return <path key={`fl${k}`} d={poly([...A, ...B.reverse()])} fill={FRESH_LIP} opacity={0.85 * detK} />;
+          });
+          // 3. the one highlight: on the settled gel where its surface climbs the lit (far) face, continuous while
+          //    glossy; as the glue sets it shortens to the best-lit stretches and fades (satin). On the fresh tail it
+          //    is wider and brighter, on the proud crest toward the light.
+          const hlW = Math.min(Math.max(0.05 * bandPx, 2.2), 6) * px;
+          const facing = (i: number) => {
+            const v = nrm(sub(pN[i], pF[i]));
+            return dotL(v) + 0.45 * noise1(r.s[i] * 1.3 + SEED[r.id] * 5, SEED[r.id] + 9);
+          };
+          const thr = -2 + 2.75 * ss(set, 0, 1);
+          const settledHl = ranges(n, (i) => settledOk(i) && r.fresh[i] < 0.45 && facing(i) > thr).map(([a, b], k) => {
+            const ps: P[] = [];
+            for (let i = a; i <= b; i++) ps.push(lerpP(cN[i], cF[i], 0.82));
+            return <path key={`h${k}`} d={open(ps, 0.5)} stroke={C.glueShine} strokeWidth={hlW * (1 - 0.2 * set)} opacity={(0.9 - 0.45 * set) * detK} />;
+          });
+          const freshW = Math.max(hlW, 0.12 * bandPx * px);
+          const freshHl = ranges(n, (i) => r.fresh[i] >= 0.4 && !r.inset[i]).map(([a, b], k) => {
+            const ps: P[] = [];
+            for (let i = a; i <= b; i++) ps.push(lerpP(cN[i], cF[i], 0.2));
+            return <path key={`hf${k}`} d={open(ps, 0.5)} stroke={C.glueShine} strokeWidth={freshW} opacity={0.95 * detK} />;
+          });
           return (
-            <g key={`g${i}`} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={detA}>
-              {settled.map(([a, b], k) => (
-                <path key={`o${k}`} d={open(line(r, 0.78, a, b), 0.5)} stroke={C.glueShine} strokeWidth={sw}
-                  strokeDasharray={`${(meanW * 2.6).toFixed(3)} ${(meanW * 1.7).toFixed(3)}`} opacity={0.8 * gloss ** 1.8} />
-              ))}
-              {fresh.map(([a, b], k) => (
-                <path key={`f${k}`} d={open(line(r, 0.76, a, b), 0.5)} stroke={C.glueShine} strokeWidth={sw * 1.3} opacity={0.95 * gloss} />
-              ))}
+            <g key={`s${ri}`} mask={`url(#${masks[r.id]})`}>
+              {deep}
+              {freshL}
+              <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+                {settledHl}
+                {freshHl}
+              </g>
             </g>
           );
         })}
@@ -497,7 +754,17 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
             <g key={`bh${i}`} opacity={flow}>
               <circle cx={b.c.x + b.r * 0.12} cy={b.c.y + b.r * 0.14} r={b.rc * 0.86} fill={C.glueDeep} opacity={0.35} />
               <circle cx={b.c.x - b.r * 0.06} cy={b.c.y - b.r * 0.06} r={b.rc * 0.78} fill={coreCol} />
-              <ellipse cx={hx} cy={hy} rx={b.r * 0.3} ry={b.r * 0.17} fill={C.glueShine} opacity={0.92 * gloss} transform={`rotate(-38 ${hx} ${hy})`} />
+              <ellipse cx={hx} cy={hy} rx={b.r * 0.3} ry={b.r * 0.17} fill={C.glueShine} opacity={0.92} transform={`rotate(-38 ${hx} ${hy})`} />
+            </g>
+          );
+        })}
+        {/* the shaded face's broken lip over the gel's edge: the gel lies IN the seam, under the bone's edge */}
+        {lineFade * healA > 0.01 && runs.map((r, ri) => {
+          const pN = NEAR_LO[r.id] ? r.lo : r.hi;
+          const rs = ranges(r.s.length, (i) => !r.inset[i] && r.fresh[i] < 0.3 && (r.id === 'C1' || r.s[i] > 0.5));
+          return (
+            <g key={`bl${ri}`} mask={`url(#${masksO[r.id]})`} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" strokeLinecap="round" opacity={lineFade * healA}>
+              {rs.map(([a, b], k) => <path key={k} d={open(pN.slice(a, b + 1), 0.5)} />)}
             </g>
           );
         })}
@@ -510,45 +777,80 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
   );
 };
 
-// ---------------------------------------------------------------- contact cues
-const Contact: React.FC<{p: P; c: number; r: number; gid: string}> = ({p, c, r, gid}) => {
-  if (c < 0.01) return null;
-  const rr = r * (1 + 0.45 * (1 - c));
-  return (
-    <g>
-      <ellipse cx={p.x + 0.2 * r} cy={p.y + 0.28 * r} rx={rr * 1.2} ry={rr} fill={`url(#${gid})`} opacity={0.62 * c} />
-      <ellipse cx={p.x + 0.06 * r} cy={p.y + 0.08 * r} rx={r * 0.5} ry={r * 0.44} fill={`url(#${gid})`} opacity={0.9 * c * c} />
-    </g>
-  );
-};
-
 // ---------------------------------------------------------------- the whole fracture
-const WEDGE_D = poly(WEDGE_POLY as P[]);
 const isDisplaced = (w: WedgeX) => Math.abs(w.dx) + Math.abs(w.dy) + Math.abs(w.rot) * 10 > 1e-4;
+/** the wedge's exposed side wall (its broken face seen as it stands out of its bed): a strip outside each face */
+type Wall = {d: string; edge: string; pores: {x: number; y: number; r: number}[]};
+const sideWall = (wW: number): Wall => {
+  const [f1, f3] = WEDGE_FACES;
+  const off = (ps: P[], id: SeamId, side: 1 | -1) =>
+    ps.map((p) => {
+      const s = seamNearest(id, p);
+      return add(p, mul(seamNormal(id, s), -side * wW));
+    });
+  const o1 = off(f1, 'C1', 1), o3 = off(f3, 'C3', -1);
+  const outer = [...[...o1].reverse(), ...o3];
+  // its spongy broken surface
+  const pores: Wall['pores'] = [];
+  [f1, f3].forEach((f, k) => {
+    const o = k === 0 ? o1 : o3;
+    for (let i = 2; i < f.length - 2; i++) {
+      const h = hash(i * 3.71 + k * 17.3);
+      if (h > 0.3) continue;
+      const q = lerpP(f[i], o[i], 0.2 + 0.6 * hash(i * 1.37 + k));
+      pores.push({x: q.x, y: q.y, r: Math.min(wW * 0.25, 0.012 + 0.03 * hash(i * 5.1 + k * 2.2) ** 2)});
+    }
+  });
+  return {d: poly([...outer, ...[...f3].reverse(), ...f1]), edge: line(outer), pores};
+};
+const WALL_CACHE = new Map<number, Wall>();
+const wallOf = (wW: number) => {
+  const key = Math.round(wW * 100);
+  const hit = WALL_CACHE.get(key);
+  if (hit) return hit;
+  const v = sideWall(key / 100);
+  WALL_CACHE.set(key, v);
+  return v;
+};
 
 export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view}) => {
   const px = st.px;
-  const ids: Ids = {shade: uid('fb_shade'), sheen: uid('fb_sheen'), rad: uid('fb_rad')};
-  const notWedge = uid('fb_nw'), wedgeClip = uid('fb_wc'), glueClip = uid('fb_gc'), soft = uid('fb_soft'), mouths = uid('fb_mo');
+  const ids: Ids = {shade: uid('fb_shade'), shadeH: uid('fb_shh'), ramp: uid('fb_ramp'), rampM: uid('fb_rampm'), sheen: uid('fb_sheen'), rad: uid('fb_rad')};
+  const notWedge = uid('fb_nw'), wedgeClip = uid('fb_wc'), glueClip = uid('fb_gc'), mouths = uid('fb_mo');
   const h = st.heal;
   const remodel = clamp(h.remodel);
-  const fade = 1 - ss(remodel, 0, 0.8); // chamfers, gap colour
-  // face lines fade out completely: both faces would leave a DOUBLE trace; a single faint seam trace, if wanted, is the
-  // healing layer's (it draws the remodelled bone over the gap)
-  const inkFade = 1 - ss(remodel, 0, 0.95);
+  // the chamfers and both faces' lines are gone by remodel 0.4 (the healing layer draws the remodelled bone over the
+  // gap; a lingering face line on either side would read as a doubled outline)
+  const fade = 1 - ss(remodel, 0, 0.4);
+  const inkFade = fade;
   const gapCol = mix(GAP, C.bone, ss(remodel, 0, 0.75));
   const disp = isDisplaced(st.wedge);
   const dispK = clamp((Math.abs(st.wedge.dx) + Math.abs(st.wedge.dy)) / 1.2 + Math.abs(st.wedge.rot) / 0.2);
-  const statArts = disp ? FACE_ART.filter((a) => !a.face.wedge) : FACE_ART;
-  const wedgeArts = FACE_ART.filter((a) => a.face.wedge);
-  const gaps = disp ? SEAM_IDS.flatMap((id) => gapPolys(id, st.wedge, 0.07, true)).map(poly) : SEATED_GAPS;
+  // the chamfer: a hard strip about 0.3 mm wide beside the gel at macro (the wider macro meniscus covers 0.14 of it),
+  // a little narrower from CAM0 out
+  const arts = faceArts(0.44 + (0.32 - 0.44) * ss(px, 0.009, 0.02));
+  const statArts = disp ? arts.filter((a) => !a.wedge) : arts;
+  const wedgeArts = arts.filter((a) => a.wedge);
   const runs = SEAM_IDS.flatMap((id) => glueRuns(id, st));
   const gapsUnion = uid('fb_gu');
   const viewW: View = disp ? [view[0] - 3, view[1] - 3, view[2] + 3, view[3] + 3] : view;
+  const shadowK = clamp(dispK * 3);
+  const so = 0.36 * Math.min(1, dispK * 1.5); // cast shadow offset (mm), away from the key light
+  const wallK = clamp(dispK * 1.25);
+  const wall = disp && wallK > 0.02 ? wallOf(0.3 * wallK) : null;
   return (
     <g>
       <defs>
-        <BoneShade gid={ids.shade} />
+        <Grad id={ids.shade} x1={-14} y1={-6} x2={16} y2={4} />
+        {/* the same shading as it falls at y = 4 (the fracture), carried down the shaft */}
+        <Grad id={ids.shadeH} x1={-17.333} y1={0} x2={12.667} y2={0} />
+        <linearGradient id={ids.ramp} gradientUnits="userSpaceOnUse" x1={0} y1={14} x2={0} y2={40}>
+          <stop offset={0} stopColor="#000000" />
+          <stop offset={1} stopColor="#FFFFFF" />
+        </linearGradient>
+        <mask id={ids.rampM} maskUnits="userSpaceOnUse" x={-20} y={13} width={40} height={250}>
+          <rect x={-20} y={13} width={40} height={250} fill={`url(#${ids.ramp})`} />
+        </mask>
         <clipPath id={ids.rad}><path d={RAD_PATH} /></clipPath>
         <linearGradient id={ids.sheen} gradientUnits="userSpaceOnUse" x1={-13} y1={0} x2={-2} y2={0}>
           <stop offset={0} stopColor="#FFFFFF" stopOpacity={0} />
@@ -556,36 +858,35 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
           <stop offset={0.6} stopColor="#FFFFFF" stopOpacity={0.12} />
           <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
         </linearGradient>
-        <radialGradient id={soft}>
-          <stop offset={0} stopColor="#2A140C" stopOpacity={0.85} />
-          <stop offset={0.5} stopColor="#2A140C" stopOpacity={0.42} />
-          <stop offset={1} stopColor="#2A140C" stopOpacity={0} />
-        </radialGradient>
-        {disp && (
-          <>
-            <clipPath id={notWedge}><path d={`M-400 -400H400V600H-400Z ${WEDGE_D}`} clipRule="evenodd" /></clipPath>
-            <clipPath id={wedgeClip}><path d={WEDGE_D} /></clipPath>
-          </>
-        )}
+        {disp && <clipPath id={notWedge}><path d={`M-400 -400H400V600H-400Z ${WEDGE_D}`} clipRule="evenodd" /></clipPath>}
+        <clipPath id={wedgeClip}><path d={WEDGE_D} /></clipPath>
         {/* everywhere except the seams' gaps: the bone's outline is cut where a seam opens onto its edge */}
-        <clipPath id={mouths}><path d={`M-400 -400H400V600H-400Z ${gaps.join(' ')}`} clipRule="evenodd" /></clipPath>
-        <clipPath id={gapsUnion}>{gaps.map((d, i) => <path key={i} d={d} />)}</clipPath>
+        <clipPath id={mouths}><path d={`M-400 -400H400V600H-400Z ${SEATED_GAPS.join(' ')}`} clipRule="evenodd" /></clipPath>
+        <clipPath id={gapsUnion}>{SEATED_GAPS.map((d, i) => <path key={i} d={d} />)}</clipPath>
         <clipPath id={glueClip}>
           {runs.map((r, i) => <path key={i} d={poly(runOutline(r, 'outer'))} />)}
         </clipPath>
       </defs>
       {/* 1. the cavity bed */}
       <path d={RAD_PATH} fill={gapCol} />
-      {/* 2-3. the static bone and its broken faces */}
+      {/* 2. the wedge's vacated bed: a cancellous floor */}
+      {disp && (
+        <g clipPath={`url(#${ids.rad})`}>
+          <g clipPath={`url(#${wedgeClip})`}>
+            <Bed px={px} view={view} k={1} />
+          </g>
+        </g>
+      )}
+      {/* 3-4. the static bone and its broken faces */}
       <g clipPath={disp ? `url(#${notWedge})` : undefined}>
         <BoneBody ids={ids} px={px} view={view} outlineClip={mouths} closeK={ss(remodel, 0.25, 0.9)} />
       </g>
       <g clipPath={`url(#${ids.rad})`}>
         <Faces arts={statArts} px={px} view={view} fade={fade} inkFade={inkFade} />
-        {/* 4. the gaps: one dark union over the faces' inner halves and across every seam's mouth */}
+        {/* 5. the gaps: one dark union over the faces' inner edges and across every seam's mouth */}
         {fade > 0.001 && (
           <g>
-            {gaps.map((d, i) => <path key={i} d={d} fill={gapCol} />)}
+            {SEATED_GAPS.map((d, i) => <path key={i} d={d} fill={gapCol} />)}
             {px < 0.05 && (
               <g fill="none" stroke={C.marrow} strokeWidth={0.22} strokeLinecap="round" opacity={0.5 * fade * clamp((0.05 - px) / 0.015)}>
                 {CORE_STATIC.map((d, i) => <path key={`m${i}`} d={d} />)}
@@ -602,27 +903,34 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
           <path d={RAD_PATH} fill="none" stroke={gapCol} strokeWidth={3.6 * px} />
         </g>
       )}
-      {/* 5. the wedge fragment in its current pose */}
+      {/* 6. the wedge fragment in its current pose: a hard cast shadow, its exposed side wall, its body and faces */}
       {disp && (
         <g>
-          <g transform={`translate(${(0.22 * dispK).toFixed(4)} ${(0.34 * dispK).toFixed(4)}) ${xfSvg(st.wedge)}`} opacity={0.4 * dispK}>
-            <g clipPath={`url(#${wedgeClip})`}><path d={RAD_PATH} fill="#1E0A06" /></g>
+          <g transform={`translate(${(-LIGHT.x * so).toFixed(4)} ${(-LIGHT.y * so).toFixed(4)}) ${xfSvg(st.wedge)}`} opacity={0.55 * shadowK}>
+            <g clipPath={`url(#${wedgeClip})`}><path d={RAD_PATH} fill={SHADOW} /></g>
           </g>
           <g transform={xfSvg(st.wedge)}>
-            <g clipPath={`url(#${wedgeClip})`}>
-              <BoneBody ids={ids} px={px} view={viewW} />
+            {wall && (
               <g clipPath={`url(#${ids.rad})`}>
-                <Faces arts={wedgeArts} px={px} view={viewW} fade={fade} inkFade={inkFade} />
+                <path d={wall.d} fill={mix(C.cancellous, C.boneDeep, 0.42)} />
+                <g fill={mix(C.cancellousPore, C.cavity, 0.3)} opacity={0.8}>
+                  {wall.pores.map((q, i) => <circle key={i} cx={q.x} cy={q.y} r={q.r} />)}
+                </g>
+                <path d={wall.edge} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" />
+              </g>
+            )}
+            <g clipPath={`url(#${wedgeClip})`}>
+              <BoneBody ids={ids} px={px} view={viewW} shaft={false} />
+              <g clipPath={`url(#${ids.rad})`}>
+                {/* while it stands out of its bed its broken side wall shows instead of the chamfer */}
+                <Faces arts={wedgeArts} px={px} view={viewW} fade={fade * (1 - 0.75 * wallK)} inkFade={inkFade} />
               </g>
             </g>
           </g>
         </g>
       )}
-      {/* 6. the glue */}
-      <Glue st={st} runs={runs} radClip={ids.rad} glueClip={glueClip} />
-      {/* 7. contact cues */}
-      {st.press && <Contact p={st.press.p} c={clamp(st.press.contact)} r={PRESS_R} gid={soft} />}
-      {st.appContact && <Contact p={st.appContact.p} c={clamp(st.appContact.contact)} r={APP_R} gid={soft} />}
+      {/* 7. the glue */}
+      <Glue st={st} runs={runs} radClip={ids.rad} glueClip={glueClip} view={view} lineFade={inkFade} />
     </g>
   );
 };

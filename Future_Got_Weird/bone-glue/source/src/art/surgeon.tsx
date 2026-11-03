@@ -113,9 +113,12 @@ const nearestOn = (p: V, ps: V[]) => {
 // IP, tip) with a radius at each joint; seen from above, a flexed phalanx is simply a shorter (foreshortened) segment.
 // Each segment is drawn in front of the held object ('f') or behind it ('b'); 'F' digits lie over everything (an index
 // on top of an instrument); a thumb may also be 'm': over the back of the hand but under an object that lies over the
-// palm (objOverPalm: a probe resting in the web).
-type Lay = 'b' | 'f' | 'F' | 'm';
-type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]};
+// palm (objOverPalm: a probe resting in the web), or 'p': part of the palm's own silhouette (its base swells into the
+// palm outline as the thenar bulge, one contour round both, no line where it leaves the hand; under the held object).
+type Lay = 'b' | 'f' | 'F' | 'm' | 'p';
+/** curl: a finger folded under the palm, seen as a short knuckle stub that grows out of the back of the hand (no gloss
+ *  or separation line at its knuckle end) */
+type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]; curl?: boolean};
 /** thumbOver: the thumb is drawn over the palm; objOverPalm: the held object lies over the back of the hand (a probe
  *  resting in the web), so it is drawn after the palm group and only the 'F' digits (and a front thumb) cover it */
 export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean; objOverPalm?: boolean};
@@ -226,6 +229,8 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
         <path key={i} d={`M${Pf(W(0.1, v * 0.4))} Q${Pf(W(0.26, v * 0.75))} ${Pf(W(u - 0.05, v))}`} fill="none" stroke={hi} strokeWidth={fmt(L * 0.012)} strokeLinecap="round" opacity={0.22} />
       ))}
       {MCP.map(([u, v], i) => {
+        // a curled finger's knuckle is part of its stub (which carries its own small gloss at the bent middle joint)
+        if (pose.fingers[i]?.curl) return null;
         const p = add(W(u - 0.03, v), mul(LIGHT, FR[i] * L * 0.3));
         return <ellipse key={`k${i}`} cx={fmt(p.x)} cy={fmt(p.y)} rx={fmt(FR[i] * L * 0.42)} ry={fmt(FR[i] * L * 0.22)} transform={`rotate(${fmt(ang + 90)} ${fmt(p.x)} ${fmt(p.y)})`} fill="#FFFFFF" opacity={0.26} />;
       })}
@@ -238,12 +243,16 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
     const A = fingers[i].filter((s) => s.lay === lay && s.si === 0);
     const B = fingers[i + 1]?.filter((s) => s.lay === lay && s.si === 0);
     if (!A.length || !B?.length) return null;
+    // beside a curled stub the knuckles blend into the back of the hand: no separation line there at all
+    if (pose.fingers[i].curl || pose.fingers[i + 1]?.curl) return null;
+    const t0 = 0;
     const bPts = [B[0].a, ...B.map((s) => s.b)];
     const runs: V[][] = [];
     let cur: V[] = [];
     A.forEach((s) => {
       for (let k = 0; k <= 6; k++) {
         const t = k / 6;
+        if (t < t0) continue;
         const p = lerpV(s.a, s.b, t);
         const r = s.ra + (s.rb - s.ra) * t;
         const nb = nearestOn(p, bPts);
@@ -260,10 +269,17 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
       .filter((rn) => rn.length > 2)
       .map((rn, k) => <path key={`s${i}${lay}${k}`} d={`M${rn.map((q) => Pf(q)).join(' L')}`} fill="none" stroke={INK} strokeWidth={SEP_PX} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />);
   };
-  const jointDeco = (segs: Seg[], key: string, lay: Lay) => {
+  const jointDeco = (segs: Seg[], key: string, lay: Lay, curl = false) => {
     const els: React.ReactNode[] = [];
     segs.forEach((s, i) => {
       if (s.lay !== lay) return;
+      if (curl) {
+        // a curled stub: only a small gloss on the bent middle knuckle (its far end), none at the hand
+        const ax = norm(sub(s.b, s.a));
+        const g = add(lerpV(s.a, s.b, 0.86), mul(LIGHT, s.rb * 0.4));
+        if (i === 0) els.push(<ellipse key={`${key}g${i}`} cx={fmt(g.x)} cy={fmt(g.y)} rx={fmt(s.rb * 0.36)} ry={fmt(s.rb * 0.14)} transform={`rotate(${fmt(degOf(ax) + 90)} ${fmt(g.x)} ${fmt(g.y)})`} fill="#FFFFFF" opacity={0.42} />);
+        return;
+      }
       const ax = norm(sub(s.b, s.a));
       const sl = len(sub(s.b, s.a));
       const nn = perp(ax);
@@ -293,6 +309,11 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
     return els;
   };
 
+  // the thenar eminence: the thumb's metacarpal swelling out of the palm's radial edge (only for a palm-merged thumb)
+  const merged = pose.thumbLay === 'p';
+  const thenar = merged ? (
+    <Capsule key="thenar" id={`${id}-thn`} a={W(0.06, 0.13)} b={thumb[0].b} ra={0.088 * L} rb={thumb[1].ra * 1.04} color={color} spec={0.1} k={0.8} />
+  ) : null;
   const thumbGroup = (
     <g>
       <g className={NSLINE}>
@@ -308,7 +329,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   const fingerDeco = (lay: Lay) => (
     <g>
       {[0, 1, 2].map((i) => sepFor(i, lay))}
-      {fingers.map((segs, i) => jointDeco(segs, `f${i}`, lay))}
+      {fingers.map((segs, i) => jointDeco(segs, `f${i}`, lay, pose.fingers[i].curl))}
     </g>
   );
   const hasBack = fingers.some((sg) => sg.some((s) => s.lay === 'b'));
@@ -325,10 +346,13 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
       <Inked w={OUT}>
         {cuffBody}
         {palm}
+        {thenar}
+        {merged && capsules(thumb.slice(1).map((s) => ({...s, lay: 'p' as Lay})), 't', 'p')}
         {fingerCaps('f')}
       </Inked>
       {cuffDeco}
       {palmDeco}
+      {merged && jointDeco(thumb.map((s) => ({...s, lay: 'p' as Lay})), 'tj', 'p')}
       {fingerDeco('f')}
     </g>
   );
@@ -392,6 +416,7 @@ const curled = (i: number, pip: [number, number], down: [number, number], fold =
   r: fingerR(i).map((r) => r * 1.07),
   // the folded middle phalanx tucks under the knuckle: only its edge shows below the stub
   lay: ['f', 'b'],
+  curl: true,
 });
 const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
@@ -433,14 +458,15 @@ const penPose = (down: [number, number]): GripPose => {
       {j: [MCP[0], pc(-24, -7), pc(-10, -2.6), pc(0.5, -0.4)], r: fingerR(0), lay: ['F', 'F', 'F']},
       // the middle finger curls down beside it, its tip under the handle's near side
       {j: [MCP[1], pc(-15, -19), pc(-5, -13.5), pc(-1.5, -8.5)], r: fingerR(1)},
-      // ring and little: curled loosely under the palm (knuckle stubs)
-      curled(2, pc(-17, -37), down, 0.06),
-      curled(3, pc(-21, -53), down, 0.055),
+      // ring and little: curled under the palm, pulled back into a row of knuckles
+      curled(2, pc(-30, -35), down, 0.06),
+      curled(3, pc(-36, -50), down, 0.055),
     ],
-    // the thumb grows from the radial edge of the hand over the back of the hand, under the probe at its knuckle (the
-    // probe rests in the web), its tip beside the index tip on the handle's far side
-    thumb: {j: [[0.13, 0.2], pc(-66, 8), pc(-34, 15), pc(-3, 9.6)], r: THUMB_R},
-    thumbLay: 'm',
+    // the thumb swells out of the palm's radial edge (the thenar), its knuckle at the hand's edge beside the handle (the
+    // probe rests in the web), then reaches forward away from the handle and turns back in: thumb and handle make a
+    // clear V; its tip presses the handle's far side beside the index tip
+    thumb: {j: [[0.13, 0.2], [0.36, 0.3], pc(-22, 22), pc(-3, 10.5)], r: THUMB_R},
+    thumbLay: 'p',
     thumbOver: false,
     objOverPalm: true,
   };
@@ -484,7 +510,10 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
   const Lc = rot(LIGHT, -roll);
   const xf = -30 * t;
   const fw = 4.6; // feature line width (head units)
-  const focus = clamp(face.focus);
+  // focus: a calm, attentive look (the eyes narrow only a little: the story's 0.75 reads as about 0.35 of the old
+  // range) with a slight inward knit of the brows
+  const focus = clamp(face.focus) * 0.47;
+  const knit = clamp(face.focus) * 0.5;
   const sm = clamp(face.smile);
   const gy = clamp(face.gy, -1, 1);
   const gx = clamp(face.gx, -1, 1);
@@ -601,9 +630,9 @@ const SurgeonHead: React.FC<{id: string; c: V; R: number; roll: number; turn: nu
   const Brow = (k: 'n' | 'f', ex: number, wf: number, inner: 1 | -1) => {
     const by = -44 + browDown * 9 - browLift * 6;
     const w = 21 * wf;
-    const innerX = ex + inner * w * 0.95 - inner * browDown * 3;
+    const innerX = ex + inner * w * 0.95 - inner * browDown * 3 + inner * knit * 4;
     const outerX = ex - inner * w * 1.05;
-    const innerY = by + browDown * 5 - browLift * 2;
+    const innerY = by + browDown * 5 - browLift * 2 + knit * 5;
     const outerY = by - browDown * 1 + browLift * 2;
     const midY = (innerY + outerY) / 2 - 5 - browLift * 3;
     return <InkLine key={`b${k}`} d={Q({x: outerX, y: outerY}, {x: ex, y: midY}, {x: innerX, y: innerY})} w={fw * 1.5} />;
@@ -846,7 +875,8 @@ const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
   const E0 = elbowFor(S, Wl0, back, P.Lu, P.Lf, P.side, P.dev);
   // withdrawal: the hand (with its instrument) slides back along the forearm and a little toward the shoulder; the
   // elbow follows part of the way (the forearm foreshortens as it lifts off the table)
-  const e = ease(1 - on);
+  // (on is already eased by the story: easing it again made the withdrawal whip)
+  const e = clamp(1 - on);
   let Wl = Wl0, E = E0, shift = {x: 0, y: 0};
   if (e > 1e-4) {
     const fdir = norm(sub(E0, Wl0));
@@ -957,17 +987,27 @@ export const SurgeonBack: React.FC<{id: string; s: SurgeonState}> = ({id, s: st}
   );
 };
 
-/** His near (left) arm, both gloved hands and both instruments: draw AFTER (over) the patient's arm. */
+/** His near (left) arm, both gloved hands and both instruments: draw AFTER (over) the patient's arm. The far (right)
+ *  glove and its applicator belong to the arm that hangs behind his chest, so they are cut by the gown's outline: a far
+ *  hand withdrawing toward his body goes behind the chest, it never sprouts from it. */
 export const SurgeonFront: React.FC<{id: string; s: SurgeonState}> = ({id, s: st}) => {
   const k = st.k;
   const far = solveArm(st, 'far');
   const near = solveArm(st, 'near');
+  const torsoD = smooth(bodyGeo(st.lean).torso, true, 0.9);
   return (
     <g className={NSCLASS}>
       <NsStyle />
+      <defs>
+        <clipPath id={`${id}-nt`}>
+          <path d={`M-20000 -20000H20000V20000H-20000Z ${torsoD}`} clipRule="evenodd" transform={bodyT(k)} />
+        </clipPath>
+      </defs>
       <SleeveArm id={`${id}-na`} a={near} far={false} k={k} />
       <GloveOf id={`${id}-nh`} a={near} far={false} obj={<Probe id={`${id}-pr`} s={st.probe} />} />
-      <GloveOf id={`${id}-fh`} a={far} far obj={<Applicator id={`${id}-ap`} s={st.app} />} />
+      <g clipPath={`url(#${id}-nt)`}>
+        <GloveOf id={`${id}-fh`} a={far} far obj={<Applicator id={`${id}-ap`} s={st.app} />} />
+      </g>
     </g>
   );
 };

@@ -1,6 +1,6 @@
 // Test entry for the V2 oyster (src/art/oyster.tsx). 'Sheet': phone-size panels (360×640) along the film's oyster
-// shot: OY_CAM_IN at t 8.0; the push at t 8.8 and 9.5 (the lead's eased zoomAbout, reproduced here); OY_CAM_OUT at
-// reveal 0.5 (t 10.0) and 1 (t 10.3); and the push at t 9.8 (window opening mid push). 'One': one full-size frame
+// shot at t 8.0, 8.5, 9.0, 9.5, 10.0, 10.3 on the lead's camera path (story.ts oysterCam, reproduced here) with the
+// film's reveal. 'One': one full-size frame
 // ({t, mode: 'in' | 'out' | 'path', reveal? (-1 or absent: the film's value), debug?}); debug overlays the bone glue band's glueTop (magenta) and
 // glueBottom (yellow) from production/v2_match_band.json, and faceTop/faceBottom (thin cyan).
 import React from 'react';
@@ -11,16 +11,15 @@ import {clamp, ss} from '../lib';
 import BAND from '../../../production/v2_match_band.json';
 
 const CUT_IN = 7.98, CUT_OUT = 10.33;
-/** the lead's oyster camera (story.ts oysterCam): a Hermite ease that is still moving at both cuts */
+/** the lead's oyster camera (story.ts oysterCam): the medium shot holds ~0.6 s with a slow creep, the push runs into the
+ *  base, then creeps on through the reveal and is still moving at the cut back */
+const OY_CREEP = 0.07;
 export const pathCam = (t: number): Cam => {
   const u = clamp((t - CUT_IN) / (CUT_OUT - CUT_IN));
-  const dl = Math.log(OY_CAM_OUT.w) - Math.log(OY_CAM_IN.w);
-  const D = CUT_OUT - CUT_IN;
-  const m0 = (-0.45 * D) / dl, m1 = (-0.22 * D) / dl;
-  const e = (x: number) => -2 * x ** 3 + 3 * x ** 2 + (x ** 3 - 2 * x ** 2 + x) * m0 + (x ** 3 - x ** 2) * m1;
+  const e = (x: number) => OY_CREEP * x + (1 - OY_CREEP) * ss(x, 0.22, 0.7);
   return zoomAbout(u, OY_CAM_IN, OY_CAM_OUT, e);
 };
-const revealAt = (t: number) => ss(t, 9.47, 10.13);
+const revealAt = (t: number) => ss(t, 9.42, 10.13);
 
 type Rows = {rows: {glueTop: number[]; glueBottom: number[]; faceTop: number[]; faceBottom: number[]}[]};
 const R = (BAND as unknown as Rows).rows;
@@ -45,12 +44,12 @@ const Frame: React.FC<{id: string; p: Panel; debug?: boolean}> = ({id, p, debug}
 );
 
 const PANELS: Panel[] = [
-  {t: 8.0, mode: 'in'},
-  {t: 8.8, mode: 'path'},
+  {t: 8.0, mode: 'path'},
+  {t: 8.5, mode: 'path'},
+  {t: 9.0, mode: 'path'},
   {t: 9.5, mode: 'path'},
-  {t: 9.8, mode: 'path'},
-  {t: 10.0, mode: 'out', reveal: 0.5},
-  {t: 10.3, mode: 'out', reveal: 1},
+  {t: 10.0, mode: 'path'},
+  {t: 10.3, mode: 'path'},
 ];
 const Sheet: React.FC<{only?: number[]}> = ({only}) => (
   <div style={{position: 'absolute', inset: 0, background: '#000'}}>

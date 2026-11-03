@@ -5,14 +5,17 @@
 //     (32 mm, 1.3 mm diameter, a slight bend 6 mm from the tip), clear barrel (10.4 x 40 mm) showing the gel whose level
 //     drops with the plunger travel, finger flange, white plunger rod and thumb pad, dark rubber stopper. The surgeon
 //     holds it in a syringe grip: the index along the barrel, the middle finger under the flange, the thumb on the pad.
-//   Probe (V2): a slim positioning probe / pusher: a fine steel shaft (2.2 mm) tapering over its last 9 mm to a small
-//     rounded point, a turned ferrule and collar, and a ribbed steel handle (9.6 mm thick, 92 mm long); 156 mm overall.
-//     The surgeon's left hand holds it in a precision (pencil) grip at the front of the handle.
+//   Probe (V2): a blunt positioning probe / ball-tip pusher (it pushes and holds bone fragments, it never pierces): a
+//     steel shaft (2.2 mm) that narrows over its last 5 mm to a short neck and ends in a polished ball (1.16 mm across),
+//     a turned ferrule and collar, and a ribbed steel handle (9.6 mm thick, 92 mm long); 156 mm overall. The surgeon's
+//     left hand holds it in a precision (pencil) grip at the front of the handle.
 //
-// Both rise off the bone with `lift` (liftXf: they back away along their axis, drift a little toward the lower right,
-// away from the key light, and grow slightly as they come up toward the lens). Their contact shadows on the bone
-// (ProbeShadow, AppShadow) are drawn by the scene in the bone layer: they meet the tip at contact and separate, soften
-// and fade as it lifts.
+// Both rise off the bone with `lift` (liftXf: they back away a little along their axis, drift a touch toward the lower
+// right and grow slightly as they come up toward the lens; the tip stays over the same piece of bone). Their contact
+// shadows on the bone (ProbeShadow, AppShadow) are drawn by the scene in the bone layer, flat and hard-edged: at contact
+// a dark crescent hugs the tip on the side away from the key light (with a small pressure highlight on the lit side)
+// and the cast shadow of the tip region meets the tip; as the tip rises the crescent goes and the cast shadow slides
+// 2-3 mm away from the tip across the bone.
 //
 // Weird Crew finish: navy ink contours (constant on-screen width: non-scaling strokes, so the same art is crisp from
 // the extreme close-up of the tips to the wide clinical shot), cel gradients lit from the upper left (LIGHT),
@@ -22,6 +25,7 @@ import {P, pt, add, sub, mul, nrm, perp, dir, open} from '../core/geo';
 import {mix, lit, shade} from '../core/color';
 import {C, INK} from './palette';
 import {clamp} from '../lib';
+import {DIST} from '../camera';
 import {uid} from '../core/ids';
 import {AppState2, ProbeState} from '../v2state';
 
@@ -85,7 +89,7 @@ export type AppState = {tip: P; ang: number; press: number; gel: number; lift?: 
  *  the hand that holds it keeps its size; the back-off makes up for the tip's growth, so the tip ends exactly `back`
  *  mm back along the axis and `drift` mm to the lower right of its contact point. h = the tip's height (mm) at lift 1,
  *  for the contact shadow. */
-export const LIFT = {back: 6, drift: 3, rise: 0.035, h: 5};
+export const LIFT = {back: 1.8, drift: 0.5, rise: 0.035, h: 3.6};
 const DRIFT: P = nrm(pt(1, 1));
 export type LiftXf = {l: number; k: number; G: P; off: P; map: (p: P) => P; svg: string | undefined};
 /** G = the grip point (unlifted), ax = unit axis from the tip toward the handle, gripDist = the tip's distance behind
@@ -203,7 +207,9 @@ export const Applicator: React.FC<{id: string; s: AppState}> = ({id, s: st}) => 
     [u(APP.cone) + 0.2, APP.rIn],
     [u(sF) + 0.25, APP.rIn],
   ]);
-  const bulbR = 0.16 + 0.6 * gel;
+  // a small bead of gel at the bore: about 0.45 mm in contact, shrinking as the tip lifts away (and when withdrawn)
+  const lf = clamp(st.lift ?? 0);
+  const bulbR = 0.45 * (1 - 0.72 * lf * lf * (3 - 2 * lf));
   // the cannula's centreline, from the ferrule to the tip, with a short smooth arc at the bend
   const can = (() => {
     const pts: P[] = [at(APP.cannula + 0.4), at(30), at(22), at(14), at(9.5), add(Bp, mul(dMainV, 1.8))];
@@ -221,7 +227,8 @@ export const Applicator: React.FC<{id: string; s: AppState}> = ({id, s: st}) => 
     return {...tb, rim: `${open(a1.slice(0, n - 3), 0.9)}L${open([...a2.slice(0, n - 3)].reverse(), 0.9).slice(1)}Z`};
   })();
   // the droplet, in the tip frame (x along the tip direction toward the barrel; the drop swells out on -x)
-  const dropD = `M${f(bulbR * 0.75)} ${f(-r * 0.62)}C${f(bulbR * 0.2)} ${f(-bulbR * 0.95)} ${f(-bulbR * 1.15)} ${f(-bulbR * 1.02)} ${f(-bulbR * 1.2)} 0C${f(-bulbR * 1.15)} ${f(bulbR * 1.02)} ${f(bulbR * 0.2)} ${f(bulbR * 0.95)} ${f(bulbR * 0.75)} ${f(r * 0.62)}Z`;
+  const neck = Math.min(r * 0.62, bulbR * 0.92);
+  const dropD = `M${f(bulbR * 0.75)} ${f(-neck)}C${f(bulbR * 0.2)} ${f(-bulbR * 0.95)} ${f(-bulbR * 1.15)} ${f(-bulbR * 1.02)} ${f(-bulbR * 1.2)} 0C${f(-bulbR * 1.15)} ${f(bulbR * 1.02)} ${f(bulbR * 0.2)} ${f(bulbR * 0.95)} ${f(bulbR * 0.75)} ${f(neck)}Z`;
 
   return (
     <g transform={lx.svg}>
@@ -320,10 +327,11 @@ export const Applicator: React.FC<{id: string; s: AppState}> = ({id, s: st}) => 
       <g transform={tipT}>
         <ellipse cx={f(-APP.tipSeg)} cy="0" rx={f(r * 0.42)} ry={f(r * 0.99)} fill={mix(C.steel, C.steelLit, 0.55)} />
         <ellipse cx={f(-APP.tipSeg)} cy="0" rx={f(r * 0.42)} ry={f(r * 0.99)} fill="none" stroke={INK} strokeWidth={INST_INK * 0.35} vectorEffect={NS} opacity={0.6} />
-        <ellipse cx={f(-APP.tipSeg - 0.02)} cy={f(-vt * r * 0.04)} rx={f(r * 0.24)} ry={f(r * 0.58)} fill={gel > 0.02 ? C.glueDeep : '#1A2630'} />
-        {gel > 0.02 && <ellipse cx={f(-APP.tipSeg - 0.04)} cy={f(-vt * r * 0.04)} rx={f(r * 0.16)} ry={f(r * 0.44)} fill={C.glue} />}
+        {/* the bore is full of gel (the cannula is primed) */}
+        <ellipse cx={f(-APP.tipSeg - 0.02)} cy={f(-vt * r * 0.04)} rx={f(r * 0.24)} ry={f(r * 0.58)} fill={C.glueDeep} />
+        <ellipse cx={f(-APP.tipSeg - 0.04)} cy={f(-vt * r * 0.04)} rx={f(r * 0.16)} ry={f(r * 0.44)} fill={mix(C.glue, C.glueDeep, 0.5 - 0.5 * gel)} />
       </g>
-      {gel > 0.02 && (
+      {bulbR > 0.05 && (
         // a small droplet of gel swelling out of the bore: an oval along the tip's direction, a neck into the bore
         <g transform={`translate(${Pf(add(st.tip, mul(dTip, -bulbR * 0.72)))}) rotate(${f(angT)})`}>
           <path d={dropD} fill={C.glueInk} stroke={C.glueInk} strokeWidth={INST_INK * 0.8} vectorEffect={NS} strokeLinejoin="round" />
@@ -378,7 +386,10 @@ const lightIn = (ang: number) => pt(LIGHT.x * Math.cos(ang) + LIGHT.y * Math.sin
 // ------------------------------------------------------------------------------------------------ probe
 /** probe dimensions (mm along the instrument from the tip, s) */
 export const PROBE = {
-  taper: 9, // the point tapers to the full shaft over this length
+  /** the polished ball at the tip: radius, and its centre's distance behind the tip point */
+  ball: 0.58,
+  neck: 0.4, // the short neck behind the ball
+  taper: 5.4, // the shaft narrows to the neck over this length
   r: 1.1, // shaft radius (2.2 mm)
   shaftEnd: 54.6,
   ferrule: 61, // a turned cone from the shaft up to the collar
@@ -392,18 +403,19 @@ export const PROBE = {
   /** where the fingertips pinch it (the grip point; the lift grows about it) */
   pinch: 71,
 };
-const SHAFT_PR: [number, number][] = [
-  [0, 0],
-  [0.05, 0.12],
-  [0.2, 0.2],
-  [0.55, 0.3],
-  [1.4, 0.45],
-  [2.8, 0.63],
-  [4.8, 0.84],
-  [6.9, 1.0],
-  [PROBE.taper, PROBE.r],
-  [PROBE.shaftEnd, PROBE.r],
-];
+/** the ball's outline from the tip point round to where the neck leaves it, then the neck and the flare to the shaft */
+const SHAFT_PR: [number, number][] = (() => {
+  const R = PROBE.ball;
+  const aJ = Math.PI - Math.asin(PROBE.neck / R); // the angle (from the tip) where the ball meets the neck
+  const pr: [number, number][] = [];
+  for (let k = 0; k <= 14; k++) {
+    const a = (aJ * k) / 14;
+    pr.push([R - R * Math.cos(a), R * Math.sin(a)]);
+  }
+  const u0 = pr[pr.length - 1][0];
+  pr.push([u0 + 0.3, PROBE.neck * 0.96], [u0 + 0.75, PROBE.neck * 1.06], [u0 + 1.4, 0.56], [u0 + 2.2, 0.75], [u0 + 3.0, 0.92], [u0 + 3.8, 1.04], [PROBE.taper, PROBE.r], [PROBE.shaftEnd, PROBE.r]);
+  return pr;
+})();
 const FERRULE_PR: [number, number][] = [
   [PROBE.shaftEnd - 0.4, PROBE.r],
   [55.4, 1.32],
@@ -423,7 +435,7 @@ const HANDLE_PR: [number, number][] = [
   [156.6, 1.7],
   [PROBE.h1, 0],
 ];
-/** the probe's radius at s (for the contact shadow) */
+/** the probe's radius at s (for the cast shadow) */
 const probeR = (s: number) => {
   for (let i = 0; i < SHAFT_PR.length - 1; i++) {
     const [u0, r0] = SHAFT_PR[i], [u1, r1] = SHAFT_PR[i + 1];
@@ -474,6 +486,9 @@ export const Probe: React.FC<{id: string; s: ProbeState}> = ({id, s: st}) => {
           <clipPath id={id_('hc')}>
             <path d={hanD} />
           </clipPath>
+          <clipPath id={id_('bl')}>
+            <circle cx={f(PROBE.ball)} cy="0" r={f(PROBE.ball)} />
+          </clipPath>
         </defs>
         {/* one ink silhouette round the whole instrument */}
         <Under d={hanD} />
@@ -508,93 +523,167 @@ export const Probe: React.FC<{id: string; s: ProbeState}> = ({id, s: st}) => {
         <path d={bandD(SHAFT_PR, 0.72, 0.88, -vs)} fill={C.steelLit} opacity={0.45} />
         <path d={bandD(SHAFT_PR, 0.16, 0.64, vs)} fill={C.steelLit} opacity={0.8} />
         <path d={bandD(SHAFT_PR, 0.3, 0.5, vs)} fill="#FFFFFF" opacity={0.95} />
-        {/* the point's polished facet catches the light: a short bright glint just behind the tip */}
-        <ellipse cx={f(1.5)} cy={f(vs * 0.18)} rx={f(0.75)} ry={f(0.11)} fill="#FFFFFF" opacity={0.9} />
+        {/* the polished ball: a sphere in flat cel steps (shadow side, body, lit cap, a hard white spec) */}
+        <g clipPath={`url(#${id_('bl')})`}>
+          <circle cx={f(PROBE.ball)} cy="0" r={f(PROBE.ball)} fill={C.steelDeep} />
+          <circle cx={f(PROBE.ball + Lf.x * PROBE.ball * 0.32)} cy={f(Lf.y * PROBE.ball * 0.32)} r={f(PROBE.ball * 0.86)} fill={C.steel} />
+          <circle cx={f(PROBE.ball + Lf.x * PROBE.ball * 0.42)} cy={f(Lf.y * PROBE.ball * 0.42)} r={f(PROBE.ball * 0.5)} fill={C.steelLit} />
+          <circle cx={f(PROBE.ball + Lf.x * PROBE.ball * 0.5)} cy={f(Lf.y * PROBE.ball * 0.5)} r={f(PROBE.ball * 0.2)} fill="#FFFFFF" />
+        </g>
+        {/* where the neck leaves the ball: a fine turned edge */}
+        <Line d={`M${f(SHAFT_PR[14][0] + 0.02)} ${f(-PROBE.neck)}L${f(SHAFT_PR[14][0] + 0.02)} ${f(PROBE.neck)}`} w={INST_INK * 0.25} opacity={0.5} />
       </g>
     </g>
   );
 };
 
 // ------------------------------------------------------------------------------------------------ contact shadows
-/** shadow offset (mm) per mm of height above the bone (the key light's elevation), and the direction it falls: away
- *  from the upper-left key light, turned a little more toward screen-down (a stylised key a touch higher than LIGHT) so
- *  an instrument that points up-left into the light still shows its shadow beside it rather than hidden beneath it */
+/** shadow offset (mm) per mm of height above the bone, and the direction it falls on the bone. The key is the upper-left
+ *  light of the whole film; the cast shadow is stylised a little lower in the sky's left (it falls to the right and a
+ *  touch down, SH_ANG) so that both instruments, which point up-left into the light (the probe from the lower right,
+ *  the applicator from the upper right), show their shadow BESIDE them rather than hidden underneath. */
 const SH_K = 0.8;
-const AWAY: P = nrm(add(mul(LIGHT, -1), pt(-0.22, 0.2)));
+const SH_ANG = 0.4;
+const AWAY: P = dir(SH_ANG);
 const SHADOW_COL = '#2B170D';
-/** the soft cast shadow of an instrument's tip region on the bone (depth-0 world mm). axis(s) = the instrument's
- *  centreline over the bone at arc length s from the tip (lifted), r(s) its radius; h0 = the tip's height above the
- *  bone, slope = the shaft's rise per mm. At h0 = 0 the shadow meets the tip (contact) with a tight dark contact spot;
- *  as the tip rises it slides off toward the lower right, widens, softens and fades. */
-const CastShadow: React.FC<{axis: (s: number) => P; r: (s: number) => number; s1: number; h0: number; slope: number; px: number; alpha: number}> = ({axis, r, s1, h0, slope, px, alpha}) => {
+const PRESS_COL = '#FFFDF6';
+/** the instrument layer's depth (Scene.tsx draws the instruments' layer at this z): its art is drawn a little larger
+ *  than the bone layer's */
+export const INSTR_Z = -6;
+/** how much larger an instrument offset is drawn than the same offset on the bone (depth 0), for a camera whose depth-0
+ *  scale is px mm per screen pixel: an instrument point tip + v lands on screen over the bone point tip + v * k */
+const instrK = (px: number) => {
+  const d = DIST * px * 1080;
+  return d / (d + INSTR_Z);
+};
+/** The cast shadow of an instrument's tip region on the bone (depth-0 world mm), flat and hard-edged (cel). axis(s) =
+ *  the instrument's centreline over the bone at arc length s from the tip (lifted), r(s) its radius; the shadow runs
+ *  from s0 (where the tip's widest round part sits: the probe's ball centre) to s1; h0 = the tip's height above the
+ *  bone, slope = the shaft's rise per mm. At h0 = 0 the shadow starts under the tip; as the tip rises it slides off
+ *  along AWAY and lightens a little. foot = the tip's footprint (centre, radius) for the contact marks: a dark crescent
+ *  hugging it on its shadow side, beside the shaft (the side of the shaft that faces AWAY), and a thin pressure
+ *  highlight opposite, both there only while it touches (contact 0..1). */
+const CastShadow: React.FC<{axis: (s: number) => P; r: (s: number) => number; s0: number; s1: number; h0: number; slope: number; px: number; alpha: number; foot: {c: P; r: number}; contact: number}> = ({axis, r, s0, s1, h0, slope, px, alpha, foot, contact}) => {
   const id = uid('csh');
-  const N = 18;
+  const N = 22;
   const c: P[] = [];
   const w: number[] = [];
   for (let i = 0; i <= N; i++) {
-    const s = s1 * Math.pow(i / N, 1.4);
+    const s = s0 + (s1 - s0) * Math.pow(i / N, 1.5);
     const h = h0 + slope * s;
     c.push(add(axis(s), mul(AWAY, h * SH_K)));
-    w.push(Math.max(r(s) * 1.05 + 0.07 * h, 2.2 * px));
+    w.push(Math.max(r(s) * 1.04, 1.6 * px));
   }
   const T = c.map((_, i) => nrm(sub(c[Math.min(N, i + 1)], c[Math.max(0, i - 1)])));
   const Nn = T.map(perp);
   const left = c.map((p, i) => add(p, mul(Nn[i], w[i])));
   const right = c.map((p, i) => add(p, mul(Nn[i], -w[i])));
-  // a round cap at the tip end
+  // a round cap at the tip end (the shadow of the ball / the cannula's end)
+  const cw = w[0];
   const cap: P[] = [];
-  for (let k = 1; k < 6; k++) {
-    const a = (k / 6) * Math.PI;
-    cap.push(add(c[0], add(mul(Nn[0], -Math.cos(a) * w[0]), mul(T[0], -Math.sin(a) * w[0]))));
+  for (let k = 1; k < 8; k++) {
+    const a = (k / 8) * Math.PI;
+    cap.push(add(c[0], add(mul(Nn[0], -Math.cos(a) * cw), mul(T[0], -Math.sin(a) * cw))));
   }
   const d = `M${[...right].reverse().map(Pf).join('L')}L${cap.map(Pf).join('L')}L${left.map(Pf).join('L')}Z`;
-  const blur = Math.max(1.6 * px, 0.03 + 0.09 * h0);
-  const xs = [...left, ...right].map((p) => p.x), ys = [...left, ...right].map((p) => p.y);
-  const m = blur * 3.2 + 0.2;
-  const box = {x: Math.min(...xs) - m, y: Math.min(...ys) - m, w: Math.max(...xs) - Math.min(...xs) + 2 * m, h: Math.max(...ys) - Math.min(...ys) + 2 * m};
-  const contact = clamp(1 - h0 / 0.7);
-  const cb = Math.max(1.2 * px, 0.04);
-  const cr = Math.max(r(0) + 0.3, 5.5 * px);
-  // the contact spot sits under the tip and the shaft just behind it (never ahead of the tip, toward the light)
-  const cc = add(add(axis(0), mul(T[0], cr * 0.95)), mul(AWAY, cr * 0.25));
-  const a0 = deg(Math.atan2(T[0].y, T[0].x));
+  const ct = clamp(contact);
+  // the contact marks, beside the shaft on its AWAY side (straight down-right would hide them under the shaft, which
+  // runs that way); offsets in mm, never thinner on screen than the instrument's own contour can hide
+  const ax = nrm(sub(axis(s0 + 1), axis(s0)));
+  let side = perp(ax);
+  if (side.x * AWAY.x + side.y * AWAY.y < 0) side = mul(side, -1);
+  const cd = nrm(add(side, mul(AWAY, 0.55)));
+  const dk = Math.max(0.2, 7 * px);
+  const darkC = add(foot.c, mul(cd, dk)), darkR = foot.r + dk * 0.55;
+  const hiC = add(foot.c, mul(cd, -dk * 0.82)), hiR = foot.r + dk * 0.16;
+  const mR = foot.r + dk * 2.2;
   return (
     <g>
       <defs>
-        <filter id={`${id}-f`} filterUnits="userSpaceOnUse" x={f(box.x)} y={f(box.y)} width={f(box.w)} height={f(box.h)}>
-          <feGaussianBlur stdDeviation={f(blur)} />
-        </filter>
         <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={f(c[0].x)} y1={f(c[0].y)} x2={f(c[N].x)} y2={f(c[N].y)}>
+          {/* flat cel steps (a hard step to a lighter tone where the shaft rises away), fading only at the very end */}
           <stop offset="0" stopColor={SHADOW_COL} stopOpacity={alpha} />
-          <stop offset="0.45" stopColor={SHADOW_COL} stopOpacity={alpha * 0.85} />
-          <stop offset="0.8" stopColor={SHADOW_COL} stopOpacity={alpha * 0.3} />
+          <stop offset="0.55" stopColor={SHADOW_COL} stopOpacity={alpha} />
+          <stop offset="0.55" stopColor={SHADOW_COL} stopOpacity={alpha * 0.62} />
+          <stop offset="0.88" stopColor={SHADOW_COL} stopOpacity={alpha * 0.62} />
           <stop offset="1" stopColor={SHADOW_COL} stopOpacity={0} />
         </linearGradient>
-        {contact > 0 && (
-          <filter id={`${id}-cf`} filterUnits="userSpaceOnUse" x={f(cc.x - cr * 2 - cb * 4)} y={f(cc.y - cr * 2 - cb * 4)} width={f(cr * 4 + cb * 8)} height={f(cr * 4 + cb * 8)}>
-            <feGaussianBlur stdDeviation={f(cb)} />
-          </filter>
+        {ct > 0.01 && (
+          <mask id={`${id}-m`} maskUnits="userSpaceOnUse" x={f(foot.c.x - mR)} y={f(foot.c.y - mR)} width={f(2 * mR)} height={f(2 * mR)}>
+            <rect x={f(foot.c.x - mR)} y={f(foot.c.y - mR)} width={f(2 * mR)} height={f(2 * mR)} fill="#FFFFFF" />
+            <circle cx={f(foot.c.x)} cy={f(foot.c.y)} r={f(foot.r)} fill="#000000" />
+          </mask>
         )}
       </defs>
-      <path d={d} fill={`url(#${id}-g)`} filter={`url(#${id}-f)`} />
-      {contact > 0 && (
-        <ellipse cx={f(cc.x)} cy={f(cc.y)} rx={f(cr * 1.25)} ry={f(cr * 0.8)} transform={`rotate(${f(a0)} ${f(cc.x)} ${f(cc.y)})`} fill={SHADOW_COL} opacity={0.75 * contact} filter={`url(#${id}-cf)`} />
+      <path d={d} fill={`url(#${id}-g)`} />
+      {ct > 0.01 && (
+        <g mask={`url(#${id}-m)`} opacity={ct}>
+          <circle cx={f(hiC.x)} cy={f(hiC.y)} r={f(hiR)} fill={PRESS_COL} />
+          <circle cx={f(darkC.x)} cy={f(darkC.y)} r={f(darkR)} fill={SHADOW_COL} opacity={0.88} />
+        </g>
       )}
     </g>
   );
 };
 
-/** The probe's contact shadow on the bone. Scene: the BONE layer (depth 0), with the probe state in depth-0 world mm
- *  (NOT reprojected); px = world mm per screen pixel at depth 0. */
-export const ProbeShadow: React.FC<{st: ProbeState; px: number}> = ({st, px}) => {
-  const pa = probeAxis(st);
-  const lx = probeLift(st);
-  return <CastShadow axis={(s) => lx.map(pa.at(s))} r={(s) => probeR(s) * lx.k} s1={20} h0={LIFT.h * lx.l} slope={0.75} px={px} alpha={0.46 * (1 - 0.3 * lx.l)} />;
+/** how a shadow follows its instrument out of the field as the hand withdraws it (on 1 -> 0, InstrState2.probeOn /
+ *  appOn): it slides back along the instrument's axis with it and is gone within the first quarter of the withdrawal
+ *  (the instrument rises away from the bone as it goes) */
+const withdrawOf = (on: number, ax: P, kI: number) => {
+  const e = 1 - clamp(on);
+  const u = e * e * (3 - 2 * e);
+  return {off: mul(ax, 200 * u * kI), fade: 1 - clamp(u / 0.22)};
 };
 
-/** The applicator cannula's contact shadow on the bone (as ProbeShadow). */
-export const AppShadow: React.FC<{st: AppState2; px: number}> = ({st, px}) => {
+/** The probe's contact shadow on the bone. Scene: the BONE layer (depth 0), with the probe state in depth-0 world mm
+ *  (NOT reprojected); px = world mm per screen pixel at depth 0; on = InstrState2.probeOn (the shadow leaves with the
+ *  withdrawing hand; default 1). */
+export const ProbeShadow: React.FC<{st: ProbeState; px: number; on?: number}> = ({st, px, on = 1}) => {
+  const pa = probeAxis(st);
+  const lx = probeLift(st);
+  const kI = instrK(px);
+  const wd = withdrawOf(on, pa.ax, kI);
+  if (wd.fade <= 0.001) return null;
+  // the instrument as it lands on the bone's screen: offsets from the (reprojected) tip are drawn kI larger
+  const at = (s: number) => add(add(st.tip, mul(sub(lx.map(pa.at(s)), st.tip), kI)), wd.off);
+  const h0 = LIFT.h * lx.l;
+  return (
+    <CastShadow
+      axis={at}
+      r={(s) => probeR(s) * lx.k * kI}
+      s0={PROBE.ball}
+      s1={13}
+      h0={h0}
+      slope={0.75}
+      px={px}
+      alpha={0.5 * (1 - 0.3 * lx.l) * wd.fade}
+      foot={{c: at(PROBE.ball), r: PROBE.ball * lx.k * kI}}
+      contact={(1 - h0 / 0.3) * wd.fade}
+    />
+  );
+};
+
+/** The applicator cannula's contact shadow on the bone (as ProbeShadow; on = InstrState2.appOn). */
+export const AppShadow: React.FC<{st: AppState2; px: number; on?: number}> = ({st, px, on = 1}) => {
   const ax = appAxis(st);
   const lx = appLift(st);
-  return <CastShadow axis={(s) => lx.map(ax.at(s))} r={() => APP.r * lx.k} s1={16} h0={LIFT.h * lx.l} slope={0.34} px={px} alpha={0.42 * (1 - 0.3 * lx.l)} />;
+  const kI = instrK(px);
+  const wd = withdrawOf(on, ax.dMain, kI);
+  if (wd.fade <= 0.001) return null;
+  const at = (s: number) => add(add(st.tip, mul(sub(lx.map(ax.at(s)), st.tip), kI)), wd.off);
+  const h0 = LIFT.h * lx.l;
+  return (
+    <CastShadow
+      axis={at}
+      r={() => APP.r * lx.k * kI}
+      s0={0}
+      s1={12}
+      h0={h0}
+      slope={0.34}
+      px={px}
+      alpha={0.46 * (1 - 0.3 * lx.l) * wd.fade}
+      foot={{c: at(0.25), r: (APP.r + 0.08) * lx.k * kI}}
+      contact={(1 - h0 / 0.3) * wd.fade}
+    />
+  );
 };

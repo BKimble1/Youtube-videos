@@ -8,6 +8,9 @@
 // applicator lifted, d1-d4 fixation release at seams.STYLOID_PRESS (lift 0 / .5 / 1, then withdrawing), r0/r5/r1 the
 // same release at a press point inside the window (staging suggestion), e/e2 wide (hands in / withdrawing), w4/w5 the
 // clinic framing (in / almost fully withdrawn), h/hl/hr hand close-ups.
+// A key 't<seconds>' (e.g. 't15.9') draws that film moment from story.ts (camera, instruments, wedge, glue) with this
+// sheet's stand-in fracture, the shadows given the instruments' withdrawal (probeOn / appOn). A key 'o<opt>_<shot>'
+// (e.g. 'oL_rv') draws a staging option for the styloid hold (OPTS below).
 // Props: st = a state key for one full-size frame, or 'sheet' with ks (keys) and cols; off = ['back'|'front'|'shadow']
 // to skip a part (debugging). Compositions: Surgeon2 (1080x1920; a 'sheet' here fits 3 x 3) and Sheet2 (1080x1440).
 //   npx remotion still src/test/surgeon2.entry.tsx Surgeon2 out.png --props='{"st":"sheet","ks":["a1","b","e"],"cols":3}'
@@ -17,16 +20,17 @@ import {Cam, Layer, layerScale} from '../camera';
 import {P, pt, closed, open} from '../core/geo';
 import {resetIds} from '../core/ids';
 import {SurgeonBack, SurgeonFront, SURGEON_DEFAULT} from '../art/surgeon';
-import {AppShadow, ProbeShadow} from '../art/instruments';
+import {AppShadow, ProbeShadow, INSTR_Z} from '../art/instruments';
 import {RoomBack, HandTable, DrapeOverArm} from '../art/room';
 import {ArmSkin, DeepTissue, IncisionRim, ArmState, armOutlinePath} from '../art/arm';
 import {Skeleton} from '../art/skeleton';
 import {BONE_DEPTH, RADIUS} from '../art/anatomy';
 import {C, INK} from '../art/palette';
 import {InstrState2} from '../v2state';
-import {SEAM_IDS, SeamId, WEDGE_OUT, WEDGE_POLY, WEDGE_SEATED, WedgeX, glueBand, seamEdgeLine, seamLength, seamNearest, xfSvg, STYLOID_PRESS} from '../art/seams';
+import {camAt, instrAt, wedgeAt, boneAt} from '../story';
+import {SEAM_IDS, SeamId, WEDGE_OUT, WEDGE_POLY, WEDGE_SEATED, WedgeX, glueBand, seamEdgeLine, seamLength, seamNearest, seamPoint, xfSvg, xfPoint, STYLOID_PRESS, WEDGE_PRESS, PROBE_ANG_W, PROBE_ANG_S} from '../art/seams';
 
-const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = -6, Z_TABLE = 40, Z_ROOM = 600;
+const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = INSTR_Z, Z_TABLE = 40, Z_ROOM = 600;
 const reproject = (c: Cam, p: P, z: number): P => {
   const r = layerScale(c, 0) / layerScale(c, z);
   return pt(c.x + (p.x - c.x) * r, c.y + (p.y - c.y) * r);
@@ -83,14 +87,27 @@ const S0 = SURGEON_DEFAULT;
 const ALL: Glue = {C1: [0, 99], C2: [0, 99], C3: [0, 99]};
 const sC1 = (x: number, y: number) => seamNearest('C1', pt(x, y));
 const sC2 = (x: number, y: number) => seamNearest('C2', pt(x, y));
-const CAM_A: Cam = {x: 3, y: -0.5, w: 26, k: 1};
+const CAM_A: Cam = {x: 4, y: -0.6, w: 26, k: 1}; // the film's CAM0
 const CAM_B: Cam = {x: 16, y: -44, w: 165, k: 0.97, focus: -6};
 const CAM_C: Cam = {x: 10, y: -18, w: 100, k: 0.98, focus: -6};
 const CAM_D: Cam = {x: 4, y: -8, w: 80, k: 1, focus: -4};
 const CAM_E: Cam = {x: 60, y: -90, w: 300, k: 0.9};
 const appA = {tip: pt(-3.4, 1.0), ang: -0.42, press: 0.4, gel: 1, lift: 0};
-const probeW = {tip: pt(10.9, 4.3), ang: 0.55, lift: 0};
-const probeS = {tip: STYLOID_PRESS, ang: 0.4, lift: 0};
+const probeW = {tip: xfPoint(WEDGE_PRESS, WEDGE_OUT), ang: PROBE_ANG_W, lift: 0};
+const probeS = {tip: STYLOID_PRESS, ang: PROBE_ANG_S, lift: 0};
+// the film's framings (story.ts): REVEAL, ACT, FIX, and a close look at the probe's contact on the styloid fragment
+const CAM_REV: Cam = {x: 10, y: -27, w: 112, k: 0.98, focus: -5};
+const CAM_ACT: Cam = {x: 8.5, y: -10, w: 62, k: 1, focus: -3};
+const CAM_FIX: Cam = {x: 6, y: -4, w: 58, k: 1, focus: -3};
+const CAM_Z: Cam = {x: 8.5, y: -6.5, w: 16, k: 1, focus: 0};
+const c2 = (y: number) => {
+  let s = 0;
+  while (seamPoint('C2', s).y > y) s += 0.05;
+  return {p: seamPoint('C2', s), s};
+};
+// the styloid stroke: the applicator steep from above (story APP_ANG_S), clear of the probe on the styloid fragment
+const APP_S = -1.35;
+const appMid = {tip: c2(-8).p, ang: APP_S - 0.025, press: 0.6, gel: 1, lift: 0};
 const appB = {tip: pt(3.6, 0.2), ang: -0.45, press: 0.5, gel: 1, lift: 0};
 const appC = {tip: pt(2.9, -12), ang: -0.5, press: 0.7, gel: 1, lift: 0};
 const st = (o: Partial<InstrState2>): InstrState2 => ({...S0, ...o});
@@ -112,10 +129,70 @@ const STATES: Record<string, Spec> = {
   r0: {label: 'r0 in-win lift0', c: CAM_D, s: st({probe: {tip: pt(7.4, -10.5), ang: 0.62, lift: 0}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
   r5: {label: 'r5 lift.5', c: CAM_D, s: st({probe: {tip: pt(7.4, -10.5), ang: 0.62, lift: 0.5}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
   r1: {label: 'r1 lift1', c: CAM_D, s: st({probe: {tip: pt(7.4, -10.5), ang: 0.62, lift: 1}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  // V2 fix-probe checks: the frame-0 push, the styloid hold and its release (lift 0 / .15 / .5 / 1), the stroke in ACT
+  f0: {label: 'f0 frame0', c: CAM_A, s: st({app: appA, probe: probeW, k: 1}), w: WEDGE_OUT, glue: {C1: [0, sC1(-3.4, 1.0)]}},
+  z0: {label: 'z0 hold', c: CAM_Z, s: st({app: appMid, probe: probeS, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  z1: {label: 'z1 lift.15', c: CAM_Z, s: st({probe: {...probeS, lift: 0.15}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  z5: {label: 'z5 lift.5', c: CAM_Z, s: st({probe: {...probeS, lift: 0.5}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  z9: {label: 'z9 lift1', c: CAM_Z, s: st({probe: {...probeS, lift: 1}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  x0: {label: 'x0 FIX hold', c: CAM_FIX, s: st({probe: probeS, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  x9: {label: 'x9 FIX lift1', c: CAM_FIX, s: st({probe: {...probeS, lift: 1}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  xo: {label: 'xo FIX out.5', c: CAM_FIX, s: st({probe: {...probeS, lift: 1}, appOn: 0, probeOn: 0.5, k: 1}), w: WEDGE_SEATED, glue: ALL},
+  ac: {label: 'ac ACT stroke', c: CAM_ACT, s: st({app: appMid, probe: probeS, k: 1, lean: 1.5}), w: WEDGE_SEATED, glue: {C1: [0, 99], C3: [0, 99], C2: [0, c2(-8).s]}},
+  al: {label: 'al ACT lifted', c: CAM_ACT, s: st({app: {...appMid, tip: c2(-17).p, ang: APP_S - 0.05, gel: 0, lift: 1}, probe: probeS, k: 1, lean: 1.5}), w: WEDGE_SEATED, glue: {C1: [0, 99], C3: [0, 99], C2: [0, c2(-17).s]}},
+  // the reveal: the applicator waits at the foot of the styloid seam at its shallow angle, the probe waits lifted beside
+  // the fragment (story PROBE_READY), below the cannula's line
+  rv: {label: 'rv REVEAL', c: CAM_REV, s: st({app: {...appB, tip: seamPoint('C2', 0.15), ang: -0.47}, probe: {tip: pt(11.25, -2.5), ang: 1.48, lift: 1}, k: 0.98, lean: 1}), w: WEDGE_SEATED, glue: {C1: [0, 99], C3: [0, 99]}},
+  hn: {label: 'hn left grip', c: {x: 30, y: 105, w: 190, k: 0.98, focus: -6}, s: st({app: appB, probe: probeS, k: 0.98}), w: WEDGE_SEATED, glue: ALL},
+  hf: {label: 'hf right grip', c: {x: 62, y: -42, w: 120, k: 1, focus: -6}, s: st({app: appMid, probe: probeS, k: 1}), w: WEDGE_SEATED, glue: ALL},
   w4: {label: 'w4 clinic', c: {x: 92, y: -100, w: 405, k: 0.86, focus: -10}, s: st({app: appB, probe: probeS, k: 0.86, lean: 1, face: {focus: 0.55, smile: 0, gx: -0.5, gy: 0.55, blink: 0}}), w: WEDGE_SEATED, glue: ALL},
   w5: {label: 'w5 out', c: {x: 92, y: -100, w: 405, k: 0.86, focus: -10}, s: st({app: {...appB, lift: 1}, probe: {...probeS, lift: 1}, appOn: 0.02, probeOn: 0.02, k: 0.86, lean: -1}), w: WEDGE_SEATED, glue: ALL},
   h: {label: 'h hands', c: {x: 120, y: -10, w: 210, k: 0.95, focus: -6}, s: st({app: appB, probe: probeS, k: 0.95}), w: WEDGE_SEATED, glue: ALL},
 };
+
+/** staging options for the styloid hold (key 'o<opt>_<shot>', e.g. 'oL_rv'): the applicator's angle on the styloid
+ *  seam, the probe's press point and angle; shots: rv = REVEAL (the applicator at the C2 foot), ac = ACT mid-stroke,
+ *  at = ACT at the top of the stroke, fx = FIX holding (applicator gone), fl = FIX lifted 1, z = close, w = wide,
+ *  h = the right hand. C = the old staging (-0.47: the cannula crosses the probe), A = steep throughout (its hand covers
+ *  the patient's thumb in REVEAL), L = steep for the stroke only (the film: story turns it on "Researchers") */
+const OPTS: Record<string, {app: number; p: P; th: number}> = {
+  A: {app: -1.3, p: pt(7, -9), th: 1.18},
+  C: {app: -0.47, p: pt(7, -9), th: 1.18},
+  L: {app: -1.35, p: pt(7, -9), th: 1.18},
+};
+const optSpec = (key: string): Spec | null => {
+  const m = /^o([A-Z])_([a-z]+)$/.exec(key);
+  if (!m || !OPTS[m[1]]) return null;
+  const o = OPTS[m[1]];
+  const probe = {tip: o.p, ang: o.th, lift: m[2] === 'fl' ? 1 : 0};
+  const foot = seamPoint('C2', 0.15);
+  const mid = c2(-8), top = c2(-17);
+  const glue2: Glue = {C1: [0, 99], C3: [0, 99]};
+  switch (m[2]) {
+    case 'rv': return {label: key, c: CAM_REV, s: st({app: {tip: foot, ang: o.app, press: 0.5, gel: 1, lift: 0}, probe, k: 0.98, lean: 2}), w: WEDGE_SEATED, glue: glue2};
+    case 'ac': return {label: key, c: CAM_ACT, s: st({app: {tip: mid.p, ang: o.app - 0.025, press: 0.6, gel: 1, lift: 0}, probe, k: 1, lean: 2}), w: WEDGE_SEATED, glue: {...glue2, C2: [0, mid.s]}};
+    case 'at': return {label: key, c: CAM_ACT, s: st({app: {tip: top.p, ang: o.app - 0.05, press: 0.7, gel: 0, lift: 0.6}, probe, k: 1, lean: 2}), w: WEDGE_SEATED, glue: {...glue2, C2: [0, top.s]}};
+    case 'fx': case 'fl': return {label: key, c: CAM_FIX, s: st({probe, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL};
+    case 'w': return {label: key, c: {x: 60, y: -90, w: 300, k: 0.9, focus: -8}, s: st({app: {tip: mid.p, ang: o.app - 0.025, press: 0.6, gel: 1, lift: 0}, probe, k: 0.9, lean: 2}), w: WEDGE_SEATED, glue: {...glue2, C2: [0, mid.s]}};
+    case 'h': return {label: key, c: {x: 28, y: -75, w: 140, k: 0.98, focus: -6}, s: st({app: {tip: mid.p, ang: o.app - 0.025, press: 0.6, gel: 1, lift: 0}, probe, k: 0.98, lean: 2}), w: WEDGE_SEATED, glue: {...glue2, C2: [0, mid.s]}};
+    case 'z': return {label: key, c: {x: o.p.x + 1, y: o.p.y + 1.5, w: 16, k: 1, focus: 0}, s: st({probe: {...probe, lift: 0}, appOn: 0, k: 1}), w: WEDGE_SEATED, glue: ALL};
+    default: return null;
+  }
+};
+
+/** a film moment from story.ts (key 't<seconds>', e.g. 't15.9'): its camera, instruments, wedge pose and glue, drawn
+ *  with this sheet's stand-in fracture and with the instruments' withdrawal passed to their shadows */
+const filmSpec = (key: string): Spec | null => {
+  if (!/^t[0-9.]+$/.test(key)) return null;
+  const t = Number(key.slice(1));
+  const wc = camAt(t);
+  if (wc.world !== 'wrist') return null;
+  const g = boneAt(t, wc.cam.w / 1080).glue;
+  const glue: Glue = {};
+  for (const id of SEAM_IDS) if (g[id].b > g[id].a) glue[id] = [g[id].a, g[id].b];
+  return {label: `${key} (${Math.round(t * 30)})`, c: wc.cam, s: instrAt(t), w: wedgeAt(t), glue};
+};
+const specOf = (key: string): Spec => filmSpec(key) ?? optSpec(key) ?? STATES[key];
 
 const ARM0: ArmState = {curl: 0.25, thumb: 0.2, incision: 1, sutures: 0, scar: 0, window: null};
 const Frame: React.FC<{sp: Spec; id: string; off?: string[]}> = ({sp, id, off = []}) => {
@@ -155,8 +232,8 @@ const Frame: React.FC<{sp: Spec; id: string; off?: string[]}> = ({sp, id, off = 
           <DeepTissue id={`${id}-dt`} s={arm} />
           <Skeleton id={`${id}-sk`} curl={arm.curl} thumb={arm.thumb} detail={px < 0.1 ? 1 : 0.6} />
           <FractureStandIn id={`${id}-fx`} w={sp.w} glue={sp.glue} px={px} />
-          {!off.includes('shadow') && ins.probeOn > 0.01 && <ProbeShadow st={ins.probe} px={px} />}
-          {!off.includes('shadow') && ins.appOn > 0.01 && <AppShadow st={ins.app} px={px} />}
+          {!off.includes('shadow') && ins.probeOn > 0.01 && <ProbeShadow st={ins.probe} px={px} on={ins.probeOn} />}
+          {!off.includes('shadow') && ins.appOn > 0.01 && <AppShadow st={ins.app} px={px} on={ins.appOn} />}
         </g>
       </Layer>
       <Layer c={c} z={Z_SKIN} maxBlur={22}>
@@ -180,8 +257,8 @@ const Sheet: React.FC<{ks: string[]; cols: number}> = ({ks, cols}) => {
     <AbsoluteFill style={{background: '#111'}}>
       {ks.map((key, i) => (
         <div key={key} style={{position: 'absolute', left: (i % cols) * 1080 * k, top: Math.floor(i / cols) * 1920 * k, width: 1080, height: 1920, transform: `scale(${k})`, transformOrigin: '0 0', overflow: 'hidden'}}>
-          <Frame sp={STATES[key]} id={`f${key}`} />
-          <div style={{position: 'absolute', left: 20, top: 20, fontSize: 64, color: '#FF0', fontFamily: 'monospace'}}>{STATES[key].label}</div>
+          <Frame sp={specOf(key)} id={`f${key.replace('.', '_')}`} />
+          <div style={{position: 'absolute', left: 20, top: 20, fontSize: 64, color: '#FF0', fontFamily: 'monospace'}}>{specOf(key).label}</div>
         </div>
       ))}
     </AbsoluteFill>
@@ -190,7 +267,7 @@ const Sheet: React.FC<{ks: string[]; cols: number}> = ({ks, cols}) => {
 
 const Test: React.FC<{st: string; ks?: string[]; cols?: number; off?: string[]}> = ({st: key, ks, cols, off}) => {
   if (key === 'sheet') return <Sheet ks={ks ?? Object.keys(STATES)} cols={cols ?? 4} />;
-  return <Frame sp={STATES[key]} id={`f${key}`} off={off} />;
+  return <Frame sp={specOf(key)} id={`f${key.replace('.', '_')}`} off={off} />;
 };
 
 registerRoot(() => (

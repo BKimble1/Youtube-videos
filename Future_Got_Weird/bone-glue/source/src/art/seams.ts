@@ -111,9 +111,11 @@ export const isWedgeSide = (id: SeamId, s: number, side: 1 | -1) =>
 /** displacement of the wedge from its seated place: rotation (rad, about WEDGE_PIVOT; + is clockwise on screen) then
  *  translation (mm) */
 export type WedgeX = {dx: number; dy: number; rot: number};
-export const WEDGE_PIVOT = pt(11.7, 9.6);
+export const WEDGE_PIVOT = pt(11.8, 9.0); // the wedge's lower tip (its C3 face meets the radial border)
 /** the displaced pose at frame 0 (seated = all zero) */
-export const WEDGE_OUT: WedgeX = {dx: 0.62, dy: 0.62, rot: 0.105};
+// tilted out about its lower tip and shifted out of the radial border: both its seams gape wedge-shaped. Checked: no
+// overlap with the static bone at any wedgeLerp(u), u in [0, 1] (the faces never come closer than ~0.5 mm)
+export const WEDGE_OUT: WedgeX = {dx: 0.8, dy: 1.3, rot: 0.2};
 export const WEDGE_SEATED: WedgeX = {dx: 0, dy: 0, rot: 0};
 export const wedgeLerp = (u: number): WedgeX => ({dx: WEDGE_OUT.dx * (1 - u), dy: WEDGE_OUT.dy * (1 - u), rot: WEDGE_OUT.rot * (1 - u)});
 export const xfPoint = (p: P, w: WedgeX): P => {
@@ -171,11 +173,13 @@ export const WEDGE_POLY: P[] = (() => {
 /** the corner of the wedge (where its two broken faces meet), seated */
 export const WEDGE_CORNER = WEDGE_POLY[0];
 /** a point on the wedge's face where the probe's tip presses (seated coordinates; carry with xfPoint) */
-export const WEDGE_PRESS = pt(10.0, 3.6);
+export const WEDGE_PRESS = pt(10.25, 3.0); // near the wedge's centroid: >= 2 mm from both its seams and the border
 /** a point on the styloid fragment where the probe holds it later (static fragment) */
-export const STYLOID_PRESS = pt(12.4, -5.4);
-/** the probe's axis angle (rad, from the tip toward the handle) on the wedge and on the styloid fragment */
-export const PROBE_ANG_W = 0.55, PROBE_ANG_S = 0.4;
+export const STYLOID_PRESS = pt(7.0, -9.0); // mid styloid fragment: ~3.5 mm right of C2, ~8 mm above C1, ~8 mm inside the rim
+/** the probe's axis angle (rad, from the tip toward the handle) on the wedge and on the styloid fragment: both from the
+ *  lower right, steep enough that on the styloid the shaft passes left of the right rake's tines (>= a shaft width at
+ *  w 58-112) and right of the wedge seam's lower end, never along the rake's arm */
+export const PROBE_ANG_W = 0.9, PROBE_ANG_S = 1.18;
 
 // ---------------------------------------------------------------- the glue band
 /** The adhesive in a seam from s0 to s1: it fills the gap between the two faces and wets out a little over each
@@ -225,7 +229,9 @@ export const growth = (id: SeamId, s: number, bridge: number, side: 1 | -1): num
   const b = bridge * 1.2;
   const tooth = 0.07 * Math.max(0, Math.sin(s * 9.3 + seed)) * clamp(bridge * 4) * (1 - clamp((bridge - 0.85) / 0.15));
   // every point is bridged by bridge 1
-  return clamp(Math.max(b * k * g * 0.5 + tooth, 0.5 * g * ss01((bridge - 0.72) / 0.28)), 0, g);
+  // the last stretches close one after another (each island keeps its width until its own closing), not all at once
+  const c = 0.72 + 0.16 * (0.5 + 0.5 * noise1(s * 0.35 + seed, 91));
+  return clamp(Math.max(b * k * g * 0.5 + tooth, 0.5 * g * ss01((bridge - c) / 0.12)), 0, g);
 };
 const ss01 = (x: number) => {
   const u = clamp(x);

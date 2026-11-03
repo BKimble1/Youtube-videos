@@ -13,7 +13,7 @@ import {WetFilm} from './art/wet';
 import {Skeleton} from './art/skeleton';
 import {ArmSkin, DeepTissue, IncisionRim, armOutlinePath} from './art/arm';
 import {SurgeonBack, SurgeonFront} from './art/surgeon';
-import {AppShadow, ProbeShadow} from './art/instruments';
+import {AppShadow, INSTR_Z, ProbeShadow} from './art/instruments';
 import {DrapeOverArm, HandTable, RoomBack} from './art/room';
 import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
@@ -29,7 +29,7 @@ setCaptionAdjust({
   lastHide: 1e9,
 });
 
-const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = -6, Z_TABLE = 40, Z_ROOM = 600;
+const Z_SKIN = -0.7 * BONE_DEPTH, Z_INSTR = INSTR_Z, Z_TABLE = 40, Z_ROOM = 600;
 
 /** a point at depth 0 drawn in a layer at depth z: where it must sit so it lands on the same screen point */
 const reproject = (c: Cam, p: P, z: number): P => {
@@ -37,7 +37,7 @@ const reproject = (c: Cam, p: P, z: number): P => {
   return pt(c.x + (p.x - c.x) * r, c.y + (p.y - c.y) * r);
 };
 
-const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) => {
+export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) => {
   const px = c.w / 1080;
   const bone: BoneState2 = boneAt(t, px);
   const arm = armAt(t);
@@ -84,8 +84,8 @@ const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, fkey}) =
           <FractureBone st={bone} view={view} />
           <HealLayer st={bone} view={view} />
           <WetFilm st={bone} />
-          {showSurgeon && ins.probeOn > 0.01 && <ProbeShadow st={ins.probe} px={px} />}
-          {showSurgeon && ins.appOn > 0.01 && <AppShadow st={ins.app} px={px} />}
+          {showSurgeon && ins.probeOn > 0.01 && <ProbeShadow st={ins.probe} px={px} on={ins.probeOn} />}
+          {showSurgeon && ins.appOn > 0.01 && <AppShadow st={ins.app} px={px} on={ins.appOn} />}
         </g>
       </Layer>
       <Layer c={c} z={Z_SKIN} maxBlur={22}>
