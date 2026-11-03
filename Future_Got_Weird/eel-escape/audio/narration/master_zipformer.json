@@ -1,0 +1,448 @@
+{
+ "audio": "audio/narration/_edited_take.wav",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   3.54,
+   3.86
+  ],
+  [
+   5.41,
+   5.8
+  ],
+  [
+   6.99,
+   7.19
+  ],
+  [
+   8.43,
+   8.83
+  ],
+  [
+   10.61,
+   10.89
+  ],
+  [
+   13.51,
+   13.88
+  ],
+  [
+   15.57,
+   16.0
+  ],
+  [
+   17.54,
+   18.0
+  ],
+  [
+   19.74,
+   19.98
+  ],
+  [
+   21.1,
+   21.3
+  ]
+ ],
+ "words": [
+  {
+   "word": "That",
+   "start": 0.0,
+   "end": 0.23
+  },
+  {
+   "word": "tail",
+   "start": 0.24,
+   "end": 0.56
+  },
+  {
+   "word": "sticking",
+   "start": 0.56,
+   "end": 0.95
+  },
+  {
+   "word": "out",
+   "start": 0.96,
+   "end": 1.12
+  },
+  {
+   "word": "of",
+   "start": 1.12,
+   "end": 1.19
+  },
+  {
+   "word": "this",
+   "start": 1.2,
+   "end": 1.38
+  },
+  {
+   "word": "fish",
+   "start": 1.4,
+   "end": 1.63
+  },
+  {
+   "word": "belongs",
+   "start": 1.64,
+   "end": 2.03
+  },
+  {
+   "word": "to",
+   "start": 2.04,
+   "end": 2.15
+  },
+  {
+   "word": "the",
+   "start": 2.16,
+   "end": 2.27
+  },
+  {
+   "word": "eel",
+   "start": 2.28,
+   "end": 2.59
+  },
+  {
+   "word": "it",
+   "start": 2.6,
+   "end": 2.79
+  },
+  {
+   "word": "just",
+   "start": 2.8,
+   "end": 3.0
+  },
+  {
+   "word": "swallowed.",
+   "start": 3.0,
+   "end": 3.54
+  },
+  {
+   "word": "Scientists",
+   "start": 3.86,
+   "end": 4.33
+  },
+  {
+   "word": "filmed",
+   "start": 4.34,
+   "end": 4.65
+  },
+  {
+   "word": "it",
+   "start": 4.66,
+   "end": 4.77
+  },
+  {
+   "word": "on",
+   "start": 4.78,
+   "end": 4.94
+  },
+  {
+   "word": "X-ray.",
+   "start": 4.94,
+   "end": 5.41
+  },
+  {
+   "word": "Inside",
+   "start": 5.8,
+   "end": 6.04
+  },
+  {
+   "word": "the",
+   "start": 6.045,
+   "end": 6.16
+  },
+  {
+   "word": "fish\u2019s",
+   "start": 6.165,
+   "end": 6.64
+  },
+  {
+   "word": "stomach,",
+   "start": 6.645,
+   "end": 6.99
+  },
+  {
+   "word": "the",
+   "start": 7.19,
+   "end": 7.24
+  },
+  {
+   "word": "eel",
+   "start": 7.23,
+   "end": 7.48
+  },
+  {
+   "word": "starts",
+   "start": 7.49,
+   "end": 7.9
+  },
+  {
+   "word": "backing",
+   "start": 7.93,
+   "end": 8.36
+  },
+  {
+   "word": "up.",
+   "start": 8.37,
+   "end": 8.43
+  },
+  {
+   "word": "Its",
+   "start": 8.83,
+   "end": 8.94
+  },
+  {
+   "word": "tail",
+   "start": 8.95,
+   "end": 9.26
+  },
+  {
+   "word": "slides",
+   "start": 9.27,
+   "end": 9.75
+  },
+  {
+   "word": "up",
+   "start": 9.75,
+   "end": 9.84
+  },
+  {
+   "word": "the",
+   "start": 9.87,
+   "end": 9.98
+  },
+  {
+   "word": "fish\u2019s",
+   "start": 9.99,
+   "end": 10.38
+  },
+  {
+   "word": "throat,",
+   "start": 10.39,
+   "end": 10.61
+  },
+  {
+   "word": "slips",
+   "start": 10.89,
+   "end": 11.18
+  },
+  {
+   "word": "through",
+   "start": 11.19,
+   "end": 11.34
+  },
+  {
+   "word": "a",
+   "start": 11.35,
+   "end": 11.46
+  },
+  {
+   "word": "gap",
+   "start": 11.47,
+   "end": 11.7
+  },
+  {
+   "word": "in",
+   "start": 11.71,
+   "end": 11.82
+  },
+  {
+   "word": "the",
+   "start": 11.83,
+   "end": 11.94
+  },
+  {
+   "word": "gills,",
+   "start": 11.95,
+   "end": 12.32
+  },
+  {
+   "word": "and",
+   "start": 12.35,
+   "end": 12.5
+  },
+  {
+   "word": "pokes",
+   "start": 12.51,
+   "end": 12.9
+  },
+  {
+   "word": "out",
+   "start": 12.91,
+   "end": 13.1
+  },
+  {
+   "word": "the",
+   "start": 13.11,
+   "end": 13.26
+  },
+  {
+   "word": "side.",
+   "start": 13.27,
+   "end": 13.51
+  },
+  {
+   "word": "Then",
+   "start": 13.88,
+   "end": 13.93
+  },
+  {
+   "word": "the",
+   "start": 13.935,
+   "end": 14.13
+  },
+  {
+   "word": "rest",
+   "start": 14.135,
+   "end": 14.41
+  },
+  {
+   "word": "of",
+   "start": 14.415,
+   "end": 14.57
+  },
+  {
+   "word": "its",
+   "start": 14.575,
+   "end": 14.75
+  },
+  {
+   "word": "body",
+   "start": 14.775,
+   "end": 15.17
+  },
+  {
+   "word": "follows.",
+   "start": 15.175,
+   "end": 15.57
+  },
+  {
+   "word": "Its",
+   "start": 16.0,
+   "end": 16.14
+  },
+  {
+   "word": "head",
+   "start": 16.145,
+   "end": 16.42
+  },
+  {
+   "word": "comes",
+   "start": 16.425,
+   "end": 16.82
+  },
+  {
+   "word": "out",
+   "start": 16.825,
+   "end": 17.1
+  },
+  {
+   "word": "last.",
+   "start": 17.105,
+   "end": 17.54
+  },
+  {
+   "word": "The",
+   "start": 18.0,
+   "end": 18.05
+  },
+  {
+   "word": "eel",
+   "start": 18.04,
+   "end": 18.33
+  },
+  {
+   "word": "curls",
+   "start": 18.33,
+   "end": 18.72
+  },
+  {
+   "word": "up",
+   "start": 18.73,
+   "end": 18.92
+  },
+  {
+   "word": "outside",
+   "start": 18.93,
+   "end": 19.28
+  },
+  {
+   "word": "the",
+   "start": 19.29,
+   "end": 19.4
+  },
+  {
+   "word": "fish,",
+   "start": 19.45,
+   "end": 19.74
+  },
+  {
+   "word": "gives",
+   "start": 19.98,
+   "end": 20.17
+  },
+  {
+   "word": "one",
+   "start": 20.18,
+   "end": 20.42
+  },
+  {
+   "word": "final",
+   "start": 20.42,
+   "end": 20.8
+  },
+  {
+   "word": "pull,",
+   "start": 20.82,
+   "end": 21.1
+  },
+  {
+   "word": "and",
+   "start": 21.3,
+   "end": 21.35
+  },
+  {
+   "word": "swims",
+   "start": 21.36,
+   "end": 21.83
+  },
+  {
+   "word": "away",
+   "start": 21.84,
+   "end": 22.03
+  },
+  {
+   "word": "from",
+   "start": 22.04,
+   "end": 22.15
+  },
+  {
+   "word": "the",
+   "start": 22.16,
+   "end": 22.32
+  },
+  {
+   "word": "animal",
+   "start": 22.32,
+   "end": 22.68
+  },
+  {
+   "word": "that",
+   "start": 22.68,
+   "end": 22.87
+  },
+  {
+   "word": "just",
+   "start": 22.88,
+   "end": 23.15
+  },
+  {
+   "word": "ate",
+   "start": 23.2,
+   "end": 23.55
+  },
+  {
+   "word": "it.",
+   "start": 23.56,
+   "end": 23.77
+  }
+ ]
+}

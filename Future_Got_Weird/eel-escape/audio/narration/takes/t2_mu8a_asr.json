@@ -1,0 +1,12 @@
+{
+ "zipformer": {
+  "transcript": "THAT TAIL STICKING OUT OF THIS FISH BELONGS TO THE EEL IT JUST SWALLOWED SCIENTISTS FILMED IT ON X RAY INSIDE THE FISH'S STOMACH THE EEL STARTS BACKING UP ITS TAIL SLIDES UP THE FISH'S THROAT SLIPS THROUGH A GAP IN THE GILLS AND POKES OUT THE SIDE THEN THE REST OF ITS BODY FOLLOWS ITS HEAD COMES OUT LAST THE EEL CURLS UP OUTSIDE THE FISH GIVES ONE FINAL PULL AND SWIMS AWAY FROM THE ANIMAL THAT JUST ATE IT",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "whisper": {
+  "transcript": "That tail sticking out of this fish belongs to the eel it just swallowed. Scientists filmed it on X-ray. Inside the fish's stomach, the eel starts backing up. Its tail slides up the fish's throat, slips through a gap in the gills, and pokes out the side. // Then, the rest of its body follows. Its head comes out last. The eel curls up outside the fish, gives one final pull, and swims away from the animal that just ate it.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}
