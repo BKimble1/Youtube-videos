@@ -9,8 +9,9 @@ const sig: Record<string, number[]> = {speed: [], logw: [], hem: [], soft: [], b
 const world: string[] = [];
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
 const frontS = (t: number) => {
+  // only while the cannula is laying (flow 1): the settling tail after a run ends makes no glue sound
   const f = boneAt(t, 0.05).front;
-  return f ? f.s : null;
+  return f && f.flow >= 0.999 ? f.s : null;
 };
 for (let i = 0; i <= Math.round(DUR * 100); i++) {
   const t = i / 100;
