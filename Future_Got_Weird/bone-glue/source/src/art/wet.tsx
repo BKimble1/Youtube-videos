@@ -107,9 +107,9 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
     const body = closed([...crest.pts, ...[...back].reverse()], 0.5);
     out.push(
       <g key={`c${k}`} opacity={fade}>
-        <path d={body} fill="#FFE1E4" opacity={0.26} />
-        <path d={open(crestLine(rows, q + 0.2, ph, t, 0.16).pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(4)} fill="none" opacity={0.2} strokeLinecap="round" />
-        <path d={open(crest.pts, 0.5)} stroke="#FFF5F5" strokeWidth={W(2.8)} fill="none" opacity={0.72} strokeLinecap="round" />
+        <path d={body} fill="#FFE1E4" opacity={0.34} />
+        <path d={open(crestLine(rows, q + 0.2, ph, t, 0.16).pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(5)} fill="none" opacity={0.34} strokeLinecap="round" />
+        <path d={open(crest.pts, 0.5)} stroke="#FFF5F5" strokeWidth={W(4.5)} fill="none" opacity={0.92} strokeLinecap="round" />
         {gelRuns(crest.pts, crest.gel).map((r, i) => (
           <path key={i} d={open(r, 0.5)} stroke={C.glueShine} strokeWidth={W(4.2)} fill="none" opacity={0.85} strokeLinecap="round" />
         ))}
@@ -129,13 +129,13 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
       <g key="surge" opacity={strength}>
         <defs>
           <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
-            <stop offset={0} stopColor={C.blood} stopOpacity={0} />
-            <stop offset={0.65} stopColor={C.blood} stopOpacity={0.22} />
-            <stop offset={1} stopColor={C.bloodDeep} stopOpacity={0.34} />
+            <stop offset={0} stopColor={C.bloodLit} stopOpacity={0} />
+            <stop offset={0.55} stopColor={C.bloodLit} stopOpacity={0.5} />
+            <stop offset={1} stopColor={C.blood} stopOpacity={0.72} />
           </linearGradient>
         </defs>
         <path d={closed([...lead.pts, ...[...tail].reverse()], 0.5)} fill={`url(#${grad})`} />
-        <path d={open(lead.pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(6)} fill="none" opacity={0.5} strokeLinecap="round" />
+        <path d={open(lead.pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(8)} fill="none" opacity={0.8} strokeLinecap="round" />
         <path d={open(lead.pts.map((p) => pt(p.x - D.x * W(5), p.y - D.y * W(5))), 0.5)} stroke="#FFF1F2" strokeWidth={W(2.6)} fill="none" opacity={0.85} strokeLinecap="round" />
         {gelRuns(lead.pts, lead.gel).map((r, i) => (
           <path key={i} d={open(r.map((p) => pt(p.x - D.x * W(5), p.y - D.y * W(5))), 0.5)} stroke={C.glueShine} strokeWidth={W(4.5)} fill="none" opacity={0.9} strokeLinecap="round" />
@@ -186,7 +186,7 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
   });
 
   // the whole film: a faint blood tint over the bone, a touch redder after the wash
-  const tint = 0.15 + 0.025 * Math.sin(t * 1.7) + (st.surge > 0.3 ? 0.06 * ss(st.surge, 0.3, 1) : 0);
+  const tint = 0.2 + 0.025 * Math.sin(t * 1.7) + (st.surge > 0.3 ? 0.1 * ss(st.surge, 0.3, 1) : 0);
   return (
     <g opacity={a}>
       <defs>
