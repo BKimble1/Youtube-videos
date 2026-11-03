@@ -1,0 +1,33 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Bone Glue, Myostatin, Zombie Snail, Zombie Ant); confirmed with creative_list_voices on 2026-11-03"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags only",
+ "flow_id": "knNKWjd6j8BIb0N55iTb",
+ "prompt": "[brisk, intrigued] Doctors turned this boy's ankle into a WORKING KNEE. [quick, explaining] Wyatt had bone cancer. Surgeons had to remove his knee, but they could save his foot. [building] They turned his lower leg halfway around and attached it to his thigh, with his toes POINTING BEHIND HIM. [clear, revealing] That backward ankle now bent the same way as his other knee. [warm] When Wyatt woke up, he could still WIGGLE HIS TOES. [pleased, matter-of-fact] And once he learned to use his new leg, that same foot helped him kick a soccer ball.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Capitals mark the three requested emphases; bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (connector default), 2 x 544.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_Ldgt.mp3",
+   "generation_id": "LdgtOHd075eOwKb3QOI6",
+   "duration_s": 24.48
+  },
+  {
+   "file": "audio/narration/takes/t2_ToAm.mp3",
+   "generation_id": "ToAmtj0HhVfkiSHMMVfR",
+   "duration_s": 24.4
+  }
+ ],
+ "chosen_take": "t1_Ldgt: both read word-perfect; t1 carries more weight on 'pointing behind' (+1.6/+2.1 dB against the take's mean, t2 about 0), equal elsewhere",
+ "master": {
+  "file": "audio/narration/FGW_Ankle_Knee_narration.wav",
+  "edits": "none: the take is used whole (24.5 s, inside the 24-27 s target), padded with silence to the 25.0 s loop",
+  "alignment": "audio/narration/takes/t1_Ldgt_zipformer.json (sherpa-onnx zipformer); the last three words set from the waveform (tools/make_narration.py FIX)",
+  "asr_check": "qa/final/asr_final_mix.json: whisper base.en WER 0.000 on the final MP4's audio; zipformer diffs are spellings only (Wyat, half way, socker)"
+ }
+}

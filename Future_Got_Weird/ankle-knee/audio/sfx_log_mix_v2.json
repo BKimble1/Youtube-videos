@@ -1,0 +1,152 @@
+[
+ {
+  "t": 0.133,
+  "sfx": "ball strike: leather thump",
+  "gain_db": -13
+ },
+ {
+  "t": 24.7,
+  "sfx": "the leg swings into the ball (runs over the seam)",
+  "gain_db": -27
+ },
+ {
+  "t": 0.153,
+  "sfx": "the ball flies off",
+  "gain_db": -31
+ },
+ {
+  "t": 0.36,
+  "sfx": "slow-motion follow-through (deep whoosh)",
+  "gain_db": -26
+ },
+ {
+  "t": 1.827,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -24
+ },
+ {
+  "t": 2.828,
+  "sfx": "cleat lands (left)",
+  "gain_db": -26
+ },
+ {
+  "t": 20.805,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -24
+ },
+ {
+  "t": 22.13,
+  "sfx": "cleat lands (left)",
+  "gain_db": -26
+ },
+ {
+  "t": 22.635,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -24
+ },
+ {
+  "t": 23.135,
+  "sfx": "cleat lands (left)",
+  "gain_db": -26
+ },
+ {
+  "t": 23.635,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -24
+ },
+ {
+  "t": 24.185,
+  "sfx": "cleat lands (left)",
+  "gain_db": -26
+ },
+ {
+  "t": 20.795,
+  "sfx": "the prosthetic cleat plants on turf",
+  "gain_db": -21
+ },
+ {
+  "t": 21.245,
+  "sfx": "weight shifts onto it (cleat on grass)",
+  "gain_db": -34
+ },
+ {
+  "t": 24.38,
+  "sfx": "backswing",
+  "gain_db": -34
+ },
+ {
+  "t": 3.333,
+  "sfx": "match cut to the illustration",
+  "gain_db": -34
+ },
+ {
+  "t": 3.595,
+  "sfx": "the x-ray window opens (soft rising tone)",
+  "gain_db": -38
+ },
+ {
+  "t": 3.875,
+  "sfx": "diseased bone glows (low pulse)",
+  "gain_db": -33
+ },
+ {
+  "t": 4.99,
+  "sfx": "cut line",
+  "gain_db": -33
+ },
+ {
+  "t": 5.21,
+  "sfx": "cut line",
+  "gain_db": -33
+ },
+ {
+  "t": 5.6,
+  "sfx": "the knee section lifts away (soft)",
+  "gain_db": -32
+ },
+ {
+  "t": 7.09,
+  "sfx": "the foot is saved (soft chime)",
+  "gain_db": -36
+ },
+ {
+  "t": 9.31,
+  "sfx": "the half-turn (airy swish following its speed)",
+  "gain_db": -31
+ },
+ {
+  "t": 11.335,
+  "sfx": "the shin meets the thigh (soft seat)",
+  "gain_db": -29
+ },
+ {
+  "t": 11.555,
+  "sfx": "stitches",
+  "gain_db": -40
+ },
+ {
+  "t": 13.88,
+  "sfx": "the socket clicks on",
+  "gain_db": -30
+ },
+ {
+  "t": 16.592,
+  "sfx": "he sits: the bench takes his weight",
+  "gain_db": -26
+ },
+ {
+  "t": 17.71,
+  "sfx": "sheet rustle as he wakes",
+  "gain_db": -35
+ },
+ {
+  "t": 19.057,
+  "sfx": "the toes wiggle (tiny rustle)",
+  "gain_db": -37
+ },
+ {
+  "t": 17.8,
+  "sfx": "monitor beep (far)",
+  "gain_db": -46
+ }
+]

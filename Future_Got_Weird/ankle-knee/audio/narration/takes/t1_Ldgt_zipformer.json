@@ -1,0 +1,468 @@
+{
+ "audio": "audio/narration/takes/t1_Ldgt.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   2.84,
+   3.31
+  ],
+  [
+   4.61,
+   4.91
+  ],
+  [
+   6.49,
+   6.67
+  ],
+  [
+   7.82,
+   8.29
+  ],
+  [
+   11.58,
+   11.79
+  ],
+  [
+   13.52,
+   13.96
+  ],
+  [
+   16.87,
+   17.37
+  ],
+  [
+   18.22,
+   18.47
+  ],
+  [
+   19.98,
+   20.37
+  ],
+  [
+   21.93,
+   22.18
+  ]
+ ],
+ "words": [
+  {
+   "word": "Doctors",
+   "start": 0.0,
+   "end": 0.47
+  },
+  {
+   "word": "turned",
+   "start": 0.48,
+   "end": 0.68
+  },
+  {
+   "word": "this",
+   "start": 0.68,
+   "end": 0.87
+  },
+  {
+   "word": "boy\u2019s",
+   "start": 0.88,
+   "end": 1.19
+  },
+  {
+   "word": "ankle",
+   "start": 1.2,
+   "end": 1.59
+  },
+  {
+   "word": "into",
+   "start": 1.6,
+   "end": 1.83
+  },
+  {
+   "word": "a",
+   "start": 1.84,
+   "end": 2.0
+  },
+  {
+   "word": "working",
+   "start": 2.0,
+   "end": 2.51
+  },
+  {
+   "word": "knee.",
+   "start": 2.52,
+   "end": 2.84
+  },
+  {
+   "word": "Wyatt",
+   "start": 3.31,
+   "end": 3.63
+  },
+  {
+   "word": "had",
+   "start": 3.635,
+   "end": 3.87
+  },
+  {
+   "word": "bone",
+   "start": 3.875,
+   "end": 4.15
+  },
+  {
+   "word": "cancer.",
+   "start": 4.155,
+   "end": 4.61
+  },
+  {
+   "word": "Surgeons",
+   "start": 4.91,
+   "end": 5.32
+  },
+  {
+   "word": "had",
+   "start": 5.32,
+   "end": 5.47
+  },
+  {
+   "word": "to",
+   "start": 5.48,
+   "end": 5.59
+  },
+  {
+   "word": "remove",
+   "start": 5.6,
+   "end": 6.0
+  },
+  {
+   "word": "his",
+   "start": 6.0,
+   "end": 6.19
+  },
+  {
+   "word": "knee,",
+   "start": 6.2,
+   "end": 6.49
+  },
+  {
+   "word": "but",
+   "start": 6.67,
+   "end": 6.73
+  },
+  {
+   "word": "they",
+   "start": 6.74,
+   "end": 6.81
+  },
+  {
+   "word": "could",
+   "start": 6.9,
+   "end": 7.14
+  },
+  {
+   "word": "save",
+   "start": 7.14,
+   "end": 7.37
+  },
+  {
+   "word": "his",
+   "start": 7.38,
+   "end": 7.52
+  },
+  {
+   "word": "foot.",
+   "start": 7.58,
+   "end": 7.82
+  },
+  {
+   "word": "They",
+   "start": 8.29,
+   "end": 8.34
+  },
+  {
+   "word": "turned",
+   "start": 8.33,
+   "end": 8.57
+  },
+  {
+   "word": "his",
+   "start": 8.575,
+   "end": 8.77
+  },
+  {
+   "word": "lower",
+   "start": 8.775,
+   "end": 9.09
+  },
+  {
+   "word": "leg",
+   "start": 9.095,
+   "end": 9.41
+  },
+  {
+   "word": "halfway",
+   "start": 9.415,
+   "end": 9.81
+  },
+  {
+   "word": "around",
+   "start": 9.815,
+   "end": 10.17
+  },
+  {
+   "word": "and",
+   "start": 10.175,
+   "end": 10.29
+  },
+  {
+   "word": "attached",
+   "start": 10.295,
+   "end": 10.75
+  },
+  {
+   "word": "it",
+   "start": 10.775,
+   "end": 10.93
+  },
+  {
+   "word": "to",
+   "start": 10.935,
+   "end": 11.05
+  },
+  {
+   "word": "his",
+   "start": 11.055,
+   "end": 11.17
+  },
+  {
+   "word": "thigh,",
+   "start": 11.255,
+   "end": 11.58
+  },
+  {
+   "word": "with",
+   "start": 11.79,
+   "end": 11.84
+  },
+  {
+   "word": "his",
+   "start": 11.845,
+   "end": 12.04
+  },
+  {
+   "word": "toes",
+   "start": 12.045,
+   "end": 12.46
+  },
+  {
+   "word": "pointing",
+   "start": 12.485,
+   "end": 12.88
+  },
+  {
+   "word": "behind",
+   "start": 12.885,
+   "end": 13.43
+  },
+  {
+   "word": "him.",
+   "start": 13.445,
+   "end": 13.52
+  },
+  {
+   "word": "That",
+   "start": 13.96,
+   "end": 14.05
+  },
+  {
+   "word": "backward",
+   "start": 14.06,
+   "end": 14.53
+  },
+  {
+   "word": "ankle",
+   "start": 14.54,
+   "end": 14.93
+  },
+  {
+   "word": "now",
+   "start": 14.94,
+   "end": 15.13
+  },
+  {
+   "word": "bent",
+   "start": 15.14,
+   "end": 15.36
+  },
+  {
+   "word": "the",
+   "start": 15.42,
+   "end": 15.53
+  },
+  {
+   "word": "same",
+   "start": 15.54,
+   "end": 15.85
+  },
+  {
+   "word": "way",
+   "start": 15.86,
+   "end": 16.05
+  },
+  {
+   "word": "as",
+   "start": 16.06,
+   "end": 16.25
+  },
+  {
+   "word": "his",
+   "start": 16.26,
+   "end": 16.46
+  },
+  {
+   "word": "other",
+   "start": 16.46,
+   "end": 16.7
+  },
+  {
+   "word": "knee.",
+   "start": 16.7,
+   "end": 16.87
+  },
+  {
+   "word": "When",
+   "start": 17.37,
+   "end": 17.42
+  },
+  {
+   "word": "Wyatt",
+   "start": 17.41,
+   "end": 17.75
+  },
+  {
+   "word": "woke",
+   "start": 17.76,
+   "end": 18.12
+  },
+  {
+   "word": "up,",
+   "start": 18.12,
+   "end": 18.22
+  },
+  {
+   "word": "he",
+   "start": 18.47,
+   "end": 18.52
+  },
+  {
+   "word": "could",
+   "start": 18.51,
+   "end": 18.66
+  },
+  {
+   "word": "still",
+   "start": 18.665,
+   "end": 18.98
+  },
+  {
+   "word": "wiggle",
+   "start": 18.985,
+   "end": 19.38
+  },
+  {
+   "word": "his",
+   "start": 19.385,
+   "end": 19.58
+  },
+  {
+   "word": "toes.",
+   "start": 19.585,
+   "end": 19.98
+  },
+  {
+   "word": "And",
+   "start": 20.37,
+   "end": 20.42
+  },
+  {
+   "word": "once",
+   "start": 20.41,
+   "end": 20.57
+  },
+  {
+   "word": "he",
+   "start": 20.575,
+   "end": 20.69
+  },
+  {
+   "word": "learned",
+   "start": 20.695,
+   "end": 20.97
+  },
+  {
+   "word": "to",
+   "start": 20.975,
+   "end": 21.09
+  },
+  {
+   "word": "use",
+   "start": 21.095,
+   "end": 21.29
+  },
+  {
+   "word": "his",
+   "start": 21.295,
+   "end": 21.45
+  },
+  {
+   "word": "new",
+   "start": 21.455,
+   "end": 21.69
+  },
+  {
+   "word": "leg,",
+   "start": 21.695,
+   "end": 21.93
+  },
+  {
+   "word": "that",
+   "start": 22.18,
+   "end": 22.25
+  },
+  {
+   "word": "same",
+   "start": 22.255,
+   "end": 22.61
+  },
+  {
+   "word": "foot",
+   "start": 22.615,
+   "end": 22.93
+  },
+  {
+   "word": "helped",
+   "start": 22.935,
+   "end": 23.23
+  },
+  {
+   "word": "him",
+   "start": 23.255,
+   "end": 23.37
+  },
+  {
+   "word": "kick",
+   "start": 23.375,
+   "end": 23.57
+  },
+  {
+   "word": "a",
+   "start": 23.575,
+   "end": 23.73
+  },
+  {
+   "word": "soccer",
+   "start": 23.735,
+   "end": 23.785
+  },
+  {
+   "word": "ball.",
+   "start": 23.775,
+   "end": 24.31
+  }
+ ]
+}
