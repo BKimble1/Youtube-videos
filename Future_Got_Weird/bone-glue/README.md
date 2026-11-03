@@ -2,10 +2,8 @@
 
 ## V2 (current review cut)
 
-**Deliverable.** `exports/FGW_Bone_Glue_V2_REVIEW_NO_NARRATION_1080x1920.mp4` contains the complete picture, captions,
-effects and music, but **not the narration**. The take files are served from a host this environment's network policy
-blocks. Once the narration is added, the file becomes `exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4` (steps below).
-**It is not published.**
+**Deliverable.** `exports/FGW_Bone_Glue_V2_FINAL_1080x1920.mp4`: picture, captions, the approved narration, effects
+and music (27.23 s). **It is not published.**
 
 **Report.** `production/V2_REPORT.md` covers the format, the measurements, the brief checklist and the remaining
 issues. Its evidence is in `qa/v2/`. The beat plan and the module contracts are in `production/V2_PLAN.md`. V1 and its
@@ -45,8 +43,8 @@ frame 0. There is no wipe.
                                                     # (--provisional: timeline from the take's Scribe word times)
     source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec.cjs && NODE_PATH=source/node_modules node /tmp/ec.cjs audio/cues.json
     python3 tools/make_audio.py mix_v2              # effects + music + mix -> source/public/audio/mix_v2.wav
-    (cd source && npm ci && npx remotion render src/index.ts BoneGlueV2 ../exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
-    python3 tools/qa_render.py exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4 qa/v2
+    (cd source && npm ci && npx remotion render src/index.ts BoneGlueV2 ../exports/FGW_Bone_Glue_V2_FINAL_1080x1920.mp4 --props='{"audio":"mix_v2","captions":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    python3 tools/qa_render.py exports/FGW_Bone_Glue_V2_FINAL_1080x1920.mp4 qa/v2
     # current no-narration cut: FGW_NO_VOICE=1 python3 tools/make_audio.py mix_v2_novoice, then render with "audio":"mix_v2_novoice"
 
 Working sheets: `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`.

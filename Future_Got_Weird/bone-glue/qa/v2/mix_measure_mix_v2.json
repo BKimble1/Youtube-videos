@@ -1,0 +1,16 @@
+{
+ "no_voice": false,
+ "integrated_lufs": -13.2,
+ "true_peak_dbtp_4x": -1.6,
+ "sample_peak_dbfs": -1.61,
+ "voice_gain_db": 7.02,
+ "voice_max_gain_reduction_db": -9.89,
+ "duration_s": 27.233,
+ "effects": 30,
+ "voice_lufs_in_mix": -16.25,
+ "sfx_lufs_in_mix": -34.8,
+ "music_lufs_in_mix": -43.73,
+ "music_bpm": 96.94,
+ "music_beats": 44,
+ "loop_seam_jump": 0.0108
+}

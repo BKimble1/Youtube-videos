@@ -1,47 +1,47 @@
 {
- "file": "FGW_Bone_Glue_V2_REVIEW_NO_NARRATION_1080x1920.mp4",
- "size_mb": 26.92,
+ "file": "FGW_Bone_Glue_V2_FINAL_1080x1920.mp4",
+ "size_mb": 26.06,
  "video": {
   "codec": "h264",
   "w": 1080,
   "h": 1920,
   "fps": "30/1",
   "pix_fmt": "yuv420p",
-  "frames_decoded": 851,
-  "duration_s": 28.367
+  "frames_decoded": 817,
+  "duration_s": 27.233
  },
  "audio": [
   {
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "317379"
+   "bitrate": "317371"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 3.96,
+ "frame_change_median": 3.95,
  "large_changes": [
   {
-   "frame": 240,
-   "t": 8.0,
-   "mad": 104.4,
+   "frame": 231,
+   "t": 7.7,
+   "mad": 104.25,
    "planned": "match cut: glue band -> oyster on its rock"
   },
   {
-   "frame": 307,
-   "t": 10.233,
-   "mad": 21.44,
+   "frame": 291,
+   "t": 9.7,
+   "mad": 20.49,
    "planned": "push to the oyster attachment; match cut back onto the glue band"
   },
   {
-   "frame": 308,
-   "t": 10.267,
-   "mad": 20.01,
+   "frame": 292,
+   "t": 9.733,
+   "mad": 21.5,
    "planned": "push to the oyster attachment; match cut back onto the glue band"
   }
  ],
  "unplanned_large_changes": [],
  "longest_near_static_run_frames": 3,
- "longest_near_static_run_starts_s": 3.6,
+ "longest_near_static_run_starts_s": 3.7,
  "loop_last_vs_first_mad": 12.63
 }

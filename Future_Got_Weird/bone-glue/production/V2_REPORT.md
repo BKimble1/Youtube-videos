@@ -1,31 +1,33 @@
-# Bone Glue V2: review cut report
+# Bone Glue V2: final report
 
-**Status: review cut, not published.** This file has no narration (see "Narration" below).
+**Status: final, with the approved narration. Not published.**
 
 ## Deliverable
 
-`exports/FGW_Bone_Glue_V2_REVIEW_NO_NARRATION_1080x1920.mp4`
+`exports/FGW_Bone_Glue_V2_FINAL_1080x1920.mp4` (captions burned in; `captions/FGW_Bone_Glue_V2.srt` alongside)
 
 | Measure | Result |
 |---|---|
 | Format | H.264 yuv420p, 1080×1920, 30 fps, BT.709; AAC 48 kHz stereo, about 320 kb/s |
-| Length | 851 frames, 28.367 s (see "Length" below) |
-| File size | 26.92 MB |
+| Length | 817 frames, 27.233 s: the narration (ends 26.31 s) plus a 0.92 s tail |
+| File size | 26.06 MB |
 | Full decode | no errors |
-| Frame-to-frame change | median 3.96 (mean absolute difference at 270×480; 2.85 before the pacing pass) |
-| Large changes | 3, all planned: the match cut to the oyster (frame 240) and the cement-to-glue dissolve on the cut back (frames 307–308). None unplanned. |
-| Near-static run | longest 3 frames (60 frames, 2 s, before the pacing pass) |
-| Loop seam (caption-free, last frame vs frame 0) | 10.14, 2.56× the median step (8.3× before). The wrist, the drape, the incision's outline and the camera's push match; the fracture and the instruments appear. |
-| Mix (no narration) | -28.11 LUFS integrated, -11.93 dBTP true peak, 28.367 s, 30 effects placed from the picture's events |
+| Frame-to-frame change | median 3.95 (mean absolute difference at 270×480; 2.85 before the pacing pass) |
+| Large changes | 3, all planned: the match cut to the oyster (frame 231) and the cement-to-glue dissolve on the cut back (frames 291–292). None unplanned. |
+| Near-static run | longest 3 frames |
+| Loop seam (caption-free, last frame vs frame 0) | 10.14, 2.57× the median step. The wrist, the drape, the incision's outline and the camera's push match; the fracture and the instruments appear. |
+| Mix | -13.2 LUFS integrated, -1.6 dBTP true peak; voice -16.25 LUFS, effects -34.8, music -43.73; 30 effects placed from the picture's events |
+| Narration check | Independent ASR of the final file's audio: zipformer WER 0.000, whisper WER 0.000 (`qa/v2/asr_final_mix.json`) |
+| Caption sync | 15 captions from the measured word times; each appears 0.04 s before its first word |
 
 ## Final pacing pass
 
 A targeted pass for pace and visual storytelling. The narration, captions, characters, style and science are unchanged.
 
-**Length.** The approved take is about 27.3 s of near-continuous speech (its longest pause is 0.36 s), so 23–25 s would
-mean rushing or cutting words. The tail after the last word is shortened from 1.5 s to 0.93 s (28.37 s in all), and
-the pace comes from denser beats instead: the median frame-to-frame change rose about 39%, and no stretch is near-still
-for more than 3 frames.
+**Length.** The approved take is about 26.3 s of near-continuous speech once its sentence gaps are trimmed, so 23–25 s
+would mean rushing or cutting words. The tail after the last word is 0.92 s (27.23 s in all), and the pace comes from
+denser beats instead: the median frame-to-frame change rose about 39%, and no stretch is near-still for more than 3
+frames.
 
 | Section | Change |
 |---|---|
@@ -39,29 +41,19 @@ for more than 3 frames.
 
 ## Narration
 
-The approved narration is used word for word (`production/NARRATION_LOCKED.txt`). It was generated once in the channel
-voice: ElevenLabs "Test Voice" `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, connector defaults, with inline delivery tags for
-controlled excitement and brisk, conversational pacing. That produced two takes, 27.76 s and 27.36 s long.
+The approved narration is used word for word (`production/NARRATION_LOCKED.txt`), in the channel voice: ElevenLabs
+"Test Voice" `kk5XaSLo2XAw0sKM98zU`, `eleven_v4`, connector defaults, with inline delivery tags for controlled
+excitement and brisk, conversational pacing. It was generated once (two takes, 27.79 s and 27.40 s); nothing was
+regenerated.
 
-**What is blocked.** The take files are served from `elevenlabsusercontent.com`. This environment's network policy
-blocks that host (proxy `CONNECT 403`, last checked 2026-11-03), so the narration could not be restored for this
-review. No workaround around the policy was attempted.
-
-**What the cut uses instead.**
-- The picture, captions and sound cues are timed to take 2's ElevenLabs Scribe word times
-  (`source/src/data/timeline.json`, `provisional: true`).
-- Every beat is keyed to a word, so when the real take is aligned the beats move with it.
-- The film runs 28.37 s: the narration's end plus a 0.93 s tail.
-
-**To finish (about 15 minutes):**
-1. Allow `elevenlabsusercontent.com` in the environment's network access settings.
-2. Download the takes from flow `vPJoRVyy04Q4iSyAc8Cy` and run `python3 tools/make_narration.py`, which gap-edits,
-   aligns, and writes the timeline, captions and SRT.
-3. Export the cues and run `python3 tools/make_audio.py mix_v2`.
-4. Render `exports/FGW_Bone_Glue_V2_REVIEW_1080x1920.mp4`.
-5. Run `tools/qa_render.py` and the ASR check on it.
-
-These steps are also in the README.
+- Both takes were downloaded once `elevenlabsusercontent.com` was allowed. Take 2 is the master: the picture was built
+  against it.
+- The only edit: sentence gaps longer than 0.30 s are shortened to 0.30 s (0.87 s removed in all). Every word is used
+  sample for sample, with no stretch, pitch or gain change (`audio/narration/FGW_Bone_Glue_narration_V2.wav`).
+- Word times were measured on the master (`audio/narration/master_zipformer.json`), and the timeline, captions and SRT
+  were rebuilt from them. The real take runs up to 1.2 s faster than the provisional timings; every beat is keyed to
+  its word, so the picture moved with it.
+- Provenance and checksums: `audio/narration/voice_provenance.json`.
 
 ## Brief checklist
 
@@ -124,7 +116,6 @@ All three inspections were done on the final file at phone size, and are saved i
 
 ## Departures from the brief, and why
 
-- **No narration in the file.** The voice host is blocked, as explained above.
 - **Probe shaft and captions.** While the probe waits beside the styloid fragment (about 3.3–6.3 s), its thin steel
   shaft passes behind the outlined caption text. A flatter probe would push the surgeon's hand out of frame beside the
   other glove.
@@ -155,27 +146,27 @@ reported:
 Because the composition is undisclosed, the picture shows no chemistry. The sources are listed in
 `production/V1_REPORT.md`.
 
-## Remaining visible issues (none blocking review)
+## Remaining visible issues (none blocking)
 
-These were found by independent review of the near-final render, verified at full resolution, and judged not blocking. All are LOW.
+Fixed in the final pass: the calm stretch after "months to heal" (new bone now starts on "needed" and the camera
+glides toward the swelling callus), the probe ball peeking at the bottom edge (it now leaves the frame after letting go
+and returns with a purposeful move), the brief healed state (remodelling now finishes before the skin returns), the
+oversized crystals in the oyster's rock section, the small finger flex (now a full wrist movement), and the thin glue
+lines and edge gloves of the old wide reveal (that shot is gone).
 
-- **Syringe glove (4.0–4.8 s).** Fixed from a stack of capsule-shaped fingers to a knuckle mass, with a tapered index finger on the barrel. It is still drawn as rounded tubes, and the bend at the index fingertip leaves a small kink visible at full size.
-- **Probe and caption (about 3.3–6.3 s).** The probe's thin shaft passes behind the caption text (see Departures).
-- **Probe ball (1.4–2.3 s).** After the release, the lifted probe ball peeks in at the bottom edge and passes behind the caption.
-- **Pull-back focus (about 2.1–3.2 s).** The depth-of-field blur changes in small steps during the pull-back.
-- **Teal lines in the wide shot (3.0–3.8 s).** The glue lines are thin at phone size; the dark open crack reads more strongly.
-- **Gloves at the edges (2–4 s).** A lumpy glove at the right edge during the reveal, and fingertips touching the bottom edge.
-- **Cutaway opening (19.2 s).** The healing cutaway opens as a small blob between the stitches; the image is briefly soft there.
-- **Start of healing (20.2–21.0 s).** The early stages change subtly at phone size before the pale new bone becomes obvious.
-- **Healed state (about 24.5–25.1 s).** The fully remodelled bone is on screen only briefly before the dissolve to skin.
-- **Finger flex (26.1–27.3 s).** The flex is small and partly overlaps the camera's ease-out.
-- **Oyster wide shot (8.0–8.7 s).** It is short; the cement first reads as a thin white rod before the push reveals the layer. The rock section has two oversized crystals.
+Still present, all LOW:
+- **Syringe glove.** Drawn as rounded tubes; a small kink at the index fingertip is visible at full size.
+- **Probe and caption (about 4–5 s).** The probe's thin shaft passes behind the caption text while it holds the
+  styloid fragment.
+- **Cutaway opening (about 18.6 s).** The healing cutaway opens as a small soft window between the stitches.
+- **Oyster cement in the wide shot (about 7.7–8.2 s).** It first reads as a thin white line before the push shows the
+  layer.
 - **Healed seam trace.** Faint at phone size, which is intended after remodelling.
 
 ## Evidence (`qa/v2/`)
 
 - `render_qa.json`: format, decode, frame-change and loop measurements.
-- `mix_measure_mix_v2_novoice.json`
+- `mix_measure_mix_v2.json` and `asr_final_mix.json`
 - `contact_every_0.5s.png`: the whole cut.
 - `hook_0-2.5s_every_3rd_frame.png`
 - `muted_phone_0-2s.png`: the first two seconds at phone size, muted.
