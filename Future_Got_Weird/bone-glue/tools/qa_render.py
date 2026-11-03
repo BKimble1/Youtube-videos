@@ -29,7 +29,7 @@ CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath
 E = CJ['EV']
 PLANNED = [(1.4, 4.1, 'the opening pull-back to the wrist'), (E['dive0'], E['cutIn'] + 0.02, 'dive onto the glue band'),
            (E['cutIn'] - 0.02, E['cutIn'] + 0.05, 'match cut: glue band -> oyster on its rock'),
-           (E['cutIn'], E['cutOut'] + 0.3, 'push to the oyster attachment; match cut back onto the glue band'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the fixation framing'),
+           (E['cutIn'], E['cutOut'] + 0.3, 'push to the oyster attachment; match cut back onto the glue band'), (E['surge0'], E['surge1'], 'the blood wash sweeps across the seam on "wet, bloody"'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the fixation framing'),
            (E['dive2a'], E['dive2b'] + 0.05, 'push into the healing framing'), (E['out0'], E['out1'] + 0.05, 'ease out to the recovered wrist'),
            (E['push0'], CJ['LOOP_T'] + 0.01, 'the loop: push back into the bone (the cut to frame 0 matches framing and direction)')]
 med = float(np.median(d))
