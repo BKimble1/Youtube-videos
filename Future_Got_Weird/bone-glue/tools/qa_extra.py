@@ -12,15 +12,15 @@ E = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 here = os.path.dirname(os.path.abspath(__file__))
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
 LT = CJ['LOOP_T']
-spans = [('opening_fixation', 0.0, 2.0), ('pullback', 1.4, 4.1), ('precise_action', 4.0, E['dive0']), ('dive', E['dive0'] - 0.1, E['cutIn'] + 0.15),
-         ('cut_in', E['cutIn'] - 0.1, E['cutIn'] + 0.1), ('oyster', E['cutIn'], E['cutOut']), ('cut_out', E['cutOut'] - 0.1, E['cutOut'] + 0.1),
-         ('wet', E['cutOut'], E['pull0']), ('pullout', E['pull0'], E['pull1'] + 0.1), ('release', E['rel0'] - 0.2, E['probeOut1'] + 0.1),
-         ('pushin', E['dive2a'] - 0.4, E['dive2b'] + 0.1), ('healing', E['hem0'], E['rem1']), ('easeout', E['out0'] - 0.1, E['out1'] + 0.1),
-         ('loop_push', E['push0'], LT - 1 / 30)]
+spans = [('hook_repair', 0.0, 1.6), ('hook_pullout', E['pullH0'] - 0.1, E['pullH1'] + 0.1), ('push_match', E['pushH0'] - 0.1, E['matchT'] + 0.1),
+         ('lab', E['matchT'], E['labEnd']), ('lab_to_sea', E['labDiss0'] - 0.3, E['cutIn'] + 0.2), ('oyster', E['cutIn'], E['cutOut']),
+         ('cut_out', E['cutOut'] - 0.25, E['cutOut'] + 0.1), ('micro', E['mic0'] - 0.3, E['mic1'] + 0.3), ('wet_wash', E['surge0'], E['pull0']),
+         ('case', E['pull0'], E['probeOut1'] + 0.1), ('three_minutes', E['set0'], E['dive2a']), ('pushin', E['dive2a'] - 0.4, E['dive2b'] + 0.1),
+         ('healing', E['hem0'], E['rem1']), ('easeout', E['out0'] - 0.1, E['out1'] + 0.1), ('loop_push', E['push0'], LT - 1 / 30)]
 for name, a, b in spans:
     step = 1 if b - a < 0.5 else 2 if b - a < 2.1 else 4 if b - a < 3.5 else 6
     subprocess.run([sys.executable, os.path.join(here, 'strips.py'), src, f'{a:.3f}', f'{b:.3f}', str(step), os.path.join(out, f'strip_{name}_{a:.2f}-{b:.2f}s.png'), '0.18', '10'], check=True)
-subprocess.run([sys.executable, os.path.join(here, 'strips.py'), src, '0', '2.0', '6', os.path.join(out, 'muted_phone_0-2s.png'), '0.3333', '6'], check=True)
+subprocess.run([sys.executable, os.path.join(here, 'strips.py'), src, '0', '3.0', '6', os.path.join(out, 'muted_phone_0-3s.png'), '0.3333', '6'], check=True)
 A = np.asarray(Image.open(sl).convert('RGB').resize((270, 480)), np.float32)
 B = np.asarray(Image.open(sf_).convert('RGB').resize((270, 480)), np.float32)
 seam = float(np.abs(A - B).mean())

@@ -27,11 +27,13 @@ d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: every dive, match and pull-out (from story.ts EV, via audio/cues.json), plus the loop pass
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
 E = CJ['EV']
-PLANNED = [(1.4, 4.1, 'the opening pull-back to the wrist'), (E['dive0'], E['cutIn'] + 0.02, 'dive onto the glue band'),
-           (E['cutIn'] - 0.02, E['cutIn'] + 0.05, 'match cut: glue band -> oyster on its rock'),
-           (E['cutIn'], E['cutOut'] + 0.3, 'push to the oyster attachment; match cut back onto the glue band'), (E['surge0'], E['surge1'], 'the blood wash sweeps across the seam on "wet, bloody"'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the fixation framing'),
+PLANNED = [(E['pullH0'], E['pullH1'] + 0.05, 'the hook pull-out to the arm'), (E['pushH0'], E['matchT'] + 0.05, 'push into the glue; match cut to the lab bead'),
+           (E['matchT'], E['labEnd'] + 0.05, 'the lab: pull back, drop, plunge, dissolve into the sea'),
+           (E['cutIn'], E['cutOut'] + 0.3, 'push to the oyster attachment; cement-to-glue dissolve'),
+           (E['mic0'] - E['micDiss'] - 0.05, E['mic1'] + E['micDiss'] + 0.05, 'macro <-> micro section dissolves'),
+           (E['surge0'], E['surge1'], 'the blood wash sweeps across the seam on "wet, bloody"'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the surgical case'),
            (E['dive2a'], E['dive2b'] + 0.05, 'push into the healing framing'), (E['out0'], E['out1'] + 0.05, 'ease out to the recovered wrist'),
-           (E['push0'], CJ['LOOP_T'] + 0.01, 'the loop: push back into the bone (the cut to frame 0 matches framing and direction)')]
+           (E['push0'], CJ['LOOP_T'] + 0.01, 'the loop: push onto frame 0 and dissolve into it')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []
