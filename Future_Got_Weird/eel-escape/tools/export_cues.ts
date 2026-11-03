@@ -4,7 +4,7 @@
 import * as fs from 'fs';
 import {DUR} from '../source/src/lib';
 import {S_EXIT} from '../source/src/eel';
-import {EV, T, camAt, eelAt, fishAt} from '../source/src/story';
+import {EV, T, camAt, eelAt, fishAt, lensAt, SWEEP0} from '../source/src/story';
 import {EEL_L} from '../source/src/anatomy';
 
 const sig: Record<string, number[]> = {slide: [], out: [], gill: [], swim: [], xray: [], cut: [], translucent: [], logw: [], lens: []};
@@ -24,8 +24,8 @@ for (let i = 0; i <= Math.round(DUR * 100); i++) {
   const f = fishAt(t);
   sig.gill.push(r3(f.gill)); sig.xray.push(r3(f.xray)); sig.cut.push(r3(f.cut)); sig.translucent.push(r3(f.translucent));
   sig.logw.push(r3(Math.log(camAt(t).w)));
-  sig.lens.push(0);
+  sig.lens.push(r3(e.free ? lensAt(t) : 0));
   prev = e;
 }
-fs.writeFileSync(process.argv[2], JSON.stringify({DUR, EV, T, ...sig}));
+fs.writeFileSync(process.argv[2], JSON.stringify({DUR, EV: {...EV, sweep0: SWEEP0}, T, ...sig}));
 console.log('cues ->', process.argv[2]);
