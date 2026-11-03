@@ -172,19 +172,23 @@ const smooth01 = (x: number) => {
 };
 /** a seated face point at (id, s, side) carried to its current position by Poses (with the junction blends) */
 const posed = (p: P, id: SeamId, s: number, side: 1 | -1, w: Poses): P => {
+  // (seated pieces give exactly the V2 numbers: the wedge's faces always pass through xfPoint, as V2's did)
   if (id === 'C1') {
     if (side === -1) {
+      if (isZero(w.lunate) && isZero(w.styloid)) return p;
       const [a, b] = J_C2;
       if (s <= a) return xfFrag(p, 'lunate', w);
       if (s >= b) return xfFrag(p, 'styloid', w);
       return lerpP(xfFrag(p, 'lunate', w), xfFrag(p, 'styloid', w), smooth01((s - a) / (b - a)));
     }
+    if (isZero(w.wedge)) return s > S_C3_ON_C1 ? xfPoint(p, w.wedge) : p;
     const [a, b] = J_C3;
     if (s <= a) return p;
     if (s >= b) return xfFrag(p, 'wedge', w);
     return lerpP(p, xfFrag(p, 'wedge', w), smooth01((s - a) / (b - a)));
   }
   const f = fragOf(id, s, side);
+  if (f === 'wedge') return xfPoint(p, w.wedge);
   return f ? xfFrag(p, f, w) : p;
 };
 /** a broken-face point in its CURRENT position (each fragment's faces carried by its transform) */

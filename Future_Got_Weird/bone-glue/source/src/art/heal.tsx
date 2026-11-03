@@ -35,11 +35,11 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS, radiusEdges} from './anatomy';
 import {
-  SEAM_IDS, S_C2_ON_C1, S_C3_ON_C1, SeamId, WEDGE_SEATED, WedgeX, growth, isWedgeSide, seamEdge, seamEdgeLine, seamEdgeSeated, seamGap, seamLength,
-  seamNearest, seamNormal, seamPoint, xfPoint,
+  FragPose, SEAM_IDS, S_C2_ON_C1, S_C3_ON_C1, SeamId, WEDGE_SEATED, growth, seamEdge, seamEdgeLine, seamEdgeSeated, seamGap, seamLength,
+  seamNearest, seamNormal, seamPoint, xfOwned,
 } from './seams';
 import {GlueRun, glueOver, glueRuns} from './fracture';
-import {BoneState2} from '../v2state';
+import {BoneState2, poseArg} from '../v2state';
 
 type View = [number, number, number, number];
 const RAD_PATH = closed(RADIUS, 0.55);
@@ -137,16 +137,16 @@ const sample = (s0: number, s1: number, step = STEP): number[] => {
   return out;
 };
 /** the gap between a seam's two current faces over [s0, s1], widened `ext` mm past each face (negative: narrowed) */
-const gapPoly = (id: SeamId, s0: number, s1: number, w: WedgeX, ext: number, step = STEP): P[] => {
+const gapPoly = (id: SeamId, s0: number, s1: number, w: FragPose, ext: number, step = STEP): P[] => {
   const ss_ = sample(s0, s1, step);
   const lo = ss_.map((s) => seamEdge(id, s, -1, w, ext));
   const hi = ss_.map((s) => seamEdge(id, s, 1, w, ext));
   return [...lo, ...hi.reverse()];
 };
 /** every seam's whole gap (C1 past both borders, the branches from C1's centreline), widened by ext */
-const allGaps = (w: WedgeX, ext: number): string[] => SEAM_IDS.map((id) => poly(gapPoly(id, S_FULL0[id], sFull1(id), w, ext, 0.12)));
+const allGaps = (w: FragPose, ext: number): string[] => SEAM_IDS.map((id) => poly(gapPoly(id, S_FULL0[id], sFull1(id), w, ext, 0.12)));
 /** one face's band from out = o0 to out = o1(s) (positive out = into the fragment, negative = into the gap) */
-const faceBand = (id: SeamId, s0: number, s1: number, side: 1 | -1, w: WedgeX, o0: (s: number) => number, o1: (s: number) => number, step = STEP): P[] => {
+const faceBand = (id: SeamId, s0: number, s1: number, side: 1 | -1, w: FragPose, o0: (s: number) => number, o1: (s: number) => number, step = STEP): P[] => {
   const ss_ = sample(s0, s1, step);
   const a = ss_.map((s) => seamEdge(id, s, side, w, o0(s)));
   const b = ss_.map((s) => seamEdge(id, s, side, w, o1(s)));
@@ -298,7 +298,7 @@ const matured = (id: SeamId, s: number, r: number, side: 1 | -1): number => {
 
 /** the woven bone left between a seam's two maturing fronts (inset(side, s) mm from each face), as polygons: one per
  *  stretch where the fronts have not met */
-const remnant = (id: SeamId, w: WedgeX, inset: (side: 1 | -1, s: number) => number): string[] => {
+const remnant = (id: SeamId, w: FragPose, inset: (side: 1 | -1, s: number) => number): string[] => {
   const out: string[] = [];
   let lo: P[] = [], hi: P[] = [];
   const flush = () => {
@@ -343,12 +343,11 @@ const CORNERS: Corner[] = (() => {
   return out;
 })();
 /** the corner's centre in the current pose */
-const cornerAt = (k: Corner, w: WedgeX): P =>
-  (isWedgeSide(k.a, k.sa, k.sideA) || isWedgeSide(k.b, k.sb, k.sideB) ? xfPoint(k.p, w) : k.p);
+const cornerAt = (k: Corner, w: FragPose): P => xfOwned(k.p, k.b, k.sb, k.sideB, w);
 /** the woven bone's growth lines round a fragment corner: the face lines at depth D stop short of the corner (the
  *  mouths), so here each depth runs in along face A from where its own line ends, round the corner on an arc about the
  *  tip (the offset of a corner is round), and out along face B to where that face's line starts */
-const cornerLine = (k: Corner, D: number, w: WedgeX): P[] => {
+const cornerLine = (k: Corner, D: number, w: FragPose): P[] => {
   const sJ = k.b === 'C2' ? S_C2_ON_C1 : S_C3_ON_C1;
   const leg = (id: SeamId, s0: number, side: 1 | -1, dir: number): P[] => {
     const out: P[] = [];
@@ -391,7 +390,7 @@ const Lining: React.FC<{st: BoneState2; view: View}> = ({st, view}) => {
   const hard = clamp(h.hard);
   const col = mix(SOFT_PINK, C.newBone, hard);
   const lit = mix(C.softCallusLit, '#FFFFFF', hard);
-  const w = st.wedge;
+  const w = poseArg(st);
   const maskId = uid('hl_lm');
   const bands: string[] = [];
   const lips: string[] = [];
@@ -513,7 +512,7 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
   const h = st.heal;
   const bridge = clamp(h.bridge), rem = clamp(h.remodel);
   if (bridge <= 0) return null;
-  const px = st.px, w = st.wedge;
+  const px = st.px, w = poseArg(st);
   const x0 = Math.max(view[0], ZONE[0]), y0 = Math.max(view[1], ZONE[1]), x1 = Math.min(view[2], ZONE[2]), y1 = Math.min(view[3], ZONE[3]);
   if (x1 <= x0 || y1 <= y0) return null;
   const box: View = [x0, y0, x1, y1];
@@ -810,7 +809,7 @@ const Hematoma: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, 
   if (a < 0.01) return null;
   const box = boxOf(view, 3);
   if (!box) return null;
-  const w = st.wedge, px = st.px;
+  const w = poseArg(st), px = st.px;
   const maskId = uid('hl_hm');
   // the clot hugs the glue's outer edge (its wetted lip and edge ink) and never covers it
   const gO = glueOver(px) + 1.4 * px;

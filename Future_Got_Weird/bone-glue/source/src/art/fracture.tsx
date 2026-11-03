@@ -32,8 +32,8 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
 import {
-  FRAG_IDS, FRAG_POLY, FragId, S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, fragDisp, fragOf, glueBand, growth,
-  seamEdgeSeated, seamGap, seamLength, seamNearest, seamNormal, xfSvgFrag,
+  FRAG_IDS, FRAG_POLY, FragId, Poses, S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, fragDisp, fragOf, glueBand,
+  growth, seamEdge, seamEdgeLine, seamEdgeSeated, seamGap, seamLength, seamNearest, seamNormal, seamPoint, xfSvgFrag,
 } from './seams';
 import {BoneState2, frontsOf, poseArg, posesOf} from '../v2state';
 
@@ -502,8 +502,8 @@ const ArtBed: React.FC<{f: FragId; px: number; view: View}> = ({f, px, view}) =>
   const [x0, y0, x1, y1] = view;
   const bed = artBedOf(f);
   const cells = bed.cells.filter((c) => c.c.x > x0 - 0.5 && c.c.x < x1 + 0.5 && c.c.y > y0 - 0.5 && c.c.y < y1 + 0.5);
-  const floor = mix(mix(C.cancellous, C.boneDeep, 0.5), C.cavity, 0.5);
-  const pit = mix(C.cancellousPore, C.cavity, 0.75);
+  const floor = mix(mix(C.cancellous, C.boneDeep, 0.5), C.cavity, 0.6);
+  const pit = mix(C.cancellousPore, C.cavity, 0.8);
   const pitIn = mix(C.cavity, '#12030A', 0.45);
   return (
     <g>
@@ -551,6 +551,16 @@ const capPts = (p1: P, p2: P, tOut: P, k = 1): P[] => {
   }
   return out;
 };
+/** how far (mm) a branch seam's start (the middle of its two faces at s = 0) stands off C1, away from C1 along the
+ *  branch's side, in a pose */
+const branchLift = (id: SeamId, w: Poses): number => {
+  const sJ = id === 'C2' ? S_C2_ON_C1 : S_C3_ON_C1;
+  const n = seamNormal('C1', sJ);
+  const away = id === 'C2' ? -1 : 1;
+  const d0 = lerpP(seamEdgeSeated(id, 0, -1), seamEdgeSeated(id, 0, 1), 0.5);
+  const d1 = lerpP(seamEdge(id, 0, -1, w), seamEdge(id, 0, 1, w), 0.5);
+  return ((d1.x - d0.x) * n.x + (d1.y - d0.y) * n.y) * away;
+};
 /** the glue in one seam as drawable runs (islands while healing), in world mm with the fragments in their current poses
  *  (the band between the two CURRENT faces: wide while a gap stands open, narrowing as the faces close).
  *  The outer edges follow seams.glueBand(over = glueOver(st.px)) exactly, except near the fresh tip (a little proud)
@@ -563,6 +573,12 @@ export const glueRuns = (id: SeamId, st: BoneState2): GlueRun[] => {
   let a = Math.max(-0.5, g.a), b = Math.min(LEN[id] + 0.6, g.b);
   if (g.b >= LEN[id] - 0.01) b = LEN[id] + 0.7;
   if (id === 'C1' && g.a <= 0.01) a = -0.7;
+  // V3: a branch's gel laid from the junction starts in C1's: while the pieces either side of the branch stand off C1,
+  // the branch's s = 0 end stands off with them, so the gel starts that much further back (on down into C1's open gap)
+  if (id !== 'C1' && g.a <= 0.01 && st.poses) {
+    const lift = branchLift(id, st.poses);
+    if (lift > 1e-6) a = Math.min(a, -Math.min(lift, 2.5));
+  }
   if (b - a < 0.03) return [];
   const bridge = st.heal.bridge;
   const inset = bridge > 0 ? (side: 1 | -1, s: number) => growth(id, s, bridge, side) : undefined;
@@ -633,6 +649,9 @@ const runOutline = (r: GlueRun, which: 'outer' | 'core'): P[] => {
   return [...lo, ...capB, ...[...hi].reverse(), ...capA];
 };
 type Bulb = {c: P; r: number; rc: number; flow: number};
+/** the half-width (mm) past which a bulb's lead stops growing with its band (above every seated band's); its swell past
+ *  the faces fades out between half-widths 0.9 and 1.25 (a head that fills a wide open gap, not spilling onto the bone) */
+const BULB_HALF_MAX = 0.9;
 /** the gel bulb where the band leaves the cannula (or a front's head): at flow 0 it lies inside the band's rounded end */
 const runBulbs = (r: GlueRun): Bulb[] => {
   const out: Bulb[] = [];
@@ -647,11 +666,13 @@ const runBulbs = (r: GlueRun): Bulb[] => {
     const tE = tEnd(r, end);
     const half = len(sub(r.hi[i], r.lo[i])) / 2;
     const halfC = len(sub(r.hiC[i], r.loC[i])) / 2;
-    const grow = 0.27 * flow * half;
+    // (in a wide open gap the head is the band's own width: its swell and lead are those of a V2-width band)
+    const hs = Math.min(half, BULB_HALF_MAX);
+    const grow = 0.27 * flow * half * clamp((1.25 - half) / 0.35);
     // as the flow eases to 0 the bulb shrinks to lie inside that rounded end (a full-width circle would stand proud of
     // a squashed or leaning cap and snap back when the front goes null)
     const r0 = 0.97 * capMin(r.lo[i], r.hi[i], tE), rc0 = 0.97 * capMin(r.loC[i], r.hiC[i], tE);
-    const c = add(lerpP(r.lo[i], r.hi[i], 0.5), mul(tE, 0.42 * flow * half));
+    const c = add(lerpP(r.lo[i], r.hi[i], 0.5), mul(tE, 0.42 * flow * hs));
     out.push({c, r: r0 + (half - r0) * flow + grow, rc: rc0 + (halfC - rc0) * flow + grow, flow});
   };
   if (r.bulbB) mk(r.s.length - 1, 'b');
@@ -749,7 +770,7 @@ const ranges = (n: number, pred: (i: number) => boolean, key?: (i: number) => nu
   return out;
 };
 
-const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string; view: View; lineFade: number; rimExtra?: React.ReactNode}> = ({st, runs, radClip, glueClip, view, lineFade, rimExtra}) => {
+const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string; view: View; lineFade: number; rimExtra?: React.ReactNode; rimMask?: string}> = ({st, runs, radClip, glueClip, view, lineFade, rimExtra, rimMask}) => {
   if (runs.length === 0) return null;
   const px = st.px;
   const set = clamp(st.set);
@@ -958,7 +979,7 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
       </g>
       {/* the bone's outline continues over the gel where a seam meets the bone's edge (the glue is flush with it) */}
       <g clipPath={`url(#${glueClip})`}>
-        <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} />
+        <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} mask={rimMask ? `url(#${rimMask})` : undefined} />
         {rimExtra}
       </g>
     </g>
@@ -967,16 +988,16 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
 
 // ---------------------------------------------------------------- the whole fracture
 const isDisplaced = (w: WedgeX) => Math.abs(w.dx) + Math.abs(w.dy) + Math.abs(w.rot) * 10 > 1e-4;
-/** the wedge's exposed side wall (its broken face seen as it stands out of its bed): a strip outside each face */
-type Wall = {d: string; edge: string; pores: {x: number; y: number; r: number}[]};
-const sideWall = (wW: number): Wall => {
-  const [f1, f3] = WEDGE_FACES;
+/** a moving fragment's exposed side wall (its broken faces seen as it stands out of its bed): a strip outside each face */
+type Wall = {d: string; edge: string; pores: {x: number; y: number; r: number}[]; faces: {d: string; k: number}[]};
+const sideWall = (fr: FragId, wW: number): Wall => {
+  const {lines: [f1, f3], seams: [[id1, side1], [id3, side3]]} = FRAG_FACES[fr];
   const off = (ps: P[], id: SeamId, side: 1 | -1) =>
     ps.map((p) => {
       const s = seamNearest(id, p);
       return add(p, mul(seamNormal(id, s), -side * wW));
     });
-  const o1 = off(f1, 'C1', 1), o3 = off(f3, 'C3', -1);
+  const o1 = off(f1, id1, side1), o3 = off(f3, id3, side3);
   const outer = [...[...o1].reverse(), ...o3];
   // its spongy broken surface
   const pores: Wall['pores'] = [];
@@ -989,17 +1010,58 @@ const sideWall = (wW: number): Wall => {
       pores.push({x: q.x, y: q.y, r: Math.min(wW * 0.25, 0.012 + 0.03 * hash(i * 5.1 + k * 2.2) ** 2)});
     }
   });
-  return {d: poly([...outer, ...[...f3].reverse(), ...f1]), edge: line(outer), pores};
+  // each face's strip on its own, with how squarely it faces the key light (it faces into the gap, -side * n)
+  const faces = ([[f1, o1, id1, side1], [f3, o3, id3, side3]] as const).map(([f, o, id, side]) => {
+    const m = f[Math.floor(f.length / 2)];
+    return {d: poly([...f, ...[...o].reverse()]), k: dotL(mul(seamNormal(id, seamNearest(id, m)), -side))};
+  });
+  return {d: poly([...outer, ...[...f3].reverse(), ...f1]), edge: line(outer), pores, faces};
 };
-const WALL_CACHE = new Map<number, Wall>();
-const wallOf = (wW: number) => {
-  const key = Math.round(wW * 100);
+const WALL_CACHE = new Map<string, Wall>();
+const wallOf = (fr: FragId, wW: number) => {
+  const k = Math.round(wW * 100);
+  const key = `${fr}${k}`;
   const hit = WALL_CACHE.get(key);
   if (hit) return hit;
-  const v = sideWall(key / 100);
+  const v = sideWall(fr, k / 100);
   WALL_CACHE.set(key, v);
   return v;
 };
+/** where each seam opens onto the bone's border (seated arc length) and which way is outward along it */
+type Mouth = {id: SeamId; s: number; dir: 1 | -1};
+const MOUTHS: Mouth[] = (() => {
+  const cross = (id: SeamId, s0: number, s1: number) => {
+    let prev = inPoly(seamPoint(id, s0), RADIUS);
+    for (let i = 1; i <= 500; i++) {
+      const s = s0 + ((s1 - s0) * i) / 500;
+      const ins = inPoly(seamPoint(id, s), RADIUS);
+      if (ins !== prev) return s;
+      prev = ins;
+    }
+    return s1;
+  };
+  return [
+    {id: 'C1', s: cross('C1', 3, -2), dir: -1}, {id: 'C1', s: cross('C1', LEN.C1 - 3, LEN.C1 + 2), dir: 1},
+    {id: 'C2', s: cross('C2', LEN.C2 - 3, LEN.C2 + 2), dir: 1}, {id: 'C3', s: cross('C3', LEN.C3 - 3, LEN.C3 + 2), dir: 1},
+  ];
+})();
+/** a mouth opened by displaced pieces: the bridge that lets the gel reach the line between the two pieces' current
+ *  border corners (added to the glue's clip), that line (inked over the gel, as the seated outline is), and the region
+ *  where the seated outline's stroke over the gel is dropped (the seated and the current mouth) */
+const mouthArt = (m: Mouth, w: Poses) => {
+  // the bridge runs well in from the mouth: a tilted piece can carry its face past the seated border some way in
+  const sIn = m.s - m.dir * 7, sOut = m.s + m.dir * 1.6;
+  const lo = seamEdgeLine(m.id, sIn, m.s, -1, w, 0.3, 0.1), hi = seamEdgeLine(m.id, sIn, m.s, 1, w, 0.3, 0.1);
+  const p1 = seamEdge(m.id, m.s, -1, w), p2 = seamEdge(m.id, m.s, 1, w);
+  const reg = (ww: Poses | WedgeX) => poly([...seamEdgeLine(m.id, sIn, sOut, -1, ww, 0.25, 0.1), ...seamEdgeLine(m.id, sIn, sOut, 1, ww, 0.25, 0.1).reverse()]);
+  return {bridge: poly([...lo, ...hi.reverse()]), line: line([p1, p2]), regions: [reg(w), reg({dx: 0, dy: 0, rot: 0})]};
+};
+const FRAG_D: Record<FragId, string> = {wedge: poly(FRAG_POLY.wedge), styloid: poly(FRAG_POLY.styloid), lunate: poly(FRAG_POLY.lunate)};
+/** an articular fragment's exposed side wall at full displacement (mm): wider than the wedge's (0.3), it is a large
+ *  fragment lifted and tilted, and the wall must read at phone size at the opening framing */
+const ART_WALL = 0.65;
+/** its cast shadow's offset (mm, away from the key light) at full displacement (the wedge's: 0.36) */
+const ART_SHADOW = 0.55;
 
 export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view}) => {
   const px = st.px;
@@ -1012,20 +1074,43 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
   const fade = 1 - ss(remodel, 0, 0.4);
   const inkFade = fade;
   const gapCol = mix(GAP, C.bone, ss(remodel, 0, 0.75));
-  const disp = isDisplaced(st.wedge);
-  const dispK = clamp((Math.abs(st.wedge.dx) + Math.abs(st.wedge.dy)) / 1.2 + Math.abs(st.wedge.rot) / 0.2);
+  const poses = posesOf(st);
+  // the fragments standing out of place (drawn in their poses); the rest is the static bone
+  const moving = FRAG_IDS.filter((f) => isDisplaced(poses[f]));
+  const disp = moving.length > 0;
+  const dispK: Record<FragId, number> = {wedge: fragDisp('wedge', poses.wedge), styloid: fragDisp('styloid', poses.styloid), lunate: fragDisp('lunate', poses.lunate)};
+  /** the articular fragments' displacement: the static seams' blood cores fade as they open */
+  const artK = Math.max(moving.includes('styloid') ? dispK.styloid : 0, moving.includes('lunate') ? dispK.lunate : 0);
   // the chamfer: a hard strip about 0.3 mm wide beside the gel at macro (the wider macro meniscus covers 0.14 of it),
   // a little narrower from CAM0 out
   const arts = faceArts(0.44 + (0.32 - 0.44) * ss(px, 0.009, 0.02));
-  const statArts = disp ? arts.filter((a) => !a.wedge) : arts;
-  const wedgeArts = arts.filter((a) => a.wedge);
+  const statArts = disp ? arts.filter((a) => !(a.frag && moving.includes(a.frag))) : arts;
   const runs = SEAM_IDS.flatMap((id) => glueRuns(id, st));
   const gapsUnion = uid('fb_gu');
   const viewW: View = disp ? [view[0] - 3, view[1] - 3, view[2] + 3, view[3] + 3] : view;
-  const shadowK = clamp(dispK * 3);
-  const so = 0.36 * Math.min(1, dispK * 1.5); // cast shadow offset (mm), away from the key light
-  const wallK = clamp(dispK * 1.25);
-  const wall = disp && wallK > 0.02 ? wallOf(0.3 * wallK) : null;
+  const clipOf: Record<FragId, string> = {wedge: wedgeClip, styloid: uid('fb_sc'), lunate: uid('fb_lc')};
+  const xfOf = (f: FragId) => xfSvgFrag(f, poses[f]);
+  /** per moving fragment: cast shadow offset and strength, side wall */
+  const look = (f: FragId) => {
+    const k = dispK[f];
+    const art = f !== 'wedge';
+    const wallK = clamp(k * 1.25);
+    return {
+      shadowK: clamp(k * 3),
+      so: (art ? ART_SHADOW : 0.36) * Math.min(1, k * 1.5),
+      wallK,
+      wall: wallK > 0.02 ? wallOf(f, (art ? ART_WALL : 0.3) * wallK) : null,
+    };
+  };
+  // the glue lies in the CURRENT gaps: where a fragment stands proud of the seated outline (the joint, the borders) the
+  // gel is clipped to that fragment's own outline instead
+  // (with st.poses the wedge's too; without, the V2 wedge keeps V2's clip)
+  const clipMov = moving.filter((f) => f !== 'wedge' || st.poses);
+  const glueRad = clipMov.length > 0 ? uid('fb_gr') : ids.rad;
+  const mouthsOpen = glueRad !== ids.rad
+    ? MOUTHS.filter((m) => [fragOf(m.id, m.s, -1), fragOf(m.id, m.s, 1)].some((f) => f && clipMov.includes(f))).map((m) => mouthArt(m, poses))
+    : [];
+  const rimMask = uid('fb_rm');
   return (
     <g>
       <defs>
@@ -1046,25 +1131,39 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
           <stop offset={0.6} stopColor="#FFFFFF" stopOpacity={0.12} />
           <stop offset={1} stopColor="#FFFFFF" stopOpacity={0} />
         </linearGradient>
-        {disp && <clipPath id={notWedge}><path d={`M-400 -400H400V600H-400Z ${WEDGE_D}`} clipRule="evenodd" /></clipPath>}
+        {disp && <clipPath id={notWedge}><path d={`M-400 -400H400V600H-400Z ${moving.map((f) => FRAG_D[f]).join(' ')}`} clipRule="evenodd" /></clipPath>}
         <clipPath id={wedgeClip}><path d={WEDGE_D} /></clipPath>
+        {moving.filter((f) => f !== 'wedge').map((f) => <clipPath key={f} id={clipOf[f]}><path d={FRAG_D[f]} /></clipPath>)}
         {/* everywhere except the seams' gaps: the bone's outline is cut where a seam opens onto its edge */}
         <clipPath id={mouths}><path d={`M-400 -400H400V600H-400Z ${SEATED_GAPS.join(' ')}`} clipRule="evenodd" /></clipPath>
         <clipPath id={gapsUnion}>{SEATED_GAPS.map((d, i) => <path key={i} d={d} />)}</clipPath>
         <clipPath id={glueClip}>
           {runs.map((r, i) => <path key={i} d={poly(runOutline(r, 'outer'))} />)}
         </clipPath>
+        {glueRad !== ids.rad && (
+          <clipPath id={glueRad}>
+            <path d={RAD_PATH} />
+            {clipMov.map((f) => <path key={f} d={FRAG_D[f]} transform={xfOf(f)} clipPath={`url(#${ids.rad})`} />)}
+            {mouthsOpen.map((m, i) => <path key={`m${i}`} d={m.bridge} />)}
+          </clipPath>
+        )}
+        {mouthsOpen.length > 0 && (
+          <mask id={rimMask} maskUnits="userSpaceOnUse" x={-60} y={-90} width={120} height={160}>
+            <rect x={-60} y={-90} width={120} height={160} fill="#FFFFFF" />
+            {mouthsOpen.flatMap((m, i) => m.regions.map((d, k) => <path key={`${i}_${k}`} d={d} fill="#000000" />))}
+          </mask>
+        )}
       </defs>
       {/* 1. the cavity bed */}
       <path d={RAD_PATH} fill={gapCol} />
-      {/* 2. the wedge's vacated bed: a cancellous floor */}
-      {disp && (
-        <g clipPath={`url(#${ids.rad})`}>
-          <g clipPath={`url(#${wedgeClip})`}>
-            <Bed px={px} view={view} k={1} />
+      {/* 2. the displaced fragments' vacated beds: the wedge's a cancellous floor, the articular fragments' deep */}
+      {moving.map((f) => (
+        <g key={`bed${f}`} clipPath={`url(#${ids.rad})`}>
+          <g clipPath={`url(#${clipOf[f]})`}>
+            {f === 'wedge' ? <Bed px={px} view={view} k={1} /> : <ArtBed f={f} px={px} view={view} />}
           </g>
         </g>
-      )}
+      ))}
       {/* 3-4. the static bone and its broken faces */}
       <g clipPath={disp ? `url(#${notWedge})` : undefined}>
         <BoneBody ids={ids} px={px} view={view} outlineClip={mouths} closeK={ss(remodel, 0.25, 0.9)} />
@@ -1074,11 +1173,11 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
         {/* 5. the gaps: one dark union over the faces' inner edges and across every seam's mouth */}
         {fade > 0.001 && (
           <g>
-            {(disp ? DISP_GAPS : SEATED_GAPS).map((d, i) => <path key={i} d={d} fill={gapCol} />)}
+            {(disp ? dispGaps(moving) : SEATED_GAPS).map((d, i) => <path key={i} d={d} fill={gapCol} />)}
             {px < 0.05 && (
               <g fill="none" stroke={C.marrow} strokeWidth={0.22} strokeLinecap="round" opacity={0.5 * fade * clamp((0.05 - px) / 0.015)}>
-                {CORE_STATIC.map((d, i) => <path key={`m${i}`} d={d} />)}
-                {dispK < 0.999 && <g opacity={1 - dispK}>{CORE_WEDGE.map((d, i) => <path key={`w${i}`} d={d} />)}</g>}
+                {artK > 0 ? <g opacity={1 - artK}>{CORE_STATIC.map((d, i) => <path key={`m${i}`} d={d} />)}</g> : CORE_STATIC.map((d, i) => <path key={`m${i}`} d={d} />)}
+                {dispK.wedge < 0.999 && <g opacity={1 - dispK.wedge}>{CORE_WEDGE.map((d, i) => <path key={`w${i}`} d={d} />)}</g>}
               </g>
             )}
           </g>
@@ -1091,46 +1190,75 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
           <path d={RAD_PATH} fill="none" stroke={gapCol} strokeWidth={3.6 * px} />
         </g>
       )}
-      {/* 6. the wedge fragment in its current pose: a hard cast shadow, its exposed side wall, its body and faces */}
+      {/* 6. the displaced fragments in their current poses: hard cast shadows (all of them first, so one fragment's
+          shadow never falls over another's body), then each one's exposed side wall, its body and faces */}
       {disp && (
         <g>
-          <g transform={`translate(${(-LIGHT.x * so).toFixed(4)} ${(-LIGHT.y * so).toFixed(4)}) ${xfSvg(st.wedge)}`} opacity={0.55 * shadowK}>
-            <g clipPath={`url(#${wedgeClip})`}><path d={RAD_PATH} fill={SHADOW} /></g>
-          </g>
-          {/* a contact shadow on the bed floor along the foot of the exposed side wall (the cast shadow falls down-right,
-              under the wound's rim at the opening framing; this keeps a depth cue inside the window). Clipped to the bed. */}
-          {wall && (
-            <g clipPath={`url(#${ids.rad})`}>
-              <g clipPath={`url(#${wedgeClip})`}>
-                <g transform={xfSvg(st.wedge)} fill="none" stroke={SHADOW} strokeLinejoin="round" strokeLinecap="round">
-                  <path d={wall.edge} strokeWidth={14 * px} opacity={0.2 * wallK} />
-                  <path d={wall.edge} strokeWidth={6.5 * px} opacity={0.42 * wallK} />
+          {moving.map((f) => {
+            const L = look(f);
+            return (
+              <g key={`sh${f}`} transform={`translate(${(-LIGHT.x * L.so).toFixed(4)} ${(-LIGHT.y * L.so).toFixed(4)}) ${xfOf(f)}`} opacity={0.55 * L.shadowK}>
+                <g clipPath={`url(#${clipOf[f]})`}><path d={RAD_PATH} fill={SHADOW} /></g>
+              </g>
+            );
+          })}
+          {moving.map((f) => {
+            const L = look(f);
+            const wall = L.wall, wallK = L.wallK;
+            const fArts = arts.filter((a) => a.frag === f);
+            return (
+              <g key={`fr${f}`}>
+                {/* a contact shadow on the bed floor along the foot of the exposed side wall (a depth cue inside the
+                    window, where the cast shadow may fall under the wound's rim). Clipped to the bed. */}
+                {wall && (
+                  <g clipPath={`url(#${ids.rad})`}>
+                    <g clipPath={`url(#${clipOf[f]})`}>
+                      <g transform={xfOf(f)} fill="none" stroke={SHADOW} strokeLinejoin="round" strokeLinecap="round">
+                        <path d={wall.edge} strokeWidth={14 * px} opacity={0.2 * wallK} />
+                        <path d={wall.edge} strokeWidth={6.5 * px} opacity={0.42 * wallK} />
+                      </g>
+                    </g>
+                  </g>
+                )}
+                <g transform={xfOf(f)}>
+                  {wall && (
+                    <g clipPath={`url(#${ids.rad})`}>
+                      <path d={wall.d} fill={mix(C.cancellous, C.boneDeep, 0.42)} />
+                      {/* an articular fragment's two broken faces each lit or in shade by which way they face */}
+                      {f !== 'wedge' && wall.faces.map((q, i) => (
+                        <path key={`wf${i}`} d={q.d} fill={mix(C.cancellous, q.k > 0 ? C.boneLit : C.boneDeep, 0.12 + 0.4 * Math.abs(q.k))} />
+                      ))}
+                      <g fill={mix(C.cancellousPore, C.cavity, 0.3)} opacity={0.8}>
+                        {wall.pores.map((q, i) => <circle key={i} cx={q.x} cy={q.y} r={q.r} />)}
+                      </g>
+                      <path d={wall.edge} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" />
+                    </g>
+                  )}
+                  <g clipPath={`url(#${clipOf[f]})`}>
+                    <BoneBody ids={ids} px={px} view={viewW} shaft={false} />
+                    <g clipPath={`url(#${ids.rad})`}>
+                      {/* while it stands out of its bed its broken side wall shows instead of the chamfer */}
+                      <Faces arts={fArts} px={px} view={viewW} fade={fade * (1 - 0.75 * wallK)} inkFade={inkFade} />
+                    </g>
+                  </g>
                 </g>
               </g>
-            </g>
-          )}
-          <g transform={xfSvg(st.wedge)}>
-            {wall && (
-              <g clipPath={`url(#${ids.rad})`}>
-                <path d={wall.d} fill={mix(C.cancellous, C.boneDeep, 0.42)} />
-                <g fill={mix(C.cancellousPore, C.cavity, 0.3)} opacity={0.8}>
-                  {wall.pores.map((q, i) => <circle key={i} cx={q.x} cy={q.y} r={q.r} />)}
-                </g>
-                <path d={wall.edge} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" />
-              </g>
-            )}
-            <g clipPath={`url(#${wedgeClip})`}>
-              <BoneBody ids={ids} px={px} view={viewW} shaft={false} />
-              <g clipPath={`url(#${ids.rad})`}>
-                {/* while it stands out of its bed its broken side wall shows instead of the chamfer */}
-                <Faces arts={wedgeArts} px={px} view={viewW} fade={fade * (1 - 0.75 * wallK)} inkFade={inkFade} />
-              </g>
-            </g>
-          </g>
+            );
+          })}
         </g>
       )}
       {/* 7. the glue */}
-      <Glue st={st} runs={runs} radClip={ids.rad} glueClip={glueClip} view={view} lineFade={inkFade} />
+      <Glue st={st} runs={runs} radClip={glueRad} glueClip={glueClip} view={view} lineFade={inkFade} rimMask={mouthsOpen.length > 0 ? rimMask : undefined}
+        rimExtra={glueRad !== ids.rad ? (
+          <>
+            {clipMov.map((f) => (
+              <g key={f} transform={xfOf(f)}>
+                <g clipPath={`url(#${clipOf[f]})`}><path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} /></g>
+              </g>
+            ))}
+            {mouthsOpen.map((m, i) => <path key={`ml${i}`} d={m.line} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} strokeLinecap="round" />)}
+          </>
+        ) : undefined} />
     </g>
   );
 };
