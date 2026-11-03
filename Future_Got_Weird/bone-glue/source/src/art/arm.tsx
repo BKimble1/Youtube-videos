@@ -14,9 +14,16 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C, INK} from './palette';
 import {Digit, FINGERS, INCISION, THUMB, WRIST_CREASE_Y, fingerChain, skinBorders, thumbChain} from './anatomy';
 
-export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread?: number; bend?: number};
-/** inc: 0 = the organic cutaway outline, 1 = the open incision's outline (the loop's last moments) */
-type Win = {c: P; r: number; soft: number; inc?: number};
+export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: Win | null; spread?: number; bend?: number};
+/** The cutaway window. c = centre, r = radius (mm; with aspect, the half-width ACROSS the window), soft = the feather
+ *  (and how far in the rim sits, as a fraction of r), inc: 0 = the organic cutaway outline, 1 = the open incision's
+ *  outline (the loop's last moments). Optional (absent = the round V2 window, unchanged):
+ *    aspect = length / width: the window is r wide on its local x and r * aspect long on its local y (an elongated
+ *      opening along the forearm, which runs along world y); its insets (the rim bands) stay a constant distance in mm
+ *    rot = the turn of that local frame (rad, + = clockwise on screen, as SVG with y down)
+ *    rim = 'soft' (the V2 feathered thinning skin) or 'cut': a crisper anatomical cutaway edge, a thin skin edge, the
+ *      cut wall's dermis and fat, and the lip's shadow falling inside onto the tissue and bones */
+export type Win = {c: P; r: number; soft: number; inc?: number; aspect?: number; rot?: number; rim?: 'soft' | 'cut'};
 
 const NS = 'non-scaling-stroke' as const;
 const LIGHT = nrm(pt(-0.62, -0.78));
@@ -214,14 +221,38 @@ const holePts = (a: number, inset = 0, n = 96): P[] => {
 };
 
 // ---------------------------------------------------------------- the cutaway window (a feathered, organic mask)
+/** true when the window uses the V3 shape fields (the round V2 window keeps its exact arithmetic) */
+const winShaped = (w: Win) => w.aspect !== undefined || w.rot !== undefined || w.rim === 'cut';
+/** the window's outline. k scales it about its centre (the round window); for a shaped window k is an inset of
+ *  (1 - k) * r mm all round, so the rim's bands keep their width along an elongated opening */
 const winPts = (w: Win, k: number, n = 72): P[] => {
   const out: P[] = [];
   const m = clamp(w.inc ?? 0);
+  const shaped = winShaped(w);
+  const asp = Math.max(0.2, w.aspect ?? 1);
+  const cr = Math.cos(w.rot ?? 0), sr = Math.sin(w.rot ?? 0);
+  const cut = w.rim === 'cut';
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2;
     const q = 0.5 * Math.sin(3 * a + 1.3) + 0.28 * Math.sin(5 * a + 0.4) + 0.16 * Math.sin(8 * a + 2.2) + 0.08 * Math.sin(13 * a + 0.7);
-    const rr = w.r * k * (1 + 0.07 * q);
-    let p = pt(w.c.x + rr * Math.cos(a), w.c.y + rr * Math.sin(a));
+    let p: P;
+    if (!shaped) {
+      const rr = w.r * k * (1 + 0.07 * q);
+      p = pt(w.c.x + rr * Math.cos(a), w.c.y + rr * Math.sin(a));
+    } else {
+      // an elongated organic opening: a superellipse-ish oval (fuller than an ellipse along its long sides), the same
+      // slow wobble in mm of r (a touch more irregular for a cut edge); inset by a constant distance
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const inset = (1 - k) * w.r;
+      const ex = Math.max(0.05, w.r - inset), ey = Math.max(0.05, w.r * asp - inset);
+      const sq = (v: number) => Math.sign(v) * Math.abs(v) ** 0.82;
+      const wob = w.r * (0.07 * q + 0.05 * Math.sin(2 * a + 0.9) + 0.03 * Math.sin(4 * a + 2.1) + (cut ? 0.012 * Math.sin(17 * a + 1.9) : 0));
+      // the wobble along the outward normal of the oval (approximately radial in its local frame)
+      const lx = ex * sq(ca), ly = ey * sq(sa);
+      const nl = nrm(pt(lx / (ex * ex), ly / (ey * ey)));
+      const qx = lx + nl.x * wob, qy = ly + nl.y * wob;
+      p = pt(w.c.x + qx * cr - qy * sr, w.c.y + qx * sr + qy * cr);
+    }
     if (m > 0) {
       // the fully retracted incision's outline at the same angle (holePts' shape), scaled by k about its centre
       const ct = Math.cos(a), st = Math.sin(a);
@@ -233,12 +264,17 @@ const winPts = (w: Win, k: number, n = 72): P[] => {
   }
   return out;
 };
+/** the half-size (mm) of a square about the window's centre that holds it and its feather (filter regions) */
+const winReach = (w: Win) => (winShaped(w) ? w.r * 1.6 * Math.max(1, w.aspect ?? 1) + (w.inc ? 40 : 0) : w.r * 1.6);
 /** the band of skin kept along the arm's outline inside a cutaway window (mm): the arm keeps its edge */
 const EDGE_BAND = 2.4;
+/** the feather (mm) of a 'cut' window's mask: crisp, but still a soft vector edge at every framing */
+const cutFeather = (w: Win) => 0.28 + 0.012 * w.r;
 /** <mask id={`${id}-wm`}>: white everywhere, black (feathered) inside the window */
 const WindowDefs: React.FC<{id: string; w: Win; ghost?: number; edge?: string}> = ({id, w, ghost = 0, edge}) => {
-  const sd = Math.max(0.02, (w.soft * w.r) / 4.4);
-  const R = w.r * 1.6;
+  const cut = w.rim === 'cut';
+  const sd = cut ? cutFeather(w) : Math.max(0.02, (w.soft * w.r) / 4.4);
+  const R = winReach(w);
   return (
     <>
       <filter id={`${id}-wf`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
@@ -251,7 +287,7 @@ const WindowDefs: React.FC<{id: string; w: Win; ghost?: number; edge?: string}> 
       )}
       <mask id={`${id}-wm`} maskUnits="userSpaceOnUse" x={-3000} y={-3000} width={6000} height={6000}>
         <rect x={-3000} y={-3000} width={6000} height={6000} fill="#FFFFFF" />
-        <path d={closed(winPts(w, 1 - w.soft * 0.5), 1)} fill="#000000" opacity={1 - ghost} filter={`url(#${id}-wf)`} />
+        <path d={closed(winPts(w, cut ? 1 : 1 - w.soft * 0.5), 1)} fill="#000000" opacity={1 - ghost} filter={`url(#${id}-wf)`} />
         {edge && <path d={edge} fill="none" stroke="#FFFFFF" strokeWidth={EDGE_BAND * 2} filter={`url(#${id}-ef)`} />}
       </mask>
     </>
@@ -259,7 +295,26 @@ const WindowDefs: React.FC<{id: string; w: Win; ghost?: number; edge?: string}> 
 };
 /** the thin warm rim where the skin thins away at the window's edge (drawn inside the masked skin) */
 const WindowRim: React.FC<{id: string; w: Win}> = ({id, w}) => {
-  const R = w.r * 1.6;
+  const R = winReach(w);
+  if (w.rim === 'cut') {
+    // the skin just outside a cut edge: it rolls down into the cut (a warm shade a millimetre wide) and its lip catches
+    // the light (a pale line right at the edge)
+    const out = (mm: number) => closed(winPts(w, 1 + mm / w.r), 1);
+    return (
+      <g>
+        <defs>
+          <filter id={`${id}-wrf`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
+            <feGaussianBlur stdDeviation={0.32} />
+          </filter>
+        </defs>
+        <g filter={`url(#${id}-wrf)`}>
+          <path d={out(1.1)} fill="none" stroke={C.skinDeep} strokeWidth={2.0} opacity={0.32} />
+          <path d={out(0.45)} fill="none" stroke={mix(C.skinDeep, '#B5524A', 0.3)} strokeWidth={0.7} opacity={0.4} />
+        </g>
+        <path d={out(0.32)} fill="none" stroke={C.skinLight} strokeWidth={0.42} opacity={0.8} />
+      </g>
+    );
+  }
   return (
     <g>
       <defs>
@@ -273,6 +328,99 @@ const WindowRim: React.FC<{id: string; w: Win}> = ({id, w}) => {
         {/* (as the window takes the incision's outline, the fat layer widens into the cut edge's yellow ring) */}
         <path d={closed(winPts(w, 1 - w.soft * 0.5 + 0.035 * (w.inc ?? 0)), 1)} fill="none" stroke={C.fat} strokeWidth={w.r * (0.018 + 0.09 * (w.inc ?? 0))} opacity={0.4 + 0.5 * (w.inc ?? 0)} />
       </g>
+    </g>
+  );
+};
+
+/** points moved inward (toward the window's inside) by d(i, outward normal) mm along the outline's normals */
+const insetBy = (ps: P[], c: P, d: (i: number, n: P) => number): P[] => {
+  const n = ps.length;
+  return ps.map((p, i) => {
+    const t = sub(ps[(i + 1) % n], ps[(i - 1 + n) % n]);
+    let o = nrm(perp(t));
+    if (o.x * (p.x - c.x) + o.y * (p.y - c.y) < 0) o = mul(o, -1);
+    return add(p, mul(o, -d(i, o)));
+  });
+};
+/** A 'cut' window's inside (drawn in the skin layer over the tissue and bones, clipped to the opening): the lip's cast
+ *  shadow falling in from the upper-left edge, a little ambient occlusion all round, and the cut wall in thin layers
+ *  (dermis, yellow subcutaneous fat with lobules, a pale fascia line), wider where the wall faces the key light (the
+ *  lower-right side) and narrower and shaded where it faces away; a fine ink line at the skin's cut edge. */
+const WindowCut: React.FC<{id: string; w: Win}> = ({id, w}) => {
+  const R = winReach(w);
+  const P0 = winPts(w, 1, 120);
+  const hole = closed(P0, 1);
+  const away = mul(LIGHT, -1);
+  // how much the wall at a point faces the light: its outward normal toward the lower right = the wall's face looks up-left
+  const face = (o: P) => o.x * away.x + o.y * away.y;
+  const W = (o: P) => 0.6 + 1.7 * Math.max(0, face(o)) ** 1.2 + 0.2 * Math.max(0, -face(o));
+  const band = (k0: number, k1: number) => {
+    const A = insetBy(P0, w.c, (_, o) => W(o) * k0);
+    const B = insetBy(P0, w.c, (_, o) => W(o) * k1);
+    return `${closed(A, 1)}${closed(B, 1)}`;
+  };
+  const shift = (mm: number) => closed(P0.map((p) => add(p, mul(away, mm))), 1);
+  const inner = closed(insetBy(P0, w.c, (_, o) => W(o)), 1);
+  // fat lobules along the fat band (deterministic)
+  const n = P0.length;
+  const lobes: React.ReactNode[] = [];
+  for (let k = 0; k < n; k += 2) {
+    const i = k;
+    const t = sub(P0[(i + 1) % n], P0[(i - 1 + n) % n]);
+    let o = nrm(perp(t));
+    if (o.x * (P0[i].x - w.c.x) + o.y * (P0[i].y - w.c.y) < 0) o = mul(o, -1);
+    const Wi = W(o);
+    const dd = Wi * (0.42 + 0.3 * hash(k * 3.3));
+    const p = add(P0[i], mul(o, -dd));
+    const r = Wi * (0.16 + 0.1 * hash(k * 5.1));
+    const ang = (Math.atan2(t.y, t.x) * 180) / Math.PI;
+    lobes.push(<ellipse key={k} cx={p.x} cy={p.y} rx={r * 1.3} ry={r} transform={`rotate(${ang} ${p.x} ${p.y})`} fill={mix(C.fat, '#FFF3C8', 0.4)} stroke={C.fatDeep} strokeWidth={0.8} opacity={0.75} vectorEffect={NS} />);
+  }
+  // a few wet glints on the lit wall
+  const glints: React.ReactNode[] = [];
+  for (let k = 0; k < 10; k++) {
+    const i = Math.floor(hash(k * 7.7 + 1) * n);
+    const t = nrm(sub(P0[(i + 1) % n], P0[(i - 1 + n) % n]));
+    let o = perp(t);
+    if (o.x * (P0[i].x - w.c.x) + o.y * (P0[i].y - w.c.y) < 0) o = mul(o, -1);
+    if (face(o) < 0.25) continue;
+    const p = add(P0[i], mul(o, -W(o) * (0.25 + 0.4 * hash(k * 2.3))));
+    const l = 0.6 + 0.6 * hash(k);
+    glints.push(<path key={k} d={`M${p.x - t.x * l} ${p.y - t.y * l}L${p.x + t.x * l} ${p.y + t.y * l}`} stroke="#FFFFFF" strokeWidth={1.5} opacity={0.7 * face(o)} strokeLinecap="round" vectorEffect={NS} />);
+  }
+  return (
+    <g>
+      <defs>
+        <clipPath id={`${id}-wcc`}><path d={hole} /></clipPath>
+        <filter id={`${id}-wcf`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
+          <feGaussianBlur stdDeviation={0.45} />
+        </filter>
+        <filter id={`${id}-wcf2`} filterUnits="userSpaceOnUse" x={w.c.x - R} y={w.c.y - R} width={2 * R} height={2 * R}>
+          <feGaussianBlur stdDeviation={0.18} />
+        </filter>
+      </defs>
+      <g clipPath={`url(#${id}-wcc)`}>
+        {/* the lip's shadow on the floor (cel steps, lightly softened), and a little occlusion all round */}
+        <g filter={`url(#${id}-wcf)`}>
+          <path d={`${hole}${shift(3.6)}`} fillRule="evenodd" fill="#1E0408" opacity={0.26} />
+          <path d={`${hole}${shift(2.2)}`} fillRule="evenodd" fill="#1E0408" opacity={0.3} />
+          <path d={`${hole}${closed(insetBy(P0, w.c, (_, o) => W(o) + 0.9), 1)}`} fillRule="evenodd" fill="#1E0408" opacity={0.22} />
+        </g>
+        {/* the cut wall: dermis, fat, fascia */}
+        <g filter={`url(#${id}-wcf2)`}>
+          <path d={band(0.82, 1.0)} fillRule="evenodd" fill={C.fascia} opacity={0.85} />
+          <path d={band(0.3, 0.86)} fillRule="evenodd" fill={C.fat} />
+          <path d={band(0.62, 0.86)} fillRule="evenodd" fill={C.fatDeep} opacity={0.45} />
+          <g>{lobes}</g>
+          <path d={band(0, 0.34)} fillRule="evenodd" fill={C.skinLayer} />
+          <path d={band(0.22, 0.34)} fillRule="evenodd" fill="#D9735E" opacity={0.6} />
+        </g>
+        <path d={`${hole}${shift(1.4)}`} fillRule="evenodd" fill="#3A0B10" opacity={0.28} />
+        {glints}
+        <path d={inner} fill="none" stroke={INK} strokeWidth={1.1} opacity={0.35} strokeLinejoin="round" vectorEffect={NS} />
+      </g>
+      {/* the skin's cut edge */}
+      <path d={hole} fill="none" stroke={INK} strokeWidth={1.7} opacity={0.82} strokeLinejoin="round" vectorEffect={NS} />
     </g>
   );
 };
@@ -645,6 +793,8 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
         {bent ? <g transform={`rotate(${(bend * 180) / Math.PI} ${WRIST_PIVOT.x} ${WRIST_PIVOT.y})`}>{seps}</g> : seps}
         <IncisionSkin id={`${id}-sut`} s={s} part="over" />
       </g>
+      {/* a 'cut' window's wall and inner shadow lie over the opening, outside the skin's mask */}
+      {win && win.rim === 'cut' && <g clipPath={`url(#${id}-cl)`}><WindowCut id={id} w={win} /></g>}
     </g>
   );
 };

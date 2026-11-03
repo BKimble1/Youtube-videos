@@ -8,9 +8,16 @@
 //   C1 (transverse, ulnar -> radial border): side +1 = below (the shaft; right of the C3 junction, the WEDGE)
 //   C2 (styloid crack, C1 -> up into the joint): side +1 = right (the styloid fragment), -1 = left (lunate fragment)
 //   C3 (wedge crack, C1 -> down to the radial border): side +1 = left/below (the shaft), -1 = right (the WEDGE)
-// The wedge (a small radial butterfly fragment: below C1's radial part, right of C3) is the only fragment that moves:
+// V2: the wedge (a small radial butterfly fragment: below C1's radial part, right of C3) is the only fragment that moves:
 // at frame 0 it sits displaced (out toward the radial side, slightly tilted) and the surgeon's probe pushes it home.
-// Its seam edges (C1 side +1 beyond the C3 junction, and C3 side -1) move with wedgeXf(). The glue never moves bone.
+// Its seam edges (C1 side +1 beyond the C3 junction, and C3 side -1) move with xfPoint(). The glue never moves bone.
+// V3: three rigid fragments can move (FragId: the wedge, the styloid fragment above C1 right of C2, the lunate fragment
+// above C1 left of C2), each by its own WedgeX about its own pivot (FRAG_PIVOT). Every function that takes a pose takes
+// a FragPose: a bare WedgeX (the V2 contract: only the wedge moves, exactly as before) or Poses (all three). With Poses,
+// a face point is carried by the fragment that owns it (fragOf); across the two C1 junctions, where C1's face passes
+// from one piece to the next (lunate -> styloid on side -1, shaft -> wedge on side +1), the point blends between the two
+// pieces' transforms over the junction's mouth (between the two fragment corners), so a glue band laid across a
+// junction stays one continuous body while the pieces stand apart. The shaft never moves.
 import {P, pt, add, sub, mul, nrm, perp, len, lerpP} from '../core/geo';
 import {C1, C2, C3} from './anatomy';
 import {clamp, hash, noise1} from '../lib';
@@ -118,22 +125,83 @@ export const WEDGE_PIVOT = pt(11.8, 9.0); // the wedge's lower tip (its C3 face 
 export const WEDGE_OUT: WedgeX = {dx: 0.8, dy: 1.3, rot: 0.2};
 export const WEDGE_SEATED: WedgeX = {dx: 0, dy: 0, rot: 0};
 export const wedgeLerp = (u: number): WedgeX => ({dx: WEDGE_OUT.dx * (1 - u), dy: WEDGE_OUT.dy * (1 - u), rot: WEDGE_OUT.rot * (1 - u)});
-export const xfPoint = (p: P, w: WedgeX): P => {
+/** a rigid pose applied about a pivot (rotation about it, then translation) */
+export const xfAbout = (p: P, w: WedgeX, pivot: P): P => {
   const c = Math.cos(w.rot), sn = Math.sin(w.rot);
-  const q = sub(p, WEDGE_PIVOT);
-  return pt(WEDGE_PIVOT.x + q.x * c - q.y * sn + w.dx, WEDGE_PIVOT.y + q.x * sn + q.y * c + w.dy);
+  const q = sub(p, pivot);
+  return pt(pivot.x + q.x * c - q.y * sn + w.dx, pivot.y + q.x * sn + q.y * c + w.dy);
 };
+/** the wedge's transform (about WEDGE_PIVOT) */
+export const xfPoint = (p: P, w: WedgeX): P => xfAbout(p, w, WEDGE_PIVOT);
+/** the SVG transform for a pose about a pivot */
+export const xfSvgAbout = (w: WedgeX, pivot: P) => `translate(${w.dx.toFixed(4)} ${w.dy.toFixed(4)}) rotate(${((w.rot * 180) / Math.PI).toFixed(4)} ${pivot.x} ${pivot.y})`;
 /** the SVG transform that carries seated wedge geometry to its current pose */
-export const xfSvg = (w: WedgeX) => `translate(${w.dx.toFixed(4)} ${w.dy.toFixed(4)}) rotate(${((w.rot * 180) / Math.PI).toFixed(4)} ${WEDGE_PIVOT.x} ${WEDGE_PIVOT.y})`;
-/** a broken-face point in its CURRENT position (the wedge's faces carried by its transform) */
-export const seamEdge = (id: SeamId, s: number, side: 1 | -1, w: WedgeX, out = 0): P => {
+export const xfSvg = (w: WedgeX) => xfSvgAbout(w, WEDGE_PIVOT);
+
+// ---------------------------------------------------------------- V3: the three moving fragments
+export type FragId = 'wedge' | 'styloid' | 'lunate';
+export const FRAG_IDS: FragId[] = ['wedge', 'styloid', 'lunate'];
+/** every moving fragment's pose (seated = all zero) */
+export type Poses = Record<FragId, WedgeX>;
+/** a pose argument: a bare WedgeX (V2: only the wedge moves) or the three fragments' Poses */
+export type FragPose = WedgeX | Poses;
+export const isPoses = (w: FragPose): w is Poses => (w as Poses).wedge !== undefined;
+/** each fragment's pivot (seated coordinates): the wedge's lower tip; the articular fragments' rough centroids, so
+ *  their rotation (angulation) and their translation (the split and the lift) read independently */
+export const FRAG_PIVOT: Record<FragId, P> = {wedge: WEDGE_PIVOT, styloid: pt(10.0, -17.0), lunate: pt(-6.0, -13.0)};
+const isZero = (w: WedgeX) => w.dx === 0 && w.dy === 0 && w.rot === 0;
+/** a seated point carried by one fragment's pose (exactly the point itself when that pose is zero) */
+export const xfFrag = (p: P, f: FragId, w: Poses): P => (isZero(w[f]) ? p : xfAbout(p, w[f], FRAG_PIVOT[f]));
+/** the SVG transform that carries a fragment's seated geometry to its pose */
+export const xfSvgFrag = (f: FragId, w: WedgeX) => xfSvgAbout(w, FRAG_PIVOT[f]);
+/** which piece owns a seam's face at s (null = the shaft, which never moves); exact at the junctions' centrelines */
+export const fragOf = (id: SeamId, s: number, side: 1 | -1): FragId | null => {
+  if (id === 'C1') return side === 1 ? (s > S_C3_ON_C1 ? 'wedge' : null) : (s < S_C2_ON_C1 ? 'lunate' : 'styloid');
+  if (id === 'C2') return side === 1 ? 'styloid' : 'lunate';
+  return side === -1 ? 'wedge' : null;
+};
+/** a pose argument as Poses (a bare WedgeX moves only the wedge) */
+export const asPoses = (w: FragPose): Poses => (isPoses(w) ? w : {wedge: w, styloid: WEDGE_SEATED, lunate: WEDGE_SEATED});
+/** the arc lengths along C1 of the fragment corners either side of each junction (seated): C1's face on side -1 meets
+ *  the lunate's / the styloid's C2 face, and on side +1 the shaft's / the wedge's C3 face. Measured below. */
+let J_C2: [number, number] = [S_C2_ON_C1 - 0.5, S_C2_ON_C1 + 0.5];
+let J_C3: [number, number] = [S_C3_ON_C1 - 0.4, S_C3_ON_C1 + 0.4];
+const smooth01 = (x: number) => {
+  const u = clamp(x);
+  return u * u * (3 - 2 * u);
+};
+/** a seated face point at (id, s, side) carried to its current position by Poses (with the junction blends) */
+const posed = (p: P, id: SeamId, s: number, side: 1 | -1, w: Poses): P => {
+  if (id === 'C1') {
+    if (side === -1) {
+      const [a, b] = J_C2;
+      if (s <= a) return xfFrag(p, 'lunate', w);
+      if (s >= b) return xfFrag(p, 'styloid', w);
+      return lerpP(xfFrag(p, 'lunate', w), xfFrag(p, 'styloid', w), smooth01((s - a) / (b - a)));
+    }
+    const [a, b] = J_C3;
+    if (s <= a) return p;
+    if (s >= b) return xfFrag(p, 'wedge', w);
+    return lerpP(p, xfFrag(p, 'wedge', w), smooth01((s - a) / (b - a)));
+  }
+  const f = fragOf(id, s, side);
+  return f ? xfFrag(p, f, w) : p;
+};
+/** a broken-face point in its CURRENT position (each fragment's faces carried by its transform) */
+export const seamEdge = (id: SeamId, s: number, side: 1 | -1, w: FragPose, out = 0): P => {
   const p = seamEdgeSeated(id, s, side, out);
-  return isWedgeSide(id, s, side) ? xfPoint(p, w) : p;
+  if (!isPoses(w)) return isWedgeSide(id, s, side) ? xfPoint(p, w) : p;
+  return posed(p, id, s, side, w);
+};
+/** any seated point on a piece carried by Poses (a fragment's interior point, a press point: fragOf names the piece) */
+export const xfOwned = (p: P, id: SeamId, s: number, side: 1 | -1, w: FragPose): P => {
+  if (!isPoses(w)) return isWedgeSide(id, s, side) ? xfPoint(p, w) : p;
+  return posed(p, id, s, side, w);
 };
 
 // ---------------------------------------------------------------- polylines and the wedge's outline
 /** sample a seam face from s0 to s1 (inclusive), every `step` mm */
-export const seamEdgeLine = (id: SeamId, s0: number, s1: number, side: 1 | -1, w: WedgeX = WEDGE_SEATED, out = 0, step = 0.08): P[] => {
+export const seamEdgeLine = (id: SeamId, s0: number, s1: number, side: 1 | -1, w: FragPose = WEDGE_SEATED, out = 0, step = 0.08): P[] => {
   const n = Math.max(1, Math.ceil(Math.abs(s1 - s0) / step));
   const ps: P[] = [];
   for (let i = 0; i <= n; i++) ps.push(seamEdge(id, s0 + ((s1 - s0) * i) / n, side, w, out));
@@ -181,13 +249,92 @@ export const STYLOID_PRESS = pt(7.0, -9.0); // mid styloid fragment: ~3.5 mm rig
  *  w 58-112) and right of the wedge seam's lower end, never along the rake's arm */
 export const PROBE_ANG_W = 0.9, PROBE_ANG_S = 1.18;
 
+// ---------------------------------------------------------------- V3: the articular fragments' outlines and poses
+/** the junction mouths on C1 (see posed): where C1's face meets each branch's face on either side */
+{
+  const corner = (side: 1 | -1, sJ: number, b: SeamId, sideB: 1 | -1): number => {
+    const A = seamEdgeLine('C1', sJ - 2.5, sJ + 2.5, side, WEDGE_SEATED, 0, 0.02);
+    const B = seamEdgeLine(b, -1, 3, sideB, WEDGE_SEATED, 0, 0.02);
+    const x = polyX(A, B);
+    return x ? seamNearest('C1', x.p) : sJ;
+  };
+  J_C2 = [corner(-1, S_C2_ON_C1, 'C2', -1), corner(-1, S_C2_ON_C1, 'C2', 1)];
+  J_C3 = [corner(1, S_C3_ON_C1, 'C3', 1), corner(1, S_C3_ON_C1, 'C3', -1)];
+}
+/** a fragment's seated outline as a clip polygon from two of its broken faces that meet at its corner: faceA runs from
+ *  the corner out past one border, faceB from the corner out past another; `far` closes it round outside the bone
+ *  (anything outside the radius is clipped by the radius outline when drawn) */
+const fragPoly = (A: P[], B: P[], far: (endA: P, endB: P) => P[]): P[] => {
+  const x = polyX(A, B);
+  const a = x ? [x.p, ...A.slice(x.i + 1)] : A;
+  const b = x ? [x.p, ...B.slice(x.j + 1)] : B;
+  return [...a, ...far(a[a.length - 1], b[b.length - 1]), ...[...b].reverse().slice(0, -1)];
+};
+/** where C2 runs out above the joint (2.5 mm past its end) and its direction there: the two articular fragments' outlines
+ *  share this line's extension up past the carpals (side -1 and +1 of it), so they never overlap */
+const C2_TOP_DIR = seamTangent('C2', seamLength('C2'));
+/** the styloid fragment (above C1's radial part, right of C2): its C1 face from the corner out past the radial border,
+ *  its C2 face up past the joint */
+export const STYLOID_POLY: P[] = fragPoly(
+  seamEdgeLine('C1', S_C2_ON_C1 - 1.5, seamLength('C1') + 2.5, -1),
+  seamEdgeLine('C2', -1.0, seamLength('C2') + 2.5, 1),
+  (e1, e2) => [pt(e1.x + 12, e1.y - 1.5), pt(e1.x + 12, -80), add(e2, mul(C2_TOP_DIR, 40)), add(e2, mul(C2_TOP_DIR, 6))],
+);
+/** the lunate fragment (above C1's ulnar part, left of C2): its C1 face from the corner out past the ulnar border, its
+ *  C2 face up past the joint */
+export const LUNATE_POLY: P[] = (() => {
+  const a = seamEdgeLine('C1', -2.5, S_C2_ON_C1 + 1.5, -1).reverse();
+  const b = seamEdgeLine('C2', -1.0, seamLength('C2') + 2.5, -1);
+  // traced the other way round (corner -> up C2 -> round the top -> out past the ulnar border -> back along C1)
+  return fragPoly(b, a, (e2, e1) => [add(e2, mul(C2_TOP_DIR, 6)), add(e2, mul(C2_TOP_DIR, 40)), pt(e1.x - 14, -80), pt(e1.x - 14, e1.y + 0.6)]);
+})();
+/** every moving fragment's seated clip outline */
+export const FRAG_POLY: Record<FragId, P[]> = {wedge: WEDGE_POLY, styloid: STYLOID_POLY, lunate: LUNATE_POLY};
+
+export const POSES_SEATED: Poses = {wedge: WEDGE_SEATED, styloid: WEDGE_SEATED, lunate: WEDGE_SEATED};
+/** frame 0 of V3: the distal radius shattered. The two articular fragments are split apart across C2 and lifted off C1,
+ *  each angulated a little (their C1 faces tilt up toward the split, the joint surface opens), and the wedge is out as
+ *  in V2. Gaps face to face: C2 2.5 mm at C1 widening to 3.6 at the joint; C1 2.3-2.9 mm under the two fragments, 3-3.9
+ *  over the wedge (out as well). Checked: along posesLerp(u), u in [0, 1], no two pieces' faces come closer than they
+ *  are seated (lunate/styloid 0.56 mm, fragment/shaft 0.66, the wedge as V2), and the lunate stays 1.9 mm clear of the
+ *  ulna. */
+export const POSES_SHATTER: Poses = {
+  wedge: WEDGE_OUT,
+  styloid: {dx: 1.1, dy: -1.75, rot: 0.022},
+  lunate: {dx: -1.2, dy: -1.8, rot: -0.022},
+};
+const lerpX = (a: WedgeX, b: WedgeX, u: number): WedgeX => ({dx: a.dx + (b.dx - a.dx) * u, dy: a.dy + (b.dy - a.dy) * u, rot: a.rot + (b.rot - a.rot) * u});
+/** a blend of two pose sets (per fragment, linear in dx, dy and rot) */
+export const posesMix = (a: Poses, b: Poses, u: number): Poses => ({wedge: lerpX(a.wedge, b.wedge, u), styloid: lerpX(a.styloid, b.styloid, u), lunate: lerpX(a.lunate, b.lunate, u)});
+/** the reduction path from `from` (POSES_SHATTER) at u = 0 to seated at u = 1. u may be one number or one per
+ *  fragment (a fragment left out of the record stays at u = 0). The wedge runs as wedgeLerp; the articular fragments
+ *  slide together across C2 a little ahead of seating onto C1 (the forceps' squeeze: dx and rot lead, dy follows; both
+ *  smooth, monotone and exact at the ends), so they visibly come together and then sit down. Feed it an eased u. */
+export const posesLerp = (u: number | Partial<Record<FragId, number>>, from: Poses = POSES_SHATTER): Poses => {
+  const uf = (f: FragId) => clamp(typeof u === 'number' ? u : u[f] ?? 0);
+  const art = (f: FragId): WedgeX => {
+    const v = uf(f), lead = 0.3 * v * (1 - v);
+    const ux = v + lead, uy = v - lead;
+    const w = from[f];
+    return {dx: w.dx * (1 - ux), dy: w.dy * (1 - uy), rot: w.rot * (1 - ux)};
+  };
+  const v = uf('wedge');
+  const w0 = from.wedge;
+  return {wedge: {dx: w0.dx * (1 - v), dy: w0.dy * (1 - v), rot: w0.rot * (1 - v)}, styloid: art('styloid'), lunate: art('lunate')};
+};
+/** how far each fragment stands from home, 0 (seated) .. 1 (about its POSES_SHATTER displacement or more) */
+export const fragDisp = (f: FragId, w: WedgeX): number =>
+  f === 'wedge'
+    ? clamp((Math.abs(w.dx) + Math.abs(w.dy)) / 1.2 + Math.abs(w.rot) / 0.2)
+    : clamp((Math.abs(w.dx) + Math.abs(w.dy)) / 2.6 + Math.abs(w.rot) / 0.15);
+
 // ---------------------------------------------------------------- the glue band
 /** The adhesive in a seam from s0 to s1: it fills the gap between the two faces and wets out a little over each
  *  (meniscus `over` mm past each face). inset(side, s) (mm) eats into the band from that side's face (healing: new
  *  bone advancing from the margins); where the two insets meet, the band is gone. Returns the band's runs (a run
  *  is one connected island): each run has its two edges (side -1 face line, side +1 face line) over the same s. */
 export type BandRun = {s: number[]; lo: P[]; hi: P[]};
-export const glueBand = (id: SeamId, s0: number, s1: number, w: WedgeX, over = 0.14, inset?: (side: 1 | -1, s: number) => number, step = 0.08): BandRun[] => {
+export const glueBand = (id: SeamId, s0: number, s1: number, w: FragPose, over = 0.14, inset?: (side: 1 | -1, s: number) => number, step = 0.08): BandRun[] => {
   const runs: BandRun[] = [];
   let cur: BandRun | null = null;
   const n = Math.max(1, Math.ceil((s1 - s0) / step));

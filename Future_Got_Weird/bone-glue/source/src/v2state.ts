@@ -1,7 +1,7 @@
 // V2 per-frame state contracts shared by the story (story.ts computes them) and the art modules (they draw them).
 // World millimetres (anatomy.ts); seams and the wedge transform in art/seams.ts.
 import {P} from './core/geo';
-import {SeamId, WedgeX} from './art/seams';
+import {FragPose, Poses, SeamId, WedgeX, asPoses} from './art/seams';
 
 /** healing, each 0..1 */
 export type Heal2 = {
@@ -20,6 +20,8 @@ export type Heal2 = {
 export const HEAL2_0: Heal2 = {hem: 0, soft: 0, bridge: 0, hard: 0, remodel: 0};
 
 export type GlueSpan = {a: number; b: number}; // filled arc interval along the seam centreline (mm); none if b <= a
+/** a fresh glue front: the seam, its arc length (the end of that seam's span it is laying) and its flow 0..1 */
+export type GlueFront = {seam: SeamId; s: number; flow: number};
 
 export type BoneState2 = {
   /** an animation clock (s): flow phases, shimmer */
@@ -30,8 +32,16 @@ export type BoneState2 = {
   wedge: WedgeX;
   /** the adhesive in each seam */
   glue: Record<SeamId, GlueSpan>;
+  /** V3: every moving fragment's pose (art/seams.ts Poses: the wedge, the styloid and the lunate fragment). Optional:
+   *  when absent only the wedge moves, by `wedge`, exactly as in V2; when present it is what is drawn (keep its wedge
+   *  equal to `wedge` for anything that still reads that field) */
+  poses?: Poses;
   /** where the applicator's tip is laying glue right now (the fresh end of a span), or null; flow 0..1 */
-  front: {seam: SeamId; s: number; flow: number} | null;
+  front: GlueFront | null;
+  /** V3: more glue fronts at the same time (each with its proud fresh tail, gloss and bright bulb at the end of its span),
+   *  drawn together with `front`: e.g. one injection at the C1/C2 junction racing out along C1 both ways, up C2 and down
+   *  C3 at once. A front sits at (or within 0.35 mm of) one end of that seam's glue span. */
+  fronts?: GlueFront[];
   /** 0 fresh and glossy .. 1 set (satin) */
   set: number;
   /** the probe tip touching bone: its contact point (current, world mm) and contact 0..1 (0 = lifted clear) */
@@ -65,3 +75,10 @@ export type InstrState2 = {
   lean: number;
   k: number;
 };
+
+/** the pose argument the art modules pass to seams.ts (st.poses when given, else the V2 wedge pose) */
+export const poseArg = (st: BoneState2): FragPose => st.poses ?? st.wedge;
+/** every fragment's pose (from st.poses, or the V2 wedge alone) */
+export const posesOf = (st: BoneState2): Poses => asPoses(poseArg(st));
+/** every glue front (front first, then fronts) */
+export const frontsOf = (st: BoneState2): GlueFront[] => (st.front ? (st.fronts ? [st.front, ...st.fronts] : [st.front]) : st.fronts ?? []);
