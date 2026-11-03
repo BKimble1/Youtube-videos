@@ -14,7 +14,14 @@ export const CAP_Y: [string, number][] = [
  *  the cut; the last caption leaves when the loop's wipe has reset the picture */
 let ADJ: {show: Record<number, number>; lastHide: number} = {show: {}, lastHide: 1e9};
 export const setCaptionAdjust = (a: typeof ADJ) => { ADJ = a; };
-export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : ADJ.show[k] ?? c.show) && t < (k === CAPTIONS.length - 1 ? Math.min(c.hide, ADJ.lastHide) : c.hide));
+/** a caption stays up until the next one shows when the gap between them is a frame or two (no blank frame) */
+const hideOf = (k: number) => {
+  const c = CAPTIONS[k];
+  if (k === CAPTIONS.length - 1) return Math.min(c.hide, ADJ.lastHide);
+  const next = ADJ.show[k + 1] ?? CAPTIONS[k + 1].show;
+  return next > c.hide && next - c.hide < 0.12 ? next : c.hide;
+};
+export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : ADJ.show[k] ?? c.show) && t < hideOf(k));
 export const capY = (i: number) => {
   const [first, y] = CAP_Y[i];
   if (!CAPTIONS[i].text.startsWith(first)) throw new Error(`caption table out of step at ${i}: ${CAPTIONS[i].text}`);

@@ -172,7 +172,10 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
   ];
   all.forEach((r, i) => {
     const lip = GLUE_LIP_SIDE[r.id];
-    const sides: [P[], boolean][] = [[r.lo, lip === -1], [r.hi, lip === 1]];
+    // the bone-ink lip as FractureBone draws it: not along a branch's first 0.5 mm (that end lies in C1's gel)
+    const k0 = r.id === 'C1' ? 0 : r.s.findIndex((s) => s > 0.5);
+    const lipPs = (ps: P[]) => (k0 < 0 ? [] : ps.slice(k0));
+    const sides: [P[], boolean][] = [[lip === -1 ? lipPs(r.lo) : r.lo, lip === -1], [lip === 1 ? lipPs(r.hi) : r.hi, lip === 1]];
     edges.push(
       <g key={`e${i}`} mask={`url(#${masks[r.id]})`} fill="none" strokeLinejoin="round" strokeLinecap="round">
         {sides.map(([ps, isLip], k) => (
@@ -192,8 +195,11 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
       <g clipPath={`url(#${clip})`}>
         <rect x={-30} y={-30} width={60} height={60} fill={rgba(mix(C.blood, C.bloodLit, 0.3), tint)} />
         {out}
-        {lipUp.length > 2 && <path d={open(lipUp, 0.5)} stroke={C.bloodDeep} strokeWidth={W(5)} fill="none" opacity={0.32} strokeLinecap="round" />}
-        {lipDown.length > 2 && <path d={open(lipDown, 0.5)} stroke="#FFF2F2" strokeWidth={W(2)} fill="none" opacity={0.4} strokeLinecap="round" />}
+        {/* (cut where a branch's gel joins: no film lip across a T-junction's mouth) */}
+        <g mask={masks.C1 ? `url(#${masks.C1})` : undefined}>
+          {lipUp.length > 2 && <path d={open(lipUp, 0.5)} stroke={C.bloodDeep} strokeWidth={W(5)} fill="none" opacity={0.32} strokeLinecap="round" />}
+          {lipDown.length > 2 && <path d={open(lipDown, 0.5)} stroke="#FFF2F2" strokeWidth={W(2)} fill="none" opacity={0.4} strokeLinecap="round" />}
+        </g>
       </g>
       {edges}
     </g>

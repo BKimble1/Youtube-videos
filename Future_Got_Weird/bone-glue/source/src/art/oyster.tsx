@@ -810,7 +810,7 @@ const MoteField: React.FC<{t: number; cam: Cam; m: Motes}> = ({t, cam, m}) => {
  *  world-locked one (MOTE_X), so the macro and the cut back are exactly as before. */
 const MOTE_ZOOM = 0.25;
 const MOTE_DRIFT = 0.13;
-const MOTE_X: [number, number] = [9.62, 9.95];
+const MOTE_X: [number, number] = [9.72, 10.02];
 const moteCam = (cam: Cam): {cam: Cam; drift: number} => {
   const L = Math.log(OY_W_IN / cam.w);
   const w = OY_W_IN * Math.exp(-MOTE_ZOOM * L);

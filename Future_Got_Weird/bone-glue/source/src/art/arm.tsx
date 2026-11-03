@@ -606,7 +606,7 @@ const Rake: React.FC<{id: string; side: number; a: number; out: number}> = ({id,
   const tys = [-3.3, 0, 3.3].map((d) => yc + d);
   const ang = side < 0 ? (163 * Math.PI) / 180 : (11 * Math.PI) / 180;
   const hd = pt(Math.cos(ang), Math.sin(ang));
-  const dx = mul(hd, out * 30);
+  const dx = mul(hd, out * 12);
   const lift = clamp(out * 1.6);
   const tines = tys.map((y) => {
     const x = lipX(y);
@@ -637,7 +637,7 @@ const Rake: React.FC<{id: string; side: number; a: number; out: number}> = ({id,
   const g0 = add(h0, mul(hn, 2.0)), g1 = add(h0, mul(hn, -2.0));
   const shadow = 'translate(1.4 2.0)';
   return (
-    <g opacity={1 - ss(out, 0.6, 1)}>
+    <g opacity={1 - ss(out, 0.25, 0.85)}>
       <defs>
         <linearGradient id={`${id}-s`} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
           <stop offset={0} stopColor={C.steelLit} />
@@ -705,12 +705,13 @@ export const IncisionRim: React.FC<{id: string; s: ArmState}> = ({id, s}) => {
     glints.push(<path key={k} d={`M${p.x - tg.x * l} ${p.y - tg.y * l}L${p.x + tg.x * l} ${p.y + tg.y * l}`} stroke="#FFFFFF" strokeWidth={1.6} opacity={0.75 * lit} strokeLinecap="round" vectorEffect={NS} />);
   }
   const gA = pt(c.x + LIGHT.x * a, c.y + LIGHT.y * INCISION.ry), gB = pt(c.x - LIGHT.x * a, c.y - LIGHT.y * INCISION.ry);
-  const out = 1 - ss(e, 0.55, 0.95);
+  // the rakes lift off the lips and withdraw a little as the incision closes, fading as they go (no flick)
+  const out = 1 - ss(e, 0.3, 0.95);
   return (
     <g>
       <defs>
         <clipPath id={`${id}-h`}><path d={poly(H)} /></clipPath>
-        {win && <WindowDefs id={id} w={win} ghost={0.3} />}
+        {win && <WindowDefs id={id} w={win} ghost={0} />}
         <linearGradient id={`${id}-wl`} gradientUnits="userSpaceOnUse" x1={gA.x} y1={gA.y} x2={gB.x} y2={gB.y}>
           <stop offset={0} stopColor="#2A0A10" stopOpacity={0.4} />
           <stop offset={0.5} stopColor="#2A0A10" stopOpacity={0.05} />

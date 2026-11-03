@@ -709,7 +709,7 @@ export const AppShadow: React.FC<{st: AppState2; px: number; on?: number}> = ({s
       h0={h0}
       slope={0.34}
       px={px}
-      alpha={0.46 * (1 - 0.3 * lx.l) * wd.fade}
+      alpha={0.46 * (1 - 0.85 * lx.l) * wd.fade}
       foot={{c: at(0.25), r: (APP.r + 0.08) * lx.k * kI}}
       contact={(1 - h0 / 0.3) * wd.fade}
     />
