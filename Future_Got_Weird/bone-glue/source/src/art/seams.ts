@@ -174,6 +174,8 @@ export const WEDGE_CORNER = WEDGE_POLY[0];
 export const WEDGE_PRESS = pt(10.0, 3.6);
 /** a point on the styloid fragment where the probe holds it later (static fragment) */
 export const STYLOID_PRESS = pt(12.4, -5.4);
+/** the probe's axis angle (rad, from the tip toward the handle) on the wedge and on the styloid fragment */
+export const PROBE_ANG_W = 0.55, PROBE_ANG_S = 0.4;
 
 // ---------------------------------------------------------------- the glue band
 /** The adhesive in a seam from s0 to s1: it fills the gap between the two faces and wets out a little over each
@@ -196,7 +198,9 @@ export const glueBand = (id: SeamId, s0: number, s1: number, w: WedgeX, over = 0
       continue;
     }
     // the wetting overhang disappears as new bone covers that face
-    const oM = im > 0 ? -im : over, oP = ip > 0 ? -ip : over;
+    // (eased away over the first 0.12 mm of growth so the band never jumps narrower)
+    const ease = (i: number) => (i > 0 ? over * (1 - clamp(i / 0.12)) ** 2 - i : over);
+    const oM = ease(im), oP = ease(ip);
     const lo = seamEdge(id, s, -1, w, oM), hi = seamEdge(id, s, 1, w, oP);
     if (!cur) cur = {s: [], lo: [], hi: []};
     cur.s.push(s); cur.lo.push(lo); cur.hi.push(hi);
@@ -213,8 +217,17 @@ export const growth = (id: SeamId, s: number, bridge: number, side: 1 | -1): num
   if (bridge <= 0) return 0;
   const g = seamGap(id, s);
   const seed = SEED[id] * 10 + (side > 0 ? 3 : 7);
-  const k = 0.55 + 0.9 * (0.5 + 0.5 * noise1(s * 0.62 + seed, seed)); // local speed 0.55..1.45
-  const b = bridge * 1.9;
+  // each face's own speed, plus a pinch both faces share: where it is high the two fronts meet early and cut the band,
+  // while between pinches the glue stays thick, so it breaks into chunky islands that shrink and vanish one by one
+  const own = 0.5 + 0.5 * noise1(s * 0.62 + seed, seed);
+  const pinch = 0.5 + 0.5 * noise1(s * 1.1 + SEED[id] * 13, 77);
+  const k = 0.5 + 0.4 * own + 0.9 * pinch ** 1.5; // 0.5..1.8
+  const b = bridge * 1.2;
   const tooth = 0.07 * Math.max(0, Math.sin(s * 9.3 + seed)) * clamp(bridge * 4) * (1 - clamp((bridge - 0.85) / 0.15));
-  return clamp(b * k * g * 0.5 + tooth, 0, g);
+  // every point is bridged by bridge 1
+  return clamp(Math.max(b * k * g * 0.5 + tooth, 0.5 * g * ss01((bridge - 0.72) / 0.28)), 0, g);
+};
+const ss01 = (x: number) => {
+  const u = clamp(x);
+  return u * u * (3 - 2 * u);
 };

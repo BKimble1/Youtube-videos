@@ -4,19 +4,26 @@
 //   Applicator: a compact syringe-type applicator for the teal adhesive (NOT a consumer glue tube): blunt steel cannula
 //     (32 mm, 1.3 mm diameter, a slight bend 6 mm from the tip), clear barrel (10.4 x 40 mm) showing the gel whose level
 //     drops with the plunger travel, finger flange, white plunger rod and thumb pad, dark rubber stopper. The surgeon
-//     holds it in a syringe grip: the index curled round the flange, the thumb on the pad.
-//   Clamp: a pointed reduction clamp (Weber type): two curved jaws bowing out to the right of the bone and ending in
-//     small points, a box joint 35 mm from the tips, two handles running down-right to a pair of finger rings (thumb in
-//     the upper ring, ring finger in the lower one) with a ratchet between them.
+//     holds it in a syringe grip: the index along the barrel, the middle finger under the flange, the thumb on the pad.
+//   Probe (V2): a slim positioning probe / pusher: a fine steel shaft (2.2 mm) tapering over its last 9 mm to a small
+//     rounded point, a turned ferrule and collar, and a ribbed steel handle (9.6 mm thick, 92 mm long); 156 mm overall.
+//     The surgeon's left hand holds it in a precision (pencil) grip at the front of the handle.
+//
+// Both rise off the bone with `lift` (liftXf: they back away along their axis, drift a little toward the lower right,
+// away from the key light, and grow slightly as they come up toward the lens). Their contact shadows on the bone
+// (ProbeShadow, AppShadow) are drawn by the scene in the bone layer: they meet the tip at contact and separate, soften
+// and fade as it lifts.
 //
 // Weird Crew finish: navy ink contours (constant on-screen width: non-scaling strokes, so the same art is crisp from
-// the extreme close-up of the cannula tip to the wide clinical shot), cel gradients lit from the upper left (LIGHT),
+// the extreme close-up of the tips to the wide clinical shot), cel gradients lit from the upper left (LIGHT),
 // small white glosses. No text, numbers or glyphs. Deterministic.
 import React from 'react';
-import {P, pt, add, sub, mul, nrm, perp, dir, len, lerpP, open} from '../core/geo';
+import {P, pt, add, sub, mul, nrm, perp, dir, open} from '../core/geo';
 import {mix, lit, shade} from '../core/color';
 import {C, INK} from './palette';
 import {clamp} from '../lib';
+import {uid} from '../core/ids';
+import {AppState2, ProbeState} from '../v2state';
 
 // ------------------------------------------------------------------------------------------------ shared drawing bits
 /** direction TOWARD the key light (upper left), as dc/shade LIGHT */
@@ -69,7 +76,28 @@ const STEEL_STOPS: [number, string][] = [
 ];
 
 // ------------------------------------------------------------------------------------------------ applicator
-export type AppState = {tip: P; ang: number; press: number; gel: number};
+/** the applicator's state (V1 shape; V2's AppState2 adds lift) */
+export type AppState = {tip: P; ang: number; press: number; gel: number; lift?: number};
+
+// ------------------------------------------------------------------------------------------------ lift
+/** An instrument rising off the bone: it backs away along its axis by `back` mm, drifts `drift` mm toward the lower
+ *  right (away from the key light) and grows by `rise` (it comes up toward the lens). The growth is about the grip, so
+ *  the hand that holds it keeps its size; the back-off makes up for the tip's growth, so the tip ends exactly `back`
+ *  mm back along the axis and `drift` mm to the lower right of its contact point. h = the tip's height (mm) at lift 1,
+ *  for the contact shadow. */
+export const LIFT = {back: 6, drift: 3, rise: 0.035, h: 5};
+const DRIFT: P = nrm(pt(1, 1));
+export type LiftXf = {l: number; k: number; G: P; off: P; map: (p: P) => P; svg: string | undefined};
+/** G = the grip point (unlifted), ax = unit axis from the tip toward the handle, gripDist = the tip's distance behind
+ *  the grip along the axis */
+export const liftXf = (G: P, ax: P, gripDist: number, lift: number): LiftXf => {
+  const l = clamp(lift);
+  const k = 1 + LIFT.rise * l;
+  const off = add(mul(ax, LIFT.back * l + (k - 1) * gripDist), mul(DRIFT, LIFT.drift * l));
+  const map = (p: P) => add(add(G, mul(sub(p, G), k)), off);
+  const svg = l < 1e-5 ? undefined : `translate(${Pf(add(G, off))}) scale(${k.toFixed(5)}) translate(${Pf(mul(G, -1))})`;
+  return {l, k, G, off, map, svg};
+};
 
 /** applicator dimensions (mm along the instrument from the cannula tip, s) */
 export const APP = {
@@ -110,13 +138,21 @@ const stopperS = (press: number) => APP.in0 + APP.inLen * (1 - clamp(press));
  *  (radians, atan2 convention, y down; the hand's axis lies along it); padBack = the centre of the thumb pad's back
  *  face, where the thumb presses; flangeS / padBackS = their arc lengths from the tip. */
 export const APP_GRIP = {s: (APP.barrelEnd + APP.flangeEnd) / 2};
+/** the applicator's lift transform (about the flange) */
+export const appLift = (st: AppState): LiftXf => {
+  const ax = appAxis(st);
+  const G = ax.at(APP_GRIP.s);
+  return liftXf(G, ax.dMain, Math.max(0, (G.x - st.tip.x) * ax.dMain.x + (G.y - st.tip.y) * ax.dMain.y), st.lift ?? 0);
+};
 export const appGrip = (st: AppState): {p: P; ang: number; padBack: P; flangeS: number; padBackS: number} => {
   const ax = appAxis(st);
+  const lx = appLift(st);
   const sPB = stopperS(st.press) + APP.stopT + APP.rod + APP.padT;
-  return {p: ax.at(APP_GRIP.s), ang: st.ang + Math.PI, padBack: ax.at(sPB), flangeS: APP_GRIP.s, padBackS: sPB};
+  return {p: lx.map(ax.at(APP_GRIP.s)), ang: st.ang + Math.PI, padBack: lx.map(ax.at(sPB)), flangeS: APP_GRIP.s, padBackS: sPB};
 };
 
-export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> = ({id, s: st, shadow = true}) => {
+export const Applicator: React.FC<{id: string; s: AppState}> = ({id, s: st}) => {
+  const lx = appLift(st);
   const {Bp, dTip, dMain: dMainV, at} = appAxis(st);
   const r = APP.r;
   const angM = deg(st.ang);
@@ -187,48 +223,8 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
   // the droplet, in the tip frame (x along the tip direction toward the barrel; the drop swells out on -x)
   const dropD = `M${f(bulbR * 0.75)} ${f(-r * 0.62)}C${f(bulbR * 0.2)} ${f(-bulbR * 0.95)} ${f(-bulbR * 1.15)} ${f(-bulbR * 1.02)} ${f(-bulbR * 1.2)} 0C${f(-bulbR * 1.15)} ${f(bulbR * 1.02)} ${f(bulbR * 0.2)} ${f(bulbR * 0.95)} ${f(bulbR * 0.75)} ${f(r * 0.62)}Z`;
 
-  // the cannula's shadow on the wound: converges to the tip (contact), softens and fades as the shaft rises
-  const shadowEl = (() => {
-    if (!shadow) return null;
-    const away = mul(LIGHT, -1);
-    const pts: P[] = [];
-    const N = 10;
-    const ws: number[] = [];
-    for (let i = 0; i <= N; i++) {
-      const s = (APP.cannula + 4) * (i / N);
-      pts.push(add(at(s), mul(away, 0.08 + s * 0.085)));
-      ws.push(r * (0.85 + s * 0.035));
-    }
-    const left: P[] = [], right: P[] = [];
-    for (let i = 0; i <= N; i++) {
-      const t = nrm(sub(pts[Math.min(N, i + 1)], pts[Math.max(0, i - 1)]));
-      const n = perp(t);
-      left.push(add(pts[i], mul(n, ws[i])));
-      right.push(add(pts[i], mul(n, -ws[i])));
-    }
-    const d = `M${left.map(Pf).join('L')}L${[...right].reverse().map(Pf).join('L')}Z`;
-    const g0 = at(0), g1 = at(APP.cannula);
-    return (
-      <g>
-        <defs>
-          <filter id={id_('shf')} x="-25%" y="-25%" width="150%" height="150%">
-            <feGaussianBlur stdDeviation={f(0.45)} />
-          </filter>
-          <linearGradient id={id_('shg')} gradientUnits="userSpaceOnUse" x1={f(g0.x)} y1={f(g0.y)} x2={f(g1.x)} y2={f(g1.y)}>
-            <stop offset="0" stopColor="#2E1A10" stopOpacity={0.5} />
-            <stop offset="0.14" stopColor="#2E1A10" stopOpacity={0.3} />
-            <stop offset="0.38" stopColor="#2E1A10" stopOpacity={0.1} />
-            <stop offset="0.6" stopColor="#2E1A10" stopOpacity={0} />
-          </linearGradient>
-        </defs>
-        <path d={d} fill={`url(#${id_('shg')})`} filter={`url(#${id_('shf')})`} />
-      </g>
-    );
-  })();
-
   return (
-    <g>
-      {shadowEl}
+    <g transform={lx.svg}>
       <defs>
         <CylGrad id={id_('fe')} r={1.12} vs={vs} stops={STEEL_STOPS} />
         <CylGrad id={id_('hb')} r={3.7} vs={vs} stops={[[0, '#FFFFFF'], [0.25, lit(C.barrel, 0.5)], [0.6, C.barrel], [0.9, mix(C.barrel, C.steelDeep, 0.45)], [1, mix(C.barrel, C.steelDeep, 0.25)]]} />
@@ -340,106 +336,6 @@ export const Applicator: React.FC<{id: string; s: AppState; shadow?: boolean}> =
   );
 };
 
-// ------------------------------------------------------------------------------------------------ clamp
-export type ClampState = {a: P; b: P; open: number; lift: number};
-
-/** clamp dimensions (mm) */
-export const CLAMP = {
-  joint: 32, // tips -> box joint
-  bendHandle: -0.06, // the handles' turn (rad) from the jaws' axis: they run on to the right, about level, to the near hand
-  handle: 56, // joint -> ring centres along the handles
-  ringOff: 13.2, // each ring centre's offset across the handles' midline
-  ringR: 10.6,
-  ringIn: 8.0, // a gloved thumb / finger fits through
-  openMax: 0.24, // jaw rotation at open = 1 (rad)
-  liftDist: 135,
-};
-
-/** the clamp's frame: tips' midpoint, unit axis toward the joint (away from the bone), unit a -> b, half spread */
-const clampFrame = (st: ClampState) => {
-  const ab = nrm(sub(st.b, st.a));
-  const ax = pt(ab.y, -ab.x);
-  const h = len(sub(st.b, st.a)) / 2;
-  const hd = pt(Math.cos(CLAMP.bendHandle), Math.sin(CLAMP.bendHandle)); // handle direction in the frame
-  const hdW = add(mul(ax, hd.x), mul(ab, hd.y)); // ... in the world
-  const off = mul(hdW, CLAMP.liftDist * clamp(st.lift));
-  const m = add(lerpP(st.a, st.b, 0.5), off);
-  const W = (q: P): P => add(m, add(mul(ax, q.x), mul(ab, q.y)));
-  return {ab, ax, h, hd, hdW, m, W};
-};
-const rotAbout = (q: P, c: P, a: number) => {
-  const d = sub(q, c);
-  return add(c, pt(d.x * Math.cos(a) - d.y * Math.sin(a), d.x * Math.sin(a) + d.y * Math.cos(a)));
-};
-/** the rings' centres in the world (with the jaws' opening): `upper` belongs to jaw b's piece (the thumb's ring, on the
- *  far side of the handles), `lower` to jaw a's piece (the ring finger's); `hd` = the handles' direction from the joint
- *  toward the rings; `joint` = the box joint */
-export const clampRings = (st: ClampState) => {
-  const F = clampFrame(st);
-  const th = CLAMP.openMax * clamp(st.open);
-  const J = pt(CLAMP.joint, 0);
-  const hn = perp(F.hd);
-  const ringAt = (sg: number) => {
-    // piece of jaw a (sg -1) carries the ring on the +hn side, and rotates by +th when opening
-    const a = th * (sg < 0 ? 1 : -1);
-    return F.W(rotAbout(add(J, add(mul(F.hd, CLAMP.handle), mul(hn, CLAMP.ringOff * -sg))), J, a));
-  };
-  const lower = ringAt(-1);
-  const upper = ringAt(1);
-  return {upper, lower, hd: F.hdW, joint: F.W(J), mid: lerpP(upper, lower, 0.5)};
-};
-
-/** Where the surgeon's left hand holds the clamp (a ring grip seen from above): p = midway between the two finger rings,
- *  ang = the handles' direction from the rings toward the box joint (radians); the thumb goes through the upper ring,
- *  the ring finger through the lower one, the index lies along the shank toward the joint. */
-/** (kept for compatibility) the grip's distance from the box joint along the handles */
-export const CLAMP_GRIP = {d: CLAMP.handle, turn: 0};
-export const clampGrip = (st: ClampState): {p: P; ang: number; upper: P; lower: P} => {
-  const R = clampRings(st);
-  return {p: R.mid, ang: Math.atan2(-R.hd.y, -R.hd.x), upper: R.upper, lower: R.lower};
-};
-/** the ring's two concentric outlines (annulus, even-odd) */
-const ringPath = (c: P, R1: number, R0: number) =>
-  `M${f(c.x + R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x - R1)} ${f(c.y)}A${f(R1)} ${f(R1)} 0 1 0 ${f(c.x + R1)} ${f(c.y)}Z M${f(c.x + R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x - R0)} ${f(c.y)}A${f(R0)} ${f(R0)} 0 1 1 ${f(c.x + R0)} ${f(c.y)}Z`;
-/** one finger ring redrawn over a digit that passes down through it: the ring's half on the far side of the line
- *  through its centre perpendicular to `toward` (the half the digit's tip dips under) */
-export const ClampRingOver: React.FC<{id: string; c: P; toward: P; near?: {c: P; r: number}}> = ({id, c, toward, near}) => {
-  const t = nrm(toward);
-  const n = perp(t);
-  const B = 60;
-  const half = `M${Pf(add(c, mul(n, B)))}L${Pf(add(add(c, mul(n, B)), mul(t, B)))}L${Pf(add(add(c, mul(n, -B)), mul(t, B)))}L${Pf(add(c, mul(n, -B)))}Z`;
-  // only round the digit's tip (`near`), so neighbouring digits that lie over the ring keep their place
-  const nearD = near ? `M${f(near.c.x + near.r)} ${f(near.c.y)}A${f(near.r)} ${f(near.r)} 0 1 0 ${f(near.c.x - near.r)} ${f(near.c.y)}A${f(near.r)} ${f(near.r)} 0 1 0 ${f(near.c.x + near.r)} ${f(near.c.y)}Z` : null;
-  const d = ringPath(c, CLAMP.ringR, CLAMP.ringIn);
-  return (
-    <g>
-      <defs>
-        <clipPath id={`${id}-c`}>
-          <path d={half} />
-        </clipPath>
-        {nearD && (
-          <clipPath id={`${id}-n`}>
-            <path d={nearD} />
-          </clipPath>
-        )}
-        <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={f(c.x - CLAMP.ringR * 0.7)} y1={f(c.y - CLAMP.ringR * 0.8)} x2={f(c.x + CLAMP.ringR * 0.7)} y2={f(c.y + CLAMP.ringR * 0.8)}>
-          <stop offset="0" stopColor={C.steelLit} />
-          <stop offset="0.35" stopColor={C.steel} />
-          <stop offset="0.75" stopColor={C.steelDeep} />
-          <stop offset="1" stopColor={mix(C.steelDeep, C.steel, 0.5)} />
-        </linearGradient>
-      </defs>
-      <g clipPath={nearD ? `url(#${id}-n)` : undefined}>
-      <g clipPath={`url(#${id}-c)`}>
-        <Under d={d} fillRule="evenodd" />
-        <path d={d} fill={`url(#${id}-g)`} fillRule="evenodd" />
-        <path d={`M${Pf(add(c, mul(dir(-2.75), CLAMP.ringR * 0.86)))}A${f(CLAMP.ringR * 0.86)} ${f(CLAMP.ringR * 0.86)} 0 0 1 ${Pf(add(c, mul(dir(-1.35), CLAMP.ringR * 0.86)))}`} fill="none" stroke="#FFFFFF" strokeWidth={f(0.8)} strokeLinecap="round" />
-      </g>
-      </g>
-    </g>
-  );
-};
-
 /** a curved tapered bar from a centreline with half widths: outline and the lit / shadow bands (a steel rod's form) */
 const bar = (c: P[], hw: number[], L: P, pointed = false) => {
   const n = c.length;
@@ -469,129 +365,236 @@ const SteelBar: React.FC<{b: ReturnType<typeof bar>}> = ({b}) => (
   </g>
 );
 
-export const Clamp: React.FC<{id: string; s: ClampState; shadow?: boolean}> = ({id, s: st, shadow = true}) => {
-  const F = clampFrame(st);
-  const h = F.h;
-  const th = CLAMP.openMax * clamp(st.open);
-  const J = pt(CLAMP.joint, 0);
-  // jaw centrelines in the frame (u toward the joint, v along a -> b), for the closed clamp, from the joint to the tip
-  const jaw = (sg: number): P[] => [
-    pt(CLAMP.joint + 2, sg * 1.4),
-    pt(CLAMP.joint - 5, sg * 4.6),
-    pt(CLAMP.joint - 12, sg * (h + 5.2)),
-    pt(15, sg * (h + 8.4)),
-    pt(7.4, sg * (h + 8.2)),
-    pt(2.6, sg * (h + 5.0)),
-    pt(0.55, sg * (h + 2.0)),
-    pt(0, sg * h),
-  ];
-  const jawW = [2.2, 2.1, 1.95, 1.75, 1.5, 1.15, 0.7, 0.05];
-  // handles: from the joint along hd, each to its ring (piece 1 = jaw a (-v) + the handle on the +n side, crossed)
-  const hn = perp(F.hd);
-  const handle = (sg: number): P[] => {
-    const at = (d: number, o: number) => add(J, add(mul(F.hd, d), mul(hn, o * sg)));
-    return [at(-3, 0), at(9, 2.4), at(23, 5.6), at(36, 8.6), at(CLAMP.handle - CLAMP.ringR * 0.92, CLAMP.ringOff - 2.4)];
-  };
-  const ringC = (sg: number) => add(J, add(mul(F.hd, CLAMP.handle), mul(hn, CLAMP.ringOff * sg)));
-  const handleW = [2.4, 2.4, 2.25, 2.1, 2.0];
-  // world mapping (with each piece's rotation for the opening)
-  const piece = (sg: number) => {
-    const a = th * (sg < 0 ? 1 : -1); // jaw a (sg -1) rotates +th
-    const R = (q: P) => F.W(rotAbout(q, J, a));
-    const jc = jaw(sg).map(R);
-    const hc = handle(-sg).map(R);
-    const rc = R(ringC(-sg));
-    return {jc, hc, rc, a};
-  };
-  const p1 = piece(-1);
-  const p2 = piece(1);
-  const jawBar = (pc: typeof p1) => bar(pc.jc, jawW, LIGHT, true);
-  const handleBar = (pc: typeof p1) => bar(pc.hc, handleW, LIGHT);
-  const ringD = ringPath;
-  // ratchet: a toothed bar on each handle reaching across to the other one, ahead of the rings
-  const ratchet = (pc: typeof p1, sg: number) => {
-    const base = (d: number, o: number) => {
-      const q = add(J, add(mul(F.hd, d), mul(hn, o * sg)));
-      return F.W(rotAbout(q, J, pc.a));
-    };
-    const d0 = 36.5;
-    const outline = [base(d0, 8.4), base(d0, -3.2), base(d0 + 2.3, -3.2), base(d0 + 2.3, 8.4)];
-    const teeth: P[] = [];
-    for (let i = 0; i <= 5; i++) teeth.push(base(d0 + (sg > 0 ? 2.3 : 0) + (sg > 0 ? 0.55 : -0.55), 7.6 - i * 1.5), base(d0 + (sg > 0 ? 2.3 : 0), 7.0 - i * 1.5));
-    return {d: `M${outline.map(Pf).join('L')}Z`, teeth: `M${teeth.map(Pf).join('L')}`};
-  };
-  const r1 = ratchet(p1, -1);
-  const r2 = ratchet(p2, 1);
-  const Jw = F.W(J);
-  const boxAng = deg(Math.atan2(F.ax.y, F.ax.x));
-  const ba = Math.atan2(F.ax.y, F.ax.x);
-  const Lb = pt(LIGHT.x * Math.cos(ba) + LIGHT.y * Math.sin(ba), -LIGHT.x * Math.sin(ba) + LIGHT.y * Math.cos(ba));
-  const pieceEl = (pc: typeof p1, k: string, rt: ReturnType<typeof ratchet>) => {
-    const jb = jawBar(pc);
-    const hb = handleBar(pc);
-    return (
-      <g key={k}>
-        <Under d={jb.outline} />
-        <Under d={hb.outline} />
-        <Under d={rt.d} />
-        <Under d={ringD(pc.rc, CLAMP.ringR, CLAMP.ringIn)} fillRule="evenodd" />
-        <SteelBar b={jb} />
-        <SteelBar b={hb} />
-        <path d={rt.d} fill={C.steel} />
-        <path d={rt.teeth} fill="none" stroke={C.steelDeep} strokeWidth={INST_INK * 0.35} vectorEffect={NS} />
-        <path d={ringD(pc.rc, CLAMP.ringR, CLAMP.ringIn)} fill={`url(#${id}-rg)`} fillRule="evenodd" />
-        {/* ring gloss: a crisp arc on the lit upper-left and a soft one on the inner lower-right */}
-        <path d={`M${Pf(add(pc.rc, mul(dir(-2.75), CLAMP.ringR * 0.86)))}A${f(CLAMP.ringR * 0.86)} ${f(CLAMP.ringR * 0.86)} 0 0 1 ${Pf(add(pc.rc, mul(dir(-1.35), CLAMP.ringR * 0.86)))}`} fill="none" stroke="#FFFFFF" strokeWidth={f(0.8)} strokeLinecap="round" />
-        <path d={`M${Pf(add(pc.rc, mul(dir(0.15), CLAMP.ringIn * 1.12)))}A${f(CLAMP.ringIn * 1.12)} ${f(CLAMP.ringIn * 1.12)} 0 0 1 ${Pf(add(pc.rc, mul(dir(1.5), CLAMP.ringIn * 1.12)))}`} fill="none" stroke={C.steelLit} strokeWidth={f(0.6)} strokeLinecap="round" opacity={0.8} />
-      </g>
-    );
-  };
-  // contact shadows: the jaws lie close over the bone, the points press into it
-  const shadowEl = shadow ? (
-    <g>
-      <defs>
-        <filter id={`${id}-sf`} x="-25%" y="-25%" width="150%" height="150%">
-          <feGaussianBlur stdDeviation="0.9" />
-        </filter>
-      </defs>
-      <g filter={`url(#${id}-sf)`} opacity={0.38 * (1 - clamp(st.lift * 2.5))}>
-        {[p1, p2].map((pc, i) => (
-          <path key={i} d={open(pc.jc.map((q, j) => add(q, mul(LIGHT, -(0.6 + (pc.jc.length - 1 - j) * 0.25)))), 0.9)} fill="none" stroke="#0B1620" strokeWidth={f(3.2)} strokeLinecap="round" />
-        ))}
-      </g>
-    </g>
-  ) : null;
+
+/** a band between two fractions of a solid of revolution's radius on one side (lit side = +1 * vs): [[u, r], ...] */
+const bandD = (pr: [number, number][], k0: number, k1: number, side: number) => {
+  const a = pr.map(([u, r]) => `${f(u)} ${f(side * k0 * r)}`);
+  const b = [...pr].reverse().map(([u, r]) => `${f(u)} ${f(side * k1 * r)}`);
+  return `M${a.join('L')}L${b.join('L')}Z`;
+};
+/** the light direction in an axis frame rotated by ang */
+const lightIn = (ang: number) => pt(LIGHT.x * Math.cos(ang) + LIGHT.y * Math.sin(ang), -LIGHT.x * Math.sin(ang) + LIGHT.y * Math.cos(ang));
+
+// ------------------------------------------------------------------------------------------------ probe
+/** probe dimensions (mm along the instrument from the tip, s) */
+export const PROBE = {
+  taper: 9, // the point tapers to the full shaft over this length
+  r: 1.1, // shaft radius (2.2 mm)
+  shaftEnd: 54.6,
+  ferrule: 61, // a turned cone from the shaft up to the collar
+  collar: 63.8,
+  h0: 63.6, // the handle (ribbed at its front, where the fingertips hold it)
+  h1: 156.7,
+  rH: 4.8,
+  rib0: 66.4,
+  rib1: 103,
+  ribStep: 2.2,
+  /** where the fingertips pinch it (the grip point; the lift grows about it) */
+  pinch: 71,
+};
+const SHAFT_PR: [number, number][] = [
+  [0, 0],
+  [0.05, 0.12],
+  [0.2, 0.2],
+  [0.55, 0.3],
+  [1.4, 0.45],
+  [2.8, 0.63],
+  [4.8, 0.84],
+  [6.9, 1.0],
+  [PROBE.taper, PROBE.r],
+  [PROBE.shaftEnd, PROBE.r],
+];
+const FERRULE_PR: [number, number][] = [
+  [PROBE.shaftEnd - 0.4, PROBE.r],
+  [55.4, 1.32],
+  [59.8, 2.42],
+  [PROBE.ferrule + 0.1, 2.6],
+];
+const HANDLE_PR: [number, number][] = [
+  [PROBE.h0, 3.7],
+  [64.1, 4.45],
+  [64.8, PROBE.rH],
+  [104, PROBE.rH],
+  [106.2, 4.6],
+  [150, 4.42],
+  [153.6, 4.26],
+  [155.3, 3.85],
+  [156.2, 2.95],
+  [156.6, 1.7],
+  [PROBE.h1, 0],
+];
+/** the probe's radius at s (for the contact shadow) */
+const probeR = (s: number) => {
+  for (let i = 0; i < SHAFT_PR.length - 1; i++) {
+    const [u0, r0] = SHAFT_PR[i], [u1, r1] = SHAFT_PR[i + 1];
+    if (s <= u1) return r0 + ((r1 - r0) * clamp((s - u0) / (u1 - u0 || 1)));
+  }
+  return PROBE.r;
+};
+
+/** the probe's axis: a point at arc length s from the tip (unlifted) and the unit axis toward the handle */
+export const probeAxis = (st: ProbeState) => {
+  const ax = dir(st.ang);
+  return {ax, at: (s: number): P => add(st.tip, mul(ax, s))};
+};
+export const probeLift = (st: ProbeState): LiftXf => {
+  const pa = probeAxis(st);
+  return liftXf(pa.at(PROBE.pinch), pa.ax, PROBE.pinch, st.lift);
+};
+/** Where the surgeon's left hand holds the probe (a precision grip): p = the pinch point on the axis (the index pad
+ *  rests on top of the handle there, the thumb and middle fingertips press its sides), ang = the direction from the
+ *  handle toward the tip (rad), ax = the unit axis from the tip toward the handle, s = the pinch's arc length, k = the
+ *  lift's growth. Lifted with the instrument. */
+export const probeGrip = (st: ProbeState): {p: P; ang: number; ax: P; s: number; k: number} => {
+  const pa = probeAxis(st);
+  const lx = probeLift(st);
+  return {p: lx.map(pa.at(PROBE.pinch)), ang: st.ang + Math.PI, ax: pa.ax, s: PROBE.pinch, k: lx.k};
+};
+
+export const Probe: React.FC<{id: string; s: ProbeState}> = ({id, s: st}) => {
+  const lx = probeLift(st);
+  const Lf = lightIn(st.ang);
+  const vs = Lf.y >= 0 ? 1 : -1; // the lit edge's side in the axis frame
+  const id_ = (k: string) => `${id}-${k}`;
+  const shaftD = profile(SHAFT_PR);
+  const ferD = profile(FERRULE_PR);
+  const colD = rrect(PROBE.ferrule, PROBE.collar, -3.3, 3.3, 0.7);
+  const hanD = profile(HANDLE_PR);
+  const ribs: number[] = [];
+  for (let u = PROBE.rib0; u <= PROBE.rib1; u += PROBE.ribStep) ribs.push(u);
+  const R = PROBE.rH;
   return (
-    <g>
-      <defs>
-        <linearGradient id={`${id}-rg`} gradientUnits="objectBoundingBox" x1="0.15" y1="0.1" x2="0.85" y2="0.9">
-          <stop offset="0" stopColor={C.steelLit} />
-          <stop offset="0.35" stopColor={C.steel} />
-          <stop offset="0.75" stopColor={C.steelDeep} />
-          <stop offset="1" stopColor={mix(C.steelDeep, C.steel, 0.5)} />
-        </linearGradient>
-      </defs>
-      {shadowEl}
-      {pieceEl(p2, 'p2', r2)}
-      {pieceEl(p1, 'p1', r1)}
-      {/* the box joint over both pieces, with its pivot pin (drawn in the joint's own frame, lit from the upper left) */}
-      <g transform={`translate(${Pf(Jw)}) rotate(${f(boxAng)})`}>
+    <g transform={lx.svg}>
+      <g transform={`translate(${Pf(st.tip)}) rotate(${f(deg(st.ang))})`}>
         <defs>
-          <linearGradient id={`${id}-bx`} gradientUnits="userSpaceOnUse" x1={f(Lb.x * 5)} y1={f(Lb.y * 5)} x2={f(-Lb.x * 5)} y2={f(-Lb.y * 5)}>
-            <stop offset="0" stopColor={C.steelLit} />
-            <stop offset="0.45" stopColor={C.steel} />
-            <stop offset="1" stopColor={C.steelDeep} />
-          </linearGradient>
+          <CylGrad id={id_('sh')} r={PROBE.r} vs={vs} stops={STEEL_STOPS} />
+          <CylGrad id={id_('fe')} r={2.6} vs={vs} stops={STEEL_STOPS} />
+          <CylGrad id={id_('co')} r={3.3} vs={vs} stops={STEEL_STOPS} />
+          <CylGrad id={id_('ha')} r={R} vs={vs} stops={STEEL_STOPS.map(([o, c]) => [o, mix(c, C.steelDeep, 0.08)] as [number, string])} />
+          <clipPath id={id_('hc')}>
+            <path d={hanD} />
+          </clipPath>
         </defs>
-        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={INK} stroke={INK} strokeWidth={INST_INK} vectorEffect={NS} />
-        <path d={rrect(-4.6, 4.6, -3.9, 3.9, 1.6)} fill={`url(#${id}-bx)`} />
-        <path d={`M${f(-3.4 + Lb.x * 0.6)} ${f(Lb.y > 0 ? 3.0 : -3.0)}L${f(3.4 + Lb.x * 0.6)} ${f(Lb.y > 0 ? 3.0 : -3.0)}`} stroke="#FFFFFF" strokeWidth={0.5} strokeLinecap="round" opacity={0.7} />
-        <circle cx="0" cy="0" r="1.75" fill={C.steelDeep} />
-        <circle cx="0" cy="0" r="1.75" fill="none" stroke={INK} strokeWidth={INST_INK * 0.45} vectorEffect={NS} />
-        <circle cx={f(Lb.x * 0.18)} cy={f(Lb.y * 0.18)} r="1.25" fill={C.steel} />
-        <circle cx={f(Lb.x * 0.6)} cy={f(Lb.y * 0.6)} r="0.45" fill="#FFFFFF" opacity={0.9} />
+        {/* one ink silhouette round the whole instrument */}
+        <Under d={hanD} />
+        <Under d={colD} />
+        <Under d={ferD} />
+        <Under d={shaftD} />
+        {/* handle: satin steel, ribbed at the front where the fingertips hold it */}
+        <path d={hanD} fill={`url(#${id_('ha')})`} />
+        <path d={bandD(HANDLE_PR, 0.34, 0.6, vs)} fill="#FFFFFF" opacity={0.75} />
+        <g clipPath={`url(#${id_('hc')})`}>
+          {ribs.map((u, i) => (
+            <g key={i}>
+              <path d={rect(u - 0.38, u + 0.38, -R, R)} fill={shade(C.steelDeep, 0.15)} opacity={0.62} />
+              <path d={rect(u + 0.38, u + 0.78, -R, R)} fill="#FFFFFF" opacity={0.32} />
+            </g>
+          ))}
+          {/* a soft reflected rim on the shadow side, and the smooth body's long gloss */}
+          <path d={bandD(HANDLE_PR, 0.74, 0.88, -vs)} fill={C.steelLit} opacity={0.32} />
+          <path d={rect(PROBE.rib1 + 4, 150, vs * R * 0.42, vs * R * 0.56)} fill="#FFFFFF" opacity={0.9} />
+        </g>
+        <Line d={`M${f(PROBE.h0 + 0.5)} ${f(-3.9)}L${f(PROBE.h0 + 0.5)} ${f(3.9)}`} w={INST_INK * 0.3} opacity={0.55} />
+        {/* collar and ferrule */}
+        <path d={colD} fill={`url(#${id_('co')})`} />
+        <path d={rect(PROBE.ferrule + 0.5, PROBE.collar - 0.6, vs * 1.0, vs * 2.2)} fill="#FFFFFF" opacity={0.8} />
+        <path d={ferD} fill={`url(#${id_('fe')})`} />
+        <path d={bandD(FERRULE_PR, 0.3, 0.55, vs)} fill="#FFFFFF" opacity={0.85} />
+        <Line d={`M${f(PROBE.ferrule)} ${f(-2.6)}L${f(PROBE.ferrule)} ${f(2.6)}`} w={INST_INK * 0.3} opacity={0.5} />
+        {/* the shaft and its point: cel bands that follow the taper */}
+        <path d={shaftD} fill={C.steel} />
+        <path d={bandD(SHAFT_PR, 0.25, 1.0, -vs)} fill={C.steelDeep} opacity={0.78} />
+        <path d={bandD(SHAFT_PR, -0.05, 0.25, -vs)} fill={mix(C.steel, C.steelDeep, 0.4)} opacity={0.5} />
+        <path d={bandD(SHAFT_PR, 0.72, 0.88, -vs)} fill={C.steelLit} opacity={0.45} />
+        <path d={bandD(SHAFT_PR, 0.16, 0.64, vs)} fill={C.steelLit} opacity={0.8} />
+        <path d={bandD(SHAFT_PR, 0.3, 0.5, vs)} fill="#FFFFFF" opacity={0.95} />
+        {/* the point's polished facet catches the light: a short bright glint just behind the tip */}
+        <ellipse cx={f(1.5)} cy={f(vs * 0.18)} rx={f(0.75)} ry={f(0.11)} fill="#FFFFFF" opacity={0.9} />
       </g>
     </g>
   );
 };
 
+// ------------------------------------------------------------------------------------------------ contact shadows
+/** shadow offset (mm) per mm of height above the bone (the key light's elevation), and the direction it falls: away
+ *  from the upper-left key light, turned a little more toward screen-down (a stylised key a touch higher than LIGHT) so
+ *  an instrument that points up-left into the light still shows its shadow beside it rather than hidden beneath it */
+const SH_K = 0.8;
+const AWAY: P = nrm(add(mul(LIGHT, -1), pt(-0.22, 0.2)));
+const SHADOW_COL = '#2B170D';
+/** the soft cast shadow of an instrument's tip region on the bone (depth-0 world mm). axis(s) = the instrument's
+ *  centreline over the bone at arc length s from the tip (lifted), r(s) its radius; h0 = the tip's height above the
+ *  bone, slope = the shaft's rise per mm. At h0 = 0 the shadow meets the tip (contact) with a tight dark contact spot;
+ *  as the tip rises it slides off toward the lower right, widens, softens and fades. */
+const CastShadow: React.FC<{axis: (s: number) => P; r: (s: number) => number; s1: number; h0: number; slope: number; px: number; alpha: number}> = ({axis, r, s1, h0, slope, px, alpha}) => {
+  const id = uid('csh');
+  const N = 18;
+  const c: P[] = [];
+  const w: number[] = [];
+  for (let i = 0; i <= N; i++) {
+    const s = s1 * Math.pow(i / N, 1.4);
+    const h = h0 + slope * s;
+    c.push(add(axis(s), mul(AWAY, h * SH_K)));
+    w.push(Math.max(r(s) * 1.05 + 0.07 * h, 2.2 * px));
+  }
+  const T = c.map((_, i) => nrm(sub(c[Math.min(N, i + 1)], c[Math.max(0, i - 1)])));
+  const Nn = T.map(perp);
+  const left = c.map((p, i) => add(p, mul(Nn[i], w[i])));
+  const right = c.map((p, i) => add(p, mul(Nn[i], -w[i])));
+  // a round cap at the tip end
+  const cap: P[] = [];
+  for (let k = 1; k < 6; k++) {
+    const a = (k / 6) * Math.PI;
+    cap.push(add(c[0], add(mul(Nn[0], -Math.cos(a) * w[0]), mul(T[0], -Math.sin(a) * w[0]))));
+  }
+  const d = `M${[...right].reverse().map(Pf).join('L')}L${cap.map(Pf).join('L')}L${left.map(Pf).join('L')}Z`;
+  const blur = Math.max(1.6 * px, 0.03 + 0.09 * h0);
+  const xs = [...left, ...right].map((p) => p.x), ys = [...left, ...right].map((p) => p.y);
+  const m = blur * 3.2 + 0.2;
+  const box = {x: Math.min(...xs) - m, y: Math.min(...ys) - m, w: Math.max(...xs) - Math.min(...xs) + 2 * m, h: Math.max(...ys) - Math.min(...ys) + 2 * m};
+  const contact = clamp(1 - h0 / 0.7);
+  const cb = Math.max(1.2 * px, 0.04);
+  const cr = Math.max(r(0) + 0.3, 5.5 * px);
+  // the contact spot sits under the tip and the shaft just behind it (never ahead of the tip, toward the light)
+  const cc = add(add(axis(0), mul(T[0], cr * 0.95)), mul(AWAY, cr * 0.25));
+  const a0 = deg(Math.atan2(T[0].y, T[0].x));
+  return (
+    <g>
+      <defs>
+        <filter id={`${id}-f`} filterUnits="userSpaceOnUse" x={f(box.x)} y={f(box.y)} width={f(box.w)} height={f(box.h)}>
+          <feGaussianBlur stdDeviation={f(blur)} />
+        </filter>
+        <linearGradient id={`${id}-g`} gradientUnits="userSpaceOnUse" x1={f(c[0].x)} y1={f(c[0].y)} x2={f(c[N].x)} y2={f(c[N].y)}>
+          <stop offset="0" stopColor={SHADOW_COL} stopOpacity={alpha} />
+          <stop offset="0.45" stopColor={SHADOW_COL} stopOpacity={alpha * 0.85} />
+          <stop offset="0.8" stopColor={SHADOW_COL} stopOpacity={alpha * 0.3} />
+          <stop offset="1" stopColor={SHADOW_COL} stopOpacity={0} />
+        </linearGradient>
+        {contact > 0 && (
+          <filter id={`${id}-cf`} filterUnits="userSpaceOnUse" x={f(cc.x - cr * 2 - cb * 4)} y={f(cc.y - cr * 2 - cb * 4)} width={f(cr * 4 + cb * 8)} height={f(cr * 4 + cb * 8)}>
+            <feGaussianBlur stdDeviation={f(cb)} />
+          </filter>
+        )}
+      </defs>
+      <path d={d} fill={`url(#${id}-g)`} filter={`url(#${id}-f)`} />
+      {contact > 0 && (
+        <ellipse cx={f(cc.x)} cy={f(cc.y)} rx={f(cr * 1.25)} ry={f(cr * 0.8)} transform={`rotate(${f(a0)} ${f(cc.x)} ${f(cc.y)})`} fill={SHADOW_COL} opacity={0.75 * contact} filter={`url(#${id}-cf)`} />
+      )}
+    </g>
+  );
+};
+
+/** The probe's contact shadow on the bone. Scene: the BONE layer (depth 0), with the probe state in depth-0 world mm
+ *  (NOT reprojected); px = world mm per screen pixel at depth 0. */
+export const ProbeShadow: React.FC<{st: ProbeState; px: number}> = ({st, px}) => {
+  const pa = probeAxis(st);
+  const lx = probeLift(st);
+  return <CastShadow axis={(s) => lx.map(pa.at(s))} r={(s) => probeR(s) * lx.k} s1={20} h0={LIFT.h * lx.l} slope={0.75} px={px} alpha={0.46 * (1 - 0.3 * lx.l)} />;
+};
+
+/** The applicator cannula's contact shadow on the bone (as ProbeShadow). */
+export const AppShadow: React.FC<{st: AppState2; px: number}> = ({st, px}) => {
+  const ax = appAxis(st);
+  const lx = appLift(st);
+  return <CastShadow axis={(s) => lx.map(ax.at(s))} r={() => APP.r * lx.k} s1={16} h0={LIFT.h * lx.l} slope={0.34} px={px} alpha={0.42 * (1 - 0.3 * lx.l)} />;
+};

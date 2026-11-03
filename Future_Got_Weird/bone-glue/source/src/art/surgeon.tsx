@@ -1,20 +1,23 @@
 // The surgeon: a seated Weird Crew surgeon at the RIGHT side of the hand table, turned in a 3/4 profile toward
 // screen-left and leaning over the wrist, in a scrub cap, a surgical mask, an opaque gown with long sleeves and
-// light-blue gloves. Right-handed: his far RIGHT hand holds the applicator in a syringe grip (the index curled round the
-// flange, the thumb on the plunger pad, the rest of the fingers closed), his near LEFT hand holds the pointed reduction
-// clamp by its handles (thumb through the upper ring, ring finger through the lower one, the index along the shank).
+// light-blue gloves. Right-handed: his far RIGHT hand holds the glue applicator in a syringe grip (the index along the
+// barrel, the middle finger under the flange, the thumb on the plunger pad, the ring and little fingers closed); his
+// near LEFT hand holds the positioning probe (V2) in a precision (pencil) grip: the handle lies in the web between the
+// thumb and the index knuckle, the index pad rests on top of its ribbed front, the thumb and middle fingertips press
+// its two sides from below, the ring and little fingers curl loosely under the palm.
 //
 // Construction (dc lineage: Death Clock -> Real Web Fluid -> Glass Climbing): an upright bust (head adapted from dc
 // Head: the crew's eyes and brows, the cap replaces the hair, the mask covers the nose, mouth and chin), dc Limb
 // sleeves (shoulder -> bent elbow -> wrist, the far arm behind the torso, the near arm in front of it), and gloved hands
 // adapted from dc Hand (the same palm and knuckle layout, slimmer life-size fingers, and an explicit pose per joint so
 // each digit can wrap the instrument; the instrument is sandwiched between the digits that pass behind it and the
-// palm and digits in front of it; digits that go down through the clamp's rings get the ring's far half drawn back
-// over their tips).
+// palm and digits in front of it). The elbow is placed so the forearm continues the hand's own axis (a wrist never
+// bends more than ~17 degrees).
 //
 // Space: the wrist plane in millimetres (anatomy.ts). The scene draws that plane with scale(s, s*k) (camera k: the
 // table squash of the high three-quarter view). The upright body is drawn with an inverse vertical scale 1/k about
 // his table-level anchor, so his proportions never squash; his hands and the instruments stay in the table plane.
+// A hand whose instrument leaves the field (appOn / probeOn -> 0) carries it back along the forearm toward his body.
 //
 // Every contour is a constant on-screen width (non-scaling strokes, 2.8 px showing, the weight of the patient's skin
 // line and the instruments); the face's drawn features scale with the face. No text or glyphs. Deterministic.
@@ -25,29 +28,16 @@ import {Blob, Capsule, LIGHT, Lin} from '../dc/shade';
 import {Limb} from '../dc/limb';
 import {lit, mix, shade} from '../dc/color';
 import {add, clamp, dot, fmt, len, lerpV, mul, norm, P as Pf, perp, rad, rot, sub, V} from '../dc/math';
-import {AppState, Applicator, ClampRingOver, ClampState, Clamp, appGrip, clampGrip} from './instruments';
+import {Applicator, Probe, appGrip, probeGrip} from './instruments';
+import {InstrState2} from '../v2state';
 
 // ------------------------------------------------------------------------------------------------ state
-export type SurgeonFace = {focus: number; smile: number; gx: number; gy: number; blink: number};
-export type SurgeonState = {
-  app: AppState;
-  clamp: ClampState;
-  /** 1 = the right hand grips the applicator; 0 = released and moved back toward the body */
-  appHeld: number;
-  /** 1 = the left hand grips the clamp; 0 = released and moved back toward the body */
-  clampHeld: number;
-  /** focus: concentration (brows lowered, eyes narrowed); smile: eye-smile above the mask (cheeks lift, lower lids
-   *  rise); gx, gy: gaze offset -1..1 (+ = screen right / down; looking at the wrist is about gx -0.5, gy 0.6);
-   *  blink 0..1 */
-  face: SurgeonFace;
-  /** the camera's table squash (the scene draws the wrist plane with scale(s, s*k)) */
-  k: number;
-  /** small body lean in degrees: + leans his upper body toward the table (screen-left), - sits back (about -8..8) */
-  lean: number;
-  /** optional (the story's instrument visibility); the hands stay on the instruments, so these are informational */
-  appOn?: number;
-  clampOn?: number;
-};
+export type SurgeonFace = InstrState2['face'];
+/** V2: the shared instrument state (v2state.InstrState2): app (AppState2), probe (ProbeState), appOn / probeOn (1 = in
+ *  the hand at the instrument; 0 = withdrawn with it toward the body, out of the field), face, lean (degrees, + leans
+ *  toward the table), k (the camera's table squash). Instrument tips are in the instrument layer's plane (the scene
+ *  reprojects them). */
+export type SurgeonState = InstrState2;
 
 // ------------------------------------------------------------------------------------------------ sizes, ink
 export const SURGEON = {
@@ -121,10 +111,14 @@ const nearestOn = (p: V, ps: V[]) => {
 // Hand coordinates (as dc Hand): u along the hand's axis from the wrist (in units of the hand length L), v across it,
 // positive toward the thumb. A digit is its joint chain in hand coordinates (MCP, PIP, DIP, tip; the thumb: CMC, MCP,
 // IP, tip) with a radius at each joint; seen from above, a flexed phalanx is simply a shorter (foreshortened) segment.
-// Each segment is drawn in front of the held object ('f') or behind it ('b').
-type Lay = 'b' | 'f' | 'F';
+// Each segment is drawn in front of the held object ('f') or behind it ('b'); 'F' digits lie over everything (an index
+// on top of an instrument); a thumb may also be 'm': over the back of the hand but under an object that lies over the
+// palm (objOverPalm: a probe resting in the web).
+type Lay = 'b' | 'f' | 'F' | 'm';
 type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]};
-export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean};
+/** thumbOver: the thumb is drawn over the palm; objOverPalm: the held object lies over the back of the hand (a probe
+ *  resting in the web), so it is drawn after the palm group and only the 'F' digits (and a front thumb) cover it */
+export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean; objOverPalm?: boolean};
 
 /** the back of the hand (dc palm, a touch slimmer: a life-size glove) */
 const PALM: [number, number][] = [
@@ -165,9 +159,9 @@ type GloveProps = {
   cuff: {dir: V; len: number; r0: number; r1: number};
   /** the held object (drawn between the 'b' and 'f' digits) */
   obj?: React.ReactNode;
-  /** drawn right after the thumb (a clamp ring's far half over the thumb's tip) */
+  /** drawn right after the thumb */
   thumbOverlay?: React.ReactNode;
-  /** drawn last (a clamp ring's far half over a finger that passes through it) */
+  /** drawn last */
   over?: React.ReactNode;
 };
 
@@ -302,7 +296,9 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   const thumbGroup = (
     <g>
       <g className={NSLINE}>
-        <Inked w={OUT}>{capsules(thumb.map((s) => ({...s, lay: pose.thumbLay})), 't', pose.thumbLay)}</Inked>
+        <Inked w={OUT} id={`${id}-th`} fade={pose.thumbLay === 'm' ? [{c: thumb[0].a, r: thumb[0].ra * 1.7}] : undefined}>
+          {capsules(thumb.map((s) => ({...s, lay: pose.thumbLay})), 't', pose.thumbLay)}
+        </Inked>
         {jointDeco(thumb.map((s) => ({...s, lay: pose.thumbLay})), 'tj', pose.thumbLay)}
       </g>
       {thumbOverlay}
@@ -317,37 +313,56 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   );
   const hasBack = fingers.some((sg) => sg.some((s) => s.lay === 'b'));
   const hasTop = fingers.some((sg) => sg.some((s) => s.lay === 'F'));
-  // the hand's own lines are constant on-screen width (NSLINE); the held object and the ring overlays keep their own
+  // the hand's own lines are constant on-screen width (NSLINE); the held object keeps its own
+  const backGroup = hasBack && (
+    <g className={NSLINE}>
+      <Inked w={OUT}>{fingerCaps('b')}</Inked>
+      {fingerDeco('b')}
+    </g>
+  );
+  const palmGroup = (
+    <g className={NSLINE}>
+      <Inked w={OUT}>
+        {cuffBody}
+        {palm}
+        {fingerCaps('f')}
+      </Inked>
+      {cuffDeco}
+      {palmDeco}
+      {fingerDeco('f')}
+    </g>
+  );
+  const topGroup = hasTop && (
+    <g className={NSLINE}>
+      <Inked w={OUT} id={`${id}-top`} fade={fingers.filter((sg) => sg.some((x) => x.lay === 'F')).map((sg) => ({c: sg[0].a, r: sg[0].ra * 1.5}))}>
+        {fingerCaps('F')}
+      </Inked>
+      {fingerDeco('F')}
+    </g>
+  );
+  if (pose.objOverPalm) {
+    return (
+      <g>
+        {backGroup}
+        {pose.thumbLay === 'b' && thumbGroup}
+        {palmGroup}
+        {pose.thumbLay === 'm' && thumbGroup}
+        {obj}
+        {pose.thumbLay === 'f' && thumbGroup}
+        {topGroup}
+        {over}
+      </g>
+    );
+  }
   return (
     <g>
-      {hasBack && (
-        <g className={NSLINE}>
-          <Inked w={OUT}>{fingerCaps('b')}</Inked>
-          {fingerDeco('b')}
-        </g>
-      )}
+      {backGroup}
       {pose.thumbLay === 'b' && thumbGroup}
       {obj}
       {pose.thumbLay === 'f' && !pose.thumbOver && thumbGroup}
-      <g className={NSLINE}>
-        <Inked w={OUT}>
-          {cuffBody}
-          {palm}
-          {fingerCaps('f')}
-        </Inked>
-        {cuffDeco}
-        {palmDeco}
-        {fingerDeco('f')}
-      </g>
+      {palmGroup}
       {pose.thumbLay === 'f' && pose.thumbOver && thumbGroup}
-      {hasTop && (
-        <g className={NSLINE}>
-          <Inked w={OUT} id={`${id}-top`} fade={fingers.filter((sg) => sg.some((x) => x.lay === 'F')).map((sg) => ({c: sg[0].a, r: sg[0].ra * 1.5}))}>
-            {fingerCaps('F')}
-          </Inked>
-          {fingerDeco('F')}
-        </g>
-      )}
+      {topGroup}
       {over}
     </g>
   );
@@ -363,22 +378,20 @@ const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
   const q = sub(p, wrist);
   return [dot(q, d) / L_H, dot(q, n) / (L_H * ts)];
 };
-const handPt = (wrist: V, ang: number, ts: 1 | -1, u: number, v: number): V => {
-  const d = dirDeg(ang);
-  return add(wrist, add(mul(d, u * L_H), mul(perp(d), v * L_H * ts)));
-};
 
 /** Syringe grip (right hand, back of the hand up, ts -1): the applicator runs along the hand's thumb-side groove
- *  (v 0.27), its flange at u 0.6 under the index's middle joint. The index curls round the flange's inner wing (its
- *  last joint passing under the barrel, the tip showing beyond it), the middle finger curls in beside it, the ring and
- *  little fingers close loosely; the thumb lies along the near side of the plunger rod with its pad on the plunger's
- *  thumb pad, ready to press. */
+ *  (v 0.27), its flange at u 0.64. The index lies along the top of the barrel toward the cannula (steering it), the
+ *  middle finger hooks under the barrel in front of the flange (its tip shows on the near side), the ring and little
+ *  fingers curl loosely (knuckle stubs, the folded phalanges tucked under); the thumb lies along the near side of the
+ *  plunger rod with its pad on the plunger's thumb pad, ready to press. */
 const FAR_UV = {u: 0.64, v: 0.272};
 /** a curled finger: knuckle (MCP), the middle joint (PIP) and the middle phalanx folding down under it, which from the
  *  high camera shows as a short, darker segment toward the bottom of the screen (`down`: screen-down in hand units) */
 const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075): Digit => ({
   j: [MCP[i], pip, [pip[0] + down[0] * fold, pip[1] + down[1] * fold]],
   r: fingerR(i).map((r) => r * 1.07),
+  // the folded middle phalanx tucks under the knuckle: only its edge shows below the stub
+  lay: ['f', 'b'],
 });
 const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
@@ -399,25 +412,37 @@ const farPose = (thumbTip: [number, number], down: [number, number]): GripPose =
   };
 };
 
-/** Ring grip (left hand, back of the hand up, ts +1): the clamp's handles run along the hand toward the box joint; the
- *  thumb's tip goes down through the upper ring, the ring finger through the lower ring, the middle finger curls
- *  between them, the index lies along the shank toward the joint and the little finger closes under. */
-const NEAR_MID = {u: 0.6, v: 0.06};
-const nearPose = (upper: [number, number], lower: [number, number], down: [number, number]): GripPose => {
-  const base: [number, number] = [0.1, 0.19];
-  const tt: [number, number] = [upper[0] - 0.012, upper[1] + 0.012];
+/** Precision (pencil) grip, left hand (ts +1, back of the hand up). The probe lies in the web between the thumb and
+ *  the index knuckle and runs forward to the fingertips: the index pad rests on top of the handle's ribbed front, the
+ *  thumb tip presses its far side and the middle fingertip its near side (both tucked under the steel), the ring and
+ *  little fingers curl loosely under the palm. The probe's line in hand coordinates: through PEN.p (the pinch) toward
+ *  the handle's end, turned PEN.tilt degrees off the hand's axis toward the thumb (it leaves over the web). The pose is
+ *  written in the probe's own frame: pc(a, t) = a mm toward the tip from the pinch, t mm across toward the thumb. */
+const PEN = {p: [0.71, 0.155] as [number, number], tilt: 14};
+const penFrame = () => {
+  const th = rad(PEN.tilt);
+  const hb: [number, number] = [-Math.cos(th), Math.sin(th)];
+  const td: [number, number] = [Math.sin(th), Math.cos(th)];
+  return (a: number, t: number): [number, number] => [PEN.p[0] + (-hb[0] * a + td[0] * t) / L_H, PEN.p[1] + (-hb[1] * a + td[1] * t) / L_H];
+};
+const penPose = (down: [number, number]): GripPose => {
+  const pc = penFrame();
   return {
     fingers: [
-      // the index runs between the two rings and along the shank toward the box joint
-      {j: [MCP[0], [0.62, 0.066], [0.745, 0.052], [0.838, 0.046]], r: fingerR(0), lay: ['F', 'F', 'F']},
-      // the middle finger curls down onto the lower ring's handle, the ring finger goes down through the lower ring
-      curled(1, [0.56, 0.01], down, 0.055),
-      {j: [MCP[2], [lower[0] - 0.05, lower[1] - 0.028], [lower[0], lower[1]]], r: fingerR(2)},
-      curled(3, [0.495, -0.132], down, 0.055),
+      // the index arches from its knuckle (beside the probe, ulnar) forward onto the top of the handle
+      {j: [MCP[0], pc(-24, -7), pc(-10, -2.6), pc(0.5, -0.4)], r: fingerR(0), lay: ['F', 'F', 'F']},
+      // the middle finger curls down beside it, its tip under the handle's near side
+      {j: [MCP[1], pc(-15, -19), pc(-5, -13.5), pc(-1.5, -8.5)], r: fingerR(1)},
+      // ring and little: curled loosely under the palm (knuckle stubs)
+      curled(2, pc(-17, -37), down, 0.06),
+      curled(3, pc(-21, -53), down, 0.055),
     ],
-    thumb: {j: [base, [0.3, 0.27], [0.47, (0.27 + tt[1]) / 2 + 0.02], tt], r: THUMB_R},
-    thumbLay: 'f',
-    thumbOver: true,
+    // the thumb grows from the radial edge of the hand over the back of the hand, under the probe at its knuckle (the
+    // probe rests in the web), its tip beside the index tip on the handle's far side
+    thumb: {j: [[0.13, 0.2], pc(-66, 8), pc(-34, 15), pc(-3, 9.6)], r: THUMB_R},
+    thumbLay: 'm',
+    thumbOver: false,
+    objOverPalm: true,
   };
 };
 
@@ -429,7 +454,7 @@ const screenDown = (ang: number, ts: 1 | -1, k: number): [number, number] => {
   const dn = norm({x: 0, y: 1 / Math.max(0.5, k)});
   return [dot(dn, d), dot(dn, n) * ts];
 };
-type GripSolve = {wrist: V; ang: number; pose: GripPose; ts: 1 | -1; tipT: V; tipR?: V; ringU?: V; ringL?: V; toward?: V};
+type GripSolve = {wrist: V; ang: number; pose: GripPose; ts: 1 | -1};
 const solveFar = (st: SurgeonState): GripSolve => {
   const g = appGrip(st.app);
   const ts: 1 | -1 = -1;
@@ -439,20 +464,17 @@ const solveFar = (st: SurgeonState): GripSolve => {
   // the thumb's pulp on the pad's back face
   const tipW = sub(g.padBack, mul(d, 0.046 * L_H));
   const tipH = toHand(tipW, wrist, ang, ts);
-  return {wrist, ang, ts, pose: farPose(tipH, screenDown(ang, ts, st.k)), tipT: tipW};
+  return {wrist, ang, ts, pose: farPose(tipH, screenDown(ang, ts, st.k))};
 };
 const solveNear = (st: SurgeonState): GripSolve => {
-  const g = clampGrip(st.clamp);
+  const g = probeGrip(st.probe);
   const ts: 1 | -1 = 1;
-  const nv = norm(sub(g.upper, g.lower));
-  const d = {x: nv.y, y: -nv.x};
-  const ang = degOf(d);
-  const wrist = sub(sub(g.p, mul(d, NEAR_MID.u * L_H)), mul(perp(d), NEAR_MID.v * L_H * ts));
-  const up = toHand(g.upper, wrist, ang, ts);
-  const lo = toHand(g.lower, wrist, ang, ts);
-  const pose = nearPose(up, lo, screenDown(ang, ts, st.k));
-  const tipT = handPt(wrist, ang, ts, pose.thumb.j[3][0], pose.thumb.j[3][1]);
-  return {wrist, ang, ts, pose, tipT, tipR: g.lower, ringU: g.upper, ringL: g.lower, toward: d};
+  // the hand frame (ts +1) is a rotation: turn it so the probe line (hand direction pi - tilt) lies along the probe
+  const angR = Math.atan2(g.ax.y, g.ax.x) - (Math.PI - rad(PEN.tilt));
+  const ang = (angR * 180) / Math.PI;
+  const d = dirDeg(ang);
+  const wrist = sub(sub(g.p, mul(d, PEN.p[0] * L_H)), mul(perp(d), PEN.p[1] * L_H * ts));
+  return {wrist, ang, ts, pose: penPose(screenDown(ang, ts, st.k))};
 };
 
 // ------------------------------------------------------------------------------------------------ head
@@ -780,53 +802,64 @@ const bodyGeo = (lean: number) => {
 };
 
 // ------------------------------------------------------------------------------------------------ arms
-/** two-bone arm: the elbow on the clockwise (side -1) or anticlockwise side of the shoulder -> wrist line; an arm
- *  that cannot reach straightens (the forearm is foreshortened toward the lens, so its drawn length is free) */
-const ik = (S: V, Wr: V, Lu: number, Lf: number, side: 1 | -1): V => {
-  const dv = sub(Wr, S);
+/** The elbow for a wrist: the two-bone solution (forearm Lf, upper arm Lu from the shoulder S, the elbow on `side` of
+ *  the wrist -> shoulder line), then turned so the forearm stays within `dev` radians of the hand's own axis (`back`:
+ *  the unit direction from the wrist back along the hand's axis), so a wrist is never broken; the upper arm takes up
+ *  the difference (it hangs from the raised shoulder, foreshortened, so its drawn length is free). Local frame. */
+const elbowFor = (S: V, Wl: V, back: V, Lu: number, Lf: number, side: 1 | -1, dev: number): V => {
+  const dv = sub(S, Wl);
   const c = Math.max(1e-3, len(dv));
-  let a = Lu, b = Lf;
-  if (c > a + b - 1) {
-    const kk = (c + 1) / (a + b);
-    a *= kk;
-    b *= kk;
+  const u = norm(dv);
+  let fd = u;
+  if (c < Lu + Lf && c > Math.abs(Lu - Lf)) {
+    const a = (Lf * Lf - Lu * Lu + c * c) / (2 * c);
+    const h = Math.sqrt(Math.max(0, Lf * Lf - a * a));
+    fd = norm(add(mul(u, a), mul(perp(u), h * side)));
   }
-  const cc = Math.max(c, Math.abs(a - b) + 1);
-  const A = Math.acos(clamp((a * a + cc * cc - b * b) / (2 * a * cc), -1, 1));
-  const base = Math.atan2(dv.y, dv.x);
-  const ang = base + side * A;
-  return add(S, {x: Math.cos(ang) * a, y: Math.sin(ang) * a});
+  const ang = clamp(Math.atan2(back.x * fd.y - back.y * fd.x, dot(back, fd)), -dev, dev);
+  const fd2 = {x: back.x * Math.cos(ang) - back.y * Math.sin(ang), y: back.x * Math.sin(ang) + back.y * Math.cos(ang)};
+  return add(Wl, mul(fd2, Lf));
 };
 const ARM = {
   // the far arm hangs behind the chest; its forearm comes out past the chest, angling down to the applicator
-  far: {Lu: 92, Lf: 128, side: -1 as const},
-  // the near arm comes down from the near shoulder, bends at the elbow by his side, the forearm angles down-left
-  near: {Lu: 162, Lf: 110, side: -1 as const},
+  far: {Lu: 110, Lf: 165, side: 1 as const, dev: 0.3},
+  // the near arm comes down from the near shoulder to the elbow at his side; the forearm reaches up-left to the probe
+  near: {Lu: 260, Lf: 175, side: 1 as const, dev: 0.3},
 };
+/** how far (mm) a hand carries its instrument back along the forearm when it leaves the field (appOn / probeOn 0) */
+const WITHDRAW = 200;
 /** sleeve radii: shoulder, elbow, wrist (the glove's cuff covers the wrist end) */
 const SLV = {s: 36, e: 31, w: 27};
 const CUFF = {len: 40, r0: 0.158 * SURGEON.hand, r1: 27.5};
 
-type ArmSolve = {grip: GripSolve; S: V; E: V; Wl: V; wrist: V; cuffDir: V; held: number};
+type ArmSolve = {grip: GripSolve; S: V; E: V; Wl: V; wrist: V; cuffDir: V; shift: V};
 const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
   const k = st.k;
   const g = bodyGeo(st.lean);
   const grip = which === 'far' ? solveFar(st) : solveNear(st);
-  const held = clamp(which === 'far' ? st.appHeld : st.clampHeld);
+  const on = clamp(which === 'far' ? st.appOn : st.probeOn);
   const S = which === 'far' ? g.farS : g.nearS;
   const P = ARM[which];
-  let Wl = toLocal(grip.wrist, k);
-  let E = ik(S, Wl, P.Lu, P.Lf, P.side);
-  let cuffDir = norm(sub(fromLocal(E, k), grip.wrist));
-  let wrist = grip.wrist;
-  if (held < 0.999) {
-    // a released hand draws back along the forearm, toward the body
-    wrist = add(grip.wrist, mul(cuffDir, 80 * ease(1 - held)));
-    Wl = toLocal(wrist, k);
-    E = ik(S, Wl, P.Lu, P.Lf, P.side);
-    cuffDir = norm(sub(fromLocal(E, k), wrist));
+  const d = dirDeg(grip.ang);
+  const back = norm({x: -d.x, y: -d.y * k});
+  const Wl0 = toLocal(grip.wrist, k);
+  const E0 = elbowFor(S, Wl0, back, P.Lu, P.Lf, P.side, P.dev);
+  // withdrawal: the hand (with its instrument) slides back along the forearm and a little toward the shoulder; the
+  // elbow follows part of the way (the forearm foreshortens as it lifts off the table)
+  const e = ease(1 - on);
+  let Wl = Wl0, E = E0, shift = {x: 0, y: 0};
+  if (e > 1e-4) {
+    const fdir = norm(sub(E0, Wl0));
+    const toS = norm(sub(S, Wl0));
+    const md = norm(add(mul(fdir, 0.7), mul(toS, 0.3)));
+    const D = mul(md, WITHDRAW * e);
+    Wl = add(Wl0, D);
+    E = add(E0, mul(D, 0.55));
+    shift = sub(fromLocal(Wl, k), grip.wrist);
   }
-  return {grip, S, E, Wl, wrist, cuffDir, held};
+  const wrist = add(grip.wrist, shift);
+  const cuffDir = norm(sub(fromLocal(E, k), wrist));
+  return {grip, S, E, Wl, wrist, cuffDir, shift};
 };
 
 const SleeveArm: React.FC<{id: string; a: ArmSolve; far: boolean; k: number}> = ({id, a, far, k}) => {
@@ -856,27 +889,19 @@ const SleeveArm: React.FC<{id: string; a: ArmSolve; far: boolean; k: number}> = 
   );
 };
 
-const GloveOf: React.FC<{id: string; a: ArmSolve; far: boolean; obj: React.ReactNode; thumbOverlay?: React.ReactNode; over?: React.ReactNode}> = ({id, a, far, obj, thumbOverlay, over}) => {
-  const holding = a.held > 0.999;
-  return (
-    <g>
-      {!holding && obj}
-      <GloveHand
-        id={id}
-        wrist={a.wrist}
-        ang={a.grip.ang}
-        L={SURGEON.hand}
-        ts={a.grip.ts}
-        pose={a.grip.pose}
-        color={far ? shade(C.glove, 0.06) : C.glove}
-        cuff={{dir: a.cuffDir, len: CUFF.len, r0: CUFF.r0, r1: CUFF.r1}}
-        obj={holding ? obj : undefined}
-        thumbOverlay={holding ? thumbOverlay : undefined}
-        over={holding ? over : undefined}
-      />
-    </g>
-  );
-};
+const GloveOf: React.FC<{id: string; a: ArmSolve; far: boolean; obj: React.ReactNode}> = ({id, a, far, obj}) => (
+  <GloveHand
+    id={id}
+    wrist={a.wrist}
+    ang={a.grip.ang}
+    L={SURGEON.hand}
+    ts={a.grip.ts}
+    pose={a.grip.pose}
+    color={far ? shade(C.glove, 0.06) : C.glove}
+    cuff={{dir: a.cuffDir, len: CUFF.len, r0: CUFF.r0, r1: CUFF.r1}}
+    obj={<g transform={a.shift.x || a.shift.y ? `translate(${fmt(a.shift.x)} ${fmt(a.shift.y)})` : undefined}>{obj}</g>}
+  />
+);
 
 // ------------------------------------------------------------------------------------------------ the two passes
 /** Head, gowned torso and the far (right) arm's sleeve: draw BEFORE the patient's arm. */
@@ -937,33 +962,24 @@ export const SurgeonFront: React.FC<{id: string; s: SurgeonState}> = ({id, s: st
   const k = st.k;
   const far = solveArm(st, 'far');
   const near = solveArm(st, 'near');
-  const fingerTipR = fingerR(2)[3] * SURGEON.hand * 1.25;
-  const thumbTipR = THUMB_R[3] * SURGEON.hand * 1.25;
-  const ng = near.grip;
   return (
     <g className={NSCLASS}>
       <NsStyle />
       <SleeveArm id={`${id}-na`} a={near} far={false} k={k} />
-      <GloveOf
-        id={`${id}-nh`}
-        a={near}
-        far={false}
-        obj={<Clamp id={`${id}-cl`} s={st.clamp} />}
-        thumbOverlay={ng.ringU && <ClampRingOver id={`${id}-ru`} c={ng.ringU} toward={ng.toward!} near={{c: ng.tipT, r: thumbTipR}} />}
-        over={ng.ringL && <ClampRingOver id={`${id}-rl`} c={ng.ringL} toward={ng.toward!} near={{c: ng.ringL, r: fingerTipR}} />}
-      />
+      <GloveOf id={`${id}-nh`} a={near} far={false} obj={<Probe id={`${id}-pr`} s={st.probe} />} />
       <GloveOf id={`${id}-fh`} a={far} far obj={<Applicator id={`${id}-ap`} s={st.app} />} />
     </g>
   );
 };
 
-/** default instrument states and face the staging was designed around (the clinical shot) */
+/** a default state the staging was designed around (the wrist reveal: the probe on the styloid fragment, the
+ *  applicator at the foot of the styloid seam) */
 export const SURGEON_DEFAULT: SurgeonState = {
-  app: {tip: {x: 5.5, y: -17.9}, ang: -0.39, press: 0.68, gel: 0},
-  clamp: {a: {x: 7.5, y: -5.5}, b: {x: 6.5, y: 5.5}, open: 0, lift: 0},
-  appHeld: 1,
-  clampHeld: 1,
+  app: {tip: {x: 3.6, y: 0.2}, ang: -0.45, press: 0.5, gel: 1, lift: 0},
+  probe: {tip: {x: 12.4, y: -5.4}, ang: 0.4, lift: 0},
+  appOn: 1,
+  probeOn: 1,
   face: {focus: 0.55, smile: 0, gx: -0.5, gy: 0.55, blink: 0},
-  k: 0.86,
+  k: 0.97,
   lean: 0,
 };
