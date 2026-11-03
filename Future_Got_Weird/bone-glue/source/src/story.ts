@@ -24,7 +24,7 @@
 //   25.25-27.3  ease out to the recovered wrist; the fingers flex gently and relax
 //   27.45-end   push back in through the clearing skin onto the healed radius in the opening's framing: the loop cuts to
 //               frame 0 on the same framing and direction (the healed bone is never shown breaking)
-import {P, pt, lerpP, add, mul} from './core/geo';
+import {P, pt, lerpP, add, mul, sub} from './core/geo';
 import {FPS, FRAMES, clamp, lerp, ss, word} from './lib';
 import {Cam, zoomAbout} from './camera';
 import {
@@ -68,10 +68,11 @@ const S2_VIS = (() => {
 export const EV = {
   // the opening preview of fixation
   seat0: 0.04, seat1: 0.62,
-  c1a: 0.36, c1b: 0.92, hop1: 1.22, c3b: 1.60, appUp1: 1.85,
+  c1a: 0.36, c1b: 0.92, hop0: 1.10, hop1: 1.27, c3b: 1.60, appUp1: 1.85,
   // the probe holds the wedge until the glue has run the whole of the wedge's upper seam (C1 to the radial border, 0.92),
-  // then lets go and backs off down-right along its own axis while the applicator arcs over it to the wedge's seam
-  // (0.92-1.22): the read is glue first, then the tool lets go, and the fragment stays
+  // then lets go and backs off down-right along its own axis while the applicator waits at the seam's end; only then
+  // (1.10-1.27) does the applicator arc over the bone to the wedge's seam: glue first, then the tool lets go alone,
+  // and the fragment stays
   probeUp0: 0.93, probeUp1: 1.24,
   // staggered: the applicator moves to the foot of the styloid seam first, then the probe (lifted) to a ready spot
   // beside the styloid fragment, below the cannula's line
@@ -85,11 +86,12 @@ export const EV = {
   dive0: Math.max(5.85, T.they - 0.1), cutIn: T.inspired + 0.18, cutOut: T.rocksEnd + 0.08,
   reveal0: T.rocks - 0.05, reveal1: T.rocksEnd - 0.12,
   // the wet macro
-  surge0: T.wet - 0.1, surge1: T.bloodyEnd + 0.2,
+  // (the wash takes ~0.8 s to cross the frame, so the glue is seen holding under it)
+  surge0: T.wet - 0.1, surge1: T.bloodyEnd + 0.55,
   pull0: T.woundEnd - 0.02, pull1: T.surgeons - 0.05,
   // fixation
   rel0: T.secured, rel1: T.secured + 0.6, probeOut0: T.secured + 0.5, probeOut1: T.pieces + 0.55,
-  set0: T.three - 0.1, set1: T.minutesEnd,
+  set0: 0, set1: 0,
   // closing and healing
   close0: T.minutesEnd - 0.35, close1: T.fracture + 0.3, sut0: T.fracture - 0.15, sut1: T.fracture + 0.22,
   dive2a: T.fracture - 0.15, dive2b: T.needed + 0.25,
@@ -112,6 +114,9 @@ EV.c2b = Math.max(EV.c2b, EV.c2a + 0.75); // a deliberate stroke, ending on "did
 EV.appLift1 = EV.c2b + 0.35;
 EV.appOut0 = Math.max(EV.appLift1 + 0.1, EV.dive0 - 0.2);
 EV.appOut1 = EV.appOut0 + 0.9;
+// the gel sets from gloss to satin as soon as the probe has cleared, on "in just three minutes"
+EV.set0 = EV.probeOut1 - 0.45;
+EV.set1 = EV.set0 + 1.05;
 
 // ---------------------------------------------------------------- the applicator (the glue's front)
 type AppPose = {tip: P; ang: number; lift: number; laying: {seam: SeamId; s: number} | null};
@@ -126,6 +131,8 @@ const APP_ANG_S = -1.28;
 const APP_ANG_S_END = -0.98;
 const appAngS = (s: number) => lerp(APP_ANG_S, APP_ANG_S_END, ss(s, 2, 17));
 const C3_TOP = 0.3;
+/** the hop's sideways bow (mm, toward the wedge's face) */
+const HOP_ARC = 1.2;
 const appPose = (t: number): AppPose => {
   const ang = APP_ANG + 0.03 * Math.sin(t * 1.3);
   if (t < EV.c1a) {
@@ -136,9 +143,14 @@ const appPose = (t: number): AppPose => {
     const s = lerp(10.4, L1, ss(t, EV.c1a, EV.c1b) * 0.85 + 0.15 * clamp((t - EV.c1a) / (EV.c1b - EV.c1a)));
     return {tip: seamPoint('C1', s), ang, lift: 0, laying: {seam: 'C1', s}};
   }
+  // parked at the seam's end while the probe lets go of the wedge
+  if (t < EV.hop0) return {tip: seamPoint('C1', L1), ang, lift: 0, laying: null};
   if (t < EV.hop1) {
-    const u = ss(t, EV.c1b, EV.hop1);
-    return {tip: lerpP(seamPoint('C1', L1), seamPoint('C3', L3), u), ang, lift: 0.55 * Math.sin(Math.PI * clamp((t - EV.c1b) / (EV.hop1 - EV.c1b))), laying: null};
+    // then a short lifted hop on a slight arc over the bone (not parallel to the probe's exit) to the wedge seam's foot
+    const u = ss(t, EV.hop0, EV.hop1), arc = Math.sin(Math.PI * clamp((t - EV.hop0) / (EV.hop1 - EV.hop0)));
+    const a = seamPoint('C1', L1), b = seamPoint('C3', L3), d = sub(b, a), n = Math.hypot(d.x, d.y) || 1;
+    const side = pt((-d.y / n) * HOP_ARC * arc, (d.x / n) * HOP_ARC * arc);
+    return {tip: add(lerpP(a, b, u), side), ang, lift: 0.55 * arc, laying: null};
   }
   if (t < EV.c3b) {
     const s = lerp(L3, C3_TOP, ss(t, EV.hop1, EV.c3b) * 0.8 + 0.2 * clamp((t - EV.hop1) / (EV.c3b - EV.hop1)));
@@ -278,7 +290,7 @@ export const instrAt = (t: number): InstrState2 => {
 };
 
 // ---------------------------------------------------------------- the patient's arm
-export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null; spread: number};
+export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread: number};
 export const WINDOW_C = pt(-3, -14);
 export const armAt = (t: number): ArmS => {
   const closing = ss(t, EV.close0, EV.close1);
@@ -290,12 +302,15 @@ export const armAt = (t: number): ArmS => {
   if (t > EV.close1 - 0.1) r = 64 * ss(t, EV.close1 - 0.1, EV.dive2b) * (1 - ss(t, EV.out1 - 0.25, EV.out1 + 0.1));
   const shut = ss(t, EV.push1 - 0.9, EV.push1);
   if (t > EV.push0) r = lerp(64, 18, shut);
+  // ... and in its last moments it takes the incision's own outline, crisp edge and fat ring, so the cut to frame 0
+  // changes the fracture and the instruments, not the wound's shape (the scar fades under it)
+  const inc = t > EV.push0 ? ss(t, EV.push1 - 0.45, EV.push1) : 0;
   // it opens out of the sutured incision (centred on it while small), then settles on the healing framing's centre
   const wc = t > EV.push0 ? lerpP(WINDOW_C, INCISION.c, shut) : lerpP(INCISION.c, WINDOW_C, ss(r, 6, 40));
-  const win = r > 0.3 ? {c: wc, r, soft: 0.22} : null;
+  const win = r > 0.3 ? {c: wc, r, soft: lerp(0.22, 0.07, inc), inc} : null;
   // one small natural movement: the fingers flex gently and spread a touch, then relax
   const mv = t > EV.curl0 && t < EV.curl1 ? Math.sin(Math.PI * clamp((t - EV.curl0) / (EV.curl1 - EV.curl0))) ** 1.2 : 0;
-  return {curl: 0.25 + 0.16 * mv, thumb: 0.2 + 0.3 * mv, incision: 1 - closing, sutures: sut, scar, window: win, spread: 0.55 * mv};
+  return {curl: 0.25 + 0.16 * mv, thumb: 0.2 + 0.3 * mv, incision: 1 - closing, sutures: sut, scar: scar * (1 - inc), window: win, spread: 0.55 * mv};
 };
 /** an opaque skin copy over the windowed skin: 0 during surgery and healing, 1 for the recovered wrist, clearing on the
  *  loop's push */

@@ -15,7 +15,7 @@
   "gain_db": -27
  },
  {
-  "t": 1.22,
+  "t": 1.27,
   "sfx": "cannula touches the wedge seam",
   "gain_db": -31
  },
@@ -105,7 +105,7 @@
   "gain_db": -32
  },
  {
-  "t": 18.37,
+  "t": 17.56,
   "sfx": "the gel sets (low, soft)",
   "gain_db": -29
  },

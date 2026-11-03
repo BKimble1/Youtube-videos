@@ -119,7 +119,8 @@ export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
 
   // the stronger wash on "wet, bloody": a darker sheet with a crisp leading edge sweeps across the field and the seam
   if (st.surge >= 0 && st.surge <= 1) {
-    const u = ss(st.surge, 0, 1);
+    // nearly constant speed across the frame (eased only at the ends), so the sheet crosses the seam at a readable pace
+    const u = 0.3 * ss(st.surge, 0, 1) + 0.7 * st.surge;
     const qf = Q0 + 4 + (span - 2) * u;
     const strength = Math.sin(Math.PI * clamp(st.surge)) ** 0.45;
     const lead = crestLine(rows, qf, 0.4, t * 2.5, 0.32);

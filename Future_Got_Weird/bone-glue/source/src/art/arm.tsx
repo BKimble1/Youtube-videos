@@ -14,8 +14,9 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C, INK} from './palette';
 import {Digit, FINGERS, INCISION, THUMB, WRIST_CREASE_Y, fingerChain, skinBorders, thumbChain} from './anatomy';
 
-export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number} | null; spread?: number};
-type Win = {c: P; r: number; soft: number};
+export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread?: number};
+/** inc: 0 = the organic cutaway outline, 1 = the open incision's outline (the loop's last moments) */
+type Win = {c: P; r: number; soft: number; inc?: number};
 
 const NS = 'non-scaling-stroke' as const;
 const LIGHT = nrm(pt(-0.62, -0.78));
@@ -203,11 +204,20 @@ const holePts = (a: number, inset = 0, n = 96): P[] => {
 // ---------------------------------------------------------------- the cutaway window (a feathered, organic mask)
 const winPts = (w: Win, k: number, n = 72): P[] => {
   const out: P[] = [];
+  const m = clamp(w.inc ?? 0);
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2;
     const q = 0.5 * Math.sin(3 * a + 1.3) + 0.28 * Math.sin(5 * a + 0.4) + 0.16 * Math.sin(8 * a + 2.2) + 0.08 * Math.sin(13 * a + 0.7);
     const rr = w.r * k * (1 + 0.07 * q);
-    out.push(pt(w.c.x + rr * Math.cos(a), w.c.y + rr * Math.sin(a)));
+    let p = pt(w.c.x + rr * Math.cos(a), w.c.y + rr * Math.sin(a));
+    if (m > 0) {
+      // the fully retracted incision's outline at the same angle (holePts' shape), scaled by k about its centre
+      const ct = Math.cos(a), st = Math.sin(a);
+      const pinch = (1 - 0.3 * Math.abs(st) ** 3) * (1 + 0.07 * Math.exp(-(((st + 0.04 * Math.sign(ct)) / 0.32) ** 2)));
+      const h = pt(INCISION.c.x + k * holeA(1) * pinch * ct, INCISION.c.y + k * INCISION.ry * st);
+      p = pt(p.x + (h.x - p.x) * m, p.y + (h.y - p.y) * m);
+    }
+    out.push(p);
   }
   return out;
 };
@@ -248,7 +258,8 @@ const WindowRim: React.FC<{id: string; w: Win}> = ({id, w}) => {
       <g filter={`url(#${id}-wrf)`}>
         <path d={closed(winPts(w, 1 - w.soft * 0.3), 1)} fill="none" stroke={C.skinLayer} strokeWidth={w.r * 0.05} opacity={0.75} />
         <path d={closed(winPts(w, 1 - w.soft * 0.42), 1)} fill="none" stroke="#D9735E" strokeWidth={w.r * 0.03} opacity={0.6} />
-        <path d={closed(winPts(w, 1 - w.soft * 0.5), 1)} fill="none" stroke={C.fat} strokeWidth={w.r * 0.018} opacity={0.4} />
+        {/* (as the window takes the incision's outline, the fat layer widens into the cut edge's yellow ring) */}
+        <path d={closed(winPts(w, 1 - w.soft * 0.5 + 0.035 * (w.inc ?? 0)), 1)} fill="none" stroke={C.fat} strokeWidth={w.r * (0.018 + 0.09 * (w.inc ?? 0))} opacity={0.4 + 0.5 * (w.inc ?? 0)} />
       </g>
     </g>
   );
