@@ -45,107 +45,107 @@
   "gain_db": -31
  },
  {
-  "t": 5.25,
+  "t": 5.115,
   "sfx": "push down onto the glue band",
   "gain_db": -28
  },
  {
-  "t": 7.86,
+  "t": 7.55,
   "sfx": "match cut into the water (muffled)",
   "gain_db": -27
  },
  {
-  "t": 8.95,
+  "t": 8.64,
   "sfx": "the attachment window opens (soft)",
   "gain_db": -33
  },
  {
-  "t": 10.08,
+  "t": 9.57,
   "sfx": "match cut back to the bone",
   "gain_db": -28
  },
  {
-  "t": 13.693,
+  "t": 12.95,
   "sfx": "pull out to the fixation framing",
   "gain_db": -30
  },
  {
-  "t": 18.77,
+  "t": 18.06,
   "sfx": "move back into the fracture",
   "gain_db": -31
  },
  {
-  "t": 25.2,
+  "t": 24.12,
   "sfx": "ease out to the wrist",
   "gain_db": -32
  },
  {
-  "t": 8.239,
+  "t": 7.947,
   "sfx": "bubble",
-  "gain_db": -34.419768311794776
+  "gain_db": -35.980490844338696
  },
  {
-  "t": 10.57,
+  "t": 10.11,
   "sfx": "the bond holds (soft knock)",
   "gain_db": -30
  },
  {
-  "t": 12.003,
+  "t": 11.59,
   "sfx": "the wash sweeps over the seam",
   "gain_db": -30
  },
  {
-  "t": 16.62,
+  "t": 15.91,
   "sfx": "probe lifts off (released)",
   "gain_db": -29
  },
  {
-  "t": 17.11,
+  "t": 16.4,
   "sfx": "probe withdraws",
   "gain_db": -32
  },
  {
-  "t": 17.96,
+  "t": 17.25,
   "sfx": "the gel sets (low, soft)",
   "gain_db": -29
  },
  {
-  "t": 18.85,
+  "t": 18.14,
   "sfx": "suture pull",
   "gain_db": -34
  },
  {
-  "t": 19.12,
+  "t": 18.41,
   "sfx": "hematoma: a low organic swell",
   "gain_db": -28
  },
  {
-  "t": 19.63,
+  "t": 18.815,
   "sfx": "soft callus: fibrous creak",
   "gain_db": -31
  },
  {
-  "t": 21.314,
+  "t": 20.011,
   "sfx": "the glue thins and disappears (whispering fizz)",
   "gain_db": -34
  },
  {
-  "t": 24.85,
+  "t": 23.35,
   "sfx": "restored (a settling tone)",
   "gain_db": -34
  },
  {
-  "t": 26.0,
+  "t": 24.85,
   "sfx": "skin as the fingers flex",
   "gain_db": -31
  },
  {
-  "t": 26.65,
+  "t": 25.5,
   "sfx": "the fingers relax",
   "gain_db": -34
  },
  {
-  "t": 27.44,
+  "t": 26.31,
   "sfx": "push back into the wrist (into frame 0)",
   "gain_db": -29
  }

@@ -1,16 +1,16 @@
 {
  "no_voice": true,
- "integrated_lufs": -28.11,
- "true_peak_dbtp_4x": -11.93,
- "sample_peak_dbfs": -12.03,
+ "integrated_lufs": -28.18,
+ "true_peak_dbtp_4x": -13.34,
+ "sample_peak_dbfs": -13.35,
  "voice_gain_db": 2.0,
  "voice_max_gain_reduction_db": 0.0,
- "duration_s": 28.367,
+ "duration_s": 27.233,
  "effects": 30,
  "voice_lufs_in_mix": null,
- "sfx_lufs_in_mix": -30.67,
- "music_lufs_in_mix": -37.58,
- "music_bpm": 97.3,
- "music_beats": 46,
- "loop_seam_jump": 0.0132
+ "sfx_lufs_in_mix": -30.74,
+ "music_lufs_in_mix": -37.64,
+ "music_bpm": 96.94,
+ "music_beats": 44,
+ "loop_seam_jump": 0.0139
 }

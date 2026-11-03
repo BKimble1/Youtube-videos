@@ -1,0 +1,152 @@
+[
+ {
+  "t": 0.42,
+  "sfx": "plunger creak",
+  "gain_db": -34
+ },
+ {
+  "t": 1.8,
+  "sfx": "plunger creak",
+  "gain_db": -36
+ },
+ {
+  "t": 0.48,
+  "sfx": "the fragment seats (soft bony tock)",
+  "gain_db": -27
+ },
+ {
+  "t": 1.1,
+  "sfx": "cannula touches the wedge seam",
+  "gain_db": -31
+ },
+ {
+  "t": 1.45,
+  "sfx": "applicator lifts",
+  "gain_db": -34
+ },
+ {
+  "t": 0.88,
+  "sfx": "probe eases off the fragment",
+  "gain_db": -31
+ },
+ {
+  "t": 4.35,
+  "sfx": "probe settles on the styloid fragment",
+  "gain_db": -32
+ },
+ {
+  "t": 1.58,
+  "sfx": "cannula touches the styloid seam",
+  "gain_db": -33
+ },
+ {
+  "t": 2.23,
+  "sfx": "applicator lifts off (stroke done)",
+  "gain_db": -31
+ },
+ {
+  "t": 5.115,
+  "sfx": "push down onto the glue band",
+  "gain_db": -28
+ },
+ {
+  "t": 7.55,
+  "sfx": "match cut into the water (muffled)",
+  "gain_db": -27
+ },
+ {
+  "t": 8.64,
+  "sfx": "the attachment window opens (soft)",
+  "gain_db": -33
+ },
+ {
+  "t": 9.57,
+  "sfx": "match cut back to the bone",
+  "gain_db": -28
+ },
+ {
+  "t": 12.95,
+  "sfx": "pull out to the fixation framing",
+  "gain_db": -30
+ },
+ {
+  "t": 18.06,
+  "sfx": "move back into the fracture",
+  "gain_db": -31
+ },
+ {
+  "t": 24.12,
+  "sfx": "ease out to the wrist",
+  "gain_db": -32
+ },
+ {
+  "t": 7.947,
+  "sfx": "bubble",
+  "gain_db": -35.980490844338696
+ },
+ {
+  "t": 10.11,
+  "sfx": "the bond holds (soft knock)",
+  "gain_db": -30
+ },
+ {
+  "t": 11.59,
+  "sfx": "the wash sweeps over the seam",
+  "gain_db": -30
+ },
+ {
+  "t": 15.91,
+  "sfx": "probe lifts off (released)",
+  "gain_db": -29
+ },
+ {
+  "t": 16.4,
+  "sfx": "probe withdraws",
+  "gain_db": -32
+ },
+ {
+  "t": 17.25,
+  "sfx": "the gel sets (low, soft)",
+  "gain_db": -29
+ },
+ {
+  "t": 18.14,
+  "sfx": "suture pull",
+  "gain_db": -34
+ },
+ {
+  "t": 18.41,
+  "sfx": "hematoma: a low organic swell",
+  "gain_db": -28
+ },
+ {
+  "t": 18.815,
+  "sfx": "soft callus: fibrous creak",
+  "gain_db": -31
+ },
+ {
+  "t": 20.011,
+  "sfx": "the glue thins and disappears (whispering fizz)",
+  "gain_db": -34
+ },
+ {
+  "t": 23.35,
+  "sfx": "restored (a settling tone)",
+  "gain_db": -34
+ },
+ {
+  "t": 24.85,
+  "sfx": "skin as the fingers flex",
+  "gain_db": -31
+ },
+ {
+  "t": 25.5,
+  "sfx": "the fingers relax",
+  "gain_db": -34
+ },
+ {
+  "t": 26.31,
+  "sfx": "push back into the wrist (into frame 0)",
+  "gain_db": -29
+ }
+]

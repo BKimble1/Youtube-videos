@@ -1,0 +1,413 @@
+{
+ "audio": "audio/narration/takes/t2_RlHD.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.39,
+   1.65
+  ],
+  [
+   3.64,
+   4.03
+  ],
+  [
+   5.61,
+   5.99
+  ],
+  [
+   9.93,
+   10.32
+  ],
+  [
+   13.17,
+   13.65
+  ],
+  [
+   15.02,
+   15.25
+  ],
+  [
+   18.37,
+   18.8
+  ],
+  [
+   20.65,
+   21.12
+  ],
+  [
+   22.38,
+   22.6
+  ],
+  [
+   24.36,
+   24.79
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.11
+  },
+  {
+   "word": "you",
+   "start": 0.12,
+   "end": 0.31
+  },
+  {
+   "word": "shattered",
+   "start": 0.32,
+   "end": 0.79
+  },
+  {
+   "word": "your",
+   "start": 0.8,
+   "end": 1.03
+  },
+  {
+   "word": "wrist,",
+   "start": 1.04,
+   "end": 1.39
+  },
+  {
+   "word": "imagine",
+   "start": 1.65,
+   "end": 2.08
+  },
+  {
+   "word": "gluing",
+   "start": 2.08,
+   "end": 2.43
+  },
+  {
+   "word": "the",
+   "start": 2.44,
+   "end": 2.59
+  },
+  {
+   "word": "bones",
+   "start": 2.6,
+   "end": 3.0
+  },
+  {
+   "word": "back",
+   "start": 3.0,
+   "end": 3.23
+  },
+  {
+   "word": "together.",
+   "start": 3.24,
+   "end": 3.64
+  },
+  {
+   "word": "Researchers",
+   "start": 4.03,
+   "end": 4.63
+  },
+  {
+   "word": "actually",
+   "start": 4.635,
+   "end": 5.19
+  },
+  {
+   "word": "did",
+   "start": 5.195,
+   "end": 5.47
+  },
+  {
+   "word": "it.",
+   "start": 5.475,
+   "end": 5.61
+  },
+  {
+   "word": "They",
+   "start": 5.99,
+   "end": 6.04
+  },
+  {
+   "word": "developed",
+   "start": 6.03,
+   "end": 6.41
+  },
+  {
+   "word": "an",
+   "start": 6.44,
+   "end": 6.59
+  },
+  {
+   "word": "experimental",
+   "start": 6.6,
+   "end": 7.28
+  },
+  {
+   "word": "glue",
+   "start": 7.28,
+   "end": 7.67
+  },
+  {
+   "word": "inspired",
+   "start": 7.68,
+   "end": 8.19
+  },
+  {
+   "word": "by",
+   "start": 8.2,
+   "end": 8.35
+  },
+  {
+   "word": "oysters",
+   "start": 8.36,
+   "end": 8.91
+  },
+  {
+   "word": "sticking",
+   "start": 8.92,
+   "end": 9.28
+  },
+  {
+   "word": "to",
+   "start": 9.28,
+   "end": 9.52
+  },
+  {
+   "word": "rocks.",
+   "start": 9.52,
+   "end": 9.93
+  },
+  {
+   "word": "It",
+   "start": 10.32,
+   "end": 10.37
+  },
+  {
+   "word": "grips",
+   "start": 10.36,
+   "end": 10.8
+  },
+  {
+   "word": "bone",
+   "start": 10.805,
+   "end": 11.16
+  },
+  {
+   "word": "even",
+   "start": 11.165,
+   "end": 11.4
+  },
+  {
+   "word": "inside",
+   "start": 11.405,
+   "end": 11.76
+  },
+  {
+   "word": "a",
+   "start": 11.765,
+   "end": 11.88
+  },
+  {
+   "word": "wet,",
+   "start": 11.885,
+   "end": 12.21
+  },
+  {
+   "word": "bloody",
+   "start": 12.245,
+   "end": 12.8
+  },
+  {
+   "word": "wound.",
+   "start": 12.805,
+   "end": 13.17
+  },
+  {
+   "word": "In",
+   "start": 13.65,
+   "end": 13.7
+  },
+  {
+   "word": "one",
+   "start": 13.69,
+   "end": 13.88
+  },
+  {
+   "word": "reported",
+   "start": 13.89,
+   "end": 14.41
+  },
+  {
+   "word": "wrist",
+   "start": 14.41,
+   "end": 14.77
+  },
+  {
+   "word": "case,",
+   "start": 14.77,
+   "end": 15.02
+  },
+  {
+   "word": "surgeons",
+   "start": 15.25,
+   "end": 15.61
+  },
+  {
+   "word": "secured",
+   "start": 15.615,
+   "end": 16.05
+  },
+  {
+   "word": "the",
+   "start": 16.055,
+   "end": 16.17
+  },
+  {
+   "word": "broken",
+   "start": 16.175,
+   "end": 16.53
+  },
+  {
+   "word": "pieces",
+   "start": 16.535,
+   "end": 16.95
+  },
+  {
+   "word": "in",
+   "start": 16.975,
+   "end": 17.13
+  },
+  {
+   "word": "just",
+   "start": 17.135,
+   "end": 17.32
+  },
+  {
+   "word": "three",
+   "start": 17.455,
+   "end": 17.85
+  },
+  {
+   "word": "minutes.",
+   "start": 17.855,
+   "end": 18.37
+  },
+  {
+   "word": "The",
+   "start": 18.8,
+   "end": 18.85
+  },
+  {
+   "word": "fracture",
+   "start": 18.84,
+   "end": 19.26
+  },
+  {
+   "word": "still",
+   "start": 19.265,
+   "end": 19.5
+  },
+  {
+   "word": "needed",
+   "start": 19.505,
+   "end": 19.82
+  },
+  {
+   "word": "months",
+   "start": 19.825,
+   "end": 20.22
+  },
+  {
+   "word": "to",
+   "start": 20.225,
+   "end": 20.38
+  },
+  {
+   "word": "heal.",
+   "start": 20.385,
+   "end": 20.65
+  },
+  {
+   "word": "But",
+   "start": 21.12,
+   "end": 21.17
+  },
+  {
+   "word": "as",
+   "start": 21.16,
+   "end": 21.28
+  },
+  {
+   "word": "new",
+   "start": 21.285,
+   "end": 21.335
+  },
+  {
+   "word": "bone",
+   "start": 21.325,
+   "end": 21.88
+  },
+  {
+   "word": "grows,",
+   "start": 21.885,
+   "end": 22.38
+  },
+  {
+   "word": "the",
+   "start": 22.6,
+   "end": 22.65
+  },
+  {
+   "word": "glue",
+   "start": 22.65,
+   "end": 23.0
+  },
+  {
+   "word": "gradually",
+   "start": 23.01,
+   "end": 23.61
+  },
+  {
+   "word": "disappears.",
+   "start": 23.61,
+   "end": 24.36
+  },
+  {
+   "word": "Your",
+   "start": 24.79,
+   "end": 24.89
+  },
+  {
+   "word": "body",
+   "start": 24.895,
+   "end": 25.29
+  },
+  {
+   "word": "replaces",
+   "start": 25.295,
+   "end": 25.85
+  },
+  {
+   "word": "the",
+   "start": 25.855,
+   "end": 26.01
+  },
+  {
+   "word": "stuff",
+   "start": 26.015,
+   "end": 26.29
+  },
+  {
+   "word": "holding",
+   "start": 26.295,
+   "end": 26.65
+  },
+  {
+   "word": "you",
+   "start": 26.655,
+   "end": 26.81
+  },
+  {
+   "word": "together.",
+   "start": 26.815,
+   "end": 27.27
+  }
+ ]
+}

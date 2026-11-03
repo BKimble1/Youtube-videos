@@ -1731,14 +1731,14 @@ const SECTION = (() => {
     const sl = (bandTop(x + 0.05) - bandTop(x - 0.05)) / 0.1;
     prisms.push(`M${f(x)} ${f(y0)}L${f(x + sl * (y0 - y1) * 0.6)} ${f(y1)}`);
   }
-  // the rock: a few large angular crystals (150-250 px across at OY_CAM_OUT) over a Voronoi of small grains; tones mix
+  // the rock: a few larger angular crystals (100-150 px across at OY_CAM_OUT, so none reads as a foreign object) over a Voronoi of small grains; tones mix
   // grey, warm tan, dark mica/hornblende, pale quartz and a little pinkish feldspar; thin, low-contrast gaps
   type Big = {c: P; r: number; tone: string; kind: string; rot: number};
   const BIGS: Big[] = [
-    {c: pt(-3.2, 1.62), r: 0.98, tone: GRAIN.q[0], kind: 'q', rot: 0.3},
-    {c: pt(1.85, 2.75), r: 0.82, tone: GRAIN.t[2], kind: 't', rot: 1.1},
-    {c: pt(-0.5, 4.55), r: 0.86, tone: GRAIN.g[1], kind: 'g', rot: 2.0},
-    {c: pt(4.35, 1.85), r: 0.7, tone: GRAIN.d[1], kind: 'd', rot: 0.7},
+    {c: pt(-3.2, 1.62), r: 0.56, tone: GRAIN.q[0], kind: 'q', rot: 0.3},
+    {c: pt(1.85, 2.75), r: 0.5, tone: GRAIN.t[2], kind: 't', rot: 1.1},
+    {c: pt(-0.5, 4.55), r: 0.6, tone: GRAIN.g[1], kind: 'g', rot: 2.0},
+    {c: pt(4.35, 1.85), r: 0.52, tone: GRAIN.d[1], kind: 'd', rot: 0.7},
     {c: pt(-1.5, 1.45), r: 0.42, tone: GRAIN.g[3], kind: 'g', rot: 1.6},
     {c: pt(3.55, 4.2), r: 0.5, tone: GRAIN.f[0], kind: 'f', rot: 2.4},
     {c: pt(-4.7, 3.7), r: 0.46, tone: GRAIN.d[2], kind: 'd', rot: 0.2},

@@ -1,0 +1,18 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU SHATTERED YOUR WRIST IMAGINE GLUING THE BONES BACK TOGETHER RESEARCHERS ACTUALLY DID IT THEY DEVELOPED AN EXPERIMENTAL GLUE INSPIRED BY OYSTERS STICKING TO ROCKS IT GRIPS BONE EVEN INSIDE A WET BLOODY WOUND IN ONE REPORTED WRIST CASE SURGEONS SECURED THE BROKEN PIECES IN JUST THREE MINUTES THE FRACTURE STILL NEEDED MONTHS TO HEAL BUT AS NEW BONE GROWS THE GLUE GRADUALLY DISAPPEARS YOUR BODY REPLACES THE STUFF HOLDING YOU TOGETHER SAID",
+  "wer": 0.014,
+  "diffs": [
+   [
+    "insert",
+    "",
+    "said"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you shattered your wrist, imagine gluing the bones back together. Researchers actually did it! They developed an experimental glue inspired by oysters sticking to rocks. It grips bone even inside a wet, bloody wound. In one reported wrist case, surgeons secured the broken pieces in just three minutes. The fracture still needed months to heal. But as new bone grows, the glue gradually disappears. Your body replaces the stuff holding you together. [",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

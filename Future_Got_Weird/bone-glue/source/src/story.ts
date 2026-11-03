@@ -95,17 +95,19 @@ export const EV = {
   close0: T.minutesEnd - 0.35, close1: T.fracture + 0.3, sut0: T.fracture - 0.15, sut1: T.fracture + 0.22,
   dive2a: T.fracture - 0.15, dive2b: T.needed + 0.25,
   hem0: T.fracture + 0.25, hem1: T.needed + 0.05, soft0: T.needed - 0.05, soft1: T.months + 0.45,
-  bridge0: T.heal - 0.15, bridge1: T.disappearsEnd - 0.1, hard0: T.healEnd - 0.4, hard1: T.grows + 0.4,
+  bridge0: T.needed, bridge1: T.disappearsEnd - 0.1, hard0: T.healEnd - 0.4, hard1: T.grows + 0.4,
   mac0: T.but - 0.05, mac1: T.grows + 0.1, back0: T.glue2 - 0.1, back1: T.disappearsEnd - 0.25,
   // remodelling (woven -> mature bone) as the last glue goes
-  rem0: T.disappearsEnd - 0.08, rem1: T.body + 0.2,
+  rem0: T.disappearsEnd - 0.15, rem1: T.disappearsEnd + 0.35,
   // the ending: out to the recovered hand, which bends at the wrist (radial, ulnar, back) with the fingers spreading
-  out0: T.body - 0.1, out1: T.replaces + 0.55, curl0: T.stuff - 0.25, curl1: T.togetherEnd2 - 0.05,
+  out0: T.body + 0.05, out1: T.replaces + 0.6, curl0: T.stuff - 0.25, curl1: T.togetherEnd2 - 0.05,
   bend0: T.stuff - 0.3, bend1: T.togetherEnd2 - 0.02,
   // the loop: push back in onto the opening's wide framing, still moving at the hook's own speed
   push0: T.togetherEnd2 + 0.0, push1: LOOP_T,
 };
 EV.probeOut0 = EV.rel0 + 0.45;
+// the wrist starts to move once the camera has settled on it
+EV.bend0 = Math.max(EV.bend0, EV.out1 - 0.05);
 EV.probeOut1 = EV.probeOut0 + 0.75;
 // the gel sets from gloss to satin as soon as the probe has cleared, on "in just three minutes"
 EV.set0 = EV.probeOut1 - 0.45;
@@ -170,7 +172,7 @@ const appPose = (t: number): AppPose => {
 const PROBE_BACK = 8;
 /** ... then settles this far (mm) down toward the frame's lower edge (a touch to the left), so it waits in view, below
  *  the cannula's line */
-const PROBE_DROP = 11;
+const PROBE_DROP = 24;
 const PROBE_BACK_V = mul(pt(Math.cos(PROBE_ANG_W), Math.sin(PROBE_ANG_W)), PROBE_BACK);
 const PROBE_DROP_V = pt(-0.25 * PROBE_DROP, PROBE_DROP);
 const PROBE_PARK = add(add(WEDGE_PRESS, PROBE_BACK_V), PROBE_DROP_V);
@@ -346,7 +348,8 @@ const CASE: Cam = {x: 5, y: -24, w: 106, k: 0.99, focus: -4};
 const FIX: Cam = {x: 6, y: -4, w: 58, k: 1, focus: -3};
 const FIX2: Cam = {x: 5.6, y: -3.6, w: 53, k: 1, focus: -3};
 const HEAL: Cam = {x: 3.2, y: -0.8, w: 30, k: 1, focus: 0};
-const HEAL_B: Cam = {x: 3.4, y: -0.6, w: 26.5, k: 1, focus: 0};
+/** ... gliding toward the radial side, where the soft callus swells over the cortex, while the fronts begin */
+const HEAL_B: Cam = {x: 6.2, y: -1.6, w: 23.5, k: 1, focus: 0};
 /** "new bone grows": a macro of the T-junctions, where woven bone advances from both faces into the glue */
 const MACRO_H: Cam = {x: 5, y: -1, w: 11.5, k: 1, focus: 0};
 /** "the glue gradually disappears": back out over the whole fracture */
@@ -411,8 +414,8 @@ const wristCam = (t: number): Cam => {
   if (t < EV.dive2a) return hermite(t, EV.fix1, FIX, {x: -0.3, y: 0.15, lw: -0.03}, EV.dive2a, FIX2, {x: -0.5, y: 0.2, lw: -0.05});
   if (t < EV.dive2b) return zoomH(t, EV.dive2a, FIX2, EV.dive2b, HEAL, -0.05, -0.04, pt(0.04, 0.03), pt(-0.5, 0.2));
   // healing: hematoma and callus on the whole fracture; "new bone grows": in to the macro; "disappears": back out
-  if (t < EV.mac0) return hermite(t, EV.dive2b, HEAL, {x: 0.04, y: 0.03, lw: -0.04}, EV.mac0, HEAL_B, {x: 0.05, y: 0, lw: -0.1});
-  if (t < EV.mac1) return zoomH(t, EV.mac0, HEAL_B, EV.mac1, MACRO_H, -0.1, -0.03, pt(0.05, 0), pt(0.05, 0));
+  if (t < EV.mac0) return hermite(t, EV.dive2b, HEAL, {x: 0.6, y: -0.2, lw: -0.04}, EV.mac0, HEAL_B, {x: 0.3, y: 0, lw: -0.2});
+  if (t < EV.mac1) return zoomH(t, EV.mac0, HEAL_B, EV.mac1, MACRO_H, -0.2, -0.03, pt(0.05, 0), pt(0.3, 0));
   if (t < EV.back0) return drift(MACRO_H, {x: 0.05, y: 0, lw: -0.03}, t - EV.mac1);
   const mB = drift(MACRO_H, {x: 0.05, y: 0, lw: -0.03}, EV.back0 - EV.mac1);
   if (t < EV.back1) return zoomH(t, EV.back0, mB, EV.back1, HEAL_W, -0.03, 0.02, pt(0, 0), pt(0.05, 0));
