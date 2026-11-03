@@ -9,15 +9,18 @@
 //      disagree (no dark gap, no overlap) and the T-junctions fill naturally from the fragments' corners. Pale, cool
 //      woven bone (paler and greyer than the warm shaft) with a staggered lattice of pores elongated in the growth
 //      direction and faint growth lines parallel to each face (fixed in the bone: the front uncovers them as it
-//      passes), a bright rim with a deep-teal line along the front, and spicules that bud out of the front into the
-//      glue and are overtaken by it, so the advance reads frame to frame. As the last glue goes the woven bone
-//      densifies (its pores shrink from the old faces inward).
-//      Remodelling: mature bone (the shaft's own shading, sheen, lamellae and pores) advances as one front per face. It
-//      starts on the intact cortex just past the face's bevel, sweeps in across the bevel and the face line (by remodel
-//      ~0.3), then narrows the pale woven band, still textured (unevenly, so it pinches into pale streaks); the fronts
-//      meet around remodel 0.75. Only late (remodel 0.25-0.7) does the woven bone left between them tone down to a
-//      shade just darker than the shaft, so the last thin line is never lighter than the bone around it; it closes to a
-//      faint trace (remodel 0.55-0.9). At remodel 1 nothing of the woven layer is drawn.
+//      passes; round each fragment corner they follow arcs about the tip), a bright rim with a deep-teal line along the
+//      front, and short, irregular spicules (the woven bone's own fill, a fine teal edge) that bud out of the front into
+//      the glue and are overtaken by it, so the advance reads frame to frame. At each fragment corner a disc of the same
+//      textured woven bone rounds the join (never a flat disc). As the last glue goes the woven bone densifies (its
+//      pores shrink from the old faces inward).
+//      Remodelling: mature bone (the shaft's own shading, sheen, lamellae and pores) advances as one steady front per
+//      face. It starts on the intact cortex just past the face's bevel, sweeps in across the bevel to the face line (by
+//      remodel ~0.17), then narrows the pale woven band, which stays pale and textured while it narrows (unevenly, so it
+//      pinches into pale streaks from remodel ~0.48; the last close around 0.72, where the film's healing framing ends).
+//      Only as it closes (remodel 0.47-0.7) does the woven bone left between the fronts tone down to a shade just darker
+//      than the shaft, so the last thin line is never lighter than the bone around it; it ends as a faint trace (remodel
+//      0.5-0.78). At remodel 1 nothing of the woven layer is drawn.
 //   3. the fracture hematoma (hem): a dark clot hugging the seams' lips and spilling at the exits; each layer is one
 //      opaque union under a single group opacity, and none of it covers the glue (it stays teal)
 //   4. the callus cuff at the margins (where the seams leave the bone's borders): soft grey-pink and fibrous, hardening
@@ -85,6 +88,8 @@ const WOVEN_SH = stopAt(WOVEN_STOPS, 0.85);
 /** the woven lattice's pores and growth lines: cool mauve-greys (the shaft's own pores are warm tan) */
 const PORE = '#C7C0C6';
 const PORE_DEEP = '#A99FA8';
+/** on the radial cuff (held to the shaft's shade) the pores sit a step darker than its band */
+const PORE_RAD = mix(PORE, PORE_DEEP, 0.6);
 /** the shaft's own vascular pores (fracture.tsx Pores), for the remodelled bone */
 const PORE_SHAFT = mix(C.cancellousPore, C.boneShade, 0.25);
 const GROWTH_LINE = '#CEC9CD';
@@ -102,7 +107,9 @@ const SOFT_INK = '#5E4B5C';
 // hard callus (woven bone) on each border: near-white only on the lit ulnar cuff; on the shaded radial border the tones
 // are held to the shaft's local shade (cooled to the woven bone's cast)
 const HARD_SH = mix(C.newBone, C.boneShade, 0.45);
-const HARD_RAD = mix(mix(mix(HARD_SH, C.newBone, 0.35), WOVEN_SH, 0.4), C.boneShade, 0.22);
+// (pulled most of the way to the shaft's shade at its radial edge: the inner band sits ~10 luma above the shaft just
+// inside the border, a slightly paler cuff rather than a cream strip)
+const HARD_RAD = mix(mix(mix(mix(HARD_SH, C.newBone, 0.35), WOVEN_SH, 0.4), C.boneShade, 0.22), stopAt(SHAFT_STOPS, 0.9), 0.58);
 const HARD_RAD_OUT = mix(mix(C.boneShade, C.boneDeep, 0.2), '#BDB8AC', 0.25);
 const HARD_ULN = stopAt(WOVEN_STOPS, 0.3);
 const HARD_ULN_LIT = '#FFFFFF';
@@ -243,7 +250,8 @@ const PORES: Pore[] = (() => {
   return out;
 })();
 /** the spicules on each front: fixed places along the seam; each buds out ahead of the front into the glue and is
- *  overtaken by it */
+ *  overtaken by it. Short and irregular (about a third of the places skipped, the rest jittered), so the front reads
+ *  as a budding edge, not a row of teeth */
 type Spur = {id: SeamId; side: 1 | -1; s: number; ph: number; hw: number; L: number; c: P};
 const SPURS: Spur[] = (() => {
   const out: Spur[] = [];
@@ -252,9 +260,10 @@ const SPURS: Spur[] = (() => {
       const seed = SEED[id] * 7 + (side > 0 ? 1 : 3);
       for (let s = S_FULL0[id] + 0.15; s < LEN[id] + 0.5; s += 0.24) {
         const h = (k: number) => hash(s * 7.37 + seed * 1.93 + k * 11.1);
-        const sv = s + (h(0) - 0.5) * 0.1;
+        if (h(4) < 0.35) continue;
+        const sv = s + (h(0) - 0.5) * 0.14;
         if (!realFace(id, sv, side, 0.15)) continue;
-        out.push({id, side, s: sv, ph: h(1), hw: 0.05 + 0.03 * h(2), L: 0.065 + 0.06 * h(3), c: seamEdgeSeated(id, sv, side, 0)});
+        out.push({id, side, s: sv, ph: h(1), hw: 0.045 + 0.035 * h(2), L: 0.7 * (0.065 + 0.06 * h(3)), c: seamEdgeSeated(id, sv, side, 0)});
       }
     }
   }
@@ -263,21 +272,28 @@ const SPURS: Spur[] = (() => {
 /** how far past each face the remodelling starts: just beyond the outer edge of the fracture's bevel (its chamfer
  *  strip is ~0.32 mm wide at the healing framings, up to ~0.36 with its edge line) */
 const EXT0 = 0.42;
+/** remodel progress (at a face's mean speed) at which its front reaches the face line, and the gap's centre */
+const R_FACE = 0.17, R_MEET = 0.58;
 /** the mature (remodelled) bone's front on one face, for remodel progress r, as mm from the face into the gap
- *  (negative: still out over the face's bevel). ONE front per face: it starts at EXT0 out on the intact cortex, sweeps
- *  across the bevel and the face line (by r ~0.3), then on into the pale woven bone, which visibly narrows. Each face
- *  has its own uneven speed, so the two fronts meet around r 0.75 (earlier where both are fast: the pale band pinches
- *  into streaks first); a closing term makes sure both sides together cover the whole gap by r = 1. */
+ *  (negative: still out over the face's bevel). ONE front per face, moving at a steady pace: it starts at EXT0 out on
+ *  the intact cortex, sweeps across the bevel to the face line (r ~0.17), then on into the pale woven bone, which
+ *  visibly narrows while it stays pale and textured. Each face has its own speed and both share slow pinches along the
+ *  seam, so the fronts meet first where both are fast (r ~0.48: the band breaks into pale streaks) and last around
+ *  r 0.72 (the film's healing framing is held to r ~0.72); a closing term covers the whole gap by r 0.84. */
 const matured = (id: SeamId, s: number, r: number, side: 1 | -1): number => {
   if (r <= 0) return -EXT0;
   const g = seamGap(id, s);
   const seed = SEED[id] * 23 + (side > 0 ? 4 : 9);
-  const k = 0.7 + 0.6 * (0.5 + 0.5 * noise1(s * 0.48 + seed, seed));
-  const own = r * 1.25 * k * g * 0.5 + 0.03 * Math.sin(s * 6.1 + seed) * r * (1 - r);
-  const into = clamp(Math.max(own, 0.5 * g * ss(r, 0.7, 1)), 0, g);
-  // the bevel is crossed first, a little sooner where this face is the faster one
-  const over = EXT0 * (1 - ss(r * (0.8 + 0.2 * k), 0, 0.3));
-  return into - over;
+  const own = 0.5 + 0.5 * noise1(s * 0.9 + seed, seed);
+  const pinch = 0.5 + 0.5 * noise1(s * 0.7 + SEED[id] * 5, 41);
+  const k = 0.8 + 0.18 * own + 0.24 * pinch; // 0.8..1.22
+  const p = r * k;
+  let f = p <= R_FACE ? -EXT0 * (1 - p / R_FACE) : (0.5 * g * (p - R_FACE)) / (R_MEET - R_FACE);
+  // a slight waviness along the front while it moves
+  f += 0.025 * Math.sin(s * 5.3 + seed) * ss(r, 0.05, 0.25) * (1 - ss(r, 0.45, 0.65));
+  const close = 0.5 * g * ss(r, 0.62, 0.84);
+  if (close > 0) f = Math.max(f, close);
+  return Math.min(f, g);
 };
 
 /** the woven bone left between a seam's two maturing fronts (inset(side, s) mm from each face), as polygons: one per
@@ -326,6 +342,41 @@ const CORNERS: Corner[] = (() => {
   }
   return out;
 })();
+/** the corner's centre in the current pose */
+const cornerAt = (k: Corner, w: WedgeX): P =>
+  (isWedgeSide(k.a, k.sa, k.sideA) || isWedgeSide(k.b, k.sb, k.sideB) ? xfPoint(k.p, w) : k.p);
+/** the woven bone's growth lines round a fragment corner: the face lines at depth D stop short of the corner (the
+ *  mouths), so here each depth runs in along face A from where its own line ends, round the corner on an arc about the
+ *  tip (the offset of a corner is round), and out along face B to where that face's line starts */
+const cornerLine = (k: Corner, D: number, w: WedgeX): P[] => {
+  const sJ = k.b === 'C2' ? S_C2_ON_C1 : S_C3_ON_C1;
+  const leg = (id: SeamId, s0: number, side: 1 | -1, dir: number): P[] => {
+    const out: P[] = [];
+    let s = s0;
+    for (let i = 0; i < 14; i++) {
+      out.push(seamEdge(id, s, side, w, -D));
+      if (realFace(id, s, side, 0.1) && i > 0) break;
+      s += dir * 0.08;
+    }
+    out.push(seamEdge(id, s + dir * 0.08, side, w, -D));
+    return out;
+  };
+  const A = leg(k.a, k.sa, k.sideA, Math.sign(k.sa - sJ) || 1);
+  const B = leg(k.b, k.sb, k.sideB, 1);
+  const c = cornerAt(k, w);
+  const eA = A[0], eB = B[0];
+  const aA = Math.atan2(eA.y - c.y, eA.x - c.x), aB = Math.atan2(eB.y - c.y, eB.x - c.x);
+  let da = aB - aA;
+  while (da > Math.PI) da -= 2 * Math.PI;
+  while (da < -Math.PI) da += 2 * Math.PI;
+  const rA = len(sub(eA, c)), rB = len(sub(eB, c));
+  const arc: P[] = [];
+  for (let j = 1; j < 8; j++) {
+    const u = j / 8, an = aA + da * u, rr = rA + (rB - rA) * u;
+    arc.push(pt(c.x + Math.cos(an) * rr, c.y + Math.sin(an) * rr));
+  }
+  return [...[...A].reverse(), ...arc, ...B];
+};
 
 // ---------------------------------------------------------------- 1. the soft lining on the lips
 const Lining: React.FC<{st: BoneState2; view: View}> = ({st, view}) => {
@@ -468,7 +519,7 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
   const box: View = [x0, y0, x1, y1];
   const ids = {
     mask: uid('hl_nb'), clip: uid('hl_gc'), glue: uid('hl_gl'), woven: uid('hl_wv'), shaft: uid('hl_sh'), sheen: uid('hl_sn'), mat: uid('hl_mt'),
-    matW: uid('hl_mw'), notMat: uid('hl_nm'), fil: uid('hl_fl'), mouths: uid('hl_mo'), gaps: uid('hl_gp'),
+    matW: uid('hl_mw'), notMat: uid('hl_nm'), fil: uid('hl_fl'), filOut: uid('hl_fo'), mouths: uid('hl_mo'), gaps: uid('hl_gp'),
   };
   // remodelling: the maturing fronts carry the change. Each starts on the intact cortex just past its face's bevel
   // (EXT0) and sweeps in across the bevel and the face line, then narrows the pale woven band; the woven bone left
@@ -476,7 +527,8 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
   // the rest over remodel 0.25-0.7, while the band is already narrow). Behind the fronts: the shaft's own shading and
   // surface detail, so no stale bevel or face line is left beside the closing seam
   const remod = rem > 0.001;
-  const kSh = 0.28 * ss(bridge, 0.75, 1) + 0.72 * ss(rem, 0.25, 0.7);
+  // (the pale band keeps its tone while the fronts narrow it, and tones down only as it closes to a line)
+  const kSh = 0.28 * ss(bridge, 0.75, 1) + 0.72 * ss(rem, 0.47, 0.7);
   const ext = remod ? EXT0 : 0;
   // white: the region this layer covers (the gaps, past each face by ext while remodelling); white0: the gaps alone
   // (the woven bone, the spicules and the fillets never reach past a face)
@@ -535,9 +587,19 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
   }
   // incremental growth lines: once a front has passed depth D, a faint broken line parallel to its face (the bone is
   // laid down in layers), so the advance leaves a record of where the front has been
-  const lineA = clamp((0.05 - px) / 0.02) * (1 - ss(rem, 0.1, 0.5));
+  const lineA = clamp((0.05 - px) / 0.02) * (1 - ss(rem, 0.44, 0.66));
   const glines: string[] = [];
+  // the same lines round each fragment corner (each fades in as the corner's new bone passes its depth)
+  const cLines: {d: string; a: number}[] = [];
   if (lineA > 0.01) {
+    for (const k of CORNERS) {
+      if (!inBox(cornerAt(k, w), box, 1)) continue;
+      const r = 0.5 * (growth(k.a, k.sa, bridge, k.sideA) + growth(k.b, k.sb, bridge, k.sideB));
+      for (const D of [0.13, 0.26, 0.39]) {
+        const a = clamp((r - D - 0.05) / 0.06);
+        if (a > 0.01) cLines.push({d: open(cornerLine(k, D, w), 0.5), a});
+      }
+    }
     for (const id of SEAM_IDS) {
       for (const side of [-1, 1] as const) {
         for (const D of [0.13, 0.26, 0.39]) {
@@ -590,15 +652,17 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
       spurs.push(open([base(-sp.hw), at(-0.62, 0.45), at(-0.38, 0.85), at(0, 1), at(0.38, 0.85), at(0.62, 0.45), base(sp.hw)], 1));
     }
   }
-  // the corner joins: a disc of woven bone about each fragment tip, the radius of the new bone on its two faces
-  const fillets: {c: P; r: number}[] = [];
+  // the corner joins: a disc of woven bone about each fragment tip, the radius of the new bone on its two faces. It is
+  // part of the new bone's region (in the mask, so the lattice and the growth lines with their corner arcs run through
+  // it: never a flat disc); the fronts' rim lines are kept out of it, and its own edge carries the rim where it stands in
+  // the glue
+  const fillets: {c: P; r: number; a: number}[] = [];
   if (bridge < 1 && black.length > 0) {
     for (const k of CORNERS) {
       const r = 0.5 * (growth(k.a, k.sa, bridge, k.sideA) + growth(k.b, k.sb, bridge, k.sideB));
       if (r < 0.025) continue;
-      const wedge = isWedgeSide(k.a, k.sa, k.sideA) || isWedgeSide(k.b, k.sb, k.sideB);
-      const c = wedge ? xfPoint(k.p, w) : k.p;
-      if (inBox(c, box, 1)) fillets.push({c, r});
+      const c = cornerAt(k, w);
+      if (inBox(c, box, 1)) fillets.push({c, r, a: clamp((r - 0.025) / 0.04)});
     }
   }
   const wovenStops = blendStops(WOVEN_STOPS, SEAM_STOPS, kSh);
@@ -628,15 +692,24 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
         <mask id={ids.mask} maskUnits="userSpaceOnUse" x={x0} y={y0} width={x1 - x0} height={y1 - y0}>
           {cover.map((d, i) => <path key={`w${i}`} d={d} fill="#FFFFFF" />)}
           {black.map((d, i) => <path key={`b${i}`} d={d} fill="#000000" />)}
+          {fillets.length > 0 && (
+            <g clipPath={`url(#${ids.clip})`}>{fillets.map((f, i) => <circle key={`f${i}`} cx={f.c.x} cy={f.c.y} r={f.r} fill="#FFFFFF" />)}</g>
+          )}
         </mask>
         <clipPath id={ids.clip}>
           {white0.map((d, i) => <path key={i} d={d} />)}
         </clipPath>
         {(spurs.length > 0 || fillets.length > 0) && <clipPath id={ids.glue}>{black.map((d, i) => <path key={i} d={d} />)}</clipPath>}
         {fillets.length > 0 && (
-          <mask id={ids.fil} maskUnits="userSpaceOnUse" x={x0} y={y0} width={x1 - x0} height={y1 - y0}>
-            {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} fill="#FFFFFF" />)}
-          </mask>
+          <>
+            <mask id={ids.fil} maskUnits="userSpaceOnUse" x={x0} y={y0} width={x1 - x0} height={y1 - y0}>
+              {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} fill="#FFFFFF" />)}
+            </mask>
+            <mask id={ids.filOut} maskUnits="userSpaceOnUse" x={x0} y={y0} width={x1 - x0} height={y1 - y0}>
+              {R('#FFFFFF')}
+              {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} fill="#000000" />)}
+            </mask>
+          </>
         )}
         {remod && (
           <>
@@ -673,15 +746,16 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
           <>
             {woven}
             {pores.length > 0 && <g opacity={poreA}>{pores}</g>}
-            {glines.length > 0 && (
+            {(glines.length > 0 || cLines.length > 0) && (
               <g fill="none" stroke={GROWTH_LINE} strokeWidth={1.25 * px} strokeDasharray="0.26 0.08 0.4 0.11" strokeLinecap="round" opacity={0.8 * lineA}>
                 {glines.map((d, i) => <path key={i} d={d} />)}
+                {cLines.map((c, i) => <path key={`c${i}`} d={c.d} opacity={c.a} />)}
               </g>
             )}
           </>
         ))}
         {rimA > 0.01 && rimPaths.length > 0 && (
-          <g fill="none" strokeLinejoin="round" opacity={rimA}>
+          <g fill="none" strokeLinejoin="round" opacity={rimA} mask={fillets.length > 0 ? `url(#${ids.filOut})` : undefined}>
             {rimPaths.map((d, i) => <path key={`r${i}`} d={d} stroke={RIM} strokeWidth={2 * (rimW + inkW)} />)}
             {rimPaths.map((d, i) => <path key={`k${i}`} d={d} stroke={RIM_INK} strokeWidth={2 * inkW} />)}
           </g>
@@ -689,21 +763,26 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
       </g>
       {spurs.length > 0 && (
         <g clipPath={`url(#${ids.clip})`}>
-          {/* the spicules' teal edge only where they stand in the glue, then their pale fill */}
-          <g clipPath={`url(#${ids.glue})`} fill="none" stroke={RIM_INK} strokeWidth={2 * inkW} strokeLinejoin="round">
+          {/* the spicules: a fine teal edge only where they stand in the glue, then the woven bone's own fill (they are
+              the front budding, not a separate white material) */}
+          <g clipPath={`url(#${ids.glue})`} fill="none" stroke={RIM_INK} strokeWidth={inkW} strokeLinejoin="round">
             {spurs.map((d, i) => <path key={i} d={d} />)}
           </g>
-          {spurs.map((d, i) => <path key={`f${i}`} d={d} fill={RIM} />)}
+          {spurs.map((d, i) => <path key={`f${i}`} d={d} fill={`url(#${ids.woven})`} />)}
         </g>
       )}
-      {fillets.length > 0 && (
-        <g clipPath={`url(#${ids.clip})`}>
-          {/* the fillet's edge only where it stands in the glue (a teal line, as along every front), then its fill */}
-          <g clipPath={`url(#${ids.glue})`} fill="none" stroke={RIM_INK} strokeWidth={2 * inkW}>
-            {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} opacity={clamp((f.r - 0.025) / 0.04)} />)}
+      {fillets.length > 0 && rimA > 0.01 && (
+        <g clipPath={`url(#${ids.clip})`} opacity={rimA}>
+          {/* the fillet's edge where it stands in the glue: the teal line just outside it and the bright rim just inside,
+              as along every front */}
+          <g clipPath={`url(#${ids.glue})`} fill="none">
+            <g mask={`url(#${ids.filOut})`} stroke={RIM_INK} strokeWidth={2 * inkW}>
+              {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} opacity={f.a} />)}
+            </g>
+            <g mask={`url(#${ids.fil})`} stroke={RIM} strokeWidth={2 * rimW}>
+              {fillets.map((f, i) => <circle key={i} cx={f.c.x} cy={f.c.y} r={f.r} opacity={f.a} />)}
+            </g>
           </g>
-          {/* (during remodelling only inside the woven bone that is left: never a pale disc over the mature bone) */}
-          {wovenLeft && inWoven('fl', <g mask={`url(#${ids.fil})`}>{woven}</g>)}
         </g>
       )}
     </g>
@@ -714,10 +793,10 @@ const NewBone: React.FC<{st: BoneState2; view: View; radClip: string}> = ({st, v
 const TRACES: string[] = SEAM_IDS.map((id) =>
   open(sample(id === 'C1' ? -0.5 : 0.5, LEN[id] + 0.5, 0.1).map((s) => seamEdgeSeated(id, s, 1, -seamGap(id, s) / 2)), 0.5));
 const Trace: React.FC<{st: BoneState2; radClip: string}> = ({st, radClip}) => {
-  const a = ss(st.heal.remodel, 0.55, 0.9);
+  const a = ss(st.heal.remodel, 0.5, 0.78);
   if (a < 0.01) return null;
   return (
-    <g clipPath={`url(#${radClip})`} fill="none" stroke={C.boneShade} strokeWidth={1.3 * st.px} strokeLinecap="round" opacity={0.32 * a}>
+    <g clipPath={`url(#${radClip})`} fill="none" stroke={C.boneShade} strokeWidth={1.5 * st.px} strokeLinecap="round" opacity={0.4 * a}>
       {TRACES.map((d, i) => <path key={i} d={d} />)}
     </g>
   );
@@ -877,7 +956,7 @@ const Cuff: React.FC<{st: BoneState2; view: View}> = ({st, view}) => {
                 const q = add(pts[k].p, mul(pts[k].n, b * (0.15 + 0.7 * hash(k * 1.3 + j * 4.1 + cf.seed))));
                 const rr = 0.035 + 0.025 * hash(k * 2.9 + j);
                 const ang = (Math.atan2(pts[k].n.y, pts[k].n.x) * 180) / Math.PI + 30 * (hash(k * 5.1 + j) - 0.5);
-                pores.push(<ellipse key={`${k}_${j}`} cx={q.x} cy={q.y} rx={rr * 1.6} ry={rr} transform={`rotate(${ang.toFixed(1)} ${q.x} ${q.y})`} fill={hh > 0.85 ? PORE_DEEP : PORE} />);
+                pores.push(<ellipse key={`${k}_${j}`} cx={q.x} cy={q.y} rx={rr * 1.6} ry={rr} transform={`rotate(${ang.toFixed(1)} ${q.x} ${q.y})`} fill={hh > 0.85 ? PORE_DEEP : rad ? PORE_RAD : PORE} />);
               }
             }
           }

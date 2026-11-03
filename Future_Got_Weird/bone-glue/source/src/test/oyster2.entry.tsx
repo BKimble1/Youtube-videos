@@ -1,7 +1,8 @@
 // Test entry for the V2 oyster (src/art/oyster.tsx). 'Sheet': phone-size panels (360×640) along the film's oyster
 // shot at t 8.0, 8.5, 9.0, 9.5, 10.0, 10.3 on the lead's camera path (story.ts oysterCam, reproduced here) with the
 // film's reveal. 'One': one full-size frame
-// ({t, mode: 'in' | 'out' | 'path', reveal? (-1 or absent: the film's value), debug?}); debug overlays the bone glue band's glueTop (magenta) and
+// ({t, mode: 'in' | 'out' | 'path', reveal? (-1 or absent: the film's value), cam? (overrides the mode's camera: any
+// {x, y, w} in world mm, for close-ups), debug?}); debug overlays the bone glue band's glueTop (magenta) and
 // glueBottom (yellow) from production/v2_match_band.json, and faceTop/faceBottom (thin cyan).
 import React from 'react';
 import {Composition, registerRoot} from 'remotion';
@@ -25,8 +26,8 @@ type Rows = {rows: {glueTop: number[]; glueBottom: number[]; faceTop: number[]; 
 const R = (BAND as unknown as Rows).rows;
 const pl = (k: 'glueTop' | 'glueBottom' | 'faceTop' | 'faceBottom') => R.map((r) => `${r[k][0].toFixed(1)},${r[k][1].toFixed(1)}`).join(' ');
 
-type Panel = {t: number; mode: 'in' | 'out' | 'path'; reveal?: number};
-const camOf = (p: Panel): Cam => (p.mode === 'in' ? OY_CAM_IN : p.mode === 'out' ? OY_CAM_OUT : pathCam(p.t));
+type Panel = {t: number; mode: 'in' | 'out' | 'path'; reveal?: number; cam?: Cam};
+const camOf = (p: Panel): Cam => (p.cam ? p.cam : p.mode === 'in' ? OY_CAM_IN : p.mode === 'out' ? OY_CAM_OUT : pathCam(p.t));
 const revOf = (p: Panel) => (typeof p.reveal === 'number' && p.reveal >= 0 ? p.reveal : p.mode === 'path' ? revealAt(p.t) : p.mode === 'out' ? 1 : 0);
 
 const Frame: React.FC<{id: string; p: Panel; debug?: boolean}> = ({id, p, debug}) => (

@@ -28,8 +28,8 @@ import {Blob, Capsule, LIGHT, Lin} from '../dc/shade';
 import {Limb} from '../dc/limb';
 import {lit, mix, shade} from '../dc/color';
 import {add, clamp, dot, fmt, len, lerpV, mul, norm, P as Pf, perp, rad, rot, sub, V} from '../dc/math';
-import {Applicator, Probe, appGrip, probeGrip} from './instruments';
-import {InstrState2} from '../v2state';
+import {Applicator, Probe, appGrip, probeGrip, setWithdrawDir, withdrawDist} from './instruments';
+import {AppState2, InstrState2, ProbeState} from '../v2state';
 
 // ------------------------------------------------------------------------------------------------ state
 export type SurgeonFace = InstrState2['face'];
@@ -855,8 +855,6 @@ const ARM = {
   // the near arm comes down from the near shoulder to the elbow at his side; the forearm reaches up-left to the probe
   near: {Lu: 260, Lf: 175, side: 1 as const, dev: 0.3},
 };
-/** how far (mm) a hand carries its instrument back along the forearm when it leaves the field (appOn / probeOn 0) */
-const WITHDRAW = 200;
 /** sleeve radii: shoulder, elbow, wrist (the glove's cuff covers the wrist end) */
 const SLV = {s: 36, e: 31, w: 27};
 const CUFF = {len: 40, r0: 0.158 * SURGEON.hand, r1: 27.5};
@@ -874,15 +872,15 @@ const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
   const Wl0 = toLocal(grip.wrist, k);
   const E0 = elbowFor(S, Wl0, back, P.Lu, P.Lf, P.side, P.dev);
   // withdrawal: the hand (with its instrument) slides back along the forearm and a little toward the shoulder; the
-  // elbow follows part of the way (the forearm foreshortens as it lifts off the table)
-  // (on is already eased by the story: easing it again made the withdrawal whip)
-  const e = clamp(1 - on);
+  // elbow follows part of the way (the forearm foreshortens as it lifts off the table). The distance law
+  // (instruments.withdrawDist) keeps the stretch still in the frame gentle and steady.
+  const dist = withdrawDist(on);
   let Wl = Wl0, E = E0, shift = {x: 0, y: 0};
-  if (e > 1e-4) {
+  if (dist > 1e-4) {
     const fdir = norm(sub(E0, Wl0));
     const toS = norm(sub(S, Wl0));
     const md = norm(add(mul(fdir, 0.7), mul(toS, 0.3)));
-    const D = mul(md, WITHDRAW * e);
+    const D = mul(md, dist);
     Wl = add(Wl0, D);
     E = add(E0, mul(D, 0.55));
     shift = sub(fromLocal(Wl, k), grip.wrist);
@@ -891,6 +889,9 @@ const solveArm = (st: SurgeonState, which: 'far' | 'near'): ArmSolve => {
   const cuffDir = norm(sub(fromLocal(E, k), wrist));
   return {grip, S, E, Wl, wrist, cuffDir, shift};
 };
+
+/** QA helper (tests and measuring scripts): the solved arms for a state (wrist, elbow, grip; the surgeon's local frame) */
+export const surgeonArms = (st: SurgeonState) => ({far: solveArm(st, 'far'), near: solveArm(st, 'near')});
 
 const SleeveArm: React.FC<{id: string; a: ArmSolve; far: boolean; k: number}> = ({id, a, far, k}) => {
   const col = far ? shade(C.gown, 0.14) : C.gown;
@@ -1023,3 +1024,14 @@ export const SURGEON_DEFAULT: SurgeonState = {
   k: 0.97,
   lean: 0,
 };
+
+// the instruments' contact shadows follow the hands' withdrawal direction (the default pose, level, no lean: the
+// direction barely depends on them)
+setWithdrawDir((which, inst) => {
+  const st: SurgeonState = which === 'app'
+    ? {...SURGEON_DEFAULT, app: inst as AppState2, appOn: 0.5, k: 1, lean: 0}
+    : {...SURGEON_DEFAULT, probe: inst as ProbeState, probeOn: 0.5, k: 1, lean: 0};
+  const sh = solveArm(st, which === 'app' ? 'far' : 'near').shift;
+  const l = len(sh);
+  return l > 1e-6 ? {x: sh.x / l, y: sh.y / l} : null;
+});

@@ -4,8 +4,10 @@
 // npx remotion still src/test/heal.entry.tsx One out.jpg --props='{"i":4}' --log=error
 // npx remotion still src/test/heal.entry.tsx Strip out.jpg --log=error            (the healing stretch on the film's clock)
 // npx remotion still src/test/heal.entry.tsx Crops out.jpg --props='{"bs":[0.3,0.5,0.7],"rs":[0.5]}' --log=error
-// rem0 (Strip, Crops, One): preview a remodel schedule that starts earlier, at rem0 (s), with a gentler start
-// (remodel = 0.6 * ss(t, rem0, EV.rem1) + 0.4 * linear), in place of story.ts's own
+// rem0 (Strip, Crops, One): preview a remodel schedule that starts at rem0 (s) instead of EV.rem0, same shape as
+// story.ts's own (remodel = 0.6 * ss(t, rem0, EV.rem1) + 0.4 * linear)
+// npx remotion still src/test/heal.entry.tsx Junctions out.jpg --log=error    (the C1/C2 and C1/C3 corners at 3x)
+// npx remotion still src/test/heal.entry.tsx Remodel out.jpg --log=error      (the woven -> mature front at 2x)
 import React from 'react';
 import {Composition, registerRoot, AbsoluteFill} from 'remotion';
 import {Cam, Layer, viewRect} from '../camera';
@@ -150,6 +152,12 @@ registerRoot(() => (
   <>
     <Composition id="Crops" component={Crops} durationInFrames={1} fps={30} width={1620} height={1200}
       defaultProps={{bs: [0.3, 0.5, 0.7], rs: [0.5], x: 300, y: 820, w: 760, h: 560, k: 0.7, cols: 2} as CropP} />
+    {/* the T-junctions through the island phase (corner discs and growth-line arcs) and the remodelling front, on the
+        film's clock and camera */}
+    <Composition id="Junctions" component={Crops} durationInFrames={1} fps={30} width={1620} height={1200}
+      defaultProps={{ts: [21.0, 22.4, 22.8, 23.4, 24.0, 24.4], bs: [], rs: [], x: 490, y: 920, w: 220, h: 120, k: 3, cols: 2} as CropP} />
+    <Composition id="Remodel" component={Crops} durationInFrames={1} fps={30} width={1620} height={1200}
+      defaultProps={{ts: [24.4, 24.6, 24.7, 24.8, 24.9, 25.0, 25.05, 25.1, 25.2], bs: [], rs: [], x: 300, y: 950, w: 260, h: 120, k: 2, cols: 3} as CropP} />
     <Composition id="Sheet" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{only: undefined as number[] | undefined}} />
     {/* the healing stretch and on through the ease-out and the loop push-in (the healed bone must stay healed) */}
     <Composition id="Strip" component={Strip} durationInFrames={1} fps={30} width={1080} height={1280}

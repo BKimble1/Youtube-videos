@@ -28,12 +28,15 @@
 //
 // The oyster, its cement and the rock never move. Everything that belongs to the water moves, left to right: particles
 // in several depth layers (near the subject at every zoom: scale-adaptive octaves; light motes over open water, dark
-// silt over shell and rock; every streak within ±18° of the flow), large soft foreground flecks (8.4–10.1 s), weed
-// scraps across the base in the macro, weed bending with the current, bubbles, shafts and caustics, and one current
-// SURGE (t 8.45–9.45, peak ≈ 8.95). All motion is a deterministic, continuous function of t. Contours keep a constant
-// on-screen weight; every SVG filter region is clipped to the view.
+// silt over shell and rock; every streak within ±18° of the flow; during the push drawn through a partly decoupled
+// mote camera so they keep streaming right instead of bursting out of the zoom centre: moteCam), large soft foreground
+// flecks (8.4–10.1 s), torn weed bits crossing the wide framings on screen-space runs, weed scraps across the base in
+// the macro, weed bending with the current, bubbles, shafts and caustics, and one current SURGE (t 8.45–9.45, peak ≈
+// 8.95). The wide framing's far and foreground layers fade out with the push (no hard layer gates). All motion is a
+// deterministic, continuous function of t. Contours keep a constant on-screen weight; every SVG filter region is
+// clipped to the view.
 import React from 'react';
-import {Cam, Layer, viewRect, layerScale, toScreen, toWorld, W, H} from '../camera';
+import {Cam, Layer, viewRect, layerScale, toScreen, toWorld, W, H, DIST} from '../camera';
 import {C} from './palette';
 import {P, pt, add, mul, nrm, perp, sub, line, closed, open, tube, n4} from '../core/geo';
 import {mix, rgba} from '../core/color';
@@ -157,13 +160,15 @@ const arcs = (ps: P[]) => {
   return s;
 };
 const tangents = (ps: P[]) => ps.map((_, i) => nrm(sub(ps[Math.min(ps.length - 1, i + 1)], ps[Math.max(0, i - 1)])));
-type FrillOpts = {taper?: number; sharp?: number; mode?: 'scallop' | 'tooth'; ampP?: (p: P, u: number) => number; lobeK?: (j: number) => number; toothP?: number};
+type FrillOpts = {taper?: number; sharp?: number; mode?: 'scallop' | 'tooth'; ampP?: (p: P, u: number) => number; lobeK?: (j: number) => number; toothP?: number; toothSoft?: (p: P) => number};
 /** a frilly edge: the base polyline pushed along its normal (side +1 = perp of the direction of travel) in lobes.
  *  'scallop' = rounded lobes with sharp valleys, 'tooth' = the oyster's zigzag (plicate) margin. lobeK(j) scales lobe
  *  j's amplitude, and a share toothP of the lobes take the tooth shape (an irregular, flaky edge rather than an even
- *  scallop). Also returns the indices of the valleys between lobes (for flutes). */
+ *  scallop); toothSoft(p) 0..1, where it is high, rounds those odd teeth off into low, blunt bumps and keeps every
+ *  lobe at most 0.4 as tall as it is wide (no spikes standing off the silhouette). Also returns the indices of the
+ *  valleys between lobes (for flutes). */
 const frillX = (base: P[], side: number, amp: [number, number], wl: [number, number], seed: number, o: FrillOpts = {}) => {
-  const {taper = 1.6, sharp = 0.55, mode = 'scallop', ampP = () => 1, lobeK = () => 1, toothP = 0} = o;
+  const {taper = 1.6, sharp = 0.55, mode = 'scallop', ampP = () => 1, lobeK = () => 1, toothP = 0, toothSoft} = o;
   const s = arcs(base);
   const L = s[s.length - 1];
   const b = [0];
@@ -183,9 +188,13 @@ const frillX = (base: P[], side: number, amp: [number, number], wl: [number, num
     const uu = Math.pow(u, 0.75 + 0.5 * hash(seed * 1.37 + j * 5.11));
     const odd = mode !== 'tooth' && hash(seed * 4.41 + j * 2.237) < toothP;
     const tooth = mode === 'tooth' || odd;
-    const a = lerp(amp[0], amp[1], hash(seed * 2.9 + j * 1.618)) * ampP(p, s[i] / L) * lobeK(j) * (odd ? 0.5 : 1);
+    const blunt = toothSoft ? clamp(toothSoft(p)) : 0;
+    const soft = odd ? blunt : 0;
+    const a0 = lerp(amp[0], amp[1], hash(seed * 2.9 + j * 1.618)) * ampP(p, s[i] / L) * lobeK(j) * (odd ? 0.5 - 0.2 * soft : 1);
+    const a = lerp(a0, Math.min(a0, 0.4 * (b[j + 1] - b[j])), blunt);
     const tp = ss(s[i], 0, taper) * ss(L - s[i], 0, taper);
-    const sh = tooth ? (Math.sqrt(1 + r) - Math.sqrt((2 * uu - 1) ** 2 + r)) / top : Math.pow(Math.sin(Math.PI * uu), sharp);
+    const tS = (Math.sqrt(1 + r) - Math.sqrt((2 * uu - 1) ** 2 + r)) / top;
+    const sh = tooth ? lerp(tS, Math.pow(Math.sin(Math.PI * uu), 1.1), soft) : Math.pow(Math.sin(Math.PI * uu), sharp);
     return add(p, mul(perp(T[i]), side * a * sh * tp));
   });
   return {pts, val};
@@ -313,10 +322,63 @@ const bandLine = (fy: (x: number) => number, x0: number, x1: number): P[] => {
 };
 /** the cutaway window: centred on the band at M; its full world radius (640 px on screen at OY_CAM_OUT) */
 export const OY_WIN = {c: pt(0, (bandTop(0) + bandBot(0)) / 2), r: 640 * SP};
+/** the window's opening iris starts at this radius (screen px at OY_CAM_OUT): wider than the band, so the very first
+ *  frames already show shell above and rock below it (a cut, not a bubble on the band) */
+const WIN_R0 = 120 * SP;
+/** the window's radius (world mm) at reveal 0..1: the V2 iris plus a head start of WIN_R0 that runs out smoothly by
+ *  reveal 0.35 (the radius keeps growing throughout; from 0.35 on it is exactly the V2 curve, so the window at the cut
+ *  back is unchanged) */
+const winR = (reveal: number) => {
+  const v = clamp(reveal);
+  return OY_WIN.r * (1 - Math.pow(1 - v, 1.6)) + WIN_R0 * Math.pow(Math.max(0, 1 - v / 0.35), 2);
+};
+/** the window's fade-in (0..1): the cut appears within about two frames, its content and its inked edge together */
+const winA = (reveal: number) => ss(reveal, 0.004, 0.03);
 
 // ------------------------------------------------------------------ the oyster and its cement (static geometry, built once)
 /** the attached span of the lower valve: from XA (umbo end) to XB (where the bill's margin lifts off the rock) */
 const XA = -29, XB = 24;
+/** the cement band seen from outside: a thin even layer under the whole attached base, its ends rounded */
+const CEM_XA = XA - 0.55, CEM_XB = XB + 0.35;
+const cementPath = (top: (x: number) => number, bot: (x: number) => number) => {
+  const cap = (x: number, dir: number) => {
+    const t0 = top(x), b0 = bot(x), m = (t0 + b0) / 2, hh = (b0 - t0) / 2;
+    const out: P[] = [];
+    for (let i = 1; i < 14; i++) {
+      const th = -Math.PI / 2 + (i / 14) * Math.PI;
+      out.push(pt(x + dir * 0.9 * hh * Math.cos(th), m + hh * Math.sin(th)));
+    }
+    return dir > 0 ? out : out.reverse();
+  };
+  const topEdge = bandLine(top, CEM_XA, CEM_XB);
+  const botEdge = bandLine(bot, CEM_XB, CEM_XA);
+  return {topEdge, botEdge, d: line([...topEdge, ...cap(CEM_XB, 1), ...botEdge, ...cap(CEM_XA, -1)]) + 'Z'};
+};
+/** the band's edges with the small lumps smoothed away (Gaussian, σ 0.8 mm): how the cement reads in the wider
+ *  framings, where the match band's fine wiggles made a lumpy bead. The upper edge never drops more than 0.25 mm below
+ *  the true one (the valve's base overlaps the cement by 0.3 mm, so no gap opens). */
+const SMOOTH_BAND = (() => {
+  const X0 = CEM_XA - 3, st = 0.05, n = Math.ceil((CEM_XB + 3 - X0) / st);
+  const xs = Array.from({length: n + 1}, (_, i) => X0 + i * st);
+  const T = xs.map(bandTop), B = xs.map(bandBot);
+  const sig = 0.8, k = Math.ceil((3 * sig) / st);
+  const wts = Array.from({length: 2 * k + 1}, (_, i) => Math.exp(-0.5 * (((i - k) * st) / sig) ** 2));
+  const blur = (a: number[]) =>
+    a.map((_, i) => {
+      let sa = 0, sw = 0;
+      for (let q = -k; q <= k; q++) {
+        const m = i + q;
+        if (m < 0 || m >= a.length) continue;
+        sa += wts[q + k] * a[m];
+        sw += wts[q + k];
+      }
+      return sa / sw;
+    });
+  const Ts = blur(T), Bs = blur(B);
+  return {top: xs.map((x, i) => pt(x, Math.min(Ts[i], T[i] + 0.25))), bot: xs.map((x, i) => pt(x, Bs[i]))};
+})();
+const smoothTopAt = (x: number) => yOn(SMOOTH_BAND.top, x);
+const smoothBotAt = (x: number) => yOn(SMOOTH_BAND.bot, x);
 const buildOyster = () => {
   // --- the lid (right valve): a teardrop seen a little from above, pointed at the hinge, highest ~36 % along the
   // shell, rounding at the bill; its back edge is a lumpy, asymmetric dome (a flat shoulder, then a steeper fall to the
@@ -335,6 +397,8 @@ const buildOyster = () => {
     mode: 'scallop', sharp: 0.65, taper: 2.2, toothP: 0.3,
     ampP: (p) => 0.75 + 0.85 * billZ(p.x),
     lobeK: (j) => 0.25 + 1.4 * Math.pow(hash(j * 7.31 + 0.7), 1.3),
+    // toward the bill the odd teeth stood off the back edge as two small spikes: round them into a rough lip
+    toothSoft: (p) => ss(p.x, 12, 22),
   });
   // the lip seam between the valves: wavy, dropping from the hinge toward the bill, its plicate teeth biting down
   const LIP0 = rough(
@@ -476,19 +540,8 @@ const buildOyster = () => {
   const fine = FINE_E.map((q, k) => line(frillN(ellArc(q.xc, q.yc, q.rx, q.ry, -25, q.th1, 48), -1, [0.25, 0.6], [1.6, 2.8], 71 + k * 5, {mode: 'scallop', sharp: 0.7, taper: 1})));
 
   // --- the cement band seen from outside: a thin even layer under the whole attached base, its ends rounded
-  const xa = XA - 0.55, xb = XB + 0.35;
-  const cap = (x: number, dir: number) => {
-    const t0 = bandTop(x), b0 = bandBot(x), m = (t0 + b0) / 2, hh = (b0 - t0) / 2;
-    const out: P[] = [];
-    for (let i = 1; i < 14; i++) {
-      const th = -Math.PI / 2 + (i / 14) * Math.PI;
-      out.push(pt(x + dir * 0.9 * hh * Math.cos(th), m + hh * Math.sin(th)));
-    }
-    return dir > 0 ? out : out.reverse();
-  };
-  const topEdge = bandLine(bandTop, xa, xb);
-  const botEdge = bandLine(bandBot, xb, xa);
-  const cemD = line([...topEdge, ...cap(xb, 1), ...botEdge, ...cap(xa, -1)]) + 'Z';
+  const xa = CEM_XA, xb = CEM_XB;
+  const {topEdge, botEdge, d: cemD} = cementPath(bandTop, bandBot);
 
   // --- the silhouette's upper envelope (for the cast shadow and the particles' colour)
   const ENV_X0 = -42, ENV_ST = 0.25, ENV_N = Math.round((45 - ENV_X0) / ENV_ST);
@@ -563,14 +616,21 @@ const LID_BARNACLES = [
 // ------------------------------------------------------------------ the boulder (static)
 /** the boulder's silhouette against the water: the crown's back edge, then the shaded right shoulder turning down to
  *  an undercut, dark underside inside the medium frame (the left flank runs out of frame) */
-const ROCK_TOP = spline(
-  [
-    pt(-96, 87), pt(-84, 74), pt(-78, 60), pt(-65, 36), pt(-58, 23), pt(-52, 14), pt(-46, 6.5), pt(-39, 0.8), pt(-30, -3.8), pt(-17, -7.2), pt(0, -8.5),
-    pt(15, -8.1), pt(27, -6.8), pt(36, -4.7), pt(41.5, -2.9), pt(45.2, -0.4), pt(47.6, 3.6), pt(48.9, 9), pt(49.4, 15), pt(49.3, 22), pt(48.4, 30),
-    pt(46.3, 38), pt(43, 46), pt(38.4, 53.5), pt(32.6, 60), pt(26, 65.5), pt(19, 70), pt(12, 73.4), pt(4, 76.2), pt(-8, 78.6), pt(-24, 81.2), pt(-50, 84.8), pt(-78, 87.5),
-  ],
-  0.5,
-);
+const ROCK_TOP = [
+  ...spline(
+    [
+      pt(-96, 87), pt(-84, 74), pt(-78, 60), pt(-65, 36), pt(-58, 23), pt(-52, 14), pt(-46, 6.5), pt(-39, 0.8), pt(-30, -3.8), pt(-17, -7.2), pt(0, -8.5),
+      pt(15, -8.1), pt(27, -6.8), pt(36, -4.7), pt(41.5, -2.9), pt(45.2, -0.4), pt(47.6, 3.6), pt(48.9, 9), pt(49.4, 15), pt(49.3, 22), pt(48.4, 30),
+      pt(46.3, 38),
+    ],
+    0.5,
+  ),
+  // the underside where the boulder sits down on the bed: broken, blocky (straight breaks with small jogs and ledges),
+  // not a smooth glassy curve
+  pt(45.1, 41.6), pt(44.2, 42.4), pt(42.7, 46.3), pt(40.6, 49.7), pt(39.1, 50.5), pt(36.4, 54.6), pt(33.3, 58.3), pt(31.6, 58.9),
+  pt(28.4, 62.6), pt(24.2, 65.9), pt(21.4, 66.8), pt(17.6, 69.9), pt(13.1, 72.3), pt(10.4, 72.9), pt(5.6, 75.2), pt(0.8, 75.9),
+  pt(-3.6, 77.4), pt(-8, 78.6), pt(-13.5, 79.1), pt(-16.2, 80.3), pt(-24, 81.2), pt(-36, 82.4), pt(-39, 83.6), pt(-50, 84.8), pt(-64, 85.9), pt(-78, 87.5),
+];
 const I_SH = ROCK_TOP.reduce((bi, p, i, a) => (p.x > a[bi].x ? i : bi), 0);
 const ROCK_CROWN = ROCK_TOP.slice(0, I_SH + 1);
 const ROCK_SIDE = ROCK_TOP.slice(I_SH);
@@ -594,11 +654,14 @@ const CROWN_D = line([pt(-90, -40), pt(90, -40), ...[...BROW].reverse().map((p) 
  *  face, and the dark undercut along the lower right */
 const FACE_LIT = closed([pt(-84, 30), pt(-64, 25), pt(-48, 17.5), pt(-30, 13.8), pt(-10, 12.8), pt(6, 14), pt(14, 21), pt(10, 31), pt(-2, 41), pt(-20, 50), pt(-42, 58), pt(-64, 63), pt(-88, 66)], 0.8);
 const FACE_SHADE = closed([pt(70, 12), pt(46.5, 19.5), pt(41.5, 25), pt(35.5, 33.5), pt(28, 43.5), pt(19, 53), pt(7, 61.5), pt(-12, 68.5), pt(-36, 74), pt(-64, 78), pt(-96, 80), pt(-96, 240), pt(70, 240)], 0.8);
+/** the undercut's upper edge, where the face breaks over onto the underside: ragged and blocky (overhanging ledges) */
+const UNDER_EDGE = [
+  pt(-90, 90), pt(-78, 82.5), pt(-66, 81.9), pt(-63.5, 80.6), pt(-50, 79.6), pt(-38.5, 78.9), pt(-35.8, 77.0), pt(-24, 76.2), pt(-15.2, 75.6),
+  pt(-12.4, 73.5), pt(-3.5, 72.7), pt(4, 70.8), pt(8.6, 70.1), pt(10.6, 67.6), pt(16.4, 65.9), pt(22, 62.2), pt(25.2, 61.4), pt(26.9, 58.2),
+  pt(31.2, 55.0), pt(32.6, 51.6), pt(36.2, 49.4), pt(37.4, 46.6), pt(39.4, 44), pt(42.6, 41.6),
+];
 /** the undercut: the boulder's underside, turned away from the light, where it sits down on the seabed */
-const UNDER_D = line([
-  ...ROCK_SIDE.filter((p) => p.y > 40),
-  pt(-90, 90), pt(-78, 82.5), pt(-50, 79.6), pt(-24, 76.2), pt(-8, 73.6), pt(4, 70.8), pt(13.5, 67.2), pt(22, 62.2), pt(29, 56.5), pt(34.8, 50.3), pt(39.4, 44),
-]) + 'Z';
+const UNDER_D = line([...ROCK_SIDE.filter((p) => p.y > 41.5), ...UNDER_EDGE]) + 'Z';
 /** fracture planes of the face: subtle value shifts with broken ink edges */
 const FACETS: {ps: P[]; lit: boolean; a: number; edge: [number, number]}[] = [
   {ps: [pt(-54, 31), pt(-33, 24.5), pt(-17, 30), pt(-24, 44), pt(-47, 48)], lit: true, a: 0.34, edge: [2, 4]},
@@ -738,26 +801,45 @@ const MoteField: React.FC<{t: number; cam: Cam; m: Motes}> = ({t, cam, m}) => {
   return <>{out}</>;
 };
 
+/** The near particles during the push. Drawn locked to the world, a 12x push flings every particle radially out of
+ *  the zoom centre, so on the left half of the frame the water streamed LEFT, against the current. During the push
+ *  they are drawn instead through a mote camera that zooms only MOTE_ZOOM of the way (in log scale, about the same
+ *  screen point as the world: the match point M) and carries a screen-space rightward drift that grows with the
+ *  zoom (MOTE_DRIFT of the frame width per log unit): together the flow wins everywhere and the water keeps moving
+ *  past, left to right, while the oyster holds still. Once the push has settled the decoupled field dissolves into the
+ *  world-locked one (MOTE_X), so the macro and the cut back are exactly as before. */
+const MOTE_ZOOM = 0.25;
+const MOTE_DRIFT = 0.13;
+const MOTE_X: [number, number] = [9.62, 9.95];
+const moteCam = (cam: Cam): {cam: Cam; drift: number} => {
+  const L = Math.log(OY_W_IN / cam.w);
+  const w = OY_W_IN * Math.exp(-MOTE_ZOOM * L);
+  return {cam: {...cam, x: (cam.x * w) / cam.w, y: (cam.y * w) / cam.w, w}, drift: MOTE_DRIFT * W * L};
+};
+
 /** suspended particles near the subject at any zoom: octaves of cells (each 1/3 the last), each drawn while its cells
  *  are near `target` px on screen, drifting `flowCells` cells per unit, so the stream looks the same at every scale
  *  and the push carries the camera through it. Light motes over open water, dark silt over shell and rock. */
 type AField = {c0: number; target: number; dens: number; r: [number, number]; a: number; seed: number; soft?: boolean};
 const NEAR_FIELD: AField = {c0: 162, target: 130, dens: 0.82, r: [0.022, 0.046], a: 0.85, seed: 11};
 const FORE_FIELD: AField = {c0: 162, target: 320, dens: 0.34, r: [0.026, 0.058], a: 0.5, seed: 23, soft: true};
-const AdaptiveMotes: React.FC<{id: string; t: number; cam: Cam; z: number; F: AField; reveal?: number}> = ({id, t, cam, z, F, reveal = 0}) => {
+const AdaptiveMotes: React.FC<{id: string; t: number; cam: Cam; z: number; F: AField; reveal?: number; wcam?: Cam; drift?: number; k?: number}> = ({
+  id, t, cam, z, F, reveal = 0, wcam = cam, drift = 0, k = 1,
+}) => {
+  if (k < 0.005) return null;
   const s = layerScale(cam, z);
   // the open window is a diagram of the section: particles over it are kept faint so the band reads clean
-  const wr = OY_WIN.r * (1 - Math.pow(1 - clamp(reveal), 1.6));
+  const wr = reveal > 0.001 ? winR(reveal) * winA(reveal) : 0;
   const [x0, y0, x1, y1] = viewRect(cam, z, 1.1);
   const ph = flowCells(t), ph1 = flowCells(t - DT), se = surgeE(t);
-  const wmm = 22 * mmPx(cam);
+  const wmm = 22 * mmPx(wcam);
   const out: React.ReactNode[] = [];
   for (let o = 0; o < 9; o++) {
     const cell = F.c0 / Math.pow(3, o);
     const g = Math.log((cell * s) / F.target) / Math.log(3);
     const wgt = 1 - ss(Math.abs(g), 0.3, 1.0);
     if (wgt < 0.02) continue;
-    const u = ph * cell, u1 = ph1 * cell;
+    const u = ph * cell + drift / s, u1 = ph1 * cell + drift / s;
     const i0 = Math.floor((x0 - u) / cell) - 2, i1 = Math.ceil((x1 - u) / cell) + 1;
     const j0 = Math.floor(y0 / cell) - 1, j1 = Math.ceil(y1 / cell) + 1;
     for (let i = i0; i <= i1; i++) {
@@ -770,12 +852,12 @@ const AdaptiveMotes: React.FC<{id: string; t: number; cam: Cam; z: number; F: AF
         const p = pos(t, u);
         if (p.x < x0 || p.x > x1 || p.y < y0 || p.y > y1) continue;
         const ang = streakAng(p, pos(t - DT, u1));
-        const p0 = z === 0 ? p : toWorld(cam, toScreen(cam, p, z), 0);
+        const p0 = z === 0 && wcam === cam ? p : toWorld(wcam, toScreen(cam, p, z), 0);
         const sol = solidAt(p0, wmm);
         const r = lerp(F.r[0], F.r[1], hr) * cell;
         const st = 1.3 + 2.6 * se;
         const inWin = wr > 0 ? ss(wr - Math.hypot(p0.x - OY_WIN.c.x, p0.y - OY_WIN.c.y), -0.05 * wr, 0.05 * wr) : 0;
-        const a = F.a * wgt * (0.5 + 0.5 * hr) * (1 - 0.72 * inWin * clamp(reveal));
+        const a = k * F.a * wgt * (0.5 + 0.5 * hr) * (1 - 0.72 * inWin * clamp(reveal));
         const el = (fill: string, op: number, k: string) => (
           <ellipse key={k} cx={f(p.x)} cy={f(p.y)} rx={f(r * st)} ry={f(r * (0.85 - 0.25 * se))} transform={`rotate(${f(ang)} ${f(p.x)} ${f(p.y)})`} fill={fill} opacity={f(op)} />
         );
@@ -920,28 +1002,36 @@ const Silt: React.FC<{id: string; t: number; cam: Cam; seed: number; n: number; 
 /** a torn scrap of weed (a ragged leaf), inked */
 const scrapD = (L: number, Wd: number, seed: number) =>
   `M${f(-L / 2)} 0Q${f(-L * 0.12)} ${f(-Wd)} ${f(L * 0.42)} ${f(-Wd * 0.35)}L${f(L / 2)} ${f(-Wd * (0.05 + 0.2 * hash(seed)))}L${f(L * 0.44)} ${f(Wd * 0.1)}L${f(L * 0.5)} ${f(Wd * 0.35)}Q${f(L * 0.05)} ${f(Wd * 0.95)} ${f(-L / 2)} 0Z`;
-/** torn bits of weed tumbling through with the surge */
-const Bits: React.FC<{t: number; seed: number; n: number; ys: [number, number]; size: number; iw: number}> = ({t, seed, n, ys, size, iw}) => {
-  if (t < 8.4 || t > 10.1) return null;
+/** torn bits of weed tumbling through with the current and the surge, in the wider framings. Each crosses the frame
+ *  on a screen-space run of ~1.6-2.0 s (≈ 20-40 px per frame, the faster in the surge), so the push does not fling it
+ *  outward or make it strobe; its size follows the zoom only in part (it drifts at its own depth, blurred). `ys` is a
+ *  band of screen heights (fractions of H) and `t0s` the times the bits enter at the left edge. */
+const Bits: React.FC<{t: number; cam: Cam; z: number; seed: number; t0s: number[]; ys: [number, number]; size: number; iw: number}> = ({t, cam, z, seed, t0s, ys, size, iw}) => {
+  const s = layerScale(cam, z), s0 = layerScale(OY_CAM_IN, z);
+  const grow = Math.pow(s0 / s, 0.45);
   const out: React.ReactNode[] = [];
-  for (let i = 0; i < n; i++) {
+  t0s.forEach((t0, i) => {
     const h = hash(i * 5.17 + seed), h2 = hash(i * 2.31 + seed * 3.3);
-    const t0 = 8.42 + 0.16 * i + 0.05 * h, t1 = t0 + 0.75 + 0.2 * h2;
-    const u = clamp((t - t0) / (t1 - t0));
-    if (u <= 0 || u >= 1) continue;
-    const e = ss5(u, 0, 1);
-    const x = lerp(-95, 105, lerp(u, e, 0.6));
-    const y = lerp(ys[0], ys[1], h) + 6 * Math.sin(TAU * (0.8 * u + h2)) - 4 * Math.sin(Math.PI * u);
-    const ang = (h2 * 360 + 520 * u * (h > 0.5 ? 1 : -1)) % 360;
-    const L = size * (0.7 + 0.6 * h);
+    const T = 1.6 + 0.4 * h2;
+    const v = 1150 / T;
+    const age = t - t0;
+    if (age <= 0 || age > T + 0.6) return;
+    const L = size * (0.7 + 0.6 * h) * grow;
+    const pad = L * s + 40;
+    const sx = -pad + v * age + 260 * (surgeD(t) - surgeD(t0)) + 18 * Math.sin(1.7 * age + h * 6);
+    if (sx > W + pad) return;
+    const sy = H * lerp(ys[0], ys[1], h) + 26 * Math.sin(TAU * (0.45 * age + h2)) + 30 * age * (h2 - 0.5);
+    const p = toWorld(cam, pt(sx, sy), z);
+    const u = age / T;
+    const ang = (h2 * 360 + 300 * u * (h > 0.5 ? 1 : -1)) % 360;
     out.push(
-      <g key={i} transform={`translate(${f(x)} ${f(y)}) rotate(${f(ang)}) scale(1 ${f(0.55 + 0.45 * Math.cos(TAU * 1.3 * u + h * 6))})`}>
+      <g key={i} transform={`translate(${f(p.x)} ${f(p.y)}) rotate(${f(ang)}) scale(1 ${f(0.55 + 0.45 * Math.cos(TAU * 0.8 * u + h * 6))})`}>
         <Inked w={iw * 0.7}>
           <InkPath d={scrapD(L, L * 0.3, i + seed)} fill={i % 2 ? K.weed : mix(K.weed, K.weedLit, 0.4)} />
         </Inked>
       </g>,
     );
-  }
+  });
   return <>{out}</>;
 };
 /** in the macro: a few scraps of weed drifting slowly across the base, left to right, above and below the window */
@@ -1275,10 +1365,12 @@ const RockBody: React.FC<{id: string; cam: Cam; iw: number; lw: number}> = ({id,
               </g>
             ))}
             <path d={FACE_SHADE} fill={mix(K.rockDeep, C.seaDeep, 0.2)} opacity={0.62} />
-            {/* the undercut: the boulder's underside turned away from the light, down to the seabed */}
+            {/* the undercut: the boulder's underside turned away from the light, down to the seabed; its broken upper
+                edge inked in short runs (ledges), no bounce-light rim inside the silhouette */}
             <path d={UNDER_D} fill={mix(K.rockDeep, K.under, 0.6)} opacity={0.82} />
-            {/* light bounced up from the seabed along the rounded flank */}
-            <path d={open(ROCK_SIDE.filter((p) => p.y > 14 && p.y < 66).map((p) => pt(p.x - 1.3, p.y - 0.4)), 1)} fill="none" stroke={mix(K.rockLit, C.seaLit, 0.5)} strokeWidth="1.8" strokeLinecap="round" opacity={0.3} />
+            {[[1, 3], [5, 7], [9, 11], [13, 15], [17, 19], [20, 22]].map(([a, b], i) => (
+              <InkLine key={`u${i}`} d={line(UNDER_EDGE.slice(a, b + 1))} w={lw * 1.1} opacity={0.5} />
+            ))}
             {CORALLINE.map((q, i) => (
               <Coralline key={`c${i}`} {...q} />
             ))}
@@ -1417,43 +1509,54 @@ const Shadows: React.FC<{id: string; cam: Cam}> = ({id, cam}) => {
  *  one even tone, a narrow shade along each edge (≤ 7 screen px) and one bright streak a little below the middle,
  *  where the bone glue carries its own highlight */
 const CEMENT_STREAK = 0.66;
-const CementLook: React.FC<{x0: number; x1: number; px: number}> = ({x0, x1, px}) => {
+const CementLook: React.FC<{x0: number; x1: number; px: number; top?: (x: number) => number; bot?: (x: number) => number; lit?: number}> = ({
+  x0, x1, px, top: fTop = bandTop, bot: fBot = bandBot, lit = 0.95,
+}) => {
   const h = FIT.h;
   const eS = Math.min(0.2 * h, 7 * px);
-  const top = bandLine(bandTop, x0, x1), bot = bandLine(bandBot, x0, x1);
+  const top = bandLine(fTop, x0, x1), bot = bandLine(fBot, x0, x1);
   const topShade = line([...top, ...[...top].reverse().map((p) => pt(p.x, p.y + eS))]) + 'Z';
   const botShade = line([...bot, ...[...bot].reverse().map((p) => pt(p.x, p.y - eS))]) + 'Z';
-  const streak = runs(bandLine((x) => lerp(bandTop(x), bandBot(x), CEMENT_STREAK), x0 + 0.3, x1 - 0.3), (p) => noise1(p.x * 0.5 + 3.3, 21) > -0.45);
+  const streak = runs(bandLine((x) => lerp(fTop(x), fBot(x), CEMENT_STREAK), x0 + 0.3, x1 - 0.3), (p) => noise1(p.x * 0.5 + 3.3, 21) > -0.45);
   const sw = Math.max(0.075 * h, 1.8 * px);
   return (
     <>
       <path d={topShade} fill={K.cementShade} opacity={0.5} />
       <path d={botShade} fill={K.cementShade} opacity={0.72} />
       {streak.map((sg, i) => (
-        <path key={i} d={line(sg)} fill="none" stroke={K.cementLit} strokeWidth={f(sw)} strokeLinecap="round" opacity={0.95} />
+        <path key={i} d={line(sg)} fill="none" stroke={K.cementLit} strokeWidth={f(sw)} strokeLinecap="round" opacity={lit} />
       ))}
     </>
   );
 };
 
-/** the cement band as seen from outside: a thin pale layer between shell and rock, its ends rounded */
-const CementOutside: React.FC<{id: string; iw: number; px: number}> = ({id, iw, px}) => (
-  <>
-    <defs>
-      <clipPath id={`${id}-cc`}>
-        <path d={OY.cemD} />
-      </clipPath>
-    </defs>
-    <Inked w={iw * 0.72}>
-      <InkPath d={OY.cemD} fill={K.cement} />
-      <Deco>
-        <g clipPath={`url(#${id}-cc)`}>
-          <CementLook x0={OY.xa - 1} x1={OY.xb + 1} px={px} />
-        </g>
-      </Deco>
-    </Inked>
-  </>
-);
+/** the cement band as seen from outside: a thin pale layer between shell and rock, its ends rounded. In the wider
+ *  framings (camera wider than ~36 mm) its edges relax to the smoothed band and its tone settles a little toward the
+ *  shell's grey with a softer streak, so the medium shot shows a thin, even layer rather than a bright lumpy bead; from
+ *  ~36 mm in (the push's second half, the macro and the window) it is exactly the match band. */
+const CementOutside: React.FC<{id: string; iw: number; px: number}> = ({id, iw, px}) => {
+  const k = ss(px * W, 36, 64);
+  const top = k > 0.001 ? (x: number) => lerp(bandTop(x), smoothTopAt(x), k) : bandTop;
+  const bot = k > 0.001 ? (x: number) => lerp(bandBot(x), smoothBotAt(x), k) : bandBot;
+  const d = k > 0.001 ? cementPath(top, bot).d : OY.cemD;
+  return (
+    <>
+      <defs>
+        <clipPath id={`${id}-cc`}>
+          <path d={d} />
+        </clipPath>
+      </defs>
+      <Inked w={iw * 0.72}>
+        <InkPath d={d} fill={k > 0.001 ? mix(K.cement, K.shPale, 0.3 * k) : K.cement} />
+        <Deco>
+          <g clipPath={`url(#${id}-cc)`}>
+            {k > 0.001 ? <CementLook x0={OY.xa - 1} x1={OY.xb + 1} px={px} top={top} bot={bot} lit={0.95 - 0.45 * k} /> : <CementLook x0={OY.xa - 1} x1={OY.xb + 1} px={px} />}
+          </g>
+        </Deco>
+      </Inked>
+    </>
+  );
+};
 
 /** the oyster (cupped lower valve + lid); the cement band is drawn over the valve's base */
 const Oyster: React.FC<{id: string; iw: number; lw: number; px: number}> = ({id, iw, lw, px}) => {
@@ -1691,25 +1794,42 @@ const SECTION = (() => {
     }
     return out;
   };
-  const fleckD = (c: P, r: number, seed: number) => closed(blob(c, r * 1.3, r * 0.85, seed, 7, 0.3, seed), 1);
+  /** a thin dark sliver (a mica / hornblende inclusion seen edge-on): a pointed, slightly bent lens along angle a */
+  const sliverD = (c: P, len: number, wid: number, a: number, seed: number) => {
+    const dv = pt(Math.cos(a), Math.sin(a)), nv = pt(-dv.y, dv.x);
+    const bend = (hash(seed * 3.7) - 0.5) * 0.2 * wid;
+    const at = (u: number, o: number) => add(add(c, mul(dv, u * len * 0.5)), mul(nv, o + bend * (1 - u * u)));
+    const w1 = wid * (0.4 + 0.25 * hash(seed * 5.3)), w2 = wid * (0.4 + 0.25 * hash(seed * 6.1));
+    return line([at(-1, 0), at(-0.45, -w1), at(0.25, -w2 * 0.9), at(1, 0), at(0.3, w2), at(-0.5, w1 * 0.8)]) + 'Z';
+  };
   const grainOf = (poly: P[], tone: string, kind: string, si: number, big: boolean) => {
     const ce = mul(poly.reduce((a, p) => add(a, p), pt(0, 0)), 1 / poly.length);
     const rad = poly.reduce((a, p) => a + Math.hypot(p.x - ce.x, p.y - ce.y), 0) / poly.length;
     if (rad < 0.03) return null;
     const k = Math.max(0.5, 1 - 0.012 / rad); // thin, low-contrast gaps (~3 px at OY_CAM_OUT)
     const ins = poly.map((p) => add(ce, mul(sub(p, ce), k)));
-    const lit = ins.map((p) => add(add(ce, mul(sub(p, ce), 0.6)), pt(-0.05 * Math.min(1, rad * 3), -0.06 * Math.min(1, rad * 3))));
+    // a lit bevel only on the big crystals (on every small grain it read as a mosaic of pebbles)
+    const lit = big ? line(ins.map((p) => add(add(ce, mul(sub(p, ce), 0.6)), pt(-0.05 * Math.min(1, rad * 3), -0.06 * Math.min(1, rad * 3))))) + 'Z' : null;
     const h = hash(si * 9.13 + 0.4);
-    // small dark mineral flecks in some grains; a glint on quartz; cleavage traces across the big crystals
+    // dark mineral inclusions: thin slivers (elongated, never round dots), a few in the big crystals roughly along
+    // their cleavage, one in some small grains; a glint on about one pale quartz grain in six; cleavage traces across
+    // the big crystals
     const flecks: string[] = [];
     if (kind !== 'd' && (hash(si * 4.4) < 0.18 || big)) {
-      const nf = big ? 3 : 1;
+      const nf = big ? 2 + Math.floor(hash(si * 8.8) * 2) : 1;
+      const ca = h * Math.PI, cd = pt(Math.cos(ca), Math.sin(ca)), cn = pt(-cd.y, cd.x);
       for (let q = 0; q < nf; q++) {
-        const fc = add(ce, pt((hash(si * 2.2 + q) - 0.5) * rad * 0.9, (hash(si * 3.3 + q) - 0.5) * rad * 0.8));
-        flecks.push(fleckD(fc, Math.min(0.06, rad * 0.13) * (0.6 + 0.6 * hash(si + q * 1.3)), si * 3 + q));
+        // big crystals: scattered along and across the cleavage (staggered, never in a row), angles within ±30° of
+        // it, one long sliver and shorter ones
+        const fc = big
+          ? add(add(ce, mul(cd, ((q + 0.5) / nf - 0.5) * rad * 0.9 + (hash(si * 2.2 + q * 1.9) - 0.5) * rad * 0.25)), mul(cn, (q % 2 ? 1 : -1) * (0.12 + 0.22 * hash(si * 3.3 + q * 2.7)) * rad))
+          : add(ce, pt((hash(si * 2.2 + q * 1.9) - 0.5) * rad * 1.05, (hash(si * 3.3 + q * 2.7) - 0.5) * rad * 0.9));
+        const a = (big ? ca : hash(si * 1.7) * Math.PI) + (hash(si * 5.5 + q * 3.1) - 0.5) * (big ? 1.0 : 0.7);
+        const len = big ? rad * (q === 0 ? 0.42 : 0.16 + 0.14 * hash(si + q * 4.3)) : Math.min(0.13, rad * 0.5) * (0.7 + 0.5 * hash(si + q * 1.3));
+        flecks.push(sliverD(fc, len, big ? 0.036 : Math.min(0.03, len * 0.28), a, si * 3 + q));
       }
     }
-    const glint = kind === 'q' && rad > 0.08 ? {c: add(ce, pt(-rad * 0.3, -rad * 0.3)), r: rad * 0.16} : null;
+    const glint = kind === 'q' && rad > 0.08 && (big || hash(si * 6.71 + 0.3) < 1 / 6) ? {c: add(ce, pt(-rad * 0.3, -rad * 0.3)), r: rad * 0.16} : null;
     const cleave = big
       ? [-0.32, 0.02, 0.3].map((o) => {
           const a = h * Math.PI, dv = pt(Math.cos(a), Math.sin(a)), nv = pt(-dv.y, dv.x);
@@ -1717,7 +1837,7 @@ const SECTION = (() => {
           return line([add(c0, mul(dv, -rad * 0.5)), add(c0, mul(dv, rad * 0.5))]);
         })
       : [];
-    return {d: line(ins) + 'Z', lit: line(lit) + 'Z', tone, kind, c: ce, flecks, glint, cleave, big};
+    return {d: line(ins) + 'Z', lit, tone, kind, c: ce, flecks, glint, cleave, big};
   };
   const small = seeds.map((s, si) => {
     const B = 0.7;
@@ -1759,8 +1879,9 @@ const SectionWindow: React.FC<{id: string; cam: Cam; reveal: number}> = ({id, ca
   if (reveal <= 0.001) return null;
   const px = mmPx(cam);
   const c = OY_WIN.c;
-  const r = OY_WIN.r * (1 - Math.pow(1 - clamp(reveal), 1.6));
-  if (r < 3 * px) return null;
+  const r = winR(reveal);
+  const al = winA(reveal);
+  if (r < 3 * px || al < 0.005) return null;
   const sd = Math.max(0.6 * px, 0.014 * r);
   const R = r * 1.15;
   const S = SECTION;
@@ -1768,7 +1889,7 @@ const SectionWindow: React.FC<{id: string; cam: Cam; reveal: number}> = ({id, ca
   const box = {x: c.x - R, y: c.y - R, w: 2 * R, h: 2 * R};
   const winD = closed(winPts(c, r), 1);
   return (
-    <g>
+    <g opacity={al < 0.999 ? f(al) : undefined}>
       <defs>
         <filter id={`${id}-wf`} filterUnits="userSpaceOnUse" x={f(box.x)} y={f(box.y)} width={f(box.w)} height={f(box.h)}>
           <feGaussianBlur stdDeviation={f(sd)} />
@@ -1818,7 +1939,7 @@ const SectionWindow: React.FC<{id: string; cam: Cam; reveal: number}> = ({id, ca
           {S.grains.map((g, i) => (
             <g key={`g${i}`}>
               <path d={g.d} fill={g.tone} stroke={g.big ? K.grainGap : 'none'} strokeWidth={f(2.6 * px)} strokeLinejoin="round" />
-              <path d={g.lit} fill="#FFFFFF" opacity={g.kind === 'd' ? 0.05 : 0.07} />
+              {g.lit && <path d={g.lit} fill="#FFFFFF" opacity={g.kind === 'd' ? 0.05 : 0.07} />}
               {g.cleave.map((d, k) => (
                 <path key={`c${k}`} d={d} fill="none" stroke={mix(g.tone, INK, 0.25)} strokeWidth={f(1.1 * px)} opacity={0.4} />
               ))}
@@ -1838,8 +1959,9 @@ const SectionWindow: React.FC<{id: string; cam: Cam; reveal: number}> = ({id, ca
         {/* the cut face is lit from the upper left */}
         <rect x={f(box.x)} y={f(box.y)} width={f(box.w)} height={f(box.h)} fill={`url(#${id}-sl)`} />
       </g>
-      {/* the cut edge: inked navy at the contour weight */}
-      <path d={winD} fill="none" stroke={INK} strokeWidth={f(3.6 * px)} strokeLinejoin="round" opacity={f(clamp(reveal * 3))} />
+      {/* the cut edge: inked navy at the contour weight, at full strength as soon as the window is a few band widths
+          across (a faint ring read as a soap bubble or a magnifier) */}
+      <path d={winD} fill="none" stroke={INK} strokeWidth={f(3.6 * px)} strokeLinejoin="round" opacity={f(ss(r / px, 20, 40))} />
     </g>
   );
 };
@@ -1949,9 +2071,17 @@ const Seabed: React.FC<{id: string}> = ({id}) => {
 
 /** the boulder's contact shadow on the bed, hugging its undercut (at the boulder's own depth, drawn behind it) */
 const BED_SHADOW = (() => {
+  // the bed is uneven: the shadow's width wanders (no even band copying the silhouette)
   const base = ROCK_SIDE.filter((p) => p.y > 44);
-  const outer = base.map((p) => pt(p.x + 3.5 + 0.06 * Math.max(0, p.x), p.y + 4.5));
-  return {inner: line([...base, ...[...base].reverse().map((p) => pt(p.x + 1.4, p.y + 2.2))]) + 'Z', outer: line([...base, ...[...outer].reverse()]) + 'Z'};
+  const outer = base.map((p) => {
+    const k = 0.55 + 0.75 * (0.5 + 0.5 * noise1(p.x * 0.09 + 1.7, 3));
+    return pt(p.x + (3.5 + 0.06 * Math.max(0, p.x)) * k, p.y + 4.5 * k);
+  });
+  const inner = base.map((p) => {
+    const k = 0.6 + 0.8 * (0.5 + 0.5 * noise1(p.x * 0.14 + 5.3, 8));
+    return pt(p.x + 1.4 * k, p.y + 2.2 * k);
+  });
+  return {inner: line([...base, ...[...inner].reverse()]) + 'Z', outer: line([...base, ...[...outer].reverse()]) + 'Z'};
 })();
 const BedShadow: React.FC = () => (
   <>
@@ -2020,6 +2150,13 @@ export const OysterWorld: React.FC<{id: string; t: number; cam: Cam; reveal?: nu
       </Layer>
     ));
   const zFore = -0.5 * d0;
+  // the near particles: decoupled from the push (moteCam), dissolving into the world-locked field after it
+  const mc = moteCam(cam);
+  const kB = ss(t, MOTE_X[0], MOTE_X[1]);
+  const zForeM = -0.5 * DIST * mc.cam.w;
+  // the wide framing's far and foreground layers fade out as the push passes them (no hard pops)
+  const wideA = ss(cam.w, 28, 36);
+  const bitsA = ss(cam.w, 26, 44);
   return (
     <div style={{position: 'absolute', left: 0, top: 0, width: W, height: H, overflow: 'hidden', background: C.sea}}>
       <Layer c={cam} z={900} maxBlur={0}>
@@ -2033,24 +2170,24 @@ export const OysterWorld: React.FC<{id: string; t: number; cam: Cam; reveal?: nu
         <Reef id={`${id}-rf`} />
       </Layer>
       {far((m) => m.z >= 100 && m.z < 250)}
-      {cam.w > 30 && (
-        <Layer c={cam} z={45} blurK={8} maxBlur={4}>
+      {wideA > 0.003 && (
+        <Layer c={cam} z={45} blurK={8} maxBlur={4} opacity={wideA < 0.997 ? wideA : undefined}>
           <MoteField t={t} cam={cam} m={FAR_MOTES[2]} />
           <Bubbles t={t} cam={cam} z={45} seed={3} every={1.05} xs={[-95, 90]} y0={14} rr={[0.55, 1.2]} />
         </Layer>
       )}
-      {cam.w > 24 && (
-        <Layer c={cam} z={30} blurK={22} maxBlur={6}>
+      {cam.w > 18 && (
+        <Layer c={cam} z={30} blurK={22} maxBlur={6} opacity={cam.w < 26 ? ss(cam.w, 18, 26) : undefined}>
           <Seabed id={`${id}-sb`} />
         </Layer>
       )}
-      {cam.w > 30 && (
-        <Layer c={cam} z={22} blurK={14} maxBlur={6}>
-          <Bits t={t} seed={7} n={3} ys={[-70, -34]} size={5} iw={iw} />
+      {bitsA > 0.003 && t > 7.6 && t < 10.2 && (
+        <Layer c={cam} z={22} blurK={14} maxBlur={6} opacity={bitsA < 0.997 ? bitsA : undefined}>
+          <Bits t={t} cam={cam} z={22} seed={7} t0s={[7.55, 7.98, 8.42]} ys={[0.15, 0.33]} size={5} iw={iw} />
         </Layer>
       )}
       <Layer c={cam} z={0}>
-        {cam.w > 24 && <BedShadow />}
+        {cam.w > 18 && (cam.w < 26 ? <g opacity={f(ss(cam.w, 18, 26))}><BedShadow /></g> : <BedShadow />)}
         <RockBody id={`${id}-r`} cam={cam} iw={iw} lw={lw} />
       </Layer>
       <Layer c={cam} z={0} blurK={0} minBlur={Math.min(6, 0.3 * (W / cam.w))}>
@@ -2061,20 +2198,36 @@ export const OysterWorld: React.FC<{id: string; t: number; cam: Cam; reveal?: nu
         <SectionWindow id={`${id}-w`} cam={cam} reveal={reveal} />
         <Foreground id={`${id}-fg`} t={t} cam={cam} iw={iw} lw={lw} />
         <Scraps t={t} iw={iw} lw={lw} />
-        <AdaptiveMotes id={`${id}-am`} t={t} cam={cam} z={0} F={NEAR_FIELD} reveal={reveal} />
+        {kB > 0.003 && <AdaptiveMotes id={`${id}-am`} t={t} cam={cam} z={0} F={NEAR_FIELD} reveal={reveal} k={kB < 0.997 ? kB : 1} />}
       </Layer>
-      <Layer c={cam} z={zFore} blurK={0} minBlur={3.5}>
-        <AdaptiveMotes id={`${id}-af`} t={t} cam={cam} z={zFore} F={FORE_FIELD} reveal={reveal} />
-      </Layer>
+      {kB < 0.997 && (
+        <Layer c={mc.cam} z={0}>
+          <AdaptiveMotes id={`${id}-amm`} t={t} cam={mc.cam} wcam={cam} drift={mc.drift} z={0} F={NEAR_FIELD} reveal={reveal} k={1 - kB} />
+        </Layer>
+      )}
+      {kB > 0.003 && (
+        <Layer c={cam} z={zFore} blurK={0} minBlur={3.5}>
+          <AdaptiveMotes id={`${id}-af`} t={t} cam={cam} z={zFore} F={FORE_FIELD} reveal={reveal} k={kB < 0.997 ? kB : 1} />
+        </Layer>
+      )}
+      {kB < 0.997 && (
+        <Layer c={mc.cam} z={zForeM} blurK={0} minBlur={3.5}>
+          <AdaptiveMotes id={`${id}-afm`} t={t} cam={mc.cam} wcam={cam} drift={mc.drift} z={zForeM} F={FORE_FIELD} reveal={reveal} k={1 - kB} />
+        </Layer>
+      )}
       {d0 - 30 > 0.3 * d0 && (
         <Layer c={cam} z={-30} blurK={90} maxBlur={12}>
           <NearRock id={`${id}-nr`} />
         </Layer>
       )}
-      {cam.w > 30 && (
-        <Layer c={cam} z={-14} blurK={30} maxBlur={10}>
+      {wideA > 0.003 && (
+        <Layer c={cam} z={-14} blurK={30} maxBlur={10} opacity={wideA < 0.997 ? wideA : undefined}>
           <Bubbles t={t} cam={cam} z={-14} seed={17} every={2.3} xs={[30, 70]} y0={60} rr={[1.1, 1.7]} />
-          <Bits t={t} seed={3} n={2} ys={[-44, -16]} size={7} iw={iw} />
+        </Layer>
+      )}
+      {bitsA > 0.003 && t > 7.6 && t < 10.2 && (
+        <Layer c={cam} z={-14} blurK={30} maxBlur={10} opacity={bitsA < 0.997 ? bitsA : undefined}>
+          <Bits t={t} cam={cam} z={-14} seed={3} t0s={[7.8, 8.3]} ys={[0.24, 0.42]} size={7} iw={iw} />
         </Layer>
       )}
       <Flecks id={`${id}-fk`} t={t} cam={cam} />

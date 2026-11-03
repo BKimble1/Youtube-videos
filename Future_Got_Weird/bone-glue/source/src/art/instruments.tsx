@@ -626,13 +626,41 @@ const CastShadow: React.FC<{axis: (s: number) => P; r: (s: number) => number; s0
   );
 };
 
+/** How far (mm) a hand has carried its instrument back toward the body as it leaves the field, for the story's `on`
+ *  (InstrState2.appOn / probeOn: 1 = at work, 0 = gone; the story eases it with a smoothstep over the withdrawal, so
+ *  the time fraction u is recovered by inverting that). While the instrument is still in the frame (the first ~50 mm,
+ *  about 60% of the time) it eases in to a moderate, steady pace: the surgeon draws it away. Once it is out of every
+ *  framing it speeds up to the full distance and settles. (A plain ease over the full 200 mm put the visible exit in
+ *  the first 0.25 s at up to 200 px per frame: a whip.) The surgeon's arms (surgeon.tsx) and the contact shadows
+ *  below share it. */
+export const WITHDRAW_MM = 200;
+/** the distance law: [u, fraction of WITHDRAW_MM, slope] keys, cubic Hermite between them */
+const WD_KEYS: [number, number, number][] = [[0, 0, 0], [0.2, 0.035, 0.38], [0.6, 0.24, 0.62], [1, 1, 0]];
+export const withdrawDist = (on: number): number => {
+  const e = clamp(1 - on);
+  if (e <= 1e-6) return 0;
+  if (e >= 1 - 1e-6) return WITHDRAW_MM;
+  const u = clamp(0.5 - Math.sin(Math.asin(1 - 2 * e) / 3));
+  let i = 0;
+  while (i < WD_KEYS.length - 2 && u > WD_KEYS[i + 1][0]) i++;
+  const [u0, q0, m0] = WD_KEYS[i], [u1, q1, m1] = WD_KEYS[i + 1];
+  const D = u1 - u0, x = (u - u0) / D;
+  const q = (2 * x ** 3 - 3 * x ** 2 + 1) * q0 + (x ** 3 - 2 * x ** 2 + x) * D * m0 + (-2 * x ** 3 + 3 * x ** 2) * q1 + (x ** 3 - x ** 2) * D * m1;
+  return WITHDRAW_MM * q;
+};
+/** the direction (unit, world) in which the surgeon's hand carries an instrument away: surgeon.tsx registers it
+ *  (it solves the arms; this module cannot import it), so a withdrawing shadow follows its instrument */
+type WithdrawDir = (which: 'app' | 'probe', st: AppState2 | ProbeState) => P | null;
+let withdrawDir: WithdrawDir | null = null;
+export const setWithdrawDir = (f: WithdrawDir) => {
+  withdrawDir = f;
+};
 /** how a shadow follows its instrument out of the field as the hand withdraws it (on 1 -> 0, InstrState2.probeOn /
- *  appOn): it slides back along the instrument's axis with it and is gone within the first quarter of the withdrawal
- *  (the instrument rises away from the bone as it goes) */
-const withdrawOf = (on: number, ax: P, kI: number) => {
-  const e = 1 - clamp(on);
-  const u = e * e * (3 - 2 * e);
-  return {off: mul(ax, 200 * u * kI), fade: 1 - clamp(u / 0.22)};
+ *  appOn): it slides with it (the hand's direction, else back along the instrument's axis; the same distance law as
+ *  the hand) and is gone once the instrument has travelled ~40 mm (it rises away from the bone as it goes) */
+const withdrawOf = (on: number, dirW: P, kI: number) => {
+  const d = withdrawDist(on);
+  return {off: mul(dirW, d * kI), fade: 1 - clamp(d / 40)};
 };
 
 /** The probe's contact shadow on the bone. Scene: the BONE layer (depth 0), with the probe state in depth-0 world mm
@@ -642,7 +670,7 @@ export const ProbeShadow: React.FC<{st: ProbeState; px: number; on?: number}> = 
   const pa = probeAxis(st);
   const lx = probeLift(st);
   const kI = instrK(px);
-  const wd = withdrawOf(on, pa.ax, kI);
+  const wd = withdrawOf(on, (on < 1 && withdrawDir?.('probe', st)) || pa.ax, kI);
   if (wd.fade <= 0.001) return null;
   // the instrument as it lands on the bone's screen: offsets from the (reprojected) tip are drawn kI larger
   const at = (s: number) => add(add(st.tip, mul(sub(lx.map(pa.at(s)), st.tip), kI)), wd.off);
@@ -668,7 +696,7 @@ export const AppShadow: React.FC<{st: AppState2; px: number; on?: number}> = ({s
   const ax = appAxis(st);
   const lx = appLift(st);
   const kI = instrK(px);
-  const wd = withdrawOf(on, ax.dMain, kI);
+  const wd = withdrawOf(on, (on < 1 && withdrawDir?.('app', st)) || ax.dMain, kI);
   if (wd.fade <= 0.001) return null;
   const at = (s: number) => add(add(st.tip, mul(sub(lx.map(ax.at(s)), st.tip), kI)), wd.off);
   const h0 = LIFT.h * lx.l;

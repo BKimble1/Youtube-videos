@@ -19,14 +19,14 @@
 // Line widths are in screen pixels via st.px (mm per pixel), so the ink is even at every zoom. Deterministic; no filters.
 // The probe's and the applicator's contact spots and shadows belong to the instruments module.
 import React from 'react';
-import {P, add, closed, lerpP, len, mul, nrm, open, poly, pt, sub} from '../core/geo';
+import {P, add, closed, lerpP, len, mul, nrm, open, poly, pt, sub, tube} from '../core/geo';
 import {mix} from '../core/color';
 import {uid} from '../core/ids';
 import {clamp, hash, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
 import {
-  S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, glueBand, growth, seamEdgeSeated, seamGap,
+  S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, glueBand, growth, isWedgeSide, seamEdgeSeated, seamGap,
   seamLength, seamNearest, seamNormal, xfSvg,
 } from './seams';
 import {BoneState2} from '../v2state';
@@ -367,19 +367,24 @@ const BoneBody: React.FC<{ids: Ids; px: number; view: View; outlineClip?: string
 );
 
 // ---------------------------------------------------------------- the gaps between the seated faces
-const gapPoly = (id: SeamId): P[] => {
+/** a seam's gap polygon, its edges `out` mm past each seated face (negative: inside the gap, under the face lines);
+ *  `wedgeOut` for the wedge's two faces */
+const gapPoly = (id: SeamId, wedgeOut = -0.01): P[] => {
   const s0 = id === 'C1' ? -0.8 : 0, s1 = LEN[id] + 0.8;
   const n = Math.max(1, Math.ceil((s1 - s0) / 0.06));
   const lo: P[] = [], hi: P[] = [];
   for (let i = 0; i <= n; i++) {
     const s = s0 + ((s1 - s0) * i) / n;
-    lo.push(seamEdgeSeated(id, s, -1, -0.01));
-    hi.push(seamEdgeSeated(id, s, 1, -0.01));
+    lo.push(seamEdgeSeated(id, s, -1, isWedgeSide(id, s, -1) ? wedgeOut : -0.01));
+    hi.push(seamEdgeSeated(id, s, 1, isWedgeSide(id, s, 1) ? wedgeOut : -0.01));
   }
   return [...lo, ...[...hi].reverse()];
 };
 /** the seams' gaps between the seated faces: dark at every pose (the displaced wedge's bed shows beyond them) */
 const SEATED_GAPS = SEAM_IDS.map((id) => poly(gapPoly(id)));
+/** ... and while the wedge is out of its bed: on the wedge's side the gap reaches a little PAST its seated faces, over
+ *  the bed's edge, so no hairline of the static bone (drawn up to the bed's clip) shows between the dark gap and the bed */
+const DISP_GAPS = SEAM_IDS.map((id) => poly(gapPoly(id, 0.02)));
 /** a darker-red core down the middle of each seated gap (blood in the crack, close range): the static seams' parts and
  *  the wedge's (which fade in as it seats, so nothing pops when it arrives) */
 const coreLine = (id: SeamId, s0: number, s1: number) => {
@@ -540,15 +545,25 @@ const runOutline = (r: GlueRun, which: 'outer' | 'core'): P[] => {
   return [...lo, ...capB, ...[...hi].reverse(), ...capA];
 };
 type Bulb = {c: P; r: number; rc: number};
-/** the gel bulb where the band leaves the cannula: at flow 0 it is exactly the band's rounded end */
+/** the gel bulb where the band leaves the cannula: at flow 0 it lies inside the band's rounded end */
 const runBulbs = (r: GlueRun, flow: number): Bulb[] => {
   const out: Bulb[] = [];
+  /** the nearest the band's rounded end (runOutline's cap: squashed to 0.9 along the seam and sheared with the jag)
+   *  comes to its centre */
+  const capMin = (p1: P, p2: P, t: P) => {
+    const c = lerpP(p1, p2, 0.5);
+    return Math.min(len(sub(p1, c)), ...capPts(p1, p2, t, 0.9).map((q) => len(sub(q, c))));
+  };
   const mk = (i: number, end: 'a' | 'b') => {
+    const tE = tEnd(r, end);
     const half = len(sub(r.hi[i], r.lo[i])) / 2;
     const halfC = len(sub(r.hiC[i], r.loC[i])) / 2;
     const grow = 0.27 * flow * half;
-    const c = add(lerpP(r.lo[i], r.hi[i], 0.5), mul(tEnd(r, end), 0.42 * flow * half));
-    out.push({c, r: half + grow, rc: halfC + grow});
+    // as the flow eases to 0 the bulb shrinks to lie inside that rounded end (a full-width circle would stand proud of
+    // a squashed or leaning cap and snap back when the front goes null)
+    const r0 = 0.97 * capMin(r.lo[i], r.hi[i], tE), rc0 = 0.97 * capMin(r.loC[i], r.hiC[i], tE);
+    const c = add(lerpP(r.lo[i], r.hi[i], 0.5), mul(tE, 0.42 * flow * half));
+    out.push({c, r: r0 + (half - r0) * flow + grow, rc: rc0 + (halfC - rc0) * flow + grow});
   };
   if (r.bulbB) mk(r.s.length - 1, 'b');
   if (r.bulbA) mk(0, 'a');
@@ -569,6 +584,31 @@ export const GLUE_LIP_SIDE: Record<SeamId, 1 | -1> = {C1: NEAR_LO.C1 ? -1 : 1, C
 export const GLUE_EDGE_COLOR = GLUE_EDGE;
 /** the seam junctions on C1: branch, its arc length on C1, the side of C1 it leaves from */
 const JUNCTIONS: {id: SeamId; s: number; side: 1 | -1}[] = [{id: 'C2', s: S_C2_ON_C1, side: -1}, {id: 'C3', s: S_C3_ON_C1, side: 1}];
+/** the highlights' taper (mm along the seam) where a branch's highlights start */
+const HL_TAPER = 0.3;
+/** where a branch's highlights start (arc length along the branch): 0.15 mm past the point where its highlight lines
+ *  leave C1's outer band (seated, macro overhang), and no earlier than 0.9 mm. They taper in from there instead of
+ *  being cut by the junction mask (a cut curving stroke reads as a hook); C1's own highlight runs on across both
+ *  junctions. C2 ~0.91, C3 0.9. */
+const HL_START: Record<SeamId, number> = (() => {
+  const out: Record<SeamId, number> = {C1: -1e9, C2: 0.9, C3: 0.9};
+  for (const J of JUNCTIONS) {
+    const lo: P[] = [], hi: P[] = [];
+    for (let s = J.s - 3; s <= J.s + 3; s += 0.02) {
+      lo.push(seamEdgeSeated('C1', s, -1, GLUE_OVER));
+      hi.push(seamEdgeSeated('C1', s, 1, GLUE_OVER));
+    }
+    const band = [...lo, ...hi.reverse()];
+    const nSide: 1 | -1 = NEAR_LO[J.id] ? -1 : 1;
+    let last = 0;
+    for (let s = 0; s <= 3; s += 0.01) {
+      const a = seamEdgeSeated(J.id, s, nSide), b = seamEdgeSeated(J.id, s, nSide > 0 ? -1 : 1);
+      if (inPoly(lerpP(a, b, 0.82), band) || inPoly(lerpP(a, b, 0.2), band)) last = s;
+    }
+    out[J.id] = Math.max(0.9, last + 0.15);
+  }
+  return out;
+})();
 /** lip-coloured fillets in the inside corners where a branch's gel meets C1's (no ink spike in an acute corner) */
 const junctionFillets = (runs: GlueRun[], d: number): {pts: P[]; deep: boolean}[] => {
   const out: {pts: P[]; deep: boolean}[] = [];
@@ -624,7 +664,8 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
   const px = st.px;
   const set = clamp(st.set);
   const healA = 1 - clamp(st.heal.bridge * 6); // details that belong to the intact bond
-  const flow = st.front ? clamp(st.front.flow) : 0;
+  const fr0 = st.front;
+  const flow = fr0 ? clamp(fr0.flow) : 0;
   const outlines = runs.map((r) => poly(runOutline(r, 'outer')));
   const cores = runs.map((r) => poly(runOutline(r, 'core')));
   const bulbs = runs.flatMap((r) => runBulbs(r, flow));
@@ -726,21 +767,75 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
             return dotL(v) + 0.45 * noise1(r.s[i] * 1.3 + SEED[r.id] * 5, SEED[r.id] + 9);
           };
           const thr = -2 + 2.75 * ss(set, 0, 1);
-          const settledHl = ranges(n, (i) => settledOk(i) && r.fresh[i] < 0.45 && facing(i) > thr).map(([a, b], k) => {
-            const ps: P[] = [];
-            for (let i = a; i <= b; i++) ps.push(lerpP(cN[i], cF[i], 0.82));
-            return <path key={`h${k}`} d={open(ps, 0.5)} stroke={C.glueShine} strokeWidth={hlW * (1 - 0.2 * set)} opacity={(0.9 - 0.45 * set) * detK} />;
-          });
+          // a branch's highlights start clear of C1's band (HL_START) and taper in there; C1's run on across the junctions
+          const hl0 = HL_START[r.id];
+          const taperU = (s: number) => clamp((s - hl0) / HL_TAPER);
+          const hlStroke = (a: number, b: number, k: number, w: number, op: number, key: string): React.ReactNode => {
+            const at = (i: number) => lerpP(cN[i], cF[i], k);
+            if (r.s[a] >= hl0 + HL_TAPER) {
+              const ps: P[] = [];
+              for (let i = a; i <= b; i++) ps.push(at(i));
+              return <path key={key} d={open(ps, 0.5)} stroke={C.glueShine} strokeWidth={w} opacity={op} />;
+            }
+            // the taper: a ribbon (width and opacity rising from nothing) from the start, exactly at hl0 where the range
+            // was cut there, to the first sample past the zone; the ordinary stroke carries on from that sample
+            const Cs: P[] = [], Rs: number[] = [];
+            let o0 = taperU(r.s[a]);
+            if (a > 0 && r.s[a - 1] < hl0) {
+              Cs.push(lerpP(at(a - 1), at(a), (hl0 - r.s[a - 1]) / (r.s[a] - r.s[a - 1] || 1)));
+              Rs.push(0);
+              o0 = 0;
+            }
+            let m = a;
+            for (; m <= b; m++) {
+              Cs.push(at(m));
+              Rs.push(0.5 * w * taperU(r.s[m]));
+              if (r.s[m] >= hl0 + HL_TAPER) break;
+            }
+            if (Cs.length < 2) return null;
+            const o1 = taperU(r.s[Math.min(m, b)]);
+            const gid = uid('fb_hlt');
+            const g0 = Cs[0], g1 = Cs[Cs.length - 1];
+            const rest: P[] = [];
+            for (let i = m; i <= b; i++) rest.push(at(i));
+            return (
+              <g key={key} opacity={op}>
+                <defs>
+                  <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
+                    <stop offset={0} stopColor={C.glueShine} stopOpacity={o0} />
+                    <stop offset={1} stopColor={C.glueShine} stopOpacity={o1} />
+                  </linearGradient>
+                </defs>
+                <path d={poly(tube(Cs, Rs, false, false).outline)} fill={`url(#${gid})`} stroke="none" />
+                {rest.length > 1 && <path d={open(rest, 0.5)} stroke={C.glueShine} strokeWidth={w} />}
+              </g>
+            );
+          };
+          // the fresh zone by its shape (fresh / flow): while the tip lifts away (front.flow easing 1 -> 0) the fresh
+          // highlight keeps its extent and dims and thins away, and the settled highlight fades in over the tail, so the
+          // settle is continuous (thresholds on fresh itself would snap both at fixed flow values)
+          const fl = fr0 && fr0.seam === r.id ? clamp(fr0.flow) : 0;
+          const shape = (i: number) => (fl > 1e-4 ? r.fresh[i] / fl : 0);
+          const hlOk = (i: number) => settledOk(i) && facing(i) > thr && r.s[i] >= hl0;
+          const hlOp = (0.9 - 0.45 * set) * detK, hlWs = hlW * (1 - 0.2 * set);
+          const settledHl = [
+            ...ranges(n, (i) => hlOk(i) && shape(i) < 0.45).map(([a, b], k) => hlStroke(a, b, 0.82, hlWs, hlOp, `h${k}`)),
+            // (the tail overlaps the settled stretch by a sample, so no gap opens between them)
+            ...(fl < 0.999 ? ranges(n, (i) => hlOk(i) && shape(i) >= 0.45).map(([a, b], k) => hlStroke(a > 0 && r.s[a - 1] >= hl0 ? a - 1 : a, Math.min(n - 1, b + 1), 0.82, hlWs, hlOp * (1 - fl), `ht${k}`)) : []),
+          ];
           const freshW = Math.max(hlW, 0.12 * bandPx * px);
-          const freshHl = ranges(n, (i) => r.fresh[i] >= 0.4 && !r.inset[i]).map(([a, b], k) => {
-            const ps: P[] = [];
-            for (let i = a; i <= b; i++) ps.push(lerpP(cN[i], cF[i], 0.2));
-            return <path key={`hf${k}`} d={open(ps, 0.5)} stroke={C.glueShine} strokeWidth={freshW} opacity={0.95 * detK} />;
-          });
+          const freshHl = fl > 0.001
+            ? ranges(n, (i) => shape(i) >= 0.4 && !r.inset[i] && r.s[i] >= hl0).map(([a, b], k) =>
+                hlStroke(a, b, 0.2, hlW + (freshW - hlW) * fl, 0.95 * detK * fl, `hf${k}`),
+              )
+            : [];
           return (
-            <g key={`s${ri}`} mask={`url(#${masks[r.id]})`}>
-              {deep}
-              {freshL}
+            <g key={`s${ri}`}>
+              <g mask={`url(#${masks[r.id]})`}>
+                {deep}
+                {freshL}
+              </g>
+              {/* the highlights are not masked: C1's runs on across both junctions, a branch's tapers in clear of C1 */}
               <g fill="none" strokeLinecap="round" strokeLinejoin="round">
                 {settledHl}
                 {freshHl}
@@ -761,10 +856,16 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
         {/* the shaded face's broken lip over the gel's edge: the gel lies IN the seam, under the bone's edge */}
         {lineFade * healA > 0.01 && runs.map((r, ri) => {
           const pN = NEAR_LO[r.id] ? r.lo : r.hi;
-          const rs = ranges(r.s.length, (i) => !r.inset[i] && r.fresh[i] < 0.3 && (r.id === 'C1' || r.s[i] > 0.5));
+          // not over the proud fresh tail; as it settles (front.flow easing to 0) the lip fades in over it
+          const fl = fr0 && fr0.seam === r.id ? clamp(fr0.flow) : 0;
+          const tail = (i: number) => fl > 1e-4 && r.fresh[i] >= 0.3 * fl;
+          const ok = (i: number) => !r.inset[i] && (r.id === 'C1' || r.s[i] > 0.5);
+          const rs = ranges(r.s.length, (i) => ok(i) && !tail(i));
+          const rt = fl < 0.999 ? ranges(r.s.length, (i) => ok(i) && tail(i)) : [];
           return (
             <g key={`bl${ri}`} mask={`url(#${masksO[r.id]})`} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" strokeLinecap="round" opacity={lineFade * healA}>
               {rs.map(([a, b], k) => <path key={k} d={open(pN.slice(a, b + 1), 0.5)} />)}
+              {rt.map(([a, b], k) => <path key={`t${k}`} d={open(pN.slice(Math.max(0, a - 1), b + 2), 0.5)} opacity={1 - fl} />)}
             </g>
           );
         })}
@@ -886,7 +987,7 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
         {/* 5. the gaps: one dark union over the faces' inner edges and across every seam's mouth */}
         {fade > 0.001 && (
           <g>
-            {SEATED_GAPS.map((d, i) => <path key={i} d={d} fill={gapCol} />)}
+            {(disp ? DISP_GAPS : SEATED_GAPS).map((d, i) => <path key={i} d={d} fill={gapCol} />)}
             {px < 0.05 && (
               <g fill="none" stroke={C.marrow} strokeWidth={0.22} strokeLinecap="round" opacity={0.5 * fade * clamp((0.05 - px) / 0.015)}>
                 {CORE_STATIC.map((d, i) => <path key={`m${i}`} d={d} />)}
@@ -909,6 +1010,18 @@ export const FractureBone: React.FC<{st: BoneState2; view: View}> = ({st, view})
           <g transform={`translate(${(-LIGHT.x * so).toFixed(4)} ${(-LIGHT.y * so).toFixed(4)}) ${xfSvg(st.wedge)}`} opacity={0.55 * shadowK}>
             <g clipPath={`url(#${wedgeClip})`}><path d={RAD_PATH} fill={SHADOW} /></g>
           </g>
+          {/* a contact shadow on the bed floor along the foot of the exposed side wall (the cast shadow falls down-right,
+              under the wound's rim at the opening framing; this keeps a depth cue inside the window). Clipped to the bed. */}
+          {wall && (
+            <g clipPath={`url(#${ids.rad})`}>
+              <g clipPath={`url(#${wedgeClip})`}>
+                <g transform={xfSvg(st.wedge)} fill="none" stroke={SHADOW} strokeLinejoin="round" strokeLinecap="round">
+                  <path d={wall.edge} strokeWidth={14 * px} opacity={0.2 * wallK} />
+                  <path d={wall.edge} strokeWidth={6.5 * px} opacity={0.42 * wallK} />
+                </g>
+              </g>
+            </g>
+          )}
           <g transform={xfSvg(st.wedge)}>
             {wall && (
               <g clipPath={`url(#${ids.rad})`}>

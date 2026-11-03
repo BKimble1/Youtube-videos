@@ -9,7 +9,8 @@
 // same release at a press point inside the window (staging suggestion), e/e2 wide (hands in / withdrawing), w4/w5 the
 // clinic framing (in / almost fully withdrawn), h/hl/hr hand close-ups.
 // A key 't<seconds>' (e.g. 't15.9') draws that film moment from story.ts (camera, instruments, wedge, glue) with this
-// sheet's stand-in fracture, the shadows given the instruments' withdrawal (probeOn / appOn). A key 'o<opt>_<shot>'
+// sheet's stand-in fracture, the shadows given the instruments' withdrawal (probeOn / appOn); 't<seconds>@x,y,w' draws
+// the same moment through another camera (e.g. 't3.8@95,-50,190': the far hand just beyond REVEAL's right edge). A key 'o<opt>_<shot>'
 // (e.g. 'oL_rv') draws a staging option for the styloid hold (OPTS below).
 // Props: st = a state key for one full-size frame, or 'sheet' with ks (keys) and cols; off = ['back'|'front'|'shadow']
 // to skip a part (debugging). Compositions: Surgeon2 (1080x1920; a 'sheet' here fits 3 x 3) and Sheet2 (1080x1440).
@@ -154,11 +155,14 @@ const STATES: Record<string, Spec> = {
  *  seam, the probe's press point and angle; shots: rv = REVEAL (the applicator at the C2 foot), ac = ACT mid-stroke,
  *  at = ACT at the top of the stroke, fx = FIX holding (applicator gone), fl = FIX lifted 1, z = close, w = wide,
  *  h = the right hand. C = the old staging (-0.47: the cannula crosses the probe), A = steep throughout (its hand covers
- *  the patient's thumb in REVEAL), L = steep for the stroke only (the film: story turns it on "Researchers") */
+ *  the patient's thumb in REVEAL), L = steep for the stroke only (the film: story turns it on "Researchers"), P = the
+ *  polish-hands patch's stroke start */
 const OPTS: Record<string, {app: number; p: P; th: number}> = {
   A: {app: -1.3, p: pt(7, -9), th: 1.18},
   C: {app: -0.47, p: pt(7, -9), th: 1.18},
   L: {app: -1.35, p: pt(7, -9), th: 1.18},
+  // the polish-hands staging patch (story-hands.patch): the stroke starts at -1.28 and relaxes to -0.98 as the tip climbs
+  P: {app: -1.28, p: pt(7, -9), th: 1.18},
 };
 const optSpec = (key: string): Spec | null => {
   const m = /^o([A-Z])_([a-z]+)$/.exec(key);
@@ -183,10 +187,12 @@ const optSpec = (key: string): Spec | null => {
 /** a film moment from story.ts (key 't<seconds>', e.g. 't15.9'): its camera, instruments, wedge pose and glue, drawn
  *  with this sheet's stand-in fracture and with the instruments' withdrawal passed to their shadows */
 const filmSpec = (key: string): Spec | null => {
-  if (!/^t[0-9.]+$/.test(key)) return null;
-  const t = Number(key.slice(1));
+  const m = /^t([0-9.]+)(?:@(-?[0-9.]+),(-?[0-9.]+),([0-9.]+))?$/.exec(key);
+  if (!m) return null;
+  const t = Number(m[1]);
   const wc = camAt(t);
   if (wc.world !== 'wrist') return null;
+  if (m[2] !== undefined) wc.cam = {...wc.cam, x: Number(m[2]), y: Number(m[3]), w: Number(m[4])};
   const g = boneAt(t, wc.cam.w / 1080).glue;
   const glue: Glue = {};
   for (const id of SEAM_IDS) if (g[id].b > g[id].a) glue[id] = [g[id].a, g[id].b];
@@ -257,7 +263,7 @@ const Sheet: React.FC<{ks: string[]; cols: number}> = ({ks, cols}) => {
     <AbsoluteFill style={{background: '#111'}}>
       {ks.map((key, i) => (
         <div key={key} style={{position: 'absolute', left: (i % cols) * 1080 * k, top: Math.floor(i / cols) * 1920 * k, width: 1080, height: 1920, transform: `scale(${k})`, transformOrigin: '0 0', overflow: 'hidden'}}>
-          <Frame sp={specOf(key)} id={`f${key.replace('.', '_')}`} />
+          <Frame sp={specOf(key)} id={`f${key.replace(/[^A-Za-z0-9]/g, '_')}`} />
           <div style={{position: 'absolute', left: 20, top: 20, fontSize: 64, color: '#FF0', fontFamily: 'monospace'}}>{specOf(key).label}</div>
         </div>
       ))}
@@ -267,7 +273,7 @@ const Sheet: React.FC<{ks: string[]; cols: number}> = ({ks, cols}) => {
 
 const Test: React.FC<{st: string; ks?: string[]; cols?: number; off?: string[]}> = ({st: key, ks, cols, off}) => {
   if (key === 'sheet') return <Sheet ks={ks ?? Object.keys(STATES)} cols={cols ?? 4} />;
-  return <Frame sp={specOf(key)} id={`f${key.replace('.', '_')}`} off={off} />;
+  return <Frame sp={specOf(key)} id={`f${key.replace(/[^A-Za-z0-9]/g, '_')}`} off={off} />;
 };
 
 registerRoot(() => (

@@ -61,6 +61,11 @@ const STATES: S[] = [
   /* 19 */ {name: 'C3 end', cam: {x: 11, y: 8.6, w: 9}, wedge: WEDGE_SEATED, glue: ALL, set: 0},
   /* 20 */ {name: 'wedge out mac', cam: {x: 8.6, y: 1.5, w: 13}, wedge: WEDGE_OUT, glue: {C1: {a: 0, b: 9.5}}},
   /* 21 */ {name: 'w62 stroke', cam: {x: 8.5, y: -10, w: 62}, wedge: WEDGE_SEATED, glue: {...FULL13, C2: {a: 0, b: 8}}, front: {seam: 'C2', s: 8, flow: 1}},
+  // the settle after a run ends (story.ts eases front.flow 1 -> 0): the fresh highlight dims, the settled one and the
+  // bone-ink lip fade in over the tail, the bulb shrinks inside the rounded end
+  /* 22 */ {name: 'C2 end f.4', cam: {x: 3.0, y: -16.2, w: 10}, wedge: WEDGE_SEATED, glue: {...FULL13, C2: {a: 0, b: 17.65}}, front: {seam: 'C2', s: 17.65, flow: 0.4}},
+  /* 23 */ {name: 'C2 end f0', cam: {x: 3.0, y: -16.2, w: 10}, wedge: WEDGE_SEATED, glue: {...FULL13, C2: {a: 0, b: 17.65}}},
+  /* 24 */ {name: 'C1 end f.4', cam: {x: 11.5, y: -0.5, w: 10}, wedge: WEDGE_SEATED, glue: {C1: {a: 0, b: L1}}, front: {seam: 'C1', s: L1, flow: 0.4}},
 ];
 const One: React.FC<{s: S; k: number}> = ({s, k}) => {
   resetIds(`f${k}_`);
@@ -104,17 +109,20 @@ const Sheet: React.FC<{only?: number[]; cols?: number}> = ({only, cols = 4}) => 
   );
 };
 const Single: React.FC<{i: number}> = ({i}) => <One s={STATES[i]} k={i} />;
-/** an approximate 0-2 s opening (the lead's story.ts owns the real timing): seat, lay C1, hop, lay C3 upward, lift */
+/** an approximate 0-2 s opening (the lead's story.ts owns the real timing): seat, lay C1, hop, lay C3 upward, lift; after
+ *  each run the front's flow eases 1 -> 0 (the tip lifting away) as in story.ts */
 const opening = (t: number): S => {
   const sm = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
   const ss = (x: number, a: number, b: number) => sm((x - a) / (b - a));
   const b1 = t < 0.36 ? 9.5 + 0.9 * (t / 0.36) : 10.4 + (L1 - 10.4) * Math.min(1, (t - 0.36) / 0.56);
-  const a3 = L3 + (0.3 - L3) * Math.min(1, Math.max(0, (t - 1.05) / 0.4));
+  const a3 = t < 1.45 ? L3 + (0.3 - L3) * Math.min(1, Math.max(0, (t - 1.05) / 0.4)) : 0.3 * (1 - ss(t, 1.45, 1.95));
   const onC3 = t >= 1.05;
   return {
     name: `t ${t.toFixed(2)}`, cam: CAM0, wedge: wedgeLerp(ss(t, 0.04, 0.38)),
     glue: {C1: {a: 0, b: b1}, C3: onC3 ? {a: a3, b: L3} : NONE},
-    front: onC3 ? (t < 1.45 ? {seam: 'C3', s: a3, flow: 1} : undefined) : t < 0.92 ? {seam: 'C1', s: b1, flow: 1} : undefined,
+    front: onC3
+      ? t < 1.75 ? {seam: 'C3', s: a3, flow: 1 - ss(t, 1.45, 1.75)} : undefined
+      : {seam: 'C1', s: b1, flow: 1 - ss(t, 0.92, 1.05)},
     press: 1 - ss(t, 1.5, 1.95),
     app: onC3 ? (t < 1.45 ? seamPoint('C3', a3) : undefined) : t < 0.92 ? seamPoint('C1', b1) : undefined,
     set: 0, t,
