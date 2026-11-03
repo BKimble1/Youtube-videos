@@ -10,11 +10,15 @@ src, out, sl, sf_, med = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], flo
 os.makedirs(out, exist_ok=True)
 E = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))['EV']
 here = os.path.dirname(os.path.abspath(__file__))
-spans = [('widen', 1.2, 5.4), ('dive', E['dive0'] - 0.1, E['cutIn'] + 0.15), ('cut_in', E['cutIn'] - 0.1, E['cutIn'] + 0.1),
-         ('cut_out', E['cutOut'] - 0.1, E['cutOut'] + 0.1), ('pullout', E['pull0'], E['pull1'] + 0.1), ('pushin', E['dive2a'] - 0.4, E['dive2b'] + 0.1),
-         ('easeout', E['out0'] - 0.1, E['out1'] + 0.1), ('loop_wipe', E['wipe0'] - 0.05, 27.967)]
+CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
+LT = CJ['LOOP_T']
+spans = [('opening_fixation', 0.0, 2.0), ('pullback', 1.4, 4.1), ('precise_action', 4.0, E['dive0']), ('dive', E['dive0'] - 0.1, E['cutIn'] + 0.15),
+         ('cut_in', E['cutIn'] - 0.1, E['cutIn'] + 0.1), ('oyster', E['cutIn'], E['cutOut']), ('cut_out', E['cutOut'] - 0.1, E['cutOut'] + 0.1),
+         ('wet', E['cutOut'], E['pull0']), ('pullout', E['pull0'], E['pull1'] + 0.1), ('release', E['rel0'] - 0.2, E['probeOut1'] + 0.1),
+         ('pushin', E['dive2a'] - 0.4, E['dive2b'] + 0.1), ('healing', E['hem0'], E['rem1']), ('easeout', E['out0'] - 0.1, E['out1'] + 0.1),
+         ('loop_push', E['push0'], LT - 1 / 30)]
 for name, a, b in spans:
-    step = 1 if b - a < 0.5 else 2 if b - a < 1.4 else 4
+    step = 1 if b - a < 0.5 else 2 if b - a < 2.1 else 4 if b - a < 3.5 else 6
     subprocess.run([sys.executable, os.path.join(here, 'strips.py'), src, f'{a:.3f}', f'{b:.3f}', str(step), os.path.join(out, f'strip_{name}_{a:.2f}-{b:.2f}s.png'), '0.18', '10'], check=True)
 subprocess.run([sys.executable, os.path.join(here, 'strips.py'), src, '0', '2.0', '6', os.path.join(out, 'muted_phone_0-2s.png'), '0.3333', '6'], check=True)
 A = np.asarray(Image.open(sl).convert('RGB').resize((270, 480)), np.float32)

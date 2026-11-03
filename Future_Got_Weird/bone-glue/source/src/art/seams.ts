@@ -173,7 +173,7 @@ export const WEDGE_CORNER = WEDGE_POLY[0];
 /** a point on the wedge's face where the probe's tip presses (seated coordinates; carry with xfPoint) */
 export const WEDGE_PRESS = pt(10.0, 3.6);
 /** a point on the styloid fragment where the probe holds it later (static fragment) */
-export const STYLOID_PRESS = pt(10.6, -12.5);
+export const STYLOID_PRESS = pt(12.4, -5.4);
 
 // ---------------------------------------------------------------- the glue band
 /** The adhesive in a seam from s0 to s1: it fills the gap between the two faces and wets out a little over each

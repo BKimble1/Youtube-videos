@@ -18,14 +18,14 @@ throughout, never a horror treatment; the narration stays dominant:
 Music: a quiet pulse whose period divides the film length exactly, so the end flows into the start; it ducks under
 the voice and thins under the oyster comparison. Levels: voice about -16 LUFS; the whole about -14 LUFS integrated;
 true peak below -1.5 dBTP (4x oversampled).
-usage: python3 tools/make_audio.py [mix_name]   (default mix_v1)"""
+usage: python3 tools/make_audio.py [mix_name]   (default mix_v2)"""
 import json, os, sys
 import numpy as np, soundfile as sf, pyloudnorm as pyln
 from scipy.signal import butter, sosfilt, resample_poly
 
 EP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SR = 48000
-NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v1'
+NAME = sys.argv[1] if len(sys.argv) > 1 else 'mix_v2'
 cj = json.load(open(os.path.join(EP, 'audio/cues.json')))
 DUR, EV, T = cj['DUR'], cj['EV'], cj['T']
 WORLD = cj['world']
@@ -147,18 +147,24 @@ for k in range(int(DUR * 22)):
 gel_tex = norm(gel * (0.6 + 0.4 * np.sin(2 * np.pi * 7.3 * t)) + bub)
 sp = np.clip(SPEED / 15.0, 0, 1)
 sfx += db(-25) * gel_tex * lp(sp, 6)
-place(sfx, creak(0.5, 380, 40), 0.25, 'plunger creak', -34)
-place(sfx, creak(0.45, 360, 36), 2.4, 'plunger creak', -36)
-# the cannula touching down after each hop
-for at, nm in [(EV['laid0'] * 0 + 1.42, 'cannula touches the wedge crack'), (2.35, 'cannula touches the styloid crack')]:
-    place(sfx, tick(0.03, 3600), at, nm, -30)
-place(sfx, steel(0.12, 2900), EV['appLift0'] + 0.08, 'applicator lifts off', -31)
+place(sfx, creak(0.5, 380, 40), 0.42, 'plunger creak', -34)
+place(sfx, creak(0.45, 360, 36), EV['c2a'] + 0.1, 'plunger creak', -36)
+# V2 opening: the probe pushes the small fragment home (a soft bony seat), the cannula hops, the instruments lift
+place(sfx, soft_knock(420, 0.12), EV['seat1'] - 0.02, 'the fragment seats (soft bony tock)', -27)
+place(sfx, tick(0.025, 3000), EV['seat1'], None, -33)
+place(sfx, tick(0.03, 3600), EV['hop1'], 'cannula touches the wedge seam', -31)
+place(sfx, steel(0.1, 3100), EV['c3b'] + 0.05, 'applicator lifts', -34)
+place(sfx, steel(0.14, 2400), EV['probeUp0'] + 0.08, 'probe eases off the fragment', -31)
+place(sfx, tick(0.03, 3400), EV['probeDown1'] - 0.1, 'probe settles on the styloid fragment', -32)
+place(sfx, tick(0.03, 3800), EV['appDown1'] - 0.1, 'cannula touches the styloid seam', -33)
+place(sfx, steel(0.12, 2900), EV['c2b'] + 0.08, 'applicator lifts off (stroke done)', -31)
 
 # ---------------- dives and matches
-place(sfx, sweep(1.7, 300, 120, 2500, 900), EV['dive0'] + 0.15, 'push down into the incision', -28)
+place(sfx, sweep(1.7, 300, 120, 2500, 900), EV['dive0'] + 0.15, 'push down onto the glue band', -28)
 place(sfx, sweep(0.5, 200, 90, 1800, 500), EV['cutIn'] - 0.12, 'match cut into the water (muffled)', -27)
+place(sfx, sweep(0.6, 300, 150, 1500, 700), EV['reveal0'], 'the attachment window opens (soft)', -33)
 place(sfx, sweep(0.5, 150, 200, 900, 2400), EV['cutOut'] - 0.25, 'match cut back to the bone', -28)
-place(sfx, sweep(1.6, 120, 300, 900, 2600), EV['pull0'] + 0.1, 'pull out to the cutaway', -30)
+place(sfx, sweep(1.6, 120, 300, 900, 2600), EV['pull0'] + 0.1, 'pull out to the fixation framing', -30)
 place(sfx, sweep(1.0, 260, 120, 2400, 800), EV['dive2a'], 'move back into the fracture', -31)
 place(sfx, sweep(0.9, 140, 260, 900, 2200), EV['out0'] + 0.1, 'ease out to the wrist', -32)
 
@@ -168,39 +174,39 @@ cur = circ(lambda x: bp(x, 300, 1400), noise(N)) * (0.6 + 0.4 * np.sin(2 * np.pi
 uw = norm(1.0 * norm(wash) + 0.35 * norm(cur))
 sfx += db(-26) * uw * ow
 for k in range(9):
-    at = EV['match1'] + 0.1 + k * 0.19 + 0.06 * rng.random()
-    if at < EV['back0']:
+    at = EV['cutIn'] + 0.25 + k * 0.21 + 0.06 * rng.random()
+    if at < EV['cutOut'] - 0.2:
         place(sfx, plip(500 + 500 * rng.random()), at, 'bubble' if k == 0 else None, -33 - 3 * rng.random())
 
-# ---------------- the wet macro: a gentle trickle over the bead
+# ---------------- the wet macro: a gentle flow over the bonded seam, a stronger wash on "wet, bloody"
 WET = lp(sig100(cj['wet']), 5)
 trick = circ(lambda x: bp(x, 900, 4500), noise(N)) * (0.5 + 0.5 * np.abs(np.sin(2 * np.pi * 3.1 * t + 2 * np.sin(2 * np.pi * 0.9 * t))))
 sfx += db(-30) * norm(trick) * WET
 place(sfx, soft_knock(150, 0.25), T['grips'] + 0.05, 'the bond holds (soft knock)', -30)
-place(sfx, sweep(0.9, 300, 600, 1500, 4000), 11.55, 'the fluid surge washes over the bead', -30)
+place(sfx, sweep(0.9, 300, 600, 1500, 4000), EV['surge0'] + 0.05, 'the wash sweeps over the seam', -30)
 
-# ---------------- withdrawal and setting
-place(sfx, slide(0.45), EV['appOut0'] + 0.1, 'cannula slides out', -30)
-place(sfx, ratchet(3, 0.05), EV['clampOpen0'] - 0.02, 'clamp ratchet releases', -30)
-place(sfx, steel(0.18, 2300), EV['clampOut0'] + 0.3, 'clamp lifts away', -33)
+# ---------------- fixation: the probe lets go, nothing moves; the gel sets
+place(sfx, steel(0.16, 2500), EV['rel0'] + 0.06, 'probe lifts off (released)', -29)
+place(sfx, slide(0.45), EV['probeOut0'] + 0.1, 'probe withdraws', -32)
 place(sfx, soft_knock(120, 0.35), EV['set1'] - 0.35, 'the gel sets (low, soft)', -29)
 # closing: three suture pulls
 for k in range(3):
     place(sfx, rustle(0.16, 2500, 8000), EV['sut0'] + 0.08 + k * 0.17, 'suture pull' if k == 0 else None, -34)
 
-# ---------------- healing: soft material sounds
+# ---------------- healing: soft material sounds; the new bone's fine crackle follows the bridging fronts
 place(sfx, swell(0.9, 52, 0.6), EV['hem0'] - 0.05, 'hematoma: a low organic swell', -28)
 place(sfx, creak(0.8, 210, 30), EV['soft0'], 'soft callus: fibrous creak', -31)
-place(sfx, crackle(1.0, 70, 2500, 8500), EV['hard0'], 'hard callus: fine mineral crackle', -31)
-place(sfx, fizz(2.6, 120), EV['res0'] + 0.3, 'the glue islands dissolve (whispering fizz)', -33)
-place(sfx, crackle(1.8, 40, 2200, 7000), EV['res0'] + 0.6, 'new bone filling in', -35)
+BR = sig100(cj['bridge'])
+dbr = np.clip(np.gradient(BR, 1 / SR) / 0.35, 0, 1)
+grow = crackle(DUR, 55, 2200, 8000)
+sfx += db(-31) * grow[:N] * lp(dbr, 4)
+place(sfx, fizz(2.4, 110), EV['bridge0'] + 0.25 * (EV['bridge1'] - EV['bridge0']), 'the glue thins and disappears (whispering fizz)', -34)
 place(sfx, tone(220, 1.4), EV['rem1'] - 0.55, 'restored (a settling tone)', -34)
 
-# ---------------- the ending: the fingers curl, then the push back in, into frame 0
-place(sfx, rustle(0.6, 1200, 5000), EV['curl0'] + 0.05, 'skin as the fingers spread', -31)
-place(sfx, rustle(0.5, 1000, 4500), EV['curlPeak'] + 0.15, 'the fingers relax', -34)
-place(sfx, sweep(0.55, 900, 250, 6000, 1600), EV['wipe0'] + 0.02, 'the sleeve sweeps past the lens (cloth whoosh, into frame 0)', -27)
-place(sfx, rustle(0.4, 1500, 6000), EV['wipe0'] + 0.1, 'gown fabric', -31)
+# ---------------- the ending: the fingers flex, then the push back into the bone, into frame 0
+place(sfx, rustle(0.6, 1200, 5000), EV['curl0'] + 0.05, 'skin as the fingers flex', -31)
+place(sfx, rustle(0.5, 1000, 4500), EV['curl0'] + 0.7, 'the fingers relax', -34)
+place(sfx, sweep(1.4, 200, 500, 1500, 5000, 0.8), EV['push0'], 'push back into the wrist (into frame 0)', -29)
 
 # ---------------- music: a quiet pulse whose period divides the film exactly
 BEATS = int(round(DUR * 98 / 60))
@@ -246,7 +252,7 @@ elif os.environ.get('FGW_CODE_TEST'):
     # code test only (never a deliverable): a stand-in noise 'voice' so the effects and levels can be exercised
     v = lp(noise(N), 3000) * (0.5 + 0.5 * np.sin(2 * np.pi * 3 * t) ** 2); vsr = SR
 else:
-    v, vsr = sf.read(os.path.join(EP, 'audio/narration/FGW_Bone_Glue_narration_V1.wav'))
+    v, vsr = sf.read(os.path.join(EP, os.environ.get('FGW_NARRATION', 'audio/narration/FGW_Bone_Glue_narration_V2.wav')))
 if v.ndim > 1: v = v.mean(1)
 assert vsr == SR and len(v) == N, (vsr, len(v), N)
 meter = pyln.Meter(SR)

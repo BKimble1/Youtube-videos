@@ -20,9 +20,9 @@ FPS = 30
 TAKE_ID = os.environ.get('FGW_TAKE', 't2_RlHD')
 TAKE = f'audio/narration/takes/{TAKE_ID}.mp3'
 SCRIBE = f'audio/narration/takes/{TAKE_ID}_scribe.json'
-MASTER = 'audio/narration/FGW_Bone_Glue_narration_V1.wav'
+MASTER = 'audio/narration/FGW_Bone_Glue_narration_V2.wav'
 ALIGN = 'audio/narration/master_zipformer.json'
-TAIL = float(os.environ.get('FGW_TAIL', '0.56'))
+TAIL = float(os.environ.get('FGW_TAIL', '1.5'))
 CAP = float(os.environ.get('FGW_GAP_CAP', '0.30'))   # sentence gaps longer than this are shortened to it
 KEEP = {}                                              # per-sentence exceptions: next word -> kept gap (s)
 os.chdir(ROOT)
@@ -59,7 +59,7 @@ def write_timeline(W, provisional):
     def ts(t):
         ms = int(round(t * 1000)); return f'{ms // 3600000:02d}:{ms // 60000 % 60:02d}:{ms // 1000 % 60:02d},{ms % 1000:03d}'
     os.makedirs('captions', exist_ok=True)
-    with open('captions/FGW_Bone_Glue_V1.srt', 'w') as f:
+    with open('captions/FGW_Bone_Glue_V2.srt', 'w') as f:
         for k, c in enumerate(caps):
             end = c['end'] + 0.3 if k + 1 == len(caps) else min(c['hide'], caps[k + 1]['start'])
             f.write(f"{k + 1}\n{ts(c['start'])} --> {ts(end)}\n{c['text']}\n\n")

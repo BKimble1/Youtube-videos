@@ -27,10 +27,11 @@ d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: every dive, match and pull-out (from story.ts EV, via audio/cues.json), plus the loop pass
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
 E = CJ['EV']
-PLANNED = [(E['dive0'], E['cutIn'] + 0.02, 'dive to the bead edge'), (E['cutIn'] - 0.02, E['cutIn'] + 0.05, 'match cut: glue edge -> oyster cement edge'),
-           (E['back0'], E['cutOut'] + 0.3, 'push onto the cement edge; match cut back to the glue edge'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the cutaway'),
-           (E['dive2a'], E['dive2b'] + 0.05, 'push back into the fracture'), (E['out0'], E['out1'] + 0.05, 'ease out to the wrist'),
-           (E['wipe0'], CJ['LOOP_T'] + 0.01, 'the loop: the sleeve wipes across the lens'), (1.2, 5.3, 'the opening widen into the clinic')]
+PLANNED = [(1.4, 4.1, 'the opening pull-back to the wrist'), (E['dive0'], E['cutIn'] + 0.02, 'dive onto the glue band'),
+           (E['cutIn'] - 0.02, E['cutIn'] + 0.05, 'match cut: glue band -> oyster on its rock'),
+           (E['cutIn'], E['cutOut'] + 0.3, 'push to the oyster attachment; match cut back onto the glue band'), (E['pull0'], E['pull1'] + 0.05, 'pull-out to the fixation framing'),
+           (E['dive2a'], E['dive2b'] + 0.05, 'push into the healing framing'), (E['out0'], E['out1'] + 0.05, 'ease out to the recovered wrist'),
+           (E['push0'], CJ['LOOP_T'] + 0.01, 'the loop: push back into the bone (the cut to frame 0 matches framing and direction)')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []
