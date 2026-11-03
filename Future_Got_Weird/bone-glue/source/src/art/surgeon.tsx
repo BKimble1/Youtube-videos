@@ -118,7 +118,7 @@ const nearestOn = (p: V, ps: V[]) => {
 type Lay = 'b' | 'f' | 'F' | 'm' | 'p';
 /** curl: a finger folded under the palm, seen as a short knuckle stub that grows out of the back of the hand (no gloss
  *  or separation line at its knuckle end) */
-type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]; curl?: boolean};
+type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]; curl?: boolean; tube?: boolean};
 /** thumbOver: the thumb is drawn over the palm; objOverPalm: the held object lies over the back of the hand (a probe
  *  resting in the web), so it is drawn after the palm group and only the 'F' digits (and a front thumb) cover it */
 export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean; objOverPalm?: boolean};
@@ -178,20 +178,25 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
   const hi = lit(color, 0.55);
 
   // --- digits to world segments
-  type Seg = {a: V; b: V; ra: number; rb: number; lay: Lay; si: number};
+  type Seg = {a: V; b: V; ra: number; rb: number; lay: Lay; si: number; tube?: boolean; curl?: boolean};
   const digitSegs = (dg: Digit): Seg[] => {
     const pts = dg.j.map(([u, v]) => W(u, v));
     const out: Seg[] = [];
-    for (let i = 0; i < pts.length - 1; i++) out.push({a: pts[i], b: pts[i + 1], ra: dg.r[i] * L, rb: dg.r[i + 1] * L, lay: dg.lay?.[i] ?? 'f', si: i});
+    for (let i = 0; i < pts.length - 1; i++) out.push({a: pts[i], b: pts[i + 1], ra: dg.r[i] * L, rb: dg.r[i + 1] * L, lay: dg.lay?.[i] ?? 'f', si: i, tube: dg.tube, curl: dg.curl});
     return out;
   };
   const fingers = pose.fingers.map(digitSegs);
   const thumb = digitSegs(pose.thumb);
-  const segCol = (si: number) => (si === 0 ? color : mix(color, shade(color, 0.16), 0.4 + 0.3 * si));
+  const segCol = (si: number, tube?: boolean) => (si === 0 || tube ? color : mix(color, shade(color, 0.16), 0.4 + 0.3 * si));
   const capsules = (segs: Seg[], key: string, lay: Lay) =>
     segs
       .filter((s) => s.lay === lay)
-      .map((s) => <Capsule key={`${key}${s.si}`} id={`${id}-${key}${s.si}`} a={s.a} b={len(sub(s.b, s.a)) < 0.01 ? add(s.a, mul(dir, 0.01)) : s.b} ra={s.ra} rb={s.rb} color={segCol(s.si)} spec={s.si === 0 ? 0.16 : 0.1} k={1.25} />);
+      .map((s) => {
+        // a finger passing behind the held object runs under the hand, in its shadow (no gloss): it reads as tucked
+        // under, never as a ghost of a finger
+        const under = s.lay === 'b' && !s.curl;
+        return <Capsule key={`${key}${s.si}`} id={`${id}-${key}${s.si}`} a={s.a} b={len(sub(s.b, s.a)) < 0.01 ? add(s.a, mul(dir, 0.01)) : s.b} ra={s.ra} rb={s.rb} color={under ? shade(segCol(s.si, s.tube), 0.14) : segCol(s.si, s.tube)} spec={under ? 0 : s.si === 0 ? 0.16 : 0.1} k={1.25} />;
+      });
 
   // --- the cuff: a tube from under the palm back along the forearm, its open end rolled
   const c0 = W(0.05, 0);
@@ -257,7 +262,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
         const r = s.ra + (s.rb - s.ra) * t;
         const nb = nearestOn(p, bPts);
         const rB = B[0].ra;
-        if (nb.d < (r + rB) * 1.05 && nb.d > 1e-6) cur.push(add(p, mul(norm(sub(nb.q, p)), r * 0.9)));
+        if (nb.d < (r + rB) * 0.9 && nb.d > 1e-6) cur.push(add(p, mul(norm(sub(nb.q, p)), r * 0.97)));
         else if (cur.length) {
           runs.push(cur);
           cur = [];
@@ -304,7 +309,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
       // a gloss on the segment's lit side (the knuckle top for a short, flexed segment)
       const g = add(lerpV(s.a, s.b, sl < s.ra * 1.2 ? 0.5 : 0.62), mul(LIGHT, s.ra * 0.42));
       const ga = sl < s.ra * 1.2 ? degOf(ax) + 90 : degOf(ax);
-      els.push(<ellipse key={`${key}g${i}`} cx={fmt(g.x)} cy={fmt(g.y)} rx={fmt(Math.max(s.ra * 0.32, Math.min(sl * 0.32, s.ra * 0.75)))} ry={fmt(s.ra * 0.15)} transform={`rotate(${fmt(ga)} ${fmt(g.x)} ${fmt(g.y)})`} fill="#FFFFFF" opacity={0.5} />);
+      els.push(<ellipse key={`${key}g${i}`} cx={fmt(g.x)} cy={fmt(g.y)} rx={fmt(Math.max(s.ra * 0.32, Math.min(sl * 0.32, s.ra * 0.75)))} ry={fmt(s.ra * 0.15)} transform={`rotate(${fmt(ga)} ${fmt(g.x)} ${fmt(g.y)})`} fill="#FFFFFF" opacity={lay === 'b' ? 0.2 : 0.5} />);
     });
     return els;
   };
@@ -411,13 +416,23 @@ const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
 const FAR_UV = {u: 0.64, v: 0.272};
 /** a curled finger: knuckle (MCP), the middle joint (PIP) and the middle phalanx folding down under it, which from the
  *  high camera shows as a short, darker segment toward the bottom of the screen (`down`: screen-down in hand units) */
-const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075): Digit => ({
-  j: [MCP[i], pip, [pip[0] + down[0] * fold, pip[1] + down[1] * fold]],
-  r: fingerR(i).map((r) => r * 1.07),
-  // the folded middle phalanx tucks under the knuckle: only its edge shows below the stub
-  lay: ['f', 'b'],
-  curl: true,
-});
+const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075, tuck = false): Digit => {
+  // tuck: the folded phalanx never continues the stub forward (a hand turned steeply toward the screen's bottom has its
+  // screen-down along its own axis); it turns back under the knuckle, toward the palm
+  let dn = down;
+  if (tuck) {
+    const du = Math.min(down[0], 0) - 0.35;
+    const l = Math.hypot(du, down[1]) || 1;
+    dn = [du / l, down[1] / l];
+  }
+  return {
+    j: [MCP[i], pip, [pip[0] + dn[0] * fold, pip[1] + dn[1] * fold]],
+    r: fingerR(i).map((r) => r * 1.07),
+    // the folded middle phalanx tucks under the knuckle: only its edge shows below the stub
+    lay: ['f', 'b'],
+    curl: true,
+  };
+};
 const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
   const tt = thumbTip;
@@ -426,10 +441,12 @@ const farPose = (thumbTip: [number, number], down: [number, number]): GripPose =
     fingers: [
       // the index lies along the barrel toward the tip; the middle finger wraps under the barrel in front of the flange
       // (its tip shows on the near side); the ring and little fingers close into the palm
-      {j: [MCP[0], [0.616, 0.21], [0.73, 0.226], [0.818, 0.232]], r: fingerR(0)},
-      {j: [MCP[1], [0.612, 0.112], [0.676, 0.2], [0.678, 0.318]], r: fingerR(1), lay: ['f', 'b', 'b']},
-      curled(2, [0.542, -0.02], down, 0.06),
-      curled(3, [0.49, -0.11], down, 0.055),
+      // (one continuous glossy tube that tapers to the pad; its last phalanx bends down onto the barrel)
+      {j: [MCP[0], [0.616, 0.21], [0.728, 0.228], [0.8, 0.25]], r: [0.05, 0.046, 0.041, 0.034], tube: true},
+      {j: [MCP[1], [0.612, 0.112], [0.664, 0.2], [0.678, 0.318]], r: fingerR(1), lay: ['f', 'b', 'b']},
+      // the ring and little knuckles close in toward the barrel, tucked against the middle finger
+      curled(2, [0.53, 0.025], down, 0.06, true),
+      curled(3, [0.476, -0.05], down, 0.055, true),
     ],
     thumb: {j: [base, L3(base, tt, 0.42, 0.05), L3(base, tt, 0.74, 0.024), tt], r: THUMB_R},
     thumbLay: 'f',
