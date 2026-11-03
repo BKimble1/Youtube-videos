@@ -1,160 +1,177 @@
 // V2: the wet wound over the bonded seam (the "It grips bone even inside a wet, bloody wound" macro). A thin,
-// translucent, blood-tinted sheet of fluid flows DOWN the field, across the glue-filled transverse seam: ripple
-// highlights travel with it, ride up over the glue band (catching light on its surface) and carry on past it; a darker
-// film lip lies along the band's upper edge where the flow meets the raised gel. Around "wet, bloody" a stronger wash
-// sweeps across the whole field. The glue's two edges are redrawn crisp on top: it stays sealed to both faces. No
-// strands, no droplets. World millimetres, depth 0; everything is anchored to the bone, so it scales and travels with the
-// camera. Deterministic in st.flow / st.surge.
+// translucent, blood-tinted sheet of fluid flows down (and a little to the right) across the glue-filled transverse
+// seam. Its surface ripples are broad crests travelling with the flow, tilted against the seam so they visibly cross it:
+// as a crest rides over the raised gel it bends up a touch and its highlight turns to a gel glint, then it carries on
+// down the other side. Around "wet, bloody" one stronger, darker wash sweeps across the whole field. The glue's outline
+// is redrawn crisp on top (the exact edges FractureBone draws), so the bond visibly stays sealed to both broken faces
+// while the fluid passes over it. No strands, no droplets. World millimetres, depth 0; deterministic in st.flow / st.surge.
 import React from 'react';
 import {P, closed, open, pt} from '../core/geo';
 import {mix, rgba} from '../core/color';
-import {clamp, hash, noise1, ss} from '../lib';
+import {clamp, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
-import {SEAM_IDS, glueBand, seamLength} from './seams';
+import {SEAM_IDS} from './seams';
+import {glueRuns} from './fracture';
 import {BoneState2} from '../v2state';
 import {uid} from '../core/ids';
 
 const RAD = closed(RADIUS, 0.55);
-/** the field the film covers (mm): the macro framings sit inside it */
-const F = {x0: -15, x1: 12, y0: -14, y1: 15};
+/** the flow direction (down the frame, tilted a little to the right) and the crest direction across it */
+const A = 0.36;
+const D = pt(Math.sin(A), Math.cos(A));
+const E = pt(Math.cos(A), -Math.sin(A));
+/** the field's origin and extent along the crests (u) and along the flow (q), mm */
+const O = pt(-4, 0);
+const U0 = -16, U1 = 16, Q0 = -16, Q1 = 18;
+const SPACING = 3.3, SPEED = 2.2;
+const at = (u: number, q: number) => pt(O.x + E.x * u + D.x * q, O.y + E.y * u + D.y * q);
 
-/** the transverse band's upper and lower outline y at x (seated; C1 is the seam the flow crosses) */
-const C1_ROWS = (() => {
-  const runs = glueBand('C1', 0, seamLength('C1'), {dx: 0, dy: 0, rot: 0}, 0.14, undefined, 0.1);
-  const rows: {x: number; lo: number; hi: number}[] = [];
-  for (const r of runs) for (let i = 0; i < r.s.length; i++) rows.push({x: (r.lo[i].x + r.hi[i].x) / 2, lo: r.lo[i].y, hi: r.hi[i].y});
+type Rows = {x: number; lo: number; hi: number}[];
+/** the transverse band's current outline as rows (x -> upper and lower edge y) */
+const bandRows = (st: BoneState2): Rows => {
+  const rows: Rows = [];
+  for (const r of glueRuns('C1', st)) {
+    for (let i = 0; i < r.lo.length; i++) {
+      const lo = r.lo[i], hi = r.hi[i];
+      rows.push({x: (lo.x + hi.x) / 2, lo: Math.min(lo.y, hi.y), hi: Math.max(lo.y, hi.y)});
+    }
+  }
   rows.sort((a, b) => a.x - b.x);
   return rows;
-})();
-const bandAt = (x: number): {lo: number; hi: number} | null => {
-  if (x < C1_ROWS[0].x || x > C1_ROWS[C1_ROWS.length - 1].x) return null;
-  let lo = 0, hi = C1_ROWS.length - 1;
+};
+const bandAt = (rows: Rows, x: number): {lo: number; hi: number} | null => {
+  if (rows.length < 2 || x < rows[0].x || x > rows[rows.length - 1].x) return null;
+  let lo = 0, hi = rows.length - 1;
   while (hi - lo > 1) {
     const m = (lo + hi) >> 1;
-    if (C1_ROWS[m].x <= x) lo = m; else hi = m;
+    if (rows[m].x <= x) lo = m; else hi = m;
   }
-  const a = C1_ROWS[lo], b = C1_ROWS[hi];
-  const u = clamp((x - a.x) / (b.x - a.x || 1));
-  return {lo: a.lo + (b.lo - a.lo) * u, hi: a.hi + (b.hi - a.hi) * u};
+  const a = rows[lo], b = rows[hi];
+  const k = clamp((x - a.x) / (b.x - a.x || 1));
+  return {lo: a.lo + (b.lo - a.lo) * k, hi: a.hi + (b.hi - a.hi) * k};
+};
+/** how far inside the raised band a point is (0 outside, 1 well inside, soft over 0.25 mm) */
+const onBand = (rows: Rows, p: P) => {
+  const b = bandAt(rows, p.x);
+  if (!b) return 0;
+  return ss(p.y, b.lo - 0.25, b.lo + 0.1) * (1 - ss(p.y, b.hi - 0.1, b.hi + 0.25));
 };
 
-type Streak = {x0: number; v: number; len: number; ph: number; wob: number; lit: boolean};
-const STREAKS: Streak[] = Array.from({length: 26}, (_, k) => ({
-  x0: F.x0 + 1 + (F.x1 - F.x0 - 2) * ((k * 0.6180339 + 0.11 * hash(k * 3.7)) % 1),
-  v: 2.6 + 1.4 * hash(k * 5.3),
-  len: 1.4 + 2.0 * hash(k * 7.1),
-  ph: hash(k * 9.7),
-  wob: hash(k * 2.3) * 6.28,
-  lit: k % 3 !== 1,
-}));
+/** one wavy line across the flow at flow-position q (with the ride-up over the gel) */
+const crestLine = (rows: Rows, q: number, ph: number, t: number, ride: number): {pts: P[]; gel: number[]} => {
+  const pts: P[] = [], gel: number[] = [];
+  for (let u = U0; u <= U1; u += 0.25) {
+    const wq = q + 0.22 * Math.sin(u * 0.75 + ph + t * 0.9) + 0.14 * noise1(u * 0.5 + ph * 3, 31);
+    let p = at(u, wq);
+    const g = onBand(rows, p);
+    if (g > 0) p = at(u, wq - ride * g);
+    pts.push(p);
+    gel.push(g);
+  }
+  return {pts, gel};
+};
+/** split a polyline into the stretches where gel > 0.5 */
+const gelRuns = (pts: P[], gel: number[]): P[][] => {
+  const out: P[][] = [];
+  let cur: P[] = [];
+  pts.forEach((p, i) => {
+    if (gel[i] > 0.5) cur.push(p);
+    else if (cur.length) { if (cur.length > 1) out.push(cur); cur = []; }
+  });
+  if (cur.length > 1) out.push(cur);
+  return out;
+};
 
 export const WetFilm: React.FC<{st: BoneState2}> = ({st}) => {
   const a = st.wet;
   if (a <= 0.001) return null;
   const px = st.px;
   const t = st.flow;
-  const H = F.y1 - F.y0;
+  const rows = bandRows(st);
   const clip = uid('wetclip');
-  const sheen = uid('wetsheen');
+  const grad = uid('wetsurge');
   const out: React.ReactNode[] = [];
+  const W = (n: number, min = 0.004) => Math.max(min, n * px);
 
-  // ripple highlights travelling down with the flow; where one crosses the glue band it brightens on the gel's surface
-  STREAKS.forEach((k, i) => {
-    const period = (H + k.len) / k.v;
-    const ph = ((t / period + k.ph) % 1 + 1) % 1;
-    const head = F.y0 + ph * (H + k.len);
-    const tail = head - k.len;
-    const pts: P[] = [];
-    const n = 10;
-    for (let j = 0; j <= n; j++) {
-      const y = tail + ((head - tail) * j) / n;
-      pts.push(pt(k.x0 + 0.12 * (y - F.y0) * 0.12 + 0.1 * Math.sin(y * 1.6 + k.wob + t * 0.8), y));
-    }
-    const fadeEnds = Math.min(1, ph * 6, (1 - ph) * 6);
-    const wCore = Math.max(0.006, 2.4 * px), wSoft = Math.max(0.02, 9 * px);
+  // ripple crests travelling with the flow
+  const span = Q1 - Q0;
+  const n = Math.ceil(span / SPACING);
+  for (let k = 0; k < n; k++) {
+    const q = Q0 + ((((k * SPACING + t * SPEED) % span) + span) % span);
+    const fade = Math.min(1, (q - Q0) / 2.5, (Q1 - q) / 2.5);
+    if (fade <= 0) continue;
+    const ph = k * 1.7;
+    const crest = crestLine(rows, q, ph, t, 0.16);
+    const back = crestLine(rows, q - 0.55, ph, t, 0.16).pts;
+    const body = closed([...crest.pts, ...[...back].reverse()], 0.5);
     out.push(
-      <g key={`s${i}`} opacity={fadeEnds}>
-        <path d={open(pts, 0.6)} stroke={k.lit ? '#FFE9EC' : C.bloodDeep} strokeWidth={wSoft} fill="none" strokeLinecap="round" opacity={k.lit ? 0.16 : 0.22} />
-        <path d={open(pts, 0.6)} stroke={k.lit ? '#FFF6F6' : C.blood} strokeWidth={wCore} fill="none" strokeLinecap="round" opacity={k.lit ? 0.62 : 0.4} />
+      <g key={`c${k}`} opacity={fade}>
+        <path d={body} fill="#FFE1E4" opacity={0.26} />
+        <path d={open(crestLine(rows, q + 0.2, ph, t, 0.16).pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(4)} fill="none" opacity={0.2} strokeLinecap="round" />
+        <path d={open(crest.pts, 0.5)} stroke="#FFF5F5" strokeWidth={W(2.8)} fill="none" opacity={0.72} strokeLinecap="round" />
+        {gelRuns(crest.pts, crest.gel).map((r, i) => (
+          <path key={i} d={open(r, 0.5)} stroke={C.glueShine} strokeWidth={W(4.2)} fill="none" opacity={0.85} strokeLinecap="round" />
+        ))}
       </g>,
     );
-    // over the gel: a short bright glint where the ripple rides over the raised band
-    const mid = pts[Math.floor(n / 2)];
-    const b = bandAt(mid.x);
-    if (k.lit && b && head > b.lo && tail < b.hi) {
-      const y0 = Math.max(tail, b.lo + 0.08), y1 = Math.min(head, b.hi - 0.08);
-      if (y1 > y0) {
-        out.push(<path key={`g${i}`} d={`M${mid.x.toFixed(3)} ${y0.toFixed(3)}L${(mid.x + 0.02).toFixed(3)} ${y1.toFixed(3)}`} stroke={C.glueShine} strokeWidth={Math.max(0.01, 4.5 * px)} strokeLinecap="round" opacity={0.85 * fadeEnds} />);
-      }
-    }
-  });
-
-  // the film's lip along the band's upper edge: the flow meets the raised gel and spills over it, never into it
-  const lip: P[] = [];
-  for (let x = F.x0; x <= F.x1; x += 0.25) {
-    const b = bandAt(x);
-    if (b) lip.push(pt(x, b.lo - 0.05 - 0.03 * Math.sin(x * 2.3 + t * 2)));
-  }
-  if (lip.length > 2) {
-    out.push(<path key="lip" d={open(lip, 0.5)} stroke={C.bloodDeep} strokeWidth={Math.max(0.02, 7 * px)} fill="none" opacity={0.42} strokeLinecap="round" />);
-    out.push(<path key="lip2" d={open(lip.map((p) => pt(p.x, p.y - Math.max(0.02, 5 * px))), 0.5)} stroke="#FFE9EC" strokeWidth={Math.max(0.006, 2 * px)} fill="none" opacity={0.5} strokeLinecap="round" />);
   }
 
-  // the stronger wash ("wet, bloody"): a wavy front sweeps down the field; behind it the film is thicker and darker
+  // the stronger wash on "wet, bloody": a darker sheet with a crisp leading edge sweeps across the field and the seam
   if (st.surge >= 0 && st.surge <= 1) {
     const u = ss(st.surge, 0, 1);
-    const front = F.y0 - 2 + (H + 8) * u;
-    const lead: P[] = [];
-    for (let x = F.x0 - 1; x <= F.x1 + 1; x += 0.3) {
-      let y = front + 0.45 * Math.sin(x * 0.9 + t * 3.1) + 0.3 * noise1(x * 0.6 + 4, 21);
-      const b = bandAt(x);
-      // the front bulges as it rides over the raised band
-      if (b && y > b.lo - 0.4 && y < b.hi + 0.9) y += 0.35 * Math.sin(Math.PI * clamp((y - b.lo + 0.4) / (b.hi - b.lo + 1.3)));
-      lead.push(pt(x, y));
-    }
-    const back = lead.map((p) => pt(p.x, p.y - 5.5));
-    const strength = Math.sin(Math.PI * clamp(st.surge)) ** 0.5;
-    const body = closed([...back, ...[...lead].reverse()], 0.4);
+    const qf = Q0 + 4 + (span - 2) * u;
+    const strength = Math.sin(Math.PI * clamp(st.surge)) ** 0.45;
+    const lead = crestLine(rows, qf, 0.4, t * 2.5, 0.32);
+    const tail = crestLine(rows, qf - 6.5, 0.4, t * 2.5, 0).pts;
+    const g0 = at(0, qf - 6.5), g1 = at(0, qf);
     out.push(
       <g key="surge" opacity={strength}>
         <defs>
-          <linearGradient id={sheen} gradientUnits="userSpaceOnUse" x1={0} y1={front - 5.5} x2={0} y2={front}>
+          <linearGradient id={grad} gradientUnits="userSpaceOnUse" x1={g0.x} y1={g0.y} x2={g1.x} y2={g1.y}>
             <stop offset={0} stopColor={C.blood} stopOpacity={0} />
-            <stop offset={0.7} stopColor={C.blood} stopOpacity={0.24} />
-            <stop offset={1} stopColor={C.bloodDeep} stopOpacity={0.36} />
+            <stop offset={0.65} stopColor={C.blood} stopOpacity={0.22} />
+            <stop offset={1} stopColor={C.bloodDeep} stopOpacity={0.34} />
           </linearGradient>
         </defs>
-        <path d={body} fill={`url(#${sheen})`} />
-        <path d={open(lead, 0.5)} stroke={C.bloodDeep} strokeWidth={Math.max(0.02, 6 * px)} fill="none" opacity={0.55} strokeLinecap="round" />
-        <path d={open(lead.map((p) => pt(p.x, p.y - Math.max(0.02, 6 * px))), 0.5)} stroke="#FFF2F3" strokeWidth={Math.max(0.008, 2.6 * px)} fill="none" opacity={0.85} strokeLinecap="round" />
+        <path d={closed([...lead.pts, ...[...tail].reverse()], 0.5)} fill={`url(#${grad})`} />
+        <path d={open(lead.pts, 0.5)} stroke={C.bloodDeep} strokeWidth={W(6)} fill="none" opacity={0.5} strokeLinecap="round" />
+        <path d={open(lead.pts.map((p) => pt(p.x - D.x * W(5), p.y - D.y * W(5))), 0.5)} stroke="#FFF1F2" strokeWidth={W(2.6)} fill="none" opacity={0.85} strokeLinecap="round" />
+        {gelRuns(lead.pts, lead.gel).map((r, i) => (
+          <path key={i} d={open(r.map((p) => pt(p.x - D.x * W(5), p.y - D.y * W(5))), 0.5)} stroke={C.glueShine} strokeWidth={W(4.5)} fill="none" opacity={0.9} strokeLinecap="round" />
+        ))}
       </g>,
     );
   }
 
-  // the glue stays sealed to both faces: its two edges redrawn crisp over the film
+  // the film's lip where it meets the raised gel's upstream edge, and a light roll-off along its downstream edge
+  const lipUp: P[] = [], lipDown: P[] = [];
+  for (const r of rows) {
+    lipUp.push(pt(r.x, r.lo - 0.05));
+    lipDown.push(pt(r.x, r.hi + 0.05));
+  }
+
+  // the glue stays sealed to both faces: its exact outline redrawn crisp over the film
   const edges: React.ReactNode[] = [];
   SEAM_IDS.forEach((id) => {
-    const g = st.glue[id];
-    if (g.b <= g.a) return;
-    glueBand(id, g.a, g.b, st.wedge, 0.14, undefined, 0.12).forEach((r, i) => {
-      [r.lo, r.hi].forEach((e, j) => {
-        edges.push(<path key={`${id}${i}${j}`} d={open(e, 0.5)} stroke={C.glueInk} strokeWidth={Math.max(0.01, 2.6 * px)} fill="none" opacity={0.9} />);
-        edges.push(<path key={`${id}${i}${j}h`} d={open(e, 0.5)} stroke={C.glueLit} strokeWidth={Math.max(0.006, 1.2 * px)} fill="none" opacity={0.7} transform={`translate(0 ${(j === 0 ? 1 : -1) * 2.2 * px})`} />);
-      });
+    glueRuns(id, st).forEach((r, i) => {
+      edges.push(<path key={`${id}${i}l`} d={open(r.lo, 0.5)} stroke={C.glueInk} strokeWidth={W(2.4, 0.008)} fill="none" opacity={0.85} />);
+      edges.push(<path key={`${id}${i}h`} d={open(r.hi, 0.5)} stroke={C.glueInk} strokeWidth={W(2.4, 0.008)} fill="none" opacity={0.85} />);
     });
   });
 
-  // the whole film: a faint blood tint over the bone, slowly breathing
-  const tint = 0.1 + 0.03 * Math.sin(t * 1.7);
+  // the whole film: a faint blood tint over the bone, a touch redder after the wash
+  const tint = 0.15 + 0.025 * Math.sin(t * 1.7) + (st.surge > 0.3 ? 0.06 * ss(st.surge, 0.3, 1) : 0);
   return (
     <g opacity={a}>
       <defs>
         <clipPath id={clip}><path d={RAD} /></clipPath>
       </defs>
       <g clipPath={`url(#${clip})`}>
-        <rect x={F.x0} y={F.y0} width={F.x1 - F.x0} height={H} fill={rgba(mix(C.blood, C.bloodLit, 0.3), tint)} />
+        <rect x={-30} y={-30} width={60} height={60} fill={rgba(mix(C.blood, C.bloodLit, 0.3), tint)} />
         {out}
+        {lipUp.length > 2 && <path d={open(lipUp, 0.5)} stroke={C.bloodDeep} strokeWidth={W(5)} fill="none" opacity={0.32} strokeLinecap="round" />}
+        {lipDown.length > 2 && <path d={open(lipDown, 0.5)} stroke="#FFF2F2" strokeWidth={W(2)} fill="none" opacity={0.4} strokeLinecap="round" />}
       </g>
       {edges}
     </g>
