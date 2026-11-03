@@ -22,7 +22,7 @@ TAKE = f'audio/narration/takes/{TAKE_ID}.mp3'
 SCRIBE = f'audio/narration/takes/{TAKE_ID}_scribe.json'
 MASTER = 'audio/narration/FGW_Bone_Glue_narration_V2.wav'
 ALIGN = 'audio/narration/master_zipformer.json'
-TAIL = float(os.environ.get('FGW_TAIL', '1.5'))
+TAIL = float(os.environ.get('FGW_TAIL', '0.93'))
 CAP = float(os.environ.get('FGW_GAP_CAP', '0.30'))   # sentence gaps longer than this are shortened to it
 KEEP = {}                                              # per-sentence exceptions: next word -> kept gap (s)
 os.chdir(ROOT)

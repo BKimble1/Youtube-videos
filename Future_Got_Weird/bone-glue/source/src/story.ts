@@ -2,28 +2,28 @@
 // (millimetres, anatomy.ts; fracture interfaces and the moving wedge fragment in art/seams.ts) and one oyster world,
 // matched in and out. See production/V2_PLAN.md.
 //
-//   0.00-0.38   frame 0: the probe pushes the displaced wedge fragment home (the applicator already touches the seam)
-//   0.36-1.45   the applicator runs the glue along the transverse seam and up the wedge's seam: every seam round the
-//               wedge is bonded
-//   0.66-1.40   as the glue runs onto the wedge's face the probe lets go and backs off down-right, clear of the
-//               applicator's hop; the wedge stays put (fixation, seams still visible)
-//   1.45-4.00   pull back, the fracture kept large: the incision, the palm-up hand and forearm, the surgeon's hands; the
-//               applicator moves to the foot of the styloid seam, THEN the probe (lifted) to a ready spot beside the
-//               styloid fragment (never under the cannula)
-//   3.85-4.40   on "Researchers" the applicator turns steep on its tip and the probe sets down on the styloid fragment
-//   4.36-5.50   "Researchers actually did it": one precise glue stroke up the styloid seam, then the applicator lifts
-//   5.95-7.98   the applicator withdraws; a no-slip dive onto the glue band in the transverse seam
-//   7.98-10.33  match cut to the oyster (medium) -> push to its base -> a soft window exposes shell / cement / rock ->
-//               match cut back onto the glue band (same screen position and shape)
-//   10.33-13.6  macro: a fluid sheet washes across the bonded seam; a stronger wash on "wet, bloody"; the bond holds
-//   13.6-15.3   pull out to the fixation framing (every seam teal, the probe holding the styloid fragment)
-//   15.9-17.3   "secured": the probe lifts off and withdraws; nothing moves; "three minutes": the gloss sets to satin
-//   18.35-19.9  the incision closes (sutures); push into the healing framing (the opening's orientation)
-//   19.2-25.6   hematoma -> soft callus -> pale new bone advances from every broken face into the glue, which thins into
-//               islands and is gone -> remodelling
-//   25.25-27.3  ease out to the recovered wrist; the fingers flex gently and relax
-//   27.45-end   push back in through the clearing skin onto the healed radius in the opening's framing: the loop cuts to
-//               frame 0 on the same framing and direction (the healed bone is never shown breaking)
+//   0.00-1.35   frame 0 is the whole wrist (palm, thumb, the open incision, the shattered radius, the gloved hands); a
+//               no-slip push straight into the fracture while the probe seats the wedge and the glue runs along the
+//               transverse seam
+//   0.80-2.15   the probe lets go alone, the applicator glues the wedge's seam, then the styloid seam: sealed by 2.15
+//   2.30-4.45   ease back to the surgical framing as the applicator is taken away; on "Researchers" the probe sets
+//               down on the styloid fragment and holds it
+//   5.10-7.98   from "did it": a no-slip dive onto the glue band in the transverse seam
+//   7.98-10.33  match cut to the oyster -> an immediate push to its base -> on "sticking" a window exposes shell /
+//               cement / rock -> the cement band dissolves into the glue band (same screen line) on the cut back
+//   10.33-13.6  macro: a fluid sheet washes across the bonded seam; a stronger blood wash on "wet, bloody"
+//   13.6-15.0   "In one reported wrist case": out to the whole wrist; 15.0-16.0 "surgeons secured": back in
+//   16.56-17.7  the probe lets go and withdraws; nothing moves; "three minutes": the gloss sets to satin
+//   18.35-19.9  the incision closes (sutures); the cutaway pushes in on the same fracture, same orientation
+//   19.9-21.1   hematoma -> soft callus on the whole fracture
+//   21.1-22.7   "new bone grows": in to a macro of the T-junctions, woven bone advancing from both faces into the glue
+//   22.6-24.5   "the glue gradually disappears": back out over the whole fracture as the last islands close
+//   24.6-25.4   remodelling; the skin returns
+//   25.1-27.4   out to the recovered hand on the follow-up table; the wrist bends toward the thumb, across to the
+//               little-finger side and back, the fingers spreading
+//   27.44-end   push back in onto frame 0's wide framing (the drape returns, the scar opens into the incision's
+//               outline over healed bone), still moving at the hook's speed: the loop cuts to frame 0 (the healed bone
+//               is never shown breaking)
 import {P, pt, lerpP, add, mul, sub} from './core/geo';
 import {FPS, FRAMES, clamp, lerp, ss, word} from './lib';
 import {Cam, zoomAbout} from './camera';
@@ -45,7 +45,7 @@ export const T = {
   together: w('together').start, togetherEnd: w('together').end,
   researchers: w('Researchers').start, actually: w('actually').start, did: w('did').start, itEnd: w('it').end,
   they: w('They').start, experimental: w('experimental').start, glue: w('glue').start, inspired: w('inspired').start,
-  oysters: w('oysters').start, rocks: w('rocks').start, rocksEnd: w('rocks').end,
+  oysters: w('oysters').start, sticking: w('sticking').start, rocks: w('rocks').start, rocksEnd: w('rocks').end,
   grips: w('grips').start, wet: w('wet').start, bloody: w('bloody').start, bloodyEnd: w('bloody').end, woundEnd: w('wound').end,
   inW: w('In').start, reported: w('reported').start, surgeons: w('surgeons').start, secured: w('secured').start,
   pieces: w('pieces').start, three: w('three').start, minutesEnd: w('minutes').end,
@@ -66,70 +66,58 @@ const S2_VIS = (() => {
 
 // ---------------------------------------------------------------- events
 export const EV = {
-  // the opening preview of fixation
-  seat0: 0.04, seat1: 0.62,
-  c1a: 0.36, c1b: 0.92, hop0: 1.10, hop1: 1.27, c3b: 1.60, appUp1: 1.85,
-  // the probe holds the wedge until the glue has run the whole of the wedge's upper seam (C1 to the radial border, 0.92),
-  // then lets go and backs off down-right along its own axis while the applicator waits at the seam's end; only then
-  // (1.10-1.27) does the applicator arc over the bone to the wedge's seam: glue first, then the tool lets go alone,
-  // and the fragment stays
-  probeUp0: 0.93, probeUp1: 1.24,
-  // staggered: the applicator moves to the foot of the styloid seam first, then the probe (lifted) to a ready spot
-  // beside the styloid fragment, below the cannula's line
-  appMove1: 2.4, appDown1: 2.75, probeMove0: 2.5, probeMove1: 3.3,
-  // on "Researchers": the applicator turns steep on its tip (its hand stays clear of the patient's thumb through the
-  // reveal), and once the cannula has turned away the probe sets down on the styloid fragment
-  appTurn0: Math.max(3.8, T.togetherEnd - 0.25), appTurn1: 0, probeIn0: 0, probeIn1: 0, probeDown1: 0,
-  // "Researchers actually did it"
-  c2a: Math.max(4.36, T.researchers + 0.28), c2b: Math.min(T.did, T.researchers + 1.05), appLift1: 0, appOut0: 0, appOut1: 0,
-  // the dive and the oyster
-  dive0: Math.max(5.85, T.they - 0.1), cutIn: T.inspired + 0.18, cutOut: T.rocksEnd + 0.08,
-  reveal0: T.rocks - 0.05, reveal1: T.rocksEnd - 0.12,
-  // the wet macro
-  // (the wash takes ~0.8 s to cross the frame, so the glue is seen holding under it)
+  // the hook: frame 0 is the whole wrist (palm, thumb, the open incision, the shattered radius, the gloved hands); the
+  // camera pushes straight into the fracture while the repair happens: the probe seats the displaced wedge, the glue
+  // runs along the transverse seam, the probe lets go alone, the applicator glues the wedge's seam and then the
+  // styloid seam: every crack is sealed by ~2.15 s
+  seat0: 0.04, seat1: 0.50,
+  c1a: 0.25, c1b: 0.78, hop0: 0.95, hop1: 1.10, c3b: 1.40, appUp1: 1.47,
+  probeUp0: 0.80, probeUp1: 1.08,
+  appMove1: 1.62, appDown1: 1.68,
+  appTurn0: 1.68, appTurn1: 1.69,
+  c2a: 1.70, c2b: 2.15, appLift1: 2.45, appOut0: 2.55, appOut1: 3.45,
+  // "imagine gluing the bones back together": the camera eases back to the surgical framing as the applicator's hand
+  // takes it away and the probe (lifted) moves beside the styloid fragment; on "Researchers" it sets down and holds it
+  probeMove0: 2.6, probeMove1: 3.4, probeIn0: 3.95, probeIn1: 4.35, probeDown1: 4.45,
+  // the dive and the oyster (the push to its base starts at once; the section window opens on "sticking")
+  dive0: T.did - 0.1, cutIn: T.inspired + 0.18, cutOut: T.rocksEnd + 0.08,
+  reveal0: T.sticking - 0.05, reveal1: T.rocks + 0.05,
+  // the wet macro (the wash takes ~0.8 s to cross the frame, so the glue is seen holding under it)
   surge0: T.wet - 0.1, surge1: T.bloodyEnd + 0.55,
-  pull0: T.woundEnd - 0.02, pull1: T.surgeons - 0.05,
-  // fixation
-  rel0: T.secured, rel1: T.secured + 0.6, probeOut0: T.secured + 0.5, probeOut1: T.pieces + 0.55,
+  // "In one reported wrist case": out to the whole wrist on the table; "surgeons secured": in to the fixation framing
+  pull0: T.woundEnd - 0.02, pull1: T.reported + 0.75, fix1: T.secured + 0.55,
+  // fixation: the probe lets go on "pieces", the fragments stay; "three minutes": the gel sets
+  rel0: T.pieces - 0.2, rel1: T.pieces + 0.3, probeOut0: 0, probeOut1: 0,
   set0: 0, set1: 0,
-  // closing and healing
+  // closing and healing: the incision is sutured, the cutaway pushes in (hematoma, soft callus), "new bone grows": in to
+  // a macro of the T-junction where woven bone advances into the glue, "the glue gradually disappears": back out over
+  // the whole fracture as the last islands close
   close0: T.minutesEnd - 0.35, close1: T.fracture + 0.3, sut0: T.fracture - 0.15, sut1: T.fracture + 0.22,
   dive2a: T.fracture - 0.15, dive2b: T.needed + 0.25,
   hem0: T.fracture + 0.25, hem1: T.needed + 0.05, soft0: T.needed - 0.05, soft1: T.months + 0.45,
   bridge0: T.heal - 0.15, bridge1: T.disappearsEnd - 0.1, hard0: T.healEnd - 0.4, hard1: T.grows + 0.4,
-  // remodelling (woven -> mature bone) starts as the last glue goes and runs while the healing framing is held
-  rem0: T.disappearsEnd - 0.08, rem1: T.body + 0.45,
-  // the ending and the loop
-  out0: T.body, out1: T.stuff + 0.4, curl0: T.stuff - 0.1, curl1: T.togetherEnd2 - 0.1,
+  mac0: T.but - 0.05, mac1: T.grows + 0.1, back0: T.glue2 - 0.1, back1: T.disappearsEnd - 0.25,
+  // remodelling (woven -> mature bone) as the last glue goes
+  rem0: T.disappearsEnd - 0.08, rem1: T.body + 0.2,
+  // the ending: out to the recovered hand, which bends at the wrist (radial, ulnar, back) with the fingers spreading
+  out0: T.body - 0.1, out1: T.replaces + 0.55, curl0: T.stuff - 0.25, curl1: T.togetherEnd2 - 0.05,
+  bend0: T.stuff - 0.3, bend1: T.togetherEnd2 - 0.02,
+  // the loop: push back in onto the opening's wide framing, still moving at the hook's own speed
   push0: T.togetherEnd2 + 0.0, push1: LOOP_T,
 };
-// the turn swings a hand ~19 cm behind the tip through ~0.8 rad: 0.8 s keeps it a deliberate move (0.45 s whipped the
-// glove ~160 mm across the frame in a third of a second); the probe sets down once the cannula has turned past its path
-EV.appTurn1 = EV.appTurn0 + 0.8;
-EV.probeIn0 = EV.appTurn0 + 0.42;
-EV.probeIn1 = EV.appTurn0 + 0.84;
-EV.probeDown1 = EV.appTurn0 + 0.94;
-EV.c2a = Math.max(EV.c2a, EV.probeDown1 - 0.04); // the probe holds the fragment before the stroke starts
-EV.c2b = Math.max(EV.c2b, EV.c2a + 0.75); // a deliberate stroke, ending on "did it"
-EV.appLift1 = EV.c2b + 0.35;
-EV.appOut0 = Math.max(EV.appLift1 + 0.1, EV.dive0 - 0.2);
-EV.appOut1 = EV.appOut0 + 0.9;
+EV.probeOut0 = EV.rel0 + 0.45;
+EV.probeOut1 = EV.probeOut0 + 0.75;
 // the gel sets from gloss to satin as soon as the probe has cleared, on "in just three minutes"
 EV.set0 = EV.probeOut1 - 0.45;
-EV.set1 = EV.set0 + 1.05;
+EV.set1 = EV.set0 + 1.0;
 
 // ---------------------------------------------------------------- the applicator (the glue's front)
 type AppPose = {tip: P; ang: number; lift: number; laying: {seam: SeamId; s: number} | null};
 const APP_ANG = -0.42;
 /** the applicator's angle at the foot of the styloid seam through the reveal (its hand off to the right) */
 const APP_ANG_WAIT = -0.47;
-/** its angle for the stroke: steep, from above, so the cannula stays left of the probe that holds the styloid fragment
- *  (at -0.47 it swept over the probe's ball and crossed its neck) */
-const APP_ANG_S = -1.28;
-/** ... relaxing (the wrist rolls the hand out to the right) once the tip has climbed past the probe's ball, so the bent
- *  tip leaves the seam ahead of the glue front in view instead of lying along it */
-const APP_ANG_S_END = -0.98;
-const appAngS = (s: number) => lerp(APP_ANG_S, APP_ANG_S_END, ss(s, 2, 17));
+/** its angle for the styloid stroke, steepening a little as it climbs (the probe is parked well clear) */
+const appAngS = (s: number) => lerp(APP_ANG_WAIT, APP_ANG_WAIT - 0.12, ss(s, 2, 17));
 const C3_TOP = 0.3;
 /** the hop's sideways bow (mm, toward the wedge's face) */
 const HOP_ARC = 1.2;
@@ -166,7 +154,7 @@ const appPose = (t: number): AppPose => {
     return {tip: lerpP(top3, c2foot, mv), ang: lerp(ang, APP_ANG_WAIT, mv), lift: Math.max(0, up - down), laying: null};
   }
   // waiting at the foot, then turning steep on its tip for the stroke
-  if (t < EV.c2a) return {tip: c2foot, ang: lerp(APP_ANG_WAIT, APP_ANG_S, ss(t, EV.appTurn0, EV.appTurn1)), lift: 0, laying: null};
+  if (t < EV.c2a) return {tip: c2foot, ang: APP_ANG_WAIT, lift: 0, laying: null};
   if (t < EV.c2b) {
     const s = lerp(0.15, S2_VIS, ss(t, EV.c2a, EV.c2b) * 0.7 + 0.3 * clamp((t - EV.c2a) / (EV.c2b - EV.c2a)));
     return {tip: seamPoint('C2', s), ang: appAngS(s), lift: 0, laying: {seam: 'C2', s}};
@@ -290,7 +278,7 @@ export const instrAt = (t: number): InstrState2 => {
 };
 
 // ---------------------------------------------------------------- the patient's arm
-export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread: number};
+export type ArmS = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread: number; bend: number};
 export const WINDOW_C = pt(-3, -14);
 export const armAt = (t: number): ArmS => {
   const closing = ss(t, EV.close0, EV.close1);
@@ -301,16 +289,20 @@ export const armAt = (t: number): ArmS => {
   let r = 0;
   if (t > EV.close1 - 0.1) r = 64 * ss(t, EV.close1 - 0.1, EV.dive2b) * (1 - ss(t, EV.out1 - 0.25, EV.out1 + 0.1));
   const shut = ss(t, EV.push1 - 0.9, EV.push1);
-  if (t > EV.push0) r = lerp(64, 18, shut);
+  if (t > EV.push0) r = lerp(28, 18, shut);
   // ... and in its last moments it takes the incision's own outline, crisp edge and fat ring, so the cut to frame 0
   // changes the fracture and the instruments, not the wound's shape (the scar fades under it)
   const inc = t > EV.push0 ? ss(t, EV.push1 - 0.45, EV.push1) : 0;
   // it opens out of the sutured incision (centred on it while small), then settles on the healing framing's centre
-  const wc = t > EV.push0 ? lerpP(WINDOW_C, INCISION.c, shut) : lerpP(INCISION.c, WINDOW_C, ss(r, 6, 40));
+  const wc = t > EV.push0 ? INCISION.c : lerpP(INCISION.c, WINDOW_C, ss(r, 6, 40));
   const win = r > 0.3 ? {c: wc, r, soft: lerp(0.22, 0.07, inc), inc} : null;
-  // one small natural movement: the fingers flex gently and spread a touch, then relax
+  // the working wrist: the hand bends toward the thumb, across to the little-finger side and back (radial then ulnar
+  // deviation, the ulnar swing a little larger, as in a real wrist), the fingers spreading at each end of the swing
+  const bu = clamp((t - EV.bend0) / (EV.bend1 - EV.bend0));
+  const sw = t > EV.bend0 && t < EV.bend1 ? Math.sin(2 * Math.PI * bu) * Math.sin(Math.PI * bu) ** 0.35 : 0;
+  const bend = sw * (sw > 0 ? 0.3 : 0.38);
   const mv = t > EV.curl0 && t < EV.curl1 ? Math.sin(Math.PI * clamp((t - EV.curl0) / (EV.curl1 - EV.curl0))) ** 1.2 : 0;
-  return {curl: 0.25 + 0.16 * mv, thumb: 0.2 + 0.3 * mv, incision: 1 - closing, sutures: sut, scar: scar * (1 - inc), window: win, spread: 0.55 * mv};
+  return {curl: 0.25 + 0.1 * mv, thumb: 0.2 + 0.2 * mv, incision: 1 - closing, sutures: sut, scar: scar * (1 - inc), window: win, spread: 0.3 * mv + 0.5 * Math.abs(sw), bend};
 };
 /** an opaque skin copy over the windowed skin: 0 during surgery and healing, 1 for the recovered wrist, clearing on the
  *  loop's push */
@@ -322,33 +314,45 @@ export const skinVeil = (t: number) => {
   const down = ss(t, EV.push1 - 0.42, EV.push1 - 0.17);
   return up * (1 - down);
 };
-export const tableVariant = (t: number): 'drape' | 'followup' => (t < EV.dive2b ? 'drape' : 'followup');
+/** 0 = the surgical drape, 1 = the follow-up table; on the loop's push the drape returns under the hand */
+export const tableMix = (t: number) => (t < EV.dive2b ? 0 : 1 - ss(t, EV.push1 - 0.55, EV.push1 - 0.05));
+export const tableVariant = (t: number): 'drape' | 'followup' => (tableMix(t) > 0.5 ? 'followup' : 'drape');
 export const surgeonOn = (t: number) => t < EV.close1 && t < EV.probeOut1 + 0.2;
 
 // ---------------------------------------------------------------- the camera
 export type World = 'wrist' | 'oyster';
 export type WCam = {world: World; cam: Cam; reveal?: number};
-/** frame 0: the fracture fills the frame (the transverse seam, the styloid seam, the wedge on the radial side) */
+/** the close-up of the repair: the fracture fills the frame (the transverse seam, the styloid seam, the wedge) */
 export const CAM0: Cam = {x: 4.0, y: -0.6, w: 26, k: 1, focus: 0};
-/** the opening's drift (mm/s, log-w/s): the loop's push lands on CAM0 with this velocity */
+/** the close-up's drift (mm/s, log-w/s) */
 const V_OPEN = {x: 0.5, y: 0.0, lw: -0.025};
-/** the end of the pull-back: the palm-up hand (palm, thumb, the index finger's base) and the wrist read, the fracture
- *  still large in the lower middle above the captions. Reached on "together" and held (a slow drift) to its end. */
-const REVEAL: Cam = {x: 10, y: -31, w: 112, k: 0.98, focus: -5};
-const REVEAL_T = 3.6;
-/** "Researchers actually did it": closer on the incision and the gloved hand's stroke */
-const ACT: Cam = {x: 8.5, y: -10, w: 62, k: 1, focus: -3};
+/** frame 0: the whole wrist reads at once (palm, thumb, wrist crease, the open incision with the shattered radius, the
+ *  gloved hands and instruments), the fracture above the captions. The camera is already pushing in. */
+export const HOOK0: Cam = {x: 4, y: -22, w: 112, k: 0.99, focus: -4};
+/** the hook's push speed at frame 0 (log-w per second); the loop's push arrives with this same speed */
+const LV_HOOK = -0.55;
+/** the push lands on the close-up as the wedge's seam is being glued */
+const HOOK_T = 1.35;
+/** "imagine gluing the bones back together": the surgical framing, the sealed fracture large, the gloved hands */
+const ACT2: Cam = {x: 7.5, y: -8, w: 56, k: 1, focus: -3};
+const ACT2_T0 = 2.3, ACT2_T = 3.6;
 /** the match framing: the glue band in the transverse seam, centred near screen y 1000 (production/v2_match_band.json) */
 export const MATCH: Cam = {x: -7, y: 0.7247, w: 7.5, k: 1, focus: 0};
 const M_IN: Cam = {...MATCH, w: 9.2};
 const WET1: Cam = {x: -2.2, y: 0.4, w: 13.5, k: 1, focus: 0};
+/** "In one reported wrist case": the whole wrist again, now sealed, the surgeon's hand holding the fragment */
+const CASE: Cam = {x: 5, y: -24, w: 106, k: 0.99, focus: -4};
 /** the fixation framing: the incision large, the probe holding the styloid fragment */
 const FIX: Cam = {x: 6, y: -4, w: 58, k: 1, focus: -3};
 const FIX2: Cam = {x: 5.6, y: -3.6, w: 53, k: 1, focus: -3};
 const HEAL: Cam = {x: 3.2, y: -0.8, w: 30, k: 1, focus: 0};
-const HEAL_B: Cam = {x: 3.4, y: -0.6, w: 27.5, k: 1, focus: 0};
-const FOLLOW: Cam = {x: -6, y: -76, w: 182, k: 1, focus: -10};
-const FOLLOW_B: Cam = {x: -5, y: -72, w: 172, k: 1, focus: -10};
+const HEAL_B: Cam = {x: 3.4, y: -0.6, w: 26.5, k: 1, focus: 0};
+/** "new bone grows": a macro of the T-junctions, where woven bone advances from both faces into the glue */
+const MACRO_H: Cam = {x: 5, y: -1, w: 11.5, k: 1, focus: 0};
+/** "the glue gradually disappears": back out over the whole fracture */
+const HEAL_W: Cam = {x: 3.6, y: -2.5, w: 34, k: 1, focus: 0};
+/** the recovered hand on the follow-up table, large enough for the wrist's movement to read */
+const FOLLOW: Cam = {x: -5, y: -88, w: 210, k: 1, focus: -10};
 
 type CV = {x: number; y: number; lw: number};
 const hermite = (t: number, t0: number, A: Cam, vA: CV, t1: number, B: Cam, vB: CV): Cam => {
@@ -373,27 +377,20 @@ const zoomH = (t: number, t0: number, A: Cam, t1: number, B: Cam, lv0: number, l
 };
 const drift = (A: Cam, v: CV, dt: number): Cam => ({...A, x: A.x + v.x * dt, y: A.y + v.y * dt, w: A.w * Math.exp(v.lw * dt)});
 
-const PULL0 = 1.60;
-const CAM0_B = drift(CAM0, V_OPEN, PULL0);
-const V_REVEAL: CV = {x: 0.3, y: 0.4, lw: 0.03};
-const V_ACT: CV = {x: 0.3, y: 0.4, lw: -0.04};
-/** the push to ACT lands just after the stroke starts, so most of the stroke plays on a settled frame */
-const ACT_T = () => EV.c2a + 0.35;
+const V_ACT2: CV = {x: 0.3, y: 0.3, lw: -0.035};
 const openCam = (t: number): Cam => {
-  if (t < PULL0) return drift(CAM0, V_OPEN, t);
-  // a no-slip pull-back: the fracture moves steadily down the frame (never into the captions) as the hand appears
-  if (t < REVEAL_T) return zoomH(t, PULL0, CAM0_B, REVEAL_T, REVEAL, V_OPEN.lw, V_REVEAL.lw, pt(V_REVEAL.x, V_REVEAL.y), pt(V_OPEN.x, V_OPEN.y));
-  // the hand and wrist held (still drifting gently back) to the end of "together"
-  if (t < T.togetherEnd) return drift(REVEAL, V_REVEAL, t - REVEAL_T);
-  // a slow push toward the incision for the precise stroke
-  if (t < ACT_T()) return hermite(t, T.togetherEnd, drift(REVEAL, V_REVEAL, T.togetherEnd - REVEAL_T), V_REVEAL, ACT_T(), ACT, V_ACT);
-  return drift(ACT, V_ACT, t - ACT_T());
+  // frame 0 wide, already moving: a no-slip push straight into the fracture while it is repaired
+  if (t < HOOK_T) return zoomH(t, 0, HOOK0, HOOK_T, CAM0, LV_HOOK, V_OPEN.lw, pt(V_OPEN.x, V_OPEN.y), pt(0, 0));
+  if (t < ACT2_T0) return drift(CAM0, V_OPEN, t - HOOK_T);
+  // the fracture sealed: ease back to the surgical framing as the applicator is taken away
+  if (t < ACT2_T) return zoomH(t, ACT2_T0, drift(CAM0, V_OPEN, ACT2_T0 - HOOK_T), ACT2_T, ACT2, V_OPEN.lw, V_ACT2.lw, pt(V_ACT2.x, V_ACT2.y), pt(V_OPEN.x, V_OPEN.y));
+  return drift(ACT2, V_ACT2, t - ACT2_T);
 };
 /** the dive eases nearly to the oyster's opening creep at the cut (no dead stop across it) */
 const LV_DIVE_END = -0.15;
 const diveCam = (t: number) => {
-  const A = drift(ACT, V_ACT, EV.dive0 - ACT_T());
-  return zoomH(t, EV.dive0, A, EV.cutIn, M_IN, V_ACT.lw, LV_DIVE_END, pt(0, 0), pt(V_ACT.x, V_ACT.y));
+  const A = drift(ACT2, V_ACT2, EV.dive0 - ACT2_T);
+  return zoomH(t, EV.dive0, A, EV.cutIn, M_IN, V_ACT2.lw, LV_DIVE_END, pt(0, 0), pt(V_ACT2.x, V_ACT2.y));
 };
 const OY_CREEP = 0.07;
 /** the oyster push's log-width speed at the cut back (log-w per second) */
@@ -402,21 +399,37 @@ const oysterCam = (t: number): Cam => {
   const u = clamp((t - EV.cutIn) / (EV.cutOut - EV.cutIn));
   // the medium shot holds long enough to read (a slow creep), the push runs into the base, then creeps on through the
   // reveal and is still moving at the cut back (the wet macro continues it)
-  const e = (x: number) => OY_CREEP * x + (1 - OY_CREEP) * ss(x, 0.17, 0.75);
+  const e = (x: number) => OY_CREEP * x + (1 - OY_CREEP) * ss(x, 0.05, 0.6);
   return zoomAbout(u, OY_CAM_IN, OY_CAM_OUT, e);
 };
+const V_FOLLOW: CV = {x: 0.3, y: -0.5, lw: -0.02};
 const wristCam = (t: number): Cam => {
   if (t < EV.pull0) return hermite(t, EV.cutOut, MATCH, {x: 0, y: 0, lw: LV_OY_OUT}, EV.pull0, WET1, {x: 1.0, y: -0.2, lw: 0.08});
-  if (t < EV.pull1) return zoomH(t, EV.pull0, WET1, EV.pull1, FIX, 0.08, -0.03, pt(-0.3, 0.15), pt(1.0, -0.2));
-  if (t < EV.dive2a) return hermite(t, EV.pull1, FIX, {x: -0.3, y: 0.15, lw: -0.03}, EV.dive2a, FIX2, {x: -0.5, y: 0.2, lw: -0.05});
-  if (t < EV.dive2b) return zoomH(t, EV.dive2a, FIX2, EV.dive2b, HEAL, -0.05, -0.02, pt(0.04, 0.03), pt(-0.5, 0.2));
-  if (t < EV.out0) return hermite(t, EV.dive2b, HEAL, {x: 0.04, y: 0.03, lw: -0.02}, EV.out0, HEAL_B, {x: 0.04, y: 0.03, lw: -0.02});
-  if (t < EV.out1) return zoomH(t, EV.out0, HEAL_B, EV.out1, FOLLOW, -0.02, -0.04, pt(0.5, 2.0), pt(0.04, 0.03));
-  if (t < EV.push0) return hermite(t, EV.out1, FOLLOW, {x: 0.5, y: 2.0, lw: -0.04}, EV.push0, FOLLOW_B, {x: 0.8, y: 3.0, lw: -0.08});
-  // the loop: push back in onto the opening's framing, landing with the opening's own drift
-  return zoomH(t, EV.push0, FOLLOW_B, EV.push1, CAM0, -0.08, V_OPEN.lw, pt(V_OPEN.x, V_OPEN.y), pt(0.8, 3.0));
+  // "In one reported wrist case": out to the whole wrist; "surgeons secured": in to the fixation framing
+  if (t < EV.pull1) return zoomH(t, EV.pull0, WET1, EV.pull1, CASE, 0.08, 0, pt(0, 0), pt(1.0, -0.2));
+  if (t < EV.fix1) return zoomH(t, EV.pull1, CASE, EV.fix1, FIX, 0, -0.03, pt(-0.3, 0.15), pt(0, 0));
+  if (t < EV.dive2a) return hermite(t, EV.fix1, FIX, {x: -0.3, y: 0.15, lw: -0.03}, EV.dive2a, FIX2, {x: -0.5, y: 0.2, lw: -0.05});
+  if (t < EV.dive2b) return zoomH(t, EV.dive2a, FIX2, EV.dive2b, HEAL, -0.05, -0.04, pt(0.04, 0.03), pt(-0.5, 0.2));
+  // healing: hematoma and callus on the whole fracture; "new bone grows": in to the macro; "disappears": back out
+  if (t < EV.mac0) return hermite(t, EV.dive2b, HEAL, {x: 0.04, y: 0.03, lw: -0.04}, EV.mac0, HEAL_B, {x: 0.05, y: 0, lw: -0.1});
+  if (t < EV.mac1) return zoomH(t, EV.mac0, HEAL_B, EV.mac1, MACRO_H, -0.1, -0.03, pt(0.05, 0), pt(0.05, 0));
+  if (t < EV.back0) return drift(MACRO_H, {x: 0.05, y: 0, lw: -0.03}, t - EV.mac1);
+  const mB = drift(MACRO_H, {x: 0.05, y: 0, lw: -0.03}, EV.back0 - EV.mac1);
+  if (t < EV.back1) return zoomH(t, EV.back0, mB, EV.back1, HEAL_W, -0.03, 0.02, pt(0, 0), pt(0.05, 0));
+  if (t < EV.out0) return drift(HEAL_W, {x: 0, y: 0, lw: 0.02}, t - EV.back1);
+  const hB = drift(HEAL_W, {x: 0, y: 0, lw: 0.02}, EV.out0 - EV.back1);
+  // the ending: out to the recovered hand, held (a gentle drift) while the wrist moves
+  if (t < EV.out1) return zoomH(t, EV.out0, hB, EV.out1, FOLLOW, 0.02, V_FOLLOW.lw, pt(V_FOLLOW.x, V_FOLLOW.y), pt(0, 0));
+  if (t < EV.push0) return drift(FOLLOW, V_FOLLOW, t - EV.out1);
+  // the loop: push back in onto frame 0's wide framing, arriving at the hook's own push speed (it carries on through
+  // the cut into the opening's push)
+  return zoomH(t, EV.push0, drift(FOLLOW, V_FOLLOW, EV.push0 - EV.out1), EV.push1, HOOK0, V_FOLLOW.lw, LV_HOOK, pt(0, 0), pt(V_FOLLOW.x, V_FOLLOW.y));
 };
 
+/** the cut back from the oyster: its cement band dissolves into the glue band, which lies on the same screen line */
+export const CUT_BACK_DISSOLVE = 0.22;
+export const cutBackBlend = (t: number) => (t >= EV.cutOut - CUT_BACK_DISSOLVE && t < EV.cutOut ? ss(t, EV.cutOut - CUT_BACK_DISSOLVE, EV.cutOut) : 0);
+export const wristCamAt = (t: number): Cam => wristCam(t);
 export const camAt = (t: number): WCam => {
   if (t < EV.dive0) return {world: 'wrist', cam: openCam(t)};
   if (t < EV.cutIn) return {world: 'wrist', cam: diveCam(t)};

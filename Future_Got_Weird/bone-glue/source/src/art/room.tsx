@@ -99,14 +99,29 @@ const handSilhouette = (curl = 0.28): {body: string; digits: {ps: P[]; w: number
 };
 /** The arm's shadow on the surface under it, light from the upper left: a tight dark contact core hugging the
  *  silhouette and a soft cast shadow falling down-right. */
-const ArmShadow: React.FC<{id: string; core: number; soft: number; color: string; blurK?: number}> = ({id, core, soft, color, blurK = 1}) => {
+const ArmShadow: React.FC<{id: string; core: number; soft: number; color: string; blurK?: number; bend?: number}> = ({id, core, soft, color, blurK = 1, bend = 0}) => {
   const s = handSilhouette();
+  const digits = (grow: number) => s.digits.map((dg, i) => (
+    <path key={i} d={open(dg.ps, 0.8)} fill="none" stroke={color} strokeWidth={f(dg.w * 2 + grow * 2)} strokeLinecap="round" strokeLinejoin="round" />
+  ));
+  // when the wrist bends the hand's part of the shadow turns with it about the wrist (the blur hides the join)
+  const rot = `rotate(${f((bend * 180) / Math.PI)} -4 -42)`;
   const shape = (dx: number, dy: number, grow: number) => (
     <g transform={`translate(${f(dx)} ${f(dy)})`}>
-      <path d={s.body} fill={color} stroke={color} strokeWidth={f(grow * 2)} strokeLinejoin="round" />
-      {s.digits.map((dg, i) => (
-        <path key={i} d={open(dg.ps, 0.8)} fill="none" stroke={color} strokeWidth={f(dg.w * 2 + grow * 2)} strokeLinecap="round" strokeLinejoin="round" />
-      ))}
+      {Math.abs(bend) < 1e-5 ? (
+        <>
+          <path d={s.body} fill={color} stroke={color} strokeWidth={f(grow * 2)} strokeLinejoin="round" />
+          {digits(grow)}
+        </>
+      ) : (
+        <>
+          <g clipPath={`url(#${id}-fc)`}><path d={s.body} fill={color} stroke={color} strokeWidth={f(grow * 2)} strokeLinejoin="round" /></g>
+          <g transform={rot}>
+            <g clipPath={`url(#${id}-hc)`}><path d={s.body} fill={color} stroke={color} strokeWidth={f(grow * 2)} strokeLinejoin="round" /></g>
+            {digits(grow)}
+          </g>
+        </>
+      )}
     </g>
   );
   return (
@@ -114,6 +129,8 @@ const ArmShadow: React.FC<{id: string; core: number; soft: number; color: string
       <defs>
         {blurF(`${id}-s`, 7 * blurK)}
         {blurF(`${id}-c`, 2.2 * blurK)}
+        <clipPath id={`${id}-fc`}><rect x={-400} y={-42} width={800} height={1600} /></clipPath>
+        <clipPath id={`${id}-hc`}><rect x={-400} y={-600} width={800} height={558} /></clipPath>
       </defs>
       <g filter={`url(#${id}-s)`} opacity={soft}>
         {shape(8, 10, 2)}
@@ -146,7 +163,7 @@ export const BOARD = {x0: -80, x1: 72, y0: -292, y1: 1500, r: 46};
 /** the exam paper strip at the follow-up (slightly skewed on the table) */
 const PAPER = {x0: -84, x1: 70, y0: -268, skew: 0.025};
 
-export const HandTable: React.FC<{id: string; variant: 'drape' | 'followup'}> = ({id, variant}) => (variant === 'followup' ? <FollowupTable id={id} /> : <DrapedTable id={id} />);
+export const HandTable: React.FC<{id: string; variant: 'drape' | 'followup'; bend?: number}> = ({id, variant, bend}) => (variant === 'followup' ? <FollowupTable id={id} bend={bend} /> : <DrapedTable id={id} />);
 
 const DrapedTable: React.FC<{id: string}> = ({id}) => {
   const B = BOARD;
@@ -264,7 +281,7 @@ const DrapedTable: React.FC<{id: string}> = ({id}) => {
   );
 };
 
-const FollowupTable: React.FC<{id: string}> = ({id}) => {
+const FollowupTable: React.FC<{id: string; bend?: number}> = ({id, bend = 0}) => {
   const vinyl = '#4F8E98';
   const vinylLit = lit(vinyl, 0.22);
   const vinylDeep = shade(vinyl, 0.35);
@@ -334,7 +351,7 @@ const FollowupTable: React.FC<{id: string}> = ({id}) => {
             </g>
           ))}
         </g>
-        <ArmShadow id={`${id}-as`} core={0.32} soft={0.26} color="#3D5566" />
+        <ArmShadow id={`${id}-as`} core={0.32} soft={0.26} color="#3D5566" bend={bend} />
       </g>
       <path d={paperD} fill="none" stroke={INK} strokeWidth={INK_PX * 0.8} vectorEffect={NS} strokeLinejoin="round" opacity={0.7} />
     </g>

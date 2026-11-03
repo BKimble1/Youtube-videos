@@ -14,7 +14,7 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C, INK} from './palette';
 import {Digit, FINGERS, INCISION, THUMB, WRIST_CREASE_Y, fingerChain, skinBorders, thumbChain} from './anatomy';
 
-export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread?: number};
+export type ArmState = {curl: number; thumb: number; incision: number; sutures: number; scar: number; window: {c: P; r: number; soft: number; inc?: number} | null; spread?: number; bend?: number};
 /** inc: 0 = the organic cutaway outline, 1 = the open incision's outline (the loop's last moments) */
 type Win = {c: P; r: number; soft: number; inc?: number};
 
@@ -180,7 +180,19 @@ export const armGeo = (curl: number, thumb: number, spread = 0): ArmGeo => {
 };
 
 /** the closed silhouette of forearm + hand + fingers (world mm) — the film clips the inside layer to it */
-export const armOutlinePath = (s: ArmState): string => poly(armGeo(s.curl, s.thumb, s.spread ?? 0).outline);
+export const armOutlinePath = (s: ArmState): string => poly(bentOutline(armGeo(s.curl, s.thumb, s.spread ?? 0).outline, s.bend ?? 0));
+
+// ---------------------------------------------------------------- the wrist's bend (radial / ulnar deviation)
+/** the wrist's pivot (the head of the capitate, mid-wrist) and the band over which the skin turns from the forearm's
+ *  direction to the hand's (world y, mm): the outline bends smoothly; the hand's details turn rigidly with it */
+const WRIST_PIVOT = pt(-4, -42);
+const BEND_Y0 = -28, BEND_Y1 = -50;
+const bendW = (y: number) => ss(-y, -BEND_Y0, -BEND_Y1);
+const rotAbout = (p: P, c: P, a: number): P => {
+  const ca = Math.cos(a), sa = Math.sin(a), dx = p.x - c.x, dy = p.y - c.y;
+  return pt(c.x + dx * ca - dy * sa, c.y + dx * sa + dy * ca);
+};
+const bentOutline = (ps: P[], a: number): P[] => (Math.abs(a) < 1e-5 ? ps : ps.map((p) => rotAbout(p, WRIST_PIVOT, a * bendW(p.y))));
 
 // ---------------------------------------------------------------- the incision opening
 /** the opening's half-width for an incision state (0 closed .. 1 fully retracted) */
@@ -522,7 +534,9 @@ const IncisionSkin: React.FC<{id: string; s: ArmState; part: 'under' | 'over'}> 
 // ---------------------------------------------------------------- ArmSkin
 export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = ({id, s, noWindow}) => {
   const g = armGeo(s.curl, s.thumb, s.spread ?? 0);
-  const outD = poly(g.outline);
+  const bend = s.bend ?? 0;
+  const bent = Math.abs(bend) > 1e-5;
+  const outD = poly(bentOutline(g.outline, bend));
   const a = holeA(s.incision);
   const hole = s.incision > 0.004 ? holePts(a) : null;
   const clipD = hole ? `${outD}${poly(hole)}` : outD;
@@ -541,6 +555,36 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
     seps.push(<path key={`b${i}`} d={open([lerpP(cr.p, p1, 0.6), add(p1, mul(dn, 2.2))], 0.8)} fill="none" stroke={INK} strokeWidth={SEP_INK * 0.6} strokeLinecap="round" opacity={0.45} vectorEffect={NS} />);
   });
   const fsh = [I, M, R, Li];
+  const details = (k: string) => (
+    <>
+          <ForearmShade id={`${id}${k}-fa`} />
+      {/* the palm and fingers are a little pinker than the forearm */}
+      <rect x={-120} y={-320} width={240} height={290} fill={`url(#${id}-pt)`} />
+      {/* palm relief: hypothenar and thenar eminences lit from the upper left, the hollow of the palm */}
+      <RG id={`${id}${k}-hol`} c={pt(-2, -97)} rx={19} ry={23} color={C.skinDeep} a={0.22} />
+      <RG id={`${id}${k}-hyp`} c={pt(-34.5, -80)} rx={9.5} ry={27} rot={-4} color={C.skinLight} a={0.75} fx={0.4} fy={0.35} />
+      <RG id={`${id}${k}-thS`} c={add(thenarC, mul(n1, 7))} rx={10} ry={26} rot={deg(a1) + 90} color={C.skinDeep} a={0.32} />
+      <RG id={`${id}${k}-thL`} c={add(thenarC, mul(n1, -1.5))} rx={11} ry={22} rot={deg(a1) + 90} color={C.skinLight} a={0.8} fx={0.38} fy={0.36} />
+      <RG id={`${id}${k}-wr`} c={pt(-8, -33)} rx={30} ry={5} color={C.skinDeep} a={0.16} />
+      {/* the forearm's long gloss along its lit side */}
+      <path d={open([pt(-33.6, -24), pt(-34.4, 10), pt(-36.2, 60), pt(-38.6, 120), pt(-40.6, 185)], 1)} fill="none" stroke={`url(#${id}-st)`} strokeWidth={2.6} strokeLinecap="round" />
+      {/* digits */}
+      {fsh.map((f, i) => <Digit_ key={i} id={`${id}${k}-d${i}`} f={f} sBase={sb[i]} curl={s.curl} />)}
+      <Digit_ id={`${id}${k}-th`} f={g.thumb} sBase={2} curl={s.thumb} thumb />
+      {/* palm and wrist creases */}
+      <Crease d={open(HEART, 0.8)} a={0.62} />
+      <Crease d={open(HEAD, 0.8)} a={0.55} />
+      <Crease d={open(LIFE, 0.8)} a={0.62} lift={pt(-0.3, -0.2)} />
+      <Crease d={open(HYPO, 0.8)} a={0.18} />
+      <g mask={`url(#${id}-wcm)`}>
+        <Crease d={open(WRIST1, 0.8)} a={0.62} />
+        <Crease d={open(WRIST2, 0.8)} a={0.32} />
+      </g>
+      {/* small glosses */}
+      <ellipse cx={thenarC.x - 4.5} cy={thenarC.y - 6} rx={3.2} ry={1.5} transform={`rotate(${deg(a1)} ${thenarC.x - 4.5} ${thenarC.y - 6})`} fill="#FFFFFF" opacity={0.42} />
+      <ellipse cx={-37.5} cy={-90} rx={1.3} ry={4.2} transform="rotate(8 -37.5 -90)" fill="#FFFFFF" opacity={0.38} />
+    </>
+  );
   return (
     <g>
       <defs>
@@ -559,6 +603,24 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
         <mask id={`${id}-wcm`} maskUnits="userSpaceOnUse" x={-60} y={-60} width={120} height={60}>
           <rect x={-60} y={-60} width={120} height={60} fill={`url(#${id}-wcg)`} />
         </mask>
+        {bent && (
+          <>
+            <linearGradient id={`${id}-bfg`} gradientUnits="userSpaceOnUse" x1={0} y1={BEND_Y0 - 2} x2={0} y2={BEND_Y1 + 4}>
+              <stop offset={0} stopColor="#FFFFFF" />
+              <stop offset={1} stopColor="#000000" />
+            </linearGradient>
+            <linearGradient id={`${id}-bhg`} gradientUnits="userSpaceOnUse" x1={0} y1={BEND_Y0 - 2} x2={0} y2={BEND_Y1 + 4}>
+              <stop offset={0} stopColor="#000000" />
+              <stop offset={1} stopColor="#FFFFFF" />
+            </linearGradient>
+            <mask id={`${id}-bfm`} maskUnits="userSpaceOnUse" x={-400} y={-500} width={800} height={1400}>
+              <rect x={-400} y={-500} width={800} height={1400} fill={`url(#${id}-bfg)`} />
+            </mask>
+            <mask id={`${id}-bhm`} maskUnits="userSpaceOnUse" x={-400} y={-500} width={800} height={1400}>
+              <rect x={-400} y={-500} width={800} height={1400} fill={`url(#${id}-bhg)`} />
+            </mask>
+          </>
+        )}
         <linearGradient id={`${id}-st`} gradientUnits="userSpaceOnUse" x1={0} y1={-26} x2={0} y2={190}>
           <stop offset={0} stopColor="#FFFFFF" stopOpacity={0} />
           <stop offset={0.12} stopColor="#FFFFFF" stopOpacity={0.55} />
@@ -569,37 +631,18 @@ export const ArmSkin: React.FC<{id: string; s: ArmState; noWindow?: boolean}> = 
       <g mask={win ? `url(#${id}-wm)` : undefined}>
         <g clipPath={`url(#${id}-cl)`}>
           <path d={outD} fill={C.skin} />
-          <ForearmShade id={`${id}-fa`} />
-          {/* the palm and fingers are a little pinker than the forearm */}
-          <rect x={-120} y={-320} width={240} height={290} fill={`url(#${id}-pt)`} />
-          {/* palm relief: hypothenar and thenar eminences lit from the upper left, the hollow of the palm */}
-          <RG id={`${id}-hol`} c={pt(-2, -97)} rx={19} ry={23} color={C.skinDeep} a={0.22} />
-          <RG id={`${id}-hyp`} c={pt(-34.5, -80)} rx={9.5} ry={27} rot={-4} color={C.skinLight} a={0.75} fx={0.4} fy={0.35} />
-          <RG id={`${id}-thS`} c={add(thenarC, mul(n1, 7))} rx={10} ry={26} rot={deg(a1) + 90} color={C.skinDeep} a={0.32} />
-          <RG id={`${id}-thL`} c={add(thenarC, mul(n1, -1.5))} rx={11} ry={22} rot={deg(a1) + 90} color={C.skinLight} a={0.8} fx={0.38} fy={0.36} />
-          <RG id={`${id}-wr`} c={pt(-8, -33)} rx={30} ry={5} color={C.skinDeep} a={0.16} />
-          {/* the forearm's long gloss along its lit side */}
-          <path d={open([pt(-33.6, -24), pt(-34.4, 10), pt(-36.2, 60), pt(-38.6, 120), pt(-40.6, 185)], 1)} fill="none" stroke={`url(#${id}-st)`} strokeWidth={2.6} strokeLinecap="round" />
-          {/* digits */}
-          {fsh.map((f, i) => <Digit_ key={i} id={`${id}-d${i}`} f={f} sBase={sb[i]} curl={s.curl} />)}
-          <Digit_ id={`${id}-th`} f={g.thumb} sBase={2} curl={s.thumb} thumb />
-          {/* palm and wrist creases */}
-          <Crease d={open(HEART, 0.8)} a={0.62} />
-          <Crease d={open(HEAD, 0.8)} a={0.55} />
-          <Crease d={open(LIFE, 0.8)} a={0.62} lift={pt(-0.3, -0.2)} />
-          <Crease d={open(HYPO, 0.8)} a={0.18} />
-          <g mask={`url(#${id}-wcm)`}>
-            <Crease d={open(WRIST1, 0.8)} a={0.62} />
-            <Crease d={open(WRIST2, 0.8)} a={0.32} />
-          </g>
-          {/* small glosses */}
-          <ellipse cx={thenarC.x - 4.5} cy={thenarC.y - 6} rx={3.2} ry={1.5} transform={`rotate(${deg(a1)} ${thenarC.x - 4.5} ${thenarC.y - 6})`} fill="#FFFFFF" opacity={0.42} />
-          <ellipse cx={-37.5} cy={-90} rx={1.3} ry={4.2} transform="rotate(8 -37.5 -90)" fill="#FFFFFF" opacity={0.38} />
+          {!bent && details('')}
+          {bent && (
+            <>
+              <g mask={`url(#${id}-bfm)`}>{details('')}</g>
+              <g mask={`url(#${id}-bhm)`}><g transform={`rotate(${(bend * 180) / Math.PI} ${WRIST_PIVOT.x} ${WRIST_PIVOT.y})`}>{details('h')}</g></g>
+            </>
+          )}
           <IncisionSkin id={`${id}-inc`} s={s} part="under" />
           {win && <WindowRim id={id} w={win} />}
         </g>
         <path d={outD} fill="none" stroke={INK} strokeWidth={SKIN_INK} strokeLinejoin="round" vectorEffect={NS} />
-        {seps}
+        {bent ? <g transform={`rotate(${(bend * 180) / Math.PI} ${WRIST_PIVOT.x} ${WRIST_PIVOT.y})`}>{seps}</g> : seps}
         <IncisionSkin id={`${id}-sut`} s={s} part="over" />
       </g>
     </g>

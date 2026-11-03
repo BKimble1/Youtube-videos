@@ -18,7 +18,7 @@ import {DrapeOverArm, HandTable, RoomBack} from './art/room';
 import {OysterWorld} from './art/oyster';
 import {BONE_DEPTH} from './art/anatomy';
 import {P, pt} from './core/geo';
-import {EV, armAt, boneAt, camAt, instrAt, skinVeil, surgeonOn, tableVariant} from './story';
+import {EV, armAt, boneAt, camAt, cutBackBlend, instrAt, skinVeil, surgeonOn, tableMix, wristCamAt} from './story';
 import {Captions, setCaptionAdjust} from './Captions';
 import {CAPTIONS} from './lib';
 import {BoneState2, InstrState2} from './v2state';
@@ -54,6 +54,7 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
   const clipId = `${fkey}armclip`;
   const rClip = layerScale(c, Z_SKIN) / layerScale(c, 0);
   const veil = skinVeil(t);
+  const tm = tableMix(t);
   return (
     <>
       {c.w > 90 && (
@@ -63,7 +64,8 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
       )}
       {c.w > 24 && (
         <Layer c={c} z={Z_TABLE} maxBlur={18}>
-          <HandTable id={`${fkey}tab`} variant={tableVariant(t)} />
+          {tm < 0.999 && <HandTable id={`${fkey}tab`} variant="drape" />}
+          {tm > 0.001 && <g opacity={tm < 0.999 ? tm : 1}><HandTable id={`${fkey}tabf`} variant="followup" bend={arm.bend} /></g>}
         </Layer>
       )}
       {showSurgeon && (
@@ -96,7 +98,7 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
           </g>
         )}
         <IncisionRim id={`${fkey}rim`} s={arm} />
-        {tableVariant(t) === 'drape' && <DrapeOverArm id={`${fkey}dro`} />}
+        {tm < 0.999 && <g opacity={1 - tm}><DrapeOverArm id={`${fkey}dro`} /></g>}
       </Layer>
       {showSurgeon && (ins.appOn > 0.01 || ins.probeOn > 0.01) && (
         <Layer c={c} z={Z_INSTR} maxBlur={c.w < 60 ? 1.5 : 20}>
@@ -110,9 +112,16 @@ export const WristWorld: React.FC<{t: number; c: Cam; fkey: string}> = ({t, c, f
 export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t, fkey, captions = true}) => {
   resetIds(fkey);
   const wc = camAt(t);
+  const cb = cutBackBlend(t);
   const body = wc.world === 'wrist'
     ? <WristWorld t={t} c={wc.cam} fkey={fkey} />
-    : <OysterWorld id={`${fkey}oy`} t={t} cam={wc.cam} reveal={wc.reveal ?? 0} />;
+    : (
+      <>
+        <OysterWorld id={`${fkey}oy`} t={t} cam={wc.cam} reveal={wc.reveal ?? 0} />
+        {/* the cut back: the glue band dissolves in over the cement band on the same screen line */}
+        {cb > 0.001 && <div style={{position: 'absolute', inset: 0, opacity: cb}}><WristWorld t={t} c={wristCamAt(t)} fkey={`${fkey}cb`} /></div>}
+      </>
+    );
   return (
     <div style={{position: 'absolute', inset: 0, filter: 'contrast(1.04) saturate(1.05)'}}>
       {body}
