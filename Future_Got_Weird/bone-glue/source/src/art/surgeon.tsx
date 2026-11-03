@@ -61,9 +61,9 @@ const CREASE_PX = 1.5;
 /** the eyes' own contour (Inked width; non-scaling) */
 const EYE_INK = 6.4;
 
-const NSCLASS = 'bgsurg-ns';
-const NSLINE = 'bgsurg-nsl';
-const NsStyle: React.FC = () => (
+export const NSCLASS = 'bgsurg-ns';
+export const NSLINE = 'bgsurg-nsl';
+export const NsStyle: React.FC = () => (
   <style>{`.${NSCLASS} path[fill="${INK}"],.${NSCLASS} ellipse[fill="${INK}"],.${NSCLASS} circle[fill="${INK}"],.${NSLINE} path[fill="none"]{vector-effect:non-scaling-stroke}`}</style>
 );
 
@@ -115,10 +115,10 @@ const nearestOn = (p: V, ps: V[]) => {
 // on top of an instrument); a thumb may also be 'm': over the back of the hand but under an object that lies over the
 // palm (objOverPalm: a probe resting in the web), or 'p': part of the palm's own silhouette (its base swells into the
 // palm outline as the thenar bulge, one contour round both, no line where it leaves the hand; under the held object).
-type Lay = 'b' | 'f' | 'F' | 'm' | 'p';
+export type Lay = 'b' | 'f' | 'F' | 'm' | 'p';
 /** curl: a finger folded under the palm, seen as a short knuckle stub that grows out of the back of the hand (no gloss
  *  or separation line at its knuckle end) */
-type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]; curl?: boolean; tube?: boolean};
+export type Digit = {j: [number, number][]; r: number[]; lay?: Lay[]; curl?: boolean; tube?: boolean};
 /** thumbOver: the thumb is drawn over the palm; objOverPalm: the held object lies over the back of the hand (a probe
  *  resting in the web), so it is drawn after the palm group and only the 'F' digits (and a front thumb) cover it */
 export type GripPose = {fingers: Digit[]; thumb: Digit; thumbLay: Lay; thumbOver: boolean; objOverPalm?: boolean};
@@ -137,7 +137,7 @@ const PALM: [number, number][] = [
   [-0.03, 0.162],
 ];
 /** knuckle (MCP) positions and base radii: index, middle, ring, little */
-const MCP: [number, number][] = [
+export const MCP: [number, number][] = [
   [0.44, 0.166],
   [0.46, 0.055],
   [0.446, -0.056],
@@ -145,10 +145,10 @@ const MCP: [number, number][] = [
 ];
 const FR = [0.05, 0.052, 0.049, 0.043];
 const TAPER = [1, 0.95, 0.9, 0.86];
-const fingerR = (i: number) => TAPER.map((t) => FR[i] * t);
-const THUMB_R = [0.072, 0.056, 0.052, 0.048];
+export const fingerR = (i: number) => TAPER.map((t) => FR[i] * t);
+export const THUMB_R = [0.072, 0.056, 0.052, 0.048];
 
-type GloveProps = {
+export type GloveProps = {
   id: string;
   wrist: V;
   /** hand axis (deg, atan2 convention) */
@@ -168,7 +168,7 @@ type GloveProps = {
   over?: React.ReactNode;
 };
 
-const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cuff, obj, thumbOverlay, over}) => {
+export const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cuff, obj, thumbOverlay, over}) => {
   const dir = {x: Math.cos(rad(ang)), y: Math.sin(rad(ang))};
   const n = perp(dir);
   const W = (u: number, v: number): V => add(wrist, add(mul(dir, u * L), mul(n, v * L * ts)));
@@ -401,7 +401,7 @@ const GloveHand: React.FC<GloveProps> = ({id, wrist, ang, L, ts, pose, color, cu
 const L_H = SURGEON.hand;
 const dirDeg = (a: number): V => ({x: Math.cos(rad(a)), y: Math.sin(rad(a))});
 /** world -> hand coordinates for a hand placed at (wrist, ang, ts) */
-const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
+export const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
   const d = dirDeg(ang);
   const n = perp(d);
   const q = sub(p, wrist);
@@ -413,10 +413,10 @@ const toHand = (p: V, wrist: V, ang: number, ts: 1 | -1): [number, number] => {
  *  middle finger hooks under the barrel in front of the flange (its tip shows on the near side), the ring and little
  *  fingers curl loosely (knuckle stubs, the folded phalanges tucked under); the thumb lies along the near side of the
  *  plunger rod with its pad on the plunger's thumb pad, ready to press. */
-const FAR_UV = {u: 0.64, v: 0.272};
+export const FAR_UV = {u: 0.64, v: 0.272};
 /** a curled finger: knuckle (MCP), the middle joint (PIP) and the middle phalanx folding down under it, which from the
  *  high camera shows as a short, darker segment toward the bottom of the screen (`down`: screen-down in hand units) */
-const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075, tuck = false): Digit => {
+export const curled = (i: number, pip: [number, number], down: [number, number], fold = 0.075, tuck = false): Digit => {
   // tuck: the folded phalanx never continues the stub forward (a hand turned steeply toward the screen's bottom has its
   // screen-down along its own axis); it turns back under the knuckle, toward the palm
   let dn = down;
@@ -433,7 +433,7 @@ const curled = (i: number, pip: [number, number], down: [number, number], fold =
     curl: true,
   };
 };
-const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
+export const farPose = (thumbTip: [number, number], down: [number, number]): GripPose => {
   const base: [number, number] = [0.1, 0.19];
   const tt = thumbTip;
   const L3 = (a: [number, number], b: [number, number], t: number, dv: number): [number, number] => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t + dv];
@@ -491,7 +491,7 @@ const penPose = (down: [number, number]): GripPose => {
 
 /** the screen's downward direction in a hand's coordinates (the table plane is drawn squashed by k, so a drop in
  *  height reads as a short step down the screen) */
-const screenDown = (ang: number, ts: 1 | -1, k: number): [number, number] => {
+export const screenDown = (ang: number, ts: 1 | -1, k: number): [number, number] => {
   const d = dirDeg(ang);
   const n = perp(d);
   const dn = norm({x: 0, y: 1 / Math.max(0.5, k)});

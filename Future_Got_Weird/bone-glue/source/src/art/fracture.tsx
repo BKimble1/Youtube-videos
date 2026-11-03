@@ -16,6 +16,12 @@
 //      core, a light meniscus on the lit face) and one highlight that runs continuous while fresh and shortens and
 //      fades as the glue sets to satin; the shaded face's bone-ink lip is drawn over the glue's edge so the gel reads as
 //      lying IN the seam. A proud, glossy fresh tail and a bulb where it leaves the cannula (scaled by front.flow).
+// V3: any of the three moving fragments (seams.FragId: the wedge, the styloid and the lunate fragment) can stand out of
+// place (st.poses). Each displaced fragment gets its vacated bed (the wedge's a lit cancellous floor, the articular
+// fragments' a deep one in shadow), and is drawn in its own pose: cast shadow, exposed broken side wall, body (so the
+// radius' outline, the styloid tip and the articular rim move with it) and faces. The glue band runs between the two
+// CURRENT faces (wide in an open gap, a thin band once seated); several fronts (st.fronts) each carry the fresh head.
+// With every fragment seated (or st.poses absent and the wedge home) the drawing is exactly V2's.
 // Line widths are in screen pixels via st.px (mm per pixel), so the ink is even at every zoom. Deterministic; no filters.
 // The probe's and the applicator's contact spots and shadows belong to the instruments module.
 import React from 'react';
@@ -26,10 +32,10 @@ import {clamp, hash, noise1, ss} from '../lib';
 import {C} from './palette';
 import {RADIUS} from './anatomy';
 import {
-  S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, glueBand, growth, isWedgeSide, seamEdgeSeated, seamGap,
-  seamLength, seamNearest, seamNormal, xfSvg,
+  FRAG_IDS, FRAG_POLY, FragId, S_C2_ON_C1, S_C3_ON_C1, SEAM_IDS, SeamId, WEDGE_POLY, WedgeX, fragDisp, fragOf, glueBand, growth,
+  seamEdgeSeated, seamGap, seamLength, seamNearest, seamNormal, xfSvgFrag,
 } from './seams';
-import {BoneState2} from '../v2state';
+import {BoneState2, frontsOf, poseArg, posesOf} from '../v2state';
 
 type View = [number, number, number, number];
 const LIGHT = nrm(pt(-0.62, -0.78)); // toward the key light (upper left)
@@ -110,23 +116,23 @@ const walk = (ps: P[], i: number, dir: 1 | -1, d: number, from: P): P[] => {
 const line = (ps: P[]) => (ps.length < 2 ? '' : 'M' + ps.map((p) => `${p.x.toFixed(4)} ${p.y.toFixed(4)}`).join('L'));
 
 // ---------------------------------------------------------------- the broken faces (seated geometry)
-type Face = {id: SeamId; side: 1 | -1; s0: number; s1: number; wedge: boolean};
+type Face = {id: SeamId; side: 1 | -1; s0: number; s1: number; frag: FragId | null};
 /** every fragment's broken faces. A face that meets another at a fragment's corner runs a little past it; the mitres
  *  below trim both to the corner, so chamfers, edges and face lines turn it cleanly (no crossings, no hooks) */
 const FACES: Face[] = [
-  /* 0 */ {id: 'C1', side: -1, s0: -0.8, s1: S_C2_ON_C1 + 0.9, wedge: false}, // the lunate fragment's lower face
-  /* 1 */ {id: 'C1', side: -1, s0: S_C2_ON_C1 - 0.9, s1: LEN.C1 + 0.8, wedge: false}, // the styloid fragment's lower face
-  /* 2 */ {id: 'C1', side: 1, s0: -0.8, s1: S_C3_ON_C1 + 0.9, wedge: false}, // the shaft's upper face
-  /* 3 */ {id: 'C2', side: -1, s0: -0.7, s1: LEN.C2 + 0.8, wedge: false},
-  /* 4 */ {id: 'C2', side: 1, s0: -0.7, s1: LEN.C2 + 0.8, wedge: false},
-  /* 5 */ {id: 'C3', side: 1, s0: -0.7, s1: LEN.C3 + 0.8, wedge: false},
-  /* 6 */ {id: 'C1', side: 1, s0: S_C3_ON_C1 - 0.9, s1: LEN.C1 + 0.8, wedge: true}, // the wedge's upper face
-  /* 7 */ {id: 'C3', side: -1, s0: -0.7, s1: LEN.C3 + 0.8, wedge: true}, // the wedge's left face
+  /* 0 */ {id: 'C1', side: -1, s0: -0.8, s1: S_C2_ON_C1 + 0.9, frag: 'lunate'}, // the lunate fragment's lower face
+  /* 1 */ {id: 'C1', side: -1, s0: S_C2_ON_C1 - 0.9, s1: LEN.C1 + 0.8, frag: 'styloid'}, // the styloid fragment's lower face
+  /* 2 */ {id: 'C1', side: 1, s0: -0.8, s1: S_C3_ON_C1 + 0.9, frag: null}, // the shaft's upper face
+  /* 3 */ {id: 'C2', side: -1, s0: -0.7, s1: LEN.C2 + 0.8, frag: 'lunate'},
+  /* 4 */ {id: 'C2', side: 1, s0: -0.7, s1: LEN.C2 + 0.8, frag: 'styloid'},
+  /* 5 */ {id: 'C3', side: 1, s0: -0.7, s1: LEN.C3 + 0.8, frag: null},
+  /* 6 */ {id: 'C1', side: 1, s0: S_C3_ON_C1 - 0.9, s1: LEN.C1 + 0.8, frag: 'wedge'}, // the wedge's upper face
+  /* 7 */ {id: 'C3', side: -1, s0: -0.7, s1: LEN.C3 + 0.8, frag: 'wedge'}, // the wedge's left face
 ];
 /** the fragments' corners: [face, which end, face, which end] */
 const CORNERS: [number, 'start' | 'end', number, 'start' | 'end'][] = [[0, 'end', 3, 'start'], [1, 'start', 4, 'start'], [2, 'end', 5, 'start'], [6, 'start', 7, 'start']];
 type FaceArt = {
-  wedge: boolean;
+  frag: FragId | null;
   /** the cancellous chamfer strip just inside the face */
   band: string;
   /** a few facets of it a shade lighter or darker (slightly angular broken surface) */
@@ -200,7 +206,7 @@ const artOf = (r: Raw): FaceArt => {
     const rr = 0.012 + 0.016 * hash(s * 2.3 + seed * 1.1);
     pores.push({x: q.x, y: q.y, rx: rr * (1.5 + 0.6 * hash(s * 8.1)), ry: rr * 0.85, a: (Math.atan2(t.x, -t.y) * 180) / Math.PI});
   }
-  return {wedge: f.wedge, band: poly(bandPts), facets, edge: line(r.outer), face: line(r.faceL), lit, tone, pores};
+  return {frag: f.frag, band: poly(bandPts), facets, edge: line(r.outer), face: line(r.faceL), lit, tone, pores};
 };
 /** trim two polylines that cross near their starts to begin at the crossing (a clean mitre) */
 const mitre = (A: P[], B: P[]): [P[], P[]] => {
@@ -245,6 +251,13 @@ const faceArts = (base: number): FaceArt[] => {
 };
 /** the wedge's two faces (seated), mitred at the corner: C1's from the corner out, C3's from the corner down */
 const WEDGE_FACES = mitre(seamEdgeLineSeated('C1', S_C3_ON_C1 - 0.9, LEN.C1 + 0.8, 1), seamEdgeLineSeated('C3', -0.7, LEN.C3 + 0.8, -1));
+/** every moving fragment's two broken faces (seated), each from the fragment's corner outward, with their seam and side */
+type FragFaces = {lines: [P[], P[]]; seams: [[SeamId, 1 | -1], [SeamId, 1 | -1]]};
+const FRAG_FACES: Record<FragId, FragFaces> = {
+  wedge: {lines: WEDGE_FACES, seams: [['C1', 1], ['C3', -1]]},
+  styloid: {lines: mitre(seamEdgeLineSeated('C1', S_C2_ON_C1 - 0.9, LEN.C1 + 0.8, -1), seamEdgeLineSeated('C2', -0.7, LEN.C2 + 0.8, 1)), seams: [['C1', -1], ['C2', 1]]},
+  lunate: {lines: mitre(seamEdgeLineSeated('C1', -0.8, S_C2_ON_C1 + 0.9, -1).reverse(), seamEdgeLineSeated('C2', -0.7, LEN.C2 + 0.8, -1)), seams: [['C1', -1], ['C2', -1]]},
+};
 function seamEdgeLineSeated(id: SeamId, s0: number, s1: number, side: 1 | -1, out = 0, step = 0.06): P[] {
   const n = Math.max(1, Math.ceil((s1 - s0) / step));
   const ps: P[] = [];
@@ -367,24 +380,37 @@ const BoneBody: React.FC<{ids: Ids; px: number; view: View; outlineClip?: string
 );
 
 // ---------------------------------------------------------------- the gaps between the seated faces
-/** a seam's gap polygon, its edges `out` mm past each seated face (negative: inside the gap, under the face lines);
- *  `wedgeOut` for the wedge's two faces */
-const gapPoly = (id: SeamId, wedgeOut = -0.01): P[] => {
+/** a seam's gap polygon, its edges `out` mm past each seated face (negative: inside the gap, under the face lines):
+ *  0.02 mm past the faces of the fragments in `moving`, -0.01 elsewhere */
+const gapPoly = (id: SeamId, moving: FragId[] = []): P[] => {
   const s0 = id === 'C1' ? -0.8 : 0, s1 = LEN[id] + 0.8;
   const n = Math.max(1, Math.ceil((s1 - s0) / 0.06));
   const lo: P[] = [], hi: P[] = [];
+  const o = (s: number, side: 1 | -1) => {
+    const f = fragOf(id, s, side);
+    return f && moving.includes(f) ? 0.02 : -0.01;
+  };
   for (let i = 0; i <= n; i++) {
     const s = s0 + ((s1 - s0) * i) / n;
-    lo.push(seamEdgeSeated(id, s, -1, isWedgeSide(id, s, -1) ? wedgeOut : -0.01));
-    hi.push(seamEdgeSeated(id, s, 1, isWedgeSide(id, s, 1) ? wedgeOut : -0.01));
+    lo.push(seamEdgeSeated(id, s, -1, o(s, -1)));
+    hi.push(seamEdgeSeated(id, s, 1, o(s, 1)));
   }
   return [...lo, ...[...hi].reverse()];
 };
-/** the seams' gaps between the seated faces: dark at every pose (the displaced wedge's bed shows beyond them) */
+/** the seams' gaps between the seated faces: dark at every pose (a displaced fragment's bed shows beyond them) */
 const SEATED_GAPS = SEAM_IDS.map((id) => poly(gapPoly(id)));
-/** ... and while the wedge is out of its bed: on the wedge's side the gap reaches a little PAST its seated faces, over
+/** ... and while fragments are out of their beds: on their side the gap reaches a little PAST their seated faces, over
  *  the bed's edge, so no hairline of the static bone (drawn up to the bed's clip) shows between the dark gap and the bed */
-const DISP_GAPS = SEAM_IDS.map((id) => poly(gapPoly(id, 0.02)));
+const DISP_GAPS_CACHE = new Map<string, string[]>();
+const dispGaps = (moving: FragId[]): string[] => {
+  const key = moving.join(',');
+  let hit = DISP_GAPS_CACHE.get(key);
+  if (!hit) {
+    hit = SEAM_IDS.map((id) => poly(gapPoly(id, moving)));
+    DISP_GAPS_CACHE.set(key, hit);
+  }
+  return hit;
+};
 /** a darker-red core down the middle of each seated gap (blood in the crack, close range): the static seams' parts and
  *  the wedge's (which fade in as it seats, so nothing pops when it arrives) */
 const coreLine = (id: SeamId, s0: number, s1: number) => {
@@ -397,20 +423,21 @@ const CORE_WEDGE = [coreLine('C1', S_C3_ON_C1 + 0.5, LEN.C1 + 0.8), coreLine('C3
 
 // ---------------------------------------------------------------- the wedge's vacated bed (a cancellous floor)
 type Cell = {d: string; dIn: string; red: boolean; c: P};
-const BED_CELLS: Cell[] = (() => {
+/** a honeycomb of cancellous pits over a fragment's seated outline (within the radius), in a box; `keep` can thin it
+ *  to the strip along the faces that a displacement can uncover */
+const bedCells = (polyF: P[], box: View, S: number, keep?: (c: P) => boolean, seed = 0): Cell[] => {
   const out: Cell[] = [];
-  const S = 0.4;
-  const xs = WEDGE_POLY.map((p) => p.x), ys = WEDGE_POLY.map((p) => p.y);
-  const bx0 = Math.min(...xs) - 0.5, by0 = Math.min(...ys) - 0.5, bx1 = 14, by1 = Math.min(13, Math.max(...ys));
+  const [bx0, by0, bx1, by1] = box;
   for (let j = 0; by0 + j * S * 0.866 < by1; j++) {
     for (let i = 0; bx0 + i * S < bx1; i++) {
-      const h = hash(i * 7.13 + j * 3.37);
-      const c = pt(bx0 + i * S + (j % 2) * 0.5 * S + (h - 0.5) * 0.09, by0 + j * S * 0.866 + (hash(i * 2.1 + j * 9.7) - 0.5) * 0.08);
-      if (!inPoly(c, WEDGE_POLY) || !inPoly(c, RADIUS)) {
+      const h = hash(i * 7.13 + j * 3.37 + seed);
+      const c = pt(bx0 + i * S + (j % 2) * 0.5 * S + (h - 0.5) * 0.09, by0 + j * S * 0.866 + (hash(i * 2.1 + j * 9.7 + seed) - 0.5) * 0.08);
+      if (keep && !keep(c)) continue;
+      if (!inPoly(c, polyF) || !inPoly(c, RADIUS)) {
         // keep cells that straddle the bed's edge (the clip trims them)
         const nearIn = [0, 1, 2, 3, 4, 5].some((k) => {
           const q = add(c, pt(Math.cos(k * 1.047) * S * 0.5, Math.sin(k * 1.047) * S * 0.5));
-          return inPoly(q, WEDGE_POLY) && inPoly(q, RADIUS);
+          return inPoly(q, polyF) && inPoly(q, RADIUS);
         });
         if (!nearIn) continue;
       }
@@ -423,10 +450,14 @@ const BED_CELLS: Cell[] = (() => {
       }
       // the pit's shadowed upper-left inner wall: the same cell shifted toward the light and shrunk
       const sh = vs.map((v) => add(lerpP(c, v, 0.8), pt(-0.035, -0.045)));
-      out.push({d: closed(vs, 0.9), dIn: closed(sh, 0.9), red: hash(i * 11.7 + j * 5.9) > 0.88, c});
+      out.push({d: closed(vs, 0.9), dIn: closed(sh, 0.9), red: hash(i * 11.7 + j * 5.9 + seed) > 0.88, c});
     }
   }
   return out;
+};
+const BED_CELLS: Cell[] = (() => {
+  const xs = WEDGE_POLY.map((p) => p.x), ys = WEDGE_POLY.map((p) => p.y);
+  return bedCells(WEDGE_POLY, [Math.min(...xs) - 0.5, Math.min(...ys) - 0.5, 14, Math.min(13, Math.max(...ys))], 0.4);
 })();
 /** the bed's walls along the seated seams (the floor is darker in their lee) */
 const BED_WALLS = line([...[...WEDGE_FACES[0]].reverse(), ...WEDGE_FACES[1]]);
@@ -450,6 +481,41 @@ const Bed: React.FC<{px: number; view: View; k: number}> = ({px, view, k}) => {
     </g>
   );
 };
+/** an articular fragment's bed: the broken metaphysis it was lifted off, seen down the open gap. Deeper and darker than
+ *  the wedge's (the cut runs deep under a large fragment, mostly in its shadow): a dark cancellous honeycomb with a few
+ *  marrow-red cells, darkest in the lee of the walls. Cells only in the strip along its faces that a lift uncovers. */
+const ART_BED = new Map<FragId, {cells: Cell[]; walls: string}>();
+const artBedOf = (f: FragId) => {
+  const hit = ART_BED.get(f);
+  if (hit) return hit;
+  const [A, B] = FRAG_FACES[f].lines;
+  const near = [...A, ...B].filter((_, i) => i % 4 === 0);
+  const xs = near.map((p) => p.x), ys = near.map((p) => p.y);
+  const D = 4.2;
+  const keep = (c: P) => near.some((q) => (q.x - c.x) ** 2 + (q.y - c.y) ** 2 < D * D);
+  const cells = bedCells(FRAG_POLY[f], [Math.min(...xs) - D, Math.min(...ys) - D, Math.max(...xs) + D, Math.max(...ys) + D], 0.46, keep, f === 'styloid' ? 31.7 : 57.3);
+  const v = {cells, walls: line([...[...A].reverse(), ...B])};
+  ART_BED.set(f, v);
+  return v;
+};
+const ArtBed: React.FC<{f: FragId; px: number; view: View}> = ({f, px, view}) => {
+  const [x0, y0, x1, y1] = view;
+  const bed = artBedOf(f);
+  const cells = bed.cells.filter((c) => c.c.x > x0 - 0.5 && c.c.x < x1 + 0.5 && c.c.y > y0 - 0.5 && c.c.y < y1 + 0.5);
+  const floor = mix(mix(C.cancellous, C.boneDeep, 0.5), C.cavity, 0.5);
+  const pit = mix(C.cancellousPore, C.cavity, 0.75);
+  const pitIn = mix(C.cavity, '#12030A', 0.45);
+  return (
+    <g>
+      <path d={RAD_PATH} fill={floor} />
+      {cells.map((c, i) => <path key={`c${i}`} d={c.d} fill={c.red ? mix(C.marrow, C.cavity, 0.35) : pit} />)}
+      {cells.map((c, i) => <path key={`s${i}`} d={c.dIn} fill={c.red ? mix(C.marrow, C.cavity, 0.65) : pitIn} />)}
+      <path d={bed.walls} fill="none" stroke={SHADOW} strokeWidth={1.6} strokeLinejoin="round" opacity={0.45} />
+      <path d={bed.walls} fill="none" stroke={SHADOW} strokeWidth={0.7} strokeLinejoin="round" opacity={0.4} />
+      <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.2 * px} />
+    </g>
+  );
+};
 
 // ---------------------------------------------------------------- the glue
 export type GlueRun = {
@@ -462,11 +528,17 @@ export type GlueRun = {
   loC: P[];
   hiC: P[];
   fresh: number[];
+  /** per sample: the flow of the front nearest along this seam (0 with none) and that front's index (-1 with none) */
+  fl: number[];
+  fk: number[];
   inset: boolean[];
   capA: boolean;
   capB: boolean;
   bulbA: boolean;
   bulbB: boolean;
+  /** the flow of the front at each bulb end (0 where no bulb) */
+  flowA: number;
+  flowB: number;
 };
 const capPts = (p1: P, p2: P, tOut: P, k = 1): P[] => {
   const c = lerpP(p1, p2, 0.5);
@@ -479,7 +551,8 @@ const capPts = (p1: P, p2: P, tOut: P, k = 1): P[] => {
   }
   return out;
 };
-/** the glue in one seam as drawable runs (islands while healing), in world mm with the wedge in its current pose.
+/** the glue in one seam as drawable runs (islands while healing), in world mm with the fragments in their current poses
+ *  (the band between the two CURRENT faces: wide while a gap stands open, narrowing as the faces close).
  *  The outer edges follow seams.glueBand(over = glueOver(st.px)) exactly, except near the fresh tip (a little proud)
  *  and at wide framings (held to a minimum on-screen width); healing insets are passed straight through to glueBand.
  *  A span that reaches a seam's end runs on past the bone's border (clipped there), so the gel fills the seam right to
@@ -494,20 +567,30 @@ export const glueRuns = (id: SeamId, st: BoneState2): GlueRun[] => {
   const bridge = st.heal.bridge;
   const inset = bridge > 0 ? (side: 1 | -1, s: number) => growth(id, s, bridge, side) : undefined;
   const step = st.px < 0.016 ? 0.04 : 0.08; // finer sampling in close-ups
-  const outer = glueBand(id, a, b, st.wedge, glueOver(st.px), inset, step);
-  const core = glueBand(id, a, b, st.wedge, 0, inset, step);
-  const fr = st.front && st.front.seam === id ? st.front : null;
+  const pose = poseArg(st);
+  const outer = glueBand(id, a, b, pose, glueOver(st.px), inset, step);
+  const core = glueBand(id, a, b, pose, 0, inset, step);
+  const frs = frontsOf(st).filter((f) => f.seam === id);
   const out: GlueRun[] = [];
   outer.forEach((r, ri) => {
     const c = core[ri];
     if (!c || c.s.length !== r.s.length) return;
-    const lo: P[] = [], hi: P[] = [], fresh: number[] = [], ins: boolean[] = [];
+    const lo: P[] = [], hi: P[] = [], fresh: number[] = [], fls: number[] = [], fks: number[] = [], ins: boolean[] = [];
     for (let i = 0; i < r.s.length; i++) {
       const s = r.s[i];
       const im = inset ? inset(-1, s) : 0, ip = inset ? inset(1, s) : 0;
       // freshness near the tip, weighted by the flow: as the lead eases front.flow to 0 (the tip lifting away) the proud
-      // tail, its gloss and the bulb settle into the ordinary rounded end, so nothing pops when front goes null
+      // tail, its gloss and the bulb settle into the ordinary rounded end, so nothing pops when front goes null. With
+      // several fronts on one seam, each sample belongs to the nearest.
+      let k = -1, dk = 1e9;
+      frs.forEach((fr, j) => {
+        const d = Math.abs(s - fr.s);
+        if (d < dk) { dk = d; k = j; }
+      });
+      const fr = k >= 0 ? frs[k] : null;
       const f = fr ? (1 - ss(Math.abs(s - fr.s), 0.15, FRESH_MM)) * clamp(fr.flow) : 0;
+      fls.push(fr ? clamp(fr.flow) : 0);
+      fks.push(k);
       let dv = sub(c.hi[i], c.lo[i]);
       dv = len(dv) > 1e-4 ? nrm(dv) : seamNormal(id, s);
       let eM = im > 0 ? 0 : PROUD * f, eP = ip > 0 ? 0 : PROUD * f;
@@ -522,12 +605,17 @@ export const glueRuns = (id: SeamId, st: BoneState2): GlueRun[] => {
     }
     let capA = Math.abs(r.s[0] - a) < 1e-6;
     const capB = Math.abs(r.s[r.s.length - 1] - b) < 1e-6;
-    const nearA = fr ? Math.abs(fr.s - a) : 1e9, nearB = fr ? Math.abs(fr.s - b) : 1e9;
-    const bulbA = capA && nearA < 0.35 && nearA <= nearB, bulbB = capB && nearB < 0.35 && nearB < nearA;
+    // each front swells a bulb at the span end it is laying (the nearer end, within 0.35 mm)
+    let bulbA = false, bulbB = false, flowA = 0, flowB = 0;
+    for (const fr of frs) {
+      const nearA = Math.abs(fr.s - a), nearB = Math.abs(fr.s - b);
+      if (capA && nearA < 0.35 && nearA <= nearB) { bulbA = true; flowA = Math.max(flowA, clamp(fr.flow)); }
+      else if (capB && nearB < 0.35 && nearB < nearA) { bulbB = true; flowB = Math.max(flowB, clamp(fr.flow)); }
+    }
     // a branch seam's gel that starts inside C1's (its first 0.35 mm lie in C1's band) ends flat there: the two bands
     // are one body, and a rounded end would poke across C1's far half
     if (id !== 'C1' && capA && !bulbA && r.s[0] <= 0.35) capA = false;
-    out.push({id, s: r.s, lo, hi, loC: c.lo, hiC: c.hi, fresh, inset: ins, capA, capB, bulbA, bulbB});
+    out.push({id, s: r.s, lo, hi, loC: c.lo, hiC: c.hi, fresh, fl: fls, fk: fks, inset: ins, capA, capB, bulbA, bulbB, flowA, flowB});
   });
   return out;
 };
@@ -544,9 +632,9 @@ const runOutline = (r: GlueRun, which: 'outer' | 'core'): P[] => {
   const capA = r.capA ? capPts(hi[0], lo[0], tEnd(r, 'a'), 0.9) : [];
   return [...lo, ...capB, ...[...hi].reverse(), ...capA];
 };
-type Bulb = {c: P; r: number; rc: number};
-/** the gel bulb where the band leaves the cannula: at flow 0 it lies inside the band's rounded end */
-const runBulbs = (r: GlueRun, flow: number): Bulb[] => {
+type Bulb = {c: P; r: number; rc: number; flow: number};
+/** the gel bulb where the band leaves the cannula (or a front's head): at flow 0 it lies inside the band's rounded end */
+const runBulbs = (r: GlueRun): Bulb[] => {
   const out: Bulb[] = [];
   /** the nearest the band's rounded end (runOutline's cap: squashed to 0.9 along the seam and sheared with the jag)
    *  comes to its centre */
@@ -555,6 +643,7 @@ const runBulbs = (r: GlueRun, flow: number): Bulb[] => {
     return Math.min(len(sub(p1, c)), ...capPts(p1, p2, t, 0.9).map((q) => len(sub(q, c))));
   };
   const mk = (i: number, end: 'a' | 'b') => {
+    const flow = end === 'a' ? r.flowA : r.flowB;
     const tE = tEnd(r, end);
     const half = len(sub(r.hi[i], r.lo[i])) / 2;
     const halfC = len(sub(r.hiC[i], r.loC[i])) / 2;
@@ -563,7 +652,7 @@ const runBulbs = (r: GlueRun, flow: number): Bulb[] => {
     // a squashed or leaning cap and snap back when the front goes null)
     const r0 = 0.97 * capMin(r.lo[i], r.hi[i], tE), rc0 = 0.97 * capMin(r.loC[i], r.hiC[i], tE);
     const c = add(lerpP(r.lo[i], r.hi[i], 0.5), mul(tE, 0.42 * flow * half));
-    out.push({c, r: r0 + (half - r0) * flow + grow, rc: rc0 + (halfC - rc0) * flow + grow});
+    out.push({c, r: r0 + (half - r0) * flow + grow, rc: rc0 + (halfC - rc0) * flow + grow, flow});
   };
   if (r.bulbB) mk(r.s.length - 1, 'b');
   if (r.bulbA) mk(0, 'a');
@@ -647,11 +736,12 @@ const junctionFillets = (runs: GlueRun[], d: number): {pts: P[]; deep: boolean}[
   }
   return out;
 };
-/** contiguous index ranges where pred holds */
-const ranges = (n: number, pred: (i: number) => boolean): [number, number][] => {
+/** contiguous index ranges where pred holds (split where key changes, if given) */
+const ranges = (n: number, pred: (i: number) => boolean, key?: (i: number) => number): [number, number][] => {
   const out: [number, number][] = [];
   let st = -1;
   for (let i = 0; i < n; i++) {
+    if (st >= 0 && key && key(i) !== key(i - 1)) { if (i - 1 > st) out.push([st, i - 1]); st = -1; }
     if (pred(i)) { if (st < 0) st = i; }
     else if (st >= 0) { if (i - 1 > st) out.push([st, i - 1]); st = -1; }
   }
@@ -659,16 +749,14 @@ const ranges = (n: number, pred: (i: number) => boolean): [number, number][] => 
   return out;
 };
 
-const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string; view: View; lineFade: number}> = ({st, runs, radClip, glueClip, view, lineFade}) => {
+const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip: string; view: View; lineFade: number; rimExtra?: React.ReactNode}> = ({st, runs, radClip, glueClip, view, lineFade, rimExtra}) => {
   if (runs.length === 0) return null;
   const px = st.px;
   const set = clamp(st.set);
   const healA = 1 - clamp(st.heal.bridge * 6); // details that belong to the intact bond
-  const fr0 = st.front;
-  const flow = fr0 ? clamp(fr0.flow) : 0;
   const outlines = runs.map((r) => poly(runOutline(r, 'outer')));
   const cores = runs.map((r) => poly(runOutline(r, 'core')));
-  const bulbs = runs.flatMap((r) => runBulbs(r, flow));
+  const bulbs = runs.flatMap((r) => runBulbs(r));
   const fil = healA > 0.01 ? junctionFillets(runs, 0.24) : [];
   const fillets = fil.map((f) => poly(f.pts));
   const inkW = 1.25 * px;
@@ -814,21 +902,20 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
           // the fresh zone by its shape (fresh / flow): while the tip lifts away (front.flow easing 1 -> 0) the fresh
           // highlight keeps its extent and dims and thins away, and the settled highlight fades in over the tail, so the
           // settle is continuous (thresholds on fresh itself would snap both at fixed flow values)
-          const fl = fr0 && fr0.seam === r.id ? clamp(fr0.flow) : 0;
-          const shape = (i: number) => (fl > 1e-4 ? r.fresh[i] / fl : 0);
+          // (per sample: the flow of that sample's own front, when several fronts share the seam)
+          const shape = (i: number) => (r.fl[i] > 1e-4 ? r.fresh[i] / r.fl[i] : 0);
+          const fkey = (i: number) => r.fk[i];
           const hlOk = (i: number) => settledOk(i) && facing(i) > thr && r.s[i] >= hl0;
           const hlOp = (0.9 - 0.45 * set) * detK, hlWs = hlW * (1 - 0.2 * set);
           const settledHl = [
             ...ranges(n, (i) => hlOk(i) && shape(i) < 0.45).map(([a, b], k) => hlStroke(a, b, 0.82, hlWs, hlOp, `h${k}`)),
             // (the tail overlaps the settled stretch by a sample, so no gap opens between them)
-            ...(fl < 0.999 ? ranges(n, (i) => hlOk(i) && shape(i) >= 0.45).map(([a, b], k) => hlStroke(a > 0 && r.s[a - 1] >= hl0 ? a - 1 : a, Math.min(n - 1, b + 1), 0.82, hlWs, hlOp * (1 - fl), `ht${k}`)) : []),
+            ...ranges(n, (i) => hlOk(i) && shape(i) >= 0.45, fkey).filter(([a]) => r.fl[a] < 0.999).map(([a, b], k) => hlStroke(a > 0 && r.s[a - 1] >= hl0 ? a - 1 : a, Math.min(n - 1, b + 1), 0.82, hlWs, hlOp * (1 - r.fl[a]), `ht${k}`)),
           ];
           const freshW = Math.max(hlW, 0.12 * bandPx * px);
-          const freshHl = fl > 0.001
-            ? ranges(n, (i) => shape(i) >= 0.4 && !r.inset[i] && r.s[i] >= hl0).map(([a, b], k) =>
-                hlStroke(a, b, 0.2, hlW + (freshW - hlW) * fl, 0.95 * detK * fl, `hf${k}`),
-              )
-            : [];
+          const freshHl = ranges(n, (i) => shape(i) >= 0.4 && !r.inset[i] && r.s[i] >= hl0, fkey).filter(([a]) => r.fl[a] > 0.001).map(([a, b], k) =>
+            hlStroke(a, b, 0.2, hlW + (freshW - hlW) * r.fl[a], 0.95 * detK * r.fl[a], `hf${k}`),
+          );
           return (
             <g key={`s${ri}`}>
               <g mask={`url(#${masks[r.id]})`}>
@@ -846,7 +933,7 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
         {bulbs.map((b, i) => {
           const hx = b.c.x - b.r * 0.34, hy = b.c.y - b.r * 0.38;
           return (
-            <g key={`bh${i}`} opacity={flow}>
+            <g key={`bh${i}`} opacity={b.flow}>
               <circle cx={b.c.x + b.r * 0.12} cy={b.c.y + b.r * 0.14} r={b.rc * 0.86} fill={C.glueDeep} opacity={0.35} />
               <circle cx={b.c.x - b.r * 0.06} cy={b.c.y - b.r * 0.06} r={b.rc * 0.78} fill={coreCol} />
               <ellipse cx={hx} cy={hy} rx={b.r * 0.3} ry={b.r * 0.17} fill={C.glueShine} opacity={0.92} transform={`rotate(-38 ${hx} ${hy})`} />
@@ -857,15 +944,14 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
         {lineFade * healA > 0.01 && runs.map((r, ri) => {
           const pN = NEAR_LO[r.id] ? r.lo : r.hi;
           // not over the proud fresh tail; as it settles (front.flow easing to 0) the lip fades in over it
-          const fl = fr0 && fr0.seam === r.id ? clamp(fr0.flow) : 0;
-          const tail = (i: number) => fl > 1e-4 && r.fresh[i] >= 0.3 * fl;
+          const tail = (i: number) => r.fl[i] > 1e-4 && r.fresh[i] >= 0.3 * r.fl[i];
           const ok = (i: number) => !r.inset[i] && (r.id === 'C1' || r.s[i] > 0.5);
           const rs = ranges(r.s.length, (i) => ok(i) && !tail(i));
-          const rt = fl < 0.999 ? ranges(r.s.length, (i) => ok(i) && tail(i)) : [];
+          const rt = ranges(r.s.length, (i) => ok(i) && tail(i), (i) => r.fk[i]).filter(([a]) => r.fl[a] < 0.999);
           return (
             <g key={`bl${ri}`} mask={`url(#${masksO[r.id]})`} fill="none" stroke={C.boneInk} strokeWidth={1.8 * px} strokeLinejoin="round" strokeLinecap="round" opacity={lineFade * healA}>
               {rs.map(([a, b], k) => <path key={k} d={open(pN.slice(a, b + 1), 0.5)} />)}
-              {rt.map(([a, b], k) => <path key={`t${k}`} d={open(pN.slice(Math.max(0, a - 1), b + 2), 0.5)} opacity={1 - fl} />)}
+              {rt.map(([a, b], k) => <path key={`t${k}`} d={open(pN.slice(Math.max(0, a - 1), b + 2), 0.5)} opacity={1 - r.fl[a]} />)}
             </g>
           );
         })}
@@ -873,6 +959,7 @@ const Glue: React.FC<{st: BoneState2; runs: GlueRun[]; radClip: string; glueClip
       {/* the bone's outline continues over the gel where a seam meets the bone's edge (the glue is flush with it) */}
       <g clipPath={`url(#${glueClip})`}>
         <path d={RAD_PATH} fill="none" stroke={C.boneInk} strokeWidth={2.6 * px} />
+        {rimExtra}
       </g>
     </g>
   );
