@@ -1027,23 +1027,25 @@ const wallOf = (fr: FragId, wW: number) => {
   WALL_CACHE.set(key, v);
   return v;
 };
-/** where each seam opens onto the bone's border (seated arc length) and which way is outward along it */
-type Mouth = {id: SeamId; s: number; dir: 1 | -1};
+/** where each seam opens onto the bone's border: the seated arc length where its centreline (s) and each of its two
+ *  faces (lo: side -1, hi: side +1) cross the border, and which way is outward along it */
+type Mouth = {id: SeamId; s: number; lo: number; hi: number; dir: 1 | -1};
 const MOUTHS: Mouth[] = (() => {
-  const cross = (id: SeamId, s0: number, s1: number) => {
-    let prev = inPoly(seamPoint(id, s0), RADIUS);
-    for (let i = 1; i <= 500; i++) {
-      const s = s0 + ((s1 - s0) * i) / 500;
-      const ins = inPoly(seamPoint(id, s), RADIUS);
+  const cross = (at: (s: number) => P, s0: number, s1: number) => {
+    let prev = inPoly(at(s0), RADIUS);
+    for (let i = 1; i <= 1000; i++) {
+      const s = s0 + ((s1 - s0) * i) / 1000;
+      const ins = inPoly(at(s), RADIUS);
       if (ins !== prev) return s;
       prev = ins;
     }
     return s1;
   };
-  return [
-    {id: 'C1', s: cross('C1', 3, -2), dir: -1}, {id: 'C1', s: cross('C1', LEN.C1 - 3, LEN.C1 + 2), dir: 1},
-    {id: 'C2', s: cross('C2', LEN.C2 - 3, LEN.C2 + 2), dir: 1}, {id: 'C3', s: cross('C3', LEN.C3 - 3, LEN.C3 + 2), dir: 1},
-  ];
+  const mk = (id: SeamId, s0: number, s1: number, dir: 1 | -1): Mouth => ({
+    id, dir, s: cross((s) => seamPoint(id, s), s0, s1),
+    lo: cross((s) => seamEdgeSeated(id, s, -1), s0, s1), hi: cross((s) => seamEdgeSeated(id, s, 1), s0, s1),
+  });
+  return [mk('C1', 3, -2, -1), mk('C1', LEN.C1 - 3, LEN.C1 + 2, 1), mk('C2', LEN.C2 - 3, LEN.C2 + 2, 1), mk('C3', LEN.C3 - 3, LEN.C3 + 2, 1)];
 })();
 /** a mouth opened by displaced pieces: the bridge that lets the gel reach the line between the two pieces' current
  *  border corners (added to the glue's clip), that line (inked over the gel, as the seated outline is), and the region
@@ -1051,8 +1053,12 @@ const MOUTHS: Mouth[] = (() => {
 const mouthArt = (m: Mouth, w: Poses) => {
   // the bridge runs well in from the mouth: a tilted piece can carry its face past the seated border some way in
   const sIn = m.s - m.dir * 7, sOut = m.s + m.dir * 1.6;
-  const lo = seamEdgeLine(m.id, sIn, m.s, -1, w, 0.3, 0.1), hi = seamEdgeLine(m.id, sIn, m.s, 1, w, 0.3, 0.1);
-  const p1 = seamEdge(m.id, m.s, -1, w), p2 = seamEdge(m.id, m.s, 1, w);
+  // it ends on the chord between the two faces' border corners, each carried by its piece (seated, that chord is the
+  // border itself across the mouth: nothing changes as the pieces arrive)
+  const lo = seamEdgeLine(m.id, sIn, m.lo, -1, w, 0.3, 0.1), hi = seamEdgeLine(m.id, sIn, m.hi, 1, w, 0.3, 0.1);
+  const p1 = seamEdge(m.id, m.lo, -1, w), p2 = seamEdge(m.id, m.hi, 1, w);
+  lo[lo.length - 1] = seamEdge(m.id, m.lo, -1, w, 0);
+  hi[hi.length - 1] = seamEdge(m.id, m.hi, 1, w, 0);
   const reg = (ww: Poses | WedgeX) => poly([...seamEdgeLine(m.id, sIn, sOut, -1, ww, 0.25, 0.1), ...seamEdgeLine(m.id, sIn, sOut, 1, ww, 0.25, 0.1).reverse()]);
   return {bridge: poly([...lo, ...hi.reverse()]), line: line([p1, p2]), regions: [reg(w), reg({dx: 0, dy: 0, rot: 0})]};
 };
