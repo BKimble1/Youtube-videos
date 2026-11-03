@@ -8,15 +8,34 @@
 
 | Measure | Result |
 |---|---|
-| Format | H.264 yuv420p, 1080×1920, 30 fps, BT.709; AAC 48000 Hz stereo, about 320 kb/s |
-| Length | 868 frames, 28.933 s (target 28–30 s) |
-| File size | 25.55 MB |
+| Format | H.264 yuv420p, 1080×1920, 30 fps, BT.709; AAC 48 kHz stereo, about 320 kb/s |
+| Length | 851 frames, 28.367 s (see "Length" below) |
+| File size | 26.92 MB |
 | Full decode | no errors |
-| Frame-to-frame change | median 2.85 (mean absolute difference at 270×480) |
-| Large changes | 2, all planned: the match cut to the oyster (frame 240) and the match cut back to the glue band (frame 310). None unplanned. |
-| Near-static run | longest 60 frames from 22.73 s. This is the healing time-lapse under a slow push-in (frame width 30 → 27.5 mm), not a hold: the new-bone fronts and the glue islands change continuously. |
-| Loop seam (caption-free, last frame vs frame 0) | 23.53, 8.26× the median step. This is the intended match cut: the fracture returns and the instruments appear. The bone, the oval window and the camera drift match. |
-| Mix (no narration) | -27.86 LUFS integrated, -10.38 dBTP true peak, 28.933 s, 30 effects placed from the picture's events |
+| Frame-to-frame change | median 3.96 (mean absolute difference at 270×480; 2.85 before the pacing pass) |
+| Large changes | 3, all planned: the match cut to the oyster (frame 240) and the cement-to-glue dissolve on the cut back (frames 307–308). None unplanned. |
+| Near-static run | longest 3 frames (60 frames, 2 s, before the pacing pass) |
+| Loop seam (caption-free, last frame vs frame 0) | 10.14, 2.56× the median step (8.3× before). The wrist, the drape, the incision's outline and the camera's push match; the fracture and the instruments appear. |
+| Mix (no narration) | -28.11 LUFS integrated, -11.93 dBTP true peak, 28.367 s, 30 effects placed from the picture's events |
+
+## Final pacing pass
+
+A targeted pass for pace and visual storytelling. The narration, captions, characters, style and science are unchanged.
+
+**Length.** The approved take is about 27.3 s of near-continuous speech (its longest pause is 0.36 s), so 23–25 s would
+mean rushing or cutting words. The tail after the last word is shortened from 1.5 s to 0.93 s (28.37 s in all), and
+the pace comes from denser beats instead: the median frame-to-frame change rose about 39%, and no stretch is near-still
+for more than 3 frames.
+
+| Section | Change |
+|---|---|
+| Hook (0–2.2 s) | Frame 0 is the whole wrist (palm, thumb, open incision, shattered radius, gloved hands), and the camera is already pushing into the fracture while the probe seats the fragment and the glue runs. The probe lets go alone, then the applicator glues the wedge's seam and the styloid seam: every crack is teal by about 2.2 s. |
+| Surgery (2.2–8 s) | The second syringe turn and stroke, and the second push-in, are gone. One ease back to the surgical framing shows the applicator being taken away and the probe setting down to hold the styloid fragment on "Researchers". The dive into the glue starts on "did it". |
+| Oyster (8–10.3 s) | The push to its base starts at once; the section window opens on "sticking"; on the cut back the white cement band dissolves into the teal glue band on the same screen line. |
+| Fixation (13.6–18.4 s) | Out to the whole wrist on "wrist case", back in for the release on "pieces"; the gel sets on "three minutes". |
+| Healing (18.4–25.4 s) | The incision is sutured and the cutaway opens on the same fracture; hematoma and callus on the whole fracture; on "new bone grows" a push into a macro of the T-junctions where woven bone advances into the glue; on "disappears" back out as the last glue islands close; remodelling and the skin returns. |
+| Ending (25.1–27.4 s) | The recovered wrist bends toward the thumb, across to the little-finger side and back, the fingers spreading (the skin bends smoothly at the wrist; the shadow on the table follows). The arm model cannot make a fist, so the movement is at the wrist. |
+| Loop (27.44 s–end) | The camera pushes back onto frame 0's wide framing, arriving at the hook's own push speed. The surgical drape returns under the hand and the scar opens into the incision's outline over healed bone, so the cut to frame 0 brings back only the fracture and the instruments. |
 
 ## Narration
 
@@ -32,7 +51,7 @@ review. No workaround around the policy was attempted.
 - The picture, captions and sound cues are timed to take 2's ElevenLabs Scribe word times
   (`source/src/data/timeline.json`, `provisional: true`).
 - Every beat is keyed to a word, so when the real take is aligned the beats move with it.
-- The film runs 28.93 s: the narration's end plus a 1.5 s tail, inside the 28–30 s target.
+- The film runs 28.37 s: the narration's end plus a 0.93 s tail.
 
 **To finish (about 15 minutes):**
 1. Allow `elevenlabsusercontent.com` in the environment's network access settings.
@@ -45,6 +64,9 @@ review. No workaround around the policy was attempted.
 These steps are also in the README.
 
 ## Brief checklist
+
+This is the V2 brief's checklist. Where the final pacing pass re-timed a beat (the hook, the surgery, the healing
+framings, the ending movement and the loop), the table above describes the cut as delivered.
 
 All times are in seconds, from `source/src/story.ts`.
 
@@ -65,34 +87,40 @@ All times are in seconds, from `source/src/story.ts`.
 | New bone bridges from the margins; the glue thins and disappears with visible structure, not an opacity fade | **Yes.** The bone fronts are toothed and porous. The teal band narrows, breaks into islands, and the islands close one after another (`seams.growth`). The glue is gone by about 24.5 s. The pale new-bone band then holds through "disappears" and remodels into mature bone (24.65–25.65) with a faint trace. |
 | Same fracture orientation throughout | **Yes.** The opening, fixation and healing framings all show the radius in the same orientation, with the same three seams in the same places. |
 | **Ending:** recovered wrist, small natural finger movement | **Yes.** The camera eases out (25.20–26.60) through opaque skin with a faint scar to the hand on the follow-up table. The fingers flex gently, spread a touch and relax (26.10–27.34). |
-| No blue wipe; matching bone framing and direction back to the opening; the healed wrist never breaks | **Yes.** The wipe is gone. The camera pushes back into the bone (27.44–28.93) and lands on frame 0's framing with the opening's drift. The cutaway closes down to the incision's size and position and, in the last 0.45 s, takes its oval outline and fat ring. The cut to frame 0 changes only the fracture state and brings in the instruments; the break is never animated. |
+| No blue wipe; matching bone framing and direction back to the opening; the healed wrist never breaks | **Yes.** The wipe is gone. The camera pushes back from the recovered hand (27.44–28.37) and lands on frame 0's wide framing at the hook's push speed. The drape returns and the scar opens into the incision's oval outline and fat ring over healed bone. The cut to frame 0 changes only the fracture state and brings in the instruments; the break is never animated. |
 | Weird Crew style; faces and proportions; hands, fingers, grips | The film uses the Weird Crew vector finish: navy ink, cel shading, upper-left key light and restrained depth layers. Every surgeon hand was checked frame by frame. The right glove holds the syringe applicator with its thumb on the plunger pad, index finger along the barrel and middle finger under the flange. The left glove holds the probe in a pencil grip. Both cuffs run toward the surgeon. |
 | Captions synced, with no extra labels | **Yes.** The captions are the approved words only, in the channel style, with a few frames' hold where two captions would otherwise leave a blank frame. There are no labels or callouts. |
-| 28–30 s, genuine 1080×1920 | **Yes:** 28.93 s at 1080×1920 (measured above). |
+| Length, genuine 1080×1920 | 28.37 s at 1080×1920 (measured above): the approved narration cannot fit 23–25 s without rushing. |
 | Pre-delivery inspections | See "Inspections" below. |
 
 ## Inspections before delivery
 
 All three inspections were done on the final file at phone size, and are saved in `qa/v2/`.
 
-**1. The first two seconds, muted** (`muted_phone_0-2s.png`, `hook_0-2.5s_every_3rd_frame.png`, `strip_opening_fixation_*`)
-- Frame 0 is already inside the wrist: the cannula touches bone at the glue front and the probe is on the displaced wedge.
-- 0.04–0.62 s: the probe pushes the wedge home. The glue runs along the transverse seam behind the cannula.
-- 0.93–1.10 s: the probe lifts (its contact shadow separates) and backs away on its own, while the applicator stays parked. The glued wedge sits untouched.
-- 1.10–1.27 s: the applicator arcs over the bone to the wedge's diagonal seam, and lays glue up it by 1.60 s.
-- Result: with sound off, a fragment is visibly positioned, glued along its seams and let go, and it stays put. The dark seams beside the glue show it is fixed, not healed.
+**1. The first two seconds, muted** (`muted_phone_0-2s.png`, `hook_0-2.5s_every_3rd_frame.png`)
+- Frame 0 is the whole wrist: palm, thumb, wrist crease, the open incision with the cracked radius, the syringe on the
+  bone and the gloved hands.
+- 0–1.35 s: the camera pushes straight into the fracture while the probe seats the displaced wedge and the glue runs
+  along the transverse seam.
+- 0.80–0.95 s: the probe lets go on its own; the glued wedge stays put.
+- 1.10–2.15 s: the applicator glues the wedge's seam, then the styloid seam. By about 2.2 s every crack is teal.
+- Result: with sound off, a broken wrist is visibly being glued back together, and the glue seals the fracture
+  within about two seconds.
 
 **2. Fixation to healing** (`strip_release_*`, `strip_pushin_*`, `strip_healing_*`, `strip_easeout_*`)
-- On "secured" (15.88 s) the probe lifts off the styloid fragment and withdraws. Nothing moves, and all three glued seams are still plainly there.
-- On "in just three minutes" the glue sets from gloss to satin (16.86–17.91 s).
-- The incision closes and is sutured, then a cutaway pushes in on the same fracture in the same orientation.
-- From "months to heal": hematoma, then soft callus, then pale woven bone advancing from both broken faces of every seam. The teal glue narrows, breaks into islands and is gone by about 24.5 s. The pale new-bone band holds through "disappears", then remodels.
-- Result: fixation and healing are clearly separate beats, and the end of the sequence shows glue replaced by new bone, not faded out.
+- "In one reported wrist case": out to the whole wrist; "surgeons secured the broken pieces": back in, the probe lets
+  go (16.56 s) and withdraws, and nothing moves. The three glued seams are still there. "Three minutes": the gel sets.
+- The incision is sutured and the cutaway pushes in on the same fracture in the same orientation.
+- Hematoma and soft callus on the whole fracture; on "new bone grows" a push into the T-junctions where pale woven
+  bone advances from both faces into the glue; on "disappears" back out as the glue breaks into islands and is gone.
+- Result: fixation and healing are clearly separate, and the healing reads as a progression across three framings,
+  ending with glue replaced by new bone.
 
 **3. Last frame to first frame** (`loop_seam_last3_first3.png`, `strip_loop_push_*`, `loop_seam_caption_free.json`)
-- The camera pushes back from the recovered hand through the scar into the bone. In the last 0.45 s the cutaway takes the incision's oval outline and yellow fat ring, and the scar fades.
-- The last frame shows healed bone at frame 0's framing, with the same muscle edge on the right. The camera lands with the opening's own slow drift.
-- The cut to frame 0 brings back the fracture and the instruments. The healed wrist is never shown breaking, and there is no wipe.
+- After the wrist movement, the camera pushes back in from the recovered hand to frame 0's framing at the hook's own
+  speed. The drape returns under the hand and the scar opens into the incision's outline over healed bone.
+- The cut to frame 0 brings back the fracture and the instruments. The healed wrist is never shown breaking, and
+  there is no wipe.
 
 ## Departures from the brief, and why
 
