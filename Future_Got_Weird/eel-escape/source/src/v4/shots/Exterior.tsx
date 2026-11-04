@@ -49,6 +49,12 @@ type ExtState = {
   /** how far round the crossing the opening shows only the inside drawing (× the default radius): the whole bend of
    *  the neck round the cover's edge drawn in one layer (no seam across it) */
   holeR?: number;
+  /** scales the zone round the crossing that the cover's edge hides (default 1): smaller lets more of the body that is
+   *  already out show right at the edge (the arch rising out in S8; the head sliding out on the final pull) */
+  crossR?: number;
+  /** where the shade over the inside drawing starts (fraction of its radius), overriding the default (which keeps
+   *  the inside clear wherever it meets the outside drawing) */
+  shadeStop?: number;
   /** hide the outside drawing over the WHOLE visible cover plate (not only round the crossing): where the body lies
    *  in the slit just behind the cover's edge, its fin fringe on the cover side stays under the cover (S1) */
   coverFull?: boolean;
@@ -108,9 +114,10 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
     const r = Math.max(3, lerp(sc.rad[i0], sc.rad[i0 + 1], f));
     const k = lerp(sc.s[i0], sc.s[i0 + 1], f);
     const reach = (s.underRim ?? 0.4) * k;
-    const R = 1.7 * (reach + r) + 10;
+    const cr = s.crossR ?? 1;
+    const R = (1.7 * (reach + r) + 10) * cr;
     // over the opening, the outside drawing gives way to the inside one only right at the crossing (its cut end)
-    const Rh0 = reach + 1.25 * r + 6, Rh = Rh0 * (s.holeR ?? 1);
+    const Rh0 = (reach + 1.25 * r + 6) * cr, Rh = Rh0 * (s.holeR ?? 1);
     return {x, y, r, R, Rh, Rh0, dIn: ((s.underRim ?? 0.4) * N) / EEL_L, dI: ((R / Math.max(1, k) + 4.5) * N) / EEL_L};
   })();
   return (
@@ -150,7 +157,7 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
             </radialGradient>
             <radialGradient id={ids.sh} gradientUnits="userSpaceOnUse" cx={X.x} cy={X.y} r={X.R * 1.7}>
               <stop offset="0" stopColor="#2A0A0E" stopOpacity={0} />
-              <stop offset={Math.min(0.95, Math.max(s.shadeNear ?? 0.6, (1.05 * X.Rh0) / (1.7 * X.R)))} stopColor="#2A0A0E" stopOpacity={0} />
+              <stop offset={s.shadeStop ?? Math.min(0.95, Math.max(s.shadeNear ?? 0.6, (1.05 * X.Rh0) / (1.7 * X.R)))} stopColor="#2A0A0E" stopOpacity={0} />
               <stop offset="1" stopColor="#2A0A0E" stopOpacity={s.insideShade ?? 0.3} />
             </radialGradient>
             <mask id={ids.rm} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
@@ -501,12 +508,14 @@ export const pokeState = (t: number): ExtState => {
 export const pokeStateWith = (o: Orbit, t: number): ExtState => (t > 15.9 && t < 18 ? {...headState(t), cam: orbitCam(o)} : {cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
 // ---------------------------------------------------------------- S8 FOLLOWS (13.86 – 15.96): over the predator's back
-const F_A: Orbit = {target: [-16, -7, 11], az: 14, el: 20, d: 42, f: 1250, cx: 610, cy: 1150};
+const F_A: Orbit = {target: [-16, -7, 11], az: 14, el: 3, d: 42, f: 1250, cx: 610, cy: 1150};
 const F_B: Orbit = {target: [-8, -7, 12], az: 16, el: 18, d: 58, f: 1250, cx: 600, cy: 1150};
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, flankShadow: 1, clear: [[-5, -4, 0], EXIT0.p, eel.c[Math.round(N * 0.6)], eel.c[N]], clearR: 14, nearCut: 22};
+  // the arch rising out of the slit (S7) stays visible right at the edge (a small hidden zone), the bend drawn in one
+  // layer, and the body inside the slit in shadow: the tail curves out of the slit, it does not fold at it
+  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.9, shadeStop: 0.12, crossR: 0.6, holeR: 0.45, flankShadow: 1, clear: [[-5, -4, 0], EXIT0.p, eel.c[Math.round(N * 0.6)], eel.c[N]], clearR: 14, nearCut: 22};
 };
 
 // ---------------------------------------------------------------- S9 HEAD (15.96 – 17.96): tight at the gill edge
@@ -521,13 +530,15 @@ export const headState = (t: number): ExtState => {
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
-const R_A: Orbit = {target: [-18, -3, 13], az: 20, el: -8, d: 33, f: 1250, cy: 1395};
+const R_A: Orbit = {target: [-18, -3, 13], az: 20, el: -8, d: 29, f: 1250, cy: 1395};
 const R_B: Orbit = {target: [-24, -7, 16], az: 18, el: -5, d: 46, f: 1250, cy: 1160};
 /** held on the loop and the caught head; it pushes in toward the slit for the pull, and eases back as the eel swims
  *  off */
-const R_P: Orbit = {target: [-18.5, -3.5, 12], az: 20, el: -7, d: 30, f: 1250, cy: 1540};
-/** it holds through the head coming free and a beat after (the freed head in view), then eases back as the eel dashes */
-export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(lerpOrbit(R_A, R_P, ss5(t, 20.0, 20.8)), R_B, ss5(t, SWIM_CFG.rb0, SWIM_CFG.rb1)));
+const R_P: Orbit = {target: [-18.5, -3.5, 12], az: 20, el: -7, d: 30, f: 1250, cy: 1565};
+/** it holds through the head coming free and a beat after (the freed head in view), tilting a little to keep the
+ *  rising tail below the captions, then eases back as the eel dashes */
+const R_H: Orbit = {...R_P, cy: 1680};
+export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(lerpOrbit(lerpOrbit(R_A, R_P, ss5(t, 20.0, 20.8)), R_H, ss5(t, 20.95, 21.25)), R_B, ss5(t, SWIM_CFG.rb0, SWIM_CFG.rb1)));
 /** the predator from the curl to the end (S10 and S11 share it, so nothing pops where the release view becomes the
  *  swim view): breathing hard while the eel strains, the cover settling after the head leaves, a startle, a turn
  *  of the head after the escaping eel */
@@ -550,6 +561,10 @@ const tailState = (t: number): ExtState => {
     t,
     insideShade: 0.5,
     shadeNear: 0.22,
+    // the caught head's eye a little larger in the slit (it reads at phone size); on the final pull the zone the
+    // cover's edge hides shrinks, so the head is seen sliding out of the slit (it never vanishes and pops back)
+    insideEye: 1.8,
+    crossR: lerp(1, 0.3, ss(t, 20.4, 20.7)),
     flankShadow: relShadow(t),
     headOnTop: t > 20.55,
     split: 'eel',
