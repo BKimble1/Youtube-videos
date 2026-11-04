@@ -1355,9 +1355,11 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
           })}
           {/* the far side (the body wall) has no edge of its own: the light floods past it (a feathered glare; the
               view covers the inner half of these strokes) */}
-          {[130, 104, 82, 64, 48, 34, 22, 12].map((w, i) => (
-            <path key={i} d={farD} stroke={K.wrap} strokeOpacity={0.05} strokeWidth={w * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          ))}
+          <g mask={`url(#${fm})`}>
+            {[130, 104, 82, 64, 48, 34, 22, 12].map((w, i) => (
+              <path key={i} d={farD} stroke={K.wrap} strokeOpacity={0.05} strokeWidth={w * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            ))}
+          </g>
           <g clipPath={`url(#${cw})`}>
             <OutsideView c={c} t={t} />
             {/* the light wrapping round the edges, just inside them: brightest toward the far side */}
@@ -1377,13 +1379,16 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
     </g>
   );
 };
-/** a mask that fades the opening's glows out toward the caption band (nothing lit above y = Y_OPEN - 40) */
+/** a mask that fades the opening's glows out toward the caption band (nothing lit above y = Y_OPEN - 65) */
 const TopFade: React.FC<{id: string}> = ({id}) => {
   const g = id + 'g';
   return (
     <>
-      <linearGradient id={g} gradientUnits="userSpaceOnUse" x1={0} y1={Y_OPEN - 40} x2={0} y2={Y_OPEN + 150}>
+      <linearGradient id={g} gradientUnits="userSpaceOnUse" x1={0} y1={Y_OPEN - 65} x2={0} y2={Y_OPEN + 255}>
         <stop offset="0" stopColor="#000" />
+        <stop offset="0.2" stopColor="#1A1A1A" />
+        <stop offset="0.45" stopColor="#707070" />
+        <stop offset="0.72" stopColor="#C8C8C8" />
         <stop offset="1" stopColor="#FFF" />
       </linearGradient>
       <mask id={id} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>

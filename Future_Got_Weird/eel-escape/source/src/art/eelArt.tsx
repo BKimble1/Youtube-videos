@@ -56,6 +56,8 @@ export type EelProps = {
   eyeScale?: number;
   /** V4: scales the ribbon fin's height (1 = the V3 size), so the eel's fin fringe reads at phone size */
   finScale?: number;
+  /** V4: the ribbon fin's opacity (V3: 0.7, translucent) */
+  finOpacity?: number;
 };
 
 // ---------------------------------------------------------------- constants
@@ -442,9 +444,10 @@ type Ctx = {
   spec: {lo: P[]; hi: P[]; hlo: P[]; hhi: P[]};
   lateral: {pts: P[]; j0: number; j1: number}[];
   eyeK: number;
+  finOp: number;
 };
 
-const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK = 1, finK = 1): Ctx => {
+const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK = 1, finK = 1, finOp = 0.7): Ctx => {
   // one integer step ≈ 0.2 px
   const q = Math.max(20, Math.round(px * 5));
   const M = g.M;
@@ -555,7 +558,7 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK 
     g, q, px, t, phDs, phD,
     fins: {Od, Oa, Bd, Ba, Rd, Ra, jd0: stationOf(g, EEL_FEAT.dorsalFinU * (g.nS - 1)), ja0: stationOf(g, EEL_FEAT.analFinU * (g.nS - 1)), tip, tipR},
     edges: {m: edgeArr(g, -1), p: edgeArr(g, 1)},
-    pig, shadows, lights, spec, lateral, eyeK,
+    pig, shadows, lights, spec, lateral, eyeK, finOp,
   };
 };
 
@@ -595,7 +598,7 @@ const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
     }
     if (!ff.empty) {
       const fd = ff.toString();
-      els.push(<path key="ff" d={fd} fill={FIN_FILL} fillOpacity={0.7} />);
+      els.push(<path key="ff" d={fd} fill={FIN_FILL} fillOpacity={x.finOp} />);
       // fine rays: a dashed stroke along the fin's base line, wide enough to reach its edge, clipped to the fin
       if (x.px >= 12) {
         const rw = P_();
@@ -619,7 +622,7 @@ const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
         }
       }
     }
-    if (!fk.empty) els.push(<path key="fk" d={fk.toString()} fill="none" stroke={INK} strokeWidth={1.3} strokeOpacity={0.5} vectorEffect={NS} strokeLinejoin="round" strokeLinecap="round" />);
+    if (!fk.empty) els.push(<path key="fk" d={fk.toString()} fill="none" stroke={INK} strokeWidth={1.3} strokeOpacity={0.5 + Math.max(0, x.finOp - 0.7)} vectorEffect={NS} strokeLinejoin="round" strokeLinecap="round" />);
   }
   // ---- body: base pigment, nested pigment strips
   const em = x.edges.m, ep = x.edges.p;
@@ -795,7 +798,7 @@ const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
 };
 
 // ---------------------------------------------------------------- the component
-export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail', eyeScale = 1, finScale = 1}) => {
+export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail', eyeScale = 1, finScale = 1, finOpacity = 0.7}) => {
   const nS = pts.length;
   if (nS < 4 || radii.length < nS) return null;
   const last = nS - 1;
@@ -804,7 +807,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
   if (b - a < 1e-4) return null;
   const pxx = Math.max(0.5, px);
   const g = build(pts, radii);
-  const x = makeCtx(g, pxx, t, dorsal, eyeScale, finScale);
+  const x = makeCtx(g, pxx, t, dorsal, eyeScale, finScale, finOpacity);
   const M = g.M;
   // chunks (in sample indices) where the body crosses over itself
   const bounds = [a, ...chunkCuts(pts, radii, g.arcS, a, b), b];
