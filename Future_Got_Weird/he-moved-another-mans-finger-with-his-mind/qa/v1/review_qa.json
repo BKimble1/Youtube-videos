@@ -9,7 +9,7 @@
   "pix_fmt": "yuv420p",
   "color_space": "bt709",
   "nb_frames": "6353",
-  "bit_rate": "1416860"
+  "bit_rate": "1424585"
  },
  "audio": [
   {
@@ -28,9 +28,7 @@
   "true_peak_dbtp": -1.4
  },
  "black_segments": [],
- "frozen_segments_over_2_5s": [
-  "13.8"
- ],
+ "frozen_segments_over_2_5s": [],
  "audio_vs_narration": {
   "best_lag_ms": 0,
   "corr": 0.6461

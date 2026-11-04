@@ -1,23 +1,37 @@
 # Future Got Weird: He Moved Another Man’s Finger With His Mind
 
-The next long-form episode, selected on 4 Nov 2026. Format: 16:9, 1920×1080, 30 fps, target runtime about 3:30–3:50.
+Long-form episode, 16:9, selected on 4 Nov 2026.
 
-## Status
+## V1: first complete review render (current)
 
-**Narration V1 proposed, awaiting Blake's sign-off.** There is no audio, picture or render yet, and nothing is
-published.
+Not published, and not watched or heard in real time.
 
-| File | What it is |
+**Review file:** `exports/FGW_Finger_V1_REVIEW_1920x1080.mp4`
+
+| Property | Value |
 |---|---|
-| `production/EPISODE_BRIEF.md` | The channel episode-brief template, filled in, plus the creator's editorial and visual direction (verbatim) |
-| `production/NARRATION_PROPOSED_V1.txt` | The proposed narration, verbatim (544 words) |
-| `production/SCRIPT_REVIEW_V1.md` | Runtime estimate, what the audience learns in each sequence, three proposed wording corrections |
-| `production/SOURCE_NOTES.md` | Sources, claim ledger (26 claims) and hardware/staging notes for the reconstruction |
-| `research/factcheck_V1_2026-11-04.json` | Raw verdicts from the fact-check (research pass plus an adversarial verify pass) |
+| Runtime | **3:31.77** (6,353 frames at 30 fps) |
+| Video | 1920×1080, H.264 High, BT.709 |
+| Audio | AAC 48 kHz stereo |
+| Loudness | −14.2 LUFS integrated, −1.4 dBTP true peak |
+| Captions | Burned into this review cut, and delivered as SRT |
 
-## Next action
+The MP4 is Git-ignored. Checksummed 20 MB parts are in `backup/`; the restore command is in the QA report.
 
-1. Blake approves the narration, or asks for changes. Changes are made to the narration first and re-presented.
-2. The approved words are saved verbatim to `production/NARRATION_LOCKED.txt`.
-3. The first complete review render is built. Voice: ElevenLabs Test Voice `kk5XaSLo2XAw0sKM98zU`, confirmed present
-   in the workspace on 4 Nov 2026.
+| Item | File |
+|---|---|
+| Report and QA | `production/V1_QA_REPORT.md` |
+| Captions | `captions/FGW_Finger_V1.srt` |
+| Locked narration (550 words, approved with fixes 1–3) | `production/NARRATION_LOCKED.txt` |
+| Narration master | `audio/narration/FGW_Finger_narration_V1.wav` |
+| Voice provenance | `audio/narration/voice_provenance.json` |
+| Mix | `audio/mix/FGW_Finger_V1_mix.wav` |
+| Source | `source/` (Remotion 4.0.533, composition `FingerFilm`) |
+| Build brief | `production/BUILD_BRIEF.md` |
+| Claim ledger | `production/SOURCE_NOTES.md` |
+| Creator's direction | `production/EPISODE_BRIEF.md` |
+
+## Earlier steps
+
+- Narration proposed and fact-checked: `production/SCRIPT_REVIEW_V1.md`, `research/factcheck_V1_2026-11-04.json`.
+- Approved by Blake with fixes 1–3, then locked.
