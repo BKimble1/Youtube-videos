@@ -7,24 +7,33 @@
 //   screen = (540, 960) + F · (w − c) / (D + z)
 // z = 0 is the wall the eel lies on; the passage beyond the opening is at z > 0 (it recedes, and the push into it
 // has real parallax); a few soft near folds and bubbles float at z < 0. The scale of the wall is s = F / D px per eel
-// unit: 55 on the carried tail, 28 on the wide view, ~35 while the tail searches, then the dive into the opening.
+// unit: 55 on the carried tail, 34 on the wide view, ~50 while the tail searches (head and tip both in frame), then
+// the dive into the opening (to D = 0.5, inside the rim).
 //
-// Beats (global s):
-//   5.50–5.94  hand-off 1: samples 93..120 lie EXACTLY on carryTail(t) (the X-ray dissolves into us over 5.72–5.84)
-//   5.94–6.90  pull back: the tail settles beside the coil, the chamber, the coil and the head (eye) come into view
-//   6.90–7.28  "Inside the fish's stomach": the eel rests coiled, the head stirs, the tip twitches
-//   7.28–7.55  "starts": the tail tip slides along the wall, tail first, the body following on the same track
-//   7.55       it BUMPS a fold across its way (the fold dents and wobbles); the tip deflects, turns along it
-//   7.66–8.10  it searches: the tip sweeps side to side while it slides along the fold toward the pucker
-//   8.10–8.24  it presses on the pucker (the entrance to the esophagus); the opening YIELDS (8.14–8.32)
-//   8.24–8.90  the tip goes in, the body slides after it; the camera follows the tip through (the closest push)
+// The eel is ONE body on ONE track (ROUTE: the coil, out along the wall, round the fold, into the opening), laid on it
+// tail first (alongPath); its tip arc length never decreases, so no part ever slides backward. On top of the track:
+// the carried tail (blended out in heading space), a bend of the last ~7 units (twitch, flinch, turn, search) and of
+// the head, a small reverse undulation; past the lumen's rim the body bends over the lip and runs down the passage.
+//
+// Beats (global s; S4_BEATS):
+//   5.50–5.94  hand-off 1: samples 93..120 lie EXACTLY on carryTail(t) (the X-ray dissolves into us over 5.72–5.84);
+//              the coil and the head are off-frame, the body runs out of frame at the lower right
+//   5.94–6.90  pull back: the tail settles beside the coil; the chamber, the coil and the head (eye) come into view
+//   6.90–7.22  "Inside the fish's stomach": the eel rests coiled, the head stirs, the tip twitches, then lifts
+//   7.22–7.45  "the eel starts": the tail tip slides up the wall, tail first, the body following on the same track
+//   7.45       it BUMPS the fold lying across its way (the fold dents and wobbles, a dimple at the tip), flinches,
+//   7.50–7.62  turns hard right along the fold
+//   7.62–7.95  it searches along the fold's underside: two sweeps off it and back against it (touches 7.76, 7.93)
+//   7.95–8.10  it reaches the pucker's ring, feels across it and darts to the centre ("backing" 7.93–8.36)
+//   8.10–8.30  it presses; the opening YIELDS around it (8.13–8.30, open ≈ 8.2) and the tip goes in
+//   8.24–8.90  the body slides in after it; the camera follows the tip through (the closest push)
 //   8.90       hand-off 3: the dark lumen (LUMEN) fills ≥ 85 % of the frame
 import React from 'react';
-import {closed, open, P} from '../../core/geo';
+import {P} from '../../core/geo';
 import {lit, mix} from '../../core/color';
 import {uid} from '../../core/ids';
 import {clamp, hash, keyS, lerp, noise1, ring, ss, ss5} from '../../lib';
-import {C, INK, INK_PX, NS} from '../../art/palette';
+import {C, INK, NS} from '../../art/palette';
 import {eelSilhouette} from '../../art/eelArt';
 import {alongPath, at2, Eel2D, EEL_L, N, path2, Path2, RADII} from '../eelV4';
 import {carryTail, CARRY1, KEEP_Y, KeepOut, LUMEN} from '../timing';
@@ -96,7 +105,6 @@ const tangentsOf = (ps: P[]) =>
   });
 const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
 const f1 = (v: number) => (Math.round(v * 10) / 10).toString();
-const polyD = (ps: P[], r = f2) => 'M' + ps.map((p) => `${r(p.x)} ${r(p.y)}`).join('L') + 'Z';
 const circleD = (c: P, r: number) => `M${f2(c.x - r)} ${f2(c.y)}a${f2(r)} ${f2(r)} 0 1 0 ${f2(2 * r)} 0a${f2(r)} ${f2(r)} 0 1 0 ${f2(-2 * r)} 0Z`;
 const nearestS = (q: Path2, p: P) => {
   let best = 0, bd = 1e9;
@@ -107,6 +115,29 @@ const nearestS = (q: Path2, p: P) => {
   return q.s[best];
 };
 const wrapA = (a: number) => Math.atan2(Math.sin(a), Math.cos(a));
+/** smooth Catmull-Rom paths through points (as geo.closed / geo.open), written with 3 decimals */
+const fq = (q: number) => (v: number) => {
+  const r = Math.round(v * q) / q;
+  return Object.is(r, -0) ? '0' : String(r);
+};
+const F3 = fq(1000), F2 = fq(100);
+const crPath = (ps: P[], loop: boolean, f3 = F3) => {
+  const n = ps.length;
+  if (n < (loop ? 3 : 2)) return '';
+  let d = `M${f3(ps[0].x)} ${f3(ps[0].y)}`;
+  const segs = loop ? n : n - 1;
+  for (let i = 0; i < segs; i++) {
+    const g = (j: number) => (loop ? ps[(j + n) % n] : ps[Math.max(0, Math.min(n - 1, j))]);
+    const p0 = g(i - 1), p1 = g(i), p2 = g(i + 1), p3 = g(i + 2);
+    d += `C${f3(p1.x + (p2.x - p0.x) / 6)} ${f3(p1.y + (p2.y - p0.y) / 6)} ${f3(p2.x - (p3.x - p1.x) / 6)} ${f3(p2.y - (p3.y - p1.y) / 6)} ${f3(p2.x)} ${f3(p2.y)}`;
+  }
+  return loop ? d + 'Z' : d;
+};
+const closed = (ps: P[]) => crPath(ps, true);
+const open = (ps: P[]) => crPath(ps, false);
+/** the rugae are broad soft shapes: 0.01 u is plenty (they are off-frame by the deepest push) */
+const closed2 = (ps: P[]) => crPath(ps, true, F2);
+const open2 = (ps: P[]) => crPath(ps, false, F2);
 
 // ================================================================ the layout (world units: eel units, origin = A)
 // World origin = where sample I0 (12 units from the tip) rests: the carried tail's anchor. The coil lies to its right
@@ -192,7 +223,7 @@ const S_BUMP = nearestS(ROUTE, ARC[3]);
 const S_OPEN = nearestS(ROUTE, OPENING);
 /** where sample I0 sits at rest (the carry's anchor): the camera puts it on carryTail's anchor */
 const A_REST: P = at2(ROUTE, S_REST - EEL_L * (1 - I0 / N));
-/** the wide view (6.9 s): this world point at screen (540, 1110), 31 px per unit */
+/** the wide view (6.9 s): this world point at screen (540, 1110), 34 px per unit */
 const S_WIDE_ = 34;
 const C_WIDE: P = {x: 3.6, y: -7.2 - 150 / 34};
 const Wp = (x: number, y: number): P => ({x: C_WIDE.x + (x - CS.x) / S_WIDE_, y: C_WIDE.y + (y - CS.y) / S_WIDE_});
@@ -216,6 +247,11 @@ const TB = {
   in: 8.22, // the tip is in; the body slides after it
   end: 8.9,
 };
+/** cubic Hermite from (t0, s0, v0) to (t1, s1, v1) */
+const hermite = (t: number, t0: number, t1: number, s0: number, s1: number, v0: number, v1: number) => {
+  const h = t1 - t0, x = (t - t0) / h, x2 = x * x, x3 = x2 * x;
+  return (2 * x3 - 3 * x2 + 1) * s0 + (x3 - 2 * x2 + x) * h * v0 + (-2 * x3 + 3 * x2) * s1 + (x3 - x2) * h * v1;
+};
 /** route arc length where the tip reaches the pucker's raised ring */
 const S_RING = S_OPEN - 2.75;
 /** the tail tip's arc length along the track: never decreasing (the body never slides backward) */
@@ -233,8 +269,10 @@ const sTipAt = (t: number) => {
     const surge = x - Math.sin(2 * Math.PI * 2 * x) / (2 * Math.PI * 2) * 0.85;
     return S_BUMP + (S_RING - S_BUMP) * surge;
   }
-  if (t <= TB.press) return keyS(t, [[TB.ring, S_RING], [TB.press, S_OPEN - 0.5]]);
-  if (t <= TB.in) return keyS(t, [[TB.press, S_OPEN - 0.5], [TB.in, S_OPEN + 0.25]], (x) => x * (0.6 + 0.4 * x));
+  // the ring: it feels across it and darts to the centre; then the press; matched speeds at every join (u/s)
+  const vRing = ((S_RING - S_BUMP) / (TB.ring - TB.turn)) * 0.15;
+  if (t <= TB.press) return hermite(t, TB.ring, TB.press, S_RING, S_OPEN - 0.5, vRing, 2.5);
+  if (t <= TB.in) return hermite(t, TB.press, TB.in, S_OPEN - 0.5, S_OPEN + 0.25, 2.5, 5.4);
   // through: speeding up to ~13 u/s, kept going past the cut
   const x = t - TB.in;
   return S_OPEN + 0.25 + 5.4 * x + 7.5 * x * x;
@@ -491,9 +529,30 @@ const RIM_FOLDS: FoldDef[] = [
 
 /** one ruga: a soft ridge in the wall, read from its shading alone (no closed outline): the flank facing the light
  *  is lit, the other in shade and casting a little shadow onto the wall, a wet glint along the lit flank */
+type FoldPaths = {cast: string; body: string; sh: string; lit: string; glint: string; ink: string};
+const FOLD_MEMO = new Map<string, FoldPaths>();
 const Fold: React.FC<{f: FoldDef; dent?: {at: P; dir: P; a: number}}> = ({f, dent}) => {
-  let c = crDense(f.pts, 0.3);
-  if (dent && Math.abs(dent.a) > 1e-4) {
+  const dented = !!dent && Math.abs(dent.a) > 1e-4;
+  let fp = dented ? undefined : FOLD_MEMO.get(f.k);
+  if (!fp) {
+    fp = foldPaths(f, dented ? dent : undefined);
+    if (!dented) FOLD_MEMO.set(f.k, fp);
+  }
+  return (
+    <g>
+      <path d={fp.cast} fill={K.foldCast} fillOpacity={0.3} />
+      <path d={fp.body} fill={K.fold} />
+      <path d={fp.sh} fill={K.foldSh} fillOpacity={0.6} />
+      <path d={fp.lit} fill={K.foldLit} fillOpacity={0.85} />
+      <path d={fp.glint} fill="none" stroke={K.glint} strokeOpacity={0.6} strokeWidth={2.2} vectorEffect={NS} strokeLinecap="round" strokeDasharray="30 16 9 24" />
+      <path d={fp.ink} fill="none" stroke={INK} strokeOpacity={0.38} strokeWidth={1.5} vectorEffect={NS} strokeLinecap="round" />
+    </g>
+  );
+};
+const foldPaths = (f: FoldDef, dent?: {at: P; dir: P; a: number}): FoldPaths => {
+  const approx = f.pts.reduce((acc, p, i) => acc + (i ? dist(p, f.pts[i - 1]) : 0), 0);
+  let c = crDense(f.pts, clamp(approx / 46, 0.45, 1.3));
+  if (dent) {
     c = c.map((p) => {
       const g = Math.exp(-((p.x - dent.at.x) ** 2 + (p.y - dent.at.y) ** 2) / (2 * 1.15 * 1.15));
       return {x: p.x + dent.dir.x * dent.a * g, y: p.y + dent.dir.y * dent.a * g};
@@ -504,7 +563,7 @@ const Fold: React.FC<{f: FoldDef; dent?: {at: P; dir: P; a: number}}> = ({f, den
   let run = 0;
   const arc = c.map((p, i) => (run += i ? dist(p, c[i - 1]) : 0));
   const total = arc[n - 1] || 1;
-  const wv = arc.map((s, i) => {
+  const wv = arc.map((s) => {
     const u = s / total;
     return f.w * ss(u, 0, 0.14) * (1 - ss(u, 0.78, 1)) * (0.74 + 0.26 * Math.sin(u * 7.5 + f.w * 11));
   });
@@ -514,7 +573,7 @@ const Fold: React.FC<{f: FoldDef; dent?: {at: P; dir: P; a: number}}> = ({f, den
   const dl = N_.map((nn) => nn.x * LIGHT.x + nn.y * LIGHT.y);
   const gp = dl.map((d) => clamp(d * 1.8)), gm = dl.map((d) => clamp(-d * 1.8));
   const off = (k: (i: number) => number) => c.map((p, i) => ({x: p.x + N_[i].x * wv[i] * k(i), y: p.y + N_[i].y * wv[i] * k(i)}));
-  const band = (a: P[], b: P[]) => closed([...a, ...[...b].reverse()]);
+  const band = (a: P[], b: P[]) => closed2([...a, ...[...b].reverse()]);
   const eP = off(() => 1), eM = off(() => -1);
   // lit flank on the + side where it faces the light, on the − side where that one does
   const litP = off((i) => 1 - 0.78 * gp[i]), litM = off((i) => -(1 - 0.78 * gm[i]));
@@ -528,26 +587,24 @@ const Fold: React.FC<{f: FoldDef; dent?: {at: P; dir: P; a: number}}> = ({f, den
     for (let i = 0; i < n; i++) {
       if (ok(i)) cur.push(pts(i));
       else {
-        if (cur.length > 2) d += open(cur);
+        if (cur.length > 2) d += open2(cur);
         cur = [];
       }
     }
-    if (cur.length > 2) d += open(cur);
+    if (cur.length > 2) d += open2(cur);
     return d;
   };
   const side = (i: number) => (dl[i] >= 0 ? 1 : -1);
   const glintAt = (i: number) => ({x: c[i].x + N_[i].x * wv[i] * 0.52 * side(i), y: c[i].y + N_[i].y * wv[i] * 0.52 * side(i)});
   const inkAt = (i: number) => ({x: c[i].x - N_[i].x * wv[i] * side(i), y: c[i].y - N_[i].y * wv[i] * side(i)});
-  return (
-    <g>
-      <path d={band(eP, castP) + band(eM, castM)} fill={K.foldCast} fillOpacity={0.3} />
-      <path d={band(eP, eM)} fill={K.fold} />
-      <path d={band(shP, eP) + band(shM, eM)} fill={K.foldSh} fillOpacity={0.6} />
-      <path d={band(eP, litP) + band(eM, litM)} fill={K.foldLit} fillOpacity={0.85} />
-      <path d={runs(glintAt, (i) => g[i] > 0.5 && wv[i] > 0.45 * f.w)} fill="none" stroke={K.glint} strokeOpacity={0.6} strokeWidth={2.2} vectorEffect={NS} strokeLinecap="round" strokeDasharray="30 16 9 24" />
-      <path d={runs(inkAt, (i) => g[i] > 0.35 && wv[i] > 0.3 * f.w)} fill="none" stroke={INK} strokeOpacity={0.38} strokeWidth={1.5} vectorEffect={NS} strokeLinecap="round" />
-    </g>
-  );
+  return {
+    cast: band(eP, castP) + band(eM, castM),
+    body: band(eP, eM),
+    sh: band(shP, eP) + band(shM, eM),
+    lit: band(eP, litP) + band(eM, litM),
+    glint: runs(glintAt, (i) => g[i] > 0.5 && wv[i] > 0.45 * f.w),
+    ink: runs(inkAt, (i) => g[i] > 0.35 && wv[i] > 0.3 * f.w),
+  };
 };
 
 /** a crescent: the part of the disk (c, R) on the `dir` side not covered by the same disk shifted back by `sh` */
@@ -904,6 +961,21 @@ export const S4Stomach: React.FC<{t: number}> = ({t}) => {
       )}
     </svg>
   );
+};
+
+// ---------------------------------------------------------------- beats (global s), for the integrator's sound and checks
+export const S4_BEATS = {
+  carry0: 5.62, // hand-off 1: samples 93..120 on carryTail(t) from here ...
+  carry1: CARRY1, // ... to here; then the pull back reveals the chamber, the coil and the head
+  wide: TB.pull1, // the wide view of the chamber (the coil, the head and eye, the opening)
+  go: TB.go, // the tail tip starts to slide up the wall
+  bump: TB.bump, // it strikes the fold (the fold dents and wobbles; a dimple at the tip)
+  turn: TB.turn, // it has turned along the fold; the search (two sweeps, touches at 7.76 and 7.93)
+  ring: TB.ring, // it reaches the pucker's ring
+  press: TB.press, // the tip presses on the pucker's centre
+  yield: 8.2, // the opening yields (opening 8.13–8.30): the find
+  dive: 8.24, // the tip is in; the camera dives after it (the closest push)
+  dark: TB.end, // hand-off 3: the lumen fills the frame
 };
 
 // ---------------------------------------------------------------- debug exports for the test entry

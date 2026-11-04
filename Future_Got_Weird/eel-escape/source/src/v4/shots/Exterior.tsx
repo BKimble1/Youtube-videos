@@ -8,14 +8,28 @@ import {add3, basis, Basis, Cam3, dot3, lerpOrbit, mul3, norm3, Orbit, orbitCam,
 import {backFrom, Eel3D, Eel3Pose, eelScreen, EEL_L, N, path2, US} from '../eelV4';
 import {dirOf, escapeAt, EscapePose, Exit, EXIT0, rootedWith, T_REL} from '../escape';
 import {PredPose, PRED_REST, Predator, predGeom} from '../pred';
-import {PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront} from '../world';
+import {clearSight, PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront} from '../world';
+import {depth} from '../three';
 import {KeepOut, T} from '../timing';
 
 const D = Math.PI / 180;
 const bump = (t: number, a: number, peak: number, b: number) => (t <= a || t >= b ? 0 : t < peak ? ss(t, a, peak) : 1 - ss(t, peak, b));
 
 // ---------------------------------------------------------------- shared frame
-type ExtState = {cam: Cam3; pose: PredPose; eel: (EscapePose | (Eel3Pose & {crossI: number})) | null; t: number; mouthClip?: boolean};
+type ExtState = {
+  cam: Cam3;
+  pose: PredPose;
+  eel: (EscapePose | (Eel3Pose & {crossI: number})) | null;
+  t: number;
+  mouthClip?: boolean;
+  /** reed clumps near the sight lines to these points fade out (radius `clearR`) */
+  clear?: V3[];
+  clearR?: number;
+  /** the reeds/rocks split depth: 'eel' = the eel's nearest third (S11), default the predator's centre */
+  split?: 'eel' | 'pred';
+};
+/** the exit at the cover's resting edge (pred3d: along the skin, back and up) */
+export const EXIT_REST: Exit = {p: EXIT0.p, out: norm3([0.88, -0.47, 0.05])};
 const exitFor = (B: Basis, pose: PredPose): Exit => {
   const g = predGeom(B, pose);
   return {p: g.exit.p, out: g.exit.out};
@@ -25,14 +39,16 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
   const g = predGeom(B, s.pose);
   const e = s.eel;
   const cross = e ? e.crossI : -1;
+  const zSplit = s.split === 'eel' && e ? depth(B, e.c[Math.round(N * 0.4)]) : undefined;
+  const filter = s.clear ? clearSight(B, s.clear, s.clearR ?? 10) : undefined;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
-      <WorldBack B={B} t={s.t} />
+      <WorldBack B={B} t={s.t} zSplit={zSplit} filter={filter} />
       <PredShadow B={B} pose={s.pose} />
       <Predator B={B} pose={s.pose} />
       {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} />}
       {e && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} />}
-      <WorldFront B={B} t={s.t} />
+      <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
   );
 };
@@ -61,21 +77,53 @@ const predPose = (t: number, extra: Partial<PredPose> = {}): PredPose => ({...PR
 // ---------------------------------------------------------------- S1 OPEN (0 – 2.62), also the loop's target frame
 /** the gill cover: one breath on the first beat (peak T.breathPeak), the peek breath on "belongs to the eel" */
 export const openGill = (t: number) => Math.max(breath(t), 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
-/** the tail already out: 16 units, a loose S rising from under the cover toward the near side; it flicks once across
- *  the cover (independently of the breath), and keeps a slow life of its own */
-export const OPEN_OUT = 16;
+/** the tail already out: 22 units (40 % of the eel), a loose S lying OUTSIDE across the gill cover, in the plane
+ *  facing the opening camera (so the S reads on screen); it flicks once across the cover (independently of the
+ *  breath) and keeps a slow life of its own. Built in the opening camera's screen axes: R right, U up, F toward the
+ *  lens. Screen-right from this camera runs into the flank, so the tail leaves the gap up and right, turns down and
+ *  lies to the left, over the cover. */
+export const OPEN_OUT = 22;
+const O_A: Orbit = {target: [-24.5, -3.5, 7.5], az: 55, el: 12, d: 31, f: 1300, cy: 1000};
+const O_B: Orbit = {target: [-23.8, -6.0, 7.2], az: 46, el: 10, d: 21, f: 1300, cy: 1040};
+const OPEN_AX = (() => {
+  const B = basis(orbitCam(O_A));
+  return {R: B.r, U: B.u, F: mul3(B.fw, -1)};
+})();
 export const openEel = (t: number, ex: Exit): EscapePose => {
-  const flick = bump(t, 0.06, T.flick + 0.06, 0.62);
-  const life = (a: number) => 7 * D * Math.sin(2 * Math.PI * (0.7 * t + a / 11)) * clamp(a / 6);
-  // rising out of the gap, then a loose lateral S (in the plane facing the rear three-quarter camera); the flick
-  // swings it forward and out, across the cover
-  const th = (a: number) => 17 * D + 42 * D * ss(a, 0, 5) - 22 * D * ss(a, 8, 16) + life(a) + 26 * D * flick * ss(a, 2, 10);
-  const be = (a: number) => 20 * D * Math.exp(-a / 3) + 40 * D * Math.sin((2 * Math.PI * a) / 14) * ss(a, 1, 4) + 55 * D * flick * ss(a, 3, 12);
-  const r = rootedWith(ex, OPEN_OUT, th, be);
-  return {c: r.c, back: backFrom(r.c), out: r.out, crossI: r.crossI, free: false};
+  const flick = bump(t, 0.06, T.flick + 0.05, 0.6);
+  const peek = bump(t, 1.9, T.peek, 2.8);
+  const {R, U, F} = OPEN_AX;
+  // screen heading φ(a) (deg, y down: 0 = right, 90 = down)
+  const phi = (a: number) =>
+    -38 + 128 * ss(a, 0.4, 7) + 50 * ss(a, 7, 13) - 85 * ss(a, 14, 21) +
+    9 * Math.sin(2 * Math.PI * (0.65 * t + a / 10)) * clamp(a / 8) +
+    95 * flick * ss(a, 3, 13) - 40 * flick * ss(a, 13, 22) -
+    14 * peek * ss(a, 4, 14);
+  const da = 0.1;
+  const n = Math.ceil(OPEN_OUT / da);
+  const cs: V3[] = [ex.p];
+  let p = ex.p;
+  for (let k = 0; k < n; k++) {
+    const a = (k + 0.5) * da;
+    const f = (phi(a) * Math.PI) / 180;
+    // out of the gap along the skin first, then in the screen plane, drifting toward the lens (clear of the cover)
+    const w = ss(a, 0, 2.2);
+    const scr = norm3(add3(add3(mul3(R, Math.cos(f)), mul3(U, -Math.sin(f))), mul3(F, 0.28)));
+    const d = norm3(add3(mul3(ex.out, 1 - w), mul3(scr, w)));
+    p = add3(p, mul3(d, da));
+    cs.push(p);
+  }
+  const r = rootedWith(ex, OPEN_OUT, () => 0, () => 0);
+  // replace the outside part with this curve
+  const c = r.c.map((q, i) => {
+    const a = OPEN_OUT - EEL_L * (1 - US[i]);
+    if (a < 0) return q;
+    const fI = Math.min(n - 1e-6, a / da);
+    const i0 = Math.floor(fI), g = fI - i0;
+    return add3(cs[i0], mul3(sub3(cs[i0 + 1], cs[i0]), g));
+  });
+  return {c, back: backFrom(c), out: OPEN_OUT, crossI: r.crossI, free: false};
 };
-const O_A: Orbit = {target: [-26.5, -6.5, 6], az: 55, el: 12, d: 34, f: 1300, cy: 1150};
-const O_B: Orbit = {target: [-24.0, -6.4, 6.6], az: 44, el: 9, d: 20, f: 1300, cy: 1150};
 export const openCam = (t: number): Cam3 => {
   const drift = {...O_A, az: O_A.az - 2 * clamp(t / 1.6)};
   return orbitCam(lerpOrbit(drift, O_B, ss5(t, T.follow0, 2.45)));
@@ -83,8 +131,8 @@ export const openCam = (t: number): Cam3 => {
 export const openState = (t: number): ExtState => {
   const cam = openCam(t);
   const pose = predPose(t, {gill: openGill(t)});
-  const ex = exitFor(basis(cam), pose);
-  return {cam, pose, eel: openEel(t, ex), t};
+  // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
+  return {cam, pose, eel: openEel(t, EXIT_REST), t};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view

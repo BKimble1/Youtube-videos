@@ -26,12 +26,15 @@ export type Exit = {p: V3; out: V3};
 export const EXIT0: Exit = {p: [EXIT.x, EXIT.y, EXIT.z], out: norm3([0.87, -0.27, 0.43])};
 /** the inward route from the exit (a ≤ 0), under the cover, through the gill chamber toward the arches, then hidden */
 const INWARD: V3[] = [
-  [0, 0, 0], // relative to the exit
-  [-2.45, 0.75, -1.2],
-  [-5.0, 1.75, -2.4],
-  [-7.4, 2.95, -3.4],
-  [-9.5, 3.75, -4.0],
-  [-12.0, 4.4, -4.9],
+  [0, 0, 0], // relative to the exit: on into the gap along the line of the body, then DOWN just behind the cover's
+  [-0.9, 0.7, -0.3], // edge (so it shows through the opened gap) ...
+  [-1.5, 1.8, -0.8],
+  [-2.0, 3.2, -1.4],
+  [-2.8, 4.3, -2.0],
+  [-4.2, 4.8, -2.7], // ... then forward across the opercular chamber
+  [-5.8, 4.5, -3.4], // the slit between arches 2 and 3
+  [-8.0, 4.6, -4.2],
+  [-12.0, 5.0, -5.0],
   [-16.0, 5.6, -5.9],
   [-24.0, 6.6, -6.2],
   [-40.0, 7.2, -6.3],

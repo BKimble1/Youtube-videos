@@ -191,40 +191,6 @@ const PartsFrame: React.FC<{cam: string; t: number; parts: string[]; prefix: str
   return (
     <svg width={1080} height={1920}>
       {parts.map((p) => {
-        if (p.startsWith('G')) {
-          // gradient micro-benchmarks: G<n> = one full-frame rect with an n-stop vertical gradient; B<n> = n bands of 2 stops
-          const n = parseInt(p.slice(1), 10);
-          const id = `${prefix}gb`;
-          const col = (u: number) => `rgb(${Math.round(80 + 100 * u)},${Math.round(140 + 60 * Math.sin(u * 5))},${Math.round(150 - 50 * u)})`;
-          return (
-            <g key={p}>
-              <defs>
-                <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={1920}>
-                  {Array.from({length: n}, (_, i) => <stop key={i} offset={i / (n - 1)} stopColor={col(i / (n - 1))} />)}
-                </linearGradient>
-              </defs>
-              <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id})`} />
-            </g>
-          );
-        }
-        if (p.startsWith('B')) {
-          const n = parseInt(p.slice(1), 10);
-          const col = (u: number) => `rgb(${Math.round(80 + 100 * u)},${Math.round(140 + 60 * Math.sin(u * 5))},${Math.round(150 - 50 * u)})`;
-          return (
-            <g key={p}>
-              <defs>
-                {Array.from({length: n}, (_, i) => (
-                  <linearGradient key={i} id={`${prefix}bb${i}`} gradientUnits="userSpaceOnUse" x1={0} y1={(1920 * i) / n} x2={0} y2={(1920 * (i + 1)) / n}>
-                    <stop offset={0} stopColor={col(i / n)} />
-                    <stop offset={1} stopColor={col((i + 1) / n)} />
-                  </linearGradient>
-                ))}
-              </defs>
-              {Array.from({length: n}, (_, i) => <rect key={i} x={0} y={(1920 * i) / n} width={1080} height={1920 / n + 0.5} fill={`url(#${prefix}bb${i})`} />)}
-            </g>
-          );
-        }
-        if (p === 'Flat') return <rect key={p} x={0} y={0} width={1080} height={1920} fill="#558F89" />;
         if (p === 'Eel') return <Eel3D key={p} B={B} pose={eelPose(t)} t={t} />;
         if (p === 'Fish') return <FishPH key={p} B={B} />;
         if (p === 'WorldBack') return <WorldBack key={p} B={B} t={t} zSplit={zSplit} />;

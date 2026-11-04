@@ -8,7 +8,8 @@ import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import {resetIds} from '../../core/ids';
 import {C, INK} from '../../art/palette';
 import {BODY_PATH, FishBody, FishFar, FISH_REST, fishSilhouette, GillGap, Operculum, Pectoral} from '../../art/fish';
-import {basis, Basis, orbitCam, Orbit, proj, V3} from '../three';
+import {add3, basis, Basis, cross3, dot3, mul3, norm3, orbitCam, Orbit, proj, sub3, V3} from '../three';
+import {backFrom, Eel3D, N} from '../eelV4';
 import {Predator, predGeom, PredPose, PRED_REST, swimBend} from '../art/pred3d';
 
 type View = {o: Orbit; pose?: Partial<PredPose>; label: string; dim?: number};
@@ -23,6 +24,8 @@ export const VIEWS: Record<string, View> = {
   S2c: {o: {target: [-38, 1, 0], az: 0, el: 0, d: 62, f: 1250, cy: 1100}, pose: {mouth: 1}, label: 'S2 close mouth 1'},
   S8: {o: {target: [-16, -6, 2], az: 25, el: 50, d: 92, f: 1250, cy: 1150}, pose: {gill: 0.5, look: LOOK_EEL}, label: 'S8 over the back'},
   S9: {o: {target: [-24.5, -5.5, 6.6], az: 42, el: 8, d: 13.5, f: 1000}, pose: {gill: 0.8}, label: 'S9 gill edge .8'},
+  S9x: {o: {target: [-23.8, -6.6, 7.4], az: 45, el: 8, d: 6.8, f: 1000}, pose: {gill: 0.8}, label: 'gill edge 150 px/u'},
+  S9w: {o: {target: [-22, -6, 8], az: 30, el: 12, d: 34, f: 1100, cy: 1050}, pose: {gill: 0.8}, label: 'S9 wider'},
   S10: {o: {target: [-22, 3, 2], az: 10, el: -12, d: 62, f: 1250}, pose: {gill: 0.3, look: [-30, -8, 25]}, label: 'S10 low beside'},
   S11: {o: {target: [-5, 0, 0], az: -30, el: 6, d: 230, f: 1250, cy: 1250}, pose: {bend: 0.3}, label: 'S11 distant', dim: 0.25},
   S11b: {o: {target: [-5, 0, 0], az: -30, el: 6, d: 230, f: 1250, cy: 1250}, pose: {bend: -0.3, t: 0.55}, label: 'S11 bend -', dim: 0.25},
@@ -33,9 +36,18 @@ export const VIEWS: Record<string, View> = {
   back: {o: {target: [-10, -2, 0], az: 90, el: 5, d: 120, f: 1250}, label: 'from behind'},
   front: {o: {target: [-30, 0, 0], az: -70, el: 10, d: 90, f: 1250}, pose: {mouth: 1}, label: 'front 3/4 mouth'},
 };
+Object.assign(VIEWS, {
+  farSide: {o: {target: [-10, 0, 0], az: 180, el: 10, d: 130, f: 1250}, pose: {gill: 0.8}, label: 'far side az 180'},
+  below: {o: {target: [-15, 4, 0], az: 30, el: -55, d: 110, f: 1250}, pose: {mouth: 0.6}, label: 'from below'},
+  startle: {o: {target: [-12, 1, 0], az: 0, el: 0, d: 150, f: 1250, cy: 1100}, pose: {startle: 1, t: 0.1}, label: 'S2 startle 1'},
+  lookA: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-60, -10, 5]}, label: 'look forward'},
+  lookB: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-25, -25, 20]}, label: 'look up-back'},
+  lookC: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-38, 10, 30]}, label: 'look down-out'},
+} as Record<string, View>);
 const SHEETS: Record<string, string[]> = {
   brief: ['S1', 'S1g4', 'S1g1', 'S2', 'S2m5', 'S2m1', 'S8', 'S9', 'S10', 'S11', 'S11b', 'S1m'],
   extra: ['top', 'back', 'front', 'S2c', 'S9', 'S1g1'],
+  odd: ['farSide', 'below', 'startle', 'back', 'lookA', 'lookB', 'lookC', 'topc'],
 };
 
 const Water: React.FC<{B: Basis}> = ({B}) => {
@@ -174,6 +186,70 @@ const V3Outline: React.FC = () => (
   </>
 );
 
+/** a test eel through the gill exit (integration check of predGeom): `inside` eel units of the body lie under the
+ *  cover (from the snout when headIn, else from the tail end), the rest curls outside */
+const eelThrough = (g: ReturnType<typeof predGeom>, inside: number, headIn: boolean, t: number): V3[] => {
+  const P = g.exit.p, out = g.exit.out, n = g.exit.n;
+  const inDir = norm3(sub3(P, [-26.6, -5.5, 5.1]));
+  const side = norm3(cross3(n, out));
+  const pts: V3[] = [];
+  for (let i = 0; i <= N; i++) {
+    const u = headIn ? i / N : 1 - i / N; // 0 at the end that is inside
+    const s = u * 54 - inside;
+    if (s <= 0) pts.push(add3(P, mul3(inDir, s)));
+    else {
+      // outside: leave along `out`, settle into the skin's tangent plane (a little off it) and curl back along the
+      // body, with a small wave
+      const T0 = norm3(sub3(out, mul3(n, dot3(out, n))));
+      let p = P, h = out;
+      const steps = Math.ceil(s / 0.25);
+      const ds = s / steps;
+      for (let k = 0; k < steps; k++) {
+        const sk = (k + 0.5) * ds;
+        const a = (0.2 + 0.03 * Math.sin(t * 3 + sk * 0.3)) * ds;
+        const T = norm3(add3(mul3(T0, Math.cos(a * k)), mul3(side, Math.sin(a * k))));
+        const w = Math.min(1, sk / 4);
+        h = norm3(add3(mul3(out, 1 - w), mul3(T, w)));
+        p = add3(p, mul3(h, ds));
+      }
+      pts.push(p);
+    }
+  }
+  return headIn ? pts : pts;
+};
+const PredEel: React.FC<{view: string; inside: number; headIn: boolean; gill: number; t: number}> = ({view, inside, headIn, gill, t}) => {
+  resetIds('pe');
+  const v = VIEWS[view] ?? VIEWS.S9;
+  const B = basis(orbitCam(v.o));
+  const pose: PredPose = {...PRED_REST, ...v.pose, gill, t, finPhase: t * 3.1};
+  const g = predGeom(B, pose);
+  const c = eelThrough(g, inside, headIn, t);
+  // index of the exit along the body
+  let ie = 0;
+  c.forEach((p, i) => { if (Math.hypot(p[0] - g.exit.p[0], p[1] - g.exit.p[1], p[2] - g.exit.p[2]) < Math.hypot(c[ie][0] - g.exit.p[0], c[ie][1] - g.exit.p[1], c[ie][2] - g.exit.p[2])) ie = i; });
+  const eel = {c, back: backFrom(c, [0, -1, 0.3])};
+  return (
+    <AbsoluteFill style={{background: '#000'}}>
+      <svg width={1080} height={1920}>
+        <Water B={B} />
+        <Predator B={B} pose={pose} />
+        {headIn ? (
+          <>
+            {g.gap && <Eel3D B={B} pose={eel} t={t} from={0} to={ie} clip={g.gap} />}
+            <Eel3D B={B} pose={eel} t={t} from={ie} />
+          </>
+        ) : (
+          <>
+            <Eel3D B={B} pose={eel} t={t} from={0} to={ie} />
+            {g.gap && <Eel3D B={B} pose={eel} t={t} from={ie} clip={g.gap} />}
+          </>
+        )}
+        <text x={30} y={1880} fontSize={40} fill="#fff" fontFamily="monospace">{`${v.label} + eel via predGeom (gap clip, exit)`}</text>
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 const Root: React.FC = () => (
   <>
     <Composition id="PredStill" component={PredStill} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{view: 'S1'} as StillP} />
@@ -191,6 +267,7 @@ const Root: React.FC = () => (
         return {width: 1080, height: Math.ceil(n / cols) * (1920 / cols)};
       }}
     />
+    <Composition id="PredEel" component={PredEel} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{view: 'S9', inside: 2.2, headIn: true, gill: 0.8, t: 0}} />
     <Composition id="PredVsV3" component={PredVsV3} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{gill: 0}} />
   </>
 );

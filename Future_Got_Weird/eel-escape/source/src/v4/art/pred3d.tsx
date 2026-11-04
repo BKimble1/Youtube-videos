@@ -858,7 +858,7 @@ const F_PRE1 = CB - 1 - [...F_FRONT].reverse().findIndex((q) => q.x < PREOPERCLE
 const PROF: number[] = (() => {
   const raw = Array.from({length: CB}, (_, i) => {
     const b = i / (CB - 1);
-    return Math.pow(Math.sin(Math.PI * b), 0.9) * (1.3 - 0.85 * b);
+    return sm(b / 0.2) * Math.pow(Math.sin(Math.PI * b), 0.5) * (1.3 - 0.85 * b);
   });
   const m = Math.max(...raw);
   return raw.map((v) => v / m);
@@ -887,6 +887,20 @@ const COVER_THICK = (() => {
   const r = restAt(EXIT.x, psiForY({...S}, EXIT.y), [0, 0, 0]);
   return Math.max(0.02, EXIT.z - r[2]);
 })();
+/** fine speckle on the gill cover (V3 Operculum): each at its nearest cover-grid vertex, so it rides the flare */
+const COVER_SPOTS: {k: number; r: number}[] = (() => {
+  const out: {k: number; r: number}[] = [];
+  for (let i = 0; i < 22; i++) {
+    const x = lerp(-35.5, -24, hash(i * 2.3 + 9)), y = lerp(-9.5, 8, hash(i * 4.1 + 3));
+    let best = -1, bd = 0.6;
+    for (let k = 0; k < CA * CB; k++) {
+      const d = Math.hypot(COV.x[k] - x, COV.y[k] - y);
+      if (d < bd && COV.a[k] < 0.93) { bd = d; best = k; }
+    }
+    if (best >= 0) out.push({k: best, r: lerp(0.14, 0.3, hash(i * 7.7))});
+  }
+  return out;
+})();
 /** (diagnostic) the cover's thickness over the skin at EXIT */
 export const PRED_COVER_THICK = COVER_THICK;
 /** the gap's body-side margin direction (side view): the rear normal of the rest edge */
@@ -913,6 +927,8 @@ const buildCover = (cam: Cam, D: Def, pose: PredPose, side: number): CoverG => {
       const x = COV.x[k], psi = side > 0 ? COV.psi[k] : 2 * Math.PI - COV.psi[k];
       bodyVertex(tmpG, 0, cam, D, x, psi, false);
       const n: V3 = [tmpG.nx[0], tmpG.ny[0], tmpG.nz[0]];
+      // the cover swings out sideways (its upper part does not rise over the back)
+      const nl: V3 = norm3([n[0], n[1] * 0.35, n[2]]);
       const L = g * LIFT_MAX * Math.pow(a, 1.7) * PROF[ib];
       if (ia === CA - 1) lift.push(L);
       // toward the hinge, in the skin's plane (the edge swings a little forward as it lifts)
@@ -920,9 +936,9 @@ const buildCover = (cam: Cam, D: Def, pose: PredPose, side: number): CoverG => {
       const fw = norm3([F.x - E.x, F.y - E.y, 0]);
       const th = COVER_THICK * (0.55 + 0.45 * a);
       P.push([
-        tmpG.wx[0] + n[0] * L + fw[0] * L * LIFT_FWD,
-        tmpG.wy[0] + n[1] * L + fw[1] * L * LIFT_FWD,
-        tmpG.wz[0] + n[2] * L + side * th,
+        tmpG.wx[0] + nl[0] * L + fw[0] * L * LIFT_FWD,
+        tmpG.wy[0] + nl[1] * L + fw[1] * L * LIFT_FWD,
+        tmpG.wz[0] + nl[2] * L + side * th,
       ]);
       G.lf[k] = L;
       G.xr[k] = x;
@@ -1366,7 +1382,7 @@ const spotsD = (cam: Cam, D: Def, side: number, scale: number) => {
 const SCALES: {x: number; y: number; psi: number[]; v: number}[] = (() => {
   const out: {x: number; y: number; psi: number[]; v: number}[] = [];
   const W = 1.9, H = 2.2, r = H * 0.52, ca = Math.cos(-6 * D2R), sa = Math.sin(-6 * D2R);
-  for (let ix = -16; ix <= 34; ix++) {
+  for (let ix = -30; ix <= 34; ix++) {
     for (let iy = -8; iy <= 8; iy++) {
       const u = ix * (W / 2), w = iy * H + (ix % 2 ? H / 2 : 0);
       const x = u * ca - w * sa, y = u * sa + w * ca;
@@ -1434,8 +1450,8 @@ const Half: React.FC<{m: Model; side: number; K: (c: string) => string}> = ({m, 
       <Layers L={L.pig} />
       {scales && (
         <g clipPath={`url(#${clip})`} opacity={scales.op}>
-          <path d={scales.d} fill="none" stroke={K(C.fishDark)} strokeWidth={scales.w} strokeLinecap="round" opacity={0.5} />
-          <path d={scales.hi} fill="none" stroke={K(WARM)} strokeWidth={scales.w * 0.8} strokeLinecap="round" opacity={0.3} />
+          <path d={scales.d} fill="none" stroke={K(C.fishDark)} strokeWidth={scales.w} strokeLinecap="round" opacity={0.34} />
+          <path d={scales.hi} fill="none" stroke={K(WARM)} strokeWidth={scales.w * 0.8} strokeLinecap="round" opacity={0.18} />
         </g>
       )}
       {spots && <path d={spots} fill={K(C.fishDark)} opacity={0.45} clipPath={`url(#${clip})`} />}
@@ -1502,27 +1518,35 @@ const GapArt: React.FC<{gp: {e: S2[]; m: S2[]}; pose: PredPose; px: number; K: (
   }
   const e = gp.e[mi], mm = gp.m[mi];
   const g = clamp(pose.gill, 0, 1.3);
-  // filaments: short lamellae from under the cover's edge into the opening (two staggered rows)
+  // filaments: lamellae hanging from under the cover's edge into the opening, spaced by on-screen arc length (two
+  // staggered rows: a dark red blade and a lighter core)
+  const arc = [0];
+  for (let i = 1; i < n; i++) arc.push(arc[i - 1] + Math.hypot(gp.e[i].x - gp.e[i - 1].x, gp.e[i].y - gp.e[i - 1].y));
+  const total = arc[n - 1];
+  const spacing = clamp(0.17 * px, 3.5, 24);
+  const count = Math.min(240, Math.floor(total / spacing));
   let fil = '', fil2 = '';
-  const per = Math.max(1, Math.round(n / clamp(wm / 3, 18, 70)));
-  for (let i = 1; i < n - 1; i += per) {
-    for (let k = 0; k < 2; k++) {
-      const u = Math.min(n - 1.001, i + k * 0.5 * per);
-      const ia = Math.floor(u), f = u - ia;
-      const A = {x: lerp(gp.e[ia].x, gp.e[ia + 1].x, f), y: lerp(gp.e[ia].y, gp.e[ia + 1].y, f)};
-      const Bm = {x: lerp(gp.m[ia].x, gp.m[ia + 1].x, f), y: lerp(gp.m[ia].y, gp.m[ia + 1].y, f)};
-      const tx = Bm.x - A.x, ty = Bm.y - A.y, w = Math.hypot(tx, ty);
-      if (w < 2) continue;
-      const len = Math.min(w * (0.3 + 0.3 * hash(i * 3.7 + k * 1.3)), 1.4 * px * (0.6 + 0.4 * hash(i * 2.1 + k)));
-      const sk = 0.3 * (hash(i * 1.3 + k) - 0.5);
-      const ux = tx / w, uy = ty / w;
-      const s0 = {x: A.x - ux * 2, y: A.y - uy * 2};
-      const t = {x: A.x + (ux - uy * sk) * len, y: A.y + (uy + ux * sk) * len};
-      const seg = `M${fx(s0.x)} ${fx(s0.y)}L${fx(t.x)} ${fx(t.y)}`;
-      if (k === 0) fil += seg; else fil2 += seg;
-    }
+  let ia = 0;
+  for (let q = 1; q < count; q++) {
+    const sq = (q / count) * total;
+    while (ia < n - 2 && arc[ia + 1] < sq) ia++;
+    const f = (sq - arc[ia]) / (arc[ia + 1] - arc[ia] || 1);
+    const A = {x: lerp(gp.e[ia].x, gp.e[ia + 1].x, f), y: lerp(gp.e[ia].y, gp.e[ia + 1].y, f)};
+    const Bm = {x: lerp(gp.m[ia].x, gp.m[ia + 1].x, f), y: lerp(gp.m[ia].y, gp.m[ia + 1].y, f)};
+    const tx = Bm.x - A.x, ty = Bm.y - A.y, w = Math.hypot(tx, ty);
+    if (w < 2) continue;
+    const h1 = hash(q * 3.7), h2 = hash(q * 1.3 + 5);
+    const row = q % 2;
+    const len = Math.min(w * (0.32 + 0.3 * h1) * (row ? 0.8 : 1), 1.5 * px * (0.6 + 0.4 * h2));
+    const sk = 0.28 * (h2 - 0.5);
+    const ux = tx / w, uy = ty / w;
+    const s0 = {x: A.x - ux * 2, y: A.y - uy * 2};
+    const t = {x: A.x + (ux - uy * sk) * len, y: A.y + (uy + ux * sk) * len};
+    fil += `M${fx(s0.x)} ${fx(s0.y)}L${fx(t.x)} ${fx(t.y)}`;
+    const t2 = {x: A.x + (ux - uy * sk) * len * 0.7, y: A.y + (uy + ux * sk) * len * 0.7};
+    fil2 += `M${fx(A.x)} ${fx(A.y)}L${fx(t2.x)} ${fx(t2.y)}`;
   }
-  const fw = clamp(0.2 * px, 1.1, 7);
+  const fw = clamp(0.13 * px, 1.1, 13);
   const edgeD = smoothOpenPath(gp.e.map((p) => p.x), gp.e.map((p) => p.y));
   return (
     <g>
@@ -1539,7 +1563,7 @@ const GapArt: React.FC<{gp: {e: S2[]; m: S2[]}; pose: PredPose; px: number; K: (
       <path d={d} fill={`url(#${id.grad})`} />
       <g clipPath={`url(#${id.clip})`}>
         <path d={fil} fill="none" stroke={K(mix(C.gillRed, C.gillDark, 0.35))} strokeWidth={fw} strokeLinecap="round" opacity={0.9 * clamp(g * 1.5 + 0.3)} />
-        <path d={fil2} fill="none" stroke={K(mix(C.gillFilament, C.gillRed, 0.3))} strokeWidth={fw * 0.7} strokeLinecap="round" opacity={0.75 * clamp(g * 1.5)} />
+        <path d={fil2} fill="none" stroke={K(mix(C.gillFilament, C.gillRed, 0.3))} strokeWidth={fw * 0.42} strokeLinecap="round" opacity={0.7 * clamp(g * 1.5)} />
         {/* the cover's shadow just under its edge */}
         <path d={edgeD} fill="none" stroke={K(DEEP)} strokeWidth={clamp(0.45 * px, 2, 16)} opacity={0.5} />
       </g>
@@ -1576,6 +1600,19 @@ const CoverArt: React.FC<{m: Model; side: number; K: (c: string) => string}> = (
         if (mg) Ls.push({d: mg, fill: K(MARGIN), op: 0.4});
       })
     : {pig: [], light: []};
+  let spots = '';
+  if (px > 2.5) {
+    for (const sp of COVER_SPOTS) {
+      if (G.nv[sp.k] < 0.15 || !G.ok[sp.k]) continue;
+      const n = cv.normals[sp.k];
+      let t1 = cross3(n, [0, 1, 0]);
+      t1 = norm3(len3(t1) < 1e-6 ? [1, 0, 0] : t1);
+      const t2 = norm3(cross3(n, t1));
+      const E = projEll(m.cam.B, [G.wx[sp.k], G.wy[sp.k], G.wz[sp.k]], mul3(t1, sp.r), mul3(t2, sp.r));
+      if (E.rx >= 0.5) spots += ellD(E.c.x, E.c.y, E.rx, Math.max(0.3, E.ry), E.th);
+    }
+  }
+  const clip = uid('pcov');
   const ink = tagRuns(base, [LIMB]);
   // the free edge: the strong line; the attached border: the preopercle groove firm, the upper/lower borders light
   const runs = (pts: S2[], ok: boolean[], i0: number, i1: number) => {
@@ -1594,6 +1631,16 @@ const CoverArt: React.FC<{m: Model; side: number; K: (c: string) => string}> = (
       {innerD && <path d={innerD} fill={K(COVER_INNER)} />}
       {baseD && <path d={baseD} fill={K(PIG_BASE)} />}
       <Layers L={L.pig} />
+      {spots && baseD && (
+        <>
+          <defs>
+            <clipPath id={clip}>
+              <path d={baseD} />
+            </clipPath>
+          </defs>
+          <path d={spots} fill={K(C.fishDark)} opacity={0.4} clipPath={`url(#${clip})`} />
+        </>
+      )}
       <Layers L={L.light} />
       <path d={ink} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" />
       <path d={preD} fill="none" stroke={K(INK)} strokeWidth={2} strokeLinecap="round" opacity={0.85} />
@@ -1801,15 +1848,3 @@ export const predGeom = (B: Basis, pose: PredPose) => {
 
 /** a gentle swimming bend for a receding predator (radians of total turn at the tail), for `pose.bend` */
 export const swimBend = (t: number, amp = 0.32, period = 1.1) => amp * Math.sin((2 * Math.PI * t) / period);
-export const __dbgScales = (B: Basis, pose: PredPose) => {
-  const cam = camOf(B), D = makeDef(pose);
-  const G = newGrid(1, 1, []);
-  let fails = {v: 0, ok: 0, nv: 0, n: SCALES.length};
-  for (const sc of SCALES) {
-    if (sc.v < 0.16 || sc.v > 0.84) { fails.v++; continue; }
-    bodyVertex(G, 0, cam, D, sc.x, sc.psi[0], false);
-    if (!G.ok[0]) fails.ok++;
-    else if (G.nv[0] < 0.22) fails.nv++;
-  }
-  return {fails, px: pxPerU(cam, [-20, 0, 6]), r: scalesD(cam, D, 1, 85)?.d.length};
-};

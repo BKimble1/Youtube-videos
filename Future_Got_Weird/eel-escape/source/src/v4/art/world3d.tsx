@@ -765,7 +765,7 @@ const reedDraws = (o: ReedOpts): Draw[] => {
     const aNear = ss(dmin, NEAR + 1, NEAR + 7) * ok;
     if (aNear < 0.01) continue;
 
-    if (wmax < 1.3 && coc < 2.5) {
+    if (wmax < 1.3 && coc < 3) {
       // thin and far: a stroked centreline, batched per clump
       const fbk = farBatch.get(b.clump);
       const d = `M${cs.map(pp).join('L')}`;
@@ -776,7 +776,7 @@ const reedDraws = (o: ReedOpts): Draw[] => {
     const els: React.ReactNode[] = [];
     // sharp (with ink) → soft (blurred, dark) crossfade by the circle of confusion; no group opacity anywhere (each
     // would be an offscreen layer): the fade multiplies straight into fill/stroke opacities
-    const sharpK = 1 - ss(coc, 2.5, 6);
+    const sharpK = 1 - ss(coc, 3, 5);
     const oa = (k: number) => (k > 0.995 ? undefined : k.toFixed(3));
     if (sharpK > 0.01) {
       const am = sharpK * aNear;
@@ -851,7 +851,7 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       const bl = coc;
       const lay = (dw: number) => softRibbon(cS, hS.map((h) => Math.max(0.3, h + dw)));
       const hwMax = Math.max(...hS);
-      const nL = Math.round(clamp(bl / 10, 2, 4));
+      const nL = Math.round(clamp(bl / 11, 1, 4));
       const bnd = Array.from({length: nL + 1}, (_, l) => lay(-bl / 2 + (bl * l) / nL));
       if (hwMax - bl / 2 > 1) els.push(<path key="c" d={bnd[0]} fill={col} fillOpacity={oa(am)} />);
       for (let l = 0; l < nL; l++) {
