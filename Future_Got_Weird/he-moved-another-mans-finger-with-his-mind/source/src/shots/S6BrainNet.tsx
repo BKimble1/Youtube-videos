@@ -63,15 +63,19 @@ const S6Overlay: React.FC<{t: number}> = ({t}) => {
 const S6WorldLabels: React.FC<{t: number}> = ({t}) => {
   const over = T('over the part of the brain'), little = T('A little flash');
   const k = win(t, over + 0.2, over + 0.55, little - 0.5, little - 0.2);
-  if (k <= 0) return null;
+  const back = T('back of the receiver’s');
+  const kc = win(t, back - 0.1, back + 0.2, over - 0.1, over + 0.2);
+  if (k <= 0 && kc <= 0) return null;
   const tx = HEAD_R.x - 250, ty = HEAD_R.y - 115;
   const target = {x: HEAD_R.x - 0.42 * HEAD_R.r, y: HEAD_R.y + 0.5 * HEAD_R.r};
   return (
-    <g opacity={clamp(k * 1.4)}>
-      <path d={`M${tx + 40},${ty + 14} Q${tx + 70},${ty + 120} ${target.x - 20},${target.y}`} fill="none" stroke={INK} strokeWidth={3} strokeDasharray="7 6" />
-      <circle cx={target.x - 20} cy={target.y} r={4} fill={INK} />
+    <g>
+      <g opacity={clamp(k * 1.4)}>
+        <path d={`M${tx + 40},${ty + 14} Q${tx + 70},${ty + 120} ${target.x - 20},${target.y}`} fill="none" stroke={INK} strokeWidth={3} strokeDasharray="7 6" />
+        <circle cx={target.x - 20} cy={target.y} r={4} fill={INK} />
+      </g>
       <Tag x={tx} y={ty} text="visual cortex" size={17} k={k} />
-      <Tag x={COIL.x - 150} y={COIL.y + 70} text="coil" size={15} k={win(t, T('back of the receiver’s'), T('back of the receiver’s') + 0.3, over - 0.2, over + 0.1)} />
+      <Tag x={COIL.x - 105} y={COIL.y - 48} text="coil" size={17} k={kc} />
     </g>
   );
 };
