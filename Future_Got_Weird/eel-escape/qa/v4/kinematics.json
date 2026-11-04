@@ -1,14 +1,14 @@
 {
  "outDrops": 0,
  "headClears": [
-  20.867
+  20.967
  ],
- "T_REL": 20.86,
- "maxSampleGap": 0.45,
+ "T_REL": 20.95,
+ "maxSampleGap": 0.552,
  "framesInsidePredatorAfterRelease": 0,
  "midDistanceFromExit": {
-  "atRelease": 17,
-  "at22": 35.6,
-  "atEnd": 156.2
+  "atRelease": 17.1,
+  "at22": 33.3,
+  "atEnd": 150.5
  }
 }

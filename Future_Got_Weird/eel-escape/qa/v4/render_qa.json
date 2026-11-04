@@ -1,6 +1,6 @@
 {
  "file": "FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4",
- "size_mb": 30.55,
+ "size_mb": 29.69,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,40 +15,34 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "258305"
+   "bitrate": "258315"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 3.57,
+ "frame_change_median": 3.68,
  "large_changes": [
   {
    "frame": 79,
    "t": 2.633,
-   "mad": 45.4,
+   "mad": 45.39,
    "planned": "CUT S1 -> S2: the eel's curve matched, the earlier gulp"
   },
   {
    "frame": 116,
    "t": 3.867,
-   "mad": 80.69,
+   "mad": 80.68,
    "planned": "CUT S2 -> S3: the research tank"
-  },
-  {
-   "frame": 154,
-   "t": 5.133,
-   "mad": 18.36,
-   "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
    "frame": 155,
    "t": 5.167,
-   "mad": 20.88,
+   "mad": 20.85,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
    "frame": 156,
    "t": 5.2,
-   "mad": 20.29,
+   "mad": 20.27,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
@@ -60,19 +54,19 @@
   {
    "frame": 158,
    "t": 5.267,
-   "mad": 19.41,
+   "mad": 19.44,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
    "frame": 159,
    "t": 5.3,
-   "mad": 18.47,
+   "mad": 18.48,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
    "frame": 160,
    "t": 5.333,
-   "mad": 18.89,
+   "mad": 18.9,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
@@ -102,7 +96,7 @@
   {
    "frame": 261,
    "t": 8.7,
-   "mad": 21.12,
+   "mad": 21.13,
    "planned": "PUSH (camera move, not a cut): the dive after the tip into the stomach opening"
   },
   {
@@ -120,150 +114,126 @@
   {
    "frame": 264,
    "t": 8.8,
-   "mad": 25.28,
+   "mad": 25.27,
    "planned": "PUSH (camera move, not a cut): the dive after the tip into the stomach opening"
   },
   {
    "frame": 270,
    "t": 9.0,
-   "mad": 19.15,
+   "mad": 18.75,
    "planned": "DISSOLVE S4 -> S5 through the dark lumen (and out of the dark into the passage)"
-  },
-  {
-   "frame": 271,
-   "t": 9.033,
-   "mad": 18.16,
-   "planned": "DISSOLVE S4 -> S5 through the dark lumen (and out of the dark into the passage)"
-  },
-  {
-   "frame": 318,
-   "t": 10.6,
-   "mad": 19.98,
-   "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 319,
    "t": 10.633,
-   "mad": 21.92,
+   "mad": 19.49,
    "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 320,
    "t": 10.667,
-   "mad": 23.22,
+   "mad": 20.64,
    "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 321,
    "t": 10.7,
-   "mad": 24.01,
+   "mad": 21.71,
    "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 322,
    "t": 10.733,
-   "mad": 23.65,
+   "mad": 22.06,
    "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 323,
    "t": 10.767,
-   "mad": 23.01,
+   "mad": 22.58,
    "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 324,
    "t": 10.8,
-   "mad": 22.1,
+   "mad": 22.68,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 325,
    "t": 10.833,
-   "mad": 21.45,
+   "mad": 22.13,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 326,
    "t": 10.867,
-   "mad": 22.82,
+   "mad": 23.26,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 327,
    "t": 10.9,
-   "mad": 20.58,
+   "mad": 20.78,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 328,
    "t": 10.933,
-   "mad": 19.4,
+   "mad": 19.61,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 329,
    "t": 10.967,
-   "mad": 18.84,
-   "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
-  },
-  {
-   "frame": 330,
-   "t": 11.0,
-   "mad": 18.71,
-   "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
-  },
-  {
-   "frame": 331,
-   "t": 11.033,
-   "mad": 18.12,
-   "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
-  },
-  {
-   "frame": 332,
-   "t": 11.067,
-   "mad": 17.95,
+   "mad": 18.63,
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
    "frame": 381,
    "t": 12.7,
-   "mad": 78.81,
+   "mad": 79.39,
    "planned": "MATCH CUT S6 -> S7: the tip, inside -> outside"
   },
   {
    "frame": 416,
    "t": 13.867,
-   "mad": 43.71,
+   "mad": 35.91,
    "planned": "CUT S7 -> S8: over the back"
   },
   {
    "frame": 479,
    "t": 15.967,
-   "mad": 24.56,
+   "mad": 21.29,
    "planned": "CUT S8 -> S9: the trapped head"
   },
   {
    "frame": 539,
    "t": 17.967,
-   "mad": 43.17,
+   "mad": 43.29,
    "planned": "CUT S9 -> S10: low beside"
+  },
+  {
+   "frame": 636,
+   "t": 21.2,
+   "mad": 50.86,
+   "planned": "the head slips free; the body straightens"
   },
   {
    "frame": 736,
    "t": 24.533,
-   "mad": 21.44,
+   "mad": 21.22,
    "planned": "the reed across the lens wipes to frame 0"
   },
   {
    "frame": 737,
    "t": 24.567,
-   "mad": 20.53,
+   "mad": 20.59,
    "planned": "the reed across the lens wipes to frame 0"
   }
  ],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 4,
- "longest_near_static_run_starts_s": 3.7,
+ "longest_near_static_run_frames": 7,
+ "longest_near_static_run_starts_s": 13.53,
  "loop_last_vs_first_mad": 3.83
 }

@@ -1,16 +1,18 @@
-// V4 S5 THROAT + S6 GILLS (builder G): global 8.90–12.58 s, rendered 8.70–12.80. One module, one eel.
+// V4 S5 THROAT + S6 GILLS (builder G): global 8.90 – T.pokeCut (12.70) s, rendered 8.70–12.80. One module, one eel.
 //
 // "Its tail slides up the fish's throat, / slips through a gap in the gills, / and pokes out the side."
 //
 // S5 THE THROAT (8.90 – CUT): the esophagus, a narrow tube with longitudinal folds, built in true 3D (its own set
 //   frame: the tube's axis runs along +x) and seen from INSIDE, beside the eel. We open out of the stomach opening's
 //   dark lumen (hand-off 3): the dark lifts on the passage. The camera travels alongside the tail, looking up the
-//   passage, slower than the eel: the tip slides away from the lens up the passage (screen y ≈ 1460 -> 950 over
-//   8.95–10.0), tip first, through the passage's fixed bends, while the walls stream past (its depth vanishes ahead
-//   in the dark, below the caption band). From DIP0 the camera stops and settles onto the passing body, which rushes
-//   on beneath it and fills the foreground (the surroundings sink into shadow).
-// THE CUT (CUT ± XF, 3 frames): a dissolve inside that body. S6 opens with its camera just above the same body,
-//   heading the same way into the depth, framed to overlay S5's (same position, angle and width within ~20 px).
+//   passage, slower than the eel: the tip slides away from the lens up the passage (screen y ≈ 1400 -> 1000 over
+//   9.0–9.9), tip first, through the passage's fixed bends, while the walls stream past (its depth vanishes ahead
+//   in the dark, below the caption band). From DIP0 the camera picks up the tail's pace (the tail keeps its width on
+//   screen: no swelling toward the lens) and turns gently onto S6's framing of it (the surroundings sink into shadow).
+// THE CUT (CUT ± XF, 3 frames): a dissolve round ONE steady tail. S6 opens with its camera behind the same tail,
+//   heading the same way into the depth, framed (fitted) to overlay S5's: the tail's samples within ~9 px RMS, its
+//   radii within ~1 px, its screen motion within ~1.3 px per frame; MORPH0–MORPH1 carries the small remainder, so
+//   the tail's width and direction run on steadily through the change of view (about 1 degree per frame of turn).
 // S6 THE GILLS (CUT – 12.58): a new set and a new angle, from inside the pharynx looking toward the gill curtain:
 //   four arch bars (comb-like rakers on their inner edge, a red fringe of filaments behind), real slits between
 //   them, the dark opercular chamber beyond, lit from the gill opening at its rear. Set frame: X right (toward the
@@ -21,8 +23,9 @@
 //   is drawn behind the curtain (occluded by the bars and filaments), the rest in front; the filaments and the
 //   rakers part around the body and the bar beside it gives way. The eel is opaque: its far part lies over the
 //   filament fringe and under the bars and rakers, and both parts carry a pale backlit rim (light from the opening).
-//   Beats (one continuous camera move; nothing on screen passes ~33 px per frame in the push, ~26 in the pull-back):
-//   the camera rises off the body and the curtain appears (CUT – ≈10.9), the tail heads straight for the slit and
+//   Beats (one continuous camera move; the set moves at most ~40 px per frame at the frame's corners in the push and
+//   the pull-back): the curtain and the opening's light are there from the cut, the camera pushes in on the slit
+//   (CUT – ≈10.9), the tail heads straight for the slit and
 //   turns sideways into it ("slips", 10.89), the closest framing while the body threads between the two bars and the
 //   tip comes out beyond the next one (NEAR 11.40, "gap" 11.47), then an even pull-back across the chamber toward the
 //   opening, settled by SET 12.27. The opening never rises above Y_OPEN = 545 px: it closes there to a point on the
@@ -31,13 +34,18 @@
 //   and the body wall, tapering to a point at its top, with the outside seen through it (sea-green water brightening
 //   toward a rippling surface, light shafts, a hazy riverbed with tufts of plants and a few taller blades bent over in
 //   the current that cross the slit and run on behind both its edges, drifting motes; on a far plane, so it slides
-//   less than the rim as the camera moves). No outline round the light: the cover's free edge is a thin dark flap of
-//   tissue in silhouette (crisp on the rim, broken where the light spills over it), the far side is lost in a smooth
+//   less than the rim as the camera moves; tall backlit reeds stand through the part seen while the camera is still
+//   out by the arches, so the slit reads as daylight and water from the first frame it shows). No outline round the
+//   light: the cover's free edge is a thin dark flap of tissue in silhouette (only a hairline under a soft spill of
+//   light while the camera is out by the arches; crisp on the rim once it settles, broken where the light spills over
+//   it), the far side is lost in a smooth
 //   glare (chains of soft glows, no rings); the light spills over the cover's inner face, shafts of it fan in across
 //   the chamber (motes drifting in them), it catches the bars and the filaments nearest the slit, rims the eel ever
 //   brighter as the tail nears it and darkens the tail into a silhouette; where the tip goes out the glare is hottest
-//   and grows as the tip arrives, so the tip's last px dissolve into the brightness (its drawn shape unchanged). The
-//   gap breathes and opens a little wider as the tail pushes toward it.
+//   and grows as the tip arrives; as the tip goes through (T.poke on, seen until T.pokeCut) the glare eases and the
+//   tail in the light is a crisp DARK silhouette (fully so out in the water, with a thin bright edge), so the tip is
+//   seen going through the gap (its drawn shape unchanged). The gap breathes and opens a little wider as the tail
+//   pushes toward it.
 // The end is hand-off 2: the camera settles in the chamber facing the opening; its rim (the cover's free edge, light
 //   on both sides) lies on EDGE, and the eel's last 8 units lie exactly on pokeTail(t) for t in [12.44, 12.72].
 import React from 'react';
@@ -60,11 +68,11 @@ export const G_BEATS = {
   open0: 8.9, // the lumen's dark starts to open (hand-off 3: full dark until here) ...
   open1: 9.22, // ... and is gone: the passage is revealed
   slides: 9.27,
-  dip0: 10.05, // the camera dips toward the passing body ...
-  morph0: 10.3, // ... which fills the foreground: ONE eel, its screen shape carried from S5's camera to S6's ...
+  dip0: 10.05, // the camera picks up the tail's pace (its turn onto S6's framing runs S5_TURN0–S5_TURN1) ...
+  morph0: 10.3, // ... ONE eel, its screen shape carried from S5's camera to S6's (they match within a few px) ...
   cut: 10.42, // ... while the sets dissolve under it (CUT ± XF): S5 -> S6
   morph1: 10.56,
-  establish: 10.92, // the camera has risen off the body: the curtain, the tail entering the last slit
+  establish: 10.92, // the camera has pushed in past the tail: the curtain, the tail entering the last slit
   slips: 10.89, // the tip enters the slit
   near: 11.4, // the closest framing, while the body threads between the bars ...
   gap: 11.47, // ... "gap"
@@ -75,7 +83,7 @@ export const G_BEATS = {
   poke: T.poke, // the tip crosses the rim at POKE_AT
 };
 const XF = 0.05;
-/** the darkness beside the passing body around the cut (both views), so the dissolve inside it is unseen */
+/** the darkness round the tail around the cut (both views), so the sets' dissolve is soft and the tail carries it */
 const cutDark = (t: number) => 0.72 * ss(t, G_BEATS.dip0 + 0.1, G_BEATS.cut) * (1 - ss(t, G_BEATS.cut, G_BEATS.cut + 0.26));
 
 // ================================================================ small helpers
@@ -355,14 +363,15 @@ const s5Pose = (t: number) => poseOn(S5_ROUTE, s5Tip(t) - S5_X0, (c) =>
   }),
 );
 /** the S5 camera: alongside the tail, on the upper near side of the passage, looking up the passage (its depth
- *  vanishes ahead, below the caption band) and down at the tail lying along the far wall. It travels up the passage
- *  a little slower than the tip (the tip draws ahead, the walls stream past), then catches up to the tail's pace for
- *  the cut, so the tail holds still on screen (steady width) while the sets change round it; over the last 0.8 s
- *  it turns gently (a small pan and roll) so the tail lies exactly where S6's camera finds it at the cut */
+ *  vanishes ahead, below the caption band) and down at the tail lying along the far wall. It starts close behind the
+ *  tip (hidden in the lumen's dark) and travels up the passage slower than the tail, so the tip visibly slides away up
+ *  the passage (screen y ~1400 -> 1000 over 9.0-9.9 s); then it picks up the tail's pace for the cut, so the tail
+ *  holds its width on screen while the sets change round it; over the last 0.8 s it turns gently (a small pan and
+ *  roll, ~1 degree per frame on screen) so the tail lies exactly where S6's camera finds it at the cut */
 const S5_TURN0 = 9.65, S5_TURN1 = 10.45;
 const s5Cam = (t: number) => {
   const tip = s5Tip(t);
-  const lag = herm(t, [[8.7, 4.3], [9.15, 5.0], [9.7, 6.6], [10.05, 7.5], [10.42, 7.8], [10.7, 7.9]], 1.4, 0.3);
+  const lag = herm(t, [[8.7, 2.8], [9.15, 3.6], [9.7, 5.9], [10.05, 7.2], [10.42, 7.8], [10.7, 7.9]], 1.4, 0.3);
   const xc = tip - lag;
   const turn = ss(t, S5_TURN0, S5_TURN1);
   const eye: V3 = [xc, -0.75, 0.95];
@@ -698,12 +707,12 @@ const frameOf = (c: Cam6): Frame6 => {
 /** opens above the passing body (matched to S5's last frame), pushes in on the slit for the threading (closest at
  *  NEAR, while the body threads between the bars, just before 'gap'), then eases back and across to the settled end
  *  frame by SET, so the last third of a second is a still frame in which the tip travels into the light */
-const FR_CUT: Frame6 = {s: 79.06, gx: 710.4, gy: 834.0};
+const FR_CUT: Frame6 = {s: 79.15, gx: 710.9, gy: 833.0};
 const FR_GAP: Frame6 = {s: 112, gx: 355, gy: 1164};
 const FR_END: Frame6 = frameOf(CAM_END);
 /** the S6 camera is already moving when it opens: fitted so the tail's samples move on screen as S5's do at the cut
  *  (within ~1.5 px per frame), so the one tail carries straight through the change of view */
-const FR_V0 = {ls: 0.416, gx: -49.6, gy: 77.7};
+const FR_V0 = {ls: 0.374, gx: -44.7, gy: 70.1};
 /** a cubic Hermite segment from a (slope va) at t0 to b (slope vb) at t1 */
 const hermSeg = (t: number, t0: number, t1: number, a: number, b: number, va: number, vb: number) => {
   const h = t1 - t0, s = clamp((t - t0) / h), s2 = s * s, s3 = s2 * s;
@@ -1393,7 +1402,7 @@ const flapOf = (op: NonNullable<ReturnType<typeof openingScr>>, k: number, X: P,
 /** the cover's inner face (the chamber's outer wall), the light it catches round the opening, the shafts of light
  *  entering, the opening's edges in silhouette and the outside view through it */
 const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
-  const gG = uid('chG'), gL = uid('chL'), fS = uid('chS'), fR = uid('chR'), cw = uid('chWin');
+  const gG = uid('chG'), gL = uid('chL'), fS = uid('chS'), cw = uid('chWin');
   const rimMid = RIM_B[Math.floor(RIM_B.length / 2)];
   // the cover's inner face: dark, with soft fan-like folds converging toward its hinge (front, left)
   const folds: string[] = [];
@@ -1506,7 +1515,6 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
           <stop offset="1" stopColor={K.glowHot} stopOpacity={0} />
         </radialGradient>
         {op && <BlurF id={fS} sd={sS} b={boxOf(op.rim, 3 * sS + 30 * k)} />}
-        {op && <BlurF id={fR} sd={2 * sS} b={boxOf(op.rim, 6 * sS + 20 * k)} />}
         {op && (
           <clipPath id={cw} clipPathUnits="userSpaceOnUse">
             <path d={outline} />
@@ -1547,9 +1555,12 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
 
           {/* the cover's free edge in silhouette against the light */}
           {flap && <path d={flap.band} fill={K.flap} />}
-          {/* daylight spilling over the cover's edge onto both sides of it (a soft blurred band, no hard line) */}
+          {/* daylight spilling over the cover's edge onto both sides of it: a soft band, no hard line (ten faint
+              nested strokes; a blur filter over the rim's box cost a third of a second a frame) */}
           <TopFaded>
-            <path d={rimD} stroke={K.wrap} strokeOpacity={0.5 * spill} strokeWidth={30 * k} fill="none" strokeLinejoin="round" strokeLinecap="round" filter={`url(#${fR})`} />
+            {SPILL_W.map((w, i) => (
+              <path key={i} d={rimD} stroke={K.wrap} strokeOpacity={0.052 * spill} strokeWidth={w * k} fill="none" strokeLinejoin="round" strokeLinecap="round" />
+            ))}
           </TopFaded>
           {/* the light wrapping over the cover's edge lower down, where a shaft comes in */}
           <ellipse cx={0} cy={0} rx={1} ry={1} transform={slitGlowT(X2, 55 * k, 120 * k)} fill={`url(#${gW2})`} />
@@ -1561,6 +1572,8 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
     </g>
   );
 };
+/** the widths (end-frame px) of the nested strokes of the light spilling over the rim: a smooth falloff to ~45 px */
+const SPILL_W = Array.from({length: 10}, (_, i) => 6 + 84 * ((i + 1) / 10) ** 1.5);
 /** the opening's glows fade out toward the caption band: nothing is lit above FADE0 */
 const FADE0 = Y_OPEN - 65, FADE1 = Y_OPEN + 255;
 /** children in full below FADE1, and faded out between FADE1 and FADE0 above it: a mask over that band only (a
