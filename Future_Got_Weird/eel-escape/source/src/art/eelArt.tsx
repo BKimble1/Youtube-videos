@@ -52,6 +52,8 @@ export type EelProps = {
   clip?: string;
   /** where the body crosses over itself: which end's part lies on top (default 'tail') */
   over?: 'tail' | 'head';
+  /** V4: scales the eye (1 = the V3 size); the head-and-eye read at phone size */
+  eyeScale?: number;
 };
 
 // ---------------------------------------------------------------- constants
@@ -437,9 +439,10 @@ type Ctx = {
   lights: {lo: P[]; hi: P[]; op: number}[];
   spec: {lo: P[]; hi: P[]; hlo: P[]; hhi: P[]};
   lateral: {pts: P[]; j0: number; j1: number}[];
+  eyeK: number;
 };
 
-const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[]): Ctx => {
+const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK = 1): Ctx => {
   // one integer step ≈ 0.2 px
   const q = Math.max(20, Math.round(px * 5));
   const M = g.M;
@@ -550,7 +553,7 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[]): Ctx 
     g, q, px, t, phDs, phD,
     fins: {Od, Oa, Bd, Ba, Rd, Ra, jd0: stationOf(g, EEL_FEAT.dorsalFinU * (g.nS - 1)), ja0: stationOf(g, EEL_FEAT.analFinU * (g.nS - 1)), tip, tipR},
     edges: {m: edgeArr(g, -1), p: edgeArr(g, 1)},
-    pig, shadows, lights, spec, lateral,
+    pig, shadows, lights, spec, lateral, eyeK,
   };
 };
 
@@ -776,7 +779,7 @@ const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
       const phE = flank(66 * DEG);
       const ce = at(je, phE);
       const fo = Math.max(0.25, Math.cos(clampPhi(phE)));
-      const er = 0.33 * Math.max(fr.r, 1.2);
+      const er = 0.33 * Math.max(fr.r, 1.2) * x.eyeK;
       const angDeg = Math.round((Math.atan2(fr.T.y, fr.T.x) * 1800) / Math.PI) / 10;
       const cx = R(ce.x), cy = R(ce.y);
       const tr = `rotate(${angDeg} ${cx} ${cy})`;
@@ -790,7 +793,7 @@ const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
 };
 
 // ---------------------------------------------------------------- the component
-export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail'}) => {
+export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail', eyeScale = 1}) => {
   const nS = pts.length;
   if (nS < 4 || radii.length < nS) return null;
   const last = nS - 1;
@@ -799,7 +802,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
   if (b - a < 1e-4) return null;
   const pxx = Math.max(0.5, px);
   const g = build(pts, radii);
-  const x = makeCtx(g, pxx, t, dorsal);
+  const x = makeCtx(g, pxx, t, dorsal, eyeScale);
   const M = g.M;
   // chunks (in sample indices) where the body crosses over itself
   const bounds = [a, ...chunkCuts(pts, radii, g.arcS, a, b), b];
