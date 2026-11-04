@@ -1,1 +1,14 @@
-{"outDrops":0,"headClears":[20.867],"T_REL":20.86,"maxSampleGap":0.45,"framesInsidePredatorAfterRelease":0,"midDistanceFromExit":{"atRelease":18.3,"at22":39.4,"atEnd":120.9}}
+{
+ "outDrops": 0,
+ "headClears": [
+  20.867
+ ],
+ "T_REL": 20.86,
+ "maxSampleGap": 0.45,
+ "framesInsidePredatorAfterRelease": 0,
+ "midDistanceFromExit": {
+  "atRelease": 17,
+  "at22": 35.6,
+  "atEnd": 156.2
+ }
+}
