@@ -1,5 +1,5 @@
 {
- "integrated_lufs": -14.25,
+ "integrated_lufs": -14.24,
  "true_peak_dbtp": -1.47,
  "duration_s": 211.7667,
  "music_to_voice_rms_db_during_speech": -18.2,
@@ -26,5 +26,5 @@
   "line_clear": 2,
   "flip": 1
  },
- "limiter_min_gain_db": -5.81
+ "limiter_min_gain_db": -2.78
 }

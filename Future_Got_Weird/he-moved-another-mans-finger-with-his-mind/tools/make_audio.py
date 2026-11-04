@@ -137,7 +137,9 @@ for c in C['cues']:
         x = fx(kind, c.get('dur'))
     except ValueError:
         print('unknown cue kind, skipped:', kind); continue
-    x = x * 10 ** (c.get('gain', 0.0) / 20)
+    # per-kind trims keep the sparse transients from riding the limiter (and ducking the voice with them)
+    TRIM = {'boom': -5.0, 'cannon': -3.0, 'coil_pulse': -4.0, 'city_hit': -3.0, 'key_click': -1.5}
+    x = x * 10 ** ((c.get('gain', 0.0) + TRIM.get(kind, 0.0)) / 20)
     i = int(c['t'] * SR)
     if i < 0 or i >= N: continue
     x = x[:N - i]
@@ -228,6 +230,9 @@ narr_n = pyln.normalize.loudness(narr, meter.integrated_loudness(narr), -16.0)
 score_n = pyln.normalize.loudness(score, meter.integrated_loudness(score), -29.0) * duck
 room_n = room / (np.max(np.abs(room)) + 1e-9) * 0.010
 g_sfx = 10 ** ((-26.0 - meter.integrated_loudness((sfxL + sfxR) / 2 + 1e-9)) / 20)
+# soft-limit the effects bus at -9 dBFS after its gain (tanh knee), so no single hit dominates the mix
+_k = 10 ** (-9 / 20)
+sfxL = np.tanh(sfxL * g_sfx / _k) * _k / g_sfx; sfxR = np.tanh(sfxR * g_sfx / _k) * _k / g_sfx
 L = narr_n + score_n * 0.97 + room_n + sfxL * g_sfx * sfx_duck
 R = narr_n + score_n * 1.0 + room_n * 0.95 + sfxR * g_sfx * sfx_duck
 mix = np.stack([L, R], 1)
