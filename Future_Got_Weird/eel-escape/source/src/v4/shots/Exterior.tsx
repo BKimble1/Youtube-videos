@@ -179,10 +179,18 @@ const gulpMatch = (): GulpMatch => {
     const sx = ((x - B2.cx) * dep) / B2.f, sy = (-(y - B2.cy) * dep) / B2.f;
     return add3(add3(B2.eye, mul3(B2.fw, dep)), add3(mul3(B2.r, sx), mul3(B2.u, sy)));
   };
-  // outside: S1's screen curve from the gap outward (the gape is at its first point by construction)
-  const outside: V3[] = [];
-  for (let i = i0; i <= N; i++) outside.push(unp(sc.pts[i].x, sc.pts[i].y));
-  outside[0] = gape;
+  // outside: S1's screen curve from 3 units past the gap outward (its root bends toward S1's lens; not needed here),
+  // joined to the gape by a smooth bend: the body comes out of the mouth forward and turns into the matched S
+  const skip = Math.round((3 * N) / EEL_L);
+  const kept: V3[] = [];
+  for (let i = Math.min(N - 4, i0 + skip); i <= N; i++) kept.push(unp(sc.pts[i].x, sc.pts[i].y));
+  const ctrl = add3(gape, mul3(inDir, -2.6));
+  const conn: V3[] = [];
+  for (let k = 0; k < 8; k++) {
+    const u = k / 8;
+    conn.push(add3(add3(mul3(gape, (1 - u) * (1 - u)), mul3(ctrl, 2 * u * (1 - u))), mul3(kept[0], u * u)));
+  }
+  const outside: V3[] = [...conn, ...kept];
   // inside: from the gape straight on into the throat (hidden but in the mouth hole)
   const inside: V3[] = [];
   for (let k = 40; k >= 1; k--) inside.push(add3(gape, mul3(inDir, k * 1.2)));
@@ -192,7 +200,11 @@ const gulpMatch = (): GulpMatch => {
   const ss_ = [0];
   for (let i = 1; i < inside.length; i++) ss_.push(ss_[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]));
   ss_.push(ss_[inside.length - 1] + 1.2);
-  for (let i = 1; i < outside.length; i++) ss_.push(ss_[inside.length] + (i * EEL_L) / N);
+  for (let i = 1; i < conn.length + 1; i++) {
+    const a = pts[inside.length + i - 1], b = pts[inside.length + i];
+    ss_.push(ss_[ss_.length - 1] + Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]));
+  }
+  for (let i = 1; i < kept.length; i++) ss_.push(ss_[ss_.length - 1] + EEL_L / N);
   GM = {cam0, cam1, path: {p: pts, s: ss_, len: ss_[ss_.length - 1], gape: ss_[inside.length]}};
   return GM;
 };
@@ -242,7 +254,7 @@ export const gulpEel = (t: number): Eel3Pose & {crossI: number} => {
 export const gulpState = (t: number): ExtState => {
   const cam = gulpCam(t);
   const pose = predPose(t, {mouth: gulpMouth(t), gill: Math.max(breath(t), 0.15 + 0.6 * bump(t, 3.15, 3.32, 3.75)), startle: 0.4 * bump(t, 2.9, 3.2, 3.8)});
-  return {cam, pose, eel: gulpEel(t), t, mouthClip: true};
+  return {cam, pose, eel: gulpEel(t), t, mouthClip: true, insideOpacity: 0.82};
 };
 
 // ---------------------------------------------------------------- S7 POKE (12.58 – 13.86)
