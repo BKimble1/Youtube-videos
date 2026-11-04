@@ -14,16 +14,16 @@ export const p3 = (x: number, y: number, z = 0): P3 => ({x, y, z});
 /** dorsal profile, snout to caudal peduncle (top edge of the body) */
 export const DORSAL: P[] = [
   pt(-50.0, -0.6), pt(-48.6, -3.6), pt(-45.6, -6.9), pt(-42.4, -9.2), pt(-38.6, -10.6), pt(-33.5, -11.7),
-  pt(-27.0, -12.5), pt(-19.0, -12.9), pt(-10.0, -12.6), pt(0.0, -11.8), pt(10.0, -10.6), pt(20.0, -8.8),
-  pt(28.0, -6.6), pt(33.0, -5.4),
+  pt(-27.0, -12.5), pt(-19.0, -12.9), pt(-10.0, -12.6), pt(0.0, -11.8), pt(10.0, -10.6), pt(20.0, -8.7),
+  pt(28.0, -6.95), pt(33.0, -5.95),
 ];
 /** ventral profile, lower-jaw tip to caudal peduncle (bottom edge of the body) */
 export const VENTRAL: P[] = [
   pt(-51.0, 0.9), pt(-49.6, 3.6), pt(-46.4, 6.4), pt(-41.5, 8.6), pt(-35.0, 10.2), pt(-28.0, 11.3),
-  pt(-19.0, 12.1), pt(-9.0, 12.5), pt(1.0, 12.3), pt(11.0, 11.1), pt(20.0, 8.9), pt(28.0, 6.5), pt(33.0, 5.4),
+  pt(-19.0, 12.1), pt(-9.0, 12.5), pt(1.0, 12.3), pt(11.0, 11.1), pt(20.0, 8.85), pt(28.0, 6.95), pt(33.0, 5.95),
 ];
 /** the caudal peduncle end, where the caudal fin attaches (x = 33, y -5.4 .. +5.4); the rounded caudal fin reaches x = 50 */
-export const CAUDAL = {x0: 33, halfDepth0: 5.4, tipX: 50, halfDepthMax: 9.5};
+export const CAUDAL = {x0: 33, halfDepth0: 5.95, tipX: 50, halfDepthMax: 9.8};
 /** closed body outline (dorsal snout→tail, then ventral tail→jaw) for clip paths and silhouettes */
 export const BODY: P[] = [...DORSAL, ...[...VENTRAL].reverse()];
 
@@ -89,8 +89,8 @@ export const TRACT: P3[] = [
 /** the stomach part of the route (σ < 0) when the eel lies fully folded in it (a Z-fold: back along the top, forward
  *  through the middle, back along the bottom; the head is deepest, pointing toward the fish's tail) */
 export const STOMACH_FOLD: P[] = [
-  pt(-13.5, 1.7), pt(-9.0, 0.6), pt(-3.0, 0.0), pt(2.2, 0.3), pt(4.9, 1.6), pt(5.2, 3.6), pt(3.0, 4.6),
-  pt(-2.0, 4.6), pt(-7.2, 4.9), pt(-9.8, 6.1), pt(-9.6, 8.1), pt(-7.0, 8.9), pt(-2.0, 9.0), pt(3.0, 8.8), pt(8.0, 8.1), pt(12.0, 7.2), pt(15.0, 6.2),
+  pt(-13.5, 1.7), pt(-9.0, 0.5), pt(-3.0, -0.2), pt(1.8, 0.1), pt(5.0, 1.5), pt(5.9, 3.9), pt(4.2, 5.6), pt(1.0, 6.0),
+  pt(-3.5, 5.6), pt(-7.6, 5.6), pt(-10.4, 7.0), pt(-10.6, 9.3), pt(-8.2, 10.4), pt(-3.0, 10.4), pt(2.0, 10.1), pt(7.0, 9.4), pt(11.0, 8.4), pt(14.0, 7.2),
 ];
 /** the stomach part of the route once little of the eel is left inside (a gentle curve back from the cardia) */
 export const STOMACH_RELAXED: P[] = [pt(-13.5, 1.7), pt(-9.5, 2.6), pt(-4.5, 3.8), pt(1.0, 4.6), pt(6.5, 4.9), pt(11.5, 4.5), pt(16.0, 3.6), pt(20.0, 2.6)];
@@ -109,4 +109,4 @@ export const EEL_RADIUS = (u: number) => {
   return EEL_R_MAX * 0.94 * Math.pow(Math.max(0, 1 - v), 0.85) + 0.05 * (1 - v);
 };
 /** body coordinates of the eel's features */
-export const EEL_FEAT = {eyeU: 0.03, eyeR: 0.42, gillU: 0.085, pectoralU: 0.095, dorsalFinU: 0.4, analFinU: 0.47, finH: 0.42};
+export const EEL_FEAT = {eyeU: 0.03, eyeR: 0.42, gillU: 0.085, pectoralU: 0.095, dorsalFinU: 0.4, analFinU: 0.47, finH: 0.58};

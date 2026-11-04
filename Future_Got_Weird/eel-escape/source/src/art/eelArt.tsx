@@ -84,7 +84,7 @@ const smoothRange = (d: number, a: number, b: number) => {
   return x * x * (3 - 2 * x);
 };
 const pigment = (psiDeg: number) =>
-  psiDeg < 100 ? mix(C.eelBack, C.eelFlank, smoothRange(psiDeg, 42, 98)) : mix(C.eelFlank, C.eelBelly, smoothRange(psiDeg, 124, 166));
+  psiDeg < 100 ? mix(C.eelBack, C.eelFlank, smoothRange(psiDeg, 42, 98)) : mix(C.eelFlank, C.eelBelly, smoothRange(psiDeg, 108, 150));
 const rgbOf = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
 /** nested pigment strips (each covers ψ < bound around the dorsal midline, painted over the previous), the bounds
  *  chosen so every step changes the colour by the same amount */
