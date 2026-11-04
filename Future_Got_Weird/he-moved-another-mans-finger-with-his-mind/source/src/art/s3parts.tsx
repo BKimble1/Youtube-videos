@@ -19,7 +19,7 @@ import {FLAT, HandPoseP, HOVER, mixP, SideHand} from './hand';
 import {CrewChar, IDLE, mixPose, Pose, reachLocal} from './crew';
 import {EEGCap, Earbuds, RAO, STOCCO, SwimCap} from './people';
 import {PW} from '../shots/S1Hook';
-import {cursorAt, G_DUR, G_FIRE, gameClock, tm} from '../shots/s3time';
+import {cursorAt, G_DUR, G_FIRE, gameClock, hitTime, tm} from '../shots/s3time';
 
 type V = {x: number; y: number};
 export const LAB_A = PW / 1920;
@@ -140,11 +140,11 @@ const Scope: React.FC<{t: number; k: number; dropAt: number; label: string; labe
 // ---------------------------------------------------------------- Rao's lab
 const RAO_X = 470, RAO_GY = 1034, RAO_S = 2;
 const HAND = {x: 780, y: 740, s: 0.8, arm: 567, ang: 7.6};
-const MON = {x: 1440, y: 655, s: 0.95};
-const COMP = {x: 1000, y: 640, s: 0.75};
-export const RAO_CAP_CABLE: V[] = [{x: 636, y: 528}, {x: 720, y: 640}, {x: 860, y: 560}, {x: 946, y: 580}];
-export const RAO_MON_CABLE: V[] = [{x: 1054, y: 612}, {x: 1150, y: 660}, {x: 1290, y: 668}, {x: 1392, y: 646}];
-export const RAO_COMP_OUT = {x: COMP.x, y: COMP.y - 150};
+const MON = {x: 1480, y: 655, s: 0.95};
+const COMP = {x: 1050, y: 640, s: 0.68};
+export const RAO_CAP_CABLE: V[] = [{x: 636, y: 528}, {x: 720, y: 640}, {x: 900, y: 560}, {x: 1000, y: 584}];
+export const RAO_MON_CABLE: V[] = [{x: 1098, y: 612}, {x: 1180, y: 664}, {x: 1330, y: 672}, {x: 1432, y: 646}];
+export const RAO_COMP_OUT = {x: COMP.x, y: COMP.y - 140};
 /** the ghost (imagined) lift cycle: 1.4 s, lift and lower the fingers and wrist */
 const LIFT: HandPoseP = {wrist: -20, idx: [-8, 4, 2], curl: 0.12, thumb: 0.3};
 const ghostPose = (t: number) => {
@@ -166,7 +166,7 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
   const cur = cursorAt(t);
   const curK = clamp((t - (m.screen - 0.05)) / 0.45);
   const hitK = t > m.target - 0.04 ? 1 - clamp((t - (m.internet + 0.4)) / 0.5) : 0;
-  const scopeK = clamp((t - (m.capW - 0.1)) / 0.4) * (1 - clamp((t - (m.screen + 0.2)) / 0.4));
+  const scopeK = clamp((t - (m.capW - 0.1)) / 0.4) * (1 - clamp((t - (m.screen - 0.45)) / 0.35));
   const imag = t >= m.changes + 0.05;
   const labelK = clamp((t - (m.rhythm - 0.2)) / 0.3);
   const capFlow = clamp((t - (m.computer - 0.2)) / 0.4) * (1 - clamp((t - (m.target + 0.3)) / 0.4));
@@ -184,6 +184,7 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
     brows: -0.35 * concentrate + 0.3 * happy,
     mouth: happy > 0.5 ? 'grin' : concentrate > 0.5 ? 'flat' : 'smile',
   };
+  const okK = clamp((t - (hitTime() + 0.95)) / 0.25) * (1 - clamp((t - (m.disappears + 1.4)) / 0.3));
   const slowK = clamp((t - (m.imagines - 0.4)) / 0.3) * (1 - clamp((t - (m.stays + 1.0)) / 0.3));
   return (
     <g>
@@ -215,7 +216,13 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
       <Monitor id="s3mon" x={MON.x} y={MON.y} s={MON.s}>
         <GameScreen t={g} events={events} />
         <CursorWin cursor={cur} k={curK} hit={hitK} />
-        <Tag x={540} y={34} text="slow motion" size={24} k={slowK} fill={K.cream} />
+        <Tag x={520} y={38} text="slow motion" size={32} k={slowK} fill={K.cream} />
+        {okK > 0.01 && (
+          <g transform={`translate(466 196) scale(${fmt(0.7 + 0.3 * okK)})`} opacity={okK}>
+            <circle r={30} fill={K.green} stroke={INK} strokeWidth={5} />
+            <path d="M-14,0 L-4,11 L15,-11" fill="none" stroke="#FFFFFF" strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" />
+          </g>
+        )}
       </Monitor>
       <CableFlow p={RAO_CAP_CABLE} t={t} k={capFlow} color={K.teal} />
       <CableFlow p={RAO_MON_CABLE} t={t} k={monFlow} />
@@ -225,7 +232,8 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
       </Inked>
       <SideHand id="s3rh" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={FLAT} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} contact={1} surfaceY={56} />
       {gk > 0.01 && (
-        <g opacity={gk}>
+        <g opacity={Math.min(1, gk * 1.6)}>
+          <SideHand id="s3rg0" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={ghostPose(t - m.imagines)} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} ghost />
           <SideHand id="s3rg" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={ghostPose(t - m.imagines)} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} ghost />
         </g>
       )}
@@ -233,9 +241,9 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
       {scopeK > 0.01 && <path d="M592,262 Q640,250 676,236" fill="none" stroke={INK} strokeWidth={4} strokeDasharray="10 9" opacity={scopeK * 0.7} />}
       <Scope t={t} k={scopeK} dropAt={m.changes} label={imag ? 'imagining' : 'resting'} labelK={labelK} />
       {/* labels */}
-      <Tag x={960} y={575} text="imagined move" size={34} k={clamp((t - (m.imagines + 0.3)) / 0.3) * (1 - clamp((t - (m.cap - 0.2)) / 0.3))} fill={K.cream} />
-      <Tag x={560} y={612} text="real hand stays put" size={32} k={clamp((t - (m.stays - 0.05)) / 0.3) * (1 - clamp((t - (m.cap + 0.2)) / 0.3))} fill={K.cream} />
-      <Tag x={COMP.x} y={452} text="watching for the drop" size={30} k={watch} fill={K.cream} />
+      <Tag x={830} y={596} text="imagined move" size={36} k={clamp((t - (m.imagines + 0.3)) / 0.3) * (1 - clamp((t - (m.stays - 0.3)) / 0.25))} fill={K.cream} />
+      <Tag x={640} y={596} text="real hand stays put" size={36} k={clamp((t - (m.stays - 0.05)) / 0.3) * (1 - clamp((t - (m.cap + 0.2)) / 0.3))} fill={K.cream} />
+      <Tag x={860} y={466} text="watching for the drop" size={30} k={watch} fill={K.cream} />
     </g>
   );
 };
@@ -243,10 +251,10 @@ export const RaoLab: React.FC<{t: number; f: number}> = ({t, f}) => {
 // ---------------------------------------------------------------- Stocco from behind
 const HD = {x: 960, y: 330, rx: 118, ry: 128};
 export const HAND_AREA: V = {x: 907, y: 287};
-const COIL = {x: 853, y: 240, s: 0.45, ang: -50.9};
-const HANDLE_END = {x: 930, y: 146};
+const COIL = {x: 853, y: 240, s: 0.5, ang: -50.9};
+const HANDLE_END = {x: 938, y: 135};
 export const TMS_DISPLAY: V = {x: 325, y: 468};
-const TMS_CABLE: V[] = [{x: 300, y: 402}, {x: 300, y: 130}, {x: 700, y: 20}, {x: 932, y: 142}];
+const TMS_CABLE: V[] = [{x: 300, y: 402}, {x: 300, y: 130}, {x: 700, y: 10}, {x: 940, y: 131}];
 const SIGNAL = spline([HAND_AREA, {x: 918, y: 345}, {x: 944, y: 410}, {x: 962, y: 446}, {x: 990, y: 476}, {x: 1070, y: 512}, {x: 1160, y: 548}, {x: 1215, y: 600}, {x: 1252, y: 700}, {x: 1282, y: 806}]);
 
 export const StoccoBack: React.FC<{t: number; f: number}> = ({t, f}) => {
@@ -410,9 +418,9 @@ export const StoccoBack: React.FC<{t: number; f: number}> = ({t, f}) => {
         <RoundCoil x={COIL.x} y={COIL.y} s={COIL.s} ang={COIL.ang} pulse={pulseK} />
       </g>
       {/* labels */}
-      <Tag x={640} y={186} text="magnetic coil" size={36} k={coilTagK} />
-      {cortexTagK > 0.01 && <path d={`M760,232 Q840,236 ${HAND_AREA.x - 24},${HAND_AREA.y - 8}`} fill="none" stroke={INK} strokeWidth={5} opacity={cortexTagK} />}
-      <Tag x={600} y={232} text="left motor cortex" size={36} k={cortexTagK} />
+      <Tag x={700} y={300} text="magnetic coil" size={36} k={coilTagK} />
+      {cortexTagK > 0.01 && <path d={`M790,318 Q860,300 ${HAND_AREA.x - 20},${HAND_AREA.y + 6}`} fill="none" stroke={INK} strokeWidth={5} opacity={cortexTagK} />}
+      <Tag x={640} y={330} text="left motor cortex" size={36} k={cortexTagK} />
       <Tag x={HD.x - 165} y={HD.y + 108} text="L" size={34} k={lrK} />
       <Tag x={HD.x + 165} y={HD.y + 108} text="R" size={34} k={lrK} />
       <Tag x={1450} y={560} text="to the right hand" size={36} k={armTagK} />
@@ -459,7 +467,6 @@ export const StoccoClose: React.FC<{t: number; wrist: V}> = ({t, wrist}) => {
   const a = pt(u0, lerp(86, 58, u0)), b = pt(u1, lerp(86, 58, u1));
   const upK = clamp((t - m.jerk) / 0.08) * (1 - clamp((t - (m.contact - 0.3)) / 0.15));
   const dnK = clamp((t - (m.contact - 0.3)) / 0.06) * (1 - clamp((t - (m.contact + 0.2)) / 0.2));
-  const speed = clamp((t - m.jerk) / 0.03) * (1 - clamp((t - (m.jerk + 0.15)) / 0.15));
   return (
     <g>
       <defs>
@@ -493,23 +500,28 @@ export const StoccoClose: React.FC<{t: number; wrist: V}> = ({t, wrist}) => {
         </g>
       )}
       {/* motion marks: an arc about the wrist on the way up, a drop arrow on the way down */}
-      {upK > 0.01 && (
-        <g opacity={upK} fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round">
-          <path d={`M${wrist.x - 420},${wrist.y - 40} A430,430 0 0 1 ${wrist.x - 330},${wrist.y - 300}`} />
-          <path d={`M${wrist.x - 366},${wrist.y - 296} L${wrist.x - 330},${wrist.y - 300} L${wrist.x - 336},${wrist.y - 262}`} />
-        </g>
-      )}
-      {speed > 0.01 && (
-        <g opacity={speed} stroke={INK} strokeWidth={6} strokeLinecap="round">
-          <path d={`M${wrist.x - 300},${wrist.y + 40} l0,40`} />
-          <path d={`M${wrist.x - 360},${wrist.y + 20} l0,52`} />
-          <path d={`M${wrist.x - 240},${wrist.y + 50} l0,34`} />
-        </g>
-      )}
+      {upK > 0.01 && (() => {
+        // an arc about the wrist joint, just beyond the fingertips: the hand rotates UP at the wrist
+        const R = 560, a0 = (172 * Math.PI) / 180, a1 = (206 * Math.PI) / 180;
+        const P = (a: number, r = R) => `${fmt(wrist.x + Math.cos(a) * r)},${fmt(wrist.y + Math.sin(a) * r)}`;
+        const head = `M${P(a1 - 0.07, R - 26)} L${P(a1)} L${P(a1 - 0.07, R + 26)}`;
+        return (
+          <g opacity={upK} fill="none" strokeLinecap="round" strokeLinejoin="round">
+            <path d={`M${P(a0)} A${R},${R} 0 0 1 ${P(a1)}`} stroke={K.cream} strokeWidth={20} />
+            <path d={head} stroke={K.cream} strokeWidth={20} />
+            <path d={`M${P(a0)} A${R},${R} 0 0 1 ${P(a1)}`} stroke={INK} strokeWidth={9} />
+            <path d={head} stroke={INK} strokeWidth={9} />
+          </g>
+        );
+      })()}
       {dnK > 0.01 && (
-        <g opacity={dnK} fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" strokeLinejoin="round">
-          <path d={`M${KB.x - 70},${KB.y - 330} L${KB.x - 70},${KB.y - 220}`} />
-          <path d={`M${KB.x - 92},${KB.y - 246} L${KB.x - 70},${KB.y - 220} L${KB.x - 48},${KB.y - 246}`} />
+        <g opacity={dnK} fill="none" strokeLinecap="round" strokeLinejoin="round">
+          {[K.cream, INK].map((c, i) => (
+            <g key={i} stroke={c} strokeWidth={i ? 9 : 20}>
+              <path d={`M${KB.x - 150},${KB.y - 360} L${KB.x - 150},${KB.y - 230}`} />
+              <path d={`M${KB.x - 174},${KB.y - 258} L${KB.x - 150},${KB.y - 230} L${KB.x - 126},${KB.y - 258}`} />
+            </g>
+          ))}
         </g>
       )}
       {/* click mark on contact */}
@@ -524,7 +536,7 @@ export const StoccoClose: React.FC<{t: number; wrist: V}> = ({t, wrist}) => {
           </g>
         );
       })()}
-      <Tag x={wrist.x - 120} y={wrist.y - 380} text="wrist jerks up" size={38} k={clamp((t - (m.jerk + 0.05)) / 0.2)} />
+      <Tag x={wrist.x + 170} y={wrist.y - 300} text="wrist jerks up" size={40} k={clamp((t - (m.jerk + 0.05)) / 0.2)} />
     </g>
   );
 };
@@ -559,12 +571,12 @@ export const StoccoFront: React.FC<{t: number; f: number}> = ({t, f}) => {
       <circle cx={1420} cy={360} r={14} fill={K.saffron} stroke={INK} strokeWidth={4} />
       <circle cx={360} cy={170} r={70} fill="#FFFFFF" stroke={INK} strokeWidth={6} />
       <path d="M360,170 L360,124 M360,170 L392,186" stroke={INK} strokeWidth={6} strokeLinecap="round" />
-      <CrewChar look={STOCCO} pose={pose} frame={f} x={960} y={1034} scale={2} shadow={false} id="s3stoF" seed={5} headGear={<><SwimCap /><Earbuds /></>} life={0.6} />
+      <CrewChar look={STOCCO} pose={pose} frame={f} x={960} y={1034} scale={2} shadow={false} id="s3stoF" seed={5} headGear={<><SwimCap mark={false} /><Earbuds /><g stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round"><path d="M 18 -424 l 12 12 M 30 -424 l -12 12" /></g></>} life={0.6} />
       <path d="M-40,610 L1960,610 L1960,1660 L-40,1660 Z" fill="#D9A773" stroke={INK} strokeWidth={6} />
       <path d="M-40,610 L1960,610" stroke={lit('#D9A773', 0.35)} strokeWidth={8} />
       {/* the raised hand is drawn again in front of the desk edge when it is up */}
       {raise > 0.5 && <CrewChar look={STOCCO} pose={pose} frame={f} x={960} y={1034} scale={2} shadow={false} id="s3stoF2" seed={5} front="L" pass="frontArm" life={0.6} />}
-      <Tag x={1240} y={130} text="felt like a nervous tic" size={40} k={clamp((t - (m.tic - 0.25)) / 0.3) * (1 - clamp((t - (m.imagine - 0.2)) / 0.3))} />
+      <Tag x={1370} y={104} text="felt like a nervous tic" size={40} k={clamp((t - (m.tic - 0.25)) / 0.3) * (1 - clamp((t - (m.imagine - 0.2)) / 0.3))} />
     </g>
   );
 };

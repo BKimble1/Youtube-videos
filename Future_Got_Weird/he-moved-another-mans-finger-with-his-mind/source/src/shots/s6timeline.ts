@@ -151,21 +151,21 @@ const tokenAt = (v: Vote, t: number): Tok | null => {
   const flipText = v.flip === undefined ? undefined : finalText(v);
   const flip = v.flip === undefined ? 0 : clamp((t - (v.flip - 0.3)) / 0.6);
   const slotPos = {x: WIN_C.x + v.slot * 44, y: WIN_C.y};
-  const dwellS = v.slot === 0 ? (v.flip !== undefined ? 1.0 : 0.8) : 0.52;
+  const dwellS = v.slot === 0 ? (v.flip !== undefined ? 1.05 : 0.85) : 0.55;
   if (t < inAt) {
     const u = easeInOut((t - v.leave) / TRAVEL);
     const route = routeOf(v.who);
     const p = alongPath([...route.slice(0, -1), slotPos], u);
-    return {color: col, text: v.text, flipText, flip: 0, x: p.x, y: p.y, k: clamp((t - v.leave) / 0.2), s: 0.75};
+    return {color: col, text: v.text, flipText, flip: 0, x: p.x, y: p.y, k: clamp((t - v.leave) / 0.2), s: 0.9};
   }
   if (t < v.out) {
     const k = easeInOut(clamp((t - inAt) / 0.3));
-    return {color: col, text: v.text, flipText, flip, x: slotPos.x, y: slotPos.y, k: 1, s: lerp(0.75, dwellS, k)};
+    return {color: col, text: v.text, flipText, flip, x: slotPos.x, y: slotPos.y, k: 1, s: lerp(0.9, dwellS, k)};
   }
   const u = easeInOut(clamp((t - v.out) / TO_COIL));
   const p = alongPath([slotPos, ...ROUTE_R.slice(1)], u);
   const fade = 1 - clamp((t - arr) / 0.18);
-  return {color: col, text: v.text, flipText, flip, x: p.x, y: p.y, k: fade, s: lerp(dwellS, 0.55, u)};
+  return {color: col, text: v.text, flipText, flip, x: p.x, y: p.y, k: fade, s: lerp(dwellS, 0.75, u)};
 };
 
 // ---------------------------------------------------------------- cameras
@@ -180,8 +180,8 @@ export const VIEW = {
   RV: {x: MON_R.x, y: MON_R.y + (200 - 510) * MON_R.s, z: 3.3},
   SV: {x: MON_A.x, y: MON_A.y + (200 - 510) * MON_A.s, z: (3.3 * MON_R.s) / MON_A.s},
   WIDE: {x: 960, y: 470, z: 1},
-  SENDERS: {x: 430, y: 445, z: 1.15},
-  HEAD: {x: 1490, y: 650, z: 2.5},
+  SENDERS: {x: 410, y: 455, z: 1.3},
+  HEAD: {x: 1490, y: 715, z: 2.5},
   FLIP: {x: 930, y: 480, z: 1.2},
 };
 export const camAt = (t: number): CamK => {
@@ -278,7 +278,7 @@ export const bnState = (t: number): BNState => {
       tilt: 8 * (pr(t, b.overTime + 0.55, b.overTime + 0.9) + pr(t, b.learned + 0.25, b.learned + 0.6) + pr(t, b.whose + 0.15, b.whose + 0.5)),
       n: 0,
     },
-    tally: {k: pr(t, b.cleared + 0.85, b.cleared + 1.25), n: 13 * clamp((t - (b.thirteen + 0.05)) / 1.1), sub: pr(t, b.outOf + 0.1, b.outOf + 0.45)},
+    tally: {k: pr(t, b.thirteen - 0.3, b.thirteen + 0.05), n: 13 * clamp((t - (b.thirteen + 0.1)) / 1.0), sub: pr(t, b.outOf + 0.1, b.outOf + 0.45)},
     compBlink,
     look: {A: 1, B: 1},
   };
@@ -321,6 +321,7 @@ export const bnCues = (): {t: number; kind: string; gain?: number}[] => {
     {t: b.ten + 0.1, kind: 'pop', gain: 0.5},
     {t: b.across - 0.45, kind: 'whoosh', gain: 0.5},
     {t: b.cleared + 0.75, kind: 'whoosh', gain: 0.4},
+    {t: b.thirteen - 0.3, kind: 'pop', gain: 0.5},
     {t: b.outOf + 0.1, kind: 'pop', gain: 0.5},
   ];
   // the flickering lights come on (a soft tick per selection)
@@ -339,6 +340,6 @@ export const bnCues = (): {t: number; kind: string; gain?: number}[] => {
   // trust balance steps, the 10-of-16 marks, the 13-of-16 tally
   for (const a of [b.overTime + 0.55, b.learned + 0.25, b.whose + 0.15]) out.push({t: a, kind: 'tick', gain: 0.5});
   for (let i = 0; i < 10; i += 2) out.push({t: b.ten + 0.5 + (i / 10) * 1.3, kind: 'tick', gain: 0.35});
-  for (let i = 0; i < 13; i += 2) out.push({t: b.thirteen + 0.05 + (i / 13) * 1.1, kind: 'tick', gain: 0.4});
+  for (let i = 0; i < 13; i += 2) out.push({t: b.thirteen + 0.1 + (i / 13) * 1.0, kind: 'tick', gain: 0.4});
   return out.sort((x, y) => x.t - y.t);
 };

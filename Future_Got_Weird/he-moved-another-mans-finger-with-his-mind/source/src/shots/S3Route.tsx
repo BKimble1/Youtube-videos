@@ -24,7 +24,11 @@ const KL = SC * LAB_A; // lab unit -> campus unit
 type Cm = {x: number; y: number; z: number};
 type Win = {x: number; y: number};
 const labPt = (w: Win, lx: number, ly: number) => ({x: w.x + KL * lx, y: w.y + KL * (ly + LAB_OY)});
-const labCam = (w: Win, lx: number, ly: number, lz: number): Cm => ({...labPt(w, lx, ly), z: lz / KL});
+/** a camera inside a lab, kept within the lab panel so the building never shows at the frame edge */
+const labCam = (w: Win, lx: number, ly: number, lz: number): Cm => {
+  const x = clamp(lx, 960 / lz, 1920 - 960 / lz), y = clamp(ly, -LAB_OY + 540 / lz, 1630 - 540 / lz);
+  return {...labPt(w, x, y), z: lz / KL};
+};
 const WIDE: Cm = {x: 0, y: 470, z: 1.02};
 
 /** camera between A and B: log-zoom, moving about the fixed point of the two framings (a straight zoom on screen) */
@@ -72,7 +76,7 @@ export const S3: React.FC<{f: number}> = ({f}) => {
     return (
       <g>
         <rect x={0} y={0} width={1920} height={1080} fill={K.stoccoWall} />
-        <Cam x={760} y={640} z={z}>
+        <Cam x={700} y={640} z={z}>
           <StoccoClose t={t} wrist={STOCCO_WRIST} />
         </Cam>
       </g>
@@ -85,18 +89,18 @@ export const S3: React.FC<{f: number}> = ({f}) => {
   const part1 = t < m.cut;
   let cam: Cm;
   if (part1) {
-    const MONC = A(1440, 375, 1.9);
-    const HANDS = A(1110, 520, 1.2);
+    const OPEN = A(990, 470, 1.08);
+    const HANDS = A(1040, 560, 1.35);
     const HEAD = A(700, 330, 1.4);
-    const CHAIN = A(990, 450, 1.12);
-    const CURS = A(1440, 375, 2.0);
-    const COMP = A(1180, 430, 1.3);
+    const CHAIN = A(990, 480, 1.12);
+    const CURS = A(1480, 375, 2.0);
+    const COMP = A(1220, 430, 1.3);
     const BACK = B(960, 470, 1.0);
     const BHEAD = B(960, 330, 1.9);
-    const BTMS = B(720, 340, 1.35);
+    const BTMS = B(700, 380, 1.45);
     const BARM = B(1060, 560, 1.45);
     cam = camPath(t, [
-      [m.start, MONC], [m.launch + 0.7, MONC], [m.imagines + 0.4, HANDS],
+      [m.start, OPEN], [m.imagines - 0.45, OPEN], [m.imagines + 0.45, HANDS],
       [m.cap - 0.25, HANDS], [m.cap + 0.9, HEAD],
       [m.computer - 0.2, HEAD], [m.computer + 0.8, CHAIN],
       [m.screen - 0.35, CHAIN], [m.screen + 0.55, CURS],
@@ -108,9 +112,9 @@ export const S3: React.FC<{f: number}> = ({f}) => {
       [m.pulse + 0.02, BTMS], [m.handCut - 0.08, BARM],
     ]);
   } else {
-    const CURS = A(1440, 375, 2.0);
+    const CURS = A(1480, 375, 2.0);
     const FRONT = B(930, 400, 1.3);
-    const END: Cm = {x: 0, y: 480, z: 1.3};
+    const END: Cm = {x: 0, y: 445, z: 1.45};
     cam = camPath(t, [
       [m.cut, CURS], [m.disappears - 0.2, CURS], [m.disappears + 1.7, WIDE],
       [m.disappears + 1.85, WIDE], [m.described + 0.55, FRONT],
@@ -150,14 +154,14 @@ export const S3: React.FC<{f: number}> = ({f}) => {
     const pop = 1 + 0.35 * Math.max(0, 1 - Math.abs(t - (m.fire + 0.1)) / 0.35);
     const shrink = 1 - 0.6 * clamp((t - (t4 - 0.25)) / 0.3);
     const k = clamp((t - t0) / 0.2) * (1 - clamp((t - t4) / 0.2));
-    return <Packet x={p.x} y={p.y} s={(0.8 * pop * shrink) / cam.z} k={k} />;
+    return <Packet x={p.x} y={p.y} s={(1.0 * pop * shrink) / cam.z} k={k} />;
   })();
 
   // ------------------------------------------------ the ending: Rao's window erupts with game action
-  const bursts = !part1 ? [m.missing - 0.05, m.missing + 0.55, m.game - 0.05, m.game + 0.5] : [];
+  const bursts = !part1 ? [m.missing - 0.05, m.missing + 0.55, m.game - 0.05, m.game + 0.5, m.game + 0.95] : [];
   const glowA = bursts.reduce((a, b) => Math.max(a, t > b ? Math.max(0, 1 - (t - b) / 0.45) : 0), 0);
   const winA = {x: WIN_A.x + WW / 2, y: WIN_A.y};
-  const burstPos = [{x: -40, y: -10}, {x: 50, y: 30}, {x: -10, y: -40}, {x: 60, y: -20}];
+  const burstPos = [{x: -60, y: -70}, {x: 70, y: -40}, {x: -20, y: -120}, {x: 80, y: -110}, {x: -70, y: -30}];
 
   return (
     <g>
@@ -172,7 +176,7 @@ export const S3: React.FC<{f: number}> = ({f}) => {
         >
           {pk}
           {bursts.map((b, i) => (
-            <Burst key={i} x={winA.x + burstPos[i].x} y={winA.y + burstPos[i].y} s={34 + 6 * (i % 2)} k={(t - b) / 0.7} color={i % 2 ? K.coral : K.saffron} />
+            <Burst key={i} x={winA.x + burstPos[i].x} y={winA.y + burstPos[i].y} s={70 + 14 * (i % 2)} k={(t - b) / 0.7} color={i % 2 ? K.coral : K.saffron} />
           ))}
         </Campus>
       </Cam>

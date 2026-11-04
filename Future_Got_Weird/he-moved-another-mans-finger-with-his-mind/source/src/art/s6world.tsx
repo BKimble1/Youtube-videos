@@ -350,8 +350,13 @@ export const ReceiverBack: React.FC<{id: string; x: number; y: number; r: number
         {/* the figure-eight coil, flat on the back of the head over the left visual cortex, handle level */}
         {coilK > 0 && (
           <g opacity={clamp(coilK * 2)}>
-            <path d={`M${fmt(cx - 0.42 * 230 - 4)},${fmt(coil.y)} Q${fmt(cx - 1.6 * R)},${fmt(coil.y + 0.4 * R)} ${fmt(cx - 1.9 * R)},${fmt(coil.y + 1.6 * R)}`} fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" />
-            <Fig8Coil x={cx} y={coil.y} s={0.42} ang={-90} />
+            <path d={`M${fmt(cx - COIL_S * 230 - 4)},${fmt(coil.y)} Q${fmt(cx - 1.6 * R)},${fmt(coil.y + 0.4 * R)} ${fmt(cx - 1.9 * R)},${fmt(coil.y + 1.6 * R)}`} fill="none" stroke={INK} strokeWidth={8} strokeLinecap="round" />
+            <g transform={`translate(${fmt(cx)} ${fmt(coil.y)}) rotate(-90) scale(${COIL_S})`}>
+              <rect x={-24} y={-236} width={48} height={182} rx={20} fill={K.cream} opacity={0.75} />
+              <ellipse cx={-62} cy={0} rx={74} ry={68} fill={K.cream} opacity={0.75} />
+              <ellipse cx={62} cy={0} rx={74} ry={68} fill={K.cream} opacity={0.75} />
+            </g>
+            <Fig8Coil x={cx} y={coil.y} s={COIL_S} ang={-90} />
             {pulse > 0 && [0, 1, 2].map((i) => {
               const k = clamp(pulse * 1.4 - i * 0.2);
               return <circle key={i} cx={cx} cy={coil.y} r={30 + 70 * k} fill="none" stroke={K.saffron} strokeWidth={7 - i * 1.5} opacity={(1 - k) * 0.9} />;
@@ -362,7 +367,8 @@ export const ReceiverBack: React.FC<{id: string; x: number; y: number; r: number
     </g>
   );
 };
-export const coilPos = (h: {x: number; y: number; r: number}) => ({x: h.x - 0.34 * h.r, y: h.y + 0.42 * h.r});
+export const coilPos = (h: {x: number; y: number; r: number}) => ({x: h.x - 0.36 * h.r, y: h.y + 0.4 * h.r});
+const COIL_S = 0.54;
 
 // ---------------------------------------------------------------- the building
 export const ROOM_A = {x: 60, y: 60, w: 700, h: 380};
@@ -394,7 +400,7 @@ export const WIN_C = {x: WIN.x + WIN.w / 2, y: WIN.y + WIN.h / 2};
 export const routeOf = (who: 'A' | 'B') => {
   const c = capOf(who);
   const top = who === 'A' ? ROOM_A.y + 46 : ROOM_B.y + 46;
-  return [c, {x: c.x + 50, y: top}, {x: 770, y: top}, {x: 870, y: who === 'A' ? 418 : 462}, {x: WIN_C.x, y: WIN_C.y}];
+  return [c, {x: c.x + 85, y: top + 6}, {x: 770, y: top + 6}, {x: 870, y: who === 'A' ? 418 : 462}, {x: WIN_C.x, y: WIN_C.y}];
 };
 export const ROUTE_R = [{x: WIN_C.x, y: WIN_C.y}, {x: 1050, y: 470}, {x: 1180, y: 600}, {x: COIL.x - 20, y: COIL.y}];
 export const alongPath = (pts: {x: number; y: number}[], u: number) => {
@@ -465,12 +471,12 @@ const SenderRoom: React.FC<{who: 'A' | 'B'; st: BNState; t: number; f: number}> 
         {/* desk */}
         <rect x={o.x - 10} y={o.y + 330} width={o.w + 20} height={60} fill={K.desk} stroke={INK} strokeWidth={5} />
         <rect x={o.x - 10} y={o.y + 330} width={o.w + 20} height={12} fill={K.deskTop} />
+        {g.k > 0.01 && (
+          <path d={`M${fmt(eye.x)},${fmt(eye.y)} L${fmt(lerp(eye.x, led.x, g.k))},${fmt(lerp(eye.y, led.y, g.k))}`} stroke={col} strokeWidth={7} strokeDasharray="12 9" strokeLinecap="round" />
+        )}
         <BNMonitor id={`${id}m`} x={m.x} y={m.y} s={m.s} t={t} accent={col} leds={st.leds[who]} ringYes={g.side < 0 ? g.k : 0} ringNo={g.side > 0 ? g.k : 0}>
           <BNScreen id={`${id}s`} t={t} trs={st.trs} fx={{...(who === 'A' ? st.fxA : st.fxB), tint: st.tint}} accent={col} />
         </BNMonitor>
-        {g.k > 0.01 && (
-          <path d={`M${fmt(eye.x)},${fmt(eye.y)} L${fmt(lerp(eye.x, led.x, g.k))},${fmt(lerp(eye.y, led.y, g.k))}`} stroke={col} strokeWidth={5} strokeDasharray="10 8" strokeLinecap="round" opacity={0.9} />
-        )}
       </g>
     </g>
   );
@@ -590,7 +596,7 @@ const Balance: React.FC<{x: number; y: number; k: number; tilt: number}> = ({x, 
   );
 };
 
-const TallyCard: React.FC<{k: number; n: number; sub: number}> = ({k, n, sub}) => {
+export const TallyCard: React.FC<{k: number; n: number; sub: number}> = ({k, n, sub}) => {
   if (k <= 0.001) return null;
   const x0 = 960 - 16 * 31 + 5;
   return (
@@ -598,7 +604,7 @@ const TallyCard: React.FC<{k: number; n: number; sub: number}> = ({k, n, sub}) =
       <rect x={410} y={240} width={1100} height={330} rx={34} fill={INK} opacity={0.2} transform="translate(8 10)" />
       <rect x={410} y={240} width={1100} height={330} rx={34} fill={K.cream} stroke={INK} strokeWidth={6} />
       <text x={960} y={330} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={64} fill={INK}>
-        {Math.round(clamp(n, 0, 13))} of 16 lines cleared
+        13 of 16 lines cleared
       </text>
       {Array.from({length: 16}, (_, i) => {
         const on = clamp(n - i);
@@ -640,18 +646,16 @@ export const BNWorld: React.FC<{st: BNState; t: number; f: number}> = ({st, t, f
         {(['A', 'B'] as const).map((w) => <path key={w} d={'M' + routeOf(w).slice(1).map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L')} />)}
         <path d={'M' + ROUTE_R.slice(1).map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L')} />
       </g>
+      {/* room labels */}
+      <Tag x={ROOM_A.x + 300} y={ROOM_A.y + 36} text="Sender A" size={30} k={st.roomTags} fill={K.senderA} color="#FFFFFF" />
+      <Tag x={ROOM_B.x + 300} y={ROOM_B.y + 36} text="Sender B" size={30} k={st.roomTags} fill={K.senderB} color="#FFFFFF" />
+      <Tag x={ROOM_R.x + 108} y={ROOM_R.y + 38} text="Receiver" size={30} k={st.roomTags} fill={K.receiver} color="#FFFFFF" />
+      {st.hallTag.map((h, i) => <Tag key={i} x={960} y={112} text={h.text} size={h.text.length > 12 ? 28 : 38} k={h.k} />)}
       <Computer blink={st.compBlink} part="back" />
       {st.toks.map((tk, i) => <Token key={i} {...tk} />)}
       <Computer blink={st.compBlink} part="front" />
-      {/* room labels */}
-      <Tag x={ROOM_A.x + 120} y={ROOM_A.y + 40} text="Sender A" size={30} k={st.roomTags} fill={K.senderA} color="#FFFFFF" />
-      <Tag x={ROOM_B.x + 120} y={ROOM_B.y + 40} text="Sender B" size={30} k={st.roomTags} fill={K.senderB} color="#FFFFFF" />
-      <Tag x={ROOM_R.x + 120} y={ROOM_R.y + 40} text="Receiver" size={30} k={st.roomTags} fill={K.receiver} color="#FFFFFF" />
-      {st.hallTag.map((h, i) => <Tag key={i} x={960} y={112} text={h.text} size={30} k={h.k} />)}
       <FlipGrid x={960} y={176} k={st.grid.k} n={st.grid.n} />
       <Balance x={960} y={170} k={st.bal.k} tilt={st.bal.tilt} />
-      {st.tally.k > 0 && <rect x={-200} y={-200} width={2400} height={1400} fill={K.paper} opacity={0.6 * clamp(st.tally.k)} />}
-      <TallyCard k={st.tally.k} n={st.tally.n} sub={st.tally.sub} />
     </g>
   );
 };

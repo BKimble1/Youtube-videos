@@ -23,7 +23,12 @@ const RAO_X = 760, STO_X = 860, GROUND = 1000, CS = 1.5;
 export const RAO_HEAD = {x: RAO_X, y: GROUND - 372 * CS};
 export const STO_HEAD = {x: STO_X, y: GROUND - 372 * CS};
 /** where the coil sits on Stocco's head (over the cap mark, his left hemisphere = frame-right) */
-export const STO_COIL = {x: STO_X + 48, y: GROUND - 420 * CS - 20};
+export const STO_COIL = {x: STO_X + 50, y: GROUND - 372 * CS - 86, s: 0.72, ang: 30};
+/** the end of the coil's handle (where its stand arm and cable attach) */
+export const STO_COIL_GRIP = {
+  x: STO_COIL.x + Math.cos((STO_COIL.ang * Math.PI) / 180) * 262 * STO_COIL.s,
+  y: STO_COIL.y + Math.sin((STO_COIL.ang * Math.PI) / 180) * 262 * STO_COIL.s,
+};
 
 /** arm that puts the hand at room point (wx, wy) for a character at x, GROUND, CS (flip mirrors x) */
 const armTo = (cx: number, flip: boolean, side: -1 | 1, wx: number, wy: number): Arm =>
@@ -189,10 +194,10 @@ export const StoccoRoom: React.FC<RoomOpts & {coil?: number; coilPulse?: number;
       />
       {coil > 0.001 && (
         <g opacity={Math.min(1, coil * 1.5)}>
-          {/* the coil on its stand arm, over the cap mark */}
-          <path d={`M${STO_COIL.x + 300},-40 L${STO_COIL.x + 260},${STO_COIL.y - 150} L${STO_COIL.x + 110},${STO_COIL.y - 40}`} fill="none" stroke={INK} strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" />
-          <path d={`M${STO_COIL.x + 300},-40 L${STO_COIL.x + 260},${STO_COIL.y - 150} L${STO_COIL.x + 110},${STO_COIL.y - 40}`} fill="none" stroke={K.metal} strokeWidth={12} strokeLinecap="round" strokeLinejoin="round" />
-          <RoundCoil x={STO_COIL.x} y={STO_COIL.y} s={0.5} ang={-24} pulse={coilPulse} arcSide={1} />
+          {/* the coil on its stand arm, over the cap mark (his left hemisphere: frame-right on a front view) */}
+          <path d={`M${STO_COIL_GRIP.x + 40},-40 L${STO_COIL_GRIP.x + 60},${STO_COIL_GRIP.y - 120} L${STO_COIL_GRIP.x},${STO_COIL_GRIP.y}`} fill="none" stroke={INK} strokeWidth={24} strokeLinecap="round" strokeLinejoin="round" />
+          <path d={`M${STO_COIL_GRIP.x + 40},-40 L${STO_COIL_GRIP.x + 60},${STO_COIL_GRIP.y - 120} L${STO_COIL_GRIP.x},${STO_COIL_GRIP.y}`} fill="none" stroke={K.metal} strokeWidth={13} strokeLinecap="round" strokeLinejoin="round" />
+          <RoundCoil x={STO_COIL.x} y={STO_COIL.y} s={STO_COIL.s} ang={STO_COIL.ang} pulse={coilPulse} arcSide={-1} />
         </g>
       )}
       {dim > 0 && <rect x={-40} y={-40} width={RW + 80} height={RH + 80} fill={INK} opacity={0.4 * dim} />}
