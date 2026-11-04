@@ -38,9 +38,10 @@ export const T = {
   // S10 RELEASE: low beside the fish; the loose curve in front of us; tighten; the head clears ONCE on "pull"
   curl: 17.96,
   tighten: 20.3,
-  release: 20.82,
-  // S11 SWIM: track alongside the eel through reeds; the predator recedes behind it
-  swim: 21.3,
+  release: 20.82, // "pull," 20.82–21.10: the head slides out and clears once (escape.T_REL 20.95)
+  // S11 SWIM: track alongside the eel through reeds; the predator recedes behind it (a CUT from the low view, in the
+  // pause before "and swims away", after a beat on the freed head)
+  swim: 21.2,
   // S12 LOOP: a reed close to the lens wipes back to frame 0
   reed: 24.3,
   end: 24.8,

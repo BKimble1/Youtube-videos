@@ -26,6 +26,8 @@ type ExtState = {
   /** reed clumps near the sight lines to these points fade out (radius `clearR`) */
   clear?: V3[];
   clearR?: number;
+  /** a fixed per-shot choice of reed clumps (1 keep, 0 drop) in place of clear/nearCut: nothing fades mid-shot */
+  reedKeep?: (c: {x: number; z: number; r: number; h: number}) => number;
   /** fade reed clumps whose base is within this distance of the lens (no flat blades across the frame) */
   nearCut?: number;
   /** the reeds/rocks split depth: 'eel' = the eel's nearest third (S11), default the predator's centre */
@@ -44,6 +46,12 @@ type ExtState = {
   headOnTop?: boolean;
   /** draw the outside part plainly (no mask at the opening): the poke, where only the tip is out */
   plainOutside?: boolean;
+  /** how far round the crossing the opening shows only the inside drawing (× the default radius): the whole bend of
+   *  the neck round the cover's edge drawn in one layer (no seam across it) */
+  holeR?: number;
+  /** hide the outside drawing over the WHOLE visible cover plate (not only round the crossing): where the body lies
+   *  in the slit just behind the cover's edge, its fin fringe on the cover side stays under the cover (S1) */
+  coverFull?: boolean;
   /** S7: a small puff of bubbles where the tip breaks out into open water */
   puff?: boolean;
   /** how far (eel units) the outside drawing reaches in under the cover's rim at the crossing (default 0.5) */
@@ -72,8 +80,8 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
   const e = s.eel;
   const cross = e ? e.crossI : -1;
   const zSplit = s.split === 'eel' && e ? depth(B, e.c[Math.round(N * 0.4)]) : undefined;
-  const sight = s.clear ? clearSight(B, s.clear, s.clearR ?? 10) : undefined;
-  const nc = s.nearCut;
+  const sight = s.reedKeep ? (c: any, _i: number) => s.reedKeep!(c) : s.clear ? clearSight(B, s.clear, s.clearR ?? 10) : undefined;
+  const nc = s.reedKeep ? undefined : s.nearCut;
   const filter = sight || nc
     ? (c: {x: number; z: number; r: number; h: number; n: number; seed: number}, i: number) => {
         const a = sight ? Number(sight(c as any, i)) : 1;
@@ -102,8 +110,8 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
     const reach = (s.underRim ?? 0.4) * k;
     const R = 1.7 * (reach + r) + 10;
     // over the opening, the outside drawing gives way to the inside one only right at the crossing (its cut end)
-    const Rh = reach + 1.25 * r + 6;
-    return {x, y, r, R, Rh, dIn: ((s.underRim ?? 0.4) * N) / EEL_L, dI: ((R / Math.max(1, k) + 4.5) * N) / EEL_L};
+    const Rh0 = reach + 1.25 * r + 6, Rh = Rh0 * (s.holeR ?? 1);
+    return {x, y, r, R, Rh, Rh0, dIn: ((s.underRim ?? 0.4) * N) / EEL_L, dI: ((R / Math.max(1, k) + 4.5) * N) / EEL_L};
   })();
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
@@ -132,7 +140,7 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
             </radialGradient>
             <mask id={ids.mo} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
               <rect x={0} y={0} width={1080} height={1920} fill="#FFFFFF" />
-              {g.cover && <path d={g.cover} fill={`url(#${ids.rg})`} />}
+              {g.cover && <path d={g.cover} fill={s.coverFull ? '#000000' : `url(#${ids.rg})`} filter={s.coverFull ? `url(#${ids.fb})` : undefined} />}
               <path d={hole} fill={`url(#${ids.rh})`} filter={`url(#${ids.fb})`} />
             </mask>
             <radialGradient id={ids.rh} gradientUnits="userSpaceOnUse" cx={X.x} cy={X.y} r={X.Rh}>
@@ -142,7 +150,7 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
             </radialGradient>
             <radialGradient id={ids.sh} gradientUnits="userSpaceOnUse" cx={X.x} cy={X.y} r={X.R * 1.7}>
               <stop offset="0" stopColor="#2A0A0E" stopOpacity={0} />
-              <stop offset={Math.max(s.shadeNear ?? 0.6, (1.05 * X.Rh) / (1.7 * X.R))} stopColor="#2A0A0E" stopOpacity={0} />
+              <stop offset={Math.min(0.95, Math.max(s.shadeNear ?? 0.6, (1.05 * X.Rh0) / (1.7 * X.R)))} stopColor="#2A0A0E" stopOpacity={0} />
               <stop offset="1" stopColor="#2A0A0E" stopOpacity={s.insideShade ?? 0.3} />
             </radialGradient>
             <mask id={ids.rm} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
@@ -366,7 +374,7 @@ export const openState = (t: number): ExtState => {
   const pose = predPose(t, {gill: openGill(t)});
   // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
   // the part inside is in deep shade; when the peek breath lifts the cover it shows, the same body running on in
-  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideShade: 0.8 - 0.38 * bump(t, 1.95, T.peek, 2.75), insideSpan: 5, finScale: 1.9};
+  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideShade: 0.8 - 0.38 * bump(t, 1.95, T.peek, 2.75), insideSpan: 5, finScale: 1.9, coverFull: true};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view
@@ -491,8 +499,8 @@ export const pokeState = (t: number): ExtState => {
 export const pokeStateWith = (o: Orbit, t: number): ExtState => (t > 15.9 && t < 18 ? {...headState(t), cam: orbitCam(o)} : {cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
 // ---------------------------------------------------------------- S8 FOLLOWS (13.86 – 15.96): over the predator's back
-const F_A: Orbit = {target: [-16, -7, 11], az: 14, el: 34, d: 42, f: 1250, cy: 1150};
-const F_B: Orbit = {target: [-8, -7, 12], az: 16, el: 32, d: 58, f: 1250, cy: 1150};
+const F_A: Orbit = {target: [-16, -7, 11], az: 14, el: 20, d: 42, f: 1250, cx: 610, cy: 1150};
+const F_B: Orbit = {target: [-8, -7, 12], az: 16, el: 18, d: 58, f: 1250, cx: 600, cy: 1150};
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
@@ -507,7 +515,7 @@ export const headCam = (t: number): Cam3 => orbitCam(lerpOrbit(H_A, H_B, ss5(t, 
 const caughtGill = (t: number) => Math.max(breath(t), 0.25 + 0.55 * ss(t, 15.9, 16.4));
 export const headState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, shadeNear: 0.22, insideEye: 0.95, flankShadow: 1, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
+  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.64, shadeNear: 0.22, insideEye: 0.95, flankShadow: 1, holeR: 2.4, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
@@ -516,7 +524,8 @@ const R_B: Orbit = {target: [-24, -7, 16], az: 18, el: -5, d: 46, f: 1250, cy: 1
 /** held on the loop and the caught head; it pushes in toward the slit for the pull, and eases back as the eel swims
  *  off */
 const R_P: Orbit = {target: [-18.5, -3.5, 12], az: 20, el: -7, d: 30, f: 1250, cy: 1540};
-export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(lerpOrbit(R_A, R_P, ss5(t, 20.0, 20.8)), R_B, ss5(t, 20.9, 21.55)));
+/** it holds through the head coming free and a beat after (the freed head in view), then eases back as the eel dashes */
+export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(lerpOrbit(R_A, R_P, ss5(t, 20.0, 20.8)), R_B, ss5(t, SWIM_CFG.rb0, SWIM_CFG.rb1)));
 /** the predator from the curl to the end (S10 and S11 share it, so nothing pops where the release view becomes the
  *  swim view): breathing hard while the eel strains, the cover settling after the head leaves, a startle, a turn
  *  of the head after the escaping eel */
@@ -545,7 +554,32 @@ const tailState = (t: number): ExtState => {
     clear: [[-12, -3, 12], [-25, -6, 6], eel.c[Math.round(N * 0.3)]],
     clearR: 9,
     nearCut: 14,
+    // the tracking shot (after the cut): the reeds kept or dropped once for the whole shot (no clump fades mid-frame)
+    reedKeep: t >= SWIM_CFG.k1 ? swimReedKeep : undefined,
   };
+};
+/** the swim shot's reed choice: a clump is dropped (for the whole shot) if it ever comes within 9 u of a sight line
+ *  from the tracking camera to the eel or the predator, or within 14 u of the lens, sampled every 0.2 s */
+let SWIM_SIGHT: {eyes: V3[]; segs: [V3, V3][]} | null = null;
+const swimReedKeep = (c: {x: number; z: number; r: number; h: number}): number => {
+  if (!SWIM_SIGHT) {
+    const eyes: V3[] = [], segs: [V3, V3][] = [];
+    for (let t = SWIM_CFG.k1; t <= T.reed + 0.01; t += 0.2) {
+      const e = escapeAt(t), eye = swimTrack(t).eye;
+      eyes.push(eye);
+      for (const p of [[-12, -3, 12], [-25, -6, 6], [-5, -4, 0], e.c[0], e.c[Math.round(N * 0.3)], e.c[Math.round(N * 0.7)]] as V3[]) segs.push([eye, p]);
+    }
+    SWIM_SIGHT = {eyes, segs};
+  }
+  for (const [a, b] of SWIM_SIGHT.segs) {
+    const vx = b[0] - a[0], vz = b[2] - a[2], l2 = vx * vx + vz * vz || 1;
+    for (const [cx, cz] of [[c.x, c.z], [c.x + 0.35 * c.h, c.z]]) {
+      const u = clamp(((cx - a[0]) * vx + (cz - a[2]) * vz) / l2);
+      if (Math.hypot(a[0] + vx * u - cx, a[2] + vz * u - cz) - c.r < 9) return 0;
+    }
+  }
+  for (const e of SWIM_SIGHT.eyes) if (Math.hypot(c.x - e[0], c.z - e[2]) - c.r < 14) return 0;
+  return 1;
 };
 export const releaseState = (t: number): ExtState => tailState(t);
 
@@ -568,9 +602,12 @@ const swimTrack = (t: number): Cam3 => {
 };
 /** the tracking camera's offset from the swimmer, its look toward the predator, lead room (tuned with
  *  tools/v4/swim_gap.ts: clear water on screen between the eel and the predator) */
-export const SWIM_CFG = {off: [5, -44, 22], look: 0.1, lead: [-6, 0, 3], f: 1060, cx: 540, cy: 1300, k0: 20.95, k1: 21.95};
+/** S10 holds low beside the fish through the head coming free and a beat after; on "and swims away" (T.swim) the film
+ *  CUTS to the tracking view from above and outside (a swing between the two would carry the predator's face under
+ *  the eel mid-move: tools/v4/face_clear.ts). k0/k1 can still blend instead of cutting. */
+export const SWIM_CFG = {off: [5, -44, 22], look: 0.1, lead: [-6, 0, 3], f: 1060, cx: 540, cy: 1300, k0: T.swim - 0.001, k1: T.swim, rb0: 21.5, rb1: 22};
 export const swimCam = (t: number): Cam3 => {
-  const k = ss5(t, SWIM_CFG.k0, SWIM_CFG.k1);
+  const k = t >= SWIM_CFG.k1 ? 1 : ss5(t, SWIM_CFG.k0, SWIM_CFG.k1);
   return k >= 1 ? swimTrack(t) : lerpCam(releaseCam(t), swimTrack(t), k);
 };
 export const swimState = (t: number): ExtState => tailState(t);
