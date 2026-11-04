@@ -15,6 +15,8 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="SheetV3" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0], captions: true, cols: 4, v3: true}} />
     <Composition id="AnkleKneeV4" component={Film} durationInFrames={FRAMES4} fps={30} width={1080} height={1920} defaultProps={{audio: false as string | false, captions: true, v4: true}} />
     <Composition id="SheetV4" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0], captions: true, cols: 4, v4: true}} />
+    <Composition id="AnkleKneeV5" component={Film} durationInFrames={FRAMES4} fps={30} width={1080} height={1920} defaultProps={{audio: false as string | false, captions: true, v5: true}} />
+    <Composition id="SheetV5" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0], captions: true, cols: 4, v5: true}} />
     <Composition id="Sheet" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0, 9, 18, 30, 42, 54, 66, 72], captions: true, cols: 4}} />
   </>
 );
