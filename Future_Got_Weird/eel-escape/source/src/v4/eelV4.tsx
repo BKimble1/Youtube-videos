@@ -161,7 +161,13 @@ export const eelScreen = (B: Basis, e: Eel3Pose) => {
     const tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1;
     const d = norm3(e.back[i]);
     // the back in screen terms: (dx, dy) on the screen (y down), dz away from the camera
-    const dx = dot3(d, B.r), dy = -dot3(d, B.u), dz = dot3(d, B.fw);
+    let dx = dot3(d, B.r), dy = -dot3(d, B.u);
+    const dz = dot3(d, B.fw);
+    // the camera's roll turns the screen axes (as in proj)
+    if (B.roll) {
+      const c = Math.cos((B.roll * Math.PI) / 180), sn = Math.sin((B.roll * Math.PI) / 180);
+      [dx, dy] = [dx * c - dy * sn, dx * sn + dy * c];
+    }
     // right normal of the snout→tail screen direction
     const nRx = -ty / tl, nRy = tx / tl;
     const a1 = dx * nRx + dy * nRy; // toward the right edge

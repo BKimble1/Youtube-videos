@@ -3,12 +3,12 @@
  "duration_s": 24.8,
  "integrated_lufs_stereo": -14.01,
  "true_peak_dbtp_4x": -1.6,
- "limiter_max_gr_db": -2.42,
+ "limiter_max_gr_db": -2.43,
  "voice_lufs_mono": -17.11,
- "effects_lufs_mono": -34.61,
+ "effects_lufs_mono": -34.67,
  "ambience_lufs_mono": -36.67,
- "effects_under_voice_db": 17.5,
+ "effects_under_voice_db": 17.56,
  "lag_mix_vs_master_samples": 0,
- "loop_seam_jump": 0.006872,
+ "loop_seam_jump": 0.004329,
  "events": 42
 }
