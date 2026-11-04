@@ -5,10 +5,10 @@
  "true_peak_dbtp_4x": -1.6,
  "limiter_max_gr_db": -2.42,
  "voice_lufs_mono": -17.11,
- "effects_lufs_mono": -34.56,
+ "effects_lufs_mono": -34.61,
  "ambience_lufs_mono": -36.67,
- "effects_under_voice_db": 17.45,
+ "effects_under_voice_db": 17.5,
  "lag_mix_vs_master_samples": 0,
- "loop_seam_jump": 0.004481,
+ "loop_seam_jump": 0.006872,
  "events": 42
 }

@@ -398,7 +398,7 @@ const S5Fog: React.FC<{B: Basis; dip: number}> = ({B, dip}) => {
 
 const s5State = (t: number) => {
   const B = s5Cam(t);
-  const e = toScreen(B, s5Pose(t), 0.0, 0.3);
+  const e = toScreen(B, s5Pose(t), -0.4, 0.3);
   return {B, e};
 };
 
@@ -539,7 +539,7 @@ const s6Pose = (t: number) => poseOn(S6_ROUTE, s6Tip(t), (c) => backFrom(c, [0, 
 
 // ---------------------------------------------------------------- the S6 camera
 const CAM_GAP: Cam6 = {e: [3.6, -2.4, 6.2], f: 700, cx: 640, cy: 960};
-const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 728, cy: 915};
+const CAM_CUT: Cam6 = {e: [1.1, 1.75, 11.6], f: 900, cx: 753, cy: 805};
 const s6Cam = (t: number): Cam6 => {
   const ks: [number, Cam6][] = [
     [G_BEATS.cut - 0.06, CAM_CUT],
@@ -939,7 +939,7 @@ const s6State = (t: number) => {
   const c = s6Cam(t);
   const B = cam6B(c);
   const pose = s6Pose(t);
-  const e = toScreen(B, pose, 0.0, 0.5);
+  const e = toScreen(B, pose, -0.4, 0.5);
   // where the body crosses the curtain (Z = 0): a fractional sample index
   let iX = -1;
   for (let i = 1; i <= N; i++) {
