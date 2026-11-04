@@ -3,12 +3,12 @@
  "duration_s": 24.8,
  "integrated_lufs_stereo": -14.01,
  "true_peak_dbtp_4x": -1.6,
- "limiter_max_gr_db": -2.34,
- "voice_lufs_mono": -17.1,
- "effects_lufs_mono": -35.1,
+ "limiter_max_gr_db": -2.21,
+ "voice_lufs_mono": -17.11,
+ "effects_lufs_mono": -35.32,
  "ambience_lufs_mono": -36.68,
- "effects_under_voice_db": 18.0,
+ "effects_under_voice_db": 18.21,
  "lag_mix_vs_master_samples": 0,
- "loop_seam_jump": 0.004145,
- "events": 42
+ "loop_seam_jump": 0.005446,
+ "events": 46
 }

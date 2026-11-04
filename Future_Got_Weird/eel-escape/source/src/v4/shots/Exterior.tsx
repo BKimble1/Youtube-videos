@@ -58,6 +58,8 @@ type ExtState = {
   /** hide the outside drawing over the WHOLE visible cover plate (not only round the crossing): where the body lies
    *  in the slit just behind the cover's edge, its fin fringe on the cover side stays under the cover (S1) */
   coverFull?: boolean;
+  /** S1: puffs of bubbles out of the gill when the cover flares */
+  puffAt?: 'open';
   /** S7: a small puff of bubbles where the tip breaks out into open water */
   puff?: boolean;
   /** how far (eel units) the outside drawing reaches in under the cover's rim at the crossing (default 0.5) */
@@ -203,6 +205,7 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
       )}
       {e && !hole && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} over={s.headOnTop ? 'head' : 'tail'} finScale={s.finScale} />}
       {s.puff && <BreakPuff B={B} t={s.t} />}
+      {s.puffAt === 'open' && <OpenPuff B={B} t={s.t} />}
       <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
   );
@@ -224,6 +227,32 @@ const BreakPuff: React.FC<{B: Basis; t: number}> = ({B, t}) => {
     const q = proj(B, p);
     const r = q.s * b.r * (1 + 0.35 * a);
     const op = ss(a, 0, 0.06) * (1 - ss(a, b.life - 0.3, b.life));
+    if (r < 0.8 || op <= 0) return;
+    out.push(
+      <g key={k} opacity={op}>
+        <circle cx={q.x} cy={q.y} r={r} fill="#E8FBF6" fillOpacity={0.22} stroke="#F4FFFC" strokeOpacity={0.85} strokeWidth={Math.max(1, 0.16 * r)} />
+        <circle cx={q.x - 0.35 * r} cy={q.y - 0.38 * r} r={0.26 * r} fill="#FFFFFF" fillOpacity={0.9} />
+      </g>,
+    );
+  });
+  return <g>{out}</g>;
+};
+/** S1: when the cover flares (the first beat, and the gasp on "out") the gill blows out a burst of bubbles along the
+ *  slit; they rise and drift back on the current (fixed seeds) */
+const OPEN_PUFF = Array.from({length: 16}, (_, k) => {
+  const h = (a: number) => Math.abs((Math.sin(k * 91.7 + a * 271.3) * 43758.5453) % 1);
+  const te = (k < 9 ? T.breathPeak - 0.08 + 0.03 * k : T.whip3 - 0.1 + 0.03 * (k - 9)) + 0.02 * h(1);
+  return {te, r: 0.12 + 0.2 * h(2), off: [0.4 + 0.5 * h(3), 0.5 + 3.2 * h(4), 0.4 + 0.6 * h(5)] as V3, v: 3.2 + 2 * h(6), w: 2 * Math.PI * h(7), life: 0.65 + 0.35 * h(8)};
+});
+const OpenPuff: React.FC<{B: Basis; t: number}> = ({B, t}) => {
+  const out: React.ReactNode[] = [];
+  OPEN_PUFF.forEach((b, k) => {
+    const a = t - b.te;
+    if (a < 0 || a > b.life || b.te + b.life > T.gulp - 0.04) return;
+    const p: V3 = add3(add3(EXIT_OPEN.p, b.off), [0.9 * a + 0.12 * Math.sin(10 * a + b.w), -b.v * a * (1 - 0.3 * a), 0.8 * a]);
+    const q = proj(B, p);
+    const r = q.s * b.r * (1 + 0.3 * a);
+    const op = ss(a, 0, 0.05) * (1 - ss(a, b.life - 0.25, b.life));
     if (r < 0.8 || op <= 0) return;
     out.push(
       <g key={k} opacity={op}>
@@ -292,7 +321,21 @@ const propGill = (e: {crossI: number} | null) => {
 
 // ---------------------------------------------------------------- S1 OPEN (0 – 2.62), also the loop's target frame
 /** the gill cover: one breath on the first beat (peak T.breathPeak), the peek breath on "belongs to the eel" */
-export const openGill = (t: number) => Math.max(breath(t), 0.45, 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
+export const openGill = (t: number) =>
+  Math.max(breath(t), 0.45, 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.6 * bump(t, 0.82, T.whip3 - 0.02, 1.3), 0.15 + 0.85 * bump(t, 1.85, T.peek, 2.8));
+/** the hook's energy: three whips of the tail on the beats ("TAIL", "sticking", "out"), each one jolting the camera
+ *  and making the fish flinch */
+const openWhips = (t: number) => ({
+  w1: bump(t, 0.04, T.flick, 0.5),
+  w2: bump(t, T.whip2 - 0.16, T.whip2, T.whip2 + 0.26),
+  w3: bump(t, T.whip3 - 0.15, T.whip3, T.whip3 + 0.28),
+  w4: bump(t, T.whip4 - 0.13, T.whip4, T.whip4 + 0.24),
+});
+const openJolt = (t: number) => {
+  const {w1, w2, w3} = openWhips(t);
+  const k = 0.9 * bump(t, T.flick - 0.03, T.flick + 0.03, T.flick + 0.4) + 0.6 * bump(t, T.whip2 - 0.03, T.whip2 + 0.03, T.whip2 + 0.34) + 0.6 * bump(t, T.whip3 - 0.03, T.whip3 + 0.03, T.whip3 + 0.34);
+  return {k, j: k * Math.sin(2 * Math.PI * 8 * t), w: w1 + w2 + w3};
+};
 /** the tail already out: 22 units (40 % of the eel), a loose S lying OUTSIDE across the gill cover, in the plane
  *  facing the opening camera (so the S reads on screen); it flicks once across the cover (independently of the
  *  breath) and keeps a slow life of its own. Built in the opening camera's screen axes: R right, U up, F toward the
@@ -306,16 +349,21 @@ const OPEN_AX = (() => {
   return {R: B.r, U: B.u, F: mul3(B.fw, -1)};
 })();
 export const openEel = (t: number, ex: Exit): EscapePose => {
-  const flick = bump(t, 0.06, T.flick + 0.05, 0.6);
-  const peek = bump(t, 1.9, T.peek, 2.8);
+  const {w1: flick, w2, w3, w4} = openWhips(t);
+  const peek = bump(t, 1.8, T.peek, 2.7);
   const {R, U, F} = OPEN_AX;
   // screen heading φ(a) (deg, y down: 0 = right, 90 = down)
   // out of the gap and down the flank behind the cover in a loose S (screen heading φ, deg, y down: 0 right, 90 down);
-  // the flick swings the free end across the cover and back
+  // three whips on the beats swing the free end across the cover and back (whips 2 and 3 the other way first), and
+  // between them the tail never rests: a quick travelling sway, calming as the camera follows it in
+  const live = 1 - 0.55 * ss(t, 1.7, 2.4);
   const phi = (a: number) =>
     62 + 30 * ss(a, 1.5, 8) - 62 * ss(a, 8, 15) + 82 * ss(a, 15, 21.5) +
-    9 * Math.sin(2 * Math.PI * (0.65 * t + a / 10)) * clamp(a / 8) +
-    85 * flick * ss(a, 5, 14) - 30 * flick * ss(a, 14, 22) -
+    13 * live * Math.sin(2 * Math.PI * (1.7 * t + a / 9)) * clamp(a / 7) +
+    68 * flick * ss(a, 5, 14) - 24 * flick * ss(a, 14, 22) -
+    48 * w2 * ss(a, 6, 15) + 26 * w2 * ss(a, 15, 22) +
+    44 * w3 * ss(a, 5, 14) - 22 * w3 * ss(a, 14, 22) -
+    26 * w4 * ss(a, 8, 16) + 18 * w4 * ss(a, 16, 22) -
     14 * peek * ss(a, 4, 14);
   const da = 0.1;
   const n = Math.ceil(OPEN_OUT / da);
@@ -372,16 +420,23 @@ const openInward = (ex: Exit, d: number): V3 => {
   const beyond = Math.max(0, d - 0.1 * (OPEN_IN.length - 1));
   return add3(add3(ex.p, q), mul3(norm3([-0.78, -0.1, -0.58]), beyond));
 };
+/** frame 0 is O_A (the loop's target); a fast push-in grabs the tail in the first half second, each whip jolts the
+ *  camera, and on "belongs" it snaps in to the gill edge (O_B) */
 export const openCam = (t: number): Cam3 => {
-  const drift = {...O_A, az: O_A.az - 2 * clamp(t / 1.6)};
-  return orbitCam(lerpOrbit(drift, O_B, ss5(t, T.follow0, 2.45)));
+  const p = ss5(t, 0, 0.5);
+  const punch: Orbit = {...O_A, d: O_A.d - 5 * p, az: O_A.az - 4 * p, target: add3(O_A.target, mul3([0.3, -0.5, 0] as V3, p))};
+  const o = lerpOrbit(punch, O_B, ss5(t, T.follow0 - 0.04, 2.2));
+  const {j} = openJolt(t);
+  return orbitCam({...o, roll: (o.roll ?? 0) + 1.8 * j, el: o.el + 0.7 * j, target: add3(o.target, [0.1 * j, 0.14 * j, 0])});
 };
 export const openState = (t: number): ExtState => {
   const cam = openCam(t);
-  const pose = predPose(t, {gill: openGill(t)});
+  const {k, w} = openJolt(t);
+  // the fish flinches with each whip (a startle and a shudder of the body behind the head)
+  const pose = predPose(t, {gill: openGill(t), startle: Math.min(1, 0.8 * k), bend: 0.07 * Math.sin(2 * Math.PI * 2.6 * t) * Math.min(1, w)});
   // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
   // the part inside is in deep shade; when the peek breath lifts the cover it shows, the same body running on in
-  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideShade: 0.8 - 0.38 * bump(t, 1.95, T.peek, 2.75), insideSpan: 5, finScale: 1.9, coverFull: true};
+  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideShade: 0.8 - 0.38 * bump(t, 1.85, T.peek, 2.65), insideSpan: 5, finScale: 1.9, coverFull: true, puffAt: 'open'};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view
