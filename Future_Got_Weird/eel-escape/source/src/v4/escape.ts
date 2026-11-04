@@ -61,8 +61,8 @@ const OUT_KEYS: [number, number][] = [
   [12.0, -3.3],
   [12.3, -1.12],
   [12.86, 1.12],
-  [13.3, 2.7],
-  [13.86, 4.8],
+  [13.3, 3.2],
+  [13.86, 6.0],
   [14.35, 11.5],
   [14.95, 24.5],
   [15.5, 37.0],
@@ -114,7 +114,7 @@ const beta = (a: number, t: number, out: number) => {
   // out from under the cover, flattening into a plane beside the flank; the curl's plane sits farther out
   const lead = lerp(25, 50, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 6 + 2 * wTight(t), wCurl(t)));
   // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in
-  const bowZ = 16 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
+  const bowZ = 45 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
   return lead + bowZ;
 };
 export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th), -Math.cos(be) * Math.sin(th), Math.sin(be)];
@@ -153,7 +153,7 @@ export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) =>
 // ---------------------------------------------------------------- free mode
 /** after straightening along its natural heading (the mid-body's forward direction at the release: back along the
  *  flank), the swimmer veers up and away from the predator, toward the near side, head first */
-export const SWIM_DIR: V3 = norm3([0.7, -0.18, 0.7]);
+export const SWIM_DIR: V3 = norm3([0.42, -0.14, 0.9]);
 const rotAbout = (v: V3, k: V3, ang: number): V3 => {
   // Rodrigues
   const c = Math.cos(ang), s = Math.sin(ang);
@@ -179,7 +179,7 @@ export const H0: V3 = (() => {
   const f = mul3(REL.tg[MID], -1);
   return norm3([f[0], f[1] * 0.6, f[2] * 0.3]);
 })();
-const T_TURN0 = T_REL + 0.55, T_TURN1 = T_REL + 1.6;
+const T_TURN0 = T_REL + 0.22, T_TURN1 = T_REL + 1.05;
 /** the heading the HEAD has at time t (held at H0, then turning toward SWIM_DIR) */
 export const headingAt = (t: number): V3 => slerpDir(H0, SWIM_DIR, ss(t, T_TURN0, T_TURN1));
 /** swimming speed (u/s) */
@@ -244,7 +244,7 @@ const angOf = (v: V3, near: number) => {
 export const freePose = (t: number): V3[] => {
   // straightening out of the curl: the loop UNROLLS in its own plane (every tangent's in-plane angle moves to the
   // heading's), so the head swings round beside the flank, never through the predator
-  const w = ss(t, T_REL, T_REL + 0.85);
+  const w = ss(t, T_REL, T_REL + 0.42);
   const sw = swum(t);
   const thMid = REL_ANG.th[MID];
   const tg: V3[] = REL.tg.map((_, i) => {

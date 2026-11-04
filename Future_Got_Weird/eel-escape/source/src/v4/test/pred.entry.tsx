@@ -21,6 +21,9 @@ export const VIEWS: Record<string, View> = {
   S2: {o: {target: [-12, 1, 0], az: 0, el: 0, d: 150, f: 1250, cy: 1100}, label: 'S2 side'},
   S2m5: {o: {target: [-12, 1, 0], az: 0, el: 0, d: 150, f: 1250, cy: 1100}, pose: {mouth: 0.5}, label: 'S2 mouth .5'},
   S2m1: {o: {target: [-12, 1, 0], az: 0, el: 0, d: 150, f: 1250, cy: 1100}, pose: {mouth: 1}, label: 'S2 mouth 1'},
+  S2h0: {o: {target: [-30, 1, 0], az: 0, el: 0, d: 85, f: 1250, cy: 1100}, pose: {mouth: 0}, label: 'S2 head mouth 0'},
+  S2h5: {o: {target: [-30, 1, 0], az: 0, el: 0, d: 85, f: 1250, cy: 1100}, pose: {mouth: 0.5}, label: 'S2 head mouth .5'},
+  S2h1: {o: {target: [-30, 1, 0], az: 0, el: 0, d: 85, f: 1250, cy: 1100}, pose: {mouth: 1}, label: 'S2 head mouth 1'},
   S2c: {o: {target: [-38, 1, 0], az: 0, el: 0, d: 62, f: 1250, cy: 1100}, pose: {mouth: 1}, label: 'S2 close mouth 1'},
   S8: {o: {target: [-16, -6, 2], az: 25, el: 50, d: 92, f: 1250, cy: 1150}, pose: {gill: 0.5, look: LOOK_EEL}, label: 'S8 over the back'},
   S9: {o: {target: [-24.5, -5.5, 6.6], az: 42, el: 8, d: 13.5, f: 1000}, pose: {gill: 0.8}, label: 'S9 gill edge .8'},
@@ -45,7 +48,7 @@ Object.assign(VIEWS, {
   lookC: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-38, 10, 30]}, label: 'look down-out'},
 } as Record<string, View>);
 const SHEETS: Record<string, string[]> = {
-  brief: ['S1', 'S1g4', 'S1g1', 'S2', 'S2m5', 'S2m1', 'S8', 'S9', 'S10', 'S11', 'S11b', 'S1m'],
+  brief: ['S1', 'S1g4', 'S1g1', 'S2', 'S2m5', 'S2m1', 'S2h0', 'S2h5', 'S2h1', 'S8', 'S9', 'S9x', 'S10', 'S11', 'S11b', 'S1m'],
   extra: ['top', 'back', 'front', 'S2c', 'S9', 'S1g1'],
   odd: ['farSide', 'below', 'startle', 'back', 'lookA', 'lookB', 'lookC', 'topc'],
 };

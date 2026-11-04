@@ -9,7 +9,8 @@ import {OPERCLE_EDGE} from '../../source/src/anatomy';
 
 const B0 = basis(orbitCam({target: [0, 0, 0], az: 0, el: 0, d: 100, f: 1000}));
 const g = predGeom(B0, PRED_REST);
-const ex = g.exit.p, out = norm3(g.exit.out);
+import {EXIT0} from '../../source/src/v4/escape';
+const ex = EXIT0.p, out = norm3(EXIT0.out);
 let edgeT: V3;
 if (process.argv[2]) edgeT = norm3(process.argv[2].split(',').map(Number) as V3);
 else {
@@ -21,10 +22,10 @@ const ed = {x: EDGE[3].x - EDGE[1].x, y: EDGE[3].y - EDGE[1].y};
 const el0 = Math.hypot(ed.x, ed.y);
 const edgeDir = {x: ed.x / el0, y: ed.y / el0};
 const f = 1300;
-let best = {err: 1e9, az: 0, el: 0, roll: 0, d: 0, fs: 0};
-for (let az = -40; az <= 90; az += 1)
-  for (let el = -30; el <= 50; el += 1)
-    for (let roll = -70; roll <= 70; roll += 1) {
+const sols: {err: number; az: number; el: number; roll: number; d: number; fs: number}[] = [];
+for (let az = -40; az <= 100; az += 2)
+  for (let el = -60; el <= 60; el += 2)
+    for (let roll = -90; roll <= 90; roll += 1) {
       const B = basis(orbitCam({target: ex, az, el, d: 22, f, cx: POKE_AT.x, cy: POKE_AT.y, roll}));
       const p0 = proj(B, ex);
       const p1 = proj(B, add3(ex, mul3(out, 0.3)));
@@ -39,8 +40,14 @@ for (let az = -40; az <= 90; az += 1)
       // prefer the tip not foreshortened much (fs: projected length per unit at d=22 relative to unforeshortened)
       const fs = lv / (0.3 * p0.s);
       const err = e1 * 4 + e2 + 0.15 * (1 - fs);
-      if (err < best.err) best = {err, az, el, roll, d: 0, fs};
+      if (err < 0.06) sols.push({err, az, el, roll, d: 0, fs});
     }
-// distance for the speed: screen speed = 4 u/s * (f/d) * fs = POKE_SPEED
-best.d = (4 * f * best.fs) / POKE_SPEED;
-console.log(JSON.stringify({target: ex, az: best.az, el: best.el, roll: best.roll, d: +best.d.toFixed(2), f, cx: POKE_AT.x, cy: POKE_AT.y, err: +best.err.toFixed(4), fs: +best.fs.toFixed(3)}));
+// distinct solutions (best per 15° az x 15° el cell), with the distance for the speed:
+// screen speed = 4 u/s * (f/d) * fs = POKE_SPEED
+sols.sort((a, b) => a.err - b.err);
+const cells = new Map<string, typeof sols[0]>();
+for (const s of sols) { const k = `${Math.round(s.az / 15)},${Math.round(s.el / 15)}`; if (!cells.has(k)) cells.set(k, s); }
+for (const s of [...cells.values()].slice(0, 12)) {
+  s.d = (4 * f * s.fs) / POKE_SPEED;
+  console.log(JSON.stringify({target: ex, az: s.az, el: s.el, roll: s.roll, d: +s.d.toFixed(2), f, cx: POKE_AT.x, cy: POKE_AT.y, err: +s.err.toFixed(4), fs: +s.fs.toFixed(3)}));
+}

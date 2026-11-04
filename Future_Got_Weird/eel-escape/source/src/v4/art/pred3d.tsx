@@ -14,7 +14,8 @@
 //   is the set {field ≥ 0} ∩ {N·V ≥ 0}: a smooth scalar field on the surface (pigment height, a blob field, N·L with
 //   the key light FIXED IN CAMERA SPACE at the upper left and a little in front, N·H), extracted with oriented
 //   marching squares and drawn as smoothed polygons. So band edges are smooth curves that follow the form, the
-//   markings stay fixed to the body, and the far side is never drawn through the near side.
+//   markings stay fixed to the body, and the far side is never drawn through the near side. Small marks (speckle,
+//   nostrils, and at close range V3's scale edges) are projected discs/arcs on the surface, kept where it faces us.
 // - The ink silhouette is the part of each piece's visible-region boundary that lies on the limb (N·V = 0): one
 //   clean line round the union; seams between pieces are never inked.
 // - Gill cover: a plate on the cheek between the preopercle and OPERCLE_EDGE; `gill` lifts its rear edge outward
@@ -26,6 +27,13 @@
 //   fins in the mid-plane (following the bend), the paired fins splayed from the flank; translucent amber
 //   membranes, rays, spots, ink. Depth order: far paired fins, far half (with its cover and eye), median fins, near
 //   half, near cover, near eye, near paired fins (the caudal fin moves in front when the camera is behind the tail).
+//
+// API (V4_BRIEF §4-P): PredPose, PRED_REST, <Predator B pose dim/>, predGeom(B, pose) (+ swimBend(t) for S11, the
+// PredGeom type). Predator and predGeom share one cached build per (camera, pose), so calling both costs one build.
+// Notes for compositing: the eel goes on top of <Predator>; its part under the cover is clipped to predGeom().gap
+// (the visible opening only: never the cover itself); exit.p lies on the near cover's edge (EXIT exactly at gill 0),
+// exit.out runs back and up across the edge along the skin and turns outward as the cover lifts, exit.n is the
+// cover's outer normal. The near pectoral fin is drawn last, over the lower half of the cover.
 import React from 'react';
 import {BODY, DORSAL, EXIT, EYE, OPERCLE_EDGE, PECTORAL, PELVIC, PHARYNX, PREOPERCLE} from '../../anatomy';
 import {closed, P, pt} from '../../core/geo';
@@ -235,7 +243,7 @@ const makeDef = (pose: PredPose): Def => {
     bz[k] = bz[k - 1] + BSTEP * Math.sin(a);
   }
   const mouth = clamp(pose.mouth, 0, 1);
-  return {mouth, phi: mouth * 58 * D2R, bx, bz, ba, bendOn: any};
+  return {mouth, phi: mouth * 68 * D2R, bx, bz, ba, bendOn: any};
 };
 /** deform a rest point (x, y, z) → world (out). `jaw`: the point belongs to the lower jaw (in front of the corner) */
 const deform = (D: Def, x: number, y: number, z: number, jaw: boolean, out: number[]) => {
@@ -265,7 +273,7 @@ const deform = (D: Def, x: number, y: number, z: number, jaw: boolean, out: numb
         const ang = D.phi * w, ca = Math.cos(ang), sa = Math.sin(ang);
         X = HX + dx * ca + dy * sa;
         Y = HY - dx * sa + dy * ca;
-        Z *= 1 + 0.14 * D.mouth * w;
+        Z *= 1 + 0.2 * D.mouth * w;
       }
     }
     if (d > 0) {
@@ -302,13 +310,13 @@ const bendPt = (D: Def, p: V3): V3 => {
 };
 
 // ================================================================ the camera-space light
-type Cam = {B: Basis; L: V3; eye: V3};
+type Cam = {B: Basis; L: V3; eye: V3; rc: number; rs: number};
 const camOf = (B: Basis): Cam => {
   // the key light: from the upper left of the SCREEN, 38° toward the viewer (the eel renderer's light, art/eelArt.tsx)
   const LL = Math.hypot(0.62, 0.78);
   const ce = Math.cos(38 * D2R), se = Math.sin(38 * D2R);
   const L = norm3(add3(add3(mul3(B.r, (-0.62 / LL) * ce), mul3(B.u, (0.78 / LL) * ce)), mul3(B.fw, -se)));
-  return {B, L, eye: B.eye};
+  return {B, L, eye: B.eye, rc: Math.cos((B.roll * Math.PI) / 180), rs: Math.sin((B.roll * Math.PI) / 180)};
 };
 
 // ================================================================ grids (one per piece) and marching squares
@@ -331,12 +339,25 @@ const newGrid = (ni: number, nj: number, tg: number[]): Grid => {
 };
 /** project vertex k (world point and normal already set) and compute N·V, N·L, N·H */
 const shadeVertex = (G: Grid, k: number, cam: Cam) => {
-  const p: V3 = [G.wx[k], G.wy[k], G.wz[k]];
-  const q = proj(cam.B, p);
-  G.sx[k] = q.x;
-  G.sy[k] = q.y;
-  G.ok[k] = q.z < 0.4 || q.x < -900 || q.x > 1980 || q.y < -900 || q.y > 2820 ? 0 : 1;
-  const vx = cam.eye[0] - p[0], vy = cam.eye[1] - p[1], vz = cam.eye[2] - p[2];
+  // the projection inlined (three.ts proj), without temporaries
+  const B = cam.B, E = B.eye, R = B.r, U = B.u, Fw = B.fw;
+  const px = G.wx[k], py = G.wy[k], pz = G.wz[k];
+  const dx = px - E[0], dy = py - E[1], dz = pz - E[2];
+  const zr = dx * Fw[0] + dy * Fw[1] + dz * Fw[2];
+  const zc = zr > 1e-3 ? zr : 1e-3;
+  let qx = (B.f * (dx * R[0] + dy * R[1] + dz * R[2])) / zc;
+  let qy = (-B.f * (dx * U[0] + dy * U[1] + dz * U[2])) / zc;
+  if (B.roll) {
+    const t = qx * cam.rc - qy * cam.rs;
+    qy = qx * cam.rs + qy * cam.rc;
+    qx = t;
+  }
+  qx += B.cx;
+  qy += B.cy;
+  G.sx[k] = qx;
+  G.sy[k] = qy;
+  G.ok[k] = zr < 0.4 || qx < -900 || qx > 1980 || qy < -900 || qy > 2820 ? 0 : 1;
+  const vx = -dx, vy = -dy, vz = -dz;
   const vl = Math.hypot(vx, vy, vz) || 1;
   const Vx = vx / vl, Vy = vy / vl, Vz = vz / vl;
   const nx = G.nx[k], ny = G.ny[k], nz = G.nz[k];
@@ -770,9 +791,12 @@ const bodyVertex = (G: Grid, k: number, cam: Cam, D: Def, x: number, psi: number
   deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
   const ax = (TMP3[0] - P0x) * Math.sign(hx), ay = (TMP3[1] - P0y) * Math.sign(hx), az = (TMP3[2] - P0z) * Math.sign(hx);
   const xq = Math.max(x, X_MIN + 0.03);
-  restAt(xq, psi, TMP);
-  deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
-  const qx = TMP3[0], qy = TMP3[1], qz = TMP3[2];
+  let qx = P0x, qy = P0y, qz = P0z;
+  if (xq !== x) {
+    restAt(xq, psi, TMP);
+    deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
+    qx = TMP3[0]; qy = TMP3[1]; qz = TMP3[2];
+  }
   restAt(xq, psi + 0.003, TMP);
   deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
   const bx = TMP3[0] - qx, by = TMP3[1] - qy, bz = TMP3[2] - qz;
@@ -901,8 +925,6 @@ const COVER_SPOTS: {k: number; r: number}[] = (() => {
   }
   return out;
 })();
-/** (diagnostic) the cover's thickness over the skin at EXIT */
-export const PRED_COVER_THICK = COVER_THICK;
 /** the gap's body-side margin direction (side view): the rear normal of the rest edge */
 const E_NRM: P[] = E_REST.map((_, i) => {
   const a = E_REST[Math.max(0, i - 1)], b = E_REST[Math.min(CB - 1, i + 1)];
@@ -1318,7 +1340,14 @@ const skinLayers = (G: Grid, K: (c: string) => string, px: number, extra: (layer
     const d = regionD(G, f);
     if (d) L.push({d, fill: K(fill), op});
   };
-  for (const p of PIG) add((k) => p.bound(G.xr[k]) - v[k], p.col);
+  for (const p of PIG) {
+    const bs = new Float32Array(G.ni);
+    for (let i = 0; i < G.ni; i++) bs[i] = p.bound(G.xr[i * G.nj]);
+    const nj = G.nj;
+    // the cover grid's rows are not stations: fall back to per-vertex bounds there
+    const perStation = G.tg[0] !== HINGE;
+    add((k) => (perStation ? bs[(k / nj) | 0] : p.bound(G.xr[k])) - v[k], p.col);
+  }
   // the tail darkens a little toward the caudal fin
   add((k) => (G.xr[k] - 14) / 10, C.fishDark, 0.1);
   add((k) => (G.xr[k] - 24) / 10, C.fishDark, 0.1);
@@ -1819,8 +1848,16 @@ export const Predator: React.FC<{B: Basis; pose: PredPose; dim?: number}> = ({B,
   );
 };
 
+export type PredGeom = {
+  outline: string;
+  gap: string;
+  mouthHole: string;
+  exit: {p: V3; out: V3; n: V3};
+  mouthIn: {p: V3; dir: V3};
+  eye: {x: number; y: number; r: number};
+};
 /** geometry for compositing the eel against the predator (all screen px unless noted) */
-export const predGeom = (B: Basis, pose: PredPose) => {
+export const predGeom = (B: Basis, pose: PredPose): PredGeom => {
   const m = model(B, pose);
   const gp = m.gap;
   let gap = '';
