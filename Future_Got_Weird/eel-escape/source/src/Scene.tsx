@@ -2,20 +2,20 @@
 // translucent reveal, the X-ray and the three-quarter cutaway), the environment in front, the lens pass and the loop
 // wipe back to frame 0, then captions in screen space.
 import React from 'react';
-import {resetIds, uid} from '../core/ids';
-import {open, P, pt} from '../core/geo';
-import {clamp, DUR, ss} from '../lib';
-import {DIST, Layer, layerScale, W as SW, H as SH} from '../camera';
-import {EXIT, GILL_Z} from '../anatomy';
-import {N, RADII, S_EXIT} from '../eel';
-import {camAt, eelAt, EV, fishAt, HEAD_CAUGHT, lensAt, SWEEP0} from '../story';
-import {FishBody, FishFar, FishLook, GillGap, gillGapPath, Operculum, Pectoral, propForRadius} from '../art/fish';
-import {XRayBack, XRayFront} from '../art/xray';
-import {CUT_Z, cutWindowPath, CutEdge, GillArches, InteriorBack, StomachFront} from '../art/inside';
-import {C} from '../art/palette';
-import {Eel} from '../art/eelArt';
-import {EnvBack, EnvFront, FishShadow, RUSH_DIR, WaterRush} from '../art/water';
-import {Captions} from '../Captions';
+import {resetIds, uid} from './core/ids';
+import {open, P, pt} from './core/geo';
+import {clamp, DUR, ss} from './lib';
+import {DIST, Layer, layerScale, W as SW, H as SH} from './camera';
+import {EXIT, GILL_Z} from './anatomy';
+import {N, RADII, S_EXIT} from './eel';
+import {camAt, eelAt, EV, fishAt, HEAD_CAUGHT, lensAt, SWEEP0} from './story';
+import {FishBody, FishFar, FishLook, GillGap, gillGapPath, Operculum, Pectoral, propForRadius} from './art/fish';
+import {XRayBack, XRayFront} from './art/xray';
+import {CUT_Z, cutWindowPath, CutEdge, GillArches, InteriorBack, StomachFront} from './art/inside';
+import {C} from './art/palette';
+import {Eel} from './art/eelArt';
+import {EnvBack, EnvFront, FishShadow, RUSH_DIR, WaterRush} from './art/water';
+import {Captions} from './Captions';
 
 const X0 = -26;
 /** the yaw of the three-quarter cutaway, per depth slice: x' = X0 + (x - X0) cos ψ + z sin ψ */
@@ -37,6 +37,20 @@ const xrayWipe = (t: number) => {
   if (t < outA) return {wiping: false, front: 0, xLeft: true, xFrom: 0, xTo: 1, eFrom: 0, eTo: 0};
   if (t < outB) return {wiping: true, front: fr(ss(t, outA, outB)), xLeft: false, xFrom: 0, xTo: 1, eFrom: 0, eTo: 1};
   return {wiping: false, front: 0, xLeft: true, xFrom: 0, xTo: 0, eFrom: 0, eTo: 1};
+};
+
+/** the X-ray halo along the inside part of the eel, in a few segments whose width follows the body's taper */
+const haloSegs = (P2: P[], ex: number) => {
+  const end = Math.min(ex, N);
+  const out: {d: string; w: number}[] = [];
+  const step = 12;
+  for (let i = 0; i < end; i += step) {
+    const j = Math.min(end, i + step + 1);
+    if (j - i < 2) break;
+    const r = RADII[Math.min(N, Math.round((i + j) / 2))];
+    out.push({d: open(P2.slice(i, j + 1), 0.5), w: 2 * r + 1.3});
+  }
+  return out;
 };
 
 /** the fish's look for time t */
@@ -107,7 +121,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
         <defs>
           {needMask && (
             <>
-              <filter id={blurId} x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation={1.4} /></filter>
+              <filter id={blurId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600}><feGaussianBlur stdDeviation={1.4} /></filter>
               <mask id={mId} maskUnits="userSpaceOnUse" x={-200} y={-200} width={400} height={400}>
                 <rect x={-200} y={-200} width={400} height={400} fill="#FFF" />
                 {holePath && f.reveal > 0.002 && <path d={holePath} stroke="#000" strokeWidth={9} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={0.82 * f.reveal} filter={`url(#${blurId})`} />}
@@ -115,7 +129,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
               </mask>
             </>
           )}
-          <filter id={haloId} x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation={0.7} /></filter>
+          <filter id={haloId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600}><feGaussianBlur stdDeviation={0.45} /></filter>
           {xw.wiping && (
             <>
               <linearGradient id={wgId} gradientUnits="userSpaceOnUse" x1={xw.front - WIPE_SOFT} y1={0} x2={xw.front + WIPE_SOFT} y2={0}>
@@ -144,7 +158,12 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
           return <Eel key={k} pts={eg.pts.map((q) => pt(q.x, q.y))} radii={RADII} px={px} t={t} to={Math.min(eg.exitIdx, N)} opacity={0.16 * (1 - k * 0.25)} />;
         })}
         {inside && showX && (
-          <g mask={xMaskRef}><path d={open(P2.slice(0, Math.min(ex, N) + 1), 0.5)} fill="none" stroke={C.xrayBone} strokeWidth={3.4} strokeLinecap="round" strokeLinejoin="round" opacity={0.34} filter={`url(#${haloId})`} /></g>
+          <g mask={xMaskRef}>
+            {/* the contrast-dyed eel glows on the radiograph: a soft bright halo following its body (tapering with it) */}
+            {haloSegs(P2, ex).map((sg, k) => (
+              <path key={k} d={sg.d} fill="none" stroke={C.xrayBone} strokeWidth={sg.w} strokeLinecap="round" strokeLinejoin="round" opacity={0.5} filter={`url(#${haloId})`} />
+            ))}
+          </g>
         )}
         {inside && <Eel {...eelProps} from={0} to={Math.min(iSlit, N)} />}
         <g mask={eMaskRef}>
@@ -158,7 +177,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
               <g opacity={skinA}><FishBody s={s} mask={mask} /></g>
               <g opacity={skinA}><GillGap s={s} /></g>
             </g>
-            {inside && iGap < ex && skinA > 0.99 && <Eel {...eelProps} from={iGap} to={Math.min(ex, N)} clip={gapClip} />}
+            {inside && iGap < ex && skinA > 0.99 && <Eel {...eelProps} from={iGap} to={Math.min(ex, N)} clip={`url(#${gapClip})`} />}
             <g transform={yawM(psi, CUT_Z)}>
               <g opacity={skinA}><Operculum s={s} mask={mask} /></g>
               <g opacity={skinA}><Pectoral s={s} mask={mask} /></g>

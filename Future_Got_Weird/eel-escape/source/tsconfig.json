@@ -17,7 +17,6 @@
     "noUnusedLocals": false
   },
   "exclude": [
-    "remotion.config.ts",
-    "src/_draft/**"
+    "remotion.config.ts"
   ]
 }

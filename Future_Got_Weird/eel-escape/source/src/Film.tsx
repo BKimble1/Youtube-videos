@@ -1,7 +1,7 @@
 // The film: one Scene per frame, the mix underneath; and a contact sheet of chosen frames for checking.
 import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
-import {FPS} from '../lib';
+import {FPS} from './lib';
 import {Scene} from './Scene';
 
 export const Frame: React.FC<{f: number; captions: boolean}> = ({f, captions}) => (

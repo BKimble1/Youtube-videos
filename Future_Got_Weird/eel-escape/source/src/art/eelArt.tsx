@@ -609,7 +609,7 @@ const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
             </clipPath>,
           );
           els.push(
-            <path key="fr" d={rw.toString()} clipPath={`url(#${id})`} fill="none" stroke={C.eelBack} strokeOpacity={0.3} strokeWidth={q * FIN_D * 2.3} strokeDasharray={`${q * 0.028} ${q * 0.1}`} strokeLinejoin="round" />,
+            <path key="fr" d={rw.toString()} clipPath={`url(#${id})`} fill="none" stroke={C.eelBack} strokeOpacity={0.22} strokeWidth={q * FIN_D * 2.3} strokeDasharray={`${q * 0.022} ${q * 0.085}`} strokeLinejoin="round" />,
           );
         }
       }
@@ -689,7 +689,7 @@ const featRanges = (g: Geo): [Feat, number, number][] => {
     ['gill', S(EEL_FEAT.gillU, -0.9), S(EEL_FEAT.gillU, 0.9)],
     ['mouth', 0, S(0.036, 0.9)],
     ['pec', S(EEL_FEAT.pectoralU, -0.9), S(EEL_FEAT.pectoralU, 3.4)],
-    ['eye', S(EEL_FEAT.eyeU, -1.3), S(EEL_FEAT.eyeU, 1.3)],
+    ['eye', S(EEL_FEAT.eyeU, -1.6), S(EEL_FEAT.eyeU, 1.6)],
   ];
 };
 
@@ -767,18 +767,20 @@ const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
       }
       els.push(<path key={'pr' + side} d={rays.toString()} stroke={C.eelBack} strokeOpacity={0.35} strokeWidth={1} vectorEffect={NS} fill="none" strokeLinecap="round" />);
     }
-    // eye: small, dark, with a thin silvery ring and a highlight toward the light
-    if (want('eye') && shows(60)) {
+    // eye: dark, with a silvery ring and a highlight toward the light; radius ≈ 0.4 u so it still reads on a phone
+    // when only the head shows in the gill opening (27 px/u → ~11 px across at 360 px wide); set a little below
+    // the dorsal profile so the ring keeps clear of the ink edge
+    if (want('eye') && shows(66)) {
       const je = st(EEL_FEAT.eyeU);
       const fr = frame(je);
-      const phE = flank(60 * DEG);
+      const phE = flank(66 * DEG);
       const ce = at(je, phE);
       const fo = Math.max(0.25, Math.cos(clampPhi(phE)));
-      const er = 0.25 * Math.max(fr.r, 0.9);
+      const er = 0.33 * Math.max(fr.r, 1.2);
       const angDeg = Math.round((Math.atan2(fr.T.y, fr.T.x) * 1800) / Math.PI) / 10;
       const cx = R(ce.x), cy = R(ce.y);
       const tr = `rotate(${angDeg} ${cx} ${cy})`;
-      els.push(<ellipse key={'er' + side} cx={cx} cy={cy} rx={R(er)} ry={R(er * fo)} transform={tr} fill={EYE_RING} stroke={INK} strokeWidth={1.4} vectorEffect={NS} />);
+      els.push(<ellipse key={'er' + side} cx={cx} cy={cy} rx={R(er)} ry={R(er * fo)} transform={tr} fill={EYE_RING} stroke={INK} strokeWidth={1.7} vectorEffect={NS} />);
       els.push(<ellipse key={'ep' + side} cx={cx} cy={cy} rx={R(er * 0.72)} ry={R(er * 0.72 * fo)} transform={tr} fill={C.eelEye} />);
       els.push(<circle key={'eh' + side} cx={R(ce.x + LX * er * 0.36)} cy={R(ce.y + LY * er * 0.36)} r={R(er * 0.26)} fill={WHITE} fillOpacity={0.95} />);
       els.push(<circle key={'ei' + side} cx={R(ce.x - LX * er * 0.3)} cy={R(ce.y - LY * er * 0.3)} r={R(er * 0.1)} fill={WHITE} fillOpacity={0.6} />);
@@ -921,24 +923,32 @@ export const eelSilhouette = (pts: P[], radii: number[], from = 0, to?: number, 
   const g = build(pts, radii);
   const w = new PW(1000);
   const A = a < 1e-6 ? 0 : stationOf(g, a), B = b >= last - 1e-6 ? g.M - 1 : stationOf(g, b);
+  // ONE outer contour (a single winding, so any fill rule gives the union): on each side the farther of the body
+  // edge and the fin edge (the fin edges coincide with the body edge where there is no fin)
+  const x = withFins ? makeCtx(g, 100, t, dorsal) : null;
   const em: P[] = [], ep: P[] = [];
   for (let j = 0; j < g.M; j++) {
-    em.push(edgeAt(g, j, -1, grow));
-    ep.push(edgeAt(g, j, 1, grow));
-  }
-  strip(w, em, ep, A, B);
-  if (withFins) {
-    const fi = makeCtx(g, 100, t, dorsal).fins;
-    if (B > fi.jd0) strip(w, fi.Od, fi.Bd, Math.max(A, fi.jd0 - 1), B);
-    if (B > fi.ja0) strip(w, fi.Oa, fi.Ba, Math.max(A, fi.ja0 - 1), B);
-    if (b >= last - 1e-6) {
-      w.M(fi.tip[0].x, fi.tip[0].y);
-      w.L(fi.tip[1].x, fi.tip[1].y);
-      w.L(fi.tip[2].x, fi.tip[2].y);
-      w.L(g.c[g.M - 1].x, g.c[g.M - 1].y);
-      w.Z();
+    let mExt = g.rm[j], pExt = g.rp[j];
+    if (x) {
+      const c = g.c[j], n = g.n[j];
+      for (const O of [x.fins.Od[j], x.fins.Oa[j]]) {
+        const v = (O.x - c.x) * n.x + (O.y - c.y) * n.y;
+        if (v < 0) mExt = Math.max(mExt, -v);
+        else pExt = Math.max(pExt, v);
+      }
     }
+    em.push(edgeAt(g, j, -1, mExt - g.rm[j] + grow));
+    ep.push(edgeAt(g, j, 1, pExt - g.rp[j] + grow));
   }
+  if (x && b >= last - 1e-6) {
+    // round the fringe past the tail tip: the −N side, the tip points (in −N → +N order), the +N side back
+    const j = g.M - 1, c = g.c[j], n = g.n[j];
+    const tip = [...x.fins.tip];
+    if ((tip[0].x - c.x) * n.x + (tip[0].y - c.y) * n.y > 0) tip.reverse();
+    const ext = [...em, ...tip, ...[...ep].reverse()];
+    curve(w, ext, A, 2 * g.M + 2 - A, false, true);
+    w.Z();
+  } else strip(w, em, ep, A, B);
   // absolute integers in thousandths → back to units
   return w
     .toString()

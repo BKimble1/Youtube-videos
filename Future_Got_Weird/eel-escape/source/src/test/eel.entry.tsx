@@ -13,7 +13,7 @@ import {Cam, DIST, Layer, layerScale} from '../camera';
 import {RADII} from '../eel';
 import {camAt, eelAt, lensAt} from '../story';
 import {C, INK, INK_PX, NS} from '../art/palette';
-import {Eel} from '../art/eelArt';
+import {Eel, eelSilhouette} from '../art/eelArt';
 import {resetIds} from '../core/ids';
 
 type FrameProps = {
@@ -29,6 +29,11 @@ type FrameProps = {
   focus?: number;
   /** clip test: clip the outside part to a circle of this radius (units) around sample `focus` (or 100) */
   clipR?: number;
+  /** overlay eelSilhouette() (with fins, grown by 0.15 u) as a thin outline, to check it matches the drawing */
+  sil?: boolean;
+  /** url(#id) clip test (as the Scene does for the gill-gap section): the whole eel from = 0, clipped by a caller-
+   *  defined clipPath (a circle of this radius around sample `focus`, or 4) */
+  urlClipR?: number;
 };
 
 const Water: React.FC = () => (
@@ -42,7 +47,7 @@ const Fish: React.FC<{c: Cam}> = ({c}) => (
   </Layer>
 );
 
-export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false, dorsal: dorsal0, twist, fish = true, over, zoom, focus, clipR}) => {
+export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false, dorsal: dorsal0, twist, fish = true, over, zoom, focus, clipR, sil, urlClipR}) => {
   const e = eelAt(t);
   const dorsal = twist ? e.pts.map((_, i) => twist[0] + (twist[1] - twist[0]) * (i / (e.pts.length - 1))) : dorsal0;
   let c: Cam = camAt(t);
@@ -76,7 +81,26 @@ export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false
       {!split && inPart && <Layer c={c} z={z}>{inPart}</Layer>}
       {fish && <Fish c={c} />}
       {split && inPart && <Layer c={c} z={z}>{inPart}</Layer>}
-      {outPart && <Layer c={c} z={z}>{outPart}</Layer>}
+      {outPart && !urlClipR && <Layer c={c} z={z}>{outPart}</Layer>}
+      {urlClipR && (() => {
+        const q = e.pts[Math.round(focus ?? 4)];
+        const id = 'testUrlClip';
+        return (
+          <Layer c={c} z={z}>
+            <defs>
+              <clipPath id={id}>
+                <circle cx={q.x} cy={q.y} r={urlClipR} />
+              </clipPath>
+            </defs>
+            <Eel {...common} from={0} clip={`url(#${id})`} />
+          </Layer>
+        );
+      })()}
+      {sil && (
+        <Layer c={c} z={z}>
+          <path d={eelSilhouette(e.pts, RADII, 0, undefined, true, t, typeof dorsal === 'number' ? dorsal : 1, 0.15)} fill="none" stroke="#FFE14D" strokeWidth={1.2} vectorEffect={NS} />
+        </Layer>
+      )}
     </AbsoluteFill>
   );
 };
