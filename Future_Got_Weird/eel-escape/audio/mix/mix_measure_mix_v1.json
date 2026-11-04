@@ -1,7 +1,7 @@
 {
  "name": "mix_v1",
  "no_voice": false,
- "cues": "kept as it is (FGW_NO_REGEN=1)",
+ "cues": "regenerated from story.ts",
  "duration_s": 24.8,
  "sr": 48000,
  "samples": 1190400,
@@ -10,16 +10,16 @@
  "true_peak_dbtp_4x": -1.6,
  "sample_peak_dbfs": -1.61,
  "limiter_max_gain_reduction_db": -2.43,
- "voice_lufs_in_mix": -17.1,
- "voice_lufs_in_mix_stereo_equiv": -14.09,
+ "voice_lufs_in_mix": -17.11,
+ "voice_lufs_in_mix_stereo_equiv": -14.1,
  "voice_compressor_gain_reduction_db": {
   "max": -6.81,
   "p95_while_speaking": -5.57,
   "median_while_speaking": -2.38
  },
- "effects_lufs_in_mix": -31.4,
- "ambience_lufs_in_mix": -36.66,
- "effects_under_voice_db": 14.3,
+ "effects_lufs_in_mix": -31.39,
+ "ambience_lufs_in_mix": -36.67,
+ "effects_under_voice_db": 14.28,
  "effects_and_ambience_short_term_max_lufs": -26.7,
  "voice_short_term_max_lufs": -15.4,
  "events_logged": 84,
@@ -31,7 +31,7 @@
   "duration_s": 24.8,
   "lag_voice_stem_vs_master_samples": 0,
   "lag_mix_vs_master_samples": 0,
-  "corr_voice_stem_vs_master": 0.98208,
+  "corr_voice_stem_vs_master": 0.98206,
   "word_onset_lags_mix_vs_master_samples": {
    "That@0.0": 0,
    "to@2.04": 0,
@@ -47,14 +47,14 @@
   "sample_exact": true,
   "fx_minus_voice_momentary_during_clear_speech_db": {
    "max": -0.4,
-   "median": -14.8,
+   "median": -14.9,
    "at_s": 5.62
   },
   "fx_minus_voice_200ms_inside_words_db": {
-   "max": -1.3,
-   "median": -16.3,
-   "at_s": 20.77,
-   "word": "final"
+   "max": -1.0,
+   "median": -16.4,
+   "at_s": 13.48,
+   "word": "side."
   },
   "voice_over_fx_above_3khz_at_consonants_db": {
    "median": 46.4,
@@ -62,18 +62,18 @@
   }
  },
  "loop": {
-  "loop_seam_jump": 0.002992,
-  "median_sample_step_last_0p5s": 0.003894,
-  "p99_sample_step_whole": 0.164094,
+  "loop_seam_jump": 0.002931,
+  "median_sample_step_last_0p5s": 0.004193,
+  "p99_sample_step_whole": 0.164055,
   "mix_rms_db_last_50ms_first_50ms": [
-   -26.27,
-   -22.33
+   -26.3,
+   -22.36
   ],
   "fx_and_amb_rms_db_last_50ms_first_50ms": [
-   -26.27,
-   -28.75
+   -26.3,
+   -28.82
   ],
-  "mix_seam_step_percentile_of_steps_near_seam": 33.9,
+  "mix_seam_step_percentile_of_steps_near_seam": 32.1,
   "ambience_seam_jump": 0.000558,
   "ambience_seam_step_percentile": 70.6,
   "ambience_median_step": 0.000315,

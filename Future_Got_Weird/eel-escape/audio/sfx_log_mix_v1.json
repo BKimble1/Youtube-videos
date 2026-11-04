@@ -398,15 +398,15 @@
   "tag": "squeeze",
   "level_re_voice_db": -9.0,
   "level_measure": "momentary max",
-  "gain_db": -19.7,
+  "gain_db": -20.0,
   "cue": "signal 'slide'",
   "bus": "tex",
   "kind": "texture",
-  "peak_env": 0.83,
-  "layer_short_term_max_lufs": -31.5,
-  "layer_momentary_max_lufs": -27.9,
+  "peak_env": 0.84,
+  "layer_short_term_max_lufs": -31.3,
+  "layer_momentary_max_lufs": -27.6,
   "layer_integrated_lufs": -34.87,
-  "layer_under_voice_db": 10.8
+  "layer_under_voice_db": 10.5
  },
  {
   "t": 8.12,
@@ -978,15 +978,15 @@
   "tag": "squeeze",
   "level_re_voice_db": -9.0,
   "level_measure": "momentary max",
-  "gain_db": -19.7,
+  "gain_db": -20.0,
   "cue": "signal 'slide'",
   "bus": "tex",
   "kind": "texture",
   "peak_env": 0.73,
-  "layer_short_term_max_lufs": -31.5,
-  "layer_momentary_max_lufs": -27.9,
+  "layer_short_term_max_lufs": -31.3,
+  "layer_momentary_max_lufs": -27.6,
   "layer_integrated_lufs": -34.87,
-  "layer_under_voice_db": 10.8
+  "layer_under_voice_db": 10.5
  },
  {
   "t": 20.77,
@@ -1101,8 +1101,8 @@
   "layer_under_voice_db": 9.9
  },
  {
-  "t": 20.976,
-  "end": 23.927,
+  "t": 20.975,
+  "end": 23.914,
   "sfx": "swim wake (faint)",
   "tag": "wake",
   "level_re_voice_db": -20.0,
@@ -1112,23 +1112,23 @@
   "bus": "tex",
   "kind": "texture",
   "peak_env": 0.92,
-  "layer_short_term_max_lufs": -40.0,
-  "layer_momentary_max_lufs": -37.7,
-  "layer_integrated_lufs": -40.34,
-  "layer_under_voice_db": 20.6
+  "layer_short_term_max_lufs": -40.1,
+  "layer_momentary_max_lufs": -38.3,
+  "layer_integrated_lufs": -40.45,
+  "layer_under_voice_db": 21.2
  },
  {
   "t": 21.116,
   "end": 21.326,
   "sfx": "first stroke: it straightens and swims",
   "tag": "s",
-  "level_re_voice_db": -12.3,
-  "gain_db": -9.4,
+  "level_re_voice_db": -12.2,
+  "gain_db": -9.3,
   "cue": "signal 'swim' (tail-beat peak)",
   "bus": "dot",
   "kind": "event",
-  "momentary_max_lufs": -28.4,
-  "under_voice_db": 11.3,
+  "momentary_max_lufs": -28.3,
+  "under_voice_db": 11.2,
   "voice_momentary_max_here": -18.1,
   "nearest_word_onset": {
    "word": "and",
@@ -1436,22 +1436,22 @@
   }
  },
  {
-  "t": 23.646,
-  "end": 23.856,
+  "t": 23.626,
+  "end": 23.836,
   "sfx": "swim stroke",
   "tag": "s",
-  "level_re_voice_db": -15.5,
-  "gain_db": -12.2,
+  "level_re_voice_db": -16.1,
+  "gain_db": -12.8,
   "cue": "signal 'swim' (tail-beat peak)",
   "bus": "dot",
   "kind": "event",
-  "momentary_max_lufs": -32.8,
-  "under_voice_db": 15.7,
-  "voice_momentary_max_here": -17.7,
+  "momentary_max_lufs": -33.7,
+  "under_voice_db": 16.6,
+  "voice_momentary_max_here": -16.8,
   "nearest_word_onset": {
    "word": "it.",
    "t": 23.56,
-   "dt": 0.086
+   "dt": 0.066
   }
  },
  {
@@ -1460,7 +1460,7 @@
   "sfx": "the tail sweeps past the lens: close whoosh into the opening",
   "tag": "LENS",
   "level_re_voice_db": -10.5,
-  "gain_db": -11.8,
+  "gain_db": -11.9,
   "cue": "EV.lens0..end (peak on the sweep at 24.62 s, swing-out 24.18 s)",
   "bus": "lens",
   "kind": "event",

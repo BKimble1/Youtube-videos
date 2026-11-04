@@ -111,7 +111,9 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
   const wgId = uid('wg'), wgInvId = uid('wgi'), xMaskId = uid('xmask'), eMaskId = uid('emask');
   const xMaskRef = xw.wiping ? `url(#${xMaskId})` : undefined;
   const eMaskRef = xw.wiping ? `url(#${eMaskId})` : undefined;
-  const eelProps = {pts: P2, radii: RADII, px, t};
+  // after the release the swimmer rolls over so its dark back is up as it swims away
+  const dorsal = 1 - 2 * ss(t, EV.release + 0.07, EV.release + 0.62);
+  const eelProps = {pts: P2, radii: RADII, px, t, dorsal};
   const ghosts = t > EV.rew0 && t < EV.rew1 ? [0.05, 0.1, 0.15] : [];
 
   return (
@@ -186,7 +188,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
           </g>
         )}
         {showX && <g mask={xMaskRef}><XRayFront s={s} opacity={0.9} /></g>}
-        {!e.free && ex <= N && <Eel {...eelProps} from={Math.max(0, ex - 1)} to={N} />}
+        {!e.free && ex <= N && <Eel {...eelProps} from={ex} to={N} />}
         {e.free && lens < 0.001 && <Eel {...eelProps} from={0} to={N} />}
       </Layer>
       <EnvFront c={c} t={t} xray={xr} />
@@ -237,7 +239,7 @@ const LensEelOnTop: React.FC<{t: number}> = ({t}) => {
   const z = -lensAt(t) * DIST * c.w;
   return (
     <Layer c={c} z={z} maxBlur={26}>
-      <Eel pts={e.pts.map((q) => pt(q.x, q.y))} radii={RADII} px={layerScale(c, z)} t={t} from={0} to={N} />
+      <Eel pts={e.pts.map((q) => pt(q.x, q.y))} radii={RADII} px={layerScale(c, z)} t={t} from={0} to={N} dorsal={-1} />
     </Layer>
   );
 };
