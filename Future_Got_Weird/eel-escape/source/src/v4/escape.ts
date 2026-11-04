@@ -44,7 +44,7 @@ export const escGill = (t: number): number => {
   if (out <= -0.5) return 0;
   const u = clamp(1 - out / EEL_L, 0, 1);
   // the broad head, caught behind the edge, props the cover wide open (the eye shows just inside)
-  return 0.28 + 0.3 * (RADII[Math.round(u * N)] / EEL_R_MAX) * clamp((out + 0.5) / 1.5) + 0.24 * ss(out, 45, 49);
+  return 0.28 + 0.3 * (RADII[Math.round(u * N)] / EEL_R_MAX) * clamp((out + 0.5) / 1.5) + 0.24 * ss(out, 45, 49) + 0.1 * strainAt(t);
 };
 /** the exit used by the escape at time t (until the release) */
 export const exitAt = (t: number): Exit => exitAtGill(escGill(Math.min(t, T_REL - 1e-6)));
@@ -131,7 +131,7 @@ const theta = (a: number, t: number, out: number) => {
   //     lead-out longer: the loop pulls away from the fish)
   const k = wTight(t);
   const a0 = LOOP.a0 + 3 * k, a1 = lerp(LOOP.a1, 42, k);
-  const curl = th0 - 10 * D * sm(a / 5) + lerp(LOOP.turn, -322, k) * D * sm(clamp((a - a0) / (a1 - a0)));
+  const curl = th0 - 10 * D * sm(a / 5) + lerp(LOOP.turn, -342, k) * D * sm(clamp((a - a0) / (a1 - a0)));
   // (3) a travelling wave running tail → head (the eel is swimming BACKWARD out of the fish)
   const A = (lerp(9, 7.5, wCurl(t)) + 4 * k) * D * sm(a / 7);
   const wave = A * Math.sin(2 * Math.PI * (1.25 * t + a / 15)) + 4 * D * wCurl(t) * Math.sin(2 * Math.PI * (0.45 * t + a / 40));
@@ -154,7 +154,7 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
   const n = Math.max(1, Math.ceil(Math.max(0, out) / da));
   const cs: V3[] = [ex.p];
   let p = ex.p;
-  const lead0 = inward ? null : norm3(mul3(INWARD[1], -1));
+  const lead0 = inward && !(inward as any).std ? null : norm3(mul3(INWARD[1], -1));
   for (let k = 0; k < n; k++) {
     const a = (k + 0.5) * da;
     let d = dirOf(th(a), be(a));
@@ -179,9 +179,16 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
 export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) => {
   const out = outOverride ?? outAt(t);
   // at the poke the tip leaves straight along the exit's outward direction (the S6 → S7 contract); once the body is
-  // out, it rises out of the slit from the caught head's route down it
-  return rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out), undefined, 2.5 * ss(t, 13.4, 14.8));
+  // out, it rises out of the slit from the caught head's route down it. While the head is caught it strains: quick
+  // tugs that bunch the head up the slit toward the opening (and back), the body outside unchanged
+  const st = strainAt(t);
+  const inward = st > 1e-4 ? Object.assign((d: number) => add3(inwardAt(ex, d), mul3(STRAIN_DIR, 0.55 * st * clamp((d - 0.6) / 2.4))), {std: true}) : undefined;
+  return rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out), inward, 2.5 * ss(t, 13.4, 14.8));
 };
+/** the caught head's tugs (0..1): a few in S9 (the predicament) and S10, ending in the final pull */
+const STRAIN_T = [16.75, 17.35, 18.35, 19.15, 19.85];
+export const strainAt = (t: number) => STRAIN_T.reduce((m, c) => Math.max(m, t <= c - 0.08 || t >= c + 0.34 ? 0 : t < c ? ss(t, c - 0.08, c) : 1 - ss(t, c, c + 0.34)), 0);
+const STRAIN_DIR: V3 = norm3([-0.25, -1, 0.15]);
 
 // ---------------------------------------------------------------- free mode
 /** after straightening along its natural heading (the mid-body's forward direction at the release: back along the
@@ -214,7 +221,7 @@ const T_TURN0 = T_REL + 0.12, T_TURN1 = T_REL + 0.85;
 /** then it veers upstream (a curving escape, so its body never points back at the predator) */
 export const SWIM_DIR2: V3 = norm3([-0.6, -0.08, 0.8]);
 /** the headings (tunable for tools/v4/swim_gap.ts) */
-export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number]};
+export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number], drift: 13, tau: 0.42};
 export const headingAt = (t: number): V3 => slerpDir(slerpDir(SWIM_HEAD.h0, SWIM_HEAD.d1, ss(t, T_TURN0, T_TURN1)), SWIM_HEAD.d2, ss(t, T_TURN1 + SWIM_HEAD.k2[0], T_TURN1 + SWIM_HEAD.k2[1]));
 /** swimming speed (u/s) */
 const speedAt = (t: number) => 38 * ss(t, T_REL + 0.05, T_REL + 0.7) + 8 * ss(t, T_REL + 1.0, T_REL + 2.2);
@@ -254,7 +261,7 @@ const anchorAt = (t: number): V3 => {
   }
   // the push off the predator: the whole eel moves out from the flank (and up) while it straightens, so its body
   // (lying along the fish, not pointing at it) leaves the flank whole: no tail left resting on the fish
-  const drift = mul3(DRIFT_DIR, DRIFT_U * (1 - Math.exp(-dt / 0.42)));
+  const drift = mul3(DRIFT_DIR, SWIM_HEAD.drift * (1 - Math.exp(-dt / SWIM_HEAD.tau)));
   return add3(add3(add3(REL.c[MID], pull), sw), drift);
 };
 const DRIFT_DIR: V3 = norm3([0.05, -0.3, 1]);
@@ -312,15 +319,25 @@ export const freePose = (t: number): V3[] => {
 
 /** the eel's back: up (−y) where the body runs level; where it runs nearly vertical (down the gill opening) the back
  *  turns toward the fish's tail (+x), so the eyes face the sides (one toward the viewer) */
-export const backFrom = (c: V3[]): V3[] =>
-  c.map((_, i) => {
-    const a = c[Math.max(0, i - 1)], b = c[Math.min(c.length - 1, i + 1)];
-    const T = norm3(sub3(b, a));
+export const backFrom = (c: V3[]): V3[] => {
+  const tg = c.map((_, i) => norm3(sub3(c[Math.min(c.length - 1, i + 1)], c[Math.max(0, i - 1)])));
+  const raw = tg.map((T) => {
     const w = ss(Math.abs(T[1]), 0.55, 0.85);
     const pref = norm3([w, -(1 - w), 0]);
     const k = dot3(pref, T);
     return norm3([pref[0] - k * T[0], pref[1] - k * T[1], pref[2] - k * T[2]]);
   });
+  // smoothed along the body (no sample-to-sample flips of the back where the body runs near vertical: the fin
+  // fringe keeps an even edge), then made perpendicular to the tangent again
+  const R = 6;
+  return raw.map((_, i) => {
+    let a: V3 = [0, 0, 0];
+    for (let j = Math.max(0, i - R); j <= Math.min(raw.length - 1, i + R); j++) a = add3(a, mul3(raw[j], 1 - Math.abs(j - i) / (R + 1)));
+    const T = tg[i], k = dot3(a, T);
+    const v: V3 = [a[0] - k * T[0], a[1] - k * T[1], a[2] - k * T[2]];
+    return len3(v) > 1e-6 ? norm3(v) : raw[i];
+  });
+};
 
 // ---------------------------------------------------------------- the pose for any exterior time
 export type EscapePose = Eel3Pose & {out: number; crossI: number; free: boolean};

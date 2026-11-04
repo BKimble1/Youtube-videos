@@ -289,23 +289,19 @@ const K = {
   chamberDeep: mix(C.chamber, LUMEN, 0.55),
   chamberWarm: mix(C.chamber, C.gillRed, 0.45),
   chamberFold: mix(C.chamber, LUMEN, 0.35),
-  rimLip: mix(C.fleshDeep, C.gillFilament, 0.35),
-  rimGlow: lit(mix(C.flesh, C.gillFilament, 0.35), 0.35),
-  waterHot: lit(C.waterTop, 0.55),
-  waterBright: lit(C.waterTop, 0.22),
-  water: C.waterTop,
-  waterDeep: C.waterMid,
-  wallBeyond: mix(C.fleshDeep, C.chamber, 0.35),
   backlight: lit(mix(C.waterTop, C.eelBelly, 0.4), 0.35),
   // the light through the opening on the cover's inner face beside the rim
   glow: lit(mix(C.flesh, C.gillFilament, 0.3), 0.5),
   glowWarm: lit(mix(C.flesh, C.gillRed, 0.25), 0.3),
   glowHot: lit(mix(mix(C.flesh, C.gillFilament, 0.3), C.waterTop, 0.45), 0.62),
-  // the cover's backlit membrane inside the rim: the same pale cyan-white light as the water, a touch warmer
-  membHot: lit(mix(C.waterTop, C.flesh, 0.06), 0.66),
-  memb: lit(mix(C.waterTop, C.flesh, 0.1), 0.58),
-  membEdge: lit(mix(C.waterTop, C.flesh, 0.16), 0.5),
-  innerLip: mix(C.fleshDeep, C.flesh, 0.35),
+  // the daylight itself (the shafts entering, the glare, the light wrapping round edges, the rim light on the eel)
+  beam: lit(C.waterTop, 0.7),
+  wrap: lit(C.waterTop, 0.82),
+  // the opening's edges seen against the light: a dark silhouette (the cover's free edge, the body wall)
+  sil: mix(INK, LUMEN, 0.45),
+  // the filaments and the bars where the light from the opening catches them
+  filLit: lit(C.gillFilament, 0.45),
+  barLit: lit(mix(C.flesh, C.waterTop, 0.35), 0.55),
 };
 
 // ================================================================ S5: THE THROAT (3D tube, seen from inside)
@@ -830,7 +826,7 @@ const fingerD = (b: P, tp: P, w0: number) => {
   const f = (p: P) => `${p.x.toFixed(3)} ${p.y.toFixed(3)}`;
   return `M${f({x: b.x + mx * w0, y: b.y + my * w0})}L${f({x: mid.x + mx * w1, y: mid.y + my * w1})}Q${f(ctrl)} ${f({x: mid.x - mx * w1, y: mid.y - my * w1})}L${f({x: b.x - mx * w0, y: b.y - my * w0})}Z`;
 };
-type ArchGeo = {bar: string; barSh: string; barHi: string; rakers: string; rakerSh: string; filBack: string; fil: string; filHi: string};
+type ArchGeo = {bar: string; barSh: string; barHi: string; barRim: string; rakers: string; rakerSh: string; filBack: string; fil: string; filHi: string};
 const archGeo = (k: number, discs: Disc[], t: number): ArchGeo => {
   let C0 = archLine(k);
   const n = C0.length;
@@ -867,6 +863,8 @@ const archGeo = (k: number, discs: Disc[], t: number): ArchGeo => {
   const bar = dPolyF([capT, ...L, capB, ...[...R].reverse()]);
   const barSh = dPolyF([...Rs.slice(3, -3), ...[...R.slice(3, -3)].reverse()]);
   const barHi = dPolyF(C0.slice(8, -8).map((_, j) => at(j + 8, -w((j + 8) / (n - 1)) * 0.55)), false);
+  // the edge facing the opening, where its light catches the bar
+  const barRim = dPolyF(C0.slice(6, -6).map((_, j) => at(j + 6, w((j + 6) / (n - 1)) * 0.72)), false);
   // rakers: a comb of short pale teeth along the inner (left) edge, pointing in and a little up; irregularly spaced
   // (2–4 samples), so the comb has no clean period to strobe against the camera's motion
   let rakers = '', rakerSh = '';
@@ -918,7 +916,7 @@ const archGeo = (k: number, discs: Disc[], t: number): ArchGeo => {
     const h2 = {x: b.x + (tp.x - b.x) * 0.78 - Tn[i].x * 0.03, y: b.y + (tp.y - b.y) * 0.78 - Tn[i].y * 0.03};
     filHi += `M${h1.x.toFixed(3)} ${h1.y.toFixed(3)}L${h2.x.toFixed(3)} ${h2.y.toFixed(3)}`;
   }
-  return {bar, barSh, barHi, rakers, rakerSh, filBack, fil, filHi};
+  return {bar, barSh, barHi, barRim, rakers, rakerSh, filBack, fil, filHi};
 };
 const dPolyF = (ps: P[], close = true) => (ps.length ? 'M' + ps.map((p) => `${p.x.toFixed(3)} ${p.y.toFixed(3)}`).join('L') + (close ? 'Z' : '') : '');
 
@@ -955,24 +953,38 @@ const Tissue: React.FC = () => {
 };
 
 /** the curtain: all filaments (behind), then the bars, then the rakers (in front); then the tissue frame */
-const Curtain: React.FC<{c: Cam6; geos: ArchGeo[]; part: 'fil' | 'bars'}> = ({c, geos, part}) => {
+const Curtain: React.FC<{c: Cam6; geos: ArchGeo[]; part: 'fil' | 'bars'; lt: Light | null}> = ({c, geos, part, lt}) => {
   if (c.e[2] < 0.35) return null;
   const all = (f: (g: ArchGeo) => string) => geos.map(f).join('');
+  // the opening's light on the curtain: a gradient about the hot point, in the curtain's own (set) units
+  const m = planeM(c, 0);
+  const gl = uid('curL');
+  const lg = lt && (
+    <radialGradient id={gl} gradientUnits="userSpaceOnUse" cx={(lt.H.x - m.tx) / m.s} cy={(lt.H.y - m.ty) / m.s} r={(620 * lt.k) / m.s}>
+      <stop offset="0" stopColor={part === 'fil' ? K.filLit : K.barLit} stopOpacity={part === 'fil' ? 0.9 : 1} />
+      <stop offset="0.5" stopColor={part === 'fil' ? K.filLit : K.barLit} stopOpacity={part === 'fil' ? 0.4 : 0.55} />
+      <stop offset="1" stopColor={part === 'fil' ? K.filLit : K.barLit} stopOpacity={0} />
+    </radialGradient>
+  );
   if (part === 'fil')
     return (
       <g transform={planeT(c, 0)}>
+        {lg && <defs>{lg}</defs>}
         <path d={all((g) => g.filBack)} fill={K.filBack} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
         <path d={all((g) => g.fil)} fill={K.fil} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
+        {lg && <path d={all((g) => g.fil)} fill={`url(#${gl})`} />}
         <path d={all((g) => g.filHi)} stroke={K.filHi} strokeWidth={2.2} strokeLinecap="round" fill="none" vectorEffect={NS} />
       </g>
     );
   return (
     <g transform={planeT(c, 0)}>
+      {lg && <defs>{lg}</defs>}
       {geos.map((g, i) => (
         <g key={i}>
           <path d={g.bar} fill={K.bar} />
           <path d={g.barSh} fill={K.barSh} />
           <path d={g.barHi} stroke={K.barHi} strokeWidth={3.4} strokeLinecap="round" fill="none" vectorEffect={NS} />
+          {lg && <path d={g.barRim} stroke={`url(#${gl})`} strokeWidth={4} strokeLinecap="round" fill="none" vectorEffect={NS} />}
           <path d={g.bar} fill="none" stroke={INK} strokeWidth={2.6} vectorEffect={NS} strokeLinejoin="round" />
         </g>
       ))}
@@ -1029,25 +1041,19 @@ const EDGE_EXT: P[] = (() => {
 const RIM_B: P[] = EDGE_EXT.map((q) => fromPlane(CAM_END, Z_B, q));
 const FAR_B: P[] = (() => {
   // the opening's other side (the body wall behind the cover): roughly parallel, a few units further back (right),
-  // closing on the rim at both ends
+  // closing on the rim at both ends. Wide enough that the water beyond reads through it as a view, not a stripe
   const n = RIM_B.length;
   return RIM_B.map((p, i) => {
     const u = i / (n - 1);
-    const wv = (2.5 + 0.35 * Math.sin(u * 9.5 + 0.6)) * Math.sin(Math.PI * clamp((u - 0.02) / 0.96)) ** 0.6;
+    const wv = (3.3 + 0.3 * Math.sin(u * 9.5 + 0.6)) * Math.sin(Math.PI * clamp((u - 0.02) / 0.96)) ** 1.1;
     return {x: p.x + wv, y: p.y + 0.5 * Math.sin(Math.PI * u)};
   });
 })();
 
 /** the opening's top never reaches the caption band: above this screen line the cover lies on the body */
 const Y_OPEN = 545;
-/** the backlit membrane: the gill cover's thin free margin, lit through by the water, reaches this far inside the
- *  rim (screen px, perpendicular to EDGE, at the end frame). Its inner edge is a clear line: the tip crosses it into
- *  the light about 0.4 s before the cut and runs across the light to the rim (EDGE) */
-const MEMB_PX = 108;
-const S_B_END = planeM(CAM_END, Z_B).s;
 /** the opening on screen for this camera: the rim (the cover's free edge, on EDGE at the end), the far side (the
- *  body wall), closed at the top by a short arch no higher than Y_OPEN (where the cover meets the body); and inside
- *  the rim the backlit membrane, from its inner edge to the rim */
+ *  body wall), closed at the top by a short arch no higher than Y_OPEN (where the cover meets the body) */
 const openingScr = (c: Cam6) => {
   const Y_CUT = Y_OPEN + 46; // the rim and far side stop here; an arch closes the top, peaking at Y_OPEN
   const below = (L: P[]): P[] => {
@@ -1059,22 +1065,9 @@ const openingScr = (c: Cam6) => {
       }
     return [];
   };
-  const rimAll = RIM_B.map((p) => toPlane(c, Z_B, p));
-  const rim = below(rimAll);
+  const rim = below(RIM_B.map((p) => toPlane(c, Z_B, p)));
   const far = below(FAR_B.map((p) => toPlane(c, Z_B, p)));
   if (rim.length < 2 || far.length < 2) return null;
-  // the membrane's inner edge: the rim pushed toward the chamber (left of its downward run), tapering to nothing at
-  // the top (under the arch) and at the far bottom end
-  const sc = planeM(c, Z_B).s / S_B_END;
-  const nA = rimAll.length;
-  const innerAll = rimAll.map((p, i) => {
-    const a = rimAll[Math.max(0, i - 1)], b = rimAll[Math.min(nA - 1, i + 1)];
-    const tx = b.x - a.x, ty = b.y - a.y, l = Math.hypot(tx, ty) || 1;
-    const u = i / (nA - 1);
-    const d = MEMB_PX * sc * ss(p.y, Y_CUT - 40 * sc, Y_CUT + 520 * sc) * ss(1 - u, 0, 0.22);
-    return {x: p.x - (ty / l) * d, y: p.y + (tx / l) * d};
-  });
-  const inner = below(innerAll);
   // the top: a rounded arch from the far side back to the rim (where the cover meets the body)
   const cap: P[] = [];
   if (rim[0].y <= Y_CUT + 0.5) {
@@ -1082,17 +1075,203 @@ const openingScr = (c: Cam6) => {
     const h = Math.min(Y_CUT - Y_OPEN, 0.5 * w);
     for (let j = 1; j < 16; j++) {
       const u = j / 16;
-      cap.push({x: lerp(f0.x, r0.x, u), y: lerp(f0.y, r0.y, u) - h * Math.sin(Math.PI * u) ** 0.8});
+      // a pointed top: the slit closes where the cover meets the body
+      cap.push({x: lerp(f0.x, r0.x, u), y: lerp(f0.y, r0.y, u) - h * (1 - Math.abs(2 * u - 1) ** 1.6)});
     }
   }
   const poly = [...rim, ...[...far].reverse(), ...cap];
-  const memb = inner.length > 1 ? [...inner, ...[...rim].reverse()] : [];
-  const light = inner.length > 1 ? [...inner, ...[...far].reverse(), ...cap] : poly;
-  return {rim, far, cap, poly, inner, memb, light};
+  return {rim, far, cap, poly};
 };
 
-const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c}) => {
-  const gG = uid('chG'), gW = uid('chW'), gH = uid('chH'), gM = uid('chM');
+// ---------------------------------------------------------------- the light through the opening
+// Everything the opening does to the shot is authored in END-FRAME px ("Q": the screen at the settled end camera)
+// and carried to the current camera by the uniform map of its plane: the opening, its glow and the light shafts
+// entering the chamber on the cover's plane Z_B; the outside view on a far plane Z_OUT (it slides less than the rim
+// as the camera moves: a real view through a gap, with depth).
+type QMap = {k: number; tx: number; ty: number};
+const qMap = (c: Cam6, z0: number): QMap => {
+  const m = planeM(c, z0), m0 = planeM(CAM_END, z0), k = m.s / m0.s;
+  return {k, tx: m.tx - k * m0.tx, ty: m.ty - k * m0.ty};
+};
+const qPt = (q: QMap, p: P): P => ({x: q.k * p.x + q.tx, y: q.k * p.y + q.ty});
+const qT = (q: QMap) => `matrix(${q.k.toFixed(5)} 0 0 ${q.k.toFixed(5)} ${q.tx.toFixed(2)} ${q.ty.toFixed(2)})`;
+/** the outside view's plane: well beyond the opening */
+const Z_OUT = Z_B - 10;
+/** where the light is hottest: just beyond the rim, where the tip goes out (Q) */
+const HOT_Q: P = {x: POKE_AT.x + 55, y: POKE_AT.y - 30};
+/** the slit's tilt: its long axis against the screen's vertical (Q), for the elongated glows */
+const SLIT_DEG = (Math.atan2(-(EDGE[EDGE.length - 1].x - EDGE[0].x), EDGE[EDGE.length - 1].y - EDGE[0].y) * 180) / Math.PI;
+type Light = {H: P; k: number};
+const lightOf = (c: Cam6): Light => {
+  const q = qMap(c, Z_B);
+  return {H: qPt(q, HOT_Q), k: q.k};
+};
+/** an elliptical radial gradient along the slit, centred at H (rx across, ry along; screen px) */
+const slitGlowT = (H: P, rx: number, ry: number) => `translate(${H.x.toFixed(1)} ${H.y.toFixed(1)}) rotate(${SLIT_DEG.toFixed(2)}) scale(${rx.toFixed(1)} ${ry.toFixed(1)})`;
+/** the rim's x at a Q-space height (EDGE_EXT runs top -> bottom; its upper half is monotone in y) */
+const rimAtY = (y: number): P => {
+  let best = EDGE_EXT[0], bd = 1e9;
+  for (const p of EDGE_EXT) if (Math.abs(p.y - y) < bd && p.y < 1700) { bd = Math.abs(p.y - y); best = p; }
+  return best;
+};
+
+// the outside: open water, brightest toward the surface (top), light shafts, a hazy riverbed with a few low tufts of
+// plants far off, motes drifting in the current (Q px)
+const O = {
+  sky: lit(C.waterTop, 0.7), // toward the surface: near white
+  hi: lit(C.waterTop, 0.42),
+  mid: lit(C.waterTop, 0.16),
+  low: mix(C.waterTop, C.waterMid, 0.3),
+  far: mix(C.waterTop, C.haze, 0.6),
+  bedFar: mix(C.haze, C.sand, 0.4),
+  bedNear: mix(C.sand, C.haze, 0.42),
+  pebble: mix(mix(C.pebbleA, C.haze, 0.45), C.sand, 0.2),
+  tuft: mix(mix(C.fin, C.waterMid, 0.56), C.haze, 0.42), // the reeds' mid tone, hazed by distance
+  mote: C.mote,
+};
+const HORIZON = 1490;
+const TUFTS: {x: number; n: number; h: number; s: number}[] = [
+  {x: 470, n: 4, h: 170, s: 0.4},
+  {x: 590, n: 5, h: 230, s: 2.1},
+  {x: 705, n: 6, h: 420, s: 3.7},
+  {x: 840, n: 5, h: 380, s: 5.3},
+];
+const tuftD = (t: number) => {
+  let d = '';
+  for (const tf of TUFTS) {
+    for (let b = 0; b < tf.n; b++) {
+      const hb = tf.h * (0.6 + 0.4 * hash(tf.s * 7 + b * 3.3));
+      const x0 = tf.x + (b - (tf.n - 1) / 2) * 9, y0 = HORIZON + 45 + 25 * hash(tf.s + b);
+      const lean = (b - (tf.n - 1) / 2) * 0.22 + 0.15;
+      const sway = 0.12 * Math.sin(1.3 * t + tf.s + b * 0.9);
+      const L: P[] = [], R: P[] = [];
+      for (let j = 0; j <= 8; j++) {
+        const s = j / 8;
+        const a = lean * s + sway * s * s;
+        const x = x0 + hb * (Math.sin(a) * s), y = y0 - hb * s;
+        const w = 6 * (1 - s) ** 0.8 + 0.4;
+        L.push({x: x - w, y});
+        R.push({x: x + w, y});
+      }
+      d += dPoly([...L, ...R.reverse()]);
+    }
+  }
+  return d;
+};
+const OutsideView: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
+  const gW = uid('owat'), gS = uid('osun'), gB = uid('obed'), gH = uid('ohaze'), gF = uid('oshaft');
+  // light shafts slanting down from the upper left, shimmering
+  const shafts: {d: string; o: number}[] = [];
+  for (let i = 0; i < 6; i++) {
+    const x0 = 520 + i * 125 + 22 * Math.sin(0.33 * t + 1.7 * i) + 30 * hash(i * 4.1);
+    const w0 = 16 + 26 * hash(i * 2.3), w1 = w0 * 2.2;
+    const y0 = 420, y1 = HORIZON, sl = -0.3;
+    const x1 = x0 + sl * (y1 - y0);
+    shafts.push({d: dPoly([{x: x0 - w0, y: y0}, {x: x0 + w0, y: y0}, {x: x1 + w1, y: y1}, {x: x1 - w1, y: y1}]), o: 0.42 * (0.65 + 0.35 * noise1(0.45 * t + i * 3.1, 7))});
+  }
+  // motes drifting with the current (fading in and out at the ends of their run: no pops)
+  const motes: string[] = [];
+  const mOp: number[] = [];
+  for (let i = 0; i < 22; i++) {
+    const u = (hash(i * 1.7) + 0.03 * t) % 1;
+    const x = 300 + 560 * u, y = 600 + 1150 * hash(i * 5.3) + 9 * Math.sin(0.8 * t + i);
+    const r = 2.6 + 2.8 * hash(i * 9.1);
+    motes.push(`M${(x - r).toFixed(1)},${y.toFixed(1)}a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${(2 * r).toFixed(1)},0a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${(-2 * r).toFixed(1)},0Z`);
+    mOp.push(0.85 * ss(u, 0, 0.1) * (1 - ss(u, 0.9, 1)));
+  }
+  const pebbles = [
+    [430, 1585, 16, 6], [560, 1552, 11, 4], [690, 1610, 19, 7], [520, 1680, 22, 8], [760, 1540, 10, 4], [610, 1760, 26, 9], [380, 1740, 20, 7], [470, 1860, 30, 10],
+  ];
+  return (
+    <g transform={qT(qMap(c, Z_OUT))}>
+      <defs>
+        <linearGradient id={gW} gradientUnits="userSpaceOnUse" x1={0} y1={480} x2={0} y2={HORIZON}>
+          <stop offset="0" stopColor={O.sky} />
+          <stop offset="0.28" stopColor={O.hi} />
+          <stop offset="0.6" stopColor={O.mid} />
+          <stop offset="0.86" stopColor={O.low} />
+          <stop offset="1" stopColor={O.far} />
+        </linearGradient>
+        <radialGradient id={gS} gradientUnits="userSpaceOnUse" cx={540} cy={560} r={560}>
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.7} />
+          <stop offset="0.45" stopColor="#FFFFFF" stopOpacity={0.22} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={gB} gradientUnits="userSpaceOnUse" x1={0} y1={HORIZON} x2={0} y2={2150}>
+          <stop offset="0" stopColor={O.bedFar} />
+          <stop offset="1" stopColor={O.bedNear} />
+        </linearGradient>
+        <linearGradient id={gH} gradientUnits="userSpaceOnUse" x1={0} y1={HORIZON - 120} x2={0} y2={HORIZON + 90}>
+          <stop offset="0" stopColor={O.far} stopOpacity={0} />
+          <stop offset="0.55" stopColor={O.far} stopOpacity={0.75} />
+          <stop offset="1" stopColor={O.far} stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id={gF} gradientUnits="userSpaceOnUse" x1={0} y1={420} x2={0} y2={HORIZON}>
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      <rect x={-1500} y={-1500} width={4500} height={HORIZON + 1500} fill={`url(#${gW})`} />
+      <path d={`M-1500 ${HORIZON}C0 ${HORIZON - 14} 600 ${HORIZON + 12} 3000 ${HORIZON - 6}L3000 4000L-1500 4000Z`} fill={`url(#${gB})`} />
+      {pebbles.map(([x, y, rx, ry], i) => (
+        <ellipse key={i} cx={x} cy={y} rx={rx} ry={ry} fill={O.pebble} fillOpacity={0.7} />
+      ))}
+      <path d={tuftD(t)} fill={O.tuft} />
+      <rect x={-1500} y={HORIZON - 120} width={4500} height={210} fill={`url(#${gH})`} />
+      {shafts.map((s, i) => (
+        <path key={i} d={s.d} fill={`url(#${gF})`} opacity={s.o} />
+      ))}
+      <rect x={-1500} y={-1500} width={4500} height={4500} fill={`url(#${gS})`} />
+      {motes.map((d, i) => (
+        <path key={i} d={d} fill={O.mote} fillOpacity={mOp[i]} />
+      ))}
+    </g>
+  );
+};
+
+/** the shafts of light that come IN through the opening and fan across the chamber (Q px on the cover's plane):
+ *  [height on the rim, its width there, turn (rad) from the tip's reverse travel, length, strength] */
+const BEAMS: [number, number, number, number, number][] = [
+  [700, 70, -0.34, 700, 0.75],
+  [850, 105, -0.15, 880, 1],
+  [1035, 90, 0.0, 820, 0.95],
+  [1215, 120, 0.15, 760, 0.75],
+  [1420, 90, 0.3, 600, 0.55],
+];
+const beamGeo = (t: number, qTop = -1e9) =>
+  BEAMS.map(([y0, h, a, L, o], i) => {
+    const y = Math.max(y0, qTop + 25);
+    const p1 = rimAtY(y), p2 = rimAtY(y + h);
+    const b = Math.atan2(-POKE_DIR.y, -POKE_DIR.x) + a;
+    const d = {x: Math.cos(b), y: Math.sin(b)}, n = {x: -d.y, y: d.x};
+    const spread = 0.16 * L;
+    const q1 = {x: p1.x + d.x * L - n.x * spread, y: p1.y + d.y * L - n.y * spread};
+    const q2 = {x: p2.x + d.x * L + n.x * spread, y: p2.y + d.y * L + n.y * spread};
+    const m0 = {x: 0.5 * (p1.x + p2.x), y: 0.5 * (p1.y + p2.y)};
+    return {poly: [p1, p2, q2, q1], m0, m1: {x: m0.x + d.x * L, y: m0.y + d.y * L}, d, n, h, L, o: o * (0.75 + 0.25 * noise1(0.6 * t + i * 2.7, 3))};
+  });
+
+/** the cover's free edge as a flap in silhouette: the rim (and the top arch, from where it leaves the far side) with a
+ *  band of varying thickness on its outer side (toward the chamber), crisp along the rim itself */
+const flapOf = (op: NonNullable<ReturnType<typeof openingScr>>, k: number) => {
+  const line = [...op.cap.slice(6), ...op.rim];
+  const n = line.length;
+  const arc = [0];
+  for (let i = 1; i < n; i++) arc.push(arc[i - 1] + Math.hypot(line[i].x - line[i - 1].x, line[i].y - line[i - 1].y));
+  const tot = arc[n - 1] || 1;
+  const inner = line.map((p, i) => {
+    const a = line[Math.max(0, i - 1)], b = line[Math.min(n - 1, i + 1)];
+    const tx = b.x - a.x, ty = b.y - a.y, l = Math.hypot(tx, ty) || 1;
+    const u = arc[i] / tot;
+    const w = k * (4 + 7 * Math.sin(Math.PI * clamp(u * 1.1)) ** 0.7) * ss(arc[i], 0, 90 * k);
+    return {x: p.x - (ty / l) * w, y: p.y + (tx / l) * w};
+  });
+  return {band: dPoly([...line, ...[...inner].reverse()]), soft: dPoly(inner, false), line: dPoly(line, false)};
+};
+/** the cover's inner face (the chamber's outer wall), the light it catches round the opening, the shafts of light
+ *  entering, the opening's edges in silhouette and the outside view through it */
+const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
+  const gG = uid('chG'), gL = uid('chL'), cw = uid('chWin'), fm = uid('chFade');
   const rimMid = RIM_B[Math.floor(RIM_B.length / 2)];
   // the cover's inner face: dark, with soft fan-like folds converging toward its hinge (front, left)
   const folds: string[] = [];
@@ -1106,16 +1285,23 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c}) => {
     folds.push(dPoly(pts, false));
   }
   const op = openingScr(c);
-  const m = planeM(c, Z_B);
-  const sp = (p: P) => toPlane(c, Z_B, p);
-  const rm = sp(rimMid);
-  const hot = sp(fromPlane(CAM_END, Z_B, {x: POKE_AT.x + 70, y: POKE_AT.y - 10}));
-  const rimLine = op ? dPoly([...op.rim].reverse().concat([...op.cap].reverse()), false) : '';
-  const farD = op ? dPoly(op.far, false) : '';
-  const innerD = op && op.inner.length > 1 ? dPoly(op.inner, false) : '';
-  const sc = m.s / S_B_END;
-  // the membrane's light falls off from the rim (thinnest, brightest) to its inner edge: a gradient across EDGE
-  const mA = sp(fromPlane(CAM_END, Z_B, POKE_AT)), mB = sp(fromPlane(CAM_END, Z_B, {x: POKE_AT.x - MEMB_PX * 0.98, y: POKE_AT.y + MEMB_PX * 0.2}));
+  const q = qMap(c, Z_B);
+  const {H: hot, k} = lightOf(c);
+  // the opening's visible top in Q (its screen top is held at Y_OPEN while the camera moves)
+  const beams = beamGeo(t, op ? (op.rim[0].y - q.ty) / q.k : -1e9);
+  const bIds = beams.map(() => uid('chB'));
+  // motes carried in on the shafts of light (drifting inward, fading at both ends of their run)
+  const motes: {p: P; r: number; o: number}[] = [];
+  for (let i = 0; i < 14; i++) {
+    const b = beams[i % beams.length];
+    const u = (hash(i * 3.7) + 0.075 * t) % 1;
+    const off = (hash(i * 1.3) - 0.5) * b.h * (1 + 1.2 * u);
+    const p = {x: b.m0.x + b.d.x * u * b.L * 0.75 + b.n.x * off, y: b.m0.y + b.d.y * u * b.L * 0.75 + b.n.y * off};
+    motes.push({p: qPt(q, p), r: (2.4 + 2.2 * hash(i * 8.3)) * k, o: 0.75 * Math.sin(Math.PI * u) * b.o});
+  }
+  const outline = op ? dPoly(op.poly) : '';
+  const farD = op ? dPoly([...op.far, ...op.cap.slice(0, 4)], false) : '';
+  const flap = op ? flapOf(op, k) : null;
   return (
     <g>
       <defs>
@@ -1124,22 +1310,31 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c}) => {
           <stop offset="0.45" stopColor={K.chamber} />
           <stop offset="1" stopColor={K.chamberDeep} />
         </radialGradient>
-        <linearGradient id={gW} gradientUnits="userSpaceOnUse" x1={rm.x} y1={rm.y} x2={rm.x + 4.2 * m.s} y2={rm.y - 1.2 * m.s}>
-          <stop offset="0" stopColor={K.waterHot} />
-          <stop offset="0.3" stopColor={K.waterBright} />
-          <stop offset="0.75" stopColor={K.water} />
-          <stop offset="1" stopColor={K.waterDeep} />
-        </linearGradient>
-        <linearGradient id={gM} gradientUnits="userSpaceOnUse" x1={mA.x} y1={mA.y} x2={mB.x} y2={mB.y}>
-          <stop offset="0" stopColor={K.membHot} />
-          <stop offset="0.55" stopColor={K.memb} />
-          <stop offset="1" stopColor={K.membEdge} />
-        </linearGradient>
-        <radialGradient id={gH} gradientUnits="userSpaceOnUse" cx={hot.x} cy={hot.y} r={3.2 * m.s}>
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0.55} />
-          <stop offset="0.5" stopColor="#FFFFFF" stopOpacity={0.18} />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
+        {/* the light round the opening on the cover's inner face and the body wall: hot near the slit, then the warm
+            glow of lit flesh, fading into the chamber's dark */}
+        <radialGradient id={gL} gradientUnits="userSpaceOnUse" cx={0} cy={0} r={1} gradientTransform={slitGlowT(hot, 470 * k, 980 * k)}>
+          <stop offset="0" stopColor={K.glowHot} stopOpacity={0.95} />
+          <stop offset="0.2" stopColor={K.glow} stopOpacity={0.7} />
+          <stop offset="0.42" stopColor={K.glowWarm} stopOpacity={0.36} />
+          <stop offset="0.7" stopColor={K.chamberWarm} stopOpacity={0.2} />
+          <stop offset="1" stopColor={K.chamberWarm} stopOpacity={0} />
         </radialGradient>
+        {beams.map((b, i) => {
+          const a = qPt(q, b.m0), z = qPt(q, b.m1);
+          return (
+            <linearGradient key={i} id={bIds[i]} gradientUnits="userSpaceOnUse" x1={a.x} y1={a.y} x2={z.x} y2={z.y}>
+              <stop offset="0" stopColor={K.beam} stopOpacity={0.34} />
+              <stop offset="0.35" stopColor={K.beam} stopOpacity={0.12} />
+              <stop offset="1" stopColor={K.beam} stopOpacity={0} />
+            </linearGradient>
+          );
+        })}
+        <TopFade id={fm} />
+        {op && (
+          <clipPath id={cw} clipPathUnits="userSpaceOnUse">
+            <path d={outline} />
+          </clipPath>
+        )}
       </defs>
       <g transform={planeT(c, Z_B)}>
         <rect x={-60} y={-60} width={120} height={120} fill={`url(#${gG})`} />
@@ -1147,25 +1342,86 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c}) => {
       </g>
       {op && (
         <g>
-          {/* a little of the light spills onto the chamber wall beyond the membrane (soft, layered strokes) */}
-          {innerD && [1.5, 0.9, 0.45].map((wd, i) => (
-            <path key={i} d={innerD} stroke={K.glowWarm} strokeOpacity={0.08 + 0.04 * i} strokeWidth={wd * m.s} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <rect x={0} y={Y_OPEN - 40} width={W} height={H + 40 - Y_OPEN} fill={`url(#${gL})`} mask={`url(#${fm})`} />
+          {/* the shafts of light coming in through the slit (a soft outer and a brighter inner layer each) */}
+          {beams.map((b, i) => {
+            const core = [b.poly[0], b.poly[1], {x: lerp(b.poly[1].x, b.poly[2].x, 0.8) - b.n.x * 0.06 * b.L, y: lerp(b.poly[1].y, b.poly[2].y, 0.8) - b.n.y * 0.06 * b.L}, {x: lerp(b.poly[0].x, b.poly[3].x, 0.8) + b.n.x * 0.06 * b.L, y: lerp(b.poly[0].y, b.poly[3].y, 0.8) + b.n.y * 0.06 * b.L}];
+            return (
+              <g key={i} opacity={b.o}>
+                <path d={dPoly(b.poly.map((p) => qPt(q, p)))} fill={`url(#${bIds[i]})`} opacity={0.6} />
+                <path d={dPoly(core.map((p) => qPt(q, p)))} fill={`url(#${bIds[i]})`} />
+              </g>
+            );
+          })}
+          {/* the far side (the body wall) has no edge of its own: the light floods past it (a feathered glare; the
+              view covers the inner half of these strokes) */}
+          {[130, 104, 82, 64, 48, 34, 22, 12].map((w, i) => (
+            <path key={i} d={farD} stroke={K.wrap} strokeOpacity={0.05} strokeWidth={w * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />
           ))}
-          {/* the backlit membrane inside the rim, then the opening: bright water beyond the cover's free edge */}
-          {op.memb.length > 2 && <path d={dPoly(op.memb)} fill={`url(#${gM})`} />}
-          <path d={dPoly(op.poly)} fill={`url(#${gW})`} />
-          <path d={dPoly(op.poly)} fill={`url(#${gH})`} />
-          {/* the far side of the opening: the body wall, in the light */}
-          <path d={farD} stroke={K.wallBeyond} strokeWidth={Math.max(10, 0.42 * m.s)} strokeOpacity={0.9} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <path d={farD} stroke={INK} strokeWidth={2.4} fill="none" strokeLinejoin="round" />
-          {/* the membrane's inner edge: the margin of the cover's bone, a clear line with a lit lip on the chamber side */}
-          {innerD && <path d={dPoly(op.inner.map((p) => ({x: p.x - 0.09 * m.s, y: p.y})), false)} stroke={K.innerLip} strokeWidth={Math.max(5, 0.16 * m.s)} fill="none" strokeLinecap="round" strokeLinejoin="round" />}
-          {innerD && <path d={innerD} stroke={INK} strokeWidth={2.6} fill="none" strokeLinejoin="round" />}
-          {/* the rim: the cover's thin free edge, seen against the light on both sides, running on over the top */}
-          <path d={rimLine} stroke={K.rimLip} strokeWidth={Math.max(6, 0.15 * m.s * Math.max(1, sc))} fill="none" strokeLinecap="round" strokeLinejoin="round" />
-          <path d={rimLine} stroke={INK} strokeWidth={2.2} fill="none" strokeLinejoin="round" />
+          <g clipPath={`url(#${cw})`}>
+            <OutsideView c={c} t={t} />
+            {/* the light wrapping round the edges, just inside them: brightest toward the far side */}
+            {[70, 50, 32, 16].map((w, i) => (
+              <path key={i} d={farD} stroke={K.wrap} strokeOpacity={0.09} strokeWidth={w * k} fill="none" strokeLinejoin="round" />
+            ))}
+          </g>
+          {/* the cover's free edge in silhouette against the light: a thin dark flap with a crisp outer edge (on the
+              rim), fading on its chamber side, running on over the top where the cover meets the body */}
+          {flap && [34, 27, 21, 15, 10, 6].map((w, i) => <path key={i} d={flap.soft} stroke={K.sil} strokeOpacity={0.07} strokeWidth={w * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />)}
+          {flap && <path d={flap.band} fill={K.sil} />}
+          {motes.map((m, i) => (
+            <circle key={i} cx={m.p.x.toFixed(1)} cy={m.p.y.toFixed(1)} r={m.r.toFixed(2)} fill={K.wrap} fillOpacity={m.o} />
+          ))}
         </g>
       )}
+    </g>
+  );
+};
+/** a mask that fades the opening's glows out toward the caption band (nothing lit above y = Y_OPEN - 40) */
+const TopFade: React.FC<{id: string}> = ({id}) => {
+  const g = id + 'g';
+  return (
+    <>
+      <linearGradient id={g} gradientUnits="userSpaceOnUse" x1={0} y1={Y_OPEN - 40} x2={0} y2={Y_OPEN + 150}>
+        <stop offset="0" stopColor="#000" />
+        <stop offset="1" stopColor="#FFF" />
+      </linearGradient>
+      <mask id={id} maskUnits="userSpaceOnUse" x={0} y={0} width={W} height={H}>
+        <rect x={0} y={0} width={W} height={H} fill={`url(#${g})`} />
+      </mask>
+    </>
+  );
+};
+/** the glare of the opening over everything round it (drawn over the arches and the eel): soft, no edge */
+const OpeningBloom: React.FC<{c: Cam6}> = ({c}) => {
+  const op = openingScr(c);
+  if (!op) return null;
+  const {H: hot, k} = lightOf(c);
+  const g = uid('bloom'), fm = uid('blFade'), gx = uid('blX');
+  const x = qPt(qMap(c, Z_B), {x: POKE_AT.x + 6, y: POKE_AT.y - 3});
+  return (
+    <g>
+      <defs>
+        <radialGradient id={g} gradientUnits="userSpaceOnUse" cx={0} cy={0} r={1} gradientTransform={slitGlowT(hot, 210 * k, 520 * k)}>
+          <stop offset="0" stopColor={K.wrap} stopOpacity={0.42} />
+          <stop offset="0.35" stopColor={K.wrap} stopOpacity={0.2} />
+          <stop offset="0.7" stopColor={K.glowHot} stopOpacity={0.06} />
+          <stop offset="1" stopColor={K.glowHot} stopOpacity={0} />
+        </radialGradient>
+        <TopFade id={fm} />
+        <radialGradient id={gx} gradientUnits="userSpaceOnUse" cx={x.x} cy={x.y} r={95 * k}>
+          <stop offset="0" stopColor={K.wrap} stopOpacity={0.5} />
+          <stop offset="0.4" stopColor={K.wrap} stopOpacity={0.22} />
+          <stop offset="1" stopColor={K.wrap} stopOpacity={0} />
+        </radialGradient>
+      </defs>
+      <rect x={0} y={Y_OPEN - 40} width={W} height={H + 40 - Y_OPEN} fill={`url(#${g})`} mask={`url(#${fm})`} />
+      {/* the gap is widest where the tail goes out: the light is hottest there and the tip runs into its glare */}
+      <circle cx={x.x} cy={x.y} r={95 * k} fill={`url(#${gx})`} />
+      {/* the light wrapping over the cover's edge (soft, a few px into the silhouette) */}
+      {[[12, 0.1], [5, 0.16]].map(([w, o], i) => (
+        <path key={i} d={dPoly(op.rim, false)} stroke={K.wrap} strokeOpacity={o} strokeWidth={w * k} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      ))}
     </g>
   );
 };
@@ -1233,14 +1489,18 @@ const S6View: React.FC<{t: number; eel?: boolean}> = ({t, eel = true}) => {
   // and rakers in front of it; the part in front of the curtain is drawn last. Both carry a pale backlit rim (the
   // light from the opening), so the slate body reads against the dark chamber at any size.
   const through = eel && iX >= 0;
+  const lt = openingScr(c) ? lightOf(c) : null;
   return (
     <g>
       <rect x={0} y={0} width={W} height={H} fill={K.chamberDeep} />
       <ChamberWall c={c} t={t} />
-      {curtainOn && <Curtain c={c} geos={geos} part="fil" />}
+      {curtainOn && <Curtain c={c} geos={geos} part="fil" lt={lt} />}
       {through && <EelRim e={e} t={t} a={iX} b={N} w={3.6} />}
+      {through && lt && <EelLit e={e} t={t} a={iX} lt={lt} />}
       {through && <EelS e={e} t={t} from={iX} />}
-      {curtainOn && <Curtain c={c} geos={geos} part="bars" />}
+      {through && lt && <EelLit e={e} t={t} a={iX} lt={lt} shade />}
+      {curtainOn && <Curtain c={c} geos={geos} part="bars" lt={lt} />}
+      <OpeningBloom c={c} />
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
       {eel && <EelRim e={e} t={t} a={0} b={iX >= 0 ? iX - rimBack(e, iX) : N} w={3.6} />}
       {eel && (iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />)}
@@ -1253,6 +1513,36 @@ const rimBack = (e: ScrEel, iX: number) => {
   const i = Math.max(0, Math.min(N - 1, Math.floor(iX)));
   const l = Math.hypot(e.pts[i + 1].x - e.pts[i].x, e.pts[i + 1].y - e.pts[i].y);
   return Math.min(0.8, 4.5 / Math.max(1e-3, l));
+};
+/** the eel in the opening's light, samples a..N: under the body (`shade` false) a bright rim on the side toward the
+ *  light, growing as the tail nears the opening; over it (`shade`) a darkening toward the light, so the tail goes
+ *  into the brightness as a silhouette */
+const EelLit: React.FC<{e: ScrEel; t: number; a: number; lt: Light; shade?: boolean}> = ({e, t, a, lt, shade}) => {
+  const f = Math.max(a, e.from);
+  if (N - f < 0.05) return null;
+  const g = uid(shade ? 'eSh' : 'eHot');
+  const d = shade ? finSil(e, t, f, N, 0) : finSil(e, t, f, N, 5.5, 3, -2);
+  const cx = lt.H.x / e.k, cy = lt.H.y / e.k, r = ((shade ? 360 : 460) * lt.k) / e.k;
+  return (
+    <g transform={`scale(${e.k})`}>
+      <defs>
+        {shade ? (
+          <radialGradient id={g} gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={r}>
+            <stop offset="0" stopColor={K.sil} stopOpacity={0.55} />
+            <stop offset="0.5" stopColor={K.sil} stopOpacity={0.28} />
+            <stop offset="1" stopColor={K.sil} stopOpacity={0} />
+          </radialGradient>
+        ) : (
+          <radialGradient id={g} gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={r}>
+            <stop offset="0" stopColor={K.wrap} stopOpacity={1} />
+            <stop offset="0.45" stopColor={K.beam} stopOpacity={0.8} />
+            <stop offset="1" stopColor={K.beam} stopOpacity={0} />
+          </radialGradient>
+        )}
+      </defs>
+      <path d={d} fill={`url(#${g})`} />
+    </g>
+  );
 };
 /** the pale backlit rim round the eel (the light from the opening), samples a..b */
 const EelRim: React.FC<{e: ScrEel; t: number; a: number; b: number; w: number; opacity?: number}> = ({e, t, a, b, w, opacity = 1}) => {
@@ -1326,9 +1616,10 @@ export const keepOut = (t: number): KeepOut => {
       const g = gapPoly(s.c);
       if (onScr(g)) pts.push(...g);
     }
-    // the gill opening (the bright water beyond the rim) is the gap's other end: it counts too
+    // the gill opening (the water beyond the rim, between the cover's free edge and the body wall) is the gap's
+    // other end: it counts too
     const op = openingScr(s.c);
-    if (op && onScr(op.light)) pts.push(...op.light.filter((_, i) => i % 2 === 0));
+    if (op && onScr(op.poly)) pts.push(...op.poly.filter((_, i) => i % 2 === 0));
     if (pts.length >= 3) gap = hull(pts);
   }
   return gap ? {eel, gap} : {eel};
