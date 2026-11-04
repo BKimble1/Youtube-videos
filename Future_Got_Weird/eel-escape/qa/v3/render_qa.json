@@ -1,6 +1,6 @@
 {
- "file": "FGW_Eel_Escape_V3_1080x1920.mp4",
- "size_mb": 19.58,
+ "file": "FGW_Eel_Escape_V3_FINAL_1080x1920.mp4",
+ "size_mb": 20.2,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,14 +15,14 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "317370"
+   "bitrate": "259972"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 1.62,
+ "frame_change_median": 1.64,
  "large_changes": [],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 11,
- "longest_near_static_run_starts_s": 23.93,
- "loop_last_vs_first_mad": 3.26
+ "longest_near_static_run_frames": 15,
+ "longest_near_static_run_starts_s": 23.8,
+ "loop_last_vs_first_mad": 3.25
 }

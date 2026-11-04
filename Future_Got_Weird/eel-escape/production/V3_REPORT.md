@@ -3,7 +3,10 @@
 **Deliverable:** `exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4`
 
 - **Video:** H.264, 1080×1920, 30 fps, 744 frames, 24.80 s, CRF 16, yuv420p, BT.709.
-- **Audio:** AAC 320 kb/s, 48 kHz stereo.
+- **Audio:** AAC, 48 kHz stereo (320 kb/s target, about 260 kb/s measured average).
+- **How it was made:** the delivered file came from `tools/render_resilient.sh`: JPEG frames at quality 95 rendered
+  in resumable chunks (the container restarted twice during long renders), then one x264 encode with the channel
+  settings.
 
 **Evidence:** `qa/v3/`.
 
@@ -19,12 +22,12 @@
 | Check | Result |
 |---|---|
 | Decode | 0 errors; 744 frames decoded |
-| Frame-to-frame change | Median 1.62. **No large changes anywhere**, so no one-frame jumps or resets. |
-| Near-static stretches | Longest is 11 frames (0.37 s, at 23.93 s: the predator alone, breathing, before the lens sweep). |
-| Loop seam | Last frame vs frame 0: 3.26, about twice an ordinary frame step. The departing tail's wipe has already revealed the opening composition, on the same camera and the same fish. |
+| Frame-to-frame change | Median 1.64. **No large changes anywhere**, so no one-frame jumps or resets. |
+| Near-static stretches | Longest is 15 frames (0.5 s, at 23.8 s: the predator alone, breathing, settling before the lens sweep). |
+| Loop seam | Last frame vs frame 0: 3.25, about twice an ordinary frame step. The departing tail's wipe has already revealed the opening composition, on the same camera and the same fish. |
 | Narration on the final track | The MP4's own audio transcribed by sherpa-onnx Zipformer and Whisper base.en: **WER 0.000 on both** |
-| Loudness (`audio/mix/mix_measure_mix_v3.json`) | −14.01 LUFS integrated, −1.60 dBTP true peak (4×). Voice −14.07 LUFS stereo-equivalent; effects 14.1 dB under the voice. Loop seam jump 0.0009. |
-| Timing | Speech from frame 1 (0.02 s) to 23.77 s. The film is 24.80 s, inside the 22–25 s target. |
+| Loudness (`audio/mix/mix_measure_mix_v3.json`; decoded from the MP4: −14.02 LUFS, −1.6 dBFS sample peak) | −14.01 LUFS integrated, −1.60 dBTP true peak (4×). Voice −14.07 LUFS stereo-equivalent; effects 14.1 dB under the voice. Loop seam jump 0.0009. |
+| Timing | Speech from frame 1 (0.02 s) to 23.77 s. The film is 24.80 s, inside the 22–25 s target. Audio offset against the mix: 0 samples (cross-correlated). |
 
 ## The brief, point by point
 

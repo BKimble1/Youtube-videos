@@ -5,7 +5,7 @@
 **Deliverable:** `exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4`. It is not published.
 
 - **Video:** 1080×1920, 30 fps, 744 frames, 24.80 s, H.264 CRF 16, yuv420p, BT.709.
-- **Audio:** AAC 320 kb/s, 48 kHz stereo.
+- **Audio:** AAC, 48 kHz stereo (320 kb/s target).
 - **Contents:** narration, burned-in captions, underwater ambience and effects.
 
 **Report:** `production/V3_REPORT.md` covers what was built, the measurements, the brief checklist, the two review
@@ -59,6 +59,8 @@ underwater ambience plus restrained effects, with one clear accent: the water ru
     (cd source && npm ci && npx remotion render src/index.ts EelEscapeV1 ../exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4 \
       --props='{"audio":"mix_v3","captions":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p \
       --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    # or, resumable after an interruption (JPEG frames in chunks, then one x264 encode with the same settings):
+    tools/render_resilient.sh mix_v3 exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4
     python3 tools/qa_render.py exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4 qa/v3
 
 **Working sheets:** `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`.
