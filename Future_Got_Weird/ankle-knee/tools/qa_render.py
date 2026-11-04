@@ -26,7 +26,15 @@ fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: the cuts and the dissolve (from story.ts via audio/cues.json), the strike, the plant
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), os.environ.get('FGW_CUES', 'audio/cues.json'))))
-if 'SCAN_T' in CJ:  # V3
+if 'WIPE_T' in CJ:  # V4
+    T4 = CJ['T']
+    PLANNED = [(0, CJ['WIPE_T'] + 0.25, 'the strike, the ball at the lens and the wipe')]
+    for s0, nm in CJ['CUTS'][1:]:
+        PLANNED.append((s0 - 0.04, s0 + 0.08, f'cut to {nm}'))
+    PLANNED += [(CJ['WIPE_T'], 1.2, 'the reveal follows the leg down from the follow-through'), (T4['working'] - 0.3, T4['wyatt'] + 0.4, 'the proof: the prosthetic shin swings'),
+                (CJ['CUT_TURN'], CJ['CUT_REHAB_A'], 'the half-turn and the join'), (CJ['BEND0'], CJ['FOOTFALL'] + 0.05, 'the bend, the rise and the step'),
+                (CJ['CUT_FIELD'], CJ['DUR'] + 0.01, 'the approach, plant and swing')]
+elif 'SCAN_T' in CJ:  # V3
     T3 = CJ['T']
     PLANNED = [(CJ['STRIKE1'] - 0.05, CJ['SCAN_T'] + 0.1, 'the strike and the ball rushing at the lens into the scan')]
     for s0, nm in CJ['CUTS'][1:]:

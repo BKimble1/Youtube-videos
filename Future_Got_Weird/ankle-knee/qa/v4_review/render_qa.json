@@ -1,0 +1,492 @@
+{
+ "file": "FGW_Ankle_Knee_V4_REVIEW_1080x1920.mp4",
+ "size_mb": 11.09,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 725,
+  "duration_s": 24.167
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317370"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 1.2,
+ "large_changes": [
+  {
+   "frame": 1,
+   "t": 0.033,
+   "mad": 14.4,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 2,
+   "t": 0.067,
+   "mad": 14.35,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 3,
+   "t": 0.1,
+   "mad": 15.63,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 4,
+   "t": 0.133,
+   "mad": 16.14,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 5,
+   "t": 0.167,
+   "mad": 16.18,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 6,
+   "t": 0.2,
+   "mad": 15.05,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 7,
+   "t": 0.233,
+   "mad": 15.71,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 8,
+   "t": 0.267,
+   "mad": 18.99,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 9,
+   "t": 0.3,
+   "mad": 25.2,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 10,
+   "t": 0.333,
+   "mad": 36.52,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 11,
+   "t": 0.367,
+   "mad": 61.13,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 12,
+   "t": 0.4,
+   "mad": 73.86,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 13,
+   "t": 0.433,
+   "mad": 82.74,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 14,
+   "t": 0.467,
+   "mad": 88.77,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 15,
+   "t": 0.5,
+   "mad": 35.44,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 16,
+   "t": 0.533,
+   "mad": 18.6,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 17,
+   "t": 0.567,
+   "mad": 24.96,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 18,
+   "t": 0.6,
+   "mad": 26.51,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 19,
+   "t": 0.633,
+   "mad": 23.5,
+   "planned": "the strike, the ball at the lens and the wipe"
+  },
+  {
+   "frame": 20,
+   "t": 0.667,
+   "mad": 17.87,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 21,
+   "t": 0.7,
+   "mad": 14.19,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 22,
+   "t": 0.733,
+   "mad": 17.27,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 23,
+   "t": 0.767,
+   "mad": 19.05,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 24,
+   "t": 0.8,
+   "mad": 19.21,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 25,
+   "t": 0.833,
+   "mad": 18.94,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 26,
+   "t": 0.867,
+   "mad": 18.6,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 27,
+   "t": 0.9,
+   "mad": 19.94,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 28,
+   "t": 0.933,
+   "mad": 20.98,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 29,
+   "t": 0.967,
+   "mad": 18.45,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 30,
+   "t": 1.0,
+   "mad": 17.83,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 31,
+   "t": 1.033,
+   "mad": 17.97,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 16.94,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "mad": 13.84,
+   "planned": "the reveal follows the leg down from the follow-through"
+  },
+  {
+   "frame": 59,
+   "t": 1.967,
+   "mad": 12.65,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 13.29,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 61,
+   "t": 2.033,
+   "mad": 13.09,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 63,
+   "t": 2.1,
+   "mad": 12.68,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 64,
+   "t": 2.133,
+   "mad": 14.06,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 65,
+   "t": 2.167,
+   "mad": 15.69,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 66,
+   "t": 2.2,
+   "mad": 16.38,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 67,
+   "t": 2.233,
+   "mad": 16.65,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 68,
+   "t": 2.267,
+   "mad": 16.54,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 69,
+   "t": 2.3,
+   "mad": 15.97,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 70,
+   "t": 2.333,
+   "mad": 14.93,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 71,
+   "t": 2.367,
+   "mad": 13.48,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 91,
+   "t": 3.033,
+   "mad": 14.88,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 92,
+   "t": 3.067,
+   "mad": 17.11,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 93,
+   "t": 3.1,
+   "mad": 20.68,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 94,
+   "t": 3.133,
+   "mad": 21.09,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 95,
+   "t": 3.167,
+   "mad": 21.16,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 96,
+   "t": 3.2,
+   "mad": 20.02,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 97,
+   "t": 3.233,
+   "mad": 17.77,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 98,
+   "t": 3.267,
+   "mad": 15.3,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 99,
+   "t": 3.3,
+   "mad": 14.38,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 100,
+   "t": 3.333,
+   "mad": 14.13,
+   "planned": "the proof: the prosthetic shin swings"
+  },
+  {
+   "frame": 109,
+   "t": 3.633,
+   "mad": 103.66,
+   "planned": "cut to xray"
+  },
+  {
+   "frame": 161,
+   "t": 5.367,
+   "mad": 169.15,
+   "planned": "cut to anat"
+  },
+  {
+   "frame": 237,
+   "t": 7.9,
+   "mad": 13.6,
+   "planned": "cut to turn"
+  },
+  {
+   "frame": 342,
+   "t": 11.4,
+   "mad": 40.83,
+   "planned": "cut to rehabA"
+  },
+  {
+   "frame": 439,
+   "t": 14.633,
+   "mad": 60.09,
+   "planned": "cut to rehabB"
+  },
+  {
+   "frame": 480,
+   "t": 16.0,
+   "mad": 45.28,
+   "planned": "cut to rehabC"
+  },
+  {
+   "frame": 511,
+   "t": 17.033,
+   "mad": 35.91,
+   "planned": "cut to wake"
+  },
+  {
+   "frame": 547,
+   "t": 18.233,
+   "mad": 22.95,
+   "planned": "cut to toes"
+  },
+  {
+   "frame": 566,
+   "t": 18.867,
+   "mad": 26.14,
+   "planned": "cut to notice"
+  },
+  {
+   "frame": 585,
+   "t": 19.5,
+   "mad": 81.73,
+   "planned": "cut to sock"
+  },
+  {
+   "frame": 600,
+   "t": 20.0,
+   "mad": 12.51,
+   "planned": null
+  },
+  {
+   "frame": 601,
+   "t": 20.033,
+   "mad": 13.44,
+   "planned": null
+  },
+  {
+   "frame": 602,
+   "t": 20.067,
+   "mad": 12.94,
+   "planned": null
+  },
+  {
+   "frame": 603,
+   "t": 20.1,
+   "mad": 13.31,
+   "planned": null
+  },
+  {
+   "frame": 604,
+   "t": 20.133,
+   "mad": 12.35,
+   "planned": null
+  },
+  {
+   "frame": 607,
+   "t": 20.233,
+   "mad": 46.7,
+   "planned": "cut to field"
+  },
+  {
+   "frame": 717,
+   "t": 23.9,
+   "mad": 42.51,
+   "planned": "cut to low"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 600,
+   "t": 20.0,
+   "mad": 12.51,
+   "planned": null
+  },
+  {
+   "frame": 601,
+   "t": 20.033,
+   "mad": 13.44,
+   "planned": null
+  },
+  {
+   "frame": 602,
+   "t": 20.067,
+   "mad": 12.94,
+   "planned": null
+  },
+  {
+   "frame": 603,
+   "t": 20.1,
+   "mad": 13.31,
+   "planned": null
+  },
+  {
+   "frame": 604,
+   "t": 20.133,
+   "mad": 12.35,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 31,
+ "longest_near_static_run_starts_s": 3.67,
+ "loop_last_vs_first_mad": 14.24
+}

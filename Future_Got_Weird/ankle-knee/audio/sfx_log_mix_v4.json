@@ -1,0 +1,227 @@
+[
+ {
+  "t": 0.033,
+  "sfx": "ball strike (contact, frame 2)",
+  "gain_db": -15
+ },
+ {
+  "t": 0.063,
+  "sfx": "the ball comes at the lens (rising whoosh)",
+  "gain_db": -23
+ },
+ {
+  "t": 0.36,
+  "sfx": "the ball passes the lens (low whoom, the wipe)",
+  "gain_db": -27
+ },
+ {
+  "t": 0.863,
+  "sfx": "reveal: prosthetic cleat lands",
+  "gain_db": -27
+ },
+ {
+  "t": 1.18,
+  "sfx": "reveal: left cleat lands",
+  "gain_db": -27
+ },
+ {
+  "t": 3.227,
+  "sfx": "reveal: prosthetic cleat lands",
+  "gain_db": -27
+ },
+ {
+  "t": 1.22,
+  "sfx": "toes flex in the socket",
+  "gain_db": -40
+ },
+ {
+  "t": 2,
+  "sfx": "the prosthetic shin swings back (the knee bends)",
+  "gain_db": -32
+ },
+ {
+  "t": 2.53,
+  "sfx": "the socket at full bend",
+  "gain_db": -38
+ },
+ {
+  "t": 2.93,
+  "sfx": "the shin swings back down",
+  "gain_db": -34
+ },
+ {
+  "t": 3.625,
+  "sfx": "cut to the X-ray (monitor tick)",
+  "gain_db": -31
+ },
+ {
+  "t": 3.665,
+  "sfx": "diseased bone (low pulse)",
+  "gain_db": -31
+ },
+ {
+  "t": 4.135,
+  "sfx": "the diseased section is ringed (soft ping)",
+  "gain_db": -40
+ },
+ {
+  "t": 4.76,
+  "sfx": "cut margin (femur)",
+  "gain_db": -35
+ },
+ {
+  "t": 4.9,
+  "sfx": "cut margin (tibia)",
+  "gain_db": -35
+ },
+ {
+  "t": 5.295,
+  "sfx": "X-ray to the surgical illustration (air)",
+  "gain_db": -38
+ },
+ {
+  "t": 5.4,
+  "sfx": "the margins become cut faces",
+  "gain_db": -34
+ },
+ {
+  "t": 5.46,
+  "sfx": "the middle section slides out (soft)",
+  "gain_db": -32
+ },
+ {
+  "t": 6.86,
+  "sfx": "the foot is kept (soft chime)",
+  "gain_db": -37
+ },
+ {
+  "t": 7.38,
+  "sfx": "the toes curl",
+  "gain_db": -41
+ },
+ {
+  "t": 7.91,
+  "sfx": "the half-turn (airy swish)",
+  "gain_db": -30
+ },
+ {
+  "t": 9.47,
+  "sfx": "where it reconnects (soft ping)",
+  "gain_db": -41
+ },
+ {
+  "t": 9.63,
+  "sfx": "the segment rises into line",
+  "gain_db": -36
+ },
+ {
+  "t": 10.67,
+  "sfx": "it seats on the thigh (soft knock)",
+  "gain_db": -28
+ },
+ {
+  "t": 10.72,
+  "sfx": "stitches",
+  "gain_db": -40
+ },
+ {
+  "t": 12.0,
+  "sfx": "his toes flick in the socket",
+  "gain_db": -37
+ },
+ {
+  "t": 14.27,
+  "sfx": "hands tighten on the rails",
+  "gain_db": -34
+ },
+ {
+  "t": 14.42,
+  "sfx": "the bend (socket and liner)",
+  "gain_db": -35
+ },
+ {
+  "t": 14.615,
+  "sfx": "trainers and cloth as he lowers",
+  "gain_db": -38
+ },
+ {
+  "t": 15.82,
+  "sfx": "he rises",
+  "gain_db": -39
+ },
+ {
+  "t": 16.18,
+  "sfx": "the prosthetic heel lifts",
+  "gain_db": -40
+ },
+ {
+  "t": 16.45,
+  "sfx": "the prosthetic leg swings through (the step)",
+  "gain_db": -36
+ },
+ {
+  "t": 16.98,
+  "sfx": "the prosthetic trainer lands (footfall)",
+  "gain_db": -27
+ },
+ {
+  "t": 17.11,
+  "sfx": "he stirs as he wakes",
+  "gain_db": -39
+ },
+ {
+  "t": 18.275,
+  "sfx": "the toes wiggle against the sheet (fabric)",
+  "gain_db": -29
+ },
+ {
+  "t": 18.935,
+  "sfx": "he shifts on the pillow",
+  "gain_db": -42
+ },
+ {
+  "t": 19.6,
+  "sfx": "toes flex in the socket (field)",
+  "gain_db": -39
+ },
+ {
+  "t": 19.87,
+  "sfx": "the cleat drags back on the turf",
+  "gain_db": -32
+ },
+ {
+  "t": 20.205,
+  "sfx": "the pass rolling on grass (speed-shaped bed)",
+  "gain_db": -37
+ },
+ {
+  "t": 22.247,
+  "sfx": "cleat lands (left)",
+  "gain_db": -25
+ },
+ {
+  "t": 22.588,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -25
+ },
+ {
+  "t": 22.918,
+  "sfx": "cleat lands (left)",
+  "gain_db": -25
+ },
+ {
+  "t": 23.248,
+  "sfx": "cleat lands (prosthetic)",
+  "gain_db": -25
+ },
+ {
+  "t": 23.772,
+  "sfx": "cleat lands (left)",
+  "gain_db": -22
+ },
+ {
+  "t": 23.94,
+  "sfx": "the prosthetic leg swings in (to frame 0)",
+  "gain_db": -29
+ }
+]

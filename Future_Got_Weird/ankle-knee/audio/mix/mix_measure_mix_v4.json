@@ -1,0 +1,11 @@
+{
+ "integrated_lufs": -13.46,
+ "true_peak_dbtp_4x": -1.6,
+ "voice_lufs_in_mix": -16.5,
+ "sfx_lufs_in_mix": -38.93,
+ "amb_lufs_in_mix": -43.98,
+ "voice_max_gain_reduction_db": -10.18,
+ "duration_s": 24.167,
+ "effects": 45,
+ "loop_seam_jump": 0.0006
+}
