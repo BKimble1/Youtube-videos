@@ -1,6 +1,18 @@
 # Future Got Weird: Doctors Turned His Ankle Into a Knee
 
-## V4 (current review cut)
+## V5 (final)
+
+**Deliverable.** `exports/FGW_Ankle_Knee_V5_FINAL_1080x1920.mp4` (a true 1080×1920, 24.17 s, narrated). The report is `production/V5_REPORT.md` and the evidence is in `qa/v5_final/`. V5 is a focused polish of V4:
+- the soccer torso construction (`source/src/v5/body5.tsx`)
+- the hospital blanket and leg connection (`bed5.tsx`)
+- a 1–3 s section about 12% quicker
+- a new closing payoff: stance, then the ankle bending in the socket, then contact, then the ball at the lens into frame 0
+
+    source/node_modules/.bin/esbuild tools/export_cues_v5.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec5.cjs && NODE_PATH=source/node_modules node /tmp/ec5.cjs audio/cues_v5.json
+    python3 tools/make_audio_v5.py mix_v5
+    (cd source && npx remotion render src/index.ts AnkleKneeV5 ../exports/FGW_Ankle_Knee_V5_FINAL_1080x1920.mp4 --props='{"audio":"mix_v5","captions":true,"v5":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+
+## V4 (previous review cut)
 
 **Deliverable.** `exports/FGW_Ankle_Knee_V4_REVIEW_1080x1920.mp4` (1080×1920, 24.17 s, narrated). **Not published.**
 The report is `production/V4_REPORT.md` and the evidence is in `qa/v4_review/`. V4 keeps the V3 narration master verbatim.

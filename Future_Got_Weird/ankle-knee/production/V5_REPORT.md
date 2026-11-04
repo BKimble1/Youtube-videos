@@ -4,11 +4,11 @@
 
 | Measure | Result |
 |---|---|
-| Format | __FMT__ |
+| Format | True 1080×1920 (SAR 1:1, DAR 9:16), 30 fps, 725 frames, 24.167 s; H.264 yuv420p BT.709; AAC 48 kHz stereo 320 kb/s; 11.49 MB; no decode errors |
 | Narration | The same approved take, sample for sample (`audio/narration/FGW_Ankle_Knee_narration_V3.wav`). The captions use the same timeline as V4 |
-| ASR of the final file | __ASR__ |
-| Mix | __MIX__ |
-| Measured frame QA | __QA__ |
+| ASR of the final file | whisper base.en WER **0.000** (`qa/v5_final/asr_final.json`) |
+| Mix | -13.78 LUFS integrated, -1.6 dBTP. Voice -16.82 LUFS, effects -38.09, ambience -44.69. The closing strike sits under the voice's "kick" |
+| Measured frame QA | 0 unplanned large frame changes. Longest near-still stretch: 31 frames, on the still X-ray (unchanged from V4). The loop seam is now a deliberate cut, from the full-frame ball to frame 0 (`qa/v5_final/`) |
 
 Note: the two reference screenshots mentioned in the brief did not reach this session. The corrections below follow the written description, checked against V4 frames rendered to reproduce each problem.
 

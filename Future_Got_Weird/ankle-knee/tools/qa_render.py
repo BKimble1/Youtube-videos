@@ -31,9 +31,9 @@ if 'WIPE_T' in CJ:  # V4
     PLANNED = [(0, CJ['WIPE_T'] + 0.25, 'the strike, the ball at the lens and the wipe')]
     for s0, nm in CJ['CUTS'][1:]:
         PLANNED.append((s0 - 0.04, s0 + 0.08, f'cut to {nm}'))
-    PLANNED += [(CJ['WIPE_T'], 1.2, 'the reveal follows the leg down from the follow-through'), (T4['working'] - 0.3, T4['wyatt'] + 0.4, 'the proof: the prosthetic shin swings'),
+    PLANNED += [(CJ['WIPE_T'], 1.2, 'the reveal follows the leg down from the follow-through'), (T4['working'] - 0.3, CJ['CUT_XRAY'], 'the proof: the prosthetic shin swings (V5: a second bend runs to the cut)'),
                 (CJ['CUT_TURN'], CJ['CUT_REHAB_A'], 'the half-turn and the join'), (CJ['BEND0'], CJ['FOOTFALL'] + 0.05, 'the bend, the rise and the step'),
-                (CJ['CUT_FIELD'], CJ['DUR'] + 0.01, 'the approach, plant and swing'), (CJ['CUT_SOCK'] + 0.3, CJ['CUT_FIELD'], 'the turned ankle draws the cleat back (socket shot)')]
+                (CJ['CUT_FIELD'], CJ['DUR'] + 0.01, 'the closing kick; the ball fills the lens and cuts to frame 0'), (CJ['CUT_SOCK'] + 0.3, CJ['CUT_FIELD'], 'the turned ankle draws the cleat back (socket shot)')]
 elif 'SCAN_T' in CJ:  # V3
     T3 = CJ['T']
     PLANNED = [(CJ['STRIKE1'] - 0.05, CJ['SCAN_T'] + 0.1, 'the strike and the ball rushing at the lens into the scan')]
