@@ -149,7 +149,7 @@ export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th
 
 /** the rooted body: samples snout → tail tip, and where the body crosses the exit (fractional sample index) */
 /** a body rooted at the exit with `out` units outside, shaped by the direction field (θ(a), β(a)) */
-export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be: (a: number) => number, inward?: (d: number) => V3) => {
+export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be: (a: number) => number, inward?: (d: number) => V3, leadLen = 2.5) => {
   const da = 0.1;
   const n = Math.max(1, Math.ceil(Math.max(0, out) / da));
   const cs: V3[] = [ex.p];
@@ -158,7 +158,7 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
   for (let k = 0; k < n; k++) {
     const a = (k + 0.5) * da;
     let d = dirOf(th(a), be(a));
-    if (lead0) d = norm3(add3(mul3(lead0, 1 - ss(a, 0, 2.5)), mul3(d, ss(a, 0, 2.5))));
+    if (lead0 && leadLen > 0.05) d = norm3(add3(mul3(lead0, 1 - ss(a, 0, leadLen)), mul3(d, ss(a, 0, leadLen))));
     p = add3(p, mul3(d, da));
     cs.push(p);
   }
@@ -178,7 +178,9 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
 };
 export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) => {
   const out = outOverride ?? outAt(t);
-  return rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out));
+  // at the poke the tip leaves straight along the exit's outward direction (the S6 → S7 contract); once the body is
+  // out, it rises out of the slit from the caught head's route down it
+  return rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out), undefined, 2.5 * ss(t, 13.4, 14.8));
 };
 
 // ---------------------------------------------------------------- free mode

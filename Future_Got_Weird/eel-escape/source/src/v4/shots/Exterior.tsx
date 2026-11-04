@@ -442,9 +442,9 @@ export const gulpState = (t: number): ExtState => {
 
 // ---------------------------------------------------------------- S7 POKE (12.58 – 13.86)
 // the camera is solved (tools/solve_poke) so the exit, the tip's travel and the cover's edge land on the contract
-export const POKE_ORBIT: Orbit = {target: [-23.55, -6.35, 6.4], az: 20, el: -22, d: 18.3, f: 1300, cx: 540, cy: 1010, roll: 12};
+export const POKE_ORBIT: Orbit = {target: [-23.673, -6.489, 7.343], az: 20, el: -22, d: 18.3, f: 1300, cx: 540, cy: 1010, roll: 12};
 const POKE_ORBIT1: Orbit = {target: [-27, -8.0, 7], az: 22, el: -14, d: 36, f: 1300, cx: 540, cy: 1080, roll: 4};
-export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.95, 13.86)));
+export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.76, 13.8)));
 export const pokeState = (t: number): ExtState => {
   const eel = escapeAt(t);
   return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, plainOutside: true, nearCut: 22};
@@ -472,9 +472,10 @@ export const headState = (t: number): ExtState => {
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
-const R_A: Orbit = {target: [-17, -3, 13], az: 20, el: -8, d: 36, f: 1250, cy: 1160};
+const R_A: Orbit = {target: [-18, -3, 13], az: 20, el: -8, d: 33, f: 1250, cy: 1395};
 const R_B: Orbit = {target: [-24, -7, 16], az: 18, el: -5, d: 46, f: 1250, cy: 1160};
-export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(R_A, R_B, ss5(t, T.tighten, T.swim)));
+/** held close on the loop and the caught head through the pull; it eases back as the eel swims off */
+export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(R_A, R_B, ss5(t, 20.78, 21.5)));
 /** the predator from the curl to the end (S10 and S11 share it, so nothing pops where the release view becomes the
  *  swim view): breathing hard while the eel strains, the cover settling after the head leaves, a startle, a turn
  *  of the head after the escaping eel */
