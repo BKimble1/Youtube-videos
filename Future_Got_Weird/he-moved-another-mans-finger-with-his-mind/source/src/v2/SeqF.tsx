@@ -58,7 +58,7 @@ const times = () => {
     b,
     swap1,
     split1: b.each - 0.3,
-    w2: b.vote + 0.19,
+    w2: b.vote + 0.55,
     split2: b.freshRound - 0.4,
     open2: b.chance - 0.2,
     w3: b.chance + 0.42,
@@ -93,7 +93,7 @@ const camW2 = (t: number): CamS => {
   const T = times();
   const ks: CK[] = [
     [T.w2, CAMS.HUB],
-    [T.w2 + 0.8, CAMS.HUBWIN],
+    [T.w2 + 0.95, CAMS.HUBWIN],
     [T.b.coil + 0.2, CAMS.HEADBACK],
     [T.b.over - 0.1, CAMS.HEADBACK_B],
     [T.in1[0] - 0.9, CAMS.HEADBACK2],

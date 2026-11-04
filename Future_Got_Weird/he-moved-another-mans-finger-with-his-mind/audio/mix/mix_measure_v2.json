@@ -1,0 +1,30 @@
+{
+ "integrated_lufs": -14.25,
+ "true_peak_dbtp": -1.47,
+ "duration_s": 211.7667,
+ "music_to_voice_rms_db_during_speech": -18.2,
+ "score_rms_dbfs_in_missing_click_gap": -240.0,
+ "sfx_cues_by_kind": {
+  "key_click": 6,
+  "whoosh": 11,
+  "cannon": 9,
+  "tick": 24,
+  "pop": 13,
+  "packet_send": 4,
+  "packet_arrive": 9,
+  "coil_pulse": 13,
+  "boom": 6,
+  "plane_pass": 3,
+  "rocket_launch": 5,
+  "spinner": 2,
+  "error": 2,
+  "city_hit": 8,
+  "pad_click": 3,
+  "rotate": 5,
+  "vote": 6,
+  "flash": 4,
+  "line_clear": 2,
+  "flip": 1
+ },
+ "limiter_min_gain_db": -5.81
+}

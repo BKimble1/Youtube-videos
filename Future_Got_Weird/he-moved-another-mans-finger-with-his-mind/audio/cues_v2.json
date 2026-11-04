@@ -1,0 +1,858 @@
+{
+ "frames": 6353,
+ "scenes": [
+  {
+   "id": "A",
+   "start": 0
+  },
+  {
+   "id": "B",
+   "start": 19.54
+  },
+  {
+   "id": "C",
+   "start": 44.64
+  },
+  {
+   "id": "D",
+   "start": 90
+  },
+  {
+   "id": "E",
+   "start": 101.81
+  },
+  {
+   "id": "F",
+   "start": 135.87
+  },
+  {
+   "id": "G",
+   "start": 178.87
+  }
+ ],
+ "K": {
+  "flipped": 126.63,
+  "flippedEnd": 127.49,
+  "across3": 129.7,
+  "bad": 100.13,
+  "goBack": 196.26,
+  "wrong": 208.42,
+  "fire": 65.65,
+  "trust": 179.32
+ },
+ "cues": [
+  {
+   "t": 0.13333333333333333,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "A"
+  },
+  {
+   "t": 0.3,
+   "kind": "whoosh",
+   "gain": -12,
+   "dur": 0.4,
+   "scene": "A"
+  },
+  {
+   "t": 0.58,
+   "kind": "cannon",
+   "gain": -2,
+   "scene": "A"
+  },
+  {
+   "t": 2.5,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "A"
+  },
+  {
+   "t": 3.5500000000000003,
+   "kind": "pop",
+   "gain": -12,
+   "scene": "A"
+  },
+  {
+   "t": 5.9399999999999995,
+   "kind": "packet_send",
+   "gain": -9,
+   "scene": "A"
+  },
+  {
+   "t": 6.959999999999999,
+   "kind": "packet_arrive",
+   "gain": -10,
+   "scene": "A"
+  },
+  {
+   "t": 7.22,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "A"
+  },
+  {
+   "t": 7.6,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "A"
+  },
+  {
+   "t": 7.633333333333334,
+   "kind": "cannon",
+   "gain": 0,
+   "scene": "A"
+  },
+  {
+   "t": 7.953333333333334,
+   "kind": "boom",
+   "gain": -2,
+   "scene": "A"
+  },
+  {
+   "t": 9.05,
+   "kind": "whoosh",
+   "gain": -11,
+   "dur": 1.4,
+   "scene": "A"
+  },
+  {
+   "t": 13.32,
+   "kind": "pop",
+   "gain": -9,
+   "scene": "A"
+  },
+  {
+   "t": 15.15,
+   "kind": "packet_send",
+   "gain": -12,
+   "scene": "A"
+  },
+  {
+   "t": 16.6,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "A"
+  },
+  {
+   "t": 18.4,
+   "kind": "whoosh",
+   "gain": -11,
+   "dur": 1.4,
+   "scene": "A"
+  },
+  {
+   "t": 18.63,
+   "kind": "tick",
+   "gain": -9,
+   "scene": "A"
+  },
+  {
+   "t": 20.779999999999998,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 22.12,
+   "kind": "pop",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 23.150000000000002,
+   "kind": "tick",
+   "gain": -9,
+   "scene": "B"
+  },
+  {
+   "t": 24.73,
+   "kind": "whoosh",
+   "gain": -7,
+   "dur": 0.35,
+   "scene": "B"
+  },
+  {
+   "t": 25.34,
+   "kind": "tick",
+   "gain": -6,
+   "scene": "B"
+  },
+  {
+   "t": 25.79,
+   "kind": "tick",
+   "gain": -6,
+   "scene": "B"
+  },
+  {
+   "t": 27.84,
+   "kind": "tick",
+   "gain": -3,
+   "scene": "B"
+  },
+  {
+   "t": 29.7,
+   "kind": "whoosh",
+   "gain": -11,
+   "dur": 0.4,
+   "scene": "B"
+  },
+  {
+   "t": 31.72,
+   "kind": "plane_pass",
+   "gain": -5,
+   "dur": 2.5,
+   "scene": "B"
+  },
+  {
+   "t": 34.22,
+   "kind": "pop",
+   "gain": -9,
+   "scene": "B"
+  },
+  {
+   "t": 35.5,
+   "kind": "rocket_launch",
+   "gain": -5,
+   "scene": "B"
+  },
+  {
+   "t": 36.96666666666667,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "B"
+  },
+  {
+   "t": 37,
+   "kind": "cannon",
+   "gain": 0,
+   "scene": "B"
+  },
+  {
+   "t": 37.32,
+   "kind": "boom",
+   "gain": 0,
+   "scene": "B"
+  },
+  {
+   "t": 42.24,
+   "kind": "pop",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 43.42,
+   "kind": "whoosh",
+   "gain": -12,
+   "dur": 1.1,
+   "scene": "B"
+  },
+  {
+   "t": 46.22,
+   "kind": "rocket_launch",
+   "scene": "C"
+  },
+  {
+   "t": 54.39,
+   "kind": "tick",
+   "gain": -9,
+   "scene": "C"
+  },
+  {
+   "t": 61.46,
+   "kind": "pop",
+   "gain": -6,
+   "scene": "C"
+  },
+  {
+   "t": 62.6,
+   "kind": "packet_send",
+   "scene": "C"
+  },
+  {
+   "t": 65.11,
+   "kind": "packet_arrive",
+   "gain": -3,
+   "scene": "C"
+  },
+  {
+   "t": 65.9,
+   "kind": "whoosh",
+   "gain": -12,
+   "scene": "C"
+  },
+  {
+   "t": 72.86,
+   "kind": "tick",
+   "gain": -6,
+   "scene": "C"
+  },
+  {
+   "t": 73.64,
+   "kind": "coil_pulse",
+   "scene": "C"
+  },
+  {
+   "t": 76.15,
+   "kind": "key_click",
+   "scene": "C"
+  },
+  {
+   "t": 76.25,
+   "kind": "cannon",
+   "scene": "C"
+  },
+  {
+   "t": 77.95,
+   "kind": "boom",
+   "scene": "C"
+  },
+  {
+   "t": 81.37,
+   "kind": "whoosh",
+   "gain": -12,
+   "scene": "C"
+  },
+  {
+   "t": 90.25,
+   "kind": "rocket_launch",
+   "gain": -9,
+   "scene": "D"
+  },
+  {
+   "t": 91.35,
+   "kind": "tick",
+   "gain": -10,
+   "scene": "D"
+  },
+  {
+   "t": 91.41,
+   "kind": "packet_send",
+   "gain": -7,
+   "scene": "D"
+  },
+  {
+   "t": 92.25999999999999,
+   "kind": "spinner",
+   "gain": -11,
+   "dur": 0.45000000000000284,
+   "scene": "D"
+  },
+  {
+   "t": 92.71,
+   "kind": "error",
+   "gain": -5,
+   "scene": "D"
+  },
+  {
+   "t": 93.25,
+   "kind": "city_hit",
+   "gain": -5,
+   "scene": "D"
+  },
+  {
+   "t": 97.8,
+   "kind": "packet_arrive",
+   "gain": -8,
+   "scene": "D"
+  },
+  {
+   "t": 98.53,
+   "kind": "pop",
+   "gain": -11,
+   "scene": "D"
+  },
+  {
+   "t": 100.13,
+   "kind": "error",
+   "gain": -3,
+   "scene": "D"
+  },
+  {
+   "t": 100.42999999999999,
+   "kind": "spinner",
+   "gain": -14,
+   "dur": 1.2,
+   "scene": "D"
+  },
+  {
+   "t": 102.36,
+   "kind": "tick",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 104.27,
+   "kind": "pop",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 104.55,
+   "kind": "pop",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 105.03999999999999,
+   "kind": "pop",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 107.93,
+   "kind": "packet_arrive",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 108.25,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 108.47,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 108.52,
+   "kind": "cannon",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 108.83999999999999,
+   "kind": "boom",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 111.9,
+   "kind": "rotate",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 114.77,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 116.25,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 117.74000000000001,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 120,
+   "kind": "rocket_launch",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 121.4,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 121.62,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 121.67,
+   "kind": "cannon",
+   "gain": -7,
+   "scene": "E"
+  },
+  {
+   "t": 121.85,
+   "kind": "plane_pass",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 121.99,
+   "kind": "boom",
+   "gain": -7,
+   "scene": "E"
+  },
+  {
+   "t": 122.45,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 122.67,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 122.72,
+   "kind": "cannon",
+   "gain": -8,
+   "scene": "E"
+  },
+  {
+   "t": 123.04,
+   "kind": "boom",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 124.84999999999998,
+   "kind": "city_hit",
+   "gain": -16,
+   "scene": "E"
+  },
+  {
+   "t": 125.16,
+   "kind": "cannon",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 125.22999999999998,
+   "kind": "city_hit",
+   "gain": -16,
+   "scene": "E"
+  },
+  {
+   "t": 125.98999999999998,
+   "kind": "city_hit",
+   "gain": -16,
+   "scene": "E"
+  },
+  {
+   "t": 126.69999999999999,
+   "kind": "rocket_launch",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 128.1,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 129.45,
+   "kind": "city_hit",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 131.23000000000002,
+   "kind": "tick",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 131.48000000000002,
+   "kind": "tick",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 131.73000000000002,
+   "kind": "tick",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 133.45,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 133.63,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 133.81,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 139.21,
+   "kind": "rotate",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 141.10999999999999,
+   "kind": "pop",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 142.48000000000002,
+   "kind": "whoosh",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 146.92,
+   "kind": "tick",
+   "gain": -8,
+   "scene": "F"
+  },
+  {
+   "t": 151.39000000000001,
+   "kind": "rotate",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 157.38,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 157.68,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 158.98,
+   "kind": "packet_arrive",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 159.13,
+   "kind": "packet_arrive",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 160.96,
+   "kind": "tick",
+   "gain": -6,
+   "scene": "F"
+  },
+  {
+   "t": 165.41,
+   "kind": "coil_pulse",
+   "scene": "F"
+  },
+  {
+   "t": 165.99,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "F"
+  },
+  {
+   "t": 171.74000000000004,
+   "kind": "coil_pulse",
+   "scene": "F"
+  },
+  {
+   "t": 172.28000000000003,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "F"
+  },
+  {
+   "t": 174.25,
+   "kind": "rotate",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 176,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 176.20000000000002,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 178,
+   "kind": "line_clear",
+   "gain": -3,
+   "scene": "F"
+  },
+  {
+   "t": 179.99,
+   "kind": "whoosh",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 183.04999999999998,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "G"
+  },
+  {
+   "t": 183.63,
+   "kind": "vote",
+   "gain": -4,
+   "scene": "G"
+  },
+  {
+   "t": 184.39999999999998,
+   "kind": "packet_arrive",
+   "gain": -10,
+   "scene": "G"
+  },
+  {
+   "t": 185.25,
+   "kind": "flip",
+   "scene": "G"
+  },
+  {
+   "t": 185.64000000000001,
+   "kind": "packet_arrive",
+   "gain": -10,
+   "scene": "G"
+  },
+  {
+   "t": 187.38000000000002,
+   "kind": "coil_pulse",
+   "scene": "G"
+  },
+  {
+   "t": 188,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "G"
+  },
+  {
+   "t": 188.39999999999998,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 188.71666666666664,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 189.0333333333333,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 189.64,
+   "kind": "rotate",
+   "gain": -4,
+   "scene": "G"
+  },
+  {
+   "t": 192.38,
+   "kind": "line_clear",
+   "gain": -3,
+   "scene": "G"
+  },
+  {
+   "t": 193.2,
+   "kind": "pop",
+   "gain": -8,
+   "scene": "G"
+  },
+  {
+   "t": 193.81,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 194.014,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 194.218,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 194.33,
+   "kind": "pop",
+   "gain": -10,
+   "scene": "G"
+  },
+  {
+   "t": 194.422,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 194.626,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 196.43333333333334,
+   "kind": "key_click",
+   "gain": -4,
+   "scene": "G"
+  },
+  {
+   "t": 199.46,
+   "kind": "coil_pulse",
+   "scene": "G"
+  },
+  {
+   "t": 199.87,
+   "kind": "key_click",
+   "scene": "G"
+  },
+  {
+   "t": 199.91,
+   "kind": "cannon",
+   "gain": -10,
+   "scene": "G"
+  },
+  {
+   "t": 204.20000000000002,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "G"
+  },
+  {
+   "t": 208.5,
+   "kind": "whoosh",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 208.95,
+   "kind": "plane_pass",
+   "gain": -10,
+   "scene": "G"
+  }
+ ]
+}

@@ -166,7 +166,7 @@ const Tiles: React.FC<{t: number; st: ReturnType<typeof fgState>}> = ({t, st}) =
       {Array.from({length: 16}, (_, i) => {
         const p = tileXY(i);
         const r = T.tiles + 0.62 + (i - 1) * 0.068;
-        const vis = i === 0 ? 1 : pr(t, r - 0.45, r - 0.2);
+        const vis = i === 0 ? 1 : pr(t, r - 0.28, r - 0.08);
         const fail = FAILS.includes(i);
         const tile = i === 0 ? {x: lerp(start.x, p.x, shrink), y: lerp(start.y, p.y, shrink), s: lerp(start.s, TILE.s, shrink)} : {x: p.x, y: p.y, s: TILE.s};
         const tr = i === 0 ? tr2 : tileTrial(i, r);
