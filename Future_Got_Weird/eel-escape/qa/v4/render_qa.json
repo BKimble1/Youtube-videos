@@ -1,6 +1,6 @@
 {
  "file": "FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4",
- "size_mb": 29.61,
+ "size_mb": 29.9,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,40 +15,28 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "258315"
+   "bitrate": "259051"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.03,
+ "frame_change_median": 4.23,
  "large_changes": [
   {
    "frame": 79,
    "t": 2.633,
-   "mad": 45.39,
+   "mad": 45.49,
    "planned": "CUT S1 -> S2: the eel's curve matched, the earlier gulp"
   },
   {
    "frame": 116,
    "t": 3.867,
-   "mad": 80.68,
+   "mad": 80.69,
    "planned": "CUT S2 -> S3: the research tank"
-  },
-  {
-   "frame": 155,
-   "t": 5.167,
-   "mad": 20.85,
-   "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
-  },
-  {
-   "frame": 156,
-   "t": 5.2,
-   "mad": 20.27,
-   "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
    "frame": 157,
    "t": 5.233,
-   "mad": 21.28,
+   "mad": 21.27,
    "planned": "PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach"
   },
   {
@@ -62,12 +50,6 @@
    "t": 5.8,
    "mad": 44.09,
    "planned": "DISSOLVE S3 -> S4 on the carried tail"
-  },
-  {
-   "frame": 261,
-   "t": 8.7,
-   "mad": 21.13,
-   "planned": "PUSH (camera move, not a cut): the dive after the tip into the stomach opening"
   },
   {
    "frame": 262,
@@ -86,12 +68,6 @@
    "t": 8.8,
    "mad": 25.28,
    "planned": "PUSH (camera move, not a cut): the dive after the tip into the stomach opening"
-  },
-  {
-   "frame": 320,
-   "t": 10.667,
-   "mad": 20.64,
-   "planned": "the body fills the foreground: S5 -> S6"
   },
   {
    "frame": 321,
@@ -130,12 +106,6 @@
    "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
   },
   {
-   "frame": 327,
-   "t": 10.9,
-   "mad": 20.78,
-   "planned": "PUSH (camera move, not a cut): the push into the gill gap as the tail threads it"
-  },
-  {
    "frame": 381,
    "t": 12.7,
    "mad": 79.39,
@@ -162,24 +132,18 @@
   {
    "frame": 639,
    "t": 21.3,
-   "mad": 54.16,
+   "mad": 54.15,
    "planned": "the head slips free; the body straightens"
   },
   {
    "frame": 736,
    "t": 24.533,
-   "mad": 21.39,
-   "planned": "the reed across the lens wipes to frame 0"
-  },
-  {
-   "frame": 737,
-   "t": 24.567,
-   "mad": 20.48,
+   "mad": 21.61,
    "planned": "the reed across the lens wipes to frame 0"
   }
  ],
  "unplanned_large_changes": [],
  "longest_near_static_run_frames": 7,
  "longest_near_static_run_starts_s": 13.53,
- "loop_last_vs_first_mad": 3.83
+ "loop_last_vs_first_mad": 4.39
 }
