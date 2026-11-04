@@ -268,7 +268,7 @@ const deform = (D: Def, x: number, y: number, z: number, jaw: boolean, out: numb
       // the jaw drops like a door and the throat under the corner follows without folding
       const dx = x - HX, dy = y - HY;
       const al = Math.atan2(dy, -dx) / D2R;
-      const w = 1 - sstep(15, 125, al);
+      const w = 1 - sstep(8, 160, al);
       if (w > 0) {
         const ang = D.phi * w, ca = Math.cos(ang), sa = Math.sin(ang);
         X = HX + dx * ca + dy * sa;
@@ -776,9 +776,15 @@ const psiFar = (x: number, s: number) => {
   const pc = secAt(x).pc;
   return s <= S_B ? Math.PI - EPS_PSI + (Math.PI - pc + EPS_PSI) * (s / S_B) : 2 * Math.PI - pc + (pc + EPS_PSI) * ((s - S_B) / (1 - S_B));
 };
+/** the lower jaw in two halves (near: its cleft → the chin's midline; far: the midline → its cleft), drawn far
+ *  first so the near half covers the far half's outline */
 const psiJaw = (x: number, s: number) => {
   const pc = secAt(x).pc;
-  return pc + s * (2 * Math.PI - 2 * pc);
+  return pc + s * (Math.PI + EPS_PSI - pc);
+};
+const psiJawF = (x: number, s: number) => {
+  const pc = secAt(x).pc;
+  return Math.PI - EPS_PSI + s * (Math.PI + EPS_PSI - pc);
 };
 /** fill a body vertex: world point, analytic normal (finite differences of the deformed surface), rest attributes */
 const bodyVertex = (G: Grid, k: number, cam: Cam, D: Def, x: number, psi: number, jaw: boolean) => {
@@ -821,7 +827,7 @@ const bodyVertex = (G: Grid, k: number, cam: Cam, D: Def, x: number, psi: number
   G.yr[k] = yr;
   shadeVertex(G, k, cam);
 };
-type BodyGrids = {near: Grid; far: Grid; jaw: Grid | null; xs: number[]; ic: number; aN: number; bF: number; jawSS: number[]};
+type BodyGrids = {near: Grid; far: Grid; jaw: Grid | null; jawF: Grid | null; xs: number[]; ic: number; aN: number; bF: number};
 const buildBody = (cam: Cam, D: Def): BodyGrids => {
   const {xs, ic} = pickStations(cam, D);
   const ni = xs.length;
@@ -843,15 +849,19 @@ const buildBody = (cam: Cam, D: Def): BodyGrids => {
       if (open && i <= ic && j <= cf.a) far.ok[k] = 0;
     }
   }
-  let jaw: Grid | null = null, jawSS: number[] = [];
+  let jaw: Grid | null = null, jawF: Grid | null = null;
   if (open) {
     const xj = xs.slice(0, ic + 1);
-    const cj = pickCols(cam, D, xj, psiJaw, -1, true, 16, 90);
-    jawSS = cj.ss;
-    jaw = newGrid(xj.length, cj.ss.length, [SEAM, SEAM, LIP, LIP, SEAM, SEAM]);
-    for (let i = 0; i < xj.length; i++) for (let j = 0; j < cj.ss.length; j++) bodyVertex(jaw, i * cj.ss.length + j, cam, D, xj[i], psiJaw(xj[i], cj.ss[j]), true);
+    const half = (psiOf: (x: number, s: number) => number, tg: number[]) => {
+      const cj = pickCols(cam, D, xj, psiOf, -1, true, 10, 60);
+      const G = newGrid(xj.length, cj.ss.length, tg);
+      for (let i = 0; i < xj.length; i++) for (let j = 0; j < cj.ss.length; j++) bodyVertex(G, i * cj.ss.length + j, cam, D, xj[i], psiOf(xj[i], cj.ss[j]), true);
+      return G;
+    };
+    jaw = half(psiJaw, [SEAM, SEAM, LIP, SEAM, SEAM, SEAM]);
+    jawF = half(psiJawF, [SEAM, SEAM, SEAM, LIP, SEAM, SEAM]);
   }
-  return {near, far, jaw, xs, ic, aN: cn.a, bF: cf.a, jawSS};
+  return {near, far, jaw, jawF, xs, ic, aN: cn.a, bF: cf.a};
 };
 
 // ================================================================ the gill cover (a plate on the cheek; fixed grid, precomputed)
@@ -1152,7 +1162,7 @@ type Model = {
   covers: [CoverG, CoverG];
   gap: {e: S2[]; m: S2[]} | null;
   gapFar: {e: S2[]; m: S2[]} | null;
-  gape: {d: string; lips: S2[][]; c: S2; r: number} | null;
+  gape: {d: string; c: S2; r: number} | null;
   fins: {d1: Fin3; d2: Fin3; anal: Fin3; caudal: Fin3; pecN: Fin3; pecF: Fin3; pelN: Fin3; pelF: Fin3};
   eyes: [EyeG | null, EyeG | null];
   exit: {p: V3; out: V3; n: V3};
@@ -1161,6 +1171,7 @@ type Model = {
   baseNear: Loop[];
   baseFar: Loop[];
   baseJaw: Loop[];
+  baseJawF: Loop[];
   coverBase: [Loop[], Loop[]];
 };
 
@@ -1201,6 +1212,122 @@ const eyeGeom = (cam: Cam, D: Def, side: number, look: V3 | null): EyeG | null =
   return {c: {x: E.c.x, y: E.c.y}, rx: E.rx, ry, th: E.th, vis: clamp((vis - 0.03) / 0.12), pu: clamp(pu, -0.45, 0.45), pv: clamp(pv, -0.45, 0.45), R: E.rx};
 };
 
+/** the visible part of the mouth opening, as ONE smooth outline: a signed-distance field on a small screen grid
+ *  (inside any of the opening polygons, outside every piece drawn over the gape), contoured like the skin bands */
+const visibleHole = (polys: S2[][], occ: Loop[][]): string => {
+  let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  for (const ps of polys) for (const p of ps) { x0 = Math.min(x0, p.x); y0 = Math.min(y0, p.y); x1 = Math.max(x1, p.x); y1 = Math.max(y1, p.y); }
+  if (!(x1 - x0 > 1.5 && y1 - y0 > 1.5)) return '';
+  const cell = Math.max(1.2, Math.max(x1 - x0, y1 - y0) / 50);
+  x0 -= 2 * cell; y0 -= 2 * cell; x1 += 2 * cell; y1 += 2 * cell;
+  const nj = Math.ceil((x1 - x0) / cell) + 1, ni = Math.ceil((y1 - y0) / cell) + 1;
+  type Seg = [number, number, number, number];
+  const segsOf = (ps: S2[]): Seg[] => ps.map((p, i) => {
+    const q = ps[(i + 1) % ps.length];
+    return [p.x, p.y, q.x, q.y] as Seg;
+  });
+  // the openings, thinned to ≤ 64 vertices each (finer than the field's cells)
+  const thin = (ps: S2[]) => {
+    if (ps.length <= 64) return ps;
+    const out: S2[] = [];
+    for (let i = 0; i < 64; i++) out.push(ps[Math.round((i / 64) * ps.length) % ps.length]);
+    return out;
+  };
+  const pseg = polys.filter((ps) => ps.length >= 3).map((ps) => segsOf(thin(ps)));
+  // the occluders: per grid column and piece, the sorted heights where the piece's boundary crosses that column
+  // (inside = an odd number of crossings above the point); and the boundary segments near the grid (distance)
+  const m = 4 * cell;
+  const oDist: Seg[] = [];
+  const cross: Float64Array[][] = [];
+  for (const ls of occ) {
+    const cols: number[][] = Array.from({length: nj}, () => []);
+    for (const L of ls) {
+      const n = L.x.length;
+      for (let i = 0; i < n; i++) {
+        const j2 = (i + 1) % n;
+        const ax = L.x[i], ay = L.y[i], bx = L.x[j2], by = L.y[j2];
+        const lo = Math.min(ax, bx), hi = Math.max(ax, bx);
+        if (hi < x0 || lo > x1) continue;
+        if (Math.max(ay, by) >= y0 - m && Math.min(ay, by) <= y1 + m) oDist.push([ax, ay, bx, by]);
+        if (hi === lo) continue;
+        const c0 = Math.max(0, Math.ceil((lo - x0) / cell)), c1 = Math.min(nj - 1, Math.floor((hi - x0) / cell));
+        for (let c = c0; c <= c1; c++) {
+          const px = x0 + c * cell;
+          if ((ax <= px) === (bx <= px)) continue;
+          cols[c].push(ay + ((px - ax) / (bx - ax)) * (by - ay));
+        }
+      }
+    }
+    cross.push(cols.map((ys) => Float64Array.from(ys).sort()));
+  }
+  const below = (arr: Float64Array, y: number) => {
+    let lo = 0, hi = arr.length;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (arr[mid] < y) lo = mid + 1; else hi = mid;
+    }
+    return lo;
+  };
+  const dseg = (s: Seg, px: number, py: number) => {
+    const dx = s[2] - s[0], dy = s[3] - s[1], l2 = dx * dx + dy * dy;
+    const t = l2 > 0 ? clamp(((px - s[0]) * dx + (py - s[1]) * dy) / l2) : 0;
+    return Math.hypot(px - s[0] - dx * t, py - s[1] - dy * t);
+  };
+  const crossUp = (s: Seg, px: number, py: number) => {
+    const ax = s[0], bx = s[2];
+    if ((ax <= px) === (bx <= px)) return false;
+    const y = s[1] + ((px - ax) / (bx - ax)) * (s[3] - s[1]);
+    return y < py;
+  };
+  // the near-boundary segments binned (bins of the margin size: a point only needs its own bin)
+  const nbx = Math.ceil((x1 - x0) / m) + 1, nby = Math.ceil((y1 - y0) / m) + 1;
+  const bins: number[][] = Array.from({length: nbx * nby}, () => []);
+  oDist.forEach((sg, q) => {
+    const bx0 = Math.max(0, Math.floor((Math.min(sg[0], sg[2]) - m - x0) / m)), bx1 = Math.min(nbx - 1, Math.floor((Math.max(sg[0], sg[2]) + m - x0) / m));
+    const by0 = Math.max(0, Math.floor((Math.min(sg[1], sg[3]) - m - y0) / m)), by1 = Math.min(nby - 1, Math.floor((Math.max(sg[1], sg[3]) + m - y0) / m));
+    for (let by = by0; by <= by1; by++) for (let bx = bx0; bx <= bx1; bx++) bins[by * nbx + bx].push(q);
+  });
+  const G = newGrid(ni, nj, [SEAM, SEAM, SEAM, SEAM, SEAM, SEAM]);
+  const g = new Float32Array(ni * nj);
+  const rr = 1.6 * cell;
+  const sds: number[] = [];
+  for (let i = 0; i < ni; i++) {
+    for (let j = 0; j < nj; j++) {
+      const k = i * nj + j, px = x0 + j * cell, py = y0 + i * cell;
+      G.sx[k] = px;
+      G.sy[k] = py;
+      // a smooth union of the openings (log-sum-exp), so no notch where the side and front openings meet
+      sds.length = 0;
+      let mx = -1e9;
+      for (const ss of pseg) {
+        let inside = false, dm = 1e9;
+        for (const sg of ss) {
+          if (crossUp(sg, px, py)) inside = !inside;
+          const d = dseg(sg, px, py);
+          if (d < dm) dm = d;
+        }
+        const sd = inside ? dm : -dm;
+        sds.push(sd);
+        if (sd > mx) mx = sd;
+      }
+      let acc = 0;
+      for (const sd of sds) acc += Math.exp((sd - mx) / rr);
+      const sdG = mx + rr * Math.log(acc) - rr * Math.log(Math.min(2, sds.length));
+      if (sdG < -2 * cell) { g[k] = sdG; continue; }
+      let inB = false;
+      for (let pc = 0; pc < cross.length && !inB; pc++) if (below(cross[pc][j], py) & 1) inB = true;
+      let dB = m;
+      const bin = bins[Math.min(nby - 1, Math.floor((py - y0) / m)) * nbx + Math.min(nbx - 1, Math.floor((px - x0) / m))];
+      for (const q of bin) { const d = dseg(oDist[q], px, py); if (d < dB) dB = d; }
+      g[k] = Math.min(sdG, inB ? -dB : dB);
+    }
+  }
+  // drop slivers and islands (where pieces meet at the chin and snout tips): keep the hole's real outline only
+  const loops = contour(G, g, false);
+  const big = loops.reduce((mx, L) => Math.max(mx, Math.abs(loopArea(L))), 0);
+  return loopsPath(loops.filter((L) => Math.abs(loopArea(L)) > Math.max(9 * cell * cell, 0.02 * big)));
+};
+
 let CACHE: {key: string; m: Model}[] = [];
 const keyOf = (B: Basis, pose: PredPose) => JSON.stringify([B.eye, B.r, B.u, B.f, B.cx, B.cy, B.roll, pose.t, pose.gill, pose.mouth, pose.bend, pose.finPhase, pose.startle, pose.look]);
 const model = (B: Basis, pose: PredPose): Model => {
@@ -1221,12 +1348,19 @@ const buildModel = (B: Basis, pose: PredPose): Model => {
   const gap = gapPoly(covers[0], cam);
   const gapFar = gapPoly(covers[1], cam);
 
+  // ---- visible-region boundaries (the ink silhouette and the occlusion outline)
+  const baseNear = contour(body.near, body.near.nv, true);
+  const baseFar = contour(body.far, body.far.nv, true);
+  const baseJaw = body.jaw ? contour(body.jaw, body.jaw.nv, true) : [];
+  const baseJawF = body.jawF ? contour(body.jawF, body.jawF.nv, true) : [];
+  const coverBase: [Loop[], Loop[]] = [contour(covers[0].G, covers[0].G.nv, true), contour(covers[1].G, covers[1].G.nv, true)];
+
   // ---- the gape (open mouth): side openings and the front opening, between the upper lips (body) and the lower
-  // lips (jaw)
+  // lips (jaw); what shows of it is that union minus everything drawn over it (both halves, the jaw, the covers)
   let gape: Model['gape'] = null;
   let mouthC: V3 = [-48, 1.8, 0];
-  if (body.jaw) {
-    const {near, far, jaw, ic, aN, bF} = body;
+  if (body.jaw && body.jawF) {
+    const {near, far, jaw, jawF, ic, aN, bF} = body;
     const col = (G: Grid, j: number, i0: number, i1: number) => {
       const out: {s: S2; w: V3}[] = [];
       const step = i1 >= i0 ? 1 : -1;
@@ -1238,7 +1372,7 @@ const buildModel = (B: Basis, pose: PredPose): Model => {
       return out;
     };
     const nu = col(near, aN, ic, 0), fu = col(far, bF + 1, 0, ic);
-    const fl = col(jaw, jaw.nj - 1, ic, 0), nl = col(jaw, 0, 0, ic);
+    const fl = col(jawF, jawF.nj - 1, ic, 0), nl = col(jaw, 0, 0, ic);
     const polyD = (pts: S2[]) => {
       const L = {x: pts.map((p) => p.x), y: pts.map((p) => p.y)};
       const a = loopArea(L);
@@ -1248,12 +1382,13 @@ const buildModel = (B: Basis, pose: PredPose): Model => {
     const sideN = [...nu.map((q) => q.s), ...nl.map((q) => q.s)];
     const sideF = [...[...fu].reverse().map((q) => q.s), ...[...fl].reverse().map((q) => q.s)];
     const front = [...nu.map((q) => q.s), ...fu.map((q) => q.s), ...fl.map((q) => q.s), ...nl.map((q) => q.s)];
-    const d = polyD(sideN) + polyD(sideF) + polyD(front);
+    const d0 = polyD(sideN) + polyD(sideF) + polyD(front);
+    const d = d0 ? visibleHole([sideN, sideF, front], [baseNear, baseFar, baseJaw, baseJawF, coverBase[0], coverBase[1]]) : '';
     const all = [...nu, ...fu, ...fl, ...nl];
     mouthC = all.reduce((s, q) => add3(s, mul3(q.w, 1 / all.length)), [0, 0, 0] as V3);
     const cs = proj(B, mouthC);
     const span = Math.max(...all.map((q) => Math.hypot(q.s.x - cs.x, q.s.y - cs.y)));
-    if (d && D.mouth > 0.03) gape = {d, lips: [nu.map((q) => q.s), nl.map((q) => q.s), fu.map((q) => q.s), fl.map((q) => q.s)], c: {x: cs.x, y: cs.y}, r: span};
+    if (d && D.mouth > 0.03) gape = {d, c: {x: cs.x, y: cs.y}, r: span};
   }
 
   // ---- fins
@@ -1307,20 +1442,16 @@ const buildModel = (B: Basis, pose: PredPose): Model => {
   const pb: V3 = [PHARYNX.back.x, PHARYNX.back.y, 0];
   const mouthIn = {p: mouthC, dir: norm3(sub3(pb, mouthC))};
 
-  // ---- visible-region boundaries (the ink silhouette and the occlusion outline)
-  const baseNear = contour(body.near, body.near.nv, true);
-  const baseFar = contour(body.far, body.far.nv, true);
-  const baseJaw = body.jaw ? contour(body.jaw, body.jaw.nv, true) : [];
-  const coverBase: [Loop[], Loop[]] = [contour(covers[0].G, covers[0].G.nv, true), contour(covers[1].G, covers[1].G.nv, true)];
+  // ---- visible-region boundaries (computed above: the ink silhouette and the occlusion outline)
   // a common orientation (the far half and the far cover are mirror images) so the union fills with nonzero
   const orient = (ls: Loop[]) => {
     if (!ls.length) return 1;
     const big = ls.reduce((b, L) => (Math.abs(loopArea(L)) > Math.abs(loopArea(b)) ? L : b), ls[0]);
     return Math.sign(loopArea(big)) || 1;
   };
-  const outline = [baseNear, baseFar, baseJaw, coverBase[0], coverBase[1]].map((ls) => loopsPath(ls, orient(ls))).join('');
+  const outline = [baseNear, baseFar, baseJaw, baseJawF, coverBase[0], coverBase[1]].map((ls) => loopsPath(ls, orient(ls))).join('');
 
-  return {cam, D, pose, nearFront, body, covers, gap, gapFar, gape, fins, eyes, exit, mouthIn, outline, baseNear, baseFar, baseJaw, coverBase};
+  return {cam, D, pose, nearFront, body, covers, gap, gapFar, gape, fins, eyes, exit, mouthIn, outline, baseNear, baseFar, baseJaw, baseJawF, coverBase};
 };
 function lerpP2(a: P, b: P, u: number): P {
   return pt(lerp(a.x, b.x, u), lerp(a.y, b.y, u));
@@ -1738,7 +1869,6 @@ const EyeArt: React.FC<{e: EyeG; K: (c: string) => string}> = ({e, K}) => {
 const GapeArt: React.FC<{g: NonNullable<Model['gape']>; px: number; K: (c: string) => string}> = ({g, px, K}) => {
   const clip = uid('pmClip');
   const lw = clamp(1.1 * px, 2, 40);
-  const lips = g.lips.map((ps) => smoothOpenPath(ps.map((p) => p.x), ps.map((p) => p.y), 1.5)).join('');
   return (
     <g>
       <defs>
@@ -1748,19 +1878,22 @@ const GapeArt: React.FC<{g: NonNullable<Model['gape']>; px: number; K: (c: strin
       </defs>
       <path d={g.d} fill={K(GAPE)} />
       <g clipPath={`url(#${clip})`}>
-        <path d={lips} fill="none" stroke={K(GAPE_IN)} strokeWidth={lw} strokeLinecap="round" opacity={0.85} />
-        <path d={lips} fill="none" stroke={K(mix(C.pharynx, C.fishBelly, 0.3))} strokeWidth={lw * 0.35} strokeLinecap="round" opacity={0.5} />
         <ellipse cx={g.c.x + 0.15 * g.r} cy={g.c.y + 0.05 * g.r} rx={g.r * 0.42} ry={g.r * 0.3} fill={K(DEEP)} opacity={0.55} />
+        {/* the soft pink lining of the lips: along the hole's edge only (half of each stroke falls inside the clip) */}
+        <path d={g.d} fill="none" stroke={K(GAPE_IN)} strokeWidth={lw} strokeLinejoin="round" opacity={0.6} />
+        <path d={g.d} fill="none" stroke={K(GAPE_IN)} strokeWidth={lw * 0.55} strokeLinejoin="round" opacity={0.55} />
+        <path d={g.d} fill="none" stroke={K(mix(C.pharynx, C.fishBelly, 0.3))} strokeWidth={lw * 0.18} strokeLinejoin="round" opacity={0.45} />
       </g>
+      {/* the rim's ink (along the lips it lies under the jaws' own lip lines; at the open front it closes the mouth) */}
+      <path d={g.d} fill="none" stroke={K(INK)} strokeWidth={2.2} strokeLinejoin="round" />
     </g>
   );
 };
 
-/** the jaw piece (open mouth): skin stack, limb ink, the lower lip's edge */
-const JawArt: React.FC<{m: Model; K: (c: string) => string}> = ({m, K}) => {
-  const G = m.body.jaw;
+/** one half of the lower jaw (open mouth): skin stack, limb ink, the lower lip's edge */
+const JawHalf: React.FC<{m: Model; G: Grid | null; base: Loop[]; K: (c: string) => string}> = ({m, G, base, K}) => {
   if (!G) return null;
-  const baseD = loopsPath(m.baseJaw);
+  const baseD = loopsPath(base);
   if (!baseD) return null;
   const px = pxPerU(m.cam, [-46, 4, 3]);
   const L = skinLayers(G, K, px);
@@ -1769,10 +1902,17 @@ const JawArt: React.FC<{m: Model; K: (c: string) => string}> = ({m, K}) => {
       <path d={baseD} fill={K(PIG_BASE)} />
       <Layers L={L.pig} />
       <Layers L={L.light} />
-      <path d={tagRuns(m.baseJaw, [LIP])} fill="none" stroke={K(INK)} strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" />
-      <path d={tagRuns(m.baseJaw, [LIMB])} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={tagRuns(base, [LIP])} fill="none" stroke={K(INK)} strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={tagRuns(base, [LIMB])} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" strokeLinejoin="round" />
     </g>
   );
+};
+/** one half of the dropped lower jaw: `front` = the half on the camera's side (drawn just before that side's body
+ *  half), else the other (drawn before the far body half) */
+const JawArt: React.FC<{m: Model; front: boolean; K: (c: string) => string}> = ({m, front, K}) => {
+  if (!m.body.jaw) return null;
+  const nearSide = front === m.nearFront;
+  return nearSide ? <JawHalf m={m} G={m.body.jaw} base={m.baseJaw} K={K} /> : <JawHalf m={m} G={m.body.jawF} base={m.baseJawF} K={K} />;
 };
 
 /** the pectoral fin's fleshy base lobe (one side) */
@@ -1845,12 +1985,13 @@ export const Predator: React.FC<{B: Basis; pose: PredPose; dim?: number}> = ({B,
       {fin(pecFar, 0.3)}
       {fin(pelFar, 0.3)}
       {m.gape && <GapeArt g={m.gape} px={pxPerU(m.cam, m.mouthIn.p)} K={K} />}
-      <JawArt m={m} K={K} />
+      <JawArt m={m} front={false} K={K} />
       {side(farS)}
       {!caudalFront && fin(m.fins.caudal)}
       {fin(m.fins.d2)}
       {fin(m.fins.d1)}
       {fin(m.fins.anal)}
+      <JawArt m={m} front={true} K={K} />
       {side(nearS)}
       {caudalFront && fin(m.fins.caudal)}
       {fin(pelNear)}
