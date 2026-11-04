@@ -21,9 +21,12 @@ import {BN, EEGCap} from '../art/people';
 import {CH, CW, GROWS, PF, SoftArc, Trial, TrialCells} from '../art/s6world';
 import {RaoPanel} from '../shots/S1Hook';
 import {GEvent} from '../art/game';
-import {F_DOWN, F_HOVER, F_JERK, F_LIFT, F_REST, FingerECU, FPose, KEY, mixF, pressPose} from './finger';
+import {F_DOWN, F_HOVER, F_JERK, F_LIFT, F_REST, FingerECU, FPose, indexPts, KEY, mixF, pressPose} from './finger';
+/** the opening's frame-0 action (SeqA): a lifted pose pulled down to contact at frame 4 */
+const OPEN_TC = 4 / 30;
+const OPEN_FROM = mixF(F_LIFT, F_HOVER, 0.25);
 import {ECU_CAM} from './contracts';
-import {CamS} from './core2';
+import {CamS, sp} from './core2';
 import {FB, fgState, fgTrials, fgVotes, follow, pr, pulseTimes, win} from './fgTime';
 import {MON, scrPt} from './fgWorld';
 import {CAMS, camAt, camT, CK, POVVignette, WorldView} from './fgShot';
@@ -38,7 +41,8 @@ const times = () => {
   const cutB = b.ten;
   const in3: [number, number] = [b.overTime - 0.05, b.overTime + 0.45];
   const tiles = b.cleared + 0.42;
-  const ecu = b.goBack + 0.04;
+  // the reprise starts on a frame boundary so its first frame is exactly the opening's frame 0
+  const ecu = Math.ceil((b.goBack + 0.04) * FPS) / FPS;
   const pull0 = b.wrongEnd + 0.03, pull1 = pull0 + 1.55;
   return {b, swap, thru0, face, cutB, in3, tiles, ecu, pull0, pull1};
 };
@@ -145,9 +149,9 @@ const Tiles: React.FC<{t: number; st: ReturnType<typeof fgState>}> = ({t, st}) =
   const T = times();
   const b = T.b;
   const shrink = pr(t, T.tiles, T.tiles + 0.75);
-  const toBar = pr(t, b.outOf + 0.55, T.ecu - 0.05);
-  const merge = pr(t, T.ecu - 0.25, T.ecu + 0.05);
-  const fadeBars = pr(t, T.ecu + 0.15, T.ecu + 0.55);
+  const toBar = pr(t, b.outOf + 0.55, T.ecu - 0.3);
+  const merge = pr(t, T.ecu - 0.3, T.ecu - 0.05);
+  const fadeBars = t >= T.ecu ? 1 : 0;
   // tile 0 starts exactly where the real playfield is on screen (CAMS.RFULL), then shrinks to its slot
   const pf0 = scrPt(MON.R, PF.x, PF.y);
   const c = CAMS.RFULL;
@@ -224,8 +228,27 @@ const fingerAt = (t: number) => {
   const j0 = p0 + 0.2, j1 = j0 + 0.1, c0 = j1 + 0.11; // jerk up, then the snap down to contact
   const r0 = c0 + 0.16, r1 = r0 + 0.12, h1 = r1 + 0.6;
   const lift0 = b.andYou + 0.3, lift1 = lift0 + 0.42, set1 = lift1 + 0.85;
-  let pose: FPose = {...F_HOVER, wrist: F_HOVER.wrist + idle};
+  let pose: FPose = {...F_HOVER, wrist: F_HOVER.wrist + idle * pr(t, T.ecu + 1.4, T.ecu + 2.2)};
   let press = 0;
+  // the opening, replayed from its frame 0 (A: snapState from a lifted pose, contact at frame 4)
+  const tau = t - T.ecu;
+  if (tau >= 0 && tau < 1.5) {
+    const tc = OPEN_TC;
+    let drive = lerp(0.55, 1.0, clamp(tau / tc)) + (tau > tc ? (tau - tc) * 1.6 : 0);
+    if (tau < tc) {
+      const u = clamp((tau - (tc - 0.2)) / 0.2);
+      pose = mixF(OPEN_FROM, F_DOWN, u * u * u);
+    } else if (tau < 0.62) {
+      press = Math.min(1.22, sp(tau * FPS, tc, {damping: 9, stiffness: 520}));
+      pose = pressPose(press);
+    } else {
+      const r = easeInOut(clamp((tau - 0.62) / 0.78));
+      press = Math.max(0, 1 - clamp((tau - 0.62) / 0.14));
+      pose = r < 0.001 ? pressPose(press) : mixF(pressPose(press), F_HOVER, r);
+    }
+    if (drive > 1.4) drive = -1;
+    return {pose, press, drive, keyGlow: tau >= tc ? Math.max(0, 1 - (tau - tc) / 0.35) : 0, calm: 0, lines: tau < tc + 0.08 ? clamp(1 - (tau - tc) / 0.08) : 0};
+  }
   if (t >= p0 && t < h1) {
     if (t < j0) pose = F_HOVER;
     else if (t < j1) pose = mixF(F_HOVER, F_JERK, easeOut(clamp((t - j0) / (j1 - j0))));
@@ -247,8 +270,9 @@ const fingerAt = (t: number) => {
     pose,
     press,
     drive: t >= p0 && t < p0 + 0.5 ? ((t - p0) / 0.32) : -1,
-    keyGlow: Math.max(t >= c0 ? 1 - clamp((t - c0) / 0.55) : 0, 1 - pr(t, T.ecu, T.ecu + 0.9)),
+    keyGlow: t >= c0 ? 1 - clamp((t - c0) / 0.55) : 0,
     calm: pr(t, lift1, lift1 + 0.6) * (0.8 + 0.2 * Math.sin(t * 2.2)),
+    lines: t >= c0 - 0.08 && t < c0 + 0.08 ? clamp(1 - Math.abs(t - c0) / 0.08) : 0,
   };
 };
 const EcuWorld: React.FC<{t: number; wide: number}> = ({t, wide}) => {
@@ -269,12 +293,46 @@ const EcuWorld: React.FC<{t: number; wide: number}> = ({t, wide}) => {
         </g>
       )}
       <FingerECU id={`${id}-f`} pose={fa.pose} press={fa.press} keyGlow={fa.keyGlow} drive={fa.drive} calm={fa.calm} />
+      <SnapLines pose={fa.pose} k={fa.lines} />
       {wide > 0.001 && (
         <g opacity={clamp(wide * 1.5)}>
           <rect x={-3000} y={KEY.y + 50} width={2670} height={60} fill="#C99A68" />
           <rect x={2110} y={KEY.y + 50} width={3000} height={60} fill="#C99A68" />
         </g>
       )}
+    </g>
+  );
+};
+/** the opening's camera move on contact (y + 10), then a slow drift toward the hand */
+const ecuCamAt = (t: number): CamS => {
+  const T = times();
+  const tau = t - T.ecu;
+  const settle = clamp((tau - OPEN_TC) / 0.15) * (1 - pr(t, T.ecu + 0.8, T.ecu + 1.8));
+  const drift = pr(t, T.ecu + 0.8, T.pull0, (x) => x);
+  return {x: ECU_CAM.x - 20 * drift, y: ECU_CAM.y + 10 * settle - 10 * drift, z: ECU_CAM.z * (1 + 0.035 * drift)};
+};
+/** motion arcs about the knuckle trailing the fingertip as it snaps down (as in the opening, SeqA) */
+const SnapLines: React.FC<{pose: FPose; k: number}> = ({pose, k}) => {
+  if (k <= 0.01) return null;
+  const ip = indexPts(pose);
+  const c = ip[0], tip = ip[3];
+  const a = Math.atan2(tip.y - c.y, tip.x - c.x);
+  const R = Math.hypot(tip.x - c.x, tip.y - c.y);
+  const deg = Math.PI / 180;
+  return (
+    <g opacity={k} fill="none" strokeLinecap="round">
+      {[0, 1, 2].map((i) => {
+        const r = R + 30 - i * 95;
+        const a0 = a + (8 + i * 3) * deg, a1 = a + (36 - i * 4) * deg;
+        const P = (q: number) => `${fmt(c.x + Math.cos(q) * r)},${fmt(c.y + Math.sin(q) * r)}`;
+        const d = `M${P(a0)} A${fmt(r)},${fmt(r)} 0 0 1 ${P(a1)}`;
+        return (
+          <g key={i}>
+            <path d={d} stroke={K.cream} strokeWidth={22} />
+            <path d={d} stroke={INK} strokeWidth={8} />
+          </g>
+        );
+      })}
     </g>
   );
 };
@@ -373,7 +431,7 @@ export const VG: React.FC<{f: number}> = ({f}) => {
   }
   // ---------------------------------------------------------------- 13 of 16 -> the cleared lines become the space bar
   if (t < T.ecu + 0.6) {
-    const showEcu = t >= T.ecu - 0.05;
+    const showEcu = t >= T.ecu;
     return (
       <g>
         {!showEcu ? (
@@ -381,8 +439,8 @@ export const VG: React.FC<{f: number}> = ({f}) => {
             <WorldView id={id} st={st} f={f} cam={CAMS.RFULL} pillars={false} />
           </g>
         ) : (
-          <g opacity={pr(t, T.ecu - 0.05, T.ecu + 0.3)}>
-            <g transform={camT(ECU_CAM)}>
+          <g>
+            <g transform={camT(ecuCamAt(t))}>
               <EcuWorld t={t} wide={0} />
             </g>
           </g>
@@ -394,8 +452,7 @@ export const VG: React.FC<{f: number}> = ({f}) => {
   // ---------------------------------------------------------------- the finger, then the two hands
   {
     const e = pr(t, T.pull0, T.pull1);
-    const drift = pr(t, T.ecu, T.pull0, (x) => x);
-    const ecuCam: CamS = {x: ECU_CAM.x - 20 * drift, y: ECU_CAM.y - 10 * drift, z: ECU_CAM.z * (1 + 0.035 * drift)};
+    const ecuCam = ecuCamAt(t);
     const hold = pr(t, T.pull1, T.pull1 + 2.2, (x) => x);
     const fin: CamS = {x: FINAL.x + 6 * hold, y: FINAL.y - 4 * hold, z: FINAL.z * (1 + 0.015 * hold)};
     const cam: CamS = e <= 0 ? ecuCam : {x: lerp(ecuCam.x, fin.x, e), y: lerp(ecuCam.y, fin.y, e), z: Math.exp(lerp(Math.log(ecuCam.z), Math.log(fin.z), e))};
@@ -441,6 +498,7 @@ export const CUES_VG = (): {t: number; kind: string; gain?: number; dur?: number
     {t: b.cleared - 0.05, kind: 'line_clear', gain: -3},
     {t: b.thirteen - 0.15, kind: 'pop', gain: -8},
     {t: b.outOf + 0.05, kind: 'pop', gain: -10},
+    {t: T.ecu + OPEN_TC, kind: 'key_click', gain: -4},
     {t: p0, kind: 'coil_pulse'},
     {t: c0, kind: 'key_click'},
     {t: c0 + 0.04, kind: 'cannon', gain: -10},
