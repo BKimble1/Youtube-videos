@@ -31,7 +31,7 @@ export const railsCam = (t: number): Cam => {
   return glide(t, keys);
 };
 
-const Room: React.FC<{c: Cam; k: string}> = ({c, k}) => {
+export const Room: React.FC<{c: Cam; k: string}> = ({c, k}) => {
   const yh = horizonY(c);
   const DW = D0 + 330;
   const wallBase = proj(c, DW, {x: 0, y: 0}).y;
@@ -57,7 +57,7 @@ const Room: React.FC<{c: Cam; k: string}> = ({c, k}) => {
   );
 };
 /** one rail at depth D as seen in the subject layer, with its posts */
-const Rail: React.FC<{c: Cam; D: number; k: string; posts: number[]}> = ({c, D, k, posts}) => {
+export const Rail: React.FC<{c: Cam; D: number; k: string; posts: number[]}> = ({c, D, k, posts}) => {
   const r = 2.0 * (D0 / D);
   const y = toD0(c, D, 0, RAIL_Y).y;
   const x0 = c.x - 400, x1 = c.x + 400;

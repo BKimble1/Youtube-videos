@@ -57,6 +57,9 @@ export type Leg3D = {
   /** keep the shin only from this height (local y, negative = above the ankle): the cut */
   top: number;
   toeCurl?: number;
+  /** V3: the lens's own turn round the leg (deg; a three-quarter view) and its height (deg, default PITCH) */
+  view?: number;
+  pitch?: number;
 };
 
 const rotZ = (p: V3, a: number): V3 => [p[0] * Math.cos(a) - p[1] * Math.sin(a), p[0] * Math.sin(a) + p[1] * Math.cos(a), p[2]];
@@ -64,12 +67,14 @@ const yawP = (p: V3, th: number): V3 => [p[0] * Math.cos(th) - p[2] * Math.sin(t
 
 export const legXf = (g: Leg3D) => {
   const th = (g.yaw * Math.PI) / 180, sa = (g.sa * Math.PI) / 180, pt = (-g.point * Math.PI) / 180;
+  const vw = ((g.view ?? 0) * Math.PI) / 180, pi = g.pitch !== undefined ? (g.pitch * Math.PI) / 180 : PITCH;
   /** local point -> {screen x, screen y, depth}; foot points are pointed at the ankle first */
   return (p: V3, foot: boolean) => {
     let q = foot ? rotZ(p, pt) : p;
     q = yawP(q, th);
+    if (vw) q = yawP(q, vw);
     const r = rotZ(q, sa);
-    return {x: g.A.x + r[0], y: g.A.y + r[1] - q[2] * Math.sin(PITCH), z: q[2]};
+    return {x: g.A.x + r[0], y: g.A.y + r[1] * Math.cos(pi - PITCH) - q[2] * Math.sin(pi), z: g.pitch === undefined ? q[2] : q[2] * Math.cos(pi)};
   };
 };
 

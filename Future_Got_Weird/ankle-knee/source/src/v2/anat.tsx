@@ -45,7 +45,7 @@ const HIP: V = {x: 0, y: -74}, KNEE: V = {x: 0, y: -39.5}, ANKLE: V = {x: 0, y: 
 export const CUT_F = HIP.y + 16, CUT_T = ANKLE.y - 19;
 const P = (x: number, y: number) => `${fmt(x)},${fmt(y)}`;
 /** skin, bones and foot of the leg before the operation (side profile, facing screen-left) */
-const AnatLeg: React.FC<{k: string; iw: number; diseased: number; toe: number; glow: number}> = ({k, iw, diseased, toe, glow}) => {
+export const AnatLeg: React.FC<{k: string; iw: number; diseased: number; toe: number; glow: number}> = ({k, iw, diseased, toe, glow}) => {
   const femur = `M${P(-1.4, -78)} L${P(-1.6, -50)} Q${P(-3.6, -45)} ${P(-3.4, -41.4)} Q${P(-1.2, -39.2)} ${P(1.6, -40.4)} Q${P(3.9, -41.2)} ${P(3.4, -44.6)} Q${P(1.6, -48)} ${P(1.4, -51)} L${P(1.3, -78)} Z`;
   const tibia = `M${P(-3.4, -38.2)} Q${P(0, -38.9)} ${P(3.2, -38.2)} Q${P(3.0, -35.5)} ${P(1.0, -33.5)} L${P(0.9, -9.5)} Q${P(1.2, -7.6)} ${P(0.2, -7.0)} Q${P(-2.4, -6.9)} ${P(-2.6, -8.8)} L${P(-1.6, -33.5)} Q${P(-3.5, -35.4)} ${P(-3.4, -38.2)} Z`;
   const fib = `M${P(2.6, -35.5)} Q${P(3.6, -35.6)} ${P(3.4, -34)} L${P(2.6, -8.4)} L${P(1.8, -8.4)} L${P(2.2, -34)} Z`;
@@ -79,7 +79,7 @@ const cutLine = (y: number, half: number, u: number, iw: number, key: string) =>
   </g>
 );
 /** a clean cut face across the leg at height y (tissue band, the bone's end in cream) */
-const CutFace: React.FC<{y: number; half: number; bone: number; iw: number}> = ({y, half, bone, iw}) => (
+export const CutFace: React.FC<{y: number; half: number; bone: number; iw: number}> = ({y, half, bone, iw}) => (
   <g>
     <line x1={fmt(-half)} y1={fmt(y)} x2={fmt(half)} y2={fmt(y)} stroke={C.tissue} strokeWidth={iw * 2.2} strokeLinecap="round" />
     <line x1={fmt(-bone)} y1={fmt(y)} x2={fmt(bone)} y2={fmt(y)} stroke={C.bone} strokeWidth={iw * 2.4} strokeLinecap="round" />

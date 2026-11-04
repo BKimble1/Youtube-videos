@@ -12,7 +12,7 @@ import {C} from './pal';
 
 const S = (p: {x: number; y: number}) => `${fmt(p.x)},${fmt(p.y)}`;
 
-export const Pitch: React.FC<{c: Cam; id: string; goalX?: number}> = ({c, id, goalX = -760}) => {
+export const Pitch: React.FC<{c: Cam; id: string; goalX?: number; goalD?: number}> = ({c, id, goalX = -760, goalD = 1500}) => {
   const yh = horizonY(c);
   const k0 = W / c.w;
   // turf bands: constant-distance stripes 180 cm deep
@@ -54,7 +54,7 @@ export const Pitch: React.FC<{c: Cam; id: string; goalX?: number}> = ({c, id, go
   }
   // the goal down the field (a small youth goal, 180 x 500 cm, side-on: we see one post, the crossbar running away and
   // the net's side panel)
-  const DG = 1500, DG2 = 1500 + 200;
+  const DG = goalD, DG2 = goalD + 200;
   const gp = (x: number, y: number, D = DG) => proj(c, D, {x, y});
   const gh = 180;
   const goal = (

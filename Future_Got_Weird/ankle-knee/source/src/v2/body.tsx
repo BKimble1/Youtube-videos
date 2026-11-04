@@ -43,6 +43,9 @@ export type BPose = {
   /** wrist bend added to the forearm direction (deg) */
   wN?: number;
   wF?: number;
+  /** V3: absolute hand angles (deg, screen), e.g. a hand wrapped over a rail */
+  hAbsN?: number;
+  hAbsF?: number;
   neck: number;
   turn: number;
   expr: Expr;
@@ -128,6 +131,8 @@ export type SocketStyle = {
   clear: number;
   /** 0..1: a small window over the ankle and heel cut into the solid shell */
   local: number;
+  /** V3: 0..1 a solid carbon rim round the clear shell (the cut wall), so the socket reads as a real part */
+  rim?: number;
 };
 /** the fitted prosthesis: socket (style above), pylon, prosthetic foot's shoe */
 export const Prosthesis2: React.FC<{id: string; j: BJ; iw: number; s: SocketStyle; shoe: Shoe; toeCurl: number; skin: string}> = ({id, j, iw, s, shoe, toeCurl, skin}) => {
@@ -151,7 +156,7 @@ export const Prosthesis2: React.FC<{id: string; j: BJ; iw: number; s: SocketStyl
   return (
     <g>
       <Inked w={iw}>
-        <Capsule id={`${id}-py`} a={pyl0} b={pyl1} ra={1.45} rb={1.45} color={C.pylon} spec={0.55} />
+        <Capsule id={`${id}-py`} a={pyl0} b={pyl1} ra={1.45 + 0.35 * (s.rim ?? 0)} rb={1.45 + 0.35 * (s.rim ?? 0)} color={C.pylon} spec={0.55} />
         <InkPath d={path([sp({x: -2.6, y: SOCKET_BOT - 1.2}), sp({x: 2.6, y: SOCKET_BOT - 1.2}), sp({x: 1.8, y: SOCKET_BOT + 1.4}), sp({x: -1.8, y: SOCKET_BOT + 1.4})], 0.3)} fill={C.pylonDeep} />
       </Inked>
       <ShoeOn id={`${id}-sh`} kind={shoe} A={j.PA} fa={j.nFoot} iw={iw} />
@@ -185,6 +190,13 @@ export const Prosthesis2: React.FC<{id: string; j: BJ; iw: number; s: SocketStyl
           {s.clear > 0.01 && <g opacity={Math.min(1, s.clear * 1.6)}>{foot}</g>}
           {s.clear > 0.01 && (
             <g opacity={s.clear}>
+              {(s.rim ?? 0) > 0.01 && (
+                <g opacity={s.rim}>
+                  <g clipPath={`url(#${id}-oc)`}><path d={out} fill="none" stroke={C.carbon} strokeWidth={3.0} /></g>
+                  <g clipPath={`url(#${id}-oc)`}><path d={out} fill="none" stroke={C.carbonCut} strokeWidth={0.5} transform="" opacity={0.9} /></g>
+                  <path d={out} fill="none" stroke={INK} strokeWidth={iw * 0.75} />
+                </g>
+              )}
               <path d={out} fill="none" stroke={C.carbonCut} strokeWidth={0.55} opacity={0.9} />
               <path d={out} fill="none" stroke={INK} strokeWidth={iw * 0.3} opacity={0.55} />
             </g>
@@ -242,7 +254,7 @@ export const Wyatt2: React.FC<{p: BPose; o: BOpts}> = ({p, o}) => {
       <Capsule id={`${id}-${k}sl`} a={add(H, mul(dirA(hipA), -1.5))} b={add(H, mul(dirA(hipA), 11.5))} ra={8.3} rb={7.7} color={c} />
     </Inked>
   );
-  const armDraw = (k: string, a: {S: V; E: V; W: V}, hand: HandPose, wb: number, dim: number) => {
+  const armDraw = (k: string, a: {S: V; E: V; W: V}, hand: HandPose, wb: number, dim: number, abs?: number) => {
     const fdir = norm(sub(a.W, a.E));
     const sk = dim ? shade(skin, dim) : skin;
     const ud = norm(sub(a.E, a.S));
@@ -250,7 +262,7 @@ export const Wyatt2: React.FC<{p: BPose; o: BOpts}> = ({p, o}) => {
       <g>
         <Inked w={iw}>
           <Limb id={`${id}-${k}a`} A={a.S} B={a.E} C={a.W} rA={3.7} rB={3.0} rC={2.4} color={sk} k={0.9} capC="flat" crease={iw * 0.6} />
-          <Hand id={`${id}-${k}h`} wrist={a.W} ang={angOf(fdir) + wb} L={DIMW.hand} thumbSide={1} view="back" pose={hand} color={sk} bare />
+          <Hand id={`${id}-${k}h`} wrist={a.W} ang={abs ?? angOf(fdir) + wb} L={DIMW.hand} thumbSide={1} view="back" pose={hand} color={sk} bare />
         </Inked>
         <Inked w={iw}>
           <Capsule id={`${id}-${k}sv`} a={add(a.S, mul(ud, -2.6))} b={add(a.S, mul(ud, 8.0))} ra={4.7} rb={4.1} color={dim ? shade(shirt, dim) : shirt} />
@@ -296,7 +308,7 @@ export const Wyatt2: React.FC<{p: BPose; o: BOpts}> = ({p, o}) => {
   );
   const body = (
     <g>
-      {armDraw('f', j.armF, p.hF ?? HAND_RELAXED, p.wF ?? 0, fd)}
+      {armDraw('f', j.armF, p.hF ?? HAND_RELAXED, p.wF ?? 0, fd, p.hAbsF)}
       {o.behind}
       {farLeg}
       <Inked w={iw}>
@@ -315,7 +327,7 @@ export const Wyatt2: React.FC<{p: BPose; o: BOpts}> = ({p, o}) => {
       )}
       {nearLeg}
       {o.beforeNearArm}
-      {armDraw('n', j.armN, p.hN ?? HAND_RELAXED, p.wN ?? 0, 0)}
+      {armDraw('n', j.armN, p.hN ?? HAND_RELAXED, p.wN ?? 0, 0, p.hAbsN)}
     </g>
   );
   return o.silhouette ? <g style={{filter: 'brightness(0)'}}>{body}</g> : body;

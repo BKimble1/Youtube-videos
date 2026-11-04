@@ -1,6 +1,21 @@
 # Future Got Weird: Doctors Turned His Ankle Into a Knee
 
-## V2 (current review cut)
+## V3 (current review cut)
+
+**Deliverable.** `exports/FGW_Ankle_Knee_V3_REVIEW_1080x1920.mp4` (1080×1920, 24.17 s, narrated). **Not published.**
+Its report is `production/V3_REPORT.md`, with the evidence in `qa/v3_review/`. V3 uses the same approved take, with only the dead air
+between sentences tightened (0.77 s). It is re-timed so the kick lands at 1.12 s, and it keeps V2's ball-to-scan transition. The middle is
+rebuilt as three distinct surgery views (scan → matched anatomy → three-quarter turn → attach), with a rehab proof shot and bend.
+The ending runs recovery foot → face → lace → plant → a wide kick to the goal (`source/src/v3/`).
+
+    python3 tools/make_narration_v3.py
+    source/node_modules/.bin/esbuild tools/export_cues_v3.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec3.cjs && NODE_PATH=source/node_modules node /tmp/ec3.cjs audio/cues_v3.json
+    python3 tools/make_audio_v3.py mix_v3
+    (cd source && npx remotion render src/index.ts AnkleKneeV3 ../exports/FGW_Ankle_Knee_V3_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3","captions":true,"v3":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    FGW_CUES=audio/cues_v3.json python3 tools/qa_render.py exports/FGW_Ankle_Knee_V3_REVIEW_1080x1920.mp4 qa/v3_review
+    # sheets: cd source && ./sheet3.sh out.png "f1,f2,..." [captions] [cols]
+
+## V2 (previous review cut)
 
 **Deliverable.** `exports/FGW_Ankle_Knee_V2_REVIEW_1080x1920.mp4` (1080×1920, 25.0 s, narrated). **Not published.**
 Its report is `production/V2_REPORT.md`, with the evidence in `qa/v2_review/`. V2 reuses the approved narration master unchanged.

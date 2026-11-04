@@ -26,7 +26,15 @@ fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: the cuts and the dissolve (from story.ts via audio/cues.json), the strike, the plant
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), os.environ.get('FGW_CUES', 'audio/cues.json'))))
-if 'CUTS' in CJ:  # V2
+if 'SCAN_T' in CJ:  # V3
+    T3 = CJ['T']
+    PLANNED = [(CJ['STRIKE1'] - 0.05, CJ['SCAN_T'] + 0.1, 'the strike and the ball rushing at the lens into the scan')]
+    for s0, nm in CJ['CUTS'][1:]:
+        PLANNED.append((s0 - 0.04, s0 + (0.36 if nm == 'anat' else 0.08), f'cut to {nm}' + (' (matched dissolve from the scan)' if nm == 'anat' else '')))
+    PLANNED += [(CJ['SCAN_T'], T3['wyatt'] + 0.1, 'the push into the knee scan'), (CJ['STRIKE2'] - 0.6, CJ['STRIKE2'] + 0.9, 'the closing kick and the ball to goal'),
+                (CJ['DUR'] - 0.7, CJ['DUR'] + 0.01, 'the push back into frame 0'), (0, 0.95, 'the opening flex, swing and widen to the ball'), (CJ['plant'] - 0.2, CJ['plant'] + 0.05, 'the cleat comes down to plant (insert)'),
+                (T3['they'], T3['around'] + 0.3, 'the half-turn'), (T3['with'], T3['that'] + 0.2, 'the track down from his hip to both legs')]
+elif 'CUTS' in CJ:  # V2
     PLANNED = [(CJ['STRIKE1'] - 0.05, CJ['T']['wyatt'] + 0.05, 'the strike and the ball rushing at the lens')]
     for s0, nm in CJ['CUTS'][1:]:
         PLANNED.append((s0 - 0.04, s0 + (0.36 if nm == 'anat' else 0.08), f'cut to {nm}' + (' (matched dissolve from the scan)' if nm == 'anat' else '')))
