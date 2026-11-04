@@ -1,0 +1,73 @@
+// V4 timeline: the same narration master as V3 (the approved take, dead air capped at 0.30 s; data/timeline_v3.json),
+// 725 frames at 30 fps. Every value is a pure function of t. Word times are T4 (= T3).
+//
+//   kick    0      the decisive frame (low side angle): planted cleat, prosthetic cleat one frame from the ball, the
+//                  backward foot in the socket above it. Contact on frame 2 (index 1), follow-through, the ball exits
+//                  fast toward the lens, spinning; the ball wipes (right edge sweeping right-to-left) into
+//   reveal  WIPE   a close side view of the same leg, the backward foot at the same screen position and angle. On
+//                  "ankle" the toes point behind him; on "working knee" the turned ankle flexes and the prosthetic shin
+//                  swings with it (contact, reveal, proof: three beats inside the opening sentence)
+//   xray    bone   the X-ray, already close on the affected area; the diseased section shows; cut margins on "Surgeons"
+//   anat    remove the clean side-profile surgical illustration; the middle separates; on "save his foot" attention
+//                  moves down to the foot with the whole lower segment still in view
+//   turn    They   one continuous shot with the thigh as a fixed reference: toes forward -> the whole lower segment
+//                  rotates -> toes backward -> where it reconnects -> it rises and joins the thigh
+//   rehabA  with   tight side profile at the socket: which way his toes point inside it; the bend begins
+//   rehabB  bent   (cut on the bend) low two-leg view: both sides bend together, "the same way as his other knee"
+//   rehabC  rise   (cut on the rise) wider: he shifts his weight and takes one clear step at the bars
+//   wake    woke   (cut on the footfall) recovery: Wyatt wakes
+//   toes    wiggle straight to the toes: one unmistakable wiggle against the sheet
+//   notice  toes   Wyatt notices it (short)
+//   sock    And    match: the foot's position becomes the fitted socket, back on the field
+//   field   use    the closing scene: he tracks the rolling ball, takes his final stride, plants his support foot
+//   low     swing  cut low as the prosthetic cleat swings in; the last frame is one frame before frame 0
+import {T3, DUR3, FRAMES3, CAPS3, Cap3} from '../v3/story3';
+
+export const T4 = T3;
+export const DUR4 = DUR3;
+export const FRAMES4 = FRAMES3;
+export const CAPS4: Cap3[] = CAPS3;
+export const FPS4 = 30;
+
+export type Shot4 = 'kick' | 'reveal' | 'xray' | 'anat' | 'turn' | 'rehabA' | 'rehabB' | 'rehabC' | 'wake' | 'toes' | 'notice' | 'sock' | 'field' | 'low';
+
+// ---------------------------------------------------------------------------------------------------- the cut list
+/** the kick: contact on frame index 1 (the second frame) */
+export const CONTACT = 1 / 30;
+/** the ball covers the whole frame at WIPE_T; its trailing edge then sweeps off and reveals the close leg view */
+export const WIPE_T = 0.4;
+export const CUT_XRAY = T4.bone - 0.05; // 3.62
+export const CUT_ANAT = T4.remove - 0.07; // 5.35 (a quick matched dissolve from the X-ray)
+export const CUT_TURN = T4.they - 0.05; // 7.88
+export const CUT_REHAB_A = T4.with - 0.03; // 11.40
+
+// rehab: one movement across three views
+export const BEND0 = 14.32; // the bend starts in shot A ("ankle now")
+export const CUT_REHAB_B = T4.bent; // 14.62, cut on the bend
+export const BEND_LOW = 15.3; // the bottom of the bend ("same way")
+export const RISE0 = 15.82; // he starts to rise (end of "his other")
+export const CUT_REHAB_C = 16.0; // cut on the rise
+export const STEP0 = 16.45; // weight is on the left leg; the prosthetic foot leaves the floor
+export const FOOTFALL = 16.98; // the prosthetic cleat lands
+export const CUT_WAKE = T4.woke - 0.03; // 17.03, cut on the footfall
+
+// recovery
+export const CUT_TOES = T4.wiggle - 0.05; // 18.20
+export const WIGGLE0 = T4.wiggle + 0.02, WIGGLE1 = T4.wiggle + 0.5; // 18.27 - 18.75
+export const CUT_NOTICE = T4.toes2 - 0.02; // 18.84
+export const CUT_SOCK = T4.and2 - 0.04; // 19.50
+export const CUT_FIELD = T4.use - 0.03; // 20.20
+
+// the closing kick: plant, the swing, the cut low; contact would fall one frame after the loop point
+export const T_LOOP = DUR4 + CONTACT; // contact time on the closing clock (frame 725 == frame 0 + 1)
+export const CUT_LOW = DUR4 - 9 / 30; // 23.867: the last 9 frames are the low angle of frame 0
+
+export const CUTS4: [number, Shot4][] = [
+  [0, 'kick'], [WIPE_T, 'reveal'], [CUT_XRAY, 'xray'], [CUT_ANAT, 'anat'], [CUT_TURN, 'turn'],
+  [CUT_REHAB_A, 'rehabA'], [CUT_REHAB_B, 'rehabB'], [CUT_REHAB_C, 'rehabC'],
+  [CUT_WAKE, 'wake'], [CUT_TOES, 'toes'], [CUT_NOTICE, 'notice'], [CUT_SOCK, 'sock'],
+  [CUT_FIELD, 'field'], [CUT_LOW, 'low'],
+];
+export const shot4At = (t: number): Shot4 => { let s: Shot4 = 'kick'; for (const [t0, n] of CUTS4) if (t >= t0) s = n; return s; };
+export const start4 = (n: Shot4) => CUTS4.find((c) => c[1] === n)![0];
+export const end4 = (n: Shot4) => { const i = CUTS4.findIndex((c) => c[1] === n); return i + 1 < CUTS4.length ? CUTS4[i + 1][0] : DUR4; };
