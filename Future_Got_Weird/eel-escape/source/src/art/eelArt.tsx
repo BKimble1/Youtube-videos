@@ -54,6 +54,8 @@ export type EelProps = {
   over?: 'tail' | 'head';
   /** V4: scales the eye (1 = the V3 size); the head-and-eye read at phone size */
   eyeScale?: number;
+  /** V4: scales the ribbon fin's height (1 = the V3 size), so the eel's fin fringe reads at phone size */
+  finScale?: number;
 };
 
 // ---------------------------------------------------------------- constants
@@ -442,7 +444,7 @@ type Ctx = {
   eyeK: number;
 };
 
-const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK = 1): Ctx => {
+const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK = 1, finK = 1): Ctx => {
   // one integer step ≈ 0.2 px
   const q = Math.max(20, Math.round(px * 5));
   const M = g.M;
@@ -520,8 +522,8 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[], eyeK 
   let hdN = 0, haN = 0;
   for (let j = 0; j < M; j++) {
     const u = g.u[j];
-    const hd = finHeight(u, EEL_FEAT.dorsalFinU, FIN_D, t, 0);
-    const ha = finHeight(u, EEL_FEAT.analFinU, FIN_A, t, 1.7);
+    const hd = finHeight(u, EEL_FEAT.dorsalFinU, FIN_D * finK, t, 0);
+    const ha = finHeight(u, EEL_FEAT.analFinU, FIN_A * finK, t, 1.7);
     if (j === M - 1) {
       hdN = hd;
       haN = ha;
@@ -793,7 +795,7 @@ const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
 };
 
 // ---------------------------------------------------------------- the component
-export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail', eyeScale = 1}) => {
+export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal = 1, opacity, clip, over = 'tail', eyeScale = 1, finScale = 1}) => {
   const nS = pts.length;
   if (nS < 4 || radii.length < nS) return null;
   const last = nS - 1;
@@ -802,7 +804,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
   if (b - a < 1e-4) return null;
   const pxx = Math.max(0.5, px);
   const g = build(pts, radii);
-  const x = makeCtx(g, pxx, t, dorsal, eyeScale);
+  const x = makeCtx(g, pxx, t, dorsal, eyeScale, finScale);
   const M = g.M;
   // chunks (in sample indices) where the body crosses over itself
   const bounds = [a, ...chunkCuts(pts, radii, g.arcS, a, b), b];
@@ -868,7 +870,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
     const zs = ch.zones.flat();
     const j0 = Math.max(0, Math.floor(Math.min(ch.A, ch.fA, ...zs))), j1 = Math.min(M - 1, Math.ceil(Math.max(ch.B, ch.fB, ...zs)));
     for (let j = j0; j <= j1; j++) {
-      const rr = g.r[j] + FIN_D + 1;
+      const rr = g.r[j] + FIN_D * Math.max(1, finScale) + 1;
       x0 = Math.min(x0, g.c[j].x - rr);
       y0 = Math.min(y0, g.c[j].y - rr);
       x1 = Math.max(x1, g.c[j].x + rr);

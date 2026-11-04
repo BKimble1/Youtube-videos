@@ -121,7 +121,7 @@ export const openEel = (t: number, ex: Exit): EscapePose => {
   const phi = (a: number) =>
     -38 + 128 * ss(a, 0.4, 7) + 50 * ss(a, 7, 13) - 85 * ss(a, 14, 21) +
     9 * Math.sin(2 * Math.PI * (0.65 * t + a / 10)) * clamp(a / 8) +
-    62 * flick * ss(a, 3, 13) - 30 * flick * ss(a, 13, 22) -
+    62 * flick * ss(a, 6, 14) - 30 * flick * ss(a, 14, 22) -
     14 * peek * ss(a, 4, 14);
   const da = 0.1;
   const n = Math.ceil(OPEN_OUT / da);
@@ -156,7 +156,7 @@ export const openState = (t: number): ExtState => {
   const cam = openCam(t);
   const pose = predPose(t, {gill: openGill(t)});
   // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
-  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideOpacity: 0.82};
+  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideOpacity: 0.5};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view
