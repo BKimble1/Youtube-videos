@@ -7,7 +7,7 @@ export const GAME_FULL = 'translate(0 -60) scale(3)';
 
 /** The opening extreme close-up camera on the FingerECU world (finger + space bar). Frame 0 of the film (A) and the
  *  reprise on "Go back to that finger" (G) both use it, so the ending reconnects to the first frame exactly. */
-export const ECU_CAM = {x: KEY.x + 120, y: KEY.y - 300, z: 1.25};
+export const ECU_CAM = {x: KEY.x + 110, y: KEY.y - 250, z: 1.08};
 
 /** S5/E -> F match cut: the 2014 touchpad's surface, front-on, fills exactly this rect on E's last frame
  *  (135.87 s); F's first frame shows the falling block whose bounding box is the same rect. */
