@@ -180,7 +180,7 @@ export const VIEW = {
   RV: {x: MON_R.x, y: MON_R.y + (200 - 510) * MON_R.s, z: 3.3},
   SV: {x: MON_A.x, y: MON_A.y + (200 - 510) * MON_A.s, z: (3.3 * MON_R.s) / MON_A.s},
   WIDE: {x: 960, y: 470, z: 1},
-  SENDERS: {x: 410, y: 455, z: 1.3},
+  SENDERS: {x: 740, y: 455, z: 1.3},
   HEAD: {x: 1490, y: 715, z: 2.5},
   FLIP: {x: 930, y: 480, z: 1.2},
 };
@@ -265,7 +265,7 @@ export const bnState = (t: number): BNState => {
     brain: win(t, b.over - 0.05, b.over + 0.5, b.little - 0.45, b.little - 0.15),
     flashW,
     tiltR: -7 * win(t, b.trust - 0.05, b.trust + 0.3, b.trust + 0.75, b.trust + 1.15),
-    roomTags: pr(t, b.rooms - 0.05, b.rooms + 0.35),
+    roomTags: win(t, b.rooms - 0.05, b.rooms + 0.35, b.here + 0.1, b.here + 0.6),
     hallTag: [
       {text: 'BrainNet · 2019', k: win(t, b.y2019 + 0.6, b.y2019 + 1.0, b.two - 0.3, b.two)},
       {text: 'Round 1', k: win(t, b.got - 0.1, b.got + 0.25, b.fresh - 0.15, b.fresh)},
@@ -278,7 +278,7 @@ export const bnState = (t: number): BNState => {
       tilt: 8 * (pr(t, b.overTime + 0.55, b.overTime + 0.9) + pr(t, b.learned + 0.25, b.learned + 0.6) + pr(t, b.whose + 0.15, b.whose + 0.5)),
       n: 0,
     },
-    tally: {k: pr(t, b.thirteen - 0.3, b.thirteen + 0.05), n: 13 * clamp((t - (b.thirteen + 0.1)) / 1.0), sub: pr(t, b.outOf + 0.1, b.outOf + 0.45)},
+    tally: {k: pr(t, b.thirteen - 0.12, b.thirteen + 0.2), n: 13 * clamp((t - (b.thirteen + 0.1)) / 1.0), sub: pr(t, b.outOf + 0.1, b.outOf + 0.45)},
     compBlink,
     look: {A: 1, B: 1},
   };
@@ -321,7 +321,7 @@ export const bnCues = (): {t: number; kind: string; gain?: number}[] => {
     {t: b.ten + 0.1, kind: 'pop', gain: 0.5},
     {t: b.across - 0.45, kind: 'whoosh', gain: 0.5},
     {t: b.cleared + 0.75, kind: 'whoosh', gain: 0.4},
-    {t: b.thirteen - 0.3, kind: 'pop', gain: 0.5},
+    {t: b.thirteen - 0.12, kind: 'pop', gain: 0.5},
     {t: b.outOf + 0.1, kind: 'pop', gain: 0.5},
   ];
   // the flickering lights come on (a soft tick per selection)

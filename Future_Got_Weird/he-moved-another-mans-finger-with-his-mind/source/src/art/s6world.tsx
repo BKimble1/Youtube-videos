@@ -400,7 +400,7 @@ export const WIN_C = {x: WIN.x + WIN.w / 2, y: WIN.y + WIN.h / 2};
 export const routeOf = (who: 'A' | 'B') => {
   const c = capOf(who);
   const top = who === 'A' ? ROOM_A.y + 46 : ROOM_B.y + 46;
-  return [c, {x: c.x + 85, y: top + 6}, {x: 770, y: top + 6}, {x: 870, y: who === 'A' ? 418 : 462}, {x: WIN_C.x, y: WIN_C.y}];
+  return [c, {x: c.x + 100, y: top + 6}, {x: 770, y: top + 6}, {x: 870, y: who === 'A' ? 418 : 462}, {x: WIN_C.x, y: WIN_C.y}];
 };
 export const ROUTE_R = [{x: WIN_C.x, y: WIN_C.y}, {x: 1050, y: 470}, {x: 1180, y: 600}, {x: COIL.x - 20, y: COIL.y}];
 export const alongPath = (pts: {x: number; y: number}[], u: number) => {
@@ -647,8 +647,8 @@ export const BNWorld: React.FC<{st: BNState; t: number; f: number}> = ({st, t, f
         <path d={'M' + ROUTE_R.slice(1).map((p) => `${fmt(p.x)},${fmt(p.y)}`).join(' L')} />
       </g>
       {/* room labels */}
-      <Tag x={ROOM_A.x + 300} y={ROOM_A.y + 36} text="Sender A" size={30} k={st.roomTags} fill={K.senderA} color="#FFFFFF" />
-      <Tag x={ROOM_B.x + 300} y={ROOM_B.y + 36} text="Sender B" size={30} k={st.roomTags} fill={K.senderB} color="#FFFFFF" />
+      <Tag x={ROOM_A.x + 104} y={ROOM_A.y + 36} text="Sender A" size={30} k={st.roomTags} fill={K.senderA} color="#FFFFFF" />
+      <Tag x={ROOM_B.x + 104} y={ROOM_B.y + 36} text="Sender B" size={30} k={st.roomTags} fill={K.senderB} color="#FFFFFF" />
       <Tag x={ROOM_R.x + 108} y={ROOM_R.y + 38} text="Receiver" size={30} k={st.roomTags} fill={K.receiver} color="#FFFFFF" />
       {st.hallTag.map((h, i) => <Tag key={i} x={960} y={112} text={h.text} size={h.text.length > 12 ? 28 : 38} k={h.k} />)}
       <Computer blink={st.compBlink} part="back" />

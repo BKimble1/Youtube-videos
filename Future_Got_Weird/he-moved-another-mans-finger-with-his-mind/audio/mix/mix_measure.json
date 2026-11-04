@@ -1,18 +1,30 @@
 {
- "integrated_lufs": -14.23,
+ "integrated_lufs": -14.24,
  "true_peak_dbtp": -1.48,
  "duration_s": 211.7667,
  "music_to_voice_rms_db_during_speech": -18.2,
  "score_rms_dbfs_in_missing_click_gap": -240.0,
  "sfx_cues_by_kind": {
-  "key_click": 2,
-  "cannon": 2,
-  "boom": 2,
-  "plane_pass": 1,
-  "rocket_launch": 1,
-  "whoosh": 2,
-  "pop": 1,
-  "tick": 1
+  "key_click": 5,
+  "cannon": 10,
+  "boom": 12,
+  "plane_pass": 5,
+  "rocket_launch": 6,
+  "whoosh": 30,
+  "pop": 33,
+  "tick": 38,
+  "packet_send": 2,
+  "packet_arrive": 3,
+  "coil_pulse": 8,
+  "spinner": 1,
+  "error": 1,
+  "pad_click": 1,
+  "flip": 2,
+  "city_hit": 5,
+  "rotate": 4,
+  "vote": 6,
+  "flash": 5,
+  "line_clear": 2
  },
- "limiter_min_gain_db": -2.5
+ "limiter_min_gain_db": -2.85
 }

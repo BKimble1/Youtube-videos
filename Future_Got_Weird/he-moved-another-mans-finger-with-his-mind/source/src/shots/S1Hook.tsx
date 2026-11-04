@@ -128,7 +128,8 @@ export const campusCam = (p: number) => {
   const gap0 = 12 / z0;
   const together = (WIN_B.x - WIN_A.x - WW - gap0) / 2;
   const sep = 1 - smooth(clamp((p - 0.18) / 0.82));
-  const z = z0 * Math.pow(1.02 / z0, easeInOut(p));
+  // overfill the frame by 3.5 % at p = 0 so no building edge shows around the two windows
+  const z = z0 * 1.035 * Math.pow(1.02 / (z0 * 1.035), easeInOut(p));
   const cx0 = (WIN_A.x + together + WW + WIN_B.x - together) / 2;
   const cy0 = WIN_A.y + WH / 2;
   const k = easeInOut(clamp((p - 0.05) / 0.95));
