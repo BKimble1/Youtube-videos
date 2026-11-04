@@ -1,0 +1,22 @@
+{
+ "provider": "ElevenLabs (authorized workspace connection, restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "verified": "creative_list_voices search 'Test Voice' on 4 Nov 2026 returned this id (category generated, 'Test Voice For Youtube.')"},
+ "model_id": "eleven_v4 (no speed parameter in this connector; pace directed with an inline tag)",
+ "flow_id": "Dwt27rdqg8BzXSZnydgE",
+ "script": "production/NARRATION_LOCKED.txt (550 words, approved by Blake on 4 Nov 2026), verbatim, in seven generation blocks (tools/script.py)",
+ "direction_tag": "[slow, unhurried storytelling pace, curious and warm, a real pause after every sentence] (B4 adds 'dry amused tone'). Not spoken in the delivered audio; see the trims below.",
+ "pace_test": "Hook with '[curious, conversational, relaxed pace]' ran ~215 wpm (b1_t1/b1_t2); the slower tag gave 163-202 wpm. Body blocks 155-177 wpm.",
+ "selection": "By measurement only (no playback here): PocketSphinx screen vs block text (qa/take_screen_sphinx.json), pace, and checks of each take's opening (spoken tags, false starts). Nobody has listened to the takes.",
+ "selected": {
+  "B1": {"take": "b1s_t2_LRao.mp3", "generation_id": "LRaosm5mXLh3LZCoVY5Z", "note": "false start ('He moved someone else's finger') before a clean read; in-point 2.80 s in the silence before the restart"},
+  "B2": {"take": "b2_t2_GmFn.mp3", "generation_id": "GmFnxI7aZjLCInaWHviH"},
+  "B3": {"take": "b3_t3_NwVB.mp3", "generation_id": "NwVBryQSiZXkfAqHuBFQ"},
+  "B4": {"take": "b4_t1_IUjH.mp3", "generation_id": "IUjHlziZeHQo6OaeVpaz"},
+  "B5": {"take": "b5_t3_RLVf.mp3", "generation_id": "RLVfy8dGFlNvPGxKFAMD", "note": "the take opens by speaking part of the direction tag ('a real pause after every sentence'); in-point 3.20 s in the silence after it"},
+  "B6": {"take": "b6_t1_xJmF.mp3", "generation_id": "xJmFothFbMtIqRwwfvkf", "note": "every B6 take reads its first sentence twice; in-point 5.05 s in the silence before the second (clean) read"},
+  "B7": {"take": "b7_t3_Au7S.mp3", "generation_id": "Au7Sb0Q1lCubwrWZRx33"}
+ },
+ "rejected": {"b4_t3_Jr6M.mp3": "sphinx WER 0.46 with 36 words for 26 (an unexplained extra passage)", "b3_t2_cSwg.mp3": "repeats 'Watch what happens on a rocket'", "b5_t1_abG7.mp3": "repeats 'a year later'", "b5_t2_L2Fa.mp3": "speaks the tag"},
+ "word_timing": "PocketSphinx forced alignment against the locked words from each in-point (tools/align.py); median +50 ms vs measured waveform onsets after pauses (Scribe +170 ms). Onsets after pauses are snapped to the waveform (tools/make_narration.py).",
+ "assembly": "tools/make_narration.py: no time-stretch or pitch change; 0.30 s lead; block gaps 0.95/0.90/1.30/1.25/1.40/0.95 s; 3.20 s tail; 23 planned pauses inserted at the quietest point between two sentences (every cut point below -60 dB), including 0.35 s + 0.70 s around 'Fire.', 1.70 s for the missing click, 0.35 s before 'Bad connection.' and 0.55/0.60/0.65 s between the final sentences."
+}

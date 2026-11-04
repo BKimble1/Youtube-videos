@@ -1,0 +1,37 @@
+{
+ "1": {
+  "median_abs_ms": 105,
+  "max_abs_ms": 295,
+  "worst": "mind."
+ },
+ "2": {
+  "median_abs_ms": 96,
+  "max_abs_ms": 653,
+  "worst": "desk."
+ },
+ "3": {
+  "median_abs_ms": 101,
+  "max_abs_ms": 648,
+  "worst": "pulse."
+ },
+ "4": {
+  "median_abs_ms": 95,
+  "max_abs_ms": 520,
+  "worst": "problems."
+ },
+ "5": {
+  "median_abs_ms": 75,
+  "max_abs_ms": 475,
+  "worst": "four."
+ },
+ "6": {
+  "median_abs_ms": 120,
+  "max_abs_ms": 1910,
+  "worst": "Then"
+ },
+ "7": {
+  "median_abs_ms": 90,
+  "max_abs_ms": 463,
+  "worst": "Here\u2019s"
+ }
+}

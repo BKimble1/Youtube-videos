@@ -1,0 +1,25 @@
+He moved someone else’s finger with his mind. Watch the hand on the left. That’s the guy playing. The finger on the right just fired his cannon. It belongs to a man across campus who can’t even see the game.
+
+In 2013, two researchers at the University of Washington split one video game between two buildings. Rajesh Rao got the screen. Andrea Stocco got the space bar. Together, they had the equipment you normally get by sitting down at a desk.
+
+Rao’s job was to defend a little city. A supply plane flies over? Let it through. A pirate ship launches a rocket? Shoot it down. Easy enough, except the only person who could see the difference had no way to press fire himself.
+
+Watch what happens on a rocket. Rao imagines moving his right hand. His real hand stays put. But under that cap, the rhythm of his brain activity changes. A computer is watching for that change. On his screen, a little cursor climbs. When it hits the target, the computer sends one command over the internet. Fire.
+
+Across campus, a magnetic coil sits over the part of Stocco’s brain that helps move his right hand. The command triggers a pulse. His hand jerks up, comes down on the space bar, and the cannon shoots. The rocket disappears on Rao’s screen. Stocco described the feeling as something like a nervous tic. Imagine being the controller and missing the entire game.
+
+There’s a detail I love in their pilot report. Their first session ended early because of network problems. Two human brains, ready to go. Bad connection.
+
+A year later, the team tried it with three pairs of volunteers. This time the receiver’s hand rested over a touchpad. In some rounds, the researchers quietly flipped the coil over. Same game. Same pulse strength. Even the participants couldn’t tell which way the coil was facing.
+
+With the coil in position, one pair hit about five out of six rockets. Another hit only one in four. With the coil flipped? Across all three pairs, nobody pressed the touchpad once. Every rocket got through.
+
+Then the researchers gave the person on the receiving end a much better job.
+
+In a 2019 study, three people played a falling-block game from three separate rooms. Two players could see the gap at the bottom. The third could see the block and had to decide whether to rotate it. From that seat, either answer looked reasonable.
+
+Each teammate sent a vote. This time the coil was at the back of the receiver’s head, over the part of the brain involved in vision. A little flash in their vision meant “rotate.” No flash meant “leave it.” They got one vote from each teammate, chose what to do, then got a fresh round of votes and a chance to change their answer.
+
+Here’s where I’d start having trust issues. On ten of the sixteen trials, the computer flipped one teammate’s advice. Over time, receivers learned whose signal to trust. Across five teams, they cleared the line about thirteen times out of sixteen.
+
+Go back to that finger. In the first game, the pulse helped decide when somebody else’s hand moved. Six years later, a pulse could give you advice. And you could decide the other guy was wrong.

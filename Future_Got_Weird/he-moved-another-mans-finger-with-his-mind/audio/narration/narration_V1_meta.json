@@ -1,0 +1,220 @@
+{
+ "file": "audio/narration/FGW_Finger_narration_V1.wav",
+ "sha256": "4d9f9106a4dea48cbe2592e54ed00c1eb8086c6d0955a31d34052af99f41c627",
+ "duration_s": 211.7667,
+ "frames_30fps": 6353,
+ "speech_s": [
+  0.41,
+  208.42
+ ],
+ "words": 550,
+ "lead_s": 0.3,
+ "gaps_s": [
+  0.95,
+  0.9,
+  1.3,
+  1.25,
+  1.4,
+  0.95
+ ],
+ "tail_s": 3.2,
+ "inserted_pauses": [
+  {
+   "block": 1,
+   "after": "screen.",
+   "seconds": 0.3,
+   "at_src_s": 8.76
+  },
+  {
+   "block": 1,
+   "after": "bar.",
+   "seconds": 0.35,
+   "at_src_s": 10.98
+  },
+  {
+   "block": 1,
+   "after": "desk.",
+   "seconds": 0.5,
+   "at_src_s": 15.18
+  },
+  {
+   "block": 1,
+   "after": "through.",
+   "seconds": 0.6,
+   "at_src_s": 20.11
+  },
+  {
+   "block": 1,
+   "after": "down.",
+   "seconds": 0.5,
+   "at_src_s": 23.42
+  },
+  {
+   "block": 2,
+   "after": "climbs.",
+   "seconds": 0.3,
+   "at_src_s": 15.73
+  },
+  {
+   "block": 2,
+   "after": "internet.",
+   "seconds": 0.35,
+   "at_src_s": 19.5
+  },
+  {
+   "block": 2,
+   "after": "Fire.",
+   "seconds": 0.7,
+   "at_src_s": 20.7
+  },
+  {
+   "block": 2,
+   "after": "shoots.",
+   "seconds": 0.4,
+   "at_src_s": 32.77
+  },
+  {
+   "block": 2,
+   "after": "tic.",
+   "seconds": 0.3,
+   "at_src_s": 39.1
+  },
+  {
+   "block": 3,
+   "after": "go.",
+   "seconds": 0.35,
+   "at_src_s": 9.25
+  },
+  {
+   "block": 4,
+   "after": "touchpad.",
+   "seconds": 0.4,
+   "at_src_s": 10.34
+  },
+  {
+   "block": 4,
+   "after": "facing.",
+   "seconds": 0.6,
+   "at_src_s": 19.9
+  },
+  {
+   "block": 4,
+   "after": "four.",
+   "seconds": 0.5,
+   "at_src_s": 26.05
+  },
+  {
+   "block": 4,
+   "after": "flipped?",
+   "seconds": 1.7,
+   "at_src_s": 27.42
+  },
+  {
+   "block": 5,
+   "after": "reasonable.",
+   "seconds": 0.5,
+   "at_src_s": 25.34
+  },
+  {
+   "block": 5,
+   "after": "vote.",
+   "seconds": 0.35,
+   "at_src_s": 27.35
+  },
+  {
+   "block": 5,
+   "after": "it.\u201d",
+   "seconds": 0.45,
+   "at_src_s": 39.11
+  },
+  {
+   "block": 6,
+   "after": "issues.",
+   "seconds": 0.35,
+   "at_src_s": 3.02
+  },
+  {
+   "block": 6,
+   "after": "sixteen.",
+   "seconds": 0.6,
+   "at_src_s": 15.98
+  },
+  {
+   "block": 6,
+   "after": "finger.",
+   "seconds": 0.55,
+   "at_src_s": 17.23
+  },
+  {
+   "block": 6,
+   "after": "moved.",
+   "seconds": 0.6,
+   "at_src_s": 21.38
+  },
+  {
+   "block": 6,
+   "after": "advice.",
+   "seconds": 0.65,
+   "at_src_s": 24.34
+  }
+ ],
+ "blocks": [
+  {
+   "block": 0,
+   "take": "audio/narration/takes/b1s_t2_LRao.mp3",
+   "generation_id": "LRaosm5mXLh3LZCoVY5Z",
+   "src_in": 2.8,
+   "src_out": 14.64,
+   "start": 0.3
+  },
+  {
+   "block": 1,
+   "take": "audio/narration/takes/b2_t2_GmFn.mp3",
+   "generation_id": "GmFnxI7aZjLCInaWHviH",
+   "src_in": 0.11,
+   "src_out": 28.88,
+   "start": 13.09
+  },
+  {
+   "block": 2,
+   "take": "audio/narration/takes/b3_t3_NwVB.mp3",
+   "generation_id": "NwVBryQSiZXkfAqHuBFQ",
+   "src_in": 0.1,
+   "src_out": 42.24,
+   "start": 45.01
+  },
+  {
+   "block": 3,
+   "take": "audio/narration/takes/b4_t1_IUjH.mp3",
+   "generation_id": "IUjHlziZeHQo6OaeVpaz",
+   "src_in": 0.0,
+   "src_out": 10.16,
+   "start": 90.5
+  },
+  {
+   "block": 4,
+   "take": "audio/narration/takes/b5_t3_RLVf.mp3",
+   "generation_id": "RLVfy8dGFlNvPGxKFAMD",
+   "src_in": 3.2,
+   "src_out": 32.56,
+   "start": 102.26
+  },
+  {
+   "block": 5,
+   "take": "audio/narration/takes/b6_t1_xJmF.mp3",
+   "generation_id": "xJmFothFbMtIqRwwfvkf",
+   "src_in": 5.05,
+   "src_out": 45.9,
+   "start": 136.22
+  },
+  {
+   "block": 6,
+   "take": "audio/narration/takes/b7_t3_Au7S.mp3",
+   "generation_id": "Au7Sb0Q1lCubwrWZRx33",
+   "src_in": 0.0,
+   "src_out": 26.48,
+   "start": 179.32
+  }
+ ],
+ "wpm_over_speech_span": 158.6
+}
