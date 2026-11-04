@@ -95,17 +95,31 @@ Every confirmed finding was fixed before the next render.
 | 5 | 7 of 7: a pop at S10 → S11; the tail across the predator's face; the head beat did not land; frame one did not say "tail"; the exit route jumped; a cut-end at the slit; beaded fins | S10/S11 made one take; the caught head shaded and straining; the camera pushes in for the pull; the opening tail redrawn |
 | 6 | 5 of 7: a 90° elbow where the eel leaves the slit; the exit point jumped between S7, S8 and S9; the head looked "already out" and its release took 3 frames; the swim crossed the face; a fin strip forked over the cover in S1; the tail swelled through the S5 → S6 dissolve | A rounded bend at the gill edge, drawn in one layer; S8 lowered; the head slides out over about 12 frames, clearing on "pull"; a cut to the overhead view (no swing past the face); an even fin edge; S5/S6 redrawn (builder G) |
 | 7 | 3 of 4: S8 turned S7's arch into an L; the caught head was a 5 px dot during the curl; the eye vanished behind the cover and popped back during the release | S8 opens on S7's arch; the head is seen sliding out; a larger eye in the slit; a closer curl; about 10 frames on the freed head |
-| 8 | (final round: below) | |
+| 8 (final) | 4 of 5 majors confirmed. In S10 the curl and the release sit in the bottom quarter of the frame (where the Shorts title overlay goes), the top half empty, the loop clipped at the right edge. The beat on the freed head is scrambled by the tail whipping round and the camera moving (f629–638). The tail folds into a hairpin just after the S11 cut (f639–647). The "head comes out last" line has no visible event (one of two verifiers refuted this). | Not changed in this cut. See "Known limits". |
 
 **The four questions, as the fresh viewer answered them:**
 
-| | Round 4 | Round 5 | Round 6 | Round 7 |
-|---|---|---|---|---|
-| 1. The tail in frame one | Partly (a separate animal, not a fin) | Partly | Partly | Mostly yes: not a fin, "the tail end of something long and thin"; that it is an eel comes from the caption |
-| 2. Out of the stomach | Mostly yes | Yes | Yes | Yes, continuous on screen from the X-ray to the gills |
-| 3. Where it exits | Yes, once the eye enters | Partly (the opening read as a solid crescent) | Yes | Yes, from the picture alone |
-| 4. The head comes free | No | Only if you watch closely | Only just | Only just (too quick, and the eye vanished): fixed for round 8 |
+| | Round 4 | Round 5 | Round 6 | Round 7 | Round 8 (this cut) |
+|---|---|---|---|---|---|
+| 1. The tail in frame one | Partly (a separate animal, not a fin) | Partly | Partly | Mostly yes | Mostly yes. "A tail, not a fin" holds from the picture alone: a tapering end with no head, moving on its own. That it is an EEL, and that it was swallowed, come from the caption. |
+| 2. Out of the stomach | Mostly yes | Yes | Yes | Yes | Yes, "the strongest part". Head and tail read apart from the X-ray on; the tail leaves the stomach while the head stays in the coil. |
+| 3. Where it exits | Yes, once the eye enters | Partly (the opening read as a solid crescent) | Yes | Yes, from the picture alone | Partly, after a beat. The opening reads as "a way out to open water" (that the arches are gills comes from the caption). Outside, the first 0.3 s is a small tip on a brown surface before the eye enters. |
+| 4. The head comes free | No | Only if you watch closely | Only just | Only just | Only just. The eye now stays in view as the head slides out and it clears once on "pull", but the release is quick, low in the frame and soon cut away. |
 
 ## Known limits
 
-(filled in)
+What a muted phone viewer can still trip on in this cut (from the round-8 review), most important first. The first five are the next pass.
+
+1. **The release sits low in the frame (S10, f540–638).** The curl and the head coming free sit at about 72–80 % of the frame height. On a phone that is where the Shorts title and channel row go, and the right side of the loop runs under the action buttons. The top half of the frame is empty water. The framing was kept low so that the rising tail stays under the captions in the top band; the fix is to reframe S10 (higher in the frame, with the captions still clear).
+2. **The beat on the freed head is busy (f629–638).** The head is free for about 9 frames before the cut. In that time the tail whips round through the loop, the camera eases down, and by f638 the head reaches the left edge (its eye half cut, touching the predator's eye at the frame edge for one frame). The release itself now reads: the eye stays in view as the head slides out, and it clears once on "pull".
+3. **"Its head comes out last" (S9) shows no movement.** Per the brief, the eye sits just inside the opening on that line and the head clears only on "one final pull". A first-time viewer read the still head in the slit as already out, though one of two verifiers refuted this.
+4. **The bend where the eel leaves the slit (S8, S9).** The outer edge is rounded, but the inner corner still makes a sharp notch, and in S8 small drawing errors show at the bend: boxes, a stray line, red wedges (f436–477). S8 now opens on S7's arch, but the bend flattens into a "7" shape as the shot goes on.
+5. **The first frames of the swim (S11, f639–647).** The tail end, still unrolling, folds into a hairpin before the eel straightens into its strokes.
+6. **The poke outside (S7, f381–393).** The tip is small at phone size and the predator's eye only enters at about 13.05 s. The match-cut contract fixes the framing at the cut. The tip changes look across the cut (dark and pointed inside, lighter and blunt outside).
+7. **Caption-carried facts.** The gills, the throat, "scientists", and that the grey strand in the flashback is the same eel are named by the narration, not by the pictures. The route itself (out of the stomach, up the passage, through the arches, out of the side) reads without captions.
+8. **Small items.**
+   - The predator's eye is cut by the left frame edge in S9.
+   - The tail end swings into the last frames of S9 from the bottom edge.
+   - The eel's contact shadow shows as beads in S9 and S10.
+   - The X-ray-to-stomach dissolve is short (2 frames).
+   - Some bokeh discs pop in S11.

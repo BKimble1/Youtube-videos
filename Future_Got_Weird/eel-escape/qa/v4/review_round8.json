@@ -1,0 +1,594 @@
+{
+ "regress": [
+  {
+   "group": "exit-and-route",
+   "checks": [
+    {
+     "item": "1. S6->S7 match cut (f380->f381) and S7 (f381-415): same tip, same place and direction, breaking out of the gill edge with a bubble puff, then rising out of the slit in a smooth arch",
+     "status": "partly",
+     "evidence": "Position holds. In full res the S6 tip at f380 is at about (567,997), and the top of the S7 tail at f381 is at about (575,994). On the phone sheet both sit at about the same spot in the tile (about x170, y325), so the cut reads as continuous. The bubble puff is there: two bubbles at f381, a cluster of 4-6 at f384-f397, gone by about f410. By f408-f415 the tail is a clean, smooth arch over the flank. What does not match is the shape and direction of the tip. At f380 it is a tapered, pointed dark-navy tip with a pale rim, travelling diagonally up-right at about 15-20 degrees. At f381 it is a lighter slate-blue piece with a dark outline, running straight up the slit and ending in a blunt, squared-off cap bent right and slightly down, like a bent pipe end. So the direction of travel changes from diagonal to vertical across the cut. From f381 to f404 the tail is a tight cane or inverted-J hook, not an arch. On the phone tiles f387-f402 it reads as a small '?'. The arch only shows from about f408. The tip pokes out over tan flank, not against open water."
+    },
+    {
+     "item": "2. S7->S8 cut (f415->f416) and S8 (f416-477): arch continues, no sharp L or V at the slit exit, no short stub at the cut, no dark-red wedge on the bend (f436-468)",
+     "status": "not fixed",
+     "evidence": "At the cut, f415 shows a tall arch rising well above the slit exit and reaching far right. f416 shows a much lower, flatter hook. The rise is about 70 px against about 120 px in f415, which is more than the about 0.83x camera change explains (eye about 145 px wide in f415, about 120 px in f416). The blue area of the eel drops from about 6,350 px to about 2,450 px across the cut. So a shorter stub replaces the arch. Through S8 the exit turns into a corner: a boomerang or V at f428, and a near right-angle '\u0393' at f436-f447. On the phone tiles f438-f447 it reads as a sharp '7'. Zoomed in, the bend has drawing glitches: an outlined rectangular box where the vertical and horizontal parts overlap (f440-f456); a stray thin line sticking up-left from the bend (f460); small brown rectangles (f460-f472); and dark-red triangle wedges sitting on the bend (f464, f468, f472). At f477 there is a diamond-shaped inner notch. On the phone tiles f459-f468 these show as a dark knot at the bend."
+    },
+    {
+     "item": "3. S9 (f479-538): smooth curve where the eel leaves the slit (no hard elbow, no inner notch, no dark facet); head reads as still INSIDE the opening, in shadow, eye just inside",
+     "status": "not fixed",
+     "evidence": "The outer corner is rounded, but the inner corner is a hard right-angle elbow in every S9 frame. At f479 the inner corner has a squared vertical step. At f486 and f500 it is a sharp pointed notch. At f520 and f536 an outlined dark pointed V wedge sits in the inner corner. On the phone tiles f489-f537 the eel reads as an inverted L ('\u0393'). A faint diagonal seam (the gill-cover edge) also crosses the body at the bend (f479, f500, f520). The head is not in shadow. Only at f479-f486 is its lower end somewhat darker. From about f495 it is bright, lit silver-blue with a crisp outline, drawn in front of the dark-red slit with red showing to its right and below. The eye is large and white-ringed with a highlight, and clearly visible on the phone tiles (f492-f537). With the caption 'Its HEAD comes out LAST', a muted viewer sees the head already poking out of the slit, not hidden just inside it."
+    }
+   ],
+   "newProblems": [
+    {
+     "shot": "S9",
+     "frames": "f533-538 (phone tiles f534, f537)",
+     "severity": "minor",
+     "claim": "The eel's tail end swings in from the bottom-right edge, in front of the predator's pectoral fin. It shows up as a second thin blue eel, with no visible link to the body running off the top-right. On a phone it reads as a second eel or snake entering the shot just before the cut to S10.",
+     "fix": "Start the tail curl-in after the S10 cut. Or keep it off-frame in S9. Or frame S9 so the loop of body linking the two visible parts is on screen."
+    },
+    {
+     "shot": "S7",
+     "frames": "f406-415",
+     "severity": "minor",
+     "claim": "There is a squared step on the right outline of the tail where the outside arch meets the part lying in the slit (at about y 1140 full res). The outside part is slightly wider, with a flat bottom edge, so the arch looks pasted onto the in-slit body.",
+     "fix": "Taper or blend the outside segment into the in-slit segment so the outline stays continuous and the same width where the tail leaves the slit."
+    },
+    {
+     "shot": "S7",
+     "frames": "f381-404",
+     "severity": "minor",
+     "claim": "The tail end is a blunt, squared-off cap: a flat end with a corner, bent right and down. It is not the tapered, pointed eel tail seen in S6 and in the later arch. It also changes from dark navy with a pale rim (S6) to light slate-blue with a dark outline (S7) across the match cut.",
+     "fix": "Use the same tapered tail tip and a similar colour and rim treatment on both sides of the f380/f381 match cut."
+    }
+   ]
+  },
+  {
+   "group": "head-and-release",
+   "checks": [
+    {
+     "item": "1. S10 curl (f540-620): caught head and eye read at phone size at the slit; head vs thin raised tail stays clear",
+     "status": "partly",
+     "evidence": "Mostly fixed. At 1/3 (phone) scale the eye is a clear white-ringed dot of about 13-16 px (about 45 px full-res) at the slit in f540-543 and in every frame f553-620 I checked (f564-609 every 3rd). The head points down into the slit and the tapered tail rises separately as the '6', so the two ends read apart. The exception is f544-552: the thin tail tip slides up straight across the front of the caught head. The eye is half covered at f547 and f550-552 and fully hidden at f548-549 (only a white arc shows). For those 4-5 frames the tail tip also pokes above the head as a second prong at the slit. In f544-546 the tail tip is drawn as a frayed, fading 'broom' of 3-4 strands where it crosses the gill-cover edge, which shows as a small fan of strokes even at phone size. From f553 on the tail clears the head and everything reads cleanly."
+    },
+    {
+     "item": "2. S10 release (f612-640): eye stays visible while the head slides out, head comes free once around f628-630, about 10 frames on the freed head before the cut at f639",
+     "status": "fixed",
+     "evidence": "Checked every frame f612-638. The eye is fully visible f612-619. From f620 to f626 the tan gill-cover edge crosses part of the eye: a crescent or ring at f621-623, a strip through the middle at f624-625, the lower part at f626. It is never fully hidden, and it is whole again from f627. Its size grows smoothly with no jump: about 44 px full-res at f612, about 50 at f626, about 56-60 at f629-631. The chin clears the cover at f629, the head is fully free at f630 and moves left without going back in, so it comes free once, under the 'gives one FINAL PULL' caption (f600-636). The freed head is on screen f630-638 (9 frames). Small caveat: the head drifts to the left edge, and at f638, the last frame before the cut, the frame edge cuts the eye in half, so there are about 8 clean frames."
+    },
+    {
+     "item": "3. S10 (f585-630): fin fringe along the raised tail is an even edge",
+     "status": "fixed",
+     "evidence": "Checked f585, 588, 591, 597, 600, 603, 606, 609, 612, 615, 618, 621, 624, 627, 630 at 0.7-1.5x full-res. The fringe is an even band of constant width with fine hatched rays along both sides of the tail, all the way to a smooth rounded tip (f585, f591, f597, f603, f609). I saw no beads, lobes or segment joins, including where the tail passes behind the loop (f600, f606) and along the doubled strands above the loop (f618-633). It also stays even on the short raised stub at f636-637."
+    },
+    {
+     "item": "4. S10->S11 cut (f638->f639) and S11 (f639-735): clean cut, eel never lies across predator face or eye, swims away into clear water, no reed clump fades or ghosts",
+     "status": "fixed",
+     "evidence": "The cut is a clean single-frame hard cut. Mean frame difference is 42-65 at f638->f639, against 6-12 for the frames on either side, and f639 shows no trace of f638. The eel's head touches the predator's lower cheek or throat under the gill line only in f639-641 (3 frames: overlapping at f639, on the jaw edge at f640, just touching at f641). It never reaches the eye. From f642 to f735 it stays clearly below and left of the predator. It swims to the lower left across open sand while the predator head moves up to the right edge and is cropped there (f699-729). Reed clumps and rocks enter from the left edge and scroll across with the pan (tall reeds f658-662; rock and sprig f680-702), staying fully opaque. I found no clump fading or ghosting in the middle of the frame. The reed wipe to S12 starts at about f731."
+    }
+   ],
+   "newProblems": [
+    {
+     "shot": "S11",
+     "frames": "f639-647",
+     "severity": "major",
+     "claim": "In the first beat after the cut the eel's tail is folded into a hard-cornered hairpin with a visible crease line at the fold: a V-fold at f639-641, an L-shape at f643, an acute fold at f645 and a hooked tip at f647. It looks like bent wire or a paperclip, not a flexing eel, and the sharp L is plain at phone size (f642-645).",
+     "fix": "Limit how much the S11 spine can bend per segment, or start the S11 pose from a smooth S or C curve, so the tail sweeps out of the S10 loop shape with no corner and no crease stroke."
+    },
+    {
+     "shot": "S10",
+     "frames": "f544-552",
+     "severity": "minor",
+     "claim": "As the tail tip slides up past the caught head, it is drawn frayed and soft-faded where it crosses the gill-cover edge, like 3-4 separate strands or a broom (f544-546). It then covers the eel's eye (fully at f548-549), so for about 0.15 s there are two prongs at the slit and no eye.",
+     "fix": "Route the tail tip around the head (outside or behind it) instead of across the front of the eye, and mask the tip against the cover with a hard edge instead of a feathered fade."
+    },
+    {
+     "shot": "S10",
+     "frames": "f615-620",
+     "severity": "minor",
+     "claim": "Where the eel's snout and neck cross the gill-cover edge as the head starts to slide out, the eel is faded with a soft brownish gradient instead of being cleanly hidden. At phone size this shows as a small pointed beak or hook on the snout (f617-619).",
+     "fix": "Use a hard occlusion mask at the cover edge (or a cover lip drawn on top) for these frames."
+    },
+    {
+     "shot": "S11",
+     "frames": "f654-658, f684, f707-709, f720-723",
+     "severity": "minor",
+     "claim": "Large soft white bokeh discs (about 100 px full-res, about 30 px on phone) pop in for 1-2 frames and jump position. At f684 one sits right next to the eel, and at f708 one crosses the eel's body. They read as flickering smudges or ghosts, not drifting particles.",
+     "fix": "Slow the near-camera motes so each one drifts across over many frames, cap their size or opacity, or drop the biggest ones and keep them off the eel's path."
+    }
+   ]
+  }
+ ],
+ "naive": {
+  "q1": "SHOT-BY-SHOT, read from the pictures only (no captions):\nS1 f000-f078: Side close-up of a brown fish's head. A blue-grey, glossy strap with a thin fin fringe comes out of the top of the red gill slit, hangs down across the orange pectoral fin and tapers to a point. It whips left at f006-f012, settles, and the camera pushes in slowly (f063-f078).\nS2 f081-f114: Desaturated \"earlier\" shot. Extreme close-up of a gaping mouth with a grey strand hanging out that gets slurped in (f084-f090). The mouth shuts (f096) and the camera pulls back to the fish resting.\nS3 f117-f171: Lab tank. A scanner bar sweeps over the fish and turns it into an X-ray. A glowing eel lies coiled in its belly: the head (with eye) points toward the fish's tail, and the thin tail rises toward the fish's head. Camera pushes in.\nS4 f174-f267: Dissolve to a pink stomach. The blue eel is coiled with its head in the middle of the coil. The tail tip reaches a star-shaped pucker, enters it (f240-f246), the pucker opens (f249), the camera dives in, and the frame goes nearly black (f264-f267).\nS5 f270-f309: Ribbed pink tunnel with a blue tapered spike pushing toward the vanishing point.\nS6 f312-f378: Red comb-like arches with a bright crescent \"window\" to water and plants. The tip threads between the arches up to the window (flash at f375).\nS7 f381-f414: Outside, tight on the fish's side. A tiny blue tip and a bubble appear at the top of the gill slit. The camera pulls back, the eye enters, and the tip grows and bends backward along the flank.\nS8 f417-f477: Wide profile. A blue line grows rearward along the upper flank from the top of the slit.\nS9 f479-f538: Close-up. A thick blue body lies along the flank. On the cut, a head with an eye is suddenly visible, tucked into the slit, and it does not move. The thin end slides in from the bottom right at f534.\nS10 f539-f636: Tighter framing with lots of empty water. The body is a big loop over the fish. The thin end swings past the slit (f540-f546), then rises through the loop into a \"6\" shape. The head pops up and free of the slit at f627-f636.\nS11 f639-f732: Wide seabed. The eel slips away from the fish's head toward the lower left; the fish stays put.\nS12 f735-f741: A foreground plant wipes back to the S1 hook (loop point).\n\nQ1, the tail in frame one: mostly yes. At f000 the strap's colour and texture (blue-grey, glossy, fin fringe) are clearly not the fish's own (brown and orange spotted), so it does not read as a fin. It tapers to a point with no head visible, and it moves on its own at f006-f012, so \"the tail end of some long animal hanging out of the gill\" comes across without words. What only the caption supplies is the word EEL (from pictures alone it could be a worm, a parasite or a sea snake) and the fact that the fish swallowed it.\nTwo picture problems:\n(a) The tapering tip, which is the main cue that this is a tail, sits at roughly x 900-960, y 1550-1870 of 1920. That is inside the bottom ~20% where the Shorts title and channel row sit, and against the right-hand action-button column (also true at f009 and f030). On a real phone the \"tail\" cue is likely to be covered.\n(b) This pose (out of the top of the slit, hanging down over the pectoral fin) never happens in the story. At f381-f477 the tail comes out of the top of the slit and lies backward along the upper flank.\nDepends on caption: only for \"eel\" and \"swallowed\". \"A tail, not a fin\" holds up from the picture alone.",
+  "q2": "Yes. This is the strongest part.\n- f165 (X-ray): you can tell head from tail. The eye is on the right-pointing end; the thin tail curls up and to the left, toward the fish's head.\n- f189-f231 (stomach): the same layout in colour. Head with eye in the centre of the coil, thin tail reaching up-left.\n- f225-f246: the tail tip clearly hooks into the star-shaped pucker. You can see it is the tail (not the head) leaving, because the head with its eye stays visible in the coil until f252-f255.\n- f249-f261: the pucker opens and the camera dives after the tail.\n- f270-f309: the same blue tapered tip runs up the ribbed tunnel. Colour and taper keep the identity, so you don't lose the eel.\nSmall wobbles:\n- f174-f186 (dissolve): a ghost X-ray eel at lower left (its head around (700,1440)) overlaps a coloured coil at the right edge whose head is off-frame until about f189, so it briefly looks like two eels.\n- f264-f267 is nearly black for about 0.2 s.\nDepends on caption: following the path does not. Knowing that the pucker and tunnel are the \"throat\", rather than just a hole and a tube, does.",
+  "q3": "Partly, and only after a beat.\nInside (f315-f378): the tip threads between red comb-like arches toward a bright crescent opening with water and plants beyond. That clearly reads as \"a way out to the open water\", but a first-time viewer will not know the arches are gills. They read as ribs or combs, so \"a gap in the gills\" depends on the caption.\nOutside (f381): it cuts to a tight shot of a brown surface with a dark red slit. Neither the fish's eye nor its head is in frame until about f390-f393, and the tail tip is a small blue hook (roughly 40x50 px on a 1080-wide frame, about 4% of width) at the top of the slit, plus one bubble. On a phone the first ~0.3 s is \"what am I looking at?\". It resolves as the camera pulls back (f396-f429) and the eye appears. From then on the exit point is clear without words: the top of the gill slit, just behind the eye, on the side of the head (wide shot f417-f477).\nOne snag: the tail then lies backward along the upper flank, which does not match the frame-one pose of hanging down over the pectoral fin. If you remember the hook, the geometry doesn't add up.\nDepends on caption: the location is readable from the pictures; the anatomy name (\"gills\") needs the caption.",
+  "q4": "Only just, and the timing is off.\nOn the cut at f479 (16.0 s) a head with an eye suddenly appears at the gill slit, tucked under the edge of the gill cover. It then sits essentially still for about 4.7 s (f479-f618) while the body loops. From the pictures alone it looks as if the head is already out: the eye is on the outside and visible throughout. So no \"head comes out\" event happens at the narration line (caption \"Its HEAD comes out LAST\" runs f480-f537), and with captions the line points at a head that isn't moving.\nThe actual release is f627-f636: the head lifts off the slit, and at f636 the slit is empty below it. That is about 0.3 s, under the caption \"gives one final pull\", and it cuts away to the wide shot only 3 frames later at f639.\nIt also happens low in the frame. The head is at roughly y 1420-1500 of 1920 (74-78%), right at the top of the Shorts title overlay band, with the slit itself inside the band, while the top ~55% of the frame is empty water. The right side of the loop also runs under the action-button column.\nA viewer can catch it as \"the eel snaps free\" if they're looking, but it's brief and low, and it doesn't line up with the \"head last\" line.\nDepends on caption: yes. Without one, you see a head peeking out early and then a sudden snap. With one, the caption names the beat 4.5 s before it happens.",
+  "needsCaption": [
+   "f000-f047: that the blue strap is an EEL (could be a worm, parasite or sea snake) and that the fish swallowed it. The picture alone only says 'tail end of something long'.",
+   "f081-f114: that the grey strand slurped into the desaturated mouth is the same blue eel. It is grey, has no head showing and is a different colour from the hook.",
+   "f117-f171: 'Scientists filmed it on X-ray'. The scanner sweep reads as an X-ray scan, but 'scientists' and 'real footage' only come from the caption.",
+   "f270-f309: that the ribbed pink tunnel is the fish's throat.",
+   "f312-f378: that the red comb-like arches are gills ('slips through a gap in the gills'). Without the caption they read as ribs or combs.",
+   "f480-f537: 'Its head comes out last'. There is no visual event at this line; the head has been visible and still at the slit since the cut at f479, so the beat exists only in the caption.",
+   "f624-f636: 'final pull'. The snap is visible but lasts about 0.3 s; the caption is what tells you the head just came free."
+  ],
+  "findings": [
+   {
+    "shot": "S9-S10 head exit",
+    "frames": "f479-f618 (head visible and still), f627-f636 (real release), f639 (cut)",
+    "severity": "major",
+    "claim": "The 'head comes out last' beat has no visible event. The head with its eye appears at the slit on the cut at f479 and stays put for about 4.7 s, so from the pictures it looks already out. The real release happens 4.5 s later under 'final pull', lasts about 0.3 s and is cut away from 3 frames later.",
+    "fix": "Keep the head hidden under the gill cover (no eye showing) until the release, and stage the release during or right after 'Its head comes out last' (around f500-f540), or move the line to the release. Hold 0.5-1 s on the freed head before the f639 cut."
+   },
+   {
+    "shot": "S1 hook",
+    "frames": "f000, f009, f030 (whole S1 f000-f078)",
+    "severity": "major",
+    "claim": "The tail's tapering tip, the cue that makes it read as a tail and not just a blue strap, ends at roughly x 900-960, y 1550-1870 of 1920. That is inside the Shorts bottom title band and against the right action-button column, so on a phone the defining taper is likely covered.",
+    "fix": "Reframe or scale the hook so the whole tail, including the tip, sits above about y 1450 and left of about x 880, for example by pushing the fish up and left or shortening the hanging length."
+   },
+   {
+    "shot": "S10 curl/release",
+    "frames": "f539-f636 (esp. f621-f636)",
+    "severity": "major",
+    "claim": "The climax is composed in the bottom quarter. The head and slit sit at about 72-80% of frame height, inside or touching the Shorts title band, and the right side of the loop runs under the action-button column, while the top ~55% of the frame is empty water.",
+    "fix": "Raise the camera or shift the frame so the slit and head sit around 45-60% height, and keep the loop left of about x 880."
+   },
+   {
+    "shot": "S10 curl",
+    "frames": "f540-f546 (tail tip around (350,1370) next to eye at (415,1380) in f543)",
+    "severity": "minor",
+    "claim": "Right after the cut, the thin tail end swings round and lands beside the head at the gill slit. For a moment both ends are at the slit, which raises 'which end is which, is the tail going back in?'.",
+    "fix": "Route the tail's sweep below or away from the slit (keep the tip at least ~150 px from the head), or start the curl shot with the tail already rising."
+   },
+   {
+    "shot": "S9 to S10 cut",
+    "frames": "f538 to f539",
+    "severity": "minor",
+    "claim": "Continuity jump on the cut: the body goes from lying straight along the flank, tail just entering at the bottom, to a big loop arching above the fish's back.",
+    "fix": "Bridge it with a few frames of the body lifting off the flank before the cut, or cut on a matching pose."
+   },
+   {
+    "shot": "S7 exit close-up",
+    "frames": "f381-f390",
+    "severity": "minor",
+    "claim": "The exit shot opens on an unidentifiable brown surface with no eye or head in frame, and the emerging tip is tiny (about 40x50 px on 1080) and low-contrast blue on brown. On a phone the first ~0.3 s reads as 'what am I looking at?'.",
+    "fix": "Open with the fish's eye in frame (start the pull-back wider), and make the tip larger or brighter with a bigger bubble puff so the eye goes straight to it."
+   },
+   {
+    "shot": "S1 vs S7-S8",
+    "frames": "f000 vs f417-f477",
+    "severity": "minor",
+    "claim": "The hook pose (tail hanging down from the slit over the pectoral fin) never happens in the story. In the story the tail leaves the top of the slit and lies backward along the upper flank, so the hook image and the escape geometry don't match.",
+    "fix": "Either let the emerging tail droop down over the pectoral fin in S7-S8, or rebuild the hook from an actual story pose (around f450-f477, framed for the hook)."
+   },
+   {
+    "shot": "S2 flashback swallow",
+    "frames": "f081-f114",
+    "severity": "minor",
+    "claim": "The swallowed strand is grey with no head showing, so nothing visually links it to the blue eel. The extreme close-up with a giant eye at the top of frame (f081-f087) briefly reads as a different creature.",
+    "fix": "Keep a hint of the eel's blue in the desaturated grade (or tint only the eel), and start slightly wider so the fish's head reads before the mouth fills the frame."
+   },
+   {
+    "shot": "S4 X-ray to stomach dissolve",
+    "frames": "f174-f186",
+    "severity": "minor",
+    "claim": "During the dissolve the ghost X-ray eel (head around (700,1440)) and the coloured eel (coil at the right edge, head off-frame until about f189) don't line up, so for a moment there seem to be two eels.",
+    "fix": "Line up the coloured eel's position and pose with the X-ray eel through the dissolve, or keep the coloured head in frame from f174."
+   },
+   {
+    "shot": "S6 gills",
+    "frames": "f312-f378",
+    "severity": "minor",
+    "claim": "The gill arches read as red ribs or combs. 'Gills' only comes from the caption, and the tip creeps slowly for about 2.2 s with little change.",
+    "fix": "Show a hint of gill flaps opening and closing with the light, or tighten the shot by about 0.5 s."
+   },
+   {
+    "shot": "S8-S9 slit bend",
+    "frames": "f447, f462 (kink at about (310-380, 1080-1130)); f480 inner-bend notch",
+    "severity": "minor",
+    "claim": "Where the eel bends into the slit, its outline breaks into a small sharp arrowhead or notch, like a folded flap. At phone size it can read as an extra fin or the tail tip.",
+    "fix": "Smooth the bend geometry and outline join where the body crosses the gill cover edge."
+   },
+   {
+    "shot": "S11 swim-away",
+    "frames": "f690-f732",
+    "severity": "minor",
+    "claim": "The leading head of the departing eel travels into the bottom-left of the Shorts title band (about 80-86% height), so the 'swims away' face is partly covered.",
+    "fix": "Angle the swim path more leftward or upward so the head stays above about 75% height."
+   }
+  ]
+ },
+ "craft": {
+  "findings": [
+   {
+    "shot": "S10",
+    "frames": "f540-f612 (worst f543, f549, f600, f610)",
+    "severity": "major",
+    "claim": "The hero curl shot is bottom-heavy and clipped. The eel loop touches or runs off the right frame edge for most of the shot, and the predator's eye is cut by the left edge. All the action sits in the lower ~45% of the frame, and the top ~45% is empty water. On a phone the curl reads as a cropped ring rather than a full figure.",
+    "fix": "Reframe S10: pull back 12-15% and pan right about 120 px, so the loop's outer rim stays at least 60 px inside the right edge and the eye clears the left edge. Then tilt up so the eel occupies roughly y 650-1500 of 1920. That frees space and still keeps the top caption band (y<520) clear."
+   },
+   {
+    "shot": "S10 end into cut to S11",
+    "frames": "f629-f638 (cut f639)",
+    "severity": "major",
+    "claim": "The 'beat on the freed head' isn't a beat. Frame-to-frame motion peaks here (mean diff 8-12, against 2-7 earlier in the shot). The camera pushes and tilts while the tail whips about 850 px across the frame in 4 frames (f633-f637), threading through the loop. At f638 the head is half out of frame left just before the cut. The payoff gets scrambled.",
+    "fix": "Ease the camera to a stop by about f626 and hold. Move the tail swing earlier (finish it by f626), or stretch it over at least 10 frames. Keep the head at least 150 px inside the left edge through f638, so f629-f638 is a near-still hold on the freed head with only a small head or body settle."
+   },
+   {
+    "shot": "S3 to S4 transition",
+    "frames": "f173-f174",
+    "severity": "minor",
+    "claim": "The X-ray to stomach transition is a 2-frame dissolve, which reads as a flash frame or glitch, not a deliberate cut. The eel also jumps position: the X-ray head and coil sit centre-left, while in the stomach the coil is pinned to the right edge.",
+    "fix": "Either make it a clean hard cut at f174, or stretch it to an 8-12 frame dissolve (about f167-f178). Offset the S4 start framing so the stomach coil lands near where the X-ray coil was, giving a match-dissolve."
+   },
+   {
+    "shot": "S4",
+    "frames": "f174-f190",
+    "severity": "minor",
+    "claim": "For the first ~0.55 s of the stomach shot, the eel's coil and head are off the right edge. Only the thin tail and a sliver of ring show while 'Inside the fish's STOMACH' plays, so the eel reads as a worm fragment until the pan catches up around f192.",
+    "fix": "Start the S4 camera about 250 px further right (or the eel about 250 px left), so the full coil and the head with its eye are in frame from f174. Then let the pan and push continue from there."
+   },
+   {
+    "shot": "S7 to S8 cut",
+    "frames": "f415 to f416",
+    "severity": "minor",
+    "claim": "This is a jump cut: the angle is the same, the scale changes by about 0.75x, and both sides are near-static (diff ~0.3). The tail also fails to match: at f415 it is a tall hook rising from the slit and arcing toward the dorsal line, and at f416 it becomes a short, low horizontal hook. The tail visibly shrinks at the cut, and the pectoral fin changes shape.",
+    "fix": "Match the tail pose across the cut: start S8 with the same rise angle and length, scaled to the new framing. Or replace the cut with a continuous pull-back from S7, or change the angle enough that it reads as a new shot."
+   },
+   {
+    "shot": "S9",
+    "frames": "f479-f505 (visible on phone sheet f486-f501)",
+    "severity": "minor",
+    "claim": "A second, lighter, finely hatched eel band runs just above and behind the main eel body on the right half of the frame. The body reads as doubled or ghosted.",
+    "fix": "Hide or occlude the far body segment in S9. Either z-sort it under the near segment and clip it to the fish flank, or don't draw it until it is needed for the S10 curl."
+   },
+   {
+    "shot": "S9-S10",
+    "frames": "f479-f538 and f540-f612",
+    "severity": "minor",
+    "claim": "The eel's contact shadow is built from overlapping hard-edged dark circles. It shows as a row of dark beads under the eel in S9 and as dark blobs inside the loop in S10, reading as extra fish spots rather than a shadow.",
+    "fix": "Render the shadow as one soft path, or blur the stamped circles (gaussian 12-20 px at 1080 wide). Lower its opacity about 30% so the circle edges disappear."
+   },
+   {
+    "shot": "S11",
+    "frames": "f639-f645",
+    "severity": "minor",
+    "claim": "Right after the cut, the eel's U-bend has a sharp V-kink: the tail folds back at an acute angle beside the predator's pectoral fin. For about 6 frames the eel looks broken.",
+    "fix": "Set a minimum spine bend radius (about 40 px at 1080) for S11's opening pose, or open the first pose into a soft S-curve that straightens over f639-f650."
+   },
+   {
+    "shot": "S7",
+    "frames": "f381-f400",
+    "severity": "minor",
+    "claim": "At phone size the poke-out tip is small: about 40 px at 1080 wide, roughly 14 pt on screen. It is dark blue against the dark red slit, and the camera is already pulling out. The bubbles carry most of the read for this beat.",
+    "fix": "Start S7 about 1.3x tighter, or hold the pull-out until about f400. Add a light rim or highlight on the tip so it separates from the slit."
+   },
+   {
+    "shot": "S3",
+    "frames": "f141-f168",
+    "severity": "minor",
+    "claim": "A near-dead hold (f141-f148, diff <0.6) is followed by a crash zoom of about 4x in 18 frames (f150-f168), the fastest camera move in the piece. The X-ray eel jumps from small to full frame. Readable, but jarring on a phone.",
+    "fix": "Start the push around f136 and spread it over about 30 frames with an ease-in and ease-out, ending around f168. That removes both the hold and the snap."
+   },
+   {
+    "shot": "S9",
+    "frames": "f486-f531",
+    "severity": "minor",
+    "claim": "There are about 1.5 s of near-freeze with only a slow camera push (diffs 1.2-3.7). The head sits motionless in the slit, so the beat reads as paused rather than straining.",
+    "fix": "Add a slow body slide (move the highlight or texture along the eel toward the right), plus a small head shift or eye blink about every 12-15 frames. The beat then reads as the eel working itself out."
+   }
+  ]
+ },
+ "verified": [
+  {
+   "shot": "S11",
+   "frames": "f639-647",
+   "severity": "major",
+   "claim": "In the first beat after the cut the eel's tail is folded into a hard-cornered hairpin with a visible crease line at the fold: a V-fold at f639-641, an L-shape at f643, an acute fold at f645 and a hooked tip at f647. It looks like bent wire or a paperclip, not a flexing eel, and the sharp L is plain at phone size (f642-645).",
+   "fix": "Limit how much the S11 spine can bend per segment, or start the S11 pose from a smooth S or C curve, so the tail sweeps out of the S10 loop shape with no corner and no crease stroke.",
+   "src": "regress:head-and-release",
+   "votes": [
+    {
+     "refuted": false,
+     "reason": "The claim holds; I couldn't refute it. I checked the full-res frames f637-650 (crop sheet /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s11/crops_637_650.jpg and zoom /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s11/fold_zoom.jpg). The S10 frames f637-638 show a smooth round coil. On the cut at f639 the eel's rear body runs down-right beside the pectoral fin and folds back on itself at about (750,1440). The fold is a narrow hairpin with a dark notch or crease on the inside corner, and the tail returns up-left (f639-641). Over f642-645 the fold sharpens into a hard L, then an acute angle at about (775,1445) and (830,1460). The tail segment lies nearly flat against the body, and the inside of the corner is a pinched dark crease, not a curve. It reads as a creased tube or bent wire. At f643 the zoom also shows the tail's outline doubled or misregistered. f646 is still an acute V, and f647-648 show a small hooked tip before the body relaxes into a smooth wave by f649-650. The claim's frame labels are slightly off: the acute fold runs f645-646 and the hook f647-648. The substance is right. It's visible at phone size. In the 360x640 phone sheet tiles for f639, f642 and f645 the eel is centred, about a third of the frame wide, and the sharp V/L fold is the most prominent shape in it. It lasts about 9-10 frames (0.3 s), right on a new shot where the eye is looking for the eel, so a muted phone viewer would see it. Major severity is reasonable."
+    },
+    {
+     "refuted": false,
+     "reason": "The claim is accurate. In the full-res caption-free frames, f639-641 show the tail folded back on itself into a V/hairpin with a pointed corner. At 2x zoom on f639 a small notch or crease line is visible at the apex, where the inner and outer outlines meet in a point instead of a rounded bend. f642-645 show the lower body bent into a near right-angle L with straight segments on either side, the opposite of a smooth eel curve. f646 has a sharp hooked fold at the tip and f647 a small residual hook. The body only relaxes into a smooth S-wave from about f648. I scaled whole frames down to 360x640 and the V at f639 and the sharp L at f642-646 are still plainly readable, because the eel is large and close to the centre of the frame and contrasts strongly with the sand. It lasts only about 9 frames (0.3 s), but it is the first thing the viewer sees after the cut into S11 and it sits in the main subject, so brevity does not hide it. It reads as bent wire or a paperclip, not flexing tissue. Evidence crops: /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s11/crop_638_649.jpg, /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s11/zoom_639_644.jpg, /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s11/phone_639_646.jpg."
+    }
+   ],
+   "confirmed": true
+  },
+  {
+   "shot": "S9-S10 head exit",
+   "frames": "f479-f618 (head visible and still), f627-f636 (real release), f639 (cut)",
+   "severity": "major",
+   "claim": "The 'head comes out last' beat has no visible event. The head with its eye appears at the slit on the cut at f479 and stays put for about 4.7 s, so from the pictures it looks already out. The real release happens 4.5 s later under 'final pull', lasts about 0.3 s and is cut away from 3 frames later.",
+   "fix": "Keep the head hidden under the gill cover (no eye showing) until the release, and stage the release during or right after 'Its head comes out last' (around f500-f540), or move the line to the release. Hold 0.5-1 s on the freed head before the f639 cut.",
+   "src": "naive",
+   "votes": [
+    {
+     "refuted": false,
+     "reason": "The core of the claim holds up in the frames. Two details are wrong and the severity is arguable.\n\nConfirmed:\n- Hard cuts at f479 (S9), f539 (S10) and f639 (S11). Frame-to-frame differences are about 17, 40 and 52 at those frames, against about 1-3 within shots.\n- From f479 the eel's head, with its eye, sits wedged in the red gill slit. It moves very little: between f479 and about f492 the eye slides out from under the edge of the see-through gill cover into the slit, and after that the head is effectively still. It stays put through all of S9 and through S10 until about f615, roughly 4.5 s, while the body comes out and curls into a loop above it.\n- The caption 'Its HEAD comes out LAST' plays over S9, f486-f537, where the head does nothing that reads as coming out.\n- The real exit happens under the caption 'gives one FINAL PULL' (f600-f638). The head lifts off the slit lip at about f616-f620, the eye clears the slit at about f624-f630, and the head is fully free by about f633-f634. The cut to the tracking shot comes at f639.\n\nWrong or overstated:\n- The head does not look 'already out'. It reads as lodged in the slit with the eye peeking out.\n- The release is longer than claimed: about 0.6 s (f616-f634), not 0.3 s. The freed head stays on screen for about 5 frames before the cut, more than 3 but still very brief.\n- The release is clearly visible at phone size (tiles f618-f636).\n\nOn severity: in order of events the head is still visibly the last part out, and pairing it with 'final pull' can be defended. The problem is real but closer to moderate than major. A muted viewer sees no head event under its own caption, then a quick release about 4 s later that is cut away almost at once."
+    },
+    {
+     "refuted": true,
+     "reason": "I'd call this mostly refuted. The frames show a visible head release, so \"no visible event\" and the \"major\" rating overstate it. What survives is a smaller problem with timing.\n\n1) The head does not sit unchanged from the cut at f479. Full-res crops show it sliding up into the gap between f479 and f497. At f479-f485 the eye is dim and half hidden under the gill cover, and by about f491 it is bright and out in the opening. It holds still only from about f497 to f612. That small slide happens under the \"Its HEAD comes out LAST\" caption.\n\n2) It does not look \"already out\". In every frame from f497 to f612 the head is still lodged in the slit: the red gill tissue frames it, and the snout tucks under the edge of the gill cover. From f540 the body coils outside while the head stays pinned. The order a viewer sees is: body out, head still stuck, curl, pull, head pops free. That makes the head clearly the last part to come out.\n\n3) The release is longer and bigger than 0.3 s. The head starts moving at f615-f618, slides out of the slit from f618 to f627, is fully free by f630, and keeps lifting until f638. That is about 0.7 s of motion. The free head then sits well above the fish's back in f630-f636, a large jump that is easy to see at the 360x640 phone tile size. The cut does come 3 frames after f636, but S11 opens at f639 on the eel swimming free beside the fish, which confirms the release.\n\n4) The part of the claim that holds: the release plays under the \"gives one FINAL PULL\" caption, not under \"Its HEAD comes out LAST\" (about f479-f537). The free head also gets only about 0.3 s before the cut. Since the narration itself has the final pull freeing the head, this is a minor timing and hold-length issue, not a missing beat.\n\nEvidence crops are in /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_head/ (s9.jpg, s9head.jpg, s10a.jpg, s10b.jpg, s10c.jpg)."
+    }
+   ],
+   "confirmed": true
+  },
+  {
+   "shot": "S1 hook",
+   "frames": "f000, f009, f030 (whole S1 f000-f078)",
+   "severity": "major",
+   "claim": "The tail's tapering tip, the cue that makes it read as a tail and not just a blue strap, ends at roughly x 900-960, y 1550-1870 of 1920. That is inside the Shorts bottom title band and against the right action-button column, so on a phone the defining taper is likely covered.",
+   "fix": "Reframe or scale the hook so the whole tail, including the tip, sits above about y 1450 and left of about x 880, for example by pushing the fish up and left or shortening the hanging length.",
+   "src": "naive",
+   "votes": [
+    {
+     "refuted": true,
+     "reason": "The claim gets the tip's position right but is wrong about what that hides. I opened full-res f000, f009 and f030, the S1 phone sheets (f000-f078, both caption-free and captioned), and measured the blue eel mask row by row on every 3rd frame from f000 to f078.\n\n1) Where the tip is: in most S1 frames it ends at about x 890-950, y 1850-1880. f009 is different: the tail flicks left and the tip lands near x 150-200, y 1750, not at x 900-960. From f057 to f078 the camera pushes in and the tail runs off the bottom-right corner, so no tip is on screen at all.\n\n2) Where the taper is: it is not at the tip. In f000 to f054 the tail is about 80-100 px wide at y 1300-1500, about 50-65 px at y 1600, and about 40 px at y 1700, at x 720-970. The last ~150 px (y 1750-1880) is a nearly constant ~30 px with a blunt, rounded end; see the crop at /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s1/tipcrop.jpg. So the narrowing that reads as a tail happens mostly above the title band and left of the button column. Only the thin end falls in the band, where it sits between title lines and just left of the audio/remix square.\n\n3) Mock check: I overlaid a deliberately pessimistic Shorts UI on f000, f009, f021, f030, f045 and f054 (opaque bars standing in for text, a button column at x 968-1064, a dark bottom scrim): /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s1/mock.jpg. In every frame the long S-shaped eel still visibly narrows from the gill toward the bottom. The lateral-line highlight and fin-fringe edge stay clearly visible, and the f006-f012 flick is unobstructed motion that says tail. Nothing reads as a strap.\n\n4) Muted viewers: in the captioned cut, the top caption reads \"That TAIL sticking out of this fish\" with TAIL highlighted, from f000 through f045. Then \"belongs to the EEL\" follows. A muted viewer is told it is a tail in text, so the reading does not depend on the last ~150 px.\n\nAt most this is a minor note that the blunt end sits low in the frame. It is not a major problem that makes the hook unreadable."
+    },
+    {
+     "refuted": true,
+     "reason": "The location in the claim is right, but the conclusion that the taper is covered does not hold up once you look at the frames. I measured the blue eel pixels in the full-res caption-free frames. In f000-f003 and f018-f054 the rounded tip sits at about x 880-930, y 1847-1880. The widest part of that lower stretch reaches x 958-972 at y 1700-1750. In f006-f012 the tail swings left, putting the tip at x 150-400, y 1755-1893, for about 0.2 s. From f057 the camera pushes in toward the gill edge and the tail runs off the bottom-right edge, so f060-f078 have no tip in frame at all. That means 'whole S1 f000-f078' misdescribes about a quarter of the shot. Against that: (1) The taper is gradual and most of it is above the bottom band. The tail narrows from about 100 px wide at the gill (y about 1000) to about 60 px by y 1600, then to about 37 px and a rounded end. Only the last roughly 250 px of a roughly 1100 px visible tail is below y 1600. The narrowing S-shape, the banded blue colouring with a light belly stripe, and the wagging motion all read as an eel tail well inside the safe area. (2) I composited a deliberately pessimistic Shorts overlay mock over captioned f000, f012, f030, f045 and f054: a bottom scrim, a right icon column at x 965-1055, channel, title and sound rows drawn as solid bars to x 860 or less, and a progress bar. The mock is at /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s1/mock_ui.jpg. Viewed at 360x640 phone size, the tapering tip stays visible in the gap between the end of the title text and the icon column in f000, f030, f045 and f054. Only in the brief f012 leftward swing does it pass behind the title rows. Real Shorts text is thin glyphs, not solid bars, so actual occlusion would be less than in the mock. (3) A muted viewer does not need the taper to identify it. The top-of-frame caption reads 'That TAIL sticking out of this fish' with TAIL highlighted from f000-f045, then 'belongs to the EEL'. What is true: the very tip sits under the bottom scrim and the sound/title rows, so it is less crisp there. That is a minor framing nicety, not a major problem with the hook reading as a tail."
+    }
+   ],
+   "confirmed": false
+  },
+  {
+   "shot": "S10 curl/release",
+   "frames": "f539-f636 (esp. f621-f636)",
+   "severity": "major",
+   "claim": "The climax is composed in the bottom quarter. The head and slit sit at about 72-80% of frame height, inside or touching the Shorts title band, and the right side of the loop runs under the action-button column, while the top ~55% of the frame is empty water.",
+   "fix": "Raise the camera or shift the frame so the slit and head sit around 45-60% height, and keep the loop left of about x 880.",
+   "src": "naive",
+   "votes": [
+    {
+     "refuted": false,
+     "reason": "I checked the full-res caption-free frames (f540-f638) and the claim holds up, though it overstates a few details.\n\nWhat I measured (blue-eel pixel mask, plus a sheet of f612-f638 with guide lines at 55%, 75% and 78% height and at 86% width; sheet saved at /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/s10_guides.jpg):\n\n1. Vertical position. Through all of S10 the eel's vertical centroid stays between 0.63 and 0.74 of frame height, about 0.71 at f618-f630. The loop body spans y 0.45-0.90.\n2. Top of the frame. Only 2-21% of the eel's pixels sit above 55% height, about 3-11% in f621-f636. The one exception is the thin tail tip, which reaches about y 0.33-0.47 in f588-f633. In the captioned frames, the caption sits at about y 0.18-0.22. That leaves a band of empty water, about 25-30% of the frame tall, between the caption and the eel.\n3. Head and slit. The eel's eye sits right on the 75% line from f612 through f629, at the slit exit, so the head-out and comes-free beat (f618-629) happens at about 75-77% height. The red slit runs from there to the bottom edge. After the head is free it rises a little: about 0.72 at f630, 0.69 at f632 and about 0.66-0.67 at f633-f636. So the head is at the top edge of the Shorts title band during the key moment and only just clears it at the end.\n4. Right side. From f540 to f630 the loop runs to x = 1.00, and 21-31% of the eel's pixels fall in the strip x > 0.86, y 0.50-0.85, which is where the like/comment/share buttons sit. The loop pulls left of that strip only at f633 (5.7%) and f636-638 (0%).\n\nOverstatements in the claim: the action is in the bottom ~45-55% of the frame, not literally the bottom quarter. The top 55% is not completely empty, because of the tail tip and the caption. The head is at about 66-67% by f633-636, not 72-80%. None of these changes the main point: the climax (head exit, curl, final pull) sits low and to the right, against the title band and partly under the button column, with a large empty stretch of water above it. A muted phone viewer would see this, so the problem is real."
+    },
+    {
+     "refuted": false,
+     "reason": "I couldn't refute it. The full-res caption-free frames back the claim on every main point. I opened element-621/630/636, the captioned 627, and a sheet of f540-f636 with guide lines at 50/70/75/80% height and x=87%, and I measured the eel's eye position.\n\n1) The head and slit sit low. Eye height is about 71-72% for f540-f600, 74-77% for f612-f627 (f621 ~77%, f624 75.8%, f627 74.3%) and 71.7% at f630. The emergence point on the gill slit is at about 73-77%, and the slit itself runs from there to the bottom of the frame. So during the climax (head slides out, ~f612-f630, the narration's 'Its head comes out last') the head is right at the top edge of the channel/title band. The reviewer's word 'touching' is accurate. 'Inside' would be true only of the slit's lower part, not of the head.\n\n2) The loop runs under the action-button column. From f540 to f627 the right side of the loop reaches 98-100% of frame width at about 55-88% height. Roughly 20-30% of eel pixels fall in that right-column zone. The loop pulls inside it only at f633-f636.\n\n3) The top of the frame is empty water. The eel and fish fill the band below ~50% for most of the shot. From f585 on, the thin tail tip reaches 33-46% height, so 'top ~55% empty' is a slight overstatement; ~45-50% is closer. In the captioned version the captions sit at ~18% height, far from the action. Nothing else occupies the upper half.\n\n4) It isn't too brief to matter. The low framing holds for the whole of S10 (f539-f638, ~3.3 s), and the lowest moment is the payoff beat itself. The only exception is f633-f636, about 0.1-0.2 s just before the cut at f639, when the freed head rises to 66-68%.\n\nMitigating points don't change the verdict:\n- The head isn't deep inside the band. It sits at its upper edge, so it's crowded rather than fully hidden.\n- The icons in the right column cover eel body, not the head.\n- 'Major' is arguable versus 'moderate'.\n\nStill, the problem is real and a muted phone viewer would see it: the escape point is jammed against the Shorts UI while the upper half of the frame shows only water."
+    }
+   ],
+   "confirmed": true
+  },
+  {
+   "shot": "S10",
+   "frames": "f540-f612 (worst f543, f549, f600, f610)",
+   "severity": "major",
+   "claim": "The hero curl shot is bottom-heavy and clipped. The eel loop touches or runs off the right frame edge for most of the shot, and the predator's eye is cut by the left edge. All the action sits in the lower ~45% of the frame, and the top ~45% is empty water. On a phone the curl reads as a cropped ring rather than a full figure.",
+   "fix": "Reframe S10: pull back 12-15% and pan right about 120 px, so the loop's outer rim stays at least 60 px inside the right edge and the eye clears the left edge. Then tilt up so the eel occupies roughly y 650-1500 of 1920. That frees space and still keeps the top caption band (y<520) clear.",
+   "src": "craft",
+   "votes": [
+    {
+     "refuted": false,
+     "reason": "The claim holds. I checked the full-res frames f543, f549, f600 and f610, the caption-free and captioned phone sheets for f540-f645, and ran a pixel scan for eel-blue pixels in the rightmost 10 columns, every 3rd frame from f537 to f639.\n\n(1) Right-edge clipping is real. In f543 and f549 the ring is visibly cut off by the right edge, so you cannot see its far side. The scan finds eel pixels in the edge columns over 200-527 pixel rows on every sampled frame from f540 to f606. The loop only clears the edge at f609-f615, and only just: in f610 it ends at about x=1060 of 1080. It touches the edge again from f618 to f627. So it is on or past the edge for roughly 67 of the 73 frames claimed.\n\n(2) The predator's eye is cut in half by the left edge (x=0) in every S10 frame, including f543, f549, f600 and f610.\n\n(3) The frame is bottom-heavy. From f540 to f570 the highest eel pixel is at y of about 960-979 of 1920, so the top ~51% is empty water with a few bubbles. That is in line with, or slightly worse than, the claim's top ~45%. One nuance: from about f573 to f612 the tail rises to y\u2248670-765 (about 35-40% from the top), so in the second half the action takes up more like the lower 60%. Even then, everything above about y=670 is empty. In the captioned version the caption sits at about y=10-20% and does not fill the empty band below it.\n\n(4) At 360x640 phone size, f540-f606 read as a ring sliced by the right edge with a half-eye at the left, not as a whole curled figure. Only the brief f609-f615 window shows the full 6-shape inside the frame.\n\nSeverity: major is fair. This is the hero beat named in the narration (\"curls up\"), and it stays cropped for almost its whole run."
+    },
+    {
+     "refuted": false,
+     "reason": "I could not refute the claim. I checked the full-res caption-free frames 543, 549, 600 and 610 and both phone sheets (540-591 and 594-645), and the claim holds.\n\n- **Right edge:** In f540-f546 the loop clearly runs off the right edge and is cut, so you see a partial ring. From f549 to about f606 the outer right side of the loop sits flush against x\u22481075-1080, kissing or clipped by the edge. It only pulls inside the frame at about f609-f612, and it touches the edge again briefly around f618-f627. That is roughly two-thirds of S10 (f539-f638), so \"most of the shot\" is fair.\n- **Left edge:** The predator's amber eye is centred near x\u22480-15 in every S10 frame, so only about half of it shows. It is cut by the left edge throughout.\n- **Bottom-heavy layout:** Measured in pixels, the top of the eel is at y\u2248975 (51% down) for f540-f570. When the tail rises into the \"6\" in f582-f612, the tail tip reaches y\u2248670-770 (35-40% down). The upper 35-50% of the frame is empty water with a few bubbles.\n\nThe claim overstates two points, but neither changes the verdict:\n1. The tail flick in f585-f612 lifts the action into the lower ~60-65% of the frame, not only the lower 45%.\n2. In the captioned version, the caption (\"The eel CURLS up outside the fish,\") fills about 15-23% of the frame height. Even so, the band from about 25% to 50% stays empty.\n\nOn a phone, the cropped ring at the start (f540-f546) and the loop pressed against the right edge, plus the half-eye on the left, are easy to see. The shot looks crammed into the bottom right with dead space above. The problem is real and lasts about 2+ seconds, so it is not too brief to matter."
+    }
+   ],
+   "confirmed": true
+  },
+  {
+   "shot": "S10 end into cut to S11",
+   "frames": "f629-f638 (cut f639)",
+   "severity": "major",
+   "claim": "The 'beat on the freed head' isn't a beat. Frame-to-frame motion peaks here (mean diff 8-12, against 2-7 earlier in the shot). The camera pushes and tilts while the tail whips about 850 px across the frame in 4 frames (f633-f637), threading through the loop. At f638 the head is half out of frame left just before the cut. The payoff gets scrambled.",
+   "fix": "Ease the camera to a stop by about f626 and hold. Move the tail swing earlier (finish it by f626), or stretch it over at least 10 frames. Keep the head at least 150 px inside the left edge through f638, so f629-f638 is a near-still hold on the freed head with only a small head or body settle.",
+   "src": "craft",
+   "votes": [
+    {
+     "refuted": false,
+     "reason": "I could not refute the claim. The full-res frames back it up.\n\n1) Motion. Mean absolute luma difference per frame at 270x480 is 2.2-3.5 from f591-603. It rises to 6-7 at f607-617 (the slide-out), then falls back to 2.7-4 at f622-628 while the head comes free. After that it climbs to 5.4 (f629), 8.3, 9.7, 11.2, 12.1 (f633), 11.9, 11.0, 9.1, 9.7 and 9.5 (f638), then the cut at f639 (52). The end of S10 is the highest-motion stretch in the shot, not a hold.\n\n2) Tail whip. The tail tip starts upper right at about x 900, y 640 at f633. By f636-637 it has swept down and left through the loop to about x 20-240, which is roughly 850-900 px in 4 frames. The body goes from a '6' loop to a 'D' shape.\n\n3) Camera. The predator's eye and dorsal line slide left and the dorsal line rises across f630-f638. At f638 the predator's eye has left frame. The eel's head has drifted to the left edge, its eye cut by the frame edge, and the loop has reopened. That is the last frame before the cut to S11.\n\n4) Is there a freed-head beat? Only the f618-628 stretch is calm, about 0.35 s with the head fully clear of the gill. That is the payoff moment, and the tail whip starts right after it.\n\nMitigations, which don't refute the claim. Over f618-637 the caption reads 'gives one FINAL PULL,' so the whip can read as the narrated final pull rather than random noise. The eel's head and eye stay clearly readable on the phone sheets through f637. Only f638 cuts the head at the edge, and that is a single frame. 'Scrambled' may overstate it. Still, the core points hold: there is no held beat on the freed head, motion peaks just before the cut, and the head ends at the frame edge.\n\nStrips I built are in /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s10/ (a.jpg, b.jpg, c.jpg, d.jpg, e.jpg)."
+    },
+    {
+     "refuted": false,
+     "reason": "The frames back up the claim. Per-frame contact sheets are at /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s10/seq627_640.jpg and /tmp/claude-0/-home-user-Youtube-videos/ca3a682e-48b2-5027-8af2-434fb6f4565d/scratchpad/refute_s10/key.jpg.\n\n1) Motion. I measured mean frame-to-frame differences myself. They sit at about 2-3.6 through f560-f627, with one hump of 4-7 at f604-f619 during the slide-out. They then jump to 5.4 at f629 and 8.3-12.1 across f630-f638 (peak 12.14 at f633). That rise starts right where the beat on the freed head should be.\n\n2) The tail whip. At f633 the tail tip is at about x=970 of the 1080 px frame, pointing upper right. At f636 it is vertical near x=250. At f637 it is at the left edge (about x=10). That is roughly 950 px in 4 frames, so the claim's 850 px is if anything low. The tail also crosses back through the loop.\n\n3) Camera. Between f629 and f638 the framing pushes in and tilts. The fish's eye and gill move from the lower left out toward the edge, and the loop grows to fill the lower half of the frame.\n\n4) Last frame. At f638 the head is cut by the left edge, with only half the eye showing. The cut to S11 comes at f639 (diff 52).\n\nWhat I could put against it: the freed head is clearly readable outside the gill for about 0.35-0.5 s (f618-f629/633) before the whip starts, and the head stays recognisable through f637. A viewer does get a glimpse of it, and the whip could be read as the \"one final pull\". The claim's \"major\" severity is therefore arguable. But the last ~0.3 s before the cut is the most chaotic stretch of the shot, with no settled hold on the head and the head leaving frame, so the planned beat on the freed head is not delivered. A muted phone viewer would see a quick flail and then a cut. I could not refute the factual parts of the claim."
+    }
+   ],
+   "confirmed": true
+  }
+ ],
+ "minors": [
+  {
+   "shot": "S9",
+   "frames": "f533-538 (phone tiles f534, f537)",
+   "severity": "minor",
+   "claim": "The eel's tail end swings in from the bottom-right edge, in front of the predator's pectoral fin. It shows up as a second thin blue eel, with no visible link to the body running off the top-right. On a phone it reads as a second eel or snake entering the shot just before the cut to S10.",
+   "fix": "Start the tail curl-in after the S10 cut. Or keep it off-frame in S9. Or frame S9 so the loop of body linking the two visible parts is on screen.",
+   "src": "regress:exit-and-route"
+  },
+  {
+   "shot": "S7",
+   "frames": "f406-415",
+   "severity": "minor",
+   "claim": "There is a squared step on the right outline of the tail where the outside arch meets the part lying in the slit (at about y 1140 full res). The outside part is slightly wider, with a flat bottom edge, so the arch looks pasted onto the in-slit body.",
+   "fix": "Taper or blend the outside segment into the in-slit segment so the outline stays continuous and the same width where the tail leaves the slit.",
+   "src": "regress:exit-and-route"
+  },
+  {
+   "shot": "S7",
+   "frames": "f381-404",
+   "severity": "minor",
+   "claim": "The tail end is a blunt, squared-off cap: a flat end with a corner, bent right and down. It is not the tapered, pointed eel tail seen in S6 and in the later arch. It also changes from dark navy with a pale rim (S6) to light slate-blue with a dark outline (S7) across the match cut.",
+   "fix": "Use the same tapered tail tip and a similar colour and rim treatment on both sides of the f380/f381 match cut.",
+   "src": "regress:exit-and-route"
+  },
+  {
+   "shot": "S10",
+   "frames": "f544-552",
+   "severity": "minor",
+   "claim": "As the tail tip slides up past the caught head, it is drawn frayed and soft-faded where it crosses the gill-cover edge, like 3-4 separate strands or a broom (f544-546). It then covers the eel's eye (fully at f548-549), so for about 0.15 s there are two prongs at the slit and no eye.",
+   "fix": "Route the tail tip around the head (outside or behind it) instead of across the front of the eye, and mask the tip against the cover with a hard edge instead of a feathered fade.",
+   "src": "regress:head-and-release"
+  },
+  {
+   "shot": "S10",
+   "frames": "f615-620",
+   "severity": "minor",
+   "claim": "Where the eel's snout and neck cross the gill-cover edge as the head starts to slide out, the eel is faded with a soft brownish gradient instead of being cleanly hidden. At phone size this shows as a small pointed beak or hook on the snout (f617-619).",
+   "fix": "Use a hard occlusion mask at the cover edge (or a cover lip drawn on top) for these frames.",
+   "src": "regress:head-and-release"
+  },
+  {
+   "shot": "S11",
+   "frames": "f654-658, f684, f707-709, f720-723",
+   "severity": "minor",
+   "claim": "Large soft white bokeh discs (about 100 px full-res, about 30 px on phone) pop in for 1-2 frames and jump position. At f684 one sits right next to the eel, and at f708 one crosses the eel's body. They read as flickering smudges or ghosts, not drifting particles.",
+   "fix": "Slow the near-camera motes so each one drifts across over many frames, cap their size or opacity, or drop the biggest ones and keep them off the eel's path.",
+   "src": "regress:head-and-release"
+  },
+  {
+   "shot": "S10 curl",
+   "frames": "f540-f546 (tail tip around (350,1370) next to eye at (415,1380) in f543)",
+   "severity": "minor",
+   "claim": "Right after the cut, the thin tail end swings round and lands beside the head at the gill slit. For a moment both ends are at the slit, which raises 'which end is which, is the tail going back in?'.",
+   "fix": "Route the tail's sweep below or away from the slit (keep the tip at least ~150 px from the head), or start the curl shot with the tail already rising.",
+   "src": "naive"
+  },
+  {
+   "shot": "S9 to S10 cut",
+   "frames": "f538 to f539",
+   "severity": "minor",
+   "claim": "Continuity jump on the cut: the body goes from lying straight along the flank, tail just entering at the bottom, to a big loop arching above the fish's back.",
+   "fix": "Bridge it with a few frames of the body lifting off the flank before the cut, or cut on a matching pose.",
+   "src": "naive"
+  },
+  {
+   "shot": "S7 exit close-up",
+   "frames": "f381-f390",
+   "severity": "minor",
+   "claim": "The exit shot opens on an unidentifiable brown surface with no eye or head in frame, and the emerging tip is tiny (about 40x50 px on 1080) and low-contrast blue on brown. On a phone the first ~0.3 s reads as 'what am I looking at?'.",
+   "fix": "Open with the fish's eye in frame (start the pull-back wider), and make the tip larger or brighter with a bigger bubble puff so the eye goes straight to it.",
+   "src": "naive"
+  },
+  {
+   "shot": "S1 vs S7-S8",
+   "frames": "f000 vs f417-f477",
+   "severity": "minor",
+   "claim": "The hook pose (tail hanging down from the slit over the pectoral fin) never happens in the story. In the story the tail leaves the top of the slit and lies backward along the upper flank, so the hook image and the escape geometry don't match.",
+   "fix": "Either let the emerging tail droop down over the pectoral fin in S7-S8, or rebuild the hook from an actual story pose (around f450-f477, framed for the hook).",
+   "src": "naive"
+  },
+  {
+   "shot": "S2 flashback swallow",
+   "frames": "f081-f114",
+   "severity": "minor",
+   "claim": "The swallowed strand is grey with no head showing, so nothing visually links it to the blue eel. The extreme close-up with a giant eye at the top of frame (f081-f087) briefly reads as a different creature.",
+   "fix": "Keep a hint of the eel's blue in the desaturated grade (or tint only the eel), and start slightly wider so the fish's head reads before the mouth fills the frame.",
+   "src": "naive"
+  },
+  {
+   "shot": "S4 X-ray to stomach dissolve",
+   "frames": "f174-f186",
+   "severity": "minor",
+   "claim": "During the dissolve the ghost X-ray eel (head around (700,1440)) and the coloured eel (coil at the right edge, head off-frame until about f189) don't line up, so for a moment there seem to be two eels.",
+   "fix": "Line up the coloured eel's position and pose with the X-ray eel through the dissolve, or keep the coloured head in frame from f174.",
+   "src": "naive"
+  },
+  {
+   "shot": "S6 gills",
+   "frames": "f312-f378",
+   "severity": "minor",
+   "claim": "The gill arches read as red ribs or combs. 'Gills' only comes from the caption, and the tip creeps slowly for about 2.2 s with little change.",
+   "fix": "Show a hint of gill flaps opening and closing with the light, or tighten the shot by about 0.5 s.",
+   "src": "naive"
+  },
+  {
+   "shot": "S8-S9 slit bend",
+   "frames": "f447, f462 (kink at about (310-380, 1080-1130)); f480 inner-bend notch",
+   "severity": "minor",
+   "claim": "Where the eel bends into the slit, its outline breaks into a small sharp arrowhead or notch, like a folded flap. At phone size it can read as an extra fin or the tail tip.",
+   "fix": "Smooth the bend geometry and outline join where the body crosses the gill cover edge.",
+   "src": "naive"
+  },
+  {
+   "shot": "S11 swim-away",
+   "frames": "f690-f732",
+   "severity": "minor",
+   "claim": "The leading head of the departing eel travels into the bottom-left of the Shorts title band (about 80-86% height), so the 'swims away' face is partly covered.",
+   "fix": "Angle the swim path more leftward or upward so the head stays above about 75% height.",
+   "src": "naive"
+  },
+  {
+   "shot": "S3 to S4 transition",
+   "frames": "f173-f174",
+   "severity": "minor",
+   "claim": "The X-ray to stomach transition is a 2-frame dissolve, which reads as a flash frame or glitch, not a deliberate cut. The eel also jumps position: the X-ray head and coil sit centre-left, while in the stomach the coil is pinned to the right edge.",
+   "fix": "Either make it a clean hard cut at f174, or stretch it to an 8-12 frame dissolve (about f167-f178). Offset the S4 start framing so the stomach coil lands near where the X-ray coil was, giving a match-dissolve.",
+   "src": "craft"
+  },
+  {
+   "shot": "S4",
+   "frames": "f174-f190",
+   "severity": "minor",
+   "claim": "For the first ~0.55 s of the stomach shot, the eel's coil and head are off the right edge. Only the thin tail and a sliver of ring show while 'Inside the fish's STOMACH' plays, so the eel reads as a worm fragment until the pan catches up around f192.",
+   "fix": "Start the S4 camera about 250 px further right (or the eel about 250 px left), so the full coil and the head with its eye are in frame from f174. Then let the pan and push continue from there.",
+   "src": "craft"
+  },
+  {
+   "shot": "S7 to S8 cut",
+   "frames": "f415 to f416",
+   "severity": "minor",
+   "claim": "This is a jump cut: the angle is the same, the scale changes by about 0.75x, and both sides are near-static (diff ~0.3). The tail also fails to match: at f415 it is a tall hook rising from the slit and arcing toward the dorsal line, and at f416 it becomes a short, low horizontal hook. The tail visibly shrinks at the cut, and the pectoral fin changes shape.",
+   "fix": "Match the tail pose across the cut: start S8 with the same rise angle and length, scaled to the new framing. Or replace the cut with a continuous pull-back from S7, or change the angle enough that it reads as a new shot.",
+   "src": "craft"
+  },
+  {
+   "shot": "S9",
+   "frames": "f479-f505 (visible on phone sheet f486-f501)",
+   "severity": "minor",
+   "claim": "A second, lighter, finely hatched eel band runs just above and behind the main eel body on the right half of the frame. The body reads as doubled or ghosted.",
+   "fix": "Hide or occlude the far body segment in S9. Either z-sort it under the near segment and clip it to the fish flank, or don't draw it until it is needed for the S10 curl.",
+   "src": "craft"
+  },
+  {
+   "shot": "S9-S10",
+   "frames": "f479-f538 and f540-f612",
+   "severity": "minor",
+   "claim": "The eel's contact shadow is built from overlapping hard-edged dark circles. It shows as a row of dark beads under the eel in S9 and as dark blobs inside the loop in S10, reading as extra fish spots rather than a shadow.",
+   "fix": "Render the shadow as one soft path, or blur the stamped circles (gaussian 12-20 px at 1080 wide). Lower its opacity about 30% so the circle edges disappear.",
+   "src": "craft"
+  },
+  {
+   "shot": "S11",
+   "frames": "f639-f645",
+   "severity": "minor",
+   "claim": "Right after the cut, the eel's U-bend has a sharp V-kink: the tail folds back at an acute angle beside the predator's pectoral fin. For about 6 frames the eel looks broken.",
+   "fix": "Set a minimum spine bend radius (about 40 px at 1080) for S11's opening pose, or open the first pose into a soft S-curve that straightens over f639-f650.",
+   "src": "craft"
+  },
+  {
+   "shot": "S7",
+   "frames": "f381-f400",
+   "severity": "minor",
+   "claim": "At phone size the poke-out tip is small: about 40 px at 1080 wide, roughly 14 pt on screen. It is dark blue against the dark red slit, and the camera is already pulling out. The bubbles carry most of the read for this beat.",
+   "fix": "Start S7 about 1.3x tighter, or hold the pull-out until about f400. Add a light rim or highlight on the tip so it separates from the slit.",
+   "src": "craft"
+  },
+  {
+   "shot": "S3",
+   "frames": "f141-f168",
+   "severity": "minor",
+   "claim": "A near-dead hold (f141-f148, diff <0.6) is followed by a crash zoom of about 4x in 18 frames (f150-f168), the fastest camera move in the piece. The X-ray eel jumps from small to full frame. Readable, but jarring on a phone.",
+   "fix": "Start the push around f136 and spread it over about 30 frames with an ease-in and ease-out, ending around f168. That removes both the hold and the snap.",
+   "src": "craft"
+  },
+  {
+   "shot": "S9",
+   "frames": "f486-f531",
+   "severity": "minor",
+   "claim": "There are about 1.5 s of near-freeze with only a slow camera push (diffs 1.2-3.7). The head sits motionless in the slit, so the beat reads as paused rather than straining.",
+   "fix": "Add a slow body slide (move the highlight or texture along the eel toward the right), plus a small head shift or eye blink about every 12-15 frames. The beat then reads as the eel working itself out.",
+   "src": "craft"
+  }
+ ]
+}
