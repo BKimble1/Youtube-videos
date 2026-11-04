@@ -153,11 +153,12 @@ const wiggle = (u: number, sig: number, t: number) => {
 
 // ---------------------------------------------------------------- free mode: the release, the stroke, the swim
 const relax = (t: number) => ss(t, EV.release + 0.05, EV.release + 1.05);
-const kSwim = (u: number, t: number) => (0.035 + 0.11 * u) * Math.sin(2 * Math.PI * (u / 0.62 - 2.4 * (t - EV.release)));
+// the tail's stroke grows in as it swims clear (so the tail never flops back over the fish while it straightens)
+const kSwim = (u: number, t: number) => (0.035 + 0.11 * u * (0.35 + 0.65 * ss(t, EV.swim0 + 0.2, EV.swim0 + 0.8))) * Math.sin(2 * Math.PI * (u / 0.62 - 2.4 * (t - EV.release)));
 // mid-body motion after the release: the coil pulls up and away from the gill as it straightens (both ends swing about
 // mid-body), turning so the head leads up and to the right, clear of the fish; then a quick swim along that heading
 export const SWIM_DIR = (-62 * Math.PI) / 180;
-const M_AFTER = pt(-8.5, -27.5);
+const M_AFTER = pt(-8.5, -34.5);
 let REL0: {M: P; th: number} | null = null;
 const rel0 = () => (REL0 ??= releaseMid(DRIVERS));
 const angTo = (from: number, to: number) => {
@@ -168,7 +169,7 @@ const angTo = (from: number, to: number) => {
 };
 /** the swimmer's heading (snout direction): up and to the right, clear of the fish, out of the frame */
 export const headingAt = (_t: number) => SWIM_DIR;
-const swimSpeed = (t: number) => 15 * ss(t, EV.release + 0.5, EV.release + 1.3) + 12 * ss(t, EV.swim0 + 0.9, EV.swim0 + 1.6);
+const swimSpeed = (t: number) => 15 * ss(t, EV.release + 0.3, EV.release + 0.9) + 12 * ss(t, EV.swim0 + 0.9, EV.swim0 + 1.6);
 const SW_DT = 1 / 240;
 const swimTable: P[] = (() => {
   const out: P[] = [];
@@ -267,10 +268,9 @@ const CAM_KEYS: Key[] = [
   [T.comes, C(-18.5, -11.5, 56), travel],
   [T.lastEnd + 0.1, C(-18.4, -11.0, 54), travel],
   [EV.curl1, C(-19.5, -13.0, 54), travel],
-  [EV.release + 0.2, C(-19.5, -13.5, 56), travel],
-  // it swims clear, up and away, the predator below in frame all along; one smooth move then settles on the opening
+  [EV.release + 0.2, C(-21.0, -17.0, 62), travel],
+  // it swims clear, up and away, the predator below in frame all along; ONE smooth move then settles on the opening
   // camera (the predator alive and upright), so the tail's sweep past the lens reveals frame 0 on an identical fish
-  [EV.release + 1.25, C(-18.0, -17.0, 62), travel],
   [SWEEP0 - 0.3, CAM_A, travel],
 ];
 export const camAt = (t: number): Cam => glide(t, CAM_KEYS);

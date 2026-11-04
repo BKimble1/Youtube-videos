@@ -43,7 +43,7 @@
   tapering, fringed and flexing on its own, clearly unlike the warm amber, rayed fins.
 - In the first 0.46 s the cover beats once (the red crescent peaks at frame 3 and has closed by frame 13), and the
   tail swings the opposite way.
-- The tail tip stays 57–90 px inside the frame.
+- The tail tip stays inside the frame: its rightmost pixel is at least 38 px from the edge (gate measurement).
 
 **Shot 2: what is still inside (1.6–5.7 s)**
 - On "the eel it just swallowed" the camera follows the tail inward.
@@ -88,8 +88,9 @@
 - The predator stays alive and upright: breathing, a startle flutter, and its eye following the eel.
 
 **Shot 6: the loop (21.3–24.8 s)**
-- The eel swims clear, up and away, and leaves the frame. The predator stays in frame all along.
-- One smooth move settles on the opening camera.
+- The eel swims clear, up and away, and leaves the frame. Every eel sample stays at least 4 u above the
+  predator's back once it is clear (probed on every frame). The predator's eye stays in frame throughout.
+- One smooth, monotonic move settles on the opening camera.
 - The eel's tapering tail then sweeps once, right to left, close past the lens. Behind it the opening composition
   appears: the same camera, the same fish, and the tail back in the gill.
 - The last frame flows into frame 0, and the tail sweep matches the opening tail's flick.
@@ -143,9 +144,27 @@ before it was acted on. Round two also re-checked round one's fixes.
 - The lens tail read as a straight pole. It is now the tapering rear third, with its tip, an S-flex and less blur.
 - The reveal holes showed a milky patch. The frosted interior now darkens rather than lightens.
 
+**Final gate (pre-delivery, on the V3 candidate), with an adversarial check of every failure.**
+
+- **Passed:**
+  - the tail leads the whole escape;
+  - the head releases once and comes out last;
+  - the eel exits through the gill opening;
+  - frame 0 reads at phone size (the tail is not a fin; the cover beats once while the tail flexes the other way);
+  - the loop shows one predator and flows into frame 0;
+  - the captions never cover the gill opening and never blank.
+- **Confirmed and fixed in the delivered file:**
+  - Just after the release, the swimmer's tail flopped back onto the predator's back for about 0.6 s, so the eel
+    looked stuck in the fish. The swimmer now stays above the fish.
+  - The camera stopped and reversed during the swim-away. It now makes one move.
+- **Refuted by the verifier (planned or not noticeable):**
+  - the head out of frame during the slit close-up (the same stage then widens to show head, slit, exit and tail
+    together);
+  - a faint frosted sheen in the reveal.
+
 ## Known limits (honest list)
 
-1. **Not watched or heard in real time.** This environment has no display or speakers. Picture, timing and sound
+1. **Not watched or heard in real time by me.** This environment has no display or speakers. Picture, timing and sound
    were checked from frames, frame-difference measurements, ASR, loudness measurements and spectrograms. A phone
    check is the last step before upload.
 2. **The three-quarter cutaway is a restrained 14° yaw** on layered 2D art. It reads as a cutaway into the gills
