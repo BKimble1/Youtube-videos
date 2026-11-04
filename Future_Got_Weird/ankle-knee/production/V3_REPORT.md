@@ -13,11 +13,11 @@
 | Length | 725 frames, 24.17 s (V2: 750 frames, 25.00 s) |
 | Narration | The same approved ElevenLabs take, verbatim. Only dead air was cut: sentence gaps over 0.30 s were shortened to 0.30 s with 12 ms crossfades (0.77 s removed in all, before *Wyatt*, *They*, *That*, *When* and *And*). No word is touched (`tools/make_narration_v3.py`, `audio/narration/FGW_Ankle_Knee_narration_V3.wav`) |
 | ASR of the mix | whisper base.en WER **0.000**. Zipformer differs only in spellings (Wyat, half way, sockerball) (`qa/v3_review/asr_mix_v3.json`) |
-| Mix | __MIX__ |
-| Full decode | __DECODE__ |
-| Pacing | __STATIC__ |
-| Loop seam | __LOOP__ |
-| Unplanned large frame changes | __UNPLANNED__ |
+| Mix | −13.5 LUFS integrated, −1.6 dBTP (4× oversampled). Voice −16.6 LUFS, effects −34.8, ambience −46.7 (`audio/mix/mix_measure_mix_v3.json`) |
+| Full decode | no errors; 725 frames decoded, 11.1 MB |
+| Pacing | Longest near-static run: **11 frames (0.37 s)**, at the three-quarter turn's ease-in (V2: 15 frames). The first V3 render had a 1.3 s hold on the scan, after the push-in finished and before the anatomy dissolve. The push now keeps creeping in through that gap and still lands exactly on the anatomy match |
+| Loop seam | last frame vs frame 0: 5.2 (V2 6.0). The follow-through pushes into frame 0's own close-up, and the socket clears back to the rimmed cutaway (`qa/v3_review/loop_seam_last3_first3.png`) |
+| Unplanned large frame changes | none. Every large frame change falls in a planned window: the ball at the lens, the cuts, the scan dissolve, the opening widen, the track down from the hip, the plant insert and the closing push |
 
 ## The new cut
 
