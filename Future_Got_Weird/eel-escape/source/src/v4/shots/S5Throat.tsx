@@ -4,8 +4,12 @@
 //
 // S5 THE THROAT (8.90 – CUT): the esophagus, a narrow tube with longitudinal folds, built in true 3D (its own set
 //   frame: the tube's axis runs along +x) and seen from INSIDE, beside the eel. We open out of the stomach opening's
-//   dark lumen (hand-off 3); the camera travels alongside the tail as it slides up the passage, tip first; near the
-//   end it dips toward the passing body until the moving body fills the foreground.
+//   dark lumen (hand-off 3): the dark lifts on the passage. The camera travels alongside the tail, looking up the
+//   passage, as the tail slides on tip first through the passage's fixed bends (its depth vanishes ahead in the dark,
+//   below the caption band). From DIP0 the camera stops and settles onto the passing body, which rushes on beneath
+//   it and fills the foreground (the surroundings sink into shadow).
+// THE CUT (CUT ± XF, 3 frames): a dissolve inside that body. S6 opens with its camera just above the same body,
+//   heading the same way into the depth, framed to overlay S5's (same position, angle and width within ~20 px).
 // S6 THE GILLS (CUT – 12.58): a new set and a new angle, from inside the pharynx looking toward the gill curtain:
 //   four arch bars (comb-like rakers on their inner edge, a red fringe of filaments behind), real slits between
 //   them, the dark opercular chamber beyond, lit from the gill opening at its rear. Set frame: X right (toward the
@@ -14,18 +18,21 @@
 //   Z = const maps to the screen by a uniform scale: the arches, the chamber wall and the opening are flat layers
 //   with exact perspective between them, and the eel is a 3D route through them. Its part already through the slit
 //   is drawn behind the curtain (occluded by the bars and filaments), the rest in front; the filaments and the
-//   rakers part around the body and the bar beside it gives way.
+//   rakers part around the body and the bar beside it gives way. Beats: the camera rises off the body and the
+//   curtain appears (CUT – 10.78), the tail heads straight for the slit and turns sideways into it ("slips", 10.89),
+//   the closest push while the body threads between the two bars and the tip comes out beyond the next one ("gap",
+//   11.47 – 11.67), then the camera follows the tip across the chamber toward the opening (11.67 – 12.40).
 // The end is hand-off 2: the camera settles in the chamber facing the opening; its rim (the gill cover's free edge,
 //   bright water beyond) lies on EDGE, and the eel's last 8 units lie exactly on pokeTail(t) for t in [12.44, 12.72].
 import React from 'react';
 import {P} from '../../core/geo';
 import {uid} from '../../core/ids';
-import {lit, mix, rgba} from '../../core/color';
+import {lit, mix} from '../../core/color';
 import {C, INK, NS} from '../../art/palette';
 import {eelSilhouette} from '../../art/eelArt';
 import {clamp, hash, lerp, noise1, ss} from '../../lib';
 import {EEL_L, Eel2D, Eel3Pose, N, RADII, US, backFrom, eelScreen} from '../eelV4';
-import {EDGE, KeepOut, LUMEN, POKE0, POKE1, POKE_AT, POKE_DIR, POKE_PX, T, pokeTail} from '../timing';
+import {EDGE, KeepOut, LUMEN, POKE0, POKE_DIR, POKE_PX, T, pokeTail} from '../timing';
 import {Basis, V3, add3, basis, dot3, len3, mul3, norm3, projPoly, proj, spline3, sub3} from '../three';
 
 const W = 1080, H = 1920;
@@ -39,10 +46,10 @@ export const G_BEATS = {
   slides: 9.27,
   dip0: 10.1, // the camera dips toward the passing body ...
   cut: 10.42, // ... which fills the foreground: S5 -> S6 (a short dissolve inside the body, CUT ± XF)
-  establish: 10.78, // the gill curtain, the tail heading for the slit between arch 2 and arch 3
+  establish: 10.78, // the camera has risen off the body: the gill curtain, the tail heading for the slit
   slips: 10.89, // the tip enters the slit
   gap: 11.47, // the body threads the gap (the closest push)
-  follow: 11.8, // the camera follows the tip across the chamber toward the opening
+  follow: 11.67, // closest on the gap; from here the camera follows the tip toward the opening
   settle: 12.4, // the inside of the poke is framed (static camera from here)
   poke: T.poke, // the tip crosses the rim at POKE_AT
 };
@@ -233,7 +240,7 @@ const s5Cam = (t: number) => {
   const dip = ss(t, G_BEATS.dip0, G_BEATS.cut + 0.05);
   const eye: V3 = [xc, lerp(-0.75, 0.78, dip), lerp(0.95, -0.3, dip)];
   const dir: V3 = [lerp(3.2, 3.0, dip), lerp(0.95, 0.95, dip), lerp(-0.65, -0.62, dip)];
-  return basis({eye, target: add3(eye, dir), f: 700, roll: lerp(-22, -24, dip)});
+  return basis({eye, target: add3(eye, dir), f: 700, roll: lerp(-22, -9, dip)});
 };
 /** where the passage's depth vanishes on screen */
 const s5Vp = (B: Basis) => proj(B, add3(B.eye, [400, 0, 0]));
@@ -379,7 +386,7 @@ const S5View: React.FC<{t: number}> = ({t}) => {
   const {B, e} = s5State(t);
   // the eel's soft contact shadow on the wall below it (light from the upper left)
   const sh = eelSilhouette(e.pts.map((p) => ({x: p.x + 14, y: p.y + 22})), e.rad.map((r) => r * 1.05), Math.max(1, e.from), N, false, t, 1, 4);
-  // opening out of the lumen: an iris of dark that widens off the frame, centred on the passage ahead
+  // opening out of the lumen: its dark lifts evenly, lingering a moment longer at the frame's edges
   const op = ss(t, G_BEATS.open0, G_BEATS.open1);
   const tipS = e.pts[N];
   const ir = uid('s5iris');
@@ -394,14 +401,14 @@ const S5View: React.FC<{t: number}> = ({t}) => {
       {op < 1 && (
         <g>
           <defs>
-            <radialGradient id={ir} gradientUnits="userSpaceOnUse" cx={tipS.x - 40} cy={tipS.y + 190} r={110 + 2400 * op ** 1.6}>
+            <radialGradient id={ir} gradientUnits="userSpaceOnUse" cx={tipS.x} cy={tipS.y + 120} r={1500}>
               <stop offset="0" stopColor={LUMEN} stopOpacity={0} />
-              <stop offset="0.55" stopColor={LUMEN} stopOpacity={0.35 * (1 - op)} />
+              <stop offset="0.5" stopColor={LUMEN} stopOpacity={0.5} />
               <stop offset="1" stopColor={LUMEN} stopOpacity={1} />
             </radialGradient>
           </defs>
-          <rect x={0} y={0} width={W} height={H} fill={`url(#${ir})`} />
-          <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={1 - ss(t, G_BEATS.open0, G_BEATS.open0 + 0.22)} />
+          <rect x={0} y={0} width={W} height={H} fill={`url(#${ir})`} opacity={1 - op} />
+          <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={1 - ss(t, G_BEATS.open0, G_BEATS.open0 + 0.36)} />
         </g>
       )}
     </g>
@@ -435,7 +442,6 @@ const Z_B = -2.5; // the chamber's outer wall (the cover's inner face) and the o
 const F_END = 520;
 /** the poke contract at the cut, mapped into the plane Z_E for a camera at the origin's height (solved below) */
 const PK = pokeTail(T.poke);
-const I0 = PK.i0;
 // G (the crossing of the curtain) is at the origin; the contract's first sample sits up and to the right of it,
 // one plane in: from the slit the body goes into the chamber, then turns along the cover toward the opening
 const G_TO_I0: V3 = [1.9, -1.0, Z_E];
@@ -513,14 +519,14 @@ const s6Pose = (t: number) => poseOn(S6_ROUTE, s6Tip(t), (c) => backFrom(c, [0, 
 
 // ---------------------------------------------------------------- the S6 camera
 const CAM_EST: Cam6 = {e: [1.6, -0.9, 10.8], f: 1000, cx: 540, cy: 960};
-const CAM_GAP: Cam6 = {e: [0.25, -0.45, 3.5], f: 960, cx: 540, cy: 980};
-const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 700, cy: 845};
+const CAM_GAP: Cam6 = {e: [0.95, -0.62, 4.0], f: 900, cx: 540, cy: 990};
+const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 735, cy: 875};
 const s6Cam = (t: number): Cam6 => {
   const ks: [number, Cam6][] = [
     [G_BEATS.cut - 0.06, CAM_CUT],
     [G_BEATS.establish, CAM_EST],
     [11.0, {e: [1.2, -0.66, 9.6], f: 990, cx: 540, cy: 962}],
-    [G_BEATS.gap + 0.2, CAM_GAP],
+    [G_BEATS.follow, CAM_GAP],
     [G_BEATS.settle, CAM_END],
   ];
   const comp = (sel: (c: Cam6) => number) => herm(t, ks.map(([tk, c]) => [tk, sel(c)] as Key));
@@ -533,16 +539,59 @@ const s6Cam = (t: number): Cam6 => {
 };
 
 // ---------------------------------------------------------------- the gill curtain (plane Z = 0, set units)
+// the pharynx's tissue around the curtain (its roof and floor where the arches root, and its front wall); open
+// beyond the last arch, where the chamber runs on toward the opening
+/** a fold of tissue whose edge runs along y0 and, past x1, rounds off and curls away (dir -1 up, +1 down) */
+const lipLine = (y0: number, x1: number, dir: number, seed: number): P[] => {
+  const out: P[] = [];
+  for (let j = 0; j <= 44; j++) {
+    const x = -6 + j * 0.27;
+    if (x > x1) break;
+    out.push({x, y: y0 + 0.3 * Math.sin(x * 1.3 + seed) + 0.2 * Math.sin(x * 0.55 + 1 + seed)});
+  }
+  const e = out[out.length - 1];
+  for (let j = 1; j <= 14; j++) {
+    const a = (j / 14) * (Math.PI / 2);
+    out.push({x: e.x + 1.4 * Math.sin(a) + 0.25 * a, y: e.y + dir * (1.4 * (1 - Math.cos(a)) + 2.2 * (j / 14) ** 2)});
+  }
+  const l = out[out.length - 1];
+  out.push({x: l.x + 0.3, y: l.y + dir * 3}, {x: l.x + 0.5, y: l.y + dir * 30});
+  return out;
+};
+const ROOF: P[] = lipLine(-6.9, 5.4, -1, 0).map((p) => ({x: p.x, y: p.y - 0.5 * Math.max(0, p.x + 4)}));
+const FLOOR: P[] = lipLine(9.6, 5.3, 1, 2).map((p) => ({x: p.x, y: p.y + 0.35 * Math.max(0, p.x + 3)}));
+/** the pharynx's front wall (left of the first arch), top to bottom: a soft bulging lip */
+const FRONT: P[] = Array.from({length: 33}, (_, j) => {
+  const y = lerp(ROOF[0].y, FLOOR[0].y, j / 32);
+  return {x: -6 + 0.55 * Math.sin(Math.PI * (j / 32)) ** 0.6 + 0.18 * Math.sin(j * 0.9), y};
+});
+const WINDOW: P[] = [...ROOF, {x: 40, y: -40}, {x: 40, y: 40}, ...[...FLOOR].reverse(), ...[...FRONT].reverse().slice(1, -1)];
 const ARCH_X = [-3.5, -1.15, 1.15, 3.5];
-const ARCH_Y0 = -8.2, ARCH_Y1 = 10.8;
 const ARCH_N = 170;
 /** an arch's centreline: a curved bar, concave toward the front (left), top to bottom */
+const archX = (k: number, y: number) => {
+  const d = y - 1.2;
+  return ARCH_X[k] + (d < 0 ? 0.012 : 0.021) * d * d - 0.003 * d * d * Math.abs(k - 1.5) - 0.03;
+};
+/** y of a lip line at x (linear in x; past its end the tissue is gone: `beyond`) */
+const lipY = (L: P[], x: number, beyond: number) => {
+  if (x <= L[0].x) return L[0].y;
+  for (let i = 1; i < L.length; i++) if (x <= L[i].x) return lerp(L[i - 1].y, L[i].y, (x - L[i - 1].x) / (L[i].x - L[i - 1].x || 1));
+  return beyond;
+};
+/** each arch runs from inside the roof to inside the floor (its ends root in the tissue) */
+const ARCH_SPAN: [number, number][] = [0, 1, 2, 3].map((k) => {
+  let y0 = -2, y1 = 4;
+  while (y0 > -24 && y0 > lipY(ROOF, archX(k, y0), -40) - 0.7) y0 -= 0.05;
+  while (y1 < 24 && y1 < lipY(FLOOR, archX(k, y1), 40) + 0.7) y1 += 0.05;
+  return [y0, y1];
+});
 const archLine = (k: number): P[] => {
   const out: P[] = [];
+  const [y0, y1] = ARCH_SPAN[k];
   for (let j = 0; j <= ARCH_N; j++) {
-    const y = lerp(ARCH_Y0 - 1.6 * k, ARCH_Y1 + 0.9 * k, j / ARCH_N);
-    const x = ARCH_X[k] + 0.021 * (y - 1.2) ** 2 - 0.004 * (y - 1.2) ** 2 * Math.abs(k - 1.5) - 0.03;
-    out.push({x, y});
+    const y = lerp(y0, y1, j / ARCH_N);
+    out.push({x: archX(k, y), y});
   }
   return out;
 };
@@ -665,28 +714,6 @@ const archGeo = (k: number, discs: Disc[], t: number): ArchGeo => {
 };
 const dPolyF = (ps: P[], close = true) => (ps.length ? 'M' + ps.map((p) => `${p.x.toFixed(3)} ${p.y.toFixed(3)}`).join('L') + (close ? 'Z' : '') : '');
 
-/** the pharynx's tissue around the curtain (its roof and floor where the arches root, and its front wall); open
- *  beyond the last arch, where the chamber runs on toward the opening */
-/** a fold of tissue whose edge runs along y0 and, past x1, rounds off and curls away (dir -1 up, +1 down) */
-const lipLine = (y0: number, x1: number, dir: number, seed: number): P[] => {
-  const out: P[] = [];
-  for (let j = 0; j <= 44; j++) {
-    const x = -6 + j * 0.27;
-    if (x > x1) break;
-    out.push({x, y: y0 + 0.3 * Math.sin(x * 1.3 + seed) + 0.2 * Math.sin(x * 0.55 + 1 + seed)});
-  }
-  const e = out[out.length - 1];
-  for (let j = 1; j <= 14; j++) {
-    const a = (j / 14) * (Math.PI / 2);
-    out.push({x: e.x + 1.4 * Math.sin(a) + 0.25 * a, y: e.y + dir * (1.4 * (1 - Math.cos(a)) + 2.2 * (j / 14) ** 2)});
-  }
-  const l = out[out.length - 1];
-  out.push({x: l.x + 0.3, y: l.y + dir * 3}, {x: l.x + 0.5, y: l.y + dir * 30});
-  return out;
-};
-const ROOF: P[] = lipLine(-6.9, 4.6, -1, 0).map((p) => ({x: p.x, y: p.y - 0.5 * Math.max(0, p.x + 4)}));
-const FLOOR: P[] = lipLine(9.6, 5.3, 1, 2).map((p) => ({x: p.x, y: p.y + 0.35 * Math.max(0, p.x + 3)}));
-const WINDOW: P[] = [...ROOF, {x: 40, y: -40}, {x: 40, y: 40}, ...[...FLOOR].reverse()];
 const TISSUE_FOLDS: string = (() => {
   let d = '';
   for (let j = 0; j < 7; j++) {
@@ -701,7 +728,7 @@ const TISSUE_FOLDS: string = (() => {
 const Tissue: React.FC = () => {
   const outer = 'M-40 -40L40 -40L40 40L-40 40Z';
   const win = dPolyF(WINDOW);
-  const edge = dPolyF(ROOF, false) + dPolyF(FLOOR, false);
+  const edge = dPolyF(ROOF, false) + dPolyF(FLOOR, false) + dPolyF(FRONT, false);
   const roofLip = dPolyF(ROOF.map((p) => ({x: p.x, y: p.y - 0.28})), false);
   const floorLip = dPolyF(FLOOR.map((p) => ({x: p.x, y: p.y + 0.3})), false);
   return (
@@ -751,11 +778,11 @@ const EDGE_EXT: P[] = (() => {
   const a = EDGE[0], b = EDGE[1], y = EDGE[EDGE.length - 1], z = EDGE[EDGE.length - 2];
   const up: P[] = [];
   let p = a, d = {x: a.x - b.x, y: a.y - b.y};
-  for (let k = 0; k < 6; k++) {
+  for (let k = 0; k < 5; k++) {
     const l = Math.hypot(d.x, d.y);
     d = {x: d.x / l, y: d.y / l};
     // turn gradually toward the front (left) as it rises: the cover's edge curving over the top
-    const ang = Math.atan2(d.y, d.x) - 0.16;
+    const ang = Math.atan2(d.y, d.x) - 0.2;
     d = {x: Math.cos(ang), y: Math.sin(ang)};
     p = {x: p.x + d.x * 135, y: p.y + d.y * 135};
     up.push(p);
@@ -787,8 +814,6 @@ const FAR_B: P[] = (() => {
 })();
 
 const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
-  const m = planeM(c, Z_B);
-  void m;
   const gG = uid('chG'), gW = uid('chW'), gL = uid('chL');
   const rimMid = RIM_B[Math.floor(RIM_B.length / 2)];
   // the cover's inner face: dark, with soft fan-like folds converging toward its hinge (front, left)
@@ -902,7 +927,6 @@ const S6View: React.FC<{t: number}> = ({t}) => {
   // the chamber's shade on the eel's part beyond the curtain (less near the opening)
   const shadeD = iX >= 0 ? eelSilhouette(e.pts, e.rad, Math.max(iX, e.from), N, false, t, e.dorsal, 0) : '';
   const shG = uid('s6sh');
-  const tipS = e.pts[N];
   const rimS = toPlane(c, Z_B, RIM_B[Math.floor(RIM_B.length / 2)]);
   return (
     <g>
@@ -924,7 +948,6 @@ const S6View: React.FC<{t: number}> = ({t}) => {
       {curtainOn && <Curtain c={c} discs={discs} t={t} />}
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
       {front}
-      {void tipS}
     </g>
   );
 };
