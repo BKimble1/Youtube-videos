@@ -146,7 +146,7 @@ export const RAO_CAP_CABLE: V[] = [{x: 636, y: 528}, {x: 720, y: 640}, {x: 900, 
 export const RAO_MON_CABLE: V[] = [{x: 1098, y: 612}, {x: 1180, y: 664}, {x: 1330, y: 672}, {x: 1432, y: 646}];
 export const RAO_COMP_OUT = {x: COMP.x, y: COMP.y - 140};
 /** the ghost (imagined) lift cycle: 1.4 s, lift and lower the fingers and wrist */
-const LIFT: HandPoseP = {wrist: -20, idx: [-8, 4, 2], curl: 0.12, thumb: 0.3};
+const LIFT: HandPoseP = {wrist: -28, idx: [-12, 2, 0], curl: 0.1, thumb: 0.3};
 const ghostPose = (t: number) => {
   const ph = ((t % 1.4) + 1.4) % 1.4;
   const k = ph < 0.55 ? easeInOut(ph / 0.55) : ph < 0.75 ? 1 : ph < 1.3 ? 1 - easeInOut((ph - 0.75) / 0.55) : 0;
@@ -433,7 +433,7 @@ export const KB = {x: 430, y: 862, s: 1.45};
 const HS = 1.72;
 const DOWN: HandPoseP = {wrist: -4, idx: [26, 26, 14], curl: 0.42, thumb: 0.45};
 const TRAIL: HandPoseP = {wrist: -17, idx: [30, 30, 16], curl: 0.55, thumb: 0.48};
-const UP: HandPoseP = {wrist: -29, idx: [4, 8, 4], curl: 0.3, thumb: 0.4};
+const UP: HandPoseP = {wrist: -29, idx: [10, 14, 8], curl: 0.26, thumb: 0.4};
 /** the TMS-driven movement: a sharp involuntary wrist extension (fingers trailing), a brief mechanical hold, then
  *  the hand drops and the index fingertip lands on the space bar at `contact`. */
 export const jerkPose = (t: number): HandPoseP => {

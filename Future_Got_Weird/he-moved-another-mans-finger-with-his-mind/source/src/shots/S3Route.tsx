@@ -90,7 +90,7 @@ export const S3: React.FC<{f: number}> = ({f}) => {
   let cam: Cm;
   if (part1) {
     const OPEN = A(990, 470, 1.08);
-    const HANDS = A(1040, 560, 1.35);
+    const HANDS = A(1066, 560, 1.28);
     const HEAD = A(700, 330, 1.4);
     const CHAIN = A(990, 480, 1.12);
     const CURS = A(1480, 375, 2.0);
