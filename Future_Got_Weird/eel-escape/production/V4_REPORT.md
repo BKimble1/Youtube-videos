@@ -3,7 +3,7 @@
 **Deliverable:** `exports/FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4`
 
 - **Video:** H.264, 1080 × 1920, 30 fps, 744 frames, 24.80 s, CRF 16, yuv420p, BT.709.
-- **Audio:** AAC 48 kHz stereo (320 kb/s target).
+- **Audio:** AAC 48 kHz stereo (about 258 kb/s as encoded).
 - **Narration:** the locked master, unchanged, sample-aligned. The words are identical to V3.
 
 **What changed from V3:** a new shot sequence, with new settings and perspectives and new drawings throughout. V3
@@ -67,14 +67,14 @@ All measured on the exported file or on the shot code, every frame. The files ar
 | Check | Result | File |
 |---|---|---|
 | Decode | 744 frames, 24.80 s, 1080 × 1920, 30 fps, no decode errors | `render_qa.json` |
-| Motion | Median frame-to-frame change 3.68. The longest near-static run is 7 frames (0.23 s, at 13.53 s). Every large change is a planned cut (including the match cut at 12.70 s and the S10 → S11 cut at 21.20 s), dissolve or wipe, or one of the deliberate camera moves into a discovery (the X-ray push-in, the dive into the stomach opening, the passage out of the dark, the push into the gill gap). No unplanned jumps. | `render_qa.json` |
+| Motion | Median frame-to-frame change 4.03. The longest near-static run is 7 frames (0.23 s, at 13.53 s). Every large change is a planned cut (including the match cut at 12.70 s and the S10 → S11 cut at 21.20 s), dissolve or wipe, or one of the deliberate camera moves into a discovery (the X-ray push-in, the dive into the stomach opening, the passage out of the dark, the push into the gill gap). No unplanned jumps. | `render_qa.json` |
 | Loop seam | Last frame against frame 0: mean change 3.83, about the film's own median frame step. | `render_qa.json`, `loop_seam_last3_first3.png` |
 | Narration | Two independent recognisers (Zipformer, Whisper) on the exported audio: WER 0.0 on both, word for word. | `final_asr.json` |
 | Mix | −14.0 LUFS integrated, −1.6 dBTP. The narration sits at sample offset 0. Effects average 18.0 dB under the voice. 42 placed events; the poke sound lands on the S6 → S7 cut (12.71 s), the release accents on the head clearing (20.95 s). | `audio/mix/mix_measure_mix_v4.json`, `audio/sfx_log_mix_v4.json` |
 | Tail leads | The length outside never decreases (0 drops). The body stays connected (largest sample gap 0.55 u, at the rounded bend; the spacing is 0.45 u). | `kinematics.json` |
 | Head clears once | One crossing, at 20.967 s ("pull," runs 20.82–21.10 s). The head slides out over about 12 frames before it. | `kinematics.json` |
-| Real distance | After the release the eel is inside the predator on 0 frames. Mid-body distance from the gill exit: 17.1 u at release, 33.3 u at 22 s, 150.5 u at the end (the eel is 54 u long). | `kinematics.json` |
-| Face clear | From the release to 1.6 s after: the eel covers the predator's eye on 0 frames and never enters the caption band; 5 frames have a few samples (at most 5 of 121) on the face, the tail end leaving the slit. | `tools/v4/face_clear.ts` |
+| Real distance | After the release the eel is inside the predator on 0 frames. Mid-body distance from the gill exit: 17.1 u at release, 31.3 u at 22 s, 147.1 u at the end (the eel is 54 u long). | `kinematics.json` |
+| Face clear | From the release to 1.6 s after, the eel never enters the caption band. It touches the predator's face on 3 frames. On two of them only 1 of its 121 samples touches. On the third (f638, the last frame before the cut) the head reaches the predator's eye at the frame edge. In the overhead view the tail end clears the fish by the second frame after the cut. | `tools/v4/face_clear.ts` |
 | Captions | Captions sit in the top band. With a caption up, the eel and the gill gap stay below the keep-out line on every frame. The tightest margin is 34 px (S10, the rising tail, 20.60 s). | `caption_keepout.txt` |
 
 ## Muted phone-size review
