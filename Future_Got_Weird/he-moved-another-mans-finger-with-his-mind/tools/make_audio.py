@@ -26,9 +26,12 @@ from scipy.signal import butter, sosfilt, resample_poly
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SR = 48000
 rng = np.random.default_rng(23)
-C = json.load(open('audio/cues.json'))
+VER = os.environ.get('VER', 'V1')          # V2: VER=V2 python3 tools/make_audio.py (reads audio/cues_v2.json)
+C = json.load(open('audio/cues.json' if VER == 'V1' else f'audio/cues_{VER.lower()}.json'))
 KK = C['K']
 SC = {s['id'].split(' ')[0]: s['start'] for s in C['scenes']}
+if 'A' in SC:  # V2 sequence ids A..G map onto the V1 section names used by the score
+    SC = {'S1': SC['A'], 'S2': SC['B'], 'S3': SC['C'], 'S4': SC['D'], 'S5': SC['E'], 'S6': SC['F'], 'S7': SC['G']}
 narr, sr0 = sf.read('audio/narration/FGW_Finger_narration_V1.wav')
 assert sr0 == SR
 N = len(narr)
@@ -242,11 +245,12 @@ for i in range(N):
     tg = look[i]; cur = tg if tg < cur else rel * cur + (1 - rel) * tg; g[i] = cur
 mix = mix * g[:, None]
 os.makedirs('audio/mix/stems', exist_ok=True)
-sf.write('audio/mix/FGW_Finger_V1_mix.wav', mix, SR, subtype='PCM_24')
+MIX = f'audio/mix/FGW_Finger_{VER}_mix.wav'
+sf.write(MIX, mix, SR, subtype='PCM_24')
 sf.write('audio/mix/stems/score.wav', score_n, SR, subtype='PCM_24')
 sf.write('audio/mix/stems/sfx.wav', np.stack([sfxL, sfxR], 1) * g_sfx, SR, subtype='PCM_24')
 os.makedirs('source/public/audio', exist_ok=True)
-shutil.copy('audio/mix/FGW_Finger_V1_mix.wav', 'source/public/audio/mix.wav')
+shutil.copy(MIX, 'source/public/audio/mix.wav')
 mask = out > 0.5
 gap = (t_all > KK['flippedEnd'] + 0.1) & (t_all < KK['across3'] - 0.1)
 res = {
@@ -258,5 +262,5 @@ res = {
     'sfx_cues_by_kind': used,
     'limiter_min_gain_db': round(20 * np.log10(g.min()), 2),
 }
-json.dump(res, open('audio/mix/mix_measure.json', 'w'), indent=1)
+json.dump(res, open('audio/mix/mix_measure.json' if VER == 'V1' else f'audio/mix/mix_measure_{VER.lower()}.json', 'w'), indent=1)
 print(json.dumps(res))

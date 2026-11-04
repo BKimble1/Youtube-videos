@@ -1,0 +1,63 @@
+# Measured sentence times (s) of the locked narration master (use T('phrase') in code)
+  0.41-  2.85  He moved someone else’s finger with his mind.
+  3.45-  4.55  Watch the hand on the left.
+  4.96-  5.89  That’s the guy playing.
+  6.41-  8.58  The finger on the right just fired his cannon.
+  9.07- 11.98  It belongs to a man across campus who can’t even see the game.
+ 13.17- 19.34  In 2013, two researchers at the University of Washington split one video game between two buildings.
+ 19.89- 21.29  Rajesh Rao got the screen.
+ 22.07- 23.76  Andrea Stocco got the space bar.
+ 24.71- 28.25  Together, they had the equipment you normally get by sitting down at a desk.
+ 29.33- 31.23  Rao’s job was to defend a little city.
+ 31.70- 32.98  A supply plane flies over?
+ 33.36- 33.95  Let it through.
+ 35.04- 36.52  A pirate ship launches a rocket?
+ 36.93- 37.67  Shoot it down.
+ 38.73- 43.95  Easy enough, except the only person who could see the difference had no way to press fire himself.
+ 45.09- 46.84  Watch what happens on a rocket.
+ 47.49- 49.34  Rao imagines moving his right hand.
+ 49.84- 51.16  His real hand stays put.
+ 51.71- 54.99  But under that cap, the rhythm of his brain activity changes.
+ 55.52- 57.39  A computer is watching for that change.
+ 57.92- 60.12  On his screen, a little cursor climbs.
+ 60.97- 64.31  When it hits the target, the computer sends one command over the internet.
+ 65.13- 65.65  Fire.
+ 66.98- 72.09  Across campus, a magnetic coil sits over the part of Stocco’s brain that helps move his right hand.
+ 72.66- 74.12  The command triggers a pulse.
+ 74.63- 78.47  His hand jerks up, comes down on the space bar, and the cannon shoots.
+ 79.47- 81.47  The rocket disappears on Rao’s screen.
+ 82.07- 85.08  Stocco described the feeling as something like a nervous tic.
+ 86.08- 88.97  Imagine being the controller and missing the entire game.
+ 90.50- 93.47  There’s a detail I love in their pilot report.
+ 94.05- 96.87  Their first session ended early because of network problems.
+ 97.30- 99.22  Two human brains, ready to go.
+100.13-100.84  Bad connection.
+102.36-105.63  A year later, the team tried it with three pairs of volunteers.
+106.14-108.90  This time the receiver’s hand rested over a touchpad.
+109.83-113.01  In some rounds, the researchers quietly flipped the coil over.
+113.46-114.09  Same game.
+114.42-115.36  Same pulse strength.
+115.90-118.74  Even the participants couldn’t tell which way the coil was facing.
+119.99-123.67  With the coil in position, one pair hit about five out of six rockets.
+124.05-125.64  Another hit only one in four.
+126.63-127.49  With the coil flipped?
+129.70-133.01  Across all three pairs, nobody pressed the touchpad once.
+133.35-134.64  Every rocket got through.
+136.37-140.45  Then the researchers gave the person on the receiving end a much better job.
+141.01-146.28  In a 2019 study, three people played a falling-block game from three separate rooms.
+146.82-148.83  Two players could see the gap at the bottom.
+149.34-152.78  The third could see the block and had to decide whether to rotate it.
+153.44-156.05  From that seat, either answer looked reasonable.
+157.18-158.56  Each teammate sent a vote.
+159.55-165.11  This time the coil was at the back of the receiver’s head, over the part of the brain involved in vision.
+165.70-168.11  A little flash in their vision meant “rotate.”
+168.63-170.36  No flash meant “leave it.”
+171.61-178.22  They got one vote from each teammate, chose what to do, then got a fresh round of votes and a chance to change their answer.
+179.32-181.81  Here’s where I’d start having trust issues.
+182.73-186.92  On ten of the sixteen trials, the computer flipped one teammate’s advice.
+187.50-190.46  Over time, receivers learned whose signal to trust.
+191.02-195.08  Across five teams, they cleared the line about thirteen times out of sixteen.
+196.26-197.22  Go back to that finger.
+198.33-201.90  In the first game, the pulse helped decide when somebody else’s hand moved.
+202.98-205.41  Six years later, a pulse could give you advice.
+206.49-208.42  And you could decide the other guy was wrong.

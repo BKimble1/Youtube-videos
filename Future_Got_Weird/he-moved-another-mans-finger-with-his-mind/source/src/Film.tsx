@@ -14,7 +14,7 @@ export const sceneAt = (f: number) => {
   return s;
 };
 
-const Captions: React.FC<{f: number}> = ({f}) => {
+export const Captions: React.FC<{f: number}> = ({f}) => {
   const t = f / FPS;
   const c = (CUES as {start: number; end: number; text: string}[]).find((q) => t >= q.start && t < q.end + 0.25);
   if (!c) return null;
