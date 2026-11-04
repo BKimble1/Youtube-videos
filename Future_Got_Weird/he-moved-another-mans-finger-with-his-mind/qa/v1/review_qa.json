@@ -1,0 +1,48 @@
+{
+ "file": "exports/FGW_Finger_V1_REVIEW_1920x1080.mp4",
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1920,
+  "height": 1080,
+  "r_frame_rate": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "nb_frames": "6353",
+  "bit_rate": "1416860"
+ },
+ "audio": [
+  {
+   "codec_name": "aac",
+   "sample_rate": "48000",
+   "channels": 2,
+   "bit_rate": "264570",
+   "duration": "211.766000"
+  }
+ ],
+ "duration_s": 211.766667,
+ "narration_master_s": 211.7667,
+ "loudness": {
+  "integrated_lufs": -14.2,
+  "lra_lu": 3.4,
+  "true_peak_dbtp": -1.4
+ },
+ "black_segments": [],
+ "frozen_segments_over_2_5s": [
+  "13.8"
+ ],
+ "audio_vs_narration": {
+  "best_lag_ms": 0,
+  "corr": 0.6461
+ },
+ "asr_pocketsphinx": {
+  "wer_vs_locked_script": 0.315,
+  "note": "free recognition with the bundled US model; noisy on this voice; supporting only"
+ },
+ "srt": {
+  "cues": 64,
+  "max_start_offset_from_a_word_onset_ms": 0.0,
+  "overlaps": 0,
+  "last_end_s": 208.72
+ }
+}

@@ -62,8 +62,8 @@ const handAt = (t: number) => {
   const r = pr(t, e.rise, e.settle0);
   const s = pr(t, e.settle0, e.settle1);
   const pose = s > 0 ? mixP(RAISE, FLAT, s) : mixP(HOVER, RAISE, r);
-  // the hand draws back off the keys (toward the body) and comes down flat on the desk in front of the keyboard
-  return {pose, dx: lerp(0, 44, s), dy: lerp(-10 * r, 150, s), contact: s};
+  // the hand draws back off the keys (toward the body) and lifts clear of the keyboard and settles flat on the desk behind it: plainly not pressing, fully in frame
+  return {pose, dx: lerp(0, 90, s), dy: lerp(-10 * r, -185, s), contact: s};
 };
 
 const S7StoccoPanel: React.FC<{f: number}> = ({f}) => {

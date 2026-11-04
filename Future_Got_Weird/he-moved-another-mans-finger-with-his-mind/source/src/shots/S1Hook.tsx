@@ -151,7 +151,7 @@ export const Campus: React.FC<{f: number; shift: number; frameK: number; rao: Re
   const t = f / FPS;
   const sc = WW / PW;
   const cloud = (x: number, y: number, s: number) => (
-    <g transform={`translate(${fmt(x + ((t * 6) % 3000) - 1500)} ${y}) scale(${s})`} opacity={0.9}>
+    <g transform={`translate(${fmt(x + ((t * 22) % 3000) - 1500)} ${y}) scale(${s})`} opacity={0.9}>
       <ellipse cx={0} cy={0} rx={90} ry={34} fill="#FFFFFF" />
       <ellipse cx={-50} cy={8} rx={60} ry={26} fill="#FFFFFF" />
       <ellipse cx={60} cy={10} rx={64} ry={24} fill="#FFFFFF" />
@@ -173,6 +173,23 @@ export const Campus: React.FC<{f: number; shift: number; frameK: number; rao: Re
       <rect x={-3000} y={GROUND} width={6000} height={1400} fill={K.grass} />
       {/* the walk between the two buildings */}
       <path d={`M${-340 + shift},${GROUND + 6} C-120,${GROUND + 160} 120,${GROUND + 120} ${340 - shift},${GROUND + 6} L${340 - shift},${GROUND + 40} C120,${GROUND + 170} -120,${GROUND + 210} ${-340 + shift},${GROUND + 40} Z`} fill={K.path} stroke={INK} strokeWidth={4} />
+      {[0, 1, 2].map((i) => {
+        // small walkers crossing the lawn between the buildings (background life)
+        const u = ((t * (0.045 + i * 0.012) + i * 0.37) % 1);
+        const px = -300 + 600 * (i % 2 ? 1 - u : u);
+        const py = GROUND + 70 + 40 * Math.sin(u * Math.PI) - i * 18;
+        const step = Math.sin(t * 9 + i) * 3;
+        const col = [K.coral, K.teal, K.saffron][i];
+        return (
+          <g key={i} transform={`translate(${fmt(px)} ${fmt(py)}) scale(0.9)`}>
+            <ellipse cx={0} cy={2} rx={11} ry={3} fill={INK} opacity={0.15} />
+            <rect x={-4 + step * 0.4} y={-14} width={3.4} height={14} rx={1.5} fill="#2E3F5C" />
+            <rect x={0.6 - step * 0.4} y={-14} width={3.4} height={14} rx={1.5} fill="#2E3F5C" />
+            <rect x={-6} y={-32} width={12} height={20} rx={4} fill={col} stroke={INK} strokeWidth={1.6} />
+            <circle cx={0} cy={-38} r={6} fill="#E8B48F" stroke={INK} strokeWidth={1.6} />
+          </g>
+        );
+      })}
       <Tree x={-60} y={GROUND + 10} s={1.05} />
       <Tree x={150} y={GROUND - 4} s={0.8} />
       <Tree x={-1000} y={GROUND} s={1.1} />
