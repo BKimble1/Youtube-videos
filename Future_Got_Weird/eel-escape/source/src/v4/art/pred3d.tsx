@@ -1801,3 +1801,15 @@ export const predGeom = (B: Basis, pose: PredPose) => {
 
 /** a gentle swimming bend for a receding predator (radians of total turn at the tail), for `pose.bend` */
 export const swimBend = (t: number, amp = 0.32, period = 1.1) => amp * Math.sin((2 * Math.PI * t) / period);
+export const __dbgScales = (B: Basis, pose: PredPose) => {
+  const cam = camOf(B), D = makeDef(pose);
+  const G = newGrid(1, 1, []);
+  let fails = {v: 0, ok: 0, nv: 0, n: SCALES.length};
+  for (const sc of SCALES) {
+    if (sc.v < 0.16 || sc.v > 0.84) { fails.v++; continue; }
+    bodyVertex(G, 0, cam, D, sc.x, sc.psi[0], false);
+    if (!G.ok[0]) fails.ok++;
+    else if (G.nv[0] < 0.22) fails.nv++;
+  }
+  return {fails, px: pxPerU(cam, [-20, 0, 6]), r: scalesD(cam, D, 1, 85)?.d.length};
+};
