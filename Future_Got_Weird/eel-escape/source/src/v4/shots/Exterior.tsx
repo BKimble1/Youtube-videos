@@ -33,6 +33,8 @@ type ExtState = {
   insideOpacity?: number;
   /** draw only this many eel units of the inside part (behind the opening), e.g. into the mouth */
   insideSpan?: number;
+  /** how dark the opening's shade is over the part inside (default 0.3) */
+  insideShade?: number;
 };
 /** the exit at the cover's resting edge (pred3d: along the skin, back and up) */
 export const EXIT_REST: Exit = {p: EXIT0.p, out: norm3([0.88, -0.47, 0.05])};
@@ -58,13 +60,45 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
         return Math.min(a, b);
       }
     : undefined;
+  // the eel and the opening it passes through (the gill gap, or the open mouth): the body is drawn twice near the
+  // opening, once INSIDE (opaque, in the opening's shade, seen only through the opening) and once OUTSIDE (everywhere
+  // else), the two meeting along the opening's edge through feathered masks, so the body passes smoothly under the
+  // cover's edge with no cut end; farther out the body is drawn plainly
+  const hole = e && cross > 0 && cross < N ? (s.mouthClip ? g.mouthHole : g.gap) : '';
+  const drawInside = s.insideSpan !== 0;
+  const dI = (2.2 * N) / EEL_L, dO = (4.5 * N) / EEL_L;
+  const ids = {fb: uid('fbh'), mi: uid('mih'), mo: uid('moh')};
+  const fromIn = s.insideSpan ? Math.max(0, cross - (s.insideSpan * N) / EEL_L) : 0;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
       <WorldBack B={B} t={s.t} zSplit={zSplit} filter={filter} />
       <PredShadow B={B} pose={s.pose} />
       <Predator B={B} pose={s.pose} />
-      {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={s.insideSpan ? Math.max(0, cross - (s.insideSpan * N) / EEL_L) : 0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} opacity={s.insideOpacity} />}
-      {e && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} />}
+      {e && hole && (
+        <>
+          <defs>
+            <filter id={ids.fb} filterUnits="userSpaceOnUse" x={-200} y={-200} width={1480} height={2320}>
+              <feGaussianBlur stdDeviation={2.2} />
+            </filter>
+            <mask id={ids.mi} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
+              <path d={hole} fill="#FFFFFF" filter={`url(#${ids.fb})`} />
+            </mask>
+            <mask id={ids.mo} maskUnits="userSpaceOnUse" x={0} y={0} width={1080} height={1920}>
+              <rect x={0} y={0} width={1080} height={1920} fill="#FFFFFF" />
+              <path d={hole} fill="#000000" filter={`url(#${ids.fb})`} />
+            </mask>
+          </defs>
+          <g mask={`url(#${ids.mi})`}>
+            {drawInside && <Eel3D B={B} pose={e} t={s.t} from={fromIn} to={Math.min(N, cross + dI)} />}
+            <path d={hole} fill={s.mouthClip ? '#1A0608' : '#2A0A0E'} fillOpacity={s.insideShade ?? 0.3} />
+          </g>
+          <g mask={`url(#${ids.mo})`}>
+            <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross - dI)} to={Math.min(N, cross + dO)} />
+          </g>
+          {cross + dO < N && <Eel3D B={B} pose={e} t={s.t} from={cross + dO} />}
+        </>
+      )}
+      {e && !hole && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} />}
       <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
   );
@@ -156,7 +190,7 @@ export const openState = (t: number): ExtState => {
   const cam = openCam(t);
   const pose = predPose(t, {gill: openGill(t)});
   // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
-  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideOpacity: 0.5};
+  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideShade: 0.66};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view
@@ -266,7 +300,7 @@ export const gulpEel = (t: number): Eel3Pose & {crossI: number} => {
 export const gulpState = (t: number): ExtState => {
   const cam = gulpCam(t);
   const pose = predPose(t, {mouth: gulpMouth(t), gill: Math.max(breath(t), 0.15 + 0.6 * bump(t, 3.15, 3.32, 3.75)), startle: 0.4 * bump(t, 2.9, 3.2, 3.8)});
-  return {cam, pose, eel: gulpEel(t), t, mouthClip: true, insideOpacity: 0.6, insideSpan: 3.5};
+  return {cam, pose, eel: gulpEel(t), t, mouthClip: true, insideSpan: 0, insideShade: 0.0};
 };
 
 // ---------------------------------------------------------------- S7 POKE (12.58 – 13.86)
@@ -276,7 +310,7 @@ const POKE_ORBIT1: Orbit = {target: [-27, -8.0, 7], az: 22, el: -14, d: 36, f: 1
 export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.64, 13.6)));
 export const pokeState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85};
+  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5};
 };
 export const pokeStateWith = (o: Orbit, t: number): ExtState => ({cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
@@ -286,7 +320,7 @@ const F_B: Orbit = {target: [-11, -8, 16], az: 12, el: 56, d: 62, f: 1250, cy: 1
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
+  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
 };
 
 // ---------------------------------------------------------------- S9 HEAD (15.96 – 17.96): tight at the gill edge
@@ -297,7 +331,7 @@ export const headCam = (t: number): Cam3 => orbitCam(lerpOrbit(H_A, H_B, ss5(t, 
 const caughtGill = (t: number) => Math.max(breath(t), 0.25 + 0.55 * ss(t, 15.9, 16.4));
 export const headState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
+  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.28, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
@@ -309,7 +343,7 @@ export const releaseState = (t: number): ExtState => ({
   pose: predPose(t, {gill: Math.max(breath(t) + 0.08 * Math.sin(2 * Math.PI * 1.3 * t) * (t < T_REL ? 1 : 0), escGill(t), 0.7 * bump(t, T_REL, T_REL + 0.18, T_REL + 0.9)), startle: bump(t, T_REL - 0.1, T_REL + 0.25, T_REL + 1.6), bend: 0.12 * bump(t, T_REL, T_REL + 0.4, T_REL + 1.5)}),
   eel: escapeAt(t),
   t,
-  insideOpacity: 0.85,
+  insideShade: 0.3,
   clear: [[-12, -3, 12], [-25, -6, 6]],
   clearR: 14,
 });
@@ -330,7 +364,7 @@ export const swimCam = (t: number): Cam3 => {
   if (down[0] < 0) down = mul3(down, -1) as V3;
   const side = norm3(add3(mul3([0, 0, 1], 1 - ss(t, 21.25, 22.3)), mul3(down, ss(t, 21.25, 22.3))));
   // above and beside (looking down ~45°), so the stretch of open water between the eel and the predator shows on screen
-  const up = lerp(-9, -30, ss(t, 21.3, 22.4));
+  const up = lerp(-24, -30, ss(t, 21.3, 22.4));
   const eye = add3(head, add3(add3(mul3(h, lerp(12, -2, ss(t, 21.3, 22.4))), mul3(side, lerp(26, 22, ss(t, 21.3, 22.4)))), [0, up, 0]));
   const fish: V3 = [-5, -4, 0];
   const focus = add3(mul3(head, 0.55), mul3(mid, 0.45));

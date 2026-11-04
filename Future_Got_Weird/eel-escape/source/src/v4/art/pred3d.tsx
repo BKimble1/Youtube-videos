@@ -249,16 +249,16 @@ const makeDef = (pose: PredPose): Def => {
 const deform = (D: Def, x: number, y: number, z: number, jaw: boolean, out: number[]) => {
   let X = x, Y = y, Z = z;
   if (D.mouth > 1e-4 && !jaw && x < X_C) {
-    // the upper lip lifts a little as the jaws part (the snout top and the eye stay)
+    // the upper lip lifts a little as the jaws part (the snout top and the eye stay). Applied to the whole upper-jaw
+    // piece with no test against the cleft: its vertices lie ON the cleft, and an on/off test there stepped the lip
+    // (its part below the cleft is cut away while the mouth is open)
     const dx = x - HX, dy = y - HY;
-    if (y <= cleftY(x)) {
-      const al = Math.atan2(dy, -dx) / D2R;
-      const w = 1 - sstep(-12, -75, al);
-      if (w > 0) {
-        const ang = -D.phi * 0.12 * w, ca = Math.cos(ang), sa = Math.sin(ang);
-        X = HX + dx * ca + dy * sa;
-        Y = HY - dx * sa + dy * ca;
-      }
+    const al = Math.atan2(dy, -dx) / D2R;
+    const w = 1 - sstep(-12, -75, al);
+    if (w > 0) {
+      const ang = -D.phi * 0.12 * w, ca = Math.cos(ang), sa = Math.sin(ang);
+      X = HX + dx * ca + dy * sa;
+      Y = HY - dx * sa + dy * ca;
     }
   }
   if (D.mouth > 1e-4 && x < X_C + 16 && (jaw || x >= X_C)) {
@@ -797,9 +797,21 @@ const bodyVertex = (G: Grid, k: number, cam: Cam, D: Def, x: number, psi: number
     deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
     qx = TMP3[0]; qy = TMP3[1]; qz = TMP3[2];
   }
-  restAt(xq, psi + 0.003, TMP);
+  // the ψ step stays on this vertex's own side of the open mouth's cut (upper jaw above the cleft, the lower jaw
+  // between its two cleft edges): a difference across the tear would give a false normal along the lips
+  let hp = 0.003;
+  if (D.mouth > 1e-4 && xq < X_C) {
+    if (jaw) {
+      if (psi + hp > 2 * Math.PI - secAt(xq).pc) hp = -hp;
+    } else {
+      restAt(xq, psi + hp, TMP);
+      if (TMP[1] > cleftY(xq) + 1e-9) hp = -hp;
+    }
+  }
+  restAt(xq, psi + hp, TMP);
   deform(D, TMP[0], TMP[1], TMP[2], jaw, TMP3);
-  const bx = TMP3[0] - qx, by = TMP3[1] - qy, bz = TMP3[2] - qz;
+  const sg = hp > 0 ? 1 : -1;
+  const bx = (TMP3[0] - qx) * sg, by = (TMP3[1] - qy) * sg, bz = (TMP3[2] - qz) * sg;
   let nx = ay * bz - az * by, ny = az * bx - ax * bz, nz = ax * by - ay * bx;
   const nl = Math.hypot(nx, ny, nz);
   if (nl < 1e-12) { nx = -1; ny = 0; nz = 0; } else { nx /= nl; ny /= nl; nz /= nl; }

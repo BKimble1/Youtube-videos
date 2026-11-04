@@ -42,7 +42,8 @@ export const escGill = (t: number) => {
   const out = outAt(t);
   if (out <= -0.5) return 0;
   const u = clamp(1 - out / EEL_L, 0, 1);
-  return 0.28 + 0.3 * (RADII[Math.round(u * N)] / EEL_R_MAX) * clamp((out + 0.5) / 1.5);
+  // the broad head, caught behind the edge, props the cover wide open (the eye shows just inside)
+  return 0.28 + 0.3 * (RADII[Math.round(u * N)] / EEL_R_MAX) * clamp((out + 0.5) / 1.5) + 0.24 * ss(out, 45, 49);
 };
 /** the exit used by the escape at time t (until the release) */
 export const exitAt = (t: number): Exit => exitAtGill(escGill(Math.min(t, T_REL - 1e-6)));
@@ -113,7 +114,7 @@ export const outAt = (t: number): number => {
 
 // ---------------------------------------------------------------- the outside shape
 /** phase weights (smooth): bow into the current (S7, S8) → the loose curl (S9, S10) → tightening (the pull) */
-const wCurl = (t: number) => ss(t, 15.7, 17.2);
+const wCurl = (t: number) => ss(t, 17.3, 18.9);
 const wTight = (t: number) => 0.45 * ss(t, 18.4, 20.2) + 0.55 * ss(t, 20.2, 20.78);
 
 /** the curl's loop (S9–S10): it starts LOOP_A0 units out and runs clockwise as seen from the near side (back → down →
@@ -136,7 +137,7 @@ const theta = (a: number, t: number, out: number) => {
 };
 const beta = (a: number, t: number, out: number) => {
   // out from under the cover, flattening into a plane beside the flank; the curl's plane sits farther out
-  const lead = lerp(25, 60, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 7 + 2 * wTight(t), wCurl(t)));
+  const lead = lerp(25, 72, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 9 + 2 * wTight(t), wCurl(t)));
   // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in
   const bowZ = 55 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
   return lead + bowZ;

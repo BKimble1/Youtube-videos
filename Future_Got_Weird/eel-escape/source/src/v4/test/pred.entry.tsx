@@ -47,9 +47,16 @@ Object.assign(VIEWS, {
   lookB: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-25, -25, 20]}, label: 'look up-back'},
   lookC: {o: {target: [-40, -6, 3], az: 15, el: 5, d: 22, f: 1250}, pose: {look: [-38, 10, 30]}, label: 'look down-out'},
 } as Record<string, View>);
+Object.assign(VIEWS, {
+  G2a: {o: {target: [-47, 2.5, 1], az: -6, el: 4, d: 22, f: 1300}, pose: {mouth: 1}, label: 'gulp d22 m1'},
+  G2b: {o: {target: [-47, 2.5, 1], az: -6, el: 4, d: 22, f: 1300}, pose: {mouth: 0.85}, label: 'gulp d22 m.85'},
+  G2c: {o: {target: [-45, 2.5, 1], az: -6, el: 4, d: 40, f: 1300}, pose: {mouth: 1}, label: 'gulp d40 m1'},
+  G2d: {o: {target: [-42, 2.5, 1], az: -6, el: 4, d: 60, f: 1300}, pose: {mouth: 0.9}, label: 'gulp d60 m.9'},
+} as Record<string, View>);
 const SHEETS: Record<string, string[]> = {
   brief: ['S1', 'S1g4', 'S1g1', 'S2', 'S2m5', 'S2m1', 'S2h0', 'S2h5', 'S2h1', 'S8', 'S9', 'S9x', 'S10', 'S11', 'S11b', 'S1m'],
   extra: ['top', 'back', 'front', 'S2c', 'S9', 'S1g1'],
+  gulp: ['G2a', 'G2b', 'G2c', 'G2d'],
   odd: ['farSide', 'below', 'startle', 'back', 'lookA', 'lookB', 'lookC', 'topc'],
 };
 

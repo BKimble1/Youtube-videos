@@ -15,7 +15,7 @@ const Layer: React.FC<{opacity?: number; filter?: string; children: React.ReactN
   <div style={{position: 'absolute', inset: 0, overflow: 'hidden', opacity, filter}}>{children}</div>
 );
 /** the flashback (S2, the earlier gulp): a little drained and warm, with a soft vignette */
-const FLASHBACK = 'saturate(0.72) sepia(0.14) brightness(0.97)';
+const FLASHBACK = 'saturate(0.5) sepia(0.3) brightness(0.97) contrast(0.96)';
 const Vignette: React.FC<{a: number}> = ({a}) => (
   <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 75% 60% at 50% 55%, rgba(0,0,0,0) 55%, rgba(8,10,14,0.55) 100%)', opacity: a}} />
 );
@@ -28,6 +28,8 @@ export const ShotsAt: React.FC<{t: number}> = ({t}) => {
       <Layer filter={FLASHBACK}>
         <ExtShot id="gulp" t={t} />
         <Vignette a={1} />
+        {/* into the memory: a soft bloom of light at the cut */}
+        <div style={{position: 'absolute', inset: 0, background: '#FFF6E6', opacity: 0.5 * clamp(1 - (t - T.gulp) / 0.16)}} />
       </Layer>
     );
   // S3 → S4: the carried tail; the stomach comes up under the X-ray over 5.72–5.84
