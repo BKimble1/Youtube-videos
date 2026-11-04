@@ -69,8 +69,10 @@ export const ballScreen = (t: number) => {
   const s0 = toScreen(LOW, BALL_C);
   const r0 = BALL_R * camScale(LOW);
   const K: [number, number, number, number][] = [
-    [CONTACT, s0.x, s0.y, r0], [CONTACT + 0.033, s0.x - 55, s0.y - 270, r0 * 1.03], [CONTACT + 0.067, s0.x - 115, s0.y - 570, r0 * 1.07], [0.17, s0.x - 175, s0.y - 960, r0 * 1.2],
-    [0.27, 300, 430, 330], [0.34, 410, 580, 600], [0.37, 440, 760, 880], [WIPE_T, 450, 930, 1290], [0.45, -630, 920, 1330], [0.5, -1420, 900, 1370], [0.6, -2600, 880, 1440],
+    // up and left, fast, staying below the caption band; then it swells toward the lens where it is (no turn back to
+    // the centre) until it covers the frame, and its trailing edge sweeps off to the left
+    [CONTACT, s0.x, s0.y, r0], [CONTACT + 0.033, s0.x - 60, s0.y - 210, r0 * 1.03], [CONTACT + 0.067, s0.x - 120, s0.y - 420, r0 * 1.07], [0.17, s0.x - 190, s0.y - 640, r0 * 1.2],
+    [0.27, s0.x - 205, s0.y - 665, 300], [0.34, s0.x - 200, s0.y - 650, 700], [WIPE_T, s0.x - 190, s0.y - 640, 1570], [0.45, -760, 760, 1610], [0.5, -1560, 760, 1650], [0.6, -2800, 760, 1700],
   ];
   const x = spline(t, K.map((q) => [q[0], q[1]]));
   const y = spline(t, K.map((q) => [q[0], q[2]]));

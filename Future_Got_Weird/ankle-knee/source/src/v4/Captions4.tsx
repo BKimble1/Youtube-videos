@@ -19,5 +19,5 @@ export const Captions4: React.FC<{t: number; ys?: Record<number, number | ((t: n
   if (i < 0) return null;
   const v = ys[i];
   const y = v === undefined ? DEFAULT_Y : typeof v === 'function' ? v(t) : v;
-  return <CaptionLine key={i} c={CAPS4[i]} y={y} a={i === 0 ? 1 : clamp((t - CAPS4[i].show) / 0.067)} />;
+  return <CaptionLine key={i} c={CAPS4[i]} y={y} a={i === 0 ? 1 : clamp(0.5 + (t - CAPS4[i].show) / 0.067)} />;
 };

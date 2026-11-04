@@ -59,7 +59,7 @@ const HX: [number, number][] = [
 ];
 // the kicking leg (near, prosthetic) from toe-off to landing: angles keyed through IK solutions at the key moments
 const ik = (H: V, P: V, pitch = 80) => legTo(H, P, pitch);
-const NEAR_TOEOFF = -0.4;
+const NEAR_TOEOFF = -0.52;
 const LAND = 0.84;
 const PA_LAND: V = {x: -60, y: -ANK};
 
@@ -69,6 +69,10 @@ const hipAt = (tau: number): V => {
   const run = ss(tau, -2.35, -2.0) * (1 - ss(tau, -0.7, -0.42));
   let y = -71.5 + 1.4 * Math.sin((tau + 2.3) * Math.PI * 3.1) * run;
   y = lerp(y, H_HIT.y, ss(tau, -0.7, -0.4) * (1 - ss(tau, 0.3, 1.0)));
+  // after the landing: soft knees (both bend a little), so the turned foot tilts back in its socket and its toes point
+  // clearly behind him on "ankle"; he straightens into the proof
+  const soft = ss(tau, 0.75, 1.05) * (1 - ss(tau, T4.working - CONTACT - 0.3, T4.working - CONTACT));
+  y += 4.6 * soft;
   // before he sets off: a ready stance, knees soft, a small bounce on his toes as the pass comes past
   const ready = 1 - ss(tau, -2.45, -2.2);
   if (tau < 0) y += ready * (1.6 + 0.7 * Math.sin(2 * Math.PI * 1.7 * (tau + 4)));
@@ -91,9 +95,9 @@ export const kickPose = (tau: number): BPose => {
   }
   const nf = footOn(tau, NEAR_SW, 122);
   // the trailing (near) foot peels off before the swing: heel up, toes last to leave
-  const peel = ss(tau, -0.78, NEAR_TOEOFF);
+  const peel = ss(tau, -0.9, NEAR_TOEOFF);
   if (tau > -0.94 && tau < NEAR_TOEOFF) nf.p = {x: nf.p.x - 3 * peel, y: nf.p.y - 7 * peel}, nf.pitch = 90 - 34 * peel;
-  if (!strike && tau < -0.78 && nf.air === 0) {
+  if (!strike && tau < -0.9 && nf.air === 0) {
     const dx = H.x - nf.p.x;
     H = {x: H.x, y: Math.max(H.y, nf.p.y - Math.sqrt(Math.max(0, reach ** 2 - dx * dx)))};
   }
@@ -105,13 +109,13 @@ export const kickPose = (tau: number): BPose => {
     const aHit = ik(H_HIT, PA_HIT, 78);
     const aPre = ik({x: H_HIT.x + 1.2, y: H_HIT.y}, {x: PA_HIT.x + 15, y: PA_HIT.y - 5}, 74); // frame 0: one frame out
     const aLand = legTo({x: spline(LAND, HX), y: -69.5}, PA_LAND, 90);
-    const HIP: [number, number][] = [[NEAR_TOEOFF, a0.hip], [-0.2, -16], [-0.1, -6], [-1 / 30, aPre.hip], [0, aHit.hip], [0.2, 56], [0.47, 52], [0.66, 30], [LAND, aLand.hip]];
-    const KNEE: [number, number][] = [[NEAR_TOEOFF, a0.knee], [-0.2, 92], [-0.1, 74], [-1 / 30, aPre.knee], [0, aHit.knee], [0.2, 8], [0.47, 12], [0.66, 28], [LAND, aLand.knee]];
-    const ANKK: [number, number][] = [[NEAR_TOEOFF, a0.ank], [-0.2, 0], [-1 / 30, aPre.ank], [0, aHit.ank], [0.3, 0], [LAND, aLand.ank]];
+    const HIP: [number, number][] = [[NEAR_TOEOFF, a0.hip], [-0.34, -16], [-0.17, -5], [-1 / 30, aPre.hip], [0, aHit.hip], [0.2, 56], [0.47, 52], [0.66, 30], [LAND, aLand.hip]];
+    const KNEE: [number, number][] = [[NEAR_TOEOFF, a0.knee], [-0.34, 92], [-0.17, 72], [-1 / 30, aPre.knee], [0, aHit.knee], [0.2, 8], [0.47, 12], [0.66, 28], [LAND, aLand.knee]];
+    const ANKK: [number, number][] = [[NEAR_TOEOFF, a0.ank], [-0.34, 0], [-1 / 30, aPre.ank], [0, aHit.ank], [0.3, 0], [LAND, aLand.ank]];
     near = {hip: spline(tau, HIP), knee: spline(tau, KNEE), ank: spline(tau, ANKK)};
   } else {
     // landed in front; standing; the proof: the turned ankle flexes on "working knee" and the prosthetic shin swings
-    const curl = ss5(tau, T4.working - CONTACT - 0.02, T4.knee - CONTACT + 0.02) * (1 - ss5(tau, T4.knee - CONTACT + 0.42, T4.wyatt - CONTACT + 0.2));
+    const curl = ss5(tau, T4.working - CONTACT - 0.02, T4.knee - CONTACT + 0.02) * (1 - ss5(tau, T4.knee - CONTACT + 0.5, CUT_XRAY - CONTACT));
     const KC = 64;
     const shift = ss(tau, T4.working - CONTACT - 0.35, T4.working - CONTACT) * (1 - ss(tau, T4.wyatt - CONTACT + 0.1, T4.wyatt - CONTACT + 0.45));
     H = {x: H.x - 2.5 * shift, y: H.y};
@@ -119,7 +123,6 @@ export const kickPose = (tau: number): BPose => {
     const base = legTo(H, PA_LAND, 90);
     near = {hip: lerp(base.hip, -4, curl), knee: lerp(base.knee, KC, curl), ank: lerp(base.ank, 0, curl)};
   }
-  const after = tau >= 0;
   // the far leg: planted at SUP from the plant on (fs handles it), adjusting step after the kick
   const far = legTo({x: H.x + STAG.x, y: H.y + STAG.y}, fs.p, fs.pitch);
   // arms: running swing -> balance at the strike (near arm back, far arm out) -> easing to his sides
@@ -128,8 +131,9 @@ export const kickPose = (tau: number): BPose => {
   const bal = ss(tau, -0.6, -0.2) * (1 - ss(tau, 0.5, 1.3));
   const rest = ss(tau, 0.9, 1.5);
   const rdy = tau < 0 ? 1 - ss(tau, -2.45, -2.1) : 0;
-  const aN = {sh: lerp(lerp(lerp(lerp(-6, -16, rdy), -40 * ph, run), after ? 30 : -48, bal), -6, rest), el: lerp(lerp(lerp(lerp(22, 44, rdy), 62, run), after ? 40 : 28, bal), 20, rest)};
-  const aF = {sh: lerp(lerp(lerp(lerp(8, 22, rdy), 40 * ph, run), after ? -40 : 76, bal), 6, rest), el: lerp(lerp(lerp(lerp(26, 48, rdy), 66, run), after ? 30 : 34, bal), 22, rest)};
+  const ab = ss(tau, -0.02, 0.26); // the strike's balance arms swing through to the follow-through's
+  const aN = {sh: lerp(lerp(lerp(lerp(-6, -16, rdy), -40 * ph, run), lerp(-48, 30, ab), bal), -6, rest), el: lerp(lerp(lerp(lerp(22, 44, rdy), 62, run), lerp(28, 40, ab), bal), 20, rest)};
+  const aF = {sh: lerp(lerp(lerp(lerp(8, 22, rdy), 40 * ph, run), lerp(76, -40, ab), bal), 6, rest), el: lerp(lerp(lerp(lerp(26, 48, rdy), 66, run), lerp(34, 30, ab), bal), 22, rest)};
   const lean = ss(tau, -0.5, -0.1) * (1 - ss(tau, 0.3, 1.0));
   // gaze: tracking the rolling ball before the strike, after it as it flies, then down at his leg
   const watchBall = ss(tau, -3.3, -2.7) * (1 - ss(tau, 0.4, 0.9));
@@ -137,13 +141,13 @@ export const kickPose = (tau: number): BPose => {
   return {
     hip: H, pelvis: 4 + 4 * lean + 3 * run, chest: lerp(-1, 10, run) + 6 * lean - 5 * ss(tau, 0, 0.25) * (1 - rest),
     near, far, stag: STAG, aN, aF, hN: HAND_EASY, hF: HAND_OPEN, wN: -8, wF: 12,
-    neck: lerp(6, 14, lean) + 8 * ss(tau, 1.0, 1.6), turn: 0.95,
+    neck: lerp(6, 14, lean) + 8 * ss(tau, 1.0, 1.6) + 12 * ss(tau, -3.3, -2.8) * (1 - ss(tau, -2.4, -1.9)), turn: 0.95,
     expr: {...mixExpr(happy, focus, ss(tau, -1.2, -0.5) * (1 - ss(tau, 0.25, 0.8))), gx: lerp(lerp(-0.5, -0.9, watchBall), 0.85, behind), gy: lerp(0.2, 0.75, ss(tau, -1.0, -0.3))},
     blink: 0,
   };
 };
 /** toes inside the socket: a small flex as the reveal lands on "ankle", none in the strike */
-export const kickToe = (tau: number) => 22 * Math.max(0, Math.sin(Math.PI * clamp((tau - (T4.ankle - CONTACT + 0.02)) / 0.5)));
+export const kickToe = (tau: number) => 38 * Math.max(0, Math.sin(Math.PI * clamp((tau - (T4.ankle - CONTACT + 0.02)) / 0.4)));
 
 // ------------------------------------------------------------------------------------------------ the ball
 /** the pass (tau <= 0), in world cm: played from behind him, it rolls past him (screen right to left), slowing, and
@@ -160,7 +164,7 @@ export const ballWorld = (tau: number) => {
 
 // ------------------------------------------------------------------------------------------------ cameras
 /** the decisive frame's low side angle (frame 0, the strike, and the last 9 frames of the film) */
-export const LOW: Cam = {x: -21, y: -43, w: 82, eye: -13};
+export const LOW: Cam = {x: -19.5, y: -38.5, w: 86, eye: -13};
 /** the close side view after the wipe: follows the leg down from the follow-through, then holds on it */
 /** where the backward foot was when the ball covered it in LOW (screen px) and its centre in the foot frame */
 export const FOOT_MATCH = {x: 215, y: 880};
@@ -172,7 +176,7 @@ export const footCentre = (tau: number) => {
   const u = dirA(fa), v = dirA(fa + 90);
   return {x: A.x + 5 * u.x + 2 * v.x, y: A.y + 5 * u.y + 2 * v.y};
 };
-const REV_W = 48;
+const REV_W = 52;
 const REV_HOLD: Cam = {x: -53, y: -37, w: REV_W, eye: -36};
 export const revealCam = (t: number): Cam => {
   // first: the lens holds the foot where the viewer last saw it; then it pans to the standing leg as he lands
@@ -182,7 +186,7 @@ export const revealCam = (t: number): Cam => {
   const u = ss5(t, 0.5, 1.15);
   // through the proof the lens drifts right with the swinging prosthetic shin so the whole swing stays in frame
   const sw = ss5(t, T4.working - 0.25, T4.knee) * (1 - ss5(t, T4.knee + 0.45, T4.wyatt + 0.3));
-  return {x: lerp(track.x, REV_HOLD.x, u) + 13 * sw, y: lerp(track.y, REV_HOLD.y, u) + 3 * sw, w: REV_W, eye: lerp(track.eye, REV_HOLD.eye, u)};
+  return {x: lerp(track.x, REV_HOLD.x, u) + 9 * sw, y: lerp(track.y, REV_HOLD.y, u) + 3 * sw, w: REV_W, eye: lerp(track.eye, REV_HOLD.eye, u)};
 };
 /** the closing field scene: medium-wide, tracking between Wyatt and the ball */
 export const fieldCam = (t: number): Cam => {

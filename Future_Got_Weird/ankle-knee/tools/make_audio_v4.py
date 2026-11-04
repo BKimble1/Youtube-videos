@@ -108,7 +108,7 @@ def cleat(at, name, gain=-24, pro=False):
     if pro: place(sfx, tick(0.02, 3400), at + 0.01, None, gain - 14)
 # ---- the opening: contact on frame 2 (a short impact under the voice), the ball at the lens, the wipe
 CT = cj['CONTACT']
-strike(CT, -15, 'ball strike (contact, frame 2)')
+strike(CT, -18, 'ball strike (contact, frame 2)')
 place(sfx, sweep(0.18, 400, 900, 2500, 6000, 0.7), CT - 0.17, None, -31)  # the swing's last whip (runs over the loop seam)
 place(sfx, sweep(0.42, 160, 420, 900, 3800, 0.6), CT + 0.03, 'the ball comes at the lens (rising whoosh)', -23)
 place(sfx, sweep(0.26, 90, 160, 400, 1200, 1.0), cj['WIPE_T'] - 0.04, 'the ball passes the lens (low whoom, the wipe)', -27)
@@ -144,7 +144,7 @@ place(sfx, knock(240, 0.2), 10.67, 'it seats on the thigh (soft knock)', -28)
 for k in range(3): place(sfx, tick(0.015, 5000), 10.72 + 0.07 * k, 'stitches' if k == 0 else None, -40)
 # ---- rehab: toes flex in the socket; the bend; the rise; the step and its footfall
 place(sfx, rustle(0.4, 1200, 5000), 12.0, 'his toes flick in the socket', -37)
-place(sfx, knock(520, 0.12), cj['BEND0'] - 0.05, 'hands tighten on the rails', -34)
+place(sfx, knock(520, 0.12), cj['CUT_REHAB_B'] + 0.01, 'hands on the rails take his weight (the two-leg view)', -34)
 place(sfx, rustle(0.6, 800, 3000), cj['BEND0'] + 0.1, 'the bend (socket and liner)', -35)
 place(sfx, rustle(0.45, 900, 3500), cj['CUT_REHAB_B'], 'trainers and cloth as he lowers', -38)
 place(sfx, rustle(0.4, 900, 3500), cj['RISE0'], 'he rises', -39)
@@ -182,7 +182,7 @@ room = circ(lambda x: lp(x, 260), noise(N)) * 0.7 + 0.18 * np.sin(2 * np.pi * 60
 clean = circ(lambda x: bp(x, 150, 900), noise(N))
 gym = circ(lambda x: bp(x, 200, 1500), noise(N))
 w_field = win(0, cj['CUT_XRAY']) + win(cj['CUT_SOCK'], DUR - 1e-3)
-amb = db(-22) * norm(field) * w_field + db(-31) * norm(room) * win(cj['CUT_XRAY'], cj['CUT_ANAT']) + db(-37) * norm(clean) * win(cj['CUT_ANAT'], cj['CUT_REHAB_A'])
+amb = db(-22) * norm(field) * w_field + db(-31) * norm(room) * win(cj['CUT_XRAY'], cj['CUT_ANAT']) + db(-28) * norm(clean) * win(cj['CUT_ANAT'], cj['CUT_REHAB_A'])
 amb += db(-31) * norm(gym) * win(cj['CUT_REHAB_A'], cj['CUT_WAKE']) + db(-29) * norm(room) * win(cj['CUT_WAKE'], cj['CUT_SOCK'])
 
 # ---------------- voice and mix

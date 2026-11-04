@@ -246,12 +246,14 @@ export const XrayShot4: React.FC<{t: number; k: string}> = ({t, k}) => <XrayFram
  *  (clear of the Shorts overlay); the toes ~210 px inside the left edge */
 const ANAT_W = 50;
 export const ANATCAM: Cam = {x: -3, y: CUT_F + (H / 2 - 375) / (W / ANAT_W), w: ANAT_W, eye: -40};
-export const anatCam4 = (_t: number): Cam => ANATCAM;
+/** on "but they could save his foot" the lens tilts down at the same scale (no push-in): the kept segment comes to
+ *  the middle of the frame (its cut face ~780 px, the sole ~1330 px), the thigh leaves the top */
+export const anatCam4 = (t: number): Cam => ({...ANATCAM, y: ANATCAM.y + 13.8 * ss5(t, T4.but - 0.04, T4.save + 0.06), eye: ANATCAM.eye + 13.8 * ss5(t, T4.but - 0.04, T4.save + 0.06)});
 const SPLIT = T4.remove; // 5.42: the dashed margins become cut faces
 const OUT0 = T4.remove + 0.04, OUT1 = T4.knee2 + 0.19; // 5.46 -> 6.20: the diseased middle slides out of frame
 const SAVE0 = T4.save - 0.06;
 export const AnatShot4: React.FC<{t: number; k: string}> = ({t, k}) => {
-  const c = ANATCAM;
+  const c = anatCam4(t);
   const iw = 7 / camScale(c);
   const split = t >= SPLIT;
   const dash = 1 - ss(t, SPLIT - 0.03, SPLIT + 0.1);
@@ -265,7 +267,7 @@ export const AnatShot4: React.FC<{t: number; k: string}> = ({t, k}) => {
   const save = ss(t, SAVE0, T4.save + 0.3);
   const onFoot = ss(t, T4.foot - 0.1, T4.foot + 0.25);
   const alive = ss(t, T4.save, T4.foot + 0.3);
-  const toe = 24 * Math.max(0, Math.sin(Math.PI * clamp((t - (T4.foot - 0.02)) / 0.42)));
+  const toe = 0; // (the toes keep still here: the one wiggle belongs to "wiggle his toes")
   const band = (y0: number, y1: number, id: string) => <clipPath id={id}><rect x={-60} y={y0} width={120} height={y1 - y0} /></clipPath>;
   const mid = (CUT_F + CUT_T) / 2;
   return (
@@ -328,7 +330,7 @@ const A_JOIN: V = {x: 0, y: -39};
 const GAP = 10;
 const TOP = -19;
 const YAW0 = CUT_TURN - 0.04, YAW1 = T4.around + 0.05; // 7.84 -> 9.51
-const RISE0 = YAW1 + 0.12, RISE1 = T4.thigh - 0.12; // 9.63 -> 10.78
+const RISE0 = YAW1 - 0.09, RISE1 = T4.thigh + 0.15; // 9.42 -> 11.05: the rise grows out of the turn's settle and seats on "thigh"
 /** a trapezoid of speed with cosine ramps: under way at once, constant through the middle, settling at the end */
 const trap = (t: number, t0: number, t1: number, ta: number, td: number) => {
   const T = t1 - t0, s = clamp(t - t0, 0, T);

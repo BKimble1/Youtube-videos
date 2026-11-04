@@ -25,6 +25,7 @@ export const Scene4: React.FC<{t: number; fkey: string; captions: boolean}> = ({
     case 'wake': body = <WakeShot4 t={t} k={k} />; break;
     case 'toes': body = <ToesShot4 t={t} k={k} />; break;
     case 'notice': body = <NoticeShot4 t={t} k={k} />; break;
+    case 'toes2': body = <ToesShot4 t={t} k={k} />; break;
     case 'sock': body = <SockShot4 t={t} k={k} />; break;
     case 'field': body = <FieldShot4 t={t} k={k} />; break;
     default: body = <LowShot4 t={t} k={k} />;

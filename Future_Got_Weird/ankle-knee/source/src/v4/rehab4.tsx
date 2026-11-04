@@ -181,8 +181,8 @@ export const A_W = 32;
 export const camA = (t: number): Cam => {
   // (x is held: the frame's left edge sits between the socket's front corner and his other sock, so his other leg
   // shows only as the heel of its trainer and the thigh going out at the top, never as a sliver)
-  const y = herm(t, [[CUT_REHAB_A, -26.2, -0.35], [13.42, -26.9, -0.35], [14.3, -36.0, 0]]);
-  const x = lerp(-5.32, -5.4, ss(t, CUT_REHAB_A, 14.3));
+  const y = herm(t, [[CUT_REHAB_A, -26.2, -0.35], [12.6, -26.65, -1.2], [14.42, -36.0, 0]]);
+  const x = lerp(-5.32, -5.4, ss(t, CUT_REHAB_A, 14.42));
   return {x, y, w: A_W, eye: y - 10.5};
 };
 /** B: a low lens near the floor; the legs and the grips; a slight drift for parallax */
@@ -294,7 +294,7 @@ export const RehabC4: React.FC<{t: number; k: string}> = ({t, k}) => <RehabView 
  *  (CAP_Y_BED), which still clears his head in C. */
 export const CAP_Y4_REHAB = 180;
 export const CAP_Y_REHAB: Record<number, number | ((t: number) => number)> = {
-  7: CAP_Y4_REHAB,
+  7: 215, // three lines: lower so its top line clears the top UI band; the socket rim stays below it
   8: CAP_Y4_REHAB,
   9: CAP_Y4_REHAB,
   10: 260,
