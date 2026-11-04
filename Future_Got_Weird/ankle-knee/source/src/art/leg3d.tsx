@@ -196,9 +196,8 @@ export const TurnRing: React.FC<{g: Leg3D; y: number; r: number; a: number; dir:
   const X = legXf({...g, yaw: 0});
   const pts: {x: number; y: number; z: number}[] = [];
   // the arc runs the way the toes travel (round the back, then across the front), arrow at the front-right end
-  void dir;
   for (let k = 0; k <= 40; k++) {
-    const b = (30 + (k / 40) * 310) * (Math.PI / 180);
+    const b = (dir >= 0 ? 30 + (k / 40) * 310 : 510 - (k / 40) * 310) * (Math.PI / 180);
     pts.push(X([r * Math.cos(b), y, r * Math.sin(b)], false));
   }
   const seg = pts.filter((p) => (half === 'front' ? p.z < 0 : p.z >= 0));

@@ -1,0 +1,33 @@
+{
+ "zipformer": {
+  "transcript": "DOCTORS TURNED THIS BOY'S ANKLE INTO A WORKING KNEE WYAT HAD BONE CANCER SURGEONS HAD TO REMOVE HIS KNEE BUT THEY COULD SAVE HIS FOOT THEY TURNED HIS LOWER LEG HALF WAY AROUND AND ATTACHED IT TO HIS THIGH WITH HIS TOES POINTING BEHIND HIM THAT BACKWARD ANKLE NOW BENT THE SAME WAY AS HIS OTHER KNEE WHEN WYAT WOKE UP HE COULD STILL WIGGLE HIS TOES AND ONCE HE LEARNED TO USE HIS NEW LEG THAT SAME FOOT HELPED HIM KICK A SOCKER BALL",
+  "wer": 0.06,
+  "diffs": [
+   [
+    "replace",
+    "wyatt",
+    "wyat"
+   ],
+   [
+    "replace",
+    "halfway",
+    "half way"
+   ],
+   [
+    "replace",
+    "wyatt",
+    "wyat"
+   ],
+   [
+    "replace",
+    "soccer",
+    "socker"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "Doctors turned this boy's ankle into a working knee. Wyatt had bone cancer. Surgeons had to remove his knee, but they could save his foot. They turned his lower leg halfway around and attached it to his thigh, with his toes pointing behind him. That backward ankle now bent the same way as his other knee. When Wyatt woke up, he could still wiggle his toes. And once he learned to use his new leg, that same foot helped him kick a soccer ball.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

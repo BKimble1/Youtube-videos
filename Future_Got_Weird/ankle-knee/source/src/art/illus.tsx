@@ -128,7 +128,7 @@ export const IllusShot: React.FC<{c: Cam; s: IllusState; k: string}> = ({c, s, k
           </g>
         )}
         {s.save > 0.01 && <Glow id={`${k}sv`} c={add(A, {x: s.yaw > 90 ? 4 : -4, y: 1})} r={17} ry={12} color={C.healthy} alpha={0.55 * s.save} blend="normal" />}
-        <TurnRing g={g} y={-4.5} r={6.8} a={s.ring} dir={-1} half="back" iw={iw} />
+        <TurnRing g={g} y={-4.5} r={6.8} a={s.ring} dir={1} half="back" iw={iw} />
         {!s.split ? (
           // the whole leg before the cuts: one contour
           <Inked w={iw}>
@@ -158,7 +158,7 @@ export const IllusShot: React.FC<{c: Cam; s: IllusState; k: string}> = ({c, s, k
             })}
           </g>
         )}
-        <TurnRing g={g} y={-4.5} r={6.8} a={s.ring} dir={-1} half="front" iw={iw} />
+        <TurnRing g={g} y={-4.5} r={6.8} a={s.ring} dir={1} half="front" iw={iw} />
         {/* the diseased section, marked, then lifted away */}
         {s.split && s.midOut < 0.999 && (
           <g opacity={1 - s.midOut} transform={`translate(${fmt(midOff.x)} ${fmt(midOff.y)})`}>

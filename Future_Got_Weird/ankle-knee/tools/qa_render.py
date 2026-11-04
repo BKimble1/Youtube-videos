@@ -25,12 +25,21 @@ n = len(fr)
 fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: the cuts and the dissolve (from story.ts via audio/cues.json), the strike, the plant
-CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
-SH = CJ['shots']
-PLANNED = [(0.0, 0.45, 'the strike: the ball leaves the frame')]
-for k, (s0, nm) in enumerate(SH[1:]):
-    PLANNED.append((s0 - 0.04, s0 + (0.4 if nm == 'bench' else 0.08), f'cut to {nm}' + (' (matched dissolve from the illustration)' if nm == 'bench' else '')))
-PLANNED.append((CJ['T']['learned'], CJ['T']['learned'] + 1.4, 'the lens rises from the cleat to the whole boy'))
+CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), os.environ.get('FGW_CUES', 'audio/cues.json'))))
+if 'CUTS' in CJ:  # V2
+    PLANNED = [(CJ['STRIKE1'] - 0.05, CJ['T']['wyatt'] + 0.05, 'the strike and the ball rushing at the lens')]
+    for s0, nm in CJ['CUTS'][1:]:
+        PLANNED.append((s0 - 0.04, s0 + (0.36 if nm == 'anat' else 0.08), f'cut to {nm}' + (' (matched dissolve from the scan)' if nm == 'anat' else '')))
+    T2 = CJ['T']
+    PLANNED += [(T2['learned'] + 0.17, T2['learned'] + 1.3, 'the lens rises from the plant to the step'), (CJ['STRIKE2'] - 0.3, CJ['STRIKE2'] + 0.5, 'the closing strike'),
+                (CJ['DUR'] - 0.62, CJ['DUR'] + 0.01, 'the push back into frame 0'), (0, 0.6, 'the opening widen'), (T2['toes2'] - 0.05, T2['and2'], 'the lens moves to his eyes and back down to the crease'),
+                (T2['attached'] - 0.1, T2['that'], 'the rise to the thigh and the widen to Wyatt')]
+else:
+    SH = CJ['shots']
+    PLANNED = [(0.0, 0.45, 'the strike: the ball leaves the frame')]
+    for k, (s0, nm) in enumerate(SH[1:]):
+        PLANNED.append((s0 - 0.04, s0 + (0.4 if nm == 'bench' else 0.08), f'cut to {nm}'))
+    PLANNED.append((CJ['T']['learned'], CJ['T']['learned'] + 1.4, 'the lens rises from the cleat to the whole boy'))
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

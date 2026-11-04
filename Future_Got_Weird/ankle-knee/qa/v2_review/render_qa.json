@@ -1,0 +1,486 @@
+{
+ "file": "FGW_Ankle_Knee_V2_REVIEW_1080x1920.mp4",
+ "size_mb": 12.41,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 750,
+  "duration_s": 25.0
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317370"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 2.73,
+ "large_changes": [
+  {
+   "frame": 4,
+   "t": 0.133,
+   "mad": 14.27,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 5,
+   "t": 0.167,
+   "mad": 17.69,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 6,
+   "t": 0.2,
+   "mad": 21.17,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 7,
+   "t": 0.233,
+   "mad": 23.64,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 8,
+   "t": 0.267,
+   "mad": 24.41,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 9,
+   "t": 0.3,
+   "mad": 23.75,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 10,
+   "t": 0.333,
+   "mad": 22.44,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 11,
+   "t": 0.367,
+   "mad": 20.03,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 12,
+   "t": 0.4,
+   "mad": 17.27,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 13,
+   "t": 0.433,
+   "mad": 14.02,
+   "planned": "the opening widen"
+  },
+  {
+   "frame": 100,
+   "t": 3.333,
+   "mad": 89.7,
+   "planned": "the strike and the ball rushing at the lens"
+  },
+  {
+   "frame": 139,
+   "t": 4.633,
+   "mad": 13.94,
+   "planned": null
+  },
+  {
+   "frame": 148,
+   "t": 4.933,
+   "mad": 16.62,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 149,
+   "t": 4.967,
+   "mad": 20.51,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 150,
+   "t": 5.0,
+   "mad": 23.68,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 151,
+   "t": 5.033,
+   "mad": 23.8,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 152,
+   "t": 5.067,
+   "mad": 23.28,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 153,
+   "t": 5.1,
+   "mad": 20.46,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 154,
+   "t": 5.133,
+   "mad": 15.25,
+   "planned": "cut to anat (matched dissolve from the scan)"
+  },
+  {
+   "frame": 419,
+   "t": 13.967,
+   "mad": 33.78,
+   "planned": "cut to rails"
+  },
+  {
+   "frame": 521,
+   "t": 17.367,
+   "mad": 45.33,
+   "planned": "cut to bed"
+  },
+  {
+   "frame": 584,
+   "t": 19.467,
+   "mad": 16.31,
+   "planned": null
+  },
+  {
+   "frame": 585,
+   "t": 19.5,
+   "mad": 20.16,
+   "planned": null
+  },
+  {
+   "frame": 586,
+   "t": 19.533,
+   "mad": 21.69,
+   "planned": null
+  },
+  {
+   "frame": 587,
+   "t": 19.567,
+   "mad": 21.18,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 588,
+   "t": 19.6,
+   "mad": 20.02,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 589,
+   "t": 19.633,
+   "mad": 18.49,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 590,
+   "t": 19.667,
+   "mad": 18.36,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 591,
+   "t": 19.7,
+   "mad": 19.39,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 592,
+   "t": 19.733,
+   "mad": 18.91,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 593,
+   "t": 19.767,
+   "mad": 18.67,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 594,
+   "t": 19.8,
+   "mad": 17.58,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 595,
+   "t": 19.833,
+   "mad": 15.58,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 606,
+   "t": 20.2,
+   "mad": 26.63,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 607,
+   "t": 20.233,
+   "mad": 31.49,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 608,
+   "t": 20.267,
+   "mad": 26.5,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 609,
+   "t": 20.3,
+   "mad": 33.13,
+   "planned": "the lens moves to his eyes and back down to the crease"
+  },
+  {
+   "frame": 610,
+   "t": 20.333,
+   "mad": 27.61,
+   "planned": "cut to lace"
+  },
+  {
+   "frame": 611,
+   "t": 20.367,
+   "mad": 76.2,
+   "planned": "cut to lace"
+  },
+  {
+   "frame": 626,
+   "t": 20.867,
+   "mad": 68.49,
+   "planned": "cut to step"
+  },
+  {
+   "frame": 628,
+   "t": 20.933,
+   "mad": 15.51,
+   "planned": "cut to step"
+  },
+  {
+   "frame": 629,
+   "t": 20.967,
+   "mad": 21.45,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 630,
+   "t": 21.0,
+   "mad": 21.37,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 631,
+   "t": 21.033,
+   "mad": 13.83,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 636,
+   "t": 21.2,
+   "mad": 15.94,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 637,
+   "t": 21.233,
+   "mad": 19.81,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 638,
+   "t": 21.267,
+   "mad": 23.48,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 639,
+   "t": 21.3,
+   "mad": 25.87,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 640,
+   "t": 21.333,
+   "mad": 25.53,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 641,
+   "t": 21.367,
+   "mad": 24.48,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 642,
+   "t": 21.4,
+   "mad": 23.06,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 643,
+   "t": 21.433,
+   "mad": 21.86,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 644,
+   "t": 21.467,
+   "mad": 20.88,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 645,
+   "t": 21.5,
+   "mad": 16.52,
+   "planned": "the lens rises from the plant to the step"
+  },
+  {
+   "frame": 665,
+   "t": 22.167,
+   "mad": 32.3,
+   "planned": "cut to kick"
+  },
+  {
+   "frame": 694,
+   "t": 23.133,
+   "mad": 13.71,
+   "planned": null
+  },
+  {
+   "frame": 730,
+   "t": 24.333,
+   "mad": 15.88,
+   "planned": null
+  },
+  {
+   "frame": 731,
+   "t": 24.367,
+   "mad": 14.55,
+   "planned": null
+  },
+  {
+   "frame": 737,
+   "t": 24.567,
+   "mad": 16.0,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 738,
+   "t": 24.6,
+   "mad": 19.65,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 739,
+   "t": 24.633,
+   "mad": 22.11,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 740,
+   "t": 24.667,
+   "mad": 24.5,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 741,
+   "t": 24.7,
+   "mad": 27.37,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 742,
+   "t": 24.733,
+   "mad": 29.02,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 743,
+   "t": 24.767,
+   "mad": 29.34,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 744,
+   "t": 24.8,
+   "mad": 28.49,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 745,
+   "t": 24.833,
+   "mad": 25.27,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 746,
+   "t": 24.867,
+   "mad": 21.13,
+   "planned": "the push back into frame 0"
+  },
+  {
+   "frame": 747,
+   "t": 24.9,
+   "mad": 17.26,
+   "planned": "the push back into frame 0"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 139,
+   "t": 4.633,
+   "mad": 13.94,
+   "planned": null
+  },
+  {
+   "frame": 584,
+   "t": 19.467,
+   "mad": 16.31,
+   "planned": null
+  },
+  {
+   "frame": 585,
+   "t": 19.5,
+   "mad": 20.16,
+   "planned": null
+  },
+  {
+   "frame": 586,
+   "t": 19.533,
+   "mad": 21.69,
+   "planned": null
+  },
+  {
+   "frame": 694,
+   "t": 23.133,
+   "mad": 13.71,
+   "planned": null
+  },
+  {
+   "frame": 730,
+   "t": 24.333,
+   "mad": 15.88,
+   "planned": null
+  },
+  {
+   "frame": 731,
+   "t": 24.367,
+   "mad": 14.55,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 15,
+ "longest_near_static_run_starts_s": 3.9,
+ "loop_last_vs_first_mad": 6.04
+}

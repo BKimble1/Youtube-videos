@@ -1,5 +1,20 @@
 # Future Got Weird: Doctors Turned His Ankle Into a Knee
 
+## V2 (current review cut)
+
+**Deliverable.** `exports/FGW_Ankle_Knee_V2_REVIEW_1080x1920.mp4` (1080×1920, 25.0 s, narrated). **Not published.**
+Its report is `production/V2_REPORT.md`, with the evidence in `qa/v2_review/`. V2 reuses the approved narration master unchanged.
+It rebuilds the picture: a new opening on the backward foot, a scene of its own for every narration beat (scan, anatomy, the half-turn, the
+reveal, the rehab rails, recovery, the lace, the step, the closing kick), and a redrawn Wyatt (`source/src/v2/`).
+
+    (cd source && npx remotion render src/index.ts AnkleKneeV2 ../exports/FGW_Ankle_Knee_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2r","captions":true,"v2":true}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k)
+    source/node_modules/.bin/esbuild tools/export_cues_v2.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --outfile=/tmp/ec2.cjs && NODE_PATH=source/node_modules node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/make_audio_v2.py mix_v2r
+    FGW_CUES=audio/cues_v2.json python3 tools/qa_render.py exports/FGW_Ankle_Knee_V2_REVIEW_1080x1920.mp4 qa/v2_review
+    # sheets: cd source && ./sheet2.sh out.png "f1,f2,..." [captions] [cols];  poses + silhouettes: src/test/poses2.entry.tsx
+
+## V1
+
 **Deliverable.** `exports/FGW_Ankle_Knee_1080x1920.mp4`: 1080×1920, 30 fps, 25.0 s (750 frames), H.264 yuv420p BT.709,
 AAC 48 kHz stereo. It has picture, synchronized captions, the locked narration, effects and ambience. It loops: the
 last frame flows into frame 0. **Not published.**
