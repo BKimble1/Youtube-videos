@@ -20,7 +20,7 @@ import {CrewChar, IDLE, Pose} from '../art/crew';
 import {BN, EEGCap} from '../art/people';
 import {CH, CW, GROWS, PF, SoftArc, Trial, TrialCells} from '../art/s6world';
 import {RaoPanel} from '../shots/S1Hook';
-import {GEvent} from '../art/game';
+import {GameScreen, GEvent} from '../art/game';
 import {F_DOWN, F_HOVER, F_JERK, F_LIFT, F_REST, FingerECU, FPose, indexPts, KEY, mixF, pressPose} from './finger';
 /** the opening's frame-0 action (SeqA): a lifted pose pulled down to contact at frame 4 */
 const OPEN_TC = 4 / 30;
@@ -478,11 +478,62 @@ export const VG: React.FC<{f: number}> = ({f}) => {
           </g>
           <SoftArc x={ax + 10} y={250} w={720} k={arcK} />
         </g>
+        <MemoryWindow t={t} f={f} />
         <Tag x={56} y={60} anchor="start" text="2013" size={34} k={win(t, b.first - 0.05, b.first + 0.25, b.moved + 0.3, b.moved + 0.6)} />
         <Tag x={56} y={60} anchor="start" text="2019" size={34} k={win(t, b.six - 0.05, b.six + 0.25, b.wrongEnd - 0.1, b.wrongEnd + 0.2)} />
       </g>
     );
   }
+};
+
+// ---------------------------------------------------------------- the ending's memory window (lead's V2 QA fix)
+// While the finger close-up holds, a small window recalls each game in turn: the 2013 cannon fires with the snap,
+// then the window wipes to the 2019 Receiver's screen as the advice arc appears, and it slides away before the
+// voluntary choice. Something new every 1-2 s; the finger stays the anchor.
+const MemoryWindow: React.FC<{t: number; f: number}> = ({t, f}) => {
+  const T = times();
+  const b = T.b;
+  const p0 = b.pulse1 + 0.02, c0 = p0 + 0.2 + 0.1 + 0.11;
+  const tIn = b.first - 0.15, tOut = b.otherGuy - 0.35;
+  if (t < tIn || t > tOut + 0.6) return null;
+  const kIn = sp(f, tIn, {damping: 15, stiffness: 120});
+  const kOut = pr(t, tOut, tOut + 0.45);
+  const x = lerp(-640, 56, kIn) - 700 * kOut;
+  const y = 112;
+  const W = 560, H = 350;
+  const wipe = pr(t, b.six - 0.1, b.six + 0.3);
+  const events: GEvent[] = [{kind: 'rocket', t0: c0 + 0.04 - 2.05, dur: 3.4, fire: c0 + 0.04}];
+  const fall = clamp((t - b.six) / 2.4);
+  return (
+    <g transform={`translate(${fmt(x)} ${y})`}>
+      <rect x={8} y={10} width={W} height={H} rx={18} fill={INK} opacity={0.22} />
+      <rect x={0} y={0} width={W} height={H} rx={18} fill="#FFFFFF" stroke={INK} strokeWidth={6} />
+      <defs>
+        <clipPath id={`${id}-mw`}><rect x={14} y={14} width={W - 28} height={H - 28} rx={10} /></clipPath>
+        <clipPath id={`${id}-mw19`}><rect x={14 + (W - 28) * (1 - wipe)} y={14} width={(W - 28) * wipe} height={H - 28} /></clipPath>
+      </defs>
+      <g clipPath={`url(#${id}-mw)`}>
+        <g transform={`translate(14 14) scale(${fmt((W - 28) / 640)})`}>
+          <GameScreen t={t} events={events} />
+        </g>
+        {wipe > 0 && (
+          <g clipPath={`url(#${id}-mw19)`}>
+            <rect x={14} y={14} width={W - 28} height={H - 28} fill="#1F3442" />
+            <g transform={`translate(${W / 2 - 120} 30)`}>
+              <rect x={0} y={0} width={240} height={290} fill="#2A4456" stroke="#5E7A8C" strokeWidth={3} />
+              {[[0, 0], [1, 0], [2, 0], [2, 1]].map(([cx, cy], i) => (
+                <rect key={i} x={60 + cx * 40} y={14 + fall * 60 + cy * 40} width={38} height={38} rx={4} fill={K.saffron} stroke={INK} strokeWidth={3} />
+              ))}
+              <rect x={0} y={150} width={240} height={140} fill="#162A32" opacity={0.85} />
+              <path d="M40,165 L200,275 M200,165 L40,275" stroke="#5E7A8C" strokeWidth={3} opacity={0.5} />
+            </g>
+            <text x={70} y={110} fontFamily="Fredoka Variable, sans-serif" fontWeight={700} fontSize={34} fill="#FFFFFF">YES</text>
+            <text x={W - 130} y={110} fontFamily="Fredoka Variable, sans-serif" fontWeight={700} fontSize={34} fill="#FFFFFF">NO</text>
+          </g>
+        )}
+      </g>
+    </g>
+  );
 };
 
 export const CUES_VG = (): {t: number; kind: string; gain?: number; dur?: number}[] => {
