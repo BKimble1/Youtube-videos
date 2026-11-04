@@ -170,7 +170,7 @@ slide_out = np.clip(outV / 25, 0, 1) ** 0.8
 layer(squeeze_tex(slide_in * 0.8 + slide_out), 'slides: up the throat, out of the gill', -20.0, 'tex')
 place(whoosh(0.5, 120, 520, 800), BE.get('pass', T['bodyWipe']) - 0.2, 'S5>S6: the body fills the foreground', -13.0)
 place(squelch(0.2, 900, 260, 3.4, 1600), BE.get('slip', 11.5), 'S6: the slip between the arches', -16.0)
-place(poke_sound(), T['poke'] + 0.01, 'S7: the tip breaks into open water', -13.0)
+place(poke_sound(), T.get('pokeCut', T['poke']) + 0.01, 'S7: the tip breaks into open water', -13.0)
 # ---------------------------------------------------------------- S9/S10: the struggle, the curl tightening
 for k, at in enumerate(np.arange(16.3, 20.2, 0.62) + rng.uniform(-0.08, 0.08, len(np.arange(16.3, 20.2, 0.62)))):
     place(stroke(0.2, rng.uniform(420, 600), 1.0), at, f'thrash {k + 1}', -24.0)

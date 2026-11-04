@@ -54,7 +54,7 @@ export const ShotsAt: React.FC<{t: number}> = ({t}) => {
       </>
     );
   }
-  if (t < T.poke) return <Layer><S5Throat t={t} /></Layer>;
+  if (t < T.pokeCut) return <Layer><S5Throat t={t} /></Layer>;
   if (t < T.follows) return <Layer><ExtShot id="poke" t={t} /></Layer>;
   if (t < T.head) return <Layer><ExtShot id="follows" t={t} /></Layer>;
   if (t < T.curl) return <Layer><ExtShot id="head" t={t} /></Layer>;

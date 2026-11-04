@@ -44,6 +44,8 @@ type ExtState = {
   headOnTop?: boolean;
   /** draw the outside part plainly (no mask at the opening): the poke, where only the tip is out */
   plainOutside?: boolean;
+  /** S7: a small puff of bubbles where the tip breaks out into open water */
+  puff?: boolean;
   /** how far (eel units) the outside drawing reaches in under the cover's rim at the crossing (default 0.5) */
   underRim?: number;
   /** the ribbon fin's scale (default eelV4's FIN_SCALE_3D) */
@@ -185,9 +187,37 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
         </>
       )}
       {e && !hole && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} over={s.headOnTop ? 'head' : 'tail'} finScale={s.finScale} />}
+      {s.puff && <BreakPuff B={B} t={s.t} />}
       <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
   );
+};
+/** S7: as the tip breaks out of the gill edge it lets go a few bubbles; they rise and drift back on the current and
+ *  are gone before S8 (fixed seeds, released along the tip's own path from T.poke) */
+const PUFF = Array.from({length: 9}, (_, k) => {
+  const h = (a: number) => (Math.sin(k * 127.1 + a * 311.7) * 43758.5453) % 1;
+  const j = (a: number) => Math.abs(h(a));
+  return {te: T.poke + 0.045 * k + 0.02 * j(1), r: 0.09 + 0.15 * j(2), off: [0.3 * (j(3) - 0.5), -0.3 - 0.15 * j(4), 0.3 + 0.3 * j(5)] as V3, v: 2.6 + 1.2 * j(6), w: 2 * Math.PI * j(7), life: Math.min(0.7 + 0.3 * j(8), T.follows - 0.08 - (T.poke + 0.045 * k + 0.02 * j(1)))};
+});
+const BreakPuff: React.FC<{B: Basis; t: number}> = ({B, t}) => {
+  const out: React.ReactNode[] = [];
+  PUFF.forEach((b, k) => {
+    const a = t - b.te;
+    if (a < 0 || a > b.life) return;
+    const p0 = escapeAt(b.te).c[N];
+    const p: V3 = add3(add3(p0, b.off), [0.6 * a + 0.08 * Math.sin(9 * a + b.w), -b.v * a * (1 - 0.25 * a), 0.25 * a]);
+    const q = proj(B, p);
+    const r = q.s * b.r * (1 + 0.35 * a);
+    const op = ss(a, 0, 0.06) * (1 - ss(a, b.life - 0.3, b.life));
+    if (r < 0.8 || op <= 0) return;
+    out.push(
+      <g key={k} opacity={op}>
+        <circle cx={q.x} cy={q.y} r={r} fill="#E8FBF6" fillOpacity={0.22} stroke="#F4FFFC" strokeOpacity={0.85} strokeWidth={Math.max(1, 0.16 * r)} />
+        <circle cx={q.x - 0.35 * r} cy={q.y - 0.38 * r} r={0.26 * r} fill="#FFFFFF" fillOpacity={0.9} />
+      </g>,
+    );
+  });
+  return <g>{out}</g>;
 };
 /** the outside eel's soft shadow on the predator (down and right of it: the key light is at the upper left), clipped
  *  to the predator's outline */
@@ -456,7 +486,7 @@ const POKE_ORBIT1: Orbit = {target: [-27, -8.0, 7], az: 22, el: -14, d: 38, f: 1
 export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.64, 13.5)));
 export const pokeState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, plainOutside: true, nearCut: 22};
+  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, plainOutside: true, nearCut: 22, puff: true};
 };
 export const pokeStateWith = (o: Orbit, t: number): ExtState => (t > 15.9 && t < 18 ? {...headState(t), cam: orbitCam(o)} : {cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 

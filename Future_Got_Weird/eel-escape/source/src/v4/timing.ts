@@ -29,7 +29,8 @@ export const T = {
   slips: 10.89,
   gap: 11.47,
   // S7 POKE: the tip crosses the gill edge (inside) -> the same tip breaks into open water (outside); match cut
-  poke: 12.58,
+  poke: 12.58, // the tip crosses the gill edge (EDGE, POKE_AT)
+  pokeCut: 12.7, // ... and the film cuts outside 0.12 s later, so the tip is seen INSIDE the bright opening first
   // S8 FOLLOWS: elevated over the predator's back; a growing length slides out and bows into the current
   follows: 13.86,
   // S9 HEAD: tight at the gill edge; the eye just inside, the neck through the gap, the body curling outside
@@ -51,8 +52,8 @@ export const SHOTS: {id: ShotId; t0: number; t1: number}[] = [
   {id: 'gulp', t0: T.gulp, t1: T.xray},
   {id: 'xray', t0: T.xray, t1: T.stomach},
   {id: 'stomach', t0: T.stomach, t1: T.throat},
-  {id: 'throat', t0: T.throat, t1: T.poke}, // S5 throat + S6 gills + the inside half of the S7 match
-  {id: 'poke', t0: T.poke, t1: T.follows},
+  {id: 'throat', t0: T.throat, t1: T.pokeCut}, // S5 throat + S6 gills + the inside half of the S7 match
+  {id: 'poke', t0: T.pokeCut, t1: T.follows},
   {id: 'follows', t0: T.follows, t1: T.head},
   {id: 'head', t0: T.head, t1: T.curl},
   {id: 'release', t0: T.curl, t1: T.swim},
@@ -111,7 +112,7 @@ export const carryTail = (t: number): {pts: P[]; r: number[]; i0: number} => {
 
 // ---------------------------------------------------------------- hand-off 2: S6 inside -> S7 outside (the poke)
 /** the match on "pokes out the side": the tail TIP crosses the gill edge at the same screen point, moving the same
- *  way, at the same size, on both sides of the cut at T.poke. For t in [POKE0, POKE1] both shots draw the eel's last
+ *  way, at the same size, on both sides of the cut (T.pokeCut). For t in [POKE0, POKE1] both shots draw the eel's last
  *  8 eel units on these screen points; the gill edge (inside: the rim of the opening against the bright water
  *  beyond; outside: the cover's rear edge) is the line EDGE, which the tip crosses at T.poke. */
 export const POKE0 = 12.44, POKE1 = 12.72;
