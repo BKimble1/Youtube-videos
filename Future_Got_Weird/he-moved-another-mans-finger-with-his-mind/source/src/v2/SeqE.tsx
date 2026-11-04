@@ -37,6 +37,7 @@ import {lit, mix, shade} from '../dc/color';
 import {CamS, FPS, T, TE, camKeys, pr} from './core2';
 import {Cam, Desk, FONT_HEAD, INK, K, Label, Monitor, Tag, Touchpad} from '../art/kit';
 import {GameScreen, GEvent, arcPt, evState} from '../art/game';
+import {GameScreenDE} from './gameDE';
 import {HandPoseP, indexTip, mixP, SideHand} from '../art/hand';
 import {CrewChar, IDLE, Look} from '../art/crew';
 import {EEGCap, V14} from '../art/people';
@@ -312,7 +313,7 @@ const DriveGlow: React.FC<{pose: HandPoseP; k: number}> = ({pose, k}) => {
   return <path d={d} fill="none" stroke={K.saffron} strokeWidth={20} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={`${fmt(L * 0.3)} ${fmt(L * 2)}`} strokeDashoffset={fmt(-L * (k * 1.15 - 0.3))} opacity={0.9 * (1 - clamp((k - 0.75) / 0.25))} />;
 };
 
-const GameInset: React.FC<{id: string; t: number; events: GEvent[]; cursor?: number; cityHitAt?: number; x: number; y: number; s: number; tag?: number}> = ({id, t, events, cursor, cityHitAt, x, y, s, tag = 1}) => (
+const GameInset: React.FC<{id: string; t: number; events: GEvent[]; cursor?: number; cityHitAt?: number; x: number; y: number; s: number; tag?: number; aimLead?: number}> = ({id, t, events, cursor, cityHitAt, x, y, s, tag = 1, aimLead}) => (
   <g>
     {cityHitAt !== undefined && t > cityHitAt && t < cityHitAt + 0.9 && (
       <rect x={x - 22} y={y - 22} width={640 * s + 44} height={400 * s + 44} rx={24} fill="none" stroke={K.coral} strokeWidth={12} opacity={1 - (t - cityHitAt) / 0.9} />
@@ -325,7 +326,7 @@ const GameInset: React.FC<{id: string; t: number; events: GEvent[]; cursor?: num
     </defs>
     <g clipPath={`url(#${id})`}>
       <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(s)})`}>
-        <GameScreen t={t} events={events} cityHitAt={cityHitAt} cursor={cursor} />
+        <GameScreenDE t={t} events={events} cityHitAt={cityHitAt} cursor={cursor} aimLead={aimLead} idp={`${id}-g`} />
       </g>
     </g>
     <rect x={x} y={y} width={640 * s} height={400 * s} rx={6} fill="none" stroke={INK} strokeWidth={4} />
@@ -391,7 +392,7 @@ const RightSide: React.FC<{t: number; events: GEvent[]; cursor: number; cityHitA
     <rect x={860} y={-300} width={1500} height={950} fill="url(#ve-rwall)" />
     <rect x={860} y={650} width={1500} height={700} fill="url(#ve-pool)" />
     <rect x={860} y={650} width={1500} height={10} fill="#7D7064" />
-    {!hideGame && <GameInset id="ve-gclip" t={t} events={events} cursor={cursor} cityHitAt={cityHitAt} x={GAME.x} y={GAME.y} s={GAME.s} tag={gameTag} />}
+    {!hideGame && <GameInset id="ve-gclip" t={t} events={events} cursor={cursor} cityHitAt={cityHitAt} x={GAME.x} y={GAME.y} s={GAME.s} tag={gameTag} aimLead={0.12} />}
     {!hideGame && tally}
     {padMorph ?? <Touchpad x={PAD.x} y={PAD.y} s={PAD.s} press={press} glow={press} />}
     <g transform={`translate(${fmt(handDx)} ${fmt(handDy)})`}>

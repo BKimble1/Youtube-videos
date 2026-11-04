@@ -222,9 +222,13 @@ const CursorWin: React.FC<{cursor: number; slide: number}> = ({cursor, slide}) =
     </g>
   );
 
+/** the game's own clock continues C's (C ends at 90.0 s with GameScreen t = 8.64), so the ship's bob is continuous */
+const GCLK = (M: ReturnType<typeof tl>) => 8.64 - M.s;
+
 const W1: React.FC<{f: number; freeze?: boolean}> = ({f}) => {
   const M = tl();
   const t = f / FPS;
+  const go = GCLK(M);
   const cam = camW1(Math.min(t, M.xf0), M);
   const events = [{kind: 'rocket' as const, t0: M.launch, dur: M.cityHit - M.launch}];
   const cursor = pr(f, M.s + 0.55, M.fire, easeInOut) * (1 - pr(f, M.brk + 0.1, M.brk + 0.6));
@@ -330,7 +334,7 @@ const W1: React.FC<{f: number; freeze?: boolean}> = ({f}) => {
         </defs>
         <g clipPath="url(#vd-gclip)">
           <g transform={GAME_FULL}>
-            <GameScreen t={t} events={events} cityHitAt={hit ? M.cityHit : undefined} />
+            <GameScreen t={t + go} events={events.map((e) => ({...e, t0: e.t0 + go}))} cityHitAt={hit ? M.cityHit + go : undefined} />
             <CursorWin cursor={cursor} slide={slide} />
           </g>
         </g>
@@ -458,7 +462,7 @@ const Snapshot: React.FC<{f: number}> = ({f}) => {
       </defs>
       <g clipPath={`url(#vd-snap-${f})`}>
         <g transform={`translate(${fmt(x)} ${fmt(y)}) scale(${fmt(w / 640)})`}>
-          <GameScreen t={ts} events={[]} cityHitAt={M.cityHit} />
+          <GameScreen t={ts + GCLK(M)} events={[]} cityHitAt={M.cityHit + GCLK(M)} />
           <CursorWin cursor={0} slide={1} />
         </g>
       </g>

@@ -44,6 +44,8 @@ const T_STO2 = 38.45;
 const T_RAOF = () => T('except') - 0.03;
 const T_RHAND = () => T('had no way') - 0.01;
 const T_END = 1339 / FPS; // B's last frame = GAME_FULL
+/** C runs GameScreen on t = film time - 46.22; B's last game shot uses the same clock so the ship's bob is continuous */
+const C_CLOCK = 46.22;
 
 const EVB = (): GEvent[] => [
   {kind: 'plane', t0: T_PLANE(), dur: 2.5},
@@ -216,7 +218,7 @@ const RaoHandDesk: React.FC<{t: number; glare: number; spot: number}> = ({t, gla
     <path d="M-2000,520 L4000,520 L4000,2000 L-2000,2000 Z" fill="url(#vb-rt)" stroke={INK} strokeWidth={6} />
     <path d="M-2000,520 L4000,520" stroke={lit(K.deskTop, 0.35)} strokeWidth={8} />
     <MonitorV2 id="vb-rhmon" x={RH_MON.x} y={RH_MON.y} s={RH_MON.s} glare={glare} edge={glare}>
-      <GameScreen t={t} events={[]} />
+      <GameScreen t={t - C_CLOCK} events={[]} />
     </MonitorV2>
     {/* the empty spot where a fire button would be */}
     {spot > 0.01 && (
@@ -442,7 +444,7 @@ export const VB: React.FC<{f: number}> = ({f}) => {
     <g>
       <rect x={0} y={0} width={1920} height={1080} fill="#9FD3EC" />
       <g transform={GAME_FULL}>
-        <GameScreen t={t} events={[]} />
+        <GameScreen t={t - C_CLOCK} events={[]} />
       </g>
     </g>
   );
