@@ -116,7 +116,7 @@ export const outAt = (t: number): number => {
 
 // ---------------------------------------------------------------- the outside shape
 /** phase weights (smooth): bow into the current (S7, S8) → the loose curl (S9, S10) → tightening (the pull) */
-const wCurl = (t: number) => ss(t, 17.3, 18.9);
+const wCurl = (t: number) => ss(t, 16.5, 18.7);
 const wTight = (t: number) => 0.45 * ss(t, 18.4, 20.2) + 0.55 * ss(t, 20.2, 20.78);
 
 /** the curl's loop (S9–S10): it starts LOOP_A0 units out and runs clockwise as seen from the near side (back → down →
@@ -135,18 +135,15 @@ const theta = (a: number, t: number, out: number) => {
   // (3) a travelling wave running tail → head (the eel is swimming BACKWARD out of the fish)
   const A = (lerp(9, 7.5, wCurl(t)) + 4 * k) * D * sm(a / 7);
   const wave = A * Math.sin(2 * Math.PI * (1.25 * t + a / 15)) + 4 * D * wCurl(t) * Math.sin(2 * Math.PI * (0.45 * t + a / 40));
-  // while the head is caught (S9) the body leaves the opening rising up and back over the shoulder, clear of the gap
-  const lift = 38 * D * (1 - sm(a / 10)) * ss(t, 15.6, 16.2) * (1 - ss(t, 17.4, 18.2));
-  return lerp(bow, curl, wCurl(t)) + wave + lift;
+  return lerp(bow, curl, wCurl(t)) + wave;
 };
 const beta = (a: number, t: number, out: number) => {
   // out from under the cover, flattening into a plane beside the flank; the curl's plane sits farther out
-  const lead = lerp(25, 72, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 9 + 2 * wTight(t), wCurl(t)));
-  // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in
-  const bowZ = 55 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
-  // ... and less toward the viewer there
-  const keep = 1 - 0.65 * ss(t, 15.6, 16.2) * (1 - ss(t, 17.4, 18.2));
-  return lead * keep + bowZ;
+  const lead = lerp(25, 50, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 9 + 2 * wTight(t), wCurl(t)));
+  // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in; once most
+  // of the body is out (S9) it lies back along the flank instead (not toward the viewer)
+  const bowZ = 55 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t)) * (1 - 0.8 * ss(t, 15.2, 16.2));
+  return lead + bowZ;
 };
 export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th), -Math.cos(be) * Math.sin(th), Math.sin(be)];
 
@@ -187,7 +184,7 @@ export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) =>
 // ---------------------------------------------------------------- free mode
 /** after straightening along its natural heading (the mid-body's forward direction at the release: back along the
  *  flank), the swimmer veers up and away from the predator, toward the near side, head first */
-export const SWIM_DIR: V3 = norm3([0.3, -0.3, 0.9]);
+export const SWIM_DIR: V3 = norm3([-0.72, -0.3, 0.62]);
 const rotAbout = (v: V3, k: V3, ang: number): V3 => {
   // Rodrigues
   const c = Math.cos(ang), s = Math.sin(ang);
@@ -209,15 +206,14 @@ const REL = (() => {
 })();
 const MID = N / 2;
 /** the natural heading at the release: the mid-body's forward direction, levelled a little */
-export const H0: V3 = (() => {
-  const f = mul3(REL.tg[MID], -1);
-  return norm3([f[0], f[1] * 0.6, f[2] * 0.3]);
-})();
+export const H0: V3 = norm3([-0.8, -0.5, 0.3]); // the head leaves the slit up, out and back, clear of the fish
 const T_TURN0 = T_REL + 0.12, T_TURN1 = T_REL + 0.85;
 /** the heading the HEAD has at time t (held at H0, then turning toward SWIM_DIR) */
 /** then it veers upstream (a curving escape, so its body never points back at the predator) */
-export const SWIM_DIR2: V3 = norm3([-0.55, -0.2, 0.81]);
-export const headingAt = (t: number): V3 => slerpDir(slerpDir(H0, SWIM_DIR, ss(t, T_TURN0, T_TURN1)), SWIM_DIR2, ss(t, T_TURN1 + 0.1, T_TURN1 + 1.4));
+export const SWIM_DIR2: V3 = norm3([-0.6, -0.08, 0.8]);
+/** the headings (tunable for tools/v4/swim_gap.ts) */
+export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number]};
+export const headingAt = (t: number): V3 => slerpDir(slerpDir(SWIM_HEAD.h0, SWIM_HEAD.d1, ss(t, T_TURN0, T_TURN1)), SWIM_HEAD.d2, ss(t, T_TURN1 + SWIM_HEAD.k2[0], T_TURN1 + SWIM_HEAD.k2[1]));
 /** swimming speed (u/s) */
 const speedAt = (t: number) => 38 * ss(t, T_REL + 0.05, T_REL + 0.7) + 8 * ss(t, T_REL + 1.0, T_REL + 2.2);
 /** distance swum since the release (numerical, cheap) */
@@ -242,7 +238,7 @@ const pastTime = (t: number, a: number) => {
 };
 /** anchor (mid-body): the pull's momentum (toward the tail end along the release tangent, decaying), plus the
  *  distance swum along the heading the mid-body has (the head's heading, delayed) */
-const PULL_V = 29;
+const PULL_V = 14;
 const anchorAt = (t: number): V3 => {
   const dt = Math.max(0, t - T_REL);
   const tau = 0.12;
@@ -254,8 +250,13 @@ const anchorAt = (t: number): V3 => {
     const tm = T_REL + s + step / 2;
     sw = add3(sw, mul3(headingAt(pastTime(tm, EEL_L / 2)), speedAt(tm) * step));
   }
-  return add3(add3(REL.c[MID], pull), sw);
+  // the push off the predator: the whole eel moves out from the flank (and up) while it straightens, so its body
+  // (lying along the fish, not pointing at it) leaves the flank whole: no tail left resting on the fish
+  const drift = mul3(DRIFT_DIR, DRIFT_U * (1 - Math.exp(-dt / 0.42)));
+  return add3(add3(add3(REL.c[MID], pull), sw), drift);
 };
+const DRIFT_DIR: V3 = norm3([0.05, -0.3, 1]);
+const DRIFT_U = 13;
 /** the release tangents as in-plane angle θ (unwrapped along the body) and out-of-plane slope β */
 const REL_ANG = (() => {
   const th: number[] = [], be: number[] = [];

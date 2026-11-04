@@ -2008,6 +2008,8 @@ export type PredGeom = {
   exit: {p: V3; out: V3; n: V3};
   mouthIn: {p: V3; dir: V3};
   eye: {x: number; y: number; r: number};
+  cover: string;
+  rim: {x: number; y: number}[];
 };
 /** geometry for compositing the eel against the predator (all screen px unless noted) */
 export const predGeom = (B: Basis, pose: PredPose): PredGeom => {
@@ -2033,6 +2035,16 @@ export const predGeom = (B: Basis, pose: PredPose): PredGeom => {
     /** WORLD: the centre of the gape and the direction into the throat */
     mouthIn: m.mouthIn,
     eye: e ? {x: e.c.x, y: e.c.y, r: e.R} : {x: pe.x, y: pe.y, r: 0},
+    /** path d: the visible part of the near gill cover (the plate), for hiding what passes under its edge */
+    cover: (() => {
+      const ls = m.coverBase[m.nearFront ? 0 : 1];
+      return ls.length ? loopsPath(ls) : '';
+    })(),
+    /** screen px: the near cover's free (rear) edge, top → bottom, where it is visible */
+    rim: (() => {
+      const cv = m.covers[m.nearFront ? 0 : 1];
+      return cv.edgeS.filter((_, i) => cv.edgeOk[i]).map((p) => ({x: p.x, y: p.y}));
+    })(),
   };
 };
 

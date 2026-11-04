@@ -2,10 +2,13 @@
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import {resetIds} from '../../core/ids';
-import {ExtFrame, ExtShot, LoopShot, pokeStateWith} from '../shots/Exterior';
+import {EXT_DBG, ExtFrame, ExtShot, LoopShot, pokeStateWith} from '../shots/Exterior';
 
-const Cell: React.FC<{id: string; t: number; band: boolean; o?: any}> = ({id, t, band, o}) => {
+const Cell: React.FC<{id: string; t: number; band: boolean; o?: any}> = ({id, t, band, o: o0}) => {
+  let o = o0;
   resetIds(`${id}${Math.round(t * 1000)}_`);
+  EXT_DBG.layer = o && o.dbg ? o.dbg : '';
+  if (o && o.dbg) o = undefined;
   return (
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: '#000'}}>
       {o ? <ExtFrame s={pokeStateWith(o, t)} /> : id === 'loop' ? <LoopShot t={t} dur={24.8} /> : <ExtShot id={id} t={t} />}
