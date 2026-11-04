@@ -44,8 +44,9 @@ export type EelProps = {
   t: number;
   /** which side the dark back is on: 1 (default) = the left of the snout→tail direction (a left-facing eel shows
    *  its back up; the opening's rising tail shows it on its upper/outer side), -1 = the other side. Values in
-   *  between roll the body about its long axis (0 = the back faces the viewer), so a flip can be animated. */
-  dorsal?: number;
+   *  between roll the body about its long axis (0 = the back faces the viewer), so a flip can be animated. An
+   *  array (one value per sample) twists the body along its length; use the same value/array for every section. */
+  dorsal?: number | number[];
   opacity?: number;
   /** clip: a path `d` in the layer's units (e.g. gillGapPath(s)), or a ready `url(#id)` reference */
   clip?: string;
@@ -72,7 +73,7 @@ const TIP_EXT = 0.3;
 const WHITE = '#FFFFFF';
 /** shadow tint: a deep cool slate, so the shadowed pale belly stays blue-grey instead of going muddy */
 const SHADOW = mix(INK, C.eelBack, 0.45);
-const FIN_FILL = mix(C.eelBack, C.eelFin, 0.35);
+const FIN_FILL = mix(C.eelFin, C.eelBack, 0.38);
 const PEC_FILL = mix(C.eelFin, C.eelFlank, 0.3);
 const LATERAL = lit(C.eelFlank, 0.3);
 const EYE_RING = mix(C.eelBelly, C.eelFin, 0.35);
@@ -425,8 +426,11 @@ type Ctx = {
   q: number;
   px: number;
   t: number;
+  /** projected angle of the dorsal midline, per station, and at the head */
+  phDs: number[];
   phD: number;
-  fins: {Od: P[]; Oa: P[]; Bd: P[]; Ba: P[]; jd0: number; ja0: number; tip: P[]};
+  /** fin outer edges (O), bases inside the body (B), mid-lines for the rays (R), the fringe round the tail tip */
+  fins: {Od: P[]; Oa: P[]; Bd: P[]; Ba: P[]; Rd: P[]; Ra: P[]; jd0: number; ja0: number; tip: P[]; tipR: P[]};
   edges: {m: P[]; p: P[]};
   pig: {lo: P[]; hi: P[]; col: string}[];
   shadows: {sides: {lo: P[]; hi: P[]; live: boolean[]}[]; op: number}[];
@@ -435,13 +439,20 @@ type Ctx = {
   lateral: {pts: P[]; j0: number; j1: number}[];
 };
 
-const makeCtx = (g: Geo, px: number, t: number, dorsal: number): Ctx => {
+const makeCtx = (g: Geo, px: number, t: number, dorsal: number | number[]): Ctx => {
   // one integer step ≈ 0.2 px
   const q = Math.max(20, Math.round(px * 5));
-  const d = Math.max(-1, Math.min(1, dorsal));
-  const phD = -d * HP;
   const M = g.M;
-  const pig = PIG.map((p) => ({lo: edgeArr(g, sOf(phD - p.bound)), hi: edgeArr(g, sOf(phD + p.bound)), col: p.col}));
+  const dOf = (i: number) => {
+    const v = typeof dorsal === 'number' ? dorsal : dorsal[Math.max(0, Math.min(dorsal.length - 1, i))] ?? 1;
+    return Math.max(-1, Math.min(1, Number.isFinite(v) ? v : 1));
+  };
+  const phDs = g.idx.map((f) => {
+    const i = Math.floor(f), fr = f - i;
+    return -HP * (dOf(i) + (dOf(i + 1) - dOf(i)) * fr);
+  });
+  const phD = phDs[Math.min(M - 1, CAP_N)];
+  const pig = PIG.map((p) => ({lo: edgeArr(g, phDs.map((ph) => sOf(ph - p.bound))), hi: edgeArr(g, phDs.map((ph) => sOf(ph + p.bound))), col: p.col}));
   // light: per station, the cross-section angle of the light; the lit interval for each threshold
   const ph0 = g.al.map((a) => Math.atan2(a * CE, SE));
   const shadows = SHADOWS.map((L) => {
@@ -486,14 +497,23 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number): Ctx => {
   const spec = {lo: edgeArr(g, sLo), hi: edgeArr(g, sHi), hlo: edgeArr(g, hLo), hhi: edgeArr(g, hHi)};
   // lateral line(s) on the visible flank(s)
   const lateral: Ctx['lateral'] = [];
+  const l0 = stationOf(g, 0.105 * (g.nS - 1)), l1 = stationOf(g, 0.8 * (g.nS - 1));
   for (const side of [1, -1]) {
-    const ph = phD + side * 94 * DEG;
-    if (Math.abs(ph) > 80 * DEG) continue;
-    lateral.push({pts: edgeArr(g, Math.sin(ph)), j0: stationOf(g, 0.105 * (g.nS - 1)), j1: stationOf(g, 0.8 * (g.nS - 1))});
+    const phs = phDs.map((ph) => ph + side * 94 * DEG);
+    const pl = edgeArr(g, phs.map(sOf));
+    // the runs of stations where this flank faces the viewer
+    let run = -1;
+    for (let j = Math.floor(l0); j <= Math.ceil(l1) + 1; j++) {
+      const vis = j <= Math.ceil(l1) && j < M && Math.abs(phs[j]) <= 80 * DEG;
+      if (vis && run < 0) run = j;
+      if (!vis && run >= 0) {
+        lateral.push({pts: pl, j0: Math.max(l0, run), j1: Math.min(l1, j - 1)});
+        run = -1;
+      }
+    }
   }
   // fins: dorsal on the dorsal midline's projected side, anal on the opposite side
-  const sd = Math.sin(phD), sa = -sd;
-  const Od: P[] = [], Oa: P[] = [], Bd: P[] = [], Ba: P[] = [];
+  const Od: P[] = [], Oa: P[] = [], Bd: P[] = [], Ba: P[] = [], Rd: P[] = [], Ra: P[] = [];
   let hdN = 0, haN = 0;
   for (let j = 0; j < M; j++) {
     const u = g.u[j];
@@ -504,7 +524,8 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number): Ctx => {
       haN = ha;
     }
     const k = g.kap[j];
-    const put = (s: number, h: number, O: P[], Bs: P[]) => {
+    const sd = Math.sin(phDs[j]), sa = -sd;
+    const put = (s: number, h: number, O: P[], Bs: P[], Rs: P[]) => {
       const sg = s >= 0 ? 1 : -1;
       const rSide = sg > 0 ? g.rp[j] : g.rm[j];
       let ext = (rSide + h) * Math.abs(s);
@@ -512,18 +533,22 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number): Ctx => {
       O.push({x: g.c[j].x + g.n[j].x * sg * ext, y: g.c[j].y + g.n[j].y * sg * ext});
       const bb = rSide * Math.abs(s) * 0.45;
       Bs.push({x: g.c[j].x + g.n[j].x * sg * bb, y: g.c[j].y + g.n[j].y * sg * bb});
+      const mm = rSide * Math.abs(s);
+      Rs.push({x: g.c[j].x + g.n[j].x * sg * mm, y: g.c[j].y + g.n[j].y * sg * mm});
     };
-    put(sd, hd, Od, Bd);
-    put(sa, ha, Oa, Ba);
+    put(sd, hd, Od, Bd, Rd);
+    put(sa, ha, Oa, Ba, Ra);
   }
   // the fringe around the pointed tail tip
   const jl = M - 1, cN = g.c[jl], T = g.tg[jl], nn = g.n[jl];
+  const sd = Math.sin(phDs[jl]), sa = -sd;
   const sgD = sd >= 0 ? 1 : -1, sgA = -sgD;
   const tp = (fw: number, side: number, h: number): P => ({x: cN.x + T.x * fw + nn.x * side * h, y: cN.y + T.y * fw + nn.y * side * h});
   const tip = [tp(TIP_EXT * 0.62, sgD, hdN * Math.abs(sd) * 0.66), tp(TIP_EXT, 0, 0), tp(TIP_EXT * 0.62, sgA, haN * Math.abs(sa) * 0.66)];
+  const tipR = [tp(TIP_EXT * 0.05, sgD, 0.05 * Math.abs(sd)), tp(TIP_EXT * 0.12, 0, 0), tp(TIP_EXT * 0.05, sgA, 0.05 * Math.abs(sa))];
   return {
-    g, q, px, t, phD,
-    fins: {Od, Oa, Bd, Ba, jd0: stationOf(g, EEL_FEAT.dorsalFinU * (g.nS - 1)), ja0: stationOf(g, EEL_FEAT.analFinU * (g.nS - 1)), tip},
+    g, q, px, t, phDs, phD,
+    fins: {Od, Oa, Bd, Ba, Rd, Ra, jd0: stationOf(g, EEL_FEAT.dorsalFinU * (g.nS - 1)), ja0: stationOf(g, EEL_FEAT.analFinU * (g.nS - 1)), tip, tipR},
     edges: {m: edgeArr(g, -1), p: edgeArr(g, 1)},
     pig, shadows, lights, spec, lateral,
   };
@@ -532,7 +557,7 @@ const makeCtx = (g: Geo, px: number, t: number, dorsal: number): Ctx => {
 // ---------------------------------------------------------------- one chunk of body
 /** a chunk: the body is drawn over [A, B] (extended past cut ends), the fin over [fA, fB]; mask zones black out
  *  what lies beyond the cuts */
-type Chunk = {A: number; B: number; fA: number; fB: number; head: boolean; tail: boolean; zones: [number, number][]};
+type Chunk = {A: number; B: number; fA: number; fB: number; head: boolean; tail: boolean; zones: [number, number][]; feats: Feat[]};
 
 const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
   const {g, q} = x;
@@ -563,7 +588,32 @@ const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
         curve(fk, fi.Oa, Math.max(A, fi.ja0), B, false, true);
       }
     }
-    if (!ff.empty) els.push(<path key="ff" d={ff.toString()} fill={FIN_FILL} fillOpacity={0.58} />);
+    if (!ff.empty) {
+      const fd = ff.toString();
+      els.push(<path key="ff" d={fd} fill={FIN_FILL} fillOpacity={0.7} />);
+      // fine rays: a dashed stroke along the fin's base line, wide enough to reach its edge, clipped to the fin
+      if (x.px >= 12) {
+        const rw = P_();
+        if (tail) {
+          const ext = [...fi.Rd, ...fi.tipR, ...[...fi.Ra].reverse()];
+          curve(rw, ext, Math.max(A, fi.jd0), 2 * M + 2 - Math.max(A, fi.ja0), false, true);
+        } else {
+          if (B > fi.jd0) curve(rw, fi.Rd, Math.max(A, fi.jd0), B, false, true);
+          if (B > fi.ja0) curve(rw, fi.Ra, Math.max(A, fi.ja0), B, false, true);
+        }
+        if (!rw.empty) {
+          const id = uid('eelfin');
+          els.push(
+            <clipPath key="fc" id={id}>
+              <path d={fd} />
+            </clipPath>,
+          );
+          els.push(
+            <path key="fr" d={rw.toString()} clipPath={`url(#${id})`} fill="none" stroke={C.eelBack} strokeOpacity={0.3} strokeWidth={q * FIN_D * 2.3} strokeDasharray={`${q * 0.028} ${q * 0.1}`} strokeLinejoin="round" />,
+          );
+        }
+      }
+    }
     if (!fk.empty) els.push(<path key="fk" d={fk.toString()} fill="none" stroke={INK} strokeWidth={1.3} strokeOpacity={0.5} vectorEffect={NS} strokeLinejoin="round" strokeLinecap="round" />);
   }
   // ---- body: base pigment, nested pigment strips
@@ -630,8 +680,22 @@ const Body: React.FC<{x: Ctx; ch: Chunk}> = ({x, ch}) => {
 };
 
 // ---------------------------------------------------------------- the head: eye, mouth, gill slit, pectoral fin
-const Head: React.FC<{x: Ctx}> = ({x}) => {
+type Feat = 'gill' | 'mouth' | 'pec' | 'eye';
+/** where each head feature lies along the body (station coordinates): every chunk whose range overlaps a feature
+ *  draws it, and the cut masks split it exactly where the chunks meet (the eye can sit right at a join) */
+const featRanges = (g: Geo): [Feat, number, number][] => {
+  const S = (u: number, dIdx: number) => stationOf(g, Math.max(0, u * (g.nS - 1) + dIdx));
+  return [
+    ['gill', S(EEL_FEAT.gillU, -0.9), S(EEL_FEAT.gillU, 0.9)],
+    ['mouth', 0, S(0.036, 0.9)],
+    ['pec', S(EEL_FEAT.pectoralU, -0.9), S(EEL_FEAT.pectoralU, 3.4)],
+    ['eye', S(EEL_FEAT.eyeU, -1.3), S(EEL_FEAT.eyeU, 1.3)],
+  ];
+};
+
+const Head: React.FC<{x: Ctx; only: Feat[]}> = ({x, only}) => {
   const {g, q, phD, t} = x;
+  const want = (f: Feat) => only.includes(f);
   const els: React.ReactNode[] = [];
   const R = (v: number) => Math.round(v * q);
   const st = (u: number) => stationOf(g, u * (g.nS - 1));
@@ -654,10 +718,10 @@ const Head: React.FC<{x: Ctx}> = ({x}) => {
   };
   for (const side of [1, -1]) {
     const flank = (psi: number) => phD + side * psi;
-    // only on the flank that faces the viewer
-    if (Math.cos(flank(90 * DEG)) < 0.08) continue;
+    /** a feature at angle ψ from the dorsal midline shows only on the side that faces the viewer */
+    const shows = (psiDeg: number) => Math.cos(flank(psiDeg * DEG)) > 0.12;
     // gill slit: a short crescent low on the flank, just ahead of the pectoral fin
-    {
+    if (want('gill') && shows(118)) {
       const jg = st(EEL_FEAT.gillU);
       const fr = frame(jg);
       const ps = [0, 0.5, 1].map((k) => {
@@ -668,7 +732,7 @@ const Head: React.FC<{x: Ctx}> = ({x}) => {
       els.push(<path key={'g' + side} d={open(ps)} fill="none" stroke={INK} strokeOpacity={0.75} strokeWidth={1.5} vectorEffect={NS} strokeLinecap="round" />);
     }
     // mouth: the cleft from the snout tip back to the corner below the eye, the corner turning down a little
-    {
+    if (want('mouth') && shows(110)) {
       const jt = st(0.036);
       const ps: P[] = [];
       const K = 6;
@@ -679,7 +743,7 @@ const Head: React.FC<{x: Ctx}> = ({x}) => {
       els.push(<path key={'m' + side} d={open(ps)} fill="none" stroke={INK} strokeWidth={1.8} vectorEffect={NS} strokeLinecap="round" strokeLinejoin="round" />);
     }
     // pectoral fin: a tiny rounded paddle on the flank, fanning gently
-    {
+    if (want('pec') && shows(96)) {
       const jp = st(EEL_FEAT.pectoralU);
       const fr = frame(jp);
       const base = at(jp, flank(96 * DEG));
@@ -704,7 +768,7 @@ const Head: React.FC<{x: Ctx}> = ({x}) => {
       els.push(<path key={'pr' + side} d={rays.toString()} stroke={C.eelBack} strokeOpacity={0.35} strokeWidth={1} vectorEffect={NS} fill="none" strokeLinecap="round" />);
     }
     // eye: small, dark, with a thin silvery ring and a highlight toward the light
-    {
+    if (want('eye') && shows(60)) {
       const je = st(EEL_FEAT.eyeU);
       const fr = frame(je);
       const phE = flank(60 * DEG);
@@ -745,6 +809,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
     return Math.min(0.5, 1.5 / pxx / Math.max(1e-3, sl));
   };
   const EXT = 1; // how far the body runs on past a cut, under the mask (stations)
+  const FR = featRanges(g);
   const chunks: Chunk[] = [];
   for (let k = 0; k < bounds.length - 1; k++) {
     const first = k === 0, lastC = k === bounds.length - 2;
@@ -756,20 +821,24 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
     let A = eA, B = eB;
     const fA = eA, fB = eB;
     const zones: [number, number][] = [];
+    // head features overlapping this chunk (drawn whole, then cut by the same masks as the body)
+    const near = FR.filter(([, f0, f1]) => f1 > eA && f0 < eB);
+    const feats = near.map(([f]) => f);
+    const fMin = Math.min(eA, ...near.map(([, f0]) => f0)), fMax = Math.max(eB, ...near.map(([, , f1]) => f1));
     if (!head) {
       // drawn after its neighbour at the start (a later section, or the next chunk when the tail lies on top)?
       const overlapper = first ? true : tailOn;
       const cut = overlapper ? Math.max(0, eA - epsAt(eA)) : eA;
       A = Math.max(0, cut - EXT);
-      zones.push([Math.max(0, A - 0.4), cut]);
+      zones.push([Math.max(0, Math.min(A, fMin) - 0.4), cut]);
     }
     if (!tail) {
       const overlapper = lastC ? false : !tailOn;
       const cut = overlapper ? Math.min(M - 1, eB + epsAt(eB)) : eB;
       B = Math.min(M - 1, cut + EXT);
-      zones.push([cut, Math.min(M - 1, B + 0.4)]);
+      zones.push([cut, Math.min(M - 1, Math.max(B, fMax) + 0.4)]);
     }
-    chunks.push({A, B, fA, fB, head, tail, zones});
+    chunks.push({A, B, fA, fB, head, tail, zones, feats});
   }
   const order = tailOn ? chunks : [...chunks].reverse();
   const defs: React.ReactNode[] = [];
@@ -791,7 +860,8 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
   const maskOf = (ch: Chunk, i: number) => {
     if (!ch.zones.length) return undefined;
     let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-    const j0 = Math.max(0, Math.floor(Math.min(ch.A, ch.fA))), j1 = Math.min(M - 1, Math.ceil(Math.max(ch.B, ch.fB)));
+    const zs = ch.zones.flat();
+    const j0 = Math.max(0, Math.floor(Math.min(ch.A, ch.fA, ...zs))), j1 = Math.min(M - 1, Math.ceil(Math.max(ch.B, ch.fB, ...zs)));
     for (let j = j0; j <= j1; j++) {
       const rr = g.r[j] + FIN_D + 1;
       x0 = Math.min(x0, g.c[j].x - rr);
@@ -826,7 +896,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
   const parts = order.map((ch, i) => (
     <g key={i} mask={maskOf(ch, i)}>
       <Body x={x} ch={ch} />
-      {ch.head && <Head x={x} />}
+      {ch.feats.length > 0 && <Head x={x} only={ch.feats} />}
     </g>
   ));
   // (clip and mask units are userSpaceOnUse: the clip is read in the layer's units, the masks in the scaled space
@@ -842,7 +912,7 @@ export const Eel: React.FC<EelProps> = ({pts, radii, from = 0, to, px, t, dorsal
 /** the eel's silhouette over a section (body, optionally with the ribbon fin), one closed path in the layer's
  *  units, for masks and clips (holes along the eel in the translucent skin, a glow, a contact shadow); `grow`
  *  widens it by that many units */
-export const eelSilhouette = (pts: P[], radii: number[], from = 0, to?: number, withFins = false, t = 0, dorsal = 1, grow = 0): string => {
+export const eelSilhouette = (pts: P[], radii: number[], from = 0, to?: number, withFins = false, t = 0, dorsal: number | number[] = 1, grow = 0): string => {
   const nS = pts.length;
   if (nS < 4) return '';
   const last = nS - 1;

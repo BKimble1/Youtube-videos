@@ -47,7 +47,7 @@ export const mono = (keys: [number, number][]) => {
 // ---------------------------------------------------------------- events
 const S = S_EXIT, L = EEL_L;
 /** the tail's length outside the fish in the opening (and again when the exterior is restored after the cutaway) */
-export const OPEN_OUT = 14;
+export const OPEN_OUT = 21;
 export const EV = {
   beat0: 0.0, beat1: 0.46,
   reveal0: T.belongs, reveal1: T.swallowed + 0.15,
@@ -75,7 +75,7 @@ const sigKeys = mono([
   [EV.rew1, -0.6], [T.stomach, -0.5], [EV.back0, -0.35],
   [T.backing + 0.25, 1.6], [T.its, 4.6], [T.slides + 0.25, 8.6], [EV.throat, S_THROAT],
   [T.slips + 0.25, S_THROAT + 1.6], [EV.slit, S_SLIT + 0.4], [EV.chamber, S_CHAMBER + 0.9], [EV.poke, S + 0.4],
-  [T.side, S + 4.2], [EV.cutHold1, S + 7.4], [EV.restore1, S + OPEN_OUT - 0.2],
+  [T.side, S + 5.5], [EV.cutHold1, S + 9.5], [EV.restore1, S + OPEN_OUT - 3.0], [EV.restore1 + 0.3, S + OPEN_OUT + 0.6],
   [T.body, S + 26], [T.follows, S + 38], [EV.follow1, S + L - 5.5], [EV.headAt, S + L - 1.9],
 ]);
 export const HEAD_CAUGHT = S + L - 1.75; // the snout 1.75 u inside the gill opening: the eye just behind the cover's edge
@@ -123,7 +123,10 @@ const kOut = (a: number, lo: number, t: number) => {
   // the tail's own flexing: a wave that grows toward the tip; in the opening it flexes against the gill beat
   const tipW = clamp(a / Math.max(6, lo));
   const live = t < EV.rew0 ? 1 : 0.8;
-  k += live * 0.07 * tipW * Math.sin((2 * Math.PI * a) / 10 - 2 * Math.PI * 1.25 * t);
+  // an eel's travelling S-wave, strongest toward the tip (the free tail is clearly a separate, moving animal)
+  k += live * 0.105 * Math.pow(tipW, 0.7) * Math.sin((2 * Math.PI * a) / 13 - 2 * Math.PI * 1.15 * t);
+  // while only the tail is out it leans back over the fish's back
+  k += 0.028 * (1 - ss(lo, 24, 34)) * ss(a, 3, 9);
   if (t < EV.rew0 + 0.1) k += -0.075 * (gillAt(t - 0.05 - a * 0.012) - 0.16) * bump((a - 1.5) / 9) * 1.7;
   // the curl outside the fish, tightening on "curls … outside the fish"; the strongest just before the pull
   const c = ss(t, EV.curl0, EV.curl1) * (1 + 0.2 * ss(t, EV.tug0, EV.release)) ;
@@ -139,7 +142,9 @@ const wiggle = (u: number, sig: number, t: number) => {
 
 // ---------------------------------------------------------------- free mode: the release, the stroke, the swim
 const relax = (t: number) => ss(t, EV.release + 0.05, EV.release + 1.05);
-const kSwim = (u: number, t: number) => (0.035 + 0.11 * u) * Math.sin(2 * Math.PI * (u / 0.62 - 2.4 * (t - EV.release)));
+const kSwim = (u: number, t: number) =>
+  // the wave calms as it nears the lens, so the departing tail is one clean band when it sweeps across
+  (1 - 0.85 * ss(t, EV.lens0 - 0.35, EV.lens0 + 0.25)) * (0.035 + 0.11 * u) * Math.sin(2 * Math.PI * (u / 0.62 - 2.4 * (t - EV.release)));
 // mid-body motion after the release: the coil pulls up and away from the gill as it straightens (both ends swing about
 // mid-body), turning so the head leads up and to the right, clear of the fish; then a quick swim along that heading
 export const SWIM_DIR = (-28 * Math.PI) / 180;
@@ -183,21 +188,28 @@ const freeMove = (t: number) => {
 export const SWEEP0 = DUR - 0.5;
 export const LENS = {near: 0.85, end: 0.935, r1: 40, r2: 28};
 export const lensAt = (t: number) => LENS.near * ss(t, EV.lens0 - 0.4, SWEEP0) + (LENS.end - LENS.near) * ss(t, SWEEP0, DUR);
-/** the departing tail's stroke past the lens: it swings out past the right edge, then sweeps right to left across the
- *  whole frame (a rotation of the body about its head, which is already above the frame) */
-const pivotRot = (t: number) => {
-  const a = -((LENS.r1 * Math.PI) / 180) * ss(t, SWEEP0 - 0.24, SWEEP0);
-  return a + (((LENS.r1 + LENS.r2) * Math.PI) / 180) * ss(t, SWEEP0, DUR + 0.12);
+/** the departing tail's stroke past the lens: the body (vertical, its head already above the frame) swings out just past
+ *  the right edge, then sweeps right to left across the whole frame; a sideways shift keeps the band upright, so every
+ *  height clears the edges together (no dead frames) */
+export const SWEEP = {out: 7.4, back: 5.2, outT: 0.2};
+const pivotRot = (_t: number) => 0;
+const sweepShift = (t: number) => {
+  const outU = ss(t, SWEEP0 - SWEEP.outT, SWEEP0);
+  // the sweep back: quick from the start (a cubic ease-out), still moving at the loop point
+  const u = clamp((t - SWEEP0) / (DUR + 0.06 - SWEEP0));
+  const back = 1 - Math.pow(1 - u, 2.2);
+  return pt(SWEEP.out * outU - (SWEEP.out + SWEEP.back) * (t > SWEEP0 ? back : 0), 0);
 };
 
 export const DRIVERS: Drivers = {
   sigTip, kOut, wiggle, tRelease: EV.release, relax, kSwim, freeMove,
   outZ: (t) => 6.9,
   pivotRot,
+  sweepShift,
 };
 export const eelAt = (t: number): EelPose => eelPose(t, DRIVERS);
 /** the same eel without the final stroke's rotation (the camera follows this, so the stroke itself crosses the frame) */
-const DRIVERS_STEADY: Drivers = {...DRIVERS, pivotRot: () => 0};
+const DRIVERS_STEADY: Drivers = {...DRIVERS, pivotRot: () => 0, sweepShift: () => pt(0, 0)};
 
 // ---------------------------------------------------------------- the fish's state
 export type FishState = {
@@ -232,7 +244,7 @@ export const fishAt = (t: number): FishState => {
 };
 
 // ---------------------------------------------------------------- the camera
-export const CAM_A: Cam = {x: -31, y: -4, w: 48};
+export const CAM_A: Cam = {x: -30, y: -6, w: 44};
 const C = (x: number, y: number, w: number): Cam => ({x, y, w});
 const CAM_KEYS: Key[] = [
   [EV.reveal0 - 0.1, CAM_A],
@@ -245,9 +257,10 @@ const CAM_KEYS: Key[] = [
   [EV.cutHold1, C(-25.0, -3.8, 45), travel],
   [EV.restore1, CAM_A, travel],
   [EV.follow1, C(-21.0, -13.0, 66), travel],
-  [T.last + 0.1, C(-24.0, -10.0, 46), travel],
-  [EV.curl1, C(-22.0, -12.0, 54), travel],
-  [EV.release + 0.2, C(-22.0, -12.0, 54), travel],
+  [T.comes, C(-21.0, -10.5, 50), travel],
+  [T.lastEnd + 0.1, C(-22.5, -9.0, 40), travel],
+  [EV.curl1, C(-19.5, -13.0, 54), travel],
+  [EV.release + 0.2, C(-19.5, -13.5, 56), travel],
 ];
 const CAM_SWIM: Cam = {x: -10, y: -16, w: 82};
 export const camAt = (t: number): Cam => {

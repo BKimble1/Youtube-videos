@@ -16,7 +16,20 @@ import {C, INK, INK_PX, NS} from '../art/palette';
 import {Eel} from '../art/eelArt';
 import {resetIds} from '../core/ids';
 
-type FrameProps = {t: number; view?: 'story' | 'head' | 'lens' | 'tail'; split?: boolean; dorsal?: number; fish?: boolean; over?: 'tail' | 'head'; zoom?: number; focus?: number};
+type FrameProps = {
+  t: number;
+  view?: 'story' | 'head' | 'lens' | 'tail';
+  split?: boolean;
+  dorsal?: number | number[];
+  /** a twist along the body: dorsal from `twist[0]` at the snout to `twist[1]` at the tail tip */
+  twist?: [number, number];
+  fish?: boolean;
+  over?: 'tail' | 'head';
+  zoom?: number;
+  focus?: number;
+  /** clip test: clip the outside part to a circle of this radius (units) around sample `focus` (or 100) */
+  clipR?: number;
+};
 
 const Water: React.FC = () => (
   <AbsoluteFill style={{background: `linear-gradient(180deg, ${C.waterTop} 0%, ${C.waterMid} 55%, ${C.waterDeep} 100%)`}} />
@@ -29,8 +42,9 @@ const Fish: React.FC<{c: Cam}> = ({c}) => (
   </Layer>
 );
 
-export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false, dorsal, fish = true, over, zoom, focus}) => {
+export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false, dorsal: dorsal0, twist, fish = true, over, zoom, focus, clipR}) => {
   const e = eelAt(t);
+  const dorsal = twist ? e.pts.map((_, i) => twist[0] + (twist[1] - twist[0]) * (i / (e.pts.length - 1))) : dorsal0;
   let c: Cam = camAt(t);
   let z = 0;
   if (focus !== undefined) {
@@ -50,7 +64,12 @@ export const EelFrame: React.FC<FrameProps> = ({t, view = 'story', split = false
   const inside = !e.free && e.exitIdx > 0 ? Math.min(N, e.exitIdx) : 0;
   const common = {pts: e.pts, radii: RADII, px, t, dorsal, over};
   const inPart = inside > 0 ? <Eel {...common} from={0} to={inside} /> : null;
-  const outPart = inside < N ? <Eel {...common} from={inside} /> : null;
+  let clip: string | undefined;
+  if (clipR) {
+    const q = e.pts[Math.round(focus ?? 100)];
+    clip = `M${q.x - clipR} ${q.y}a${clipR} ${clipR} 0 1 0 ${2 * clipR} 0a${clipR} ${clipR} 0 1 0 ${-2 * clipR} 0z`;
+  }
+  const outPart = inside < N ? <Eel {...common} from={inside} clip={clip} /> : null;
   return (
     <AbsoluteFill>
       <Water />
@@ -67,15 +86,17 @@ const Frame1: React.FC<FrameProps> = (p) => {
   return <EelFrame {...p} />;
 };
 
-export const EelSheet: React.FC<{ts: number[]; cols?: number; split?: boolean}> = ({ts, cols = 3, split}) => {
+type SheetProps = {ts: number[]; cols?: number; split?: boolean; dorsals?: (number | number[])[]; cells?: FrameProps[]};
+export const EelSheet: React.FC<SheetProps> = ({ts, cols = 3, split, dorsals, cells}) => {
+  const list: FrameProps[] = cells ?? ts.map((t, i) => ({t, split, dorsal: dorsals?.[i]}));
   const k = 1 / cols;
   return (
     <AbsoluteFill style={{backgroundColor: '#111'}}>
-      {ts.map((t, i) => {
+      {list.map((cell, i) => {
         resetIds(`s${i}_`);
         return (
           <div key={i} style={{position: 'absolute', left: (i % cols) * 1080 * k, top: Math.floor(i / cols) * 1920 * k, width: 1080, height: 1920, transform: `scale(${k})`, transformOrigin: '0 0', overflow: 'hidden'}}>
-            <EelFrame t={t} split={split} />
+            <EelFrame {...cell} />
           </div>
         );
       })}
@@ -86,7 +107,7 @@ export const EelSheet: React.FC<{ts: number[]; cols?: number; split?: boolean}> 
 const Root: React.FC = () => (
   <>
     <Composition id="EelFrame" component={Frame1} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{t: 0} as FrameProps} />
-    <Composition id="EelSheet" component={EelSheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{ts: [0, 6.5, 9.5, 12.6, 15, 17, 19.6, 20.9, 22], cols: 3} as {ts: number[]; cols?: number; split?: boolean}} />
+    <Composition id="EelSheet" component={EelSheet} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{ts: [0, 6.5, 9.5, 12.6, 15, 17, 19.6, 20.9, 22], cols: 3} as SheetProps} />
   </>
 );
 

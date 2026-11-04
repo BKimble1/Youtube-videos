@@ -109,6 +109,8 @@ export type Drivers = {
   outZ: (t: number) => number;
   /** free mode: an extra rotation of the whole body about its head (the last tail sweep past the lens) */
   pivotRot: (t: number) => number;
+  /** free mode: a sideways shift of the body (world units), applied last (the departing tail's sweep across the lens) */
+  sweepShift: (t: number) => P;
 };
 
 export type EelPose = {
@@ -241,6 +243,8 @@ const freePose = (t: number, D: Drivers): EelPose => {
       q.y = pv.y + dx * sr + dy * cr;
     }
   }
+  const sh = D.sweepShift(t);
+  if (sh.x !== 0 || sh.y !== 0) for (const q of pts) { q.x += sh.x; q.y += sh.y; }
   return {pts, sig, exitIdx: 0, free: true, sigTip: S_EXIT + EEL_L, fold: 0};
 };
 

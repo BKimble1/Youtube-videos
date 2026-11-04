@@ -171,7 +171,7 @@ const eelBits = (t: number): EelBits => {
   const e = eelAt(t);
   return {pts: e.pts, exitIdx: e.exitIdx};
 };
-/** a tube outline (fish-local x, y) along samples [a, b) with radii scaled by k plus an offset */
+/** a closed tube outline along the points, with the radii scaled by k plus a constant extra (shadows) */
 const tubeOutline = (pts: P[], radii: number[], k = 1, extra = 0) => {
   const n = pts.length;
   if (n < 2) return '';
@@ -264,9 +264,8 @@ const InteriorReveal: React.FC<{t: number}> = () => {
 let ARCH_SHADOWS: string | null = null;
 const archShadows = () =>
   (ARCH_SHADOWS ??= [0, 1, 2, 3].map((i) => archGeo(i, 0.3, []).hull).join('').replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, x, y) => `${n4(+x + 0.55)} ${n4(+y + 0.75)}`));
-const THROAT_GLINTS =
-  open([pt(-40.2, -1.05), pt(-38.6, -1.32), pt(-36.8, -1.38), pt(-35.4, -1.25)]) +
-  open([pt(-25.6, 0.12), pt(-24.0, 0.02), pt(-22.2, 0.06)]);
+const REAR_FIBRES = open([pt(-21.5, -7.0), pt(-21.0, -2.0), pt(-21.1, 2.5), pt(-22.0, 6.2)]) + open([pt(-20.6, -5.5), pt(-20.2, -1.0), pt(-20.4, 3.6)]);
+const THROAT_GLINTS = open([pt(-25.6, 0.12), pt(-24.0, 0.02), pt(-22.2, 0.06)]);
 
 const InteriorCut: React.FC<{t: number}> = ({t}) => {
   const cR = uid('icR'), gFl = uid('icFl'), gCh = uid('icCh'), gTh = uid('icTh'), gEw = uid('icEw');
@@ -311,13 +310,8 @@ const InteriorCut: React.FC<{t: number}> = ({t}) => {
       <g clipPath={`url(#${cR})`}>
         {/* flesh: the head's muscle around the cut */}
         <rect x={-42} y={-13} width={24} height={23} fill={`url(#${gFl})`} />
-        <path
-          d={open([pt(-39, -8.6), pt(-35.5, -9.6), pt(-31, -10.2), pt(-26, -9.9), pt(-21, -8.6)]) +
-            open([pt(-39, -6.1), pt(-36.6, -6.9), pt(-34.8, -7.2)]) +
-            open([pt(-39.5, 6.3), pt(-36, 7.0), pt(-31, 7.9), pt(-26, 8.2), pt(-21, 7.6)]) +
-            open([pt(-21.4, -6.5), pt(-21.0, -2.0), pt(-21.2, 2.5), pt(-22.2, 6.0)])}
-          fill="none" stroke={rgba(lit(C.flesh, 0.6), 0.8)} strokeWidth={1.3} vectorEffect={NS} strokeLinecap="round"
-        />
+        {/* muscle fibres on the chamber's rear wall (what the yaw reveals behind the gill cover strip) */}
+        <path d={REAR_FIBRES} fill="none" stroke={rgba(lit(C.flesh, 0.6), 0.8)} strokeWidth={1.3} vectorEffect={NS} strokeLinecap="round" />
         {/* the opercular chamber: a deep red cavity around the gills */}
         <path d={CHAMBER_CUT_D} fill={`url(#${gCh})`} />
         {/* the throat: the pharynx lumen running forward to the mouth and back into the esophagus */}
@@ -328,7 +322,7 @@ const InteriorCut: React.FC<{t: number}> = ({t}) => {
         <path d={open([pt(-28.4, 3.6), pt(-25.0, 3.38), pt(-20.0, 3.48), pt(-16.0, 3.5)]) + 'L-16 4.35' + open([pt(-16, 4.35), pt(-20, 4.35), pt(-25, 4.3), pt(-28.0, 4.45)]).slice(1) + 'Z'} fill={`url(#${gEw})`} />
         {/* the gill arches' soft shadows on the throat's far wall (light from the upper left) */}
         <path d={archShadows()} fill={rgba(C.gillDark, 0.26)} />
-        {/* wet glints on the throat's lining */}
+        {/* a wet glint on the esophagus lining */}
         <path d={THROAT_GLINTS} fill="none" stroke="#FFFFFF" strokeOpacity={0.3} strokeWidth={0.12} strokeLinecap="round" />
         {/* the eel's soft shadow on the throat floor */}
         {behind.length > 1 && <path d={tubeOutline(behind, rr, 1.05, 0.08)} fill={rgba(C.gillDark, 0.38)} />}
@@ -440,7 +434,13 @@ const archGeo = (i: number, gill: number, eel: EelDisc[]): ArchGeo => {
       const up = mul(perp(nrm(sub(tp, b))), -FIL_W * 0.18 * Math.sign(sub(tp, b).x || 1));
       core += `M${P2(add(add(b, mul(sub(tp, b), 0.3)), up))}L${P2(add(add(b, mul(sub(tp, b), 0.78)), up))}`;
     }
-    if (k < n - 1) filBack += finger(mul(add(base[k], base[k + 1]), 0.5), mul(add(tipOf(k, 0.92), tipOf(k + 1, 0.92)), 0.5), FIL_W * 0.5);
+    if (k < n - 1) {
+      // the second row (the other hemibranch), between the first row's filaments, a little longer and turned
+      // ventrally, so the comb's edge reads feathered rather than toothed
+      const bb = mul(add(base[k], base[k + 1]), 0.5), tb = mul(add(tipOf(k, 0.97), tipOf(k + 1, 0.97)), 0.5);
+      const v = sub(tb, bb), Tm = S[k].T;
+      filBack += finger(bb, add(add(bb, v), mul(Tm, 0.1 * Math.hypot(v.x, v.y))), FIL_W * 0.5);
+    }
   }
   // the bony bar: a tube tapered at both ends, with its lit front edge
   const C0 = S.map((s) => s.p);
