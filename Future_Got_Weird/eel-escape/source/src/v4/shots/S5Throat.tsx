@@ -355,16 +355,19 @@ const s5Pose = (t: number) => poseOn(S5_ROUTE, s5Tip(t) - S5_X0, (c) =>
   }),
 );
 /** the S5 camera: alongside the tail, on the upper near side of the passage, looking up the passage (its depth
- *  vanishes ahead, below the caption band) and down at the tail lying along the far wall; it keeps pace a little
- *  behind the tip (the tip draws ahead), then from DIP0 it dips toward the passing body until it fills the frame */
+ *  vanishes ahead, below the caption band) and down at the tail lying along the far wall. It travels up the passage
+ *  a little slower than the tip (the tip draws ahead, the walls stream past), then catches up to the tail's pace for
+ *  the cut, so the tail holds still on screen (steady width) while the sets change round it; over the last 0.8 s
+ *  it turns gently (a small pan and roll) so the tail lies exactly where S6's camera finds it at the cut */
+const S5_TURN0 = 9.65, S5_TURN1 = 10.45;
 const s5Cam = (t: number) => {
   const tip = s5Tip(t);
-  const lag = herm(t, [[8.7, 4.3], [9.15, 5.0], [9.7, 6.9], [10.05, 8.7], [10.42, 11.2]], 1.4, 5.0);
+  const lag = herm(t, [[8.7, 4.3], [9.15, 5.0], [9.7, 6.6], [10.05, 7.5], [10.42, 7.8], [10.7, 7.9]], 1.4, 0.3);
   const xc = tip - lag;
-  const dip = ss(t, G_BEATS.dip0, G_BEATS.cut + 0.05);
-  const eye: V3 = [xc, lerp(-0.75, 0.78, dip), lerp(0.95, -0.3, dip)];
-  const dir: V3 = [lerp(3.2, 3.0, dip), lerp(0.95, 0.95, dip), lerp(-0.65, -0.62, dip)];
-  return basis({eye, target: add3(eye, dir), f: 700, roll: lerp(-22, -9, dip)});
+  const turn = ss(t, S5_TURN0, S5_TURN1);
+  const eye: V3 = [xc, -0.75, 0.95];
+  const dir: V3 = [3.2, 0.95 + 0.162 * turn, -0.65 - 0.657 * turn];
+  return basis({eye, target: add3(eye, dir), f: 700, roll: -22 + 14 * turn});
 };
 /** where the passage's depth vanishes on screen */
 const s5Vp = (B: Basis) => proj(B, add3(B.eye, [400, 0, 0]));
@@ -695,11 +698,12 @@ const frameOf = (c: Cam6): Frame6 => {
 /** opens above the passing body (matched to S5's last frame), pushes in on the slit for the threading (closest at
  *  NEAR, while the body threads between the bars, just before 'gap'), then eases back and across to the settled end
  *  frame by SET, so the last third of a second is a still frame in which the tip travels into the light */
-const FR_CUT: Frame6 = {s: 92, gx: 756, gy: 817};
+const FR_CUT: Frame6 = {s: 79.06, gx: 710.4, gy: 834.0};
 const FR_GAP: Frame6 = {s: 112, gx: 355, gy: 1164};
 const FR_END: Frame6 = frameOf(CAM_END);
-/** the S6 camera is already moving when it opens (S5's camera was dipping onto the body) */
-const FR_V0 = {ls: 0.32, gx: -230, gy: 140};
+/** the S6 camera is already moving when it opens: fitted so the tail's samples move on screen as S5's do at the cut
+ *  (within ~1.5 px per frame), so the one tail carries straight through the change of view */
+const FR_V0 = {ls: 0.416, gx: -49.6, gy: 77.7};
 /** a cubic Hermite segment from a (slope va) at t0 to b (slope vb) at t1 */
 const hermSeg = (t: number, t0: number, t1: number, a: number, b: number, va: number, vb: number) => {
   const h = t1 - t0, s = clamp((t - t0) / h), s2 = s * s, s3 = s2 * s;
@@ -1132,13 +1136,14 @@ const O = {
   sky: lit(C.waterTop, 0.66), // toward the surface: near white
   hi: lit(C.waterTop, 0.36),
   mid: lit(C.waterTop, 0.12),
-  low: mix(C.waterTop, C.waterMid, 0.3),
+  low: mix(C.waterTop, C.waterMid, 0.5),
   far: mix(C.waterTop, C.haze, 0.6),
   bedFar: mix(C.haze, C.sand, 0.4),
   bedNear: mix(C.sand, C.haze, 0.42),
   pebble: mix(mix(C.pebbleA, C.haze, 0.45), C.sand, 0.2),
   tuft: mix(mix(C.fin, C.waterMid, 0.56), C.haze, 0.3), // the reeds' mid tone, hazed by distance
-  blade: mix(mix(C.fin, C.waterDeep, 0.55), C.haze, 0.22),
+  blade: mix(mix(C.fin, C.waterDeep, 0.7), C.haze, 0.08), // backlit: nearly a silhouette against the bright water
+  bladeLit: mix(mix(C.fin, C.waterTop, 0.5), C.haze, 0.1),
   mote: C.mote,
 };
 const HORIZON = 1490;
@@ -1173,12 +1178,21 @@ const tuftD = (t: number) => {
 /** a few tall ribbon blades nearer than the tufts, bent over in the current (+x), so they cross the slit and run on
  *  behind both its edges (a scene beyond the gap, not a picture on a shape): base, two controls, tip (Q px), width */
 const BLADES: {p: [number, number][]; w: number; s: number}[] = [
-  {p: [[280, 1580], [268, 1000], [345, 715], [640, 600]], w: 20, s: 0.3},
-  {p: [[380, 1585], [372, 1120], [440, 845], [860, 755]], w: 23, s: 1.7},
-  {p: [[590, 1575], [588, 1360], [625, 1215], [885, 1120]], w: 21, s: 3.1},
-  {p: [[665, 1580], [668, 1400], [712, 1265], [940, 1200]], w: 18, s: 4.4},
+  {p: [[280, 1580], [268, 1000], [345, 715], [640, 600]], w: 26, s: 0.3},
+  {p: [[380, 1585], [372, 1120], [440, 845], [860, 755]], w: 30, s: 1.7},
+  {p: [[590, 1575], [588, 1360], [625, 1215], [885, 1120]], w: 28, s: 3.1},
+  {p: [[665, 1580], [668, 1400], [712, 1265], [940, 1200]], w: 24, s: 4.4},
+  // (where the slit looks while the camera is still out by the arches, Q x ~540-860: tall blades standing through
+  // the whole of it; none where the tip goes out at the end, Q ~(520-650, 880-1100), which stays bright)
+  {p: [[690, 1650], [688, 1300], [700, 1020], [770, 800]], w: 32, s: 5.6},
+  {p: [[790, 1655], [792, 1350], [805, 1100], [880, 900]], w: 28, s: 6.9},
+  {p: [[610, 1660], [606, 1450], [612, 1300], [660, 1180]], w: 24, s: 8.2},
+  {p: [[728, 1660], [726, 1350], [730, 1050], [760, 760]], w: 18, s: 9.4},
+  {p: [[818, 1665], [820, 1380], [826, 1100], [850, 820]], w: 20, s: 10.6},
+  {p: [[862, 1660], [860, 1420], [868, 1200], [900, 980]], w: 16, s: 11.9},
+  {p: [[762, 1670], [764, 1500], [772, 1330], [800, 1150]], w: 22, s: 13.1},
 ];
-const bladeD = (t: number) => {
+const bladeD = (t: number, lit = false) => {
   let d = '';
   for (const b of BLADES) {
     const sw = 18 * Math.sin(1.1 * t + b.s) + 8 * Math.sin(2.3 * t + 2 * b.s);
@@ -1193,7 +1207,8 @@ const bladeD = (t: number) => {
       const dy = 3 * v * v * (p1.y - p0.y) + 6 * v * u * (p2.y - p1.y) + 3 * u * u * (p3.y - p2.y);
       const l = Math.hypot(dx, dy) || 1;
       const w = 0.5 * b.w * (1 - u) ** 0.7 + 0.6;
-      L.push({x: x - (dy / l) * w, y: y + (dx / l) * w});
+      // (R is the edge toward the upper left, the light: with `lit` only a strip along it, its lit edge)
+      L.push(lit ? {x: x + (dy / l) * w * 0.35, y: y - (dx / l) * w * 0.35} : {x: x - (dy / l) * w, y: y + (dx / l) * w});
       R.push({x: x + (dy / l) * w, y: y - (dx / l) * w});
     }
     d += dPoly([...L, ...R.reverse()]);
@@ -1201,7 +1216,7 @@ const bladeD = (t: number) => {
   return d;
 };
 /** the water's surface far above, seen from below: a bright band with a slow net of ripples (Q px) */
-const SURF_Y = 650;
+const SURF_Y = 760;
 const surfD = (t: number) => {
   const lines: string[] = [];
   for (let j = 0; j < 5; j++) {
@@ -1221,7 +1236,7 @@ const OutsideView: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
     const w0 = 14 + 22 * hash(i * 2.3), w1 = w0 * 2.4;
     const y0 = SURF_Y - 60, y1 = HORIZON, sl = -0.3;
     const x1 = x0 + sl * (y1 - y0);
-    shafts.push({d: dPoly([{x: x0 - w0, y: y0}, {x: x0 + w0, y: y0}, {x: x1 + w1, y: y1}, {x: x1 - w1, y: y1}]), o: 0.5 * (0.6 + 0.4 * noise1(0.45 * t + i * 3.1, 7))});
+    shafts.push({d: dPoly([{x: x0 - w0, y: y0}, {x: x0 + w0, y: y0}, {x: x1 + w1, y: y1}, {x: x1 - w1, y: y1}]), o: 0.62 * (0.6 + 0.4 * noise1(0.45 * t + i * 3.1, 7))});
   }
   // motes drifting with the current (fading in and out at the ends of their run: no pops)
   const motes: string[] = [];
@@ -1283,6 +1298,7 @@ const OutsideView: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
       ))}
       {/* the nearer blades, over the shafts (hazed a little less than the tufts) */}
       <path d={bladeD(t)} fill={O.blade} />
+      <path d={bladeD(t, true)} fill={O.bladeLit} />
       <rect x={-1500} y={-1500} width={4500} height={4500} fill={`url(#${gS})`} />
       {motes.map((d, i) => (
         <path key={i} d={d} fill={O.mote} fillOpacity={mOp[i]} />
@@ -1350,8 +1366,10 @@ const WRAP2_Q: P = (() => {
 
 /** the cover's free edge as a flap in silhouette against the light: a dark band on its chamber side, crisp along the
  *  rim itself, tapering into the slit's point at the top; where the tail goes out the light spills over it (the flap
- *  thins to a hair there, under the glare), so it is never one unbroken outline */
-const flapOf = (op: NonNullable<ReturnType<typeof openingScr>>, k: number, X: P, X2: P) => {
+ *  thins to a hair there, under the glare), so it is never one unbroken outline. `thin` (0..1) scales it: while the
+ *  camera is still out by the arches the edge is only a hairline under the light spilling over it (a dark band round
+ *  a small crescent of light read as a claw); it firms up as the camera settles on the opening */
+const flapOf = (op: NonNullable<ReturnType<typeof openingScr>>, k: number, X: P, X2: P, thin = 1) => {
   const line = op.rim;
   const n = line.length;
   const arc = [0];
@@ -1367,15 +1385,15 @@ const flapOf = (op: NonNullable<ReturnType<typeof openingScr>>, k: number, X: P,
     const p = line[i];
     const u = arc[i] / (1300 * k);
     const spill = Math.max(Math.exp(-((Math.hypot(p.x - X.x, p.y - X.y) / (210 * k)) ** 2)), 0.75 * Math.exp(-((Math.hypot(p.x - X2.x, p.y - X2.y) / (120 * k)) ** 2)));
-    return k * (2 + 5 * Math.sin(Math.PI * clamp(u * 1.15)) ** 0.7 + 1.5 * Math.sin(arc[i] / (120 * k) + 1.3) ** 2) * ss(arc[i], 0, 120 * k) * (1 - 0.9 * spill);
+    return thin * k * (2 + 5 * Math.sin(Math.PI * clamp(u * 1.15)) ** 0.7 + 1.5 * Math.sin(arc[i] / (120 * k) + 1.3) ** 2) * ss(arc[i], 0, 120 * k) * (1 - 0.9 * spill);
   };
-  const inner = off(wAt), wide = off((i) => 2.4 * wAt(i) + 3 * k * ss(arc[i], 0, 120 * k));
+  const inner = off(wAt), wide = off((i) => 2.4 * wAt(i) + 3 * thin * k * ss(arc[i], 0, 120 * k));
   return {band: dPoly([...line, ...[...inner].reverse()]), wide: dPoly([...line, ...[...wide].reverse()])};
 };
 /** the cover's inner face (the chamber's outer wall), the light it catches round the opening, the shafts of light
  *  entering, the opening's edges in silhouette and the outside view through it */
 const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
-  const gG = uid('chG'), gL = uid('chL'), fS = uid('chS'), cw = uid('chWin');
+  const gG = uid('chG'), gL = uid('chL'), fS = uid('chS'), fR = uid('chR'), cw = uid('chWin');
   const rimMid = RIM_B[Math.floor(RIM_B.length / 2)];
   // the cover's inner face: dark, with soft fan-like folds converging toward its hinge (front, left)
   const folds: string[] = [];
@@ -1407,7 +1425,11 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
   }
   const outline = op ? dPoly(op.poly) : '';
   const X2 = qPt(q, WRAP2_Q);
-  const flap = op ? flapOf(op, k, X, X2) : null;
+  // the edge firms up as the camera settles on the opening (see flapOf); until then the light spills over it
+  const crisp = ss(t, 11.75, 12.25);
+  const flap = op ? flapOf(op, k, X, X2, lerp(0.3, 1, crisp)) : null;
+  const rimD = op ? dPoly(op.rim, false) : '';
+  const spill = lerp(1, 0.3, crisp);
   const gW2 = uid('chW2');
   const sS = 7 * k;
   // the glare flooding out past the far side (the body wall has no edge of its own): a chain of soft round glows
@@ -1484,6 +1506,7 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
           <stop offset="1" stopColor={K.glowHot} stopOpacity={0} />
         </radialGradient>
         {op && <BlurF id={fS} sd={sS} b={boxOf(op.rim, 3 * sS + 30 * k)} />}
+        {op && <BlurF id={fR} sd={2 * sS} b={boxOf(op.rim, 6 * sS + 20 * k)} />}
         {op && (
           <clipPath id={cw} clipPathUnits="userSpaceOnUse">
             <path d={outline} />
@@ -1513,7 +1536,7 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
             <circle key={i} cx={b.x.toFixed(1)} cy={b.y.toFixed(1)} r={b.r.toFixed(1)} fill={`url(#${gBw})`} opacity={b.o.toFixed(3)} />
           ))}
           {/* the cover's edge: its soft shadow on the chamber side */}
-          {flap && <path d={flap.wide} fill={K.flap} filter={`url(#${fS})`} opacity={0.75} />}
+          {flap && <path d={flap.wide} fill={K.flap} filter={`url(#${fS})`} opacity={lerp(0.4, 0.75, crisp)} />}
           {/* the outside, seen through the slit */}
           <g clipPath={`url(#${cw})`}>
             <OutsideView c={c} t={t} />
@@ -1524,6 +1547,10 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
 
           {/* the cover's free edge in silhouette against the light */}
           {flap && <path d={flap.band} fill={K.flap} />}
+          {/* daylight spilling over the cover's edge onto both sides of it (a soft blurred band, no hard line) */}
+          <TopFaded>
+            <path d={rimD} stroke={K.wrap} strokeOpacity={0.5 * spill} strokeWidth={30 * k} fill="none" strokeLinejoin="round" strokeLinecap="round" filter={`url(#${fR})`} />
+          </TopFaded>
           {/* the light wrapping over the cover's edge lower down, where a shaft comes in */}
           <ellipse cx={0} cy={0} rx={1} ry={1} transform={slitGlowT(X2, 55 * k, 120 * k)} fill={`url(#${gW2})`} />
           {motes.map((m, i) => (
@@ -1571,9 +1598,9 @@ const OpeningBloom: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
   const {H: hot, k} = lightOf(c);
   const g = uid('bloom'), gx = uid('blX'), gy = uid('blY');
   const X = exitScr(c);
-  // (past T.poke, which only a later cut would show, its core eases a little so the tip reads as a dark point
-  // inside the light rather than lost in it)
-  const amp = (0.45 + 0.55 * ss(t, 12.2, 12.567)) * (1 - 0.35 * ss(t, T.poke, T.poke + 0.1));
+  // (as the tip goes through, T.poke on, its core eases so the tip reads as a dark point inside the light rather
+  // than lost in it; the film holds this inside view until T.pokeCut)
+  const amp = (0.45 + 0.55 * ss(t, 12.2, 12.567)) * (1 - 0.45 * ss(t, T.poke - 0.03, T.poke + 0.08));
   const R = (110 + 50 * ss(t, 12.2, 12.567)) * k;
   return (
     <g>
@@ -1682,9 +1709,58 @@ const S6View: React.FC<{t: number; eel?: boolean}> = ({t, eel = true}) => {
       {through && lt && <EelLit e={e} t={t} a={iX} lt={lt} shade />}
       {curtainOn && <Curtain c={c} geos={geos} part="bars" lt={lt} />}
       <OpeningBloom c={c} t={t} />
+      {eel && <TipInLight c={c} e={e} t={t} />}
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
       {eel && <EelRim e={e} t={t} a={0} b={iX >= 0 ? iX - rimBack(e, iX) : N} w={3.6} />}
       {eel && (iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />)}
+    </g>
+  );
+};
+/** the tail going into the daylight, as the tip goes through the gap: a crisp dark silhouette against the bright
+ *  water and over the glare (the part already out of the opening fully, the part just inside it shading off into the
+ *  body's own tone away from the light), with a thin bright edge where the light wraps round the part outside, so at
+ *  phone size the one dark tail is seen going THROUGH the gap. Only its shading: the drawn shape is the eel's own (on
+ *  pokeTail) */
+const TIP_DARK = mix(INK, C.eelBack, 0.3);
+const TipInLight: React.FC<{c: Cam6; e: ScrEel; t: number}> = ({c, e, t}) => {
+  const a = ss(t, 12.45, T.poke);
+  if (a <= 0) return null;
+  const op = openingScr(c, t);
+  if (!op) return null;
+  const cl = uid('tipL'), mk = uid('tipM'), mg = uid('tipG');
+  const i0 = N - 24;
+  const X = exitScr(c);
+  const r = 250 * lightOf(c).k;
+  const sil = finSil(e, t, i0, N, 0);
+  const body = (
+    <g transform={`scale(${e.k})`}>
+      <path d={sil} fill={TIP_DARK} stroke={INK} strokeWidth={1.2} vectorEffect={NS} strokeLinejoin="round" />
+    </g>
+  );
+  return (
+    <g opacity={a}>
+      <defs>
+        <clipPath id={cl} clipPathUnits="userSpaceOnUse">
+          <path d={dPoly(op.poly)} />
+        </clipPath>
+        <radialGradient id={mg} gradientUnits="userSpaceOnUse" cx={X.x} cy={X.y} r={r}>
+          <stop offset="0" stopColor="#FFF" />
+          <stop offset="0.4" stopColor="#E0E0E0" />
+          <stop offset="1" stopColor="#000" />
+        </radialGradient>
+        <mask id={mk} maskUnits="userSpaceOnUse" x={X.x - r} y={X.y - r} width={2 * r} height={2 * r}>
+          <rect x={X.x - r} y={X.y - r} width={2 * r} height={2 * r} fill={`url(#${mg})`} />
+        </mask>
+      </defs>
+      {/* just inside the opening, in the glare: shading off away from the light */}
+      <g mask={`url(#${mk})`}>{body}</g>
+      {/* out in the water: fully dark, with the light's thin edge round it */}
+      <g clipPath={`url(#${cl})`}>
+        <g transform={`scale(${e.k})`}>
+          <path d={finSil(e, t, i0, N, 2.4)} fill={K.wrap} />
+        </g>
+        {body}
+      </g>
     </g>
   );
 };
@@ -1807,4 +1883,4 @@ export const keepOut = (t: number): KeepOut => {
 };
 
 /** for the test sheet and the report */
-export const S5_DEBUG = {s5Tip, s6Tip, s6Cam, SIG_G, SIG_R, CAM_END, s6State, s5State, morphEel, RIM_B, Z_B, Z_E, EDGE_EXT, planeM, PK3, S6_ROUTE, A_X, archLine, ROOF, openingScr, toPlane};
+export const S5_DEBUG = {inMorph, setW, s5Tip, s6Tip, s6Cam, SIG_G, SIG_R, CAM_END, s6State, s5State, morphEel, RIM_B, Z_B, Z_E, EDGE_EXT, planeM, PK3, S6_ROUTE, A_X, archLine, ROOF, openingScr, toPlane};

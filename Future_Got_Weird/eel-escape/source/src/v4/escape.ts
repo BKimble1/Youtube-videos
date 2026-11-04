@@ -99,15 +99,15 @@ const OUT_KEYS: [number, number][] = [
   [20.2, 49.9], // the loop tightens; the head strains at the edge
   [20.45, 50.05],
 ];
-export const T_REL = 20.86; // the snout clears the opening (on "pull", 20.82–21.10)
+export const T_REL = 20.95; // the snout clears the opening (on "pull", 20.82–21.10)
 /** the length outside the exit (eel units), monotone non-decreasing: the tail leads; = EEL_L at T_REL */
 export const outAt = (t: number): number => {
   if (t >= T_REL) return EEL_L;
   if (t > 20.45) {
-    // the final pull: the head works out of the gap over ~0.4 s (the eye clears at ≈ 20.74), accelerating, the snout
-    // clearing at T_REL
+    // the final pull: the head slides out of the gap over ~0.5 s at a steady, slightly quickening pace (the whole head
+    // is seen working out over ~12 frames), the snout clearing at T_REL
     const x = (t - 20.45) / (T_REL - 20.45);
-    return lerp(50.05, EEL_L, x * x * (0.25 + 0.75 * x) * 0.55 + x * 0.45);
+    return lerp(50.05, EEL_L, 0.85 * x + 0.15 * x * x);
   }
   // linear through the poke (constant speed), C1-smooth elsewhere
   if (t >= 12.3 && t <= 12.86) return -1.12 + 4 * (t - 12.3);
@@ -176,6 +176,32 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
   const crossI = N * (1 - out / EEL_L);
   return {c, out, crossI};
 };
+/** FILLET: where the body turns from its route inside (down the slit) to its course outside, round the corner into a
+ *  smooth bend (radius ≈ 1.5 body widths) instead of an elbow: a Gaussian smoothing of the centre line, weighted to
+ *  the crossing, its width limited by how much of the body lies on either side (so a short tip just out is untouched) */
+export const FILLET = {sigU: 2.6, k: 1};
+export const filletAt = (c: V3[], crossI: number, k = FILLET.k): V3[] => {
+  if (k <= 1e-3 || crossI <= 0 || crossI >= N) return c;
+  const per = N / EEL_L; // samples per unit
+  const sig = Math.min(FILLET.sigU * per, (N - crossI) / 2.2, crossI / 2.2);
+  if (sig < 0.6) return c;
+  const W = Math.ceil(3 * sig);
+  const i0 = Math.max(0, Math.floor(crossI - 3.2 * sig)), i1 = Math.min(N, Math.ceil(crossI + 3.2 * sig));
+  const out = c.slice();
+  for (let i = i0; i <= i1; i++) {
+    let a: V3 = [0, 0, 0], ws = 0;
+    for (let j = i - W; j <= i + W; j++) {
+      if (j < 0 || j > N) continue;
+      const w = Math.exp(-0.5 * ((j - i) / sig) ** 2);
+      a = add3(a, mul3(c[j], w));
+      ws += w;
+    }
+    const sm2 = mul3(a, 1 / ws);
+    const wt = k * Math.exp(-0.5 * ((i - crossI) / (1.4 * sig)) ** 2);
+    out[i] = add3(mul3(c[i], 1 - wt), mul3(sm2, wt));
+  }
+  return out;
+};
 export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) => {
   const out = outOverride ?? outAt(t);
   // at the poke the tip leaves straight along the exit's outward direction (the S6 → S7 contract); once the body is
@@ -183,7 +209,9 @@ export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) =>
   // tugs that bunch the head up the slit toward the opening (and back), the body outside unchanged
   const st = strainAt(t);
   const inward = st > 1e-4 ? Object.assign((d: number) => add3(inwardAt(ex, d), mul3(STRAIN_DIR, 0.55 * st * clamp((d - 0.6) / 2.4))), {std: true}) : undefined;
-  return rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out), inward, 2.5 * ss(t, 13.4, 14.8));
+  const r = rootedWith(ex, out, (a) => theta(a, t, out), (a) => beta(a, t, out), inward, 2.5 * ss(t, T.pokeCut + 0.05, 13.7));
+  // the bend at the edge rounds in after the match cut (the poke contract holds at the cut)
+  return {...r, c: filletAt(r.c, r.crossI, FILLET.k * ss(t, T.pokeCut + 0.02, T.pokeCut + 0.5))};
 };
 /** the caught head's tugs (0..1): a few in S9 (the predicament) and S10, ending in the final pull */
 const STRAIN_T = [16.75, 17.35, 18.35, 19.15, 19.85];
@@ -216,15 +244,21 @@ const REL = (() => {
 const MID = N / 2;
 /** the natural heading at the release: the mid-body's forward direction, levelled a little */
 export const H0: V3 = norm3([-0.8, -0.5, 0.3]); // the head leaves the slit up, out and back, clear of the fish
-const T_TURN0 = T_REL + 0.12, T_TURN1 = T_REL + 0.85;
 /** the heading the HEAD has at time t (held at H0, then turning toward SWIM_DIR) */
 /** then it veers upstream (a curving escape, so its body never points back at the predator) */
 export const SWIM_DIR2: V3 = norm3([-0.6, -0.08, 0.8]);
-/** the headings (tunable for tools/v4/swim_gap.ts) */
-export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number], drift: 13, tau: 0.42};
-export const headingAt = (t: number): V3 => slerpDir(slerpDir(SWIM_HEAD.h0, SWIM_HEAD.d1, ss(t, T_TURN0, T_TURN1)), SWIM_HEAD.d2, ss(t, T_TURN1 + SWIM_HEAD.k2[0], T_TURN1 + SWIM_HEAD.k2[1]));
-/** swimming speed (u/s) */
-const speedAt = (t: number) => 38 * ss(t, T_REL + 0.05, T_REL + 0.7) + 8 * ss(t, T_REL + 1.0, T_REL + 2.2);
+/** the headings (tunable for tools/v4/face_clear.ts): t0/t1 the turn toward d1 (s after T_REL); dash: the freed eel
+ *  holds (its body springing straight, pushing off the flank along driftDir) for this long before it dashes away */
+export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number], drift: 13, tau: 0.3, dash: 0.12, driftDir: norm3([0.05, -0.3, 1]) as V3, t0: 0.12, t1: 0.85, w0: 0, wDur: 0.8};
+export const headingAt = (t: number): V3 => {
+  const T0 = T_REL + SWIM_HEAD.t0, T1 = T_REL + SWIM_HEAD.t1;
+  return slerpDir(slerpDir(SWIM_HEAD.h0, SWIM_HEAD.d1, ss(t, T0, T1)), SWIM_HEAD.d2, ss(t, T1 + SWIM_HEAD.k2[0], T1 + SWIM_HEAD.k2[1]));
+};
+/** swimming speed (u/s): the dash starts SWIM_HEAD.dash after the release (on "and swims away") */
+const speedAt = (t: number) => {
+  const d = SWIM_HEAD.dash;
+  return 38 * ss(t, T_REL + d, T_REL + d + 0.6) + 8 * ss(t, T_REL + d + 0.9, T_REL + d + 2.1);
+};
 /** distance swum since the release (numerical, cheap) */
 const swum = (t: number) => {
   let s = 0;
@@ -261,11 +295,9 @@ const anchorAt = (t: number): V3 => {
   }
   // the push off the predator: the whole eel moves out from the flank (and up) while it straightens, so its body
   // (lying along the fish, not pointing at it) leaves the flank whole: no tail left resting on the fish
-  const drift = mul3(DRIFT_DIR, SWIM_HEAD.drift * (1 - Math.exp(-dt / SWIM_HEAD.tau)));
+  const drift = mul3(norm3(SWIM_HEAD.driftDir), SWIM_HEAD.drift * (1 - Math.exp(-dt / SWIM_HEAD.tau)));
   return add3(add3(add3(REL.c[MID], pull), sw), drift);
 };
-const DRIFT_DIR: V3 = norm3([0.05, -0.3, 1]);
-const DRIFT_U = 13;
 /** the release tangents as in-plane angle θ (unwrapped along the body) and out-of-plane slope β */
 const REL_ANG = (() => {
   const th: number[] = [], be: number[] = [];
@@ -290,7 +322,7 @@ const angOf = (v: V3, near: number) => {
 export const freePose = (t: number): V3[] => {
   // straightening out of the curl: the loop UNROLLS in its own plane (every tangent's in-plane angle moves to the
   // heading's), so the head swings round beside the flank, never through the predator
-  const w = ss(t, T_REL, T_REL + 0.8);
+  const w = ss(t, T_REL + SWIM_HEAD.w0, T_REL + SWIM_HEAD.w0 + SWIM_HEAD.wDur);
   const sw = swum(t);
   const thMid = REL_ANG.th[MID];
   const tg: V3[] = REL.tg.map((_, i) => {
@@ -319,9 +351,18 @@ export const freePose = (t: number): V3[] => {
 
 /** the eel's back: up (−y) where the body runs level; where it runs nearly vertical (down the gill opening) the back
  *  turns toward the fish's tail (+x), so the eyes face the sides (one toward the viewer) */
+/** BACK.mode 'plane': the back is the body's tangent crossed with the fish's side-plane normal (+z): up where the body
+ *  runs level toward the fish's tail, and it stays on ONE side of the curve all the way round a bend or loop (a lateral
+ *  curl, as an eel curls), so the ribbon fin's fringe never flips sides and pinches into beads. 'legacy': up where
+ *  level, toward the fish's tail where vertical (flips side wherever the body turns past vertical). */
+export const BACK = {mode: 'plane' as 'plane' | 'legacy'};
 export const backFrom = (c: V3[]): V3[] => {
   const tg = c.map((_, i) => norm3(sub3(c[Math.min(c.length - 1, i + 1)], c[Math.max(0, i - 1)])));
   const raw = tg.map((T) => {
+    if (BACK.mode === 'plane') {
+      const b: V3 = [T[1], -T[0], 0]; // T × (0, 0, 1)
+      if (len3(b) > 0.25) return norm3(b);
+    }
     const w = ss(Math.abs(T[1]), 0.55, 0.85);
     const pref = norm3([w, -(1 - w), 0]);
     const k = dot3(pref, T);
