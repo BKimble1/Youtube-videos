@@ -1,0 +1,1325 @@
+[
+ {
+  "cluster": "2013-demo",
+  "research": {
+   "claims": [
+    {
+     "id": "A1",
+     "script_text": "In 2013, two researchers at the University of Washington split one video game between two buildings. Rajesh Rao got the screen. Andrea Stocco got the space bar.",
+     "claim": "The demonstration took place in 2013 at the University of Washington, and the two researchers were Rajesh Rao and Andrea Stocco.",
+     "status": "confirmed",
+     "evidence": "UW News, 27 Aug 2013 (mirrored on ScienceDaily and EurekAlert): Rao, a UW professor of computer science and engineering, partnered with Stocco, a UW research assistant professor in psychology at the Institute for Learning & Brain Sciences. The release text includes the fragment '[Aug.] 12, Rao sat in his lab wearing a cap with electrodes...'. Pilot page (homes.cs.washington.edu/~rao/brain2brain): 'The pilot study involved 2 subjects, both researchers involved in the study (R. Rao as \"Sender\" and A. Stocco as \"Receiver\")'. The pilot report is cited as Rao RPN, Stocco A, Prat CS, Bryan M, Sarma D, et al. (2013), 'Direct Brain-to-Brain Communication in Humans: A Pilot Study', 12 August 2013.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://sciencedaily.com/releases/2013/08/130827122713.htm",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A2",
+     "script_text": "It belongs to a man across campus who can't even see the game. ... split one video game between two buildings. Rajesh Rao got the screen. Andrea Stocco got the space bar.",
+     "claim": "The two were in separate buildings across campus. Rao saw the game screen, Stocco had the space bar, and Stocco could not see the game.",
+     "status": "confirmed",
+     "evidence": "UW News 2013: Stocco 'was in his lab across campus wearing a purple swim cap'. The release also says Rao sent a signal to Stocco 'on the other side of the UW campus'. A wire report (East Idaho News) says Stocco 'was in another building'. UW News: 'Stocco, who wore noise-canceling earbuds and wasn't looking at a computer screen, involuntarily moved his right index finger to push the space bar on the keyboard in front of him'. Rao & Stocco in Scientific American: 'Rao alone could see the screen displaying the game. But only Stocco could press the button to fire the cannon.' Pilot page: 'The Sender is unable to press the \"fire\" button which is only available to Subject 2 (the \"Receiver\")'. Caveat: no 2013 source found names the two buildings. The ~1 mile distance between buildings in PLoS ONE 2014 refers to the follow-up study.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.eastidahonews.com/?p=76193",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A3",
+     "script_text": "Rao's job was to defend a little city. A supply plane flies over? Let it through. A pirate ship launches a rocket? Shoot it down. Easy enough, except the only person who could see the difference had no way to press fire himself.",
+     "claim": "The game: defend a city, let friendly supply planes through, and shoot down pirate-ship rockets with a cannon, fired with the space bar.",
+     "status": "confirmed",
+     "evidence": "Rao & Stocco, Scientific American: 'A pirate ship is shooting rockets at a city. The goal is to fire a cannon to intercept each rocket.' CNN, 28 Aug 2013: 'The goal of the game is to hit rockets fired by pirate ships and avoid hitting supply planes.' The pilot session log defines 'Missile' as the pirate rocket and 'Airplane' as the supply plane (experiment page). PLoS ONE 2014: in 50% of trials a friendly 'supply airplane' flew across instead of a rocket, and participants had to avoid firing so the plane could enter the city. Pilot page: the TMS pulse produced an upward hand movement, 'typically resulting in the space bar being hit... and firing the cannon'. Note: the 2014 study replaced the space bar with a touchpad.",
+     "sources": [
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://www.cnn.com/2013/08/28/health/brain-interface",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A4",
+     "script_text": "Rao imagines moving his right hand. His real hand stays put. But under that cap, the rhythm of his brain activity changes. A computer is watching for that change.",
+     "claim": "Rao imagined moving his right hand without moving it, wearing an EEG cap. The computer detected a change in a brain rhythm (mu-band power).",
+     "status": "confirmed",
+     "evidence": "UW News / Scientific American 2013: 'he imagined moving his right hand (being careful not to actually move his hand), causing a cursor to hit the \"fire\" button'. UW News: 'Rao sat in his lab wearing a cap with electrodes hooked up to an electroencephalography machine'. Rao & Stocco, Scientific American: 'a tight-fitting cap studded with 32 electrodes'. PLoS ONE 2014 (Rao, Stocco et al.) describes the same system: right-hand motor imagery suppresses mu-band power (the 'mu' rhythm, ~8-12 Hz; subjects' control band reported as 11-13 Hz), and this drop is mapped to upward cursor movement, while no suppression lets the cursor drift down. Caveat: the mu-band detail comes from the 2014 paper, which describes the 2013 pilot as the first demonstration of this BBI. I did not retrieve the pilot page's own wording on mu.",
+     "sources": [
+      "https://www.scientificamerican.com/article/scientist-controls-colleagues-hand-in-first-human-brain-to-brain-interface/",
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A5",
+     "script_text": "On his screen, a little cursor climbs. When it hits the target, the computer sends one command over the internet. Fire.",
+     "claim": "Rao's on-screen cursor moves up to a target at the top of the screen, labelled 'Fire'.",
+     "status": "confirmed",
+     "evidence": "Pilot experiment page: 'If the cursor hit the blue circular target at the top, the computer decides that the Sender has engaged in motor imagery and sends a stimulation pulse to the Receiver.' PLoS ONE 2014: the Sender guided the cursor 'to either the \"Fire\" target at the top of the screen or towards the bottom of the screen'; 'When the cursor hit the \"Fire\" target (a large blue circle) located at the top of the screen...'. Fig. 1 caption: 'The Sender engages in motor imagery to move the white cursor on the left to hit the blue circular target in order to fire the cannon'. UW News 2013: the cursor hit the 'fire' button. Direction is UP (imagery = upward; rest = downward drift). Target: a large blue circle labelled 'Fire'. The cursor starts at the left of its window.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/",
+      "https://www.scientificamerican.com/article/scientist-controls-colleagues-hand-in-first-human-brain-to-brain-interface/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A6",
+     "script_text": "When it hits the target, the computer sends one command over the internet. Fire.",
+     "claim": "When the cursor hit the target, a single fire command went over the internet to the other lab's TMS machine.",
+     "status": "confirmed",
+     "evidence": "Pilot page: 'When the computer detects imagined hand movements, a \"fire\" command is transmitted over the Internet to the TMS machine, which causes an upward movement of the right hand of the \"Receiver.\"' PLoS ONE 2014: 'When the cursor hit the \"Fire\" target... the Sender's computer transmitted a signal over the Internet to the Receiver's computer'. That paper puts internet transmission at roughly 10 ms in the 2014 study. The pilot session log shows 'Sending TMS pulse' entries.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A7",
+     "script_text": "Across campus, a magnetic coil sits over the part of Stocco's brain that helps move his right hand. The command triggers a pulse. His hand jerks up, comes down on the space bar, and the cannon shoots.",
+     "claim": "A TMS coil sat over Stocco's left motor cortex (right-hand area). The pulse made his hand jerk up and then come down on the space bar.",
+     "status": "partly",
+     "evidence": "Coil placement is confirmed. UW News: Stocco wore 'a magnetic stimulation coil over his left motor cortex, which controls hand movement'. Pilot photo caption: 'Subject 2 (the \"Receiver\") with TMS coil placed over left motor cortex region and right hand resting slightly above the \"fire\" key on the keyboard.' Pilot page: the coil 'was localized over the part of the Receiver's brain that controls the wrist and fingers'. The movement is described as upward: the pilot page says the fire command 'causes an upward movement of the right hand of the \"Receiver.\" This usually results in the \"fire\" key being hit', and the pulse produced 'a muscle twitch and upward hand movement, typically resulting in the space bar being hit'. UW News: he 'involuntarily moved his right index finger to push the space bar'. Fox13: the finger 'involuntarily twitched'. What differs: no source found describes the hand 'coming down' onto the key. Sources say only that the upward twitch usually resulted in the key being hit. It did not always: in Session 4, one stimulation did not cause the fire key to be hit.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.fox13seattle.com/news/mind-control-uw-researchers-brain-to-brain-experiment-a-success"
+     ],
+     "suggested_fix": "His hand twitches up, hits the space bar, and the cannon shoots."
+    },
+    {
+     "id": "A8",
+     "script_text": "and the cannon shoots. The rocket disappears on Rao's screen.",
+     "claim": "The cannon fired and the rocket was destroyed on Rao's screen.",
+     "status": "confirmed",
+     "evidence": "Pilot page: the hand movement typically resulted 'in the space bar being hit... firing the cannon' in the Sender's game. PLoS ONE 2014 Fig. 1 caption: fire 'the cannon (bottom center) and destroy the rocket before it reaches the city'. Caveat: a hit was 'typical', not guaranteed. Discover (quoted in secondary coverage) said Stocco's hand would tap the spacebar, '(sometimes) scoring a hit in the game'. The narration describes one successful trial, so it is accurate as written.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A9",
+     "script_text": "Stocco described the feeling as something like a nervous tic.",
+     "claim": "Stocco likened the sensation to a nervous tic.",
+     "status": "confirmed",
+     "evidence": "UW News, 27 Aug 2013 (ScienceDaily mirror), exact wording: 'Stocco compared the feeling of his hand moving involuntarily to that of a nervous tic.' This is the release's paraphrase, not a direct quote, so the narration's unquoted paraphrase is appropriate. Do not put it in quotation marks as Stocco's own words. Rao & Stocco in Scientific American add: 'Stocco did not register the impulse consciously, but his right hand moved anyway.'",
+     "sources": [
+      "https://sciencedaily.com/releases/2013/08/130827122713.htm",
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A10",
+     "script_text": "There's a detail I love in the lab notes. Their first session ended early because the network connection failed. Two human brains, ready to go. Bad connection.",
+     "claim": "The pilot record says the first session was cut short by a network or connection failure.",
+     "status": "partly",
+     "evidence": "The pilot study page (homes.cs.washington.edu/~rao/brain2brain/experiment.html) says: 'Session 1 was terminated early due to network communication issues, which were resolved as the subjects waited for the next session.' The same page reports four experimental sessions of 5-7 trials each, says 'Sessions 2, 3, and 4 witnessed successful transmission of information from the Sender to the Receiver', and says that in Session 4 both achieved near-perfect performance ('Sender: 100% correct detection and transmission of appropriate signal, Receiver: 100% correct elicitation of hand movement upon stimulation; 1 stimulation not causing the \"fire\" key to be hit'). What differs: (1) this is the public pilot-study web page / report, not 'lab notes'; (2) it says 'network communication issues', not that the connection 'failed'; (3) the issues were fixed while the subjects waited, and the next session went ahead. The core fact (Session 1 ended early because of a network problem) is supported.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html"
+     ],
+     "suggested_fix": "There's a detail I love in their pilot report. Their first session ended early because of network problems."
+    }
+   ],
+   "staging_details": [
+    "Date and setting: the session ran on 12 Aug 2013 and was announced on 27 Aug 2013. Rao 'sat in his lab'; Stocco 'was in his lab across campus' (UW News 2013). One wire report says Stocco was 'in another building' (East Idaho News).",
+    "Rao's headgear: 'a cap with electrodes hooked up to an electroencephalography machine' (UW News 2013). Rao & Stocco in Scientific American: 'a tight-fitting cap studded with 32 electrodes'. For contrast, the 2014 study used a 64-channel Ag/AgCl actiCAP (Brain Products) with g.USBamp amplifiers at 512 Hz (PLoS ONE 2014). Don't apply that spec to 2013.",
+    "Stocco's headgear: 'a purple swim cap marked with the stimulation site for the transcranial magnetic stimulation coil', with the coil over his left motor cortex (UW News 2013). Forbes describes the swim cap as serving as the stimulation-site marker.",
+    "Coil shape: CIRCULAR, not figure-eight. The pilot page says 'The pulse was delivered though a circle coil at 69% of the machine's power output', from a MagStim Rapid\u00b2 stimulator. The UW tech report version mentions a 70 mm MagStim circle coil on a Super Rapid\u00b2 unit. PLoS ONE 2014: 'A 90 mm circular TMS coil was kept in place by an articulated arm.' The figure-eight coil (70 mm Magstim Alpha, over occipital site O1) was used in BrainNet 2019, not here. How the coil was held in 2013 was not confirmed; in 2014 it was held by an articulated arm.",
+    "Stocco's hand position: 'right hand resting slightly above the \"fire\" key on the keyboard' (pilot page photo caption). The pulse produced 'a muscle twitch and upward hand movement' (pilot page). The finger involved was his right index finger (UW News 2013).",
+    "What Stocco saw and heard: he 'wore noise-canceling earbuds and wasn't looking at a computer screen' (UW News 2013). The Bottom Line (UCSB) repeats the noise-canceling earbuds detail. 2014 receivers sat in a dark room without seeing the game (Medical Xpress 2014).",
+    "Lab coordination: 'The team had a Skype connection set up so the two labs could coordinate, though neither Rao nor Stocco could see the Skype screens' (UW News 2013). Forbes describes it as a Skype connection with no video.",
+    "Game layout: a city on the left, attacked by rockets fired from a pirate ship in the lower right; a cannon at the lower/bottom center; in half of the trials a friendly 'supply airplane' flies across instead (PLoS ONE 2014 task description, same game; Fig. 1 caption).",
+    "Sender's cursor display: a white cursor starting on the left; a large blue circular 'Fire' target at the top of the screen; imagery moves the cursor up, rest lets it drift down (pilot page; PLoS ONE 2014). The 2014 monitor showed both the cursor window and the game.",
+    "Pilot session log on the project page: timestamped lines with trial types 'Missile' (pirate rocket) and 'Airplane' (supply plane), and repeated 'Sending TMS pulse' entries (brain2brain experiment page).",
+    "Rao quote usable on screen: 'It was both exciting and eerie to watch an imagined action from my brain get translated into actual action by another brain' (UW News 2013). Coverage also notes Rao was concentrating on the game and at first did not realize it had worked.",
+    "Pilot structure: four experimental sessions of 5-7 trials each; Session 1 ended early because of 'network communication issues'; Sessions 2-4 transmitted successfully (brain2brain experiment page).",
+    "The 2014 follow-up used a touchpad, not a space bar. PLoS ONE 2014 reports internet transmission of ~10 ms and a mean receiver motor response ~627 ms after the pulse. These are 2014-study figures, retrieved from a search summary only."
+   ],
+   "searches_run": [
+    "\"Direct Brain-to-Brain Communication in Humans: A Pilot Study\" Rao Stocco 2013",
+    "UW News 2013 \"Researcher controls colleague's motions\" brain-to-brain interface Stocco \"nervous tic\"",
+    "Rao Stocco 2013 brain-to-brain experiment pirate ship rocket supply plane cannon space bar game",
+    "WebFetch www.washington.edu/news/2013/08/27/... (single attempt; FAILED ENOTFOUND \u2014 www.washington.edu must be allowed in session network settings; no further WebFetch attempted)",
+    "Stocco \"nervous tic\" brain-to-brain right index finger space bar keyboard 2013",
+    "2013 UW brain-to-brain Rao Stocco buildings ... \"across campus\" earplugs",
+    "homes.cs.washington.edu rao brain2brain experiment pilot study EEG cursor target \"Fire\" TMS figure-eight coil",
+    "\"A Direct Brain-to-Brain Interface in Humans\" cursor \"Fire\" target top \"Don't Fire\" bottom mu rhythm motor imagery sender screen",
+    "Brain2Brain Study Experiment \"white cursor\" \"blue target\" motor imagery sender pilot Rao",
+    "Rao Stocco pilot brain-to-brain 2013 trial log session network connection failed first session ended",
+    "homes.cs.washington.edu ~rao brain2brain results pilot session trials hits misses accuracy",
+    "\"Brain2Brain Study\" Rao pilot results \"session\" interrupted OR \"connection\" OR \"network\" problem",
+    "Stocco 2013 TMS \"figure-eight\" OR \"figure 8\" coil left motor cortex receiver brain-to-brain pilot \"swim cap\"",
+    "\"terminated early\" \"network communication\" brain2brain Rao Stocco session 1",
+    "Brain2Brain pilot Rao Stocco \"Session 4\" \"100%\" sender receiver sessions training TMS intensity",
+    "2013 brain-to-brain Stocco \"upward\" OR \"jerk\" OR \"twitch\" finger space bar \"involuntary\" video Rao imagined",
+    "brain2brain experiment Rao Stocco TMS \"circle coil\" OR \"circular coil\" pilot receiver left motor cortex hand",
+    "brain2brain experiment.html \"muscle twitch\" \"upward hand movement\" space bar Receiver TMS pulse",
+    "brain2brain pilot Rao \"Sender\" EEG electrodes \"32\" OR \"64\" channel cap ...",
+    "\"We Can Now Send Thoughts Directly between Brains\" Scientific American Rao 2013 cap 32 electrodes pirate ship cannon",
+    "brain2brain experiment page game \"pirate ship\" \"rocket\" \"supply plane\" OR \"friendly plane\" city cannon Sender Receiver rules",
+    "Scientific American 2013 \"Scientist controls colleague's hand\" Stocco \"nervous tic\" Rao building computer screen keyboard",
+    "\"compared the feeling of his hand moving involuntarily to that of a nervous tic\"",
+    "UW release 2013 Rao \"imagined moving his right hand\" cursor \"fire button\" Stocco \"involuntarily moved his right index finger\" space bar",
+    "Rao Stocco 2013 ... Institute for Learning & Brain Sciences lab \"half a mile\" OR \"a mile\" apart brain-to-brain",
+    "\"The Sender engages in motor imagery to move the white cursor\"",
+    "brain2brain experiment Rao pilot \"two buildings\" OR \"different buildings\" OR \"separate buildings\" Sender Receiver Skype \"UW campus\"",
+    "Rao Stocco 2013 pilot \"Subject 1\" Sender EEG \"Subject 2\" Receiver photo caption brain2brain experiment cap electrodes",
+    "brain2brain pilot experiment Sender cursor \"hit the\" \"Fire\" target \"large circle\" top screen mu band Receiver TMS command sent internet",
+    "Rao Stocco PLoS ONE 2014 Figure \"cursor\" moves \"upward\" \"Fire\" circle ... \"pirate ship\"",
+    "\"Direct Brain-to-Brain Interface in Humans\" cursor \"constant\" horizontal velocity ... \"Don't Fire\"",
+    "pmc PMC4221017 Figure 1 caption \"white cursor\" \"blue target\" Sender Receiver",
+    "Stocco \"noise-canceling\" earbuds OR \"ear buds\" \"wasn't looking at a computer screen\" brain-to-brain 2013",
+    "brain2brain pilot Rao \"Sender\" \"unable to press\" \"fire\" button \"only available\" Receiver cannot see game screen",
+    "brain2brain pilot study 2013 \"four sessions\" OR \"4 sessions\" trials per session results ...",
+    "\"Direct Brain-to-Brain Interface in Humans\" TMS \"upward\" movement hand wrist touchpad press \"falls\" OR \"drop\" OR \"downward\" ...",
+    "2013 Rao Stocco brain-to-brain video Stocco finger \"jerk\" OR \"jerked\" OR \"twitched\" space bar hit \"not every time\"",
+    "brain2brain pilot experiment page Rao sender \"mu\" OR \"motor imagery\" EEG \"right hand\" imagery cursor \"upward\" 2013 pilot description",
+    "\"Direct Brain-to-Brain Communication in Humans: A Pilot Study\" video cursor Sender screen \"fire\" target cannon EEG left right split screen",
+    "brain2brain experiment.html pilot \"trial log\" OR \"log\" Sender Receiver timestamps \"fire\" sent received TMS pulse",
+    "\"blue circular target at the top\" Sender motor imagery stimulation pulse Receiver",
+    "brain2brain experiment Rao \"A portion of the session log\" Missile Airplane \"Sending TMS pulse\"",
+    "brain2brain experiment game screenshot city \"pirate ship\" cannon \"bottom\" rocket supply plane \"reach the city\" Sender goal",
+    "UW 2013 brain-to-brain Rao \"Skype\" coordinate labs \"purple swim cap\" stimulation site marked Stocco photo",
+    "Rao Stocco Scientific American 2019 \"32 electrodes\" cap pirate ship rockets city ...",
+    "August 12 2013 Rao Stocco brain-to-brain \"different buildings\" OR \"separate buildings\" OR \"another building\" campus University of Washington"
+   ]
+  },
+  "verified": {
+   "claims": [
+    {
+     "id": "A1",
+     "script_text": "In 2013, two researchers at the University of Washington split one video game between two buildings. Rajesh Rao got the screen. Andrea Stocco got the space bar.",
+     "claim": "The demonstration took place in 2013 at the University of Washington. The two researchers were Rajesh Rao and Andrea Stocco. Rao had the game screen and Stocco had the fire key (space bar).",
+     "status": "confirmed",
+     "evidence": "UW News, 27 Aug 2013 (seen in search results and mirrors): 'Rao, a UW professor of computer science and engineering' partnered with 'Stocco, a research assistant professor in psychology at the UW's Institute for Learning & Brain Sciences'. The pilot page (homes.cs.washington.edu/~rao/brain2brain) is dated August 12, 2013, and names 'R. Rao as \"Sender\" and A. Stocco as \"Receiver\"'. Rao & Stocco, Scientific American: 'Rao alone could see the screen displaying the game. But only Stocco could press the button to fire the cannon.' UW News 2013: Stocco 'involuntarily moved his right index finger to push the space bar on the keyboard in front of him.' I found nothing that contradicts this. The 'two buildings' wording is checked under A2.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A2",
+     "script_text": "It belongs to a man across campus who can't even see the game. ... split one video game between two buildings. Rajesh Rao got the screen. Andrea Stocco got the space bar.",
+     "claim": "The two were in separate buildings across campus. Rao saw the game screen, Stocco had the space bar, and Stocco could not see the game.",
+     "status": "partly",
+     "evidence": "Supported: (1) Across campus. UW News 2013 says Stocco 'was in his lab across campus', and CNN (28 Aug 2013) says the two were 'situated on different parts of the University of Washington's campus'. (2) Stocco could not see the game. UW News 2013: Stocco 'wore noise-canceling earbuds and wasn't looking at a computer screen'. Rao & Stocco, Scientific American: 'Rao alone could see the screen displaying the game.' What differs: no primary 2013 source I found says 'buildings'. The explicit 'separate buildings' wording is about the 2014 follow-up. UW News 2014: 'They sat in separate buildings on campus about a half mile apart'. PLoS ONE 2014: buildings 'approximately 1 mile apart', so the press release and the paper also disagree on distance. The first researcher's 2013 'another building' quote comes from a secondary wire outlet (East Idaho News); I saw it listed in results but could not read the text. Two labs across campus almost certainly means two buildings, so this is a wording-precision issue, not an error. Warning: one secondary summary said Rao and Stocco were both 'watching the same video game'. That is wrong, and the narration correctly avoids it.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.cnn.com/2013/08/28/health/brain-interface",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/",
+      "https://www.eastidahonews.com/?p=76193"
+     ],
+     "suggested_fix": "Optional, to match the 2013 primary wording: \"In 2013, two researchers at the University of Washington split one video game across campus.\""
+    },
+    {
+     "id": "A3",
+     "script_text": "Rao's job was to defend a little city. A supply plane flies over? Let it through. A pirate ship launches a rocket? Shoot it down. Easy enough, except the only person who could see the difference had no way to press fire himself.",
+     "claim": "The game: defend a city, let friendly supply planes through, and shoot down pirate-ship rockets with a cannon. Only Rao could see the game, and only Stocco could fire.",
+     "status": "confirmed",
+     "evidence": "Rao & Stocco, Scientific American: 'A pirate ship is shooting rockets at a city. The goal is to fire a cannon to intercept each rocket.' and 'Rao alone could see the screen displaying the game. But only Stocco could press the button to fire the cannon.' The pilot session log (brain2brain experiment page, entries dated 12 Aug 2013) uses 'Missile' for a pirate rocket and 'Airplane' for a friendly supply plane, so the plane trials were already in the 2013 pilot. PLoS ONE 2014, same game: 'In 50% of the trials, a friendly \"supply airplane\" flew across the screen instead of a pirate rocket', and the Sender had to avoid firing. Pilot page: 'The Sender is unable to press the \"fire\" button which is only available to Subject 2 (the \"Receiver\")' (per the first researcher; consistent with Scientific American). I found no contradicting source.",
+     "sources": [
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/",
+      "https://www.cnn.com/2013/08/28/health/brain-interface"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A4",
+     "script_text": "Rao imagines moving his right hand. His real hand stays put. But under that cap, the rhythm of his brain activity changes. A computer is watching for that change.",
+     "claim": "Rao imagined moving his right hand without moving it, while wearing an EEG cap. The computer detected a change in a brain rhythm.",
+     "status": "confirmed",
+     "evidence": "UW News / Scientific American 2013: 'he imagined moving his right hand (being careful not to actually move his hand), causing a cursor to hit the \"fire\" button'. UW News 2013: 'Rao sat in his lab wearing a cap with electrodes hooked up to an electroencephalography machine'. Rao & Stocco, Scientific American: 'The giveaway was a drop in the low-frequency oscillations in Rao's brain. We used that signature as our cue to send a command over the Internet to stimulate Stocco's brain.' This directly supports 'the rhythm... changes'. PLoS ONE 2014 (same system): motor imagery suppresses power in the mu control band (11-13 Hz), and that suppression drives the cursor's vertical movement.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.scientificamerican.com/article/scientist-controls-colleagues-hand-in-first-human-brain-to-brain-interface/",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A5",
+     "script_text": "On his screen, a little cursor climbs. When it hits the target, the computer sends one command over the internet. Fire.",
+     "claim": "Rao's on-screen cursor moves up to a target at the top of the screen (the 'Fire' target).",
+     "status": "confirmed",
+     "evidence": "UW News 2013: imagining the movement caused 'a cursor to hit the \"fire\" button'. PLoS ONE 2014 Fig. 1 caption, confirmed in my searches: 'The Sender engages in motor imagery to move the white cursor on the left to hit the blue circular target in order to fire the cannon'. Mu-band suppression drives the cursor's vertical movement. The first researcher retrieved the upward direction from two places. Pilot page: 'If the cursor hit the blue circular target at the top...'. PLoS ONE 2014: the 'Fire' target was 'at the top of the screen', with the cursor otherwise moving 'towards the bottom of the screen'. My own searches did not re-surface the words 'at the top', but they turned up nothing that contradicts an upward climb. So: white cursor starting at left, climbs (imagery) or drifts down (rest), large blue circle 'Fire' target at top.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A6",
+     "script_text": "When it hits the target, the computer sends one command over the internet. Fire.",
+     "claim": "When the cursor hit the target, a single fire command went over the internet to the other lab's TMS machine.",
+     "status": "confirmed",
+     "evidence": "Pilot page (via search summary): when the computer detected imagined hand movements, 'a \"fire\" command is transmitted over the Internet to the TMS machine'. Rao & Stocco, Scientific American: 'We used that signature as our cue to send a command over the Internet to stimulate Stocco's brain.' The pilot session log shows each rocket ('Missile') trial followed by a 'Sending TMS pulse' line. PLoS ONE 2014 reports internet transmission of about 10 ms in the follow-up.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A7",
+     "script_text": "Across campus, a magnetic coil sits over the part of Stocco's brain that helps move his right hand. The command triggers a pulse. His hand jerks up, comes down on the space bar, and the cannon shoots.",
+     "claim": "A TMS coil sat over Stocco's left motor cortex (right-hand area). The pulse made his hand jerk up and then come down on the space bar.",
+     "status": "confirmed",
+     "evidence": "I am upgrading this from the first researcher's 'partly'. A source does describe the hand coming down. Two separate search results quoting the pilot page (homes.cs.washington.edu/~rao/brain2brain/experiment.html) gave the same wording: the stimulation causes 'a quick upward jerk of the Receiver's right hand', and 'this up-down movement of the hand typically (though not always) results in the \"fire\" key being hit'. The Receiver's right hand was 'resting slightly above the \"fire\" key on the keyboard'. PLoS ONE 2014 (touchpad version) says the same: because the TMS pulse causes an upward jerk of the hand, the touchpad is actually pressed during the downward part of the movement. On coil placement, UW News 2013 says the coil was 'placed directly over his left motor cortex, which controls hand movement'. Rao & Stocco, Scientific American: 'a TMS coil over his left motor cortex, the brain area that controls the movement of his right hand'. Caveats: (1) the hit was typical, not guaranteed (Session 4 had '1 stimulation not causing the \"fire\" key to be hit'), but the narration describes one successful trial; (2) UW News says it was specifically his right index finger that pushed the space bar. I could not fetch the pilot page directly, so the 'up-down' wording comes from search-result quotes of it.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.scientificamerican.com/article/we-can-now-send-thoughts-directly-between-brains/",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A8",
+     "script_text": "and the cannon shoots. The rocket disappears on Rao's screen.",
+     "claim": "The cannon fired and the rocket was destroyed on Rao's screen.",
+     "status": "confirmed",
+     "evidence": "Pilot page (via search summary): the TMS pulse produced 'a muscle twitch and upward hand movement, typically resulting in the space bar being hit as a result and firing the cannon in the Sender's computer game'. The pilot session log includes hit counters such as 'Missiles hit: 1' after a missile trial. PLoS ONE 2014 Fig. 1 (same game): fire the cannon and destroy the rocket before it reaches the city. 'Disappears' is a fair visual rendering of 'hit/destroyed'. A hit was typical, not guaranteed. That is acceptable for a single illustrated trial.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A9",
+     "script_text": "Stocco described the feeling as something like a nervous tic.",
+     "claim": "Stocco likened the sensation to a nervous tic.",
+     "status": "confirmed",
+     "evidence": "UW News, 27 Aug 2013 (and mirrors including Research & Development World, Innovations Report, EarthSky): 'Stocco compared the feeling of his hand moving involuntarily to that of a nervous tic.' This is the release's paraphrase, not a direct quote, so the narration's unquoted paraphrase is right. Do not put it on screen in quotation marks as Stocco's words. One outlet's variant reads 'similar to a nervous tick or spasm'.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.rdworldonline.com/researcher-controls-colleagues-motions-in-first-human-brain-to-brain-interface/",
+      "https://sciencedaily.com/releases/2013/08/130827122713.htm"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "A10",
+     "script_text": "There's a detail I love in the lab notes. Their first session ended early because the network connection failed. Two human brains, ready to go. Bad connection.",
+     "claim": "The pilot record says the first session was cut short by a network or connection failure.",
+     "status": "partly",
+     "evidence": "Confirmed verbatim in my search of the pilot page (homes.cs.washington.edu/~rao/brain2brain/experiment.html): 'Session 1 was terminated early due to network communication issues, which were resolved as the subjects waited for the next session.' Also: 'Sessions 2, 3, and 4 witnessed successful transmission of information from the Sender to the Receiver.' I agree with the first researcher on what differs: (1) the source is the public pilot-study page/report, not private 'lab notes'. The page does include a session log, but the Session 1 note is in the results text, not the log. (2) It says 'network communication issues', not that the connection 'failed'. (3) The problem was fixed while the subjects waited, and the next session went ahead. The 'Bad connection' punchline still fits. I could not re-confirm the first researcher's 'four sessions of 5-7 trials each' wording; my search summaries did not show it.",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html"
+     ],
+     "suggested_fix": "There's a detail I love in their pilot report. Their first session ended early because of network problems."
+    }
+   ],
+   "staging_details": [
+    "Date: the pilot ran on 12 August 2013 (the pilot page is dated August 12, 2013, and its session-log entries carry that date). UW announced it on 27 Aug 2013.",
+    "Locations, 2013: Rao 'sat in his lab'. Stocco 'was in his lab across campus' (UW News 2013). CNN: 'different parts of the University of Washington's campus'. No 2013 source I found names the buildings. For the 2014 follow-up, UW News 2014 says 'separate buildings on campus about a half mile apart', while the PLoS ONE paper says 'approximately 1 mile apart'. Don't give a distance for 2013.",
+    "Rao's setup: 'a cap with electrodes hooked up to an electroencephalography machine' (UW News 2013). Rao & Stocco (Scientific American) describe 'a tight-fitting cap studded with 32 electrodes' (per first researcher; not re-retrieved by me). The trigger signal was 'a drop in the low-frequency oscillations in Rao's brain' (Rao & Stocco, Scientific American). PLoS ONE 2014 gives the mu control band as 11-13 Hz.",
+    "Rao's screen: a white cursor starting on the left, plus a blue circular target (Fire). Motor imagery moves the cursor to the target and fires the cannon (PLoS ONE 2014 Fig. 1 caption, same game). The first researcher retrieved 'blue circular target at the top' from the pilot page.",
+    "Stocco's setup: 'a purple swim cap marked with the stimulation site for the transcranial magnetic stimulation coil that was placed directly over his left motor cortex' (UW News 2013). He 'wore noise-canceling earbuds and wasn't looking at a computer screen' (UW News 2013). Don't show Stocco watching the game; one secondary summary wrongly says both watched it.",
+    "Stocco's hand: the right hand was 'resting slightly above the \"fire\" key on the keyboard' (pilot page photo caption). The pulse caused 'a quick upward jerk of the Receiver's right hand', and 'this up-down movement of the hand typically (though not always) results in the \"fire\" key being hit' (pilot page, via search quotes). The finger that pushed the space bar was his right index finger (UW News 2013). So animate a small involuntary lift, then a drop onto the space bar.",
+    "Coil shape (from the first researcher; not re-verified by me): a circular coil at 69% of machine output (pilot page), 90 mm circular coil on an articulated arm in 2014 (PLoS ONE). A figure-eight coil belongs to BrainNet 2019, not here.",
+    "Coordination: 'The team had a Skype connection set up so the two labs could coordinate, though neither Rao nor Stocco could see the Skype screens' (UW News 2013).",
+    "Game: 'A pirate ship is shooting rockets at a city. The goal is to fire a cannon to intercept each rocket' (Rao & Stocco, Scientific American). In half the trials a friendly 'supply airplane' flies across instead (PLoS ONE 2014). The 2013 session log labels trials 'Missile' and 'Airplane', logs 'Sending TMS pulse' on missile trials, and shows counters like 'Missiles hit: 1' (brain2brain experiment page).",
+    "Session outcome: 'Session 1 was terminated early due to network communication issues, which were resolved as the subjects waited for the next session.' 'Sessions 2, 3, and 4 witnessed successful transmission.' In Session 4, Sender and Receiver were at '100%', with '1 stimulation not causing the \"fire\" key to be hit' (pilot page).",
+    "Usable Rao quote: 'It was both exciting and eerie to watch an imagined action from my brain get translated into actual action by another brain' (UW News 2013).",
+    "2014 follow-up contrast (for later scenes): receivers 'sat wearing headphones in a dark room, with no ability to see the computer game, with the right hand positioned over the only touchpad that could fire the cannon' (UW News 2014 / Medical Xpress). The touchpad was pressed on the downward part of the TMS-induced up-down hand movement (PLoS ONE 2014). UW News 2014 gives pair accuracy as 'ranging from 25 to 83 percent'.",
+    "Caveat from coverage: Kurzweil AI noted that the 2013 report gave no evidence Stocco could block the finger movement voluntarily. Rao stressed that the system reads only simple brain signals, not thoughts (UW News 2013)."
+   ],
+   "searches_run": [
+    "\"Session 1 was terminated early\" brain2brain Rao Stocco (extended)",
+    "Stocco \"nervous tic\" brain-to-brain interface 2013 University of Washington",
+    "Rao Stocco 2013 brain-to-brain Stocco \"across campus\" lab building Rao lab \"computer science\" building Institute for Learning & Brain Sciences",
+    "brain2brain pilot study Sender Receiver \"buildings\" Rao Stocco 2013 UW campus half mile (extended)",
+    "brain2brain experiment.html Receiver TMS \"upward\" hand movement \"fire\" key \"slightly above\" keyboard (extended)",
+    "Rao 2013 pilot brain-to-brain sender EEG \"mu\" rhythm motor imagery cursor moves up \"fire\" target blue circle (extended)",
+    "\"quick upward jerk\" Receiver right hand \"fire\" key brain2brain (extended)",
+    "\"separate buildings\" \"half a mile apart\" OR \"half mile apart\" brain-to-brain University of Washington Rao Stocco (extended)",
+    "UW CSE technical report 2013 \"Direct Brain-to-Brain Communication in Humans\" pilot Sender Receiver \"Computer Science\" building Psychology \"Guthrie\"",
+    "WebFetch web.archive.org snapshot of homes.cs.washington.edu/~rao/brain2brain/experiment.html (single attempt; FAILED, unable to fetch; no further WebFetch attempted)",
+    "\"up-down movement\" Receiver hand \"fire\" key TMS brain-to-brain pilot Rao (extended)",
+    "Rao Stocco 2013 pilot \"Sender\" \"Receiver\" \"network communication issues\" sessions \"5-7 trials\" OR \"trials each\" (extended)",
+    "Rao Stocco 2013 brain-to-brain Stocco \"wasn't looking at a computer screen\" \"noise-canceling earbuds\" right index finger space bar",
+    "\"We Can Now Send Thoughts Directly between Brains\" Scientific American author Rao Stocco 2013 \"building\" game cannon (extended)",
+    "2013 Rao Stocco brain-to-brain \"different buildings\" OR \"another building\" OR \"two buildings\" OR \"separate building\" August 2013 (extended)",
+    "CNN August 2013 \"brain interface\" Rao Stocco building campus Stocco \"space bar\" pirate ships supply planes (extended)",
+    "brain2brain pilot Rao Stocco session log \"Missile\" \"Airplane\" \"Sending TMS pulse\" (extended)",
+    "homes.cs.washington.edu rao brain2brain \"This up-down movement\" (NOT RUN: shared web-search budget exhausted)",
+    "PLoS ONE 2014 Rao \"touchpad is actually pressed\" OR \"downward\" \"upward jerk\" TMS receiver hand (NOT RUN: shared web-search budget exhausted)"
+   ]
+  }
+ },
+ {
+  "cluster": "2014-study",
+  "research": {
+   "claims": [
+    {
+     "id": "B1",
+     "script_text": "A year later, the team tried it with three pairs of volunteers.",
+     "claim": "The three-pair study was run about a year after the August 2013 demo.",
+     "status": "partly",
+     "evidence": "UW News (5 Nov 2014, 'UW study shows direct brain interface between humans') describes the team as having 'successfully replicated a direct brain-to-brain connection between pairs of people as part of a scientific study following the team's initial demonstration a year ago.' PLOS ONE gives 'Received July 21, 2014; Accepted September 10, 2014; Published November 5, 2014'. The UW tech report version is numbered UW-CSE-14-07-01, which means July 2014. No search result gave the actual dates of the sessions. They must have been run before the paper was submitted on 21 July 2014, which is less than a year after the 12 Aug 2013 demo. The publication came about 15 months after the demo. 'A year later' matches UW's own framing, but the sessions themselves probably took place within the year, not a year later.",
+     "sources": [
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://www.news-medical.net/news/20141105/UW-researchers-successfully-replicate-direct-brain-to-brain-connection-between-people.aspx",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://pubmed.ncbi.nlm.nih.gov/25372285/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf"
+     ],
+     "suggested_fix": "Within a year, the team tried it with three pairs of volunteers."
+    },
+    {
+     "id": "B2",
+     "script_text": "the team tried it with three pairs of volunteers",
+     "claim": "The study used three sender-receiver pairs, six participants in total.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE abstract: 'We describe the first direct brain-to-brain interface in humans and present results from experiments involving six different subjects.' Secondary coverage of the paper says they 'were divided into three pairs, with one participant playing the role of the \"sender\" and one playing the role of the \"receiver.\"' UW News 2014 has the same account: six participants paired as sender and receiver, placed in separate buildings on campus. Table 2 lists Pairs 1-3. The search results did not say how participants were recruited or whether they were paid, so 'volunteers' is used in the ordinary sense only.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://www.kurzweilai.net/brain-to-brain-interface-via-internet-replicated-improved"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B3",
+     "script_text": "This time the receiver's hand rested over a touchpad.",
+     "claim": "In 2014 the receiver's right hand was held above a touchpad, not on a keyboard, and the TMS-evoked jerk produced the press.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE abstract: a 'Fire' command went to the TMS machine, 'which caused an upward movement of the right hand of a second participant (the \"Receiver\"), resulting in a press by the hand on a touchpad.' Paper text found in search: 'the TMS pulse causes an upward jerk of the Receiver's right hand, which was positioned above the touchpad'. The receiver 'could use his/her right hand to press a touchpad, but could not see the game.' The press happens on the downward part of the movement: the upward jerk comes from the wrist-extensor muscle, and the hand then falls back onto the pad (UW tech report). Scoring: 'touchpad press in response to a TMS pulse is a true positive whereas a press without a TMS pulse is a false positive.' UW News 2014: the receiver's hand would twitch, 'pressing the touchpad and firing the cannon.' For contrast, the 2013 pilot page says the receiver 'kept one or more fingers on a standard computer keyboard's space bar', so 'this time' is accurate.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B4",
+     "script_text": "In some rounds, the researchers quietly flipped the coil over. Same game. Same pulse strength.",
+     "claim": "In control blocks the TMS coil was flipped so the pulse could not move the hand. Pulse intensity and the game were unchanged.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE: 'During control blocks the brain-to-brain channel was made non-operational by changing the coil position so that the TMS pulse could not cause the desired movement of the right hand.' Also: 'the position of the coil was changed so that, with the same power output, it could not trigger a hand response.' Axis of the flip, from the UW tech report and the UW slide deck as returned by search: 'The coil was simply rotated 180 degrees on the axis of its handle, so that its electrical current was flowing in the opposite direction.' One search summary attributed to the paper the line 'The electromagnetic pulse was still delivered at the same intensity, thus making the two conditions identical but for the target location', but an exact-phrase search did not find that sentence. Design: each pair ran 2 experimental and 2 control blocks in randomized order, so control was half the blocks. The sender kept playing the same game, and 'the performance of the senders was unaffected by this manipulation.' No source explicitly says the click sound was the same. Receivers wore earphones playing music or an audiobook so that 'the TMS participants were not given any visual or acoustic cues about the experiment.' 'Flipped over' is a fair plain-English version of the 180-degree rotation. That precise wording comes from the tech report and slides of the same study, while the PLOS wording says only that the 'coil position' was changed.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.slideshare.net/slideshow/a-direct-brain-tobrain-interface-in-humans/116462057",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": "Optional, for precision: 'In half the rounds, the researchers quietly flipped the coil over.'"
+    },
+    {
+     "id": "B5",
+     "script_text": "Even the participants couldn't tell which way the coil was facing.",
+     "claim": "Participants could not tell the experimental coil position from the control (flipped) position.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE, also in the UW tech report and the ResearchGate copy: 'None of the participants could distinguish between the two coil positions.' Supporting blinding detail: TMS participants brought music or an audiobook to play through earphones, so they 'were not given any visual or acoustic cues about the experiment.' The receiver could not see the game, and senders sat in a different building from the coil.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B6",
+     "script_text": "With the coil in position, one pair hit about five out of six rockets. Another hit only one in four.",
+     "claim": "In experimental blocks Pair 1 destroyed 83.33% of rockets (about 5/6) and Pair 2 destroyed 25%.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE Table 2 ('Percentage of rockets and planes hit by pair'; the UW tech report version is titled 'Percentage of rockets correctly identified by pair'). Experimental blocks: % Rockets Hit = Pair 1 83.33%, Pair 2 25.00%, Pair 3 37.50%. % Planes Hit = Pair 1 37.50%, Pair 2 18.75%, Pair 3 0.00%. Text: 'the three pairs of subjects correctly identified and destroyed 83.3%, 25.0%, and 37.5% of the rockets respectively during the experimental blocks, and 0% of the rockets during the control blocks.' These figures are hit rates on rockets (true positives / rockets), not overall accuracy. UW News' 'accuracy ... ranging from 25 to 83 percent' is the same rocket hit rate. Context the narration leaves out: the 83%-rocket pair also shot down 37.5% of the friendly supply planes. Pair 3 (37.5% of rockets) shot down no planes. Misses were attributed mostly to senders failing to produce the motor-imagery signal. Receiver-side false positives were nearly nil: 'only one response was recorded in the absence of TMS stimulation' (tech report wording). Block sizes from a search snippet: 10 trials per block for Pair 1 and 16 per block for Pairs 2 and 3, with about 50% rocket trials. Raw hit and miss counts were not retrieved, only percentages.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B7",
+     "script_text": "With the coil flipped? Across all three pairs, nobody pressed the touchpad once. Every rocket got through.",
+     "claim": "In control blocks there were zero touchpad presses (no hits and no false alarms), so 0% of rockets were destroyed for all pairs.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE / UW tech report: the authors cite 'the extremely low rates of false positives across the receivers' responses (only one response was recorded in the absence of TMS stimulation), as well as the complete lack of touchpad presses during the control blocks.' Results: '0% of the rockets during the control blocks', and receivers' performance was 'at a minimum during the control condition (corresponding to 0% of rockets correctly identified)'. Because any plane hit also needs a touchpad press, zero presses also means zero planes hit in control. Senders kept issuing fire commands normally ('the performance of the senders was unaffected by this manipulation'), so the pulses were still delivered and nothing happened. Information transfer: about 4-13 bits per experimental block, 0 in control blocks.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://lacuna.tiptreesystems.com/work/a-direct-brain-to-brain-interface-in-humans/wrk_60d3d762656626936cc08e6679b50f08"
+     ],
+     "suggested_fix": ""
+    }
+   ],
+   "staging_details": [
+    "Locations (2014 study): sender's EEG was recorded in the Neural Systems Lab (UW Computer Science building) and the receiver's TMS ran in the I-LABS building. UW News 2014 says participants were in separate buildings and 'unable to communicate with each other any other way.' (UW News 5 Nov 2014; brain2brain experiment page)",
+    "Receiver seat: a BrainSight TMS chair. The head rests on a neck rest and is held by an adjustable arm with padded forehead supports. The coil is mounted on an articulated arm. (PLOS ONE Fig. 5 'TMS Set-Up' caption, also on figshare/ResearchGate.) Coil size differs between versions: 90 mm in PLOS ONE, 70 mm in the UW tech report.",
+    "Receiver's right hand was positioned above a touchpad. The TMS pulse caused an upward jerk (wrist extension) and the hand pressed the touchpad on the way down. (PLOS ONE abstract/methods; UW tech report)",
+    "Receiver could not see the game. Receivers wore noise-cancelling earphones and listened to music or an audiobook they brought, so they got 'no visual or acoustic cues about the experiment.' (PLOS ONE methods / Fig. 5 caption)",
+    "Coil placement: over the receiver's motor cortex (hand area controlling the right hand). During experimental blocks the coil was kept in the exact position found in the earlier parameter-estimation session, and the experimenter moved the coil away from the head between blocks. (PLOS ONE methods, via search snippets)",
+    "Control (sham) coil position: the coil rotated 180 degrees on the axis of its handle, so the current flowed in the opposite direction, at the same power output. (UW tech report UW-CSE-14-07-01; UW slide deck)",
+    "Sender: wore an EEG cap and watched the game. Right-hand motor imagery moved a cursor upward, and reaching the target sent 'Fire' over the internet. (PLOS ONE abstract)",
+    "Game: a pirate ship with skull-and-bones on the right fires a rocket toward a city on the left in 50% of trials. The other trials show a friendly supply airplane that should be let through. (PLOS ONE / UW tech report)",
+    "Block structure: per pair, 2 experimental and 2 control blocks in randomized order. Reported as 10 trials per block for Pair 1 and 16 per block for Pairs 2 and 3 (search snippet; not checked against the full text).",
+    "Contrast with 2013: Stocco's fingers rested on a standard keyboard's space bar (the 'fire' key), he wore noise-canceling earbuds, and the coil was over his left motor cortex. (brain2brain pilot page; UW News 27 Aug 2013)"
+   ],
+   "searches_run": [
+    "Rao Stocco 2014 \"A Direct Brain-to-Brain Interface in Humans\" PLoS ONE Table 2 hits misses false positives accuracy",
+    "\"A Direct Brain-to-Brain Interface in Humans\" control condition TMS coil flipped touchpad",
+    "UW News November 2014 brain-to-brain interface three pairs accuracy 25 percent 83 percent",
+    "WebFetch https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/ -> FAILED (ENOTFOUND; pmc.ncbi.nlm.nih.gov must be allowed in the session's network settings); no further WebFetch attempted",
+    "Rao Stocco 2014 brain-to-brain \"touchpad\" receiver right hand TMS \"Receiver\" PLoS ONE",
+    "\"A Direct Brain-to-Brain Interface in Humans\" Table 2 \"true positives\" \"false positives\" pair 1 pair 2 pair 3 experimental control",
+    "\"A Direct Brain-to-Brain Interface in Humans\" control blocks coil \"rotated\" OR \"flipped\" OR \"orientation\" sound same intensity",
+    "Rao 2014 brain-to-brain interface PLoS ONE \"Percentage of rockets correctly identified by pair\" 83.3 25 37.5",
+    "\"rotated 180 degrees\" \"axis of its handle\" brain-to-brain interface Rao Stocco control blocks",
+    "\"none of the participants could distinguish between the two coil positions\" brain-to-brain",
+    "Rao Stocco 2014 brain-to-brain PLoS ONE receiver \"touchpad\" right hand placed position methods earplugs BrainSight chair coil holder",
+    "\"A Direct Brain-to-Brain Interface in Humans\" PLoS ONE received accepted published November 5 2014 date experiments conducted",
+    "\"A Direct Brain-to-Brain Interface in Humans\" \"Percentage of rockets and planes hit by pair\" Table 2",
+    "Rao 2014 brain-to-brain \"Rockets Hit\" \"Planes Hit\" Experimental Control 83.33% 37.50% 18.75% table",
+    "Rao 2014 brain-to-brain PLoS ONE \"only one response was recorded in the absence of TMS stimulation\" false positives receivers",
+    "Rao 2014 brain-to-brain interface each pair blocks trials rockets planes per block experimental control session",
+    "Rao Stocco brain-to-brain 2014 control blocks coil \"180\" handle \"opposite direction\" current sham same intensity \"target location\"",
+    "Rao 2014 direct brain-to-brain interface \"16 trials\" OR \"10 trials\" blocks pairs rockets planes randomized",
+    "UW News 2014 \"uw study shows direct brain interface between humans\" receivers \"touchpad\" \"dark room\" earplugs coil",
+    "\"During the experiment, the Receiver was accommodated on a BrainSight chair\" TMS set-up figure caption",
+    "Rao 2014 brain-to-brain receiver \"could not see\" game earphones music audiobook \"acoustic cues\"",
+    "washington.edu news 2014/11/05 brain interface \"a year ago\" replicate touchpad",
+    "Rao 2014 brain-to-brain \"positioned above the touchpad\" OR \"over the touchpad\" receiver right hand upward jerk",
+    "\"UW researchers successfully replicate\" OR \"uw study shows direct brain interface\" 2014 \"initial demonstration a year ago\"",
+    "Rao 2014 brain-to-brain PLoS ONE TMS intensity motor threshold left motor cortex coil 90 mm (no relevant results)",
+    "\"identical but for the target location\" TMS brain-to-brain (exact phrase not found)",
+    "Rao Stocco 2014 brain-to-brain criticism sham control coil flipped click sound receivers blind randomized",
+    "\"A Direct Brain-to-Brain Interface in Humans\" \"two experimental blocks\" \"two control blocks\" trials per block order",
+    "Rao 2014 brain-to-brain sender EEG separate buildings receiver headphones touchpad game screen Fire"
+   ]
+  },
+  "verified": {
+   "claims": [
+    {
+     "id": "B1",
+     "script_text": "A year later, the team tried it with three pairs of volunteers.",
+     "claim": "The three-pair study took place about a year after the August 2013 demo.",
+     "status": "partly",
+     "evidence": "I agree with the first researcher's 'partly'. UW News (5 Nov 2014), as quoted in syndicated copies on news-medical.net and medicalxpress, says the team 'successfully replicated a direct brain-to-brain connection between pairs of people as part of a scientific study following the team's initial demonstration a year ago.' So the 'a year' framing is UW's own, but it is timed from the November 2014 announcement. That is about 15 months after the August 2013 demo. The PLOS ONE record (found via a search of the PMC/typeset copies) gives 'Received July 21, 2014; Accepted September 10, 2014; Published November 5, 2014', and the UW tech report is numbered UW-CSE-14-07-01 (July 2014). The sessions therefore must have ended before late July 2014, within about 11 months of the demo. One search summary said the six participants took part 'over the course of three months', but an exact-phrase search did not find that sentence, so no session dates are confirmed. This is a minor imprecision: 'a year later' fits when the study was published, not necessarily when the sessions were run.",
+     "sources": [
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://www.news-medical.net/news/20141105/UW-researchers-successfully-replicate-direct-brain-to-brain-connection-between-people.aspx",
+      "https://medicalxpress.com/news/2014-11-brain-interface-humans.html",
+      "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4221017/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf"
+     ],
+     "suggested_fix": "Within a year, the team tried it with three pairs of volunteers. (Optional; 'A year later' matches UW's own press framing.)"
+    },
+    {
+     "id": "B2",
+     "script_text": "the team tried it with three pairs of volunteers",
+     "claim": "The study used three sender-receiver pairs, six participants in total, who were not the two original researchers.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE abstract: 'results from experiments involving six different subjects.' UW News 2014: 'The UW study involved three pairs of participants.' Stocco in UW News 2014: 'Now we have replicated our methods and know that they can work reliably with walk-in participants.' Search summaries of the paper's methods give six participants aged 21-38 who were 'recruited through word of mouth' and gave written consent. A second search could not confirm the recruitment wording. No source mentions payment, so 'volunteers' is fine in the ordinary sense. Table 2 lists Pairs 1-3.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://pubmed.ncbi.nlm.nih.gov/25372285/",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B3",
+     "script_text": "This time the receiver's hand rested over a touchpad.",
+     "claim": "In 2014 the receiver's right hand was placed over a touchpad, not on a keyboard space bar as in 2013.",
+     "status": "confirmed",
+     "evidence": "UW News 2014, as quoted in syndicated copies (EurekAlert, Newswise, medicalxpress): the receiver sat across campus 'wearing headphones in a dark room', unable to see the game, 'with the right hand placed over the only touchpad that could fire the cannon'. A successful transfer would make the receiver's hand twitch, 'pressing the touchpad and firing the cannon.' PLOS ONE abstract: the 'Fire' command 'caused an upward movement of the right hand of a second participant (the \"Receiver\"), resulting in a press by the hand on a touchpad.' A paper snippet: when the muscle extends the wrist 'it produces an upward movement of the hand', and the 'up-down movement of the hand typically resulted in enough force to trigger a \"click\" event.' The 2013 pilot used the space bar, which other searches confirmed via NBC and UW coverage, so 'this time' is accurate. 'Rested over' fairly renders 'placed over' and 'positioned above'.",
+     "sources": [
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/",
+      "https://www.eurekalert.org/news-releases/617775",
+      "https://www.newswise.com/articles/uw-study-shows-direct-brain-interface-between-humans",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B4",
+     "script_text": "In some rounds, the researchers quietly flipped the coil over. Same game. Same pulse strength.",
+     "claim": "In control blocks the TMS coil was turned over (rotated 180 degrees) so the pulse could not move the hand. The power output and the game were unchanged, and participants were not told which blocks were control blocks.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE: 'During control blocks the brain-to-brain channel was made non-operational by changing the coil position so that the TMS pulse could not cause the desired movement of the right hand.' Also: with 'the same power output, it could not trigger a hand response.' UW tech report UW-CSE-14-07-01: 'the coil was simply rotated 180 degrees on the axis of its handle, so that its electrical current was flowing in the opposite direction.' The active position was flush against the head with current clockwise ('B' side). Turning the coil 180 degrees about its handle turns it over, so 'flipped over' is accurate. That exact mechanism is spelled out in the tech report, and the PLOS wording only says 'changing the coil position'. Design: each experiment had 'two experimental blocks and two control blocks' (10 trials per block for Pair 1, 16 for Pairs 2 and 3), in randomized order, so 'some rounds' means half the blocks. On 'quietly': a paper snippet says participants 'were told in advance of the presence of two conditions, but were not told to which condition each block belonged'. An exact-phrase search did not re-find that sentence. Senders played the same game throughout.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": "Optional precision: 'In half the rounds, the researchers quietly flipped the coil over.'"
+    },
+    {
+     "id": "B5",
+     "script_text": "Even the participants couldn't tell which way the coil was facing.",
+     "claim": "Participants could not tell the active coil position from the flipped control position.",
+     "status": "confirmed",
+     "evidence": "Two separate extended searches returned the paper's sentence 'None of the participants could distinguish between the two coil positions' and attributed it to the PLOS ONE paper and its control-block description. An exact-phrase search on its own did not index the sentence, so it is confirmed through those paper summaries rather than a direct page hit. Supporting blinding details from the paper: receivers 'were facing a blank wall with their back to the experimenter and the experimental equipment', and they wore headphones in a dark room (UW News 2014). The paper's 'two coil positions' are the normal and 180-degree-rotated orientations, so 'which way the coil was facing' is a fair rendering. Nuance: participants knew two conditions existed but not which block was which.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B6",
+     "script_text": "With the coil in position, one pair hit about five out of six rockets. Another hit only one in four.",
+     "claim": "In experimental blocks Pair 1 destroyed 83.33% of rockets (about 5/6) and Pair 2 destroyed 25%.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE Table 2, as returned by search: '% Rockets Hit \u00b7 Experimental \u00b7 83.33% \u00b7 25.00% \u00b7 37.50%' (Pairs 1, 2, 3) and '% Planes Hit \u00b7 Experimental \u00b7 37.50 \u00b7 18.75% \u00b7 0.00%'. Text: 'the three pairs of subjects correctly identified and destroyed 83.3%, 25.0%, and 37.5% of the rockets respectively during the experimental blocks, and 0% of the rockets during the control blocks.' UW News 2014: 'accuracy varied among the pairs, ranging from 25 to 83 percent.' 83.33% is exactly 5/6 (or 10/12), so 'about five out of six' is accurate. With 2 blocks of 10 trials for Pair 1, that is consistent with 10 of 12 rockets, but raw counts were not retrieved. Context the narration leaves out: the best pair also shot down 37.5% of friendly planes, and the paper says Pair 2 struggled to tell planes from rockets. No conflicting figures were found in any version.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/",
+      "https://www.washington.edu/news/2014/11/05/uw-study-shows-direct-brain-interface-between-humans/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "B7",
+     "script_text": "With the coil flipped? Across all three pairs, nobody pressed the touchpad once. Every rocket got through.",
+     "claim": "In all control blocks there were zero touchpad presses, so 0% of rockets were destroyed for every pair.",
+     "status": "confirmed",
+     "evidence": "PLOS ONE discussion: the authors cite 'the extremely low rates of false positives across the receivers' responses (only one response was recorded in the absence of TMS stimulation), as well as the complete lack of touchpad presses during the control blocks.' Results: '0% of the rockets during the control blocks.' PubMed/PLOS abstract: \u03b2 = 0 in all six control blocks, with no information transferred, against about 4-13 bits per experimental block. Six control blocks means 2 per pair across 3 pairs, so the statement covers all three pairs. The single stray press happened without TMS, so it fell in an experimental-condition trial, not a control block. Zero presses means no rocket was destroyed.",
+     "sources": [
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://pubmed.ncbi.nlm.nih.gov/25372285/",
+      "https://www.researchgate.net/publication/267809989_A_Direct_Brain-to-Brain_Interface_in_Humans"
+     ],
+     "suggested_fix": ""
+    }
+   ],
+   "staging_details": [
+    "Receiver room (2014): across campus from the sender, wearing headphones in a dark room, unable to see the game, right hand placed over the only touchpad that could fire the cannon. (UW News 5 Nov 2014, via EurekAlert/Newswise/medicalxpress copies)",
+    "Receiver orientation: 'facing a blank wall with their back to the experimenter and the experimental equipment.' (PLOS ONE 2014, via search)",
+    "Receiver seat: a BrainSight chair with the head against a neck rest. A 90 mm MagStim circle coil, connected to a Super Rapid^2 stimulator, was held in place by an articulated arm. The UW tech report draft says 70 mm instead. (PLOS ONE Fig. 5 'TMS Set-Up' caption and methods; UW-CSE-14-07-01)",
+    "Active coil position: a circle coil flush against the head, current flowing clockwise ('B' side). Control position: the coil rotated 180 degrees on the axis of its handle, so the current flowed in the opposite direction, at the same power output. Sources disagree on handle direction ('horizontally' vs 'leftwards'). (UW tech report UW-CSE-14-07-01; PLOS ONE)",
+    "Hand motion: the TMS pulse makes a wrist-extension 'upward movement of the hand', and the 'up-down movement of the hand typically resulted in enough force to trigger a click' on the touchpad. (PLOS ONE / UW tech report)",
+    "Sender: EEG cap. A drop in mu-band (11-13 Hz) power during right-hand motor imagery was mapped to upward movement of a cursor on screen. Rocket trials show mu suppression and airplane trials do not. (PLOS ONE methods/figure captions, via search)",
+    "Game: a pirate ship fires a rocket at the city, or a friendly supply plane flies by. Moving the cursor up on a rocket trial is a true positive, and moving it up on a plane trial is a false positive. (PLOS ONE, via search)",
+    "Block structure per pair: 2 experimental + 2 control blocks in randomized order. 10 trials per block for Pair 1 and 16 for Pairs 2 and 3, because setup turned out faster than expected. Participants were told there were two conditions but not which block was which. (PLOS ONE, via search snippet)",
+    "Results table (PLOS ONE Table 2): rockets hit in experimental blocks were 83.33% / 25.00% / 37.50% and planes hit were 37.50% / 18.75% / 0.00% for Pairs 1/2/3. Control blocks: 0% of rockets and no touchpad presses at all.",
+    "Participants: six people aged 21-38, described by Stocco as 'walk-in participants'. Funded by the W.M. Keck Foundation, the U.S. Army Research Office and UW. (UW News 2014; PLOS ONE via search)"
+   ],
+   "searches_run": [
+    "\"A Direct Brain-to-Brain Interface in Humans\" Rao Stocco 2014 control blocks coil rockets 83.3% 25.0% 37.5%",
+    "UW News November 2014 \"brain-to-brain\" three pairs touchpad \"a year ago\" Rao Stocco study",
+    "\"None of the participants could distinguish between the two coil positions\" (exact phrase: not indexed)",
+    "Rao 2014 brain-to-brain interface PLoS ONE \"control blocks\" coil \"same power output\" could not trigger hand response",
+    "Rao Stocco brain-to-brain 2014 \"complete lack of touchpad presses during the control blocks\"",
+    "Rao 2014 brain-to-brain interface Table 2 \"Rockets Hit\" \"Planes Hit\" pair 1 pair 2 pair 3 experimental control",
+    "WebFetch https://d.docksci.com/... -> FAILED (ENOTFOUND; d.docksci.com would have to be allowed in the session's network settings); no further WebFetch attempted",
+    "Rao 2014 direct brain-to-brain interface six participants \"21-38\" recruited paid volunteers informed consent pairs",
+    "Rao 2014 PLoS ONE brain-to-brain \"upward\" jerk right hand \"touchpad\" Receiver positioned wrist",
+    "brain-to-brain interface Rao Stocco control blocks coil \"rotated\" 180 degrees handle opposite direction current sham",
+    "\"brain-to-brain\" Rao 2014 participants \"over the course of three months\" experiment dates sessions",
+    "Rao Stocco 2014 brain-to-brain Receiver right hand touchpad placed above/over/resting TMS upward movement press methods",
+    "Rao 2014 brain-to-brain interface trials per block \"16 trials\" pair 1 \"10 trials\" two experimental blocks two control blocks randomized",
+    "\"brain-to-brain interface in humans\" planes \"37.5%\" \"18.75%\" airplanes hit pair senders false positives",
+    "Rao 2014 brain-to-brain \"were not told to which condition each block belonged\" control coil (exact phrase: not indexed)",
+    "UW news 2014 Rao Stocco Prat replicated brain-to-brain \"accuracy\" \"25 to 83 percent\" pairs separate buildings touchpad cannon",
+    "\"took part in the experiment over the course of three months\" (exact phrase: not found)",
+    "\"brain-to-brain\" Rao 2014 PLoS ONE \"recruited through word of mouth\" participants sender receiver training session",
+    "\"uw study shows direct brain interface between humans\" \"initial demonstration a year ago\"",
+    "UW 2014 brain interface receivers \"dark room\" right hand \"touchpad\" \"fire the cannon\" Stocco Rao replicated",
+    "Rao 2014 brain-to-brain sender cursor \"move the cursor upward\" right hand motor imagery \"Fire\" target EEG mu rhythm game",
+    "\"A Direct Brain-to-Brain Interface in Humans\" \"Received: July 21, 2014\" accepted September 2014",
+    "brain2brain UW Rao 2014 PLoS ONE \"None of the participants\" coil positions distinguish control blocks headphones music audiobook",
+    "\"touchpad that could fire the cannon\" OR \"only touchpad\" brain interface 2014 receiver dark room headphones",
+    "Rao 2014 brain-to-brain \"Percentage of rockets\" Table 2 pairs \"planes\" experimental control \"83.33\"",
+    "Rao 2014 brain-to-brain interface TMS \"circle coil\" diameter mm Magstim BrainSight receiver left motor cortex"
+   ]
+  }
+ },
+ {
+  "cluster": "2019-brainnet",
+  "research": {
+   "claims": [
+    {
+     "id": "C1",
+     "script_text": "In 2019, three people played a falling-block game ... Six years later, a pulse could give you advice.",
+     "claim": "The BrainNet study is from 2019, six years after the 2013 Rao-Stocco experiment.",
+     "status": "partly",
+     "evidence": "The paper is Jiang, Stocco, Losey, Abernethy, Prat and Rao, 'BrainNet: A Multi-Person Brain-to-Brain Interface for Direct Collaboration Between Brains', Scientific Reports 9:6115, published 16 April 2019, DOI 10.1038/s41598-019-41895-7 (Nature/PMC6467884 listing). UW News covered it on 1 July 2019 (washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind). The work was already out as a preprint in September 2018 (arXiv 1809.08632, bioRxiv 425066 posted 26 Sept 2018), and MIT Technology Review covered it on 29 Sept 2018. So the games were played in or before 2018, not in 2019. 'Six years' holds if you count to the 2019 journal publication; it is about five years if you count to when the work was done or first reported.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467884",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf",
+      "https://arxiv.org/abs/1809.08632",
+      "https://www.technologyreview.com/2018/09/29/139965/the-first-social-network-of-brains-lets-three-people-transmit-thoughts-to-each-others-heads/",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind"
+     ],
+     "suggested_fix": "\"In a 2019 study, three people played a falling-block game from three separate rooms.\" ('Six years later' can stay, since it counts to the 2019 publication.)"
+    },
+    {
+     "id": "C2",
+     "script_text": "three people played a falling-block game from three separate rooms.",
+     "claim": "Three people played a Tetris-like game, each in a separate room.",
+     "status": "confirmed",
+     "evidence": "Paper (arXiv/bioRxiv text, quoted in search results): 'The three participants in a triad were located in different rooms in the same building on the University of Washington campus and could only communicate with each other through the brain-to-brain interface.' The abstract describes the task as 'a Tetris-like game'. Futurity, reposting the UW News story, says 'three people play a Tetris-like game using a brain-to-brain interface.'",
+     "sources": [
+      "https://arxiv.org/html/1809.08632v3",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full",
+      "https://www.futurity.org/brainnet-brain-to-brain-interface-game-2098002/",
+      "https://www.nature.com/articles/s41598-019-41895-7"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C3",
+     "script_text": "Two players could see the gap at the bottom. The third could see the block and had to decide whether to rotate it. From that seat, either answer looked reasonable.",
+     "claim": "Two Senders saw the whole screen, including the gap. The Receiver saw only the block, not the bottom line, and had to decide whether to rotate it (by 180 degrees). Both answers were plausible from the Receiver's view.",
+     "status": "confirmed",
+     "evidence": "UW News/Futurity: 'Two people, the Senders, can see both the block and the line but can't control the game. The third person, the Receiver, can see only the block but can tell the game whether to rotate the block to successfully complete the line.' Paper: the Receiver 'could only see the block at the top of screen and not the bottom line'. The decision was whether to rotate the piece 180 degrees: 'If the cursor reached the green \"Yes\" bar, the interface interpreted the participant's decision to be rotation of the block (by 180 degrees).' On 'either answer looked reasonable': no source uses those words, but the design supports it. The paper says that across the sixteen trials 'in half of them the falling block had to be rotated and in the other half, it had to be left in the original orientation', and the Receiver could not see the gap. Rao (quoted in press coverage): Tetris is 'a task where two humans can see the solution but are unable to act, motivating a collaboration with a third human who can act but is unable to see the solution.'",
+     "sources": [
+      "https://www.futurity.org/brainnet-brain-to-brain-interface-game-2098002/",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://arxiv.org/html/1809.08632v3",
+      "https://www.biorxiv.org/content/10.1101/425066v2.full",
+      "https://www.nature.com/articles/s41598-019-41895-7"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C4",
+     "script_text": "Each teammate sent a vote.",
+     "claim": "Each Sender sent a yes/no 'rotate' decision using SSVEP: staring at LEDs that flash at different frequencies.",
+     "status": "confirmed",
+     "evidence": "Paper (Nature/arXiv): Senders 'convey their decisions of \"rotate\" or \"do not rotate\" by controlling a horizontally moving cursor using steady-state visually-evoked potentials (SSVEPs).' They looked at a 17 Hz LED labelled 'Yes' (rotate) or a 15 Hz LED labelled 'No' (do not rotate). In the arXiv v3 and Nature versions the 17 Hz LED is on the left of the screen and the 15 Hz LED on the right. Cursor direction came from comparing EEG power at 17 Hz and 15 Hz, and 'the final decision was made by tallying up the number of epochs in which the greatest power was recorded at either 17 Hz or 15 Hz over a 10-second period.' UW News: 'Beneath the \"Yes\" option, an LED flashes 17 times per second.' Note that New Atlas and Technology Review reversed the frequency mapping; the paper gives 17 Hz = Yes.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://arxiv.org/html/1809.08632v3",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://neurosciencenews.com/brain-to-brain-video-game-14390/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C5",
+     "script_text": "This time the coil was at the back of the receiver's head, over the part of the brain involved in vision. A little flash in their vision meant \"rotate.\" No flash meant \"leave it.\"",
+     "claim": "The Receiver's TMS coil was over the occipital (visual) cortex. A phosphene meant 'rotate' and no phosphene meant 'do not rotate'.",
+     "status": "confirmed",
+     "evidence": "Paper: 'The Senders' decisions are delivered to the Receiver through two TMS pulses delivered sequentially to the occipital cortex, eliciting a phosphene for a \"yes\" decision or no phosphene for a \"no\" rotation decision for each Sender.' The abstract describes TMS 'for non-invasively stimulating the visual cortex.' Coil: a 70-mm Figure-8 Alpha coil (Magstim) 'positioned over the left occipital lobe in a location corresponding to site O1 in the 10\u201320 system' (Nature version). Intensities: 'rotate' was set above the Receiver's phosphene threshold, where a phosphene appeared on 10 consecutive pulses; 'do not rotate' was set below it, where no phosphene appeared on 10 consecutive pulses (arXiv). Narration matches: flash = rotate. Strictly, the coil was slightly left of the midline (site O1), but 'back of the head' is accurate.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C6",
+     "script_text": "They got one vote from each teammate, chose what to do, then had a second chance to change their answer.",
+     "claim": "Each trial had two rounds. The Receiver got one TMS signal per Sender and decided. The Senders then saw the result and sent new decisions, and the Receiver could change the decision.",
+     "status": "confirmed",
+     "evidence": "Paper: the decisions arrive as 'two TMS pulses delivered sequentially', one per Sender. Each pulse lasted 1 ms, with 'an eight-second delay ... enforced between the two pulses to remain within the strictest safety guidelines of TMS stimulation', and 'the Receiver always received the decision from one Sender first, then the other' (arXiv). The Receiver then 'conveyed their decision (rotate or do not rotate) to the game using the same SSVEP-based procedure used by both Senders.' Paper: 'BrainNet's design incorporates a second round of interactions between the Senders and the Receiver, so that the action of the Receiver in the first round can be perceived by the Senders, giving them a second chance to convey (potentially corrective) decisions to the Receiver.' The narration leaves out that the Senders voted again before the Receiver's second decision. It is not wrong, but it can make it sound as though the Receiver reconsidered with no new input.",
+     "sources": [
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.newsweek.com/brainnet-scientists-connect-three-peoples-brains-so-they-can-communicate-1150448"
+     ],
+     "suggested_fix": "Optional, for precision: \"They got one vote from each teammate, chose what to do, then got a second round of votes and a chance to change their answer.\""
+    },
+    {
+     "id": "C7",
+     "script_text": "On ten of the sixteen trials, the computer flipped one teammate's advice.",
+     "claim": "The software made one Sender unreliable by making their transmitted decision wrong in 10 of 16 trials.",
+     "status": "confirmed",
+     "evidence": "Paper (text quoted in search results): 'our software randomly chooses one Sender to be less reliable by making the decision sent to the Receiver from that Sender incorrect in ten out of sixteen trials.' The arXiv version adds that in each session one Sender was randomly designated the 'Bad' Sender, and that Sender's decision was 'forced to be incorrect, both in the first and second round of each trial' (the 10 of 16 trials). UW News, 1 July 2019: the researchers created a 'bad Sender' by flipping that person's responses in 10 of the 16 trials. 'Computer' fits the paper's 'our software'. One nuance: the paper says the signal was forced to be wrong, which is not quite the same as flipping the Sender's real answer, but UW News itself says 'flipping'.",
+     "sources": [
+      "https://arxiv.org/html/1809.08632v3",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C8",
+     "script_text": "Over time, receivers learned whose signal to trust.",
+     "claim": "Over the course of a session, Receivers learned which Sender was more reliable.",
+     "status": "confirmed",
+     "evidence": "Abstract: 'Receivers are able to learn which Sender is more reliable based solely on the information transmitted to their brains.' UW News, 1 July 2019: 'Over time, the Receiver switched from being relatively neutral about both Senders to strongly preferring the information from the \"good Sender.\"' Paper: block-by-block regression weights and correlations 'exhibit ascending trends for the \"Good\" Sender but not the \"Bad\" Sender'. Mutual information was significantly higher for good Senders (about 0.336) than for bad Senders (about 0.051): t(8) = 5.187, p = .002 in the Nature/arXiv version; the bioRxiv preprint reports t(8) = 4.44.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://arxiv.org/html/1809.08632v3",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C9",
+     "script_text": "Across five teams, they cleared the line about thirteen times out of sixteen.",
+     "claim": "Five triads averaged 81.25% accuracy, which equals 13 of 16 trials. Accuracy meant a correct block rotation, i.e. a cleared line.",
+     "status": "confirmed",
+     "evidence": "Abstract: 'Five groups of three subjects successfully used BrainNet to perform the Tetris task, with an average accuracy of 0.813' (81.25%). Scientific Reports: 'The mean accuracy across all triads was 0.8125, corresponding to 13 correct trials out of 16.' Each triad played 16 trials. Accuracy is 'the proportion of correct block rotations achieved by the triad', with chance at 0.5. Performance was above chance: binomial p = 0.002 in one version; the bioRxiv preprint reports t(4) = 7.91, p = .001. A correct rotation is what fills the gap and clears the line, so 'cleared the line' is fair. Two caveats: 13/16 is a mean across triads, not every team's score ('about' covers this), and the search results did not say whether accuracy was scored on the first-round or final decision.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.biorxiv.org/content/10.1101/425066v2.full",
+      "https://www.researchgate.net/figure/Performance-of-Triads-of-Participants-using-BrainNet-The-plot-shows-accuracy-achieved-by_fig5_332453220",
+      "https://www.inverse.com/article/60596-brain-internet-connect-thoughts-messages"
+     ],
+     "suggested_fix": "Optional: \"Across five teams, they cleared the line about thirteen times out of sixteen, on average.\""
+    },
+    {
+     "id": "C10",
+     "script_text": "Six years later, a pulse could give you advice. And you could decide the other guy was wrong.",
+     "claim": "The Receiver chose whether to act, and could go against a Sender's suggestion.",
+     "status": "confirmed",
+     "evidence": "Paper: the Receiver gets each Sender's decision as a phosphene or no phosphene and 'Receivers made their decision based on whether a phosphene was perceived and conveyed their decision (rotate or do not rotate) to the game using the same SSVEP-based procedure used by both Senders.' The Receiver's choice was their own EEG-controlled action, not triggered by the pulse. When the two Senders' signals conflicted, the Receiver had to choose which to follow. The learning result (C8) shows Receivers came to weight the good Sender over the bad one. IEEE Spectrum: all the receivers noticed the pattern of bad advice and 'chose to listen to the more accurate sender'. 'Decide the other guy was wrong' is an interpretation, but a fair one. Contrast with 2013/2014, where the TMS pulse over motor cortex directly caused the hand movement.",
+     "sources": [
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://spectrum.ieee.org/amp/video-game-players-electronically-connect-their-brains-2650278766",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind"
+     ],
+     "suggested_fix": ""
+    }
+   ],
+   "staging_details": [
+    "Room layout: 'The three participants in a triad were located in different rooms in the same building on the University of Washington campus and could only communicate with each other through the brain-to-brain interface' (BrainNet paper, arXiv/bioRxiv text quoted in search results).",
+    "Senders wore EEG caps and could not control the game (UW News 1 July 2019, via Futurity/NeuroscienceNews repost).",
+    "Sender screen: the Tetris-like game with a falling block at the top and a partly filled line with a gap at the bottom. Press summaries of Fig. 2 describe a green line at the bottom that the Senders can see and the Receiver cannot (paper Fig. 2 description in search results).",
+    "Sender interface: 'Yes' and 'No' on either side of the screen. A 17 Hz flashing LED labelled 'Yes' (rotate) sits on the left and a 15 Hz LED labelled 'No' (do not rotate) on the right (arXiv v3 / Nature version; bioRxiv v2 says only 'opposite sides'). UW News: 'Beneath the \"Yes\" option, an LED flashes 17 times per second.'",
+    "A horizontally moving cursor gives real-time feedback. More 17 Hz EEG power pushes it toward the 'Yes' side. Reaching the green 'Yes' bar means rotate the block 180 degrees; reaching the 'No' bar means keep its orientation. The decision is tallied over a 10-second window (Nature/arXiv).",
+    "While the Receiver decides, each Sender's monitor shows a gray background with a text prompt saying the Receiver is deciding (Nature version, per search summary).",
+    "Receiver hardware: EEG cap plus a 70-mm Figure-8 Alpha TMS coil (Magstim, UK) driven by a Magstim SuperRapid2 stimulator. The coil sits over the left occipital lobe at site O1 (lower back of the head, just left of center), flush to the head, with the handle parallel to the ground and extending toward the left (Nature version, per search results).",
+    "Pulse timing: each Sender's decision arrives as a single 1 ms TMS pulse. Sender 1 and Sender 2 pulses come one after the other, with an eight-second gap for TMS safety. A phosphene (brief flash of light the Receiver perceives) means 'Yes, rotate'; no phosphene means 'No' (arXiv/Nature).",
+    "Calibration: each Receiver's phosphene threshold was measured first (PEST method). The 'Yes' intensity was raised in 5% steps until a phosphene appeared on 10 consecutive pulses. The 'No' intensity was lowered in 5% steps until no phosphene appeared on 10 consecutive pulses (arXiv).",
+    "Receiver screen: shows the falling block at the top but not the bottom line/gap. In paper Fig. 2 ('Examples of Screens seen by the Receiver and the Senders across Two Rounds'), the Receiver's screens are in the left column and the Senders' in the right column.",
+    "Receiver decision: made with the same SSVEP LED/cursor interface as the Senders (17 Hz Yes / 15 Hz No), so the Receiver also stares at flashing LEDs to answer (Nature/arXiv; CACM).",
+    "Round 2: after the Receiver's first decision, the Senders see the block, possibly now rotated, mid-way through its fall, and send a second (possibly corrective) decision (Nature, per search results).",
+    "Session design: 16 trials per triad. Half needed a rotation and half did not. One randomly chosen Sender per session was the 'Bad' Sender, whose transmitted decision was wrong in 10 of 16 trials, in both rounds (arXiv / UW News).",
+    "Press photo: Futurity's repost of the UW story shows a researcher fitting the TMS coil and EEG cap on a Receiver (search-result description; image not viewed directly).",
+    "Press inconsistency to avoid: New Atlas and MIT Technology Review reversed the LED mapping (15 Hz = rotate). The paper says 17 Hz = Yes/rotate."
+   ],
+   "searches_run": [
+    "WebSearch (extended): BrainNet multi-person brain-to-brain interface Tetris Senders Receiver phosphene occipital cortex",
+    "WebSearch (extended): BrainNet Jiang Stocco Rao 2019 Scientific Reports 81.25% accuracy five groups",
+    "WebSearch (extended): BrainNet \"bad Sender\" 10 out of 16 trials decisions flipped first round second round",
+    "WebFetch https://arxiv.org/html/1809.08632v3: failed with ENOTFOUND (arxiv.org is not in the session's allowed network domains), so WebFetch was not used again",
+    "WebSearch (extended): BrainNet Receiver cannot see bottom of screen Tetris block rotate 180 degrees Senders see entire screen",
+    "WebSearch (extended): BrainNet SSVEP LEDs 15 Hz 17 Hz Yes No Senders flashing lights sides of screen",
+    "WebSearch (extended): BrainNet TMS phosphene rotate / do not rotate intensity no phosphene Receiver decision second round",
+    "WebSearch (extended): UW News July 2019 BrainNet three people play Tetris separate rooms Rao Stocco",
+    "WebSearch (standard): BrainNet Scientific Reports 9 6115 published 16 April 2019",
+    "WebSearch (extended): BrainNet Receiver two TMS pulses one for each Sender occipital phosphene flash second round change",
+    "WebSearch (extended): BrainNet one of the Senders randomly chosen bad Sender decisions altered 10 out of 16 trials",
+    "WebSearch (extended): BrainNet methods TMS coil positioned occipital cortex location phosphene threshold PEST Magstim",
+    "WebSearch (extended): BrainNet Receiver only the top screen bottom line hidden Tetris rotate Receiver view figure",
+    "WebSearch (extended): 'How you and your friends can play a video game together using only your minds' UW News receiver flash learned sender flipped",
+    "WebSearch (extended): BrainNet Nature methods different rooms Senders Receiver laboratory 16 trials session",
+    "WebSearch (extended): BrainNet Receiver decision same SSVEP LEDs Yes No Receiver screen cursor",
+    "WebSearch (extended): BrainNet Tetris separate rooms three players senders receiver",
+    "WebSearch (extended): Futurity 'With BrainNet, 3 people play Tetris with their minds' receiver senders block line rotate flash",
+    "WebSearch (extended): 'in different rooms and couldn't see, hear or speak to one another' BrainNet",
+    "WebSearch (extended): UW News BrainNet flipped 10 out of the 16 sender receiver figured out which sender",
+    "WebSearch (extended): washington.edu news 2019/07/01 play a video game using only your mind bad sender good sender",
+    "WebSearch (extended): BrainNet arXiv 'forced to be incorrect' 'both in the first and second round' Sender session randomly",
+    "WebSearch (extended): BrainNet Figure 2 caption Receiver screen Senders screens two rounds hidden",
+    "WebSearch (extended): BrainNet mutual information Good Sender Bad Sender 'relatively neutral' 'strongly preferring'",
+    "WebSearch (extended): BrainNet '13 out of 16' cleared the line average accuracy groups UW",
+    "WebSearch (extended): BrainNet 'different rooms in the same building' University of Washington triad",
+    "WebSearch (extended): BrainNet Receiver conflicting decisions Senders disagree choose which Sender to follow",
+    "WebSearch (extended): BrainNet paper accuracy defined correct Receiver final decision second round",
+    "WebSearch (extended): BrainNet Nature 17 Hz LED left side 15 Hz right side cursor green bar Sender interface",
+    "WebSearch (standard): BrainNet 'eight-second delay' TMS pulses Receiver safety guidelines",
+    "WebSearch (extended): BrainNet 'correct block rotations' end of second round final decision accuracy 0.8125"
+   ]
+  },
+  "verified": {
+   "claims": [
+    {
+     "id": "C1",
+     "script_text": "In 2019, three people played a falling-block game ... Six years later, a pulse could give you advice.",
+     "claim": "The BrainNet study is from 2019, six years after the 2013 Rao-Stocco experiment.",
+     "status": "partly",
+     "evidence": "I agree with the first researcher. The PMC/Nature listing in my search results dates the paper to Scientific Reports 2019 Apr 16; 9:6115. UW News of 1 July 2019 (via ScienceDaily/NeuroscienceNews) says the peer-reviewed paper appeared in Scientific Reports 'after a preprint was posted to arXiv earlier.' The bioRxiv preprint URL (biorxiv.org/content/biorxiv/early/2018/09/26/425066) shows it was posted 26 Sept 2018. MIT Technology Review (URL dated 2018/09/29), TechXplore (2018-10) and Fanatical Futurist (2018/10) all covered the results in autumn 2018. So the game sessions took place in or before September 2018, not 2019. Counting from Aug 2013 to the April 2019 journal paper gives roughly six years, so 'six years later' works if it refers to publication. Counting to when the games were actually played or first reported gives about five years.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467884",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf",
+      "https://arxiv.org/abs/1809.08632",
+      "https://www.technologyreview.com/2018/09/29/139965/the-first-social-network-of-brains-lets-three-people-transmit-thoughts-to-each-others-heads/amp/",
+      "https://techxplore.com/news/2018-10-brainnet-people-brainwaves-tetris.html",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm"
+     ],
+     "suggested_fix": "\"In a 2019 study, three people played a falling-block game from three separate rooms.\" ('Six years later' can stay, since it counts to the 2019 paper.)"
+    },
+    {
+     "id": "C2",
+     "script_text": "three people played a falling-block game from three separate rooms.",
+     "claim": "Three people played a Tetris-like game, each in a separate room.",
+     "status": "confirmed",
+     "evidence": "My searches found nothing that contradicts this. UW News, 1 July 2019 (via ScienceDaily/Lab Manager/NeuroscienceNews): three people played a Tetris-like game with two Senders and one Receiver using a brain-to-brain interface. For the separate rooms, the first researcher's results quote the paper: 'The three participants in a triad were located in different rooms in the same building on the University of Washington campus and could only communicate with each other through the brain-to-brain interface.' My own search for that exact sentence hit the session's web-search budget limit, so I could not re-run it. No source I saw describes a different arrangement. Detail: the rooms were in one building, which fits 'three separate rooms'.",
+     "sources": [
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://neurosciencenews.com/brain-to-brain-video-game-14390/",
+      "https://arxiv.org/html/1809.08632v3",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C3",
+     "script_text": "Two players could see the gap at the bottom. The third could see the block and had to decide whether to rotate it. From that seat, either answer looked reasonable.",
+     "claim": "Two Senders saw the whole screen, including the gap. The Receiver saw only the block, not the bottom line, and had to decide whether to rotate it. Both answers were plausible from the Receiver's view.",
+     "status": "confirmed",
+     "evidence": "Paper (in my search results): 'the actual player of the game, namely the Receiver, could only see the block at top of screen and not the bottom line'. The Senders 'could see both the block at top and the line at bottom.' The task was whether to rotate the block 180 degrees. UW News 2019: 'The Receiver can see only the block but can tell the game whether to rotate the block to successfully complete the line. The Senders can see both the block and the line but can't control the game.' Press coverage (Analytics India Mag / TechXplore) says the Receiver saw only the top half of the Tetris screen. No source uses the words 'either answer looked reasonable'. The paper's design backs it up: the Receiver could not see the gap, and half of the 16 trials needed a rotation while half did not (first researcher's quote). I found nothing that contradicts this.",
+     "sources": [
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://analyticsindiamag.com/ai-features/meet-brainnet-a-new-interface-that-allows-3-people-to-directly-transmit-thoughts",
+      "https://techxplore.com/news/2018-10-brainnet-people-brainwaves-tetris.html"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C4",
+     "script_text": "Each teammate sent a vote.",
+     "claim": "Each Sender sent a yes/no 'rotate' decision to the Receiver using an EEG-based BCI (SSVEP, staring at flashing LEDs).",
+     "status": "confirmed",
+     "evidence": "Paper (Nature/PMC abstract in search results): 'Two participants (\"Sender 1\" and \"Sender 2\") each use a Brain-Computer Interface (BCI) based on electroencephalography (EEG) to convey information about a collaborative task (here, a Tetris-like game) directly to the brain of the third participant (\"Receiver\").' Papers We Love summary: the Senders' signals were EEG-based SSVEP responses, used to pick 'rotate' or 'do not rotate'. UW News 2019: each Sender sent 'Yes' or 'No' by concentrating on the matching flashing light. 'Vote' fits one binary decision per Sender per round. My searches did not re-check the first researcher's 17 Hz = Yes, 15 Hz = No mapping, and found nothing that contradicts it.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467884",
+      "https://paperswelove.org/papers/brainnet-a-multi-person-brain-to-brain-interface-f-aaa31031/",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C5",
+     "script_text": "This time the coil was at the back of the receiver's head, over the part of the brain involved in vision. A little flash in their vision meant \"rotate.\" No flash meant \"leave it.\"",
+     "claim": "The Receiver's TMS coil was over the occipital (visual) cortex. A phosphene (flash) meant 'rotate' and no phosphene meant 'do not rotate'.",
+     "status": "confirmed",
+     "evidence": "Nature version (in my search results): each Sender's decision reached the Receiver through 'two TMS pulses delivered sequentially to the occipital cortex', with a phosphene for 'yes' and no phosphene for 'no' rotation. arXiv: each pulse lasted 1 ms, and the Receiver decided based on whether a phosphene was perceived. Press summary of the paper: 'a single phosphene to indicate the block must be rotated or no flash of light'. UW News 2019: a coil stimulates the part of the brain that translates signals from the eyes. The direction matches the narration: flash = rotate. Coil site O1 (lower back of the head, slightly left of the midline) comes from the first researcher's quote of the Nature methods. I could not re-search it because the search budget ran out, and no source contradicts it.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C6",
+     "script_text": "They got one vote from each teammate, chose what to do, then had a second chance to change their answer.",
+     "claim": "Each trial had two rounds. In each round the Receiver got one signal per Sender and decided. After round 1, the Senders saw the Receiver's choice and sent new votes, and the Receiver could then change the decision.",
+     "status": "partly",
+     "evidence": "Paper (arXiv/bioRxiv text in my search results): 'Each trial is composed of two rounds: the first round is as described above; after the first round, the Senders are given the opportunity to examine the Receiver's decision, shown on their screen as the block (now potentially rotated) mid-way through its fall. The Senders are then given another chance to make new (possibly corrective) suggestions to the Receiver through the brain-to-brain interface.' The paper also says successful completion of a trial requires accurate communication between the Senders and the Receiver across these two rounds. So the Receiver did get a second decision, but it came after a fresh vote from each teammate. The narration's 'They got one vote from each teammate ... then had a second chance' suggests one vote per teammate per trial and a second decision with no new input. In the paper, the 'second chance' belongs to the Senders. Downgraded from confirmed because the order of events is incomplete in a way viewers would notice.",
+     "sources": [
+      "https://arxiv.org/html/1809.08632v3",
+      "https://www.biorxiv.org/content/10.1101/425066.full.pdf",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf",
+      "https://www.nature.com/articles/s41598-019-41895-7"
+     ],
+     "suggested_fix": "\"They got one vote from each teammate, chose what to do, then got a fresh round of votes and a chance to change their answer.\""
+    },
+    {
+     "id": "C7",
+     "script_text": "On ten of the sixteen trials, the computer flipped one teammate's advice.",
+     "claim": "In each session, software made one randomly chosen Sender unreliable by making their transmitted decision wrong in 10 of the 16 trials.",
+     "status": "confirmed",
+     "evidence": "UW News, 1 July 2019 (in my search results): 'The team purposely picked one of the senders to be a \"bad sender\" and flipped their responses in 10 out of the 16 trials.' Big Think: the 'bad' Sender's decisions were incorrect in ten of sixteen trials, in both the first and second rounds. Nature abstract: the researchers varied one Sender's reliability 'by injecting noise into the signals from one randomly chosen Sender.' The first researcher's quote of the paper ('making the decision sent to the Receiver from that Sender incorrect in ten out of sixteen trials') agrees. One small point: the paper says the transmitted decision was forced to be incorrect, where UW News says 'flipped'. 'Computer' is fine; the paper says 'our software'.",
+     "sources": [
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://bigthink.com/health/connected-brains-play-tetris/",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://arxiv.org/pdf/1809.08632"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C8",
+     "script_text": "Over time, receivers learned whose signal to trust.",
+     "claim": "Over a session, Receivers learned which Sender was more reliable.",
+     "status": "confirmed",
+     "evidence": "Nature/PMC (in my search results): 'across all five triads of BrainNet participants, the mutual information transmitted between the Receiver and the \"Good\" Sender is significantly higher than that between the Receiver and the \"Bad\" Sender.' The paper's conclusion: like conventional social networks, BrainNet 'allows a Receiver to learn to trust the Sender who is more reliable.' Papers We Love summary: Receivers came to weight the more reliable Sender more heavily over repeated rounds. UW News (quoted by the first researcher): 'Over time, the Receiver switched from being relatively neutral about both Senders to strongly preferring the information from the \"good Sender.\"' I found nothing that contradicts this.",
+     "sources": [
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467884",
+      "https://paperswelove.org/papers/brainnet-a-multi-person-brain-to-brain-interface-f-aaa31031/",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "C9",
+     "script_text": "Across five teams, they cleared the line about thirteen times out of sixteen.",
+     "claim": "Five triads averaged 81.25% accuracy, equal to 13 of 16 trials, where accuracy means a correct block rotation (a cleared line).",
+     "status": "confirmed",
+     "evidence": "UW News, 1 July 2019 (via ScienceDaily etc., in my search results) uses nearly the narration's own words: 'On average, each group successfully cleared the line 81 percent of the time, or for 13 out of 16 trials.' Paper (arXiv/bioRxiv): 'The mean accuracy across all triads was 0.8125, corresponding to 13 correct trials out of 16.' Nature: 'Five groups, each with three human subjects, successfully used BrainNet to perform the collaborative task, with an average accuracy of 81.25%.' Accuracy is 'the proportion of correct block rotations achieved by the triad'. The triad performance figure (Figure 3 in the version found) plots each triad against a dashed chance line at 0.5. Accuracy is scored per trial, and success needed communication to work across both rounds, so it reflects the final outcome. Caveat: 13/16 is a mean across triads and individual triads varied; 'about' covers this.",
+     "sources": [
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full",
+      "https://arxiv.org/abs/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7"
+     ],
+     "suggested_fix": "Optional: \"Across five teams, they cleared the line about thirteen times out of sixteen, on average.\""
+    },
+    {
+     "id": "C10",
+     "script_text": "Six years later, a pulse could give you advice. And you could decide the other guy was wrong.",
+     "claim": "In BrainNet the pulse carried a Sender's suggestion. The Receiver decided whether to act and could reject a Sender's suggestion.",
+     "status": "confirmed",
+     "evidence": "Paper (arXiv/bioRxiv, in my search results): the Receiver decided based on whether a phosphene was perceived, then sent their own rotate/do-not-rotate decision with the same EEG/SSVEP method. When the Senders disagreed, the Receiver had to decide which one to trust (bioRxiv). Nature/PMC: Receivers learned to trust the more reliable Sender, and mutual information with the 'Good' Sender was significantly higher in all five triads. So the pulse was advice, not a forced movement, and Receivers did learn to discount the unreliable teammate. 'Decide the other guy was wrong' is an interpretation, but the data support it. The 'six years' point is covered under C1.",
+     "sources": [
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.biorxiv.org/content/biorxiv/early/2018/09/26/425066.full.pdf",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC6467884"
+     ],
+     "suggested_fix": ""
+    }
+   ],
+   "staging_details": [
+    "Room layout: 'The three participants in a triad were located in different rooms in the same building on the University of Washington campus and could only communicate with each other through the brain-to-brain interface' (BrainNet paper, arXiv/bioRxiv, from the first researcher's search results).",
+    "Roles: two Senders and one Receiver. The Senders can see both the block and the line but can't control the game. The Receiver can see only the block but tells the game whether to rotate it (UW News, 1 July 2019, via ScienceDaily/NeuroscienceNews).",
+    "Receiver's screen: the falling block at the top only, with no bottom line. Press coverage describes it as the top half of the Tetris screen (paper on arXiv; Analytics India Mag / TechXplore).",
+    "The decision was binary: rotate the block 180 degrees, or leave it (paper / press summaries).",
+    "Sender interface: EEG cap plus flashing LEDs labelled Yes and No, one on each side of the screen. The Sender stares at one to move a horizontal cursor (SSVEP). Per the first researcher's quote of the paper and UW News, 17 Hz = Yes (rotate, left) and 15 Hz = No (right). Avoid the reversed mapping used by New Atlas and MIT Technology Review.",
+    "Receiver hardware: EEG cap plus a TMS coil over the occipital cortex at the lower back of the head. The first researcher's quote of the Nature methods gives a 70-mm figure-8 Magstim coil at site O1 (just left of center). UW News: the coil stimulates the part of the brain that translates signals from the eyes.",
+    "Pulse timing: two TMS pulses per round, one per Sender, delivered one after the other. Each pulse is 1 ms (arXiv). A phosphene (brief flash) means rotate; no phosphene means do not rotate (Nature). The first researcher also found an 8-second safety gap between the two pulses.",
+    "Round 2: after the Receiver's first decision, the Senders see the block, possibly now rotated, mid-way through its fall, and send new (possibly corrective) suggestions (arXiv/bioRxiv).",
+    "The Receiver answers with the same EEG/SSVEP flashing-LED interface as the Senders, so the Receiver also stares at lights to give a final answer (paper).",
+    "Session: 16 trials per triad, five triads. One Sender per session was randomly made the 'bad Sender', whose responses were flipped in 10 of 16 trials, in both rounds (UW News; Big Think).",
+    "Results chart: the triad performance figure (Figure 3 in the arXiv/bioRxiv version found) plots each triad's accuracy against a dashed chance line at 0.5. Mean accuracy is 0.8125 = 13/16 (paper). UW News phrasing: each group 'successfully cleared the line 81 percent of the time, or for 13 out of 16 trials.'",
+    "Timeline graphic: preprint on bioRxiv 26 Sept 2018 and arXiv 1809.08632 (Sept 2018); Scientific Reports 9:6115 on 16 Apr 2019; UW News release on 1 July 2019."
+   ],
+   "searches_run": [
+    "WebSearch (extended): BrainNet Jiang Stocco Rao Scientific Reports 2019 \"ten out of sixteen trials\" less reliable Sender",
+    "WebSearch (extended): BrainNet \"average accuracy\" 0.8125 triads Tetris brain-to-brain interface Receiver final decision second round",
+    "WebSearch (extended): BrainNet Receiver phosphene \"yes\" rotate \"no\" occipital cortex TMS two pulses Senders decisions",
+    "WebSearch (extended): \"play a video game using only your mind\" UW News 2019 BrainNet Receiver flash of light Senders 10 out of 16",
+    "WebSearch (extended): BrainNet paper accuracy \"first round\" \"second round\" Receiver decisions triads performance figure 4 accuracy chance 0.5",
+    "WebSearch (extended): BrainNet Receiver \"could only see the block\" Tetris \"rotate\" 180 degrees bottom line Senders entire screen",
+    "WebSearch (extended): BrainNet \"different rooms\" \"same building\" University of Washington triad \u2014 NOT RUN: shared web-search budget used up",
+    "WebSearch (extended): BrainNet TMS coil \"O1\" left occipital lobe Magstim figure-8 Receiver phosphene threshold \u2014 NOT RUN: budget used up",
+    "WebSearch (standard): BrainNet arXiv 1809.08632 preprint date experiments conducted \u2014 NOT RUN: budget used up",
+    "WebFetch https://www.nature.com/articles/s41598-019-41895-7 \u2014 failed with ENOTFOUND (www.nature.com must be allowed in the session's network settings); WebFetch not tried again"
+   ]
+  }
+ },
+ {
+  "cluster": "framing-and-hardware",
+  "research": {
+   "claims": [
+    {
+     "id": "D1",
+     "script_text": "He moved someone else\u2019s finger with his mind.",
+     "claim": "Rao's EEG-decoded motor imagery triggered a TMS pulse that made Stocco's finger/hand move, so it is fair to say he moved someone else's finger with his mind.",
+     "status": "partly",
+     "evidence": "The movement is confirmed. UW News (27 Aug 2013, washington.edu/news/2013/08/27/...) says: 'Using electrical brain recordings and a form of magnetic stimulation, Rajesh Rao sent a brain signal to Andrea Stocco on the other side of the UW campus, causing Stocco's finger to move on a keyboard.' A UW photo caption adds: 'Stocco's right index finger moved involuntarily to hit the \"fire\" button.' The mechanism is confirmed by the Brain2Brain experiment page (homes.cs.washington.edu/~rao/brain2brain/experiment.html, read through search excerpts because the host is blocked): the sender 'imagined moving the right hand', the computer recognised that imagery and turned it into a magnetic pulse to the receiver's left motor cortex, and the resulting hand movement 'typically (though not always)' hit the fire key. The researchers' own caveats: Rao 'cautioned this technology only reads certain kinds of simple brain signals, not a person's thoughts' (UW News). KurzweilAI, EarthSky and other reposts of the UW story give the line 'it doesn't give anyone the ability to control your actions against your will.' Rao called it 'basically a one-way flow of information from my brain to his' (CNN/NPR coverage). Both subjects were the researchers themselves, and the work was 'approved by the University of Washington Institutional Review Board' (experiment page). The 'mind' framing therefore simplifies the setup. The trigger was a computer detecting a change in Rao's EEG while he imagined a hand movement, not a thought being sent. UW itself used similar headline language ('controls colleague's motions').",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.kurzweilai.net/first-human-brain-to-brain-interface",
+      "https://earthsky.org/science-wire/first-human-brain-to-brain-interface/",
+      "https://www.cnn.com/2013/08/28/health/brain-interface/index.html",
+      "https://www.npr.org/sections/thetwo-way/2013/08/30/217178528/dont-call-it-a-mind-meld-human-brains-connect-via-internet"
+     ],
+     "suggested_fix": "Acceptable as a hook because the script explains the mechanism later. For tighter accuracy: \"He moved someone else\u2019s finger with his brain signals.\" Optionally add an on-screen note: \"Simple signal only - not thoughts. Both volunteers consented.\""
+    },
+    {
+     "id": "D2",
+     "script_text": "The finger on the right just fired his cannon. ... His hand jerks up, comes down on the space bar, and the cannon shoots.",
+     "claim": "In 2013 it was the receiver's right index finger specifically, and UW's own wording calls it a finger and/or a hand.",
+     "status": "confirmed",
+     "evidence": "UW News 2013 photo caption: 'Stocco's right index finger moved involuntarily to hit the \"fire\" button.' The secondary summary of the UW story says Stocco 'involuntarily moved his right index finger to push the space bar on the keyboard in front of him.' The UW lead sentence says 'causing Stocco's finger to move on a keyboard.' The UW headline says 'motions', and the release text and reposts also say hand: 'Stocco compared the feeling of his hand moving involuntarily to that of a nervous tic' (per CBS News, EarthSky and KurzweilAI reposts of UW). The Brain2Brain experiment page describes it as a hand movement: the pulse caused 'a quick upward jerk of the right hand'. The receiver kept 'one or more fingers' on the space bar, the designated 'fire' key, and the up-down movement 'typically (though not always) results in the \"fire\" key being hit.' So 'finger' and 'hand jerks up, comes down on the space bar' both match the sources. Note that the space bar is the fire key, and the pulse did not always land on it.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.cbsnews.com/news/human-brain-control-experiment-successful/",
+      "https://www.kurzweilai.net/first-human-brain-to-brain-interface"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "D3",
+     "script_text": "There\u2019s a detail I love in the lab notes. Their first session ended early because the network connection failed. Two human brains, ready to go. Bad connection.",
+     "claim": "The early end of the first session is recorded in 'lab notes'. What kind of document actually holds it?",
+     "status": "partly",
+     "evidence": "The detail is on the public project web page 'Direct Brain-to-Brain Communication in Humans: A Pilot Study' (Rao lab site, Experiment page), not in lab notebooks. The page states: 'Session 1 was terminated early due to network communication issues, which were resolved as the subjects waited for the next session.' The same page shows a timestamped excerpt labelled 'A portion of the session log', dated August 12, 2013, with Airplane and Missile trial entries. One excerpt ends 'Missiles hit: 2, Airplanes hit: 0, Attempts: 5', but the page does not clearly say which session that excerpt is from. It also notes that 'In Session 4, both the Sender and Receiver achieved close to perfect performance.' The later formal write-up is UW CSE Technical Report UW-CSE-14-07-01 (July 2014). I could not open the page directly because the host is blocked; this wording comes from search-engine excerpts. Differences from the narration: (a) it is a study web page with a session-log excerpt, not 'lab notes'; (b) the source says 'network communication issues', not that 'the network connection failed'. Neither subject was idle by choice: the issues 'were resolved as the subjects waited for the next session.'",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://homes.cs.washington.edu/~rao/brain2brain/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf"
+     ],
+     "suggested_fix": "\"There\u2019s a detail I love in the study\u2019s session notes. Their first session ended early because of network problems.\" Alternative: \"...in the team\u2019s write-up.\" Keep \"Bad connection.\""
+    },
+    {
+     "id": "D4",
+     "script_text": "(Hardware for illustration) \"under that cap\" / \"a magnetic coil sits over the part of Stocco\u2019s brain that helps move his right hand\" / \"the receiver\u2019s hand rested over a touchpad\" / \"flipped the coil over\" / \"the coil was at the back of the receiver\u2019s head\" / LEDs",
+     "claim": "Hardware details: the sender's EEG system, the TMS device and coil, coil placement and mounting, what the receiver wore, the 2014 touchpad, and the 2019 LED frequencies.",
+     "status": "partly",
+     "evidence": "2013 PILOT (Brain2Brain experiment page, via search excerpts): sender EEG was a 'USBamp EEG recording system' with gold-plated electrodes over the left hemisphere at standard 10-20 locations, sampled at 256 Hz. I found no electrode count for 2013. A Rao and Stocco Scientific American Mind essay ('When Two Brains Connect', seen only as a blog repost) says Rao wore 'a cap fitted with 32 electrodes', but it is unclear which session that refers to. TMS: 'MagStim Rapid^2 model TMS machine', single-pulse protocol. The coil was 'localized over the part of the Receiver's brain that controls the wrist and fingers'. UW News: 'placed directly over his left motor cortex, which controls hand movement.' I found no 2013 coil shape or size and no statement on whether it was hand-held or arm-mounted. Receiver: UW News says Stocco 'wore noise-canceling earbuds and wasn't looking at a computer screen.' Secondary press (Nextgov headline 'Electrodes, a Magnet, and a Swim Cap'; other reposts) describes a purple swim cap marked with the coil site. A Skype link let the two labs coordinate, but neither subject could see it. 2014 PLoS ONE (via search excerpts): 'A 90 mm circular TMS coil ... was kept in place by an articulated arm', a dual-rod arm on a BrainSight chair. The UW tech report version says 70 mm, so the two versions conflict. Stimulator: Magstim Super Rapid2. The receiver's head rested on a neck rest with padded forehead prongs; they faced a blank wall and wore noise-cancellation earphones playing music or an audiobook of their choice. The receiver's computer connected to the TMS machine through a custom serial cable. Response: an involuntary right-hand movement to strike a touchpad; I found no touchpad model. Sender: EEG motor imagery (mu band 11-13 Hz) moved a cursor vertically; I found no amplifier or cap model. Control blocks: 'the coil was turned 180 degrees on its handle's axis' at the same power output, and 'none of the participants could distinguish between the two coil positions.' I found no hotspot-finding procedure or target muscle for 2013 or 2014. 2019 BrainNet (Sci Rep / arXiv, via search excerpts): sender LEDs flashed at 17 Hz for 'Yes/rotate' and 15 Hz for 'No', placed on the left and right sides of the screen. Sender EEG: OpenBCI Cyton, 8 channels, 250 Hz, 16-bit. A BrainAmp (BrainVision, 5000 Hz, 20-bit) is also listed, but its role (likely the Receiver) is not confirmed. TMS: SuperRapid2 (Magstim) with a '70-mm Figure-8 Alpha coil', 'flush against the head with its handle parallel to the ground', delivering two 1 ms pulses 8 s apart to the occipital cortex. UW 2019 (Stocco): 'a cable that ends with a wand that looks like a tiny racket behind the Receiver's head.'",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.nextgov.com/digital-government/2013/08/scientist-used-some-electrodes-magnet-and-swim-cap-play-video-game-using-his-colleagues-brain/69566",
+      "https://verbumlogos.blogspot.com/2014/10/brains.html",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://www.researchgate.net/figure/TMS-Set-Up-During-the-experiment-the-Receiver-was-accommodated-on-a-BrainSight-chair_fig5_267809989",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://openbci.com/community/cyton-8-channel-project-brainnet-a-multi-person-brain-to-brain-interface-for-direct-collaboration-between-brains/",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm"
+     ],
+     "suggested_fix": "No narration change needed: \"a magnetic coil sits over the part of Stocco\u2019s brain that helps move his right hand\", \"flipped the coil over\" (180 degrees on the handle axis), \"Same pulse strength\" (same power output) and \"the back of the receiver\u2019s head\" all match. For the art: show the 2014 coil on an articulated arm rather than hand-held. For 2013, do not show a figure-of-eight coil unless confirmed (coil shape unverified). Show a 2019 figure-8 coil at the back of the head."
+    },
+    {
+     "id": "D5",
+     "script_text": "(Framing) In 2013, two researchers at the University of Washington split one video game between two buildings.",
+     "claim": "UW called the 2013 demonstration the 'first' human brain-to-brain interface. What did it say the system could not do?",
+     "status": "confirmed",
+     "evidence": "UW News headline (27 Aug 2013): 'Researcher controls colleague's motions in 1st human brain-to-brain interface.' Lead, as quoted verbatim in News-Medical, TechBriefs and UPI reposts: 'University of Washington researchers have performed what they believe is the first noninvasive human-to-human brain interface.' Limits, from UW News: 'Rao cautioned this technology only reads certain kinds of simple brain signals, not a person's thoughts.' KurzweilAI and EarthSky reposts of the UW text: 'it doesn't give anyone the ability to control your actions against your will.' Fox 13 Seattle paraphrases Rao: it 'doesn't currently give anyone the ability to control one's actions against one's will.' The 'cannot be used on anyone unknowingly' point appears only in secondary summaries ('no way the technology in the experiment could be used on a person without them knowing'). Rao: 'basically a one-way flow of information from my brain to his.' NPR: the researchers said Vulcan mind-meld talk is 'wildly premature' and that the work concerns sharing brain signals, not thoughts. The 2014 PLoS ONE paper describes 'the first direct brain-to-brain interface in humans'. BrainNet (2019) was described as 'the first multi-person non-invasive direct brain-to-brain interface for collaborative problem solving.' External criticism: Duke's Miguel Nicolelis called the 2013 demo 'a technical trick' that 'doesn't cross the threshold of brain-to-brain communication' because there was no feedback from the receiver.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://www.news-medical.net/news/20130828/UW-researchers-perform-first-noninvasive-human-to-human-brain-interface.aspx",
+      "https://www.kurzweilai.net/first-human-brain-to-brain-interface",
+      "https://earthsky.org/science-wire/first-human-brain-to-brain-interface/",
+      "https://www.fox13seattle.com/2013/08/27/uw-scientist-controls-colleagues-movements-in-brain-to-brain-experiment/",
+      "https://www.npr.org/sections/thetwo-way/2013/08/30/217178528/dont-call-it-a-mind-meld-human-brains-connect-via-internet",
+      "https://www.upi.com/Science_News/2013/08/28/First-human-to-human-brain-interface-achieved-by-UW-scientists/7001377687943/"
+     ],
+     "suggested_fix": "The narration does not claim \"first\". If you add it, hedge it: \"what UW called the first human brain-to-brain interface.\" A responsible on-screen caveat: \"Reads one simple signal - not thoughts. Can\u2019t override anyone\u2019s will.\""
+    },
+    {
+     "id": "D6",
+     "script_text": "In 2019, three people played a falling-block game from three separate rooms... On ten of the sixteen trials, the computer flipped one teammate\u2019s advice. Over time, receivers learned whose signal to trust. Across five teams, they cleared the line about thirteen times out of sixteen.",
+     "claim": "The UW 2019 news story explains the Senders vs Receiver viewpoints, the reversed votes, and the results.",
+     "status": "confirmed",
+     "evidence": "UW News, 1 July 2019, by Sarah McQuate: 'How you and your friends can play a video game together using only your minds' (washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind; reprinted by ScienceDaily, Neuroscience News and Futurity). Key sentences as reprinted: 'Two people, the Senders, can see both the block and the line but can't control the game. The third person, the Receiver, can see only the block but can tell the game whether to rotate the block to successfully complete the line.' 'If the answer was, \"Yes, rotate the block,\" then the Receiver would see the bright flash. If the answer was \"No,\" then the Receiver wouldn't see anything.' Stocco: 'To deliver the message to the Receiver, we used a cable that ends with a wand that looks like a tiny racket behind the Receiver's head. This coil stimulates the part of the brain that translates signals from the eyes.' The Senders could review the Receiver's decision and send corrections. The team 'purposely picked one of the Senders to be a \"bad Sender\" and flipped their responses in 10 out of the 16 trials.' 'On average, each group successfully cleared the line 81% of the time, or for 13 out of 16 trials.' Five groups each played 16 rounds. Rao: 'We wanted to know if a group of people could collaborate using only their brains.' The paper (Sci Rep 9:6115) gives 81.25% average accuracy and says Receivers 'learned which Sender was more reliable'. The three were 'in different rooms in the same building' (bioRxiv/arXiv preprint). Paper published 16 April 2019.",
+     "sources": [
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://neurosciencenews.com/brain-to-brain-video-game-14390/",
+      "https://www.futurity.org/brainnet-brain-to-brain-interface-game-2098002/",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full"
+     ],
+     "suggested_fix": "Optional precision: \"On ten of the sixteen trials, the researchers flipped one teammate\u2019s advice.\" A designated \"bad Sender\" was picked by the team; the computer only carried out the flip. 13/16 is a per-group average (81.25%), so \"about\" is right."
+    }
+   ],
+   "staging_details": [
+    "2013 receiver: Stocco wore noise-canceling earbuds and was not looking at a computer screen. His fingers rested on the keyboard space bar, the designated 'fire' key. (UW News 27 Aug 2013; Brain2Brain experiment page)",
+    "2013 receiver: the TMS pulse produced 'a quick upward jerk of the right hand' that 'typically (though not always)' hit the fire key. (Brain2Brain experiment page, homes.cs.washington.edu/~rao/brain2brain/experiment.html)",
+    "2013 receiver: secondary press describes a purple swim cap marked with the TMS stimulation site (Nextgov headline: 'A Scientist Used Some Electrodes, a Magnet, and a Swim Cap...'). The coil was over the left motor cortex. (UW News photo caption: 'wears a magnetic stimulation coil over the left motor cortex region of his brain')",
+    "2013 TMS: 'MagStim Rapid^2' stimulator with a single-pulse protocol. The coil was localized over the area controlling 'the wrist and fingers'. Coil shape and mounting were not found. (Brain2Brain experiment page)",
+    "2013 sender: Rao wore an EEG cap; the system was a g.tec 'USBamp' with gold-plated electrodes over the left hemisphere at 10-20 sites, 256 Hz. Rao and Stocco's Scientific American Mind essay mentions a 'cap fitted with 32 electrodes'. (Experiment page; verbumlogos.blogspot.com repost of SciAm Mind 'When Two Brains Connect')",
+    "2013: the labs were in two buildings across campus. A Skype connection let the labs coordinate, but neither subject could see the Skype screens. Experiment date: August 12, 2013. (Experiment page; CBC)",
+    "2013 game: a city to defend, with 'Airplane' (supply plane, don't fire) and 'Missile' (pirate rocket, fire) trials. The session log excerpt is timestamped, e.g. 'Missiles hit: 2, Airplanes hit: 0, Attempts: 5'. (Experiment page session-log excerpt)",
+    "2014 receiver: seated in a BrainSight TMS chair with a neck rest and an adjustable arm with padded forehead prongs. The 90 mm circular coil (70 mm in the UW tech report version) was held by a dual-rod articulated arm, not by hand. (PLoS ONE 2014 Fig. 'TMS Set-Up' caption, via ResearchGate figure page)",
+    "2014 receiver: faced a blank wall and wore noise-cancellation earphones playing music or an audiobook of their choice. Their right hand struck a touchpad when pulsed. (PLoS ONE 2014, via search excerpts)",
+    "2014 control: the coil was turned 180 degrees on its handle's axis, at the same power output; none of the participants could distinguish the two positions. (PLoS ONE 2014)",
+    "2014 sender: the sender saw a cursor moving vertically, controlled by imagined right-hand movement (mu band 11-13 Hz suppression). (PLoS ONE 2014)",
+    "2019 Senders: two LEDs on the left and right sides of the screen, flashing at 17 Hz ('Yes'/rotate) and 15 Hz ('No'). A cursor moved toward whichever LED the brain signal followed. (BrainNet, Sci Rep 2019 / arXiv 1809.08632)",
+    "2019 Sender EEG: OpenBCI Cyton, 8-channel, 250 Hz. (BrainNet paper text via search; OpenBCI community page)",
+    "2019 Receiver TMS: Magstim SuperRapid2 with a 70-mm Figure-8 Alpha coil, flush against the back of the head with its handle parallel to the ground. Two 1 ms pulses 8 s apart: a phosphene (flash) meant 'yes', no flash meant 'no'. (BrainNet arXiv/Sci Rep)",
+    "2019 UW quote for visuals: Stocco said 'a cable that ends with a wand that looks like a tiny racket behind the Receiver's head.' (UW News 1 July 2019, reprinted by ScienceDaily/Futurity)",
+    "2019: the three participants were in different rooms in the same UW building. (BrainNet preprint, bioRxiv)"
+   ],
+   "searches_run": [
+    "UW News 2013 \"Researcher controls colleague's motions\" brain-to-brain interface Rao Stocco nervous tic",
+    "Rao Stocco 2013 \"Direct Brain-to-Brain Communication in Humans: A Pilot Study\" EEG TMS Magstim coil index finger",
+    "\"A Direct Brain-to-Brain Interface in Humans\" PLoS ONE 2014 Rao Stocco BioSemi electrodes Magstim touchpad sham coil flipped",
+    "BrainNet multi-person brain-to-brain interface Jiang Stocco Rao 2019 Scientific Reports LED 17 Hz 15 Hz Emotiv phosphene",
+    "Brain2Brain Study experiment page Rao Sender Receiver EEG cap TMS coil hotspot left motor cortex right index finger keyboard",
+    "Rao Stocco 2013 brain-to-brain pilot first session network connection failed trial log technical report UW CSE",
+    "UW News July 2019 BrainNet play a video game together using only your minds Tetris senders receiver unreliable sender flipped decisions",
+    "\"A Direct Brain-to-Brain Interface in Humans\" methods TMS Magstim figure-of-eight coil touchpad receiver earplugs sham coil rotated",
+    "\"TMS Set-Up. During the experiment, the Receiver was accommodated on a BrainSight chair\" coil",
+    "Rao 2014 brain-to-brain PLoS ONE control condition coil flipped OR rotated receiver could not distinguish",
+    "brain2brain experiment.html Rao \"wrist and fingers\" EEG \"Session 1\" \"terminated early\" network coil placement electrodes",
+    "BrainNet Jiang 2019 methods LED Hz flashing Yes No senders SSVEP OpenBCI receiver phosphene occipital TMS MagStim coil",
+    "washington.edu news 2013/08/27 Rao cannot be used against will simple brain signals not your thoughts Stocco nervous tic",
+    "washington.edu news 2019/07/01 BrainNet Stocco Rao Receiver Senders 16 rounds 13 out of 16 bad sender trust",
+    "2014 Rao Stocco brain-to-brain PLoS ONE sender EEG BioSemi OR g.USBamp electrodes receiver touchpad swim cap motor hotspot",
+    "BrainNet 2019 EEG OpenBCI Cyton senders receiver TMS Super Rapid coil figure-eight 70 mm occipital phosphene threshold",
+    "Stocco brain-to-brain 2013 \"nervous tic\" involuntary finger \"space bar\"",
+    "Theodros Haile BrainNet receiver flash of light rotate block Wessel Cassis UW News Sarah McQuate 2019",
+    "Andrea Stocco 2013 brain-to-brain photo swim cap TMS coil Rao EEG cap photo",
+    "\"Direct Brain-to-Brain Interface in Humans\" 2014 sender EEG electrodes 10-20 amplifier Mu beta motor imagery cursor receiver coil hotspot",
+    "\"How you and your friends can play a video game together using only your minds\" Senders Receiver flipped reliable sciencedaily",
+    "brain2brain pilot 2013 Rao experiment USBamp electrodes MagStim Rapid coil single-pulse receiver space bar fire key",
+    "BrainNet Jiang 2019 methods EEG OpenBCI g.tec Neuroscan electrodes O1 O2 Oz Receiver TMS MagStim Super Rapid2 coil occipital phosphene threshold",
+    "Scientific American Rao \"tight-fitting cap studded with 32 electrodes\" brain-to-brain",
+    "\"compared the feeling of his hand moving involuntarily to that of a nervous tic\"",
+    "\"doesn't give anyone the ability to control your actions against your will\" Rao highly specialized equipment ideal conditions",
+    "\"University of Washington researchers have performed what they believe is the first noninvasive human-to-human brain interface\"",
+    "Rao brain2brain 2013 pilot experiment page EEG electrodes left hemisphere 256 Hz g.tec USBamp number of electrodes",
+    "Stocco \"nervous tic\" Rao brain interface 2013 University of Washington",
+    "Rao 2013 \"only reads certain kinds of simple brain signals, not a person's thoughts\"",
+    "brain2brain experiment page \"Session 1 was terminated early\" network Rao Stocco August 12 2013 sessions trials hits",
+    "BrainNet arxiv 1809.08632 methods Receiver EEG Senders TMS coil figure-of-eight circular Magstim BrainSight occipital 70mm",
+    "openbci.com community \"Cyton 8-channel Project\" BrainNet",
+    "BrainNet 2019 Receiver TMS Magstim coil occipital BrainSight phosphene OpenBCI Ultracortex gold cup electrodes O1 O2",
+    "Rao Stocco 2014 brain-to-brain PLoS ONE receiver right hand touchpad wrist relaxed Super Rapid 90 mm coil articulated arm blank wall",
+    "2014 brain-to-brain interface Rao sender EEG BioSemi OR g.USBamp OR Neuroscan cap channels sender motor imagery touchpad",
+    "BrainNet \"bad Sender\" \"good Sender\" receiver learned reliability flipped \"10 out of 16\" trials Jiang Stocco Rao",
+    "UW News 2019 BrainNet Stocco quote \"We wanted to know if\" trust one of the Senders unreliable Receiver Rao social network of brains",
+    "BrainNet Tetris receiver TMS back of the head occipital flash Senders LEDs 17 15 hertz electrodes cap photo UW news",
+    "Rao Stocco 2013 TMS coil figure-eight OR circular Stocco left motor cortex coil held stand demonstration video",
+    "\"a cable that ends with a wand that looks like a tiny racket\" Stocco BrainNet",
+    "\"control your actions against your will\" Rao brain-to-brain 2013 UW",
+    "\"How you and your friends can play a video game together\" BrainNet one Sender flipped noise Receiver trust July 1 2019 McQuate",
+    "Stocco quote BrainNet \"the part of the brain that translates signals from the eyes\" wand Receiver's head",
+    "UW news BrainNet 2019 make one Sender wrong Receiver which Sender 13 out of 16 sciencedaily neurosciencenews text",
+    "BrainNet Jiang 2019 Super Rapid OR Magstim TMS coil Receiver Brainsight occipital EEG OpenBCI Cyton gold electrodes Oz 250 Hz methods",
+    "Rao Stocco PLoS ONE 2014 EEG sender electrodes g.tec OR BrainAmp OR Neuroscan OR Biosemi C3 motor imagery 11-13 Hz receiver motor hotspot FDI",
+    "BrainNet arxiv \"EEG signals were recorded\" Senders OpenBCI Cyton BrainAmp Receiver 5000 Hz DC amplifier electrodes occipital",
+    "2013 Rao Stocco brain-to-brain pilot TMS coil hand-held OR held in place OR mechanical arm Stocco cap marked stimulation site swim cap nextgov",
+    "WebFetch attempt (single allowed): https://pmc.ncbi.nlm.nih.gov/articles/PMC4221017/ failed with ENOTFOUND. The session's network settings would need to allow pmc.ncbi.nlm.nih.gov; no further WebFetch was attempted."
+   ]
+  },
+  "verified": {
+   "claims": [
+    {
+     "id": "D1",
+     "script_text": "He moved someone else\u2019s finger with his mind.",
+     "claim": "Rao's EEG-decoded motor imagery set off a TMS pulse that moved Stocco's finger, so it is fair to say he moved someone else's finger with his mind.",
+     "status": "partly",
+     "evidence": "SKEPTIC NOTE: I could not run any fresh search. This turn's shared limit of 200 WebSearch calls was already used up, and my one allowed WebFetch (www.nature.com) failed with ENOTFOUND. This verdict therefore audits the first researcher's quoted evidence; it is not an independent re-check. The first pass quotes primary sources. UW News (27 Aug 2013): 'Rao sent a brain signal to Andrea Stocco on the other side of the UW campus, causing Stocco's finger to move on a keyboard.' UW photo caption: 'Stocco's right index finger moved involuntarily to hit the \"fire\" button.' So the finger movement is supported. 'With his mind' is a simplification. The trigger was a computer spotting an EEG change while Rao imagined moving his right hand (Brain2Brain experiment page, via search excerpt). Rao 'cautioned this technology only reads certain kinds of simple brain signals, not a person's thoughts' (UW News). The experiment page also says the movement hit the key 'typically (though not always)'. I found nothing that contradicts the movement itself. 'Partly' stands because of the 'mind' framing, not because of any factual error about the event.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.npr.org/sections/thetwo-way/2013/08/30/217178528/dont-call-it-a-mind-meld-human-brains-connect-via-internet"
+     ],
+     "suggested_fix": "Acceptable as a hook because the mechanism is explained within 30 seconds. If tighter wording is wanted: \"He moved someone else\u2019s finger by imagining moving his own.\""
+    },
+    {
+     "id": "D2",
+     "script_text": "The finger on the right just fired his cannon. ... His hand jerks up, comes down on the space bar, and the cannon shoots.",
+     "claim": "The 2013 receiver's right index finger or hand moved up, then down onto the space bar (the fire key), firing the cannon.",
+     "status": "confirmed",
+     "evidence": "No fresh search was possible (budget used up; nature.com fetch failed with ENOTFOUND). I checked the first pass's quotes for consistency and found no conflict in direction or body part. The UW News 2013 photo caption (primary) says 'Stocco's right index finger moved involuntarily to hit the \"fire\" button.' The Brain2Brain experiment page (primary, quoted through search excerpts) says the pulse caused 'a quick upward jerk of the right hand', with the fingers resting on the space bar as the designated 'fire' key. It adds that the up-down movement 'typically (though not always) results in the \"fire\" key being hit.' The space-bar detail also appears in the UW-story summary ('involuntarily moved his right index finger to push the space bar'). 'Jerks up, comes down on the space bar' matches 'upward jerk' followed by a downward key hit. Caveat: a hit was not guaranteed on every pulse. The narration shows one successful rocket hit, which is consistent with the sources.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.cbsnews.com/news/human-brain-control-experiment-successful/"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "D3",
+     "script_text": "There\u2019s a detail I love in the lab notes. Their first session ended early because the network connection failed. Two human brains, ready to go. Bad connection.",
+     "claim": "The first session of the 2013 pilot ended early because of a network failure, as recorded in 'lab notes'.",
+     "status": "partly",
+     "evidence": "No fresh search was possible, and homes.cs.washington.edu is blocked. The first pass's excerpt of the Brain2Brain pilot page reads: 'Session 1 was terminated early due to network communication issues, which were resolved as the subjects waited for the next session.' The researcher's reading looks correct, and I see two small mismatches. (1) The sentence is in the narrative text of a public study web page ('Direct Brain-to-Brain Communication in Humans: A Pilot Study'), not in lab notes. The page also shows a separate auto-generated 'portion of the session log' (12 Aug 2013), but the early-termination sentence is not part of that log. (2) 'Network communication issues' is softer than 'the network connection failed'. The source does not say the connection dropped completely. 'Their first session' = Session 1 is correct. 'Two human brains, ready to go' fits 'as the subjects waited for the next session.' The page also says that 'In Session 4, both the Sender and Receiver achieved close to perfect performance.'",
+     "sources": [
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf"
+     ],
+     "suggested_fix": "\"There\u2019s a detail I love in the study\u2019s notes. Their first session ended early because of network problems.\" Keep \"Two human brains, ready to go. Bad connection.\""
+    },
+    {
+     "id": "D4",
+     "script_text": "(Hardware for illustration) \"under that cap\" / \"a magnetic coil sits over the part of Stocco\u2019s brain that helps move his right hand\" / \"the receiver\u2019s hand rested over a touchpad\" / \"flipped the coil over\" / \"the coil was at the back of the receiver\u2019s head\" / LEDs",
+     "claim": "Hardware details: sender EEG cap, TMS coil placement and mounting, the 2014 touchpad and flipped-coil control, the 2019 occipital coil and LEDs.",
+     "status": "partly",
+     "evidence": "No fresh search was possible (budget used up; nature.com ENOTFOUND). From the first pass's quotes, the narration's hardware lines are supported. 'Over his left motor cortex, which controls hand movement' (UW 2013) supports the coil line. In 2014 'the coil was turned 180 degrees on its handle's axis' at the same power output, and 'none of the participants could distinguish between the two coil positions' (PLoS ONE 2014 excerpt). This supports 'flipped the coil over', 'Same pulse strength' and 'couldn't tell which way the coil was facing'. In 2019 a coil sat 'behind the Receiver's head' and 'stimulates the part of the brain that translates signals from the eyes' (Stocco, UW 2019). 'Partly' stands because several illustration specifics are still unresolved. (a) 2014 coil size conflict: the PLoS ONE excerpt gives a '90 mm circular' coil and the UW tech report gives 70 mm. I could not settle this, so don't draw a size-specific coil. (b) The 2013 coil's shape and mounting (hand-held or arm) were not found, so avoid a specific shape. (c) The 2019 sender EEG is given as 'OpenBCI Cyton, 8 channels, 250 Hz, 16-bit'. The 16-bit figure was not re-verified and is suspect for that board, so leave bit depth out of any on-screen text. (d) 2019 'No' votes: the first pass describes two 1 ms pulses 8 s apart, one per Sender. It is unconfirmed whether a 'No' vote meant no pulse or a weaker pulse below the flash threshold. 'No flash meant leave it' is safe either way. For staging, don't assume a 'No' was silent until this is checked against the paper's methods. (e) The 2014 touchpad model was not found. 'Rested over a touchpad' is consistent with the receiver's right hand striking a touchpad when pulsed.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0111332",
+      "https://homes.cs.washington.edu/~rao/brain2brain/UW-CSE-14-07-01.PDF.pdf",
+      "https://www.researchgate.net/figure/TMS-Set-Up-During-the-experiment-the-Receiver-was-accommodated-on-a-BrainSight-chair_fig5_267809989",
+      "https://arxiv.org/pdf/1809.08632",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm"
+     ],
+     "suggested_fix": "No narration change needed. For the art: show a generic coil in 2013. Show the 2014 coil held by an articulated arm, with no size label. Show the 2019 coil flat against the back of the head. Don't show a 'No' vote as a missing pulse or click until the 2019 methods are checked."
+    },
+    {
+     "id": "D5",
+     "script_text": "(Framing) In 2013, two researchers at the University of Washington split one video game between two buildings.",
+     "claim": "In 2013 two UW researchers in separate buildings across campus shared one game. UW framed it as the first human brain-to-brain interface and said what the system could not do.",
+     "status": "confirmed",
+     "evidence": "No fresh search was possible. The first pass's primary quotes support the framing. UW News headline (27 Aug 2013): 'Researcher controls colleague's motions in 1st human brain-to-brain interface.' The lead, as reposted: 'what they believe is the first noninvasive human-to-human brain interface.' Limits: 'only reads certain kinds of simple brain signals, not a person's thoughts' (UW). The demonstration date of 12 Aug 2013 (experiment page session log) supports 'In 2013'. 'Two buildings' rests on UW's 'on the other side of the UW campus' plus the first pass's staging note that the labs were in two buildings (experiment page; CBC). No quote was given for the literal phrase 'two buildings', but 'other side of campus' strongly implies it and nothing contradicts it. The narration does not use the word 'first', so no hedge is required. The Nicolelis criticism ('a technical trick') is context, not a contradiction.",
+     "sources": [
+      "https://www.washington.edu/news/2013/08/27/researcher-controls-colleagues-motions-in-1st-human-brain-to-brain-interface/",
+      "https://homes.cs.washington.edu/~rao/brain2brain/experiment.html",
+      "https://www.npr.org/sections/thetwo-way/2013/08/30/217178528/dont-call-it-a-mind-meld-human-brains-connect-via-internet"
+     ],
+     "suggested_fix": ""
+    },
+    {
+     "id": "D6",
+     "script_text": "In 2019, three people played a falling-block game from three separate rooms... On ten of the sixteen trials, the computer flipped one teammate\u2019s advice. Over time, receivers learned whose signal to trust. Across five teams, they cleared the line about thirteen times out of sixteen.",
+     "claim": "BrainNet (2019): Senders vs Receiver viewpoints, one Sender's votes flipped in 10 of 16 trials, receivers learned whom to trust, five teams averaged 13/16 (81.25%).",
+     "status": "partly",
+     "evidence": "No fresh search was possible (budget used up; nature.com ENOTFOUND). The numbers in the first pass's UW 2019 quotes hold up. The team 'purposely picked one of the Senders to be a \"bad Sender\" and flipped their responses in 10 out of the 16 trials.' 'On average, each group successfully cleared the line 81% of the time, or for 13 out of 16 trials.' Five groups each played 16 rounds. The paper gives a mean of 81.25%, and 0.8125 x 16 = 13 exactly, so 'about thirteen' is right. Receivers 'learned which Sender was more reliable' (Sci Rep). The flash meant yes: 'If the answer was \"Yes, rotate the block,\" then the Receiver would see the bright flash.' DOWNGRADE REASON, the date: the first pass's own sources show the game was played before 2019. The arXiv preprint is numbered 1809.08632, and arXiv numbers start with year and month, so it was posted in September 2018. The bioRxiv preprint 10.1101/425066 dates from the same period. Only the publication dates are 2019 (Sci Rep, 16 April 2019; UW News, 1 July 2019). So 'In 2019, three people played' misdates the sessions. 'Three separate rooms' matches the preprint's 'different rooms in the same building'. 'The computer flipped' fits the setup: the flip had to happen in software between the Sender's decoded vote and the TMS. However, the UW quote says only 'we ... flipped', which is also how the first pass worded it. Not checked: whether the 10/16 flips applied to the first round, the second round, or both. The narration does not depend on this.",
+     "sources": [
+      "https://www.washington.edu/news/2019/07/01/play-a-video-game-using-only-your-mind",
+      "https://www.sciencedaily.com/releases/2019/07/190701163827.htm",
+      "https://www.nature.com/articles/s41598-019-41895-7",
+      "https://arxiv.org/abs/1809.08632",
+      "https://www.biorxiv.org/content/10.1101/425066v1.full"
+     ],
+     "suggested_fix": "\"In a 2019 study, three people played a falling-block game from three separate rooms.\" The rest can stay. The closing line \"Six years later\" works if it counts from the 2013 demo to the 2019 paper."
+    }
+   ],
+   "staging_details": [
+    "2013 receiver: Stocco wore noise-canceling earbuds and was not looking at a computer screen. His right index finger moved involuntarily to hit the 'fire' key (the space bar). (UW News, 27 Aug 2013, text and photo caption)",
+    "2013 receiver motion: 'a quick upward jerk of the right hand'. The up-down movement 'typically (though not always)' hit the fire key. (Brain2Brain experiment page, via search excerpt)",
+    "2013 coil placement: over Stocco's left motor cortex, 'which controls hand movement' (UW News). The experiment page says it was over the area controlling 'the wrist and fingers'. Stimulator: MagStim Rapid^2, single pulse. Coil shape and mounting were NOT found, so draw a generic coil.",
+    "2013 receiver cap: secondary press (Nextgov headline) mentions a swim cap marking the coil site. Color and markings are unverified, so treat them as optional.",
+    "2013 sender: Rao wore an EEG cap (g.tec USBamp, gold electrodes over the left hemisphere, 256 Hz, per the experiment page excerpt). A Rao/Stocco SciAm Mind essay (seen only as a blog repost) mentions a 32-electrode cap, but it is unclear which session that refers to.",
+    "2013 logistics: the labs were on opposite sides of the UW campus (UW News). Pilot sessions ran on 12 Aug 2013. Session 1 was 'terminated early due to network communication issues, which were resolved as the subjects waited for the next session' (experiment page). In Session 4 both subjects reached 'close to perfect performance'.",
+    "2013 game: defend a city. A supply 'Airplane' should not be fired on; a pirate 'Missile' should be shot down. A session-log excerpt reads 'Missiles hit: 2, Airplanes hit: 0, Attempts: 5'. (Experiment page)",
+    "2014 receiver: seated in a BrainSight chair with a neck rest and padded forehead prongs. The coil was held by an articulated arm, not by hand. Coil size conflicts between versions (PLoS ONE '90 mm circular' vs the UW tech report's 70 mm), so don't label the size. (PLoS ONE 2014 figure caption via ResearchGate; UW-CSE-14-07-01)",
+    "2014 receiver: faced a blank wall and wore noise-cancellation earphones playing music or an audiobook. The right hand struck a touchpad when pulsed. (PLoS ONE 2014, via search excerpt)",
+    "2014 control: the coil was 'turned 180 degrees on its handle's axis' at the same power output, and 'none of the participants could distinguish between the two coil positions'. A pulse was still delivered, so keep the same click and sound level. (PLoS ONE 2014)",
+    "2014 sender: imagined right-hand movement (mu band 11-13 Hz) moved a cursor vertically on screen. (PLoS ONE 2014, via search excerpt)",
+    "2019 Senders: LEDs on the left and right of the screen flashing at 17 Hz ('Yes'/rotate) and 15 Hz ('No'). Sender EEG: OpenBCI Cyton, 8 channels, 250 Hz. Bit depth unverified, so omit it. (BrainNet arXiv 1809.08632 / Sci Rep 2019; OpenBCI community page)",
+    "2019 Receiver: Magstim SuperRapid2 with a 70-mm figure-8 coil, flush against the back of the head, handle parallel to the ground (BrainNet paper, via search excerpt). Stocco: 'a cable that ends with a wand that looks like a tiny racket behind the Receiver's head' (UW News, 1 Jul 2019).",
+    "2019 flash meaning: a flash (phosphene) = 'Yes, rotate'; nothing seen = 'No'. (UW News 2019) Unverified: whether a 'No' meant no pulse or a weaker pulse below the flash threshold. Don't stage a 'No' as silent until this is checked.",
+    "2019 setting: the three participants were in different rooms in the same building (BrainNet preprint). Five triads, 16 trials each. One designated 'bad Sender' had votes flipped in 10 of 16 trials. Mean accuracy 81.25% (13/16). (UW News 2019; Sci Rep 2019)",
+    "2019 timeline: the arXiv preprint 1809.08632 was posted in September 2018, so the sessions were run before 2019. The Sci Rep paper appeared 16 Apr 2019 and UW News on 1 Jul 2019."
+   ],
+   "searches_run": [
+    "FAILED (shared 200-per-turn WebSearch limit already used up, not performed): brain2brain experiment Rao \"terminated early\" network session receiver space bar \"upward\" hand",
+    "FAILED (limit used up, not performed): UW News August 27 2013 Rao Stocco brain-to-brain \"nervous tic\" \"right index finger\" across campus building",
+    "FAILED (limit used up, not performed): BrainNet Jiang Stocco Rao 2019 Scientific Reports \"81.25%\" \"10 out of\" trials flipped Sender receiver TMS figure-eight coil occipital",
+    "WebFetch (single allowed attempt): https://www.nature.com/articles/s41598-019-41895-7 failed with ENOTFOUND. www.nature.com would need to be allowed in the session's network settings. No further WebFetch was attempted.",
+    "Local check: searched the repo for source notes (/home/user/Youtube-videos/Future_Got_Weird/he-moved-another-mans-finger-with-his-mind/production/ holds only EPISODE_BRIEF.md and NARRATION_PROPOSED_V1.txt; no SOURCE_NOTES.md or source text yet).",
+    "Because no fresh searches could run, these verdicts audit the first researcher's quoted evidence for internal consistency, misreadings and date logic. More searches can continue in a follow-up message, or after raising CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION."
+   ]
+  }
+ }
+]
