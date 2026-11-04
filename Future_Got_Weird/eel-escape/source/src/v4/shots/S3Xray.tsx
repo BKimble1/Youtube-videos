@@ -23,15 +23,13 @@ import {FishBody, FishFar, FishLook, GillGap, opercGeom, Operculum, Pectoral} fr
 import {XRayBack, XRayFront} from '../../art/xray';
 import {eelSilhouette} from '../../art/eelArt';
 import {EEL_L, EEL_R_MAX, EYE_SCALE, N, RADII} from '../eelV4';
-import {CARRY0, CARRY1, CARRY_PX, carryTail, KeepOut} from '../timing';
+import {CARRY0, CARRY_PX, carryTail, KeepOut} from '../timing';
 
 // ---------------------------------------------------------------- beats
 /** the snout crosses the field's right edge: the beam catches (flash, edge flare, lamp). The sound goes here. */
-export const XRAY_CHANGE_T = 4.0;
-/** the whole fish (caudal tip included) is inside the field */
-export const XRAY_ALL_IN_T = 4.86;
+export const XRAY_CHANGE_T = 3.96;
 /** the full skeletal profile holds (on "X-ray", 4.94) until the push toward the stomach begins */
-export const XRAY_PUSH0 = 5.12;
+export const XRAY_PUSH0 = 5.06;
 /** the push ends exactly on the carried tail (px per unit = CARRY_PX) */
 export const XRAY_PUSH1 = CARRY0;
 
@@ -57,38 +55,44 @@ const EEL_CORE = lit(C.xrayEdge, 0.35);
 const EEL_BONE = lit(C.xrayBone, 0.4);
 
 // ---------------------------------------------------------------- the set (tank units)
-const FIELD = {x0: -58, x1: 58, y0: -58, y1: 27};
-const TANK = {x0: -170, x1: 260, rim: -52, water: -45, floor: 16.5, bottom: 22, base: 26};
-const EMIT = {x0: -64, x1: 64, y0: -84, y1: -58};
-const DETECT = {x0: -64, x1: 64, y0: 27, y1: 38};
-const BENCH_Y = 38;
+const FIELD = {x0: -58, x1: 58, y0: -57, y1: 27};
+const TANK = {x0: -170, x1: 260, rim: -51, water: -45, floor: 16.5, bottom: 22, base: 26};
+const EMIT = {x0: -64, x1: 64, y0: -71, y1: -57};
+const DETECT = {x0: -64, x1: 64, y0: 27, y1: 35};
+const BENCH_Y = 35;
 
 // ---------------------------------------------------------------- the fish's glide
-/** the fish's frame origin in tank units: it glides in from the right at ~130 u/s and coasts to rest at x = 0 */
-const V_GLIDE = 130;
+/** the fish's frame origin in tank units: it glides in from the right at V_GLIDE u/s, its snout (the lower jaw's
+ *  tip) reaching the field's right edge exactly at XRAY_CHANGE_T, then decelerates evenly to rest at x = 0 */
+const V_GLIDE = 122;
 const GLIDE_STOP = 5.1;
-const DECEL0 = 4.5;
-const SNOUT_X = -51.2;
+const SNOUT_X = -51.0;
+const X_AT_CHANGE = 58 - SNOUT_X;
+const DECEL0 = (2 * X_AT_CHANGE) / V_GLIDE + 2 * XRAY_CHANGE_T - GLIDE_STOP;
 export const fishX = (t: number) => {
-  // constant speed until DECEL0, then a linear deceleration to rest at GLIDE_STOP; position anchored so the snout
-  // reaches the field edge at XRAY_CHANGE_T
-  const dDec = (V_GLIDE * (GLIDE_STOP - DECEL0)) / 2;
-  const xRest = 0;
-  const xDec0 = xRest + dDec;
-  if (t >= GLIDE_STOP) return xRest;
+  if (t >= GLIDE_STOP) return 0;
   if (t >= DECEL0) {
     const u = GLIDE_STOP - t;
-    return xRest + (V_GLIDE * u * u) / (2 * (GLIDE_STOP - DECEL0));
+    return (V_GLIDE * u * u) / (2 * (GLIDE_STOP - DECEL0));
   }
-  return xDec0 + V_GLIDE * (DECEL0 - t);
+  return X_AT_CHANGE - V_GLIDE * (t - XRAY_CHANGE_T);
 };
-// the snout crossing time follows from the glide (checked in the report); keep XRAY_CHANGE_T in step with it
+/** the caudal fin's tip in fish units (its sway reaches ≈ 50.5) */
+const CAUDAL_TIP_X = 50.5;
+/** the whole fish (caudal tip included) is inside the field: before "X-ray" (4.94) */
+export const XRAY_ALL_IN_T = (() => {
+  const xIn = 58 - CAUDAL_TIP_X; // the fish's origin when its caudal tip reaches the edge (in the deceleration)
+  return GLIDE_STOP - Math.sqrt((2 * (GLIDE_STOP - DECEL0) * xIn) / V_GLIDE);
+})();
 const fishY = (t: number) => 0.25 * Math.sin(2 * Math.PI * 0.45 * (t - 3.6)) * (1 - ss(t, 4.6, 5.1));
 
+/** the integral of the smoothstep from 0 to x (x in units of the step's length) */
+const ssInt = (x: number) => (x <= 0 ? 0 : x >= 1 ? 0.5 + (x - 1) : x ** 3 - x ** 4 / 2);
 const lookFor = (t: number): FishLook => ({
   t,
   gill: 0.18 + 0.1 * (0.5 + 0.5 * Math.sin(2 * Math.PI * 0.9 * (t - 3.5))),
-  finPhase: 2 * Math.PI * (1.6 * (t - 3.0) - 0.7 * ss(t, 4.6, 5.2)),
+  // the fins beat at 1.6 Hz while gliding, easing to 0.6 Hz as it coasts to rest (the phase never runs backward)
+  finPhase: 2 * Math.PI * (1.6 * (t - 3.0) - 1.0 * 0.6 * ssInt((t - 4.6) / 0.6)),
   startle: 0,
   prop: 0,
   look: 0,
@@ -99,29 +103,29 @@ const I0 = Math.round(N * (1 - 12 / EEL_L)); // = carryTail's i0
 const SEG_B = EEL_L / N; // body sample spacing
 const SEG_T = 12 / (N - I0); // the carried tail's sample spacing
 /** the tail's root (sample I0) in fish units, fixed in the stomach */
-const A_W: P = pt(-0.6, 7.0);
+const A_W: P = pt(-2.4, 7.25);
 /** the body route from the tail's root back toward the head (control points, fish units): down-right along the
  *  stomach floor, up round its blind end, forward along its roof, a hairpin down, and back toward the blind end,
  *  so the head lies deepest with the eye toward the fish's tail */
 const ROUTE_CP: P[] = [
   A_W,
-  pt(1.6, 8.45),
-  pt(4.0, 9.0),
-  pt(6.2, 8.15),
-  pt(7.7, 6.35),
-  pt(8.15, 4.35),
-  pt(7.55, 2.35),
-  pt(5.7, 0.75),
-  pt(2.8, -0.35),
-  pt(-0.6, -0.75),
-  pt(-3.3, -0.2),
-  pt(-4.4, 1.5),
-  pt(-3.1, 3.0),
-  pt(-0.4, 3.45),
-  pt(2.4, 4.1),
-  pt(4.6, 4.9),
-  pt(6.6, 5.0),
-  pt(8.6, 4.9),
+  pt(0.4, 8.95),
+  pt(3.6, 9.3),
+  pt(6.25, 8.2),
+  pt(7.75, 6.3),
+  pt(8.15, 4.3),
+  pt(7.5, 2.3),
+  pt(5.6, 0.7),
+  pt(2.6, -0.4),
+  pt(-1.0, -0.8),
+  pt(-3.6, -0.4),
+  pt(-5.0, 1.3),
+  pt(-3.8, 3.1),
+  pt(-1.0, 3.7),
+  pt(1.0, 4.35),
+  pt(3.4, 4.85),
+  pt(5.4, 5.0),
+  pt(7.4, 5.0),
 ];
 /** Catmull-Rom sampled densely, with an arc-length table */
 const dense = (cp: P[], per = 16) => {
@@ -176,22 +180,23 @@ const carryHeadings = (t: number): number[] => {
   const a = hd(CLAMP0), b = hd(CLAMP0 + 0.02);
   return a.map((v, k) => v + (wrapA(b[k] - v) / 0.02) * (t - CLAMP0));
 };
-/** the carried tail's root on screen, extrapolated (carryTail clamps its clock before CARRY0 - 0.2) */
+/** the carried tail's root on screen: carryTail's own for t >= CARRY0 - 0.2, extrapolated linearly before (where
+ *  carryTail clamps its clock), so the push never aims at a frozen point */
 const carryRoot = (t: number): P => {
-  const a = carryTail(CLAMP0).pts[0], b = carryTail(CLAMP0 + 0.1).pts[0];
-  const tc = Math.min(t, CARRY1 + 0.2);
-  return pt(a.x + ((b.x - a.x) / 0.1) * (tc - CLAMP0), a.y + ((b.y - a.y) / 0.1) * (tc - CLAMP0));
+  if (t >= CLAMP0) return carryTail(t).pts[0];
+  const a = carryTail(CLAMP0).pts[0], b = carryTail(CLAMP0 + 0.02).pts[0];
+  return pt(a.x + ((b.x - a.x) / 0.02) * (t - CLAMP0), a.y + ((b.y - a.y) / 0.02) * (t - CLAMP0));
 };
 
 /** the tail's own stirring before the hand-off: a slow sweep and a wave running to the tip (headings, rad) */
 const ownHeadings = (t: number): number[] => {
   const n = N - I0;
   const out: number[] = [];
-  const sweep = 0.2 * Math.sin(2 * Math.PI * 0.75 * (t - 3.9)) + 0.08 * noise1(t * 1.3, 4);
+  const sweep = 0.27 * Math.sin(2 * Math.PI * 0.8 * (t - 3.9)) + 0.08 * noise1(t * 1.3, 4);
   for (let k = 0; k < n; k++) {
     const a = (k + 0.5) * SEG_T;
     const f = a / 12;
-    out.push((-150 * Math.PI) / 180 - 0.04 * a + sweep * Math.pow(f, 1.2) + 0.3 * Math.sin(2 * Math.PI * (1.5 * t - a / 8.5)) * f);
+    out.push((-150 * Math.PI) / 180 - 0.04 * a + sweep * Math.pow(f, 1.2) + 0.36 * Math.sin(2 * Math.PI * (1.6 * t - a / 8.5)) * f);
   }
   return out;
 };
@@ -241,14 +246,21 @@ export const eelPts = (t: number): P[] => {
 // ---------------------------------------------------------------- the camera
 type Cam = {x: number; y: number; s: number};
 const LOGS = (a: number, b: number, u: number) => Math.exp(lerp(Math.log(a), Math.log(b), u));
-/** the establishing → full-profile camera (tank units) */
+/** the establishing → full-profile camera (tank units): a wide view of the rig with the fish entering at the right,
+ *  then a pan and push with the fish until the field fills the width (the full skeletal profile) */
+const CAMB0 = 3.6, CAMB1 = 4.98;
 const camBase = (t: number): Cam => {
-  const u = ss5(t, 3.78, 4.98);
-  const drift = ss(t, 4.9, 5.7);
+  // x: a Hermite pan that is already moving left at the cut (following the fish) and settles on the field's centre
+  const T = CAMB1 - CAMB0;
+  const tau = clamp((t - CAMB0) / T);
+  const h00 = 2 * tau ** 3 - 3 * tau ** 2 + 1, h10 = tau ** 3 - 2 * tau ** 2 + tau;
+  const x = t < CAMB0 ? 68 + 34 * (CAMB0 - t) : 68 * h00 - 34 * T * h10;
+  const u = ss5(t, CAMB0, CAMB1);
+  const drift = ss(t, 4.85, 5.7);
   return {
-    x: lerp(52, 0, u) - 0.6 * (t - 3.6),
-    y: lerp(-24, -7.5, u),
-    s: LOGS(5.2, 8.75, u) * (1 + 0.04 * drift) * (1 + 0.012 * (t - 3.6)),
+    x,
+    y: lerp(-25, -20, u),
+    s: LOGS(7.9, 8.75, u) * (1 + 0.035 * drift),
   };
 };
 /** the camera: base, then the push that follows the tail into the carried pose (scale CARRY_PX, the tail's root on
@@ -285,18 +297,17 @@ export const keepOut = (t: number): KeepOut => {
     const q = toScreen(c, pt(p.x + fx, p.y + fy));
     return {x: q.x, y: q.y, r: RADII[i] * c.s};
   });
-  // the gill gap shows only while the head is still outside the field (the exterior)
+  // the gill gap (the exterior's dark opening under the cover) shows while it is still outside the field
   const out: KeepOut = {eel: e};
-  if (fx + SNOUT_X > FIELD.x1 - 30) {
-    const G = opercGeom(lookFor(t));
-    out.gap = G.gap.map((p) => toScreen(c, pt(p.x + fx, p.y + fy)));
-  }
+  const G = opercGeom(lookFor(t));
+  if (Math.max(...G.gap.map((p) => p.x)) + fx > FIELD.x1) out.gap = G.gap.map((p) => toScreen(c, pt(p.x + fx, p.y + fy)));
   return out;
 };
 
 // ---------------------------------------------------------------- the radiograph eel
 const RX = EEL_R_MAX;
-const scaleR = (k: number, add0 = 0) => RADII.map((r) => r * k + add0 * (r / RX));
+/** radii scaled by k, plus a glow margin that shrinks toward the fine tail tip (sqrt of the local radius) */
+const scaleR = (k: number, add0 = 0) => RADII.map((r) => r * k + add0 * Math.sqrt(r / RX));
 /** the eel's centreline frame: unit tangents and left normals */
 const frame = (pts: P[]) =>
   pts.map((p, i) => {
@@ -304,28 +315,31 @@ const frame = (pts: P[]) =>
     const tg = nrm(sub(b, a));
     return {tg, n: perp(tg)};
   });
-const XRayEel: React.FC<{pts: P[]; t: number; glow: number}> = ({pts, t, glow}) => {
+/** The swallowed eel as the radiograph shows it: dyed with contrast agent, it glows (an aqua halo and a dense body,
+ *  brightest along its axis, as a cylinder is), with its own skeleton: a BROAD BRIGHT SKULL with jaws and the eye as
+ *  a bony ring at the head end, the vertebral column thinning along the body, and a tail that tapers to a fine point
+ *  inside the faint fringe of its ribbon fin. In fish units, inside the fish's transform. `glow` lifts the halo. */
+const XRayEel: React.FC<{pts: P[]; t: number; glow: number; tail: number}> = ({pts, t, glow, tail}) => {
   const F = frame(pts);
-  // the glow and the body, as nested silhouettes (thickest at the centreline, as a cylinder shows on a radiograph)
-  const halo2 = eelSilhouette(pts, scaleR(2.1, 0.5));
-  const halo1 = eelSilhouette(pts, scaleR(1.45, 0.15));
+  const halo2 = eelSilhouette(pts, scaleR(1.9, 0.75));
+  const halo1 = eelSilhouette(pts, scaleR(1.3, 0.28));
   const body = eelSilhouette(pts, RADII);
-  const mid = eelSilhouette(pts, scaleR(0.68));
-  const core = eelSilhouette(pts, scaleR(0.36));
-  const fin = eelSilhouette(pts, RADII, Math.round(N * 0.38), N, true, t, 1, 0.05);
+  const mid = eelSilhouette(pts, scaleR(0.66));
+  const core = eelSilhouette(pts, scaleR(0.32));
+  const fin = eelSilhouette(pts, RADII, Math.round(N * 0.38), N, true, t, 1, 0.04);
   // the vertebral column: from behind the skull to near the tip, in short chunks that thin with the body
   const spine: {d: string; w: number}[] = [];
-  const i0 = Math.round(N * 0.085);
+  const i0 = Math.round(N * 0.09);
   const i1 = Math.round(N * 0.975);
   for (let i = i0; i < i1; i += 6) {
     const j = Math.min(i1, i + 6);
-    spine.push({d: open(pts.slice(i, j + 1), 0.5), w: 0.3 * RADII[Math.round((i + j) / 2)]});
+    spine.push({d: open(pts.slice(i, j + 1), 0.5), w: 0.34 * RADII[Math.round((i + j) / 2)]});
   }
-  // the skull: a dense lens over the head (snout → the neck), broader than the body behind it
-  const nSk = Math.round(N * 0.1);
+  // the skull: a dense lens over the head (snout → neck), as broad as the head
+  const nSk = Math.round(N * 0.105);
   const skW = (i: number) => {
     const u = i / N;
-    const prof = u < 0.012 ? 0.45 + 0.35 * (u / 0.012) : u < 0.06 ? 0.8 + 0.08 * Math.sin(((u - 0.012) / 0.048) * Math.PI) : 0.8 * (1 - ss(u, 0.06, 0.1)) + 0.28;
+    const prof = u < 0.014 ? 0.55 + 0.33 * (u / 0.014) : u < 0.07 ? 0.88 + 0.06 * Math.sin(((u - 0.014) / 0.056) * Math.PI) : 0.88 * (1 - ss(u, 0.07, 0.105)) + 0.3;
     return RADII[i] * prof;
   };
   const skL: P[] = [], skR: P[] = [];
@@ -333,36 +347,55 @@ const XRayEel: React.FC<{pts: P[]; t: number; glow: number}> = ({pts, t, glow}) 
     skL.push(add(pts[i], mul(F[i].n, skW(i))));
     skR.push(add(pts[i], mul(F[i].n, -skW(i))));
   }
-  const snout = add(pts[0], mul(F[0].tg, -0.35));
+  const snout = add(pts[0], mul(F[0].tg, -0.3));
   const skull = closed([snout, ...skL.slice(1), ...[...skR.slice(1)].reverse()], 0.9);
-  // jaws: two dense lines from the snout tip back along the lower side
-  const jawA = open([add(snout, mul(F[0].n, -0.15)), ...[2, 5, 8].map((i) => add(pts[i], mul(F[i].n, -RADII[i] * 0.55)))], 1);
-  const jawB = open([add(snout, mul(F[0].n, 0.1)), ...[2, 4, 6].map((i) => add(pts[i], mul(F[i].n, -RADII[i] * 0.05)))], 1);
-  // the eye: a bright bony ring (the orbit) round a darker eyeball with a dense lens
+  const skullIn = closed([add(snout, mul(F[0].tg, 0.5)), ...skL.slice(2, -1).map((q, k) => lerpP(q, pts[k + 2], 0.42)), ...[...skR.slice(2, -1).map((q, k) => lerpP(q, pts[k + 2], 0.42))].reverse()], 0.9);
+  // jaws: dense lines from the snout tip back along the lower side
+  const jaw = open([add(snout, mul(F[0].n, -0.12)), ...[2, 5, 8].map((i) => add(pts[i], mul(F[i].n, -RADII[i] * 0.6)))], 1);
+  // the eye: a bright bony ring (the orbit) round the darker eyeball, a dense lens
   const ie = Math.round(N * 0.03);
-  const eyeR = 0.42 * EYE_SCALE;
-  const ec = add(pts[ie], mul(F[ie].n, RADII[ie] * 0.18));
+  const eyeR = 0.46 * EYE_SCALE;
+  const ec = add(pts[ie], mul(F[ie].n, RADII[ie] * 0.2));
   // the pectoral girdle: a bright arc across the body just behind the head
-  const ig = Math.round(N * 0.1);
-  const gir = open([add(pts[ig], mul(F[ig].n, RADII[ig] * 0.95)), add(pts[ig + 1], mul(F[ig].n, 0)), add(pts[ig], mul(F[ig].n, -RADII[ig] * 0.95))], 1);
+  const ig = Math.round(N * 0.105);
+  const gir = open([add(pts[ig], mul(F[ig].n, RADII[ig] * 0.95)), add(pts[ig + 1], mul(F[ig].tg, 0.15)), add(pts[ig], mul(F[ig].n, -RADII[ig] * 0.95))], 1);
+  // the head's own glow (the dense skull shines through the halo): a bright bulb that reads at phone size
+  const hc = pts[Math.round(N * 0.04)];
+  // the followed tail: its glow builds up from the rear third to the tip (overlapping sections: a soft onset)
+  const tailHalo = tail > 0.002 ? [0.5, 0.6, 0.7, 0.8].map((u) => eelSilhouette(pts, scaleR(2.0, 0.5), Math.round(N * u), N)) : [];
+  const tailCore = tail > 0.002 ? [0.58, 0.66, 0.74].map((u) => eelSilhouette(pts, scaleR(0.55), Math.round(N * u), N)) : [];
   return (
     <g>
-      <path d={halo2} fill={EEL_HALO} fillOpacity={0.09 * glow} />
-      <path d={halo1} fill={EEL_HALO} fillOpacity={0.16 * glow} />
-      <path d={fin} fill={EEL_HALO} fillOpacity={0.16} />
-      <path d={body} fill={EEL_BODY} fillOpacity={0.5} />
-      <path d={mid} fill={EEL_BODY} fillOpacity={0.45} />
-      <path d={core} fill={EEL_CORE} fillOpacity={0.4} />
-      <path d={body} fill="none" stroke={EEL_CORE} strokeOpacity={0.55} strokeWidth={1.2} vectorEffect={NS} />
-      {spine.map((sg, k) => (
-        <path key={k} d={sg.d} fill="none" stroke={EEL_BONE} strokeOpacity={0.75} strokeWidth={sg.w} strokeDasharray="0.3 0.14" />
+      <path d={halo2} fill={EEL_HALO} fillOpacity={0.1 * glow * (1 - 0.4 * tail)} />
+      <path d={halo1} fill={EEL_HALO} fillOpacity={0.2 * glow * (1 - 0.3 * tail)} />
+      <circle cx={hc.x} cy={hc.y} r={3.3} fill={EEL_HALO} fillOpacity={0.1 * glow} />
+      <circle cx={hc.x} cy={hc.y} r={2.4} fill={EEL_HALO} fillOpacity={0.16 * glow} />
+      <circle cx={hc.x} cy={hc.y} r={1.7} fill={EEL_CORE} fillOpacity={0.14 * glow} />
+      {tailHalo.map((d, k) => (
+        <path key={k} d={d} fill={EEL_HALO} fillOpacity={0.07 * tail} />
       ))}
-      <path d={skull} fill={EEL_BONE} fillOpacity={0.62} stroke={EEL_BONE} strokeOpacity={0.9} strokeWidth={0.12} />
-      <path d={jawA + jawB} fill="none" stroke={EEL_BONE} strokeOpacity={0.95} strokeWidth={0.13} strokeLinecap="round" />
-      <path d={gir} fill="none" stroke={EEL_BONE} strokeOpacity={0.7} strokeWidth={0.16} strokeLinecap="round" />
-      <circle cx={ec.x} cy={ec.y} r={eyeR * 0.9} fill={C.xrayBg0} fillOpacity={0.75} />
-      <circle cx={ec.x} cy={ec.y} r={eyeR * 0.92} fill="none" stroke={EEL_BONE} strokeWidth={0.2} />
-      <circle cx={ec.x - 0.08} cy={ec.y - 0.06} r={eyeR * 0.3} fill={EEL_BONE} fillOpacity={0.95} />
+      <path d={fin} fill={EEL_HALO} fillOpacity={0.2 + 0.12 * tail} />
+      <path d={body} fill={EEL_BODY} fillOpacity={0.72} />
+      <path d={mid} fill={EEL_BODY} fillOpacity={0.55} />
+      <path d={core} fill={EEL_CORE} fillOpacity={0.55} />
+      {tailCore.map((d, k) => (
+        <path key={k} d={d} fill={EEL_CORE} fillOpacity={0.15 * tail} />
+      ))}
+      <path d={body} fill="none" stroke={EEL_CORE} strokeOpacity={0.8} strokeWidth={1.4} vectorEffect={NS} />
+      {spine.map((sg, k) => (
+        <path key={k} d={sg.d} fill="none" stroke={EEL_BONE} strokeOpacity={0.55} strokeWidth={sg.w * 0.45} />
+      ))}
+      {spine.map((sg, k) => (
+        <path key={`v${k}`} d={sg.d} fill="none" stroke={EEL_BONE} strokeOpacity={0.85} strokeWidth={sg.w} strokeDasharray="0.32 0.13" />
+      ))}
+      <path d={skull} fill={EEL_BONE} fillOpacity={0.8} />
+      <path d={skullIn} fill={C.xrayBone} fillOpacity={0.75} />
+      <path d={skull} fill="none" stroke={EEL_BONE} strokeWidth={1.3} vectorEffect={NS} />
+      <path d={jaw} fill="none" stroke={C.xrayBone} strokeOpacity={1} strokeWidth={0.16} strokeLinecap="round" />
+      <path d={gir} fill="none" stroke={EEL_BONE} strokeOpacity={0.85} strokeWidth={0.2} strokeLinecap="round" />
+      <circle cx={ec.x} cy={ec.y} r={eyeR * 0.95} fill={C.xrayBg0} fillOpacity={0.82} />
+      <circle cx={ec.x} cy={ec.y} r={eyeR * 0.95} fill="none" stroke={C.xrayBone} strokeWidth={0.22} />
+      <circle cx={ec.x - 0.08} cy={ec.y - 0.06} r={eyeR * 0.32} fill={C.xrayBone} />
     </g>
   );
 };
@@ -390,17 +423,63 @@ const ellD = (c: P, rx: number, ry: number, a: number) => {
 };
 const PEB_COL = [C.pebbleA, C.pebbleB, C.pebbleC];
 
-/** the dark lab behind the tank (drawn on a far layer) */
-const LabBack: React.FC = () => (
-  <g>
-    {/* faint wall panels and a bench-height shelf of equipment silhouettes */}
-    <rect x={-600} y={-400} width={1300} height={800} fill={LAB} />
-    {[-300, -180, -60, 60, 180, 300, 420].map((x, i) => (
-      <rect key={i} x={x} y={-260} width={112} height={250} fill={LAB_DEEP} fillOpacity={0.35} />
-    ))}
-    <rect x={-600} y={-12} width={1300} height={60} fill={LAB_DEEP} fillOpacity={0.5} />
-  </g>
-);
+/** the dark lab behind the tank (a far layer): the wall in the tank's light, panel seams, a high shelf of equipment
+ *  silhouettes; flat shapes in two deep tones */
+const LabBack: React.FC = () => {
+  const id = uid('xlPool');
+  const boxes: [number, number, number, number][] = [
+    [-250, -168, 34, 22], [-210, -176, 18, 30], [-186, -163, 40, 17], [-120, -171, 26, 25], [-88, -160, 14, 14],
+    [70, -174, 30, 28], [106, -165, 44, 19], [160, -178, 16, 32], [182, -166, 30, 20], [240, -171, 38, 25],
+  ];
+  return (
+    <g>
+      <defs>
+        <radialGradient id={id} gradientUnits="userSpaceOnUse" cx="10" cy="-30" r="190" gradientTransform="translate(10 -30) scale(1.3 1) translate(-10 30)">
+          <stop offset="0" stopColor={LAB_GLOW} />
+          <stop offset="0.6" stopColor={mix(LAB_GLOW, LAB, 0.6)} />
+          <stop offset="1" stopColor={LAB} />
+        </radialGradient>
+      </defs>
+      <rect x={-700} y={-500} width={1500} height={1000} fill={LAB} />
+      <rect x={-700} y={-500} width={1500} height={1000} fill={`url(#${id})`} />
+      {[-330, -230, -130, 150, 250, 350].map((x, i) => (
+        <path key={i} d={`M${x} -400V160`} stroke={LAB_DEEP} strokeWidth={2.2} vectorEffect={NS} strokeOpacity={0.55} />
+      ))}
+      {/* the shelf and what stands on it */}
+      <rect x={-300} y={-146} width={600} height={4} fill={LAB_DEEP} />
+      <rect x={-300} y={-146} width={600} height={1} fill={LAB_GLOW} fillOpacity={0.7} />
+      {boxes.map(([x, y, w, h], i) => (
+        <g key={i}>
+          <rect x={x} y={y} width={w} height={h} rx={i % 3 === 0 ? 3 : 1} fill={LAB_DEEP} />
+          <rect x={x} y={y} width={w * 0.22} height={h} rx={1} fill={LAB_GLOW} fillOpacity={0.35} />
+        </g>
+      ))}
+    </g>
+  );
+};
+
+/** the bench under the rig: a slab with a lit front edge and a cabinet of doors below (light from the upper left) */
+const Bench: React.FC = () => {
+  const y = BENCH_Y;
+  const doors = [-360, -250, -140, -30, 80, 190, 300];
+  return (
+    <g>
+      <rect x={-420} y={y + 5} width={960} height={300} fill={mix(LAB_DEEP, METAL_DEEP, 0.3)} />
+      {doors.map((x, i) => (
+        <g key={i}>
+          <rect x={x + 2} y={y + 10} width={104} height={200} rx={1.5} fill={mix(LAB_DEEP, METAL_DEEP, 0.42)} stroke={INK} strokeWidth={INK_PX * 0.7} vectorEffect={NS} />
+          <rect x={x + 2} y={y + 10} width={104} height={1.2} fill={METAL_SH} fillOpacity={0.6} />
+          <rect x={x + 8} y={y + 18} width={22} height={2.2} rx={1.1} fill={METAL_SH} stroke={INK} strokeWidth={1.3} vectorEffect={NS} />
+        </g>
+      ))}
+      {/* the slab */}
+      <rect x={-420} y={y} width={960} height={5} fill={BENCH} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
+      <rect x={-420} y={y} width={960} height={1.2} fill={METAL_LIT} fillOpacity={0.75} />
+      {/* the rig's shadow on the slab, falling to the lower right */}
+      <rect x={DETECT.x0 + 3} y={y + 0.4} width={DETECT.x1 - DETECT.x0 + 8} height={2.2} fill={INK} fillOpacity={0.35} />
+    </g>
+  );
+};
 
 /** the rig: the tank (back, water, gravel), drawn at the fish's depth; the field drawn separately */
 const TankBack: React.FC<{t: number}> = ({t}) => {
@@ -457,32 +536,45 @@ const TankTrims: React.FC = () => {
   );
 };
 
-/** a boxy housing: front face, lit top face, the shadowed underside, ink; light from the upper left */
-const Housing: React.FC<{x0: number; x1: number; y0: number; y1: number; depth: number; aperture: 'down' | 'up'; lamp: number}> = ({x0, x1, y0, y1, depth, aperture, lamp}) => {
-  const top = poly([pt(x0, y0), pt(x0 + depth, y0 - depth * 0.55), pt(x1 + depth, y0 - depth * 0.55), pt(x1, y0)]);
-  const side = poly([pt(x1, y0), pt(x1 + depth, y0 - depth * 0.55), pt(x1 + depth, y1 - depth * 0.55), pt(x1, y1)]);
+/** a boxy housing: front face, lit top face, shadowed side, ink; light from the upper left. The emitter carries the
+ *  X-ray tube (a capsule) on top; both have a beam window facing the field, vents and an indicator lamp. */
+const Housing: React.FC<{x0: number; x1: number; y0: number; y1: number; depth: number; kind: 'emitter' | 'detector'; lamp: number; beam: number}> = ({x0, x1, y0, y1, depth, kind, lamp, beam}) => {
+  const dy = depth * 0.55;
+  const top = poly([pt(x0, y0), pt(x0 + depth, y0 - dy), pt(x1 + depth, y0 - dy), pt(x1, y0)]);
+  const side = poly([pt(x1, y0), pt(x1 + depth, y0 - dy), pt(x1 + depth, y1 - dy), pt(x1, y1)]);
   const h = y1 - y0;
-  const ap = aperture === 'down' ? {y: y1 - 1.6, h: 1.6} : {y: y0, h: 1.6};
-  const vents = Array.from({length: 7}, (_, i) => x0 + 8 + i * 2.6);
+  const win = kind === 'emitter' ? {y: y1 - 1.8, h: 1.8} : {y: y0, h: 1.5};
+  const vents = Array.from({length: 6}, (_, i) => x0 + 7 + i * 2.6);
+  const tube = kind === 'emitter';
+  const tc = {x0: -34, x1: 34, y: y0 - dy - 3.2, r: 3.4};
   return (
     <g>
+      {tube && (
+        <g>
+          <rect x={tc.x0} y={tc.y - tc.r} width={tc.x1 - tc.x0} height={2 * tc.r} rx={tc.r} fill={METAL} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
+          <rect x={tc.x0 + 2} y={tc.y - tc.r + 0.9} width={tc.x1 - tc.x0 - 4} height={1.3} rx={0.65} fill={METAL_LIT} />
+          <rect x={tc.x0 + 2} y={tc.y + tc.r * 0.25} width={tc.x1 - tc.x0 - 4} height={tc.r * 0.6} rx={0.8} fill={METAL_SH} fillOpacity={0.7} />
+          {[-24, 24].map((x, i) => (
+            <rect key={i} x={x - 2.4} y={tc.y - tc.r - 0.6} width={4.8} height={2 * tc.r + 1.2} rx={0.8} fill={METAL_SH} stroke={INK} strokeWidth={1.6} vectorEffect={NS} />
+          ))}
+        </g>
+      )}
       <path d={top} fill={METAL_LIT} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
       <path d={side} fill={METAL_SH} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
       <rect x={x0} y={y0} width={x1 - x0} height={h} fill={METAL} />
-      {/* a soft core shadow toward the lower right of the front face */}
-      <rect x={x0} y={y0 + h * 0.62} width={x1 - x0} height={h * 0.38} fill={METAL_SH} fillOpacity={0.55} />
-      <rect x={x0} y={y0} width={x1 - x0} height={0.9} fill={METAL_LIT} fillOpacity={0.8} />
-      {/* the aperture strip (the beam window) */}
-      <rect x={x0 + 4} y={ap.y} width={x1 - x0 - 8} height={ap.h} fill={METAL_DEEP} />
-      <rect x={x0 + 4} y={ap.y + (aperture === 'down' ? ap.h - 0.5 : 0)} width={x1 - x0 - 8} height={0.5} fill={C.xrayEdge} fillOpacity={0.25 + 0.6 * lamp} />
-      {/* vents and a panel seam */}
+      <rect x={x0} y={y0 + h * 0.6} width={x1 - x0} height={h * 0.4} fill={METAL_SH} fillOpacity={0.5} />
+      <rect x={x0} y={y0} width={x1 - x0} height={0.9} fill={METAL_LIT} fillOpacity={0.85} />
+      {/* the beam window, glowing faintly (and brightly when the beam catches) */}
+      <rect x={x0 + 4} y={win.y} width={x1 - x0 - 8} height={win.h} fill={METAL_DEEP} />
+      <rect x={x0 + 4} y={kind === 'emitter' ? win.y + win.h - 0.6 : win.y} width={x1 - x0 - 8} height={0.6} fill={C.xrayEdge} fillOpacity={0.3 + 0.65 * beam} />
       {vents.map((x, i) => (
-        <rect key={i} x={x} y={y0 + h * 0.25} width={1.1} height={h * 0.32} rx={0.5} fill={METAL_DEEP} fillOpacity={0.8} />
+        <rect key={i} x={x} y={y0 + h * 0.22} width={1.1} height={h * 0.36} rx={0.5} fill={METAL_DEEP} fillOpacity={0.85} />
       ))}
-      <path d={`M${x1 - 26} ${y0 + 1.2}V${y1 - 2.2}`} stroke={METAL_DEEP} strokeWidth={1.2} vectorEffect={NS} strokeOpacity={0.7} />
-      {/* the indicator lamp (lights when the beam catches) */}
-      <circle cx={x1 - 14} cy={y0 + h * 0.4} r={1.3} fill={mix(METAL_DEEP, LAMP, 0.25 + 0.75 * lamp)} stroke={INK} strokeWidth={1.4} vectorEffect={NS} />
-      {lamp > 0.02 && <circle cx={x1 - 14} cy={y0 + h * 0.4} r={3.2} fill={LAMP} fillOpacity={0.22 * lamp} />}
+      <path d={`M${x1 - 24} ${y0 + 1}V${y1 - (kind === 'emitter' ? 2.4 : 1.8)}`} stroke={METAL_DEEP} strokeWidth={1.3} vectorEffect={NS} strokeOpacity={0.8} />
+      {/* the indicator lamp */}
+      <circle cx={x1 - 13} cy={y0 + h * 0.42} r={1.25} fill={mix(METAL_DEEP, LAMP, 0.15 + 0.85 * lamp)} stroke={INK} strokeWidth={1.4} vectorEffect={NS} />
+      {lamp > 0.02 && <circle cx={x1 - 13} cy={y0 + h * 0.42} r={3.4} fill={LAMP} fillOpacity={0.24 * lamp} />}
+      {lamp > 0.02 && <circle cx={x1 - 13.35} cy={y0 + h * 0.42 - 0.35} r={0.4} fill={C.mote} fillOpacity={0.9 * lamp} />}
       <rect x={x0} y={y0} width={x1 - x0} height={h} fill="none" stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
     </g>
   );
@@ -528,7 +620,7 @@ const FieldEdges: React.FC<{flare: number}> = ({flare}) => {
       {[F.x0, F.x1].map((x, k) => (
         <g key={k}>
           {strips.map((s, i) => (
-            <rect key={i} x={x - s.w / 2} y={F.y0} width={s.w} height={F.y1 - F.y0} fill={C.xrayEdge} fillOpacity={Math.min(1, s.a * (1 + 2.6 * flare * (k === 1 ? 1 : 0.5)))} />
+            <rect key={i} x={x - (s.w / 2) * (1 + 1.6 * flare * (k === 1 ? 1 : 0.3))} y={F.y0} width={s.w * (1 + 1.6 * flare * (k === 1 ? 1 : 0.3))} height={F.y1 - F.y0} fill={C.xrayEdge} fillOpacity={Math.min(1, s.a * (1 + 3 * flare * (k === 1 ? 1 : 0.4)))} />
           ))}
         </g>
       ))}
@@ -542,16 +634,22 @@ export const S3Xray: React.FC<{t: number}> = ({t}) => {
   const fx = fishX(t), fy = fishY(t);
   const s = lookFor(t);
   const pts = eelPts(t);
-  // the beam catches as the snout crosses the edge: a flash decaying over ~0.35 s
-  const flash = t < XRAY_CHANGE_T ? 0 : Math.exp(-(t - XRAY_CHANGE_T) / 0.16);
-  const lamp = ss(t, XRAY_CHANGE_T - 0.02, XRAY_CHANGE_T + 0.04);
-  // the stomach is brought forward as the camera pushes toward it
-  const toStom = ss(t, XRAY_PUSH0 - 0.1, XRAY_PUSH1);
-  const id = {fClip: uid('xFieldClip'), oClip: uid('xOutClip'), sh: uid('xShadow')};
+  // the beam catches as the snout crosses the edge: a quick flash through the field, the edge flares, the lamps light
+  const dtc = t - XRAY_CHANGE_T;
+  const flash = dtc < 0 ? 0 : Math.exp(-dtc / 0.13);
+  const flare = dtc < -0.04 ? 0 : dtc < 0 ? (dtc + 0.04) / 0.04 : Math.exp(-dtc / 0.3);
+  const lamp = ss(t, XRAY_CHANGE_T - 0.02, XRAY_CHANGE_T + 0.03);
+  const beam = 0.25 + 0.75 * flare;
+  // the stomach: established in the full profile, then brought forward as the camera pushes toward it
+  const stomA = ss(t, 4.62, 4.98);
+  const toStom = ss(t, XRAY_PUSH0 + 0.05, XRAY_PUSH1 + 0.15);
+  const id = {fClip: uid('xFieldClip'), oClip: uid('xOutClip'), sh: uid('xShadow'), vig: uid('xVig'), fl: uid('xFlash')};
   const F = FIELD;
   const fieldD = `M${F.x0} ${F.y0}H${F.x1}V${F.y1}H${F.x0}Z`;
   const outD = `M-2000 -2000H2000V2000H-2000Z${fieldD}`;
   const fishT = `translate(${n4(fx)} ${n4(fy)})`;
+  const ST = STOMACH;
+  const vr = ST.ry * 1.9;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0, background: LAB}}>
       <defs>
@@ -561,21 +659,34 @@ export const S3Xray: React.FC<{t: number}> = ({t}) => {
         <clipPath id={id.oClip}>
           <path d={outD} clipRule="evenodd" fillRule="evenodd" />
         </clipPath>
-        <radialGradient id={id.sh} gradientUnits="userSpaceOnUse" cx={fx - 6} cy={TANK.floor + 0.6} r={44} gradientTransform={`translate(${fx - 6} ${TANK.floor + 0.6}) scale(1 0.09) translate(${-(fx - 6)} ${-(TANK.floor + 0.6)})`}>
+        <radialGradient id={id.sh} gradientUnits="userSpaceOnUse" cx={fx - 6} cy={TANK.floor + 0.6} r={44} gradientTransform={`translate(${n4(fx - 6)} ${TANK.floor + 0.6}) scale(1 0.09) translate(${n4(-(fx - 6))} ${-(TANK.floor + 0.6)})`}>
           <stop offset="0" stopColor={C.bedShadow} stopOpacity={0.55} />
           <stop offset="1" stopColor={C.bedShadow} stopOpacity={0} />
         </radialGradient>
+        {flash > 0.005 && (
+          <linearGradient id={id.fl} gradientUnits="userSpaceOnUse" x1={FIELD.x1} y1="0" x2={FIELD.x0} y2="0">
+            <stop offset="0" stopColor={C.xrayEdge} stopOpacity={0.42 * flash} />
+            <stop offset="0.3" stopColor={C.xrayEdge} stopOpacity={0.16 * flash} />
+            <stop offset="1" stopColor={C.xrayEdge} stopOpacity={0.07 * flash} />
+          </linearGradient>
+        )}
+        {toStom > 0.001 && (
+          <radialGradient id={id.vig} gradientUnits="userSpaceOnUse" cx={ST.c.x} cy={ST.c.y} r={vr} gradientTransform={`translate(${ST.c.x} ${ST.c.y}) scale(${(ST.rx / ST.ry) * 0.92} 1) translate(${-ST.c.x} ${-ST.c.y})`}>
+            <stop offset="0" stopColor={C.xrayBg0} stopOpacity={0} />
+            <stop offset="0.5" stopColor={C.xrayBg0} stopOpacity={0} />
+            <stop offset="0.68" stopColor={C.xrayBg0} stopOpacity={0.38 * toStom} />
+            <stop offset="1" stopColor={C.xrayBg0} stopOpacity={0.62 * toStom} />
+          </radialGradient>
+        )}
       </defs>
       <g transform={camT(c, 160)}>
         <LabBack />
       </g>
       <g transform={camT(c, 0)}>
-        {/* the emitter's mount (a gantry arm up out of frame) and the bench under the detector */}
-        <rect x={-6} y={-400} width={12} height={400 + EMIT.y0} fill={METAL_SH} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
-        <rect x={-6} y={-400} width={3} height={400 + EMIT.y0} fill={METAL_LIT} fillOpacity={0.5} />
-        <rect x={-400} y={BENCH_Y} width={900} height={4} fill={BENCH} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
-        <rect x={-400} y={BENCH_Y} width={900} height={1} fill={METAL_LIT} fillOpacity={0.6} />
-        <rect x={-400} y={BENCH_Y + 4} width={900} height={300} fill={LAB_DEEP} />
+        {/* the emitter's gantry arm (up out of frame) and the bench under the detector */}
+        <rect x={-5} y={-420} width={10} height={420 + EMIT.y0 - 10} fill={METAL_SH} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
+        <rect x={-5} y={-420} width={2.6} height={420 + EMIT.y0 - 10} fill={METAL_LIT} fillOpacity={0.45} />
+        <Bench />
         {/* the tank outside the field */}
         <g clipPath={`url(#${id.oClip})`}>
           <TankBack t={t} />
@@ -594,22 +705,24 @@ export const S3Xray: React.FC<{t: number}> = ({t}) => {
           <FieldGround flash={flash} />
           <g transform={fishT}>
             <XRayBack s={s} />
-            {toStom > 0.001 && (
-              <ellipse cx={STOMACH.c.x} cy={STOMACH.c.y} rx={STOMACH.rx} ry={STOMACH.ry} fill={C.xrayFlesh} fillOpacity={0.1 * toStom} stroke={C.xrayEdge} strokeOpacity={0.3 * toStom} strokeWidth={0.25} />
+            {stomA > 0.001 && (
+              <g>
+                <ellipse cx={ST.c.x} cy={ST.c.y} rx={ST.rx} ry={ST.ry} fill={C.xrayFlesh} fillOpacity={0.08 * stomA + 0.08 * toStom} />
+                <ellipse cx={ST.c.x} cy={ST.c.y} rx={ST.rx} ry={ST.ry} fill="none" stroke={C.xrayEdge} strokeOpacity={0.22 * stomA + 0.2 * toStom} strokeWidth={1.6} vectorEffect={NS} />
+              </g>
             )}
-            <XRayFront s={s} opacity={0.8} />
-            <XRayEel pts={pts} t={t} glow={1} />
-            <XRayFront s={s} opacity={0.18} />
+            <XRayFront s={s} opacity={0.8 - 0.2 * toStom} />
+            {toStom > 0.001 && <rect x={-80} y={-60} width={160} height={120} fill={`url(#${id.vig})`} />}
+            <XRayEel pts={pts} t={t} glow={1} tail={toStom} />
+            <XRayFront s={s} opacity={0.16 * (1 - 0.5 * toStom)} />
           </g>
-          {flash > 0.005 && <rect x={F.x0} y={F.y0} width={F.x1 - F.x0} height={F.y1 - F.y0} fill={C.xrayEdge} fillOpacity={0.3 * flash} />}
+          {flash > 0.005 && <rect x={F.x0} y={F.y0} width={F.x1 - F.x0} height={F.y1 - F.y0} fill={`url(#${id.fl})`} />}
         </g>
-        <FieldEdges flare={flash} />
-        {/* the housings frame the field: the emitter above the tank, the detector below it */}
-        <Housing {...EMIT} depth={5} aperture="down" lamp={lamp} />
-        <Housing {...DETECT} depth={5} aperture="up" lamp={lamp} />
+        <FieldEdges flare={flare} />
+        {/* the housings frame the field: the emitter (with its tube) above the tank, the detector below it */}
+        <Housing {...EMIT} depth={5} kind="emitter" lamp={lamp} beam={beam} />
+        <Housing {...DETECT} depth={5} kind="detector" lamp={lamp} beam={beam} />
       </g>
     </svg>
   );
 };
-void CARRY1;
-void clamp;
