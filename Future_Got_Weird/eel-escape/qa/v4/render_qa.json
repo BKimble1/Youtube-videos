@@ -1,6 +1,6 @@
 {
  "file": "FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4",
- "size_mb": 31.4,
+ "size_mb": 31.16,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,40 +15,34 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "258824"
+   "bitrate": "258967"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.08,
+ "frame_change_median": 4.2,
  "large_changes": [
   {
    "frame": 79,
    "t": 2.633,
-   "mad": 44.5,
+   "mad": 47.6,
    "planned": "CUT S1 -> S2: the eel's curve matched, the earlier gulp"
   },
   {
    "frame": 116,
    "t": 3.867,
-   "mad": 76.63,
+   "mad": 80.69,
    "planned": "CUT S2 -> S3: the research tank"
-  },
-  {
-   "frame": 155,
-   "t": 5.167,
-   "mad": 20.86,
-   "planned": null
   },
   {
    "frame": 157,
    "t": 5.233,
-   "mad": 21.31,
+   "mad": 21.26,
    "planned": null
   },
   {
    "frame": 173,
    "t": 5.767,
-   "mad": 23.7,
+   "mad": 23.69,
    "planned": "DISSOLVE S3 -> S4 on the carried tail"
   },
   {
@@ -78,7 +72,7 @@
   {
    "frame": 264,
    "t": 8.8,
-   "mad": 25.28,
+   "mad": 25.27,
    "planned": null
   },
   {
@@ -91,18 +85,6 @@
    "frame": 327,
    "t": 10.9,
    "mad": 21.1,
-   "planned": null
-  },
-  {
-   "frame": 328,
-   "t": 10.933,
-   "mad": 20.99,
-   "planned": null
-  },
-  {
-   "frame": 329,
-   "t": 10.967,
-   "mad": 20.94,
    "planned": null
   },
   {
@@ -142,59 +124,47 @@
    "planned": null
   },
   {
-   "frame": 336,
-   "t": 11.2,
-   "mad": 20.43,
-   "planned": null
-  },
-  {
    "frame": 378,
    "t": 12.6,
-   "mad": 83.44,
+   "mad": 83.48,
    "planned": "MATCH CUT S6 -> S7: the tip, inside -> outside"
   },
   {
    "frame": 416,
    "t": 13.867,
-   "mad": 42.83,
+   "mad": 42.89,
    "planned": "CUT S7 -> S8: over the back"
   },
   {
    "frame": 479,
    "t": 15.967,
-   "mad": 29.44,
+   "mad": 29.62,
    "planned": "CUT S8 -> S9: the trapped head"
   },
   {
    "frame": 539,
    "t": 17.967,
-   "mad": 31.51,
+   "mad": 35.39,
    "planned": "CUT S9 -> S10: low beside"
   },
   {
    "frame": 639,
    "t": 21.3,
-   "mad": 25.38,
+   "mad": 40.82,
    "planned": "the head slips free; the body straightens"
   },
   {
    "frame": 736,
    "t": 24.533,
-   "mad": 21.33,
+   "mad": 21.43,
    "planned": "the reed across the lens wipes to frame 0"
   }
  ],
  "unplanned_large_changes": [
   {
-   "frame": 155,
-   "t": 5.167,
-   "mad": 20.86,
-   "planned": null
-  },
-  {
    "frame": 157,
    "t": 5.233,
-   "mad": 21.31,
+   "mad": 21.26,
    "planned": null
   },
   {
@@ -218,7 +188,7 @@
   {
    "frame": 264,
    "t": 8.8,
-   "mad": 25.28,
+   "mad": 25.27,
    "planned": null
   },
   {
@@ -231,18 +201,6 @@
    "frame": 327,
    "t": 10.9,
    "mad": 21.1,
-   "planned": null
-  },
-  {
-   "frame": 328,
-   "t": 10.933,
-   "mad": 20.99,
-   "planned": null
-  },
-  {
-   "frame": 329,
-   "t": 10.967,
-   "mad": 20.94,
    "planned": null
   },
   {
@@ -279,12 +237,6 @@
    "frame": 335,
    "t": 11.167,
    "mad": 21.23,
-   "planned": null
-  },
-  {
-   "frame": 336,
-   "t": 11.2,
-   "mad": 20.43,
    "planned": null
   }
  ],
