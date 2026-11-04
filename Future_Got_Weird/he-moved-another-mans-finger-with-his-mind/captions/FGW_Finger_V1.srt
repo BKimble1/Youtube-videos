@@ -1,0 +1,297 @@
+1
+00:00:00,410 --> 00:00:03,150
+He moved someone else’s
+finger with his mind.
+
+2
+00:00:03,450 --> 00:00:06,190
+Watch the hand on the left.
+That’s the guy playing.
+
+3
+00:00:06,410 --> 00:00:08,880
+The finger on the right
+just fired his cannon.
+
+4
+00:00:09,070 --> 00:00:12,280
+It belongs to a man across campus
+who can’t even see the game.
+
+5
+00:00:13,170 --> 00:00:16,780
+In 2013, two researchers
+at the University of Washington
+
+6
+00:00:16,820 --> 00:00:19,640
+split one video game
+between two buildings.
+
+7
+00:00:19,890 --> 00:00:21,590
+Rajesh Rao got the screen.
+
+8
+00:00:22,070 --> 00:00:24,060
+Andrea Stocco got the space bar.
+
+9
+00:00:24,710 --> 00:00:28,550
+Together, they had the equipment you
+normally get by sitting down at a desk.
+
+10
+00:00:29,330 --> 00:00:31,530
+Rao’s job was to defend a little city.
+
+11
+00:00:31,700 --> 00:00:34,250
+A supply plane flies over? Let it through.
+
+12
+00:00:35,040 --> 00:00:37,970
+A pirate ship launches
+a rocket? Shoot it down.
+
+13
+00:00:38,730 --> 00:00:41,280
+Easy enough, except the only
+person who could see
+
+14
+00:00:41,320 --> 00:00:44,250
+the difference had no way
+to press fire himself.
+
+15
+00:00:45,090 --> 00:00:47,140
+Watch what happens on a rocket.
+
+16
+00:00:47,490 --> 00:00:49,640
+Rao imagines moving his right hand.
+
+17
+00:00:49,840 --> 00:00:51,460
+His real hand stays put.
+
+18
+00:00:51,710 --> 00:00:55,290
+But under that cap, the rhythm
+of his brain activity changes.
+
+19
+00:00:55,520 --> 00:00:57,690
+A computer is watching for that change.
+
+20
+00:00:57,920 --> 00:01:00,420
+On his screen, a little cursor climbs.
+
+21
+00:01:00,970 --> 00:01:04,610
+When it hits the target, the computer
+sends one command over the internet.
+
+22
+00:01:05,130 --> 00:01:06,130
+Fire.
+
+23
+00:01:06,980 --> 00:01:09,770
+Across campus, a magnetic
+coil sits over the part
+
+24
+00:01:09,810 --> 00:01:12,390
+of Stocco’s brain that
+helps move his right hand.
+
+25
+00:01:12,660 --> 00:01:14,420
+The command triggers a pulse.
+
+26
+00:01:14,630 --> 00:01:18,770
+His hand jerks up, comes down on
+the space bar, and the cannon shoots.
+
+27
+00:01:19,470 --> 00:01:21,770
+The rocket disappears on Rao’s screen.
+
+28
+00:01:22,070 --> 00:01:25,380
+Stocco described the feeling
+as something like a nervous tic.
+
+29
+00:01:26,080 --> 00:01:29,270
+Imagine being the controller
+and missing the entire game.
+
+30
+00:01:30,500 --> 00:01:33,770
+There’s a detail I love
+in their pilot report.
+
+31
+00:01:34,050 --> 00:01:37,170
+Their first session ended early
+because of network problems.
+
+32
+00:01:37,300 --> 00:01:39,520
+Two human brains, ready to go.
+
+33
+00:01:40,130 --> 00:01:41,140
+Bad connection.
+
+34
+00:01:42,360 --> 00:01:45,930
+A year later, the team tried it
+with three pairs of volunteers.
+
+35
+00:01:46,140 --> 00:01:49,200
+This time the receiver’s
+hand rested over a touchpad.
+
+36
+00:01:49,830 --> 00:01:53,310
+In some rounds, the researchers
+quietly flipped the coil over.
+
+37
+00:01:53,460 --> 00:01:55,660
+Same game. Same pulse strength.
+
+38
+00:01:55,900 --> 00:01:59,040
+Even the participants couldn’t
+tell which way the coil was facing.
+
+39
+00:01:59,990 --> 00:02:03,970
+With the coil in position, one pair
+hit about five out of six rockets.
+
+40
+00:02:04,050 --> 00:02:05,940
+Another hit only one in four.
+
+41
+00:02:06,630 --> 00:02:07,790
+With the coil flipped?
+
+42
+00:02:09,700 --> 00:02:13,310
+Across all three pairs,
+nobody pressed the touchpad once.
+
+43
+00:02:13,350 --> 00:02:14,940
+Every rocket got through.
+
+44
+00:02:16,370 --> 00:02:20,750
+Then the researchers gave the person
+on the receiving end a much better job.
+
+45
+00:02:21,010 --> 00:02:23,530
+In a 2019 study, three people played
+
+46
+00:02:23,570 --> 00:02:26,580
+a falling-block game
+from three separate rooms.
+
+47
+00:02:26,820 --> 00:02:29,130
+Two players could see
+the gap at the bottom.
+
+48
+00:02:29,340 --> 00:02:33,080
+The third could see the block and had
+to decide whether to rotate it.
+
+49
+00:02:33,440 --> 00:02:36,350
+From that seat, either
+answer looked reasonable.
+
+50
+00:02:37,180 --> 00:02:38,860
+Each teammate sent a vote.
+
+51
+00:02:39,550 --> 00:02:42,860
+This time the coil was at the back
+of the receiver’s head,
+
+52
+00:02:42,980 --> 00:02:45,410
+over the part of the brain
+involved in vision.
+
+53
+00:02:45,700 --> 00:02:48,410
+A little flash in their
+vision meant “rotate.”
+
+54
+00:02:48,630 --> 00:02:50,660
+No flash meant “leave it.”
+
+55
+00:02:51,610 --> 00:02:54,840
+They got one vote from each
+teammate, chose what to do,
+
+56
+00:02:54,900 --> 00:02:58,520
+then got a fresh round of votes
+and a chance to change their answer.
+
+57
+00:02:59,320 --> 00:03:02,110
+Here’s where I’d start
+having trust issues.
+
+58
+00:03:02,730 --> 00:03:07,220
+On ten of the sixteen trials, the computer
+flipped one teammate’s advice.
+
+59
+00:03:07,500 --> 00:03:10,760
+Over time, receivers learned
+whose signal to trust.
+
+60
+00:03:11,020 --> 00:03:15,380
+Across five teams, they cleared the line
+about thirteen times out of sixteen.
+
+61
+00:03:16,260 --> 00:03:17,520
+Go back to that finger.
+
+62
+00:03:18,330 --> 00:03:22,200
+In the first game, the pulse helped
+decide when somebody else’s hand moved.
+
+63
+00:03:22,980 --> 00:03:25,710
+Six years later, a pulse
+could give you advice.
+
+64
+00:03:26,490 --> 00:03:28,720
+And you could decide
+the other guy was wrong.
