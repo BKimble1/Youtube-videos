@@ -494,7 +494,9 @@ const POKE_ORBIT1: Orbit = {target: [-27, -8.0, 7], az: 22, el: -14, d: 38, f: 1
 export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.64, 13.5)));
 export const pokeState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: 0.5, plainOutside: true, nearCut: 22, puff: true};
+  // just after the match cut the body inside the slit stays in shadow (the inside view showed it coming in on a
+  // different line); only the tip breaking out reads, then the slit lightens as more of the body comes out
+  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideShade: lerp(0.9, 0.5, ss(t, 12.95, 13.5)), shadeNear: 0.12, plainOutside: true, nearCut: 22, puff: true};
 };
 export const pokeStateWith = (o: Orbit, t: number): ExtState => (t > 15.9 && t < 18 ? {...headState(t), cam: orbitCam(o)} : {cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 

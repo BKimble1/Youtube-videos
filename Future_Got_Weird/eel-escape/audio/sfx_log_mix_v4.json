@@ -173,118 +173,118 @@
  },
  {
   "t": 20.3,
-  "dur": 0.56,
+  "dur": 0.65,
   "sfx": "S10: the curl tightens (stretch)",
   "level_re_voice_db": -17.0,
   "bus": "dot"
  },
  {
-  "t": 20.85,
+  "t": 20.94,
   "dur": 0.9,
   "sfx": "S10: RELEASE water rush",
   "level_re_voice_db": -6.0,
   "bus": "accent"
  },
  {
-  "t": 20.86,
+  "t": 20.95,
   "dur": 0.3,
   "sfx": "S10: release low pop",
   "level_re_voice_db": -12.0,
   "bus": "accent"
  },
  {
-  "t": 20.89,
+  "t": 20.98,
   "dur": 0.7,
   "sfx": "S10: release bubbles",
   "level_re_voice_db": -14.0,
   "bus": "accent"
  },
  {
-  "t": 21.21,
+  "t": 21.3,
   "dur": 0.19,
   "sfx": "swim stroke 1",
   "level_re_voice_db": -22.0,
   "bus": "dot"
  },
  {
-  "t": 21.448,
+  "t": 21.538,
   "dur": 0.19,
   "sfx": "swim stroke 2",
   "level_re_voice_db": -22.3,
   "bus": "dot"
  },
  {
-  "t": 21.686,
+  "t": 21.776,
   "dur": 0.19,
   "sfx": "swim stroke 3",
   "level_re_voice_db": -22.6,
   "bus": "dot"
  },
  {
-  "t": 21.924,
+  "t": 22.014,
   "dur": 0.19,
   "sfx": "swim stroke 4",
   "level_re_voice_db": -22.9,
   "bus": "dot"
  },
  {
-  "t": 22.162,
+  "t": 22.252,
   "dur": 0.19,
   "sfx": "swim stroke 5",
   "level_re_voice_db": -23.2,
   "bus": "dot"
  },
  {
-  "t": 22.4,
+  "t": 22.49,
   "dur": 0.19,
   "sfx": "swim stroke 6",
   "level_re_voice_db": -23.5,
   "bus": "dot"
  },
  {
-  "t": 22.639,
+  "t": 22.729,
   "dur": 0.19,
   "sfx": "swim stroke 7",
   "level_re_voice_db": -23.8,
   "bus": "dot"
  },
  {
-  "t": 22.877,
+  "t": 22.967,
   "dur": 0.19,
   "sfx": "swim stroke 8",
   "level_re_voice_db": -24.1,
   "bus": "dot"
  },
  {
-  "t": 23.115,
+  "t": 23.205,
   "dur": 0.19,
   "sfx": "swim stroke 9",
   "level_re_voice_db": -24.4,
   "bus": "dot"
  },
  {
-  "t": 23.353,
+  "t": 23.443,
   "dur": 0.19,
   "sfx": "swim stroke 10",
   "level_re_voice_db": -24.7,
   "bus": "dot"
  },
  {
-  "t": 23.591,
+  "t": 23.681,
   "dur": 0.19,
   "sfx": "swim stroke 11",
   "level_re_voice_db": -25.0,
   "bus": "dot"
  },
  {
-  "t": 23.829,
+  "t": 23.919,
   "dur": 0.19,
   "sfx": "swim stroke 12",
   "level_re_voice_db": -25.3,
   "bus": "dot"
  },
  {
-  "t": 24.067,
+  "t": 24.157,
   "dur": 0.19,
   "sfx": "swim stroke 13",
   "level_re_voice_db": -25.6,
