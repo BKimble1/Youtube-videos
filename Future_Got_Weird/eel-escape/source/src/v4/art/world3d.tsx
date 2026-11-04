@@ -1,28 +1,36 @@
 // V4 package W: the open water, the riverbed and the reeds, in 3D (v4/three.ts world: the predator's own units, y DOWN,
-// the bed is the plane y = BED_Y, z toward the near side, the current flows +x).
+// the bed is the plane y = BED_Y = 12.95, z toward the near side, the current flows +x).
 //
 // Every exterior shot draws its environment through the SAME camera Basis as the predator and the eel, so every angle
-// reads as one place: the same light (from the upper left of the screen), the same water colour by view direction, the
-// same riverbed, the same reed beds, the same distant stones and plants. Everything is world-anchored, so a moving
-// camera gets true parallax; nothing pops: discrete detail fades by size and by distance, motes wrap on a
-// world-anchored tile around the eye and fade before the tile edge.
+// reads as one place: the same light (from the upper left of the screen), the same water colour by view direction
+// (brighter toward the surface, deeper and bluer toward the distance), the same riverbed, the same reed beds, the same
+// distant stones and plants. Everything is world-anchored, so a moving camera gets true parallax, and nothing pops:
+// discrete detail fades by screen size and by distance, motes wrap on a world-anchored tile around the eye and fade
+// before the tile edge, LOD never changes a shape.
 //
 // All components return SVG elements in SCREEN px: put them straight into the frame's root
 // <svg width=1080 height=1920> (untransformed). No filters at all: softness is layered translucent shapes.
 //
 // Frame recipe (back to front):
-//   <WorldBack B t zSplit />        water by view direction, the upper-left glow, light shafts, distant silhouettes,
-//                                   the bed (sand, gravel, caustic net), the reeds and rocks BEHIND zSplit, back motes,
-//                                   a mild vignette
+//   <WorldBack B t zSplit />        water by view direction + the upper-left glow, light shafts, distant silhouettes,
+//                                   the bed (sand by distance, caustic dapples, gravel), the reeds and boulders BEHIND
+//                                   zSplit, back motes, a mild vignette
 //   <PredShadow B pose />           the predator's soft contact shadow on the bed
-//   <Predator .../> <Eel3D .../>    (packages P and the eel)
-//   <WorldFront B t zSplit />       the reeds and rocks IN FRONT of zSplit (soft, dark, out of focus near the lens),
-//                                   front motes (bokeh near the lens)
-//   <ReedWipe t t0 t1 />            (the loop only) a reed blade sweeping right → left right at the lens
+//   <Predator .../> <Eel3D .../>    (package P and the eel)
+//   <WorldFront B t zSplit />       the reeds and boulders IN FRONT of zSplit (soft and dark near the lens), front motes
+//                                   (bokeh near the lens)
+//   <ReedWipe t t0 t1 />            (the loop only) a reed blade sweeping right → left right at the lens; show frame 0
+//                                   inside reedWipePoly(t, t0, t1) underneath it
 //
-// zSplit: the camera depth (units along the view axis, three.ts depth()) of the subject. Reeds, rocks and motes whose
-// depth is ≥ zSplit draw in WorldBack, the rest in WorldFront. It is also the focus distance for the depth of field
-// (things much nearer the lens than zSplit go soft and dark). Default: the depth of the predator's centre (0, 0, 0).
+// zSplit: the camera depth (units along the view axis, three.ts depth()) of the subject. Reeds, boulders and motes
+// whose depth is ≥ zSplit draw in WorldBack, the rest in WorldFront (a blade by its base). It is also the focus
+// distance of the depth of field: things much nearer the lens than zSplit go soft and dark. Default: the depth of the
+// predator's centre (0, 0, 0). In a shot where front reeds would cover the subject, pass filter={clearSight(B, [...
+// points to keep in view], r)}: clumps near those sight lines fade out smoothly (never pop as the camera moves).
+//
+// Exports: WorldBack, WorldFront, Reeds, PredShadow, ReedWipe, reedWipePoly, reedWipeCore (checks), REEDS (the clump
+// placements), ROCKS, clearSight, ReedFilter, BED_Y, SURF_Y, waterColor, fogAt, hazeOf (e.g. the receding predator's
+// `dim`), the reed colours.
 import React from 'react';
 import {add3, Basis, depth, dot3, len3, mul3, norm3, P2, smoothClosed, sub3, V3, proj, cross3, hull, V2} from '../three';
 import {C, INK, INK_PX, NS} from '../../art/palette';
@@ -57,12 +65,12 @@ const SAND_NEAR = mix(mix(C.sand, C.pebbleC, 0.45), C.haze, 0.14);
 const BED_SHADOW = mix(C.bedShadow, C.waterDeep, 0.25);
 const CAUSTIC = lit(mix(C.mote, C.pebbleB, 0.12), 0.25);
 /** the reeds (eelgrass): olive green in three cel tones, plus the near-lens silhouette tone */
-export const REED_LIT = lit(mix(C.fin, C.waterTop, 0.36), 0.14);
-export const REED_MID = mix(mix(C.fin, C.waterDeep, 0.4), C.fishBody, 0.1);
-export const REED_DARK = mix(mix(C.finDark, C.waterDeep, 0.55), C.fishDark, 0.2);
-const REED_YEL = mix(C.fin, C.fishBody, 0.4);
-const REED_TEAL = mix(C.waterMid, C.fishDark, 0.25);
-export const REED_NEAR = shade(mix(REED_DARK, C.waterDeep, 0.4), 0.4);
+export const REED_LIT = lit(mix(C.fin, C.waterTop, 0.46), 0.12);
+export const REED_MID = mix(C.fin, C.waterMid, 0.56);
+export const REED_DARK = mix(mix(C.finDark, C.waterDeep, 0.6), C.fishDark, 0.15);
+const REED_YEL = mix(C.fin, C.waterMid, 0.36);
+const REED_TEAL = mix(C.waterMid, C.finDark, 0.3);
+export const REED_NEAR = shade(mix(REED_DARK, C.waterDeep, 0.3), 0.32);
 const ROCK_BASE = mix(mix(C.pebbleA, C.pebbleC, 0.4), C.haze, 0.08);
 
 // ================================================================ the water by view direction, and the haze
@@ -87,7 +95,7 @@ export const waterColor = (dir: V3) => {
   }
   return WATER_ZENITH;
 };
-const FOG0 = 45, FOG_L = 240;
+const FOG0 = 55, FOG_L = 270;
 /** how far a point at distance d (world units from the eye) has dissolved into the water (0..1) */
 export const fogAt = (d: number) => (d <= FOG0 ? 0 : 1 - Math.exp(-(d - FOG0) / FOG_L));
 /** the haze amount of a world point seen from this camera (e.g. the receding predator's `dim`) */
@@ -109,6 +117,16 @@ const lightDir = (B: Basis): V3 => norm3(add3(add3(mul3(B.r, -0.55), mul3(B.u, 0
 const onScreen = (x: number, y: number, m: number) => x > -m && x < W + m && y > -m && y < H + m;
 const f1 = (n: number) => (Math.round(n * 10) / 10).toString();
 const pp = (p: V2) => `${f1(p.x)} ${f1(p.y)}`;
+/** smooth closed path (Catmull-Rom as cubic Béziers) at 0.1 px precision */
+const closedPx = (ps: P[]) => {
+  const n = ps.length;
+  let d = `M${pp(ps[0])}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = ps[(i - 1 + n) % n], p1 = ps[i], p2 = ps[(i + 1) % n], p3 = ps[(i + 2) % n];
+    d += `C${f1(p1.x + (p2.x - p0.x) / 6)} ${f1(p1.y + (p2.y - p0.y) / 6)} ${f1(p2.x - (p3.x - p1.x) / 6)} ${f1(p2.y - (p3.y - p1.y) / 6)} ${pp(p2)}`;
+  }
+  return d + 'Z';
+};
 /** the bed region in view (x/z bounding box), out to the distance dMax */
 const bedView = (B: Basis, dMax: number) => {
   let x0 = B.eye[0], x1 = B.eye[0], z0 = B.eye[2], z1 = B.eye[2];
@@ -139,10 +157,30 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
   // the horizon row (unrolled, centre column): the ray with no vertical component
   const uy = B.u[1];
   const yh = Math.abs(uy) > 1e-6 ? (B.f * B.fw[1]) / uy : 1e9;
+  // the drawn area: the frame (in unrolled coordinates: the frame's box rotated back, when rolled)
+  let fx0 = 0, fy0 = 0, fx1 = W, fy1 = H;
+  if (B.roll) {
+    const c = Math.cos((-B.roll * Math.PI) / 180), sn = Math.sin((-B.roll * Math.PI) / 180);
+    const xs: number[] = [], ys2: number[] = [];
+    for (const [x, y] of [[0, 0], [W, 0], [W, H], [0, H]]) {
+      const dx = x - B.cx, dy = y - B.cy;
+      xs.push(B.cx + dx * c - dy * sn);
+      ys2.push(B.cy + dx * sn + dy * c);
+    }
+    fx0 = Math.min(...xs) - 2; fx1 = Math.max(...xs) + 2; fy0 = Math.min(...ys2) - 2; fy1 = Math.max(...ys2) + 2;
+  }
+  const fyMin = fy0, fyMax = fy1;
   const ys: number[] = [];
-  for (let i = 0; i <= 44; i++) ys.push(-R + (2 * R * i) / 44);
-  for (const o of [1, 3, 6, 10, 16, 25, 38, 55, 80, 110, 150, 210, 290]) ys.push(yh + o, yh - o);
-  const rows = ys.filter((y) => y >= -R && y <= R).sort((a, b) => a - b);
+  // rows: an even spread over the frame plus a geometric cluster around the horizon (where the bed's depth changes
+  // fastest); rows closer than 12 px to a neighbour are merged away
+  const yT = (fyMin - B.cy), yB = (fyMax - B.cy);
+  for (let i = 0; i <= 20; i++) ys.push(yT + ((yB - yT) * i) / 20);
+  for (const o of [2, 6, 14, 28, 50, 85, 140, 220]) ys.push(yh + o, yh - o);
+  const rows0 = ys.filter((y) => y >= yT - 1 && y <= yB + 1).sort((a, b) => a - b);
+  const rows: number[] = [];
+  for (const y of rows0) if (!rows.length || y - rows[rows.length - 1] > 12 || Math.abs(y - yh) < 8) rows.push(y);
+  rows[0] = yT;
+  rows[rows.length - 1] = yB;
   const stops = rows.map((y) => {
     const d = rayDir(B, 0, y);
     let col = waterColor(d);
@@ -150,7 +188,7 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
       const D = eyeH / d[1];
       col = mix(bedColor(D), col, fogAt(D));
     }
-    return {o: (y + R) / (2 * R), col};
+    return {y: B.cy + y, col};
   });
   // the glow of the light from the upper left: a broad soft bloom where the sky light comes from (camera-relative
   // heading, fixed elevation), sliding off the top of the frame as the camera looks down
@@ -160,26 +198,36 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
   const gy = dEl < 85 ? -B.f * Math.tan((dEl * Math.PI) / 180) : -1e5;
   const gx = B.f * Math.tan((gAz * Math.PI) / 180) * (1 + 0.4 * Math.max(0, -camEl) / 30);
   const gr = 1500;
-  const glow = gy > -R - gr * 0.9;
+  const glow = gy > -R - gr * 0.9 && B.cy + gy - gr < fy1 && B.cy + gy + gr > fy0;
+  const gx0 = Math.max(fx0, B.cx + gx - gr), gx1 = Math.min(fx1, B.cx + gx + gr), gy0 = Math.max(fy0, B.cy + gy - gr), gy1 = Math.min(fy1, B.cy + gy + gr);
+  // the gradient is drawn as bands between consecutive rows, each a TWO-stop gradient (several times cheaper to
+  // rasterise than one many-stop gradient); bands overlap by 1 px and agree at their joins, so no seam shows
+  const bands: {y0: number; y1: number; c0: string; c1: string}[] = [];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const y0 = Math.round(stops[i].y), y1 = Math.round(stops[i + 1].y);
+    if (y1 <= y0) continue;
+    bands.push({y0, y1, c0: stops[i].col, c1: stops[i + 1].col});
+  }
   return (
     <g transform={rollG(B)}>
       <defs>
-        <linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={0} y1={B.cy - R} x2={0} y2={B.cy + R}>
-          {stops.map((s, i) => (
-            <stop key={i} offset={s.o.toFixed(5)} stopColor={s.col} />
-          ))}
-        </linearGradient>
+        {bands.map((b, i) => (
+          <linearGradient key={i} id={`${id}g${i}`} gradientUnits="userSpaceOnUse" x1={0} y1={b.y0} x2={0} y2={b.y1}>
+            <stop offset="0" stopColor={b.c0} />
+            <stop offset="1" stopColor={b.c1} />
+          </linearGradient>
+        ))}
         {glow && (
           <radialGradient id={`${id}l`} gradientUnits="userSpaceOnUse" cx={B.cx + gx} cy={B.cy + gy} r={gr}>
-            <stop offset="0" stopColor={lit(C.waterTop, 0.6)} stopOpacity={0.62} />
-            <stop offset="0.38" stopColor={lit(C.waterTop, 0.45)} stopOpacity={0.3} />
-            <stop offset="0.7" stopColor={lit(C.waterTop, 0.3)} stopOpacity={0.08} />
-            <stop offset="1" stopColor={C.waterTop} stopOpacity={0} />
+            <stop offset="0" stopColor={lit(C.waterTop, 0.55)} stopOpacity={0.5} />
+            <stop offset="1" stopColor={lit(C.waterTop, 0.3)} stopOpacity={0} />
           </radialGradient>
         )}
       </defs>
-      <rect x={B.cx - R} y={B.cy - R} width={2 * R} height={2 * R} fill={`url(#${id}g)`} />
-      {glow && <rect x={B.cx - R} y={B.cy - R} width={2 * R} height={2 * R} fill={`url(#${id}l)`} />}
+      {bands.map((b, i) => (
+        <rect key={i} x={Math.floor(fx0)} y={b.y0} width={Math.ceil(fx1 - fx0)} height={b.y1 - b.y0 + (i < bands.length - 1 ? 1 : 0)} fill={`url(#${id}g${i})`} />
+      ))}
+      {glow && <rect x={gx0} y={gy0} width={gx1 - gx0} height={gy1 - gy0} fill={`url(#${id}l)`} />}
     </g>
   );
 };
@@ -188,11 +236,11 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
 type Shaft = {x: number; z: number; w: number; a: number; ph: number};
 const SHAFTS: Shaft[] = (() => {
   const out: Shaft[] = [];
-  const g = 70;
-  for (let i = -7; i <= 7; i++) {
-    for (let j = -7; j <= 7; j++) {
+  const g = 85;
+  for (let i = -6; i <= 6; i++) {
+    for (let j = -6; j <= 6; j++) {
       const h = (k: number) => hash(i * 13.17 + j * 7.31 + k * 3.03 + 0.5);
-      if (h(1) < 0.45) continue;
+      if (h(1) < 0.5) continue;
       out.push({x: (i + h(2)) * g, z: (j + h(3)) * g, w: 7 + 26 * h(4) * h(4), a: 0.1 + 0.12 * h(5), ph: TAU * h(6)});
     }
   }
@@ -225,7 +273,7 @@ const Shafts: React.FC<{B: Basis; t: number}> = ({B, t}) => {
     if (Math.max(pa.x, pb.x) < -wpx || Math.min(pa.x, pb.x) > W + wpx) continue;
     if (Math.max(pa.y, pb.y) < -50 || Math.min(pa.y, pb.y) > H + 50) continue;
     const a = s.a * kEl * (0.72 + 0.28 * noise1(0.3 * t + s.ph, 4)) * ss(D, 22, 70) * (1 - 0.7 * fogAt(D));
-    if (a < 0.008) continue;
+    if (a < 0.015) continue;
     const quad = (wTop: number, wBot: number) => {
       const ra = mul3(B.r, lerp(wTop, wBot, ua) / 2), rb = mul3(B.r, lerp(wTop, wBot, ub) / 2);
       const A = at(ua), Bq = at(ub);
@@ -241,7 +289,7 @@ const Shafts: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       <defs>
         {items.map((it, i) => (
           <linearGradient key={i} id={`${id}${i}`} gradientUnits="userSpaceOnUse" x1={f1(it.ga.x)} y1={f1(it.ga.y)} x2={f1(it.gb.x)} y2={f1(it.gb.y)}>
-            {[0, 0.25, 0.5, 0.75, 1].map((k) => (
+            {[0, 0.4, 1].map((k) => (
               <stop key={k} offset={k} stopColor={C.mote} stopOpacity={(it.a * prof(lerp(it.sa, it.sb, k))).toFixed(4)} />
             ))}
           </linearGradient>
@@ -249,7 +297,7 @@ const Shafts: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       </defs>
       {items.map((it, i) => (
         <g key={i} fill={`url(#${id}${i})`}>
-          <path d={it.d[0]} opacity={0.45} />
+          <path d={it.d[0]} fillOpacity={0.45} />
           <path d={it.d[1]} />
         </g>
       ))}
@@ -326,27 +374,39 @@ const FarProps: React.FC<{B: Basis; t: number}> = ({B, t}) => {
 };
 
 // ================================================================ THE BED: gravel (world-fixed, multi-scale), caustics
-type GravelSet = {cell: number; ext: number; keep: number; r: [number, number]; seed: number};
+type GravelSet = {cell: number; ext: number; keep: number; r: [number, number]; seed: number; dMax: number; dDown: number};
+/** three world-fixed scales of gravel; each is drawn out to dMax (+ dDown more when the camera looks straight down,
+ *  where the bed is not foreshortened), fading out before it */
 const GRAVEL: GravelSet[] = [
-  {cell: 4.6, ext: 240, keep: 0.55, r: [0.22, 0.85], seed: 1.3},
-  {cell: 11, ext: 420, keep: 0.6, r: [0.6, 2.1], seed: 7.9},
-  {cell: 27, ext: 760, keep: 0.6, r: [1.6, 5.2], seed: 13.7},
+  {cell: 4.6, ext: 240, keep: 0.55, r: [0.22, 0.85], seed: 1.3, dMax: 75, dDown: 45},
+  {cell: 11, ext: 420, keep: 0.6, r: [0.6, 2.1], seed: 7.9, dMax: 190, dDown: 40},
+  {cell: 27, ext: 760, keep: 0.55, r: [1.6, 4.6], seed: 13.7, dMax: 520, dDown: 0},
 ];
 const STONE_TONES = [mix(C.pebbleA, SAND, 0.18), mix(C.pebbleB, SAND, 0.15), mix(C.pebbleC, SAND, 0.12)];
-const ell = (x: number, y: number, rx: number, ry: number) =>
-  `M${f1(x - rx)} ${f1(y)}a${f1(rx)} ${f1(ry)} 0 1 0 ${f1(2 * rx)} 0a${f1(rx)} ${f1(ry)} 0 1 0 ${f1(-2 * rx)} 0Z`;
-/** the gravel in view, batched into a few paths by tone and haze step (so hundreds of stones cost a handful of
- *  elements). Stones fade in by screen size (no pop) and dissolve into the water with distance. */
+/** an ellipse as path data: small ones as an octagon (cheaper to fill, identical at that size), big ones as arcs */
+const ell = (x: number, y: number, rx: number, ry: number) => {
+  if (rx < 4.5) {
+    const a = rx * 0.7071, b = ry * 0.7071;
+    return `M${f1(x - rx)} ${f1(y)}L${f1(x - a)} ${f1(y - b)}L${f1(x)} ${f1(y - ry)}L${f1(x + a)} ${f1(y - b)}L${f1(x + rx)} ${f1(y)}L${f1(x + a)} ${f1(y + b)}L${f1(x)} ${f1(y + ry)}L${f1(x - a)} ${f1(y + b)}Z`;
+  }
+  return `M${f1(x - rx)} ${f1(y)}a${f1(rx)} ${f1(ry)} 0 1 0 ${f1(2 * rx)} 0a${f1(rx)} ${f1(ry)} 0 1 0 ${f1(-2 * rx)} 0Z`;
+};
+/** the gravel in view, batched into a few paths by tone, haze step and size class (so hundreds of stones cost a
+ *  handful of elements). Stones fade in by screen size and out by distance (no pops), and dissolve into the water. */
 const Gravel: React.FC<{B: Basis}> = ({B}) => {
   const hgt = BED_Y - B.eye[1];
-  const NF = 6;
-  const body: string[][] = STONE_TONES.map(() => Array.from({length: NF}, () => ''));
-  const shadow: string[] = Array.from({length: NF}, () => '');
-  const hi: string[] = Array.from({length: NF}, () => '');
-  const alphaB: number[][] = STONE_TONES.map(() => Array.from({length: NF}, () => 0));
-  let count = 0;
+  const lookDown = clamp(B.fw[1], 0, 1);
+  const NF = 8;
+  const NT = STONE_TONES.length;
+  // buckets: [fog][tone] for bodies (small: no ink; big: ink), caps, and shadows per fog step; each also keeps the
+  // lowest alpha it has to show (stones fading in/out are binned by alpha too, 3 steps)
+  type Bk = {d: string};
+  const mk = () => Array.from({length: NF * NT * 3}, (): Bk => ({d: ''}));
+  const bodyS = mk(), bodyB = mk(), cap = mk();
+  const shadow = Array.from({length: NF * 3}, (): Bk => ({d: ''}));
   for (const g of GRAVEL) {
-    const v = bedView(B, Math.min(g.ext * 1.6, 900));
+    const dMax = g.dMax + g.dDown * lookDown;
+    const v = bedView(B, dMax);
     const i0 = Math.floor(Math.max(v.x0, -g.ext) / g.cell), i1 = Math.ceil(Math.min(v.x1, g.ext) / g.cell);
     const j0 = Math.floor(Math.max(v.z0, -g.ext) / g.cell), j1 = Math.ceil(Math.min(v.z1, g.ext) / g.cell);
     for (let i = i0; i <= i1; i++) {
@@ -357,101 +417,98 @@ const Gravel: React.FC<{B: Basis}> = ({B}) => {
         if (Math.abs(x) > g.ext || Math.abs(z) > g.ext) continue;
         const r = lerp(g.r[0], g.r[1], Math.pow(h(0.3), 2));
         const c: V3 = [x, BED_Y - r * 0.22, z];
+        const D = Math.hypot(x - B.eye[0], c[1] - B.eye[1], z - B.eye[2]);
+        if (D > dMax) continue;
         const dz = depth(B, c);
         if (dz < NEAR + 1) continue;
         const pc = proj(B, c);
         const rx = r * pc.s;
-        if (rx < 0.55 || !onScreen(pc.x, pc.y, rx * 1.5 + 4)) continue;
-        const D = len3(sub3(c, B.eye));
+        if (rx < 1.1 || !onScreen(pc.x, pc.y, rx * 1.5 + 4)) continue;
+        const a = ss(rx, 1.1, 2.4) * (1 - ss(D, dMax * 0.72, dMax));
+        if (a < 0.04) continue;
         const sinA = clamp(hgt / D, 0.02, 1);
         const ry = pc.s * Math.hypot(r * sinA, 0.5 * r * Math.sqrt(1 - sinA * sinA));
         const fg = fogAt(D);
         const fb = Math.min(NF - 1, Math.floor(fg * NF * 0.999));
+        const ab = a > 0.8 ? 2 : a > 0.45 ? 1 : 0;
         const tone = h(0.4) < 0.4 ? 0 : h(0.4) < 0.75 ? 1 : 2;
-        const a = ss(rx, 0.55, 1.6);
-        body[tone][fb] += ell(pc.x, pc.y, rx, ry);
-        alphaB[tone][fb] = Math.max(alphaB[tone][fb], a);
-        if (rx > 2.2) {
-          shadow[fb] += ell(pc.x + rx * 0.28, pc.y + ry * 0.55, rx * 1.08, ry * 0.5);
-          hi[fb] += ell(pc.x - rx * 0.25, pc.y - ry * 0.32, rx * 0.55, ry * 0.42);
+        const key = (fb * NT + tone) * 3 + ab;
+        (rx > 7 ? bodyB : bodyS)[key].d += ell(pc.x, pc.y, rx, ry);
+        if (rx > 3.2) {
+          shadow[fb * 3 + ab].d += ell(pc.x + rx * 0.3, pc.y + ry * 0.5, rx * 1.1, ry * 0.55);
+          cap[key].d += ell(pc.x - rx * 0.1, pc.y - ry * 0.24, rx * 0.86, ry * 0.72);
         }
-        count++;
       }
     }
   }
   const out: React.ReactNode[] = [];
-  for (let f = 0; f < NF; f++) {
+  const AB = [0.3, 0.62, 1];
+  for (let f = NF - 1; f >= 0; f--) {
     const fg = (f + 0.5) / NF;
     const wc = HORIZON;
-    if (shadow[f]) out.push(<path key={`s${f}`} d={shadow[f]} fill={BED_SHADOW} opacity={(0.32 * (1 - fg)).toFixed(3)} />);
-    STONE_TONES.forEach((tc, k) => {
-      if (body[k][f]) out.push(<path key={`b${f}${k}`} d={body[k][f]} fill={mix(tc, wc, fg * 0.92)} opacity={(0.55 + 0.45 * alphaB[k][f]).toFixed(3)} />);
-    });
-    if (hi[f]) out.push(<path key={`h${f}`} d={hi[f]} fill={lit(SAND_LIT, 0.35)} opacity={(0.5 * (1 - fg)).toFixed(3)} />);
+    for (let ab = 0; ab < 3; ab++) {
+      const sd = shadow[f * 3 + ab].d;
+      if (sd) out.push(<path key={`s${f}${ab}`} d={sd} fill={BED_SHADOW} fillOpacity={(0.3 * (1 - fg) * AB[ab]).toFixed(3)} />);
+    }
+    for (let k = 0; k < NT; k++) {
+      const tc = STONE_TONES[k];
+      for (let ab = 0; ab < 3; ab++) {
+        const key = (f * NT + k) * 3 + ab;
+        const o = AB[ab] < 1 ? AB[ab].toFixed(2) : undefined;
+        const body = mix(shade(tc, 0.2), wc, fg * 0.92);
+        if (bodyS[key].d) out.push(<path key={`b${key}`} d={bodyS[key].d} fill={body} fillOpacity={o} />);
+        if (bodyB[key].d)
+          out.push(<path key={`B${key}`} d={bodyB[key].d} fill={body} fillOpacity={o} stroke={INK} strokeOpacity={(0.5 * (1 - fg) * AB[ab]).toFixed(3)} strokeWidth={INK_PX * 0.5} vectorEffect={NS} />);
+        if (cap[key].d) out.push(<path key={`c${key}`} d={cap[key].d} fill={mix(lit(mix(tc, SAND, 0.2), 0.1), wc, fg * 0.92)} fillOpacity={o} />);
+      }
+    }
   }
-  void count;
   return <g>{out}</g>;
 };
 
-/** 2D value noise in [-1, 1] (smooth, deterministic) */
-const vnoise2 = (x: number, z: number, seed: number) => {
-  const i = Math.floor(x), j = Math.floor(z);
-  const fx = x - i, fz = z - j;
-  const sx = fx * fx * (3 - 2 * fx), sz = fz * fz * (3 - 2 * fz);
-  const h = (a: number, b: number) => hash(a * 12.9898 + b * 78.233 + seed * 37.719) * 2 - 1;
-  const a0 = h(i, j), a1 = h(i + 1, j), b0 = h(i, j + 1), b1 = h(i + 1, j + 1);
-  return lerp(lerp(a0, a1, sx), lerp(b0, b1, sx), sz);
-};
-/** the caustic field on the bed: its zero set is a drifting labyrinth of light lines */
-const causticF = (x: number, z: number, t: number) =>
-  vnoise2(x / 7.5 + 0.05 * t, z / 7.5 - 0.03 * t, 1) + 0.55 * vnoise2(x / 3.6 - 0.09 * t, z / 3.6 + 0.04 * t, 2);
-/** caustics: the bright wavering lines of focused sunlight on the bed around the eye (world-anchored; marching squares
- *  on the zero set of a drifting noise field), brightest when the camera looks down, fading with distance */
+/** caustics: the dapples of focused sunlight on the bed around the eye: world-anchored soft rounded patches on a
+ *  jittered grid, each breathing and drifting slowly; brighter when the camera looks down, fading with distance,
+ *  batched into a few paths by distance band */
 const Caustics: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const lookDown = clamp(B.fw[1], -1, 1);
-  const k = 0.5 + 0.5 * ss(lookDown, 0.1, 0.7);
-  const g = 1.9;
-  const dMax = 95;
+  const k = 0.55 + 0.45 * ss(lookDown, 0.1, 0.7);
+  const g = 6.2;
+  const dMax = 105;
   const v = bedView(B, dMax);
   const i0 = Math.floor(v.x0 / g), i1 = Math.ceil(v.x1 / g), j0 = Math.floor(v.z0 / g), j1 = Math.ceil(v.z1 / g);
-  if ((i1 - i0 + 1) * (j1 - j0 + 1) > 40000) return null;
-  const bands = [16, 28, 44, 66, dMax];
-  const paths = bands.map(() => '');
-  const ni = i1 - i0 + 2;
-  const val = new Float32Array(ni * (j1 - j0 + 2));
-  for (let i = i0; i <= i1 + 1; i++) for (let j = j0; j <= j1 + 1; j++) val[(i - i0) * (j1 - j0 + 2) + (j - j0)] = causticF(i * g, j * g, t);
-  const V = (i: number, j: number) => val[(i - i0) * (j1 - j0 + 2) + (j - j0)];
+  if ((i1 - i0 + 1) * (j1 - j0 + 1) > 6000) return null;
+  // each blob's own opacity (distance, haze, its breathing), quantised into NQ fine levels: one path per level
+  const NQ = 12, AMAX = 0.2;
+  const paths = Array.from({length: NQ}, () => '');
   const Y = BED_Y - 0.02;
-  const P3 = (x: number, z: number) => proj(B, [x, Y, z]);
   for (let i = i0; i <= i1; i++) {
     for (let j = j0; j <= j1; j++) {
-      const x = i * g, z = j * g;
-      const D = Math.hypot(x - B.eye[0], Y - B.eye[1], z - B.eye[2]);
+      const h = (q: number) => hash(i * 12.9898 + j * 78.233 + q * 4.37);
+      if (h(1) < 0.12) continue;
+      const life = 0.5 + 0.5 * noise1(0.3 * t + 20 * h(3), 7);
+      const cx = (i + 0.5) * g + 0.22 * g * noise1(0.11 * t + 9 * h(5), 3) + 0.4 * t;
+      const cz = (j + 0.5) * g + 0.22 * g * noise1(0.09 * t + 9 * h(6), 4);
+      const D = Math.hypot(cx - B.eye[0], Y - B.eye[1], cz - B.eye[2]);
       if (D > dMax) continue;
-      const a = V(i, j), b = V(i + 1, j), c = V(i + 1, j + 1), d = V(i, j + 1);
-      const cs: [number, number][] = [];
-      if (a * b < 0) cs.push([x + (g * a) / (a - b), z]);
-      if (b * c < 0) cs.push([x + g, z + (g * b) / (b - c)]);
-      if (c * d < 0) cs.push([x + g - (g * c) / (c - d), z + g]);
-      if (d * a < 0) cs.push([x, z + g - (g * d) / (d - a)]);
-      if (cs.length < 2) continue;
-      if (depth(B, [x, Y, z]) < NEAR + 3) continue;
-      const q = cs.map(([px, pz]) => P3(px, pz));
-      if (!onScreen(q[0].x, q[0].y, 20)) continue;
-      const bi = bands.findIndex((bb) => D <= bb);
-      paths[bi] += `M${pp(q[0])}L${pp(q[1])}`;
-      if (q.length === 4) paths[bi] += `M${pp(q[2])}L${pp(q[3])}`;
+      const op = k * 0.16 * ss(life, 0.12, 0.45) * (1 - ss(D, 30, dMax)) * (1 - fogAt(D)) * (0.55 + 0.45 * ss(D, 8, 30));
+      const q = Math.min(NQ - 1, Math.floor((op / AMAX) * NQ));
+      if (q < 1) continue;
+      if (depth(B, [cx, Y, cz]) < NEAR + 4) continue;
+      const pc = proj(B, [cx, Y, cz]);
+      const R = g * (0.36 + 0.12 * h(4)) * (0.75 + 0.25 * life);
+      if (!onScreen(pc.x, pc.y, R * pc.s + 10)) continue;
+      const ring: P[] = [];
+      for (let qq = 0; qq < 7; qq++) {
+        const a = (qq / 7) * TAU + h(7);
+        const rr = R * (0.72 + 0.5 * hash(i * 3.1 + j * 5.3 + qq * 1.7) + 0.12 * Math.sin(0.8 * t + qq + 6 * h(8)));
+        ring.push(proj(B, [cx + Math.cos(a) * rr, Y, cz + Math.sin(a) * rr]));
+      }
+      paths[q] += closedPx(ring);
     }
   }
   return (
-    <g fill="none" stroke={CAUSTIC} strokeLinecap="round" strokeLinejoin="round">
-      {paths.map((d, i) => {
-        if (!d) return null;
-        const Dm = i === 0 ? bands[0] * 0.75 : (bands[i - 1] + bands[i]) / 2;
-        const w = clamp((0.16 * B.f) / Dm, 0.8, 5);
-        const op = k * 0.34 * (1 - ss(Dm, 26, dMax)) * (1 - fogAt(Dm));
-        return op > 0.01 ? <path key={i} d={d} strokeWidth={f1(w)} strokeOpacity={op.toFixed(3)} /> : null;
-      })}
+    <g fill={CAUSTIC}>
+      {paths.map((d, q) => (d ? <path key={q} d={d} fillOpacity={(((q + 0.5) / NQ) * AMAX).toFixed(4)} /> : null))}
     </g>
   );
 };
@@ -509,7 +566,7 @@ const rockDraw = (B: Basis, rk: Rock, key: string): Draw | null => {
   const sh = proj(B, [rk.x + rk.r * 0.25, BED_Y, rk.z]);
   const inkO = (1 - 0.85 * f) * (1 - ss(D, 260, 420));
   const shapes: React.ReactNode[] = [
-    <ellipse key="s" cx={f1(sh.x + rpx * 0.12)} cy={f1(sh.y)} rx={f1(rpx * 1.05)} ry={f1(Math.max(2, rpx * 0.22))} fill={BED_SHADOW} opacity={(0.35 * (1 - f)).toFixed(3)} />,
+    <ellipse key="s" cx={f1(sh.x + rpx * 0.12)} cy={f1(sh.y)} rx={f1(rpx * 1.05)} ry={f1(Math.max(2, rpx * 0.22))} fill={BED_SHADOW} fillOpacity={(0.35 * (1 - f)).toFixed(3)} />,
     <path key="a" d={smoothClosed(hull(all))} fill={col(shade(ROCK_BASE, 0.32))} stroke={INK} strokeOpacity={inkO.toFixed(3)} strokeWidth={INK_PX * 0.75} vectorEffect={NS} strokeLinejoin="round" />,
   ];
   if (mid.length > 2) shapes.push(<path key="m" d={smoothClosed(hull(mid))} fill={col(ROCK_BASE)} />);
@@ -559,13 +616,13 @@ const bladesOf = (cl: ReedClump, ci: number): Blade[] =>
     const ox = Math.cos(ang) * rr, oz = Math.sin(ang) * rr;
     // lean downstream (+x), fanning a little away from the clump's centre
     const out = Math.atan2(oz, ox);
-    const dir = Math.atan2(0.5 * Math.sin(out) + (h(3) - 0.5) * 0.6, 1 + 0.4 * Math.cos(out));
+    const dir = Math.atan2(0.35 * Math.sin(out) + (h(3) - 0.5) * 0.45, 1 + 0.3 * Math.cos(out));
     return {
       x: cl.x + ox, z: cl.z + oz,
       L: cl.h * (0.6 + 0.4 * h(4)),
       w: 1.8 + 1.9 * h(5),
-      th0: TAU * h(6), tw: (h(7) - 0.5) * 5,
-      lean: 0.06 + 0.18 * h(8), bend: 0.35 + 0.75 * h(9),
+      th0: TAU * h(6), tw: (h(7) - 0.5) * 3.6,
+      lean: 0.08 + 0.2 * h(8), bend: 0.45 + 0.85 * h(9),
       dir, ph: TAU * h(10), tone: h(11), clump: ci,
     };
   });
@@ -626,7 +683,7 @@ const softRibbon = (c: P[], hw: number[]) => {
   const a = c[n - 2], b = c[n - 1];
   const tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1;
   const cap = {x: b.x + (tx / tl) * hw[n - 1] * 0.9, y: b.y + (ty / tl) * hw[n - 1] * 0.9};
-  return smoothClosed([...L, cap, ...R.reverse()]);
+  return closedPx([...L, cap, ...R.reverse()]);
 };
 
 /** a clump filter: false/0 drops the clump, a number in (0, 1) fades it */
@@ -658,7 +715,10 @@ const reedDraws = (o: ReedOpts): Draw[] => {
     const bd = depth(B, base);
     if (o.near !== bd < zSplit) continue;
     const Dh = Math.hypot(b.x - B.eye[0], b.z - B.eye[2]);
-    const n = Dh < 140 ? 12 : Dh < 260 ? 8 : 5;
+    // the geometry is always the same 12-segment curve (no shape change with distance); far blades are drawn
+    // through every 2nd / 3rd sample of it
+    const n = 12;
+    const step = Dh < 150 ? 1 : Dh < 280 ? 2 : 3;
     const g = bladeGeom(b, t, n);
     // depths, near-plane cut: keep the longest run of samples in front of the lens
     const dz = g.C.map((p) => depth(B, p));
@@ -676,7 +736,8 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       if (best[1] - best[0] < 1) continue;
       [i0, i1] = best;
     }
-    const idx = Array.from({length: i1 - i0 + 1}, (_, k) => i0 + k);
+    const idx: number[] = [];
+    for (let i = i0; i <= i1; i++) if (i === i0 || i === i1 || (i - i0) % step === 0) idx.push(i);
     const cs = idx.map((i) => proj(B, g.C[i]));
     // screen bbox cull (with the widest half-width)
     let bx0 = 1e9, bx1 = -1e9, by0 = 1e9, by1 = -1e9, wmax = 0;
@@ -765,25 +826,49 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       }
     }
     if (sharpK < 0.99) {
-      // out of focus: soft, dark, layered (core opaque, three translucent halos), no ink
-      const hw = idx.map((i, k) => {
-        const a = cs[k];
+      // out of focus: soft, dark, layered (an opaque core and translucent halos), no ink; every other sample is
+      // plenty for a blurred shape
+      const sel = idx.map((_, k) => k).filter((k) => k % 2 === 0 || k === idx.length - 1);
+      const cS = sel.map((k) => cs[k]);
+      const hS = sel.map((k) => {
+        const i = idx[k], a = cs[k];
         const e = proj(B, add3(g.C[i], mul3(g.W[i], g.w[i] / 2)));
         const prev = cs[Math.max(0, k - 1)], next = cs[Math.min(cs.length - 1, k + 1)];
         const tx = next.x - prev.x, ty = next.y - prev.y, tl = Math.hypot(tx, ty) || 1;
         return Math.abs(((e.x - a.x) * -ty + (e.y - a.y) * tx) / tl);
       });
-      const dark = 0.82 * ss(coc, 3, 40);
+      const dark = 0.85 * ss(coc, 3, 34);
       const col = mix(mix(tones[0], tones[1], 0.45), REED_NEAR, dark);
       const bl = coc;
-      const lay = (dw: number) => softRibbon(cs, hw.map((h) => Math.max(0.3, h + dw)));
+      const lay = (dw: number) => softRibbon(cS, hS.map((h) => Math.max(0.3, h + dw)));
       const g2: React.ReactNode[] = [];
-      if (Math.max(...hw) - bl / 2 > 1) g2.push(<path key="c" d={lay(-bl / 2)} />);
+      const hwMax = Math.max(...hS);
+      if (hwMax - bl / 2 > 1) g2.push(<path key="c" d={lay(-bl / 2)} />);
       // nL translucent halos from −bl/2 to +bl/2: stacked they ramp the edge from 0 to opaque
-      const nL = Math.round(clamp(bl / 9, 3, 6));
-      const la = 1 - Math.pow(0.12, 1 / nL);
-      for (let l = 0; l < nL; l++) g2.push(<path key={`h${l}`} d={lay(-bl / 2 + (bl * (l + 0.5)) / nL)} opacity={la.toFixed(3)} />);
-      els.push(<g key="soft" fill={col} opacity={(1 - sharpK).toFixed(3)}>{g2}</g>);
+      // (layer l, counted outward from the core, has opacity 1/(l + 2): the stacked coverage then steps evenly from
+      // the outer edge to the core, k/(nL + 1))
+      const nL = Math.round(clamp(bl / 8, 3, 5));
+      for (let l = 0; l < nL; l++) g2.push(<path key={`h${l}`} d={lay(-bl / 2 + (bl * (l + 0.5)) / nL)} fillOpacity={(1 / (l + 2)).toFixed(3)} />);
+      // the lit side of the out-of-focus blade: a soft lighter band toward the light (screen upper left)
+      if (hwMax > 8 && hwMax - bl / 2 > 4) {
+        const sh = cS.map((c0, k) => {
+          const a0 = cS[Math.max(0, k - 1)], b0 = cS[Math.min(cS.length - 1, k + 1)];
+          const tx = b0.x - a0.x, ty = b0.y - a0.y, tl = Math.hypot(tx, ty) || 1;
+          let nx = -ty / tl, ny = tx / tl;
+          if (nx * -0.62 + ny * -0.78 < 0) { nx = -nx; ny = -ny; }
+          const o = Math.max(0, hS[k] - bl / 2) * 0.42;
+          return {x: c0.x + nx * o, y: c0.y + ny * o};
+        });
+        const sw = hS.map((h) => Math.max(0.3, (h - bl / 2) * 0.3));
+        const sc = mix(col, mix(tones[1], tones[2], 0.5), 0.3 + 0.25 * (1 - dark));
+        g2.push(
+          <g key="lit" fill={sc}>
+            <path d={softRibbon(sh, sw.map((w0) => w0 + bl * 0.3))} fillOpacity={0.3} />
+            <path d={softRibbon(sh, sw)} fillOpacity={0.55} />
+          </g>,
+        );
+      }
+      els.push(<g key="soft" fill={col} opacity={sharpK > 0.01 ? (1 - sharpK).toFixed(3) : undefined}>{g2}</g>);
     }
     out.push({D: bd, el: <g key={`b${out.length}`} opacity={aNear < 0.99 ? aNear.toFixed(3) : undefined}>{els}</g>});
   }
@@ -895,9 +980,9 @@ const Motes: React.FC<{B: Basis; t: number; zSplit: number; near: boolean}> = ({
           </radialGradient>
         </defs>
       )}
-      {small.map((d, i) => (d ? <path key={i} d={d} fill={C.mote} opacity={((i + 0.5) / NB).toFixed(3)} /> : null))}
+      {small.map((d, i) => (d ? <path key={i} d={d} fill={C.mote} fillOpacity={((i + 0.5) / NB).toFixed(3)} /> : null))}
       {bokeh.map((b, i) => (
-        <circle key={`k${i}`} cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} fill={`url(#${id})`} opacity={b.a.toFixed(3)} />
+        <circle key={`k${i}`} cx={f1(b.x)} cy={f1(b.y)} r={f1(b.r)} fill={`url(#${id})`} fillOpacity={b.a.toFixed(3)} />
       ))}
     </g>
   );
@@ -906,15 +991,19 @@ const Motes: React.FC<{B: Basis; t: number; zSplit: number; near: boolean}> = ({
 // ================================================================ vignette (behind the subject)
 const Vignette: React.FC = () => {
   const id = uid('vg');
+  // only the ring outside the clear centre is filled (the gradient is transparent inside it anyway)
+  const cx = 510, cy = 900, R = 1150, k = 0.55;
+  const rx = R * k, ry = R * k;
+  const ring = `M-2 -2H${W + 2}V${H + 2}H-2Z M${cx - rx} ${cy}a${rx} ${ry} 0 1 0 ${2 * rx} 0a${rx} ${ry} 0 1 0 ${-2 * rx} 0Z`;
   return (
     <g>
       <defs>
-        <radialGradient id={id} gradientUnits="userSpaceOnUse" cx={510} cy={900} r={1150}>
-          <stop offset="0.55" stopColor={C.waterDeep} stopOpacity={0} />
+        <radialGradient id={id} gradientUnits="userSpaceOnUse" cx={cx} cy={cy} r={R}>
+          <stop offset={k} stopColor={C.waterDeep} stopOpacity={0} />
           <stop offset="1" stopColor={C.waterDeep} stopOpacity={0.3} />
         </radialGradient>
       </defs>
-      <rect x={0} y={0} width={W} height={H} fill={`url(#${id})`} />
+      <path d={ring} fillRule="evenodd" fill={`url(#${id})`} />
     </g>
   );
 };
@@ -961,15 +1050,18 @@ export const WorldFront: React.FC<WorldProps> = ({B, t, zSplit, reeds = true, fi
 // ================================================================ the predator's contact shadow
 /** the predator's soft contact shadow on the bed: a body-shaped ellipse in 3D (following the lateral `bend`, which is
  *  approximated as a parabola from x = −25 to the tail tip), layered for a soft edge, nudged away from the upper-left
- *  light. `at` moves it with a translated predator (world offset, default none). Draw after WorldBack, before the
- *  predator. */
-export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; opacity?: number}> = ({B, pose, at = [0, 0, 0], opacity = 1}) => {
+ *  light. Draw after WorldBack, before the predator.
+ *  - pose: any object with the predator's `bend` (a PredPose works)
+ *  - at: a world offset for a translated predator (default none)
+ *  - lift: how far the belly is above the bed (u, default 0): the shadow spreads and fades
+ *  - opacity: overall multiplier (default 1) */
+export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; lift?: number; opacity?: number}> = ({B, pose, at = [0, 0, 0], lift = 0, opacity = 1}) => {
   const bend = pose.bend ?? 0;
   const zOff = (x: number) => (bend * Math.max(0, x + 25) ** 2) / 150;
   // half-width of the shadow (the body's footprint plus the soft spread)
   const hwAt = (x: number) => {
     const u = (x + 52) / 104;
-    return 9.5 * Math.pow(Math.sin(Math.PI * clamp(u, 0, 1)), 0.7) * (1 - 0.45 * clamp(u, 0, 1));
+    return 9.5 * (1 + Math.max(0, lift) / 12) * Math.pow(Math.sin(Math.PI * clamp(u, 0, 1)), 0.7) * (1 - 0.45 * clamp(u, 0, 1));
   };
   const nudge = mul3(norm3([B.r[0], 0, B.r[2]]), 1.6);
   const ring = (k: number, x0: number, x1: number) => {
@@ -980,7 +1072,7 @@ export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; opa
         const u = s === 0 ? i / N2 : 1 - i / N2;
         const x = lerp(x0, x1, u);
         const hw = hwAt(x) * k * (s === 0 ? 1 : -1);
-        const p: V3 = add3(add3([x, BED_Y, zOff(x) + hw], at), nudge);
+        const p: V3 = add3(add3([x, BED_Y - at[1], zOff(x) + hw], at), nudge);
         if (depth(B, p) < NEAR) return '';
         pts.push(proj(B, p));
       }
@@ -989,7 +1081,7 @@ export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; opa
   };
   const c: V3 = add3([-6, BED_Y, 0], at);
   const D = len3(sub3(c, B.eye));
-  const a = opacity * (1 - fogAt(D));
+  const a = (opacity * (1 - fogAt(D))) / (1 + Math.max(0, lift) / 5);
   if (a < 0.01) return null;
   const col = BED_SHADOW;
   const layers: [number, number, number, number][] = [
@@ -999,10 +1091,10 @@ export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; opa
     [0.42, -40, 22, 0.2],
   ];
   return (
-    <g fill={col} opacity={a.toFixed(3)}>
+    <g fill={col}>
       {layers.map(([k, x0, x1, o], i) => {
         const d = ring(k, x0, x1);
-        return d ? <path key={i} d={d} opacity={o} /> : null;
+        return d ? <path key={i} d={d} fillOpacity={(o * a).toFixed(3)} /> : null;
       })}
     </g>
   );
@@ -1049,18 +1141,22 @@ export const ReedWipe: React.FC<{t: number; t0: number; t1: number}> = ({t, t0, 
     return `M${[...L, ...R].map(pp).join('L')}Z`;
   };
   const s = WIPE_SOFT;
-  const body = mix(REED_NEAR, REED_DARK, 0.25);
+  const body = mix(REED_NEAR, REED_DARK, 0.4);
+  // six translucent halos (outermost first, opacity 1/(NL + 1 − l)) ramp the soft edge evenly to the opaque core
+  const NL = 6;
   return (
     <g>
-      <g fill={REED_NEAR}>
-        <path d={band(s / 2, s / 2)} opacity={0.3} />
-        <path d={band(s / 6, s / 6)} opacity={0.4} />
-        <path d={band(-s / 6, -s / 6)} opacity={0.5} />
+      <g fill={body}>
+        {Array.from({length: NL}, (_, l) => {
+          const dw = s / 2 - (s * (l + 0.5)) / NL;
+          return <path key={l} d={band(dw, dw)} fillOpacity={(1 / (NL + 1 - l)).toFixed(3)} />;
+        })}
       </g>
       <path d={band(-s / 2, -s / 2)} fill={body} />
-      <g fill={mix(body, REED_MID, 0.55)}>
-        <path d={stripe(46)} opacity={0.35} />
-        <path d={stripe(24)} opacity={0.5} />
+      <g fill={mix(body, REED_MID, 0.5)}>
+        <path d={stripe(70)} fillOpacity={0.25} />
+        <path d={stripe(46)} fillOpacity={0.35} />
+        <path d={stripe(26)} fillOpacity={0.45} />
       </g>
     </g>
   );
@@ -1071,3 +1167,5 @@ export const reedWipeCore = (t: number, t0: number, t1: number, y: number) => {
   const c = wipeCentre(X, y), hw = wipeHalf(y);
   return {left: c - hw + WIPE_SOFT / 2, right: c + hw - WIPE_SOFT / 2, seam: c + hw - WIPE_SOFT / 2 - WIPE_SEAM_IN};
 };
+/** the internal layers, for the test entry's timing bench only */
+export const __PARTS = {WaterBg, FarProps, Shafts, Caustics, Gravel, Motes, Reeds, Vignette};

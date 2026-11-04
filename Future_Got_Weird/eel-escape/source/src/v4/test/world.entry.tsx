@@ -11,20 +11,37 @@ import {C, INK, INK_PX, NS} from '../../art/palette';
 import {lit, mix, shade} from '../../core/color';
 import {add3, basis, Basis, Cam3, dot3, hull, norm3, orbitCam, proj, smoothClosed, sub3, V3, depth} from '../three';
 import {Eel3D, Eel3Pose, backFrom, N, EEL_L} from '../eelV4';
-import {PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront, hazeOf, reedWipeCore} from '../art/world3d';
+import {escapeAt} from '../escape';
+import {add3 as addV, mul3, norm3 as nrm3, sub3 as subV} from '../three';
+import {clearSight, PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront, hazeOf, reedWipeCore, __PARTS} from '../art/world3d';
 
 // ---------------------------------------------------------------- cameras (the brief's list for package P, plus the track)
 const TRACK0 = 21.3;
 const eelHead = (t: number): V3 => {
   const tau = t - TRACK0;
-  return [-32 - 2 * tau, 2 - 1.2 * tau, 14 + 21 * tau];
+  return [-30 - 1.5 * tau, 2 - 1.2 * tau, 22 + 21 * tau];
 };
+/** the test track: the eye trucks along +z at 20 u/s beside the eel's path, looking across it and back toward the
+ *  predator, so the reeds between pass fast and the predator recedes */
 const trackCam = (t: number): Cam3 => {
   const tau = t - TRACK0;
-  const zc = 14 + 20 * tau;
-  return {eye: [-88, -7, zc + 18], target: [-30, 1, zc - 22], f: 1250};
+  const zc = 22 + 20 * tau;
+  return {eye: [-84, -6, zc - 4], target: [-26, 2, zc - 30], f: 1250};
+};
+/** the integrator's S11 camera (shots/Exterior.tsx swimCam, copied here so this test does not depend on that file):
+ *  ahead of the escaping eel (v4/escape.ts) and to its side, looking back at it and a little toward the predator */
+const swimCam = (t: number): Cam3 => {
+  const e = escapeAt(t);
+  const mid = e.c[Math.round(N * 0.45)];
+  const h = nrm3(subV(e.c[0], e.c[N]));
+  const side = nrm3([h[2], 0, -h[0]]);
+  const eye = addV(addV(mid, mul3(h, 34)), addV(mul3(side, 15), [0, -4, 0]));
+  const fish: V3 = [-5, -3, 0];
+  const target = addV(mid, mul3(subV(fish, mid), 0.07));
+  return {eye, target, f: 1150, cy: 1060};
 };
 const CAMS: Record<string, (t: number) => Cam3> = {
+  swim: swimCam,
   s1: () => orbitCam({target: [-27, -5, 4], az: 58, el: 12, d: 46, f: 1250}),
   s2: () => orbitCam({target: [-8, 0, 0], az: 0, el: 0, d: 150, f: 1250}),
   s8: () => orbitCam({target: [-18, -4, 4], az: 25, el: 50, d: 95, f: 1250}),
@@ -33,6 +50,13 @@ const CAMS: Record<string, (t: number) => Cam3> = {
   s11: () => orbitCam({target: [0, 0, 0], az: -30, el: 4, d: 208, f: 1250}),
   track: trackCam,
 };
+/** variants: the same cameras with the sight line to the subject cleared of reeds (clearSight) */
+const CLEAR: Record<string, V3[]> = {
+  s10c: [[-18, 2, 6], [-40, 0, 4]],
+  s2c: [[-30, 0, 0], [10, 0, 0], [35, 0, 0]],
+  s8c: [[-18, -4, 4], [10, 0, 0]],
+};
+for (const k of Object.keys(CLEAR)) CAMS[k] = CAMS[k.slice(0, -1)];
 
 // ---------------------------------------------------------------- the placeholder predator (a tapered ellipsoid)
 const FishPH: React.FC<{B: Basis; dim?: number}> = ({B, dim = 0}) => {
@@ -94,16 +118,17 @@ const eelPose = (t: number): Eel3Pose => {
 const Frame: React.FC<{cam: string; t: number; fish?: boolean; prefix: string}> = ({cam, t, fish = true, prefix}) => {
   resetIds(prefix);
   const B = basis(CAMS[cam](t));
-  const isTrack = cam === 'track';
-  const pose = isTrack ? eelPose(t) : null;
+  const isTrack = cam === 'track' || cam === 'swim';
+  const pose = cam === 'track' ? eelPose(t) : cam === 'swim' ? escapeAt(t) : null;
   const zSplit = pose ? depth(B, pose.c[60]) : undefined;
+  const filter = CLEAR[cam] ? clearSight(B, CLEAR[cam], 14) : undefined;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{display: 'block'}}>
-      <WorldBack B={B} t={t} zSplit={zSplit} />
+      <WorldBack B={B} t={t} zSplit={zSplit} filter={filter} />
       {fish && <PredShadow B={B} pose={{bend: isTrack ? 0.25 : 0}} />}
       {fish && <FishPH B={B} dim={isTrack ? hazeOf(B, [0, 0, 0]) : 0} />}
       {pose && <Eel3D B={B} pose={pose} t={t} />}
-      <WorldFront B={B} t={t} zSplit={zSplit} />
+      <WorldFront B={B} t={t} zSplit={zSplit} filter={filter} />
     </svg>
   );
 };
@@ -154,11 +179,64 @@ const WorldSheet: React.FC<{items: Item[]; cols: number}> = ({items, cols}) => {
   );
 };
 /** k copies of one frame stacked (for timing: render k = 1 and k = 6, the difference / 5 is one frame's cost) */
-const Bench: React.FC<{cam: string; t: number; k: number}> = ({cam, t, k}) => (
+const PartsFrame: React.FC<{cam: string; t: number; parts: string[]; prefix: string}> = ({cam, t, parts, prefix}) => {
+  resetIds(prefix);
+  const B = basis(CAMS[cam](t));
+  const zSplit = depth(B, [0, 0, 0]);
+  const PP = __PARTS as Record<string, React.FC<any>>;
+  return (
+    <svg width={1080} height={1920}>
+      {parts.map((p) => {
+        if (p.startsWith('G')) {
+          // gradient micro-benchmarks: G<n> = one full-frame rect with an n-stop vertical gradient; B<n> = n bands of 2 stops
+          const n = parseInt(p.slice(1), 10);
+          const id = `${prefix}gb`;
+          const col = (u: number) => `rgb(${Math.round(80 + 100 * u)},${Math.round(140 + 60 * Math.sin(u * 5))},${Math.round(150 - 50 * u)})`;
+          return (
+            <g key={p}>
+              <defs>
+                <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={0} y1={0} x2={0} y2={1920}>
+                  {Array.from({length: n}, (_, i) => <stop key={i} offset={i / (n - 1)} stopColor={col(i / (n - 1))} />)}
+                </linearGradient>
+              </defs>
+              <rect x={0} y={0} width={1080} height={1920} fill={`url(#${id})`} />
+            </g>
+          );
+        }
+        if (p.startsWith('B')) {
+          const n = parseInt(p.slice(1), 10);
+          const col = (u: number) => `rgb(${Math.round(80 + 100 * u)},${Math.round(140 + 60 * Math.sin(u * 5))},${Math.round(150 - 50 * u)})`;
+          return (
+            <g key={p}>
+              <defs>
+                {Array.from({length: n}, (_, i) => (
+                  <linearGradient key={i} id={`${prefix}bb${i}`} gradientUnits="userSpaceOnUse" x1={0} y1={(1920 * i) / n} x2={0} y2={(1920 * (i + 1)) / n}>
+                    <stop offset={0} stopColor={col(i / n)} />
+                    <stop offset={1} stopColor={col((i + 1) / n)} />
+                  </linearGradient>
+                ))}
+              </defs>
+              {Array.from({length: n}, (_, i) => <rect key={i} x={0} y={(1920 * i) / n} width={1080} height={1920 / n + 0.5} fill={`url(#${prefix}bb${i})`} />)}
+            </g>
+          );
+        }
+        if (p === 'Flat') return <rect key={p} x={0} y={0} width={1080} height={1920} fill="#558F89" />;
+        if (p === 'Eel') return <Eel3D key={p} B={B} pose={eelPose(t)} t={t} />;
+        if (p === 'Fish') return <FishPH key={p} B={B} />;
+        if (p === 'WorldBack') return <WorldBack key={p} B={B} t={t} zSplit={zSplit} />;
+        if (p === 'WorldFront') return <WorldFront key={p} B={B} t={t} zSplit={zSplit} />;
+        const near = p.endsWith('Front');
+        const Comp = PP[near ? p.slice(0, -5) : p];
+        return <Comp key={p} B={B} t={t} zSplit={zSplit} near={near} />;
+      })}
+    </svg>
+  );
+};
+const Bench: React.FC<{cam: string; t: number; k: number; parts?: string[]}> = ({cam, t, k, parts}) => (
   <AbsoluteFill style={{background: '#000'}}>
     {Array.from({length: k}, (_, i) => (
       <div key={i} style={{position: 'absolute', inset: 0}}>
-        <Tile it={{cam, t: t + i * 0.001}} i={i} />
+        {parts ? <PartsFrame cam={cam} t={t + i * 0.001} parts={parts} prefix={`p${i}`} /> : <Tile it={{cam, t: t + i * 0.001}} i={i} />}
       </div>
     ))}
   </AbsoluteFill>
@@ -184,6 +262,23 @@ const WipeCheck: React.FC = () => {
   );
 };
 
+/** the predator's contact shadow alone (red, over white), with the placeholder fish outline, for checking its shape */
+const ShadowDebug: React.FC<{cam: string; t: number}> = ({cam, t}) => {
+  resetIds('sd');
+  const B = basis(CAMS[cam](t));
+  return (
+    <AbsoluteFill style={{background: '#fff'}}>
+      <svg width={1080} height={1920}>
+        <g style={{filter: 'none'}}>
+          <PredShadow B={B} pose={{bend: cam === 'track' ? 0.25 : 0}} opacity={4} />
+        </g>
+        <g opacity={0.35}>
+          <FishPH B={B} />
+        </g>
+      </svg>
+    </AbsoluteFill>
+  );
+};
 const sheetMeta = ({props}: {props: {items: Item[]; cols: number}}) => ({
   width: 1080,
   height: Math.ceil(props.items.length / props.cols) * Math.round(1920 / props.cols),
@@ -202,6 +297,7 @@ const Root: React.FC = () => (
       calculateMetadata={sheetMeta}
     />
     <Composition id="Bench" component={Bench} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{cam: 's1', t: 0, k: 1}} />
+    <Composition id="ShadowDebug" component={ShadowDebug} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{cam: 'track', t: 21.3}} />
     <Composition id="WipeCheck" component={WipeCheck} durationInFrames={1} fps={30} width={1080} height={400} />
   </>
 );
