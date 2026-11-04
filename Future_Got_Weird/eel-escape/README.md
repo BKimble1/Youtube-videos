@@ -1,6 +1,38 @@
 # Future Got Weird: This Eel Escapes Through the Fish That Ate It
 
-## V3 (current: the delivery cut)
+## V4 (current: the review cut with a new shot sequence)
+
+**Deliverable:** `exports/FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4`, not published. Same narration and specifications as
+V3.
+
+V4 replaces V3's single reframed side profile with a new sequence of distinct settings and perspectives:
+
+- the rear three-quarter at the gill, and the flashback gulp;
+- the X-ray tank and a newly drawn stomach;
+- the throat passage and the gill arches;
+- the poke into open water, over the back, and the trapped head;
+- the low view of the release, the tracking swim, and the reed wipe.
+
+**Where to look:**
+
+- **Report:** `production/V4_REPORT.md`.
+- **Build brief and contracts:** `production/V4_BRIEF.md`.
+- **Source:** `source/src/v4/` (composition `EelEscapeV4`).
+- **Evidence:** `qa/v4/`.
+
+**Rebuild V4:**
+
+    npx --prefix source esbuild tools/v4/export_cues.ts --bundle --platform=node --loader:.tsx=tsx --jsx=automatic --outfile=/tmp/c.js && node /tmp/c.js
+    python3 tools/v4/make_audio_v4.py mix_v4
+    COMP=EelEscapeV4 tools/render_resilient.sh mix_v4 exports/FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4 source/out/frames_v4
+    python3 tools/qa_render.py exports/FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4 qa/v4 v4
+
+**Checks:**
+
+- `tools/v4/keepout.ts`: captions never on the eel or the gill gap.
+- `tools/v4/verify_kin.ts`: the tail leads, the head clears once, and the eel never re-enters the predator.
+
+## V3 (the earlier delivery cut)
 
 **Deliverable:** `exports/FGW_Eel_Escape_V3_FINAL_1080x1920.mp4`. It is not published.
 
