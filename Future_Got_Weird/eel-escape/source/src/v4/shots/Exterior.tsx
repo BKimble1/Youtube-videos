@@ -90,41 +90,63 @@ export const openState = (t: number): ExtState => {
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view
 /** the eel's path into the open mouth: from deep in the throat out through the gape, then the tail outside in the
  *  S matched to S1's last frame (rebuilt in this camera at the cut) */
-const GULP_CAM0: Orbit = {target: [-51, 0.5, 0], az: -4, el: 4, d: 24, f: 1300, cy: 1060};
-const GULP_CAM1: Orbit = {target: [-36, 0, 0], az: -2, el: 3, d: 58, f: 1300, cy: 1100};
-export const gulpCam = (t: number): Cam3 => orbitCam(lerpOrbit(GULP_CAM0, GULP_CAM1, ss5(t, T.gulp + 0.12, T.gulp + 0.75)));
+/** The cut S1 → S2 matches the eel's CURVE: S1's last frame looks into the gill gap with the body entering it; S2's
+ *  first frame puts the open mouth exactly where that gap was, at the same scale, and lays the tail outside the mouth
+ *  on the very same screen curve (unprojected onto the plane of the gape). Then the camera pulls back to the side
+ *  view while the tail is sucked in along that curve. Computed once (deterministic). */
+type GulpMatch = {cam0: Orbit; cam1: Orbit; path: {p: V3[]; s: number[]; len: number; gape: number}};
+let GM: GulpMatch | null = null;
+const gulpMatch = (): GulpMatch => {
+  if (GM) return GM;
+  const s1 = openState(T.gulp - 1 / 30);
+  const B1 = basis(s1.cam);
+  const e1 = s1.eel!;
+  const sc = eelScreen(B1, e1);
+  const i0 = Math.min(N, Math.max(0, Math.ceil(e1.crossI)));
+  const E1 = sc.pts[i0];
+  const k1 = proj(B1, e1.c[i0]).s; // px per unit at the gap in S1
+  // the side view's gape: the predator's mouth fully open
+  const B0 = basis(orbitCam({target: [0, 0, 0], az: 0, el: 0, d: 100, f: 1000}));
+  const mg = predGeom(B0, {...PRED_REST, mouth: 1});
+  const gape = mg.mouthIn.p, inDir = norm3(mg.mouthIn.dir);
+  const f = 1300;
+  const cam0: Orbit = {target: gape, az: -6, el: 4, d: f / k1, f, cx: E1.x, cy: E1.y};
+  const cam1: Orbit = {target: [-36, 0, 0], az: -3, el: 3, d: 60, f, cx: 540, cy: 1100};
+  const C0 = orbitCam(cam0);
+  const B2 = basis(C0);
+  const dep = dot3(sub3(gape, B2.eye), B2.fw);
+  const unp = (x: number, y: number): V3 => {
+    const sx = ((x - B2.cx) * dep) / B2.f, sy = (-(y - B2.cy) * dep) / B2.f;
+    return add3(add3(B2.eye, mul3(B2.fw, dep)), add3(mul3(B2.r, sx), mul3(B2.u, sy)));
+  };
+  // outside: S1's screen curve from the gap outward (the gape is at its first point by construction)
+  const outside: V3[] = [];
+  for (let i = i0; i <= N; i++) outside.push(unp(sc.pts[i].x, sc.pts[i].y));
+  outside[0] = gape;
+  // inside: from the gape straight on into the throat (hidden but in the mouth hole)
+  const inside: V3[] = [];
+  for (let k = 40; k >= 1; k--) inside.push(add3(gape, mul3(inDir, k * 1.2)));
+  const pts = [...inside, ...outside];
+  // the arc table counts the EEL's own length (sample spacing L/N outside), so the body sliding along the path keeps
+  // S1's on-screen curve however foreshortened it was there
+  const ss_ = [0];
+  for (let i = 1; i < inside.length; i++) ss_.push(ss_[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1], pts[i][2] - pts[i - 1][2]));
+  ss_.push(ss_[inside.length - 1] + 1.2);
+  for (let i = 1; i < outside.length; i++) ss_.push(ss_[inside.length] + (i * EEL_L) / N);
+  GM = {cam0, cam1, path: {p: pts, s: ss_, len: ss_[ss_.length - 1], gape: ss_[inside.length]}};
+  return GM;
+};
+export const gulpCam = (t: number): Cam3 => {
+  const m = gulpMatch();
+  return orbitCam(lerpOrbit(m.cam0, m.cam1, ss5(t, T.gulp + 0.1, T.gulp + 0.8)));
+};
 export const gulpMouth = (t: number) => 1 - ss(t, T.mouthShut - 0.16, T.mouthShut + 0.02);
-const GULP_PATH = (() => {
-  // inside: from the stomach forward through the throat to the gape (hidden but for the mouth hole)
-  const pts: V3[] = [
-    [-14, 1.5, 0], [-24, 1.0, 0], [-34, 0.8, 0], [-44, 0.6, 0], [-50.5, 0.4, 0.4],
-    // outside the gape: the tail's loose S, toward the camera side and up
-    [-54.0, -0.6, 1.6], [-57.0, -2.8, 2.6], [-58.4, -6.0, 3.2], [-57.2, -9.0, 3.4], [-54.6, -11.0, 3.2], [-52.8, -13.6, 2.8],
-  ];
-  // densify (Catmull-Rom) and build an arc-length table in 3D
-  const out: V3[] = [];
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
-    for (let k = 0; k < 12; k++) {
-      const u = k / 12, u2 = u * u, u3 = u2 * u;
-      out.push([0, 1, 2].map((j) => 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * u + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * u2 + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * u3)) as V3);
-    }
-  }
-  out.push(pts[pts.length - 1]);
-  const s = [0];
-  for (let i = 1; i < out.length; i++) s.push(s[i - 1] + Math.hypot(out[i][0] - out[i - 1][0], out[i][1] - out[i - 1][1], out[i][2] - out[i - 1][2]));
-  // the arc length of the gape
-  let gi = 0;
-  for (let i = 0; i < out.length; i++) if (out[i][0] <= -50.5) { gi = i; break; }
-  return {p: out, s, len: s[s.length - 1], gape: s[gi]};
-})();
 const gulpAt = (sArc: number): V3 => {
-  const q = GULP_PATH;
+  const q = gulpMatch().path;
   if (sArc <= 0) return q.p[0];
   if (sArc >= q.len) {
     const a = q.p[q.p.length - 1], b = q.p[q.p.length - 2];
-    const d = norm3(sub3(a, b));
-    return add3(a, mul3(d, sArc - q.len));
+    return add3(a, mul3(norm3(sub3(a, b)), sArc - q.len));
   }
   let lo = 0, hi = q.p.length - 1;
   while (hi - lo > 1) {
@@ -134,22 +156,26 @@ const gulpAt = (sArc: number): V3 => {
   const f = (sArc - q.s[lo]) / (q.s[hi] - q.s[lo] || 1);
   return add3(q.p[lo], mul3(sub3(q.p[hi], q.p[lo]), f));
 };
-/** the tail tip's arc position: 16 units outside the gape at the cut, then sucked in (accelerating), gone at 3.12 */
+/** the tail tip's arc position: OPEN_OUT units outside the gape at the cut (as in S1), then sucked in (accelerating),
+ *  gone at 3.12 */
 export const gulpTip = (t: number) => {
-  const sOut = GULP_PATH.gape + 16;
-  const sIn = GULP_PATH.gape - 1.5;
+  const q = gulpMatch().path;
+  const sOut = q.gape + (q.len - q.gape);
+  const sIn = q.gape - 1.5;
   const x = clamp((t - T.gulp) / (3.12 - T.gulp));
   return lerp(sOut, sIn, x * x * (0.35 + 0.65 * x));
 };
 export const gulpEel = (t: number): Eel3Pose & {crossI: number} => {
   const tip = gulpTip(t);
-  const flail = (u: number) => 0.5 * Math.sin(2 * Math.PI * (2.6 * t - u * 5)) * clamp((u - 0.6) / 0.4);
+  // a flail of the free tail, growing in after the cut (so the cut frame is exactly S1's curve)
+  const k = ss(t, T.gulp + 0.04, T.gulp + 0.3);
+  const flail = (u: number) => k * 0.5 * Math.sin(2 * Math.PI * (2.6 * t - u * 5)) * clamp((u - 0.6) / 0.4);
   const c = US.map((u) => {
     const p = gulpAt(tip - EEL_L * (1 - u));
-    return add3(p, [0, 0, flail(u)]);
+    return add3(p, [0, -flail(u), 0]);
   });
   // the part beyond the gape (outside the mouth) is drawn over the predator; the rest only inside the mouth hole
-  const outLen = tip - GULP_PATH.gape;
+  const outLen = tip - gulpMatch().path.gape;
   const crossI = N * (1 - Math.max(0, outLen) / EEL_L);
   return {c, back: backFrom(c), crossI};
 };
