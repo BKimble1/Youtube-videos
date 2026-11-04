@@ -249,7 +249,7 @@ export const H0: V3 = norm3([-0.8, -0.5, 0.3]); // the head leaves the slit up, 
 export const SWIM_DIR2: V3 = norm3([-0.6, -0.08, 0.8]);
 /** the headings (tunable for tools/v4/face_clear.ts): t0/t1 the turn toward d1 (s after T_REL); dash: the freed eel
  *  holds (its body springing straight, pushing off the flank along driftDir) for this long before it dashes away */
-export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number], drift: 13, tau: 0.3, dash: 0.12, driftDir: norm3([0.05, -0.3, 1]) as V3, t0: 0.12, t1: 0.85, w0: 0, wDur: 0.8};
+export const SWIM_HEAD = {h0: H0, d1: SWIM_DIR, d2: SWIM_DIR2, k2: [0.1, 1.7] as [number, number], drift: 13, tau: 0.3, dash: 0.2, driftDir: norm3([0.05, -0.3, 1]) as V3, t0: 0.12, t1: 0.85, w0: 0, wDur: 0.8};
 export const headingAt = (t: number): V3 => {
   const T0 = T_REL + SWIM_HEAD.t0, T1 = T_REL + SWIM_HEAD.t1;
   return slerpDir(slerpDir(SWIM_HEAD.h0, SWIM_HEAD.d1, ss(t, T0, T1)), SWIM_HEAD.d2, ss(t, T1 + SWIM_HEAD.k2[0], T1 + SWIM_HEAD.k2[1]));
