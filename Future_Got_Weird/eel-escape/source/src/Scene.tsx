@@ -61,8 +61,8 @@ export const lookAt = (t: number): FishLook => {
   if (!e.free && e.exitIdx <= N) prop = propForRadius(RADII[Math.min(N, e.exitIdx)]);
   if (e.free) prop = Math.exp(-(t - EV.release) / 0.12);
   prop = Math.max(prop, ss(t, EV.headAt - 0.2, EV.headAt + 0.2) * (1 - ss(t, EV.release, EV.release + 0.2)));
-  // the eye glances back toward the gill while the head is caught, and after the release
-  const look = 0.85 * ss(t, EV.headAt - 0.3, EV.headAt + 0.35) * (1 - ss(t, EV.release + 0.9, EV.release + 1.6));
+  // the eye glances back toward the gill while the head is caught, and stays on the eel as it leaves
+  const look = 0.85 * ss(t, EV.headAt - 0.3, EV.headAt + 0.35);
   return {t, gill: f.gill, finPhase: f.finPhase, startle: f.startle, prop, look};
 };
 

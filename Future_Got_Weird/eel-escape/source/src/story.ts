@@ -268,6 +268,8 @@ const CAM_KEYS: Key[] = [
   [EV.release + 1.2, C(-9.0, -21.0, 70), travel],
   [EV.swim0 + 1.1, CAM_SWIM, travel],
   [T.ate + 0.15, C(-17.0, -14.0, 64), travel],
+  // a slow push on the predator, alive and upright, before the tail sweeps past the lens
+  [DUR, C(-18.5, -12.5, 59), travel],
 ];
 export const camAt = (t: number): Cam => glide(t, CAM_KEYS);
 
