@@ -2,7 +2,30 @@
 
 Long-form episode, 16:9, selected on 4 Nov 2026.
 
-## V1: first complete review render (current)
+## V2: animation and pacing overhaul (current)
+
+Not published, and not watched or heard in real time.
+
+**Review file:** `exports/FGW_Finger_V2_REVIEW_1920x1080.mp4`
+
+| Property | Value |
+|---|---|
+| Runtime | 3:31.77 (6,353 frames at 30 fps) |
+| Loudness | −14.2 LUFS integrated, −1.3 dBTP true peak |
+| Narration and captions | Unchanged from V1 |
+| Picture | Every sequence rebuilt in `source/src/v2/` (composition `FingerV2`) |
+| Static picture | No frozen stretch of 1.5 s or longer |
+
+The MP4 is Git-ignored; checksummed parts are in `backup/`.
+
+| Item | File |
+|---|---|
+| Report (scene changes, transitions, concerns) | `production/V2_REPORT.md` |
+| Creator's direction (verbatim) | `production/V2_DIRECTION.md` |
+| Build brief | `production/V2_BRIEF.md` |
+| QA | `qa/v2/` |
+
+## V1: first complete review render
 
 Not published, and not watched or heard in real time.
 
