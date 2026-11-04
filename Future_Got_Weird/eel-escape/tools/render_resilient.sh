@@ -2,7 +2,7 @@
 # Resumable render: the composition as a JPEG frame sequence (quality 95, the same frames Remotion encodes itself), in
 # chunks that survive an interruption (a chunk whose frames all exist is skipped), then one x264 encode with the
 # channel settings (CRF 16, slow, yuv420p, BT.709) and the mix as AAC 320 kb/s.
-# usage: tools/render_resilient.sh <mix_name> <out.mp4> [frames_dir]
+# usage: [COMP=EelEscapeV4] tools/render_resilient.sh <mix_name> <out.mp4> [frames_dir]
 set -euo pipefail
 MIX=${1:?mix name, e.g. mix_v3}
 OUT=$(realpath -m "${2:?output mp4}")
@@ -10,6 +10,7 @@ EP="$(cd "$(dirname "$0")/.." && pwd)"
 FR=${3:-$EP/source/out/frames_$MIX}
 TOTAL=$(python3 -c "import json;print(json.load(open('$EP/source/src/data/timeline.json'))['frames'])")
 CH=62
+COMP=${COMP:-EelEscapeV1}
 mkdir -p "$FR"
 cd "$EP/source"
 for ((a = 0; a < TOTAL; a += CH)); do
@@ -18,7 +19,7 @@ for ((a = 0; a < TOTAL; a += CH)); do
   for ((f = a; f <= b; f++)); do [[ -s "$FR/element-$(printf %03d $f).jpeg" || -s "$FR/element-$f.jpeg" || -s "$FR/element-$(printf %02d $f).jpeg" ]] || { missing=1; break; }; done
   if ((missing)); then
     echo "render frames $a-$b"
-    npx remotion render src/index.ts EelEscapeV1 "$FR" --sequence --frames=$a-$b --image-format=jpeg --jpeg-quality=95 \
+    npx remotion render src/index.ts "$COMP" "$FR" --sequence --frames=$a-$b --image-format=jpeg --jpeg-quality=95 \
       --props='{"audio":false,"captions":true}' --concurrency=3 --log=error
   fi
 done
