@@ -27,9 +27,14 @@ type ExtState = {
   clearR?: number;
   /** the reeds/rocks split depth: 'eel' = the eel's nearest third (S11), default the predator's centre */
   split?: 'eel' | 'pred';
+  /** the part inside the gill drawn a little dimmed (it is in the chamber's shade) */
+  insideOpacity?: number;
 };
 /** the exit at the cover's resting edge (pred3d: along the skin, back and up) */
 export const EXIT_REST: Exit = {p: EXIT0.p, out: norm3([0.88, -0.47, 0.05])};
+/** S1: the tail comes straight out of the dark opening toward the rear camera (the root end-on in the gap), then
+ *  bends into its S; the part inside runs straight back into the opening */
+export const EXIT_OPEN: Exit = {p: EXIT0.p, out: norm3([0.42, -0.4, 0.81])};
 const exitFor = (B: Basis, pose: PredPose): Exit => {
   const g = predGeom(B, pose);
   return {p: g.exit.p, out: g.exit.out};
@@ -46,7 +51,7 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
       <WorldBack B={B} t={s.t} zSplit={zSplit} filter={filter} />
       <PredShadow B={B} pose={s.pose} />
       <Predator B={B} pose={s.pose} />
-      {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} />}
+      {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} opacity={s.insideOpacity} />}
       {e && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} />}
       <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
@@ -120,7 +125,7 @@ export const openEel = (t: number, ex: Exit): EscapePose => {
     p = add3(p, mul3(d, da));
     cs.push(p);
   }
-  const r = rootedWith(ex, OPEN_OUT, () => 0, () => 0);
+  const r = rootedWith(ex, OPEN_OUT, () => 0, () => 0, (d) => add3(ex.p, add3(mul3(ex.out, -Math.min(d, 3)), mul3(norm3([-0.9, 0.45, -0.3]), Math.max(0, d - 3)))));
   // replace the outside part with this curve
   const c = r.c.map((q, i) => {
     const a = OPEN_OUT - EEL_L * (1 - US[i]);
@@ -139,7 +144,7 @@ export const openState = (t: number): ExtState => {
   const cam = openCam(t);
   const pose = predPose(t, {gill: openGill(t)});
   // the root stays where the cover's edge rests; when the cover lifts, the body shows continuing under it
-  return {cam, pose, eel: openEel(t, EXIT_REST), t};
+  return {cam, pose, eel: openEel(t, EXIT_OPEN), t, insideOpacity: 0.82};
 };
 
 // ---------------------------------------------------------------- S2 GULP (2.62 – 3.84): the earlier gulp, side view

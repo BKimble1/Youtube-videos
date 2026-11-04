@@ -7,7 +7,7 @@ set -euo pipefail
 MIX=${1:?mix name, e.g. mix_v3}
 OUT=$(realpath -m "${2:?output mp4}")
 EP="$(cd "$(dirname "$0")/.." && pwd)"
-FR=${3:-$EP/source/out/frames_$MIX}
+FR=$(realpath -m "${3:-$EP/source/out/frames_$MIX}")
 TOTAL=$(python3 -c "import json;print(json.load(open('$EP/source/src/data/timeline.json'))['frames'])")
 CH=62
 COMP=${COMP:-EelEscapeV1}

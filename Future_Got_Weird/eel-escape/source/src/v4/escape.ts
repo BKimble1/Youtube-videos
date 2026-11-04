@@ -121,7 +121,7 @@ export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th
 
 /** the rooted body: samples snout → tail tip, and where the body crosses the exit (fractional sample index) */
 /** a body rooted at the exit with `out` units outside, shaped by the direction field (θ(a), β(a)) */
-export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be: (a: number) => number) => {
+export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be: (a: number) => number, inward?: (d: number) => V3) => {
   const da = 0.1;
   const n = Math.max(1, Math.ceil(Math.max(0, out) / da));
   const cs: V3[] = [ex.p];
@@ -139,7 +139,7 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
   };
   const c: V3[] = US.map((u) => {
     const a = out - EEL_L * (1 - u);
-    return a >= 0 ? outsideAt(Math.min(a, out)) : inwardAt(ex, -a);
+    return a >= 0 ? outsideAt(Math.min(a, out)) : inward ? inward(-a) : inwardAt(ex, -a);
   });
   // the exit crossing, as a fractional sample index (body points with index > crossI are outside)
   const crossI = N * (1 - out / EEL_L);

@@ -1,0 +1,516 @@
+{
+ "file": "FGW_Eel_Escape_V4_REVIEW_1080x1920.mp4",
+ "size_mb": 31.08,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 744,
+  "duration_s": 24.8
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "259215"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 3.84,
+ "large_changes": [
+  {
+   "frame": 79,
+   "t": 2.633,
+   "mad": 42.76,
+   "planned": "CUT S1 -> S2: the eel's curve matched, the earlier gulp"
+  },
+  {
+   "frame": 116,
+   "t": 3.867,
+   "mad": 75.67,
+   "planned": "CUT S2 -> S3: the research tank"
+  },
+  {
+   "frame": 157,
+   "t": 5.233,
+   "mad": 19.99,
+   "planned": null
+  },
+  {
+   "frame": 158,
+   "t": 5.267,
+   "mad": 24.45,
+   "planned": null
+  },
+  {
+   "frame": 159,
+   "t": 5.3,
+   "mad": 24.63,
+   "planned": null
+  },
+  {
+   "frame": 160,
+   "t": 5.333,
+   "mad": 24.65,
+   "planned": null
+  },
+  {
+   "frame": 161,
+   "t": 5.367,
+   "mad": 22.06,
+   "planned": null
+  },
+  {
+   "frame": 162,
+   "t": 5.4,
+   "mad": 23.4,
+   "planned": null
+  },
+  {
+   "frame": 163,
+   "t": 5.433,
+   "mad": 23.19,
+   "planned": null
+  },
+  {
+   "frame": 164,
+   "t": 5.467,
+   "mad": 19.21,
+   "planned": null
+  },
+  {
+   "frame": 173,
+   "t": 5.767,
+   "mad": 23.54,
+   "planned": "DISSOLVE S3 -> S4 on the carried tail"
+  },
+  {
+   "frame": 174,
+   "t": 5.8,
+   "mad": 22.24,
+   "planned": "DISSOLVE S3 -> S4 on the carried tail"
+  },
+  {
+   "frame": 175,
+   "t": 5.833,
+   "mad": 21.91,
+   "planned": "DISSOLVE S3 -> S4 on the carried tail"
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "mad": 19.82,
+   "planned": null
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "mad": 19.21,
+   "planned": null
+  },
+  {
+   "frame": 262,
+   "t": 8.733,
+   "mad": 23.51,
+   "planned": null
+  },
+  {
+   "frame": 263,
+   "t": 8.767,
+   "mad": 23.73,
+   "planned": null
+  },
+  {
+   "frame": 264,
+   "t": 8.8,
+   "mad": 23.34,
+   "planned": null
+  },
+  {
+   "frame": 317,
+   "t": 10.567,
+   "mad": 21.14,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 318,
+   "t": 10.6,
+   "mad": 24.7,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 319,
+   "t": 10.633,
+   "mad": 27.57,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 320,
+   "t": 10.667,
+   "mad": 28.08,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 321,
+   "t": 10.7,
+   "mad": 27.11,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 322,
+   "t": 10.733,
+   "mad": 24.67,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 323,
+   "t": 10.767,
+   "mad": 21.68,
+   "planned": "the body fills the foreground: S5 -> S6"
+  },
+  {
+   "frame": 348,
+   "t": 11.6,
+   "mad": 20.24,
+   "planned": null
+  },
+  {
+   "frame": 349,
+   "t": 11.633,
+   "mad": 22.59,
+   "planned": null
+  },
+  {
+   "frame": 350,
+   "t": 11.667,
+   "mad": 24.4,
+   "planned": null
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "mad": 27.12,
+   "planned": null
+  },
+  {
+   "frame": 352,
+   "t": 11.733,
+   "mad": 30.77,
+   "planned": null
+  },
+  {
+   "frame": 353,
+   "t": 11.767,
+   "mad": 34.68,
+   "planned": null
+  },
+  {
+   "frame": 354,
+   "t": 11.8,
+   "mad": 35.89,
+   "planned": null
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "mad": 33.54,
+   "planned": null
+  },
+  {
+   "frame": 356,
+   "t": 11.867,
+   "mad": 32.19,
+   "planned": null
+  },
+  {
+   "frame": 357,
+   "t": 11.9,
+   "mad": 31.83,
+   "planned": null
+  },
+  {
+   "frame": 358,
+   "t": 11.933,
+   "mad": 34.44,
+   "planned": null
+  },
+  {
+   "frame": 359,
+   "t": 11.967,
+   "mad": 37.03,
+   "planned": null
+  },
+  {
+   "frame": 360,
+   "t": 12.0,
+   "mad": 35.55,
+   "planned": null
+  },
+  {
+   "frame": 361,
+   "t": 12.033,
+   "mad": 31.96,
+   "planned": null
+  },
+  {
+   "frame": 362,
+   "t": 12.067,
+   "mad": 28.88,
+   "planned": null
+  },
+  {
+   "frame": 363,
+   "t": 12.1,
+   "mad": 25.66,
+   "planned": null
+  },
+  {
+   "frame": 364,
+   "t": 12.133,
+   "mad": 22.02,
+   "planned": null
+  },
+  {
+   "frame": 378,
+   "t": 12.6,
+   "mad": 84.73,
+   "planned": "MATCH CUT S6 -> S7: the tip, inside -> outside"
+  },
+  {
+   "frame": 416,
+   "t": 13.867,
+   "mad": 47.47,
+   "planned": "CUT S7 -> S8: over the back"
+  },
+  {
+   "frame": 479,
+   "t": 15.967,
+   "mad": 30.11,
+   "planned": "CUT S8 -> S9: the trapped head"
+  },
+  {
+   "frame": 539,
+   "t": 17.967,
+   "mad": 33.4,
+   "planned": "CUT S9 -> S10: low beside"
+  },
+  {
+   "frame": 639,
+   "t": 21.3,
+   "mad": 32.7,
+   "planned": "the head slips free; the body straightens"
+  },
+  {
+   "frame": 734,
+   "t": 24.467,
+   "mad": 19.52,
+   "planned": "the reed across the lens wipes to frame 0"
+  },
+  {
+   "frame": 735,
+   "t": 24.5,
+   "mad": 20.75,
+   "planned": "the reed across the lens wipes to frame 0"
+  },
+  {
+   "frame": 736,
+   "t": 24.533,
+   "mad": 24.29,
+   "planned": "the reed across the lens wipes to frame 0"
+  },
+  {
+   "frame": 737,
+   "t": 24.567,
+   "mad": 20.66,
+   "planned": "the reed across the lens wipes to frame 0"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 157,
+   "t": 5.233,
+   "mad": 19.99,
+   "planned": null
+  },
+  {
+   "frame": 158,
+   "t": 5.267,
+   "mad": 24.45,
+   "planned": null
+  },
+  {
+   "frame": 159,
+   "t": 5.3,
+   "mad": 24.63,
+   "planned": null
+  },
+  {
+   "frame": 160,
+   "t": 5.333,
+   "mad": 24.65,
+   "planned": null
+  },
+  {
+   "frame": 161,
+   "t": 5.367,
+   "mad": 22.06,
+   "planned": null
+  },
+  {
+   "frame": 162,
+   "t": 5.4,
+   "mad": 23.4,
+   "planned": null
+  },
+  {
+   "frame": 163,
+   "t": 5.433,
+   "mad": 23.19,
+   "planned": null
+  },
+  {
+   "frame": 164,
+   "t": 5.467,
+   "mad": 19.21,
+   "planned": null
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "mad": 19.82,
+   "planned": null
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "mad": 19.21,
+   "planned": null
+  },
+  {
+   "frame": 262,
+   "t": 8.733,
+   "mad": 23.51,
+   "planned": null
+  },
+  {
+   "frame": 263,
+   "t": 8.767,
+   "mad": 23.73,
+   "planned": null
+  },
+  {
+   "frame": 264,
+   "t": 8.8,
+   "mad": 23.34,
+   "planned": null
+  },
+  {
+   "frame": 348,
+   "t": 11.6,
+   "mad": 20.24,
+   "planned": null
+  },
+  {
+   "frame": 349,
+   "t": 11.633,
+   "mad": 22.59,
+   "planned": null
+  },
+  {
+   "frame": 350,
+   "t": 11.667,
+   "mad": 24.4,
+   "planned": null
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "mad": 27.12,
+   "planned": null
+  },
+  {
+   "frame": 352,
+   "t": 11.733,
+   "mad": 30.77,
+   "planned": null
+  },
+  {
+   "frame": 353,
+   "t": 11.767,
+   "mad": 34.68,
+   "planned": null
+  },
+  {
+   "frame": 354,
+   "t": 11.8,
+   "mad": 35.89,
+   "planned": null
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "mad": 33.54,
+   "planned": null
+  },
+  {
+   "frame": 356,
+   "t": 11.867,
+   "mad": 32.19,
+   "planned": null
+  },
+  {
+   "frame": 357,
+   "t": 11.9,
+   "mad": 31.83,
+   "planned": null
+  },
+  {
+   "frame": 358,
+   "t": 11.933,
+   "mad": 34.44,
+   "planned": null
+  },
+  {
+   "frame": 359,
+   "t": 11.967,
+   "mad": 37.03,
+   "planned": null
+  },
+  {
+   "frame": 360,
+   "t": 12.0,
+   "mad": 35.55,
+   "planned": null
+  },
+  {
+   "frame": 361,
+   "t": 12.033,
+   "mad": 31.96,
+   "planned": null
+  },
+  {
+   "frame": 362,
+   "t": 12.067,
+   "mad": 28.88,
+   "planned": null
+  },
+  {
+   "frame": 363,
+   "t": 12.1,
+   "mad": 25.66,
+   "planned": null
+  },
+  {
+   "frame": 364,
+   "t": 12.133,
+   "mad": 22.02,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 8,
+ "longest_near_static_run_starts_s": 12.63,
+ "loop_last_vs_first_mad": 3.78
+}
