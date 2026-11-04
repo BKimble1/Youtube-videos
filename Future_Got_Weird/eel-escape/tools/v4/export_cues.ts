@@ -23,7 +23,18 @@ for (let i = 0; i <= n; i++) {
   gill.push(ext ? +ext(t).pose.gill.toFixed(4) : 0);
   outV.push(t >= T.poke && t < T_REL ? +((outAt(t + 0.005) - outAt(t - 0.005)) / 0.01).toFixed(3) : 0);
 }
-const beats = {...((X as any).BEATS ?? {}), ...((S as any).BEATS ?? {}), ...((G as any).BEATS ?? {})};
+const SB = (S as any).S4_BEATS, GB = (G as any).G_BEATS;
+const beats = {
+  carry: 5.62,
+  probeTouches: [SB.bump, 7.76, 7.93, SB.press],
+  found: SB.yield,
+  through: SB.dive,
+  pass: GB.cut,
+  slip: GB.gap,
+  reedPasses: [] as number[],
+  S4: SB,
+  G: GB,
+};
 const out = {DUR, T, T_REL, XRAY_CHANGE_T: (X as any).XRAY_CHANGE_T ?? 4.0, beats, signals: {rate: 100, gill, outV, shot}};
 fs.writeFileSync(path.join(process.cwd(), 'audio/cues_v4.json'), JSON.stringify(out));
 console.log('cues_v4.json', Object.keys(out), 'beats', beats);

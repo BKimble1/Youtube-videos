@@ -173,8 +173,25 @@ export const eelScreen = (B: Basis, e: Eel3Pose) => {
 };
 /** The V4 eel in 3D, drawn in screen px (place it in the frame's root, untransformed). `from`/`to` cut sections
  *  (sample indices) exactly as in eelArt; `clip` is a SCREEN-space path d or url(#id). */
-export const Eel3D: React.FC<{B: Basis; pose: Eel3Pose; t: number; from?: number; to?: number; clip?: string; opacity?: number; over?: 'tail' | 'head'}> = ({B, pose, t, from, to, clip, opacity, over}) => {
+export const Eel3D: React.FC<{B: Basis; pose: Eel3Pose; t: number; from?: number; to?: number; clip?: string; opacity?: number; over?: 'tail' | 'head'}> = ({B, pose, t, from: from0, to: to0, clip, opacity, over}) => {
   const sc = eelScreen(B, pose);
+  // near plane: only the samples in front of the lens (the longest such run inside [from, to]) are drawn
+  const NEAR = 1.5;
+  let from = from0, to = to0;
+  {
+    const a = Math.max(0, Math.floor(from ?? 0)), b = Math.min(N, Math.ceil(to ?? N));
+    if (sc.depth.slice(a, b + 1).some((z) => z < NEAR)) {
+      let best: [number, number] | null = null, s0 = -1;
+      for (let i = a; i <= b + 1; i++) {
+        const ok = i <= b && sc.depth[i] >= NEAR;
+        if (ok && s0 < 0) s0 = i;
+        if (!ok && s0 >= 0) { if (!best || i - 1 - s0 > best[1] - best[0]) best = [s0, i - 1]; s0 = -1; }
+      }
+      if (!best || best[1] - best[0] < 2) return null;
+      from = Math.max(from ?? 0, best[0]);
+      to = Math.min(to ?? N, best[1]);
+    }
+  }
   // draw in eel-like units: divide by a reference scale (the median px per unit), so the renderer's unit constants
   // (fin heights, cut overlaps) stay proportionate; radii carry the per-sample perspective
   const ss = [...sc.s].sort((a, b) => a - b);

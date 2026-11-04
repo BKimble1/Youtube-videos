@@ -5,7 +5,7 @@ import React from 'react';
 import {clamp, keyS, lerp, ss, ss5} from '../../lib';
 import {uid} from '../../core/ids';
 import {add3, basis, Basis, Cam3, dot3, lerpOrbit, mul3, norm3, Orbit, orbitCam, orbitDir, proj, sub3, V3} from '../three';
-import {backFrom, Eel3D, Eel3Pose, eelScreen, EEL_L, N, path2, US} from '../eelV4';
+import {backFrom, Eel3D, Eel3Pose, eelScreen, EEL_L, EEL_R_MAX, N, path2, RADII, US} from '../eelV4';
 import {dirOf, escapeAt, EscapePose, Exit, EXIT0, headingAt, rootedWith, T_REL} from '../escape';
 import {PredPose, PRED_REST, Predator, predGeom} from '../pred';
 import {clearSight, PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront} from '../world';
@@ -74,9 +74,16 @@ export const extKeepOut = (s: ExtState): KeepOut => {
 const breath = (t: number) => 0.14 + 0.1 * (0.5 + 0.5 * Math.sin(2 * Math.PI * 0.85 * t - 1.2));
 const predPose = (t: number, extra: Partial<PredPose> = {}): PredPose => ({...PRED_REST, t, finPhase: t, gill: breath(t), ...extra});
 
+/** while the eel passes through the gill opening it props the cover open: the gap opens to fit the body there */
+const propGill = (e: {crossI: number} | null) => {
+  if (!e || e.crossI <= 0 || e.crossI >= N) return 0;
+  const r = RADII[Math.round(e.crossI)] / EEL_R_MAX;
+  return 0.3 + 0.35 * r;
+};
+
 // ---------------------------------------------------------------- S1 OPEN (0 – 2.62), also the loop's target frame
 /** the gill cover: one breath on the first beat (peak T.breathPeak), the peek breath on "belongs to the eel" */
-export const openGill = (t: number) => Math.max(breath(t), 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
+export const openGill = (t: number) => Math.max(breath(t), propGill({crossI: N * (1 - OPEN_OUT / EEL_L)}), 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
 /** the tail already out: 22 units (40 % of the eel), a loose S lying OUTSIDE across the gill cover, in the plane
  *  facing the opening camera (so the S reads on screen); it flicks once across the cover (independently of the
  *  breath) and keeps a slow life of its own. Built in the opening camera's screen axes: R right, U up, F toward the
@@ -238,7 +245,10 @@ export const gulpState = (t: number): ExtState => {
 export const POKE_ORBIT: Orbit = {target: [-23.55, -6.35, 6.4], az: 20, el: -22, d: 18.3, f: 1300, cx: 540, cy: 1010, roll: 12};
 const POKE_ORBIT1: Orbit = {target: [-24, -8.5, 7], az: 24, el: -16, d: 30, f: 1300, cx: 540, cy: 1060, roll: 5};
 export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.8, 13.86)));
-export const pokeState = (t: number): ExtState => ({cam: pokeCam(t), pose: predPose(t), eel: escapeAt(t), t});
+export const pokeState = (t: number): ExtState => {
+  const eel = escapeAt(t);
+  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), propGill(eel))}), eel, t};
+};
 export const pokeStateWith = (o: Orbit, t: number): ExtState => ({cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
 // ---------------------------------------------------------------- S8 FOLLOWS (13.86 – 15.96): over the predator's back
@@ -247,7 +257,7 @@ const F_B: Orbit = {target: [-8, -9, 14], az: 30, el: 42, d: 56, f: 1250, cy: 10
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), 0.35)}), eel, t, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
+  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), propGill(eel))}), eel, t, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
 };
 
 // ---------------------------------------------------------------- S9 HEAD (15.96 – 17.96): tight at the gill edge
@@ -258,7 +268,7 @@ export const headCam = (t: number): Cam3 => orbitCam(lerpOrbit(H_A, H_B, ss5(t, 
 const caughtGill = (t: number) => Math.max(breath(t), 0.25 + 0.55 * ss(t, 15.9, 16.4));
 export const headState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: headCam(t), pose: predPose(t, {gill: caughtGill(t)}), eel, t, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
+  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(caughtGill(t), propGill(eel))}), eel, t, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
@@ -267,7 +277,7 @@ const R_B: Orbit = {target: [-11, -6, 13], az: 16, el: -7, d: 48, f: 1250, cy: 1
 export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(R_A, R_B, ss5(t, T.tighten, T.swim)));
 export const releaseState = (t: number): ExtState => ({
   cam: releaseCam(t),
-  pose: predPose(t, {gill: Math.max(caughtGill(t) * (1 - ss(t, T_REL, T_REL + 0.3)), breath(t)), startle: bump(t, T_REL - 0.1, T_REL + 0.25, T_REL + 1.6), bend: 0.12 * bump(t, T_REL, T_REL + 0.4, T_REL + 1.5)}),
+  pose: predPose(t, {gill: Math.max(caughtGill(t) * (1 - ss(t, T_REL, T_REL + 0.3)), breath(t), propGill(escapeAt(t))), startle: bump(t, T_REL - 0.1, T_REL + 0.25, T_REL + 1.6), bend: 0.12 * bump(t, T_REL, T_REL + 0.4, T_REL + 1.5)}),
   eel: escapeAt(t),
   t,
   clear: [[-12, -3, 12], [-25, -6, 6]],
