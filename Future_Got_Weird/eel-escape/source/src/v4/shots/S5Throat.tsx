@@ -5,9 +5,10 @@
 // S5 THE THROAT (8.90 – CUT): the esophagus, a narrow tube with longitudinal folds, built in true 3D (its own set
 //   frame: the tube's axis runs along +x) and seen from INSIDE, beside the eel. We open out of the stomach opening's
 //   dark lumen (hand-off 3): the dark lifts on the passage. The camera travels alongside the tail, looking up the
-//   passage, as the tail slides on tip first through the passage's fixed bends (its depth vanishes ahead in the dark,
-//   below the caption band). From DIP0 the camera stops and settles onto the passing body, which rushes on beneath
-//   it and fills the foreground (the surroundings sink into shadow).
+//   passage, slower than the eel: the tip slides away from the lens up the passage (screen y ≈ 1460 -> 950 over
+//   8.95–10.0), tip first, through the passage's fixed bends, while the walls stream past (its depth vanishes ahead
+//   in the dark, below the caption band). From DIP0 the camera stops and settles onto the passing body, which rushes
+//   on beneath it and fills the foreground (the surroundings sink into shadow).
 // THE CUT (CUT ± XF, 3 frames): a dissolve inside that body. S6 opens with its camera just above the same body,
 //   heading the same way into the depth, framed to overlay S5's (same position, angle and width within ~20 px).
 // S6 THE GILLS (CUT – 12.58): a new set and a new angle, from inside the pharynx looking toward the gill curtain:
@@ -18,10 +19,14 @@
 //   Z = const maps to the screen by a uniform scale: the arches, the chamber wall and the opening are flat layers
 //   with exact perspective between them, and the eel is a 3D route through them. Its part already through the slit
 //   is drawn behind the curtain (occluded by the bars and filaments), the rest in front; the filaments and the
-//   rakers part around the body and the bar beside it gives way. Beats: the camera rises off the body and the
-//   curtain appears (CUT – 10.78), the tail heads straight for the slit and turns sideways into it ("slips", 10.89),
-//   the closest push while the body threads between the two bars and the tip comes out beyond the next one ("gap",
-//   11.47 – 11.67), then the camera follows the tip across the chamber toward the opening (11.67 – 12.40).
+//   rakers part around the body and the bar beside it gives way. The eel is opaque: its far part lies over the
+//   filament fringe and under the bars and rakers, and both parts carry a pale backlit rim (light from the opening).
+//   Beats (one continuous camera move, eased so nothing on screen passes ~35 px per frame in the follow): the camera
+//   rises off the body and the curtain appears (CUT – ≈10.9), the tail heads straight for the slit and turns
+//   sideways into it ("slips", 10.89), the closest framing while the body threads between the two bars and the tip
+//   comes out beyond the next one (11.40, "gap" 11.47), then a gentle follow across the chamber toward the opening
+//   (11.40 – 12.42). The opening (the bright crescent) never rises above Y_OPEN = 545 px: its top closes there in an
+//   arch (the cover meeting the body), and keepOut().gap includes it.
 // The end is hand-off 2: the camera settles in the chamber facing the opening; its rim (the gill cover's free edge,
 //   bright water beyond) lies on EDGE, and the eel's last 8 units lie exactly on pokeTail(t) for t in [12.44, 12.72].
 import React from 'react';
@@ -46,7 +51,7 @@ export const G_BEATS = {
   slides: 9.27,
   dip0: 10.1, // the camera dips toward the passing body ...
   cut: 10.42, // ... which fills the foreground: S5 -> S6 (a short dissolve inside the body, CUT ± XF)
-  establish: 10.90, // the camera has risen off the body: the gill curtain, the tail heading for the slit
+  establish: 10.9, // (descriptive) the camera has risen off the body: the curtain, the tail heading for the slit
   slips: 10.89, // the tip enters the slit
   gap: 11.47, // the body threads the gap (the closest push)
   follow: 11.40, // closest on the gap (the body threads it on 'gap'); then a gentle follow toward the opening
@@ -198,7 +203,7 @@ const S5R = 2.55; // the passage's radius (eel units)
 const S5K = 12; // longitudinal folds
 const tubeC = (x: number): V3 => [x, 0.16 * Math.sin(0.21 * x + 0.4), 0.2 * Math.sin(0.16 * x + 1.3)];
 /** a fold's angle around the axis (0 = down (+y), π/2 = toward the camera's side (+z)), meandering slowly */
-const foldPhi = (k: number, x: number) => (2 * Math.PI * (k + 0.5)) / S5K + 0.1 * noise1(0.2 * x + k * 7.3, 3);
+const foldPhi = (k: number, x: number) => (2 * Math.PI * (k + 0.5)) / S5K + 0.1 * noise1(0.2 * x + (((k % S5K) + S5K) % S5K) * 7.3, 3);
 const tubeR = (x: number, phi: number) => S5R * (1 + 0.035 * Math.sin(0.5 * x + 3 * phi) + 0.03 * noise1(0.27 * x + phi, 5));
 const wallPt = (x: number, phi: number, inset = 0): V3 => {
   const c = tubeC(x), r = tubeR(x, phi) - inset;
@@ -379,7 +384,7 @@ const S5Fog: React.FC<{B: Basis; dip: number}> = ({B, dip}) => {
 
 const s5State = (t: number) => {
   const B = s5Cam(t);
-  const e = toScreen(B, s5Pose(t), 0.12, 0.45);
+  const e = toScreen(B, s5Pose(t), 0.12, 0.3);
   return {B, e};
 };
 
@@ -519,9 +524,8 @@ const s6Tip = (t: number) =>
 const s6Pose = (t: number) => poseOn(S6_ROUTE, s6Tip(t), (c) => backFrom(c, [0, -1, 0.35]));
 
 // ---------------------------------------------------------------- the S6 camera
-const CAM_EST: Cam6 = {e: [1.5, -0.2, 10.9], f: 990, cx: 640, cy: 900};
 const CAM_GAP: Cam6 = {e: [3.6, -2.4, 6.2], f: 700, cx: 640, cy: 960};
-const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 735, cy: 875};
+const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 728, cy: 915};
 const s6Cam = (t: number): Cam6 => {
   const ks: [number, Cam6][] = [
     [G_BEATS.cut - 0.06, CAM_CUT],
@@ -820,25 +824,27 @@ const Y_OPEN = 545;
 /** the opening on screen for this camera: the rim (the cover's free edge), the far side (the body wall), closed at
  *  the top by a short lip no higher than Y_OPEN (where the cover meets the body) */
 const openingScr = (c: Cam6) => {
+  const Y_CUT = Y_OPEN + 46; // the rim and far side stop here; an arch closes the top, peaking at Y_OPEN
   const below = (L: P[]): P[] => {
-    if (L[0].y >= Y_OPEN) return L;
+    if (L[0].y >= Y_CUT) return L;
     for (let i = 1; i < L.length; i++)
-      if (L[i].y >= Y_OPEN) {
-        const a = L[i - 1], b = L[i], u = (Y_OPEN - a.y) / (b.y - a.y || 1);
-        return [{x: lerp(a.x, b.x, u), y: Y_OPEN}, ...L.slice(i)];
+      if (L[i].y >= Y_CUT) {
+        const a = L[i - 1], b = L[i], u = (Y_CUT - a.y) / (b.y - a.y || 1);
+        return [{x: lerp(a.x, b.x, u), y: Y_CUT}, ...L.slice(i)];
       }
     return [];
   };
   const rim = below(RIM_B.map((p) => toPlane(c, Z_B, p)));
   const far = below(FAR_B.map((p) => toPlane(c, Z_B, p)));
   if (rim.length < 2 || far.length < 2) return null;
-  // the top lip: from the far side back to the rim, sagging a little (it stays below Y_OPEN)
+  // the top: a rounded arch from the far side back to the rim (where the cover meets the body)
   const cap: P[] = [];
-  if (rim[0].y <= Y_OPEN + 0.5) {
+  if (rim[0].y <= Y_CUT + 0.5) {
     const f0 = far[0], r0 = rim[0], w = Math.hypot(f0.x - r0.x, f0.y - r0.y);
-    for (let j = 1; j < 8; j++) {
-      const u = j / 8;
-      cap.push({x: lerp(f0.x, r0.x, u), y: lerp(f0.y, r0.y, u) + 0.12 * w * Math.sin(Math.PI * u)});
+    const h = Math.min(Y_CUT - Y_OPEN, 0.5 * w);
+    for (let j = 1; j < 12; j++) {
+      const u = j / 12;
+      cap.push({x: lerp(f0.x, r0.x, u), y: lerp(f0.y, r0.y, u) - h * Math.sin(Math.PI * u) ** 0.8});
     }
   }
   const poly = [...rim, ...[...far].reverse(), ...cap];
@@ -969,11 +975,10 @@ const S6View: React.FC<{t: number}> = ({t}) => {
   // the eel, opaque: its part beyond the curtain (in the chamber) lies over the filament fringe and under the bars
   // and rakers in front of it; the part in front of the curtain is drawn last. Both carry a pale backlit rim (the
   // light from the opening), so the slate body reads against the dark chamber at any size.
-  const cut = iX >= 0 ? iX : N + 1;
   const rim = (a: number, b: number) => {
     if (b - Math.max(a, e.from) < 0.05) return null;
-    const d = eelSilhouette(e.pts.map((p) => ({x: p.x + 1.5, y: p.y - 1.5})), e.rad, Math.max(a, e.from), Math.min(b, N), false, t, e.dorsal, 3.2);
-    return <path d={d} fill={K.backlight} fillOpacity={0.9} />;
+    const d = eelSilhouette(e.pts.map((p) => ({x: p.x + 2, y: p.y - 2})), e.rad, Math.max(a, e.from), Math.min(b, N), false, t, e.dorsal, 4.4);
+    return <path d={d} fill={K.backlight} fillOpacity={0.95} />;
   };
   return (
     <g>
@@ -984,7 +989,7 @@ const S6View: React.FC<{t: number}> = ({t}) => {
       {iX >= 0 && <EelS e={e} t={t} from={iX} />}
       {curtainOn && <Curtain c={c} geos={geos} part="bars" />}
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
-      {rim(0, cut)}
+      {rim(0, iX >= 0 ? iX - 0.8 : N)}
       {iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />}
     </g>
   );

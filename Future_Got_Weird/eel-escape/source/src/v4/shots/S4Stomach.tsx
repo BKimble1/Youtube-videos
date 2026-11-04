@@ -19,11 +19,13 @@
 //   5.50–5.94  hand-off 1: samples 93..120 lie EXACTLY on carryTail(t) (the X-ray dissolves into us over 5.72–5.84);
 //              the coil and the head are off-frame, the body runs out of frame at the lower right
 //   5.94–6.90  pull back: the tail settles beside the coil; the chamber, the coil and the head (eye) come into view
+//              (the opening's ring stays below y = 520 through the first caption)
 //   6.90–7.22  "Inside the fish's stomach": the eel rests coiled, the head stirs, the tip twitches, then lifts
 //   7.22–7.45  "the eel starts": the tail tip slides up the wall, tail first, the body following on the same track
 //   7.45       it BUMPS the fold lying across its way (the fold dents and wobbles, a dimple at the tip), flinches,
 //   7.50–7.62  turns hard right along the fold
-//   7.62–7.95  it searches along the fold's underside: two sweeps off it and back against it (touches 7.76, 7.93)
+//   7.62–7.95  it searches along the fold's underside: two sweeps off it and back against it (touches 7.76, 7.93);
+//              7.50–8.25 the whole eel is in frame (the head's link to the coil reads)
 //   7.95–8.10  it reaches the pucker's ring, feels across it and darts to the centre ("backing" 7.93–8.36)
 //   8.10–8.30  it presses; the opening YIELDS around it (8.13–8.30, open ≈ 8.2) and the tip goes in
 //   8.24–8.90  the body slides in after it; the camera follows the tip through (the closest push)
@@ -141,7 +143,9 @@ const open2 = (ps: P[]) => crPath(ps, false, F2);
 
 // ================================================================ the layout (world units: eel units, origin = A)
 // World origin = where sample I0 (12 units from the tip) rests: the carried tail's anchor. The coil lies to its right
-// (off-frame during the carry), the opening up and to the left (where the carried tail sweeps).
+// (off-frame during the carry), the opening up and to the left (where the carried tail sweeps), close enough that on
+// the carried tail (55 px/u) its ring stays below the caption band (y ≥ 520), and the whole coil fits in the frame
+// while the tail searches.
 const I0 = 93; // carryTail(t).i0
 /** the opening (the entrance to the esophagus, a puckered ring in the wall) */
 export const OPENING: P = {x: -1.6, y: -11.75};
@@ -161,7 +165,7 @@ const spiralAt = (th: number): P => {
   return {x: COIL_C.x + r * Math.cos(psi), y: COIL_C.y + r * Math.sin(psi)};
 };
 /** the probe: the tip slides up the wall (heading ≈ −97°) into the fold FOLD_BUMP lying across its way, is stopped,
- *  turns hard right and follows the fold's underside up to the opening. CORNER is where the approach meets the line
+ *  turns hard right and follows the fold's underside along to the opening. CORNER is where the approach meets the line
  *  along the fold; the track rounds it with radius R_CORNER and the tip is stopped part-way round (BUMP) */
 const CORNER: P = {x: -7.6, y: -12.9};
 const R_CORNER = 0.95;

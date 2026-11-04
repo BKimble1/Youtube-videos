@@ -123,7 +123,7 @@ export const LOOP = {a0: 8, a1: 50, turn: -305};
 const theta = (a: number, t: number, out: number) => {
   const th0 = 17 * D; // out from under the cover: back and a little up
   // (1) bowing back into the current: settles to streaming slightly downward along the flank
-  const bow = th0 + (-24 * D) * sm(a / 11) + 10 * D * Math.sin(Math.PI * clamp(a / Math.max(8, out))) * sm(out / 10);
+  const bow = th0 + (-20 * D) * sm(a / 11) + 6 * D * Math.sin(Math.PI * clamp(a / Math.max(8, out))) * sm(out / 10);
   // (2) the curl: a loose loop (radius ≈ 6 u) beside the gill; tightening on the pull (shorter, so smaller, and the
   //     lead-out longer: the loop pulls away from the fish)
   const k = wTight(t);

@@ -281,8 +281,8 @@ export const pokeState = (t: number): ExtState => {
 export const pokeStateWith = (o: Orbit, t: number): ExtState => ({cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
 // ---------------------------------------------------------------- S8 FOLLOWS (13.86 – 15.96): over the predator's back
-const F_A: Orbit = {target: [-17, -9, 11], az: 24, el: 40, d: 40, f: 1250, cy: 1080};
-const F_B: Orbit = {target: [-8, -9, 14], az: 30, el: 42, d: 56, f: 1250, cy: 1080};
+const F_A: Orbit = {target: [-20, -8, 13], az: 8, el: 54, d: 44, f: 1250, cy: 1200};
+const F_B: Orbit = {target: [-11, -8, 16], az: 12, el: 56, d: 62, f: 1250, cy: 1220};
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
@@ -335,7 +335,7 @@ export const swimCam = (t: number): Cam3 => {
   const fish: V3 = [-5, -4, 0];
   const focus = add3(mul3(head, 0.55), mul3(mid, 0.45));
   const target = add3(focus, mul3(sub3(fish, focus), lerp(0.18, 0.02, ss(t, 21.3, 22.4))));
-  return {eye, target, f: lerp(1100, 1060, ss(t, 21.3, 22.4)), cy: 1120};
+  return {eye, target, f: lerp(1100, 1060, ss(t, 21.3, 22.4)), cy: lerp(1120, 1320, ss(t, 21.4, 22.2))};
 };
 export const swimState = (t: number): ExtState => {
   const eel = escapeAt(t);
