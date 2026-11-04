@@ -335,8 +335,8 @@ export const headState = (t: number): ExtState => {
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
-const R_A: Orbit = {target: [-17, -3, 13], az: 20, el: -8, d: 36, f: 1250, cy: 1040};
-const R_B: Orbit = {target: [-9, -5, 15], az: 22, el: -6, d: 50, f: 1250, cy: 1040};
+const R_A: Orbit = {target: [-17, -3, 13], az: 20, el: -8, d: 36, f: 1250, cy: 1160};
+const R_B: Orbit = {target: [-9, -5, 15], az: 22, el: -6, d: 50, f: 1250, cy: 1160};
 export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(R_A, R_B, ss5(t, T.tighten, T.swim)));
 export const releaseState = (t: number): ExtState => ({
   cam: releaseCam(t),
