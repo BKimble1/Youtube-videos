@@ -255,6 +255,26 @@ export const Hook: React.FC<{f: number}> = ({f}) => {
           )}
         </Campus>
       </Cam>
+      <Tag x={40} y={52} anchor="start" size={26} text="Animated reconstruction" fill="#FFFFFF" k={pr(f, T('In 2013') + 0.3, T('In 2013') + 0.8) * (1 - pr(f, T('Rajesh Rao') - 0.6, T('Rajesh Rao') - 0.2))} />
     </g>
   );
+};
+
+/** sound cues for the mix (tools/export_cues.ts) */
+export const CUES_S1 = (): {t: number; kind: string; gain?: number}[] => {
+  const ev = hookEvents();
+  const out: {t: number; kind: string; gain?: number}[] = [];
+  strikeTimes().forEach((t) => out.push({t, kind: 'key_click'}));
+  ev.forEach((e) => {
+    if (e.t0 > -0.5) out.push({t: e.t0, kind: e.kind === 'plane' ? 'plane_pass' : 'rocket_launch', gain: e.kind === 'plane' ? -4 : -6});
+    if (e.fire !== undefined) {
+      out.push({t: e.fire, kind: 'cannon'});
+      out.push({t: e.fire + 0.32, kind: 'boom'});
+    }
+  });
+  out.push({t: T('across campus') - 0.1, kind: 'whoosh', gain: -4});
+  out.push({t: T('In 2013') - 0.05, kind: 'pop', gain: -6});
+  out.push({t: T('split one video game') + 0.5, kind: 'whoosh', gain: -8});
+  out.push({t: T('two buildings') + 0.15, kind: 'tick', gain: -6});
+  return out;
 };

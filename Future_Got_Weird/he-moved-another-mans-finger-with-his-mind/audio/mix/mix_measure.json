@@ -1,0 +1,18 @@
+{
+ "integrated_lufs": -14.23,
+ "true_peak_dbtp": -1.48,
+ "duration_s": 211.7667,
+ "music_to_voice_rms_db_during_speech": -18.2,
+ "score_rms_dbfs_in_missing_click_gap": -240.0,
+ "sfx_cues_by_kind": {
+  "key_click": 2,
+  "cannon": 2,
+  "boom": 2,
+  "plane_pass": 1,
+  "rocket_launch": 1,
+  "whoosh": 2,
+  "pop": 1,
+  "tick": 1
+ },
+ "limiter_min_gain_db": -2.5
+}
