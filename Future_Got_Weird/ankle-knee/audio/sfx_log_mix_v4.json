@@ -2,7 +2,7 @@
  {
   "t": 0.033,
   "sfx": "ball strike (contact, frame 2)",
-  "gain_db": -15
+  "gain_db": -18
  },
  {
   "t": 0.063,
@@ -25,7 +25,7 @@
   "gain_db": -27
  },
  {
-  "t": 3.227,
+  "t": 3.447,
   "sfx": "reveal: prosthetic cleat lands",
   "gain_db": -27
  },
@@ -130,8 +130,8 @@
   "gain_db": -37
  },
  {
-  "t": 14.27,
-  "sfx": "hands tighten on the rails",
+  "t": 14.625,
+  "sfx": "hands on the rails take his weight (the two-leg view)",
   "gain_db": -34
  },
  {
@@ -145,7 +145,7 @@
   "gain_db": -38
  },
  {
-  "t": 15.82,
+  "t": 15.94,
   "sfx": "he rises",
   "gain_db": -39
  },

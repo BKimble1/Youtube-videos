@@ -11,10 +11,10 @@
 | Format | H.264 yuv420p BT.709, 1080×1920, 30 fps; AAC 48 kHz stereo, 320 kb/s |
 | Length | 725 frames, 24.17 s. It loops: frame 724 is one frame before frame 0's composition |
 | Narration | The approved take, verbatim: the same V3 master (`audio/narration/FGW_Ankle_Knee_narration_V3.wav`), sample for sample. Every cut and beat is keyed to its measured word times (`source/src/v4/story4.ts`) |
-| ASR of the final file | __ASR__ |
-| Mix | __MIX__ |
-| Full decode | __DECODE__ |
-| Measured frame QA | __QA__ |
+| ASR of the final file | whisper base.en WER **0.000**. Zipformer's only differences are spellings (Wyat, half way, sockerball) (`qa/v4_review/asr_final.json`) |
+| Mix | -13.46 LUFS integrated, -1.6 dBTP (4x oversampled). Voice -16.5 LUFS, effects -39.55, ambience -44.24 (`audio/mix/mix_measure_mix_v4.json`) |
+| Full decode | no errors; 725 frames, 11.23 MB |
+| Measured frame QA | no unplanned large frame changes (0). Longest near-still stretch: 31 frames from 3.67 s, where the diseased bone tints in on the still X-ray. Loop seam: the frame change from 724 to 0 is 12.39, against about 14-16 for the opening frames' own swing, so the swing runs on across it. See `qa/v4_review/render_qa.json` |
 
 ## The new cut
 
@@ -46,7 +46,7 @@
   - *Ball position:* no jump across the seam; the same rolling ball sits at the strike position.
   - *Screen direction:* everything moves screen-left: the run, the pass, the kick, the ball's exit and the wipe.
   - *Leg continuity:* the swing runs on with no pose pop.
-  - The seam's frame change is 14.2, against 14.4–16.2 for the opening frames.
+  - The seam's frame change is 12.4, against about 14–16 for the opening frames' own swing.
 - **Captions** sit at each shot's chosen height, clear of the ankle, the cleats and the ball. During the wipe the ball fills the whole frame, so it passes under the caption.
 
 ## Independent review
