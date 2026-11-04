@@ -1054,7 +1054,11 @@ const FAR_B: P[] = (() => {
 const Y_OPEN = 545;
 /** the opening on screen for this camera: the rim (the cover's free edge, on EDGE at the end), the far side (the
  *  body wall), closed at the top by a short arch no higher than Y_OPEN (where the cover meets the body) */
-const openingScr = (c: Cam6) => {
+/** the gap breathes (the cover's slow pumping) and opens a little wider as the tail pushes toward it; only its far
+ *  side moves, so the rim stays on EDGE */
+const gapWiden = (t: number) => 1 + 0.045 * Math.sin((2 * Math.PI * (t - 10.4)) / 1.55) + 0.08 * ss(t, 12.0, 12.58);
+const openingScr = (c: Cam6, t: number) => {
+  const wd = gapWiden(t);
   const Y_CUT = Y_OPEN + 46; // the rim and far side stop here; an arch closes the top, peaking at Y_OPEN
   const below = (L: P[]): P[] => {
     if (L[0].y >= Y_CUT) return L;
@@ -1066,7 +1070,7 @@ const openingScr = (c: Cam6) => {
     return [];
   };
   const rim = below(RIM_B.map((p) => toPlane(c, Z_B, p)));
-  const far = below(FAR_B.map((p) => toPlane(c, Z_B, p)));
+  const far = below(FAR_B.map((p, i) => toPlane(c, Z_B, {x: RIM_B[i].x + (p.x - RIM_B[i].x) * wd, y: RIM_B[i].y + (p.y - RIM_B[i].y) * wd})));
   if (rim.length < 2 || far.length < 2) return null;
   // the top: a rounded arch from the far side back to the rim (where the cover meets the body)
   const cap: P[] = [];
@@ -1126,7 +1130,7 @@ const O = {
   bedFar: mix(C.haze, C.sand, 0.4),
   bedNear: mix(C.sand, C.haze, 0.42),
   pebble: mix(mix(C.pebbleA, C.haze, 0.45), C.sand, 0.2),
-  tuft: mix(mix(C.fin, C.waterMid, 0.56), C.haze, 0.42), // the reeds' mid tone, hazed by distance
+  tuft: mix(mix(C.fin, C.waterMid, 0.56), C.haze, 0.3), // the reeds' mid tone, hazed by distance
   mote: C.mote,
 };
 const HORIZON = 1490;
@@ -1149,7 +1153,7 @@ const tuftD = (t: number) => {
         const s = j / 8;
         const a = lean * s + sway * s * s;
         const x = x0 + hb * (Math.sin(a) * s), y = y0 - hb * s;
-        const w = 6 * (1 - s) ** 0.8 + 0.4;
+        const w = 8 * (1 - s) ** 0.8 + 0.5;
         L.push({x: x - w, y});
         R.push({x: x + w, y});
       }
@@ -1284,7 +1288,7 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
     }
     folds.push(dPoly(pts, false));
   }
-  const op = openingScr(c);
+  const op = openingScr(c, t);
   const q = qMap(c, Z_B);
   const {H: hot, k} = lightOf(c);
   // the opening's visible top in Q (its screen top is held at Y_OPEN while the camera moves)
@@ -1398,8 +1402,8 @@ const TopFade: React.FC<{id: string}> = ({id}) => {
   );
 };
 /** the glare of the opening over everything round it (drawn over the arches and the eel): soft, no edge */
-const OpeningBloom: React.FC<{c: Cam6}> = ({c}) => {
-  const op = openingScr(c);
+const OpeningBloom: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
+  const op = openingScr(c, t);
   if (!op) return null;
   const {H: hot, k} = lightOf(c);
   const g = uid('bloom'), fm = uid('blFade'), gx = uid('blX');
@@ -1494,7 +1498,7 @@ const S6View: React.FC<{t: number; eel?: boolean}> = ({t, eel = true}) => {
   // and rakers in front of it; the part in front of the curtain is drawn last. Both carry a pale backlit rim (the
   // light from the opening), so the slate body reads against the dark chamber at any size.
   const through = eel && iX >= 0;
-  const lt = openingScr(c) ? lightOf(c) : null;
+  const lt = openingScr(c, t) ? lightOf(c) : null;
   return (
     <g>
       <rect x={0} y={0} width={W} height={H} fill={K.chamberDeep} />
@@ -1505,7 +1509,7 @@ const S6View: React.FC<{t: number; eel?: boolean}> = ({t, eel = true}) => {
       {through && <EelS e={e} t={t} from={iX} />}
       {through && lt && <EelLit e={e} t={t} a={iX} lt={lt} shade />}
       {curtainOn && <Curtain c={c} geos={geos} part="bars" lt={lt} />}
-      <OpeningBloom c={c} />
+      <OpeningBloom c={c} t={t} />
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
       {eel && <EelRim e={e} t={t} a={0} b={iX >= 0 ? iX - rimBack(e, iX) : N} w={3.6} />}
       {eel && (iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />)}
@@ -1623,7 +1627,7 @@ export const keepOut = (t: number): KeepOut => {
     }
     // the gill opening (the water beyond the rim, between the cover's free edge and the body wall) is the gap's
     // other end: it counts too
-    const op = openingScr(s.c);
+    const op = openingScr(s.c, t);
     if (op && onScr(op.poly)) pts.push(...op.poly.filter((_, i) => i % 2 === 0));
     if (pts.length >= 3) gap = hull(pts);
   }
