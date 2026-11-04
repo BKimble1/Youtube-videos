@@ -139,8 +139,8 @@ const World: React.FC<{t: number}> = ({t}) => {
           )}
           {seeIn > 0.002 && (
             <filter id={frostId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600} colorInterpolationFilters="sRGB">
-              <feColorMatrix type="saturate" values="0.45" />
-              <feComponentTransfer><feFuncR type="linear" slope="0.86" intercept="0.02" /><feFuncG type="linear" slope="0.9" intercept="0.03" /><feFuncB type="linear" slope="0.92" intercept="0.05" /></feComponentTransfer>
+              <feColorMatrix type="saturate" values="0.55" />
+              <feComponentTransfer><feFuncR type="linear" slope="0.74" /><feFuncG type="linear" slope="0.76" /><feFuncB type="linear" slope="0.8" /></feComponentTransfer>
             </filter>
           )}
           <filter id={haloId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600}><feGaussianBlur stdDeviation={0.5} /></filter>
@@ -188,7 +188,7 @@ const World: React.FC<{t: number}> = ({t}) => {
         {inner(0, Math.min(iSlit, N))}
         {showE && (
           <g mask={eMaskRef}>
-            {revealA > 0.002 && <g opacity={revealA} transform={yawM(psi, CUT_Z)}><StomachFront t={t} mode="reveal" /></g>}
+            {revealA > 0.002 && <g opacity={0.55 * revealA} transform={yawM(psi, CUT_Z)} filter={`url(#${frostId})`}><StomachFront t={t} mode="reveal" /></g>}
             {revealA * (1 - kc) > 0.002 && <g opacity={revealA * (1 - kc)} transform={yawM(psi, CUT_Z)}><GillArches t={t} mode="reveal" gill={f.gill} /></g>}
             {kc > 0.002 && <g opacity={kc} transform={yawM(psi, GILL_Z)}><GillArches t={t} mode="cut" gill={f.gill} /></g>}
           </g>
@@ -230,23 +230,25 @@ const lensTail = (t: number) => {
   const z = -LENS.depth * DIST * c.w;
   const sc = layerScale(c, z); // px per unit at that depth
   const xs = sweepX(t);
-  const u0 = 0.71; // the body coordinate at the frame's middle height: the tapering rear section crosses the frame
+  const u0 = 0.82; // the body coordinate at the frame's middle height: the tapering rear section, the tip near the bottom
   const L = 54;
   const pts: P[] = [];
+  const ph = (t - SWEEP0) * 2 * Math.PI * 1.6;
   for (let i = 0; i <= N; i++) {
     const u = i / N;
-    const yScr = SH / 2 + (u - u0) * L * sc; // body runs down the frame, tail tip far below
-    // a gentle bow along the body and a lean opposite to the motion (the tail trails the stroke)
-    const bow = 140 * Math.sin(Math.PI * (u - 0.2)) + 0.18 * (yScr - SH / 2);
-    pts.push(pt(c.x + (xs + bow - 540) / sc, c.y + (yScr - SH / 2) / sc));
+    const yScr = SH / 2 + (u - u0) * L * sc; // body runs down the frame, tail tip low in the frame
+    // the tail's own S-flex, travelling toward the tip and growing toward it, and a lean opposite the stroke
+    const flex = (40 + 120 * clamp((u - 0.55) / 0.45)) * Math.sin((2 * Math.PI * (u - 0.55)) / 0.42 - ph);
+    const lean = 0.2 * (yScr - SH / 2);
+    pts.push(pt(c.x + (xs + flex + lean - 540) / sc, c.y + (yScr - SH / 2) / sc));
   }
   return {c, z, sc, pts};
 };
 const LensTail: React.FC<{t: number}> = ({t}) => {
   const {c, z, sc, pts} = lensTail(t);
   return (
-    <Layer c={c} z={z} maxBlur={11}>
-      <Eel pts={pts} radii={RADII} px={sc} t={t} from={20} to={N} dorsal={-1} />
+    <Layer c={c} z={z} maxBlur={5}>
+      <Eel pts={pts} radii={RADII} px={sc} t={t} from={40} to={N} dorsal={-1} />
     </Layer>
   );
 };
@@ -254,9 +256,10 @@ const LensTail: React.FC<{t: number}> = ({t}) => {
 const wipePath = (t: number) => {
   if (t < SWEEP0) return null;
   const {c, sc, pts} = lensTail(t);
-  const sp = pts.slice(20).map((q) => pt(540 + sc * (q.x - c.x), 960 + sc * (q.y - c.y)));
+  const sp = pts.slice(40).map((q) => pt(540 + sc * (q.x - c.x), 960 + sc * (q.y - c.y)));
   const last = sp[sp.length - 1], first = sp[0];
-  return 'M' + sp.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(' L') + ` L 4000 ${last.y.toFixed(1)} L 4000 -4000 L ${first.x.toFixed(1)} -4000 Z`;
+  // past the tip the seam runs straight down: both sides there show the same camera on the same fish and bed
+  return 'M' + sp.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(' L') + ` L ${last.x.toFixed(1)} 4000 L 4000 4000 L 4000 -4000 L ${first.x.toFixed(1)} -4000 Z`;
 };
 
 export const Scene: React.FC<{t: number; fkey: string; captions?: boolean}> = ({t, fkey, captions = true}) => {

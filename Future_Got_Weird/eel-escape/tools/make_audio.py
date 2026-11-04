@@ -428,8 +428,8 @@ layer(wake_env * wake, 'swim wake (faint)', -20.0, 'tex', spans_of(wake_env, 0.2
 # ---------------------------------------------------------------- the departing tail's close whoosh past the lens
 if 'sweep0' in EV:
     # the picture's own events: the tail swings out past the right edge (peak just before EV.sweep0), then sweeps
-    # back across the lens, crossing the frame centre about 0.32 s after it
-    t_pk, t_sw = EV['sweep0'] + 0.32, EV['sweep0'] - 0.12
+    # back across the lens, crossing the frame centre about 0.21 s after it
+    t_pk, t_sw = EV['sweep0'] + 0.21, EV['sweep0'] - 0.12
 else:
     lpk = local_max(SW100, lens0, end - 0.05, 0.3, 0.12)
     t_pk = lpk[-1] / 100 if lpk else end - 0.25          # the sweep past the lens: the last surge of 'swim'

@@ -156,7 +156,7 @@ const relax = (t: number) => ss(t, EV.release + 0.05, EV.release + 1.05);
 const kSwim = (u: number, t: number) => (0.035 + 0.11 * u) * Math.sin(2 * Math.PI * (u / 0.62 - 2.4 * (t - EV.release)));
 // mid-body motion after the release: the coil pulls up and away from the gill as it straightens (both ends swing about
 // mid-body), turning so the head leads up and to the right, clear of the fish; then a quick swim along that heading
-export const SWIM_DIR = (-28 * Math.PI) / 180;
+export const SWIM_DIR = (-62 * Math.PI) / 180;
 const M_AFTER = pt(-8.5, -27.5);
 let REL0: {M: P; th: number} | null = null;
 const rel0 = () => (REL0 ??= releaseMid(DRIVERS));
@@ -168,7 +168,7 @@ const angTo = (from: number, to: number) => {
 };
 /** the swimmer's heading (snout direction): up and to the right, clear of the fish, out of the frame */
 export const headingAt = (_t: number) => SWIM_DIR;
-const swimSpeed = (t: number) => 15 * ss(t, EV.release + 0.5, EV.release + 1.3) + 16 * ss(t, EV.swim0 + 1.05, EV.swim0 + 1.75);
+const swimSpeed = (t: number) => 15 * ss(t, EV.release + 0.5, EV.release + 1.3) + 12 * ss(t, EV.swim0 + 0.9, EV.swim0 + 1.6);
 const SW_DT = 1 / 240;
 const swimTable: P[] = (() => {
   const out: P[] = [];
@@ -239,9 +239,13 @@ export const fishAt = (t: number): FishState => {
 };
 
 // ---------------------------------------------------------------- the camera
+// ---------------------------------------------------------------- the departing tail's sweep across the lens
+/** after the eel has swum out of frame, its tail passes close in front of the lens once, right to left (a big blurred
+ *  band), and the region it has crossed shows frame 0: the loop. Depth as a fraction of the camera distance. */
+export const SWEEP0 = DUR - 0.52;
+export const LENS = {depth: 0.75};
 export const CAM_A: Cam = {x: -29.3, y: -6.2, w: 47};
 const C = (x: number, y: number, w: number): Cam => ({x, y, w});
-const CAM_SWIM: Cam = {x: -4, y: -25, w: 74};
 const CAM_KEYS: Key[] = [
   [EV.reveal0 - 0.1, CAM_A],
   [EV.reveal1 + 0.3, C(-13.5, 1.0, 64), travel],
@@ -264,26 +268,19 @@ const CAM_KEYS: Key[] = [
   [T.lastEnd + 0.1, C(-18.4, -11.0, 54), travel],
   [EV.curl1, C(-19.5, -13.0, 54), travel],
   [EV.release + 0.2, C(-19.5, -13.5, 56), travel],
-  // it swims clear, up and to the right, the predator below; then it leaves the frame
-  [EV.release + 1.2, C(-9.0, -21.0, 70), travel],
-  [EV.swim0 + 1.1, CAM_SWIM, travel],
-  [T.ate + 0.15, C(-17.0, -14.0, 64), travel],
-  // a slow push on the predator, alive and upright, before the tail sweeps past the lens
-  [DUR, C(-18.5, -12.5, 59), travel],
+  // it swims clear, up and away, the predator below in frame all along; one smooth move then settles on the opening
+  // camera (the predator alive and upright), so the tail's sweep past the lens reveals frame 0 on an identical fish
+  [EV.release + 1.25, C(-18.0, -17.0, 62), travel],
+  [SWEEP0 - 0.3, CAM_A, travel],
 ];
 export const camAt = (t: number): Cam => glide(t, CAM_KEYS);
 
-// ---------------------------------------------------------------- the departing tail's sweep across the lens
-/** after the eel has swum out of frame, its tail passes close in front of the lens once, right to left (a big blurred
- *  band), and the region it has crossed shows frame 0: the loop. Depth as a fraction of the camera distance. */
-export const SWEEP0 = DUR - 0.52;
-export const LENS = {depth: 0.85};
 /** the band's screen x (px) of its centre line at the frame's middle height: from past the right edge to past the left */
 export const sweepX = (t: number) => {
   const u = clamp((t - SWEEP0) / (DUR + 0.05 - SWEEP0));
   // quick from the start and still moving at the loop point (it carries straight into the opening's tail flick)
   const e = 0.25 * u + 0.75 * (1 - Math.pow(1 - u, 1.8));
-  return lerp(1080 + 340, -640, e);
+  return lerp(1080 + 240, -520, e);
 };
 /** @deprecated the lens pass is now a screen-space sweep (sweepX); kept for the module test entries */
 export const lensAt = (_t: number) => 0;

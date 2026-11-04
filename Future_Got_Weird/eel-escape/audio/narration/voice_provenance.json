@@ -1,0 +1,52 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Bone Glue, Myostatin, Zombie Snail, Zombie Ant, Dead Spider and Cyborg Cockroach); confirmed with creative_list_voices on 2026-11-03"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "SNuFDGWQUZCYVnYOrNxM",
+ "prompt": "[intrigued, quick, pointing it out] That tail sticking out of this fish belongs to the EEL it just swallowed. [fast paced, explaining] Scientists filmed it on X-ray. Inside the fish’s stomach, the eel starts backing up. Its tail slides up the fish’s throat, slips through a gap in the gills, and pokes out the side. Then the rest of its body follows. [a little slower] Its head comes out LAST. [building] The eel curls up outside the fish, [quick, energetic] gives one final pull, and swims away from the animal that just ATE it.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Capitals mark emphasis only; the bracket tags direct delivery (pointing out something strange at the opening, brisk, a slight slowdown on 'Its head comes out last', the pace picking up on 'one final pull') and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 528.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_5pFw.mp3",
+   "generation_id": "5pFwrto2auhRoIyKU2KT",
+   "session_id": "kb1zgbSWiMaxiqbD31HE",
+   "duration_s": 23.954,
+   "sha256": "89e6f6e7d28be3a011c6ec08ec37cfb62dcf3b01cc30335b1c83e09afb45b057",
+   "asr": {
+    "zipformer": 0.0,
+    "whisper": 0.0
+   },
+   "chosen": true,
+   "why": "the stronger slowdown on 'Its head comes out last' (5.2 syllables/s against about 6.3 either side) and the stronger pick-up on 'one final pull'; word-perfect on both ASR models; speech from 0.02 s"
+  },
+  {
+   "file": "audio/narration/takes/t2_mu8a.mp3",
+   "generation_id": "mu8aTSn6GDECYsU2u10G",
+   "session_id": "I6zYnmzIF3q9O2kLj6M1",
+   "duration_s": 22.988,
+   "sha256": "5be388e0ed63cd9151dcc0173b67462f111a62bbdd51515d2486a2a59c76101f",
+   "asr": {
+    "zipformer": 0.0,
+    "whisper": 0.0
+   },
+   "chosen": false,
+   "why_not": "equally clean, but a flatter slowdown on the head line (5.6 syllables/s)"
+  }
+ ],
+ "download_status": "DOWNLOADED 2026-11-03 from the flow's signed URLs (elevenlabsusercontent.com reachable).",
+ "master": {
+  "file": "audio/narration/FGW_Eel_Escape_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 24.80 s (the film length)",
+  "edits": "none: the take is used sample for sample (no gap shortening, no stretch, pitch or gain change); only padded to the film length",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer)",
+  "sha256": "15eb7a6cff4bc6a38caae64d5c2385cd2954c1574581559e92a5aace08218f36"
+ },
+ "final_check": "qa/v3/final_asr.json: the narration transcribed from the delivered MP4's own audio, WER 0.000 on both zipformer and whisper base.en",
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pace measurements and levels."
+}
