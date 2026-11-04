@@ -28,7 +28,8 @@
 // predator's centre (0, 0, 0). In a shot where front reeds would cover the subject, pass filter={clearSight(B, [...
 // points to keep in view], r)}: clumps near those sight lines fade out smoothly (never pop as the camera moves).
 //
-// Exports: WorldBack, WorldFront, Reeds, PredShadow, ReedWipe, reedWipePoly, reedWipeCore (checks), REEDS (the clump
+// Exports: WorldBack, WorldFront, Reeds, PredShadow, ReedWipe, reedWipePoly (path d) / reedWipePts (points),
+// reedWipeCore (checks), REEDS (the clump
 // placements), ROCKS, clearSight, ReedFilter, BED_Y, SURF_Y, waterColor, fogAt, hazeOf (e.g. the receding predator's
 // `dim`), the reed colours.
 import React from 'react';
@@ -201,7 +202,9 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
   const glow = gy > -R - gr * 0.9 && B.cy + gy - gr < fy1 && B.cy + gy + gr > fy0;
   const gx0 = Math.max(fx0, B.cx + gx - gr), gx1 = Math.min(fx1, B.cx + gx + gr), gy0 = Math.max(fy0, B.cy + gy - gr), gy1 = Math.min(fy1, B.cy + gy + gr);
   // the gradient is drawn as bands between consecutive rows, each a TWO-stop gradient (several times cheaper to
-  // rasterise than one many-stop gradient); bands overlap by 1 px and agree at their joins, so no seam shows
+  // rasterise than one many-stop gradient). Each band runs 8 px on under the next one (its gradient pads with its end
+  // colour, which is the next band's start colour), so the next band's anti-aliased top edge always lies over an
+  // opaque, matching colour: no seam, even when the frame is scaled or rolled
   const bands: {y0: number; y1: number; c0: string; c1: string}[] = [];
   for (let i = 0; i < stops.length - 1; i++) {
     const y0 = Math.round(stops[i].y), y1 = Math.round(stops[i + 1].y);
@@ -225,7 +228,7 @@ const WaterBg: React.FC<{B: Basis}> = ({B}) => {
         )}
       </defs>
       {bands.map((b, i) => (
-        <rect key={i} x={Math.floor(fx0)} y={b.y0} width={Math.ceil(fx1 - fx0)} height={b.y1 - b.y0 + (i < bands.length - 1 ? 1 : 0)} fill={`url(#${id}g${i})`} />
+        <rect key={i} x={Math.floor(fx0)} y={b.y0} width={Math.ceil(fx1 - fx0)} height={b.y1 - b.y0 + (i < bands.length - 1 ? 8 : 0)} fill={`url(#${id}g${i})`} />
       ))}
       {glow && <rect x={gx0} y={gy0} width={gx1 - gx0} height={gy1 - gy0} fill={`url(#${id}l)`} />}
     </g>
@@ -771,8 +774,12 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       continue;
     }
     const els: React.ReactNode[] = [];
+    // sharp (with ink) → soft (blurred, dark) crossfade by the circle of confusion; no group opacity anywhere (each
+    // would be an offscreen layer): the fade multiplies straight into fill/stroke opacities
     const sharpK = 1 - ss(coc, 2.5, 6);
+    const oa = (k: number) => (k > 0.995 ? undefined : k.toFixed(3));
     if (sharpK > 0.01) {
+      const am = sharpK * aNear;
       // projected edges, facing sign per sample, runs of one face
       const e1 = idx.map((i) => proj(B, add3(g.C[i], mul3(g.W[i], g.w[i] / 2))));
       const e2 = idx.map((i) => proj(B, add3(g.C[i], mul3(g.W[i], -g.w[i] / 2))));
@@ -802,11 +809,11 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       }
       const outline = `M${e1.map(pp).join('L')}L${e2.reverse().map(pp).join('L')}Z`;
       const inkW = INK_PX * 0.62 * (1 - 0.5 * fg) * clamp(wmax / 2.5, 0.45, 1);
-      const inkO = (1 - 0.88 * fg) * clamp((wmax - 0.8) / 1.5, 0, 1);
+      const inkO = (1 - 0.88 * fg) * clamp((wmax - 0.8) / 1.5, 0, 1) * am;
       if (runs.length === 1) {
-        els.push(<path key="r" d={outline} fill={tones[runs[0].tone]} stroke={INK} strokeOpacity={inkO.toFixed(3)} strokeWidth={f1(inkW)} strokeLinejoin="round" />);
+        els.push(<path key="r" d={outline} fill={tones[runs[0].tone]} fillOpacity={oa(am)} stroke={INK} strokeOpacity={inkO.toFixed(3)} strokeWidth={f1(inkW)} strokeLinejoin="round" />);
       } else {
-        runs.forEach((r, ri) => els.push(<path key={ri} d={`M${r.pts.map(pp).join('L')}Z`} fill={tones[r.tone]} />));
+        runs.forEach((r, ri) => els.push(<path key={ri} d={`M${r.pts.map(pp).join('L')}Z`} fill={tones[r.tone]} fillOpacity={oa(am)} />));
         els.push(<path key="o" d={outline} fill="none" stroke={INK} strokeOpacity={inkO.toFixed(3)} strokeWidth={f1(inkW)} strokeLinejoin="round" />);
       }
       // a thin lit stripe along the lit face's midrib on big, near, in-focus blades
@@ -822,12 +829,14 @@ const reedDraws = (o: ReedOpts): Draw[] => {
           }
         });
         if (seg.length > 2) segs.push(`M${seg.map(pp).join('L')}`);
-        if (segs.length) els.push(<path key="mr" d={segs.join('')} fill="none" stroke={mix(tones[2], C.mote, 0.25)} strokeOpacity={0.45} strokeWidth={f1(Math.max(1, wmax * 0.12))} strokeLinecap="round" />);
+        if (segs.length) els.push(<path key="mr" d={segs.join('')} fill="none" stroke={mix(tones[2], C.mote, 0.25)} strokeOpacity={(0.45 * am).toFixed(3)} strokeWidth={f1(Math.max(1, wmax * 0.12))} strokeLinecap="round" />);
       }
     }
     if (sharpK < 0.99) {
-      // out of focus: soft, dark, layered (an opaque core and translucent halos), no ink; every other sample is
-      // plenty for a blurred shape
+      // out of focus: soft and dark, no ink: an opaque core plus nL NON-overlapping rings outward, their opacity
+      // stepping evenly down to 0 at the blurred edge (each pixel is painted once); every other sample is plenty for
+      // a blurred shape
+      const am = (1 - sharpK) * aNear;
       const sel = idx.map((_, k) => k).filter((k) => k % 2 === 0 || k === idx.length - 1);
       const cS = sel.map((k) => cs[k]);
       const hS = sel.map((k) => {
@@ -841,14 +850,13 @@ const reedDraws = (o: ReedOpts): Draw[] => {
       const col = mix(mix(tones[0], tones[1], 0.45), REED_NEAR, dark);
       const bl = coc;
       const lay = (dw: number) => softRibbon(cS, hS.map((h) => Math.max(0.3, h + dw)));
-      const g2: React.ReactNode[] = [];
       const hwMax = Math.max(...hS);
-      if (hwMax - bl / 2 > 1) g2.push(<path key="c" d={lay(-bl / 2)} />);
-      // nL translucent halos from −bl/2 to +bl/2: stacked they ramp the edge from 0 to opaque
-      // (layer l, counted outward from the core, has opacity 1/(l + 2): the stacked coverage then steps evenly from
-      // the outer edge to the core, k/(nL + 1))
-      const nL = Math.round(clamp(bl / 8, 3, 5));
-      for (let l = 0; l < nL; l++) g2.push(<path key={`h${l}`} d={lay(-bl / 2 + (bl * (l + 0.5)) / nL)} fillOpacity={(1 / (l + 2)).toFixed(3)} />);
+      const nL = Math.round(clamp(bl / 10, 2, 4));
+      const bnd = Array.from({length: nL + 1}, (_, l) => lay(-bl / 2 + (bl * l) / nL));
+      if (hwMax - bl / 2 > 1) els.push(<path key="c" d={bnd[0]} fill={col} fillOpacity={oa(am)} />);
+      for (let l = 0; l < nL; l++) {
+        els.push(<path key={`h${l}`} d={bnd[l + 1] + bnd[l]} fillRule="evenodd" fill={col} fillOpacity={(((nL - l) / (nL + 1)) * am).toFixed(3)} />);
+      }
       // the lit side of the out-of-focus blade: a soft lighter band toward the light (screen upper left)
       if (hwMax > 8 && hwMax - bl / 2 > 4) {
         const sh = cS.map((c0, k) => {
@@ -859,18 +867,12 @@ const reedDraws = (o: ReedOpts): Draw[] => {
           const o = Math.max(0, hS[k] - bl / 2) * 0.42;
           return {x: c0.x + nx * o, y: c0.y + ny * o};
         });
-        const sw = hS.map((h) => Math.max(0.3, (h - bl / 2) * 0.3));
+        const sw = hS.map((h) => Math.max(0.3, (h - bl / 2) * 0.3 + bl * 0.1));
         const sc = mix(col, mix(tones[1], tones[2], 0.5), 0.3 + 0.25 * (1 - dark));
-        g2.push(
-          <g key="lit" fill={sc}>
-            <path d={softRibbon(sh, sw.map((w0) => w0 + bl * 0.3))} fillOpacity={0.3} />
-            <path d={softRibbon(sh, sw)} fillOpacity={0.55} />
-          </g>,
-        );
+        els.push(<path key="lit" d={softRibbon(sh, sw)} fill={sc} fillOpacity={(0.5 * am).toFixed(3)} />);
       }
-      els.push(<g key="soft" fill={col} opacity={sharpK > 0.01 ? (1 - sharpK).toFixed(3) : undefined}>{g2}</g>);
     }
-    out.push({D: bd, el: <g key={`b${out.length}`} opacity={aNear < 0.99 ? aNear.toFixed(3) : undefined}>{els}</g>});
+    out.push({D: bd, el: <g key={`b${out.length}`}>{els}</g>});
   }
   farBatch.forEach((fb, ci) => out.push({D: fb.D, el: <path key={`f${ci}`} d={fb.d} fill="none" stroke={fb.col} strokeWidth={f1(fb.w)} strokeLinecap="round" strokeLinejoin="round" opacity={fb.a < 0.99 ? fb.a.toFixed(3) : undefined} />}));
   return out;
@@ -1055,12 +1057,12 @@ export const WorldFront: React.FC<WorldProps> = ({B, t, zSplit, reeds = true, fi
  *  - at: a world offset for a translated predator (default none)
  *  - lift: how far the belly is above the bed (u, default 0): the shadow spreads and fades
  *  - opacity: overall multiplier (default 1) */
-export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; lift?: number; opacity?: number}> = ({B, pose, at = [0, 0, 0], lift = 0, opacity = 1}) => {
-  const bend = pose.bend ?? 0;
+export const PredShadow: React.FC<{B: Basis; pose?: {bend?: number}; at?: V3; lift?: number; opacity?: number}> = ({B, pose, at = [0, 0, 0], lift = 0, opacity = 1}) => {
+  const bend = pose?.bend ?? 0;
   const zOff = (x: number) => (bend * Math.max(0, x + 25) ** 2) / 150;
   // half-width of the shadow (the body's footprint plus the soft spread)
   const hwAt = (x: number) => {
-    const u = (x + 52) / 104;
+    const u = (x + 54) / 100;
     return 9.5 * (1 + Math.max(0, lift) / 12) * Math.pow(Math.sin(Math.PI * clamp(u, 0, 1)), 0.7) * (1 - 0.45 * clamp(u, 0, 1));
   };
   const nudge = mul3(norm3([B.r[0], 0, B.r[2]]), 1.6);
@@ -1085,10 +1087,10 @@ export const PredShadow: React.FC<{B: Basis; pose: {bend?: number}; at?: V3; lif
   if (a < 0.01) return null;
   const col = BED_SHADOW;
   const layers: [number, number, number, number][] = [
-    [1.35, -56, 56, 0.14],
-    [1.0, -51, 51, 0.16],
-    [0.7, -46, 38, 0.18],
-    [0.42, -40, 22, 0.2],
+    [1.3, -54, 44, 0.14],
+    [1.0, -51, 40, 0.16],
+    [0.7, -46, 32, 0.18],
+    [0.42, -40, 18, 0.2],
   ];
   return (
     <g fill={col}>
@@ -1112,16 +1114,19 @@ const wipeX = (t: number, t0: number, t1: number) => {
 /** the blade's centre x at screen row y (it leans: the top further right) and its half-width */
 const wipeCentre = (X: number, y: number) => X - 0.17 * (y - H / 2) + 26 * Math.sin((y / H) * Math.PI * 1.3 + 0.4);
 const wipeHalf = (y: number) => WIPE_W / 2 + 22 * Math.sin((y / H) * Math.PI * 2 + 1.1);
-/** the screen region the wipe has already passed (right of the blade's trailing edge, which lies inside the blade's
- *  opaque core): show frame 0 there. [] before t0; the whole frame from t1. */
-export const reedWipePoly = (t: number, t0: number, t1: number): P[] => {
-  if (t <= t0) return [];
+/** the screen region the wipe has already passed, as points (right of the blade's trailing edge, which lies inside
+ *  the blade's opaque core): a degenerate off-screen sliver before t0, the whole frame from t1 */
+export const reedWipePts = (t: number, t0: number, t1: number): P[] => {
+  if (t <= t0) return [{x: W + 40, y: -40}, {x: W + 41, y: -40}, {x: W + 41, y: -39}];
   if (t >= t1) return [{x: -10, y: -10}, {x: W + 10, y: -10}, {x: W + 10, y: H + 10}, {x: -10, y: H + 10}];
   const X = wipeX(t, t0, t1);
   const pts: P[] = [];
   for (let y = -60; y <= H + 60; y += 60) pts.push({x: wipeCentre(X, y) + wipeHalf(y) - WIPE_SOFT / 2 - WIPE_SEAM_IN, y});
   return [...pts, {x: W + 2000, y: H + 60}, {x: W + 2000, y: -60}];
 };
+/** the same region as path data `d` (screen px), for a clipPath or CSS clip-path: path('…'): show frame 0 inside it.
+ *  Never empty (an empty CSS path would clip nothing). */
+export const reedWipePoly = (t: number, t0: number, t1: number): string => `M${reedWipePts(t, t0, t1).map(pp).join('L')}Z`;
 /** the reed blade of the loop: a dark, out-of-focus eelgrass blade right at the lens sweeping right → left over
  *  [t0, t1] (≈ 0.4 s); its opaque core always covers the reedWipePoly seam. Draw it over both frames. */
 export const ReedWipe: React.FC<{t: number; t0: number; t1: number}> = ({t, t0, t1}) => {

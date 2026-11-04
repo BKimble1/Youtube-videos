@@ -26,8 +26,10 @@ export const VIEWS: Record<string, View> = {
   S10: {o: {target: [-22, 3, 2], az: 10, el: -12, d: 62, f: 1250}, pose: {gill: 0.3, look: [-30, -8, 25]}, label: 'S10 low beside'},
   S11: {o: {target: [-5, 0, 0], az: -30, el: 6, d: 230, f: 1250, cy: 1250}, pose: {bend: 0.3}, label: 'S11 distant', dim: 0.25},
   S11b: {o: {target: [-5, 0, 0], az: -30, el: 6, d: 230, f: 1250, cy: 1250}, pose: {bend: -0.3, t: 0.55}, label: 'S11 bend -', dim: 0.25},
+  S11c: {o: {target: [-5, 0, 0], az: -30, el: 6, d: 110, f: 1250, cy: 1150}, pose: {bend: 0.3}, label: 'S11 nearer', dim: 0.25},
   S1m: {o: {target: [-27, -5, 4], az: 58, el: 12, d: 46, f: 1250}, pose: {gill: 1, mouth: 1}, label: 'S1 gill 1 mouth 1'},
   top: {o: {target: [-10, -4, 0], az: 0, el: 88, d: 170, f: 1250}, label: 'from above'},
+  topc: {o: {target: [-32, -6, 0], az: 30, el: 70, d: 60, f: 1250, roll: -60}, pose: {gill: 0.6, look: [-20, -20, 10]}, label: 'head from above'},
   back: {o: {target: [-10, -2, 0], az: 90, el: 5, d: 120, f: 1250}, label: 'from behind'},
   front: {o: {target: [-30, 0, 0], az: -70, el: 10, d: 90, f: 1250}, pose: {mouth: 1}, label: 'front 3/4 mouth'},
 };
@@ -76,7 +78,7 @@ const Debug: React.FC<{B: Basis; pose: PredPose}> = ({B, pose}) => {
   );
 };
 
-const Shot: React.FC<{v: View; over?: Partial<PredPose>; debug?: boolean; label?: boolean}> = ({v, over, debug, label}) => {
+const Shot: React.FC<{v: View; over?: Partial<PredPose>; debug?: boolean; label?: boolean; tag?: string}> = ({v, over, debug, label, tag}) => {
   const B = basis(orbitCam(v.o));
   const pose: PredPose = {...PRED_REST, ...v.pose, ...over};
   return (
@@ -87,13 +89,20 @@ const Shot: React.FC<{v: View; over?: Partial<PredPose>; debug?: boolean; label?
       <rect x={0} y={0} width={1080} height={500} fill="#000" opacity={0.08} />
       {label !== false && (
         <text x={30} y={1880} fontSize={44} fill="#fff" fontFamily="monospace" stroke="#000" strokeWidth={1}>
-          {v.label}
+          {v.label + (tag ?? '')}
         </text>
       )}
     </svg>
   );
 };
 
+/** a moving pose at time t (the cover breathing, the fins fanning, a swimming bend where the view has one) */
+const overAt = (t: number, v: View): Partial<PredPose> => ({
+  t,
+  finPhase: t * 3.1,
+  gill: v.pose?.gill !== undefined ? v.pose.gill : 0.22 + 0.2 * Math.sin(t * 2.4),
+  bend: (v.pose?.bend ?? 0) !== 0 ? swimBend(t) : 0,
+});
 type StillP = Partial<PredPose> & {view: string; debug?: boolean; az?: number; el?: number; d?: number};
 const PredStill: React.FC<StillP> = ({view, debug, az, el, d, ...over}) => {
   resetIds('p');
@@ -106,8 +115,9 @@ const PredStill: React.FC<StillP> = ({view, debug, az, el, d, ...over}) => {
   );
 };
 
-const PredSheet: React.FC<{sheet: string; cols?: number; debug?: boolean; t?: number}> = ({sheet, cols = 4, debug, t}) => {
-  const names = SHEETS[sheet] ?? sheet.split(',');
+const PredSheet: React.FC<{sheet: string; cols?: number; debug?: boolean; t?: number; vary?: boolean; ts?: number[]}> = ({sheet, cols = 4, debug, t, vary, ts}) => {
+  const names0 = SHEETS[sheet] ?? sheet.split(',');
+  const names = ts ? ts.map(() => names0[0]) : names0;
   const k = 1 / cols;
   return (
     <AbsoluteFill style={{background: '#111'}}>
@@ -115,7 +125,7 @@ const PredSheet: React.FC<{sheet: string; cols?: number; debug?: boolean; t?: nu
         resetIds(`s${i}_`);
         return (
           <div key={i} style={{position: 'absolute', left: (i % cols) * 1080 * k, top: Math.floor(i / cols) * 1920 * k, width: 1080, height: 1920, transform: `scale(${k})`, transformOrigin: '0 0', overflow: 'hidden'}}>
-            <Shot v={VIEWS[n]} debug={debug} over={t !== undefined ? {t, finPhase: t * 3.1, bend: (VIEWS[n].pose?.bend ?? 0) !== 0 ? swimBend(t) : 0} : undefined} />
+            <Shot v={VIEWS[n]} debug={debug} tag={ts ? ` t=${ts[i].toFixed(2)}` : undefined} over={ts ? overAt(ts[i], VIEWS[n]) : t !== undefined || vary ? overAt((t ?? 0) + (vary ? i * 0.013 : 0), VIEWS[n]) : undefined} />
           </div>
         );
       })}
@@ -174,9 +184,9 @@ const Root: React.FC = () => (
       fps={30}
       width={1080}
       height={1920}
-      defaultProps={{sheet: 'brief', cols: 4} as {sheet: string; cols?: number; debug?: boolean; t?: number}}
+      defaultProps={{sheet: 'brief', cols: 4} as {sheet: string; cols?: number; debug?: boolean; t?: number; vary?: boolean; ts?: number[]}}
       calculateMetadata={({props}) => {
-        const n = (SHEETS[props.sheet] ?? props.sheet.split(',')).length;
+        const n = props.ts ? props.ts.length : (SHEETS[props.sheet] ?? props.sheet.split(',')).length;
         const cols = props.cols ?? 4;
         return {width: 1080, height: Math.ceil(n / cols) * (1920 / cols)};
       }}

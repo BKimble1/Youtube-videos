@@ -12,6 +12,7 @@ import {lit, mix, shade} from '../../core/color';
 import {add3, basis, Basis, Cam3, dot3, hull, norm3, orbitCam, proj, smoothClosed, sub3, V3, depth} from '../three';
 import {Eel3D, Eel3Pose, backFrom, N, EEL_L} from '../eelV4';
 import {escapeAt} from '../escape';
+import {Predator, PRED_REST} from '../art/pred3d';
 import {add3 as addV, mul3, norm3 as nrm3, sub3 as subV} from '../three';
 import {clearSight, PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront, hazeOf, reedWipeCore, __PARTS} from '../art/world3d';
 
@@ -49,6 +50,9 @@ const CAMS: Record<string, (t: number) => Cam3> = {
   s10: () => orbitCam({target: [-18, 2, 6], az: 10, el: -12, d: 42, f: 1250}),
   s11: () => orbitCam({target: [0, 0, 0], az: -30, el: 4, d: 208, f: 1250}),
   track: trackCam,
+  /** robustness: a rolled camera, and one looking straight down */
+  roll: () => orbitCam({target: [-20, -2, 4], az: 35, el: 8, d: 70, f: 1250, roll: 9}),
+  down: () => orbitCam({target: [-10, 0, 4], az: 10, el: 88, d: 110, f: 1250}),
 };
 /** variants: the same cameras with the sight line to the subject cleared of reeds (clearSight) */
 const CLEAR: Record<string, V3[]> = {
@@ -115,7 +119,7 @@ const eelPose = (t: number): Eel3Pose => {
 };
 
 // ---------------------------------------------------------------- one frame
-const Frame: React.FC<{cam: string; t: number; fish?: boolean; prefix: string}> = ({cam, t, fish = true, prefix}) => {
+const Frame: React.FC<{cam: string; t: number; fish?: boolean; prefix: string; real?: boolean}> = ({cam, t, fish = true, prefix, real}) => {
   resetIds(prefix);
   const B = basis(CAMS[cam](t));
   const isTrack = cam === 'track' || cam === 'swim';
@@ -126,7 +130,8 @@ const Frame: React.FC<{cam: string; t: number; fish?: boolean; prefix: string}> 
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{display: 'block'}}>
       <WorldBack B={B} t={t} zSplit={zSplit} filter={filter} />
       {fish && <PredShadow B={B} pose={{bend: isTrack ? 0.25 : 0}} />}
-      {fish && <FishPH B={B} dim={isTrack ? hazeOf(B, [0, 0, 0]) : 0} />}
+      {fish && !real && <FishPH B={B} dim={isTrack ? hazeOf(B, [0, 0, 0]) : 0} />}
+      {fish && real && <Predator B={B} pose={{...PRED_REST, t}} dim={isTrack ? hazeOf(B, [0, 0, 0]) : 0} />}
       {pose && <Eel3D B={B} pose={pose} t={t} />}
       <WorldFront B={B} t={t} zSplit={zSplit} filter={filter} />
     </svg>
@@ -135,8 +140,7 @@ const Frame: React.FC<{cam: string; t: number; fish?: boolean; prefix: string}> 
 /** the loop: the tracking frame at t, frame 0 (S1) revealed behind the passing blade, the blade on top */
 const WIPE0 = 24.32, WIPE1 = 24.72;
 const WipeFrame: React.FC<{t: number; prefix: string; debug?: boolean}> = ({t, prefix, debug}) => {
-  const poly = reedWipePoly(t, WIPE0, WIPE1);
-  const d = poly.length ? `M${poly.map((p) => `${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join('L')}Z` : '';
+  const d = reedWipePoly(t, WIPE0, WIPE1);
   resetIds(prefix + 'w');
   return (
     <div style={{position: 'relative', width: 1080, height: 1920}}>
@@ -156,9 +160,9 @@ const WipeFrame: React.FC<{t: number; prefix: string; debug?: boolean}> = ({t, p
   );
 };
 
-type Item = {cam: string; t: number; label?: string; debug?: boolean};
+type Item = {cam: string; t: number; label?: string; debug?: boolean; real?: boolean};
 const Tile: React.FC<{it: Item; i: number}> = ({it, i}) =>
-  it.cam === 'wipe' ? <WipeFrame t={it.t} prefix={`t${i}`} debug={it.debug} /> : <Frame cam={it.cam} t={it.t} prefix={`t${i}`} />;
+  it.cam === 'wipe' ? <WipeFrame t={it.t} prefix={`t${i}`} debug={it.debug} /> : <Frame cam={it.cam} t={it.t} prefix={`t${i}`} real={it.real} />;
 
 const WorldCam: React.FC<{cam: string; t: number}> = ({cam, t}) => (
   <AbsoluteFill style={{background: C.waterMid}}>

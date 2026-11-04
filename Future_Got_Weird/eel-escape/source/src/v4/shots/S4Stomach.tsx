@@ -45,8 +45,8 @@ const K = {
   floorSh: mix(C.stomach, C.stomachWall, 0.62),
   floor: C.stomach,
   floorLit: lit(C.stomach, 0.16),
-  fold: mix(C.stomach, C.flesh, 0.45),
-  foldLit: lit(C.flesh, 0.34),
+  fold: mix(C.stomach, C.flesh, 0.24),
+  foldLit: lit(mix(C.stomach, C.flesh, 0.6), 0.14),
   foldSh: mix(C.stomachWall, C.chamber, 0.12),
   foldCast: mix(C.stomachWall, C.chamber, 0.45),
   glint: '#FFF7E6',
@@ -193,8 +193,8 @@ const S_OPEN = nearestS(ROUTE, OPENING);
 /** where sample I0 sits at rest (the carry's anchor): the camera puts it on carryTail's anchor */
 const A_REST: P = at2(ROUTE, S_REST - EEL_L * (1 - I0 / N));
 /** the wide view (6.9 s): this world point at screen (540, 1110), 31 px per unit */
-const S_WIDE_ = 31;
-const C_WIDE: P = {x: 3.6, y: -7.2 - 150 / 31};
+const S_WIDE_ = 34;
+const C_WIDE: P = {x: 3.6, y: -7.2 - 150 / 34};
 const Wp = (x: number, y: number): P => ({x: C_WIDE.x + (x - CS.x) / S_WIDE_, y: C_WIDE.y + (y - CS.y) / S_WIDE_});
 const toWide = (w: P): P => ({x: CS.x + S_WIDE_ * (w.x - C_WIDE.x), y: CS.y + S_WIDE_ * (w.y - C_WIDE.y)});
 const A_WIDE: P = toWide(A_REST);
@@ -209,8 +209,8 @@ const TB = {
   recoil: 7.5, // it flinches back off the fold ...
   turn: 7.62, // ... then turns along it
   search0: 7.62, // it searches along the fold's underside: the tip sweeps off and back onto the fold, twice
-  ring: 7.98, // it reaches the pucker's ring and feels across it
-  press: 8.08, // the tip finds the centre and presses
+  ring: 7.95, // it reaches the pucker's ring and feels across it
+  press: 8.1, // the tip finds the centre and presses
   yield0: 8.13, // the opening yields
   yield1: 8.3,
   in: 8.22, // the tip is in; the body slides after it
@@ -248,9 +248,9 @@ const dentAt = (t: number) => (t < TB.bump - 0.05 ? 0 : ss(t, TB.bump - 0.05, TB
  *  search, the ring, the press */
 const TOUCHES: [number, number][] = [
   [7.45, 1.0],
-  [7.77, 0.65],
-  [7.95, 0.65],
-  [8.08, 0.85],
+  [7.76, 0.65],
+  [7.93, 0.65],
+  [8.1, 0.85],
 ];
 
 // ================================================================ the camera
@@ -258,7 +258,7 @@ export type Cam = {c: P; s: number; D: number};
 const lnS = (t: number) => {
   if (t <= CARRY1) return LN(S_CARRY);
   if (t <= TB.pull1) return lerp(LN(S_CARRY), LN(S_WIDE_), ss5(t, CARRY1, TB.pull1));
-  if (t <= 8.12) return keyS(t, [[TB.pull1, LN(S_WIDE_)], [7.15, LN(34)], [7.7, LN(49)], [8.12, LN(52)]]);
+  if (t <= 8.12) return keyS(t, [[TB.pull1, LN(S_WIDE_)], [7.15, LN(36.5)], [7.7, LN(49)], [8.12, LN(52)]]);
   // the dive: an accelerating push into the opening (no ease-out: it carries on through the dissolve)
   const x = (t - 8.12) / (TB.end - 8.12);
   return LN(52) + (LN(F / 0.5) - LN(52)) * Math.pow(x, 2.4);
@@ -327,7 +327,7 @@ const tipPhi = (t: number) => {
   // searching along the fold (which lies on its left): the tip sweeps off it (right, +) and back up against it (−),
   // twice, each press a touch on the wall
   const sx = (t - TB.search0) / (TB.ring - TB.search0);
-  const search = sx > 0 && sx < 1 ? 0.55 * Math.sin(2 * Math.PI * 2 * sx - 0.6) * ss(sx, 0.05, 0.25) * (1 - ss(sx, 0.85, 1)) : 0;
+  const search = sx > 0 && sx < 1 ? 0.7 * Math.sin(2 * Math.PI * 2 * sx - 0.6) * ss(sx, 0.05, 0.25) * (1 - ss(sx, 0.85, 1)) : 0;
   // on the ring: a quick feel (left-right) before it dips into the centre
   const feel = 0.28 * Math.sin(2 * Math.PI * 5 * (t - TB.ring)) * ss(t, TB.ring, TB.ring + 0.02) * (1 - ss(t, TB.press - 0.04, TB.press));
   return idle + lift + flinch + turn + search + feel;
@@ -378,16 +378,21 @@ export const poseAt = (t: number): Pose => {
   if (sT > sRim) {
     const Pr = at2(ROUTE, sRim);
     const v = {x: Pr.x - OPENING.x, y: Pr.y - OPENING.y};
+    const vl = Math.hypot(v.x, v.y) || 1;
     iRim = N * (1 - (sT - sRim) / EEL_L);
+    // it slips over the lip (a bend of radius RB, from lying on the wall to running down the passage) and on down along
+    // the passage wall (perspective alone draws it to the vanishing point; the camera, following, stays clear of it)
+    const RB = 0.36, QB = (Math.PI * RB) / 2;
     for (let i = Math.max(0, Math.ceil(iRim)); i <= N; i++) {
-      const d = sT - EEL_L * (1 - i / N) - sRim;
-      // it slips over the lip and runs on down the passage along its wall (perspective alone draws it to the
-      // vanishing point; the camera, following, stays clear of it)
-      const rho = 0.7 + 0.3 * Math.exp(-d / 0.5);
+      const e = sT - EEL_L * (1 - i / N) - sRim;
+      const ph = Math.min(e / RB, Math.PI / 2);
+      const lat = vl - RB * Math.sin(ph);
+      const d = e <= QB ? RB * (1 - Math.cos(ph)) : RB + (e - QB);
       // a slow screw as it goes deeper (the passage turns a little)
       const a = 0.3 * (1 - Math.exp(-d / 2));
-      const vx = v.x * Math.cos(a) - v.y * Math.sin(a), vy = v.x * Math.sin(a) + v.y * Math.cos(a);
-      w[i] = {x: OPENING.x + vx * rho, y: OPENING.y + vy * rho};
+      const ux = v.x / vl, uy = v.y / vl;
+      const vx = ux * Math.cos(a) - uy * Math.sin(a), vy = ux * Math.sin(a) + uy * Math.cos(a);
+      w[i] = {x: OPENING.x + vx * lat, y: OPENING.y + vy * lat};
       z[i] = d;
     }
   }
@@ -426,16 +431,16 @@ const FOLD_BUMP_CP: P[] = [
 ];
 const DENT_AT: P = {x: -7.95, y: -14.1};
 /** a fold as a streamline: it leaves the pucker's ring at `ang` and winds outward round the opening */
-const streamFold = (ang: number, len: number, swirl: number, seed: number): P[] => {
+const streamFold = (ang: number, len: number, swirl: number, seed: number, r0 = 2.75): P[] => {
   const pts: P[] = [];
   let a = ang * DEG;
-  let p = {x: OPENING.x + Math.cos(a) * 2.75, y: OPENING.y + Math.sin(a) * 2.75 * 0.94};
+  let p = {x: OPENING.x + Math.cos(a) * r0, y: OPENING.y + Math.sin(a) * r0 * 0.94};
   const n = Math.max(6, Math.round(len / 1.5));
   for (let k = 0; k <= n; k++) {
     pts.push(p);
     // relax toward the radial direction turned by `swirl` (the folds wind gently round the opening), meandering
     const rad = Math.atan2(p.y - OPENING.y, p.x - OPENING.x) + swirl * DEG;
-    a += wrapA(rad - a) * 0.22 + 0.2 * noise1(k * 0.8 + seed * 3.1, seed);
+    a += wrapA(rad - a) * 0.22 + 0.3 * noise1(k * 0.75 + seed * 3.1, seed);
     p = {x: p.x + Math.cos(a) * (len / n), y: p.y + Math.sin(a) * (len / n)};
   }
   return pts;
@@ -449,19 +454,25 @@ const FOLDS: FoldDef[] = [
   {pts: streamFold(-58, 14, -26, 6), w: 0.75, k: 'f'},
   {pts: streamFold(-96, 11, -24, 7), w: 0.72, k: 'g'},
   {pts: streamFold(-134, 11, -22, 8), w: 0.72, k: 'h'},
+  // shorter ones further out, between the main folds
+  {pts: streamFold(92, 11, -30, 11, 10), w: 0.55, k: 's1'},
+  {pts: streamFold(60, 12, -32, 12, 11), w: 0.6, k: 's2'},
+  {pts: streamFold(28, 12, -34, 13, 10.5), w: 0.6, k: 's3'},
+  {pts: streamFold(-6, 10, -32, 14, 10), w: 0.55, k: 's4'},
+  {pts: streamFold(-40, 8, -28, 15, 9), w: 0.5, k: 's5'},
 ];
 /** the floor (the chamber's wall facing us) and the wall bands curving toward the frame */
-const FLOOR_C: P = {x: 3.0, y: -6.0};
+const FLOOR_C: P = {x: 3.4, y: -6.6};
 const blob = (c: P, rx: number, ry: number, seed: number, wob: number, n = 30): P[] =>
   Array.from({length: n}, (_, k) => {
     const a = (k / n) * 2 * Math.PI;
     const m = 1 + wob * noise1(k * 0.7, seed);
     return {x: c.x + Math.cos(a) * rx * m, y: c.y + Math.sin(a) * ry * m};
   });
-const FLOOR = blob(FLOOR_C, 16.2, 22.5, 11, 0.045);
-const BAND1 = blob({x: FLOOR_C.x + 0.3, y: FLOOR_C.y + 0.4}, 19.4, 26.5, 12, 0.05);
-const BAND2 = blob({x: FLOOR_C.x + 0.8, y: FLOOR_C.y + 0.9}, 24.5, 33, 13, 0.06);
-const BAND3 = blob({x: FLOOR_C.x + 1.2, y: FLOOR_C.y + 1.4}, 31, 42, 14, 0.06);
+const FLOOR = blob(FLOOR_C, 14.8, 19.8, 11, 0.05);
+const BAND1 = blob({x: FLOOR_C.x + 0.3, y: FLOOR_C.y + 0.4}, 17.8, 23.6, 12, 0.05);
+const BAND2 = blob({x: FLOOR_C.x + 0.8, y: FLOOR_C.y + 0.9}, 22.5, 29.5, 13, 0.06);
+const BAND3 = blob({x: FLOOR_C.x + 1.2, y: FLOOR_C.y + 1.4}, 29, 38, 14, 0.06);
 /** broad folds following the chamber's curve: arcs of the rim bands */
 const arcOf = (c: P, rx: number, ry: number, a0: number, a1: number, n = 8): P[] =>
   Array.from({length: n + 1}, (_, k) => {
@@ -469,13 +480,13 @@ const arcOf = (c: P, rx: number, ry: number, a0: number, a1: number, n = 8): P[]
     return {x: c.x + Math.cos(a) * rx, y: c.y + Math.sin(a) * ry};
   });
 const RIM_FOLDS: FoldDef[] = [
-  {pts: arcOf(FLOOR_C, 17.9, 24.6, 100, 205), w: 1.0, k: 'r1'},
-  {pts: arcOf(FLOOR_C, 17.6, 24.3, -40, 70), w: 1.0, k: 'r2'},
-  {pts: arcOf(FLOOR_C, 22, 30, 60, 140), w: 1.15, k: 'r3'},
-  {pts: arcOf(FLOOR_C, 22.4, 30.2, -95, -15), w: 1.1, k: 'r4'},
-  {pts: arcOf(FLOOR_C, 21.5, 29.5, 200, 262), w: 1.05, k: 'r5'},
-  {pts: arcOf(FLOOR_C, 27.5, 37.5, -70, 40), w: 1.3, k: 'r6'},
-  {pts: arcOf(FLOOR_C, 27.5, 37.5, 120, 230), w: 1.3, k: 'r7'},
+  {pts: arcOf(FLOOR_C, 16.4, 21.8, 100, 205), w: 1.0, k: 'r1'},
+  {pts: arcOf(FLOOR_C, 16.2, 21.6, -40, 70), w: 1.0, k: 'r2'},
+  {pts: arcOf(FLOOR_C, 20.2, 26.6, 60, 140), w: 1.15, k: 'r3'},
+  {pts: arcOf(FLOOR_C, 20.5, 26.8, -95, -15), w: 1.1, k: 'r4'},
+  {pts: arcOf(FLOOR_C, 19.8, 26.2, 200, 262), w: 1.05, k: 'r5'},
+  {pts: arcOf(FLOOR_C, 25.8, 33.6, -70, 40), w: 1.3, k: 'r6'},
+  {pts: arcOf(FLOOR_C, 25.8, 33.6, 120, 230), w: 1.3, k: 'r7'},
 ];
 
 /** one ruga: a soft ridge in the wall, read from its shading alone (no closed outline): the flank facing the light
@@ -495,7 +506,7 @@ const Fold: React.FC<{f: FoldDef; dent?: {at: P; dir: P; a: number}}> = ({f, den
   const total = arc[n - 1] || 1;
   const wv = arc.map((s, i) => {
     const u = s / total;
-    return f.w * ss(u, 0, 0.14) * (1 - ss(u, 0.8, 1)) * (0.85 + 0.15 * Math.sin(u * 9 + f.w * 7));
+    return f.w * ss(u, 0, 0.14) * (1 - ss(u, 0.78, 1)) * (0.74 + 0.26 * Math.sin(u * 7.5 + f.w * 11));
   });
   // per point, both sides: how squarely each flank faces the light (continuous, so nothing pops where the ridge
   // turns along the light and the lit side changes)
@@ -612,6 +623,13 @@ const Pucker: React.FC<{t: number}> = ({t}) => {
   );
 };
 
+const SHEEN = [
+  {c: {x: FLOOR_C.x + 8.5, y: FLOOR_C.y + 11.5}, rx: 4.5, ry: 1.3, a: -52, o: 0.1},
+  {c: {x: FLOOR_C.x + 10.6, y: FLOOR_C.y + 7.8}, rx: 3.2, ry: 0.8, a: -62, o: 0.13},
+  {c: {x: FLOOR_C.x + 4.2, y: FLOOR_C.y + 15.2}, rx: 3.6, ry: 0.9, a: -30, o: 0.11},
+  {c: {x: FLOOR_C.x + 11.8, y: FLOOR_C.y + 4.2}, rx: 1.6, ry: 0.4, a: -70, o: 0.22},
+  {c: {x: FLOOR_C.x + 7.4, y: FLOOR_C.y + 13.6}, rx: 1.4, ry: 0.35, a: -45, o: 0.24},
+];
 /** the chamber: the floor facing us, its rim, the walls curving toward the frame (the bowl is lit on its lower
  *  right, which faces the light; the upper-left wall is in shadow) */
 const Chamber: React.FC = () => {
@@ -634,6 +652,12 @@ const Chamber: React.FC = () => {
         {/* the bowl: its lower-right side faces the light; the rim shades the upper-left */}
         <path d={crescentD({x: FLOOR_C.x + 2.5, y: FLOOR_C.y + 3.5}, 22, la + Math.PI, 9)} fill={K.floorLit} fillOpacity={0.75} />
         <path d={crescentD({x: FLOOR_C.x - 0.6, y: FLOOR_C.y - 0.6}, 24, la, 4.6)} fill={K.floorSh} fillOpacity={0.7} />
+      </g>
+      <g clipPath={`url(#${id})`}>
+        {/* wet sheen where the bowl faces the light */}
+        {SHEEN.map((q, j) => (
+          <ellipse key={j} cx={f2(q.c.x)} cy={f2(q.c.y)} rx={f2(q.rx)} ry={f2(q.ry)} transform={`rotate(${q.a} ${f2(q.c.x)} ${f2(q.c.y)})`} fill={K.glint} fillOpacity={q.o} />
+        ))}
       </g>
       <path d={closed(FLOOR)} fill="none" stroke={INK} strokeOpacity={0.3} strokeWidth={2} vectorEffect={NS} />
       <path d={closed(BAND1)} fill="none" stroke={INK} strokeOpacity={0.22} strokeWidth={1.6} vectorEffect={NS} />
@@ -667,20 +691,28 @@ const K_NEAR = F / (F / S_WIDE_ + Z_NEAR);
 /** wide-view px -> the near layer's world (so the shapes sit where drawn in the wide view) */
 const nearW = (x: number, y: number): P => ({x: C_WIDE.x + (x - CS.x) / K_NEAR, y: C_WIDE.y + (y - CS.y) / K_NEAR});
 const NEAR_SHAPES: P[][] = [
-  [nearW(1170, 1250), nearW(1065, 1420), nearW(1040, 1650), nearW(1075, 1900), nearW(1170, 2050)],
-  [nearW(-110, 1700), nearW(60, 1790), nearW(170, 1910), nearW(220, 2060), nearW(-110, 2080)],
+  [nearW(1180, 1180), nearW(1060, 1330), nearW(1015, 1560), nearW(1040, 1800), nearW(1110, 1990), nearW(1200, 2060)],
+  [nearW(-120, 1620), nearW(70, 1720), nearW(200, 1850), nearW(250, 2010), nearW(-120, 2080)],
+  [nearW(-120, 380), nearW(30, 470), nearW(70, 650), nearW(10, 820), nearW(-120, 900)],
 ];
 const Near: React.FC<{cam: Cam}> = ({cam}) => {
-  const a = ss(cam.D, 9, 16);
+  const a = ss(cam.D, 10, 18);
   if (a <= 0.01) return null;
   return (
     <g transform={layerTf(cam, Z_NEAR)} opacity={a}>
-      {NEAR_SHAPES.map((ps, k) => (
-        <g key={k}>
-          <path d={closed(ps)} fill={K.near} fillOpacity={0.92} />
-          <path d={open(ps.slice(0, -1).map((p) => ({x: p.x + LIGHT.x * 0.25, y: p.y + LIGHT.y * 0.25})))} fill="none" stroke={K.nearLit} strokeOpacity={0.7} strokeWidth={6} vectorEffect={NS} strokeLinecap="round" />
-        </g>
-      ))}
+      {NEAR_SHAPES.map((ps, k) => {
+        const c = ps.reduce((acc, p) => ({x: acc.x + p.x / ps.length, y: acc.y + p.y / ps.length}), {x: 0, y: 0});
+        // out of focus: the same mass three times, growing and fading (a soft edge without a blur filter)
+        const grow = (g: number) => ps.map((p) => ({x: c.x + (p.x - c.x) * g, y: c.y + (p.y - c.y) * g}));
+        return (
+          <g key={k}>
+            <path d={closed(grow(1.1))} fill={K.near} fillOpacity={0.25} />
+            <path d={closed(grow(1.04))} fill={K.near} fillOpacity={0.4} />
+            <path d={closed(ps)} fill={K.near} fillOpacity={0.75} />
+            <path d={closed(grow(0.94).map((p) => ({x: p.x + LIGHT.x * 0.35, y: p.y + LIGHT.y * 0.35})))} fill={K.nearLit} fillOpacity={0.22} />
+          </g>
+        );
+      })}
     </g>
   );
 };
@@ -691,8 +723,12 @@ const Near: React.FC<{cam: Cam}> = ({cam}) => {
 const passageR = (rh: number, d: number) => rh * (0.96 - 0.22 * (1 - Math.exp(-d / 1.4)));
 /** how fast the passage goes dark with depth (u): the walls, and the eel going down it (which hugs the passage closer
  *  to its axis than the walls, so the same gradient reads it as deeper: a longer length compensates) */
-const FOG_WALL = 0.5, FOG_EEL = 0.75;
-const fogOf = (d: number, L = FOG_WALL) => 1 - Math.exp(-d / L);
+/** the light from the stomach reaches further down the passage while we look in from outside, less once we are in
+ *  it (the camera at depth D from the rim plane) */
+const fogLen = (D: number) => 0.5 + 1.3 * ss(D, 0.8, 4);
+/** the eel runs down the passage at this fraction of its radius */
+const EEL_RHO = 0.75;
+const fogOf = (d: number, L: number) => 1 - Math.exp(-d / L);
 const FOG_U = [1, 0.94, 0.86, 0.76, 0.64, 0.5, 0.36, 0.2, 0];
 const fogGeom = (cam: Cam, rh: number) => {
   const c0 = proj(cam, OPENING, 0);
@@ -701,7 +737,8 @@ const fogGeom = (cam: Cam, rh: number) => {
   const vx = CS.x - c0.x, vy = CS.y - c0.y, vl = Math.hypot(vx, vy), m = Math.min(1, (0.9 * R) / (vl || 1));
   return {c0, R, f: {x: c0.x + vx * m, y: c0.y + vy * m}};
 };
-const FogGrad: React.FC<{id: string; cam: Cam; rh: number; from: string; to: string; op?: (fog: number) => number; k?: number; L?: number}> = ({id, cam, rh, from, to, op, k = 1, L = FOG_WALL}) => {
+const FogGrad: React.FC<{id: string; cam: Cam; rh: number; from: string; to: string; op?: (fog: number) => number; k?: number}> = ({id, cam, rh, from, to, op, k = 1}) => {
+  const L = fogLen(cam.D);
   const g = fogGeom(cam, rh);
   const q = (v: number) => (v / k).toFixed(4);
   return (
@@ -736,7 +773,7 @@ const Passage: React.FC<{cam: Cam; t: number; clipId: string}> = ({cam, t, clipI
       {/* the lit lower-right inner wall near the rim (it faces the light) */}
       <path d={crescentD(rings[0].c, rings[0].r * 0.995, Math.atan2(-LIGHT.y, -LIGHT.x), rings[0].r * 0.28)} fill={K.passageLit} fillOpacity={0.45} />
       {rings.map((q, k) => (
-        <path key={k} d={circleD(q.c, q.r)} fill="none" stroke={LUMEN} strokeOpacity={0.5 * (1 - fogOf(q.d))} strokeWidth={2.4} vectorEffect={NS} />
+        <path key={k} d={circleD(q.c, q.r)} fill="none" stroke={LUMEN} strokeOpacity={0.5 * (1 - fogOf(q.d, fogLen(cam.D)))} strokeWidth={2.4} vectorEffect={NS} />
       ))}
       <path d={lines.join('')} stroke={LUMEN} strokeOpacity={0.4} strokeWidth={2.2} vectorEffect={NS} fill="none" />
     </g>
@@ -782,6 +819,7 @@ export const S4Stomach: React.FC<{t: number}> = ({t}) => {
   // the contact shadow: the eel's silhouette dropped to the lower right on the wall
   const shOff = {x: 0.42 * k, y: 0.58 * k};
   const shadowD = eelSilhouette(ptsE, radiiS, 0, outTo, false, t, DORSAL, 0.05);
+  const shadowWide = eelSilhouette(ptsE, radiiS, 0, outTo, false, t, DORSAL, 0.45);
   // the fold the tip strikes: a dent along its travel
   const dirB = (() => {
     const a = at2(ROUTE, S_BUMP - 0.6), b = at2(ROUTE, S_BUMP);
@@ -790,12 +828,26 @@ export const S4Stomach: React.FC<{t: number}> = ({t}) => {
   })();
   const dent = {at: DENT_AT, dir: dirB, a: 0.55 * dentAt(t)};
   const fogId = uid('s4fg');
+  const vigId = uid('s4vg');
+  // the eel down the passage is drawn only as deep as the light reaches (beyond, the fog is total; its fin fringe does
+  // not shrink with depth, so the tip down there would show as a stray line)
+  const dMax = 4 * fogLen(cam.D);
+  const iDeep = Math.min(N, N * (1 - (sTipAt(t) - (S_OPEN - lumenR(t) * 0.92) - dMax) / EEL_L));
+  // ... and only its body: the ribbon fin keeps its size in eel units while the body shrinks with depth
+  const bodyId = uid('s4bd');
+  const bodyD = inside && iDeep > pose.iRim + 0.05 ? eelSilhouette(ptsE, radiiS, Math.max(0, pose.iRim - 0.5), iDeep, false, t, DORSAL, 0.03) : '';
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
       <defs>
         <clipPath id={lumId}>
           <path d={lumD} />
         </clipPath>
+        {bodyD && (
+          <clipPath id={bodyId}>
+            <path d={bodyD} transform={`scale(${k})`} />
+          </clipPath>
+        )}
+
       </defs>
       <rect x={0} y={0} width={1080} height={1920} fill={K.deep} />
       <g transform={layerTf(cam, 0)}>
@@ -811,19 +863,25 @@ export const S4Stomach: React.FC<{t: number}> = ({t}) => {
         <Dimples t={t} />
       </g>
       <Passage cam={cam} t={t} clipId={lumId} />
+      <g transform={`translate(${f1(shOff.x * 1.35)} ${f1(shOff.y * 1.35)}) scale(${k})`}>
+        <path d={shadowWide} fill={K.eelShadow} fillOpacity={0.16} />
+      </g>
       <g transform={`translate(${f1(shOff.x)} ${f1(shOff.y)}) scale(${k})`}>
-        <path d={shadowD} fill={K.eelShadow} fillOpacity={0.38} />
+        <path d={shadowD} fill={K.eelShadow} fillOpacity={0.32} />
       </g>
       <Eel2D pts={scr} k={k} px={1} t={t} dorsal={DORSAL} to={outTo} rScale={rS} />
-      {inside && (
+      {inside && iDeep > pose.iRim + 0.05 && (
         <g clipPath={`url(#${lumId})`}>
-          <Eel2D pts={scr} k={k} px={1} t={t} dorsal={DORSAL} from={pose.iRim} rScale={rS} />
-          {/* down the passage it goes dark with the same fog as the passage walls */}
+          <g clipPath={`url(#${bodyId})`}>
+            <Eel2D pts={scr} k={k} px={1} t={t} dorsal={DORSAL} from={pose.iRim} to={iDeep} rScale={rS} />
+          </g>
+          {/* down the passage it goes dark with the same fog as the passage walls (its own gradient: it runs a little
+              inside the wall's radius) */}
           <defs>
-            <FogGrad id={fogId} cam={cam} rh={lumenR(t)} from={LUMEN} to={LUMEN} op={(fg) => fg} k={k} L={FOG_EEL} />
+            <FogGrad id={fogId} cam={cam} rh={lumenR(t) * EEL_RHO} from={LUMEN} to={LUMEN} op={(fg) => fg} k={k} />
           </defs>
           <g transform={`scale(${k})`}>
-            <path d={eelSilhouette(ptsE, radiiS, pose.iRim, N, true, t, DORSAL, 0.06)} fill={`url(#${fogId})`} />
+            <path d={bodyD} fill={`url(#${fogId})`} />
           </g>
         </g>
       )}
@@ -831,6 +889,19 @@ export const S4Stomach: React.FC<{t: number}> = ({t}) => {
         <Bubbles t={t} />
       </g>
       <Near cam={cam} />
+      {/* the chamber closes round us: the frame's edges fall into the walls' shade */}
+      {cam.D > 4 && (
+        <>
+          <defs>
+            <radialGradient id={vigId} gradientUnits="userSpaceOnUse" cx={540} cy={1020} r={1150}>
+              <stop offset="0.5" stopColor={K.deep} stopOpacity={0} />
+              <stop offset="0.78" stopColor={K.deep} stopOpacity={0.22 * ss(cam.D, 4, 9)} />
+              <stop offset="1" stopColor={K.deep} stopOpacity={0.5 * ss(cam.D, 4, 9)} />
+            </radialGradient>
+          </defs>
+          <rect x={0} y={0} width={1080} height={1920} fill={`url(#${vigId})`} />
+        </>
+      )}
     </svg>
   );
 };

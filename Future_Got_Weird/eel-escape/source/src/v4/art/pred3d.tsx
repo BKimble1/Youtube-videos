@@ -130,8 +130,8 @@ const profY = (ch: P[], x: number) => {
 };
 /** half-width: broad head (7.5 u at the cheeks), 5.5 at mid-body, 3 at x = 25, 1.8 at the peduncle */
 const WIDTH = pchip(
-  [X_MIN, X_MIN + 0.45, -50.0, -48.6, -46.0, -43.0, -40.0, -36.0, -31.0, -27.0, -23.0, -16.0, -8.0, 0.0, 10.0, 18.0, 25.0, 30.0, 33.0, 33.9, X_END],
-  [0.0, 1.45, 2.45, 3.55, 4.75, 5.75, 6.45, 7.05, 7.45, 7.42, 7.05, 6.55, 6.05, 5.5, 4.6, 3.75, 3.0, 2.3, 1.8, 1.2, 0.3],
+  [X_MIN, X_MIN + 0.3, -50.5, -50.0, -48.6, -46.0, -43.0, -40.0, -36.0, -31.0, -27.0, -23.0, -16.0, -8.0, 0.0, 10.0, 18.0, 25.0, 30.0, 33.0, 33.9, X_END],
+  [0.0, 1.9, 3.0, 3.75, 4.75, 5.6, 6.25, 6.75, 7.15, 7.45, 7.42, 7.05, 6.55, 6.05, 5.5, 4.6, 3.75, 3.0, 2.3, 1.8, 1.2, 0.3],
 );
 /** the closed mouth's cleft (V3 fish.tsx CLEFT), snout tip → corner */
 const CLEFT: P[] = [pt(-50.85, 0.2), pt(-48.6, 0.86), pt(-46.2, 1.5), pt(-43.7, 2.12), pt(-41.3, 2.66)];
@@ -166,7 +166,7 @@ for (let k = 0; k < SN; k++) {
   T_BOT[k] = bot;
   T_YW[k] = top + h * lerp(0.57, 0.5, sstep(-34, -5, x));
   T_W[k] = WIDTH(x);
-  T_NT[k] = lerp(2.55, 2.15, sstep(-38, -12, x));
+  T_NT[k] = x < -30 ? lerp(2.85, 2.32, sstep(-40, -30, x)) : lerp(2.32, 2.15, sstep(-30, -10, x));
   T_NB[k] = x < 0 ? lerp(3.0, 2.6, sstep(-36, 0, x)) : lerp(2.6, 2.25, sstep(0, 33, x));
   let yc: number;
   if (x <= CLEFT[0].x) yc = lerp(Y_TIP, CLEFT[0].y, sstep(X_MIN, CLEFT[0].x, x));
@@ -245,9 +245,9 @@ const deform = (D: Def, x: number, y: number, z: number, jaw: boolean, out: numb
     const dx = x - HX, dy = y - HY;
     if (y <= cleftY(x)) {
       const al = Math.atan2(dy, -dx) / D2R;
-      const w = 1 - sstep(-14, -52, al);
+      const w = 1 - sstep(-12, -75, al);
       if (w > 0) {
-        const ang = -D.phi * 0.3 * w, ca = Math.cos(ang), sa = Math.sin(ang);
+        const ang = -D.phi * 0.12 * w, ca = Math.cos(ang), sa = Math.sin(ang);
         X = HX + dx * ca + dy * sa;
         Y = HY - dx * sa + dy * ca;
       }
@@ -335,7 +335,7 @@ const shadeVertex = (G: Grid, k: number, cam: Cam) => {
   const q = proj(cam.B, p);
   G.sx[k] = q.x;
   G.sy[k] = q.y;
-  if (q.z < 0.4 || q.x < -900 || q.x > 1980 || q.y < -900 || q.y > 2820) G.ok[k] = 0;
+  G.ok[k] = q.z < 0.4 || q.x < -900 || q.x > 1980 || q.y < -900 || q.y > 2820 ? 0 : 1;
   const vx = cam.eye[0] - p[0], vy = cam.eye[1] - p[1], vz = cam.eye[2] - p[2];
   const vl = Math.hypot(vx, vy, vz) || 1;
   const Vx = vx / vl, Vy = vy / vl, Vz = vz / vl;
@@ -637,35 +637,22 @@ const SPOTS: [number, number, number][] = (() => {
   return out;
 })();
 
-// pigment: height on the section v (0 the back, 1 the belly) → colour (the V3 body gradient), as nested strips with
-// equal colour steps
-const PIG_STOPS: [number, string][] = [
-  [0, C.fishDark], [0.2, mix(C.fishDark, C.fishBody, 0.7)], [0.45, C.fishBody], [0.64, C.fishCheek],
-  [0.78, mix(C.fishCheek, C.fishBelly, 0.65)], [0.9, C.fishBelly], [1, C.fishBelly],
+// pigment (cel): four tones by the height on the section v (0 the back, 1 the belly): the dark olive back, the
+// olive-brown flank, the warm lower flank, the pale belly; one soft intermediate step at each boundary, and the
+// boundaries wander a little along the body (pigment, not contour lines)
+const TONE_BACK = mix(C.fishDark, C.fishBody, 0.42);
+const TONE_FLANK = C.fishBody;
+const TONE_LOW = mix(C.fishCheek, C.fishBelly, 0.32);
+const PIG_BASE = mix(C.fishBelly, C.fishCheek, 0.12);
+const wav = (x: number, a: number, b: number, k: number) => a * Math.sin(x / 3.3 + k) + b * Math.sin(x / 7.9 + 2.1 * k);
+const PIG: {bound: (x: number) => number; col: string}[] = [
+  {bound: (x) => 0.795 + wav(x, 0.012, 0.018, 1), col: mix(TONE_LOW, PIG_BASE, 0.5)},
+  {bound: (x) => 0.765 + wav(x, 0.012, 0.018, 1), col: TONE_LOW},
+  {bound: (x) => 0.585 + wav(x, 0.014, 0.025, 2), col: mix(TONE_FLANK, TONE_LOW, 0.5)},
+  {bound: (x) => 0.55 + wav(x, 0.014, 0.025, 2), col: TONE_FLANK},
+  {bound: (x) => 0.235 + wav(x, 0.02, 0.03, 3), col: mix(TONE_BACK, TONE_FLANK, 0.5)},
+  {bound: (x) => 0.19 + wav(x, 0.02, 0.03, 3), col: TONE_BACK},
 ];
-const pigment = (v: number) => {
-  for (let i = 1; i < PIG_STOPS.length; i++) {
-    if (v <= PIG_STOPS[i][0]) {
-      const [a, ca] = PIG_STOPS[i - 1], [b, cb] = PIG_STOPS[i];
-      return mix(ca, cb, (v - a) / (b - a));
-    }
-  }
-  return C.fishBelly;
-};
-const rgbOf = (h: string) => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
-const PIG: {bound: number; col: string}[] = (() => {
-  const K = 15;
-  const vs: number[] = [], ds: number[] = [0];
-  for (let k = 0; k <= 400; k++) vs.push(1 - k / 400);
-  for (let k = 1; k <= 400; k++) {
-    const a = rgbOf(pigment(vs[k - 1])), b = rgbOf(pigment(vs[k]));
-    ds.push(ds[k - 1] + Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]));
-  }
-  const total = ds[400];
-  const vAt = (q: number) => vs[Math.max(0, ds.findIndex((d) => d >= q))];
-  return Array.from({length: K}, (_, k) => ({bound: vAt((total * (k + 0.5)) / K), col: pigment(vAt((total * (k + 1)) / K))}));
-})();
-const PIG_BASE = pigment(1);
 const vOf = (x: number, y: number) => {
   const S = secAt(x);
   return S.bot > S.top ? (y - S.top) / (S.bot - S.top) : 0.5;
@@ -900,6 +887,8 @@ const COVER_THICK = (() => {
   const r = restAt(EXIT.x, psiForY({...S}, EXIT.y), [0, 0, 0]);
   return Math.max(0.02, EXIT.z - r[2]);
 })();
+/** (diagnostic) the cover's thickness over the skin at EXIT */
+export const PRED_COVER_THICK = COVER_THICK;
 /** the gap's body-side margin direction (side view): the rear normal of the rest edge */
 const E_NRM: P[] = E_REST.map((_, i) => {
   const a = E_REST[Math.max(0, i - 1)], b = E_REST[Math.min(CB - 1, i + 1)];
@@ -1134,7 +1123,8 @@ const eyeGeom = (cam: Cam, D: Def, side: number, look: V3 | null): EyeG | null =
   const G = newGrid(1, 1, []);
   bodyVertex(G, 0, cam, D, EYE_REST.x, side > 0 ? EYE_REST.psi : 2 * Math.PI - EYE_REST.psi, false);
   const Ps: V3 = [G.wx[0], G.wy[0], G.wz[0]], Ns: V3 = [G.nx[0], G.ny[0], G.nz[0]];
-  const ne = norm3(add3(mul3(Ns, 0.45), mul3(norm3([0.05, -0.36, side * 0.93]), 0.55)));
+  // dorsolateral: the eye looks out and up (both eyes show from above), drawn as a dome so it stays round side on
+  const ne = norm3(add3(mul3(Ns, 0.35), mul3(norm3([0.04, -0.56, side * 0.83]), 0.65)));
   const c = add3(Ps, mul3(Ns, 0.3));
   const vis = dot3(ne, norm3(sub3(cam.eye, c)));
   if (vis < 0.03) return null;
@@ -1144,8 +1134,8 @@ const eyeGeom = (cam: Cam, D: Def, side: number, look: V3 | null): EyeG | null =
   const r = EYE.r;
   const E = projEll(cam.B, c, mul3(t1, r), mul3(t2, r));
   if (E.c.z < 0.5) return null;
-  // a bulging eye never collapses to a sliver
-  const ry = Math.max(E.ry, E.rx * 0.5);
+  // a bulging eye (a dome): rounder than its rim's ellipse, never a sliver
+  const ry = Math.min(E.rx, Math.max(E.ry, E.rx * (0.5 + 0.5 * Math.min(1, vis + 0.15))));
   // the pupil: toward the look target, within the iris
   let off: V3 = [0, 0.08, 0];
   if (look) {
@@ -1249,13 +1239,20 @@ const buildModel = (B: Basis, pose: PredPose): Model => {
 
   // ---- the exit on the near cover's edge
   const cv = covers[0];
-  const ke = (CA - 1) * CB + B_EXIT, ke2 = (CA - 3) * CB + B_EXIT;
+  const ke = (CA - 1) * CB + B_EXIT;
   const pE: V3 = [cv.G.wx[ke], cv.G.wy[ke], cv.G.wz[ke]];
-  const pIn: V3 = [cv.G.wx[ke2], cv.G.wy[ke2], cv.G.wz[ke2]];
   const nE = cv.normals[ke];
   const liftE = cv.lift[B_EXIT];
-  // outward from under the cover: past the edge (away from the hinge), turning outward as the cover lifts
-  const out = norm3(add3(norm3(sub3(pE, pIn)), mul3(nE, 0.25 + 0.15 * liftE)));
+  // outward from under the cover: across the edge along the skin (back and up, the edge's rear normal), turning
+  // outward as the cover lifts
+  const skinAt = (x: number, y: number): V3 => {
+    const G1 = newGrid(1, 1, []);
+    bodyVertex(G1, 0, cam, D, x, psiForY({...secAt(x)}, y), false);
+    return [G1.wx[0], G1.wy[0], G1.wz[0]];
+  };
+  const eR = E_REST[B_EXIT], eN = E_NRM[B_EXIT];
+  const rear = norm3(sub3(skinAt(eR.x + eN.x * 0.6, eR.y + eN.y * 0.6), skinAt(eR.x, eR.y)));
+  const out = norm3(add3(rear, mul3(nE, 0.25 + 0.2 * liftE)));
   const exit = {p: pE, out, n: nE};
   const pb: V3 = [PHARYNX.back.x, PHARYNX.back.y, 0];
   const mouthIn = {p: mouthC, dir: norm3(sub3(pb, mouthC))};
@@ -1287,7 +1284,7 @@ function surfZ(x: number, y: number) {
 // ================================================================ painting
 type Paint = {d: string; fill: string; op: number};
 /** the standard skin stack for a body piece: pigment steps, markings, lips, shade, light, gloss, rim */
-const skinLayers = (G: Grid, K: (c: string) => string, px: number, extra: (layers: Paint[]) => void = () => {}): Paint[] => {
+const skinLayers = (G: Grid, K: (c: string) => string, px: number, extra: (layers: Paint[]) => void = () => {}): {pig: Paint[]; light: Paint[]} => {
   const n = G.ni * G.nj;
   const v = new Float32Array(n), sad = new Float32Array(n), blo = new Float32Array(n), dc = new Float32Array(n), up = new Float32Array(n);
   let xMin = 1e9, xMax = -1e9;
@@ -1305,7 +1302,7 @@ const skinLayers = (G: Grid, K: (c: string) => string, px: number, extra: (layer
     const d = regionD(G, f);
     if (d) L.push({d, fill: K(fill), op});
   };
-  for (const p of PIG) add((k) => p.bound - v[k], p.col);
+  for (const p of PIG) add((k) => p.bound(G.xr[k]) - v[k], p.col);
   // the tail darkens a little toward the caudal fin
   add((k) => (G.xr[k] - 14) / 10, C.fishDark, 0.1);
   add((k) => (G.xr[k] - 24) / 10, C.fishDark, 0.1);
@@ -1322,19 +1319,19 @@ const skinLayers = (G: Grid, K: (c: string) => string, px: number, extra: (layer
     add((k) => Math.min(dc[k] + du(G.xr[k]), -dc[k] + 0.001, lipEnd(G.xr[k] - 0.4)), LIP_UP, 0.75);
     add((k) => Math.min(dc[k] + 0.001, dl(G.xr[k]) - dc[k], lipEnd(G.xr[k] + 0.3)), LIP_LO, 0.7);
   }
+  const pig = L.splice(0, L.length);
   // light (key light in camera space, upper left)
-  add((k) => 0.16 - G.nl[k], SHADOW, 0.2);
-  add((k) => -0.22 - G.nl[k], SHADOW, 0.18);
-  add((k) => G.nl[k] - 0.66, WARM, 0.09);
-  add((k) => G.nl[k] - 0.87, WARM, 0.1);
-  // wet gloss: a soft halo and a streak
-  add((k) => G.nh[k] - 0.94, GLOSS, 0.08);
-  add((k) => G.nh[k] - 0.976, GLOSS, 0.2);
+  add((k) => 0.12 - G.nl[k], SHADOW, 0.22);
+  add((k) => -0.34 - G.nl[k], SHADOW, 0.16);
+  add((k) => G.nl[k] - 0.7, WARM, 0.11);
+  // wet gloss: a streak with a faint halo
+  add((k) => G.nh[k] - 0.95, GLOSS, 0.07);
+  add((k) => G.nh[k] - 0.978, GLOSS, 0.2);
   // rim light along the back (toward the key light) and a warm bounce from the sand along the belly
   const rimW = clamp(14 / Math.max(1, px), 0.06, 0.2);
   add((k) => Math.min(rimW - G.nv[k], up[k] - 0.35, 32.4 - G.xr[k]), WARM, 0.3);
   add((k) => Math.min(rimW * 1.2 - G.nv[k], -up[k] - 0.45, 32.4 - G.xr[k]), BOUNCE, 0.22);
-  return L;
+  return {pig, light: L};
 };
 const Layers: React.FC<{L: Paint[]}> = ({L}) => (
   <>
@@ -1364,6 +1361,53 @@ const spotsD = (cam: Cam, D: Def, side: number, scale: number) => {
   return d;
 };
 
+/** the scale lattice (V3's tile: 1.9 × 2.2 u, alternate columns offset, tilted 6°) over the trunk behind the cover,
+ *  side-view (x, y) and ψ on the near side, precomputed */
+const SCALES: {x: number; y: number; psi: number[]; v: number}[] = (() => {
+  const out: {x: number; y: number; psi: number[]; v: number}[] = [];
+  const W = 1.9, H = 2.2, r = H * 0.52, ca = Math.cos(-6 * D2R), sa = Math.sin(-6 * D2R);
+  for (let ix = -16; ix <= 34; ix++) {
+    for (let iy = -8; iy <= 8; iy++) {
+      const u = ix * (W / 2), w = iy * H + (ix % 2 ? H / 2 : 0);
+      const x = u * ca - w * sa, y = u * sa + w * ca;
+      if (x < -26.5 || x > 31) continue;
+      const S = {...secAt(x)};
+      if (y < S.top + 0.6 || y > S.bot - 0.6) continue;
+      const ys = [y - r, y, y + r].map((q) => clamp(q, S.top + 0.05, S.bot - 0.05));
+      const xs = [x, x + r * 0.9, x];
+      out.push({x, y, psi: ys.map((q, i) => psiForY({...secAt(xs[i])}, q)), v: (y - S.top) / (S.bot - S.top)});
+    }
+  }
+  return out;
+})();
+/** faint rear-facing scale edges on one side (only at close range) */
+const scalesD = (cam: Cam, D: Def, side: number, px: number) => {
+  if (px < 9) return null;
+  const G = newGrid(1, 1, []);
+  const r = 2.2 * 0.52;
+  let d = '', hi = '';
+  for (const sc of SCALES) {
+    // fade toward the dark back and the pale belly
+    if (sc.v < 0.16 || sc.v > 0.84) continue;
+    const xs = [sc.x, sc.x + r * 0.9, sc.x];
+    const q: S2[] = [];
+    let ok = true;
+    for (let i = 0; i < 3; i++) {
+      bodyVertex(G, 0, cam, D, xs[i], side > 0 ? sc.psi[i] : 2 * Math.PI - sc.psi[i], false);
+      if (!G.ok[0] || G.nv[0] < 0.22) { ok = false; break; }
+      q.push({x: G.sx[0], y: G.sy[0]});
+    }
+    if (!ok) continue;
+    if (q.every((p) => p.x < -50 || p.x > 1130 || p.y < -50 || p.y > 1970)) continue;
+    const cx = 2 * q[1].x - (q[0].x + q[2].x) / 2, cy = 2 * q[1].y - (q[0].y + q[2].y) / 2;
+    d += `M${fx(q[0].x)} ${fx(q[0].y)}Q${fx(cx)} ${fx(cy)} ${fx(q[2].x)} ${fx(q[2].y)}`;
+    // the lit lip of the scale, just inside its upper half
+    const m0 = {x: lerp(q[0].x, q[1].x, 0.12), y: lerp(q[0].y, q[1].y, 0.12)};
+    hi += `M${fx(m0.x)} ${fx(m0.y)}Q${fx(lerp(cx, q[1].x, 0.35))} ${fx(lerp(cy, q[1].y, 0.35))} ${fx(lerp(q[1].x, q[0].x, 0.1))} ${fx(lerp(q[1].y, q[0].y, 0.1))}`;
+  }
+  return d ? {d, hi, w: clamp(0.075 * px, 0.8, 3.2), op: clamp((px - 9) / 12)} : null;
+};
+
 const pxPerU = (cam: Cam, p: V3) => proj(cam.B, p).s;
 
 /** one half of the body (side +1 near, -1 far), with its features */
@@ -1376,6 +1420,7 @@ const Half: React.FC<{m: Model; side: number; K: (c: string) => string}> = ({m, 
   const L = skinLayers(G, K, px);
   const clip = uid('phalf');
   const spots = spotsD(m.cam, m.D, side, px);
+  const scales = scalesD(m.cam, m.D, side, px);
   const ink = tagRuns(base, [LIMB]);
   const lipInk = m.body.jaw ? tagRuns(base, [LIP]) : '';
   return (
@@ -1386,8 +1431,15 @@ const Half: React.FC<{m: Model; side: number; K: (c: string) => string}> = ({m, 
         </clipPath>
       </defs>
       <path d={baseD} fill={K(PIG_BASE)} />
-      <Layers L={L} />
+      <Layers L={L.pig} />
+      {scales && (
+        <g clipPath={`url(#${clip})`} opacity={scales.op}>
+          <path d={scales.d} fill="none" stroke={K(C.fishDark)} strokeWidth={scales.w} strokeLinecap="round" opacity={0.5} />
+          <path d={scales.hi} fill="none" stroke={K(WARM)} strokeWidth={scales.w * 0.8} strokeLinecap="round" opacity={0.3} />
+        </g>
+      )}
       {spots && <path d={spots} fill={K(C.fishDark)} opacity={0.45} clipPath={`url(#${clip})`} />}
+      <Layers L={L.light} />
       {lipInk && <path d={lipInk} fill="none" stroke={K(INK)} strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" />}
       <path d={ink} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" strokeLinejoin="round" />
     </g>
@@ -1414,7 +1466,7 @@ const HeadMarks: React.FC<{m: Model; side: number; K: (c: string) => string}> = 
     pts.push(at(-40.75, 2.9), at(-40.5, 3.2));
     let run: S2[] = [];
     const flush = () => { if (run.length > 1) cleft += smoothOpenPath(run.map((q) => q.x), run.map((q) => q.y), 1.5); run = []; };
-    for (const q of pts) { if (q.v > 0.02) run.push(q.s); else flush(); }
+    for (const q of pts) { if (q.v > 0.15) run.push(q.s); else flush(); }
     flush();
   }
   const nos = ([[-47.7, -3.35, 0.34, true], [-45.5, -5.15, 0.22, false]] as [number, number, number, boolean][]).map(([x, y, r, ink]) => {
@@ -1523,7 +1575,7 @@ const CoverArt: React.FC<{m: Model; side: number; K: (c: string) => string}> = (
         const mg = regionD(G, (k) => 0.62 - G.aux[k]);
         if (mg) Ls.push({d: mg, fill: K(MARGIN), op: 0.4});
       })
-    : [];
+    : {pig: [], light: []};
   const ink = tagRuns(base, [LIMB]);
   // the free edge: the strong line; the attached border: the preopercle groove firm, the upper/lower borders light
   const runs = (pts: S2[], ok: boolean[], i0: number, i1: number) => {
@@ -1541,7 +1593,8 @@ const CoverArt: React.FC<{m: Model; side: number; K: (c: string) => string}> = (
     <g>
       {innerD && <path d={innerD} fill={K(COVER_INNER)} />}
       {baseD && <path d={baseD} fill={K(PIG_BASE)} />}
-      <Layers L={L} />
+      <Layers L={L.pig} />
+      <Layers L={L.light} />
       <path d={ink} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" />
       <path d={preD} fill="none" stroke={K(INK)} strokeWidth={2} strokeLinecap="round" opacity={0.85} />
       <path d={bordD} fill="none" stroke={K(INK)} strokeWidth={1.3} strokeLinecap="round" opacity={0.4} />
@@ -1626,7 +1679,8 @@ const JawArt: React.FC<{m: Model; K: (c: string) => string}> = ({m, K}) => {
   return (
     <g>
       <path d={baseD} fill={K(PIG_BASE)} />
-      <Layers L={L} />
+      <Layers L={L.pig} />
+      <Layers L={L.light} />
       <path d={tagRuns(m.baseJaw, [LIP])} fill="none" stroke={K(INK)} strokeWidth={2.3} strokeLinecap="round" strokeLinejoin="round" />
       <path d={tagRuns(m.baseJaw, [LIMB])} fill="none" stroke={K(INK)} strokeWidth={INK_PX} strokeLinecap="round" strokeLinejoin="round" />
     </g>
