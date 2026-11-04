@@ -144,11 +144,11 @@ const open2 = (ps: P[]) => crPath(ps, false, F2);
 // (off-frame during the carry), the opening up and to the left (where the carried tail sweeps).
 const I0 = 93; // carryTail(t).i0
 /** the opening (the entrance to the esophagus, a puckered ring in the wall) */
-export const OPENING: P = {x: -1.75, y: -15.74};
+export const OPENING: P = {x: -1.6, y: -11.75};
 /** the coil: a loose spiral, the head at its centre, wound clockwise outward to its end E, then a short run to A */
 const R0 = 2.9;
 const B_SP = 3.15 / (2 * Math.PI); // turn spacing 3.15 u (the body is 2.5 u thick)
-const RUN = 4;
+const RUN = 2;
 const SP_LEN = EEL_L * (I0 / N) - RUN;
 const TH_E = (-R0 + Math.sqrt(R0 * R0 + 2 * B_SP * SP_LEN)) / B_SP;
 const R_E = R0 + B_SP * TH_E;
@@ -163,7 +163,7 @@ const spiralAt = (th: number): P => {
 /** the probe: the tip slides up the wall (heading ≈ −97°) into the fold FOLD_BUMP lying across its way, is stopped,
  *  turns hard right and follows the fold's underside up to the opening. CORNER is where the approach meets the line
  *  along the fold; the track rounds it with radius R_CORNER and the tip is stopped part-way round (BUMP) */
-const CORNER: P = {x: -7.7, y: -13.1};
+const CORNER: P = {x: -7.6, y: -12.9};
 const R_CORNER = 0.95;
 const D_IN: P = (() => {
   const a = -97 * DEG;
@@ -202,10 +202,10 @@ const ROUTE: Path2 = (() => {
     E_PT,
     {x: E_PT.x + Math.cos(H_A) * 2, y: E_PT.y + Math.sin(H_A) * 2},
     {x: 0, y: 0},
-    {x: -2.2, y: -1.95},
-    {x: -4.25, y: -4.0},
-    {x: -5.85, y: -6.15},
-    {x: -6.85, y: -8.4},
+    {x: -2.3, y: -1.9},
+    {x: -4.4, y: -3.9},
+    {x: -6.0, y: -5.9},
+    {x: -6.9, y: -7.6},
     {x: a0.x - D_IN.x * 2.4, y: a0.y - D_IN.y * 2.4},
     {x: a0.x - D_IN.x * 1.1, y: a0.y - D_IN.y * 1.1},
     a0,
@@ -223,9 +223,9 @@ const S_BUMP = nearestS(ROUTE, ARC[3]);
 const S_OPEN = nearestS(ROUTE, OPENING);
 /** where sample I0 sits at rest (the carry's anchor): the camera puts it on carryTail's anchor */
 const A_REST: P = at2(ROUTE, S_REST - EEL_L * (1 - I0 / N));
-/** the wide view (6.9 s): this world point at screen (540, 1110), 34 px per unit */
+/** the wide view (6.9 s): this world point at screen (540, 1120), 34 px per unit */
 const S_WIDE_ = 34;
-const C_WIDE: P = {x: 3.6, y: -7.2 - 150 / 34};
+const C_WIDE: P = {x: 2.4, y: -5.1 - 160 / 34};
 const Wp = (x: number, y: number): P => ({x: C_WIDE.x + (x - CS.x) / S_WIDE_, y: C_WIDE.y + (y - CS.y) / S_WIDE_});
 const toWide = (w: P): P => ({x: CS.x + S_WIDE_ * (w.x - C_WIDE.x), y: CS.y + S_WIDE_ * (w.y - C_WIDE.y)});
 const A_WIDE: P = toWide(A_REST);
@@ -296,10 +296,10 @@ export type Cam = {c: P; s: number; D: number};
 const lnS = (t: number) => {
   if (t <= CARRY1) return LN(S_CARRY);
   if (t <= TB.pull1) return lerp(LN(S_CARRY), LN(S_WIDE_), ss5(t, CARRY1, TB.pull1));
-  if (t <= 8.12) return keyS(t, [[TB.pull1, LN(S_WIDE_)], [7.15, LN(36.5)], [7.7, LN(49)], [8.12, LN(52)]]);
+  if (t <= 8.12) return keyS(t, [[TB.pull1, LN(S_WIDE_)], [7.15, LN(36.5)], [7.7, LN(44)], [8.12, LN(46)]]);
   // the dive: an accelerating push into the opening (no ease-out: it carries on through the dissolve)
   const x = (t - 8.12) / (TB.end - 8.12);
-  return LN(52) + (LN(F / 0.5) - LN(52)) * Math.pow(x, 2.4);
+  return LN(46) + (LN(F / 0.5) - LN(46)) * Math.pow(x, 2.4);
 };
 const O_WIDE: P = toWide(OPENING);
 export const camAt = (t: number): Cam => {
@@ -314,8 +314,9 @@ export const camAt = (t: number): Cam => {
   }
   // the opening is the reference: where it sits on screen
   const Q = {
-    x: keyS(t, [[TB.pull1, O_WIDE.x], [7.15, O_WIDE.x + 30], [7.7, 470], [8.12, 470], [8.62, CS.x]]),
-    y: keyS(t, [[TB.pull1, O_WIDE.y], [7.15, O_WIDE.y - 10], [7.7, 640], [8.12, 650], [8.62, CS.y]]),
+    // (from 7.7 the whole coil stays in frame, so the head's link to the body reads while the tail searches)
+    x: keyS(t, [[TB.pull1, O_WIDE.x], [7.15, O_WIDE.x + 6], [7.7, 380], [8.12, 362], [8.62, CS.x]]),
+    y: keyS(t, [[TB.pull1, O_WIDE.y], [7.15, O_WIDE.y - 25], [7.7, 762], [8.12, 742], [8.62, CS.y]]),
   };
   return {c: {x: OPENING.x - (Q.x - CS.x) / sD, y: OPENING.y - (Q.y - CS.y) / sD}, s: sD, D};
 };
@@ -426,8 +427,8 @@ export const poseAt = (t: number): Pose => {
       const ph = Math.min(e / RB, Math.PI / 2);
       const lat = vl - RB * Math.sin(ph);
       const d = e <= QB ? RB * (1 - Math.cos(ph)) : RB + (e - QB);
-      // a slow screw as it goes deeper (the passage turns a little)
-      const a = 0.3 * (1 - Math.exp(-d / 2));
+      // past the lip it turns to run along the passage's lower-left wall (and the passage turns a little)
+      const a = -0.6 * (1 - Math.exp(-d / 0.8));
       const ux = v.x / vl, uy = v.y / vl;
       const vx = ux * Math.cos(a) - uy * Math.sin(a), vy = ux * Math.sin(a) + uy * Math.cos(a);
       w[i] = {x: OPENING.x + vx * lat, y: OPENING.y + vy * lat};
@@ -448,10 +449,17 @@ const frameAt = (t: number): Frame => {
   return {cam, pose, scr, rS, r};
 };
 
-/** the eel's screen samples (centre + radius, px) for the caption check (no gill gap in this shot) */
+/** the eel's screen samples (centre + radius, px) for the caption check: those in the frame and visible (down the
+ *  passage the eel goes dark; samples there count until the fog has all but hidden them). No gill gap in this shot. */
 export const keepOut = (t: number): KeepOut => {
   const fr = frameAt(t);
-  return {eel: fr.scr.map((p, i) => ({x: p.x, y: p.y, r: fr.r[i]})).filter((q) => q.x > -q.r && q.x < 1080 + q.r && q.y < 1920 + q.r)};
+  const L = fogLen(fr.cam.D);
+  return {
+    eel: fr.scr
+      .map((p, i) => ({x: p.x, y: p.y, r: fr.r[i], fog: fogOf(fr.pose.z[i], L)}))
+      .filter((q) => q.x > -q.r && q.x < 1080 + q.r && q.y > -q.r && q.y < 1920 + q.r && q.fog < 0.9)
+      .map(({x, y, r}) => ({x, y, r})),
+  };
 };
 
 // ================================================================ the wall's art (world units, z = 0)
@@ -459,15 +467,15 @@ type FoldDef = {pts: P[]; w: number; k: string};
 /** the fold the tip bumps: it leaves the pucker down and to the left; the tip comes up from below and hits its
  *  underside at BUMP, then turns and follows it up to the opening */
 const FOLD_BUMP_CP: P[] = [
-  {x: OPENING.x - 2.7, y: OPENING.y + 0.6},
-  {x: -6.2, y: -14.65},
-  {x: -8.1, y: -14.05},
-  {x: -10.0, y: -13.4},
-  {x: -11.8, y: -12.4},
-  {x: -13.3, y: -10.9},
-  {x: -14.3, y: -9.0},
+  {x: -4.08, y: -13.19},
+  {x: -5.75, y: -13.51},
+  {x: -7.42, y: -13.83},
+  {x: -9.3, y: -14.05},
+  {x: -11.2, y: -13.85},
+  {x: -12.9, y: -13.0},
+  {x: -14.2, y: -11.4},
 ];
-const DENT_AT: P = {x: -7.95, y: -14.1};
+const DENT_AT: P = {x: -7.4, y: -13.8};
 /** a fold as a streamline: it leaves the pucker's ring at `ang` and winds outward round the opening */
 const streamFold = (ang: number, len: number, swirl: number, seed: number, r0 = 2.75): P[] => {
   const pts: P[] = [];
@@ -811,28 +819,32 @@ const FogGrad: React.FC<{id: string; cam: Cam; rh: number; from: string; to: str
 const Passage: React.FC<{cam: Cam; t: number; clipId: string}> = ({cam, t, clipId}) => {
   const rh = lumenR(t);
   const gid = uid('s4pg');
-  const ds = [0.06, 0.2, 0.4, 0.7, 1.1];
-  const rings = ds.map((d) => ({c: proj(cam, OPENING, d), r: (F * passageR(rh, d)) / (cam.D + d), d}));
-  const lines: string[] = [];
-  for (let k = 0; k < 10; k++) {
-    const a = (k / 10) * 2 * Math.PI + 0.3 + 0.2 * Math.sin(k * 1.7);
-    const p0 = proj(cam, {x: OPENING.x + Math.cos(a) * passageR(rh, 0.02), y: OPENING.y + Math.sin(a) * passageR(rh, 0.02)}, 0.02);
-    const p1 = proj(cam, {x: OPENING.x + Math.cos(a) * passageR(rh, 1.5), y: OPENING.y + Math.sin(a) * passageR(rh, 1.5)}, 1.5);
-    lines.push(`M${f1(p0.x)} ${f1(p0.y)}L${f1(p1.x)} ${f1(p1.y)}`);
-  }
   const g = fogGeom(cam, rh);
+  // soft longitudinal folds: a lit crest and a shaded groove per fold, wedges from the rim down the passage (no lines);
+  // the depth fog over everything takes them into the dark
+  const wall = (a: number, d: number) => proj(cam, {x: OPENING.x + Math.cos(a) * passageR(rh, d), y: OPENING.y + Math.sin(a) * passageR(rh, d)}, d);
+  const wedge = (a: number, w: number) => {
+    const ps = [wall(a - w, 0.01), wall(a + w, 0.01), wall(a + w * 0.7, 1.2), wall(a + w * 0.35, 3.5), wall(a - w * 0.35, 3.5), wall(a - w * 0.7, 1.2)];
+    return 'M' + ps.map((p) => `${f1(p.x)} ${f1(p.y)}`).join('L') + 'Z';
+  };
+  // each fold twice, wide and narrow, at low opacity: a soft edge rather than a hard sector
+  const crests: string[] = [], grooves: string[] = [];
+  for (let k = 0; k < 9; k++) {
+    const a = (k / 9) * 2 * Math.PI + 0.3 + 0.18 * Math.sin(k * 1.7);
+    crests.push(wedge(a, 0.15), wedge(a, 0.07));
+    grooves.push(wedge(a + 0.22, 0.09), wedge(a + 0.22, 0.04));
+  }
   return (
     <g clipPath={`url(#${clipId})`}>
       <defs>
-        <FogGrad id={gid} cam={cam} rh={rh} from={K.passage} to={LUMEN} />
+        <FogGrad id={gid} cam={cam} rh={rh} from={LUMEN} to={LUMEN} op={(fg) => fg} />
       </defs>
-      <path d={circleD(g.c0, g.R * 1.05)} fill={`url(#${gid})`} />
+      <path d={circleD(g.c0, g.R * 1.05)} fill={K.passage} />
       {/* the lit lower-right inner wall near the rim (it faces the light) */}
-      <path d={crescentD(rings[0].c, rings[0].r * 0.995, Math.atan2(-LIGHT.y, -LIGHT.x), rings[0].r * 0.28)} fill={K.passageLit} fillOpacity={0.45} />
-      {rings.map((q, k) => (
-        <path key={k} d={circleD(q.c, q.r)} fill="none" stroke={LUMEN} strokeOpacity={0.5 * (1 - fogOf(q.d, fogLen(cam.D)))} strokeWidth={2.4} vectorEffect={NS} />
-      ))}
-      <path d={lines.join('')} stroke={LUMEN} strokeOpacity={0.4} strokeWidth={2.2} vectorEffect={NS} fill="none" />
+      <path d={crescentD(g.c0, g.R * 0.995, Math.atan2(-LIGHT.y, -LIGHT.x), g.R * 0.3)} fill={K.passageLit} fillOpacity={0.4} />
+      <path d={crests.join('')} fill={K.passageLit} fillOpacity={0.07} />
+      <path d={grooves.join('')} fill={LUMEN} fillOpacity={0.06} />
+      <path d={circleD(g.c0, g.R * 1.05)} fill={`url(#${gid})`} />
     </g>
   );
 };

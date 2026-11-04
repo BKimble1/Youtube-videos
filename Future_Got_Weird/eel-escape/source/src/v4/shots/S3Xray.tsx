@@ -27,9 +27,10 @@ import {CARRY0, CARRY_PX, carryTail, KeepOut} from '../timing';
 
 // ---------------------------------------------------------------- beats
 /** the snout crosses the field's right edge: the beam catches (flash, edge flare, lamp). The sound goes here. */
-export const XRAY_CHANGE_T = 3.96;
-/** the full skeletal profile holds (on "X-ray", 4.94) until the push toward the stomach begins */
-export const XRAY_PUSH0 = 5.06;
+export const XRAY_CHANGE_T = 3.9;
+/** the full skeletal profile holds (from XRAY_ALL_IN_T, through "X-ray" at 4.94) until the push toward the stomach
+ *  begins; the push eases in slowly, so the whole skeleton stays in frame until ≈ 5.07 */
+export const XRAY_PUSH0 = 4.95;
 /** the push ends exactly on the carried tail (px per unit = CARRY_PX) */
 export const XRAY_PUSH1 = CARRY0;
 
@@ -55,20 +56,22 @@ const EEL_CORE = lit(C.xrayEdge, 0.35);
 const EEL_BONE = lit(C.xrayBone, 0.4);
 
 // ---------------------------------------------------------------- the set (tank units)
-const FIELD = {x0: -58, x1: 58, y0: -57, y1: 27};
+const FIELD = {x0: -76, x1: 76, y0: -57, y1: 27};
 const TANK = {x0: -170, x1: 260, rim: -51, water: -45, floor: 16.5, bottom: 22, base: 26};
-const EMIT = {x0: -64, x1: 64, y0: -71, y1: -57};
-const DETECT = {x0: -64, x1: 64, y0: 27, y1: 35};
+const EMIT = {x0: -82, x1: 82, y0: -71, y1: -57};
+const DETECT = {x0: -82, x1: 82, y0: 27, y1: 35};
 const BENCH_Y = 35;
 
 // ---------------------------------------------------------------- the fish's glide
-/** the fish's frame origin in tank units: it glides in from the right at V_GLIDE u/s, its snout (the lower jaw's
- *  tip) reaching the field's right edge exactly at XRAY_CHANGE_T, then decelerates evenly to rest at x = 0 */
-const V_GLIDE = 122;
-const GLIDE_STOP = 5.1;
+/** the fish's frame origin in tank units: it darts in from the right at V_GLIDE u/s, its snout (the lower jaw's tip)
+ *  reaching the field's right edge exactly at XRAY_CHANGE_T, and brakes evenly over its last DEC_DIST units to rest at
+ *  x = 0. The field is wider than the fish, so the whole fish is inside (XRAY_ALL_IN_T) while it is still braking. */
+const V_GLIDE = 200;
+const DEC_DIST = 40;
 const SNOUT_X = -51.0;
-const X_AT_CHANGE = 58 - SNOUT_X;
-const DECEL0 = (2 * X_AT_CHANGE) / V_GLIDE + 2 * XRAY_CHANGE_T - GLIDE_STOP;
+const X_AT_CHANGE = FIELD.x1 - SNOUT_X;
+const DECEL0 = XRAY_CHANGE_T + (X_AT_CHANGE - DEC_DIST) / V_GLIDE;
+const GLIDE_STOP = DECEL0 + (2 * DEC_DIST) / V_GLIDE;
 export const fishX = (t: number) => {
   if (t >= GLIDE_STOP) return 0;
   if (t >= DECEL0) {
@@ -79,20 +82,20 @@ export const fishX = (t: number) => {
 };
 /** the caudal fin's tip in fish units (its sway reaches ≈ 50.5) */
 const CAUDAL_TIP_X = 50.5;
-/** the whole fish (caudal tip included) is inside the field: before "X-ray" (4.94) */
+/** the whole fish (caudal tip included) is inside the field (during the braking) */
 export const XRAY_ALL_IN_T = (() => {
-  const xIn = 58 - CAUDAL_TIP_X; // the fish's origin when its caudal tip reaches the edge (in the deceleration)
+  const xIn = FIELD.x1 - CAUDAL_TIP_X;
   return GLIDE_STOP - Math.sqrt((2 * (GLIDE_STOP - DECEL0) * xIn) / V_GLIDE);
 })();
-const fishY = (t: number) => 0.25 * Math.sin(2 * Math.PI * 0.45 * (t - 3.6)) * (1 - ss(t, 4.6, 5.1));
+const fishY = (t: number) => 0.25 * Math.sin(2 * Math.PI * 0.45 * (t - 3.6)) * (1 - ss(t, 4.2, GLIDE_STOP));
 
 /** the integral of the smoothstep from 0 to x (x in units of the step's length) */
 const ssInt = (x: number) => (x <= 0 ? 0 : x >= 1 ? 0.5 + (x - 1) : x ** 3 - x ** 4 / 2);
 const lookFor = (t: number): FishLook => ({
   t,
   gill: 0.18 + 0.1 * (0.5 + 0.5 * Math.sin(2 * Math.PI * 0.9 * (t - 3.5))),
-  // the fins beat at 1.6 Hz while gliding, easing to 0.6 Hz as it coasts to rest (the phase never runs backward)
-  finPhase: 2 * Math.PI * (1.6 * (t - 3.0) - 1.0 * 0.6 * ssInt((t - 4.6) / 0.6)),
+  // the fins beat at 1.6 Hz while darting in, easing to 0.6 Hz as it brakes and rests (the phase never runs backward)
+  finPhase: 2 * Math.PI * (1.6 * (t - 3.0) - 1.0 * 0.5 * ssInt((t - 4.3) / 0.5)),
   startle: 0,
   prop: 0,
   look: 0,
@@ -103,29 +106,30 @@ const I0 = Math.round(N * (1 - 12 / EEL_L)); // = carryTail's i0
 const SEG_B = EEL_L / N; // body sample spacing
 const SEG_T = 12 / (N - I0); // the carried tail's sample spacing
 /** the tail's root (sample I0) in fish units, fixed in the stomach */
-const A_W: P = pt(-2.4, 7.25);
-/** the body route from the tail's root back toward the head (control points, fish units): down-right along the
- *  stomach floor, up round its blind end, forward along its roof, a hairpin down, and back toward the blind end,
- *  so the head lies deepest with the eye toward the fish's tail */
+const A_W: P = pt(2.4, 5.3);
+/** the body route from the tail's root back toward the head (control points, fish units): down-right and round a
+ *  turn at the stomach's blind end, forward along its floor, up round its front, and back through the middle under
+ *  the tail, so the head lies deep in the coil below the tail's root, its eye toward the fish's tail; the tail runs
+ *  up and forward from the root toward the esophagus */
 const ROUTE_CP: P[] = [
   A_W,
-  pt(0.4, 8.95),
-  pt(3.6, 9.3),
-  pt(6.25, 8.2),
-  pt(7.75, 6.3),
-  pt(8.15, 4.3),
-  pt(7.5, 2.3),
-  pt(5.6, 0.7),
-  pt(2.6, -0.4),
-  pt(-1.0, -0.8),
-  pt(-3.6, -0.4),
-  pt(-5.0, 1.3),
-  pt(-3.8, 3.1),
-  pt(-1.0, 3.7),
-  pt(1.0, 4.35),
-  pt(3.4, 4.85),
-  pt(5.4, 5.0),
-  pt(7.4, 5.0),
+  pt(4.15, 6.35),
+  pt(5.45, 7.45),
+  pt(5.15, 8.75),
+  pt(3.6, 9.45),
+  pt(1.3, 9.8),
+  pt(-2.2, 10.0),
+  pt(-6.2, 9.8),
+  pt(-9.6, 8.9),
+  pt(-12.1, 7.4),
+  pt(-13.3, 5.4),
+  pt(-12.3, 3.85),
+  pt(-10.0, 4.7),
+  pt(-7.0, 5.85),
+  pt(-4.0, 6.8),
+  pt(-1.0, 7.35),
+  pt(1.2, 7.8),
+  pt(3.2, 8.1),
 ];
 /** Catmull-Rom sampled densely, with an arc-length table */
 const dense = (cp: P[], per = 16) => {
@@ -192,11 +196,11 @@ const carryRoot = (t: number): P => {
 const ownHeadings = (t: number): number[] => {
   const n = N - I0;
   const out: number[] = [];
-  const sweep = 0.27 * Math.sin(2 * Math.PI * 0.8 * (t - 3.9)) + 0.08 * noise1(t * 1.3, 4);
+  const sweep = 0.24 * Math.sin(2 * Math.PI * 0.8 * (t - 3.9)) + 0.06 * noise1(t * 1.3, 4);
   for (let k = 0; k < n; k++) {
     const a = (k + 0.5) * SEG_T;
     const f = a / 12;
-    out.push((-150 * Math.PI) / 180 - 0.04 * a + sweep * Math.pow(f, 1.2) + 0.36 * Math.sin(2 * Math.PI * (1.6 * t - a / 8.5)) * f);
+    out.push((-145 * Math.PI) / 180 - 0.04 * a + sweep * Math.pow(f, 1.2) + 0.36 * Math.sin(2 * Math.PI * (1.6 * t - a / 8.5)) * f);
   }
   return out;
 };
@@ -248,26 +252,29 @@ type Cam = {x: number; y: number; s: number};
 const LOGS = (a: number, b: number, u: number) => Math.exp(lerp(Math.log(a), Math.log(b), u));
 /** the establishing → full-profile camera (tank units): a wide view of the rig with the fish entering at the right,
  *  then a pan and push with the fish until the field fills the width (the full skeletal profile) */
-const CAMB0 = 3.6, CAMB1 = 4.98;
+const CAMB0 = 3.84, CAMB1 = 4.72;
+const CAM_X0 = 80, CAM_V0 = -110;
 const camBase = (t: number): Cam => {
-  // x: a Hermite pan that is already moving left at the cut (following the fish) and settles on the field's centre
+  // x: a Hermite pan already moving left at the cut (following the fish) that settles on the fish at rest
   const T = CAMB1 - CAMB0;
   const tau = clamp((t - CAMB0) / T);
   const h00 = 2 * tau ** 3 - 3 * tau ** 2 + 1, h10 = tau ** 3 - 2 * tau ** 2 + tau;
-  const x = t < CAMB0 ? 68 + 34 * (CAMB0 - t) : 68 * h00 - 34 * T * h10;
+  const x = t < CAMB0 ? CAM_X0 - CAM_V0 * (CAMB0 - t) : CAM_X0 * h00 + CAM_V0 * T * h10;
   const u = ss5(t, CAMB0, CAMB1);
-  const drift = ss(t, 4.85, 5.7);
+  const creep = ss(t, CAMB1, 5.6);
   return {
     x,
     y: lerp(-25, -20, u),
-    s: LOGS(7.9, 8.75, u) * (1 + 0.035 * drift),
+    s: LOGS(7.9, 9.3, u) * (1 + 0.03 * creep),
   };
 };
 /** the camera: base, then the push that follows the tail into the carried pose (scale CARRY_PX, the tail's root on
  *  carryTail's root). For t >= CARRY0 the screen tail is exactly carryTail(t). */
 export const camAt = (t: number): Cam => {
   const b = camBase(t);
-  const w = ss5(t, XRAY_PUSH0, XRAY_PUSH1);
+  // a cubic ease in log scale over ~20 frames: a gentle start (the whole skeleton stays in frame for its first
+  // ~0.12 s), a peak zoom rate of ≈ 3.9 /s, and zero scale velocity on arrival at CARRY0
+  const w = ss(t, XRAY_PUSH0, XRAY_PUSH1);
   if (w <= 0) return b;
   const fx = fishX(t), fy = fishY(t);
   const root = pt(A_W.x + fx, A_W.y + fy);
@@ -587,7 +594,7 @@ const FieldGround: React.FC<{flash: number}> = ({flash}) => {
   return (
     <g>
       <defs>
-        <radialGradient id={id.g} gradientUnits="userSpaceOnUse" cx="0" cy="-6" r="72" gradientTransform="translate(0 -6) scale(1.15 1) translate(0 6)">
+        <radialGradient id={id.g} gradientUnits="userSpaceOnUse" cx="0" cy="-6" r="72" gradientTransform="translate(0 -6) scale(1.45 1) translate(0 6)">
           <stop offset="0" stopColor={mix(C.xrayBg1, C.xraySoft, 0.12 + 0.3 * flash)} />
           <stop offset="0.6" stopColor={mix(C.xrayBg1, C.xrayBg0, 0.4)} />
           <stop offset="1" stopColor={C.xrayBg0} />
@@ -641,7 +648,7 @@ export const S3Xray: React.FC<{t: number}> = ({t}) => {
   const lamp = ss(t, XRAY_CHANGE_T - 0.02, XRAY_CHANGE_T + 0.03);
   const beam = 0.25 + 0.75 * flare;
   // the stomach: established in the full profile, then brought forward as the camera pushes toward it
-  const stomA = ss(t, 4.62, 4.98);
+  const stomA = ss(t, 4.35, 4.75);
   const toStom = ss(t, XRAY_PUSH0 + 0.05, XRAY_PUSH1 + 0.15);
   const id = {fClip: uid('xFieldClip'), oClip: uid('xOutClip'), sh: uid('xShadow'), vig: uid('xVig'), fl: uid('xFlash')};
   const F = FIELD;

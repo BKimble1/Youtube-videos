@@ -13,8 +13,9 @@
 // pull's momentum, then swims (head first) along the escape direction.
 import {EXIT} from '../anatomy';
 import {clamp, keyS, lerp, sm, ss} from '../lib';
-import {add3, cross3, dot3, len3, mul3, norm3, sub3, V3} from './three';
-import {backFrom, EEL_L, Eel3Pose, N, US} from './eelV4';
+import {add3, basis, cross3, dot3, len3, mul3, norm3, orbitCam, sub3, V3} from './three';
+import {backFrom, EEL_L, EEL_R_MAX, Eel3Pose, N, RADII, US} from './eelV4';
+import {predGeom, PRED_REST} from './art/pred3d';
 import {T} from './timing';
 
 const D = Math.PI / 180;
@@ -24,6 +25,27 @@ const D = Math.PI / 180;
  *  predGeom().exit can replace these; the default is V3's EXIT and a direction back, up and out from under the cover */
 export type Exit = {p: V3; out: V3};
 export const EXIT0: Exit = {p: [EXIT.x, EXIT.y, EXIT.z], out: norm3([0.87, -0.27, 0.43])};
+/** the exit on the cover's rear edge as the cover lifts (pred3d's geometry, sampled once and interpolated) */
+const EXIT_G = (() => {
+  const B = basis(orbitCam({target: [0, 0, 0], az: 0, el: 0, d: 100, f: 1000}));
+  return [0, 0.25, 0.5, 0.75, 1].map((g) => predGeom(B, {...PRED_REST, gill: g}).exit.p as V3);
+})();
+export const exitAtGill = (g: number): Exit => {
+  const x = clamp(g, 0, 1) * 4, i = Math.min(3, Math.floor(x)), f = x - i;
+  return {p: add3(EXIT_G[i], mul3(sub3(EXIT_G[i + 1], EXIT_G[i]), f)), out: EXIT0.out};
+};
+/** how far the eel props the gill cover open while it passes through the opening (it lifts the cover to fit the body
+ *  there): every exterior shot uses this for the predator's cover from the poke to the release, so the eel's root and
+ *  the cover's edge stay together */
+export const escGill = (t: number) => {
+  if (t >= T_REL) return 0;
+  const out = outAt(t);
+  if (out <= -0.5) return 0;
+  const u = clamp(1 - out / EEL_L, 0, 1);
+  return 0.28 + 0.3 * (RADII[Math.round(u * N)] / EEL_R_MAX) * clamp((out + 0.5) / 1.5);
+};
+/** the exit used by the escape at time t (until the release) */
+export const exitAt = (t: number): Exit => exitAtGill(escGill(Math.min(t, T_REL - 1e-6)));
 /** the inward route from the exit (a ≤ 0), under the cover, through the gill chamber toward the arches, then hidden */
 const INWARD: V3[] = [
   [0, 0, 0], // relative to the exit: on into the gap along the line of the body, then DOWN just behind the cover's
@@ -61,26 +83,28 @@ const OUT_KEYS: [number, number][] = [
   [12.0, -3.3],
   [12.3, -1.12],
   [12.86, 1.12],
-  [13.3, 3.2],
-  [13.86, 6.0],
-  [14.35, 11.5],
+  [13.1, 2.5],
+  [13.4, 4.6],
+  [13.86, 8.2],
+  [14.35, 13.5],
   [14.95, 24.5],
   [15.5, 37.0],
   [15.96, 44.6],
   [16.45, 48.4],
   [17.0, 49.4], // the head is caught: the neck in the gap, the eye about 3 u inside
-  [20.3, 49.4],
-  [20.62, 50.0], // the curve tightens
-  [20.74, 51.3],
+  [18.4, 49.4],
+  [20.2, 49.9], // the loop tightens; the head strains at the edge
+  [20.45, 50.05],
 ];
 export const T_REL = 20.86; // the snout clears the opening (on "pull", 20.82–21.10)
 /** the length outside the exit (eel units), monotone non-decreasing: the tail leads; = EEL_L at T_REL */
 export const outAt = (t: number): number => {
   if (t >= T_REL) return EEL_L;
-  if (t > 20.74) {
-    // the final pull: accelerating out of the gap, reaching L at T_REL with speed ≈ 26 u/s
-    const x = (t - 20.74) / (T_REL - 20.74);
-    return lerp(51.3, EEL_L, x * x * 0.3 + x * 0.7);
+  if (t > 20.45) {
+    // the final pull: the head works out of the gap over ~0.4 s (the eye clears at ≈ 20.74), accelerating, the snout
+    // clearing at T_REL
+    const x = (t - 20.45) / (T_REL - 20.45);
+    return lerp(50.05, EEL_L, x * x * (0.25 + 0.75 * x) * 0.55 + x * 0.45);
   }
   // linear through the poke (constant speed), C1-smooth elsewhere
   if (t >= 12.3 && t <= 12.86) return -1.12 + 4 * (t - 12.3);
@@ -90,7 +114,7 @@ export const outAt = (t: number): number => {
 // ---------------------------------------------------------------- the outside shape
 /** phase weights (smooth): bow into the current (S7, S8) → the loose curl (S9, S10) → tightening (the pull) */
 const wCurl = (t: number) => ss(t, 15.7, 17.2);
-const wTight = (t: number) => ss(t, 20.25, 20.8);
+const wTight = (t: number) => 0.45 * ss(t, 18.4, 20.2) + 0.55 * ss(t, 20.2, 20.78);
 
 /** the curl's loop (S9–S10): it starts LOOP_A0 units out and runs clockwise as seen from the near side (back → down →
  *  forward along the bottom → up → back over the top), a loose loop beside the gill, in front of the flank */
@@ -106,15 +130,15 @@ const theta = (a: number, t: number, out: number) => {
   const a0 = LOOP.a0 + 3 * k, a1 = lerp(LOOP.a1, 42, k);
   const curl = th0 - 10 * D * sm(a / 5) + lerp(LOOP.turn, -350, k) * D * sm(clamp((a - a0) / (a1 - a0)));
   // (3) a travelling wave running tail → head (the eel is swimming BACKWARD out of the fish)
-  const A = (lerp(9, 5, wCurl(t)) + 5 * k) * D * sm(a / 7);
-  const wave = A * Math.sin(2 * Math.PI * (1.5 * t + a / 15));
+  const A = (lerp(9, 7.5, wCurl(t)) + 4 * k) * D * sm(a / 7);
+  const wave = A * Math.sin(2 * Math.PI * (1.25 * t + a / 15)) + 4 * D * wCurl(t) * Math.sin(2 * Math.PI * (0.45 * t + a / 40));
   return lerp(bow, curl, wCurl(t)) + wave;
 };
 const beta = (a: number, t: number, out: number) => {
   // out from under the cover, flattening into a plane beside the flank; the curl's plane sits farther out
-  const lead = lerp(25, 50, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 6 + 2 * wTight(t), wCurl(t)));
+  const lead = lerp(25, 60, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 7 + 2 * wTight(t), wCurl(t)));
   // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in
-  const bowZ = 45 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
+  const bowZ = 55 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
   return lead + bowZ;
 };
 export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th), -Math.cos(be) * Math.sin(th), Math.sin(be)];
@@ -126,9 +150,12 @@ export const rootedWith = (ex: Exit, out: number, th: (a: number) => number, be:
   const n = Math.max(1, Math.ceil(Math.max(0, out) / da));
   const cs: V3[] = [ex.p];
   let p = ex.p;
+  const lead0 = inward ? null : norm3(mul3(INWARD[1], -1));
   for (let k = 0; k < n; k++) {
     const a = (k + 0.5) * da;
-    p = add3(p, mul3(dirOf(th(a), be(a)), da));
+    let d = dirOf(th(a), be(a));
+    if (lead0) d = norm3(add3(mul3(lead0, 1 - ss(a, 0, 2.5)), mul3(d, ss(a, 0, 2.5))));
+    p = add3(p, mul3(d, da));
     cs.push(p);
   }
   const outsideAt = (a: number): V3 => {
@@ -153,7 +180,7 @@ export const rootedPose = (t: number, ex: Exit = EXIT0, outOverride?: number) =>
 // ---------------------------------------------------------------- free mode
 /** after straightening along its natural heading (the mid-body's forward direction at the release: back along the
  *  flank), the swimmer veers up and away from the predator, toward the near side, head first */
-export const SWIM_DIR: V3 = norm3([0.42, -0.14, 0.9]);
+export const SWIM_DIR: V3 = norm3([0.3, -0.3, 0.9]);
 const rotAbout = (v: V3, k: V3, ang: number): V3 => {
   // Rodrigues
   const c = Math.cos(ang), s = Math.sin(ang);
@@ -169,7 +196,7 @@ const slerpDir = (a: V3, b: V3, w: number): V3 => {
   return norm3(rotAbout(a, norm3(ax), ang * w));
 };
 const REL = (() => {
-  const r = rootedPose(T_REL, EXIT0, EEL_L);
+  const r = rootedPose(T_REL, exitAt(T_REL), EEL_L);
   const tg = r.c.map((_, i) => norm3(sub3(r.c[Math.min(N, i + 1)], r.c[Math.max(0, i - 1)])));
   return {c: r.c, tg};
 })();
@@ -179,11 +206,13 @@ export const H0: V3 = (() => {
   const f = mul3(REL.tg[MID], -1);
   return norm3([f[0], f[1] * 0.6, f[2] * 0.3]);
 })();
-const T_TURN0 = T_REL + 0.22, T_TURN1 = T_REL + 1.05;
+const T_TURN0 = T_REL + 0.12, T_TURN1 = T_REL + 0.85;
 /** the heading the HEAD has at time t (held at H0, then turning toward SWIM_DIR) */
-export const headingAt = (t: number): V3 => slerpDir(H0, SWIM_DIR, ss(t, T_TURN0, T_TURN1));
+/** then it veers upstream (a curving escape, so its body never points back at the predator) */
+export const SWIM_DIR2: V3 = norm3([-0.55, -0.2, 0.81]);
+export const headingAt = (t: number): V3 => slerpDir(slerpDir(H0, SWIM_DIR, ss(t, T_TURN0, T_TURN1)), SWIM_DIR2, ss(t, T_TURN1 + 0.1, T_TURN1 + 1.4));
 /** swimming speed (u/s) */
-const speedAt = (t: number) => 30 * ss(t, T_REL + 0.1, T_REL + 0.8) + 8 * ss(t, T_REL + 1.2, T_REL + 2.4);
+const speedAt = (t: number) => 38 * ss(t, T_REL + 0.05, T_REL + 0.7) + 8 * ss(t, T_REL + 1.0, T_REL + 2.2);
 /** distance swum since the release (numerical, cheap) */
 const swum = (t: number) => {
   let s = 0;
@@ -244,7 +273,7 @@ const angOf = (v: V3, near: number) => {
 export const freePose = (t: number): V3[] => {
   // straightening out of the curl: the loop UNROLLS in its own plane (every tangent's in-plane angle moves to the
   // heading's), so the head swings round beside the flank, never through the predator
-  const w = ss(t, T_REL, T_REL + 0.42);
+  const w = ss(t, T_REL, T_REL + 0.62);
   const sw = swum(t);
   const thMid = REL_ANG.th[MID];
   const tg: V3[] = REL.tg.map((_, i) => {
@@ -258,7 +287,7 @@ export const freePose = (t: number): V3[] => {
     const base = dirOf(th, be);
     const back = norm3(sub3([0, -1, 0], mul3(base, dot3([0, -1, 0], base))));
     // the swimming wave: lateral (about the back axis), travelling head → tail, growing toward the tail
-    const A = (12 + 20 * u) * D * ss(t, T_REL + 0.05, T_REL + 0.5);
+    const A = (14 + 20 * u) * D * ss(t, T_REL, T_REL + 0.3);
     const wave = A * Math.sin(2 * Math.PI * (2.1 * t - a / 30));
     return rotAbout(base, back, wave);
   });
@@ -273,11 +302,11 @@ export const freePose = (t: number): V3[] => {
 
 // ---------------------------------------------------------------- the pose for any exterior time
 export type EscapePose = Eel3Pose & {out: number; crossI: number; free: boolean};
-export const escapeAt = (t: number, ex: Exit = EXIT0): EscapePose => {
+export const escapeAt = (t: number, ex?: Exit): EscapePose => {
   if (t >= T_REL) {
     const c = freePose(t);
     return {c, back: backFrom(c), out: EEL_L, crossI: -1, free: true};
   }
-  const r = rootedPose(t, ex);
+  const r = rootedPose(t, ex ?? exitAt(t));
   return {c: r.c, back: backFrom(r.c), out: r.out, crossI: r.crossI, free: false};
 };

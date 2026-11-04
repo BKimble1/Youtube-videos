@@ -6,7 +6,7 @@ import {clamp, keyS, lerp, ss, ss5} from '../../lib';
 import {uid} from '../../core/ids';
 import {add3, basis, Basis, Cam3, dot3, lerpOrbit, mul3, norm3, Orbit, orbitCam, orbitDir, proj, sub3, V3} from '../three';
 import {backFrom, Eel3D, Eel3Pose, eelScreen, EEL_L, EEL_R_MAX, N, path2, RADII, US} from '../eelV4';
-import {dirOf, escapeAt, EscapePose, Exit, EXIT0, headingAt, rootedWith, T_REL} from '../escape';
+import {dirOf, escapeAt, EscapePose, escGill, Exit, EXIT0, exitAtGill, headingAt, rootedWith, T_REL} from '../escape';
 import {PredPose, PRED_REST, Predator, predGeom} from '../pred';
 import {clearSight, PredShadow, ReedWipe, reedWipePoly, WorldBack, WorldFront} from '../world';
 import {depth} from '../three';
@@ -25,16 +25,20 @@ type ExtState = {
   /** reed clumps near the sight lines to these points fade out (radius `clearR`) */
   clear?: V3[];
   clearR?: number;
+  /** fade reed clumps whose base is within this distance of the lens (no flat blades across the frame) */
+  nearCut?: number;
   /** the reeds/rocks split depth: 'eel' = the eel's nearest third (S11), default the predator's centre */
   split?: 'eel' | 'pred';
   /** the part inside the gill drawn a little dimmed (it is in the chamber's shade) */
   insideOpacity?: number;
+  /** draw only this many eel units of the inside part (behind the opening), e.g. into the mouth */
+  insideSpan?: number;
 };
 /** the exit at the cover's resting edge (pred3d: along the skin, back and up) */
 export const EXIT_REST: Exit = {p: EXIT0.p, out: norm3([0.88, -0.47, 0.05])};
 /** S1: the tail comes straight out of the dark opening toward the rear camera (the root end-on in the gap), then
  *  bends into its S; the part inside runs straight back into the opening */
-export const EXIT_OPEN: Exit = {p: EXIT0.p, out: norm3([0.42, -0.4, 0.81])};
+export const EXIT_OPEN: Exit = {p: exitAtGill(0.45).p, out: norm3([0.42, -0.4, 0.81])};
 const exitFor = (B: Basis, pose: PredPose): Exit => {
   const g = predGeom(B, pose);
   return {p: g.exit.p, out: g.exit.out};
@@ -45,13 +49,21 @@ export const ExtFrame: React.FC<{s: ExtState}> = ({s}) => {
   const e = s.eel;
   const cross = e ? e.crossI : -1;
   const zSplit = s.split === 'eel' && e ? depth(B, e.c[Math.round(N * 0.4)]) : undefined;
-  const filter = s.clear ? clearSight(B, s.clear, s.clearR ?? 10) : undefined;
+  const sight = s.clear ? clearSight(B, s.clear, s.clearR ?? 10) : undefined;
+  const nc = s.nearCut;
+  const filter = sight || nc
+    ? (c: {x: number; z: number; r: number; h: number; n: number; seed: number}, i: number) => {
+        const a = sight ? Number(sight(c as any, i)) : 1;
+        const b = nc ? ss(Math.hypot(c.x - B.eye[0], c.z - B.eye[2]) - c.r, nc * 0.6, nc) : 1;
+        return Math.min(a, b);
+      }
+    : undefined;
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', left: 0, top: 0}}>
       <WorldBack B={B} t={s.t} zSplit={zSplit} filter={filter} />
       <PredShadow B={B} pose={s.pose} />
       <Predator B={B} pose={s.pose} />
-      {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} opacity={s.insideOpacity} />}
+      {e && cross > 0 && (s.mouthClip ? g.mouthHole : g.gap) && <Eel3D B={B} pose={e} t={s.t} from={s.insideSpan ? Math.max(0, cross - (s.insideSpan * N) / EEL_L) : 0} to={Math.min(N, cross)} clip={s.mouthClip ? g.mouthHole : g.gap} opacity={s.insideOpacity} />}
       {e && cross < N && <Eel3D B={B} pose={e} t={s.t} from={Math.max(0, cross)} />}
       <WorldFront B={B} t={s.t} zSplit={zSplit} filter={filter} />
     </svg>
@@ -88,7 +100,7 @@ const propGill = (e: {crossI: number} | null) => {
 
 // ---------------------------------------------------------------- S1 OPEN (0 – 2.62), also the loop's target frame
 /** the gill cover: one breath on the first beat (peak T.breathPeak), the peek breath on "belongs to the eel" */
-export const openGill = (t: number) => Math.max(breath(t), propGill({crossI: N * (1 - OPEN_OUT / EEL_L)}), 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
+export const openGill = (t: number) => Math.max(breath(t), 0.45, 0.15 + 0.7 * bump(t, -0.02, T.breathPeak, 0.46), 0.15 + 0.85 * bump(t, 1.95, T.peek, 2.9));
 /** the tail already out: 22 units (40 % of the eel), a loose S lying OUTSIDE across the gill cover, in the plane
  *  facing the opening camera (so the S reads on screen); it flicks once across the cover (independently of the
  *  breath) and keeps a slow life of its own. Built in the opening camera's screen axes: R right, U up, F toward the
@@ -109,7 +121,7 @@ export const openEel = (t: number, ex: Exit): EscapePose => {
   const phi = (a: number) =>
     -38 + 128 * ss(a, 0.4, 7) + 50 * ss(a, 7, 13) - 85 * ss(a, 14, 21) +
     9 * Math.sin(2 * Math.PI * (0.65 * t + a / 10)) * clamp(a / 8) +
-    95 * flick * ss(a, 3, 13) - 40 * flick * ss(a, 13, 22) -
+    62 * flick * ss(a, 3, 13) - 30 * flick * ss(a, 13, 22) -
     14 * peek * ss(a, 4, 14);
   const da = 0.1;
   const n = Math.ceil(OPEN_OUT / da);
@@ -254,17 +266,17 @@ export const gulpEel = (t: number): Eel3Pose & {crossI: number} => {
 export const gulpState = (t: number): ExtState => {
   const cam = gulpCam(t);
   const pose = predPose(t, {mouth: gulpMouth(t), gill: Math.max(breath(t), 0.15 + 0.6 * bump(t, 3.15, 3.32, 3.75)), startle: 0.4 * bump(t, 2.9, 3.2, 3.8)});
-  return {cam, pose, eel: gulpEel(t), t, mouthClip: true, insideOpacity: 0.82};
+  return {cam, pose, eel: gulpEel(t), t, mouthClip: true, insideOpacity: 0.6, insideSpan: 3.5};
 };
 
 // ---------------------------------------------------------------- S7 POKE (12.58 – 13.86)
 // the camera is solved (tools/solve_poke) so the exit, the tip's travel and the cover's edge land on the contract
 export const POKE_ORBIT: Orbit = {target: [-23.55, -6.35, 6.4], az: 20, el: -22, d: 18.3, f: 1300, cx: 540, cy: 1010, roll: 12};
-const POKE_ORBIT1: Orbit = {target: [-24, -8.5, 7], az: 24, el: -16, d: 30, f: 1300, cx: 540, cy: 1060, roll: 5};
-export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.8, 13.86)));
+const POKE_ORBIT1: Orbit = {target: [-27, -8.0, 7], az: 22, el: -14, d: 36, f: 1300, cx: 540, cy: 1080, roll: 4};
+export const pokeCam = (t: number): Cam3 => orbitCam(lerpOrbit(POKE_ORBIT, POKE_ORBIT1, ss5(t, 12.64, 13.6)));
 export const pokeState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), propGill(eel))}), eel, t};
+  return {cam: pokeCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85};
 };
 export const pokeStateWith = (o: Orbit, t: number): ExtState => ({cam: orbitCam(o), pose: predPose(t), eel: escapeAt(t), t});
 
@@ -274,7 +286,7 @@ const F_B: Orbit = {target: [-8, -9, 14], az: 30, el: 42, d: 56, f: 1250, cy: 10
 export const followsCam = (t: number): Cam3 => orbitCam(lerpOrbit(F_A, F_B, ss5(t, T.follows, T.head)));
 export const followsState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), propGill(eel))}), eel, t, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
+  return {cam: followsCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85, clear: [[-5, -4, 0], eel.c[Math.round(N * 0.6)]], clearR: 14};
 };
 
 // ---------------------------------------------------------------- S9 HEAD (15.96 – 17.96): tight at the gill edge
@@ -285,18 +297,19 @@ export const headCam = (t: number): Cam3 => orbitCam(lerpOrbit(H_A, H_B, ss5(t, 
 const caughtGill = (t: number) => Math.max(breath(t), 0.25 + 0.55 * ss(t, 15.9, 16.4));
 export const headState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(caughtGill(t), propGill(eel))}), eel, t, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
+  return {cam: headCam(t), pose: predPose(t, {gill: Math.max(breath(t), escGill(t))}), eel, t, insideOpacity: 0.85, clear: [EXIT0.p, eel.c[Math.round(N * 0.5)]], clearR: 12};
 };
 
 // ---------------------------------------------------------------- S10 RELEASE (17.96 – 21.30): low beside the fish
-const R_A: Orbit = {target: [-17, -3, 12.5], az: 12, el: -9, d: 36, f: 1250, cy: 1040};
-const R_B: Orbit = {target: [-11, -6, 13], az: 16, el: -7, d: 48, f: 1250, cy: 1040};
+const R_A: Orbit = {target: [-17, -3, 13], az: 20, el: -8, d: 36, f: 1250, cy: 1040};
+const R_B: Orbit = {target: [-9, -5, 15], az: 22, el: -6, d: 50, f: 1250, cy: 1040};
 export const releaseCam = (t: number): Cam3 => orbitCam(lerpOrbit(R_A, R_B, ss5(t, T.tighten, T.swim)));
 export const releaseState = (t: number): ExtState => ({
   cam: releaseCam(t),
-  pose: predPose(t, {gill: Math.max(caughtGill(t) * (1 - ss(t, T_REL, T_REL + 0.3)), breath(t), propGill(escapeAt(t))), startle: bump(t, T_REL - 0.1, T_REL + 0.25, T_REL + 1.6), bend: 0.12 * bump(t, T_REL, T_REL + 0.4, T_REL + 1.5)}),
+  pose: predPose(t, {gill: Math.max(breath(t) + 0.08 * Math.sin(2 * Math.PI * 1.3 * t) * (t < T_REL ? 1 : 0), escGill(t), 0.7 * bump(t, T_REL, T_REL + 0.18, T_REL + 0.9)), startle: bump(t, T_REL - 0.1, T_REL + 0.25, T_REL + 1.6), bend: 0.12 * bump(t, T_REL, T_REL + 0.4, T_REL + 1.5)}),
   eel: escapeAt(t),
   t,
+  insideOpacity: 0.85,
   clear: [[-12, -3, 12], [-25, -6, 6]],
   clearR: 14,
 });
@@ -304,25 +317,30 @@ export const releaseState = (t: number): ExtState => ({
 // ---------------------------------------------------------------- S11 SWIM (21.30 – 24.30): tracking alongside, ahead
 /** the tracking camera: beside and a little ahead of the swimmer (on its near side, away from the predator), looking
  *  back across it so the predator lies behind it in frame; it rides with the eel's mid-body (smoothed heading) */
+/** the tracking camera: beside the swimmer on its downstream (+x) side and a little ahead, looking back across it so
+ *  the predator lies behind it, up and to the side in frame; it rides with the eel's head (lead room) and recedes from
+ *  the predator with it */
 export const swimCam = (t: number): Cam3 => {
   const e = escapeAt(t);
-  // frame the HEAD and the front half: the camera rides beside and ahead of the eel's front quarter
-  const front = e.c[Math.round(N * 0.22)];
-  const h = headingAt(t - 0.3);
-  // horizontal side AWAY from the predator (whose axis is the x axis): the camera is never on the fish's side
-  let side = norm3([h[2], 0, -h[0]]);
-  const away = norm3([0, 0, front[2] >= 0 ? 1 : -1]);
-  if (dot3(side, away) < 0) side = mul3(side, -1) as V3;
-  // looking back across the eel at about 45° (the head toward us, the body trailing back toward the predator), from a
-  // little above so the swimming S shows
-  const eye = add3(front, add3(add3(mul3(h, 21), mul3(side, 20)), [0, -11, 0]));
-  const fish: V3 = [-5, -3, 0];
-  const target = add3(front, mul3(sub3(fish, front), 0.1));
-  return {eye, target, f: 1150, cy: 1080};
+  const head = e.c[Math.round(N * 0.12)], mid = e.c[Math.round(N * 0.45)];
+  const h = headingAt(t - 0.25);
+  // the side: at first straight out from the predator's flank (+z, never toward the fish), then swinging to the
+  // swimmer's downstream side as it heads out into open water
+  let down = norm3([h[2], 0, -h[0]]);
+  if (down[0] < 0) down = mul3(down, -1) as V3;
+  const side = norm3(add3(mul3([0, 0, 1], 1 - ss(t, 21.25, 22.3)), mul3(down, ss(t, 21.25, 22.3))));
+  // above and beside (looking down ~45°), so the stretch of open water between the eel and the predator shows on screen
+  const up = lerp(-9, -30, ss(t, 21.3, 22.4));
+  const eye = add3(head, add3(add3(mul3(h, lerp(12, -2, ss(t, 21.3, 22.4))), mul3(side, lerp(26, 22, ss(t, 21.3, 22.4)))), [0, up, 0]));
+  const fish: V3 = [-5, -4, 0];
+  const focus = add3(mul3(head, 0.55), mul3(mid, 0.45));
+  const target = add3(focus, mul3(sub3(fish, focus), lerp(0.18, 0.02, ss(t, 21.3, 22.4))));
+  return {eye, target, f: lerp(1100, 1060, ss(t, 21.3, 22.4)), cy: 1120};
 };
 export const swimState = (t: number): ExtState => {
   const eel = escapeAt(t);
-  return {cam: swimCam(t), pose: predPose(t, {look: eel.c[0], bend: 0.1 * Math.sin(2 * Math.PI * 0.6 * t)}), eel, t, split: 'eel', clear: [eel.c[Math.round(N * 0.3)]], clearR: 4};
+  const cam = swimCam(t);
+  return {cam, pose: predPose(t, {look: eel.c[0], bend: 0.1 * Math.sin(2 * Math.PI * 0.6 * t)}), eel, t, split: 'eel', clear: [eel.c[Math.round(N * 0.3)]], clearR: 4, nearCut: 14};
 };
 
 // ---------------------------------------------------------------- the shot table

@@ -33,7 +33,7 @@ import {eelSilhouette} from '../../art/eelArt';
 import {clamp, hash, lerp, noise1, ss} from '../../lib';
 import {EEL_L, Eel2D, Eel3Pose, N, RADII, US, backFrom, eelScreen} from '../eelV4';
 import {EDGE, KeepOut, LUMEN, POKE0, POKE_DIR, POKE_PX, T, pokeTail} from '../timing';
-import {Basis, V3, add3, basis, dot3, len3, mul3, norm3, projPoly, proj, spline3, sub3} from '../three';
+import {Basis, V3, add3, basis, dot3, hull, len3, mul3, norm3, projPoly, proj, spline3, sub3} from '../three';
 
 const W = 1080, H = 1920;
 const P2 = (p: P) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`;
@@ -46,11 +46,11 @@ export const G_BEATS = {
   slides: 9.27,
   dip0: 10.1, // the camera dips toward the passing body ...
   cut: 10.42, // ... which fills the foreground: S5 -> S6 (a short dissolve inside the body, CUT ± XF)
-  establish: 10.78, // the camera has risen off the body: the gill curtain, the tail heading for the slit
+  establish: 10.90, // the camera has risen off the body: the gill curtain, the tail heading for the slit
   slips: 10.89, // the tip enters the slit
   gap: 11.47, // the body threads the gap (the closest push)
-  follow: 11.67, // closest on the gap; from here the camera follows the tip toward the opening
-  settle: 12.4, // the inside of the poke is framed (static camera from here)
+  follow: 11.40, // closest on the gap (the body threads it on 'gap'); then a gentle follow toward the opening
+  settle: 12.42, // the inside of the poke is framed (static camera from here)
   poke: T.poke, // the tip crosses the rim at POKE_AT
 };
 const XF = 0.045;
@@ -113,7 +113,7 @@ const poseOn = (q: Path3, sTip: number, back: (c: V3[]) => V3[]): Eel3Pose => {
 /** the eel on screen: samples (px), radii (px), roll, depth; `from` = the first sample in front of the near plane
  *  (the samples behind it are replaced by a straight continuation, so the renderer's frame stays sane) */
 type ScrEel = {pts: P[]; rad: number[]; dorsal: number[]; depth: number[]; from: number; k: number};
-const toScreen = (B: Basis, pose: Eel3Pose, near = 0.35): ScrEel => {
+const toScreen = (B: Basis, pose: Eel3Pose, near = 0.35, kMul = 1): ScrEel => {
   const sc = eelScreen(B, pose);
   let last = -1;
   for (let i = 0; i <= N; i++) if (sc.depth[i] < near) last = i;
@@ -135,7 +135,7 @@ const toScreen = (B: Basis, pose: Eel3Pose, near = 0.35): ScrEel => {
   for (let i = j0 + 1; i <= N; i++) scr += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
   const tru = (EEL_L * (N - j0)) / N;
   const sTip = sc.s[Math.min(N, j0 + 6)];
-  const k = Math.max(4, Math.min(sTip, scr / Math.max(1e-3, tru)));
+  const k = Math.max(3, kMul * Math.min(sTip, scr / Math.max(1e-3, tru)));
   return {pts, rad, dorsal: sc.dorsal, depth: sc.depth, from: last >= 0 ? from + 0.02 : 0, k};
 };
 const EelS: React.FC<{e: ScrEel; t: number; from?: number; to?: number; opacity?: number}> = ({e, t, from, to, opacity}) => {
@@ -190,6 +190,7 @@ const K = {
   water: C.waterTop,
   waterDeep: C.waterMid,
   wallBeyond: mix(C.fleshDeep, C.chamber, 0.35),
+  backlight: lit(mix(C.waterTop, C.eelBelly, 0.4), 0.35),
 };
 
 // ================================================================ S5: THE THROAT (3D tube, seen from inside)
@@ -197,7 +198,7 @@ const S5R = 2.55; // the passage's radius (eel units)
 const S5K = 12; // longitudinal folds
 const tubeC = (x: number): V3 => [x, 0.16 * Math.sin(0.21 * x + 0.4), 0.2 * Math.sin(0.16 * x + 1.3)];
 /** a fold's angle around the axis (0 = down (+y), π/2 = toward the camera's side (+z)), meandering slowly */
-const foldPhi = (k: number, x: number) => (2 * Math.PI * k) / S5K + 0.1 * noise1(0.2 * x + k * 7.3, 3);
+const foldPhi = (k: number, x: number) => (2 * Math.PI * (k + 0.5)) / S5K + 0.1 * noise1(0.2 * x + k * 7.3, 3);
 const tubeR = (x: number, phi: number) => S5R * (1 + 0.035 * Math.sin(0.5 * x + 3 * phi) + 0.03 * noise1(0.27 * x + phi, 5));
 const wallPt = (x: number, phi: number, inset = 0): V3 => {
   const c = tubeC(x), r = tubeR(x, phi) - inset;
@@ -235,7 +236,7 @@ const s5Pose = (t: number) => poseOn(S5_ROUTE, s5Tip(t) - S5_X0, (c) =>
  *  behind the tip (the tip draws ahead), then from DIP0 it dips toward the passing body until it fills the frame */
 const s5Cam = (t: number) => {
   const tip = s5Tip(t);
-  const lag = herm(t, [[8.7, 7.0], [9.4, 7.8], [10.05, 8.8], [10.42, 11.2]], 0, 5.0);
+  const lag = herm(t, [[8.7, 2.9], [9.15, 3.3], [9.7, 5.9], [10.05, 8.4], [10.42, 11.2]], 0.6, 5.0);
   const xc = tip - lag;
   const dip = ss(t, G_BEATS.dip0, G_BEATS.cut + 0.05);
   const eye: V3 = [xc, lerp(-0.75, 0.78, dip), lerp(0.95, -0.3, dip)];
@@ -378,14 +379,14 @@ const S5Fog: React.FC<{B: Basis; dip: number}> = ({B, dip}) => {
 
 const s5State = (t: number) => {
   const B = s5Cam(t);
-  const e = toScreen(B, s5Pose(t), 0.12);
+  const e = toScreen(B, s5Pose(t), 0.12, 0.45);
   return {B, e};
 };
 
 const S5View: React.FC<{t: number}> = ({t}) => {
   const {B, e} = s5State(t);
   // the eel's soft contact shadow on the wall below it (light from the upper left)
-  const sh = eelSilhouette(e.pts.map((p) => ({x: p.x + 14, y: p.y + 22})), e.rad.map((r) => r * 1.05), Math.max(1, e.from), N, false, t, 1, 4);
+  const sh = eelSilhouette(e.pts.map((p, i) => ({x: p.x + 0.2 * e.rad[i], y: p.y + 0.34 * e.rad[i]})), e.rad.map((r) => r * 1.02), Math.max(1, e.from), N, false, t, 1, 0);
   // opening out of the lumen: its dark lifts evenly, lingering a moment longer at the frame's edges
   const op = ss(t, G_BEATS.open0, G_BEATS.open1);
   const tipS = e.pts[N];
@@ -444,7 +445,7 @@ const F_END = 520;
 const PK = pokeTail(T.poke);
 // G (the crossing of the curtain) is at the origin; the contract's first sample sits up and to the right of it,
 // one plane in: from the slit the body goes into the chamber, then turns along the cover toward the opening
-const G_TO_I0: V3 = [1.9, -1.0, Z_E];
+const G_TO_I0: V3 = [1.25, -0.66, Z_E];
 const CAM_END: Cam6 = (() => {
   const zc = Z_E + F_END / POKE_PX; // the eel plane at exactly POKE_PX px per unit
   const s = POKE_PX;
@@ -465,9 +466,9 @@ const S6_ROUTE: Path3 = (() => {
     [-0.22, 0.26, 0.95],
     [-0.1, 0.07, 0.3],
     [0, 0, 0],
-    [0.42, -0.22, -0.62],
-    [1.05, -0.56, -1.4],
-    [1.55, -0.82, -1.85],
+    [0.3, -0.16, -0.6],
+    [0.74, -0.39, -1.3],
+    [1.02, -0.54, -1.76],
   ];
   // the contract's points at the cut, as the end of the route, then on along the poke direction
   const end: V3[] = PK.pts.map((q) => {
@@ -518,14 +519,12 @@ const s6Tip = (t: number) =>
 const s6Pose = (t: number) => poseOn(S6_ROUTE, s6Tip(t), (c) => backFrom(c, [0, -1, 0.35]));
 
 // ---------------------------------------------------------------- the S6 camera
-const CAM_EST: Cam6 = {e: [1.6, -0.9, 10.8], f: 1000, cx: 540, cy: 960};
-const CAM_GAP: Cam6 = {e: [0.95, -0.62, 4.0], f: 900, cx: 540, cy: 990};
+const CAM_EST: Cam6 = {e: [1.5, -0.2, 10.9], f: 990, cx: 640, cy: 900};
+const CAM_GAP: Cam6 = {e: [3.6, -2.4, 6.2], f: 700, cx: 640, cy: 960};
 const CAM_CUT: Cam6 = {e: [0.95, 2.15, 11.6], f: 900, cx: 735, cy: 875};
 const s6Cam = (t: number): Cam6 => {
   const ks: [number, Cam6][] = [
     [G_BEATS.cut - 0.06, CAM_CUT],
-    [G_BEATS.establish, CAM_EST],
-    [11.0, {e: [1.2, -0.66, 9.6], f: 990, cx: 540, cy: 962}],
     [G_BEATS.follow, CAM_GAP],
     [G_BEATS.settle, CAM_END],
   ];
@@ -747,16 +746,19 @@ const Tissue: React.FC = () => {
 };
 
 /** the curtain: all filaments (behind), then the bars, then the rakers (in front); then the tissue frame */
-const Curtain: React.FC<{c: Cam6; discs: Disc[]; t: number}> = ({c, discs, t}) => {
+const Curtain: React.FC<{c: Cam6; geos: ArchGeo[]; part: 'fil' | 'bars'}> = ({c, geos, part}) => {
   if (c.e[2] < 0.35) return null;
-  const geos = [0, 1, 2, 3].map((k) => archGeo(k, discs, t));
   const all = (f: (g: ArchGeo) => string) => geos.map(f).join('');
-  const filB = all((g) => g.filBack), filF = all((g) => g.fil);
+  if (part === 'fil')
+    return (
+      <g transform={planeT(c, 0)}>
+        <path d={all((g) => g.filBack)} fill={K.filBack} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
+        <path d={all((g) => g.fil)} fill={K.fil} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
+        <path d={all((g) => g.filHi)} stroke={K.filHi} strokeWidth={2.2} strokeLinecap="round" fill="none" vectorEffect={NS} />
+      </g>
+    );
   return (
     <g transform={planeT(c, 0)}>
-      <path d={filB} fill={K.filBack} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
-      <path d={filF} fill={K.fil} stroke={INK} strokeWidth={1.6} vectorEffect={NS} strokeLinejoin="round" />
-      <path d={all((g) => g.filHi)} stroke={K.filHi} strokeWidth={2.2} strokeLinecap="round" fill="none" vectorEffect={NS} />
       {geos.map((g, i) => (
         <g key={i}>
           <path d={g.bar} fill={K.bar} />
@@ -813,6 +815,36 @@ const FAR_B: P[] = (() => {
   });
 })();
 
+/** the opening's top never reaches the caption band: above this screen line the cover lies on the body */
+const Y_OPEN = 545;
+/** the opening on screen for this camera: the rim (the cover's free edge), the far side (the body wall), closed at
+ *  the top by a short lip no higher than Y_OPEN (where the cover meets the body) */
+const openingScr = (c: Cam6) => {
+  const below = (L: P[]): P[] => {
+    if (L[0].y >= Y_OPEN) return L;
+    for (let i = 1; i < L.length; i++)
+      if (L[i].y >= Y_OPEN) {
+        const a = L[i - 1], b = L[i], u = (Y_OPEN - a.y) / (b.y - a.y || 1);
+        return [{x: lerp(a.x, b.x, u), y: Y_OPEN}, ...L.slice(i)];
+      }
+    return [];
+  };
+  const rim = below(RIM_B.map((p) => toPlane(c, Z_B, p)));
+  const far = below(FAR_B.map((p) => toPlane(c, Z_B, p)));
+  if (rim.length < 2 || far.length < 2) return null;
+  // the top lip: from the far side back to the rim, sagging a little (it stays below Y_OPEN)
+  const cap: P[] = [];
+  if (rim[0].y <= Y_OPEN + 0.5) {
+    const f0 = far[0], r0 = rim[0], w = Math.hypot(f0.x - r0.x, f0.y - r0.y);
+    for (let j = 1; j < 8; j++) {
+      const u = j / 8;
+      cap.push({x: lerp(f0.x, r0.x, u), y: lerp(f0.y, r0.y, u) + 0.12 * w * Math.sin(Math.PI * u)});
+    }
+  }
+  const poly = [...rim, ...[...far].reverse(), ...cap];
+  return {rim, far, cap, poly};
+};
+
 const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
   const gG = uid('chG'), gW = uid('chW'), gL = uid('chL');
   const rimMid = RIM_B[Math.floor(RIM_B.length / 2)];
@@ -827,45 +859,57 @@ const ChamberWall: React.FC<{c: Cam6; t: number}> = ({c, t}) => {
     }
     folds.push(dPoly(pts, false));
   }
-  const open = [...RIM_B, ...[...FAR_B].reverse()];
+  const op = openingScr(c);
+  const m = planeM(c, Z_B);
+  const sp = (p: P) => toPlane(c, Z_B, p);
+  const rm = sp(rimMid);
   // light rays in the water beyond the opening
   const rays: string[] = [];
   for (let j = 0; j < 6; j++) {
     const x0 = rimMid.x + 1 + j * 1.3 + 0.4 * Math.sin(t * 0.8 + j);
-    rays.push(dPoly([{x: x0, y: -30}, {x: x0 + 0.9, y: -30}, {x: x0 + 4.6, y: 30}, {x: x0 + 3.9, y: 30}]));
+    rays.push(dPoly([{x: x0, y: -30}, {x: x0 + 0.9, y: -30}, {x: x0 + 4.6, y: 30}, {x: x0 + 3.9, y: 30}].map(sp)));
   }
+  const rimLine = op ? dPoly([...op.rim].reverse().concat([...op.cap].reverse()), false) : '';
   return (
-    <g transform={planeT(c, Z_B)}>
+    <g>
       <defs>
         <radialGradient id={gG} gradientUnits="userSpaceOnUse" cx={rimMid.x} cy={rimMid.y} r={14}>
           <stop offset="0" stopColor={K.chamberWarm} />
           <stop offset="0.45" stopColor={K.chamber} />
           <stop offset="1" stopColor={K.chamberDeep} />
         </radialGradient>
-        <linearGradient id={gW} gradientUnits="userSpaceOnUse" x1={rimMid.x} y1={rimMid.y} x2={rimMid.x + 4.2} y2={rimMid.y - 1.2}>
+        <linearGradient id={gW} gradientUnits="userSpaceOnUse" x1={rm.x} y1={rm.y} x2={rm.x + 4.2 * m.s} y2={rm.y - 1.2 * m.s}>
           <stop offset="0" stopColor={K.waterHot} />
           <stop offset="0.3" stopColor={K.waterBright} />
           <stop offset="0.75" stopColor={K.water} />
           <stop offset="1" stopColor={K.waterDeep} />
         </linearGradient>
-        <clipPath id={gL}>
-          <path d={dPoly(open)} />
-        </clipPath>
+        {op && (
+          <clipPath id={gL}>
+            <path d={dPoly(op.poly)} />
+          </clipPath>
+        )}
       </defs>
-      <rect x={-60} y={-60} width={120} height={120} fill={`url(#${gG})`} />
-      <path d={folds.join('')} stroke={K.chamberFold} strokeWidth={5} strokeOpacity={0.55} fill="none" vectorEffect={NS} />
-      {/* the opening: bright water beyond the cover's free edge */}
-      <path d={dPoly(open)} fill={`url(#${gW})`} />
-      <g clipPath={`url(#${gL})`}>
-        <path d={rays.join('')} fill={'#FFFFFF'} fillOpacity={0.12} />
+      <g transform={planeT(c, Z_B)}>
+        <rect x={-60} y={-60} width={120} height={120} fill={`url(#${gG})`} />
+        <path d={folds.join('')} stroke={K.chamberFold} strokeWidth={5} strokeOpacity={0.55} fill="none" vectorEffect={NS} />
       </g>
-      {/* the far side of the opening: the body wall, in the light */}
-      <path d={dPoly(FAR_B, false)} stroke={K.wallBeyond} strokeWidth={26} strokeOpacity={0.9} fill="none" vectorEffect={NS} strokeLinecap="round" />
-      <path d={dPoly(FAR_B, false)} stroke={INK} strokeWidth={2.4} fill="none" vectorEffect={NS} />
-      {/* the rim: the cover's thin free edge, backlit */}
-      <path d={dPoly(RIM_B, false)} stroke={K.rimLip} strokeWidth={30} fill="none" vectorEffect={NS} strokeLinecap="round" />
-      <path d={dPoly(RIM_B.map((p) => ({x: p.x - 0.08, y: p.y})), false)} stroke={K.rimGlow} strokeWidth={9} fill="none" vectorEffect={NS} strokeLinecap="round" />
-      <path d={dPoly(RIM_B, false)} stroke={INK} strokeWidth={3} fill="none" vectorEffect={NS} />
+      {op && (
+        <g>
+          {/* the opening: bright water beyond the cover's free edge (screen space) */}
+          <path d={dPoly(op.poly)} fill={`url(#${gW})`} />
+          <g clipPath={`url(#${gL})`}>
+            <path d={rays.join('')} fill={'#FFFFFF'} fillOpacity={0.12} />
+          </g>
+          {/* the far side of the opening: the body wall, in the light */}
+          <path d={dPoly(op.far, false)} stroke={K.wallBeyond} strokeWidth={26} strokeOpacity={0.9} fill="none" strokeLinecap="round" />
+          <path d={dPoly(op.far, false)} stroke={INK} strokeWidth={2.4} fill="none" />
+          {/* the rim: the cover's thin free edge, backlit, running on across the top of the opening */}
+          <path d={rimLine} stroke={K.rimLip} strokeWidth={30} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+          <path d={dPoly(op.rim.map((p) => ({x: p.x - 4.5, y: p.y})), false)} stroke={K.rimGlow} strokeWidth={9} fill="none" strokeLinecap="round" />
+          <path d={rimLine} stroke={INK} strokeWidth={3} fill="none" strokeLinejoin="round" />
+        </g>
+      )}
     </g>
   );
 };
@@ -875,7 +919,7 @@ const s6State = (t: number) => {
   const c = s6Cam(t);
   const B = cam6B(c);
   const pose = s6Pose(t);
-  const e = toScreen(B, pose, 0.12);
+  const e = toScreen(B, pose, 0.12, 0.5);
   // where the body crosses the curtain (Z = 0): a fractional sample index
   let iX = -1;
   for (let i = 1; i <= N; i++) {
@@ -921,33 +965,27 @@ const S6View: React.FC<{t: number}> = ({t}) => {
   const {c, pose, e, iX} = s6State(t);
   const discs = eelDiscs(pose);
   const curtainOn = c.e[2] > 0.35;
-  // the eel: its part beyond the curtain first (in the chamber), then the curtain, then the part in front
-  const back = iX >= 0 ? <EelS e={e} t={t} from={iX} /> : null;
-  const front = iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />;
-  // the chamber's shade on the eel's part beyond the curtain (less near the opening)
-  const shadeD = iX >= 0 ? eelSilhouette(e.pts, e.rad, Math.max(iX, e.from), N, false, t, e.dorsal, 0) : '';
-  const shG = uid('s6sh');
-  const rimS = toPlane(c, Z_B, RIM_B[Math.floor(RIM_B.length / 2)]);
+  const geos = curtainOn ? [0, 1, 2, 3].map((k) => archGeo(k, discs, t)) : [];
+  // the eel, opaque: its part beyond the curtain (in the chamber) lies over the filament fringe and under the bars
+  // and rakers in front of it; the part in front of the curtain is drawn last. Both carry a pale backlit rim (the
+  // light from the opening), so the slate body reads against the dark chamber at any size.
+  const cut = iX >= 0 ? iX : N + 1;
+  const rim = (a: number, b: number) => {
+    if (b - Math.max(a, e.from) < 0.05) return null;
+    const d = eelSilhouette(e.pts.map((p) => ({x: p.x + 1.5, y: p.y - 1.5})), e.rad, Math.max(a, e.from), Math.min(b, N), false, t, e.dorsal, 3.2);
+    return <path d={d} fill={K.backlight} fillOpacity={0.9} />;
+  };
   return (
     <g>
       <rect x={0} y={0} width={W} height={H} fill={K.chamberDeep} />
       <ChamberWall c={c} t={t} />
-      {back}
-      {shadeD && (
-        <g>
-          <defs>
-            <radialGradient id={shG} gradientUnits="userSpaceOnUse" cx={rimS.x} cy={rimS.y} r={900}>
-              <stop offset="0.12" stopColor={K.chamberDeep} stopOpacity={0} />
-              <stop offset="0.6" stopColor={K.chamberDeep} stopOpacity={0.3} />
-              <stop offset="1" stopColor={K.chamberDeep} stopOpacity={0.45} />
-            </radialGradient>
-          </defs>
-          <path d={shadeD} fill={`url(#${shG})`} />
-        </g>
-      )}
-      {curtainOn && <Curtain c={c} discs={discs} t={t} />}
+      {curtainOn && <Curtain c={c} geos={geos} part="fil" />}
+      {iX >= 0 && rim(iX, N)}
+      {iX >= 0 && <EelS e={e} t={t} from={iX} />}
+      {curtainOn && <Curtain c={c} geos={geos} part="bars" />}
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
-      {front}
+      {rim(0, cut)}
+      {iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />}
     </g>
   );
 };
@@ -977,10 +1015,16 @@ export const keepOut = (t: number): KeepOut => {
   if (a > 0) {
     const s = s6State(t);
     eel.push(...keepOfEel(s.e));
+    const onScr = (g: P[]) => g.some((p) => p.x > 0 && p.x < W && p.y > 0 && p.y < H);
+    const pts: P[] = [];
     if (s.c.e[2] > 0.35) {
       const g = gapPoly(s.c);
-      if (g.some((p) => p.x > 0 && p.x < W && p.y > 0 && p.y < H)) gap = g;
+      if (onScr(g)) pts.push(...g);
     }
+    // the gill opening (the bright crescent) is the gap's other end: it counts too
+    const op = openingScr(s.c);
+    if (op && onScr(op.poly)) pts.push(...op.poly.filter((_, i) => i % 2 === 0));
+    if (pts.length >= 3) gap = hull(pts);
   }
   return gap ? {eel, gap} : {eel};
 };

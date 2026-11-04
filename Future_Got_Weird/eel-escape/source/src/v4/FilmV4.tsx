@@ -31,9 +31,9 @@ export const ShotsAt: React.FC<{t: number}> = ({t}) => {
       </Layer>
     );
   // S3 → S4: the carried tail; the stomach comes up under the X-ray over 5.72–5.84
-  if (t < 5.72) return <Layer><S3Xray t={t} /></Layer>;
-  if (t < 5.84) {
-    const k = clamp((t - 5.72) / 0.12);
+  if (t < 5.75) return <Layer><S3Xray t={t} /></Layer>;
+  if (t < 5.81) {
+    const k = clamp((t - 5.75) / 0.06);
     return (
       <>
         <Layer><S4Stomach t={t} /></Layer>
