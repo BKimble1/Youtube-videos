@@ -85,8 +85,11 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
   const xr = f.xray; // the environment's darkness crossfades on the same timing
   const showX = xw.xFrom < xw.xTo; // some part of the fish is X-ray
   const showE = xw.eFrom < xw.eTo; // some part of the fish is exterior / translucent illustration
-  const interior = clamp(Math.max(0.85 * f.translucent, f.cut));
-  const skinA = clamp(1 - 0.5 * f.translucent);
+  const interior = clamp(Math.max(0.8 * f.translucent, f.cut));
+  const skinA = clamp(1 - 0.46 * f.translucent);
+  // through the translucent skin the interior reads cooler and calmer (frosted glass, not raw flesh); the cutaway keeps
+  // its full colour
+  const frost = f.cut < 0.5 && f.translucent > 0.002;
   // ---- the exterior's mask: soft holes along the eel's inner path (the reveal) and the cutaway window
   const mId = uid('skinmask');
   const blurId = uid('skinblur');
@@ -108,6 +111,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
   while (iGap > 0 && e.sig[iGap - 1] > S_EXIT - 3.2) iGap--;
   const gapClip = uid('gapclip');
   const haloId = uid('halo');
+  const frostId = uid('frost');
   const wgId = uid('wg'), wgInvId = uid('wgi'), xMaskId = uid('xmask'), eMaskId = uid('emask');
   const xMaskRef = xw.wiping ? `url(#${xMaskId})` : undefined;
   const eMaskRef = xw.wiping ? `url(#${eMaskId})` : undefined;
@@ -131,6 +135,12 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
               </mask>
             </>
           )}
+          {frost && (
+            <filter id={frostId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600} colorInterpolationFilters="sRGB">
+              <feColorMatrix type="saturate" values="0.45" />
+              <feComponentTransfer><feFuncR type="linear" slope="0.86" intercept="0.02" /><feFuncG type="linear" slope="0.9" intercept="0.03" /><feFuncB type="linear" slope="0.92" intercept="0.05" /></feComponentTransfer>
+            </filter>
+          )}
           <filter id={haloId} filterUnits="userSpaceOnUse" x={-300} y={-300} width={600} height={600}><feGaussianBlur stdDeviation={0.45} /></filter>
           {xw.wiping && (
             <>
@@ -152,7 +162,7 @@ const World: React.FC<{t: number; overlay?: boolean}> = ({t}) => {
         {showE && <g mask={eMaskRef}><g transform={yawM(psi, -5)}><FishFar s={s} /></g></g>}
         {showX && <g mask={xMaskRef}><XRayBack s={s} /></g>}
         <g mask={eMaskRef}>
-        {showE && interior > 0.002 && <g opacity={interior} transform={yawM(psi, 0)}><InteriorBack t={t} mode={f.cut > 0.5 ? 'cut' : 'reveal'} /></g>}
+        {showE && interior > 0.002 && <g opacity={interior} transform={yawM(psi, 0)} filter={frost ? `url(#${frostId})` : undefined}><InteriorBack t={t} mode={f.cut > 0.5 ? 'cut' : 'reveal'} /></g>}
         </g>
         {inside && ghosts.map((g, k) => {
           const eg = eelAt(t - g);
