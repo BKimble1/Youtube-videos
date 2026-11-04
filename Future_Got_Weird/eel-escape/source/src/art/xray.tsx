@@ -6,7 +6,7 @@
 //               pterygiophores, fin rays) and a cool edge glow. Drawn ABOVE the eel at partial opacity, so the eel
 //               keeps its own colours inside the radiograph.
 // Clean vector shapes only: no grid, no text. Bones have world-unit widths (they scale with the camera); each bone class
-// is one path drawn twice (a soft halo and a bright core), so there are no filters.
+// is one path drawn twice (a soft halo and a bright core): no filters; one mask keeps the rim glow outside the outline.
 import React from 'react';
 import {ESOPHAGUS, EYE, GILL_ARCHES, PHARYNX, PREOPERCLE, SPINE, STOMACH, SWIM_BLADDER} from '../anatomy';
 import {add, closed, lerpP, mul, n4, nrm, open, P, perp, pt, sub} from '../core/geo';
@@ -63,7 +63,7 @@ const centrum = (v: Vert) => {
   return M(P_(-a, -h)) + Q(P_(0, -h * 0.72), P_(a, -h)) + Q(P_(a + 0.12, 0), P_(a, h)) + Q(P_(0, h * 0.72), P_(-a, h)) + Q(P_(-a - 0.12, 0), P_(-a, -h)) + 'Z';
 };
 const SKEL_STATIC = (() => {
-  let cen = '', disc = '', neural = '', haemal = '', ribs = '', pteryg = '', epi = '';
+  let cen = '', disc = '', neural = '', haemal = '', ribs = '', epi = '';
   VERTS.forEach((v, i) => {
     cen += centrum(v);
     const n = perp(v.t); // points down-ish (y+) for a rightward tangent
@@ -100,7 +100,7 @@ const SKEL_STATIC = (() => {
     // fine epineurals above, angled back
     if (v.x < 24) epi += seg(add(nb, pt(0.2, -0.3)), add(nb, pt(3.4, -1.3)));
   });
-  return {cen, disc, neural, haemal, ribs, pteryg, epi};
+  return {cen, disc, neural, haemal, ribs, epi};
 })();
 
 // ---------------------------------------------------------------- head bones (static parts)
@@ -300,7 +300,7 @@ export const XRayFront: React.FC<{s: FishLook; opacity?: number}> = ({s, opacity
   const lens = pt(EYE.c.x - 0.3, EYE.c.y + 0.05);
   const bones: Stroke[] = [
     // the skull (a dense mass), jaws and the eye
-    {d: SKULL_D, w: 0.18, a: 0.7, fill: 0.2},
+    {d: SKULL_D, w: 0.18, a: 0.78, fill: 0.24},
     {d: ORBIT_RING, w: 0.22, a: 0.62},
     {d: PREMAX + PREMAX_ASC, w: 0.1, a: 0.9, fill: 0.62},
     {d: MAXILLA, w: 0.08, a: 0.6, fill: 0.3},
@@ -313,30 +313,30 @@ export const XRayFront: React.FC<{s: FishLook; opacity?: number}> = ({s, opacity
     {d: opercle, w: 0.13, a: 0.55, fill: 0.1},
     {d: opStrut, w: 0.28, a: 0.55},
     {d: subop, w: 0.11, a: 0.45, fill: 0.08},
-    {d: PREOP_D, w: 0.38, a: 0.72},
+    {d: PREOP_D, w: 0.38, a: 0.8},
     {d: INTEROP, w: 0.08, a: 0.45, fill: 0.2},
     {d: BRANCHIOSTEGALS, w: 0.1, a: 0.42},
     {d: CERATOHYAL, w: 0.08, a: 0.5, fill: 0.28},
     // the gill arches and rakers
-    {d: ARCHES_D, w: 0.2, a: 0.5},
+    {d: ARCHES_D, w: 0.2, a: 0.58},
     {d: RAKERS, w: 0.06, a: 0.3},
     // the girdles
-    {d: CLEITHRUM, w: 0.42, a: 0.72},
+    {d: CLEITHRUM, w: 0.42, a: 0.8},
     {d: POSTCLEITH, w: 0.06, a: 0.45, fill: 0.3},
     {d: SCAPULA + CORACOID, w: 0.08, a: 0.45, fill: 0.22},
     {d: PECT_RADIALS, w: 0.16, a: 0.45},
     {d: PELVIC_GIRDLE, w: 0.08, a: 0.5, fill: 0.26},
     // the axial skeleton
-    {d: S.ribs, w: 0.11, a: 0.42},
+    {d: S.ribs, w: 0.11, a: 0.5},
     {d: S.epi, w: 0.05, a: 0.18},
-    {d: S.neural + S.haemal, w: 0.12, a: 0.55},
+    {d: S.neural + S.haemal, w: 0.12, a: 0.62},
     {d: ptery, w: 0.09, a: 0.32},
-    {d: S.cen, w: 0.1, a: 0.9, fill: 0.62},
+    {d: S.cen, w: 0.1, a: 0.95, fill: 0.76},
     {d: S.disc, w: 0.08, a: 0.45},
     {d: HYPURALS, w: 0.08, a: 0.7, fill: 0.4},
     // the fin rays
     {d: spines, w: 0.13, a: 0.8},
-    {d: finRays, w: 0.08, a: 0.62},
+    {d: finRays, w: 0.08, a: 0.7},
   ];
   const rim = uid('xrRim');
   return (

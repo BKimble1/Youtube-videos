@@ -11,9 +11,9 @@ import {resetIds, uid} from '../core/ids';
 import {RADII} from '../eel';
 import {camAt, eelAt, fishAt} from '../story';
 import {C, INK, INK_PX, NS} from '../art/palette';
-import {STRIP_W, CUT_WINDOW, CUT_Z, CutEdge, GillArches, InteriorBack, StomachFront, yawMatrix, yawX} from '../art/inside';
+import {STRIP_W, cutWindowPath, CUT_Z, CutEdge, GillArches, InteriorBack, StomachFront, yawMatrix, yawX} from '../art/inside';
 
-type Props = {mode: 'reveal' | 'cut'; t: number; yawDeg?: number; tag?: string; split?: boolean};
+type Props = {mode: 'reveal' | 'cut'; t: number; yawDeg?: number; tag?: string; split?: boolean; open?: number};
 
 const Bg: React.FC = () => (
   <AbsoluteFill style={{background: `linear-gradient(180deg, ${C.waterTop} 0%, ${C.waterMid} 45%, ${C.waterDeep} 100%)`}} />
@@ -61,7 +61,7 @@ const Reveal: React.FC<{t: number; tag: string; split: boolean}> = ({t, tag, spl
 };
 
 /** the plain olive exterior (stand-in for FishBody + Operculum) in the skin slice, masked by the window */
-const Exterior: React.FC = () => {
+const Exterior: React.FC<{open: number}> = ({open: k}) => {
   const m = uid('tm');
   // the gill cover's rear strip (the part the window leaves intact), a shade lighter than the body
   const T = OPERCLE_EDGE.map((_, i) => {
@@ -76,7 +76,7 @@ const Exterior: React.FC = () => {
       <defs>
         <mask id={m} maskUnits="userSpaceOnUse" x={-80} y={-60} width={160} height={120}>
           <rect x={-80} y={-60} width={160} height={120} fill="#FFFFFF" />
-          <path d={CUT_WINDOW} fill="#000000" />
+          <path d={cutWindowPath(k)} fill="#000000" />
         </mask>
       </defs>
       <g mask={`url(#${m})`}>
@@ -95,7 +95,7 @@ const Exterior: React.FC = () => {
   );
 };
 
-const Cut: React.FC<{t: number; yawDeg: number; tag: string}> = ({t, yawDeg, tag}) => {
+const Cut: React.FC<{t: number; yawDeg: number; tag: string; open: number}> = ({t, yawDeg, tag, open: k}) => {
   resetIds(tag);
   const c = camAt(t), e = eelAt(t), f = fishAt(t);
   const yaw = (yawDeg * Math.PI) / 180;
@@ -119,8 +119,8 @@ const Cut: React.FC<{t: number; yawDeg: number; tag: string}> = ({t, yawDeg, tag
         </g>
         {kG < inEnd && <EelTube pts={Q} a={kG - 1} b={inEnd - 1} />}
         <g transform={yawMatrix(CUT_Z, yaw)}>
-          <Exterior />
-          <CutEdge yaw={yaw} />
+          <Exterior open={k} />
+          <CutEdge yaw={yaw} open={k} />
         </g>
         {inEnd <= 120 && <EelTube pts={Q} a={inEnd - 1} b={120} />}
       </Layer>
@@ -128,8 +128,8 @@ const Cut: React.FC<{t: number; yawDeg: number; tag: string}> = ({t, yawDeg, tag
   );
 };
 
-export const InsideOne: React.FC<Props> = ({mode, t, yawDeg = 22, tag = 'a', split = false}) =>
-  mode === 'cut' ? <Cut t={t} yawDeg={yawDeg} tag={tag} /> : <Reveal t={t} tag={tag} split={split} />;
+export const InsideOne: React.FC<Props> = ({mode, t, yawDeg = 22, tag = 'a', split = false, open: k = 1}) =>
+  mode === 'cut' ? <Cut t={t} yawDeg={yawDeg} tag={tag} open={k} /> : <Reveal t={t} tag={tag} split={split} />;
 
 const SHEET: Props[] = [
   {mode: 'reveal', t: 3.0}, {mode: 'reveal', t: 6.5}, {mode: 'cut', t: 11.6, yawDeg: 22},

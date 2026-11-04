@@ -2,21 +2,25 @@
 //
 // Depth model (camera.tsx): a layer at depth z (+ farther, - nearer) is scaled by d / (d + z), d = 2.2·w. The riverbed is
 // ONE horizontal plane at y = BED_Y (the fish's belly rests on it at z = 0), so a bed point at depth zb appears on screen
-// at row  H/2 + s(zb)·(BED_Y − c.y): the far bed climbs toward the camera's eye line and fades into the water's haze.
-// The continuous bed (its colour by depth) and the fine bed detail (gravel, caustic net) are therefore drawn in SCREEN
-// space, projected per frame from bed coordinates (x, zb), so every pebble parallaxes exactly at its own depth; the
-// discrete props (rocks, plant clumps, motes, near pebbles) sit in a few depth layers whose depth-of-field blur is the
-// Layer's CSS blur (no per-element SVG filters). Motes wrap on a world-anchored tile around the camera, so they never
-// run out and never pop inside the frame.
+// at row  H/2 + s(zb)·(BED_Y − c.y): the far bed climbs toward the camera's eye line and dissolves into the water.
+// The continuous bed (its colour by depth) and the fine bed detail (gravel, caustic filaments) are therefore drawn in
+// SCREEN space, projected per frame from bed coordinates (x, zb), so every pebble parallaxes exactly at its own depth;
+// the discrete props (rocks, plant clumps, motes, near pebbles) sit in a few depth layers whose depth-of-field blur is
+// the Layer's CSS blur (no SVG filters at all). Motes wrap on a world-anchored tile around the camera, so they never run
+// out and never pop inside the frame. The stream flows toward +x (the fish faces upstream): motes drift and plants lean
+// that way.
 //
-// Draw order (back to front) — EnvBack: far water (gradient, light from the upper left, shafts, bokeh) → bed plane →
-// hazy far bed → mid bed (rocks, plants, motes) → the bed around the fish (gravel, caustics) → the near bed (soft
-// caustics, big gravel, in front of the fish but behind it in draw order) → small motes → vignette → X-ray darkness.
-// The Scene then draws FishShadow in the fish's own layer, the fish, the eel, EnvFront (motes and near pebbles in front
-// of the fish), WaterRush.
+// Draw order, back to front. EnvBack: far water (unblurred: gradient, glow and light shafts from the upper left, bokeh)
+// → bed plane (unblurred screen SVG: the bed's colour by depth, laid over the far water with opacity 1 − haze, plus the
+// in-focus gravel and caustic filaments around the fish) → mid layer (ONE blur pass: the hazy far bed — ridge, rocks,
+// eelgrass — drawn at its own depth inside it, then mid rocks, plants and soft bokeh motes) → near bed (blurred: soft
+// caustics and big gravel toward the lens; it lies in front of the fish in depth but never overlaps it on screen) →
+// small motes behind the fish → vignette → X-ray darkness. The Scene then draws FishShadow in the fish's own layer, the
+// fish, the eel, EnvFront (motes and big soft pebbles in front of the fish), WaterRush. Blurred layers: 2 in EnvBack,
+// 1 in EnvFront.
 import React from 'react';
 import {Cam, DIST, H, Layer, layerScale, W} from '../camera';
-import {closed, open, P, pt} from '../core/geo';
+import {closed, P, pt} from '../core/geo';
 import {lit, mix, rgba} from '../core/color';
 import {uid} from '../core/ids';
 import {clamp, hash, lerp, noise1, ss} from '../lib';
@@ -48,7 +52,7 @@ const zbAtRow = (c: Cam, r: number) => {
 };
 /** half the world extent (x, y) seen at depth z */
 const halfView = (c: Cam, z: number): [number, number] => [W / 2 / sOf(c, z), H / 2 / (sOf(c, z) * kOf(c))];
-/** the same at the widest framing of the film (w = 82), for wrap tiles */
+/** the same at a framing a little wider than the film's widest (w = 82), for wrap tiles */
 const halfViewMax = (z: number): [number, number] => {
   const s = layerScale({x: 0, y: 0, w: 84}, z);
   return [W / 2 / s, H / 2 / s];
@@ -61,6 +65,12 @@ const InScreen: React.FC<{c: Cam; z: number; children: React.ReactNode}> = ({c, 
   const s = sOf(c, z), k = kOf(c);
   return <g transform={`translate(${c.x} ${c.y}) scale(${1 / s} ${1 / (s * k)}) translate(${-W / 2} ${-H / 2})`}>{children}</g>;
 };
+/** draws children given in world units at depth z inside a <Layer c z={inLayer}> (a scale about the camera centre), so
+ *  content at several depths can share one layer's blur pass with exact parallax */
+const AtDepth: React.FC<{c: Cam; z: number; inLayer: number; children: React.ReactNode}> = ({c, z, inLayer, children}) => {
+  const k = sOf(c, z) / sOf(c, inLayer);
+  return <g transform={`translate(${c.x} ${c.y}) scale(${k}) translate(${-c.x} ${-c.y})`}>{children}</g>;
+};
 /** a plain screen-space SVG (optionally blurred) */
 const Screen: React.FC<{blur?: number; opacity?: number; children: React.ReactNode}> = ({blur = 0, opacity, children}) => (
   <div style={{position: 'absolute', inset: 0, opacity, filter: blur > 0.45 ? `blur(${blur.toFixed(1)}px)` : undefined}}>
@@ -71,6 +81,18 @@ const Screen: React.FC<{blur?: number; opacity?: number; children: React.ReactNo
 );
 
 const f1 = (n: number) => (Math.abs(n) < 1e-4 ? '0' : n.toFixed(2).replace(/\.?0+$/, ''));
+/** smooth open path through screen-pixel points (Catmull-Rom as cubic Béziers, 0.1 px precision) */
+const openPx = (ps: P[], tension = 1) => {
+  const g = (n: number) => (Math.round(n * 10) / 10).toString();
+  const n = ps.length, k = tension / 6;
+  let d = `M${g(ps[0].x)} ${g(ps[0].y)}`;
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = ps[Math.max(0, i - 1)], p1 = ps[i], p2 = ps[i + 1], p3 = ps[Math.min(n - 1, i + 2)];
+    d += `C${g(p1.x + (p2.x - p0.x) * k)} ${g(p1.y + (p2.y - p0.y) * k)} ${g(p2.x - (p3.x - p1.x) * k)} ${g(p2.y - (p3.y - p1.y) * k)} ${g(p2.x)} ${g(p2.y)}`;
+  }
+  return d;
+};
+const r1 = (n: number) => Math.round(n * 10) / 10;
 const wrap = (v: number, T: number) => ((((v + T / 2) % T) + T) % T) - T / 2;
 
 // ---------------------------------------------------------------- colours
@@ -190,7 +212,7 @@ const FarWater: React.FC<{c: Cam; t: number}> = ({c, t}) => {
 // ---------------------------------------------------------------- the bed plane (screen space, continuous in depth)
 /** the bed plane: its colour sampled on screen rows spaced densely near the horizon (where depth changes fastest), so the
  *  gradient varies continuously with the camera (no stops appearing or vanishing) */
-const BedPlane: React.FC<{c: Cam}> = ({c}) => {
+const BedPlane: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   const id = uid('bp');
   const rH = H / 2 + 1, rB = H + 24;
   const n = 30;
@@ -209,6 +231,7 @@ const BedPlane: React.FC<{c: Cam}> = ({c}) => {
         </linearGradient>
       </defs>
       <rect x={-20} y={rH} width={W + 40} height={rB - rH} fill={`url(#${id}g)`} />
+      <FocusBed c={c} t={t} />
     </Screen>
   );
 };
@@ -298,7 +321,8 @@ const HAZE_CLUMPS: Clump[] = [
   {x: 112, h: 56, n: 8, seed: 15, lean: 0.12, spread: 12}, {x: 178, h: 36, n: 6, seed: 16, lean: 0.1, spread: 8},
 ];
 const ridgeY = (x: number) => BED_Y - (1.6 + 2.4 * (0.5 + 0.5 * noise1(x / 34, 7)) + 1.4 * (0.5 + 0.5 * noise1(x / 11, 8)));
-const HazeBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
+/** the hazy far bed's content, drawn at its own depth inside the mid layer (one shared blur pass; see AtDepth) */
+const HazeBed: React.FC<{c: Cam; t: number; inLayer: number}> = ({c, t, inLayer}) => {
   const id = uid('hb');
   const z = Z.haze;
   const [hw] = halfView(c, z);
@@ -310,7 +334,7 @@ const HazeBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   const ridgeTop = hazed(c, lit(SAND, 0.1), z, rrow);
   const vis = (x: number, r: number) => x + r > xa && x - r < xb;
   return (
-    <Layer c={c} z={z} maxBlur={14}>
+    <AtDepth c={c} z={z} inLayer={inLayer}>
       <defs>
         <linearGradient id={`${id}r`} gradientUnits="userSpaceOnUse" x1="0" y1={BED_Y - 6} x2="0" y2={BED_Y + 0.5}>
           <stop offset="0" stopColor={ridgeTop} />
@@ -324,7 +348,7 @@ const HazeBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
       {HAZE_ROCKS.filter((r) => vis(r.x, r.rx)).map((r, i) => (
         <RockG key={`r${i}`} c={c} z={z} r={r} id={`${id}k${i}`} />
       ))}
-    </Layer>
+    </AtDepth>
   );
 };
 
@@ -361,6 +385,7 @@ const MidBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   const motes = Array.from({length: MOTES_MID.n}, (_, i) => motePos(c, MOTES_MID, i, t));
   return (
     <Layer c={c} z={z} blurK={46} maxBlur={16}>
+      <HazeBed c={c} t={t} inLayer={z} />
       {MID_CLUMPS.filter((p) => vis(p.x, p.h)).map((p, i) => (
         <ClumpG key={`c${i}`} c={c} z={z + 4} p={p} t={t} dark={PLANT_DARK} light={PLANT_LIGHT} />
       ))}
@@ -378,16 +403,15 @@ const MidBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
 /** caustic shimmer on the bed, seen at a grazing angle: long wavy filaments of light at roughly constant depth (each
  *  wanders in depth, so neighbours touch and enclose thin cells), broken into pieces, drifting slowly. World-anchored,
  *  projected to the screen; one path per filament. Returns [path, depth] per filament. */
-const causticBands = (c: Cam, t: number, z0: number, z1: number, gz: number, step: number, seed: number) => {
+const causticBands = (c: Cam, t: number, z0: number, z1: number, gz: number, step: number, seed: number, thr = -0.2) => {
   const [hw] = halfView(c, z1);
   const xmin = c.x - hw - 3, xmax = c.x + hw + 3;
   const out: [string, number][] = [];
   const j0 = Math.ceil(z0 / gz), j1 = Math.floor(z1 / gz);
-  const THR = -0.2;
   for (let j = j0; j <= j1; j++) {
     const zj = j * gz;
     const zAt = (x: number) => zj + 0.46 * gz * noise1(x / 7.3 + 0.19 * t + j * 1.71, seed) + 0.2 * gz * noise1(x / 2.7 - 0.31 * t + j * 3.13, seed + 1);
-    const onAt = (x: number) => noise1(x / 8.3 + 0.13 * t + j * 5.37, seed + 2) - THR;
+    const onAt = (x: number) => noise1(x / 8.3 + 0.13 * t + j * 5.37, seed + 2) - thr;
     const P1 = (x: number) => {
       const zb = Math.max(zAt(x), -0.82 * DIST * c.w);
       return pt(scrX(c, x, zb), rowOf(c, zb));
@@ -409,7 +433,7 @@ const causticBands = (c: Cam, t: number, z0: number, z1: number, gz: number, ste
       op = o;
     }
     if (run.length > 2) runs.push(run);
-    if (runs.length) out.push([runs.map((r) => open(r, 0.9)).join(''), zj]);
+    if (runs.length) out.push([runs.map((r) => openPx(r, 0.9)).join(''), zj]);
   }
   return out;
 };
@@ -439,16 +463,16 @@ const StoneG: React.FC<{c: Cam; s: Stone; fade: number}> = ({c, s, fade}) => {
   const sc = sOf(c, s.zb);
   const X = scrX(c, s.x, s.zb), Y = rowOf(c, s.zb);
   const rx = s.r * sc, ry = s.r * 0.62 * sc;
-  if (rx < 0.5) return null;
+  if (rx < 0.9) return null;
   const base0 = s.tone < 0.33 ? C.pebbleA : s.tone < 0.66 ? C.pebbleB : C.pebbleC;
   const base = mix(mix(base0, SAND, 0.25), waterAtRow(c, Y), fog(s.zb));
   const top = lit(base, 0.1 + 0.1 * s.hi);
   const a = fade;
   return (
     <g opacity={a}>
-      <ellipse cx={X + rx * 0.35} cy={Y + ry * 0.05} rx={rx * 1.15} ry={ry * 0.45} fill={C.bedShadow} opacity={0.35} />
-      <ellipse cx={X} cy={Y - ry * 0.7} rx={rx} ry={ry} fill={base} />
-      <ellipse cx={X - rx * 0.22} cy={Y - ry * 1.02} rx={rx * 0.66} ry={ry * 0.52} fill={top} opacity={0.7} />
+      {rx > 2.5 && <ellipse cx={r1(X + rx * 0.35)} cy={r1(Y + ry * 0.05)} rx={r1(rx * 1.15)} ry={r1(ry * 0.45)} fill={C.bedShadow} opacity={0.35} />}
+      <ellipse cx={r1(X)} cy={r1(Y - ry * 0.7)} rx={r1(rx)} ry={r1(ry)} fill={base} />
+      <ellipse cx={r1(X - rx * 0.22)} cy={r1(Y - ry * 1.02)} rx={r1(rx * 0.66)} ry={r1(ry * 0.52)} fill={top} opacity={0.7} />
     </g>
   );
 };
@@ -457,19 +481,20 @@ const CAUSTIC = lit(mix(C.mote, C.pebbleB, 0.15), 0.2);
 const FocusBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   const zMin = Math.max(-14, zbAtRow(c, H + 60) - 2.5);
   if (zMin > 40) return null;
-  const bands = causticBands(c, t, zMin, 44, 3.1, 1.1, 7);
-  const stones = gravel(c, Math.max(zMin, -12), 30, 8, 5, 2, [0.16, 0.75], 3);
+  // (screen-space content: drawn inside the bed plane's SVG, unblurred)
+  const bands = causticBands(c, t, zMin, 44, 4.2, 1.5, 7, 0.05);
+  const stones = gravel(c, Math.max(zMin, -12), 26, 9, 5.5, 2, [0.16, 0.75], 3);
   return (
-    <Screen blur={0.9}>
+    <g>
       {bands.map(([d, zm], b) => {
         const fade = (1 - ss(zm, 12, 44)) * ss(zm, -10, -3);
         if (fade < 0.01) return null;
-        return <path key={b} d={d} fill="none" stroke={CAUSTIC} strokeWidth={clamp(0.09 * sOf(c, zm), 1.1, 2.8)} strokeOpacity={0.24 * fade} strokeLinecap="round" strokeLinejoin="round" />;
+        return <path key={b} d={d} fill="none" stroke={CAUSTIC} strokeWidth={clamp(0.09 * sOf(c, zm), 1.1, 2.8)} strokeOpacity={0.22 * fade} strokeLinecap="round" strokeLinejoin="round" />;
       })}
       {stones.map((s, i) => (
         <StoneG key={i} c={c} s={s} fade={ss(s.zb, -12, -7) * (1 - 0.7 * fog(s.zb))} />
       ))}
-    </Screen>
+    </g>
   );
 };
 /** the bed in front of the fish, toward the lens: out of focus (soft caustics, big gravel) */
@@ -477,7 +502,7 @@ const NearBed: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   const zMin = zNearOk(c, zbAtRow(c, H + 40) - 4);
   if (zMin > -9) return null;
   const z = Z.nearBed;
-  const bands = causticBands(c, t, zMin, -6, 4.6, 1.6, 19);
+  const bands = causticBands(c, t, zMin, -6, 4.6, 2.2, 19, 0.12);
   const stones = gravel(c, zMin, -9, 11, 10, 1, [0.4, 1.3], 9);
   return (
     <Layer c={c} z={z} blurK={44} maxBlur={20}>
@@ -539,13 +564,13 @@ const FrontBed: React.FC<{c: Cam; t: number; opacity: number}> = ({c, t, opacity
         return (
           <g key={i}>
             <defs>
-              <linearGradient id={`${id}${i}`} gradientUnits="userSpaceOnUse" x1={r.x - r.rx * 0.5} y1={BED_Y - r.ry} x2={r.x + r.rx * 0.3} y2={BED_Y + 0.3 * r.ry}>
+              <linearGradient id={`${id}p${i}`} gradientUnits="userSpaceOnUse" x1={r.x - r.rx * 0.5} y1={BED_Y - r.ry} x2={r.x + r.rx * 0.3} y2={BED_Y + 0.3 * r.ry}>
                 <stop offset="0" stopColor={lit(mix(bed, stone, 0.6), 0.24)} />
                 <stop offset="0.5" stopColor={mix(bed, stone, 0.55)} />
                 <stop offset="1" stopColor={mix(mix(bed, stone, 0.4), BED_NEAR, 0.35)} />
               </linearGradient>
             </defs>
-            <path d={rockPath(r)} fill={`url(#${id}${i})`} />
+            <path d={rockPath(r)} fill={`url(#${id}p${i})`} />
           </g>
         );
       })}
@@ -574,10 +599,8 @@ export const EnvBack: React.FC<{c: Cam; t: number; xray: number}> = ({c, t, xray
       {x < 0.999 && (
         <>
           <FarWater c={c} t={t} />
-          <BedPlane c={c} />
-          <HazeBed c={c} t={t} />
+          <BedPlane c={c} t={t} />
           <MidBed c={c} t={t} />
-          <FocusBed c={c} t={t} />
           <NearBed c={c} t={t} />
           <Motes c={c} t={t} m={MOTES_BACK} soft={0.25} />
           <Vignette />
@@ -599,16 +622,16 @@ export const EnvFront: React.FC<{c: Cam; t: number; xray: number}> = ({c, t, xra
   );
 };
 
-/** the fish's contact shadow on the bed (fish-local units, draw it in the fish's layer before the fish). c (optional)
- *  sets how far the shadow spreads below the contact line (the bed recedes, so its depth shows as height); xray fades
- *  it out with the water. */
-export const FishShadow: React.FC<{t: number; c?: Cam; xray?: number}> = ({t, c, xray = 0}) => {
+/** the fish's contact shadow on the bed (fish-local units; draw it in the fish's layer, before the fish). c (optional,
+ *  recommended: the frame's camera) sets how far the shadow spreads below the contact line (the bed recedes, so its
+ *  depth shows as height on screen); xray (optional) fades it out with the water. t is accepted for the contract; the
+ *  shadow is steady (the fish rests on the bed throughout). */
+export const FishShadow: React.FC<{t: number; c?: Cam; xray?: number}> = ({c, xray = 0}) => {
   const id = uid('fs');
   const o = 1 - clamp(xray);
   if (o < 0.001) return null;
   // the head is ≈ 14 u wide: ±7 u of depth on the bed shows as this much height on screen (fish-local units)
   const spread = c ? clamp(((BED_Y - c.y) * 7.5) / (DIST * c.w - 7.5), 0.6, 3) : 1.3;
-  const startle = t > 20.78 ? Math.exp(-(t - 20.78) / 0.5) : 0;
   const pel = PELVIC.base;
   return (
     <g opacity={o}>
@@ -625,7 +648,7 @@ export const FishShadow: React.FC<{t: number; c?: Cam; xray?: number}> = ({t, c,
         </radialGradient>
       </defs>
       {/* broad occlusion under the whole body, shifted a little downstream/right (light from the upper left) */}
-      <ellipse cx={-7} cy={BED_Y + 0.1 * spread} rx={46 + 1.5 * startle} ry={spread * 1.25} fill={`url(#${id}a)`} />
+      <ellipse cx={-7} cy={BED_Y + 0.1 * spread} rx={46} ry={spread * 1.25} fill={`url(#${id}a)`} />
       {/* the contact core under the belly, where it presses on the sand */}
       <ellipse cx={-7.5} cy={BED_Y + 0.05} rx={24} ry={Math.max(0.45, spread * 0.42)} fill={`url(#${id}b)`} />
       {/* the pelvic fins resting on the bed */}
@@ -711,7 +734,7 @@ export const WaterRush: React.FC<{at: P; dir: number; t: number; t0: number}> = 
       bubbles.push(
         <g key={i} opacity={op}>
           <circle cx={q.x} cy={q.y} r={r} fill={rgba(C.mote, 0.22)} stroke={lit(C.mote, 0.5)} strokeWidth={1.8} vectorEffect={NS} />
-          <circle cx={q.x - r * 0.36} cy={q.y - r * 0.38} r={r * 0.27} fill="#FFFFFF" opacity={0.95} />
+          <circle cx={q.x - r * 0.36} cy={q.y - r * 0.38} r={r * 0.27} fill={lit(C.mote, 0.85)} opacity={0.95} />
         </g>,
       );
     }

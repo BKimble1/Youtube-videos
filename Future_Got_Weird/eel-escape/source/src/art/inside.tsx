@@ -67,7 +67,9 @@ const offsetOpen = (ps: P[], d: number | ((i: number) => number)) => {
   const T = tangents(ps, false);
   return ps.map((p, i) => add(p, mul(perp(T[i]), typeof d === 'number' ? d : d(i))));
 };
-const P2 = (p: P) => `${n4(p.x)} ${n4(p.y)}`;
+/** compact coordinates (0.01 u ≈ 0.25 px at the closest framing) */
+const f2 = (v: number) => (Math.round(v * 100) / 100).toString();
+const P2 = (p: P) => `${f2(p.x)} ${f2(p.y)}`;
 
 // ---------------------------------------------------------------- the cutaway window
 /** width of the gill cover's rear strip left intact behind the window (along OPERCLE_EDGE) */
@@ -81,12 +83,20 @@ export const CUT_WINDOW_PTS: P[] = [
   pt(-29.4, 7.0), pt(-33.0, 7.05), pt(-35.95, 5.75), pt(-37.55, 2.9), pt(-37.95, -0.8), pt(-37.35, -5.4),
 ];
 /** the cut wall's thickness (u) at each window control point: thin along the gill cover strip, thicker into the head */
-const WIN_THICK: number[] = [2.4, 2.6, 2.6, 1.9, 1.15, 0.95, 0.95, 1.0, 1.15, 1.7, 2.6, 2.6, 2.4, 2.4, 2.4, 2.4];
+const WIN_THICK: number[] = [1.4, 2.6, 2.6, 1.9, 1.15, 0.95, 0.95, 1.0, 1.15, 1.7, 2.6, 2.6, 1.4, 1.3, 1.3, 1.3];
+/** the skin's thickness at the window's edge, and the cut's bevel (the face seen even head-on), u */
+const CUT_LIP = 0.18;
+const CUT_BEVEL = 0.4;
 /** fish-local path: the cutaway window (the hole the Scene masks out of the exterior, in the slice z = CUT_Z) */
 export const CUT_WINDOW: string = closed(CUT_WINDOW_PTS);
 const WIN_T = tangents(CUT_WINDOW_PTS, true);
 /** inward normal at each window control point (the window runs clockwise on screen, so inward = perp(T)) */
 const WIN_IN = WIN_T.map(perp);
+/** the window's centre (it opens from here) */
+const WIN_C: P = CUT_WINDOW_PTS.reduce((a, p) => add(a, mul(p, 1 / CUT_WINDOW_PTS.length)), pt(0, 0));
+const winPtsAt = (k: number) => (k >= 1 ? CUT_WINDOW_PTS : CUT_WINDOW_PTS.map((p) => add(WIN_C, mul(sub(p, WIN_C), Math.max(0.02, k)))));
+/** the window opening (k 0 → 1: grown from its centre to CUT_WINDOW), for an optional opening animation */
+export const cutWindowPath = (k: number) => (k >= 1 ? CUT_WINDOW : closed(winPtsAt(k)));
 const winGrown = (d: number, dx = 0) => closed(CUT_WINDOW_PTS.map((p, i) => add(p, add(mul(WIN_IN[i], -d), pt(dx, 0)))));
 /** the region InteriorBack covers in mode 'cut': the window and the window seen at full yaw (the deep slice slides
  *  left relative to the skin by CUT_Z·sin ψ, so the deep layer must reach ~2.6 u further back than the window) */
@@ -205,8 +215,8 @@ const InteriorReveal: React.FC<{t: number}> = () => {
           <stop offset="1" stopColor={shade(C.stomachWall, 0.18)} />
         </radialGradient>
         <linearGradient id={gCh} gradientUnits="userSpaceOnUse" x1={-33} y1={-10} x2={-26} y2={9}>
-          <stop offset="0" stopColor={mix(C.chamber, C.gillDark, 0.2)} />
-          <stop offset="0.55" stopColor={mix(C.chamber, C.pharynx, 0.28)} />
+          <stop offset="0" stopColor={mix(C.chamber, C.gillDark, 0.25)} />
+          <stop offset="0.55" stopColor={mix(C.chamber, C.gillRed, 0.22)} />
           <stop offset="1" stopColor={mix(C.chamber, C.pharynx, 0.5)} />
         </linearGradient>
         <linearGradient id={gEso} gradientUnits="userSpaceOnUse" x1={0} y1={-0.5} x2={0} y2={3.6}>
@@ -255,8 +265,8 @@ let ARCH_SHADOWS: string | null = null;
 const archShadows = () =>
   (ARCH_SHADOWS ??= [0, 1, 2, 3].map((i) => archGeo(i, 0.3, []).hull).join('').replace(/(-?\d+(?:\.\d+)?) (-?\d+(?:\.\d+)?)/g, (_, x, y) => `${n4(+x + 0.55)} ${n4(+y + 0.75)}`));
 const THROAT_GLINTS =
-  open([pt(-39.6, -1.25), pt(-38.4, -1.42), pt(-37.3, -1.45)]) + open([pt(-36.4, -1.38), pt(-35.9, -1.36)]) +
-  open([pt(-24.6, 0.05), pt(-23.2, 0.0), pt(-22.1, 0.02)]) + open([pt(-38.8, 3.55), pt(-37.6, 3.62)]);
+  open([pt(-40.2, -1.05), pt(-38.6, -1.32), pt(-36.8, -1.38), pt(-35.4, -1.25)]) +
+  open([pt(-25.6, 0.12), pt(-24.0, 0.02), pt(-22.2, 0.06)]);
 
 const InteriorCut: React.FC<{t: number}> = ({t}) => {
   const cR = uid('icR'), gFl = uid('icFl'), gCh = uid('icCh'), gTh = uid('icTh'), gEw = uid('icEw');
@@ -319,7 +329,7 @@ const InteriorCut: React.FC<{t: number}> = ({t}) => {
         {/* the gill arches' soft shadows on the throat's far wall (light from the upper left) */}
         <path d={archShadows()} fill={rgba(C.gillDark, 0.26)} />
         {/* wet glints on the throat's lining */}
-        <path d={THROAT_GLINTS} fill="none" stroke="#FFFFFF" strokeOpacity={0.42} strokeWidth={0.13} strokeLinecap="round" />
+        <path d={THROAT_GLINTS} fill="none" stroke="#FFFFFF" strokeOpacity={0.3} strokeWidth={0.12} strokeLinecap="round" />
         {/* the eel's soft shadow on the throat floor */}
         {behind.length > 1 && <path d={tubeOutline(behind, rr, 1.05, 0.08)} fill={rgba(C.gillDark, 0.38)} />}
         {/* ink: the cavity and the throat's edges */}
@@ -334,7 +344,7 @@ const InteriorCut: React.FC<{t: number}> = ({t}) => {
 };
 
 // ================================================================ GillArches
-type ArchGeo = {ink: string; filBack: string; fil: string; core: string; bar: string; hi: string; hull: string};
+type ArchGeo = {filBack: string; fil: string; core: string; bar: string; hi: string; hull: string};
 const ARCH_PER = 10; // centreline samples per control segment
 const FIL_STEP = 0.36; // filament spacing along the arch (u)
 const FIL_W = 0.22; // filament thickness at the base (u)
@@ -432,7 +442,6 @@ const archGeo = (i: number, gill: number, eel: EelDisc[]): ArchGeo => {
     }
     if (k < n - 1) filBack += finger(mul(add(base[k], base[k + 1]), 0.5), mul(add(tipOf(k, 0.92), tipOf(k + 1, 0.92)), 0.5), FIL_W * 0.5);
   }
-  const ink = filBack + fil;
   // the bony bar: a tube tapered at both ends, with its lit front edge
   const C0 = S.map((s) => s.p);
   const Lb = S.map(({p, T, u}) => add(p, mul(perp(T), rb(u))));
@@ -442,7 +451,7 @@ const archGeo = (i: number, gill: number, eel: EelDisc[]): ArchGeo => {
   const hi = line(S.slice(3, -3).map(({p, T, u}) => add(p, mul(perp(T), rb(u) * 0.42))));
   // the arch's hull (bar + filament tips), for clipping the eel's shadow
   const hull = `M${P2(capT)}L` + Lb.map(P2).join('L') + `L${P2(capB)}L` + S.map((_, k) => P2(tipOf(n - 1 - k, 1.04))).join('L') + 'Z';
-  return {ink, filBack, fil, core, bar, hi, hull};
+  return {filBack, fil, core, bar, hi, hull};
 };
 
 /** The four gill arches (near side, z = GILL_Z) with their red filaments, drawn rearmost first. `gill` (0..1, the
@@ -466,7 +475,7 @@ export const GillArches: React.FC<{t: number; mode: InsideMode; gill: number}> =
       break;
     }
   }
-  const barC = mix(C.flesh, C.gillRed, cut ? 0.5 : 0.35);
+  const barC = mix(C.flesh, C.gillRed, cut ? 0.56 : 0.35);
   // the eel's part in front of the gill plane (inside the fish): its shadow falls on the arches, down and right
   const front: P[] = [], rr: number[] = [];
   if (cut) {
@@ -507,16 +516,27 @@ export const GillArches: React.FC<{t: number; mode: InsideMode; gill: number}> =
         </mask>
       )}
       {cut && <path d={CHAMBER_CUT_D} fill={`url(#${gDim})`} mask={cross ? `url(#${mDim})` : undefined} />}
-      {geos.map((g, k) => (
+      {geos.map((g, k) => {
+        // each filament row is defined once and drawn twice (its ink underlay merges the row's outline)
+        const idB = uid('gaB'), idF = uid('gaF');
+        return (
         <g key={k} opacity={cut ? 1 : 0.86}>
-          <path d={g.ink} fill={inkC} stroke={inkC} strokeWidth={cut ? 0.1 : 0.05} strokeLinejoin="round" />
-          <path d={g.filBack} fill={shade(C.gillRed, cut ? 0.45 : 0.25)} />
-          <path d={g.fil} fill={red} />
+          <defs>
+            <path id={idB} d={g.filBack} />
+            <path id={idF} d={g.fil} />
+          </defs>
+          <g fill={inkC} stroke={inkC} strokeWidth={cut ? 0.1 : 0.05} strokeLinejoin="round">
+            <use href={`#${idB}`} />
+            <use href={`#${idF}`} />
+          </g>
+          <use href={`#${idB}`} fill={shade(C.gillRed, cut ? 0.45 : 0.25)} />
+          <use href={`#${idF}`} fill={red} />
           <path d={g.core} stroke={cut ? C.gillFilament : lit(C.gillFilament, 0.15)} strokeWidth={FIL_W * 0.3} strokeLinecap="round" fill="none" />
           <path d={g.bar} fill={barC} stroke={inkC} strokeWidth={cut ? 1.3 : 0.9} vectorEffect={NS} strokeLinejoin="round" />
           <path d={g.hi} stroke={lit(barC, 0.45)} strokeWidth={0.07} strokeLinecap="round" fill="none" />
         </g>
-      ))}
+        );
+      })}
       {/* the eel's shadow where it crosses the chamber in front of the arches */}
       {cut && front.length > 1 && (
         <g clipPath={`url(#${cArch})`}>
@@ -561,28 +581,32 @@ export const StomachFront: React.FC<{t: number; mode: InsideMode}> = ({mode}) =>
 };
 
 // ================================================================ CutEdge
-/** The cut faces of the window: the skin's thin lip all round, and the wall's cut face (skin + muscle; thin along the
- *  gill cover strip, thicker into the head) that the yaw reveals along the window's rear edge, its visible width
- *  growing with tan ψ. Draw it in the SAME slice transform as the masked exterior (yawMatrix(CUT_Z, yaw)), right
- *  after the exterior and before the outside eel. `yaw` in radians; `opacity` for the cutaway's fade. */
-export const CutEdge: React.FC<{yaw: number; opacity?: number}> = ({yaw, opacity = 1}) => {
+/** The cut faces of the window: the skin's dark lip and a narrow bevelled cut face all round (seen even head-on), and
+ *  the wall's cut face (skin + fat + muscle; thin along the gill cover strip, thicker into the head) that the yaw
+ *  reveals along the window's rear edge, its visible width growing with tan ψ, plus the soft occlusion just inside
+ *  the rim and the window's ink contour. Draw it in the SAME slice transform as the masked exterior
+ *  (yawMatrix(CUT_Z, yaw)), right after the exterior and before the outside eel. `yaw` in radians; `opacity` for the
+ *  cutaway's fade; `open` (0..1, default 1) only if the Scene animates the window opening with cutWindowPath(open). */
+export const CutEdge: React.FC<{yaw: number; opacity?: number; open?: number}> = ({yaw, opacity = 1, open: k = 1}) => {
   const tn = Math.tan(yaw);
-  const LIP = 0.2;
-  // inner lip of the face: the window inset by the lip, slid by the wall thickness (projected into this slice)
-  const inner = CUT_WINDOW_PTS.map((p, i) => add(p, add(mul(WIN_IN[i], LIP), pt(-WIN_THICK[i] * tn, 0))));
-  const midL = CUT_WINDOW_PTS.map((p, i) => add(p, add(mul(WIN_IN[i], LIP), pt(-WIN_THICK[i] * tn * 0.38, 0))));
-  const innerD = closed(inner), midD = closed(midL);
-  const lipD = closed(CUT_WINDOW_PTS.map((p, i) => add(p, mul(WIN_IN[i], LIP))));
+  const W = winPtsAt(k), WD = cutWindowPath(k);
+  const kk = Math.min(1, Math.max(0.02, k) * 2.5); // the lip and bevel scale down while a small window opens
+  // inner lip of the face: the window inset by the skin lip and the cut's bevel, slid by the wall thickness projected
+  // into this slice (the yaw shows the rear faces; the front faces turn away and narrow)
+  const at = (i: number, inset: number, f: number) => add(W[i], add(mul(WIN_IN[i], inset * kk), pt(-WIN_THICK[i] * tn * f * kk, 0)));
+  const ring = (inset: number, f: number) => closed(W.map((_, i) => at(i, inset, f)));
+  const innerD = ring(CUT_LIP + CUT_BEVEL, 1);
+  const fatD = ring(CUT_LIP + CUT_BEVEL * 0.3, 0.3);
+  const lipD = ring(CUT_LIP, 0);
   const cW = uid('ceW'), cF = uid('ceF'), cI = uid('ceI');
-  const show = Math.abs(tn) > 0.004;
   return (
     <g opacity={opacity}>
       <defs>
         <clipPath id={cW}>
-          <path d={CUT_WINDOW} />
+          <path d={WD} />
         </clipPath>
         <clipPath id={cF}>
-          <path d={CUT_WINDOW + innerD} clipRule="evenodd" />
+          <path d={WD + innerD} clipRule="evenodd" />
         </clipPath>
         <clipPath id={cI}>
           <path d={innerD} />
@@ -591,23 +615,21 @@ export const CutEdge: React.FC<{yaw: number; opacity?: number}> = ({yaw, opacity
       <g clipPath={`url(#${cW})`}>
         {/* the interior's occlusion just inside the cut (the wall overhangs the cavity) */}
         <g clipPath={`url(#${cI})`}>
-          <path d={innerD} fill="none" stroke={rgba(C.gillDark, 0.32)} strokeWidth={1.5} />
-          <path d={innerD} fill="none" stroke={rgba(C.gillDark, 0.3)} strokeWidth={0.6} />
+          <path d={innerD} fill="none" stroke={rgba(C.gillDark, 0.3)} strokeWidth={1.5} />
+          <path d={innerD} fill="none" stroke={rgba(C.gillDark, 0.32)} strokeWidth={0.55} />
         </g>
-        {show && (
-          <g clipPath={`url(#${cF})`}>
-            <path d={CUT_WINDOW} fill={C.cutFace} />
-            {/* the muscle under the skin and fat, a shade deeper toward the inside */}
-            <path d={midD} fill="none" stroke={rgba(C.fleshDeep, 0.55)} strokeWidth={1.1} vectorEffect={NS} />
-            <path d={innerD} fill="none" stroke={rgba(C.fleshDeep, 0.6)} strokeWidth={0.36} />
-          </g>
-        )}
+        {/* the cut face: pale fat under the skin, then muscle, a shade deeper toward the inside */}
+        <g clipPath={`url(#${cF})`}>
+          <path d={WD} fill={C.cutFace} />
+          <path d={innerD} fill="none" stroke={rgba(C.fleshDeep, 0.55)} strokeWidth={0.5} />
+          <path d={fatD} fill="none" stroke={rgba(C.fleshDeep, 0.5)} strokeWidth={1.1} vectorEffect={NS} />
+        </g>
         {/* the skin's own thickness: a dark lip just inside the window's edge, catching a thin highlight */}
-        <path d={CUT_WINDOW} fill="none" stroke={C.fishDark} strokeWidth={LIP * 2} />
-        <path d={lipD} fill="none" stroke={rgba(lit(C.cutFace, 0.3), 0.9)} strokeWidth={1.2} vectorEffect={NS} />
-        {show && <path d={innerD} fill="none" stroke={rgba(INK, 0.6)} strokeWidth={1.3} vectorEffect={NS} />}
+        <path d={WD} fill="none" stroke={C.fishDark} strokeWidth={CUT_LIP * 2 * kk} />
+        <path d={lipD} fill="none" stroke={rgba(lit(C.cutFace, 0.35), 0.9)} strokeWidth={1.2} vectorEffect={NS} />
+        <path d={innerD} fill="none" stroke={rgba(INK, 0.62)} strokeWidth={1.3} vectorEffect={NS} />
       </g>
-      <path d={CUT_WINDOW} fill="none" stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
+      <path d={WD} fill="none" stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
     </g>
   );
 };

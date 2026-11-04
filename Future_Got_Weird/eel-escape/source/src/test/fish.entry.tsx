@@ -1,7 +1,8 @@
 // Test entry for the predator exterior and its X-ray (src/art/fish.tsx, src/art/xray.tsx), at the film's framings.
 // The eel here is a plain slate tube along eelAt(t).pts (the real eel is another module).
 //   npx remotion still src/test/fish.entry.tsx Fish out.png --props='{"t":0}'
-//   props: t (story time), cam (camera time, default t), gill / prop / look / startle (overrides), mode 'ext' | 'xray'
+//   props: t (story time), cam (camera time, default t), view ({x, y, w}: a free camera), gill / prop / look / startle
+//   (overrides), mode 'ext' | 'xray', op (skin opacity: the translucent reveal), sil (overlay fishSilhouette in magenta)
 //   npx remotion still src/test/fish.entry.tsx FishSheet out.png      (gill 0 / 0.5 / 1 × prop 0 / 1 at camAt(0))
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
@@ -14,7 +15,7 @@ import {camAt, eelAt, fishAt} from '../story';
 import {FishBody, FishFar, FishLook, GillGap, gillGapPath, Operculum, Pectoral, fishSilhouette} from '../art/fish';
 import {XRayBack, XRayFront} from '../art/xray';
 
-type Props = {t: number; cam?: number; gill?: number; prop?: number; look?: number; startle?: number; mode?: 'ext' | 'xray'; sil?: boolean; op?: number};
+type Props = {t: number; cam?: number; gill?: number; prop?: number; look?: number; startle?: number; mode?: 'ext' | 'xray'; sil?: boolean; op?: number; view?: Cam};
 
 /** a plain slate tube for samples [i0, i1] of the eel */
 const EelTube: React.FC<{ps: P[]; i0: number; i1: number; px: number}> = ({ps, i0, i1, px}) => {
@@ -36,8 +37,8 @@ const EelTube: React.FC<{ps: P[]; i0: number; i1: number; px: number}> = ({ps, i
   );
 };
 
-const Scene: React.FC<Props> = ({t, cam, gill, prop, look, startle, mode = 'ext', sil, op}) => {
-  const c: Cam = camAt(cam ?? t);
+const Scene: React.FC<Props> = ({t, cam, gill, prop, look, startle, mode = 'ext', sil, op, view}) => {
+  const c: Cam = view ?? camAt(cam ?? t);
   const f = fishAt(t);
   const e = eelAt(t);
   const s: FishLook = {t, gill: gill ?? f.gill, finPhase: f.finPhase, startle: startle ?? f.startle, prop: prop ?? 0, look: look ?? 0};

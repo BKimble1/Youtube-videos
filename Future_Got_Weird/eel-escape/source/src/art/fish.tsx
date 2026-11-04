@@ -5,7 +5,7 @@
 //   gill cover, a separate plate behind the eye) → Pectoral (near pectoral fin) → the eel's outside part.
 // Every outline is a function of the FishLook state and is shared with the X-ray (xray.tsx), so both match exactly.
 import React from 'react';
-import {ANAL, BODY, DORSAL, DORSAL1, DORSAL2, EXIT, EYE, OPERCLE_EDGE, PECTORAL, PELVIC, PREOPERCLE, VENTRAL} from '../anatomy';
+import {ANAL, BODY, DORSAL, DORSAL1, DORSAL2, EXIT, EYE, OPERCLE_EDGE, PECTORAL, PELVIC, PREOPERCLE} from '../anatomy';
 import {add, closed, lerpP, mul, n4, nrm, open, P, poly, pt, rot, sub} from '../core/geo';
 import {lit, mix, shade} from '../core/color';
 import {uid} from '../core/ids';
@@ -15,10 +15,19 @@ import {C, INK, INK_PX, NS} from './palette';
 export type FishLook = {t: number; gill: number; finPhase: number; startle: number; prop: number; look: number};
 /** a calm resting state (handy defaults for tests and stills) */
 export const FISH_REST: FishLook = {t: 0, gill: 0.16, finPhase: 0, startle: 0, prop: 0, look: 0};
+/** a FishLook from story.fishAt(t) (its gill, finPhase and startle) plus the eel's prop and the eye's look */
+export const fishLook = (t: number, f: {gill: number; finPhase: number; startle: number}, prop = 0, look = 0): FishLook => ({
+  t, gill: f.gill, finPhase: f.finPhase, startle: f.startle, prop, look,
+});
+/** a suggested `prop` for the eel's body radius (u) where it passes the exit: the thin tail lifts the edge about
+ *  halfway (≈ 0.5), the trunk and head fully (1) */
+export const propForRadius = (r: number) => clamp((r - 0.1) / 0.95, 0, 1);
 
 const D2R = Math.PI / 180;
-/** the warm key-light tint for highlights */
-const WARM = '#FFE9B8';
+/** the warm key-light tint for highlights, the white of glosses and the near-black of deep shadow (all from C) */
+const WARM = lit(C.fishBelly, 0.62);
+const GLOSS = lit(C.mote, 0.7);
+const DEEP = C.pupil;
 const maskUrl = (m?: string) => (!m ? undefined : m.startsWith('url(') ? m : `url(#${m.replace(/^#/, '')})`);
 
 // ---------------------------------------------------------------- curve sampling (the same Catmull-Rom Béziers as geo.ts)
@@ -98,7 +107,6 @@ const profAt = (ps: P[], x: number) => {
 /** the body's top (dorsal) and bottom (ventral) edge at x */
 export const topY = (x: number) => profAt(DORS_PTS, x);
 export const botY = (x: number) => profAt(VENT_PTS, x);
-void VENTRAL;
 
 // ---------------------------------------------------------------- the fins (ray fans; geometry shared with the X-ray)
 export type Ray = {b: P; c: P; t: P};
@@ -224,7 +232,7 @@ const finCaudal = (s: FishLook): Fin => {
     const m = add(lerpP(b, q, 0.5), pt(0, 0.25 * sway));
     return {b, c: m, t: q};
   });
-  const outline = [pt(31.5, -5.6), pt(33.6, -5.6), ...edgeThrough(rays, 0.025).slice(1, -1), pt(33.6, 5.6), pt(31.5, 5.6)];
+  const outline = [pt(31.5, -5.6), pt(33.6, -5.6), ...edgeThrough(rays, 0.008).slice(1, -1), pt(33.6, 5.6), pt(31.5, 5.6)];
   return {outline: orient(outline), tension: 1, rays, bands: [0.24, 0.42, 0.6, 0.78], spot: 1.05, g0: pt(33, 0), g1: pt(49, 0)};
 };
 /** pelvic fin (separate, resting on the bed under the pectoral); far = the far-side one, a little behind */
@@ -371,7 +379,7 @@ const PLATE_REST: P[] = (() => {
   return sampleCurve(cps, 0.9, 8).slice(1, -1);
 })();
 export const opercGeom = (s: FishLook): OperGeom => {
-  const fl = s.startle * 0.32 * Math.abs(Math.sin(s.t * 23));
+  const fl = s.startle * 0.32 * Math.abs(Math.sin(s.t * 14.5));
   const g = clamp(s.gill + fl, 0, 1.3);
   const pr = clamp(s.prop, 0, 1.2);
   const d: number[] = [], w: number[] = [], notch: number[] = [];
@@ -614,8 +622,8 @@ export const FishBody: React.FC<{s: FishLook; opacity?: number; mask?: string}> 
       <path d={`M${n4(E.x - r * 0.96)} ${n4(E.y - r * 0.28)}A${r} ${r} 0 0 1 ${n4(E.x + r * 0.96)} ${n4(E.y - r * 0.28)}A${r * 1.25} ${r * 0.9} 0 0 0 ${n4(E.x - r * 0.96)} ${n4(E.y - r * 0.28)}Z`} fill={C.fishDark} opacity={0.38} />
       <circle cx={pup.x} cy={pup.y} r={r * 0.5} fill={C.pupil} />
       <circle cx={E.x} cy={E.y} r={r} fill="none" stroke={INK} strokeWidth={2.2} vectorEffect={NS} />
-      <ellipse cx={E.x - 0.72} cy={E.y - 0.78} rx={0.62} ry={0.42} transform={`rotate(-32 ${E.x - 0.72} ${E.y - 0.78})`} fill="#FFFFFF" opacity={0.92} />
-      <circle cx={pup.x + 0.62} cy={pup.y + 0.6} r={0.19} fill="#FFFFFF" opacity={0.6} />
+      <ellipse cx={E.x - 0.72} cy={E.y - 0.78} rx={0.62} ry={0.42} transform={`rotate(-32 ${E.x - 0.72} ${E.y - 0.78})`} fill={GLOSS} opacity={0.92} />
+      <circle cx={pup.x + 0.62} cy={pup.y + 0.6} r={0.19} fill={GLOSS} opacity={0.6} />
       {/* silhouette ink (the peduncle end is left to the caudal fin) */}
       <g clipPath={`url(#${id.sc})`}>
         <path d={BODY_PATH} fill="none" stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
@@ -649,7 +657,7 @@ export const GillGap: React.FC<{s: FishLook}> = ({s}) => {
           <path d={poly(G.gap)} />
         </clipPath>
         <linearGradient id={id.grad} gradientUnits="userSpaceOnUse" x1={n4(mid.x - nm.x * 0.5)} y1={n4(mid.y - nm.y * 0.5)} x2={n4(mid.x + nm.x * 1.8)} y2={n4(mid.y + nm.y * 1.8)}>
-          <stop offset="0" stopColor={mix(C.gillDark, '#000000', 0.45)} />
+          <stop offset="0" stopColor={mix(C.gillDark, DEEP, 0.45)} />
           <stop offset="0.6" stopColor={C.chamber} />
           <stop offset="1" stopColor={mix(C.chamber, C.gillRed, 0.25)} />
         </linearGradient>
@@ -658,8 +666,8 @@ export const GillGap: React.FC<{s: FishLook}> = ({s}) => {
       <g clipPath={`url(#${id.clip})`}>
         <path d={fil} fill="none" stroke={mix(C.gillRed, C.gillDark, 0.25)} strokeWidth={0.36} strokeLinecap="round" opacity={0.75 * clamp(s.gill * 1.4 + 0.25)} />
         <path d={fil} fill="none" stroke={C.gillFilament} strokeWidth={0.09} strokeLinecap="round" opacity={0.55 * clamp(s.gill * 1.4)} />
-        <path d={open(G.ec)} fill="none" stroke="#000000" strokeWidth={0.7} opacity={0.5} />
-        <path d={open(G.eb)} fill="none" stroke="#000000" strokeWidth={0.35} opacity={0.35} />
+        <path d={open(G.ec)} fill="none" stroke={DEEP} strokeWidth={0.7} opacity={0.5} />
+        <path d={open(G.eb)} fill="none" stroke={DEEP} strokeWidth={0.35} opacity={0.35} />
       </g>
       {/* the body-side rim of the opening, lit, and its ink */}
       <path d={open(G.eb.slice(3, -3).map((q, i) => add(q, mul(G.nrm[i + 3], 0.14))))} fill="none" stroke={lit(C.fishCheek, 0.3)} strokeWidth={1.6} vectorEffect={NS} opacity={0.5} strokeLinecap="round" />
@@ -712,8 +720,8 @@ export const Operculum: React.FC<{s: FishLook; opacity?: number; mask?: string}>
           <stop offset="1" stopColor={mix(C.fishBelly, C.fishBody, 0.3)} />
         </linearGradient>
         <radialGradient id={id.sheen} gradientUnits="userSpaceOnUse" cx="-31.5" cy="-4" r="11" fx="-34" fy="-7.5">
-          <stop offset="0" stopColor="#FFF7E6" stopOpacity={0.22 + 0.06 * g} />
-          <stop offset="0.55" stopColor="#FFF7E6" stopOpacity={0.05} />
+          <stop offset="0" stopColor={WARM} stopOpacity={0.22 + 0.06 * g} />
+          <stop offset="0.55" stopColor={WARM} stopOpacity={0.05} />
           <stop offset="1" stopColor={C.fishDark} stopOpacity={0.16} />
         </radialGradient>
         <linearGradient id={id.lo} gradientUnits="userSpaceOnUse" x1="0" y1="2" x2="0" y2="11">
@@ -742,7 +750,7 @@ export const Operculum: React.FC<{s: FishLook; opacity?: number; mask?: string}>
       </defs>
       {/* the shadow the flap casts on the body (and into the opening) behind it */}
       <g clipPath={`url(#${id.behind})`}>
-        <path d={open(shadowLine)} fill="none" stroke={mix(C.fishDark, '#000000', 0.5)} strokeWidth={0.45 + 0.55 * g + 0.5 * clamp(s.prop)} opacity={0.5} filter={`url(#${id.blur})`} />
+        <path d={open(shadowLine)} fill="none" stroke={mix(C.fishDark, DEEP, 0.5)} strokeWidth={0.45 + 0.55 * g + 0.5 * clamp(s.prop)} opacity={0.5} filter={`url(#${id.blur})`} />
       </g>
       {lifted && <path d={lipBand} fill={mix(C.fishLip, C.pharynx, 0.35)} />}
       {/* the plate */}
@@ -755,8 +763,8 @@ export const Operculum: React.FC<{s: FishLook; opacity?: number; mask?: string}>
         <rect x={-40} y={-12} width={20} height={24} fill={`url(#${id.form})`} />
         <path d={rimD} fill={lit(C.fishCheek, 0.35)} opacity={0.42} />
         <path d={open(ridge)} fill="none" stroke={INK} strokeWidth={1.2} vectorEffect={NS} opacity={0.28} strokeLinecap="round" />
-        <path d={open(G.ec.slice(4, Math.round(n * 0.42)).map((q, i) => add(q, mul(G.nrm[i + 4], -0.2))))} fill="none" stroke="#FFF7E6" strokeWidth={1.6} vectorEffect={NS} opacity={0.32} strokeLinecap="round" />
-        <path d={open(PREOPERCLE.map((q) => add(q, pt(0.35, 0))))} fill="none" stroke="#FFF7E6" strokeWidth={1.5} vectorEffect={NS} opacity={0.22} strokeLinecap="round" />
+        <path d={open(G.ec.slice(4, Math.round(n * 0.42)).map((q, i) => add(q, mul(G.nrm[i + 4], -0.2))))} fill="none" stroke={WARM} strokeWidth={1.6} vectorEffect={NS} opacity={0.32} strokeLinecap="round" />
+        <path d={open(PREOPERCLE.map((q) => add(q, pt(0.35, 0))))} fill="none" stroke={WARM} strokeWidth={1.5} vectorEffect={NS} opacity={0.22} strokeLinecap="round" />
         {/* a soft gloss across the convex plate (stronger as it turns toward the light when flared) */}
         <path d={open([pt(-34.8, -7.2), pt(-32.2, -8.9), pt(-29.0, -9.25), pt(-26.4, -8.0)].map((q) => add(q, pt(0.5 * g, 0))))} fill="none" stroke={`url(#${id.gl})`} strokeWidth={1.1} strokeLinecap="round" />
       </g>
