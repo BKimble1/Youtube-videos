@@ -115,11 +115,25 @@ const poseOn = (q: Path3, sTip: number, back: (c: V3[]) => V3[]): Eel3Pose => {
   return {c, back: back(c)};
 };
 
-/** the eel on screen: samples (px), radii (px), roll, depth; `from` = the first sample in front of the near plane
- *  (the samples behind it are replaced by a straight continuation, so the renderer's frame stays sane) */
+/** the depth used for projection: exact beyond Z_SOFT, easing (C1) to a floor near the lens, so a body passing
+ *  right by the camera grows smoothly instead of blowing up between two samples (no flare, no pop) */
+const Z_SOFT = 0.9, Z_FLOOR = 0.35;
+const softZ = (z: number) => (z >= Z_SOFT ? z : Z_FLOOR + (Z_SOFT - Z_FLOOR) * Math.exp((z - Z_SOFT) / (Z_SOFT - Z_FLOOR)));
+/** the eel on screen: samples (px), radii (px), roll, depth; `from` = the first sample in front of the camera
+ *  (depth > `near`; the samples behind are replaced by a straight continuation, so the renderer's frame stays sane;
+ *  with the softened depth the cut lands far outside the frame while the camera rides beside the body) */
 type ScrEel = {pts: P[]; rad: number[]; dorsal: number[]; depth: number[]; from: number; k: number};
-const toScreen = (B: Basis, pose: Eel3Pose, near = 0.35, kMul = 1): ScrEel => {
+const toScreen = (B: Basis, pose: Eel3Pose, near = 0.0, kMul = 1): ScrEel => {
   const sc = eelScreen(B, pose);
+  const cr = Math.cos((B.roll * Math.PI) / 180), sr = Math.sin((B.roll * Math.PI) / 180);
+  pose.c.forEach((p, i) => {
+    const d = sub3(p, B.eye);
+    const z = softZ(dot3(d, B.fw));
+    const x0 = (B.f * dot3(d, B.r)) / z, y0 = (-B.f * dot3(d, B.u)) / z;
+    sc.pts[i] = {x: B.cx + x0 * cr - y0 * sr, y: B.cy + x0 * sr + y0 * cr};
+    sc.s[i] = B.f / z;
+    sc.rad[i] = RADII[i] * sc.s[i];
+  });
   let last = -1;
   for (let i = 0; i <= N; i++) if (sc.depth[i] < near) last = i;
   const from = Math.min(N - 2, last + 1);
@@ -384,7 +398,7 @@ const S5Fog: React.FC<{B: Basis; dip: number}> = ({B, dip}) => {
 
 const s5State = (t: number) => {
   const B = s5Cam(t);
-  const e = toScreen(B, s5Pose(t), 0.12, 0.3);
+  const e = toScreen(B, s5Pose(t), 0.0, 0.3);
   return {B, e};
 };
 
@@ -925,7 +939,7 @@ const s6State = (t: number) => {
   const c = s6Cam(t);
   const B = cam6B(c);
   const pose = s6Pose(t);
-  const e = toScreen(B, pose, 0.12, 0.5);
+  const e = toScreen(B, pose, 0.0, 0.5);
   // where the body crosses the curtain (Z = 0): a fractional sample index
   let iX = -1;
   for (let i = 1; i <= N; i++) {
@@ -975,9 +989,9 @@ const S6View: React.FC<{t: number}> = ({t}) => {
   // the eel, opaque: its part beyond the curtain (in the chamber) lies over the filament fringe and under the bars
   // and rakers in front of it; the part in front of the curtain is drawn last. Both carry a pale backlit rim (the
   // light from the opening), so the slate body reads against the dark chamber at any size.
-  const rim = (a: number, b: number) => {
+  const rim = (a: number, b: number, w: number) => {
     if (b - Math.max(a, e.from) < 0.05) return null;
-    const d = eelSilhouette(e.pts.map((p) => ({x: p.x + 2, y: p.y - 2})), e.rad, Math.max(a, e.from), Math.min(b, N), false, t, e.dorsal, 4.4);
+    const d = eelSilhouette(e.pts.map((p) => ({x: p.x + 2, y: p.y - 2})), e.rad, Math.max(a, e.from), Math.min(b, N), false, t, e.dorsal, w);
     return <path d={d} fill={K.backlight} fillOpacity={0.95} />;
   };
   return (
@@ -985,11 +999,11 @@ const S6View: React.FC<{t: number}> = ({t}) => {
       <rect x={0} y={0} width={W} height={H} fill={K.chamberDeep} />
       <ChamberWall c={c} t={t} />
       {curtainOn && <Curtain c={c} geos={geos} part="fil" />}
-      {iX >= 0 && rim(iX, N)}
+      {iX >= 0 && rim(iX, N, 6.5)}
       {iX >= 0 && <EelS e={e} t={t} from={iX} />}
       {curtainOn && <Curtain c={c} geos={geos} part="bars" />}
       <rect x={0} y={0} width={W} height={H} fill={LUMEN} fillOpacity={cutDark(t)} />
-      {rim(0, iX >= 0 ? iX - 0.8 : N)}
+      {rim(0, iX >= 0 ? iX - 0.8 : N, 4.4)}
       {iX >= 0 ? <EelS e={e} t={t} to={iX} /> : <EelS e={e} t={t} />}
     </g>
   );
