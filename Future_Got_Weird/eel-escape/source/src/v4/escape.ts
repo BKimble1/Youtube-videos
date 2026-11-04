@@ -14,7 +14,7 @@
 import {EXIT} from '../anatomy';
 import {clamp, keyS, lerp, sm, ss} from '../lib';
 import {add3, basis, cross3, dot3, len3, mul3, norm3, orbitCam, sub3, V3} from './three';
-import {backFrom, EEL_L, EEL_R_MAX, Eel3Pose, N, RADII, US} from './eelV4';
+import {EEL_L, EEL_R_MAX, Eel3Pose, N, RADII, US} from './eelV4';
 import {predGeom, PRED_REST} from './art/pred3d';
 import {T} from './timing';
 
@@ -37,8 +37,9 @@ export const exitAtGill = (g: number): Exit => {
 /** how far the eel props the gill cover open while it passes through the opening (it lifts the cover to fit the body
  *  there): every exterior shot uses this for the predator's cover from the poke to the release, so the eel's root and
  *  the cover's edge stay together */
-export const escGill = (t: number) => {
-  if (t >= T_REL) return 0;
+export const escGill = (t: number): number => {
+  // after the release the cover settles from where the head left it (no snap shut)
+  if (t >= T_REL) return escGill(T_REL - 1e-4) * (1 - ss(t, T_REL, T_REL + 0.55));
   const out = outAt(t);
   if (out <= -0.5) return 0;
   const u = clamp(1 - out / EEL_L, 0, 1);
@@ -49,18 +50,19 @@ export const escGill = (t: number) => {
 export const exitAt = (t: number): Exit => exitAtGill(escGill(Math.min(t, T_REL - 1e-6)));
 /** the inward route from the exit (a ≤ 0), under the cover, through the gill chamber toward the arches, then hidden */
 const INWARD: V3[] = [
-  [0, 0, 0], // relative to the exit: on into the gap along the line of the body, then DOWN just behind the cover's
-  [-0.9, 0.7, -0.3], // edge (so it shows through the opened gap) ...
-  [-1.5, 1.8, -0.8],
-  [-2.0, 3.2, -1.4],
-  [-2.8, 4.3, -2.0],
-  [-4.2, 4.8, -2.7], // ... then forward across the opercular chamber
-  [-5.8, 4.5, -3.4], // the slit between arches 2 and 3
-  [-8.0, 4.6, -4.2],
-  [-12.0, 5.0, -5.0],
-  [-16.0, 5.6, -5.9],
-  [-24.0, 6.6, -6.2],
-  [-40.0, 7.2, -6.3],
+  [0, 0, 0], // relative to the exit: straight DOWN the slit just behind the cover's lifted edge (the caught head lies
+  [0.4, 1.15, -0.38], // here, side-on, seen through the propped-open gap with its eye toward us) ...
+  [0.8, 2.3, -0.76],
+  [1.1, 3.45, -1.14],
+  [1.2, 4.6, -1.6],
+  [0.4, 5.8, -2.3], // ... then forward across the opercular chamber to the slit between the arches
+  [-1.6, 6.6, -2.9],
+  [-4.4, 6.9, -3.5],
+  [-7.5, 7.0, -4.3],
+  [-11.0, 7.2, -5.0],
+  [-16.0, 7.4, -5.9],
+  [-24.0, 7.6, -6.2],
+  [-40.0, 7.8, -6.3],
 ];
 const inwardTable = (() => {
   const s = [0];
@@ -129,18 +131,22 @@ const theta = (a: number, t: number, out: number) => {
   //     lead-out longer: the loop pulls away from the fish)
   const k = wTight(t);
   const a0 = LOOP.a0 + 3 * k, a1 = lerp(LOOP.a1, 42, k);
-  const curl = th0 - 10 * D * sm(a / 5) + lerp(LOOP.turn, -350, k) * D * sm(clamp((a - a0) / (a1 - a0)));
+  const curl = th0 - 10 * D * sm(a / 5) + lerp(LOOP.turn, -322, k) * D * sm(clamp((a - a0) / (a1 - a0)));
   // (3) a travelling wave running tail → head (the eel is swimming BACKWARD out of the fish)
   const A = (lerp(9, 7.5, wCurl(t)) + 4 * k) * D * sm(a / 7);
   const wave = A * Math.sin(2 * Math.PI * (1.25 * t + a / 15)) + 4 * D * wCurl(t) * Math.sin(2 * Math.PI * (0.45 * t + a / 40));
-  return lerp(bow, curl, wCurl(t)) + wave;
+  // while the head is caught (S9) the body leaves the opening rising up and back over the shoulder, clear of the gap
+  const lift = 38 * D * (1 - sm(a / 10)) * ss(t, 15.6, 16.2) * (1 - ss(t, 17.4, 18.2));
+  return lerp(bow, curl, wCurl(t)) + wave + lift;
 };
 const beta = (a: number, t: number, out: number) => {
   // out from under the cover, flattening into a plane beside the flank; the curl's plane sits farther out
   const lead = lerp(25, 72, wCurl(t)) * D * Math.exp(-a / lerp(3.5, 9 + 2 * wTight(t), wCurl(t)));
   // the bow into the current: the middle of the outside body swings out (+z) and the tail comes back in
   const bowZ = 55 * D * Math.cos(Math.PI * clamp(a / Math.max(10, out))) * sm(out / 14) * (1 - wCurl(t));
-  return lead + bowZ;
+  // ... and less toward the viewer there
+  const keep = 1 - 0.65 * ss(t, 15.6, 16.2) * (1 - ss(t, 17.4, 18.2));
+  return lead * keep + bowZ;
 };
 export const dirOf = (th: number, be: number): V3 => [Math.cos(be) * Math.cos(th), -Math.cos(be) * Math.sin(th), Math.sin(be)];
 
@@ -274,7 +280,7 @@ const angOf = (v: V3, near: number) => {
 export const freePose = (t: number): V3[] => {
   // straightening out of the curl: the loop UNROLLS in its own plane (every tangent's in-plane angle moves to the
   // heading's), so the head swings round beside the flank, never through the predator
-  const w = ss(t, T_REL, T_REL + 0.62);
+  const w = ss(t, T_REL, T_REL + 0.8);
   const sw = swum(t);
   const thMid = REL_ANG.th[MID];
   const tg: V3[] = REL.tg.map((_, i) => {
@@ -300,6 +306,18 @@ export const freePose = (t: number): V3[] => {
   for (let i = MID - 1; i >= 0; i--) c[i] = sub3(c[i + 1], mul3(norm3(add3(tg[i + 1], tg[i])), ds));
   return c;
 };
+
+/** the eel's back: up (−y) where the body runs level; where it runs nearly vertical (down the gill opening) the back
+ *  turns toward the fish's tail (+x), so the eyes face the sides (one toward the viewer) */
+export const backFrom = (c: V3[]): V3[] =>
+  c.map((_, i) => {
+    const a = c[Math.max(0, i - 1)], b = c[Math.min(c.length - 1, i + 1)];
+    const T = norm3(sub3(b, a));
+    const w = ss(Math.abs(T[1]), 0.55, 0.85);
+    const pref = norm3([w, -(1 - w), 0]);
+    const k = dot3(pref, T);
+    return norm3([pref[0] - k * T[0], pref[1] - k * T[1], pref[2] - k * T[2]]);
+  });
 
 // ---------------------------------------------------------------- the pose for any exterior time
 export type EscapePose = Eel3Pose & {out: number; crossI: number; free: boolean};

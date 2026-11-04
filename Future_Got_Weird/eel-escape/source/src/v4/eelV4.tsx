@@ -20,7 +20,7 @@ export const N = 120;
 export const US = Array.from({length: N + 1}, (_, i) => i / N);
 export const EYE_SCALE = 1.45;
 /** the ribbon fin, a little taller than V3's so the eel's fin fringe reads at phone size outside the fish */
-export const FIN_SCALE_3D = 1.6;
+export const FIN_SCALE_3D = 1.3;
 
 // monotone cubic (Fritsch–Carlson) through the profile knots, so the radius is smooth (C1) with no overshoot
 const KU = [0.0, 0.012, 0.03, 0.055, 0.085, 0.115, 0.16, 0.24, 0.34, 0.45, 0.6, 0.75, 0.88, 0.96, 1.0];
@@ -175,7 +175,7 @@ export const eelScreen = (B: Basis, e: Eel3Pose) => {
 };
 /** The V4 eel in 3D, drawn in screen px (place it in the frame's root, untransformed). `from`/`to` cut sections
  *  (sample indices) exactly as in eelArt; `clip` is a SCREEN-space path d or url(#id). */
-export const Eel3D: React.FC<{B: Basis; pose: Eel3Pose; t: number; from?: number; to?: number; clip?: string; opacity?: number; over?: 'tail' | 'head'}> = ({B, pose, t, from: from0, to: to0, clip, opacity, over}) => {
+export const Eel3D: React.FC<{B: Basis; pose: Eel3Pose; t: number; from?: number; to?: number; clip?: string; opacity?: number; over?: 'tail' | 'head'; eyeScale?: number}> = ({B, pose, t, from: from0, to: to0, clip, opacity, over, eyeScale = EYE_SCALE}) => {
   const sc = eelScreen(B, pose);
   // near plane: only the samples in front of the lens (the longest such run inside [from, to]) are drawn
   const NEAR = 1.5;
@@ -203,7 +203,7 @@ export const Eel3D: React.FC<{B: Basis; pose: Eel3Pose; t: number; from?: number
   const clipU = clip && !clip.startsWith('url(') ? undefined : clip;
   const inner = (
     <g transform={`scale(${s0})`}>
-      <Eel pts={ptsU} radii={radU} px={s0} t={t} dorsal={sc.dorsal} from={from} to={to} opacity={opacity} clip={clipU} over={over} eyeScale={EYE_SCALE} finScale={FIN_SCALE_3D} />
+      <Eel pts={ptsU} radii={radU} px={s0} t={t} dorsal={sc.dorsal} from={from} to={to} opacity={opacity} clip={clipU} over={over} eyeScale={eyeScale} finScale={FIN_SCALE_3D} />
     </g>
   );
   if (clip && !clip.startsWith('url(')) return <ClipG d={clip}>{inner}</ClipG>;
