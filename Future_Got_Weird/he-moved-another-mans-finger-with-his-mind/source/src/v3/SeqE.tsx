@@ -58,8 +58,8 @@ const tm = () => {
   const e2 = mkTrial(T('touchpad') - 1.6);
   const flipIn = T('In some rounds') - 0.38;
   const walk1 = flipIn + 0.85;
-  const shh = T('quietly') - 0.75;
-  const grip = T('flipped the coil') - 0.12;
+  const shh = T('quietly') - 0.6;
+  const grip = T('flipped the coil') + 0.08;
   const fs = grip + 0.08; // the coil turns
   const fe = fs + 0.8;
   const ab0 = T('Same game') - 0.42;
@@ -113,7 +113,7 @@ const BOXS = 1.3;
 const BOXP = {x: 1520, y: 600};
 const PORT = {x: BOXP.x + 180 * BOXS, y: BOXP.y};
 const PLS = 0.9; // plug scale in E
-const RES = {home: 2060, flip: 1180, y: 1062, s: 2.2};
+const RES = {home: 2060, flip: 1250, y: 1062, s: 2.2};
 // sender room (local)
 const SND = {x: 1300, y: 1238, s: 2.2};
 const SMON = {x: 620, y: 815, s: 0.78};
@@ -295,29 +295,25 @@ const resState = (t: number): {x: number; perf: Perf; behind: boolean} => {
   } else if (t > M.flipIn && t < M.fe + 1.2) {
     // the flip: walk in, a quiet finger to the lips, take the coil body and its handle, turn it, let go
     const mouthW = rigWorld(ch, MOUTH_L);
-    const rimA = {x: 975, y: 228}; // the coil body's top rim; the turn reflects it across the handle axis
-    const rimB = (() => {
-      const v = {x: rimA.x - COIL.x, y: rimA.y - COIL.y};
-      const along = v.x * HDIR.x + v.y * HDIR.y;
-      const p = {x: COIL.x + HDIR.x * along, y: COIL.y + HDIR.y * along};
-      return {x: 2 * p.x - rimA.x, y: 2 * p.y - rimA.y};
-    })();
+    // his right hand takes the coil by its handle, next to the coil, and turns it about the handle's own axis
     const turn = clamp((t - M.fs) / (M.fe - M.fs));
-    const onCoil = {x: lerp(rimA.x, rimB.x, easeInOut(turn)) + 34 * Math.sin(turn * Math.PI), y: lerp(rimA.y, rimB.y, easeInOut(turn))};
-    const handleEnd = {x: HANDLE_END.x - 6, y: HANDLE_END.y - 4};
+    const g0 = onHandle(140);
+    const perp = {x: -HDIR.y, y: HDIR.x};
+    const onHandleG = {x: g0.x + perp.x * 16 * Math.sin(turn * Math.PI), y: g0.y + perp.y * 16 * Math.sin(turn * Math.PI)};
+    const chairTop = {x: 1150, y: 462};
     const shhK = bump(t, M.shh, M.grip - 0.35, 0.28, 0.22);
     const lMouth = {x: mouthW.x - 6, y: mouthW.y + 22};
     if (t < M.grip - 0.35) hl = {x: lerp(restL.x, lMouth.x, shhK), y: lerp(restL.y, lMouth.y, shhK)};
-    else if (t < M.grip) hl = kp(t, [[M.grip - 0.35, restL], [M.grip, rimA, 50, easeOut]]);
-    else if (t < M.fe + 0.06) hl = onCoil;
-    else hl = kp(t, [[M.fe + 0.06, rimB], [M.fe + 0.55, restL, -30]]);
-    if (t < M.grip - 0.3) hr = restR;
-    else if (t < M.grip) hr = kp(t, [[M.grip - 0.3, restR], [M.grip - 0.02, handleEnd, -40, easeOut]]);
-    else if (t < M.fe + 0.06) hr = handleEnd;
-    else hr = kp(t, [[M.fe + 0.06, handleEnd], [M.fe + 0.55, restR, 40]]);
+    else if (t < M.grip) hl = kp(t, [[M.grip - 0.35, restL], [M.grip, g0, 40, easeOut]]);
+    else if (t < M.fe + 0.06) hl = onHandleG;
+    else hl = kp(t, [[M.fe + 0.06, g0], [M.fe + 0.55, restL, -30]]);
+    if (t < M.grip - 0.45) hr = restR;
+    else if (t < M.grip - 0.1) hr = kp(t, [[M.grip - 0.45, restR], [M.grip - 0.1, chairTop, -30, easeOut]]);
+    else if (t < M.fe + 0.3) hr = chairTop;
+    else hr = kp(t, [[M.fe + 0.3, chairTop], [M.fe + 0.75, restR, 30]]);
     const holding = t >= M.grip - 0.05 && t < M.fe + 0.06;
     sl = shhK > 0.05 ? {curl: 0.85, spread: 0.1, point: shhK} : holding ? {curl: 0.8, spread: 0.15} : {curl: 0.25, spread: 0.55};
-    sr = holding ? {curl: 0.85, spread: 0.1} : {curl: 0.3, spread: 0.4};
+    sr = t >= M.grip - 0.1 && t < M.fe + 0.3 ? {curl: 0.55, spread: 0.2} : {curl: 0.3, spread: 0.4};
     lookX = shhK > 0.3 ? 0 : -0.55;
     lookY = shhK > 0.3 ? 0 : -0.45;
     mouth = shhK > 0.3 ? 'smirk' : t > M.fe ? 'smile' : 'hmm';
@@ -410,7 +406,6 @@ const RecvRoom: React.FC<{f: number; S: RS; id: string}> = ({f, S, id}) => {
         desk={<g>
           <Desk id={`${id}-desk`} x0={360} x1={1240} y={840} d={130} h={320} top="#8C735D" face="#6E5A49" />
           <TouchPad14 id={`${id}-pad`} press={S.press} />
-          {S.zeroK > 0.001 && <Tag x={320} y={600} text="0 presses" size={84} k={S.zeroK} />}
         </g>} />
       {/* the stimulated patch under the coil (only when the active face looks into the head) */}
       {active && e > 0.001 && <ellipse cx={SCALP.x} cy={SCALP.y} rx={90} ry={60} fill={`url(#${id}-gl)`} opacity={0.85 * e} />}
@@ -635,6 +630,7 @@ const World: React.FC<{f: number; cam: CamS}> = ({f, cam}) => {
                     const x = lerp(-GAP - 40, 40, u), y = oy + CEIL + 90 * Math.sin(u * Math.PI);
                     return <rect x={fmt(x - 40)} y={fmt(y - 30)} width={80} height={60} rx={14} fill={K.saffron} stroke={INK} strokeWidth={7} />;
                   })()}
+                  {S.zeroK > 0.001 && <Tag x={RWE + 120} y={oy + 560} text="0 presses" size={130} anchor="start" k={S.zeroK} />}
                   <Tag x={-GAP / 2} y={oy + 560} text={`Pair ${i + 1}`} size={140} fill={lit(LOOKS_R[i].shirt, 0.35)} k={pr(f, M.pops[i] - 0.05, M.pops[i] + 0.25)} />
                 </g>
               )}

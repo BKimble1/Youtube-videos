@@ -1,0 +1,851 @@
+{
+ "frames": 6353,
+ "scenes": [
+  {
+   "id": "A",
+   "start": 0
+  },
+  {
+   "id": "B",
+   "start": 19.54
+  },
+  {
+   "id": "C",
+   "start": 44.64
+  },
+  {
+   "id": "D",
+   "start": 90
+  },
+  {
+   "id": "E",
+   "start": 101.81
+  },
+  {
+   "id": "F",
+   "start": 135.87
+  },
+  {
+   "id": "G",
+   "start": 178.87
+  },
+  {
+   "id": "H",
+   "start": 195.95999999999998
+  }
+ ],
+ "K": {
+  "flipped": 126.63,
+  "flippedEnd": 127.49,
+  "across3": 129.7,
+  "bad": 100.13,
+  "goBack": 196.26,
+  "wrong": 208.42,
+  "fire": 65.65,
+  "trust": 179.32
+ },
+ "cues": [
+  {
+   "t": 0.06666666666666667,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "A"
+  },
+  {
+   "t": 0.75,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "A"
+  },
+  {
+   "t": 0.7833333333333333,
+   "kind": "cannon",
+   "gain": -3,
+   "scene": "A"
+  },
+  {
+   "t": 1.1033333333333333,
+   "kind": "boom",
+   "gain": -6,
+   "scene": "A"
+  },
+  {
+   "t": 2.2,
+   "kind": "plane_pass",
+   "gain": -14,
+   "dur": 2.6,
+   "scene": "A"
+  },
+  {
+   "t": 4.56,
+   "kind": "rocket_launch",
+   "gain": -10,
+   "scene": "A"
+  },
+  {
+   "t": 6.45,
+   "kind": "packet_send",
+   "gain": -10,
+   "scene": "A"
+  },
+  {
+   "t": 7.0200000000000005,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "A"
+  },
+  {
+   "t": 7.220000000000001,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "A"
+  },
+  {
+   "t": 7.57,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "A"
+  },
+  {
+   "t": 7.6033333333333335,
+   "kind": "cannon",
+   "gain": -2,
+   "scene": "A"
+  },
+  {
+   "t": 7.923333333333334,
+   "kind": "boom",
+   "gain": -4,
+   "scene": "A"
+  },
+  {
+   "t": 9.19,
+   "kind": "whoosh",
+   "gain": -14,
+   "dur": 1.4,
+   "scene": "A"
+  },
+  {
+   "t": 13.32,
+   "kind": "pop",
+   "gain": -10,
+   "scene": "A"
+  },
+  {
+   "t": 15.15,
+   "kind": "packet_send",
+   "gain": -13,
+   "scene": "A"
+  },
+  {
+   "t": 16.6,
+   "kind": "packet_arrive",
+   "gain": -13,
+   "scene": "A"
+  },
+  {
+   "t": 18.63,
+   "kind": "tick",
+   "gain": -10,
+   "scene": "A"
+  },
+  {
+   "t": 20.729999999999997,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 21.4,
+   "kind": "packet_send",
+   "gain": -14,
+   "scene": "B"
+  },
+  {
+   "t": 23.150000000000002,
+   "kind": "tick",
+   "gain": -10,
+   "scene": "B"
+  },
+  {
+   "t": 24.96,
+   "kind": "whoosh",
+   "gain": -12,
+   "dur": 0.6,
+   "scene": "B"
+  },
+  {
+   "t": 25.89,
+   "kind": "tick",
+   "gain": -8,
+   "scene": "B"
+  },
+  {
+   "t": 26.09,
+   "kind": "tick",
+   "gain": -8,
+   "scene": "B"
+  },
+  {
+   "t": 27.84,
+   "kind": "tick",
+   "gain": -4,
+   "scene": "B"
+  },
+  {
+   "t": 31.75,
+   "kind": "plane_pass",
+   "gain": -6,
+   "dur": 2.55,
+   "scene": "B"
+  },
+  {
+   "t": 34.841,
+   "kind": "pop",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 35.64,
+   "kind": "rocket_launch",
+   "gain": -5,
+   "scene": "B"
+  },
+  {
+   "t": 36.199999999999996,
+   "kind": "packet_send",
+   "gain": -12,
+   "scene": "B"
+  },
+  {
+   "t": 36.699999999999996,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "B"
+  },
+  {
+   "t": 37.05,
+   "kind": "key_click",
+   "gain": 0,
+   "scene": "B"
+  },
+  {
+   "t": 37.08333333333333,
+   "kind": "cannon",
+   "gain": 0,
+   "scene": "B"
+  },
+  {
+   "t": 37.40333333333333,
+   "kind": "boom",
+   "gain": -1,
+   "scene": "B"
+  },
+  {
+   "t": 42.410000000000004,
+   "kind": "tick",
+   "gain": -16,
+   "scene": "B"
+  },
+  {
+   "t": 42.99,
+   "kind": "tick",
+   "gain": -16,
+   "scene": "B"
+  },
+  {
+   "t": 46.22,
+   "kind": "rocket_launch",
+   "scene": "C"
+  },
+  {
+   "t": 61.46,
+   "kind": "pop",
+   "gain": -6,
+   "scene": "C"
+  },
+  {
+   "t": 62.6,
+   "kind": "packet_send",
+   "scene": "C"
+  },
+  {
+   "t": 65.11,
+   "kind": "packet_arrive",
+   "gain": -3,
+   "scene": "C"
+  },
+  {
+   "t": 66.25,
+   "kind": "tick",
+   "gain": -9,
+   "scene": "C"
+  },
+  {
+   "t": 73.64,
+   "kind": "coil_pulse",
+   "scene": "C"
+  },
+  {
+   "t": 76.15,
+   "kind": "key_click",
+   "scene": "C"
+  },
+  {
+   "t": 76.25,
+   "kind": "cannon",
+   "scene": "C"
+  },
+  {
+   "t": 77.95,
+   "kind": "boom",
+   "scene": "C"
+  },
+  {
+   "t": 90.25,
+   "kind": "rocket_launch",
+   "gain": -9,
+   "scene": "D"
+  },
+  {
+   "t": 91.35,
+   "kind": "tick",
+   "gain": -10,
+   "scene": "D"
+  },
+  {
+   "t": 91.41,
+   "kind": "packet_send",
+   "gain": -7,
+   "scene": "D"
+  },
+  {
+   "t": 92.78,
+   "kind": "error",
+   "gain": -6,
+   "scene": "D"
+  },
+  {
+   "t": 93.25,
+   "kind": "city_hit",
+   "gain": -5,
+   "scene": "D"
+  },
+  {
+   "t": 97.85,
+   "kind": "packet_arrive",
+   "gain": -8,
+   "scene": "D"
+  },
+  {
+   "t": 98.53,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "D"
+  },
+  {
+   "t": 100.13,
+   "kind": "error",
+   "gain": -3,
+   "scene": "D"
+  },
+  {
+   "t": 100.42999999999999,
+   "kind": "spinner",
+   "gain": -15,
+   "dur": 1.2,
+   "scene": "D"
+  },
+  {
+   "t": 102.73,
+   "kind": "tick",
+   "gain": -5,
+   "scene": "E"
+  },
+  {
+   "t": 104.55,
+   "kind": "tick",
+   "gain": -16,
+   "scene": "E"
+  },
+  {
+   "t": 105.03999999999999,
+   "kind": "tick",
+   "gain": -16,
+   "scene": "E"
+  },
+  {
+   "t": 106.72,
+   "kind": "rocket_launch",
+   "gain": -12,
+   "scene": "E"
+  },
+  {
+   "t": 107.82000000000001,
+   "kind": "packet_arrive",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 108.12,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 108.32,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 108.37,
+   "kind": "cannon",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 108.69,
+   "kind": "boom",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 112.11,
+   "kind": "rotate",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 114.77,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 117.49000000000001,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 120,
+   "kind": "rocket_launch",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 121.4,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 121.6,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 121.65,
+   "kind": "cannon",
+   "gain": -7,
+   "scene": "E"
+  },
+  {
+   "t": 121.85,
+   "kind": "plane_pass",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 121.97,
+   "kind": "boom",
+   "gain": -7,
+   "scene": "E"
+  },
+  {
+   "t": 122.45,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 122.65,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 122.7,
+   "kind": "cannon",
+   "gain": -8,
+   "scene": "E"
+  },
+  {
+   "t": 123.02,
+   "kind": "boom",
+   "gain": -9,
+   "scene": "E"
+  },
+  {
+   "t": 124.57000000000001,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 124.77000000000001,
+   "kind": "pad_click",
+   "gain": -3,
+   "scene": "E"
+  },
+  {
+   "t": 124.82000000000001,
+   "kind": "cannon",
+   "gain": -12,
+   "scene": "E"
+  },
+  {
+   "t": 124.85,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 125.64999999999999,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 126.05,
+   "kind": "city_hit",
+   "gain": -15,
+   "scene": "E"
+  },
+  {
+   "t": 126.69999999999999,
+   "kind": "rocket_launch",
+   "gain": -10,
+   "scene": "E"
+  },
+  {
+   "t": 128.1,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 129.45,
+   "kind": "city_hit",
+   "gain": -4,
+   "scene": "E"
+  },
+  {
+   "t": 131.28,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 131.5,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 131.72,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "E"
+  },
+  {
+   "t": 133.45000000000002,
+   "kind": "city_hit",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 133.65,
+   "kind": "city_hit",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 133.85000000000002,
+   "kind": "city_hit",
+   "gain": -13,
+   "scene": "E"
+  },
+  {
+   "t": 137.94,
+   "kind": "rotate",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 141.35,
+   "kind": "whoosh",
+   "gain": -14,
+   "scene": "F"
+  },
+  {
+   "t": 149.42000000000002,
+   "kind": "tick",
+   "gain": -10,
+   "scene": "F"
+  },
+  {
+   "t": 151.39000000000001,
+   "kind": "rotate",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 157.28,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "F"
+  },
+  {
+   "t": 158.38,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "F"
+  },
+  {
+   "t": 159.12,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 159.42000000000002,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 160.86,
+   "kind": "tick",
+   "gain": -8,
+   "scene": "F"
+  },
+  {
+   "t": 165.41,
+   "kind": "coil_pulse",
+   "scene": "F"
+  },
+  {
+   "t": 165.99,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "F"
+  },
+  {
+   "t": 171.64000000000001,
+   "kind": "coil_pulse",
+   "scene": "F"
+  },
+  {
+   "t": 172.41000000000003,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "F"
+  },
+  {
+   "t": 174.57000000000002,
+   "kind": "rotate",
+   "gain": -4,
+   "scene": "F"
+  },
+  {
+   "t": 175.05,
+   "kind": "whoosh",
+   "gain": -16,
+   "scene": "F"
+  },
+  {
+   "t": 175.53,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "F"
+  },
+  {
+   "t": 175.7,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "F"
+  },
+  {
+   "t": 176.47,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 176.63000000000002,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "F"
+  },
+  {
+   "t": 178.22,
+   "kind": "line_clear",
+   "gain": -3,
+   "scene": "F"
+  },
+  {
+   "t": 183,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "G"
+  },
+  {
+   "t": 183.23,
+   "kind": "vote",
+   "gain": -5,
+   "scene": "G"
+  },
+  {
+   "t": 183.92999999999998,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 184.54000000000002,
+   "kind": "packet_arrive",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 185.28,
+   "kind": "flip",
+   "scene": "G"
+  },
+  {
+   "t": 187.08,
+   "kind": "coil_pulse",
+   "scene": "G"
+  },
+  {
+   "t": 187.95000000000002,
+   "kind": "flash",
+   "gain": -2,
+   "scene": "G"
+  },
+  {
+   "t": 188.54999999999998,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 188.85,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 189.14999999999998,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 189.49,
+   "kind": "tick",
+   "gain": -12,
+   "scene": "G"
+  },
+  {
+   "t": 190.75,
+   "kind": "rotate",
+   "gain": -4,
+   "scene": "G"
+  },
+  {
+   "t": 192.38,
+   "kind": "line_clear",
+   "gain": -3,
+   "scene": "G"
+  },
+  {
+   "t": 193.35,
+   "kind": "pop",
+   "gain": -10,
+   "scene": "G"
+  },
+  {
+   "t": 193.442,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 193.732,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 194.02200000000002,
+   "kind": "tick",
+   "gain": -14,
+   "scene": "G"
+  },
+  {
+   "t": 195.23,
+   "kind": "whoosh",
+   "gain": -16,
+   "scene": "G"
+  },
+  {
+   "t": 196.30999999999997,
+   "kind": "whoosh",
+   "gain": -16,
+   "dur": 0.6,
+   "scene": "H"
+  },
+  {
+   "t": 199.12,
+   "kind": "coil_pulse",
+   "gain": -4,
+   "scene": "H"
+  },
+  {
+   "t": 199.72000000000003,
+   "kind": "key_click",
+   "gain": -1,
+   "scene": "H"
+  },
+  {
+   "t": 203.02999999999997,
+   "kind": "whoosh",
+   "gain": -18,
+   "dur": 0.7,
+   "scene": "H"
+  },
+  {
+   "t": 204.17000000000002,
+   "kind": "coil_pulse",
+   "gain": -8,
+   "scene": "H"
+  },
+  {
+   "t": 204.22000000000003,
+   "kind": "flash",
+   "gain": -4,
+   "scene": "H"
+  },
+  {
+   "t": 209.21999999999997,
+   "kind": "whoosh",
+   "gain": -16,
+   "dur": 1.2,
+   "scene": "H"
+  }
+ ]
+}

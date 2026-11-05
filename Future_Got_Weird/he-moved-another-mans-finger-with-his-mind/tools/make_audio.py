@@ -31,7 +31,7 @@ C = json.load(open('audio/cues.json' if VER == 'V1' else f'audio/cues_{VER.lower
 KK = C['K']
 SC = {s['id'].split(' ')[0]: s['start'] for s in C['scenes']}
 if 'A' in SC:  # V2 sequence ids A..G map onto the V1 section names used by the score
-    SC = {'S1': SC['A'], 'S2': SC['B'], 'S3': SC['C'], 'S4': SC['D'], 'S5': SC['E'], 'S6': SC['F'], 'S7': SC['G']}
+    SC = {'S1': SC['A'], 'S2': SC['B'], 'S3': SC['C'], 'S4': SC['D'], 'S5': SC['E'], 'S6': SC['F'], 'S7': SC['G'], **({'S8': SC['H']} if 'H' in SC else {})}
 narr, sr0 = sf.read('audio/narration/FGW_Finger_narration_V1.wav')
 assert sr0 == SR
 N = len(narr)
