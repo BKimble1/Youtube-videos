@@ -59,8 +59,8 @@ export const EV_A = (): GEvent[] => {
 };
 
 // ---------------------------------------------------------------- the diptych cameras (room-local cameras per panel)
-type PK = {gx: number; L: CamS; R: CamS};
-const P0: PK = {gx: 840, L: {x: 840, y: 505, z: 0.98}, R: {x: 818, y: 520, z: 1.24}};
+export type PK = {gx: number; L: CamS; R: CamS};
+export const P0_DIP: PK = {gx: 840, L: {x: 840, y: 505, z: 0.98}, R: {x: 818, y: 520, z: 1.24}};
 const keysD = (t: number, ks: [number, PK, ((x: number) => number)?][]): PK => {
   if (t <= ks[0][0]) return ks[0][1];
   for (let i = 0; i < ks.length - 1; i++) {
@@ -77,8 +77,8 @@ const keysD = (t: number, ks: [number, PK, ((x: number) => number)?][]): PK => {
 const dipCam = (t: number): PK => {
   const c2 = C2();
   return keysD(t, [
-    [0, P0],
-    [0.04, P0],
+    [0, P0_DIP],
+    [0.04, P0_DIP],
     // follow the stimulation down his arm into the hand; Rao's screen stays in view for the shot
     [0.44, {gx: 700, L: {x: 990, y: 560, z: 1.05}, R: {x: 676, y: 690, z: 2.3}}],
     [0.98, {gx: 694, L: {x: 996, y: 562, z: 1.07}, R: {x: 672, y: 694, z: 2.36}}, lin1],
@@ -102,7 +102,7 @@ const dipCam = (t: number): PK => {
 const C_M0: CamS = {x: 0, y: 470, z: 1.32};
 const C_M1: CamS = {x: 0, y: 470, z: 0.98};
 const mergeK = (t: number) => easeInOut(clamp((t - T_MERGE0()) / (T_MERGE1() - T_MERGE0())));
-const STO_WIN: CamS = {...Rw({x: 1000, y: 560}), z: 2.25};
+const STO_WIN: CamS = {...Rw({x: 940, y: 560}), z: 2.85};
 const CRANE: CamS = {x: 0, y: 150, z: 0.46};
 const SPLIT_CAM: CamS = {x: -40, y: 260, z: 0.6};
 export const campusCamA = (t: number): CamS => {
@@ -144,7 +144,11 @@ const stoFace = (t: number): Partial<Pose> => {
   const look2 = clamp((t - (p2 + 0.15)) / 0.2) * (1 - clamp((t - (T_MERGE0() + 0.4)) / 0.5));
   const lk = Math.max(look1, look2);
   const puzzled = clamp((t - (p1 + 0.35)) / 0.3) * (1 - clamp((t - 2.6) / 0.4)) + clamp((t - (p2 + 0.3)) / 0.3) * (1 - clamp((t - T_MERGE0()) / 0.4));
-  return {lookX: lerp(0.05, -0.95, lk), lookY: lerp(0.18, 0.85, lk), tilt: -5 * lk, brows: 0.6 * clamp(puzzled), browAsym: 0.5 * clamp(puzzled), mouth: puzzled > 0.5 ? 'hmm' : 'flat', lean: -1.5 * lk};
+  // "who can't even see the game": nothing in front of him; his eyes wander over the bare wall
+  const ts = T_STO() + 0.25;
+  const scanK = clamp((t - ts) / 0.2) * (1 - clamp((t - (T_CRANE() + 0.2)) / 0.4));
+  const scan = Math.sin(clamp((t - ts) / 1.6) * Math.PI * 2) * 0.7 * scanK;
+  return {lookX: lerp(0.05, -0.95, lk) + scan, lookY: lerp(0.18, 0.85, lk) - 0.25 * scanK, tilt: -5 * lk + 2 * scan, brows: 0.6 * clamp(puzzled) + 0.35 * scanK, browAsym: 0.5 * clamp(puzzled), mouth: puzzled > 0.5 ? 'hmm' : 'flat', lean: -1.5 * lk};
 };
 const raoFace = (t: number): Partial<Pose> => {
   const ev = EV_A();

@@ -16,6 +16,7 @@ import {CrewChar, IDLE, Look, Pose} from './crew3';
 import {RAO, STOCCO} from '../art/people';
 import {GameScreen, GEvent, arcPt, CANNON, evState} from '../art/game';
 import {Computer, Desk, FONT_HEAD, INK, K, RoundCoil, Tree} from '../art/kit';
+import {SoftArc} from '../art/s6world';
 import {FPS} from './core2';
 import {FLAT_DESK_Y, H_FLAT, H_HOVER, HPose, HS, h2r, inkFor, KB, KEY, RoomArm, W as HW} from './abhand';
 
@@ -449,8 +450,15 @@ export type StoOpts = {
   armLift?: number;
   /** the stimulation path and the arm lit as a whole (frame 0's complete circuit) */
   stimLit?: number;
+  /** H: the room forms around the carried bar: wall and desk tinted toward the paper 0..1, keyboard build 0..1,
+   *  the hand entering (room-unit offset of the arm) */
+  paper?: number;
+  kbRise?: number;
+  handOffset?: V;
+  /** the phosphene (a soft flash in his vision) 0..1 */
+  flash?: number;
 };
-export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, tmsLit = 0, lit = 0, sig = -1, stim = -1, hand = H_HOVER, press = 0, keyGlow = 0, drive = -1, kb = 1, earGlow = 0, zr = 1, life = 0.35, coilBack = 0, armLift = 0, stimLit = 0}) => {
+export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, tmsLit = 0, lit = 0, sig = -1, stim = -1, hand = H_HOVER, press = 0, keyGlow = 0, drive = -1, kb = 1, earGlow = 0, zr = 1, life = 0.35, coilBack = 0, armLift = 0, stimLit = 0, paper = 0, kbRise = 1, handOffset, flash = 0}) => {
   const pose: Pose = {...IDLE, armL: {a: 20, b: 20}, armR: {a: 6, b: 8}, handR: {curl: 0.4, spread: 0.2}, lookX: 0.05, lookY: 0.18, mouth: 'flat', brows: 0, ...face};
   const sh = shoulderAt(STO_X, pose, f, 5, life);
   const common = {look: STOCCO as Look, pose, frame: f, seed: 5, x: STO_X, y: GR, scale: CS, flip: false, life, id: `${id}-c`, shadow: false};
@@ -466,8 +474,8 @@ export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, 
     <g>
       <defs>
         <linearGradient id={`${id}-wall`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={lit_(K.stoccoWall, 0.22)} />
-          <stop offset="1" stopColor={K.stoccoWall} />
+          <stop offset="0" stopColor={mix(lit_(K.stoccoWall, 0.22), K.paper, paper)} />
+          <stop offset="1" stopColor={mix(K.stoccoWall, K.paper, paper)} />
         </linearGradient>
       </defs>
       <rect x={-600} y={-600} width={3120} height={2400} fill={`url(#${id}-wall)`} />
@@ -504,7 +512,10 @@ export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, 
       <CrewChar {...common} front="L" pass="body" headGear={<g><SwimCapV3 /><EarbudsV3 glow={earGlow} /></g>} />
       {cb <= 0.5 && coilEl}
       {coilPulse > 0.01 && cb <= 0.5 && <ellipse cx={coil.x} cy={coil.y} rx={46 * coilPulse + 20} ry={(46 * coilPulse + 20) * 0.55} transform={`rotate(${coil.ang} ${coil.x} ${coil.y})`} fill={K.saffron} opacity={0.75 * coilPulse} />}
-      <Desk id={`${id}-desk`} x0={-200} x1={2200} y={STO_DESK} d={110} h={420} />
+      <g opacity={1 - paper}>
+        <Desk id={`${id}-desk`} x0={-200} x1={2200} y={STO_DESK} d={110} h={420} />
+      </g>
+      {paper > 0.001 && <rect x={-200} y={STO_DESK - 110} width={2400} height={530} fill={mix(K.stoccoWall, K.paper, paper)} opacity={paper} />}
       {/* a mug and a notepad: an ordinary desk, but no screen */}
       <g>
         <rect x={1420} y={STO_DESK - 92} width={64} height={78} rx={10} fill={K.coral} stroke={INK} strokeWidth={5} />
@@ -515,8 +526,10 @@ export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, 
       {(stim >= 0 || stimLit > 0.01) && <RouteGlow P={stimPath(sh)} lit={stimLit} k={stim} w={7} len={0.4} />}
       {/* his right arm and hand (profile) on the keyboard */}
       <g opacity={1}>
-        <RoomArm id={`${id}-arm`} P={STO_P} shoulderRoom={sh} pose={hand} press={press} keyGlow={keyGlow} drive={drive} driveLit={stimLit} skin={K.stoccoSkin} sleeve={K.stoccoSleeve} inkW={inkFor(zr)} keyboard={kb > 0.5} keyRise={1} armLift={armLift} />
+        <RoomArm id={`${id}-arm`} P={STO_P} shoulderRoom={sh} pose={hand} press={press} keyGlow={keyGlow} drive={drive} driveLit={stimLit} skin={K.stoccoSkin} sleeve={K.stoccoSleeve} inkW={inkFor(zr)} keyboard={kb > 0.5} keyRise={kbRise} armLift={armLift}
+          handOffset={handOffset ? {x: handOffset.x / HS, y: handOffset.y / HS} : undefined} />
       </g>
+      {flash > 0.001 && <SoftArc x={STO_X + 4} y={STO_HEAD.y - 46} w={250} k={flash} />}
     </g>
   );
 };

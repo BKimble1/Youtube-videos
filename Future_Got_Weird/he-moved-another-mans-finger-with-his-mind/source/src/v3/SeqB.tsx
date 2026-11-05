@@ -25,7 +25,7 @@ import {FPS, T} from './core2';
 import {GAME_FULL} from './contracts';
 import {
   camL, camLerp, camPath, CamS, camR, camT, fullGameCam, lin1, Lw, MonitorV2, OfficeChair, PlainDesk, RAO_HEAD, RAO_P,
-  RAO_ROUTE, RaoRoom, RMON, Rw, STO_HEAD, STO_KEY, STO_P, STO_ROUTE, StoccoRoom, toScr, World, LAWN,
+  RAO_ROUTE, RaoRoom, RMON, ROUTE, Rw, STO_HEAD, STO_KEY, STO_P, STO_ROUTE, StoccoRoom, toScr, World, LAWN,
 } from './abworld';
 import {CampusA, campusCamA, GameWorld} from './SeqA';
 import {Diptych, dipRects, Panel} from './abdip';
@@ -173,10 +173,27 @@ const DeskGag: React.FC<{t: number}> = ({t}) => {
 };
 /** the lawn monitor's GAME_FULL camera (CW units) */
 const LAWN_FULL = fullGameCam(L_MON);
+/** game units <-> CW units on the lawn monitor */
+const g2c = (g: CamS): CamS => ({x: L_MON.x + (g.x - 320) * L_MON.s, y: L_MON.y + (g.y - 510) * L_MON.s, z: g.z / L_MON.s});
+const c2g = (c: CamS): CamS => ({x: 320 + (c.x - L_MON.x) / L_MON.s, y: 510 + (c.y - L_MON.y) / L_MON.s, z: c.z * L_MON.s});
+/** one continuous push through the bezel into the game (game units): it becomes the game shot once the screen
+ *  fills the frame */
+const P_IN0 = () => T_GAME() - 1.0;
+const P_IN1 = () => T_GAME() + 0.55;
+const G_IN1: CamS = {x: 330, y: 206, z: 3.5};
+const pushG = (t: number): CamS => {
+  const a = c2g({x: 20, y: 700, z: 1.7});
+  const u = easeInOut(clamp((t - P_IN0()) / (P_IN1() - P_IN0())));
+  const z = Math.exp(lerp(Math.log(a.z), Math.log(G_IN1.z), u));
+  const w = (1 / a.z - 1 / z) / (1 / a.z - 1 / G_IN1.z);
+  return {x: lerp(a.x, G_IN1.x, w), y: lerp(a.y, G_IN1.y, w), z};
+};
+const inGame = (t: number) => t >= P_IN0() && pushG(t).z >= 3.02;
 
 // ---------------------------------------------------------------- the campus camera through B's campus part
 const campusCamB = (t: number): CamS => {
   if (t < 20.0) return campusCamA(t);
+  if (t >= P_IN0()) return g2c(pushG(t));
   return camPath(t, [
     [20.0, camL({x: 720, y: 560}, 1.32)],
     [T_RIDE, camL({x: 880, y: 530}, 1.5), lin1],
@@ -187,12 +204,11 @@ const campusCamB = (t: number): CamS => {
     [T_RIDE + 1.04, {x: 172, y: 600, z: 2.2}, lin1],
     [T_STO, camR({x: 600, y: 640}, 1.55), easeOut],
     [T_OUTB - 0.05, camR({x: 650, y: 640}, 1.75)],
-    // back out to both buildings for "Together"
+    // back out to both buildings for "Together", then toward the desk on the lawn
     [T('Together') + 0.05, {x: 0, y: 560, z: 0.92}],
     [T_DESKIN() + 0.6, {x: 0, y: 640, z: 1.12}],
     [T_BUMP() + 0.2, {x: 20, y: 700, z: 1.7}],
-    [T_GAME() - 0.4, {x: L_MON.x, y: LD.y - 50, z: 3.6}],
-    [T_GAME(), LAWN_FULL, easeIn],
+    [P_IN0(), {x: 20, y: 700, z: 1.7}, lin1],
   ]);
 };
 
@@ -251,14 +267,13 @@ export const VB: React.FC<{f: number}> = ({f}) => {
   const ev = EVB();
 
   // ---- 1. Rao's window, the ride along the cable, Stocco's window, back out, the desk gag (campus world)
-  if (t < T_GAME()) {
+  if (t < T_GAME() + 1 && !inGame(t)) {
     const C = campusCamB(t);
     const zr = C.z / 3;
     const lifted = t > T_LIFT() + 0.02;
     const sh = stoHandB(t);
-    const wakeScreen = clamp((t - (T('screen') - 0.15)) / 0.3);
     const roomL = (
-      <RaoRoom id="vb-rao" f={f} screen={<g opacity={wakeScreen}><GameWorld id="vb-g" t={t} events={[]} /></g>} face={raoFaceB(t)} lens={0.6 * wakeScreen} lensContent={<GameScreen t={t} events={[]} />} mon={lifted ? 0 : 1} zr={zr} />
+      <RaoRoom id="vb-rao" f={f} screen={<GameWorld id="vb-g" t={t} events={[]} />} face={raoFaceB(t)} lens={0.6} lensContent={<GameScreen t={t} events={[]} />} mon={lifted ? 0 : 1} zr={zr} />
     );
     const roomR = (
       <StoccoRoom id="vb-sto" f={f} hand={sh.pose} armLift={sh.armLift} kb={t > T_LIFT() + 0.2 ? 0 : 1} keyGlow={0.8 * clamp((t - (T('space bar') - 0.05)) / 0.15) * (1 - clamp((t - (T_OUTB + 0.3)) / 0.3))}
@@ -270,7 +285,7 @@ export const VB: React.FC<{f: number}> = ({f}) => {
     const tagS = clamp((t - (T('Andrea Stocco') + 0.05)) / 0.3) * (1 - clamp((t - (T_OUTB + 0.1)) / 0.25));
     return (
       <g>
-        <CampusA f={f} C={C} t={t} roomL={roomL} roomR={roomR} id="vb" sig={-1} overlay={<DeskGag t={t} />} />
+        <CampusA f={f} C={C} t={t} roomL={roomL} roomR={roomR} id="vb" sig={t > T_RIDE + 0.05 && t < T_STO + 0.1 ? lerp(ROUTE.kComp + 0.01, ROUTE.kB + 0.03, easeInOut(clamp((t - (T_RIDE + 0.05)) / (T_STO - T_RIDE - 0.15)))) : -1} overlay={<DeskGag t={t} />} />
         <Tag x={clamp(head.x, 260, 1660)} y={clamp(head.y, 110, 820)} text="Rajesh Rao" size={48} k={tagR} />
         <Tag x={clamp(sHead.x, 260, 1660)} y={clamp(sHead.y, 110, 820)} text="Andrea Stocco" size={48} k={tagS} />
       </g>
@@ -280,9 +295,8 @@ export const VB: React.FC<{f: number}> = ({f}) => {
   if (t < T_RAO1()) {
     const tp = T_PLANE();
     const pp = arcPt(clamp((t - tp) / PLANE_DUR));
-    const cam = camPath(t, [
-      [T_GAME(), {x: 320, y: 200, z: 3.0}],
-      [T_GAME() + 0.6, {x: 380, y: 240, z: 3.5}, easeOut],
+    const cam = t < P_IN1() ? pushG(t) : camPath(t, [
+      [P_IN1(), G_IN1],
       [T('little city') + 0.2, {x: 520, y: 250, z: 3.9}],
       [tp - 0.1, {x: 220, y: 240, z: 3.6}],
     ]);
@@ -324,8 +338,8 @@ export const VB: React.FC<{f: number}> = ({f}) => {
   // ---- 6. CUT ON THE CLICK: the cannon fires, the rocket bursts
   if (t < T_STO2()) {
     const cam = camPath(t, [
-      [T_FIRE(), {x: 430, y: 250, z: 4.2}],
-      [T_FIRE() + 0.9, {x: 400, y: 220, z: 3.4}, easeOut],
+      [T_FIRE(), {x: 400, y: 214, z: 3.45}],
+      [T_FIRE() + 0.9, {x: 390, y: 212, z: 3.35}, easeOut],
       [T_STO2(), {x: 380, y: 210, z: 3.3}, lin1],
     ]);
     return <GameShot cam={cam} t={t} events={ev} />;
@@ -355,17 +369,18 @@ export const VB: React.FC<{f: number}> = ({f}) => {
     const live = le.find((e) => t >= e.t0 && t < e.t0 + e.dur) ?? le[0];
     const lu = clamp((t - live.t0) / live.dur);
     const isRocket = live.kind === 'rocket' && t >= live.t0;
+    const drop = clamp((t - (T_RHAND() - 0.3)) / 0.25);
     return (
       <RoomShot cam={cam}>
         <RaoRoom id="vb-rao3" f={f} screen={<GameWorld id="vb-g3" t={t} events={le} />} zr={cam.z} lens={1} lensContent={<LensCrop t={t} />}
-          face={{lookX: lerp(0.5, 1.0, lu), lookY: lerp(0.1, -0.4, Math.sin(Math.PI * lu)), mouth: isRocket ? 'flat' : 'smile', brows: isRocket ? -0.4 : 0.2, lean: isRocket ? -1.5 : 0}} />
+          face={{lookX: lerp(lerp(0.5, 1.0, lu), -0.6, drop), lookY: lerp(lerp(0.1, -0.4, Math.sin(Math.PI * lu)), 0.85, drop), mouth: isRocket ? 'flat' : 'smile', brows: isRocket ? -0.4 + 0.8 * drop : 0.2, lean: isRocket ? -1.5 : 0, tilt: -3 * drop}} />
       </RoomShot>
     );
   }
   // ---- 9. no way to press fire himself -> into his screen (GAME_FULL at T_END)
   if (t < T_END - 1e-6) {
     const fin = fullGameCam(RMON);
-    const look = clamp((t - (T('no way') - 0.25)) / 0.3) * (1 - clamp((t - (T('himself') - 0.05)) / 0.3));
+    const look = clamp((t - (T_RHAND() - 0.05)) / 0.1) * (1 - clamp((t - (T('himself') - 0.05)) / 0.3));
     const cam = camPath(t, [
       [T_RHAND(), {x: 560, y: 600, z: 1.9}],
       [T('press fire') - 0.1, {x: 480, y: 650, z: 2.1}],

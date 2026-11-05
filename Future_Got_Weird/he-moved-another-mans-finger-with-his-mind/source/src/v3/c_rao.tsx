@@ -478,7 +478,7 @@ export const gameCam = (t: number): CamS => {
 export const gameT = (gc: CamS) => `translate(960 540) scale(${fmt(3 * gc.z)}) translate(${fmt(-gc.x)} ${fmt(-gc.y)})`;
 /** the game camera expressed in the R world (the game is Rao's monitor at 1:1) */
 export const fromGame = (gc: CamS): CamS => ({x: SCR.x + gc.x, y: SCR.y + gc.y, z: 3 * gc.z});
-const T_SWITCH = () => ct().rocket + 0.72;
+const T_SWITCH = () => ct().rocket + 0.62;
 
 export const raoCam = (t: number): CamS => {
   const c = ct();
@@ -501,8 +501,8 @@ export const raoCam = (t: number): CamS => {
   if (t < c.screen + 0.5) {
     return camPath(t, [
       [ts, fromGame(gameCam(ts))],
-      [c.imag + 0.62, TWO, (u) => easeInOut(u)],
-      [c.moving + 0.05, {...TWO, x: 1060, z: 1.03}],
+      [c.imag + 0.85, TWO, (u) => (u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2)],
+      [c.moving + 0.3, {...TWO, x: 1060, z: 1.03}],
       [c.right + 0.35, MED],
       [c.stays, {...MED, x: 460, y: 515, z: 1.56}],
       [c.putE + 0.1, STILL],

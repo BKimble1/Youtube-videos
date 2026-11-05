@@ -54,6 +54,7 @@ export const FORE_DIR = (() => {
 })();
 export const FORE_ROOM = 117; // crew FORE 78 x 1.5
 const lerpN = (a: number, b: number, k: number) => a + (b - a) * k;
+const easeOutN = (t: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3);
 const dir = (deg: number): V => ({x: -Math.cos(rad(deg)), y: Math.sin(rad(deg))});
 const rotW = (p: V, deg: number): V => {
   const c = Math.cos(rad(deg)), s = Math.sin(rad(deg));
@@ -149,7 +150,7 @@ export const KeyboardHU: React.FC<{id: string; press?: number; keyGlow?: number;
       const v = vis(x);
       if (v <= 0.001) return null;
       return (
-        <g key={`${tag}${i}`} transform={`translate(0 ${fmt((1 - v) * 60)})`} opacity={clamp(v * 2)}>
+        <g key={`${tag}${i}`} transform={`translate(0 ${fmt((1 - v) * 90)})`} opacity={clamp(v * 4)}>
           <Keycap id={`${id}-${tag}${i}`} x={x} y={y} w={w} press={0} kind="key" inkW={kw} />
         </g>
       );
@@ -158,7 +159,7 @@ export const KeyboardHU: React.FC<{id: string; press?: number; keyGlow?: number;
   return (
     <g>
       {deck > 0.001 && (
-        <g opacity={clamp(deck * 1.5)}>
+        <g transform={deck < 1 ? `translate(${fmt(KEY.x)} ${fmt(KEY.y)}) scale(${fmt(Math.max(0.36, easeOutN(deck)))} ${fmt(Math.max(0.5, easeOutN(deck)))}) translate(${fmt(-KEY.x)} ${fmt(-KEY.y)})` : undefined}>
           <path d={`M${KB.x0 + 60},${KEY.y - 2 * KEY.depth - 120} L${KB.x1 - 60},${KEY.y - 2 * KEY.depth - 120} L${KB.x1},${KB.top} L${KB.x0},${KB.top} Z`} fill="#C9D1D8" stroke={INK} strokeWidth={kw} strokeLinejoin="round" />
           <rect x={KB.x0} y={KB.top} width={KB.x1 - KB.x0} height={KB.base - KB.top} rx={18} fill="#A4AFB8" stroke={INK} strokeWidth={kw} />
         </g>
@@ -198,10 +199,14 @@ export type ArmHandProps = {
   armLift?: number;
   /** the whole drive path lit (the connection, frame 0) */
   driveLit?: number;
+  /** offset (hand units) of the arm and hand only (the keyboard stays): the hand entering the shot */
+  handOffset?: V;
 };
 
 /** The arm and hand in hand units (wrist pivot W). The forearm is bare (short sleeves, like the crew rig). */
-export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleeve, inkW, press = 0, keyGlow = 0, drive = -1, keyboard = true, keyRise = 1, surfaceY, armLift = 0, driveLit = 0}) => {
+export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleeve, inkW, press = 0, keyGlow = 0, drive = -1, keyboard = true, keyRise = 1, surfaceY, armLift = 0, driveLit = 0, handOffset}) => {
+  const off = handOffset ?? {x: 0, y: 0};
+  const shoulderL = shoulder ? {x: shoulder.x - off.x, y: shoulder.y - off.y} : undefined;
   const ip = indexPts(pose);
   const midPts = chain({x: KN.x + 40, y: KN.y - 34}, 3, [pose.a[0] + 4 + 8 * pose.curl, pose.a[1] + 6 + 14 * pose.curl, pose.a[2] + 4 + 8 * pose.curl], [300, 196, 160]).map((q) => rotW(q, pose.wrist));
   const ringPts = chain({x: KN.x + 92, y: KN.y - 56}, 2, [pose.a[0] + 10 + 12 * pose.curl, pose.a[1] + 14 + 18 * pose.curl, pose.a[2] + 8 + 10 * pose.curl], [270, 170, 140]).map((q) => rotW(q, pose.wrist));
@@ -248,7 +253,7 @@ export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleev
     );
   })();
   // the drive: shoulder -> elbow -> wrist -> back of the hand -> index
-  const sh = shoulder ?? {x: elbow.x + 200, y: elbow.y - 1000};
+  const sh = shoulderL ?? {x: elbow.x + 200, y: elbow.y - 1000};
   const glowPath = [sh, elbow, {x: wristC.x, y: wristC.y - 60}, rotW({x: 1700, y: 340}, pose.wrist), ip[0], ip[1], ip[2], ip[3]];
   const segL = glowPath.slice(1).map((p, i) => Math.hypot(p.x - glowPath[i].x, p.y - glowPath[i].y));
   const glowLen = segL.reduce((s, x) => s + x, 0);
@@ -259,6 +264,7 @@ export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleev
   return (
     <g>
       {keyboard && <KeyboardHU id={`${id}-kb`} press={press} keyGlow={keyGlow} inkW={inkW * 0.72} rise={keyRise} />}
+      <g transform={`translate(${fmt(off.x)} ${fmt(off.y)})`}>
       {/* contact shadow of the finger on the cap / desk */}
       <SoftShadow id={`${id}-cs`} c={{x: pad.x + 10, y: (keyboard ? KEY.y - 20 + press * KEY.travel : surf - 6)}} rx={150} ry={22} alpha={0.32 * clamp(1 - (surf - pad.y) / 220)} />
       {!keyboard && surfaceY !== undefined && <SoftShadow id={`${id}-hs`} c={{x: 1800, y: surfaceY - 4}} rx={620} ry={46} alpha={0.22} />}
@@ -275,7 +281,7 @@ export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleev
       </Inked>
       {/* upper arm (sleeve), forearm, hand and index as one contour */}
       <Inked w={inkW}>
-        {shoulder && <Capsule id={`${id}-ua`} a={shoulder} b={elbow} ra={196} rb={186} color={sleeve} spec={0.08} />}
+        {shoulderL && <Capsule id={`${id}-ua`} a={shoulderL} b={elbow} ra={196} rb={186} color={sleeve} spec={0.08} />}
         <Lin id={`${id}-hand`} d={handD} from={armShadeA} to={armShadeB} stops={[[0, lit(skin, 0.26)], [0.3, lit(skin, 0.08)], [0.62, skin], [1, shade(skin, 0.28)]]} />
         <Capsule id={`${id}-i1`} a={ip[0]} b={ip[1]} ra={R[0]} rb={R[1]} color={skin} spec={0.2} />
         <Capsule id={`${id}-i2`} a={ip[1]} b={ip[2]} ra={R[1]} rb={R[2]} color={skin} spec={0.2} />
@@ -301,6 +307,7 @@ export const ArmHand: React.FC<ArmHandProps> = ({id, pose, shoulder, skin, sleev
         <Capsule id={`${id}-t1`} a={th[0]} b={th[1]} ra={78} rb={66} color={skin} />
         <Capsule id={`${id}-t2`} a={th[1]} b={th[2]} ra={66} rb={56} color={skin} spec={0.25} />
       </Inked>
+      </g>
     </g>
   );
 };

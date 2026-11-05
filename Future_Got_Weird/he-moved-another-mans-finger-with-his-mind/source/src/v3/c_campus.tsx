@@ -76,7 +76,7 @@ export const campusCam = (t: number): PCam => {
   const m = tm();
   const p0 = NET[0];
   return pcamPath(t, [
-    [m.cut, {x: p0.x, y: p0.y, alt: 30, zoom: 1}],
+    [m.cut, {x: p0.x, y: p0.y, alt: 46, zoom: 1}],
     [m.cut + 0.75, {x: -18, y: 14, alt: 118, zoom: 1}, easeInOut],
     [m.arriveB - 0.1, {x: 56, y: 13, alt: 96, zoom: 1}, easeInOut],
     [m.end, {x: ENTRY.x, y: ENTRY.y, alt: 21, zoom: 1}, (u) => easeIn(u) * 0.6 + u * 0.4],

@@ -370,7 +370,7 @@ export const sCamA = (t: number): CamS => {
     [c.command2 + 0.15, {x: 690, y: 430, z: 0.98}],
     [c.pulse + 0.1, {x: 705, y: 425, z: 1.02}],
     [c.pulse + 0.55, {x: 990, y: 400, z: 1.45}, easeIn],
-    [c.ecu, {x: hand.x + 4, y: hand.y - 6, z: 4.6, rot: -50}, (u) => u],
+    [c.ecu, {x: hand.x + 4, y: hand.y - 6, z: 4.6, rot: -30}, (u) => u],
   ]);
 };
 export const StoccoShotA: React.FC<{t: number; f: number}> = ({t, f}) => {
@@ -433,8 +433,8 @@ export const frontPose = (t: number): Pose => {
   const tw = twitchF(t, c.something + 0.05, 1) + twitchF(t, c.nervous + 0.1, 0.6);
   const shake = t > c.ticE - 0.25 && t < c.ticE + 0.3 ? Math.sin((t - (c.ticE - 0.25)) * 44) * (1 - ramp(t, c.ticE - 0.25, c.ticE + 0.3)) : 0;
   const flinch = Math.max(0, twitchF(t, c.something + 0.08, 1)) + 0.6 * Math.max(0, twitchF(t, c.nervous + 0.13, 0.6));
-  const back = sramp(t, c.ticE + 0.3, c.back - 0.08);
-  const armL: Arm = {a: lerp(ARM_F.a, 30, raise) + 2 * rel, b: lerp(ARM_F.b - 6 * (1 - rel), -150, raise) - 10 * rel + tremor + 18 * tw + 12 * shake};
+  const back = sramp(t, c.ticE + 0.45, c.back + 0.1);
+  const armL: Arm = {a: lerp(ARM_F.a, 30, raise) + 5 * rel * (1 - raise), b: lerp(ARM_F.b - 6 * (1 - rel), -150, raise) - 26 * rel * (1 - raise) + tremor + 18 * tw + 12 * shake};
   const hx = lerp(lerp(-0.2, -0.45, look), -0.55, raise) * (1 - back);
   const hy = lerp(lerp(0, 0.8, look), 0.35, raise) * (1 - back);
   const puzzled = sramp(t, c.described, c.described + 0.4) * (1 - back * 0.7);
@@ -476,7 +476,7 @@ export const StoccoFrontShot: React.FC<{t: number; f: number}> = ({t, f}) => {
   const c = ct();
   const pose = frontPose(t);
   const cam = camPath(t, [
-    [c.front, {x: 960, y: 560, z: 1.22}],
+    [c.front, {x: 960, y: 640, z: 1.3}],
     [c.something, {x: 945, y: 520, z: 1.36}],
     [c.ticE + 0.3, {x: 935, y: 505, z: 1.46}],
     [c.back, {x: 940, y: 510, z: 1.42}],
@@ -543,7 +543,8 @@ const endPose = (t: number): {pose: Pose; turn: number; drum: number; shrug: num
   const c = ct();
   // idle: his left hand drums on the desk; he looks over at the machine, then back at the wall; a small shrug
   const drum = t > c.imagine + 0.1 && t < c.missing ? Math.abs(Math.sin((t - c.imagine) * 11)) : 0;
-  const turn = 0.75 * sramp(t, c.imagine + 0.35, c.imagine + 0.75) * (1 - sramp(t, c.controller + 0.45, c.missing - 0.05));
+  // the head finishes the turn back to the wall that began in the front view (his right is frame-right here)
+  const turn = 0.75 * sramp(t, c.imagine + 0.35, c.imagine + 0.75) * (1 - sramp(t, c.controller + 0.45, c.missing - 0.05)) - 0.3 * (1 - sramp(t, c.back, c.back + 0.3));
   const shrug = sramp(t, c.missing, c.missing + 0.3) * (1 - sramp(t, c.game - 0.05, c.game + 0.45));
   return {
     pose: {...IDLE, armL: HIDDEN, armR: HIDDEN, lean: 0, tilt: 3 * shrug, bob: -9 * shrug, lookX: 0, lookY: 0, brows: 0, mouth: 'flat'},
