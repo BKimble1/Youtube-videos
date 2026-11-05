@@ -482,198 +482,198 @@
    "enemyNear": 0.401
   },
   {
-   "gameArea": 0.9918,
+   "gameArea": 0.99,
    "micro": 0,
-   "w": 19.8501,
+   "w": 19.8866,
    "lens": 0,
    "enemyNear": 0.402
   },
   {
-   "gameArea": 0.95,
+   "gameArea": 0.9395,
    "micro": 0,
-   "w": 20.7236,
+   "w": 20.9563,
    "lens": 0,
    "enemyNear": 0.402
   },
   {
-   "gameArea": 0.8891,
+   "gameArea": 0.8673,
    "micro": 0,
-   "w": 22.1436,
+   "w": 22.6997,
    "lens": 0,
    "enemyNear": 0.396
   },
   {
-   "gameArea": 0.8187,
+   "gameArea": 0.7861,
    "micro": 0,
-   "w": 24.0459,
+   "w": 25.0455,
    "lens": 0,
    "enemyNear": 0.391
   },
   {
-   "gameArea": 0.7455,
+   "gameArea": 0.7039,
    "micro": 0,
-   "w": 26.4089,
+   "w": 27.9704,
    "lens": 0,
    "enemyNear": 0.385
   },
   {
-   "gameArea": 0.6737,
+   "gameArea": 0.6259,
    "micro": 0,
-   "w": 29.2211,
+   "w": 31.4556,
    "lens": 0,
    "enemyNear": 0.38
   },
   {
-   "gameArea": 0.6064,
+   "gameArea": 0.5552,
    "micro": 0,
-   "w": 32.4658,
+   "w": 35.4633,
    "lens": 0,
    "enemyNear": 0.378
   },
   {
-   "gameArea": 0.5452,
+   "gameArea": 0.4932,
    "micro": 0,
-   "w": 36.1096,
+   "w": 39.9172,
    "lens": 0,
    "enemyNear": 0.379
   },
   {
-   "gameArea": 0.4911,
+   "gameArea": 0.4406,
    "micro": 0,
-   "w": 40.0924,
+   "w": 44.6852,
    "lens": 0,
    "enemyNear": 0.381
   },
   {
-   "gameArea": 0.4442,
+   "gameArea": 0.3972,
    "micro": 0,
-   "w": 44.3184,
+   "w": 49.5658,
    "lens": 0,
    "enemyNear": 0.382
   },
   {
-   "gameArea": 0.4047,
+   "gameArea": 0.358,
    "micro": 0,
-   "w": 48.6481,
+   "w": 54.2801,
    "lens": 0,
    "enemyNear": 0.383
   },
   {
-   "gameArea": 0.3722,
+   "gameArea": 0.3195,
    "micro": 0,
-   "w": 52.8942,
+   "w": 58.4755,
    "lens": 0,
    "enemyNear": 0.385
   },
   {
-   "gameArea": 0.3337,
+   "gameArea": 0.2892,
    "micro": 0,
-   "w": 56.8223,
+   "w": 61.7445,
    "lens": 0,
    "enemyNear": 0.386
   },
   {
-   "gameArea": 0.3046,
+   "gameArea": 0.272,
    "micro": 0,
-   "w": 60.159,
+   "w": 63.6623,
    "lens": 0,
    "enemyNear": 0.388
   },
   {
-   "gameArea": 0.2813,
+   "gameArea": 0.2783,
    "micro": 0,
-   "w": 62.609,
+   "w": 62.9432,
    "lens": 0,
    "enemyNear": 0.389
   },
   {
-   "gameArea": 0.2702,
+   "gameArea": 0.3092,
    "micro": 0,
-   "w": 63.8804,
+   "w": 52.6955,
    "lens": 0,
    "enemyNear": 0.391
   },
   {
-   "gameArea": 0.2738,
+   "gameArea": 0.137,
    "micro": 0,
-   "w": 63.4591,
+   "w": 37.1884,
    "lens": 0,
    "enemyNear": 0.393
   },
   {
-   "gameArea": 0.3133,
+   "gameArea": 0,
    "micro": 0,
-   "w": 55.5927,
+   "w": 22.7846,
    "lens": 0,
    "enemyNear": 0.394
   },
   {
-   "gameArea": 0.1304,
+   "gameArea": 0,
    "micro": 0,
-   "w": 37.8907,
+   "w": 12.4816,
    "lens": 0,
    "enemyNear": 0.396
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 19.369,
+   "w": 6.2962,
    "lens": 0,
    "enemyNear": 0.398
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 7.6935,
+   "w": 3.0121,
    "lens": 0,
    "enemyNear": 0.399
   },
   {
    "gameArea": 0,
-   "micro": 0,
-   "w": 2.5886,
+   "micro": 0.186,
+   "w": 1.4074,
    "lens": 0,
    "enemyNear": 0.401
   },
   {
    "gameArea": 0,
-   "micro": 0.416,
-   "w": 0.8285,
+   "micro": 0.514,
+   "w": 0.6615,
    "lens": 0,
    "enemyNear": 0.403
   },
   {
    "gameArea": 0,
-   "micro": 0.879,
-   "w": 0.2857,
+   "micro": 0.826,
+   "w": 0.3221,
    "lens": 0,
    "enemyNear": 0.405
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1187,
+   "w": 0.1673,
    "lens": 0,
    "enemyNear": 0.407
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0642,
+   "w": 0.0955,
    "lens": 0,
    "enemyNear": 0.409
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0463,
+   "w": 0.0617,
    "lens": 0,
    "enemyNear": 0.411
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0421,
+   "w": 0.0465,
    "lens": 0,
    "enemyNear": 0.413
   },
@@ -687,49 +687,49 @@
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0422,
+   "w": 0.0421,
    "lens": 0,
    "enemyNear": 0.417
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0426,
+   "w": 0.0424,
    "lens": 0,
    "enemyNear": 0.419
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0433,
+   "w": 0.043,
    "lens": 0,
    "enemyNear": 0.421
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0442,
+   "w": 0.0439,
    "lens": 0,
    "enemyNear": 0.423
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0452,
+   "w": 0.0449,
    "lens": 0,
    "enemyNear": 0.426
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0461,
+   "w": 0.0459,
    "lens": 0,
    "enemyNear": 0.428
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0467,
+   "w": 0.0466,
    "lens": 0,
    "enemyNear": 0.43
   },
@@ -820,77 +820,77 @@
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0523,
+   "w": 0.0544,
    "lens": 0,
    "enemyNear": 0.461
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0583,
+   "w": 0.0761,
    "lens": 0,
    "enemyNear": 0.463
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0818,
+   "w": 0.1395,
    "lens": 0,
    "enemyNear": 0.465
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.1492,
+   "micro": 0.838,
+   "w": 0.3139,
    "lens": 0,
    "enemyNear": 0.468
   },
   {
    "gameArea": 0,
-   "micro": 0.805,
-   "w": 0.3382,
+   "micro": 0.426,
+   "w": 0.8102,
    "lens": 0,
    "enemyNear": 0.47
   },
   {
    "gameArea": 0,
-   "micro": 0.395,
-   "w": 0.8691,
+   "micro": 0,
+   "w": 2.2433,
    "lens": 0,
    "enemyNear": 0.473
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 2.247,
+   "w": 6.2319,
    "lens": 0,
    "enemyNear": 0.475
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 5.1841,
+   "w": 16,
    "lens": 0,
    "enemyNear": 0.477
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 9.6869,
+   "w": 16,
    "lens": 0,
    "enemyNear": 0.48
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 13.9568,
+   "w": 16,
    "lens": 0,
    "enemyNear": 0.482
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 15.8673,
+   "w": 16,
    "lens": 0,
    "enemyNear": 0.484
   },
@@ -967,84 +967,84 @@
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 14.61,
+   "w": 14.7093,
    "lens": 0,
    "enemyNear": 0.507
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 14.8381,
+   "w": 15.5541,
    "lens": 0,
    "enemyNear": 0.508
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 15.5809,
+   "w": 17.2224,
    "lens": 0,
    "enemyNear": 0.51
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 17.021,
+   "w": 19.7649,
    "lens": 0,
    "enemyNear": 0.512
   },
   {
-   "gameArea": 0.048,
+   "gameArea": 0.1187,
    "micro": 0,
-   "w": 19.267,
+   "w": 23.2703,
    "lens": 0,
    "enemyNear": 0.507
   },
   {
-   "gameArea": 0.2351,
+   "gameArea": 0.2577,
    "micro": 0,
-   "w": 22.3444,
+   "w": 27.8212,
    "lens": 0,
    "enemyNear": 0.498
   },
   {
-   "gameArea": 0.4047,
+   "gameArea": 0.3622,
    "micro": 0,
-   "w": 26.1363,
+   "w": 33.4326,
    "lens": 0,
    "enemyNear": 0.49
   },
   {
-   "gameArea": 0.533,
+   "gameArea": 0.4274,
    "micro": 0,
-   "w": 30.311,
+   "w": 39.9709,
    "lens": 0,
    "enemyNear": 0.12
   },
   {
-   "gameArea": 0.5738,
+   "gameArea": 0.4781,
    "micro": 0,
-   "w": 34.3105,
+   "w": 40,
    "lens": 0,
    "enemyNear": 0.12
   },
   {
-   "gameArea": 0.5253,
+   "gameArea": 0.4922,
    "micro": 0,
-   "w": 37.4817,
+   "w": 40,
    "lens": 0,
    "enemyNear": 0.12
   },
   {
-   "gameArea": 0.5002,
+   "gameArea": 0.4922,
    "micro": 0,
-   "w": 39.3581,
+   "w": 40,
    "lens": 0,
    "enemyNear": 0.12
   },
   {
-   "gameArea": 0.4925,
+   "gameArea": 0.4922,
    "micro": 0,
-   "w": 39.9726,
+   "w": 40,
    "lens": 0,
    "enemyNear": 0.12
   },
@@ -1259,142 +1259,142 @@
    "enemyNear": 0.13
   },
   {
-   "gameArea": 0.197,
+   "gameArea": 0.191,
    "micro": 0,
-   "w": 51.9465,
+   "w": 52,
    "lens": 1,
    "enemyNear": 0.131
   },
   {
-   "gameArea": 0.1815,
+   "gameArea": 0.1982,
    "micro": 0,
-   "w": 50.6788,
+   "w": 52,
    "lens": 0.966,
    "enemyNear": 0.132
   },
   {
-   "gameArea": 0.1631,
+   "gameArea": 0.133,
    "micro": 0,
-   "w": 46.5847,
+   "w": 52,
    "lens": 0.789,
    "enemyNear": 0.133
   },
   {
-   "gameArea": 0.086,
+   "gameArea": 0.1506,
    "micro": 0,
-   "w": 39.393,
+   "w": 52,
    "lens": 0.528,
    "enemyNear": 0.134
   },
   {
-   "gameArea": 0.1361,
+   "gameArea": 0.0547,
    "micro": 0,
-   "w": 30.2664,
+   "w": 52,
    "lens": 0.259,
    "enemyNear": 0.135
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 21.0773,
+   "w": 33.9718,
    "lens": 0.059,
    "enemyNear": 0.136
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 13.3844,
+   "w": 20.6289,
    "lens": 0,
    "enemyNear": 0.137
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 7.8515,
+   "w": 12.0125,
    "lens": 0,
    "enemyNear": 0.138
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 4.3336,
+   "w": 6.7877,
    "lens": 0,
    "enemyNear": 0.139
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 2.3013,
+   "w": 3.7662,
    "lens": 0,
    "enemyNear": 0.141
   },
   {
    "gameArea": 0,
-   "micro": 0.253,
-   "w": 1.2051,
+   "micro": 0.017,
+   "w": 2.076,
    "lens": 0,
    "enemyNear": 0.142
   },
   {
    "gameArea": 0,
-   "micro": 0.529,
-   "w": 0.6383,
+   "micro": 0.274,
+   "w": 1.1504,
    "lens": 0,
    "enemyNear": 0.143
   },
   {
    "gameArea": 0,
-   "micro": 0.79,
-   "w": 0.3506,
+   "micro": 0.523,
+   "w": 0.6485,
    "lens": 0,
    "enemyNear": 0.144
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.2042,
+   "micro": 0.759,
+   "w": 0.3763,
    "lens": 0,
    "enemyNear": 0.145
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.1286,
+   "micro": 0.978,
+   "w": 0.2274,
    "lens": 0,
    "enemyNear": 0.147
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0887,
+   "w": 0.1449,
    "lens": 0,
    "enemyNear": 0.148
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0675,
+   "w": 0.0984,
    "lens": 0,
    "enemyNear": 0.149
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0565,
+   "w": 0.0721,
    "lens": 0,
    "enemyNear": 0.151
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0516,
+   "w": 0.0577,
    "lens": 0,
    "enemyNear": 0.152
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0501,
+   "w": 0.0511,
    "lens": 0,
    "enemyNear": 0.153
   },
@@ -2031,224 +2031,224 @@
   {
    "gameArea": 0.0633,
    "micro": 0,
-   "w": 131.9971,
+   "w": 131.9286,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0634,
+   "gameArea": 0.0641,
    "micro": 0,
-   "w": 131.881,
+   "w": 131.1455,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0638,
+   "gameArea": 0.0657,
    "micro": 0,
-   "w": 131.4298,
+   "w": 129.5568,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0648,
+   "gameArea": 0.0681,
    "micro": 0,
-   "w": 130.4625,
+   "w": 127.2456,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0664,
+   "gameArea": 0.0714,
    "micro": 0,
-   "w": 128.8515,
+   "w": 124.3035,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0689,
+   "gameArea": 0.0755,
    "micro": 0,
-   "w": 126.5231,
+   "w": 120.8274,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0723,
+   "gameArea": 0.0807,
    "micro": 0,
-   "w": 123.457,
+   "w": 116.9154,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.077,
+   "gameArea": 0.0869,
    "micro": 0,
-   "w": 119.6819,
+   "w": 112.6641,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.083,
+   "gameArea": 0.0942,
    "micro": 0,
-   "w": 115.2687,
+   "w": 108.1656,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0906,
+   "gameArea": 0.1029,
    "micro": 0,
-   "w": 110.3218,
+   "w": 103.5061,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1001,
+   "gameArea": 0.113,
    "micro": 0,
-   "w": 104.9675,
+   "w": 98.764,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1117,
+   "gameArea": 0.1247,
    "micro": 0,
-   "w": 99.3438,
+   "w": 94.0092,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1259,
+   "gameArea": 0.1382,
    "micro": 0,
-   "w": 93.5898,
+   "w": 89.3026,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1429,
+   "gameArea": 0.1537,
    "micro": 0,
-   "w": 87.8369,
+   "w": 84.6959,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1632,
+   "gameArea": 0.1713,
    "micro": 0,
-   "w": 82.2027,
+   "w": 80.2322,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1745,
+   "gameArea": 0.1738,
    "micro": 0,
-   "w": 76.7862,
+   "w": 75.9461,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1618,
+   "gameArea": 0.1624,
    "micro": 0,
-   "w": 71.6665,
+   "w": 71.8648,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.14,
+   "gameArea": 0.1438,
    "micro": 0,
-   "w": 66.9022,
+   "w": 68.0085,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1167,
+   "gameArea": 0.1243,
    "micro": 0,
-   "w": 62.533,
+   "w": 64.3917,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0921,
+   "gameArea": 0.1041,
    "micro": 0,
-   "w": 58.582,
+   "w": 61.0238,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0667,
+   "gameArea": 0.0834,
    "micro": 0,
-   "w": 55.0583,
+   "w": 57.91,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0411,
+   "gameArea": 0.0624,
    "micro": 0,
-   "w": 51.96,
+   "w": 55.0524,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.0161,
+   "gameArea": 0.0415,
    "micro": 0,
-   "w": 49.277,
+   "w": 52.4506,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0,
+   "gameArea": 0.0211,
    "micro": 0,
-   "w": 46.9931,
+   "w": 50.1025,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0,
+   "gameArea": 0.0018,
    "micro": 0,
-   "w": 45.0879,
-   "lens": 0,
-   "enemyNear": 0
-  },
-  {
-   "gameArea": 0,
-   "micro": 0,
-   "w": 43.538,
+   "w": 48.0048,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 42.3175,
+   "w": 46.1541,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 41.3978,
+   "w": 44.5471,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 40.7473,
+   "w": 43.1811,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 40.3298,
+   "w": 42.055,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 40.1023,
+   "w": 41.1693,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 40.0134,
+   "w": 40.5269,
+   "lens": 0,
+   "enemyNear": 0
+  },
+  {
+   "gameArea": 0,
+   "micro": 0,
+   "w": 40.1339,
    "lens": 0,
    "enemyNear": 0
   },
@@ -2395,126 +2395,126 @@
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 14.983,
+   "w": 14.813,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 14.5845,
+   "w": 13.4558,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 13.3195,
+   "w": 11.2246,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 11.1486,
+   "w": 8.6968,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 8.4697,
+   "w": 6.3301,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 5.8509,
+   "w": 4.3779,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 3.7171,
+   "w": 2.9097,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0,
-   "w": 2.2127,
+   "micro": 0.06,
+   "w": 1.8797,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.233,
-   "w": 1.264,
+   "micro": 0.258,
+   "w": 1.1938,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.482,
-   "w": 0.712,
+   "micro": 0.457,
+   "w": 0.7539,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.725,
-   "w": 0.4067,
+   "micro": 0.654,
+   "w": 0.4788,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.95,
-   "w": 0.2421,
+   "micro": 0.844,
+   "w": 0.3093,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1538,
+   "w": 0.2056,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1063,
+   "w": 0.1422,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0807,
+   "w": 0.1035,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0676,
+   "w": 0.0802,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0617,
+   "w": 0.0669,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0601,
+   "w": 0.0608,
    "lens": 0,
    "enemyNear": 0
   },
@@ -3018,98 +3018,98 @@
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 19.6581,
+   "w": 20,
    "lens": 0,
    "enemyNear": 0.16
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 17.6801,
+   "w": 20,
    "lens": 0,
    "enemyNear": 0.161
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 13.8196,
+   "w": 20,
    "lens": 0,
    "enemyNear": 0.163
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 9.2311,
+   "w": 20,
    "lens": 0,
    "enemyNear": 0.164
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 5.3284,
+   "w": 17.2031,
    "lens": 0,
    "enemyNear": 0.165
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 2.7454,
+   "w": 8.0563,
    "lens": 0,
    "enemyNear": 0.167
   },
   {
    "gameArea": 0,
-   "micro": 0.213,
-   "w": 1.3235,
+   "micro": 0,
+   "w": 3.6352,
    "lens": 0,
    "enemyNear": 0.168
   },
   {
    "gameArea": 0,
-   "micro": 0.535,
-   "w": 0.6308,
+   "micro": 0.122,
+   "w": 1.63,
    "lens": 0,
    "enemyNear": 0.169
   },
   {
    "gameArea": 0,
-   "micro": 0.837,
-   "w": 0.3145,
+   "micro": 0.46,
+   "w": 0.7492,
    "lens": 0,
    "enemyNear": 0.171
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.1726,
+   "micro": 0.773,
+   "w": 0.3642,
    "lens": 0,
    "enemyNear": 0.172
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1085,
+   "w": 0.1931,
    "lens": 0,
    "enemyNear": 0.173
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0797,
+   "w": 0.1152,
    "lens": 0,
    "enemyNear": 0.175
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.068,
+   "w": 0.0798,
    "lens": 0,
    "enemyNear": 0.176
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0651,
+   "w": 0.0662,
    "lens": 0,
    "enemyNear": 0.178
   },
@@ -3550,161 +3550,161 @@
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1501,
+   "w": 0.1514,
    "lens": 0,
    "enemyNear": 0.209
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1519,
+   "w": 0.1625,
    "lens": 0,
    "enemyNear": 0.209
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.1586,
+   "w": 0.1861,
    "lens": 0,
    "enemyNear": 0.209
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.1729,
+   "micro": 0.981,
+   "w": 0.2259,
    "lens": 0,
    "enemyNear": 0.209
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.1986,
+   "micro": 0.874,
+   "w": 0.2888,
    "lens": 0,
    "enemyNear": 0.209
   },
   {
    "gameArea": 0,
-   "micro": 0.952,
-   "w": 0.2411,
+   "micro": 0.747,
+   "w": 0.3864,
    "lens": 0,
    "enemyNear": 0.21
   },
   {
    "gameArea": 0,
-   "micro": 0.844,
-   "w": 0.3093,
+   "micro": 0.604,
+   "w": 0.5375,
    "lens": 0,
    "enemyNear": 0.21
   },
   {
    "gameArea": 0,
-   "micro": 0.714,
-   "w": 0.4177,
+   "micro": 0.447,
+   "w": 0.7724,
    "lens": 0,
    "enemyNear": 0.21
   },
   {
    "gameArea": 0,
-   "micro": 0.564,
-   "w": 0.5899,
+   "micro": 0.278,
+   "w": 1.1393,
    "lens": 0,
    "enemyNear": 0.21
   },
   {
    "gameArea": 0,
-   "micro": 0.398,
-   "w": 0.8635,
-   "lens": 0,
-   "enemyNear": 0.211
-  },
-  {
-   "gameArea": 0,
-   "micro": 0.222,
-   "w": 1.2959,
-   "lens": 0,
-   "enemyNear": 0.211
-  },
-  {
-   "gameArea": 0,
-   "micro": 0.04,
-   "w": 1.9705,
+   "micro": 0.1,
+   "w": 1.7138,
    "lens": 0,
    "enemyNear": 0.211
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 2.9981,
+   "w": 2.6122,
    "lens": 0,
    "enemyNear": 0.211
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 4.5078,
+   "w": 4.0085,
    "lens": 0,
    "enemyNear": 0.211
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 6.6179,
+   "w": 6.1531,
+   "lens": 0,
+   "enemyNear": 0.211
+  },
+  {
+   "gameArea": 0,
+   "micro": 0,
+   "w": 9.3875,
+   "lens": 0,
+   "enemyNear": 0.211
+  },
+  {
+   "gameArea": 0,
+   "micro": 0,
+   "w": 14.1437,
    "lens": 0,
    "enemyNear": 0.212
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 9.3844,
+   "w": 20.9086,
    "lens": 0,
    "enemyNear": 0.212
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 12.7357,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.212
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 16.4272,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.212
   },
   {
-   "gameArea": 0.0688,
+   "gameArea": 0,
    "micro": 0,
-   "w": 20.0555,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.213
   },
   {
-   "gameArea": 0.0648,
+   "gameArea": 0.0412,
    "micro": 0,
-   "w": 23.1586,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.213
   },
   {
-   "gameArea": 0.1056,
+   "gameArea": 0.1208,
    "micro": 0,
-   "w": 25.3741,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.213
   },
   {
-   "gameArea": 0.1203,
+   "gameArea": 0.1313,
    "micro": 0,
-   "w": 26.5844,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.213
   },
   {
-   "gameArea": 0.1247,
+   "gameArea": 0.1259,
    "micro": 0,
-   "w": 26.9764,
+   "w": 27,
    "lens": 0,
    "enemyNear": 0.214
   },
@@ -5354,198 +5354,198 @@
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1249,
+   "gameArea": 0.1266,
    "micro": 0,
-   "w": 93.9602,
+   "w": 93.312,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1275,
+   "gameArea": 0.142,
    "micro": 0,
-   "w": 92.9876,
+   "w": 88.1241,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1372,
+   "gameArea": 0.177,
    "micro": 0,
-   "w": 89.6451,
+   "w": 78.9124,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1596,
+   "gameArea": 0.2218,
    "micro": 0,
-   "w": 83.1226,
+   "w": 67.2825,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.1969,
+   "gameArea": 0.1856,
    "micro": 0,
-   "w": 73.459,
+   "w": 54.8501,
    "lens": 0,
    "enemyNear": 0
   },
   {
-   "gameArea": 0.205,
+   "gameArea": 0.1056,
    "micro": 0,
-   "w": 61.5156,
-   "lens": 0,
-   "enemyNear": 0
-  },
-  {
-   "gameArea": 0.144,
-   "micro": 0,
-   "w": 48.6774,
-   "lens": 0,
-   "enemyNear": 0
-  },
-  {
-   "gameArea": 0.0129,
-   "micro": 0,
-   "w": 36.394,
+   "w": 42.9322,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 25.7683,
+   "w": 32.399,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 17.3539,
+   "w": 23.672,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 11.1849,
+   "w": 16.8153,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 6.9518,
+   "w": 11.6615,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 4.2034,
+   "w": 7.9286,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
    "micro": 0,
-   "w": 2.4964,
+   "w": 5.3069,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.167,
-   "w": 1.4711,
+   "micro": 0,
+   "w": 3.5116,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.395,
-   "w": 0.8692,
+   "micro": 0,
+   "w": 2.3067,
    "lens": 0,
    "enemyNear": 0
   },
   {
    "gameArea": 0,
-   "micro": 0.618,
-   "w": 0.5202,
+   "micro": 0.155,
+   "w": 1.5105,
+   "lens": 0,
+   "enemyNear": 0
+  },
+  {
+   "gameArea": 0,
+   "micro": 0.339,
+   "w": 0.9902,
+   "lens": 0,
+   "enemyNear": 0
+  },
+  {
+   "gameArea": 0,
+   "micro": 0.52,
+   "w": 0.6525,
    "lens": 0,
    "enemyNear": 0.106
   },
   {
    "gameArea": 0,
-   "micro": 0.831,
-   "w": 0.3185,
+   "micro": 0.697,
+   "w": 0.434,
    "lens": 0,
    "enemyNear": 0.106
   },
   {
    "gameArea": 0,
-   "micro": 1,
-   "w": 0.2014,
-   "lens": 0,
-   "enemyNear": 0.106
-  },
-  {
-   "gameArea": 0,
-   "micro": 1,
-   "w": 0.1326,
+   "micro": 0.868,
+   "w": 0.2926,
    "lens": 0,
    "enemyNear": 0.106
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0915,
+   "w": 0.2008,
+   "lens": 0,
+   "enemyNear": 0.106
+  },
+  {
+   "gameArea": 0,
+   "micro": 1,
+   "w": 0.1409,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0665,
+   "w": 0.1014,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0512,
+   "w": 0.0753,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0417,
+   "w": 0.0578,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0359,
+   "w": 0.0462,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0325,
+   "w": 0.0385,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0308,
+   "w": 0.0336,
    "lens": 0,
    "enemyNear": 0.107
   },
   {
    "gameArea": 0,
    "micro": 1,
-   "w": 0.0301,
+   "w": 0.0309,
    "lens": 0,
    "enemyNear": 0.107
   },

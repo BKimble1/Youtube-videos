@@ -183,7 +183,7 @@ def whoosh(dur, f0, f1, g=1.0, seed=0):
 for k, r in enumerate(C['rides']):
     up = r['w1'] > r['w0']
     add(mv, whoosh(r['t1'] - r['t0'] + 0.15, 500 if up else 2600, 2600 if up else 500, 0.6, k), r['t0'] - 0.05)
-for k, (a, b, g, f0, f1) in enumerate([(0.25, 0.78, 0.5, 2200, 700), (0.78, 1.18, 0.55, 700, 2400), (5.0, 6.7, 0.45, 2400, 600), (7.62, 8.7, 0.35, 600, 1500),
+for k, (a, b, g, f0, f1) in enumerate([(0.25, 0.72, 0.5, 2200, 700), (0.72, 1.2, 0.55, 700, 2400), (5.0, 6.7, 0.45, 2400, 600), (7.62, 8.7, 0.35, 600, 1500),
                                         (9.35, 9.95, 0.3, 800, 2000), (11.16, 11.85, 0.3, 900, 1600), (19.29, 19.75, 0.3, 700, 1700), (21.0, 22.0, 0.35, 1800, 700),
                                         (23.45, 24.4, 0.45, 700, 2600), (25.87, 27.15, 0.35, 2400, 700), (28.05, 28.9, 0.55, 600, 2600)]):
     add(mv, whoosh(b - a + 0.1, f0, f1, g, 40 + k), a - 0.05)
@@ -267,11 +267,11 @@ def at(x, rel):
     return x * db(vl + rel - l)
 buses = {
     'game': at(game, -11.0),
-    'culture': at(cult, -17.0),
+    'culture': at(cult, -15.0),
     'ui': at(ui, -19.0),
     'moves': at(mv, -18.5),
     'room': at(room, -27.0),
-    'music': at(music, -19.5),
+    'music': at(music, -17.5),
 }
 fx = sum(ducked(b) for b in buses.values())
 mix_pre = voice + fx

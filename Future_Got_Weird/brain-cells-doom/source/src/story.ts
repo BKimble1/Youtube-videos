@@ -123,7 +123,7 @@ const zoomAbout = (u: number, A: Cam, B: Cam, e = ss5(u, 0, 1)): Cam => {
   return {x: px + (A.x - px) * (wv / A.w), y: py + (A.y - py) * (wv / A.w), w: wv};
 };
 /** zoom in to B while a target point (which B centres) slides from where it sits in A to the frame centre */
-const zoomTo = (u: number, A: Cam, B: Cam, e = ss5(u, 0, 1), e2 = ss(u, 0, 0.75)): Cam => {
+const zoomTo = (u: number, A: Cam, B: Cam, e = ss(u, 0, 1), e2 = ss(u, 0, 0.75)): Cam => {
   const wv = Math.exp(lerp(Math.log(A.w), Math.log(B.w), e));
   const ox = (B.x - A.x) / A.w, oy = (B.y - A.y) / A.w; // the target's offset in A, in frame widths
   const k = 1 - e2;
@@ -133,15 +133,32 @@ const travel = (u: number, A: Cam, B: Cam, e = ss5(u, 0, 1)): Cam => ({x: lerp(A
 /** ride a signal: the camera centres the token while the width changes in log space; the distance travelled is
  *  proportional to the change in width, so the token keeps a steady pace on screen at every scale */
 type Ride = {kind: RouteKind; r: RP[]; t0: number; t1: number; w0: number; w1: number; ease?: (u: number) => number};
+const RIDE_K = 1.2; // frame width per cm of route still to go (or already gone): the camera widens with distance
 const rideAt = (rd: Ride, t: number) => {
   const u = clamp((t - rd.t0) / (rd.t1 - rd.t0));
-  const e = (rd.ease ?? ((x: number) => ss5(x, 0, 1)))(u);
-  const w = Math.exp(lerp(Math.log(rd.w0), Math.log(rd.w1), e));
-  const pts = routePts(rd.r, w);
-  const L = routeLen(pts);
-  const f = (w - rd.w0) / (rd.w1 - rd.w0);
-  const p = alongPts(pts, f * L);
-  return {cam: {x: p.x, y: p.y, w}, p, pts, s: f * L, L, w};
+  const e = (rd.ease ?? ((x: number) => ss(x, 0, 1)))(u);
+  const inward = rd.w1 < rd.w0;
+  let w = inward ? rd.w0 : rd.w0;
+  let pts = routePts(rd.r, w), L = routeLen(pts), sPos = 0;
+  for (let it = 0; it < 3; it++) {
+    if (inward) {
+      // the distance still to go shrinks in log space; the frame is k times that distance (never wider than w0)
+      const a = rd.w1 / RIDE_K;
+      const rem = (L + a) * Math.exp(e * Math.log(a / (L + a))) - a;
+      w = clamp(RIDE_K * rem + rd.w1, rd.w1, rd.w0);
+      sPos = L - rem;
+    } else {
+      const a = rd.w0 / RIDE_K;
+      const d = (L + a) * Math.exp((1 - e) * Math.log(a / (L + a))) - a;
+      w = clamp(RIDE_K * d + rd.w0, rd.w0, rd.w1);
+      sPos = d;
+    }
+    pts = routePts(rd.r, w);
+    L = routeLen(pts);
+  }
+  if (u >= 1) { w = rd.w1; sPos = L; }
+  const p = alongPts(pts, sPos);
+  return {cam: {x: p.x, y: p.y, w}, p, pts, s: sPos, L, w};
 };
 export const RIDES: Ride[] = [
   {kind: 'rec', r: recRoute(33, DEC_FIRE), t0: 1.85, t1: 2.22, w0: 0.052, w1: 16},
@@ -170,9 +187,9 @@ const ALIVE: Cam = {x: -7, y: -16, w: 50};
 type Seg = [number, number, (u: number, t: number) => Cam];
 const SEGS: Seg[] = [
   [0, 0.25, () => GAME0],
-  [0.25, 0.78, (u) => zoomAbout(u, GAME0, TWO, ss(u, 0, 1) ** 0.85)],
-  [0.78, 1.18, (u) => zoomTo(u, TWO, M1)],
-  [1.18, 1.5, (u) => travel(u, M1, M2)],
+  [0.25, 0.72, (u) => zoomAbout(u, GAME0, TWO, ss(u, 0, 1) ** 0.85)],
+  [0.72, 1.2, (u) => zoomTo(u, TWO, M1)],
+  [1.2, 1.5, (u) => travel(u, M1, M2)],
   [1.5, 1.85, (u) => travel(u, M2, M3)],
   [1.85, 2.22, (_, t) => rideAt(RIDES[0], t).cam],
   [2.22, 2.55, (u) => travel(u, DEC_A, DEC_B)],
