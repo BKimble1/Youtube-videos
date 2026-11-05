@@ -130,6 +130,14 @@ def swish(dur=0.26, f0=500, f1=1300, wet=0.5):
     b = np.zeros(n); bb = bubble(rng.uniform(380, 520), 0.02, 0.6); m = min(n - int(0.55 * n), len(bb)); b[int(0.55 * n):int(0.55 * n) + m] = bb[:m]
     return norm(lp(rmsn(y) + wet * 3 * b, 2400))
 place(swish(), T['flick'] - 0.08, 'S1: the tail flicks across the cover', -15.0)
+# the hook's two further whips, and the gill's bubble burst on the gasp
+if 'whip2' in T:
+    place(swish(0.22, 560, 1450), T['whip2'] - 0.07, 'S1: the tail whips back', -17.0)
+if 'whip3' in T:
+    place(swish(0.22, 520, 1350), T['whip3'] - 0.07, 'S1: a third whip', -17.0)
+    place(bubble_burst(0.4, 8), T['whip3'] - 0.08, 'S1: the gill blows bubbles', -21.0)
+if 'whip4' in T:
+    place(swish(0.18, 600, 1500), T['whip4'] - 0.06, 'S1: a small flick', -20.0)
 # ---------------------------------------------------------------- S2: the gulp (an inrush, the mouth shutting, the swallow)
 def gulp_sound():
     dur = 0.95; n = int(dur * SR); tt = np.arange(n) / SR

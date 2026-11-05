@@ -39,6 +39,34 @@
   "bus": "dot"
  },
  {
+  "t": 0.61,
+  "dur": 0.22,
+  "sfx": "S1: the tail whips back",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 0.96,
+  "dur": 0.4,
+  "sfx": "S1: the gill blows bubbles",
+  "level_re_voice_db": -21.0,
+  "bus": "dot"
+ },
+ {
+  "t": 0.97,
+  "dur": 0.22,
+  "sfx": "S1: a third whip",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 1.39,
+  "dur": 0.18,
+  "sfx": "S1: a small flick",
+  "level_re_voice_db": -20.0,
+  "bus": "dot"
+ },
+ {
   "t": 2.74,
   "dur": 0.95,
   "sfx": "S2: the GULP (inrush, the mouth shuts, the swallow)",
@@ -123,49 +151,49 @@
   "bus": "dot"
  },
  {
-  "t": 16.351,
+  "t": 16.293,
   "dur": 0.2,
   "sfx": "thrash 1",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 16.933,
+  "t": 16.889,
   "dur": 0.2,
   "sfx": "thrash 2",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 17.52,
+  "t": 17.578,
   "dur": 0.2,
   "sfx": "thrash 3",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 18.168,
+  "t": 18.151,
   "dur": 0.2,
   "sfx": "thrash 4",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 18.738,
+  "t": 18.747,
   "dur": 0.2,
   "sfx": "thrash 5",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 19.361,
+  "t": 19.419,
   "dur": 0.2,
   "sfx": "thrash 6",
   "level_re_voice_db": -24.0,
   "bus": "dot"
  },
  {
-  "t": 19.983,
+  "t": 20.087,
   "dur": 0.2,
   "sfx": "thrash 7",
   "level_re_voice_db": -24.0,

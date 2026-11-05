@@ -9,9 +9,12 @@ import {N, RADII, EEL_L} from './eelV4';
 export const T = {
   // S1 OPEN: rear three-quarter behind the predator's cheek; the tail already out of the gill in a loose S
   breathPeak: 0.2, // the cover breathes once (open peak) ...
-  flick: 0.24, // ... and the tail flicks independently across it, out of phase
-  follow0: 1.64, // "belongs": follow the tail to the gill edge
-  peek: 2.15, // a breath lifts the cover: the SAME body continues inside
+  flick: 0.24, // ... and the tail flicks independently across it, out of phase ("TAIL")
+  whip2: 0.68, // a second whip back the other way ("sticking")
+  whip3: 1.04, // a third, with a gasp of the cover and a burst of bubbles ("out")
+  whip4: 1.45, // a smaller flick ("fish")
+  follow0: 1.64, // "belongs": follow the tail to the gill edge (a quick snap in)
+  peek: 2.05, // a breath lifts the cover: the SAME body continues inside
   // S2 GULP: a short side view of the earlier gulp; the eel's body curve matched at the cut
   gulp: 2.62,
   mouthShut: 3.18, // the mouth closes on the tail ("swallowed" 3.00–3.54): the gulp sound
