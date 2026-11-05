@@ -1,0 +1,257 @@
+[
+ {
+  "t": 0.0,
+  "sfx": "LL reach whir",
+  "gain_db": -30
+ },
+ {
+  "t": 0.44,
+  "sfx": "cup taken (grip on paper)",
+  "gain_db": -30
+ },
+ {
+  "t": 0.78,
+  "sfx": "UL crosses behind the shoulder",
+  "gain_db": -31
+ },
+ {
+  "t": 1.3,
+  "sfx": "LR fingers 0",
+  "gain_db": -34
+ },
+ {
+  "t": 1.45,
+  "sfx": "LR fingers 1",
+  "gain_db": -34
+ },
+ {
+  "t": 1.58,
+  "sfx": "LR fingers 2",
+  "gain_db": -34
+ },
+ {
+  "t": 1.62,
+  "sfx": "four arms arc (low)",
+  "gain_db": -32
+ },
+ {
+  "t": 1.7,
+  "sfx": "four arms arc (high)",
+  "gain_db": -35
+ },
+ {
+  "t": 2.95,
+  "sfx": "LR sweeps across the lens",
+  "gain_db": -32
+ },
+ {
+  "t": 3.5,
+  "sfx": "UR follows the model (reach up)",
+  "gain_db": -30
+ },
+ {
+  "t": 4.45,
+  "sfx": "UR wrist roll",
+  "gain_db": -31
+ },
+ {
+  "t": 5.35,
+  "sfx": "UR elbow folds",
+  "gain_db": -30
+ },
+ {
+  "t": 6.5,
+  "sfx": "LL puts the cup down",
+  "gain_db": -32
+ },
+ {
+  "t": 7.27,
+  "sfx": "cup set on the cart",
+  "gain_db": -32
+ },
+ {
+  "t": 9.62,
+  "sfx": "collar release 0",
+  "gain_db": -34
+ },
+ {
+  "t": 9.66,
+  "sfx": "collar release 1",
+  "gain_db": -34
+ },
+ {
+  "t": 9.7,
+  "sfx": "collar release 2",
+  "gain_db": -34
+ },
+ {
+  "t": 9.74,
+  "sfx": "collar release 3",
+  "gain_db": -34
+ },
+ {
+  "t": 9.6,
+  "sfx": "arms slide out on their axes",
+  "gain_db": -36
+ },
+ {
+  "t": 10.05,
+  "sfx": "terminal light 1",
+  "gain_db": -31
+ },
+ {
+  "t": 10.16,
+  "sfx": "terminal light 2",
+  "gain_db": -31
+ },
+ {
+  "t": 10.27,
+  "sfx": "terminal light 3",
+  "gain_db": -31
+ },
+ {
+  "t": 10.38,
+  "sfx": "terminal light 4",
+  "gain_db": -31
+ },
+ {
+  "t": 10.49,
+  "sfx": "terminal light 5",
+  "gain_db": -31
+ },
+ {
+  "t": 10.6,
+  "sfx": "terminal light 6",
+  "gain_db": -31
+ },
+ {
+  "t": 10.9,
+  "sfx": "arms slide home",
+  "gain_db": -37
+ },
+ {
+  "t": 11.3,
+  "sfx": "three arms seat",
+  "gain_db": -33
+ },
+ {
+  "t": 11.2,
+  "sfx": "three collars lock",
+  "gain_db": -35
+ },
+ {
+  "t": 11.76,
+  "sfx": "UL plug seats",
+  "gain_db": -30
+ },
+ {
+  "t": 11.93,
+  "sfx": "UL collar locks",
+  "gain_db": -27
+ },
+ {
+  "t": 13.0,
+  "sfx": "shoulder rotation",
+  "gain_db": -30
+ },
+ {
+  "t": 13.75,
+  "sfx": "elbow",
+  "gain_db": -30
+ },
+ {
+  "t": 14.55,
+  "sfx": "wrist and hand",
+  "gain_db": -31
+ },
+ {
+  "t": 16.5,
+  "sfx": "extra hand to the front",
+  "gain_db": -31
+ },
+ {
+  "t": 18.2,
+  "sfx": "wrist turn through the match cut",
+  "gain_db": -32
+ },
+ {
+  "t": 18.9,
+  "sfx": "hand over the head",
+  "gain_db": -31
+ },
+ {
+  "t": 19.85,
+  "sfx": "pat",
+  "gain_db": -32
+ },
+ {
+  "t": 20.45,
+  "sfx": "pat",
+  "gain_db": -33
+ },
+ {
+  "t": 22.85,
+  "sfx": "collar unlock (twist)",
+  "gain_db": -29
+ },
+ {
+  "t": 23.15,
+  "sfx": "collar released",
+  "gain_db": -30
+ },
+ {
+  "t": 23.15,
+  "sfx": "plug drawn out",
+  "gain_db": -33
+ },
+ {
+  "t": 23.6,
+  "sfx": "arm folds (unpowered)",
+  "gain_db": -35
+ },
+ {
+  "t": 24.05,
+  "sfx": "hand-off grip",
+  "gain_db": -34
+ },
+ {
+  "t": 24.85,
+  "sfx": "plug in",
+  "gain_db": -33
+ },
+ {
+  "t": 25.1,
+  "sfx": "plug seats",
+  "gain_db": -29
+ },
+ {
+  "t": 25.24,
+  "sfx": "collar locks",
+  "gain_db": -26
+ },
+ {
+  "t": 25.32,
+  "sfx": "arm light on",
+  "gain_db": -30
+ },
+ {
+  "t": 25.45,
+  "sfx": "arm wakes",
+  "gain_db": -30
+ },
+ {
+  "t": 26.4,
+  "sfx": "borrowed arm moves",
+  "gain_db": -32
+ },
+ {
+  "t": 27.6,
+  "sfx": "borrowed arm moves 2",
+  "gain_db": -33
+ },
+ {
+  "t": 29.4,
+  "sfx": "reach toward the viewer",
+  "gain_db": -31
+ }
+]

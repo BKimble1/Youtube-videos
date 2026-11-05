@@ -1,0 +1,464 @@
+{
+ "audio": "audio/narration/FGW_JIZAI_narration_V1.wav",
+ "source_take": "audio/narration/takes/t1_B7w8.mp3",
+ "inserted_silence": [
+  {
+   "at_take_s": 6.265,
+   "seconds": 0.25
+  },
+  {
+   "at_take_s": 12.505,
+   "seconds": 0.2
+  },
+  {
+   "at_take_s": 15.895,
+   "seconds": 0.2
+  },
+  {
+   "at_take_s": 20.775,
+   "seconds": 0.25
+  },
+  {
+   "at_take_s": 24.665,
+   "seconds": 0.45
+  }
+ ],
+ "duration_s": 30.07,
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.11
+  },
+  {
+   "word": "you",
+   "start": 0.12,
+   "end": 0.23
+  },
+  {
+   "word": "put",
+   "start": 0.24,
+   "end": 0.47
+  },
+  {
+   "word": "on",
+   "start": 0.48,
+   "end": 0.63
+  },
+  {
+   "word": "this",
+   "start": 0.64,
+   "end": 0.83
+  },
+  {
+   "word": "backpack,",
+   "start": 0.84,
+   "end": 1.4
+  },
+  {
+   "word": "you",
+   "start": 1.56,
+   "end": 1.63
+  },
+  {
+   "word": "can",
+   "start": 1.64,
+   "end": 1.83
+  },
+  {
+   "word": "have",
+   "start": 1.84,
+   "end": 2.07
+  },
+  {
+   "word": "six",
+   "start": 2.08,
+   "end": 2.43
+  },
+  {
+   "word": "arms.",
+   "start": 2.44,
+   "end": 2.97
+  },
+  {
+   "word": "Four",
+   "start": 3.36,
+   "end": 3.48
+  },
+  {
+   "word": "are",
+   "start": 3.485,
+   "end": 3.76
+  },
+  {
+   "word": "robotic,",
+   "start": 3.765,
+   "end": 4.36
+  },
+  {
+   "word": "and",
+   "start": 4.365,
+   "end": 4.52
+  },
+  {
+   "word": "someone",
+   "start": 4.525,
+   "end": 4.88
+  },
+  {
+   "word": "else",
+   "start": 4.885,
+   "end": 5.12
+  },
+  {
+   "word": "can",
+   "start": 5.125,
+   "end": 5.28
+  },
+  {
+   "word": "control",
+   "start": 5.285,
+   "end": 5.76
+  },
+  {
+   "word": "them.",
+   "start": 5.765,
+   "end": 5.87
+  },
+  {
+   "word": "Researchers",
+   "start": 6.6,
+   "end": 7.07
+  },
+  {
+   "word": "in",
+   "start": 7.08,
+   "end": 7.19
+  },
+  {
+   "word": "Japan",
+   "start": 7.2,
+   "end": 7.63
+  },
+  {
+   "word": "built",
+   "start": 7.64,
+   "end": 7.95
+  },
+  {
+   "word": "JIZAI",
+   "start": 7.96,
+   "end": 8.43
+  },
+  {
+   "word": "ARMS,",
+   "start": 8.44,
+   "end": 8.85
+  },
+  {
+   "word": "a",
+   "start": 9.05,
+   "end": 9.1
+  },
+  {
+   "word": "wearable",
+   "start": 9.09,
+   "end": 9.54
+  },
+  {
+   "word": "rig",
+   "start": 9.55,
+   "end": 9.82
+  },
+  {
+   "word": "with",
+   "start": 9.83,
+   "end": 10.02
+  },
+  {
+   "word": "six",
+   "start": 10.03,
+   "end": 10.31
+  },
+  {
+   "word": "sockets",
+   "start": 10.31,
+   "end": 10.74
+  },
+  {
+   "word": "for",
+   "start": 10.75,
+   "end": 10.86
+  },
+  {
+   "word": "detachable",
+   "start": 10.87,
+   "end": 11.5
+  },
+  {
+   "word": "robot",
+   "start": 11.51,
+   "end": 11.95
+  },
+  {
+   "word": "limbs.",
+   "start": 11.95,
+   "end": 12.33
+  },
+  {
+   "word": "Move",
+   "start": 12.97,
+   "end": 13.06
+  },
+  {
+   "word": "a",
+   "start": 13.07,
+   "end": 13.18
+  },
+  {
+   "word": "miniature",
+   "start": 13.19,
+   "end": 13.62
+  },
+  {
+   "word": "controller,",
+   "start": 13.63,
+   "end": 14.18
+  },
+  {
+   "word": "and",
+   "start": 14.19,
+   "end": 14.34
+  },
+  {
+   "word": "the",
+   "start": 14.35,
+   "end": 14.5
+  },
+  {
+   "word": "full-sized",
+   "start": 14.51,
+   "end": 15.1
+  },
+  {
+   "word": "arm",
+   "start": 15.11,
+   "end": 15.5
+  },
+  {
+   "word": "follows.",
+   "start": 15.51,
+   "end": 15.91
+  },
+  {
+   "word": "That",
+   "start": 16.56,
+   "end": 16.61
+  },
+  {
+   "word": "means",
+   "start": 16.6,
+   "end": 16.93
+  },
+  {
+   "word": "another",
+   "start": 16.935,
+   "end": 17.29
+  },
+  {
+   "word": "person",
+   "start": 17.295,
+   "end": 17.65
+  },
+  {
+   "word": "can",
+   "start": 17.655,
+   "end": 17.85
+  },
+  {
+   "word": "move",
+   "start": 17.855,
+   "end": 18.01
+  },
+  {
+   "word": "the",
+   "start": 18.015,
+   "end": 18.15
+  },
+  {
+   "word": "extra",
+   "start": 18.175,
+   "end": 18.49
+  },
+  {
+   "word": "hand",
+   "start": 18.495,
+   "end": 18.69
+  },
+  {
+   "word": "on",
+   "start": 18.695,
+   "end": 18.81
+  },
+  {
+   "word": "your",
+   "start": 18.815,
+   "end": 19.05
+  },
+  {
+   "word": "back",
+   "start": 19.055,
+   "end": 19.29
+  },
+  {
+   "word": "while",
+   "start": 19.295,
+   "end": 19.45
+  },
+  {
+   "word": "your",
+   "start": 19.455,
+   "end": 19.69
+  },
+  {
+   "word": "real",
+   "start": 19.695,
+   "end": 20.01
+  },
+  {
+   "word": "hands",
+   "start": 20.015,
+   "end": 20.33
+  },
+  {
+   "word": "stay",
+   "start": 20.335,
+   "end": 20.69
+  },
+  {
+   "word": "still.",
+   "start": 20.695,
+   "end": 20.93
+  },
+  {
+   "word": "They",
+   "start": 21.69,
+   "end": 21.74
+  },
+  {
+   "word": "even",
+   "start": 21.73,
+   "end": 21.95
+  },
+  {
+   "word": "demonstrated",
+   "start": 21.955,
+   "end": 22.7
+  },
+  {
+   "word": "people",
+   "start": 22.715,
+   "end": 22.95
+  },
+  {
+   "word": "removing",
+   "start": 22.955,
+   "end": 23.39
+  },
+  {
+   "word": "their",
+   "start": 23.395,
+   "end": 23.59
+  },
+  {
+   "word": "robotic",
+   "start": 23.595,
+   "end": 24.11
+  },
+  {
+   "word": "arms",
+   "start": 24.115,
+   "end": 24.43
+  },
+  {
+   "word": "and",
+   "start": 24.435,
+   "end": 24.63
+  },
+  {
+   "word": "swapping",
+   "start": 24.635,
+   "end": 25.19
+  },
+  {
+   "word": "them.",
+   "start": 25.195,
+   "end": 25.29
+  },
+  {
+   "word": "So",
+   "start": 26.2,
+   "end": 26.36
+  },
+  {
+   "word": "now,",
+   "start": 26.37,
+   "end": 26.8
+  },
+  {
+   "word": "borrowing",
+   "start": 26.81,
+   "end": 27.4
+  },
+  {
+   "word": "someone's",
+   "start": 27.41,
+   "end": 27.84
+  },
+  {
+   "word": "arm",
+   "start": 27.85,
+   "end": 28.12
+  },
+  {
+   "word": "doesn't",
+   "start": 28.13,
+   "end": 28.52
+  },
+  {
+   "word": "have",
+   "start": 28.53,
+   "end": 28.64
+  },
+  {
+   "word": "to",
+   "start": 28.65,
+   "end": 28.76
+  },
+  {
+   "word": "be",
+   "start": 28.77,
+   "end": 28.88
+  },
+  {
+   "word": "a",
+   "start": 28.89,
+   "end": 29.0
+  },
+  {
+   "word": "figure",
+   "start": 29.01,
+   "end": 29.36
+  },
+  {
+   "word": "of",
+   "start": 29.37,
+   "end": 29.51
+  },
+  {
+   "word": "speech.",
+   "start": 29.53,
+   "end": 29.96
+  }
+ ]
+}

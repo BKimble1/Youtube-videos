@@ -1,0 +1,86 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Eel Escape, Bone Glue, Finger); confirmed with creative_list_voices on 2026-11-05 ('Test Voice For Youtube.')"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags only",
+ "flow_id": "lbZOgwGL6bcpi4ecv8Cu",
+ "prompt": "[curious and energetic, but grounded and natural] If you put on this backpack, you can have six arms. Four are robotic, and someone else can control them. Researchers in Japan built Jizai Arms, a wearable rig with six sockets for detachable robot limbs. Move a miniature controller, and the full-sized arm follows. That means another person can move the extra hand on your back while your real hands stay still. They even demonstrated people removing their robotic arms and swapping them. [a touch of dry wonder] So now, borrowing someone's arm doesn't have to be a figure of speech.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). 'JIZAI ARMS' was written 'Jizai Arms' in the prompt only so the model reads it as a name and not as spelled letters; the spoken words are unchanged and the captions show the locked capitals. Bracket tags direct delivery and are not spoken (confirmed by ASR).",
+ "generated_once": "One run of two variations (the connector default), 2 x 582.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_B7w8.mp3",
+   "generation_id": "B7w82o8R2Nc4IsNcPws3",
+   "session_id": "G9NP60j2hRu7xZyst0yb",
+   "duration_s": 28.76,
+   "sha256": "a6d0e3cd9b910829757424ecc3c464bdfbe7839e278ce39fea17272a104e18be",
+   "asr_wer": {
+    "zipformer": 0.068,
+    "whisper": 0.023
+   },
+   "asr_diffs": {
+    "zipformer": [
+     [
+      "replace",
+      "backpack",
+      "back pack"
+     ],
+     [
+      "replace",
+      "robotic",
+      "rhootic"
+     ],
+     [
+      "replace",
+      "someone",
+      "some one"
+     ],
+     [
+      "replace",
+      "jizai",
+      "ji"
+     ]
+    ],
+    "whisper": [
+     [
+      "delete",
+      "four",
+      ""
+     ],
+     [
+      "replace",
+      "jizai",
+      "gizai"
+     ]
+    ]
+   },
+   "chosen": true,
+   "why": "'Jizai' heard as 'Gizai' (closest to jee-zai) vs take 2's 'GZI'; every other word recognised (the remaining differences are spellings: '4', 'back pack', 'some one'); speech from 0.00 s"
+  },
+  {
+   "file": "audio/narration/takes/t2_Qvag.mp3",
+   "generation_id": "QvagdkSKBbI6Tv8IibEt",
+   "session_id": "B9a63uTwHCjy9m1fYoj5",
+   "duration_s": 29.15,
+   "sha256": "c54ba4651332d75529e0b2fa34f6da93ffdcbcef64761a6705aac0e66732ec17",
+   "asr_wer": {
+    "zipformer": 0.091,
+    "whisper": 0.023
+   },
+   "chosen": false,
+   "why_not": "'Jizai' clipped toward 'GZI' on both recognisers"
+  }
+ ],
+ "master": {
+  "file": "audio/narration/FGW_JIZAI_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 30.07 s",
+  "edits": "no time-stretch, pitch or gain change; five existing sentence pauses lengthened by inserting digital silence at the quietest 10 ms inside each pause (all cut points at or below -89 dBFS): +0.25 s after 'control them.', +0.20 s after 'limbs.', +0.20 s after 'follows.', +0.25 s after 'still.', +0.45 s before the payoff line (tools/make_narration.py)",
+  "word_timing": "audio/narration/FGW_JIZAI_words_V1.json: sherpa-onnx Zipformer token times matched to the locked words (tools/align_zipformer.py), shifted by the inserted silence",
+  "sha256": "caa9636726ab20573b86acd55f2bbc508c01d4ea9f9fe2991c47d891c61ce5b2"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models and timing measurements."
+}

@@ -1,0 +1,13 @@
+import {stateAt} from '../../source/src/film/Film';
+import {proj} from '../../source/src/r3/m3';
+import {slotGeoMini} from '../../source/src/film/s1';
+import {plugged} from '../../source/src/r3/stage';
+const t = +(process.argv[2] ?? 14.1);
+const st = stateAt(t);
+const P = proj(st.cam);
+const m = slotGeoMini(st.mini!.pose);
+const w = st.wearers[0];
+const g = plugged(w, w.arms.find((a) => a.tid === 'UR')!);
+const f = (n: string, q: any) => { const p = P.p(q); console.log(n.padEnd(10), p.x.toFixed(0), p.y.toFixed(0), 'z', p.z.toFixed(0), 'k', P.k(p.z).toFixed(2)); };
+console.log('eye', JSON.stringify(P.eye));
+f('miniBase', m.base); f('miniE', m.E); f('miniW', m.W); f('urBase', g.base); f('urE', g.E); f('urW', g.W);

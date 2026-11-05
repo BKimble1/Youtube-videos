@@ -1,0 +1,12 @@
+{
+ "integrated_lufs_stereo": -14.11,
+ "max_short_term_lufs": -16.2,
+ "sample_peak_dbfs": -1.39,
+ "limiter_max_gain_reduction_db": -1.0,
+ "voice_vs_music_lufs": {
+  "voice": -18.56,
+  "music_in_mix": -27.81,
+  "fx": -42.54
+ },
+ "duration_s": 31.0
+}
