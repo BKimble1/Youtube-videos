@@ -1,6 +1,6 @@
 {
  "file": "FGW_Brain_Cells_DOOM_V1_REVIEW_1080x1920.mp4",
- "size_mb": 86.11,
+ "size_mb": 91.45,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,57 +15,43 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "263864"
+   "bitrate": "264786"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 16.78,
+ "frame_change_median": 17.52,
  "large_changes": [
   {
-   "frame": 29,
-   "t": 0.967,
-   "mad": 86.52,
+   "frame": 28,
+   "t": 0.933,
+   "mad": 93.21,
    "planned": "push into the chip"
   },
   {
-   "frame": 126,
-   "t": 4.2,
-   "mad": 88.54,
-   "planned": "signal ride (stim)"
+   "frame": 60,
+   "t": 2.0,
+   "mad": 93.06,
+   "planned": "signal ride (rec)"
+  },
+  {
+   "frame": 62,
+   "t": 2.067,
+   "mad": 99.95,
+   "planned": "signal ride (rec)"
   },
   {
    "frame": 330,
    "t": 11.0,
-   "mad": 97.44,
+   "mad": 97.43,
    "planned": "out of the chip, up to the game"
-  },
-  {
-   "frame": 375,
-   "t": 12.5,
-   "mad": 120.35,
-   "planned": "signal ride (stim)"
-  },
-  {
-   "frame": 376,
-   "t": 12.533,
-   "mad": 104.8,
-   "planned": "signal ride (stim)"
-  },
-  {
-   "frame": 461,
-   "t": 15.367,
-   "mad": 115.59,
-   "planned": "signal ride (rec)"
-  },
-  {
-   "frame": 716,
-   "t": 23.867,
-   "mad": 84.29,
-   "planned": "dive to the cells"
   }
  ],
  "unplanned_large_changes": [],
  "longest_near_static_run_frames": 3,
  "longest_near_static_run_starts_s": 19.17,
- "loop_last_vs_first_mad": 39.85
+ "loop_last_vs_first_mad": 39.85,
+ "delivered_audio": {
+  "integrated_lufs": -14.01,
+  "true_peak_dbtp": -1.59
+ }
 }
