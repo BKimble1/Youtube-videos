@@ -2,7 +2,31 @@
 
 Long-form episode, 16:9, selected on 4 Nov 2026.
 
-## V2: animation and pacing overhaul (current)
+## V3: cinematic animation and transition overhaul (current)
+
+Not published, and not watched or heard in real time.
+
+**Review file:** `exports/FGW_Finger_V3_REVIEW_1920x1080.mp4`
+
+| Property | Value |
+|---|---|
+| Runtime | 3:31.77 (6,353 frames at 30 fps) |
+| Loudness | −14.2 LUFS integrated, −1.3 dBTP true peak |
+| Narration and captions | Unchanged |
+| Picture | Every section reworked in `source/src/v3/` (composition `FingerV3`, sections A–H) |
+| Characters | The cast rig now has articulated hands |
+| Ending | Loops back into frame 0 |
+| Static picture | No frozen stretch of 1.5 s or longer |
+
+The MP4 is Git-ignored; checksummed parts are in `backup/`.
+
+| Item | File |
+|---|---|
+| Report (changes, verified transitions, concerns) | `production/V3_REPORT.md` |
+| Creator's direction (verbatim) | `production/V3_DIRECTION.md` |
+| QA | `qa/v3/` |
+
+## V2: animation and pacing overhaul
 
 Not published, and not watched or heard in real time.
 
