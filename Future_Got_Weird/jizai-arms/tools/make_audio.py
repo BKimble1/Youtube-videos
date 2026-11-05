@@ -28,7 +28,7 @@ voice = np.zeros(N); voice[:min(N, len(nar))] = nar[:N]
 words = json.load(open(os.path.join(ROOT, 'audio/narration/FGW_JIZAI_words_V1.json')))['words']
 speech = np.zeros(N)
 for w in words:
-    a, b = int(max(0, w['start'] - 0.05) * SR), int(min(DUR, w['end'] + 0.12) * SR)
+    a, b = int(max(0, w['start'] - 0.05) * SR), int(min(DUR, w['end'] + (0.45 if w is words[-1] else 0.12)) * SR)
     speech[a:b] = 1
 speech = A.smooth(speech, 3.0)
 speech = np.clip(speech / max(1e-9, speech.max()), 0, 1)
@@ -82,6 +82,9 @@ for k in range(BARS * 8):
 music = pad + 0.05 * lp(arp, 4200) + 0.12 * sub + 0.012 * hat
 # duck under speech (about 7 dB) and lift a little in the gaps
 music *= db(-7.5 * speech)
+# the last words ('figure of speech') are the softest of the read: a further dip in the bed under them
+lastdip = A.window(28.95, 30.05, 0.25)
+music *= db(-8.0 * lastdip)
 
 # ------------------------------------------------------------------ effects
 fx = np.zeros(N)
@@ -185,15 +188,16 @@ put(whir(0.9, 220, 280), 25.45, W, 'arm wakes')
 # S6
 put(whir(1.1, 210, 250), 26.4, W - 2, 'borrowed arm moves')
 put(whir(0.9, 230, 280), 27.6, W - 3, 'borrowed arm moves 2')
-put(whir(1.2, 220, 290), 29.4, W - 1, 'reach toward the viewer')
-fx = A.lp(fx, 9000)
+put(whir(1.0, 220, 290), 29.98, W - 1, 'reach toward the viewer (after the last word)')
+fx = A.lp(fx, 9000) * db(-8.0 * A.window(28.95, 29.98, 0.2))
 
 # ------------------------------------------------------------------ mix and master
-v = voice * db(0)
+v = voice * db(0) * (0 if os.environ.get('NOVOICE') else 1)
 mix = v + music * db(-2) + fx * db(3)
 # a gentle compressor on the sum, then normalise to -14 LUFS and limit true peak at -1.5 dBTP
 mix, _ = A.compress(mix, thr_db=-18, ratio=1.8)
-L = A.lufs(mix) + 3.01  # stereo (two identical channels) meters 3 dB above the mono sum
+print('pre-norm lufs', A.lufs(mix))
+L = (float(os.environ['LREF']) if os.environ.get('LREF') else A.lufs(mix)) + 3.01  # stereo (two identical channels) meters 3 dB above the mono sum
 mix *= db(-14.0 - L)
 mix, gr = A.tp_limit(mix, -1.5)
 st = np.stack([mix, mix], 1)
@@ -210,9 +214,9 @@ def write24(p, x):
         f.setnchannels(x.shape[1] if x.ndim > 1 else 1); f.setsampwidth(3); f.setframerate(SR); f.writeframes(b24)
 os.makedirs(os.path.join(ROOT, 'audio/mix'), exist_ok=True)
 os.makedirs(os.path.join(ROOT, 'source/public/audio'), exist_ok=True)
-out = os.path.join(ROOT, 'audio/mix/FGW_JIZAI_V1_mix.wav')
+out = os.path.join(ROOT, 'audio/mix/FGW_JIZAI_V1_mix.wav' if not os.environ.get('NOVOICE') else '/tmp/claude-0/-home-user-Youtube-videos/8ee7068f-8a4f-5a41-9a7a-a0a4c70ac0d3/scratchpad/novoice.wav')
 write24(out, st)
-write24(os.path.join(ROOT, 'source/public/audio/mix_v1.wav'), st)
+if not os.environ.get('NOVOICE'): write24(os.path.join(ROOT, 'source/public/audio/mix_v1.wav'), st)
 meas = {
     'integrated_lufs_stereo': round(float(A.pyln.Meter(SR).integrated_loudness(st)), 2),
     'max_short_term_lufs': A.lmax(st.mean(1), 3.0),
@@ -221,6 +225,6 @@ meas = {
     'voice_vs_music_lufs': {'voice': A.lufs(v), 'music_in_mix': A.lufs(music * db(-2)), 'fx': A.lufs(fx)},
     'duration_s': DUR,
 }
-json.dump(meas, open(os.path.join(ROOT, 'audio/mix/mix_measure_v1.json'), 'w'), indent=1)
+if not os.environ.get('NOVOICE'): json.dump(meas, open(os.path.join(ROOT, 'audio/mix/mix_measure_v1.json'), 'w'), indent=1)
 json.dump(LOG, open(os.path.join(ROOT, 'audio/sfx_cues_v1.json'), 'w'), indent=1)
 print(json.dumps(meas, indent=1))

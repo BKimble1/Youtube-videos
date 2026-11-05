@@ -4,7 +4,7 @@
 set -e
 OUT=$1; TIMES=$2; COLS=${3:-4}; SC=${4:-360}
 D=$(mktemp -d)
-JSON="{\"times\":[${TIMES}]}"
+JSON="{\"times\":[${TIMES}],\"capt\":true}"
 npx remotion render src/index.ts Probe "$D/f" --sequence --props="$JSON" --image-format=png --log=error --concurrency=4 >/dev/null
 N=$(ls $D/f | wc -l)
 i=0; ARGS=""; FILT=""

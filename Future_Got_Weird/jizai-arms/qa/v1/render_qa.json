@@ -1,0 +1,161 @@
+{
+ "file": "FGW_JIZAI_Arms_V1_REVIEW_1080x1920.mp4",
+ "size_mb": 25.44,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "frames_decoded": 930,
+  "duration_s": 31.0
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "280579"
+  }
+ ],
+ "loudness": {
+  "integrated": "I:         -14.1 LUFS",
+  "true_peak": "Peak:       -1.4 dBFS"
+ },
+ "decode_errors": null,
+ "frame_change_median": 6.32,
+ "large_changes": [
+  {
+   "frame": 43,
+   "t": 1.433,
+   "mad": 32.26,
+   "planned": null
+  },
+  {
+   "frame": 44,
+   "t": 1.467,
+   "mad": 32.03,
+   "planned": null
+  },
+  {
+   "frame": 94,
+   "t": 3.133,
+   "mad": 32.45,
+   "planned": "robot hand sweeps across the lens as the camera swings to the operator"
+  },
+  {
+   "frame": 544,
+   "t": 18.133,
+   "mad": 31.61,
+   "planned": "zoom to the operator fingers"
+  },
+  {
+   "frame": 545,
+   "t": 18.167,
+   "mad": 31.81,
+   "planned": "zoom to the operator fingers"
+  },
+  {
+   "frame": 546,
+   "t": 18.2,
+   "mad": 32.81,
+   "planned": "zoom to the operator fingers"
+  },
+  {
+   "frame": 547,
+   "t": 18.233,
+   "mad": 33.25,
+   "planned": "zoom to the operator fingers"
+  },
+  {
+   "frame": 555,
+   "t": 18.5,
+   "mad": 58.87,
+   "planned": "MATCH CUT: the model wrist -> the full wrist (same view direction, distance x2)"
+  },
+  {
+   "frame": 648,
+   "t": 21.6,
+   "mad": 41.51,
+   "planned": "CUT: a separate demonstration (two wearers)"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 43,
+   "t": 1.433,
+   "mad": 32.26,
+   "planned": null
+  },
+  {
+   "frame": 44,
+   "t": 1.467,
+   "mad": 32.03,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 18,
+ "longest_near_static_run_starts_s": 20.7,
+ "loop_last_vs_first_mad": 27.3,
+ "asr": {
+  "zipformer": {
+   "wer": 0.115,
+   "diffs": [
+    [
+     "replace",
+     "backpack",
+     "back pack"
+    ],
+    [
+     "replace",
+     "someone",
+     "some one"
+    ],
+    [
+     "replace",
+     "jizai",
+     "j zi"
+    ],
+    [
+     "replace",
+     "fullsized",
+     "full sized"
+    ],
+    [
+     "replace",
+     "someone's",
+     "some one's"
+    ]
+   ]
+  },
+  "whisper": {
+   "wer": 0.046,
+   "diffs": [
+    [
+     "replace",
+     "jizai",
+     "gzi"
+    ],
+    [
+     "replace",
+     "fullsized",
+     "full sized"
+    ],
+    [
+     "delete",
+     "speech",
+     ""
+    ]
+   ]
+  },
+  "tail_from_21s_transcripts": {
+   "stdout": [
+    "== zipformer  WER 0.747",
+    "THEY EVEN DEMONSTRATED PEOPLE REMOVING THEIR ROBOTIC ARMS AND SWAPPING THEM SO NOW BORROWING SOME ONE'S ARM DOESN'T HAVE TO BE A FIGURE OF SPEECH",
+    "== whisper  WER 0.724",
+    "They even demonstrated people removing their robotic arms and swapping them. So now, borrowing someone's arm doesn't have to be a figure of speech."
+   ]
+  }
+ }
+}

@@ -217,7 +217,7 @@ export const s34State = (t: number): StageState => {
     const FZ = (1380 * 250) / 46;
     const back = ramp(t, MATCH + 0.3, 20.3, io);
     const close: Cam = {t: urG.W, yaw: VY, pitch: VP, dist: 500, f: FZ};
-    const wide: Cam = {t: v3(-6, 136, 6), yaw: VY - 6, pitch: 13, dist: 200, f: 1380};
+    const wide: Cam = {t: v3(-10, 132, 6), yaw: VY + 14, pitch: 10, dist: 205, f: 1380};
     cam = logMix(close, wide, back);
   }
   return {

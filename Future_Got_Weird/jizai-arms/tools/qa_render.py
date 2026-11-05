@@ -25,12 +25,12 @@ n = len(fr)
 fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr.astype(np.float32), axis=0)).mean(axis=(1, 2, 3))
 PLANNED = [
-    (18.45, 18.55, 'MATCH CUT: the model\\'s wrist -> the full wrist (same view direction, distance x2)'),
+    (18.45, 18.55, 'MATCH CUT: the model wrist -> the full wrist (same view direction, distance x2)'),
     (21.55, 21.65, 'CUT: a separate demonstration (two wearers)'),
     (2.9, 3.6, 'robot hand sweeps across the lens as the camera swings to the operator'),
     (9.0, 10.1, 'orbit to the back; the body turns translucent'),
     (12.4, 13.2, 'the return orbit; the body returns'),
-    (17.9, 18.5, 'zoom to the operator\\'s fingers'),
+    (17.9, 18.5, 'zoom to the operator fingers'),
 ]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
@@ -65,7 +65,13 @@ if au:
     subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', src, '-ac', '1', '-ar', '16000', wav], check=True)
     r = subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'asr_sherpa.py'), wav, models, os.path.join(out, 'final_asr.json')], capture_output=True, text=True)
     asr = json.load(open(os.path.join(out, 'final_asr.json')))
-    os.remove(wav)
+    # Whisper reads at most 30 s per piece and the mix has no 0.3 s silences (the music runs under the pauses), so the
+    # last words fall outside its window on the full file: a second pass on the tail (from 21 s) covers them.
+    tw = os.path.join(out, '_tail.wav')
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '21.0', '-i', src, '-ac', '1', '-ar', '16000', tw], check=True)
+    rt = subprocess.run(['python3', os.path.join(os.path.dirname(os.path.abspath(__file__)), 'asr_sherpa.py'), tw, models], capture_output=True, text=True)
+    asr['tail_from_21s_transcripts'] = {'stdout': [l for l in rt.stdout.splitlines() if l and not l.startswith('  diffs')]}
+    os.remove(wav); os.remove(tw)
 lou = subprocess.run(['ffmpeg', '-hide_banner', '-i', src, '-af', 'ebur128=peak=true', '-f', 'null', '-'], capture_output=True, text=True).stderr if au else ''
 I = [l for l in lou.splitlines() if l.strip().startswith('I:')]
 Pk = [l for l in lou.splitlines() if l.strip().startswith('Peak:')]
@@ -80,7 +86,7 @@ res = {
     'unplanned_large_changes': [j for j in jumps if not j['planned']],
     'longest_near_static_run_frames': best, 'longest_near_static_run_starts_s': round(best_at / fps, 2),
     'loop_last_vs_first_mad': round(loop, 2),
-    'asr': {k: {'wer': v['wer'], 'diffs': v['diffs']} for k, v in (asr or {}).items()},
+    'asr': {k: ({'wer': v['wer'], 'diffs': v['diffs']} if 'wer' in v else v) for k, v in (asr or {}).items()},
 }
 json.dump(res, open(os.path.join(out, 'render_qa.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))

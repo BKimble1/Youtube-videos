@@ -1,0 +1,219 @@
+{
+ "frame0": {
+  "humanHandsOnScreen": 2,
+  "robotHandsOnScreen": 4,
+  "armsOnScreen": 6,
+  "llHand": {
+   "x": 683,
+   "y": 1359,
+   "k": 12.45
+  }
+ },
+ "last": {
+  "humanHandsOnScreen": 2,
+  "robotHandsOnScreen": 3,
+  "armsOnScreen": 5,
+  "llHand": {
+   "x": 581,
+   "y": 1371,
+   "k": 12.38
+  }
+ },
+ "jointLimitViolations": 0,
+ "jointLimitSamples": [],
+ "handReachShortfalls": 1,
+ "handReachSamples": [
+  "24.43 w.R short by 1.2 cm"
+ ],
+ "controllerMirrorMaxErrorCm": 6,
+ "headClashes": 0,
+ "headClashSamples": [],
+ "cameraJumps": [
+  {
+   "f": 92,
+   "eye": 5.3,
+   "tgt": 0.6,
+   "df": 0
+  },
+  {
+   "f": 93,
+   "eye": 7.6,
+   "tgt": 0.3,
+   "df": 0
+  },
+  {
+   "f": 95,
+   "eye": 7.4,
+   "tgt": 0.3,
+   "df": 0
+  },
+  {
+   "f": 96,
+   "eye": 5.1,
+   "tgt": 0.6,
+   "df": 0
+  },
+  {
+   "f": 276,
+   "eye": 4.1,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 277,
+   "eye": 4.9,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 278,
+   "eye": 5.3,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 279,
+   "eye": 5.1,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 280,
+   "eye": 4.7,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 281,
+   "eye": 4,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 335,
+   "eye": 4,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 337,
+   "eye": 4.1,
+   "tgt": 0,
+   "df": 0
+  },
+  {
+   "f": 377,
+   "eye": 4.8,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 378,
+   "eye": 6,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 379,
+   "eye": 7.3,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 380,
+   "eye": 6.8,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 381,
+   "eye": 6.3,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 382,
+   "eye": 5.7,
+   "tgt": 0.3,
+   "df": 0
+  },
+  {
+   "f": 383,
+   "eye": 4.7,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 384,
+   "eye": 4.1,
+   "tgt": 0.1,
+   "df": 0
+  },
+  {
+   "f": 506,
+   "eye": 4.9,
+   "tgt": 0.7,
+   "df": 0
+  },
+  {
+   "f": 507,
+   "eye": 6.2,
+   "tgt": 0.8,
+   "df": 0
+  },
+  {
+   "f": 508,
+   "eye": 4.6,
+   "tgt": 0.2,
+   "df": 0
+  },
+  {
+   "f": 509,
+   "eye": 5.3,
+   "tgt": 0.7,
+   "df": 0
+  },
+  {
+   "f": 510,
+   "eye": 4.6,
+   "tgt": 0.7,
+   "df": 0
+  },
+  {
+   "f": 511,
+   "eye": 4,
+   "tgt": 0.6,
+   "df": 0
+  },
+  {
+   "f": 539,
+   "eye": 1.1,
+   "tgt": 1.1,
+   "df": 0.126
+  },
+  {
+   "f": 540,
+   "eye": 1.2,
+   "tgt": 1.1,
+   "df": 0.148
+  },
+  {
+   "f": 541,
+   "eye": 1.3,
+   "tgt": 1.2,
+   "df": 0.171
+  },
+  {
+   "f": 542,
+   "eye": 0.6,
+   "tgt": 0.5,
+   "df": 0.16
+  },
+  {
+   "f": 543,
+   "eye": 1.3,
+   "tgt": 1.2,
+   "df": 0.137
+  }
+ ]
+}

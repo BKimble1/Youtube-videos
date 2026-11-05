@@ -1,0 +1,54 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU PUT ON THIS BACK PACK YOU CAN HAVE SIX ARMS FOUR ARE ROBOTIC AND SOME ONE ELSE CAN CONTROL THEM RESEARCHERS IN JAPAN BUILT J ZI ARMS A WEARABLE RIG WITH SIX SOCKETS FOR DETACHABLE ROBOT LIMBS MOVE A MINIATURE CONTROLLER AND THE FULL SIZED ARM FOLLOWS THAT MEANS ANOTHER PERSON CAN MOVE THE EXTRA HAND ON YOUR BACK WHILE YOUR REAL HANDS STAY STILL THEY EVEN DEMONSTRATED PEOPLE REMOVING THEIR ROBOTIC ARMS AND SWAPPING THEM SO NOW BORROWING SOME ONE'S ARM DOESN'T HAVE TO BE A FIGURE OF SPEECH",
+  "wer": 0.115,
+  "diffs": [
+   [
+    "replace",
+    "backpack",
+    "back pack"
+   ],
+   [
+    "replace",
+    "someone",
+    "some one"
+   ],
+   [
+    "replace",
+    "jizai",
+    "j zi"
+   ],
+   [
+    "replace",
+    "fullsized",
+    "full sized"
+   ],
+   [
+    "replace",
+    "someone's",
+    "some one's"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you put on this backpack, you can have six arms. Four are robotic, and someone else can control them. Researchers in Japan built GZI arms, a wearable rig with six sockets for detachable robot limbs. Move a miniature controller, and the full-sized arm follows. That means another person can move the extra hand on your back while your real hands stay still. They even demonstrated people removing their robotic arms and swapping them. So now, borrowing someone's arm doesn't have to be a figure of",
+  "wer": 0.046,
+  "diffs": [
+   [
+    "replace",
+    "jizai",
+    "gzi"
+   ],
+   [
+    "replace",
+    "fullsized",
+    "full sized"
+   ],
+   [
+    "delete",
+    "speech",
+    ""
+   ]
+  ]
+ }
+}

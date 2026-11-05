@@ -45,7 +45,7 @@ export const CAPS = GROUPS.map(([a, b, emph], i) => ({
   end: i + 1 < GROUPS.length ? Math.min(WS[GROUPS[i + 1][0]].start, WS[b].end + 0.35) : WS[b].end + 0.6,
 }));
 /** caption centre height per caption (px); keeps them off the action */
-const Y_DEFAULT = 1560;
+const Y_DEFAULT = 1700;
 const YS: Record<number, number> = {};
 
 export const Captions: React.FC<{t: number}> = ({t}) => {
