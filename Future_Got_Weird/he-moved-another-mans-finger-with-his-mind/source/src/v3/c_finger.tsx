@@ -132,8 +132,8 @@ export const FingerECU: React.FC<{
   const ip = indexPts(pose);
   const midPts = chain({x: KN.x + 40, y: KN.y - 34}, 3, [pose.a[0] + 4 + 8 * pose.curl, pose.a[1] + 6 + 14 * pose.curl, pose.a[2] + 4 + 8 * pose.curl], [300, 196, 160]).map((q) => rotW(q, pose.wrist));
   const hand = [
-    {x: 1290, y: 330}, {x: 1600, y: 290}, {x: 2000, y: 330}, {x: 2300, y: 380},
-    {x: 2300, y: 640}, {x: 1950, y: 620}, {x: 1600, y: 560}, {x: 1340, y: 470},
+    {x: 1290, y: 330}, {x: 1600, y: 290}, {x: 2050, y: 340}, {x: 3000, y: 470},
+    {x: 3000, y: 760}, {x: 2050, y: 640}, {x: 1600, y: 560}, {x: 1340, y: 470},
   ].map((q) => rotW(q, pose.wrist));
   const handD = `M${fmt(hand[0].x)},${fmt(hand[0].y)} C${fmt(hand[1].x)},${fmt(hand[1].y)} ${fmt(hand[2].x)},${fmt(hand[2].y)} ${fmt(hand[3].x)},${fmt(hand[3].y)} L${fmt(hand[4].x)},${fmt(hand[4].y)} C${fmt(hand[5].x)},${fmt(hand[5].y)} ${fmt(hand[6].x)},${fmt(hand[6].y)} ${fmt(hand[7].x)},${fmt(hand[7].y)} Z`;
   const th = [{x: 1720, y: 560}, {x: 1500, y: 680}, {x: 1340, y: 720}].map((q) => rotW(q, pose.wrist));
@@ -193,13 +193,12 @@ export const FingerECU: React.FC<{
         <Capsule id={`${id}-m2`} a={midPts[1]} b={midPts[2]} ra={58} rb={54} color={back} />
         <Capsule id={`${id}-m3`} a={midPts[2]} b={midPts[3]} ra={54} rb={50} color={back} />
       </Inked>
-      {/* hand + index (one contour), sleeve cuff off frame-right */}
+      {/* hand + index + bare forearm (one contour) */}
       <Inked w={10}>
-        <Blob id={`${id}-hand`} d={handD} c={rotW({x: 1700, y: 420}, pose.wrist)} r={520} color={skin} />
+        <Blob id={`${id}-hand`} d={handD} c={rotW({x: 1950, y: 440}, pose.wrist)} r={980} color={skin} />
         <Capsule id={`${id}-i1`} a={ip[0]} b={ip[1]} ra={R[0]} rb={R[1]} color={skin} spec={0.2} />
         <Capsule id={`${id}-i2`} a={ip[1]} b={ip[2]} ra={R[1]} rb={R[2]} color={skin} spec={0.2} />
         <Capsule id={`${id}-i3`} a={ip[2]} b={ip[3]} ra={R[2]} rb={R[3]} color={skin} spec={0.3} />
-        <Capsule id={`${id}-fa`} a={rotW({x: 2150, y: 486}, pose.wrist)} b={rotW({x: 2900, y: 560}, pose.wrist)} ra={150} rb={172} color={skin} spec={0.15} />
       </Inked>
       {/* knuckle bump and dorsal detail */}
       <InkLine d={`M${fmt(ip[0].x + 30)},${fmt(ip[0].y - 62)} q40,-18 80,-6`} w={6} opacity={0.4} />

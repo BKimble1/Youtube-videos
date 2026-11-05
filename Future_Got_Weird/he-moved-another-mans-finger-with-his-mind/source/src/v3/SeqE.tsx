@@ -58,7 +58,7 @@ const tm = () => {
   const e2 = mkTrial(T('touchpad') - 1.6);
   const flipIn = T('In some rounds') - 0.38;
   const walk1 = flipIn + 0.85;
-  const shh = T('quietly') - 0.55;
+  const shh = T('quietly') - 0.75;
   const grip = T('flipped the coil') - 0.12;
   const fs = grip + 0.08; // the coil turns
   const fe = fs + 0.8;
@@ -113,15 +113,15 @@ const BOXS = 1.3;
 const BOXP = {x: 1520, y: 600};
 const PORT = {x: BOXP.x + 180 * BOXS, y: BOXP.y};
 const PLS = 0.9; // plug scale in E
-const RES = {home: 2060, flip: 1250, y: 1062, s: 2.2};
+const RES = {home: 2060, flip: 1180, y: 1062, s: 2.2};
 // sender room (local)
 const SND = {x: 1300, y: 1238, s: 2.2};
 const SMON = {x: 620, y: 815, s: 0.78};
 const STOWER = {x: 1900, y: 830, s: 1.4};
 // cameras
-const WIDE: CamS = {x: -400, y: 1700, z: 0.284};
-const TCC = {x: 620, y: 475, z: 1.3};
-const COILC = {x: 1110, y: 360, z: 1.9};
+const WIDE: CamS = {x: -400, y: 1950, z: 0.262};
+const TCC = {x: 880, y: 574, z: 1.1};
+const COILC = {x: 1060, y: 390, z: 1.45};
 const tcCam = (i: number, zMul = 1): CamS => ({x: TCC.x, y: TCC.y + rY(i), z: TCC.z * zMul});
 const drift = (rel: number) => 1 + 0.025 * easeInOut(clamp(rel / 3.3));
 
@@ -154,22 +154,22 @@ type Seg = {a: number; b: number; shift: number; events: GEvent[]; cursor: [numb
 const segsOf = (i: number): Seg[] => {
   const M = M_();
   const idle = (a: number, b: number): Seg => ({a, b, shift: 0, events: [], cursor: []});
-  const w2: Seg = {a: M.out2 - 0.2, b: 999, shift: 0, events: wide2Rockets(i).map((r) => ({kind: 'rocket' as const, t0: r.t0, dur: r.dur})), cursor: wide2Rockets(i).map((r) => [r.t0 + 0.1, r.pulse - 0.1, r.pulse] as [number, number, number])};
+  const w2: Seg = {a: M.out2 + 0.5, b: 999, shift: 0, events: wide2Rockets(i).map((r) => ({kind: 'rocket' as const, t0: r.t0, dur: r.dur})), cursor: wide2Rockets(i).map((r) => [r.t0 + 0.1, r.pulse - 0.1, r.pulse] as [number, number, number])};
   if (i === 0)
     return [
       {a: 0, b: M.ab0, shift: 0, events: [{kind: 'rocket', t0: M.e2.t0, dur: DUR, fire: M.e2.fire}], cursor: [[M.e2.up0, M.e2.up1, M.e2.pulse]]},
       {a: M.ab0, b: M.cutN, shift: 0, events: [{kind: 'plane', t0: T('Same game') - 0.1, dur: 2.4}], cursor: []},
       {a: M.cutN, b: M.up1, shift: 100 - M.N.t0, events: [{kind: 'rocket', t0: M.N.t0, dur: DUR, fire: M.N.fire}, {kind: 'plane', t0: M.P.t0, dur: M.P.dur, fire: M.P.fire}], cursor: [[M.N.up0, M.N.up1, M.N.pulse], [M.P.up0, M.P.up1, M.P.pulse]]},
-      {a: M.up1, b: M.out2 - 0.2, shift: 100 - M.F.t0, events: [{kind: 'rocket', t0: M.F.t0, dur: DUR}], cursor: [[M.F.up0, M.F.up1, M.F.pulse]]},
+      {a: M.up1, b: M.out2 + 0.5, shift: 100 - M.F.t0, events: [{kind: 'rocket', t0: M.F.t0, dur: DUR}], cursor: [[M.F.up0, M.F.up1, M.F.pulse]]},
       w2,
     ];
   if (i === 1)
     return [
       idle(0, M.up0 - 0.2),
-      {a: M.up0 - 0.2, b: M.out2 - 0.2, shift: 0, events: M.p2.map((t0, n) => ({kind: 'rocket' as const, t0, dur: 1.1, fire: n === 1 ? M.p2hit.fire : undefined})), cursor: [[M.p2[1] + 0.05, M.p2hit.pulse - 0.05, M.p2hit.pulse]]},
+      {a: M.up0 - 0.2, b: M.out2 + 0.5, shift: 0, events: M.p2.map((t0, n) => ({kind: 'rocket' as const, t0, dur: 1.1, fire: n === 1 ? M.p2hit.fire : undefined})), cursor: [[M.p2[1] + 0.05, M.p2hit.pulse - 0.05, M.p2hit.pulse]]},
       w2,
     ];
-  return [idle(0, M.out2 - 0.2), w2];
+  return [idle(0, M.out2 + 0.5), w2];
 };
 const gameAt = (i: number, t: number) => {
   const all = segsOf(i);
@@ -194,7 +194,7 @@ const pulsesOf = (i: number): number[] => {
 type PlugS = {j: Pt; ang: number; seated: boolean};
 type RS = {
   i: number; look: Look; flip: number; pulses: number[]; lights: number; perf: Perf; press: number;
-  game: ReturnType<typeof gameAt>; axisK: number; zeroK: number; tally: number; researcher?: {x: number; perf: Perf}; plug: PlugS; power: number;
+  game: ReturnType<typeof gameAt>; axisK: number; zeroK: number; tally: number; researcher?: {x: number; perf: Perf; behind: boolean}; plug: PlugS; power: number;
 };
 
 /** pair i's receiver at time t; twin: the AB "coil in position" copy of pair 1 */
@@ -220,9 +220,9 @@ const rState = (i: number, t: number, twin = false): RS => {
   }
   const glance = bump(t - lastJerk, 0.32, 1.15, 0.25, 0.35);
   const sh = i === 0 && t > M.ab0 && t < M.cutN ? bump(t, M.shrug, M.shrug + 1.35, 0.3, 0.35) : 0;
-  const off = i === 0 && !twin ? pr(t * FPS, M.handOff, M.handOff + 0.5) : 0;
+  const off = i === 0 && !twin ? pr(t * FPS, M.handOff, M.handOff + 0.6) : 0;
   const handled = i === 0 && !twin ? bump(t, M.grip - 0.1, M.fe + 0.2, 0.3, 0.4) : 0;
-  const rest = {x: lerp(H_REST.x, 800, off), y: H_REST.y - 40 * Math.sin(off * Math.PI) + (806 - H_REST.y) * off};
+  const rest = {x: lerp(H_REST.x, 742, off) - 70 * Math.sin(off * Math.PI), y: lerp(H_REST.y, 452, off)}; // session over: the hand leaves the pad to rub his neck
   const hand = {x: lerp(rest.x + jx, 690, sh), y: lerp(rest.y + jy, 600, sh)};
   const hr = {x: lerp(H_REST_R.x, 1030, sh), y: lerp(H_REST_R.y, 605, sh)};
   const lookX = lerp(lerp(0, -0.55, glance), 0.5, Math.max(sh, handled * 0.9));
@@ -233,7 +233,7 @@ const rState = (i: number, t: number, twin = false): RS => {
     pose: {lookX, lookY, brows, mouth, tilt: -6 * sh + 1.5 * hitch, lean: 1.2 * hitch, blink: blinkAt(t, pulses.map((p) => p + 0.04))},
     hl: hand,
     hr,
-    sl: sh > 0 ? {curl: lerp(shape.curl, 0.05, sh), spread: lerp(shape.spread ?? 0.3, 0.85, sh)} : off > 0 ? {curl: lerp(0.38, 0.3, off), spread: 0.3} : shape,
+    sl: sh > 0 ? {curl: lerp(shape.curl, 0.05, sh), spread: lerp(shape.spread ?? 0.3, 0.85, sh)} : off > 0 ? {curl: lerp(0.38, 0.2, off), spread: lerp(0.3, 0.6, off)} : shape,
     sr: {curl: lerp(0.35, 0.05, sh), spread: lerp(0.3, 0.85, sh)},
   };
   // lights: pairs 2 and 3 are dark until "three pairs of volunteers"
@@ -270,7 +270,7 @@ const plugState = (i: number, t: number): PlugS => {
 };
 
 /** the 2014 researcher (pair 1's room): handles the plug, then the coil */
-const resState = (t: number): {x: number; perf: Perf} => {
+const resState = (t: number): {x: number; perf: Perf; behind: boolean} => {
   const M = M_();
   const x = kv(t, [[M.s, 2420], [M.s + 0.42, RES.home, easeOut], [M.flipIn + 0.05, RES.home], [M.walk1, RES.flip, easeInOut], [M.fe + 0.12, RES.flip], [M.fe + 0.85, RES.home + 40, easeInOut]]);
   const walking = (t > M.s && t < M.s + 0.42) || (t > M.flipIn + 0.05 && t < M.walk1) || (t > M.fe + 0.12 && t < M.fe + 0.85);
@@ -305,7 +305,7 @@ const resState = (t: number): {x: number; perf: Perf} => {
     const turn = clamp((t - M.fs) / (M.fe - M.fs));
     const onCoil = {x: lerp(rimA.x, rimB.x, easeInOut(turn)) + 34 * Math.sin(turn * Math.PI), y: lerp(rimA.y, rimB.y, easeInOut(turn))};
     const handleEnd = {x: HANDLE_END.x - 6, y: HANDLE_END.y - 4};
-    const shhK = bump(t, M.shh, M.grip - 0.35, 0.3, 0.3);
+    const shhK = bump(t, M.shh, M.grip - 0.35, 0.28, 0.22);
     const lMouth = {x: mouthW.x - 6, y: mouthW.y + 22};
     if (t < M.grip - 0.35) hl = {x: lerp(restL.x, lMouth.x, shhK), y: lerp(restL.y, lMouth.y, shhK)};
     else if (t < M.grip) hl = kp(t, [[M.grip - 0.35, restL], [M.grip, rimA, 50, easeOut]]);
@@ -325,7 +325,7 @@ const resState = (t: number): {x: number; perf: Perf} => {
     browAsym = shhK > 0.3 ? 0.8 : 0;
     tilt = shhK > 0.3 ? 5 : -3;
   }
-  return {x, perf: {pose: {lookX, lookY, mouth, brows, browAsym, tilt, bob}, hl, hr, sl, sr}};
+  return {x, perf: {pose: {lookX, lookY, mouth, brows, browAsym, tilt, bob}, hl, hr, sl, sr}, behind: t >= M.seat + 0.8};
 };
 
 // ---------------------------------------------------------------- receiver room (local coords 0..RWE x 0..RHE)
@@ -400,6 +400,8 @@ const RecvRoom: React.FC<{f: number; S: RS; id: string}> = ({f, S, id}) => {
       <path d={netD} fill="none" stroke={INK} strokeWidth={22} strokeLinecap="round" />
       <path d={netD} fill="none" stroke="#3D4852" strokeWidth={13} strokeLinecap="round" />
       {pkPt && <rect x={fmt(pkPt.x - 34)} y={fmt(pkPt.y - 26)} width={68} height={52} rx={12} fill={K.saffron} stroke={INK} strokeWidth={6} />}
+      <CoilArm base={{x: 1420, y: 1100}} j1={{x: 1420, y: 150}} j2={{x: 1255, y: 128}} end={ARM_END} />
+      {R && R.behind && <Person3 id={`${id}-res`} look={RESEARCHER} f={f} x={R.x} y={RES.y} scale={RES.s} seed={41} perf={R.perf} life={0.35} />}
       {/* the TMS chair */}
       <rect x={RCV.x - 300} y={470} width={600} height={700} rx={70} fill="#38434D" stroke={INK} strokeWidth={7} />
       <rect x={RCV.x - 270} y={492} width={540} height={44} rx={22} fill="#4A5661" />
@@ -408,14 +410,13 @@ const RecvRoom: React.FC<{f: number; S: RS; id: string}> = ({f, S, id}) => {
         desk={<g>
           <Desk id={`${id}-desk`} x0={360} x1={1240} y={840} d={130} h={320} top="#8C735D" face="#6E5A49" />
           <TouchPad14 id={`${id}-pad`} press={S.press} />
-          {S.zeroK > 0.001 && <Tag x={600} y={950} text="0 presses" size={92} k={S.zeroK} />}
+          {S.zeroK > 0.001 && <Tag x={320} y={600} text="0 presses" size={84} k={S.zeroK} />}
         </g>} />
       {/* the stimulated patch under the coil (only when the active face looks into the head) */}
       {active && e > 0.001 && <ellipse cx={SCALP.x} cy={SCALP.y} rx={90} ry={60} fill={`url(#${id}-gl)`} opacity={0.85 * e} />}
       {/* the stand, its arm and the coil; the coil's cable to the machine */}
       <path d={coilD} fill="none" stroke={INK} strokeWidth={16} strokeLinecap="round" />
       <path d={coilD} fill="none" stroke={cableHot ? K.saffron : '#2D363D'} strokeWidth={8} strokeLinecap="round" />
-      <CoilArm base={{x: 1420, y: 1100}} j1={{x: 1420, y: 150}} j2={{x: 1255, y: 128}} end={ARM_END} />
       <Coil14 flip={S.flip} pulse={e} axisK={S.axisK} />
       {/* the TMS machine on its cart, the network port on top */}
       <rect x={BOXP.x + 20} y={BOXP.y + 190} width={260} height={24} rx={8} fill="#46525C" stroke={INK} strokeWidth={6} />
@@ -430,7 +431,7 @@ const RecvRoom: React.FC<{f: number; S: RS; id: string}> = ({f, S, id}) => {
       <g transform={`rotate(${fmt(pl.ang)} ${fmt(pl.j.x)} ${fmt(pl.j.y)})`}>
         <Plug x={pl.j.x} y={pl.j.y + PLUG_JOIN * PLS} s={PLS} />
       </g>
-      {R && <Person3 id={`${id}-res`} look={RESEARCHER} f={f} x={R.x} y={RES.y} scale={RES.s} seed={41} perf={R.perf} life={0.35} shadow />}
+      {R && !R.behind && <Person3 id={`${id}-res`} look={RESEARCHER} f={f} x={R.x} y={RES.y} scale={RES.s} seed={41} perf={R.perf} life={0.35} shadow />}
       {S.lights < 0.999 && <rect x={-20} y={-20} width={RWE + 40} height={RHE + 40} fill="#0E141A" opacity={0.8 * (1 - S.lights)} />}
     </g>
   );
@@ -704,9 +705,9 @@ const camAfter = (t: number): CamS => {
 
 // ---------------------------------------------------------------- AB: coil in position (top) | coil flipped (bottom)
 const AB_REG = {x: 880, y: 380, w: 1640};
-const PANEL = {w: 1082, h: 409};
-const P_TOP = {x: 960 - PANEL.w / 2, y: 22};
-const P_BOT = {x: 960 - PANEL.w / 2, y: 449};
+const PANEL = {w: 1240, h: 467};
+const P_TOP = {x: 1000 - PANEL.w / 2, y: 30};
+const P_BOT = {x: 1000 - PANEL.w / 2, y: 517};
 type Rect = {x: number; y: number; w: number; h: number};
 const PanelView: React.FC<{id: string; f: number; S: RS; rect: Rect; cam: CamS; border: number}> = ({id, f, S, rect, cam, border}) => (
   <g>
@@ -750,8 +751,8 @@ const AB: React.FC<{f: number}> = ({f}) => {
       <PanelView id="ve-abA" f={f} S={rState(0, t, true)} rect={rA} cam={camInA} border={1 - open} />
       {tagK > 0.001 && (
         <g>
-          <Tag x={rA.x - 14} y={rA.y + 52} text="Coil in position" size={32} fill={lit(K.saffron, 0.45)} anchor="end" k={tagK} />
-          <Tag x={rB.x - 14} y={rB.y + 52} text="Coil flipped" size={32} fill="#D5DBE0" anchor="end" k={tagK} />
+          <Tag x={rA.x - 14} y={rA.y + 52} text="Coil in position" size={30} fill={lit(K.saffron, 0.45)} anchor="end" k={tagK} />
+          <Tag x={rB.x - 14} y={rB.y + 52} text="Coil flipped" size={30} fill="#D5DBE0" anchor="end" k={tagK} />
         </g>
       )}
     </g>

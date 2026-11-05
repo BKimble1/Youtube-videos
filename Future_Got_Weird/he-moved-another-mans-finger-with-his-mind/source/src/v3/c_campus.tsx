@@ -1,18 +1,13 @@
-// Sequence C, part 2 (~63.7 -> 74.8 s): the one command crosses campus and drives the TMS coil.
+// V3 Sequence C, part 2 (64.06 -> 65.75 s): the one command crosses campus.
 // A true perspective camera looks straight down (c_cam PCam): rooftops, a tall foreground tower, tree canopies and
-// low clouds all parallax against the lawn. The FIRE command runs along the campus network line from Rao's
-// building (frame left) to Stocco's (frame right), arriving on "Fire."; in the silence the camera dives through
-// Stocco's skylight into his room, seen from straight above (he faces the top of frame, so his LEFT is frame-left):
-// the TMS machine on its cart, the coil on its articulated arm over his LEFT motor cortex, his RIGHT hand on the
-// keyboard. The command crawls in (slow motion) along the cable, docks in the machine, the current runs up the coil
-// cable, the coil clicks; the scalp turns to x-ray (the brain's motor strip, hand area on the left hemisphere) and
-// the stimulation pathway runs from the left motor cortex, crosses the midline at the neck, and runs down the
-// RIGHT arm to the hand (cut with it into the hand ECU, c_end).
+// low clouds all parallax against the lawn. The FIRE command runs along the campus network line from Rao's building
+// (frame left) to Stocco's (frame right), arriving on "Fire."; it slips into the building's network entry box (which
+// lights) and the camera dives after it: the match cut on the command lands on the wall jack in Stocco's room
+// (c_stocco). V2's skylight dive and top-down room are gone.
 import React from 'react';
 import {lit, mix, shade} from '../dc/color';
 import {clamp, easeIn, easeInOut, easeOut, fmt, lerp, smooth} from '../dc/math';
 import {INK, K, Packet, Tag, FONT_HEAD} from '../art/kit';
-import {STOCCO} from '../art/people';
 import {PCam, pcamPath, pLayer, pPt, pScale} from './c_cam';
 import {ct} from './c_time';
 
