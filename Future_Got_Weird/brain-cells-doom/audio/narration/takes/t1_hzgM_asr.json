@@ -1,0 +1,33 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU CONNECT TWO HUNDRED THOUSAND LIVING HUMAN BRAIN CELLS TO DOOM THEY CAN HELP MAKE THE CHARACTER SHOOT SCIENTISTS ACTUALLY DID IT THE CELLS AREN'T INSIDE SOME ONE'S HEAD THEY'RE GROWING ON A CHIP THE GAME SENDS ELECTRICAL SIGNALS INTO THEM AND WHEN THE NERONS FIRE BACK SOFT WARE TRANSLATES THEIR ACTIVITY INTO COMMANDS TO MOVE TURN AND SHOOT THEY'RE TERRIBLE AT THE GAME AND A NORMAL COMPUTER STILL DOES MUCH OF THE WORK BUT THE WEIRDEST PART IS REAL THIS VITIO GAME CONTROLLER IS ALIVE",
+  "wer": 0.072,
+  "diffs": [
+   [
+    "replace",
+    "someone's",
+    "some one's"
+   ],
+   [
+    "replace",
+    "neurons",
+    "nerons"
+   ],
+   [
+    "replace",
+    "software",
+    "soft ware"
+   ],
+   [
+    "replace",
+    "video",
+    "vitio"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you connect 200,000 living human brain cells to doom... They can help make the character shoot. Scientists actually did it. The cells aren't inside someone's head. They're growing on a chip. The game sends electrical signals into them, and when the neurons fire back, software translates their activity into commands to move, turn, and shoot. They're terrible at the game, and a normal computer still does much of the work. But the weirdest part is real. This video game controller is alive.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

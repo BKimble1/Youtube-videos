@@ -1,0 +1,471 @@
+{
+ "audio": "audio/narration/takes/t2_ZiRX.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   3.51,
+   3.83
+  ],
+  [
+   5.31,
+   5.67
+  ],
+  [
+   7.22,
+   7.64
+  ],
+  [
+   9.31,
+   9.62
+  ],
+  [
+   10.7,
+   11.16
+  ],
+  [
+   13.09,
+   13.3
+  ],
+  [
+   14.58,
+   14.85
+  ],
+  [
+   17.61,
+   17.84
+  ],
+  [
+   18.82,
+   19.29
+  ],
+  [
+   20.62,
+   20.9
+  ],
+  [
+   22.97,
+   23.45
+  ],
+  [
+   25.27,
+   25.87
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.23
+  },
+  {
+   "word": "connect",
+   "start": 0.24,
+   "end": 0.68
+  },
+  {
+   "word": "200,000",
+   "start": 0.68,
+   "end": 1.71
+  },
+  {
+   "word": "living",
+   "start": 1.72,
+   "end": 2.07
+  },
+  {
+   "word": "human",
+   "start": 2.08,
+   "end": 2.39
+  },
+  {
+   "word": "brain",
+   "start": 2.4,
+   "end": 2.67
+  },
+  {
+   "word": "cells",
+   "start": 2.68,
+   "end": 3.03
+  },
+  {
+   "word": "to",
+   "start": 3.04,
+   "end": 3.18
+  },
+  {
+   "word": "Doom,",
+   "start": 3.2,
+   "end": 3.51
+  },
+  {
+   "word": "they",
+   "start": 3.83,
+   "end": 3.88
+  },
+  {
+   "word": "can",
+   "start": 3.87,
+   "end": 3.98
+  },
+  {
+   "word": "help",
+   "start": 3.99,
+   "end": 4.23
+  },
+  {
+   "word": "make",
+   "start": 4.23,
+   "end": 4.38
+  },
+  {
+   "word": "the",
+   "start": 4.39,
+   "end": 4.46
+  },
+  {
+   "word": "character",
+   "start": 4.47,
+   "end": 4.94
+  },
+  {
+   "word": "shoot.",
+   "start": 4.95,
+   "end": 5.31
+  },
+  {
+   "word": "Scientists",
+   "start": 5.67,
+   "end": 6.24
+  },
+  {
+   "word": "actually",
+   "start": 6.25,
+   "end": 6.77
+  },
+  {
+   "word": "did",
+   "start": 6.81,
+   "end": 7.08
+  },
+  {
+   "word": "it.",
+   "start": 7.09,
+   "end": 7.22
+  },
+  {
+   "word": "The",
+   "start": 7.64,
+   "end": 7.69
+  },
+  {
+   "word": "cells",
+   "start": 7.68,
+   "end": 8.02
+  },
+  {
+   "word": "aren't",
+   "start": 8.03,
+   "end": 8.26
+  },
+  {
+   "word": "inside",
+   "start": 8.27,
+   "end": 8.67
+  },
+  {
+   "word": "someone's",
+   "start": 8.67,
+   "end": 9.18
+  },
+  {
+   "word": "head.",
+   "start": 9.19,
+   "end": 9.31
+  },
+  {
+   "word": "They're",
+   "start": 9.62,
+   "end": 9.7
+  },
+  {
+   "word": "growing",
+   "start": 9.705,
+   "end": 10.06
+  },
+  {
+   "word": "on",
+   "start": 10.065,
+   "end": 10.22
+  },
+  {
+   "word": "a",
+   "start": 10.225,
+   "end": 10.38
+  },
+  {
+   "word": "chip.",
+   "start": 10.385,
+   "end": 10.7
+  },
+  {
+   "word": "The",
+   "start": 11.16,
+   "end": 11.21
+  },
+  {
+   "word": "game",
+   "start": 11.2,
+   "end": 11.4
+  },
+  {
+   "word": "sends",
+   "start": 11.41,
+   "end": 11.68
+  },
+  {
+   "word": "electrical",
+   "start": 11.69,
+   "end": 12.29
+  },
+  {
+   "word": "signals",
+   "start": 12.29,
+   "end": 12.72
+  },
+  {
+   "word": "into",
+   "start": 12.73,
+   "end": 12.96
+  },
+  {
+   "word": "them,",
+   "start": 12.97,
+   "end": 13.09
+  },
+  {
+   "word": "and",
+   "start": 13.3,
+   "end": 13.35
+  },
+  {
+   "word": "when",
+   "start": 13.34,
+   "end": 13.43
+  },
+  {
+   "word": "the",
+   "start": 13.435,
+   "end": 13.55
+  },
+  {
+   "word": "neurons",
+   "start": 13.555,
+   "end": 13.98
+  },
+  {
+   "word": "fire",
+   "start": 13.995,
+   "end": 14.35
+  },
+  {
+   "word": "back,",
+   "start": 14.355,
+   "end": 14.58
+  },
+  {
+   "word": "software",
+   "start": 14.85,
+   "end": 15.31
+  },
+  {
+   "word": "translates",
+   "start": 15.315,
+   "end": 15.83
+  },
+  {
+   "word": "their",
+   "start": 15.835,
+   "end": 15.99
+  },
+  {
+   "word": "activity",
+   "start": 15.995,
+   "end": 16.47
+  },
+  {
+   "word": "into",
+   "start": 16.475,
+   "end": 16.7
+  },
+  {
+   "word": "commands",
+   "start": 16.715,
+   "end": 17.15
+  },
+  {
+   "word": "to",
+   "start": 17.155,
+   "end": 17.35
+  },
+  {
+   "word": "move,",
+   "start": 17.355,
+   "end": 17.61
+  },
+  {
+   "word": "turn,",
+   "start": 17.84,
+   "end": 18.16
+  },
+  {
+   "word": "and",
+   "start": 18.165,
+   "end": 18.4
+  },
+  {
+   "word": "shoot.",
+   "start": 18.405,
+   "end": 18.82
+  },
+  {
+   "word": "They're",
+   "start": 19.29,
+   "end": 19.49
+  },
+  {
+   "word": "terrible",
+   "start": 19.495,
+   "end": 20.05
+  },
+  {
+   "word": "at",
+   "start": 20.055,
+   "end": 20.18
+  },
+  {
+   "word": "the",
+   "start": 20.215,
+   "end": 20.33
+  },
+  {
+   "word": "game,",
+   "start": 20.335,
+   "end": 20.62
+  },
+  {
+   "word": "and",
+   "start": 20.9,
+   "end": 20.95
+  },
+  {
+   "word": "a",
+   "start": 20.94,
+   "end": 20.99
+  },
+  {
+   "word": "normal",
+   "start": 21.0,
+   "end": 21.35
+  },
+  {
+   "word": "computer",
+   "start": 21.36,
+   "end": 21.83
+  },
+  {
+   "word": "still",
+   "start": 21.84,
+   "end": 22.03
+  },
+  {
+   "word": "does",
+   "start": 22.04,
+   "end": 22.31
+  },
+  {
+   "word": "much",
+   "start": 22.32,
+   "end": 22.47
+  },
+  {
+   "word": "of",
+   "start": 22.48,
+   "end": 22.63
+  },
+  {
+   "word": "the",
+   "start": 22.64,
+   "end": 22.76
+  },
+  {
+   "word": "work.",
+   "start": 22.76,
+   "end": 22.97
+  },
+  {
+   "word": "But",
+   "start": 23.45,
+   "end": 23.5
+  },
+  {
+   "word": "the",
+   "start": 23.49,
+   "end": 23.6
+  },
+  {
+   "word": "weirdest",
+   "start": 23.61,
+   "end": 24.2
+  },
+  {
+   "word": "part",
+   "start": 24.21,
+   "end": 24.48
+  },
+  {
+   "word": "is",
+   "start": 24.53,
+   "end": 24.84
+  },
+  {
+   "word": "real.",
+   "start": 24.85,
+   "end": 25.27
+  },
+  {
+   "word": "This",
+   "start": 25.87,
+   "end": 25.92
+  },
+  {
+   "word": "video",
+   "start": 25.93,
+   "end": 26.36
+  },
+  {
+   "word": "game",
+   "start": 26.37,
+   "end": 26.57
+  },
+  {
+   "word": "controller",
+   "start": 26.57,
+   "end": 27.13
+  },
+  {
+   "word": "is",
+   "start": 27.21,
+   "end": 27.48
+  },
+  {
+   "word": "alive.",
+   "start": 27.49,
+   "end": 28.03
+  }
+ ]
+}

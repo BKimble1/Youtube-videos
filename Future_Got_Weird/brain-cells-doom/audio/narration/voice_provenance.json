@@ -1,0 +1,51 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Eel Escape and earlier episodes); confirmed with creative_list_voices on 2026-11-05"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides); delivery directed with inline tags only",
+ "flow_id": "Y7sJNUWgHXlufu1glr0J",
+ "prompt": "[intrigued, quick, pointing it out] If you connect 200,000 living human brain cells to Doom, they can help make the character shoot. [slightly amazed] Scientists actually did it. [brisk, explaining] The cells aren't inside someone's head. They're growing on a chip. [energized, clear] The game sends electrical signals into them, and when the neurons fire back, software translates their activity into commands to move, turn, and shoot. [dry, a little amused] They're terrible at the game, and a normal computer still does much of the work. [leaning in] But the weirdest part is real. [quietly amazed] This video game controller is ALIVE.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Capitals mark emphasis only; bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 637.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_hzgM.mp3",
+   "generation_id": "hzgMoA2UK7jdn2aXT8QQ",
+   "session_id": "HpnQ9YaOpvadTp02mdTB",
+   "duration_s": 27.76,
+   "sha256": "477fa40bbf56fc678abed636314b896a030f46d1a7e19735049f255cde53d462",
+   "asr_wer": {
+    "zipformer": 0.072,
+    "whisper": 0.0
+   },
+   "chosen": false,
+   "why_not": "equally clean; a slightly quicker final line ('This video game controller is alive' over 2.04 s) and a longer mid-sentence pause after 'Doom' (0.37 s)"
+  },
+  {
+   "file": "audio/narration/takes/t2_ZiRX.mp3",
+   "generation_id": "ZiRXPa5NYwmk02BrYDux",
+   "session_id": "9WKUObN8X95YH0TQCnws",
+   "duration_s": 28.32,
+   "sha256": "e262274aac3fc571549e9b745569ac0ae63f5a0c26c594349d0e293f9511e152",
+   "asr_wer": {
+    "zipformer": 0.072,
+    "whisper": 0.0
+   },
+   "chosen": true,
+   "why": "the more deliberate landing on the final line (2.16 s), the longer lean-in before 'This video game controller', and the shorter pause after 'Doom' (0.32 s)"
+  }
+ ],
+ "asr_note": "Whisper base.en is word-perfect on both takes. Zipformer's differences are spellings, not misreadings: 'some one's', 'soft ware', 'vidio', 'neurans' (the alignment maps them to the locked words).",
+ "master": {
+  "file": "audio/narration/FGW_Brain_Cells_DOOM_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 29.00 s (the film length)",
+  "edits": "none: the take is used sample for sample; only padded to the film length",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer)",
+  "sha256": "e7425eb4bcdbbb05d8698dd8400ce4adf7aa35d81c1fef51dd99b42e3b205b58"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pace measurements and levels."
+}

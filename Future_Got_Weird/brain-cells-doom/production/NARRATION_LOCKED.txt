@@ -1,0 +1,7 @@
+If you connect 200,000 living human brain cells to Doom, they can help make the character shoot.
+Scientists actually did it.
+The cells aren't inside someone's head. They're growing on a chip.
+The game sends electrical signals into them, and when the neurons fire back, software translates their activity into commands to move, turn, and shoot.
+They're terrible at the game, and a normal computer still does much of the work.
+But the weirdest part is real.
+This video game controller is alive.

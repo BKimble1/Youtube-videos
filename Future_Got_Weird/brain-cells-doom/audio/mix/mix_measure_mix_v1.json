@@ -1,0 +1,16 @@
+{
+ "mix": "audio/mix/FGW_Brain_Cells_DOOM_MIX_V1.wav",
+ "integrated_lufs_stereo": -14.0,
+ "true_peak_dbtp": -1.6,
+ "limiter_max_reduction_db": 2.61,
+ "voice_vs_effects_db": {
+  "game": -13.8,
+  "culture": -24.0,
+  "ui": -23.3,
+  "moves": -24.4,
+  "room": -28.8,
+  "music": -21.4
+ },
+ "loop_seam_abs": 0.0043,
+ "duration_s": 29.0
+}

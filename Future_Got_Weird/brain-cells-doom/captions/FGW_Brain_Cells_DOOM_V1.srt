@@ -1,0 +1,68 @@
+1
+00:00:00,000 --> 00:00:01,680
+If you connect 200,000
+
+2
+00:00:01,720 --> 00:00:03,000
+living human brain cells
+
+3
+00:00:03,040 --> 00:00:03,790
+to Doom,
+
+4
+00:00:03,830 --> 00:00:05,630
+they can help make the character shoot.
+
+5
+00:00:05,670 --> 00:00:07,600
+Scientists actually did it.
+
+6
+00:00:07,640 --> 00:00:09,580
+The cells aren't inside someone's head.
+
+7
+00:00:09,620 --> 00:00:11,120
+They're growing on a chip.
+
+8
+00:00:11,160 --> 00:00:13,260
+The game sends electrical signals into them,
+
+9
+00:00:13,300 --> 00:00:14,810
+and when the neurons fire back,
+
+10
+00:00:14,850 --> 00:00:16,435
+software translates their activity
+
+11
+00:00:16,475 --> 00:00:19,250
+into commands to move, turn, and shoot.
+
+12
+00:00:19,290 --> 00:00:20,860
+They're terrible at the game,
+
+13
+00:00:20,900 --> 00:00:21,800
+and a normal computer
+
+14
+00:00:21,840 --> 00:00:23,410
+still does much of the work.
+
+15
+00:00:23,450 --> 00:00:25,830
+But the weirdest part is real.
+
+16
+00:00:25,870 --> 00:00:27,170
+This video game controller
+
+17
+00:00:27,210 --> 00:00:28,330
+is alive.
+
