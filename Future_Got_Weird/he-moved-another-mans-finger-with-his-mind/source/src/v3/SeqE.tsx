@@ -43,7 +43,8 @@ import {CrewChar, IDLE, Look} from '../art/crew';
 import {EEGCap, V14} from '../art/people';
 import {Burst, Chair, CoilArm, PlaneIcon, RedX, RocketIcon, S5Coil, TmsBox, MiniCity} from '../art/s5parts';
 import {PAD_RECT} from './contracts';
-import {anchorCam, Cable, D_PLUG, D_PLUG_END, HANG_DECAY, HANG_W, Plug, PLUG_JOIN, PLUG_TIP, toScr} from './SeqD';
+import {anchorCam, Cable, Plug, PLUG_JOIN, PLUG_TIP, toScr} from './SeqD';
+const D_PLUG = {LS: 0.6, L: 174.6, PA: {x: -240, y: 520}}; const D_PLUG_END = {z: 3.5, screen: {x: 960, y: 430}}; const HANG_DECAY = 1.55, HANG_W = 5.2;
 
 // ---------------------------------------------------------------- timing
 type Trial = {t0: number; up0: number; up1: number; pulse: number; tap: number; fire: number; kill: number; arrive: number};

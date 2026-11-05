@@ -11,7 +11,7 @@
 import React from 'react';
 import {clamp, easeInOut, fmt, lerp} from '../dc/math';
 import {lit, mix, shade} from '../dc/color';
-import {CrewChar, IDLE, Pose} from '../art/crew';
+import {CrewChar, IDLE, Pose} from './crew3';
 import {BN, EEGCap} from '../art/people';
 import {FONT_HEAD, Fig8Coil, INK, K} from '../art/kit';
 import {BNMonitor, CH, CW, GAP_COL, GCOLS, GROWS, PF, Token, Trial, TrialCells, trialRow, TRACK_V} from '../art/s6world';
@@ -25,9 +25,15 @@ export const MON = {A: {x: 1120, y: 720, s: 0.9}, B: {x: 1120, y: 1820, s: 0.9},
 export const PERSON = {A: {x: 430, y: 1000, s: 1.6}, B: {x: 430, y: 2100, s: 1.6}};
 export const HEAD = {x: 3600, y: 1215, r: 150};
 export const STIM = {x: 2980, y: 830, w: 300, h: 170};
-export const COMPU = {x: 1990, y: 660, w: 520, h: 800};
+/** V3 lab computer: a tower PC on the bench (the Senders' cables plug into it) and a workstation monitor whose screen
+ *  (WIN) runs the relay software, where each decoded vote appears in its Sender's row. */
+export const TOWER = {x: 1835, y: 800, w: 160, h: 350};
+export const BENCH_Y = 1150;
+export const COMPU = TOWER;
 export const WIN = {x: 2040, y: 740, w: 420, h: 320};
-export const SLOT = {A: {x: 2170, y: 830}, B: {x: 2170, y: 970}};
+export const SLOT = {A: {x: 2335, y: 840}, B: {x: 2335, y: 935}};
+export const PORT_IN = {A: {x: 1880, y: 800}, B: {x: 1835, y: 1095}};
+export const PORT_OUT = {x: 1995, y: 1118};
 export const OUT_Y = 950;
 export const COIL_S = 0.8;
 export const coilAt = (h = HEAD) => ({x: h.x - 0.36 * h.r, y: h.y + 0.4 * h.r});
@@ -44,28 +50,25 @@ export const eyeOf = (who: 'A' | 'B'): P2 => {
 export const routeOf = (who: 'A' | 'B'): P2[] => {
   const p = PERSON[who];
   const oy = who === 'A' ? 0 : 1100;
-  const slot = SLOT[who];
-  return [
+  const head = [
     {x: p.x + 60 * p.s, y: p.y - 380 * p.s},
     {x: p.x + 84 * p.s, y: p.y - 260 * p.s},
     {x: 640, y: oy + 668},
     {x: 720, y: oy + 668},
     {x: 720, y: oy + 40},
-    {x: 1880, y: oy + 40},
-    {x: 1880, y: slot.y},
-    {x: slot.x, y: slot.y},
   ];
+  return who === 'A'
+    ? [...head, {x: PORT_IN.A.x, y: 40}, PORT_IN.A]
+    : [...head, {x: 1812, y: oy + 40}, {x: 1812, y: PORT_IN.B.y}, PORT_IN.B];
 };
-export const routeOut = (who: 'A' | 'B'): P2[] => {
-  const slot = SLOT[who];
-  return [
-    {x: slot.x, y: slot.y},
-    {x: 2400, y: slot.y},
-    {x: 2400, y: OUT_Y},
-    {x: STIM.x, y: OUT_Y},
-    {x: STIM.x + STIM.w * 0.5, y: OUT_Y},
-  ];
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const routeOut = (_who: 'A' | 'B'): P2[] => [
+  PORT_OUT,
+  {x: 2620, y: PORT_OUT.y},
+  {x: 2620, y: OUT_Y},
+  {x: STIM.x, y: OUT_Y},
+  {x: STIM.x + STIM.w * 0.5, y: OUT_Y},
+];
 /** the coil cable from the stimulator to the coil handle (drawn with the head) */
 export const COIL_CABLE: P2[] = [{x: STIM.x + STIM.w, y: STIM.y + 70}, {x: 3330, y: 1000}, {x: HANDLE_END.x - 10, y: HANDLE_END.y}];
 export const alongPath = (pts: P2[], u: number): P2 => {
@@ -150,8 +153,7 @@ export const FieldScreen: React.FC<{id: string; t: number; trs: Trial[]; fx: Fie
       </g>
       {gapGlow > 0 && (
         <g opacity={gapGlow}>
-          <rect x={PF.x + GAP_COL * CW - 5} y={PF.y + (GROWS - 1) * CH - 5} width={CW + 10} height={CH + 10} rx={8} fill="none" stroke={K.saffron} strokeWidth={6} />
-          <circle cx={PF.x + GAP_COL * CW + CW / 2} cy={PF.y + (GROWS - 1) * CH + CH / 2} r={30 + 10 * Math.sin(t * 7)} fill="none" stroke={K.saffron} strokeWidth={3} opacity={0.6} />
+          <rect x={PF.x + GAP_COL * CW - 5} y={PF.y + (GROWS - 1) * CH - 5} width={CW + 10} height={CH + 10} rx={8} fill={K.saffron} fillOpacity={0.18} stroke={K.saffron} strokeWidth={6} />
         </g>
       )}
       {fog > 0.002 && (
@@ -207,9 +209,11 @@ export type FGState = {
   stimBlink: number;
   look: number;
   tilt: number;
-  /** the hub: 10-of-16 strip progress and the glitch frame on the bad Sender's slot */
+  /** the relay software: 10-of-16 strip progress and the "flipped by software" note on the bad Sender's row */
   strip: {k: number; n: number};
-  glitch: number;
+  flipNote: number;
+  /** the stimulator's display: the last command (pulse / no pulse) and whose vote it was */
+  stim: {k: number; yes: boolean; who: 'A' | 'B'};
   hubBlink: number;
   cableGlow: {A: number; B: number; out: number};
 };
@@ -217,6 +221,8 @@ export type FGState = {
 // ---------------------------------------------------------------- people
 const senderPose = (g: Gaze, k: number): Pose => ({
   ...IDLE,
+  handL: {curl: 0.45, spread: 0.2},
+  handR: {curl: 0.45, spread: 0.2},
   lookX: lerp(0.55, g.side < 0 ? 0.5 : 0.95, g.k),
   lookY: lerp(-0.1, -0.3, g.k),
   brows: lerp(0.05, 0.25, k),
@@ -271,7 +277,7 @@ const SenderRoom: React.FC<{id: string; who: 'A' | 'B'; st: FGState; f: number}>
         <rect x={o.x - 10} y={o.y + 700} width={o.w + 20} height={34} fill={K.deskTop} stroke={INK} strokeWidth={5} />
         <rect x={o.x + 585} y={o.y + 646} width={110} height={56} rx={8} fill="#3B4A57" stroke={INK} strokeWidth={4} />
         <circle cx={o.x + 672} cy={o.y + 662} r={7} fill={mix('#6E7C86', col, clamp(st.cableGlow[who] + st.cap[who]))} stroke={INK} strokeWidth={2.5} />
-        <BNMonitor id={`${id}-m`} x={m.x} y={m.y} s={m.s} t={st.t} accent={col} leds={st.leds[who]} ringYes={g.side < 0 ? g.k : 0} ringNo={g.side > 0 ? g.k : 0}>
+        <BNMonitor id={`${id}-m`} x={m.x} y={m.y} s={m.s} t={st.t} accent={col} leds={st.leds[who]}>
           <FieldScreen id={`${id}-s`} t={st.t} trs={st.trs} fx={{...st.fx[who], tint: st.tint}} />
         </BNMonitor>
         {g.k > 0.01 && (
@@ -352,11 +358,19 @@ export const RecvBack: React.FC<{id: string; h?: {x: number; y: number; r: numbe
               <ellipse cx={-62} cy={0} rx={76} ry={70} fill={K.cream} opacity={0.7} />
               <ellipse cx={62} cy={0} rx={76} ry={70} fill={K.cream} opacity={0.7} />
             </g>
+            {pulse > 0 && (
+              <g transform={`translate(${fmt(cx)} ${fmt(coil.y)}) rotate(-90) scale(${COIL_S})`} opacity={Math.pow(1 - pulse, 1.5)}>
+                <ellipse cx={-62} cy={0} rx={100} ry={92} fill={K.saffron} opacity={0.45} />
+                <ellipse cx={62} cy={0} rx={100} ry={92} fill={K.saffron} opacity={0.45} />
+              </g>
+            )}
             <Fig8Coil x={cx} y={coil.y} s={COIL_S} ang={-90} />
-            {pulse > 0 && [0, 1, 2].map((i) => {
-              const k = clamp(pulse * 1.4 - i * 0.2);
-              return <circle key={i} cx={cx} cy={coil.y} r={40 + 110 * k} fill="none" stroke={K.saffron} strokeWidth={9 - i * 2} opacity={(1 - k) * 0.9} />;
-            })}
+            {pulse > 0 && (
+              <g transform={`translate(${fmt(cx)} ${fmt(coil.y)}) rotate(-90) scale(${COIL_S})`} opacity={Math.pow(1 - pulse, 1.2)} fill="none" stroke={K.saffron} strokeWidth={9}>
+                <ellipse cx={-62} cy={0} rx={64} ry={58} />
+                <ellipse cx={62} cy={0} rx={64} ry={58} />
+              </g>
+            )}
           </g>
         )}
       </g>
@@ -372,16 +386,24 @@ export const RecvGaze: React.FC<{g: Gaze; look: number}> = ({g, look}) => {
   return <path d={`M${fmt(from.x)},${fmt(from.y)} L${fmt(lerp(from.x, to.x, g.k))},${fmt(lerp(from.y, to.y, g.k))}`} stroke={K.receiver} strokeWidth={7} strokeDasharray="12 9" strokeLinecap="round" />;
 };
 
-const Stimulator: React.FC<{blink: number}> = ({blink}) => {
+const Stimulator: React.FC<{blink: number; cmd: FGState['stim']}> = ({blink, cmd}) => {
   const {x, y, w, h} = STIM;
+  const col = cmd.who === 'A' ? K.senderA : K.senderB;
+  const dw = w - 120;
   return (
     <g>
       <rect x={x + 8} y={y + 10} width={w} height={h} rx={14} fill={INK} opacity={0.18} />
       <rect x={x} y={y} width={w} height={h} rx={14} fill="#DCE1E5" stroke={INK} strokeWidth={5} />
-      <rect x={x + 18} y={y + 18} width={w - 120} height={56} rx={8} fill="#2A3B47" stroke={INK} strokeWidth={3} />
-      <text x={x + 18 + (w - 120) / 2} y={y + 56} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={30} fill="#BFD3E0">TMS</text>
+      <rect x={x + 18} y={y + 18} width={dw} height={56} rx={8} fill="#2A3B47" stroke={INK} strokeWidth={3} />
+      <text x={x + 18 + dw / 2} y={y + 56} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={30} fill="#BFD3E0" opacity={1 - cmd.k}>TMS</text>
+      {cmd.k > 0 && (
+        <g opacity={cmd.k}>
+          <circle cx={x + 40} cy={y + 46} r={10} fill={col} stroke={INK} strokeWidth={2.5} />
+          <text x={x + 58} y={y + 55} fontFamily={FONT_HEAD} fontWeight={700} fontSize={cmd.yes ? 28 : 24} fill={cmd.yes ? K.saffron : '#8FA6B9'}>{cmd.yes ? 'PULSE' : 'no pulse'}</text>
+        </g>
+      )}
       <circle cx={x + w - 54} cy={y + 46} r={20} fill={mix('#6E7C86', K.saffron, blink)} stroke={INK} strokeWidth={4} />
-      {blink > 0 && <circle cx={x + w - 54} cy={y + 46} r={40} fill={K.saffron} opacity={0.3 * blink} />}
+      {blink > 0 && <circle cx={x + w - 54} cy={y + 46} r={34} fill={K.saffron} opacity={0.3 * blink} />}
       {[0, 1, 2].map((i) => <rect key={i} x={x + 18 + i * 52} y={y + 100} width={40} height={40} rx={20} fill="#B5BEC6" stroke={INK} strokeWidth={3} />)}
     </g>
   );
@@ -389,7 +411,6 @@ const Stimulator: React.FC<{blink: number}> = ({blink}) => {
 
 const ReceiverRoom: React.FC<{id: string; st: FGState}> = ({id, st}) => {
   const o = RR;
-  const g = st.gaze.R;
   return (
     <g>
       <defs>
@@ -412,18 +433,18 @@ const ReceiverRoom: React.FC<{id: string; st: FGState}> = ({id, st}) => {
         <rect x={o.x - 10} y={1420} width={o.w + 20} height={60} fill={K.desk} stroke={INK} strokeWidth={5} />
         <rect x={o.x - 10} y={1480} width={o.w + 20} height={700} fill="#6E5A4C" />
         <rect x={o.x - 10} y={1480} width={o.w + 20} height={40} fill={INK} opacity={0.25} />
-        <BNMonitor id={`${id}-m`} x={MON.R.x} y={MON.R.y} s={MON.R.s} t={st.t} accent={K.receiver} leds={st.leds.R} ringYes={g.side < 0 ? g.k : 0} ringNo={g.side > 0 ? g.k : 0}>
+        <BNMonitor id={`${id}-m`} x={MON.R.x} y={MON.R.y} s={MON.R.s} t={st.t} accent={K.receiver} leds={st.leds.R}>
           <FieldScreen id={`${id}-s`} t={st.t} trs={st.trs} fx={{...st.fx.R, tint: st.tint}} />
         </BNMonitor>
-        <Stimulator blink={st.stimBlink} />
+        <Stimulator blink={st.stimBlink} cmd={st.stim} />
       </g>
     </g>
   );
 };
 
-const HubRoom: React.FC<{id: string; st: FGState}> = ({id, st}) => {
+/** the room behind the lab computer: wall, skirting, floor (drawn under the cables) */
+const HubBack: React.FC<{id: string}> = ({id}) => {
   const o = HUB;
-  const {x, y, w, h} = COMPU;
   return (
     <g>
       <defs>
@@ -434,40 +455,59 @@ const HubRoom: React.FC<{id: string; st: FGState}> = ({id, st}) => {
       </defs>
       <rect x={o.x} y={o.y} width={o.w} height={o.h} fill={`url(#${id}-w)`} />
       <rect x={o.x} y={1520} width={o.w} height={580} fill="#CFC2AE" />
-      <rect x={x + 10} y={y + 14} width={w} height={h} rx={22} fill={INK} opacity={0.18} />
-      <rect x={x} y={y} width={w} height={h} rx={22} fill="#D9DEE2" stroke={INK} strokeWidth={6} />
-      <rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} rx={10} fill="#1F3442" stroke={INK} strokeWidth={5} />
-      <g opacity={0.3} stroke="#7FA3C4" strokeWidth={3} fill="none">
-        <path d={`M${WIN.x + 20},${WIN.y + 40} h60 v40 h70 M${WIN.x + 400},${WIN.y + 280} h-60 v-40 h-50 M${WIN.x + 30},${WIN.y + 290} h90 M${WIN.x + 260},${WIN.y + 30} h120 v30`} />
-      </g>
-      {[0, 1, 2, 3].map((i) => <rect key={i} x={x + 60} y={y + 440 + i * 46} width={w - 160} height={16} rx={8} fill="#B5BEC6" />)}
-      {[0, 1, 2, 3].map((i) => {
-        const on = 0.35 + 0.65 * ((Math.floor(st.t * 6 + i * 2.3) % 3) === 0 ? 1 : 0);
-        return <circle key={`l${i}`} cx={x + w - 70} cy={y + 448 + i * 46} r={8} fill={mix('#6E7C86', i % 2 ? K.teal : K.saffron, on)} stroke={INK} strokeWidth={2.5} />;
-      })}
-      <circle cx={x + w / 2} cy={y + h - 60} r={18} fill={mix('#6E7C86', K.saffron, st.hubBlink)} stroke={INK} strokeWidth={4} />
-      {st.hubBlink > 0 && <circle cx={x + w / 2} cy={y + h - 60} r={40} fill={K.saffron} opacity={0.3 * st.hubBlink} />}
-      {/* the bad Sender's slot glitches while the software flips the vote */}
-      {st.glitch > 0 && (
-        <g opacity={st.glitch}>
-          <rect x={SLOT.B.x - 92} y={SLOT.B.y - 50} width={184} height={100} rx={18} fill="none" stroke={K.saffron} strokeWidth={6} strokeDasharray="14 8" />
-          {[0, 1, 2].map((i) => (
-            <rect key={i} x={SLOT.B.x + 100 + ((i * 37 + Math.floor(st.t * 20) * 13) % 60)} y={SLOT.B.y - 40 + i * 30} width={40 - i * 8} height={8} fill={K.saffron} opacity={0.7} />
-          ))}
+      {/* a wall rack shelf with the EEG amplifier receivers */}
+      <rect x={2080} y={300} width={460} height={18} fill={K.deskDeep} stroke={INK} strokeWidth={4} />
+      {[0, 1].map((i) => (
+        <g key={i}>
+          <rect x={2110 + i * 220} y={214} width={180} height={86} rx={8} fill="#3B4A57" stroke={INK} strokeWidth={4} />
+          <rect x={2126 + i * 220} y={232} width={70} height={24} rx={4} fill="#22323D" />
+          <circle cx={2266 + i * 220} cy={256} r={9} fill={i ? K.senderB : K.senderA} stroke={INK} strokeWidth={2.5} />
         </g>
+      ))}
+    </g>
+  );
+};
+
+/** The relay software on the workstation monitor (screen-space = world, inside WIN). */
+const RelayUI: React.FC<{st: FGState}> = ({st}) => {
+  const {x, y, w, h} = WIN;
+  const row = (who: 'A' | 'B') => {
+    const sl = SLOT[who];
+    const col = who === 'A' ? K.senderA : K.senderB;
+    return (
+      <g key={who}>
+        <circle cx={x + 30} cy={sl.y} r={11} fill={col} stroke={INK} strokeWidth={3} />
+        <text x={x + 50} y={sl.y + 8} fontFamily={FONT_HEAD} fontWeight={600} fontSize={23} fill="#D3DEE6">{`Sender ${who}`}</text>
+        <rect x={sl.x - 58} y={sl.y - 26} width={116} height={52} rx={26} fill="none" stroke="#4A6378" strokeWidth={3} strokeDasharray="7 6" />
+      </g>
+    );
+  };
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill="#14232E" />
+      <rect x={x} y={y} width={w} height={34} fill="#24394A" />
+      {[0, 1, 2].map((i) => <circle key={i} cx={x + 16 + i * 16} cy={y + 17} r={5} fill={['#EF6B55', '#FFC744', '#7CC08A'][i]} />)}
+      <text x={x + 70} y={y + 24} fontFamily={FONT_HEAD} fontWeight={600} fontSize={18} fill="#BFD3E0">BrainNet relay</text>
+      <text x={x + w - 14} y={y + 24} textAnchor="end" fontFamily={FONT_HEAD} fontWeight={600} fontSize={16} fill="#7F98AB">decode · send</text>
+      <path d={`M${x + 16},${y + 885 - 740} H${x + w - 16}`} stroke="#2B4152" strokeWidth={2} />
+      {row('A')}
+      {row('B')}
+      {st.flipNote > 0 && (
+        <text x={SLOT.B.x} y={SLOT.B.y + 52} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={19} fill={K.saffron} opacity={st.flipNote}>flipped by software</text>
       )}
-      {/* 10 of 16 trials */}
+      {/* 10 of 16 trials: the bad Sender's vote is flipped on these */}
       {st.strip.k > 0 && (
         <g opacity={clamp(st.strip.k * 1.5)}>
+          <text x={x + 16} y={y + 262} fontFamily={FONT_HEAD} fontWeight={600} fontSize={16} fill="#9DB2C3">trials where B is flipped</text>
           {Array.from({length: 16}, (_, i) => {
             const marked = [0, 1, 3, 4, 6, 8, 9, 11, 13, 14];
             const idx = marked.indexOf(i);
             const on = idx >= 0 ? clamp(st.strip.n - idx) : 0;
-            const cx = x + w / 2 - 7.5 * 30 + i * 30, cy = y - 50;
+            const cx = x + 26 + i * 24.5, cy = y + 290;
             return (
               <g key={i}>
-                <rect x={cx - 12} y={cy - 12} width={24} height={24} rx={5} fill={mix(K.cream, K.senderB, on)} stroke={INK} strokeWidth={3} />
-                {on > 0.5 && <path d={`M${cx - 6},${cy - 2} h10 l-3,-4 M${cx + 6},${cy + 3} h-10 l3,4`} stroke="#FFFFFF" strokeWidth={2.5} fill="none" strokeLinecap="round" />}
+                <rect x={cx - 10} y={cy - 10} width={20} height={20} rx={4} fill={mix('#2A4152', K.senderB, on)} stroke="#5E7A8C" strokeWidth={2} />
+                {on > 0.5 && <path d={`M${cx - 5},${cy - 2} h8 l-2.5,-3 M${cx + 5},${cy + 3} h-8 l2.5,3`} stroke="#FFFFFF" strokeWidth={2} fill="none" strokeLinecap="round" />}
               </g>
             );
           })}
@@ -477,9 +517,59 @@ const HubRoom: React.FC<{id: string; st: FGState}> = ({id, st}) => {
   );
 };
 
-/** cables: the two Sender conduits, the hub output through the wall, with an optional glow travelling along them */
-const Cables: React.FC<{st: FGState; front?: boolean}> = ({st}) => {
-  const rA = routeOf('A'), rB = routeOf('B'), out = [...routeOut('A').slice(2)];
+/** the lab computer (tower + workstation monitor + keyboard on a bench), drawn over the cable ends */
+const HubFront: React.FC<{id: string; st: FGState}> = ({id, st}) => {
+  const o = HUB;
+  const {x, y, w, h} = TOWER;
+  const by = BENCH_Y;
+  return (
+    <g>
+      {/* the bench */}
+      <rect x={o.x - 4} y={by} width={o.w + 8} height={30} fill={K.deskTop} stroke={INK} strokeWidth={5} />
+      <rect x={o.x - 4} y={by + 30} width={o.w + 8} height={300} fill={K.desk} stroke={INK} strokeWidth={5} />
+      <rect x={o.x + 40} y={by + 70} width={360} height={110} rx={8} fill={shade(K.desk, 0.08)} stroke={INK} strokeWidth={4} />
+      <rect x={o.x + 190} y={by + 115} width={60} height={14} rx={7} fill={K.deskDeep} />
+      {/* tower PC */}
+      <rect x={x + 10} y={y + 14} width={w} height={h} rx={10} fill={INK} opacity={0.18} />
+      <rect x={x} y={y} width={w} height={h} rx={10} fill="#C9D0D6" stroke={INK} strokeWidth={5} />
+      <rect x={x + 6} y={y + 6} width={w - 12} height={h - 12} rx={6} fill="none" stroke="#E4E9ED" strokeWidth={3} />
+      <rect x={x + 22} y={y + 36} width={w - 44} height={22} rx={4} fill="#9EA9B2" stroke={INK} strokeWidth={3} />
+      <rect x={x + 22} y={y + 68} width={w - 44} height={22} rx={4} fill="#9EA9B2" stroke={INK} strokeWidth={3} />
+      <rect x={x + 30} y={y + 44} width={40} height={6} rx={3} fill="#6E7C86" />
+      {Array.from({length: 7}, (_, i) => <rect key={i} x={x + 26} y={y + 140 + i * 18} width={w - 52} height={7} rx={3.5} fill="#A8B2BA" />)}
+      <circle cx={x + w / 2} cy={y + h - 52} r={15} fill="#E4E9ED" stroke={INK} strokeWidth={4} />
+      <circle cx={x + w / 2} cy={y + h - 52} r={5} fill={mix('#7CC08A', '#D9FBE0', st.hubBlink)} />
+      <circle cx={x + w - 26} cy={y + h - 22} r={7} fill={mix('#6E7C86', K.saffron, st.hubBlink)} stroke={INK} strokeWidth={2.5} />
+      {st.hubBlink > 0 && <circle cx={x + w - 26} cy={y + h - 22} r={15} fill={K.saffron} opacity={0.35 * st.hubBlink} />}
+      {/* ports */}
+      <rect x={PORT_IN.A.x - 12} y={PORT_IN.A.y - 4} width={24} height={12} rx={3} fill="#3B4A57" stroke={INK} strokeWidth={3} />
+      <rect x={PORT_IN.B.x - 4} y={PORT_IN.B.y - 12} width={12} height={24} rx={3} fill="#3B4A57" stroke={INK} strokeWidth={3} />
+      <rect x={PORT_OUT.x - 8} y={PORT_OUT.y - 12} width={12} height={24} rx={3} fill="#3B4A57" stroke={INK} strokeWidth={3} />
+      {/* workstation monitor */}
+      <path d={`M2160,${by} L2340,${by} L2320,${by - 16} L2180,${by - 16} Z`} fill={K.metalDeep} stroke={INK} strokeWidth={5} strokeLinejoin="round" />
+      <rect x={2228} y={WIN.y + WIN.h + 20} width={44} height={by - 16 - (WIN.y + WIN.h + 20)} fill={K.metal} stroke={INK} strokeWidth={5} />
+      <rect x={WIN.x - 26} y={WIN.y - 26} width={WIN.w + 52} height={WIN.h + 56} rx={18} fill="#2A3B47" stroke={INK} strokeWidth={6} />
+      <defs>
+        <clipPath id={`${id}-win`}>
+          <rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} rx={4} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#${id}-win)`}>
+        <RelayUI st={st} />
+      </g>
+      <rect x={WIN.x} y={WIN.y} width={WIN.w} height={WIN.h} rx={4} fill="none" stroke={INK} strokeWidth={4} />
+      <circle cx={WIN.x + WIN.w + 10} cy={WIN.y + WIN.h + 16} r={4} fill="#7CC08A" />
+      {/* keyboard and mouse */}
+      <path d={`M2070,${by + 4} L2410,${by + 4} L2420,${by + 24} L2060,${by + 24} Z`} fill="#E9EDF0" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+      <path d={`M2085,${by + 12} H2395 M2080,${by + 18} H2400`} stroke="#B5BEC6" strokeWidth={3} />
+      <ellipse cx={2475} cy={by + 14} rx={22} ry={11} fill="#E9EDF0" stroke={INK} strokeWidth={4} />
+    </g>
+  );
+};
+
+/** cables: the two Sender lines into the tower, the tower's output to the stimulator, with a glow while a vote rides */
+const Cables: React.FC<{st: FGState}> = ({st}) => {
+  const rA = routeOf('A'), rB = routeOf('B'), out = routeOut('A');
   const pipe = (pts: P2[], glow: number, col: string, k: string) => (
     <g key={k}>
       <path d={pd(pts)} fill="none" stroke={INK} strokeWidth={14} strokeLinejoin="round" strokeLinecap="round" />
@@ -489,9 +579,9 @@ const Cables: React.FC<{st: FGState; front?: boolean}> = ({st}) => {
   );
   return (
     <g>
-      {pipe(rA.slice(1, -1), st.cableGlow.A, K.senderA, 'a')}
-      {pipe(rB.slice(1, -1), st.cableGlow.B, K.senderB, 'b')}
-      {pipe([{x: COMPU.x + COMPU.w, y: OUT_Y}, ...out.slice(1)], st.cableGlow.out, K.saffron, 'o')}
+      {pipe(rA.slice(1), st.cableGlow.A, K.senderA, 'a')}
+      {pipe(rB.slice(1), st.cableGlow.B, K.senderB, 'b')}
+      {pipe(out, st.cableGlow.out, K.saffron, 'o')}
     </g>
   );
 };
@@ -504,12 +594,11 @@ export const FGWorld: React.FC<{id: string; st: FGState; f: number; head?: boole
     <rect x={-60} y={-60} width={4820} height={2220} rx={12} fill="#D8C9AE" stroke={INK} strokeWidth={8} />
     <SenderRoom id={`${id}a`} who="A" st={st} f={f} />
     <SenderRoom id={`${id}b`} who="B" st={st} f={f} />
-    <HubRoom id={`${id}h`} st={st} />
+    <HubBack id={`${id}h`} />
     <ReceiverRoom id={`${id}r`} st={st} />
-    {[RA, RB, HUB, RR].map((o, i) => <rect key={i} x={o.x} y={o.y} width={o.w} height={o.h} fill="none" stroke={INK} strokeWidth={7} />)}
     <Cables st={st} />
-    {/* the computer's front lip over the cable ends (the cables enter it) */}
-    <rect x={COMPU.x - 3} y={COMPU.y + 120} width={10} height={COMPU.h - 240} fill="#D9DEE2" />
+    <HubFront id={`${id}h`} st={st} />
+    {[RA, RB, HUB, RR].map((o, i) => <rect key={i} x={o.x} y={o.y} width={o.w} height={o.h} fill="none" stroke={INK} strokeWidth={7} />)}
     {st.toks.map((tk, i) => <Token key={i} {...tk} />)}
     {head && (
       <g>

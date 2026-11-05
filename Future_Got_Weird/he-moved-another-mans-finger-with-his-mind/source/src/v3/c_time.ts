@@ -44,11 +44,13 @@ const build = () => {
     across: T('Across campus, a magnetic coil'),
     magnetic: W('a magnetic coil sits', 1),
     coil: W('a magnetic coil sits', 2),
+    part: W('sits over the part', 3),
     brain: W('Stocco’s brain that helps', 1),
     helps: W('Stocco’s brain that helps', 3),
     rightHand: W('move his right hand', 2),
     rightHandE: E('move his right hand', 3),
     command2: T('The command triggers a pulse'),
+    trig: W('The command triggers a pulse', 2),
     pulse: W('The command triggers a pulse', 4),
     hisHand: T('His hand jerks up'),
     jerks: W('His hand jerks up', 2),
@@ -61,6 +63,7 @@ const build = () => {
     disW: W('The rocket disappears', 2),
     raoScreenE: E('on Rao’s screen', 2),
     described: T('Stocco described the feeling'),
+    feeling: W('described the feeling', 2),
     something: T('something like a nervous tic'),
     nervous: T('nervous tic'),
     ticE: E('nervous tic', 1),
@@ -76,13 +79,19 @@ const build = () => {
     cut: 0,
     hit: 0,
     ecu: 0,
+    sRoom: 0,
+    front: 0,
+    back: 0,
   };
   c.jerk = c.jerks + 0.01; // the wrist extension starts on "jerks"
   c.drop = c.comes + 0.06; // the hand starts to fall on "comes"
   c.contact = c.down + 0.04; // the pad lands on the space bar on "down"
   c.cut = c.contact + 3 / 30; // cut to the cannon on the bottom of the key travel
   c.hit = c.shoots + 0.02; // the shot meets the rocket on "shoots"
-  c.ecu = c.hisHand + 0.2; // cut from the anatomy path into the hand ECU
+  c.ecu = c.hisHand + 0.08; // the stimulation pathway reaches the hand: cut into the hand ECU (drive glow at the wrist)
+  c.sRoom = 65.75; // match cut on the command: campus entry box -> the wall jack in Stocco's room (silence after "Fire.")
+  c.front = c.raoScreenE; // Rao's fist pump -> Stocco's hand lifting off the key (cut on the upward motion)
+  c.back = c.imagine - 0.22; // Stocco's head settles back to the wall -> the reverse angle behind him
   return c;
 };
 let memo: ReturnType<typeof build> | null = null;

@@ -1,59 +1,54 @@
-// Sequence C, part 1 (44.64 -> ~63.7 s): the game, Rao, his brain rhythm, the EEG computer, the cursor and the
-// one command leaving Rao's lab. One world ("R", 1920 x 1080 lab units) that the camera travels through:
-//  - the game seen full-frame (the B->C contract) launches the rocket and tracks it into slow motion;
-//  - pull-out: the game is the reflection in Rao's glasses, and his concentrating face appears around it;
-//  - down his arm to his RIGHT hand: the imagined movement is a dashed ghost, the real hand stays flat;
-//  - up to the EEG cap and into the electrode over his LEFT motor cortex (frame-right in this front view): the
-//    brain's regular rhythm (mu band) fills the frame and SHRINKS when he imagines the movement;
-//  - the same trace becomes the EEG computer's readout; the pull-out reveals the cap, cable and computer, which
-//    watches for the drop (threshold);
-//  - along the cable to his screen: an extreme close-up follows the cursor up to the blue FIRE target;
-//  - the computer sends one FIRE command up the network cable; the camera rides it to the wall jack (match-cut to
-//    the campus in c_campus).
+// V3 Sequence C, part 1 (44.64 -> 64.06 s): the game, Rao, his brain rhythm, the EEG computer, the cursor and the one
+// command leaving Rao's lab. One world ("R", lab units) that the camera travels through without a cut:
+//  - the plain game full frame (the B->C contract); the rocket launches on "rocket" and the camera follows it up;
+//  - PULL BACK THROUGH THE SCREEN: the game was Rao's monitor; the pull-out reveals Rao (crew3 rig, front view) with his
+//    eyes on the rocket;
+//  - his concentration: brows knit, the head leans toward the screen, the eyes squint on each imagined attempt; his
+//    real right hand (frame-left) lies still on the desk while a translucent "imagined" hand lifts and grips;
+//  - PUSH TO THE CAP: the cap over his LEFT motor cortex (frame-right in this front view) turns see-through: the
+//    brain's rhythm pulses in the cortex under the electrode, and the electrode's wire starts to carry it;
+//  - the waveform rides the wire and the cap cable to the EEG computer (the camera follows it) and becomes the trace on
+//    its readout, which shrinks on "changes";
+//  - the computer watches (threshold band) and sends "up" to the screen: the cursor climbs to the FIRE target;
+//  - on the hit a pulse returns to the computer, which sends ONE command (the FIRE chip) up the network cable; the
+//    camera rides it into the wall jack (match cut to the campus, c_campus).
 import React from 'react';
 import {lit, mix, shade} from '../dc/color';
-import {Inked} from '../dc/ink';
 import {clamp, easeIn, easeInOut, easeOut, fmt, hash, lerp, smooth} from '../dc/math';
-import {Capsule, SoftShadow} from '../dc/shade';
+import {SoftShadow} from '../dc/shade';
 import {GameScreen, GEvent} from '../art/game';
-import {FLAT, HandPoseP, mixP, SideHand} from '../art/hand';
-import {CrewChar, IDLE, Pose} from '../art/crew';
-import {EEGCap, RAO} from '../art/people';
+import {CrewChar, IDLE, Look, Pose} from './crew3';
+import {RAO} from '../art/people';
 import {FONT_HEAD, INK, K, Monitor, Packet, Tag} from '../art/kit';
 import {CamS, FPS} from './core2';
 import {GAME_FULL} from './contracts';
-import {camPath, camT, toScreen} from './c_cam';
+import {camPath, camT} from './c_cam';
 import {ct, cursorAt, G_DUR, G_FIRE, gameClock} from './c_time';
 
 type V = {x: number; y: number};
 export const gameEvents = (): GEvent[] => [{kind: 'rocket', t0: 0, dur: G_DUR, fire: G_FIRE}];
+const ramp = (t: number, a: number, b: number) => clamp((t - a) / (b - a || 1e-6));
+const sramp = (t: number, a: number, b: number) => smooth(ramp(t, a, b));
 
 // ---------------------------------------------------------------- layout of the R world
-const RAO_X = 520, RAO_GY = 1080, RAO_S = 2.1;
-const HEAD_C = {x: RAO_X, y: RAO_GY - 372 * RAO_S};
-/** the frame-right lens of Rao's glasses (his LEFT eye) */
-const LENS = {x0: RAO_X + 7 * RAO_S, y0: RAO_GY + (-378 - 15) * RAO_S, w: 30 * RAO_S, h: 26 * RAO_S, rx: 7 * RAO_S};
-const LENS_L = {...LENS, x0: RAO_X - 37 * RAO_S};
-const GS = LENS.w / 640; // game units -> R units in the lens
-const G0 = {x: LENS.x0 + LENS.w / 2 - 320 * GS, y: LENS.y0 + LENS.h / 2 - 200 * GS};
-/** the electrode over his left motor cortex (C3; frame-right in a front view) */
-export const ELEC = {x: RAO_X + 40 * RAO_S, y: RAO_GY + (-372 - 58 + 22 - 12) * RAO_S, r: 6.5 * RAO_S};
-const HAND = {x: 815, y: 760, s: 0.8, arm: 567, ang: 7.6};
-const SHOULDER = {x: RAO_X - 66 * RAO_S, y: RAO_GY - 292 * RAO_S};
+export const RAO_X = 520, RAO_GY = 1080, RAO_S = 2.1;
+const HY = -372, HR = 58;
+/** the electrode over his left motor cortex (C3; frame-right in a front view), head-local */
+const C3 = {x: 40, y: HY - HR + 22 - 12};
 const DESK_Y = 640;
 const TOWER = {x0: 1040, x1: 1260, y0: 420, y1: 720};
 export const LCD = {x0: 1062, x1: 1238, y0: 446, y1: 560};
 const LCD_C = {x: (LCD.x0 + LCD.x1) / 2, y: (LCD.y0 + LCD.y1) / 2};
-export const LCD_Z = 1920 / (LCD.x1 - LCD.x0);
-const MON = {x: 1760, y: 720, s: 1};
-const SCR = {x: MON.x - 320, y: MON.y - 510};
+export const MON = {x: 1760, y: 720, s: 1};
+/** Rao's game screen (top-left of the 640 x 400 screen) in the R world */
+export const SCR = {x: MON.x - 320, y: MON.y - 510};
 const PLATE = {x: 1300, y: 132};
-const CAP_CABLE: V[] = [{x: 696, y: 551}, {x: 740, y: 660}, {x: 900, y: 700}, {x: 1040, y: 640}];
 const MON_CABLE: V[] = [{x: 1260, y: 660}, {x: 1360, y: 712}, {x: 1560, y: 726}, {x: 1700, y: 712}];
 const NET_CABLE: V[] = [{x: 1205, y: 420}, {x: 1210, y: 300}, {x: 1296, y: 260}, {x: PLATE.x, y: PLATE.y + 40}];
-/** cursor centre in R (0 bottom .. 1 FIRE target) */
 const cursorR = (c: number) => ({x: SCR.x + 52, y: SCR.y + 364 - clamp(c) * 300});
 const TARGET_R = {x: SCR.x + 52, y: SCR.y + 52};
+/** his forearms rest on the desk, pointing inward; the right arm is rig side -1 (frame-left in this front view) */
+const ARM_REST = {a: 18, b: -66};
 
 export const bz = (p: V[], u: number): V => {
   const a = (1 - u) ** 3, b = 3 * u * (1 - u) ** 2, c = 3 * u * u * (1 - u), d = u ** 3;
@@ -67,13 +62,13 @@ export const Cable: React.FC<{p: V[]; w?: number; color?: string}> = ({p, w = 9,
   </g>
 );
 /** data dots flowing along a cable */
-export const CableFlow: React.FC<{p: V[]; t: number; k: number; color?: string; n?: number; speed?: number; r?: number}> = ({p, t, k, color = K.teal, n = 5, speed = 0.8, r = 7}) => {
+export const CableFlow: React.FC<{p: V[]; t: number; k: number; color?: string; n?: number; speed?: number; r?: number; reverse?: boolean}> = ({p, t, k, color = K.teal, n = 5, speed = 0.8, r = 7, reverse = false}) => {
   if (k <= 0.01) return null;
   return (
     <g opacity={clamp(k)}>
       {Array.from({length: n}, (_, i) => {
-        const u = (((t * speed + i / n) % 1) + 1) % 1;
-        const q = bz(p, u);
+        const u0 = (((t * speed + i / n) % 1) + 1) % 1;
+        const q = bz(p, reverse ? 1 - u0 : u0);
         return (
           <g key={i}>
             <circle cx={fmt(q.x)} cy={fmt(q.y)} r={r * 2} fill={color} opacity={0.3} />
@@ -85,95 +80,208 @@ export const CableFlow: React.FC<{p: V[]; t: number; k: number; color?: string; 
   );
 };
 
-// ---------------------------------------------------------------- the rhythm trace (shared by the brain view and the LCD)
+// ---------------------------------------------------------------- the rhythm (shared by the cortex, the wire and the LCD)
 /** relative rhythm amplitude at signal time s: the regular mu rhythm, which shrinks when he imagines */
-const rhythmAmp = (s: number) => 1 - 0.76 * smooth(clamp((s - ct().changes) / 0.45));
+export const rhythmAmp = (s: number) => 1 - 0.76 * smooth(clamp((s - ct().changes) / 0.45));
+const RHZ = 2.9; // the drawn rhythm (slowed for the eye)
 /** a scope trace over [x0, x1] centred on cy: newest signal at the right edge, scrolling left */
 const tracePath = (t: number, x0: number, x1: number, cy: number, A: number, n = 160) => {
-  const span = 1.7; // seconds of signal across the width
+  const span = 1.7;
   let d = '';
   for (let i = 0; i <= n; i++) {
     const u = i / n;
     const s = t - (1 - u) * span;
     const a = rhythmAmp(s);
-    const y = cy - A * a * Math.sin(s * Math.PI * 2 * 2.9) * (0.88 + 0.12 * Math.sin(s * 4.3)) - A * 0.07 * Math.sin(s * 41 + 1) * (1.2 - a);
+    const y = cy - A * a * Math.sin(s * Math.PI * 2 * RHZ) * (0.88 + 0.12 * Math.sin(s * 4.3)) - A * 0.07 * Math.sin(s * 41 + 1) * (1.2 - a);
     d += `${i ? 'L' : 'M'}${fmt(lerp(x0, x1, u))},${fmt(y)}`;
   }
   return d;
 };
 
-let gyri: {d: string; cx: number}[] | null = null;
-const GYRI = () =>
-  (gyri ??= (() => {
-    const out: {d: string; cx: number}[] = [];
-    let n = 0;
-    for (let gx = 0; gx < 9; gx++)
-      for (let gyy = 0; gyy < 6; gyy++) {
-        n++;
-        let x = -260 + gx * 300 + 120 * hash(n, 1), y = -180 + gyy * 270 + 120 * hash(n, 2);
-        let a = hash(n, 3) * Math.PI * 2;
-        let d = `M${fmt(x)},${fmt(y)}`;
-        for (let k = 0; k < 7; k++) {
-          a += (hash(n * 13 + k, 4) - 0.5) * 2.4;
-          const nx = x + Math.cos(a) * 95, ny = y + Math.sin(a) * 95;
-          d += ` Q${fmt(x + Math.cos(a - 0.6) * 70)},${fmt(y + Math.sin(a - 0.6) * 70)} ${fmt(nx)},${fmt(ny)}`;
-          x = nx;
-          y = ny;
-        }
-        out.push({d, cx: -260 + gx * 300});
-      }
-    return out;
-  })());
-
-/** the brain's rhythm, full frame (screen space). bg 0 = cortex tissue, 1 = the computer's readout screen */
-export const RhythmView: React.FC<{t: number; bg: number; s?: number}> = ({t, bg, s = 1}) => {
+// ---------------------------------------------------------------- Rao's acting
+const attempt = (t: number, a: number) => {
+  const d = t - a;
+  if (d < 0 || d > 1.3) return 0;
+  return d < 0.42 ? easeInOut(d / 0.42) : d < 0.72 ? 1 : 1 - easeInOut((d - 0.72) / 0.58);
+};
+/** the two imagined movements: on "moving his right hand" and again while "his real hand stays put" */
+const attempts = (t: number) => {
   const c = ct();
+  const a1 = c.moving + 0.08, a2 = c.stays + 0.32;
+  return {k: Math.max(attempt(t, a1), attempt(t, a2)), grip: Math.max(sramp(t, a1 + 0.42, a1 + 0.66) * (1 - sramp(t, a1 + 0.8, a1 + 1.1)), sramp(t, a2 + 0.42, a2 + 0.66) * (1 - sramp(t, a2 + 0.8, a2 + 1.1)))};
+};
+export const ghostK = (t: number) => {
+  const c = ct();
+  return ramp(t, c.moving - 0.02, c.moving + 0.22) * (1 - ramp(t, c.putE + 0.2, c.putE + 0.5));
+};
+const pumpK = (t: number) => {
+  const c = ct();
+  // anticipation dip, a quick rise ending on the cut to Stocco (the matched upward motion)
+  const dip = sramp(t, c.front - 0.42, c.front - 0.3) * (1 - sramp(t, c.front - 0.3, c.front - 0.22));
+  const up = easeOut(ramp(t, c.front - 0.3, c.front + 0.02));
+  return {dip, up};
+};
+export const raoPose = (t: number): Pose => {
+  const c = ct();
+  const conc = sramp(t, c.imag - 0.15, c.imag + 0.4) * (1 - 0.45 * sramp(t, c.target + 0.1, c.target + 0.6));
+  const att = attempts(t);
+  const relief = sramp(t, c.disW + 0.05, c.disW + 0.55);
+  const tense = sramp(t, c.cut + 1.2, c.cut + 1.6) * (1 - relief);
+  // the eyes follow the action on his screen: the rocket climbing, then the cursor climbing to FIRE
+  const cur = cursorAt(t);
+  const curLook = 0.25 - 0.55 * cur;
+  const lookY = t < c.imag ? lerp(0.05, -0.3, sramp(t, c.rocket + 0.6, c.rocket + 1.2)) : t < c.screen ? lerp(-0.3, 0.1, sramp(t, c.imag, c.imag + 0.8)) : t < c.cut ? curLook : lerp(-0.1, -0.35, relief);
+  const pump = pumpK(t);
+  return {
+    ...IDLE,
+    armL: ARM_REST,
+    armR: {a: ARM_REST.a + 4 * pump.dip + 22 * pump.up, b: ARM_REST.b - 8 * pump.dip + 200 * pump.up},
+    handL: {curl: 0.14, spread: 0.18},
+    handR: {curl: lerp(0.14, 0.95, sramp(t, c.front - 0.6, c.front - 0.42)), spread: 0.15},
+    lean: -1.5 * relief,
+    tilt: 2.6 * conc + 1.2 * att.k + 1.5 * tense - 3 * relief,
+    lookX: 0.86,
+    lookY,
+    brows: -0.5 * conc - 0.25 * att.k - 0.3 * tense + 0.45 * relief,
+    browAsym: 0,
+    mouth: relief > 0.4 ? (t > c.disW + 0.5 ? 'grin' : 'smile') : conc > 0.4 || tense > 0.4 ? 'flat' : 'smile',
+    bob: -5 * conc - 3 * att.k - 4 * tense + 4 * relief,
+    blink: att.k > 0.3 ? 1 - 0.3 * att.k : tense > 0.5 ? 0.85 : undefined,
+  };
+};
+const ghostPose = (t: number): Pose => {
+  const att = attempts(t);
+  const p = raoPose(t);
+  return {...p, armL: {a: ARM_REST.a + 8 * att.k, b: ARM_REST.b - 58 * att.k}, handL: {curl: lerp(lerp(0.14, 0.02, att.k), 0.95, att.grip), spread: lerp(0.18, 0.75, att.k) * (1 - att.grip)}};
+};
+const GHOST: Look = {...RAO, skin: '#A5E3DD', shirt: '#A5E3DD'};
+
+/** head-local point -> R world, through the rig's tilt, lean and bob (life 0) */
+const rotAbout = (p: V, deg: number, o: V): V => {
+  const a = (deg * Math.PI) / 180, cs = Math.cos(a), sn = Math.sin(a);
+  const dx = p.x - o.x, dy = p.y - o.y;
+  return {x: o.x + dx * cs - dy * sn, y: o.y + dx * sn + dy * cs};
+};
+const headW = (p: V, pose: Pose): V => {
+  const a = rotAbout(p, pose.tilt, {x: 0, y: HY + 50});
+  const b = rotAbout(a, pose.lean, {x: 0, y: -150});
+  return {x: RAO_X + RAO_S * b.x, y: RAO_GY + RAO_S * (b.y + (pose.bob ?? 0))};
+};
+
+// ---------------------------------------------------------------- the EEG cap (with the see-through window at C3)
+const CAP_D = `M ${-HR - 4} ${HY + 4} Q ${-HR - 6} ${HY - HR - 22} 0 ${HY - HR - 20} Q ${HR + 6} ${HY - HR - 22} ${HR + 4} ${HY + 4} Q ${HR * 0.5} ${HY - 18} 0 ${HY - 20} Q ${-HR * 0.5} ${HY - 18} ${-HR - 4} ${HY + 4} Z`;
+const ELECS: [number, number][] = [[-40, -12], [-20, -34], [0, -40], [20, -34], [40, -12], [-30, 4], [0, -16], [30, 4], [-50, 6], [50, 6]];
+/** sulci of the cortex patch under C3 (head-local): wavy folds running roughly front-to-back, the central sulcus
+ *  crossing them */
+let sulci: string[] | null = null;
+const SULCI = () =>
+  (sulci ??= Array.from({length: 9}, (_, n) => {
+    const y0 = C3.y - 44 + n * 11;
+    let d = `M${fmt(C3.x - 50)},${fmt(y0)}`;
+    for (let k = 0; k < 10; k++) {
+      const x1 = C3.x - 50 + (k + 1) * 10;
+      const amp = 3 + 2.5 * hash(n * 7 + k, 5);
+      d += ` Q${fmt(x1 - 5)},${fmt(y0 + (k % 2 ? amp : -amp) + 2 * Math.sin(n + k))} ${fmt(x1)},${fmt(y0 + 1.5 * Math.sin(n * 1.7 + k * 0.9))}`;
+    }
+    return d;
+  }));
+const RaoCap: React.FC<{t: number; xr: number; live: number}> = ({t, xr, live}) => {
   const amp = rhythmAmp(t);
-  const ph = Math.sin(t * Math.PI * 2 * 2.9);
-  // gyri: convoluted folds of the cortex surface; each brightens with the rhythm (in sync before the change)
-  const gy = GYRI().map((gp, i) => {
-    const sync = amp * (0.5 + 0.5 * Math.sin(t * Math.PI * 2 * 2.9 - gp.cx / 520));
-    return (
-      <g key={i}>
-        <path d={gp.d} fill="none" stroke="#F0B2A8" strokeWidth={96} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={gp.d} fill="none" stroke={K.teal} strokeWidth={96} strokeLinecap="round" strokeLinejoin="round" opacity={0.28 * sync} />
-        <path d={gp.d} fill="none" stroke="#FAD6CE" strokeWidth={34} strokeLinecap="round" strokeLinejoin="round" opacity={0.7} transform="translate(-10 -14)" />
-      </g>
-    );
-  });
-  const A = 24 * LCD_Z;
-  const trace = tracePath(t, 0, 1920, 540, A);
-  const tagA = clamp((t - (c.rhythm + 0.02)) / 0.25) * (1 - clamp((t - (c.changes + 0.05)) / 0.2));
-  const tagB = clamp((t - (c.changes + 0.3)) / 0.25) * (1 - clamp((t - (c.changesE + 0.2)) / 0.2));
+  const ph = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 * RHZ);
+  const g = gameClock(t);
   return (
     <g>
       <defs>
-        <radialGradient id="vc-rv-vig" cx="0.5" cy="0.5" r="0.75">
-          <stop offset="0.55" stopColor={INK} stopOpacity={0} />
-          <stop offset="1" stopColor={INK} stopOpacity={0.45} />
+        <clipPath id="vc-cap-clip"><path d={CAP_D} /></clipPath>
+        <radialGradient id="vc-xr-g" cx={C3.x} cy={C3.y} r={36} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={1} />
+          <stop offset="0.6" stopColor="#FFFFFF" stopOpacity={0.95} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0} />
         </radialGradient>
+        <mask id="vc-xr-mask" maskUnits="userSpaceOnUse" x={C3.x - 60} y={C3.y - 60} width={120} height={120}>
+          <rect x={C3.x - 60} y={C3.y - 60} width={120} height={120} fill="url(#vc-xr-g)" />
+        </mask>
+        <clipPath id="vc-lensR"><rect x={7} y={-393} width={30} height={26} rx={7} /></clipPath>
+        <clipPath id="vc-lensL"><rect x={-37} y={-393} width={30} height={26} rx={7} /></clipPath>
       </defs>
-      <g transform={`translate(960 540) scale(${fmt(s)}) translate(-960 -540)`}>
-        <g opacity={1 - bg}>
-          <rect x={-400} y={-300} width={2720} height={1680} fill="#B9706E" />
-          {gy}
-          <circle cx={960} cy={540} r={620} fill={K.teal} opacity={0.1 * amp * (0.5 + 0.5 * ph)} />
+      {/* the game reflected in his glasses: his eyes stay on the screen */}
+      {[['vc-lensL', -22], ['vc-lensR', 22]].map(([id, cx]) => (
+        <g key={id as string} clipPath={`url(#${id})`} opacity={0.2}>
+          <g transform={`translate(${fmt((cx as number) - 15)} -393) scale(${(30 / 640).toFixed(5)})`}>
+            <GameScreen t={g} events={gameEvents()} />
+          </g>
         </g>
-      </g>
-      {bg > 0 && (
-        <g opacity={bg}>
-          <rect x={0} y={0} width={1920} height={1080} fill={K.screenDark} />
-          {Array.from({length: 9}, (_, i) => (
-            <line key={i} x1={(i + 1) * (1920 / 9)} y1={0} x2={(i + 1) * (1920 / 9)} y2={1080} stroke="#FFFFFF" strokeWidth={3} opacity={0.07} />
-          ))}
-          <line x1={0} y1={540} x2={1920} y2={540} stroke="#FFFFFF" strokeWidth={3} opacity={0.12} />
+      ))}
+      <path d={CAP_D} fill="#3B4A57" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+      {xr > 0.005 && (
+        <g clipPath="url(#vc-cap-clip)">
+          <g mask="url(#vc-xr-mask)" opacity={xr}>
+            <rect x={C3.x - 60} y={C3.y - 60} width={120} height={120} fill="#E9A39B" />
+            <rect x={C3.x - 60} y={C3.y - 60} width={120} height={120} fill={K.teal} opacity={0.55 * amp * ph} />
+            {SULCI().map((d, i) => <path key={i} d={d} fill="none" stroke="#B5615E" strokeWidth={1.8} strokeLinecap="round" opacity={0.8} />)}
+            <path d={`M${C3.x - 14},${C3.y - 50} Q${C3.x - 4},${C3.y - 10} ${C3.x + 16},${C3.y + 40}`} fill="none" stroke="#9C4D4B" strokeWidth={2.8} strokeLinecap="round" />
+          </g>
         </g>
       )}
-      <path d={trace} fill="none" stroke={K.teal} strokeWidth={60} strokeLinejoin="round" strokeLinecap="round" opacity={0.25 * (1 - bg)} />
-      <path d={trace} fill="none" stroke={mix(K.teal, '#FFFFFF', 0.35 * (1 - bg))} strokeWidth={LCD_Z * 1.3} strokeLinejoin="round" strokeLinecap="round" />
-      <rect x={0} y={0} width={1920} height={1080} fill="url(#vc-rv-vig)" opacity={1 - bg} />
-      <Tag x={960} y={150} text="brain rhythm" size={46} k={tagA} />
-      <Tag x={960} y={150} text="rhythm drops" size={46} k={tagB} fill={K.saffron} />
+      {ELECS.map(([x, y], i) => {
+        const isC3 = i === 4;
+        const gl = isC3 ? live * (0.35 + 0.65 * ph * amp) : 0;
+        return (
+          <g key={i}>
+            {gl > 0.02 && <circle cx={x} cy={HY - HR + 22 + y} r={10} fill={K.teal} opacity={0.3 * gl} />}
+            <circle cx={x} cy={HY - HR + 22 + y} r={6.5} fill={mix('#D9DEE2', K.teal, gl)} stroke={INK} strokeWidth={2.5} />
+          </g>
+        );
+      })}
+      {/* the electrode's lead under the cap to the bundle, then the bundle down to the shoulder */}
+      <path d={`M ${C3.x} ${C3.y + 6} Q ${C3.x + 14} ${C3.y + 22} ${HR - 2} ${HY - 6}`} fill="none" stroke={INK} strokeWidth={3} opacity={0.35 + 0.65 * xr} />
+      <path d={`M ${HR - 2} ${HY - 6} Q ${HR + 30} ${HY + 30} ${HR + 26} ${HY + 120}`} fill="none" stroke={INK} strokeWidth={7} strokeLinecap="round" />
+    </g>
+  );
+};
+
+// ---------------------------------------------------------------- the wave riding the wire (cap -> cable -> computer)
+const quadPt = (a: V, b: V, c: V, u: number): V => ({x: (1 - u) * (1 - u) * a.x + 2 * u * (1 - u) * b.x + u * u * c.x, y: (1 - u) * (1 - u) * a.y + 2 * u * (1 - u) * b.y + u * u * c.y});
+const capCable = (pose: Pose): V[] => {
+  const s = headW({x: HR + 26, y: HY + 120}, pose);
+  return [s, {x: s.x + 44, y: s.y + 109}, {x: 900, y: 700}, {x: 1040, y: 640}];
+};
+const wirePts = (pose: Pose) => {
+  const pts: V[] = [];
+  for (let i = 0; i <= 8; i++) pts.push(headW(quadPt({x: C3.x, y: C3.y + 6}, {x: C3.x + 14, y: C3.y + 22}, {x: HR - 2, y: HY - 6}, i / 8), pose));
+  for (let i = 1; i <= 16; i++) pts.push(headW(quadPt({x: HR - 2, y: HY - 6}, {x: HR + 30, y: HY + 30}, {x: HR + 26, y: HY + 120}, i / 16), pose));
+  const cc = capCable(pose);
+  for (let i = 1; i <= 40; i++) pts.push(bz(cc, i / 40));
+  const L = [0];
+  for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+  return {pts, L};
+};
+const WAVE_V = 700; // px per second along the wire
+const WAVE_L = 205; // wavelength (px): about 3.4 cycles per second at the eye
+export const waveT0 = () => ct().rhythm - 0.12;
+const WireWave: React.FC<{t: number; pose: Pose; k: number}> = ({t, pose, k}) => {
+  if (k <= 0.01) return null;
+  const {pts, L} = wirePts(pose);
+  const total = L[L.length - 1];
+  const front = WAVE_V * (t - waveT0());
+  if (front <= 0) return null;
+  let d = '';
+  const step = 5;
+  for (let s = 0; s <= Math.min(front, total); s += step) {
+    let i = 1;
+    while (i < L.length - 1 && L[i] < s) i++;
+    const u = (s - L[i - 1]) / (L[i] - L[i - 1] || 1);
+    const p = {x: lerp(pts[i - 1].x, pts[i].x, u), y: lerp(pts[i - 1].y, pts[i].y, u)};
+    const dx = pts[i].x - pts[i - 1].x, dy = pts[i].y - pts[i - 1].y, l = Math.hypot(dx, dy) || 1;
+    const n = {x: -dy / l, y: dx / l};
+    const env = clamp(s / 40) * clamp((front - s) / 60) * clamp((total - s) / 30);
+    const a = 15 * rhythmAmp(t - s / WAVE_V) * env * Math.sin(((s - (t - waveT0()) * WAVE_V) / WAVE_L) * Math.PI * 2);
+    d += `${d ? 'L' : 'M'}${fmt(p.x + n.x * a)},${fmt(p.y + n.y * a)}`;
+  }
+  return (
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={k}>
+      <path d={d} stroke={K.teal} strokeWidth={16} opacity={0.3} />
+      <path d={d} stroke={lit(K.teal, 0.35)} strokeWidth={5} />
     </g>
   );
 };
@@ -219,67 +327,69 @@ const Tower: React.FC<{light: number; lightColor: string}> = ({light, lightColor
       <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0} rx={16} fill="#D9DEE2" stroke={INK} strokeWidth={6} />
       <rect x={x0 + 8} y={y0 + 8} width={20} height={y1 - y0 - 16} rx={8} fill="#FFFFFF" opacity={0.35} />
       <rect x={LCD.x0 - 8} y={LCD.y0 - 8} width={LCD.x1 - LCD.x0 + 16} height={LCD.y1 - LCD.y0 + 16} rx={10} fill="#46525C" stroke={INK} strokeWidth={5} />
-      {[0, 1, 2].map((i) => <rect key={i} x={x0 + 40} y={590 + i * 22} width={x1 - x0 - 110} height={12} rx={6} fill="#B5BEC6" />)}
-      {/* electrode input sockets on the left edge (the cap cable plugs in) */}
+      <text x={x0 + 40} y={600} fontFamily={FONT_HEAD} fontWeight={700} fontSize={26} fill="#7E8B96">EEG</text>
+      {[0, 1].map((i) => <rect key={i} x={x0 + 40} y={616 + i * 22} width={x1 - x0 - 110} height={12} rx={6} fill="#B5BEC6" />)}
       <rect x={x0 - 14} y={620} width={20} height={34} rx={5} fill="#46525C" stroke={INK} strokeWidth={4} />
       <circle cx={x1 - 36} cy={652} r={13} fill={mix('#6E7C86', lightColor, light)} stroke={INK} strokeWidth={4} />
-      {light > 0.05 && <circle cx={x1 - 36} cy={652} r={28} fill={lightColor} opacity={0.3 * light} />}
+      {light > 0.05 && <circle cx={x1 - 36} cy={652} r={24} fill={lightColor} opacity={0.3 * light} />}
       <path d={`M${x0 + 30},${y1 - 26} L${x1 - 30},${y1 - 26}`} stroke="#B5BEC6" strokeWidth={6} strokeLinecap="round" />
     </g>
   );
 };
 
-// ---------------------------------------------------------------- the BCI cursor window (with a slide-in reveal)
+// ---------------------------------------------------------------- the BCI cursor window (slides in from the left edge)
 export const CursorWin: React.FC<{cursor: number; k: number; hit: number; merge?: number}> = ({cursor, k, hit, merge = 0}) => {
   if (k <= 0.001) return null;
+  const pop = 1 + 0.16 * Math.sin(clamp(hit * 1.6) * Math.PI) * (hit > 0 ? 1 : 0);
   return (
     <g transform={`translate(${fmt(-110 * (1 - easeOut(k)))} 0)`}>
       <rect x={6} y={6} width={92} height={388} rx={10} fill="#1F3442" opacity={0.92} stroke={INK} strokeWidth={3} />
-      <circle cx={52} cy={52} r={34} fill={mix(K.blue, '#7FA6EA', hit)} stroke="#FFFFFF" strokeWidth={4} />
-      <text x={52} y={59} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={19} fill="#FFFFFF">FIRE</text>
+      <g transform={`translate(52 52) scale(${fmt(pop)})`}>
+        <circle cx={0} cy={0} r={34} fill={mix(K.blue, K.saffron, clamp(hit * 1.5))} stroke="#FFFFFF" strokeWidth={4} />
+        <text x={0} y={7} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={19} fill={hit > 0.4 ? INK : '#FFFFFF'}>FIRE</text>
+      </g>
       <line x1={52} y1={92} x2={52} y2={370} stroke="#FFFFFF" strokeWidth={2} strokeDasharray="4 8" opacity={0.35} />
-      <rect x={36} y={fmt(354 - clamp(cursor) * 300)} width={32} height={20} rx={4} fill="#FFFFFF" stroke={INK} strokeWidth={2.5} opacity={1 - merge} />
-      {hit > 0 && <circle cx={52} cy={52} r={40 + 14 * (1 - hit)} fill="none" stroke={K.saffron} strokeWidth={7} opacity={hit} />}
+      <rect x={36} y={fmt(354 - clamp(cursor) * 300)} width={32} height={20} rx={4} fill="#FFFFFF" stroke={INK} strokeWidth={2.5} opacity={(1 - merge) * (1 - clamp(hit * 4))} />
     </g>
   );
 };
 
-// ---------------------------------------------------------------- the imagined movement (dashed ghost)
-const GLIFT: HandPoseP = {wrist: -30, idx: [-14, 2, 0], curl: 0.08, thumb: 0.3};
-/** two imagined lifts of the right hand: on "moving his right hand" and again while "his real hand stays put" */
-const ghostLift = (t: number) => {
+// ---------------------------------------------------------------- the FIRE command
+/** 0..1 progress of the hit pulse running back along the monitor cable to the computer */
+const backPulse = (t: number) => {
   const c = ct();
-  const cyc = (a: number) => {
-    const d = t - a;
-    if (d < 0 || d > 1.25) return 0;
-    return d < 0.4 ? easeInOut(d / 0.4) : d < 0.75 ? 1 : 1 - easeInOut((d - 0.75) / 0.5);
-  };
-  return Math.max(cyc(c.moving + 0.15), cyc(c.stays + 0.45));
+  return ramp(t, c.target + 0.22, c.sends - 0.04);
 };
-export const ghostK = (t: number) => {
+export const packetPath = (t: number) => {
   const c = ct();
-  return clamp((t - (c.moving + 0.05)) / 0.25) * (1 - clamp((t - (c.putE + 0.25)) / 0.3));
+  const t0 = c.sends, t1 = c.internet + 0.02;
+  const u = easeInOut(clamp((t - t0) / (t1 - t0)));
+  return {p: bz(NET_CABLE, u), k: clamp((t - t0) / 0.12), t0, t1};
 };
+/** the chip's on-screen scale stays constant while the camera moves */
+export const PACKET_SCREEN_S = 0.85;
 
 // ---------------------------------------------------------------- the room
-export const RaoRoom: React.FC<{t: number; f: number; lens?: number}> = ({t, f, lens = 0}) => {
+export const RaoRoom: React.FC<{t: number; f: number; cam: CamS}> = ({t, f, cam}) => {
   const c = ct();
   const g = gameClock(t);
-  const conc = clamp((t - (c.imag - 0.1)) / 0.4) * (1 - clamp((t - (c.target + 0.6)) / 0.5));
-  const pose: Pose = {...IDLE, armR: {a: 6, b: 6}, lookX: 0.8, lookY: 0.25, brows: -0.4 * conc, mouth: conc > 0.5 ? 'flat' : 'smile', tilt: 0, lean: 0};
+  const pose = raoPose(t);
   const gk = ghostK(t);
-  const lift = ghostLift(t);
   const cur = cursorAt(t);
-  const curK = clamp((t - (c.screen - 0.05)) / 0.4);
-  const hitK = t > c.target ? 1 - clamp((t - (c.target + 0.7)) / 0.6) : 0;
-  const capFlow = clamp((t - (c.computer - 0.3)) / 0.4) * (1 - clamp((t - (c.target + 0.4)) / 0.4));
-  const monFlow = clamp((t - (c.screen - 0.4)) / 0.4) * (1 - clamp((t - (c.target + 0.3)) / 0.4));
-  const thr = clamp((t - (c.watching - 0.1)) / 0.5);
-  const up = clamp((t - (c.watching + 0.35)) / 0.25);
-  const sent = t > c.sends - 0.15 && t < c.internetE + 0.4;
-  const light = sent ? 1 : t > c.computer ? 0.5 + 0.5 * (Math.sin(t * 10) > 0 ? 1 : 0) : 0;
-  const pk = packetAt(t);
-  const plateGlow = clamp((t - (c.internet - 0.2)) / 0.3);
+  const curK = clamp((t - (c.computer + 0.9)) / 0.5);
+  const hitK = t > c.target ? clamp((t - c.target) / 0.5) * (1 - clamp((t - (c.target + 1.0)) / 0.5)) : 0;
+  const xr = sramp(t, c.cap - 0.1, c.cap + 0.45) * (1 - sramp(t, c.changes - 0.2, c.changes + 0.3));
+  const live = sramp(t, c.cap, c.cap + 0.4);
+  const waveK = clamp((t - waveT0()) / 0.1) * (1 - 0.6 * sramp(t, c.computer + 0.3, c.computer + 0.9)) * (1 - sramp(t, c.target, c.target + 0.4));
+  const monFlow = sramp(t, c.watching - 0.1, c.watching + 0.3) * (1 - sramp(t, c.target - 0.1, c.target + 0.2));
+  const thr = clamp((t - (c.computer + 0.05)) / 0.5);
+  const up = clamp((t - (c.watching + 0.1)) / 0.25);
+  const sent = t > c.sends - 0.08 && t < c.internetE + 0.4;
+  const light = sent ? 1 : t > c.computer ? 0.35 + 0.35 * (Math.sin(t * 10) > 0 ? 1 : 0) : 0;
+  const pp = packetPath(t);
+  const plateGlow = clamp((t - (c.internet - 0.05)) / 0.2);
+  const bp = backPulse(t);
+  const common = {look: RAO, pose, frame: f, x: RAO_X, y: RAO_GY, scale: RAO_S, shadow: false, life: 0, eyeDarts: false, seed: 3};
   return (
     <g>
       <defs>
@@ -291,12 +401,10 @@ export const RaoRoom: React.FC<{t: number; f: number; lens?: number}> = ({t, f, 
           <stop offset="0" stopColor={shade(K.deskTop, 0.12)} />
           <stop offset="1" stopColor={lit(K.deskTop, 0.12)} />
         </linearGradient>
-        <clipPath id="vc-r-lens"><rect x={LENS.x0} y={LENS.y0} width={LENS.w} height={LENS.h} rx={LENS.rx} /></clipPath>
-        <clipPath id="vc-r-lensl"><rect x={LENS_L.x0} y={LENS_L.y0} width={LENS_L.w} height={LENS_L.h} rx={LENS_L.rx} /></clipPath>
       </defs>
-      <rect x={-600} y={-700} width={3400} height={1360} fill="url(#vc-r-wall)" />
-      <rect x={-600} y={DESK_Y - 30} width={3400} height={30} fill={K.raoWallDeep} />
-      {/* pinboard and a window on the campus (Rao's room, as in the hook) */}
+      <rect x={-900} y={-900} width={4000} height={1560} fill="url(#vc-r-wall)" />
+      <rect x={-900} y={DESK_Y - 30} width={4000} height={30} fill={K.raoWallDeep} />
+      {/* pinboard and a window on the campus */}
       <rect x={40} y={60} width={250} height={180} rx={8} fill="#E9D8B8" stroke={INK} strokeWidth={6} />
       <rect x={72} y={88} width={74} height={56} fill="#FFFFFF" stroke={INK} strokeWidth={4} transform="rotate(-4 109 116)" />
       <rect x={176} y={98} width={78} height={90} fill={K.blueLight} stroke={INK} strokeWidth={4} transform="rotate(5 215 143)" />
@@ -313,77 +421,46 @@ export const RaoRoom: React.FC<{t: number; f: number; lens?: number}> = ({t, f, 
       <g>
         <rect x={PLATE.x - 34} y={PLATE.y - 44} width={68} height={88} rx={8} fill="#F4F6F8" stroke={INK} strokeWidth={5} />
         <rect x={PLATE.x - 16} y={PLATE.y - 22} width={32} height={26} rx={3} fill="#2D363D" stroke={INK} strokeWidth={3} />
-        {plateGlow > 0 && <rect x={PLATE.x - 16} y={PLATE.y - 22} width={32} height={26} rx={3} fill={K.saffron} opacity={0.8 * plateGlow} />}
+        {plateGlow > 0 && <rect x={PLATE.x - 16} y={PLATE.y - 22} width={32} height={26} rx={3} fill={K.saffron} opacity={0.85 * plateGlow} />}
       </g>
-      {/* Rao (body pass, without his right arm: that is the desk arm below) */}
-      <CrewChar look={RAO} pose={pose} frame={f} x={RAO_X} y={RAO_GY} scale={RAO_S} front="L" pass="body" shadow={false} life={0} eyeDarts={false} id="vc-rao" headGear={<EEGCap />} seed={3} />
-      {/* screen light on his face from the game (frame right) */}
-      <ellipse cx={HEAD_C.x + 60} cy={HEAD_C.y + 20} rx={90} ry={110} fill={K.blueLight} opacity={0.12} />
-      {lens > 0.001 && (
-        <g>
-          {[['vc-r-lens', LENS], ['vc-r-lensl', LENS_L]].map(([id, L], i) => {
-            const LL = L as typeof LENS;
-            const g0 = {x: LL.x0 + LL.w / 2 - 320 * GS, y: G0.y};
-            return (
-              <g key={i} clipPath={`url(#${id})`} opacity={lens}>
-                <g transform={`translate(${fmt(g0.x)} ${fmt(g0.y)}) scale(${GS.toFixed(6)})`}>
-                  <GameScreen t={g} events={gameEvents()} />
-                </g>
-                <path d={`M${LL.x0},${LL.y0 + LL.h * 0.7} L${LL.x0 + LL.w * 0.5},${LL.y0} L${LL.x0 + LL.w * 0.75},${LL.y0} L${LL.x0},${LL.y0 + LL.h}`} fill="#FFFFFF" opacity={0.3 * clamp(1 - lens) + 0.05} />
-              </g>
-            );
-          })}
-        </g>
-      )}
+      {/* Rao: body pass (the head carries the EEG cap and its see-through window) */}
+      <CrewChar {...common} front="L" pass="body" id="vc-rao" headGear={<RaoCap t={t} xr={xr} live={live} />} />
       {/* desk */}
-      <path d={`M-600,${DESK_Y} L2800,${DESK_Y} L2800,1700 L-600,1700 Z`} fill="url(#vc-r-top)" stroke={INK} strokeWidth={6} />
-      <path d={`M-600,${DESK_Y} L2800,${DESK_Y}`} stroke={lit(K.deskTop, 0.35)} strokeWidth={8} />
+      <path d={`M-900,${DESK_Y} L3100,${DESK_Y} L3100,1900 L-900,1900 Z`} fill="url(#vc-r-top)" stroke={INK} strokeWidth={6} />
+      <path d={`M-900,${DESK_Y} L3100,${DESK_Y}`} stroke={lit(K.deskTop, 0.35)} strokeWidth={8} />
       {/* cables: cap -> computer -> monitor; computer -> network plate */}
-      <Cable p={CAP_CABLE} />
+      <Cable p={capCable(pose)} />
       <Cable p={NET_CABLE} color="#5D6B76" w={8} />
       <Cable p={MON_CABLE} />
       <Tower light={light} lightColor={sent || t > c.target - 0.1 ? K.saffron : K.teal} />
       <LcdTrace t={t} thr={thr} up={up} />
       <Monitor id="vc-rmon" x={MON.x} y={MON.y} s={MON.s}>
         <GameScreen t={g} events={gameEvents()} />
-        <CursorWin cursor={cur} k={curK} hit={hitK} merge={clamp((t - c.target) / 0.15) * (1 - clamp((t - (c.target + 1.6)) / 0.2))} />
+        <CursorWin cursor={cur} k={curK} hit={hitK} />
       </Monitor>
-      <CableFlow p={CAP_CABLE} t={t} k={capFlow} color={K.teal} />
       <CableFlow p={MON_CABLE} t={t} k={monFlow} color={K.teal} speed={1.1} />
-      {/* Rao's right arm on the desk, the hand flat; the imagined lift is a dashed ghost */}
-      <Inked w={7}>
-        <Capsule id="vc-rua" a={SHOULDER} b={{x: 370, y: 700}} ra={56} rb={58} color={K.raoSleeve} spec={0.12} />
-      </Inked>
-      <SideHand id="vc-rh" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={FLAT} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} contact={1} surfaceY={56} />
+      {bp > 0 && bp < 1 && (() => {
+        const q = bz(MON_CABLE, 1 - easeInOut(bp));
+        return (
+          <g>
+            <circle cx={q.x} cy={q.y} r={26} fill={K.saffron} opacity={0.35} />
+            <circle cx={q.x} cy={q.y} r={12} fill={K.saffron} stroke={INK} strokeWidth={3} />
+          </g>
+        );
+      })()}
+      <WireWave t={t} pose={pose} k={waveK} />
+      {/* Rao's arms on the desk (front passes): his right hand (frame-left) lies still */}
+      <CrewChar {...common} front="L" pass="frontArm" id="vc-rao-l" />
+      <CrewChar {...common} front="R" pass="frontArm" id="vc-rao-r" />
       {gk > 0.01 && (
-        <g opacity={Math.min(1, gk * 1.4)}>
-          <SideHand id="vc-rg" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={mixP(FLAT, GLIFT, lift)} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} ghost />
-          <SideHand id="vc-rg2" x={HAND.x} y={HAND.y} s={HAND.s} dir={1} side="pinky" pose={mixP(FLAT, GLIFT, lift)} skin={K.raoSkin} sleeve={K.raoSleeve} arm={HAND.arm} armAng={HAND.ang} ghost />
+        <g opacity={0.62 * gk}>
+          <CrewChar {...common} look={GHOST} pose={ghostPose(t)} front="L" pass="frontArm" id="vc-rao-g" />
         </g>
       )}
-      <Tag x={HAND.x + 40} y={HAND.y - 250} text="imagined" size={40} k={clamp((t - (c.right - 0.05)) / 0.25) * (1 - clamp((t - (c.stays + 0.1)) / 0.25))} />
-      <Tag x={HAND.x - 40} y={HAND.y - 250} text="real hand: still" size={40} k={clamp((t - (c.stays + 0.3)) / 0.25) * (1 - clamp((t - (c.but - 0.05)) / 0.25))} />
-      <Tag x={(TOWER.x0 + TOWER.x1) / 2} y={TOWER.y0 - 56} text="watching for the drop" size={34} k={clamp((t - (c.watching - 0.05)) / 0.3) * (1 - clamp((t - (c.changeE + 0.35)) / 0.3))} />
-      {pk && <Packet x={pk.x} y={pk.y} s={pk.s} k={pk.k} />}
+      <Tag x={250} y={470} text="imagined" size={34} k={clamp((t - (c.right - 0.1)) / 0.25) * (1 - clamp((t - (c.putE + 0.1)) / 0.25))} />
+      {t >= pp.t0 && t < pp.t1 + 0.12 && <Packet x={pp.p.x} y={pp.p.y} s={PACKET_SCREEN_S / cam.z} k={pp.k * (1 - clamp((t - pp.t1) / 0.1))} />}
     </g>
   );
-};
-
-// ---------------------------------------------------------------- the FIRE command leaving the computer
-export const PACKET_SCREEN_S = 1.0;
-/** packet position along the network cable (R world); s is set by the caller for constant screen size */
-export const packetPath = (t: number) => {
-  const c = ct();
-  const t0 = c.sends + 0.02, t1 = c.internet + 0.05;
-  const u = easeInOut(clamp((t - t0) / (t1 - t0)));
-  return {p: bz(NET_CABLE, u), k: clamp((t - t0) / 0.15), t0, t1};
-};
-let camAtR: (t: number) => CamS = () => ({x: 0, y: 0, z: 1});
-const packetAt = (t: number) => {
-  const pp = packetPath(t);
-  if (t < pp.t0) return null;
-  const cam = camAtR(t);
-  return {x: pp.p.x, y: pp.p.y, s: PACKET_SCREEN_S / cam.z, k: pp.k};
 };
 
 // ---------------------------------------------------------------- cameras
@@ -393,67 +470,75 @@ export const gameCam = (t: number): CamS => {
   const g = camPath(t, [
     [c.start, {x: 320, y: 200, z: 1}],
     [c.watch + 0.1, {x: 320, y: 200, z: 1}],
-    [c.rocket - 0.05, {x: 210, y: 235, z: 1.22}],
-    [c.rocket + 0.85, {x: 250, y: 178, z: 1.6}],
+    [c.rocket - 0.05, {x: 215, y: 238, z: 1.2}],
+    [c.rocket + 0.75, {x: 250, y: 190, z: 1.45}],
   ]);
-  // never show past the game's edges
   return {...g, x: clamp(g.x, 320 / g.z, 640 - 320 / g.z), y: clamp(g.y, 20 + 180 / g.z, 380 - 180 / g.z)};
 };
 export const gameT = (gc: CamS) => `translate(960 540) scale(${fmt(3 * gc.z)}) translate(${fmt(-gc.x)} ${fmt(-gc.y)})`;
-const T_SWITCH = () => ct().rocket + 0.8;
-const fromGame = (gc: CamS): CamS => ({x: G0.x + GS * gc.x, y: G0.y + GS * gc.y, z: (3 * gc.z) / GS});
+/** the game camera expressed in the R world (the game is Rao's monitor at 1:1) */
+export const fromGame = (gc: CamS): CamS => ({x: SCR.x + gc.x, y: SCR.y + gc.y, z: 3 * gc.z});
+const T_SWITCH = () => ct().rocket + 0.72;
 
 export const raoCam = (t: number): CamS => {
   const c = ct();
   const ts = T_SWITCH();
-  const FACE: CamS = {x: 700, y: 330, z: 2.25};
-  const HANDC: CamS = {x: 690, y: 640, z: 1.8};
-  const CAPC: CamS = {x: 640, y: 225, z: 3.0};
-  const IN: CamS = {x: ELEC.x, y: ELEC.y, z: 96};
-  const LCDF: CamS = {x: LCD_C.x, y: LCD_C.y, z: LCD_Z};
-  const WIDE: CamS = {x: 860, y: 410, z: 1.42};
+  const TWO: CamS = {x: 1110, y: 430, z: 0.99};
+  const MED: CamS = {x: 470, y: 505, z: 1.5};
+  const STILL: CamS = {x: 440, y: 540, z: 1.72};
+  const CAPC: CamS = {x: 585, y: 262, z: 3.5};
+  const CAPX: CamS = {x: 600, y: 268, z: 3.9};
+  const LCDF: CamS = {x: LCD_C.x, y: LCD_C.y + 6, z: 6.2};
+  const WATCH: CamS = {x: 860, y: 440, z: 1.5};
+  const MONV: CamS = {x: 1650, y: 430, z: 1.55};
   const cy = (tt: number) => cursorR(cursorAt(tt)).y;
   const CUR0: CamS = {x: SCR.x + 52 + 150, y: cy(c.cursor) - 60, z: 3.3};
   const TGT: CamS = {x: SCR.x + 52 + 170, y: TARGET_R.y + 40, z: 4.0};
-  const TOWERC: CamS = {x: 1220, y: 420, z: 2.3};
-  const pe = packetPath(c.internet + 0.05).p;
+  const BACK: CamS = {x: 1440, y: 520, z: 1.3};
+  const TOWERC: CamS = {x: 1215, y: 430, z: 2.2};
+  const pe = packetPath(c.internet).p;
   const PLATEC: CamS = {x: pe.x, y: pe.y, z: 4.2};
-  if (t < c.screen + 0.55) {
+  if (t < c.screen + 0.5) {
     return camPath(t, [
       [ts, fromGame(gameCam(ts))],
-      [c.imag + 0.35, FACE],
-      [c.moving + 0.1, {...FACE, x: 690, y: 350, z: 2.15}],
-      [c.right + 0.25, HANDC],
-      [c.putE, {...HANDC, x: 740, y: 650, z: 1.95}],
-      [c.cap + 0.02, CAPC],
-      [c.rhythm - 0.04, IN, easeIn],
-      [c.changesE + 0.36, LCDF],
-      [c.watching + 0.15, WIDE],
-      [c.changeE + 0.1, {...WIDE, x: 960, y: 430, z: 1.62}],
-      [c.screen + 0.55, CUR0],
+      [c.imag + 0.62, TWO, (u) => easeInOut(u)],
+      [c.moving + 0.05, {...TWO, x: 1060, z: 1.03}],
+      [c.right + 0.35, MED],
+      [c.stays, {...MED, x: 460, y: 515, z: 1.56}],
+      [c.putE + 0.1, STILL],
+      [c.but + 0.05, {...STILL, x: 450, y: 520, z: 1.8}],
+      [c.cap + 0.15, CAPC],
+      [c.rhythm - 0.05, CAPX],
+      [c.rhythm + 0.45, {x: 700, y: 500, z: 2.6}, easeIn],
+      [c.changes - 0.4, {x: 950, y: 610, z: 2.4}, (u) => u],
+      [c.changes - 0.05, LCDF, easeOut],
+      [c.changesE + 0.4, {...LCDF, z: 6.8}],
+      [c.computer + 0.75, WATCH],
+      [c.changeE + 0.15, {...WATCH, x: 960, z: 1.45}],
+      [c.screen + 0.5, MONV],
     ]);
   }
   if (t < c.target) {
-    // the cursor ECU: the camera rides up with the cursor and pushes in as it nears the target
-    const u = clamp((t - (c.screen + 0.55)) / (c.target - (c.screen + 0.55)));
+    const t0 = c.screen + 0.5;
+    if (t < c.cursor) return camPath(t, [[t0, MONV], [c.cursor, CUR0]]);
+    const u = clamp((t - c.cursor) / (c.target - c.cursor));
     const q = clamp((cy(c.cursor) - cy(t)) / (cy(c.cursor) - TARGET_R.y));
     return {x: lerp(CUR0.x, TGT.x, smooth(u)), y: lerp(CUR0.y, TGT.y, q), z: lerp(CUR0.z, TGT.z, smooth(u))};
   }
-  if (t < c.sends + 0.05) return camPath(t, [[c.target, TGT], [c.target + 0.35, {...TGT, z: 3.7}], [c.sends + 0.05, TOWERC]]);
-  // ride the packet up the network cable to the wall plate
+  if (t < c.sends) return camPath(t, [[c.target, TGT], [c.target + 0.3, {...TGT, z: 3.8}], [c.sends - 0.25, BACK], [c.sends, {...TOWERC, z: 2.0}]]);
+  // ride the command up the network cable to the wall plate, then into the jack
   const pp = packetPath(t);
-  const k = smooth(clamp((t - (c.sends + 0.05)) / 0.4));
-  const zz = lerp(TOWERC.z, PLATEC.z, easeInOut(clamp((t - (c.sends + 0.05)) / (c.internet - c.sends))));
-  return {x: lerp(TOWERC.x, pp.p.x, k), y: lerp(TOWERC.y, pp.p.y, k), z: zz};
+  const k = smooth(clamp((t - c.sends) / 0.35));
+  const zz = lerp(2.0, PLATEC.z, easeInOut(clamp((t - c.sends) / (c.internet - c.sends))));
+  const ride = {x: lerp(TOWERC.x, pp.p.x, k), y: lerp(TOWERC.y, pp.p.y, k), z: zz};
+  const dive = easeIn(clamp((t - c.internet) / (c.internet + 0.1 - c.internet)));
+  return {...ride, z: ride.z * Math.pow(2.1, dive)};
 };
-camAtR = raoCam;
 
 /** the whole part-1 shot (screen space) */
 export const RaoShot: React.FC<{t: number; f: number}> = ({t, f}) => {
   const c = ct();
   const ts = T_SWITCH();
-  const slowK = clamp((t - (c.rocket + 0.6)) / 0.25) * (1 - clamp((t - (c.imag + 0.9)) / 0.3));
-  const slowTag = <Tag x={1720} y={70} text="slow motion" size={30} k={slowK} fill="#FFFFFF" />;
   if (t < ts) {
     const gc = gameCam(t);
     return (
@@ -462,41 +547,11 @@ export const RaoShot: React.FC<{t: number; f: number}> = ({t, f}) => {
         <g transform={t <= c.start + 1 / FPS ? GAME_FULL : gameT(gc)}>
           <GameScreen t={gameClock(t)} events={gameEvents()} />
         </g>
-        {slowTag}
       </g>
     );
   }
   const cam = raoCam(t);
-  const lens = 1 - clamp((t - ts - 0.4) / 0.55) * 0.62 - 0.38 * clamp((t - (c.moving + 0.1)) / 0.5);
-  // the electrode iris into the brain rhythm, and back out of the computer's readout
-  const er = ELEC.r * cam.z;
-  const ec = toScreen(cam, ELEC);
-  const inBrain = t >= c.cap && t < c.changesE + 0.36;
-  const room = <g transform={camT(cam)}><RaoRoom t={t} f={f} lens={lens} /></g>;
-  if (inBrain) {
-    const morph = smooth(clamp((t - (c.changesE - 0.05)) / 0.35));
-    const full = er > 1120 || t >= c.rhythm - 0.04;
-    const s = 1 + 0.05 * clamp((t - c.rhythm) / 2.2);
-    const rv = <RhythmView t={t} bg={morph} s={s} />;
-    if (full) return <g>{rv}</g>;
-    const open = clamp((er - 50) / 220);
-    return (
-      <g>
-        {room}
-        {open > 0 && (
-          <g>
-            <defs><clipPath id={`vc-iris${f}`}><circle cx={fmt(ec.x)} cy={fmt(ec.y)} r={fmt(er * 0.86)} /></clipPath></defs>
-            <g clipPath={`url(#vc-iris${f})`} opacity={open}>{rv}</g>
-          </g>
-        )}
-        {slowTag}
-      </g>
-    );
-  }
-  return (
-    <g>
-      {room}
-      {slowTag}
-    </g>
-  );
+  return <g transform={camT(cam)}><RaoRoom t={t} f={f} cam={cam} /></g>;
 };
+
+export {easeIn};

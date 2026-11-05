@@ -1,22 +1,23 @@
-// V2 sequences A + B (0 -> 44.64 s): the shared world.
+// V3 sequences A, B and H: the shared world.
 //  - cameras: anchor-preserving keyed camera (a pull-out keeps its subject steady), near-layer parallax
-//  - RaoRoom   Rao's lab, front view (room-local 1920 x 1080): EEG cap -> cable -> computer -> network out, the
-//              game monitor, his right hand flat on the desk (frame-left)
-//  - StoccoRoom Stocco's lab, seen from BEHIND (room-local 1920 x 1080): he faces a bare wall; swim cap, earbuds,
-//              round coil over his LEFT motor cortex (frame-left in a back view), TMS unit, keyboard + right hand
+//  - RaoRoom   Rao's lab, front view (room-local 1920 x 1080, crew3 rig): EEG cap -> cable -> computer -> network
+//              out through the right wall; the game monitor; his RIGHT hand (profile arm, abhand) flat on the desk,
+//              frame-left
+//  - StoccoRoom Stocco's lab, front view (the camera is the bare wall he faces; there is no screen on his desk):
+//              swim cap, earbuds, round coil over his LEFT motor cortex (frame-right in a front view) on its
+//              holder arm, the TMS unit (frame-left), his RIGHT hand (profile arm) on the keyboard, frame-left
 //  - Campus    the two labs in two different buildings (CW world units), the network line between them, far/mid
 //              parallax layers, and the signal route (cap -> cable -> computer -> network -> TMS -> coil)
 // Every value is a pure function of the frame. Ids are prefixed by the caller (`va-` / `vb-`).
 import React from 'react';
 import {clamp, easeIn, easeInOut, easeOut, fmt, lerp} from '../dc/math';
-import {lit, mix, shade} from '../dc/color';
-import {Capsule, Blob, SoftShadow} from '../dc/shade';
-import {Inked} from '../dc/ink';
-import {Arm, CrewChar, IDLE, Look, Pose, reachLocal} from '../art/crew';
-import {RAO} from '../art/people';
+import {lit, lit as lit_, mix, shade} from '../dc/color';
+import {CrewChar, IDLE, Look, Pose} from './crew3';
+import {RAO, STOCCO} from '../art/people';
 import {GameScreen, GEvent, arcPt, CANNON, evState} from '../art/game';
-import {Computer, Desk, FONT_HEAD, INK, K, Keyboard, RoundCoil, Tree} from '../art/kit';
+import {Computer, Desk, FONT_HEAD, INK, K, RoundCoil, Tree} from '../art/kit';
 import {FPS} from './core2';
+import {FLAT_DESK_Y, H_FLAT, H_HOVER, HPose, HS, h2r, inkFor, KB, KEY, RoomArm, W as HW} from './abhand';
 
 export type CamS = {x: number; y: number; z: number};
 /** precise number for transforms (dc fmt rounds to 2 decimals, too coarse for scales under deep zooms) */
@@ -165,65 +166,60 @@ export const shotPos = (e: GEvent, g: number) => {
   const m0 = {x: CANNON.x + Math.cos(want) * 50, y: CANNON.y + Math.sin(want) * 50};
   return {p: {x: m0.x + (hp.x - CANNON.x) * sk, y: m0.y + (hp.y - CANNON.y) * sk}, muzzle: {x: CANNON.x + Math.cos(want) * 58, y: CANNON.y + Math.sin(want) * 58}, hit: hp, ang: (want * 180) / Math.PI};
 };
+// ---------------------------------------------------------------- the cast rig, placed in a room
+export const CS = 1.5;
+export const GR = 1050;
+const HY = -372, HR = 58;
+const driftF = (g: number, seed = 0, period = 120) => 0.65 * Math.sin((g / period + seed * 0.37) * Math.PI * 2) + 0.35 * Math.sin((g / (period * 0.61) + seed * 0.91) * Math.PI * 2);
+/** the room position of a crew character's shoulder (side -1 = rig L = frame-left), replicating the rig's own
+ *  idle lean/bob so an arm drawn outside the rig stays attached */
+export const shoulderAt = (cx: number, pose: Pose, frame: number, seed: number, life: number, side: -1 | 1 = -1): V => {
+  const lean = pose.lean + driftF(frame, seed + 7, 210) * 0.7 * life;
+  const bob = (pose.bob ?? 0) + driftF(frame, seed + 3, 96) * 1.4 * life;
+  const lx = 66 * side, ly = -292;
+  const a = (lean * Math.PI) / 180;
+  const rx = lx * Math.cos(a) - (ly + 150) * Math.sin(a);
+  const ry = lx * Math.sin(a) + (ly + 150) * Math.cos(a) - 150;
+  return {x: cx + rx * CS, y: GR + (ry + bob) * CS};
+};
+/** head centre (room) of a crew character, for framing */
+export const headAt = (cx: number) => ({x: cx, y: GR + HY * CS});
 
 // ---------------------------------------------------------------- Rao's lab (front view)
-const CS = 1.5, GR = 1000, HY = -372, HR = 58;
-export const RAO_X = 620;
-export const RAO_HEAD = {x: RAO_X, y: GR + HY * CS};
-export const RAO_DESK_Y = 760;
-/** Rao's game monitor (room-local) */
-export const RMON = {x: 1440, y: 708, s: 0.62};
-/** computer tower on the desk (bottom centre) */
-const COMP = {x: 1010, y: 712, s: 0.6};
-/** Rao's hands (room-local): his RIGHT hand is frame-left in a front view */
-export const RAO_RH = {x: 430, y: 714};
-const RAO_LH = {x: 810, y: 716};
-/** EEG cable: from the end of the cap's own lead (on his left shoulder) down to the desk and on to the computer */
-export const RAO_CABLE: V[] = [{x: RAO_X + (HR + 26) * CS, y: GR + (HY + 120) * CS}, {x: 770, y: 730}, {x: 808, y: 744}, {x: 968, y: 690}];
-const RAO_MONCABLE: V[] = [{x: 1052, y: 672}, {x: 1150, y: 700}, {x: 1300, y: 712}, {x: 1420, y: 700}];
-/** network: computer -> along the back of the desk -> out of the room at the right wall (x 1920) */
-export const RAO_NET: V[] = [{x: 1050, y: 690}, {x: 1150, y: 750}, {x: 1600, y: 748}, {x: 1920, y: 744}];
+export const RAO_X = 640;
+export const RAO_HEAD = headAt(RAO_X);
+export const RAO_DESK = 750;
+/** his RIGHT hand (frame-left in a front view): the wrist pivot of the profile arm, flat on the desk */
+export const RAO_P: V = {x: 425, y: RAO_DESK - (FLAT_DESK_Y - HW.y) * HS};
+/** game monitor (room-local; MonitorV2 coordinates) */
+export const RMON = {x: 1075, y: RAO_DESK, s: 0.56};
+const COMP = {x: 818, y: RAO_DESK, s: 0.5};
+/** EEG cable: from the end of the cap's own lead (on his left shoulder, frame-right) down to the computer */
+const capLead = {x: RAO_X + (HR + 26) * CS, y: GR + (HY + 120) * CS};
+export const RAO_CABLE: V[] = [capLead, {x: 760, y: 744}, {x: 770, y: 748}, {x: 790, y: 704}];
+const RAO_MONCABLE: V[] = [{x: 850, y: 704}, {x: 900, y: 742}, {x: 980, y: 744}, {x: 1060, y: 744}];
+/** network: computer -> along the back of the desk -> out through the right wall (toward Stocco's building) */
+export const RAO_NET: V[] = [{x: 850, y: 735}, {x: 900, y: 744}, {x: 1300, y: 744}, {x: 1920, y: 744}];
 const hs = (x: number, y: number): V => ({x: RAO_X + x * CS, y: GR + y * CS});
-/** route inside Rao's lab, room-local: cap crown -> cap lead -> cable -> computer -> network exit */
-export const raoRoute = (): V[] => [
-  hs(0, HY - HR - 6), hs(30, HY - HR + 4), hs(HR - 2, HY - 6),
-  ...cubPts([hs(HR - 2, HY - 6), hs(HR + 30, HY + 30), hs(HR + 30, HY + 70), hs(HR + 26, HY + 120)], 8).slice(1),
-  ...cubPts(RAO_CABLE, 16).slice(1),
-  {x: COMP.x, y: 660}, {x: 1050, y: 690},
-  ...cubPts(RAO_NET, 18).slice(1),
-];
-/** fraction of the Rao route at which the signal reaches the computer (teal -> saffron) */
-export const RAO_COMP_K = (() => {
-  const r = raoRoute();
-  const P = polyOf(r);
-  const i = r.findIndex((p) => p.x === COMP.x && p.y === 660);
-  return P.L[i] / P.L[P.L.length - 1];
+/** the route inside Rao's lab: cap crown -> cap lead -> cable -> computer -> network exit (room-local) */
+export const RAO_ROUTE = (() => {
+  const a: V[] = [
+    hs(0, HY - HR - 6), hs(30, HY - HR + 4), hs(HR - 2, HY - 6),
+    ...cubPts([hs(HR - 2, HY - 6), hs(HR + 30, HY + 30), hs(HR + 30, HY + 70), hs(HR + 26, HY + 120)], 8).slice(1),
+    ...cubPts(RAO_CABLE, 16).slice(1),
+    {x: COMP.x, y: COMP.y - 60},
+  ];
+  const b: V[] = [...cubPts(RAO_NET, 18)];
+  const P = polyOf([...a, ...b]);
+  const tot = P.L[P.L.length - 1];
+  const kComp = P.L[a.length - 1] / tot;
+  return {P, kComp, box0: P.L[a.length - 2] / tot, box1: P.L[a.length] / tot};
 })();
-
-/** the measurement path in Rao's room: cap crown -> lead -> cable -> computer */
-const RAO_FLOW = (() => {
-  const r = raoRoute();
-  const i = r.findIndex((p) => p.x === COMP.x && p.y === 660);
-  return polyOf(r.slice(0, i + 1));
-})();
-const RouteDots: React.FC<{P: Poly; t: number; k: number; color?: string; n?: number; r?: number}> = ({P, t, k, color = K.teal, n = 5, r = 9}) => (
-  <g opacity={clamp(k)}>
-    {Array.from({length: n}, (_, i) => {
-      const q = polyAt(P, (t * 0.7 + i / n) % 1);
-      return (
-        <g key={i}>
-          <circle cx={fmt(q.x)} cy={fmt(q.y)} r={r * 2} fill={color} opacity={0.3} />
-          <circle cx={fmt(q.x)} cy={fmt(q.y)} r={r} fill={color} stroke={INK} strokeWidth={2.5} />
-        </g>
-      );
-    })}
-  </g>
-);
 const ELEC: [number, number][] = [[-40, -12], [-20, -34], [0, -40], [20, -34], [40, -12], [-30, 4], [0, -16], [30, 4], [-50, 6], [50, 6]];
-/** EEG cap (art/people EEGCap) with electrodes that light up teal in a travelling wave (lit 0..1, wave = phase) */
-const CapV2: React.FC<{lit: number; t: number}> = ({lit: lk, t}) => (
+/** EEG cap with electrodes that light teal in a travelling wave (lit 0..1) */
+export const CapV3: React.FC<{lit: number; t: number}> = ({lit: lk, t}) => (
   <g>
-    {lk > 0.01 && <ellipse cx={0} cy={HY - HR + 6} rx={HR + 26} ry={HR * 0.85} fill={K.teal} opacity={0.22 * lk} />}
+    {lk > 0.01 && <ellipse cx={0} cy={HY - HR + 6} rx={HR + 26} ry={HR * 0.85} fill={K.teal} opacity={0.2 * lk} />}
     <path d={`M ${-HR - 4} ${HY + 4} Q ${-HR - 6} ${HY - HR - 22} 0 ${HY - HR - 20} Q ${HR + 6} ${HY - HR - 22} ${HR + 4} ${HY + 4} Q ${HR * 0.5} ${HY - 18} 0 ${HY - 20} Q ${-HR * 0.5} ${HY - 18} ${-HR - 4} ${HY + 4} Z`} fill="#3B4A57" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
     {ELEC.map(([x, y], i) => {
       const w = lk * (0.55 + 0.45 * Math.sin(t * 11 - x * 0.09 + y * 0.05));
@@ -238,7 +234,7 @@ const CapV2: React.FC<{lit: number; t: number}> = ({lit: lk, t}) => (
     <path d={`M ${HR - 2} ${HY - 6} Q ${HR + 30} ${HY + 30} ${HR + 26} ${HY + 120}`} fill="none" stroke="#3B4A57" strokeWidth={3.5} strokeLinecap="round" />
   </g>
 );
-/** the game reflected small in Rao's glasses (head space, under the cap) */
+/** the game reflected small in Rao's glasses (head space) */
 const Lenses: React.FC<{id: string; k: number; content: React.ReactNode}> = ({id, k, content}) => {
   if (k <= 0.01) return null;
   const ey = HY - 6;
@@ -260,289 +256,266 @@ const Lenses: React.FC<{id: string; k: number; content: React.ReactNode}> = ({id
     </g>
   );
 };
-const armTo = (cx: number, flip: boolean, side: -1 | 1, wx: number, wy: number): Arm => reachLocal(((flip ? -1 : 1) * (wx - cx)) / CS, (wy - GR) / CS, side);
+
+/** a lit wire (the connection, drawn along the real cables) and a travelling pulse on a room route */
+export const RouteGlow: React.FC<{P: Poly; lit?: number; k?: number; kSplit?: number; w?: number; len?: number; r0?: number; r1?: number}> = ({P, lit = 0, k = -1, kSplit = 0, w = 7, len = 0.08, r0 = 0, r1 = 1}) => {
+  const col = (a: number) => (a < kSplit ? K.teal : K.saffron);
+  const seg = (a: number, b: number) => (Math.max(a, r0) < Math.min(b, r1) ? polySub(P, Math.max(a, r0), Math.min(b, r1)) : null);
+  const tA = seg(0, kSplit), sA = seg(kSplit, 1);
+  // the pulse, restricted to [r0, r1]
+  const pk0 = Math.max(r0, k - len), pk1 = Math.min(r1, k);
+  const ph = k >= r0 && k <= r1 ? polyAt(P, k) : null;
+  const pc = col(Math.min(k, 1));
+  return (
+    <g>
+      {lit > 0.01 && (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={lit}>
+          {tA && <path d={tA} stroke={K.teal} strokeWidth={w * 2.6} opacity={0.35} />}
+          {tA && <path d={tA} stroke="#7FE3DA" strokeWidth={w * 0.9} />}
+          {sA && <path d={sA} stroke={K.saffron} strokeWidth={w * 2.6} opacity={0.35} />}
+          {sA && <path d={sA} stroke={K.saffron} strokeWidth={w * 0.9} />}
+        </g>
+      )}
+      {k > 0 && pk1 > pk0 && (
+        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+          <path d={polySub(P, pk0, pk1)} stroke={pc} strokeWidth={w * 3} opacity={0.28} />
+          <path d={polySub(P, pk0, pk1)} stroke={pc} strokeWidth={w} />
+          {ph && k < 1 && <circle cx={fmt(ph.x)} cy={fmt(ph.y)} r={fmt(w * 2.2)} fill={pc} opacity={0.35} />}
+          {ph && k < 1 && <circle cx={fmt(ph.x)} cy={fmt(ph.y)} r={fmt(w * 1.05)} fill={pc} stroke={INK} strokeWidth={fmt(w * 0.28)} />}
+        </g>
+      )}
+    </g>
+  );
+};
 
 export type RaoOpts = {
   id: string;
   f: number;
   /** the game screen content (640 x 400 local) */
   screen: React.ReactNode;
-  /** electrodes lit 0..1 */
   capLit?: number;
-  /** computer status light 0..1 and its colour */
   compBlink?: number;
   compColor?: string;
   face?: Partial<Pose>;
-  /** game reflected in his glasses 0..1 (and the content) */
   lens?: number;
   lensContent?: React.ReactNode;
-  /** a saffron ring on his still right hand ("the hand on the left") */
-  handRing?: number;
-  /** monitor glare / screen edge (fade them on a full-screen push) */
   glare?: number;
   edge?: number;
-  /** emphasis on the monitor 0..1 */
-  monGlow?: number;
-  /** the EEG cable lit teal 0..1, and teal measurement dots flowing cap -> computer 0..1 */
-  cableGlow?: number;
-  flow?: number;
+  /** the monitor present 0..1 (it is carried in and out in A's split and B's desk gag) */
+  mon?: number;
+  /** the route: lit wire 0..1, pulse head 0..1 (< 0 off) */
+  lit?: number;
+  sig?: number;
+  /** his right hand (profile) pose and an optional lift of the whole forearm (hand units) */
+  hand?: HPose;
+  armLift?: number;
+  /** room zoom of the camera that shows this room (for the hand's contour width) */
+  zr?: number;
+  life?: number;
 };
-export const RaoRoom: React.FC<RaoOpts> = ({id, f, screen, capLit = 0, compBlink = 0, compColor = K.teal, face = {}, lens = 0, lensContent, handRing = 0, glare = 1, edge = 1, monGlow = 0, cableGlow = 0, flow = 0}) => {
+export const RaoRoom: React.FC<RaoOpts> = ({id, f, screen, capLit = 0, compBlink = 0, compColor = K.teal, face = {}, lens = 0, lensContent, glare = 1, edge = 1, mon = 1, lit = 0, sig = -1, hand = H_FLAT, armLift = 0, zr = 1, life = 0.5}) => {
   const t = f / FPS;
-  const sR: -1 | 1 = -1; // front view, unflipped: the right hand is rig side -1
-  const aR = armTo(RAO_X, false, sR, RAO_RH.x, RAO_RH.y);
-  const aL = armTo(RAO_X, false, 1, RAO_LH.x, RAO_LH.y);
-  const pose: Pose = {...IDLE, lookX: 0.85, lookY: 0.12, mouth: 'smile', ...face, armL: aR, armR: aL};
+  const pose: Pose = {...IDLE, armL: {a: 20, b: 20}, armR: {a: 6, b: 6}, handR: {curl: 0.4, spread: 0.2}, lookX: 0.85, lookY: 0.1, mouth: 'smile', ...face};
   const gear = (
     <g>
       <Lenses id={`${id}-l`} k={lens} content={lensContent ?? screen} />
-      <CapV2 lit={capLit} t={t} />
+      <CapV3 lit={capLit} t={t} />
     </g>
   );
-  const common = {look: RAO as Look, pose, frame: f, seed: 3, x: RAO_X, y: GR, scale: CS, flip: false, life: 0.45, headGear: gear, id: `${id}-c`, shadow: false};
+  const sh = shoulderAt(RAO_X, pose, f, 3, life);
+  const common = {look: RAO as Look, pose, frame: f, seed: 3, x: RAO_X, y: GR, scale: CS, flip: false, life, headGear: gear, id: `${id}-c`, shadow: false};
   return (
     <g>
       <defs>
         <linearGradient id={`${id}-wl`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={lit(K.raoWall, 0.25)} />
+          <stop offset="0" stopColor={lit_(K.raoWall, 0.25)} />
           <stop offset="1" stopColor={K.raoWall} />
         </linearGradient>
       </defs>
-      <rect x={-300} y={-400} width={2520} height={1900} fill={`url(#${id}-wl)`} />
-      <rect x={-300} y={540} width={2520} height={30} fill={K.raoWallDeep} />
+      <rect x={-600} y={-600} width={3120} height={2400} fill={`url(#${id}-wl)`} />
+      <rect x={-600} y={RAO_DESK - 220} width={3120} height={30} fill={K.raoWallDeep} />
       {/* pinboard + a framed plot: Rao's room */}
-      <rect x={110} y={140} width={250} height={180} rx={8} fill="#E9D8B8" stroke={INK} strokeWidth={6} />
-      <rect x={142} y={166} width={78} height={60} fill="#FFFFFF" stroke={INK} strokeWidth={4} transform="rotate(-4 181 196)" />
-      <rect x={242} y={176} width={84} height={98} fill={K.blueLight} stroke={INK} strokeWidth={4} transform="rotate(5 284 225)" />
-      <circle cx={182} cy={168} r={7} fill={K.coral} stroke={INK} strokeWidth={3} />
-      <rect x={1640} y={150} width={170} height={130} rx={6} fill="#FFFFFF" stroke={INK} strokeWidth={6} />
-      <path d="M1662,250 L1700,216 L1730,236 L1786,178" fill="none" stroke={K.blue} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" />
+      <rect x={110} y={150} width={250} height={180} rx={8} fill="#E9D8B8" stroke={INK} strokeWidth={6} />
+      <rect x={142} y={176} width={78} height={60} fill="#FFFFFF" stroke={INK} strokeWidth={4} transform="rotate(-4 181 206)" />
+      <rect x={242} y={186} width={84} height={98} fill={K.blueLight} stroke={INK} strokeWidth={4} transform="rotate(5 284 235)" />
+      <circle cx={182} cy={178} r={7} fill={K.coral} stroke={INK} strokeWidth={3} />
+      <rect x={940} y={170} width={190} height={140} rx={6} fill="#FFFFFF" stroke={INK} strokeWidth={6} />
+      <path d="M964,280 L1004,244 L1036,264 L1096,198" fill="none" stroke={K.blue} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" />
+      <rect x={1380} y={250} width={300} height={22} rx={6} fill={K.deskDeep} stroke={INK} strokeWidth={5} />
+      {[0, 1, 2, 3, 4].map((i) => <rect key={i} x={1400 + i * 38} y={160 + (i % 2) * 14} width={30} height={90 - (i % 2) * 14} rx={4} fill={[K.coral, K.blue, K.saffron, K.teal, K.blueLight][i]} stroke={INK} strokeWidth={4} />)}
       {/* chair back */}
-      <rect x={RAO_X - 150} y={GR - 470} width={300} height={360} rx={44} fill="#4A5866" stroke={INK} strokeWidth={6} />
-      <rect x={RAO_X - 118} y={GR - 446} width={236} height={40} rx={18} fill={lit('#4A5866', 0.18)} opacity={0.6} />
+      <rect x={RAO_X - 150} y={GR - 520} width={300} height={360} rx={44} fill="#4A5866" stroke={INK} strokeWidth={6} />
+      <rect x={RAO_X - 118} y={GR - 496} width={236} height={40} rx={18} fill={lit_('#4A5866', 0.18)} opacity={0.6} />
       <CrewChar {...common} front="L" pass="body" />
-      <Desk id={`${id}-desk`} x0={60} x1={2200} y={RAO_DESK_Y} d={130} h={420} />
-      {/* network cable along the back of the desk and out through the wall (frame right: toward Stocco's building) */}
+      <Desk id={`${id}-desk`} x0={-200} x1={2200} y={RAO_DESK} d={110} h={420} />
+      {/* network cable along the back of the desk and out through the right wall (toward Stocco's building) */}
       <g fill="none" strokeLinecap="round">
         <path d={cubD(RAO_NET)} stroke={INK} strokeWidth={13} />
         <path d={cubD(RAO_NET)} stroke="#5D6B76" strokeWidth={7} />
       </g>
+      <RouteGlow P={RAO_ROUTE.P} lit={lit} k={sig} kSplit={RAO_ROUTE.kComp} w={8} len={0.07} r0={RAO_ROUTE.box1} />
       <Computer x={COMP.x} y={COMP.y} s={COMP.s} blink={compBlink} color={compColor} />
-      <g fill="none" strokeLinecap="round">
-        <path d={cubD(RAO_MONCABLE)} stroke={INK} strokeWidth={12} />
-        <path d={cubD(RAO_MONCABLE)} stroke="#3B4A57" strokeWidth={6} />
-      </g>
-      {monGlow > 0.01 && <rect x={RMON.x - 236} y={RMON.y - 350} width={472} height={310} rx={30} fill={K.saffron} opacity={0.35 * monGlow} />}
-      <MonitorV2 id={`${id}-mon`} x={RMON.x} y={RMON.y} s={RMON.s} glare={glare} edge={edge}>
-        {screen}
-      </MonitorV2>
-      <CrewChar {...common} front="L" pass="frontArm" />
-      <CrewChar {...common} front="R" pass="frontArm" />
-      {/* the EEG cable from the cap lead, over his left shoulder and arm, down to the desk and the computer */}
-      <g fill="none" strokeLinecap="round">
-        {cableGlow > 0.01 && <path d={cubD(RAO_CABLE)} stroke={cableGlow > 0.8 ? '#FFFFFF' : K.teal} strokeWidth={34} opacity={0.35 * cableGlow} />}
-        <path d={cubD(RAO_CABLE)} stroke={INK} strokeWidth={13} />
-        <path d={cubD(RAO_CABLE)} stroke={mix('#3B4A57', cableGlow > 0.8 ? K.saffron : '#7FE3DA', cableGlow)} strokeWidth={7} />
-      </g>
-      {flow > 0.01 && <RouteDots P={RAO_FLOW} t={t} k={flow} />}
-      {handRing > 0.01 && (
-        <g opacity={Math.min(1, handRing * 1.5)}>
-          <ellipse cx={RAO_RH.x + 10} cy={RAO_RH.y + 4} rx={150 + 40 * (1 - handRing)} ry={100 + 26 * (1 - handRing)} fill="none" stroke={K.saffron} strokeWidth={22} />
-          <ellipse cx={RAO_RH.x + 10} cy={RAO_RH.y + 4} rx={150 + 40 * (1 - handRing)} ry={100 + 26 * (1 - handRing)} fill="none" stroke={INK} strokeWidth={5} opacity={0.6} />
+      {mon > 0.001 && (
+        <g opacity={clamp(mon * 3)}>
+          <g fill="none" strokeLinecap="round">
+            <path d={cubD(RAO_MONCABLE)} stroke={INK} strokeWidth={12} />
+            <path d={cubD(RAO_MONCABLE)} stroke="#3B4A57" strokeWidth={6} />
+          </g>
+          <MonitorV2 id={`${id}-mon`} x={RMON.x} y={RMON.y} s={RMON.s} glare={glare} edge={edge}>
+            {screen}
+          </MonitorV2>
         </g>
       )}
+      {/* the EEG cable from the cap lead down to the computer */}
+      <g fill="none" strokeLinecap="round">
+        <path d={cubD(RAO_CABLE)} stroke={INK} strokeWidth={13} />
+        <path d={cubD(RAO_CABLE)} stroke="#3B4A57" strokeWidth={7} />
+      </g>
+      <RouteGlow P={RAO_ROUTE.P} lit={lit} k={sig} kSplit={RAO_ROUTE.kComp} w={8} len={0.07} r1={RAO_ROUTE.box0} />
+      {/* his right arm and hand (profile), flat on the desk */}
+      <RoomArm id={`${id}-arm`} P={RAO_P} shoulderRoom={sh} pose={hand} skin={K.raoSkin} sleeve={K.raoSleeve} inkW={inkFor(zr)} keyboard={false} surfaceY={FLAT_DESK_Y} armLift={armLift} />
     </g>
   );
 };
 
-// ---------------------------------------------------------------- Stocco's lab, seen from behind (he faces a bare wall)
-const SHD = {x: 960, y: 330, rx: 118, ry: 128};
-/** the coil sits over his LEFT motor cortex: frame-left in this back view */
-const SCOIL = {x: 853, y: 240, s: 0.5, ang: -50.9};
-const S_HANDLE = {x: 938, y: 135};
-const TMS = {x: 212, y: 398, w: 226, h: 296};
-const TMS_CABLE: V[] = [{x: 300, y: 402}, {x: 300, y: 130}, {x: 700, y: 10}, {x: 940, y: 131}];
-/** network: in through the left wall (x 0, toward Rao's building) -> the TMS unit */
-const STO_NET: V[] = [{x: 0, y: 600}, {x: 80, y: 600}, {x: 150, y: 610}, {x: TMS.x, y: 600}];
-export const SKB = {x: 1430, y: 704, s: 0.62};
-/** where a screen would stand behind his keyboard (the dashed "no screen" outline) */
-export const GHOST = {x: 1430, y: 372};
-/** the right hand (back view): wrist and the index tip on the space bar */
-const S_ELBOW = {x: 1304, y: 846};
-const S_WRIST = {x: 1398, y: 778};
-/** where the index fingertip rests: on the space bar */
-export const S_TIP = {x: 1392, y: 699};
-export const stoRoute = (): V[] => [
-  ...cubPts(STO_NET, 10),
-  {x: TMS.x + 60, y: 560}, {x: 300, y: 470}, {x: 300, y: 402},
-  ...cubPts(TMS_CABLE, 20).slice(1),
-  {x: S_HANDLE.x, y: S_HANDLE.y}, {x: SCOIL.x, y: SCOIL.y},
-];
-/** the dorsal (back-of-hand) view of his right hand resting just in front of the keyboard, index on the space bar.
- *  press 0..1 pushes the index down (and the cap with it). */
-const BackHand: React.FC<{id: string; press?: number; lift?: number}> = ({id, press = 0, lift = 0}) => {
-  const sk = K.stoccoSkin;
-  const W = {x: S_WRIST.x, y: S_WRIST.y - 6 * lift};
-  // hand axis: from the wrist forward (up-screen) toward the space bar; across = toward the little finger (frame right)
-  const dx = S_TIP.x + 22 - W.x, dy = S_TIP.y - W.y, dl = Math.hypot(dx, dy);
-  const ax = {x: dx / dl, y: dy / dl};
-  const nx = {x: -ax.y, y: ax.x};
-  const P = (u: number, v: number): V => ({x: W.x + ax.x * u + nx.x * v, y: W.y + ax.y * u + nx.y * v - lift * 14 * (u / 80)});
-  const kn = [-24, -8, 8, 23].map((v, i) => P(58 - Math.abs(i - 1.2) * 4, v));
-  const tipLen = [24 + 6 * press, 20, 18, 14];
-  const fingers = kn.map((k, i) => {
-    const L = tipLen[i];
-    const tip = {x: k.x + ax.x * L, y: k.y + ax.y * L * 0.6 + (i === 0 ? 2 * press : 0)};
-    return {k, tip};
-  });
-  const palm = `M${fmt(P(0, -24).x)},${fmt(P(0, -24).y)} C${fmt(P(30, -36).x)},${fmt(P(30, -36).y)} ${fmt(P(58, -38).x)},${fmt(P(58, -38).y)} ${fmt(P(66, -30).x)},${fmt(P(66, -30).y)} L${fmt(P(64, 34).x)},${fmt(P(64, 34).y)} C${fmt(P(46, 38).x)},${fmt(P(46, 38).y)} ${fmt(P(20, 32).x)},${fmt(P(20, 32).y)} ${fmt(P(0, 24).x)},${fmt(P(0, 24).y)} Z`;
-  const th0 = P(14, -26), th1 = P(34, -40), th2 = P(48, -40);
-  return (
-    <g>
-      <Inked w={6}>
-        {fingers.slice().reverse().map((g, i) => (
-          <Capsule key={i} id={`${id}-f${i}`} a={g.k} b={g.tip} ra={9.5} rb={8} color={i === 3 ? sk : shade(sk, 0.06 + 0.03 * i)} />
-        ))}
-        <Capsule id={`${id}-t1`} a={th0} b={th1} ra={11} rb={9} color={sk} />
-        <Capsule id={`${id}-t2`} a={th1} b={th2} ra={9} rb={8} color={sk} />
-        <Blob id={`${id}-palm`} d={palm} c={P(36, -6)} r={60} color={sk} />
-        <Capsule id={`${id}-fa`} a={S_ELBOW} b={W} ra={38} rb={30} color={K.stoccoSleeve} spec={0.1} />
-      </Inked>
-      {/* knuckle bumps */}
-      {fingers.map((g, i) => (
-        <circle key={i} cx={fmt(g.k.x + 2)} cy={fmt(g.k.y - 1)} r={4} fill={lit(sk, 0.35)} opacity={0.7} />
-      ))}
-      <path d={`M${fmt(W.x - 26)},${fmt(W.y + 18)} L${fmt(W.x + 22)},${fmt(W.y - 8)}`} stroke={shade(K.stoccoSleeve, 0.35)} strokeWidth={6} strokeLinecap="round" opacity={0.6} />
-    </g>
-  );
-};
+// ---------------------------------------------------------------- Stocco's lab (front view; the camera is the bare wall he faces)
+export const STO_X = 1060;
+export const STO_HEAD = headAt(STO_X);
+export const STO_DESK = 770;
+/** his RIGHT hand on the keyboard: the wrist pivot (room) */
+export const STO_P: V = {x: 770, y: STO_DESK - (KB.base - HW.y) * HS};
+/** the space bar centre and the fingertip at hover (room), for framing */
+export const STO_KEY = h2r(STO_P, {x: KEY.x, y: KEY.y - KEY.depth / 2});
+const TMS = {x: 320, y: 440, w: 170, h: 196};
+/** the coil over his LEFT motor cortex: frame-right on the top of the head in this front view */
+export const SCOIL = {x: STO_X + 44 * CS, y: GR - 426 * CS, s: 0.3 * CS, ang: 40};
+const S_HANDLE = {x: SCOIL.x - Math.cos((SCOIL.ang * Math.PI) / 180) * 250 * SCOIL.s, y: SCOIL.y - Math.sin((SCOIL.ang * Math.PI) / 180) * 250 * SCOIL.s};
+const TMS_CABLE: V[] = [{x: TMS.x + 120, y: TMS.y + 4}, {x: 470, y: 110}, {x: 820, y: 70}, {x: S_HANDLE.x - 10, y: S_HANDLE.y - 4}];
+/** network: in through the left wall (toward Rao's building) -> the TMS unit */
+const STO_NET: V[] = [{x: 0, y: 600}, {x: 120, y: 600}, {x: 240, y: 560}, {x: TMS.x, y: 560}];
+/** the route in Stocco's lab: wall -> TMS -> coil cable -> coil (room-local) */
+export const STO_ROUTE = polyOf([...cubPts(STO_NET, 8), {x: TMS.x + 60, y: 540}, {x: TMS.x + 120, y: TMS.y + 40}, ...cubPts(TMS_CABLE, 20), {x: SCOIL.x, y: SCOIL.y}]);
+/** route fractions: the pulse enters the TMS box, and leaves it on the coil cable */
+export const STO_K = (() => {
+  const n = cubPts(STO_NET, 8).length;
+  const tot = STO_ROUTE.L[STO_ROUTE.L.length - 1];
+  return {box0: STO_ROUTE.L[n - 1] / tot, box1: STO_ROUTE.L[n + 1] / tot};
+})();
+/** the stimulation pathway (metaphor): coil -> left motor cortex -> down, crossing at the neck -> right shoulder */
+export const stimPath = (sh: V): Poly => polyOf([{x: SCOIL.x + 4, y: SCOIL.y + 14}, {x: STO_X + 96, y: STO_HEAD.y - 6}, {x: STO_X + 92, y: STO_HEAD.y + 40}, {x: STO_X + 62, y: STO_HEAD.y + 104}, {x: STO_X + 10, y: STO_HEAD.y + 118}, {x: sh.x + 50, y: sh.y - 4}, sh]);
+
+/** swim cap marking the coil site on his LEFT hemisphere (frame-right in a front view) */
+const SwimCapV3: React.FC = () => (
+  <g>
+    <path d={`M ${-HR - 3} ${HY + 2} Q ${-HR - 5} ${HY - HR - 18} 0 ${HY - HR - 16} Q ${HR + 5} ${HY - HR - 18} ${HR + 3} ${HY + 2} Q ${HR * 0.5} ${HY - 22} 0 ${HY - 24} Q ${-HR * 0.5} ${HY - 22} ${-HR - 3} ${HY + 2} Z`} fill={K.swimCap} stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+    <path d={`M ${-HR * 0.7} ${HY - HR + 4} Q ${-HR * 0.3} ${HY - HR - 12} ${HR * 0.1} ${HY - HR - 10}`} fill="none" stroke="#FFFFFF" strokeWidth={4} opacity={0.3} strokeLinecap="round" />
+  </g>
+);
+const EarbudsV3: React.FC<{glow?: number}> = ({glow = 0}) => (
+  <g>
+    {[-1, 1].map((s) => (
+      <g key={s}>
+        {glow > 0.01 && <circle cx={s * (HR + 4)} cy={HY + 8} r={20} fill={K.saffron} opacity={0.45 * glow} />}
+        <circle cx={s * (HR + 4)} cy={HY + 8} r={10} fill="#F4F6F8" stroke={INK} strokeWidth={3.5} />
+        <path d={`M${s * (HR + 4)},${HY + 17} q${s * 2},16 ${s * -4},30`} fill="none" stroke="#F4F6F8" strokeWidth={4} strokeLinecap="round" />
+      </g>
+    ))}
+  </g>
+);
 
 export type StoOpts = {
   id: string;
   f: number;
-  /** coil pulse 0..1 */
+  face?: Partial<Pose>;
+  /** the coil's pulse (click) 0..1 and the TMS display */
   coilPulse?: number;
-  /** TMS unit light 0..1 */
   tmsLit?: number;
-  /** space bar glow / press */
-  space?: number;
+  /** route: lit wire, pulse head (wall -> coil); stimulation path head (coil -> shoulder) */
+  lit?: number;
+  sig?: number;
+  stim?: number;
+  /** the hand */
+  hand?: HPose;
   press?: number;
-  /** the hand jerk (lift) 0..1 */
-  lift?: number;
-  /** a dashed "no screen here" outline on the bare wall 0..1 */
-  ghostScreen?: number;
-  /** a soft glow on the earbuds 0..1 */
+  keyGlow?: number;
+  drive?: number;
+  /** keyboard present 0..1 (carried in and out) */
+  kb?: number;
   earGlow?: number;
+  zr?: number;
+  life?: number;
+  /** H: the coil slides from the motor site to the back of the head (0..1) */
+  coilBack?: number;
+  armLift?: number;
+  /** the stimulation path and the arm lit as a whole (frame 0's complete circuit) */
+  stimLit?: number;
 };
-export const StoccoRoom: React.FC<StoOpts> = ({id, f, coilPulse = 0, tmsLit = 0, space = 0, press = 0, lift = 0, ghostScreen = 0, earGlow = 0}) => {
-  const t = f / FPS;
-  const bob = Math.sin(t * 1.4) * 1.5;
-  const sk = K.stoccoSkin;
+export const StoccoRoom: React.FC<StoOpts> = ({id, f, face = {}, coilPulse = 0, tmsLit = 0, lit = 0, sig = -1, stim = -1, hand = H_HOVER, press = 0, keyGlow = 0, drive = -1, kb = 1, earGlow = 0, zr = 1, life = 0.35, coilBack = 0, armLift = 0, stimLit = 0}) => {
+  const pose: Pose = {...IDLE, armL: {a: 20, b: 20}, armR: {a: 6, b: 8}, handR: {curl: 0.4, spread: 0.2}, lookX: 0.05, lookY: 0.18, mouth: 'flat', brows: 0, ...face};
+  const sh = shoulderAt(STO_X, pose, f, 5, life);
+  const common = {look: STOCCO as Look, pose, frame: f, seed: 5, x: STO_X, y: GR, scale: CS, flip: false, life, id: `${id}-c`, shadow: false};
+  // the coil: on the motor site, or slid round to the back of the head (H)
+  const cb = easeInOut(clamp(coilBack));
+  const coil = {x: lerp(SCOIL.x, STO_X + 96, cb), y: lerp(SCOIL.y, STO_HEAD.y + 30, cb), ang: lerp(SCOIL.ang, 90, cb)};
+  const handleEnd = {x: coil.x - Math.cos((coil.ang * Math.PI) / 180) * 250 * SCOIL.s, y: coil.y - Math.sin((coil.ang * Math.PI) / 180) * 250 * SCOIL.s};
+  const coilCable: V[] = [{x: TMS.x + 120, y: TMS.y + 4}, {x: 470, y: 110}, {x: lerp(820, 900, cb), y: lerp(70, 120, cb)}, {x: handleEnd.x - 10, y: handleEnd.y - 4}];
+  const holder = `M${TMS.x + TMS.w - 24},${TMS.y + 10} L${lerp(640, 700, cb)},${lerp(170, 190, cb)} L${fmt(handleEnd.x + 4)},${fmt(handleEnd.y + 2)}`;
+  const coilEl = <g transform={`translate(${fmt(coil.x)} ${fmt(coil.y)}) scale(-1 1)`}><RoundCoil x={0} y={0} s={SCOIL.s} ang={-coil.ang} pulse={0} /></g>;
+  const sp = sig >= 0 ? sig : -1;
   return (
     <g>
       <defs>
         <linearGradient id={`${id}-wall`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={lit(K.stoccoWall, 0.22)} />
+          <stop offset="0" stopColor={lit_(K.stoccoWall, 0.22)} />
           <stop offset="1" stopColor={K.stoccoWall} />
         </linearGradient>
-        <linearGradient id={`${id}-shirt`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={lit(K.stoccoSleeve, 0.18)} />
-          <stop offset="1" stopColor={shade(K.stoccoSleeve, 0.22)} />
-        </linearGradient>
-        <radialGradient id={`${id}-head`} cx="0.38" cy="0.32" r="0.8">
-          <stop offset="0" stopColor={lit(sk, 0.2)} />
-          <stop offset="1" stopColor={shade(sk, 0.18)} />
-        </radialGradient>
-        <radialGradient id={`${id}-cap`} cx="0.35" cy="0.25" r="0.85">
-          <stop offset="0" stopColor={lit(K.swimCap, 0.25)} />
-          <stop offset="1" stopColor={shade(K.swimCap, 0.2)} />
-        </radialGradient>
-        <clipPath id={`${id}-hclip`}>
-          <ellipse cx={SHD.x} cy={SHD.y} rx={SHD.rx} ry={SHD.ry} />
-        </clipPath>
       </defs>
-      {/* the bare wall he faces: nothing to watch */}
-      <rect x={-300} y={-500} width={2520} height={1110} fill={`url(#${id}-wall)`} />
-      <rect x={-300} y={584} width={2520} height={26} fill={K.stoccoWallDeep} />
-      <rect x={1790} y={470} width={44} height={60} rx={6} fill="#FBF3E4" stroke={INK} strokeWidth={4} />
-      <circle cx={1812} cy={492} r={4} fill={INK} opacity={0.5} />
-      <circle cx={1812} cy={510} r={4} fill={INK} opacity={0.5} />
-      {ghostScreen > 0.01 && (
-        <g opacity={ghostScreen} fill="none" stroke={INK} strokeLinejoin="round">
-          <rect x={GHOST.x - 199} y={GHOST.y - 124} width={398} height={248} rx={10} strokeWidth={7} strokeDasharray="26 18" />
-          <path d={`M${GHOST.x - 14},${GHOST.y + 140} L${GHOST.x - 14},${GHOST.y + 196} M${GHOST.x + 14},${GHOST.y + 140} L${GHOST.x + 14},${GHOST.y + 196} M${GHOST.x - 60},${GHOST.y + 206} L${GHOST.x + 60},${GHOST.y + 206}`} strokeWidth={6} strokeDasharray="14 10" />
-        </g>
-      )}
-      {/* desk top (seen past him), the desk front edge, the dark knee space and the floor */}
-      <path d="M-300,610 L2220,610 L2220,770 L-300,770 Z" fill="#D9A773" stroke={INK} strokeWidth={6} />
-      <path d="M-300,610 L2220,610" stroke={lit('#D9A773', 0.35)} strokeWidth={8} />
-      <rect x={-300} y={770} width={2520} height={36} fill={shade('#D9A773', 0.25)} stroke={INK} strokeWidth={5} />
-      <rect x={-300} y={806} width={2520} height={420} fill="#6F5B4A" />
-      <rect x={-300} y={1226} width={2520} height={500} fill="#CFC2AE" />
-      <Keyboard id={`${id}-kb`} x={SKB.x} y={SKB.y} s={SKB.s} spaceDown={press} glowSpace={space} />
-      {/* network cable in through the left wall -> the TMS unit */}
+      <rect x={-600} y={-600} width={3120} height={2400} fill={`url(#${id}-wall)`} />
+      <rect x={-600} y={STO_DESK - 200} width={3120} height={26} fill={K.stoccoWallDeep} />
+      {/* a light switch and a calendar: his room */}
+      <rect x={1640} y={300} width={170} height={210} rx={6} fill="#FFFFFF" stroke={INK} strokeWidth={6} />
+      <rect x={1640} y={300} width={170} height={50} fill={K.coral} stroke={INK} strokeWidth={6} />
+      {[0, 1, 2, 3].map((r) => [0, 1, 2, 3].map((c) => <rect key={`${r}${c}`} x={1660 + c * 36} y={368 + r * 32} width={24} height={20} rx={3} fill={K.paper} />))}
+      <rect x={1500} y={430} width={44} height={60} rx={6} fill="#FBF3E4" stroke={INK} strokeWidth={4} />
+      {/* network cable in through the left wall -> the TMS unit (on its cart, behind the desk) */}
       <g fill="none" strokeLinecap="round">
         <path d={cubD(STO_NET)} stroke={INK} strokeWidth={13} />
         <path d={cubD(STO_NET)} stroke="#5D6B76" strokeWidth={7} />
       </g>
-      {/* TMS unit on its cart (frame left) */}
+      <RouteGlow P={STO_ROUTE} lit={lit} k={sp} w={8} len={0.06} r1={STO_K.box0} />
       <g>
-        <rect x={236} y={690} width={180} height={30} fill="#7E8B96" stroke={INK} strokeWidth={5} />
-        <rect x={250} y={720} width={14} height={500} fill="#7E8B96" stroke={INK} strokeWidth={4} />
-        <rect x={392} y={720} width={14} height={500} fill="#7E8B96" stroke={INK} strokeWidth={4} />
+        <rect x={TMS.x + TMS.w / 2 - 12} y={TMS.y + TMS.h - 4} width={24} height={STO_DESK - TMS.y - TMS.h + 10} fill="#7E8B96" stroke={INK} strokeWidth={4} />
         <rect x={TMS.x} y={TMS.y} width={TMS.w} height={TMS.h} rx={16} fill="#D9DEE2" stroke={INK} strokeWidth={6} />
-        <rect x={244} y={432} width={162} height={74} rx={8} fill={K.screenDark} stroke={INK} strokeWidth={4} />
-        {tmsLit > 0.01 && <text x={325} y={482} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={38} fill={K.saffron} opacity={tmsLit}>FIRE</text>}
-        {[0, 1, 2].map((i) => <rect key={i} x={250 + i * 52} y={540} width={40} height={14} rx={6} fill="#B5BEC6" />)}
-        <circle cx={392} cy={630} r={16} fill={mix('#6E7C86', K.saffron, tmsLit)} stroke={INK} strokeWidth={4} />
+        <rect x={TMS.x + 24} y={TMS.y + 30} width={TMS.w - 48} height={68} rx={8} fill={K.screenDark} stroke={INK} strokeWidth={4} />
+        {tmsLit > 0.01 && <text x={TMS.x + TMS.w / 2} y={TMS.y + 78} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={700} fontSize={36} fill={K.saffron} opacity={tmsLit}>FIRE</text>}
+        {[0, 1, 2].map((i) => <rect key={i} x={TMS.x + 28 + i * 50} y={TMS.y + 126} width={38} height={14} rx={6} fill="#B5BEC6" />)}
+        <circle cx={TMS.x + TMS.w - 36} cy={TMS.y + 186} r={15} fill={mix('#6E7C86', K.saffron, tmsLit)} stroke={INK} strokeWidth={4} />
       </g>
-      {/* coil holder arm and the coil cable */}
+      {/* the coil holder arm and the coil cable, over his head */}
       <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-        <path d={`M420,410 L560,70 L${S_HANDLE.x - 6},${S_HANDLE.y - 14}`} stroke={INK} strokeWidth={26} />
-        <path d={`M420,410 L560,70 L${S_HANDLE.x - 6},${S_HANDLE.y - 14}`} stroke="#9AA7B1" strokeWidth={14} />
-        <circle cx={560} cy={70} r={16} fill="#7E8B96" stroke={INK} strokeWidth={5} />
-        <path d={cubD(TMS_CABLE)} stroke={INK} strokeWidth={16} />
-        <path d={cubD(TMS_CABLE)} stroke="#2D363D" strokeWidth={10} />
+        <path d={holder} stroke={INK} strokeWidth={24} />
+        <path d={holder} stroke="#9AA7B1" strokeWidth={13} />
+        <circle cx={lerp(640, 700, cb)} cy={lerp(170, 190, cb)} r={15} fill="#7E8B96" stroke={INK} strokeWidth={5} />
+        <path d={cubD(coilCable)} stroke={INK} strokeWidth={15} />
+        <path d={cubD(coilCable)} stroke="#2D363D" strokeWidth={9} />
       </g>
-      {/* Stocco from behind */}
-      <g transform={`translate(0 ${fmt(bob)})`}>
-        <Inked w={7}>
-          <Capsule id={`${id}-lfa`} a={{x: 632, y: 822}} b={{x: 700, y: 742}} ra={40} rb={34} color={K.stoccoSleeve} />
-        </Inked>
-        <rect x={918} y={400} width={84} height={110} fill={sk} stroke={INK} strokeWidth={6} />
-        <path d="M650,1140 L668,650 Q676,566 770,538 L908,494 Q960,484 1012,494 L1150,538 Q1244,566 1252,650 L1270,1140 Z" fill={`url(#${id}-shirt)`} stroke={INK} strokeWidth={7} strokeLinejoin="round" />
-        <path d="M908,494 Q960,520 1012,494" fill="none" stroke={shade(K.stoccoSleeve, 0.35)} strokeWidth={6} strokeLinecap="round" />
-        <path d="M960,520 L960,880" stroke={shade(K.stoccoSleeve, 0.25)} strokeWidth={5} opacity={0.5} />
-        <Inked w={7}>
-          <Capsule id={`${id}-lua`} a={{x: 724, y: 590}} b={{x: 640, y: 822}} ra={52} rb={44} color={K.stoccoSleeve} spec={0.1} />
-          <Capsule id={`${id}-rua`} a={{x: 1196, y: 590}} b={S_ELBOW} ra={52} rb={44} color={shade(K.stoccoSleeve, 0.06)} spec={0.1} />
-        </Inked>
-        <BackHand id={`${id}-bh`} press={press} lift={lift} />
-        {/* chair back */}
-        <rect x={720} y={880} width={480} height={300} rx={40} fill="#46525C" stroke={INK} strokeWidth={7} />
-        <rect x={744} y={900} width={160} height={30} rx={14} fill="#5D6B76" opacity={0.7} />
-        {/* ears + noise-cancelling earbuds */}
-        {[-1, 1].map((sd) => (
-          <g key={sd}>
-            <ellipse cx={SHD.x + sd * (SHD.rx - 2)} cy={SHD.y + 30} rx={16} ry={28} fill={shade(sk, 0.08)} stroke={INK} strokeWidth={6} />
-            {earGlow > 0.01 && <circle cx={SHD.x + sd * (SHD.rx + 4)} cy={SHD.y + 32} r={26} fill={K.saffron} opacity={0.45 * earGlow} />}
-            <circle cx={SHD.x + sd * (SHD.rx + 4)} cy={SHD.y + 32} r={12} fill="#F4F6F8" stroke={INK} strokeWidth={4} />
-            <rect x={SHD.x + sd * (SHD.rx + 4) - 4} y={SHD.y + 38} width={8} height={26} rx={4} fill="#F4F6F8" stroke={INK} strokeWidth={3} />
-          </g>
-        ))}
-        <ellipse cx={SHD.x} cy={SHD.y} rx={SHD.rx} ry={SHD.ry} fill={`url(#${id}-head)`} />
-        <g clipPath={`url(#${id}-hclip)`}>
-          <path d={`M${SHD.x - 130},372 Q${SHD.x},420 ${SHD.x + 130},372 L${SHD.x + 130},430 Q${SHD.x},468 ${SHD.x - 130},430 Z`} fill="#5A3A22" />
-          <path d={`M${SHD.x - 140},160 L${SHD.x + 140},160 L${SHD.x + 140},368 Q${SHD.x},404 ${SHD.x - 140},368 Z`} fill={`url(#${id}-cap)`} />
-          <path d={`M${SHD.x - 130},362 Q${SHD.x},398 ${SHD.x + 130},362`} fill="none" stroke={shade(K.swimCap, 0.35)} strokeWidth={8} />
-          <path d={`M${SHD.x - 70},226 Q${SHD.x - 30},208 ${SHD.x + 10},214`} fill="none" stroke="#FFFFFF" strokeWidth={10} strokeLinecap="round" opacity={0.3} />
-          {/* the coil-site mark on the cap: his LEFT hemisphere (frame left from behind) */}
-          <g stroke="#FFFFFF" strokeWidth={7} strokeLinecap="round" opacity={0.9}>
-            <path d="M884,268 l20,20 M904,268 l-20,20" />
-          </g>
-        </g>
-        <ellipse cx={SHD.x} cy={SHD.y} rx={SHD.rx} ry={SHD.ry} fill="none" stroke={INK} strokeWidth={7} />
-        <RoundCoil x={SCOIL.x} y={SCOIL.y} s={SCOIL.s} ang={SCOIL.ang} pulse={coilPulse} />
+      {/* the coil at the back of the head is behind him */}
+      {cb > 0.5 && coilEl}
+      <CrewChar {...common} front="L" pass="body" headGear={<g><SwimCapV3 /><EarbudsV3 glow={earGlow} /></g>} />
+      {cb <= 0.5 && coilEl}
+      {coilPulse > 0.01 && cb <= 0.5 && <ellipse cx={coil.x} cy={coil.y} rx={46 * coilPulse + 20} ry={(46 * coilPulse + 20) * 0.55} transform={`rotate(${coil.ang} ${coil.x} ${coil.y})`} fill={K.saffron} opacity={0.75 * coilPulse} />}
+      <Desk id={`${id}-desk`} x0={-200} x1={2200} y={STO_DESK} d={110} h={420} />
+      {/* a mug and a notepad: an ordinary desk, but no screen */}
+      <g>
+        <rect x={1420} y={STO_DESK - 92} width={64} height={78} rx={10} fill={K.coral} stroke={INK} strokeWidth={5} />
+        <path d="M1484,700 q30,0 28,22 q-2,20 -28,18" fill="none" stroke={INK} strokeWidth={6} />
+        <path d="M1240,760 L1380,760 L1400,738 L1260,738 Z" fill="#FFFFFF" stroke={INK} strokeWidth={4} strokeLinejoin="round" />
+      </g>
+      <RouteGlow P={STO_ROUTE} lit={lit} k={sp} w={8} len={0.06} r0={STO_K.box1} />
+      {(stim >= 0 || stimLit > 0.01) && <RouteGlow P={stimPath(sh)} lit={stimLit} k={stim} w={7} len={0.4} />}
+      {/* his right arm and hand (profile) on the keyboard */}
+      <g opacity={1}>
+        <RoomArm id={`${id}-arm`} P={STO_P} shoulderRoom={sh} pose={hand} press={press} keyGlow={keyGlow} drive={drive} driveLit={stimLit} skin={K.stoccoSkin} sleeve={K.stoccoSleeve} inkW={inkFor(zr)} keyboard={kb > 0.5} keyRise={1} armLift={armLift} />
       </g>
     </g>
   );
@@ -571,19 +544,19 @@ const extRoute = (): V[] => [
 ];
 /** the whole route in CW units with key fractions */
 export const ROUTE = (() => {
-  const a = raoRoute().map(Lw);
+  const a = RAO_ROUTE.P.pts.map(Lw);
   const b = extRoute();
-  const c = stoRoute().map(Rw).slice(1);
+  const c = STO_ROUTE.pts.map(Rw).slice(1);
   const pts = [...a, ...b.slice(1), ...c];
   const P = polyOf(pts);
   const tot = P.L[P.L.length - 1];
   const kA = P.L[a.length - 1] / tot; // leaves Rao's room
   const kB = P.L[a.length - 1 + b.length - 1] / tot; // enters Stocco's room
-  const kComp = (RAO_COMP_K * P.L[a.length - 1]) / tot;
+  const kComp = (RAO_ROUTE.kComp * P.L[a.length - 1]) / tot;
   return {P, kA, kB, kComp};
 })();
 /** the exterior network line only */
-const EXT = polyOf(extRoute());
+export const EXT = polyOf(extRoute());
 
 const Facade: React.FC<{id: string; x0: number; x1: number; top: number; color: string; style: 'brick' | 'stone'; win: {x: number; y: number; w: number; h: number}; room: React.ReactNode; glass?: number}> = ({id, x0, x1, top, color, style, win, room, glass = 1}) => {
   const w = x1 - x0;

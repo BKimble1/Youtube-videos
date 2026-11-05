@@ -26,16 +26,18 @@ export const CAMS = {
   OTS3: {x: 3664, y: 1004, z: 1.07},
   SENW: {x: 1300, y: 1060, z: 0.5},
   SENW2: {x: 1275, y: 1052, z: 0.54},
-  HUB: {x: 1650, y: 1050, z: 0.62},
-  HUBWIN: {x: 2230, y: 900, z: 1.3},
+  HUB: {x: 2180, y: 905, z: 1.9},
+  HUB2: {x: 2195, y: 900, z: 1.98},
   HEADBACK: {x: 3545, y: 1238, z: 2.0},
   HEADBACK_B: {x: 3538, y: 1232, z: 2.12},
   HEADBACK2: {x: 3410, y: 1105, z: 1.42},
   POV: {x: R.x, y: 700, z: 1.6},
   POV2: {x: R.x, y: 704, z: 1.7},
-  BFACE: {x: 640, y: 1530, z: 1.25},
-  HUBWIN2: {x: 2250, y: 885, z: 1.85},
-  HUBWIN3: {x: 2262, y: 890, z: 1.95},
+  HUBWIN3: {x: 2250, y: 922, z: 2.85},
+  HUBWIN4: {x: 2256, y: 920, z: 2.95},
+  AMED: {x: 830, y: 470, z: 1.32},
+  WIDE: {x: 2370, y: 1050, z: 0.4},
+  WIDE2: {x: 2420, y: 1060, z: 0.43},
 };
 export type CK = [number, CamS, ((x: number) => number)?];
 export const camAt = (t: number, ks: CK[]) => camKeys(t * FPS, ks);
@@ -50,7 +52,7 @@ export const HeadLayer: React.FC<{id: string; st: FGState; cam: CamS; d: number;
   op <= 0.001 ? null : (
     <g transform={nearT(cam, d, ref, ax, ay)} opacity={op}>
       <RecvBack id={id} coilK={st.coilK} pulse={st.pulse} brain={st.brain} look={st.look} tilt={st.tilt} />
-      <RecvGaze g={st.gaze.R} look={st.look} />
+      {cam.z < 1.4 && <g opacity={1 - clamp((cam.z - 1.0) / 0.4)}><RecvGaze g={st.gaze.R} look={st.look} /></g>}
     </g>
   );
 
