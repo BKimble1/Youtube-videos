@@ -14,7 +14,7 @@ import {Capsule} from '../dc/shade';
 import {arcPt, CANNON} from '../art/game';
 import {K} from '../art/kit';
 import {CamS, sp} from './core2';
-import {F_DOWN, F_HOVER, F_JERK, FingerECU, FPose, KEY, keyTopY, mixF, padPt} from './finger';
+import {F_DOWN, F_HOVER, F_JERK, FingerECU, FPose, KEY, keyTopY, mixF, padPt} from './c_finger';
 import {camPath, camT} from './c_cam';
 import {RaoRoom, SCR} from './c_rao';
 import {ct, G_DUR, G_FIRE, gameClock} from './c_time';
