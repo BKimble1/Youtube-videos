@@ -1,5 +1,19 @@
 # Future Got Weird: Brain Cells Playing DOOM
 
+## V2: final polish (current)
+
+**Deliverable:** `exports/FGW_Brain_Cells_DOOM_V2_FINAL_REVIEW_1080x1920.mp4`. It is not yet published.
+
+- **Format:** the same as V1 (1080×1920, 30 fps, 870 frames, 29.00 s; −14 LUFS).
+- **What changed:** a targeted camera polish in `source/src/story.ts`:
+  - the hook (0–5 s) and the ending (23–29 s) now use one eased move per beat;
+  - two of the middle's scale changes are smoothed;
+  - activity and sound cues were retimed to match.
+- **What did not change:** the narration, the voice take, the art, the game and the sound design.
+- **Report and QC checklist:** `production/V2_REPORT.md`. Transitions: `production/TRANSITIONS.md`. Evidence:
+  `qa/v2/`.
+- **V1's camera path** is in commit `b171a07`; the V1 MP4 stays in `exports/`.
+
 ## V1: the review cut
 
 **Deliverable:** `exports/FGW_Brain_Cells_DOOM_V1_REVIEW_1080x1920.mp4`. It is not yet published.
@@ -51,10 +65,10 @@ these layers:
     python3 tools/make_narration.py          # take -> narration master, word timeline, captions, SRT
     (cd source && npm ci)
     npx --prefix source esbuild tools/export_cues.ts --bundle --platform=node --loader:.tsx=tsx --jsx=automatic --outfile=/tmp/c.js && node /tmp/c.js
-    python3 tools/make_audio.py mix_v1
-    tools/render_resilient.sh mix_v1 exports/FGW_Brain_Cells_DOOM_V1_REVIEW_1080x1920.mp4 source/out/frames_v1
-    python3 tools/qa_render.py exports/FGW_Brain_Cells_DOOM_V1_REVIEW_1080x1920.mp4 qa/v1
-    python3 tools/strip.py exports/FGW_Brain_Cells_DOOM_V1_REVIEW_1080x1920.mp4 qa/v1/strip.png 29,126 3 0.14
+    python3 tools/make_audio.py mix_v2
+    tools/render_resilient.sh mix_v2 exports/FGW_Brain_Cells_DOOM_V2_FINAL_REVIEW_1080x1920.mp4 source/out/frames_v2
+    python3 tools/qa_render.py exports/FGW_Brain_Cells_DOOM_V2_FINAL_REVIEW_1080x1920.mp4 qa/v2 v2
+    # (V1: check out b171a07, then mix_v1 / frames_v1 / qa/v1)
 
 **Working sheets:** `cd source && ./sheet.sh out.png "f1,f2,..." [captions] [cols]`.
 

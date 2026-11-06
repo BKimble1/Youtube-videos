@@ -7,7 +7,7 @@
   - motion between neighbouring frames: the longest run of near-static frames (the brief: no static holds over 1 s)
   - loop seam: last frame vs first frame
   - contact sheets: every 0.5 s, and the hook (0-2.5 s) every 3rd frame
-usage: python3 tools/qa_render.py <video.mp4> <out_dir> [v4]"""
+usage: python3 tools/qa_render.py <video.mp4> <out_dir> [v2]"""
 import json, subprocess, sys, os
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -30,10 +30,20 @@ EPD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CJ = json.load(open(os.path.join(EPD, 'audio/cues.json')))
 PLANNED = [(s['t'] - 0.02, s['t'] + 0.12, 'muzzle flash') for s in CJ['shots']] + [(0.0, 0.05, 'muzzle flash (frame 0)')]
 PLANNED += [(r['t0'], r['t1'], f"signal ride ({r['kind']})") for r in CJ['rides']]
-PLANNED += [(0.25, 0.8, 'pull back through the monitor'), (0.78, 1.2, 'push into the chip'), (5.0, 6.7, 'pull back to the lab'),
-            (7.6, 8.75, 'push into the CL1'), (9.3, 10.0, 'microscope push and iris'), (10.65, 11.9, 'out of the chip, up to the game'),
-            (13.2, 13.8, 'out to the whole array'), (19.2, 19.8, 'push to the game'), (21.0, 22.05, 'pull back to the hardware'),
-            (21.3, 21.5, 'the hurt flash'), (23.4, 24.45, 'dive to the cells'), (25.8, 27.2, 'pull back to the bench'), (28.0, 29.0, 'whip into the game')]
+if len(sys.argv) > 3 and sys.argv[3] == 'v2':
+    # V2 camera path (story.ts SEGS): the hook push, the reveal, the push back into the game, then V1's middle (with the
+    # two retimed scale changes) and the V2 ending
+    PLANNED += [(0.0, 0.7, 'hook push toward the brute'), (0.7, 1.75, 'reveal: pull back to game, software and CL1'),
+                (3.45, 4.45, 'push back into the game'), (5.35, 6.7, 'pull back to the lab'),
+                (7.6, 8.75, 'push into the CL1'), (9.3, 10.0, 'microscope push and iris'), (10.65, 11.8, 'out of the chip, up to the game'),
+                (13.2, 13.8, 'out to the whole array'), (19.2, 19.8, 'push to the game'), (21.0, 22.05, 'pull back to the hardware'),
+                (21.3, 21.5, 'the hurt flash'), (23.45, 25.1, 'push to the cells'), (25.7, 27.0, 'ride the activity out to the decoder'),
+                (26.9, 28.0, 'settle on game + living culture'), (27.9, 29.0, 'push into the game (frame-0 framing)')]
+else:
+    PLANNED += [(0.25, 0.8, 'pull back through the monitor'), (0.78, 1.2, 'push into the chip'), (5.0, 6.7, 'pull back to the lab'),
+                (7.6, 8.75, 'push into the CL1'), (9.3, 10.0, 'microscope push and iris'), (10.65, 11.9, 'out of the chip, up to the game'),
+                (13.2, 13.8, 'out to the whole array'), (19.2, 19.8, 'push to the game'), (21.0, 22.05, 'pull back to the hardware'),
+                (21.3, 21.5, 'the hurt flash'), (23.4, 24.45, 'dive to the cells'), (25.8, 27.2, 'pull back to the bench'), (28.0, 29.0, 'whip into the game')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []

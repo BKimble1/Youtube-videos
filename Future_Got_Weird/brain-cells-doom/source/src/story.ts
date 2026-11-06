@@ -25,28 +25,28 @@ const FIRE = [32, 33, 34], TURN = [29, 30, 31, 37], MOVE = [41, 42, 49], TURNR =
 const ENC = [11, 12, 18, 19, 20, 21, 26, 27, 28];
 setActivity({
   stims: [
-    {t: 1.2, cs: [26, 27, 19], pulses: 3}, // hook: the camera arrives on electrode 26 as it is stimulated
+    {t: 1.45, cs: [26, 27, 19], pulses: 3}, // V2 hook: seen through the lens as it opens on the culture
     {t: 3.05, cs: [18, 19, 20, 21], pulses: 2},
     {t: 4.6, cs: [26, 27, 28, 19], pulses: 3}, // the pulse the camera rode down from the encoder
-    {t: 12.8, cs: ENC, pulses: 3}, // "...electrical signals into them"
+    {t: 12.93, cs: ENC, pulses: 3}, // "...electrical signals into them"
     {t: 20.4, cs: [11, 12, 20], pulses: 2},
     {t: 26.0, cs: [26, 27], pulses: 2},
   ],
   resps: [
-    {t: 1.52, cs: FIRE}, // -> FIRE decoded 2.25 -> the shot at 2.70
+    {t: 1.85, cs: FIRE}, // -> the recording rides out 1.95-2.40 -> FIRE decoded 2.38 -> the shot at 2.70
     {t: 3.28, cs: TURN}, // -> the turn at 3.5
-    {t: 4.78, cs: FIRE}, // "shoot" -> the shot at 5.0
+    {t: 4.4, cs: FIRE}, // "shoot" -> FIRE decoded 4.70 -> the shot at 5.0
     {t: 5.28, cs: FIRE},
     {t: 13.62, cs: MOVE}, {t: 13.9, cs: TURN}, {t: 14.12, cs: FIRE}, // "...the neurons fire back"
     {t: 17.08, cs: MOVE}, {t: 17.55, cs: TURN}, {t: 18.1, cs: FIRE}, // what the decoder reads for move, turn, shoot
     {t: 19.05, cs: TURNR, p: 0.7}, {t: 19.55, cs: FIRE, p: 0.6}, {t: 20.05, cs: FIRE, p: 0.6}, {t: 21.62, cs: TURN, p: 0.7},
     {t: 21.8, cs: FIRE, p: 0.6}, {t: 22.28, cs: FIRE, p: 0.7},
-    {t: 26.25, cs: FIRE, p: 0.7},
+    {t: 25.55, cs: FIRE, p: 0.9}, // V2 ending: the volley the camera rides out of the chip
     {t: 27.55, cs: FIRE}, // "alive" -> FIRE decoded -> the shot at 28.55, and the loop
   ],
   bursts: [
-    {t: 24.05, x: -380, y: 40, speed: 800, radius: 420, p: 0.55},
-    {t: 24.85, x: -330, y: 120, speed: 650, radius: 560, p: 0.75}, // "real"
+    {t: 24.75, x: -420, y: 100, speed: 800, radius: 420, p: 0.6}, // V2: as the push arrives on the culture
+    {t: T.real - 0.05, x: -360, y: 120, speed: 650, radius: 560, p: 0.8}, // "real"
     {t: 27.38, x: -420, y: 60, speed: 600, radius: 650, p: 0.85}, // "alive"
   ],
 });
@@ -57,7 +57,7 @@ export type CmdKind = 'move' | 'turn' | 'fire';
 type Iv = [number, number];
 const shots = filmShots();
 const CMD: Record<CmdKind, Iv[]> = {
-  fire: shots.map((s): Iv => (Math.abs(s.t - 2.7) < 0.01 ? [2.24, 2.82] : Math.abs(s.t - 28.55) < 0.01 ? [28.22, 28.68] : [s.t - 0.3, s.t + 0.12])),
+  fire: shots.map((s): Iv => (Math.abs(s.t - 2.7) < 0.01 ? [2.38, 2.82] : Math.abs(s.t - 28.55) < 0.01 ? [28.22, 28.68] : [s.t - 0.3, s.t + 0.12])),
   turn: [[3.42, 4.05], [17.72, 18.12], [19.28, 19.72], [21.45, 21.95], [22.35, 22.5]],
   move: [[5.65, 9.0], [17.24, 17.66], [24, 28.12]],
 };
@@ -161,14 +161,14 @@ const rideAt = (rd: Ride, t: number) => {
   return {cam: {x: p.x, y: p.y, w}, p, pts, s: sPos, L, w};
 };
 export const RIDES: Ride[] = [
-  {kind: 'rec', r: recRoute(33, DEC_FIRE), t0: 1.85, t1: 2.22, w0: 0.052, w1: 16},
-  {kind: 'stim', r: stimRoute(26), t0: 3.95, t1: 4.62, w0: 52, w1: 0.05},
-  {kind: 'stim', r: stimRoute(26), t0: 12.3, t1: 12.78, w0: 20, w1: 0.065},
+  {kind: 'rec', r: recRoute(33, DEC_FIRE), t0: 1.95, t1: 2.4, w0: 0.052, w1: 16}, // V2: seen from the wide shot
+  {kind: 'rec', r: recRoute(33, DEC_MOVE), t0: 25.75, t1: 26.95, w0: 0.052, w1: 58}, // V2 ending: the camera rides it out
+  {kind: 'stim', r: stimRoute(26), t0: 12.15, t1: 12.95, w0: 20, w1: 0.065},
   {kind: 'rec', r: recRoute(33, DEC_C), t0: 14.85, t1: 15.62, w0: 0.15, w1: 27},
 ];
 const M1 = camUm(-300, -100, 420), M2 = camUm(-360, 10, 470), M3: Cam = {...camUm(-500, 152, 520), w: 0.052};
 const DEC_A: Cam = {x: DEC_FIRE.x, y: DEC_FIRE.y, w: 16}, DEC_B: Cam = {x: 12.6, y: -24.5, w: 14.6};
-const cmdRide: Ride = {kind: 'cmd', r: cmdRoute(pt(12.6, -24.5)), t0: 2.55, t1: 2.95, w0: 14.6, w1: 40};
+const cmdRide: Ride = {kind: 'cmd', r: cmdRoute(pt(12.6, -24.5)), t0: 2.45, t1: 2.68, w0: 14.6, w1: 40};
 RIDES.push(cmdRide);
 const GAME_MID: Cam = {x: 0, y: -61, w: 40};
 const ENC_W: Cam = {x: ENC_P.x, y: ENC_P.y, w: 52};
@@ -183,32 +183,37 @@ const ENC_M = camUm(-300, -100, 650), ENC_M2 = camUm(-220, -60, 800), ARR = camU
 const DEC_CC: Cam = {x: DEC_C.x, y: DEC_C.y, w: 27};
 const CLOSE = camUm(-380, 60, 300), CLOSE2 = camUm(-410, 72, 268);
 const ALIVE: Cam = {x: -7, y: -16, w: 50};
+// V2 framings
+const GAME_IN: Cam = {x: 0, y: -66, w: GAME0.w * 0.93}; // the hook's single push toward the brute and the muzzle flash
+const TWO_D: Cam = {x: 1, y: -39, w: 57}; // the reveal holds and drifts while the recording travels to the decoder
+const GAME_P: Cam = {x: 0, y: -52, w: 44}; // the game with the DECODE lamps beneath it
+const GAME_P2: Cam = {x: 0, y: -53, w: 41.5};
+const RIDE_END: Cam = {x: DEC_MOVE.x, y: DEC_MOVE.y, w: 58};
+const ALIVE_C: Cam = {x: -6, y: -37, w: 60};
+const M3_PRE: Cam = {...camUm(-470, 120, 640), w: 0.064}; // the push lands on the culture, then drifts to the FIRE electrode // the game and the living culture in one frame
 
 type Seg = [number, number, (u: number, t: number) => Cam];
 const SEGS: Seg[] = [
-  [0, 0.25, () => GAME0],
-  [0.25, 0.72, (u) => zoomAbout(u, GAME0, TWO, ss(u, 0, 1) ** 0.85)],
-  [0.72, 1.2, (u) => zoomTo(u, TWO, M1)],
-  [1.2, 1.5, (u) => travel(u, M1, M2)],
-  [1.5, 1.85, (u) => travel(u, M2, M3)],
-  [1.85, 2.22, (_, t) => rideAt(RIDES[0], t).cam],
-  [2.22, 2.55, (u) => travel(u, DEC_A, DEC_B)],
-  [2.55, 2.95, (_, t) => rideAt(cmdRide, t).cam],
-  [2.95, 3.5, (u) => zoomAbout(u, GAME_MID, TWO_L)],
-  [3.5, 3.95, (u) => travel(u, TWO_L, ENC_W)],
-  [3.95, 4.62, (_, t) => rideAt(RIDES[1], t).cam],
-  [4.62, 5.0, (u) => travel(u, M26, MF)],
-  [5.0, 6.7, (u) => zoomAbout(u, MF, LAB_WIDE)],
+  // V2 hook: one push to the action, one reveal of the hardware (the lens opens on the living culture), a calm drift
+  // while the recording travels to the decoder and the command fires the gun, one push back into the game, one reveal of
+  // the lab. Each move lands on new information; no dive into the chip and back in the first five seconds.
+  [0, 0.7, (u) => travel(u, GAME0, GAME_IN, 1 - (1 - u) ** 3)],
+  [0.7, 1.75, (u) => zoomAbout(u, GAME_IN, TWO)],
+  [1.75, 3.45, (u) => travel(u, TWO, TWO_D, ss(u, 0, 1))],
+  [3.45, 4.45, (u) => zoomAbout(u, TWO_D, GAME_P)],
+  [4.45, 5.35, (u) => travel(u, GAME_P, GAME_P2, ss(u, 0, 1))],
+  [5.35, 6.7, (u) => zoomAbout(u, GAME_P2, LAB_WIDE)],
   [6.7, 7.62, (u) => travel(u, LAB_WIDE, {x: 8, y: -44, w: 132})],
   [7.62, 8.7, (u) => zoomTo(u, {x: 8, y: -44, w: 132}, CL1_IN)],
   [8.7, 9.35, (u) => travel(u, CL1_IN, HEAD)],
   [9.35, 9.95, (u) => zoomTo(u, HEAD, SCOPE)],
   [9.95, 10.7, (u) => travel(u, SCOPE, SCOPE2)],
-  [10.7, 11.16, (u) => zoomAbout(u, SCOPE2, CHIPV)],
-  [11.16, 11.85, (u) => zoomAbout(u, CHIPV, GAME_V)],
-  [11.85, 12.3, (u) => travel(u, GAME_V, ENC_C)],
-  [12.3, 12.78, (_, t) => rideAt(RIDES[2], t).cam],
-  [12.78, 13.25, (u) => travel(u, ENC_M, ENC_M2)],
+  // V2: the two fastest scale changes get more time and a gentler (cubic) ease; the dive now lands on "them"
+  [10.7, 11.2, (u) => zoomAbout(u, SCOPE2, CHIPV, ss(u, 0, 1))],
+  [11.2, 11.75, (u) => zoomAbout(u, CHIPV, GAME_V, ss(u, 0, 1))],
+  [11.75, 12.15, (u) => travel(u, GAME_V, ENC_C)],
+  [12.15, 12.95, (_, t) => rideAt(RIDES[2], t).cam],
+  [12.95, 13.25, (u) => travel(u, ENC_M, ENC_M2)],
   [13.25, 13.75, (u) => zoomAbout(u, ENC_M2, ARR)],
   [13.75, 14.85, (u) => travel(u, ARR, ARR2, ss(u, 0.45, 1))],
   [14.85, 15.62, (_, t) => rideAt(RIDES[3], t).cam],
@@ -219,11 +224,14 @@ const SEGS: Seg[] = [
   [19.75, 21.0, (u) => travel(u, GAME_F, {...GAME_F, w: 47.5})],
   [21.0, 22.0, (u) => zoomAbout(u, {...GAME_F, w: 47.5}, LAB_COMP)],
   [22.0, 23.45, (u) => travel(u, LAB_COMP, {...LAB_COMP, w: 94})],
-  [23.45, 24.4, (u) => zoomTo(u, {...LAB_COMP, w: 94}, CLOSE)],
-  [24.4, 25.87, (u) => travel(u, CLOSE, CLOSE2, ss(u, 0, 1))],
-  [25.87, 27.15, (u) => zoomAbout(u, CLOSE2, TWO_L)],
-  [27.15, 28.05, (u) => travel(u, TWO_L, ALIVE)],
-  [28.05, 28.9, (u) => zoomAbout(u, ALIVE, GAME0)],
+  // V2 ending: one controlled push into the living culture (the bursts carry it), ride the volley out through the chip,
+  // the PC and the cable to the decoder, settle on the game and the culture together for "is alive", one push into the
+  // game for the shot, landing on frame 0.
+  [23.45, 25.05, (u) => zoomAbout(u, {...LAB_COMP, w: 94}, M3_PRE)],
+  [25.05, 25.75, (u) => travel(u, M3_PRE, M3, ss(u, 0, 1))],
+  [25.75, 26.95, (_, t) => rideAt(RIDES[1], t).cam],
+  [26.95, 27.95, (u) => travel(u, RIDE_END, ALIVE_C)],
+  [27.95, 28.9, (u) => zoomAbout(u, ALIVE_C, GAME0)],
   [28.9, 29.1, () => GAME0],
 ];
 export const camAt = (t: number): Cam => {
@@ -239,7 +247,7 @@ export {chipK};
 // ------------------------------------------------------------------ the lens (a local magnified view of the culture)
 export const LENS = {c: pt(-20, -4), r: 9, um: {x: -330, y: 30, w: 600}};
 export const lensState = (t: number) => {
-  const a1 = ss(t, 2.98, 3.22) * (1 - ss(t, 3.98, 4.16));
+  const a1 = ss(t, 1.3, 1.62) * (1 - ss(t, 3.5, 3.75));
   const a2 = ss(t, 26.35, 26.7) * (1 - ss(t, 28.12, 28.3));
   const a = Math.max(a1, a2);
   const grow = ss(t, T.alive - 0.45, T.alive + 0.12) * (1 - ss(t, 28.05, 28.25));
@@ -267,7 +275,7 @@ export const LABELS: Label[] = [
 ];
 export const labelAmt = (l: Label, t: number) => ss(t, l.t0, l.t0 + 0.2) * (1 - ss(t, l.t1 - 0.2, l.t1));
 // ------------------------------------------------------------------ live traffic on the cables (wide shots)
-export const trafficAmt = (t: number) => Math.max(ss(t, 5.9, 6.3) * (1 - ss(t, 7.7, 8.0)), ss(t, 21.4, 21.8) * (1 - ss(t, 23.5, 23.8)), ss(t, 3.0, 3.2) * (1 - ss(t, 3.6, 3.9)), ss(t, 26.6, 26.9) * (1 - ss(t, 28.1, 28.3)));
+export const trafficAmt = (t: number) => Math.max(ss(t, 5.9, 6.3) * (1 - ss(t, 7.7, 8.0)), ss(t, 21.4, 21.8) * (1 - ss(t, 23.5, 23.8)), ss(t, 2.75, 2.95) * (1 - ss(t, 3.45, 3.7)), ss(t, 26.6, 26.9) * (1 - ss(t, 28.1, 28.3)));
 export const TRAFFIC_ROUTES = {
   stim: (): RP[] => [lab(CABLE_PC_CTRL[0].x, CABLE_PC_CTRL[0].y), ...[...pcIn].reverse().slice(1), ...[...ringIn].reverse().slice(1)],
   rec: (): RP[] => [...ringIn, ...pcIn],
@@ -278,6 +286,7 @@ export const CMD_PULSES: {t: number; from: Pt; k: CmdKind}[] = [
   {t: T.turn - 0.24, from: DEC_TURN, k: 'turn'},
   {t: T.shoot2 - 0.24, from: DEC_FIRE, k: 'fire'},
   {t: 3.25, from: DEC_TURN, k: 'turn'},
+  {t: 4.72, from: DEC_FIRE, k: 'fire'}, // V2: the decoded FIRE that makes the character shoot (5.0)
   {t: 28.3, from: DEC_FIRE, k: 'fire'},
 ];
 export const cmdRouteOf = (from: Pt) => cmdRoute(from);

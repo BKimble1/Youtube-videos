@@ -1,3 +1,30 @@
+# V2 transition list (final polish)
+
+V2 changes the camera only in the hook (0–5 s), at two scale changes in the middle, and in the ending (23–29 s). Rows
+10–23 of the V1 table below still describe 5–23 s, with the retimed rows noted here. There are still no cuts.
+
+| # | Time (s) | Outgoing → incoming | New information | Verdict |
+|---|---|---|---|---|
+| 1 | 0–0.7 | Gameplay, one decelerating 7% push toward the brute | The gun fires (frame 0, 0.3 s) | keep (hook) |
+| 2 | 0.7–1.75 | Pure zoom out: game → monitor → software screen → CL1, with the lens on the living culture | The game is controlled from a device holding living cells | keep (one move, no reversal) |
+| 3 | 1.75–3.45 | Hold the wide frame with a slight drift: stimulation, FIRE response, amber recording along the cable, DECODE FIRE, command into the game, hit | Cause → effect in one frame | keep |
+| 4 | 3.45–4.45 | Pure zoom into the game; the DECODE lamps stay below it | Back to the payoff, still showing the decoder | keep |
+| 5 | 4.45–5.35 | Slight drift; FIRE decodes (4.72), shots at 5.0 and 5.6 | Each shot has its decode | keep |
+| 6 | 5.35–6.7 | Pure zoom out to the lab | "Scientists actually did it" | keep (V1 row 10, retimed) |
+| 7 | 10.7–11.75 | Out of the chip, up to the game | As V1 rows 13–14: 0.50 s + 0.55 s on a cubic ease (previously 0.46 + 0.69 s, quintic); 25% lower peak speed | keep (smoothed) |
+| 8 | 11.75–12.15 | Game → ENCODE panel | As V1 row 15 | keep |
+| 9 | 12.15–12.95 | Ride cyan into the INPUT electrodes, landing on "them" | As V1 row 16: 0.80 s (previously 0.48 s); 40% lower peak speed | keep (smoothed) |
+| 10 | 23.45–25.05 | Pure zoom about the chip: hardware → living culture; the bursts arrive on "real" | The real, living part | keep (no slide across the panel) |
+| 11 | 25.05–25.75 | Drift to the FIRE lead | The activity's source | keep |
+| 12 | 25.75–26.95 | Ride the amber recording out: pads → headstage → cable → PC → DECODE | The activity passes through the interface | keep |
+| 13 | 26.95–27.95 | Settle on the game, the software and the CL1 with the lens on the culture; a burst on "alive" | The living interface and the gameplay together | keep |
+| 14 | 27.95–29.0 | Pure zoom into the game: FIRE, a shot at 28.55, then hold the frame-0 framing | Closes the loop into frame 0's shot | keep (no fade to black) |
+
+Removed from V1: the hook's dive into the chip (V1 row 2), the stimulation close-up and the µm-scale rides (rows 3–6),
+the encoder ride in the hook (row 8), the ending's pull back to the bench (row 25) and the whip (row 27).
+
+---
+
 # V1 transition list
 
 This list follows the FGW editing rules. It has one row per camera transition in the order they play, with the

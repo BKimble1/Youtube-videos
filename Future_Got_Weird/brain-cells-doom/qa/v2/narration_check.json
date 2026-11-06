@@ -1,0 +1,13 @@
+{
+ "v1": {
+  "voice_band_corr_with_narration_master": 0.9904,
+  "lag_ms": 0.0,
+  "samples": 1392000
+ },
+ "v2": {
+  "voice_band_corr_with_narration_master": 0.9905,
+  "lag_ms": 0.0,
+  "samples": 1392000
+ },
+ "v1_vs_v2_voice_band_corr": 0.9974
+}
