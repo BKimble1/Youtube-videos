@@ -20,47 +20,7 @@ import {Duck, Pond} from './art/duck';
 const W = 1080, H = 1920;
 const frac = (x: number) => x - Math.floor(x);
 
-// ------------------------------------------------------------------ reveal masks (screen-space paths, anchored to the body)
-/** z of the near body surface at body-local (x, y) (chest/rear ellipsoids), so a mask drawn on the flank projects onto it */
-const surfZ = (x: number, y: number) => {
-  const a = 1 - ((x - 2) / 10.5) ** 2 - (y / 7) ** 2;
-  const b = 1 - ((x + 7.5) / 8.5) ** 2 - ((y - 0.7) / 5.3) ** 2;
-  return Math.max(7.2 * Math.sqrt(Math.max(0.03, a)), 5.6 * Math.sqrt(Math.max(0.03, b)));
-};
-const X0 = -6, X1 = 10.5, YT = 7.0, YB = -8.0;
-const onFlank = (B: Basis, F: Frame, x: number, y: number): V2 => {
-  const p = proj(B, xf(F, [x, y, surfZ(x, y) + 0.3]));
-  return {x: p.x, y: p.y};
-};
-/** a feather-tipped edge across the flank at fraction e (0 = top of the window, 1 = bottom); open 'above' or 'below' it */
-const sweepPath = (B: Basis, F: Frame, e: number, mode: 'above' | 'below') => {
-  if (mode === 'above' && e <= 0) return null;
-  if (mode === 'below' && e >= 1) return null;
-  const yc = lerp(YT - 0.3, YB + 0.3, clamp(e));
-  const edge: V2[] = [];
-  const n = 26;
-  for (let i = 0; i <= n; i++) {
-    const x = lerp(X1, X0, i / n);
-    // a wing-like trailing edge: tilted down toward the tail, with feather-tip scallops
-    const y = yc + 0.16 * (x - 2.5) - 0.5 * Math.abs(Math.sin((x * Math.PI) / 1.7));
-    edge.push(onFlank(B, F, x, y));
-  }
-  const far = mode === 'above' ? YT + 3 : YB - 3;
-  // edge runs from X1 back to X0, so [cap at X0, cap at X1, edge] is a simple closed polygon
-  return poly([onFlank(B, F, X0, far), onFlank(B, F, X1, far), ...edge]);
-};
-/** a radial reveal around body-local centre c (feather-tipped rim) of radius r cm */
-const radialPath = (B: Basis, F: Frame, c: [number, number], r: number) => {
-  if (r <= 0.05) return null;
-  const pts: V2[] = [];
-  const n = 40;
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2;
-    const rr = r * (1 - 0.06 * Math.abs(Math.sin(a * 5)));
-    pts.push(onFlank(B, F, c[0] + rr * Math.cos(a), c[1] + rr * Math.sin(a) * 0.9));
-  }
-  return poly(pts);
-};
+import {sweepPath, radialPath} from './reveal';
 
 // ------------------------------------------------------------------ the bird with its drive
 /** revealPath: the open part of the flank window (screen space); null = closed (exterior intact) */
@@ -98,8 +58,9 @@ const LabShot: React.FC<{t: number}> = ({t}) => {
   return (
     <g>
       <LabBack B={B} t={t} />
-      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} />
+      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />
       <DroneBird B={B} s={s} revealPath={radialPath(B, s.F, LAB_GEAR_C, 10.5 * rOpen)} focus={labFocus(t)} detail={detail} shellLift={lift} />
+      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" />
       <ExplodeGuides B={B} F={s.F} t={t} lift={lift} />
       <LabFront B={B} t={t} />
     </g>
