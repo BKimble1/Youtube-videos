@@ -94,7 +94,7 @@ const Full: React.FC<{v: number}> = ({v}) => {
   );
 };
 /** 8 cells (2 x 4), whole-bird views at half scale */
-const SHEET: [number, number][] = [[0, 0.5], [1, 0.5], [2, 0.5], [3, 0.5], [4, 0.5], [5, 0.55], [6, 0.8], [7, 0.5]];
+const SHEET: [number, number][] = [[0, 0.42], [1, 0.42], [2, 0.42], [3, 0.42], [4, 0.5], [5, 0.5], [6, 0.8], [7, 0.5]];
 const Sheet: React.FC = () => {
   resetIds('s');
   const w = 540, h = 480;
@@ -117,7 +117,7 @@ const Sheet: React.FC = () => {
             <g key={i} transform={`translate(${tx},${ty})`}>
               <g clipPath={`url(#sc${i})`}>
                 <rect width={w} height={h} fill="url(#sheetbg)" />
-                <Cell v={v} scaleK={k} cx={w / 2 + (v.cam.cx! - 540) * k} cy={h / 2 + (v.cam.cy! - 1000) * k * 0.6 + (vi === 6 ? 40 : 0)} />
+                <Cell v={v} scaleK={k} cx={w / 2 + (v.cam.cx! - 540) * k + (vi < 4 ? 30 : 0)} cy={h / 2 + (v.cam.cy! - 1000) * k * 0.6 + (vi === 6 ? 40 : vi < 4 ? 40 : 0)} />
               </g>
               <rect width={w} height={h} fill="none" stroke="#5A666C" strokeWidth={2} />
               <text x={12} y={26} fontSize={18} fill="#30404A" fontFamily="sans-serif">{v.name}</text>

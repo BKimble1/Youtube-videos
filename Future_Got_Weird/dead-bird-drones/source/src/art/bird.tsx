@@ -103,7 +103,7 @@ const mkE = (e: {c: V3; r: V3; tilt?: number}): E3 => {
   return {c: e.c, r: e.r, cs: Math.cos(t), sn: Math.sin(t), rm: (e.r[0] + e.r[1] + e.r[2]) / 3};
 };
 /** a small local volume that tapers the rear into the tail (it carries the uppertail and undertail coverts) */
-const TAILBASE = {c: [-15.0, 1.55, 0] as V3, r: [4.2, 2.35, 3.3] as V3, tilt: 9};
+const TAILBASE = {c: [-15.6, 1.75, 0] as V3, r: [5.0, 2.2, 3.1] as V3, tilt: 11};
 const ELLS: E3[] = [BODY.chest, BODY.rear, BODY.neck, BODY.head, TAILBASE].map(mkE);
 const HEAD_I = 3;
 const toN = (e: E3, v: V3): V3 => [(v[0] * e.cs + v[1] * e.sn) / e.r[0], (-v[0] * e.sn + v[1] * e.cs) / e.r[1], v[2] / e.r[2]];
@@ -1103,7 +1103,12 @@ const HeadLine: React.FC<{cx: Ctx; ink: string}> = ({cx, ink}) => {
 /** the shell's spar slot at the near shoulder (seen only when the shell is lifted off the frame) */
 const ShoulderSlot: React.FC<{B: Basis; F: Frame; a: number; T: Tint}> = ({B, F, a, T}) => {
   const p0 = proj(B, xf(F, surfNear(2.5, 2.7).p)), p1 = proj(B, xf(F, surfNear(2.5, 5.7).p));
-  return <path d={capsule2(p0, p1, 0.32 * p0.s, 0.32 * p1.s)} fill={T('#2B1E15')} stroke={T(INK)} strokeWidth={LINE_PX} vectorEffect={NS} opacity={a} />;
+  return (
+    <g opacity={a}>
+      <path d={capsule2(p0, p1, 0.36 * p0.s, 0.36 * p1.s)} fill={T(C.shellCut)} stroke={T(INK)} strokeWidth={LINE_PX} vectorEffect={NS} />
+      <path d={capsule2(p0, p1, 0.2 * p0.s, 0.2 * p1.s)} fill={T('#3A2A1E')} />
+    </g>
+  );
 };
 
 void hash;
