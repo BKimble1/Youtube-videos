@@ -272,8 +272,25 @@ const DebugPart: React.FC<{t: number; part: string}> = ({t, part}) => {
     </AbsoluteFill>
   );
 };
+/** debug: the opening shot through the story's own camera with chosen layers ('back', 'bird', 'front'); the closing
+ *  frames draw the same world at t - DUR, so t may be negative */
+const DebugOpen: React.FC<{t: number; parts: string[]}> = ({t, parts}) => {
+  resetIds('do_');
+  const s = openState(t);
+  const B = basis(s.cam);
+  return (
+    <AbsoluteFill style={{background: '#F0F'}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+        {parts.includes('back') && <FieldBack B={B} t={t} />}
+        {parts.includes('bird') && <Bird B={B} F={s.F} ps={s.ps} />}
+        {parts.includes('front') && <FieldFront B={B} t={t} />}
+      </svg>
+    </AbsoluteFill>
+  );
+};
 const Root: React.FC = () => (
   <>
+    <Composition id="WorldDebugOpen" component={DebugOpen} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 0, parts: ['back', 'bird', 'front']}} />
     <Composition id="WorldField" component={Field} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="WorldLabMeadow" component={LabMeadow} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="WorldSkyFlock" component={SkyFlock} durationInFrames={1} fps={30} width={W} height={H} />

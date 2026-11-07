@@ -4,7 +4,7 @@ import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import {basis} from '../three';
 import {Bird} from '../art/bird';
-import {Mech, Cradle} from '../art/mech';
+import {Mech, MechLook, Cradle} from '../art/mech';
 import {CUT, LAB, labFocus, labShellLift, labState, openReveal, openState, ShotState} from '../story';
 import {radialPath, sweepPath} from '../reveal';
 import {clamp, ss} from '../lib';
@@ -13,8 +13,9 @@ import {resetIds} from '../core/ids';
 import {FieldBack, FieldFront, LabBack, LabFront} from '../art/world';
 
 type Zoom = [number, number, number, number] | null;
-const Frame1: React.FC<{t: number}> = ({t}) => {
-  let s: ShotState, path: string | null = null, lift = 0, focus: 'P0' | 'A' | 'B' | 'rod' | null = null, detail = 0.25;
+/** xray: the drive alone (no bird, no background) through the same camera, to see what the shell hides */
+const Frame1: React.FC<{t: number; xray?: boolean; focusOverride?: string | null}> = ({t, xray = false, focusOverride}) => {
+  let s: ShotState, path: string | null = null, lift = 0, focus: MechLook['focus'] = null, detail = 0.25;
   const lab = t >= CUT.openToLab;
   if (!lab) {
     s = openState(t);
@@ -29,6 +30,14 @@ const Frame1: React.FC<{t: number}> = ({t}) => {
     detail = clamp((s.cam.scale - 16) / 36);
   }
   const B = basis(s.cam);
+  if (focusOverride !== undefined) focus = focusOverride as typeof focus;
+  if (xray)
+    return (
+      <g>
+        <rect x={-2000} y={-2000} width={6000} height={6000} fill="#E9DCC6" />
+        <Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />
+      </g>
+    );
   return (
     <g>
       {lab ? <LabBack B={B} t={t} /> : <FieldBack B={B} t={t} />}
@@ -40,7 +49,7 @@ const Frame1: React.FC<{t: number}> = ({t}) => {
     </g>
   );
 };
-const Sheet: React.FC<{ts: number[]; cols: number; zooms?: Zoom[]}> = ({ts, cols, zooms = []}) => {
+const Sheet: React.FC<{ts: number[]; cols: number; zooms?: Zoom[]; xray?: boolean[]; focus?: (string | null)[]}> = ({ts, cols, zooms = [], xray = [], focus = []}) => {
   const rows = Math.ceil(ts.length / cols);
   const w = 1080 / cols, h = 1920 / rows;
   return (
@@ -54,7 +63,7 @@ const Sheet: React.FC<{ts: number[]; cols: number; zooms?: Zoom[]}> = ({ts, cols
             <g key={i} transform={`translate(${(i % cols) * w},${Math.floor(i / cols) * h})`}>
               <clipPath id={`mfc${i}`}><rect width={w} height={h} /></clipPath>
               <g clipPath={`url(#mfc${i})`}>
-                <g transform={`scale(${k}) translate(${-z[0]},${-z[1]})`}><Frame1 t={t} /></g>
+                <g transform={`scale(${k}) translate(${-z[0]},${-z[1]})`}><Frame1 t={t} xray={xray[i] ?? false} focusOverride={focus[i]} /></g>
               </g>
               <text x={12} y={34} fontSize={28} fontFamily="monospace" fill="#000">{t.toFixed(2)}</text>
               <rect width={w} height={h} fill="none" stroke="#000" strokeWidth={3} />

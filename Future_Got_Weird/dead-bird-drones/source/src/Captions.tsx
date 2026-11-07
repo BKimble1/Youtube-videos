@@ -20,12 +20,19 @@ export const Captions: React.FC<{t: number}> = ({t}) => {
   if (i < 0) return null;
   return <CaptionLine key={i} c={CAPTIONS[i]} y={CAP_Y} a={i === 0 ? 1 : clamp(0.5 + (t - CAPTIONS[i].show) / 0.067)} />;
 };
-/** one caption, centred on y, kept clear of the right-hand action buttons */
+/** three-word captions that would wrap to an orphan word: set on one line, a little smaller, in a slightly wider box
+ *  (still inside x 70..910) */
+const ONE_LINE = new Set(['with machinery hidden', 'using a preserved duck.']);
+/** one caption: its FIRST line is centred on y (so the text never jumps when a two-line caption follows a one-line one;
+ *  a second line hangs below), kept clear of the right-hand action buttons */
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; left?: number; width?: number}> = ({c, y, a, left = 110, width = 760}) => {
   const words = c.text.split(' ');
+  const one = ONE_LINE.has(c.text.toLowerCase());
+  const fs = one ? 61 : 66;
+  const lh = fs * 1.16;
   return (
-    <div style={{position: 'absolute', left, width, top: y, transform: 'translateY(-50%) translateZ(0)', willChange: 'transform, opacity', opacity: a, textAlign: 'center', textWrap: 'balance'} as React.CSSProperties}>
-      <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: 66, lineHeight: 1.16, letterSpacing: '0.005em', color: '#FFFFFF',
+    <div style={{position: 'absolute', left: one ? 70 : left, width: one ? 840 : width, top: y - lh / 2, transform: 'translateZ(0)', willChange: 'transform, opacity', opacity: a, textAlign: 'center', textWrap: 'balance', whiteSpace: one ? 'nowrap' : undefined} as React.CSSProperties}>
+      <span style={{fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 900, fontSize: fs, lineHeight: 1.16, letterSpacing: '0.005em', color: '#FFFFFF',
         WebkitTextStroke: '10px rgba(6,9,14,0.94)', paintOrder: 'stroke fill', textShadow: '0 5px 16px rgba(0,0,0,0.6)'} as React.CSSProperties}>
         {words.map((wd, k) => {
           const key = wd.toLowerCase().replace(/[^a-z]/g, '');

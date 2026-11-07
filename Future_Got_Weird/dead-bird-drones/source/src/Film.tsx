@@ -11,61 +11,69 @@ import {
 } from './story';
 import {Captions} from './Captions';
 import {C, INK} from './art/palette';
-import {Bird, NearWing} from './art/bird';
+import {Bird, BirdLook} from './art/bird';
 import {Mech, Cradle} from './art/mech';
 import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack, MEADOW, SKY} from './art/world';
 import {Flock, LivingBird} from './art/flock';
 import {Duck, Pond} from './art/duck';
 
 const W = 1080, H = 1920;
+const LABEL_Y = 1440;
 const frac = (x: number) => x - Math.floor(x);
 
 import {sweepPath, radialPath} from './reveal';
 
 // ------------------------------------------------------------------ the bird with its drive
 /** revealPath: the open part of the flank window (screen space); null = closed (exterior intact) */
-const DroneBird: React.FC<{B: Basis; s: ShotState; revealPath?: string | null; focus?: 'P0' | 'A' | 'B' | 'rod' | null; detail?: number; shellLift?: number; tone?: number}> = ({B, s, revealPath = null, focus = null, detail = 0, shellLift = 0, tone = 0}) => (
-  <Bird
-    B={B}
-    F={s.F}
-    ps={s.ps}
-    look={{cut: revealPath ? 1 : 0, cutReveal: revealPath ? () => revealPath : undefined, phantom: revealPath ? 1 : 0, shellLift, tone}}
-    mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />}
-  />
-);
+const DroneBird: React.FC<{B: Basis; s: ShotState; revealPath?: string | null; focus?: 'P0' | 'A' | 'B' | 'rod' | null; detail?: number; shellLift?: number; shellTilt?: number; phantom?: number; tone?: number}> = ({B, s, revealPath = null, focus = null, detail = 0, shellLift = 0, shellTilt = 0, phantom = 0, tone = 0}) => {
+  // the near wing is ghosted over the drive whenever the drive is shown (a cutaway, or the frame in the exploded view)
+  const look: BirdLook & {shellTilt?: number} = {cut: revealPath ? 1 : 0, cutReveal: revealPath ? () => revealPath : undefined, phantom: revealPath ? 1 : phantom, shellLift, shellTilt, tone};
+  return <Bird B={B} F={s.F} ps={s.ps} look={look as BirdLook} mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />} />;
+};
+/** a shot in three layers, so a transition can sweep its background and keep one continuous drone */
+type Parts = {back: React.ReactNode; bird: React.ReactNode; front: React.ReactNode};
+const Shot: React.FC<{p: Parts}> = ({p}) => <g>{p.back}{p.bird}{p.front}</g>;
 
 // ------------------------------------------------------------------ shots
-const OpenShot: React.FC<{t: number}> = ({t}) => {
+const openParts = (t: number): Parts => {
   const s = openState(t);
   const B = basis(s.cam);
   const r = openReveal(t);
-  return (
-    <g>
-      <FieldBack B={B} t={t} />
-      <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />
-      <FieldFront B={B} t={t} />
-    </g>
-  );
+  return {
+    back: <FieldBack B={B} t={t} />,
+    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />,
+    front: <FieldFront B={B} t={t} />,
+  };
 };
+const OpenShot: React.FC<{t: number}> = ({t}) => <Shot p={openParts(t)} />;
 
 const LAB_GEAR_C: [number, number] = [3.4, -1.6];
-const LabShot: React.FC<{t: number}> = ({t}) => {
+const labParts = (t: number): Parts => {
   const s = labState(t);
   const B = basis(s.cam);
   const lift = labShellLift(t);
   const rOpen = ss(t, LAB.cutOpen[0], LAB.cutOpen[1]) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[1]));
   const detail = clamp((s.cam.scale - 16) / 36);
-  return (
-    <g>
-      <LabBack B={B} t={t} />
-      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />
-      <DroneBird B={B} s={s} revealPath={radialPath(B, s.F, LAB_GEAR_C, 10.5 * rOpen)} focus={labFocus(t)} detail={detail} shellLift={lift} />
-      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" ps={s.ps} />
-      <ExplodeGuides B={B} F={s.F} t={t} lift={lift} />
-      <LabFront B={B} t={t} />
-    </g>
-  );
+  const k = clamp(lift / LAB.liftH);
+  return {
+    back: (
+      <g>
+        <LabBack B={B} t={t} />
+        <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />
+      </g>
+    ),
+    // while the shell is up it tips toward the camera (its open underside shows) and the near wing is ghosted over the frame
+    bird: <DroneBird B={B} s={s} revealPath={radialPath(B, s.F, LAB_GEAR_C, 10.5 * rOpen)} focus={labFocus(t)} detail={detail} shellLift={lift} shellTilt={14 * k} phantom={ss(k, 0.15, 0.6)} />,
+    front: (
+      <g>
+        <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" ps={s.ps} />
+        <ExplodeGuides B={B} F={s.F} t={t} lift={lift} />
+        <LabFront B={B} t={t} />
+      </g>
+    ),
+  };
 };
+const LabShot: React.FC<{t: number}> = ({t}) => <Shot p={labParts(t)} />;
 /** dashed alignment guides in the exploded view (shell slots to the frame's hinges; belly to the cradle pads) */
 const ExplodeGuides: React.FC<{B: Basis; F: Frame; t: number; lift: number}> = ({B, F, t, lift}) => {
   const a = clamp(ss(t, LAB.lift[0] + 0.55, LAB.lift[0] + 0.9) * (1 - ss(t, LAB.seat[0], LAB.seat[0] + 0.3)));
@@ -110,32 +118,44 @@ const placeFlock = (state: (t: number) => ShotState, t0: number, tc: number, spo
     return {o: [p[0] - v[0] * (tc - t0), p[1], p[2]], v, scale: 1, phase, freq};
   });
 };
-const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 + 1.5, [
-  [300, 700, 2600, 4, 2.3, 0.1], [520, 790, 1700, -3, 2.1, 0.55], [600, 660, 3300, 2, 2.5, 0.3], [680, 760, 2200, -4, 2.2, 0.8], [420, 650, 3900, 3, 2.4, 0.05],
+// meadow: five far birds over the reeds and two nearer ones (about two-thirds of the drone's size) flying calmly beside
+// it, none within ~60 px of its wing envelope, all below the caption band (paths checked with a projection script). The
+// camera's rotation is fixed for the shot, so the far birds hold their places; they fly on with the drone at the end.
+const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 + 1.2, [
+  [120, 610, 3300, 3, 2.4, 0.05], [330, 690, 2400, 4, 2.3, 0.1], [560, 585, 3800, 2, 2.5, 0.3], [720, 660, 2000, -4, 2.2, 0.8], [960, 600, 2900, -3, 2.1, 0.55],
+  [215, 880, 650, 2, 2.2, 0.35], [890, 790, 800, -2, 2.3, 0.7],
 ]);
-// sky: the flock sits ahead of the drone (upper right) through "watching the birds", then flies on out of the right edge
-// during the push-in, so the punchline caption and the loop are clear (paths checked with a projection script, all
-// birds stay below y 470 in the caption's column)
-const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, SKY_T0 + 1.3, [
-  [640, 640, 2400, 10, 2.2, 0.2], [780, 720, 1600, 6, 2.4, 0.65], [900, 600, 3000, 8, 2.1, 0.4], [980, 760, 2000, 4, 2.5, 0.9], [720, 560, 3600, 10, 2.3, 0.15],
+// sky: the flock holds the upper right, ahead of the drone (its eye line), with one nearer bird behind it on the left, and
+// stays in frame through the punchline; all clear of the caption column and the drone's wingtips at every phase
+const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, 21.5, [
+  [720, 600, 3000, 0, 2.2, 0.2], [860, 690, 2200, 0, 2.4, 0.65], [985, 560, 3600, 0, 2.1, 0.4], [830, 820, 1600, 0, 2.5, 0.9],
+  [230, 650, 900, 0, 2.2, 0.5],
 ]);
-const MeadowShot: React.FC<{t: number}> = ({t}) => {
+const meadowParts = (t: number): Parts => {
   const s = meadowState(t);
   const B = basis(s.cam);
   const tf = t - MEADOW_T0;
   const ar = arcs(t);
-  return (
-    <g>
-      <MeadowBack B={B} t={tf} />
-      <Flock B={B} t={tf} birds={MEADOW_FLOCK} haze={MEADOW.haze} />
-      <DroneBird B={B} s={s} />
-      {ar.a > 0.01 && <SoundArcs B={B} F={s.F} a={ar.a} r={ar.r} />}
-      <MeadowFront B={B} t={tf} />
-    </g>
-  );
+  return {
+    back: (
+      <g>
+        <MeadowBack B={B} t={tf} />
+        <Flock B={B} t={tf} birds={MEADOW_FLOCK} haze={MEADOW.haze} />
+      </g>
+    ),
+    bird: <DroneBird B={B} s={s} />,
+    front: (
+      <g>
+        {ar.a > 0.01 && <SoundArcs B={B} F={s.F} a={ar.a} n={ar.n} r={ar.r} />}
+        <MeadowFront B={B} t={tf} />
+      </g>
+    ),
+  };
 };
-/** restrained sound arcs around the drone that diminish (the low-disturbance research aim; no numbers, no "silent") */
-const SoundArcs: React.FC<{B: Basis; F: Frame; a: number; r: number}> = ({B, F, a, r}) => {
+const MeadowShot: React.FC<{t: number}> = ({t}) => <Shot p={meadowParts(t)} />;
+/** restrained sound arcs around the drone: three, then on 'less disturbance' they shrink to one faint arc that stays
+ *  (a reduction, never silence; no numbers) */
+const SoundArcs: React.FC<{B: Basis; F: Frame; a: number; n: number; r: number}> = ({B, F, a, n, r}) => {
   const c = proj(B, xf(F, [0, 1, 0]));
   const base = 30 * c.s * r;
   const arc = (R: number, a0: number, a1: number) => {
@@ -144,12 +164,17 @@ const SoundArcs: React.FC<{B: Basis; F: Frame; a: number; r: number}> = ({B, F, 
   };
   return (
     <g opacity={a} fill="none" strokeLinecap="round">
-      {[1, 1.35, 1.7].map((k, i) => (
-        <g key={i} opacity={(1 - i * 0.28) * 0.75}>
-          <path d={arc(base * k, -0.55, 0.55)} stroke="#FFFFFF" strokeWidth={4} />
-          <path d={arc(base * k, Math.PI - 0.55, Math.PI + 0.55)} stroke="#FFFFFF" strokeWidth={4} />
-        </g>
-      ))}
+      {[1, 1.32, 1.64].map((k, i) => {
+        const o = clamp(n - i);
+        if (o <= 0.01) return null;
+        const ds = [arc(base * k, -0.5, 0.5), arc(base * k, Math.PI - 0.5, Math.PI + 0.5)];
+        return (
+          <g key={i} opacity={o * (1 - i * 0.22)}>
+            {ds.map((d, j) => <path key={`u${j}`} d={d} stroke={INK} strokeWidth={9.5} opacity={0.28} />)}
+            {ds.map((d, j) => <path key={`w${j}`} d={d} stroke="#FFFFFF" strokeWidth={6} />)}
+          </g>
+        );
+      })}
     </g>
   );
 };
@@ -170,43 +195,58 @@ const PondShot: React.FC<{t: number}> = ({t}) => {
   );
 };
 
-const SkyShot: React.FC<{t: number}> = ({t}) => {
+const skyParts = (t: number): Parts => {
   const s = skyState(t);
   const B = basis(s.cam);
   const r = skyReveal(t);
   const tf = t - SKY_T0;
-  return (
-    <g>
-      <SkyBack B={B} t={tf} />
-      <Flock B={B} t={tf} birds={SKY_FLOCK} haze={SKY.haze} />
-      <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />
-    </g>
-  );
+  return {
+    back: (
+      <g>
+        <SkyBack B={B} t={tf} />
+        <Flock B={B} t={tf} birds={SKY_FLOCK} haze={SKY.haze} />
+      </g>
+    ),
+    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />,
+    front: null,
+  };
 };
+const SkyShot: React.FC<{t: number}> = ({t}) => <Shot p={skyParts(t)} />;
 
 // ------------------------------------------------------------------ transitions
-/** a near wing passing close to the lens (seen from above, its span across the frame, trailing edge up) sweeps DOWN the
- *  frame: above its mid-chord the incoming shot, below it the outgoing one */
-const WING_PS: Pose = pose(phiOfPhase(0.25));
-const WingWipe: React.FC<{p: number; under: React.ReactNode; over: React.ReactNode}> = ({p, under, over}) => {
-  const id = uid('ww');
-  const y = lerp(-420, H + 420, p);
-  const W0 = WING_PS.wing.near;
-  const mid = wingPt(W0, 21, 5);
-  const cam = (yy: number): Basis => basis({target: mid, yaw: 90, pitch: 89.5, dist: 3000, scale: 41, cx: 540, cy: yy, roll: -6 + 10 * p});
-  const F0 = bodyFrame([0, 0, 0]);
-  const v = (H + 840) / 0.45; // px/s nominal, for the ghosts
+/** the place changes behind one continuous drone: the incoming background sweeps DOWN the frame on the drone's
+ *  downstroke (an edge curved like the wingtip's arc, with a soft streak of light above it), under the drone; the drone
+ *  and the foreground are swept with their backgrounds, and since both shots frame the same drone at the same place,
+ *  scale and wing phase, it does not change */
+const SweepWipe: React.FC<{p: number; out: Parts; inn: Parts}> = ({p, out, inn}) => {
+  const id = uid('sw');
+  const sag = 80;
+  const y = lerp(-2 * sag - 40, H + 40, p);
+  const curve = (dy: number) => `-60,${(y + dy).toFixed(1)} Q${W / 2},${(y + dy + 2 * sag).toFixed(1)} ${W + 60},${(y + dy).toFixed(1)}`;
+  const above = `M-60,-800 L${W + 60},-800 L${W + 60},${y.toFixed(1)} Q${W / 2},${(y + 2 * sag).toFixed(1)} -60,${y.toFixed(1)} Z`;
+  const below = `M-60,${H + 800} L${W + 60},${H + 800} L${W + 60},${y.toFixed(1)} Q${W / 2},${(y + 2 * sag).toFixed(1)} -60,${y.toFixed(1)} Z`;
+  const band = `M${curve(-170)} L${W + 60},${y.toFixed(1)} Q${W / 2},${(y + 2 * sag).toFixed(1)} -60,${y.toFixed(1)} Z`;
+  const both = (k: keyof Parts) => (
+    <g>
+      <g clipPath={`url(#${id}b)`}>{out[k]}</g>
+      <g clipPath={`url(#${id}a)`}>{inn[k]}</g>
+    </g>
+  );
   return (
     <g>
       <defs>
-        <clipPath id={`${id}u`}><rect x={-50} y={y} width={W + 100} height={H + 900} /></clipPath>
-        <clipPath id={`${id}o`}><rect x={-50} y={-900} width={W + 100} height={y + 900} /></clipPath>
+        <clipPath id={`${id}a`}><path d={above} /></clipPath>
+        <clipPath id={`${id}b`}><path d={below} /></clipPath>
+        <linearGradient id={`${id}g`} x1="0" y1={y - 170} x2="0" y2={y + 2 * sag} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity={0.42} />
+        </linearGradient>
       </defs>
-      <g clipPath={`url(#${id}u)`}>{under}</g>
-      <g clipPath={`url(#${id}o)`}>{over}</g>
-      <g opacity={0.22}><NearWing B={cam(y - v / FPS * 0.66)} F={F0} ps={WING_PS} /></g>
-      <g opacity={0.4}><NearWing B={cam(y - v / FPS * 0.33)} F={F0} ps={WING_PS} /></g>
-      <NearWing B={cam(y)} F={F0} ps={WING_PS} />
+      {both('back')}
+      <path d={band} fill={`url(#${id}g)`} />
+      <path d={`M${curve(0)}`} fill="none" stroke="#FFFFFF" strokeWidth={3} opacity={0.55} />
+      {both('bird')}
+      {both('front')}
     </g>
   );
 };
@@ -254,30 +294,32 @@ const CrestWipe: React.FC<{p: number; t: number; under: React.ReactNode; over: R
       <defs><clipPath id={`${id}l`}><path d={left} /></clipPath></defs>
       {under}
       <g clipPath={`url(#${id}l)`}>{over}</g>
-      <path d={edge} fill="none" stroke={C.waterLit} strokeWidth={70} opacity={0.55} strokeLinecap="round" />
-      <path d={edge} fill="none" stroke="#FFFFFF" strokeWidth={14} opacity={0.9} strokeLinecap="round" />
-      <path d={edge} fill="none" stroke={C.water} strokeWidth={4} opacity={0.6} transform="translate(-20,0)" />
+      <path d={edge} fill="none" stroke={C.water} strokeWidth={96} strokeLinecap="round" />
+      <path d={edge} fill="none" stroke={C.waterLit} strokeWidth={56} strokeLinecap="round" transform="translate(10,0)" />
+      <path d={edge} fill="none" stroke="#FFFFFF" strokeWidth={14} opacity={0.95} strokeLinecap="round" transform="translate(30,0)" />
+      <path d={edge} fill="none" stroke={INK} strokeWidth={2.2} opacity={0.45} transform="translate(-46,0)" />
     </g>
   );
 };
 
 // ------------------------------------------------------------------ the scope labels
-const ScopeLabel: React.FC<{text: string; a: number; x: number; y: number}> = ({text, a, x, y}) =>
+const ScopeLabel: React.FC<{text: string; a: number; y: number}> = ({text, a, y}) =>
   a <= 0.01 ? null : (
-    <div style={{position: 'absolute', left: x, top: y, opacity: a, transform: 'translateZ(0)', padding: '7px 16px 8px', borderRadius: 999, background: C.labelBg,
-      border: '1.5px solid rgba(244,241,232,0.55)', color: C.labelText, fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 800, fontSize: 27, letterSpacing: '0.16em', lineHeight: 1}}>
-      {text}
+    <div style={{position: 'absolute', left: 0, width: W, top: y, textAlign: 'center', opacity: a, transform: 'translateZ(0)'}}>
+      <span style={{display: 'inline-block', padding: '7px 16px 8px', borderRadius: 999, background: C.labelBg, border: '1.5px solid rgba(244,241,232,0.55)', color: C.labelText,
+        fontFamily: '"Nunito Variable", "Nunito", system-ui, sans-serif', fontWeight: 800, fontSize: 27, letterSpacing: '0.16em', lineHeight: 1}}>
+        {text}
+      </span>
     </div>
   );
 const labelOps = (t: number) => {
   const sch = Math.max(
-    ss(t, 0.3, 0.55) * (1 - ss(t, OPEN_REVEAL.close[0], OPEN_REVEAL.close[1])),
-    ss(t, LAB.lift[0] + 0.45, LAB.lift[0] + 0.75) * (1 - ss(t, LAB.seat[1] - 0.25, LAB.seat[1] + 0.05)),
-    ss(t, LAB.cutOpen[0] + 0.15, LAB.cutOpen[1]) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[0] + 0.25)),
-    ss(t, T.using2, T.using2 + 0.2) * (1 - ss(t, T.duckEnd, T.duckEnd + 0.25)),
-    ss(t, SKY_REVEAL.open[0], SKY_REVEAL.open[0] + 0.15) * (1 - ss(t, SKY_REVEAL.close[0], SKY_REVEAL.close[1])),
+    ss(t, 0.25, 0.45) * (1 - ss(t, OPEN_REVEAL.close[0], OPEN_REVEAL.close[1])), // the opening cutaway
+    ss(t, LAB.lift[0] + 0.45, LAB.lift[0] + 0.75) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[0] + 0.25)), // exploded view through the close drive
+    ss(t, T.robot + 0.2, T.robot + 0.45) * (1 - ss(t, CUT.pondToSky[0], CUT.pondToSky[0] + 0.2)), // the duck's split view
+    ss(t, SKY_REVEAL.open[0], SKY_REVEAL.open[0] + 0.15) * (1 - ss(t, SKY_REVEAL.close[0], SKY_REVEAL.close[1])), // the callback
   );
-  const res = ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, CUT.meadowToPond[0] - 0.1, CUT.meadowToPond[0] + 0.1));
+  const res = ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, CUT.meadowToPond[0] - 0.2, CUT.meadowToPond[0]));
   return {sch, res};
 };
 
@@ -286,13 +328,13 @@ export const pictureAt = (t: number): React.ReactNode => {
   const [lm0, lm1] = CUT.labToMeadow, [mp0, mp1] = CUT.meadowToPond, [ps0, ps1] = CUT.pondToSky, [lp0, lp1] = CUT.loop;
   if (t < CUT.openToLab) return <OpenShot t={t} />;
   if (t < lm0) return <LabShot t={t} />;
-  if (t < lm1) return <WingWipe p={ss5(t, lm0, lm1) * 0.5 + 0.5 * (t - lm0) / (lm1 - lm0)} under={<LabShot t={t} />} over={<MeadowShot t={t} />} />;
+  if (t < lm1) return <SweepWipe p={ss(t, lm0, lm1)} out={labParts(t)} inn={meadowParts(t)} />;
   if (t < mp0) return <MeadowShot t={t} />;
   if (t < mp1) return <WaterlineWipe p={ss(t, mp0, mp1)} t={t} under={<PondShot t={t} />} over={<MeadowShot t={t} />} />;
   if (t < ps0) return <PondShot t={t} />;
   if (t < ps1) return <CrestWipe p={ss(t, ps0, ps1)} t={t} under={<PondShot t={t} />} over={<SkyShot t={t} />} />;
   if (t < lp0) return <SkyShot t={t} />;
-  if (t < lp1) return <WingWipe p={ss5(t, lp0, lp1) * 0.6 + 0.4 * (t - lp0) / (lp1 - lp0)} under={<SkyShot t={t} />} over={<OpenShot t={t - DUR} />} />;
+  if (t < lp1) return <SweepWipe p={ss(t, lp0, lp1)} out={skyParts(t)} inn={openParts(t - DUR)} />;
   return <OpenShot t={t - DUR} />;
 };
 
@@ -305,8 +347,8 @@ export const FilmFrame: React.FC<{f: number; captions: boolean}> = ({f, captions
       <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute', left: 0, top: 0}}>
         {pictureAt(t)}
       </svg>
-      <ScopeLabel text="SCHEMATIC" a={L.sch} x={64} y={1418} />
-      <ScopeLabel text="RESEARCH GOAL" a={L.res} x={64} y={1418} />
+      <ScopeLabel text="SCHEMATIC" a={L.sch} y={LABEL_Y} />
+      <ScopeLabel text="RESEARCH GOAL" a={L.res} y={LABEL_Y} />
       {captions && <Captions t={t} />}
     </AbsoluteFill>
   );

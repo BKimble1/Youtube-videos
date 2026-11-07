@@ -7,10 +7,18 @@
 // depth, like a matte painting that still moves with the correct parallax for its distance. Every layer is softened by a
 // simple depth-of-field model focused where the view axis crosses z = 0 (the bird's plane), so the bird stays crisp and
 // the world falls into soft bokeh. Deterministic: no randomness beyond the lib hash/noise.
+//
+// FILTER SAFETY (a Chromium bug, reproduced in the headless shell the film renders with): when everything inside a
+// filtered group (<g filter>) is culled, because it lies outside the frame or under an ancestor clip such as a wipe,
+// any descendant that opens its own compositing layer (an `opacity` attribute on an element or group, or a
+// `clip-path`) is painted as a small blurred rectangle at the SVG origin (the top-left corner). So inside every
+// filtered group in this module (Soft, the fence, the meadow foreground) transparency is given with fillOpacity /
+// strokeOpacity (or pre-mixed colours) and clipping is done with geometry, never with opacity or clip-path; and the
+// fence feeds its filters only posts, staples and wires whose blurred footprint touches the frame.
 import React from 'react';
 import {add3, Basis, cross3, deg, depth, dot3, lerp3, mul3, norm3, P2, planeMatrix, poly, proj, rad, smoothClosed, smoothOpen, SP, sub3, UP, unproj, V2, V3} from '../three';
 import {CRADLE} from '../rig';
-import {C, INK, LINE_PX, NS} from './palette';
+import {C, INK, INK_PX, LINE_PX, NS} from './palette';
 import {clamp, hash, lerp, noise1} from '../lib';
 import {mix} from '../core/color';
 import {uid} from '../core/ids';
@@ -31,7 +39,9 @@ export const coc = (B: Basis, d: number, A: number) => {
   const dF = focusDepth(B);
   return A * (B.f / dF) * Math.abs(1 - dF / Math.max(1, d));
 };
-/** a group softened by a gaussian blur of about px (screen px across); skipped when negligible */
+/** a group softened by a gaussian blur of about px (screen px across); skipped when negligible. Its children must not
+ *  use `opacity` or `clip-path` (see FILTER SAFETY above); the optional opacity here sits outside the filter, which is
+ *  safe. */
 export const Soft: React.FC<{px: number; opacity?: number; children?: React.ReactNode}> = ({px, opacity, children}) => {
   const sd = Math.round(Math.min(px, 90) * 2) / 4; // stdDeviation = px / 2, quantised to 0.25 px
   if (sd < 0.35) return <g opacity={opacity}>{children}</g>;
@@ -228,9 +238,12 @@ export const FIELD = {
   groundY: -140,
   fenceZ: -150,
   postGap: 260,
-  /** a post that passes behind the bird at t = 0.5 s in the story's opening: the bird is at x = 0.5 V and the yaw-14
-   *  camera sees the fence line (150 cm behind the bird) shifted by 150 tan(14 deg) toward -x */
-  postX0: 0.5 * 200 - 150 * Math.tan((14 * Math.PI) / 180),
+  /** the fence's phase: a post stands at x = postX0 + k postGap. Through the story's frame-0 camera (yaw 14, pitch 7,
+   *  dist 900, 17.5 px/cm at the bird, cx 455, target x -2.5) post k = 0 is already in the thumbnail, its top at
+   *  x = 900 px below and right of the bird, and it slides behind (below) the bird by about 0.3 s (the bird flies at
+   *  V = 200 cm/s, the posts move about 100 px per frame). The closing frames draw the same world at t - DUR, so the
+   *  loop meets the same post. */
+  postX0: -8,
   postW: 12,
   /** post tops sit well below the bird's belly at the opening cameras (no tangent with the bird's silhouette) */
   postTop: -40,
@@ -290,10 +303,12 @@ const Valley: React.FC<{B: Basis; Z: number; yRef: number; tops: number[]; cols:
         // rhythm and strength, a lighter top on the crowns like the treeline (never a dashed stroke)
         const h = hedgeRow(B, Z + i * 1500 - 300, yRef, (x) => e + 0.07 * noise1(x / 4000, 20 + i), 31 + i * 7.7);
         if (!h.body.length) return null;
+        // (drawn inside a Soft blur: per-path fillOpacity, never a group opacity)
+        const a = 0.42 + 0.3 * hash(i * 9.1 + 5);
         return (
-          <g key={`h${i}`} opacity={0.42 + 0.3 * hash(i * 9.1 + 5)}>
-            <path d={blobsPath(h.body, 1.25, 0.78)} fill={mix(hedge, haze, k + 0.05)} />
-            <path d={blobsPath(h.hl, 1.2, 0.7)} fill={lit} />
+          <g key={`h${i}`}>
+            <path d={blobsPath(h.body, 1.25, 0.78)} fill={mix(hedge, haze, k + 0.05)} fillOpacity={a} />
+            <path d={blobsPath(h.hl, 1.2, 0.7)} fill={lit} fillOpacity={a} />
           </g>
         );
       })}
@@ -442,14 +457,15 @@ const Post: React.FC<{B: Basis; x: number; seed: number; inkA?: number}> = ({B, 
           <stop offset={1} stopColor="#7E6046" />
         </linearGradient>
       </defs>
-      <path d={sil} fill={INK} stroke={INK} strokeWidth={2.6} strokeLinejoin="round" vectorEffect={NS} opacity={inkA} />
+      {/* drawn inside the fence's blur filter: fill/stroke opacities only (FILTER SAFETY) */}
+      <path d={sil} fill={INK} stroke={INK} strokeWidth={INK_PX} strokeLinejoin="round" vectorEffect={NS} fillOpacity={inkA} strokeOpacity={inkA} />
       <path d={poly(g.front)} fill={`url(#${id})`} />
       <path d={poly(g.side)} fill="#5F4733" />
       <path d={poly(g.topF)} fill="#C2A27A" />
-      <path d={grains.join(' ')} fill="none" stroke="#5E452F" strokeWidth={LINE_PX} opacity={0.55} vectorEffect={NS} />
-      <path d={smoothOpen(crack)} fill="none" stroke="#4A3524" strokeWidth={LINE_PX} opacity={0.7} vectorEffect={NS} />
-      <ellipse cx={knot.x} cy={knot.y} rx={1.3 * s} ry={2.1 * s} fill="#6B4E36" stroke="#4A3524" strokeWidth={1} opacity={0.8} vectorEffect={NS} />
-      <path d={poly([fr[2], fr[1]])} stroke={INK} strokeWidth={LINE_PX} opacity={0.35} vectorEffect={NS} />
+      <path d={grains.join(' ')} fill="none" stroke="#5E452F" strokeWidth={LINE_PX} strokeOpacity={0.55} vectorEffect={NS} />
+      <path d={smoothOpen(crack)} fill="none" stroke="#4A3524" strokeWidth={LINE_PX} strokeOpacity={0.7} vectorEffect={NS} />
+      <ellipse cx={knot.x} cy={knot.y} rx={1.3 * s} ry={2.1 * s} fill="#6B4E36" stroke="#4A3524" strokeWidth={1} fillOpacity={0.8} strokeOpacity={0.8} vectorEffect={NS} />
+      <path d={poly([fr[2], fr[1]])} stroke={INK} strokeWidth={LINE_PX} strokeOpacity={0.35} vectorEffect={NS} />
     </g>
   );
 };
@@ -462,16 +478,49 @@ const hullPts = (pts: V2[]): V2[] => {
   for (let i = p.length - 1; i >= 0; i--) { const q = p[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); }
   return lo.slice(0, -1).concat(up.slice(0, -1));
 };
+/** does the screen box of these points, grown by (mx, my) px, touch the frame? */
+const touches = (pts: V2[], mx: number, my: number) => {
+  let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (const p of pts) {
+    x0 = Math.min(x0, p.x);
+    x1 = Math.max(x1, p.x);
+    y0 = Math.min(y0, p.y);
+    y1 = Math.max(y1, p.y);
+  }
+  return x1 > -mx && x0 < W + mx && y1 > -my && y0 < H + my;
+};
+/** the fence wire: a weathered galvanised grey pulled toward the grass it is seen against, so it sits in the field at
+ *  the grass's depth instead of reading as a crisp line drawn over the frame */
+const WIRE = '#5E6A5E', WIRE_LIT = '#F1F3E6';
 /** the post-and-wire fence along the flight line. defocus = the depth-of-field blur (px across); the posts also
- *  carry a horizontal motion smear (the camera tracks the bird at FIELD.V; a 180-degree shutter) */
-const Fence: React.FC<{B: Basis; defocus: number}> = ({B, defocus}) => {
+ *  carry a horizontal motion smear (the camera tracks the bird at FIELD.V; a 180-degree shutter). grass = the blur of
+ *  the field's grass (px across): the wires are softened to about the grass around them. Only posts, wires and staples
+ *  whose blurred footprint touches the frame are drawn (FILTER SAFETY: a filter is never fed off-frame content only). */
+const Fence: React.FC<{B: Basis; defocus: number; grass?: number}> = ({B, defocus, grass = 0}) => {
   const {fenceZ: Z, postGap: G, postX0: X0, wires} = FIELD;
   const [lo, hi] = spanX(B, Z, 260);
   const k0 = Math.ceil((lo - X0) / G) - 1, k1 = Math.floor((hi - X0) / G) + 1;
   const ks: number[] = [];
   for (let k = k0; k <= k1 && ks.length < 40; k++) ks.push(k);
   const zw = Z + FIELD.postW / 2 + 0.6;
-  const wirePaths = wires.map((wy, wi) => {
+  // blur: depth of field everywhere; the posts and staples add the shutter smear along x (a box of smear px ~ a
+  // gaussian of 0.29 smear)
+  const q4 = (v: number) => Math.round(v * 4) / 4;
+  const sdD = q4(Math.min(defocus, 90) / 2);
+  const sx = proj(B, [(lo + hi) / 2, -90, Z]).s;
+  const smear = FIELD.V * (1 / 60) * sx;
+  const sdX = q4(Math.hypot(sdD, 0.29 * smear));
+  // a smeared post has no crisp edge left anywhere: its horizontal top and the ink above it get a vertical blur too,
+  // and the ink silhouette fades with the smear (it would otherwise survive as a dark hairline over the post's top)
+  const sdY = q4(Math.max(sdD, 0.3 * sdX, 1.5));
+  const inkA = 1 - 0.8 * clamp(smear / 40);
+  // the wires: about a third of the grass's blur (never crisper than the posts' own depth of field)
+  const sdW = q4(Math.max(sdD, 0.3 * grass));
+  const posts = ks.filter((k) => {
+    const g = postGeo(B, X0 + k * G, k * 17.3 + 4);
+    return touches([...g.front, ...g.side, ...g.topF], 3 * sdX + 4, 3 * sdY + 4);
+  });
+  const wirePaths = wires.flatMap((wy, wi) => {
     const pts: V2[] = [];
     ks.forEach((k, i) => {
       if (i === ks.length - 1) {
@@ -483,47 +532,43 @@ const Fence: React.FC<{B: Basis; defocus: number}> = ({B, defocus}) => {
         pts.push(xy(proj(B, [X0 + (k + u) * G, wy - (2.2 + 0.6 * wi) * 4 * u * (1 - u), zw])));
       }
     });
-    return smoothOpen(pts);
+    return touches(pts, 3 * sdW + 4, 3 * sdW + 4) ? [smoothOpen(pts)] : [];
   });
-  const staples = ks.flatMap((k) => wires.map((wy) => proj(B, [X0 + k * G, wy, zw])));
-  // blur: depth of field everywhere; the posts and staples add the shutter smear along x (a box of smear px ~ a
-  // gaussian of 0.29 smear)
-  const sdD = Math.round(Math.min(defocus, 90) * 2) / 4;
-  const sx = proj(B, [(lo + hi) / 2, -90, Z]).s;
-  const smear = FIELD.V * (1 / 60) * sx;
-  const sdX = Math.round(Math.hypot(sdD, 0.29 * smear) * 4) / 4;
-  // a smeared post has no crisp edge left anywhere: its horizontal top and the ink above it get a vertical blur too,
-  // and the ink silhouette fades with the smear (it would otherwise survive as a dark hairline over the post's top)
-  const sdY = Math.round(Math.max(sdD, 0.3 * sdX, 1.5) * 4) / 4;
-  const inkA = 1 - 0.8 * clamp(smear / 40);
+  const staples = ks.flatMap((k) => wires.map((wy) => proj(B, [X0 + k * G, wy, zw]))).filter((p) => touches([p], 3 * sdX + 6, 3 * sdY + 6));
   const idW = uid('wfw'), idP = uid('wfp');
   const filt = (id: string, a: number, b: number) => (
     <filter id={id} filterUnits="userSpaceOnUse" x={-320} y={-320} width={W + 640} height={H + 640} colorInterpolationFilters="sRGB">
       <feGaussianBlur stdDeviation={`${a} ${b}`} />
     </filter>
   );
-  const wireOn = sdD >= 0.35;
+  const wireOn = sdW >= 0.35;
   return (
     <g>
       <defs>
-        {wireOn && filt(idW, sdD, sdD)}
-        {filt(idP, sdX, sdY)}
+        {wireOn && wirePaths.length > 0 && filt(idW, sdW, sdW)}
+        {(posts.length > 0 || staples.length > 0) && filt(idP, sdX, sdY)}
       </defs>
-      <g filter={`url(#${idP})`}>
-        {ks.map((k) => <Post key={k} B={B} x={X0 + k * G} seed={k * 17.3 + 4} inkA={inkA} />)}
-      </g>
+      {posts.length > 0 && (
+        <g filter={`url(#${idP})`}>
+          {posts.map((k) => <Post key={k} B={B} x={X0 + k * G} seed={k * 17.3 + 4} inkA={inkA} />)}
+        </g>
+      )}
       {/* the wires run across the posts' front faces, so they are drawn over the posts, and the staples over the wires */}
-      <g filter={wireOn ? `url(#${idW})` : undefined}>
-        {wirePaths.map((d, i) => (
-          <g key={i}>
-            <path d={d} fill="none" stroke="#3B4247" strokeWidth={1.8} vectorEffect={NS} opacity={0.85} />
-            <path d={d} fill="none" stroke="#E7EDEF" strokeWidth={0.7} vectorEffect={NS} opacity={0.55} transform="translate(0,-0.8)" />
-          </g>
-        ))}
-      </g>
-      <g filter={`url(#${idP})`}>
-        {staples.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={Math.max(1.2, 0.7 * p.s)} fill="#3B4247" />)}
-      </g>
+      {wirePaths.length > 0 && (
+        <g filter={wireOn ? `url(#${idW})` : undefined}>
+          {wirePaths.map((d, i) => (
+            <g key={i}>
+              <path d={d} fill="none" stroke={WIRE} strokeWidth={1.8} vectorEffect={NS} strokeOpacity={0.6} />
+              <path d={d} fill="none" stroke={WIRE_LIT} strokeWidth={0.8} vectorEffect={NS} strokeOpacity={0.3} transform="translate(0,-0.9)" />
+            </g>
+          ))}
+        </g>
+      )}
+      {staples.length > 0 && (
+        <g filter={`url(#${idP})`}>
+          {staples.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r={Math.max(1.2, 0.7 * p.s)} fill={WIRE} />)}
+        </g>
+      )}
     </g>
   );
 };
@@ -548,7 +593,7 @@ export const FieldBack: React.FC<Env> = ({B, t}) => {
       <Soft px={coc(B, browD, FIELD_A)}>
         <FieldGround B={B} t={t} />
       </Soft>
-      <Fence B={B} defocus={coc(B, postD, FIELD_A) * 0.8} />
+      <Fence B={B} defocus={coc(B, postD, FIELD_A) * 0.8} grass={coc(B, browD, FIELD_A)} />
     </g>
   );
 };
@@ -619,7 +664,7 @@ const Pegboard: React.FC<{B: Basis}> = ({B}) => {
         </pattern>
       </defs>
       {/* shadow of the panel on the wall */}
-      <path d={quadZ(B, LABSET.wallZ + 0.1, x0 + 1.2, x1 + 1.2, y0 - 1.6, y1 - 1.6)} fill="#AEBCC5" opacity={0.6} />
+      <path d={quadZ(B, LABSET.wallZ + 0.1, x0 + 1.2, x1 + 1.2, y0 - 1.6, y1 - 1.6)} fill="#AEBCC5" fillOpacity={0.6} />
       <path d={quadZ(B, Z, x0, x1, y0, y1)} fill="#C9D2D6" />
       <path d={quadZ(B, Z, x0 + frame, x1 - frame, y0 + frame, y1 - frame)} fill="#E4E9EA" />
       <path d={quadZ(B, Z, x0 + frame, x1 - frame, y0 + frame, y1 - frame)} fill={`url(#${pid})`} />
@@ -644,8 +689,12 @@ export const TOOLS = {
 };
 const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
   const at = (x: number, y: number) => planeMatrix(B, [x, y, Z], [1, 0, 0], [0, -1, 0]);
-  const sw = {stroke: '#2E3D48', strokeWidth: 1.2, vectorEffect: NS, strokeLinejoin: 'round' as const};
-  const shadow = (k: string, d: string, tr: string) => <path key={k} d={d} transform={`${tr} translate(0.6,0.8)`} fill="#7D8C95" opacity={0.32} />;
+  // the tools sit a little into the board's tone (12%): pre-mixed toward the board instead of a group opacity, because
+  // they are drawn inside the wall's blur filter (FILTER SAFETY)
+  const BOARD = '#E4E9EA', TA = 0.88;
+  const tc = (c: string) => mix(c, BOARD, 1 - TA);
+  const sw = {stroke: tc('#2E3D48'), strokeWidth: 1.2, vectorEffect: NS, strokeLinejoin: 'round' as const};
+  const shadow = (k: string, d: string, tr: string) => <path key={k} d={d} transform={`${tr} translate(0.6,0.8)`} fill="#7D8C95" fillOpacity={0.32 * TA} />;
   const T = TOOLS;
   const [dx, dcol, hl, sl] = T.driver;
   // needle-nose pliers hung by the pivot: slim jaws up, red grips spreading down (8 cm in all)
@@ -653,29 +702,29 @@ const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
   const gripL = 'M-0.45,0.5 Q-1.2,2.8 -1.55,5.6 L-0.72,5.7 Q-0.5,3.1 0.05,1.0 Z', gripR = 'M0.45,0.5 Q1.2,2.8 1.55,5.6 L0.72,5.7 Q0.5,3.1 -0.05,1.0 Z';
   const driver = `M-0.75,0.5 L0.75,0.5 L0.75,${fx(0.5 + hl)} L-0.75,${fx(0.5 + hl)} Z`;
   return (
-    <g opacity={0.88}>
+    <g>
       {/* a precision screwdriver hung by its cap */}
       {shadow('s0', `${driver} M-0.17,${fx(0.5 + hl)} L0.17,${fx(0.5 + hl)} L0.17,${fx(0.5 + hl + sl)} L-0.17,${fx(0.5 + hl + sl)} Z`, at(dx, T.y))}
       <g transform={at(dx, T.y)}>
-        <rect x={-0.75} y={0.5} width={1.5} height={hl} rx={0.6} fill={dcol} {...sw} />
-        <rect x={-0.45} y={1.1} width={0.32} height={hl - 1.2} rx={0.15} fill="#FFFFFF" opacity={0.45} />
-        <rect x={-0.17} y={0.5 + hl} width={0.34} height={sl} fill={C.steel} {...sw} />
-        <circle cx={0} cy={0.35} r={0.45} fill={C.steelDeep} />
+        <rect x={-0.75} y={0.5} width={1.5} height={hl} rx={0.6} fill={tc(dcol)} {...sw} />
+        <rect x={-0.45} y={1.1} width={0.32} height={hl - 1.2} rx={0.15} fill="#FFFFFF" fillOpacity={0.45 * TA} />
+        <rect x={-0.17} y={0.5 + hl} width={0.34} height={sl} fill={tc(C.steel)} {...sw} />
+        <circle cx={0} cy={0.35} r={0.45} fill={tc(C.steelDeep)} />
       </g>
       {/* small pliers */}
       {shadow('s1', `${jaws} ${gripL} ${gripR}`, at(T.pliers[0], T.pliers[1] - 2.6))}
       <g transform={at(T.pliers[0], T.pliers[1] - 2.6)}>
-        <path d={jaws} fill={C.steel} {...sw} />
-        <path d={gripL} fill="#C2564A" {...sw} />
-        <path d={gripR} fill="#C2564A" {...sw} />
-        <circle cx={0} cy={0.35} r={0.42} fill={C.steelDeep} />
+        <path d={jaws} fill={tc(C.steel)} {...sw} />
+        <path d={gripL} fill={tc('#C2564A')} {...sw} />
+        <path d={gripR} fill={tc('#C2564A')} {...sw} />
+        <circle cx={0} cy={0.35} r={0.42} fill={tc(C.steelDeep)} />
       </g>
       {/* a small roll of tape hanging on its hook through the core */}
       <g transform={at(T.tape[0], T.tape[1])}>
-        <circle cx={0.6} cy={2.3} r={3.1} fill="#7D8C95" opacity={0.3} />
-        <circle cx={0} cy={1.5} r={3.1} fill="#E9E4D6" {...sw} />
-        <circle cx={0} cy={1.5} r={1.5} fill="#C9D2D6" {...sw} />
-        <circle cx={-1.1} cy={0.4} r={0.7} fill="#FFFFFF" opacity={0.45} />
+        <circle cx={0.6} cy={2.3} r={3.1} fill="#7D8C95" fillOpacity={0.3 * TA} />
+        <circle cx={0} cy={1.5} r={3.1} fill={tc('#E9E4D6')} {...sw} />
+        <circle cx={0} cy={1.5} r={1.5} fill={tc('#C9D2D6')} {...sw} />
+        <circle cx={-1.1} cy={0.4} r={0.7} fill="#FFFFFF" fillOpacity={0.45 * TA} />
       </g>
     </g>
   );
@@ -787,17 +836,17 @@ const Bench: React.FC<{B: Basis}> = ({B}) => {
         const a = proj(B, [x - 6, BY + y, zf - 2.6]), b = proj(B, [x + 6, BY + y, zf - 2.6]);
         return <path key={`${x}_${y}`} d={`M${P2(a)} L${P2(b)}`} stroke="#E6ECEF" strokeWidth={Math.max(1.5, 1.4 * a.s)} strokeLinecap="round" />;
       }))}
-      <path d={quadZ(B, zf - 2.8, x0, x1, BY - 9, BY - 3.6)} fill="#6F7E88" opacity={0.55} />
+      <path d={quadZ(B, zf - 2.8, x0, x1, BY - 9, BY - 3.6)} fill="#6F7E88" fillOpacity={0.55} />
       <path d={quadZ(B, zf, x0, x1, BY - 3.6, BY)} fill="#A8987C" />
       <path d={quadY(B, BY, x0, x1, zb, zf)} fill={`url(#${id})`} />
-      <path d={poly(projPoly(B, [[x0, BY, zf], [x1, BY, zf]]), false)} stroke="#F4EDE0" strokeWidth={1.6} vectorEffect={NS} opacity={0.9} />
+      <path d={poly(projPoly(B, [[x0, BY, zf], [x1, BY, zf]]), false)} stroke="#F4EDE0" strokeWidth={1.6} vectorEffect={NS} strokeOpacity={0.9} />
       {/* contact shadow along the wall */}
-      <path d={quadY(B, BY + 0.05, x0, x1, zb, zb + 5)} fill="#9E9078" opacity={0.35} />
+      <path d={quadY(B, BY + 0.05, x0, x1, zb, zb + 5)} fill="#9E9078" fillOpacity={0.35} />
       {/* the cutting mat */}
       <path d={quadY(B, BY + 0.2, mat.x0, mat.x1, mat.z0, mat.z1)} fill="#2F6E5C" />
       <path d={quadY(B, BY + 0.28, mat.x0 + 0.6, mat.x1 - 0.6, mat.z0 + 0.6, mat.z1 - 0.6)} fill="#3E8A72" />
-      <path d={grid.join(' ')} fill="none" stroke="#CFEBDD" strokeWidth={0.8} opacity={0.32} vectorEffect={NS} />
-      <path d={major.join(' ')} fill="none" stroke="#E4F5EC" strokeWidth={1.3} opacity={0.42} vectorEffect={NS} />
+      <path d={grid.join(' ')} fill="none" stroke="#CFEBDD" strokeWidth={0.8} strokeOpacity={0.32} vectorEffect={NS} />
+      <path d={major.join(' ')} fill="none" stroke="#E4F5EC" strokeWidth={1.3} strokeOpacity={0.42} vectorEffect={NS} />
       {/* the lamp's light pool */}
       <g transform={planeMatrix(B, add3(LABSET.lamp.aim, [0, 0.4, 0]), [1, 0, 0], [0, 0, 1])}>
         <ellipse cx={0} cy={0} rx={34} ry={30} fill={`url(#${pid})`} />
@@ -858,10 +907,10 @@ export const LabFront: React.FC<Env> = ({B}) => {
   const sh = (a: SP, b: SP, ra: number, rb: number, dy: number) => capsule({x: a.x, y: a.y + dy * a.s}, {x: b.x, y: b.y + dy * b.s}, ra * a.s, rb * b.s);
   return (
     <Soft px={coc(B, d, LAB_A)}>
-      <path d={sh(sd0, sd2, 0.9, 0.5, 0.6)} fill="#24333D" opacity={0.18} />
+      <path d={sh(sd0, sd2, 0.9, 0.5, 0.6)} fill="#24333D" fillOpacity={0.18} />
       {/* each tweezer arm casts its own thin shadow (the arms' own radii) */}
-      <path d={sh(tw0, tw1, 0.32, 0.12, 0.4)} fill="#24333D" opacity={0.15} />
-      <path d={sh(tw0, tw2, 0.32, 0.12, 0.4)} fill="#24333D" opacity={0.15} />
+      <path d={sh(tw0, tw1, 0.32, 0.12, 0.4)} fill="#24333D" fillOpacity={0.15} />
+      <path d={sh(tw0, tw2, 0.32, 0.12, 0.4)} fill="#24333D" fillOpacity={0.15} />
       <path d={capsule(sd0, sd1, 0.85 * sd0.s, 0.75 * sd1.s)} fill="#3F7FA8" stroke={INK} strokeWidth={1.4} vectorEffect={NS} />
       <path d={capsule(sd1, sd2, 0.18 * sd1.s, 0.12 * sd2.s)} fill={C.steel} stroke={INK} strokeWidth={1.2} vectorEffect={NS} />
       {/* tweezers: two narrow tapered steel arms in a shallow V, joined at the back */}
@@ -1011,7 +1060,7 @@ const MeadowFarGround: React.FC<{B: Basis; t: number}> = ({B, t}) => {
     const ks = lat(a, b, st);
     const top = ks.map((k) => xy(proj(B, [k * st, Y + 0.3, (zc as number) - (wz as number) * (0.6 + 0.4 * noise1(k * st / 500, 70 + i))])));
     const bot = ks.map((k) => xy(proj(B, [k * st, Y + 0.3, (zc as number) + (wz as number) * (0.6 + 0.4 * noise1(k * st / 430, 80 + i))]))).reverse();
-    return <path key={`st${i}`} d={poly([...top, ...bot])} fill={mix(c as string, M_HAZE, 0.3)} opacity={0.75} />;
+    return <path key={`st${i}`} d={poly([...top, ...bot])} fill={mix(c as string, M_HAZE, 0.3)} fillOpacity={0.75} />;
   });
   // a few low willow shrubs toward the edge
   const shrubs: Blob[] = [];
@@ -1055,11 +1104,20 @@ const MeadowWater: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const water = poly([...fb, ...[...nb].reverse()]);
   const yF = fb.reduce((a, p) => a + p.y, 0) / Math.max(1, fb.length);
   const yN = nb.reduce((a, p) => a + p.y, 0) / Math.max(1, nb.length);
-  const id = uid('wwat'), cid = uid('wwatc');
-  // reflections of the far bank vegetation: a dark soft band under the bank
-  const refl: V2[] = fb.map((p, i) => ({x: p.x, y: p.y + (yN - yF) * (0.16 + 0.1 * (0.5 + 0.5 * noise1(i * 0.35, 51)))}));
-  const reflP = poly([...fb.map((p) => ({x: p.x, y: p.y - 2})), ...[...refl].reverse()]);
-  // glints: short horizontal streaks on the water, world-anchored
+  const id = uid('wwat');
+  // reflections of the far bank vegetation: a dark soft band under the bank. It is bounded by geometry, not a clip (this
+  // is drawn inside a blur filter: FILTER SAFETY): its top is the far bank's own edge and its foot stays above the near
+  // bank at every x
+  const nbY = (x: number) => {
+    if (!nb.length) return Infinity;
+    if (x <= nb[0].x) return nb[0].y;
+    for (let i = 1; i < nb.length; i++) if (x <= nb[i].x) return lerp(nb[i - 1].y, nb[i].y, (x - nb[i - 1].x) / Math.max(1e-6, nb[i].x - nb[i - 1].x));
+    return nb[nb.length - 1].y;
+  };
+  const refl: V2[] = fb.map((p, i) => ({x: p.x, y: Math.max(p.y, Math.min(p.y + (yN - yF) * (0.16 + 0.1 * (0.5 + 0.5 * noise1(i * 0.35, 51))), nbY(p.x) - 2))}));
+  const reflP = poly([...fb, ...[...refl].reverse()]);
+  // glints: short horizontal streaks on the water, world-anchored (their rows lie between the banks' extremes, so they
+  // fall on the water without a clip)
   const gl: string[] = [];
   for (let z = MEADOW.nearBankZ - 120; z > MEADOW.farBankZ + 150; z -= 170) {
     const [a, b] = spanX(B, z, 100);
@@ -1082,13 +1140,10 @@ const MeadowWater: React.FC<{B: Basis; t: number}> = ({B, t}) => {
           <stop offset={0.35} stopColor="#B5DAE3" />
           <stop offset={1} stopColor="#86BDD0" />
         </linearGradient>
-        <clipPath id={cid}><path d={water} /></clipPath>
       </defs>
       <path d={water} fill={`url(#${id})`} />
-      <g clipPath={`url(#${cid})`}>
-        <path d={reflP} fill={mix('#6D8F6A', '#B5DAE3', 0.35)} opacity={0.55} />
-        <path d={gl.join(' ')} stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" opacity={0.6} />
-      </g>
+      <path d={reflP} fill={mix('#6D8F6A', '#B5DAE3', 0.35)} fillOpacity={0.55} />
+      <path d={gl.join(' ')} stroke="#FFFFFF" strokeWidth={2.2} strokeLinecap="round" strokeOpacity={0.6} />
     </g>
   );
 };
@@ -1116,9 +1171,9 @@ const MeadowNear: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         const lobes = [[0, 0, 1, 1], [0.55, 0.25, 0.6, 0.7], [-0.5, -0.2, 0.55, 0.75]];
         pools.push(
           <g key={`p${ri}_${k}`} transform={planeMatrix(B, [x, Y + 0.5, zz], [1, 0, 0], [0, 0, 1])}>
-            {lobes.map(([u, v, a, b2], j) => <ellipse key={`r${j}`} cx={u * rx} cy={v * rz - 4} rx={a * rx + 5} ry={b2 * rz + 5} fill="#7E9A5A" opacity={0.55} />)}
+            {lobes.map(([u, v, a, b2], j) => <ellipse key={`r${j}`} cx={u * rx} cy={v * rz - 4} rx={a * rx + 5} ry={b2 * rz + 5} fill="#7E9A5A" fillOpacity={0.55} />)}
             {lobes.map(([u, v, a, b2], j) => <ellipse key={`w${j}`} cx={u * rx} cy={v * rz} rx={a * rx} ry={b2 * rz} fill="#A9D2DB" />)}
-            <ellipse cx={0} cy={rz * 0.25} rx={rx * 0.6} ry={rz * 0.35} fill="#CDE6EB" opacity={0.7} />
+            <ellipse cx={0} cy={rz * 0.25} rx={rx * 0.6} ry={rz * 0.35} fill="#CDE6EB" fillOpacity={0.7} />
           </g>,
         );
         return;
@@ -1141,7 +1196,7 @@ const MeadowNear: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       </defs>
       <path d={ground} fill={`url(#${id})`} />
       {/* a light muddy lip along the bank */}
-      <path d={smoothOpen(nb)} fill="none" stroke="#C9C39A" strokeWidth={Math.max(2, 14 * proj(B, [0, Y, MEADOW.nearBankZ]).s)} opacity={0.7} />
+      <path d={smoothOpen(nb)} fill="none" stroke="#C9C39A" strokeWidth={Math.max(2, 14 * proj(B, [0, Y, MEADOW.nearBankZ]).s)} strokeOpacity={0.7} />
       {pools}
       {tufts}
     </g>

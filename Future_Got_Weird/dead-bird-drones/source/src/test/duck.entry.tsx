@@ -158,6 +158,9 @@ const Root: React.FC = () => (
     <Composition id="DuckDipFull" component={() => <Full cam={pondCam(17.6)} t={17.6} look={filmLook(17.6)} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckMechClose" component={() => <MechSheet />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckHeadClose" component={() => <Full cam={{target: add3(duckPos(16.3), [17, 14, 0]), yaw: 10, pitch: 6, dist: 700, scale: 48, cy: 960}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
+    {/* the speculum and tertials on the folded wing, close: the split camera and the surface camera */}
+    <Composition id="DuckSpecClose" component={() => <Full cam={{...pondCam(18.2), target: add3(duckPos(18.2), [-10, 6, 0]), scale: 52, cx: 540, cy: 960}} t={18.2} look={filmLook(18.2)} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckSpecSurface" component={() => <Full cam={{...pondCam(16.6), target: add3(duckPos(16.6), [-10, 7, 0]), scale: 52, cx: 540, cy: 960}} t={16.6} look={filmLook(16.6)} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSurfaceClose" component={() => <Full cam={{...surfCam(16.3), target: add3(duckPos(16.3), [-6, 6, 0]), scale: 30, cy: 1000}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
   </>
 );

@@ -21,8 +21,8 @@ import {mix} from '../core/color';
 export type MechLook = {
   /** gear B's angular speed (rad/s) at this frame: draws rotational motion blur on fast parts */
   rate?: number;
-  /** optional emphasis (a soft warm rim/highlight on that part) */
-  focus?: 'P0' | 'A' | 'P1' | 'B' | 'rod' | null;
+  /** optional emphasis (a soft warm rim/highlight on that part). 'motor' = the motor can and its pinion P0 together */
+  focus?: 'P0' | 'A' | 'P1' | 'B' | 'rod' | 'motor' | null;
   /** 0..1: 0 = mid-distance simplification (opening cutaway at ~20 px/cm), 1 = close-up (60-120 px/cm) */
   detail?: number;
   alpha?: number;
@@ -33,10 +33,18 @@ type Tone = {lit: string; base: string; deep: string};
 const BRASS: Tone = {lit: C.brassLit, base: C.brass, deep: mix(C.brass, C.brassDeep, 0.72)};
 const BRASS_SIDE = mix(C.brassDeep, INK, 0.12);
 const STEEL: Tone = {lit: C.steelLit, base: C.steel, deep: C.steelDeep};
-/** the hardened-steel pinions: brighter than any steel around them, so P0 pops off the dark bearing seat behind it */
+/** the hardened-steel pinions: brighter than any steel around them */
 const PINION: Tone = {lit: '#FAFCFD', base: '#CAD3DA', deep: '#66737E'};
 const PINION_SIDE = mix(C.steelDeep, INK, 0.3);
-const ROD: Tone = {lit: '#F6F9FB', base: '#BCC6CE', deep: '#5E6C77'};
+/** the back gear plane (A and P0, behind B and P1): one step darker and less saturated, so the two planes separate */
+const BRASS_BACK: Tone = {lit: mix(C.brassLit, '#C9B88E', 0.4), base: mix(C.brass, '#8F7E58', 0.36), deep: mix(BRASS.deep, INK, 0.2)};
+const BRASS_SIDE_BACK = mix(BRASS_SIDE, INK, 0.18);
+const PINION_BACK: Tone = {lit: '#E8EDF0', base: '#AEB9C2', deep: '#55626D'};
+const PINION_SIDE_BACK = mix(PINION_SIDE, INK, 0.15);
+/** the connecting rods: pale bright steel (a strong value contrast with the navy plate behind them, and a navy ink
+ *  contour against the cream shell); the far rod one step darker (it lies behind the near one) */
+const ROD: Tone = {lit: '#FFFFFF', base: '#D3DCE2', deep: '#73828E'};
+const ROD_FAR: Tone = {lit: '#EEF2F5', base: '#B9C4CC', deep: '#5B6874'};
 const PLATE_T: Tone = {lit: C.plateLit, base: C.plate, deep: mix(C.plate, INK, 0.4)};
 const PLATE_SIDE = mix(C.plate, INK, 0.55);
 const CARBON: Tone = {lit: '#69737D', base: C.carbon, deep: '#121518'};
@@ -45,9 +53,12 @@ const CAN: Tone = {lit: C.steelLit, base: C.motor, deep: C.steelDeep};
 const BAND: Tone = {lit: '#6FA6D6', base: C.motorBand, deep: '#1B456C'};
 const CAP: Tone = {lit: '#737B83', base: C.motorCap, deep: '#1E2226'};
 const COPPER: Tone = {lit: '#F2B07A', base: C.copper, deep: '#87461F'};
-/** the motor's front face (a step darker than the can) and the dark bearing seat around its shaft */
-const MFACE: Tone = {lit: C.steel, base: mix(C.steel, C.steelDeep, 0.6), deep: mix(C.steelDeep, INK, 0.3)};
-const BEARING: Tone = {lit: '#5A6672', base: '#2B333B', deep: '#14181C'};
+/** the motor's steel front end (shaft side): pressed steel, a step darker than the can's side; its bearing boss is
+ *  lighter, the sintered bronze bushing in it warm */
+const MFACE: Tone = {lit: '#D5DCE1', base: mix(C.steel, C.steelDeep, 0.5), deep: mix(C.steelDeep, INK, 0.35)};
+const BOSS: Tone = {lit: '#F4F7F9', base: '#BAC5CD', deep: '#5F6D78'};
+const BRONZE: Tone = {lit: '#E9C08A', base: '#B7864D', deep: '#6E4B22'};
+const SLOT_D = '#1A1F24';
 /** the white nylon 2-pin connector the motor leads plug into */
 const NYLON: Tone = {lit: '#FFFDF8', base: '#E4DDCD', deep: '#A69C88'};
 /** focus emphasis: a saturated warm rim just outside the ink, under a soft pale halo */
@@ -200,33 +211,36 @@ type CylOpt = {
   caps?: 'auto' | 'none' | 'a' | 'b';
   ink?: number;
   noUnder?: boolean;
+  /** radius at b (a frustum: a tapered shank); default = r */
+  r2?: number;
 };
-const cylRims = (c: Ctx, a: V3, b: V3, r: number, n: number) => {
+const cylRims = (c: Ctx, a: V3, b: V3, r: number, n: number, r2 = r) => {
   const d = norm3(sub3(b, a));
   const [e1, e2] = perpBasis(d);
   const ra: V2[] = [], rb: V2[] = [];
   for (let i = 0; i < n; i++) {
     const th = (i / n) * Math.PI * 2;
-    const off = add3(mul3(e1, r * Math.cos(th)), mul3(e2, r * Math.sin(th)));
-    ra.push(pj(c, add3(a, off)));
-    rb.push(pj(c, add3(b, off)));
+    const cs = Math.cos(th), sn = Math.sin(th);
+    ra.push(pj(c, add3(a, add3(mul3(e1, r * cs), mul3(e2, r * sn)))));
+    rb.push(pj(c, add3(b, add3(mul3(e1, r2 * cs), mul3(e2, r2 * sn)))));
   }
   return {d, ra, rb};
 };
 /** a cylinder's screen silhouette (hull of both rims) */
-const cylSil = (c: Ctx, a: V3, b: V3, r: number, n = 18) => {
-  const {ra, rb} = cylRims(c, a, b, r, n);
+const cylSil = (c: Ctx, a: V3, b: V3, r: number, n = 18, r2 = r) => {
+  const {ra, rb} = cylRims(c, a, b, r, n, r2);
   return poly(hull([...ra, ...rb]));
 };
 /** a solid cylinder between body-local points a and b: silhouette (hull of both rims), cross shading, visible cap */
 const cyl = (c: Ctx, a: V3, b: V3, r: number, t: Tone, o: CylOpt = {}): El[] => {
   const out: El[] = [];
   if (len3(sub3(b, a)) < 1e-4) return out;
-  const {d, ra, rb} = cylRims(c, a, b, r, o.n ?? 20);
+  const r2 = o.r2 ?? r;
+  const {d, ra, rb} = cylRims(c, a, b, r, o.n ?? 20, r2);
   const sil = hull([...ra, ...rb]);
   const silD = poly(sil);
   const A = pj(c, a), Bp = pj(c, b);
-  const w = (r * (A.s + Bp.s)) / 2;
+  const w = ((r + r2) * (A.s + Bp.s)) / 4;
   const ax = {x: Bp.x - A.x, y: Bp.y - A.y};
   const L = Math.hypot(ax.x, ax.y);
   let nx: V2 = LS;

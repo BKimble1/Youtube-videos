@@ -102,11 +102,11 @@ def call(f0=2900, dur=0.22):
 sfx = np.zeros(N)
 
 # ---------------- wingbeats of the visible drone: one per downstroke (phase crosses 0 = the top of the upstroke)
-U = np.array(cj['u']); SC = np.array(cj['scale']); MH = np.array(cj['motorHz'])
+U = np.array(cj['u']); SC = np.array(cj['scale']); MH = np.array(cj['motorHz']); VIS = np.array(cj['vis'])
 n_beats = 0
 for i in range(1, len(U)):
     w = WORLD[i]
-    if w not in ('open', 'lab', 'meadow', 'sky') or SC[i] <= 0: continue
+    if w not in ('open', 'lab', 'meadow', 'sky') or SC[i] <= 0 or not VIS[i]: continue  # only while the drone is on screen
     if np.floor(U[i]) > np.floor(U[i - 1]) and U[i] - U[i - 1] < 0.5:
         at = i / 100
         speed = (U[min(len(U) - 1, i + 2)] - U[max(0, i - 2)]) / 0.04 * cj['EV']['tFlap']  # 1 = flight speed
@@ -158,14 +158,14 @@ place(sfx, click(3300, 0.04), EV['seatB'], None, -36)
 
 # ---------------- transitions
 lm = EV['labToMeadow']
-place(sfx, swish(lm[1] - lm[0] + 0.15, 150, 300, 900, 2400, 1.0), lm[0] - 0.05, 'wing wipe (near wing past the lens)', -29)
+place(sfx, swish(lm[1] - lm[0] + 0.25, 150, 300, 900, 2400, 1.0), lm[0] - 0.05, 'background sweep on the downstroke (lab to meadow)', -30)
 mp = EV['meadowToPond']
 place(sfx, swish(mp[1] - mp[0] + 0.2, 250, 400, 1400, 3200, 1.0), mp[0] - 0.05, 'waterline wipe (water swish)', -31)
 place(sfx, lap(0.35, 420), mp[1] - 0.05, None, -33)
 ps = EV['pondToSky']
 place(sfx, swish(ps[1] - ps[0] + 0.2, 300, 200, 2500, 1200, 1.0), ps[0] - 0.05, 'water crosses the lens (crest swash)', -31)
 lo = EV['loop']
-place(sfx, swish(lo[1] - lo[0] - 0.1, 140, 260, 800, 2000, 1.3), lo[0] + 0.02, 'loop: wing wipe into frame 0', -31)
+place(sfx, swish(lo[1] - lo[0] + 0.25, 140, 260, 800, 2000, 1.3), lo[0] - 0.05, 'loop: background sweep on the downstroke into frame 0', -31)
 
 # ---------------- the duck: a subtle water cue (paddle swishes, lapping), muffled in the below-water view
 pond = world_mask('pond')

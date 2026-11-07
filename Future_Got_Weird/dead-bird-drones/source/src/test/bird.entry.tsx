@@ -11,6 +11,7 @@ import {CRADLE} from '../rig';
 import {labFocus, labShellLift, labState, LAB, openReveal, openState, skyReveal, skyState, ShotState, CUT} from '../story';
 import {radialPath, sweepPath} from '../reveal';
 import {Mech} from '../art/mech';
+import {pictureAt} from '../Film';
 
 /** a simple placeholder for the drive (the real Mech is built in parallel) */
 const MechStub: React.FC<{B: Basis; F: Frame; ps: Pose}> = ({B, F, ps}) => {
@@ -205,8 +206,37 @@ const FilmCheck: React.FC<{set: number}> = ({set}) => {
   );
 };
 
+/** the real film picture (Film.tsx pictureAt) at film frames fs, each zoomed by k about the film point (cx, cy) (or the
+ *  per-frame centre c[i]), in a grid of `cols` columns: the check for the film's own cameras and reveal masks */
+const FilmCrops: React.FC<{fs: number[]; k: number; cx: number; cy: number; cols: number; c?: [number, number][]}> = ({fs, k, cx, cy, cols, c}) => {
+  const rows = Math.ceil(fs.length / cols);
+  const w = 1080 / cols, h = 1920 / rows;
+  return (
+    <AbsoluteFill style={{background: '#333'}}>
+      <svg width={1080} height={1920}>
+        <defs>{fs.map((_, i) => <clipPath key={i} id={`fz${i}`}><rect width={w} height={h} /></clipPath>)}</defs>
+        {fs.map((f, i) => {
+          resetIds(`z${i}_`);
+          const [x, y] = c?.[i] ?? [cx, cy];
+          return (
+            <g key={i} transform={`translate(${(i % cols) * w},${Math.floor(i / cols) * h})`}>
+              <g clipPath={`url(#fz${i})`}>
+                <rect width={w} height={h} fill="#CFE3EE" />
+                <g transform={`translate(${w / 2 - x * k},${h / 2 - y * k}) scale(${k})`}>{pictureAt(f / 30)}</g>
+                <text x={8} y={26} fontSize={22} fill="#FF0" stroke="#000" strokeWidth={0.6} fontFamily="monospace">{f}</text>
+              </g>
+              <rect width={w} height={h} fill="none" stroke="#111" strokeWidth={2} />
+            </g>
+          );
+        })}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 const Root: React.FC = () => (
   <>
+    <Composition id="FilmCrops" component={FilmCrops} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0], k: 1, cx: 540, cy: 960, cols: 1}} />
     <Composition id="BirdFilm" component={FilmCheck} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{set: 0}} />
     <Composition id="BirdSheet" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="BirdFilmOne" component={FilmOne} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{t: 0}} />

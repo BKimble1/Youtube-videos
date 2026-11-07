@@ -22,9 +22,11 @@
 //   module turns. No propeller.
 // - The pond convention for the split (over/under) view: a vertical "glass" plane at z = GLASS_Z in front of the
 //   duck. Below the water, only what lies behind that plane is shown, through it (below the projected line y = 0,
-//   z = GLASS_Z, the frame's waterline); above it the far water surface is seen from just above. As the camera's
-//   grazing angle falls (pondSplit 0 -> 1, the film's dip) that waterline WIPES up the frame from below: under it the
-//   underwater view is opaque, and everything lying on the surface (glints, reflection, wake) is hard-clipped above it.
+//   z = GLASS_Z, the frame's waterline, recomputed from the camera every frame); above it the far water surface is
+//   seen from above. The underwater view's top edge is ALWAYS that projected waterline: as the camera's grazing angle
+//   falls (pondSplit 0 -> 1, the film's dip) the view is revealed by a soft front that descends from the waterline to
+//   the bottom of the frame, and what lies on the surface in front of the glass (glints, reflection, wake) gives way
+//   to it. There is never a second, free edge crossing the water.
 import React from 'react';
 import {
   add3, Basis, cross3, deg, dot3, ellipsoid2, Frame, hull, len3, mul3, norm3, P2, planeMatrix, poly, proj, rotZ, smoothClosed,
@@ -831,14 +833,20 @@ const duckFrame = (o: V3, t: number): Frame => {
 export const duckCrank = (t: number) => 2 * Math.PI * PADDLE_HZ * t + 0.6;
 
 // ================================================================ the split convention (shared by Duck and Pond)
-/** how far the pond's underwater view is shown (0 = camera well above the water, 1 = at the waterline), from the
- *  camera's grazing angle to the glass plane's top edge */
-export const pondSplit = (B: Basis) => {
-  const h = B.eye[1];
-  const d = Math.max(1, B.eye[2] - GLASS_Z);
-  const a = deg(Math.atan2(h, d));
-  return 1 - ss(a, 0.7, 8.0);
-};
+/** the camera's grazing angle (deg) over the glass plane's top edge */
+const glassGraze = (B: Basis) => deg(Math.atan2(B.eye[1], Math.max(1, B.eye[2] - GLASS_Z)));
+/** how far the camera has come down to the water (0 = well above it, 1 = at the waterline): the water tint of the
+ *  submerged parts and the near surface glints follow it */
+const dipOf = (B: Basis) => 1 - ss(glassGraze(B), 0.7, 8.0);
+/** the grazing angles (deg) over which the underwater view is revealed (it is complete before the camera is down) */
+const REVEAL_A: [number, number] = [1.2, 8.75];
+/** the reveal's soft front (px): it descends from the frame's waterline to the bottom of the frame */
+const REVEAL_FEATHER = 420;
+/** how far the pond's underwater view is revealed below the frame's waterline (0 = camera well above the water: none;
+ *  1 = the whole frame below the waterline), from the camera's grazing angle to the glass plane's top edge. The view's
+ *  top edge is ALWAYS the projected waterline (the glass plane's top edge, y = 0, z = GLASS_Z); the reveal is a soft
+ *  front that descends from it, so no second edge ever crosses the water. */
+export const pondSplit = (B: Basis) => 1 - ss(glassGraze(B), REVEAL_A[0], REVEAL_A[1]);
 /** the frame's waterline: the projected top edge of the glass plane (y = 0, z = GLASS_Z), with a gentle ripple */
 const edgeLine = (B: Basis, t: number): V2[] => {
   const xc = B.eye[0];
@@ -853,37 +861,87 @@ const edgeLine = (B: Basis, t: number): V2[] => {
   }
   return out;
 };
-/** the frame's waterline as drawn: the glass edge, wiped up the frame from below as the camera reaches the water
- *  (pondSplit 0 -> 1). Below it the underwater view is opaque; everything that lies ON the surface is hard-clipped
- *  above it (no cross-fade, no double exposure). */
-const wipeLine = (B: Basis, t: number): V2[] => {
-  const e = edgeLine(B, t);
-  const uw = pondSplit(B);
-  if (uw >= 0.999) return e;
-  let top = Infinity;
-  for (const p of e) top = Math.min(top, p.y);
-  const dy = (1 - uw) * Math.max(0, H + 160 - top);
-  return e.map((p) => ({x: p.x, y: p.y + dy}));
-};
+/** the region below / above the frame's waterline: closed polygons on the PROJECTED waterline (recomputed from the
+ *  camera every frame), never a band of their own */
 const underClipD = (B: Basis, t: number) => {
-  const e = wipeLine(B, t);
+  const e = edgeLine(B, t);
   return `M${e.map(P2).join(' L')} L${W + 90},${H + 600} L-90,${H + 600} Z`;
 };
 const overClipD = (B: Basis, t: number) => {
-  const e = wipeLine(B, t);
+  const e = edgeLine(B, t);
   return `M${e.map(P2).join(' L')} L${W + 90},-600 L-90,-600 Z`;
 };
-/** things that lie ON the water surface (reflection, wake): hard-clipped above the frame's waterline */
+/** the reveal front below the frame's waterline: `r` = pondSplit; the front lies `nF` px below the waterline's chord
+ *  (measured along its downward normal), fully revealed above nF - REVEAL_FEATHER, not at all below nF */
+type Reveal = {r: number; o: V2; n: V2; span: number; nF: number; full: boolean};
+const revealOf = (B: Basis, t: number): Reveal => {
+  const r = pondSplit(B);
+  const e = edgeLine(B, t);
+  const a = e[0], b = e[e.length - 1];
+  let nx = -(b.y - a.y), ny = b.x - a.x;
+  const nl = Math.hypot(nx, ny) || 1;
+  nx /= nl; ny /= nl;
+  if (ny < 0) { nx = -nx; ny = -ny; }
+  const xm = W / 2;
+  const o = {x: xm, y: a.y + ((xm - a.x) * (b.y - a.y)) / (b.x - a.x || 1)};
+  // the deepest frame corner below the waterline (plus the ripple's reach)
+  const span = Math.max(0, ...[[-20, H + 20], [W + 20, H + 20]].map(([x, y]) => (x - o.x) * nx + (y - o.y) * ny)) + 30;
+  const nF = r * (span + REVEAL_FEATHER);
+  return {r, o, n: {x: nx, y: ny}, span, nF, full: nF - REVEAL_FEATHER >= span};
+};
+/** opacity of the reveal right at the waterline (0..1) */
+const revealAtEdge = (R: Reveal) => clamp(R.nF / REVEAL_FEATHER);
+/** a mask element for the reveal front (`inv`: its complement, for what lies on the surface in front of the glass) */
+const RevealMask: React.FC<{id: string; R: Reveal; inv?: boolean}> = ({id, R, inv}) => {
+  const p0 = {x: R.o.x + R.n.x * (R.nF - REVEAL_FEATHER), y: R.o.y + R.n.y * (R.nF - REVEAL_FEATHER)};
+  const p1 = {x: R.o.x + R.n.x * R.nF, y: R.o.y + R.n.y * R.nF};
+  // a smoothstep-like falloff (white = shown)
+  const st: [number, number][] = [[0, 1], [0.25, 0.9], [0.5, 0.5], [0.75, 0.1], [1, 0]];
+  return (
+    <>
+      <linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={p0.x} y1={p0.y} x2={p1.x} y2={p1.y}>
+        {st.map(([o, v], i) => <stop key={i} offset={o} stopColor="#FFFFFF" stopOpacity={inv ? 1 - v : v} />)}
+      </linearGradient>
+      <mask id={id} maskUnits="userSpaceOnUse" x={-300} y={-900} width={W + 600} height={H + 1800}>
+        <rect x={-300} y={-900} width={W + 600} height={H + 1800} fill={`url(#${id}g)`} />
+      </mask>
+    </>
+  );
+};
+/** the underwater side of the split: clipped below the projected waterline and revealed by the front */
+const UnderSide: React.FC<{B: Basis; t: number; R: Reveal; children: React.ReactNode}> = ({B, t, R, children}) => {
+  const id = uid('dku');
+  return (
+    <g>
+      <defs>
+        <clipPath id={`${id}c`}><path d={underClipD(B, t)} /></clipPath>
+        {!R.full && <RevealMask id={`${id}m`} R={R} />}
+      </defs>
+      <g clipPath={`url(#${id}c)`}>
+        {R.full ? children : <g mask={`url(#${id}m)`}>{children}</g>}
+      </g>
+    </g>
+  );
+};
+/** things that lie ON the water surface (reflection, wake, near glints): whole above the frame's waterline; below it
+ *  (on the surface in front of the glass, which the cutaway removes) they give way to the reveal front */
 const OnSurface: React.FC<{B: Basis; t: number; children: React.ReactNode}> = ({B, t, children}) => {
-  const uw = pondSplit(B);
-  if (uw < 0.01) return <g>{children}</g>;
+  const R = revealOf(B, t);
+  if (R.r < 0.001) return <g>{children}</g>;
   const id = uid('dks');
   return (
     <g>
       <defs>
-        <clipPath id={id}><path d={overClipD(B, t)} /></clipPath>
+        <clipPath id={`${id}o`}><path d={overClipD(B, t)} /></clipPath>
+        {!R.full && <clipPath id={`${id}u`}><path d={underClipD(B, t)} /></clipPath>}
+        {!R.full && <RevealMask id={`${id}m`} R={R} inv />}
       </defs>
-      <g clipPath={`url(#${id})`}>{children}</g>
+      <g clipPath={`url(#${id}o)`}>{children}</g>
+      {!R.full && (
+        <g clipPath={`url(#${id}u)`}>
+          <g mask={`url(#${id}m)`}>{children}</g>
+        </g>
+      )}
     </g>
   );
 };
@@ -1470,10 +1528,11 @@ const Wake: React.FC<{B: Basis; F: Frame; o: V3; t: number; amt: number; v: numb
 
 /** below the waterline: submerged hull with the cutaway, the printed module, pushrods, legs and paddling feet */
 const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: number}> = ({B, F, HV, t, cut}) => {
-  const uw = pondSplit(B);
-  // shown only below the frame's waterline (the wipe), where the underwater view is opaque: no double exposure
+  // shown only below the frame's projected waterline, revealed by the same front as the pond's underwater view
+  const RV = revealOf(B, t);
+  const uw = dipOf(B);
   const ua = ss(cut, 0, 0.3);
-  if (ua < 0.01 || uw < 0.01) return null;
+  if (ua < 0.01 || RV.r < 0.001) return null;
   const open = ss(cut, 0.22, 0.85);
   const id = uid('dkb');
   const P = (p: V3) => proj(B, xf(F, p));
@@ -1661,7 +1720,6 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
   return (
     <g opacity={ua}>
       <defs>
-        <clipPath id={`${id}e`}><path d={underClipD(B, t)} /></clipPath>
         <mask id={`${id}h`} maskUnits="userSpaceOnUse" x={-W} y={-H} width={3 * W} height={3 * H}>
           <path d={HV.below} fill="#FFFFFF" />
         </mask>
@@ -1672,7 +1730,7 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
           <stop offset={1} stopColor={tw(K.innerShellLit, tint)} />
         </linearGradient>
       </defs>
-      <g clipPath={`url(#${id}e)`}>
+      <UnderSide B={B} t={t} R={RV}>
         {/* far leg and foot (behind the hull) */}
         <Foot g={legs[1]} />
         {/* submerged hull, tinted by the water */}
@@ -1723,7 +1781,7 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
         )}
         {/* near leg and foot (outside the hull, in front) */}
         <Foot g={legs[0]} />
-      </g>
+      </UnderSide>
     </g>
   );
 };
@@ -2083,8 +2141,8 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
 };
 
 const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
-  const uw = pondSplit(B);
-  if (uw < 0.01) return null;
+  const R = revealOf(B, t);
+  if (R.r < 0.001) return null;
   const id = uid('pdu');
   const e = edgeLine(B, t);
   const ey = e[Math.floor(e.length / 2)].y;
@@ -2097,6 +2155,13 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const floorL = lineAcross(B, FLOOR_Y, BANK_Z + 60);
   const floorD = `M-100,${fx(yOnLine(floorL, -100))} L${W + 100},${fx(yOnLine(floorL, W + 100))} L${W + 100},${H + 100} L-100,${H + 100} Z`;
   const fy = yOnLine(floorL, W / 2);
+  // the floor's fill fades in below its far line; while the camera is still above the water (the far floor line then
+  // lies above the frame's waterline) the rays just under the surface run a long way through the water before they
+  // reach the floor, so the floor fades in below the waterline over a longer, foggy ramp (continuous with the split)
+  const fTop = Math.max(fy, ey) - 6;
+  const fRamp = 26 + 0.35 * clamp(ey - fy, 0, 600);
+  const fBot = Math.max(fTop + 66, H);
+  const fO1 = Math.min(0.9, fRamp / (fBot - fTop)), fO2 = Math.max(fO1 + 0.05, 0.4);
   // weeds (ribbons from the floor, fogged by distance)
   const wd = ['', '', ''];
   for (const [zr, bucket] of [[-980, 0], [-770, 1], [-580, 2]] as [number, number][]) {
@@ -2218,16 +2283,15 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   return (
     <g>
       <defs>
-        <clipPath id={`${id}c`}><path d={underClipD(B, t)} /></clipPath>
         <linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={0} y1={ey} x2={0} y2={H}>
           <stop offset={0} stopColor={PC.uwTop} />
           <stop offset={0.28} stopColor={PC.uwMid} />
           <stop offset={1} stopColor={PC.uwLow} />
         </linearGradient>
-        <linearGradient id={`${id}f`} gradientUnits="userSpaceOnUse" x1={0} y1={fy - 6} x2={0} y2={Math.max(fy + 60, H)}>
+        <linearGradient id={`${id}f`} gradientUnits="userSpaceOnUse" x1={0} y1={fTop} x2={0} y2={fBot}>
           <stop offset={0} stopColor={mix(PC.floor, PC.uwMid, 0.66)} stopOpacity={0} />
-          <stop offset={0.035} stopColor={mix(PC.floor, PC.uwMid, 0.58)} stopOpacity={0.92} />
-          <stop offset={0.4} stopColor={mix(PC.floor, PC.uwMid, 0.36)} stopOpacity={1} />
+          <stop offset={fO1} stopColor={mix(PC.floor, PC.uwMid, 0.58)} stopOpacity={0.92} />
+          <stop offset={fO2} stopColor={mix(PC.floor, PC.uwMid, 0.36)} stopOpacity={1} />
           <stop offset={1} stopColor={mix(PC.floor, PC.uwLow, 0.4)} stopOpacity={1} />
         </linearGradient>
         <linearGradient id={`${id}s`} x1={0} y1={0} x2={0} y2={1}>
@@ -2240,7 +2304,7 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         </linearGradient>
         <filter id={`${id}b`} x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation={2.2} /></filter>
       </defs>
-      <g clipPath={`url(#${id}c)`}>
+      <UnderSide B={B} t={t} R={R}>
         <rect x={-100} y={ey - 40} width={W + 200} height={H - ey + 200} fill={`url(#${id}g)`} />
         <path d={floorD} fill={`url(#${id}f)`} />
         <g filter={`url(#${id}b)`}>
@@ -2265,19 +2329,20 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         <path d={m1} fill={PC.mote} opacity={0.35} />
         <path d={m2} fill={PC.mote} opacity={0.6} />
         <rect x={-100} y={ey - 10} width={W + 200} height={80} fill={`url(#${id}m)`} />
-      </g>
+      </UnderSide>
     </g>
   );
 };
 
 const PondSurface: React.FC<{B: Basis; t: number}> = ({B, t}) => {
-  const uw = pondSplit(B);
+  const R = revealOf(B, t);
   const id = uid('pds');
-  const e = wipeLine(B, t);
+  const e = edgeLine(B, t);
   const line = `M${e.map(P2).join(' L')}`;
-  // glints on the near water (in front of the duck), drawn over its reflection; above the frame's waterline only
+  // glints on the near water (in front of the duck), drawn over its reflection; they lie on the surface in front of the
+  // glass, so they give way to the reveal front like the reflection
   let gl = '';
-  const glA = 0.45 * (1 - ss(uw, 0.6, 1));
+  const glA = 0.45 * (1 - ss(dipOf(B), 0.6, 1));
   if (glA > 0.01) {
     for (let r = 0; r < 14; r++) {
       const z = 32 + r * r * 2.2;
@@ -2296,21 +2361,18 @@ const PondSurface: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   }
   let eMid = Infinity;
   for (const p of e) eMid = Math.min(eMid, p.y);
-  const show = uw > 0.01 && eMid < H + 40;
+  // the waterline itself comes in with the reveal right under it
+  const lineA = revealAtEdge(R);
+  const show = lineA > 0.005 && eMid < H + 40;
   return (
     <g>
       {gl && (
-        uw > 0.01 ? (
-          <g>
-            <defs><clipPath id={`${id}o`}><path d={overClipD(B, t)} /></clipPath></defs>
-            <path d={gl} clipPath={`url(#${id}o)`} stroke="#FFFFFF" strokeWidth={1.8} vectorEffect={NS} strokeLinecap="round" opacity={glA} fill="none" />
-          </g>
-        ) : (
+        <OnSurface B={B} t={t}>
           <path d={gl} stroke="#FFFFFF" strokeWidth={1.8} vectorEffect={NS} strokeLinecap="round" opacity={glA} fill="none" />
-        )
+        </OnSurface>
       )}
       {show && (
-        <g>
+        <g opacity={lineA}>
           <defs>
             <linearGradient id={`${id}h`} gradientUnits="userSpaceOnUse" x1={0} y1={eMid} x2={0} y2={eMid + 30}>
               <stop offset={0} stopColor="#FFFFFF" stopOpacity={0.55} />
@@ -2328,6 +2390,7 @@ const PondSurface: React.FC<{B: Basis; t: number}> = ({B, t}) => {
 
 const PondFront: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const uw = pondSplit(B);
+  const dA = 1 - ss(uw, 0.3, 0.9), nA = ss(uw, 0.5, 1);
   const id = uid('pdf');
   // soft near bokeh glints at the bottom of the frame (surface views), soft near motes (split views)
   const disc: {x: number; y: number; r: number; a: number}[] = [];
@@ -2359,8 +2422,8 @@ const PondFront: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         </linearGradient>
       </defs>
       <rect x={-20} y={H - 360} width={W + 40} height={380} fill={`url(#${id}v)`} />
-      {uw < 0.99 && disc.map((d, i) => <circle key={i} cx={d.x} cy={d.y} r={d.r} fill={`url(#${id}d)`} opacity={d.a * (1 - uw)} />)}
-      {uw > 0.01 && near.map((d, i) => <circle key={`n${i}`} cx={d.x} cy={d.y} r={d.r} fill={`url(#${id}d)`} opacity={0.28 * uw} />)}
+      {dA > 0.01 && disc.map((d, i) => <circle key={i} cx={d.x} cy={d.y} r={d.r} fill={`url(#${id}d)`} opacity={d.a * dA} />)}
+      {nA > 0.01 && near.map((d, i) => <circle key={`n${i}`} cx={d.x} cy={d.y} r={d.r} fill={`url(#${id}d)`} opacity={0.28 * nA} />)}
     </g>
   );
 };
