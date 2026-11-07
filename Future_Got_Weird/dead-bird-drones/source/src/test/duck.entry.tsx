@@ -109,8 +109,46 @@ const MechSheet: React.FC = () => {
   );
 };
 
+/** 8 consecutive film frames (30 fps) at the film's own cameras (story.ts pondCam / duckCut / duckPos), each cell a
+ *  crop of the full frame (centre `crop`, magnified `zoom`), 2 columns x 4 rows: for checking motion frame to frame
+ *  (the feet unfolding and folding over several frames; the pond floor sliding by without fading). */
+const Strip: React.FC<{f0: number; crop?: {x: number; y: number}; zoom?: number}> = ({f0, crop = {x: 390, y: 1030}, zoom = 2}) => {
+  resetIds('dkst_');
+  const cw = 540, ch = 480;
+  return (
+    <AbsoluteFill style={{background: '#444'}}>
+      <svg width={W} height={H}>
+        {Array.from({length: 8}, (_, i) => {
+          const f = f0 + i, t = f / 30;
+          const cid = uid('scell');
+          return (
+            <g key={i} transform={`translate(${(i % 2) * cw},${Math.floor(i / 2) * ch})`}>
+              <clipPath id={cid}><rect width={cw} height={ch} /></clipPath>
+              <g clipPath={`url(#${cid})`}>
+                <g transform={`translate(${cw / 2},${ch / 2}) scale(${zoom}) translate(${-crop.x},${-crop.y})`}>
+                  <Frame1 B={basis(pondCam(t))} t={t} look={filmLook(t)} />
+                </g>
+              </g>
+              <rect width={cw} height={ch} fill="none" stroke="#000" strokeWidth={3} />
+              <rect x={8} y={8} width={64} height={30} fill="#000" opacity={0.6} />
+              <text x={14} y={30} fill="#fff" fontSize={20} fontFamily="monospace">{f}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 const Root: React.FC = () => (
   <>
+    {/* the near foot unfolds (forward reversal between 546 and 547) while the far foot folds; then the reverse */}
+    <Composition id="DuckFootStripA" component={() => <Strip f0={544} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckFootStripB" component={() => <Strip f0={534} />} durationInFrames={1} fps={30} width={W} height={H} />
+    {/* the near pond floor under the duck at the split camera: pebbles and clumps slide by, world-anchored */}
+    <Composition id="DuckFloorStrip" component={() => <Strip f0={548} crop={{x: 560, y: 1380}} zoom={1} />} durationInFrames={1} fps={30} width={W} height={H} />
+    {/* the duck's reflection at the film's surface camera: broken ripple bands, frame to frame */}
+    <Composition id="DuckReflStrip" component={() => <Strip f0={498} crop={{x: 620, y: 1190}} zoom={1.2} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet1" component={() => <Sheet cells={S1} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet2" component={() => <Sheet cells={S2} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet3" component={() => <Sheet cells={S3} />} durationInFrames={1} fps={30} width={W} height={H} />

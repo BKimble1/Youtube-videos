@@ -170,11 +170,141 @@ const convexPath = (pts: V2[], step = 13) => {
   const hl = hull(pts);
   return hl.length >= 3 ? smoothC(resample(hl, step)) : '';
 };
+// ---------------------------------------------------------------- 2D polygon tools (screen px)
+/** twice-signed area convention: > 0 for one winding; both union inputs are brought to > 0 */
+const area2 = (p: V2[]) => {
+  let a = 0;
+  for (let i = 0; i < p.length; i++) {
+    const q = p[i], r = p[(i + 1) % p.length];
+    a += q.x * r.y - r.x * q.y;
+  }
+  return a / 2;
+};
+const inPoly = (pt: V2, pg: V2[]) => {
+  let c = false;
+  for (let i = 0, j = pg.length - 1; i < pg.length; j = i++) {
+    const a = pg[i], b = pg[j];
+    if (a.y > pt.y !== b.y > pt.y && pt.x < ((b.x - a.x) * (pt.y - a.y)) / (b.y - a.y) + a.x) c = !c;
+  }
+  return c;
+};
+/** where segments a-b and c-d cross: t along a-b, u along c-d (both 0..1), or null */
+const segX = (a: V2, b: V2, c: V2, d: V2): {t: number; u: number} | null => {
+  const rx = b.x - a.x, ry = b.y - a.y, sx = d.x - c.x, sy = d.y - c.y;
+  const den = rx * sy - ry * sx;
+  if (Math.abs(den) < 1e-12) return null;
+  const qx = c.x - a.x, qy = c.y - a.y;
+  const t = (qx * sy - qy * sx) / den, u = (qx * ry - qy * rx) / den;
+  return t >= 0 && t <= 1 && u >= 0 && u <= 1 ? {t, u} : null;
+};
+/** points along the closed Catmull-Rom curve that smoothC / smoothClosed draw through pts */
+const crSample = (pts: V2[], per = 4, k = 1 / 6): V2[] => {
+  const n = pts.length, out: V2[] = [];
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1 = {x: p1.x + (p2.x - p0.x) * k, y: p1.y + (p2.y - p0.y) * k}, c2 = {x: p2.x - (p3.x - p1.x) * k, y: p2.y - (p3.y - p1.y) * k};
+    for (let s = 0; s < per; s++) {
+      const u = s / per, v = 1 - u;
+      out.push({
+        x: v * v * v * p1.x + 3 * v * v * u * c1.x + 3 * v * u * u * c2.x + u * u * u * p2.x,
+        y: v * v * v * p1.y + 3 * v * v * u * c1.y + 3 * v * u * u * c2.y + u * u * u * p2.y,
+      });
+    }
+  }
+  return out;
+};
+/** the outline of the union of two simple closed polygons (a Weiler-Atherton walk, both brought to the same winding),
+ *  starting from A's vertex `start` (which must lie outside B); `sw` = the indices where the walk changes polygon */
+const unionWalk = (A0: V2[], B0: V2[], start: number): {pts: V2[]; sw: number[]} | null => {
+  const rev = area2(A0) < 0;
+  const A = rev ? A0.slice().reverse() : A0, Bq = area2(B0) < 0 ? B0.slice().reverse() : B0;
+  const s0 = rev ? A0.length - 1 - start : start;
+  if (inPoly(A[s0], Bq)) return null;
+  const PL = [A, Bq];
+  let cur = 0, i = s0, p = A[s0];
+  const pts: V2[] = [p], sw: number[] = [];
+  for (let guard = 0; guard < 4 * (A.length + Bq.length); guard++) {
+    const pc = PL[cur], po = PL[1 - cur];
+    const nI = (i + 1) % pc.length, q = pc[nI];
+    let bt = Infinity, bj = -1, bx: V2 | null = null;
+    for (let j = 0; j < po.length; j++) {
+      const r = segX(p, q, po[j], po[(j + 1) % po.length]);
+      if (!r || r.t >= bt) continue;
+      const X = {x: p.x + (q.x - p.x) * r.t, y: p.y + (q.y - p.y) * r.t};
+      if (dist2(X, p) < 1e-3) continue; // the crossing just switched at
+      bt = r.t; bj = j; bx = X;
+    }
+    if (bx) {
+      pts.push(bx);
+      sw.push(pts.length - 1);
+      cur = 1 - cur; i = bj; p = bx;
+      continue;
+    }
+    if (cur === 0 && nI === s0) return {pts, sw};
+    pts.push(q);
+    i = nI; p = q;
+  }
+  return null;
+};
+/** round the corner at index J of a closed polyline: the stretch within arc length t on either side is replaced by a
+ *  quadratic blend through the corner (tangent to the two chords), i.e. a fillet */
+const filletAt = (p: V2[], J: number, t: number): V2[] => {
+  const n = p.length;
+  const c: number[] = [0];
+  for (let i = 1; i < n; i++) c.push(c[i - 1] + dist2(p[i - 1], p[i]));
+  const total = c[n - 1] + dist2(p[n - 1], p[0]);
+  if (t <= 0 || 2 * t > 0.45 * total) return p;
+  const at = (s0: number): V2 => {
+    const s = ((s0 % total) + total) % total;
+    let i = 0;
+    while (i < n - 1 && c[i + 1] <= s) i++;
+    const a = p[i], b = p[(i + 1) % n];
+    const L = (i < n - 1 ? c[i + 1] : total) - c[i];
+    const u = L > 1e-9 ? (s - c[i]) / L : 0;
+    return {x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u};
+  };
+  const sJ = c[J], P0 = at(sJ - t), P1 = at(sJ + t), Q = p[J];
+  const out: V2[] = [P1];
+  for (let k = 1; k < n; k++) {
+    const idx = (J + k) % n;
+    const d = (c[idx] - sJ + total) % total;
+    if (d > t && d < total - t) out.push(p[idx]);
+  }
+  out.push(P0);
+  for (let k = 1; k < 10; k++) {
+    const u = k / 10, v = 1 - u;
+    out.push({x: v * v * P0.x + 2 * u * v * Q.x + u * u * P1.x, y: v * v * P0.y + 2 * u * v * Q.y + u * u * P1.y});
+  }
+  return out;
+};
+/** the turn (rad) of a closed polyline at index J, measured over arc length L each side; negative = concave (for
+ *  area2 > 0) */
+const turnAt = (p: V2[], J: number, L: number) => {
+  const n = p.length;
+  const walk = (dir: number): V2 => {
+    let acc = 0, i = J;
+    for (let k = 0; k < n; k++) {
+      const j = (i + dir + n) % n;
+      const d = dist2(p[i], p[j]);
+      if (acc + d >= L) {
+        const u = (L - acc) / (d || 1);
+        return {x: p[i].x + (p[j].x - p[i].x) * u, y: p[i].y + (p[j].y - p[i].y) * u};
+      }
+      acc += d; i = j;
+    }
+    return p[i];
+  };
+  const a = walk(-1), b = walk(1), q = p[J];
+  const ax = q.x - a.x, ay = q.y - a.y, bx = b.x - q.x, by = b.y - q.y;
+  return Math.atan2(ax * by - ay * bx, ax * bx + ay * by);
+};
 const toEye = (B: Basis, p: V3) => norm3(sub3(B.eye, p));
 const fx = (n: number) => n.toFixed(1);
 const circ = (x: number, y: number, r: number) => `M${fx(x - r)},${fx(y)}a${fx(r)},${fx(r)} 0 1,0 ${fx(2 * r)},0a${fx(r)},${fx(r)} 0 1,0 ${fx(-2 * r)},0Z`;
 /** the light, fixed in camera space: from the upper left, a little in front */
 const lightDir = (B: Basis): V3 => norm3(add3(add3(mul3(B.r, -0.55), mul3(B.u, 0.66)), mul3(B.fw, -0.5)));
+/** plumage regions are stroked in their own colour this wide (screen px), so each overlaps the silhouette edge */
+const BLEED_PX = 2.5;
 /** screen direction toward the light (for the shifted-silhouette cel bands) */
 const LD = {x: -0.62, y: -0.78};
 
@@ -461,7 +591,7 @@ const ellFrame = (F: Frame, c: V3, tilt: number): Frame => ({
 const ellPath = (B: Basis, F: Frame, e: {c: V3; r: V3; tilt: number}) => smoothClosed(ellipsoid2(B, ellFrame(F, e.c, e.tilt), [0, 0, 0], e.r, 40));
 /** the head as ONE smooth rounded shape: the convex hull of its three volumes (nape, cranium, face) and the top of the
  *  neck tube, so the nape and the throat blend into the neck (no notches) */
-const headPath = (B: Basis, F: Frame) => {
+const headHull = (B: Basis, F: Frame): V2[] => {
   const pts: V2[] = [HEAD.nape, HEAD.cranium, HEAD.face].flatMap((e) => ellipsoid2(B, ellFrame(F, e.c, e.tilt), [0, 0, 0], e.r, 36));
   for (const u of [0.86, 0.93, 1.0]) {
     const nk = neckAt(u);
@@ -469,9 +599,50 @@ const headPath = (B: Basis, F: Frame) => {
     const r = nk.r * c.s;
     for (let k = 0; k < 24; k++) pts.push({x: c.x + r * Math.cos((k / 24) * Math.PI * 2), y: c.y + r * Math.sin((k / 24) * Math.PI * 2)});
   }
-  return convexPath(pts, 10);
+  const hl = hull(pts);
+  return hl.length >= 3 ? resample(hl, 10) : [];
 };
-const neckPath = (B: Basis, F: Frame) => {
+const headPath = (B: Basis, F: Frame) => {
+  const h = headHull(B, F);
+  return h.length >= 3 ? smoothC(h) : '';
+};
+/** the fillet at the head/neck junctions (nape and throat): the blend runs this far (cm) along the outline on either
+ *  side of each junction */
+const NECK_FILLET = 0.8;
+/** head and neck as ONE outline: the union of the head's rounded hull and the neck tube, with smooth fillets where
+ *  the tube meets the head (no helmet-on-a-tube corners). Falls back to the two shapes (as separate paths) if the
+ *  union cannot be traced. */
+const neckHeadPaths = (B: Basis, F: Frame): string[] => {
+  const hd = headHull(B, F);
+  const nk = neckPts(B, F);
+  const apart = () => [neckPath(B, F), headPath(B, F)].filter(Boolean);
+  if (hd.length < 3 || nk.length < 3) return apart();
+  const H2 = crSample(hd, 3), N2 = crSample(nk, 4);
+  // start the walk on the neck's buried lower cap: its point farthest from the head
+  let cx = 0, cy = 0;
+  for (const q of H2) { cx += q.x; cy += q.y; }
+  cx /= H2.length; cy /= H2.length;
+  let st = 0, bd = -1;
+  N2.forEach((q, i) => { const d = Math.hypot(q.x - cx, q.y - cy); if (d > bd) { bd = d; st = i; } });
+  const U = unionWalk(N2, H2, st);
+  if (!U || U.sw.length < 2) return apart();
+  const s = proj(B, xf(F, neckAt(0.86).c)).s;
+  // the junctions: the concave switches, the sharpest first, at most one per side (a near-tangent graze of the two
+  // outlines can add a pair of shallow switches next to a real junction)
+  const cand = U.sw.map((J) => ({q: U.pts[J], turn: turnAt(U.pts, J, 1.0 * s)})).filter((c) => c.turn < -0.12);
+  cand.sort((a, b) => a.turn - b.turn);
+  const keep: V2[] = [];
+  for (const c of cand) if (keep.length < 2 && keep.every((k) => dist2(k, c.q) > 3 * NECK_FILLET * s)) keep.push(c.q);
+  let pts = U.pts;
+  for (const q of keep) {
+    let J = 0, bj = Infinity;
+    pts.forEach((p, i) => { const d = dist2(p, q); if (d < bj) { bj = d; J = i; } });
+    pts = filletAt(pts, J, NECK_FILLET * s);
+  }
+  return [smoothC(resample(pts, 5))];
+};
+/** the neck tube's outline (both ends rounded; both are buried, in the body and in the head) */
+const neckPts = (B: Basis, F: Frame): V2[] => {
   const n = 12;
   const S: SP[] = [], rr: number[] = [];
   for (let i = 0; i <= n; i++) {
@@ -503,8 +674,9 @@ const neckPath = (B: Basis, F: Frame) => {
   };
   const endCap = cap(S[n], rr[n] * S[n].s, L[n], {x: S[n].x - S[n - 1].x, y: S[n].y - S[n - 1].y});
   const startCap = cap(S[0], rr[0] * S[0].s, R[0], {x: S[0].x - S[1].x, y: S[0].y - S[1].y});
-  return smoothClosed([...L, ...endCap, ...R.slice().reverse(), ...startCap]);
+  return [...L, ...endCap, ...R.slice().reverse(), ...startCap];
 };
+const neckPath = (B: Basis, F: Frame) => smoothClosed(neckPts(B, F));
 /** bill loft sample points (local) */
 const billSections = (() => {
   const secs: V3[][] = [];
@@ -578,18 +750,32 @@ const legAlpha = (phi: number) => {
   while (a <= -180) a += 360;
   return a;
 };
-/** the largest swing change over +-0.05 rad of crank (normalises the power-stroke phase) */
-const DA_MAX = (() => {
-  let m = 1e-6;
-  for (let k = 0; k < 120; k++) {
-    const phi = (k / 120) * Math.PI * 2;
-    m = Math.max(m, Math.abs(legAlpha(phi + 0.05) - legAlpha(phi - 0.05)));
+/** the crank angles of the leg's two reversals: `fwd` = foot fully forward (the power stroke starts), `back` = foot
+ *  fully back (the recovery starts). The crank angle grows with time. */
+const PHI_REV = (() => {
+  let mx = -Infinity, mn = Infinity, back = 0, fwd = 0;
+  for (let k = 0; k < 1440; k++) {
+    const phi = (k / 1440) * Math.PI * 2;
+    const a = legAlpha(phi);
+    if (a > mx) { mx = a; back = phi; }
+    if (a < mn) { mn = a; fwd = phi; }
   }
-  return m;
+  return {fwd, back};
 })();
-/** 0 = recovery (foot moving forward, web folded) .. 1 = power stroke (foot moving back, web spread): centred on the
- *  backward swing (from the sign of d alpha / d phi; the crank angle grows with time) */
-const powerOf = (phi: number) => sm(0.5 + 1.25 * (legAlpha(phi + 0.05) - legAlpha(phi - 0.05)) / DA_MAX);
+const wrap2pi = (x: number) => ((x % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+/** the web unfolds / folds over this much crank angle (75 deg = 4+ frames at 30 fps), starting a little before each
+ *  reversal (the water loads the web as the foot turns round) */
+const FOLD_PRE = 15 * R2, FOLD_LEN = 75 * R2;
+/** 0 = recovery (foot moving forward, web folded) .. 1 = power stroke (foot moving back, web spread), from the crank
+ *  phase relative to the two reversal angles: a smooth ramp at each reversal, so the foot never flips in one frame */
+const powerOf = (phi: number) => {
+  const d = wrap2pi(phi - PHI_REV.fwd + FOLD_PRE);
+  const pow = wrap2pi(PHI_REV.back - PHI_REV.fwd);
+  if (d < FOLD_LEN) return sm(d / FOLD_LEN);
+  if (d < pow) return 1;
+  if (d < pow + FOLD_LEN) return 1 - sm((d - pow) / FOLD_LEN);
+  return 0;
+};
 /** the near foot's crank angle at the middle of its power stroke (fastest backward swing); the far foot's is half a
  *  turn away */
 const PHI_POWER = (() => {
@@ -833,9 +1019,24 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
     }
     verm.push(lineOnSurf(B, F, xy));
   }
-  // ---- neck, crop, head
-  const neck = neckPath(B, F);
-  const head = headPath(B, F);
+  // ---- neck and head: one filleted outline
+  const neck = neckHeadPaths(B, F);
+  // everything of the neck/head group lies in world y >= 0: the neck tube's buried lower cap reaches below the water
+  // (local y ~ -0.7), so the group is clipped to the screen region above the projected near waterline (carried on
+  // along the duck's axis past both ends, closed upward), pulled 3 px inside the hull, which covers that band
+  const wlUp = (() => {
+    const wl = HV.wlNear, wlL = HV.wlLocal;
+    if (wl.length < 2) return '';
+    const wlY = wlYOf(F);
+    const far = (x: number): V2 => {
+      const q = P([x, wlY(x), 0]);
+      return {x: q.x, y: q.y};
+    };
+    const pts = [far(wlL[0][0] - 300), ...wl, far(wlL[wlL.length - 1][0] + 300)].map((p) => ({x: p.x, y: p.y - 3}));
+    const a = pts[0], z = pts[pts.length - 1];
+    return poly([...pts, {x: z.x, y: -4 * H}, {x: a.x, y: -4 * H}]);
+  })();
+  const yUp = wlUp ? `url(#${idA}y)` : undefined;
   // collar: a white band round the neck (front-facing arc)
   const e2: V3 = [0, 0, 1];
   const ringArc = (u: number, ext = 0.06): V2[] => {
@@ -967,13 +1168,22 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
   // ---- waterline foam (near half)
   const foam = HV.wlNear.length > 2 ? smoothOpen(HV.wlNear) : '';
   const headDS = 0.85 * sAt, headDH = 0.32 * sAt;
+  // a region fill bled 1.25 px past its edge: inside the body's mask every region overlaps the silhouette, so no lighter
+  // base shows through the anti-aliased edge
+  const reg = (d: string, fill: string, opacity?: number) =>
+    d ? <path d={d} fill={fill} stroke={fill} strokeWidth={BLEED_PX} vectorEffect={NS} strokeLinejoin="round" opacity={opacity} /> : null;
   return (
     <g>
       <defs>
-        <clipPath id={idA}><path d={HV.above} /></clipPath>
-        <clipPath id={`${idA}n`}><path d={neck} /></clipPath>
+        {/* the body's fills are composited as one layer and then masked by the silhouette (a mask, not a per-shape
+            clip: the edge pixels are covered once, by the outermost region) */}
+        <mask id={`${idA}m`} maskUnits="userSpaceOnUse" x={-W} y={-H} width={3 * W} height={3 * H}>
+          <path d={HV.above} fill="#FFFFFF" />
+        </mask>
+        <clipPath id={`${idA}n`}>{neck.map((d, i) => <path key={i} d={d} />)}</clipPath>
         <clipPath id={`${idA}b`}><path d={bill} /></clipPath>
         {lowN && <clipPath id={`${idA}l`}><path d={lowN} /></clipPath>}
+        {wlUp && <clipPath id={`${idA}y`}><path d={wlUp} /></clipPath>}
       </defs>
       {/* tail fan behind the stern */}
       <path d={tail} fill={K.tail} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
@@ -985,29 +1195,30 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
       {/* the drake curl: one small upturned black feather on the tail's root */}
       {curls.map((d, i) => <path key={`c${i}`} d={d} fill={K.curl} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />)}
       {curlGloss.map((d, i) => <path key={`g${i}`} d={d} fill="none" stroke={K.curlGloss} strokeWidth={LINE_PX * 1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.85} />)}
-      {/* one ink line round body, neck and head: stroke under, fills over */}
-      <g fill="none" stroke={INK} strokeWidth={INK_PX * 2} vectorEffect={NS} strokeLinejoin="round">
-        <path d={neck} vectorEffect={NS} />
-        <path d={head} vectorEffect={NS} />
-        <path d={HV.above} vectorEffect={NS} />
+      {/* one ink line round body and neck/head: stroke under, fills over */}
+      <g clipPath={yUp}>
+        {neck.map((d, i) => <path key={i} d={d} fill="none" stroke={INK} strokeWidth={INK_PX * 2} vectorEffect={NS} strokeLinejoin="round" />)}
       </g>
-      {/* head and neck: one iridescent green form (green above the collar, chestnut below) */}
-      <Cel paths={[neck, head]} base={K.head} shadow={K.headShadow} sheen={K.headSheen} dS={headDS} dH={headDH} />
-      <g clipPath={`url(#${idA}n)`}>
-        {lowN && <path d={lowN} fill={K.breast} />}
-        {collar && <path d={collar} fill={C.duckCollar} />}
-        {collar && <path d={collar} fill="none" stroke="#C9C8BF" strokeWidth={LINE_PX * 0.7} vectorEffect={NS} opacity={0.7} />}
+      <path d={HV.above} fill="none" stroke={INK} strokeWidth={INK_PX * 2} vectorEffect={NS} strokeLinejoin="round" />
+      {/* head and neck: one iridescent green form (green above the collar, chestnut below), above the water only */}
+      <g clipPath={yUp}>
+        <Cel paths={neck} base={K.head} shadow={K.headShadow} sheen={K.headSheen} dS={headDS} dH={headDH} />
+        <g clipPath={`url(#${idA}n)`}>
+          {lowN && <path d={lowN} fill={K.breast} />}
+          {collar && <path d={collar} fill={C.duckCollar} />}
+          {collar && <path d={collar} fill="none" stroke="#C9C8BF" strokeWidth={LINE_PX * 0.7} vectorEffect={NS} opacity={0.7} />}
+        </g>
       </g>
       {/* body */}
-      <g clipPath={`url(#${idA})`}>
-        <path d={HV.above} fill={K.flank} />
+      <g mask={`url(#${idA}m)`}>
+        {reg(HV.above, K.flank)}
         <g fillRule="evenodd">
           <path d={verm.join(' ')} fill="none" stroke={K.vermic} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} opacity={0.28} />
-          <path d={R.upper} fill={K.upper} />
-          <path d={R.mantle} fill={K.mantle} />
-          <path d={R.prim} fill={K.primary} />
-          <path d={R.vent} fill={K.vent} />
-          <path d={R.stern} fill={K.stern} />
+          {reg(R.upper, K.upper)}
+          {reg(R.mantle, K.mantle)}
+          {reg(R.prim, K.primary)}
+          {reg(R.vent, K.vent)}
+          {reg(R.stern, K.stern)}
           <path d={primLines.join(' ')} fill="none" stroke={K.primaryEdge} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.6} strokeLinecap="round" />
           <path d={tert.join(' ') + ' ' + scal.join(' ')} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.55} strokeLinecap="round" />
           {spec && <path d={specW} fill={K.specW} />}
@@ -1015,17 +1226,19 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
           {spec && <path d={specLo} fill={K.specDeep} />}
           {spec && <path d={specTuck} fill={K.flank} />}
           {spec && <path d={specTop} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX * 1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.85} />}
-          <path d={R.breast} fill={K.breast} />
-          <path d={R.shadow} fill={INK} opacity={0.2} />
-          <path d={R.core} fill={INK} opacity={0.13} />
-          <path d={R.hi} fill="#FFFFFF" opacity={0.14} />
+          {reg(R.breast, K.breast)}
+          {reg(R.shadow, INK, 0.2)}
+          {reg(R.core, INK, 0.13)}
+          {reg(R.hi, '#FFFFFF', 0.14)}
         </g>
       </g>
-      {/* the body's clip edge crosses the chestnut lower neck: restate the chestnut along it (no anti-aliased grey seam) */}
+      {/* the body's edge crosses the chestnut lower neck: restate the chestnut along it (no anti-aliased grey seam) */}
       {lowN && (
-        <g clipPath={`url(#${idA}n)`}>
-          <g clipPath={`url(#${idA}l)`}>
-            <path d={HV.above} fill="none" stroke={K.breast} strokeWidth={3.2} vectorEffect={NS} />
+        <g clipPath={yUp}>
+          <g clipPath={`url(#${idA}n)`}>
+            <g clipPath={`url(#${idA}l)`}>
+              <path d={HV.above} fill="none" stroke={K.breast} strokeWidth={3.2} vectorEffect={NS} />
+            </g>
           </g>
         </g>
       )}
@@ -1081,8 +1294,7 @@ const Reflection: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; alpha: 
     pts.push({x: q.x, y: q.y});
   }
   const body = convexPath(pts, 12);
-  const neck = neckPath(B, M);
-  const head = [headPath(B, M)];
+  const neckHead = neckHeadPaths(B, M);
   const bill = convexPath(billSections.flat().map((p) => {
     const q = proj(B, xf(M, p));
     return {x: q.x, y: q.y};
@@ -1092,33 +1304,73 @@ const Reflection: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; alpha: 
   const hd = proj(B, xf(M, HEAD.cranium.c));
   const x0 = Math.min(...pts.map((p) => p.x), hd.x) - 60, x1 = Math.max(...pts.map((p) => p.x), hd.x) + 120;
   const y0 = wl.y - 8, y1 = hd.y + 6 * hd.s;
-  // ripple bands (gaps widen with distance below the waterline)
-  let bands = '';
+  const sc = wl.s;
+  const span = Math.max(1, y1 - y0);
+  // ripple bands: rows that get taller and open wider gaps with depth below the waterline; each row is broken into
+  // tapered dashes at hashed gaps (laid out along the duck, drifting slowly), and each row's slice of the mirrored image
+  // wobbles sideways with its own phase; the whole reflection fades with depth (mask)
+  const drift = 0.6 * sc * t;
+  const bands: {d: string; dx: number}[] = [];
   let y = y0, k = 0;
   while (y < y1 && k < 60) {
-    const hgt = 8 + 3 * Math.sin(k * 1.7);
-    const top: V2[] = [], bot: V2[] = [];
-    for (let i = 0; i <= 14; i++) {
-      const x = lerp(x0, x1, i / 14);
-      top.push({x, y: y + 1.6 * Math.sin(x / 26 + t * 3.1 + k * 0.9)});
-      bot.push({x, y: y + hgt + 1.8 * Math.sin(x / 21 - t * 2.6 + k * 1.3)});
+    const q = clamp((y - y0) / span);
+    const hgt = (0.42 + 0.75 * q) * sc * (0.8 + 0.4 * hash(k * 1.7 + 0.3));
+    const gap = 1.2 + (0.06 + 0.6 * q * q) * sc * (0.6 + 0.8 * hash(k * 2.9 + 1.1));
+    const wa = 0.11 * sc, wb = 0.13 * sc;
+    const yT = (x: number) => y + wa * Math.sin(x / (1.9 * sc) + t * 3.1 + k * 0.9);
+    const yB = (x: number) => y + hgt + wb * Math.sin(x / (1.55 * sc) - t * 2.6 + k * 1.3);
+    let d = '';
+    let r = -70 * sc, m = 0;
+    while (m < 80) {
+      const segL = lerp(15, 3.5, q) * sc * (0.5 + hash(k * 7.3 + m * 1.9));
+      const gapL = (0.25 + 1.9 * q) * sc * (0.25 + hash(k * 3.1 + m * 5.7));
+      const xa = wl.x + r - drift, xb = xa + segL;
+      r += segL + gapL;
+      m++;
+      if (xb < x0) continue;
+      if (xa > x1) break;
+      const n = Math.max(4, Math.min(16, Math.round(segL / 10)));
+      const top: V2[] = [], bot: V2[] = [];
+      for (let i = 0; i <= n; i++) {
+        const u = i / n, x = lerp(xa, xb, u);
+        const env = Math.pow(Math.sin(Math.PI * u), 0.45);
+        const t0 = yT(x), b0 = yB(x), mid = (t0 + b0) / 2;
+        top.push({x, y: mid - (mid - t0) * env});
+        bot.push({x, y: mid + (b0 - mid) * env});
+      }
+      d += poly([...top, ...bot.reverse()]) + ' ';
     }
-    bands += poly([...top, ...bot.reverse()]) + ' ';
-    y += hgt + 1.5 + 0.045 * (y - y0);
+    const dx = (0.06 + 0.45 * q) * sc * Math.sin(t * (2.0 + 0.9 * hash(k * 5.3)) + k * 2.1);
+    if (d) bands.push({d, dx});
+    y += hgt + gap;
     k++;
   }
   return (
     <g opacity={alpha}>
       <defs>
-        <clipPath id={id}><path d={bands} /></clipPath>
         <clipPath id={`${id}b`}><rect x={brX} y={-H} width={W * 2} height={H * 3} /></clipPath>
+        <g id={`${id}s`}>
+          {neckHead.map((d, i) => <path key={i} d={d} fill="#1E4B42" />)}
+          <path d={bill} fill="#9C8E45" />
+          <path d={body} fill="#7D8986" />
+          <g clipPath={`url(#${id}b)`}><path d={body} fill="#5B4038" /></g>
+        </g>
+        {bands.map((b, i) => <clipPath key={i} id={`${id}c${i}`}><path d={b.d} /></clipPath>)}
+        <linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={0} y1={y0} x2={0} y2={y1}>
+          <stop offset={0} stopColor="#FFFFFF" />
+          <stop offset={0.35} stopColor="#FFFFFF" stopOpacity={0.8} />
+          <stop offset={1} stopColor="#FFFFFF" stopOpacity={0.12} />
+        </linearGradient>
+        <mask id={`${id}f`} maskUnits="userSpaceOnUse" x={x0 - 300} y={y0 - 60} width={x1 - x0 + 600} height={span + 120}>
+          <rect x={x0 - 300} y={y0 - 60} width={x1 - x0 + 600} height={span + 120} fill={`url(#${id}g)`} />
+        </mask>
       </defs>
-      <g clipPath={`url(#${id})`}>
-        <path d={neck} fill="#1E4B42" />
-        {head.map((d, i) => <path key={i} d={d} fill="#1E4B42" />)}
-        <path d={bill} fill="#9C8E45" />
-        <path d={body} fill="#7D8986" />
-        <g clipPath={`url(#${id}b)`}><path d={body} fill="#5B4038" /></g>
+      <g mask={`url(#${id}f)`}>
+        {bands.map((b, i) => (
+          <g key={i} clipPath={`url(#${id}c${i})`}>
+            <use href={`#${id}s`} transform={`translate(${fx(b.dx)},0)`} />
+          </g>
+        ))}
       </g>
     </g>
   );
@@ -1246,6 +1498,9 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     return Math.min((1 - u ** 4 - v ** 4) * 4, s.l[2] * 2);
   };
   const win = open > 0.03 ? hullRegion(HV, winF) : '';
+  // a region fill bled past its edge (inside the hull's mask; see AboveWater)
+  const reg = (d: string, fill: string, opacity?: number) =>
+    d ? <path d={d} fill={fill} stroke={fill} strokeWidth={BLEED_PX} vectorEffect={NS} strokeLinejoin="round" opacity={opacity} /> : null;
   // ---- legs
   const phiN = duckCrank(t);
   const legs = [legGeo(1, phiN), legGeo(-1, phiN + Math.PI)];
@@ -1266,68 +1521,74 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     const p1 = {x: lerp(A.x, Bq.x, 0.88) + nx * o, y: lerp(A.y, Bq.y, 0.88) + ny * o};
     return `M${P2(p0)} L${P2(p1)}`;
   };
+  /** one foot: a single outline that MORPHS (point for point) from the folded leaf (recovery) to the spread web (power
+   *  stroke) as g.pw ramps at each reversal; the toes morph from the leaf's creases. No cross-fade, no one-frame flip. */
   const Foot: React.FC<{g: LegG}> = ({g}) => {
     const K0 = P(g.ankle);
     const T = g.tips.map(P), N = g.notch.map(P), Hl = P(g.heel);
-    const web = `M${P2(Hl)} L${P2(T[2])} Q${P2(N[1])} ${P2(T[1])} Q${P2(N[0])} ${P2(T[0])} Z`;
-    // which face do we see? dorsal normal = -(D x E) for the near-foot convention
+    const e = g.pw;
+    // which face do we see? dorsal normal = -(D x E) for the near-foot convention; the tone turns continuously as the
+    // web swings through edge-on
     const nD = mul3(cross3(g.D, g.E), -g.side);
-    const dorsal = dot3(xfv(F, nD), toEye(B, xf(F, g.ankle))) * g.side > 0;
-    const webCol = tw(dorsal ? K.footWeb : K.footSole);
-    const spread = ss(g.pw, 0.3, 0.6);
-    // folded (recovery): ONE tapered closed-web leaf along the middle toe, laid out in screen space so it keeps its
-    // width (>= ~0.9 cm at mid) from any view, with two crease lines
-    const leaf = (() => {
-      if (spread > 0.98) return null;
-      const A = K0, Z = T[1];
-      const dx = Z.x - A.x, dy = Z.y - A.y;
-      const L = Math.hypot(dx, dy) || 1;
-      const ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
-      const sc = (A.s + Z.s) / 2;
-      const hw = (u: number) => Math.max(0.17 * (1 - u), 0.47 * Math.pow(Math.sin(Math.PI * Math.min(1, u)), 0.85)) * sc;
-      const at = (u: number, w: number): V2 => ({x: A.x + dx * u + nx * w, y: A.y + dy * u + ny * w});
-      const Lp: V2[] = [], Rp: V2[] = [];
-      const n = 12;
-      for (let i = 0; i <= n; i++) {
-        const u = i / n;
-        Lp.push(at(u, hw(u)));
-        Rp.push(at(u, -hw(u)));
+    const fd = dot3(xfv(F, nD), toEye(B, xf(F, g.ankle))) * g.side;
+    const webTone = mix(K.footSole, K.footWeb, ss(fd, -0.2, 0.2));
+    // the folded leaf: a tapered closed web along the middle toe, laid out in screen space so it keeps its width
+    // (>= ~0.9 cm at mid) from any view
+    const A = K0, Z = T[1];
+    const dx = Z.x - A.x, dy = Z.y - A.y;
+    const Ll = Math.hypot(dx, dy) || 1;
+    const nx = -dy / Ll, ny = dx / Ll;
+    const sc = (A.s + Z.s) / 2;
+    const hw = (u: number) => Math.max(0.17 * (1 - u), 0.47 * Math.pow(Math.sin(Math.PI * clamp(u)), 0.85)) * sc;
+    const at = (u: number, w: number): V2 => ({x: A.x + dx * u + nx * w, y: A.y + dy * u + ny * w});
+    // the web's side carrying toe 2 goes to the leaf's +n side if that is where it lies
+    const off = (q: V2) => (q.x - A.x) * nx + (q.y - A.y) * ny;
+    const sg = off(T[2]) >= off(T[0]) ? 1 : -1;
+    const lerpP = (a: V2, b: V2, u: number): V2 => ({x: a.x + (b.x - a.x) * u, y: a.y + (b.y - a.y) * u});
+    const quad = (a: V2, c: V2, b: V2, u: number): V2 => ({
+      x: (1 - u) ** 2 * a.x + 2 * u * (1 - u) * c.x + u * u * b.x,
+      y: (1 - u) ** 2 * a.y + 2 * u * (1 - u) * c.y + u * u * b.y,
+    });
+    // matching point lists: heel/base, side (toe 2), tip (middle toe), side (toe 0), back to the heel
+    const n1 = 9, n2 = 7, UA = 0.8;
+    const leafP: V2[] = [A], webP: V2[] = [Hl];
+    for (let i = 1; i <= n1; i++) { leafP.push(at((UA * i) / n1, sg * hw((UA * i) / n1))); webP.push(lerpP(Hl, T[2], i / n1)); }
+    for (let j = 1; j < n2; j++) { const u = UA + ((1 - UA) * j) / n2; leafP.push(at(u, sg * hw(u))); webP.push(quad(T[2], N[1], T[1], j / n2)); }
+    leafP.push(at(1, 0)); webP.push(T[1]);
+    for (let j = 1; j < n2; j++) { const u = 1 - ((1 - UA) * j) / n2; leafP.push(at(u, -sg * hw(u))); webP.push(quad(T[1], N[0], T[0], j / n2)); }
+    for (let i = 0; i < n1; i++) { const u = UA * (1 - i / n1); leafP.push(at(u, -sg * hw(u))); webP.push(lerpP(T[0], Hl, i / n1)); }
+    const outline = poly(leafP.map((p, i) => lerpP(p, webP[i], e)));
+    // toes: from the leaf's two creases and its centre line (folded) to the three toes (spread)
+    const toes = [0, 1, 2].map((i) => {
+      const pts: V2[] = [];
+      for (let k = 0; k <= 6; k++) {
+        const u = 0.14 + (0.86 * k) / 6;
+        const lf = i === 1 ? at(u * 0.93, 0) : at(u * UA, (i === 2 ? sg : -sg) * 0.42 * hw(u * UA));
+        pts.push(lerpP(lf, lerpP(K0, T[i], u), e));
       }
-      const outline = poly([...Lp, ...Rp.reverse()]);
-      const crease = [0.36, -0.36].map((f) => {
-        const pts: V2[] = [];
-        for (let i = 2; i <= 9; i++) pts.push(at(i / n * 1.0, f * hw(i / n)));
-        return smoothOpen(pts);
-      }).join(' ');
-      return {outline, crease};
-    })();
+      return pts;
+    });
+    const toeD = toes.map((p) => smoothOpen(p)).join(' ');
+    const toeW = lerp(LINE_PX, 0.3 * sc, e);
+    const tips = toes.map((p) => p[p.length - 1]);
     return (
       <g>
         <path d={capsule(g.exit, g.ankle, 0.42, 0.34)} fill={tw(K.foot)} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} />
-        {spread > 0.02 && (
-          <g opacity={spread}>
-            <path d={web} fill={webCol} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
-            {g.tips.map((tp, i) => (
-              <path key={i} d={capsule(g.ankle, tp, 0.22, 0.12)} fill={tw(K.footLit)} stroke={INK} strokeWidth={LINE_PX * 0.6} vectorEffect={NS} opacity={0.95} />
-            ))}
-            {T.map((q, i) => <circle key={`k${i}`} cx={q.x} cy={q.y} r={0.16 * q.s} fill={K.claw} />)}
-          </g>
-        )}
-        {leaf && (
-          <g opacity={1 - spread}>
-            <path d={leaf.outline} fill={tw(K.footWeb)} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
-            <path d={leaf.crease} fill="none" stroke={tw(K.footCrease)} strokeWidth={LINE_PX} vectorEffect={NS} strokeLinecap="round" />
-          </g>
-        )}
+        <path d={outline} fill={tw(mix(K.footWeb, webTone, e))} stroke={INK} strokeWidth={INK_PX} vectorEffect={NS} strokeLinejoin="round" />
+        {e > 0.02 && <path d={toeD} fill="none" stroke={INK} strokeWidth={toeW + 1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.9 * e} />}
+        <path d={toeD} fill="none" stroke={tw(mix(K.footCrease, K.footLit, e))} strokeWidth={toeW} vectorEffect={NS} strokeLinecap="round" />
+        {e > 0.05 && tips.map((q, i) => <circle key={`k${i}`} cx={q.x} cy={q.y} r={0.16 * sc * e} fill={K.claw} />)}
         <circle cx={K0.x} cy={K0.y} r={0.4 * K0.s} fill={tw(K.foot)} stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} />
       </g>
     );
   };
-  // the linkage: moving parts (crank, pushrod, rocker) in dark steel, fixed parts (module, bracket) in light print
+  // the linkage: moving parts (crank, pushrod, rocker) in dark steel, fixed parts (module, bracket) in light print.
+  // The FAR set (behind the module, seen through the open shell) recedes: tinted toward the inner shell, thin light
+  // ink, no highlights, so it never tangles with the near set
   const Linkage: React.FC<{g: LegG; far?: boolean}> = ({g, far}) => {
-    const k = far ? 0.45 : 0;
-    const col = (c: string) => tw(mix(c, K.uwDeep, k), 0.12);
-    const ink = far ? LINE_PX : INK_PX;
+    const col = (c: string) => (far ? tw(mix(c, K.innerShell, 0.62), 0.2) : tw(c, 0.12));
+    const ink = far ? LINE_PX * 0.6 : INK_PX;
+    const io = far ? 0.6 : 1;
     const sd = g.side;
     const pin = P(g.pin), lev = P(g.lever), hip = P(g.hip), cr = P(g.crank0);
     const zb = sd * LEG.zBracket;
@@ -1339,33 +1600,34 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
       capsule([hx - 1.5, -4.85, zb], [hx, hy, zb], 0.42, 0.55),
     ];
     const acc = P(add3(g.crank0, mul3(sub3(g.pin, g.crank0), 0.52)));
+    const st = {stroke: INK, strokeWidth: ink, strokeOpacity: io, vectorEffect: NS} as const;
     return (
       <g>
         <g>
-          {br.map((d, i) => <path key={`o${i}`} d={d} fill="none" stroke={INK} strokeWidth={LINE_PX * 2} vectorEffect={NS} />)}
+          {br.map((d, i) => <path key={`o${i}`} d={d} fill="none" stroke={INK} strokeWidth={far ? ink * 2 : LINE_PX * 2} strokeOpacity={io} vectorEffect={NS} />)}
           {br.map((d, i) => <path key={`f${i}`} d={d} fill={col(K.printedSide)} />)}
         </g>
         {/* the leg's upper end inside the hull, and its rocker (the leg's own extension above the hip) */}
-        <path d={capsule(g.hip, g.exit, 0.45, 0.42)} fill={col(K.foot)} stroke={INK} strokeWidth={ink} vectorEffect={NS} />
-        <path d={capsule(g.hip, g.lever, 0.44, 0.34)} fill={col(K.steel)} stroke={INK} strokeWidth={ink} vectorEffect={NS} strokeLinejoin="round" />
+        <path d={capsule(g.hip, g.exit, 0.45, 0.42)} fill={col(K.foot)} {...st} />
+        <path d={capsule(g.hip, g.lever, 0.44, 0.34)} fill={col(K.steel)} {...st} strokeLinejoin="round" />
         {!far && <path d={gloss(g.hip, g.lever, 0.16)} stroke={K.steelLit} strokeWidth={1.3} vectorEffect={NS} strokeLinecap="round" opacity={0.75} />}
         {/* crank arm on the output shaft */}
-        <path d={capsule(g.crank0, g.pin, 0.52, 0.42)} fill={col(K.steel)} stroke={INK} strokeWidth={ink} vectorEffect={NS} strokeLinejoin="round" />
+        <path d={capsule(g.crank0, g.pin, 0.52, 0.42)} fill={col(K.steel)} {...st} strokeLinejoin="round" />
         {!far && <path d={gloss(g.crank0, g.pin, 0.2)} stroke={K.steelLit} strokeWidth={1.3} vectorEffect={NS} strokeLinecap="round" opacity={0.75} />}
-        <circle cx={cr.x} cy={cr.y} r={0.24 * cr.s} fill={col(K.steelLit)} stroke={INK} strokeWidth={LINE_PX * 0.7} vectorEffect={NS} />
+        {!far && <circle cx={cr.x} cy={cr.y} r={0.24 * cr.s} fill={col(K.steelLit)} stroke={INK} strokeWidth={LINE_PX * 0.7} vectorEffect={NS} />}
         {!far && <circle cx={acc.x} cy={acc.y} r={0.2 * acc.s} fill={C.accent} />}
         {/* pushrod */}
-        <path d={capsule(g.pin, g.lever, 0.3, 0.3)} fill={col(K.steel)} stroke={INK} strokeWidth={ink} vectorEffect={NS} />
+        <path d={capsule(g.pin, g.lever, 0.3, 0.3)} fill={col(K.steel)} {...st} />
         {!far && <path d={gloss(g.pin, g.lever, 0.1)} stroke={K.steelLit} strokeWidth={1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.7} />}
         {/* pin eyes */}
         {[pin, lev].map((q, i) => (
           <g key={`e${i}`}>
-            <circle cx={q.x} cy={q.y} r={0.45 * q.s} fill={col(K.steel)} stroke={INK} strokeWidth={ink} vectorEffect={NS} />
-            <circle cx={q.x} cy={q.y} r={0.17 * q.s} fill={col(K.steelLit)} />
+            <circle cx={q.x} cy={q.y} r={0.45 * q.s} fill={col(K.steel)} {...st} />
+            {!far && <circle cx={q.x} cy={q.y} r={0.17 * q.s} fill={col(K.steelLit)} />}
           </g>
         ))}
         {/* hip pivot boss */}
-        <circle cx={hip.x} cy={hip.y} r={0.42 * hip.s} fill={col(K.printed)} stroke={INK} strokeWidth={ink} vectorEffect={NS} />
+        <circle cx={hip.x} cy={hip.y} r={0.42 * hip.s} fill={col(K.printed)} {...st} />
         <circle cx={hip.x} cy={hip.y} r={0.15 * hip.s} fill={col(K.axle)} />
       </g>
     );
@@ -1400,7 +1662,9 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     <g opacity={ua}>
       <defs>
         <clipPath id={`${id}e`}><path d={underClipD(B, t)} /></clipPath>
-        <clipPath id={`${id}h`}><path d={HV.below} /></clipPath>
+        <mask id={`${id}h`} maskUnits="userSpaceOnUse" x={-W} y={-H} width={3 * W} height={3 * H}>
+          <path d={HV.below} fill="#FFFFFF" />
+        </mask>
         <clipPath id={`${id}w`}><path d={win} /></clipPath>
         <linearGradient id={`${id}g`} gradientUnits="userSpaceOnUse" x1={wTop.x} y1={wTop.y} x2={wBot.x} y2={wBot.y}>
           <stop offset={0} stopColor={tw(mix(K.innerShell, INK, 0.45), tint)} />
@@ -1413,14 +1677,14 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
         <Foot g={legs[1]} />
         {/* submerged hull, tinted by the water */}
         <path d={HV.below} fill="none" stroke={INK} strokeWidth={INK_PX * 2} vectorEffect={NS} strokeLinejoin="round" />
-        <g clipPath={`url(#${id}h)`}>
-          <path d={HV.below} fill={tw(K.flank)} />
+        <g mask={`url(#${id}h)`}>
+          {reg(HV.below, tw(K.flank))}
           <g fillRule="evenodd">
-            <path d={R.belly} fill={tw(K.belly)} />
-            <path d={R.stern} fill={tw(K.stern)} />
-            <path d={R.breast} fill={tw(K.breast)} />
-            <path d={R.shadow} fill={INK} opacity={0.2} />
-            <path d={R.core} fill={INK} opacity={0.12} />
+            {reg(R.belly, tw(K.belly))}
+            {reg(R.stern, tw(K.stern))}
+            {reg(R.breast, tw(K.breast))}
+            {reg(R.shadow, INK, 0.2)}
+            {reg(R.core, INK, 0.12)}
           </g>
           {/* the cutaway: inside the preserved skin, the printed drive */}
           {win && (
@@ -1824,6 +2088,10 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const id = uid('pdu');
   const e = edgeLine(B, t);
   const ey = e[Math.floor(e.length / 2)].y;
+  // the highest point of the frame's waterline: anything wholly above it is hidden by the underwater clip anyway, so
+  // only that is culled (no item pops in or out where it can be seen)
+  let eTop = Infinity;
+  for (const p of e) eTop = Math.min(eTop, p.y);
   const fog = (p: V3) => 1 - Math.exp(-Math.max(0, -(p[2] - B.eye[2])) / 1100);
   // pond floor
   const floorL = lineAcross(B, FLOOR_Y, BANK_Z + 60);
@@ -1832,7 +2100,7 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   // weeds (ribbons from the floor, fogged by distance)
   const wd = ['', '', ''];
   for (const [zr, bucket] of [[-980, 0], [-770, 1], [-580, 2]] as [number, number][]) {
-    const [xa, xb] = visX(B, -30, zr, 120);
+    const [xa, xb] = visX(B, -30, zr, 260);
     const spx = 34 + 10 * bucket;
     for (let k = Math.floor(xa / spx); k <= Math.ceil(xb / spx); k++) {
       if (hash(k * 3.7 + bucket * 11) < 0.35) continue;
@@ -1845,14 +2113,13 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       }
     }
   }
-  // the near floor (lower third): pebbles on the silt and a few rooted weed clumps, crisp and only lightly fogged,
-  // kept out of the subject's column (screen x 300..800) with a soft fade
-  const colFade = (sx: number) => clamp((Math.abs(sx - 550) - 250) / 90);
+  // the near floor (lower third): pebbles on the silt and a few rooted weed clumps, crisp and only lightly fogged.
+  // Every item is anchored in the world (it slides by as the camera tracks the duck; nothing fades by screen position)
   const fogMix = (c: string, p: V3) => mix(c, PC.uwMid, clamp(0.08 + 0.55 * fog(p), 0, 0.8));
-  type Peb = {d: string; sh: string; hi: V2 & {r: number}; fill: string; a: number};
+  type Peb = {d: string; sh: string; hi: V2 & {r: number}; fill: string; a: number; z: number};
   const pebs: Peb[] = [];
   for (const zr of [-125, -180, -245, -320, -410, -520]) {
-    const [xa, xb] = visX(B, FLOOR_Y, zr, 60);
+    const [xa, xb] = visX(B, FLOOR_Y, zr, 120);
     const spx = 13 + 0.03 * -zr;
     for (let k = Math.floor(xa / spx); k <= Math.ceil(xb / spx); k++) {
       const h = hash(k * 3.31 + zr * 0.71);
@@ -1862,27 +2129,26 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       const r = 1.6 + 3.4 * hash(k * 5.3 + zr * 0.17) ** 1.5;
       const p: V3 = [x, FLOOR_Y, z];
       const c = proj(B, p);
-      const a = colFade(c.x);
-      if (a < 0.02 || c.y < ey + 10 || c.y > H + 20) continue;
       const rx = r * c.s, ry = r * c.s * (0.5 + 0.15 * hash(k * 4.4 + zr));
+      if (c.y + ry < eTop || c.y - 2 * ry > H + 10) continue;
       const cy = c.y - ry * 0.55;
       const d = `M${fx(c.x - rx)},${fx(cy)} a${fx(rx)},${fx(ry)} 0 1,0 ${fx(2 * rx)},0 a${fx(rx)},${fx(ry)} 0 1,0 ${fx(-2 * rx)},0Z`;
       const sh = `M${fx(c.x - rx * 1.2)},${fx(c.y + ry * 0.25)} a${fx(rx * 1.2)},${fx(ry * 0.35)} 0 1,0 ${fx(rx * 2.4)},0 a${fx(rx * 1.2)},${fx(ry * 0.35)} 0 1,0 ${fx(-rx * 2.4)},0Z`;
       const tone = PC.pebble[Math.floor(hash(k * 9.1 + zr) * PC.pebble.length)];
-      pebs.push({d, sh, hi: {x: c.x - rx * 0.28, y: cy - ry * 0.32, r: rx * 0.55}, fill: fogMix(tone, p), a: a * (1 - 0.35 * fog(p))});
+      pebs.push({d, sh, hi: {x: c.x - rx * 0.28, y: cy - ry * 0.32, r: rx * 0.55}, fill: fogMix(tone, p), a: 1 - 0.35 * fog(p), z});
     }
   }
-  type Clump = {d: string; fill: string; a: number};
+  type Clump = {d: string; fill: string; a: number; z: number};
   const clumps: Clump[] = [];
   for (const [zr, spx, seed] of [[-250, 46, 1], [-360, 58, 2]] as [number, number, number][]) {
-    const [xa, xb] = visX(B, FLOOR_Y, zr, 120);
+    const [xa, xb] = visX(B, FLOOR_Y, zr, 320);
     for (let k = Math.floor(xa / spx); k <= Math.ceil(xb / spx); k++) {
       if (hash(k * 4.13 + seed * 17) < 0.42) continue;
       const cx = k * spx + (hash(k * 6.1 + seed) - 0.5) * spx * 0.5;
       const cz = zr + (hash(k * 2.3 + seed * 5) - 0.5) * 40;
       const c = proj(B, [cx, FLOOR_Y, cz]);
-      const a = colFade(c.x);
-      if (a < 0.02 || c.y < ey + 20) continue;
+      // a clump reaches ~36 cm up: cull it only when even its tips lie above the waterline
+      if (proj(B, [cx, FLOOR_Y + 40, cz]).y < eTop) continue;
       let d = '';
       const n = 5 + Math.floor(hash(k * 1.3 + seed) * 3);
       for (let b = 0; b < n; b++) {
@@ -1892,28 +2158,30 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         const sway = u * 0.9 + 0.1 * Math.sin(t * 0.9 + k + b * 0.7) + (hash(k + b * 3.1) - 0.5) * 0.25;
         d += blade(B, base, hgt, sway, 1.7 + 0.8 * hash(k * 2 + b));
       }
-      clumps.push({d, fill: fogMix(PC.weedNear, [cx, FLOOR_Y, cz]), a: a * (1 - 0.3 * fog([cx, FLOOR_Y, cz]))});
+      clumps.push({d, fill: fogMix(PC.weedNear, [cx, FLOOR_Y, cz]), a: 1 - 0.3 * fog([cx, FLOOR_Y, cz]), z: cz});
     }
   }
   // faint ripples in the silt (sand ridges), world-anchored rows
   let silt = '';
   for (let r = 0; r < 9; r++) {
     const z = -180 - r * r * 11;
-    const [xa, xb] = visX(B, FLOOR_Y, z, 60);
+    const [xa, xb] = visX(B, FLOOR_Y, z, 200);
     const dx = 22 + 0.04 * -z;
     for (let m = Math.floor(xa / dx); m <= Math.ceil(xb / dx); m++) {
       if (hash(m * 1.9 + r * 7.7) < 0.45) continue;
       const x = m * dx + (hash(m * 3.1 + r) - 0.5) * dx * 0.6;
       const L = dx * (0.25 + 0.2 * hash(m + r * 2.2));
       const a = proj(B, [x - L, FLOOR_Y, z]), b = proj(B, [x + L, FLOOR_Y, z]);
-      if (a.y < ey + 10) continue;
+      if (Math.max(a.y, b.y) < eTop - 4) continue;
       silt += `M${P2(a)} Q${fx((a.x + b.x) / 2)},${fx((a.y + b.y) / 2 - 1.6)} ${P2(b)} `;
     }
   }
   // light shafts (from the surface, slanting down-right: light from the upper left)
   const shafts: string[] = [];
   {
-    const [xa, xb] = visX(B, 0, -260, 300);
+    const [xa0, xb0] = visX(B, 0, -260, 120);
+    const sTop = proj(B, [B.eye[0], 0, -260]).s;
+    const xa = xa0 - (330 + 30 * 2.4 * sTop) / Math.max(0.1, sTop), xb = xb0;
     const spx = 90;
     for (let k = Math.floor(xa / spx); k <= Math.ceil(xb / spx); k++) {
       if (hash(k * 4.9) < 0.3) continue;
@@ -1930,7 +2198,7 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   {
     const cell = 36;
     for (const zr of [-320, -180, -60, 10]) {
-      const [xa, xb] = visX(B, -20, zr, 60);
+      const [xa, xb] = visX(B, -20, zr, 90);
       for (let k = Math.floor(xa / cell); k <= Math.ceil(xb / cell); k++) {
         for (let q = 0; q < 2; q++) {
           const hh = hash(k * 12.9 + q * 3.1 + zr);
@@ -1940,7 +2208,7 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
             zr + (hash(k * 1.1 + q * 7 + zr) - 0.5) * 60,
           ];
           const c = proj(B, p);
-          if (c.y < ey + 4) continue;
+          if (c.y < eTop - 4) continue;
           const r = (0.18 + 0.22 * hash(hh * 91)) * c.s;
           if (fog(p) > 0.45) m1 += circ(c.x, c.y, r); else m2 += circ(c.x, c.y, r);
         }
@@ -1981,16 +2249,18 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
           <path d={wd[2]} fill={mix(PC.weed, PC.uwMid, 0.5)} />
         </g>
         {silt && <path d={silt} fill="none" stroke={mix(PC.floor, PC.uwLow, 0.6)} strokeWidth={1.8} vectorEffect={NS} strokeLinecap="round" opacity={0.55} />}
-        {clumps.map((c, i) => (
-          <path key={`w${i}`} d={c.d} fill={c.fill} stroke={INK} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} strokeOpacity={0.45} opacity={c.a} />
-        ))}
-        {pebs.map((p, i) => (
-          <g key={`p${i}`} opacity={p.a}>
-            <path d={p.sh} fill={PC.uwLow} opacity={0.35} />
-            <path d={p.d} fill={p.fill} stroke={INK} strokeWidth={LINE_PX * 0.9} vectorEffect={NS} strokeOpacity={0.6} />
-            <ellipse cx={p.hi.x} cy={p.hi.y} rx={p.hi.r} ry={p.hi.r * 0.5} fill="#FFFFFF" opacity={0.16} />
-          </g>
-        ))}
+        {/* pebbles and clumps together, far to near */}
+        {[...clumps.map((c) => ({z: c.z, c, p: null as Peb | null})), ...pebs.map((p) => ({z: p.z, c: null as Clump | null, p}))]
+          .sort((a, b) => a.z - b.z)
+          .map(({c, p}, i) => (c ? (
+            <path key={`w${i}`} d={c.d} fill={c.fill} stroke={INK} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} strokeOpacity={0.45} opacity={c.a} />
+          ) : p ? (
+            <g key={`p${i}`} opacity={p.a}>
+              <path d={p.sh} fill={PC.uwLow} opacity={0.35} />
+              <path d={p.d} fill={p.fill} stroke={INK} strokeWidth={LINE_PX * 0.9} vectorEffect={NS} strokeOpacity={0.6} />
+              <ellipse cx={p.hi.x} cy={p.hi.y} rx={p.hi.r} ry={p.hi.r * 0.5} fill="#FFFFFF" opacity={0.16} />
+            </g>
+          ) : null))}
         {shafts.map((d, i) => <path key={i} d={d} fill={`url(#${id}s)`} opacity={0.7 + 0.3 * Math.sin(t * 0.9 + i * 1.7)} />)}
         <path d={m1} fill={PC.mote} opacity={0.35} />
         <path d={m2} fill={PC.mote} opacity={0.6} />
