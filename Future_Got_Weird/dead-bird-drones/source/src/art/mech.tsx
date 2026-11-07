@@ -137,6 +137,13 @@ const perpBasis = (d: V3): [V3, V3] => {
   return [e1, norm3(cross3(d, e1))];
 };
 
+/** a flat disc facing +z (body-local) at o: an end face drawn on its own */
+const disc = (c: Ctx, o: V3, r: number, t: Tone, n = 24): El[] => {
+  const rim = ring3(c, o, [1, 0, 0], [0, 1, 0], r, n);
+  const bb = bbox(rim);
+  return [<path key={key(c)} d={poly(rim)} fill={litGrad(c, bb.m, bb.R, t, 0.5)} stroke={INK} strokeWidth={c.line} strokeOpacity={0.85} strokeLinejoin="round" vectorEffect={NS} />];
+};
+
 type CylOpt = {
   n?: number;
   /** opacity of the white specular streak */
@@ -245,7 +252,7 @@ const slab = (
   L: Layers,
   ringsAt: (u: number) => V3[][],
   probe: [V3, V3],
-  t: {face: string; side: string; ink?: number; line?: number; glow?: number; maxSlices?: number},
+  t: {face: string; side: string; ink?: number; line?: number; glow?: number; maxSlices?: number; inkOp?: number},
 ) => {
   const p0 = pj(c, probe[0]), p1 = pj(c, probe[1]);
   const dpx = Math.hypot(p1.x - p0.x, p1.y - p0.y);
@@ -256,10 +263,10 @@ const slab = (
   if (t.glow) L.under.push(...glow(c, faceD, t.glow));
   for (let i = nS; i >= 1; i--) {
     const d = ring2(i / nS);
-    L.under.push(under(c, d, t.ink));
+    L.under.push(under(c, d, t.ink, t.inkOp));
     L.side.push(fillP(c, d, t.side));
   }
-  L.under.push(under(c, faceD, t.ink));
+  L.under.push(under(c, faceD, t.ink, t.inkOp));
   L.face.push(
     <path key={key(c)} d={faceD} fill={t.face} fillRule="evenodd" stroke={INK} strokeWidth={t.line ?? c.line} strokeOpacity={0.9} strokeLinejoin="round" vectorEffect={NS} />,
   );
@@ -268,8 +275,9 @@ const slab = (
 
 // ------------------------------------------------------------------ gear geometry (body-local, exported for checks)
 /** tooth profile: [radial offset from the pitch circle in modules, half-width as a fraction of the angular pitch] */
-const TOOTH_FULL: [number, number][] = [[-1.25, 0.335], [-1.0, 0.305], [-0.5, 0.272], [0, 0.235], [0.5, 0.195], [0.82, 0.162], [1.0, 0.118]];
-const TOOTH_LOW: [number, number][] = [[-1.25, 0.33], [-0.4, 0.27], [0.55, 0.19], [1.0, 0.12]];
+// (checked numerically over a full crank turn: meshing outlines never overlap; the pitch-circle backlash is ~12%)
+const TOOTH_FULL: [number, number][] = [[-1.25, 0.34], [-1.0, 0.3], [-0.6, 0.255], [0, 0.22], [0.5, 0.175], [0.82, 0.138], [1.0, 0.095]];
+const TOOTH_LOW: [number, number][] = [[-1.25, 0.3], [-0.4, 0.245], [0.55, 0.17], [1.0, 0.105]];
 /** a gear's toothed outline in body-local (x, y): tooth k centred at angle ang + k 2pi/n (counter-clockwise from +x,
  *  seen from +z), exactly rig.ts's tooth phase */
 export const gearOutline = (G: Gear, ang: number, prof: [number, number][] = TOOTH_FULL): [number, number][] => {
@@ -370,46 +378,46 @@ const fillet = (pts: P2t[], r: number, seg = 4): P2t[] => {
   }
   return out;
 };
-/** union of a polygon (clockwise, y up) with a circle it crosses twice */
-const unionCircle = (pts: P2t[], c: P2t, R: number, n = 28): P2t[] => {
+/** boolean of a polygon (clockwise, y up) with a circle whose boundary it crosses twice: 'union' adds the disc,
+ *  'cut' removes it */
+const circleOp = (pts: P2t[], c: P2t, R: number, mode: 'union' | 'cut', n = 28): P2t[] => {
   const inside = (p: P2t) => Math.hypot(p[0] - c[0], p[1] - c[1]) < R;
-  const hit = (a: P2t, b: P2t, first: boolean): P2t => {
-    const dx = b[0] - a[0], dy = b[1] - a[1], fx = a[0] - c[0], fy = a[1] - c[1];
-    const A = dx * dx + dy * dy, Bq = 2 * (fx * dx + fy * dy), Cq = fx * fx + fy * fy - R * R;
-    const disc = Math.sqrt(Math.max(0, Bq * Bq - 4 * A * Cq));
-    const t = first ? (-Bq - disc) / (2 * A) : (-Bq + disc) / (2 * A);
-    return [a[0] + dx * t, a[1] + dy * t];
-  };
   const N = pts.length;
-  let iIn = -1, iOut = -1;
+  let ein: {i: number; p: P2t} | null = null, eout: {i: number; p: P2t} | null = null;
   for (let i = 0; i < N; i++) {
     const a = pts[i], b = pts[(i + 1) % N];
-    if (!inside(a) && inside(b)) iIn = i;
-    if (inside(a) && !inside(b)) iOut = i;
+    const dx = b[0] - a[0], dy = b[1] - a[1], fx = a[0] - c[0], fy = a[1] - c[1];
+    const A = dx * dx + dy * dy, Bq = 2 * (fx * dx + fy * dy), Cq = fx * fx + fy * fy - R * R;
+    const disc = Bq * Bq - 4 * A * Cq;
+    if (disc <= 0) continue;
+    const t0 = (-Bq - Math.sqrt(disc)) / (2 * A), t1 = (-Bq + Math.sqrt(disc)) / (2 * A);
+    if (t0 > 0 && t0 < 1 && !inside(a)) ein = {i, p: [a[0] + dx * t0, a[1] + dy * t0]};
+    if (t1 > 0 && t1 < 1 && !inside(b)) eout = {i, p: [a[0] + dx * t1, a[1] + dy * t1]};
   }
-  if (iIn < 0 || iOut < 0) return pts;
-  const Ein = hit(pts[iIn], pts[(iIn + 1) % N], true), Eout = hit(pts[iOut], pts[(iOut + 1) % N], false);
-  const out: P2t[] = [];
-  for (let k = (iOut + 1) % N; ; k = (k + 1) % N) {
+  if (!ein || !eout) return pts;
+  const out: P2t[] = [eout.p];
+  for (let k = (eout.i + 1) % N; ; k = (k + 1) % N) {
     out.push(pts[k]);
-    if (k === iIn) break;
+    if (k === ein.i) break;
   }
-  out.push(Ein);
-  const aIn = Math.atan2(Ein[1] - c[1], Ein[0] - c[0]);
-  let aOut = Math.atan2(Eout[1] - c[1], Eout[0] - c[0]);
-  while (aOut > aIn) aOut -= Math.PI * 2; // clockwise
-  const m = Math.max(2, Math.round(((aIn - aOut) / (Math.PI * 2)) * n));
+  out.push(ein.p);
+  const aIn = Math.atan2(ein.p[1] - c[1], ein.p[0] - c[0]);
+  let aOut = Math.atan2(eout.p[1] - c[1], eout.p[0] - c[0]);
+  if (mode === 'union') while (aOut > aIn) aOut -= Math.PI * 2; // clockwise, around the outside
+  else while (aOut < aIn) aOut += Math.PI * 2; // counter-clockwise, through the inside
+  const m = Math.max(2, Math.round((Math.abs(aIn - aOut) / (Math.PI * 2)) * n));
   for (let i = 1; i < m; i++) {
     const a = lerp(aIn, aOut, i / m);
     out.push([c[0] + R * Math.cos(a), c[1] + R * Math.sin(a)]);
   }
-  out.push(Eout);
   return out;
 };
 /** the slot through the plate's top edge that clears the far rod and the far spar (they pass behind the plate) */
 const SLOT = {x0: 1.8, x1: 3.2, yb: 2.0};
-/** the plate's motor-mount lobe around the motor bore */
-const LOBE_R = 2.05;
+/** the motor bore (rig.ts PLATE.holes, the one on the motor axis) opens the plate's lower edge as a notch; the motor's
+ *  face is bolted behind two ears that reach into it, so the can, its band, end cap and terminals stay in view */
+const BORE = PLATE.holes.reduce((a, h) => (Math.hypot(h.c[0] - MOTOR.c[0], h.c[1] - MOTOR.c[1]) < Math.hypot(a.c[0] - MOTOR.c[0], a.c[1] - MOTOR.c[1]) ? h : a));
+export const EARS: P2t[] = [50, 130].map((d) => [MOTOR.c[0] + 1.2 * Math.cos((d * Math.PI) / 180), MOTOR.c[1] + 1.2 * Math.sin((d * Math.PI) / 180)]);
 export const PLATE_OUTLINE: P2t[] = (() => {
   const o = PLATE.outline;
   const pts: P2t[] = [o[0], o[1]];
@@ -422,9 +430,11 @@ export const PLATE_OUTLINE: P2t[] = (() => {
   }
   pts.push([SLOT.x1, top]);
   for (let i = 2; i < o.length; i++) pts.push(o[i]);
-  return fillet(unionCircle(pts, [MOTOR.c[0], MOTOR.c[1]], LOBE_R), 0.32);
+  let r = circleOp(pts, BORE.c, BORE.r, 'cut');
+  for (const e of EARS) r = circleOp(r, e, 0.42, 'union', 20);
+  return fillet(r, 0.3);
 })();
-const PLATE_HOLES: P2t[][] = PLATE.holes.map((h) => circ2(h.c[0], h.c[1], h.r, h.r > 1.2 ? 30 : 22));
+const PLATE_HOLES: P2t[][] = PLATE.holes.filter((h) => h !== BORE).map((h) => circ2(h.c[0], h.c[1], h.r, h.r > 1.2 ? 30 : 22));
 const PLATE_BACK = PLATE.z - PLATE.th;
 /** top-bar brackets: one block at each end of the hinge axes, jutting from the plate; the hinge pins span them */
 const BRACKET = {y0: 4.0, y1: 5.15, w: 0.9};
@@ -458,7 +468,7 @@ const gearRings3 = (G: Gear, ang: number, z: number, prof: [number, number][], l
   [gearOutline(G, ang, prof), ...gearHoles(G, ang, low)].map((r) => r.map(([x, y]) => [x, y, z] as V3));
 
 /** one gear (one blur sample) into the layers */
-const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number) => {
+const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number, inkOp = 1) => {
   const front = facing(c.B, xf(c.F, [G.c[0], G.c[1], G.z1]), xfv(c.F, [0, 0, 1])) > 0;
   const zf = front ? G.z1 : G.z0, zb = front ? G.z0 : G.z1;
   const toothPx = MOD * c.s0;
@@ -473,6 +483,7 @@ const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number) => {
     side: brass ? BRASS_SIDE : PINION_SIDE,
     ink: Math.min(c.ink, lerp(1.1, INK_PX, clamp((toothPx - 2.5) / 5))),
     glow: glowAmt,
+    inkOp,
   });
 };
 
@@ -546,7 +557,7 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
   for (let i = 0; i < K; i++) {
     const L = layers();
     const dt = K === 1 ? 0 : (i / (K - 1) - 0.5) * SHUTTER;
-    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0);
+    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0, i === 0 ? 1 : 0.3);
     // equal-weight accumulation: copy i drawn at 1/(i+1) over the running average
     out.push(<g key={key(c)} opacity={K === 1 ? undefined : f2(1 / (i + 1))}>{flat(L)}</g>);
   }
@@ -579,8 +590,7 @@ const plate = (c: Ctx): El[] => {
   // screws (hex sockets)
   if (c.det > 0.4) {
     const screws: P2t[] = [[-1.4, 4.35], [6.0, 4.45], [6.75, -1.4], [0.55, -1.95]];
-    const m = MOTOR.c;
-    for (const a of [-0.78, -2.36]) screws.push([m[0] + 1.84 * Math.cos(a), m[1] + 1.84 * Math.sin(a)]);
+    screws.push(...EARS);
     for (const [x, y] of screws) {
       const hd = ring3(c, [x, y, PLATE.z + 0.04], [1, 0, 0], [0, 1, 0], 0.17, 14);
       const bb2 = bbox(hd);
@@ -614,9 +624,11 @@ const motor = (c: Ctx): El[] => {
     const rad: V3 = [Math.cos(a), Math.sin(a), 0], tan: V3 = [-Math.sin(a), Math.cos(a), 0];
     out.push(...box(c, termPt(a, 1.43), [rad, tan, [0, 0, 1]], [0.24, 0.13, 0.04], COPPER));
   }
-  out.push(...cyl(c, at(zCapEnd), at(MOTOR.z1), MOTOR.r, CAN, {n: 30, spec: 0.7}));
+  out.push(...cyl(c, at(zCapEnd), at(MOTOR.z1), MOTOR.r, CAN, {n: 30, spec: 0.7, caps: 'none'}));
   const zb0 = lerp(zCapEnd, MOTOR.z1, 0.3), zb1 = lerp(zCapEnd, MOTOR.z1, 0.66);
   out.push(...cyl(c, at(zb0), at(zb1), MOTOR.r + 0.015, BAND, {n: 30, spec: 0.35, caps: 'none', ink: c.line}));
+  // the can's front face (drawn after the band, which lies behind it)
+  out.push(...disc(c, at(MOTOR.z1), MOTOR.r, {lit: C.steelLit, base: C.steel, deep: mix(C.steel, C.steelDeep, 0.7)}, 30));
   out.push(...cyl(c, at(MOTOR.z1), at(MOTOR.z1 + 0.12), 0.45, STEEL, {n: 20, spec: 0}));
   if (c.det > 0.4) {
     for (const a of [0.8, 0.8 + Math.PI]) {
@@ -756,52 +768,53 @@ const bodyExit = (o: V3, d: V3) => {
     }
   return best;
 };
-const CR = {tmax: (62 * Math.PI) / 180, padT: 0.55, ribT: 0.7, ribHalf: 0.26, legW: 1.25, footZ: 3.5, boardT: 1.0, boardZ: 4.4, boardX: [-9.2, 9.6] as [number, number], n: 12};
-/** one support's profile (yz) at body-local x: the body's underside section and the pad/rib curves */
+const CR = {tmax: (64 * Math.PI) / 180, padT: 0.5, armT: 0.75, baseT: 1.0, postR: 0.42, boardT: 1.0, boardZ: 4.4, boardX: [-9.2, 9.6] as [number, number], n: 14};
+type YZ = [number, number];
+/** a support's yz section at body-local x: (y, z) of the body's underside along the angle t from straight down,
+ *  pushed out by off (cm) */
 const crSection = (x: number) => {
   const O: V3 = [x, -1, 0];
-  const at = (t: number, off: number): [number, number] => {
+  return (t: number, off: number): YZ => {
     const d: V3 = [0, -Math.cos(t), Math.sin(t)];
     const r = bodyExit(O, d) + 0.02 + off;
-    return [O[1] + d[1] * r, d[2] * r]; // (y, z)
+    return [O[1] + d[1] * r, d[2] * r];
   };
-  return at;
 };
-type YZ = [number, number];
-/** the near half (z >= 0) of a support: pad band and rib (arch with a U saddle and a leg), as (y, z) polygons whose
- *  first and last points sit on the cut plane z = 0 */
+/** the near half (z >= 0) of one support, as (y, z) polygons whose first and last points sit on the cut plane z = 0:
+ *  the foam liner, and the U saddle block under it */
 const crProfiles = (x: number) => {
   const at = crSection(x);
   const N = CR.n, tm = CR.tmax;
   const ts = Array.from({length: N + 1}, (_, i) => (i / N) * tm);
   const pad: YZ[] = [...ts.map((t) => at(t, 0)), ...[...ts].reverse().map((t) => at(t, CR.padT))];
-  // the rib: saddle from the pad's outer face, a band of ribT, then a leg down to the board
-  const yb = CRADLE.benchY + CR.boardT;
-  const tLeg = tm * 0.55;
-  const inner = ts.map((t) => at(t, CR.padT));
-  const outerTip = at(tm, CR.padT + CR.ribT);
-  const legTop = at(tLeg + 0.12, CR.padT + CR.ribT);
-  const archTop = at(tLeg * 0.35, CR.padT + CR.ribT);
-  const rib: YZ[] = [
-    ...inner,
-    outerTip,
-    at(tm * 0.85, CR.padT + CR.ribT),
-    legTop,
-    [lerp(legTop[0], yb, 0.5), CR.footZ + CR.legW * 0.62],
-    [yb, CR.footZ + CR.legW * 0.6],
-    [yb, CR.footZ - CR.legW * 0.6],
-    [lerp(archTop[0], yb, 0.55), CR.footZ - CR.legW * 0.75],
-    [archTop[0] - 0.9, archTop[1] * 0.75],
-    archTop,
-    at(0, CR.padT + CR.ribT),
-  ];
-  return {pad, rib, yb};
+  const yBot = at(0, CR.padT)[0] - CR.baseT;
+  const side = at(tm * 0.5, CR.padT + CR.armT);
+  const block: YZ[] = [...ts.map((t) => at(t, CR.padT))];
+  // rounded arm tip
+  const tipIn = at(tm, CR.padT), tipOut = at(tm, CR.padT + CR.armT);
+  const tc: YZ = [(tipIn[0] + tipOut[0]) / 2, (tipIn[1] + tipOut[1]) / 2];
+  const tr = Math.hypot(tipOut[0] - tipIn[0], tipOut[1] - tipIn[1]) / 2;
+  const a0 = Math.atan2(tipIn[0] - tc[0], tipIn[1] - tc[1]);
+  for (let i = 1; i < 6; i++) {
+    const a = a0 - (i / 6) * Math.PI;
+    block.push([tc[0] + tr * Math.sin(a), tc[1] + tr * Math.cos(a)]);
+  }
+  for (let i = N; i >= N / 2; i--) block.push(at((i / N) * tm, CR.padT + CR.armT));
+  // the outer wall down to a flat base with rounded corners
+  const zb = side[1] * 0.96;
+  block.push([lerp(side[0], yBot, 0.55), zb + 0.04]);
+  block.push([yBot + 0.35, zb]);
+  block.push([yBot + 0.08, zb - 0.12]);
+  block.push([yBot, zb - 0.38]);
+  block.push([yBot, 0]);
+  return {pad, block, yBot};
 };
 const CR_PROF = CRADLE.xs.map((x) => ({x, ...crProfiles(x)}));
 
 type Half = 1 | -1;
-/** an extruded half-profile (along x, thickness 2*hx) with its ink left open along the cut (z = 0) so the two halves join */
-const crExtrude = (c: Ctx, x: number, hx: number, prof: YZ[], side: Half, t: Tone, sideCol: string, maxS = 6): El[] => {
+/** a half-profile extruded along x (half-thickness hx); its ink stays open along the cut (z = 0) so the two halves
+ *  join seamlessly. grad: the face fill, shared by both halves */
+const crExtrude = (c: Ctx, x: number, hx: number, prof: YZ[], side: Half, face: string, sideCol: string, maxS = 7): El[] => {
   const L = layers();
   const camPlusX = dot3(sub3(c.B.eye, xf(c.F, [x, -10, 0])), xfv(c.F, [1, 0, 0])) > 0;
   const xf0 = camPlusX ? x + hx : x - hx, xb0 = camPlusX ? x - hx : x + hx;
@@ -810,17 +823,23 @@ const crExtrude = (c: Ctx, x: number, hx: number, prof: YZ[], side: Half, t: Ton
   const dpx = Math.hypot(p1.x - p0.x, p1.y - p0.y);
   const nS = dpx < 0.4 ? 0 : Math.max(1, Math.min(maxS, Math.ceil(dpx / 1.8)));
   const openD = (r: V2[]) => `M${r.map((p) => `${f2(p.x)},${f2(p.y)}`).join(' L')}`;
-  const face = pts(xf0);
-  const bb = bbox(face);
   for (let i = nS; i >= 0; i--) {
-    const r = pts(lerp(xf0, xb0, i / nS || 0));
+    const r = pts(lerp(xf0, xb0, nS ? i / nS : 0));
     L.under.push(<path key={key(c)} d={openD(r)} fill="none" stroke={INK} strokeWidth={2 * c.ink} strokeLinejoin="round" strokeLinecap="butt" vectorEffect={NS} />);
     if (i > 0) L.side.push(fillP(c, poly(r), sideCol));
   }
-  // the extruded edge between the back slice and the face: a band under the slices
-  L.face.push(<path key={key(c)} d={poly(face)} fill={litGrad(c, bb.m, bb.R, t, 0.5)} />);
-  L.face.push(<path key={key(c)} d={openD(face)} fill="none" stroke={INK} strokeWidth={c.line} strokeOpacity={0.85} strokeLinejoin="round" vectorEffect={NS} />);
+  const fr = pts(xf0);
+  L.face.push(<path key={key(c)} d={poly(fr)} fill={face} />);
+  L.face.push(<path key={key(c)} d={openD(fr)} fill="none" stroke={INK} strokeWidth={c.line} strokeOpacity={0.85} strokeLinejoin="round" vectorEffect={NS} />);
   return flat(L);
+};
+/** the face gradient of a support part, from the full (both halves) profile so the halves match */
+const crFace = (c: Ctx, x: number, hx: number, prof: YZ[], t: Tone) => {
+  const camPlusX = dot3(sub3(c.B.eye, xf(c.F, [x, -10, 0])), xfv(c.F, [1, 0, 0])) > 0;
+  const xx = camPlusX ? x + hx : x - hx;
+  const pts = [...prof.map(([y, z]) => pj(c, [xx, y, z])), ...prof.map(([y, z]) => pj(c, [xx, y, -z]))];
+  const bb = bbox(pts);
+  return litGrad(c, bb.m, bb.R, t, 0.5);
 };
 
 /** the lab's padded two-U support under the body (rig.ts CRADLE), standing on the bench at `base` (world).
@@ -835,25 +854,30 @@ export const Cradle: React.FC<{B: Basis; F: Frame; base: V3; layer?: 'all' | 'ba
   c.line = LINE_PX;
   const back: El[] = [], front: El[] = [];
   const yb = CRADLE.benchY + CR.boardT;
+  const blockSide = mix(RIB.base, RIB.deep, 0.45), padSide = mix(PAD.deep, INK, 0.15);
+  const faces = CR_PROF.map((p) => ({
+    block: crFace(c, p.x, CRADLE.padW / 2, p.block, RIB),
+    pad: crFace(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, PAD),
+  }));
   if (layer !== 'front') {
     const I: [V3, V3, V3] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
     const bx = CR.boardX;
     back.push(...box(c, [(bx[0] + bx[1]) / 2, CRADLE.benchY + CR.boardT / 2, 0], I, [(bx[1] - bx[0]) / 2, CR.boardT / 2, CR.boardZ], BOARD));
-    // rubber feet line (a darker lip at the board's base)
-    const xs = CR_PROF.map((p) => p.x);
-    // crossbar joining the two arches under the saddles
-    const ybar = Math.max(...CR_PROF.map((p) => p.rib[p.rib.length - 1][0])) - 1.2;
-    back.push(...cyl(c, [xs[0], ybar, 0], [xs[1], ybar, 0], 0.32, RIB, {n: 16, spec: 0.5}));
-    for (const p of CR_PROF) {
-      back.push(...crExtrude(c, p.x, CR.ribHalf, p.rib, -1, RIB, mix(RIB.deep, INK, 0.1)));
-      back.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.pad, -1, PAD, mix(PAD.deep, INK, 0.2)));
-    }
+    // a post under each saddle, on a foot flange
+    CR_PROF.forEach((p) => {
+      back.push(...cyl(c, [p.x, yb, 0], [p.x, yb + 0.18, 0], 0.85, RIB, {n: 24, spec: 0}));
+      back.push(...cyl(c, [p.x, yb + 0.18, 0], [p.x, p.yBot + 0.05, 0], CR.postR, RIB, {n: 18, spec: 0.6, caps: 'none'}));
+    });
+    CR_PROF.forEach((p, i) => {
+      back.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.block, -1, faces[i].block, blockSide));
+      back.push(...crExtrude(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, -1, faces[i].pad, padSide));
+    });
   }
   if (layer !== 'back') {
-    for (const p of CR_PROF) {
-      front.push(...crExtrude(c, p.x, CR.ribHalf, p.rib, 1, RIB, mix(RIB.deep, INK, 0.1)));
-      front.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.pad, 1, PAD, mix(PAD.deep, INK, 0.2)));
-    }
+    CR_PROF.forEach((p, i) => {
+      front.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.block, 1, faces[i].block, blockSide));
+      front.push(...crExtrude(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, 1, faces[i].pad, padSide));
+    });
   }
   void yb;
   return (

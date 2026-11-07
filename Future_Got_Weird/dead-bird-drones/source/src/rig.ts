@@ -215,4 +215,4 @@ export const R2D = deg;
 
 // ------------------------------------------------------------------ lab cradle contact (body-local)
 /** two padded U-supports under the body (lab construction scene); y of the bench top below the bird origin */
-export const CRADLE = {xs: [-5.5, 6.0], contactY: -6.4, benchY: -15.5, padW: 2.4};
+export const CRADLE = {xs: [-8.5, 10.5], contactY: -6.4, benchY: -15.5, padW: 2.4};

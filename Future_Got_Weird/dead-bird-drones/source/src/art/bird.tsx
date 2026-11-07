@@ -334,6 +334,7 @@ type BodyBuild = {
   mid: string; brown: string; head: string; cheek: string; sh1: string; sh2: string; li: string;
   hide: string;
   cs: number;
+  box: {x0: number; y0: number; x1: number; y1: number};
 };
 /** screen bbox of the merged body */
 const bodyBox = (cx: Ctx) => {
@@ -378,9 +379,9 @@ const buildBody = (cx: Ctx, wingPlane: {o: V3; n: V3} | null): BodyBuild | null 
       FM[k] = fb + 0.75;
       FH[k] = fHead(r.p, n);
       FC[k] = fCheek(r.p, n);
-      S1[k] = 0.06 - NL;
-      S2[k] = -0.4 - NL;
-      LI[k] = NL - 0.6;
+      S1[k] = -0.1 - NL;
+      S2[k] = -0.5 - NL;
+      LI[k] = NL - 0.86;
       if (wingPlane) {
         const den = dot3(dw, wN);
         let tw = 1e9;
@@ -388,7 +389,8 @@ const buildBody = (cx: Ctx, wingPlane: {o: V3; n: V3} | null): BodyBuild | null 
           const tt = dot3(sub3(wO, cx.B.eye), wN) / den;
           if (tt > 0) tw = tt;
         }
-        HD[k] = Math.min(tw - r.t, -r.s);
+        // a little overlap onto the body (the wing's root feathers lie over the shoulder: no seam along the outline)
+        HD[k] = Math.min(tw - r.t - 0.9, -r.s - 0.55);
       }
     }
   }
@@ -399,6 +401,7 @@ const buildBody = (cx: Ctx, wingPlane: {o: V3; n: V3} | null): BodyBuild | null 
     mid: go(FM), brown: go(FB), head: go(FH), cheek: go(FC), sh1: go(S1), sh2: go(S2), li: go(LI),
     hide: wingPlane ? go(HD) : '',
     cs,
+    box: {x0: Math.max(X0, bb.x0), y0: Math.max(Y0, bb.y0), x1: Math.min(X1, bb.x1), y1: Math.min(Y1, bb.y1)},
   };
 };
 
@@ -503,8 +506,9 @@ const tipPoly = (g: FeatherGeo, s0: number): F2[] => {
   return [g.at(s0, 1), ...out, g.at(s0, -1)];
 };
 type FeatherSpec = {f: Feather; i: number; g: FeatherGeo};
-const KIND_SC: Record<Feather['kind'], number> = {primary: 0.7, secondary: 0.8, covert: 0.74, lesser: 0.7};
-const WING_FEATHERS: FeatherSpec[] = FEATHERS.map((f, i) => ({f, i, g: featherGeo(f.base, f.tip, f.w, KIND_SC[f.kind], f.kind === 'primary' ? 0.78 : 0.92, f.kind === 'primary' ? 1.12 : 1.08)}));
+const KIND_SC: Record<Feather['kind'], number> = {primary: 0.7, secondary: 0.8, covert: 0.52, lesser: 0.4};
+const KIND_W: Record<Feather['kind'], number> = {primary: 1, secondary: 1, covert: 1.22, lesser: 1.3};
+const WING_FEATHERS: FeatherSpec[] = FEATHERS.map((f, i) => ({f, i, g: featherGeo(f.base, f.tip, f.w * KIND_W[f.kind], KIND_SC[f.kind], f.kind === 'primary' ? 0.78 : 0.92, f.kind === 'primary' ? 1.12 : 1.08)}));
 const KIND_INDEX = (() => {
   const counts: Record<string, number> = {};
   return FEATHERS.map((f) => {
@@ -516,30 +520,30 @@ const KIND_N: Record<Feather['kind'], number> = {primary: 0, secondary: 0, cover
 FEATHERS.forEach((f) => { KIND_N[f.kind]++; });
 /** the feathered shoulder (scapular / axillary) patch joining the wing root to the body, in wing coords */
 const FAIR: F2[] = (() => {
-  const out: F2[] = [[0.5, -1.5], [3.5, -2.1], [7.4, -2.35]];
-  const n = 6, b0 = -2.35, b1 = 11.2;
+  const out: F2[] = [[0.5, -0.2], [2.4, -1.15], [4.6, -1.95], [7.2, -2.35]];
+  const n = 8, b0 = -2.35, b1 = 11.2;
   for (let k = 0; k < n; k++) {
     const ba = b0 + ((b1 - b0) * k) / n, bb = b0 + ((b1 - b0) * (k + 1)) / n;
-    const aa = 7.3 - 0.1 * k;
+    const aa = 7.1 - 0.08 * k;
     for (let q = 1; q <= 4; q++) {
       const u = q / 4;
-      out.push([aa + 1.05 * Math.sin(u * Math.PI) - 0.1 * u, ba + (bb - ba) * u]);
+      out.push([aa + 0.7 * Math.sin(u * Math.PI) - 0.08 * u, ba + (bb - ba) * u]);
     }
   }
-  out.push([4.0, 11.35], [0.5, 10.9]);
+  out.push([4.8, 11.0], [2.5, 10.3], [0.5, 9.6]);
   return out;
 })();
 /** inner scallop row of the shoulder patch (open arcs), in wing coords */
 const FAIR_ROW: F2[][] = (() => {
   const rows: F2[][] = [];
-  for (const [aa, k0, n] of [[4.7, -1.6, 6], [2.6, -1.2, 5]] as [number, number, number][]) {
+  for (const [aa, k0, n] of [[4.9, -1.6, 7]] as [number, number, number][]) {
     const b1 = 10.6;
     for (let k = 0; k < n; k++) {
       const ba = k0 + ((b1 - k0) * k) / n, bb = k0 + ((b1 - k0) * (k + 1)) / n;
       const arc: F2[] = [];
       for (let q = 0; q <= 4; q++) {
         const u = q / 4;
-        arc.push([aa + 0.85 * Math.sin(u * Math.PI), ba + (bb - ba) * u]);
+        arc.push([aa + 0.6 * Math.sin(u * Math.PI), ba + (bb - ba) * u]);
       }
       rows.push(arc);
     }
@@ -619,7 +623,13 @@ const WingArt: React.FC<{B: Basis; F: Frame; W: WingFrame; st: WingStyle}> = ({B
   }
   // ink underlay: the union silhouette (feathers, arm, shoulder patch)
   let inkD = '';
-  for (const s of order) inkD += polyD(PP(s.g.outline));
+  const bb = {x0: Infinity, y0: Infinity, x1: -Infinity, y1: -Infinity};
+  for (const s of order) {
+    const pts = PP(s.g.outline);
+    for (const p of pts) { bb.x0 = Math.min(bb.x0, p.x); bb.x1 = Math.max(bb.x1, p.x); bb.y0 = Math.min(bb.y0, p.y); bb.y1 = Math.max(bb.y1, p.y); }
+    inkD += polyD(pts);
+  }
+  const gid = uid('bwg');
   const armS = ARM.map(([a, b, r]) => {
     const q = proj(B, xf(F, wingPt(W, a, b)));
     return {p: {x: q.x, y: q.y}, r: r * q.s};
@@ -628,6 +638,8 @@ const WingArt: React.FC<{B: Basis; F: Frame; W: WingFrame; st: WingStyle}> = ({B
   for (let i = 0; i < armS.length - 1; i++) armD += capsule2(armS[i].p, armS[i + 1].p, armS[i].r, armS[i + 1].r);
   const fairPts = PP(FAIR);
   const fairD = st.fair > 0.01 ? smoothClosed(fairPts) : '';
+  const fid = uid('bwf');
+  const fg0 = P(2.2, 4.5), fg1 = P(7.4, 4.5);
   const fill = (kd: Feather['kind'], ki: number) => K.L(kd === 'primary' ? K.primary(ki) : kd === 'secondary' ? K.secondary(ki) : kd === 'covert' ? K.covert(ki) : K.lesser(ki));
   return (
     <g>
@@ -649,25 +661,42 @@ const WingArt: React.FC<{B: Basis; F: Frame; W: WingFrame; st: WingStyle}> = ({B
           tipD = polyD(PP(tipPoly(s.g, kd === 'primary' ? 0.9 : 0.88)));
           if (det > 0.35) shaftD = polyD(PP([s.g.at(0.05, 0), s.g.at(0.86, 0)]), false);
         } else if (kd === 'covert') {
-          barD = polyD(PP([s.g.at(0.3, 0.45), s.g.at(0.62, 0.42), s.g.at(0.86, 0), s.g.at(0.62, -0.42), s.g.at(0.3, -0.45)]));
-          tipD = polyD(PP(tipPoly(s.g, 0.88)));
-        } else {
+          barD = polyD(PP([s.g.at(0.34, 0.06), s.g.at(0.52, 0.34), s.g.at(0.7, 0.3), s.g.at(0.82, 0), s.g.at(0.7, -0.3), s.g.at(0.52, -0.34), s.g.at(0.34, -0.06)]));
           tipD = polyD(PP(tipPoly(s.g, 0.84)));
+        } else {
+          barD = polyD(PP([s.g.at(0.3, 0.05), s.g.at(0.5, 0.3), s.g.at(0.66, 0), s.g.at(0.5, -0.3), s.g.at(0.3, -0.05)]));
+          tipD = polyD(PP(tipPoly(s.g, 0.8)));
         }
-        const barOp = flight ? (dorsal ? 0.42 : 0.3) * clamp(det * 1.5) : dorsal ? 0.7 : 0.25;
+        const barOp = flight ? (dorsal ? 0.42 : 0.3) * clamp(det * 1.5) : kd === 'covert' ? (dorsal ? 0.6 : 0.2) : dorsal ? 0.35 : 0.12;
         return (
           <g key={s.i}>
-            <path d={out} fill={fill(kd, ki)} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.62} strokeLinejoin="round" vectorEffect={NS} />
+            <path d={out} fill={fill(kd, ki)} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={flight ? 0.58 : 0.42} strokeLinejoin="round" vectorEffect={NS} />
             {barD && <path d={barD} fill={K.L(K.bar)} opacity={barOp} />}
             {tipD && <path d={tipD} fill={K.L(kd === 'covert' ? K.covertTip : K.tip)} opacity={kd === 'lesser' ? 0.5 : 0.92} />}
             {shaftD && <path d={shaftD} fill="none" stroke={K.L(K.shaft)} strokeWidth={LINE_PX * 0.75} strokeOpacity={0.55 * det} strokeLinecap="round" vectorEffect={NS} />}
           </g>
         );
       })}
+      {/* soft modelling lit from the upper left over the whole wing (one path: the union of the feathers) */}
+      <defs>
+        <linearGradient id={gid} gradientUnits="userSpaceOnUse" x1={bb.x0} y1={bb.y0} x2={bb.x1} y2={bb.y1}>
+          <stop offset="0" stopColor="#FFF8EA" stopOpacity={0.2} />
+          <stop offset="0.45" stopColor="#FFF8EA" stopOpacity={0} />
+          <stop offset="1" stopColor="#24140A" stopOpacity={0.2} />
+        </linearGradient>
+      </defs>
+      <path d={inkD} fill={`url(#${gid})`} />
       {fairD && (
         <g opacity={st.fair}>
-          <path d={fairD} fill={K.L(K.fair)} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.55} strokeLinejoin="round" vectorEffect={NS} />
-          <path d={FAIR_ROW.map((arc) => smoothOpen(PP(arc))).join('')} fill="none" stroke={K.L(K.fairLine)} strokeWidth={LINE_PX} strokeOpacity={dorsal ? 0.5 : 0.35} strokeLinecap="round" vectorEffect={NS} />
+          <defs>
+            <linearGradient id={fid} gradientUnits="userSpaceOnUse" x1={fg0.x} y1={fg0.y} x2={fg1.x} y2={fg1.y}>
+              <stop offset="0" stopColor={st.T(C.plumage)} />
+              <stop offset="0.4" stopColor={st.T(mix(C.plumage, dorsal ? C.plumage : K.fair, 0.35))} />
+              <stop offset="1" stopColor={K.L(K.fair)} />
+            </linearGradient>
+          </defs>
+          <path d={fairD} fill={`url(#${fid})`} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.32} strokeLinejoin="round" vectorEffect={NS} />
+          <path d={FAIR_ROW.map((arc) => smoothOpen(PP(arc))).join('')} fill="none" stroke={K.L(K.fairLine)} strokeWidth={LINE_PX} strokeOpacity={dorsal ? 0.4 : 0.22} strokeLinecap="round" vectorEffect={NS} />
         </g>
       )}
       {st.collar > 0.01 && (() => {
@@ -697,7 +726,8 @@ const TAIL_FEATHERS = (() => {
     const xt = TAIL.tipX + 1.3 * (zt / TAIL.spread) ** 2;
     const xb = -14.4;
     const base: V3 = [xb, yAt(xb), zt * 0.2];
-    const tip: V3 = [xt, yAt(xt), zt];
+    // a gently arched fan (outer feathers a little lower), so it reads as a fan from the side too
+    const tip: V3 = [xt, yAt(xt) - 1.5 * (zt / TAIL.spread) ** 2, zt];
     const ax = norm3(sub3(tip, base));
     const wv = norm3(cross3(nT, ax));
     out.push({k, base, tip, wv, z: zt});
@@ -900,7 +930,7 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
   const eCut = sm(cut);
   const hole = eCut > 0.004 ? holeGeo(B, Fs, eCut) : null;
   const reveal = hole && look.cutReveal ? look.cutReveal(B) : null;
-  const ids = {clip: uid('bbody'), win: uid('bwin'), rev: uid('brev'), mBody: uid('bmb'), mWing: uid('bmw'), mHide: uid('bmh'), gIn: uid('bgin'), gRim: uid('bgrim')};
+  const ids = {clip: uid('bbody'), win: uid('bwin'), rev: uid('brev'), mBody: uid('bmb'), mWing: uid('bmw'), mHide: uid('bmh'), gIn: uid('bgin'), gRim: uid('bgrim'), gBody: uid('bgb')};
   const BIG = {x: -4000, y: -4000, width: 9000, height: 10000};
   const st: WingStyle = {T, fair: clamp(1 - lift / 1.6), collar: clamp(lift / 2.0), detail: 1};
   const scal = body ? scallopPaths(cx) : ['', '', ''];
@@ -916,6 +946,11 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
     <g>
       <defs>
         <clipPath id={ids.clip}><path d={body.outline} clipRule="evenodd" fillRule="evenodd" /></clipPath>
+        <linearGradient id={ids.gBody} gradientUnits="userSpaceOnUse" x1={body.box.x0} y1={body.box.y0} x2={body.box.x1} y2={body.box.y1}>
+          <stop offset="0" stopColor="#FFF8EA" stopOpacity={0.2} />
+          <stop offset="0.5" stopColor="#FFF8EA" stopOpacity={0} />
+          <stop offset="1" stopColor="#24140A" stopOpacity={0.16} />
+        </linearGradient>
       </defs>
       <path d={body.outline} fill={T(C.breast)} fillRule="evenodd" />
       <g clipPath={`url(#${ids.clip})`}>
@@ -926,9 +961,10 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
         <path d={scal[0]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX} strokeOpacity={0.55} strokeLinecap="round" vectorEffect={NS} />
         <path d={scal[2]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX * 0.85} strokeOpacity={0.5} strokeLinecap="round" vectorEffect={NS} />
         <path d={scal[1]} fill="none" stroke={T(C.breastDeep)} strokeWidth={LINE_PX} strokeOpacity={0.6} strokeLinecap="round" vectorEffect={NS} />
-        <path d={body.sh1} fill={T('#5A3317')} opacity={0.24} fillRule="evenodd" />
-        <path d={body.sh2} fill={T('#3B200E')} opacity={0.2} fillRule="evenodd" />
-        <path d={body.li} fill={T('#FFF3D8')} opacity={0.26} fillRule="evenodd" />
+        <path d={body.sh1} fill={T('#5E3C22')} opacity={0.22} fillRule="evenodd" />
+        <path d={body.sh2} fill={T('#3B220F')} opacity={0.16} fillRule="evenodd" />
+        <path d={body.li} fill={T('#FFF6E2')} opacity={0.2} fillRule="evenodd" />
+        <path d={body.outline} fill={`url(#${ids.gBody})`} fillRule="evenodd" />
         <HeadLine cx={cx} ink={ink} />
       </g>
       <path d={body.outline} fill="none" stroke={ink} strokeWidth={INK_PX} strokeLinejoin="round" vectorEffect={NS} />

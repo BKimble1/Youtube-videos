@@ -177,8 +177,8 @@ export const labState = (t: number): ShotState => {
   // the match: the opening camera at the cut, re-based from the flight line onto the lab bird (identical framing)
   const oc = openCam(CUT.openToLab);
   const M: Orbit = {...oc, target: sub3v(oc.target, [V_FLY * CUT.openToLab, 0, 0])};
-  const wide: Orbit = {target: [-2.5, -2.0, 0], yaw: 22, pitch: 15, dist: 420, scale: 14, cx: 520, cy: 1060};
-  const exploded: Orbit = {target: [-2.5, 4.5, 0], yaw: 24, pitch: 14, dist: 420, scale: 12.6, cx: 520, cy: 1060};
+  const wide: Orbit = {target: [-2.5, -2.5, 0], yaw: 22, pitch: 15, dist: 420, scale: 16, cx: 520, cy: 1060};
+  const exploded: Orbit = {target: [-2.5, 5.0, 0], yaw: 25, pitch: 15, dist: 420, scale: 16.5, cx: 520, cy: 1080};
   const gear: Orbit = {target: [3.4, -1.9, 0.3], yaw: 12, pitch: 7, dist: 90, scale: 48, cy: 1060};
   const gear2: Orbit = {...gear, target: [3.6, -2.0, 0.3], scale: 55};
   const fP0: Orbit = {target: [GP0X[0], GP0X[1] + 0.2, 0], yaw: 10, pitch: 6, dist: 80, scale: 72, cy: 1060};

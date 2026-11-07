@@ -9,6 +9,9 @@ import {radialPath, sweepPath} from '../reveal';
 import {clamp, ss, DUR} from '../lib';
 import {CRADLE} from '../rig';
 import {resetIds} from '../core/ids';
+import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack} from '../art/world';
+import {Flock} from '../art/flock';
+import {MEADOW_T0, SKY_T0} from '../story';
 
 const Cell: React.FC<{t: number}> = ({t}) => {
   let s: ShotState, bg = '#CFE6F2', path: string | null = null, lift = 0, focus: 'P0' | 'A' | 'B' | 'rod' | null = null, detail = 0.25, lab = false;
@@ -26,13 +29,25 @@ const Cell: React.FC<{t: number}> = ({t}) => {
   } else if (t < CUT.meadowToPond[1]) { s = meadowState(t); bg = '#CFE8DF'; }
   else { s = skyState(t); bg = '#F3E2C8'; const r = skyReveal(t); path = r ? sweepPath(basis(s.cam), s.F, r.e, r.mode) : null; }
   const B = basis(s.cam);
+  const isOpen = t < CUT.openToLab || t >= DUR, isMeadow = !lab && !isOpen && t < CUT.meadowToPond[1], isSky = !lab && !isOpen && !isMeadow;
+  const tt = t >= DUR ? t - DUR : t;
+  const birds = [{o: [-120, 160, -900] as [number, number, number], v: [205, 4, 0] as [number, number, number], scale: 1, phase: 0.1, freq: 2.3}, {o: [60, 110, -1300] as [number, number, number], v: [212, 2, 0] as [number, number, number], scale: 1, phase: 0.55, freq: 2.1}];
   return (
     <g>
       <rect width={1080} height={1920} fill={bg} />
+      {isOpen && <FieldBack B={B} t={tt} />}
+      {lab && <LabBack B={B} t={t} />}
+      {isMeadow && <MeadowBack B={B} t={t - MEADOW_T0} />}
+      {isMeadow && <Flock B={B} t={t - MEADOW_T0} birds={birds} />}
+      {isSky && <SkyBack B={B} t={t - SKY_T0} />}
+      {isSky && <Flock B={B} t={t - SKY_T0} birds={birds} />}
       {lab && <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />}
       <Bird B={B} F={s.F} ps={s.ps} look={{cut: path ? 1 : 0, cutReveal: path ? () => path : undefined, phantom: path ? 1 : 0, shellLift: lift}}
         mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />} />
       {lab && <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" />}
+      {isOpen && <FieldFront B={B} t={tt} />}
+      {lab && <LabFront B={B} t={t} />}
+      {isMeadow && <MeadowFront B={B} t={t - MEADOW_T0} />}
     </g>
   );
 };
