@@ -6,7 +6,7 @@ import {add3, basis, Basis, bodyFrame, ellipsoid2, Frame, Orbit, poly, proj, rot
 import {BODY, CRADLE, GEARS, pose, phiOfPhase, Pose, WING_OUTLINE, wingPt} from '../rig';
 import {Mech, MechLook, Cradle} from '../art/mech';
 import {C, INK} from '../art/palette';
-import {resetIds} from '../core/ids';
+import {resetIds, uid} from '../core/ids';
 
 const ellFrame = (F: Frame, e: {c: V3; tilt?: number}): Frame => {
   const t = e.tilt ?? 0;
@@ -38,32 +38,44 @@ const ShellBack: React.FC<{B: Basis; F: Frame; id: string}> = ({B, F, id}) => {
 const BodyProxy: React.FC<{B: Basis; F: Frame}> = ({B, F}) => (
   <path d={smoothClosed(bodySil(B, F))} fill={C.plumage} stroke={INK} strokeWidth={2.6} opacity={0.95} />
 );
-const WingProxy: React.FC<{B: Basis; F: Frame; ps: Pose; side: 'near' | 'far'}> = ({B, F, ps, side}) => {
+const WingProxy: React.FC<{B: Basis; F: Frame; ps: Pose; side: 'near' | 'far'; phantom?: boolean}> = ({B, F, ps, side, phantom}) => {
   const W = ps.wing[side];
   const pts = WING_OUTLINE.map(([a, b]) => proj(B, xf(F, wingPt(W, a, b))));
+  if (phantom)
+    return (
+      <g>
+        <path d={poly(pts)} fill={C.plumageLit} opacity={0.35} />
+        <path d={poly(pts)} fill="none" stroke={INK} strokeWidth={2.2} strokeDasharray="14 5 3 5" opacity={0.9} />
+      </g>
+    );
   return <path d={poly(pts)} fill={side === 'near' ? C.plumageLit : C.plumageDeep} stroke={INK} strokeWidth={2.6} opacity={0.9} />;
 };
 
-type CellSpec = {x: number; y: number; w: number; h: number; cam: Orbit; u: number; look?: MechLook; kind?: 'cut' | 'cradle' | 'cradleAll' | 'exploded' | 'bare'; label: string};
+type CellSpec = {x: number; y: number; w: number; h: number; cam: Orbit; u: number; look?: MechLook; kind?: 'cut' | 'cradle' | 'cradleAll' | 'exploded' | 'bare'; label: string; wing?: boolean};
 const Cell: React.FC<{s: CellSpec; i: number}> = ({s, i}) => {
   const B = basis({...s.cam, cx: s.w / 2 + (s.cam.cx ?? 0), cy: s.h / 2 + (s.cam.cy ?? 0)});
   const F = bodyFrame([0, 0, 0]);
   const ps = pose(phiOfPhase(s.u));
   const kind = s.kind ?? 'cut';
+  const clipId = uid('mcell'), shellId = uid('msb'), bodyClip = uid('mbody');
+  const mech = <Mech B={B} F={F} ps={ps} look={s.look} />;
   return (
     <g transform={`translate(${s.x},${s.y})`}>
-      <clipPath id={`mcell${i}`}><rect width={s.w} height={s.h} /></clipPath>
-      <g clipPath={`url(#mcell${i})`}>
+      <clipPath id={clipId}><rect width={s.w} height={s.h} /></clipPath>
+      <g clipPath={`url(#${clipId})`}>
         <rect width={s.w} height={s.h} fill={kind === 'cradle' || kind === 'exploded' ? '#DCE4E8' : '#C9D6DD'} />
-        {kind === 'cut' && <ShellBack B={B} F={F} id={`msb${i}`} />}
+        {kind === 'cut' && s.wing && <WingProxy B={B} F={F} ps={ps} side="far" />}
+        {kind === 'cut' && <ShellBack B={B} F={F} id={shellId} />}
         {kind === 'exploded' && <WingProxy B={B} F={F} ps={ps} side="far" />}
         {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="back" />}
         {kind === 'cradle' && <BodyProxy B={B} F={F} />}
-        {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="front" />}
+        {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="front" ps={ps} />}
         {kind === 'exploded' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
         {kind === 'cradleAll' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
         {kind === 'cradleAll' && <BodyProxy B={B} F={F} />}
-        {kind !== 'cradle' && kind !== 'cradleAll' && <Mech B={B} F={F} ps={ps} look={s.look} />}
+        {kind === 'cut' && s.wing && <clipPath id={bodyClip}><path d={smoothClosed(bodySil(B, F))} /></clipPath>}
+        {kind !== 'cradle' && kind !== 'cradleAll' && (kind === 'cut' && s.wing ? <g clipPath={`url(#${bodyClip})`}>{mech}</g> : mech)}
+        {kind === 'cut' && s.wing && <WingProxy B={B} F={F} ps={ps} side="near" phantom />}
         {kind === 'exploded' && <WingProxy B={B} F={F} ps={ps} side="near" />}
       </g>
       <rect width={s.w} height={s.h} fill="none" stroke="#7A8790" strokeWidth={2} />
@@ -76,7 +88,7 @@ const DRIVE_T: V3 = [2.4, 0.2, 0];
 const sheetA = (): CellSpec[] => {
   const cells: CellSpec[] = [];
   [0, 0.25, 0.5, 0.75].forEach((u, k) =>
-    cells.push({x: k * 270, y: 0, w: 270, h: 440, cam: {target: DRIVE_T, yaw: 14, pitch: 7, dist: 900, scale: 20}, u, look: {detail: 0.25}, label: `20px u=${u}`}),
+    cells.push({x: k * 270, y: 0, w: 270, h: 440, cam: {target: DRIVE_T, yaw: 14, pitch: 7, dist: 900, scale: 20}, u, look: {detail: 0.25}, label: `20px u=${u}`, wing: true}),
   );
   const gb: V3 = [3.4, -1.9, 0.3];
   cells.push({x: 0, y: 440, w: 540, h: 500, cam: {target: gb, yaw: 10, pitch: 5, dist: 90, scale: 60}, u: 0.1, look: {detail: 0.85}, label: 'gearbox 60px'});
@@ -90,24 +102,32 @@ const sheetA = (): CellSpec[] => {
 };
 const sheetB = (): CellSpec[] => {
   const cells: CellSpec[] = [];
-  cells.push({x: 0, y: 0, w: 1080, h: 820, cam: {target: [-1.5, -2.5, 0], yaw: 24, pitch: 14, dist: 420, scale: 26}, u: 0.15, kind: 'exploded', look: {detail: 0.45}, label: 'frame on cradle, wings on spars (exploded view, 26px)'});
+  cells.push({x: 0, y: 0, w: 1080, h: 820, cam: {target: [-1.5, -2.5, 0], yaw: 28, pitch: 16, dist: 420, scale: 26}, u: 0.15, kind: 'exploded', look: {detail: 0.02}, label: 'frame on cradle, wings on spars (exploded view, 26px, detail 0.02 as in the film)'});
   cells.push({x: 0, y: 820, w: 540, h: 550, cam: {target: [3.0, -0.6, 0.3], yaw: 12, pitch: 7, dist: 90, scale: 66}, u: 0.6, look: {detail: 0.9, focus: 'B'}, label: 'focus B 66px'});
   cells.push({x: 540, y: 820, w: 540, h: 550, cam: {target: [2.6, 3.0, 1.6], yaw: 12, pitch: 5, dist: 80, scale: 60}, u: 0.85, look: {detail: 0.9, focus: 'rod'}, label: 'focus rod 60px'});
   cells.push({x: 0, y: 1370, w: 540, h: 550, cam: {target: [4.6, -2.2, 0], yaw: 10, pitch: 6, dist: 80, scale: 70}, u: 0.42, look: {detail: 0.9, focus: 'A', rate: 0.9}, label: 'focus A 70px'});
-  cells.push({x: 540, y: 1370, w: 540, h: 550, cam: {target: DRIVE_T, yaw: 14, pitch: 7, dist: 900, scale: 30}, u: 0.6, look: {detail: 0.4, rate: (2 * Math.PI) / 0.7}, label: '30px flight blur'});
+  cells.push({x: 540, y: 1370, w: 540, h: 550, cam: {target: DRIVE_T, yaw: 14, pitch: 7, dist: 900, scale: 30}, u: 0.6, look: {detail: 0.4, rate: (2 * Math.PI) / 0.7}, label: '30px flight blur', wing: true});
   return cells;
 };
 const sheetC = (): CellSpec[] => {
   const cells: CellSpec[] = [];
   cells.push({x: 0, y: 0, w: 1080, h: 700, cam: {target: [-1, -5, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradle', label: 'cradle 14px (lab wide)'});
   cells.push({x: 0, y: 700, w: 1080, h: 620, cam: {target: [5.5, -9, 0], yaw: 22, pitch: 15, dist: 420, scale: 34}, u: 0.25, kind: 'cradle', label: 'cradle 34px'});
-  cells.push({x: 0, y: 1320, w: 1080, h: 600, cam: {target: [-1, -6, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradleAll', label: 'cradle layer=all drawn before the body (current Film order)'});
+  cells.push({x: 0, y: 1320, w: 1080, h: 600, cam: {target: [-1, -6, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradleAll', label: 'cradle layer=all, drawn before the body (its near arms end up hidden)'});
   return cells;
 };
 
-const Sheet: React.FC<{which: 'A' | 'B' | 'C'}> = ({which}) => {
+/** the blur ramp: the gearbox at 48 px/cm as the speed rises (fractions of flight speed); the slow-motion close drive
+ *  runs at 0.32 */
+const sheetD = (): CellSpec[] => {
+  const fr = [0, 0.15, 0.22, 0.26, 0.29, 0.32, 0.6, 1];
+  return fr.map((f, k) => ({x: (k % 2) * 540, y: Math.floor(k / 2) * 480, w: 540, h: 480, cam: {target: [3.6, -2.0, 0.3] as V3, yaw: 12, pitch: 7, dist: 90, scale: 48},
+    u: 0.2, look: {detail: 0.75, rate: f * (2 * Math.PI) / 0.7}, label: `rate ${f} x flight`}));
+};
+
+const Sheet: React.FC<{which: 'A' | 'B' | 'C' | 'D'}> = ({which}) => {
   resetIds('mech');
-  const cells = which === 'A' ? sheetA() : which === 'B' ? sheetB() : sheetC();
+  const cells = which === 'A' ? sheetA() : which === 'B' ? sheetB() : which === 'C' ? sheetC() : sheetD();
   return (
     <AbsoluteFill style={{background: '#E6ECEF'}}>
       <svg width={1080} height={1920}>
@@ -119,6 +139,7 @@ const Sheet: React.FC<{which: 'A' | 'B' | 'C'}> = ({which}) => {
 const SheetA: React.FC = () => <Sheet which="A" />;
 const SheetB: React.FC = () => <Sheet which="B" />;
 const SheetC: React.FC = () => <Sheet which="C" />;
+const SheetD: React.FC = () => <Sheet which="D" />;
 
 /** geometry check: a marker at gear B's angle on the crank radius must sit on the projected crank pin */
 const Check: React.FC = () => {
@@ -144,7 +165,8 @@ const Root: React.FC = () => (
   <>
     <Composition id="MechA" component={SheetA} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="MechB" component={SheetB} durationInFrames={1} fps={30} width={1080} height={1920} />
- <Composition id="MechC" component={SheetC} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="MechC" component={SheetC} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="MechD" component={SheetD} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="MechCheck" component={Check} durationInFrames={1} fps={30} width={1080} height={1920} />
   </>
 );

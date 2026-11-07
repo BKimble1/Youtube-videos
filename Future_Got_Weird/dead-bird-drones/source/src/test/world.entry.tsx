@@ -2,14 +2,15 @@
 // A grey placeholder bird (the rig's BODY ellipsoids and wing outline) stands at the camera target so scale reads.
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
-import {Basis, basis, bodyFrame, ellipsoid2, Frame, mul3, Orbit, poly, proj, rotZ, smoothClosed, V3, xf, xfv} from '../three';
+import {Basis, basis, bodyFrame, ellipsoid2, Frame, Orbit, poly, proj, rotZ, smoothClosed, V3, xf, xfv} from '../three';
 import {BODY, phiOfPhase, pose, Pose, wingPt, WING_OUTLINE, WingFrame} from '../rig';
 import {resetIds, uid} from '../core/ids';
-import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack} from '../art/world';
+import {FieldBack, FieldFront, LabBack, LabFront, MEADOW, MeadowBack, MeadowFront, SKY, SkyBack} from '../art/world';
 import {Flock, FLOCK_MEADOW, FLOCK_SKY, LivingBird, LivingBirdView, offsetFlock, wingbeat} from '../art/flock';
-import {labState, meadowState, openState, skyState, MEADOW_T0, SKY_T0, ShotState, V_FLY} from '../story';
+import {labShellLift, labState, meadowState, openState, skyState, MEADOW_T0, SKY_T0, ShotState, V_FLY} from '../story';
 import {DUR} from '../lib';
 import {INK} from '../art/palette';
+import {Bird} from '../art/bird';
 
 const W = 1080, H = 1920;
 
@@ -116,7 +117,7 @@ const skyCell = (t: number, birds = false) => {
   return (
     <g>
       <SkyBack B={B} t={t} />
-      {birds && <Flock B={B} t={t} birds={SKY_BIRDS} />}
+      {birds && <Flock B={B} t={t} birds={SKY_BIRDS} haze={SKY.haze} />}
       <Placeholder B={B} F={bodyFrame([300 * t, 0, 0])} ps={pose(phiOfPhase(t / 0.7))} />
     </g>
   );
@@ -140,21 +141,59 @@ const flockClose = () => {
   );
 };
 
+/** the living bird beside the hero (same camera, same scale), then the whole wingbeat in 16 phases at 7 px/cm and at
+ *  story size (2.6 px/cm), to check the silhouette match and that no phase degenerates into needles or shards */
+const glideFreeSeed = (ph: number) => {
+  for (let s = 1; s < 200; s++) if (wingbeat({o: [0, 0, 0], v: [1, 0, 0], scale: 1, phase: ph}, 0, s).glide < 0.01) return s;
+  return 1;
+};
+const TailZoom: React.FC = () => {
+  resetIds('tz_');
+  const cam = (scale: number, cx: number, cy: number, yaw = 14, pitch = 8) => basis({target: [-22, 2, 0], yaw, pitch, dist: 700, scale, cx, cy});
+  return (
+    <AbsoluteFill style={{background: '#CFE3EC'}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+        <Bird B={cam(24, 540, 300)} F={bodyFrame([0, 0, 0])} ps={pose(phiOfPhase(0.22))} />
+        <LivingBirdView B={cam(24, 540, 800)} t={0} bird={{o: [0, 0, 0], v: [1, 0, 0], scale: 1, phase: 0.3, freq: 2.3}} seed={glideFreeSeed(0.3)} />
+        <Bird B={cam(24, 540, 1300, 30, 25)} F={bodyFrame([0, 0, 0])} ps={pose(phiOfPhase(0.22))} />
+        <LivingBirdView B={cam(24, 540, 1700, 30, 25)} t={0} bird={{o: [0, 0, 0], v: [1, 0, 0], scale: 1, phase: 0.3, freq: 2.3}} seed={glideFreeSeed(0.3)} />
+      </svg>
+    </AbsoluteFill>
+  );
+};
+const FlockBeat: React.FC = () => {
+  resetIds('fb_');
+  const cam = (scale: number, cx: number, cy: number) => basis({target: [-2, 0, 0], yaw: 14, pitch: 8, dist: 700, scale, cx, cy});
+  const living = (B: Basis, ph: number, k: string) => (
+    <LivingBirdView key={k} B={B} t={0} bird={{o: [0, 0, 0], v: [1, 0, 0], scale: 1, phase: ph, freq: 2.3}} seed={glideFreeSeed(ph)} />
+  );
+  const cells: React.ReactNode[] = [];
+  // hero (left) and living bird (right), two wing positions
+  [0.22, 0.7].forEach((u, r) => {
+    const Bh = cam(8, 270, 150 + r * 240), Bl = cam(8, 800, 150 + r * 240);
+    cells.push(<Bird key={`h${r}`} B={Bh} F={bodyFrame([0, 0, 0], 0, 0, 0)} ps={pose(phiOfPhase(u))} />);
+    cells.push(living(Bl, r ? 0.62 : 0.3, `l${r}`));
+  });
+  for (let i = 0; i < 16; i++) {
+    const B = cam(7, 180 + (i % 3) * 360, 640 + Math.floor(i / 3) * 215);
+    cells.push(living(B, i / 16, `p${i}`));
+  }
+  for (let i = 0; i < 16; i++) {
+    const B = cam(2.6, 68 + (i % 8) * 135, 1800 + Math.floor(i / 8) * 90 - 20);
+    cells.push(living(B, i / 16, `q${i}`));
+  }
+  return (
+    <AbsoluteFill style={{background: '#C9E1EC'}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>
+        <rect width={W} height={H} fill="#CFE3EC" />
+        <rect y={1690} width={W} height={230} fill="#E6EEE6" />
+        {cells}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 // ------------------------------------------------------------------ the story's own cameras (for checking the film)
-const FILM_MEADOW: LivingBird[] = [
-  {o: [-120, 160, -900], v: [205, 4, 0], scale: 1, phase: 0.1, freq: 2.3},
-  {o: [60, 110, -1300], v: [212, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
-  {o: [260, 220, -1600], v: [208, -3, 0], scale: 1, phase: 0.3, freq: 2.5},
-  {o: [-320, 60, -1150], v: [200, 6, 0], scale: 1, phase: 0.8, freq: 2.2},
-  {o: [420, 140, -2100], v: [215, 0, 0], scale: 1, phase: 0.05, freq: 2.4},
-];
-const FILM_SKY: LivingBird[] = [
-  {o: [-140, 120, -700], v: [205, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
-  {o: [80, 190, -1050], v: [210, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
-  {o: [-360, 230, -1400], v: [203, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
-  {o: [300, 80, -1800], v: [212, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
-  {o: [-40, 300, -2300], v: [208, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
-];
 const storyCell = (t: number) => {
   let s: ShotState;
   let back: React.ReactNode, front: React.ReactNode = null, flock: React.ReactNode = null;
@@ -172,20 +211,22 @@ const storyCell = (t: number) => {
     s = meadowState(t);
     const B = basis(s.cam);
     back = <MeadowBack B={B} t={t - MEADOW_T0} />;
-    flock = <Flock B={B} t={t - MEADOW_T0} birds={FLOCK_MEADOW} />;
+    flock = <Flock B={B} t={t - MEADOW_T0} birds={FLOCK_MEADOW} haze={MEADOW.haze} />;
     front = <MeadowFront B={B} t={t - MEADOW_T0} />;
   } else {
     s = skyState(t);
     const B = basis(s.cam);
     back = <SkyBack B={B} t={t - SKY_T0} />;
-    flock = <Flock B={B} t={t - SKY_T0} birds={offsetFlock(FLOCK_SKY, V_FLY * (SKY_T0 - DUR))} />;
+    flock = <Flock B={B} t={t - SKY_T0} birds={offsetFlock(FLOCK_SKY, V_FLY * (SKY_T0 - DUR))} haze={SKY.haze} />;
   }
   const B = basis(s.cam);
+  // the hero itself (no drive), with the exploded view's shell lift in the lab, so keep-outs read true
+  const lift = t >= 3.95 && t < 12.6 ? labShellLift(t) : 0;
   return (
     <g>
       {back}
       {flock}
-      <Placeholder B={B} F={s.F} ps={s.ps} />
+      <Bird B={B} F={s.F} ps={s.ps} look={{shellLift: lift}} />
       {front}
     </g>
   );
@@ -200,9 +241,11 @@ const Field: React.FC = () => <Grid cols={2} rows={2} cells={[
 const LabMeadow: React.FC = () => <Grid cols={2} rows={2} cells={[
   {label: 'lab wide', node: labCell(labWide)},
   {label: 'lab close', node: labCell(labClose)},
-  {label: 'meadow t=0', node: meadowCell(0)},
-  {label: 'meadow t=1.5 +flock', node: meadowCell(1.5, true)},
+  {label: 'meadow (story cam) t=13.0', node: storyCell(13.0)},
+  {label: 'meadow (brief cam) t=1 +flock', node: meadowCell(1, true)},
 ]} />;
+/** the lab through the story's own cameras with the hero's real shell lift: wide, exploded, schematic, seating */
+const LAB_TS = [5.0, 6.6, 7.4, 8.0];
 const SkyFlock: React.FC = () => <Grid cols={2} rows={2} cells={[
   {label: 'sky t=0', node: skyCell(0)},
   {label: 'sky t=1.5 +flock', node: skyCell(1.5, true)},
@@ -211,19 +254,9 @@ const SkyFlock: React.FC = () => <Grid cols={2} rows={2} cells={[
 ]} />;
 const STORY_TS = [0, 0.5, 3.0, 3.9, 4.6, 5.2, 7.0, 9.6, 10.9, 13.0, 14.6, 15.4, 19.5, 20.8, 22.2, 23.4];
 const Story: React.FC<{ts: number[]}> = ({ts}) => <Grid cols={4} rows={4} cells={ts.map((t) => ({label: `t=${t}`, node: storyCell(t)}))} />;
+const Pair: React.FC<{ts: number[]}> = ({ts}) => <Grid cols={2} rows={1} cells={ts.map((t) => ({label: `t=${t}`, node: storyCell(t)}))} />;
 const Single: React.FC<{t: number}> = ({t}) => <Grid cols={1} rows={1} cells={[{label: `t=${t}`, node: storyCell(t)}]} />;
-
-const Root: React.FC = () => (
-  <>
-    <Composition id="WorldField" component={Field} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="WorldLabMeadow" component={LabMeadow} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="WorldSkyFlock" component={SkyFlock} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="WorldStory" component={Story} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{ts: STORY_TS}} />
-    <Composition id="WorldSingle" component={Single} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 0}} />
-  </>
-);
-void mul3;
-void ({} as V3);
+const Pair2: React.FC<{ts: number[]}> = ({ts}) => <Grid cols={2} rows={2} cells={ts.map((t) => ({label: `t=${t}`, node: storyCell(t)}))} />;
 
 // ------------------------------------------------------------------ debug: one environment layer alone at a story time
 const DebugPart: React.FC<{t: number; part: string}> = ({t, part}) => {
@@ -239,9 +272,18 @@ const DebugPart: React.FC<{t: number; part: string}> = ({t, part}) => {
     </AbsoluteFill>
   );
 };
-registerRoot(() => (
+const Root: React.FC = () => (
   <>
-    <Root />
+    <Composition id="WorldField" component={Field} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="WorldLabMeadow" component={LabMeadow} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="WorldSkyFlock" component={SkyFlock} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="WorldTailZoom" component={TailZoom} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="WorldFlockBeat" component={FlockBeat} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="WorldStory" component={Story} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{ts: STORY_TS}} />
+    <Composition id="WorldLabStory" component={Pair2} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{ts: LAB_TS}} />
+    <Composition id="WorldPair" component={Pair} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{ts: [14, 20.5]}} />
+    <Composition id="WorldSingle" component={Single} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 0}} />
     <Composition id="WorldDebug" component={DebugPart} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 10.9, part: 'labback'}} />
   </>
-));
+);
+registerRoot(Root);

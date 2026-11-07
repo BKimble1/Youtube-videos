@@ -8,8 +8,9 @@ import {C, INK} from '../art/palette';
 import {Bird, BirdLook, NearWing, WINDOW, birdHull} from '../art/bird';
 import {clamp, lerp, ss} from '../lib';
 import {CRADLE} from '../rig';
-import {labShellLift, labState, LAB, openReveal, openState, skyReveal, skyState, ShotState, CUT} from '../story';
-import {poly, V2} from '../three';
+import {labFocus, labShellLift, labState, LAB, openReveal, openState, skyReveal, skyState, ShotState, CUT} from '../story';
+import {radialPath, sweepPath} from '../reveal';
+import {Mech} from '../art/mech';
 
 /** a simple placeholder for the drive (the real Mech is built in parallel) */
 const MechStub: React.FC<{B: Basis; F: Frame; ps: Pose}> = ({B, F, ps}) => {
@@ -63,6 +64,8 @@ const VIEWS: View[] = [
   {name: 'cutaway reveal half', cam: {target: [2.6, 0.6, 0], yaw: 14, pitch: 7, dist: 900, scale: 23, cx: 500, cy: 1030}, u: 0.06, look: {cut: 1, phantom: 1, cutReveal: (B) => halfReveal(B)}},
   {name: 'tone 0.6 hull', cam: {target: [-2.5, 2, 0], yaw: 10, pitch: 4, dist: 1100, scale: 11, cx: 540, cy: 960}, u: 0.6, look: {tone: 0.6}, hull: true},
   {name: 'cut 0.5 low', cam: {target: [0, 1, 0], yaw: -12, pitch: 3, dist: 900, scale: 16, cx: 540, cy: 960}, u: 0.85, look: {cut: 0.5, phantom: 0.5}},
+  {name: 'shoulder rear end 80', cam: {target: [-7.5, 2.8, 5], yaw: 14, pitch: 7, dist: 900, scale: 80, cx: 540, cy: 960}, u: 0.36},
+  {name: 'shoulder upstroke 45', cam: {target: [-1, 6.5, 4], yaw: 14, pitch: 7, dist: 900, scale: 45, cx: 540, cy: 960}, u: 0.0},
 ];
 /** a test reveal: the upper half of the window (screen space, through the body frame) */
 const halfReveal = (B: Basis) => {
@@ -79,7 +82,7 @@ const Cell: React.FC<{v: View; scaleK?: number; cx?: number; cy?: number}> = ({v
   return (
     <g>
       {v.hull && <path d={`M${birdHull(B, F, ps).map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')} Z`} fill="rgba(255,255,255,0.25)" stroke="#5B7C8C" strokeDasharray="6 6" />}
-      <Bird B={B} F={F} ps={ps} look={v.look} mech={<MechStub B={B} F={F} ps={ps} />} />
+      <Bird B={B} F={F} ps={ps} look={v.look} mech={<Mech B={B} F={F} ps={ps} look={{detail: cam.scale > 40 ? 1 : 0.25}} />} />
     </g>
   );
 };
@@ -133,43 +136,12 @@ const Sheet: React.FC = () => {
   );
 };
 void WINDOW;
+void MechStub; // kept: a light stand-in for the drive when debugging the shell alone
 void add3;
 
-// ---------------------------------------------------------------- the film's own situations (reveal masks copied from Film.tsx)
-const surfZ = (x: number, y: number) => {
-  const a = 1 - ((x - 2) / 10.5) ** 2 - (y / 7) ** 2;
-  const b = 1 - ((x + 7.5) / 8.5) ** 2 - ((y - 0.7) / 5.3) ** 2;
-  return Math.max(7.2 * Math.sqrt(Math.max(0.03, a)), 5.6 * Math.sqrt(Math.max(0.03, b)));
-};
-const onFlank = (B: Basis, F: Frame, x: number, y: number): V2 => {
-  const p = proj(B, xf(F, [x, y, surfZ(x, y) + 0.3]));
-  return {x: p.x, y: p.y};
-};
-const sweepPath = (B: Basis, F: Frame, e: number, mode: 'above' | 'below') => {
-  const X0 = -6, X1 = 10.5, YT = 7.0, YB = -8.0;
-  if (mode === 'above' && e <= 0) return null;
-  if (mode === 'below' && e >= 1) return null;
-  const yc = lerp(YT - 0.3, YB + 0.3, clamp(e));
-  const edge: V2[] = [];
-  for (let i = 0; i <= 26; i++) {
-    const x = lerp(X1, X0, i / 26);
-    edge.push(onFlank(B, F, x, yc + 0.16 * (x - 2.5) - 0.5 * Math.abs(Math.sin((x * Math.PI) / 1.7))));
-  }
-  const far = mode === 'above' ? YT + 3 : YB - 3;
-  return poly([onFlank(B, F, X0, far), onFlank(B, F, X1, far), ...edge]);
-};
-const radialPath = (B: Basis, F: Frame, c: [number, number], r: number) => {
-  if (r <= 0.05) return null;
-  const pts: V2[] = [];
-  for (let i = 0; i < 40; i++) {
-    const a = (i / 40) * Math.PI * 2;
-    const rr = r * (1 - 0.06 * Math.abs(Math.sin(a * 5)));
-    pts.push(onFlank(B, F, c[0] + rr * Math.cos(a), c[1] + rr * Math.sin(a) * 0.9));
-  }
-  return poly(pts);
-};
+// ---------------------------------------------------------------- the film's own situations (real Mech, the film's reveal masks)
 const FilmFrame: React.FC<{t: number}> = ({t}) => {
-  let s: ShotState, reveal: string | null = null, lift = 0;
+  let s: ShotState, reveal: string | null = null, lift = 0, focus: 'P0' | 'A' | 'B' | 'rod' | null = null, detail = 0.25;
   if (t < CUT.openToLab) {
     s = openState(t);
     const r = openReveal(t);
@@ -179,6 +151,8 @@ const FilmFrame: React.FC<{t: number}> = ({t}) => {
     lift = labShellLift(t);
     const rOpen = ss(t, LAB.cutOpen[0], LAB.cutOpen[1]) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[1]));
     reveal = radialPath(basis(s.cam), s.F, [3.4, -1.6], 10.5 * rOpen);
+    focus = labFocus(t);
+    detail = clamp((s.cam.scale - 16) / 36);
   } else {
     s = skyState(t);
     const r = skyReveal(t);
@@ -191,11 +165,23 @@ const FilmFrame: React.FC<{t: number}> = ({t}) => {
         const p = proj(B, [0, CRADLE.benchY, 0]);
         return <rect x={-50} y={p.y} width={1200} height={2000} fill="#C8B79C" />;
       })()}
-      <Bird B={B} F={s.F} ps={s.ps} look={{cut: reveal ? 1 : 0, cutReveal: reveal ? () => reveal : undefined, phantom: reveal ? 1 : 0, shellLift: lift}} mech={<MechStub B={B} F={s.F} ps={s.ps} />} />
+      <Bird B={B} F={s.F} ps={s.ps} look={{cut: reveal ? 1 : 0, cutReveal: reveal ? () => reveal : undefined, phantom: reveal ? 1 : 0, shellLift: lift}} mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />} />
     </g>
   );
 };
-const FILM_TS: number[][] = [[0, 0.45, 1.2, 2.0], [2.95, 3.9, 4.6, 6.6], [8.2, 9.3, 10.0, 12.2], [12.9, 19.5, 20.95, 21.3]];
+const FILM_TS: number[][] = [[0, 0.45, 1.2, 2.0], [2.95, 3.9, 4.6, 6.6], [8.2, 9.3, 10.0, 12.2], [12.9, 19.5, 20.95, 21.3], [11.0, 11.5, 11.83, 12.27], [5.555, 5.621, 5.688, 8.6]];
+/** one film time at full frame */
+const FilmOne: React.FC<{t: number}> = ({t}) => {
+  resetIds('o');
+  return (
+    <AbsoluteFill style={{background: '#D6E8EF'}}>
+      <svg width={1080} height={1920}>
+        <FilmFrame t={t} />
+        <text x={30} y={60} fontSize={30} fill="#203040" fontFamily="sans-serif">{t.toFixed(2)}</text>
+      </svg>
+    </AbsoluteFill>
+  );
+};
 const FilmCheck: React.FC<{set: number}> = ({set}) => {
   resetIds('c');
   const ts = FILM_TS[set];
@@ -223,6 +209,7 @@ const Root: React.FC = () => (
   <>
     <Composition id="BirdFilm" component={FilmCheck} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{set: 0}} />
     <Composition id="BirdSheet" component={Sheet} durationInFrames={1} fps={30} width={1080} height={1920} />
+    <Composition id="BirdFilmOne" component={FilmOne} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{t: 0}} />
     <Composition id="BirdFull" component={Full} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{v: 0}} />
   </>
 );

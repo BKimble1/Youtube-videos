@@ -2,25 +2,16 @@
 // below-water schematic, the pond layers) and full-frame stills at the film's cameras.
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
-import {add3, basis, Basis, Orbit, V3} from '../three';
-import {resetIds} from '../core/ids';
+import {add3, basis, Basis, Orbit} from '../three';
+import {resetIds, uid} from '../core/ids';
 import {Duck, DuckLook, Pond} from '../art/duck';
+// the film's own pond cameras and timing (story.ts): the dip and split cells use them exactly
+import {duckCut, duckPos, pondCam} from '../story';
 
 const W = 1080, H = 1920;
-// the film's pond timing (story.ts): the duck swims +x at 38 cm/s from x = -30 at t = 15.56
-const T0 = 15.56;
-const duckPos = (t: number): V3 => [38 * (t - T0) - 30, 0, 0];
+/** the contract's surface view: yaw 10, pitch 6, 14 px/cm */
 const surfCam = (t: number): Orbit => ({target: add3(duckPos(t), [4, 8, 0]), yaw: 10, pitch: 6, dist: 700, scale: 14, cy: 1000});
-const filmSurf = (t: number): Orbit => ({target: add3(duckPos(t), [4, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 15, cy: 1000});
-const splitCam = (t: number): Orbit => ({target: add3(duckPos(t), [3, -2, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 17, cy: 960});
-const lerpO = (a: Orbit, b: Orbit, u: number): Orbit => ({
-  target: [a.target[0] + (b.target[0] - a.target[0]) * u, a.target[1] + (b.target[1] - a.target[1]) * u, a.target[2] + (b.target[2] - a.target[2]) * u],
-  yaw: a.yaw + (b.yaw - a.yaw) * u,
-  pitch: a.pitch + (b.pitch - a.pitch) * u,
-  dist: a.dist * Math.pow(b.dist / a.dist, u),
-  scale: a.scale * Math.pow(b.scale / a.scale, u),
-  cy: (a.cy ?? 960) + ((b.cy ?? 960) - (a.cy ?? 960)) * u,
-});
+const filmLook = (t: number): DuckLook => ({cut: duckCut(t), wake: 1});
 
 type Layers = {back?: boolean; under?: boolean; duck?: boolean; surface?: boolean; front?: boolean};
 const ALL: Layers = {back: true, under: true, duck: true, surface: true, front: true};
@@ -42,17 +33,20 @@ const Sheet: React.FC<{cells: Cell[]}> = ({cells}) => {
   return (
     <AbsoluteFill style={{background: '#444'}}>
       <svg width={W} height={H}>
-        {cells.map((c, i) => (
+        {cells.map((c, i) => {
+          const cid = uid('cell');
+          return (
           <g key={i} transform={`translate(${(i % cols) * w},${Math.floor(i / cols) * h}) scale(0.5)`}>
-            <clipPath id={`cell${i}`}><rect width={W} height={H} /></clipPath>
-            <g clipPath={`url(#cell${i})`}>
+            <clipPath id={cid}><rect width={W} height={H} /></clipPath>
+            <g clipPath={`url(#${cid})`}>
               <Frame1 B={basis(c.cam)} t={c.t} look={c.look} layers={c.layers} bg={c.bg} />
               {/* safe-area guides: caption band and the Shorts title band */}
               <rect y={470} width={W} height={1030} fill="none" stroke="rgba(255,0,0,0.35)" strokeWidth={3} strokeDasharray="12 10" />
             </g>
             <rect width={W} height={H} fill="none" stroke="#000" strokeWidth={4} />
           </g>
-        ))}
+          );
+        })}
       </svg>
     </AbsoluteFill>
   );
@@ -73,24 +67,26 @@ const S1: Cell[] = [
   {cam: surfCam(16.0), t: 16.0},
   {cam: surfCam(16.23), t: 16.23},
   {cam: surfCam(16.47), t: 16.47},
-  {cam: filmSurf(17.0), t: 17.0},
+  {cam: pondCam(16.9), t: 16.9, look: filmLook(16.9)},
 ];
-// sheet 2: the waterline split view with cut = 1 at two times, the transition, and the pond layers alone
+// sheet 2: the film's waterline split (cut = 1) at two times, mid-dip, and the pond layers alone at the split camera
 const S2: Cell[] = [
-  {cam: splitCam(17.95), t: 17.95, look: {cut: 1}},
-  {cam: splitCam(18.18), t: 18.18, look: {cut: 1}},
-  {cam: lerpO(filmSurf(17.7), splitCam(17.7), 0.5), t: 17.7, look: {cut: 0.5}},
-  {cam: splitCam(18.0), t: 18.0, layers: {back: true, under: true, surface: true, front: true}},
+  {cam: pondCam(18.0), t: 18.0, look: filmLook(18.0)},
+  {cam: pondCam(18.27), t: 18.27, look: filmLook(18.27)},
+  {cam: pondCam(17.56), t: 17.56, look: filmLook(17.56)},
+  {cam: pondCam(18.1), t: 18.1, layers: {back: true, under: true, surface: true, front: true}},
 ];
 // sheet 3: pond layers one by one at the split camera and the surface camera
 const S3: Cell[] = [
-  {cam: splitCam(18.0), t: 18.0, layers: {back: true}},
-  {cam: splitCam(18.0), t: 18.0, layers: {under: true, surface: true}, bg: '#30363A'},
-  {cam: filmSurf(16.5), t: 16.5, layers: {back: true, surface: true, front: true}},
-  {cam: splitCam(18.0), t: 18.0, layers: {duck: true}, look: {cut: 1}, bg: '#CBD5D8'},
+  {cam: pondCam(18.1), t: 18.1, layers: {back: true}},
+  {cam: pondCam(18.1), t: 18.1, layers: {under: true, surface: true}, bg: '#30363A'},
+  {cam: pondCam(16.5), t: 16.5, layers: {back: true, surface: true, front: true}},
+  {cam: pondCam(18.1), t: 18.1, layers: {duck: true}, look: {cut: 1}, bg: '#CBD5D8'},
 ];
+// sheet 4: the film's camera dip (story.ts pondCam / duckCut) at four moments, the wipe rising with it
+const S4: Cell[] = [17.42, 17.5, 17.58, 17.68].map((t) => ({cam: pondCam(t), t, look: filmLook(t)}));
 
-// mechanism close-ups at four crank phases (one paddle cycle = 1 / 1.5 s)
+// mechanism close-ups at four crank phases (one paddle cycle = 1 / 1.5 s), from the film's split camera angle
 const MechSheet: React.FC = () => {
   resetIds('dkm_');
   const ts = [18.0, 18.0 + 1 / 6, 18.0 + 2 / 6, 18.0 + 3 / 6];
@@ -98,11 +94,12 @@ const MechSheet: React.FC = () => {
     <AbsoluteFill style={{background: '#444'}}>
       <svg width={W} height={H}>
         {ts.map((t, i) => {
-          const cam: Orbit = {target: add3(duckPos(t), [-2, -5, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 34, cx: 540, cy: 900};
+          const cam: Orbit = {...pondCam(t), target: add3(duckPos(t), [-2, -3.5, 0]), scale: 34, cx: 540, cy: 900};
+          const cid = uid('mcell');
           return (
             <g key={i} transform={`translate(${(i % 2) * 540},${Math.floor(i / 2) * 960}) scale(0.5)`}>
-              <clipPath id={`m${i}`}><rect width={W} height={H} /></clipPath>
-              <g clipPath={`url(#m${i})`}><Frame1 B={basis(cam)} t={t} look={{cut: 1}} /></g>
+              <clipPath id={cid}><rect width={W} height={H} /></clipPath>
+              <g clipPath={`url(#${cid})`}><Frame1 B={basis(cam)} t={t} look={{cut: 1}} /></g>
               <rect width={W} height={H} fill="none" stroke="#000" strokeWidth={4} />
             </g>
           );
@@ -117,10 +114,13 @@ const Root: React.FC = () => (
     <Composition id="DuckSheet1" component={() => <Sheet cells={S1} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet2" component={() => <Sheet cells={S2} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet3" component={() => <Sheet cells={S3} />} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="DuckSurfaceFull" component={() => <Full cam={filmSurf(16.6)} t={16.6} />} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="DuckSplitFull" component={() => <Full cam={splitCam(18.05)} t={18.05} look={{cut: 1}} />} durationInFrames={1} fps={30} width={W} height={H} />
- <Composition id="DuckMechClose" component={() => <MechSheet />} durationInFrames={1} fps={30} width={W} height={H} />
-    <Composition id="DuckSurfaceClose" component={() => <Full cam={{...surfCam(16.3), scale: 30, cy: 1100}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckSheet4" component={() => <Sheet cells={S4} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckSurfaceFull" component={() => <Full cam={pondCam(16.6)} t={16.6} look={filmLook(16.6)} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckSplitFull" component={() => <Full cam={pondCam(18.2)} t={18.2} look={filmLook(18.2)} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckDipFull" component={() => <Full cam={pondCam(17.6)} t={17.6} look={filmLook(17.6)} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckMechClose" component={() => <MechSheet />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckHeadClose" component={() => <Full cam={{target: add3(duckPos(16.3), [17, 14, 0]), yaw: 10, pitch: 6, dist: 700, scale: 48, cy: 960}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
+    <Composition id="DuckSurfaceClose" component={() => <Full cam={{...surfCam(16.3), target: add3(duckPos(16.3), [-6, 6, 0]), scale: 30, cy: 1000}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
   </>
 );
 registerRoot(Root);
