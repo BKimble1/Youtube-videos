@@ -537,20 +537,63 @@ const F_PRIM = (s: HS) => {
   const u = clamp((x + 19.4) / 9.6);
   return Math.min((-9.6 - x) * 0.6, (x + 19.4) * 0.6, s.l[1] - (topY(x) - lerp(0.5, 2.3, Math.sqrt(u))));
 };
-/** the speculum: a narrow slanted band of secondaries along the folded wing's lower edge, (x, dy above yFlank0) */
-const SPEC = {xa: -14.1, xb: -8.6, lo: -0.4, hi: 0.32, slant: 0.7, bar: 0.3};
-/** a parallelogram on the near hull surface, following the flank line: corners at dy = lo / hi, ends slanted */
-const specQuad = (xa: number, xb: number, lo: number, hi: number): [number, number][] => {
+/** the speculum: a short curved band of blue-violet secondaries along the folded wing's lower edge, white bars above
+ *  (greater-covert tips) and below (secondary tips). Duck-local x from xa (rear, tucked under the tertials) to xb
+ *  (front, under the flank feathers); its spine runs dy above the flank line and sags in the middle like the wing's
+ *  lower edge; hb = the blue half-height, hw = each white bar */
+const SPEC = {xa: -12.0, xb: -6.5, dy: 0.44, sag: 0.2, hb: 0.36, hw: 0.2};
+const specSpine = (u: number): [number, number] => {
+  const x = lerp(SPEC.xa, SPEC.xb, u);
+  return [x, yFlank0(x) + SPEC.dy - SPEC.sag * Math.sin(Math.PI * u)];
+};
+/** the band's taper toward its two rounded ends (0 at the ends, 1 along the middle) */
+const specTap = (u: number) => Math.sqrt(Math.max(0, 1 - Math.abs(2 * u - 1) ** 3));
+/** the strip of the band between offsets lo(u) .. hi(u) (cm, + up) from its spine, as a closed (x, y) outline */
+const specStrip = (lo: (u: number) => number, hi: (u: number) => number, n = 18): [number, number][] => {
   const out: [number, number][] = [];
-  const at = (x0: number, dy: number): [number, number] => {
-    const x = x0 + SPEC.slant * (dy - SPEC.lo);
-    return [x, yFlank0(x) + dy];
-  };
-  for (let k = 0; k <= 8; k++) out.push(at(lerp(xa, xb, k / 8), lo));
-  for (let k = 1; k < 3; k++) out.push(at(xb, lerp(lo, hi, k / 3)));
-  for (let k = 0; k <= 8; k++) out.push(at(lerp(xb, xa, k / 8), hi));
-  for (let k = 1; k < 3; k++) out.push(at(xa, lerp(hi, lo, k / 3)));
+  for (let k = 0; k <= n; k++) { const u = k / n, [x, y] = specSpine(u); out.push([x, y + lo(u)]); }
+  for (let k = n; k >= 0; k--) { const u = k / n, [x, y] = specSpine(u); out.push([x, y + hi(u)]); }
   return out;
+};
+const specHb = (u: number) => SPEC.hb * specTap(u);
+const specHo = (u: number) => SPEC.hb * specTap(u) + SPEC.hw * Math.pow(specTap(u), 0.4);
+/** the tertials: three long grey-brown feathers lying over the rear of the folded wing, above the speculum, their
+ *  rounded tips pointing back; each a fraction f of the way from just above the speculum to the mantle line, tips at
+ *  x = tip; their roots run forward under the scapulars (faded out between x = -9.2 and -5.6) */
+const TERT = [
+  {f: 0.16, tip: -12.7},
+  {f: 0.5, tip: -13.25},
+  {f: 0.84, tip: -12.85},
+];
+const TERT_ROOT = -5.0, TERT_FADE: [number, number] = [-9.2, -5.6];
+const tertBand = (x: number): [number, number] => [yFlank0(x) + SPEC.dy + SPEC.hb + 0.32, topY(x) - 1.0];
+/** one tertial's outline (x, y): upper edge root -> tip, a rounded tip, lower edge back to the root */
+const tertOutline = (k: number): {pts: [number, number][]; lower: [number, number][]} => {
+  const {f, tip} = TERT[k];
+  const half = (x: number) => {
+    const [a, b] = tertBand(x);
+    return Math.max(0.3, 0.2 * (b - a));
+  };
+  const cy = (x: number) => {
+    const [a, b] = tertBand(x);
+    return lerp(a, b, f);
+  };
+  const L = 0.9; // the rounded tip's length (cm)
+  const xs = tip + L;
+  const up: [number, number][] = [], lo: [number, number][] = [], tipPts: [number, number][] = [];
+  for (let k2 = 0; k2 <= 14; k2++) {
+    const x = lerp(TERT_ROOT, xs, k2 / 14);
+    up.push([x, cy(x) + half(x)]);
+    lo.push([x, cy(x) - half(x)]);
+  }
+  const h = half(xs), c = cy(xs);
+  for (let k2 = 1; k2 < 10; k2++) {
+    const a = (Math.PI * k2) / 10; // from the top round the tip to the bottom
+    tipPts.push([xs - L * Math.sin(a), c + h * Math.cos(a)]);
+  }
+  // the visible edge: the lower edge from the root to the tip, and round the tip's apex
+  const lower = [...lo, ...tipPts.slice().reverse().slice(0, 7)];
+  return {pts: [...up, ...tipPts, ...lo.slice().reverse()], lower};
 };
 const F_BREAST = (s: HS) => s.l[0] - xBreast(s.l[1]);
 const F_BELLY = (s: HS) => -2.2 - s.l[1];
