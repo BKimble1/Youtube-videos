@@ -111,10 +111,13 @@ const placeFlock = (state: (t: number) => ShotState, t0: number, tc: number, spo
   });
 };
 const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 + 1.5, [
-  [330, 640, 2600, 4, 2.3, 0.1], [560, 720, 1700, -3, 2.1, 0.55], [740, 580, 3300, 2, 2.5, 0.3], [860, 700, 2200, -4, 2.2, 0.8], [450, 540, 3900, 3, 2.4, 0.05],
+  [300, 700, 2600, 4, 2.3, 0.1], [520, 790, 1700, -3, 2.1, 0.55], [600, 660, 3300, 2, 2.5, 0.3], [680, 760, 2200, -4, 2.2, 0.8], [420, 650, 3900, 3, 2.4, 0.05],
 ]);
+// sky: the flock sits ahead of the drone (upper right) through "watching the birds", then flies on out of the right edge
+// during the push-in, so the punchline caption and the loop are clear (paths checked with a projection script, all
+// birds stay below y 470 in the caption's column)
 const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, SKY_T0 + 1.3, [
-  [430, 600, 2400, 3, 2.2, 0.2], [610, 680, 1600, -2, 2.4, 0.65], [770, 570, 3000, 2, 2.1, 0.4], [850, 720, 2000, -4, 2.5, 0.9], [540, 530, 3600, 1, 2.3, 0.15],
+  [640, 640, 2400, 10, 2.2, 0.2], [780, 720, 1600, 6, 2.4, 0.65], [900, 600, 3000, 8, 2.1, 0.4], [980, 760, 2000, 4, 2.5, 0.9], [720, 560, 3600, 10, 2.3, 0.15],
 ]);
 const MeadowShot: React.FC<{t: number}> = ({t}) => {
   const s = meadowState(t);

@@ -195,12 +195,13 @@ export const labState = (t: number): ShotState => {
   const wingCam: Orbit = {target: lerpVec(midWing, [4, 4, 12], 0.4), yaw: 18, pitch: 9, dist: 300, scale: 15, cy: 1000};
   let cam: Orbit;
   if (t < 5.2) cam = lerpOrbit(M, wide, ss5(t, CUT.openToLab, 5.2));
-  else if (t < 8.85) {
+  else if (t < T.gearbox + 0.1) {
+    // exploded view and back, then one unhurried push into the gearbox that starts while the shell is still seating
     const ex2: Orbit = {...exploded, yaw: 31, pitch: 17, target: [-2.0, 6.5, 0]};
     const ex = lerpOrbit(exploded, ex2, ss5(t, 6.3, 8.0));
-    cam = lerpOrbit(wide, ex, clamp(ss5(t, 5.25, 6.6) - ss5(t, 7.95, 8.85)));
+    const held = lerpOrbit(wide, ex, clamp(ss5(t, 5.25, 6.6) - ss5(t, 7.95, 8.85)));
+    cam = lerpOrbit(held, gear, ss5(t, 8.45, T.gearbox + 0.1));
   }
-  else if (t < T.gearbox + 0.1) cam = lerpOrbit(wide, gear, ss5(t, 8.85, T.gearbox + 0.1));
   else if (t < T.motors - 0.05) cam = lerpOrbit(gear, gear2, ss5(t, T.gearbox + 0.1, T.motors - 0.05));
   else if (t < T.spinning + 0.2) cam = lerpOrbit(gear2, fP0, ss5(t, T.motors - 0.05, T.spinning + 0.2));
   else if (t < T.motion + 0.15) cam = lerpOrbit(fP0, fA, ss5(t, T.spinning + 0.2, T.motion + 0.15));
