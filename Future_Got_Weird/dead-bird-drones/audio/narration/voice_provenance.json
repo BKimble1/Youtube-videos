@@ -1,0 +1,81 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (the same id as Eel Escape, Bone Glue, Myostatin, Zombie Snail, Zombie Ant, Dead Spider and Cyborg Cockroach per their provenance files); confirmed with creative_list_voices (search 'Test Voice') on 2026-11-07"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "cpsagIs44zqsq6cpw9ex",
+ "prompt": "[conversational, brisk, lightly intrigued] If you put a motor inside a dead bird, you could make it fly again. [brisk, explaining] Researchers built drones using preserved bird bodies, with machinery hidden underneath the feathers. A gearbox turns the motor’s spinning motion into flapping wings. The goal is to watch wildlife with less disturbance. [a little more excited] And they’ve built a swimming robot using a preserved duck. [dry] So the bird watching the birds… [deadpan] might already be dead.",
+ "prompt_note": "The supplied V2 words verbatim (production/NARRATION_V2.txt). The bracket tags direct delivery and are not spoken (both recognisers confirm no tag words in either take).",
+ "generated_once": "One run of two variations (the connector default), 2 x 502.95 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_9OP5.mp3",
+   "generation_id": "9OP5A4qWthp2Mo1HcBbF",
+   "session_id": "97LLKAqCkSlUAC1jfhPH",
+   "duration_s": 22.909,
+   "sha256": "b49cb8d3739aa6a222111806ebcc6ded1538ab3496c3985d82e2e071b55d9dc0",
+   "asr_wer": {
+    "zipformer": 0.075,
+    "whisper": 0.015
+   },
+   "chosen": false,
+   "why_not": "equally clean, but flat pitch across the last two lines (median 139 Hz on 'So the bird watching the birds', 143 Hz on 'might already be dead'), so the dry punchline does not drop; a faint breath (-62 dB) before 'And'"
+  },
+  {
+   "file": "audio/narration/takes/t2_dTuc.mp3",
+   "generation_id": "dTuc977a04xsayZlXfPv",
+   "session_id": "2GTYDObXdgXbpDy03068",
+   "duration_s": 22.753,
+   "sha256": "f7f36e6affc708d5bc4c785db3bc08e7a4a0308fc64810f0383037c581a369ce",
+   "asr_wer": {
+    "zipformer": 0.075,
+    "whisper": 0.015
+   },
+   "chosen": true,
+   "why": "the setup line rises (median 190 Hz) and the final words drop low and dry (124 Hz), with a 0.33 s pause between them; clean silence before 'And'; speech from 0.00 s; 177.9 words per minute over the span"
+  }
+ ],
+ "asr_note": "Residual ASR differences on both takes are spelling only: zipformer writes 'robot' as 'rowbot'/'rowbout'; whisper hears the initial 'And' as 'Hand' (an aspirated onset). Compound splits ('gear box', 'wild life') are normalised in tools/script.py.",
+ "download_status": "DOWNLOADED 2026-11-07 from the flow's signed URLs (elevenlabsusercontent.com allowed in the environment).",
+ "master": {
+  "file": "audio/narration/FGW_Dead_Bird_Drones_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 23.60 s (the film length)",
+  "edits": "none: the take is used sample for sample (no gap shortening, stretch, pitch or gain change); only padded with 1.00 s of silence after the last word (the loop seam before 'If' restarts)",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer, onset-snapped)",
+  "sha256": "46d63e7ff887009de218dd98b0c8ec5c1cef8e88c132bd0c15bcbd85f9b10528",
+  "asr": {
+   "zipformer": {
+    "transcript": "IF YOU PUT A MOTOR INSIDE A DEAD BIRD YOU COULD MAKE IT FLY AGAIN RESEARCHERS BUILT DRONES USING PRESERVED BIRD BODIES WITH MACHINERY HIDDEN UNDERNEATH THE FEATHERS A GEAR BOX TURNS THE MOTOR'S SPINNING MOTION INTO FLAPPING WINGS THE GOAL IS TO WATCH WILD LIFE WITH LESS DISTURBANCE AND THEY'VE BUILT A SWIMMING ROWBOT USING A PRESERVED DUCK SO THE BIRD WATCHING THE BIRDS MIGHT ALREADY BE DEAD SAID",
+    "wer": 0.03,
+    "diffs": [
+     [
+      "replace",
+      "robot",
+      "rowbot"
+     ],
+     [
+      "insert",
+      "",
+      "said"
+     ]
+    ]
+   },
+   "whisper": {
+    "transcript": "If you put a motor inside a dead bird, you could make it fly again. Researchers built drones using preserved bird bodies with machinery hidden underneath the feathers. A gearbox turns the motor's spinning motion into flapping wings. The goal is to watch wildlife with less disturbance. Hand they've built a swimming robot using a preserved duck. So the bird watching the birds might already be dead. [",
+    "wer": 0.015,
+    "diffs": [
+     [
+      "replace",
+      "and",
+      "hand"
+     ]
+    ]
+   }
+  }
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pace, pitch and level measurements."
+}

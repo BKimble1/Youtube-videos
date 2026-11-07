@@ -1,0 +1,80 @@
+1
+00:00:00,000 --> 00:00:00,760
+If you put a motor
+
+2
+00:00:00,800 --> 00:00:02,140
+inside a dead bird,
+
+3
+00:00:02,180 --> 00:00:02,680
+you could make it
+
+4
+00:00:02,720 --> 00:00:04,070
+fly again.
+
+5
+00:00:04,110 --> 00:00:05,265
+Researchers built drones
+
+6
+00:00:05,305 --> 00:00:06,950
+using preserved bird bodies,
+
+7
+00:00:06,990 --> 00:00:07,895
+with machinery hidden
+
+8
+00:00:07,935 --> 00:00:09,320
+underneath the feathers.
+
+9
+00:00:09,360 --> 00:00:10,175
+A gearbox turns
+
+10
+00:00:10,215 --> 00:00:11,375
+the motor’s spinning motion
+
+11
+00:00:11,415 --> 00:00:12,910
+into flapping wings.
+
+12
+00:00:12,950 --> 00:00:13,420
+The goal is
+
+13
+00:00:13,460 --> 00:00:14,380
+to watch wildlife
+
+14
+00:00:14,420 --> 00:00:15,900
+with less disturbance.
+
+15
+00:00:15,940 --> 00:00:16,575
+And they’ve built
+
+16
+00:00:16,615 --> 00:00:17,455
+a swimming robot
+
+17
+00:00:17,495 --> 00:00:19,090
+using a preserved duck.
+
+18
+00:00:19,130 --> 00:00:19,905
+So the bird
+
+19
+00:00:19,945 --> 00:00:21,410
+watching the birds…
+
+20
+00:00:21,450 --> 00:00:22,900
+might already be dead.
+

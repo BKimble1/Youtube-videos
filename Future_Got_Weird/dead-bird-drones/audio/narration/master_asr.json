@@ -1,0 +1,29 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU PUT A MOTOR INSIDE A DEAD BIRD YOU COULD MAKE IT FLY AGAIN RESEARCHERS BUILT DRONES USING PRESERVED BIRD BODIES WITH MACHINERY HIDDEN UNDERNEATH THE FEATHERS A GEAR BOX TURNS THE MOTOR'S SPINNING MOTION INTO FLAPPING WINGS THE GOAL IS TO WATCH WILD LIFE WITH LESS DISTURBANCE AND THEY'VE BUILT A SWIMMING ROWBOT USING A PRESERVED DUCK SO THE BIRD WATCHING THE BIRDS MIGHT ALREADY BE DEAD SAID",
+  "wer": 0.03,
+  "diffs": [
+   [
+    "replace",
+    "robot",
+    "rowbot"
+   ],
+   [
+    "insert",
+    "",
+    "said"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you put a motor inside a dead bird, you could make it fly again. Researchers built drones using preserved bird bodies with machinery hidden underneath the feathers. A gearbox turns the motor's spinning motion into flapping wings. The goal is to watch wildlife with less disturbance. Hand they've built a swimming robot using a preserved duck. So the bird watching the birds might already be dead. [",
+  "wer": 0.015,
+  "diffs": [
+   [
+    "replace",
+    "and",
+    "hand"
+   ]
+  ]
+ }
+}

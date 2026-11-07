@@ -1,0 +1,375 @@
+{
+ "audio": "audio/narration/takes/t1_9OP5.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   2.08,
+   2.27
+  ],
+  [
+   3.46,
+   4.1
+  ],
+  [
+   6.81,
+   6.97
+  ],
+  [
+   8.91,
+   9.36
+  ],
+  [
+   12.51,
+   12.96
+  ],
+  [
+   15.57,
+   16.03
+  ],
+  [
+   18.79,
+   19.28
+  ],
+  [
+   21.28,
+   21.61
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.19
+  },
+  {
+   "word": "put",
+   "start": 0.2,
+   "end": 0.39
+  },
+  {
+   "word": "a",
+   "start": 0.4,
+   "end": 0.51
+  },
+  {
+   "word": "motor",
+   "start": 0.52,
+   "end": 0.87
+  },
+  {
+   "word": "inside",
+   "start": 0.88,
+   "end": 1.24
+  },
+  {
+   "word": "a",
+   "start": 1.24,
+   "end": 1.35
+  },
+  {
+   "word": "dead",
+   "start": 1.36,
+   "end": 1.71
+  },
+  {
+   "word": "bird,",
+   "start": 1.72,
+   "end": 2.08
+  },
+  {
+   "word": "you",
+   "start": 2.27,
+   "end": 2.33
+  },
+  {
+   "word": "could",
+   "start": 2.335,
+   "end": 2.49
+  },
+  {
+   "word": "make",
+   "start": 2.495,
+   "end": 2.65
+  },
+  {
+   "word": "it",
+   "start": 2.655,
+   "end": 2.81
+  },
+  {
+   "word": "fly",
+   "start": 2.815,
+   "end": 3.17
+  },
+  {
+   "word": "again.",
+   "start": 3.175,
+   "end": 3.46
+  },
+  {
+   "word": "Researchers",
+   "start": 4.1,
+   "end": 4.61
+  },
+  {
+   "word": "built",
+   "start": 4.62,
+   "end": 4.85
+  },
+  {
+   "word": "drones",
+   "start": 4.86,
+   "end": 5.29
+  },
+  {
+   "word": "using",
+   "start": 5.3,
+   "end": 5.57
+  },
+  {
+   "word": "preserved",
+   "start": 5.58,
+   "end": 6.09
+  },
+  {
+   "word": "bird",
+   "start": 6.1,
+   "end": 6.37
+  },
+  {
+   "word": "bodies,",
+   "start": 6.38,
+   "end": 6.81
+  },
+  {
+   "word": "with",
+   "start": 6.97,
+   "end": 7.04
+  },
+  {
+   "word": "machinery",
+   "start": 7.05,
+   "end": 7.64
+  },
+  {
+   "word": "hidden",
+   "start": 7.65,
+   "end": 7.96
+  },
+  {
+   "word": "underneath",
+   "start": 7.97,
+   "end": 8.37
+  },
+  {
+   "word": "the",
+   "start": 8.37,
+   "end": 8.52
+  },
+  {
+   "word": "feathers.",
+   "start": 8.53,
+   "end": 8.91
+  },
+  {
+   "word": "A",
+   "start": 9.36,
+   "end": 9.41
+  },
+  {
+   "word": "gearbox",
+   "start": 9.4,
+   "end": 9.93
+  },
+  {
+   "word": "turns",
+   "start": 9.935,
+   "end": 10.21
+  },
+  {
+   "word": "the",
+   "start": 10.215,
+   "end": 10.33
+  },
+  {
+   "word": "motor\u2019s",
+   "start": 10.335,
+   "end": 10.69
+  },
+  {
+   "word": "spinning",
+   "start": 10.695,
+   "end": 11.05
+  },
+  {
+   "word": "motion",
+   "start": 11.055,
+   "end": 11.41
+  },
+  {
+   "word": "into",
+   "start": 11.415,
+   "end": 11.61
+  },
+  {
+   "word": "flapping",
+   "start": 11.615,
+   "end": 12.13
+  },
+  {
+   "word": "wings.",
+   "start": 12.135,
+   "end": 12.51
+  },
+  {
+   "word": "The",
+   "start": 12.96,
+   "end": 13.01
+  },
+  {
+   "word": "goal",
+   "start": 13.0,
+   "end": 13.29
+  },
+  {
+   "word": "is",
+   "start": 13.295,
+   "end": 13.45
+  },
+  {
+   "word": "to",
+   "start": 13.455,
+   "end": 13.61
+  },
+  {
+   "word": "watch",
+   "start": 13.615,
+   "end": 13.93
+  },
+  {
+   "word": "wildlife",
+   "start": 13.935,
+   "end": 14.44
+  },
+  {
+   "word": "with",
+   "start": 14.455,
+   "end": 14.65
+  },
+  {
+   "word": "less",
+   "start": 14.655,
+   "end": 14.89
+  },
+  {
+   "word": "disturbance.",
+   "start": 14.895,
+   "end": 15.57
+  },
+  {
+   "word": "And",
+   "start": 16.03,
+   "end": 16.11
+  },
+  {
+   "word": "they\u2019ve",
+   "start": 16.12,
+   "end": 16.39
+  },
+  {
+   "word": "built",
+   "start": 16.4,
+   "end": 16.67
+  },
+  {
+   "word": "a",
+   "start": 16.68,
+   "end": 16.75
+  },
+  {
+   "word": "swimming",
+   "start": 16.76,
+   "end": 17.16
+  },
+  {
+   "word": "robot",
+   "start": 17.16,
+   "end": 17.55
+  },
+  {
+   "word": "using",
+   "start": 17.56,
+   "end": 17.83
+  },
+  {
+   "word": "a",
+   "start": 17.84,
+   "end": 17.95
+  },
+  {
+   "word": "preserved",
+   "start": 17.96,
+   "end": 18.47
+  },
+  {
+   "word": "duck.",
+   "start": 18.48,
+   "end": 18.79
+  },
+  {
+   "word": "So",
+   "start": 19.28,
+   "end": 19.39
+  },
+  {
+   "word": "the",
+   "start": 19.395,
+   "end": 19.67
+  },
+  {
+   "word": "bird",
+   "start": 19.675,
+   "end": 20.07
+  },
+  {
+   "word": "watching",
+   "start": 20.075,
+   "end": 20.47
+  },
+  {
+   "word": "the",
+   "start": 20.475,
+   "end": 20.71
+  },
+  {
+   "word": "birds\u2026",
+   "start": 20.715,
+   "end": 21.28
+  },
+  {
+   "word": "might",
+   "start": 21.61,
+   "end": 21.72
+  },
+  {
+   "word": "already",
+   "start": 21.725,
+   "end": 22.2
+  },
+  {
+   "word": "be",
+   "start": 22.205,
+   "end": 22.4
+  },
+  {
+   "word": "dead.",
+   "start": 22.405,
+   "end": 22.72
+  }
+ ]
+}

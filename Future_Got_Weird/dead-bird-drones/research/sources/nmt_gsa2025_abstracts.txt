@@ -1,0 +1,159 @@
+2025 GSA Abstracts 2
+Search this site
+Embedded Files
+Skip to main content
+Skip to navigation
+2025 GSA Abstracts 2
+GSA Poster Competition Session 2
+Tuesday,
+April
+22
+, 2025,
+1pm
+-
+3
+pm
+NMT Skeen Library
+SRS202
+5
+-0
+19
+—
+Taxidermy and Biomimicry in Drone Development
+AUTHORS:
+Darion Vosbein, Jared Upshaw, Kathryn McDonagh,
+Mostafa Hassanalian
+RESEARCH ADVISOR:
+Dr.
+Mostafa Hassanalian
+This poster presents a novel approach to wildlife monitoring using biomimetic robotics by integrating taxidermy into both aquatic and aerial systems. By combining the design principles of a swimming taxidermy duck robot and a flapping-wing drone, this study explores non-intrusive methods for ecological surveillance. The swimming duck robot leverages the natural locomotion and appearance of a Mallard duck to discreetly navigate wetland environments, utilizing 3D-printed components and integrated sensors for environmental data collection. Meanwhile, the flapping-wing aerial system employs a taxidermied Mallard as the base for a drone that mimics realistic bird flight, enhancing stealth and minimizing disruption to wildlife. This aerial design incorporates a custom gearbox to achieve lifelike wing motion, supported by aerodynamic analysis to optimize lift and drag performance. Both systems demonstrate the potential of using biomimicry for seamless integration into natural habitats, reducing ecological impact while maintaining effective data-gathering capabilities. The integration of these two platforms provides a comprehensive solution for multi-environment monitoring, advancing the field of biomimetic robotics and wildlife observation. Future work will focus on enhancing durability, waterproofing, and control mechanisms to improve operational efficiency and adaptability.
+SRS202
+5
+-0
+22
+—
+Design and Concept Validation of a Beta-Gamma Radiation Coincidence Spectroscopy System
+AUTHORS:
+Jacob Sandusky, Douglas Wells
+RESEARCH ADVISOR: Dr. Douglas Wells
+This work details the development of a multi-modal beta-gamma coincidence spectroscopy system designed to distinguish instances of similar gamma decay signatures from different radioisotopes in novel photonuclear production reactions. The system integrates beta-sensitive and gamma-sensitive detectors, coupled through timing and coincidence modules, to improve isotope identification and yield quantification. By synchronizing beta and gamma decay events within a precise time window of ~20ns, the system can differentiate correlated events from background noise and competing signals, enabling high-resolution spectral analysis and isotope identification. This design supports the objectives of the New Mexico Institute of Mining and Technology Photonuclear Laboratory, which focuses on advancing photonuclear methods to produce medically relevant isotopes. Photonuclear production, driven by high-energy Bremsstrahlung photon beams, is a promising alternative to traditional isotope production routes, offering more accessible production and enabling the synthesis of new radioisotopes. The lab’s research aims to measure excitation functions, investigate isotope production reaction mechanisms, and expand production capabilities for theranostic isotopes, which are critical for both diagnostic imaging and targeted radiotherapy. By providing more accurate cross-section measurements and isotope yield data, the beta-gamma coincidence system contributes directly to these objectives.
+SRS2025-051—CFD Analysis and Design Optimization of Dandelion-Inspired Flying Sensors for Remote Sensing in Inaccessible Environments
+AUTHORS: Gifty Quayson, Matteo Orlando,
+Mostafa Hassanalian
+RESEARCH ADVISOR: Dr.
+Mostafa Hassanalian
+This research aims to design and optimize lightweight, aerodynamically efficient dandelion-inspired structures capable of carrying sensors for environmental monitoring in remote and inaccessible terrains. Dandelion seeds exhibit a unique flight mechanism, traveling vast distances due to their specialized bristle arrangement, which generates a Separated Vortex Ring. By mimicking this natural design, we seek to develop micro-flying devices (3–10 cm) optimized for stable descent, prolonged flight, and controlled orientation. These bio-inspired structures will be designed to accommodate lightweight sensors for atmospheric data collection. The 2D and 3D configurations based on dandelion seed morphology, differing in spoke count, ring diameters, and bristle geometries. Computational fluid dynamics (CFD) simulations will analyze the aerodynamic performance of these designs, focusing on stability, durability, and energy efficiency across diverse environmental conditions. Material selection will prioritize lightweight yet robust compositions to enhance flight performance and adaptability. This research integrates shape design, optimization strategies, and prototype testing to determine the most effective configurations for controlled dispersion and prolonged airborne sensing. By leveraging nature’s passive flight principles, these dandelion-inspired structures have the potential to revolutionize remote sensing applications, providing a novel, energy-efficient means of environmental data collection in challenging terrains.
+SRS202
+5
+-0
+53
+—
+Nanostructures and Mechano-Optoelectronic Properties of Air-brushed Poly(3-hexylthiophene)-based Thin Films
+AUTHORS: Cason Jones, Mackenzie Mooreland, Aaron Madrid, Carlos Neri Soto, Myeong-Lok Seol, Jessica Koehne, Youngmin Lee, Donghyeon Ryu
+RESEARCH ADVISOR: Dr. Donghyeon Ryu
+Poly(3-hexylthiophene) (P3HT)-based mechano-optoelectronic (MO) thin films represent a promising emerging technology, capable of acting as a self power strain sensing device. The performance of these highly elastic and self-powered devices is dependent upon the nanostructure of their constituent thin films, particularly factors like crystallinity, molecular alignment, and π-π stacking. This research seeks to understand the process-structure-property relationship of MO thin films in order to optimize final sensor performance. While spin coating has traditionally been employed, airbrush deposition offers a scalable alternative for producing larger-area sensors. Airbrushing presents its own challenges in the form of uneven surfaces caused by the “coffee ring effect” (CRE), where droplets of solution create rings as they dry, and therefore decrease absorbance as well as the crystallinity of the P3HT. Strategies to mitigate CRE, such as process optimization, are explored alongside the incorporation of carbon nanotubes (CNTs) to enhance strain sensitivity. CNTs help to improve mechanical flexibility and charge transport, making them crucial in advancing the performance of MO thin films. It was found that carbon nanotubes serve to enhance the optoelectronic properties of P3HT based MO thin films.
+SRS2025-062—Autonomous Drone-Robot Implementation for Mine Evacuation and Rescue
+AUTHORS: Narges Bagheri,
+DarionVosbein, Hassan Khaniani, Mostafa Hassanalian
+RESEARCH ADVISOR: Dr.
+Mostafa Hassanalian
+Search and rescue operations remain extremely hazardous for mine rescue teams. In the era of ever-increasing applied robotics, mine rescuers could benefit from deploying scouting robotic agents. The proposed solution deploys a custom-made collaborative UGV-UAV system with the objectives of environment mapping, and air quality data collection while maintaining communications for data transferring with the rescue mission center. Designing such a system involves a plethora of hardware and software selection, fabrication, and deployment challenges for the robotic agents. A successfully developed UGV-UAV system can significantly expedite S&R operations while minimizing risks for the rescuers, and saving lives.
+SRS2025-077—Sustainable, Portable, Solar-Powered Bio-Inspired Drone Vertiport System for Orphaned Well Exploration
+AUTHORS: Fahad Mannan, Logan Moore, Arthur Wietharn,
+Mostafa Hassanalian
+RESEARCH ADVISOR: Dr.
+Mostafa Hassanalian
+This research explores bio-inspired vertiport designs (a hub for VTOL drones’ takeoff, landing, and servicing, also referred to as nesting station, docking station, hangar, or landing station) for drone swarms tasked with specific missions like the exploration of Orphaned well sites where it is difficult and harmful for human explorers. The vertiport system design is inspired by tree structures, with branches represented by capsules that house drones. Solar panels mounted on actuators at the top of the vertiport adjust their orientation to maximize sun exposure, supplying power to the vertiport's isolated grid for continuous energy day and night. A weather station located at the top transmits data to a computing system, ensuring environmental safety for drone operations. The vertiport's key components include capsules that open and close during drone launch and landing. Each capsule is equipped with charging contacts for the drones, Apriltags to facilitate precise landing, and a mechanism to center the drone within the capsule upon closure. Designed to protect the drones from environmental conditions, these capsules feature robust structures capable of withstanding harsh weather, ensuring the drones are safeguarded inside. This design highlights the potential of bio-inspired approaches in creating efficient vertiport systems.
+SRS2025-084—Adaptive Deep Learning for Cancer Classification: Investigating Sequential Training and Transfer Learning on RNA-Seq Data
+AUTHORS: Mohammad Shihab Uddin, Sharmin Sultana, Oleg Makhnin
+RESEARCH ADVISOR: Dr.
+Oleg Makhnin
+Accurate cancer classification is essential for enhancing diagnosis and advancing personalized treatment. The growing accessibility of RNA sequencing (RNA-seq) data transformed cancer research by facilitating the more precise, data-driven classification of various cancer types. However, traditional machine learning models often face challenges due to the high-dimensional characteristics of gene expression data and the limited availability of labeled samples, particularly in the case of rare cancers. This study explores innovative deep-learning approaches to enhance cancer classification using RNA-seq data from The Cancer Genome Atlas (TCGA), covering 33 cancer types. Specifically, we investigate two key research questions: (1) Can sequential training, where models are incrementally updated with new cancer datasets, effectively replace traditional one-shot training without compromising accuracy? (2) Can a master pre-trained model generalize across diverse cancer datasets, improving classification performance for cancers with limited data? By addressing these challenges, this research aims to develop a more flexible and scalable method of classifying cancer, ultimately contributing to more accurate diagnostics and improved personalized treatment strategies.
+SRS2025-087—The Interplay of XRN2 and DDX23 in Preventing R-loop-induced Genomic Instability
+AUTHORS: Rana Biswas, Brenda Muniz, Juliana Rehmeier,
+Praveen Patidar
+RESEARCH ADVISOR: Dr.
+Praveen Patidar
+R-loops, DNA-RNA hybrids with displaced single-stranded DNA, are associated with genomic instability and cause neurodegenerative disorders, autoimmune diseases, and cancer if they are not resolved in a timely manner. Therefore, understanding the mechanisms involved in R-loop metabolism is essential. Several factors have been reported to regulate R-loops, including RNA processing and splicing factors, elongation factors, topoisomerases, helicases, and nucleases. The 5'→3' exoribonuclease 2 (XRN2) and DEAD(Asp-Glu-Ala-Asp)-box helicase 23 (DDX23) individually play important roles in R-loop resolution and DNA repair, however, their interplay remains poorly understood. The overall goal of this research project is to determine the biochemical basis, functional implications, and biological significance of XRN2-DDX23 interaction in R-loop metabolism and genome maintenance. A previous study from our laboratory identified XRN2’s association with DDX23. Based on this finding and available literature, we hypothesized that XRN2 and DDX23 interplay is critical in preventing R-loop-induced genomic instability. Our analysis found an interaction between XRN2 and DDX23. Furthermore, their simultaneous deficiency creates similar levels of DNA damage and replication stress as their individual deletion. Finally, we also found that cells employ FANCD2-dependent replication fork progression pathway to mitigate replication stress induced by simultaneous deficiency of XRN2 and DDX23. Collectively, these data strongly suggest that XRN2 and DDX23 cooperate to protect cells from detrimental effects of R-loops.
+SRS202
+5
+-
+090
+—
+Implementation of a Pretrained Convolutional Neural Network, MobileNetV2, to Predict the Degree of Fracturing in Rock Masses
+AUTHORS:
+Alejandro Montiel, Hassan Khaniani
+RESEARCH ADVISOR: Dr.
+Hassan Khaniani
+This study explores a preliminary approach that leverages a pre-trained Convolutional Neural Network (CNN), MobileNetV2, to predict the degree of fracturing in rock masses from high-resolution images. the proposed approach enables immediate two-dimensional evaluation by capturing images of rock mass and processing them through the CNN, minimizing human error and bias associated with manual measurements, reducing both time and resource consumption. A custom-labeled dataset of 380 rock mass images was used to train the model, classifying fracturing into four categories: “low”, “medium”, “high”, and “rockfall”. “low” corresponds to images with up to one joint set, “medium” up to two joint sets, “high” more than two joint sets, and “rockfall” represents highly fractured rock masses where rockfalls are evident at slope or tunnel faces. The CNN employed, MobileNetV2, is a widely recognized pre-trained model for image classification, designed for efficiency and high-performance feature extraction. It focuses on detecting and estimating joint set frequency and density by prioritizing low-level and high-coherence features in rock mass images. Developed by Google, MobileNetV2 is distinguished by its lightweight architecture and computational efficiency, making it well-suited for this application. The proposed framework presents an innovative solution for rapid, field-deployable assessment of rock mass fracturing that could potentially support traditional method to evaluate this important parameter. Future work will focus on expanding the dataset to capture a broader range of fracturing conditions, further improving model generalization and predictive accuracy.
+SRS202
+5
+-
+091
+—
+Lightweight Identity-Based Cryptographic Framework for Secure Wireless Sensor Networks
+AUTHORS: Preston Kite, Andrew Loera,
+Dongwan Shin
+RESEARCH ADVISOR: Dr.
+Dongwan Shin
+Wireless Sensor Networks (WSNs) are increasingly critical in various applications, yet their resource-constrained nature poses significant challenges for implementing robust security protocols. This research addresses these challenges by proposing a lightweight and identity-based cryptographic framework tailored for WSNs. The framework integrates a modified Boneh-Franklin identity-based encryption (IBE) scheme with Ascon, a lightweight cryptographic algorithm recently selected by NIST for future standardization. The IBE scheme simplifies node communication by minimizing storage requirements and enabling efficient access control through permissions embedded in node identities. To validate the framework, we deploy a physical WSN using Raspberry Pi Zero devices, three types of sensors, and spread spectrum communication. Performance metrics, including power consumption and timing, are analyzed and compared to traditional encryption schemes. The results demonstrate the feasibility of our approach in providing a secure, efficient, and adaptable solution for WSNs, with potential applications across diverse environments. This work contributes to advancing lightweight cryptographic solutions for resource-constrained systems, ensuring both security and operational efficiency. Preston Kite is the lead software engineer with Andrew Loera as the undergraduate computer hardware engineer under advisor Dr. Dongwan Shin.
+SRS2025-093—Development of Permanent Magnet Spherical Motor for Robotic Shoulders
+AUTHORS: Jakobe Ochoa, Curtis O'Malley
+RESEARCH ADVISOR: Dr.
+Curtis O'Malley
+With the growing need for automation and robotics in increasingly complex applications, actuators and motors must become more versatile. Systems with increased dexterity and control must meet evolving demands of autonomous robotic systems. The development of a Permanent Magnet Spherical Motor (PMSM) allows for precise applications like gimbals, traditional industrial robots (Pick-and-Place), non-traditional robotic locomotion to be achieved by this single actuator. The PMSM with stable motion and accuracy is more favorable for mobile robots than a series of single axis actuators due to weight consolidation, lack of singularity issues, and inherent motion optimization. In this application the PMSM is designed to be the shoulder joint of a mobile climbing robot with inspiration taken from shoulders in primates. Although spherical motors provide three degrees of freedom for actuation and rotation, the manufacturing, control, and practicality of the technology remains uncertain, difficult, and incomplete. Many control methods have been employed to control PMSMs, however this research focuses on creating a reliable design that can be controlled with an open-loop controller for simple demonstrations and future testing. A robust controller such as high-gain feedback control or loop transfer recovery is explored to attempt reliable control in uncertain situations. The primary objective of the research is to create a prototype that addresses these weaknesses using mechanical design improvements and robust control methods. The research will culminate with a prototype and design process documentation that includes an evaluation of the implementation of spherical motors and areas where this technology falls short.
+SRS2025-096—A Physical Review of Soft Robotic Pneumatic Artificial Muscles
+AUTHORS: Matthew Tyrrell,
+Curtis O'Malley
+RESEARCH ADVISOR: Dr.
+Curtis O'Malley
+The field of soft robotics has an extensive history dating back to the 1960s in which a variety of biological, chemical, piezoelectric, thermal, and mechanical mechanisms have been explored to produce highly compliant robotic systems. While these compliant systems may have greater limitations with regard to power-output and traditional control systems, they result in more humanly-friendly robotics with greater degrees of freedom due to the nonlinear yielding structures and actuators. Pneumatic artificial muscles (PAMs) are a subcategory of soft robotics which produce mechanical motion through pneumatically driven systems which inflate flexible and/or expandable materials like nylon, latex, and silicone. PAM systems are nonlinear mechanical systems which require extensive physical system testing to develop a robust nonlinear computational model. This computational model is required to facilitate the design of new purpose-built PAMs with unique geometry and manufacturing methods. The development of a pneumatic test bench provides a means to validate existing actuators like McKibben Actuators and Pneumatic Networks which focus on flexible and expandable materials with controlled compliance. The data acquired from the pneumatic test bench and tested actuators will provide a foundation for new computation models.
+SRS2025-09
+7
+—
+Isolation and Characterization of Novel Pseudomonas Phages For Use in Phage Therapy
+AUTHORS:
+Aaron Ortiz, Linda DeVeaux
+RESEARCH ADVISOR: Dr. Linda DeVeaux
+Multidrug-resistant (MDR) bacterial infections pose a major problem to the health of
+immunocompromised patients. Antibiotics are the first line of defense against infections, but are rapidly losing efficacy as bacterial pathogens such as
+Pseudomonas aeruginosa
+grow
+increasingly resistant to antibiotics. As a result, scientists are searching for effective
+alternatives, with phage therapy becoming a promising treatment for cases where antibiotics
+fail. Recently, a physician at Nebraska Children’s Hospital reached out to our lab regarding a
+patient with a MDR
+P. aeruginosa
+urinary tract infection. Despite extensive last-resort antibiotic treatments, the patient still presents with
+P. aeruginosa
+in urine samples. Familiar with phage therapy, the physician sent us the bacterial strains (named Strain 1 and Strain 2) taken from the patient in hopes that I could isolate phages capable of infecting these strains. Five phages (SP33, SP34, SP35, SP36 and SP37) were isolated against Strain 1 from the Albuquerque, Las Cruces and Socorro wastewater treatment plants. Characterization of the phages revealed their high therapeutic potential as they are capable of limiting host bacterial growth. Strain 1 was capable of developing resistance to all five phages
+in vitro
+suggesting the possibility of phage resistance developing
+in vivo
+.
+SRS2025-0
+99
+—
+Exploring Shock Wave Boundary Layer Interactions in Supersonic Autonomous Drones for Formation Flight
+AUTHORS:
+Darien Williams,Tie Wei
+RESEARCH ADVISOR: Dr.
+Tie Wei
+The future of U.S. air supremacy hinges on sixth-generation fighter aircraft which will coordinate with semi-autonomous drones flying in formations at supersonic speeds. These formations impact radar detectability, payload delivery, and fuel efficiency, with shock wave boundary layer interactions (SWBI) playing a key role in determining viable configurations. This study examines SWBI between aircraft operating at Mach 2 using ANSYS FLUENT, focusing on pressure differences between leading and trailing aircraft. Results show that a trailing aircraft positioned within a shock wave experienced a 108% increase in upper surface pressure and a 35% decrease in lower surface pressure. Increasing the leading-edge distance to position the trailing aircraft within expansion waves, upper surface pressure increase was reduced to 62.6%, while the lower surface pressure decrease was reduced to 12.4%. These pressure differentials can disrupt control and lift surfaces, decrease fuel efficiency, and compromise mission success. Optimizing formation development based on mission requirements will help minimize radar cross-section, increase fuel efficiency, and ensure successful payload delivery. As the development of the high-speed aircraft utilized by sixth generation fighters continues, understanding the SWBI effects in formation becomes crucial for mission success.
+SRS2025-10
+0
+—
+Separating the Inseparable: Kinematic Recoil as a Separation Method for Identical Isotopes and the Production of Fluorine-18
+AUTHORS:
+Mariana Baca
+, D
+ouglas Wells
+RESEARCH ADVISOR: Dr. Douglas Wells
+Fluorine-18 (18F) is a crucial isotope for Positron Emission Tomography (PET), conventionally produced with proton cyclotron accelerators with the 18O(p, n)18F reaction. While effective, this method requires expensive equipment that is not widely available. Due to the short, 2hr half-life of F-18, this decreases the availability of this crucial isotope, since many hospitals are out of reach in this time frame from the nearest proton accelerator. This project explores an alternative production path-way utilizing the 19F(γ, n)18F reaction via electron linear accelerators (LINACs), which are more widely available in hospital settings and may provide a path for more accessible and local production. A major challenge in photonuclear isotope production is the separation of chemically identical parent-daughter
+pairs, such as 19F and 18F. To address this, we will investigate kinematic recoil as a physical separation technique, where the 18F nucleus recoils and is physically captured using strategically placed catcher materials. We present preliminary yield estimates using cross sections from literature and evaluate potential target materials (LiF, C2F4), and discuss experimental design considerations, including vacuum systems, detector setups, and monitoring foils, as well as preliminary experimental results. Our findings aim to establish the feasibility of producing 18F using LINACs, to potentially provide a cost-effective
+alternative to cyclotron-based methods to increase the availability of this medically useful isotope.
+The Student Research Symposium (SRS) is an initiative of the Office for Student Learning (OSL) and the Joseph R. Skeen Library. Thank you to our contributors and supporters: Student Affairs, the CLASS Department, the Writing & Communication Lab, and the Graduate Student Association (GSA).
+Report abuse
+Page details
+Page updated
+Report abuse
