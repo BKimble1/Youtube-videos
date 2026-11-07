@@ -1,4 +1,4 @@
-// BIRD test sheets: the preserved exterior through the film's cameras (placeholder drive in the cutaway).
+// BIRD test sheets: the preserved exterior through the test cameras and the film's own cameras (real Mech drive).
 import React from 'react';
 import {AbsoluteFill, Composition, registerRoot} from 'remotion';
 import {resetIds} from '../core/ids';

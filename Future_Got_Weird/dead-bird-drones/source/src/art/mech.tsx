@@ -602,12 +602,12 @@ const WIRES: {col: Tone; pts: V3[]; tail: number}[] = [
   {
     col: {lit: '#F08A7C', base: C.wireRed, deep: '#7E2620'},
     pts: [termPt(TERM[0], 1.6), termPt(TERM[0], 1.95, -5.1), [6.55, -3.3, -4.7], [6.1, -2.35, -3.95], [4.2, -2.05, -3.7], [2.0, -2.15, -3.5], [0.55, -2.3, -3.2], ...connTail(1)],
-    tail: 3,
+    tail: 2,
   },
   {
     col: {lit: '#5E6670', base: C.wireBlack, deep: '#0E1012'},
     pts: [termPt(TERM[1], 1.6), termPt(TERM[1], 1.95, -5.1), [6.85, -3.45, -4.45], [6.35, -2.5, -3.75], [4.2, -2.3, -3.85], [2.0, -2.4, -3.65], [0.75, -2.48, -3.35], ...connTail(-1)],
-    tail: 3,
+    tail: 2,
   },
 ];
 
@@ -710,6 +710,17 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
     const ring = fg.sm > 0 || fg.sw > 0.18 ? circ2(fg.G.c[0], fg.G.c[1], fg.G.r + 0.95 * MOD, 48) : gearOutline(fg.G, ps.gear[fg.id], fg.prof);
     out.push(...glowPass(c, [poly(z3(ring, fg.zf)), poly(z3(ring, fg.zb))], 1));
   }
+  // the smear band of a blurred gear sits UNDER the fading crisp copies at a strength that never dips during the
+  // crossfade, so a half-blurred gear reads as a solid part with a soft rim instead of a see-through ghost
+  const smearK = (sm: number) => Math.min(1, 2 * sm);
+  for (const g of gs) {
+    if (g.sm <= 0) continue;
+    const G = g.G;
+    const C3 = (r: number) => poly(z3(circ2(G.c[0], G.c[1], r, 48), g.zf));
+    const tipD = C3(G.r + MOD), midD = C3(G.r + 0.5 * MOD), rootD = C3(G.r - 1.25 * MOD);
+    out.push(<path key={key(c)} d={`${midD} ${rootD}`} fill={g.face} fillRule="evenodd" opacity={f2(0.82 * smearK(g.sm))} />);
+    out.push(<path key={key(c)} d={`${tipD} ${midD}`} fill={g.face} fillRule="evenodd" opacity={f2(0.38 * smearK(g.sm))} />);
+  }
   for (let i = 0; i < K; i++) {
     const L = layers();
     const dt = K === 1 ? 0 : (i / (K - 1) - 0.5) * SHUTTER;
@@ -729,7 +740,8 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
       }
       if (g.sm < 1) {
         slab(c, L, (u) => gearRings3(G, a, lerp(g.zf, g.zb, u), g.prof), g.probe, {
-          face: g.face, side: g.side, ink: g.gInk, inkOp: (i === 0 ? 1 : 0.3) * (1 - g.sm), faceOp: 1 - g.sm, sideOp: 1 - g.sm, copy: i > 0,
+          face: g.face, side: g.side, ink: g.gInk, inkOp: (i === 0 ? 1 : g.sm > 0 ? 0 : 0.3) * (1 - g.sm), faceOp: 1 - g.sm, sideOp: 1 - g.sm, copy: i > 0,
+          ...(i > 0 && g.sm > 0 ? {line: 0} : {}),
         });
       }
     }
@@ -740,9 +752,7 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
     if (g.sm <= 0) continue;
     const G = g.G;
     const C3 = (r: number) => poly(z3(circ2(G.c[0], G.c[1], r, 48), g.zf));
-    const tipD = C3(G.r + MOD), midD = C3(G.r + 0.5 * MOD), rootD = C3(G.r - 1.25 * MOD);
-    out.push(<path key={key(c)} d={`${midD} ${rootD}`} fill={g.face} fillRule="evenodd" opacity={f2(0.82 * g.sm)} />);
-    out.push(<path key={key(c)} d={`${tipD} ${midD}`} fill={g.face} fillRule="evenodd" opacity={f2(0.38 * g.sm)} />);
+    const tipD = C3(G.r + MOD), rootD = C3(G.r - 1.25 * MOD);
     out.push(lineP(c, tipD, g.gInk * 0.8, INK, 0.5 * g.sm));
     out.push(lineP(c, rootD, c.line * 0.8, INK, 0.3 * g.sm));
   }
@@ -773,7 +783,7 @@ const plate = (c: Ctx): El[] => {
     );
   }
   // screws (socket heads), including the two that hold the motor's face to the ears
-  const screws: P2t[] = [[-1.4, 4.35], [6.0, 4.45], [6.75, -1.4], [0.55, -1.95], ...EARS];
+  const screws: P2t[] = [[-1.4, 4.35], [6.0, 4.45], [6.75, -1.4], [0.55, -1.95]];
   out.push(...faded(c, fade(c, 0.4), screws.flatMap(([x, y]) => screw(c, [x, y, PLATE.z + 0.04]))));
   return out;
 };

@@ -44,7 +44,7 @@ const Cell: React.FC<{t: number}> = ({t}) => {
       {lab && <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />}
       <Bird B={B} F={s.F} ps={s.ps} look={{cut: path ? 1 : 0, cutReveal: path ? () => path : undefined, phantom: path ? 1 : 0, shellLift: lift}}
         mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />} />
-      {lab && <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" />}
+      {lab && <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" ps={s.ps} />}
       {isOpen && <FieldFront B={B} t={tt} />}
       {lab && <LabFront B={B} t={t} />}
       {isMeadow && <MeadowFront B={B} t={t - MEADOW_T0} />}

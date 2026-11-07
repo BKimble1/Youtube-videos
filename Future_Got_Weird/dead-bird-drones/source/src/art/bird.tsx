@@ -8,23 +8,26 @@
 //   region (cream underparts, brown upperparts with a mid band, the darker head, the pale cheek, two shadow bands
 //   and a light band with the key light fixed at the screen's upper left) is a {field >= 0} set extracted with
 //   marching squares, so band edges follow the form and markings stay fixed to the body.
-// - Feather texture: scalloped feather rows on a fixed surface lattice (back, nape, breast), kept where the surface
-//   faces the camera and is not occluded: open tip arcs at mid distance, closed soft tip crescents close up.
+// - Feather texture: scalloped feather rows on a fixed surface lattice (back, nape, breast; each row's angles are
+//   symmetric by construction, every feather appears once), kept where the surface faces the camera and is not
+//   occluded: open tip arcs at mid distance, closed soft tip crescents close up.
 // - Wings: rigid preserved wings clamped to the spars, every feather of rig FEATHERS projected point by point through
 //   wingPt (exact under a close lens), plus a few inner feathers (tertials / inner coverts) that carry the wing into
 //   the shell. Dorsal (top normal facing the camera) brown: flight feathers with bars and pale tips, greater coverts
 //   with a dark shaft streak and a thin pale fringe, each covert row casting a soft shadow; ventral pale and quiet.
-//   Coverts are lined only along their exposed tips. Seen edge-on, the wing keeps an airfoil-like blade profile. The
-//   near wing is hidden where its plane lies behind the body surface (a depth mask from the same grid), and a lens of
-//   body plumage (the feathered shoulder: from the true wing / shell intersection out to a ragged scalloped edge, in
-//   the body's own local colour, fading into the body at both tips) covers the junction: no seam, no cuff.
+//   Coverts are lined only along their exposed tips; the lesser coverts sit on a smooth leading-edge strip that ends
+//   in a rounded wrist. Seen edge-on, the wing keeps an airfoil-like blade profile with covert-tip scallops. The near
+//   wing is hidden where its plane lies behind the body surface (a depth mask from the same grid), and a lens of body
+//   plumage (the feathered shoulder, from the true wing / shell intersection out to a ragged scalloped edge) covers the
+//   junction. The lens is painted with the body's own layers (the same band, texture and shading paths through <use>),
+//   so it continues the body exactly where they meet; it narrows by geometry (never by opacity) as the shell lifts.
 // - Tail fan of 12 feathers, a short dark beak (two mandibles, nostril, culmen gloss), a fixed glossy glass eye.
 // - Cutaway: WINDOW (body-local x, y on the near surface) cut through the shell: far shell's clean inner surface,
 //   then the `mech` node, then the near shell with a bevelled cream cut-face rim (feather layer + form) and ink.
 //   `cutReveal` limits the open area (the film's wing-shaped wipe); `phantom` ghosts the near wing over the hole.
 // - Exploded view: `shellLift` raises the whole shell (body, neck, head, beak, eye, tail); the wings stay on the
-//   spars (the shoulder patch fades, the inner feathers draw in to the root, a clamp collar shows, and the shell's
-//   spar slot appears as a dark slit along the spar's whole sweep).
+//   spars (the shoulder lens narrows to the junction, the inner feathers draw in to the root, a clamp collar grows in,
+//   and the shell's spar slot appears as a dark slit along the spar's whole sweep).
 // The exterior is PASSIVE: nothing here blinks, breathes or turns; all motion comes from ps (the mechanism).
 import React from 'react';
 import {

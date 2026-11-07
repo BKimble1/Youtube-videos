@@ -13,7 +13,7 @@ import {Captions} from './Captions';
 import {C, INK} from './art/palette';
 import {Bird, NearWing} from './art/bird';
 import {Mech, Cradle} from './art/mech';
-import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack} from './art/world';
+import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack, MEADOW, SKY} from './art/world';
 import {Flock, LivingBird} from './art/flock';
 import {Duck, Pond} from './art/duck';
 
@@ -60,7 +60,7 @@ const LabShot: React.FC<{t: number}> = ({t}) => {
       <LabBack B={B} t={t} />
       <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="back" />
       <DroneBird B={B} s={s} revealPath={radialPath(B, s.F, LAB_GEAR_C, 10.5 * rOpen)} focus={labFocus(t)} detail={detail} shellLift={lift} />
-      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" />
+      <Cradle B={B} F={s.F} base={[0, CRADLE.benchY, 0]} layer="front" ps={s.ps} />
       <ExplodeGuides B={B} F={s.F} t={t} lift={lift} />
       <LabFront B={B} t={t} />
     </g>
@@ -114,7 +114,7 @@ const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 
   [330, 640, 2600, 4, 2.3, 0.1], [560, 720, 1700, -3, 2.1, 0.55], [740, 580, 3300, 2, 2.5, 0.3], [860, 700, 2200, -4, 2.2, 0.8], [450, 540, 3900, 3, 2.4, 0.05],
 ]);
 const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, SKY_T0 + 1.3, [
-  [430, 560, 2400, 3, 2.2, 0.2], [610, 640, 1600, -2, 2.4, 0.65], [770, 520, 3000, 2, 2.1, 0.4], [850, 680, 2000, -4, 2.5, 0.9], [540, 470, 3600, 1, 2.3, 0.15],
+  [430, 600, 2400, 3, 2.2, 0.2], [610, 680, 1600, -2, 2.4, 0.65], [770, 570, 3000, 2, 2.1, 0.4], [850, 720, 2000, -4, 2.5, 0.9], [540, 530, 3600, 1, 2.3, 0.15],
 ]);
 const MeadowShot: React.FC<{t: number}> = ({t}) => {
   const s = meadowState(t);
@@ -124,7 +124,7 @@ const MeadowShot: React.FC<{t: number}> = ({t}) => {
   return (
     <g>
       <MeadowBack B={B} t={tf} />
-      <Flock B={B} t={tf} birds={MEADOW_FLOCK} />
+      <Flock B={B} t={tf} birds={MEADOW_FLOCK} haze={MEADOW.haze} />
       <DroneBird B={B} s={s} />
       {ar.a > 0.01 && <SoundArcs B={B} F={s.F} a={ar.a} r={ar.r} />}
       <MeadowFront B={B} t={tf} />
@@ -175,7 +175,7 @@ const SkyShot: React.FC<{t: number}> = ({t}) => {
   return (
     <g>
       <SkyBack B={B} t={tf} />
-      <Flock B={B} t={tf} birds={SKY_FLOCK} />
+      <Flock B={B} t={tf} birds={SKY_FLOCK} haze={SKY.haze} />
       <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />
     </g>
   );
