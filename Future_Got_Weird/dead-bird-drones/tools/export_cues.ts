@@ -10,6 +10,7 @@ import {
   MEADOW_T0, POND_T0, SKY_T0, OPEN_REVEAL, SKY_REVEAL,
 } from '../source/src/story';
 import {RATIO} from '../source/src/rig';
+import {PADDLE_HZ} from '../source/src/art/duck';
 
 const r3 = (x: number) => Math.round(x * 1000) / 1000;
 const shotAt = (t: number): string => {
@@ -50,5 +51,11 @@ const EV = {
   openReveal: [OPEN_REVEAL.first[0], OPEN_REVEAL.second[0]], openClose: OPEN_REVEAL.close[0], skyOpen: SKY_REVEAL.open[0], skyClose: SKY_REVEAL.close[0],
   meadowT0: MEADOW_T0, pondT0: POND_T0, skyT0: SKY_T0, tFlap: T_FLAP,
 };
-fs.writeFileSync(process.argv[2], JSON.stringify({DUR, T, EV, world, ...sig}));
+// the duck's feet: two alternate power strokes per crank turn (art/duck.tsx duckCrank = 2 pi PADDLE_HZ t + 0.6)
+const duckStrokes: number[] = [];
+for (let k = 0; k < 400; k++) {
+  const t = (k * Math.PI - 0.6) / (2 * Math.PI * PADDLE_HZ);
+  if (t > POND_T0 && t < CUT.pondToSky[1]) duckStrokes.push(r3(t));
+}
+fs.writeFileSync(process.argv[2], JSON.stringify({DUR, T, EV, world, duckStrokes, ...sig}));
 console.log('cues ->', process.argv[2]);

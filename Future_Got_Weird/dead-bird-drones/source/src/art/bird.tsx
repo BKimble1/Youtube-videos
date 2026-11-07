@@ -280,7 +280,7 @@ const loopsD = (loops: V2[][], minArea: number) => {
       const a = L[(i - 1 + n) % n], b = L[(i + 1) % n];
       return {x: 0.25 * a.x + 0.5 * p.x + 0.25 * b.x, y: 0.25 * a.y + 0.5 * p.y + 0.25 * b.y};
     });
-    d += polyD(S);
+    d += polyD(n > 24 ? S.filter((_, i) => i % 2 === 0) : S);
   }
   return d;
 };
@@ -444,6 +444,7 @@ const SCALLOPS: Scal[] = (() => {
 })();
 const scallopPaths = (cx: Ctx) => {
   const ds: string[] = ['', '', ''];
+  if (proj(cx.B, xf(cx.F, [0, 0, 0])).s < 3.5) return ds;
   const camL = cx.o;
   for (const sc of SCALLOPS) {
     const V = sub3(camL, sc.p);
@@ -612,6 +613,8 @@ const WingArt: React.FC<{B: Basis; F: Frame; W: WingFrame; st: WingStyle}> = ({B
   const K = wingColours(dorsal, st.T, lightK);
   const ink = st.T(INK);
   const pxcm = proj(B, mid).s;
+  // seen edge-on, the interior feather lines fade (the wing reads as one solid blade, not a bundle of strokes)
+  const edgeK = clamp(Math.abs(facing(B, mid, topW)) * 3.2, 0.2, 1);
   const det = st.detail * clamp((pxcm - 6) / 10);
   // draw order: back to front (dorsal: as listed; ventral: flight groups reversed, so the stack mirrors)
   const groups: Feather['kind'][] = ['primary', 'secondary', 'covert', 'lesser'];
@@ -667,10 +670,10 @@ const WingArt: React.FC<{B: Basis; F: Frame; W: WingFrame; st: WingStyle}> = ({B
           barD = polyD(PP([s.g.at(0.3, 0.05), s.g.at(0.5, 0.3), s.g.at(0.66, 0), s.g.at(0.5, -0.3), s.g.at(0.3, -0.05)]));
           tipD = polyD(PP(tipPoly(s.g, 0.8)));
         }
-        const barOp = flight ? (dorsal ? 0.42 : 0.3) * clamp(det * 1.5) : kd === 'covert' ? (dorsal ? 0.6 : 0.2) : dorsal ? 0.35 : 0.12;
+        const barOp = edgeK * (flight ? (dorsal ? 0.42 : 0.3) * clamp(det * 1.5) : kd === 'covert' ? (dorsal ? 0.6 : 0.2) : dorsal ? 0.35 : 0.12);
         return (
           <g key={s.i}>
-            <path d={out} fill={fill(kd, ki)} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={flight ? 0.58 : 0.42} strokeLinejoin="round" vectorEffect={NS} />
+            <path d={out} fill={fill(kd, ki)} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={(flight ? 0.58 : 0.42) * edgeK} strokeLinejoin="round" vectorEffect={NS} />
             {barD && <path d={barD} fill={K.L(K.bar)} opacity={barOp} />}
             {tipD && <path d={tipD} fill={K.L(kd === 'covert' ? K.covertTip : K.tip)} opacity={kd === 'lesser' ? 0.5 : 0.92} />}
             {shaftD && <path d={shaftD} fill="none" stroke={K.L(K.shaft)} strokeWidth={LINE_PX * 0.75} strokeOpacity={0.55 * det} strokeLinecap="round" vectorEffect={NS} />}
@@ -716,6 +719,8 @@ const wingOutlineOpen = (B: Basis, F: Frame, W: WingFrame) => smoothOpen(WING_OU
 }));
 
 // ================================================================ tail, beak, eye
+/** the fan is gently arched (outer feathers lower at the tips), so it reads as a fan from the side too */
+const TAIL_ARCH = 2.0;
 const TAIL_FEATHERS = (() => {
   const lift = TAIL.lift * D2R;
   const yAt = (x: number) => TAIL.root[1] + (TAIL.root[0] - x) * Math.tan(lift);
@@ -726,17 +731,19 @@ const TAIL_FEATHERS = (() => {
     const xt = TAIL.tipX + 1.3 * (zt / TAIL.spread) ** 2;
     const xb = -14.4;
     const base: V3 = [xb, yAt(xb), zt * 0.2];
-    // a gently arched fan (outer feathers a little lower), so it reads as a fan from the side too
-    const tip: V3 = [xt, yAt(xt) - 1.5 * (zt / TAIL.spread) ** 2, zt];
+    const tip: V3 = [xt, yAt(xt) - TAIL_ARCH * (zt / TAIL.spread) ** 2, zt];
     const ax = norm3(sub3(tip, base));
     const wv = norm3(cross3(nT, ax));
     out.push({k, base, tip, wv, z: zt});
   }
   return {feathers: out, nT};
 })();
-const tailPt = (f: {base: V3; tip: V3; wv: V3}, s: number, side: number) => {
+const tailPt = (f: {base: V3; tip: V3; wv: V3; z: number}, s: number, side: number) => {
   const hw = (TAIL.width / 2) * (0.55 + 0.45 * sm(s / 0.3)) * (s > 0.84 ? Math.sqrt(Math.max(0, 1 - ((s - 0.84) / 0.16) ** 2)) : 1);
-  return add3(add3(f.base, mul3(sub3(f.tip, f.base), s)), mul3(f.wv, hw * side));
+  // across the feather, follow the arched fan's slope so neighbours stay overlapped when seen edge-on
+  const slope = ((-2 * TAIL_ARCH * f.z) / (TAIL.spread * TAIL.spread)) * s;
+  const w = mul3(f.wv, hw * side);
+  return add3(add3(f.base, mul3(sub3(f.tip, f.base), s)), [w[0], w[1] + slope * w[2], w[2]]);
 };
 const TailArt: React.FC<{B: Basis; F: Frame; T: Tint; L: V3}> = ({B, F, T, L}) => {
   const P = (p: V3): V2 => {
@@ -745,7 +752,9 @@ const TailArt: React.FC<{B: Basis; F: Frame; T: Tint; L: V3}> = ({B, F, T, L}) =
   };
   const nW = xfv(F, TAIL_FEATHERS.nT);
   const centre = xf(F, [-21, 3, 0]);
-  const dorsal = facing(B, centre, nW) >= 0;
+  const fT = facing(B, centre, nW);
+  const dorsal = fT >= 0;
+  const edgeK = clamp(Math.abs(fT) * 3.2, 0.15, 1);
   const lightK = clamp(dot3(dorsal ? nW : mul3(nW, -1), L) * 0.9 - 0.1, -0.6, 0.6);
   const Lc = (c: string) => T(lightK >= 0 ? mix(c, '#FFF6E4', lightK * 0.3) : mix(c, '#2A180C', -lightK * 0.4));
   const fs = [...TAIL_FEATHERS.feathers].sort((a, b) => (dorsal ? Math.abs(b.z) - Math.abs(a.z) : Math.abs(a.z) - Math.abs(b.z)));
@@ -777,10 +786,10 @@ const TailArt: React.FC<{B: Basis; F: Frame; T: Tint; L: V3}> = ({B, F, T, L}) =
         const cen = Math.abs(f.z) < 1;
         return (
           <g key={f.k}>
-            <path d={polyD(outline(f))} fill={Lc(cen ? mix(base, C.plumage, 0.25) : mix(base, C.plumageDeep, (Math.abs(f.z) / TAIL.spread) * 0.2))} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.6} strokeLinejoin="round" vectorEffect={NS} />
-            <path d={polyD(band(f, 0.76, 0.84))} fill={Lc(bar)} opacity={dorsal ? 0.62 : 0.35} />
+            <path d={polyD(outline(f))} fill={Lc(cen ? mix(base, C.plumage, 0.25) : mix(base, C.plumageDeep, (Math.abs(f.z) / TAIL.spread) * 0.2))} stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.6 * edgeK} strokeLinejoin="round" vectorEffect={NS} />
+            <path d={polyD(band(f, 0.76, 0.84))} fill={Lc(bar)} opacity={(dorsal ? 0.62 : 0.35) * (0.4 + 0.6 * edgeK)} />
             <path d={polyD(band(f, 0.9, 1))} fill={Lc(tip)} opacity={0.88} />
-            <path d={polyD([P(tailPt(f, 0.06, 0)), P(tailPt(f, 0.86, 0))], false)} fill="none" stroke={Lc(mix(C.flightEdge, C.tail, 0.35))} strokeWidth={LINE_PX * 0.7} strokeOpacity={0.45} vectorEffect={NS} />
+            <path d={polyD([P(tailPt(f, 0.06, 0)), P(tailPt(f, 0.86, 0))], false)} fill="none" stroke={Lc(mix(C.flightEdge, C.tail, 0.35))} strokeWidth={LINE_PX * 0.7} strokeOpacity={0.45 * edgeK} vectorEffect={NS} />
           </g>
         );
       })}
@@ -855,15 +864,15 @@ const EyeArt: React.FC<{B: Basis; F: Frame; T: Tint; c: V3; n: V3}> = ({B, F, T,
         <circle r={r * 1.24} fill={T(C.eyeRing)} stroke={ink} strokeWidth={LINE_PX} vectorEffect={NS} />
         <circle r={r} fill={`url(#${gid})`} stroke={T('#0B0705')} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} />
       </g>
-      <ellipse cx={p.x - 0.3 * k} cy={p.y - 0.33 * k} rx={0.27 * k} ry={0.22 * k} fill="#FFFFFF" opacity={0.92} />
-      <circle cx={p.x + 0.33 * k} cy={p.y + 0.3 * k} r={0.09 * k} fill="#FFFFFF" opacity={0.7} />
+      <ellipse cx={p.x - 0.3 * k} cy={p.y - 0.33 * k} rx={0.27 * k} ry={0.22 * k} fill={T("#FFFFFF")} opacity={0.92} />
+      <circle cx={p.x + 0.33 * k} cy={p.y + 0.3 * k} r={0.09 * k} fill={T("#FFFFFF")} opacity={0.7} />
     </g>
   );
 };
 
 // ================================================================ the cutaway window (body-local x, y on the near flank)
 const WINDOW_CTRL: [number, number][] = [
-  [8.5, 0.2], [8.1, 2.9], [6.4, 4.8], [3.6, 5.4], [0.6, 4.95], [-1.9, 3.35], [-3.5, 0.6], [-2.65, -2.05], [-0.8, -4.35], [1.8, -5.9], [4.6, -6.2], [6.8, -5.0], [8.1, -2.7],
+  [8.5, 0.4], [8.0, 3.0], [6.3, 4.85], [3.6, 5.4], [0.8, 4.7], [-1.4, 2.9], [-2.9, 0.9], [-3.5, -0.3], [-2.7, -1.7], [-1.0, -3.9], [1.6, -5.7], [4.6, -6.2], [6.9, -5.0], [8.2, -2.6],
 ];
 /** the cutaway window on the near flank, body-local (x, y), at the near surface (a smooth closed outline) */
 export const WINDOW: [number, number][] = crClosed(WINDOW_CTRL, 4);
@@ -934,6 +943,8 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
   const BIG = {x: -4000, y: -4000, width: 9000, height: 10000};
   const st: WingStyle = {T, fair: clamp(1 - lift / 1.6), collar: clamp(lift / 2.0), detail: 1};
   const scal = body ? scallopPaths(cx) : ['', '', ''];
+  // feather texture thins out at small sizes (it would read as noise at a distance)
+  const texK = clamp((proj(B, xf(Fs, [0, 0, 0])).s - 5) / 10, 0.3, 1);
   const holeFill = reveal ?? (hole ? hole.outer : '');
   // the hole region (window, limited by the reveal) as a clipped group
   const inHole = (child: React.ReactNode) => (
@@ -941,6 +952,18 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
   );
   const hb = hole?.bbox;
 
+  // the near wing's soft cast shadow on the body (light from the upper left), from its coarse outline
+  const wingShadow = wings && lift < 0.5 ? (() => {
+    const P = (a: number, b: number): V2 => {
+      const q = proj(B, xf(F, wingPt(Wn, a, b)));
+      return {x: q.x, y: q.y};
+    };
+    const k = 0.85 * proj(B, xf(F, Wn.o)).s;
+    return {
+      d: smoothClosed(WING_OUTLINE.map(([a, b]) => P(a, b))) + smoothClosed(FAIR.map(([a, b]) => P(a, b))),
+      tr: `translate(${f1(0.6 * k)},${f1(0.8 * k)})`,
+    };
+  })() : null;
   // ---- body (near shell)
   const bodyArt = body && (
     <g>
@@ -958,13 +981,14 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
         <path d={body.brown} fill={T(C.plumage)} fillRule="evenodd" />
         <path d={body.head} fill={T(mix(C.head, C.plumageDeep, 0.28))} fillRule="evenodd" />
         <path d={body.cheek} fill={T(C.cheek)} fillRule="evenodd" />
-        <path d={scal[0]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX} strokeOpacity={0.55} strokeLinecap="round" vectorEffect={NS} />
-        <path d={scal[2]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX * 0.85} strokeOpacity={0.5} strokeLinecap="round" vectorEffect={NS} />
-        <path d={scal[1]} fill="none" stroke={T(C.breastDeep)} strokeWidth={LINE_PX} strokeOpacity={0.6} strokeLinecap="round" vectorEffect={NS} />
+        <path d={scal[0]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX} strokeOpacity={0.55 * texK} strokeLinecap="round" vectorEffect={NS} />
+        <path d={scal[2]} fill="none" stroke={T(C.plumageBar)} strokeWidth={LINE_PX * 0.85} strokeOpacity={0.5 * texK} strokeLinecap="round" vectorEffect={NS} />
+        <path d={scal[1]} fill="none" stroke={T(C.breastDeep)} strokeWidth={LINE_PX} strokeOpacity={0.6 * texK} strokeLinecap="round" vectorEffect={NS} />
         <path d={body.sh1} fill={T('#5E3C22')} opacity={0.22} fillRule="evenodd" />
         <path d={body.sh2} fill={T('#3B220F')} opacity={0.16} fillRule="evenodd" />
         <path d={body.li} fill={T('#FFF6E2')} opacity={0.2} fillRule="evenodd" />
         <path d={body.outline} fill={`url(#${ids.gBody})`} fillRule="evenodd" />
+        {wingShadow && <path d={wingShadow.d} transform={wingShadow.tr} fill={T('#2E1A0C')} opacity={0.2} />}
         <HeadLine cx={cx} ink={ink} />
       </g>
       <path d={body.outline} fill="none" stroke={ink} strokeWidth={INK_PX} strokeLinejoin="round" vectorEffect={NS} />
@@ -1095,7 +1119,9 @@ const HeadLine: React.FC<{cx: Ctx; ink: string}> = ({cx, ink}) => {
     else if (cur.length) { segs.push(cur); cur = []; }
   }
   if (cur.length) segs.push(cur);
-  const d = segs.filter((s) => s.length >= 3).map((s) => smoothOpen(s)).join('');
+  const segLen = (s: V2[]) => s.reduce((a, p, i) => (i ? a + Math.hypot(p.x - s[i - 1].x, p.y - s[i - 1].y) : 0), 0);
+  const minLen = 2.2 * proj(cx.B, xf(cx.F, ELLS[HEAD_I].c)).s;
+  const d = segs.filter((s) => s.length >= 4 && segLen(s) > minLen).map((s) => smoothOpen(s)).join('');
   if (!d) return null;
   return <path d={d} fill="none" stroke={ink} strokeWidth={LINE_PX} strokeOpacity={0.45} strokeLinecap="round" vectorEffect={NS} />;
 };

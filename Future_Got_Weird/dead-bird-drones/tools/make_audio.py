@@ -170,10 +170,8 @@ place(sfx, swish(lo[1] - lo[0] - 0.1, 140, 260, 800, 2000, 1.3), lo[0] + 0.02, '
 # ---------------- the duck: a subtle water cue (paddle swishes, lapping), muffled in the below-water view
 pond = world_mask('pond')
 dk = lp(sig100(cj['duckCut']), 6)
-k = 0; at = EV['pondT0'] + 0.25
-while at < EV['pondToSky'][1]:
-    place(sfx, lap(0.3, 300 + 80 * (k % 2)), at, 'duck paddle stroke (water)' if k == 0 else None, -35 - 2 * (k % 2))
-    at += 0.42; k += 1
+for k, at in enumerate(cj['duckStrokes']):  # each foot's power stroke (the duck module's crank)
+    place(sfx, lap(0.26, 300 + 80 * (k % 2)), at + 0.04, 'duck paddle stroke (water)' if k == 0 else None, -36 - 2 * (k % 2))
 wake = circ(lambda x: bp(x, 250, 1800), noise(N)) * (0.5 + 0.5 * np.sin(2 * np.pi * 1.7 * t) ** 2)
 sfx += db(-38) * norm(wake) * pond * (1 - 0.6 * dk)
 under = circ(lambda x: lp(x, 260), noise(N))

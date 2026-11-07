@@ -3,7 +3,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {clamp, DUR, FPS, lerp, ss, ss5} from './lib';
 import {resetIds, uid} from './core/ids';
-import {add3, Basis, basis, bodyFrame, Frame, orbit, Orbit, P2, poly, proj, V2, V3, xf} from './three';
+import {add3, Basis, basis, bodyFrame, Frame, orbit, Orbit, P2, poly, proj, unproj, V2, V3, xf} from './three';
 import {pose, phiOfPhase, wingPt, HINGE, CRADLE, Pose} from './rig';
 import {
   CUT, LAB, T, T_FLAP, V_FLY, arcs, duckCut, duckPos, labFocus, labShellLift, labState, meadowState, openState, pondCam, skyState,
@@ -93,21 +93,26 @@ const ExplodeGuides: React.FC<{B: Basis; F: Frame; t: number; lift: number}> = (
   );
 };
 
-/** living birds beyond the drone (alive and natural; they fly on, unaware of it) */
-const MEADOW_FLOCK: LivingBird[] = [
-  {o: [-120, 160, -900], v: [205, 4, 0], scale: 1, phase: 0.1, freq: 2.3},
-  {o: [60, 110, -1300], v: [212, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
-  {o: [260, 220, -1600], v: [208, -3, 0], scale: 1, phase: 0.3, freq: 2.5},
-  {o: [-320, 60, -1150], v: [200, 6, 0], scale: 1, phase: 0.8, freq: 2.2},
-  {o: [420, 140, -2100], v: [215, 0, 0], scale: 1, phase: 0.05, freq: 2.4},
-];
-const SKY_FLOCK: LivingBird[] = [
-  {o: [-140, 120, -700], v: [205, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
-  {o: [80, 190, -1050], v: [210, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
-  {o: [-360, 230, -1400], v: [203, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
-  {o: [300, 80, -1800], v: [212, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
-  {o: [-40, 300, -2300], v: [208, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
-];
+/** living birds beyond the drone (alive and natural; they fly on, unaware of it). Each is placed by where it should sit
+ *  on screen at the middle of its shot (x, y px) and how far beyond the drone it is (cm of extra depth), then given a
+ *  cruising speed close to the drone's, so the tracking camera keeps it in the frame's upper half, over the far land. */
+type Spot = [number, number, number, number, number, number]; // screen x, screen y, extra depth, dvx (cm/s), freq, phase
+const placeFlock = (state: (t: number) => ShotState, t0: number, tc: number, spots: Spot[]): LivingBird[] => {
+  const s = state(tc);
+  const B = basis(s.cam);
+  const d0 = proj(B, s.F.o).z;
+  return spots.map(([x, y, extra, dvx, freq, phase]) => {
+    const v: V3 = [V_FLY + dvx, 0, 0];
+    const p = unproj(B, x, y, d0 + extra);
+    return {o: [p[0] - v[0] * (tc - t0), p[1], p[2]], v, scale: 1, phase, freq};
+  });
+};
+const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 + 1.5, [
+  [330, 640, 2600, 4, 2.3, 0.1], [560, 720, 1700, -3, 2.1, 0.55], [740, 580, 3300, 2, 2.5, 0.3], [860, 700, 2200, -4, 2.2, 0.8], [450, 540, 3900, 3, 2.4, 0.05],
+]);
+const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, SKY_T0 + 1.3, [
+  [430, 560, 2400, 3, 2.2, 0.2], [610, 640, 1600, -2, 2.4, 0.65], [770, 520, 3000, 2, 2.1, 0.4], [850, 680, 2000, -4, 2.5, 0.9], [540, 470, 3600, 1, 2.3, 0.15],
+]);
 const MeadowShot: React.FC<{t: number}> = ({t}) => {
   const s = meadowState(t);
   const B = basis(s.cam);

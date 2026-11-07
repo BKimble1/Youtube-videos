@@ -6,8 +6,9 @@ import {Basis, basis, bodyFrame, ellipsoid2, Frame, mul3, Orbit, poly, proj, rot
 import {BODY, phiOfPhase, pose, Pose, wingPt, WING_OUTLINE, WingFrame} from '../rig';
 import {resetIds, uid} from '../core/ids';
 import {FieldBack, FieldFront, LabBack, LabFront, MeadowBack, MeadowFront, SkyBack} from '../art/world';
-import {Flock, LivingBird, LivingBirdView, wingbeat} from '../art/flock';
-import {labState, meadowState, openState, skyState, MEADOW_T0, SKY_T0, ShotState} from '../story';
+import {Flock, FLOCK_MEADOW, FLOCK_SKY, LivingBird, LivingBirdView, offsetFlock, wingbeat} from '../art/flock';
+import {labState, meadowState, openState, skyState, MEADOW_T0, SKY_T0, ShotState, V_FLY} from '../story';
+import {DUR} from '../lib';
 import {INK} from '../art/palette';
 
 const W = 1080, H = 1920;
@@ -92,10 +93,10 @@ const labCell = (o: Orbit) => {
   );
 };
 const MEADOW_BIRDS = (t0: number): LivingBird[] => [
-  {o: [300 * t0 - 160, 60, -900], v: [300, 4, 0], scale: 1, phase: 0.1, freq: 2.3},
-  {o: [300 * t0 + 120, 20, -1300], v: [306, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
-  {o: [300 * t0 + 340, 90, -1700], v: [298, -3, 0], scale: 1, phase: 0.3, freq: 2.5},
-  {o: [300 * t0 - 420, 10, -1200], v: [302, 5, 0], scale: 1, phase: 0.8, freq: 2.2},
+  {o: [300 * t0 - 260, 20, -900], v: [300, 4, 0], scale: 1, phase: 0.1, freq: 2.3},
+  {o: [300 * t0 + 20, -10, -1300], v: [306, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
+  {o: [300 * t0 + 240, 30, -1700], v: [298, -3, 0], scale: 1, phase: 0.3, freq: 2.5},
+  {o: [300 * t0 - 520, -20, -1200], v: [302, 5, 0], scale: 1, phase: 0.8, freq: 2.2},
 ];
 const meadowCell = (t: number, birds = false) => {
   const B = basis(meadowCam(t));
@@ -109,12 +110,12 @@ const meadowCell = (t: number, birds = false) => {
   );
 };
 const SKY_BIRDS: LivingBird[] = [
-  {o: [-150, 60, -600], v: [300, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
-  {o: [90, 110, -1000], v: [306, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
-  {o: [-330, 150, -1400], v: [297, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
-  {o: [260, -40, -1800], v: [310, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
-  {o: [-20, 190, -2400], v: [304, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
-  {o: [180, -90, -700], v: [300, 1, -8], scale: 1, phase: 0.45, freq: 2.0},
+  {o: [-250, -10, -600], v: [300, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
+  {o: [-10, -40, -1000], v: [306, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
+  {o: [-430, -30, -1400], v: [297, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
+  {o: [160, -90, -1800], v: [310, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
+  {o: [-120, -110, -2400], v: [304, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
+  {o: [120, -60, -700], v: [300, 1, -8], scale: 1, phase: 0.45, freq: 2.0},
 ];
 const skyCell = (t: number, birds = false) => {
   const B = basis(skyCam(t));
@@ -177,13 +178,13 @@ const storyCell = (t: number) => {
     s = meadowState(t);
     const B = basis(s.cam);
     back = <MeadowBack B={B} t={t - MEADOW_T0} />;
-    flock = <Flock B={B} t={t - MEADOW_T0} birds={FILM_MEADOW} />;
+    flock = <Flock B={B} t={t - MEADOW_T0} birds={FLOCK_MEADOW} />;
     front = <MeadowFront B={B} t={t - MEADOW_T0} />;
   } else {
     s = skyState(t);
     const B = basis(s.cam);
     back = <SkyBack B={B} t={t - SKY_T0} />;
-    flock = <Flock B={B} t={t - SKY_T0} birds={FILM_SKY} />;
+    flock = <Flock B={B} t={t - SKY_T0} birds={offsetFlock(FLOCK_SKY, V_FLY * (SKY_T0 - DUR))} />;
   }
   const B = basis(s.cam);
   return (
@@ -227,6 +228,26 @@ const Root: React.FC = () => (
     <Composition id="WorldSingle" component={Single} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 0}} />
   </>
 );
-registerRoot(Root);
 void mul3;
 void ({} as V3);
+
+// ------------------------------------------------------------------ debug: one environment layer alone at a story time
+const DebugPart: React.FC<{t: number; part: string}> = ({t, part}) => {
+  resetIds('d_');
+  const s = t < 12.6 ? labState(t) : meadowState(t);
+  const B = basis(s.cam);
+  const node =
+    part === 'labback' ? <LabBack B={B} t={t} /> : part === 'labfront' ? <LabFront B={B} t={t} /> :
+    part === 'meadowback' ? <MeadowBack B={B} t={t - MEADOW_T0} /> : <MeadowFront B={B} t={t - MEADOW_T0} />;
+  return (
+    <AbsoluteFill style={{background: '#F0F'}}>
+      <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`}>{node}</svg>
+    </AbsoluteFill>
+  );
+};
+registerRoot(() => (
+  <>
+    <Root />
+    <Composition id="WorldDebug" component={DebugPart} durationInFrames={1} fps={30} width={W} height={H} defaultProps={{t: 10.9, part: 'labback'}} />
+  </>
+));

@@ -222,8 +222,8 @@ export const meadowState = (t: number): ShotState => {
   const x = V_FLY * (t - MEADOW_T0);
   const F = flyFrame(x, u, 0);
   const base: V3 = [x, 0, 0];
-  const A: Orbit = {target: add3(base, [-6, 10, 0]), yaw: 6, pitch: 3, dist: 1100, scale: 10.5, cy: 1080};
-  const Bm: Orbit = {target: add3(base, [-2, 6, 0]), yaw: 9, pitch: 4, dist: 1100, scale: 11.5, cy: 1060};
+  const A: Orbit = {target: add3(base, [-4, 8, 0]), yaw: 6, pitch: 3, dist: 1100, scale: 12.5, cx: 480, cy: 1100};
+  const Bm: Orbit = {target: add3(base, [-2, 6, 0]), yaw: 9, pitch: 4, dist: 1100, scale: 13.5, cx: 480, cy: 1080};
   const cam = lerpOrbit(A, Bm, ss5(t, MEADOW_T0, CUT.meadowToPond[1]));
   return {cam, F, u, ps: P(u), rate: rateOf(1 / T_FLAP)};
 };
@@ -241,9 +241,9 @@ export const duckPos = (t: number): V3 => [DUCK_V * (t - POND_T0) - 30, 0, 0];
 export const duckCut = (t: number) => ss(t, T.using2 - 0.15, T.using2 + 0.3) * (1 - ss(t, T.duckEnd + 0.02, T.duckEnd + 0.4));
 export const pondCam = (t: number): Orbit => {
   const p = duckPos(t);
-  const surf: Orbit = {target: add3(p, [4, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 15, cy: 1000};
-  const surf2: Orbit = {...surf, target: add3(p, [6, 6, 0]), scale: 16.5};
-  const split: Orbit = {target: add3(p, [3, -2, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 17, cy: 960};
+  const surf: Orbit = {target: add3(p, [2, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 12.5, cx: 500, cy: 1020};
+  const surf2: Orbit = {...surf, target: add3(p, [3, 6, 0]), scale: 13.5};
+  const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 13.5, cx: 500, cy: 980};
   const k = duckCut(t);
   return lerpOrbit(lerpOrbit(surf, surf2, ss5(t, POND_T0, T.using2)), split, ss5(k, 0, 1));
 };

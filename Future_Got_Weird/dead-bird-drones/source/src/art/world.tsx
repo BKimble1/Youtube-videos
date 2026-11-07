@@ -72,6 +72,9 @@ const lat = (lo: number, hi: number, step: number, cap = 260): number[] => {
   return out;
 };
 const xy = (p: SP): V2 => ({x: p.x, y: p.y});
+/** are these projected points safely in front of the camera and (some of them) near the frame? */
+const visible = (pts: SP[], m = 400) =>
+  pts.every((p) => p.z > 5) && pts.some((p) => p.x > -m && p.x < W + m && p.y > -m && p.y < H + m);
 /** project a world polygon, clipped to the camera's near side */
 const projPoly = (B: Basis, pts: V3[], near = 3): V2[] => {
   const out: V3[] = [];
@@ -139,7 +142,7 @@ const ridge = (B: Basis, Z: number, yRef: number, el: (x: number) => number, elB
   const b1 = xy(proj(B, [x1, farY(Z, elBot, yRef), Z])), b0 = xy(proj(B, [x0, farY(Z, elBot, yRef), Z]));
   return `${smoothOpen(pts)} L${P2(b1)} L${P2(b0)} Z`;
 };
-type Blob = {x: number; y: number; r: number; k: number};
+type Blob = {x: number; y: number; r: number; k: number; a?: number};
 /** tree crowns along a far plane: round blobs whose tops follow el(x) */
 const crowns = (B: Basis, Z: number, yRef: number, el: (x: number) => number, spacing: number, seed: number): Blob[] => {
   const [lo, hi] = spanX(B, Z, 320);
@@ -148,16 +151,20 @@ const crowns = (B: Basis, Z: number, yRef: number, el: (x: number) => number, sp
     for (let row = 0; row < 2; row++) {
       const h0 = hash(k * 7.13 + seed + row * 31.7), h1 = hash(k * 3.71 + seed * 2.3 + row * 17.1);
       const x = (k + 0.5 * row + (h0 - 0.5) * 0.6) * spacing;
-      const R = spacing * (row ? 0.42 + 0.3 * h1 : 0.55 + 0.35 * h1);
-      const top = farY(Z, el(x), yRef) - (row ? 0.45 : 0) * R + (h0 - 0.5) * 0.5 * R;
-      const p = proj(B, [x, top - R, Z]);
-      out.push({x: p.x, y: p.y, r: R * p.s, k: h0});
+      const R = spacing * (row ? 0.36 + 0.36 * h1 : 0.46 + 0.5 * h1 * h1);
+      const a = !row && h0 > 0.82 ? 1.5 : 1;
+      const top = farY(Z, el(x), yRef) - (row ? 0.5 : 0) * R + (h0 - 0.5) * 0.6 * R + (a > 1 ? 0.8 * R : 0);
+      const p = proj(B, [x, top - R * a, Z]);
+      out.push({x: p.x, y: p.y, r: R * p.s, k: h0, a});
     }
   }
   return out;
 };
 const blobsPath = (bs: Blob[], sx = 1.06, sy = 0.94) =>
-  bs.map((b) => `M${fx(b.x - b.r * sx)},${fx(b.y)} a${fx(b.r * sx)},${fx(b.r * sy)} 0 1,0 ${fx(2 * b.r * sx)},0 a${fx(b.r * sx)},${fx(b.r * sy)} 0 1,0 ${fx(-2 * b.r * sx)},0 Z`).join(' ');
+  bs.map((b) => {
+    const rx = b.r * sx / (b.a ?? 1) ** 0.3, ry = b.r * sy * (b.a ?? 1);
+    return `M${fx(b.x - rx)},${fx(b.y)} a${fx(rx)},${fx(ry)} 0 1,0 ${fx(2 * rx)},0 a${fx(rx)},${fx(ry)} 0 1,0 ${fx(-2 * rx)},0 Z`;
+  }).join(' ');
 
 /** an ellipse path (centre, radii, rotation in deg) */
 const ellPath = (cx: number, cy: number, rx: number, ry: number, rot: number) => {
@@ -279,12 +286,21 @@ const FieldFar: React.FC<{B: Basis}> = ({B}) => {
       <path d={ridge(B, Zt, yr, (x) => fieldTrees(x) - 0.3, -14)} fill={mix('#5F8C5C', F_HAZE, 0.3)} />
       <path d={blobsPath(cr)} fill={mix('#5F8C5C', F_HAZE, 0.3)} />
       <path d={blobsPath(hl)} fill={mix('#86AE72', F_HAZE, 0.3)} />
-      {bands.map(([e, c], i) => (
-        <path key={i} d={ridge(B, Zv + i * 1500, yr, (x) => e + 0.07 * noise1(x / 4000, 20 + i), -14)} fill={mix(c, F_HAZE, 0.38)} />
+      <Valley B={B} Z={Zv} yRef={yr} tops={bands.map((b) => b[0])} cols={bands.map((b) => b[1])} haze={F_HAZE} k={0.38} hedge="#5C8655" />
+    </g>
+  );
+};
+/** hazy far fields below a treeline: bands of fields falling toward the viewer, edged with dotted hedgerows */
+const Valley: React.FC<{B: Basis; Z: number; yRef: number; tops: number[]; cols: string[]; haze: string; k: number; hedge: string; elBot?: number}> = ({B, Z, yRef, tops, cols, haze, k, hedge, elBot = -16}) => {
+  const s0 = proj(B, [0, 0, Z]).s;
+  return (
+    <g>
+      {tops.map((e, i) => (
+        <path key={i} d={ridge(B, Z + i * 1500, yRef, (x) => e + 0.07 * noise1(x / 4000, 20 + i), elBot)} fill={mix(cols[i % cols.length], haze, k)} />
       ))}
-      {bands.map(([e], i) => (
-        <path key={`h${i}`} d={ridgeLine(B, Zv + i * 1500 - 300, yr, (x) => e + 0.07 * noise1(x / 4000, 20 + i))} fill="none" stroke={mix('#5C8655', F_HAZE, 0.42)}
-          strokeWidth={Math.max(2, 120 * proj(B, [0, 0, Zv]).s)} strokeLinecap="round" strokeDasharray={`${fx(Math.max(3, 200 * proj(B, [0, 0, Zv]).s))} ${fx(Math.max(2, 90 * proj(B, [0, 0, Zv]).s))}`} />
+      {tops.map((e, i) => (
+        <path key={`h${i}`} d={ridgeLine(B, Z + i * 1500 - 300, yRef, (x) => e + 0.07 * noise1(x / 4000, 20 + i))} fill="none" stroke={mix(hedge, haze, k + 0.05)}
+          strokeWidth={Math.max(2, 120 * s0)} strokeLinecap="round" strokeDasharray={`${fx(Math.max(3, 200 * s0))} ${fx(Math.max(2, 90 * s0))}`} />
       ))}
     </g>
   );
@@ -340,7 +356,7 @@ const FieldGround: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       const L = (h + 8) * bp.s, lean = (hash(sd + 8) - 0.5) * 0.5 + sw;
       const tx = bp.x + Math.sin(lean) * L, ty = bp.y - Math.cos(lean) * L;
       seeds.push(`M${fx(bp.x)},${fx(bp.y)} Q${fx(bp.x + Math.sin(lean * 0.5) * L * 0.5)},${fx(bp.y - L * 0.55)} ${fx(tx)},${fx(ty)}`);
-      flowers.push(<ellipse key={`s${k}`} cx={tx} cy={ty} rx={0.9 * bp.s} ry={2.6 * bp.s} transform={`rotate(${fx(deg(lean))},${fx(tx)},${fx(ty)})`} fill="#B79E66" />);
+      flowers.push(<ellipse key={`s${k}`} cx={tx} cy={ty} rx={0.45 * bp.s} ry={1.5 * bp.s} transform={`rotate(${fx(deg(lean))},${fx(tx)},${fx(ty)})`} fill="#CDBB86" />);
     } else if (hash(sd + 11) > 0.84) {
       const L = (h * 0.8) * bp.s;
       const fxp = bp.x + (hash(sd + 12) - 0.5) * 4 * bp.s, fyp = bp.y - L;
@@ -364,16 +380,9 @@ const FieldGround: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         </linearGradient>
       </defs>
       <path d={ground} fill={`url(#${id})`} />
-      {[0, 1, 2, 3, 4, 5].map((i) => {
-        const [a, b] = spanX(B, -600, 0);
-        const sp = 260;
-        const k = Math.floor((a + b) / 2 / sp) + i - 2;
-        const x = k * sp + hash(k * 3.3) * 120;
-        return groundEllipse(B, [x, Y, -560 - 180 * hash(k * 1.9)], 70 + 50 * hash(k * 7.7), 60 + 40 * hash(k * 5.1), rgba(hash(k * 2.2) > 0.5 ? '#4E7F3A' : '#D8E3A0', 0.22), i);
-      })}
       {tufts}
       <path d={browT.join(' ')} fill="#7FA055" />
-      <path d={seeds.join(' ')} fill="none" stroke="#8E9A5A" strokeWidth={Math.max(1, 0.3 * proj(B, [0, Y, Zb]).s)} />
+      <path d={seeds.join(' ')} fill="none" stroke="#9AA466" strokeWidth={Math.max(1, 0.22 * proj(B, [0, Y, Zb]).s)} />
       {flowers}
     </g>
   );
@@ -524,11 +533,11 @@ export const LABSET = {
   wallZ: -72,
   frontZ: 34,
   benchX: [-190, 190] as [number, number],
-  peg: {x0: -150, x1: 92, y0: 9, y1: 96},
+  peg: {x0: -150, x1: 92, y0: 14, y1: 84},
   mat: {x0: -36, x1: 34, z0: -30, z1: 22},
   lamp: {base: [-62, CRADLE.benchY, -50] as V3, elbow: [-66, 33, -58] as V3, head: [-40, 44, -40] as V3, aim: [-10, CRADLE.benchY, -8] as V3},
 };
-const LAB_A = 0.85;
+const LAB_A = 1.5;
 const BY = CRADLE.benchY;
 
 const Wall: React.FC<{B: Basis}> = ({B}) => {
@@ -548,8 +557,8 @@ const Wall: React.FC<{B: Basis}> = ({B}) => {
       <path d={quadZ(B, Z, -600, 600, BY, 400)} fill={`url(#${id})`} />
       <Glow x={lit.x} y={lit.y} r={Math.max(300, 160 * proj(B, [-120, 120, Z]).s)} color="#F4F8FA" a={0.7} />
       {/* backsplash strip */}
-      <path d={quadZ(B, Z + 0.3, -600, 600, BY, BY + 9)} fill="#C3CED5" />
-      <path d={quadZ(B, Z + 0.3, -600, 600, BY + 9, BY + 9.6)} fill="#E9EFF2" />
+      <path d={quadZ(B, Z + 0.3, -600, 600, BY, BY + 4)} fill="#C9D3D9" />
+      <path d={quadZ(B, Z + 0.3, -600, 600, BY + 4, BY + 4.5)} fill="#EEF3F5" />
     </g>
   );
 };
@@ -565,7 +574,7 @@ const Pegboard: React.FC<{B: Basis}> = ({B}) => {
     <g>
       <defs>
         <pattern id={pid} patternUnits="userSpaceOnUse" width={sp} height={sp} patternTransform={`${m} translate(${-o[0] % sp},${o[1] % sp})`}>
-          <circle cx={sp / 2} cy={sp / 2} r={0.33} fill="#8E9DA6" />
+          <circle cx={sp / 2} cy={sp / 2} r={0.3} fill="#9EADB5" />
         </pattern>
       </defs>
       {/* shadow of the panel on the wall */}
@@ -577,7 +586,7 @@ const Pegboard: React.FC<{B: Basis}> = ({B}) => {
     </g>
   );
 };
-/** hand tools hung on the pegboard, drawn flat in the board's plane (local cm, b down) */
+/** hand tools hung on the pegboard, drawn flat in the board's plane (local cm, b down), kept to the sides */
 const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
   const at = (x: number, y: number) => planeMatrix(B, [x, y, Z], [1, 0, 0], [0, -1, 0]);
   const sw = {stroke: '#2E3D48', strokeWidth: 1.2, vectorEffect: NS, strokeLinejoin: 'round' as const};
@@ -586,46 +595,53 @@ const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
       <path d="M-0.4,0 L0.4,0 L0.4,2.2 Q0.4,3.4 1.6,3.4 L1.6,2.6" fill="none" stroke="#56636D" strokeWidth={0.55} strokeLinecap="round" />
     </g>
   );
+  const shadow = (k: string, d: string, tr: string) => <path key={k} d={d} transform={`${tr} translate(0.7,0.9)`} fill="#7D8C95" opacity={0.35} />;
+  const plier = 'M-1.1,0 L1.1,0 L1.6,5.2 L0.6,6.6 L-0.6,6.6 L-1.6,5.2 Z';
+  const gripL = 'M-0.7,6.4 Q-2.4,12 -2.9,20 L-1.2,20.2 Q-0.9,12.5 0,7.6 Z', gripR = 'M0.7,6.4 Q2.4,12 2.9,20 L1.2,20.2 Q0.9,12.5 0,7.6 Z';
+  const wrench = 'M-0.9,4 L0.9,4 L1.1,19 L-1.1,19 Z M-2.7,1.6 A2.9,2.9 0 1,1 2.7,1.6 L1.2,2 L1.2,-0.2 L-1.2,-0.2 L-1.2,2 Z M2.2,20.6 A2.2,2.2 0 1,1 -2.2,20.6 A2.2,2.2 0 1,1 2.2,20.6 Z';
   return (
     <g>
-      {/* pliers */}
-      <g transform={at(-78, 84)}>
-        <path d="M-1.1,0 L1.1,0 L1.6,5.2 L0.6,6.6 L-0.6,6.6 L-1.6,5.2 Z" fill={C.steel} {...sw} />
-        <path d="M-0.7,6.4 Q-2.4,12 -2.9,20 L-1.2,20.2 Q-0.9,12.5 0,7.6 Z" fill="#C2564A" {...sw} />
-        <path d="M0.7,6.4 Q2.4,12 2.9,20 L1.2,20.2 Q0.9,12.5 0,7.6 Z" fill="#C2564A" {...sw} />
+      {/* left: pliers, two screwdrivers, a wrench */}
+      {shadow('s0', `${plier} ${gripL} ${gripR}`, at(-74, 66))}
+      <g transform={at(-74, 66)}>
+        <path d={plier} fill={C.steel} {...sw} />
+        <path d={gripL} fill="#C2564A" {...sw} />
+        <path d={gripR} fill="#C2564A" {...sw} />
         <circle cx={0} cy={6.2} r={0.75} fill={C.steelDeep} />
       </g>
-      {/* two screwdrivers */}
-      {[[-66, '#E0A43A'], [-59, '#4D8DB8']].map(([x, col], i) => (
-        <g key={`sd${i}`} transform={at(x as number, 86 - i * 2)}>
-          <rect x={-1.25} y={0} width={2.5} height={9.5} rx={1.1} fill={col as string} {...sw} />
-          <rect x={-0.9} y={1.2} width={0.55} height={7} rx={0.25} fill="#FFFFFF" opacity={0.45} />
-          <rect x={-0.3} y={9.5} width={0.6} height={10 + i * 3} fill={C.steel} {...sw} />
+      {([[-63, '#E0A43A', 9.5, 10], [-56.5, '#4D8DB8', 8.5, 13]] as [number, string, number, number][]).map(([x, col, hl, sl], i) => (
+        <g key={`sd${i}`}>
+          <rect x={-1.25} y={0.9} width={2.5} height={hl + sl} rx={1} fill="#7D8C95" opacity={0.3} transform={`${at(x, 67)} translate(0.6,0)`} />
+          <g transform={at(x, 67)}>
+            <rect x={-1.25} y={0} width={2.5} height={hl} rx={1.1} fill={col} {...sw} />
+            <rect x={-0.85} y={1.2} width={0.55} height={hl - 2.4} rx={0.25} fill="#FFFFFF" opacity={0.45} />
+            <rect x={-0.3} y={hl} width={0.6} height={sl} fill={C.steel} {...sw} />
+          </g>
         </g>
       ))}
-      {/* an open-end wrench */}
-      <g transform={`${at(-48, 84)} rotate(8)`}>
-        <path d="M-0.9,2.6 L0.9,2.6 L1.1,19 L-1.1,19 Z" fill={C.steel} {...sw} />
-        <path d="M-2.6,0 A2.8,2.8 0 1,1 2.6,0 L1.2,0.4 L1.2,-1.5 L-1.2,-1.5 L-1.2,0.4 Z" fill={C.steel} {...sw} transform="translate(0,1.4)" />
-        <circle cx={0} cy={20.6} r={2.2} fill={C.steel} {...sw} />
+      {shadow('s1', wrench, `${at(-46, 66)} rotate(6)`)}
+      <g transform={`${at(-46, 66)} rotate(6)`}>
+        <path d={wrench} fill={C.steel} fillRule="evenodd" {...sw} />
         <circle cx={0} cy={20.6} r={1.0} fill="#E4E9EA" />
       </g>
-      {/* scissors and a coil of copper wire on the right */}
-      <g transform={at(30, 84)}>
+      {/* right: scissors, a coil of copper wire, a small roll of tape */}
+      <g transform={at(8, 66)}>
         <path d="M-0.5,0 L-1.5,14 L0,14.6 Z" fill={C.steelLit} {...sw} />
         <path d="M0.5,0 L1.5,14 L0,14.6 Z" fill={C.steel} {...sw} />
         <ellipse cx={-2.4} cy={-2.6} rx={2.1} ry={2.6} fill="none" stroke="#3F8E8A" strokeWidth={1.2} />
         <ellipse cx={2.4} cy={-2.6} rx={2.1} ry={2.6} fill="none" stroke="#3F8E8A" strokeWidth={1.2} />
       </g>
-      <g transform={at(52, 80)}>
+      <g transform={at(22, 66)}>
+        <circle cx={0.6} cy={6.9} r={6} fill="none" stroke="#7D8C95" strokeWidth={2.4} opacity={0.3} />
         <circle cx={0} cy={6} r={6} fill="none" stroke={C.copper} strokeWidth={2.4} />
         <circle cx={0} cy={6} r={6} fill="none" stroke="#E7A06E" strokeWidth={0.6} strokeDasharray="1.2 1.4" />
       </g>
-      <g transform={at(70, 84)}>
-        <rect x={-3.2} y={0} width={6.4} height={12} rx={1.4} fill="#E5E1D6" {...sw} />
-        <rect x={-2.2} y={2} width={4.4} height={3} rx={0.6} fill="#9FB4BF" />
+      <g transform={at(36, 64)}>
+        <circle cx={0.6} cy={4.9} r={4.2} fill="#7D8C95" opacity={0.3} />
+        <circle cx={0} cy={4} r={4.2} fill="#E9E4D6" {...sw} />
+        <circle cx={0} cy={4} r={2.2} fill="#C9D2D6" {...sw} />
       </g>
-      {[[-90, 70], [-30, 88], [10, 88], [44, 66], [84, 70], [-110, 88]].map(([x, y], i) => hook(x, y, i))}
+      {[[-86, 58], [-30, 72], [-14, 60], [50, 70], [-100, 72]].map(([x, y], i) => hook(x, y, i))}
     </g>
   );
 };
@@ -659,20 +675,9 @@ const Lamp: React.FC<{B: Basis}> = ({B}) => {
     const q = P(p);
     return <circle key={k} cx={q.x} cy={q.y} r={r * q.s} fill="#56616B" stroke={INK} strokeWidth={1.2} vectorEffect={NS} />;
   };
-  const pool = add3(aim, [0, 0.25, 0]);
-  const pid = uid('wlamp');
+  if (!visible([P(base), P(elbow), P(head), P(rimC)], 900)) return null;
   return (
     <g>
-      <defs>
-        <radialGradient id={pid}>
-          <stop offset={0} stopColor="#FFFFFF" stopOpacity={0.5} />
-          <stop offset={0.5} stopColor="#F6FBFF" stopOpacity={0.22} />
-          <stop offset={1} stopColor="#F6FBFF" stopOpacity={0} />
-        </radialGradient>
-      </defs>
-      <g transform={planeMatrix(B, pool, [1, 0, 0], [0, 0, 1])}>
-        <ellipse cx={0} cy={0} rx={34} ry={30} fill={`url(#${pid})`} />
-      </g>
       <path d={poly(hullPts([...baseTop, ...baseBot]))} fill="#9AA6AE" stroke={INK} strokeWidth={1.6} vectorEffect={NS} />
       <path d={smoothClosed(baseTop)} fill="#E8EDF0" />
       <path d={arm(pivot, elbow, 0.85)} fill="#E9EEF1" stroke={INK} strokeWidth={1.6} vectorEffect={NS} />
@@ -704,10 +709,15 @@ const Bench: React.FC<{B: Basis}> = ({B}) => {
   const major: string[] = [];
   for (let x = mat.x0 + 2; x < mat.x1 - 1; x += 10) major.push(poly(projPoly(B, [[x, gy, mat.z0 + 2], [x, gy, mat.z1 - 2]]), false));
   for (let z = mat.z0 + 2; z < mat.z1 - 1; z += 10) major.push(poly(projPoly(B, [[mat.x0 + 2, gy, z], [mat.x1 - 2, gy, z]]), false));
-  const sid = uid('wshd');
+  const sid = uid('wshd'), pid = uid('wpool');
   return (
     <g>
       <defs>
+        <radialGradient id={pid}>
+          <stop offset={0} stopColor="#FFFFFF" stopOpacity={0.45} />
+          <stop offset={0.5} stopColor="#F6FBFF" stopOpacity={0.2} />
+          <stop offset={1} stopColor="#F6FBFF" stopOpacity={0} />
+        </radialGradient>
         <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={back.x - 200} y1={back.y} x2={front.x + 200} y2={front.y}>
           <stop offset={0} stopColor="#E3D7C2" />
           <stop offset={1} stopColor="#CDBC9F" />
@@ -718,8 +728,15 @@ const Bench: React.FC<{B: Basis}> = ({B}) => {
           <stop offset={1} stopColor="#24333D" stopOpacity={0} />
         </radialGradient>
       </defs>
-      {/* the dark space under the bench, the front edge, the top */}
-      <path d={quadZ(B, zf - 3, x0, x1, BY - 90, BY - 3.6)} fill="#46525B" />
+      {/* drawer cabinets under the bench, the front edge, the top */}
+      <path d={quadZ(B, zf - 3, x0, x1, BY - 90, BY - 3.6)} fill="#A9B6BE" />
+      <path d={[-150, -90, -30, 30, 90, 150].map((x) => poly(projPoly(B, [[x, BY - 4, zf - 2.9], [x, BY - 90, zf - 2.9]]), false)).join(' ') + ' ' + [-22, -40].map((y) => poly(projPoly(B, [[x0, BY + y, zf - 2.9], [x1, BY + y, zf - 2.9]]), false)).join(' ')}
+        stroke="#7E8D97" strokeWidth={2} vectorEffect={NS} />
+      {[-120, -60, 0, 60, 120].map((x) => [-13, -31].map((y) => {
+        const a = proj(B, [x - 6, BY + y, zf - 2.6]), b = proj(B, [x + 6, BY + y, zf - 2.6]);
+        return <path key={`${x}_${y}`} d={`M${P2(a)} L${P2(b)}`} stroke="#E6ECEF" strokeWidth={Math.max(1.5, 1.4 * a.s)} strokeLinecap="round" />;
+      }))}
+      <path d={quadZ(B, zf - 2.8, x0, x1, BY - 9, BY - 3.6)} fill="#6F7E88" opacity={0.55} />
       <path d={quadZ(B, zf, x0, x1, BY - 3.6, BY)} fill="#A8987C" />
       <path d={quadY(B, BY, x0, x1, zb, zf)} fill={`url(#${id})`} />
       <path d={poly(projPoly(B, [[x0, BY, zf], [x1, BY, zf]]), false)} stroke="#F4EDE0" strokeWidth={1.6} vectorEffect={NS} opacity={0.9} />
@@ -730,6 +747,10 @@ const Bench: React.FC<{B: Basis}> = ({B}) => {
       <path d={quadY(B, BY + 0.28, mat.x0 + 0.6, mat.x1 - 0.6, mat.z0 + 0.6, mat.z1 - 0.6)} fill="#3E8A72" />
       <path d={grid.join(' ')} fill="none" stroke="#CFEBDD" strokeWidth={0.8} opacity={0.32} vectorEffect={NS} />
       <path d={major.join(' ')} fill="none" stroke="#E4F5EC" strokeWidth={1.3} opacity={0.42} vectorEffect={NS} />
+      {/* the lamp's light pool */}
+      <g transform={planeMatrix(B, add3(LABSET.lamp.aim, [0, 0.4, 0]), [1, 0, 0], [0, 0, 1])}>
+        <ellipse cx={0} cy={0} rx={34} ry={30} fill={`url(#${pid})`} />
+      </g>
       {/* the bird's and cradle's soft shadow on the mat (the bird sits at the origin in every lab shot) */}
       <g transform={planeMatrix(B, [-1, BY + 0.35, -3], [1, 0, 0], [0, 0, 1])}>
         <ellipse cx={0} cy={0} rx={24} ry={11} fill={`url(#${sid})`} />
@@ -748,7 +769,7 @@ export const LabBack: React.FC<Env> = ({B}) => {
         <Wall B={B} />
         <Pegboard B={B} />
       </Soft>
-      <Soft px={coc(B, benchD, LAB_A)}>
+      <Soft px={Math.max(coc(B, benchD, LAB_A), 0.8 * coc(B, depth(B, [0, BY, 20]), LAB_A))}>
         <Bench B={B} />
       </Soft>
       <Soft px={coc(B, lampD, LAB_A)}>
@@ -763,7 +784,7 @@ export const LabFront: React.FC<Env> = ({B}) => {
   const d = depth(B, [-20, BY, 26]);
   const sd0 = P([-50, BY + 0.9, 27]), sd1 = P([-40, BY + 0.9, 24]), sd2 = P([-30, BY + 0.5, 21]);
   const tw0 = P([20, BY + 0.4, 28]), tw1 = P([33, BY + 0.4, 23]);
-  if (Math.max(sd0.y, sd2.y, tw0.y) < 0 || Math.min(sd0.y, tw1.y) > H + 300) return null;
+  if (!visible([sd0, sd1, sd2, tw0, tw1], 300)) return null;
   const sh = (a: SP, b: SP) => capsule({x: a.x, y: a.y + 0.6 * a.s}, {x: b.x, y: b.y + 0.6 * b.s}, 0.9 * a.s, 0.9 * b.s);
   return (
     <Soft px={coc(B, d, LAB_A)}>
@@ -799,32 +820,40 @@ const MEADOW_SKY: [number, string][] = [
 ];
 const nearBank = (x: number) => MEADOW.nearBankZ + 70 * noise1(x / 520, 31) + 25 * noise1(x / 130, 32);
 const farBank = (x: number) => MEADOW.farBankZ + 110 * noise1(x / 700, 33) + 35 * noise1(x / 160, 34);
-/** a reed clump: tall leaves and stems with plume heads (two paths: green body, plumes) */
-const reedClump = (b: SP, h: number, seed: number, sway: number, n = 9) => {
+/** a reed clump (common reed): stems and long leaves with soft drooping plumes; two paths: green body, plumes */
+const reedClump = (b: SP, h: number, seed: number, sway: number, n = 12, wcm = 1.3, plume = 1) => {
   let leaves = '';
   let plumes = '';
   for (let i = 0; i < n; i++) {
     const u = i / (n - 1) - 0.5;
-    const hi = h * (0.62 + 0.38 * hash(seed + i * 1.9));
+    const hi = h * (0.6 + 0.4 * hash(seed + i * 1.9));
     const L = hi * b.s;
-    const lean = u * 0.32 + (hash(seed + i * 2.7) - 0.5) * 0.18 + sway;
-    const bx = b.x + u * 26 * b.s, by = b.y;
+    const lean = u * 0.36 + (hash(seed + i * 2.7) - 0.5) * 0.2 + sway * (0.7 + 0.6 * hash(seed + i));
+    const bx = b.x + u * 34 * b.s + (hash(seed + i * 3.9) - 0.5) * 8 * b.s, by = b.y + (hash(seed + i * 4.9) - 0.5) * 6 * b.s;
     const tx = bx + Math.sin(lean) * L, ty = by - Math.cos(lean) * L;
-    const w = 0.9 * b.s;
-    leaves += `M${fx(bx - w)},${fx(by)} Q${fx(bx + Math.sin(lean * 0.4) * L * 0.5)},${fx(by - L * 0.5)} ${fx(tx)},${fx(ty)} Q${fx(bx + Math.sin(lean * 0.4) * L * 0.5 + w)},${fx(by - L * 0.5)} ${fx(bx + w)},${fx(by)} Z `;
-    // a leaf blade angled off the stem
-    if (hash(seed + i * 4.3) > 0.35) {
-      const f = 0.35 + 0.35 * hash(seed + i * 5.1);
+    const w = wcm * b.s * (0.7 + 0.5 * hash(seed + i * 1.1));
+    const mx = bx + Math.sin(lean * 0.4) * L * 0.5, my = by - L * 0.5;
+    leaves += `M${fx(bx - w)},${fx(by)} Q${fx(mx - w * 0.5)},${fx(my)} ${fx(tx)},${fx(ty)} Q${fx(mx + w * 0.5)},${fx(my)} ${fx(bx + w)},${fx(by)} Z `;
+    // long leaves angled off the stem, arching over
+    for (let j = 0; j < 2; j++) {
+      if (hash(seed + i * 4.3 + j * 9.1) < 0.3) continue;
+      const f = 0.25 + 0.45 * hash(seed + i * 5.1 + j * 3.3);
       const sx = bx + (tx - bx) * f, sy = by + (ty - by) * f;
-      const dir = hash(seed + i * 6.1) > 0.5 ? 1 : -1;
-      const ll = L * 0.32, ang = lean + dir * (0.7 + 0.3 * hash(seed + i));
-      const ex = sx + Math.sin(ang) * ll, ey = sy - Math.cos(ang) * ll * 0.8 + ll * 0.25;
-      leaves += `M${fx(sx)},${fx(sy - w)} Q${fx(sx + (ex - sx) * 0.5)},${fx(sy + (ey - sy) * 0.5 - 2.4 * w)} ${fx(ex)},${fx(ey)} Q${fx(sx + (ex - sx) * 0.5)},${fx(sy + (ey - sy) * 0.5)} ${fx(sx)},${fx(sy + w)} Z `;
+      const dir = hash(seed + i * 6.1 + j * 1.7) > 0.5 ? 1 : -1;
+      const ll = L * (0.28 + 0.16 * hash(seed + i + j * 5.5)), ang = lean + dir * (0.55 + 0.35 * hash(seed + i * 2 + j));
+      const ex = sx + Math.sin(ang) * ll, ey = sy - Math.cos(ang) * ll * 0.7 + ll * 0.18;
+      const cx = sx + Math.sin(ang) * ll * 0.45, cy = sy - Math.cos(ang) * ll * 0.62;
+      const lw = w * 1.5;
+      leaves += `M${fx(sx)},${fx(sy - lw)} Q${fx(cx)},${fx(cy - lw)} ${fx(ex)},${fx(ey)} Q${fx(cx)},${fx(cy + lw)} ${fx(sx)},${fx(sy + lw)} Z `;
     }
-    if (hash(seed + i * 7.7) > 0.3) {
-      const pl = 18 * b.s * (0.8 + 0.4 * hash(seed + i * 8.3)), pw = 3.2 * b.s;
-      const cx = tx + Math.sin(lean) * pl * 0.36, cy = ty - Math.cos(lean) * pl * 0.36;
-      plumes += ellPath(cx, cy, pl / 2, pw, deg(Math.atan2(-Math.cos(lean), Math.sin(lean)))) + ' ';
+    if (plume > 0 && hash(seed + i * 7.7) > 0.32) {
+      // a soft plume: a drooping teardrop from the stem tip
+      const pl = 20 * plume * b.s * (0.8 + 0.4 * hash(seed + i * 8.3)), pw = 3.6 * plume * b.s;
+      const dx = Math.sin(lean), dy = -Math.cos(lean), nx = -dy, ny = dx;
+      const droop = (hash(seed + i * 9.1) > 0.5 ? 1 : -1) * pl * 0.28;
+      const ax = tx + dx * pl + nx * droop, ay = ty + dy * pl + ny * droop + pl * 0.12;
+      const mx2 = tx + dx * pl * 0.45, my2 = ty + dy * pl * 0.45;
+      plumes += `M${fx(tx)},${fx(ty)} Q${fx(mx2 + nx * pw * 1.6)},${fx(my2 + ny * pw * 1.6)} ${fx(ax)},${fx(ay)} Q${fx(mx2 - nx * pw * 1.2)},${fx(my2 - ny * pw * 1.2)} ${fx(tx)},${fx(ty)} Z `;
     }
   }
   return {leaves, plumes};
@@ -841,7 +870,6 @@ const MeadowFar: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       <path d={ridge(B, Zt, yr, (x) => trees(x) - 0.25, -8)} fill={mix('#5E8577', M_HAZE, 0.42)} />
       <path d={blobsPath(cr)} fill={mix('#5E8577', M_HAZE, 0.42)} />
       <path d={blobsPath(hl)} fill={mix('#82A88E', M_HAZE, 0.42)} />
-      <CloudLayer B={B} Z={-20000} yRef={yr} spacing={3000} elLo={-1.4} elHi={-1.9} size={260} seed={45} t={t} drift={0} lit={mix('#E9EFE2', M_HAZE, 0.3)} body={mix('#D9E4D6', M_HAZE, 0.4)} shade={mix('#C7D6CC', M_HAZE, 0.4)} keep={0.9} flat={0.22} />
     </g>
   );
 };
@@ -868,20 +896,20 @@ const MeadowFarGround: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const rows = [MEADOW.edgeZ + 300, -5400, -4700, MEADOW.farBankZ - 180];
   rows.forEach((z, ri) => {
     const [a, b] = spanX(B, z, 300);
-    const sp = 560 + ri * 60;
+    const sp = 420 + ri * 50;
     lat(a, b, sp).forEach((k) => {
       const sd = k * 11.3 + ri * 71.1 + 3;
-      if (hash(sd) < 0.25) return;
+      if (hash(sd) < 0.18) return;
       const x = k * sp + (hash(sd + 1) - 0.5) * sp * 0.6;
       const zz = ri === 3 ? farBank(x) - 60 - 60 * hash(sd + 4) : z + (hash(sd + 2) - 0.5) * 200;
       const bp = proj(B, [x, Y, zz]);
       const h = 150 + 90 * hash(sd + 3);
-      const {leaves, plumes} = reedClump(bp, h, sd, 0.04 * Math.sin(t * 1.3 + x * 0.004), 9 + Math.floor(hash(sd + 5) * 5));
+      const {leaves, plumes} = reedClump(bp, h, sd, 0.04 * Math.sin(t * 1.3 + x * 0.004), 12 + Math.floor(hash(sd + 5) * 8), 1.5);
       const k2 = 0.25 + 0.2 * (1 - ri / 3);
       clumps.push(
         <g key={`${ri}_${k}`}>
           <path d={leaves} fill={mix(ri % 2 ? '#7E9C55' : '#6F9150', M_HAZE, k2)} />
-          <path d={plumes} fill={mix('#B59C80', M_HAZE, k2)} />
+          <path d={plumes} fill={mix('#C2A98C', M_HAZE, k2)} />
         </g>,
       );
     });
@@ -969,7 +997,12 @@ const MeadowNear: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       const zz = z + (hash(sd + 1) - 0.5) * 100;
       if (zz < nearBank(x) + 20) return;
       if (hash(sd + 6) > 0.86) {
-        pools.push(groundEllipse(B, [x, Y + 0.5, zz], 50 + 60 * hash(sd + 7), 22 + 30 * hash(sd + 8), '#9CCAD6', `p${ri}_${k}`));
+        pools.push(
+          <g key={`p${ri}_${k}`} transform={planeMatrix(B, [x, Y + 0.5, zz], [1, 0, 0], [0, 0, 1])}>
+            <ellipse cx={0} cy={0} rx={60 + 70 * hash(sd + 7)} ry={26 + 34 * hash(sd + 8)} fill="#A4D0DA" stroke="#5F7F4C" strokeWidth={2} strokeOpacity={0.45} vectorEffect={NS} />
+            <ellipse cx={0} cy={6} rx={(60 + 70 * hash(sd + 7)) * 0.7} ry={(26 + 34 * hash(sd + 8)) * 0.5} fill="#C8E4EA" opacity={0.6} />
+          </g>,
+        );
         return;
       }
       const bp = proj(B, [x, Y, zz]);
@@ -1031,26 +1064,38 @@ export const MeadowFront: React.FC<Env> = ({B, t}) => {
   const Y = MEADOW.groundY;
   const zF = 240;
   const [lo, hi] = spanX(B, zF, 250);
-  const sp = 210;
+  const sp = 190;
   const items: React.ReactNode[] = [];
   let dsum = 0, n = 0;
   lat(lo, hi, sp).forEach((k) => {
     const sd = k * 9.7 + 5;
-    if (hash(sd) < 0.3) return;
+    if (hash(sd) < 0.25) return;
     const x = k * sp + (hash(sd + 1) - 0.5) * sp * 0.5;
     const z = zF + (hash(sd + 2) - 0.5) * 120;
     const b = proj(B, [x, Y, z]);
     if (b.z < 30) return;
     dsum += b.z;
     n++;
-    const h = 175 + 40 * hash(sd + 3);
-    const {leaves, plumes} = reedClump(b, h, sd, 0.05 * Math.sin(t * 1.7 + k), 6);
+    const h = 165 + 45 * hash(sd + 3);
+    const sw = 0.05 * Math.sin(t * 1.7 + k);
+    const blades = tuftPath(b, h, 7, sd, sw, 1.1, 0.5);
+    // a couple of grass seed stalks with small heads
+    let stalks = '';
+    let heads = '';
+    for (let i = 0; i < 2; i++) {
+      const L = (h + 15 + 20 * hash(sd + i * 3)) * b.s, lean = (hash(sd + i * 5) - 0.5) * 0.35 + sw;
+      const bx = b.x + (i - 0.5) * 14 * b.s;
+      const tx = bx + Math.sin(lean) * L, ty = b.y - Math.cos(lean) * L;
+      stalks += `M${fx(bx)},${fx(b.y)} Q${fx(bx + Math.sin(lean * 0.5) * L * 0.5)},${fx(b.y - L * 0.55)} ${fx(tx)},${fx(ty)} `;
+      heads += ellPath(tx + Math.sin(lean) * 5 * b.s, ty - Math.cos(lean) * 5 * b.s, 6 * b.s, 1.1 * b.s, deg(Math.atan2(-Math.cos(lean), Math.sin(lean)))) + ' ';
+    }
     for (const u of [1, 0.5, 0]) {
       const dx = FIELD.V * (1 / 60) * u * b.s; // the tracking camera's shutter smear
       items.push(
         <g key={`${k}_${u}`} transform={`translate(${fx(dx)},0)`} opacity={u === 0 ? 1 : u === 0.5 ? 0.4 : 0.2}>
-          <path d={leaves} fill="#55703F" />
-          <path d={plumes} fill="#8C7660" />
+          <path d={blades} fill="#4E6B3C" />
+          <path d={stalks} fill="none" stroke="#5E7444" strokeWidth={Math.max(1, 0.5 * b.s)} />
+          <path d={heads} fill="#6B7E4A" />
         </g>,
       );
     }
@@ -1093,6 +1138,7 @@ export const SkyBack: React.FC<Env> = ({B, t}) => {
         <path d={ridge(B, Zt, yr, (x) => trees(x) - 0.28, -16)} fill={mix('#56724F', S_HAZE, 0.38)} />
         <path d={blobsPath(cr)} fill={mix('#56724F', S_HAZE, 0.38)} />
         <path d={blobsPath(hl)} fill={mix('#8DA06A', S_HAZE, 0.36)} />
+        <Valley B={B} Z={-60000} yRef={yr} tops={[-8.62, -9.15, -9.85, -10.8, -12]} cols={['#A7AE76', '#C2B783', '#99A66E', '#B9B27E']} haze={S_HAZE} k={0.42} hedge="#5E6E48" />
       </Soft>
       <Soft px={coc(B, 1.5e5, SKY_A) * 1.4}>
         <CloudLayer B={B} Z={-150000} yRef={yr} spacing={26000} elLo={-3.4} elHi={-6.6} size={4200} seed={22} t={t} drift={400} lit="#FFF3E2" body="#F5E3D2" shade="#D7C2C6" keep={0.5} flat={0.36} />

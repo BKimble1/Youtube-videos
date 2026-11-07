@@ -273,6 +273,59 @@ const slab = (
   return faceD;
 };
 
+/** an exact extrusion of a planar profile (body-local, closed) along E: the swept region is the union of the two end
+ *  caps and one quad per profile edge, all wound alike; one ink underlay of that union, then the camera-facing side
+ *  strips shaded by their normals (far first), then the visible end cap. */
+const shoelace = (q: V2[]) => {
+  let a = 0;
+  for (let i = 0; i < q.length; i++) {
+    const u = q[i], v = q[(i + 1) % q.length];
+    a += u.x * v.y - v.x * u.y;
+  }
+  return a;
+};
+const wound = (q: V2[]) => (shoelace(q) >= 0 ? q : [...q].reverse());
+const sweepRegion = (c: Ctx, prof: V3[], E: V3) => {
+  const n = prof.length;
+  const P0 = prof.map((p) => pj(c, p)), P1 = prof.map((p) => pj(c, add3(p, E)));
+  const subs = [poly(wound(P0)), poly(wound(P1))];
+  for (let i = 0; i < n; i++) {
+    const j = (i + 1) % n;
+    subs.push(poly(wound([P0[i], P0[j], P1[j], P1[i]])));
+  }
+  return {d: subs.join(' '), P0, P1};
+};
+const sweep = (c: Ctx, prof: V3[], E: V3, t: Tone, face?: string): El[] => {
+  const out: El[] = [];
+  const {d, P0, P1} = sweepRegion(c, prof, E);
+  out.push(<path key={key(c)} d={d} fill={INK} stroke={INK} strokeWidth={2 * c.ink} strokeLinejoin="round" vectorEffect={NS} />);
+  out.push(<path key={key(c)} d={d} fill={t.deep} />);
+  const np = norm3(E);
+  let A = 0;
+  for (let i = 1; i < prof.length - 1; i++) A += dot3(cross3(sub3(prof[i], prof[0]), sub3(prof[i + 1], prof[0])), np);
+  const strips: {z: number; q: V2[]; col: string}[] = [];
+  for (let i = 0; i < prof.length; i++) {
+    const j = (i + 1) % prof.length;
+    const dd = sub3(prof[j], prof[i]);
+    if (len3(dd) < 1e-6) continue;
+    const nOut = norm3(A > 0 ? cross3(dd, np) : cross3(np, dd));
+    const ctr = add3(mul3(add3(prof[i], prof[j]), 0.5), mul3(E, 0.5));
+    const nw = xfv(c.F, nOut);
+    if (facing(c.B, xf(c.F, ctr), nw) <= 0) continue;
+    const lv = dot3(nw, c.L3);
+    const col = lv > 0 ? mix(t.base, t.lit, clamp(lv * 1.2)) : mix(t.base, t.deep, clamp(-lv * 1.1));
+    strips.push({z: pj(c, ctr).z, q: [P0[i], P0[j], P1[j], P1[i]], col});
+  }
+  strips.sort((a, b) => b.z - a.z);
+  for (const st of strips) out.push(<path key={key(c)} d={poly(st.q)} fill={st.col} stroke={st.col} strokeWidth={0.8} strokeLinejoin="round" />);
+  const cen = prof.reduce((a, p) => add3(a, mul3(p, 1 / prof.length)), [0, 0, 0] as V3);
+  const capFar = facing(c.B, xf(c.F, add3(cen, E)), xfv(c.F, np)) > 0;
+  const cap = capFar ? P1 : P0;
+  const bb = bbox(cap);
+  out.push(<path key={key(c)} d={poly(cap)} fill={face ?? litGrad(c, bb.m, bb.R, t, 0.5)} stroke={INK} strokeWidth={c.line} strokeOpacity={0.85} strokeLinejoin="round" vectorEffect={NS} />);
+  return out;
+};
+
 // ------------------------------------------------------------------ gear geometry (body-local, exported for checks)
 /** tooth profile: [radial offset from the pitch circle in modules, half-width as a fraction of the angular pitch] */
 // (checked numerically over a full crank turn: meshing outlines never overlap; the pitch-circle backlash is ~12%)
@@ -440,7 +493,7 @@ const PLATE_BACK = PLATE.z - PLATE.th;
 const BRACKET = {y0: 4.0, y1: 5.15, w: 0.9};
 const KNUCKLE = {hw: 0.62, r: 0.4};
 /** rod-end eyes: radius, half-length along their pin */
-const EYE = {r: 0.34, hl: 0.13};
+const EYE = {r: 0.36, hl: 0.13};
 const SPAR_DRAWN = 6; // cm from the hinge (the Bird module draws the wings)
 
 /** wires from the motor's terminals back toward the rear of the body (kept inside the body volumes) */
@@ -553,13 +606,27 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
     K = Math.max(K, Math.ceil(sweep / (tau * 0.2)));
   }
   K = Math.min(K, Math.round(3 + 4 * c.det));
+  // a gear turning more than about half a tooth pitch per exposure smears: its teeth become a translucent band
+  // (no ink on the copies) bounded by soft tip and root circles; slower gears keep crisp inked copies
+  const smear: Record<string, boolean> = {};
+  for (const id of ids) smear[id] = K > 1 && (Math.abs(omega[id]) * SHUTTER) / ((2 * Math.PI) / GEARS[id].n) > 0.55;
   const out: El[] = [];
   for (let i = 0; i < K; i++) {
     const L = layers();
     const dt = K === 1 ? 0 : (i / (K - 1) - 0.5) * SHUTTER;
-    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0, i === 0 ? 1 : 0.3);
+    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0, smear[id] ? 0 : i === 0 ? 1 : 0.3);
     // equal-weight accumulation: copy i drawn at 1/(i+1) over the running average
     out.push(<g key={key(c)} opacity={K === 1 ? undefined : f2(1 / (i + 1))}>{flat(L)}</g>);
+  }
+  for (const id of ids) {
+    if (!smear[id]) continue;
+    const G = GEARS[id];
+    const front = facing(c.B, xf(c.F, [G.c[0], G.c[1], G.z1]), xfv(c.F, [0, 0, 1])) > 0;
+    const zf = front ? G.z1 : G.z0;
+    const tip = ring3(c, [G.c[0], G.c[1], zf], [1, 0, 0], [0, 1, 0], G.r + MOD * 0.9, 48);
+    const root = ring3(c, [G.c[0], G.c[1], zf], [1, 0, 0], [0, 1, 0], G.r - 1.1 * MOD, 48);
+    out.push(lineP(c, poly(tip), c.ink * 0.9, INK, 0.55));
+    out.push(lineP(c, poly(root), c.line, INK, 0.35));
   }
   for (const id of ids) out.push(...gearTop(c, GEARS[id], ps.gear[id], K > 1 ? omega[id] * SHUTTER : 0));
   return out;
@@ -644,12 +711,22 @@ const sparSeg = (c: Ctx, W: WingFrame, a: number, b: number, o: CylOpt = {}): El
   cyl(c, add3(W.o, mul3(W.ex, a)), add3(W.o, mul3(W.ex, b)), SPAR.r, CARBON, {n: 16, spec: 0.35, ...o});
 const collar = (c: Ctx, W: WingFrame, a: number): El[] =>
   cyl(c, add3(W.o, mul3(W.ex, a - 0.07)), add3(W.o, mul3(W.ex, a + 0.07)), SPAR.r + 0.09, STEEL, {n: 16, spec: 0, ink: c.line});
-/** the rod-end eye on a spar: a short housing coaxial with the spar, centred exactly at the lever point */
-const topEye = (c: Ctx, W: WingFrame, glowAmt: number): El[] =>
-  cyl(c, add3(W.o, mul3(W.ex, LEVER - EYE.hl)), add3(W.o, mul3(W.ex, LEVER + EYE.hl)), EYE.r, ROD, {n: 22, spec: 0.3, glow: glowAmt});
+/** a rod-end eye: a short housing on axis a-b with the dark ring of its ball bearing on the face toward the camera */
+const eye = (c: Ctx, a: V3, b: V3, glowAmt: number): El[] => {
+  const out = cyl(c, a, b, EYE.r, ROD, {n: 22, spec: 0.3, glow: glowAmt});
+  if (c.det > 0.3) {
+    const d = norm3(sub3(b, a));
+    const end = facing(c.B, xf(c.F, b), xfv(c.F, d)) > 0 ? b : a;
+    const [e1, e2] = perpBasis(d);
+    const s = pj(c, end).s;
+    out.push(lineP(c, poly(ring3(c, end, e1, e2, EYE.r * 0.62, 20)), clamp(0.07 * s, 1, 5), C.dark, 0.75));
+  }
+  return out;
+};
+/** the rod-end eye on a spar: coaxial with the spar, centred exactly at the lever point */
+const topEye = (c: Ctx, W: WingFrame, glowAmt: number): El[] => eye(c, add3(W.o, mul3(W.ex, LEVER - EYE.hl)), add3(W.o, mul3(W.ex, LEVER + EYE.hl)), glowAmt);
 /** the rod-end eye on the crank pin (axis z) */
-const pinEye = (c: Ctx, p: V3, glowAmt: number): El[] =>
-  cyl(c, [p[0], p[1], p[2] - EYE.hl], [p[0], p[1], p[2] + EYE.hl], EYE.r, ROD, {n: 22, spec: 0.3, glow: glowAmt});
+const pinEye = (c: Ctx, p: V3, glowAmt: number): El[] => eye(c, [p[0], p[1], p[2] - EYE.hl], [p[0], p[1], p[2] + EYE.hl], glowAmt);
 const rodBar = (c: Ctx, a: V3, b: V3, glowAmt: number): El[] => cyl(c, a, b, 0.135, ROD, {n: 14, spec: 0.7, caps: 'none', glow: glowAmt});
 
 const hingeAssembly = (c: Ctx, ps: Pose, glowNear: number): {back: El[]; front: El[]} => {
@@ -780,67 +857,43 @@ const crSection = (x: number) => {
     return [O[1] + d[1] * r, d[2] * r];
   };
 };
-/** the near half (z >= 0) of one support, as (y, z) polygons whose first and last points sit on the cut plane z = 0:
- *  the foam liner, and the U saddle block under it */
+/** one support's profiles (y, z): the foam liner (a band on the body's underside), the U saddle block under it, and
+ *  the near arm alone (the part that wraps the near flank, for the front layer) */
 const crProfiles = (x: number) => {
   const at = crSection(x);
   const N = CR.n, tm = CR.tmax;
-  const ts = Array.from({length: N + 1}, (_, i) => (i / N) * tm);
+  const ts = Array.from({length: 2 * N + 1}, (_, i) => ((i - N) / N) * tm); // -tm .. tm
   const pad: YZ[] = [...ts.map((t) => at(t, 0)), ...[...ts].reverse().map((t) => at(t, CR.padT))];
   const yBot = at(0, CR.padT)[0] - CR.baseT;
-  const side = at(tm * 0.5, CR.padT + CR.armT);
-  const block: YZ[] = [...ts.map((t) => at(t, CR.padT))];
-  // rounded arm tip
+  // one side of the block (z >= 0), from the saddle's centre line out over the arm tip and down the wall to the base
   const tipIn = at(tm, CR.padT), tipOut = at(tm, CR.padT + CR.armT);
   const tc: YZ = [(tipIn[0] + tipOut[0]) / 2, (tipIn[1] + tipOut[1]) / 2];
   const tr = Math.hypot(tipOut[0] - tipIn[0], tipOut[1] - tipIn[1]) / 2;
   const a0 = Math.atan2(tipIn[0] - tc[0], tipIn[1] - tc[1]);
+  const tip: YZ[] = [];
   for (let i = 1; i < 6; i++) {
     const a = a0 - (i / 6) * Math.PI;
-    block.push([tc[0] + tr * Math.sin(a), tc[1] + tr * Math.cos(a)]);
+    tip.push([tc[0] + tr * Math.sin(a), tc[1] + tr * Math.cos(a)]);
   }
-  for (let i = N; i >= N / 2; i--) block.push(at((i / N) * tm, CR.padT + CR.armT));
-  // the outer wall down to a flat base with rounded corners
+  const outerArm: YZ[] = [];
+  for (let i = N; i >= N / 2; i--) outerArm.push(at((i / N) * tm, CR.padT + CR.armT));
+  const side = outerArm[outerArm.length - 1];
   const zb = side[1] * 0.96;
-  block.push([lerp(side[0], yBot, 0.55), zb + 0.04]);
-  block.push([yBot + 0.35, zb]);
-  block.push([yBot + 0.08, zb - 0.12]);
-  block.push([yBot, zb - 0.38]);
-  block.push([yBot, 0]);
-  return {pad, block, yBot};
+  const wall: YZ[] = [[lerp(side[0], yBot, 0.55), zb + 0.04], [yBot + 0.35, zb], [yBot + 0.08, zb - 0.12], [yBot, zb - 0.38]];
+  const half: YZ[] = [];
+  for (let i = 0; i <= N; i++) half.push(at((i / N) * tm, CR.padT));
+  half.push(...tip, ...outerArm, ...wall);
+  const mir = (p: YZ): YZ => [p[0], -p[1]];
+  const block: YZ[] = [...half, ...[...half].reverse().map(mir).slice(0, -1)];
+  // the near arm: from 18 degrees up (below that the liner lies under the belly), down the wall to the base
+  const t18 = (18 * Math.PI) / 180;
+  const arm: YZ[] = [];
+  for (let i = 0; i <= N; i++) arm.push(at(lerp(t18, tm, i / N), -0.05));
+  arm.push(...tip, ...outerArm, ...wall, [yBot, at(t18, 0)[1]]);
+  return {pad, block, arm, yBot};
 };
 const CR_PROF = CRADLE.xs.map((x) => ({x, ...crProfiles(x)}));
-
-type Half = 1 | -1;
-/** a half-profile extruded along x (half-thickness hx); its ink stays open along the cut (z = 0) so the two halves
- *  join seamlessly. grad: the face fill, shared by both halves */
-const crExtrude = (c: Ctx, x: number, hx: number, prof: YZ[], side: Half, face: string, sideCol: string, maxS = 7): El[] => {
-  const L = layers();
-  const camPlusX = dot3(sub3(c.B.eye, xf(c.F, [x, -10, 0])), xfv(c.F, [1, 0, 0])) > 0;
-  const xf0 = camPlusX ? x + hx : x - hx, xb0 = camPlusX ? x - hx : x + hx;
-  const pts = (xx: number) => prof.map(([y, z]) => pj(c, [xx, y, side * z]));
-  const p0 = pj(c, [xf0, -10, 0]), p1 = pj(c, [xb0, -10, 0]);
-  const dpx = Math.hypot(p1.x - p0.x, p1.y - p0.y);
-  const nS = dpx < 0.4 ? 0 : Math.max(1, Math.min(maxS, Math.ceil(dpx / 1.8)));
-  const openD = (r: V2[]) => `M${r.map((p) => `${f2(p.x)},${f2(p.y)}`).join(' L')}`;
-  for (let i = nS; i >= 0; i--) {
-    const r = pts(lerp(xf0, xb0, nS ? i / nS : 0));
-    L.under.push(<path key={key(c)} d={openD(r)} fill="none" stroke={INK} strokeWidth={2 * c.ink} strokeLinejoin="round" strokeLinecap="butt" vectorEffect={NS} />);
-    if (i > 0) L.side.push(fillP(c, poly(r), sideCol));
-  }
-  const fr = pts(xf0);
-  L.face.push(<path key={key(c)} d={poly(fr)} fill={face} />);
-  L.face.push(<path key={key(c)} d={openD(fr)} fill="none" stroke={INK} strokeWidth={c.line} strokeOpacity={0.85} strokeLinejoin="round" vectorEffect={NS} />);
-  return flat(L);
-};
-/** the face gradient of a support part, from the full (both halves) profile so the halves match */
-const crFace = (c: Ctx, x: number, hx: number, prof: YZ[], t: Tone) => {
-  const camPlusX = dot3(sub3(c.B.eye, xf(c.F, [x, -10, 0])), xfv(c.F, [1, 0, 0])) > 0;
-  const xx = camPlusX ? x + hx : x - hx;
-  const pts = [...prof.map(([y, z]) => pj(c, [xx, y, z])), ...prof.map(([y, z]) => pj(c, [xx, y, -z]))];
-  const bb = bbox(pts);
-  return litGrad(c, bb.m, bb.R, t, 0.5);
-};
+const crProf3 = (x: number, prof: YZ[]): V3[] => prof.map(([y, z]) => [x, y, z] as V3);
 
 /** the lab's padded two-U support under the body (rig.ts CRADLE), standing on the bench at `base` (world).
  *  layer: 'back' = base board, crossbar and the far halves; 'front' = the near halves (the arms that wrap the near
@@ -854,11 +907,11 @@ export const Cradle: React.FC<{B: Basis; F: Frame; base: V3; layer?: 'all' | 'ba
   c.line = LINE_PX;
   const back: El[] = [], front: El[] = [];
   const yb = CRADLE.benchY + CR.boardT;
-  const blockSide = mix(RIB.base, RIB.deep, 0.45), padSide = mix(PAD.deep, INK, 0.15);
-  const faces = CR_PROF.map((p) => ({
-    block: crFace(c, p.x, CRADLE.padW / 2, p.block, RIB),
-    pad: crFace(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, PAD),
-  }));
+  const hx = CRADLE.padW / 2;
+  const saddle = (p: (typeof CR_PROF)[number]): El[] => [
+    ...sweep(c, crProf3(p.x - hx, p.block), [2 * hx, 0, 0], RIB),
+    ...sweep(c, crProf3(p.x - hx + 0.12, p.pad), [2 * hx - 0.24, 0, 0], PAD),
+  ];
   if (layer !== 'front') {
     const I: [V3, V3, V3] = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
     const bx = CR.boardX;
@@ -868,15 +921,19 @@ export const Cradle: React.FC<{B: Basis; F: Frame; base: V3; layer?: 'all' | 'ba
       back.push(...cyl(c, [p.x, yb, 0], [p.x, yb + 0.18, 0], 0.85, RIB, {n: 24, spec: 0}));
       back.push(...cyl(c, [p.x, yb + 0.18, 0], [p.x, p.yBot + 0.05, 0], CR.postR, RIB, {n: 18, spec: 0.6, caps: 'none'}));
     });
-    CR_PROF.forEach((p, i) => {
-      back.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.block, -1, faces[i].block, blockSide));
-      back.push(...crExtrude(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, -1, faces[i].pad, padSide));
-    });
+    CR_PROF.forEach((p) => back.push(...saddle(p)));
   }
   if (layer !== 'back') {
-    CR_PROF.forEach((p, i) => {
-      front.push(...crExtrude(c, p.x, CRADLE.padW / 2, p.block, 1, faces[i].block, blockSide));
-      front.push(...crExtrude(c, p.x, CRADLE.padW / 2 - 0.12, p.pad, 1, faces[i].pad, padSide));
+    // the near arms, redrawn over the bird through a mask of their own swept region (no seam with the back layer)
+    CR_PROF.forEach((p) => {
+      const id = uid('crm');
+      const reg = sweepRegion(c, crProf3(p.x - hx - 0.02, p.arm), [2 * hx + 0.04, 0, 0]).d;
+      c.defs.push(
+        <mask key={id} id={id} maskUnits="userSpaceOnUse" x={-4000} y={-4000} width={9000} height={9000}>
+          <path d={reg} fill="#FFFFFF" stroke="#FFFFFF" strokeWidth={2 * c.ink + 2} strokeLinejoin="round" vectorEffect={NS} />
+        </mask>,
+      );
+      front.push(<g key={key(c)} mask={`url(#${id})`}>{saddle(p)}</g>);
     });
   }
   void yb;

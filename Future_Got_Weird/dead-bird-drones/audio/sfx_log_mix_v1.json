@@ -7,7 +7,7 @@
  {
   "t": 4.2,
   "sfx": "drone wingbeat (downstroke)",
-  "gain_db": -30.4
+  "gain_db": -30.3
  },
  {
   "t": 0,
@@ -75,14 +75,14 @@
   "gain_db": -31
  },
  {
-  "t": 15.81,
+  "t": 15.643,
   "sfx": "duck paddle stroke (water)",
-  "gain_db": -35
+  "gain_db": -36
  },
  {
   "t": 17.595,
   "sfx": "bubbles under the waterline",
-  "gain_db": -38.2
+  "gain_db": -39.0
  },
  {
   "t": 13.36,

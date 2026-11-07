@@ -44,7 +44,7 @@ const WingProxy: React.FC<{B: Basis; F: Frame; ps: Pose; side: 'near' | 'far'}> 
   return <path d={poly(pts)} fill={side === 'near' ? C.plumageLit : C.plumageDeep} stroke={INK} strokeWidth={2.6} opacity={0.9} />;
 };
 
-type CellSpec = {x: number; y: number; w: number; h: number; cam: Orbit; u: number; look?: MechLook; kind?: 'cut' | 'cradle' | 'exploded' | 'bare'; label: string};
+type CellSpec = {x: number; y: number; w: number; h: number; cam: Orbit; u: number; look?: MechLook; kind?: 'cut' | 'cradle' | 'cradleAll' | 'exploded' | 'bare'; label: string};
 const Cell: React.FC<{s: CellSpec; i: number}> = ({s, i}) => {
   const B = basis({...s.cam, cx: s.w / 2 + (s.cam.cx ?? 0), cy: s.h / 2 + (s.cam.cy ?? 0)});
   const F = bodyFrame([0, 0, 0]);
@@ -60,8 +60,14 @@ const Cell: React.FC<{s: CellSpec; i: number}> = ({s, i}) => {
         {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="back" />}
         {kind === 'cradle' && <BodyProxy B={B} F={F} />}
         {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="front" />}
+        {kind === 'cradle' && [-5.5, 6].flatMap((x) => [-64, 0, 64].map((t) => {
+          const q = proj(B, xf(F, [x, -1 - 5.5 * Math.cos((t * Math.PI) / 180), 5.5 * Math.sin((t * Math.PI) / 180)]));
+          return <circle key={`${x}${t}`} cx={q.x} cy={q.y} r={4} fill="red" />;
+        }))}
         {kind === 'exploded' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
-        {kind !== 'cradle' && <Mech B={B} F={F} ps={ps} look={s.look} />}
+        {kind === 'cradleAll' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
+        {kind === 'cradleAll' && <BodyProxy B={B} F={F} />}
+        {kind !== 'cradle' && kind !== 'cradleAll' && <Mech B={B} F={F} ps={ps} look={s.look} />}
         {kind === 'exploded' && <WingProxy B={B} F={F} ps={ps} side="near" />}
       </g>
       <rect width={s.w} height={s.h} fill="none" stroke="#7A8790" strokeWidth={2} />
@@ -95,10 +101,17 @@ const sheetB = (): CellSpec[] => {
   cells.push({x: 540, y: 1370, w: 540, h: 550, cam: {target: DRIVE_T, yaw: 14, pitch: 7, dist: 900, scale: 30}, u: 0.6, look: {detail: 0.4, rate: (2 * Math.PI) / 0.7}, label: '30px flight blur'});
   return cells;
 };
+const sheetC = (): CellSpec[] => {
+  const cells: CellSpec[] = [];
+  cells.push({x: 0, y: 0, w: 1080, h: 700, cam: {target: [-1, -5, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradle', label: 'cradle 14px (lab wide)'});
+  cells.push({x: 0, y: 700, w: 1080, h: 620, cam: {target: [5.5, -9, 0], yaw: 22, pitch: 15, dist: 420, scale: 34}, u: 0.25, kind: 'cradle', label: 'cradle 34px'});
+  cells.push({x: 0, y: 1320, w: 1080, h: 600, cam: {target: [-1, -6, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradleAll', label: 'cradle layer=all drawn before the body (current Film order)'});
+  return cells;
+};
 
-const Sheet: React.FC<{which: 'A' | 'B'}> = ({which}) => {
+const Sheet: React.FC<{which: 'A' | 'B' | 'C'}> = ({which}) => {
   resetIds('mech');
-  const cells = which === 'A' ? sheetA() : sheetB();
+  const cells = which === 'A' ? sheetA() : which === 'B' ? sheetB() : sheetC();
   return (
     <AbsoluteFill style={{background: '#E6ECEF'}}>
       <svg width={1080} height={1920}>
@@ -109,6 +122,7 @@ const Sheet: React.FC<{which: 'A' | 'B'}> = ({which}) => {
 };
 const SheetA: React.FC = () => <Sheet which="A" />;
 const SheetB: React.FC = () => <Sheet which="B" />;
+const SheetC: React.FC = () => <Sheet which="C" />;
 
 /** geometry check: a marker at gear B's angle on the crank radius must sit on the projected crank pin */
 const Check: React.FC = () => {
@@ -134,6 +148,7 @@ const Root: React.FC = () => (
   <>
     <Composition id="MechA" component={SheetA} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="MechB" component={SheetB} durationInFrames={1} fps={30} width={1080} height={1920} />
+ <Composition id="MechC" component={SheetC} durationInFrames={1} fps={30} width={1080} height={1920} />
     <Composition id="MechCheck" component={Check} durationInFrames={1} fps={30} width={1080} height={1920} />
   </>
 );

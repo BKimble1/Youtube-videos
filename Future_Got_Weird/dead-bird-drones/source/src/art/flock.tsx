@@ -45,8 +45,8 @@ export const wingbeat = (bird: LivingBird, t: number, seed: number): Beat => {
   return {
     arm: lerp(arm, 7, g),
     hand: lerp(hand, 2, g),
-    armSweep: lerp(4 + 18 * up, 3, g),
-    sweep: lerp(6 + 48 * up, 9, g),
+    armSweep: lerp(4 + 14 * up, 3, g),
+    sweep: lerp(6 + 36 * up, 9, g),
     fold: lerp(up, 0.1, g),
     bob: (1 - g) * -0.9 * Math.cos(2 * Math.PI * p),
     pitch: (1 - g) * 2.2 * Math.sin(2 * Math.PI * (p - 0.1)),
@@ -75,7 +75,7 @@ const wingMap = (F: Frame, S: number, side: 1 | -1, bt: Beat): WingMap => {
   const wrist = add3(hinge, mul3(A.s, AW));
   const pt = (a: number, b: number): V3 => {
     const w = ss(a, AW - 5, AW + 3);
-    const bb = b * (1 - 0.34 * bt.fold * w);
+    const bb = b * (1 - 0.26 * bt.fold * w);
     const base = a <= AW ? add3(hinge, mul3(A.s, a)) : add3(wrist, mul3(Hd.s, a - AW));
     const chord = norm3(add3(mul3(A.c, 1 - w), mul3(Hd.c, w)));
     return xf(F, mul3(add3(base, mul3(chord, bb)), S));
@@ -148,18 +148,24 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
     return {x: q.x, y: q.y};
   };
   const n = sPx > 4 ? 40 : sPx > 1.5 ? 28 : 18;
-  const ell = (k: keyof typeof BODY) => smoothClosed(ellipsoid2(B, ellFrame(F, BODY[k].c, BODY[k].tilt ?? 0, S), [0, 0, 0], mul3(BODY[k].r, S), n));
-  const chest = ell('chest'), rear = ell('rear'), neck = ell('neck'), head = ell('head');
+  const ellP = (k: keyof typeof BODY) => ellipsoid2(B, ellFrame(F, BODY[k].c, BODY[k].tilt ?? 0, S), [0, 0, 0], mul3(BODY[k].r, S), n);
+  // one smooth body: the chest and rear merged (convex), the neck and head merged, so the belly has no dip
+  const torso = smoothClosed(hull2([...ellP('chest'), ...ellP('rear')]));
+  const neckHead = smoothClosed(hull2([...ellP('neck'), ...ellP('head')]));
+  const head = smoothClosed(ellP('head'));
   // tail: a fan tilted up, a little wider in a glide
   const sp = TAIL.spread * (1 + 0.22 * bt.glide);
-  const tailPts: V2[] = [Pp([TAIL.root[0], TAIL.root[1], 1.7])];
-  for (let i = 0; i <= 6; i++) {
-    const zz = sp * (1 - (2 * i) / 6);
+  // a fan with real thickness at the root (so it reads as a tail from the side too), thinning to the tips
+  const tailPts: V2[] = [];
+  for (const dy of [-1.5, 1.5]) for (const dz of [-1.9, 1.9]) tailPts.push(Pp([TAIL.root[0] + 1, TAIL.root[1] + dy, dz]));
+  for (let i = 0; i <= 8; i++) {
+    const zz = sp * (1 - (2 * i) / 8);
     const x = TAIL.tipX - 0.9 * (1 - (zz / sp) ** 2);
-    tailPts.push(Pp([x, TAIL.root[1] + (TAIL.root[0] - x) * Math.tan(rad(TAIL.lift)), zz]));
+    const y = TAIL.root[1] + (TAIL.root[0] - x) * Math.tan(rad(TAIL.lift));
+    tailPts.push(Pp([x, y + 0.35, zz]), Pp([x, y - 0.35, zz]));
   }
-  tailPts.push(Pp([TAIL.root[0], TAIL.root[1], -1.7]));
-  const tail = smoothClosed(tailPts);
+  for (const dz of [-3.2, 3.2]) for (const dy of [-0.9, 0.9]) tailPts.push(Pp([-19.5, TAIL.root[1] + 0.7 + dy, dz]));
+  const tail = smoothClosed(hull2(tailPts));
   const tailLines = lod > 1.2 ? [-0.55, 0, 0.55].map((u) => {
     const x = TAIL.tipX - 0.6;
     return `M${P2(Pp([TAIL.root[0] - 1.5, TAIL.root[1] + 0.2, 0]))} L${P2(Pp([x, TAIL.root[1] + (TAIL.root[0] - x) * Math.tan(rad(TAIL.lift)), u * sp]))}`;
@@ -192,10 +198,8 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
     <g>
       <defs>
         <clipPath id={ids.clip}>
-          <path d={chest} />
-          <path d={rear} />
-          <path d={neck} />
-          <path d={head} />
+          <path d={torso} />
+          <path d={neckHead} />
         </clipPath>
         <linearGradient id={ids.back} gradientUnits="userSpaceOnUse" x1={up.x - 0.3 * r} y1={up.y - 0.1 * r} x2={dn.x} y2={dn.y}>
           <stop offset={0} stopColor={col(C.plumageLit)} />
@@ -211,18 +215,15 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
       {/* the merged outer contour (one silhouette for body, head, tail and beak) */}
       <g fill={col(INK)} stroke={col(INK)} strokeWidth={2 * w} strokeLinejoin="round" vectorEffect={NS}>
         <path d={tail} vectorEffect={NS} />
-        <path d={rear} vectorEffect={NS} />
-        <path d={chest} vectorEffect={NS} />
-        <path d={neck} vectorEffect={NS} />
-        <path d={head} vectorEffect={NS} />
+        <path d={torso} vectorEffect={NS} />
+        <path d={neckHead} vectorEffect={NS} />
         <path d={beak} vectorEffect={NS} />
       </g>
       <path d={tail} fill={col(C.tail)} />
       {tailLines && <path d={tailLines} stroke={col(C.plumageBar)} strokeWidth={LINE_PX * 0.8} opacity={0.5} vectorEffect={NS} />}
       <g fill={`url(#${ids.belly})`}>
-        <path d={rear} />
-        <path d={chest} />
-        <path d={neck} />
+        <path d={torso} />
+        <path d={neckHead} />
       </g>
       <path d={back} fill={`url(#${ids.back})`} clipPath={`url(#${ids.clip})`} />
       <path d={head} fill={col(C.head)} />
@@ -282,3 +283,23 @@ export const Flock: React.FC<{B: Basis; t: number; birds: LivingBird[]}> = ({B, 
     </g>
   );
 };
+
+/** suggested flocks framed for the story's cameras (checked in src/test/world.entry.tsx, WorldStory). Positions are
+ *  relative to the drone's x at the shot's start (shift them with offsetFlock); they cruise at about the drone's speed
+ *  so they stay beyond it, in the frame's upper half, over the treeline and sky. */
+export const FLOCK_MEADOW: LivingBird[] = [
+  {o: [-260, 30, -1000], v: [212, 3, 0], scale: 1, phase: 0.1, freq: 2.3},
+  {o: [40, 5, -1400], v: [206, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
+  {o: [230, 45, -1800], v: [214, -2, 0], scale: 1, phase: 0.3, freq: 2.5},
+  {o: [-470, -15, -1300], v: [203, 4, 0], scale: 1, phase: 0.8, freq: 2.2},
+  {o: [420, 15, -2400], v: [210, 0, 0], scale: 1, phase: 0.05, freq: 2.4},
+];
+export const FLOCK_SKY: LivingBird[] = [
+  {o: [-250, -25, -800], v: [206, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
+  {o: [40, -55, -1200], v: [211, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
+  {o: [-480, -40, -1600], v: [203, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
+  {o: [260, -95, -2000], v: [213, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
+  {o: [-120, -120, -2600], v: [208, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
+];
+/** shift a flock along x (e.g. by the drone's x at the shot's start) */
+export const offsetFlock = (birds: LivingBird[], dx: number): LivingBird[] => birds.map((b) => ({...b, o: [b.o[0] + dx, b.o[1], b.o[2]]}));
