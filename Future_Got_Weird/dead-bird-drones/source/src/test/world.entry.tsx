@@ -92,12 +92,9 @@ const labCell = (o: Orbit) => {
     </g>
   );
 };
-const MEADOW_BIRDS = (t0: number): LivingBird[] => [
-  {o: [300 * t0 - 260, 20, -900], v: [300, 4, 0], scale: 1, phase: 0.1, freq: 2.3},
-  {o: [300 * t0 + 20, -10, -1300], v: [306, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
-  {o: [300 * t0 + 240, 30, -1700], v: [298, -3, 0], scale: 1, phase: 0.3, freq: 2.5},
-  {o: [300 * t0 - 520, -20, -1200], v: [302, 5, 0], scale: 1, phase: 0.8, freq: 2.2},
-];
+const MEADOW_BIRDS = (t0: number): LivingBird[] => ([[-60, 20, -900, 0.1, 2.3], [60, -10, -1300, 0.55, 2.1], [-20, 30, -1700, 0.3, 2.5], [-150, -20, -1200, 0.8, 2.2], [120, -40, -2600, 0.05, 2.4]] as number[][]).map(
+  ([dx, y, z, ph, fq]) => ({o: [300 * t0 - Math.tan((8 * Math.PI) / 180) * Math.abs(z) + dx, y, z] as V3, v: [300, 0, 0] as V3, scale: 1, phase: ph, freq: fq}),
+);
 const meadowCell = (t: number, birds = false) => {
   const B = basis(meadowCam(t));
   return (
@@ -109,14 +106,11 @@ const meadowCell = (t: number, birds = false) => {
     </g>
   );
 };
-const SKY_BIRDS: LivingBird[] = [
-  {o: [-250, -10, -600], v: [300, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
-  {o: [-10, -40, -1000], v: [306, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
-  {o: [-430, -30, -1400], v: [297, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
-  {o: [160, -90, -1800], v: [310, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
-  {o: [-120, -110, -2400], v: [304, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
-  {o: [120, -60, -700], v: [300, 1, -8], scale: 1, phase: 0.45, freq: 2.0},
-];
+/** test birds placed beyond the target along the camera's line of sight (yaw 12: x shifts by -tan(12) |z|), then
+ *  offset by dx cm, at height y; they fly at the camera's 300 cm/s */
+const SKY_BIRDS: LivingBird[] = ([[-60, -10, -600, 0.2, 2.2], [40, -40, -1000, 0.65, 2.4], [-120, -30, -1400, 0.4, 2.1], [110, -90, -1800, 0.9, 2.5], [-40, -150, -2600, 0.15, 2.3], [150, -70, -800, 0.45, 2.0], [-200, -220, -3600, 0.7, 2.2]] as number[][]).map(
+  ([dx, y, z, ph, fq]) => ({o: [-Math.tan((12 * Math.PI) / 180) * Math.abs(z) + dx, y, z] as V3, v: [300, 2, 0] as V3, scale: 1, phase: ph, freq: fq}),
+);
 const skyCell = (t: number, birds = false) => {
   const B = basis(skyCam(t));
   return (

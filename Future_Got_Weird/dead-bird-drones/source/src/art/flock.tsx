@@ -159,14 +159,14 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
   const sp = TAIL.spread * (1 + 0.22 * bt.glide);
   // a fan with real thickness at the root (so it reads as a tail from the side too), thinning to the tips
   const tailPts: V2[] = [];
-  for (const dy of [-1.5, 1.5]) for (const dz of [-1.9, 1.9]) tailPts.push(Pp([TAIL.root[0] + 1, TAIL.root[1] + dy, dz]));
+  for (const dy of [-2.0, 1.7]) for (const dz of [-1.9, 1.9]) tailPts.push(Pp([TAIL.root[0] + 1, TAIL.root[1] + dy, dz]));
   for (let i = 0; i <= 8; i++) {
     const zz = sp * (1 - (2 * i) / 8);
     const x = TAIL.tipX - 0.9 * (1 - (zz / sp) ** 2);
     const y = TAIL.root[1] + (TAIL.root[0] - x) * Math.tan(rad(TAIL.lift));
-    tailPts.push(Pp([x, y + 0.35, zz]), Pp([x, y - 0.35, zz]));
+    tailPts.push(Pp([x, y + 0.55, zz]), Pp([x, y - 0.55, zz]));
   }
-  for (const dz of [-3.2, 3.2]) for (const dy of [-0.9, 0.9]) tailPts.push(Pp([-19.5, TAIL.root[1] + 0.7 + dy, dz]));
+  for (const dz of [-3.2, 3.2]) for (const dy of [-1.3, 1.1]) tailPts.push(Pp([-19.5, TAIL.root[1] + 0.7 + dy, dz]));
   const tail = smoothClosed(hull2(tailPts));
   const tailLines = lod > 1.2 ? [-0.55, 0, 0.55].map((u) => {
     const x = TAIL.tipX - 0.6;
@@ -221,7 +221,7 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
         <path d={neckHead} vectorEffect={NS} />
         <path d={beak} vectorEffect={NS} />
       </g>
-      <path d={tail} fill={col(C.tail)} />
+      <path d={tail} fill={col(mix(C.tail, C.plumage, 0.35))} />
       {tailLines && <path d={tailLines} stroke={col(C.plumageBar)} strokeWidth={LINE_PX * 0.8} opacity={0.5} vectorEffect={NS} />}
       <g fill={`url(#${ids.belly})`}>
         <path d={torso} />

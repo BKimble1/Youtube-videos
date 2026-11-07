@@ -1320,7 +1320,8 @@ const reedMass = (B: Basis, z: number, h0: number, amp: number, seed: number): [
   for (let i = 0; i <= n; i++) {
     const x = xa + ((xb - xa) * i) / n;
     const h = h0 + amp * (0.6 * noise1(x / 38, seed) + 0.4 * noise1(x / 11, seed + 3));
-    const q = proj(B, [x, h, z]), b = proj(B, [x, 0, z]), m = proj(B, [x, -h * 0.85, z]);
+    const hm = h0 + amp * 0.5 * noise1(x / 120, seed + 7);
+    const q = proj(B, [x, h, z]), b = proj(B, [x, 0, z]), m = proj(B, [x, -hm * 0.8, z]);
     top.push({x: q.x, y: q.y});
     base.push({x: b.x, y: b.y});
     mir.push({x: m.x, y: m.y});
@@ -1346,7 +1347,6 @@ const buildReeds = (B: Basis, t: number): Reeds => {
       const wb = 1.2 + 0.9 * hash(k * 9.7 + b * 0.53);
       const tn = Math.floor(hash(k * 6.3 + b * 1.9) * 3);
       tone[tn] += blade(B, base, h, lean, wb);
-      refl += blade(B, base, h, lean, wb, true, 0.75);
     }
     if (hash(k * 9.1) > 0.5) {
       const base: V3 = [cx + (hash(k * 2.9) - 0.5) * 8, 0, cz + 6];
@@ -1401,7 +1401,7 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const bankTopL = lineAcross(B, 3, BANK_Z - 20);
   const bankD = `M-100,${fx(yOnLine(bankTopL, -100))} L${W + 100},${fx(yOnLine(bankTopL, W + 100))} L${W + 100},${fx(yOnLine(bankL, W + 100) + 1)} L-100,${fx(yOnLine(bankL, -100) + 1)} Z`;
   // reflection bands under the bank
-  const reflEnd = yb + Math.max(30, (proj(B, [B.eye[0], -150, BANK_Z]).y - yb));
+  const reflEnd = yb + Math.max(30, (proj(B, [B.eye[0], -90, BANK_Z]).y - yb));
   const reflBands = (() => {
     let d = '';
     let y = yb - 2;
@@ -1479,6 +1479,21 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       </g>
     );
   });
+  const sheen: {x: number; y: number; rx: number; ry: number; a: number}[] = [];
+  for (const [zr, k0] of [[-700, 0], [-380, 1], [-150, 2], [80, 3]] as [number, number][]) {
+    if (zr > B.eye[2] - 80) continue;
+    const [xa, xb] = visX(B, 0, zr, 200);
+    const spx = 260 + 80 * k0;
+    for (let k = Math.floor(xa / spx); k <= Math.ceil(xb / spx); k++) {
+      const hh = hash(k * 3.9 + k0 * 17);
+      if (hh < 0.4) continue;
+      const c = proj(B, [k * spx + (hash(k * 1.3 + k0) - 0.5) * spx * 0.6, 0, zr + (hash(k * 2.7) - 0.5) * 60]);
+      const e = proj(B, [k * spx + 100, 0, zr]);
+      const flat = Math.max(0.04, Math.abs(Math.sin(grazing(B, [c.x, 0, zr]) * R2)) * 1.0);
+      sheen.push({x: c.x, y: c.y, rx: (90 + 70 * hh) * c.s, ry: (90 + 70 * hh) * c.s * flat, a: 0.12 + 0.1 * hh});
+      void e;
+    }
+  }
   const sky0 = Math.min(hz - 900, yb - 900);
   return (
     <g>
@@ -1496,9 +1511,13 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         <filter id={`${id}r`} x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation={1.4} /></filter>
         <filter id={`${id}q`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation={9} /></filter>
         <clipPath id={`${id}c`}><path d={reflBands} /></clipPath>
+        <radialGradient id={`${id}sh`}>
+          <stop offset={0} stopColor="#E9F6F4" stopOpacity={1} />
+          <stop offset={1} stopColor="#E9F6F4" stopOpacity={0} />
+        </radialGradient>
         <linearGradient id={`${id}rg`} gradientUnits="userSpaceOnUse" x1={0} y1={yb} x2={0} y2={reflEnd}>
-          <stop offset={0} stopColor={PC.reedRefl} stopOpacity={0.62} />
-          <stop offset={0.55} stopColor={PC.reedRefl} stopOpacity={0.3} />
+          <stop offset={0} stopColor={PC.reedRefl} stopOpacity={0.6} />
+          <stop offset={0.5} stopColor={PC.reedRefl} stopOpacity={0.26} />
           <stop offset={1} stopColor={PC.reedRefl} stopOpacity={0} />
         </linearGradient>
       </defs>
@@ -1537,11 +1556,8 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
           <path d={reeds.massRefl} fill={`url(#${id}rg)`} />
         </g>
       )}
-      {reeds && (
-        <g clipPath={`url(#${id}c)`} opacity={0.18}>
-          <path d={reeds.refl} fill={PC.reedRefl} />
-        </g>
-      )}
+
+      {sheen.map((q, i) => <ellipse key={`sh${i}`} cx={q.x} cy={q.y} rx={q.rx} ry={q.ry} fill={`url(#${id}sh)`} opacity={q.a} />)}
       <path d={dk} stroke={PC.waterLow} strokeWidth={1.6} vectorEffect={NS} strokeLinecap="round" opacity={0.28} fill="none" />
       <path d={g3[0]} stroke="#FFFFFF" strokeWidth={1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.5} fill="none" />
       <path d={g3[1]} stroke="#FFFFFF" strokeWidth={1.8} vectorEffect={NS} strokeLinecap="round" opacity={0.5} fill="none" />
