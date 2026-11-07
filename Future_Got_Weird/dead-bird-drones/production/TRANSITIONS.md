@@ -11,7 +11,7 @@ Every camera or scene transition, as: outgoing subject → incoming subject → 
 | 4 | 3.30–3.95, cut at 3.95 | Flying bird → push to its near wing root → MATCH CUT to the same wing root on the lab cradle | A new place and time (construction): same object, same screen position, scale, wing phase and velocity at the cut; the bird's bob and pitch carry over and settle into the cradle | Keep (new place; a match of one object, not a morph between objects) |
 | 5 | 3.95–5.20 | Wing root → the whole bird on its cradle in the lab | Establishes the lab | Keep |
 | 6 | 5.35–8.79 | Assembled bird → exploded view (shell up) → seated again | Shows that the preserved exterior is a shell over a mechanical frame | Keep (reveal, in the current view) |
-| 7 | 8.85–9.50 | Lab wide → push to the flank as a local cutaway opens on the gearbox | Reveals the drive in the same body | Keep (reveal) |
+| 7 | 8.45–9.50 | Lab wide → one unhurried push to the flank (starting as the shell seats) while a local cutaway opens on the gearbox | Reveals the drive in the same body | Keep (reveal) |
 | 8 | 9.50–12.10 | Gearbox → follow the motor pinion → gear A → gear B and the crank → up the rod to the spar lever | One causal chain followed continuously (no cut) | Keep (reveal the mechanism) |
 | 9 | 12.10–12.56 | Rod and lever → pull out along the spar to the complete wing as the feathers close over the drive | Connects the linkage to the whole wing's stroke | Keep |
 | 10 | 12.56–12.96 | Lab bench test → the near wing passing the lens (wipe) → the drone flying over the meadow | A new place (the research goal); the downstroke carries the drone forward | Keep (new place) |
