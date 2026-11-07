@@ -1,0 +1,342 @@
+{
+ "audio": "/tmp/claude-0/export_mono16k.wav",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.07
+  },
+  {
+   "word": "you",
+   "start": 0.08,
+   "end": 0.19
+  },
+  {
+   "word": "put",
+   "start": 0.2,
+   "end": 0.35
+  },
+  {
+   "word": "a",
+   "start": 0.36,
+   "end": 0.47
+  },
+  {
+   "word": "motor",
+   "start": 0.48,
+   "end": 0.79
+  },
+  {
+   "word": "inside",
+   "start": 0.8,
+   "end": 1.12
+  },
+  {
+   "word": "a",
+   "start": 1.12,
+   "end": 1.27
+  },
+  {
+   "word": "dead",
+   "start": 1.28,
+   "end": 1.59
+  },
+  {
+   "word": "bird,",
+   "start": 1.6,
+   "end": 2.0
+  },
+  {
+   "word": "you",
+   "start": 2.0,
+   "end": 2.2
+  },
+  {
+   "word": "could",
+   "start": 2.2,
+   "end": 2.39
+  },
+  {
+   "word": "make",
+   "start": 2.4,
+   "end": 2.55
+  },
+  {
+   "word": "it",
+   "start": 2.56,
+   "end": 2.72
+  },
+  {
+   "word": "fly",
+   "start": 2.72,
+   "end": 3.11
+  },
+  {
+   "word": "again.",
+   "start": 3.12,
+   "end": 3.87
+  },
+  {
+   "word": "Researchers",
+   "start": 3.88,
+   "end": 4.59
+  },
+  {
+   "word": "built",
+   "start": 4.6,
+   "end": 4.83
+  },
+  {
+   "word": "drones",
+   "start": 4.84,
+   "end": 5.27
+  },
+  {
+   "word": "using",
+   "start": 5.28,
+   "end": 5.59
+  },
+  {
+   "word": "preserved",
+   "start": 5.6,
+   "end": 6.07
+  },
+  {
+   "word": "bird",
+   "start": 6.08,
+   "end": 6.39
+  },
+  {
+   "word": "bodies,",
+   "start": 6.4,
+   "end": 6.81
+  },
+  {
+   "word": "with",
+   "start": 6.84,
+   "end": 7.03
+  },
+  {
+   "word": "machinery",
+   "start": 7.04,
+   "end": 7.63
+  },
+  {
+   "word": "hidden",
+   "start": 7.64,
+   "end": 7.96
+  },
+  {
+   "word": "underneath",
+   "start": 7.96,
+   "end": 8.35
+  },
+  {
+   "word": "the",
+   "start": 8.36,
+   "end": 8.51
+  },
+  {
+   "word": "feathers.",
+   "start": 8.52,
+   "end": 9.15
+  },
+  {
+   "word": "A",
+   "start": 9.16,
+   "end": 9.31
+  },
+  {
+   "word": "gearbox",
+   "start": 9.32,
+   "end": 9.96
+  },
+  {
+   "word": "turns",
+   "start": 9.96,
+   "end": 10.19
+  },
+  {
+   "word": "the",
+   "start": 10.2,
+   "end": 10.31
+  },
+  {
+   "word": "motor\u2019s",
+   "start": 10.32,
+   "end": 10.71
+  },
+  {
+   "word": "spinning",
+   "start": 10.72,
+   "end": 11.03
+  },
+  {
+   "word": "motion",
+   "start": 11.04,
+   "end": 11.39
+  },
+  {
+   "word": "into",
+   "start": 11.4,
+   "end": 11.63
+  },
+  {
+   "word": "flapping",
+   "start": 11.64,
+   "end": 12.15
+  },
+  {
+   "word": "wings.",
+   "start": 12.16,
+   "end": 12.71
+  },
+  {
+   "word": "The",
+   "start": 12.72,
+   "end": 12.96
+  },
+  {
+   "word": "goal",
+   "start": 12.96,
+   "end": 13.27
+  },
+  {
+   "word": "is",
+   "start": 13.28,
+   "end": 13.43
+  },
+  {
+   "word": "to",
+   "start": 13.44,
+   "end": 13.59
+  },
+  {
+   "word": "watch",
+   "start": 13.6,
+   "end": 13.92
+  },
+  {
+   "word": "wildlife",
+   "start": 13.92,
+   "end": 14.43
+  },
+  {
+   "word": "with",
+   "start": 14.44,
+   "end": 14.63
+  },
+  {
+   "word": "less",
+   "start": 14.64,
+   "end": 14.88
+  },
+  {
+   "word": "disturbance.",
+   "start": 14.88,
+   "end": 15.79
+  },
+  {
+   "word": "And",
+   "start": 15.8,
+   "end": 16.07
+  },
+  {
+   "word": "they\u2019ve",
+   "start": 16.08,
+   "end": 16.35
+  },
+  {
+   "word": "built",
+   "start": 16.36,
+   "end": 16.6
+  },
+  {
+   "word": "a",
+   "start": 16.6,
+   "end": 16.71
+  },
+  {
+   "word": "swimming",
+   "start": 16.72,
+   "end": 17.11
+  },
+  {
+   "word": "robot",
+   "start": 17.12,
+   "end": 17.47
+  },
+  {
+   "word": "using",
+   "start": 17.48,
+   "end": 17.76
+  },
+  {
+   "word": "a",
+   "start": 17.76,
+   "end": 17.87
+  },
+  {
+   "word": "preserved",
+   "start": 17.88,
+   "end": 18.39
+  },
+  {
+   "word": "duck.",
+   "start": 18.4,
+   "end": 18.95
+  },
+  {
+   "word": "So",
+   "start": 18.96,
+   "end": 19.35
+  },
+  {
+   "word": "the",
+   "start": 19.36,
+   "end": 19.6
+  },
+  {
+   "word": "bird",
+   "start": 19.6,
+   "end": 20.0
+  },
+  {
+   "word": "watching",
+   "start": 20.0,
+   "end": 20.39
+  },
+  {
+   "word": "the",
+   "start": 20.4,
+   "end": 20.6
+  },
+  {
+   "word": "birds\u2026",
+   "start": 20.6,
+   "end": 21.31
+  },
+  {
+   "word": "might",
+   "start": 21.32,
+   "end": 21.6
+  },
+  {
+   "word": "already",
+   "start": 21.6,
+   "end": 22.11
+  },
+  {
+   "word": "be",
+   "start": 22.12,
+   "end": 22.39
+  },
+  {
+   "word": "dead.",
+   "start": 22.4,
+   "end": 23.6
+  }
+ ]
+}
