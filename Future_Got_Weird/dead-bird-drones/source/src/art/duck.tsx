@@ -54,12 +54,12 @@ const K = {
   vent: '#EEEDE6',
   stern: '#222527',
   specW: '#F6F5F0',
-  spec: '#2E3F9C',
+  spec: '#34489E',
   breast: C.duckBreast,
   belly: '#D7D5CC',
   head: C.duckHead,
   headSheen: C.duckHeadLit,
-  headShadow: '#103E30',
+  headShadow: '#14503C',
   breastSheen: '#9A5A40',
   breastShadow: '#552517',
   bill: C.duckBill,
@@ -83,8 +83,8 @@ const K = {
   printed: C.printed,
   printedSide: C.printedDeep,
   printedLine: '#8EA2A9',
-  rod: '#8F9BA4',
-  rodLit: '#D6DDE2',
+  rod: '#74828D',
+  rodLit: '#C9D3DA',
   axle: C.dark,
   innerShell: '#A8957A', // the far inner surface of the preserved skin seen through the window (in shade)
   innerShellLit: '#C9B79A',
@@ -239,9 +239,9 @@ const msLoops = (ni: number, nj: number, val: (i: number, j: number) => number, 
 // ================================================================ the hull (body) geometry, duck-local cm
 const X0 = -20, X1 = 18.2, XM = (X0 + X1) / 2, HLX = (X1 - X0) / 2;
 const KX = [X0, -18, -12, 0, 12, 16, X1];
-const YC = pchip(KX, [4.5, 3.9, 2.0, 2.05, 3.6, 4.2, 4.2]);
-const HT = pchip(KX, [3.5, 4.06, 7.43, 8.55, 8.7, 7.85, 7.5]);
-const HB = pchip(KX, [3.5, 4.2, 7.43, 8.55, 8.56, 8.0, 7.8]);
+const YC = pchip(KX, [6.0, 4.9, 2.5, 2.05, 3.4, 4.2, 4.2]);
+const HT = pchip(KX, [2.4, 3.2, 6.6, 8.75, 8.2, 7.6, 7.3]);
+const HB = pchip(KX, [3.0, 5.2, 7.9, 8.55, 8.4, 8.0, 7.8]);
 const WD = pchip(KX, [4.0, 5.0, 8.3, 10.2, 9.4, 8.0, 7.5]);
 const NE = 2.5; // end rounding exponent
 const PX = 2.4; // section exponent (a little boxy, like a floating duck)
@@ -373,7 +373,7 @@ const hullRegion = (HV: HullView, f: (s: HS) => number, facing = true) => {
 /** the breast's rear edge (x as a function of height), gently scalloped */
 const xBreast = (y: number) => 9.4 - 0.12 * (y - 4) + 0.03 * Math.min(0, y - 4) ** 2 + 0.22 * Math.sin(y * 1.7);
 /** the flank's upper edge (the folded wing and scapulars lie above it) */
-const yFlank0 = pchip([-22, -16, -9, -2, 5, 10], [5.6, 6.2, 7.0, 7.7, 8.6, 9.8]);
+const yFlank0 = pchip([-22, -16, -9, -2, 5, 10], [4.4, 4.9, 5.6, 6.4, 7.7, 9.3]);
 const yFlank = (x: number) => yFlank0(x) + 0.2 * Math.sin(x * 1.35);
 /** the black stern's front edge */
 const xStern = (y: number) => -14.6 + 0.16 * y;
@@ -381,9 +381,17 @@ const F_UPPER = (s: HS) => s.l[1] - yFlank(s.l[0]);
 const F_MANTLE = (s: HS) => s.l[1] - (topY(s.l[0]) - 1.15);
 const F_VENT = (s: HS) => Math.min(xStern(s.l[1]) + 1.7 - s.l[0], 5.6 - s.l[1]);
 const F_STERN = (s: HS) => xStern(s.l[1]) - s.l[0];
-const specBox = (s: HS, g: number) =>
-  Math.min(s.l[0] + 12.0 + g, -8.4 + g - s.l[0], s.l[1] - (yFlank0(s.l[0]) - 0.55 - g), yFlank0(s.l[0]) + 0.3 + g - s.l[1]);
-const F_SPECW = (s: HS) => specBox(s, 0.26);
+const specBox = (s: HS, g: number) => {
+  const x = s.l[0], y = s.l[1], yb = yFlank0(x);
+  return Math.min(x + 13.0 - 0.5 * (y - yb) + g, -7.2 - 0.5 * (y - yb) + g - x, y - (yb - 0.25 - g), yb + 0.75 + g - y);
+};
+const F_SPECW = (s: HS) => specBox(s, 0.22);
+/** the folded primaries: a dark tapering band along the rear of the back */
+const F_PRIM = (s: HS) => {
+  const x = s.l[0];
+  const u = clamp((x + 19.4) / 9.6);
+  return Math.min((-9.6 - x) * 0.6, (x + 19.4) * 0.6, s.l[1] - (topY(x) - lerp(0.5, 2.3, Math.sqrt(u))));
+};
 const F_SPEC = (s: HS) => specBox(s, 0);
 const F_BREAST = (s: HS) => s.l[0] - xBreast(s.l[1]);
 const F_BELLY = (s: HS) => -2.2 - s.l[1];
@@ -392,17 +400,25 @@ const F_CORE = (s: HS) => (-0.32 - s.nl) * 10;
 const F_HI = (s: HS) => (s.nl - 0.74) * 10;
 
 // ================================================================ neck, head, bill, tail (duck-local)
-const NECK = {a: [11.4, 7.6, 0] as V3, b: [15.0, 18.0, 0] as V3, ra: 5.0, rb: 3.55};
-const COLLAR_U = 0.33; // along the neck axis
-const HEAD = {
-  nape: {c: [13.9, 20.1, 0] as V3, r: [3.2, 3.5, 3.0] as V3, tilt: 12},
-  cranium: {c: [16.4, 20.9, 0] as V3, r: [4.95, 3.95, 3.15] as V3, tilt: -7},
-  face: {c: [18.9, 19.9, 0] as V3, r: [3.35, 3.0, 2.65] as V3, tilt: -16},
+/** the neck: a tube along a quadratic curve from inside the breast up into the head, radius varying (a slight waist) */
+const NECK = {a: [11.3, 4.4, 0] as V3, m: [13.3, 10.0, 0] as V3, b: [16.0, 16.4, 0] as V3, r: [5.1, 4.35, 4.45]};
+const neckAt = (u: number): {c: V3; t: V3; r: number} => {
+  const a = NECK.a, m = NECK.m, b = NECK.b;
+  const c = add3(add3(mul3(a, (1 - u) ** 2), mul3(m, 2 * u * (1 - u))), mul3(b, u * u));
+  const t = norm3(add3(mul3(sub3(m, a), 2 * (1 - u)), mul3(sub3(b, m), 2 * u)));
+  const r = u < 0.5 ? lerp(NECK.r[0], NECK.r[1], sm(u / 0.5)) : lerp(NECK.r[1], NECK.r[2], sm((u - 0.5) / 0.5));
+  return {c, t, r};
 };
-const BILL = {base: [21.1, 19.85, 0] as V3, tip: [26.9, 18.55, 0] as V3};
+const COLLAR_U = 0.43; // along the neck curve
+const HEAD = {
+  nape: {c: [14.2, 18.2, 0] as V3, r: [3.3, 3.6, 3.05] as V3, tilt: 14},
+  cranium: {c: [16.7, 19.1, 0] as V3, r: [5.0, 3.95, 3.15] as V3, tilt: -6},
+  face: {c: [19.2, 18.0, 0] as V3, r: [3.4, 3.05, 2.7] as V3, tilt: -16},
+};
+const BILL = {base: [21.6, 18.1, 0] as V3, tip: [27.2, 16.85, 0] as V3};
 const EYE_L: V3 = (() => {
   const c = HEAD.cranium.c, r = HEAD.cranium.r;
-  const x = 18.55, y = 21.45;
+  const x = 18.9, y = 19.65;
   const q = 1 - ((x - c[0]) / r[0]) ** 2 - ((y - c[1]) / r[1]) ** 2;
   return [x, y, r[2] * Math.sqrt(Math.max(0, q)) + 0.05];
 })();
@@ -416,8 +432,38 @@ const ellFrame = (F: Frame, c: V3, tilt: number): Frame => ({
 });
 const ellPath = (B: Basis, F: Frame, e: {c: V3; r: V3; tilt: number}) => smoothClosed(ellipsoid2(B, ellFrame(F, e.c, e.tilt), [0, 0, 0], e.r, 40));
 const neckPath = (B: Basis, F: Frame) => {
-  const a = proj(B, xf(F, NECK.a)), b = proj(B, xf(F, NECK.b));
-  return capsule2(a, b, NECK.ra * a.s, NECK.rb * b.s);
+  const n = 12;
+  const S: SP[] = [], rr: number[] = [];
+  for (let i = 0; i <= n; i++) {
+    const q = neckAt(i / n);
+    S.push(proj(B, xf(F, q.c)));
+    rr.push(q.r);
+  }
+  const L: V2[] = [], R: V2[] = [];
+  for (let i = 0; i <= n; i++) {
+    const a = S[Math.max(0, i - 1)], b = S[Math.min(n, i + 1)];
+    let tx = b.x - a.x, ty = b.y - a.y;
+    const tl = Math.hypot(tx, ty) || 1;
+    tx /= tl; ty /= tl;
+    const w = rr[i] * S[i].s;
+    L.push({x: S[i].x - ty * w, y: S[i].y + tx * w});
+    R.push({x: S[i].x + ty * w, y: S[i].y - tx * w});
+  }
+  // rounded caps (both ends are buried in the body and the head), bulging away from the tube
+  const cap = (c: SP, r: number, from: V2, out: V2): V2[] => {
+    const a0 = Math.atan2(from.y - c.y, from.x - c.x);
+    const ao = Math.atan2(out.y, out.x);
+    const sgn = Math.cos(a0 + Math.PI / 2 - ao) > 0 ? 1 : -1;
+    const pts: V2[] = [];
+    for (let k = 1; k < 8; k++) {
+      const a = a0 + (sgn * Math.PI * k) / 8;
+      pts.push({x: c.x + r * Math.cos(a), y: c.y + r * Math.sin(a)});
+    }
+    return pts;
+  };
+  const endCap = cap(S[n], rr[n] * S[n].s, L[n], {x: S[n].x - S[n - 1].x, y: S[n].y - S[n - 1].y});
+  const startCap = cap(S[0], rr[0] * S[0].s, R[0], {x: S[0].x - S[1].x, y: S[0].y - S[1].y});
+  return smoothClosed([...L, ...endCap, ...R.slice().reverse(), ...startCap]);
 };
 /** bill loft sample points (local) */
 const billSections = (() => {
@@ -428,8 +474,8 @@ const billSections = (() => {
     const u = (k / n) * 1.08;
     const c = add3(add3(BILL.base, mul3(ax, Math.min(u, 1))), [0, -0.38 * Math.sin(Math.PI * Math.min(u, 1)), 0]);
     const tipK = u > 0.93 ? Math.sqrt(Math.max(0, 1 - ((u - 0.93) / 0.15) ** 2)) : 1;
-    const hw = (1.25 + 0.3 * Math.min(u, 1)) * tipK;
-    const hh = lerp(1.12, 0.5, Math.min(u, 1)) * Math.max(0.7, tipK);
+    const hw = (1.3 + 0.32 * Math.min(u, 1)) * tipK;
+    const hh = lerp(1.25, 0.52, Math.min(u, 1)) * Math.max(0.7, tipK);
     const cc = u > 1 ? add3(c, mul3(norm3(ax), (u - 1) * len3(ax))) : c;
     const ring: V3[] = [];
     for (let j = 0; j < 14; j++) {
@@ -442,36 +488,29 @@ const billSections = (() => {
 })();
 /** tail fan (pale, pointed), in the duck's mid-plane region behind the stern */
 const TAIL_PTS: V3[] = (() => {
-  const out: V3[] = [[-17.6, 4.6, -2.3]];
+  const out: V3[] = [[-18.0, 6.0, -2.1]];
   const n = 9;
   for (let k = 0; k < n; k++) {
     const z = -3.3 + (6.6 * k) / (n - 1);
     const q = (z / 3.3) ** 2;
-    out.push([-26.9 + 1.0 * q, 6.0 - 0.8 * q, z]);
+    out.push([-26.0 + 1.0 * q, 7.6 - 1.7 * q, z]);
     if (k < n - 1) {
       const z2 = z + 6.6 / (n - 1) / 2;
       const q2 = (z2 / 3.3) ** 2;
-      out.push([-26.1 + 1.0 * q2, 5.95 - 0.8 * q2, z2]);
+      out.push([-25.25 + 1.0 * q2, 7.5 - 1.7 * q2, z2]);
     }
   }
-  out.push([-17.6, 4.6, 2.3]);
+  out.push([-18.0, 6.0, 2.1]);
   return out;
 })();
 const CURLS: {pts: [number, number][]; z: number; w: number}[] = [
-  {pts: [[-16.2, 5.6], [-17.8, 7.1], [-19.0, 8.6], [-19.0, 9.9], [-18.2, 10.6], [-17.3, 10.2], [-17.3, 9.4], [-18.0, 9.0]], z: 0.35, w: 0.8},
-  {pts: [[-15.8, 5.5], [-17.2, 6.8], [-18.2, 8.1], [-18.3, 9.2], [-17.6, 9.7], [-17.0, 9.3], [-17.1, 8.7]], z: -0.35, w: 0.7},
+  {pts: [[-16.0, 6.4], [-17.6, 7.9], [-18.8, 9.3], [-18.8, 10.6], [-18.0, 11.3], [-17.1, 10.9], [-17.1, 10.1], [-17.8, 9.7]], z: 0.35, w: 0.8},
+  {pts: [[-15.6, 6.3], [-17.0, 7.6], [-18.0, 8.8], [-18.1, 9.9], [-17.4, 10.4], [-16.8, 10.0], [-16.9, 9.4]], z: -0.35, w: 0.7},
 ];
-/** the folded wing's tip (primaries) lying on the rump, in side coords (x, y); z follows the surface */
-const WINGTIP_XY: [number, number][] = [[-9.5, 8.9], [-13.8, 8.3], [-17.4, 7.2], [-20.6, 6.1], [-17.9, 6.15], [-13.6, 7.0], [-9.8, 7.9]];
-const onSurf = (x: number, y: number, out = 0.3): V3 => {
-  const z = zAt(x, y);
-  return [x, y, Math.max(1.6, (z > 0 ? z : 0) + out)];
-};
-
 // ================================================================ the drive and the legs (duck-local)
-const MODULE = {x0: -8.6, x1: 4.6, y0: -4.2, y1: -0.6, z: 3.0, r: 1.0};
-const COVER = {a: [1.6, -2.45] as [number, number], b: [-5.3, -1.95] as [number, number], r: 1.12, z: 3.32};
-const LEG = {c: [-5.3, -1.95] as [number, number], rc: 0.9, hip: [-6.8, -4.65] as [number, number], lev: 1.5, shank: 5.3, zCrank: 3.55, zRod: 3.78, zLeg: 3.98};
+const MODULE = {x0: -8.4, x1: 5.0, y0: -3.9, y1: -0.5, z: 3.0, r: 1.0};
+const COVER = {a: [2.4, -2.2] as [number, number], b: [-4.2, -1.55] as [number, number], r: 1.05, z: 3.32};
+const LEG = {c: [-4.2, -1.55] as [number, number], rc: 0.95, hip: [-5.7, -4.9] as [number, number], lev: 1.55, shank: 5.4, zCrank: 3.55, zRod: 3.8, zLeg: 4.0};
 const ALPHA0 = 6; // mean swing (deg, + = foot back)
 const ROD_L = (() => {
   const a = ALPHA0 * R2;
@@ -646,6 +685,7 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
     stern: hullRegion(HV, F_STERN),
     specW: hullRegion(HV, F_SPECW),
     spec: hullRegion(HV, F_SPEC),
+    prim: hullRegion(HV, F_PRIM),
     breast: hullRegion(HV, F_BREAST),
     shadow: hullRegion(HV, F_SHADOW),
     core: hullRegion(HV, F_CORE),
@@ -689,12 +729,11 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
   const neck = neckPath(B, F);
   const nape = ellPath(B, F, HEAD.nape), cran = ellPath(B, F, HEAD.cranium), face = ellPath(B, F, HEAD.face);
   // collar: a white band round the neck (front-facing arc)
-  const axis = norm3(sub3(NECK.b, NECK.a));
-  const e1 = norm3(cross3(axis, [0, 0, 1]));
   const e2: V3 = [0, 0, 1];
   const ringArc = (u: number, ext = 0.06): V2[] => {
-    const c = add3(NECK.a, mul3(sub3(NECK.b, NECK.a), u));
-    const r = lerp(NECK.ra, NECK.rb, u) + 0.02;
+    const nk = neckAt(u);
+    const c = nk.c, r = nk.r + 0.02;
+    const e1 = norm3(cross3(nk.t, [0, 0, 1]));
     const pts: {p: V2; f: number}[] = [];
     for (let k = 0; k < 72; k++) {
       const th = (k / 72) * Math.PI * 2;
@@ -757,26 +796,24 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
   // ---- tail fan and curls
   const tailS = TAIL_PTS.map((p) => P(p));
   const tail = smoothClosed(tailS.map((q) => ({x: q.x, y: q.y})), 1 / 9);
-  const tailRoot = P([-17.6, 4.7, 0]);
+  const tailRoot = P([-18.0, 6.1, 0]);
   const curls = CURLS.map((c) => ribbon(B, F, c.pts.map(([x, y]) => [x, y, c.z] as V3), c.w, c.w * 0.45));
   const curlGloss = CURLS.map((c) => smoothOpen(c.pts.slice(1, -2).map(([x, y]) => {
     const q = P([x - 0.12, y + 0.1, c.z + 0.2]);
     return {x: q.x, y: q.y};
   })));
-  // ---- wing tip (primaries) on the rump
-  const tipPts = WINGTIP_XY.map(([x, y]) => P(onSurf(x, y, 0.35)));
-  const wingTip = smoothClosed(tipPts.map((q) => ({x: q.x, y: q.y})), 1 / 7);
-  const tipEdge = smoothOpen(WINGTIP_XY.slice(0, 4).map(([x, y]) => {
-    const q = P(onSurf(x, y - 0.35, 0.4));
-    return {x: q.x, y: q.y};
-  }));
-  const tipLine = smoothOpen([[-11.5, 7.9], [-16.0, 7.75], [-20.5, 7.5]].map(([x, y]) => {
-    const q = P(onSurf(x, y, 0.42));
-    return {x: q.x, y: q.y};
-  }));
+  // primaries' edge lines
+  const primLines = [0.9, 1.6].map((d) => {
+    const xy: [number, number][] = [];
+    for (let k = 0; k <= 10; k++) {
+      const x = lerp(-10.5, -18.6, k / 10);
+      xy.push([x, topY(x) - d * lerp(0.9, 0.35, k / 10)]);
+    }
+    return lineOnSurf(B, F, xy);
+  });
   // ---- waterline foam (near half)
   const foam = HV.wlNear.length > 2 ? smoothOpen(HV.wlNear) : '';
-  const headDS = 1.05 * sAt, headDH = 0.32 * sAt;
+  const headDS = 0.85 * sAt, headDH = 0.32 * sAt;
   return (
     <g>
       <defs>
@@ -816,21 +853,19 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
           <path d={verm.join(' ')} fill="none" stroke={K.vermic} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} opacity={0.28} />
           <path d={R.upper} fill={K.upper} />
           <path d={R.mantle} fill={K.mantle} />
+          <path d={R.prim} fill={K.primary} />
           <path d={R.vent} fill={K.vent} />
           <path d={R.stern} fill={K.stern} />
           <path d={R.specW} fill={K.specW} />
           <path d={R.spec} fill={K.spec} />
+          <path d={primLines.join(' ')} fill="none" stroke={K.primaryEdge} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.6} strokeLinecap="round" />
           <path d={tert.join(' ') + ' ' + scal.join(' ')} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.55} strokeLinecap="round" />
           <path d={R.breast} fill={K.breast} />
           <path d={R.shadow} fill={INK} opacity={0.2} />
           <path d={R.core} fill={INK} opacity={0.13} />
-          <path d={R.hi} fill="#FFFFFF" opacity={0.2} />
+          <path d={R.hi} fill="#FFFFFF" opacity={0.14} />
         </g>
       </g>
-      {/* folded wing tip on the rump */}
-      <path d={wingTip} fill={K.primary} stroke={INK} strokeWidth={LINE_PX * 1.3} vectorEffect={NS} strokeLinejoin="round" />
-      <path d={tipEdge} fill="none" stroke={K.primaryEdge} strokeWidth={LINE_PX} vectorEffect={NS} strokeLinecap="round" opacity={0.9} />
-      <path d={tipLine} fill="none" stroke={INK} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} strokeLinecap="round" opacity={0.45} />
       {/* bill */}
       <Cel paths={[bill]} base={K.bill} shadow={K.billShadow} sheen={K.billSheen} dS={0.5 * sAt} dH={0.22 * sAt} />
       <path d={bill} fill="none" stroke={INK} strokeWidth={INK_PX * 0.9} vectorEffect={NS} strokeLinejoin="round" />
@@ -853,7 +888,7 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
       )}
       {/* small gloss on the crown */}
       {(() => {
-        const g = P([15.9, 24.0, 1.2]);
+        const g = P([16.2, 22.2, 1.2]);
         return <ellipse cx={g.x} cy={g.y} rx={0.95 * g.s} ry={0.42 * g.s} transform={`rotate(-14 ${fx(g.x)} ${fx(g.y)})`} fill="#FFFFFF" opacity={0.42} />;
       })()}
       {/* waterline contact */}
@@ -1016,10 +1051,10 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     core: hullRegion(HV, F_CORE),
   };
   // ---- the cutaway window (near flank, below the waterline), following the keel
-  const WXc = -2.0, WA = 8.5;
+  const WXc = -1.2, WA = 10.0;
   const winF = (s: HS) => {
     const x = s.l[0], y = s.l[1];
-    const lo = keelY(x) + 0.45, hi = -0.85;
+    const lo = keelY(x) + 0.3, hi = -0.45;
     const ym = (lo + hi) / 2, hh = Math.max(0.2, (hi - lo) / 2);
     const k = Math.max(0.02, open);
     const u = (x - WXc) / (WA * k), v = (y - ym) / (hh * k);
@@ -1058,7 +1093,7 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     const k = far ? 0.12 : 0;
     const col = (c: string) => tw(mix(c, K.uwDeep, k), 0.12);
     const pin = P(g.pin), lev = P(g.lever), hip = P(g.hip), cr = P(g.crank0);
-    const brA: V3 = [-7.15, -3.9, g.side * 3.3], brB: V3 = [g.hip[0], g.hip[1], g.side * 3.3];
+    const brA: V3 = [g.hip[0] - 0.4, MODULE.y0 + 0.2, g.side * 3.3], brB: V3 = [g.hip[0], g.hip[1], g.side * 3.3];
     return (
       <g>
         {/* printed bracket carrying the hip pivot */}
@@ -1071,7 +1106,7 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
         {/* lever on the hip pivot */}
         <path d={capsule(g.hip, g.lever, 0.4, 0.3)} fill={col(K.printed)} stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} />
         {/* pushrod */}
-        <path d={capsule(g.pin, g.lever, 0.15, 0.15)} fill={col(K.rod)} stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} />
+        <path d={capsule(g.pin, g.lever, 0.2, 0.2)} fill={col(K.rod)} stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} />
         <path d={`M${P2(pin)} L${P2(lev)}`} stroke={col(K.rodLit)} strokeWidth={1.2} vectorEffect={NS} opacity={0.7} />
         <circle cx={pin.x} cy={pin.y} r={0.3 * pin.s} fill={col(K.rod)} stroke={INK} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} />
         <circle cx={pin.x} cy={pin.y} r={0.11 * pin.s} fill={col(K.axle)} />
@@ -1105,7 +1140,7 @@ const BelowWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number; cut: nu
     return capsule2({x: ax, y: ay}, {x: bx, y: by}, COVER.r, COVER.r * 0.78);
   })();
   // ---- inner surface light: a gradient across the window (dark under the top lip)
-  const wTop = P([WXc, -0.9, 6]), wBot = P([WXc, keelY(WXc) + 0.5, 5]);
+  const wTop = P([WXc, -0.5, 6]), wBot = P([WXc, keelY(WXc) + 0.3, 5]);
   const tint = 0.2;
   return (
     <g opacity={ua}>
@@ -1363,13 +1398,14 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
   const wTop: V2[] = [{x: -100, y: yOnLine(bankL, -100)}, {x: W + 100, y: yOnLine(bankL, W + 100)}];
   const water = `M${P2(wTop[0])} L${P2(wTop[1])} L${W + 100},${H + 100} L-100,${H + 100} Z`;
   // bank strip
-  const bankTopL = lineAcross(B, 7, BANK_Z - 20);
+  const bankTopL = lineAcross(B, 3, BANK_Z - 20);
   const bankD = `M-100,${fx(yOnLine(bankTopL, -100))} L${W + 100},${fx(yOnLine(bankTopL, W + 100))} L${W + 100},${fx(yOnLine(bankL, W + 100) + 1)} L-100,${fx(yOnLine(bankL, -100) + 1)} Z`;
   // reflection bands under the bank
+  const reflEnd = yb + Math.max(30, (proj(B, [B.eye[0], -150, BANK_Z]).y - yb));
   const reflBands = (() => {
     let d = '';
     let y = yb - 2;
-    const yEnd = yb + Math.max(30, (proj(B, [B.eye[0], -110, BANK_Z]).y - yb) * 0.9);
+    const yEnd = yb + Math.max(30, (proj(B, [B.eye[0], -110, BANK_Z]).y - yb) * 0.6);
     let k = 0;
     while (y < yEnd && k < 80) {
       const hgt = 5 + 9 * hash(k * 1.7) * Math.max(0.3, 1 - k / 40);
@@ -1458,8 +1494,13 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
         </linearGradient>
         <filter id={`${id}f`} x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation={7} /></filter>
         <filter id={`${id}r`} x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation={1.4} /></filter>
-        <filter id={`${id}q`} x="-5%" y="-10%" width="110%" height="120%"><feGaussianBlur stdDeviation={2.6} /></filter>
+        <filter id={`${id}q`} x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation={9} /></filter>
         <clipPath id={`${id}c`}><path d={reflBands} /></clipPath>
+        <linearGradient id={`${id}rg`} gradientUnits="userSpaceOnUse" x1={0} y1={yb} x2={0} y2={reflEnd}>
+          <stop offset={0} stopColor={PC.reedRefl} stopOpacity={0.62} />
+          <stop offset={0.55} stopColor={PC.reedRefl} stopOpacity={0.3} />
+          <stop offset={1} stopColor={PC.reedRefl} stopOpacity={0} />
+        </linearGradient>
       </defs>
       <rect x={-50} y={-50} width={W + 100} height={H + 100} fill={`url(#${id}s)`} />
       {clouds.length > 0 && (
@@ -1492,11 +1533,13 @@ const PondBack: React.FC<{B: Basis; t: number}> = ({B, t}) => {
       )}
       <path d={water} fill={`url(#${id}w)`} />
       {reeds && (
-        <g clipPath={`url(#${id}c)`}>
-          <g filter={`url(#${id}q)`} opacity={0.5}>
-            <path d={reeds.massRefl} fill={PC.reedRefl} />
-            <path d={reeds.refl} fill={PC.reedRefl} opacity={0.6} />
-          </g>
+        <g filter={`url(#${id}q)`}>
+          <path d={reeds.massRefl} fill={`url(#${id}rg)`} />
+        </g>
+      )}
+      {reeds && (
+        <g clipPath={`url(#${id}c)`} opacity={0.18}>
+          <path d={reeds.refl} fill={PC.reedRefl} />
         </g>
       )}
       <path d={dk} stroke={PC.waterLow} strokeWidth={1.6} vectorEffect={NS} strokeLinecap="round" opacity={0.28} fill="none" />
@@ -1582,8 +1625,9 @@ const PondUnder: React.FC<{B: Basis; t: number}> = ({B, t}) => {
           <stop offset={1} stopColor={PC.uwLow} />
         </linearGradient>
         <linearGradient id={`${id}f`} gradientUnits="userSpaceOnUse" x1={0} y1={fy} x2={0} y2={H}>
-          <stop offset={0} stopColor={mix(PC.floor, PC.uwMid, 0.88)} />
-          <stop offset={1} stopColor={mix(PC.floor, PC.uwLow, 0.45)} />
+          <stop offset={0} stopColor={mix(PC.floor, PC.uwMid, 0.85)} stopOpacity={0} />
+          <stop offset={0.35} stopColor={mix(PC.floor, PC.uwMid, 0.75)} stopOpacity={0.6} />
+          <stop offset={1} stopColor={mix(PC.floor, PC.uwLow, 0.45)} stopOpacity={0.9} />
         </linearGradient>
         <linearGradient id={`${id}s`} x1={0} y1={0} x2={0} y2={1}>
           <stop offset={0} stopColor="#FFFFFF" stopOpacity={0.22} />

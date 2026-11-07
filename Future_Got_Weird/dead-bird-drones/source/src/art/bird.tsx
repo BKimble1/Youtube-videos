@@ -30,7 +30,7 @@ import {BEAK, BODY, EYE, Feather, FEATHERS, Pose, TAIL, WING_OUTLINE, WingFrame,
 import {C, INK, INK_PX, LINE_PX, NS} from './palette';
 import {mix} from '../core/color';
 import {uid} from '../core/ids';
-import {clamp, hash, W as SCREEN_W, H as SCREEN_H} from '../lib';
+import {clamp, W as SCREEN_W, H as SCREEN_H} from '../lib';
 
 // ================================================================ API
 export type BirdLook = {
@@ -960,7 +960,7 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
     };
     const k = 0.85 * proj(B, xf(F, Wn.o)).s;
     return {
-      d: smoothClosed(WING_OUTLINE.map(([a, b]) => P(a, b))) + smoothClosed(FAIR.map(([a, b]) => P(a, b))),
+      d: smoothClosed(WING_OUTLINE.map(([a, b]) => P(a, b))),
       tr: `translate(${f1(0.6 * k)},${f1(0.8 * k)})`,
     };
   })() : null;
@@ -1137,4 +1137,3 @@ const ShoulderSlot: React.FC<{B: Basis; F: Frame; a: number; T: Tint}> = ({B, F,
   );
 };
 
-void hash;

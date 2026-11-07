@@ -60,13 +60,15 @@ res = {
 json.dump(res, open(os.path.join(out, 'render_qa.json'), 'w'), indent=1)
 print(json.dumps(res, indent=1))
 
+_cache = {}
 def sheet(idx, cols, path, scale=0.25):
-    # ffmpeg's select returns frames in stream order, so decode sorted and put them back in the requested order
-    order = sorted(set(idx))
-    full = subprocess.run(['ffmpeg', '-v', 'error', '-i', src, '-vf', f"select='{'+'.join(f'eq(n,{i})' for i in order)}',scale={int(1080 * scale)}:{int(1920 * scale)}", '-vsync', '0', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True).stdout
-    w, h = int(1080 * scale), int(1920 * scale)
-    got = np.frombuffer(full, np.uint8).reshape(-1, h, w, 3)
-    ims = [got[order.index(i)] for i in idx]
+    # decode the whole file once per scale (frame index = decode order), so every label is exact
+    w, h = int(1080 * scale) // 2 * 2, int(1920 * scale) // 2 * 2
+    if scale not in _cache:
+        raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', src, '-vf', f'scale={w}:{h}', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True, check=True).stdout
+        _cache[scale] = np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
+    got = _cache[scale]
+    ims = [got[i] for i in idx if i < len(got)]
     rows = (len(ims) + cols - 1) // cols
     canvas = Image.new('RGB', (cols * w, rows * h), (16, 16, 16))
     dr = ImageDraw.Draw(canvas)

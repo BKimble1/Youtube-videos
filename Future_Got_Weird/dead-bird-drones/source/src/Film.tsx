@@ -6,7 +6,7 @@ import {resetIds, uid} from './core/ids';
 import {add3, Basis, basis, bodyFrame, Frame, orbit, Orbit, P2, poly, proj, unproj, V2, V3, xf} from './three';
 import {pose, phiOfPhase, wingPt, HINGE, CRADLE, Pose} from './rig';
 import {
-  CUT, LAB, T, T_FLAP, V_FLY, arcs, duckCut, duckPos, labFocus, labShellLift, labState, meadowState, openState, pondCam, skyState,
+  CUT, LAB, T, T_FLAP, V_FLY, arcs, labFrameLift, duckCut, duckPos, labFocus, labShellLift, labState, meadowState, openState, pondCam, skyState,
   uOpen, uSky, MEADOW_T0, SKY_T0, ShotState, OPEN_REVEAL, SKY_REVEAL, openReveal, skyReveal,
 } from './story';
 import {Captions} from './Captions';
@@ -76,10 +76,13 @@ const ExplodeGuides: React.FC<{B: Basis; F: Frame; t: number; lift: number}> = (
     [[-9, -4.6 + lift, 0], [-2.4, -2.4, 0]],
     [[9, -4.2 + lift, 0], [7.2, -1.4, 0]],
   ];
+  // the frame off the cradle (three-layer schematic): body bottom to the cradle pads, in world coords for the pads
+  const fl = labFrameLift(t);
+  const worldPairs: [V3, V3][] = fl > 0.3 ? CRADLE.xs.map((x) => [xf(F, [x, CRADLE.contactY + 0.3, 0]), [x, CRADLE.contactY - 0.2, 0]] as [V3, V3]) : [];
   return (
     <g opacity={a}>
-      {pairs.map(([p, q], i) => {
-        const P = proj(B, xf(F, p)), Q = proj(B, xf(F, q));
+      {[...pairs.map(([p, q]) => [xf(F, p), xf(F, q)] as [V3, V3]), ...worldPairs].map(([p, q], i) => {
+        const P = proj(B, p), Q = proj(B, q);
         return (
           <g key={i}>
             <line x1={P.x} y1={P.y} x2={Q.x} y2={Q.y} stroke="#FFFFFF" strokeWidth={3.2} strokeDasharray="10 9" strokeLinecap="round" opacity={0.85} />

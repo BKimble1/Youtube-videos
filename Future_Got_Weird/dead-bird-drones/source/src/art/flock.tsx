@@ -136,6 +136,8 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
   if (c0.z < 15) return null;
   const sPx = c0.s * S; // screen px per hero-cm
   if (sPx * 50 < 6) return null;
+  const R0 = 42 * sPx; // a generous bound of the bird with its wings
+  if (c0.x + R0 < -60 || c0.x - R0 > 1140 || c0.y + R0 < -60 || c0.y - R0 > 1980) return null;
   const lod = sPx; // > 1: feather lines, > 1.5: eye and cheek
   const w = clamp(sPx * 0.42, 0.8, INK_PX);
   const d = c0.z;
@@ -284,22 +286,25 @@ export const Flock: React.FC<{B: Basis; t: number; birds: LivingBird[]}> = ({B, 
   );
 };
 
-/** suggested flocks framed for the story's cameras (checked in src/test/world.entry.tsx, WorldStory). Positions are
- *  relative to the drone's x at the shot's start (shift them with offsetFlock); they cruise at about the drone's speed
- *  so they stay beyond it, in the frame's upper half, over the treeline and sky. */
+/** suggested flocks framed for the story's cameras (checked in src/test/world.entry.tsx, WorldStory): positions are
+ *  relative to the drone's x at the shot's start (shift them with offsetFlock; the meadow drone starts at x = 0, the sky
+ *  drone at V_FLY * (SKY_T0 - DUR)). Spread in depth from 9 to 50 m beyond the drone, they hold the frame's upper half
+ *  over the treeline and sky through the whole shot, drifting gently ahead (speeds solved against the camera moves). */
 export const FLOCK_MEADOW: LivingBird[] = [
-  {o: [-260, 30, -1000], v: [212, 3, 0], scale: 1, phase: 0.1, freq: 2.3},
-  {o: [40, 5, -1400], v: [206, 2, 0], scale: 1, phase: 0.55, freq: 2.1},
-  {o: [230, 45, -1800], v: [214, -2, 0], scale: 1, phase: 0.3, freq: 2.5},
-  {o: [-470, -15, -1300], v: [203, 4, 0], scale: 1, phase: 0.8, freq: 2.2},
-  {o: [420, 15, -2400], v: [210, 0, 0], scale: 1, phase: 0.05, freq: 2.4},
+  {o: [-153, 38, -900], v: [193, -10, 0], scale: 1, phase: 0.1, freq: 2.3},
+  {o: [-149, 39, -1300], v: [187, -10, 0], scale: 1, phase: 0.55, freq: 2.1},
+  {o: [-159, 0, -2000], v: [177, -10, 0], scale: 1, phase: 0.3, freq: 2.5},
+  {o: [-335, -38, -2600], v: [171, -10, 0], scale: 1, phase: 0.8, freq: 2.2},
+  {o: [-338, -25, -3600], v: [157, -10, 0], scale: 1, phase: 0.05, freq: 2.4},
+  {o: [-400, -106, -5000], v: [136, -10, 0], scale: 1, phase: 0.42, freq: 2.0},
 ];
 export const FLOCK_SKY: LivingBird[] = [
-  {o: [-250, -25, -800], v: [206, 3, 0], scale: 1, phase: 0.2, freq: 2.2},
-  {o: [40, -55, -1200], v: [211, -2, 0], scale: 1, phase: 0.65, freq: 2.4},
-  {o: [-480, -40, -1600], v: [203, 0, 0], scale: 1, phase: 0.4, freq: 2.1},
-  {o: [260, -95, -2000], v: [213, 2, 0], scale: 1, phase: 0.9, freq: 2.5},
-  {o: [-120, -120, -2600], v: [208, 1, 0], scale: 1, phase: 0.15, freq: 2.3},
+  {o: [-226, -10, -800], v: [200, -14, 0], scale: 1, phase: 0.2, freq: 2.2},
+  {o: [-293, -28, -1300], v: [196, -14, 0], scale: 1, phase: 0.65, freq: 2.4},
+  {o: [-378, -118, -2000], v: [190, -14, 0], scale: 1, phase: 0.4, freq: 2.1},
+  {o: [-665, -220, -2800], v: [190, -14, 0], scale: 1, phase: 0.9, freq: 2.5},
+  {o: [-786, -231, -3800], v: [181, -14, 0], scale: 1, phase: 0.15, freq: 2.3},
+  {o: [-952, -449, -5200], v: [169, -14, 0], scale: 1, phase: 0.72, freq: 2.0},
 ];
 /** shift a flock along x (e.g. by the drone's x at the shot's start) */
 export const offsetFlock = (birds: LivingBird[], dx: number): LivingBird[] => birds.map((b) => ({...b, o: [b.o[0] + dx, b.o[1], b.o[2]]}));

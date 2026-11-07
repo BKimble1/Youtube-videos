@@ -11,7 +11,7 @@
 // Ink: every part is outlined by an underlay (its silhouette stroked in ink at twice the contour width, then filled
 // over), all strokes at constant screen width (vectorEffect non-scaling-stroke).
 import React from 'react';
-import {add3, Basis, bodyFrame, cross3, dot3, facing, Frame, hull, len3, mul3, norm3, poly, proj, rotZ, smoothOpen, sub3, V2, V3, xf, xfv} from '../three';
+import {add3, Basis, bodyFrame, cross3, dot3, facing, Frame, hull, len3, mul3, norm3, proj, rotZ, smoothOpen, sub3, V2, V3, xf, xfv} from '../three';
 import {BODY, CRADLE, CRANK, GEARS, Gear, HINGE, LEVER, MOD, MOTOR, PLATE, Pose, SPAR, TOPBAR, WingFrame} from '../rig';
 import {C, INK, INK_PX, LINE_PX, NS} from './palette';
 import {uid} from '../core/ids';
@@ -74,6 +74,9 @@ const lerp = (a: number, b: number, u: number) => a + (b - a) * u;
 const key = (c: Ctx) => `m${c.k++}`;
 const pj = (c: Ctx, p: V3) => proj(c.B, xf(c.F, p));
 const f2 = (n: number) => n.toFixed(2);
+const f1 = (n: number) => n.toFixed(1);
+/** a polygon path at 0.1 px precision (keeps the many-point gear paths light) */
+const poly = (pts: V2[], close = true) => (pts.length ? `M${pts.map((p) => `${f1(p.x)},${f1(p.y)}`).join('L')}${close ? 'Z' : ''}` : '');
 const dOf = (rings: V2[][]) => rings.map((r) => poly(r)).join(' ');
 
 const makeCtx = (B: Basis, F: Frame, detail: number | undefined, probe: V3): Ctx => {
@@ -252,21 +255,24 @@ const slab = (
   L: Layers,
   ringsAt: (u: number) => V3[][],
   probe: [V3, V3],
-  t: {face: string; side: string; ink?: number; line?: number; glow?: number; maxSlices?: number; inkOp?: number},
+  t: {face: string; side: string; ink?: number; line?: number; glow?: number; maxSlices?: number; inkOp?: number; copy?: boolean},
 ) => {
   const p0 = pj(c, probe[0]), p1 = pj(c, probe[1]);
   const dpx = Math.hypot(p1.x - p0.x, p1.y - p0.y);
-  const maxS = t.maxSlices ?? 2 + Math.round(3 * c.det);
-  const nS = dpx < 0.4 ? 0 : Math.max(1, Math.min(maxS, Math.ceil(dpx / 1.5)));
+  const maxS = t.maxSlices ?? 1 + Math.round(2 * c.det);
+  // a sub-frame blur copy draws only its face (the side band averages in from the first copy)
+  const nS = t.copy || dpx < 0.4 ? 0 : Math.max(1, Math.min(maxS, Math.ceil(dpx / 2)));
   const ring2 = (u: number) => dOf(ringsAt(u).map((r) => r.map((p) => pj(c, p))));
   const faceD = ring2(0);
+  const inkOp = t.inkOp ?? 1;
   if (t.glow) L.under.push(...glow(c, faceD, t.glow));
   for (let i = nS; i >= 1; i--) {
     const d = ring2(i / nS);
-    L.under.push(under(c, d, t.ink, t.inkOp));
+    // ink under the hidden face only: the slices between fill the band, the face's own underlay closes the contour
+    if (i === nS && inkOp > 0) L.under.push(under(c, d, t.ink, inkOp));
     L.side.push(fillP(c, d, t.side));
   }
-  L.under.push(under(c, faceD, t.ink, t.inkOp));
+  if (inkOp > 0) L.under.push(under(c, faceD, t.ink, inkOp));
   L.face.push(
     <path key={key(c)} d={faceD} fill={t.face} fillRule="evenodd" stroke={INK} strokeWidth={t.line ?? c.line} strokeOpacity={0.9} strokeLinejoin="round" vectorEffect={NS} />,
   );
@@ -330,6 +336,7 @@ const sweep = (c: Ctx, prof: V3[], E: V3, t: Tone, face?: string): El[] => {
 /** tooth profile: [radial offset from the pitch circle in modules, half-width as a fraction of the angular pitch] */
 // (checked numerically over a full crank turn: meshing outlines never overlap; the pitch-circle backlash is ~12%)
 const TOOTH_FULL: [number, number][] = [[-1.25, 0.34], [-1.0, 0.3], [-0.6, 0.255], [0, 0.22], [0.5, 0.175], [0.82, 0.138], [1.0, 0.095]];
+const TOOTH_MED: [number, number][] = [[-1.25, 0.34], [-0.6, 0.255], [0, 0.22], [0.6, 0.165], [1.0, 0.095]];
 const TOOTH_LOW: [number, number][] = [[-1.25, 0.3], [-0.4, 0.245], [0.55, 0.17], [1.0, 0.105]];
 /** a gear's toothed outline in body-local (x, y): tooth k centred at angle ang + k 2pi/n (counter-clockwise from +x,
  *  seen from +z), exactly rig.ts's tooth phase */
@@ -521,11 +528,11 @@ const gearRings3 = (G: Gear, ang: number, z: number, prof: [number, number][], l
   [gearOutline(G, ang, prof), ...gearHoles(G, ang, low)].map((r) => r.map(([x, y]) => [x, y, z] as V3));
 
 /** one gear (one blur sample) into the layers */
-const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number, inkOp = 1) => {
+const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number, inkOp = 1, copy = false) => {
   const front = facing(c.B, xf(c.F, [G.c[0], G.c[1], G.z1]), xfv(c.F, [0, 0, 1])) > 0;
   const zf = front ? G.z1 : G.z0, zb = front ? G.z0 : G.z1;
   const toothPx = MOD * c.s0;
-  const prof = toothPx < 5 ? TOOTH_LOW : TOOTH_FULL;
+  const prof = toothPx < 5 ? TOOTH_LOW : toothPx < 9 ? TOOTH_MED : TOOTH_FULL;
   const low = c.det < 0.35;
   const ctr = pj(c, [G.c[0], G.c[1], zf]);
   const R = (G.r + MOD) * ctr.s;
@@ -537,6 +544,7 @@ const gearBody = (c: Ctx, L: Layers, G: Gear, ang: number, glowAmt: number, inkO
     ink: Math.min(c.ink, lerp(1.1, INK_PX, clamp((toothPx - 2.5) / 5))),
     glow: glowAmt,
     inkOp,
+    copy,
   });
 };
 
@@ -580,7 +588,7 @@ const gearTop = (c: Ctx, G: Gear, ang: number, sweep: number): El[] => {
   if (mk) {
     const a = ang + mk.da;
     const mc: V3 = [G.c[0] + mk.r * Math.cos(a), G.c[1] + mk.r * Math.sin(a), zf + 0.005];
-    const sz = Math.max(mk.size, 2.2 / Math.max(1, ctr.s));
+    const sz = Math.max(mk.size, 3.2 / Math.max(1, ctr.s));
     if (Math.abs(sweep) > 0.05) {
       const tr = ring3(c, [G.c[0], G.c[1], zf + 0.005], X, Y, mk.r, 12, a - sweep / 2, a + sweep / 2, false);
       out.push(<path key={key(c)} d={poly(tr, false)} fill="none" stroke={C.accent} strokeWidth={f2(sz * 2 * ctr.s * 0.85)} strokeLinecap="round" opacity={0.42} vectorEffect={NS} />);
@@ -605,7 +613,7 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
     const tau = (2 * Math.PI) / GEARS[id].n;
     K = Math.max(K, Math.ceil(sweep / (tau * 0.2)));
   }
-  K = Math.min(K, Math.round(3 + 4 * c.det));
+  K = Math.min(K, Math.round(2 + 4 * c.det));
   // a gear turning more than about half a tooth pitch per exposure smears: its teeth become a translucent band
   // (no ink on the copies) bounded by soft tip and root circles; slower gears keep crisp inked copies
   const smear: Record<string, boolean> = {};
@@ -614,7 +622,7 @@ const gearGroup = (c: Ctx, ids: Gear['id'][], ps: Pose, rate: number, focus: Mec
   for (let i = 0; i < K; i++) {
     const L = layers();
     const dt = K === 1 ? 0 : (i / (K - 1) - 0.5) * SHUTTER;
-    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0, smear[id] ? 0 : i === 0 ? 1 : 0.3);
+    for (const id of ids) gearBody(c, L, GEARS[id], ps.gear[id] + omega[id] * dt, i === 0 && focus === id ? 1 : 0, smear[id] ? 0 : i === 0 ? 1 : 0.3, i > 0);
     // equal-weight accumulation: copy i drawn at 1/(i+1) over the running average
     out.push(<g key={key(c)} opacity={K === 1 ? undefined : f2(1 / (i + 1))}>{flat(L)}</g>);
   }
@@ -727,7 +735,17 @@ const eye = (c: Ctx, a: V3, b: V3, glowAmt: number): El[] => {
 const topEye = (c: Ctx, W: WingFrame, glowAmt: number): El[] => eye(c, add3(W.o, mul3(W.ex, LEVER - EYE.hl)), add3(W.o, mul3(W.ex, LEVER + EYE.hl)), glowAmt);
 /** the rod-end eye on the crank pin (axis z) */
 const pinEye = (c: Ctx, p: V3, glowAmt: number): El[] => eye(c, [p[0], p[1], p[2] - EYE.hl], [p[0], p[1], p[2] + EYE.hl], glowAmt);
-const rodBar = (c: Ctx, a: V3, b: V3, glowAmt: number): El[] => cyl(c, a, b, 0.135, ROD, {n: 14, spec: 0.7, caps: 'none', glow: glowAmt});
+/** a connecting rod between its two eye centres: the bar, and at each end the rod-end's thicker shank (drawn before
+ *  the eyes, so each eye visibly belongs to its rod) */
+const rodBar = (c: Ctx, a: V3, b: V3, glowAmt: number): El[] => {
+  const d = norm3(sub3(b, a));
+  const neck = 0.62;
+  return [
+    ...cyl(c, a, b, 0.135, ROD, {n: 14, spec: 0.7, caps: 'none', glow: glowAmt}),
+    ...cyl(c, a, add3(a, mul3(d, neck)), 0.2, ROD, {n: 14, spec: 0.5, glow: glowAmt * 0.6}),
+    ...cyl(c, add3(b, mul3(d, -neck)), b, 0.2, ROD, {n: 14, spec: 0.5, glow: glowAmt * 0.6}),
+  ];
+};
 
 const hingeAssembly = (c: Ctx, ps: Pose, glowNear: number): {back: El[]; front: El[]} => {
   const back: El[] = [], front: El[] = [];
@@ -850,11 +868,12 @@ type YZ = [number, number];
 /** a support's yz section at body-local x: (y, z) of the body's underside along the angle t from straight down,
  *  pushed out by off (cm) */
 const crSection = (x: number) => {
-  const O: V3 = [x, -1, 0];
+  // fitted to the narrowest section across the saddle's width, so the liner touches the body along its whole length
+  const xs = [x - CRADLE.padW / 2, x, x + CRADLE.padW / 2];
   return (t: number, off: number): YZ => {
     const d: V3 = [0, -Math.cos(t), Math.sin(t)];
-    const r = bodyExit(O, d) + 0.02 + off;
-    return [O[1] + d[1] * r, d[2] * r];
+    const r = Math.min(...xs.map((xx) => bodyExit([xx, -1, 0], d))) + 0.02 + off;
+    return [-1 + d[1] * r, d[2] * r];
   };
 };
 /** one support's profiles (y, z): the foam liner (a band on the body's underside), the U saddle block under it, and

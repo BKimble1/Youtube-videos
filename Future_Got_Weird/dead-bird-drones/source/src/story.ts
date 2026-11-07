@@ -169,8 +169,12 @@ const GBX: V3 = [2.5, -0.4, 0], GAX: V3 = [4.64, -2.2, 0], GP0X: V3 = [4.46, -4.
 /** the lab bird's body frame: at the match it carries the flying bird's bob and pitch, then settles into the cradle */
 export const labFrame = (t: number): Frame => {
   const k = 1 - ss(t, CUT.openToLab, LAB.spinEnd);
-  return bodyFrame([0, bob(U_MATCH) * k, 0], 0, pitchOsc(U_MATCH) * k, 0);
+  return bodyFrame([0, bob(U_MATCH) * k + labFrameLift(t), 0], 0, pitchOsc(U_MATCH) * k, 0);
 };
+/** the three-layer schematic: after the shell has risen, the mechanical frame (with the wings on its spars) also rises
+ *  off the cradle, then both come back down in turn (frame first, then the shell seats over it) */
+export const LAB_FRAME_LIFT = {h: 5.5, up: [6.45, 7.25] as [number, number], down: [7.5, 8.1] as [number, number]};
+export const labFrameLift = (t: number) => LAB_FRAME_LIFT.h * (ss5(t, ...LAB_FRAME_LIFT.up) - ss5(t, ...LAB_FRAME_LIFT.down));
 export const labState = (t: number): ShotState => {
   const u = uLab(t);
   const F = labFrame(t);
@@ -191,14 +195,18 @@ export const labState = (t: number): ShotState => {
   const wingCam: Orbit = {target: lerpVec(midWing, [4, 4, 12], 0.4), yaw: 18, pitch: 9, dist: 300, scale: 15, cy: 1000};
   let cam: Orbit;
   if (t < 5.2) cam = lerpOrbit(M, wide, ss5(t, CUT.openToLab, 5.2));
-  else if (t < 8.85) cam = lerpOrbit(wide, exploded, clamp(ss5(t, 5.25, 6.6) - ss5(t, 7.9, 8.85)));
+  else if (t < 8.85) {
+    const ex2: Orbit = {...exploded, yaw: 31, pitch: 17, target: [-2.0, 6.5, 0]};
+    const ex = lerpOrbit(exploded, ex2, ss5(t, 6.3, 8.0));
+    cam = lerpOrbit(wide, ex, clamp(ss5(t, 5.25, 6.6) - ss5(t, 7.95, 8.85)));
+  }
   else if (t < T.gearbox + 0.1) cam = lerpOrbit(wide, gear, ss5(t, 8.85, T.gearbox + 0.1));
   else if (t < T.motors - 0.05) cam = lerpOrbit(gear, gear2, ss5(t, T.gearbox + 0.1, T.motors - 0.05));
   else if (t < T.spinning + 0.2) cam = lerpOrbit(gear2, fP0, ss5(t, T.motors - 0.05, T.spinning + 0.2));
   else if (t < T.motion + 0.15) cam = lerpOrbit(fP0, fA, ss5(t, T.spinning + 0.2, T.motion + 0.15));
   else if (t < T.into + 0.05) cam = lerpOrbit(fA, fB, ss5(t, T.motion + 0.15, T.into + 0.05));
-  else if (t < T.wings - 0.05) cam = lerpOrbit(fB, fRod, ss5(t, T.into + 0.05, T.wings - 0.05));
-  else cam = lerpOrbit(fRod, wingCam, ss5(t, T.wings - 0.05, CUT.labToMeadow[0] + 0.1));
+  else if (t < 11.85) cam = lerpOrbit(fB, fRod, ss5(t, T.into + 0.05, 11.85));
+  else cam = lerpOrbit(fRod, wingCam, ss5(t, 11.85, 12.8));
   return {cam, F, u, ps, rate: rateOf(labSpeed(t))};
 };
 const sub3v = (a: V3, b: V3): V3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];

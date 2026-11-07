@@ -90,6 +90,28 @@ const S3: Cell[] = [
   {cam: splitCam(18.0), t: 18.0, layers: {duck: true}, look: {cut: 1}, bg: '#CBD5D8'},
 ];
 
+// mechanism close-ups at four crank phases (one paddle cycle = 1 / 1.5 s)
+const MechSheet: React.FC = () => {
+  resetIds('dkm_');
+  const ts = [18.0, 18.0 + 1 / 6, 18.0 + 2 / 6, 18.0 + 3 / 6];
+  return (
+    <AbsoluteFill style={{background: '#444'}}>
+      <svg width={W} height={H}>
+        {ts.map((t, i) => {
+          const cam: Orbit = {target: add3(duckPos(t), [-2, -5, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 34, cx: 540, cy: 900};
+          return (
+            <g key={i} transform={`translate(${(i % 2) * 540},${Math.floor(i / 2) * 960}) scale(0.5)`}>
+              <clipPath id={`m${i}`}><rect width={W} height={H} /></clipPath>
+              <g clipPath={`url(#m${i})`}><Frame1 B={basis(cam)} t={t} look={{cut: 1}} /></g>
+              <rect width={W} height={H} fill="none" stroke="#000" strokeWidth={4} />
+            </g>
+          );
+        })}
+      </svg>
+    </AbsoluteFill>
+  );
+};
+
 const Root: React.FC = () => (
   <>
     <Composition id="DuckSheet1" component={() => <Sheet cells={S1} />} durationInFrames={1} fps={30} width={W} height={H} />
@@ -97,6 +119,7 @@ const Root: React.FC = () => (
     <Composition id="DuckSheet3" component={() => <Sheet cells={S3} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSurfaceFull" component={() => <Full cam={filmSurf(16.6)} t={16.6} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSplitFull" component={() => <Full cam={splitCam(18.05)} t={18.05} look={{cut: 1}} />} durationInFrames={1} fps={30} width={W} height={H} />
+ <Composition id="DuckMechClose" component={() => <MechSheet />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSurfaceClose" component={() => <Full cam={{...surfCam(16.3), scale: 30, cy: 1100}} t={16.3} />} durationInFrames={1} fps={30} width={W} height={H} />
   </>
 );

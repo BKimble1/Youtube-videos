@@ -172,9 +172,9 @@ const ellPath = (cx: number, cy: number, rx: number, ry: number, rot: number) =>
   const a = {x: cx - rx * c, y: cy - rx * s}, b = {x: cx + rx * c, y: cy + rx * s};
   return `M${P2(a)} A${fx(rx)},${fx(ry)} ${fx(rot)} 1,0 ${P2(b)} A${fx(rx)},${fx(ry)} ${fx(rot)} 1,0 ${P2(a)} Z`;
 };
-/** soft cel-shaded cumulus: a cluster of puffs, lit from the upper left */
+/** soft cel-shaded cumulus: a cluster of puffs over a flat base, lit from the upper left. The body and lit puffs are
+ *  shrunk inside their own shade puff, so no clip path is needed. */
 const Cloud: React.FC<{c: V2; s: number; seed: number; lit: string; body: string; shade: string; flat?: number}> = ({c, s, seed, lit, body, shade, flat = 0.55}) => {
-  const id = uid('wcl');
   const puffs: Blob[] = [];
   const n = 5 + Math.floor(hash(seed) * 3);
   for (let i = 0; i < n; i++) {
@@ -183,18 +183,12 @@ const Cloud: React.FC<{c: V2; s: number; seed: number; lit: string; body: string
     puffs.push({x: c.x + u * s * 1.9 + (hash(seed + i * 2.9) - 0.5) * s * 0.25, y: c.y - r * 0.55 + (hash(seed + i * 4.1) - 0.5) * s * 0.12, r, k: 0});
   }
   const base = `M${fx(c.x - s * 1.15)},${fx(c.y)} L${fx(c.x + s * 1.15)},${fx(c.y)} L${fx(c.x + s * 1.0)},${fx(c.y + s * 0.16)} L${fx(c.x - s * 1.0)},${fx(c.y + s * 0.16)} Z`;
-  const all = blobsPath(puffs, 1, 1) + ' ' + base;
-  const litP = blobsPath(puffs.map((p) => ({...p, x: p.x - p.r * 0.2, y: p.y - p.r * 0.26, r: p.r * 0.86})), 1, 1);
+  const shift = (k: number, dx: number, dy: number) => blobsPath(puffs.map((p) => ({...p, x: p.x + p.r * dx, y: p.y + p.r * dy, r: p.r * k})), 1, 1);
   return (
     <g transform={`translate(${fx(c.x)},${fx(c.y)}) scale(1,${flat * 1.6}) translate(${fx(-c.x)},${fx(-c.y)})`}>
-      <defs>
-        <clipPath id={id}><path d={all} /></clipPath>
-      </defs>
-      <path d={all} fill={shade} />
-      <g clipPath={`url(#${id})`}>
-        <path d={blobsPath(puffs.map((p) => ({...p, y: p.y - p.r * 0.1})), 1, 1)} fill={body} />
-        <path d={litP} fill={lit} />
-      </g>
+      <path d={blobsPath(puffs, 1, 1) + ' ' + base} fill={shade} />
+      <path d={shift(0.9, -0.03, -0.08)} fill={body} />
+      <path d={shift(0.68, -0.16, -0.2)} fill={lit} />
     </g>
   );
 };
@@ -209,7 +203,8 @@ const CloudLayer: React.FC<{B: Basis; Z: number; yRef: number; spacing: number; 
     const el = lerp(elLo, elHi, hash(k * 5.3 + seed * 1.9));
     const p = proj(B, [x, farY(Z, el, yRef), Z]);
     const s = size * (0.6 + 0.6 * hash(k * 9.1 + seed)) * p.s;
-    if (p.x < -3 * s || p.x > W + 3 * s) continue;
+    const fl = (flat ?? 0.55) * 1.6;
+    if (p.x + 1.4 * s < -120 || p.x - 1.4 * s > W + 120 || p.y + 0.3 * s < -120 || p.y - 1.1 * s * fl > H + 120) continue;
     out.push(<Cloud key={k} c={{x: p.x, y: p.y}} s={s} seed={k * 13.1 + seed} lit={lit} body={body} shade={shade} flat={flat} />);
   }
   return <g>{out}</g>;
@@ -533,7 +528,7 @@ export const LABSET = {
   wallZ: -72,
   frontZ: 34,
   benchX: [-190, 190] as [number, number],
-  peg: {x0: -150, x1: 92, y0: 14, y1: 84},
+  peg: {x0: -150, x1: 92, y0: 6, y1: 78},
   mat: {x0: -36, x1: 34, z0: -30, z1: 22},
   lamp: {base: [-62, CRADLE.benchY, -50] as V3, elbow: [-66, 33, -58] as V3, head: [-40, 44, -40] as V3, aim: [-10, CRADLE.benchY, -8] as V3},
 };
@@ -602,8 +597,8 @@ const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
   return (
     <g>
       {/* left: pliers, two screwdrivers, a wrench */}
-      {shadow('s0', `${plier} ${gripL} ${gripR}`, at(-74, 66))}
-      <g transform={at(-74, 66)}>
+      {shadow('s0', `${plier} ${gripL} ${gripR}`, at(-74, 46))}
+      <g transform={at(-74, 46)}>
         <path d={plier} fill={C.steel} {...sw} />
         <path d={gripL} fill="#C2564A" {...sw} />
         <path d={gripR} fill="#C2564A" {...sw} />
@@ -611,37 +606,37 @@ const Tools: React.FC<{B: Basis; Z: number}> = ({B, Z}) => {
       </g>
       {([[-63, '#E0A43A', 9.5, 10], [-56.5, '#4D8DB8', 8.5, 13]] as [number, string, number, number][]).map(([x, col, hl, sl], i) => (
         <g key={`sd${i}`}>
-          <rect x={-1.25} y={0.9} width={2.5} height={hl + sl} rx={1} fill="#7D8C95" opacity={0.3} transform={`${at(x, 67)} translate(0.6,0)`} />
-          <g transform={at(x, 67)}>
+          <rect x={-1.25} y={0.9} width={2.5} height={hl + sl} rx={1} fill="#7D8C95" opacity={0.3} transform={`${at(x, 47)} translate(0.6,0)`} />
+          <g transform={at(x, 47)}>
             <rect x={-1.25} y={0} width={2.5} height={hl} rx={1.1} fill={col} {...sw} />
             <rect x={-0.85} y={1.2} width={0.55} height={hl - 2.4} rx={0.25} fill="#FFFFFF" opacity={0.45} />
             <rect x={-0.3} y={hl} width={0.6} height={sl} fill={C.steel} {...sw} />
           </g>
         </g>
       ))}
-      {shadow('s1', wrench, `${at(-46, 66)} rotate(6)`)}
-      <g transform={`${at(-46, 66)} rotate(6)`}>
+      {shadow('s1', wrench, `${at(-46, 46)} rotate(6)`)}
+      <g transform={`${at(-46, 46)} rotate(6)`}>
         <path d={wrench} fill={C.steel} fillRule="evenodd" {...sw} />
         <circle cx={0} cy={20.6} r={1.0} fill="#E4E9EA" />
       </g>
       {/* right: scissors, a coil of copper wire, a small roll of tape */}
-      <g transform={at(8, 66)}>
+      <g transform={at(8, 44)}>
         <path d="M-0.5,0 L-1.5,14 L0,14.6 Z" fill={C.steelLit} {...sw} />
         <path d="M0.5,0 L1.5,14 L0,14.6 Z" fill={C.steel} {...sw} />
         <ellipse cx={-2.4} cy={-2.6} rx={2.1} ry={2.6} fill="none" stroke="#3F8E8A" strokeWidth={1.2} />
         <ellipse cx={2.4} cy={-2.6} rx={2.1} ry={2.6} fill="none" stroke="#3F8E8A" strokeWidth={1.2} />
       </g>
-      <g transform={at(22, 66)}>
+      <g transform={at(22, 46)}>
         <circle cx={0.6} cy={6.9} r={6} fill="none" stroke="#7D8C95" strokeWidth={2.4} opacity={0.3} />
         <circle cx={0} cy={6} r={6} fill="none" stroke={C.copper} strokeWidth={2.4} />
         <circle cx={0} cy={6} r={6} fill="none" stroke="#E7A06E" strokeWidth={0.6} strokeDasharray="1.2 1.4" />
       </g>
-      <g transform={at(36, 64)}>
+      <g transform={at(36, 44)}>
         <circle cx={0.6} cy={4.9} r={4.2} fill="#7D8C95" opacity={0.3} />
         <circle cx={0} cy={4} r={4.2} fill="#E9E4D6" {...sw} />
         <circle cx={0} cy={4} r={2.2} fill="#C9D2D6" {...sw} />
       </g>
-      {[[-86, 58], [-30, 72], [-14, 60], [50, 70], [-100, 72]].map(([x, y], i) => hook(x, y, i))}
+      {[[-86, 40], [-30, 52], [-14, 42], [50, 50], [-100, 56], [-58, 62], [20, 64]].map(([x, y], i) => hook(x, y, i))}
     </g>
   );
 };
@@ -1076,18 +1071,19 @@ export const MeadowFront: React.FC<Env> = ({B, t}) => {
     if (b.z < 30) return;
     dsum += b.z;
     n++;
-    const h = 165 + 45 * hash(sd + 3);
+    // heights capped so the tips stay in the bottom band (below the drone) for the story's meadow cameras
+    const h = 150 + 30 * hash(sd + 3);
     const sw = 0.05 * Math.sin(t * 1.7 + k);
     const blades = tuftPath(b, h, 7, sd, sw, 1.1, 0.5);
     // a couple of grass seed stalks with small heads
     let stalks = '';
     let heads = '';
     for (let i = 0; i < 2; i++) {
-      const L = (h + 15 + 20 * hash(sd + i * 3)) * b.s, lean = (hash(sd + i * 5) - 0.5) * 0.35 + sw;
+      const L = (h + 4 + 6 * hash(sd + i * 3)) * b.s, lean = (hash(sd + i * 5) - 0.5) * 0.35 + sw;
       const bx = b.x + (i - 0.5) * 14 * b.s;
       const tx = bx + Math.sin(lean) * L, ty = b.y - Math.cos(lean) * L;
       stalks += `M${fx(bx)},${fx(b.y)} Q${fx(bx + Math.sin(lean * 0.5) * L * 0.5)},${fx(b.y - L * 0.55)} ${fx(tx)},${fx(ty)} `;
-      heads += ellPath(tx + Math.sin(lean) * 5 * b.s, ty - Math.cos(lean) * 5 * b.s, 6 * b.s, 1.1 * b.s, deg(Math.atan2(-Math.cos(lean), Math.sin(lean)))) + ' ';
+      heads += ellPath(tx + Math.sin(lean) * 2.5 * b.s, ty - Math.cos(lean) * 2.5 * b.s, 3 * b.s, 0.7 * b.s, deg(Math.atan2(-Math.cos(lean), Math.sin(lean)))) + ' ';
     }
     for (const u of [1, 0.5, 0]) {
       const dx = FIELD.V * (1 / 60) * u * b.s; // the tracking camera's shutter smear

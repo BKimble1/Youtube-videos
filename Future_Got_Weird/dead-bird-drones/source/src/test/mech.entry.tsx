@@ -60,10 +60,6 @@ const Cell: React.FC<{s: CellSpec; i: number}> = ({s, i}) => {
         {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="back" />}
         {kind === 'cradle' && <BodyProxy B={B} F={F} />}
         {kind === 'cradle' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} layer="front" />}
-        {kind === 'cradle' && [-5.5, 6].flatMap((x) => [-64, 0, 64].map((t) => {
-          const q = proj(B, xf(F, [x, -1 - 5.5 * Math.cos((t * Math.PI) / 180), 5.5 * Math.sin((t * Math.PI) / 180)]));
-          return <circle key={`${x}${t}`} cx={q.x} cy={q.y} r={4} fill="red" />;
-        }))}
         {kind === 'exploded' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
         {kind === 'cradleAll' && <Cradle B={B} F={F} base={[0, CRADLE.benchY, 0]} />}
         {kind === 'cradleAll' && <BodyProxy B={B} F={F} />}
@@ -89,7 +85,7 @@ const sheetA = (): CellSpec[] => {
   cells.push({x: 540, y: 940, w: 540, h: 500, cam: {target: [2.5, 3.9, 2.3], yaw: 10, pitch: 5, dist: 80, scale: 110}, u: 0.35, look: {detail: 1}, label: 'rod-lever 110px'});
   cells.push({x: 0, y: 1440, w: 360, h: 480, cam: {target: [3.6, -2.0, 0.3], yaw: 12, pitch: 7, dist: 90, scale: 48}, u: 0.2, look: {detail: 0.8, rate: (2 * Math.PI) / 0.7}, label: 'blur: flight rate'});
   cells.push({x: 360, y: 1440, w: 360, h: 480, cam: {target: [3.6, -2.0, 0.3], yaw: 12, pitch: 7, dist: 90, scale: 48}, u: 0.2, look: {detail: 0.8, rate: 0.32 * (2 * Math.PI) / 0.7, focus: 'P0'}, label: 'slow + focus P0'});
-  cells.push({x: 720, y: 1440, w: 360, h: 480, cam: {target: [-1, -6, 0], yaw: 22, pitch: 15, dist: 420, scale: 14}, u: 0.25, kind: 'cradle', label: 'cradle 14px'});
+  cells.push({x: 720, y: 1440, w: 360, h: 480, cam: {target: [-1, -4, 0], yaw: 22, pitch: 15, dist: 420, scale: 8}, u: 0.25, kind: 'cradle', label: 'cradle 8px'});
   return cells;
 };
 const sheetB = (): CellSpec[] => {
