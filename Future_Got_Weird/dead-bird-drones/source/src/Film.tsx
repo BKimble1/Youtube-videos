@@ -7,7 +7,7 @@ import {add3, Basis, basis, bodyFrame, Frame, orbit, Orbit, P2, poly, proj, unpr
 import {pose, phiOfPhase, wingPt, HINGE, CRADLE, Pose} from './rig';
 import {
   CUT, LAB, T, T_FLAP, V_FLY, arcs, labFrameLift, duckCut, duckPos, labFocus, labShellLift, labState, meadowState, openState, pondCam, skyState,
-  uOpen, uSky, MEADOW_T0, SKY_T0, ShotState, OPEN_REVEAL, SKY_REVEAL, openReveal, skyReveal,
+  uOpen, uSky, MEADOW_T0, SKY_T0, ShotState, OPEN_REVEAL, SKY_REVEAL, openReveal, skyReveal, meadowReveal, MEADOW_REVEAL,
 } from './story';
 import {Captions} from './Captions';
 import {C, INK} from './art/palette';
@@ -41,11 +41,19 @@ const openParts = (t: number): Parts => {
   const r = openReveal(t);
   return {
     back: <FieldBack B={B} t={t} />,
-    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />,
+    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} focus={openFocus(t)} detail={detailOf(s.cam.scale)} />,
     front: <FieldFront B={B} t={t} />,
   };
 };
 const OpenShot: React.FC<{t: number}> = ({t}) => <Shot p={openParts(t)} />;
+/** drive detail by on-screen scale (px/cm) */
+const detailOf = (scale: number) => clamp((scale - 16) / 36);
+/** (V2) the hook's highlight follows the words: the motor on 'motor', then the rod, lever and wing root on 'dead bird' */
+const openFocus = (t: number): 'P0' | 'A' | 'B' | 'rod' | null => {
+  if (t >= 0.35 && t < 0.95) return 'motor' as unknown as 'P0';
+  if (t >= 0.95 && t < 2.0) return 'rod';
+  return null;
+};
 
 const LAB_GEAR_C: [number, number] = [3.4, -1.6];
 const labParts = (t: number): Parts => {
@@ -143,7 +151,10 @@ const meadowParts = (t: number): Parts => {
         <Flock B={B} t={tf} birds={MEADOW_FLOCK} haze={MEADOW.haze} />
       </g>
     ),
-    bird: <DroneBird B={B} s={s} />,
+    bird: (() => {
+      const r = meadowReveal(t);
+      return <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={detailOf(s.cam.scale)} />;
+    })(),
     front: (
       <g>
         {ar.a > 0.01 && <SoundArcs B={B} F={s.F} a={ar.a} n={ar.n} r={ar.r} />}
@@ -207,7 +218,7 @@ const skyParts = (t: number): Parts => {
         <Flock B={B} t={tf} birds={SKY_FLOCK} haze={SKY.haze} />
       </g>
     ),
-    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={0.25} />,
+    bird: <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={detailOf(s.cam.scale)} />,
     front: null,
   };
 };
@@ -318,12 +329,12 @@ const ScopeLabel: React.FC<{text: string; a: number; y: number}> = ({text, a, y}
   );
 const labelOps = (t: number) => {
   const sch = Math.max(
-    ss(t, 0.25, 0.45) * (1 - ss(t, OPEN_REVEAL.close[0], OPEN_REVEAL.close[1])), // the opening cutaway
+    1 - ss(t, OPEN_REVEAL.close[0], OPEN_REVEAL.close[1]), // the hook cutaway (open from frame 0)
     ss(t, LAB.lift[0] + 0.45, LAB.lift[0] + 0.75) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[0] + 0.25)), // exploded view through the close drive
-    ss(t, T.robot + 0.2, T.robot + 0.45) * (1 - ss(t, CUT.pondToSky[0], CUT.pondToSky[0] + 0.2)), // the duck's split view
-    ss(t, SKY_REVEAL.open[0], SKY_REVEAL.open[0] + 0.15) * (1 - ss(t, SKY_REVEAL.close[0], SKY_REVEAL.close[1])), // the callback
+    ss(t, MEADOW_REVEAL.open[0] + 0.1, MEADOW_REVEAL.open[1] + 0.1) * (1 - ss(t, CUT.pondToSky[0], CUT.pondToSky[0] + 0.2)), // the match through the duck's schematic
+    ss(t, SKY_REVEAL.open[0], SKY_REVEAL.open[0] + 0.15), // the callback, open into the loop
   );
-  const res = ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, CUT.meadowToPond[0] - 0.2, CUT.meadowToPond[0]));
+  const res = ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, MEADOW_REVEAL.open[0] - 0.05, MEADOW_REVEAL.open[0] + 0.1));
   return {sch, res};
 };
 

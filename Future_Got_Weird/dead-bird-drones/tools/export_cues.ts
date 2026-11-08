@@ -6,7 +6,7 @@
 import * as fs from 'fs';
 import {DUR} from '../source/src/lib';
 import {
-  CUT, LAB, T, T_FLAP, labShellLift, labState, meadowState, openState, skyState, openReveal, skyReveal, duckCut, uLab, uOpen, uMeadow, uSky,
+  CUT, LAB, T, T_FLAP, meadowReveal, labShellLift, labState, meadowState, openState, skyState, openReveal, skyReveal, duckCut, uLab, uOpen, uMeadow, uSky,
   MEADOW_T0, POND_T0, SKY_T0, OPEN_REVEAL, SKY_REVEAL,
 } from '../source/src/story';
 import {RATIO} from '../source/src/rig';
@@ -43,7 +43,7 @@ for (let i = 0; i <= Math.round(DUR * 100); i++) {
     u = uLab(t); scale = s.cam.scale; motorHz = (s.rate / (2 * Math.PI)) * RATIO; vis = 1;
     drive = t > LAB.cutOpen[0] && t < LAB.cutClose[1] ? 1 : 0;
   } else if (w === 'meadow') {
-    const s = meadowState(t); u = uMeadow(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; vis = onScreen(s);
+    const s = meadowState(t); u = uMeadow(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; vis = onScreen(s); drive = meadowReveal(t) ? 1 : 0;
   } else if (w === 'sky') {
     const s = skyState(t); u = uSky(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; drive = skyReveal(t) ? 1 : 0; vis = onScreen(s);
   }

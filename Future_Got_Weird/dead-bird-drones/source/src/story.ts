@@ -61,7 +61,9 @@ export const CUT = {
   // the background sweeps down behind the drone on one full-speed downstroke (phase 0.1 -> 0.45); the drone itself is
   // continuous (the lab's last framing is the meadow's first, re-based), so only the place changes
   labToMeadow: [12.845, 13.09] as [number, number],
-  meadowToPond: [15.56, 15.96] as [number, number], // waterline wipe
+  // (V2) a hard MATCH CUT on 'And': the camera has pushed into the drone's flank cutaway; the pond opens tight on the
+  // duck's own cutaway window at the same screen place and size, then pulls back to reveal the duck
+  meadowToPond: [15.94, 15.94] as [number, number],
   pondToSky: [18.84, 19.2] as [number, number], // water crosses the foreground edge
   // the same background sweep on the downstroke after 'dead' (sky phase 0.1 -> 0.45), into the opening's own frames
   loop: [22.93, 23.18] as [number, number],
@@ -99,17 +101,14 @@ export const openCut = (t: number) => {
 /** the opening camera, relative to the bird's flight line (no bob) at x = V_FLY t */
 export const openCam = (t: number): Orbit => {
   const base: V3 = [V_FLY * t, 0, 0];
-  const rootLocal: V3 = [HINGE.near[0] + 0.5, HINGE.near[1] + 0.6, 5.4];
-  // frame 0: the whole bird large, with lead room to the right (beak clear of the action buttons)
-  const A: Orbit = {target: add3(base, [-2.5, 2.0, 0]), yaw: 14, pitch: 7, dist: 900, scale: 17.5, cx: 455, cy: 1010};
-  // the reveal: ease in on the drive (gear B and the rods) while the wing keeps flapping
-  const A2: Orbit = {target: add3(base, [2.6, 0.6, 0]), yaw: 14, pitch: 7, dist: 900, scale: 23, cx: 500, cy: 1030};
-  // "fly again": back out to the whole bird and the fence line
-  const Bw: Orbit = {target: add3(base, [-3, 5, 0]), yaw: 16, pitch: 9, dist: 900, scale: 12.5, cx: 470, cy: 990};
-  // (no second push before the match: the lab continues from this framing, so the zoom never reverses twice)
-  void rootLocal;
-  if (t < 2.25) return lerpOrbit(A, A2, ss5(t, 0.25, 1.45));
-  return lerpOrbit(A2, Bw, ss5(t, 2.25, 3.3));
+  // (V2) frame 0: a close-up of the flying bird's flank with the cutaway open (head and wing root in frame), so the drive
+  // and the wing it moves read at once; a slow drift in while 'motor' and the rod-to-wing chain are highlighted
+  const A: Orbit = {target: add3(base, [3.6, 1.2, 0]), yaw: 14, pitch: 7, dist: 900, scale: 33, cx: 430, cy: 1040};
+  const A2: Orbit = {...A, target: add3(base, [3.4, 1.5, 0]), scale: 35};
+  // "fly again": out to the whole bird over the field, from a lower, more lateral angle (a new perspective)
+  const Bw: Orbit = {target: add3(base, [-3, 5, 0]), yaw: 20, pitch: 3, dist: 900, scale: 12.5, cx: 470, cy: 1000};
+  if (t < 1.85) return lerpOrbit(A, A2, ss5(t, 0, 1.85));
+  return lerpOrbit(A2, Bw, ss5(t, 1.85, 3.25));
 };
 export const openState = (t: number): ShotState => {
   const u = uOpen(t);
@@ -234,7 +233,12 @@ export const MEADOW_T0 = CUT.labToMeadow[0];
 /** the meadow bird continues the lab bird's stroke through the wipe */
 const U_MEADOW0 = uLab(CUT.labToMeadow[0]);
 export const uMeadow = (t: number) => U_MEADOW0 + (t - MEADOW_T0) / T_FLAP;
-/** how far the meadow camera has fallen behind the drone (cm): it decelerates smoothly over MEADOW_STOP, then holds */
+/** (V2) the meadow cutaway opens on the downstroke at 15.015 (phase 0.2) and the camera pushes into it before the cut */
+export const MEADOW_REVEAL = {open: [15.015, 15.225] as [number, number]};
+export const MEADOW_PUSH: [number, number] = [15.2, 15.94];
+export const meadowReveal = (t: number): {e: number; mode: 'above' | 'below'} | null =>
+  t < MEADOW_REVEAL.open[0] ? null : {e: ss(t, ...MEADOW_REVEAL.open), mode: 'above'};
+/** (V1, unused in V2) */
 export const MEADOW_STOP: [number, number] = [14.95, 15.55];
 const meadowLag = (t: number) => {
   const [a, b] = MEADOW_STOP;
@@ -251,15 +255,19 @@ export const meadowState = (t: number): ShotState => {
   const F = flyFrame(x, u, 0);
   // the camera keeps one rotation for the whole shot (a rotation would sweep the far flock across the frame); it tracks
   // the drone, then eases to a stop so the drone flies on, out of frame right, before the water rises
-  const base: V3 = [x - meadowLag(t), 0, 0];
+  const base: V3 = [x, 0, 0];
   const A: Orbit = {target: add3(base, LAB_END.target), ...MEADOW_CAM, scale: LAB_END.scale, cx: LAB_END.cx, cy: LAB_END.cy};
   const Bm: Orbit = {target: add3(base, [-2, 6, 0]), ...MEADOW_CAM, scale: 13.5, cx: 480, cy: 1080};
-  const cam = lerpOrbit(A, Bm, ss5(t, MEADOW_T0 + 0.3, 15.0));
+  const held = lerpOrbit(A, Bm, ss5(t, MEADOW_T0 + 0.3, 15.0));
+  // the push into the drone's open flank window (body-local window centre), so the window fills the frame for the match
+  const win = add3(base, [2.6, -0.3, 0]);
+  const Wc: Orbit = {target: win, ...MEADOW_CAM, scale: 66, cx: 540, cy: 960};
+  const cam = lerpOrbit(held, Wc, ss5(t, MEADOW_PUSH[0], MEADOW_PUSH[1]));
   return {cam, F, u, ps: P(u), rate: rateOf(1 / T_FLAP)};
 };
 /** the restrained "less disturbance" sound arcs (0..1 strength; they shrink and fade on 'less disturbance') */
 export const arcs = (t: number) => ({
-  a: 0.95 * ss(t, T.wildlife + 0.2, T.less - 0.1),
+  a: 0.95 * ss(t, T.wildlife + 0.2, T.less - 0.1) * (1 - ss(t, 15.2, 15.45)), // (V2) fade as the camera pushes into the drive
   // three arcs, reduced to one on 'less disturbance' (the last one stays: a reduction, not silence)
   n: 3 - 2 * ss(t, T.less, T.disturbanceEnd - 0.1),
   r: lerp(1, 0.78, ss(t, T.less - 0.05, T.disturbanceEnd)),
@@ -270,14 +278,16 @@ export const POND_T0 = CUT.meadowToPond[0];
 export const DUCK_V = 38; // cm/s
 export const duckPos = (t: number): V3 => [DUCK_V * (t - POND_T0) - 30, 0, 0];
 /** below-water schematic amount */
-export const duckCut = (t: number) => ss(t, T.robot - 0.15, T.using2 + 0.15);
+export const duckCut = (_t: number) => 1; // (V2) the pond opens on the below-water schematic
 export const pondCam = (t: number): Orbit => {
   const p = duckPos(t);
-  const surf: Orbit = {target: add3(p, [2, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 12.5, cx: 500, cy: 1020};
-  const surf2: Orbit = {...surf, target: add3(p, [3, 6, 0]), scale: 13.5};
+  // tight on the duck's below-water window (body-local about x -2.2, y -2.5), matching the drone window at the cut, then
+  // a smooth pull back to the waterline split view: the whole mallard above, its paddling feet and module below
+  const tight: Orbit = {target: add3(p, [-2.2, -2.4, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 34, cx: 540, cy: 960};
   const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 13.5, cx: 500, cy: 980};
-  const k = duckCut(t);
-  return lerpOrbit(lerpOrbit(surf, surf2, ss5(t, POND_T0, T.using2)), split, k); // k is already eased (duckCut): no second easing, so the dip spreads over ~0.65 s
+  const split2: Orbit = {...split, target: add3(p, [3, -2.6, 0]), scale: 14.5};
+  if (t < T.robot) return lerpOrbit(tight, split, ss5(t, POND_T0 + 0.05, T.robot));
+  return lerpOrbit(split, split2, ss5(t, T.robot, CUT.pondToSky[1]));
 };
 
 // ------------------------------------------------------------------ S6: the callback among living birds
@@ -310,6 +320,7 @@ export const skyState = (t: number): ShotState => {
 // the opening's cutaway: opened by the first downstroke's trailing edge, closed by a later one
 export const OPEN_REVEAL = {first: [0.1, 0.31] as [number, number], second: [0.8, 1.01] as [number, number], close: [2.9, 3.11] as [number, number]};
 export const openReveal = (t: number): {e: number; mode: 'above' | 'below'} | null => {
+  if (t < OPEN_REVEAL.close[0]) return {e: 1, mode: 'above'}; // (V2) open from frame 0 (and through the loop)
   if (t < OPEN_REVEAL.first[0]) return null;
   if (t < OPEN_REVEAL.close[0]) {
     const e = ss(t, ...OPEN_REVEAL.first); // fully open on the first downstroke (no half-open hold)
@@ -319,7 +330,7 @@ export const openReveal = (t: number): {e: number; mode: 'above' | 'below'} | nu
   return null;
 };
 // the callback: the same reveal, opened on a downstroke during 'watching the birds' and closed on the downstroke at 'dead'
-export const SKY_REVEAL = {open: [20.2, 20.41] as [number, number], close: [22.3, 22.51] as [number, number]};
+export const SKY_REVEAL = {open: [21.6, 21.81] as [number, number], close: [99, 99.21] as [number, number]}; // (V2) opens on 'might', stays open into the loop
 export const skyReveal = (t: number): {e: number; mode: 'above' | 'below'} | null => {
   if (t < SKY_REVEAL.open[0] || t >= SKY_REVEAL.close[1]) return null;
   if (t < SKY_REVEAL.close[0]) return {e: ss(t, ...SKY_REVEAL.open), mode: 'above'};

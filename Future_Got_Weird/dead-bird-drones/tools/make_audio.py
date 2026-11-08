@@ -140,6 +140,10 @@ for e in edges:
         seg = tk[:min(len(tk), N - e)]
         mesh[e:e + len(seg)] += seg * (0.5 + 0.5 * rng.random())
 motor = (0.9 * lp(hum, 700) + 0.12 * norm(brush) + 0.35 * bp(mesh, 1500, 7000)) * drive
+# the motor's phase does not wrap at the loop (it runs on both sides of the seam in V2): taper it to zero over 40 ms at
+# both ends so the seam is continuous
+_k = int(0.04 * SR); _w = np.ones(N); _w[:_k] = np.linspace(0, 1, _k) ** 2; _w[-_k:] = np.linspace(1, 0, _k) ** 2
+motor = motor * _w
 sfx += db(-27) * norm(motor + 1e-9) * (0.4 + 0.6 * np.clip(mhz / 8.6, 0, 1))
 LOG.append({'t': 0, 'sfx': 'motor texture (hum, brush, gear mesh) while the drive is visible', 'gain_db': -27})
 # spin-down at the match into the lab (heard faintly, the drive itself hidden)

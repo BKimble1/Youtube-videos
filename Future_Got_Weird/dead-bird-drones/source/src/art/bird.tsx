@@ -665,7 +665,8 @@ const INNER_FULL = innerSpecs(1);
 /** the wing seen (nearly) edge-on: an airfoil-like blade, a rounded leading edge tapering to the trailing edge, so the
  *  wing keeps a readable profile instead of collapsing to a line. Span stations (a, leading-edge radius cm), from a = 6
  *  (never into the body) to the hand. Drawn only near edge-on. */
-const BLADE: [number, number][] = [[6.0, 0.42], [9, 0.38], [13, 0.32], [17, 0.26], [20.4, 0.21], [23.5, 0.16], [27, 0.12], [31, 0.08]];
+// (V2) twice the V1 thickness: edge-on, the wing reads as a feathered wing profile, not a stick
+const BLADE: [number, number][] = [[6.0, 0.85], [9, 0.76], [13, 0.64], [17, 0.52], [20.4, 0.42], [23.5, 0.32], [27, 0.24], [31, 0.16]];
 /** the blade covers the front of the chord only (behind it the feathers themselves continue as the thin trailing part),
  *  so when the wing turns face-on the fading blade always lies under the coverts */
 const BLADE_CHORD = 0.5;
@@ -1220,7 +1221,9 @@ const EyeArt: React.FC<{B: Basis; F: Frame; T: Tint; c: V3; n: V3}> = ({B, F, T,
 
 // ================================================================ the cutaway window (body-local x, y on the near flank)
 const WINDOW_CTRL: [number, number][] = [
-  [8.5, 0.4], [8.0, 3.0], [6.3, 4.85], [3.6, 5.4], [0.8, 4.7], [-1.4, 2.9], [-2.9, 0.9], [-3.5, -0.3], [-2.7, -1.7], [-1.0, -3.9], [1.6, -5.7], [4.6, -6.2], [6.9, -5.0], [8.2, -2.6],
+  // (V2) the top rises over the shoulder (to y 6.3 at x 2.8, about 0.7 cm of back left above it), so the hinge, the near
+  // lever, both rod tops and the spar root are inside the opening under the cameras' downward pitch
+  [8.5, 0.4], [8.0, 3.0], [6.75, 4.85], [5.0, 5.9], [2.8, 6.3], [0.6, 5.8], [-1.25, 3.85], [-2.9, 1.0], [-3.5, -0.3], [-2.7, -1.7], [-1.0, -3.9], [1.6, -5.7], [4.6, -6.2], [6.9, -5.0], [8.2, -2.6],
 ];
 /** the cutaway window on the near flank, body-local (x, y), at the near surface (a smooth closed outline) */
 export const WINDOW: [number, number][] = crClosed(WINDOW_CTRL, 4);
