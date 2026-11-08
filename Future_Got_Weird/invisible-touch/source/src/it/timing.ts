@@ -1,0 +1,67 @@
+// Every beat is keyed to the measured word onsets of the narration master (data/timeline.json), never to fixed times.
+import {word as w, DUR} from '../lib';
+
+const s = (x: string, n = 0) => w(x, n).start;
+const e = (x: string, n = 0) => w(x, n).end;
+export const T = {
+  end: DUR,
+  // hook
+  doesnt: s("doesn't"),
+  exist: s('exist.'),
+  but0: s('But'),
+  feel0: s('FEEL'),
+  look: s('Look.'),
+  nothing: s('Nothing'),
+  touching: s('touching'),
+  so: s('So'),
+  feel1: s('feel', 1),
+  button1: s('button', 1),
+  // mechanism
+  under: s('Under'),
+  hundreds: s('hundreds'),
+  speakers: s('speakers'),
+  fire: s('fire'),
+  ultrasound: s('ultrasound'),
+  waves: s('waves.'),
+  meet: s('meet'),
+  exact: s('exact'),
+  spot: s('spot,', 0),
+  making: s('making'),
+  skin: s('skin', 0),
+  pressure: s('pressure.'),
+  move: s('Move'),
+  spot2: s('spot,', 1),
+  invisible: s('invisible'),
+  button2: s('button', 2),
+  moving: s('moving.'),
+  movingEnd: e('moving.'),
+  // clarity
+  noGlove: s('No', 0),
+  glove: s('glove.'),
+  no2: s('No', 1),
+  physical: s('physical'),
+  button3: s('button', 3),
+  // applications
+  now: s('Now'),
+  reaching: s('reaching'),
+  air: s('air'),
+  feeling: s('feeling'),
+  controls: s('controls'),
+  car: s('car.'),
+  or: s('Or'),
+  pressing: s('pressing'),
+  floating: s('floating'),
+  button4: s('button', 4),
+  without: s('without'),
+  screen: s('screen.'),
+  // the weird part
+  and2: s('And', 2),
+  weird: s('weird'),
+  you: s('You', 2),
+  grab: s('grab'),
+  it3: s('it.', 1),
+  but2: s('But', 1),
+  skin2: s('skin', 1),
+  feel3: s('feel', 4),
+  lastEnd: e('it.', 2),
+};

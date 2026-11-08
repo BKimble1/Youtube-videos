@@ -1,4 +1,5 @@
-// Copied from glass-climbing/source/src/dc (newest Weird Crew dc rig). Bone Glue: two type fixes only (stripe null -> undefined, lerpPose numeric cast).
+// Invisible Touch: copied unchanged from eel-escape/source/src/dc, plus one draw hook (`farArm`: the far arm drawn by the
+// caller, here the profile hand reaching over the array; the sleeve still covers its top). Copied from glass-climbing/source/src/dc (newest Weird Crew dc rig). Bone Glue: two type fixes only (stripe null -> undefined, lerpPose numeric cast).
 // Copied from the Death Clock V4 project (Shorts/death-clock/source/src/art/Man.tsx, commit e5b4770e) for Real Web
 // Fluid V2 (and from there for Glass Climbing, which adds only the draw-order hooks afterFarLeg / afterNearLeg and a
 // one-sided hands pass; the design is unchanged). Changes: the device model is removed, and an Outfit sets the colours (the guesser's striped tee by
@@ -310,9 +311,11 @@ type Props = {
   /** V8 (Glass Climbing): the near short sleeve drawn as a whole sleeve with a rounded, outlined crown over the shoulder,
    *  and the near arm's skin starting under it (for views where the near arm hangs in front of the torso) */
   sleeveCap?: boolean;
+  /** Invisible Touch: draw the far (right) arm with this instead of the rig's arm and back-view hand (both passes) */
+  farArm?: (j: Joints) => React.ReactNode;
 };
 
-export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide, sleeveCap}) => {
+export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand, hideLeftForearm, children, nearLegFront, hairSway = 0, outfit = GUESSER, inkK = 1, overTorso, beforeLeftForearm, afterRightArm, overAll, handsOnly, holdL, holdR, afterFarLeg, afterNearLeg, handsOnlySide, sleeveCap, farArm}) => {
   const j = manJoints(p);
   const s = p.s;
   const OUT = 7 * s * inkK; // crew contour
@@ -602,7 +605,7 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
       {Leg('rl', j.rLeg, true)}
       {afterFarLeg && <Deco>{afterFarLeg}</Deco>}
       {farSleeve.inner}
-      {armGroup('ra', j.R, true, rHand, -1)}
+      {farArm ? farArm(j) : armGroup('ra', j.R, true, rHand, -1)}
       {farSleeve.body}
       <Inked w={IN}>
         <Blob id={`${id}-pel`} d={pelD} c={loc(j.H, p.pelvis, -10, -30)} r={120 * s} color={o.pants} />
@@ -679,12 +682,12 @@ export const Man: React.FC<Props> = ({id, pose: p, expr, blink = 0, lHand, rHand
         {overTorso}
       </Deco>
       {/* the far forearm and hand cross the chest in front of the tee (behind the raised near thigh) */}
-      <g mask={`url(#${id}-rfm)`}>
+      {!farArm && <g mask={`url(#${id}-rfm)`}>
         <Inked w={IN}>
           <Capsule id={`${id}-rffa`} a={j.R.E} b={j.R.W} ra={23.5 * s} rb={o.longSleeve ? 21 * s : 17 * s} color={o.longSleeve ? far(o.shirt) : far(skin)} spec={0.2} />
           <Hand id={`${id}-rfh`} wrist={add(j.R.W, mul(j.R.foreDir, -6 * s))} ang={j.R.handAng} L={DIM.hand * s} thumbSide={-1} view="back" pose={rHand} color={far(o.glove ?? skin)} ink={IN * 0.9} bare sheen={o.glove ? 0.2 : 1} />
         </Inked>
-      </g>
+      </g>}
       {nearLegFront && (
         <g mask={`url(#${id}-llm)`}>
           <Inked w={IN}>
