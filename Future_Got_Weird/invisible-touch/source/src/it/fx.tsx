@@ -15,6 +15,7 @@ export const LAMBDA = 14;
 export const SPEED = 62; // u per second
 export const PERIOD = LAMBDA / SPEED;
 
+
 /** the cross-section row's emitter x positions (figure plane) */
 export const ROW = Array.from({length: DEV.n}, (_, i) => (i - (DEV.n - 1) / 2) * DEV.pitch);
 const EY = -DEV_TOP; // emitter faces, figure v (down)
@@ -26,12 +27,14 @@ export const delayOf = (x: number, F: V) => {
 };
 
 /** top-view emitter brightness for the firing pattern (concentric rings of phase around the point under F) */
-export const phaseGlow = (t: number, i: number, j: number, F: {x: number; y: number; z: number}, on: number) => {
+export const phaseGlow = (t: number, i: number, j: number, F: {x: number; y: number; z: number}, on: number, rate = 1, floor = 0.28) => {
   if (on <= 0.001) return 0;
   const x = (i - (DEV.n - 1) / 2) * DEV.pitch, z = (j - (DEV.n - 1) / 2) * DEV.pitch;
   const d = Math.hypot(x - F.x, DEV_TOP - F.y, z - F.z);
-  const ph = (t * SPEED + d) / LAMBDA;
-  return on * (0.28 + 0.72 * Math.max(0, Math.cos(2 * Math.PI * ph)) ** 2);
+  // the rings drift at a slowed visual rate (a stand-in for the 40 kHz phase pattern, which is far too fast to see),
+  // with soft contrast so a frame-filling macro of the cans never strobes
+  const ph = (t * SPEED * rate + d) / LAMBDA;
+  return on * (floor + (1 - floor) * Math.max(0, Math.cos(2 * Math.PI * ph)) ** 2);
 };
 
 type WaveProps = {
@@ -48,6 +51,8 @@ type WaveProps = {
   /** emission starts at this time (no crest before) */
   t0: number;
   id: string;
+  /** V2: translucent bands under each converging crest (0..1) */
+  bands?: number;
 };
 
 const arc = (c: V, r: number, a0: number, a1: number) => {
@@ -57,7 +62,7 @@ const arc = (c: V, r: number, a0: number, a1: number) => {
   return `M${p0.x.toFixed(2)},${p0.y.toFixed(2)} A${r.toFixed(2)},${r.toFixed(2)} 0 ${large} 1 ${p1.x.toFixed(2)},${p1.y.toFixed(2)}`;
 };
 
-export const Waves: React.FC<WaveProps> = ({t, F, on, wavelets = 1, envelope = 1, w, t0, id}) => {
+export const Waves: React.FC<WaveProps> = ({t, F, on, wavelets = 1, envelope = 1, w, t0, id, bands = 0}) => {
   if (on <= 0.001) return null;
   const els: React.ReactNode[] = [];
   // wavelets: each emitter, crests emitted every PERIOD after its own delay
@@ -92,6 +97,20 @@ export const Waves: React.FC<WaveProps> = ({t, F, on, wavelets = 1, envelope = 1
       const lens = Math.min(1, (dmin + 6 - Math.min(r, dmin + 6)) / 6 + 0.35);
       const near = 1 - Math.min(1, r / dmax) * 0.5;
       const st = {stroke: CYAN_HI, strokeWidth: w * (0.9 + 0.9 * near), strokeOpacity: 0.85 * born * envelope * Math.min(1, lens + 0.4)};
+      if (bands > 0.01) {
+        // a translucent wavefront: a soft band of pressure trailing each crest (explanatory)
+        const bw = Math.min(LAMBDA * 0.55, r * 0.9);
+        const stb = {stroke: CYAN, strokeWidth: bw, strokeOpacity: 0.16 * bands * born * (0.6 + 0.6 * near)};
+        const dy0 = EY - F.y;
+        const rb = r + bw * 0.45;
+        if (rb <= Math.abs(dy0) + 0.01) els.push(<path key={`b${k}`} d={arc(F, rb, aR, aL)} fill="none" {...stb} />);
+        else {
+          const hx0 = Math.sqrt(rb * rb - dy0 * dy0);
+          const b1 = Math.atan2(dy0, hx0), b2 = Math.atan2(dy0, -hx0);
+          if (b1 > aR) els.push(<path key={`b${k}a`} d={arc(F, rb, aR, b1)} fill="none" {...stb} />);
+          if (aL > b2) els.push(<path key={`b${k}b`} d={arc(F, rb, b2, aL)} fill="none" {...stb} />);
+        }
+      }
       const dy = EY - F.y;
       if (r <= Math.abs(dy) + 0.01) {
         els.push(<path key={`e${k}`} d={arc(F, r, aR, aL)} fill="none" {...st} strokeLinecap="round" filter={`url(#${id}-gl)`} />);

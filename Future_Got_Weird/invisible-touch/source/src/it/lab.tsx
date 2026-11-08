@@ -49,6 +49,10 @@ export type LabState = {
   wallBlur?: number;
   /** a plain card held in the near hand, its centre x in the gap (figure plane) */
   card?: number | null;
+  /** V2: draw the figure plane as a billboard pinned at the index pad (undistorted in three-quarter views) */
+  billboard?: boolean;
+  /** V2: a light panel on the back wall behind the gap (0..1) */
+  lightbox?: number;
 };
 
 /** on-screen contour width (px) -> figure units at this camera */
@@ -57,7 +61,7 @@ export const inkFor = (c: Cam3, px = 6.2) => {
   return px / Math.max(0.05, m.scale);
 };
 
-export const Wall: React.FC<{c: Cam3; blur?: number; id: string}> = ({c, blur = 0, id}) => {
+export const Wall: React.FC<{c: Cam3; blur?: number; id: string; lightbox?: number}> = ({c, blur = 0, id, lightbox = 0}) => {
   const z = -900;
   const m = planeMatrix(c, {x: 0, y: 0, z}, {x: 1, y: 0, z: 0}, {x: 0, y: -1, z: 0});
   // lab wall: a cool teal-navy gradient, a long shelf with boxes and bottles, an oscilloscope screen, cable tray
@@ -76,6 +80,11 @@ export const Wall: React.FC<{c: Cam3; blur?: number; id: string}> = ({c, blur = 
         <radialGradient id={`${id}-wl`} cx="0.5" cy="0.5" r="0.5">
           <stop offset="0" stopColor="#5FB7C9" stopOpacity="0.35" />
           <stop offset="1" stopColor="#5FB7C9" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id={`${id}-ls`} cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stopColor="#8FEAFF" stopOpacity="0.55" />
+          <stop offset="0.45" stopColor="#46CFFF" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#46CFFF" stopOpacity="0" />
         </radialGradient>
         <filter id={`${id}-wb`} x="-10%" y="-10%" width="120%" height="120%">
           <feGaussianBlur stdDeviation={(blur / Math.max(0.05, m.scale)).toFixed(2)} />
@@ -111,6 +120,16 @@ export const Wall: React.FC<{c: Cam3; blur?: number; id: string}> = ({c, blur = 
         <path d="M-180 0 Q-150 -70 -120 0 T-60 0 T0 0 T60 0 T120 0 T180 0" fill="none" stroke="#46CFFF" strokeOpacity={0.55} strokeWidth={8} />
         <rect x={-30} y={140} width={60} height={70} fill="#0B1C27" />
       </g>
+      {/* V2: a darker wall with a horizontal light strip at gap height: in low side views it sits right behind the
+          air gap between the fingertip and the array, so the gap reads as glowing empty space */}
+      {lightbox > 0.01 && (
+        <g opacity={lightbox}>
+          <rect x={-4200} y={-2600} width={8400} height={4200} fill="#071722" opacity={0.42} />
+          <ellipse cx={0} cy={-28} rx={1500} ry={240} fill={`url(#${id}-ls)`} />
+          <rect x={-1700} y={-42} width={3400} height={26} rx={13} fill="#DFFBFF" />
+          <rect x={-1700} y={-48} width={3400} height={38} rx={19} fill="none" stroke="#7FE6FF" strokeWidth={8} opacity={0.5} />
+        </g>
+      )}
       {/* pegboard */}
       <g transform="translate(900 -160)" opacity={0.55}>
         <rect x={-260} y={-200} width={520} height={360} rx={10} fill="#1A3E50" />
@@ -177,7 +196,13 @@ export const Driver: React.FC<{c: Cam3; ink: number}> = ({c, ink}) => {
 export const Lab: React.FC<{s: LabState; id: string}> = ({s, id}) => {
   const c = s.cam;
   const ink = inkFor(c);
-  const fm = figMatrix(c, 0, 0);
+  let fm = figMatrix(c, 0, 0);
+  if (s.billboard) {
+    // a cut-out pinned at the index pad: the pad lands exactly at its 3D place, the figure is never sheared
+    const pp = project(c, {x: s.hand.pad.x, y: -s.hand.pad.y, z: 0});
+    const k = pp.k;
+    fm = {m: `translate(${pp.x.toFixed(2)} ${pp.y.toFixed(2)}) scale(${k.toFixed(5)}) translate(${(-s.hand.pad.x).toFixed(2)} ${(-s.hand.pad.y).toFixed(2)})`, scale: k, p0: pp};
+  }
   const inkPx = 6.2;
   const W = wristFor(s.hand);
   let man: ManPose = {...s.man, rWx: W.x, rWy: W.y, rW: 1};
@@ -192,7 +217,7 @@ export const Lab: React.FC<{s: LabState; id: string}> = ({s, id}) => {
   );
   return (
     <g>
-      <Wall c={c} blur={s.wallBlur} id={`${id}-w`} />
+      <Wall c={c} blur={s.wallBlur} id={`${id}-w`} lightbox={s.lightbox} />
       <Floor c={c} />
       <Bench c={c} ink={ink * fm.scale * 0.72} />
       <Driver c={c} ink={ink * fm.scale * 0.72} />

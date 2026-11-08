@@ -1,7 +1,25 @@
 # Future Got Weird: Invisible Touch (ultrasonic mid-air haptics)
 
-This is a vertical Short: 1080×1920 at 30 fps, **31.133 s** (934 frames). V1 is a review render and is **not
-published**.
+This is a vertical Short: 1080×1920 at 30 fps, **31.133 s** (934 frames).
+
+## V2: major animation overhaul (current)
+
+V2 is a review render and is **not published**.
+
+| What | Where |
+|---|---|
+| Deliverable | `exports/FGW_Invisible_Touch_V2_REVIEW_1080x1920.mp4` |
+| Report (scene timing, V1 → V2 improvements, science, QA, remaining issues) | `production/V2_REPORT.md` |
+| V1 audit and the V2 shot plan (written first) | `production/V2_AUDIT_AND_PLAN.md` |
+| Source | `source/src/v2/` (composition `InvisibleTouchV2`) |
+| Cues and mix | `tools/v2/` |
+| QA | `qa/v2/` |
+
+The narration is unchanged: the same master and the same word timings as V1.
+
+## V1
+
+V1 is a review render and is **not published**.
 
 ## Where to look
 

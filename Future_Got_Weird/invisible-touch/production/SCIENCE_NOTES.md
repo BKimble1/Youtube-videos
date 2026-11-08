@@ -62,3 +62,32 @@ Key work:
 
 Ultrasound is inaudible. The shimmer and the rising tone heard while the waves are shown are the overlay's sound
 design, not the device's.
+
+## V2 additions
+
+**Conceptual button outlines.** These appear on "FEEL" and in the top-down shot.
+- They are dashed, glowing, see-through rings that appear briefly and dissolve.
+- They visualise *where the sensation is*.
+- They are never drawn solid or as an object the finger rests on.
+
+**Convergence rays and wavefront bands.** These are explanatory geometry.
+- A ray runs from each emitter in the section to the focus.
+- Translucent bands trail each converging crest.
+- The delays that make the crests meet are the same per-emitter delays as V1 (`it/fx.tsx`, `delayOf`).
+
+**Phase rings on the array.** In the macro, high and top-down views, the cans light in concentric rings centred under
+the focal point.
+- They show the *spatial* phase pattern.
+- They drift at a slowed visual rate (0.4 of the drawn crest speed); the real 40 kHz pattern is far too fast to see.
+
+**Top-down moving point.** The focal point circles under the palm, drawn over the back of the hand as an x-ray, and
+the array's ring pattern recentres on it every frame. This is how a moving focus is produced: the phases are
+re-steered, not the array moved.
+
+**The grab.** The fist closes at constant speed through the focal region.
+- The glow stays visible over the fingers; it is not blocked or squeezed.
+- The hand is empty afterwards.
+- The sensation then returns as a pulse on the skin: touch, not impact.
+
+**Lobby.** The keypad is drawn as light with a translucent backing and no screen behind it (CONCEPT DISPLAY). The
+haptic crests come from the pedestal (ULTRASOUND ARRAY). The two are tagged separately.
