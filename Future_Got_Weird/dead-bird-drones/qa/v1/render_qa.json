@@ -1,6 +1,6 @@
 {
  "file": "FGW_Dead_Bird_Drones_V1_REVIEW_1080x1920.mp4",
- "size_mb": 22.11,
+ "size_mb": 20.0,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,99 +15,39 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "257854"
+   "bitrate": "257402"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.47,
+ "frame_change_median": 3.98,
  "large_changes": [
   {
    "frame": 119,
    "t": 3.967,
-   "mad": 26.49,
+   "mad": 37.31,
    "planned": "match cut on the wing root into the lab"
   },
   {
-   "frame": 340,
-   "t": 11.333,
-   "mad": 24.66,
+   "frame": 373,
+   "t": 12.433,
+   "mad": 21.33,
    "planned": "push into the drive, follow it, pull back"
   },
   {
-   "frame": 341,
-   "t": 11.367,
-   "mad": 26.11,
+   "frame": 374,
+   "t": 12.467,
+   "mad": 23.08,
    "planned": "push into the drive, follow it, pull back"
   },
   {
-   "frame": 342,
-   "t": 11.4,
-   "mad": 26.07,
+   "frame": 375,
+   "t": 12.5,
+   "mad": 22.33,
    "planned": "push into the drive, follow it, pull back"
-  },
-  {
-   "frame": 380,
-   "t": 12.667,
-   "mad": 24.99,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 381,
-   "t": 12.7,
-   "mad": 34.22,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 382,
-   "t": 12.733,
-   "mad": 44.17,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 383,
-   "t": 12.767,
-   "mad": 35.33,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 384,
-   "t": 12.8,
-   "mad": 24.83,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 385,
-   "t": 12.833,
-   "mad": 25.18,
-   "planned": "wing wipe into the meadow"
-  },
-  {
-   "frame": 567,
-   "t": 18.9,
-   "mad": 23.63,
-   "planned": "dip to the waterline and back"
-  },
-  {
-   "frame": 568,
-   "t": 18.933,
-   "mad": 23.85,
-   "planned": "water crest wipe into the callback"
-  },
-  {
-   "frame": 569,
-   "t": 18.967,
-   "mad": 22.94,
-   "planned": "water crest wipe into the callback"
-  },
-  {
-   "frame": 693,
-   "t": 23.1,
-   "mad": 23.11,
-   "planned": "loop: wing wipe into frame 0"
   }
  ],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 3,
- "longest_near_static_run_starts_s": 5.17,
- "loop_last_vs_first_mad": 5.77
+ "longest_near_static_run_frames": 1,
+ "longest_near_static_run_starts_s": 6.2,
+ "loop_last_vs_first_mad": 7.23
 }

@@ -195,7 +195,7 @@ export const labState = (t: number): ShotState => {
   // the close drive: the whole gearbox, the motor and its pinion, the crank gear, then up the rod to the lever at the wing
   // hinge. Every framing keeps the flank window (body y about -6..6 cm) centred at screen y ~945, so the window stays
   // between the caption band (< 470) and the scope label (> 1420)
-  const cyFor = (o: Omit<Orbit, 'cy'>): Orbit => ({...o, cy: 945 + o.target[1] * o.scale});
+  const cyFor = (o: Omit<Orbit, 'cy'>): Orbit => ({...o, cy: 945 - o.target[1] * o.scale});
   const gear: Orbit = cyFor({target: [3.4, -1.9, 0.3], yaw: 12, pitch: 7, dist: 90, scale: 48});
   const fMotor: Orbit = cyFor({target: [GP0X[0] - 0.2, GP0X[1] + 0.9, 0], yaw: 12, pitch: 6, dist: 80, scale: 60});
   const fB: Orbit = cyFor({target: [GBX[0] + 0.4, GBX[1] + 0.2, 0], yaw: 11, pitch: 6, dist: 80, scale: 60});
@@ -270,14 +270,14 @@ export const POND_T0 = CUT.meadowToPond[0];
 export const DUCK_V = 38; // cm/s
 export const duckPos = (t: number): V3 => [DUCK_V * (t - POND_T0) - 30, 0, 0];
 /** below-water schematic amount */
-export const duckCut = (t: number) => ss5(t, T.robot - 0.12, T.using2 + 0.12);
+export const duckCut = (t: number) => ss(t, T.robot - 0.15, T.using2 + 0.15);
 export const pondCam = (t: number): Orbit => {
   const p = duckPos(t);
   const surf: Orbit = {target: add3(p, [2, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 12.5, cx: 500, cy: 1020};
   const surf2: Orbit = {...surf, target: add3(p, [3, 6, 0]), scale: 13.5};
   const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 13.5, cx: 500, cy: 980};
   const k = duckCut(t);
-  return lerpOrbit(lerpOrbit(surf, surf2, ss5(t, POND_T0, T.using2)), split, ss5(k, 0, 1));
+  return lerpOrbit(lerpOrbit(surf, surf2, ss5(t, POND_T0, T.using2)), split, k); // k is already eased (duckCut): no second easing, so the dip spreads over ~0.65 s
 };
 
 // ------------------------------------------------------------------ S6: the callback among living birds

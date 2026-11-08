@@ -5,6 +5,11 @@
 // folds through itself; an edge-on wing is drawn as a thin round-ended blade), a small body bob, a gentle wobble in
 // heading and bank, and an occasional glide. They do not react to the drone, do not scatter and carry no labels.
 // Projected through the shot camera like everything else (true 3D size and parallax).
+//
+// A blurred (defocused) living bird is drawn inside a blur filter, so nothing in it uses an `opacity` attribute or a
+// `clip-path` (fill/stroke opacities and geometric clipping instead): see FILTER SAFETY in world.tsx (a Chromium bug
+// paints such layers as a blurred rectangle at the frame's top-left corner when the filtered bird is culled, e.g. by a
+// wipe's clip).
 import React from 'react';
 import {add3, Basis, bodyFrame, cross3, deg, depth, ellipsoid2, facing, Frame, mul3, norm3, P2, poly, proj, rad, rotZ, smoothClosed, smoothOpen, V2, V3, xf, xfv} from '../three';
 import {BEAK, BODY, EYE, FEATHERS, HINGE, TAIL, WING_OUTLINE} from '../rig';
@@ -91,8 +96,81 @@ const ROOT_L: [number, number] = [2.6, -1.2], ROOT_T: [number, number] = [2.6, 8
 const OUTLINE: [number, number][] = [ROOT_L, ...WING_OUTLINE, ROOT_T];
 const COVERTS: [number, number][] = [ROOT_L, [5.4, -1.9], [9, -2.5], [13, -2.75], [17, -2.6], [19.6, -2.2], [23, -1.4], [26.6, -0.1], [26.2, 1.9], [23.2, 3.4], [20.2, 5.3], [16, 6.0], [12, 6.0], [8, 5.8], [5.4, 5.5], [2.6, 5.1]];
 const LESSER: [number, number][] = [ROOT_L, [5.4, -1.9], [9, -2.5], [13, -2.75], [17, -2.6], [19.6, -2.2], [22.6, -1.5], [22.2, 0.5], [18, 1.3], [13, 1.6], [8.5, 1.5], [5.4, 1.3], [2.6, 1.0]];
-const TRAIL: [number, number][] = WING_OUTLINE.slice(10).map(([a, b]) => [a, b - 0.75]);
 const FLIGHT_LINES = FEATHERS.filter((f) => f.kind === 'primary' || f.kind === 'secondary');
+const PRIMARIES = FEATHERS.filter((f) => f.kind === 'primary'); // 9, i = 0 innermost (trailing side) .. 8 outermost
+const unit2 = (v: [number, number]): [number, number] => {
+  const L = Math.hypot(v[0], v[1]) || 1;
+  return [v[0] / L, v[1] / L];
+};
+/** a primary's direction (base to tip) */
+const pDir = (i: number) => unit2([PRIMARIES[i].tip[0] - PRIMARIES[i].base[0], PRIMARIES[i].tip[1] - PRIMARIES[i].base[1]]);
+/** the four outer primaries (i = 8..4) stand free at the tip as fingers: their rounded tips spread a little along the
+ *  hand, and a V notch (NOTCH cm deep along the feathers) separates each from the next, so the open wing never reads as
+ *  a featureless petal */
+const NOTCH = 2.4, SPREAD = 1.3;
+const FINGER = [8, 7, 6, 5, 4];
+const fTip = (i: number): [number, number] => {
+  const [a, b] = PRIMARIES[i].tip;
+  // spread the fingers outward from the middle finger (i = 6) along the tip line, and lengthen them 0.4 cm
+  const [ma, mb] = PRIMARIES[6].tip;
+  const d = pDir(i);
+  return [ma + (a - ma) * SPREAD + 0.4 * d[0], mb + (b - mb) * SPREAD + 0.4 * d[1]];
+};
+const fNotch = (i: number, j: number): [number, number] => {
+  const p = fTip(i), q = fTip(j);
+  const d = unit2([pDir(i)[0] + pDir(j)[0], pDir(i)[1] + pDir(j)[1]]);
+  return [(p[0] + q[0]) / 2 - NOTCH * d[0], (p[1] + q[1]) / 2 - NOTCH * d[1]];
+};
+type WPt = {ab: [number, number]; corner?: boolean};
+const LEAD: WPt[] = [[5.4, -1.9], [9, -2.5], [13, -2.75], [17, -2.6], [19.6, -2.2], [23, -1.4], [27, 0.0], [30.6, 1.9]].map((ab) => ({ab: ab as [number, number]}));
+/** a finger's rounded end: two shoulder points either side of its tip (leading side first), so the end reads round,
+ *  not pointed */
+const fEnd = (i: number): WPt[] => {
+  const t = fTip(i), d = pDir(i), r = 0.55;
+  return [{ab: [t[0] - 0.3 * d[0] + r * d[1], t[1] - 0.3 * d[1] - r * d[0]]}, {ab: [t[0] - 0.3 * d[0] - r * d[1], t[1] - 0.3 * d[1] + r * d[0]]}];
+};
+const FINGERS: WPt[] = FINGER.flatMap((i, n) => (n < FINGER.length - 1 ? [...fEnd(i), {ab: fNotch(i, FINGER[n + 1]), corner: true}] : fEnd(i)));
+/** the trailing edge from the inner primaries (i = 3..0) along the secondaries to the root */
+/** where the last finger (i = 4) leaves the trailing edge: a shallower notch against primary 3 */
+const JUNC: [number, number] = (() => {
+  const p = fTip(4), q = PRIMARIES[3].tip, d = unit2([pDir(4)[0] + pDir(3)[0], pDir(4)[1] + pDir(3)[1]]);
+  return [(p[0] + q[0]) / 2 - 0.55 * NOTCH * d[0], (p[1] + q[1]) / 2 - 0.55 * NOTCH * d[1]];
+})();
+const TRAIL_EDGE: [number, number][] = [[33.6, 9.9], [31.8, 11.0], [29.5, 11.85], [27.0, 12.3], [23.5, 12.6], [20.0, 12.8], [16, 12.7], [12, 12.3], [8.5, 11.6], [5.4, 10.4]];
+/** the notched outline (root points first and last, like OUTLINE) */
+const OUTLINE_N: WPt[] = [{ab: ROOT_L}, ...LEAD, ...FINGERS, {ab: JUNC, corner: true}, ...TRAIL_EDGE.map((ab) => ({ab})), {ab: ROOT_T}];
+/** the darker trailing band: the finger tips and a band about 2.6 cm deep along the trailing edge (its inner edge
+ *  follows the primaries' directions on the hand and runs parallel to the trailing edge along the arm) */
+const BAND_IN: [number, number][] = (() => {
+  const out: [number, number][] = [];
+  for (let i = 0; i <= 8; i++) {
+    const t = i >= 4 ? fTip(i) : PRIMARIES[i].tip;
+    const d = pDir(i), k = i >= 4 ? NOTCH + 1.4 : 2.7;
+    out.push([t[0] - k * d[0], t[1] - k * d[1]]);
+  }
+  // along the arm, inward from the root: parallel to the trailing edge
+  const arm = TRAIL_EDGE.slice(4).map(([a, b]) => [a, b - 2.5 - 0.25 * (a < 9 ? (9 - a) / 3.6 : 0)] as [number, number]);
+  return [...arm.reverse(), ...out];
+})();
+const BAND: WPt[] = [...FINGERS.map((p, n) => (n === 0 ? {...p, corner: true} : p)), {ab: JUNC, corner: true}, ...TRAIL_EDGE.map((ab, n, a) => ({ab, corner: n === a.length - 1})), ...BAND_IN.map((ab, n) => ({ab, corner: n === 0}))];
+/** the pale feather tips along the trailing edge (inner primaries and secondaries) */
+const TRAIL: [number, number][] = TRAIL_EDGE.map(([a, b]) => [a, b - 0.75]);
+/** a Catmull-Rom path through points with sharp corners where asked (closed or open) */
+const smoothCorners = (pts: V2[], corner: boolean[], closed = true, k = 1 / 6) => {
+  const n = pts.length;
+  if (n < 3) return poly(pts, closed);
+  const at = (i: number) => (closed ? pts[(i + n) % n] : pts[clamp(i, 0, n - 1)]);
+  const isC = (i: number) => (closed ? corner[(i + n) % n] : i <= 0 || i >= n - 1 || corner[i]);
+  let d = `M${P2(pts[0])}`;
+  const m = closed ? n : n - 1;
+  for (let i = 0; i < m; i++) {
+    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+    const c1 = isC(i) ? {x: p1.x + (p2.x - p1.x) * k * 1.5, y: p1.y + (p2.y - p1.y) * k * 1.5} : {x: p1.x + (p2.x - p0.x) * k, y: p1.y + (p2.y - p0.y) * k};
+    const c2 = isC(i + 1) ? {x: p2.x - (p2.x - p1.x) * k * 1.5, y: p2.y - (p2.y - p1.y) * k * 1.5} : {x: p2.x - (p3.x - p1.x) * k, y: p2.y - (p3.y - p1.y) * k};
+    d += ` C${P2(c1)} ${P2(c2)} ${P2(p2)}`;
+  }
+  return closed ? d + ' Z' : d;
+};
 /** signed area of a polygon (shoelace) */
 const area2 = (p: V2[]) => {
   let s = 0;
@@ -155,15 +233,22 @@ const LivingWing: React.FC<{B: Basis; M: WingMap; w: number; col: (c: string) =>
       </g>
     );
   }
+  // the flight feathers (fingered tip), their darker trailing band, the coverts over them
   const lines = lod > 1 ? FLIGHT_LINES.filter((_, i) => lod > 2.6 || i % 2 === 0).map((f) => `M${P2(P(f.base))} L${P2(P(f.tip))}`).join(' ') : '';
+  const outN = OUTLINE_N.map((q) => P(q.ab));
+  const outC = OUTLINE_N.map((q) => !!q.corner);
+  const band = smoothCorners(BAND.map((q) => P(q.ab)), BAND.map((q) => !!q.corner));
+  const flight = dorsal ? C.flight : mix(C.underwingDeep, C.underwing, 0.12);
+  const bandC = dorsal ? mix(C.flight, C.plumageBar, 0.65) : mix(C.underwingDeep, C.plumageDeep, 0.5);
   return (
     <g>
-      <path d={smoothClosed(out)} fill={col(dorsal ? C.flight : mix(C.underwingDeep, C.underwing, 0.25))} />
+      <path d={smoothCorners(outN, outC)} fill={col(flight)} />
+      <path d={band} fill={col(bandC)} />
       <path d={smoothClosed(COVERTS.map(P))} fill={col(dorsal ? C.plumage : C.underwing)} />
-      {dorsal && lod > 1 && <path d={smoothClosed(LESSER.map(P))} fill={col(C.plumageLit)} opacity={0.75} />}
-      {lod > 1 && <path d={lines} stroke={col(dorsal ? C.plumageBar : C.underwingDeep)} strokeWidth={LINE_PX * 0.8} opacity={0.55} vectorEffect={NS} />}
-      {dorsal && lod > 1 && <path d={smoothOpen(TRAIL.map(P))} fill="none" stroke={col(C.flightEdge)} strokeWidth={Math.max(1, w * 0.9)} strokeLinecap="round" opacity={0.85} />}
-      <path d={smoothOpen(out.slice(1, -1))} fill="none" stroke={col(INK)} strokeWidth={w} strokeLinejoin="round" strokeLinecap="round" vectorEffect={NS} />
+      {dorsal && lod > 1 && <path d={smoothClosed(LESSER.map(P))} fill={col(C.plumageLit)} fillOpacity={0.75} />}
+      {lod > 1 && <path d={lines} stroke={col(dorsal ? C.plumageBar : C.underwingDeep)} strokeWidth={LINE_PX * 0.8} strokeOpacity={dorsal ? 0.55 : 0.7} vectorEffect={NS} />}
+      {dorsal && lod > 1 && <path d={smoothOpen(TRAIL.map(P))} fill="none" stroke={col(C.flightEdge)} strokeWidth={Math.max(1, w * 0.9)} strokeLinecap="round" strokeOpacity={0.85} />}
+      <path d={smoothCorners(outN.slice(1, -1), outC.slice(1, -1), false)} fill="none" stroke={col(INK)} strokeWidth={w} strokeLinejoin="round" strokeLinecap="round" vectorEffect={NS} />
     </g>
   );
 };
@@ -244,8 +329,13 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
   const ellE = (e: {c: V3; r: V3; tilt?: number}, m = n) => ellipsoid2(B, ellFrame(F, e.c, e.tilt ?? 0, S), [0, 0, 0], mul3(e.r, S), m);
   const ellP = (k: keyof typeof BODY) => ellE(BODY[k]);
   // one smooth body as on the hero: the chest, rear and tail base merged (convex), the neck and head merged
-  const torso = smoothClosed(hull2([...ellP('chest'), ...ellP('rear'), ...ellE(TAILBASE, Math.max(14, n - 12))]));
-  const neckHead = smoothClosed(hull2([...ellP('neck'), ...ellP('head')]));
+  const torsoH = hull2([...ellP('chest'), ...ellP('rear'), ...ellE(TAILBASE, Math.max(14, n - 12))]);
+  const neckHeadH = hull2([...ellP('neck'), ...ellP('head')]);
+  const torso = smoothClosed(torsoH);
+  const neckHead = smoothClosed(neckHeadH);
+  // the outlines as they are drawn (sampled curves), for clipping the back and cheek with geometry; the hull of the
+  // samples keeps the clipper strictly convex (a Catmull-Rom curve can make tiny loops between crowded points)
+  const torsoS = hull2(sampleClosed(torsoH)), neckHeadS = hull2(sampleClosed(neckHeadH));
   const head = smoothClosed(ellP('head'));
   // tail: the hero's fan (a little wider in a glide), drawn as the hero draws it but with fewer, wider feathers: outer
   // feathers first when seen from above (centre ones overlap them), each with its pale tip; only the outer part of the
@@ -272,8 +362,9 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
   const side: 1 | -1 = facing(B, L([2, 0, 0]), F.ez) >= 0 ? 1 : -1;
   const eq = EQUATOR.map(([x, y]) => Pp([x, y, side * halfW(x, y) * 0.97]));
   const eqTop = EQUATOR.map(([x, y]) => Pp([x, y + 22, 0])).reverse();
-  // the flank edge is a smooth curve (no kinks at any size); the rest of the back shape lies outside the body clip
-  const back = `${smoothOpen(eq)} ${eqTop.map((p) => `L${P2(p)}`).join(' ')} Z`;
+  // the flank edge is a smooth curve (no kinks at any size); the back shape is cut to the body's outline with geometry
+  const backPoly = [...sampleOpen(eq), ...eqTop];
+  const back = [clipConvex(backPoly, torsoS), clipConvex(backPoly, neckHeadS)].map((q) => poly(q)).join(' ');
   const up = Pp([2, 9, 0]), dn = Pp([2, -8, 0]);
   const eyeP: V3 = side > 0 ? EYE.near : EYE.far;
   const eyeN: V3 = side > 0 ? EYE.nNear : EYE.nFar;
@@ -283,16 +374,12 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
   // wings, far one first
   const Mn = wingMap(F, S, 1, bt), Mf = wingMap(F, S, -1, bt);
   const [far, near] = depth(B, Mn.mid) > depth(B, Mf.mid) ? [Mn, Mf] : [Mf, Mn];
-  const ids = {clip: uid('lbc'), back: uid('lbb'), belly: uid('lbv'), blur: uid('lbf')};
+  const ids = {back: uid('lbb'), belly: uid('lbv'), blur: uid('lbf')};
   const r = 40 * sPx;
   const blur = coc(B, d, 0.45) / 2;
   const body = (
     <g>
       <defs>
-        <clipPath id={ids.clip}>
-          <path d={torso} />
-          <path d={neckHead} />
-        </clipPath>
         <linearGradient id={ids.back} gradientUnits="userSpaceOnUse" x1={up.x - 0.3 * r} y1={up.y - 0.1 * r} x2={dn.x} y2={dn.y}>
           <stop offset={0} stopColor={col(C.plumageLit)} />
           <stop offset={0.35} stopColor={col(C.plumage)} />
@@ -315,23 +402,23 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
         <React.Fragment key={f.u}>
           <path d={f.out} fill={col(Math.abs(f.u) < 0.2 ? mix(tailBase, C.plumageLit, 0.3) : mix(tailBase, C.plumage, 0.3 - 0.2 * Math.abs(f.u)))}
             stroke={col(INK)} strokeWidth={LINE_PX} strokeOpacity={0.55 * featherLine} strokeLinejoin="round" vectorEffect={NS} />
-          <path d={f.tip} fill={col(tailTip)} opacity={0.9} />
+          <path d={f.tip} fill={col(tailTip)} fillOpacity={0.9} />
         </React.Fragment>
       ))}
       <g fill={`url(#${ids.belly})`}>
         <path d={torso} />
         <path d={neckHead} />
       </g>
-      <path d={back} fill={`url(#${ids.back})`} clipPath={`url(#${ids.clip})`} />
+      <path d={back} fill={`url(#${ids.back})`} />
       <path d={head} fill={col(C.head)} />
-      {lod > 1.5 && <ellipse cx={cheek.x} cy={cheek.y} rx={1.45 * sPx} ry={1.15 * sPx} fill={col(C.cheek)} opacity={0.9} clipPath={`url(#${ids.clip})`} />}
+      {lod > 1.5 && <path d={poly(clipConvex(Array.from({length: 20}, (_, i) => ({x: cheek.x + 1.45 * sPx * Math.cos((i / 20) * 2 * Math.PI), y: cheek.y + 1.15 * sPx * Math.sin((i / 20) * 2 * Math.PI)})), neckHeadS))} fill={col(C.cheek)} fillOpacity={0.9} />}
       <path d={beak} fill={col(C.beak)} />
       {lod > 1.5 && <path d={`M${P2(Pp([BEAK.base[0], BEAK.base[1] + BEAK.hh * 0.85, 0]))} L${P2(Pp(BEAK.tip))}`} stroke={col(C.beakLit)} strokeWidth={Math.max(1, 0.25 * sPx)} strokeLinecap="round" />}
       {eyeVis && (
         <g>
-          <circle cx={eye.x} cy={eye.y} r={0.78 * sPx} fill={col(C.eyeRing)} opacity={0.8} />
+          <circle cx={eye.x} cy={eye.y} r={0.78 * sPx} fill={col(C.eyeRing)} fillOpacity={0.8} />
           <circle cx={eye.x} cy={eye.y} r={0.62 * sPx} fill={col(C.eyeGlass)} />
-          <circle cx={eye.x - 0.2 * sPx} cy={eye.y - 0.22 * sPx} r={Math.max(0.6, 0.17 * sPx)} fill="#FFFFFF" opacity={0.9} />
+          <circle cx={eye.x - 0.2 * sPx} cy={eye.y - 0.22 * sPx} r={Math.max(0.6, 0.17 * sPx)} fill="#FFFFFF" fillOpacity={0.9} />
         </g>
       )}
     </g>
@@ -355,6 +442,55 @@ export const LivingBirdView: React.FC<{B: Basis; t: number; bird: LivingBird; se
       <g filter={`url(#${ids.blur})`}>{content}</g>
     </g>
   );
+};
+/** points along a closed Catmull-Rom curve (as smoothClosed draws it), m per segment */
+const sampleClosed = (pts: V2[], m = 4, k = 1 / 6): V2[] => {
+  const n = pts.length, out: V2[] = [];
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1 = {x: p1.x + (p2.x - p0.x) * k, y: p1.y + (p2.y - p0.y) * k}, c2 = {x: p2.x - (p3.x - p1.x) * k, y: p2.y - (p3.y - p1.y) * k};
+    for (let j = 0; j < m; j++) {
+      const u = j / m, v = 1 - u;
+      out.push({x: v * v * v * p1.x + 3 * v * v * u * c1.x + 3 * v * u * u * c2.x + u * u * u * p2.x, y: v * v * v * p1.y + 3 * v * v * u * c1.y + 3 * v * u * u * c2.y + u * u * u * p2.y});
+    }
+  }
+  return out;
+};
+/** points along an open Catmull-Rom curve (as smoothOpen draws it), m per segment */
+const sampleOpen = (pts: V2[], m = 5, k = 1 / 6): V2[] => {
+  const out: V2[] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    const c1 = {x: p1.x + (p2.x - p0.x) * k, y: p1.y + (p2.y - p0.y) * k}, c2 = {x: p2.x - (p3.x - p1.x) * k, y: p2.y - (p3.y - p1.y) * k};
+    for (let j = 0; j < m; j++) {
+      const u = j / m, v = 1 - u;
+      out.push({x: v * v * v * p1.x + 3 * v * v * u * c1.x + 3 * v * u * u * c2.x + u * u * u * p2.x, y: v * v * v * p1.y + 3 * v * v * u * c1.y + 3 * v * u * u * c2.y + u * u * u * p2.y});
+    }
+  }
+  if (pts.length) out.push(pts[pts.length - 1]);
+  return out;
+};
+/** a polygon clipped to a convex polygon (Sutherland-Hodgman): geometric clipping, so no clip-path is needed inside the
+ *  blur filter */
+const clipConvex = (subject: V2[], clip: V2[]): V2[] => {
+  const sgn = area2(clip) >= 0 ? 1 : -1;
+  let out = subject;
+  for (let i = 0; i < clip.length && out.length > 2; i++) {
+    const a = clip[i], b = clip[(i + 1) % clip.length];
+    const side = (p: V2) => sgn * ((b.x - a.x) * (p.y - a.y) - (b.y - a.y) * (p.x - a.x));
+    const inp = out;
+    out = [];
+    for (let j = 0; j < inp.length; j++) {
+      const p = inp[j], q = inp[(j + 1) % inp.length];
+      const sp = side(p), sq = side(q);
+      if (sp >= 0) out.push(p);
+      if ((sp >= 0) !== (sq >= 0)) {
+        const u = sp / (sp - sq);
+        out.push({x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u});
+      }
+    }
+  }
+  return out;
 };
 const hull2 = (pts: V2[]): V2[] => {
   const p = [...pts].sort((a, b) => a.x - b.x || a.y - b.y);

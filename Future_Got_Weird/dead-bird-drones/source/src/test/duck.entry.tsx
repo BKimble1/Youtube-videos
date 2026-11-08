@@ -83,8 +83,9 @@ const S3: Cell[] = [
   {cam: pondCam(16.5), t: 16.5, layers: {back: true, surface: true, front: true}},
   {cam: pondCam(18.1), t: 18.1, layers: {duck: true}, look: {cut: 1}, bg: '#CBD5D8'},
 ];
-// sheet 4: the film's camera dip (story.ts pondCam / duckCut) at four moments, the wipe rising with it
-const S4: Cell[] = [17.42, 17.5, 17.58, 17.68].map((t) => ({cam: pondCam(t), t, look: filmLook(t)}));
+// sheet 4: the film's camera dip (story.ts pondCam / duckCut) at four moments (frames 516-519): the underwater view
+// always starts at the projected waterline in front of the duck and is revealed by a soft front descending from it
+const S4: Cell[] = [516, 517, 518, 519].map((f) => f / 30).map((t) => ({cam: pondCam(t), t, look: filmLook(t)}));
 
 // mechanism close-ups at four crank phases (one paddle cycle = 1 / 1.5 s), from the film's split camera angle
 const MechSheet: React.FC = () => {
@@ -120,13 +121,15 @@ const Strip: React.FC<{f0: number; crop?: {x: number; y: number}; zoom?: number}
       <svg width={W} height={H}>
         {Array.from({length: 8}, (_, i) => {
           const f = f0 + i, t = f / 30;
-          const cid = uid('scell');
+          const cid = uid('scell'), fid = uid('sframe');
           return (
             <g key={i} transform={`translate(${(i % 2) * cw},${Math.floor(i / 2) * ch})`}>
               <clipPath id={cid}><rect width={cw} height={ch} /></clipPath>
+              <clipPath id={fid}><rect width={W} height={H} /></clipPath>
               <g clipPath={`url(#${cid})`}>
                 <g transform={`translate(${cw / 2},${ch / 2}) scale(${zoom}) translate(${-crop.x},${-crop.y})`}>
-                  <Frame1 B={basis(pondCam(t))} t={t} look={filmLook(t)} />
+                  {/* only what lies inside the film frame */}
+                  <g clipPath={`url(#${fid})`}><Frame1 B={basis(pondCam(t))} t={t} look={filmLook(t)} /></g>
                 </g>
               </g>
               <rect width={cw} height={ch} fill="none" stroke="#000" strokeWidth={3} />
@@ -149,6 +152,8 @@ const Root: React.FC = () => (
     <Composition id="DuckFloorStrip" component={() => <Strip f0={548} crop={{x: 560, y: 1380}} zoom={1} />} durationInFrames={1} fps={30} width={W} height={H} />
     {/* the duck's reflection at the film's surface camera: broken ripple bands, frame to frame */}
     <Composition id="DuckReflStrip" component={() => <Strip f0={498} crop={{x: 620, y: 1190}} zoom={1.2} />} durationInFrames={1} fps={30} width={W} height={H} />
+    {/* the camera dip, whole frames 514-521 (the reveal under the projected waterline) */}
+    <Composition id="DuckDipStrip" component={() => <Strip f0={514} crop={{x: 540, y: 960}} zoom={0.25} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet1" component={() => <Sheet cells={S1} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet2" component={() => <Sheet cells={S2} />} durationInFrames={1} fps={30} width={W} height={H} />
     <Composition id="DuckSheet3" component={() => <Sheet cells={S3} />} durationInFrames={1} fps={30} width={W} height={H} />

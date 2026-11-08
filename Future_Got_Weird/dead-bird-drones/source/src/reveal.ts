@@ -25,7 +25,7 @@ export const sweepPath = (B: Basis, F: Frame, e: number, mode: 'above' | 'below'
   for (let i = 0; i <= n; i++) {
     const x = lerp(X1, X0, i / n);
     // a wing-like trailing edge: tilted down toward the tail, with feather-tip scallops
-    const y = yc + 0.16 * (x - 2.5) - 0.5 * Math.abs(Math.sin((x * Math.PI) / 1.7));
+    const y = yc + 0.16 * (x - 2.5) - 0.22 * Math.abs(Math.sin((x * Math.PI) / 1.7)); // soft feather-tip scallops
     edge.push(onFlank(B, F, x, y));
   }
   const far = mode === 'above' ? YT + 3 : YB - 3;
@@ -34,12 +34,12 @@ export const sweepPath = (B: Basis, F: Frame, e: number, mode: 'above' | 'below'
 };
 /** a radial reveal around body-local centre c (feather-tipped rim) of radius r cm */
 export const radialPath = (B: Basis, F: Frame, c: [number, number], r: number) => {
-  if (r <= 0.05) return null;
+  if (r <= 1.2) return null; // no pinhole: the window appears at a readable size
   const pts: V2[] = [];
-  const n = 40;
+  const n = 120; // a smooth round iris (no visible facets)
   for (let i = 0; i < n; i++) {
     const a = (i / n) * Math.PI * 2;
-    const rr = r * (1 - 0.06 * Math.abs(Math.sin(a * 5)));
+    const rr = r;
     pts.push(onFlank(B, F, c[0] + rr * Math.cos(a), c[1] + rr * Math.sin(a) * 0.9));
   }
   return poly(pts);

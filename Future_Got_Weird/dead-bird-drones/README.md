@@ -2,8 +2,10 @@
 
 ## V1 (review cut)
 
-**Deliverable:** `exports/FGW_Dead_Bird_Drones_V1_REVIEW_1080x1920.mp4`. **Not published.** It is a review cut built
-from the supplied V2 narration; nothing in it is an approved final.
+**Deliverable:** `exports/FGW_Dead_Bird_Drones_V1_REVIEW_1080x1920.mp4` (1080×1920, 30 fps, 708 frames, 23.60 s,
+−13.5 LUFS, −1.6 dBTP). **Not published.** It is a review cut built from the supplied V2 narration; nothing in it is an
+approved final. One independent five-lens review round was run and its blockers and majors addressed; the open items
+are listed in the QA notes.
 
 **Where to look:**
 
@@ -30,7 +32,7 @@ from the supplied V2 narration; nothing in it is an approved final.
     # ASR models (k2-fsa GitHub releases, asr-models): sherpa-onnx-zipformer-en-2023-06-26 and
     #   sherpa-onnx-whisper-base.en, unpacked into /tmp/asr
     python3 tools/make_narration.py              # take -> narration master, word timeline, captions, SRT
-    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --outfile=/tmp/ec.js && node /tmp/ec.js audio/cues.json
+    source/node_modules/.bin/esbuild tools/export_cues.ts --bundle --platform=node --loader:.tsx=tsx --jsx=automatic --outfile=/tmp/ec.js && node /tmp/ec.js audio/cues.json
     python3 tools/make_audio.py mix_v1           # effects, ambience, music and mix -> source/public/audio/mix_v1.wav
     (cd source && npm ci)
     COMP=DeadBirdDronesV1 tools/render_resilient.sh mix_v1 exports/FGW_Dead_Bird_Drones_V1_REVIEW_1080x1920.mp4

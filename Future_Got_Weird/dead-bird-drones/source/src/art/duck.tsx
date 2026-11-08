@@ -60,7 +60,11 @@ const K = {
   stern: '#222527',
   specW: '#F3F2EC',
   spec: '#3F3D96', // blue-violet secondaries
+  specSheen: '#5F5EC4',
   specDeep: '#24225C',
+  tertial: '#7C6B57', // the tertials (opaque, a warmer, darker grey-brown than the scapulars)
+  tertialShade: '#6A5A48',
+  tertialEdge: '#D2C3A6', // their pale fringes
   breast: C.duckBreast,
   belly: '#D7D5CC',
   head: C.duckHead,
@@ -541,59 +545,83 @@ const F_PRIM = (s: HS) => {
  *  (greater-covert tips) and below (secondary tips). Duck-local x from xa (rear, tucked under the tertials) to xb
  *  (front, under the flank feathers); its spine runs dy above the flank line and sags in the middle like the wing's
  *  lower edge; hb = the blue half-height, hw = each white bar */
-const SPEC = {xa: -12.0, xb: -6.5, dy: 0.44, sag: 0.2, hb: 0.36, hw: 0.2};
+const SPEC = {xa: -12.0, xb: -6.5, dy: 0.44, sag: 0.2, hb: 0.36, hwUp: 0.27, hwLo: 0.17};
 const specSpine = (u: number): [number, number] => {
   const x = lerp(SPEC.xa, SPEC.xb, u);
   return [x, yFlank0(x) + SPEC.dy - SPEC.sag * Math.sin(Math.PI * u)];
 };
 /** the band's taper toward its two rounded ends (0 at the ends, 1 along the middle) */
-const specTap = (u: number) => Math.sqrt(Math.max(0, 1 - Math.abs(2 * u - 1) ** 3));
+const specTap = (u: number) => Math.sqrt(Math.max(0, 1 - Math.abs(2 * u - 1) ** 5));
 /** the strip of the band between offsets lo(u) .. hi(u) (cm, + up) from its spine, as a closed (x, y) outline */
-const specStrip = (lo: (u: number) => number, hi: (u: number) => number, n = 18): [number, number][] => {
+const specStrip = (lo: (u: number) => number, hi: (u: number) => number, n = 24): [number, number][] => {
   const out: [number, number][] = [];
-  for (let k = 0; k <= n; k++) { const u = k / n, [x, y] = specSpine(u); out.push([x, y + lo(u)]); }
-  for (let k = n; k >= 0; k--) { const u = k / n, [x, y] = specSpine(u); out.push([x, y + hi(u)]); }
+  // sampled densely toward the two ends, where the outline turns round
+  const us = Array.from({length: n + 1}, (_, k) => (1 - Math.cos((Math.PI * k) / n)) / 2);
+  for (const u of us) { const [x, y] = specSpine(u); out.push([x, y + lo(u)]); }
+  for (const u of us.slice().reverse()) { const [x, y] = specSpine(u); out.push([x, y + hi(u)]); }
   return out;
 };
 const specHb = (u: number) => SPEC.hb * specTap(u);
-const specHo = (u: number) => SPEC.hb * specTap(u) + SPEC.hw * Math.pow(specTap(u), 0.4);
-/** the tertials: three long grey-brown feathers lying over the rear of the folded wing, above the speculum, their
- *  rounded tips pointing back; each a fraction f of the way from just above the speculum to the mantle line, tips at
- *  x = tip; their roots run forward under the scapulars (faded out between x = -9.2 and -5.6) */
-const TERT = [
-  {f: 0.16, tip: -12.7},
-  {f: 0.5, tip: -13.25},
-  {f: 0.84, tip: -12.85},
-];
-const TERT_ROOT = -5.0, TERT_FADE: [number, number] = [-9.2, -5.6];
-const tertBand = (x: number): [number, number] => [yFlank0(x) + SPEC.dy + SPEC.hb + 0.32, topY(x) - 1.0];
-/** one tertial's outline (x, y): upper edge root -> tip, a rounded tip, lower edge back to the root */
-const tertOutline = (k: number): {pts: [number, number][]; lower: [number, number][]} => {
-  const {f, tip} = TERT[k];
-  const half = (x: number) => {
-    const [a, b] = tertBand(x);
-    return Math.max(0.3, 0.2 * (b - a));
-  };
-  const cy = (x: number) => {
-    const [a, b] = tertBand(x);
-    return lerp(a, b, f);
-  };
-  const L = 0.9; // the rounded tip's length (cm)
+const specHoUp = (u: number) => SPEC.hb * specTap(u) + SPEC.hwUp * Math.pow(specTap(u), 0.4);
+const specHoLo = (u: number) => SPEC.hb * specTap(u) + SPEC.hwLo * Math.pow(specTap(u), 0.4);
+/** the tertials: three long grey-brown feathers lying over the rear of the folded wing, above the speculum, stacked
+ *  like shingles (each covers the top of the one below), their rounded tips pointing back at x = tip. Together they
+ *  fill a fan from just above the speculum (tertLo) up to tertHi, which reaches near the top of the back at the rear
+ *  and drops under the mantle line toward the front, where their roots run under the scapulars (SCAP) */
+const TERT = [{tip: -12.75}, {tip: -13.3}, {tip: -12.95}];
+const TERT_ROOT = -6.0;
+const tertLo = (x: number) => yFlank0(x) + SPEC.dy + 0.46 - 0.45 * ss(-x, 10.8, 12.6); // the tips droop over the speculum's rear end
+const tertHi = (x: number) => topY(x) - lerp(1.32, 0.38, ss(-x, 8.4, 11.2));
+/** the scapulars' rear edge over the tertial roots: two rounded feather tips bulging back from x = x0 by up to d */
+const SCAP = {x0: -8.15, d: 0.75, n: 2, front: -3.2};
+/** one tertial (x, y): its outline (upper edge root -> tip, the rounded tip, lower edge back), its visible edge (the
+ *  lower edge and round the tip's apex) and its shaded lower strip */
+const tertOutline = (k: number): {pts: [number, number][]; lower: [number, number][]; shade: [number, number][]} => {
+  const {tip} = TERT[k];
+  // the lowest feather's lower edge rises a little toward its root, under the scapulars (clear of the speculum)
+  const lo0 = (x: number) => tertLo(x) + 0.35 * ss(x, -9.2, -7.4);
+  const S = (x: number) => (tertHi(x) - lo0(x)) / 3;
+  const yl = (x: number) => lo0(x) + k * S(x);
+  const yu = (x: number) => (k === 2 ? tertHi(x) : lo0(x) + (k + 1.5) * S(x));
+  const L = 1.0; // the rounded tip's length (cm)
   const xs = tip + L;
-  const up: [number, number][] = [], lo: [number, number][] = [], tipPts: [number, number][] = [];
-  for (let k2 = 0; k2 <= 14; k2++) {
-    const x = lerp(TERT_ROOT, xs, k2 / 14);
-    up.push([x, cy(x) + half(x)]);
-    lo.push([x, cy(x) - half(x)]);
+  const up: [number, number][] = [], lo: [number, number][] = [], mid: [number, number][] = [], tipPts: [number, number][] = [];
+  for (let i = 0; i <= 16; i++) {
+    const x = lerp(TERT_ROOT, xs, i / 16);
+    up.push([x, yu(x)]);
+    lo.push([x, yl(x)]);
+    mid.push([x, yl(x) + 0.34 * S(x)]);
   }
-  const h = half(xs), c = cy(xs);
-  for (let k2 = 1; k2 < 10; k2++) {
-    const a = (Math.PI * k2) / 10; // from the top round the tip to the bottom
-    tipPts.push([xs - L * Math.sin(a), c + h * Math.cos(a)]);
+  const c = (yu(xs) + yl(xs)) / 2, h = (yu(xs) - yl(xs)) / 2;
+  // the tip: a little pointed toward its lower side, as a folded feather's tip lies
+  for (let i = 1; i < 12; i++) {
+    const a = (Math.PI * i) / 12; // from the top round to the bottom
+    tipPts.push([xs - L * Math.pow(Math.sin(a), 0.8), c + h * Math.cos(a) - 0.12 * h * Math.sin(a)]);
   }
-  // the visible edge: the lower edge from the root to the tip, and round the tip's apex
-  const lower = [...lo, ...tipPts.slice().reverse().slice(0, 7)];
-  return {pts: [...up, ...tipPts, ...lo.slice().reverse()], lower};
+  const lower = [...lo, ...tipPts.slice().reverse().slice(0, 8)];
+  const shadeTip = tipPts.filter(([, y]) => y < yl(xs) + 0.34 * S(xs));
+  const shade: [number, number][] = [...mid, ...shadeTip, ...lo.slice().reverse()];
+  return {pts: [...up, ...tipPts, ...lo.slice().reverse()], lower, shade};
+};
+/** the scapulars covering the tertial roots: an outline (scalloped rear edge, then forward along the top and back
+ *  along the bottom) and the rear edge alone */
+const scapCover = (): {pts: [number, number][]; edge: [number, number][]} => {
+  const lo = (x: number) => tertLo(x) + 0.06; // above the speculum's upper white bar
+  const hi = (x: number) => topY(x) - 1.24; // just under the mantle line (no overlap with the dark mantle)
+  const edge: [number, number][] = [];
+  const m = 24;
+  for (let i = 0; i <= m; i++) {
+    const v = i / m;
+    const x = SCAP.x0 - SCAP.d * Math.pow(Math.abs(Math.sin(Math.PI * SCAP.n * v)), 0.6) * (0.85 + 0.15 * v);
+    edge.push([x, lerp(lo(x), hi(x), v)]);
+  }
+  const top: [number, number][] = [], bot: [number, number][] = [];
+  for (let i = 1; i <= 10; i++) {
+    const x = lerp(SCAP.x0, SCAP.front, i / 10);
+    top.push([x, hi(x)]);
+    bot.push([x, lo(x)]);
+  }
+  return {pts: [...edge, ...top, ...bot.reverse()], edge};
 };
 const F_BREAST = (s: HS) => s.l[0] - xBreast(s.l[1]);
 const F_BELLY = (s: HS) => -2.2 - s.l[1];
@@ -1086,9 +1114,10 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
     core: hullRegion(HV, F_CORE),
     hi: hullRegion(HV, F_HI),
   };
-  // ---- feather lines: scapular/tertial edges along the folded wing, faint vermiculation on the flank
+  // ---- feather lines: scapular edges along the folded wing (in front of the tertials, which carry their own edges),
+  // faint vermiculation on the flank
   const tert: string[] = [];
-  const tertRows: [number, number, number][] = [[0.8, -15.5, 6.5], [1.7, -13.5, 5.0], [2.6, -11.0, 3.0]];
+  const tertRows: [number, number, number][] = [[0.8, -6.4, 6.5], [1.7, -7.0, 5.0], [2.6, -7.6, 3.0]];
   for (const [dy, xa, xb] of tertRows) {
     const xy: [number, number][] = [];
     for (let k = 0; k <= 16; k++) {
@@ -1099,8 +1128,8 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
   }
   // short scallops (feather tips) along the wing's lower edge
   const scal: string[] = [];
-  for (let k = 0; k < 7; k++) {
-    const x0 = -15.2 + k * 2.6;
+  for (let k = 0; k < 4; k++) {
+    const x0 = -5.9 + k * 2.4;
     const y0 = yFlank0(x0) + 0.35;
     const xy: [number, number][] = [];
     for (let m = 0; m <= 5; m++) {
@@ -1185,36 +1214,27 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
     const Z1 = {x: Z.x + ux * ext, y: Z.y + uy * ext}, A1 = {x: A.x - ux * ext, y: A.y - uy * ext};
     return poly([...arc, Z1, {x: Z1.x - tx * down, y: Z1.y - ty * down}, {x: A1.x - tx * down, y: A1.y - ty * down}, A1]);
   })();
-  // ---- the speculum (secondaries on the folded wing): a slim blue-violet band with white bars at its two ends only
-  const specW = surfPoly(B, F, specQuad(SPEC.xa - SPEC.bar, SPEC.xb + SPEC.bar, SPEC.lo, SPEC.hi));
-  const spec = surfPoly(B, F, specQuad(SPEC.xa, SPEC.xb, SPEC.lo, SPEC.hi));
-  const specLo = surfPoly(B, F, specQuad(SPEC.xa, SPEC.xb, SPEC.lo, SPEC.lo + 0.27));
-  // grey flank feather tips overlapping the band's lower edge, so it sits between feathers
-  const specTuck = (() => {
-    let d = '';
-    for (let k = 0; k < 4; k++) {
-      const x0 = SPEC.xa + 0.35 + k * 1.32 + 0.15 * (k % 2);
-      const xy: [number, number][] = [];
-      for (let m = 0; m <= 8; m++) {
-        const u = m / 8;
-        const dy = SPEC.lo - 0.08 + 0.22 * Math.sin(Math.PI * u);
-        const x = x0 + 1.4 * u + SPEC.slant * (dy - SPEC.lo);
-        xy.push([x, yFlank0(x) + dy]);
-      }
-      d += surfPoly(B, F, xy, 0.05) + ' ';
-    }
-    return d;
-  })();
-  // the tertials' lower edge laid over the band's top: the speculum reads as tucked under them
-  const specTop = (() => {
-    const xy: [number, number][] = [];
-    for (let k = 0; k <= 12; k++) {
-      const x0 = lerp(SPEC.xa - SPEC.bar - 0.4, SPEC.xb + SPEC.bar + 0.3, k / 12);
-      const x = x0 + SPEC.slant * (SPEC.hi - SPEC.lo);
-      xy.push([x, yFlank0(x) + SPEC.hi - 0.04]);
-    }
-    return lineOnSurf(B, F, xy, 0.06);
-  })();
+  // ---- the speculum (secondaries on the folded wing): a short curved blue-violet band, white bars above and below, a
+  // sheen along its lit upper half, a deeper lower edge and the edges of three secondaries; one thin ink contour
+  const specW = surfPoly(B, F, specStrip((u) => -specHoLo(u), specHoUp));
+  const spec = specW ? surfPoly(B, F, specStrip((u) => -specHb(u), specHb)) : '';
+  const specSheen = spec ? surfPoly(B, F, specStrip((u) => 0.05 * specTap(u), (u) => 0.8 * specHb(u))) : '';
+  const specLo = spec ? surfPoly(B, F, specStrip((u) => -specHb(u), (u) => -0.42 * specHb(u))) : '';
+  const specFeath = spec
+    ? [0.34, 0.52, 0.7].map((u) => {
+        const [x, y] = specSpine(u), h = specHb(u) * 0.92;
+        return lineOnSurf(B, F, [[x + 0.16, y + h], [x - 0.02, y], [x - 0.24, y - h]], 0.07);
+      }).join(' ')
+    : '';
+  // ---- the tertials: three opaque grey-brown feathers over the rear of the wing, stacked top over bottom, each with a
+  // pale fringe along its lower edge and tip and a dark edge line; their roots fade into the scapulars
+  const terts = TERT.map((_, k) => {
+    const o = tertOutline(k);
+    return {d: surfPoly(B, F, o.pts, 0.06), shade: surfPoly(B, F, o.shade, 0.065), edge: lineOnSurf(B, F, o.lower, 0.07)};
+  });
+  const scap = scapCover();
+  const scapD = surfPoly(B, F, scap.pts, 0.08), scapEdge = lineOnSurf(B, F, scap.edge, 0.09);
+  const tertsOk = terts.every((q) => q.d) && !!scapD;
   // ---- bill
   const billPts = billSections.flat().map((p) => P(p));
   const bill = convexPath(billPts.map((q) => ({x: q.x, y: q.y})), 4);
@@ -1258,11 +1278,12 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
     return {x: q.x, y: q.y};
   })));
   // primaries' edge lines
+  // (only in front of the black rump, which covers the primaries' rear)
   const primLines = [0.9, 1.6].map((d) => {
     const xy: [number, number][] = [];
     for (let k = 0; k <= 10; k++) {
-      const x = lerp(-10.5, -18.6, k / 10);
-      xy.push([x, topY(x) - d * lerp(0.9, 0.35, k / 10)]);
+      const x = lerp(-10.5, -13.0, k / 10);
+      xy.push([x, topY(x) - d * lerp(0.9, 0.75, k / 10)]);
     }
     return lineOnSurf(B, F, xy);
   });
@@ -1321,12 +1342,32 @@ const AboveWater: React.FC<{B: Basis; F: Frame; HV: HullView; t: number}> = ({B,
           {reg(R.vent, K.vent)}
           {reg(R.stern, K.stern)}
           <path d={primLines.join(' ')} fill="none" stroke={K.primaryEdge} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.6} strokeLinecap="round" />
+          {specW && (
+            <g>
+              <path d={specW} fill={K.specW} stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} strokeLinejoin="round" strokeOpacity={0.6} />
+              {spec && <path d={spec} fill={K.spec} />}
+              {specSheen && <path d={specSheen} fill={K.specSheen} />}
+              {specLo && <path d={specLo} fill={K.specDeep} />}
+              {specFeath && <path d={specFeath} fill="none" stroke={K.specDeep} strokeWidth={LINE_PX * 0.8} vectorEffect={NS} strokeLinecap="round" opacity={0.75} />}
+            </g>
+          )}
+          {tertsOk && (
+            <g>
+              {terts.map((q, k) => (
+                <g key={`t${k}`}>
+                  <path d={q.d} fill={K.tertial} />
+                  <path d={q.shade} fill={K.tertialShade} />
+                  <path d={q.edge} fill="none" stroke={K.tertialEdge} strokeWidth={LINE_PX * 1.5} vectorEffect={NS} strokeLinecap="round" transform="translate(0,-1.3)" />
+                  <path d={q.d} fill="none" stroke={INK} strokeWidth={LINE_PX} vectorEffect={NS} strokeLinejoin="round" strokeOpacity={0.72} />
+                </g>
+              ))}
+              {/* the scapulars' rounded tips over the tertials' roots */}
+              <path d={scapD} fill={K.upper} />
+              <path d={scapEdge} fill="none" stroke={K.tertialEdge} strokeWidth={LINE_PX * 1.3} vectorEffect={NS} strokeLinecap="round" opacity={0.7} transform="translate(1.2,0)" />
+              <path d={scapEdge} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX} vectorEffect={NS} strokeLinecap="round" opacity={0.85} />
+            </g>
+          )}
           <path d={tert.join(' ') + ' ' + scal.join(' ')} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX} vectorEffect={NS} opacity={0.55} strokeLinecap="round" />
-          {spec && <path d={specW} fill={K.specW} />}
-          {spec && <path d={spec} fill={K.spec} />}
-          {spec && <path d={specLo} fill={K.specDeep} />}
-          {spec && <path d={specTuck} fill={K.flank} />}
-          {spec && <path d={specTop} fill="none" stroke={K.tertialLine} strokeWidth={LINE_PX * 1.2} vectorEffect={NS} strokeLinecap="round" opacity={0.85} />}
           {reg(R.breast, K.breast)}
           {reg(R.shadow, INK, 0.2)}
           {reg(R.core, INK, 0.13)}

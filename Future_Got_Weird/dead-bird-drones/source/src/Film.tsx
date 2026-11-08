@@ -228,8 +228,8 @@ const SweepWipe: React.FC<{p: number; out: Parts; inn: Parts}> = ({p, out, inn})
   const band = `M${curve(-170)} L${W + 60},${y.toFixed(1)} Q${W / 2},${(y + 2 * sag).toFixed(1)} -60,${y.toFixed(1)} Z`;
   const both = (k: keyof Parts) => (
     <g>
-      <g clipPath={`url(#${id}b)`}>{out[k]}</g>
-      <g clipPath={`url(#${id}a)`}>{inn[k]}</g>
+      <g mask={`url(#${id}mb)`}>{out[k]}</g>
+      <g mask={`url(#${id}ma)`}>{inn[k]}</g>
     </g>
   );
   return (
@@ -237,6 +237,10 @@ const SweepWipe: React.FC<{p: number; out: Parts; inn: Parts}> = ({p, out, inn})
       <defs>
         <clipPath id={`${id}a`}><path d={above} /></clipPath>
         <clipPath id={`${id}b`}><path d={below} /></clipPath>
+        {/* masks, not clip paths, on the swept layers: a clipped group holding blur filters can leave a filter tile at the
+            frame origin in Chromium */}
+        <mask id={`${id}ma`} maskUnits="userSpaceOnUse" x={-100} y={-900} width={W + 200} height={H + 1800}><path d={above} fill="#FFFFFF" /></mask>
+        <mask id={`${id}mb`} maskUnits="userSpaceOnUse" x={-100} y={-900} width={W + 200} height={H + 1800}><path d={below} fill="#FFFFFF" /></mask>
         <linearGradient id={`${id}g`} x1="0" y1={y - 170} x2="0" y2={y + 2 * sag} gradientUnits="userSpaceOnUse">
           <stop offset="0" stopColor="#FFFFFF" stopOpacity={0} />
           <stop offset="1" stopColor="#FFFFFF" stopOpacity={0.42} />
