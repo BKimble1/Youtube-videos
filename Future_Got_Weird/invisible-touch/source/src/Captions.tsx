@@ -15,7 +15,7 @@ export const Captions: React.FC<{t: number; y: (t: number, i: number) => number}
   const i = capIndex(t);
   if (i < 0) return null;
   const c = CAPTIONS[i];
-  return <CaptionLine key={i} c={c} y={y(c.show, i)} a={i === 0 ? 1 : clamp(0.5 + (t - c.show) / 0.067)} />;
+  return <CaptionLine key={i} c={c} y={y(c.start + 0.05, i)} a={i === 0 ? 1 : clamp(0.5 + (t - c.show) / 0.067)} />;
 };
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; left?: number; width?: number}> = ({c, y, a, left = 110, width = 760}) => {
   const words = c.text.split(' ');

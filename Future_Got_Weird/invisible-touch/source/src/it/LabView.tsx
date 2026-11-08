@@ -16,7 +16,8 @@ export const focusPoint = (s: LabShot): V => {
   const g = handGeo({W, dir, L: HAND_L}, s.pose);
   const k = s.onPalm;
   // the focus sits a hair below the skin surface it presses on
-  const palm = {x: g.palmPt.x, y: g.palmPt.y + 1.2};
+  // just under the palm's skin (below the thumb, which lies along the palm's side in the flat hand)
+  const palm = {x: g.palmPt.x + 2, y: g.palmPt.y + 5.5};
   return {x: g.pad.x + (palm.x - g.pad.x) * k, y: g.pad.y + 1.0 + (palm.y - g.pad.y - 1.0) * k};
 };
 
@@ -47,12 +48,12 @@ export const LabView: React.FC<{s: LabShot; t: number; id: string}> = ({s, t, id
           under: (k) => (
             <g>
               {s.macro > 0.01 && <rect x={-3000} y={-3000} width={6000} height={6000} fill="#0B1E2B" opacity={0.72 * Math.min(1, s.macro)} />}
-              <Waves t={t} F={F} on={s.waves} wavelets={s.wavelets} envelope={s.envelope} w={2.2 / k} t0={s.waveT0} id={`${id}-wv`} />
+              <Waves t={t} F={F} on={s.waves} wavelets={s.wavelets} envelope={s.envelope} w={Math.max(0.5, 3.2 / k)} t0={s.waveT0} id={`${id}-wv`} />
             </g>
           ),
           overlay: (k) => (
             <g>
-              {!trailOn && <Focus c={F} r={Math.max(3.2, 16 / k)} a={s.focus} id={`${id}-fc`} squash={0.55} />}
+              {!trailOn && <Focus c={F} r={Math.max(4.5, 40 / k)} a={s.focus} id={`${id}-fc`} squash={0.5} />}
               {s.pulseOn > 0.01 && (
                 <g opacity={s.pulseOn}>
                   <Pulse c={F} age={s.pulse} size={Math.max(24, 90 / k)} w={4 / k} />
@@ -80,9 +81,9 @@ const Trail: React.FC<{s: LabShot; F: V}> = ({s, F}) => {
         .slice()
         .reverse()
         .map(({p, k}) => (
-          <circle key={k} cx={p.x} cy={p.y} r={(k === 0 ? 14 : 9 - k * 0.45) * (m.scale / 3.5)} fill={k === 0 ? '#E8FBFF' : CYAN} opacity={k === 0 ? 0.95 : 0.75 * (1 - k / 14)} />
+          <circle key={k} cx={p.x} cy={p.y} r={(k === 0 ? 2.8 : 1.9 - k * 0.04) * m.scale} fill={k === 0 ? '#E8FBFF' : CYAN} opacity={k === 0 ? 0.95 : 0.8 * (1 - k / 30)} />
         ))}
-      {pts[0] && <circle cx={pts[0].p.x} cy={pts[0].p.y} r={30 * (m.scale / 3.5)} fill={CYAN} opacity={0.25} />}
+      {pts[0] && <circle cx={pts[0].p.x} cy={pts[0].p.y} r={6 * m.scale} fill={CYAN} opacity={0.28} />}
     </g>
   );
 };

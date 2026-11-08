@@ -109,7 +109,7 @@ const base = (t: number): LabShot => ({
 });
 
 // the circle the focal point traces under the flat palm ("make an invisible button feel like it's moving")
-export const CIRCLE = {cx: 6, cz: 0, r: 13, t0: T.invisible - 0.45, rate: 0.9};
+export const CIRCLE = {cx: 0, cz: 0, r: 15, t0: T.invisible - 0.45, rate: 0.9};
 export const circlePt = (t: number) => {
   const a = 2 * Math.PI * CIRCLE.rate * (t - CIRCLE.t0) - Math.PI / 2;
   return {x: CIRCLE.cx + CIRCLE.r * Math.cos(a), z: CIRCLE.cz + CIRCLE.r * Math.sin(a)};
@@ -216,10 +216,10 @@ export const labAt = (t: number): LabShot | null => {
     s.pad = {x: hx - PALM_FROM_PAD.x * open + 0, y: hy};
     s.cam = camAt(t, [
       {t: T.move - 0.03, x: -1, y: FY, d: 40, yaw: 0, pitch: -1},
-      {t: T.move + 0.55, x: hx - 6, y: FY + 6, d: 330, yaw: 0, pitch: -6},
-      {t: T.spot2 + 0.4, x: -16, y: FY + 4, d: 330, yaw: 0, pitch: -8},
-      {t: T.invisible - 0.2, x: -8, y: FY - 14, d: 240, yaw: -6, pitch: 13},
-      {t: T.noGlove, x: -4, y: FY - 14, d: 220, yaw: -10, pitch: 14},
+      {t: T.move + 0.55, x: hx - 6, y: FY - 6, d: 260, yaw: 0, pitch: -4},
+      {t: T.spot2 + 0.4, x: -20, y: FY - 8, d: 250, yaw: 0, pitch: -5},
+      {t: T.invisible - 0.2, x: -14, y: FY - 8, d: 175, yaw: -8, pitch: 17},
+      {t: T.noGlove, x: -12, y: FY - 8, d: 160, yaw: -12, pitch: 18},
     ]);
     s.pulseOn = 0;
     s.body = false;
@@ -233,7 +233,7 @@ export const labAt = (t: number): LabShot | null => {
     if (t > CIRCLE.t0) {
       // the focus traces a circle under the palm; the wave overlay fades so the moving point reads
       const tr: {x: number; z: number}[] = [];
-      for (let k = 0; k < 14; k++) tr.push(circlePt(t - k * 0.045));
+      for (let k = 0; k < 30; k++) tr.push(circlePt(t - k * 0.03));
       s.trail = tr;
       s.envelope = 0.8 * (1 - ss(t, CIRCLE.t0, CIRCLE.t0 + 0.4));
     }
@@ -259,13 +259,17 @@ export const labEndAt = (t: number): LabShot | null => {
       s.ang = 172;
       s.pad = {x: -24, y: -FY - 6};
     } else {
+      // the press on nothing, then the hand starts to reach left and the camera tracks it into the match cut
+      const go = clamp((t - (T.button3 + 0.3)) / (T.now - 0.03 - (T.button3 + 0.3)));
+      const px = -60 * go * go * 0.5 - 60 * Math.max(0, go - 0) * 0.5 * go;
+      s.pose = H_POINT;
+      s.ang = 150;
+      s.pad = {x: px, y: -FY + pressDip(t) - 3};
       s.cam = camAt(t, [
         {t: T.no2 - 0.06, x: 110, y: FY + 120, d: 1250, yaw: 4, pitch: -4},
-        {t: T.now, x: 90, y: FY + 110, d: 1150, yaw: 2, pitch: -4},
+        {t: T.button3 + 0.3, x: 96, y: FY + 112, d: 1180, yaw: 3, pitch: -4},
+        {t: T.now - 0.03, x: px + 30, y: FY + 10, d: 330, yaw: 0, pitch: -2},
       ]);
-      s.pose = H_POINT;
-      s.ang = 148;
-      s.pad = {x: -10 * ss(t, T.button3 + 0.3, T.now), y: -FY + pressDip(t) - 3};
       s.expr = EXN.wonder;
     }
     return s;
@@ -273,12 +277,12 @@ export const labEndAt = (t: number): LabShot | null => {
   if (t >= T.and2 - 0.06) {
     s.pulseOn = 0;
     // flat hand over the array, focus on the palm; then the grab closes through it
-    const grab = ss(t, T.you - 0.25, T.grab + 0.15) * (1 - ss(t, T.but2 - 0.05, T.but2 + 0.35));
+    const grab = ss(t, T.you + 0.1, T.grab + 0.25) * (1 - ss(t, T.but2 + 0.1, T.skin2 + 0.3));
     const back = ss(t, T.feel3 - 0.55, T.end - 0.25); // back to the opening's pointing pose
     s.pose = mixH(mixH(H_FLAT, H_FIST, grab), H_POINT, back);
     s.ang = lerp(lerp(174, 168, grab), 148, back);
     s.pad = {x: lerp(-20, 0, back), y: lerp(-FY - 4, -FY + pressDip(t) - 2, back) + 4 * grab};
-    s.expr = mixExpr(mixExpr(EXN.focus, EXN.puzzled, ss(t, T.grab - 0.1, T.grab + 0.3)), EXN.delight, ss(t, T.skin2, T.feel3));
+    s.expr = mixExpr(mixExpr(EXN.focus, EXN.puzzled, ss(t, T.grab, T.it3 + 0.1)), EXN.delight, ss(t, T.skin2 + 0.2, T.feel3));
     s.waveT0 = T.and2 - 1;
     s.waves = (1 - ss(t, T.feel3, T.feel3 + 0.3));
     s.envelope = 0.55 * (1 - grab * 0.5);
@@ -288,11 +292,13 @@ export const labEndAt = (t: number): LabShot | null => {
     s.cam = camAt(
       t,
       [
-        {t: T.and2 - 0.06, x: -4, y: FY + 30, d: 520, yaw: -8, pitch: -6},
-        {t: T.you - 0.1, x: 20, y: FY + 60, d: 640, yaw: -4, pitch: -5},
-        {t: T.grab + 0.3, x: 50, y: FY + 120, d: 860, yaw: 0, pitch: -5},
-        {t: T.skin2, x: 30, y: FY + 70, d: 600, yaw: -6, pitch: -5},
-        {t: T.feel3 - 0.1, x: 4, y: FY + 20, d: 380, yaw: -16, pitch: -4},
+        {t: T.and2 - 0.06, x: 40, y: FY + 130, d: 640, yaw: -8, pitch: -5},
+        {t: T.you - 0.2, x: 30, y: FY + 110, d: 600, yaw: -6, pitch: -5},
+        {t: T.grab, x: -12, y: FY + 6, d: 270, yaw: -4, pitch: -3},
+        {t: T.it3 - 0.05, x: -10, y: FY + 6, d: 260, yaw: -4, pitch: -3},
+        {t: T.but2 + 0.15, x: 185, y: FY + 360, d: 420, yaw: -10, pitch: -4},
+        {t: T.skin2 + 0.35, x: -14, y: FY + 4, d: 250, yaw: -8, pitch: -3},
+        {t: T.feel3 - 0.1, x: -4, y: FY + 8, d: 230, yaw: -14, pitch: 4},
         {...OPEN_K(T.end - 0.3), d: 190 - OPEN_V * 0.3},
         {...OPEN_K(T.end), d: 190},
       ],
@@ -306,3 +312,6 @@ export const labEndAt = (t: number): LabShot | null => {
   }
   return null;
 };
+
+/** where the lab hand's index pad is on screen just before the cut to the car (the car shot starts there) */
+export const LAB_CUT_T = T.now - 0.034;

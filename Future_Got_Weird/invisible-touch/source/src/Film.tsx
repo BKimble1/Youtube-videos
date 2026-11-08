@@ -2,7 +2,10 @@ import React from 'react';
 import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {FPS} from './lib';
 import {T} from './it/timing';
-import {labAt, labEndAt} from './it/labShots';
+import {labAt, labEndAt, LAB_CUT_T} from './it/labShots';
+import {focusPoint} from './it/LabView';
+import {figMatrix, project} from './it/cam3';
+import {setCarEntry} from './it/car';
 import {LabView} from './it/LabView';
 import {Captions} from './Captions';
 import {CarView, carActive} from './it/car';
@@ -10,13 +13,23 @@ import {KioskView, kioskActive} from './it/kiosk';
 
 /** the caption zone each shot leaves free (screen y of the caption's centre) */
 export const capY = (t: number) => {
-  if (t < T.look - 0.05) return 430; // hook: the finger is mid-frame, the array below; the upper zone is open wall
+  if (t < T.look - 0.05) return 1400; // hook: the finger is upper-middle; the lower wall is clear (and matches the loop's last caption)
   if (t < T.so - 0.07) return 430; // low angle: the gap is centre; captions high
   if (t < T.move) return 1420;
   if (t < T.now) return 1440;
-  if (t < T.and2) return 400; // car and kiosk: the controls are mid-frame
+  if (t < T.without - 0.05) return 1470; // car: the head is high in frame; captions over the door sill
+  if (t < T.and2) return 330; // kiosk: the lobby's upper wall is clear
   return 1400;
 };
+
+// the car shot opens with the hand exactly where the lab shot left it (screen point and scale of the index pad)
+(() => {
+  const l = labEndAt(LAB_CUT_T);
+  if (!l) return;
+  const p = project(l.cam, {x: l.pad.x, y: -l.pad.y, z: 0});
+  setCarEntry({sx: p.x, sy: p.y, k: figMatrix(l.cam, l.pad.x, -l.pad.y).scale});
+  void focusPoint;
+})();
 
 export const Frame: React.FC<{t: number; captions: boolean}> = ({t, captions}) => {
   let body: React.ReactNode = null;

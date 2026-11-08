@@ -66,7 +66,8 @@ export const Waves: React.FC<WaveProps> = ({t, F, on, wavelets = 1, envelope = 1
       const tau = delayOf(x, F);
       const toF = Math.atan2(F.y - EY, F.x - x);
       const dF = Math.hypot(F.x - x, F.y - EY);
-      for (let k = 0; k < 12; k++) {
+      const kNow = Math.floor((t - t0 - tau) / PERIOD);
+      for (let k = Math.max(0, kNow - 11); k <= kNow; k++) {
         const te = t0 + tau + k * PERIOD;
         const r = (t - te) * SPEED;
         if (r <= 0.3 || r > dF + 2) continue;
@@ -81,7 +82,8 @@ export const Waves: React.FC<WaveProps> = ({t, F, on, wavelets = 1, envelope = 1
     const aR = Math.atan2(EY - F.y, ROW[ROW.length - 1] - F.x);
     const dmax = Math.max(...ROW.map((xx) => Math.hypot(xx - F.x, EY - F.y)));
     const dmin = Math.abs(EY - F.y);
-    for (let k = 0; k < 14; k++) {
+    const kN = Math.floor((t - t0) / PERIOD);
+    for (let k = Math.max(0, kN - 13); k <= kN; k++) {
       // crest k leaves the array (outermost emitters) at t0 + k*PERIOD and arrives at F dmax/SPEED later
       const r = dmax - (t - t0 - k * PERIOD) * SPEED;
       if (r > dmax || r < 0.5) continue;
