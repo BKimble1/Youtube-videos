@@ -1,0 +1,50 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Eel Escape, Bone Glue, Myostatin, Zombie Snail, Zombie Ant); confirmed with creative_list_voices on 2026-11-08"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags only",
+ "flow_id": "Y80A4LwgITh11TfctEYV",
+ "prompt": "[clear, confident, a little energized, flowing straight on] This button doesn't exist. But you can FEEL it. Look. Nothing is touching his finger. So why can he feel a button? [conversational, brisk, explaining] Under his hand, hundreds of tiny speakers fire ultrasound waves. They meet at one exact spot, making his skin feel pressure. Move that spot, and you can make an invisible button feel like it's moving. [matter-of-fact] No glove. No physical button. [warm, curious] Now imagine reaching into thin air and feeling the controls of your car. Or pressing a floating button without touching a screen. [leaning in] And here's the weird part. You can't actually grab it. [softer, confident] But your skin can still feel it.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Bracket tags direct delivery and are not spoken. The first three sentences are tagged to flow straight on (no dramatic pauses).",
+ "generated_once": "One run of two variations (the connector default), 2 x 724.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_KmHM.mp3",
+   "generation_id": "KmHM13DGeXUsB0QXySLG",
+   "session_id": "t9Ty11piBUcCf13jpBwk",
+   "duration_s": 32.6,
+   "sha256": "e5de94db3a72a4d00dad798b69dfa4bbb87087e7441194e0943e96cf34804845",
+   "asr": {
+    "zipformer": 0.01,
+    "whisper": 0.0
+   },
+   "chosen": false,
+   "why_not": "zipformer heard 'so why CAN he' as 'kin' (a softer vowel on 'can'); 0.5 s longer"
+  },
+  {
+   "file": "audio/narration/takes/t2_zLJn.mp3",
+   "generation_id": "zLJnWcUjY8qOp7xvP8US",
+   "session_id": "y6E83PJPHPDZzjLt8Tkj",
+   "duration_s": 32.13,
+   "sha256": "d7c1f2b8d9fc849a6ff50e06b2e33cc099d4173cd30ba89d0e0160a58f4ffe33",
+   "asr": {
+    "zipformer": 0.0,
+    "whisper": 0.0
+   },
+   "chosen": true,
+   "why": "word-perfect on both ASR models; speech from 0.00 s; the opening line crisp and energized"
+  }
+ ],
+ "master": {
+  "file": "audio/narration/FGW_Invisible_Touch_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 31.133 s (the film length)",
+  "edits": "14 sentence gaps longer than 0.30 s shortened to 0.30 s (the one before 'You can't actually grab it' to 0.36 s), each cut in the middle of the silent run with a 12 ms equal-power crossfade; 1.12 s removed in total. No word is time-stretched, pitch-shifted or gain-changed. Natural take speech: 32.08 s; edited: 30.64 s.",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer)",
+  "sha256": "5dfe5c2e8db8744df9ac2948fbc9590a01d65a486a84ab3875e702282caade09"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pace measurements and levels."
+}

@@ -1,0 +1,18 @@
+{
+ "zipformer": {
+  "transcript": "THIS BUTTON DOESN'T EXIST BUT YOU CAN FEEL IT LOOK NOTHING IS TOUCHING HIS FINGER SO WHY KIN HE FEEL A BUTTON UNDER HIS HAND HUNDREDS OF TINY SPEAKERS FIRE ULTRA SOUND WAVES THEY MEET AT ONE EXACT SPOT MAKING HIS SKIN FEEL PRESSURE MOVE THAT SPOT AND YOU CAN MAKE AN INVISIBLE BUTTON FEEL LIKE ITS MOVING NO GLOVE NO PHYSICAL BUTTON NOW IMAGINE REACHING INTO THIN AIR AND FEELING THE CONTROLS OF YOUR CAR OR PRESSING A FLOATING BUTTON WITHOUT TOUCHING A SCREEN AND HERE'S THE WEIRD PART YOU CAN'T ACTUALLY GRAB IT BUT YOUR SKIN CAN STILL FEEL IT",
+  "wer": 0.01,
+  "diffs": [
+   [
+    "replace",
+    "can",
+    "kin"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "This button doesn't exist, but you can feel it. Look! Nothing is touching his finger. So why can he feel a button? Under his hand, hundreds of tiny speakers fire ultrasound waves. They meet at one exact spot, making his skin feel pressure. // Move that spot and you can make an invisible button feel like it's moving. No glove No physical button. Now imagine reaching into thin air and feeling the controls of your car. or pressing a floating button without touching a screen. And here's the weird part. You can't actually grab it. But your skin can still feel it.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}
