@@ -1,6 +1,6 @@
 {
  "file": "FGW_Dead_Bird_Drones_V3_1080x1920.mp4",
- "size_mb": 22.65,
+ "size_mb": 22.71,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,16 +15,16 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "257625"
+   "bitrate": "257630"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.89,
+ "frame_change_median": 4.93,
  "large_changes": [
   {
    "frame": 17,
    "t": 0.567,
-   "mad": 28.54,
+   "mad": 28.53,
    "planned": "hook: push into the motor and back out, pull back for fly again"
   },
   {
@@ -42,13 +42,13 @@
   {
    "frame": 46,
    "t": 1.533,
-   "mad": 25.23,
+   "mad": 25.24,
    "planned": "hook: push into the motor and back out, pull back for fly again"
   },
   {
    "frame": 119,
    "t": 3.967,
-   "mad": 33.84,
+   "mad": 33.83,
    "planned": "match cut into the lab"
   },
   {
@@ -60,18 +60,18 @@
   {
    "frame": 479,
    "t": 15.967,
-   "mad": 71.89,
+   "mad": 70.76,
    "planned": "whip pan from the meadow, match cut on the pan to the pond"
   },
   {
    "frame": 569,
    "t": 18.967,
-   "mad": 68.91,
+   "mad": 70.26,
    "planned": "whip tilt up to the sky, the drone flies in"
   }
  ],
  "unplanned_large_changes": [],
  "longest_near_static_run_frames": 11,
  "longest_near_static_run_starts_s": 5.9,
- "loop_last_vs_first_mad": 8.4
+ "loop_last_vs_first_mad": 8.39
 }

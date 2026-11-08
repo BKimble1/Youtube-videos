@@ -1,6 +1,25 @@
 # Future Got Weird: They Turned Dead Birds Into Drones
 
-## V2 (review cut, current)
+## V3 (final, publish candidate)
+
+**Deliverable:** `exports/FGW_Dead_Bird_Drones_V3_1080x1920.mp4`
+
+- **Format:** 1080×1920, 30 fps, 708 frames, 23.60 s.
+- **Loudness:** −13.4 LUFS, −1.6 dBTP.
+- **Status:** not published.
+- **Narration:** the approved narration, unchanged.
+- **Docs:** QA notes in `production/V3_QA_NOTES.md`; evidence in `qa/v3/`.
+- **Audio:** mix in `audio/mix/FGW_Dead_Bird_Drones_MIX_V3.wav`; stems in `audio/stems/*mix_v3*`.
+
+**Rebuild:**
+
+1. Run the cue export.
+2. `python3 tools/make_audio.py mix_v3`
+3. `COMP=DeadBirdDronesV3 tools/render_resilient.sh mix_v3 exports/FGW_Dead_Bird_Drones_V3_1080x1920.mp4`
+
+**Description line (accuracy):** "The 2025 flapping-wing prototype was built on a taxidermied mallard; the film draws a generic bird."
+
+## V2 (review cut, superseded)
 
 **Deliverable:** `exports/FGW_Dead_Bird_Drones_V2_REVIEW_1080x1920.mp4`
 - **Format:** 1080×1920, 30 fps, 708 frames, 23.60 s.

@@ -342,8 +342,8 @@ const labelOps = (t: number) => {
   );
   void MEADOW_REVEAL;
   const res = Math.max(
-    ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, MEADOW_WHIP[0], MEADOW_WHIP[0] + 0.12)), // the meadow: the aim
-    ss(t, SKY_T0 + 0.35, SKY_T0 + 0.6) * (1 - ss(t, SKY_REVEAL.open[0] - 0.25, SKY_REVEAL.open[0] - 0.05)), // (V3) the flock scene is a speculative application
+    ss(t, MEADOW_T0 + 0.1, MEADOW_T0 + 0.25) * (1 - ss(t, MEADOW_WHIP[0], MEADOW_WHIP[0] + 0.12)), // the meadow: the aim (on from the scene's start)
+    ss(t, SKY_T0, SKY_T0 + 0.1) * (1 - ss(t, SKY_REVEAL.open[0] - 0.25, SKY_REVEAL.open[0] - 0.05)), // (V3) the flock scene is a speculative application
   );
   return {sch, res};
 };

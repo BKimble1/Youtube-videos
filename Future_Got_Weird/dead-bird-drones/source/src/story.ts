@@ -264,7 +264,9 @@ export const MEADOW_REVEAL = {open: [15.015, 15.225] as [number, number]};
 export const MEADOW_PUSH: [number, number] = [15.2, 15.94];
 /** (V3) the meadow-to-pond whip pan (cm of camera lead at the cut) */
 export const MEADOW_WHIP: [number, number] = [15.52, 15.94];
-export const WHIP_CM = 150;
+export const WHIP_CM = 120;
+/** the pond side of the whip: the same screen speed at the cut (the pond is framed at 12.5 px/cm, the meadow at 13.5) */
+export const POND_WHIP = {cm: 130, dur: 0.42};
 export const meadowReveal = (t: number): {e: number; mode: 'above' | 'below'} | null =>
   t < MEADOW_REVEAL.open[0] ? null : {e: ss(t, ...MEADOW_REVEAL.open), mode: 'above'};
 /** (V1, unused in V2) */
@@ -286,7 +288,8 @@ export const meadowState = (t: number): ShotState => {
   // the drone, then eases to a stop so the drone flies on, out of frame right, before the water rises
   const base: V3 = [x, 0, 0];
   const A: Orbit = {target: add3(base, LAB_END.target), ...MEADOW_CAM, scale: LAB_END.scale, cx: LAB_END.cx, cy: LAB_END.cy};
-  const Bm: Orbit = {target: add3(base, [-2, 6, 0]), ...MEADOW_CAM, scale: 13.5, cx: 480, cy: 1080};
+  // (V3) a slow push with the camera lagging the drone, so it drifts forward across the frame (no locked hold)
+  const Bm: Orbit = {target: add3(base, [-13, 5, 0]), ...MEADOW_CAM, scale: 15, cx: 480, cy: 1080};
   const held = lerpOrbit(A, Bm, ss5(t, MEADOW_T0 + 0.3, 15.0));
   // the push into the drone's open flank window (body-local window centre), so the window fills the frame for the match
   const win = add3(base, [2.6, -0.3, 0]);
@@ -294,7 +297,8 @@ export const meadowState = (t: number): ShotState => {
   void Wc;
   // (V3) the match: a whip pan right; the drone (and the flock) slide out of frame left; hard cut at full speed to the pond,
   // where the same pan direction settles onto the swimming duck
-  const whip = WHIP_CM * Math.pow(ss(t, MEADOW_WHIP[0], MEADOW_WHIP[1]), 2);
+  const wu = clamp((t - MEADOW_WHIP[0]) / (MEADOW_WHIP[1] - MEADOW_WHIP[0]));
+  const whip = WHIP_CM * wu * wu; // accelerating into the cut (end speed 2 WHIP_CM / duration)
   const cam = {...held, target: add3(held.target, [whip, 0, 0])};
   return {cam, F, u, ps: P(u), rate: rateOf(1 / T_FLAP)};
 };
@@ -320,8 +324,10 @@ export const pondCam = (t: number): Orbit => {
   const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 14.5, cx: 500, cy: 980};
   const split2: Orbit = {...split, target: add3(p, [6, 2, 0]), scale: 19}; // in on the preserved head and breast
   // the end of the whip pan from the meadow: the camera arrives from the left of the duck, decelerating
-  const pan: V3 = [-WHIP_CM * Math.pow(1 - ss(t, POND_T0, POND_T0 + 0.42), 2), 0, 0];
-  const tilt: V3 = [0, 70 * Math.pow(ss(t, PONDSKY_WHIP[0], CUT.pondToSky[0]), 2), 0]; // whip tilt up to the sky
+  const pu = clamp((t - POND_T0) / POND_WHIP.dur);
+  const pan: V3 = [-POND_WHIP.cm * (1 - pu) * (1 - pu), 0, 0]; // decelerating from the meadow pan's speed
+  const tu = clamp((t - PONDSKY_WHIP[0]) / (CUT.pondToSky[0] - PONDSKY_WHIP[0]));
+  const tilt: V3 = [0, 70 * tu * tu, 0]; // whip tilt up to the sky, accelerating into the cut
   const k = duckCut(t);
   const c = lerpOrbit(lerpOrbit(surf, split, k), split2, ss5(t, 17.85, 18.62));
   return {...c, target: add3(add3(c.target, pan), tilt)};
@@ -343,7 +349,9 @@ export const skyState = (t: number): ShotState => {
   const end = openCam(0);
   const rot = {yaw: end.yaw, pitch: end.pitch, dist: end.dist};
   const lead: V3 = [SKY_LEAD * (1 - ss5(t, SKY_T0 + 0.1, SKY_T0 + 1.0)), 0, 0];
-  const base: V3 = add3(add3([x, 0, 0], lead), [0, 70 * Math.pow(1 - ss(t, SKY_T0, SKY_T0 + 0.45), 2), 0]); // the end of the whip tilt
+  // the end of the whip tilt, leaving the cut at the pond tilt's screen speed (70 cm in 0.33 s at 19 px/cm), decelerating
+  const su = clamp((t - SKY_T0) / 0.45);
+  const base: V3 = add3(add3([x, 0, 0], lead), [0, 213 * (1 - su) * (1 - su), 0]);
   // (V3) wide: the drone is just one bird of an ordinary-looking flock; then the camera singles it out
   const A: Orbit = {target: add3(base, [-10, 10, 0]), ...rot, scale: 8.5, cx: 520, cy: 1060};
   const Bs: Orbit = {target: add3(base, [-6, 6, 0]), ...rot, scale: 11, cx: 500, cy: 1060};
