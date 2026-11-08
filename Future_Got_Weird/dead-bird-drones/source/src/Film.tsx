@@ -28,8 +28,11 @@ import {sweepPath, radialPath} from './reveal';
 const DroneBird: React.FC<{B: Basis; s: ShotState; revealPath?: string | null; focus?: 'P0' | 'A' | 'B' | 'rod' | null; detail?: number; shellLift?: number; shellTilt?: number; phantom?: number; tone?: number}> = ({B, s, revealPath = null, focus = null, detail = 0, shellLift = 0, shellTilt = 0, phantom = 0, tone = 0}) => {
   // the near wing is ghosted over the drive whenever the drive is shown (a cutaway, or the frame in the exploded view)
   const look: BirdLook & {shellTilt?: number} = {cut: revealPath ? 1 : 0, cutReveal: revealPath ? () => revealPath : undefined, phantom: revealPath ? 1 : phantom, shellLift, shellTilt, tone};
-  return <Bird B={B} F={s.F} ps={s.ps} look={look as BirdLook} mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate, focus, detail}} />} />;
+  return <Bird B={B} F={s.F} ps={s.ps} look={look as BirdLook} mech={<Mech B={B} F={s.F} ps={s.ps} look={{rate: s.rate * BLUR_K, focus, detail}} />} />;
 };
+/** (V2) a shorter exposure than real flight speed, so the teeth of the flight-speed gears stay visible (they otherwise
+ *  blur into smooth discs) */
+const BLUR_K = 0.35;
 /** a shot in three layers, so a transition can sweep its background and keep one continuous drone */
 type Parts = {back: React.ReactNode; bird: React.ReactNode; front: React.ReactNode};
 const Shot: React.FC<{p: Parts}> = ({p}) => <g>{p.back}{p.bird}{p.front}</g>;
@@ -131,7 +134,7 @@ const placeFlock = (state: (t: number) => ShotState, t0: number, tc: number, spo
 // camera's rotation is fixed for the shot, so the far birds hold their places; they fly on with the drone at the end.
 const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 + 1.2, [
   [120, 610, 3300, 3, 2.4, 0.05], [330, 690, 2400, 4, 2.3, 0.1], [560, 585, 3800, 2, 2.5, 0.3], [720, 660, 2000, -4, 2.2, 0.8], [960, 600, 2900, -3, 2.1, 0.55],
-  [215, 880, 650, 2, 2.2, 0.35], [890, 790, 800, -2, 2.3, 0.7],
+  [215, 820, 1500, 2, 2.2, 0.35], [890, 760, 1600, -2, 2.3, 0.7], // (V2) kept well beyond the drone (no implied flock acceptance)
 ]);
 // sky: the flock holds the upper right, ahead of the drone (its eye line), with one nearer bird behind it on the left, and
 // stays in frame through the punchline; all clear of the caption column and the drone's wingtips at every phase

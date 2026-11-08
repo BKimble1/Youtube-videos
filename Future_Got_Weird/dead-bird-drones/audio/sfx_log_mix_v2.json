@@ -2,7 +2,7 @@
  {
   "t": 0.66,
   "sfx": "drone wingbeat (downstroke)",
-  "gain_db": -26.2
+  "gain_db": -27.7
  },
  {
   "t": 4.2,
@@ -20,7 +20,7 @@
   "gain_db": -46.4
  },
  {
-  "t": 19.24,
+  "t": 19.35,
   "sfx": "living birds: distant flutter",
   "gain_db": -44.0
  },
@@ -65,7 +65,7 @@
   "gain_db": -31
  },
  {
-  "t": 18.79,
+  "t": 18.9,
   "sfx": "water crosses the lens (crest swash)",
   "gain_db": -31
  },
@@ -82,7 +82,7 @@
  {
   "t": 17.595,
   "sfx": "bubbles under the waterline",
-  "gain_db": -40.8
+  "gain_db": -39.7
  },
  {
   "t": 13.645,

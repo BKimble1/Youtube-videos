@@ -61,8 +61,9 @@ Key passages (verbatim):
    below-water view (labelled SCHEMATIC) shows paddling feet driven from a sealed light-grey 3D-printed module by two
    pushrods: an illustrative assumption consistent with "natural locomotion", not a documented mechanism. No
    propeller is shown.
-5. **"Less disturbance"** is drawn as faint sound arcs that shrink while living birds simply carry on beyond the drone,
-   under a RESEARCH GOAL label. It illustrates the stated aim, not a measured result.
+5. **"Less disturbance"** (V2): living birds simply carry on, well beyond the drone, under a RESEARCH GOAL label. V1's
+   shrinking sound arcs were **removed in V2** after the claims review: no source measures or claims reduced noise, and
+   the arcs implied it. Nothing shows flock acceptance.
 6. **No institution or researcher is named on screen**, matching the narration.
 
 ## Not used
@@ -72,3 +73,11 @@ Key passages (verbatim):
 - External creator references in the brief (Zack D. Films video and the secondary breakdown) were not re-read for
   this build; only the brief's abstract directing principles were applied. No narration, characters, art, music or
   shot sequence was taken from them.
+
+## V2 review notes
+
+- The V2 claims review found no narration change necessary.
+- **Must-fix applied:** the sound arcs were removed.
+- **Recommended description line (species):** "The 2025 flapping-wing prototype was built on a taxidermied mallard; the
+  film draws a generic bird." An alternative is to restyle the flyer as a brown hen mallard.
+- **"Motor":** an inference from "drone platform" plus "custom gearbox". No source extract uses the word.

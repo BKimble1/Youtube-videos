@@ -1452,7 +1452,7 @@ export const Bird: React.FC<{B: Basis; F: Frame; ps: Pose; look?: BirdLook; mech
         </g>
       )}
       {wings && body && hole && phantom > 0 && inHole(
-        <g mask={`url(#${ids.mHide})`} opacity={0.9 * phantom}>
+        <g mask={`url(#${ids.mHide})`} opacity={0.5 * phantom}>{/* (V2) lighter ghost: the drive stays readable under the wing */}
           <path d={wingOutlineOpen(B, F, Wn)} fill="none" stroke={ink} strokeWidth={INK_PX * 0.85} strokeDasharray="14 5 3 5" strokeLinejoin="round" vectorEffect={NS} />
         </g>,
       )}

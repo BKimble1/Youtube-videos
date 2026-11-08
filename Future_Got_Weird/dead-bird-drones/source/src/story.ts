@@ -64,7 +64,9 @@ export const CUT = {
   // (V2) a hard MATCH CUT on 'And': the camera has pushed into the drone's flank cutaway; the pond opens tight on the
   // duck's own cutaway window at the same screen place and size, then pulls back to reveal the duck
   meadowToPond: [15.94, 15.94] as [number, number],
-  pondToSky: [18.84, 19.2] as [number, number], // water crosses the foreground edge
+  // (V2) a whip tilt: the pond camera tilts up fast toward the sky, hard cut at the fastest point, and the sky shot's
+  // camera finishes the tilt coming down onto the flock; the drone flies in from the left
+  pondToSky: [18.95, 18.95] as [number, number],
   // the same background sweep on the downstroke after 'dead' (sky phase 0.1 -> 0.45), into the opening's own frames
   loop: [22.93, 23.18] as [number, number],
 };
@@ -103,8 +105,9 @@ export const openCam = (t: number): Orbit => {
   const base: V3 = [V_FLY * t, 0, 0];
   // (V2) frame 0: a close-up of the flying bird's flank with the cutaway open (head and wing root in frame), so the drive
   // and the wing it moves read at once; a slow drift in while 'motor' and the rod-to-wing chain are highlighted
-  const A: Orbit = {target: add3(base, [3.6, 1.2, 0]), yaw: 14, pitch: 7, dist: 900, scale: 33, cx: 430, cy: 1040};
-  const A2: Orbit = {...A, target: add3(base, [3.4, 1.5, 0]), scale: 35};
+  // framed so the raised wingtip stays below the caption band (y > ~410) and the window above the scope label (y < ~1420)
+  const A: Orbit = {target: add3(base, [3.6, 1.2, 0]), yaw: 14, pitch: 7, dist: 900, scale: 26.5, cx: 440, cy: 1188};
+  const A2: Orbit = {...A, target: add3(base, [3.4, 1.2, 0]), scale: 26.8, cy: 1190};
   // "fly again": out to the whole bird over the field, from a lower, more lateral angle (a new perspective)
   const Bw: Orbit = {target: add3(base, [-3, 5, 0]), yaw: 20, pitch: 3, dist: 900, scale: 12.5, cx: 470, cy: 1000};
   if (t < 1.85) return lerpOrbit(A, A2, ss5(t, 0, 1.85));
@@ -134,7 +137,7 @@ export const LAB = {
   lift: [T.drones + 0.05, T.preserved1 + 0.3] as [number, number], // shell rises on 'drones'
   seat: [T.underneath - 0.05, T.feathersEnd - 0.12] as [number, number], // shell seats back
   liftH: 15,
-  cutOpen: [8.95, 9.45] as [number, number],
+  cutOpen: [9.4, 9.85] as [number, number],
   cutClose: [12.3, 12.65] as [number, number],
 };
 /** integrated phase in the lab */
@@ -209,7 +212,8 @@ export const labState = (t: number): ShotState => {
     const intro = lerpOrbit(M, wide, ss5(t, CUT.openToLab, 5.2));
     const ex = lerpOrbit(exploded, ex2, ss5(t, 6.0, 8.0));
     const held = lerpOrbit(intro, ex, ss5(t, 5.0, 6.2));
-    cam = lerpOrbit(held, gear, ss5(t, 8.3, T.gearbox + 0.1));
+    // (V2) no push: hold the exploded/seated view, then CUT on 'gearbox' to the gearbox framing (the flank then irises open)
+    cam = t < T.gearbox - 0.06 ? held : gear;
   }
   else if (t < T.turns) cam = gear;
   else if (t < T.motion - 0.05) cam = lerpOrbit(gear, fMotor, ss5(t, T.turns, T.spinning + 0.05));
@@ -267,7 +271,7 @@ export const meadowState = (t: number): ShotState => {
 };
 /** the restrained "less disturbance" sound arcs (0..1 strength; they shrink and fade on 'less disturbance') */
 export const arcs = (t: number) => ({
-  a: 0.95 * ss(t, T.wildlife + 0.2, T.less - 0.1) * (1 - ss(t, 15.2, 15.45)), // (V2) fade as the camera pushes into the drive
+  a: 0 * t, // (V2) removed after the claims review: no source measures or claims reduced noise
   // three arcs, reduced to one on 'less disturbance' (the last one stays: a reduction, not silence)
   n: 3 - 2 * ss(t, T.less, T.disturbanceEnd - 0.1),
   r: lerp(1, 0.78, ss(t, T.less - 0.05, T.disturbanceEnd)),
@@ -275,6 +279,8 @@ export const arcs = (t: number) => ({
 
 // ------------------------------------------------------------------ S5: the duck (a separate prototype, its own pond)
 export const POND_T0 = CUT.meadowToPond[0];
+/** the pond camera's whip tilt up into the cut to the sky */
+export const PONDSKY_WHIP: [number, number] = [18.62, 18.95];
 export const DUCK_V = 38; // cm/s
 export const duckPos = (t: number): V3 => [DUCK_V * (t - POND_T0) - 30, 0, 0];
 /** below-water schematic amount */
@@ -285,9 +291,14 @@ export const pondCam = (t: number): Orbit => {
   // a smooth pull back to the waterline split view: the whole mallard above, its paddling feet and module below
   const tight: Orbit = {target: add3(p, [-2.2, -2.4, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 34, cx: 540, cy: 960};
   const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 13.5, cx: 500, cy: 980};
-  const split2: Orbit = {...split, target: add3(p, [3, -2.6, 0]), scale: 14.5};
-  if (t < T.robot) return lerpOrbit(tight, split, ss5(t, POND_T0 + 0.05, T.robot));
-  return lerpOrbit(split, split2, ss5(t, T.robot, CUT.pondToSky[1]));
+  const split2: Orbit = {...split, target: add3(p, [6, 2, 0]), scale: 19}; // in on the preserved head and breast
+  const tilt: V3 = [0, 70 * Math.pow(ss(t, PONDSKY_WHIP[0], CUT.pondToSky[0]), 2), 0]; // whip tilt up to the sky
+  const tightHold: Orbit = {...tight, target: add3(tight.target, [0.6, 0, 0]), scale: 36};
+  let c: Orbit;
+  if (t < 16.45) c = lerpOrbit(tight, tightHold, ss5(t, POND_T0, 16.45));
+  else if (t < 17.3) c = lerpOrbit(tightHold, split, ss5(t, 16.45, 17.3));
+  else c = lerpOrbit(split, split2, ss5(t, 17.45, 18.6));
+  return {...c, target: add3(c.target, tilt)};
 };
 
 // ------------------------------------------------------------------ S6: the callback among living birds
@@ -306,7 +317,7 @@ export const skyState = (t: number): ShotState => {
   const end = openCam(0);
   const rot = {yaw: end.yaw, pitch: end.pitch, dist: end.dist};
   const lead: V3 = [SKY_LEAD * (1 - ss5(t, SKY_T0 + 0.1, SKY_T0 + 1.0)), 0, 0];
-  const base: V3 = add3([x, 0, 0], lead);
+  const base: V3 = add3(add3([x, 0, 0], lead), [0, 70 * Math.pow(1 - ss(t, SKY_T0, SKY_T0 + 0.45), 2), 0]); // the end of the whip tilt
   const A: Orbit = {target: add3(base, [-9, 8, 0]), ...rot, scale: 14.5, cx: 470, cy: 1100};
   const Bs: Orbit = {target: add3(base, [-5, 5, 0]), ...rot, scale: 16, cx: 465, cy: 1050};
   const Cs: Orbit = {...end, target: add3(base, end.target)};

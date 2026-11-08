@@ -34,7 +34,7 @@ export const sweepPath = (B: Basis, F: Frame, e: number, mode: 'above' | 'below'
 };
 /** a radial reveal around body-local centre c (feather-tipped rim) of radius r cm */
 export const radialPath = (B: Basis, F: Frame, c: [number, number], r: number) => {
-  if (r <= 1.2) return null; // no pinhole: the window appears at a readable size
+  if (r <= 2.6) return null; // no pinhole or leftover dot: the window appears and leaves at a readable size
   const pts: V2[] = [];
   const n = 120; // a smooth round iris (no visible facets)
   for (let i = 0; i < n; i++) {

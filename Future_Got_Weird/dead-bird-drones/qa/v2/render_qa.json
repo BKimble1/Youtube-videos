@@ -1,6 +1,6 @@
 {
  "file": "FGW_Dead_Bird_Drones_V2_REVIEW_1080x1920.mp4",
- "size_mb": 22.45,
+ "size_mb": 21.16,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -15,33 +15,57 @@
    "codec": "aac",
    "sr": "48000",
    "ch": 2,
-   "bitrate": "258033"
+   "bitrate": "257738"
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.49,
+ "frame_change_median": 4.34,
  "large_changes": [
   {
    "frame": 119,
    "t": 3.967,
-   "mad": 33.83,
+   "mad": 33.82,
    "planned": "match cut into the lab"
+  },
+  {
+   "frame": 281,
+   "t": 9.367,
+   "mad": 48.56,
+   "planned": "push into the drive, follow it, pull back"
+  },
+  {
+   "frame": 373,
+   "t": 12.433,
+   "mad": 21.77,
+   "planned": "push into the drive, follow it, pull back"
   },
   {
    "frame": 374,
    "t": 12.467,
-   "mad": 23.11,
+   "mad": 23.15,
+   "planned": "push into the drive, follow it, pull back"
+  },
+  {
+   "frame": 375,
+   "t": 12.5,
+   "mad": 22.43,
    "planned": "push into the drive, follow it, pull back"
   },
   {
    "frame": 479,
    "t": 15.967,
-   "mad": 67.91,
+   "mad": 68.18,
    "planned": "push into the drone cutaway, match cut to the duck cutaway"
+  },
+  {
+   "frame": 569,
+   "t": 18.967,
+   "mad": 72.84,
+   "planned": "whip tilt up from the pond to the sky, the drone flies in"
   }
  ],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 1,
- "longest_near_static_run_starts_s": 6.2,
- "loop_last_vs_first_mad": 9.25
+ "longest_near_static_run_frames": 14,
+ "longest_near_static_run_starts_s": 8.77,
+ "loop_last_vs_first_mad": 8.4
 }

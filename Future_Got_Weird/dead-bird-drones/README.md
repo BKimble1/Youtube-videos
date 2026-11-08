@@ -1,6 +1,20 @@
 # Future Got Weird: They Turned Dead Birds Into Drones
 
-## V1 (review cut)
+## V2 (review cut, current)
+
+**Deliverable:** `exports/FGW_Dead_Bird_Drones_V2_REVIEW_1080x1920.mp4`
+- **Format:** 1080×1920, 30 fps, 708 frames, 23.60 s.
+- **Loudness:** −13.8 LUFS, −1.6 dBTP.
+- **Status:** not published.
+- **Narration:** the approved narration, unchanged.
+- **QA notes:** `production/V2_QA_NOTES.md`. **Evidence:** `qa/v2/`. **Transitions:** `production/TRANSITIONS_V2.md`.
+- **Mix:** `audio/mix/FGW_Dead_Bird_Drones_MIX_V2.wav`. **Stems:** `audio/stems/*mix_v2*`.
+
+**Rebuild:** run the cue export, then `python3 tools/make_audio.py mix_v2`, then
+`COMP=DeadBirdDronesV2 tools/render_resilient.sh mix_v2 exports/FGW_Dead_Bird_Drones_V2_REVIEW_1080x1920.mp4`, then
+`python3 tools/qa_render.py <export> qa/v2`. The source now draws V2. V1's source is in git history at commit `03899c0`.
+
+## V1 (review cut, superseded)
 
 **Deliverable:** `exports/FGW_Dead_Bird_Drones_V1_REVIEW_1080x1920.mp4` (1080×1920, 30 fps, 708 frames, 23.60 s,
 −13.5 LUFS, −1.6 dBTP). **Not published.** It is a review cut built from the supplied V2 narration; nothing in it is an
