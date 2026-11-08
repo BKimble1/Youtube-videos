@@ -200,7 +200,8 @@ export const labAt = (t: number): LabShot | null => {
     const mod = 0.75 + 0.25 * Math.cos(2 * Math.PI * 4 * t);
     s.focus = arrive * mod;
     s.press = arrive * (0.5 + 0.5 * Math.cos(2 * Math.PI * 4 * t)) * ss(t, T.making, T.skin);
-    s.section = ss(t, t6, t6 + 0.45);
+    // the cutaway opens on "pressure" and closes again before the pull-back (never a one-frame pop)
+    s.section = ss(t, t6, t6 + 0.45) * (1 - ss(t, T.move - 0.32, T.move - 0.05));
     s.sectionAct = s.section * (0.55 + 0.45 * Math.cos(2 * Math.PI * 4 * t));
     void padW;
     return s;
@@ -260,15 +261,15 @@ export const labEndAt = (t: number): LabShot | null => {
       s.pad = {x: -24, y: -FY - 6};
     } else {
       // the press on nothing, then the hand starts to reach left and the camera tracks it into the match cut
-      const go = clamp((t - (T.button3 + 0.3)) / (T.now - 0.03 - (T.button3 + 0.3)));
+      const go = clamp((t - (T.button3 + 0.2)) / (T.now - 0.03 - (T.button3 + 0.2)));
       const px = -60 * go * go * 0.5 - 60 * Math.max(0, go - 0) * 0.5 * go;
       s.pose = H_POINT;
       s.ang = 150;
       s.pad = {x: px, y: -FY + pressDip(t) - 3};
       s.cam = camAt(t, [
         {t: T.no2 - 0.06, x: 110, y: FY + 120, d: 1250, yaw: 4, pitch: -4},
-        {t: T.button3 + 0.3, x: 96, y: FY + 112, d: 1180, yaw: 3, pitch: -4},
-        {t: T.now - 0.03, x: px + 30, y: FY + 10, d: 330, yaw: 0, pitch: -2},
+        {t: T.button3 - 0.1, x: 100, y: FY + 116, d: 1210, yaw: 3, pitch: -4},
+        {t: T.now - 0.03, x: px + 40, y: FY + 30, d: 600, yaw: 0, pitch: -3},
       ]);
       s.expr = EXN.wonder;
     }

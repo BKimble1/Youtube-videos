@@ -17,7 +17,7 @@ import {CYAN, CYAN_HI, Focus, Pulse} from './fx';
 import {Conceptag} from './tags';
 import {carCam, carPadScreen} from './car';
 
-export const kioskActive = (t: number) => t >= T.without - 0.05 && t < T.and2 - 0.06;
+export const kioskActive = (t: number) => t >= T.without - 0.05 && t < T.and2 - 0.025;
 const HAND_L = 96;
 const BTN = {x: -30, y: -236, r: 32};
 const BTN2 = {x: -30, y: -160, r: 32};

@@ -1,0 +1,177 @@
+[
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "lab room tone + faint mains hum",
+  "level_re_voice_db": -31.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "parked car cabin hush",
+  "level_re_voice_db": -32.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "lobby air",
+  "level_re_voice_db": -33.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "ultrasound overlay: faint airy shimmer",
+  "level_re_voice_db": -30.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "convergence: subtle rising tone",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "focus on skin: soft 4 Hz flutter",
+  "level_re_voice_db": -29.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0,
+  "dur": 31.133,
+  "sfx": "receptors respond: faint fine crackle",
+  "level_re_voice_db": -31.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.365,
+  "dur": 0.22,
+  "sfx": "tactile pulse (contact) @2.37",
+  "level_re_voice_db": -17.0,
+  "bus": "accent"
+ },
+ {
+  "t": 3.517,
+  "dur": 0.9,
+  "sfx": "card slides through the gap",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 5.965,
+  "dur": 0.2,
+  "sfx": "macro pulse @5.96",
+  "level_re_voice_db": -19.0,
+  "bus": "dot"
+ },
+ {
+  "t": 6.445,
+  "dur": 0.2,
+  "sfx": "macro pulse @6.44",
+  "level_re_voice_db": -19.0,
+  "bus": "dot"
+ },
+ {
+  "t": 6.91,
+  "dur": 0.7,
+  "sfx": "camera dive to the array (soft, low)",
+  "level_re_voice_db": -22.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.025,
+  "dur": 0.05,
+  "sfx": "dial detent 1",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.03,
+  "dur": 0.16,
+  "sfx": "dial pulse 1",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.305,
+  "dur": 0.05,
+  "sfx": "dial detent 2",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.31,
+  "dur": 0.16,
+  "sfx": "dial pulse 2",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.585,
+  "dur": 0.05,
+  "sfx": "dial detent 3",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.59,
+  "dur": 0.16,
+  "sfx": "dial pulse 3",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.895,
+  "dur": 0.05,
+  "sfx": "dial detent 4",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 22.9,
+  "dur": 0.16,
+  "sfx": "dial pulse 4",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 25.425,
+  "dur": 0.22,
+  "sfx": "kiosk: pulse on the fingertip",
+  "level_re_voice_db": -19.0,
+  "bus": "dot"
+ },
+ {
+  "t": 25.445,
+  "dur": 0.7,
+  "sfx": "kiosk: soft confirmation",
+  "level_re_voice_db": -21.0,
+  "bus": "accent"
+ },
+ {
+  "t": 27.79,
+  "dur": 0.55,
+  "sfx": "fingers close on nothing (skin rustle)",
+  "level_re_voice_db": -26.0,
+  "bus": "dot"
+ },
+ {
+  "t": 30.32,
+  "dur": 0.2,
+  "sfx": "the skin feels it again @30.32",
+  "level_re_voice_db": -19.0,
+  "bus": "dot"
+ },
+ {
+  "t": 30.933,
+  "dur": 0.22,
+  "sfx": "tactile pulse (contact) @30.93",
+  "level_re_voice_db": -17.0,
+  "bus": "accent"
+ }
+]

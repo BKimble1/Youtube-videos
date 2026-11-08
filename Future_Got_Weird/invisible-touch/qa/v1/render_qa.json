@@ -1,0 +1,1080 @@
+{
+ "file": "FGW_Invisible_Touch_V1_REVIEW_1080x1920.mp4",
+ "size_mb": 25.78,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 934,
+  "duration_s": 31.133
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "256899"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 2.63,
+ "large_changes": [
+  {
+   "frame": 31,
+   "t": 1.033,
+   "mad": 15.92,
+   "planned": null
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 15.38,
+   "planned": null
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "mad": 13.6,
+   "planned": null
+  },
+  {
+   "frame": 54,
+   "t": 1.8,
+   "mad": 15.74,
+   "planned": null
+  },
+  {
+   "frame": 55,
+   "t": 1.833,
+   "mad": 18.19,
+   "planned": null
+  },
+  {
+   "frame": 56,
+   "t": 1.867,
+   "mad": 18.54,
+   "planned": null
+  },
+  {
+   "frame": 57,
+   "t": 1.9,
+   "mad": 19.96,
+   "planned": null
+  },
+  {
+   "frame": 58,
+   "t": 1.933,
+   "mad": 18.64,
+   "planned": null
+  },
+  {
+   "frame": 59,
+   "t": 1.967,
+   "mad": 17.99,
+   "planned": null
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 17.58,
+   "planned": null
+  },
+  {
+   "frame": 61,
+   "t": 2.033,
+   "mad": 16.49,
+   "planned": null
+  },
+  {
+   "frame": 62,
+   "t": 2.067,
+   "mad": 16.06,
+   "planned": null
+  },
+  {
+   "frame": 63,
+   "t": 2.1,
+   "mad": 14.91,
+   "planned": null
+  },
+  {
+   "frame": 64,
+   "t": 2.133,
+   "mad": 13.96,
+   "planned": null
+  },
+  {
+   "frame": 92,
+   "t": 3.067,
+   "mad": 50.36,
+   "planned": "CUT hook -> low angle through the gap"
+  },
+  {
+   "frame": 157,
+   "t": 5.233,
+   "mad": 55.48,
+   "planned": "CUT low angle -> close on the finger"
+  },
+  {
+   "frame": 177,
+   "t": 5.9,
+   "mad": 67.58,
+   "planned": "MATCH CUT finger -> illustrative macro"
+  },
+  {
+   "frame": 213,
+   "t": 7.1,
+   "mad": 14.68,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 214,
+   "t": 7.133,
+   "mad": 17.17,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 215,
+   "t": 7.167,
+   "mad": 20.66,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 216,
+   "t": 7.2,
+   "mad": 26.84,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 217,
+   "t": 7.233,
+   "mad": 27.3,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 218,
+   "t": 7.267,
+   "mad": 25.6,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 219,
+   "t": 7.3,
+   "mad": 23.37,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 220,
+   "t": 7.333,
+   "mad": 20.22,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 221,
+   "t": 7.367,
+   "mad": 16.58,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 226,
+   "t": 7.533,
+   "mad": 17.11,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 227,
+   "t": 7.567,
+   "mad": 21.42,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "mad": 25.76,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 229,
+   "t": 7.633,
+   "mad": 23.37,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 230,
+   "t": 7.667,
+   "mad": 20.06,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 231,
+   "t": 7.7,
+   "mad": 14.06,
+   "planned": "DIVE down to the array (camera move)"
+  },
+  {
+   "frame": 275,
+   "t": 9.167,
+   "mad": 15.56,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 276,
+   "t": 9.2,
+   "mad": 15.14,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 277,
+   "t": 9.233,
+   "mad": 17.3,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 278,
+   "t": 9.267,
+   "mad": 16.13,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 279,
+   "t": 9.3,
+   "mad": 15.3,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 280,
+   "t": 9.333,
+   "mad": 14.58,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 281,
+   "t": 9.367,
+   "mad": 13.73,
+   "planned": "SWING to the side cross-section (camera move)"
+  },
+  {
+   "frame": 339,
+   "t": 11.3,
+   "mad": 13.36,
+   "planned": null
+  },
+  {
+   "frame": 340,
+   "t": 11.333,
+   "mad": 16.25,
+   "planned": null
+  },
+  {
+   "frame": 341,
+   "t": 11.367,
+   "mad": 15.52,
+   "planned": null
+  },
+  {
+   "frame": 342,
+   "t": 11.4,
+   "mad": 16.1,
+   "planned": null
+  },
+  {
+   "frame": 343,
+   "t": 11.433,
+   "mad": 16.11,
+   "planned": null
+  },
+  {
+   "frame": 344,
+   "t": 11.467,
+   "mad": 18.9,
+   "planned": null
+  },
+  {
+   "frame": 345,
+   "t": 11.5,
+   "mad": 22.67,
+   "planned": null
+  },
+  {
+   "frame": 346,
+   "t": 11.533,
+   "mad": 25.89,
+   "planned": null
+  },
+  {
+   "frame": 347,
+   "t": 11.567,
+   "mad": 19.03,
+   "planned": null
+  },
+  {
+   "frame": 348,
+   "t": 11.6,
+   "mad": 20.15,
+   "planned": null
+  },
+  {
+   "frame": 349,
+   "t": 11.633,
+   "mad": 17.35,
+   "planned": null
+  },
+  {
+   "frame": 350,
+   "t": 11.667,
+   "mad": 17.85,
+   "planned": null
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "mad": 18.78,
+   "planned": null
+  },
+  {
+   "frame": 352,
+   "t": 11.733,
+   "mad": 17.8,
+   "planned": null
+  },
+  {
+   "frame": 353,
+   "t": 11.767,
+   "mad": 17.46,
+   "planned": null
+  },
+  {
+   "frame": 354,
+   "t": 11.8,
+   "mad": 15.65,
+   "planned": null
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "mad": 13.82,
+   "planned": null
+  },
+  {
+   "frame": 422,
+   "t": 14.067,
+   "mad": 49.91,
+   "planned": "PULL-BACK out of the fingertip macro (fast camera move)"
+  },
+  {
+   "frame": 425,
+   "t": 14.167,
+   "mad": 14.93,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 426,
+   "t": 14.2,
+   "mad": 21.97,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 427,
+   "t": 14.233,
+   "mad": 25.91,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 428,
+   "t": 14.267,
+   "mad": 30.1,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 429,
+   "t": 14.3,
+   "mad": 27.4,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 430,
+   "t": 14.333,
+   "mad": 26.1,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 431,
+   "t": 14.367,
+   "mad": 25.47,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 432,
+   "t": 14.4,
+   "mad": 26.54,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 433,
+   "t": 14.433,
+   "mad": 27.71,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 434,
+   "t": 14.467,
+   "mad": 19.2,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 435,
+   "t": 14.5,
+   "mad": 13.45,
+   "planned": "PULL-BACK from the macro to the open hand"
+  },
+  {
+   "frame": 454,
+   "t": 15.133,
+   "mad": 13.25,
+   "planned": null
+  },
+  {
+   "frame": 455,
+   "t": 15.167,
+   "mad": 13.84,
+   "planned": null
+  },
+  {
+   "frame": 456,
+   "t": 15.2,
+   "mad": 13.87,
+   "planned": null
+  },
+  {
+   "frame": 525,
+   "t": 17.5,
+   "mad": 43.78,
+   "planned": "CUT -> clarity: plain hand, no overlays"
+  },
+  {
+   "frame": 553,
+   "t": 18.433,
+   "mad": 53.86,
+   "planned": "CUT -> medium: the press on nothing"
+  },
+  {
+   "frame": 579,
+   "t": 19.3,
+   "mad": 13.46,
+   "planned": null
+  },
+  {
+   "frame": 580,
+   "t": 19.333,
+   "mad": 14.11,
+   "planned": null
+  },
+  {
+   "frame": 581,
+   "t": 19.367,
+   "mad": 14.36,
+   "planned": null
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "mad": 13.98,
+   "planned": null
+  },
+  {
+   "frame": 589,
+   "t": 19.633,
+   "mad": 54.97,
+   "planned": "MATCH CUT lab hand -> car (same screen point, scale, motion)"
+  },
+  {
+   "frame": 708,
+   "t": 23.6,
+   "mad": 15.96,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 709,
+   "t": 23.633,
+   "mad": 18.49,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 710,
+   "t": 23.667,
+   "mad": 18.42,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 711,
+   "t": 23.7,
+   "mad": 17.57,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 712,
+   "t": 23.733,
+   "mad": 15.86,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 713,
+   "t": 23.767,
+   "mad": 15.03,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 717,
+   "t": 23.9,
+   "mad": 13.91,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 718,
+   "t": 23.933,
+   "mad": 14.83,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 719,
+   "t": 23.967,
+   "mad": 14.45,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 720,
+   "t": 24.0,
+   "mad": 14.68,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 721,
+   "t": 24.033,
+   "mad": 14.64,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 722,
+   "t": 24.067,
+   "mad": 16.35,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 723,
+   "t": 24.1,
+   "mad": 17.83,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 724,
+   "t": 24.133,
+   "mad": 18.87,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 725,
+   "t": 24.167,
+   "mad": 19.44,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 726,
+   "t": 24.2,
+   "mad": 20.01,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 727,
+   "t": 24.233,
+   "mad": 20.77,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 728,
+   "t": 24.267,
+   "mad": 21.43,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 729,
+   "t": 24.3,
+   "mad": 21.74,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 730,
+   "t": 24.333,
+   "mad": 21.3,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 731,
+   "t": 24.367,
+   "mad": 20.01,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 732,
+   "t": 24.4,
+   "mad": 17.83,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 733,
+   "t": 24.433,
+   "mad": 15.03,
+   "planned": "PUSH through the floating controls into the fingertip"
+  },
+  {
+   "frame": 739,
+   "t": 24.633,
+   "mad": 43.68,
+   "planned": "MATCH CUT car fingertip -> lobby"
+  },
+  {
+   "frame": 741,
+   "t": 24.7,
+   "mad": 15.38,
+   "planned": "MATCH CUT car fingertip -> lobby"
+  },
+  {
+   "frame": 742,
+   "t": 24.733,
+   "mad": 22.21,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 743,
+   "t": 24.767,
+   "mad": 25.53,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 744,
+   "t": 24.8,
+   "mad": 26.83,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 745,
+   "t": 24.833,
+   "mad": 26.57,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 746,
+   "t": 24.867,
+   "mad": 29.39,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 747,
+   "t": 24.9,
+   "mad": 28.91,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 748,
+   "t": 24.933,
+   "mad": 28.67,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 749,
+   "t": 24.967,
+   "mad": 25.36,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 750,
+   "t": 25.0,
+   "mad": 22.69,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 751,
+   "t": 25.033,
+   "mad": 16.1,
+   "planned": "PULL-BACK revealing the lobby"
+  },
+  {
+   "frame": 782,
+   "t": 26.067,
+   "mad": 53.71,
+   "planned": "CUT lobby -> back to the lab"
+  },
+  {
+   "frame": 866,
+   "t": 28.867,
+   "mad": 18.94,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 867,
+   "t": 28.9,
+   "mad": 25.02,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 868,
+   "t": 28.933,
+   "mad": 30.94,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 869,
+   "t": 28.967,
+   "mad": 29.67,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 870,
+   "t": 29.0,
+   "mad": 31.11,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 871,
+   "t": 29.033,
+   "mad": 34.09,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 872,
+   "t": 29.067,
+   "mad": 34.51,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 873,
+   "t": 29.1,
+   "mad": 32.33,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 874,
+   "t": 29.133,
+   "mad": 31.88,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 875,
+   "t": 29.167,
+   "mad": 26.58,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 876,
+   "t": 29.2,
+   "mad": 24.62,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 877,
+   "t": 29.233,
+   "mad": 18.62,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 878,
+   "t": 29.267,
+   "mad": 14.09,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 883,
+   "t": 29.433,
+   "mad": 13.32,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 884,
+   "t": 29.467,
+   "mad": 21.99,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 885,
+   "t": 29.5,
+   "mad": 28.92,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 886,
+   "t": 29.533,
+   "mad": 37.6,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 887,
+   "t": 29.567,
+   "mad": 41.77,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 888,
+   "t": 29.6,
+   "mad": 43.88,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 889,
+   "t": 29.633,
+   "mad": 37.37,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 890,
+   "t": 29.667,
+   "mad": 32.72,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 891,
+   "t": 29.7,
+   "mad": 32.94,
+   "planned": "TILT to his face and back to the hand"
+  },
+  {
+   "frame": 892,
+   "t": 29.733,
+   "mad": 22.83,
+   "planned": "TILT to his face and back to the hand"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 31,
+   "t": 1.033,
+   "mad": 15.92,
+   "planned": null
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 15.38,
+   "planned": null
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "mad": 13.6,
+   "planned": null
+  },
+  {
+   "frame": 54,
+   "t": 1.8,
+   "mad": 15.74,
+   "planned": null
+  },
+  {
+   "frame": 55,
+   "t": 1.833,
+   "mad": 18.19,
+   "planned": null
+  },
+  {
+   "frame": 56,
+   "t": 1.867,
+   "mad": 18.54,
+   "planned": null
+  },
+  {
+   "frame": 57,
+   "t": 1.9,
+   "mad": 19.96,
+   "planned": null
+  },
+  {
+   "frame": 58,
+   "t": 1.933,
+   "mad": 18.64,
+   "planned": null
+  },
+  {
+   "frame": 59,
+   "t": 1.967,
+   "mad": 17.99,
+   "planned": null
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 17.58,
+   "planned": null
+  },
+  {
+   "frame": 61,
+   "t": 2.033,
+   "mad": 16.49,
+   "planned": null
+  },
+  {
+   "frame": 62,
+   "t": 2.067,
+   "mad": 16.06,
+   "planned": null
+  },
+  {
+   "frame": 63,
+   "t": 2.1,
+   "mad": 14.91,
+   "planned": null
+  },
+  {
+   "frame": 64,
+   "t": 2.133,
+   "mad": 13.96,
+   "planned": null
+  },
+  {
+   "frame": 339,
+   "t": 11.3,
+   "mad": 13.36,
+   "planned": null
+  },
+  {
+   "frame": 340,
+   "t": 11.333,
+   "mad": 16.25,
+   "planned": null
+  },
+  {
+   "frame": 341,
+   "t": 11.367,
+   "mad": 15.52,
+   "planned": null
+  },
+  {
+   "frame": 342,
+   "t": 11.4,
+   "mad": 16.1,
+   "planned": null
+  },
+  {
+   "frame": 343,
+   "t": 11.433,
+   "mad": 16.11,
+   "planned": null
+  },
+  {
+   "frame": 344,
+   "t": 11.467,
+   "mad": 18.9,
+   "planned": null
+  },
+  {
+   "frame": 345,
+   "t": 11.5,
+   "mad": 22.67,
+   "planned": null
+  },
+  {
+   "frame": 346,
+   "t": 11.533,
+   "mad": 25.89,
+   "planned": null
+  },
+  {
+   "frame": 347,
+   "t": 11.567,
+   "mad": 19.03,
+   "planned": null
+  },
+  {
+   "frame": 348,
+   "t": 11.6,
+   "mad": 20.15,
+   "planned": null
+  },
+  {
+   "frame": 349,
+   "t": 11.633,
+   "mad": 17.35,
+   "planned": null
+  },
+  {
+   "frame": 350,
+   "t": 11.667,
+   "mad": 17.85,
+   "planned": null
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "mad": 18.78,
+   "planned": null
+  },
+  {
+   "frame": 352,
+   "t": 11.733,
+   "mad": 17.8,
+   "planned": null
+  },
+  {
+   "frame": 353,
+   "t": 11.767,
+   "mad": 17.46,
+   "planned": null
+  },
+  {
+   "frame": 354,
+   "t": 11.8,
+   "mad": 15.65,
+   "planned": null
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "mad": 13.82,
+   "planned": null
+  },
+  {
+   "frame": 454,
+   "t": 15.133,
+   "mad": 13.25,
+   "planned": null
+  },
+  {
+   "frame": 455,
+   "t": 15.167,
+   "mad": 13.84,
+   "planned": null
+  },
+  {
+   "frame": 456,
+   "t": 15.2,
+   "mad": 13.87,
+   "planned": null
+  },
+  {
+   "frame": 579,
+   "t": 19.3,
+   "mad": 13.46,
+   "planned": null
+  },
+  {
+   "frame": 580,
+   "t": 19.333,
+   "mad": 14.11,
+   "planned": null
+  },
+  {
+   "frame": 581,
+   "t": 19.367,
+   "mad": 14.36,
+   "planned": null
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "mad": 13.98,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 7,
+ "longest_near_static_run_starts_s": 21.5,
+ "loop_last_vs_first_mad": 3.87
+}
