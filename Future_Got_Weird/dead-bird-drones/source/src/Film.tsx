@@ -7,7 +7,7 @@ import {add3, Basis, basis, bodyFrame, Frame, orbit, Orbit, P2, poly, proj, unpr
 import {pose, phiOfPhase, wingPt, HINGE, CRADLE, Pose} from './rig';
 import {
   CUT, LAB, T, T_FLAP, V_FLY, arcs, labFrameLift, duckCut, duckPos, labFocus, labShellLift, labState, meadowState, openState, pondCam, skyState,
-  uOpen, uSky, MEADOW_T0, SKY_T0, ShotState, OPEN_REVEAL, SKY_REVEAL, openReveal, skyReveal, meadowReveal, MEADOW_REVEAL,
+  uOpen, uSky, MEADOW_T0, SKY_T0, ShotState, OPEN_REVEAL, SKY_REVEAL, openReveal, skyReveal, meadowReveal, MEADOW_REVEAL, MEADOW_WHIP, PONDSKY_WHIP,
 } from './story';
 import {Captions} from './Captions';
 import {C, INK} from './art/palette';
@@ -53,8 +53,8 @@ const OpenShot: React.FC<{t: number}> = ({t}) => <Shot p={openParts(t)} />;
 const detailOf = (scale: number) => clamp((scale - 16) / 36);
 /** (V2) the hook's highlight follows the words: the motor on 'motor', then the rod, lever and wing root on 'dead bird' */
 const openFocus = (t: number): 'P0' | 'A' | 'B' | 'rod' | null => {
-  if (t >= 0.35 && t < 0.95) return 'motor' as unknown as 'P0';
-  if (t >= 0.95 && t < 2.0) return 'rod';
+  if (t >= 0.3 && t < 1.25) return 'motor' as unknown as 'P0'; // (V3) during the push into the motor
+  if (t >= 1.25 && t < 2.1) return 'rod'; // back out: rod, lever, wing root
   return null;
 };
 
@@ -138,9 +138,12 @@ const MEADOW_FLOCK: LivingBird[] = placeFlock(meadowState, MEADOW_T0, MEADOW_T0 
 ]);
 // sky: the flock holds the upper right, ahead of the drone (its eye line), with one nearer bird behind it on the left, and
 // stays in frame through the punchline; all clear of the caption column and the drone's wingtips at every phase
-const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, 21.5, [
-  [720, 600, 3000, 0, 2.2, 0.2], [860, 690, 2200, 0, 2.4, 0.65], [985, 560, 3600, 0, 2.1, 0.4], [830, 820, 1600, 0, 2.5, 0.9],
-  [230, 650, 900, 0, 2.2, 0.5],
+const SKY_FLOCK: LivingBird[] = placeFlock(skyState, SKY_T0, 20.4, [
+  // (V3) an ordinary-looking flock around the drone in the wide shot: similar sizes (40-85 % of the drone), spread out,
+  // clear of the drone's wing envelope, the caption band and the label; the push-in carries them out of frame
+  // birds above the drone are far (so the push-in barely enlarges them across the caption); the near ones fly beside it
+  [300, 640, 1400, 0, 2.2, 0.2], [760, 620, 1300, 0, 2.4, 0.65], [880, 830, 700, 0, 2.1, 0.4], [200, 900, 250, 0, 2.5, 0.9],
+  [620, 560, 1800, 0, 2.3, 0.15], [930, 1240, 400, 0, 2.2, 0.5], [250, 1250, 600, 0, 2.4, 0.3], [470, 700, 1400, 0, 2.2, 0.75],
 ]);
 const meadowParts = (t: number): Parts => {
   const s = meadowState(t);
@@ -155,8 +158,8 @@ const meadowParts = (t: number): Parts => {
       </g>
     ),
     bird: (() => {
-      const r = meadowReveal(t);
-      return <DroneBird B={B} s={s} revealPath={r ? sweepPath(B, s.F, r.e, r.mode) : null} detail={detailOf(s.cam.scale)} />;
+      void meadowReveal; // (V3) the meadow drone stays closed: the match to the duck is a whip pan, not a push into the drive
+      return <DroneBird B={B} s={s} detail={detailOf(s.cam.scale)} />;
     })(),
     front: (
       <g>
@@ -334,10 +337,14 @@ const labelOps = (t: number) => {
   const sch = Math.max(
     1 - ss(t, OPEN_REVEAL.close[0], OPEN_REVEAL.close[1]), // the hook cutaway (open from frame 0)
     ss(t, LAB.lift[0] + 0.45, LAB.lift[0] + 0.75) * (1 - ss(t, LAB.cutClose[0], LAB.cutClose[0] + 0.25)), // exploded view through the close drive
-    ss(t, MEADOW_REVEAL.open[0] + 0.1, MEADOW_REVEAL.open[1] + 0.1) * (1 - ss(t, CUT.pondToSky[0], CUT.pondToSky[0] + 0.2)), // the match through the duck's schematic
+    ss(t, T.robot, T.robot + 0.25) * (1 - ss(t, PONDSKY_WHIP[0], PONDSKY_WHIP[0] + 0.15)), // the duck's below-water schematic
     ss(t, SKY_REVEAL.open[0], SKY_REVEAL.open[0] + 0.15), // the callback, open into the loop
   );
-  const res = ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, MEADOW_REVEAL.open[0] - 0.05, MEADOW_REVEAL.open[0] + 0.1));
+  void MEADOW_REVEAL;
+  const res = Math.max(
+    ss(t, MEADOW_T0 + 0.5, MEADOW_T0 + 0.75) * (1 - ss(t, MEADOW_WHIP[0], MEADOW_WHIP[0] + 0.12)), // the meadow: the aim
+    ss(t, SKY_T0 + 0.35, SKY_T0 + 0.6) * (1 - ss(t, SKY_REVEAL.open[0] - 0.25, SKY_REVEAL.open[0] - 0.05)), // (V3) the flock scene is a speculative application
+  );
   return {sch, res};
 };
 

@@ -27,12 +27,12 @@ d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes (from story.ts via audio/cues.json): camera moves into a discovery, the match cut, the wipes
 CJ = json.load(open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'audio/cues.json')))
 E = CJ['EV']
-PLANNED = [(0.0, 2.1, 'hook: close-up on the open cutaway, the wing beating'), (1.8, E['match'] - 0.01, 'pull back to the whole bird'),
-           (E['match'] - 0.05, E['match'] + 0.1, 'match cut into the lab'), (E['match'], 6.3, 'into the lab and the exploded view'),
-           (E['liftA'] - 0.1, E['seatB'] + 0.1, 'exploded view: the shell lifts and seats'), (8.2, 12.9, 'push into the drive, follow it, pull back'),
+PLANNED = [(0.0, 3.3, 'hook: push into the motor and back out, pull back for fly again'),
+           (E['match'] - 0.05, E['match'] + 0.1, 'match cut into the lab'), (E['match'], 9.45, 'lab: wide reveal, overhead crane, component close-up, seat, cut on gearbox'),
+           (9.3, 12.9, 'the close drive and the pull-back'),
            (E['labToMeadow'][0] - 0.05, E['labToMeadow'][1] + 0.05, 'background sweep into the meadow'),
-           (15.0, E['meadowToPond'][1] + 0.1, 'push into the drone cutaway, match cut to the duck cutaway'), (E['pondT0'], 17.2, 'pull back to reveal the duck'),
-           (18.5, E['pondToSky'][1] + 0.9, 'whip tilt up from the pond to the sky, the drone flies in'), (21.3, 23.0, 'callback cutaway and push in to the opening close-up'),
+           (15.45, 16.5, 'whip pan from the meadow, match cut on the pan to the pond'), (16.7, 18.7, 'dip to the waterline, in on the head'),
+           (18.5, E['pondToSky'][1] + 1.0, 'whip tilt up to the sky, the drone flies in'), (21.3, 23.0, 'callback cutaway and push in to the opening close-up'),
            (E['loop'][0] - 0.05, E['loop'][1] + 0.05, 'loop: background sweep into frame 0')]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]

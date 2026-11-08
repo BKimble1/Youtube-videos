@@ -101,6 +101,8 @@ export const openCut = (t: number) => {
   return clamp(ss(t, 0.12, 0.5)) * (1 - ss(t, 2.95, 3.45));
 };
 /** the opening camera, relative to the bird's flight line (no bob) at x = V_FLY t */
+/** (V3) the hook's push into the motor: in, held, back out (s) */
+export const HOOK_MOTOR = [0.3, 0.8, 1.25] as const;
 export const openCam = (t: number): Orbit => {
   const base: V3 = [V_FLY * t, 0, 0];
   // (V2) frame 0: a close-up of the flying bird's flank with the cutaway open (head and wing root in frame), so the drive
@@ -110,8 +112,14 @@ export const openCam = (t: number): Orbit => {
   const A2: Orbit = {...A, target: add3(base, [3.4, 1.2, 0]), scale: 26.8, cy: 1190};
   // "fly again": out to the whole bird over the field, from a lower, more lateral angle (a new perspective)
   const Bw: Orbit = {target: add3(base, [-3, 5, 0]), yaw: 20, pitch: 3, dist: 900, scale: 12.5, cx: 470, cy: 1000};
-  if (t < 1.85) return lerpOrbit(A, A2, ss5(t, 0, 1.85));
-  return lerpOrbit(A2, Bw, ss5(t, 1.85, 3.25));
+  // (V3) on 'motor' a rapid push into the motor and its pinion (same rotation, so the field does not swing), a beat on it,
+  // then straight back out to the flying bird for 'dead bird', and out to the whole bird for 'fly again'
+  const Mo: Orbit = {...A, target: add3(base, [4.3, -3.3, 0]), scale: 64, cx: 540, cy: 945 + 3.3 * 64 - 250};
+  if (t < HOOK_MOTOR[0]) return A;
+  if (t < HOOK_MOTOR[1]) return lerpOrbit(A, Mo, ss5(t, HOOK_MOTOR[0], HOOK_MOTOR[1]));
+  if (t < HOOK_MOTOR[2]) return Mo;
+  if (t < 1.95) return lerpOrbit(Mo, A2, ss5(t, HOOK_MOTOR[2], 1.95));
+  return lerpOrbit(A2, Bw, ss5(t, 1.95, 3.25));
 };
 export const openState = (t: number): ShotState => {
   const u = uOpen(t);
@@ -209,11 +217,25 @@ export const labState = (t: number): ShotState => {
   // straight on into the gearbox as the shell seats; then the close drive in step with the words; then one pull-back
   let cam: Orbit;
   if (t < T.gearbox + 0.1) {
-    const intro = lerpOrbit(M, wide, ss5(t, CUT.openToLab, 5.2));
-    const ex = lerpOrbit(exploded, ex2, ss5(t, 6.0, 8.0));
-    const held = lerpOrbit(intro, ex, ss5(t, 5.0, 6.2));
-    // (V2) no push: hold the exploded/seated view, then CUT on 'gearbox' to the gearbox framing (the flank then irises open)
-    cam = t < T.gearbox - 0.06 ? held : gear;
+    // (V3) four different views of the lab, each motivated by the narration and joined by one continuous camera path:
+    // a wide reveal of the lab ('researchers built drones'), a crane up to a high overhead assembly view as the shell lifts
+    // ('preserved bird bodies'), down onto the lifted gearbox ('machinery hidden'), back out as the shell seats
+    // ('underneath the feathers'), then a cut on 'gearbox'
+    const W1: Orbit = {target: [-6, 9, 0], yaw: 20, pitch: 9, dist: 420, scale: 7.2, cx: 540, cy: 1060};
+    const OV: Orbit = {target: [-1, 9, 0], yaw: 32, pitch: 52, dist: 420, scale: 15, cx: 540, cy: 1000};
+    const fl = labFrameLift(t);
+    const CC: Orbit = {target: [3.6, -1.6 + fl, 0.5], yaw: 18, pitch: 12, dist: 420, scale: 38, cx: 540, cy: 1230}; // low, so the hovering shell sits under the caption
+    const SM: Orbit = {target: [-1, 1.5, 0], yaw: 16, pitch: 8, dist: 420, scale: 17, cx: 540, cy: 1100};
+    const SM2: Orbit = {...SM, scale: 18.5, target: [0, 1.0, 0]};
+    let c: Orbit;
+    if (t < 4.95) c = lerpOrbit(M, W1, ss5(t, CUT.openToLab, 4.95));
+    else if (t < 5.9) c = lerpOrbit(W1, OV, ss5(t, 4.95, 5.9));
+    else if (t < 6.35) c = OV;
+    else if (t < 7.45) c = lerpOrbit(OV, CC, ss5(t, 6.35, 7.45)); // one continuous move down onto the gearbox (no hold)
+    else if (t < 8.35) c = lerpOrbit(CC, SM, ss5(t, 7.45, 8.35));
+    else c = lerpOrbit(SM, SM2, ss5(t, 8.35, T.gearbox));
+    void wide; void exploded; void ex2;
+    cam = t < T.gearbox - 0.06 ? c : gear;
   }
   else if (t < T.turns) cam = gear;
   else if (t < T.motion - 0.05) cam = lerpOrbit(gear, fMotor, ss5(t, T.turns, T.spinning + 0.05));
@@ -240,6 +262,9 @@ export const uMeadow = (t: number) => U_MEADOW0 + (t - MEADOW_T0) / T_FLAP;
 /** (V2) the meadow cutaway opens on the downstroke at 15.015 (phase 0.2) and the camera pushes into it before the cut */
 export const MEADOW_REVEAL = {open: [15.015, 15.225] as [number, number]};
 export const MEADOW_PUSH: [number, number] = [15.2, 15.94];
+/** (V3) the meadow-to-pond whip pan (cm of camera lead at the cut) */
+export const MEADOW_WHIP: [number, number] = [15.52, 15.94];
+export const WHIP_CM = 150;
 export const meadowReveal = (t: number): {e: number; mode: 'above' | 'below'} | null =>
   t < MEADOW_REVEAL.open[0] ? null : {e: ss(t, ...MEADOW_REVEAL.open), mode: 'above'};
 /** (V1, unused in V2) */
@@ -266,7 +291,11 @@ export const meadowState = (t: number): ShotState => {
   // the push into the drone's open flank window (body-local window centre), so the window fills the frame for the match
   const win = add3(base, [2.6, -0.3, 0]);
   const Wc: Orbit = {target: win, ...MEADOW_CAM, scale: 66, cx: 540, cy: 960};
-  const cam = lerpOrbit(held, Wc, ss5(t, MEADOW_PUSH[0], MEADOW_PUSH[1]));
+  void Wc;
+  // (V3) the match: a whip pan right; the drone (and the flock) slide out of frame left; hard cut at full speed to the pond,
+  // where the same pan direction settles onto the swimming duck
+  const whip = WHIP_CM * Math.pow(ss(t, MEADOW_WHIP[0], MEADOW_WHIP[1]), 2);
+  const cam = {...held, target: add3(held.target, [whip, 0, 0])};
   return {cam, F, u, ps: P(u), rate: rateOf(1 / T_FLAP)};
 };
 /** the restrained "less disturbance" sound arcs (0..1 strength; they shrink and fade on 'less disturbance') */
@@ -284,21 +313,18 @@ export const PONDSKY_WHIP: [number, number] = [18.62, 18.95];
 export const DUCK_V = 38; // cm/s
 export const duckPos = (t: number): V3 => [DUCK_V * (t - POND_T0) - 30, 0, 0];
 /** below-water schematic amount */
-export const duckCut = (_t: number) => 1; // (V2) the pond opens on the below-water schematic
+export const duckCut = (t: number) => ss(t, T.robot - 0.25, T.using2 + 0.1); // (V3) surface first, then an eased dip on 'robot'
 export const pondCam = (t: number): Orbit => {
   const p = duckPos(t);
-  // tight on the duck's below-water window (body-local about x -2.2, y -2.5), matching the drone window at the cut, then
-  // a smooth pull back to the waterline split view: the whole mallard above, its paddling feet and module below
-  const tight: Orbit = {target: add3(p, [-2.2, -2.4, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 34, cx: 540, cy: 960};
-  const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 13.5, cx: 500, cy: 980};
+  const surf: Orbit = {target: add3(p, [2, 8, 0]), yaw: 10, pitch: 8, dist: 700, scale: 12.5, cx: 500, cy: 1020};
+  const split: Orbit = {target: add3(p, [2, -3, 0]), yaw: 6, pitch: 0.5, dist: 500, scale: 14.5, cx: 500, cy: 980};
   const split2: Orbit = {...split, target: add3(p, [6, 2, 0]), scale: 19}; // in on the preserved head and breast
+  // the end of the whip pan from the meadow: the camera arrives from the left of the duck, decelerating
+  const pan: V3 = [-WHIP_CM * Math.pow(1 - ss(t, POND_T0, POND_T0 + 0.42), 2), 0, 0];
   const tilt: V3 = [0, 70 * Math.pow(ss(t, PONDSKY_WHIP[0], CUT.pondToSky[0]), 2), 0]; // whip tilt up to the sky
-  const tightHold: Orbit = {...tight, target: add3(tight.target, [0.6, 0, 0]), scale: 36};
-  let c: Orbit;
-  if (t < 16.45) c = lerpOrbit(tight, tightHold, ss5(t, POND_T0, 16.45));
-  else if (t < 17.3) c = lerpOrbit(tightHold, split, ss5(t, 16.45, 17.3));
-  else c = lerpOrbit(split, split2, ss5(t, 17.45, 18.6));
-  return {...c, target: add3(c.target, tilt)};
+  const k = duckCut(t);
+  const c = lerpOrbit(lerpOrbit(surf, split, k), split2, ss5(t, 17.85, 18.62));
+  return {...c, target: add3(add3(c.target, pan), tilt)};
 };
 
 // ------------------------------------------------------------------ S6: the callback among living birds
@@ -308,7 +334,7 @@ export const SKY_T0 = CUT.pondToSky[0];
 export const uSky = (t: number) => uOpen(t - DUR);
 export const skyCut = (t: number) => ss(t, 20.55, 20.85) * (1 - ss(t, 21.2, 21.5));
 /** the sky camera starts this far ahead of the drone (cm), so the drone flies into the frame from the left */
-export const SKY_LEAD = 70;
+export const SKY_LEAD = 110;
 export const skyState = (t: number): ShotState => {
   const u = uSky(t);
   // the bird's x runs on the same line as the opening's continuation, so the end framing is the opening's frame 0
@@ -318,8 +344,9 @@ export const skyState = (t: number): ShotState => {
   const rot = {yaw: end.yaw, pitch: end.pitch, dist: end.dist};
   const lead: V3 = [SKY_LEAD * (1 - ss5(t, SKY_T0 + 0.1, SKY_T0 + 1.0)), 0, 0];
   const base: V3 = add3(add3([x, 0, 0], lead), [0, 70 * Math.pow(1 - ss(t, SKY_T0, SKY_T0 + 0.45), 2), 0]); // the end of the whip tilt
-  const A: Orbit = {target: add3(base, [-9, 8, 0]), ...rot, scale: 14.5, cx: 470, cy: 1100};
-  const Bs: Orbit = {target: add3(base, [-5, 5, 0]), ...rot, scale: 16, cx: 465, cy: 1050};
+  // (V3) wide: the drone is just one bird of an ordinary-looking flock; then the camera singles it out
+  const A: Orbit = {target: add3(base, [-10, 10, 0]), ...rot, scale: 8.5, cx: 520, cy: 1060};
+  const Bs: Orbit = {target: add3(base, [-6, 6, 0]), ...rot, scale: 11, cx: 500, cy: 1060};
   const Cs: Orbit = {...end, target: add3(base, end.target)};
   let cam: Orbit;
   if (t < 21.4) cam = lerpOrbit(A, Bs, ss5(t, SKY_T0, 21.4));

@@ -43,7 +43,7 @@ for (let i = 0; i <= Math.round(DUR * 100); i++) {
     u = uLab(t); scale = s.cam.scale; motorHz = (s.rate / (2 * Math.PI)) * RATIO; vis = 1;
     drive = t > LAB.cutOpen[0] && t < LAB.cutClose[1] ? 1 : 0;
   } else if (w === 'meadow') {
-    const s = meadowState(t); u = uMeadow(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; vis = onScreen(s); drive = meadowReveal(t) ? 1 : 0;
+    const s = meadowState(t); u = uMeadow(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; vis = onScreen(s); void meadowReveal; // (V3) the meadow drone stays closed
   } else if (w === 'sky') {
     const s = skyState(t); u = uSky(t); scale = s.cam.scale; motorHz = RATIO / T_FLAP; drive = skyReveal(t) ? 1 : 0; vis = onScreen(s);
   }

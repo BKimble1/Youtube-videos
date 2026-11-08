@@ -1,0 +1,92 @@
+[
+ {
+  "t": 0.66,
+  "sfx": "drone wingbeat (downstroke)",
+  "gain_db": -25.0
+ },
+ {
+  "t": 4.2,
+  "sfx": "drone wingbeat (downstroke)",
+  "gain_db": -36.0
+ },
+ {
+  "t": 0,
+  "sfx": "19 drone wingbeats in all",
+  "gain_db": null
+ },
+ {
+  "t": 13.245,
+  "sfx": "living birds: distant flutter",
+  "gain_db": -46.4
+ },
+ {
+  "t": 19.35,
+  "sfx": "living birds: distant flutter",
+  "gain_db": -44.0
+ },
+ {
+  "t": 0,
+  "sfx": "motor texture (hum, brush, gear mesh) while the drive is visible",
+  "gain_db": -27
+ },
+ {
+  "t": 3.95,
+  "sfx": "the drive spins down on the cradle",
+  "gain_db": -36
+ },
+ {
+  "t": 9.13,
+  "sfx": "bench test: switch click",
+  "gain_db": -33
+ },
+ {
+  "t": 4.915,
+  "sfx": "shell lifts (soft slide)",
+  "gain_db": -35
+ },
+ {
+  "t": 7.885,
+  "sfx": "shell lowers",
+  "gain_db": -36
+ },
+ {
+  "t": 8.76,
+  "sfx": "shell seats",
+  "gain_db": -31
+ },
+ {
+  "t": 12.795,
+  "sfx": "background sweep on the downstroke (lab to meadow)",
+  "gain_db": -30
+ },
+ {
+  "t": 15.89,
+  "sfx": "waterline wipe (water swish)",
+  "gain_db": -31
+ },
+ {
+  "t": 18.9,
+  "sfx": "water crosses the lens (crest swash)",
+  "gain_db": -31
+ },
+ {
+  "t": 22.88,
+  "sfx": "loop: background sweep on the downstroke into frame 0",
+  "gain_db": -31
+ },
+ {
+  "t": 16.31,
+  "sfx": "duck paddle stroke (water)",
+  "gain_db": -36
+ },
+ {
+  "t": 17.595,
+  "sfx": "bubbles under the waterline",
+  "gain_db": -38.2
+ },
+ {
+  "t": 13.645,
+  "sfx": "meadow: a distant bird call",
+  "gain_db": -41
+ }
+]

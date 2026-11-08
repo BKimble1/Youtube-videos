@@ -1,0 +1,77 @@
+{
+ "file": "FGW_Dead_Bird_Drones_V3_1080x1920.mp4",
+ "size_mb": 22.65,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 708,
+  "duration_s": 23.6
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "257625"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 4.89,
+ "large_changes": [
+  {
+   "frame": 17,
+   "t": 0.567,
+   "mad": 28.54,
+   "planned": "hook: push into the motor and back out, pull back for fly again"
+  },
+  {
+   "frame": 18,
+   "t": 0.6,
+   "mad": 25.85,
+   "planned": "hook: push into the motor and back out, pull back for fly again"
+  },
+  {
+   "frame": 45,
+   "t": 1.5,
+   "mad": 25.97,
+   "planned": "hook: push into the motor and back out, pull back for fly again"
+  },
+  {
+   "frame": 46,
+   "t": 1.533,
+   "mad": 25.23,
+   "planned": "hook: push into the motor and back out, pull back for fly again"
+  },
+  {
+   "frame": 119,
+   "t": 3.967,
+   "mad": 33.84,
+   "planned": "match cut into the lab"
+  },
+  {
+   "frame": 281,
+   "t": 9.367,
+   "mad": 50.04,
+   "planned": "lab: wide reveal, overhead crane, component close-up, seat, cut on gearbox"
+  },
+  {
+   "frame": 479,
+   "t": 15.967,
+   "mad": 71.89,
+   "planned": "whip pan from the meadow, match cut on the pan to the pond"
+  },
+  {
+   "frame": 569,
+   "t": 18.967,
+   "mad": 68.91,
+   "planned": "whip tilt up to the sky, the drone flies in"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 11,
+ "longest_near_static_run_starts_s": 5.9,
+ "loop_last_vs_first_mad": 8.4
+}
