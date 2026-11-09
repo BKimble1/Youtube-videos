@@ -499,20 +499,20 @@
    "in_word": false
   },
   {
-   "t": 13.84,
-   "end": 14.19,
+   "t": 13.77,
+   "end": 14.12,
    "kind": "swish",
    "dur": 0.35,
    "gain_db": -6.0,
    "set_level_re_voice_db": -24.0,
    "bus": "dot",
    "pan": 0.0,
-   "in_mix_momentary_max_lufs": -42.25,
-   "under_voice_db": 28.3,
+   "in_mix_momentary_max_lufs": -41.68,
+   "under_voice_db": 27.7,
    "nearest_word": {
     "word": "scientists",
     "t": 13.75,
-    "dt": 0.09
+    "dt": 0.02
    },
    "in_word": true
   },
@@ -607,8 +607,26 @@
    "in_word": true
   },
   {
-   "t": 16.03,
-   "end": 16.11,
+   "t": 16.01,
+   "end": 17.279,
+   "kind": "cool",
+   "dur": 1.269,
+   "gain_db": -1.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -38.82,
+   "under_voice_db": 24.9,
+   "nearest_word": {
+    "word": "back",
+    "t": 15.99,
+    "dt": 0.02
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.02,
+   "end": 16.1,
    "kind": "pop",
    "dur": 0.08,
    "gain_db": -2.0,
@@ -620,43 +638,25 @@
    "nearest_word": {
     "word": "back",
     "t": 15.99,
-    "dt": 0.04
+    "dt": 0.03
    },
    "in_word": true
   },
   {
-   "t": 16.03,
-   "end": 17.281,
-   "kind": "cool",
-   "dur": 1.251,
-   "gain_db": -1.0,
-   "set_level_re_voice_db": -18.0,
-   "bus": "bed",
-   "pan": 0.0,
-   "in_mix_momentary_max_lufs": -35.86,
-   "under_voice_db": 21.9,
-   "nearest_word": {
-    "word": "back",
-    "t": 15.99,
-    "dt": 0.04
-   },
-   "in_word": true
-  },
-  {
-   "t": 16.34,
-   "end": 16.69,
+   "t": 16.27,
+   "end": 16.62,
    "kind": "pipette",
    "dur": 0.35,
    "gain_db": -8.0,
    "set_level_re_voice_db": -23.0,
    "bus": "dot",
    "pan": 0.0,
-   "in_mix_momentary_max_lufs": -40.55,
-   "under_voice_db": 26.6,
+   "in_mix_momentary_max_lufs": -41.25,
+   "under_voice_db": 27.3,
    "nearest_word": {
     "word": "into",
     "t": 16.23,
-    "dt": 0.11
+    "dt": 0.04
    },
    "in_word": true
   },
@@ -698,20 +698,20 @@
    "in_word": true
   },
   {
-   "t": 16.62,
-   "end": 16.92,
+   "t": 16.65,
+   "end": 16.95,
    "kind": "swish",
    "dur": 0.3,
    "gain_db": -5.0,
    "set_level_re_voice_db": -23.0,
    "bus": "dot",
    "pan": 0.0,
-   "in_mix_momentary_max_lufs": -36.99,
+   "in_mix_momentary_max_lufs": -36.97,
    "under_voice_db": 23.0,
    "nearest_word": {
     "word": "shape.",
     "t": 16.47,
-    "dt": 0.15
+    "dt": 0.18
    },
    "in_word": true
   },

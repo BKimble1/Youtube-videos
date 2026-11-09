@@ -58,7 +58,7 @@ const B = {
   pull0: 18.56,
   pull1: 19.06,
   coilOn: 18.8,
-  acLab: 18.84,
+  acLab: 18.92, // under the coil, once the lens has cleared it
   meltMark: 19.0,
   reach: 19.32, // 29.8 °C reached
   body: T.body1 - 0.04, // 19.39 BODY 37 °C mark
@@ -131,8 +131,16 @@ const liquidSets = (t: number): V[][] => {
   const sh = headS(t), st = tailS(t);
   const len = (sh - st) * FIELD_ARC.total;
   const R = 80 / Math.sqrt(1 + Math.max(0, len) / 190);
-  const core = fieldAt(st).p;
-  const drop = circlePts(core.x, core.y, R * 1.05, puddle.length);
+  const {p: core, tan} = fieldAt(st);
+  // the gathered drop is LIQUID: its outline keeps wobbling and it leans (bulges) toward the magnet that pulls it
+  const n0 = puddle.length;
+  const drop = puddle.map((_, k) => {
+    const a = (k / n0) * Math.PI * 2;
+    const c = Math.cos(a), s = Math.sin(a);
+    const wob = 1 + 0.045 * Math.sin(3 * a + t * 5.3) + 0.035 * Math.sin(2 * a + t * 3.1) + 0.012 * Math.sin(4 * a - t * 6.2);
+    const ru = R * 1.05 * wob * (1 + 0.22 * Math.max(0, c) * g), rv = R * wob * (1 - 0.08 * g);
+    return {x: core.x + tan.x * c * ru - tan.y * s * rv, y: core.y + tan.y * c * ru + tan.x * s * rv};
+  });
   const gathered = puddle.map((q, k) => ({x: lerp(q.x, drop[k].x, g), y: lerp(q.y, drop[k].y, g)}));
   const sets: V[][] = [gathered];
   const n = 14;
@@ -210,8 +218,23 @@ const TempMark: React.FC<{temp: number; small: string; big: string; color: strin
       {flash > 0.01 && <circle cx={f1(THERMO.x)} cy={f1(y)} r={f1(30 + 50 * flash)} fill="none" stroke={color} strokeWidth={5} opacity={(1 - flash) * 0.9} />}
       <SciLabel x={LABEL_X} y={y + bigSize * 0.36} anchor="end" p={p} ox={LABEL_X} oy={y}
         lines={[{text: big, size: bigSize, color}]} />
-      <SciLabel x={LABEL_X} y={below ? y + bigSize * 0.36 + 44 : y - bigSize * 0.62} anchor="end" p={clamp((p - 0.15) / 0.85)} ox={LABEL_X} oy={y}
-        lines={[{text: small, size: 36, color: '#E6F1FA'}]} />
+      <SciLabel x={LABEL_X} y={below ? y + bigSize * 0.36 + 48 : y - bigSize * 0.62} anchor="end" p={clamp((p - 0.15) / 0.85)} ox={LABEL_X} oy={y}
+        lines={[{text: small, size: 40, color: '#E6F1FA'}]} />
+    </g>
+  );
+};
+
+/** "AC FIELD HEATS IT" on one line under the coil (white + heat orange) */
+const HeatLabel: React.FC<{x: number; y: number; p: number; opacity: number}> = ({x, y, p, opacity}) => {
+  if (p <= 0.001 || opacity <= 0.002) return null;
+  const sc = 0.7 + 0.3 * clamp(1 + 2.9 * (clamp(p) - 1) ** 3 + 1.9 * (clamp(p) - 1) ** 2);
+  const st = {fontFamily: FONT, fontWeight: 900, fontSize: 50, stroke: 'rgba(6,10,18,0.92)', strokeWidth: 9, strokeLinejoin: 'round' as const, paintOrder: 'stroke'};
+  return (
+    <g opacity={clamp(p * 2.5) * opacity} transform={`translate(${f1(x)} ${f1(y - 18)}) scale(${sc.toFixed(3)}) translate(${f1(-x)} ${f1(-(y - 18))})`}>
+      <text x={f1(x)} y={f1(y)} textAnchor="middle" {...st}>
+        <tspan fill="#FFFFFF">AC FIELD </tspan>
+        <tspan fill={C.heat}>HEATS IT</tspan>
+      </text>
     </g>
   );
 };
@@ -253,7 +276,9 @@ export const S6: React.FC<{t: number}> = ({t}) => {
   // field line (21.45-22.12) and settles EXACTLY at identity for the hand-off
   const camS = 1.035 - 0.035 * ss5(t, B.pull0, 20.2);
   const camZ = 1 + 0.2 * ss5(t, 20.1, 20.85) - 0.2 * ss5(t, 21.45, 22.12);
-  const cam = `translate(${CAM_F.x} ${CAM_F.y}) scale(${(camS * camZ).toFixed(4)}) translate(${-CAM_F.x} ${-CAM_F.y})`;
+  // ...and a lift that brings the magnet + liquid up toward the middle of the frame while we are close (0 again by 22.12)
+  const camLift = 130 * (ss5(t, 20.1, 20.85) - ss5(t, 21.45, 22.12));
+  const cam = `translate(0 ${f1(-camLift)}) translate(${CAM_F.x} ${CAM_F.y}) scale(${(camS * camZ).toFixed(4)}) translate(${-CAM_F.x} ${-CAM_F.y})`;
   const app = ss5(t, B.pull0 + 0.06, B.pull1); // apparatus appears
   const appSc = 1.14 - 0.14 * app;
   const thermoIn = ss5(t, 18.66, 19.08), thermoOut = ss5(t, 20.12, 20.5);
@@ -269,7 +294,8 @@ export const S6: React.FC<{t: number}> = ({t}) => {
   const labA = 1 - ss(t, B.pull0 - 0.04, B.pull0 + 0.14);
 
   // phase-A label targets: a gallium grain upper-left, two magnetic particles lower-right
-  const gTarget = siteScreen(-2, -1, port.x, port.y, z, t, 0, drift);
+  // (0,-1): no magnetic particle in the rows under the GALLIUM pill, so the label never sits on a yellow-ringed particle
+  const gTarget = siteScreen(0, -1, port.x, port.y, z, t, 0, drift);
   const lensContent = (
     <g>
       <rect x={f1(port.x - port.r - 4)} y={f1(port.y - port.r - 4)} width={f1(port.r * 2 + 8)} height={f1(port.r * 2 + 8)} fill={C.navy0} />
@@ -278,11 +304,22 @@ export const S6: React.FC<{t: number}> = ({t}) => {
   );
 
   const liquid = liquidSets(t);
+  const lensFade = 1 - ss(t, 20.27, 20.45); // the lens (and its callout) fade as they iris shut into the puddle
+  // caption-band shade while the micro view fills the frame (bright grains behind the captions)
+  const scrim = ss(port.r, 520, 900) * (1 - ss(t, B.pull0, B.pull0 + 0.3));
+  const scrimId = uid('s6scrim');
   const showApp = pk > 0.001;
   const sampleC = {x: SAMPLE.x, y: SAMPLE.base - 56};
 
   return (
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute'}}>
+      <defs>
+        <linearGradient id={scrimId} gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="560">
+          <stop offset="0" stopColor={C.navy0} stopOpacity={0.62} />
+          <stop offset="0.55" stopColor={C.navy0} stopOpacity={0.4} />
+          <stop offset="1" stopColor={C.navy0} stopOpacity={0} />
+        </linearGradient>
+      </defs>
       {metalVisible ? <MetalSurface t={t} tint={0.45 * ss(t, B.open0, 17.7)} /> : <SciBg vig={fa} />}
       {metalVisible && port.r > 0.5 && port.r < 60 && (
         // a dark dimple forms first (anticipation of the opening)
@@ -308,20 +345,26 @@ export const S6: React.FC<{t: number}> = ({t}) => {
               <TempMark temp={37} small="BODY" big="37 °C" color="#FFFFFF" p={popP(t, B.body)} opacity={labOutB} bigSize={60} />
               <TempMark temp={29.8} small="GALLIUM MELTS" big="29.8 °C" color={t >= B.reach ? C.yellow : '#FFFFFF'} p={popP(t, B.meltMark)} flash={t >= B.reach ? clamp((t - B.reach) / 0.45) : 0} opacity={labOutB} bigSize={66} below />
               <SciLabel x={THERMO.x - 8} y={512} anchor="middle" p={popP(t, 18.86, 0.2)} opacity={labOutB}
-                lines={[{text: `${temp.toFixed(1)} °C`, size: 40, color: Math.abs(temp - 29.8) < 0.05 && t > B.reach - 0.05 ? C.yellow : '#FFFFFF'}]} />
+                lines={[{text: `${temp.toFixed(1)} °C`, size: 46, color: Math.abs(temp - 29.8) < 0.05 && t > B.reach - 0.05 ? C.yellow : '#FFFFFF'}]} />
             </g>
-            <SciLabel x={LABEL_X} y={1056} anchor="end" p={popP(t, B.acLab)} opacity={labOutB}
-              lines={[{text: 'AC FIELD', size: 46, color: '#FFFFFF'}, {text: 'HEATS IT', size: 46, color: C.heat}]} />
+            <HeatLabel x={COIL.x} y={COIL.y + 150} p={popP(t, B.acLab)} opacity={labOutB * app} />
             {/* ---- the callout cone from the lens to the sample ---- */}
-            <Callout lens={port} c={sampleC} r={lerp(118, 100, mS)} opacity={ss(t, 18.95, 19.12) * (1 - closeK(t))} />
+            <Callout lens={port} c={sampleC} r={lerp(118, 100, mS)} opacity={ss(t, 18.95, 19.12) * (1 - closeK(t)) * lensFade} />
           </g>
         )}
 
         {/* ---- the cutaway / lens: the material's micro view ---- */}
         {port.r > 0.5 && (
-          <Lens cx={port.x} cy={port.y} r={port.r} rim={port.r > 1180 ? 0 : 1}>
-            {lensContent}
-          </Lens>
+          // the lens fades in its last few px as it irises shut into the puddle (no bead left floating above it)
+          <g opacity={lensFade}>
+            <Lens cx={port.x} cy={port.y} r={port.r} rim={port.r > 1180 ? 0 : 1}>
+              {lensContent}
+            </Lens>
+          </g>
+        )}
+        {scrim > 0.002 && (
+          // the caption band sits over the bright lattice: a soft navy shade at the top keeps the captions legible
+          <rect x="-200" y="-200" width="1480" height="760" fill={`url(#${scrimId})`} opacity={scrim} />
         )}
 
         {/* ---- phase A labels ---- */}
@@ -340,9 +383,11 @@ export const S6: React.FC<{t: number}> = ({t}) => {
         {/* ---- phase C: the magnet steers the liquid ---- */}
       </g>
       {/* the field line is NOT part of the fade: it is the one element that stays (identical at the cut) */}
-      {t >= 20.2 && (
+      {lineDraw > 0.0005 && (
+        // grows out of the magnet once it has landed (never a stray dash before it arrives); the travelling light
+        // only runs once the whole line is drawn (FieldLine's pulse is not limited to seg)
         <g transform={cam}>
-          <FieldLine seg={[lerp(S_MAG0 - 0.02, 0, lineDraw), lerp(S_MAG0 + 0.02, 1, lineDraw)]} pulse={bloom * (1 - ss(t, 22.0, B.fade0))} t={t} />
+          <FieldLine seg={[lerp(S_MAG0 - 0.02, 0, lineDraw), lerp(S_MAG0 + 0.02, 1, lineDraw)]} pulse={ss(t, 20.98, 21.15) * (1 - ss(t, 22.0, B.fade0))} t={t} />
         </g>
       )}
       {t >= 20.2 && (

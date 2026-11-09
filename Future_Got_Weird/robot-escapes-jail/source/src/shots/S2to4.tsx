@@ -14,7 +14,7 @@
 // AlarmBeacon → guard → JailFront → AlarmWash → screen overlays (thermometer, grip, heat shimmer).
 import React from 'react';
 import {SHOTS, T} from '../story';
-import {clamp, lerp, noise1, ring, ss, ss5} from '../lib';
+import {clamp, lerp, noise1, ring, ss, ss5, word} from '../lib';
 import {BAR_R, BAR_XS, Cam3, DOOR, GUARD_AT, H, P3, W, project, toCam} from '../world';
 import {C, INK, NS} from '../art/palette';
 import {uid} from '../core/ids';
@@ -740,7 +740,11 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     </svg>
   );
 };
-const ripplAt = (t: number) => (0.2 + 0.8 * ss(t, T.liquid - 0.1, T.liquid + 0.08)) * (1 - ss(t, T.metalE, 11.6)); // settled (0) before the stream starts
+// "turned": a first shiver runs through the fresh pool (a beat in the slow push), then the full ripple on "liquid"
+const TURNED = word('turned').start;
+const ripplAt = (t: number) =>
+  Math.max(0.2 + 0.8 * ss(t, T.liquid - 0.1, T.liquid + 0.08), 0.2 + 0.55 * ss(t, TURNED - 0.06, TURNED + 0.08) * (1 - ss(t, TURNED + 0.2, TURNED + 0.55))) *
+  (1 - ss(t, T.metalE, 11.6)); // settled (0) before the stream starts
 
 export const S2: React.FC<{t: number}> = ({t}) => <Scene t={t} />;
 export const S3: React.FC<{t: number}> = ({t}) => <Scene t={t} />;

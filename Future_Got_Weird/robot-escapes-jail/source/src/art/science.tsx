@@ -534,36 +534,61 @@ export const BarMagnet: React.FC<{x: number; y: number; ang: number; t: number; 
   );
 };
 
-/** dipole field lines around a magnet (local frame: axis +x = N), r = L sin^2(theta); lines leave N and enter S.
- *  grow 0..1 = how far out the field has bloomed; dashes flow N -> S. */
+/** Bar-magnet field lines, traced from two poles (N at local +x * 0.8a, S at -x * 0.8a): every line LEAVES the N end
+ *  and curls round into the S end (textbook picture), in lobes on both sides of the axis. Traced once per magnet size
+ *  (deterministic, cached). grow 0..1 = how far the lines have shot out of N toward S; the light dashes flow N -> S. */
+const DIPOLE_CACHE = new Map<string, {pts: V[]; len: number}[]>();
+const dipoleLines = (a: number, b: number) => {
+  const key = `${a}|${b}`;
+  const hit = DIPOLE_CACHE.get(key);
+  if (hit) return hit;
+  const p = a * 0.8;
+  const field = (x: number, y: number) => {
+    const dx = x - p, ex = x + p;
+    const r = (dx * dx + y * y) ** 1.5, q = (ex * ex + y * y) ** 1.5;
+    return {x: dx / r - ex / q, y: y / r - y / q};
+  };
+  const out: {pts: V[]; len: number}[] = [];
+  for (const phi of [1.22, 1.5, 1.86]) {
+    for (const side of [-1, 1]) {
+      let x = p + 6 * Math.cos(phi), y = side * 6 * Math.sin(phi);
+      const pts: V[] = [];
+      for (let n = 0; n < 900; n++) {
+        const f = field(x, y);
+        const l = Math.hypot(f.x, f.y) || 1;
+        x += (3 * f.x) / l;
+        y += (3 * f.y) / l;
+        if (Math.hypot(x + p, y) < 6) break;
+        if (Math.abs(x) < a + 3 && Math.abs(y) < b + 3) continue; // inside the magnet body (hidden)
+        if (n % 3 === 0) pts.push({x, y});
+      }
+      let len = 0;
+      for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k].x - pts[k - 1].x, pts[k].y - pts[k - 1].y);
+      out.push({pts, len});
+    }
+  }
+  DIPOLE_CACHE.set(key, out);
+  return out;
+};
 export const DipoleField: React.FC<{x: number; y: number; ang: number; t: number; grow?: number; opacity?: number; a?: number; b?: number}> = ({
   x, y, ang, t, grow = 1, opacity = 1, a = MAGNET.a, b = MAGNET.b,
 }) => {
   if (opacity <= 0.002 || grow <= 0.01) return null;
   const ca = Math.cos(ang), sa = Math.sin(ang);
-  const Ls = [1.6, 2.3, 3.1];
   const paths: React.ReactNode[] = [];
-  Ls.forEach((Lk, i) => {
-    const L = Lk * a * (0.55 + 0.45 * clamp(grow));
-    for (const side of [-1, 1]) {
-      const pts: V[] = [];
-      for (let q = 0; q <= 64; q++) {
-        const th = 0.04 + (q / 64) * (Math.PI - 0.08);
-        const r = L * Math.sin(th) ** 2;
-        const lx = r * Math.cos(th) * 1.0, ly = side * r * Math.sin(th) * 0.9;
-        if (Math.abs(lx) < a + 2 && Math.abs(ly) < b + 2) continue; // hidden under the magnet
-        pts.push({x: x + lx * ca - ly * sa, y: y + lx * sa + ly * ca});
-      }
-      if (pts.length < 2) continue;
-      const d = 'M' + pts.map((p) => `${f1(p.x)},${f1(p.y)}`).join('L');
-      const op = opacity * clamp(grow * 1.6 - i * 0.3) * (0.75 - i * 0.14);
-      paths.push(
-        <g key={`${i}${side}`} opacity={op}>
-          <path d={d} fill="none" stroke={C.field} strokeWidth={6} strokeLinecap="round" />
-          <path d={d} fill="none" stroke="#E8FBFF" strokeWidth={3} strokeLinecap="round" strokeDasharray="10 34" strokeDashoffset={f1((side > 0 ? 1 : -1) * 0 + t * 70)} opacity={0.8} />
-        </g>,
-      );
-    }
+  dipoleLines(a, b).forEach(({pts, len}, idx) => {
+    const i = Math.floor(idx / 2); // 0 = the widest lobe
+    const k = clamp(grow * 1.5 - (2 - i) * 0.22); // the tight inner lines first, the wide ones after
+    if (k <= 0.005 || pts.length < 2) return;
+    const d = 'M' + pts.map((q) => `${f1(x + q.x * ca - q.y * sa)},${f1(y + q.x * sa + q.y * ca)}`).join('L');
+    const op = opacity * (0.5 + i * 0.13) * clamp(k * 3);
+    const reveal = k < 0.999 ? `${f1(k * len)} ${f1(len * 2)}` : undefined;
+    paths.push(
+      <g key={idx} opacity={op}>
+        <path d={d} fill="none" stroke={C.field} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={reveal} />
+        {k > 0.9 && <path d={d} fill="none" stroke="#E8FBFF" strokeWidth={3} strokeLinecap="round" strokeDasharray="10 34" strokeDashoffset={f1(-t * 70)} opacity={0.8 * clamp((k - 0.9) * 10)} />}
+      </g>,
+    );
   });
   return <g>{paths}</g>;
 };

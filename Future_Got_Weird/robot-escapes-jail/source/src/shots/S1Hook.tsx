@@ -124,7 +124,7 @@ export const s1GuardAct = (t: number): GuardAct => {
 
 // ---------------------------------------------------------------------------------------------------------------
 // the robot's performance
-const POSE_MISCHIEF: RobotPose = {...POSE_IDLE, mood: 0.78, eyeOpen: 1, lookX: 0, lookY: 0, headTilt: 7, headTurn: 0, glow: 1};
+const POSE_MISCHIEF: RobotPose = {...POSE_IDLE, mood: 0.5, eyeOpen: 1, lookX: 0, lookY: 0, headTilt: 7, headTurn: 0, glow: 1};
 const robotPose = (t: number): RobotPose => {
   const widen = ss(t, 0.8, 0.94) * (1 - ss(t, 1.55, 1.85));
   const glance = ss(t, 0.98, 1.2) * (1 - ss(t, 1.64, 1.94));
@@ -136,7 +136,7 @@ const robotPose = (t: number): RobotPose => {
   p.headTurn = 0.95 * glance;
   p.headTilt = lerp(p.headTilt, -8, glance);
   p.lean = 7 * glance;
-  p = mixPose(p, {...p, mood: 0.95, headTilt: 9, eyeOpen: 0.96, lookX: 0, headTurn: 0}, smug);
+  p = mixPose(p, {...p, mood: 0.7, headTilt: 9, eyeOpen: 0.96, lookX: 0, headTurn: 0}, smug);
   // a blink as the eyes come back to the viewer
   const bl = Math.max(0, 1 - Math.abs(t - 1.88) / 0.07);
   p.eyeOpen = p.eyeOpen * (1 - 0.95 * bl);

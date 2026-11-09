@@ -22,6 +22,8 @@ export const SHOT_VIEWS: Record<ShotId, React.FC<{t: number}>> = {S1, S2, S3, S4
 /** caption box per caption index (see data/timeline.json captions). Default: the top band (centre y 330, x 110-870). */
 const CAP: Record<number, CapBox> = {
   // S1: the guard (face, cup hand) owns the right half; the wall left of him, above the robot, is empty
-  0: {y: 560, left: 50, width: 580}, 1: {y: 560, left: 50, width: 580},
+  0: {y: 560, left: 30, width: 570}, 1: {y: 560, left: 30, width: 570},
+  // S8 "can't stop a robot anymore": the guard's head crosses the top band as he looks down; the floor below the droplet is empty
+  27: {y: 1360},
 };
 export const capBox = (i: number): CapBox => CAP[i] ?? {y: 330};

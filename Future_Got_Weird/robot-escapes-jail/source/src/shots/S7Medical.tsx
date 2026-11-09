@@ -4,7 +4,7 @@
 // round caps, the FieldLine glow) on flat C.navy1. RouteLine at m = 0, up = 0, w = 1 with the identity camera draws it
 // pixel-identically (same recipe as science.tsx FieldLine).
 // OUT (S7 -> S8): deliberate cut (new place). The last frame is the reveal: the solid stomach MODEL (tag LAB DEMO)
-// inside the dotted ghost torso (tag FUTURE IDEA), the device carrying the bead up and out of the model.
+// inside the dotted ghost torso (tag FUTURE IDEA), the device carrying the bead back up the oesophagus.
 //
 // BEATS (film seconds; word times from story.ts T / data/timeline.json):
 //   22.47–22.60  the field line alone (a light pulse starts along it)                   "Scientists" 22.59
@@ -14,9 +14,10 @@
 //   23.50–25.35  the tiny device drops into the oesophagus; the magnet slides in OUTSIDE the model (in the J hollow),
 //                field lines lock on (23.95) and it drags the device down the route to the blue bead       "robots like this"
 //   24.25–25.55  camera pushes in on the bottom of the model (the bead); lab labels fade      "could one day"
-//   25.42–25.84  "retrieve": heat glow -> the device melts and flows around the bead (engulfs it)   T.retrieve 25.515
+//   25.38–25.95  "retrieve": the warm AC-field arcs (S6's heat language, not body heat, not the steering magnet) +
+//                heat glow -> the device melts and flows around the bead (engulfs it)   T.retrieve 25.515
 //   25.90–26.20  cools: ice shimmer sweeps up, sparkle -> solid nub holding the bead          "objects" 25.96
-//   26.22–27.65  the magnet pulls it back up the route and out of the oesophagus
+//   26.22–27.65  the magnet pulls it back up the route into the oesophagus tube (ends fully visible, s = 0.1)
 //   26.30–27.45  pull back: the model sits inside a dotted ghost torso (draws on outward); tag FUTURE IDEA  "from inside your body"
 //   27.45–27.82  hold the reveal (alive: device still travelling, dots twinkle, magnet moving)
 import React from 'react';
@@ -24,7 +25,7 @@ import {C} from '../art/palette';
 import {clamp, lerp, ss, ss5, noise1} from '../lib';
 import {uid} from '../core/ids';
 import {T} from '../story';
-import {FieldLine, SciBg} from '../art/science';
+import {ACFieldArcs, FieldLine, SciBg} from '../art/science';
 import {V} from '../art/liquid';
 import {
   stomachD, Bead, BEAD, Cam2, CAM_ID, camPt, Device, deviceOutline, FieldBundle, GhostHuman, MAG_HALF, MedTag, MedText,
@@ -52,7 +53,7 @@ const S_START = -0.06; // just inside the oesophagus' top cut (hidden by the rim
 // camera: overlapping C2 moves (log zoom), so velocity carries across beats
 // ---------------------------------------------------------------------------------------------------------------------
 const CAM_B = {k: 0.82, F: {x: 576, y: 946}, O: {x: 540, y: 1000}};
-const CAM_C = {k: 2.0, F: {x: 425, y: 1360}, O: {x: 540, y: 1100}};
+const CAM_C = {k: 2.0, F: {x: 425, y: 1360}, O: {x: 540, y: 1125}};
 const CAM_D = {k: 0.36, F: {x: 640, y: 300}, O: {x: 540, y: 1080}};
 export const camAt = (t: number): Cam2 => {
   const u1 = ss5(t, B7.morph0, B7.cam1), u2 = ss5(t, B7.push0, B7.push1), u3 = ss5(t, B7.rev0, B7.rev1);
@@ -79,7 +80,7 @@ const deviceS = (t: number) => {
   }
   const u = clamp((t - B7.pull0) / (B7.pull1 - B7.pull0));
   const e = u * u * u * (u * (u * 6 - 15) + 10);
-  return lerp(S_BEAD, 0.02, e);
+  return lerp(S_BEAD, 0.1, e); // ends fully visible in the oesophagus tube (not half-hidden under the cut rim)
 };
 const deviceVel = (t: number) => (deviceS(t + 1 / 60) - deviceS(t - 1 / 60)) * 30;
 
@@ -107,14 +108,16 @@ const magAtS = (s: number): V => {
 export const S7: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t);
   const k = cam.k;
+  const kd = Math.max(k, 0.5); // device / bead / eye scale: never shrinks below readable in the wide reveal
 
   // --- route + model build
   const m = ss5(t, B7.morph0, B7.morph1);
   const up = ss(t, B7.up0, B7.up1);
   const tUp = (s: number) => B7.up0 + (1 - s / SEG_S[2]) * (B7.up1 - B7.up0); // when the draw-on reaches s
   const grow = (s: number) => {
-    const t0 = s >= SEG_S[2] ? 22.72 + (s - SEG_S[2]) * 0.28 : tUp(s) + 0.04;
-    const g = clamp((t - t0) / 0.42);
+    const low = s >= SEG_S[2];
+    const t0 = low ? 22.72 + (s - SEG_S[2]) * 0.28 : tUp(s) - 0.05;
+    const g = clamp((t - t0) / (low ? 0.42 : 0.24)); // the upper tube inflates right behind the draw-on front
     // inflate with a little silicone overshoot
     return g <= 0 ? 0 : g >= 1 ? 1 : 1 - (1 - g) ** 3 + 0.06 * Math.sin(Math.PI * g);
   };
@@ -148,13 +151,13 @@ export const S7: React.FC<{t: number}> = ({t}) => {
   const dirS = {x: rp.tan.x * Math.sign(vS || 1), y: rp.tan.y * Math.sign(vS || 1)};
   const stretch = clamp(Math.abs(vS) * 0.55, 0, 0.32) * (1 - melt) + 0.05 * Math.sin(t * 7.3) * (1 - melt) * (Math.abs(vS) > 0.05 ? 1 : 0.3);
   const devPts = deviceOutline({
-    c: cS, w: devW * k, h: devH * k, dir: dirS, stretch, melt, cool, pc: pcS,
-    prx: 56 * k, pry: 34 * k, nw: 74 * k, nh: 62 * k, t,
+    c: cS, w: devW * kd, h: devH * kd, dir: dirS, stretch, melt, cool, pc: pcS,
+    prx: 56 * kd, pry: 34 * kd, nw: 74 * kd, nh: 62 * kd, t,
   });
   // eyes: on the solid's face / the puddle's top / the nub's top
-  const eyeSolid = {x: cS.x + dirS.x * 6 * k * clamp(Math.abs(vS) * 3), y: cS.y - devH * 0.06 * k};
-  const eyePud = {x: pcS.x + 8 * k, y: pcS.y - 30 * k};
-  const eyeNub = {x: pcS.x + 4 * k, y: pcS.y - 18 * k};
+  const eyeSolid = {x: cS.x + dirS.x * 6 * kd * clamp(Math.abs(vS) * 3), y: cS.y - devH * 0.06 * kd};
+  const eyePud = {x: pcS.x + 8 * kd, y: pcS.y - 30 * kd};
+  const eyeNub = {x: pcS.x + 4 * kd, y: pcS.y - 18 * kd};
   const eyeA = {x: lerp(eyeSolid.x, eyePud.x, melt), y: lerp(eyeSolid.y, eyePud.y, melt)};
   const eyeC = {x: lerp(eyeA.x, eyeNub.x, cool), y: lerp(eyeA.y, eyeNub.y, cool)};
   const blinkAt = [23.9, 24.95, 26.32, 27.25];
@@ -163,7 +166,8 @@ export const S7: React.FC<{t: number}> = ({t}) => {
   const lookBead = ss(t, 24.95, 25.3) * (1 - ss(t, B7.pull0, B7.pull0 + 0.3));
   const lookX = lerp(rp.tan.x * Math.sign(vS || 1) * 0.6, -0.8, lookBead) + 0.25 * noise1(t * 1.3, 4) * (1 - lookBead);
   const lookY = lerp(0.2, 0.65, lookBead);
-  const eyes = {c: eyeC, s: Math.max(1.4, 12.5 * k * lerp(1, 0.85, melt)), open: (1 - blink) * (1 - squint), lookX, lookY, mood: 0, glow: 0.8 + 0.2 * heat};
+  const eyes = {c: eyeC, s: Math.max(1.4, 12.5 * kd * lerp(1, 0.85, melt)), open: (1 - blink) * (1 - squint), lookX, lookY, mood: 0, glow: 0.8 + 0.2 * heat};
+  const acOn = ss(t, B7.heat0 - 0.04, B7.heat0 + 0.14) * (1 - ss(t, B7.melt1 - 0.06, B7.cool0 + 0.06));
   const beadWin = lerp(1, 0.6, ss(t, B7.melt0 + 0.08, B7.melt1));
   const beadC = t < B7.pull0 ? camPt(cam, beadM) : camPt(cam, {x: nubM.x, y: nubM.y + 4});
   const sparkA = Math.sin(Math.PI * clamp((t - B7.spark) / 0.28));
@@ -174,7 +178,7 @@ export const S7: React.FC<{t: number}> = ({t}) => {
   const magOff = {x: -260, y: 520};
   // reveal: the magnet moves OUTSIDE the ghost body (future idea: steered from outside), keeps pulling
   const rvM = ss5(t, 26.5, 27.35);
-  const magOut = {x: -560, y: 250 - 120 * ss(t, 26.9, 27.9)};
+  const magOut = {x: -430, y: 250 - 120 * ss(t, 26.9, 27.9)};
   const magTrack = {x: lerp(magOff.x, magTarget.x, magIn), y: lerp(magOff.y, magTarget.y, magIn) + 4 * Math.sin(t * 2.1)};
   const magM = {x: lerp(magTrack.x, magOut.x, rvM), y: lerp(magTrack.y, magOut.y, rvM)};
   const devM = t < B7.melt0 ? cSolidM : nubM;
@@ -190,12 +194,12 @@ export const S7: React.FC<{t: number}> = ({t}) => {
   // --- labels
   const lblOut = 1 - ss(t, B7.lblOut0, B7.lblOut1);
   const pLbl1 = clamp((t - B7.lbl1) / 0.3), pLbl2 = clamp((t - B7.lbl2) / 0.3);
-  const lblA = camPt(cam, {x: 344, y: 409}), lblB = camPt(cam, {x: 344, y: 494});
+  const lblA = camPt(cam, {x: 372, y: 409}), lblB = camPt(cam, {x: 372, y: 496});
   const lsc = k / CAM_B.k;
   const pFut = clamp((t - B7.future) / 0.32);
   const futA = camPt(cam, {x: 600, y: 60});
   const pLab2 = clamp((t - B7.labTag2) / 0.3);
-  const lab2A = camPt(cam, {x: 1250, y: 780});
+  const lab2A = camPt(cam, {x: 470, y: 975}); // in the J hollow: clear of the ghost outline and the field lines
 
   const vig = ss(t, 22.6, 23.5);
   const idClip = uid('s7c'), idHeat = uid('s7h');
@@ -210,7 +214,11 @@ export const S7: React.FC<{t: number}> = ({t}) => {
           <path d={clipD} />
         </clipPath>
       </defs>
-      <Bead c={beadC} r={BEAD.r * k * (t < B7.pull0 ? 1 : 0.98)} window={beadWin} opacity={ss(t, 23.05, 23.4)} />
+      {/* WHAT melts it: the alternating field (S6's warm AC arcs = heat; under the metal, as in S6), distinct from the cyan steering field */}
+      <g clipPath={`url(#${idClip})`}>
+        <ACFieldArcs cx={lerp(cS.x, pcS.x, melt)} cy={lerp(cS.y, pcS.y, melt) + 16 * kd} span={150 * kd} h={120 * kd} t={t} on={acOn} />
+      </g>
+      <Bead c={beadC} r={BEAD.r * kd * (t < B7.pull0 ? 1 : 0.98)} window={beadWin} opacity={ss(t, 23.05, 23.4)} />
       {t < B7.morph0 ? (
         // the hand-off frames: literally S6's FieldLine (CONTRACTS.md S6 -> S7)
         <FieldLine />
@@ -231,13 +239,13 @@ export const S7: React.FC<{t: number}> = ({t}) => {
         )}
       {dOn > 0.001 && (
         <Device
-          pts={devPts} t={t} k={k} heat={heat} ripple={melt * (1 - cool)} cool={cool} opacity={dOn}
-          gloss={{c: t < B7.melt0 ? cS : pcS, w: (t < B7.melt0 ? devW : 70) * k, h: (t < B7.melt0 ? devH : 60) * k, on: (1 - melt) + cool * 0.9}}
+          pts={devPts} t={t} k={kd} heat={heat} ripple={melt * (1 - cool)} cool={cool} opacity={dOn}
+          gloss={{c: t < B7.melt0 ? cS : pcS, w: (t < B7.melt0 ? devW : 70) * kd, h: (t < B7.melt0 ? devH : 60) * kd, on: (1 - melt) + cool * 0.9}}
           eyes={eyes}
         />
       )}
       {/* the bead shows through the metal's socket once engulfed (drawn over the liquid) */}
-      {melt > 0.4 && <Bead c={beadC} r={BEAD.r * k} window={beadWin} opacity={ss(melt, 0.4, 0.7)} />}
+      {melt > 0.4 && <Bead c={beadC} r={BEAD.r * kd} window={beadWin} opacity={ss(melt, 0.4, 0.7)} />}
       <Sparkle c={{x: pcS.x + 26 * k, y: pcS.y - 30 * k}} r={22 * k} a={sparkA} color={C.ice} />
       <Sparkle c={{x: pcS.x - 30 * k, y: pcS.y - 6 * k}} r={13 * k} a={Math.sin(Math.PI * clamp((t - B7.spark - 0.07) / 0.24))} />
       </g>
@@ -246,10 +254,10 @@ export const S7: React.FC<{t: number}> = ({t}) => {
       <SmallMagnet c={magS} ang={magAng} sc={magScS} opacity={magIn} />
       {/* research demo labels (solid) */}
       <MedText x={lblA.x} y={lblA.y} text="STOMACH MODEL" size={54 * lsc} p={pLbl1} opacity={lblOut} />
-      <MedTag x={lblB.x} y={lblB.y} w={330} h={58} text="LAB DEMO (2023)" size={32} p={pLbl2} opacity={lblOut} />
+      <MedTag x={lblB.x} y={lblB.y} w={364} h={62} text="LAB DEMO (2023)" size={36} p={pLbl2} opacity={lblOut} />
       {/* the future possibility (ghost) + the model's own tag again, small */}
       <MedTag x={futA.x} y={futA.y} w={300} h={66} text="FUTURE IDEA" size={40} p={pFut} ghost t={t} />
-      <MedTag x={lab2A.x} y={lab2A.y} w={160} h={42} text="LAB DEMO" size={25} p={pLab2} />
+      <MedTag x={lab2A.x} y={lab2A.y} w={196} h={50} text="LAB DEMO" size={30} p={pLab2} />
     </svg>
   );
 };
