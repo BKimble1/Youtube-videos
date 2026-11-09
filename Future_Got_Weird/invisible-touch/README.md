@@ -2,7 +2,27 @@
 
 This is a vertical Short: 1080×1920 at 30 fps, **31.133 s** (934 frames).
 
-## V2: major animation overhaul (current)
+## V3: targeted final polish (current)
+
+V3 is a review render and is **not published**.
+
+| What | Where |
+|---|---|
+| Deliverable | `exports/FGW_Invisible_Touch_V3_REVIEW_1080x1920.mp4` (31.133 s, 934 frames) |
+| Report (changelog from V2, technical check, pass/fail, outstanding flaws) | `production/V3_REPORT.md` |
+| Source | `source/src/v3/` (composition `InvisibleTouchV3`) |
+| Cues and mix | `tools/v3/` |
+| QA (including a three-loop file) | `qa/v3/` |
+
+**Changes from V2:**
+- a new opening, with a flinch at the pulse and the gap revealed by 1 s;
+- a worm's-eye macro at 3–7 s;
+- a skin-slab graphic match;
+- the car as the climax, with the lobby removed;
+- a pass-through ring in the grab;
+- a rebuilt loop with the caption clearing before the seam.
+
+## V2: major animation overhaul
 
 V2 is a review render and is **not published**.
 
