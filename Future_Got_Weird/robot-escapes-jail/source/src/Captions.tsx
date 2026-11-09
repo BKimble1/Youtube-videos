@@ -1,7 +1,7 @@
 // Captions: the channel treatment (Nunito Black, white with a dark stroke, key words in yellow capitals), phrase by
 // phrase, in SCREEN space (never inside a camera transform), inside the Shorts safe area (x 110..870: clear of the
 // right-hand action buttons; y kept above ~1450 so the bottom controls/description never cover them).
-// A caption's vertical position comes from capY(t) (Film.tsx), chosen per shot so it never covers the robot's face or
+// A caption's box (centre y, optional left/width) comes from capBox(i) (Film.tsx), chosen per shot so it never covers the robot's face or
 // the central action. A short fade-in that starts at half opacity, so the frame where one caption replaces another is
 // never blank.
 import React from 'react';
@@ -14,14 +14,16 @@ const hideOf = (k: number) => {
   return next > c.hide && next - c.hide < 0.12 ? next : c.hide;
 };
 export const capIndex = (t: number) => CAPTIONS.findIndex((c, k) => t >= (k === 0 ? 0 : c.show) && t < hideOf(k));
-export const Captions: React.FC<{t: number; y: (i: number) => number}> = ({t, y}) => {
+export type CapBox = {y: number; left?: number; width?: number};
+export const Captions: React.FC<{t: number; box?: (i: number) => CapBox; y?: (i: number) => number}> = ({t, box, y}) => {
   const i = capIndex(t);
   if (i < 0) return null;
   const c = CAPTIONS[i];
   const a = i === 0 ? 1 : clamp(0.5 + (t - c.show) / 0.067);
   // a small pop on arrival (scale 0.92 -> 1 over 4 frames), never on the very first frame of the film
   const pop = i === 0 ? 1 : 0.92 + 0.08 * clamp((t - c.show) / 0.13);
-  return <CaptionLine key={i} c={c} y={y(i)} a={a} pop={pop} />;
+  const b: CapBox = box ? box(i) : {y: y ? y(i) : 330};
+  return <CaptionLine key={i} c={c} y={b.y} left={b.left} width={b.width} a={a} pop={pop} />;
 };
 export const CaptionLine: React.FC<{c: Caption; y: number; a: number; pop?: number; left?: number; width?: number}> = ({c, y, a, pop = 1, left = 110, width = 760}) => {
   const words = c.text.split(' ');

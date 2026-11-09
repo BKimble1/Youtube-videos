@@ -4,7 +4,7 @@ import {AbsoluteFill, Audio, staticFile, useCurrentFrame} from 'remotion';
 import {Captions} from './Captions';
 import {FPS} from './lib';
 import {shotAt} from './story';
-import {SHOT_VIEWS, capY} from './shots';
+import {SHOT_VIEWS, capBox} from './shots';
 import {resetIds} from './core/ids';
 
 export const Frame: React.FC<{t: number; captions: boolean}> = ({t, captions}) => {
@@ -13,7 +13,7 @@ export const Frame: React.FC<{t: number; captions: boolean}> = ({t, captions}) =
   return (
     <AbsoluteFill style={{background: '#0B1526', overflow: 'hidden'}}>
       <S t={t} />
-      {captions && <Captions t={t} y={capY} />}
+      {captions && <Captions t={t} box={capBox} />}
     </AbsoluteFill>
   );
 };
