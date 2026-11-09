@@ -4,3 +4,8 @@ source/out/
 tools/__pycache__/
 source/public/audio/*.wav
 audio/mix/stems/
+audio/mix/stems/
+audio/mix/*TEST*
+audio/mix/*_test*
+audio/mix/sfx_gallery.wav
+source/public/audio/mix_test.wav
