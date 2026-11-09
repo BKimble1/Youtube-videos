@@ -15,7 +15,17 @@ section is the hook's groove, so the end flows into frame 0 (bar 15's A7 resolve
   beat  55     (27.84-28.35) pickup: a clap roll and a chromatic bass walk-up
   beats 56-64  (28.35-32.40) the HOOK GROOVE returns (bars 14-15 = the two bars before bar 0), into the loop
 
-render(DUR) -> dict(stems={'drums','bass','keys','lead','pad'} of (N, 2) arrays, bpm, beats, sections, beat_s)."""
+render(DUR, sections=None) -> dict(stems={'drums','bass','keys','lead','pad'} of (N, 2) arrays, bpm, beats, sections,
+beat_s). `sections` (optional, e.g. cues.json "music"): {name: start_s} for any of hook, drop, groove, breath, science,
+pickup, return (aliases: ret -> return, lab / lab_groove -> groove, transition -> drop, how -> breath); each start is
+quantised to the nearest 16th of the bar grid (the tempo and the loop never change), names left out keep the V1 start.
+The section events are placed relative to the section edges (drop: kick + bass hit on its first 16th, a swell that ends
+on the groove's first 16th; breath: round bass on its first 16th, a swell into the science, the two-note mallet question
+on its last two 8ths; pickup: the clap roll over it, the walk-up on its last four 16ths towards the return's root; the
+hook's lead motif stops at the drop). With sections=None the V1 bed is reproduced sample for sample.
+
+V2 (DIRECTION_V2, 9 Nov 2026): hook 0-3.40 (full), drop 3.40-4.0 (into the metal), lab groove 4.0-17.10, breath
+17.10-17.90 ("How?"), science 17.90-27.90, pickup 27.90-28.40, return 28.40-32.40 (-> the hook)."""
 import numpy as np
 from scipy.signal import butter, sosfilt
 
@@ -50,11 +60,35 @@ CH = {
 BARS = ['Dm9', 'G13', 'Dm9', 'G13', 'Bbmaj7', 'A7', 'Dm9', 'G13', 'Bbmaj7', 'Fmaj7', 'Cadd9', 'Bbmaj7', 'Am7', 'Gm7', 'Dm9', 'A7']
 SECTIONS = [('hook', 0, 6), ('drop', 6, 8), ('groove', 8, 34), ('breath', 34, 36), ('science', 36, 55), ('pickup', 55, 56), ('return', 56, 64)]
 
-def section_of(step):
-    b = step / 4
-    for name, a, e in SECTIONS:
-        if a <= b < e: return name
+SECTION_NAMES = [n_ for n_, _, _ in SECTIONS]
+SECTION_ALIASES = {'ret': 'return', 'lab': 'groove', 'lab_groove': 'groove', 'transition': 'drop', 'how': 'breath'}
+
+def section_of(step, spans=None):
+    """the section a 16th step is in; spans: [(name, a16, e16)] (None: the V1 sections)"""
+    if spans is None:
+        b = step / 4
+        for name, a, e in SECTIONS:
+            if a <= b < e: return name
+        return 'return'
+    for name, a, e in spans:
+        if a <= step < e: return name
     return 'return'
+
+def section_spans(DUR, sections=None):
+    """[(name, a16, e16)] in 16th steps: the V1 sections, or `sections` {name: start_s} quantised to the 16th grid
+    (names left out keep their V1 start); the starts must be in the V1 order (a zero-length section is skipped)"""
+    starts = {n_: a * 4 for n_, a, _ in SECTIONS}
+    if sections:
+        s16 = DUR / BEATS / 4
+        for k, v in sections.items():
+            n_ = SECTION_ALIASES.get(k, k)
+            if n_ not in starts: raise ValueError(f'music section {k!r}: not one of {SECTION_NAMES} (or {list(SECTION_ALIASES)})')
+            starts[n_] = int(round(float(v) / s16))
+    a16 = [starts[n_] for n_ in SECTION_NAMES]
+    if a16[0] != 0: raise ValueError(f'music: the hook must start at 0 (got {a16[0]} 16ths)')
+    if any(b < a for a, b in zip(a16, a16[1:])) or a16[-1] > BEATS * 4:
+        raise ValueError(f'music sections out of order: {dict(zip(SECTION_NAMES, a16))} (16ths)')
+    return [(n_, a, e) for n_, a, e in zip(SECTION_NAMES, a16, a16[1:] + [BEATS * 4])]
 
 # the hook's lead motif: (16th step in bar, midi, length in 16ths, velocity)
 LEAD = {
@@ -68,11 +102,24 @@ LEAD = {
 LEAD_BAR = {0: 'A', 1: 'B', 14: 'A', 15: 'B7'}
 
 
-def render(DUR, seed=4242):
+def render(DUR, seed=4242, sections=None):
     rng = np.random.default_rng(seed)
     N = int(round(DUR * SR))
     beat = DUR / BEATS
     s16 = beat / 4
+    spans = section_spans(DUR, sections)
+    SP = {n_: (a, e) for n_, a, e in spans}
+    d0, g0 = SP['drop'][0], SP['groove'][0]           # drop: its first 16th, and where it ends (the groove)
+    b0, b1 = SP['breath']                             # breath
+    p0, r0 = SP['pickup']                             # pickup .. the return
+    sw_drop = max(d0 + 1, g0 - 4)                     # the drop's swell ends on the groove's first 16th (V1: 28)
+    sw_breath = max(b0 + 1, b1 - 6)                   # the breath's swell ends on the science's first 16th (V1: 138)
+    q2 = b1 - 1 if (b1 - 1) % 2 == 0 else b1 - 2      # the mallet question: the breath's last two 8ths (V1: 140, 142)
+    question = [q for q in (q2 - 2, q2) if q >= b0]
+    L_pick = r0 - p0
+    walk_to = CH[BARS[(r0 // 16) % 16]]['root'] + 12  # the pickup's bass walks up to the return's root (V1: 45 45 47 49 -> D)
+    walk = [walk_to - 5, walk_to - 5, walk_to - 3, walk_to - 1]
+    def sec_of(step): return section_of(step, spans)
     stems = {k: np.zeros((N, 2)) for k in ('drums', 'bass', 'keys', 'lead', 'pad')}
     sends = np.zeros((N, 2))      # to the plate
     delay_in = np.zeros((N, 2))   # science plucks' ping-pong delay
@@ -207,7 +254,7 @@ def render(DUR, seed=4242):
     total16 = BEATS * 4
     for step in range(total16):
         bar, s = divmod(step, 16)
-        sec = section_of(step)
+        sec = sec_of(step)
         ch = CH[BARS[bar]]; nxt = CH[BARS[(bar + 1) % 16]]
         at = t_of(step)
         r = ch['root']
@@ -218,22 +265,22 @@ def render(DUR, seed=4242):
             put('drums', shaker(0.55 if s % 4 == 2 else 0.32, s), at, 0.25)
             if s == 14: put('drums', ohat(0.25), at, -0.2, verb=0.15)
         elif sec == 'drop':
-            if step == 24: put('drums', kick(0.8), at); kick_trig[int(at * SR) % N] = 1
+            if step == d0: at0 = t_of(step, False); put('drums', kick(0.8), at0); kick_trig[int(at0 * SR) % N] = 1
             put('drums', shaker(0.3 if s % 4 == 2 else 0.18, s), at, 0.25)
-            if step == 28: put('drums', swell(beat * 1.0), at, -0.1, 0.25)
+            if step == sw_drop: put('drums', swell(beat * ((g0 - sw_drop) / 4)), t_of(step, False), -0.1, 0.25)
         elif sec == 'groove':
             if s in (0, 10): put('drums', kick(0.8), t_of(step, False)); kick_trig[int(at * SR) % N] = 1
             if s in (4, 12): put('drums', rim(0.55), at, -0.15, verb=0.2)
             if bar >= 6 and s == 12: put('drums', clap(0.45), at, 0.05, verb=0.25)
             put('drums', shaker(0.42 if s % 4 == 2 else 0.22, s), at, 0.25)
         elif sec == 'breath':
-            if step == 138: put('drums', swell(beat * 1.5), at, 0.1, 0.3)
+            if step == sw_breath: put('drums', swell(beat * ((b1 - sw_breath) / 4)), t_of(step, False), 0.1, 0.3)
         elif sec == 'science':
             if s % 2 == 0: put('drums', shaker(0.32 if s % 4 == 2 else 0.2, s), at, 0.3)
             if bar >= 11 and s == 0: put('drums', kick(0.6), t_of(step, False)); kick_trig[int(at * SR) % N] = 1
             if s in (4, 12): put('drums', rim(0.3), at, -0.2, verb=0.25)
         elif sec == 'pickup':
-            put('drums', clap(0.25 + 0.15 * (s - 12)), at, 0.05, verb=0.2)
+            put('drums', clap(0.25 + 0.15 * (step - p0) * (3 / (L_pick - 1)) if L_pick > 1 else 0.7), at, 0.05, verb=0.2)
             put('drums', shaker(0.35, s), at, 0.25)
         # bass
         if sec in ('hook', 'return'):
@@ -242,7 +289,7 @@ def render(DUR, seed=4242):
                 put('bass', bass(r + iv, s16 * 1.6), at, g=0.95 if s % 4 == 0 else 0.8)
             if s in (3, 11): put('bass', bass(r, s16 * 0.8), at, g=0.4)
         elif sec == 'drop':
-            if step == 24: put('bass', bass(r, beat * 1.2), at)
+            if step == d0: put('bass', bass(r, beat * 1.2), t_of(step, False))
         elif sec == 'groove':
             pat = {0: (0, 1.8, 0.95), 3: (0, 0.9, 0.55), 6: (7, 1.2, 0.75), 8: (12, 1.0, 0.65), 11: (7, 0.9, 0.55)}
             if s in pat:
@@ -251,11 +298,12 @@ def render(DUR, seed=4242):
                 nr_ = nxt['root']; ap = nr_ - 1 if abs(nr_ - 1 - r) <= 7 else nr_ + 1
                 put('bass', bass(ap, s16 * 1.4), at, g=0.6)
         elif sec == 'breath':
-            if step == 136: put('bass', bass(r, beat * 1.8, 'round'), at, g=0.7)
+            if step == b0: put('bass', bass(r, beat * 1.8, 'round'), t_of(step, False), g=0.7)
         elif sec == 'science':
             if s in (0, 8): put('bass', bass(r if s == 0 else r + 7, s16 * 7.5, 'round'), t_of(step, False), g=0.55 if s == 0 else 0.4)
         elif sec == 'pickup':
-            put('bass', bass([45, 45, 47, 49][s - 12], s16 * 0.9), at, g=0.75)
+            k_ = step - p0 - (L_pick - 4)
+            if k_ >= 0: put('bass', bass(walk[k_], s16 * 0.9), at, g=0.75)
         # keys
         tones = ch['tones']
         if sec in ('hook', 'return'):
@@ -277,8 +325,9 @@ def render(DUR, seed=4242):
                 nt = nxt['triad'][0]; ap = nt - 1 if abs(nt - 1 - t0) <= 8 else nt + 1
                 put('lead', pizz(ap), at, -0.12, 0.38, verb=0.2)
         elif sec == 'breath':
-            if step in (140, 142):
-                put('keys', mallet(81 if step == 140 else 88, 0.4), at, -0.2 if step == 140 else 0.25, 0.42, verb=0.45, dly=0.3)
+            if step in question:
+                first = step == question[0] and len(question) == 2
+                put('keys', mallet(81 if first else 88, 0.4), at, -0.2 if first else 0.25, 0.42, verb=0.45, dly=0.3)
         elif sec == 'science':
             idx = [0, 1, 2, 3, 4, 3, 2, 1, 2, 3, 4, 3, 1, 2, 3, 4][s]
             v = 0.42 if s % 4 == 0 else (0.3 if s % 2 == 0 else 0.22)
@@ -286,11 +335,11 @@ def render(DUR, seed=4242):
         # lead motif (hook and return)
         if sec in ('hook', 'return') and bar in LEAD_BAR:
             for st, m, ln, v in LEAD[LEAD_BAR[bar]]:
-                if st == s and (sec == 'return' or step < 24):
+                if st == s and (sec == 'return' or step < d0):
                     put('lead', lead_note(m, s16 * ln * 0.85), at, -0.08, 0.5 * v, verb=0.3, dly=0.12)
         # pad: one chord per bar (a held chord across the breath)
         if s == 0:
-            secs = {section_of(step + k) for k in range(16)}
+            secs = {sec_of(step + k) for k in range(16)}
             if 'science' in secs and bar >= 9:
                 put('pad', pad_chord(tones[:4], 16 * s16, 1.0), at, 0.0, 0.2, verb=0.4)
             elif bar == 8:
@@ -333,5 +382,7 @@ def render(DUR, seed=4242):
     for k in stems:
         stems[k] = circ(lambda y: hp(y, 28), stems[k])
     return dict(stems=stems, bpm=round(60 * BEATS / DUR, 4), beats=BEATS, beat_s=beat,
-                sections=[dict(name=n_, beats=[a, e], t=[round(a * beat, 3), round(e * beat, 3)]) for n_, a, e in SECTIONS],
+                sections=[dict(name=n_, beats=[a // 4 if a % 4 == 0 else a / 4, e // 4 if e % 4 == 0 else e / 4],
+                               t=[round(a / 4 * beat, 3), round(e / 4 * beat, 3)]) for n_, a, e in spans],
+                sections_requested=sections or None,
                 bars=BARS)
