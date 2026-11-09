@@ -95,7 +95,10 @@ export const preCam = (t: number): Cam3 => {
   const p = camPos(t);
   const o = lookAt(p, FACE);
   // frame the face a little below the centre (captions above) and a little left of centre (the guard at the right)
-  return {...p, yaw: o.yaw + deg(Math.atan(75 / F)), pitch: o.pitch - deg(Math.atan(100 / F)), f: F};
+  // the frame follows the guard's take (he recoils toward the right edge): the face target slides from 75 px left of
+  // centre to 205 px left of centre, lagging his recoil (frame 0 is unchanged: S8 matches it)
+  const ox = 75 + 130 * ss(t, 1.3, 1.8);
+  return {...p, yaw: o.yaw + deg(Math.atan(ox / F)), pitch: o.pitch - deg(Math.atan(100 / F)), f: F};
 };
 const endCam = (): Cam3 => {
   const s = F / H_END;
@@ -403,7 +406,9 @@ const robotPoseFull = (t: number, R: {c: Cam3; x: number; y: number; s: number; 
   const bL = project(c, {x: -2.6, h: 3.6, d: 0}), bR = project(c, {x: 2.6, h: 3.6, d: 0});
   const off = 0.62 + 0.25;
   const tgtL = {x: bL.x - off * bL.s, y: bL.y}, tgtR = {x: bR.x + off * bR.s, y: bR.y};
-  const grip = 1 - ss(t, 2.12, 2.5);
+  // On "by" it lets go of the bars and the arms drop to its sides, BEFORE the surge (held on the bars into the surge,
+  // the melt lattice spread the horizontal arms into a flat tray at waist height); they then fuse into the body.
+  const grip = 1 - ss(t, 1.88, 2.1);
   if (grip <= 0.001) return base;
   return solveArms(base, R.x, R.y, R.s, R.m, tgtL, tgtR, grip);
 };
@@ -441,7 +446,7 @@ export const S1View: React.FC<{t: number; debug?: boolean; dbg?: string}> = ({t,
   const splashOn = t >= T_LAND;
   const Ls = project(c, S1_CUP_LAND);
   const splashU = 0.85 * (1 - Math.pow(1 - clamp((t - T_LAND) / (T1 - T_LAND)), 1.6));
-  const ids = {bm: uid('s1bm'), fc: uid('s1fc'), nc: uid('s1nc'), rg: uid('s1rg'), rr: uid('s1rr')};
+  const ids = {bm: uid('s1bm'), fc: uid('s1fc'), nc: uid('s1nc'), rg: uid('s1rg'), rr: uid('s1rr'), rb: uid('s1rb')};
   const W = 1080, H = 1920;
   // bars mask: hide the bars where the liquid lies in front of them (the liquid inside the near region)
   const nearD = nearRegion(c);
@@ -538,6 +543,9 @@ export const S1View: React.FC<{t: number; debug?: boolean; dbg?: string}> = ({t,
           <stop offset="0" stopColor={mix(C.red, '#FFFFFF', 0.25)} stopOpacity={0.5} />
           <stop offset="1" stopColor={C.red} stopOpacity={0} />
         </linearGradient>
+        <filter id={ids.rb} filterUnits="userSpaceOnUse" x={-200} y={-200} width={W + 400} height={H + 400}>
+          <feGaussianBlur stdDeviation={f1(0.22 * R.s)} />
+        </filter>
       </defs>
       {!dbg.includes('nobars') && (
         <g mask={`url(#${ids.bm})`}>
@@ -547,9 +555,11 @@ export const S1View: React.FC<{t: number; debug?: boolean; dbg?: string}> = ({t,
       {showRobot && !dbg.includes('noov') && (
         <g clipPath={`url(#${ids.fc})`}>
           <g clipPath={`url(#${ids.nc})`}>
-            {refl.map((r, i) => (
-              <path key={i} d={r.d} fill={`url(#${ids.rg})`} />
-            ))}
+            <g filter={`url(#${ids.rb})`}>
+              {refl.map((r, i) => (
+                <path key={i} d={r.d} fill={`url(#${ids.rg})`} />
+              ))}
+            </g>
           </g>
           <path d={streaks.join(' ')} fill="#FFFFFF" opacity={0.6} />
         </g>

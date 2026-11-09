@@ -1,0 +1,585 @@
+{
+ "duration": 32.4,
+ "SHOTS": {
+  "S1": [
+   0,
+   3.24
+  ],
+  "S2": [
+   3.24,
+   5.8
+  ],
+  "S3": [
+   5.8,
+   8.8
+  ],
+  "S4": [
+   8.8,
+   13.55
+  ],
+  "S5": [
+   13.55,
+   17.02
+  ],
+  "S6": [
+   17.02,
+   22.45
+  ],
+  "S7": [
+   22.45,
+   27.82
+  ],
+  "S8": [
+   27.82,
+   32.4
+  ]
+ },
+ "T": {
+  "jail": 1.24,
+  "jailE": 1.61,
+  "melting": 2.135,
+  "meltingE": 2.87,
+  "scientists": 3.26,
+  "locked": 3.785,
+  "tiny": 4.705,
+  "cage": 5.145,
+  "cageE": 5.52,
+  "but": 5.87,
+  "breaking": 6.335,
+  "bars1": 6.895,
+  "bars1E": 7.33,
+  "it2": 7.63,
+  "melted": 7.84,
+  "meltedE": 8.5,
+  "its": 8.88,
+  "entire": 9.01,
+  "liquid": 10.45,
+  "metalE": 11.27,
+  "then1": 11.64,
+  "slipped": 11.855,
+  "through": 12.575,
+  "bars2": 12.895,
+  "bars2E": 13.31,
+  "then2": 13.71,
+  "collected": 14.47,
+  "metal2": 14.99,
+  "molded": 15.43,
+  "back": 15.99,
+  "shape": 16.47,
+  "shapeE": 16.71,
+  "how": 17.13,
+  "howE": 17.44,
+  "made": 17.985,
+  "metal3": 18.425,
+  "melts": 18.865,
+  "body1": 19.425,
+  "temperature": 19.745,
+  "temperatureE": 20.22,
+  "magnets": 20.56,
+  "control": 21.29,
+  "movement": 21.89,
+  "movementE": 22.12,
+  "exploring": 23.235,
+  "robots": 23.955,
+  "oneDay": 25.115,
+  "retrieve": 25.515,
+  "objects": 25.955,
+  "inside2": 26.635,
+  "body2": 27.315,
+  "body2E": 27.58,
+  "so": 27.93,
+  "apparently": 28.115,
+  "even": 29.29,
+  "prison": 29.515,
+  "bars3": 29.955,
+  "cant": 30.315,
+  "stop": 30.555,
+  "robot3": 30.875,
+  "anymore": 31.355,
+  "anymoreE": 31.8,
+  "end": 32.4
+ },
+ "PLANNED_MOVES": [],
+ "cues": [
+  {
+   "t": 0,
+   "kind": "alarm",
+   "dur": 3,
+   "shot": "S1"
+  },
+  {
+   "t": 0,
+   "kind": "flow",
+   "dur": 1.7,
+   "gain": -2,
+   "shot": "S1"
+  },
+  {
+   "t": 0.88,
+   "kind": "mech_click",
+   "variant": 1,
+   "gain": -4,
+   "shot": "S1"
+  },
+  {
+   "t": 1.04,
+   "kind": "servo",
+   "gain": -6,
+   "dur": 0.22,
+   "shot": "S1"
+  },
+  {
+   "t": 1.45,
+   "kind": "cup_drop",
+   "gain": -2,
+   "shot": "S1"
+  },
+  {
+   "t": 1.62,
+   "kind": "guard_gasp",
+   "shot": "S1"
+  },
+  {
+   "t": 2.095,
+   "kind": "melt",
+   "dur": 0.95,
+   "shot": "S1"
+  },
+  {
+   "t": 2.78,
+   "kind": "whoosh",
+   "dur": 0.4,
+   "gain": -2,
+   "shot": "S1"
+  },
+  {
+   "t": 3,
+   "kind": "alarm_tail",
+   "dur": 0.3,
+   "shot": "S1"
+  },
+  {
+   "t": 3.02,
+   "kind": "splash",
+   "shot": "S1"
+  },
+  {
+   "t": 3.54,
+   "kind": "swish",
+   "gain": -3,
+   "dur": 0.6,
+   "shot": "S2"
+  },
+  {
+   "t": 4.3,
+   "kind": "servo",
+   "gain": -4,
+   "shot": "S2"
+  },
+  {
+   "t": 4.4,
+   "kind": "door_slide",
+   "dur": 0.7449999999999992,
+   "shot": "S2"
+  },
+  {
+   "t": 5.145,
+   "kind": "door_slam",
+   "shot": "S2"
+  },
+  {
+   "t": 5.225,
+   "kind": "mech_click",
+   "variant": 2,
+   "gain": -2,
+   "shot": "S2"
+  },
+  {
+   "t": 5.57,
+   "kind": "mech_click",
+   "variant": 1,
+   "gain": -4,
+   "shot": "S2"
+  },
+  {
+   "t": 5.92,
+   "kind": "mech_click",
+   "variant": 0,
+   "gain": -3,
+   "shot": "S3"
+  },
+  {
+   "t": 6.1,
+   "kind": "mech_click",
+   "variant": 3,
+   "gain": -3,
+   "shot": "S3"
+  },
+  {
+   "t": 6.3,
+   "kind": "bar_tap",
+   "shot": "S3"
+  },
+  {
+   "t": 6.42,
+   "kind": "servo",
+   "gain": -2,
+   "dur": 0.4,
+   "shot": "S3"
+  },
+  {
+   "t": 6.925,
+   "kind": "mech_click",
+   "variant": 1,
+   "gain": -3,
+   "shot": "S3"
+  },
+  {
+   "t": 7,
+   "kind": "heat_coil",
+   "dur": 1.6,
+   "shot": "S3"
+  },
+  {
+   "t": 7.04,
+   "kind": "pop",
+   "gain": -4,
+   "shot": "S3"
+  },
+  {
+   "t": 7.6,
+   "kind": "melt",
+   "dur": 1.2,
+   "shot": "S3"
+  },
+  {
+   "t": 10.36,
+   "kind": "drip",
+   "gain": -4,
+   "shot": "S4"
+  },
+  {
+   "t": 11.7,
+   "kind": "flow",
+   "dur": 1.5,
+   "shot": "S4"
+  },
+  {
+   "t": 12.38,
+   "kind": "alarm",
+   "dur": 0.95,
+   "shot": "S4"
+  },
+  {
+   "t": 13.33,
+   "kind": "guard_gulp",
+   "gain": -2,
+   "shot": "S4"
+  },
+  {
+   "t": 13.84,
+   "kind": "swish",
+   "gain": -6,
+   "dur": 0.35,
+   "shot": "S5"
+  },
+  {
+   "t": 14.43,
+   "kind": "drip",
+   "gain": -6,
+   "shot": "S5"
+  },
+  {
+   "t": 14.6,
+   "kind": "flow",
+   "gain": -7,
+   "dur": 0.45,
+   "shot": "S5"
+  },
+  {
+   "t": 14.62,
+   "kind": "pipette",
+   "gain": -1,
+   "shot": "S5"
+  },
+  {
+   "t": 15.07,
+   "kind": "swish",
+   "gain": -7,
+   "dur": 0.4,
+   "shot": "S5"
+  },
+  {
+   "t": 15.5,
+   "kind": "glug",
+   "gain": -2,
+   "dur": 0.35,
+   "shot": "S5"
+  },
+  {
+   "t": 16.03,
+   "kind": "pop",
+   "gain": -2,
+   "shot": "S5"
+  },
+  {
+   "t": 16.03,
+   "kind": "cool",
+   "dur": 0.5,
+   "gain": -1,
+   "shot": "S5"
+  },
+  {
+   "t": 16.34,
+   "kind": "pipette",
+   "gain": -8,
+   "shot": "S5"
+  },
+  {
+   "t": 16.49,
+   "kind": "reveal",
+   "gain": -4,
+   "shot": "S5"
+  },
+  {
+   "t": 16.59,
+   "kind": "mech_click",
+   "variant": 2,
+   "gain": -5,
+   "shot": "S5"
+  },
+  {
+   "t": 16.62,
+   "kind": "swish",
+   "gain": -5,
+   "dur": 0.3,
+   "shot": "S5"
+  },
+  {
+   "t": 17.04,
+   "kind": "swish",
+   "gain": -4,
+   "dur": 0.3,
+   "shot": "S6"
+  },
+  {
+   "t": 17.47,
+   "kind": "reveal",
+   "gain": -6,
+   "shot": "S6"
+  },
+  {
+   "t": 17.805,
+   "kind": "pop",
+   "gain": -4,
+   "shot": "S6"
+  },
+  {
+   "t": 18.105,
+   "kind": "pop",
+   "gain": -4,
+   "shot": "S6"
+  },
+  {
+   "t": 18.56,
+   "kind": "swish",
+   "gain": -7,
+   "dur": 0.3,
+   "shot": "S6"
+  },
+  {
+   "t": 18.8,
+   "kind": "heat_coil",
+   "gain": -1,
+   "dur": 1.38,
+   "shot": "S6"
+  },
+  {
+   "t": 19.32,
+   "kind": "mech_click",
+   "gain": -5,
+   "variant": 2,
+   "shot": "S6"
+  },
+  {
+   "t": 19.34,
+   "kind": "melt",
+   "gain": -3,
+   "dur": 0.9,
+   "shot": "S6"
+  },
+  {
+   "t": 20.26,
+   "kind": "swish",
+   "gain": -5,
+   "dur": 0.3,
+   "shot": "S6"
+  },
+  {
+   "t": 20.49,
+   "kind": "mech_click",
+   "gain": -6,
+   "variant": 1,
+   "shot": "S6"
+  },
+  {
+   "t": 20.58,
+   "kind": "mag_hum",
+   "gain": 0,
+   "dur": 1.82,
+   "shot": "S6"
+  },
+  {
+   "t": 21.03,
+   "kind": "pop",
+   "gain": -6,
+   "shot": "S6"
+  },
+  {
+   "t": 21.29,
+   "kind": "flow",
+   "gain": -4,
+   "dur": 0.95,
+   "shot": "S6"
+  },
+  {
+   "t": 22.5,
+   "kind": "swish",
+   "gain": -7,
+   "dur": 0.3,
+   "shot": "S7"
+  },
+  {
+   "t": 22.78,
+   "kind": "reveal",
+   "gain": -8,
+   "shot": "S7"
+  },
+  {
+   "t": 23.36,
+   "kind": "pop",
+   "gain": -6,
+   "shot": "S7"
+  },
+  {
+   "t": 23.55,
+   "kind": "drip",
+   "gain": -6,
+   "shot": "S7"
+  },
+  {
+   "t": 23.58,
+   "kind": "pop",
+   "gain": -7,
+   "shot": "S7"
+  },
+  {
+   "t": 23.68,
+   "kind": "swish",
+   "gain": -6,
+   "dur": 0.3,
+   "shot": "S7"
+  },
+  {
+   "t": 23.95,
+   "kind": "mag_hum",
+   "gain": -2,
+   "dur": 1.45,
+   "shot": "S7"
+  },
+  {
+   "t": 24.15,
+   "kind": "flow",
+   "gain": -7,
+   "dur": 1.1,
+   "shot": "S7"
+  },
+  {
+   "t": 25.33,
+   "kind": "mech_click",
+   "gain": -7,
+   "variant": 3,
+   "shot": "S7"
+  },
+  {
+   "t": 25.42,
+   "kind": "heat_coil",
+   "gain": -6,
+   "dur": 0.45,
+   "shot": "S7"
+  },
+  {
+   "t": 25.555,
+   "kind": "melt",
+   "gain": -3,
+   "dur": 0.6,
+   "shot": "S7"
+  },
+  {
+   "t": 25.9,
+   "kind": "cool",
+   "gain": -3,
+   "dur": 0.6,
+   "shot": "S7"
+  },
+  {
+   "t": 26.12,
+   "kind": "mech_click",
+   "gain": -6,
+   "variant": 0,
+   "shot": "S7"
+  },
+  {
+   "t": 26.2,
+   "kind": "mag_hum",
+   "gain": -5,
+   "dur": 1.3,
+   "shot": "S7"
+  },
+  {
+   "t": 26.35,
+   "kind": "swish",
+   "gain": -8,
+   "dur": 0.4,
+   "shot": "S7"
+  },
+  {
+   "t": 26.9,
+   "kind": "reveal",
+   "gain": -5,
+   "shot": "S7"
+  },
+  {
+   "t": 29.11,
+   "kind": "drip",
+   "gain": -4,
+   "shot": "S8"
+  },
+  {
+   "t": 29.19,
+   "kind": "flow",
+   "dur": 1.15,
+   "gain": -8,
+   "shot": "S8"
+  },
+  {
+   "t": 30.825,
+   "kind": "mech_click",
+   "variant": 2,
+   "gain": -3,
+   "shot": "S8"
+  },
+  {
+   "t": 30.895,
+   "kind": "alarm",
+   "dur": 1.504999999999999,
+   "shot": "S8"
+  },
+  {
+   "t": 31.83,
+   "kind": "guard_gulp",
+   "gain": -3,
+   "shot": "S8"
+  }
+ ]
+}

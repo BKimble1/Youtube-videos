@@ -17,7 +17,7 @@ import {C} from '../art/palette';
 import {Cam3, P3, project} from '../world';
 import {clamp, DUR, keyS, lerp, ss, ss5} from '../lib';
 import {SHOTS, T} from '../story';
-import {camAt as s1Cam, s1Eyes, S1_GUARD} from './S1Hook';
+import {camAt as s1Cam, s1Eyes, s1GuardAct, S1_GUARD} from './S1Hook';
 
 const T_LAST = SHOTS.S8[1] - 1 / 30; // the last rendered frame of the film (32.3667)
 const rad = (a: number) => (a * Math.PI) / 180;
@@ -75,7 +75,7 @@ const slideU = (t: number) => keyS(t, [[T_IN, 0], [T.prison + 0.25, 0.55], [T.ca
 });
 
 // ---- the droplet's shape over time ----
-const RX_SMALL = 1.55, RX_END = 1.9; // floor radius (x); rd = 0.72 rx
+const RX_SMALL = 1.9, RX_END = 2.05; // floor radius (x); rd = 0.72 rx
 const MOUND_END = 1.75; // dome height at the end (world u), holds the eyes
 const EYE_H_END = 0.9; // eye-midpoint height on the mound at the end
 const dropletShape = (t: number) => {
@@ -132,17 +132,23 @@ const camAt = (t: number): Cam3 => {
 const dropletPos = (t: number) => (t < T_IN ? PATH[0] : pathAt(slideU(t)));
 
 // ---- the guard ----
+// He has a fresh coffee (the same cup-in-hand pose as S1's frame 0, so the loop cut does not pop his hands or conjure
+// a cup): a nonchalant sip on "So apparently…" while the droplet is still off screen, a wary stare, then on "can't" he
+// slowly looks down; his small start when the eyes open settles back into S1's frame-0 stare by the last frame.
+const S1_ACT0 = s1GuardAct(0);
 const guardAct = (t: number): GuardAct => {
-  const scratch = ss(t, 28.3, 28.75) * (1 - ss(t, T.cant - 0.05, T.cant + 0.45));
+  const sip = ss(t, 28.02, 28.42) * (1 - ss(t, 28.78, 29.12));
   const down = ss(t, T.cant, T.cant + 0.75);
+  const settle = ss(t, 31.85, T_LAST);
   return {
     ...GUARD_IDLE,
-    holdCup: 0,
-    look: lerp(-0.85, -0.55, down),
-    stare: 0.35 * (1 - scratch) + 0.4 * ss(t, T_EYES, T_EYES + 0.3),
-    scratch,
+    holdCup: 1,
+    sip,
+    look: lerp(lerp(-0.85, -0.55, down), S1_ACT0.look, settle),
+    stare: lerp(0.3 + 0.25 * ss(t, 29.0, 29.5) + 0.2 * ss(t, T_EYES, T_EYES + 0.3), S1_ACT0.stare, settle),
+    scratch: 0,
     lookDown: down,
-    shock: 0.35 * ss(t, T_EYES + 0.1, T_EYES + 0.3),
+    shock: 0.35 * ss(t, T_EYES + 0.1, T_EYES + 0.3) * (1 - settle),
   };
 };
 
@@ -225,7 +231,8 @@ export const S8View: React.FC<{t: number; debug?: boolean}> = ({t, debug}) => {
       <JailBack c={c} t={ta} alarm={alarm} door={0} />
       <Bars c={c} t={ta} door={0} alarm={alarm} />
       <AlarmBeacon c={c} t={ta} alarm={alarm} />
-      {/* the droplet is in front of the bar track (d < -1.2): drawn after the bars */}
+      {/* the droplet is in front of the bar track (d < -1.2) and passes in front of the guard's toe: drawn after both */}
+      {showGuard && <Guard x={gS.x} y={gS.y} s={gS.s} t={t} act={act} />}
       {on && (
         <g>
           <LiquidMetal pts={[ring, mound, ...(trail.length ? [trail] : [])]} t={t} env={env} px={base.s} ripple={0.35 * ss(t, T_EYES - 0.05, T_EYES + 0.1) * (1 - ss(t, T_EYES + 0.5, T_EYES + 1.0))} />
@@ -233,7 +240,6 @@ export const S8View: React.FC<{t: number; debug?: boolean}> = ({t, debug}) => {
           <EyesAt l={L} r={R} s={es} sx={E0.sx} sy={E0.sy} open={ex.open} lookX={ex.lookX} lookY={ex.lookY} mood={ex.mood} glow={ex.glow} opacity={ss(t, T_EYES - 0.02, T_EYES + 0.04)} />
         </g>
       )}
-      {showGuard && <Guard x={gS.x} y={gS.y} s={gS.s} t={t} act={act} />}
       <JailFront c={c} t={ta} alarm={alarm} />
       <AlarmWash c={c} t={ta} alarm={alarm} />
       {debug && (

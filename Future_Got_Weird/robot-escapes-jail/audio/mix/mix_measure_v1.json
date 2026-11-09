@@ -1,0 +1,324 @@
+{
+ "name": "v1",
+ "cues_file": "audio/cues.json",
+ "cues": 74,
+ "warnings": [],
+ "duration_s": 32.4,
+ "sr": 48000,
+ "samples": 1555200,
+ "format": "48 kHz 24-bit stereo WAV",
+ "integrated_lufs": -14.01,
+ "true_peak_dbtp_4x": -1.6,
+ "sample_peak_dbfs": -1.63,
+ "master_gain_db": -0.96,
+ "limiter_max_gain_reduction_db": -0.29,
+ "limiter_samples_reducing_over_0p5db": 0,
+ "short_term_max_lufs": -12.87,
+ "loudness_range_note": "see voice/music/sfx below",
+ "voice": {
+  "lufs_mono": -16.96,
+  "lufs_as_stereo": -13.95,
+  "pre_master_lufs_mono": -16.0,
+  "compressor_gr_db": {
+   "max": -4.38,
+   "median_in_words": 0.0
+  },
+  "limiter": {
+   "ceiling_dbtp_at_vref": -1.0,
+   "true_peak_before_dbtp": 1.25,
+   "max_gr_db": -2.25,
+   "samples_over_1db_gr": 12222
+  },
+  "lag_vs_master_samples": 0,
+  "corr_vs_master": 0.98779
+ },
+ "music": {
+  "lufs": -31.74,
+  "bpm": 118.5185,
+  "beats": 64,
+  "bars": [
+   "Dm9",
+   "G13",
+   "Dm9",
+   "G13",
+   "Bbmaj7",
+   "A7",
+   "Dm9",
+   "G13",
+   "Bbmaj7",
+   "Fmaj7",
+   "Cadd9",
+   "Bbmaj7",
+   "Am7",
+   "Gm7",
+   "Dm9",
+   "A7"
+  ],
+  "sections": {
+   "hook": {
+    "t": [
+     0.0,
+     3.037
+    ],
+    "music_under_voice_in_words_db_median": 18.1,
+    "music_level_in_gaps_re_voice_integrated_db_median": -14.3
+   },
+   "drop": {
+    "t": [
+     3.037,
+     4.05
+    ],
+    "music_under_voice_in_words_db_median": 26.7,
+    "music_level_in_gaps_re_voice_integrated_db_median": -13.2
+   },
+   "groove": {
+    "t": [
+     4.05,
+     17.212
+    ],
+    "music_under_voice_in_words_db_median": 19.8,
+    "music_level_in_gaps_re_voice_integrated_db_median": -15.9
+   },
+   "breath": {
+    "t": [
+     17.212,
+     18.225
+    ],
+    "music_under_voice_in_words_db_median": 16.2,
+    "music_level_in_gaps_re_voice_integrated_db_median": -16.1
+   },
+   "science": {
+    "t": [
+     18.225,
+     27.844
+    ],
+    "music_under_voice_in_words_db_median": 21.2,
+    "music_level_in_gaps_re_voice_integrated_db_median": -14.6
+   },
+   "pickup": {
+    "t": [
+     27.844,
+     28.35
+    ],
+    "music_under_voice_in_words_db_median": 16.6,
+    "music_level_in_gaps_re_voice_integrated_db_median": -15.7
+   },
+   "return": {
+    "t": [
+     28.35,
+     32.4
+    ],
+    "music_under_voice_in_words_db_median": 18.1,
+    "music_level_in_gaps_re_voice_integrated_db_median": -12.3
+   }
+  },
+  "under_voice_in_words_400ms_db": {
+   "median": 20.0,
+   "min": 4.0,
+   "p5": 11.7,
+   "p95": 24.3,
+   "max": 29.6
+  },
+  "level_in_gaps_re_voice_integrated_db": {
+   "median": -14.9,
+   "min": -20.6,
+   "p5": -18.6,
+   "p95": -11.2,
+   "max": -10.0
+  },
+  "level_in_words_re_voice_integrated_db": {
+   "median": -19.6,
+   "min": -28.4,
+   "p5": -22.9,
+   "p95": -15.7,
+   "max": -12.3
+  },
+  "duck_db": {
+   "lo": -4.0,
+   "mid": -10.0,
+   "hi": -6.0
+  }
+ },
+ "sfx": {
+  "lufs": -33.75,
+  "events": 74,
+  "under_voice_integrated_db": 19.8,
+  "event_under_voice_db": {
+   "median": 23.8,
+   "min": 11.7,
+   "p5": 15.8,
+   "p95": 30.9,
+   "max": 33.9
+  },
+  "loudest_events": [
+   [
+    "door_slam",
+    5.145,
+    11.7
+   ],
+   [
+    "splash",
+    3.02,
+    12.0
+   ],
+   [
+    "whoosh",
+    2.78,
+    15.0
+   ],
+   [
+    "guard_gasp",
+    1.62,
+    15.4
+   ],
+   [
+    "guard_gulp",
+    13.33,
+    16.0
+   ]
+  ]
+ },
+ "voice_vs_bed": {
+  "bed_is": "music + effects",
+  "bed_minus_voice_400ms_in_words_db": {
+   "median": -18.4,
+   "min": -28.8,
+   "p5": -22.7,
+   "p95": -8.6,
+   "max": -2.1
+  },
+  "voice_band_300_3400Hz_voice_minus_bed_50ms_in_words_db": {
+   "median": 20.1,
+   "min": -31.3,
+   "p5": -4.3,
+   "p95": 33.8,
+   "max": 43.9
+  },
+  "voice_band_300_3400Hz_voice_minus_music_50ms_in_words_db": {
+   "median": 22.6,
+   "min": -27.6,
+   "p5": 0.8,
+   "p95": 35.6,
+   "max": 43.9
+  },
+  "voice_band_voice_minus_bed_50ms_voiced_frames_db": {
+   "median": 22.8,
+   "min": -1.5,
+   "p5": 7.3,
+   "p95": 34.7,
+   "max": 43.9
+  },
+  "voiced_frames_note": "voiced = in a word and the voice band within 12 dB of its in-word median (excludes stop closures and word edges)",
+  "voiced_frames_with_bed_within_6db": 3.13,
+  "worst_moment_s": 2.84
+ },
+ "stereo": {
+  "side_minus_mid_db": -26.2,
+  "lr_correlation": 0.995
+ },
+ "loop": {
+  "mix": {
+   "jump": 0.001863,
+   "median_step_near_seam": 0.007389,
+   "p99_step_near_seam": 0.203905,
+   "jump_percentile_among_steps": 15.1,
+   "hf_over_2k_at_seam_vs_p99_nearby_db": -28.6,
+   "rms_db_last_0p3s_first_0p3s": [
+    -28.05,
+    -16.39
+   ]
+  },
+  "music": {
+   "jump": 0.001047,
+   "median_step_near_seam": 0.00215,
+   "p99_step_near_seam": 0.046579,
+   "jump_percentile_among_steps": 30.2,
+   "hf_over_2k_at_seam_vs_p99_nearby_db": -13.3,
+   "rms_db_last_0p3s_first_0p3s": [
+    -28.66,
+    -31.59
+   ]
+  },
+  "sfx": {
+   "jump": 0.001086,
+   "median_step_near_seam": 0.001344,
+   "p99_step_near_seam": 0.003516,
+   "jump_percentile_among_steps": 37.1,
+   "hf_over_2k_at_seam_vs_p99_nearby_db": -15.8,
+   "rms_db_last_0p3s_first_0p3s": [
+    -37.22,
+    -42.36
+   ]
+  },
+  "voice": {
+   "jump": 0.000106,
+   "median_step_near_seam": 0.0,
+   "p99_step_near_seam": 0.203634,
+   "jump_percentile_among_steps": 53.7,
+   "hf_over_2k_at_seam_vs_p99_nearby_db": -67.5,
+   "rms_db_last_0p3s_first_0p3s": [
+    -240.0,
+    -16.53
+   ]
+  },
+  "music_bar_aligned": "64 beats = 16 bars in 32.4 s (118.5185 BPM): periodic, tails and reverb wrap circularly"
+ },
+ "gaps": [
+  [
+   1.61,
+   1.86
+  ],
+  [
+   2.87,
+   3.26
+  ],
+  [
+   5.52,
+   5.87
+  ],
+  [
+   7.33,
+   7.63
+  ],
+  [
+   8.5,
+   8.88
+  ],
+  [
+   11.27,
+   11.64
+  ],
+  [
+   13.31,
+   13.71
+  ],
+  [
+   16.71,
+   17.13
+  ],
+  [
+   17.44,
+   17.89
+  ],
+  [
+   20.22,
+   20.52
+  ],
+  [
+   22.12,
+   22.59
+  ],
+  [
+   27.58,
+   27.93
+  ],
+  [
+   28.94,
+   29.29
+  ],
+  [
+   31.8,
+   32.4
+  ]
+ ]
+}

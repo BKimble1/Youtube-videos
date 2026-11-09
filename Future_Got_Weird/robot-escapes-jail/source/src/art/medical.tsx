@@ -132,7 +132,7 @@ const mapBez = (c: Cam2, b: Bez): Bez => b.map((p) => camPt(c, p)) as Bez;
 export const RouteLine: React.FC<{cam: Cam2; m: number; up: number; w: number; opacity?: number; pulse?: number; t: number}> = ({cam, m, up, w, opacity = 1, pulse = 0, t}) => {
   if (opacity <= 0.002) return null;
   const segs = routeAt(m).map((b) => mapBez(cam, b));
-  const lower = bezD(segs[2]);
+  const lower = bezD(revBez(segs[2])); // FIELD_PATH direction (150,1420) -> (930,960), as S6 draws it
   const upper = bezD(revBez(segs[1])) + bezD(revBez(segs[0]), false);
   const all = bezD(segs[0]) + bezD(segs[1], false) + bezD(segs[2], false);
   const pts = segs.flat();
@@ -158,7 +158,7 @@ export const RouteLine: React.FC<{cam: Cam2; m: number; up: number; w: number; o
       {stroke(lower, lineW, C.field, 1)}
       {u > 0.001 && stroke(upper, lineW, C.field, 1, undefined, upDash)}
       {pulse > 0.01 && (
-        <path d={all} fill="none" stroke="#E8FBFF" strokeWidth={Math.max(2, 5 * w)} strokeLinecap="round" pathLength={L} strokeDasharray="18 70" strokeDashoffset={f1(-t * 120)} opacity={pulse * 0.8} />
+        <path d={u >= 0.9995 ? all : lower} fill="none" stroke="#E8FBFF" strokeWidth={Math.max(2, 5 * w)} strokeLinecap="round" pathLength={L} strokeDasharray="18 70" strokeDashoffset={f1(-t * 120)} opacity={pulse * 0.8} />
       )}
     </g>
   );
@@ -189,27 +189,37 @@ export const RIM_DUO = {c: P(104, 1188), rx: 46, ry: 15, ang: -55};
 /** per outline point: the arc fraction of its nearest final-route point (for the inflate-from-the-line build) */
 export const STOMACH_S = STOMACH.map((p) => nearestS(ROUTE_POLY, p));
 
-/** The model. grow(s) = 0..1 inflation of the wall around route fraction s (0 = collapsed on the line);
- *  m = current route morph (the walls ride on the morphing line while they inflate). */
-export const StomachModel: React.FC<{cam: Cam2; grow: (s: number) => number; m: number; t: number; opacity?: number; layer: 'back' | 'front'}> = ({
-  cam, grow, m, t, opacity = 1, layer,
-}) => {
-  if (opacity <= 0.002) return null;
-  const pl = samplePoly(routeAt(m), 40);
+/** the model's outline (and inner cavity outline) in screen space for a given build state; gAvg = mean inflation */
+export const stomachPts = (cam: Cam2, grow: (s: number) => number, m: number, pl: Poly = samplePoly(routeAt(m), 40), tip = 0) => {
+  const tipP = polyAt(pl, tip).p;
   const pts: V[] = [], inner: V[] = [];
   let gsum = 0;
   STOMACH.forEach((q, i) => {
     const s = STOMACH_S[i];
     const g = clamp(grow(s));
     gsum += g;
-    const base = polyAt(pl, s).p;
+    const onRoute = polyAt(pl, s).p;
     // the final model point relative to the FINAL route point, carried by the morphing route point
     const fin = polyAt(ROUTE_POLY, s).p;
-    const full = {x: base.x + (q.x - fin.x), y: base.y + (q.y - fin.y)};
+    const full = {x: onRoute.x + (q.x - fin.x), y: onRoute.y + (q.y - fin.y)};
+    // not-yet-drawn route (s < tip): collapsed onto the drawn tip, not onto the invisible route
+    const base = s < tip ? tipP : onRoute;
     pts.push(camPt(cam, {x: lerp(base.x, full.x, g), y: lerp(base.y, full.y, g)}));
     inner.push(camPt(cam, {x: lerp(base.x, full.x, g * 0.8), y: lerp(base.y, full.y, g * 0.8)}));
   });
-  const gAvg = gsum / STOMACH.length;
+  return {pts, inner, gAvg: gsum / STOMACH.length};
+};
+/** smooth closed path of the model's outline in screen space (for clipping contents to the model) */
+export const stomachD = (cam: Cam2, grow: (s: number) => number, m: number, tip = 0) => smoothPath(stomachPts(cam, grow, m, undefined, tip).pts, 1);
+
+/** The model. grow(s) = 0..1 inflation of the wall around route fraction s (0 = collapsed on the line);
+ *  m = current route morph (the walls ride on the morphing line while they inflate). */
+export const StomachModel: React.FC<{cam: Cam2; grow: (s: number) => number; m: number; t: number; opacity?: number; layer: 'back' | 'front'; tip?: number}> = ({
+  cam, grow, m, t, opacity = 1, layer, tip = 0,
+}) => {
+  if (opacity <= 0.002) return null;
+  const pl = samplePoly(routeAt(m), 40);
+  const {pts, inner, gAvg} = stomachPts(cam, grow, m, pl, tip);
   if (gAvg < 0.004) return null;
   const d = smoothPath(pts, 1);
   const di = smoothPath(inner, 1);
@@ -252,7 +262,7 @@ export const StomachModel: React.FC<{cam: Cam2; grow: (s: number) => number; m: 
   const idS = uid('stS'), idC2 = uid('stK');
   const rim = (r: typeof RIM_TOP, key: string) => {
     const s = nearestS(ROUTE_POLY, r.c);
-    const base = polyAt(pl, s).p, fin = polyAt(ROUTE_POLY, s).p;
+    const base = polyAt(pl, Math.max(s, tip)).p, fin = polyAt(ROUTE_POLY, s).p;
     const g = clamp(grow(s));
     const c = camPt(cam, {x: base.x + (r.c.x - fin.x) * g, y: base.y + (r.c.y - fin.y) * g});
     if (g < 0.05) return null;

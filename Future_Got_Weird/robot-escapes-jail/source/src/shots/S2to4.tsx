@@ -13,9 +13,9 @@
 // Layer order per frame: JailBack → (inside liquid / robot) → Bars → (liquid in front of the bar line, redrawn) →
 // AlarmBeacon → guard → JailFront → AlarmWash → screen overlays (thermometer, grip, heat shimmer).
 import React from 'react';
-import {T} from '../story';
+import {SHOTS, T} from '../story';
 import {clamp, lerp, noise1, ring, ss, ss5} from '../lib';
-import {BAR_R, BAR_XS, Cam3, DOOR, GUARD_AT, H, P3, W, project} from '../world';
+import {BAR_R, BAR_XS, Cam3, DOOR, GUARD_AT, H, P3, W, project, toCam} from '../world';
 import {C, INK, NS} from '../art/palette';
 import {uid} from '../core/ids';
 import {mix} from '../core/color';
@@ -61,9 +61,14 @@ const OUT_C = {x: 6.5, d: -7.4}; // toward the guard's feet
 const SW0 = T.scientists - 0.02, SW1 = 4.75;            // swing: top-down → frontal
 const PU0 = 4.35, PU1 = 9.0;                             // slow push-in while the door slams / walk / melt
 const LO0 = 8.55, LO1 = 11.8;                            // low push toward the floor, in front of the escape gap
-const OU0 = T.slipped - 0.16, OU1 = 13.4;                // out: back off + crane up with the leading edge
+const OU0 = T.slipped - 0.16, OU1 = 13.38;               // out: back off + crane up with the leading edge
 const LOW_P: X3 = [0.8, 4.3, -5.9], LOW_T: X3 = [0.1, 0.4, 3.0], LOW_F = 1000;
-const END_P: X3 = [3.6, 14.6, -20.6], END_T: X3 = [6.5, 0, -6.7], END_F = 1330;
+// REVEAL ("through the bars"): the crane-back widens onto the guard, whose face reads in frame while the silver crawls
+// toward his shoes; then DOWN: he looks down and the camera tilts/pushes down with his gaze onto the puddle (S5 contract:
+// the END pose puts the puddle at (540, 1040), 300 × 140 px, so the final lock is a near-identity)
+const RV0 = 12.1, RV1 = 12.62, DN0 = 12.7, DN1 = 13.36;
+const REV_P: X3 = [2.6, 8.6, -27.5], REV_T: X3 = [9.0, 10.4, -9.5], REV_F = 850;
+const END_P: X3 = [6.5, 16.0, -18.6], END_T: X3 = [6.5, 0, -5.92], END_F = 1330;
 
 export const camAt = (t: number): Cam3 => {
   // SWING: head-on top-down (contract: head circle centred (540, 980), r ≈ 150) → the camera backs out of the cell
@@ -90,14 +95,17 @@ export const camAt = (t: number): Cam3 => {
   f = lerp(f, LOW_F, u3);
   // OUT: "slipped" — the silver rushes at the lens; the camera backs off and cranes up, keeping the LEADING EDGE in
   // frame as it crosses the bar line, then settles looking down on the puddle collecting in the corridor
-  const u4 = ss5(t, OU0, OU1);
+  const u4 = ss5(t, OU0, RV1 + 0.12);
   if (u4 > 0) {
-    p = bez3(p, add3(p, [0.3, 0.2, -3.2]), [END_P[0] - 0.8, END_P[1] - 3.2, END_P[2] + 1.2], END_P, u4);
+    // back out + crane up to the reveal, then (overlapping, so it never stops) on to the end pose
+    p = bez3(p, add3(p, [0.3, 0.2, -3.6]), [REV_P[0] - 0.6, REV_P[1] - 2.2, REV_P[2] + 4.0], REV_P, u4);
+    p = lerp3(p, END_P, ss5(t, DN0 - 0.12, DN1));
     const e = pathAt(edgeAt(t));
-    const follow = ss(t, OU0, 12.35) * (1 - ss(t, 12.55, OU1));
+    const follow = ss(t, OU0, 12.25);
     const tE: X3 = [e.x, 0.25, e.d];
-    tg = lerp3(lerp3(tg, tE, follow), END_T, ss5(t, 12.3, OU1));
-    f = lerp(f, END_F, u4);
+    tg = lerp3(lerp3(tg, tE, follow), REV_T, ss5(t, RV0, RV1));
+    tg = lerp3(tg, END_T, ss5(t, DN0, DN1));
+    f = lerp(lerp(f, REV_F, ss5(t, OU0, RV1)), END_F, ss5(t, DN0, DN1));
   }
   return lookAt(p, tg, f);
 };
@@ -509,6 +517,37 @@ const placeRobot = (c: Cam3, x: number, d: number) => {
   return {x: lerp(Hd.x, F.x, cv), y: Hd.y + 8.4 * cv * s, s, view: invSS(u), F};
 };
 
+/** jail.tsx draws the guard desk lamp's warm floor pool (centre (20, 0, -14), screen blend ≈ 0.1 WARM over the corridor
+ *  floor) with an affine linearisation that blows up as its centre nears the camera plane and is culled at z < 0.7:
+ *  the floor brightened, then popped dark in one frame when this camera dollies past d ≈ -14 (9.87 s; again at ≈ 12.2 s
+ *  on the way back). Where the module has culled it, this layer carries the same warm screen on the corridor floor and
+ *  eases it out (or in, before it reappears) over ≈ 0.45 s, so the change is a fade, not a pop. */
+const WARM_O: P3 = {x: 20, h: 0, d: -14};
+const WARM_ZN = 0.7;
+const warmOn = (t: number) => toCam(camAt(t), WARM_O).z >= WARM_ZN;
+const WARM_X: number[] = (() => {
+  const out: number[] = [];
+  let prev = warmOn(SHOTS.S2[0]);
+  for (let t = SHOTS.S2[0]; t <= SHOTS.S4[1]; t += 1 / 600) {
+    const on = warmOn(t);
+    if (on !== prev) out.push(t);
+    prev = on;
+  }
+  return out;
+})();
+const warmFixAt = (t: number) => {
+  if (warmOn(t)) return 0;
+  let k = 0;
+  for (const tc of WARM_X) k = Math.max(k, 1 - ss(Math.abs(t - tc), 0, 0.45));
+  return k;
+};
+const WarmFix: React.FC<{c: Cam3; k: number}> = ({c, k}) => {
+  if (k <= 0.004) return null;
+  const d = polyD(c, [{x: -60, h: 0, d: -60}, {x: 60, h: 0, d: -60}, {x: 60, h: 0, d: 0}, {x: -60, h: 0, d: 0}]);
+  if (!d) return null;
+  return <path d={d} fill="#FFC56B" opacity={0.1 * k} style={{mixBlendMode: 'screen'}} />;
+};
+
 const alarmAt = (t: number) => ss(t, 12.38, 12.62);
 // the induction coil: on at 7.0 (melts it), eased back once it is liquid (it only has to stay molten)
 const heatAt = (t: number) => ss(t, 7.0, 7.65) * (1 - 0.55 * ss(t, 9.2, 10.4));
@@ -646,12 +685,14 @@ const Scene: React.FC<{t: number}> = ({t}) => {
 
   // ---- guard
   const g = project(c, GUARD_AT);
+  // he hears the alarm and sees the silver crawling at him: a recoil, a frozen stare (with a glance at us: "did you see
+  // that?"), then he looks down at it — the camera follows his gaze down
   const gAct: GuardAct = {
     ...GUARD_IDLE,
-    look: lerp(-0.35, -0.85, ss(t, 12.2, 12.45)),
-    stare: ss(t, 12.35, 12.7),
-    shock: ss(t, 12.25, 12.4) * (1 - ss(t, 12.5, 12.9)) * 0.7,
-    lookDown: ss(t, 12.7, 13.3) * 0.8,
+    look: lerp(lerp(lerp(-0.35, -0.7, ss(t, 12.14, 12.32)), -0.12, ss(t, 12.44, 12.56)), -0.45, ss(t, 12.68, 12.9)),
+    stare: ss(t, 12.28, 12.5),
+    shock: ss(t, 12.16, 12.3) * (1 - ss(t, 12.5, 12.9)) * 0.8,
+    lookDown: ss(t, 12.66, 13.1) * 0.85,
     sip: 0,
     holdCup: 1,
   };
@@ -665,6 +706,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{position: 'absolute'}}>
       <JailBack c={c} t={t} alarm={alarm} heat={heat} door={door} />
+      <WarmFix c={c} k={warmFixAt(t)} />
       {showRobot && (
         <Robot x={rb.x} y={rb.y} s={rb.s} t={t} pose={pose} melt={R.melt} heat={heat} view={rb.view} env={env} opacity={robotOp} />
       )}

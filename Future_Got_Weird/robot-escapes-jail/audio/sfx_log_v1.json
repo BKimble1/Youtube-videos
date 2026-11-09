@@ -1,0 +1,1331 @@
+{
+ "name": "v1",
+ "cues_file": "audio/cues.json",
+ "voice_lufs_as_stereo": -13.95,
+ "events": [
+  {
+   "t": 0.0,
+   "end": 3.0,
+   "kind": "alarm",
+   "dur": 3.0,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -19.0,
+   "bus": "bed",
+   "pan": 0.3,
+   "in_mix_momentary_max_lufs": -33.7,
+   "under_voice_db": 19.8,
+   "alarm_under_voice_in_words_db_median": 28.0
+  },
+  {
+   "t": 0.0,
+   "end": 2.391,
+   "kind": "flow",
+   "dur": 2.391,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.18,
+   "under_voice_db": 21.2,
+   "nearest_word": {
+    "word": "This",
+    "t": 0.0,
+    "dt": 0.0
+   },
+   "in_word": true
+  },
+  {
+   "t": 0.88,
+   "end": 1.03,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 1,
+   "in_mix_momentary_max_lufs": -38.23,
+   "under_voice_db": 24.3,
+   "nearest_word": {
+    "word": "escaped",
+    "t": 0.76,
+    "dt": 0.12
+   },
+   "in_word": true
+  },
+  {
+   "t": 1.04,
+   "end": 1.26,
+   "kind": "servo",
+   "dur": 0.22,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -40.42,
+   "under_voice_db": 26.5,
+   "nearest_word": {
+    "word": "JAIL\u2026",
+    "t": 1.24,
+    "dt": -0.2
+   },
+   "in_word": true
+  },
+  {
+   "t": 1.45,
+   "end": 2.804,
+   "kind": "cup_drop",
+   "dur": 1.354,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -17.0,
+   "bus": "dot",
+   "pan": 0.35,
+   "in_mix_momentary_max_lufs": -31.38,
+   "under_voice_db": 17.4,
+   "nearest_word": {
+    "word": "JAIL\u2026",
+    "t": 1.24,
+    "dt": 0.21
+   },
+   "in_word": true
+  },
+  {
+   "t": 1.62,
+   "end": 2.847,
+   "kind": "guard_gasp",
+   "dur": 1.227,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -15.0,
+   "bus": "accent",
+   "pan": 0.35,
+   "in_mix_momentary_max_lufs": -29.3,
+   "under_voice_db": 15.4,
+   "nearest_word": {
+    "word": "by",
+    "t": 1.86,
+    "dt": -0.24
+   },
+   "in_word": false
+  },
+  {
+   "t": 2.095,
+   "end": 3.759,
+   "kind": "melt",
+   "dur": 1.664,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -13.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -30.73,
+   "under_voice_db": 16.8,
+   "nearest_word": {
+    "word": "MELTING.",
+    "t": 2.135,
+    "dt": -0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 2.78,
+   "end": 3.18,
+   "kind": "whoosh",
+   "dur": 0.4,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -15.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -28.97,
+   "under_voice_db": 15.0,
+   "nearest_word": {
+    "word": "Scientists",
+    "t": 3.26,
+    "dt": -0.48
+   },
+   "in_word": true
+  },
+  {
+   "t": 3.0,
+   "end": 3.3,
+   "kind": "alarm_tail",
+   "dur": 0.3,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -19.0,
+   "bus": "bed",
+   "pan": 0.3,
+   "in_mix_momentary_max_lufs": -33.7,
+   "under_voice_db": 19.8,
+   "alarm_under_voice_in_words_db_median": 28.0
+  },
+  {
+   "t": 3.02,
+   "end": 4.052,
+   "kind": "splash",
+   "dur": 1.032,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -12.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -25.97,
+   "under_voice_db": 12.0,
+   "nearest_word": {
+    "word": "Scientists",
+    "t": 3.26,
+    "dt": -0.24
+   },
+   "in_word": false
+  },
+  {
+   "t": 3.54,
+   "end": 4.14,
+   "kind": "swish",
+   "dur": 0.6,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -21.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -37.94,
+   "under_voice_db": 24.0,
+   "nearest_word": {
+    "word": "locked",
+    "t": 3.785,
+    "dt": -0.245
+   },
+   "in_word": true
+  },
+  {
+   "t": 4.3,
+   "end": 4.6,
+   "kind": "servo",
+   "dur": 0.3,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.8,
+   "under_voice_db": 27.8,
+   "nearest_word": {
+    "word": "inside",
+    "t": 4.225,
+    "dt": 0.075
+   },
+   "in_word": true
+  },
+  {
+   "t": 4.4,
+   "end": 6.051,
+   "kind": "door_slide",
+   "dur": 1.651,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -15.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -31.54,
+   "under_voice_db": 17.6,
+   "nearest_word": {
+    "word": "a",
+    "t": 4.545,
+    "dt": -0.145
+   },
+   "in_word": true
+  },
+  {
+   "t": 5.145,
+   "end": 6.998,
+   "kind": "door_slam",
+   "dur": 1.853,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -10.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -25.61,
+   "under_voice_db": 11.7,
+   "nearest_word": {
+    "word": "cage.",
+    "t": 5.145,
+    "dt": 0.0
+   },
+   "in_word": true
+  },
+  {
+   "t": 5.225,
+   "end": 5.375,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -21.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 2,
+   "in_mix_momentary_max_lufs": -41.22,
+   "under_voice_db": 27.3,
+   "nearest_word": {
+    "word": "cage.",
+    "t": 5.145,
+    "dt": 0.08
+   },
+   "in_word": true
+  },
+  {
+   "t": 5.57,
+   "end": 5.72,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 1,
+   "in_mix_momentary_max_lufs": -36.95,
+   "under_voice_db": 23.0,
+   "nearest_word": {
+    "word": "But",
+    "t": 5.87,
+    "dt": -0.3
+   },
+   "in_word": false
+  },
+  {
+   "t": 5.92,
+   "end": 6.07,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 0,
+   "in_mix_momentary_max_lufs": -40.5,
+   "under_voice_db": 26.6,
+   "nearest_word": {
+    "word": "instead",
+    "t": 5.91,
+    "dt": 0.01
+   },
+   "in_word": true
+  },
+  {
+   "t": 6.1,
+   "end": 6.25,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 3,
+   "in_mix_momentary_max_lufs": -45.0,
+   "under_voice_db": 31.1,
+   "nearest_word": {
+    "word": "of",
+    "t": 6.175,
+    "dt": -0.075
+   },
+   "in_word": true
+  },
+  {
+   "t": 6.3,
+   "end": 7.526,
+   "kind": "bar_tap",
+   "dur": 1.226,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -14.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -31.83,
+   "under_voice_db": 17.9,
+   "nearest_word": {
+    "word": "breaking",
+    "t": 6.335,
+    "dt": -0.035
+   },
+   "in_word": true
+  },
+  {
+   "t": 6.42,
+   "end": 6.82,
+   "kind": "servo",
+   "dur": 0.4,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -39.91,
+   "under_voice_db": 26.0,
+   "nearest_word": {
+    "word": "breaking",
+    "t": 6.335,
+    "dt": 0.085
+   },
+   "in_word": true
+  },
+  {
+   "t": 6.925,
+   "end": 7.075,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 1,
+   "in_mix_momentary_max_lufs": -44.54,
+   "under_voice_db": 30.6,
+   "nearest_word": {
+    "word": "bars\u2026",
+    "t": 6.895,
+    "dt": 0.03
+   },
+   "in_word": true
+  },
+  {
+   "t": 7.0,
+   "end": 8.6,
+   "kind": "heat_coil",
+   "dur": 1.6,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -36.21,
+   "under_voice_db": 22.3,
+   "nearest_word": {
+    "word": "bars\u2026",
+    "t": 6.895,
+    "dt": 0.105
+   },
+   "in_word": true
+  },
+  {
+   "t": 7.04,
+   "end": 7.12,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -44.23,
+   "under_voice_db": 30.3,
+   "nearest_word": {
+    "word": "bars\u2026",
+    "t": 6.895,
+    "dt": 0.145
+   },
+   "in_word": true
+  },
+  {
+   "t": 7.6,
+   "end": 9.494,
+   "kind": "melt",
+   "dur": 1.894,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -13.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -31.14,
+   "under_voice_db": 17.2,
+   "nearest_word": {
+    "word": "It",
+    "t": 7.63,
+    "dt": -0.03
+   },
+   "in_word": false
+  },
+  {
+   "t": 10.36,
+   "end": 11.31,
+   "kind": "drip",
+   "dur": 0.95,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -43.94,
+   "under_voice_db": 30.0,
+   "nearest_word": {
+    "word": "liquid",
+    "t": 10.45,
+    "dt": -0.09
+   },
+   "in_word": true
+  },
+  {
+   "t": 11.7,
+   "end": 13.874,
+   "kind": "flow",
+   "dur": 2.174,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -14.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -32.15,
+   "under_voice_db": 18.2,
+   "nearest_word": {
+    "word": "it",
+    "t": 11.68,
+    "dt": 0.02
+   },
+   "in_word": true
+  },
+  {
+   "t": 12.38,
+   "end": 13.33,
+   "kind": "alarm",
+   "dur": 0.95,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -19.0,
+   "bus": "bed",
+   "pan": 0.3,
+   "in_mix_momentary_max_lufs": -33.7,
+   "under_voice_db": 19.8,
+   "alarm_under_voice_in_words_db_median": 28.0
+  },
+  {
+   "t": 13.33,
+   "end": 14.414,
+   "kind": "guard_gulp",
+   "dur": 1.084,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "accent",
+   "pan": 0.35,
+   "in_mix_momentary_max_lufs": -29.96,
+   "under_voice_db": 16.0,
+   "nearest_word": {
+    "word": "Then",
+    "t": 13.71,
+    "dt": -0.38
+   },
+   "in_word": false
+  },
+  {
+   "t": 13.84,
+   "end": 14.19,
+   "kind": "swish",
+   "dur": 0.35,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -42.25,
+   "under_voice_db": 28.3,
+   "nearest_word": {
+    "word": "scientists",
+    "t": 13.75,
+    "dt": 0.09
+   },
+   "in_word": true
+  },
+  {
+   "t": 14.43,
+   "end": 15.393,
+   "kind": "drip",
+   "dur": 0.963,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -37.11,
+   "under_voice_db": 23.2,
+   "nearest_word": {
+    "word": "collected",
+    "t": 14.47,
+    "dt": -0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 14.6,
+   "end": 15.812,
+   "kind": "flow",
+   "dur": 1.212,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -21.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -39.93,
+   "under_voice_db": 26.0,
+   "nearest_word": {
+    "word": "collected",
+    "t": 14.47,
+    "dt": 0.13
+   },
+   "in_word": true
+  },
+  {
+   "t": 14.62,
+   "end": 14.97,
+   "kind": "pipette",
+   "dur": 0.35,
+   "gain_db": -1.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.58,
+   "under_voice_db": 21.6,
+   "nearest_word": {
+    "word": "collected",
+    "t": 14.47,
+    "dt": 0.15
+   },
+   "in_word": true
+  },
+  {
+   "t": 15.07,
+   "end": 15.47,
+   "kind": "swish",
+   "dur": 0.4,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.29,
+   "under_voice_db": 27.3,
+   "nearest_word": {
+    "word": "metal",
+    "t": 14.99,
+    "dt": 0.08
+   },
+   "in_word": true
+  },
+  {
+   "t": 15.5,
+   "end": 16.625,
+   "kind": "glug",
+   "dur": 1.125,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -40.42,
+   "under_voice_db": 26.5,
+   "nearest_word": {
+    "word": "molded",
+    "t": 15.43,
+    "dt": 0.07
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.03,
+   "end": 16.11,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -21.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -42.77,
+   "under_voice_db": 28.8,
+   "nearest_word": {
+    "word": "back",
+    "t": 15.99,
+    "dt": 0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.03,
+   "end": 17.281,
+   "kind": "cool",
+   "dur": 1.251,
+   "gain_db": -1.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.86,
+   "under_voice_db": 21.9,
+   "nearest_word": {
+    "word": "back",
+    "t": 15.99,
+    "dt": 0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.34,
+   "end": 16.69,
+   "kind": "pipette",
+   "dur": 0.35,
+   "gain_db": -8.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -40.55,
+   "under_voice_db": 26.6,
+   "nearest_word": {
+    "word": "into",
+    "t": 16.23,
+    "dt": 0.11
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.49,
+   "end": 18.819,
+   "kind": "reveal",
+   "dur": 2.329,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -30.02,
+   "under_voice_db": 16.1,
+   "nearest_word": {
+    "word": "shape.",
+    "t": 16.47,
+    "dt": 0.02
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.59,
+   "end": 16.74,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 2,
+   "in_mix_momentary_max_lufs": -39.12,
+   "under_voice_db": 25.2,
+   "nearest_word": {
+    "word": "shape.",
+    "t": 16.47,
+    "dt": 0.12
+   },
+   "in_word": true
+  },
+  {
+   "t": 16.62,
+   "end": 16.92,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -36.99,
+   "under_voice_db": 23.0,
+   "nearest_word": {
+    "word": "shape.",
+    "t": 16.47,
+    "dt": 0.15
+   },
+   "in_word": true
+  },
+  {
+   "t": 17.04,
+   "end": 17.34,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -38.08,
+   "under_voice_db": 24.1,
+   "nearest_word": {
+    "word": "How?",
+    "t": 17.13,
+    "dt": -0.09
+   },
+   "in_word": false
+  },
+  {
+   "t": 17.47,
+   "end": 19.77,
+   "kind": "reveal",
+   "dur": 2.3,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -32.33,
+   "under_voice_db": 18.4,
+   "nearest_word": {
+    "word": "How?",
+    "t": 17.13,
+    "dt": 0.34
+   },
+   "in_word": false
+  },
+  {
+   "t": 17.805,
+   "end": 17.885,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -36.95,
+   "under_voice_db": 23.0,
+   "nearest_word": {
+    "word": "It\u2019s",
+    "t": 17.89,
+    "dt": -0.085
+   },
+   "in_word": false
+  },
+  {
+   "t": 18.105,
+   "end": 18.185,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -44.78,
+   "under_voice_db": 30.8,
+   "nearest_word": {
+    "word": "from",
+    "t": 18.145,
+    "dt": -0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 18.56,
+   "end": 18.86,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -42.83,
+   "under_voice_db": 28.9,
+   "nearest_word": {
+    "word": "metal",
+    "t": 18.425,
+    "dt": 0.135
+   },
+   "in_word": true
+  },
+  {
+   "t": 18.8,
+   "end": 20.18,
+   "kind": "heat_coil",
+   "dur": 1.38,
+   "gain_db": -1.0,
+   "set_level_re_voice_db": -19.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.09,
+   "under_voice_db": 21.1,
+   "nearest_word": {
+    "word": "melts",
+    "t": 18.865,
+    "dt": -0.065
+   },
+   "in_word": true
+  },
+  {
+   "t": 19.32,
+   "end": 19.47,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 2,
+   "in_mix_momentary_max_lufs": -44.75,
+   "under_voice_db": 30.8,
+   "nearest_word": {
+    "word": "body",
+    "t": 19.425,
+    "dt": -0.105
+   },
+   "in_word": true
+  },
+  {
+   "t": 19.34,
+   "end": 20.927,
+   "kind": "melt",
+   "dur": 1.587,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -33.97,
+   "under_voice_db": 20.0,
+   "nearest_word": {
+    "word": "body",
+    "t": 19.425,
+    "dt": -0.085
+   },
+   "in_word": true
+  },
+  {
+   "t": 20.26,
+   "end": 20.56,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -36.97,
+   "under_voice_db": 23.0,
+   "nearest_word": {
+    "word": "And",
+    "t": 20.52,
+    "dt": -0.26
+   },
+   "in_word": false
+  },
+  {
+   "t": 20.49,
+   "end": 20.64,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 1,
+   "in_mix_momentary_max_lufs": -40.95,
+   "under_voice_db": 27.0,
+   "nearest_word": {
+    "word": "And",
+    "t": 20.52,
+    "dt": -0.03
+   },
+   "in_word": false
+  },
+  {
+   "t": 20.58,
+   "end": 22.4,
+   "kind": "mag_hum",
+   "dur": 1.82,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.52,
+   "under_voice_db": 21.6,
+   "nearest_word": {
+    "word": "magnets",
+    "t": 20.56,
+    "dt": 0.02
+   },
+   "in_word": true
+  },
+  {
+   "t": 21.03,
+   "end": 21.11,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -40.83,
+   "under_voice_db": 26.9,
+   "nearest_word": {
+    "word": "help",
+    "t": 21.05,
+    "dt": -0.02
+   },
+   "in_word": true
+  },
+  {
+   "t": 21.29,
+   "end": 22.898,
+   "kind": "flow",
+   "dur": 1.608,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -18.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -37.24,
+   "under_voice_db": 23.3,
+   "nearest_word": {
+    "word": "control",
+    "t": 21.29,
+    "dt": 0.0
+   },
+   "in_word": true
+  },
+  {
+   "t": 22.5,
+   "end": 22.8,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -42.69,
+   "under_voice_db": 28.7,
+   "nearest_word": {
+    "word": "Scientists",
+    "t": 22.59,
+    "dt": -0.09
+   },
+   "in_word": false
+  },
+  {
+   "t": 22.78,
+   "end": 25.099,
+   "kind": "reveal",
+   "dur": 2.319,
+   "gain_db": -8.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -37.46,
+   "under_voice_db": 23.5,
+   "nearest_word": {
+    "word": "Scientists",
+    "t": 22.59,
+    "dt": 0.19
+   },
+   "in_word": true
+  },
+  {
+   "t": 23.36,
+   "end": 23.44,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -42.31,
+   "under_voice_db": 28.4,
+   "nearest_word": {
+    "word": "exploring",
+    "t": 23.235,
+    "dt": 0.125
+   },
+   "in_word": true
+  },
+  {
+   "t": 23.55,
+   "end": 24.509,
+   "kind": "drip",
+   "dur": 0.959,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -47.83,
+   "under_voice_db": 33.9,
+   "nearest_word": {
+    "word": "whether",
+    "t": 23.715,
+    "dt": -0.165
+   },
+   "in_word": true
+  },
+  {
+   "t": 23.58,
+   "end": 23.66,
+   "kind": "pop",
+   "dur": 0.08,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -26.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -47.67,
+   "under_voice_db": 33.7,
+   "nearest_word": {
+    "word": "whether",
+    "t": 23.715,
+    "dt": -0.135
+   },
+   "in_word": true
+  },
+  {
+   "t": 23.68,
+   "end": 23.98,
+   "kind": "swish",
+   "dur": 0.3,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.87,
+   "under_voice_db": 27.9,
+   "nearest_word": {
+    "word": "whether",
+    "t": 23.715,
+    "dt": -0.035
+   },
+   "in_word": true
+  },
+  {
+   "t": 23.95,
+   "end": 25.4,
+   "kind": "mag_hum",
+   "dur": 1.45,
+   "gain_db": -2.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -36.65,
+   "under_voice_db": 22.7,
+   "nearest_word": {
+    "word": "robots",
+    "t": 23.955,
+    "dt": -0.005
+   },
+   "in_word": true
+  },
+  {
+   "t": 24.15,
+   "end": 25.938,
+   "kind": "flow",
+   "dur": 1.788,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -21.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -40.17,
+   "under_voice_db": 26.2,
+   "nearest_word": {
+    "word": "robots",
+    "t": 23.955,
+    "dt": 0.195
+   },
+   "in_word": true
+  },
+  {
+   "t": 25.33,
+   "end": 25.48,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -7.0,
+   "set_level_re_voice_db": -26.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 3,
+   "in_mix_momentary_max_lufs": -45.57,
+   "under_voice_db": 31.6,
+   "nearest_word": {
+    "word": "day",
+    "t": 25.315,
+    "dt": 0.015
+   },
+   "in_word": true
+  },
+  {
+   "t": 25.42,
+   "end": 25.87,
+   "kind": "heat_coil",
+   "dur": 0.45,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -24.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.21,
+   "under_voice_db": 27.3,
+   "nearest_word": {
+    "word": "retrieve",
+    "t": 25.515,
+    "dt": -0.095
+   },
+   "in_word": true
+  },
+  {
+   "t": 25.555,
+   "end": 26.914,
+   "kind": "melt",
+   "dur": 1.359,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -16.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.58,
+   "under_voice_db": 21.6,
+   "nearest_word": {
+    "word": "retrieve",
+    "t": 25.515,
+    "dt": 0.04
+   },
+   "in_word": true
+  },
+  {
+   "t": 25.9,
+   "end": 27.241,
+   "kind": "cool",
+   "dur": 1.341,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -37.45,
+   "under_voice_db": 23.5,
+   "nearest_word": {
+    "word": "objects",
+    "t": 25.955,
+    "dt": -0.055
+   },
+   "in_word": true
+  },
+  {
+   "t": 26.12,
+   "end": 26.27,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -6.0,
+   "set_level_re_voice_db": -25.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 0,
+   "in_mix_momentary_max_lufs": -44.73,
+   "under_voice_db": 30.8,
+   "nearest_word": {
+    "word": "objects",
+    "t": 25.955,
+    "dt": 0.165
+   },
+   "in_word": true
+  },
+  {
+   "t": 26.2,
+   "end": 27.5,
+   "kind": "mag_hum",
+   "dur": 1.3,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -23.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.27,
+   "under_voice_db": 27.3,
+   "nearest_word": {
+    "word": "from",
+    "t": 26.435,
+    "dt": -0.235
+   },
+   "in_word": true
+  },
+  {
+   "t": 26.35,
+   "end": 26.75,
+   "kind": "swish",
+   "dur": 0.4,
+   "gain_db": -8.0,
+   "set_level_re_voice_db": -26.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.65,
+   "under_voice_db": 27.7,
+   "nearest_word": {
+    "word": "from",
+    "t": 26.435,
+    "dt": -0.085
+   },
+   "in_word": true
+  },
+  {
+   "t": 26.9,
+   "end": 29.228,
+   "kind": "reveal",
+   "dur": 2.328,
+   "gain_db": -5.0,
+   "set_level_re_voice_db": -17.0,
+   "bus": "accent",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -35.01,
+   "under_voice_db": 21.1,
+   "nearest_word": {
+    "word": "your",
+    "t": 27.075,
+    "dt": -0.175
+   },
+   "in_word": true
+  },
+  {
+   "t": 29.11,
+   "end": 30.068,
+   "kind": "drip",
+   "dur": 0.958,
+   "gain_db": -4.0,
+   "set_level_re_voice_db": -20.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -33.99,
+   "under_voice_db": 20.0,
+   "nearest_word": {
+    "word": "Even",
+    "t": 29.29,
+    "dt": -0.18
+   },
+   "in_word": false
+  },
+  {
+   "t": 29.19,
+   "end": 31.013,
+   "kind": "flow",
+   "dur": 1.823,
+   "gain_db": -8.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "bed",
+   "pan": 0.0,
+   "in_mix_momentary_max_lufs": -41.81,
+   "under_voice_db": 27.9,
+   "nearest_word": {
+    "word": "Even",
+    "t": 29.29,
+    "dt": -0.1
+   },
+   "in_word": false
+  },
+  {
+   "t": 30.825,
+   "end": 30.975,
+   "kind": "mech_click",
+   "dur": 0.15,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -22.0,
+   "bus": "dot",
+   "pan": 0.0,
+   "variant": 2,
+   "in_mix_momentary_max_lufs": -40.64,
+   "under_voice_db": 26.7,
+   "nearest_word": {
+    "word": "a",
+    "t": 30.795,
+    "dt": 0.03
+   },
+   "in_word": true
+  },
+  {
+   "t": 30.895,
+   "end": 0.0,
+   "kind": "alarm",
+   "dur": 1.504999999999999,
+   "gain_db": 0.0,
+   "set_level_re_voice_db": -19.0,
+   "bus": "bed",
+   "pan": 0.3,
+   "in_mix_momentary_max_lufs": -33.7,
+   "under_voice_db": 19.8,
+   "alarm_under_voice_in_words_db_median": 28.0
+  },
+  {
+   "t": 31.83,
+   "end": 0.514,
+   "kind": "guard_gulp",
+   "dur": 1.084,
+   "gain_db": -3.0,
+   "set_level_re_voice_db": -17.0,
+   "bus": "accent",
+   "pan": 0.35,
+   "in_mix_momentary_max_lufs": -30.95,
+   "under_voice_db": 17.0,
+   "nearest_word": {
+    "word": "anymore.",
+    "t": 31.355,
+    "dt": 0.475
+   },
+   "in_word": false
+  }
+ ]
+}
