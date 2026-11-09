@@ -337,11 +337,12 @@ export const CoffeeSplash: React.FC<SplashProps> = ({cx, cy, r, u: u0, view = 1,
   return (
     <g>
       <defs>
-        <radialGradient id={`${id}-p`} gradientUnits="userSpaceOnUse" cx={f(cx - pr * 0.2)} cy={f(cy - pr * 0.25 * ky)} r={f(pr * 1.15)}>
-          <stop offset="0" stopColor={C.coffeeLit} />
-          <stop offset="0.55" stopColor={C.coffee} />
-          <stop offset="0.9" stopColor={mix(C.coffee, COFFEE_DEEP, 0.6)} />
-          <stop offset="1" stopColor={COFFEE_DEEP} />
+        <radialGradient id={`${id}-p`} gradientUnits="userSpaceOnUse" cx={f(cx)} cy={f(cy)} r={f(pr * 1.18)} gradientTransform={`translate(0 ${f(cy * (1 - ky))}) scale(1 ${f(ky)})`}>
+          {/* a FLAT spill seen from above: deep brown where it is deep, thinning to amber at the edge (not a lit ball) */}
+          <stop offset="0" stopColor={mix(C.coffee, COFFEE_DEEP, 0.45)} />
+          <stop offset="0.62" stopColor={C.coffee} />
+          <stop offset="0.8" stopColor={C.coffeeLit} />
+          <stop offset="0.86" stopColor={mix(C.coffeeLit, '#E2B27A', 0.55)} />
         </radialGradient>
       </defs>
       {/* contact darkening of the floor round the puddle */}
@@ -357,10 +358,10 @@ export const CoffeeSplash: React.FC<SplashProps> = ({cx, cy, r, u: u0, view = 1,
       ))}
       {/* inner ring where the crown's wall meets the pool (fades as it settles) */}
       <ellipse cx={f(cx)} cy={f(cy)} rx={f(pr * 0.8)} ry={f(pr * 0.8 * ky)} fill="none" stroke={COFFEE_DEEP} strokeWidth={f(Math.max(1, pr * 0.05))} opacity={0.35 * (1 - u)} />
-      {/* glossy highlights: a soft crescent and a crisp spot toward the key light */}
-      <ellipse cx={f(hl.x)} cy={f(hl.y)} rx={f(pr * 0.34)} ry={f(pr * 0.12 * ky + pr * 0.03)} transform={`rotate(-30 ${f(hl.x)} ${f(hl.y)})`} fill="#FFFFFF" opacity={0.28} />
-      <ellipse cx={f(hl.x - pr * 0.05)} cy={f(hl.y - pr * 0.02)} rx={f(pr * 0.1)} ry={f(pr * 0.05 * ky + pr * 0.015)} transform={`rotate(-30 ${f(hl.x)} ${f(hl.y)})`} fill="#FFFFFF" opacity={0.7} />
-      <path d={`M${f(cx + pr * 0.62)},${f(cy + pr * 0.5 * ky)} A${f(pr * 0.8)} ${f(pr * 0.8 * ky)} 0 0 1 ${f(cx - pr * 0.1)},${f(cy + pr * 0.8 * ky)}`} fill="none" stroke={COFFEE_DEEP} strokeWidth={f(Math.max(1, pr * 0.04))} strokeLinecap="round" opacity={0.4} />
+      {/* flat-liquid gloss: the ceiling light's reflection as a long thin streak, plus a bright meniscus on the far rim */}
+      <ellipse cx={f(hl.x + pr * 0.1)} cy={f(hl.y)} rx={f(pr * 0.5)} ry={f(pr * 0.05 * ky + pr * 0.012)} transform={`rotate(-24 ${f(hl.x)} ${f(hl.y)})`} fill="#FFFFFF" opacity={0.42} />
+      <ellipse cx={f(hl.x - pr * 0.12)} cy={f(hl.y - pr * 0.05)} rx={f(pr * 0.16)} ry={f(pr * 0.025 * ky + pr * 0.008)} transform={`rotate(-24 ${f(hl.x)} ${f(hl.y)})`} fill="#FFFFFF" opacity={0.8} />
+      <path d={`M${f(cx - pr * 0.86)},${f(cy - pr * 0.3 * ky)} A${f(pr * 0.91)} ${f(pr * 0.91 * ky)} 0 0 1 ${f(cx + pr * 0.3)},${f(cy - pr * 0.86 * ky)}`} fill="none" stroke="#F3D3A6" strokeWidth={f(Math.max(1, pr * 0.03))} strokeLinecap="round" opacity={0.55} />
       {front.map(spikeEl)}
       {drops.filter((q) => !q.landed).map(dropEl)}
       {cupLanded && <CoffeeCup x={cx + r * 0.42} y={cy - r * 0.08 * ky} s={r * 0.38} rot={104} empty />}
