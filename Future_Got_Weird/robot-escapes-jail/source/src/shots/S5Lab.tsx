@@ -47,7 +47,7 @@ const MS0 = DIVE0 + 0.04, MS1 = DIVE0 + 0.165; // MetalSurface fades in inside t
 
 // ---- beat times (all keyed to the narration) ----
 const B = {
-  inA: 13.64, // pipette hand starts coming in
+  inA: T0 + 0.02, // 13.57: the pipette hand starts coming in right on the cut (motion from the first frames)
   pre: T.collected - 0.33, // squeeze the bulb before dipping
   dip: T.collected - 0.05, // tip in the puddle
   draw0: T.collected + 0.03, // release: the metal is drawn up
