@@ -7,7 +7,7 @@
   - motion between neighbouring frames: the longest run of near-static frames (the brief: no static holds over 1 s)
   - loop seam: last frame vs first frame
   - contact sheets: every 0.5 s, and the hook (0-2.5 s) every 3rd frame
-usage: python3 tools/qa_render.py <video.mp4> <out_dir> [v4]"""
+usage: python3 tools/qa_render.py <video.mp4> <out_dir>"""
 import json, subprocess, sys, os
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
@@ -24,36 +24,11 @@ fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W, 3).astype(np.float32)
 n = len(fr)
 fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
-# the planned large changes: V3 from story.ts EV (audio/cues.json); V4 (third argument 'v4') from the V4 shot cuts
+# the planned large changes: the shot boundaries (story.ts SHOTS, exported to audio/cues.json by tools/export_cues.ts)
 EPD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if len(sys.argv) > 3 and sys.argv[3] == 'v4':
-    T4 = json.load(open(os.path.join(EPD, 'audio/cues_v4.json')))['T']
-    cut = lambda a, why: (a - 0.04, a + 0.07, why)
-    PLANNED = [cut(T4['gulp'], 'CUT S1 -> S2: the eel\'s curve matched, the earlier gulp'),
-               cut(T4['xray'], 'CUT S2 -> S3: the research tank'),
-               (5.1, 5.4, 'PUSH (camera move, not a cut): the X-ray push-in following the tail toward the stomach'),
-               (5.7, 5.86, 'DISSOLVE S3 -> S4 on the carried tail'),
-               (8.6, 8.82, 'PUSH (camera move, not a cut): the dive after the tip into the stomach opening'),
-               (8.83, 9.05, 'DISSOLVE S4 -> S5 through the dark lumen (and out of the dark into the passage)'),
-               (T4['bodyWipe'] - 0.35, T4['bodyWipe'] + 0.35, 'the body fills the foreground: S5 -> S6'),
-               (10.78, 11.1, 'PUSH (camera move, not a cut): the push into the gill gap as the tail threads it'),
-               cut(T4.get('pokeCut', T4['poke']), 'MATCH CUT S6 -> S7: the tip, inside -> outside'),
-               cut(T4['follows'], 'CUT S7 -> S8: over the back'),
-               cut(T4['head'], 'CUT S8 -> S9: the trapped head'),
-               cut(T4['curl'], 'CUT S9 -> S10: low beside'),
-               (T4['release'] - 0.1, T4['release'] + 0.9, 'the head slips free; the body straightens'),
-               cut(T4['swim'], 'CUT S10 -> S11: tracking through the reeds'),
-               (T4['reed'] - 0.1, T4['end'] + 0.01, 'the reed across the lens wipes to frame 0')]
-else:
-    CJ = json.load(open(os.path.join(EPD, 'audio/cues.json')))
-    E = CJ['EV']
-    PLANNED = [(E['reveal0'], E['reveal1'] + 0.35, 'follow the tail inward; the skin turns translucent'),
-               (E['xray0'], E['xray1'] + 0.05, 'the same outline becomes the X-ray'),
-               (E['rew0'], E['rew1'] + 0.05, 'the rewind: the eel slides back into the stomach'),
-               (E['cut0'], E['cut1'] + 0.25, 'X-ray -> exterior with the three-quarter cutaway window'),
-               (E['cutHold1'] - 0.05, E['restore1'] + 0.05, 'the window closes: the opening composition again'),
-               (E['release'] - 0.1, E['release'] + 0.8, 'the head pulls free: water rush, the body straightens'),
-               (E['lens0'] - 0.5, E['end'] + 0.01, 'the eel comes at the lens; its tail sweeps across and wipes to frame 0')]
+CJ = json.load(open(os.path.join(EPD, 'audio/cues.json')))
+PLANNED = [(t0 - 0.05, t0 + 0.08, f'CUT -> {k}') for k, (t0, t1) in CJ['SHOTS'].items() if t0 > 0]
+PLANNED += [(a, b, why) for a, b, why in CJ.get('PLANNED_MOVES', [])]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]
 jumps = []
@@ -97,6 +72,9 @@ def sheet(idx, cols, path, scale=0.25):
         dr.text((x + 6, y + 6), f'{idx[k]}  {idx[k] / fps:.2f}s', fill=(255, 230, 0))
     canvas.save(path)
 sheet(list(range(0, n, 15)), 10, os.path.join(out, 'contact_every_0.5s.png'), 0.2)
-sheet(list(range(0, 76, 3)), 9, os.path.join(out, 'hook_0-2.5s_every_3rd_frame.png'), 0.2)
+sheet(list(range(0, 91, 2)), 9, os.path.join(out, 'hook_0-3s_every_2nd_frame.png'), 0.2)
+for k, (t0, t1) in CJ['SHOTS'].items():
+    if t0 > 0:
+        f0 = int(round(t0 * fps)); sheet(list(range(max(0, f0 - 5), min(n, f0 + 5))), 10, os.path.join(out, f'boundary_{k}.png'), 0.2)
 sheet(list(range(max(0, n - 22), n)) + list(range(0, 8)), 10, os.path.join(out, 'loop_last22_first8.png'), 0.2)
 sheet([n - 3, n - 2, n - 1, 0, 1, 2], 6, os.path.join(out, 'loop_seam_last3_first3.png'), 0.3)

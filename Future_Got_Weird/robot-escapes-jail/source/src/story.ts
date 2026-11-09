@@ -32,8 +32,8 @@ export const T = {
 
 /** shot boundaries [start, end) in seconds. Cuts sit in the pauses between sentences. */
 export const SHOTS = {
-  S1: [0, 3.1],               // the impossible escape (hook) -> cup falls (whip follows it)
-  S2: [3.1, 5.8],             // splash -> top-down cell -> tilt to frontal -> door slams on "cage"
+  S1: [0, 3.24],              // the impossible escape (hook) -> cup falls (whip follows it) -> splash (top-down)
+  S2: [3.24, 5.8],            // match cut: splash -> robot head from above, in the cell -> tilt to frontal -> door slams on "cage"
   S3: [5.8, 8.8],             // reach, press, annoyed, heat, collapse on "MELTED"
   S4: [8.8, 13.55],           // liquid: low push, slips through the bars, collects outside; guard stares
   S5: [13.55, 17.02],         // match cut: puddle -> lab collection dish; collected, poured into a mold, cooled, revealed
