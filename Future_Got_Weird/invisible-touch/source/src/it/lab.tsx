@@ -53,6 +53,8 @@ export type LabState = {
   billboard?: boolean;
   /** V2: a light panel on the back wall behind the gap (0..1) */
   lightbox?: number;
+  /** V4: round transducer cans (no keycap silhouettes) */
+  roundCans?: boolean;
 };
 
 /** on-screen contour width (px) -> figure units at this camera */
@@ -221,7 +223,7 @@ export const Lab: React.FC<{s: LabState; id: string}> = ({s, id}) => {
       <Floor c={c} />
       <Bench c={c} ink={ink * fm.scale * 0.72} />
       <Driver c={c} ink={ink * fm.scale * 0.72} />
-      <Device c={c} ink={ink * fm.scale * 0.6} glow={s.glow} id={`${id}-dv`} />
+      <Device c={c} ink={ink * fm.scale * 0.6} glow={s.glow} id={`${id}-dv`} round={s.roundCans} />
       <g transform={fm.m}>
         {s.under && s.under(fm.scale)}
         {c.pitch < -45 ? null : s.body !== false ? (

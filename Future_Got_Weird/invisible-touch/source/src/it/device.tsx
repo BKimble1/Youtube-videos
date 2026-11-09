@@ -51,9 +51,9 @@ export const Box: React.FC<{c: Cam3; b: [number, number, number, number, number,
   );
 };
 
-type DevProps = {c: Cam3; ink: number; glow?: (i: number, j: number) => number; id: string};
+type DevProps = {c: Cam3; ink: number; glow?: (i: number, j: number) => number; id: string; round?: boolean};
 
-export const Device: React.FC<DevProps> = ({c, ink, glow, id}) => {
+export const Device: React.FC<DevProps> = ({c, ink, glow, id, round}) => {
   const H = DEV.half;
   // emitters back (-Z) to front (+Z); within a row, far side from the camera first
   const order: [number, number][] = [];
@@ -78,6 +78,12 @@ export const Device: React.FC<DevProps> = ({c, ink, glow, id}) => {
   return (
     <g>
       <defs>
+        <linearGradient id={`${id}-can`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#6F7C88" />
+          <stop offset="0.35" stopColor="#C7D0D8" />
+          <stop offset="0.6" stopColor="#9AA6B1" />
+          <stop offset="1" stopColor="#5E6B77" />
+        </linearGradient>
         <radialGradient id={`${id}-mesh`} cx="0.4" cy="0.35" r="0.7">
           <stop offset="0" stopColor="#4A5763" />
           <stop offset="1" stopColor="#151B21" />
@@ -99,7 +105,26 @@ export const Device: React.FC<DevProps> = ({c, ink, glow, id}) => {
         const side = `M${(bot.x + nx * hw).toFixed(2)},${(bot.y + ny * hw).toFixed(2)} L${(top.x + nx * hw).toFixed(2)},${(top.y + ny * hw).toFixed(2)} L${(top.x - nx * hw).toFixed(2)},${(top.y - ny * hw).toFixed(2)} L${(bot.x - nx * hw).toFixed(2)},${(bot.y - ny * hw).toFixed(2)} Z`;
         return (
           <g key={`${i}-${j}`}>
-            <path d={side} fill="#8E9AA5" />
+            {round ? (
+              // V4: a round transducer can: a dark recessed seat on the board, the can's curved base (its projected
+              // circle), a metallic side between the base and the face; no square corners anywhere
+              (() => {
+                const e = emitterPos(i, j);
+                const bm = topMatrix(c, e.x, DEV.top, e.z);
+                const sw = ink * 0.45 / Math.max(0.2, bm.scale);
+                return (
+                  <g>
+                    <g transform={bm.m}>
+                      <circle r={DEV.r * 1.18} fill="#0B141A" />
+                      <circle r={DEV.r} fill={`url(#${id}-can)`} stroke={INK} strokeWidth={sw} />
+                    </g>
+                    <path d={side} fill={`url(#${id}-can)`} />
+                  </g>
+                );
+              })()
+            ) : (
+              <path d={side} fill="#8E9AA5" />
+            )}
             {(() => {
                 const e = emitterPos(i, j);
                 const fm = topMatrix(c, e.x, DEV_TOP, e.z);

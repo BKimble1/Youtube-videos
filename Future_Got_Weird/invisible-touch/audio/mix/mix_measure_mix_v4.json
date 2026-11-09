@@ -1,0 +1,16 @@
+{
+ "name": "mix_v4",
+ "duration_s": 31.133,
+ "integrated_lufs_stereo": -14.02,
+ "true_peak_dbtp_4x": -1.6,
+ "limiter_max_gr_db": -3.19,
+ "voice_lufs_mono": -17.04,
+ "effects_lufs_mono": -40.46,
+ "ambience_lufs_mono": -49.63,
+ "effects_under_voice_db": 23.42,
+ "voice_max_momentary_lufs": -12.6,
+ "effects_max_momentary_lufs": -33.0,
+ "lag_mix_vs_master_samples": 0,
+ "loop_seam_jump": 0.001441,
+ "events": 35
+}

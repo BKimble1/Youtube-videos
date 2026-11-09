@@ -2,7 +2,20 @@
 
 This is a vertical Short: 1080×1920 at 30 fps, **31.133 s** (934 frames).
 
-## V3: targeted final polish (current)
+## V4: final retention, motion and loop polish (current)
+
+V4 is a review render and is **not published**.
+
+| What | Where |
+|---|---|
+| Deliverable | `exports/FGW_Invisible_Touch_V4_REVIEW_1080x1920.mp4` (31.133 s, 934 frames) |
+| Report (changes from V3 with timestamps, validation, pass/fail, remaining flaws) | `production/V4_REPORT.md` |
+| V3 audit and the five fixes, written first | `production/V4_AUDIT.md` |
+| Source | `source/src/v4/` (composition `InvisibleTouchV4`) |
+| Cues and mix | `tools/v4/` |
+| QA (including the seam sheets and a three-loop file) | `qa/v4/` |
+
+## V3: targeted final polish
 
 V3 is a review render and is **not published**.
 
