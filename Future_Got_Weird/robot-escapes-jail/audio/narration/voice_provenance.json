@@ -1,0 +1,16 @@
+{
+  "voice": "ElevenLabs approved channel narrator ('Test Voice')",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "model": "eleven_v4",
+  "flow_id": "AmbZ797yPgNO1K6meuyW",
+  "script": "production/NARRATION_LOCKED.txt (89 words; two verified science corrections, see production/DIRECTION.md)",
+  "takes": [
+    {"take": "t1_gjOV", "generation_id": "gjOVRoOMD17OCpaMb1Me", "session_id": "E82eNfpOcbUlr9v8deEj", "duration_s": 31.92, "credits": 703, "chosen": true,
+     "file": "audio/narration/takes/t1_gjOV.mp3"},
+    {"take": "t2_RZrN", "generation_id": "RZrNDCD2Yp1VB7e1cFhM", "session_id": "dp1eGOTxED3e8AlyUgoq", "duration_s": 32.56, "credits": 703, "chosen": false,
+     "file": "audio/narration/takes/t2_RZrN.mp3"}
+  ],
+  "master": {"file": "audio/narration/FGW_Robot_Escapes_Jail_narration_V1.wav", "format": "48 kHz 24-bit mono", "duration_s": 32.4,
+             "edits": "none (take 1 as generated, decoded, 0.6 s tail of room tone)", "alignment": "audio/narration/master_zipformer.json"},
+  "selection": "take 1: both ASR models transcribe it word-for-word (whisper differs only in British spellings); tighter pacing; first word on frame 0. Chosen by transcription and timing, not by listening (no playback in this environment)."
+}
