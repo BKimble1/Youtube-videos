@@ -709,25 +709,29 @@ const LidBack: React.FC<{w: number; h: number}> = ({w, h}) => (
 );
 
 // ---------------------------------------------------------------------------------------------------------------
-// cooling: a cool frost shimmer sweeping over a face (face-local units), with sparkling ice crystals
+// cooling (passive, room air): a soft cool tint sweeps over a face (face-local units) from the head end to the feet end,
+// with a faint bright front and a few small glints where the metal inside has set. No ice: the composite re-solidifies
+// near room temperature, so the cue is "cooler", never "frozen".
 export const Frost: React.FC<{w: number; h: number; p: number; k: number; t: number}> = ({w, h, p, k, t}) => {
   const id = {g: uid('frG'), c: uid('frC')};
-  const y = lerp(-0.35 * h, 1.35 * h, p); // band centre (sweeps from the head end to the feet end)
-  const band = 0.32 * h;
-  const crystals = Array.from({length: 26}, (_, i) => {
-    const cx = (0.08 + 0.84 * ((i * 0.618) % 1)) * w;
-    const cy = (0.04 + 0.92 * ((i * 0.377 + 0.13) % 1)) * h;
-    const passed = clamp((y - cy) / (band * 0.6) + 0.5);
-    const tw = 0.6 + 0.4 * Math.sin(t * 23 + i * 2.1);
-    return {cx, cy, a: passed * tw, r: 5 + 5 * ((i * 0.53) % 1)};
+  const y = lerp(-0.3 * h, 1.3 * h, p); // front position (sweeps from the head end to the feet end)
+  const soft = 0.28 * h; // width of the soft leading edge
+  const glints = Array.from({length: 9}, (_, i) => {
+    const cx = (0.16 + 0.68 * (0.5 + 0.5 * noise1(i * 1.37 + 0.2, 11))) * w;
+    const cy = ((i + 0.5) / 9) * h * 0.92 + 0.04 * h;
+    const passed = clamp((y - cy) / (soft * 0.5));
+    const life = passed * (1 - clamp((y - cy - soft * 1.2) / soft)); // flashes as the front passes, then fades
+    const tw = 0.7 + 0.3 * Math.sin(t * 19 + i * 2.3);
+    return {cx, cy, a: life * tw, r: 6 + 4 * (0.5 + 0.5 * noise1(i * 2.1, 5))};
   });
   return (
     <g opacity={k}>
       <defs>
-        <linearGradient id={id.g} gradientUnits="userSpaceOnUse" x1="0" y1={f1(y - band)} x2="0" y2={f1(y + band)}>
-          <stop offset="0" stopColor={C.ice} stopOpacity={0.55} />
-          <stop offset="0.45" stopColor="#FFFFFF" stopOpacity={0.85} />
-          <stop offset="0.55" stopColor={C.ice} stopOpacity={0.6} />
+        {/* cool behind the front (top), clear ahead of it (bottom): one smooth ramp, no hard edges */}
+        <linearGradient id={id.g} gradientUnits="userSpaceOnUse" x1="0" y1={f1(y - soft)} x2="0" y2={f1(y + soft * 0.35)}>
+          <stop offset="0" stopColor={C.ice} stopOpacity={0.3} />
+          <stop offset="0.72" stopColor="#FFFFFF" stopOpacity={0.42} />
+          <stop offset="0.8" stopColor={C.ice} stopOpacity={0.22} />
           <stop offset="1" stopColor={C.ice} stopOpacity={0} />
         </linearGradient>
         <clipPath id={id.c}>
@@ -735,22 +739,12 @@ export const Frost: React.FC<{w: number; h: number; p: number; k: number; t: num
         </clipPath>
       </defs>
       <g clipPath={`url(#${id.c})`}>
-        {/* frosted (already swept) part: a cool icy veil */}
-        <rect x={0} y={0} width={w} height={clamp(y / h) * h} fill={C.ice} opacity={0.32} />
-        <rect x={-10} y={y - band} width={w + 20} height={band * 2} fill={`url(#${id.g})`} />
-        {/* fern-like frost streaks */}
-        {Array.from({length: 7}, (_, i) => {
-          const x0 = (0.1 + i * 0.13) * w;
-          const yl = Math.min(y, h);
-          return (
-            <path key={i} d={`M${f1(x0)},${f1(yl)} q${f1(8 * noise1(i, 3))},-${f1(h * 0.12)} ${f1(14 * noise1(i, 5))},-${f1(h * 0.25)}`} fill="none" stroke="#FFFFFF" strokeWidth={2} vectorEffect={NS} opacity={0.35} />
-          );
-        })}
+        <rect x={-10} y={-10} width={w + 20} height={h + 20} fill={`url(#${id.g})`} />
       </g>
-      {crystals.map((q, i) =>
+      {glints.map((q, i) =>
         q.a > 0.02 ? (
           <g key={i} transform={`translate(${f1(q.cx)} ${f1(q.cy)})`} opacity={q.a}>
-            <path d={`M0,${-q.r}L${q.r * 0.22},${-q.r * 0.22}L${q.r},0L${q.r * 0.22},${q.r * 0.22}L0,${q.r}L${-q.r * 0.22},${q.r * 0.22}L${-q.r},0L${-q.r * 0.22},${-q.r * 0.22}Z`} fill="#FFFFFF" />
+            <path d={`M0,${-q.r}L${q.r * 0.2},${-q.r * 0.2}L${q.r},0L${q.r * 0.2},${q.r * 0.2}L0,${q.r}L${-q.r * 0.2},${q.r * 0.2}L${-q.r},0L${-q.r * 0.2},${-q.r * 0.2}Z`} fill="#FFFFFF" />
           </g>
         ) : null,
       )}

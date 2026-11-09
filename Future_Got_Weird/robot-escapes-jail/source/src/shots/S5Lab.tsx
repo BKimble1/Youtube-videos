@@ -37,12 +37,13 @@ const T0 = SHOTS.S5[0];
 const K0 = 140 / 300; // camera start: the bench foreshortening that maps the radius-300 bench puddle onto 300 x 140
 const ROBOT_X = MOLD.hinge + MOLD.w / 2; // the figure's centre line on the bench
 const CHEST_V = MOLD.feetV - 5.26 * MOLD.sb; // torso centre (robot h 5.26) on the bench
-const DIVE0 = 16.56, DIVE1 = 16.865; // the push into the chest; from DIVE1 on: full-frame MetalSurface
+const DIVE0 = 16.59, DIVE1 = 16.865; // the push into the chest; from DIVE1 on: full-frame MetalSurface. DIVE0 is set so
+// that the eyes jump the caption band (y 250-420) between two frames (501: y 505 -> 502: y 129) instead of sitting under it
 const Z_END = 31;
 const Z_MOLD = 1.65, Z_REV = 2.0; // over the mold (fill, lid) / at the reveal
-const PIP_K = 0.8;
-const CHEAP_T = 16.72; // from here on (s > 300 px/u) the figure is drawn without robot.tsx's filters
-const MS0 = 16.6, MS1 = 16.725; // MetalSurface fades in inside the torso // pipette scale (bench px -> pipette units)
+const PIP_K = 0.8; // pipette scale (bench px -> pipette units)
+const CHEAP_T = 16.75; // from here on (s > 300 px/u) the figure is drawn without robot.tsx's filters
+const MS0 = DIVE0 + 0.04, MS1 = DIVE0 + 0.165; // MetalSurface fades in inside the torso
 
 // ---- beat times (all keyed to the narration) ----
 const B = {
@@ -56,12 +57,12 @@ const B = {
   disp0: T.molded + 0.03, // squeeze: fill the mold
   disp1: T.molded + 0.3,
   out0: T.molded + 0.32,
-  lid0: T.molded + 0.38, // lid flips closed (15.81 -> 16.02)
-  lid1: T.molded + 0.59,
-  cool0: 16.03,
-  cool1: 16.31,
-  open0: 16.28, // lid flips open
-  open1: 16.48,
+  lid0: T.molded + 0.37, // lid flips closed (15.80 -> 16.01)
+  lid1: T.molded + 0.58,
+  cool0: T.molded + 0.58, // 16.01: cooling (passive)
+  cool1: T.molded + 0.82,
+  open0: T.molded + 0.78, // 16.21: lid flips open, so the re-formed figure is on show before "shape"
+  open1: T.molded + 0.97,
   eyes: T.shape, // 16.47 eyes light up
 };
 
@@ -115,6 +116,16 @@ const lidAngAt = (t: number) => {
   const flop = 6 * Math.exp(-(t - B.lid1) / 0.05) * Math.sin(((t - B.lid1) / 0.09) * Math.PI) * (t > B.lid1 ? 1 : 0);
   const open = ss5(t, B.open0, B.open1);
   return clamp(180 * close - flop - 180 * open, 0, 180);
+};
+
+/** the lid hand: relaxed on the way in, a firm pinch on the tab from just before the flip until it lets go */
+const lidPoseAt = (t: number): HandPose => {
+  const grip = ss(t, B.lid0 - 0.1, B.lid0) * (1 - ss(t, B.open1, B.open1 + 0.06));
+  return mixHand(
+    {curl: [0.35, 0.5, 0.6, 0.65], spread: 0.3, thumb: 42, thumbCurl: 0.3},
+    {curl: [0.6, 0.8, 0.9, 0.95], spread: 0.12, thumb: 22, thumbCurl: 0.45},
+    grip,
+  );
 };
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -182,8 +193,8 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   // ---- mold: liquid fill / figure / lid
   const theta = lidAngAt(t);
   const lv = levelAt(t);
-  const fillOn = lv > 0.002 && t < 16.15;
-  const figOn = t >= 16.15;
+  const fillOn = lv > 0.002 && t < B.open0 - 0.03; // swapped for the solid figure while the lid is shut
+  const figOn = t >= B.open0 - 0.03;
   const feet = top(MOLD.w / 2, MOLD.feetV);
   const mTop = benchPt(c, ROBOT_X, MOLD.feetV, MOLD.tau).m;
   const sR = c.Z * MOLD.sb * mTop; // px per robot unit
@@ -263,18 +274,18 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   const lidIn = ss5(t, B.lid0 - 0.26, B.lid0 - 0.02);
   const lidOut = ss5(t, B.open1 + 0.02, B.open1 + 0.26);
   const LL = 235 * c.Z * tab.m;
-  const handAng = -38 - 104 * ss(theta, 20, 160) / 1;
+  // the forearm always points back at the scientist's elbow, below the frame on the near side of the bench (bench
+  // coords, so it rides with the camera): as the tab arcs over the hinge the arm pivots there (about 30 deg), it never
+  // swings its root across the frame
+  const elbow = P(MOLD.hinge + 20, MOLD.z1 + 760, 160);
+  const towardTab = (q: {x: number; y: number}) => (Math.atan2(q.y - elbow.y, q.x - elbow.x) * 180) / Math.PI;
+  const handAng = towardTab(pinchWrist(tab, towardTab(tab), LL, 1, lidPoseAt(t)));
   const away = {x: -Math.cos((handAng * Math.PI) / 180), y: -Math.sin((handAng * Math.PI) / 180)};
   const off = (1 - lidIn) + lidOut; // 0 = on the tab, 1 = off-screen
-  const grip = ss(t, B.lid0 - 0.1, B.lid0) * (1 - ss(t, B.open1, B.open1 + 0.06));
-  const lidPose: HandPose = mixHand(
-    {curl: [0.35, 0.5, 0.6, 0.65], spread: 0.3, thumb: 42, thumbCurl: 0.3},
-    {curl: [0.6, 0.8, 0.9, 0.95], spread: 0.12, thumb: 22, thumbCurl: 0.45},
-    grip,
-  );
+  const lidPose = lidPoseAt(t);
   const press = 0.05 * LL * Math.sin(Math.PI * ss(t, B.lid1, B.lid1 + 0.14));
-  const pinchAt = pinchWrist(tab, handAng, LL, -1, lidPose);
-  const lidWrist = {x: pinchAt.x + away.x * LL * 1.3 * off - 80 * off, y: pinchAt.y + away.y * LL * 1.3 * off + 200 * off + press};
+  const pinchAt = pinchWrist(tab, handAng, LL, 1, lidPose);
+  const lidWrist = {x: pinchAt.x + away.x * LL * 2.4 * off, y: pinchAt.y + away.y * LL * 2.4 * off + press};
   const lidHandOn = t > B.lid0 - 0.27 && t < B.open1 + 0.27;
 
   // ---- dive: MetalSurface fades in inside the torso as the chest fills the frame
@@ -297,14 +308,14 @@ const Scene: React.FC<{t: number}> = ({t}) => {
         {figEl}
       </MoldBase>
       <MoldLid c={c} theta={theta} sil={SIL} frost={frostP} frostK={frostK} t={t} />
-      <ColdWisps x0={P(MOLD.hinge, 0).x} x1={P(MOLD.hinge + MOLD.w, 0).x} y={P(0, MOLD.z0, MOLD.tau * 2).y} k={wispK * 0.8} t={t} s={c.Z * 0.6} />
+      <ColdWisps x0={P(MOLD.hinge + 30, 0).x} x1={P(MOLD.hinge + MOLD.w - 30, 0).x} y={P(0, lerp(MOLD.z0, MOLD.z1, 0.45), MOLD.tau * 2).y} k={wispK * 0.6} t={t} s={c.Z * 0.6} />
       {pipOn && (
         <g>
           <Pipette tip={tipS} ang={ang} sc={pipSc} fill={fillB} squeeze={sq} t={t} part="tube" />
           <GloveArm wrist={wristP} ang={pipHandAng} L={HL} pose={pipPose} thumbSide={1} hold={{front: [0, 't'], obj: <Pipette tip={tipS} ang={ang} sc={pipSc} fill={fillB} squeeze={sq} t={t} part="bulb" />}} />
         </g>
       )}
-      {lidHandOn && <GloveArm wrist={lidWrist} ang={handAng} L={LL} pose={lidPose} thumbSide={-1} hold={off < 0.15 ? {front: [0, 't'], obj: <LidTabShape c={c} theta={theta} />} : undefined} />}
+      {lidHandOn && <GloveArm wrist={lidWrist} ang={handAng} L={LL} pose={lidPose} thumbSide={1} hold={off < 0.15 ? {front: [0, 't'], obj: <LidTabShape c={c} theta={theta} />} : undefined} />}
       {msK > 0.001 && <TorsoMetal d={torsoD} t={t} k={msK} />}
     </svg>
   );

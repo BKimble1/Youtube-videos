@@ -67,7 +67,7 @@ const LOW_P: X3 = [0.8, 4.3, -5.9], LOW_T: X3 = [0.1, 0.4, 3.0], LOW_F = 1000;
 // toward his shoes; then DOWN: he looks down and the camera tilts/pushes down with his gaze onto the puddle (S5 contract:
 // the END pose puts the puddle at (540, 1040), 300 × 140 px, so the final lock is a near-identity)
 const RV0 = 12.1, RV1 = 12.62, DN0 = 12.7, DN1 = 13.36;
-const REV_P: X3 = [2.6, 8.6, -27.5], REV_T: X3 = [9.0, 10.4, -9.5], REV_F = 850;
+const REV_P: X3 = [2.6, 8.6, -27.5], REV_T: X3 = [9.0, 10.0, -9.5], REV_F = 790;
 const END_P: X3 = [6.5, 16.0, -18.6], END_T: X3 = [6.5, 0, -5.92], END_F = 1330;
 
 export const camAt = (t: number): Cam3 => {
@@ -95,17 +95,17 @@ export const camAt = (t: number): Cam3 => {
   f = lerp(f, LOW_F, u3);
   // OUT: "slipped" — the silver rushes at the lens; the camera backs off and cranes up, keeping the LEADING EDGE in
   // frame as it crosses the bar line, then settles looking down on the puddle collecting in the corridor
-  const u4 = ss5(t, OU0, RV1 + 0.12);
-  if (u4 > 0) {
+  const u4 = ss5(t, OU0 + 0.15, RV1 + 0.12); // stays close while the silver squeezes through the gap, then pulls back
+  if (t > OU0) {
     // back out + crane up to the reveal, then (overlapping, so it never stops) on to the end pose
-    p = bez3(p, add3(p, [0.3, 0.2, -3.6]), [REV_P[0] - 0.6, REV_P[1] - 2.2, REV_P[2] + 4.0], REV_P, u4);
+    p = bez3(p, add3(p, [0.2, 0.1, -1.6]), [REV_P[0] - 0.6, REV_P[1] - 2.2, REV_P[2] + 5.0], REV_P, u4);
     p = lerp3(p, END_P, ss5(t, DN0 - 0.12, DN1));
     const e = pathAt(edgeAt(t));
     const follow = ss(t, OU0, 12.25);
     const tE: X3 = [e.x, 0.25, e.d];
     tg = lerp3(lerp3(tg, tE, follow), REV_T, ss5(t, RV0, RV1));
     tg = lerp3(tg, END_T, ss5(t, DN0, DN1));
-    f = lerp(lerp(f, REV_F, ss5(t, OU0, RV1)), END_F, ss5(t, DN0, DN1));
+    f = lerp(lerp(f, REV_F, ss5(t, 12.0, RV1)), END_F, ss5(t, DN0, DN1));
   }
   return lookAt(p, tg, f);
 };
@@ -519,9 +519,9 @@ const placeRobot = (c: Cam3, x: number, d: number) => {
 
 /** jail.tsx draws the guard desk lamp's warm floor pool (centre (20, 0, -14), screen blend ≈ 0.1 WARM over the corridor
  *  floor) with an affine linearisation that blows up as its centre nears the camera plane and is culled at z < 0.7:
- *  the floor brightened, then popped dark in one frame when this camera dollies past d ≈ -14 (9.87 s; again at ≈ 12.2 s
- *  on the way back). Where the module has culled it, this layer carries the same warm screen on the corridor floor and
- *  eases it out (or in, before it reappears) over ≈ 0.45 s, so the change is a fade, not a pop. */
+ *  the floor brightened, then popped dark in one frame when this camera dollies past d ≈ -14 (9.85 s). Where the module
+ *  has just culled it, this layer carries the same warm screen on the corridor floor and eases it out over ≈ 0.45 s, so
+ *  the change is a fade, not a pop. */
 const WARM_O: P3 = {x: 20, h: 0, d: -14};
 const WARM_ZN = 0.7;
 const warmOn = (t: number) => toCam(camAt(t), WARM_O).z >= WARM_ZN;
@@ -530,7 +530,8 @@ const WARM_X: number[] = (() => {
   let prev = warmOn(SHOTS.S2[0]);
   for (let t = SHOTS.S2[0]; t <= SHOTS.S4[1]; t += 1 / 600) {
     const on = warmOn(t);
-    if (on !== prev) out.push(t);
+    if (prev && !on) out.push(t); // only where it is culled while the camera creeps past it (on the fast way back the
+    // camera jumps across the blow-up zone within a frame, so the module's own pool comes back at a low level)
     prev = on;
   }
   return out;
@@ -538,7 +539,7 @@ const WARM_X: number[] = (() => {
 const warmFixAt = (t: number) => {
   if (warmOn(t)) return 0;
   let k = 0;
-  for (const tc of WARM_X) k = Math.max(k, 1 - ss(Math.abs(t - tc), 0, 0.45));
+  for (const tc of WARM_X) if (t >= tc) k = Math.max(k, 1 - ss(t - tc, 0, 0.45));
   return k;
 };
 const WarmFix: React.FC<{c: Cam3; k: number}> = ({c, k}) => {
