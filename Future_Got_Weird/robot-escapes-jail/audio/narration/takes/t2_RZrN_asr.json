@@ -1,0 +1,23 @@
+{
+ "zipformer": {
+  "transcript": "THIS ROBOT ESCAPED JAIL BY MELTING SCIENTISTS LOCKED IT INSIDE A TINY CAGE BUT INSTEAD OF BREAKING THE BARS IT MELTED ITS ENTIRE BODY TURNED INTO LIQUID METAL THEN IT SLIPPED STRAIGHT THROUGH THE BARS THEN SCIENTISTS COLLECTED THE METAL AND MOULDED IT BACK INTO SHAPE HOW IT'S MADE FROM A METAL THAT MELTS NEAR BODY TEMPERATURE AND MAGNETS HELP CONTROL ITS MOVEMENT SCIENTISTS ARE EXPLORING WHETHER ROBOTS LIKE THIS COULD ONE DAY RETRIEVE OBJECTS FROM INSIDE YOUR BODY SO APPARENTLY EVEN PRISON BARS CAN'T STOP A ROWBOT ANY MORE",
+  "wer": 0.045,
+  "diffs": [
+   [
+    "replace",
+    "molded",
+    "moulded"
+   ],
+   [
+    "replace",
+    "robot anymore",
+    "rowbot any more"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "This robot escaped jail by melting. Scientists locked it inside a tiny cage. But instead of breaking the bars... It melted. Its entire body turned into liquid metal. Then, it slipped straight through the bars. Then, scientists collected the metal and molded it back into shape. How? It's made from a metal that melts near body temperature. and magnets help control its movement. Scientists are exploring whether robots like this could one day retrieve objects from inside your body. So apparently Even prison bars can't stop a robot anymore.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

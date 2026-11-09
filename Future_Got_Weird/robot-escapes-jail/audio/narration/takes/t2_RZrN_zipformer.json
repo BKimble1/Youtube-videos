@@ -1,0 +1,505 @@
+{
+ "audio": "audio/narration/takes/t2_RZrN.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   1.7,
+   1.98
+  ],
+  [
+   3.02,
+   3.45
+  ],
+  [
+   5.76,
+   6.1
+  ],
+  [
+   7.58,
+   7.88
+  ],
+  [
+   8.73,
+   9.13
+  ],
+  [
+   11.5,
+   11.88
+  ],
+  [
+   13.76,
+   14.16
+  ],
+  [
+   17.31,
+   17.71
+  ],
+  [
+   18.07,
+   18.48
+  ],
+  [
+   20.84,
+   21.14
+  ],
+  [
+   22.84,
+   23.29
+  ],
+  [
+   28.26,
+   28.63
+  ],
+  [
+   29.64,
+   30.01
+  ]
+ ],
+ "words": [
+  {
+   "word": "This",
+   "start": 0.0,
+   "end": 0.31
+  },
+  {
+   "word": "robot",
+   "start": 0.32,
+   "end": 0.75
+  },
+  {
+   "word": "escaped",
+   "start": 0.76,
+   "end": 1.27
+  },
+  {
+   "word": "JAIL\u2026",
+   "start": 1.28,
+   "end": 1.7
+  },
+  {
+   "word": "by",
+   "start": 1.98,
+   "end": 2.23
+  },
+  {
+   "word": "MELTING.",
+   "start": 2.24,
+   "end": 3.02
+  },
+  {
+   "word": "Scientists",
+   "start": 3.45,
+   "end": 3.95
+  },
+  {
+   "word": "locked",
+   "start": 3.955,
+   "end": 4.25
+  },
+  {
+   "word": "it",
+   "start": 4.275,
+   "end": 4.39
+  },
+  {
+   "word": "inside",
+   "start": 4.395,
+   "end": 4.75
+  },
+  {
+   "word": "a",
+   "start": 4.755,
+   "end": 4.91
+  },
+  {
+   "word": "tiny",
+   "start": 4.915,
+   "end": 5.35
+  },
+  {
+   "word": "cage.",
+   "start": 5.355,
+   "end": 5.76
+  },
+  {
+   "word": "But",
+   "start": 6.1,
+   "end": 6.15
+  },
+  {
+   "word": "instead",
+   "start": 6.14,
+   "end": 6.4
+  },
+  {
+   "word": "of",
+   "start": 6.41,
+   "end": 6.56
+  },
+  {
+   "word": "breaking",
+   "start": 6.57,
+   "end": 6.93
+  },
+  {
+   "word": "the",
+   "start": 6.93,
+   "end": 7.08
+  },
+  {
+   "word": "bars\u2026",
+   "start": 7.09,
+   "end": 7.58
+  },
+  {
+   "word": "It",
+   "start": 7.88,
+   "end": 8.04
+  },
+  {
+   "word": "MELTED.",
+   "start": 8.05,
+   "end": 8.73
+  },
+  {
+   "word": "Its",
+   "start": 9.13,
+   "end": 9.24
+  },
+  {
+   "word": "entire",
+   "start": 9.25,
+   "end": 9.76
+  },
+  {
+   "word": "body",
+   "start": 9.77,
+   "end": 10.12
+  },
+  {
+   "word": "turned",
+   "start": 10.13,
+   "end": 10.41
+  },
+  {
+   "word": "into",
+   "start": 10.41,
+   "end": 10.64
+  },
+  {
+   "word": "liquid",
+   "start": 10.65,
+   "end": 11.17
+  },
+  {
+   "word": "metal.",
+   "start": 11.17,
+   "end": 11.5
+  },
+  {
+   "word": "Then",
+   "start": 11.88,
+   "end": 12.0
+  },
+  {
+   "word": "it",
+   "start": 12.01,
+   "end": 12.22
+  },
+  {
+   "word": "slipped",
+   "start": 12.25,
+   "end": 12.64
+  },
+  {
+   "word": "straight",
+   "start": 12.65,
+   "end": 13.03
+  },
+  {
+   "word": "through",
+   "start": 13.05,
+   "end": 13.24
+  },
+  {
+   "word": "the",
+   "start": 13.25,
+   "end": 13.36
+  },
+  {
+   "word": "bars.",
+   "start": 13.37,
+   "end": 13.76
+  },
+  {
+   "word": "Then",
+   "start": 14.16,
+   "end": 14.27
+  },
+  {
+   "word": "scientists",
+   "start": 14.28,
+   "end": 14.99
+  },
+  {
+   "word": "collected",
+   "start": 15.0,
+   "end": 15.39
+  },
+  {
+   "word": "the",
+   "start": 15.4,
+   "end": 15.55
+  },
+  {
+   "word": "metal",
+   "start": 15.56,
+   "end": 15.83
+  },
+  {
+   "word": "and",
+   "start": 15.84,
+   "end": 15.96
+  },
+  {
+   "word": "molded",
+   "start": 15.96,
+   "end": 16.35
+  },
+  {
+   "word": "it",
+   "start": 16.36,
+   "end": 16.52
+  },
+  {
+   "word": "back",
+   "start": 16.56,
+   "end": 16.79
+  },
+  {
+   "word": "into",
+   "start": 16.8,
+   "end": 17.07
+  },
+  {
+   "word": "shape.",
+   "start": 17.08,
+   "end": 17.31
+  },
+  {
+   "word": "How?",
+   "start": 17.71,
+   "end": 18.07
+  },
+  {
+   "word": "It\u2019s",
+   "start": 18.48,
+   "end": 18.59
+  },
+  {
+   "word": "made",
+   "start": 18.595,
+   "end": 18.75
+  },
+  {
+   "word": "from",
+   "start": 18.755,
+   "end": 18.91
+  },
+  {
+   "word": "a",
+   "start": 18.915,
+   "end": 19.03
+  },
+  {
+   "word": "metal",
+   "start": 19.035,
+   "end": 19.35
+  },
+  {
+   "word": "that",
+   "start": 19.355,
+   "end": 19.47
+  },
+  {
+   "word": "melts",
+   "start": 19.475,
+   "end": 19.83
+  },
+  {
+   "word": "near",
+   "start": 19.835,
+   "end": 20.03
+  },
+  {
+   "word": "body",
+   "start": 20.035,
+   "end": 20.35
+  },
+  {
+   "word": "temperature.",
+   "start": 20.355,
+   "end": 20.84
+  },
+  {
+   "word": "And",
+   "start": 21.14,
+   "end": 21.19
+  },
+  {
+   "word": "magnets",
+   "start": 21.18,
+   "end": 21.7
+  },
+  {
+   "word": "help",
+   "start": 21.71,
+   "end": 21.9
+  },
+  {
+   "word": "control",
+   "start": 21.91,
+   "end": 22.26
+  },
+  {
+   "word": "its",
+   "start": 22.27,
+   "end": 22.5
+  },
+  {
+   "word": "movement.",
+   "start": 22.51,
+   "end": 22.84
+  },
+  {
+   "word": "Scientists",
+   "start": 23.29,
+   "end": 23.7
+  },
+  {
+   "word": "are",
+   "start": 23.705,
+   "end": 23.86
+  },
+  {
+   "word": "exploring",
+   "start": 23.865,
+   "end": 24.34
+  },
+  {
+   "word": "whether",
+   "start": 24.345,
+   "end": 24.58
+  },
+  {
+   "word": "robots",
+   "start": 24.585,
+   "end": 25.1
+  },
+  {
+   "word": "like",
+   "start": 25.105,
+   "end": 25.34
+  },
+  {
+   "word": "this",
+   "start": 25.345,
+   "end": 25.58
+  },
+  {
+   "word": "could",
+   "start": 25.585,
+   "end": 25.78
+  },
+  {
+   "word": "one",
+   "start": 25.785,
+   "end": 25.98
+  },
+  {
+   "word": "day",
+   "start": 25.985,
+   "end": 26.18
+  },
+  {
+   "word": "retrieve",
+   "start": 26.185,
+   "end": 26.62
+  },
+  {
+   "word": "objects",
+   "start": 26.625,
+   "end": 27.14
+  },
+  {
+   "word": "from",
+   "start": 27.145,
+   "end": 27.29
+  },
+  {
+   "word": "inside",
+   "start": 27.345,
+   "end": 27.78
+  },
+  {
+   "word": "your",
+   "start": 27.785,
+   "end": 28.02
+  },
+  {
+   "word": "body.",
+   "start": 28.025,
+   "end": 28.26
+  },
+  {
+   "word": "So",
+   "start": 28.63,
+   "end": 28.84
+  },
+  {
+   "word": "apparently\u2026",
+   "start": 28.845,
+   "end": 29.64
+  },
+  {
+   "word": "Even",
+   "start": 30.01,
+   "end": 30.22
+  },
+  {
+   "word": "prison",
+   "start": 30.225,
+   "end": 30.7
+  },
+  {
+   "word": "bars",
+   "start": 30.705,
+   "end": 31.02
+  },
+  {
+   "word": "can\u2019t",
+   "start": 31.025,
+   "end": 31.26
+  },
+  {
+   "word": "stop",
+   "start": 31.265,
+   "end": 31.5
+  },
+  {
+   "word": "a",
+   "start": 31.505,
+   "end": 31.58
+  },
+  {
+   "word": "robot",
+   "start": 31.585,
+   "end": 32.02
+  },
+  {
+   "word": "anymore.",
+   "start": 32.025,
+   "end": 32.45
+  }
+ ]
+}
