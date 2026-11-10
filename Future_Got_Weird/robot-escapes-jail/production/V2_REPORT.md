@@ -69,9 +69,22 @@ The key claims and quotes:
 - The medical part is a labeled lab demonstration on a model, followed by a labeled future idea.
 - The narration's "melts near body temperature" is framed visually as 29.8 °C, below the 37 °C mark.
 
-## 5. Remaining limitations
+## 5. QA passes on the final render (measured on the MP4)
 
-See the QA section of this report for the measured results of the final render.
+| Pass | Result |
+|---|---|
+| Format | 1080×1920, 30 fps, H.264 yuv420p, AAC 48 kHz stereo; 972 frames, 32.40 s; full decode with 0 errors; no black frames |
+| A, opening | Every second frame of 0–3 s inspected (`production/qa_v2_hook_0-3s.png`). The robot is present on frame 0, already deforming into the gap. The rope through the gap is visible at 0.35–0.8 s, it collects as one body, reforms by about 1.62 s and looks at the viewer. Proportions after the reform are identical to the rigid robot. |
+| B, pacing | The longest near-static run is 8 frames (0.27 s, at 22.3 s, the hand-off blob). Nothing is unchanged for more than 1.5 s. |
+| C, animation | The engine holds area within about 1 % through the squeeze, collapse and streams. A frame-difference scan finds no one-frame pops: the only large frame-to-frame changes are the three planned moves (push into the dome at 2.93 s, pull out of the lab figure at 3.67 s, push into the metal at 17.35 s), each ramping over several frames. |
+| D, science | Heat is always the AC coil (orange), separate from the magnet (cyan field). The solid figure cannot pass; the liquid is pulled through by the external magnet; people recast it in a mold. The stomach is labeled as a model and lab demo; the human outline is labeled a future idea. The stylized robot appears only in the tagged dramatization. |
+| E, transitions | Every boundary was checked frame by frame. At 3.40 the frames are exactly `ChromeSurface` on both sides. At 13.67 the camera and puddle are identical. At 22.56 the hand-off blob is identical. At 27.90 the sphere and the robot head are both at (540, 900) with r 130 (measured). |
+| F, loop | Frames 950–971 then 0–7 inspected (`production/qa_v2_loop_seam.png`): same camera, bars, grip, eyes and alarm. The 971 → 0 frame difference (9.96) sits on the smooth ramp of its neighbours. The music bed and the alarm run through the loop point without a click. |
+| G, final | Checked by contact sheets of the whole film (every 0.5 s and the key frames in `production/FGW_Robot_Escapes_Jail_V2_keyframes.png`) and at phone size. Real-time playback and muted viewing could not be done here (see limitations). |
+| Mix | −14.0 LUFS integrated, −1.6 dBTP true peak, voice at 0 samples lag against the master. |
+| Narration in the final MP4 (ASR) | Zipformer transcribes every word; its only differences are British spellings ("moulded", "any more"). Whisper is word-perfect up to its 30 s window (a limit of the tool). |
+
+## 6. Remaining limitations
 
 - **Audio not heard.** There is no playback here. The mix was checked by loudness, true peak, spectrograms, voice alignment and an ASR transcript of the final MP4, not by ear. Effect character, the "comic" punctuation and the music need a listen on headphones and a phone.
 - **Not watched in real time, and no muted viewing.** The film was inspected frame by frame and through contact sheets and frame-difference measurements, not watched at speed.
