@@ -26,7 +26,7 @@ fps = eval(vs['r_frame_rate'])
 d = np.abs(np.diff(fr, axis=0)).mean(axis=(1, 2, 3))
 # the planned large changes: the shot boundaries (story.ts SHOTS, exported to audio/cues.json by tools/export_cues.ts)
 EPD = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CJ = json.load(open(os.path.join(EPD, 'audio/cues.json')))
+CJ = json.load(open(os.environ.get('QA_CUES') or os.path.join(EPD, 'audio/cues.json')))
 PLANNED = [(t0 - 0.05, t0 + 0.08, f'CUT -> {k}') for k, (t0, t1) in CJ['SHOTS'].items() if t0 > 0]
 PLANNED += [(a, b, why) for a, b, why in CJ.get('PLANNED_MOVES', [])]
 med = float(np.median(d))

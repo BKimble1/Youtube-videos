@@ -611,8 +611,8 @@ export const CHROME = {
   low: '#6D809B', // reflected floor near the lower edge
   rim: '#FFFFFF',
   spec: '#FFFFFF',
-  flat0: '#1E2C45', // floor mirror (far: the dark surroundings)
-  flat1: '#3A4B68', // floor mirror (near)
+  flat0: '#3B4F72', // floor mirror (far: the dark surroundings)
+  flat1: '#7488AB', // floor mirror (near)
   flatEdge: '#C9D8E8',
 };
 

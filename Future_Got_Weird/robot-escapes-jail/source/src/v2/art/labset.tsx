@@ -458,11 +458,14 @@ const roundRect = (x0: number, x1: number, d0: number, d1: number, r: number, h:
 };
 /** an affine gradient transform mapping the unit circle to a floor circle (centre c, radius r) seen by cam */
 const affGrad = (cam: Cam3, c: P3, r: number): string | null => {
-  const o = labProj(cam, c), a = labProj(cam, {...c, x: c.x + r}), b = labProj(cam, {...c, d: c.d + r});
-  const a2 = labProj(cam, {...c, x: c.x - r}), b2 = labProj(cam, {...c, d: c.d - r});
+  // the floor disc's local affine frame at its centre (projection Jacobian x r): continuous for every camera, including
+  // cameras that have the disc's far rim behind them (the old rim-point version returned null there -> one-frame pops)
+  const e = Math.min(1, r * 0.05);
+  const o = labProj(cam, c), a = labProj(cam, {...c, x: c.x + e}), a2 = labProj(cam, {...c, x: c.x - e});
+  const b = labProj(cam, {...c, d: c.d + e}), b2 = labProj(cam, {...c, d: c.d - e});
   if (!o || !a || !b || !a2 || !b2) return null;
-  const cx = (a.x + a2.x + b.x + b2.x) / 4, cy = (a.y + a2.y + b.y + b2.y) / 4;
-  return `matrix(${f3((a.x - a2.x) / 2)} ${f3((a.y - a2.y) / 2)} ${f3((b.x - b2.x) / 2)} ${f3((b.y - b2.y) / 2)} ${f3(cx)} ${f3(cy)})`;
+  const k = r / (2 * e);
+  return `matrix(${f3((a.x - a2.x) * k)} ${f3((a.y - a2.y) * k)} ${f3((b.x - b2.x) * k)} ${f3((b.y - b2.y) * k)} ${f3(o.x)} ${f3(o.y)})`;
 };
 const COPPER = '#C8743A', COPPER_LT = '#F6B57C';
 const coilPts = (): P3[] => {
