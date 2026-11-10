@@ -5,7 +5,10 @@ level by loudness (KINDS[kind]['level'] = its loudest momentary (400 ms) loudnes
 ducking). Restrained, clean, cartoon-physical but not silly. Key-matched tones are in D (dorian), like the music bed.
 
 The prison alarm is not a one-shot: `alarm_bed()` is one loop-periodic two-tone klaxon locked to the music's beat, which
-the 'alarm' / 'alarm_tail' cues gate (see make_audio.py)."""
+the 'alarm' / 'alarm_tail' cues gate (see make_audio.py).
+
+V2 (DIRECTION_V2 section 10) adds: tension, squeeze, stream, reform, snap, escape, comic (variant 0-2), lock, chain,
+clunk, ac_on, field, enter (t = the surface crossing, ENTER_PRE s of rise before it), glint. The V1 kinds are unchanged."""
 import numpy as np
 from scipy.signal import butter, sosfilt, lfilter
 
@@ -392,6 +395,213 @@ def g_reveal(rng, dur=1.8):
     return norm(lp(np.stack([L, R], 1) * fades(n, 0.001, 0.4)[:, None], 11000))
 
 
+# ---------------------------------------------------------------- V2 generators (DIRECTION_V2 section 10)
+def g_tension(rng, dur=0.8):
+    """metallic stress as the robot deforms: a slow stick-slip creak (friction pulses whose rate climbs with the strain,
+    in two or three gestures) ringing a few steel modes, a low bending groan under it, two tiny stress ticks; no impact"""
+    n = ns(dur); t = tt(n); u = t / dur
+    gest = np.clip(0.5 + 0.5 * smooth_noise(rng, n, 4.5), 0, 1) ** 1.5  # the creak gestures ('eeerk')
+    rate = (24 + 30 * u + 70 * gest) * (1 + 0.08 * smooth_noise(rng, n, 25))  # the stick-slip rate = the creak's pitch
+    grains = impulses(rng, rate, 0.0004)
+    creak = sum(a * rmsn(reson(grains, f * (1 + 0.006 * rng.standard_normal()), tau))  # short rings: each slip is heard
+                for f, a, tau in [(612, 1.0, 0.009), (1347, 0.8, 0.007), (2210, 0.55, 0.005), (3480, 0.3, 0.004)])
+    ph = phase(92 * (1 + 0.22 * u) * (1 + 0.03 * smooth_noise(rng, n, 3)))
+    groan = lp(np.tanh(1.8 * (np.sin(ph) + 0.4 * np.sin(2 * ph))), 900) * (0.6 + 0.4 * gest)
+    ticks = np.zeros(n)
+    for at in (0.3 + 0.1 * rng.random(), 0.62 + 0.1 * rng.random()):
+        m = ns(0.05)
+        put(ticks, modal(m, [(rng.uniform(3900, 5200), 1.0, 0.008), (rng.uniform(6500, 7600), 0.5, 0.005)], rng, 0.0002), at * dur)
+    x = 0.7 * norm(creak) * (0.3 + 0.7 * gest) + 0.2 * norm(groan) + 0.15 * ticks
+    return norm(bp(x, 70, 9000) * (0.35 + 0.65 * ss(u, 0, 0.5)) * fades(n, 0.04, min(0.15, dur * 0.25)))
+
+def g_squeeze(rng, dur=0.6):
+    """wet metallic squelch of liquid forced through a narrow gap: irregular pressure pulses through a narrow resonant
+    band that tightens and rises as the gap constricts, a faint steel ring riding on it (the liquid is metal), then it
+    lets go (at ~72 %) with a short downward wet 'schlup'"""
+    n = ns(dur); t = tt(n); u = t / dur; k = 0.72
+    fc = np.where(u < k, 480 * (2000 / 480) ** (np.clip(u / k, 0, 1) ** 1.4), 2000 * (560 / 2000) ** ss(u, k, 1.0))
+    pr = (30 + 46 * np.clip(u / k, 0, 1)) * (1 + 0.3 * smooth_noise(rng, n, 9))
+    puls = impulses(rng, pr, 0.0025)
+    src = rmsn(puls) + 0.4 * rng.standard_normal(n)
+    sq = rmsn(svf(src, fc, np.where(u < k, 5 + 6 * u / k, 4.0)))
+    sheen = sum(a * rmsn(reson(puls, f, 0.018)) for f, a in [(2870, 1.0), (4410, 0.6)])
+    amp = (0.3 + 0.7 * ss(u, 0, k * 0.9)) * (1 - 0.8 * ss(u, k, k + 0.1))
+    rel = np.zeros(n); m = ns(0.16); tm = tt(m)
+    put(rel, np.sin(phase(glide(460, 150, m, 0.5))) * hit_env(m, 0.05, 0.002)
+        + 0.35 * rmsn(bp(rng.standard_normal(m), 500, 2600)) * hit_env(m, 0.02, 0.001), k * dur)
+    x = (0.6 * sq + 0.07 * sheen) * amp + 0.75 * rel
+    return norm(lp(x, 6500, 4) * fades(n, 0.03, 0.06))
+
+def g_stream(rng, dur=1.5):
+    """soft fluid-metal movement, sustained: a heavy, smooth, viscous pour (not bubbly like 'flow'): two slowly
+    wandering resonant liquid bands, a slow slosh swell, a faint fine silvery shimmer on top"""
+    n = ns(dur); t = tt(n)
+    f1 = 360 * 2 ** (0.5 * smooth_noise(rng, n, 1.6)); f2 = 820 * 2 ** (0.5 * smooth_noise(rng, n, 4.0))
+    b1 = rmsn(svf(rng.standard_normal(n), f1, 2.4)); b2 = rmsn(svf(rng.standard_normal(n), f2, 9.0))  # b2: a slow liquid gurgle
+    slosh = 0.62 + 0.38 * smooth_noise(rng, n, 1.3)
+    shim = rmsn(bp(impulses(rng, np.full(n, 70.0), 0.0003), 5000, 11000)) * (0.5 + 0.5 * smooth_noise(rng, n, 6))
+    x = lp((0.6 * b1 + 0.32 * b2) * slosh, 4500, 4) + 0.03 * shim
+    return norm(x * fades(n, min(0.3, dur * 0.3), min(0.4, dur * 0.35)))
+
+def g_reform(rng, dur=0.55):
+    """metal flowing back into shape: a rising shimmer (bright metal partials gliding up an octave into D-A-D-A-D with
+    a quickening tremolo), a rising airy band under it; it ends TIGHT at t + dur (8 ms), where a 'snap' lands (stereo)"""
+    n = ns(dur); t = tt(n); u = t / dur
+    L = np.zeros(n); R = np.zeros(n)
+    for i, (f1, p) in enumerate([(587.33, -0.4), (880.0, 0.3), (1174.66, -0.15), (1760.0, 0.4), (2349.32, -0.3)]):
+        ph = phase(glide(f1 * 0.5, f1, n, 0.7) * (1 + 0.004 * (2 * (i % 2) - 1)))
+        trem = 0.7 + 0.3 * np.sin(phase(6 + 22 * u ** 1.5) + i)
+        y = (np.sin(ph) + 0.25 * np.sin(2.76 * ph)) * trem / (1 + 0.4 * i)
+        gl, gr = pan_gains(p); L += y * gl; R += y * gr
+    env = u ** 2.2
+    air = rmsn(svf(rng.standard_normal(n), 1500 * (7000 / 1500) ** u, 2.0)) * u ** 2.5 * 0.35
+    x = np.stack([L * env + air, R * env + air], 1)
+    return norm(hp(x, 300) * fades(n, 0.02, 0.008)[:, None])
+
+def g_snap(rng, dur=0.22):
+    """the head snapping into shape: a crisp bright click (a ~1 ms noise spike), a short high steel 'tik', a tiny tight
+    body knock that drops in pitch; dry and clean"""
+    n = ns(dur)
+    click = rmsn(hp(rng.standard_normal(n), 3000)) * hit_env(n, 0.0012, 0.0001)
+    tik = modal(n, [(3150, 1.0, 0.022), (4870, 0.6, 0.014), (7210, 0.35, 0.008), (1880, 0.4, 0.03)], rng, 0.0002)
+    body = np.sin(phase(glide(240, 120, n, 0.2))) * hit_env(n, 0.018, 0.0004)
+    return norm(lp(0.5 * click + 0.6 * norm(tik) + 0.55 * body, 14000) * fades(n, 0.0001, 0.06))
+
+def g_escape(rng, dur=0.5):
+    """the satisfying release as it pops free of the bars: a round suction 'thwup' (a low pop whose pitch springs up),
+    a soft air puff, two small wet bloops after; comedic but restrained"""
+    n = ns(dur); t = tt(n)
+    pop = np.sin(phase(150 + 380 * (1 - np.exp(-t / 0.018)))) * hit_env(n, 0.045, 0.0015)
+    puff = rmsn(bp(rng.standard_normal(n), 500, 2500)) * hit_env(n, 0.03, 0.002)
+    bl = np.zeros(n); put(bl, bubble(rng, 420, 0.03, 1.6), 0.09); put(bl, 0.5 * bubble(rng, 640, 0.02, 1.4), 0.16)
+    return norm(lp(1.0 * pop + 0.18 * puff + 0.45 * bl, 6000) * fades(n, 0.0005, 0.12))
+
+def g_comic(rng, dur=0.35, variant=None):
+    """short deadpan punctuation (cue variant): 0 a hollow little 'bonk' (a wood-block knock that drops a tone), 1 a tiny
+    high 'plink' (a glassy D7 pluck lifting a hair), 2 a dry two-note 'boop-boop' falling a fourth (A5 -> E5)"""
+    v = int(rng.integers(0, 3)) if variant is None else int(variant) % 3
+    n = ns(dur); t = tt(n)
+    if v == 0:
+        f = 560 * (0.62 + 0.38 * np.exp(-t / 0.03))
+        x = np.sin(phase(f)) * hit_env(n, 0.06, 0.0006) + 0.5 * np.sin(phase(f * 2.31)) * hit_env(n, 0.02, 0.0004)
+        x = lp(x + 0.3 * rmsn(bp(rng.standard_normal(n), 800, 3000)) * hit_env(n, 0.003, 0.0002), 5000)
+    elif v == 1:
+        f = 2349.32 * (1 + 0.03 * (1 - np.exp(-t / 0.02)))
+        x = (np.sin(phase(f)) + 0.2 * np.sin(phase(f * 2.0)) + 0.08 * np.sin(phase(f * 3.9))) * hit_env(n, 0.07, 0.0008)
+    else:
+        x = np.zeros(n)
+        for at, f0 in ((0.0, 880.0), (0.13, 659.26)):
+            m = ns(0.12); tm = tt(m); ph = phase(f0 * (1 - 0.02 * tm / 0.12))
+            put(x, (np.sin(ph) + 0.18 * np.sin(3 * ph)) * hit_env(m, 0.05, 0.004) * np.clip((0.12 - tm) / 0.02, 0, 1), at)
+        x = lp(x, 4000)
+    return norm(x * fades(n, 0.0002, 0.05))
+
+def g_lock(rng, dur=0.25):
+    """a padlock / latch: a short spring-loaded slide ('ch'), then the shackle's solid clack (bright steel modes over a
+    small hard body knock), a tiny second tick as it seats"""
+    n = ns(dur); x = np.zeros(n)
+    m = ns(0.03); put(x, 0.25 * rmsn(bp(rng.standard_normal(m), 2500, 7000)) * np.sin(np.pi * np.arange(m) / m) ** 2, 0.0)
+    m = ns(0.18); tm = tt(m)
+    clack = modal(m, [(1730, 1.0, 0.03), (2890, 0.8, 0.022), (4460, 0.55, 0.014), (6320, 0.3, 0.008)], rng, 0.0002)
+    knock = np.sin(2 * np.pi * 310 * tm) * hit_env(m, 0.012, 0.0003)
+    crack = rmsn(hp(rng.standard_normal(m), 2000)) * hit_env(m, 0.0015, 0.0001)
+    put(x, 0.7 * norm(clack) + 0.5 * knock + 0.4 * crack, 0.032)
+    put(x, 0.25 * modal(ns(0.05), [(3600, 1.0, 0.006), (5400, 0.5, 0.004)], rng, 0.0002), 0.085)
+    return norm(lp(x, 12000) * fades(n, 0.0002, 0.05))
+
+def g_chain(rng, dur=0.6):
+    """a short chain rattle: a quick shake of small steel links (each a bright inharmonic clink), clustered at the start
+    and thinning out"""
+    n = ns(dur); x = np.zeros(n)
+    shakes = [0.0, 0.17 + 0.03 * rng.random(), 0.36 + 0.04 * rng.random()]  # three small shakes, each a cluster of clinks
+    times = [dur * (s_ + 0.12 * rng.random() ** 1.5) for s_ in shakes for _ in range(6)]
+    for at in sorted(times):
+        m = ns(0.08); f = rng.uniform(2300, 4200)
+        c = modal(m, [(f, 1.0, rng.uniform(0.012, 0.03)), (f * 2.41, 0.5, 0.01), (f * 3.83, 0.25, 0.006)], rng, 0.0002)
+        c = c + 0.3 * rmsn(hp(rng.standard_normal(m), 3000)) * hit_env(m, 0.001, 0.0001)
+        put(x, c * rng.uniform(0.35, 1.0) * (1 - 0.6 * at / dur), at)
+    return norm(bp(x, 900, 13000) * fades(n, 0.0003, 0.08))
+
+def g_clunk(rng, dur=0.4):
+    """a small solid metal figure knocking against thin bars (lab scale, ~1 cm): a hard little 'tok' (a high, short body:
+    a small object), the thin rods' bright ring, a tiny rebound tock; nothing big or boomy"""
+    n = ns(dur); x = np.zeros(n)
+    for a, at in ((1.0, 0.0), (0.35, 0.055 + 0.01 * rng.random())):
+        m = ns(0.3); tm = tt(m)
+        tok = np.sin(2 * np.pi * rng.uniform(820, 980) * tm) * hit_env(m, 0.01, 0.0003) \
+            + 0.6 * np.sin(2 * np.pi * rng.uniform(1700, 1900) * tm) * hit_env(m, 0.006, 0.0002)
+        rods = modal(m, [(3020, 1.0, 0.07), (3110, 0.7, 0.06), (5170, 0.4, 0.035), (8330, 0.15, 0.015)], rng, 0.0003)
+        crack = rmsn(bp(rng.standard_normal(m), 2000, 8000)) * hit_env(m, 0.0015, 0.0001)
+        put(x, a * (0.9 * tok + 0.35 * norm(rods) + 0.25 * crack), at)
+    return norm(hp(x, 300) * fades(n, 0.0002, 0.1))
+
+def g_ac_on(rng, dur=1.2):
+    """the induction coil energising: a soft relay tick, an electrical hum that swells in (100 Hz buzz, odd harmonics),
+    a charging tone that rises and settles on A (in key), a faint fast high shimmer fading in (the ~50 kHz field,
+    suggested up in the audible air band). It powers UP; it does not whine (unlike heat_coil)"""
+    n = ns(dur); t = tt(n); u = t / dur
+    relay = np.zeros(n); put(relay, 0.4 * modal(ns(0.03), [(2600, 1.0, 0.004), (4100, 0.6, 0.003)], rng, 0.0002), 0.0)
+    hum = lp(sum(np.sin(2 * np.pi * 100 * k * t + rng.uniform(0, 6.28)) / k for k in (1, 3, 5, 7, 9)), 1200) * ss(u, 0.0, 0.5)
+    ph = phase(110 * 2 ** ss(u, 0.05, 0.75))  # A2 -> A3, settles
+    charge = (np.sin(ph) + 0.4 * np.sin(2 * ph) + 0.25 * np.sin(3 * ph) + 0.12 * np.sin(4 * ph)) * ss(u, 0.03, 0.45) \
+        * (0.85 + 0.15 * np.sin(2 * np.pi * 100 * t))
+    shim = rmsn(bp(rng.standard_normal(n), 8500, 14000)) * (0.6 + 0.4 * np.sin(2 * np.pi * 37 * t) ** 2) * ss(u, 0.25, 0.9)
+    x = 0.35 * hum / 2 + 0.5 * charge / 1.5 + 0.06 * shim + relay
+    return norm(hp(x, 60) * fades(n, 0.003, min(0.25, dur * 0.25)))
+
+def g_field(rng, dur=1.6):
+    """a magnetic field swelling on: a smooth 'vwoom' (a soft D3/A3/D4 chord whose level swells, a slow wobble) and a
+    phaser-like comb sweeping through a soft airy band (the field lines), different in each ear (wide). No buzz and no
+    rising pitch (unlike ac_on), a swell rather than a steady beating drone (unlike mag_hum) (stereo)"""
+    n = ns(dur); t = tt(n); u = t / dur
+    sw = ss(u, 0, 0.45) * (1 - 0.35 * ss(u, 0.6, 1.0))
+    low = (np.sin(2 * np.pi * 146.83 * t) + 0.6 * np.sin(2 * np.pi * 220.0 * t + 1.0) + 0.25 * np.sin(2 * np.pi * 293.66 * t + 2.0)) \
+        * (1 + 0.15 * np.sin(2 * np.pi * 1.3 * t))
+    out = []
+    for off in (0.0, 1.4):
+        band = bp(rng.standard_normal(n), 400, 3000)
+        idx = np.clip(np.arange(n) - (0.0012 + 0.0009 * np.sin(2 * np.pi * 0.7 * t + off)) * SR, 0, n - 1)
+        i0 = np.floor(idx).astype(int); fr = idx - i0; i1 = np.minimum(i0 + 1, n - 1)
+        out.append(0.5 * low / 1.5 + 0.15 * rmsn(band + band[i0] * (1 - fr) + band[i1] * fr))
+    x = np.stack(out, 1) * sw[:, None]
+    return norm(lp(x, 4000) * fades(n, 0.02, min(0.4, dur * 0.3))[:, None])
+
+ENTER_PRE = 0.4
+def g_enter(rng, dur=0.5):
+    """'into the metal': the camera crosses the chrome surface (the cue time is the crossing). A tonal rise (noise through
+    narrow resonances on D/A that glide up an octave and close in from the sides to the centre), then at the crossing a
+    soft, muffled metallic bloom (a low bell on D heard from inside the metal: dark, slightly chorused) and a little
+    'whum'. ENTER_PRE s of rise come before t, dur s of bloom after (stereo)"""
+    pre = ENTER_PRE; n = ns(pre + dur); i0 = ns(pre); t = tt(n)
+    ur = np.clip(t / pre, 0, 1)
+    rise = ur ** 2.4 * np.where(t < pre, 1.0, np.exp(-(t - pre) / 0.05))
+    L = np.zeros(n); R = np.zeros(n)
+    for f0, a, p in ((293.66, 1.0, -0.6), (440.0, 0.7, 0.6), (587.33, 0.5, -0.35), (880.0, 0.3, 0.35)):
+        y = rmsn(svf(rng.standard_normal(n), f0 * 2 ** (ur ** 1.5), 8 + 10 * ur)) * a * rise
+        pp = p * (1 - ur)
+        L += y * np.where(pp <= 0, 1.0, np.cos(np.clip(pp, 0, 1) * np.pi / 2))
+        R += y * np.where(pp >= 0, 1.0, np.cos(np.clip(-pp, 0, 1) * np.pi / 2))
+    mm = n - i0; tm = tt(mm)
+    parts = ((1, 1.0, 1.0), (2.0, 0.3, 0.5), (2.76, 0.2, 0.35), (5.4, 0.06, 0.15))
+    whum = np.sin(phase(146.83 * (1 + 0.3 * np.exp(-tm / 0.03)))) * hit_env(mm, 0.12, 0.004)
+    L[i0:] += 0.9 * lp(bell(mm, 587.33, 0.5, parts, rng), 2200) + 0.7 * whum
+    R[i0:] += 0.9 * lp(bell(mm, 587.33 * 1.004, 0.5, parts, rng), 2200) + 0.7 * whum
+    return norm(hp(np.stack([L, R], 1), 90) * fades(n, 0.01, min(0.2, dur * 0.4))[:, None])
+
+def g_glint(rng, dur=0.3):
+    """a tiny metallic sparkle (a highlight sweeping over chrome): four very high, very short pings rising quickly in
+    key (A6 D7 E7 A7), sweeping left to right, over a breath of bright air (stereo)"""
+    n = ns(dur); L = np.zeros(n); R = np.zeros(n)
+    for k, (f, p) in enumerate([(1760.0, -0.4), (2349.32, -0.13), (2637.02, 0.13), (3520.0, 0.4)]):
+        m = ns(0.2); tm = tt(m)
+        y = (np.sin(2 * np.pi * f * tm) + 0.2 * np.sin(2 * np.pi * f * 2.76 * tm)) * hit_env(m, rng.uniform(0.03, 0.05), 0.0006) * (1 - 0.12 * k)
+        gl, gr = pan_gains(p); at = 0.024 * k + 0.004 * rng.random()
+        put(L, y * gl, at); put(R, y * gr, at)
+    m = ns(0.14); air = rmsn(hp(rng.standard_normal(m), 7000)) * np.sin(np.pi * np.arange(m) / m) ** 2 * 0.06
+    put(L, air, 0.0); put(R, air, 0.0)
+    return norm(np.stack([L, R], 1) * fades(n, 0.0005, 0.08)[:, None])
+
+
 # ---------------------------------------------------------------- the registry
 # level: loudest momentary loudness, dB re the voice (before ducking); bus: how it ducks under the words
 # (bed = continuous textures, ducked most; dot = small one-shots; accent = the few impacts / musical accents, ducked
@@ -424,6 +634,21 @@ KINDS = {
     'guard_gulp': dict(fn=g_guard_gulp, level=-14.0, bus='accent', pan=0.35, verb=-16.0, dur=0.35, pre=0.0, desc='comedic gulp: throat click + two descending gloops'),
     'sting':      dict(fn=g_sting, level=-11.0, bus='accent', pan=0.0, verb=-10.0, dur=1.6, pre=STING_PRE, desc='musical accent: reversed swell -> bell-pluck Dm chord + sub (hit at t)'),
     'reveal':     dict(fn=g_reveal, level=-12.0, bus='accent', pan=0.0, verb=-10.0, dur=1.8, pre=0.0, desc='soft glockenspiel chime D-F-A-D + warm bloom'),
+    # ---- V2 (DIRECTION_V2 section 10): every one 11-14 dB under the voice before ducking
+    'tension':    dict(fn=g_tension, level=-13.0, bus='bed', pan=0.0, verb=-16.0, dur=0.8, pre=0.0, desc='metallic stress as it deforms: stick-slip creak through steel modes, rising strain, low groan, two stress ticks'),
+    'squeeze':    dict(fn=g_squeeze, level=-11.0, bus='accent', pan=0.0, verb=-16.0, dur=0.6, pre=0.0, desc='wet metallic squelch through a gap: pressure pulses in a tightening rising band + steel sheen, lets go at 72 % with a downward schlup'),
+    'stream':     dict(fn=g_stream, level=-14.0, bus='bed', pan=0.0, verb=-16.0, dur=1.5, pre=0.0, desc='soft sustained fluid-metal movement: heavy smooth viscous pour (two wandering liquid bands, slosh), faint silver shimmer; not bubbly'),
+    'reform':     dict(fn=g_reform, level=-12.0, bus='accent', pan=0.0, verb=-20.0, dur=0.55, pre=0.0, desc='metal flowing back into shape: rising shimmer of metal partials up an octave into D/A, quickening tremolo; ends tight at t+dur (put the snap there)'),
+    'snap':       dict(fn=g_snap, level=-13.0, bus='accent', pan=0.0, verb=-16.0, dur=0.22, pre=0.0, desc='head snaps into shape: crisp click + short high steel tik + tiny pitch-dropping body knock'),
+    'escape':     dict(fn=g_escape, level=-12.0, bus='accent', pan=0.0, verb=-14.0, dur=0.5, pre=0.0, desc="pops free: round suction 'thwup' (pitch springs up) + air puff + two small bloops"),
+    'comic':      dict(fn=g_comic, level=-14.0, bus='dot', pan=0.0, verb=-14.0, dur=0.35, pre=0.0, variants=3, desc="deadpan punctuation (variant 0 hollow 'bonk', 1 tiny high 'plink', 2 dry 'boop-boop' falling a fourth)"),
+    'lock':       dict(fn=g_lock, level=-14.0, bus='dot', pan=0.0, verb=-14.0, dur=0.25, pre=0.0, desc='padlock/latch: spring slide, solid shackle clack, seating tick'),
+    'chain':      dict(fn=g_chain, level=-14.0, bus='dot', pan=0.0, verb=-14.0, dur=0.6, pre=0.0, desc='short chain rattle: small steel link clinks, clustered then thinning'),
+    'clunk':      dict(fn=g_clunk, level=-14.0, bus='dot', pan=0.0, verb=None, dur=0.4, pre=0.0, desc='small (lab-scale) solid metal figure knocking thin bars: hard little tok + thin rod ring + rebound'),
+    'ac_on':      dict(fn=g_ac_on, level=-14.0, bus='bed', pan=0.0, verb=None, dur=1.2, pre=0.0, desc='induction coil energising: relay tick, 100 Hz hum swelling in, charging tone rising A2->A3 and settling, faint high shimmer'),
+    'field':      dict(fn=g_field, level=-14.0, bus='bed', pan=0.0, verb=None, dur=1.6, pre=0.0, desc="magnetic field swell: soft D3/A3/D4 'vwoom' that swells, phaser comb through an airy band, wide; no buzz, no rising pitch"),
+    'enter':      dict(fn=g_enter, level=-12.0, bus='dot', pan=0.0, verb=None, dur=0.5, pre=ENTER_PRE, desc="'into the metal' (t = crossing the surface): tonal D/A resonant rise closing to the centre -> muffled metallic bloom + whum"),
+    'glint':      dict(fn=g_glint, level=-14.0, bus='dot', pan=0.0, verb=-12.0, dur=0.3, pre=0.0, desc='tiny metallic sparkle: four very short high pings A6-D7-E7-A7, L->R, breath of air'),
 }
 
 
@@ -433,4 +658,6 @@ def render(kind, rng, dur=None, variant=None):
     d = k['dur'] if dur is None else float(dur)
     if kind == 'mech_click':
         return g_mech_click(rng, d, variant)
+    if k.get('variants'):
+        return k['fn'](rng, d, variant)
     return k['fn'](rng, d)

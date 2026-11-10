@@ -1,0 +1,284 @@
+{
+ "duration": 32.4,
+ "note": "V2 sound test cues (SOUND-V2): plausible placements from V2_BRIEF shot plan + word times; not the director cues",
+ "music": {
+  "hook": 0,
+  "drop": 3.4,
+  "groove": 4.0,
+  "breath": 17.1,
+  "science": 17.9,
+  "pickup": 27.9,
+  "ret": 28.4
+ },
+ "cues": [
+  {
+   "t": 0.3,
+   "kind": "squeeze",
+   "dur": 0.6,
+   "gain": -1,
+   "shot": "H1"
+  },
+  {
+   "t": 0.35,
+   "kind": "stream",
+   "dur": 1.1,
+   "gain": -2,
+   "shot": "H1"
+  },
+  {
+   "t": 0.85,
+   "kind": "squeeze",
+   "dur": 0.55,
+   "shot": "H1"
+  },
+  {
+   "t": 1.4,
+   "kind": "escape",
+   "shot": "H1"
+  },
+  {
+   "t": 1.45,
+   "kind": "reform",
+   "dur": 0.35,
+   "shot": "H1"
+  },
+  {
+   "t": 1.8,
+   "kind": "snap",
+   "shot": "H1"
+  },
+  {
+   "t": 2.05,
+   "kind": "alarm",
+   "dur": 1.2,
+   "shot": "H1"
+  },
+  {
+   "t": 3.25,
+   "kind": "alarm_tail",
+   "dur": 0.5,
+   "shot": "H1"
+  },
+  {
+   "t": 3.4,
+   "kind": "enter",
+   "shot": "H1"
+  },
+  {
+   "t": 4.1,
+   "kind": "glint",
+   "gain": -3,
+   "shot": "LB"
+  },
+  {
+   "t": 5.14,
+   "kind": "lock",
+   "shot": "LB"
+  },
+  {
+   "t": 6.4,
+   "kind": "clunk",
+   "shot": "LB"
+  },
+  {
+   "t": 6.95,
+   "kind": "clunk",
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 7.45,
+   "kind": "ac_on",
+   "dur": 1.0,
+   "shot": "LB"
+  },
+  {
+   "t": 7.9,
+   "kind": "melt",
+   "dur": 1.2,
+   "gain": -1,
+   "shot": "LB"
+  },
+  {
+   "t": 9.3,
+   "kind": "stream",
+   "dur": 1.8,
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 10.5,
+   "kind": "glint",
+   "gain": -3,
+   "shot": "LB"
+  },
+  {
+   "t": 11.45,
+   "kind": "field",
+   "dur": 2.0,
+   "shot": "LB"
+  },
+  {
+   "t": 12.15,
+   "kind": "squeeze",
+   "dur": 0.6,
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 12.4,
+   "kind": "stream",
+   "dur": 1.2,
+   "gain": -3,
+   "shot": "LB"
+  },
+  {
+   "t": 13.05,
+   "kind": "drip",
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 14.5,
+   "kind": "pipette",
+   "shot": "MS"
+  },
+  {
+   "t": 15.45,
+   "kind": "glug",
+   "shot": "MS"
+  },
+  {
+   "t": 15.9,
+   "kind": "cool",
+   "dur": 0.8,
+   "gain": -1,
+   "shot": "MS"
+  },
+  {
+   "t": 16.47,
+   "kind": "reveal",
+   "gain": -2,
+   "shot": "MS"
+  },
+  {
+   "t": 17.75,
+   "kind": "enter",
+   "gain": -1,
+   "shot": "MS"
+  },
+  {
+   "t": 18.0,
+   "kind": "stream",
+   "dur": 1.4,
+   "gain": -5,
+   "shot": "MS"
+  },
+  {
+   "t": 18.75,
+   "kind": "ac_on",
+   "dur": 1.0,
+   "gain": -3,
+   "shot": "MS"
+  },
+  {
+   "t": 20.5,
+   "kind": "field",
+   "dur": 1.6,
+   "shot": "MS"
+  },
+  {
+   "t": 21.3,
+   "kind": "glint",
+   "gain": -4,
+   "shot": "MS"
+  },
+  {
+   "t": 21.6,
+   "kind": "stream",
+   "dur": 0.9,
+   "gain": -3,
+   "shot": "MS"
+  },
+  {
+   "t": 22.6,
+   "kind": "field",
+   "dur": 1.4,
+   "gain": -2,
+   "shot": "FU"
+  },
+  {
+   "t": 22.8,
+   "kind": "stream",
+   "dur": 1.2,
+   "gain": -4,
+   "shot": "FU"
+  },
+  {
+   "t": 25.2,
+   "kind": "ac_on",
+   "dur": 0.8,
+   "gain": -3,
+   "shot": "FU"
+  },
+  {
+   "t": 26.0,
+   "kind": "cool",
+   "dur": 0.6,
+   "gain": -2,
+   "shot": "FU"
+  },
+  {
+   "t": 26.55,
+   "kind": "swish",
+   "shot": "FU"
+  },
+  {
+   "t": 27.4,
+   "kind": "glint",
+   "gain": -3,
+   "shot": "FU"
+  },
+  {
+   "t": 28.15,
+   "kind": "chain",
+   "shot": "J1"
+  },
+  {
+   "t": 28.45,
+   "kind": "lock",
+   "shot": "J1"
+  },
+  {
+   "t": 28.62,
+   "kind": "lock",
+   "gain": -3,
+   "shot": "J1"
+  },
+  {
+   "t": 28.97,
+   "kind": "comic",
+   "variant": 2,
+   "shot": "J1"
+  },
+  {
+   "t": 29.95,
+   "kind": "bar_tap",
+   "gain": -2,
+   "shot": "J1"
+  },
+  {
+   "t": 30.82,
+   "kind": "comic",
+   "variant": 1,
+   "gain": -3,
+   "shot": "J1"
+  },
+  {
+   "t": 32.1,
+   "kind": "tension",
+   "dur": 0.6,
+   "shot": "J1"
+  }
+ ]
+}

@@ -4,15 +4,20 @@
 Everything is synthesised (tools/sfx_lib.py: the effects; tools/music.py: the bed). No samples, no third-party music.
 The narration master is used sample for sample (gain, a gentle compressor and a true-peak limiter only).
 
-Cues: audio/cues.json = {"duration": 32.4, "cues": [{"t", "kind", "gain"?, "dur"?, "pan"?, "variant"?}, ...]}
+Cues: audio/cues.json = {"duration": 32.4, "music"?: {section: start_s}, "cues": [{"t", "kind", "gain"?, "dur"?, "pan"?, "variant"?}, ...]}
   t        film seconds (the sound's start; for 'sting' the HIT, its swell starts 0.22 s earlier). A sound that runs
            past the end continues at the start (the Short loops).
   kind     one of sfx_lib.KINDS (alarm, alarm_tail, door_slide, door_slam, cup_drop, splash, bar_tap, mech_click, servo,
            melt, flow, drip, glug, pipette, cool, mag_hum, heat_coil, whoosh, swish, pop, guard_gasp, guard_gulp, sting,
-           reveal)
+           reveal; V2: tension, squeeze, stream, reform, snap, escape, comic, lock, chain, clunk, ac_on, field, enter,
+           glint; for 'enter' t is the surface crossing, its rise starts 0.4 s earlier)
   gain     dB offset on the kind's level (default 0)
   dur      seconds, for the kinds that stretch (alarm, alarm_tail, melt, flow, mag_hum, heat_coil, cool, whoosh, ...)
-  pan      -1..1 overrides the kind's pan; variant (mech_click) 0-3
+  pan      -1..1 overrides the kind's pan; variant (mech_click 0-3, comic 0-2)
+  music    optional: the music bed's section starts in film seconds, any of hook, drop, groove, breath, science, pickup,
+           return (aliases ret, lab, lab_groove, transition, how), quantised to the 16th grid (tools/music.py); absent:
+           the V1 sections (V1 unchanged). V2: {"hook": 0, "drop": 3.4, "groove": 4.0, "breath": 17.1, "science": 17.9,
+           "pickup": 27.9, "return": 28.4}
   alarm:   gates one loop-periodic klaxon bed (one tone per music beat); fades in 0.12 s (none if t <= 0.02: the loop's
            continuation) and out 0.25 s (none if it reaches the end: it continues into frame 0). alarm_tail fades it
            out over its dur. Overlapping alarm cues never double up.
@@ -244,7 +249,7 @@ if GALLERY:
     DUR_G = 0.0; items = []
     order = [k for k in X.KINDS if k != 'alarm_tail']
     for kind in order:
-        variants = [0, 1, 2, 3] if kind == 'mech_click' else [None]
+        variants = [0, 1, 2, 3] if kind == 'mech_click' else list(range(X.KINDS[kind].get('variants', 0))) or [None]
         for var in variants:
             if kind == 'alarm':
                 beat = 32.4 / 64; n = int(2.6 * SR)
@@ -399,7 +404,8 @@ DC = lambda x: circ(lambda y: hp(y, 25, 2), x)
 sfx = DC(sum(ducked(BUS[b], b) for b in BUS))
 
 # ---------------------------------------------------------------- music: rendered, ducked (sidechain, deeper in the voice band), levelled
-MUS = M.render(DUR)
+MUSIC_SECTIONS = cj.get('music') or None
+MUS = M.render(DUR, sections=MUSIC_SECTIONS)
 music_raw = sum(MUS['stems'].values())
 m_lo = circ(lambda y: lp(y, 600, 4), music_raw)
 m_hi = circ(lambda y: hp(y, 5000, 4), music_raw)
@@ -501,6 +507,7 @@ res = {'name': NAME, 'cues_file': CUES, 'cues': len(CUE_LIST), 'warnings': WARN,
                              'samples_over_1db_gr': int(np.sum(vlim < db(-1)))},
                  'lag_vs_master_samples': lag, 'corr_vs_master': round(float(np.corrcoef(mono(voice_out), v)[0, 1]), 5)},
        'music': {'lufs': lufs(music_out), 'bpm': MUS['bpm'], 'beats': MUS['beats'], 'bars': MUS['bars'], 'sections': sections,
+                 **({'sections_requested_s': MUSIC_SECTIONS, 'sections_note': 'starts quantised to the 16th grid'} if MUSIC_SECTIONS else {}),
                  'under_voice_in_words_400ms_db': stat((L_v - L_m)[inw]),
                  'level_in_gaps_re_voice_integrated_db': stat(L_m[gaps] - voice_l_st),
                  'level_in_words_re_voice_integrated_db': stat(L_m[inw] - voice_l_st),
