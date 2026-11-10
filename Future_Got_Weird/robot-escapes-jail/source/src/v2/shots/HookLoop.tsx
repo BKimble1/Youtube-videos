@@ -137,7 +137,7 @@ const hookState = (tau: number): Robot2State => ({
   press: ss(tau, 30.95 - DUR, 31.85 - DUR),
   // frame 0 is still a clean robot silhouette (head only just softening where the face presses into the gap); the head
   // goes liquid over the first 0.4 s, the shoulders / arms by 0.5 s, the legs by 0.75 s
-  soften: {head: clamp(splineKeys(tau, KSOFT)), upper: ss(tau, 0.1, 0.5), lower: ss(tau, 0.35, 0.75)},
+  soften: {head: clamp(splineKeys(tau, KSOFT)), upper: ss(tau, 0.1, 0.5), lower: ss(tau, 0.1, 0.45)},
   squeeze: {gap: HERO.gap, out: HERO.out, u: loopU(tau), outPose: outPose(tau)},
   reform: keyS(tau, [[T_REFORM0, 0], [T_REFORM1, 1]], (x) => 0.5 * x + 0.5 * x * x * (3 - 2 * x)),
 });
@@ -398,23 +398,27 @@ const Escalation: React.FC<{c: Cam3; tau: number}> = ({c, tau}) => {
 /** the cell door's ordinary padlock (H1: "the cell still locked") */
 const DoorPadlock: React.FC<{c: Cam3}> = ({c}) => <Padlock c={c} p={P(9.45, 13.2, -1.5)} k={2.1} />;
 
-/** silver smears left on the two bars and the sill by the squeeze (they grow as the material passes, then stay) */
+/** silver smears left on the two bars and the sill by the squeeze: a film wiped down the gap-side face of each bar from
+ *  where the hands melted on it (grip height), born under the melting hand, then slowly running down into a drip that
+ *  stays attached to the bar (one continuous streak, never a loose drop) */
 const Smears: React.FC<{c: Cam3; tau: number}> = ({c, tau}) => {
-  const g = ss(tau, 0.55, 1.25);
-  if (g <= 0.01) return null;
+  const born = ss(tau, 0.42, 0.66);
+  if (born <= 0.01) return null;
   const prims: Prim3[] = [];
   for (const side of [-1, 1]) {
-    // a silver film wiped down the gap-side face of each bar, thickening into a drip at the bottom
     const x = side * (HERO.barX - 0.42);
-    const top = 13.4 + 0.4 * side, len = (4.2 + 1.2 * side) * g;
     const dd = -0.42;
-    prims.push({k: 'cap3', a: P(x, top, dd), b: P(x, top - len, dd), ra: 0.11, rb: 0.2});
-    prims.push({k: 's', p: P(x, top - len - 0.1, dd - 0.02), r: 0.26 * g});
-    const len2 = (1.6 - 0.5 * side) * ss(tau, 0.8, 1.7);
-    prims.push({k: 'cap3', a: P(x + side * 0.12, 10.2 + side * 0.6, dd), b: P(x + side * 0.12, 10.2 + side * 0.6 - len2, dd), ra: 0.08, rb: 0.15});
+    const top = HERO.gripH + 0.35 + 0.25 * side;
+    // the film runs down (decelerating), the drip at its foot swells a little as it collects
+    const run = 1 - (1 - ss(tau, 0.42, 1.9 + 0.2 * side)) ** 2;
+    const len = 0.3 + (2.8 + 0.6 * side) * run;
+    const w = 0.12 * born;
+    prims.push({k: 'cap3', a: P(x, top, dd), b: P(x, top - len, dd), ra: w * 1.0, rb: w * 1.35});
+    prims.push({k: 's', p: P(x, top - len - 0.05, dd - 0.02), r: w * (1.5 + 0.25 * run)});
   }
   // a little residue on the sill where it poured over
-  prims.push({k: 'disc3', p: P(0.5, 0.42, -0.95), rx: 1.3 * g, rd: 0.45 * g, flat: 1} as Prim3);
+  const g = ss(tau, 0.55, 1.25);
+  if (g > 0.01) prims.push({k: 'disc3', p: P(0.5, 0.42, -0.95), rx: 1.3 * g, rd: 0.45 * g, flat: 1} as Prim3);
   const pr = projectPrims(c, prims);
   const o = project(c, P(0, 10, -0.4));
   return <ChromeBody prims={pr} blend={0.12 * o.s} R={0.25 * o.s} specs={1} />;

@@ -267,7 +267,18 @@ export const snapEase = (x: number) => {
  *  liquid shapes is solved so the body's projected area stays equal to the rigid body's (no shrinking lump). The area
  *  is measured in TWO orthographic views (front and side) and averaged, so material lined up in depth while it flows
  *  through the bars (inside remainder, neck, outside front) is not mistaken for lost area. */
+const RIG_CACHE = new Map<string, Robot2Rig>();
 export const robot2Rig = (base: Robot2Base, pose: Robot2Pose, state: Robot2State = {}, t = 0): Robot2Rig => {
+  // pure: the back / front depth passes (and the shot's own probes) of one frame share one solve
+  const key = JSON.stringify([base, pose, state, t]);
+  const hit = RIG_CACHE.get(key);
+  if (hit) return hit;
+  const r = robot2RigSolve(base, pose, state, t);
+  RIG_CACHE.set(key, r);
+  if (RIG_CACHE.size > 16) RIG_CACHE.delete(RIG_CACHE.keys().next().value as string);
+  return r;
+};
+const robot2RigSolve = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: number): Robot2Rig => {
   const r1 = rigAlpha(base, pose, state, t, 1);
   if (!r1.liquid) return r1;
   const s = base.s ?? 1;
@@ -281,7 +292,7 @@ export const robot2Rig = (base: Robot2Base, pose: Robot2Pose, state: Robot2State
     return sq ? lerp(aIn, rigidFrontArea(base, pose, {...state, squeeze: {...sq, u: 1}}, cam, k), ss(sq.u, 0.55, 1)) : aIn;
   };
   const tF = tgt(camF), tS = tgt(camS);
-  const err = (r: Robot2Rig) => 0.5 * (unionArea(projectPrims(camF, r.prims3), r.blendU * k, 70) / tF + unionArea(projectPrims(camS, r.prims3), r.blendU * k, 70) / tS) - 1;
+  const err = (r: Robot2Rig) => 0.5 * (unionArea(projectPrims(camF, r.prims3), r.blendU * k, AREA_CELLS) / tF + unionArea(projectPrims(camS, r.prims3), r.blendU * k, AREA_CELLS) / tS) - 1;
   let xa = 1, fa = err(r1);
   let xb = fa > 0 ? 0.93 : 1.08;
   let rb = rigAlpha(base, pose, state, t, xb);
@@ -297,6 +308,9 @@ export const robot2Rig = (base: Robot2Base, pose: Robot2Pose, state: Robot2State
   }
   return rb;
 };
+/** lattice resolution of the area bookkeeping (cells across the body): ~ the resolution the body is drawn at (ChromeBody marches
+ *  ~120 cells across it), fine enough for the thin rope / pour; liquid and rigid areas are measured alike */
+const AREA_CELLS = 120;
 const RIGID_CACHE = new Map<string, number>();
 /** projected area of the rigid body in an orthographic view (inside pose; the outside pose once the squeeze is done) */
 const rigidFrontArea = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, cam: Cam3, k: number) => {
@@ -307,7 +321,7 @@ const rigidFrontArea = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, 
   if (hit !== undefined) return hit;
   const P = useOut ? robot2Posed({...sq!.out, s: base.s}, sq!.outPose ?? POSE_IDLE) : robot2Posed(base, pose);
   const prims = projectPrims(cam, P.parts.map((q) => ({...q.rigid, g: q.g, blend: 0.06 * P.s})));
-  const a = unionArea(prims, 0.06 * P.s * k, 70);
+  const a = unionArea(prims, 0.06 * P.s * k, AREA_CELLS);
   RIGID_CACHE.set(key, a);
   if (RIGID_CACHE.size > 32) RIGID_CACHE.delete(RIGID_CACHE.keys().next().value as string);
   return a;
@@ -334,7 +348,9 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
   // shapes go rigid bottom-up and the head's shape snaps last
   const headRise = (x: number) => (x < 0.72 ? 1.07 * ss(x / 0.72, 0, 1) : 1.07 - 0.07 * ss((x - 0.72) / 0.28, 0, 1));
   const posR: Record<Region, number> = {lower: ss(rf, 0, 0.6), upper: ss(rf, 0.04, 0.66), head: headRise(clamp((rf - 0.08) / 0.7))};
-  const reformR: Record<Region, number> = {lower: ss(rf, 0.12, 0.62), upper: ss(rf, 0.26, 0.78), head: ss(rf, 0.6, 0.84)};
+  const reformR: Record<Region, number> = {lower: ss(rf, 0.12, 0.62), upper: ss(rf, 0.26, 0.78), head: ss(rf, 0.52, 0.84)};
+  // the ear discs grow out of the head over several frames, ahead of the head's final snap
+  const earOut = ss(rf, 0.3, 0.84);
   // the collected lump outside: parts sag into a wide low mound (c = 1) and rise back to rigid (c = 0)
   const lumpOf = (q: Part, c: number): P3 => {
     const b = B ? B.parts.find((z) => z.id === q.id)! : q;
@@ -342,16 +358,23 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
     const hh = b.c.h - (sq ? sq.out.h : base.h);
     const k = c;
     // a living lump: slow deterministic wobble while liquid
-    const wx = 0.22 * s * k * noise1(t * 1.7 + q.sigma * 11, 5) * wob, wh = 0.16 * s * k * noise1(t * 2.1 + q.sigma * 13, 6) * wob;
-    const P0 = {x: bx + (b.c.x - bx) * (1 + 0.55 * k) + wx, h: (sq ? sq.out.h : base.h) + q.re * 0.6 * k + hh * (1 - 0.86 * k) + wh, d: b.c.d + (q.id === 'head' ? -0.3 * s : 0) * k};
+    // + a travelling surface ripple across the mound (each part's phase from its place in the lump) and a slow swell
+    const ry = 2 * Math.PI * (1.6 * t - 0.35 * (b.c.x - bx) / s);
+    const wx = (0.22 * noise1(t * 1.7 + q.sigma * 11, 5) + 0.1 * Math.sin(ry + 1.3)) * s * k * wob;
+    const wh = (0.16 * noise1(t * 2.1 + q.sigma * 13, 6) + 0.16 * Math.sin(ry)) * s * k * wob;
+    // the mound spreads wide but stays ONE body: lateral offsets are soft-clamped inside the head's / torso's extent
+    // (the arms become side bulges of the mound, never lobes of their own)
+    const dx = b.c.x - bx, lim = 2.1 * s;
+    const dxL = lerp(dx, lim * Math.tanh((dx * 1.55) / lim), k);
+    const P0 = {x: bx + dxL + wx, h: (sq ? sq.out.h : base.h) + q.re * 0.6 * k + hh * (1 - 0.86 * k) + wh, d: b.c.d + (q.id === 'head' ? -0.3 * s : 0) * k};
     if (q.region === 'head' && q.id !== 'head') {
       // ears / neck stay attached to the head's lump (pulled in as it goes liquid)
       const hq = A.parts.find((z) => z.id === 'head')!;
       const hb = B ? B.parts.find((z) => z.id === 'head')! : hq;
       const H0 = lumpOf(hq, c);
       // (ears stay tucked into the head's liquid until the head's shape snaps back: no brim of fillets on the way up)
-      const kin = Math.max(k, sq && u >= 1 ? 1 - reformR.head : 0);
-      return {x: H0.x + (b.c.x - hb.c.x) * (1 - 0.6 * kin), h: H0.h + (b.c.h - hb.c.h) * (1 - 0.45 * kin), d: H0.d + (b.c.d - hb.c.d)};
+      const kin = Math.max(k, sq && u >= 1 ? 1 - earOut : 0);
+      return {x: H0.x + (b.c.x - hb.c.x) * (1 - 0.25 * kin), h: H0.h + (b.c.h - hb.c.h) * (1 - 0.2 * kin), d: H0.d + (b.c.d - hb.c.d)};
     }
     return P0;
   };
@@ -376,6 +399,31 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
     preH += w * (q.c.h - sagH(q));
   }
   const hcG = preM > 1e-9 ? preH / preM : A.head.c.h;
+  // soft sag (inside): the region slumps and spreads a little; wobble on the liquid surface; press toward the bars
+  const a0Of = (q: Part): P3 => {
+    const soft = softR[q.region];
+    const sag = soft * soft;
+    const ph = noise1(t * 1.3 + q.sigma * 7, 3) * wob;
+    const pd = pressOf(q);
+    return {
+      // (upper parts spread a little as they slump; the legs run together into one column of liquid under the body)
+      x: q.c.x + (q.c.x - A.torso.c.x) * (q.region === 'lower' ? -0.6 * Math.sqrt(sag) : 0.18 * sag) + 0.08 * s * ph * soft + (g ? (g.x - q.c.x) * 0.15 * (pd > 0 ? press : 0) : 0),
+      h: q.c.h - sagH(q),
+      d: q.c.d - pd,
+    };
+  };
+  // the ONE outside mass. The head's front (the FACE) leads: it bulges out at the gap exit, droops and slides down into
+  // the lump; every other part's front rides INSIDE that mass (no beads strung along the pour) and only settles into its
+  // own place in the lump as the mass lands, so the outside is always one cohesive body.
+  const headPart = A.parts.find((z) => z.id === 'head')!;
+  const lamH = sq ? lamOf(u, 0) : 0;
+  const headExit = (rf2: number): P3 => {
+    const A0 = a0Of(headPart);
+    const hx = lerp(A0.h, hcG, 0.7);
+    return {x: g ? g.x : A0.x, h: hx - 0.6 * s * ss(lamH, 0.1, 0.4), d: (g ? g.d : A0.d) - 0.5 * s - 0.9 * rf2};
+  };
+  const headLump = lumpOf(headPart, 1);
+  const headFront = sq && lamH > 0 ? (lamH >= 1 ? headLump : pourAt(headExit(headPart.re * alpha * lamH), headLump, ss(lamH, 0.3, 0.92))) : null;
   for (const q of A.parts) {
     partArea += Math.PI * q.re * q.re;
     const soft = softR[q.region];
@@ -386,17 +434,10 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
     // shape for a moment); back to rigid with the reform
     let mu = ss(soft, 0, 0.7);
     if (sq && lam > 0) mu = Math.max(mu, ss(lam, 0.05, 0.35));
-    if (sq && lam >= 1) mu = clamp(1 - reformR[q.region]);
+    if (sq && lam >= 1) mu = clamp(1 - (q.id === 'earL' || q.id === 'earR' ? earOut : reformR[q.region]));
     muOf[q.id] = mu;
-    // soft sag (inside): the region slumps and spreads a little; wobble on the liquid surface; press toward the bars
-    const sag = soft * soft;
     const ph = noise1(t * 1.3 + q.sigma * 7, 3) * wob;
-    const pd = pressOf(q);
-    const A0: P3 = {
-      x: q.c.x + (q.c.x - A.torso.c.x) * 0.18 * sag + 0.08 * s * ph * soft + (g ? (g.x - q.c.x) * 0.15 * (pd > 0 ? press : 0) : 0),
-      h: q.c.h - sagH(q),
-      d: q.c.d - pd,
-    };
+    const A0 = a0Of(q);
     let liquid: Prim3;
     let rigidP = q.rigid;
     if (!sq || lam <= 0) {
@@ -409,6 +450,12 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
       const lc = lumpOf(q, cOut);
       liquid = {k: 's', p: lc, r: q.re * alpha};
       rigidP = shift3(Bq.rigid, {x: lc.x - Bq.c.x, h: lc.h - Bq.c.h, d: lc.d - Bq.c.d}, 1);
+      // the ear discs grow out of the head (small -> full size) as they slide out to their place
+      if (rigidP.k === 'ell3' && (q.id === 'earL' || q.id === 'earR')) {
+        const e = lerp(0.3, 1, ss(earOut, 0, 1));
+        rigidP = {...rigidP, rx: rigidP.rx * e, ry: rigidP.ry * e};
+        liquid = {...liquid, r: (liquid as {r: number}).r * lerp(0.75, 1, earOut)};
+      }
     } else {
       // in transit: inside remainder (1-l)^2 + neck 2l(1-l) + outside front l^2 = 1 (the part's area is exact at every l)
       const gg = g!;
@@ -424,13 +471,21 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
       const aS = fS * Math.PI * q.re * q.re * alpha * alpha;
       transit.m += aS;
       transit.h += aS * A0.h;
-      // the front: bulges out right at the gap exit (at the neck's height), then slides down into its lump place
-      const hx = lerp(A0.h, hcG, 0.7);
-      // the head's front (the FACE) bulges out at the gap exit and droops like a forming drop before it pours down into
-      // the lump; every other part's material runs straight down the pour into the lump on the floor
+      // the front: the head's (the FACE) bulges out at the gap exit and droops like a forming drop before it slides
+      // down into the lump; every other part's front joins that one outside mass (riding inside it, offset toward its
+      // own lump place as the mass lands) and settles into its lump place as its transit ends
       const isHead = q.id === 'head';
-      const ex: P3 = {x: gg.x, h: hx - (isHead ? 0.6 * s * ss(lam, 0.1, 0.4) : 0), d: gg.d - 0.5 * s - 0.9 * rf2};
-      const front = pourAt(ex, lumpOf(q, 1), isHead ? ss(lam, 0.3, 0.92) : ss(lam, 0.1, 0.65));
+      const hx = lerp(A0.h, hcG, 0.7);
+      let front: P3;
+      if (isHead || !headFront) {
+        const ex: P3 = {x: gg.x, h: hx - (isHead ? 0.6 * s * ss(lam, 0.1, 0.4) : 0), d: gg.d - 0.5 * s - 0.9 * rf2};
+        front = pourAt(ex, lumpOf(q, 1), isHead ? ss(lam, 0.3, 0.92) : ss(lam, 0.1, 0.65));
+      } else {
+        const own = lumpOf(q, 1);
+        const land = ss(lamH, 0.45, 1);
+        const anchor: P3 = {x: headFront.x + (own.x - headLump.x) * land * 0.85, h: headFront.h + (own.h - headLump.h) * land * 0.85, d: headFront.d + (own.d - headLump.d) * land * 0.85};
+        front = lerp3(anchor, own, ss(lam, 0.35, 1));
+      }
       liquid = {k: 's', p: tail, r: rt};
       rigidP = shift3(q.rigid, {x: tail.x - q.c.x, h: tail.h - q.c.h, d: tail.d - q.c.d}, 1);
       if (rf2 > 0.01) prims3.push({k: 's', p: front, r: rf2, g: q.g});
@@ -448,7 +503,7 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
         eyeInfo = {l: {x: ec.x - ox, h: ec.h, d: ec.d}, r: {x: ec.x + ox, h: ec.h, d: ec.d}, sx: narrow * lerp(1, 0.9, sqz), sy: 1 + 0.32 * sqz, d: ec.d, vis: 1};
         headInfo = {c: lerp3(tail, front, b), r: q.re * lerp(Math.sqrt(fT), Math.sqrt(fF), b)};
       }
-      if (q.id === 'torso') ledInfo = {c: fF > fT ? {x: front.x + 0.25 * rf2, h: front.h + 0.2 * rf2, d: front.d - 0.7 * rf2} : {x: tail.x + 0.25 * rt, h: tail.h + 0.2 * rt, d: tail.d - 0.7 * rt}, k: 1};
+
     }
     prims3.push(mu >= 1 ? {...liquid, g: q.g} : mu <= 0 ? {...rigidP, g: q.g} : {k: 'mix3', a: rigidP, b: liquid, t: mu, g: q.g});
     if (q.id === 'head') {
@@ -464,13 +519,54 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
         const Bq = B!.parts.find((z) => z.id === 'head')!;
         const lc = lumpOf(q, cOut);
         const dv = {x: lc.x - Bq.c.x, h: lc.h - Bq.c.h, d: lc.d - Bq.c.d};
-        eyeInfo = {l: add3(B!.eyes.l, dv), r: add3(B!.eyes.r, dv), sx: 1 - 0.25 * mu, sy: 1 - 0.3 * mu, d: lc.d, vis: 1};
+        eyeInfo = {l: add3(B!.eyes.l, dv), r: add3(B!.eyes.r, dv), sx: 1 - 0.12 * mu, sy: 1 - 0.16 * mu, d: lc.d, vis: 1};
         headInfo = {c: lc, r: q.re};
       }
     }
+    // (the chest LED glint is sunk while the metal is in transit or collected: decals only ride a body, never a puddle)
     if (q.id === 'torso' && mu > 0.02 && (!sq || lam <= 0 || lam >= 1)) {
       const c0 = !sq || lam <= 0 ? A0 : lumpOf(q, cOut);
-      ledInfo = {c: {x: c0.x + 0.5 * s, h: c0.h + 0.2 * s, d: c0.d - 0.7 * s}, k: ss(mu, 0.02, 0.4)};
+      const kSq = !sq ? 1 : lam <= 0 ? 1 - ss(u, 0.07, 0.12) : ss(reformR.upper, 0.25, 0.55);
+      if (kSq > 0.01) ledInfo = {c: {x: c0.x + 0.5 * s, h: c0.h + 0.2 * s, d: c0.d - 0.7 * s}, k: ss(mu, 0.02, 0.4) * kSq};
+    }
+  }
+  // the LUMP is alive: two slow swells travel over its top (left -> right, staggered), each growing out of the surface and
+  // sinking back (radius from 0, so nothing pops), plus the per-part ripple in lumpOf
+  // (a prim's smooth-min reach is scaled with it: a vanishing bump has no fillet left, so its wrap-around never pops)
+  const fadeBlend = new Map<Prim3, number>();
+  const rip = sq ? ss(u, 0.62, 0.85) * (1 - ss(rf, 0.06, 0.4)) * wob : 0;
+  if (rip > 0.001) {
+    const hl = lumpOf(headPart, 1 - posR.head);
+    const R0 = headPart.re * alpha;
+    for (let i = 0; i < 2; i++) {
+      const ph = (t * 1.25 + i * 0.5) % 1;
+      const env = Math.sin(Math.PI * ph);
+      const a = lerp(-1.15, 1.15, ph);
+      // (on the outline seen from the hook camera, which looks down on the lump ~35 deg: up, tipped away from us)
+      // (a broad swell: a big sphere mostly under the surface, so the outline only bulges gently, never a peak)
+      const p: P3 = {x: hl.x + Math.sin(a) * R0 * 0.72, h: hl.h + Math.cos(a) * R0 * 0.6, d: hl.d + Math.cos(a) * R0 * 0.42};
+      const pr: Prim3 = {k: 's', p, r: 0.85 * s * env * rip, g: 4};
+      prims3.push(pr);
+      fadeBlend.set(pr, env * rip);
+    }
+  }
+  // the REFORM COLUMN: while the head is still liquid, the metal rises to it as one thick liquid column from the body
+  // (no stick neck, no head floating above the body); it narrows into the neck only as the head snaps into shape, and
+  // ends exactly inside the rigid neck (radius < the neck's, on the torso -> head axis)
+  if (sq && u >= 1 && B) {
+    // (thick while the body rises, tapering over the last frames before the snap)
+    // (it tapers while the head is already taking its rigid shape, so the head's own shading owns the chin: no glint
+    // caught in the chin / column corner)
+    const colK = ss(rf, 0.02, 0.25) * (1 - ss(rf, 0.52, 0.86));
+    if (colK > 0.001) {
+      const tq = A.parts.find((z) => z.id === 'torso')!;
+      const ct = lumpOf(tq, 1 - posR.upper), ch = lumpOf(headPart, 1 - posR.head);
+      const hr = headPart.re * alpha;
+      const rr = lerp(0.8 * R2.neckR * s, 0.56 * hr, ss(colK, 0, 0.8));
+      // the column's top sits inside the head's lower half, its foot inside the torso
+      const top: P3 = {x: ch.x, h: ch.h - lerp(0.3, 0.45, colK) * hr, d: lerp(ch.d, ct.d, 0.5)};
+      const foot: P3 = {x: ct.x, h: ct.h + 0.2 * s, d: lerp(ch.d, ct.d, 0.5)};
+      prims3.push({k: 'cap3', a: foot, b: top, ra: rr * lerp(1, 1.12, colK), rb: rr, g: 2});
     }
   }
   // the NECK: one slab of liquid standing in the gap (narrower than the gap, tall, spanning the bars' depth), carrying
@@ -512,7 +608,8 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
   const torsoPart = A.parts.find((z) => z.id === 'torso')!;
   const tLam = sq ? lamOf(u, torsoPart.sigma) : 0;
   const tc = sq && u >= 1 && B ? lumpOf(torsoPart, 1 - posR.upper) : {...A.torso.c, d: A.torso.c.d - pressOf(torsoPart)};
-  const panelK = (1 - ss(torsoMu, 0, 0.75)) * (tLam > 0 && tLam < 1 ? 0 : 1);
+  // (the chest panel sinks into the softening torso quickly: it never lingers as a small chip on the liquid)
+  const panelK = (1 - ss(torsoMu, 0, sq && u < 1 ? 0.4 : 0.75)) * (tLam > 0 && tLam < 1 ? 0 : 1);
   const seams: Robot2Rig['seams'] = [];
   const rigidUp = 1 - ss(torsoMu, 0, 0.5);
   if (rigidUp > 0.02 && !(tLam > 0 && tLam < 1)) {
@@ -525,11 +622,9 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
   const hLam = sq ? lamOf(u, 0) : 0;
   const earRings = A.ears.map((c) => ({c: {...c, d: c.d - (g ? press * 0.62 * Math.max(0, base.d - g.d) : 0)}, r: R2.earR * 0.55 * s, k: hLam > 0 && hLam < 1 ? 0 : rigidHead}));
   if (sq && u >= 1 && B) {
-    // after the escape the decals ride the reformed (outside) body
-    const hq = A.parts.find((z) => z.id === 'head')!;
-    const lc = lumpOf(hq, 1 - posR.head);
-    const Bh = B.parts.find((z) => z.id === 'head')!;
-    for (let i = 0; i < earRings.length; i++) earRings[i] = {c: add3(B.ears[i], {x: lc.x - Bh.c.x, h: lc.h - Bh.c.h, d: lc.d - Bh.c.d}), r: R2.earR * 0.55 * s, k: rigidHead};
+    // after the escape the ear rings ride the ear discs as they grow out of the reformed head
+    const ears = A.parts.filter((z) => z.id === 'earL' || z.id === 'earR');
+    for (let i = 0; i < earRings.length; i++) earRings[i] = {c: lumpOf(ears[i], 1 - posR.head), r: R2.earR * 0.55 * s, k: ss(earOut, 0.5, 1)};
   }
   const armMu = Math.max(muOf['handL'] ?? 0, muOf['handR'] ?? 0);
   // (finger lines only while the gripping hands are still the inside pose's: gone once the hands start to flow)
@@ -547,13 +642,16 @@ const rigAlpha = (base: Robot2Base, pose: Robot2Pose, state: Robot2State, t: num
     rigid[3] = reformR.upper;
     rigid[4] = clamp(reformR.head);
   }
-  const liq = (x: number) => lerp(0.06, 0.62, ss(x, 0, 0.8)) * s;
+  // while the metal is in transit / collected it is ONE heavy liquid: the blend radii grow (smooth, continuous outlines,
+  // no notches between the part blobs), and shrink back as the reform rebuilds the parts
+  const heavy = sq ? ss(u, 0.09, 0.22) * (1 - ss(rf, 0.05, 0.5)) : 0;
+  const liq = (x: number) => lerp(0.06, 0.62 + 0.55 * heavy, ss(x, 0, 0.8)) * s;
   const lowL = sq ? (u >= 1 ? 1 - reformR.lower : Math.max(softR.lower, ss(u, 0.4, 0.6))) : softR.lower;
   const upL = sq ? (u >= 1 ? 1 - reformR.upper : Math.max(softR.upper, ss(u, 0.1, 0.3))) : softR.upper;
   const hdL = sq ? (u >= 1 ? 1 - clamp(reformR.head) : Math.max(softR.head, ss(u, 0, 0.08))) : softR.head;
   // the stream's blend follows its own thickness (a thin new stream never pulls a big fillet out of the body)
   const groupBlendU = [liq(1), liq(lowL), liq(Math.max(lowL, upL)), liq(upL), liq(hdL), clamp(1.4 * streamR, 0.02 * s, 0.62 * s)];
-  for (const p of prims3) p.blend = groupBlendU[p.g ?? 0] * 0.8;
+  for (const p of prims3) p.blend = groupBlendU[p.g ?? 0] * lerp(0.8, 0.95, heavy) * (fadeBlend.get(p) ?? 1);
   return {
     prims3,
     rigid,

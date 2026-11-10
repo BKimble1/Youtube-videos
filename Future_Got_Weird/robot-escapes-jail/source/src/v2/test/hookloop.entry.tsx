@@ -78,6 +78,17 @@ const Explore: React.FC<{vs: EV[]}> = ({vs}) => (
     })}
   </AbsoluteFill>
 );
+/** pop check: the hook at a FIXED camera (frame = hook frame), so consecutive-frame differences show only the robot */
+const FixedCam: React.FC<{p: number[]; at: number[]; f: number}> = ({p, at, f}) => {
+  const fr = useCurrentFrame();
+  resetIds(`fc${fr}_`);
+  const cam = camLook({x: p[0], h: p[1], d: p[2]}, {x: at[0], h: at[1], d: at[2]}, f);
+  return (
+    <AbsoluteFill style={{background: '#000'}}>
+      <JailFrame tau={fr / FPS} escalated={false} ov={{cam}} />
+    </AbsoluteFill>
+  );
+};
 export const ExploreRoot = () => <Composition id="Explore" component={Explore} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{vs: [] as EV[]}} />;
 
 registerRoot(() => (
@@ -94,6 +105,7 @@ registerRoot(() => (
     <Composition id="SheetCap" component={Sheet} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={{fs: [0, 9, 18, 30, 40, 43, 46, 49, 54, 60, 72, 84, 93, 840, 852, 864, 876, 900, 915, 930, 945, 960, 971], cols: 5, captions: true}} />
     {/* boundaries: FU -> J1 (837..842), J1 -> H1 (968..971, 0..3), H1 -> LB (96..101) */}
     <ExploreRoot />
+    <Composition id="FixedCam" component={FixedCam} durationInFrames={102} fps={FPS} width={1080} height={1920} defaultProps={{p: [-3.5, 15, -16], at: [0.8, 6.5, -2], f: 900}} />
     {/* cross-shot boundaries: FU -> J1 (828..845, FU's own frames before 837) and H1 -> LB (96..107, LB from 102) */}
     <Composition id="SheetCross" component={Sheet} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={{fs: [...range(830, 845), ...range(94, 107)], cols: 7}} />
     <Composition id="SheetReform" component={Sheet} durationInFrames={1} fps={FPS} width={1080} height={1920} defaultProps={{fs: range(30, 59), cols: 6}} />
