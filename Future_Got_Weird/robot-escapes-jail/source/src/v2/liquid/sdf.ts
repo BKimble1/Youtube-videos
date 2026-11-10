@@ -7,10 +7,12 @@
 //   blend  its own smooth-min radius (px) when it is folded into its group,
 //   g      group index (0 = default). Groups are folded into the union in ascending g with ChromeBody's group blend,
 //          and drawn back (low g) to front (high g) for the internal definition of rigid bodies (seams, part shading).
+//   flat   0..1 "lying flat on the floor" (a puddle / pool): ChromeBody shades flat regions as a floor mirror (dark
+//          reflected surroundings, bright meniscus edge, sky streaks) instead of a rounded body. Blended like depth.
 // Pure functions only (no state, no randomness).
 import {Cam3, P3, project, toCam} from '../../world';
 
-export type PrimBase = {z?: number; blend?: number; g?: number};
+export type PrimBase = {z?: number; blend?: number; g?: number; flat?: number};
 export type PrimC = PrimBase & {k: 'c'; x: number; y: number; r: number};
 /** tapered capsule from a (radius ra) to b (radius rb) */
 export type PrimCap = PrimBase & {k: 'cap'; ax: number; ay: number; bx: number; by: number; ra: number; rb: number; za?: number; zb?: number};
@@ -24,7 +26,10 @@ export type PrimTrap = PrimBase & {k: 'trap'; x: number; y: number; wt: number; 
 export type PrimAff = PrimBase & {k: 'aff'; x: number; y: number; ux: number; uy: number; vx: number; vy: number};
 /** continuous morph between two prims: distance = lerp(sd(a), sd(b), t) (a rigid part -> its liquid shape) */
 export type PrimMix = PrimBase & {k: 'mix'; a: Prim; b: Prim; t: number};
-export type Prim = PrimC | PrimCap | PrimBox | PrimEll | PrimTrap | PrimAff | PrimMix;
+/** superellipse "dome": half-width rx, top / bottom half-heights ryT / ryB with exponents nT / nB (2 = ellipse,
+ *  larger = squarer), rotation (deg). The V1 robot head: a rounder dome on top, a squarer jaw below. */
+export type PrimSup = PrimBase & {k: 'sup'; x: number; y: number; rx: number; ryT: number; ryB: number; nT: number; nB: number; rot: number};
+export type Prim = PrimC | PrimCap | PrimBox | PrimEll | PrimTrap | PrimAff | PrimMix | PrimSup;
 
 // ---------------------------------------------------------------------------------------------------------------
 // smooth minimum (polynomial, iq): k = blend radius in the same units as the distances. k <= 0 -> hard min.
@@ -123,8 +128,27 @@ const sdAff = (px: number, py: number, p: PrimAff) => {
   return (ql - 1) / Math.max(g, 1e-9);
 };
 
+const sdSup = (px: number, py: number, p: PrimSup) => {
+  const [lx, ly] = rot(px, py, p.x, p.y, p.rot);
+  const top = ly < 0;
+  const ry = Math.max(1e-3, top ? p.ryT : p.ryB), rx = Math.max(1e-3, p.rx);
+  const n = top ? p.nT : p.nB;
+  const ax = Math.abs(lx) / rx, ay = Math.abs(ly) / ry;
+  const sx = Math.pow(ax, n), sy = Math.pow(ay, n);
+  const G = Math.pow(sx + sy, 1 / n);
+  if (G < 1e-6) return -Math.min(rx, ry);
+  // |grad G| = G^(1-n) * |(ax^(n-1)/rx, ay^(n-1)/ry)|
+  const k = Math.pow(G, 1 - n);
+  const gx = (k * Math.pow(ax, n - 1)) / rx, gy = (k * Math.pow(ay, n - 1)) / ry;
+  const gl = Math.max(Math.hypot(gx, gy), 1e-6);
+  // (G - 1) / |grad G|: the distance near the boundary, and along the axes far away
+  return (G - 1) / gl;
+};
+
 export const sdPrim = (p: Prim, x: number, y: number): number => {
   switch (p.k) {
+    case 'sup':
+      return sdSup(x, y, p);
     case 'c':
       return Math.hypot(x - p.x, y - p.y) - p.r;
     case 'cap':
@@ -147,6 +171,9 @@ export const sdPrim = (p: Prim, x: number, y: number): number => {
   }
 };
 
+/** flat attribute of a prim (mix prims interpolate) */
+export const primFlat = (p: Prim): number => (p.flat ?? (p.k === 'mix' ? primFlat(p.a) * (1 - p.t) + primFlat(p.b) * p.t : 0));
+
 /** depth of a prim at a point (capsules interpolate za -> zb along their axis) */
 export const primZ = (p: Prim, x: number, y: number): number => {
   if (p.k === 'mix') return p.z ?? primZ(p.a, x, y) * (1 - p.t) + primZ(p.b, x, y) * p.t;
@@ -157,6 +184,11 @@ export const primZ = (p: Prim, x: number, y: number): number => {
 /** axis-aligned bounds of a prim (px) */
 export const primBox = (p: Prim): {x0: number; y0: number; x1: number; y1: number} => {
   switch (p.k) {
+    case 'sup': {
+      const e = Math.max(p.rx, p.ryT, p.ryB);
+      if (!p.rot) return {x0: p.x - p.rx, y0: p.y - p.ryT, x1: p.x + p.rx, y1: p.y + p.ryB};
+      return {x0: p.x - e, y0: p.y - e, x1: p.x + e, y1: p.y + e};
+    }
     case 'mix': {
       if (p.t <= 0) return primBox(p.a);
       if (p.t >= 1) return primBox(p.b);
@@ -230,7 +262,8 @@ export const sdFieldZ = (prims: Prim[], blend: number, x: number, y: number) => 
 
 // ---------------------------------------------------------------------------------------------------------------
 // world-space primitives (world units; see world.ts: x right, h up, d away from the viewer)
-export type Prim3Base = {blend?: number; g?: number};
+/** flat: see PrimBase (disc3 defaults to 1: floor discs are puddles) */
+export type Prim3Base = {blend?: number; g?: number; flat?: number};
 export type Prim3S = Prim3Base & {k: 's'; p: P3; r: number};
 export type Prim3Cap = Prim3Base & {k: 'cap3'; a: P3; b: P3; ra: number; rb: number};
 /** billboard rounded box (faces the camera; sizes in world units at p's depth; rot = screen roll, deg) */
@@ -241,9 +274,11 @@ export type Prim3Trap = Prim3Base & {k: 'trap3'; p: P3; wt: number; wb: number; 
 export type Prim3Ell = Prim3Base & {k: 'ell3'; p: P3; rx: number; ry: number; rot?: number};
 /** horizontal floor disc / ellipse on the plane h = p.h (rx along x, rd along d, rot = yaw on the floor, deg) */
 export type Prim3Disc = Prim3Base & {k: 'disc3'; p: P3; rx: number; rd: number; rot?: number};
+/** billboard superellipse dome (see PrimSup; sizes in world units at p's depth) */
+export type Prim3Sup = Prim3Base & {k: 'sup3'; p: P3; rx: number; ryT: number; ryB: number; nT: number; nB: number; rot?: number};
 /** continuous morph between two world prims */
 export type Prim3Mix = Prim3Base & {k: 'mix3'; a: Prim3; b: Prim3; t: number};
-export type Prim3 = Prim3S | Prim3Cap | Prim3Box | Prim3Trap | Prim3Ell | Prim3Disc | Prim3Mix;
+export type Prim3 = Prim3S | Prim3Cap | Prim3Box | Prim3Trap | Prim3Ell | Prim3Disc | Prim3Mix | Prim3Sup;
 
 /** camera roll of the world vertical at a point (deg): billboards stay upright in a pitched / yawed camera */
 const uprightRoll = (cam: Cam3, p: P3) => {
@@ -258,7 +293,7 @@ export const projectPrims = (cam: Cam3, prims3: Prim3[]): Prim[] => {
   for (const q of prims3) {
     // a world blend radius (world units) becomes px at the prim's depth
     const anchor: P3 = q.k === 'cap3' ? {x: (q.a.x + q.b.x) / 2, h: (q.a.h + q.b.h) / 2, d: (q.a.d + q.b.d) / 2} : q.k === 'mix3' ? (q.a as {p?: P3}).p ?? (q.a as {a: P3}).a : q.p;
-    const base = {blend: q.blend !== undefined ? q.blend * project(cam, anchor).s : undefined, g: q.g};
+    const base = {blend: q.blend !== undefined ? q.blend * project(cam, anchor).s : undefined, g: q.g, flat: q.flat ?? (q.k === 'disc3' ? 1 : undefined)};
     switch (q.k) {
       case 'mix3': {
         const [a] = projectPrims(cam, [q.a]), [b] = projectPrims(cam, [q.b]);
@@ -288,6 +323,13 @@ export const projectPrims = (cam: Cam3, prims3: Prim3[]): Prim[] => {
         if (q.k === 'box3') out.push({...base, k: 'box', x: s.x, y: s.y, hw: q.hw * s.s, hh: q.hh * s.s, r: q.r * s.s, rot: roll, z: q.p.d});
         else if (q.k === 'trap3') out.push({...base, k: 'trap', x: s.x, y: s.y, wt: q.wt * s.s, wb: q.wb * s.s, hh: q.hh * s.s, r: q.r * s.s, rot: roll, z: q.p.d});
         else out.push({...base, k: 'ell', x: s.x, y: s.y, rx: q.rx * s.s, ry: q.ry * s.s, rot: roll, z: q.p.d});
+        break;
+      }
+      case 'sup3': {
+        if (toCam(cam, q.p).z < 0.3) break;
+        const s = project(cam, q.p);
+        const roll = uprightRoll(cam, q.p) + (q.rot ?? 0);
+        out.push({...base, k: 'sup', x: s.x, y: s.y, rx: q.rx * s.s, ryT: q.ryT * s.s, ryB: q.ryB * s.s, nT: q.nT, nB: q.nB, rot: roll, z: q.p.d});
         break;
       }
       case 'disc3': {

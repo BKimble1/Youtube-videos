@@ -38,7 +38,7 @@ const DELAY = [0, 0, 0, 0, 0, 0.3, 0.3, 0.3, 0.3, 0, 0];
 /** map local 2D prims (figure units) to screen: origin o (px), k px per figure unit */
 export const mapPrim = (p: Prim, ox: number, oy: number, k: number, z: number): Prim => {
   const X = (x: number) => ox + x * k, Y = (y: number) => oy + y * k;
-  const base = {g: p.g, z, blend: p.blend !== undefined ? p.blend * k : undefined};
+  const base = {g: p.g, z, blend: p.blend !== undefined ? p.blend * k : undefined, flat: p.flat};
   switch (p.k) {
     case 'c':
       return {...base, k: 'c', x: X(p.x), y: Y(p.y), r: p.r * k};
@@ -54,17 +54,21 @@ export const mapPrim = (p: Prim, ox: number, oy: number, k: number, z: number): 
       return {...base, k: 'aff', x: X(p.x), y: Y(p.y), ux: p.ux * k, uy: p.uy * k, vx: p.vx * k, vy: p.vy * k};
     case 'mix':
       return {...base, k: 'mix', a: mapPrim(p.a, ox, oy, k, z), b: mapPrim(p.b, ox, oy, k, z), t: p.t};
+    case 'sup':
+      return {...base, k: 'sup', x: X(p.x), y: Y(p.y), rx: p.rx * k, ryT: p.ryT * k, ryB: p.ryB * k, nT: p.nT, nB: p.nB, rot: p.rot};
   }
 };
 
 const BLEND_RIGID = 0.06, BLEND_LIQUID = 0.9;
 export const LAB_FIG_AREA = unionArea(labFigureLocal(), BLEND_RIGID);
+/** the melted pool's half width (figure units) at melt 1 (labset's LAB.POOL_R = 5.0 mm for a 10 mm figure relies on it) */
+export const LAB_POOL_R1 = 4.8;
 
 /** the melt state in figure-local 2D (y down, floor 0): prims, blend, area, pool half-width (figure units) */
 export const labFigureMelt = (melt: number, t: number) => {
   const m = clamp(melt);
   if (m <= 0) return {prims: labFigureLocal(), blend: BLEND_RIGID, area: LAB_FIG_AREA, target: LAB_FIG_AREA, poolR: 0};
-  return collapse({prims: labFigureLocal(), u: m, floor: 0, t, cx: 0, delay: DELAY, blendRigid: BLEND_RIGID, blendLiquid: BLEND_LIQUID, area: LAB_FIG_AREA});
+  return collapse({prims: labFigureLocal(), u: m, floor: 0, t, cx: 0, delay: DELAY, blendRigid: BLEND_RIGID, blendLiquid: BLEND_LIQUID, area: LAB_FIG_AREA, poolR1: LAB_POOL_R1});
 };
 
 /** the pool as a world circle on the floor (x, d, r in world units) for streamThroughGap(s) in floor coordinates */

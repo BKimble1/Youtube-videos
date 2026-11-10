@@ -11,44 +11,24 @@ import {floorPrims, puddle, streamThroughGaps} from '../liquid/flow';
 import {projectPrims} from '../liquid/sdf';
 import {project} from '../../world';
 import {Prim} from '../liquid/sdf';
-import {gripPose, Robot2, Robot2Pose} from '../robot2';
+import {camLook, gripPose, HERO, HERO_BASE, heroCam, heroPose, heroState, Robot2, Robot2Pose} from '../robot2';
 import {POSE_ANNOYED, POSE_IDLE, POSE_SMUG, POSE_SURPRISED, Robot} from '../../art/robot';
-import {Cam3, P3} from '../../world';
+void POSE_SURPRISED;
+import {Cam3} from '../../world';
 import {Bars, JailBack} from '../../art/jail';
-import {keyS, ss} from '../../lib';
+import {ss} from '../../lib';
 
-/** look-at camera (world.ts conventions: yaw + turns right, pitch + looks down) */
-export const camLook = (p: P3, at: P3, f: number): Cam3 => {
-  const dx = at.x - p.x, dy = at.h - p.h, dz = at.d - p.d;
-  const yaw = (Math.atan2(dx, dz) * 180) / Math.PI;
-  const pitch = (Math.atan2(-dy, Math.hypot(dx, dz)) * 180) / Math.PI;
-  return {x: p.x, h: p.h, d: p.d, yaw, pitch, f};
-};
-const k3 = (t: number, keys: [number, P3][]): P3 => ({
-  x: keyS(t, keys.map(([a, b]) => [a, b.x] as [number, number])),
-  h: keyS(t, keys.map(([a, b]) => [a, b.h] as [number, number])),
-  d: keyS(t, keys.map(([a, b]) => [a, b.d] as [number, number])),
-});
+// the hook squeeze staging lives in robot2.tsx (HERO, heroState, heroCam, heroPose, camLook); re-exported here
+export {camLook, HERO, heroCam, heroPose, heroState};
 
 // ---- (1) HeroSqueeze: the hook mechanics in a close jail camera (2.0 s)
-export const HERO = {s: 1.5, base: {x: 0, h: 0, d: 1.7}, out: {x: 4.8, h: 0, d: -3.6}, gap: {x: 0, d: 0, w: 3.96}};
-export const heroState = (t: number) => ({
-  soften: {head: ss(t, 0.04, 0.55), upper: ss(t, 0.3, 0.8), lower: ss(t, 0.62, 1.0)},
-  squeeze: {gap: HERO.gap, out: HERO.out, u: keyS(t, [[0.08, 0], [1.22, 1]], (x) => x * x * (3 - 2 * x)), outPose: {...POSE_IDLE, lookX: 0, lookY: 0, mood: 0.35, eyeOpen: 1.05}},
-  reform: keyS(t, [[1.22, 0], [1.88, 1]], (x) => x),
-});
-export const heroCam = (t: number): Cam3 => {
-  const p = k3(t, [[0, {x: 0.3, h: 12.4, d: -8.6}], [0.35, {x: -0.8, h: 12.2, d: -9.4}], [0.9, {x: -6.5, h: 11.6, d: -13.5}], [1.45, {x: -4.5, h: 10.6, d: -17.5}], [1.95, {x: 1.8, h: 9.8, d: -19.5}]]);
-  const a = k3(t, [[0, {x: 0, h: 11.8, d: 1.0}], [0.35, {x: 0.2, h: 11.3, d: 0.4}], [0.9, {x: 1.6, h: 8.8, d: -1.0}], [1.45, {x: 3.4, h: 6.8, d: -2.8}], [1.95, {x: 4.6, h: 8.2, d: -3.6}]]);
-  const f = keyS(t, [[0, 1300], [0.9, 1150], [1.95, 1400]]);
-  return camLook(p, a, f);
-};
-const HeroSqueeze: React.FC<{t0?: number; solo?: boolean}> = ({t0 = 0, solo = false}) => {
+const HeroSqueeze: React.FC<{t0?: number; solo?: boolean; view?: 'hero' | 'side' | 'top'}> = ({t0 = 0, solo = false, view = 'hero'}) => {
   const t = t0 + useCurrentFrame() / FPS;
-  const cam = heroCam(t);
-  const pose = gripPose({...POSE_SURPRISED, eyeOpen: 1.15, lookY: -0.05}, {x: -2.6, h: 10.2, d: 0.45}, {x: 2.6, h: 10.2, d: 0.45});
+  // debug views: 'side' looks along +x (d runs left -> right: outside on the left), 'top' looks straight down
+  const cam = view === 'side' ? {x: -60, h: 7, d: -1, yaw: 90, pitch: 0, f: 3300} : view === 'top' ? {x: 0.5, h: 60, d: -1, yaw: 0, pitch: 89.9, f: 3300} : heroCam(t);
+  const pose = heroPose(t);
   const st = heroState(t);
-  const base = {...HERO.base, s: HERO.s};
+  const base = HERO_BASE;
   if (solo)
     return (
       <Frame tag="hs">
@@ -280,6 +260,8 @@ registerRoot(() => (
     <Composition id="Surface" component={Surface} durationInFrames={90} fps={FPS} width={1080} height={1920} />
     <Composition id="Handoff" component={Handoff} durationInFrames={90} fps={FPS} width={1080} height={1920} />
     <Composition id="HeroSqueeze" component={HeroSqueeze} durationInFrames={60} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0}} />
+    <Composition id="HeroSide" component={HeroSqueeze} durationInFrames={60} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, view: 'side' as const}} />
+    <Composition id="HeroTop" component={HeroSqueeze} durationInFrames={60} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, view: 'top' as const}} />
     <Composition id="PoseSheet" component={PoseSheet} durationInFrames={30} fps={FPS} width={1080} height={1920} defaultProps={{ecu: false}} />
     <Composition id="Basic" component={Basic} durationInFrames={60} fps={FPS} width={1080} height={1920} />
   </>

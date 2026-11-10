@@ -201,7 +201,11 @@ export const streamThroughGap = (o: StreamOpts): StreamOut => {
     const sS = (sG - 0.8 * rs - 0.3 * w) * ss(u, 0, 0.14);
     const sF = sS + 0.4 * rs + (sD - sS - 0.4 * rs) * ss(u, 0.02, 0.5);
     const sP = clamp(sF - 0.4 * rp, Math.min(sD, sG + 0.35 * w + 0.7 * rp), sD);
-    const src = P.at(sS), pool = P.at(sP);
+    const s1 = Math.max(sS, Math.min(sF, sP));
+    // as the source empties, its last bit and the stream's tail retract through the gap into the pool (never a
+    // stray drop left behind the bars, never a tail vanishing in place)
+    const sT = sS + (s1 - sS) * ss(u, 0.6, 0.9);
+    const src = P.at(sT), pool = P.at(sP);
     // stream radius: limited by the gap (neck) and by what is left in the source (the tail thins as it empties)
     const rMax = Math.min(0.5 * w, 0.75 * r0) * Math.min(1, 1.25 * rs / Math.max(1e-6, r0 * 0.35));
     const tail = ss(u, 0.0, 0.06);
@@ -214,8 +218,7 @@ export const streamThroughGap = (o: StreamOpts): StreamOut => {
       return rr * tail * (0.55 + 0.45 * Math.min(1, tip * 1.4)) * (1 + 0.05 * noise1(s * 0.05 - t * 3, seed));
     };
     const out: Prim[] = [...blobPrim(src, rs, sq, t, seed), ...blobPrim(pool, rp, sq, t, seed + 5)];
-    const s1 = Math.max(sS, Math.min(sF, sP));
-    if (u > 0 && u < 1 && rMax * tail > 0.05) out.push(...tube(P, sS, s1, prof, Math.max(1.5, rMax * 0.8)));
+    if (u > 0 && u < 1 && rMax * tail > 0.05 && s1 - sT > 1e-3) out.push(...tube(P, sT, s1, prof, Math.max(1.5, rMax * 0.8)));
     // droplets: leave the stream just past the gap, arc out to one side and land back in the pool
     const nd = o.drops ?? 2;
     for (let k = 0; k < nd; k++) {
@@ -295,11 +298,15 @@ export const puddle = (o: {x: number; y: number; R: number; squash?: number; t: 
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-/** rigid -> pool under gravity, keeping the area. prims in a plane with y DOWN and the floor at y = floor.
- *  One continuous, locally AREA-PRESERVING deformation of the plane is applied to every prim (so parts never come
- *  apart): each horizontal band of the body is squashed vertically by (1 - comp) and widened by 1 / (1 - comp), the
- *  top bands first (structure loses rigidity from the top), the bottom last; parts round off into liquid lumps, the
- *  blend radius grows, and a final global scale is solved so the union's area equals the rigid area. */
+/** rigid -> pool under gravity. prims in a plane with y DOWN and the floor at y = floor.
+ *  The structure loses rigidity from the TOP (and the limbs) first and SAGS: one continuous deformation of the plane
+ *  compresses each horizontal band vertically (top bands first), while the material it loses runs down into a FLAT
+ *  pool spreading on the floor (a thin floor ellipse, `flat` = 1, radius growing to `poolR1`). Bands widen only a
+ *  little and the LOWER bands widen more than the upper ones, so the silhouette is never top-heavy (no mushroom
+ *  stage): it reads as a soft metal statue sagging into its own puddle. Parts round off into liquid lumps and turn
+ *  flat as they are squashed. A global scale on the figure (not the pool) is solved so the frontal area follows the
+ *  target: the rigid area until the pool starts to spread, then easing to `areaEnd` x it, because from then on the
+ *  material's volume is carried by the floor pool's DEPTH as it spreads (the caller's perspective floor disc of radius poolR). */
 export const collapse = (o: {
   prims: Prim[];
   u: number;
@@ -310,30 +317,36 @@ export const collapse = (o: {
   delay?: number[];
   blendRigid: number;
   blendLiquid: number;
-  /** final squash (0.9: the pool is 10 % of the height) */
+  /** final vertical squash of the figure (0.95: 5 % of its height is left, inside the pool) */
   flat?: number;
   /** target area (default: the rigid union's area) */
   area?: number;
   seed?: number;
   thick?: number;
+  /** the pool's final half width (same units as the prims). Default 2.6 x the figure's half width */
+  poolR1?: number;
+  /** frontal area at u = 1 as a fraction of the rigid area (the rest is in the pool's depth). Default 0.42 */
+  areaEnd?: number;
 }) => {
   const u = clamp(o.u), t = o.t ?? 0, seed = o.seed ?? 2;
   const boxes = o.prims.map(primBox);
   const top = Math.min(...boxes.map((b) => b.y0));
   const y1 = o.floor;
   const H = Math.max(1e-3, y1 - top);
-  const cx = o.cx ?? (Math.min(...boxes.map((b) => b.x0)) + Math.max(...boxes.map((b) => b.x1))) / 2;
+  const x0 = Math.min(...boxes.map((b) => b.x0)), x1 = Math.max(...boxes.map((b) => b.x1));
+  const cx = o.cx ?? (x0 + x1) / 2;
   const A0 = o.area ?? unionArea(o.prims, o.blendRigid);
+  const poolR1 = o.poolR1 ?? 2.6 * Math.max(cx - x0, x1 - cx);
+  const target = A0 * (1 - (1 - (o.areaEnd ?? 0.42)) * ss(u, 0.15, 1));
   // the blend radius grows as the structure goes liquid, then shrinks with the pool's thickness
   const blend = (o.blendRigid + (o.blendLiquid - o.blendRigid) * ss(u, 0.05, 0.55)) * (1 - 0.72 * ss(u, 0.45, 1));
-  const flat = o.flat ?? 0.74;
-  // comp(h) for h = height above the floor (0..H): top first
+  const flat = o.flat ?? 0.95;
+  // comp(h) for h = height above the floor (0..H): the top first, the base last
   const comp = (h: number) => {
     const hn = clamp(h / H);
-    const st = 0.16 * (1 - hn);
-    return flat * ss(u, st, st + 0.8);
+    const st = 0.3 * (1 - hn);
+    return flat * ss(u, st, st + 0.7);
   };
-  // Y(h): integrated squashed height; tabulated
   const N = 96;
   const Yt: number[] = [0];
   for (let i = 1; i <= N; i++) {
@@ -345,24 +358,26 @@ export const collapse = (o: {
     const i = Math.min(N - 1, Math.floor(f));
     return Yt[i] + (Yt[i + 1] - Yt[i]) * (f - i);
   };
-  const wob = (h: number) => 0.035 * H * ss(u, 0.05, 0.4) * (1 - ss(u, 0.85, 1)) * noise1(h * 0.9 / H * 6 + t * 1.6, seed);
-  // map a point (x, y) of the rigid body
+  const wob = (h: number) => 0.03 * H * ss(u, 0.05, 0.4) * (1 - ss(u, 0.8, 1)) * noise1(((h * 0.9) / H) * 6 + t * 1.6, seed);
+  // widening: small, and larger for the lower bands (the slumping mass spreads at the base, never at the top)
   const mapP = (x: number, y: number) => {
     const h = y1 - y;
+    const hn = clamp(h / H);
     const c = comp(h);
-    const sx = 1 / Math.pow(1 - c, 0.8);
+    // material running down the sagging body accumulates at the base: the lower bands spread early (the legs merge
+    // into a wide foot of liquid), the top hardly widens
+    const sx = 1 + c * 0.08 + Math.pow(1 - hn, 1.5) * 0.9 * ss(u, 0.08, 0.6);
     return {x: cx + (x - cx) * sx + wob(h), y: y1 - Yof(h), sx, sy: 1 - c};
   };
   const mapOne = (p: Prim, i: number): Prim => {
-    const extra = o.delay?.[i] ?? 0;
     const b = boxes[i];
     const pc = mapP((b.x0 + b.x1) / 2, (b.y0 + b.y1) / 2);
-    const mu = ss(1 - pc.sy, 0.02, 0.45) * 0.9 + 0.1 * ss(u, extra, extra + 0.3) * 0;
+    const mu = ss(1 - pc.sy, 0.02, 0.4);
     let rigid: Prim;
     switch (p.k) {
       case 'c': {
         const q = mapP(p.x, p.y);
-        rigid = {...p, k: 'ell', x: q.x, y: q.y, rx: p.r * q.sx, ry: p.r * q.sy, rot: 0};
+        rigid = {...p, k: 'ell', x: q.x, y: q.y, rx: p.r * Math.sqrt(q.sx), ry: p.r * q.sy, rot: 0};
         break;
       }
       case 'cap': {
@@ -372,7 +387,7 @@ export const collapse = (o: {
         break;
       }
       case 'box': {
-        // map the top and bottom edges (neighbouring parts stay in contact), width from the centre band
+        // map the top and bottom edges (neighbouring parts stay in contact), width from the band
         const q = mapP(p.x, p.y), qt = mapP(p.x, p.y - p.hh), qb = mapP(p.x, p.y + p.hh);
         const hh = Math.max(1e-3, (qb.y - qt.y) / 2), hw = p.hw * Math.max(q.sx, (qt.sx + qb.sx) / 2);
         rigid = {...p, x: q.x, y: (qt.y + qb.y) / 2, hw, hh, r: Math.min(p.r + hh * mu * 0.35, hh, hw)};
@@ -380,7 +395,7 @@ export const collapse = (o: {
       }
       case 'trap': {
         const q = mapP(p.x, p.y), qt = mapP(p.x, p.y - p.hh), qb = mapP(p.x, p.y + p.hh);
-        rigid = {...p, x: q.x, y: (qt.y + qb.y) / 2, wt: p.wt * qt.sx, wb: p.wb * qb.sx, hh: (qb.y - qt.y) / 2, r: p.r};
+        rigid = {...p, x: q.x, y: (qt.y + qb.y) / 2, wt: p.wt * qt.sx, wb: p.wb * qb.sx, hh: Math.max(1e-3, (qb.y - qt.y) / 2), r: Math.min(p.r, Math.max(1e-3, (qb.y - qt.y) / 2))};
         break;
       }
       case 'ell': {
@@ -395,15 +410,16 @@ export const collapse = (o: {
     }
     // each prim's own blend follows its own melt, so still-rigid parts (legs) stay separate while the top flows
     const pb = Math.max(o.blendRigid + (blend - o.blendRigid) * ss(1 - pc.sy, 0.02, 0.3), (o.blendRigid + 0.25 * (o.blendLiquid - o.blendRigid)) * ss(u, 0.01, 0.15) * (1 - 0.6 * ss(u, 0.5, 1)));
-    rigid = {...rigid, blend: pb};
+    // squashed parts are lying in the pool: they shade flat
+    const fl = ss(1 - pc.sy, 0.7, 0.92) * (1 - ss(y1 - pc.y, 0.06 * H, 0.16 * H));
+    rigid = {...rigid, blend: pb, flat: fl};
     if (mu <= 0.001) return rigid;
-    // liquid lump of the same (mapped) area: an ellipse at the mapped centre
     // liquid lump spanning the same extents (so neighbouring parts stay in contact while they round off)
     const rb = primBox(rigid);
     const lx = (rb.x0 + rb.x1) / 2, ly = (rb.y0 + rb.y1) / 2, lw = ((rb.x1 - rb.x0) / 2) * 1.03, lh = ((rb.y1 - rb.y0) / 2) * 1.03;
     const lump: Prim =
       p.k === 'box' || p.k === 'trap' ? {k: 'box', x: lx, y: ly, hw: lw, hh: lh, r: Math.min(lw, lh) * 0.96, rot: 0} : {k: 'ell', x: lx, y: ly, rx: lw, ry: lh, rot: 0};
-    return {k: 'mix', a: rigid, b: lump, t: mu, g: p.g, z: p.z, blend: pb};
+    return {k: 'mix', a: rigid, b: lump, t: mu, g: p.g, z: p.z, blend: pb, flat: fl};
   };
   const mapped = o.prims.map(mapOne);
   // limbs (delay > 0) fold in toward the body early (arms droop into the torso)
@@ -415,9 +431,16 @@ export const collapse = (o: {
     const px = (b.x0 + b.x1) / 2;
     return shiftPrim(p, (cx - px) * 0.35 * k, (b.y1 - b.y0) * 0.25 * k);
   });
-  const build = (a: number): Prim[] => folded.map((p) => scalePrim(p, cx, y1, a));
-  const cal = calibrate(build, blend, A0, 1, 0.2, 2, 6);
-  return {prims: cal.prims, blend, area: cal.area, target: A0, poolR: (Math.max(...cal.prims.map((p) => primBox(p).x1)) - cx) * ss(u, 0.5, 1)};
+  // the pool: a thin flat ellipse on the floor, spreading from under the feet
+  const pr = poolR1 * Math.pow(ss(u, 0.12, 1), 0.8);
+  const ph = Math.max(0.02 * H, Math.min(0.055 * H, pr * 0.12));
+  const pool: Prim | null = pr > 0.02 * H ? {k: 'ell', x: cx, y: y1 - ph * 0.55, rx: pr, ry: ph, rot: 0, flat: 1, blend: Math.min(blend, ph * 1.5)} : null;
+  const build = (a: number): Prim[] => {
+    const f = folded.map((p) => scalePrim(p, cx, y1, a));
+    return pool ? [...f, pool] : f;
+  };
+  const cal = calibrate(build, blend, target, 1, 0.2, 1.12, 6);
+  return {prims: cal.prims, blend, area: cal.area, target, poolR: pr};
 };
 
 /** scale a prim about (ox, oy) by sqrt(a) (area factor a) */
@@ -439,6 +462,8 @@ export const scalePrim = (p: Prim, ox: number, oy: number, a: number): Prim => {
       return {...p, x: X(p.x), y: Y(p.y), ux: p.ux * k, uy: p.uy * k, vx: p.vx * k, vy: p.vy * k};
     case 'mix':
       return {...p, a: scalePrim(p.a, ox, oy, a), b: scalePrim(p.b, ox, oy, a)};
+    case 'sup':
+      return {...p, x: X(p.x), y: Y(p.y), rx: p.rx * k, ryT: p.ryT * k, ryB: p.ryB * k};
   }
 };
 
@@ -450,6 +475,7 @@ export const shiftPrim = (p: Prim, dx: number, dy: number): Prim => {
     case 'ell':
     case 'trap':
     case 'aff':
+    case 'sup':
       return {...p, x: p.x + dx, y: p.y + dy};
     case 'cap':
       return {...p, ax: p.ax + dx, ay: p.ay + dy, bx: p.bx + dx, by: p.by + dy};

@@ -16,10 +16,11 @@
 //   1 <LabBackdrop>                     screen-space navy surroundings + far lab lights (parallax with the camera)
 //   2 <LabStage>                        mat, grid, light pool, coil window + copper coil + heat glow, cage floor shadows
 //   2b dish back half, mold            (outside props that liquid may sit in / on)
-//   3 <LabACArcs half="back">           field arcs behind the sample (coil > 0)
-//   4 <CageBack>                        back + side bars, base rails, back/side top rails (and the lid while it is open)
+//   3 <CageBack>                        back + side bars, base rails, back/side top rails (and the lid while it is open)
+//   4 <LabACArcs half="back">           the AC heating indicator (coil > 0): floor halo + warm bloom + 4 thin field loops,
+//                                       all BEHIND the sample (inside the cage, in front of the back bars)
 //   5 body('back')                      everything at d >= d0 (inside the cage): the figure, the pool, the stream's tail
-//   6 <LabACArcs half="front">          field arcs in front of / through the sample
+//   6 <LabACArcs half="front">          (draws nothing: nothing of the field is drawn over the sample)
 //   7 <CageFront>                       front bar row, front top rail, the lid once it is closing (< 90 deg)
 //   8 body('front')                     everything at d < d0 (outside): the stream's front, the collected puddle
 //   7b magnet field lines (floor plane, under the outside liquid)
@@ -30,15 +31,25 @@
 //     body = (pass) => <LabStream cam={cam} t={t} u={u} part={pass} />
 //   The seam lies inside the bar gaps (front pass overlaps the back by 0.12 mm).
 //
-// CAMERAS: LAB_SHOTS (look-at specs {p, at, f}) and LAB_CAMS (Cam3): reveal (end state of labRevealCam), meltMedium,
-//   meltClose, overheadAngled, handoff (+ bench: a wide high view with the dish and mold, for MS staging).
+// CAMERAS: LAB_SHOTS (look-at specs {p, at, f}) and LAB_CAMS (Cam3): reveal (end state of labRevealCam: figure ~27 % of
+//   the frame, head centred in a bar gap), meltMedium (figure = 1/3 of the frame), meltClose (~41 %), overheadAngled,
+//   handoff (+ bench: a wide high view with the dish and mold; collect / mold: the MS hand beats).
 //   Move between them with labCamBetween(a, b, eased u) (interpolates eye and target, not angles).
 // PROPS: <LabMagnet m={{x, d, yaw?, field?}}/> (x, d = N-face centre; labMagnetGrip(m) = the handle's grip point for a
 //   <LabGlove at=.../>), <LabDish part/>, <LabMold mold={{open, fill}}/>, <LabGlove/> (true scale: a hand is 185 mm, so
-//   near the 10 mm figure only giant fingertips fit in frame; pass handMM to cheat the scale). labRevealCam(u): u = 0 is 2.6 mm off the figure's chest (the chrome fills the
-//   frame: H1 -> LB match from <ChromeSurface>), pulling straight back THROUGH the centre gap of the front bars, then
+//   near the 10 mm figure only giant fingertips fit in frame; prefer <LabHandTool/> for on-screen hands).
+// REVEAL: labRevealCam(u): u = 0 is 2.6 mm off the figure's chest (the chrome fills the frame: H1 -> LB match from
+//   <ChromeSurface>), pulling straight back THROUGH the centre gap of the front bars, then
 //   arcing up-left to the medium view of the cage on the stage (u = 1 = LAB_CAMS.reveal). u is log-distance linear:
 //   ease it in the shot (e.g. keyS) and carry H1's velocity.
+// STAGING (LB): LAB_STAGING (recommended beat times), labPullToBars(t) (HOME -> AT_BARS, clunk), magnet at
+//   LAB.MAGNET_BARS for the pull then withdrawn; labMeltBase(melt, t): the figure melts WHERE IT WAS PRESSED, its pool
+//   pinned behind the bars (spreads backward, never crosses d = 0) and ending exactly on LAB.MELT; then
+//   <LabMeltBridge k/> / labMeltBridgePrims (k 0 = LabFigure melt 1, k 1 = LabStream u 0, both exact; area moves
+//   linearly) and <LabStream u/>. test/labset.entry.tsx `Staging` renders the whole chain as one take.
+// HANDS: <LabHandTool cam t tip ang handAng tool='pipette'|'tweezers' fill squeeze open enter handMM toolMM/> with the
+//   presets LAB_HAND.collect / fill / lift (each carries its own tasteful scale cheat so the gloved fingertips + tool
+//   read at ~650-700 px). The glove is colour-graded into the dark lab light and grounded by a soft shadow.
 // HAND-OFF LB -> MS (13.67 s): LAB_HANDOFF = {t, cam, puddle: {x, d, rx, rd, seed}}; labHandoffPuddle(t, settle?) returns
 //   the engine prims (screen px in LAB_HANDOFF.cam), blend, ripples; <LabHandoffPuddle t/> draws it. settle 0 = the plain
 //   disc the stream ends with (labStreamFloor(u = 1) pool: exactly the same centre and area), 1 = the living lobed puddle.
@@ -54,10 +65,10 @@ import {Cam3, P3, toCam, W, H} from '../../world';
 import {Prim, projectPrims, sdField} from '../liquid/sdf';
 import {isoLoops} from '../liquid/march';
 import {ChromeBody, ChromeEnv, FloorOpts} from '../liquid/Chrome';
-import {calibrate, floorPrims, GapSpec, streamThroughGaps, StreamOut} from '../liquid/flow';
-import {FIG, LabFigure, labFigureLocal} from '../labFigure';
-import {GloveArm, pinchWrist} from '../../art/lab';
-import {HAND_RELAXED, HandPose} from '../../dc/Hand';
+import {calibrate, floorPrims, GapSpec, scalePrim, streamThroughGaps, StreamOut, unionArea} from '../liquid/flow';
+import {FIG, LabFigure, labFigureLocal, labFigureMelt, labFigurePrims} from '../labFigure';
+import {GloveArm, pinchWrist, Pipette, PIPETTE, PIPETTE_GRIP} from '../../art/lab';
+import {HAND_CLUTCH, HAND_RELAXED, HandPose, mixHand} from '../../dc/Hand';
 
 type V = {x: number; y: number};
 type S = V & {s: number};
@@ -73,16 +84,20 @@ export const LAB = {
   FIG_H: 10,
   /** where the figure stands when the cage closes (cage centre) */
   HOME: {x: 0, h: 0, d: 6.5} as P3,
-  /** the solid figure pressed against the front bars (its front touches the bars) */
-  AT_BARS: {x: 0, h: 0, d: 1.15} as P3,
+  /** the solid figure pressed against the front bars (its front touches the bars); x nudged so that in meltMedium
+   *  its head sits centred in the gap (the billboarded figure vs the leaning bars) */
+  AT_BARS: {x: 0.42, h: 0, d: 1.15} as P3,
   /** where it melts: its pool (r = POOL_R) then reaches from just behind the bars to the middle of the cage */
   MELT: {x: 0, h: 0, d: 5.6} as P3,
   /** the melted pool's radius (labPoolCircle at melt 1 for a 10 mm figure: 5.04) = the stream's conserved disc */
   POOL_R: 5.0,
   STAGE: {x0: -70, x1: 70, d0: -48, d1: 72, th: 6, r: 8},
   CAGE: {x0: -9.6, x1: 9.6, d0: 0, d1: 13, h: 14, pitch: PITCH, barR: BAR_R, gap: PITCH - 2 * BAR_R, postR: 0.42, rail: 0.36, base: 0.55},
-  COIL: {x: 0, d: 6.5, r0: 1.3, r1: 7.2, turns: 6, wire: 0.42, h: -0.85, win: 8.4},
+  COIL: {x: 0, d: 6.5, r0: 1.2, r1: 6.3, turns: 5, wire: 0.38, h: -0.85, win: 7.4},
   MAGNET: {hw: 2.4, len: 5.6, hh: 1.5, sled: 0.45},
+  /** the magnet's N face for the solid pull-to-the-bars beat (front, a little further out: it stays a readable
+   *  foreground prop in meltMedium instead of a giant block) */
+  MAGNET_BARS: {x: -4, d: -19.5, yaw: 12},
   /** the magnet's N face, closest working position for the stream (outside the front bars) */
   MAGNET_PULL: {x: 0, d: -13.2},
   /** where the stream collects (floor x, d) */
@@ -197,18 +212,26 @@ const CHEST: P3 = {x: 0, h: 5.6, d: LAB.HOME.d};
 export const LAB_SHOTS = {
   /** reveal start: 2.6 mm off the figure's chest (full-frame chrome) */
   reveal0: {p: {x: 0, h: 5.6, d: LAB.HOME.d - 1.8}, at: CHEST, f: 1500} as LabShot,
-  /** reveal end: the cage on the stage, slightly high and left, the open lid above */
-  reveal: {p: {x: -13, h: 17, d: -44}, at: {x: 0.5, h: 7.6, d: 5.5}, f: 2000} as LabShot,
-  /** the melt, medium: figure ~1/3 of the frame, coil window and cage visible */
-  meltMedium: {p: {x: -9, h: 12, d: -50}, at: {x: 0, h: 6.2, d: 5.6}, f: 2750} as LabShot,
-  /** the melt, close: figure fills ~55 % of the frame through the front bars, low and frontal */
-  meltClose: {p: {x: -3.5, h: 7, d: -20}, at: {x: 0, h: 4.0, d: 5.6}, f: 2100} as LabShot,
+  /** reveal end: the figure-in-cage, 3/4 from the left: figure ~27 % of the frame height (feet y ~1310), its head
+   *  centred in a bar gap (reads "too wide to fit" at phone size), the whole front of the cage across the frame and
+   *  the open lid above (it closes on "cage") */
+  reveal: {p: {x: -12, h: 15, d: -40}, at: {x: 0.4, h: 7.0, d: 5.5}, f: 2500} as LabShot,
+  /** the melt, medium: figure = 1/3 of the frame height (~620 px, feet y ~1280), head centred in a bar gap, coil
+   *  window under it, top rail at y ~315 (captions may sit over the bars above it) */
+  meltMedium: {p: {x: -12.5, h: 11, d: -36}, at: {x: 0, h: 5.2, d: 5.6}, f: 2750} as LabShot,
+  /** the melt, close: figure ~41 % of the frame, low and nearly frontal, the body centred in a bar gap */
+  meltClose: {p: {x: -7.8, h: 7, d: -20}, at: {x: 0, h: 4.0, d: 5.6}, f: 2100} as LabShot,
   /** angled overhead: the barrier, the liquid inside, the destination and the magnet outside all visible */
   overheadAngled: {p: {x: -8, h: 46, d: -32}, at: {x: 0, h: 1.5, d: -3}, f: 1950} as LabShot,
   /** the hand-off: tracking the collected puddle outside the cage (the bars behind it, the magnet below it) */
   handoff: {p: {x: -4, h: 32, d: -30}, at: {x: 0, h: 0, d: -6.4}, f: 2000} as LabShot,
   /** (extra) a wide high view of the bench: cage, dish (left) and mold (right) - for MS staging */
   bench: {p: {x: 0, h: 62, d: -62}, at: {x: 0, h: 0, d: -3}, f: 2000} as LabShot,
+  /** (MS) the collection beat: a little wider and higher than the hand-off, so the gloved hand + pipette (cheated
+   *  scale, LAB_HAND.collect) enter from the lower right and the puddle stays the subject */
+  collect: {p: {x: -6, h: 38, d: -40}, at: {x: 2.5, h: 0, d: -3.5}, f: 2000} as LabShot,
+  /** (MS) the mold beat: the open two-part mold to the right of the cage, the pipette filling it (LAB_HAND.fill) */
+  mold: {p: {x: 4, h: 26, d: -38}, at: {x: 13, h: 0, d: -14}, f: 2300} as LabShot,
 };
 export const LAB_CAMS = {
   reveal: shotCam(LAB_SHOTS.reveal),
@@ -217,6 +240,8 @@ export const LAB_CAMS = {
   overheadAngled: shotCam(LAB_SHOTS.overheadAngled),
   handoff: shotCam(LAB_SHOTS.handoff),
   bench: shotCam(LAB_SHOTS.bench),
+  collect: shotCam(LAB_SHOTS.collect),
+  mold: shotCam(LAB_SHOTS.mold),
 };
 
 /** the reveal pull-back. u 0: 2.6 mm off the chest (chrome fills the frame), straight back through the centre gap of
@@ -439,7 +464,7 @@ const affGrad = (cam: Cam3, c: P3, r: number): string | null => {
   const cx = (a.x + a2.x + b.x + b2.x) / 4, cy = (a.y + a2.y + b.y + b2.y) / 4;
   return `matrix(${f3((a.x - a2.x) / 2)} ${f3((a.y - a2.y) / 2)} ${f3((b.x - b2.x) / 2)} ${f3((b.y - b2.y) / 2)} ${f3(cx)} ${f3(cy)})`;
 };
-const COPPER = '#C8743A', COPPER_LT = '#F6B57C', COPPER_DK = '#6E3415';
+const COPPER = '#C8743A', COPPER_LT = '#F6B57C';
 const coilPts = (): P3[] => {
   const K = LAB.COIL, n = 360, pts: P3[] = [];
   for (let i = 0; i <= n; i++) {
@@ -500,9 +525,12 @@ export const LabStage: React.FC<{cam: Cam3; t: number; coil?: number; grid?: num
   const coilD = projLine(cam, COIL_PTS).map(lineD).join(' ');
   const hot = clamp(coil);
   const flick = 0.92 + 0.08 * Math.sin(t * 29) * Math.sin(t * 7.3);
-  const cuCol = mix(COPPER, '#FF9A4A', hot * 0.75);
-  const hotRings = hot > 0.01 ? [7.6, 6, 4.6, 3.2, 2].map((r) => polyD(labProjPoly(cam, circle3(K.x, K.h, K.d, r, 40)))) : [];
-  const glow = hot > 0.01 ? affGrad(cam, {x: K.x, h: 0, d: K.d}, 19) : null;
+  // the coil's own warm glow (inside the window, under the glass) and the soft heat spill on the mat
+  const coreGlow = hot > 0.01 ? affGrad(cam, {x: K.x, h: K.h, d: K.d}, K.r1 * 1.05) : null;
+  const glow = hot > 0.01 ? affGrad(cam, {x: K.x, h: 0, d: K.d}, 15) : null;
+  // copper reads as a subdued, premium spiral under smoked glass (no hard black separations): it warms when energised
+  const cuBody = mix(mix(COPPER, C.navy1, 0.42), '#E08448', hot * 0.42);
+  const cuLit = mix(mix(COPPER_LT, C.navy1, 0.3), '#FFD9A8', hot);
   // cage shadows: base AO + long thin bar shadows (key light)
   let shadows = '';
   let ao = '';
@@ -577,8 +605,8 @@ export const LabStage: React.FC<{cam: Cam3; t: number; coil?: number; grid?: num
         <g>
           <defs>
             <radialGradient id={ids.hot} gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform={glow}>
-              <stop offset="0" stopColor={C.heat} stopOpacity={0.5} />
-              <stop offset="0.5" stopColor={C.heat} stopOpacity={0.22} />
+              <stop offset="0" stopColor={C.heat} stopOpacity={0.34} />
+              <stop offset="0.5" stopColor={C.heat} stopOpacity={0.12} />
               <stop offset="1" stopColor={C.heatDeep} stopOpacity={0} />
             </radialGradient>
           </defs>
@@ -589,14 +617,23 @@ export const LabStage: React.FC<{cam: Cam3; t: number; coil?: number; grid?: num
       <path d={bezelO} fill="#4C5D73" stroke={INK} strokeWidth={2.2} />
       <path d={win} fill={`url(#${ids.win})`} stroke="#22324A" strokeWidth={1.5} />
       <g clipPath={`url(#${ids.clip})`}>
-        {hot > 0.01 && hotRings.map((d, i) => <path key={i} d={d} fill={i < 2 ? C.heatDeep : C.heat} opacity={0.13 * hot * flick} />)}
-        <path d={coilD} fill="none" stroke="#050A12" strokeWidth={f1(wpx + 3)} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={coilD} fill="none" stroke={mix(COPPER_DK, cuCol, 0.35)} strokeWidth={f1(wpx)} strokeLinecap="round" strokeLinejoin="round" />
-        <path d={coilD} fill="none" stroke={cuCol} strokeWidth={f1(wpx * 0.62)} strokeLinecap="round" strokeLinejoin="round" transform={`translate(${f1(-wpx * 0.12)} ${f1(-wpx * 0.16)})`} />
-        <path d={coilD} fill="none" stroke={mix(COPPER_LT, '#FFE6BF', hot)} strokeWidth={f1(Math.max(1, wpx * 0.18))} strokeLinecap="round" transform={`translate(${f1(-wpx * 0.24)} ${f1(-wpx * 0.3)})`} opacity={0.9} />
-        {hot > 0.01 && <path d={coilD} fill="none" stroke="#FFB86B" strokeWidth={f1(wpx * 2.4)} strokeLinecap="round" opacity={0.16 * hot * flick} />}
+        {coreGlow && (
+          <g>
+            <defs>
+              <radialGradient id={ids.hot + 'c'} gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform={coreGlow}>
+                <stop offset="0" stopColor="#FFC27A" stopOpacity={0.55} />
+                <stop offset="0.55" stopColor={C.heat} stopOpacity={0.3} />
+                <stop offset="1" stopColor={C.heatDeep} stopOpacity={0.08} />
+              </radialGradient>
+            </defs>
+            <path d={win} fill={`url(#${ids.hot}c)`} opacity={f3(hot * flick)} />
+          </g>
+        )}
+        <path d={coilD} fill="none" stroke="#08111E" strokeWidth={f1(wpx * 1.08)} strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />
+        <path d={coilD} fill="none" stroke={cuBody} strokeWidth={f1(wpx * 0.78)} strokeLinecap="round" strokeLinejoin="round" />
+        <path d={coilD} fill="none" stroke={cuLit} strokeWidth={f1(Math.max(0.8, wpx * 0.16))} strokeLinecap="round" transform={`translate(${f1(-wpx * 0.14)} ${f1(-wpx * 0.2)})`} opacity={0.34 + 0.22 * hot} />
         {/* glass: a darkening veil + a broad sheen */}
-        <path d={win} fill="#0B1526" opacity={f3(lerp(0.5, 0.1, hot))} />
+        <path d={win} fill="#0A1424" opacity={f3(lerp(0.6, 0.36, hot))} />
         {(() => {
           const g0 = labProjPoly(cam, [ax(K.x - K.win, 0, K.d + 1), ax(K.x - K.win * 0.2, 0, K.d + K.win), ax(K.x + K.win * 0.1, 0, K.d + K.win), ax(K.x - K.win, 0, K.d + 3.6)]);
           return <path d={polyD(g0)} fill="#CFE6FF" opacity={0.09} />;
@@ -610,46 +647,85 @@ export const LabStage: React.FC<{cam: Cam3; t: number; coil?: number; grid?: num
 };
 
 // =====================================================================================================================
-// AC FIELD ARCS (the coil's alternating field: warm dashed loops rising up through the sample, back down outside)
+// AC FIELD (the coil's alternating field, drawn as a clean premium indicator: a warm bloom around the sample + a few
+// thin, elegant field loops BEHIND it, rising through the sample and returning outside the coil; a soft light pulse
+// travels along each loop. Line widths are in screen px (they do not grow with the camera), so a close-up stays clean.)
 // =====================================================================================================================
-const ARC_AZ = [0, Math.PI, 0.95, Math.PI - 0.95];
+/** loop azimuths (rad, in the floor plane around the coil axis; sin > 0 = behind the sample) and peak heights (mm) */
+const ARC_LOOPS: {az: number; hk: number; rout: number}[] = [
+  {az: 0.42, hk: 10.5, rout: 8.2},
+  {az: Math.PI - 0.42, hk: 10.5, rout: 8.2},
+  {az: 0.72, hk: 6.8, rout: 6.6},
+  {az: Math.PI - 0.72, hk: 6.8, rout: 6.6},
+];
+const arcPts = (L: {az: number; hk: number; rout: number}): P3[] => {
+  const K = LAB.COIL, pts: P3[] = [];
+  for (let q = 0; q <= 48; q++) {
+    const u = q / 48;
+    const r = 0.6 + (L.rout - 0.6) * (u * u * (3 - 2 * u));
+    const hh = L.hk * Math.pow(Math.sin(Math.PI * u), 0.8);
+    pts.push({x: K.x + Math.cos(L.az) * r, h: Math.max(0, hh), d: K.d + Math.sin(L.az) * r});
+  }
+  return pts;
+};
+/** on 0..1. half 'back' (or 'all') = floor halo + bloom + loops (draw after <CageBack>, before the body); 'front'
+ *  draws nothing (kept for API compatibility: nothing of the field is drawn over the sample) */
 export const LabACArcs: React.FC<{cam: Cam3; t: number; on: number; half?: 'back' | 'front' | 'all'}> = ({cam, t, on, half = 'all'}) => {
   if (on <= 0.01) return null;
   const K = LAB.COIL;
-  const c0 = labProj(cam, {x: K.x, h: 4, d: K.d});
+  const c0 = labProj(cam, {x: K.x, h: 3.2, d: K.d});
   if (!c0) return null;
   const s = c0.s;
-  const fq = 2.6;
-  const ph = Math.sin(2 * Math.PI * fq * t);
-  const off = (Math.cos(2 * Math.PI * fq * t) / (2 * Math.PI * fq)) * 18 * s;
+  const ids = {b: uid('acB'), f: uid('acF')};
+  // AC: the field itself alternates far too fast to see (~50 kHz): show it as a steady, gently breathing presence
+  const breathe = 0.86 + 0.14 * Math.sin(2 * Math.PI * 1.3 * t);
   const out: React.ReactNode[] = [];
-  ARC_AZ.forEach((az, i) => {
-    const sd = Math.sin(az);
-    const isBack = sd > 0.05 || (Math.abs(sd) <= 0.05 && false);
-    if (half === 'back' && !isBack) return;
-    if (half === 'front' && isBack) return;
-    const major = i < 2;
-    [6.5, 11, 14.5].forEach((hk, j) => {
-      if (!major && j === 0) return;
-      const pts: P3[] = [];
-      const rin = 0.9 + 0.4 * j, rout = K.r1 + 1.2 + 1.6 * j;
-      for (let q = 0; q <= 40; q++) {
-        const u = q / 40;
-        const r = rin + (rout - rin) * (u * u * (3 - 2 * u));
-        const hh = hk * Math.pow(Math.sin(Math.PI * Math.min(1, u * 1.04)), 0.75);
-        pts.push({x: K.x + Math.cos(az) * r, h: Math.max(0, hh), d: K.d + Math.sin(az) * r});
-      }
-      const d = projLine(cam, pts).map(lineD).join(' ');
-      const a = on * (major ? 0.62 : 0.26) * (0.6 + 0.4 * Math.abs(ph)) * (1 - j * 0.15);
-      const sw = Math.max(2.2, 0.26 * s);
+  if (half !== 'front') {
+    const r = clamp(7.5 * s, 60, 900);
+    out.push(
+      <g key="bloom" opacity={f3(on * breathe)}>
+        <defs>
+          <radialGradient id={ids.b} gradientUnits="userSpaceOnUse" cx={f1(c0.x)} cy={f1(c0.y)} r={f1(r)}>
+            <stop offset="0" stopColor="#FFB070" stopOpacity={0.32} />
+            <stop offset="0.45" stopColor={C.heat} stopOpacity={0.15} />
+            <stop offset="1" stopColor={C.heatDeep} stopOpacity={0} />
+          </radialGradient>
+        </defs>
+        <ellipse cx={f1(c0.x)} cy={f1(c0.y)} rx={f1(r)} ry={f1(r * 1.05)} fill={`url(#${ids.b})`} />
+      </g>,
+    );
+    const core = clamp(0.07 * s, 1.6, 3.4), halo = core * 3.2;
+    ARC_LOOPS.forEach((L, i) => {
+      const d = projLine(cam, arcPts(L)).map(lineD).join(' ');
+      if (!d) return;
+      const a = on * (i < 2 ? 1 : 0.7);
+      // one soft light pulse per loop, rising through the sample and out (two pulses phase-shifted per side)
+      const ph = (t * 0.55 + i * 0.37) % 1;
       out.push(
-        <g key={`${i}${j}`} opacity={f3(a)}>
-          <path d={d} fill="none" stroke={C.heatDeep} strokeWidth={f1(sw * 2.4)} strokeLinecap="round" opacity={0.3} />
-          <path d={d} fill="none" stroke={C.heat} strokeWidth={f1(sw)} strokeLinecap="round" strokeDasharray={`${f1(2.2 * s)} ${f1(1.3 * s)}`} strokeDashoffset={f1(off * (i % 2 ? -1 : 1) + j * 7)} />
+        <g key={'l' + i} opacity={f3(a)}>
+          <path d={d} fill="none" stroke={C.heatDeep} strokeWidth={f1(halo)} strokeLinecap="round" opacity={0.16 * breathe} />
+          <path d={d} fill="none" stroke={C.heat} strokeWidth={f1(core)} strokeLinecap="round" opacity={0.42 * breathe} />
+          <path d={d} fill="none" stroke="#FFE3BF" strokeWidth={f1(core * 1.15)} strokeLinecap="round" pathLength={100} strokeDasharray="10 90" strokeDashoffset={f1(-ph * 100 + 10)} opacity={0.85 * Math.sin(Math.PI * ph)} />
         </g>,
       );
     });
-  });
+  }
+  if (half !== 'front') {
+    // a faint warm halo hugging the floor around the sample's base (under the body: nothing is drawn in front of it)
+    const g = affGrad(cam, {x: K.x, h: 0.05, d: K.d}, 6.5);
+    if (g)
+      out.unshift(
+        <g key="halo" opacity={f3(on * breathe * 0.8)}>
+          <defs>
+            <radialGradient id={ids.f} gradientUnits="userSpaceOnUse" cx="0" cy="0" r="1" gradientTransform={g}>
+              <stop offset="0.35" stopColor="#FFB070" stopOpacity={0.16} />
+              <stop offset="1" stopColor={C.heatDeep} stopOpacity={0} />
+            </radialGradient>
+          </defs>
+          <path d={polyD(labProjPoly(cam, circle3(K.x, 0.05, K.d, 6.5, 40)))} fill={`url(#${ids.f})`} />
+        </g>,
+      );
+  }
   return <g>{out}</g>;
 };
 
@@ -1149,6 +1225,234 @@ export const labFigureFloor = (cam: Cam3, base: P3, shadow = 0.45): FloorOpts | 
 };
 
 // =====================================================================================================================
+// STAGING: pull to the bars, the pinned melt, and the melt -> stream bridge
+// =====================================================================================================================
+/** Recommended LB staging (film seconds, keyed to the narration; the shot may shift them). The figure is pulled against
+ *  the bars by the magnet, the magnet is withdrawn (the solid stays put), then it melts WHERE IT STANDS: the bars stop
+ *  the liquid (gallium's surface tension + oxide skin hold a mm-deep puddle back from 1.2 mm gaps unless a field pulls
+ *  it), so the pool spreads BACKWARD from the bars (labMeltBase) and ends exactly on LAB.MELT, never crossing d = 0.
+ *  Then labMeltBridge (k 0 -> 1) turns the melt-1 pool into the stream's start disc, and LabStream (u) takes over. */
+export const LAB_STAGING = {
+  /** magnet slides in from the front, the solid figure slides HOME -> AT_BARS, clunk on "bars" (T 6.89) */
+  pull: {t0: 6.2, hit: 6.89},
+  /** the magnet is withdrawn (slides back out toward the viewer); the solid figure stays pressed at the bars */
+  withdraw: {t0: 7.05, t1: 7.55, d: LAB.MAGNET_PULL.d - 22},
+  /** coil on just before "MELTED" (7.84); melt 0 -> 1 with the pool pinned behind the bars */
+  coilOn: 7.6,
+  melt: {t0: 7.84, t1: 10.4},
+  /** the bridge (figure pool -> stream disc), while the camera rises to the overhead */
+  bridge: {t0: 10.4, t1: 10.9},
+  /** the magnet returns outside the front bars, then the stream (u 0 -> 1) on "slipped ... through the bars" */
+  magnetIn: {t0: 11.3, t1: 11.8},
+  stream: {t0: 11.8, t1: 13.35},
+};
+/** the solid figure dragged from HOME to the bars by the magnet: accelerating (the pull grows as it nears), a hard stop
+ *  at `hit` with a tiny metallic rebound. Returns the base and a clunk impulse 0..1 (for a squash / SFX / bar shake). */
+export const labPullToBars = (t: number, t0: number = LAB_STAGING.pull.t0, hit: number = LAB_STAGING.pull.hit, from: P3 = LAB.HOME) => {
+  const to = LAB.AT_BARS;
+  if (t <= hit) {
+    const x = clamp((t - t0) / Math.max(1e-3, hit - t0));
+    const e = x * x * (0.35 + 0.65 * x); // slow start, arrives at full speed
+    return {base: lerp3(from, to, e), clunk: 0};
+  }
+  const k = t - hit;
+  const rb = 0.16 * Math.exp(-k / 0.06) * Math.abs(Math.sin(k * 38));
+  return {base: {...to, d: to.d + rb}, clunk: Math.exp(-k / 0.08)};
+};
+/** pool depth radius (mm, along d) of the melting figure (matches labFigurePrims' floor disc: rd = 0.9 R) */
+const poolRd = (melt: number, t: number) => labFigureMelt(melt, t).poolR * (LAB.FIG_H / FIG.H) * 0.9;
+/** the pinned melt: where to stand the melting figure so its pool never crosses the bar plane. melt 0: `from`
+ *  (AT_BARS); the pool's front edge stays put behind the bars while it spreads backward; melt 1: exactly LAB.MELT
+ *  (= the stream's start disc centre). Use as LabFigure's / labFigureBody's base. */
+export const labMeltBase = (melt: number, t: number, from: P3 = LAB.AT_BARS): P3 => {
+  const front = LAB.MELT.d - poolRd(1, t);
+  const d = Math.max(from.d, front + poolRd(clamp(melt), t));
+  const u = clamp((d - from.d) / Math.max(1e-6, LAB.MELT.d - from.d));
+  return {x: lerp(from.x, LAB.MELT.x, u), h: 0, d: melt >= 1 ? LAB.MELT.d : d};
+};
+
+/** melt -> stream bridge prims (screen px in cam). k 0 = LabFigure (melt 1, at `base`) exactly, k 1 = LabStream (u 0)
+ *  exactly. Every figure prim is 'mix'-ed into the stream's floor disc (the lump sinks and flattens into the pool) with
+ *  its blend going to 0 (a hard min: identical copies add nothing at k = 1); every other stream prim grows out of an
+ *  "empty" prim (a negative-radius circle at the shared pool centre that never touches the surface) and keeps its own
+ *  blend. Stream prims are folded first, so both ends are exact. In between, one global scale about the pool centre
+ *  is solved so the visible area moves linearly from the figure's to the stream's (no dip, no pump). */
+export const labMeltBridgePrims = (cam: Cam3, t: number, k: number, base: P3 = LAB.MELT) => {
+  const e = clamp(k);
+  const A = labFigurePrims(cam, base, LAB.FIG_H, 1, t);
+  const st = labStreamFloor(0, t, {x: base.x, y: base.d, r: LAB.POOL_R});
+  const B = projectPrims(cam, floorPrims(st.prims, 0, LAB_STREAM.thick));
+  const s = pxAt(cam, base);
+  const blendB = LAB_STREAM.blend * s;
+  const c = labProj(cam, {x: base.x, h: LAB_STREAM.thick * 0.5, d: base.d}) ?? {x: 540, y: 960};
+  const off = 2.5 * Math.max(A.blend, blendB, 2);
+  const empty = (z: number): Prim => ({k: 'c', x: c.x, y: c.y, r: -off, z});
+  // the stream's main floor disc (largest affine disc) = where the figure's material goes
+  const affA = (p: Prim) => (p.k === 'aff' ? Math.abs(p.ux * p.vy - p.uy * p.vx) : 0);
+  let main = 0;
+  B.forEach((p, i) => {
+    if (affA(p) > affA(B[main])) main = i;
+  });
+  const disc: Prim | undefined = B[main];
+  const ea = ss(e, 0, 0.8), eb = ss(e, 0.2, 1);
+  const build = (sc: number): Prim[] => {
+    const raw: Prim[] = [
+      // (the main disc itself also grows out of the empty prim, faster: the figure's prims flatten into it)
+      ...B.map((p, i): Prim => ({k: 'mix', a: empty(base.d), b: p, t: i === main ? ss(e, 0, 0.5) : eb, z: p.z ?? base.d, blend: p.blend ?? blendB})),
+      ...A.prims.map((p): Prim => ({k: 'mix', a: {...p, g: undefined}, b: disc ?? empty(base.d), t: ea, z: base.d, blend: lerp(p.blend ?? A.blend, 0, ea)})),
+    ];
+    return Math.abs(sc - 1) < 1e-6 ? raw : raw.map((p) => scalePrim(p, c.x, c.y, sc));
+  };
+  const blend = lerp(A.blend, blendB, e);
+  let prims = build(1);
+  const w = ss(e, 0, 0.12) * (1 - ss(e, 0.88, 1));
+  if (w > 0.001) {
+    // area target: linear between the figure's (k 0) and the stream's (k 1) visible areas; solved on a scale factor
+    const aA = unionArea(A.prims, A.blend), aB = unionArea(B, blendB);
+    const target = lerp(aA, aB, e);
+    const cur = unionArea(prims, blend);
+    if (cur > 1) {
+      // build(q): q is an AREA factor (scalePrim)
+      const cal = calibrate(build, blend, target, target / cur, 0.3, 4, 6);
+      const sc = 1 + (cal.a - 1) * w;
+      prims = build(sc);
+    }
+  }
+  return {prims, blend, R: lerp(2.4 * A.k, LIQ_SHADE.R * s, e), band: lerp(1, LIQ_SHADE.band, e), s};
+};
+/** the bridge as a drawable two-pass body (k <= 0 draws <LabFigure melt 1>, k >= 1 draws <LabStream u 0>) */
+export const LabMeltBridge: React.FC<{cam: Cam3; t: number; k: number; part?: 'back' | 'front' | 'all'; warm?: number; base?: P3}> = ({cam, t, k, part = 'all', warm = 0, base = LAB.MELT}) => {
+  if (k <= 0)
+    return <LabFigure cam={cam} t={t} base={base} height={LAB.FIG_H} melt={1} warm={warm} env={LAB_ENV} floor={labFigureFloor(cam, base)} part={part} d0={CG.d0} />;
+  if (k >= 1) return <LabStream cam={cam} t={t} u={0} part={part} warm={warm} start={{x: base.x, y: base.d, r: LAB.POOL_R}} />;
+  const b = labMeltBridgePrims(cam, t, k, base);
+  return (
+    <ChromeBody prims={b.prims} blend={b.blend} R={b.R} band={b.band} specs={2} env={LAB_ENV} warm={warm} floor={k < 0.5 ? labFigureFloor(cam, base) : undefined} depthSplit={part === 'all' ? undefined : {d0: CG.d0, part}} />
+  );
+};
+/** convenience: the bridge as a LabWorld body render prop */
+export const labMeltBridgeBody = (cam: Cam3, t: number, k: number, warm = 0) => (pass: LabBodyPass) => <LabMeltBridge cam={cam} t={t} k={k} part={pass} warm={warm} />;
+
+// =====================================================================================================================
+// THE SCIENTIST'S HAND + TOOL (cheated scale). A real hand (~185 mm) next to a 10 mm figure is a giant blob, so the
+// hand and its tool are drawn at a tasteful cheat (LAB_HAND.handMM, ~1/9 scale): the gloved fingertips and the tool
+// read clearly while the puddle / figure stays the subject. The glove is graded darker and cooler than V1's bright
+// nitrile so it sits in the dark miniature-film light (key from the upper left, cool rim), with a soft contact shadow.
+// =====================================================================================================================
+export type LabToolKind = 'pipette' | 'tweezers' | 'none';
+export const LAB_HAND = {
+  /** wrist -> middle fingertip (mm, cheated) */
+  handMM: 17,
+  /** transfer pipette tip -> bulb end (mm, cheated) */
+  pipetteMM: 21,
+  /** tweezers tip -> joint (mm, cheated) */
+  tweezersMM: 15,
+  /** MS collection beat (cam LAB_CAMS.collect / handoff): the pipette tip dips into the hand-off puddle from the upper
+   *  right; the hand pinches the bulb */
+  collect: {tip: {x: 1.4, h: 0.3, d: -6.6} as P3, ang: -76, handAng: 186, handMM: 15, toolMM: 19, thumbSide: -1 as 1 | -1},
+  /** MS mold beat (cam LAB_CAMS.mold): the pipette fills the open mold through its sprue (feet end). Each preset
+   *  carries its own cheat (handMM / toolMM): the hand reads ~650-700 px long on screen in its camera */
+  fill: {tip: {x: 13, h: LAB.MOLD.th + 0.4, d: LAB.MOLD.d - LAB.MOLD.hl + 0.6} as P3, ang: -112, handAng: -14, handMM: 10.5, toolMM: 12.5, thumbSide: 1 as 1 | -1},
+  /** MS lift-out: tweezers pinch the re-formed figure's head in the opened mold */
+  lift: {tip: {x: 13, h: LAB.MOLD.th + 0.6, d: LAB.MOLD.d + 4.2} as P3, ang: -52, handAng: 210, handMM: 10.5, toolMM: 9.5, thumbSide: -1 as 1 | -1},
+};
+/** grade for the glove: darker, slightly desaturated, cool (feColorMatrix rows) */
+const GLOVE_GRADE = '0.5 0.14 0.06 0 0.02  0.1 0.56 0.1 0 0.025  0.08 0.18 0.56 0 0.04  0 0 0 1 0';
+/** steel tweezers in screen space: tip at `tip`, joint at angle `ang` (deg, tip -> joint), length px, open 0..1 */
+const Tweezers: React.FC<{tip: V; ang: number; len: number; open: number}> = ({tip, ang, len, open}) => {
+  const a = (ang * Math.PI) / 180;
+  const ux = Math.cos(a), uy = Math.sin(a), nx = -uy, ny = ux;
+  const gap = len * 0.035 * clamp(open);
+  const id = uid('twz');
+  const prong = (sd: 1 | -1) => {
+    const P = (u: number, v: number) => `${f1(tip.x + ux * u * len + nx * v)},${f1(tip.y + uy * u * len + ny * v)}`;
+    const w0 = len * 0.008, w1 = len * 0.03, sp = sd * (gap + len * 0.002);
+    // a flat prong: narrow at the tip, wider at the joint, bowed outward (the spring)
+    return `M${P(0, sp - sd * w0)} Q${P(0.5, sp + sd * len * 0.05)} ${P(1, sd * len * 0.024)} L${P(1, sd * (len * 0.024 + w1))} Q${P(0.5, sp + sd * (len * 0.05 + w1 * 1.4))} ${P(0, sp + sd * w0)} Z`;
+  };
+  return (
+    <g>
+      <defs>
+        <linearGradient id={id} gradientUnits="userSpaceOnUse" x1={f1(tip.x + nx * 30)} y1={f1(tip.y + ny * 30)} x2={f1(tip.x - nx * 30)} y2={f1(tip.y - ny * 30)}>
+          <stop offset="0" stopColor="#E8EFF6" />
+          <stop offset="0.45" stopColor="#9AA9BA" />
+          <stop offset="1" stopColor="#4A5869" />
+        </linearGradient>
+      </defs>
+      {([1, -1] as const).map((sd) => (
+        <path key={sd} d={prong(sd)} fill={`url(#${id})`} stroke={INK} strokeWidth={2.2} strokeLinejoin="round" />
+      ))}
+      <circle cx={f1(tip.x + ux * len * 1.01)} cy={f1(tip.y + uy * len * 1.01)} r={f1(len * 0.034)} fill="#7D8CA0" stroke={INK} strokeWidth={2.2} />
+    </g>
+  );
+};
+/** a gloved hand holding a tool, at a cheated bench scale. `tip` is the tool's working point in the world. */
+export const LabHandTool: React.FC<{
+  cam: Cam3;
+  t: number;
+  tip: P3;
+  /** screen angle tip -> tool body (deg; -90 = straight up) */
+  ang: number;
+  /** screen direction wrist -> fingers (deg) */
+  handAng: number;
+  tool?: LabToolKind;
+  /** pipette: silver fill 0..1, bulb squeeze 0..1 */
+  fill?: number;
+  squeeze?: number;
+  /** tweezers: open 0..1 */
+  open?: number;
+  handMM?: number;
+  toolMM?: number;
+  thumbSide?: 1 | -1;
+  /** entry 0..1: slides the hand + tool in from off-frame along the tool axis (0 = fully out) */
+  enter?: number;
+  grade?: number;
+  shadow?: number;
+}> = ({cam, t, tip, ang, handAng, tool = 'pipette', fill = 0, squeeze = 0, open = 0.4, handMM = LAB_HAND.handMM, toolMM, thumbSide = -1, enter = 1, grade = 1, shadow = 0.5}) => {
+  const p = labProj(cam, tip);
+  if (!p) return null;
+  const a = (ang * Math.PI) / 180;
+  const ux = Math.cos(a), uy = Math.sin(a);
+  const lenMM = toolMM ?? (tool === 'tweezers' ? LAB_HAND.tweezersMM : LAB_HAND.pipetteMM);
+  const len = lenMM * p.s;
+  // slide in along the tool axis
+  const outK = (1 - ss(clamp(enter), 0, 1)) * len * 1.6;
+  const tp: V = {x: p.x + ux * outK, y: p.y + uy * outK};
+  const L = handMM * p.s;
+  // grip point on the tool (pipette: the bulb; tweezers: 60 % up)
+  const gk = tool === 'pipette' ? PIPETTE_GRIP / PIPETTE.bulb1 : tool === 'tweezers' ? 0.6 : 0;
+  const grip: V = {x: tp.x + ux * len * gk, y: tp.y + uy * len * gk};
+  const pose = tool === 'tweezers' ? mixHand(HAND_RELAXED, HAND_CLUTCH, 0.35 + 0.3 * (1 - clamp(open))) : mixHand(HAND_RELAXED, HAND_CLUTCH, 0.25 + 0.35 * clamp(squeeze));
+  const wrist = pinchWrist(grip, handAng, L, thumbSide, pose);
+  const sc = len / PIPETTE.bulb1;
+  const gid = uid('lhG'), sid = uid('lhS');
+  // contact shadow: a soft blob on the stage under the hand, offset by the key light
+  const sh = labProj(cam, {x: tip.x + 4, h: 0, d: tip.d + 3});
+  const toolNode =
+    tool === 'pipette' ? <Pipette tip={tp} ang={ang} sc={sc} fill={fill} squeeze={squeeze} t={t} part="all" /> : tool === 'tweezers' ? <Tweezers tip={tp} ang={ang} len={len} open={open} /> : null;
+  return (
+    <g>
+      <defs>
+        <filter id={gid} x="-20%" y="-20%" width="140%" height="140%" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={grade > 0 ? GLOVE_GRADE : '1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'} />
+        </filter>
+        {sh && (
+          <radialGradient id={sid}>
+            <stop offset="0" stopColor={C.navy0} stopOpacity={0.5} />
+            <stop offset="1" stopColor={C.navy0} stopOpacity={0} />
+          </radialGradient>
+        )}
+      </defs>
+      {sh && shadow > 0 && enter > 0.05 && <ellipse cx={f1(sh.x + L * 0.25)} cy={f1(sh.y)} rx={f1(L * 0.55)} ry={f1(L * 0.22)} fill={`url(#${sid})`} opacity={f3(shadow * ss(enter, 0.3, 1))} />}
+      {toolNode}
+      <g filter={`url(#${gid})`}>
+        <GloveArm wrist={wrist} ang={handAng} L={L} pose={pose} thumbSide={thumbSide} view="back" />
+      </g>
+    </g>
+  );
+};
+
+// =====================================================================================================================
 // THE WORLD
 // =====================================================================================================================
 export type LabBodyPass = 'back' | 'front';
@@ -1174,8 +1478,8 @@ export const LabWorld: React.FC<{
     <LabStage cam={cam} t={t} coil={coil} cage={cage} />
     {dish && <LabDish cam={cam} part="back" />}
     {mold && <LabMold cam={cam} t={t} mold={mold} />}
-    <LabACArcs cam={cam} t={t} on={coil} half="back" />
     {cage && <CageBack cam={cam} lid={lid} />}
+    <LabACArcs cam={cam} t={t} on={coil} half="back" />
     {body?.('back')}
     <LabACArcs cam={cam} t={t} on={coil} half="front" />
     {cage && <CageFront cam={cam} lid={lid} />}
