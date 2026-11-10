@@ -18,7 +18,7 @@ export const SHOT_VIEWS2: Record<ShotId2, React.FC<{t: number}>> = {H1, LB, MS, 
 
 /** caption box per caption index (src/data/timeline.json captions). Default: top band, centre y 330, x 110-870. */
 const CAP: Record<number, CapBox> = {
-  0: {y: 285},    // H1: the robot's dome top is at y 369 on frame 0; keep the band above it
+  0: {y: 262},    // H1: the robot's dome top is at y 369 on frame 0; keep the band above it
   11: {y: 1380},  // MS collect: the cage bars and the gloved hand's wrist fill the upper half
   12: {y: 300},
   27: {y: 270},   // J1 "can't stop a robot anymore": the dome top climbs to y 371 by the last frame

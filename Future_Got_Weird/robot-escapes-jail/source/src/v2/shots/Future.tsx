@@ -73,7 +73,7 @@ export const FU_T = {
 };
 /** the hand-off sphere (contract FU -> J1) */
 export const FU_SPHERE = {x: 540, y: 900, r: 130};
-export const FU_TAG = {x: 48, y: 168, size: 28};
+export const FU_TAG = {x: 48, y: 168, size: 38};
 
 const O: V = {x: 540, y: 960};
 const lerpV = (a: V, b: V, u: number): V => ({x: lerp(a.x, b.x, u), y: lerp(a.y, b.y, u)});
@@ -558,7 +558,7 @@ export const FU: React.FC<{t: number}> = ({t}) => {
         {scene}
       </svg>
       <Tag text="MAGNET STEERS IT" t={t} t0={22.9} t1={FU_T.cut - 0.02} x={FU_TAG.x} y={FU_TAG.y} tone="field" size={FU_TAG.size} />
-      <Tag text="LAB DEMONSTRATION · STOMACH MODEL" t={t} t0={FU_T.cut + 0.08} t1={26.5} x={FU_TAG.x} y={FU_TAG.y} tone="dark" size={FU_TAG.size} />
+      <Tag text="STOMACH MODEL · LAB DEMO" t={t} t0={FU_T.cut + 0.08} t1={26.5} x={FU_TAG.x} y={FU_TAG.y} tone="dark" size={FU_TAG.size} />
       <Tag text="FUTURE IDEA" t={t} t0={26.62} t1={27.5} x={FU_TAG.x} y={FU_TAG.y} tone="warm" size={FU_TAG.size} />
     </>
   );

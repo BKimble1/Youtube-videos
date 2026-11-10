@@ -298,7 +298,7 @@ export const lbState = (t: number) => {
 // THE SHOT
 // =====================================================================================================================
 /** context tags: top-left, above the caption band (y 250-420), clear of the subject in every phase */
-export const TAG = {x: 48, y: 168, size: 30};
+export const TAG = {x: 48, y: 168, size: 38};
 const CHEST: P3 = {x: 0, h: 5.6, d: LAB.HOME.d};
 const RevealSurface: React.FC<{t: number; cam: Cam3}> = ({t, cam}) => {
   // the H1 ChromeSurface pattern, receding with the pull-back (scaled about the chest exactly as the camera zooms) and

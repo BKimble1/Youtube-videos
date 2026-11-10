@@ -89,7 +89,7 @@ export const MS_T = {
 };
 const S = MS_T;
 /** context tags: top-left, above the caption band (same place as LB's tags) */
-export const MS_TAG = {x: 48, y: 168, size: 30};
+export const MS_TAG = {x: 48, y: 168, size: 38};
 
 // =====================================================================================================================
 // LAB LAYOUT (mm): the open mold to the right of the cage (off-frame in the hand-off camera, revealed by following the
@@ -921,8 +921,8 @@ export const MS: React.FC<{t: number}> = ({t}) => {
       {parTag && <Tag text="+ MAGNETIC PARTICLES" t={t} t0={18.32} t1={S.labels[1]} x={parTag.x} y={parTag.y} tone="dark" size={40} align="center" />}
       {showGauge && (
         <>
-          <Tag text="GALLIUM MELTS 29.8 °C" t={t} t0={18.86} t1={20.3} x={GAUGE.x - 66 + gdx} y={gaugeY(GAUGE, 29.8)} tone="dark" size={31} align="right" />
-          <Tag text="BODY 37 °C" t={t} t0={T.body1} t1={20.3} x={GAUGE.x - 66 + gdx} y={gaugeY(GAUGE, 37)} tone="light" size={31} align="right" />
+          <Tag text="GALLIUM MELTS 29.8 °C" t={t} t0={18.86} t1={20.3} x={GAUGE.x - 66 + gdx} y={gaugeY(GAUGE, 29.8)} tone="dark" size={40} align="right" />
+          <Tag text="BODY 37 °C" t={t} t0={T.body1} t1={20.3} x={GAUGE.x - 66 + gdx} y={gaugeY(GAUGE, 37)} tone="light" size={40} align="right" />
         </>
       )}
       {tags}
