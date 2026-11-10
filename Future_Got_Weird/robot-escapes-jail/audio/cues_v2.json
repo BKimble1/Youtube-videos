@@ -1,0 +1,475 @@
+{
+ "duration": 32.4,
+ "SHOTS": {
+  "H1": [
+   0,
+   3.4
+  ],
+  "LB": [
+   3.4,
+   13.67
+  ],
+  "MS": [
+   13.67,
+   22.56
+  ],
+  "FU": [
+   22.56,
+   27.9
+  ],
+  "J1": [
+   27.9,
+   32.4
+  ]
+ },
+ "T": {
+  "jail": 1.24,
+  "jailE": 1.61,
+  "melting": 2.135,
+  "meltingE": 2.87,
+  "scientists": 3.26,
+  "locked": 3.785,
+  "tiny": 4.705,
+  "cage": 5.145,
+  "cageE": 5.52,
+  "but": 5.87,
+  "breaking": 6.335,
+  "bars1": 6.895,
+  "bars1E": 7.33,
+  "it2": 7.63,
+  "melted": 7.84,
+  "meltedE": 8.5,
+  "its": 8.88,
+  "entire": 9.01,
+  "liquid": 10.45,
+  "metalE": 11.27,
+  "then1": 11.64,
+  "slipped": 11.855,
+  "through": 12.575,
+  "bars2": 12.895,
+  "bars2E": 13.31,
+  "then2": 13.71,
+  "collected": 14.47,
+  "metal2": 14.99,
+  "molded": 15.43,
+  "back": 15.99,
+  "shape": 16.47,
+  "shapeE": 16.71,
+  "how": 17.13,
+  "howE": 17.44,
+  "made": 17.985,
+  "metal3": 18.425,
+  "melts": 18.865,
+  "body1": 19.425,
+  "temperature": 19.745,
+  "temperatureE": 20.22,
+  "magnets": 20.56,
+  "control": 21.29,
+  "movement": 21.89,
+  "movementE": 22.12,
+  "exploring": 23.235,
+  "robots": 23.955,
+  "oneDay": 25.115,
+  "retrieve": 25.515,
+  "objects": 25.955,
+  "inside2": 26.635,
+  "body2": 27.315,
+  "body2E": 27.58,
+  "so": 27.93,
+  "apparently": 28.115,
+  "even": 29.29,
+  "prison": 29.515,
+  "bars3": 29.955,
+  "cant": 30.315,
+  "stop": 30.555,
+  "robot3": 30.875,
+  "anymore": 31.355,
+  "anymoreE": 31.8,
+  "end": 32.4
+ },
+ "PLANNED_MOVES": [],
+ "music": {
+  "hook": 0,
+  "drop": 3.4,
+  "groove": 4,
+  "breath": 17.1,
+  "science": 17.9,
+  "pickup": 27.9,
+  "ret": 28.4
+ },
+ "cues": [
+  {
+   "t": 0,
+   "kind": "alarm",
+   "dur": 3.12,
+   "shot": "H1"
+  },
+  {
+   "t": 0,
+   "kind": "tension",
+   "dur": 0.9,
+   "gain": -3,
+   "shot": "H1"
+  },
+  {
+   "t": 0.02,
+   "kind": "squeeze",
+   "gain": 0,
+   "shot": "H1"
+  },
+  {
+   "t": 0.36,
+   "kind": "stream",
+   "dur": 0.85,
+   "gain": -2,
+   "shot": "H1"
+  },
+  {
+   "t": 1.15,
+   "kind": "escape",
+   "gain": -4,
+   "shot": "H1"
+  },
+  {
+   "t": 1.18,
+   "kind": "reform",
+   "dur": 0.48,
+   "shot": "H1"
+  },
+  {
+   "t": 1.62,
+   "kind": "snap",
+   "shot": "H1"
+  },
+  {
+   "t": 1.74,
+   "kind": "mech_click",
+   "variant": 1,
+   "gain": -2,
+   "shot": "H1"
+  },
+  {
+   "t": 2.61,
+   "kind": "glint",
+   "gain": -2,
+   "shot": "H1"
+  },
+  {
+   "t": 3.12,
+   "kind": "alarm_tail",
+   "dur": 0.3,
+   "shot": "H1"
+  },
+  {
+   "t": 3.17,
+   "kind": "enter",
+   "shot": "H1"
+  },
+  {
+   "t": 5.155,
+   "kind": "lock",
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 6,
+   "kind": "field",
+   "gain": -5,
+   "dur": 1.4,
+   "shot": "LB"
+  },
+  {
+   "t": 6.8,
+   "kind": "clunk",
+   "gain": -2,
+   "shot": "LB"
+  },
+  {
+   "t": 7.31,
+   "kind": "clunk",
+   "gain": 1,
+   "shot": "LB"
+  },
+  {
+   "t": 7.59,
+   "kind": "ac_on",
+   "gain": -1,
+   "dur": 1.2,
+   "shot": "LB"
+  },
+  {
+   "t": 8.09,
+   "kind": "melt",
+   "gain": -2,
+   "dur": 1.9,
+   "shot": "LB"
+  },
+  {
+   "t": 10.9,
+   "kind": "field",
+   "gain": -3,
+   "dur": 1.6,
+   "shot": "LB"
+  },
+  {
+   "t": 11.33,
+   "kind": "glint",
+   "gain": -7,
+   "shot": "LB"
+  },
+  {
+   "t": 11.94,
+   "kind": "stream",
+   "gain": -2,
+   "dur": 1.35,
+   "shot": "LB"
+  },
+  {
+   "t": 12.565,
+   "kind": "squeeze",
+   "gain": -5,
+   "dur": 0.5,
+   "shot": "LB"
+  },
+  {
+   "t": 13.33,
+   "kind": "drip",
+   "gain": -4,
+   "shot": "LB"
+  },
+  {
+   "t": 14.48,
+   "kind": "pipette",
+   "gain": -4,
+   "shot": "MS"
+  },
+  {
+   "t": 14.59,
+   "kind": "flow",
+   "gain": -10,
+   "dur": 0.55,
+   "shot": "MS"
+  },
+  {
+   "t": 15.6,
+   "kind": "glug",
+   "gain": -6,
+   "dur": 0.5,
+   "shot": "MS"
+  },
+  {
+   "t": 16.1,
+   "kind": "cool",
+   "gain": -8,
+   "dur": 0.5,
+   "shot": "MS"
+  },
+  {
+   "t": 16.96,
+   "kind": "clunk",
+   "gain": -11,
+   "shot": "MS"
+  },
+  {
+   "t": 17.52,
+   "kind": "enter",
+   "gain": -3,
+   "shot": "MS"
+  },
+  {
+   "t": 18.06,
+   "kind": "pop",
+   "gain": -9,
+   "shot": "MS"
+  },
+  {
+   "t": 18.33,
+   "kind": "pop",
+   "gain": -10,
+   "shot": "MS"
+  },
+  {
+   "t": 18.7,
+   "kind": "ac_on",
+   "gain": -4,
+   "dur": 1.2,
+   "shot": "MS"
+  },
+  {
+   "t": 19.17,
+   "kind": "melt",
+   "gain": -11,
+   "dur": 0.7,
+   "shot": "MS"
+  },
+  {
+   "t": 20.26,
+   "kind": "field",
+   "gain": -3,
+   "dur": 1.6,
+   "shot": "MS"
+  },
+  {
+   "t": 21.27,
+   "kind": "stream",
+   "gain": -10,
+   "dur": 0.8,
+   "shot": "MS"
+  },
+  {
+   "t": 22.2,
+   "kind": "drip",
+   "gain": -9,
+   "shot": "MS"
+  },
+  {
+   "t": 22.86,
+   "kind": "field",
+   "gain": -5,
+   "dur": 1.2,
+   "shot": "FU"
+  },
+  {
+   "t": 23.07,
+   "kind": "squeeze",
+   "gain": -6,
+   "dur": 0.5,
+   "shot": "FU"
+  },
+  {
+   "t": 23.12,
+   "kind": "stream",
+   "gain": -5,
+   "dur": 0.75,
+   "shot": "FU"
+  },
+  {
+   "t": 23.82,
+   "kind": "drip",
+   "gain": -6,
+   "shot": "FU"
+  },
+  {
+   "t": 24,
+   "kind": "mag_hum",
+   "gain": -6,
+   "dur": 0.9,
+   "shot": "FU"
+  },
+  {
+   "t": 24.74,
+   "kind": "clunk",
+   "gain": -7,
+   "shot": "FU"
+  },
+  {
+   "t": 24.9,
+   "kind": "ac_on",
+   "gain": -4,
+   "dur": 0.75,
+   "shot": "FU"
+  },
+  {
+   "t": 25.1,
+   "kind": "melt",
+   "gain": -5,
+   "dur": 0.55,
+   "shot": "FU"
+  },
+  {
+   "t": 25.3,
+   "kind": "squeeze",
+   "gain": -9,
+   "dur": 0.4,
+   "shot": "FU"
+  },
+  {
+   "t": 25.55,
+   "kind": "cool",
+   "gain": -6,
+   "dur": 0.5,
+   "shot": "FU"
+  },
+  {
+   "t": 25.96,
+   "kind": "field",
+   "gain": -5,
+   "dur": 1.35,
+   "shot": "FU"
+  },
+  {
+   "t": 26.47,
+   "kind": "reveal",
+   "gain": -9,
+   "dur": 1.2,
+   "shot": "FU"
+  },
+  {
+   "t": 27.66,
+   "kind": "glint",
+   "gain": -6,
+   "shot": "FU"
+  },
+  {
+   "t": 28.3,
+   "kind": "chain",
+   "gain": -7,
+   "pan": 0.45,
+   "shot": "J1"
+  },
+  {
+   "t": 28.98,
+   "kind": "comic",
+   "variant": 2,
+   "gain": -2,
+   "shot": "J1"
+  },
+  {
+   "t": 29.693,
+   "kind": "mech_click",
+   "variant": 0,
+   "gain": -6,
+   "shot": "J1"
+  },
+  {
+   "t": 29.887,
+   "kind": "mech_click",
+   "variant": 1,
+   "gain": -6,
+   "shot": "J1"
+  },
+  {
+   "t": 30.22,
+   "kind": "mech_click",
+   "variant": 2,
+   "gain": -6,
+   "shot": "J1"
+  },
+  {
+   "t": 30.31,
+   "kind": "bar_tap",
+   "gain": -2,
+   "shot": "J1"
+  },
+  {
+   "t": 31,
+   "kind": "tension",
+   "dur": 0.8,
+   "gain": -8,
+   "shot": "J1"
+  },
+  {
+   "t": 31.82,
+   "kind": "alarm",
+   "dur": 0.58,
+   "shot": "J1"
+  },
+  {
+   "t": 31.84,
+   "kind": "tension",
+   "dur": 0.56,
+   "gain": -5,
+   "shot": "J1"
+  }
+ ]
+}
