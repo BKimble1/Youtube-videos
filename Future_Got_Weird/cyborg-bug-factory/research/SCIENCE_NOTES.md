@@ -126,3 +126,31 @@ block.
    backpacks, not factory-made ones. The narration's "cyborg cockroaches" is accurate. In V2 the disaster-zone insect
    wears the camera-carrying field backpack.
 2. **"Into robots" and "turning bugs into them" are figurative.**
+
+---
+
+## V3 update (11 Nov 2026): the workstation details
+
+These come from the same paper (PMC12304280), read in this session, and are used to build the V3 machine.
+
+- **Fixation on a slider.** "The insect was fixed in a structure mounted on a motor-driven slider." "Rods A and B
+  pressed the anterior pronotum and the mesothorax, respectively, elevating the posterior pronotum." In V3, rod B is
+  drawn as low side pads, a stylisation, to keep the camera's view of the thorax clear.
+- **The cycle.**
+  - "The robotic arm scanned the insect with the camera and identified the reference point." The arm "grasped the
+    backpack, which was always placed on the backpack holder", then "applied downward force to the backpack to hook
+    the metathorax cuticle with the backpack's four branches".
+  - It then "disengaged from the backpack and returned to its initial position to capture an image of the next fixed
+    insect", and "the structure used to secure the insect was retracted, enabling the next insect to be positioned and
+    fixed onto the platform".
+- **The grip.** "The grasping section of the backpack was held by a robotic arm gripper." In V3 the fingers close on
+  the backpack's tab.
+- **Manual comparison.** "While the latter [manual assembly] needed 15 min to assemble a single insect-computer hybrid
+  robot, the former needed 68 s per insect." The paper attributes the 15-minute figure to earlier work (its ref. 18).
+  V3's step bar footnote reads "by hand: ~15 min".
+- **Scale.** The paper calls this "a scalable strategy" and argues automation "is crucial for mass production". NTU says
+  the line "is still in the prototype stage". V3 therefore shows one workstation and one insect at a time, with
+  repetition shown only as a labelled illustration.
+
+The 42-second figure in the V3 brief does not appear in the narration or the research. The narration says 68 s, which
+is verified.

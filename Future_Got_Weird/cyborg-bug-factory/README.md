@@ -1,6 +1,39 @@
 # Future Got Weird: Scientists Built a Cyborg Bug Factory
 
-## V2 (current review cut)
+## V3 (current review cut: the machine is the subject)
+
+**Status (11 Nov 2026):** V3 was rendered from source and checked from the file. **It is not published.** The
+recommendation is NOT READY until one human viewing with sound has been done; every factual claim is verified. See
+`production/V3_REPORT.md`.
+
+V3 retells the approved narration (unchanged) as a story about a machine that makes cyborg insects:
+- an extreme-macro opening of the arm installing a module, with industrial camera HUDs;
+- the paper's workstation: one slider platform with rods A and B, a backpack holder, a scan → grasp → implant → latch →
+  release cycle, and a 68 s step bar (fix → release);
+- a robot-built-from-parts comparison that match-cuts to the insect's legs;
+- a rebuilt crevice earthquake scene;
+- an ending where the machine starts the next cycle and lands on frame 0.
+
+| Deliverable | File |
+|---|---|
+| V3 review: 1080×1920, 30 fps, 946 frames, 31.533 s | `exports/FGW_Cyborg_Bug_Factory_V3_REVIEW_1080x1920.mp4` |
+| Report | `production/V3_REPORT.md` |
+| Verification | `research/SCIENCE_NOTES.md`, V2 and V3 updates |
+| Mix | `audio/mix/FGW_Cyborg_Bug_Factory_MIX_V3.wav`, `audio/mix/mix_measure_mix_v3.json`, `audio/sfx_log_mix_v3.json` |
+| QA | `qa/v3/` |
+| Source | `source/src/v3/` (composition `CyborgBugFactoryV3`; still `Sheet3`) |
+
+Rebuild V3:
+
+    python3 tools/make_audio_v3.py mix_v3
+    (cd source && npx remotion render src/index.ts CyborgBugFactoryV3 ../exports/FGW_Cyborg_Bug_Factory_V3_REVIEW_1080x1920.mp4 \
+        --props='{"audio":"mix_v3","captions":true}' --image-format=png --crf=16 --x264-preset=slow --pixel-format=yuv420p \
+        --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_render_v3.py exports/FGW_Cyborg_Bug_Factory_V3_REVIEW_1080x1920.mp4 qa/v3
+
+---
+
+## V2 (review cut, superseded)
 
 **Status (11 Nov 2026):** V2 was rendered from source and checked from the file. **It is not published.** The
 recommendation is NOT READY until one human viewing with sound has been done; there are no factual blockers. See
