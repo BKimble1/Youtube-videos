@@ -5,6 +5,7 @@ import {FRAMES} from './lib';
 import {Film, Sheet} from './Film';
 import {Film2, Sheet2} from './v2/Film2';
 import {Film3, Sheet3} from './v3/Film3';
+import {Film4, Sheet4} from './v4/Film4';
 
 export const RemotionRoot: React.FC = () => (
   <>
@@ -14,5 +15,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="Sheet2" component={Sheet2} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0, 9, 18, 30], captions: true, cols: 4}} />
     <Composition id="CyborgBugFactoryV3" component={Film3} durationInFrames={FRAMES} fps={30} width={1080} height={1920} defaultProps={{audio: false as string | false, captions: true}} />
     <Composition id="Sheet3" component={Sheet3} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0, 9, 18, 30], captions: true, cols: 4}} />
+    <Composition id="CyborgBugFactoryV4" component={Film4} durationInFrames={FRAMES} fps={30} width={1080} height={1920} defaultProps={{audio: false as string | false, captions: true}} />
+    <Composition id="Sheet4" component={Sheet4} durationInFrames={1} fps={30} width={1080} height={1920} defaultProps={{fs: [0, 9, 18, 30], captions: true, cols: 4}} />
   </>
 );

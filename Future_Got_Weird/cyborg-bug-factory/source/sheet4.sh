@@ -1,0 +1,4 @@
+#!/bin/bash
+# usage: ./sheet2.sh out.png "f1,f2,..." [captions:true|false] [cols]   (V4 contact sheet)
+FS="[$2]"; CAP=${3:-true}; COLS=${4:-4}
+npx remotion still src/index.ts Sheet4 "$1" --frame=0 --props="{\"fs\":$FS,\"captions\":$CAP,\"cols\":$COLS}" --log=error
