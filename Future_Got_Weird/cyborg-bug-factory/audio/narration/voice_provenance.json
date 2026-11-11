@@ -1,0 +1,50 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Bone Glue, Eel Escape, Myostatin, Zombie Snail, Zombie Ant, Dead Spider and the earlier Cyborg Cockroach); confirmed with creative_list_voices on 2026-11-11"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "jmJudxGZXWWD0HWyJZyC",
+ "prompt": "[conversational, fascinated] Scientists built a factory that turns living cockroaches into robots. [dry, quick] And it only takes SIXTY-EIGHT SECONDS. [brisk, explaining] A robotic arm grabs a tiny computer and attaches it to the cockroach's back. Then tiny electrodes deliver ELECTRICAL PULSES that can make the bug turn. [curious, quick] So now, instead of building tiny robots from scratch \u2014 scientists can use actual living insects. [leaning in] And here's the crazy part. [energetic] They've already sent cyborg cockroaches into a real EARTHQUAKE DISASTER ZONE. [dry, slightly unsettling] Which means we're not just building robots anymore. [deadpan, unsettling] We're turning bugs into them.",
+ "prompt_note": "The approved words, verbatim (production/NARRATION_LOCKED.txt). '68' was written out as SIXTY-EIGHT so it is read as a number of seconds; capitals mark emphasis only (68 seconds, electrical pulses, earthquake disaster zone, as the brief asks); the bracket tags direct delivery and are not spoken; the script's ellipsis after 'scratch' was given as a dash beat.",
+ "generated_once": "One run of two variations (the connector default), 2 x 697 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_vCja.mp3",
+   "generation_id": "vCjaj5mf7HvC4jni4BBo",
+   "session_id": "WPk8HZILndhudr7tI0Iw",
+   "duration_s": 32.21,
+   "sha256": "aa375f218df546c4c3de8b81c8d74cf256ce41b2e73bc254f37d38c62b843443",
+   "chosen": false,
+   "asr": {
+    "whisper_base_en": "1 difference: cockroach's -> cockroaches (homophone)",
+    "zipformer_en": "robots -> rowbots, cyborg -> sideboard, anymore we're -> any more or"
+   }
+  },
+  {
+   "file": "audio/narration/takes/t2_oiqR.mp3",
+   "generation_id": "oiqRqI6XvyqT8pWQGVEn",
+   "session_id": "mMe7nNyICSJ44ArR0tCL",
+   "duration_s": 32.13,
+   "sha256": "e80096b6c010a4817e5e5a45813ff66c3e582b80560b7269fc84949e563ca85f",
+   "chosen": true,
+   "asr": {
+    "whisper_base_en": "1 difference: cockroach's -> cockroaches (homophone)",
+    "zipformer_en": "cyborg -> sideboard, anymore we're -> any more or (cleaner 'robots' and 'robotic' than take 1)"
+   }
+  }
+ ],
+ "chosen_take": "t2_oiqR: both takes are verbatim by Whisper; take 2 articulates 'robots' and 'robotic' more cleanly (Zipformer) at the same pace",
+ "master": {
+  "file": "audio/narration/FGW_Cyborg_Bug_Factory_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 31.533 s (946 frames at 30 fps)",
+  "sha256": "2cf791cc4718356e2a1bec217aacf394f73417a0009a96944a04b5d8ec8a87c3",
+  "edits": "0.10 s of silence before the first word; sentence gaps longer than 0.26 s shortened to 0.26 s by cutting the middle of each silent run (12 ms equal-power crossfades), the deadpan beat before 'turning bugs into them' kept at 0.34 s; 1.04 s removed in all. Every word sample for sample: no time-stretch, pitch or gain change.",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer-en-2023-06-26 token timestamps snapped to measured onsets)",
+  "asr_check": "qa/asr_narration_master.json: whisper base.en WER 0.012 (one difference, the homophone cockroach's/cockroaches); zipformer WER 0.070 (mis-hearings of 'cyborg' and 'robots', not missing words)"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pause measurement and level."
+}

@@ -1,0 +1,474 @@
+{
+ "audio": "audio/narration/takes/t1_vCja.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   4.11,
+   4.43
+  ],
+  [
+   6.33,
+   6.69
+  ],
+  [
+   10.66,
+   11.12
+  ],
+  [
+   15.12,
+   15.49
+  ],
+  [
+   18.41,
+   18.67
+  ],
+  [
+   21.02,
+   21.39
+  ],
+  [
+   22.71,
+   23.14
+  ],
+  [
+   27.37,
+   27.79
+  ],
+  [
+   30.24,
+   30.67
+  ]
+ ],
+ "words": [
+  {
+   "word": "Scientists",
+   "start": 0.0,
+   "end": 0.63
+  },
+  {
+   "word": "built",
+   "start": 0.64,
+   "end": 0.91
+  },
+  {
+   "word": "a",
+   "start": 0.92,
+   "end": 1.01
+  },
+  {
+   "word": "factory",
+   "start": 1.04,
+   "end": 1.55
+  },
+  {
+   "word": "that",
+   "start": 1.56,
+   "end": 1.73
+  },
+  {
+   "word": "turns",
+   "start": 1.76,
+   "end": 2.0
+  },
+  {
+   "word": "living",
+   "start": 2.0,
+   "end": 2.39
+  },
+  {
+   "word": "cockroaches",
+   "start": 2.4,
+   "end": 3.19
+  },
+  {
+   "word": "into",
+   "start": 3.2,
+   "end": 3.43
+  },
+  {
+   "word": "robots.",
+   "start": 3.44,
+   "end": 4.11
+  },
+  {
+   "word": "And",
+   "start": 4.43,
+   "end": 4.48
+  },
+  {
+   "word": "it",
+   "start": 4.47,
+   "end": 4.58
+  },
+  {
+   "word": "only",
+   "start": 4.59,
+   "end": 4.83
+  },
+  {
+   "word": "takes",
+   "start": 4.83,
+   "end": 5.14
+  },
+  {
+   "word": "68",
+   "start": 5.15,
+   "end": 5.78
+  },
+  {
+   "word": "seconds.",
+   "start": 5.79,
+   "end": 6.33
+  },
+  {
+   "word": "A",
+   "start": 6.69,
+   "end": 6.74
+  },
+  {
+   "word": "robotic",
+   "start": 6.73,
+   "end": 7.22
+  },
+  {
+   "word": "arm",
+   "start": 7.23,
+   "end": 7.51
+  },
+  {
+   "word": "grabs",
+   "start": 7.51,
+   "end": 7.82
+  },
+  {
+   "word": "a",
+   "start": 7.83,
+   "end": 7.9
+  },
+  {
+   "word": "tiny",
+   "start": 7.95,
+   "end": 8.26
+  },
+  {
+   "word": "computer",
+   "start": 8.27,
+   "end": 8.75
+  },
+  {
+   "word": "and",
+   "start": 8.75,
+   "end": 8.86
+  },
+  {
+   "word": "attaches",
+   "start": 8.87,
+   "end": 9.38
+  },
+  {
+   "word": "it",
+   "start": 9.39,
+   "end": 9.51
+  },
+  {
+   "word": "to",
+   "start": 9.51,
+   "end": 9.62
+  },
+  {
+   "word": "the",
+   "start": 9.63,
+   "end": 9.7
+  },
+  {
+   "word": "cockroach\u2019s",
+   "start": 9.71,
+   "end": 10.51
+  },
+  {
+   "word": "back.",
+   "start": 10.51,
+   "end": 10.66
+  },
+  {
+   "word": "Then",
+   "start": 11.12,
+   "end": 11.24
+  },
+  {
+   "word": "tiny",
+   "start": 11.25,
+   "end": 11.76
+  },
+  {
+   "word": "electrodes",
+   "start": 11.77,
+   "end": 12.4
+  },
+  {
+   "word": "deliver",
+   "start": 12.41,
+   "end": 12.76
+  },
+  {
+   "word": "electrical",
+   "start": 12.77,
+   "end": 13.38
+  },
+  {
+   "word": "pulses",
+   "start": 13.41,
+   "end": 13.85
+  },
+  {
+   "word": "that",
+   "start": 13.85,
+   "end": 14.0
+  },
+  {
+   "word": "can",
+   "start": 14.01,
+   "end": 14.16
+  },
+  {
+   "word": "make",
+   "start": 14.17,
+   "end": 14.31
+  },
+  {
+   "word": "the",
+   "start": 14.33,
+   "end": 14.44
+  },
+  {
+   "word": "bug",
+   "start": 14.45,
+   "end": 14.84
+  },
+  {
+   "word": "turn.",
+   "start": 14.85,
+   "end": 15.12
+  },
+  {
+   "word": "So",
+   "start": 15.49,
+   "end": 15.58
+  },
+  {
+   "word": "now,",
+   "start": 15.585,
+   "end": 15.86
+  },
+  {
+   "word": "instead",
+   "start": 15.865,
+   "end": 16.33
+  },
+  {
+   "word": "of",
+   "start": 16.345,
+   "end": 16.5
+  },
+  {
+   "word": "building",
+   "start": 16.505,
+   "end": 16.86
+  },
+  {
+   "word": "tiny",
+   "start": 16.865,
+   "end": 17.22
+  },
+  {
+   "word": "robots",
+   "start": 17.225,
+   "end": 17.74
+  },
+  {
+   "word": "from",
+   "start": 17.745,
+   "end": 17.94
+  },
+  {
+   "word": "scratch\u2026",
+   "start": 17.945,
+   "end": 18.41
+  },
+  {
+   "word": "Scientists",
+   "start": 18.67,
+   "end": 19.17
+  },
+  {
+   "word": "can",
+   "start": 19.18,
+   "end": 19.33
+  },
+  {
+   "word": "use",
+   "start": 19.34,
+   "end": 19.56
+  },
+  {
+   "word": "actual",
+   "start": 19.66,
+   "end": 20.09
+  },
+  {
+   "word": "living",
+   "start": 20.1,
+   "end": 20.45
+  },
+  {
+   "word": "insects.",
+   "start": 20.46,
+   "end": 21.02
+  },
+  {
+   "word": "And",
+   "start": 21.39,
+   "end": 21.44
+  },
+  {
+   "word": "here\u2019s",
+   "start": 21.43,
+   "end": 21.76
+  },
+  {
+   "word": "the",
+   "start": 21.765,
+   "end": 21.91
+  },
+  {
+   "word": "crazy",
+   "start": 21.925,
+   "end": 22.48
+  },
+  {
+   "word": "part.",
+   "start": 22.485,
+   "end": 22.71
+  },
+  {
+   "word": "They\u2019ve",
+   "start": 23.14,
+   "end": 23.24
+  },
+  {
+   "word": "already",
+   "start": 23.245,
+   "end": 23.64
+  },
+  {
+   "word": "sent",
+   "start": 23.645,
+   "end": 23.96
+  },
+  {
+   "word": "cyborg",
+   "start": 23.965,
+   "end": 24.44
+  },
+  {
+   "word": "cockroaches",
+   "start": 24.445,
+   "end": 25.11
+  },
+  {
+   "word": "into",
+   "start": 25.125,
+   "end": 25.36
+  },
+  {
+   "word": "a",
+   "start": 25.365,
+   "end": 25.48
+  },
+  {
+   "word": "real",
+   "start": 25.485,
+   "end": 25.8
+  },
+  {
+   "word": "earthquake",
+   "start": 25.805,
+   "end": 26.44
+  },
+  {
+   "word": "disaster",
+   "start": 26.445,
+   "end": 27.0
+  },
+  {
+   "word": "zone.",
+   "start": 27.005,
+   "end": 27.37
+  },
+  {
+   "word": "Which",
+   "start": 27.79,
+   "end": 27.89
+  },
+  {
+   "word": "means",
+   "start": 27.9,
+   "end": 28.29
+  },
+  {
+   "word": "we\u2019re",
+   "start": 28.3,
+   "end": 28.53
+  },
+  {
+   "word": "not",
+   "start": 28.54,
+   "end": 28.73
+  },
+  {
+   "word": "just",
+   "start": 28.74,
+   "end": 28.94
+  },
+  {
+   "word": "building",
+   "start": 28.94,
+   "end": 29.29
+  },
+  {
+   "word": "robots",
+   "start": 29.3,
+   "end": 29.82
+  },
+  {
+   "word": "anymore.",
+   "start": 29.82,
+   "end": 30.09
+  },
+  {
+   "word": "We\u2019re",
+   "start": 30.1,
+   "end": 30.24
+  },
+  {
+   "word": "turning",
+   "start": 30.67,
+   "end": 31.09
+  },
+  {
+   "word": "bugs",
+   "start": 31.095,
+   "end": 31.53
+  },
+  {
+   "word": "into",
+   "start": 31.535,
+   "end": 31.85
+  },
+  {
+   "word": "them.",
+   "start": 31.855,
+   "end": 31.98
+  }
+ ]
+}

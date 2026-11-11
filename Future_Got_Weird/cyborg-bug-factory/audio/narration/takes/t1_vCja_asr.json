@@ -1,0 +1,34 @@
+{
+ "zipformer": {
+  "transcript": "SCIENTISTS BUILT A FACTORY THAT TURNS LIVING COCKROACHES INTO ROWBOTS AND IT ONLY TAKES SIXTY EIGHT SECONDS A ROBOTIC ARM GRABS A TINY COMPUTER AND ATTACHES IT TO THE COCKROACH'S BACK THEN TINY ELECTRODES DELIVER ELECTRICAL PULSES THAT CAN MAKE THE BUG TURN SO NOW INSTEAD OF BUILDING TINY ROBOTS FROM SCRATCH SCIENTISTS CAN USE ACTUAL LIVING INSECTS AND HERE'S THE CRAZY PART THEY'VE ALREADY SENT SIDEBOARD COCKROACHES INTO A REAL EARTHQUAKE DISASTER ZONE WHICH MEANS WE'RE NOT JUST BUILDING ROBOTS ANY MORE OR TURNING BUGS INTO THEM",
+  "wer": 0.058,
+  "diffs": [
+   [
+    "replace",
+    "robots",
+    "rowbots"
+   ],
+   [
+    "replace",
+    "cyborg",
+    "sideboard"
+   ],
+   [
+    "replace",
+    "anymore we're",
+    "any more or"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "Scientists built a factory that turns living cockroaches into robots. and it only takes 68 seconds. A robotic arm grabs a tiny computer and attaches it to the cockroaches back. Then, tiny electrodes deliver electrical pulses that can make the bug turn. So now, instead of building tiny robots from scratch, scientists can use actual living insects. And here's the crazy part. They've already sent cyborg cockroaches into a real earthquake disaster zone. Which means we're not just building robots anymore. We're turning bugs into them.",
+  "wer": 0.012,
+  "diffs": [
+   [
+    "replace",
+    "cockroach's",
+    "cockroaches"
+   ]
+  ]
+ }
+}

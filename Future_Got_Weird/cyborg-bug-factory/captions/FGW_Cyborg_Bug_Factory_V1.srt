@@ -1,0 +1,96 @@
+1
+00:00:00,000 --> 00:00:01,560
+Scientists built a factory
+
+2
+00:00:01,600 --> 00:00:03,160
+that turns living cockroaches
+
+3
+00:00:03,200 --> 00:00:04,280
+into robots.
+
+4
+00:00:04,320 --> 00:00:04,995
+And it only takes
+
+5
+00:00:05,035 --> 00:00:06,430
+68 seconds.
+
+6
+00:00:06,470 --> 00:00:07,510
+A robotic arm grabs
+
+7
+00:00:07,550 --> 00:00:08,430
+a tiny computer
+
+8
+00:00:08,470 --> 00:00:09,190
+and attaches it
+
+9
+00:00:09,230 --> 00:00:10,570
+to the cockroach’s back.
+
+10
+00:00:10,610 --> 00:00:12,245
+Then tiny electrodes deliver
+
+11
+00:00:12,285 --> 00:00:13,365
+electrical pulses
+
+12
+00:00:13,405 --> 00:00:14,890
+that can make the bug turn.
+
+13
+00:00:14,930 --> 00:00:15,930
+So now, instead of
+
+14
+00:00:15,970 --> 00:00:18,000
+building tiny robots from scratch…
+
+15
+00:00:18,040 --> 00:00:18,920
+Scientists can use
+
+16
+00:00:18,960 --> 00:00:20,600
+actual living insects.
+
+17
+00:00:20,640 --> 00:00:22,270
+And here’s the crazy part.
+
+18
+00:00:22,310 --> 00:00:23,065
+They’ve already sent
+
+19
+00:00:23,105 --> 00:00:24,265
+cyborg cockroaches
+
+20
+00:00:24,305 --> 00:00:25,585
+into a real earthquake
+
+21
+00:00:25,625 --> 00:00:26,740
+disaster zone.
+
+22
+00:00:26,780 --> 00:00:27,655
+Which means we’re not
+
+23
+00:00:27,695 --> 00:00:29,015
+just building robots anymore.
+
+24
+00:00:29,055 --> 00:00:31,150
+We’re turning bugs into them.
+
