@@ -1,6 +1,38 @@
 # Future Got Weird: Scientists Built a Cyborg Bug Factory
 
-## V3 (current review cut: the machine is the subject)
+## V4 (final review cut: minimalist polish)
+
+**Status (11 Nov 2026):** rendered natively and fully checked from the file. The verdict is **READY**; nobody has
+watched it in real time with sound here. See `production/V4_REPORT.md`.
+
+V4 is V3 with:
+- every HUD, label, panel, card and banner removed; only the subtitles (with sparing emphasis) and one verified
+  "68 SECONDS" graphic (fix → release) remain;
+- a rebuilt robot comparison, with bigger parts, close tracking and a direct cut to the legs;
+- an earthquake insect that is easier to follow;
+- gentler camera moves.
+
+The narration is unchanged.
+
+| Deliverable | File |
+|---|---|
+| V4 final review: 1080×1920, 30 fps, 946 frames, 31.533 s | `exports/FGW_Cyborg_Bug_Factory_V4_FINAL_REVIEW_1080x1920.mp4` |
+| Report | `production/V4_REPORT.md` |
+| Mix | `audio/mix/FGW_Cyborg_Bug_Factory_MIX_V4.wav`, `audio/mix/mix_measure_mix_v4.json` |
+| QA | `qa/v4/` |
+| Source | `source/src/v4/` (composition `CyborgBugFactoryV4`; still `Sheet4`) |
+
+Rebuild V4:
+
+    python3 tools/make_audio_v4.py mix_v4
+    (cd source && npx remotion render src/index.ts CyborgBugFactoryV4 ../exports/FGW_Cyborg_Bug_Factory_V4_FINAL_REVIEW_1080x1920.mp4 \
+        --props='{"audio":"mix_v4","captions":true}' --image-format=png --crf=16 --x264-preset=slow --pixel-format=yuv420p \
+        --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_render_v4.py exports/FGW_Cyborg_Bug_Factory_V4_FINAL_REVIEW_1080x1920.mp4 qa/v4
+
+---
+
+## V3 (review cut, superseded)
 
 **Status (11 Nov 2026):** V3 was rendered from source and checked from the file. **It is not published.** The
 recommendation is NOT READY until one human viewing with sound has been done; every factual claim is verified. See

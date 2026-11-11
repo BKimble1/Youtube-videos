@@ -29,12 +29,13 @@ const bodyAt = (k: number, t: number, dz = 6): V3 => {
   return b ? add3(b.st.body.o, [0, 0, dz]) : SEAT;
 };
 
+/** V3's lab cameras, with the two macro push-ins made gentler (zoom ~6x instead of ~10x) */
 export const camA_C3 = (t: number): Orbit =>
   chain(t, (tt) => macro0(tt), [
     // the latch done, a quick smooth pull back: the whole workstation
     {a: 1.05, b: 1.95, o: () => at([-36, -18, 14], 146, 44, 4.2, 980)},
     // into the installed module (industrial macro inspection)
-    {a: 1.98, b: 2.9, o: (tt) => at(add3(SEAT, [0, 2 - 3 * ss(tt, 2.4, 3.2), 1]), 120, 62, 44, 960)},
+    {a: 1.95, b: 3.0, o: (tt) => at(add3(SEAT, [0, 2 - 3 * ss(tt, 2.4, 3.2), 1]), 120, 62, 28, 960)},
     // the machine resets while the insect walks off
     {a: 3.1, b: 4.15, o: () => at([-8, 6, 10], 168, 30, 9, 1020)},
     // B: over the station for the sped-up cycle
@@ -45,9 +46,9 @@ export const camA_C3 = (t: number): Orbit =>
     // one continuous placement shot, low three-quarter
     {a: 8.3, b: 9.3, o: () => at(add3(SEAT, [1, 4, -2]), 114, 17, 27, 1000)},
     // C2: extreme macro of the module and its attachment points
-    {a: 10.15, b: 10.95, o: (tt) => at(add3(SEAT, [0, 3 - 4 * ss(tt, 10.6, 11.6), 0.5]), 104, 58, 48, 960)},
+    {a: 10.15, b: 10.95, o: (tt) => at(add3(SEAT, [0, 3 - 4 * ss(tt, 10.6, 11.6), 0.5]), 104, 58, 34, 960)},
     // the station: rods lift, the insect leaves the platform turning, the machine stays in the foreground
-    {a: 11.3, b: 12.55, o: () => at([-4, 26, 10], 176, 26, 7.4, 1060)},
+    {a: 11.2, b: 12.6, o: () => at([-4, 26, 10], 176, 26, 8.5, 1060)},
     {a: 13.0, b: 14.3, o: () => at([-26, 70, 8], 170, 42, 5.4, 1060)},
   ]);
 

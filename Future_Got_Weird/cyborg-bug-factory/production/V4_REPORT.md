@@ -96,3 +96,103 @@ No labels. The rig, with six jointed legs, a tripod gait and the backpack seated
 - **The reset is unchanged.** A finished cyborg walks off. The platform slides out and returns with the next insect. The
   arm goes to the holder and takes the next module (27.98). The module comes into position and down, into frame 0's
   macro.
+
+### Smoother camera
+
+The two big macro push-ins were the harshest moves in V3 (about 10× zoom in under a second), so I softened them. The
+2.0–3.0 s inspection push now goes to 28 px/mm instead of 44, over a slightly longer window. The 10.15 s macro now goes
+to 34 instead of 48, and the 11.2–12.6 s pull back is longer and less extreme.
+
+Measured, using frames whose change is more than 5× the median:
+
+| Move | V3 | V4 |
+|---|---|---|
+| 2.4 s push-in | 13 frames | 4 frames |
+| 3.5 s pull back | 10 frames | 3 frames |
+| 11.8 s pull back | several frames | none |
+
+## Narration
+
+**Unchanged.** The master `audio/narration/FGW_Cyborg_Bug_Factory_narration_V1.wav` has SHA-256
+`2cf791cc…8a87c3`, which equals `voice_provenance.json`. Caption text and timing are identical to V1–V3; only the
+yellow emphasis was reduced.
+
+ASR on the V4 MP4 (`qa/v4/asr_final_mp4.json`, `qa/v4/asr_tail_24.5s.json`):
+- **Whisper** is verbatim, except "cockroaches" for "cockroach's". It drops the last line on the whole file because of
+  its 30 s window. On the 24.5 s–end tail it hears "…which means we're not just building robots anymore. We're turning
+  bugs into them." verbatim.
+- **Zipformer** hears every word, with sound-alikes only ("rowbots", "sideboard", "any more").
+
+## Scientific verification
+
+All sources were opened and read in this session. Quotes are in `research/SCIENCE_NOTES.md`.
+
+| Claim (narration or picture) | Verified | Source |
+|---|---|---|
+| A machine assembles cyborg cockroaches; robotic arm; the insect is fixed, the backpack taken from a holder, electrodes implanted, the insect released | Yes | Lin et al., *Nat Commun* 16:6073 (2025), https://pmc.ncbi.nlm.nih.gov/articles/PMC12304280/ |
+| **68 seconds** (the graphic) | Yes, per insect, fixing → release | Same paper: "The entire automatic assembly, from initially fixing insect to finally releasing insect, spanned 68 s." The CO₂ anaesthesia beforehand is not included. |
+| "Tiny computer" on the back | Yes | Same paper: the backpack carries a microcontroller with a radio; 2.3 g. |
+| Electrodes, pulses, turning | Yes, an influence, not full control | Same paper: "robust steering (over 70°) and deceleration" under stimulation. |
+| Madagascar hissing cockroach (the rig) | Yes | Same paper. |
+| Real earthquake disaster zone | Yes | NTU, https://www.ntu.edu.sg/news/detail/ai-powered-robot-assembles-search-and-rescue-cyborg-insects: on 30 March 2025, 10 cyborg insects were deployed to Myanmar with SCDF, the first field deployment. The Star, https://www.thestar.com.my/aseanplus/aseanplus-news/2025/04/05/singapores-cyborg-cockroaches-helping-with-search-and-rescue-efforts-in-myanmar-quake: used on 31 March and twice on 3 April in Naypyidaw. Also Mothership, https://mothership.sg/2025/04/cockroach-robot-myanmar-quake-rescue/ |
+| No survivor detection shown | Correct to omit | The Star: "They have not found any survivors." |
+
+**No material claim is unresolved.** With the banner removed, the film no longer names the hand-built status of the
+deployed units, but it doesn't contradict it either: no claim is made that the factory built the Myanmar insects. The
+assembly line is a prototype (NTU), and the film never shows it as in production.
+
+## Technical QA (measured from the file)
+
+| Check | Result |
+|---|---|
+| Format | 1080×1920, 30 fps, H.264 yuv420p, AAC 48 kHz stereo at about 317 kb/s, 946 frames, 31.533 s, 26.7 MB, no decode errors. A native render. |
+| Loudness | −14.6 LUFS integrated, −2.2 dBFS peak (mix true peak −1.6 dBTP). The voice is on top in every speech window; the worst bed-to-voice window is −3.7 dB at 29.0 s. |
+| Planned cuts | 14.9 (to the build), 17.93 (match cut), 20.6 (to the rubble), 26.77 s (back to the workstation) |
+| Other large changes | The softened 2.6 s and 3.6 s moves (4 and 3 frames), plus two single frames at 4.57 and 6.03 s. Those two are the platform sliding during the sped-up "68 seconds" cycle, the same as in V3. |
+| Static picture | The longest near-static run is 6 frames. |
+| First 2 s | Every frame checked (`qa/v4/first_2s_every_frame.png`): a continuous descent, alignment, latch, LED and pull back, with no text other than the subtitle. |
+| Phone size | `qa/v4/phone_size_beats.png`: subjects and subtitles readable; the 68 graphic is clear. |
+
+### Loop
+
+**Passes.** Measured above the caption band, so only the picture counts:
+
+| Measurement | Value |
+|---|---|
+| Last frame → first frame | 12.98 |
+| Last three steps before the seam | 12.6–13.2 |
+| First three steps after the seam | 12.7–12.8 |
+
+The seam is an ordinary frame step in the continuous descent. Measured over the whole frame, the seam is 12.2 against
+about 9.5 for its neighbours. The extra is only the subtitle changing from the last line to the first, because the
+narration restarts.
+
+Supporting files:
+- `qa/v4/loop_seam_x5.mp4`: the last 2 s and first 2 s, five times.
+- `qa/v4/loop_seam_last6_first6.png`: the same module, tool, camera and lighting on both sides.
+- The audio seam jump is 0.004.
+
+## Final review checklist
+
+| # | Check | Result |
+|---|---|---|
+| 1 | First 2 s compelling | Yes. Frame 0 is the machine already lowering a module onto a living insect; the latch lands at 1.0 s. |
+| 2 | Unnecessary text removed | Yes. Only the subtitles and one 68 s graphic remain. |
+| 3 | Subtitles readable | Yes, at phone size. |
+| 4 | Timing graphic accurate | Yes. "68 SECONDS" is fixed, and its ring spans fixing → release. |
+| 5 | Robot comparison improved | Yes. About 2× larger on screen, close tracking per part, a direct cut into a leg close-up and the gait. |
+| 6 | Earthquake clean and supported | Yes. No banner, the insect stands out, and the claims are verified. |
+| 7 | Anatomy consistent | Yes. The same six-legged rig and seated backpack throughout. |
+| 8 | Transitions smooth | Yes. The harshest moves were softened; the cuts are planned. |
+| 9 | Loop works | Yes, measured above. |
+| 10 | Genuinely 1080×1920 | Yes, rendered natively. |
+| 11 | Narration unchanged | Yes, hash identical. |
+| 12 | No factual inaccuracies | None found. |
+
+## Verdict: **READY**
+
+Every check above passes on the rendered file, and every claim is verified with a source.
+
+One caveat: this environment has no screen or speakers. The review was frame-by-frame, measured, and machine-transcribed;
+nobody has watched it in real time with sound. Watching it once on a phone before posting is still recommended, but no
+known issue is left to fix.

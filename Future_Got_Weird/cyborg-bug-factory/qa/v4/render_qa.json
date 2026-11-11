@@ -1,0 +1,162 @@
+{
+ "file": "FGW_Cyborg_Bug_Factory_V4_FINAL_REVIEW_1080x1920.mp4",
+ "size_mb": 26.45,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 946,
+  "duration_s": 31.533
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 5.04,
+ "large_changes": [
+  {
+   "frame": 77,
+   "t": 2.567,
+   "mad": 25.82,
+   "planned": null
+  },
+  {
+   "frame": 78,
+   "t": 2.6,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 79,
+   "t": 2.633,
+   "mad": 26.31,
+   "planned": null
+  },
+  {
+   "frame": 80,
+   "t": 2.667,
+   "mad": 25.75,
+   "planned": null
+  },
+  {
+   "frame": 107,
+   "t": 3.567,
+   "mad": 25.86,
+   "planned": null
+  },
+  {
+   "frame": 108,
+   "t": 3.6,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 109,
+   "t": 3.633,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 137,
+   "t": 4.567,
+   "mad": 31.12,
+   "planned": null
+  },
+  {
+   "frame": 181,
+   "t": 6.033,
+   "mad": 28.73,
+   "planned": null
+  },
+  {
+   "frame": 447,
+   "t": 14.9,
+   "mad": 39.27,
+   "planned": "cut: workstation -> the robot build"
+  },
+  {
+   "frame": 538,
+   "t": 17.933,
+   "mad": 26.83,
+   "planned": "match cut: robot wheel -> insect legs"
+  },
+  {
+   "frame": 618,
+   "t": 20.6,
+   "mad": 51.32,
+   "planned": "cut: lab -> the disaster zone"
+  },
+  {
+   "frame": 803,
+   "t": 26.767,
+   "mad": 72.27,
+   "planned": "cut: disaster zone -> the workstation"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 77,
+   "t": 2.567,
+   "mad": 25.82,
+   "planned": null
+  },
+  {
+   "frame": 78,
+   "t": 2.6,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 79,
+   "t": 2.633,
+   "mad": 26.31,
+   "planned": null
+  },
+  {
+   "frame": 80,
+   "t": 2.667,
+   "mad": 25.75,
+   "planned": null
+  },
+  {
+   "frame": 107,
+   "t": 3.567,
+   "mad": 25.86,
+   "planned": null
+  },
+  {
+   "frame": 108,
+   "t": 3.6,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 109,
+   "t": 3.633,
+   "mad": 26.09,
+   "planned": null
+  },
+  {
+   "frame": 137,
+   "t": 4.567,
+   "mad": 31.12,
+   "planned": null
+  },
+  {
+   "frame": 181,
+   "t": 6.033,
+   "mad": 28.73,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 6,
+ "longest_near_static_run_starts_s": 25.4,
+ "loop_last_vs_first_mad": 12.17
+}
