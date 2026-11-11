@@ -10,7 +10,7 @@ const YEL = '#FFD84A';
 const f1 = (n: number) => n.toFixed(1);
 
 /** the cycle timer: counts 0 -> 68 s over [t0, t1], pops on arrival; a progress ring and a "time-lapse" note */
-export const Timer68: React.FC<{t: number; t0: number; t1: number; out: number}> = ({t, t0, t1, out}) => {
+export const Timer68: React.FC<{t: number; t0: number; t1: number; out: number; note?: string}> = ({t, t0, t1, out, note}) => {
   const a = ss(t, t0 - 0.12, t0 + 0.05) * (1 - ss(t, out, out + 0.18));
   if (a <= 0) return null;
   const u = clamp((t - t0) / (t1 - t0));
@@ -32,7 +32,7 @@ export const Timer68: React.FC<{t: number; t0: number; t1: number; out: number}>
             {n}
             <span style={{fontSize: 64, marginLeft: 10, color: '#FFFFFF'}}>SECONDS</span>
           </div>
-          <div style={{fontFamily: '"Nunito Variable", sans-serif', fontWeight: 800, fontSize: 32, color: CYAN, letterSpacing: '0.06em'}}>PER INSECT · SHOWN SPED UP</div>
+          <div style={{fontFamily: '"Nunito Variable", sans-serif', fontWeight: 800, fontSize: 32, color: CYAN, letterSpacing: '0.06em'}}>{note ?? 'PER INSECT · SHOWN SPED UP'}</div>
         </div>
       </div>
     </div>
@@ -67,7 +67,8 @@ export const Callout: React.FC<{p: {x: number; y: number}; to: {x: number; y: nu
   const k = ss(a, 0, 1);
   const ex = p.x + (to.x - p.x) * k, ey = p.y + (to.y - p.y) * k;
   const w = text.length * 21 + 40;
-  const lx = align === 'right' ? to.x : to.x - w;
+  // keep the label inside the frame (never clipped at an edge)
+  const lx = Math.min(1060 - w, Math.max(20, align === 'right' ? to.x : to.x - w));
   return (
     <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0, opacity: clamp(a * 1.5)}}>
       <circle cx={f1(p.x)} cy={f1(p.y)} r={11} fill={color} stroke={NAVY} strokeWidth={4} />

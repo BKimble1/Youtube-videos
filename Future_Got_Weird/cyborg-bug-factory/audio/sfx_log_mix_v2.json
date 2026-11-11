@@ -1,0 +1,347 @@
+[
+ {
+  "t": 0.2,
+  "sfx": "stimulation pulse (opening)",
+  "gain_db": -21
+ },
+ {
+  "t": 0.3,
+  "sfx": "LED flare",
+  "gain_db": -25
+ },
+ {
+  "t": 0.3,
+  "sfx": "crawl 0.3-1.0",
+  "gain_db": -26
+ },
+ {
+  "t": 0.78,
+  "sfx": "pull back over the lab",
+  "gain_db": -32
+ },
+ {
+  "t": 1.005,
+  "sfx": "crawl 1.0-1.9",
+  "gain_db": -33
+ },
+ {
+  "t": 1.38,
+  "sfx": "push onto the backpack",
+  "gain_db": -31
+ },
+ {
+  "t": 1.95,
+  "sfx": "arm servo 1.95",
+  "gain_db": -27
+ },
+ {
+  "t": 2.0,
+  "sfx": "match cut",
+  "gain_db": -30
+ },
+ {
+  "t": 2.5,
+  "sfx": "arm servo 2.50",
+  "gain_db": -29
+ },
+ {
+  "t": 2.55,
+  "sfx": "electrodes slide in",
+  "gain_db": -31
+ },
+ {
+  "t": 2.96,
+  "sfx": "backpack latches (hooks)",
+  "gain_db": -10
+ },
+ {
+  "t": 3.15,
+  "sfx": "arm servo 3.15",
+  "gain_db": -28
+ },
+ {
+  "t": 3.3,
+  "sfx": "status LED on",
+  "gain_db": -18
+ },
+ {
+  "t": 3.45,
+  "sfx": "battery plugged in",
+  "gain_db": -24
+ },
+ {
+  "t": 3.75,
+  "sfx": "arm servo 3.75",
+  "gain_db": -30
+ },
+ {
+  "t": 3.85,
+  "sfx": "clamps release",
+  "gain_db": -26
+ },
+ {
+  "t": 4.056,
+  "sfx": "crawl 4.0-4.3",
+  "gain_db": -29
+ },
+ {
+  "t": 4.3,
+  "sfx": "conveyor indexes",
+  "gain_db": -30
+ },
+ {
+  "t": 4.4,
+  "sfx": "timer tick",
+  "gain_db": -33
+ },
+ {
+  "t": 4.44,
+  "sfx": "wrist camera scan",
+  "gain_db": -31
+ },
+ {
+  "t": 4.45,
+  "sfx": "arm (sped up)",
+  "gain_db": -29
+ },
+ {
+  "t": 4.62,
+  "sfx": "implant point found",
+  "gain_db": -25
+ },
+ {
+  "t": 4.86,
+  "sfx": "gripper closes",
+  "gain_db": -26
+ },
+ {
+  "t": 4.9,
+  "sfx": "arm (sped up)",
+  "gain_db": -28
+ },
+ {
+  "t": 5.46,
+  "sfx": "latch (sped up)",
+  "gain_db": -18
+ },
+ {
+  "t": 5.56,
+  "sfx": "arm (sped up)",
+  "gain_db": -29
+ },
+ {
+  "t": 5.6,
+  "sfx": "timer reaches 68 (fix -> release)",
+  "gain_db": -24
+ },
+ {
+  "t": 6.0,
+  "sfx": "conveyor indexes",
+  "gain_db": -30
+ },
+ {
+  "t": 6.35,
+  "sfx": "arm servo 6.35",
+  "gain_db": -26
+ },
+ {
+  "t": 7.18,
+  "sfx": "gripper grabs the backpack",
+  "gain_db": -21
+ },
+ {
+  "t": 7.3,
+  "sfx": "arm servo 7.30",
+  "gain_db": -25
+ },
+ {
+  "t": 8.6,
+  "sfx": "arm servo 8.60",
+  "gain_db": -27
+ },
+ {
+  "t": 9.05,
+  "sfx": "label",
+  "gain_db": -32
+ },
+ {
+  "t": 9.35,
+  "sfx": "electrodes slide in",
+  "gain_db": -31
+ },
+ {
+  "t": 10.13,
+  "sfx": "backpack latches",
+  "gain_db": -12
+ },
+ {
+  "t": 10.36,
+  "sfx": "arm servo 10.36",
+  "gain_db": -28
+ },
+ {
+  "t": 10.5,
+  "sfx": "label",
+  "gain_db": -32
+ },
+ {
+  "t": 10.6,
+  "sfx": "status LED on",
+  "gain_db": -19
+ },
+ {
+  "t": 10.65,
+  "sfx": "label",
+  "gain_db": -32
+ },
+ {
+  "t": 10.72,
+  "sfx": "battery plugged in",
+  "gain_db": -25
+ },
+ {
+  "t": 10.98,
+  "sfx": "clamps release",
+  "gain_db": -26
+ },
+ {
+  "t": 11.0,
+  "sfx": "arm servo 11.00",
+  "gain_db": -33
+ },
+ {
+  "t": 11.302,
+  "sfx": "crawl 11.3-14.8",
+  "gain_db": -31
+ },
+ {
+  "t": 11.72,
+  "sfx": "wireless command",
+  "gain_db": -30
+ },
+ {
+  "t": 12.36,
+  "sfx": "electrical pulse",
+  "gain_db": -19
+ },
+ {
+  "t": 12.84,
+  "sfx": "electrical pulse",
+  "gain_db": -19
+ },
+ {
+  "t": 13.28,
+  "sfx": "electrical pulse",
+  "gain_db": -19
+ },
+ {
+  "t": 14.89,
+  "sfx": "toy robot drives",
+  "gain_db": -29
+ },
+ {
+  "t": 16.59,
+  "sfx": "robot bumps the ledge",
+  "gain_db": -24
+ },
+ {
+  "t": 16.64,
+  "sfx": "wheels spin",
+  "gain_db": -33
+ },
+ {
+  "t": 17.79,
+  "sfx": "robot bumps the ledge",
+  "gain_db": -26
+ },
+ {
+  "t": 17.93,
+  "sfx": "match cut",
+  "gain_db": -29
+ },
+ {
+  "t": 17.934,
+  "sfx": "crawl 17.9-22.2",
+  "gain_db": -30
+ },
+ {
+  "t": 18.99,
+  "sfx": "robot bumps the ledge",
+  "gain_db": -28
+ },
+ {
+  "t": 20.7,
+  "sfx": "the floor gives way to rubble",
+  "gain_db": -31
+ },
+ {
+  "t": 22.201,
+  "sfx": "crawl 22.2-26.7",
+  "gain_db": -32
+ },
+ {
+  "t": 22.29,
+  "sfx": "distant rumble",
+  "gain_db": -24
+ },
+ {
+  "t": 22.32,
+  "sfx": "pull back",
+  "gain_db": -31
+ },
+ {
+  "t": 22.9,
+  "sfx": "debris trickles",
+  "gain_db": -31
+ },
+ {
+  "t": 24.1,
+  "sfx": "camera feed / data link",
+  "gain_db": -33
+ },
+ {
+  "t": 24.6,
+  "sfx": "debris trickles",
+  "gain_db": -33
+ },
+ {
+  "t": 26.74,
+  "sfx": "cut back to the lab",
+  "gain_db": -30
+ },
+ {
+  "t": 26.9,
+  "sfx": "arm fetches a backpack (background)",
+  "gain_db": -33
+ },
+ {
+  "t": 27.35,
+  "sfx": "pull back over the lab",
+  "gain_db": -33
+ },
+ {
+  "t": 27.605,
+  "sfx": "crawl 27.6-31.1",
+  "gain_db": -29
+ },
+ {
+  "t": 27.8,
+  "sfx": "arm fetches a backpack (background)",
+  "gain_db": -35
+ },
+ {
+  "t": 29.0,
+  "sfx": "follow round into the passage",
+  "gain_db": -35
+ },
+ {
+  "t": 31.156,
+  "sfx": "crawl 31.1-31.5",
+  "gain_db": -33
+ },
+ {
+  "t": 31.473,
+  "sfx": "wireless command arrives",
+  "gain_db": -30
+ }
+]

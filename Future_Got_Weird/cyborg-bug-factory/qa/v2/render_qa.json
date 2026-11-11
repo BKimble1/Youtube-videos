@@ -1,0 +1,66 @@
+{
+ "file": "FGW_Cyborg_Bug_Factory_V2_REVIEW_1080x1920.mp4",
+ "size_mb": 28.17,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 946,
+  "duration_s": 31.533
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 5.18,
+ "large_changes": [
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 62.68,
+   "planned": "match cut: the cyborg backpack -> the backpack in the gripper"
+  },
+  {
+   "frame": 447,
+   "t": 14.9,
+   "mad": 33.37,
+   "planned": "cut: lab -> the comparison (robot lane)"
+  },
+  {
+   "frame": 538,
+   "t": 17.933,
+   "mad": 34.62,
+   "planned": "match cut on direction: robot -> insect lane"
+  },
+  {
+   "frame": 729,
+   "t": 24.3,
+   "mad": 26.02,
+   "planned": null
+  },
+  {
+   "frame": 803,
+   "t": 26.767,
+   "mad": 99.12,
+   "planned": "cut: disaster zone -> lab spotlight"
+  }
+ ],
+ "unplanned_large_changes": [
+  {
+   "frame": 729,
+   "t": 24.3,
+   "mad": 26.02,
+   "planned": null
+  }
+ ],
+ "longest_near_static_run_frames": 10,
+ "longest_near_static_run_starts_s": 26.83,
+ "loop_last_vs_first_mad": 4.82
+}

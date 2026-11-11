@@ -194,6 +194,11 @@ export const roachItems = (B: Basis, R: Rig, o: RoachDraw = {}): {items: Item[];
   return {items, rearZ, pronoZ};
 };
 
+/** V2: the body's plate outlines (screen paths), for a soft rim light behind the insect on dark sets */
+export const roachSilhouette = (B: Basis, R: Rig): string[] => {
+  const st = R.st, sc = st.scale ?? 1;
+  return [...TERGITES, ...THORAX, PRONOTUM].map((P) => ellipsoidPath(B, bw(st, P.c), ax3(pitchF(st.body, P.pitch), P.a, sc)));
+};
 /** the body's screen outline (for contact shadows and masks) */
 export const roachShadow = (B: Basis, R: Rig, z0: number, alpha = 0.35) => {
   const st = R.st;

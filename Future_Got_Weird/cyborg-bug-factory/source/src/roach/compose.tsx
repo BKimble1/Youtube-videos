@@ -7,12 +7,16 @@ import React from 'react';
 import {Basis, dot3, proj} from '../core/three';
 import {Item} from '../core/draw3';
 import {packParts, PackState} from '../kit/backpack';
-import {roachItems, roachShadow, RoachDraw} from './draw';
+import {roachItems, roachShadow, roachSilhouette, RoachDraw} from './draw';
 import {solve, RoachState, Rig} from './rig';
 
-export type CyborgOpts = RoachDraw & {packCamera?: boolean; shadowZ?: number; shadow?: number};
+export type CyborgOpts = RoachDraw & {packCamera?: boolean; shadowZ?: number; shadow?: number;
+  /** V2: draw the pack with another part builder (same {main, elec} contract) */
+  parts?: (B: Basis, pack: any, key: string) => {main: Item[]; elec: Item[]};
+  /** V2: a soft rim light behind the body (colour, strength) */
+  rim?: {c: string; k: number}};
 
-export const cyborgGroup = (B: Basis, st: RoachState, pack: PackState | null, key: string, o: CyborgOpts = {}): {item: Item; rig: Rig} => {
+export const cyborgGroup = (B: Basis, st: RoachState, pack: PackState | any | null, key: string, o: CyborgOpts = {}): {item: Item; rig: Rig} => {
   const R = solve(st);
   const {items, rearZ} = roachItems(B, R, {...o, key});
   const Zb = rearZ;
@@ -26,7 +30,7 @@ export const cyborgGroup = (B: Basis, st: RoachState, pack: PackState | null, ke
   if (down > 0.42) for (let i = 2; i < items.length; i++) items[i] = {...items[i], z: Zb + 1 + items[i].z * 1e-3};
   const out: Item[] = [...items];
   if (pack) {
-    const {main, elec} = packParts(B, pack, `${key}p`, {camera: o.packCamera});
+    const {main, elec} = o.parts ? o.parts(B, pack, `${key}p`) : packParts(B, pack, `${key}p`, {camera: o.packCamera});
     const fromFront = dot3(B.fw, st.body.f) < -0.35 && dot3(B.fw, [0, 0, -1]) < 0.75;
     const packZ = fromFront ? Zb - 0.5 * eps : Zb - 2 * eps;
     // keep the pack's own internal depth order, but place it as a block
@@ -39,6 +43,10 @@ export const cyborgGroup = (B: Basis, st: RoachState, pack: PackState | null, ke
   const el = (
     <g key={key}>
       {(o.shadow ?? 1) > 0 && roachShadow(B, R, o.shadowZ ?? 0, 0.32 * (o.shadow ?? 1))}
+      {o.rim && (() => {
+        const sp = proj(B, st.body.o).s;
+        return <g opacity={o.rim.k} style={{filter: `blur(${(Math.max(2, 0.5 * sp)).toFixed(1)}px)`}}>{roachSilhouette(B, R).map((d, i) => <path key={i} d={d} fill="none" stroke={o.rim!.c} strokeWidth={(Math.max(3, 1.6 * sp)).toFixed(1)} />)}</g>;
+      })()}
       {out.filter((it) => it.z > 6).sort((a, b) => b.z - a.z).map((it, i) => <React.Fragment key={i}>{it.el}</React.Fragment>)}
     </g>
   );

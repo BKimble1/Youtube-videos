@@ -97,3 +97,32 @@ needs the locked narration changed:
 - The backpack sits on the thorax behind the pronotum, never on the abdomen.
 - Electrodes go under the rear edge of the pronotum. There are no antenna or cercus wires in the factory version.
 - The backpack is about as wide as the middle of the thorax; it is a small patch, not a box.
+
+---
+
+## V2 update (11 Nov 2026): first-hand verification
+
+For V2 the environment was allowed to reach the sources, and each page was opened and read here. The quotes below are
+copied from those pages.
+
+| Claim (narration) | Source (opened) | What it says | Confidence | What the picture shows |
+|---|---|---|---|---|
+| Automated assembly ("a factory") | Lin et al., *Nat Commun* 16:6073 (2025), full text at PMC12304280 | Title: "Cyborg insect factory: automatic assembly for insect-computer hybrid robot via vision-guided robotic arm manipulation of custom bipolar electrodes". The system integrates "a robotic arm, vision-based site detection, and an insect fixation structure". | High | One arm, one station, a conveyor of fixation carriers. One insect at a time. |
+| "68 seconds" | Same paper | "The entire automatic assembly, from initially fixing insect to finally releasing insect, spanned 68 s." Separately: "the cockroaches were anesthetized for 10 min under CO₂". | High | The timer runs from fixing to release and is labelled "FIX → RELEASE · PER INSECT · SPED UP". The anaesthesia is not counted, and not shown. |
+| Electronics ("a tiny computer") and where it attaches | Same paper | "The backpack included bipolar electrodes, a mounting structure, and a microcontroller." "The total weight of the designed backpack is 2.3 g." "Mounting branches were used to hook the insect's metathorax." Bipolar electrodes implanted "into the intersegmental membrane between the insect's pronotum and mesothorax". "A microcontroller with Sub-1GHz communication." After assembly, "a LiPo battery was plugged inside the power socket". | High | A white mounting structure with a grasping tab and alignment hole, a microcontroller board, a radio antenna, hooks on the metathorax, and electrodes into the membrane under the pronotum's rear edge. The battery plugs in after assembly. 2.3 g against a 15 g payload is within what the insect can carry. |
+| How the robot works | Same paper | A UR3e arm with a Robotiq Hand-e gripper and a RealSense D435 camera. "The robotic arm was vertically oriented, with its gripper and camera positioned directly downward." The pronotum is found by deep-learning segmentation (TransUNet); the reference point is the midpoint of the posterior pronotum edge. | High | Vertical gripper, wrist camera, and a segmentation overlay that finds the pronotum and the implant point. |
+| "Electrical pulses that can make the bug turn" | Same paper | "Hybrid robots exhibited robust steering (over 70°) and deceleration (68.2% speed reduction)." Navigation along an S-shaped path. | High: the response is stimulus-dependent and does not happen every time. | A pulse is followed by a turn of about 75°. "Can make" is shown as an influence on the insect's own walking. |
+| "Real earthquake disaster zone" | NTU news release; The Star (5 Apr 2025); Mothership (5 Apr 2025); Singapore PSD feature (12 Aug 2026) | NTU: "On 30 March 2025, a team of 10 cyborg insects was deployed to Myanmar together with the Singapore Civil Defence Force (SCDF) … the first-ever field deployment of insect-hybrid robots", and these were "cyborg insects with the first-generation backpack mounted using the manual method". The Star: "first deployed on March 31 … and twice on April 3 in … Naypyidaw. They have not found any survivors"; "Fitted with infrared cameras and sensors"; data "sent back wirelessly". PSD: "fitted with a miniature thermal camera and sensors". | High | A field backpack with a camera module, a thermal-style scan reading "SCANNING…", and a data link. No survivor or detection is shown. The tag reads "first field deployment of cyborg insects". |
+| "Living insects", robots built from scratch | Paper intro; PSD feature | The paper: insect-computer hybrids for "navigating complex terrains". PSD quotes HTX's lead engineer: conventional miniature robots' on-board power "limits their operation time to only a few minutes … This increases operational time to four hours." | Medium: this is a stated motivation, not a controlled comparison. | A conceptual comparison only: one toy robot at one ledge. There is no "stuck" verdict, and no speeds, endurance or cost figures. |
+| Production scale | NTU release | "While the assembly line is still in the prototype stage…" | High | One cell, one station, one insect at a time. |
+
+**The "42 seconds" in the V2 brief.** The brief asks for a "42-second assembly time" to be verified. The approved
+narration says "68 seconds", and no version of the film has ever said 42. 68 s is verified above. There is nothing to
+block.
+
+**No narration claim is unsupported.** The two framing notes from V1 still apply:
+
+1. **Myanmar used the earlier hand-built units.** The Myanmar insects carried first-generation, manually mounted
+   backpacks, not factory-made ones. The narration's "cyborg cockroaches" is accurate. In V2 the disaster-zone insect
+   wears the camera-carrying field backpack.
+2. **"Into robots" and "turning bugs into them" are figurative.**

@@ -1,6 +1,42 @@
 # Future Got Weird: Scientists Built a Cyborg Bug Factory
 
-## V1 (review cut)
+## V2 (current review cut)
+
+**Status (11 Nov 2026):** V2 was rendered from source and checked from the file. **It is not published.** The
+recommendation is NOT READY until one human viewing with sound has been done; there are no factual blockers. See
+`production/V2_REPORT.md`.
+
+V2 is a complete visual rebuild on the same approved narration (V1 master, unchanged). It adds:
+- a dark lab;
+- a payoff-first opening (a cyborg steered in a narrow passage);
+- a match cut into the installation;
+- a control demo;
+- a physical robot-vs-insect comparison that flows continuously into the earthquake rubble;
+- an ending that is the opening cyborg's own route, so the loop is continuous by construction.
+
+| Deliverable | File |
+|---|---|
+| V2 review: 1080×1920, 30 fps, 946 frames, 31.533 s | `exports/FGW_Cyborg_Bug_Factory_V2_REVIEW_1080x1920.mp4` |
+| Report (changes, verification, QA, loop, issues, recommendation) | `production/V2_REPORT.md` |
+| Narration map | `production/V2_NARRATION_MAP.md` |
+| Verification (first-hand, with quotes) | `research/SCIENCE_NOTES.md`, V2 update |
+| Mix (same narration) | `audio/mix/FGW_Cyborg_Bug_Factory_MIX_V2.wav`, `audio/mix/mix_measure_mix_v2.json`, `audio/sfx_log_mix_v2.json` |
+| QA | `qa/v2/`, including `loop_seam_x5.mp4`, `first_3s_every_frame.png`, `phone_size_beats.png` |
+| Source | `source/src/v2/` (composition `CyborgBugFactoryV2`; still `Sheet2`) |
+
+Rebuild V2:
+
+    python3 tools/make_audio_v2.py mix_v2
+    (cd source && npx remotion render src/index.ts CyborgBugFactoryV2 ../exports/FGW_Cyborg_Bug_Factory_V2_REVIEW_1080x1920.mp4 \
+        --props='{"audio":"mix_v2","captions":true}' --image-format=png --crf=16 --x264-preset=slow --pixel-format=yuv420p \
+        --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    python3 tools/qa_render_v2.py exports/FGW_Cyborg_Bug_Factory_V2_REVIEW_1080x1920.mp4 qa/v2
+
+To make a contact sheet: `cd source && ./sheet2.sh out.png "f1,f2,..." [captions] [cols]`.
+
+---
+
+## V1 (review cut, superseded)
 
 **Status (11 Nov 2026):** V1 was rendered from source and checked from the file. Nobody has watched it in real time
 with sound; this environment has no audio or video output. **It is not published.** The report is
