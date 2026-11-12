@@ -1,0 +1,71 @@
+{
+ "frames": 850,
+ "samplesPerFrame": 2,
+ "path": {
+  "W_TOTAL": 30.3,
+  "L_TOTAL": 68.175,
+  "quadratureResidualCm": 1.333053424199937e-13
+ },
+ "checks": {},
+ "worst": {
+  "hubBottomAboveFloor": {
+   "v": 1.1279,
+   "t": 18.267
+  },
+  "ratioMin": {
+   "v": 0.6235,
+   "t": 9.817
+  },
+  "ratioMax": {
+   "v": 0.9813,
+   "t": 19.833
+  },
+  "legLenMin": {
+   "v": 7.2935,
+   "t": 9.817
+  },
+  "legLenMax": {
+   "v": 7.2997,
+   "t": 19.833
+  },
+  "legFloorClearance": {
+   "v": 0,
+   "t": 28.317
+  },
+  "legHubClearance": {
+   "v": 0.0081,
+   "t": 18.25
+  },
+  "legPropClearance": {
+   "v": 11.5946,
+   "t": 4.417
+  },
+  "legDomeClearance": {
+   "v": 0.7411,
+   "t": 18.25
+  },
+  "legLegClearance": {
+   "v": 1.8516,
+   "t": 28.317
+  },
+  "bodyPropClearance": {
+   "v": 17.1145,
+   "t": 5.433
+  },
+  "stanceSlideMax": {
+   "v": 0,
+   "t": 0.017
+  },
+  "footStepPerSampleMax": {
+   "v": 0.5563,
+   "t": 13.3
+  }
+ },
+ "loop": {
+  "bodyPos": 1.04e-14,
+  "heading": 0,
+  "legMaxCm": 2.1e-14
+ },
+ "failures": {},
+ "pass": true
+}
