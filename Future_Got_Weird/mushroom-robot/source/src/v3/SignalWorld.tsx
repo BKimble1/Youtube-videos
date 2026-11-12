@@ -44,6 +44,7 @@ const KEYS: BK[] = [
   {t: 4.4, cx: 0.05, cy: 0.1, s: 900, rot: ROT0 * 0.4}, // close on the threads: pulses running along them
   {t: 5.75, cx: 0.0, cy: 0.15, s: 440, rot: 0}, // both electrodes, and their leads leaving the scaffold
   {t: 7.4, cx: E0[0] - 0.1, cy: E0[1] - 0.15, s: 700, rot: 0}, // the electrode the next pulse reaches
+  {t: T.fired, cx: E0[0] - 0.06, cy: E0[1] - 0.1, s: 760, rot: 0}, // a slow drift in while it arrives
 ];
 const camB = (t: number): M => {
   if (t <= SEG.matchA1) { const a = discAffine(t); return [a.ex[0], a.ex[1], a.ez[0], a.ez[1], a.o[0], a.o[1]]; }

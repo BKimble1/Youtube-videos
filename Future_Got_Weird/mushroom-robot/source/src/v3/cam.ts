@@ -30,7 +30,7 @@ export const SHOTS: Shot[] = [
   {t0: 18.45, t1: 21.85, keys: [ // cut on "No": low and head-on, then a gentle rise as it shuffles and wanders
     K(18.45, 6, 7, 24, 1.0, 0, 0.9, 46), K(19.5, 4, 8, 25, 0.8, 0, 0.9, 46), K(20.7, 22, 30, 38, 0, 0, 0.6, 48), K(21.85, 40, 42, 46, 0, 0, 0.3, 48)]},
   {t0: 21.85, t1: 24.75, keys: [ // cut on "But": the leg mechanism (leg 4, the side away from the cable: socket, chambers, foot) with the culture at frame edge
-    K(21.85, -160, 13, 23, 1.6, -5.0, 0.3, 40), K(24.75, -156, 15, 19.5, 1.5, -4.8, 0.4, 40)]},
+    K(21.85, -160, 14, 29, 1.2, -4.6, 0.6, 42), K(24.75, -156, 16, 25, 1.1, -4.4, 0.6, 42)]},
   {t0: 24.75, t1: DUR, keys: [ // cut on "Which": the whole walking motion side-on, easing into the opening framing
     K(24.75, 92, 14, 42, 0, 0, 2.4, 48), K(26.4, 70, 15, 39, 0.4, 0, 2.3, 49), OPEN(DUR)]},
 ];

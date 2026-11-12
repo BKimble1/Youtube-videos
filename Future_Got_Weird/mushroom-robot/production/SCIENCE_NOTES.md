@@ -85,3 +85,23 @@ motors. The legs are inflated with air through a valve, and the fungus supplies 
 - **The scope strip, lamp, box, beaker and footprint trail.** All illustrative. The splat and the bonk are comedy.
 - **The overlay.** The on-screen tag reads "Illustration · based on Mishra et al., Science Robotics (2024), Cornell
   University" for 3.1–6.6 s.
+
+## V3 notes (visual model of the walker)
+
+- **Legs.** They are drawn with the standard piecewise-constant-curvature model used for soft robots:
+  - two inextensible sections, each with one curvature and one bending-plane angle;
+  - a root clamped to the body;
+  - limits on curvature and on bending out of the chamber plane;
+  - a strain-limiting underside;
+  - chambers that swell with pressure.
+
+  There are no rigid joints, consistent with pneumatic soft actuators.
+- **Air.** It reaches the legs through an off-board valve, via a tether. The tether runs to a boom that follows the
+  walker; the boom is invented.
+- **⚠ The walker's raised, spider-like stance is a stylisation.** The real five-limbed soft robot is flatter
+  (starfish-shaped), and its locomotion is closer to an inflate-and-crawl motion.
+- **⚠ Under UV the picture shows a paired, faster gait.** The paper reports that UV changed the gait; the exact change
+  is not reproduced from the paper.
+- **The on-screen illustration tag was removed (V2 and V3 briefs).** Attribution belongs in the video description:
+  "Based on Mishra et al., Sensorimotor control of robots mediated by electrophysiological measurements of fungal
+  mycelia, Science Robotics 9, eadk8019 (2024), Cornell University. Animation is illustrative."

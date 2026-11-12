@@ -1,6 +1,31 @@
-# Future Got Weird: FGW_Mushroom_Robot (V2 current)
+# Future Got Weird: FGW_Mushroom_Robot (V3 current)
 
-## V2: stability, cleanup and polish (current)
+## V3: mechanical animation, storytelling and final polish (current)
+
+**Status (12 Nov 2026):** V3 final review render, not published. The full report is in `production/V3_REPORT.md`:
+change log, stability QA, science review, remaining defects and the score (8/10).
+
+| Deliverable | File |
+|---|---|
+| V3 final review MP4: 1080×1920, 30 fps, 850 frames, 28.333 s | `exports/FGW_Mushroom_Robot_V3_FINAL_REVIEW_1080x1920.mp4` |
+| V3 mix (-14.08 LUFS, -1.60 dBTP) | `audio/mix/FGW_Mushroom_Robot_MIX_V3.wav` |
+| Geometry audit (every half frame: PASS) | `qa/v3/geometry_audit.json` |
+| Render QA, every-frame sheets, ASR | `qa/v3/` |
+| Source | `source/src/v3/` (composition `MushroomRobotV3`) |
+
+### Rebuild V3
+
+    cd Future_Got_Weird/mushroom-robot
+    source/node_modules/.bin/esbuild tools/v3/geom_audit.ts --bundle --platform=node --format=cjs --outfile=/tmp/ga3.cjs && node /tmp/ga3.cjs qa/v3/geometry_audit.json
+    source/node_modules/.bin/esbuild tools/v3/export_cues.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.tsx=tsx --outfile=/tmp/ec3.cjs && NODE_PATH=source/node_modules node /tmp/ec3.cjs audio/cues_v3.json
+    python3 tools/v3/make_audio_v3.py mix_v3
+    (cd source && npx remotion render src/index.ts MushroomRobotV3 ../exports/FGW_Mushroom_Robot_V3_FINAL_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v3"}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=4)
+    python3 tools/v3/qa_render_v3.py exports/FGW_Mushroom_Robot_V3_FINAL_REVIEW_1080x1920.mp4 qa/v3
+    python3 tools/asr_sherpa.py exports/FGW_Mushroom_Robot_V3_FINAL_REVIEW_1080x1920.mp4 /tmp/asr qa/v3/final_asr.json
+
+---
+
+## V2: stability, cleanup and polish (kept as delivered)
 
 **Status (12 Nov 2026):** V2 review render, not published. The full report is in `production/V2_REPORT.md`: changes,
 the geometry and clipping QA, remaining defects and the score.

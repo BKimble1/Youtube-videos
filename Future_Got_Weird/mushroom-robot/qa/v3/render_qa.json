@@ -1,0 +1,84 @@
+{
+ "file": "FGW_Mushroom_Robot_V3_FINAL_REVIEW_1080x1920.mp4",
+ "size_mb": 28.73,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 850,
+  "duration_s": 28.333
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317374"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 6.09,
+ "large_changes": [
+  {
+   "frame": 281,
+   "t": 9.367,
+   "mad": 31.36,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 282,
+   "t": 9.4,
+   "mad": 55.97,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 283,
+   "t": 9.433,
+   "mad": 59.41,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 284,
+   "t": 9.467,
+   "mad": 59.44,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 285,
+   "t": 9.5,
+   "mad": 42.69,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 286,
+   "t": 9.533,
+   "mad": 32.21,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 554,
+   "t": 18.467,
+   "mad": 39.5,
+   "planned": "CUT on \"No\": low head-on"
+  },
+  {
+   "frame": 656,
+   "t": 21.867,
+   "mad": 56.61,
+   "planned": "CUT on \"But\": the leg mechanism"
+  },
+  {
+   "frame": 743,
+   "t": 24.767,
+   "mad": 48.53,
+   "planned": "CUT on \"Which\": the whole walk side-on"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 3,
+ "longest_near_static_run_starts_s": 5.73,
+ "loop_last_vs_first_mad": 2.62,
+ "single_frame_flicker": []
+}
