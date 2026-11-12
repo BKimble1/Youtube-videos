@@ -23,12 +23,19 @@ export const tubePath = (c: Pt[], hw: number[], capStart = true, capEnd = true) 
     L.push([c[i][0] - ty * hw[i], c[i][1] + tx * hw[i]]);
     R.push([c[i][0] + ty * hw[i], c[i][1] - tx * hw[i]]);
   }
-  const arc = (r: number, to: [number, number]) => `A${fmt(r)} ${fmt(r)} 0 0 1 ${fmt(to[0])} ${fmt(to[1])}`;
+  const cap = (i: number, dir: number, to: [number, number]) => {
+    const a = c[Math.max(0, i - 1)], b = c[Math.min(n - 1, i + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1];
+    const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const k = hw[i] * 1.35 * dir;
+    const L1 = dir > 0 ? L[i] : R[i];
+    return `C${fmt(L1[0] + tx * k)} ${fmt(L1[1] + ty * k)} ${fmt(to[0] + tx * k)} ${fmt(to[1] + ty * k)} ${fmt(to[0])} ${fmt(to[1])}`;
+  };
   let d = 'M' + fmt(L[0][0]) + ' ' + fmt(L[0][1]);
   for (let i = 1; i < n; i++) d += 'L' + fmt(L[i][0]) + ' ' + fmt(L[i][1]);
-  d += capEnd ? arc(hw[n - 1], R[n - 1]) : 'L' + fmt(R[n - 1][0]) + ' ' + fmt(R[n - 1][1]);
+  d += capEnd ? cap(n - 1, 1, R[n - 1]) : 'L' + fmt(R[n - 1][0]) + ' ' + fmt(R[n - 1][1]);
   for (let i = n - 2; i >= 0; i--) d += 'L' + fmt(R[i][0]) + ' ' + fmt(R[i][1]);
-  d += capStart ? arc(hw[0], L[0]) : 'Z';
+  d += capStart ? cap(0, -1, L[0]) : 'Z';
   return d + 'Z';
 };
 export const offsetLine = (c: Pt[], off: number[]) => {

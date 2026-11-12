@@ -11,28 +11,28 @@ const K = (t: number, yaw: number, pitch: number, dist: number, fwd = 0, side = 
   ({t, yaw, pitch, dist, fwd, side, up, fov});
 // yaw: 0 = in front of the walker looking back at it; +90 = on its left (+heading rotation side)
 export const KEYS: Key[] = [
-  K(0, 38, 19, 29, 1.5, 0, 0.3),
-  K(1.25, 30, 8, 17.5, 4.6, 0.6, -1.4),
-  K(2.0, 16, 42, 10.5, 0.6, 0, 1.0),
-  K(2.55, 4, 80, 5.4, 0, 0, 0.75),
-  K(2.85, 2, 84, 4.3, 0, 0, 0.75),
+  K(0, 38, 15, 40, 1.5, 0, 1.0, 48), // frame 0: the whole walker mid-step, fungus in the dome
+  K(1.25, 30, 7, 19, 4.6, 0.6, -1.2, 40), // push toward the front legs
+  K(2.0, 16, 42, 10.5, 0.6, 0, 1.0, 36), // rise over the hub
+  K(2.55, 4, 80, 5.4, 0, 0, 0.75, 34), // down into the dome: the scaffold fills the frame
+  K(2.85, 2, 84, 4.3, 0, 0, 0.75, 34),
   // (world B on screen from 2.82 to 9.4)
-  K(9.4, -128, 13, 12.5, -4.2, 2.6, -1.0, 34),
-  K(10.55, -138, 17, 23, -1.2, 1.2, 0.2),
-  K(11.9, -100, 19, 33, 0, 0, 3.2),
-  K(14.0, -88, 17, 30, 0, 0, 2.8),
-  K(16.15, -80, 22, 31, 0, 0, 2.0),
-  K(17.35, -64, 80, 27, 0, 0, 0),
-  K(18.12, -44, 84, 22, 0, 0, 0),
-  K(18.66, 52, 10, 28, 3, 0, 0.5),
-  K(19.05, 58, 8, 24, 3, 0, 0.4),
-  K(19.7, 62, 16, 28, 2, 0, 0.6),
-  K(20.75, 25, 56, 52, 0, 0, 0),
-  K(21.65, 60, 40, 44, 0, 0, 0.5),
-  K(22.4, 100, 26, 35, 0, 0, 1.0),
-  K(24.6, 78, 22, 32, 0, 0, 0.8),
-  K(26.3, 55, 20, 30, 1.0, 0, 0.5),
-  K(DUR, 38, 19, 29, 1.5, 0, 0.3),
+  K(9.4, -128, 13, 13, -4.2, 2.6, -1.0, 40), // beside the leg the featured spike drives
+  K(10.55, -138, 16, 34, -1, 1, 0.5, 46), // pull back: the whole step
+  K(11.9, -100, 14, 44, 0, 0, 5, 46), // side view: lamp above, monitor behind
+  K(14.0, -88, 13, 40, 0, 0, 4.5, 46),
+  K(16.15, -80, 18, 42, 0, 0, 3, 46),
+  K(17.35, -64, 80, 50, 0, 0, 0, 44), // overhead: no brain, just the culture
+  K(18.12, -44, 84, 48, 0, 0, 0, 44),
+  K(18.66, 90, 12, 30, 4, 0, 1.0, 56), // low side view: walks into the box
+  K(19.05, 92, 10, 27, 4.5, 0, 0.8, 56),
+  K(19.7, 85, 16, 31, 3, 0, 1.0, 54),
+  K(20.75, 25, 58, 80, 0, 0, 0, 44), // high and wide: the track it has walked
+  K(21.65, 60, 42, 66, 0, 0, 0.5, 44),
+  K(22.4, 100, 24, 50, 0, 0, 1.5, 44), // orbit: the whole biohybrid robot
+  K(24.6, 78, 20, 46, 0, 0, 1.2, 44),
+  K(26.3, 55, 17, 43, 1.0, 0, 1.0, 46),
+  K(DUR, 38, 15, 40, 1.5, 0, 1.0, 48), // = frame 0
 ];
 /** heading used for the camera: the path heading, smoothed like the centre */
 const camHeading = (t: number) => {

@@ -25,10 +25,10 @@ const gen = () => {
       // electrodes attract nearby hyphae a little (they grow around and over them)
       for (const e of ELECTRODES) {
         const dx = e[0] - p[0], dy = e[1] - p[1], d = Math.hypot(dx, dy);
-        if (d < 0.35 && d > 0.02) {
+        if (d < 0.25 && d > 0.06) {
           const ta = Math.atan2(dy, dx);
           let da = ta - a; while (da > Math.PI) da -= 2 * Math.PI; while (da < -Math.PI) da += 2 * Math.PI;
-          a += da * 0.12;
+          a += da * 0.05;
         }
       }
       const q: P2 = [p[0] + Math.cos(a) * step, p[1] + Math.sin(a) * step];
