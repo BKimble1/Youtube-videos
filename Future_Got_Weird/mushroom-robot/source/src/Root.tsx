@@ -8,6 +8,8 @@ import {FilmV2} from './v2/Film';
 import {FilmV3} from './v3/Film';
 import {DiagWalk} from './v4/Diag';
 import {FilmV4} from './v4/Film';
+import {FilmV5} from './v5/Film';
+import {DiagStatic} from './v5/Diag';
 import {RobotWorld as RobotWorldV2} from './v2/RobotWorld';
 
 const AOnly: React.FC = () => {
@@ -24,6 +26,11 @@ export const Root: React.FC = () => (
     <Composition id="MushroomRobotV2" component={FilmV2} durationInFrames={FRAMES} fps={FPS} width={1080} height={1920} defaultProps={{audio: 'mix_v2'}} />
     <Composition id="MushroomRobotV3" component={FilmV3} durationInFrames={FRAMES} fps={FPS} width={1080} height={1920} defaultProps={{audio: 'mix_v3'}} />
     <Composition id="MushroomRobotV4" component={FilmV4} durationInFrames={FRAMES} fps={FPS} width={1080} height={1920} defaultProps={{audio: 'mix_v4'}} />
+    <Composition id="MushroomRobotV5" component={FilmV5} durationInFrames={FRAMES} fps={FPS} width={1080} height={1920} defaultProps={{audio: 'mix_v5'}} />
+    <Composition id="V5TestA-threequarter" component={DiagStatic} durationInFrames={180} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, anchor: 3, yaw: 45, pitch: 24, dist: 46, up: 0, fov: 46}} />
+    <Composition id="V5TestB-overhead" component={DiagStatic} durationInFrames={180} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, anchor: 3, yaw: 45, pitch: 84, dist: 52, up: 0, fov: 46}} />
+    <Composition id="V5TestB-low" component={DiagStatic} durationInFrames={180} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, anchor: 3, yaw: 45, pitch: 5, dist: 44, up: 1.5, fov: 46}} />
+    <Composition id="V5TestC-uv" component={DiagStatic} durationInFrames={210} fps={FPS} width={1080} height={1920} defaultProps={{t0: 11.6, anchor: 14.9, yaw: -80, pitch: 22, dist: 70, up: 0, fov: 46}} />
     <Composition id="DiagA1" component={DiagWalk} durationInFrames={210} fps={FPS} width={1080} height={1920} defaultProps={{t0: 0, yawRel: 40, pitch: 24, dist: 40}} />
     <Composition id="DiagA2" component={DiagWalk} durationInFrames={270} fps={FPS} width={1080} height={1920} defaultProps={{t0: 12.5, yawRel: -100, pitch: 12, dist: 36}} />
     <Composition id="DiagA3" component={DiagWalk} durationInFrames={180} fps={FPS} width={1080} height={1920} defaultProps={{t0: 17.4, yawRel: 6, pitch: 6, dist: 26}} />

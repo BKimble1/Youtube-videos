@@ -1,0 +1,10 @@
+{
+ "mix": "audio/mix/FGW_Mushroom_Robot_MIX_V5.wav",
+ "sha256": "10d6d86fef8ac7f201e753bfc99327f2003036c51cb128ba837879884c91affa",
+ "lufs_integrated_stereo": -14.07,
+ "true_peak_dbtp": -1.6,
+ "limiter_max_reduction_db": 2.09,
+ "voice_vs_effects_rms_db": 18.1,
+ "loop_seam_jump": 0.00503,
+ "duration_s": 28.333
+}

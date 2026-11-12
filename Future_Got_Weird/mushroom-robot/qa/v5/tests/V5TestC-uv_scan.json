@@ -1,0 +1,16 @@
+{
+ "file": "qa/v5/tests/V5TestC-uv.mp4",
+ "frames": 210,
+ "median_change": 0.87,
+ "max_change": 2.73,
+ "max_at_frame": 150,
+ "over_3x_median": [
+  102,
+  114,
+  115,
+  127,
+  128,
+  150
+ ],
+ "single_frame_flicker": []
+}

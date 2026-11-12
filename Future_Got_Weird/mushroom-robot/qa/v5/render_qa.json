@@ -1,0 +1,177 @@
+{
+ "file": "FGW_Mushroom_Robot_V5_FINAL_1080x1920.mp4",
+ "size_mb": 23.6,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 850,
+  "duration_s": 28.333
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317375"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 4.85,
+ "large_changes": [
+  {
+   "frame": 32,
+   "t": 1.067,
+   "mad": 42.33,
+   "planned": "CUT to S2 the whole walker"
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "mad": 64.05,
+   "planned": "CUT to S3 something alive inside"
+  },
+  {
+   "frame": 88,
+   "t": 2.933,
+   "mad": 93.76,
+   "planned": "CUT to S4 living hyphae"
+  },
+  {
+   "frame": 252,
+   "t": 8.4,
+   "mad": 28.38,
+   "planned": "CUT to S8 processed"
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "mad": 69.53,
+   "planned": "CUT to S9 the actuator responds"
+  },
+  {
+   "frame": 304,
+   "t": 10.133,
+   "mad": 25.96,
+   "planned": "CUT to S10 locomotion"
+  },
+  {
+   "frame": 356,
+   "t": 11.867,
+   "mad": 50.39,
+   "planned": "CUT to S11 UV on the fungus"
+  },
+  {
+   "frame": 409,
+   "t": 13.633,
+   "mad": 56.35,
+   "planned": "CUT to S12 the signal changes"
+  },
+  {
+   "frame": 443,
+   "t": 14.767,
+   "mad": 47.05,
+   "planned": "CUT to S13 a different walk"
+  },
+  {
+   "frame": 471,
+   "t": 15.7,
+   "mad": 38.93,
+   "planned": "CUT to S14 from above"
+  },
+  {
+   "frame": 497,
+   "t": 16.567,
+   "mad": 65.12,
+   "planned": "CUT to S15 where a brain would be"
+  },
+  {
+   "frame": 533,
+   "t": 17.767,
+   "mad": 80.0,
+   "planned": "CUT to S16 no brain"
+  },
+  {
+   "frame": 558,
+   "t": 18.6,
+   "mad": 44.19,
+   "planned": "CUT to S17 no eyes"
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "mad": 61.23,
+   "planned": "CUT to S18 marching in place"
+  },
+  {
+   "frame": 608,
+   "t": 20.267,
+   "mad": 31.01,
+   "planned": "CUT to S19 no idea where"
+  },
+  {
+   "frame": 657,
+   "t": 21.9,
+   "mad": 44.14,
+   "planned": "CUT to S20 a fungal signal"
+  },
+  {
+   "frame": 679,
+   "t": 22.633,
+   "mad": 61.19,
+   "planned": "CUT to S21 an actuator answers"
+  },
+  {
+   "frame": 701,
+   "t": 23.367,
+   "mad": 67.71,
+   "planned": "CUT to S22 the whole machine"
+  },
+  {
+   "frame": 744,
+   "t": 24.8,
+   "mad": 54.93,
+   "planned": "CUT to S23 coordinated walk"
+  },
+  {
+   "frame": 791,
+   "t": 26.367,
+   "mad": 41.36,
+   "planned": "CUT to S24 a fungus with a body"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 10,
+ "longest_near_static_run_starts_s": 11.53,
+ "loop_last_vs_first_mad": 3.16,
+ "shots": 24,
+ "shot_lengths_s": [
+  1.04,
+  0.93,
+  0.95,
+  1.06,
+  1.07,
+  1.64,
+  1.71,
+  0.7,
+  1.03,
+  1.71,
+  1.77,
+  1.13,
+  0.95,
+  0.87,
+  1.19,
+  0.83,
+  0.81,
+  0.87,
+  1.64,
+  0.72,
+  0.74,
+  1.42,
+  1.58,
+  1.97
+ ],
+ "single_frame_flicker": []
+}

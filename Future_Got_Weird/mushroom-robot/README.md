@@ -1,6 +1,33 @@
-# Future Got Weird: FGW_Mushroom_Robot (V4 current)
+# Future Got Weird: FGW_Mushroom_Robot (V5 current)
 
-## V4: structural animation repair and high-retention pacing (current)
+## V5: final animation repair, faster storytelling, publication polish (current)
+
+**Status (12 Nov 2026):** V5 final render, not yet watched in real time. The full report is in
+`production/V5_REPORT.md`: the V4 glitch causes, the code-level fixes, tests A–D, the 24-beat timeline, defects and the
+score (8.8/10).
+
+| Deliverable | File |
+|---|---|
+| V5 final: 1080×1920, 30 fps, 850 frames, 28.333 s | `exports/FGW_Mushroom_Robot_V5_FINAL_1080x1920.mp4` |
+| 0.25× QA copy | `qa/v5/FGW_Mushroom_Robot_V5_QA_0.25x_540x960.mp4` |
+| Tests A–C (static cameras, no cuts) | `qa/v5/tests/` |
+| Geometry audit (PASS) | `qa/v5/geometry_audit.json` |
+| Source | `source/src/v5/` (composition `MushroomRobotV5`) |
+
+### Rebuild V5
+
+    cd Future_Got_Weird/mushroom-robot
+    source/node_modules/.bin/esbuild tools/v5/geom_audit.ts --bundle --platform=node --format=cjs --outfile=/tmp/ga5.cjs && node /tmp/ga5.cjs qa/v5/geometry_audit.json
+    source/node_modules/.bin/esbuild tools/v5/export_cues.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.tsx=tsx --outfile=/tmp/ec5.cjs && NODE_PATH=source/node_modules node /tmp/ec5.cjs audio/cues_v5.json
+    python3 tools/v5/make_audio_v5.py mix_v5
+    (cd source && npx remotion render src/index.ts MushroomRobotV5 ../exports/FGW_Mushroom_Robot_V5_FINAL_1080x1920.mp4 --props='{"audio":"mix_v5"}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && for C in V5TestA-threequarter V5TestB-overhead V5TestB-low V5TestC-uv; do npx remotion render src/index.ts $C ../qa/v5/tests/$C.mp4 --scale=0.5; done)
+    python3 tools/v5/qa_render_v5.py exports/FGW_Mushroom_Robot_V5_FINAL_1080x1920.mp4 qa/v5
+    python3 tools/asr_sherpa.py exports/FGW_Mushroom_Robot_V5_FINAL_1080x1920.mp4 /tmp/asr qa/v5/final_asr.json
+
+---
+
+## V4: structural animation repair and high-retention pacing (kept as delivered)
 
 **Status (12 Nov 2026):** V4 final review render, not published. The full report is in `production/V4_REPORT.md`: the
 V3 root causes, the rig architecture, Stage A/B validation, the 23-shot timeline, QA and the score (8.5/10).
