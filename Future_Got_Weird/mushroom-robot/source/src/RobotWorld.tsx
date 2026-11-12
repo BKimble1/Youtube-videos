@@ -282,15 +282,15 @@ export const discAffine = (t: number) => {
   return {o: [o[0], o[1]], ex: [ex[0] - o[0], ex[1] - o[1]], ez: [ez[0] - o[0], ez[1] - o[1]]};
 };
 
-const Leg: React.FC<{c: Cam; t: number; P: Pose; i: number}> = ({c, t, P, i}) => {
+const Leg: React.FC<{c: Cam; t: number; P: Pose; i: number; back?: boolean}> = ({c, t, P, i, back}) => {
   const L = legCurve(t, i, P);
   // the leg starts where it leaves the hub wall (its root inside the hub is never drawn)
   let k0 = 0;
-  while (k0 < L.pts.length - 3 && Math.hypot(L.pts[k0][0] - P.x, L.pts[k0][2] - P.z) < HUB_R * 0.98) k0++;
+  while (!back && k0 < L.pts.length - 3 && Math.hypot(L.pts[k0][0] - P.x, L.pts[k0][2] - P.z) < HUB_R * 0.98) k0++;
   const pts3 = L.pts.slice(k0), rs = L.rs.slice(k0);
   const sp = pts3.map((p) => proj(c, p));
   const hw = rs.map((r, k) => r * pxPerCm(c, pts3[k]));
-  const d = tubePath(sp, hw, false, true);
+  const d = tubePath(sp, hw, !!back, true);
   const sock = (() => {
     const a = sp[0], b = sp[1];
     let tx = b[0] - a[0], ty = b[1] - a[1];
@@ -326,7 +326,7 @@ const Leg: React.FC<{c: Cam; t: number; P: Pose; i: number}> = ({c, t, P, i}) =>
       <path d={ribs} stroke={C.legRib} strokeWidth={Math.max(1.2, hw[Math.min(8, hw.length - 1)] * 0.12)} fill="none" />
       {gUV > 0.01 && <path d={d} fill={C.uv} opacity={0.12 * gUV} />}
       <path d={d} fill="none" stroke={INK} strokeWidth={INK_PX} strokeLinejoin="round" vectorEffect={NS} />
-      <path d={sock} stroke={C.hubBand} strokeWidth={Math.max(3, hw[0] * 0.38)} strokeLinecap="round" />
+      {!back && <path d={sock} stroke={C.hubBand} strokeWidth={Math.max(3, hw[0] * 0.38)} strokeLinecap="round" />}
       {L.st.lift < 0.05 && <ellipse cx={fp[0]} cy={fp[1]} rx={hw[hw.length - 1] * 0.9} ry={hw[hw.length - 1] * 0.25} fill={C.shadow} opacity={0.5} />}
     </g>
   );
@@ -455,7 +455,7 @@ const Walker: React.FC<{c: Cam; t: number}> = ({c, t}) => {
   return (
     <g>
       <path d={poly(projPoly(c, shR))} fill={C.shadow} opacity={clamp(1.2 - P.y / 6)} filter="url(#soft)" />
-      {back.map((l) => <Leg key={l.i} c={c} t={t} P={P} i={l.i} />)}
+      {back.map((l) => <Leg key={l.i} c={c} t={t} P={P} i={l.i} back />)}
       <path d={tether} stroke={INK} strokeWidth={tw * 1.0 + 3} fill="none" strokeLinecap="round" />
       <path d={tether} stroke={C.tube} strokeWidth={tw} fill="none" strokeLinecap="round" />
       <path d={tether} stroke={C.cable} strokeWidth={tw * 0.35} fill="none" strokeLinecap="round" transform={`translate(${fmt(tw * 0.25)} 0)`} />

@@ -111,8 +111,8 @@ const Hyphae: React.FC<{m: M; t: number; s: number}> = ({m, t, s}) => {
       <path d={c0} stroke={C.cord} strokeWidth={w0} />
       {/* cytoplasm streaming along the cords */}
       <path d={c0} stroke="#FFFFFF" strokeWidth={w0 * 0.45} strokeDasharray={`${fmt(3 * k + 1)} ${fmt(22 * k + 6)}`} strokeDashoffset={fmt(-t * 60 * k)} opacity={0.8} />
-      {glow && <path d={glow} stroke={C.spike} strokeWidth={w0 * 3.2} filter="url(#bglow)" />}
-      {glow && <path d={glow} stroke={C.spikeCore} strokeWidth={w0 * 1.1} />}
+      {glow && <path d={glow} stroke={C.spike} strokeWidth={Math.min(w0 * 3.2, 14)} opacity={0.85} filter="url(#bglow)" />}
+      {glow && <path d={glow} stroke={C.spikeCore} strokeWidth={Math.min(w0 * 1.1, 4.5)} />}
     </g>
   );
 };
@@ -149,7 +149,7 @@ const Electrode: React.FC<{m: M; p: [number, number]; s: number; flash: number}>
       <circle cx={c[0]} cy={c[1]} r={r * 1.35} fill={C.goldDark} />
       <circle cx={c[0]} cy={c[1]} r={r} fill={C.gold} stroke={INK} strokeWidth={2} />
       <circle cx={c[0] - r * 0.3} cy={c[1] - r * 0.3} r={r * 0.35} fill={C.goldLight} />
-      {flash > 0.02 && <circle cx={c[0]} cy={c[1]} r={r * (1.6 + 2.5 * flash)} fill={C.spike} opacity={clamp(flash)} filter="url(#bglow)" />}
+      {flash > 0.02 && <circle cx={c[0]} cy={c[1]} r={Math.min(r * (1.6 + 2.5 * flash), r + 90)} fill={C.spike} opacity={clamp(flash)} filter="url(#bglow)" />}
     </g>
   );
 };

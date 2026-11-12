@@ -1,0 +1,21 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator (same id as Eel Escape, Living Skin, Hidden Trigger and earlier episodes); confirmed with creative_list_voices on 2026-11-12"},
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags only (not spoken)",
+ "flow_id": "x59LjTQ5to5Wpk5xkSV7",
+ "prompt": "[confident, slightly amused] If you give a mushroom robot legs, it can actually walk. / [conversational, brisk] Scientists grew living fungus into a robot's electronics. / And every time the fungus fired an electrical signal... / [landing it] The robot moved. / [leaning in, amused] But here's where it gets weird. / [brisk] They shined ultraviolet light on the fungus. / And the robot changed how it walked. / [dry, deadpan] So this thing has no brain. / No eyes. / And absolutely no idea where it's going. / [confident] But the mushroom is literally controlling its legs. / [slightly amused, landing the payoff] Which means scientists basically gave a fungus a body.  (each sentence on its own paragraph)",
+ "generated_once": "One run of two variations (connector default), 2 x 657 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_rnm3.mp3", "generation_id": "rnm31Nd0cOsHLWiAaHNB", "session_id": "g3b3eyB3pz64LxRs6IXK", "sha256": "0b14e17a4a73c9099cace0a0f717068b3a43697c85a9f33b074600c6c2eaa4c1", "asr_wer": {"zipformer": "0 (after joining 'ultra violet')", "whisper": 0.0}, "chosen": true, "why": "word-perfect on both models; take 2 was heard as 'roebot' once by Zipformer; pacing otherwise near-identical"},
+  {"file": "audio/narration/takes/t2_wf2T.mp3", "generation_id": "wf2TTqi3d7Zc146yce5R", "session_id": "scnLHm2v5MzsDIOqedBt", "sha256": "517676fb0c831fe0c18d7b48207c9d0f3cc68aca7963ce01a27dd3a91962f544", "chosen": false}
+ ],
+ "master": {
+  "file": "audio/narration/FGW_Mushroom_Robot_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 28.333 s",
+  "edits": "silent gaps between sentences shortened only (cut in the middle of runs below -45 dBFS, 12 ms crossfades): 0.20 s default, 0.36 s kept before 'The robot moved.', 0.28 s before each 'But'; 1.93 s removed in total. Every word is used sample for sample: no stretch, pitch or gain change. Words unchanged.",
+  "speech": "0.00-27.77 s, 83 words, 179 wpm"
+ },
+ "final_check": "qa/v1/final_asr.json: narration transcribed from the delivered MP4's own audio, WER 0.000 on zipformer and whisper base.en",
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models and timing measurements."
+}

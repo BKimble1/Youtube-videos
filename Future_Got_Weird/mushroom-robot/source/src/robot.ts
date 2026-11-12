@@ -240,7 +240,7 @@ export const legCurve = (t: number, i: number, P: Pose, N = 18) => {
   const chord = v3.len(hf);
   // the soft leg keeps its length: choose the arch height that gives about LEG_L, plus the inflation curl
   const curve = (arch: number) => {
-    const p1: V3 = [hip[0] + flat[0] * 2.1, hip[1] + arch * 0.9, hip[2] + flat[2] * 2.1];
+    const p1: V3 = [hip[0] + flat[0] * 2.6, hip[1] + arch * 0.5, hip[2] + flat[2] * 2.6];
     const p2: V3 = [foot[0] - flat[0] * 0.9, foot[1] + arch * 1.15, foot[2] - flat[2] * 0.9];
     return [hip, p1, p2, foot] as [V3, V3, V3, V3];
   };

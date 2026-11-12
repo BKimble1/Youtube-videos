@@ -30,6 +30,7 @@ CJ = json.load(open(os.path.join(EPD, 'audio/cues.json')))
 SEG, T, UV = CJ['SEG'], CJ['T'], CJ['UV']
 PLANNED = [(1.9, SEG['matchA1'] + 0.05, 'rise over the hub and the matched dissolve into the macro (same network)'),
            (SEG['matchA1'], 4.6, 'macro push-in on the threads (camera move)'),
+           (4.6, 5.8, 'macro pull-back to both electrodes, a spike wave crossing (camera move)'),
            (T['fired'] - 0.1, SEG['wipe0'], 'following the spike down the chain (camera move)'),
            (SEG['wipe0'] - 0.02, SEG['wipe1'] + 0.05, 'the air line passes the lens: wipe back to the robot'),
            (UV['on'] - 0.05, UV['on'] + 0.15, 'the UV lamp switches on'),
