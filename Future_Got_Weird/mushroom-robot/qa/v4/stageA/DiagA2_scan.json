@@ -1,0 +1,9 @@
+{
+ "file": "qa/v4/stageA/DiagA2.mp4",
+ "frames": 270,
+ "median_change": 3.97,
+ "max_change": 8.93,
+ "max_at_frame": 112,
+ "over_3x_median": [],
+ "single_frame_flicker": []
+}
