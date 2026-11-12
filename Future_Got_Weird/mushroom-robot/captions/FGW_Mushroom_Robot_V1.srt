@@ -1,0 +1,72 @@
+1
+00:00:00,000 --> 00:00:01,920
+If you give a mushroom robot legs,
+
+2
+00:00:01,960 --> 00:00:03,390
+it can actually walk.
+
+3
+00:00:03,430 --> 00:00:05,015
+Scientists grew living fungus
+
+4
+00:00:05,055 --> 00:00:06,650
+into a robot's electronics.
+
+5
+00:00:06,690 --> 00:00:08,070
+And every time the fungus fired
+
+6
+00:00:08,110 --> 00:00:09,470
+an electrical signal...
+
+7
+00:00:09,510 --> 00:00:10,730
+The robot moved.
+
+8
+00:00:10,770 --> 00:00:12,380
+But here's where it gets weird.
+
+9
+00:00:12,420 --> 00:00:14,700
+They shined ultraviolet light on the fungus.
+
+10
+00:00:14,740 --> 00:00:16,520
+And the robot changed how it walked.
+
+11
+00:00:16,560 --> 00:00:18,540
+So this thing has no brain.
+
+12
+00:00:18,580 --> 00:00:19,350
+No eyes.
+
+13
+00:00:19,390 --> 00:00:20,900
+And absolutely no idea
+
+14
+00:00:20,940 --> 00:00:21,860
+where it's going.
+
+15
+00:00:21,900 --> 00:00:23,325
+But the mushroom is literally
+
+16
+00:00:23,365 --> 00:00:24,740
+controlling its legs.
+
+17
+00:00:24,780 --> 00:00:26,325
+Which means scientists basically
+
+18
+00:00:26,365 --> 00:00:28,070
+gave a fungus a body.
+

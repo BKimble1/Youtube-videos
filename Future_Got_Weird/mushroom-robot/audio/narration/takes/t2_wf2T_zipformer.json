@@ -1,0 +1,467 @@
+{
+ "audio": "audio/narration/takes/t2_wf2T.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   3.33,
+   3.95
+  ],
+  [
+   7.05,
+   7.41
+  ],
+  [
+   9.8,
+   10.2
+  ],
+  [
+   11.25,
+   11.69
+  ],
+  [
+   13.12,
+   13.58
+  ],
+  [
+   15.76,
+   16.05
+  ],
+  [
+   17.73,
+   18.19
+  ],
+  [
+   19.94,
+   20.2
+  ],
+  [
+   20.86,
+   21.03
+  ],
+  [
+   23.29,
+   23.74
+  ],
+  [
+   26.41,
+   26.81
+  ]
+ ],
+ "words": [
+  {
+   "word": "If",
+   "start": 0.0,
+   "end": 0.11
+  },
+  {
+   "word": "you",
+   "start": 0.12,
+   "end": 0.28
+  },
+  {
+   "word": "give",
+   "start": 0.28,
+   "end": 0.43
+  },
+  {
+   "word": "a",
+   "start": 0.44,
+   "end": 0.56
+  },
+  {
+   "word": "mushroom",
+   "start": 0.56,
+   "end": 1.07
+  },
+  {
+   "word": "robot",
+   "start": 1.08,
+   "end": 1.51
+  },
+  {
+   "word": "legs,",
+   "start": 1.52,
+   "end": 2.0
+  },
+  {
+   "word": "it",
+   "start": 2.0,
+   "end": 2.2
+  },
+  {
+   "word": "can",
+   "start": 2.2,
+   "end": 2.39
+  },
+  {
+   "word": "actually",
+   "start": 2.4,
+   "end": 3.03
+  },
+  {
+   "word": "walk.",
+   "start": 3.04,
+   "end": 3.33
+  },
+  {
+   "word": "Scientists",
+   "start": 3.95,
+   "end": 4.47
+  },
+  {
+   "word": "grew",
+   "start": 4.48,
+   "end": 4.71
+  },
+  {
+   "word": "living",
+   "start": 4.72,
+   "end": 5.07
+  },
+  {
+   "word": "fungus",
+   "start": 5.08,
+   "end": 5.55
+  },
+  {
+   "word": "into",
+   "start": 5.56,
+   "end": 5.75
+  },
+  {
+   "word": "a",
+   "start": 5.76,
+   "end": 5.88
+  },
+  {
+   "word": "robot's",
+   "start": 5.88,
+   "end": 6.31
+  },
+  {
+   "word": "electronics.",
+   "start": 6.32,
+   "end": 7.05
+  },
+  {
+   "word": "And",
+   "start": 7.41,
+   "end": 7.46
+  },
+  {
+   "word": "every",
+   "start": 7.45,
+   "end": 7.7
+  },
+  {
+   "word": "time",
+   "start": 7.71,
+   "end": 7.86
+  },
+  {
+   "word": "the",
+   "start": 7.87,
+   "end": 8.02
+  },
+  {
+   "word": "fungus",
+   "start": 8.03,
+   "end": 8.47
+  },
+  {
+   "word": "fired",
+   "start": 8.47,
+   "end": 8.74
+  },
+  {
+   "word": "an",
+   "start": 8.75,
+   "end": 8.86
+  },
+  {
+   "word": "electrical",
+   "start": 8.87,
+   "end": 9.47
+  },
+  {
+   "word": "signal...",
+   "start": 9.47,
+   "end": 9.8
+  },
+  {
+   "word": "The",
+   "start": 10.2,
+   "end": 10.28
+  },
+  {
+   "word": "robot",
+   "start": 10.28,
+   "end": 10.87
+  },
+  {
+   "word": "moved.",
+   "start": 10.88,
+   "end": 11.25
+  },
+  {
+   "word": "But",
+   "start": 11.69,
+   "end": 11.74
+  },
+  {
+   "word": "here's",
+   "start": 11.73,
+   "end": 12.1
+  },
+  {
+   "word": "where",
+   "start": 12.11,
+   "end": 12.3
+  },
+  {
+   "word": "it",
+   "start": 12.31,
+   "end": 12.42
+  },
+  {
+   "word": "gets",
+   "start": 12.43,
+   "end": 12.74
+  },
+  {
+   "word": "weird.",
+   "start": 12.75,
+   "end": 13.12
+  },
+  {
+   "word": "They",
+   "start": 13.58,
+   "end": 13.63
+  },
+  {
+   "word": "shined",
+   "start": 13.62,
+   "end": 14.03
+  },
+  {
+   "word": "ultraviolet",
+   "start": 14.03,
+   "end": 14.76
+  },
+  {
+   "word": "light",
+   "start": 14.79,
+   "end": 15.06
+  },
+  {
+   "word": "on",
+   "start": 15.07,
+   "end": 15.14
+  },
+  {
+   "word": "the",
+   "start": 15.15,
+   "end": 15.25
+  },
+  {
+   "word": "fungus.",
+   "start": 15.27,
+   "end": 15.76
+  },
+  {
+   "word": "And",
+   "start": 16.05,
+   "end": 16.1
+  },
+  {
+   "word": "the",
+   "start": 16.09,
+   "end": 16.14
+  },
+  {
+   "word": "robot",
+   "start": 16.145,
+   "end": 16.62
+  },
+  {
+   "word": "changed",
+   "start": 16.625,
+   "end": 17.02
+  },
+  {
+   "word": "how",
+   "start": 17.025,
+   "end": 17.22
+  },
+  {
+   "word": "it",
+   "start": 17.225,
+   "end": 17.42
+  },
+  {
+   "word": "walked.",
+   "start": 17.425,
+   "end": 17.73
+  },
+  {
+   "word": "So",
+   "start": 18.19,
+   "end": 18.39
+  },
+  {
+   "word": "this",
+   "start": 18.4,
+   "end": 18.75
+  },
+  {
+   "word": "thing",
+   "start": 18.76,
+   "end": 19.03
+  },
+  {
+   "word": "has",
+   "start": 19.04,
+   "end": 19.27
+  },
+  {
+   "word": "no",
+   "start": 19.28,
+   "end": 19.55
+  },
+  {
+   "word": "brain.",
+   "start": 19.56,
+   "end": 19.94
+  },
+  {
+   "word": "No",
+   "start": 20.2,
+   "end": 20.46
+  },
+  {
+   "word": "eyes.",
+   "start": 20.47,
+   "end": 20.86
+  },
+  {
+   "word": "And",
+   "start": 21.03,
+   "end": 21.1
+  },
+  {
+   "word": "absolutely",
+   "start": 21.105,
+   "end": 21.9
+  },
+  {
+   "word": "no",
+   "start": 21.905,
+   "end": 22.22
+  },
+  {
+   "word": "idea",
+   "start": 22.225,
+   "end": 22.62
+  },
+  {
+   "word": "where",
+   "start": 22.625,
+   "end": 22.78
+  },
+  {
+   "word": "it's",
+   "start": 22.785,
+   "end": 23.06
+  },
+  {
+   "word": "going.",
+   "start": 23.065,
+   "end": 23.29
+  },
+  {
+   "word": "But",
+   "start": 23.74,
+   "end": 23.79
+  },
+  {
+   "word": "the",
+   "start": 23.78,
+   "end": 23.83
+  },
+  {
+   "word": "mushroom",
+   "start": 23.835,
+   "end": 24.43
+  },
+  {
+   "word": "is",
+   "start": 24.435,
+   "end": 24.63
+  },
+  {
+   "word": "literally",
+   "start": 24.635,
+   "end": 25.19
+  },
+  {
+   "word": "controlling",
+   "start": 25.195,
+   "end": 25.71
+  },
+  {
+   "word": "its",
+   "start": 25.715,
+   "end": 25.99
+  },
+  {
+   "word": "legs.",
+   "start": 25.995,
+   "end": 26.41
+  },
+  {
+   "word": "Which",
+   "start": 26.81,
+   "end": 26.92
+  },
+  {
+   "word": "means",
+   "start": 26.93,
+   "end": 27.24
+  },
+  {
+   "word": "scientists",
+   "start": 27.25,
+   "end": 27.88
+  },
+  {
+   "word": "basically",
+   "start": 27.89,
+   "end": 28.44
+  },
+  {
+   "word": "gave",
+   "start": 28.45,
+   "end": 28.64
+  },
+  {
+   "word": "a",
+   "start": 28.65,
+   "end": 28.8
+  },
+  {
+   "word": "fungus",
+   "start": 28.81,
+   "end": 29.33
+  },
+  {
+   "word": "a",
+   "start": 29.33,
+   "end": 29.48
+  },
+  {
+   "word": "body.",
+   "start": 29.49,
+   "end": 29.87
+  }
+ ]
+}
