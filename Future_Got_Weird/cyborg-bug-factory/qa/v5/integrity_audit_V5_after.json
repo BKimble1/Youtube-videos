@@ -1,0 +1,161 @@
+{
+ "version": "V5",
+ "frames": 946,
+ "seat": [
+  {
+   "t": 1.6,
+   "minGap": 0.06,
+   "maxGap": 0.98
+  },
+  {
+   "t": 3,
+   "minGap": 0.06,
+   "maxGap": 0.98
+  },
+  {
+   "t": 10.6,
+   "minGap": 0.06,
+   "maxGap": 0.98
+  },
+  {
+   "t": 13.5,
+   "minGap": 0.06,
+   "maxGap": 0.98
+  },
+  {
+   "t": 28,
+   "minGap": 0.06,
+   "maxGap": 0.98
+  }
+ ],
+ "summary": [
+  {
+   "check": "handover: module jumps when the gripper lets go",
+   "frames": 3,
+   "worst": 0.13,
+   "at": 1.033,
+   "what": "m0",
+   "ranges": [
+    "1.03-1.03",
+    "5.50-5.50",
+    "10.20-10.20"
+   ]
+  },
+  {
+   "check": "pickup: module offset from its parked place",
+   "frames": 3,
+   "worst": 0.19,
+   "at": 4.567,
+   "what": "holder-73 -> gripper",
+   "ranges": [
+    "4.57-4.57",
+    "7.20-7.20",
+    "28.00-28.00"
+   ]
+  },
+  {
+   "check": "platform moves > 30 mm per frame in view (inside the sped-up 68 s sequence)",
+   "frames": 3,
+   "worst": 96.37,
+   "at": 4.867,
+   "what": "slider",
+   "ranges": [
+    "4.67-4.67",
+    "4.87-4.90"
+   ]
+  },
+  {
+   "check": "planted foot slides",
+   "frames": 1,
+   "worst": 0.35,
+   "at": 6.1,
+   "what": "insect 1 leg 0",
+   "ranges": [
+    "6.10-6.10"
+   ]
+  },
+  {
+   "check": "leg passes through the body",
+   "frames": 2,
+   "worst": 0.5,
+   "at": 13.9,
+   "what": "insect 2: tibia3 in pronotum",
+   "ranges": [
+    "13.90-13.90",
+    "14.80-14.80"
+   ]
+  }
+ ],
+ "detail": {
+  "handover: module jumps when the gripper lets go": [
+   {
+    "t": 1.033,
+    "v": 0.13,
+    "what": "m0"
+   },
+   {
+    "t": 5.5,
+    "v": 0.02,
+    "what": "m1"
+   },
+   {
+    "t": 10.2,
+    "v": 0.02,
+    "what": "m2"
+   }
+  ],
+  "pickup: module offset from its parked place": [
+   {
+    "t": 4.567,
+    "v": 0.19,
+    "what": "holder-73 -> gripper"
+   },
+   {
+    "t": 7.2,
+    "v": 0,
+    "what": "holder-55 -> gripper"
+   },
+   {
+    "t": 28,
+    "v": 0,
+    "what": "holder-55 -> gripper"
+   }
+  ],
+  "platform moves > 30 mm per frame in view (inside the sped-up 68 s sequence)": [
+   {
+    "t": 4.667,
+    "v": 70.13,
+    "what": "slider"
+   },
+   {
+    "t": 4.867,
+    "v": 96.37,
+    "what": "slider"
+   },
+   {
+    "t": 4.9,
+    "v": 42.92,
+    "what": "slider"
+   }
+  ],
+  "planted foot slides": [
+   {
+    "t": 6.1,
+    "v": 0.35,
+    "what": "insect 1 leg 0"
+   }
+  ],
+  "leg passes through the body": [
+   {
+    "t": 13.9,
+    "v": 0.5,
+    "what": "insect 2: tibia3 in pronotum"
+   },
+   {
+    "t": 14.8,
+    "v": 0.45,
+    "what": "insect 2: femur1 in pronotum"
+   }
+  ]
+ }
+}

@@ -1,6 +1,45 @@
 # Future Got Weird: Scientists Built a Cyborg Bug Factory
 
-## V4 (final review cut: minimalist polish)
+## V5 (final: animation integrity, collision and continuity)
+
+**Status (12 Nov 2026):** rendered natively; every frame audited geometrically and for continuity; critical interactions
+inspected frame by frame. The verdict is **READY**; nobody has watched it in real time with sound here. See
+`production/V5_REPORT.md` (defect log, fixes, validation).
+
+V5 is V4's picture and timing with the physical contradictions removed:
+- one backpack model, attached by parent–child transforms;
+- a level gripper whose held module is its child;
+- rods and a holder rebuilt so nothing passes through anything;
+- platform swaps only after the insect has left;
+- planted feet that don't slide;
+- crossfaded layer orders;
+- a passable crevice;
+- a robot whose parts rest on their supports.
+
+The narration is unchanged.
+
+| Deliverable | File |
+|---|---|
+| V5 final: 1080×1920, 30 fps, H.264, 946 frames, 31.55 s | `exports/FGW_Cyborg_Bug_Factory_V5_FINAL_1080x1920.mp4` |
+| Report | `production/V5_REPORT.md` |
+| Integrity audit (V4 before, V5 after) | `qa/v5/integrity_audit_V4_before.json`, `qa/v5/integrity_audit_V5_after.json` (code: `source/src/qa5/`) |
+| Continuity scan | `qa/v5/continuity_spikes.json`, `qa/v5/continuity_spikes_V4_before.json` (code: `tools/spike_audit.py`) |
+| QA | `qa/v5/` |
+| Source | `source/src/v5/` (composition `CyborgBugFactoryV5`; still `Sheet5`), mix `tools/make_audio_v5.py` |
+
+Rebuild and audit V5:
+
+    python3 tools/make_audio_v5.py mix_v5
+    (cd source && npx remotion render src/index.ts CyborgBugFactoryV5 ../exports/FGW_Cyborg_Bug_Factory_V5_FINAL_1080x1920.mp4 \
+        --props='{"audio":"mix_v5","captions":true}' --image-format=png --crf=16 --x264-preset=slow --pixel-format=yuv420p \
+        --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && npx esbuild src/qa5/audit.ts --bundle --platform=node --outfile=/tmp/audit.js && node /tmp/audit.js v5 ../qa/v5/integrity_audit_V5_after.json)
+    python3 tools/qa_render_v4.py exports/FGW_Cyborg_Bug_Factory_V5_FINAL_1080x1920.mp4 qa/v5
+    python3 tools/spike_audit.py exports/FGW_Cyborg_Bug_Factory_V5_FINAL_1080x1920.mp4 qa/v5/continuity_spikes.json 14.9 17.933 20.6 26.767
+
+---
+
+## V4 (minimalist polish, superseded)
 
 **Status (11 Nov 2026):** rendered natively and fully checked from the file. The verdict is **READY**; nobody has
 watched it in real time with sound here. See `production/V4_REPORT.md`.

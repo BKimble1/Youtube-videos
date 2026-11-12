@@ -1,0 +1,11624 @@
+{
+ "version": "V4",
+ "frames": 946,
+ "seat": [
+  {
+   "t": 1.6,
+   "minGap": 1.06,
+   "maxGap": 1.98
+  },
+  {
+   "t": 3,
+   "minGap": 1.06,
+   "maxGap": 1.98
+  },
+  {
+   "t": 10.6,
+   "minGap": 1.06,
+   "maxGap": 1.98
+  },
+  {
+   "t": 13.5,
+   "minGap": 1.06,
+   "maxGap": 1.98
+  },
+  {
+   "t": 28,
+   "minGap": 1.06,
+   "maxGap": 1.98
+  }
+ ],
+ "summary": [
+  {
+   "check": "leg passes through a rod",
+   "frames": 491,
+   "worst": 2.27,
+   "at": 4.3,
+   "what": "insect 0: femur4 x rod A tip",
+   "ranges": [
+    "0.00-3.63",
+    "3.90-4.30",
+    "4.43-5.80",
+    "5.97-6.00",
+    "6.17-12.20",
+    "12.43-12.97",
+    "26.77-26.83",
+    "27.10-27.67",
+    "28.07-31.50"
+   ]
+  },
+  {
+   "check": "rod penetrates the body",
+   "frames": 398,
+   "worst": 0.55,
+   "at": 1,
+   "what": "insect 0: rod B pad -1 in mesonotum",
+   "ranges": [
+    "0.00-3.30",
+    "4.57-5.63",
+    "6.30-11.83",
+    "28.27-31.50"
+   ]
+  },
+  {
+   "check": "held module not aligned with the gripper",
+   "frames": 245,
+   "worst": 14,
+   "at": 0,
+   "what": "degrees between the module and tool axes",
+   "ranges": [
+    "0.00-1.00",
+    "4.90-5.47",
+    "7.20-10.17",
+    "28.00-31.50"
+   ]
+  },
+  {
+   "check": "gripper penetrates the module tab",
+   "frames": 245,
+   "worst": 0.67,
+   "at": 8.4,
+   "what": "pad-1",
+   "ranges": [
+    "0.00-1.00",
+    "4.90-5.47",
+    "7.20-10.17",
+    "28.00-31.50"
+   ]
+  },
+  {
+   "check": "leg passes through the body",
+   "frames": 65,
+   "worst": 0.69,
+   "at": 13.767,
+   "what": "insect 2: femur1 in pronotum",
+   "ranges": [
+    "0.80-0.80",
+    "2.50-2.50",
+    "4.03-4.03",
+    "4.20-4.20",
+    "5.10-5.10",
+    "5.57-5.57",
+    "5.73-5.73",
+    "5.90-5.90",
+    "6.07-6.07",
+    "6.17-6.17",
+    "6.43-6.43",
+    "6.60-6.60"
+   ]
+  },
+  {
+   "check": "handover: module jumps when the gripper lets go",
+   "frames": 3,
+   "worst": 0.33,
+   "at": 1.033,
+   "what": "m0",
+   "ranges": [
+    "1.03-1.03",
+    "5.50-5.50",
+    "10.20-10.20"
+   ]
+  },
+  {
+   "check": "planted foot slides",
+   "frames": 118,
+   "worst": 1.59,
+   "at": 10.833,
+   "what": "insect 2 leg 1",
+   "ranges": [
+    "1.20-1.40",
+    "1.47-1.63",
+    "1.73-1.90",
+    "1.97-2.20",
+    "2.27-2.43",
+    "2.57-2.73",
+    "2.80-3.00",
+    "3.10-3.30",
+    "3.37-3.40",
+    "3.47-3.67",
+    "5.57-5.90",
+    "10.60-10.63"
+   ]
+  },
+  {
+   "check": "module electrodes / branches pass through the holder",
+   "frames": 285,
+   "worst": 2.5,
+   "at": 2.3,
+   "what": "parked module 0",
+   "ranges": [
+    "2.30-4.83",
+    "5.90-7.17",
+    "10.50-14.87",
+    "26.77-27.97"
+   ]
+  },
+  {
+   "check": "module appears on the holder in view",
+   "frames": 2,
+   "worst": 1,
+   "at": 2.3,
+   "what": "holder-64",
+   "ranges": [
+    "2.30-2.30",
+    "5.90-5.90"
+   ]
+  },
+  {
+   "check": "rod passes through the module",
+   "frames": 24,
+   "worst": 1.06,
+   "at": 4.167,
+   "what": "insect 0: rod A arm",
+   "ranges": [
+    "4.00-4.03",
+    "4.10-4.23",
+    "12.57-12.60",
+    "12.67-12.77",
+    "12.83-12.87",
+    "27.20-27.23",
+    "27.30-27.43",
+    "27.50-27.53"
+   ]
+  },
+  {
+   "check": "foot planted on nothing (floats)",
+   "frames": 30,
+   "worst": 3.18,
+   "at": 4.333,
+   "what": "insect 0 leg 2 (platform has slid away)",
+   "ranges": [
+    "4.30-4.53",
+    "6.00-6.30",
+    "27.90-28.27"
+   ]
+  },
+  {
+   "check": "platform slides away under a walking insect",
+   "frames": 20,
+   "worst": 299.56,
+   "at": 4.433,
+   "what": "insect 0",
+   "ranges": [
+    "4.30-4.57",
+    "6.00-6.33"
+   ]
+  },
+  {
+   "check": "platform / rods pass through something",
+   "frames": 7,
+   "worst": 0.33,
+   "at": 4.567,
+   "what": "insect 0 foot",
+   "ranges": [
+    "4.30-4.30",
+    "4.57-4.57",
+    "6.00-6.00",
+    "6.30-6.33",
+    "27.87-27.87",
+    "28.27-28.27"
+   ]
+  },
+  {
+   "check": "platform moves > 30 mm per frame in view (inside the sped-up 68 s sequence)",
+   "frames": 8,
+   "worst": 95.93,
+   "at": 4.533,
+   "what": "slider",
+   "ranges": [
+    "4.33-4.33",
+    "4.53-4.57",
+    "6.03-6.07",
+    "6.27-6.33"
+   ]
+  },
+  {
+   "check": "module vanishes in view",
+   "frames": 1,
+   "worst": 1,
+   "at": 4.867,
+   "what": "holder-64",
+   "ranges": [
+    "4.87-4.87"
+   ]
+  },
+  {
+   "check": "pickup: module offset from its parked place",
+   "frames": 2,
+   "worst": 0,
+   "at": 7.2,
+   "what": "holder-64 -> gripper",
+   "ranges": [
+    "7.20-7.20",
+    "28.00-28.00"
+   ]
+  },
+  {
+   "check": "foot sunk into a surface",
+   "frames": 7,
+   "worst": 0.53,
+   "at": 13.533,
+   "what": "insect 2 leg 5",
+   "ranges": [
+    "13.53-13.73"
+   ]
+  },
+  {
+   "check": "insect passes through rubble",
+   "frames": 112,
+   "worst": 11.74,
+   "at": 26.333,
+   "what": "backpack grasping tab inside slab1",
+   "ranges": [
+    "20.60-21.17",
+    "23.63-26.73"
+   ]
+  },
+  {
+   "check": "platform moves > 30 mm per frame in view (real time)",
+   "frames": 7,
+   "worst": 73.56,
+   "at": 27.967,
+   "what": "slider",
+   "ranges": [
+    "27.90-27.97",
+    "28.17-28.27"
+   ]
+  }
+ ],
+ "detail": {
+  "leg passes through a rod": [
+   {
+    "t": 0,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.033,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.067,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.1,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.133,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.167,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.2,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.233,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.267,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.3,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.333,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.367,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.4,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.433,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.467,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.5,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.533,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.567,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.6,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.633,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.667,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.7,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.733,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.767,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.8,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.833,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.867,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.9,
+    "v": 1.37,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 0.933,
+    "v": 1.33,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 0.967,
+    "v": 1.4,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 1,
+    "v": 1.42,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 1.033,
+    "v": 1.35,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.067,
+    "v": 1.36,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 1.1,
+    "v": 1.33,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.133,
+    "v": 1.41,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.167,
+    "v": 1.41,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.2,
+    "v": 1.33,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.233,
+    "v": 1.37,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.267,
+    "v": 1.29,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 1.3,
+    "v": 1.57,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.333,
+    "v": 1.79,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 1.367,
+    "v": 1.73,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.4,
+    "v": 1.43,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.433,
+    "v": 1.34,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 1.467,
+    "v": 1.5,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.5,
+    "v": 1.49,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.533,
+    "v": 1.56,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 1.567,
+    "v": 1.93,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.6,
+    "v": 1.7,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.633,
+    "v": 1.41,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.667,
+    "v": 1.53,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.7,
+    "v": 1.36,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 1.733,
+    "v": 1.31,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 1.767,
+    "v": 1.71,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 1.8,
+    "v": 1.85,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 1.833,
+    "v": 1.35,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 1.867,
+    "v": 1.33,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 1.9,
+    "v": 1.38,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 1.933,
+    "v": 1.33,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 1.967,
+    "v": 1.3,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 2,
+    "v": 1.74,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.033,
+    "v": 1.64,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.067,
+    "v": 1.36,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.1,
+    "v": 1.38,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.133,
+    "v": 1.32,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 2.167,
+    "v": 1.35,
+    "what": "insect 0: femur2 x rod B pad -1"
+   },
+   {
+    "t": 2.2,
+    "v": 1.24,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.233,
+    "v": 1.55,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.267,
+    "v": 1.61,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.3,
+    "v": 1.28,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.333,
+    "v": 1.31,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.367,
+    "v": 1.25,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 2.4,
+    "v": 1.55,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 2.433,
+    "v": 1.34,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.467,
+    "v": 1.62,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.5,
+    "v": 1.6,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.533,
+    "v": 1.29,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.567,
+    "v": 1.42,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.6,
+    "v": 1.53,
+    "what": "insect 0: femur3 x rod B pad 1"
+   },
+   {
+    "t": 2.633,
+    "v": 1.18,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.667,
+    "v": 1.38,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.7,
+    "v": 1.52,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.733,
+    "v": 1.59,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.767,
+    "v": 1.35,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.8,
+    "v": 1.3,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.833,
+    "v": 1.19,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 2.867,
+    "v": 1.27,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.9,
+    "v": 1.3,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 2.933,
+    "v": 1.5,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 2.967,
+    "v": 1.62,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 3,
+    "v": 1.37,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 3.033,
+    "v": 1.26,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 3.067,
+    "v": 1.31,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 3.1,
+    "v": 1.29,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 3.133,
+    "v": 1.37,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 3.167,
+    "v": 1.61,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 3.2,
+    "v": 1.76,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 3.233,
+    "v": 1.34,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 3.267,
+    "v": 1.47,
+    "what": "insect 0: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 3.3,
+    "v": 1.64,
+    "what": "insect 0: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 3.333,
+    "v": 1.59,
+    "what": "insect 0: tibia2 x rod B pad -1"
+   },
+   {
+    "t": 3.367,
+    "v": 1.11,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 3.4,
+    "v": 0.86,
+    "what": "insect 0: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 3.433,
+    "v": 0.95,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.467,
+    "v": 1.18,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.5,
+    "v": 1.49,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.533,
+    "v": 1.78,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.567,
+    "v": 1.97,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.6,
+    "v": 1.95,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.633,
+    "v": 0.39,
+    "what": "insect 0: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 3.9,
+    "v": 0.53,
+    "what": "insect 0: tibia4 x rod B pad -1"
+   },
+   {
+    "t": 3.933,
+    "v": 1.72,
+    "what": "insect 0: tarsus3 x rod A post"
+   },
+   {
+    "t": 3.967,
+    "v": 1.28,
+    "what": "insect 0: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 4,
+    "v": 1.84,
+    "what": "insect 0: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 4.033,
+    "v": 2.1,
+    "what": "insect 0: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 4.067,
+    "v": 1.95,
+    "what": "insect 0: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 4.1,
+    "v": 1.68,
+    "what": "insect 0: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 4.133,
+    "v": 0.57,
+    "what": "insect 0: tarsus3 x rod A post"
+   },
+   {
+    "t": 4.167,
+    "v": 1.28,
+    "what": "insect 0: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 4.2,
+    "v": 1.28,
+    "what": "insect 0: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 4.233,
+    "v": 1.28,
+    "what": "insect 0: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 4.267,
+    "v": 1.28,
+    "what": "insect 0: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 4.3,
+    "v": 2.27,
+    "what": "insect 0: femur4 x rod A tip"
+   },
+   {
+    "t": 4.433,
+    "v": 1,
+    "what": "insect 1: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 4.467,
+    "v": 1,
+    "what": "insect 1: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 4.5,
+    "v": 1,
+    "what": "insect 1: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 4.533,
+    "v": 1.38,
+    "what": "insect 1: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 4.567,
+    "v": 1.04,
+    "what": "insect 0: tibia5 x rod A arm"
+   },
+   {
+    "t": 4.567,
+    "v": 1.43,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 4.6,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.633,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.667,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.7,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.733,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.767,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.8,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.833,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.867,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.9,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.933,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 4.967,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.033,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.067,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.1,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.133,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.167,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.2,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.233,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.267,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.3,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.333,
+    "v": 1.37,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.367,
+    "v": 1.34,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.4,
+    "v": 1.39,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.433,
+    "v": 1.42,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.467,
+    "v": 1.39,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.5,
+    "v": 1.36,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.533,
+    "v": 1.33,
+    "what": "insect 1: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 5.567,
+    "v": 1.32,
+    "what": "insect 1: femur2 x rod B pad -1"
+   },
+   {
+    "t": 5.6,
+    "v": 1.32,
+    "what": "insect 1: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 5.633,
+    "v": 1.49,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.667,
+    "v": 1.67,
+    "what": "insect 1: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 5.7,
+    "v": 1.72,
+    "what": "insect 1: tibia3 x rod B pad 1"
+   },
+   {
+    "t": 5.733,
+    "v": 1.41,
+    "what": "insect 1: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 5.767,
+    "v": 1.68,
+    "what": "insect 1: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 5.8,
+    "v": 1.37,
+    "what": "insect 1: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 5.967,
+    "v": 0.68,
+    "what": "insect 1: femur4 x rod B pad -1"
+   },
+   {
+    "t": 6,
+    "v": 0.68,
+    "what": "insect 1: femur5 x rod B post 1"
+   },
+   {
+    "t": 6.167,
+    "v": 1,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 6.2,
+    "v": 1,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 6.233,
+    "v": 1,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 6.267,
+    "v": 1.21,
+    "what": "insect 2: tibia2 x rod B pad -1"
+   },
+   {
+    "t": 6.3,
+    "v": 0.51,
+    "what": "insect 1: tibia4 x rod A post"
+   },
+   {
+    "t": 6.3,
+    "v": 1.51,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 6.333,
+    "v": 1.34,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.367,
+    "v": 0.36,
+    "what": "insect 1: tibia5 x rod A arm"
+   },
+   {
+    "t": 6.367,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.4,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.433,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.467,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.5,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.533,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.567,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.6,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.633,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.667,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.7,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.733,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.767,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.833,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.867,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.9,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.933,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 6.967,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.033,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.067,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.1,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.133,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.167,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.2,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.233,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.267,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.3,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.333,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.367,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.4,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.433,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.467,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.5,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.533,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.567,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.6,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.633,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.667,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.7,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.733,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.767,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.833,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.867,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.9,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.933,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 7.967,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.033,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.067,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.1,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.133,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.167,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.2,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.233,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.267,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.3,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.333,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.367,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.4,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.433,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.467,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.5,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.533,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.567,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.6,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.633,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.667,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.7,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.733,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.767,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.833,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.867,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.9,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.933,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 8.967,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.033,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.067,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.1,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.133,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.167,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.2,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.233,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.267,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.3,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.333,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.367,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.4,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.433,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.467,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.5,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.533,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.567,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.6,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.633,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.667,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.7,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.733,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.767,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.833,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.867,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.9,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.933,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 9.967,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.033,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.067,
+    "v": 1.34,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.1,
+    "v": 1.39,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 10.133,
+    "v": 1.42,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 10.167,
+    "v": 1.39,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 10.2,
+    "v": 1.36,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 10.233,
+    "v": 1.33,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 10.267,
+    "v": 1.4,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.3,
+    "v": 1.41,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.333,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.367,
+    "v": 1.35,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.4,
+    "v": 1.36,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.433,
+    "v": 1.38,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.467,
+    "v": 1.38,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.5,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.533,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.567,
+    "v": 1.37,
+    "what": "insect 2: femur3 x rod B pad 1"
+   },
+   {
+    "t": 10.6,
+    "v": 1.33,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.633,
+    "v": 1.63,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 10.667,
+    "v": 1.6,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 10.7,
+    "v": 1.34,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 10.733,
+    "v": 1.37,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 10.767,
+    "v": 1.19,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 10.8,
+    "v": 1.37,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.833,
+    "v": 1.49,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 10.867,
+    "v": 1.82,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 10.9,
+    "v": 1.88,
+    "what": "insect 2: femur3 x rod B pad 1"
+   },
+   {
+    "t": 10.933,
+    "v": 1.51,
+    "what": "insect 2: femur3 x rod B pad 1"
+   },
+   {
+    "t": 10.967,
+    "v": 1.34,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 11,
+    "v": 1.51,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 11.033,
+    "v": 1.31,
+    "what": "insect 2: femur2 x rod B pad -1"
+   },
+   {
+    "t": 11.067,
+    "v": 1.64,
+    "what": "insect 2: femur3 x rod B pad 1"
+   },
+   {
+    "t": 11.1,
+    "v": 1.83,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.133,
+    "v": 1.43,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.167,
+    "v": 1.34,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 11.2,
+    "v": 1.29,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.233,
+    "v": 1.35,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.267,
+    "v": 1.33,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.3,
+    "v": 1.57,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.333,
+    "v": 1.83,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.367,
+    "v": 1.43,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 11.4,
+    "v": 1.44,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.433,
+    "v": 1.35,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.467,
+    "v": 1.27,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.5,
+    "v": 1.17,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.533,
+    "v": 1.56,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.567,
+    "v": 1.61,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.6,
+    "v": 1.46,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.633,
+    "v": 1.31,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.667,
+    "v": 1.23,
+    "what": "insect 2: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 11.7,
+    "v": 1.23,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.733,
+    "v": 1.32,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.767,
+    "v": 1.38,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.8,
+    "v": 1.59,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 11.833,
+    "v": 1.48,
+    "what": "insect 2: tibia2 x rod B arm -1"
+   },
+   {
+    "t": 11.867,
+    "v": 1.47,
+    "what": "insect 2: tibia2 x rod B pad -1"
+   },
+   {
+    "t": 11.9,
+    "v": 0.94,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 11.933,
+    "v": 0.74,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 11.967,
+    "v": 0.74,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 12,
+    "v": 0.86,
+    "what": "insect 2: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 12.033,
+    "v": 0.95,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.067,
+    "v": 1.18,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.1,
+    "v": 1.48,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.133,
+    "v": 1.78,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.167,
+    "v": 1.97,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.2,
+    "v": 1.65,
+    "what": "insect 2: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 12.433,
+    "v": 0.55,
+    "what": "insect 2: femur4 x rod B pad -1"
+   },
+   {
+    "t": 12.467,
+    "v": 0.46,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.5,
+    "v": 1.87,
+    "what": "insect 2: tarsus3 x rod A post"
+   },
+   {
+    "t": 12.533,
+    "v": 1.35,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.567,
+    "v": 1.99,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.6,
+    "v": 1.59,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.633,
+    "v": 1.92,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.667,
+    "v": 1.1,
+    "what": "insect 2: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 12.7,
+    "v": 0.96,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.733,
+    "v": 1.28,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.767,
+    "v": 1.28,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.8,
+    "v": 1.28,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.833,
+    "v": 1.27,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.867,
+    "v": 1.27,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.9,
+    "v": 1.27,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.933,
+    "v": 1.27,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 12.967,
+    "v": 1.19,
+    "what": "insect 2: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 26.767,
+    "v": 1.97,
+    "what": "insect 3: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 26.8,
+    "v": 1.95,
+    "what": "insect 3: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 26.833,
+    "v": 0.39,
+    "what": "insect 3: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 27.1,
+    "v": 0.53,
+    "what": "insect 3: tibia4 x rod B pad -1"
+   },
+   {
+    "t": 27.133,
+    "v": 1.72,
+    "what": "insect 3: tarsus3 x rod A post"
+   },
+   {
+    "t": 27.167,
+    "v": 1.28,
+    "what": "insect 3: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 27.2,
+    "v": 1.84,
+    "what": "insect 3: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 27.233,
+    "v": 2.1,
+    "what": "insect 3: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 27.267,
+    "v": 1.95,
+    "what": "insect 3: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 27.3,
+    "v": 1.68,
+    "what": "insect 3: tibia5 x rod B pad 1"
+   },
+   {
+    "t": 27.333,
+    "v": 0.57,
+    "what": "insect 3: tarsus3 x rod A post"
+   },
+   {
+    "t": 27.367,
+    "v": 1.28,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.4,
+    "v": 1.28,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.433,
+    "v": 1.28,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.467,
+    "v": 1.28,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.5,
+    "v": 1.27,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.533,
+    "v": 1.27,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.567,
+    "v": 1.27,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.6,
+    "v": 1.27,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.633,
+    "v": 1.27,
+    "what": "insect 3: tarsus5 x rod B post 1"
+   },
+   {
+    "t": 27.667,
+    "v": 0.49,
+    "what": "insect 3: femur5 x rod A arm"
+   },
+   {
+    "t": 28.067,
+    "v": 1,
+    "what": "insect 4: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 28.1,
+    "v": 1,
+    "what": "insect 4: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 28.133,
+    "v": 1,
+    "what": "insect 4: tarsus2 x rod B post -1"
+   },
+   {
+    "t": 28.167,
+    "v": 1,
+    "what": "insect 4: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 28.2,
+    "v": 1,
+    "what": "insect 4: tarsus3 x rod B post 1"
+   },
+   {
+    "t": 28.233,
+    "v": 1.52,
+    "what": "insect 4: tibia2 x rod B pad -1"
+   },
+   {
+    "t": 28.267,
+    "v": 1.67,
+    "what": "insect 4: tibia3 x rod B arm 1"
+   },
+   {
+    "t": 28.3,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.333,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.367,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.4,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.433,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.467,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.5,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.533,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.567,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.6,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.633,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.667,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.7,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.733,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.767,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.8,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.833,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.867,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.9,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.933,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 28.967,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.033,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.067,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.1,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.133,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.167,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.2,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.233,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.267,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.3,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.333,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.367,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.4,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.433,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.467,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.5,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.533,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.567,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.6,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.633,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.667,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.7,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.733,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.767,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.8,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.833,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.867,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.9,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.933,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 29.967,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.033,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.067,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.1,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.133,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.167,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.2,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.233,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.267,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.3,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.333,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.367,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.4,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.433,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.467,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.5,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.533,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.567,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.6,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.633,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.667,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.7,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.733,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.767,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.8,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.833,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.867,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.9,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.933,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 30.967,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.033,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.067,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.1,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.133,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.167,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.2,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.233,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.267,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.3,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.333,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.367,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.4,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.433,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.467,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   },
+   {
+    "t": 31.5,
+    "v": 1.37,
+    "what": "insect 4: femur2 x rod B pad -1"
+   }
+  ],
+  "rod penetrates the body": [
+   {
+    "t": 0,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.033,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.067,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.1,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.133,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.167,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.2,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.233,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.267,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.3,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.333,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.367,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.4,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.433,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.467,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.5,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.533,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.567,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.6,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.633,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.667,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.7,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.733,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.767,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.8,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.833,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.867,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.9,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.933,
+    "v": 0.42,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 0.967,
+    "v": 0.53,
+    "what": "insect 0: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 1,
+    "v": 0.55,
+    "what": "insect 0: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 1.033,
+    "v": 0.46,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.067,
+    "v": 0.44,
+    "what": "insect 0: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 1.1,
+    "v": 0.43,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.133,
+    "v": 0.52,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.167,
+    "v": 0.52,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.2,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.233,
+    "v": 0.46,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.267,
+    "v": 0.47,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.3,
+    "v": 0.49,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.333,
+    "v": 0.49,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.367,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.4,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.433,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.467,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.5,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.533,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.567,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.6,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.633,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.667,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.7,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.733,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.767,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.8,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.833,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.867,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.9,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.933,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 1.967,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.033,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.067,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.1,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.133,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.167,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.2,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.233,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.267,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.3,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.333,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.367,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.4,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.433,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.467,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.5,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.533,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.567,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.6,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.633,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.667,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.7,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.733,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.767,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.8,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.833,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.867,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.9,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.933,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 2.967,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.033,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.067,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.1,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.133,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.167,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.2,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.233,
+    "v": 0.48,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.267,
+    "v": 0.38,
+    "what": "insect 0: rod A tip in pronotum"
+   },
+   {
+    "t": 3.3,
+    "v": 0.41,
+    "what": "insect 0: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 4.567,
+    "v": 0.38,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.6,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.633,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.667,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.7,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.733,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.767,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.8,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.833,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.867,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.9,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.933,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 4.967,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.033,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.067,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.1,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.133,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.167,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.2,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.233,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.267,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.3,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.333,
+    "v": 0.48,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.367,
+    "v": 0.45,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.4,
+    "v": 0.5,
+    "what": "insect 1: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 5.433,
+    "v": 0.55,
+    "what": "insect 1: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 5.467,
+    "v": 0.5,
+    "what": "insect 1: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 5.5,
+    "v": 0.43,
+    "what": "insect 1: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 5.533,
+    "v": 0.41,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.567,
+    "v": 0.51,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.6,
+    "v": 0.4,
+    "what": "insect 1: rod A tip in pronotum"
+   },
+   {
+    "t": 5.633,
+    "v": 0.38,
+    "what": "insect 1: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 6.3,
+    "v": 0.4,
+    "what": "insect 2: rod B pad 1 in mesonotum"
+   },
+   {
+    "t": 6.333,
+    "v": 0.46,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.367,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.4,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.433,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.467,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.833,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.867,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.933,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 6.967,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.033,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.067,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.1,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.133,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.167,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.2,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.233,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.267,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.3,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.333,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.367,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.4,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.433,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.467,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.833,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.867,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.933,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 7.967,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.033,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.067,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.1,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.133,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.167,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.2,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.233,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.267,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.3,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.333,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.367,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.4,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.433,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.467,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.833,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.867,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.933,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 8.967,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.033,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.067,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.1,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.133,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.167,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.2,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.233,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.267,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.3,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.333,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.367,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.4,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.433,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.467,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.833,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.867,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.933,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 9.967,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.033,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.067,
+    "v": 0.45,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.1,
+    "v": 0.5,
+    "what": "insect 2: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 10.133,
+    "v": 0.55,
+    "what": "insect 2: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 10.167,
+    "v": 0.5,
+    "what": "insect 2: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 10.2,
+    "v": 0.43,
+    "what": "insect 2: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 10.233,
+    "v": 0.41,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.267,
+    "v": 0.51,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.3,
+    "v": 0.53,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.333,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.367,
+    "v": 0.46,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.4,
+    "v": 0.47,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.433,
+    "v": 0.49,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.467,
+    "v": 0.49,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.833,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.867,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.9,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.933,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 10.967,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.033,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.067,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.1,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.133,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.167,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.2,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.233,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.267,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.3,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.333,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.367,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.4,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.433,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.467,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.5,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.533,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.567,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.6,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.633,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.667,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.7,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.733,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.767,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.8,
+    "v": 0.48,
+    "what": "insect 2: rod A tip in pronotum"
+   },
+   {
+    "t": 11.833,
+    "v": 0.44,
+    "what": "insect 2: rod B pad 1 in mesonotum"
+   },
+   {
+    "t": 28.267,
+    "v": 0.45,
+    "what": "insect 4: rod B pad -1 in mesonotum"
+   },
+   {
+    "t": 28.3,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.333,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.367,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.4,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.433,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.467,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.5,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.533,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.567,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.6,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.633,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.667,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.7,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.733,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.767,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.8,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.833,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.867,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.9,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.933,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 28.967,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.033,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.067,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.1,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.133,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.167,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.2,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.233,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.267,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.3,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.333,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.367,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.4,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.433,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.467,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.5,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.533,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.567,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.6,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.633,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.667,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.7,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.733,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.767,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.8,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.833,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.867,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.9,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.933,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 29.967,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.033,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.067,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.1,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.133,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.167,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.2,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.233,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.267,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.3,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.333,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.367,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.4,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.433,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.467,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.5,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.533,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.567,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.6,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.633,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.667,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.7,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.733,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.767,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.8,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.833,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.867,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.9,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.933,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 30.967,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.033,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.067,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.1,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.133,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.167,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.2,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.233,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.267,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.3,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.333,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.367,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.4,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.433,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.467,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   },
+   {
+    "t": 31.5,
+    "v": 0.48,
+    "what": "insect 4: rod A tip in pronotum"
+   }
+  ],
+  "held module not aligned with the gripper": [
+   {
+    "t": 0,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 0.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 4.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 4.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 4.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 5.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 7.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 8.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 9.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 10.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 28.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 29.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.533,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.567,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.6,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.633,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.667,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.7,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.733,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.767,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.8,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.833,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.867,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.9,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.933,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 30.967,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.033,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.067,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.1,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.133,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.167,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.2,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.233,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.267,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.3,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.333,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.367,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.4,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.433,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.467,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   },
+   {
+    "t": 31.5,
+    "v": 14,
+    "what": "degrees between the module and tool axes"
+   }
+  ],
+  "gripper penetrates the module tab": [
+   {
+    "t": 0,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.033,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.067,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.1,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.133,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.167,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.2,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.233,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.267,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.3,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.333,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.367,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.4,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.433,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.467,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.5,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.533,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.567,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.6,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.633,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.667,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.7,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.733,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.767,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.8,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.833,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.867,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.9,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.933,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 0.967,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 1,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 4.9,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 4.933,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 4.967,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 5,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.033,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.067,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.1,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.133,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.167,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.2,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.233,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.267,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.3,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.333,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.367,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.4,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.433,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 5.467,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.2,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.233,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.267,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.3,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.333,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.367,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.4,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.433,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.467,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.5,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.533,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.567,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.6,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.633,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.667,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.7,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.733,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.767,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.8,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.833,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.867,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.9,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.933,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 7.967,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 8,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.033,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.067,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.1,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.133,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.167,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.2,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.233,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.267,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.3,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.333,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.367,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.4,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.433,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.467,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.5,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.533,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.567,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.6,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.633,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.667,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.7,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.733,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.767,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.8,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.833,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.867,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.9,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.933,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 8.967,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.033,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.067,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.1,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.133,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.167,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.2,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.233,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.267,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.3,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.333,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.367,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.4,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.433,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.467,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.5,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.533,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.567,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.6,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.633,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.667,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.7,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.733,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.767,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.8,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.833,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.867,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.9,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.933,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 9.967,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10.033,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10.067,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10.1,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10.133,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 10.167,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 28,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.033,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.067,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.1,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.133,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.167,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.2,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.233,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.267,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.3,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.333,
+    "v": 0.63,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.367,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.4,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.433,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.467,
+    "v": 0.64,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.5,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.533,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.567,
+    "v": 0.65,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.6,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.633,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.667,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.7,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.733,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.767,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.8,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.833,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.867,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.9,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.933,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 28.967,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.033,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.067,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.1,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.133,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.167,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.2,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.233,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.267,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.3,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.333,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.367,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.4,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.433,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.467,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.5,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.533,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.567,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.6,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.633,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.667,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.7,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.733,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.767,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.8,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.833,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.867,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.9,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.933,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 29.967,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.033,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.067,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.1,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.133,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.167,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.2,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.233,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.267,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.3,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.333,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.367,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.4,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.433,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.467,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.5,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.533,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.567,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.6,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.633,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.667,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.7,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.733,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.767,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.8,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.833,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.867,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.9,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.933,
+    "v": 0.67,
+    "what": "pad-1"
+   },
+   {
+    "t": 30.967,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.033,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.067,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.1,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.133,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.167,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.2,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.233,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.267,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.3,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.333,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.367,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.4,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.433,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.467,
+    "v": 0.66,
+    "what": "pad-1"
+   },
+   {
+    "t": 31.5,
+    "v": 0.66,
+    "what": "pad-1"
+   }
+  ],
+  "leg passes through the body": [
+   {
+    "t": 0.8,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 2.5,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 4.033,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 4.2,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 5.1,
+    "v": 0.42,
+    "what": "insect 0: femur0 in pronotum"
+   },
+   {
+    "t": 5.567,
+    "v": 0.49,
+    "what": "insect 0: femur3 in mesonotum"
+   },
+   {
+    "t": 5.733,
+    "v": 0.56,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 5.9,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 6.067,
+    "v": 0.41,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 6.167,
+    "v": 0.61,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 6.433,
+    "v": 0.42,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 6.6,
+    "v": 0.59,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 6.833,
+    "v": 0.44,
+    "what": "insect 0: femur3 in mesonotum"
+   },
+   {
+    "t": 7.033,
+    "v": 0.43,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 7.267,
+    "v": 0.49,
+    "what": "insect 0: femur3 in mesonotum"
+   },
+   {
+    "t": 7.433,
+    "v": 0.56,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 7.533,
+    "v": 0.59,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 7.6,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 7.667,
+    "v": 0.45,
+    "what": "insect 1: femur3 in mesonotum"
+   },
+   {
+    "t": 7.767,
+    "v": 0.57,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 7.867,
+    "v": 0.61,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 9.1,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 9.133,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 9.3,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 9.467,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 10.8,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 10.833,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 11,
+    "v": 0.41,
+    "what": "insect -1: femur1 in pronotum"
+   },
+   {
+    "t": 11.167,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 12.5,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 12.533,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 12.867,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 13.167,
+    "v": 0.41,
+    "what": "insect 2: femur0 in pronotum"
+   },
+   {
+    "t": 13.6,
+    "v": 0.47,
+    "what": "insect 2: femur3 in mesonotum"
+   },
+   {
+    "t": 13.767,
+    "v": 0.69,
+    "what": "insect 2: femur1 in pronotum"
+   },
+   {
+    "t": 14.133,
+    "v": 0.54,
+    "what": "insect 2: femur1 in pronotum"
+   },
+   {
+    "t": 14.2,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 14.233,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 14.367,
+    "v": 0.49,
+    "what": "insect 2: femur3 in mesonotum"
+   },
+   {
+    "t": 14.533,
+    "v": 0.69,
+    "what": "insect 2: femur1 in pronotum"
+   },
+   {
+    "t": 14.567,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 14.767,
+    "v": 0.47,
+    "what": "insect 2: femur3 in mesonotum"
+   },
+   {
+    "t": 27.233,
+    "v": 0.41,
+    "what": "insect 3: femur1 in pronotum"
+   },
+   {
+    "t": 27.467,
+    "v": 0.4,
+    "what": "insect 2: femur0 in pronotum"
+   },
+   {
+    "t": 27.8,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 27.833,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 28.167,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 28.3,
+    "v": 0.42,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 29.167,
+    "v": 0.52,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 29.2,
+    "v": 0.4,
+    "what": "insect 2: femur1 in pronotum"
+   },
+   {
+    "t": 29.4,
+    "v": 0.48,
+    "what": "insect 3: femur2 in mesonotum"
+   },
+   {
+    "t": 29.5,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 29.533,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 29.567,
+    "v": 0.51,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 29.833,
+    "v": 0.44,
+    "what": "insect 3: femur2 in mesonotum"
+   },
+   {
+    "t": 29.867,
+    "v": 0.4,
+    "what": "insect 1: femur1 in pronotum"
+   },
+   {
+    "t": 30,
+    "v": 0.59,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 30.167,
+    "v": 0.4,
+    "what": "insect 2: femur0 in pronotum"
+   },
+   {
+    "t": 30.433,
+    "v": 0.6,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 30.867,
+    "v": 0.52,
+    "what": "insect 3: femur0 in pronotum"
+   },
+   {
+    "t": 31.1,
+    "v": 0.45,
+    "what": "insect 3: femur2 in mesonotum"
+   },
+   {
+    "t": 31.133,
+    "v": 0.41,
+    "what": "insect 2: femur1 in pronotum"
+   },
+   {
+    "t": 31.2,
+    "v": 0.4,
+    "what": "insect 1: femur0 in pronotum"
+   },
+   {
+    "t": 31.233,
+    "v": 0.41,
+    "what": "insect 0: femur1 in pronotum"
+   },
+   {
+    "t": 31.267,
+    "v": 0.51,
+    "what": "insect 3: femur0 in pronotum"
+   }
+  ],
+  "handover: module jumps when the gripper lets go": [
+   {
+    "t": 1.033,
+    "v": 0.33,
+    "what": "m0"
+   },
+   {
+    "t": 5.5,
+    "v": 0.31,
+    "what": "m1"
+   },
+   {
+    "t": 10.2,
+    "v": 0.33,
+    "what": "m2"
+   }
+  ],
+  "planted foot slides": [
+   {
+    "t": 1.2,
+    "v": 0.44,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.233,
+    "v": 0.86,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.233,
+    "v": 0.8,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.267,
+    "v": 0.73,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.267,
+    "v": 0.6,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.267,
+    "v": 1.04,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.267,
+    "v": 0.36,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.3,
+    "v": 0.42,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.3,
+    "v": 0.88,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.333,
+    "v": 1,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.333,
+    "v": 1.17,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.367,
+    "v": 0.74,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.367,
+    "v": 0.93,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.367,
+    "v": 0.41,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 1.4,
+    "v": 0.37,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 1.467,
+    "v": 0.51,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.467,
+    "v": 0.71,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.5,
+    "v": 1.48,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.5,
+    "v": 0.98,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.533,
+    "v": 0.85,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.533,
+    "v": 1.22,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.533,
+    "v": 1.37,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.533,
+    "v": 0.85,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.567,
+    "v": 0.73,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.567,
+    "v": 0.83,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.6,
+    "v": 0.68,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.6,
+    "v": 0.66,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.633,
+    "v": 0.89,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.633,
+    "v": 1.45,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.733,
+    "v": 1.17,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.733,
+    "v": 0.81,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.767,
+    "v": 0.96,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.767,
+    "v": 0.44,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.8,
+    "v": 1.27,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 1.8,
+    "v": 1.14,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 1.833,
+    "v": 1.04,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.833,
+    "v": 1.27,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.867,
+    "v": 0.65,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.867,
+    "v": 1.3,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.9,
+    "v": 0.4,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 1.9,
+    "v": 0.5,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 1.967,
+    "v": 0.42,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 2,
+    "v": 1.48,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2,
+    "v": 0.95,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2,
+    "v": 0.38,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 2.033,
+    "v": 1.03,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.033,
+    "v": 1.09,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.067,
+    "v": 0.5,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.067,
+    "v": 0.46,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.1,
+    "v": 0.87,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.133,
+    "v": 0.85,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.133,
+    "v": 1.11,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.167,
+    "v": 0.9,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.167,
+    "v": 0.35,
+    "what": "insect 0 leg 2"
+   },
+   {
+    "t": 2.167,
+    "v": 1.02,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.2,
+    "v": 0.44,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 2.267,
+    "v": 0.37,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.267,
+    "v": 0.72,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.3,
+    "v": 1.25,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.3,
+    "v": 0.94,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.333,
+    "v": 1.44,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.333,
+    "v": 0.94,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.367,
+    "v": 0.77,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.367,
+    "v": 0.69,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.367,
+    "v": 1.13,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.367,
+    "v": 0.67,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.4,
+    "v": 0.63,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.433,
+    "v": 0.88,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.433,
+    "v": 1.29,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.567,
+    "v": 0.94,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.6,
+    "v": 1.24,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.6,
+    "v": 0.96,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.633,
+    "v": 0.97,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.633,
+    "v": 1.14,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.633,
+    "v": 0.98,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.633,
+    "v": 1.11,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.667,
+    "v": 0.88,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.667,
+    "v": 1.42,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.7,
+    "v": 0.78,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.733,
+    "v": 0.87,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.8,
+    "v": 0.44,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 2.833,
+    "v": 1.36,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.833,
+    "v": 1.15,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.867,
+    "v": 0.7,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.9,
+    "v": 0.42,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.9,
+    "v": 1.26,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 2.9,
+    "v": 0.9,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.9,
+    "v": 0.67,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 2.933,
+    "v": 0.65,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.933,
+    "v": 1.06,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 2.967,
+    "v": 0.97,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 2.967,
+    "v": 1.14,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3,
+    "v": 0.59,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3,
+    "v": 0.74,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3,
+    "v": 0.44,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 3.1,
+    "v": 0.91,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.1,
+    "v": 0.86,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.1,
+    "v": 0.37,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 3.133,
+    "v": 1.49,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.133,
+    "v": 1,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.167,
+    "v": 0.97,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.167,
+    "v": 0.66,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.2,
+    "v": 0.61,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.2,
+    "v": 0.47,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.233,
+    "v": 0.82,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.233,
+    "v": 0.95,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.267,
+    "v": 0.85,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.267,
+    "v": 1.46,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.3,
+    "v": 0.36,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 3.367,
+    "v": 0.95,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.367,
+    "v": 0.51,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.4,
+    "v": 1.29,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.4,
+    "v": 1.27,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.467,
+    "v": 0.47,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.467,
+    "v": 0.47,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.467,
+    "v": 0.47,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.5,
+    "v": 0.68,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.5,
+    "v": 0.45,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.5,
+    "v": 0.45,
+    "what": "insect 0 leg 2"
+   },
+   {
+    "t": 3.5,
+    "v": 0.68,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.5,
+    "v": 0.68,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.5,
+    "v": 0.45,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 3.533,
+    "v": 0.81,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.533,
+    "v": 0.53,
+    "what": "insect 0 leg 1"
+   },
+   {
+    "t": 3.533,
+    "v": 0.54,
+    "what": "insect 0 leg 2"
+   },
+   {
+    "t": 3.533,
+    "v": 0.81,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.533,
+    "v": 0.81,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.533,
+    "v": 0.54,
+    "what": "insect 0 leg 5"
+   },
+   {
+    "t": 3.567,
+    "v": 0.85,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.567,
+    "v": 0.85,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.567,
+    "v": 0.85,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.6,
+    "v": 0.8,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.6,
+    "v": 0.8,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.6,
+    "v": 0.81,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.633,
+    "v": 0.68,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.633,
+    "v": 0.68,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.633,
+    "v": 0.68,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 3.667,
+    "v": 0.47,
+    "what": "insect 0 leg 0"
+   },
+   {
+    "t": 3.667,
+    "v": 0.47,
+    "what": "insect 0 leg 3"
+   },
+   {
+    "t": 3.667,
+    "v": 0.47,
+    "what": "insect 0 leg 4"
+   },
+   {
+    "t": 5.567,
+    "v": 0.96,
+    "what": "insect 1 leg 1"
+   },
+   {
+    "t": 5.567,
+    "v": 0.4,
+    "what": "insect 1 leg 2"
+   },
+   {
+    "t": 5.567,
+    "v": 0.92,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.6,
+    "v": 1.25,
+    "what": "insect 1 leg 1"
+   },
+   {
+    "t": 5.6,
+    "v": 1.02,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.633,
+    "v": 0.42,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.633,
+    "v": 0.8,
+    "what": "insect 1 leg 1"
+   },
+   {
+    "t": 5.633,
+    "v": 0.39,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.633,
+    "v": 0.71,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.667,
+    "v": 0.84,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.667,
+    "v": 1.06,
+    "what": "insect 1 leg 1"
+   },
+   {
+    "t": 5.667,
+    "v": 1.48,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.667,
+    "v": 0.52,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.7,
+    "v": 0.42,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.7,
+    "v": 0.42,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.7,
+    "v": 0.41,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.733,
+    "v": 0.65,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.733,
+    "v": 0.42,
+    "what": "insect 1 leg 1"
+   },
+   {
+    "t": 5.733,
+    "v": 0.43,
+    "what": "insect 1 leg 2"
+   },
+   {
+    "t": 5.733,
+    "v": 0.65,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.733,
+    "v": 0.64,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.733,
+    "v": 0.43,
+    "what": "insect 1 leg 5"
+   },
+   {
+    "t": 5.767,
+    "v": 0.79,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.767,
+    "v": 0.79,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.767,
+    "v": 0.79,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.8,
+    "v": 0.84,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.8,
+    "v": 0.84,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.8,
+    "v": 0.85,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.833,
+    "v": 0.82,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.833,
+    "v": 0.82,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.833,
+    "v": 0.82,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.867,
+    "v": 0.71,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.867,
+    "v": 0.71,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.867,
+    "v": 0.71,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 5.9,
+    "v": 0.52,
+    "what": "insect 1 leg 0"
+   },
+   {
+    "t": 5.9,
+    "v": 0.51,
+    "what": "insect 1 leg 3"
+   },
+   {
+    "t": 5.9,
+    "v": 0.52,
+    "what": "insect 1 leg 4"
+   },
+   {
+    "t": 10.6,
+    "v": 0.36,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 10.6,
+    "v": 0.48,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 10.633,
+    "v": 0.54,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 10.7,
+    "v": 0.45,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 10.733,
+    "v": 1.5,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 10.733,
+    "v": 1.1,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 10.767,
+    "v": 0.44,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 10.767,
+    "v": 0.83,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 10.8,
+    "v": 1.04,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 10.8,
+    "v": 0.65,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 10.833,
+    "v": 0.56,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 10.833,
+    "v": 1.59,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 10.833,
+    "v": 1.05,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 10.833,
+    "v": 1.05,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 10.867,
+    "v": 0.92,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 10.867,
+    "v": 1.2,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 10.9,
+    "v": 0.67,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 10.9,
+    "v": 0.66,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.033,
+    "v": 1.44,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.033,
+    "v": 1.07,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.067,
+    "v": 1.11,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.067,
+    "v": 0.66,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.1,
+    "v": 0.55,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.1,
+    "v": 0.87,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.1,
+    "v": 0.67,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.1,
+    "v": 0.79,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.133,
+    "v": 0.82,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.133,
+    "v": 0.73,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.167,
+    "v": 0.95,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.167,
+    "v": 1.5,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.2,
+    "v": 0.47,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.2,
+    "v": 0.97,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.3,
+    "v": 1.1,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.3,
+    "v": 0.42,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.333,
+    "v": 1.35,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.333,
+    "v": 1.16,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.367,
+    "v": 0.71,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.367,
+    "v": 0.83,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.4,
+    "v": 0.58,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.4,
+    "v": 1.18,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.433,
+    "v": 0.43,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.433,
+    "v": 0.72,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.467,
+    "v": 1.01,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.467,
+    "v": 1.11,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.5,
+    "v": 0.36,
+    "what": "insect 2 leg 2"
+   },
+   {
+    "t": 11.5,
+    "v": 0.45,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 11.533,
+    "v": 0.37,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 11.567,
+    "v": 0.92,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.567,
+    "v": 0.97,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.6,
+    "v": 0.56,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.6,
+    "v": 0.62,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.633,
+    "v": 1.56,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.633,
+    "v": 0.97,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.667,
+    "v": 0.85,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.667,
+    "v": 1.26,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.7,
+    "v": 0.79,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.7,
+    "v": 0.83,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.733,
+    "v": 0.61,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.733,
+    "v": 0.79,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 11.733,
+    "v": 0.4,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 11.833,
+    "v": 1.29,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.833,
+    "v": 1.08,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.867,
+    "v": 1.27,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.867,
+    "v": 0.8,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.9,
+    "v": 0.86,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 11.9,
+    "v": 0.58,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 11.933,
+    "v": 0.65,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.967,
+    "v": 0.97,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 11.967,
+    "v": 1.32,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12,
+    "v": 0.67,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.067,
+    "v": 0.47,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.067,
+    "v": 0.47,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.067,
+    "v": 0.47,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.1,
+    "v": 0.68,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.1,
+    "v": 0.45,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 12.1,
+    "v": 0.45,
+    "what": "insect 2 leg 2"
+   },
+   {
+    "t": 12.1,
+    "v": 0.68,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.1,
+    "v": 0.68,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.1,
+    "v": 0.45,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 12.133,
+    "v": 0.8,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.133,
+    "v": 0.53,
+    "what": "insect 2 leg 1"
+   },
+   {
+    "t": 12.133,
+    "v": 0.54,
+    "what": "insect 2 leg 2"
+   },
+   {
+    "t": 12.133,
+    "v": 0.81,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.133,
+    "v": 0.81,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.133,
+    "v": 0.54,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 12.167,
+    "v": 0.84,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.167,
+    "v": 0.85,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.167,
+    "v": 0.85,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.2,
+    "v": 0.8,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.2,
+    "v": 0.8,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.2,
+    "v": 0.81,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.233,
+    "v": 0.68,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.233,
+    "v": 0.68,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.233,
+    "v": 0.68,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 12.267,
+    "v": 0.47,
+    "what": "insect 2 leg 0"
+   },
+   {
+    "t": 12.267,
+    "v": 0.47,
+    "what": "insect 2 leg 3"
+   },
+   {
+    "t": 12.267,
+    "v": 0.47,
+    "what": "insect 2 leg 4"
+   },
+   {
+    "t": 26.8,
+    "v": 0.8,
+    "what": "insect 3 leg 0"
+   },
+   {
+    "t": 26.8,
+    "v": 0.8,
+    "what": "insect 3 leg 3"
+   },
+   {
+    "t": 26.8,
+    "v": 0.81,
+    "what": "insect 3 leg 4"
+   },
+   {
+    "t": 26.833,
+    "v": 0.68,
+    "what": "insect 3 leg 0"
+   },
+   {
+    "t": 26.833,
+    "v": 0.68,
+    "what": "insect 3 leg 3"
+   },
+   {
+    "t": 26.833,
+    "v": 0.68,
+    "what": "insect 3 leg 4"
+   },
+   {
+    "t": 26.867,
+    "v": 0.47,
+    "what": "insect 3 leg 0"
+   },
+   {
+    "t": 26.867,
+    "v": 0.47,
+    "what": "insect 3 leg 3"
+   },
+   {
+    "t": 26.867,
+    "v": 0.47,
+    "what": "insect 3 leg 4"
+   }
+  ],
+  "module electrodes / branches pass through the holder": [
+   {
+    "t": 2.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 2.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 3.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 4.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 5.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 5.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 5.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 6.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 7.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 10.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 11.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 12.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 13.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 14.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 26.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.033,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.067,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.1,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.133,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.167,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.2,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.233,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.267,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.3,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.333,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.367,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.4,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.433,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.467,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.5,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.533,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.567,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.6,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.633,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.667,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.7,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.733,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.767,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.8,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.833,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.867,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.9,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.933,
+    "v": 2.5,
+    "what": "parked module 0"
+   },
+   {
+    "t": 27.967,
+    "v": 2.5,
+    "what": "parked module 0"
+   }
+  ],
+  "module appears on the holder in view": [
+   {
+    "t": 2.3,
+    "v": 1,
+    "what": "holder-64"
+   },
+   {
+    "t": 5.9,
+    "v": 1,
+    "what": "holder-64"
+   }
+  ],
+  "rod passes through the module": [
+   {
+    "t": 4,
+    "v": 0.31,
+    "what": "insect 0: rod A"
+   },
+   {
+    "t": 4.033,
+    "v": 0.64,
+    "what": "insect 0: rod A arm"
+   },
+   {
+    "t": 4.1,
+    "v": 0.41,
+    "what": "insect 0: rod A"
+   },
+   {
+    "t": 4.133,
+    "v": 0.66,
+    "what": "insect 0: rod A arm"
+   },
+   {
+    "t": 4.167,
+    "v": 1.06,
+    "what": "insect 0: rod A arm"
+   },
+   {
+    "t": 4.2,
+    "v": 0.92,
+    "what": "insect 0: rod A arm"
+   },
+   {
+    "t": 4.233,
+    "v": 0.65,
+    "what": "insect 0: rod A arm"
+   },
+   {
+    "t": 12.567,
+    "v": 0.62,
+    "what": "insect 2: rod A"
+   },
+   {
+    "t": 12.6,
+    "v": 0.37,
+    "what": "insect 2: rod A arm"
+   },
+   {
+    "t": 12.667,
+    "v": 0.74,
+    "what": "insect 2: rod A"
+   },
+   {
+    "t": 12.7,
+    "v": 0.62,
+    "what": "insect 2: rod A arm"
+   },
+   {
+    "t": 12.733,
+    "v": 0.79,
+    "what": "insect 2: rod A arm"
+   },
+   {
+    "t": 12.767,
+    "v": 0.88,
+    "what": "insect 2: rod A arm"
+   },
+   {
+    "t": 12.833,
+    "v": 0.69,
+    "what": "insect 2: rod A"
+   },
+   {
+    "t": 12.867,
+    "v": 0.59,
+    "what": "insect 2: rod A arm"
+   },
+   {
+    "t": 27.2,
+    "v": 0.31,
+    "what": "insect 3: rod A"
+   },
+   {
+    "t": 27.233,
+    "v": 0.64,
+    "what": "insect 3: rod A arm"
+   },
+   {
+    "t": 27.3,
+    "v": 0.41,
+    "what": "insect 3: rod A"
+   },
+   {
+    "t": 27.333,
+    "v": 0.66,
+    "what": "insect 3: rod A arm"
+   },
+   {
+    "t": 27.367,
+    "v": 1.06,
+    "what": "insect 3: rod A arm"
+   },
+   {
+    "t": 27.4,
+    "v": 0.92,
+    "what": "insect 3: rod A arm"
+   },
+   {
+    "t": 27.433,
+    "v": 0.65,
+    "what": "insect 3: rod A arm"
+   },
+   {
+    "t": 27.5,
+    "v": 0.63,
+    "what": "insect 3: rod A"
+   },
+   {
+    "t": 27.533,
+    "v": 0.78,
+    "what": "insect 3: rod A arm"
+   }
+  ],
+  "foot planted on nothing (floats)": [
+   {
+    "t": 4.3,
+    "v": 3.17,
+    "what": "insect 0 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 4.333,
+    "v": 3.18,
+    "what": "insect 0 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 4.333,
+    "v": 3.17,
+    "what": "insect 0 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 4.367,
+    "v": 3.18,
+    "what": "insect 0 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 4.367,
+    "v": 3.17,
+    "what": "insect 0 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 4.4,
+    "v": 3.18,
+    "what": "insect 0 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 4.4,
+    "v": 3.17,
+    "what": "insect 0 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 4.4,
+    "v": 3.17,
+    "what": "insect 0 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 4.433,
+    "v": 3.18,
+    "what": "insect 0 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 4.433,
+    "v": 3.17,
+    "what": "insect 0 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 4.433,
+    "v": 3.17,
+    "what": "insect 0 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 4.467,
+    "v": 3.17,
+    "what": "insect 0 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 4.5,
+    "v": 3.17,
+    "what": "insect 0 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 4.533,
+    "v": 3.17,
+    "what": "insect 0 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.033,
+    "v": 3.18,
+    "what": "insect 1 leg 1 (platform has slid away)"
+   },
+   {
+    "t": 6.033,
+    "v": 3.18,
+    "what": "insect 1 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 6.033,
+    "v": 3.18,
+    "what": "insect 1 leg 3 (platform has slid away)"
+   },
+   {
+    "t": 6.033,
+    "v": 3.17,
+    "what": "insect 1 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6.033,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.067,
+    "v": 3.18,
+    "what": "insect 1 leg 3 (platform has slid away)"
+   },
+   {
+    "t": 6.067,
+    "v": 3.17,
+    "what": "insect 1 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6.1,
+    "v": 3.18,
+    "what": "insect 1 leg 3 (platform has slid away)"
+   },
+   {
+    "t": 6.1,
+    "v": 3.17,
+    "what": "insect 1 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6.133,
+    "v": 3.18,
+    "what": "insect 1 leg 3 (platform has slid away)"
+   },
+   {
+    "t": 6.133,
+    "v": 3.17,
+    "what": "insect 1 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6.167,
+    "v": 3.18,
+    "what": "insect 1 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 6.167,
+    "v": 3.18,
+    "what": "insect 1 leg 3 (platform has slid away)"
+   },
+   {
+    "t": 6.167,
+    "v": 3.17,
+    "what": "insect 1 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 6.167,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.2,
+    "v": 3.18,
+    "what": "insect 1 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 6.2,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.233,
+    "v": 3.18,
+    "what": "insect 1 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 6.233,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.267,
+    "v": 3.18,
+    "what": "insect 1 leg 2 (platform has slid away)"
+   },
+   {
+    "t": 6.267,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 6.3,
+    "v": 3.17,
+    "what": "insect 1 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 27.9,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 27.933,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 27.967,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 28,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 28.033,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.033,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 28.067,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.067,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   },
+   {
+    "t": 28.1,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.133,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.167,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.2,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.233,
+    "v": 3.17,
+    "what": "insect 3 leg 4 (platform has slid away)"
+   },
+   {
+    "t": 28.267,
+    "v": 3.17,
+    "what": "insect 3 leg 5 (platform has slid away)"
+   }
+  ],
+  "platform slides away under a walking insect": [
+   {
+    "t": 4.3,
+    "v": 14.58,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.333,
+    "v": 86.81,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.367,
+    "v": 184.72,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.4,
+    "v": 268.8,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.433,
+    "v": 299.56,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.467,
+    "v": 254.99,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.5,
+    "v": 164.98,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.533,
+    "v": 69.04,
+    "what": "insect 0"
+   },
+   {
+    "t": 4.567,
+    "v": 6.69,
+    "what": "insect 0"
+   },
+   {
+    "t": 6,
+    "v": 10.29,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.033,
+    "v": 63.4,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.067,
+    "v": 141.67,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.1,
+    "v": 222.22,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.133,
+    "v": 282.2,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.167,
+    "v": 298.8,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.2,
+    "v": 262.14,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.233,
+    "v": 191.19,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.267,
+    "v": 108.81,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.3,
+    "v": 37.86,
+    "what": "insect 1"
+   },
+   {
+    "t": 6.333,
+    "v": 1.2,
+    "what": "insect 1"
+   }
+  ],
+  "platform / rods pass through something": [
+   {
+    "t": 4.3,
+    "v": 0.32,
+    "what": "insect 0 foot"
+   },
+   {
+    "t": 4.567,
+    "v": 0.33,
+    "what": "insect 0 foot"
+   },
+   {
+    "t": 6,
+    "v": 0.32,
+    "what": "insect 1 foot"
+   },
+   {
+    "t": 6.3,
+    "v": 0.33,
+    "what": "insect 1 foot"
+   },
+   {
+    "t": 6.333,
+    "v": 0.33,
+    "what": "insect 1 foot"
+   },
+   {
+    "t": 27.867,
+    "v": 0.33,
+    "what": "insect 3 foot"
+   },
+   {
+    "t": 28.267,
+    "v": 0.33,
+    "what": "insect 3 foot"
+   }
+  ],
+  "platform moves > 30 mm per frame in view (inside the sped-up 68 s sequence)": [
+   {
+    "t": 4.333,
+    "v": 72.23,
+    "what": "slider"
+   },
+   {
+    "t": 4.533,
+    "v": 95.93,
+    "what": "slider"
+   },
+   {
+    "t": 4.567,
+    "v": 62.35,
+    "what": "slider"
+   },
+   {
+    "t": 6.033,
+    "v": 53.12,
+    "what": "slider"
+   },
+   {
+    "t": 6.067,
+    "v": 78.27,
+    "what": "slider"
+   },
+   {
+    "t": 6.267,
+    "v": 82.38,
+    "what": "slider"
+   },
+   {
+    "t": 6.3,
+    "v": 70.95,
+    "what": "slider"
+   },
+   {
+    "t": 6.333,
+    "v": 36.66,
+    "what": "slider"
+   }
+  ],
+  "module vanishes in view": [
+   {
+    "t": 4.867,
+    "v": 1,
+    "what": "holder-64"
+   }
+  ],
+  "pickup: module offset from its parked place": [
+   {
+    "t": 7.2,
+    "v": 0,
+    "what": "holder-64 -> gripper"
+   },
+   {
+    "t": 28,
+    "v": 0,
+    "what": "holder-64 -> gripper"
+   }
+  ],
+  "foot sunk into a surface": [
+   {
+    "t": 13.533,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.567,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.6,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.633,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.667,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.7,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   },
+   {
+    "t": 13.733,
+    "v": 0.53,
+    "what": "insect 2 leg 5"
+   }
+  ],
+  "insect passes through rubble": [
+   {
+    "t": 20.6,
+    "v": 2.37,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.633,
+    "v": 2.37,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.667,
+    "v": 2.37,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.7,
+    "v": 3.92,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.733,
+    "v": 2.53,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.767,
+    "v": 1.69,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.8,
+    "v": 0.99,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.833,
+    "v": 0.99,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 20.867,
+    "v": 1.06,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 20.9,
+    "v": 2.47,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 20.933,
+    "v": 1.06,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 20.967,
+    "v": 1.59,
+    "what": "tarsus3 inside chunk2"
+   },
+   {
+    "t": 21,
+    "v": 1.17,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 21.033,
+    "v": 1.21,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 21.067,
+    "v": 1.26,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 21.1,
+    "v": 1.29,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 21.133,
+    "v": 1.61,
+    "what": "tarsus5 inside chunk2"
+   },
+   {
+    "t": 21.167,
+    "v": 0.92,
+    "what": "tarsus2 inside chunk14"
+   },
+   {
+    "t": 23.633,
+    "v": 1.8,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.667,
+    "v": 3.61,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.7,
+    "v": 5.48,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.733,
+    "v": 6.19,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.767,
+    "v": 6.22,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.8,
+    "v": 6.04,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.833,
+    "v": 6.14,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.867,
+    "v": 6.01,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.9,
+    "v": 5.58,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.933,
+    "v": 5.34,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 23.967,
+    "v": 5.69,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24,
+    "v": 6.16,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24.033,
+    "v": 6.14,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24.067,
+    "v": 5.75,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24.1,
+    "v": 5.54,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24.133,
+    "v": 5.52,
+    "what": "antenna inside slab0"
+   },
+   {
+    "t": 24.167,
+    "v": 6.39,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.2,
+    "v": 6.32,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.233,
+    "v": 6.17,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.267,
+    "v": 6.12,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.3,
+    "v": 5.92,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.333,
+    "v": 5.62,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.367,
+    "v": 5.28,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.4,
+    "v": 5.51,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.433,
+    "v": 6.12,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.467,
+    "v": 6.36,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.5,
+    "v": 6.11,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.533,
+    "v": 5.84,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.567,
+    "v": 5.67,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.6,
+    "v": 5.76,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.633,
+    "v": 5.47,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.667,
+    "v": 5.25,
+    "what": "antenna inside slab1"
+   },
+   {
+    "t": 24.7,
+    "v": 6.01,
+    "what": "tibia1 inside slab1"
+   },
+   {
+    "t": 24.733,
+    "v": 5.51,
+    "what": "backpack mount plate inside slab1"
+   },
+   {
+    "t": 24.767,
+    "v": 5.5,
+    "what": "backpack mount plate inside slab1"
+   },
+   {
+    "t": 24.8,
+    "v": 5.37,
+    "what": "tibia3 inside slab1"
+   },
+   {
+    "t": 24.833,
+    "v": 7.23,
+    "what": "tibia3 inside slab1"
+   },
+   {
+    "t": 24.867,
+    "v": 7.39,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 24.9,
+    "v": 7.66,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 24.933,
+    "v": 7.45,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 24.967,
+    "v": 7.36,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25,
+    "v": 7.74,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.033,
+    "v": 8.08,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.067,
+    "v": 7.89,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.1,
+    "v": 7.6,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.133,
+    "v": 7.83,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.167,
+    "v": 8.38,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.2,
+    "v": 8.53,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.233,
+    "v": 8.29,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.267,
+    "v": 8.3,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.3,
+    "v": 8.73,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.333,
+    "v": 8.97,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.367,
+    "v": 8.7,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.4,
+    "v": 8.48,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.433,
+    "v": 8.83,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.467,
+    "v": 9.35,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.5,
+    "v": 9.39,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.533,
+    "v": 9.14,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.567,
+    "v": 9.25,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.6,
+    "v": 9.71,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.633,
+    "v": 9.84,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.667,
+    "v": 9.51,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.7,
+    "v": 9.39,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.733,
+    "v": 9.84,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.767,
+    "v": 10.29,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.8,
+    "v": 10.22,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.833,
+    "v": 10,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.867,
+    "v": 10.23,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.9,
+    "v": 10.67,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.933,
+    "v": 10.68,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 25.967,
+    "v": 10.33,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26,
+    "v": 10.33,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.033,
+    "v": 10.85,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.067,
+    "v": 11.21,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.1,
+    "v": 11.06,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.133,
+    "v": 10.9,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.167,
+    "v": 11.21,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.2,
+    "v": 11.61,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.233,
+    "v": 11.51,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.267,
+    "v": 11.17,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.3,
+    "v": 11.3,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.333,
+    "v": 11.74,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.367,
+    "v": 11.41,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.4,
+    "v": 10.8,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.433,
+    "v": 10.44,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.467,
+    "v": 10.72,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.5,
+    "v": 11,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.533,
+    "v": 10.77,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.567,
+    "v": 10.53,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.6,
+    "v": 10.71,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.633,
+    "v": 11.29,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.667,
+    "v": 11.47,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.7,
+    "v": 11.26,
+    "what": "backpack grasping tab inside slab1"
+   },
+   {
+    "t": 26.733,
+    "v": 11.29,
+    "what": "backpack grasping tab inside slab1"
+   }
+  ],
+  "platform moves > 30 mm per frame in view (real time)": [
+   {
+    "t": 27.9,
+    "v": 30.22,
+    "what": "slider"
+   },
+   {
+    "t": 27.933,
+    "v": 60.22,
+    "what": "slider"
+   },
+   {
+    "t": 27.967,
+    "v": 73.56,
+    "what": "slider"
+   },
+   {
+    "t": 28.167,
+    "v": 58.19,
+    "what": "slider"
+   },
+   {
+    "t": 28.2,
+    "v": 62.05,
+    "what": "slider"
+   },
+   {
+    "t": 28.233,
+    "v": 56.26,
+    "what": "slider"
+   },
+   {
+    "t": 28.267,
+    "v": 40.83,
+    "what": "slider"
+   }
+  ]
+ }
+}

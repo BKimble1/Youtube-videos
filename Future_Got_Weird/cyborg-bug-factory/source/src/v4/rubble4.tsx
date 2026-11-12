@@ -33,8 +33,8 @@ const slab = (x: number, y0: number, y1: number, W: number, tilt: number, s: num
   const c = add3(E, add3([w[0] * W / 2, 0, w[2] * W / 2], [u[0] * th / 2, 0, u[2] * th / 2]));
   return {F: frame(c, [0, 1, 0], u), h: [(y1 - y0) / 2, W / 2, th / 2]};
 };
-const CREV = {x: 23, y0: 110, y1: 350};
-const SLABS: {F: Frame; h: V3; c: string}[] = [
+export const CREV = {x: 23, y0: 110, y1: 350};
+export const SLABS: {F: Frame; h: V3; c: string}[] = [
   {...slab(-CREV.x, CREV.y0, CREV.y1, 360, 56, -1, 34), c: CONC[0]},
   {...slab(CREV.x, CREV.y0 + 20, CREV.y1 - 10, 320, 60, 1, 30), c: CONC[1]},
   {F: frame([-420, 560, 60], [0.95, 0.3, 0.05], [0.1, -0.2, 1]), h: [300, 220, 34], c: CONC[2]},
@@ -46,7 +46,7 @@ const SLABS: {F: Frame; h: V3; c: string}[] = [
 ];
 const REBAR: [V3, V3][] = [[[-120, 330, 230], [-60, 260, 380]], [[-150, 300, 220], [-110, 210, 360]], [[140, 300, 250], [210, 230, 380]], [[260, 980, 400], [330, 900, 520]], [[200, 990, 380], [180, 880, 520]]];
 // loose rubble: chunks near the route's sides (some close to the low cameras: foreground parallax) and bricks
-const CHUNKS: {p: V3; h: V3; yaw: number; c: string}[] = Array.from({length: 40}, (_, i) => {
+export const CHUNKS: {p: V3; h: V3; yaw: number; c: string}[] = Array.from({length: 40}, (_, i) => {
   const near = i < 16;
   const y = near ? -120 + hash(i * 2.3) * 240 : 360 + hash(i * 5.1) * 400;
   let x = (hash(i * 3.3) - 0.5) * (near ? 260 : 900);
@@ -58,7 +58,7 @@ const CHUNKS: {p: V3; h: V3; yaw: number; c: string}[] = Array.from({length: 40}
 // the route: in from the open floor, through the crevice, out at the far end
 const ROUTE: Path = {p0: [0, -130, 0], yaw0: 90, segs: [{len: 200}, {len: 30, turn: -6}, {len: 260}, {len: 60, turn: 20}, {len: 2000}]};
 const sAt = (t: number) => 58 * Math.max(0, t - 20.2);
-const bugF = (t: number) => {
+export const bugF = (t: number) => {
   const sw = 8 * Math.sin(t * 2.9);
   const inC = ss(sAt(t), 200, 240) * (1 - ss(sAt(t), 470, 500));
   const st = walkState(ROUTE, sAt(t), {antTw: [16 + sw, 16 - sw], antLift: [14, 12], headPitch: -4, breathe: 0.5}, {spread: 1 - 0.18 * inC});
