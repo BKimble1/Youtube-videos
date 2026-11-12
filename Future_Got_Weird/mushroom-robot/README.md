@@ -1,6 +1,32 @@
-# Future Got Weird: FGW_Mushroom_Robot (V3 current)
+# Future Got Weird: FGW_Mushroom_Robot (V4 current)
 
-## V3: mechanical animation, storytelling and final polish (current)
+## V4: structural animation repair and high-retention pacing (current)
+
+**Status (12 Nov 2026):** V4 final review render, not published. The full report is in `production/V4_REPORT.md`: the
+V3 root causes, the rig architecture, Stage A/B validation, the 23-shot timeline, QA and the score (8.5/10).
+
+| Deliverable | File |
+|---|---|
+| V4 final review MP4: 1080×1920, 30 fps, 850 frames, 28.333 s | `exports/FGW_Mushroom_Robot_V4_FINAL_REVIEW_1080x1920.mp4` |
+| 0.25× QA copy | `qa/v4/FGW_Mushroom_Robot_V4_QA_0.25x_540x960.mp4` |
+| Stage A continuous-walk diagnostics | `qa/v4/stageA/` |
+| Stage B geometry audit (PASS) | `qa/v4/geometry_audit.json` |
+| Source | `source/src/v4/` (composition `MushroomRobotV4`; shot list `v4/shots.ts`) |
+
+### Rebuild V4
+
+    cd Future_Got_Weird/mushroom-robot
+    source/node_modules/.bin/esbuild tools/v4/geom_audit.ts --bundle --platform=node --format=cjs --outfile=/tmp/ga4.cjs && node /tmp/ga4.cjs qa/v4/geometry_audit.json
+    source/node_modules/.bin/esbuild tools/v4/export_cues.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.tsx=tsx --outfile=/tmp/ec4.cjs && NODE_PATH=source/node_modules node /tmp/ec4.cjs audio/cues_v4.json
+    python3 tools/v4/make_audio_v4.py mix_v4
+    (cd source && npx remotion render src/index.ts MushroomRobotV4 ../exports/FGW_Mushroom_Robot_V4_FINAL_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v4"}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && for C in DiagA1 DiagA2 DiagA3; do npx remotion render src/index.ts $C ../qa/v4/stageA/$C.mp4 --scale=0.5; done)
+    python3 tools/v4/qa_render_v4.py exports/FGW_Mushroom_Robot_V4_FINAL_REVIEW_1080x1920.mp4 qa/v4
+    python3 tools/asr_sherpa.py exports/FGW_Mushroom_Robot_V4_FINAL_REVIEW_1080x1920.mp4 /tmp/asr qa/v4/final_asr.json
+
+---
+
+## V3: mechanical animation, storytelling and final polish (kept as delivered)
 
 **Status (12 Nov 2026):** V3 final review render, not published. The full report is in `production/V3_REPORT.md`:
 change log, stability QA, science review, remaining defects and the score (8/10).

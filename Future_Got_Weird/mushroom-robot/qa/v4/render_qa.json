@@ -1,0 +1,170 @@
+{
+ "file": "FGW_Mushroom_Robot_V4_FINAL_REVIEW_1080x1920.mp4",
+ "size_mb": 23.2,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 850,
+  "duration_s": 28.333
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317374"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 3.69,
+ "large_changes": [
+  {
+   "frame": 36,
+   "t": 1.2,
+   "mad": 42.25,
+   "planned": "CUT to S2 elevated full body"
+  },
+  {
+   "frame": 83,
+   "t": 2.767,
+   "mad": 47.55,
+   "planned": "CUT to S3 living hyphae (macro)"
+  },
+  {
+   "frame": 201,
+   "t": 6.7,
+   "mad": 22.33,
+   "planned": "CUT to S6 electrical activity"
+  },
+  {
+   "frame": 252,
+   "t": 8.4,
+   "mad": 28.49,
+   "planned": "CUT to S8 signal processing"
+  },
+  {
+   "frame": 273,
+   "t": 9.1,
+   "mad": 71.74,
+   "planned": "CUT to S9 leg deforms"
+  },
+  {
+   "frame": 304,
+   "t": 10.133,
+   "mad": 42.07,
+   "planned": "CUT to S10 locomotion proof"
+  },
+  {
+   "frame": 330,
+   "t": 11.0,
+   "mad": 41.8,
+   "planned": "CUT to S11 foot contact"
+  },
+  {
+   "frame": 356,
+   "t": 11.867,
+   "mad": 42.53,
+   "planned": "CUT to S12 UV lamp"
+  },
+  {
+   "frame": 387,
+   "t": 12.9,
+   "mad": 43.61,
+   "planned": "CUT to S13 network under UV, signal changes"
+  },
+  {
+   "frame": 443,
+   "t": 14.767,
+   "mad": 44.48,
+   "planned": "CUT to S14 changed gait"
+  },
+  {
+   "frame": 471,
+   "t": 15.7,
+   "mad": 36.18,
+   "planned": "CUT to S15 overhead comparison"
+  },
+  {
+   "frame": 510,
+   "t": 17.0,
+   "mad": 54.96,
+   "planned": "CUT to S16 no brain"
+  },
+  {
+   "frame": 558,
+   "t": 18.6,
+   "mad": 69.46,
+   "planned": "CUT to S17 no eyes"
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "mad": 56.45,
+   "planned": "CUT to S18 shuffle"
+  },
+  {
+   "frame": 608,
+   "t": 20.267,
+   "mad": 50.25,
+   "planned": "CUT to S19 no idea where"
+  },
+  {
+   "frame": 657,
+   "t": 21.9,
+   "mad": 45.01,
+   "planned": "CUT to S20 pulse in the fungus"
+  },
+  {
+   "frame": 679,
+   "t": 22.633,
+   "mad": 63.37,
+   "planned": "CUT to S21 leg actuates"
+  },
+  {
+   "frame": 701,
+   "t": 23.367,
+   "mad": 69.17,
+   "planned": "CUT to S22 fungus to controller"
+  },
+  {
+   "frame": 744,
+   "t": 24.8,
+   "mad": 58.26,
+   "planned": "CUT to S23 hero to loop"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 2,
+ "longest_near_static_run_starts_s": 11.8,
+ "loop_last_vs_first_mad": 3.52,
+ "shots": 23,
+ "shot_lengths_s": [
+  1.2,
+  1.55,
+  1.23,
+  1.35,
+  1.36,
+  1.14,
+  0.57,
+  0.7,
+  1.03,
+  0.87,
+  0.84,
+  1.05,
+  1.85,
+  0.95,
+  1.31,
+  1.58,
+  0.81,
+  0.87,
+  1.64,
+  0.72,
+  0.74,
+  1.42,
+  3.55
+ ],
+ "single_frame_flicker": []
+}

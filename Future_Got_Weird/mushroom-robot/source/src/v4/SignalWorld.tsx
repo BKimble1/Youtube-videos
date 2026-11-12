@@ -6,10 +6,10 @@ import {clamp, ss, ss5, lerp, noise1} from '../lib';
 import {W, H} from './cam';
 import {C, INK} from '../palette';
 import {poly, fmt, Pt} from '../g2';
-import {NET, ELECTRODES, pulses, routeSlice, electrodeFlash} from './mycelium';
+import {NET, ELECTRODES, pulses, routeSlice, electrodeFlash, ROUTES} from './mycelium';
 import {DISC_R} from './robot';
-import {T, SEG} from './timing';
-import {discAffine} from './RobotWorld';
+import {FEATURED_SPIKE, uvOn, EVENTS_EXT} from './timing';
+import {BCam, Shot} from './shots';
 
 type M = [number, number, number, number, number, number];
 const apply = (m: M, p: Pt): [number, number] => [m[0] * p[0] + m[2] * p[1] + m[4], m[1] * p[0] + m[3] * p[1] + m[5]];
@@ -18,56 +18,46 @@ const fromCam = (cx: number, cy: number, s: number, rot: number, mir: number): M
   const a = co * mir, b = si * mir, c2 = -si, d = co;
   return [a, b, c2, d, W / 2 - (a * cx + c2 * cy), H / 2 - (b * cx + d * cy)];
 };
-const A0 = discAffine(SEG.matchA1);
-const MIR = Math.sign(A0.ex[0] * A0.ez[1] - A0.ex[1] * A0.ez[0]) || 1;
-const ROT0 = -Math.atan2(A0.ez[0], A0.ez[1]);
-const S0 = Math.hypot(A0.ez[0], A0.ez[1]);
-const MA: M = [A0.ex[0], A0.ex[1], A0.ez[0], A0.ez[1], A0.o[0], A0.o[1]];
-const inv = (m: M, p: [number, number]): [number, number] => {
-  const det = m[0] * m[3] - m[2] * m[1], x = p[0] - m[4], y = p[1] - m[5];
-  return [(m[3] * x - m[2] * y) / det, (-m[1] * x + m[0] * y) / det];
-};
-const C0 = inv(MA, [W / 2, H / 2]);
+const MIR = 1; // disc +x right, +y down on screen (the V4 macro shots are hard cuts, not a matched dissolve)
 
 const E0 = ELECTRODES[0], E1 = ELECTRODES[1];
 const XC = E0[0];
 const Y = {chip: 2.95, valve: 4.55};
 // the followed pulse: electrode (T.fired) -> controller -> valve, then air down the line
-const P0 = T.fired, PC = T.fired + 0.6, PV = T.fired + 1.1;
+const P0 = FEATURED_SPIKE, PC = FEATURED_SPIKE + 0.5, PV = FEATURED_SPIKE + 0.85;
 export const pulseY = (t: number) =>
   t < PC ? lerp(E0[1], Y.chip, ss5(P0, PC, t) * 0.4 + clamp((t - P0) / (PC - P0)) * 0.6)
     : lerp(Y.chip, Y.valve, ss5(PC, PV, t) * 0.4 + clamp((t - PC) / (PV - PC)) * 0.6);
 
-type BK = {t: number; cx: number; cy: number; s: number; rot: number};
-const KEYS: BK[] = [
-  {t: SEG.matchA1, cx: C0[0], cy: C0[1], s: S0, rot: ROT0},
-  {t: 4.4, cx: 0.05, cy: 0.1, s: 900, rot: ROT0 * 0.4}, // close on the threads: pulses running along them
-  {t: 5.75, cx: 0.0, cy: 0.15, s: 440, rot: 0}, // both electrodes, and their leads leaving the scaffold
-  {t: 7.4, cx: E0[0] - 0.1, cy: E0[1] - 0.15, s: 700, rot: 0}, // the electrode the next pulse reaches
-  {t: T.fired, cx: E0[0] - 0.06, cy: E0[1] - 0.1, s: 760, rot: 0}, // a slow drift in while it arrives
-];
-const camB = (t: number): M => {
-  if (t <= SEG.matchA1) { const a = discAffine(t); return [a.ex[0], a.ex[1], a.ez[0], a.ez[1], a.o[0], a.o[1]]; }
-  if (t >= T.fired) {
-    const last = KEYS[KEYS.length - 1];
-    const k = ss(T.fired, T.fired + 0.45, t);
-    const s = lerp(last.s, 330, ss(T.fired, T.fired + 0.55, t));
-    const cy = lerp(last.cy, pulseY(t) + 0.55, k) + (t > PV ? (t - PV) * 3.0 : 0);
-    return fromCam(lerp(last.cx, XC + 0.1, k), cy, s, 0, MIR);
+/** the macro camera of a B shot: eased between its start and end; 'chain' tracks the followed pulse down the lead,
+ * 'pulse' rides just behind the head of the spike that reaches an electrode inside the shot */
+export const camB = (sh: Shot & {kind: 'B'}, t: number): M => {
+  const u = ss(sh.t0, sh.t1, t) * 0.75 + ((t - sh.t0) / (sh.t1 - sh.t0)) * 0.25;
+  const A = sh.a, B = sh.b;
+  let cx = lerp(A.cx, B.cx, u), cy = lerp(A.cy, B.cy, u);
+  const sc = A.s * Math.pow(B.s / A.s, u), rot = lerp(A.rot ?? 0, B.rot ?? 0, u);
+  if (sh.follow === 'chain') { cx = XC + 0.3; cy = Math.max(A.cy, Math.min(B.cy, pulseY(t) + 0.5 + Math.max(0, t - PV) * 2.4)); }
+  if (sh.follow === 'pulse') {
+    const r = ROUTES.filter((q) => q.spike > sh.t0 && q.spike < sh.t1)[0];
+    if (r) {
+      const d0 = Math.min(r.len, Math.max(0, (sh.t0 - r.t0) * 3.6)), d1 = Math.min(r.len, Math.max(0, (sh.t1 - r.t0) * 3.6));
+      const lead = (q: number) => routeSlice(r, 0, Math.max(0.001, Math.min(r.len, q))).slice(-1)[0];
+      const pa = lead(d0), pb = lead(d1), pt = lead(Math.min(r.len, Math.max(0, (t - r.t0) * 3.6)));
+      const m = (a2: number, b2: number, c2: number) => 0.55 * c2 + 0.45 * lerp(a2, b2, u);
+      cx = m(pa[0], pb[0], pt[0]); cy = m(pa[1], pb[1], pt[1]);
+    }
   }
-  let i = 0;
-  while (i < KEYS.length - 2 && t >= KEYS[i + 1].t) i++;
-  const a = KEYS[i], b = KEYS[i + 1];
-  const u = ss5(a.t, b.t, t);
-  const mb = fromCam(lerp(a.cx, b.cx, u), lerp(a.cy, b.cy, u), a.s * Math.pow(b.s / a.s, u), lerp(a.rot, b.rot, u), MIR);
-  if (i === 0) { const k = ss(SEG.matchA1, SEG.matchA1 + 0.35, t); return MA.map((v, j) => lerp(v, mb[j], k)) as M; }
-  return mb;
+  return fromCam(cx, cy, sc, rot, MIR);
 };
+/** growth (time-lapse) of the youngest tips, shown in the first two macro shots: 0.78 -> 1 */
+export const tipGrowth = (t: number) => (t < 2.7 || t > 5.4 ? 1 : 0.78 + 0.22 * ss(2.75, 5.2, t));
 
 const Hyphae: React.FC<{m: M; t: number; s: number}> = ({m, t, s}) => {
   let c0 = '', c1 = '', c2 = '';
+  const gr = tipGrowth(t);
   for (const h of NET) {
-    const pts = h.pts.map((p) => apply(m, p));
+    const keep = h.tier === 0 ? h.pts.length : Math.max(2, Math.round(h.pts.length * gr));
+    const pts = h.pts.slice(0, keep).map((p) => apply(m, p));
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
     for (const p of pts) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
     if (x1 < -60 || x0 > W + 60 || y1 < -60 || y0 > H + 60) continue;
@@ -134,7 +124,9 @@ const Electrode: React.FC<{m: M; p: [number, number]; s: number; flash: number}>
 const Electronics: React.FC<{m: M; s: number; t: number}> = ({m, s, t}) => {
   const box = (x0: number, y0: number, x1: number, y1: number) => poly([apply(m, [x0, y0]), apply(m, [x1, y0]), apply(m, [x1, y1]), apply(m, [x0, y1])]);
   const tr = (ps: [number, number][], w = 0.05, col: string = C.copper) => <path d={poly(ps.map((p) => apply(m, p)), false)} stroke={col} strokeWidth={w * s} fill="none" strokeLinejoin="round" strokeLinecap="round" />;
-  const chipLit = clamp(Math.exp(-Math.max(0, t - PC) * 5) * (t >= PC - 0.03 ? 1 : 0));
+  let chipLit = 0;
+  for (const e of EVENTS_EXT) { const tc = e.kind === 'featured' ? PC : e.spike + 0.12; if (t >= tc - 0.02 && t < tc + 0.6) chipLit = Math.max(chipLit, Math.exp(-(t - tc) * 5)); }
+  chipLit = clamp(chipLit);
   const open = ss(PV - 0.06, PV + 0.02, t) * (1 - ss(PV + 0.45, PV + 0.6, t));
   const out: React.ReactNode[] = [];
   out.push(<path key="pcb" d={box(-1.5, 2.25, 2.3, 3.7)} fill={C.pcb} stroke={INK} strokeWidth={3} />);
@@ -195,13 +187,15 @@ const Pulse: React.FC<{m: M; s: number; t: number}> = ({m, s, t}) => {
   </g>;
 };
 
-export const SignalWorld: React.FC<{t: number}> = ({t}) => {
-  const m = camB(t);
+export const SignalWorld: React.FC<{t: number; shot: Shot & {kind: 'B'}}> = ({t, shot}) => {
+  const m = camB(shot, t);
+  const uv = uvOn(t);
   const s = Math.hypot(m[0], m[1]);
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{position: 'absolute', inset: 0}}>
       <defs>
         <filter id="bglow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="8" /></filter>
+        <radialGradient id="uvVig" cx="0.45" cy="0.3" r="0.9"><stop offset="0" stopColor="#C9B5FF" stopOpacity="0.22" /><stop offset="1" stopColor="#3B1E7A" stopOpacity="0.35" /></radialGradient>
         <radialGradient id="hubIn" cx="0.5" cy="0.3" r="0.9"><stop offset="0" stopColor="#1C3240" /><stop offset="1" stopColor="#0C171F" /></radialGradient>
       </defs>
       <rect width={W} height={H} fill="url(#hubIn)" />
@@ -211,6 +205,8 @@ export const SignalWorld: React.FC<{t: number}> = ({t}) => {
       <Electrode m={m} p={E0} s={s} flash={electrodeFlash(t, 0)} />
       <Electrode m={m} p={E1} s={s} flash={electrodeFlash(t, 1)} />
       <Pulse m={m} s={s} t={t} />
+      {uv > 0.01 && <rect width={W} height={H} fill="#8B5CFF" opacity={0.2 * uv} style={{mixBlendMode: 'screen'}} />}
+      {uv > 0.01 && <rect width={W} height={H} fill="url(#uvVig)" opacity={uv} />}
     </svg>
   );
 };

@@ -69,7 +69,7 @@
    "t": 20.183
   },
   "legSurfaceMovePerSampleMax": {
-   "v": 0.6219,
+   "v": 0.6226,
    "t": 13.633
   },
   "curvatureStepPerSampleMax": {
@@ -93,7 +93,7 @@
    "t": 18.383
   },
   "cableLampClearance": {
-   "v": 6.2049,
+   "v": 6.2051,
    "t": 12.667
   }
  },

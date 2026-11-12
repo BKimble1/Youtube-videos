@@ -1,0 +1,12 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU GIVE A MUSHROOM ROBOT LEGS IT CAN ACTUALLY WALK SCIENTISTS GREW LIVING FUNGUS INTO A ROBOT'S ELECTRONICS AND EVERY TIME THE FUNGUS FIRED AN ELECTRICAL SIGNAL THE ROBOT MOVED BUT HERE'S WHERE IT GETS WEIRD THEY SHINED ULTRA VIOLET LIGHT ON THE FUNGUS AND THE ROBOT CHANGED HOW IT WALKED SO THIS THING HAS NO BRAIN NO EYES AND ABSOLUTELY NO IDEA WHERE IT'S GOING BUT THE MUSHROOM IS LITERALLY CONTROLLING ITS LEGS WHICH MEANS SCIENTISTS BASICALLY GAVE A FUNGUS A BODY",
+  "wer": 0.0,
+  "diffs": []
+ },
+ "whisper": {
+  "transcript": "If you give a mushroom robot legs, it can actually walk. Scientists grew living fungus into a robot's electronics, and every time the fungus fired an electrical signal, the robot moved. But here's where it gets weird. They shined ultraviolet light on the fungus, and the robot changed how it walked. So this thing has no brain, no eyes, and absolutely no idea where it's going. But the mushroom is literally controlling its legs, which means scientists basically gave a fungus a body.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

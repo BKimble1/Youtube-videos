@@ -85,6 +85,7 @@ export const Beaker: React.FC<{c: Cam}> = ({c}) => {
 const Lamp: React.FC<{c: Cam; t: number; P: Pose; part: 'body' | 'beam'}> = ({c, t, P, part}) => {
   if (lampIn(t) <= 0.001) return null;
   const head = lampHead(t);
+  if (toCam(c, head)[2] < 4) return null; // never draw the lamp across the lens
   const aim: V3 = [P.x, P.y + HUB_H / 2 + 0.8, P.z];
   const dir = v3.nrm(v3.sub(aim, head));
   const uv = uvOn(t);

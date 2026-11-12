@@ -43,7 +43,7 @@ const UVS = [13.07, 13.5, 13.93, 14.36, 14.79, 15.21, 15.63, 16.05];
 const BASE: Ev[] = [
   mk(-0.03),
   mk(0.97), mk(1.97), mk(3.02), mk(4.07), mk(5.12), mk(6.0), mk(7.07),
-  mk(T.theRobot, 'featured', 0.85, 1.0, 1, FEATURED_SPIKE), // the spike followed into the electrode (8.05) and down the chain
+  mk(9.25, 'featured', 0.85, 1.0, 1, FEATURED_SPIKE), // the spike followed into the electrode (8.05) and down the chain
   mk(10.75), mk(12.25), // baseline: slow single spikes (12.13 is seen in the close-up just before the lamp)
   ...UVS.map((s) => mk(s, 'uv', 0.4, 1.0, 1.8)), // under UV: spikes larger and about twice as frequent
   mk(16.98),
