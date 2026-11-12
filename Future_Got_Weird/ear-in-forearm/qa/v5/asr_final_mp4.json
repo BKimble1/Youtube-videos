@@ -1,0 +1,24 @@
+{
+ "zipformer": {
+  "transcript": "DOCTORS GREW AN EAR INSIDE THIS WOMAN'S FOREARM SHE LOST HER EAR IN A CRASH SO SURGEONS CARVED A REPLACEMENT FROM HER OWN RIB CARTILAGE THEY TUCKED IT BENEATH HER ARMSKIN WHERE NEW BLOOD VESSELS FORMED AROUND IT MONTHS LATER THEY MOVED THE LIVING EAR TO HER HEAD RECONNECTING ITS BLOOD SUPPLY AND NERVES AND FOR MONTHS HER NEW EAR WAS RIGHT HERE",
+  "wer": 0.031,
+  "diffs": [
+   [
+    "replace",
+    "arm skin",
+    "armskin"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "\"Doctor's grew an ear inside this woman's forearm!\" She lost her ear in a crash, so surgeons carved a replacement from her own rib cartilage. They tucked it beneath her arm skin, where new blood vessels formed around it. Months later, they moved the living ear to her head, reconnecting its blood supply and nerves. And for months, her new ear was right here.",
+  "wer": 0.016,
+  "diffs": [
+   [
+    "replace",
+    "doctors",
+    "doctor's"
+   ]
+  ]
+ }
+}

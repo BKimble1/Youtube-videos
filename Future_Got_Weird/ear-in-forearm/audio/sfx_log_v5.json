@@ -1,0 +1,157 @@
+[
+ {
+  "t": 0.0,
+  "sfx": "low impact under the opening ear",
+  "gain_db": -17
+ },
+ {
+  "t": 0.02,
+  "sfx": "skin stretch (opening)",
+  "gain_db": -27
+ },
+ {
+  "t": 0.1,
+  "sfx": "forearm turning (skin)",
+  "gain_db": -38
+ },
+ {
+  "t": 4.221,
+  "sfx": "distant muffled crash, a little glass",
+  "gain_db": -24
+ },
+ {
+  "t": 4.791,
+  "sfx": "chest opening (soft tissue)",
+  "gain_db": -33
+ },
+ {
+  "t": 5.411,
+  "sfx": "blade traces the cartilage block",
+  "gain_db": -30
+ },
+ {
+  "t": 5.821,
+  "sfx": "forceps grip the block",
+  "gain_db": -34
+ },
+ {
+  "t": 5.891,
+  "sfx": "block lifts free",
+  "gain_db": -27
+ },
+ {
+  "t": 6.841,
+  "sfx": "set down on the tray (soft tap)",
+  "gain_db": -33
+ },
+ {
+  "t": 6.941,
+  "sfx": "outline cut (scrape)",
+  "gain_db": -31
+ },
+ {
+  "t": 7.105,
+  "sfx": "offcut slides aside on the drape",
+  "gain_db": -39
+ },
+ {
+  "t": 7.341,
+  "sfx": "hollows carved",
+  "gain_db": -32
+ },
+ {
+  "t": 7.641,
+  "sfx": "rim cut free (long scrape)",
+  "gain_db": -32
+ },
+ {
+  "t": 7.946,
+  "sfx": "forceps pick up the framework",
+  "gain_db": -34
+ },
+ {
+  "t": 8.706,
+  "sfx": "framework slides under the skin",
+  "gain_db": -26
+ },
+ {
+  "t": 9.036,
+  "sfx": "skin settles over it",
+  "gain_db": -29
+ },
+ {
+  "t": 9.206,
+  "sfx": "stitches, one by one",
+  "gain_db": -36
+ },
+ {
+  "t": 9.486,
+  "sfx": "organic swell, faint pulse (vessels forming)",
+  "gain_db": -27
+ },
+ {
+  "t": 11.566,
+  "sfx": "flap outlined",
+  "gain_db": -32
+ },
+ {
+  "t": 12.311,
+  "sfx": "living ear lifted",
+  "gain_db": -26
+ },
+ {
+  "t": 12.231,
+  "sfx": "forceps grip",
+  "gain_db": -33
+ },
+ {
+  "t": 13.811,
+  "sfx": "ear seated",
+  "gain_db": -30
+ },
+ {
+  "t": 14.723,
+  "sfx": "artery stitches",
+  "gain_db": -34
+ },
+ {
+  "t": 15.355,
+  "sfx": "vein stitches",
+  "gain_db": -34
+ },
+ {
+  "t": 15.946,
+  "sfx": "nerve stitches",
+  "gain_db": -34
+ },
+ {
+  "t": 15.236,
+  "sfx": "blood flows into the ear (soft pulse)",
+  "gain_db": -31
+ },
+ {
+  "t": 16.651,
+  "sfx": "memory swell into the flashback",
+  "gain_db": -30
+ },
+ {
+  "t": 17.201,
+  "sfx": "flashback: the bed muffles and warms",
+  "gain_db": -34
+ },
+ {
+  "t": 17.851,
+  "sfx": "skin stretch (the forearm turning, in the past)",
+  "gain_db": -29
+ },
+ {
+  "t": 18.956,
+  "sfx": "low soft landing on HERE",
+  "gain_db": -22
+ },
+ {
+  "t": 16.216,
+  "sfx": "bed: warm release (minor -> major) for the finished ear",
+  "gain_db": 0
+ }
+]

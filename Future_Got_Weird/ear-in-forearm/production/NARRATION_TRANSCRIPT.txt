@@ -1,0 +1,95 @@
+FGW V1 — Doctors Grew an Ear Inside Her Arm: exact narration transcript
+
+Locked script (spoken word for word; the delivered MP4's audio transcribes with zero word differences on two ASR models):
+
+Doctors grew an EAR inside this woman’s FOREARM.
+
+She lost her ear in a crash, so surgeons carved a replacement from her own rib cartilage.
+
+They tucked it beneath her arm skin, where new blood vessels formed around it.
+
+Months later, they moved the living ear to her head, reconnecting its blood supply and nerves.
+
+And for MONTHS… her new ear was right HERE.
+
+Timed (film seconds, measured word times; phrases as captioned):
+
+  0.00 –   1.27  Doctors grew an EAR
+  1.28 –   2.96  inside this woman’s FOREARM.
+  3.43 –   4.91  She lost her ear in a crash,
+  4.91 –   6.60  so surgeons carved a replacement
+  6.63 –   8.05  from her own rib cartilage.
+  8.43 –   9.91  They tucked it beneath her arm skin,
+  9.92 –  11.82  where new blood vessels formed around it.
+ 12.31 –  12.90  Months later,
+ 12.90 –  14.70  they moved the living ear to her head,
+ 14.92 –  16.96  reconnecting its blood supply and nerves.
+ 17.67 –  18.61  And for MONTHS…
+ 18.93 –  20.71  her new ear was right HERE.
+
+Word times:
+
+ 0.000  0.516  Doctors
+ 0.516  0.746  grew
+ 0.756  0.926  an
+ 0.956  1.266  EAR
+ 1.276  1.706  inside
+ 1.716  1.906  this
+ 1.916  2.236  woman’s
+ 2.356  2.956  FOREARM.
+ 3.426  3.476  She
+ 3.466  3.786  lost
+ 3.791  3.946  her
+ 3.951  4.226  ear
+ 4.231  4.346  in
+ 4.351  4.466  a
+ 4.471  4.906  crash,
+ 4.911  5.106  so
+ 5.111  5.626  surgeons
+ 5.631  5.906  carved
+ 5.911  5.986  a
+ 5.991  6.596  replacement
+ 6.631  6.786  from
+ 6.791  6.906  her
+ 6.951  7.186  own
+ 7.191  7.496  rib
+ 7.511  8.046  cartilage.
+ 8.426  8.476  They
+ 8.466  8.706  tucked
+ 8.716  8.826  it
+ 8.836  9.126  beneath
+ 9.156  9.306  her
+ 9.316  9.546  arm
+ 9.556  9.906  skin,
+ 9.916 10.106  where
+10.116 10.306  new
+10.316 10.586  blood
+10.596 11.026  vessels
+11.036 11.346  formed
+11.356 11.616  around
+11.616 11.816  it.
+12.306 12.576  Months
+12.581 12.896  later,
+12.901 13.096  they
+13.101 13.416  moved
+13.421 13.536  the
+13.541 13.856  living
+13.861 14.096  ear
+14.101 14.296  to
+14.301 14.496  her
+14.501 14.696  head,
+14.916 15.396  reconnecting
+15.406 15.596  its
+15.606 15.926  blood
+15.926 16.316  supply
+16.326 16.476  and
+16.486 16.956  nerves.
+17.666 17.716  And
+17.706 18.016  for
+18.021 18.606  MONTHS…
+18.926 18.996  her
+19.006 19.276  new
+19.286 19.596  ear
+19.606 19.836  was
+19.846 20.276  right
+20.286 20.706  HERE.

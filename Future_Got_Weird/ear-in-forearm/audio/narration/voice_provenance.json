@@ -1,0 +1,21 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "basis": "the channel's established narrator: the same id recorded for Dead Spider, Cyborg Cockroach and Zombie Ant (zombie-ant/audio/narration/voice_provenance.json); confirmed with creative_list_voices on 2026-10-30"},
+ "model_id": "eleven_v4",
+ "flow_id": "bwD0S6HRAWxUbncncW1J",
+ "prompt": "[amazed, urgent, conversational] Doctors grew an EAR inside this woman's FOREARM. [brisk, confident storytelling] She lost her ear in a crash, so surgeons carved a replacement from her own rib cartilage. They tucked it beneath her arm skin, where new blood vessels formed around it. Months later, they moved the living ear to her head, reconnecting its blood supply and nerves. [slightly unsettling, natural] And for MONTHS — her new ear was right HERE.",
+ "prompt_note": "The locked words, verbatim. The script's one ellipsis (MONTHS…) was given to the model as an em-dash beat so it would not make a dramatic pause (the brief: no pauses that interrupt momentum); the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 452.95 credits. No regeneration.",
+ "takes": [
+  {"file": "audio/narration/takes/t1_i3N6.mp3", "generation_id": "i3N6c9p4kQCUVwlInFQJ", "duration_s": 20.24, "chosen": false,
+   "asr": {"whisper_base_en": "0 differences", "zipformer_en": "spelling only: armskin"},
+   "why_not": "slightly faster; HERE is 2 dB quieter and lower than in take 2"},
+  {"file": "audio/narration/takes/t2_irmO.mp3", "generation_id": "irmOCYRc3MllE72Zzw28", "duration_s": 20.56, "chosen": true,
+   "asr": {"whisper_base_en": "0 differences", "zipformer_en": "0 differences"},
+   "why": "a short beat before FOREARM, which is 0.60 s long; HERE is the strongest of the two takes (-19.0 dB RMS, 229 Hz median pitch); EAR and FOREARM are the loudest and highest words of the opening line, so the emphasis lands where the brief asks"}
+ ],
+ "edits": "Speech untouched (no splice inside a word, no time-stretch, no pitch change). The 44 ms of digital silence before 'Doctors' was trimmed to 10 ms, so the first word starts on frame one. The sentence gap after 'nerves.' was lengthened from 0.41 s to 0.71 s (digital silence inserted inside the take's own silent gap) to give the finished ear a beat before the last line. Mix: a gentle compressor and a look-ahead limiter on the voice.",
+ "word_timing": {"master": "local sherpa-onnx Zipformer token timestamps, snapped to measured pause onsets (tools/align_zipformer.py); one fix by waveform: 'around it.' is one run of speech (the aligner had put 'it.' after the following pause)"},
+ "final": {"file": "audio/narration/FGW_Ear_Forearm_narration_V1.wav", "format": "48 kHz, 24-bit, mono", "speech_s": [0.0, 20.706], "film_s": 21.5, "asr_on_final_mp4": "whisper base.en 0 differences; zipformer 0 differences"},
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, per-word level and pitch, and pause measurement."
+}

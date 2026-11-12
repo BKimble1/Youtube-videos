@@ -1,0 +1,24 @@
+V3 vs V4 (encoded MP4s), max mean-abs luma difference per second (0-255).
+Source frames 200, 300, 450 and 560 were also rendered losslessly from the V3 commit and the V4 source: pixel-identical.
+Residuals of <=0.4 between 4 and 18 s are encoder noise (x264 references differ after the changed opening).
+ 0- 1 s: 46.98
+ 1- 2 s: 29.17
+ 2- 3 s: 16.41
+ 3- 4 s: 16.11
+ 4- 5 s: 0.21
+ 5- 6 s: 0.35
+ 6- 7 s: 0.35
+ 7- 8 s: 0.18
+ 8- 9 s: 0.18
+ 9-10 s: 0.26
+10-11 s: 0.32
+11-12 s: 0.35
+12-13 s: 0.22
+13-14 s: 0.12
+14-15 s: 0.19
+15-16 s: 0.2
+16-17 s: 0.28
+17-18 s: 0.28
+18-19 s: 5.41
+19-20 s: 40.2
+20-21 s: 46.95
