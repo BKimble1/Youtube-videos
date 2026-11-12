@@ -128,6 +128,6 @@ export const routeSlice = (r: Route, a: number, b: number): P2[] => {
 /** electrode flash when a pulse arrives */
 export const electrodeFlash = (t: number, idx: number) => {
   let g = 0;
-  for (const r of ROUTES) { if (r.el !== idx) continue; const dt = t - r.spike; if (dt > -0.02 && dt < 0.45) g += r.amp * Math.exp(-dt * 10); }
+  for (const r of ROUTES) { if (r.el !== idx) continue; const dt = t - r.spike; if (dt > 0 && dt < 0.5) g += r.amp * (dt < 0.05 ? dt / 0.05 : Math.exp(-(dt - 0.05) * 10)); }
   return g;
 };

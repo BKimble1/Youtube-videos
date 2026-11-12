@@ -8,4 +8,6 @@ const cyl = (c: V3, r: number, h: number) => (p: V3) => {
   const dr = Math.hypot(p[0] - c[0], p[2] - c[2]) - r, dy = Math.max(-p[1], p[1] - h);
   return Math.max(dr, dy) > 0 ? Math.hypot(Math.max(dr, 0), Math.max(dy, 0)) : Math.max(dr, dy);
 };
-export const PROPS: Prop[] = [{name: 'beaker', sdf: cyl(BEAKER.c, BEAKER.r, BEAKER.h)}];
+// V2: no props on the mat (the beaker was removed: the camera's moves pass too close to every useful spot for it)
+export const PROPS: Prop[] = [];
+void cyl;

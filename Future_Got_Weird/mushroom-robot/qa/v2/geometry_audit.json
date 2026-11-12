@@ -36,10 +36,6 @@
    "v": 0.0081,
    "t": 18.25
   },
-  "legPropClearance": {
-   "v": 11.5946,
-   "t": 4.417
-  },
   "legDomeClearance": {
    "v": 0.7411,
    "t": 18.25
@@ -47,10 +43,6 @@
   "legLegClearance": {
    "v": 1.8516,
    "t": 28.317
-  },
-  "bodyPropClearance": {
-   "v": 17.1145,
-   "t": 5.433
   },
   "stanceSlideMax": {
    "v": 0,

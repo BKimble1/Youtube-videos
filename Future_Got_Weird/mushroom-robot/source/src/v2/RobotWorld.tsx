@@ -10,6 +10,7 @@ import {pose, legAt, socket, legAngle, HUB_R, HUB_H, DOME_R, DISC_R, TETHER_ANCH
 import {NET, ELECTRODES, pulses, routeSlice, electrodeFlash} from './mycelium';
 import {uvOn, lampIn, EVENTS_EXT} from './timing';
 import {BEAKER} from './props';
+void BEAKER;
 
 const NS = 'non-scaling-stroke' as const;
 const ring = (c: V3, r: number, y: number, n = 40): V3[] =>
@@ -69,7 +70,7 @@ const Bench: React.FC<{c: Cam; t: number; P: Pose}> = ({c, t, P}) => {
   return <g>{out}</g>;
 };
 
-const Beaker: React.FC<{c: Cam}> = ({c}) => {
+export const Beaker: React.FC<{c: Cam}> = ({c}) => {
   const {c: b, r, h} = BEAKER;
   const bot = ring(b, r, 0, 32).map((p) => proj(c, p)), top = ring(b, r, h, 32).map((p) => proj(c, p));
   const lq = ring(b, r * 0.96, h * 0.52, 32).map((p) => proj(c, p)), lb = ring(b, r * 0.96, 0.15, 32).map((p) => proj(c, p));
@@ -304,7 +305,6 @@ export const RobotWorld: React.FC<{t: number}> = ({t}) => {
   const c = camAt(t);
   const P = pose(t);
   const objs: {z: number; el: React.ReactNode}[] = [
-    {z: toCam(c, BEAKER.c)[2], el: <Beaker key="bk" c={c} />},
     {z: toCam(c, [P.x, P.y, P.z])[2], el: <Walker key="wk" c={c} t={t} P={P} />},
     {z: -1e9, el: <Lamp key="lamp" c={c} t={t} P={P} part="body" />},
   ];

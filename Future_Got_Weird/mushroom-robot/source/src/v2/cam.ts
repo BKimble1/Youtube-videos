@@ -11,29 +11,29 @@ const K = (t: number, yaw: number, pitch: number, dist: number, fwd = 0, side = 
   ({t, yaw, pitch, dist, fwd, side, up, fov});
 // yaw: 0 = in front of the walker looking back at it; +90 = on its left (+heading rotation side)
 export const KEYS: Key[] = [
-  K(0, 36, 17, 36, 0.8, 0, 0.6, 50), // frame 0: the whole walker mid-step
-  K(1.3, 32, 13, 27, 1.5, 0, 0.6, 46), // subtle push-in
+  K(0, 36, 17, 36, 0.8, 0, 2.2, 50), // frame 0: the whole walker mid-step
+  K(1.3, 32, 13, 27, 1.5, 0, 1.6, 46), // subtle push-in
   K(2.05, 18, 40, 13, 0.3, 0, 1.2, 38), // rise over the hub
   K(2.55, 4, 80, 5.6, 0, 0, 0.75, 34), // into the dome: the culture fills the frame
   K(2.85, 2, 84, 4.4, 0, 0, 0.75, 34),
   // (macro / signal world on screen 2.82-9.4)
   K(9.4, -156, 12, 15, -4.0, 2.9, -1.0, 40), // beside the leg the followed spike drives
-  K(10.5, -150, 16, 32, -0.8, 0.8, 0.5, 48), // the whole step
+  K(10.5, -150, 16, 32, -0.8, 0.8, 1.8, 48), // the whole step
   K(11.6, -120, 30, 22, 0, 0, 2.5, 44), // toward the culture as the lamp comes in
   K(12.6, -112, 34, 15, 0, 0, 2.6, 40), // UV on the culture: the pulses
   K(13.7, -108, 30, 17, 0, 0, 2.2, 42),
-  K(14.7, -95, 17, 40, 0, 0, 1.2, 48), // back out: the faster gait
-  K(16.2, -85, 18, 40, 0, 0, 1.0, 48),
+  K(14.7, -95, 17, 40, 0, 0, 2.6, 48), // back out: the faster gait
+  K(16.2, -85, 18, 40, 0, 0, 2.4, 48),
   K(17.3, -55, 50, 30, 0, 0, 0, 44), // high three-quarter: into the dome, no brain
   K(18.1, -40, 46, 27, 0, 0, 0, 44),
   K(18.85, 8, 7, 24, 1.0, 0, 0.9, 46), // low, head-on: no eyes
   K(19.6, 5, 8, 25, 0.8, 0, 0.9, 46),
   K(20.6, 20, 30, 40, 0, 0, 0.5, 48),
   K(21.6, 60, 45, 52, 0, 0, 0, 48), // high and wide: wandering
-  K(22.5, 95, 24, 44, 0, 0, 1.0, 48), // the whole biohybrid robot
-  K(24.6, 75, 20, 40, 0, 0, 1.0, 48),
-  K(26.3, 52, 18, 38, 0.8, 0, 0.8, 50),
-  K(DUR, 36, 17, 36, 0.8, 0, 0.6, 50), // = frame 0
+  K(22.5, 95, 24, 44, 0, 0, 2.6, 48), // the whole biohybrid robot
+  K(24.6, 75, 20, 40, 0, 0, 2.4, 48),
+  K(26.3, 52, 18, 38, 0.8, 0, 2.3, 50),
+  K(DUR, 36, 17, 36, 0.8, 0, 2.2, 50), // = frame 0
 ];
 const camHeading = smoothHeading;
 // absolute yaw at each key (degrees), unwrapped so consecutive keys take the short way round

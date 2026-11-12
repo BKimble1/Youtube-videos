@@ -1,0 +1,60 @@
+{
+ "file": "FGW_Mushroom_Robot_V2_REVIEW_1080x1920.mp4",
+ "size_mb": 36.55,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 850,
+  "duration_s": 28.333
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "317374"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 7.41,
+ "large_changes": [
+  {
+   "frame": 69,
+   "t": 2.3,
+   "mad": 38.16,
+   "planned": "rise over the hub and the matched dissolve into the macro (same network)"
+  },
+  {
+   "frame": 282,
+   "t": 9.4,
+   "mad": 55.99,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 283,
+   "t": 9.433,
+   "mad": 59.84,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 284,
+   "t": 9.467,
+   "mad": 59.58,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  },
+  {
+   "frame": 285,
+   "t": 9.5,
+   "mad": 43.47,
+   "planned": "the air line passes the lens: wipe back to the robot"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 13,
+ "longest_near_static_run_starts_s": 7.4,
+ "loop_last_vs_first_mad": 2.86,
+ "single_frame_flicker": []
+}

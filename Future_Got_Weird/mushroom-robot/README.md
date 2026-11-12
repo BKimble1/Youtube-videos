@@ -1,4 +1,31 @@
-# Future Got Weird: FGW_Mushroom_Robot_V1
+# Future Got Weird: FGW_Mushroom_Robot (V2 current)
+
+## V2: stability, cleanup and polish (current)
+
+**Status (12 Nov 2026):** V2 review render, not published. The full report is in `production/V2_REPORT.md`: changes,
+the geometry and clipping QA, remaining defects and the score.
+
+| Deliverable | File |
+|---|---|
+| V2 review MP4: 1080×1920, 30 fps, 850 frames, 28.333 s | `exports/FGW_Mushroom_Robot_V2_REVIEW_1080x1920.mp4` |
+| V2 mix (-14.08 LUFS, -1.60 dBTP) | `audio/mix/FGW_Mushroom_Robot_MIX_V2.wav` |
+| Geometry audit (every half frame: PASS) | `qa/v2/geometry_audit.json` |
+| Render QA, every-frame sheets, ASR | `qa/v2/` |
+| Source | `source/src/v2/` (composition `MushroomRobotV2`) |
+
+### Rebuild V2
+
+    cd Future_Got_Weird/mushroom-robot
+    source/node_modules/.bin/esbuild tools/v2/geom_audit.ts --bundle --platform=node --format=cjs --outfile=/tmp/ga.cjs && node /tmp/ga.cjs qa/v2/geometry_audit.json
+    source/node_modules/.bin/esbuild tools/v2/export_cues.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.tsx=tsx --outfile=/tmp/ec2.cjs && NODE_PATH=source/node_modules node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/v2/make_audio_v2.py mix_v2
+    (cd source && npx remotion render src/index.ts MushroomRobotV2 ../exports/FGW_Mushroom_Robot_V2_REVIEW_1080x1920.mp4 --props='{"audio":"mix_v2"}' --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --image-format=jpeg --jpeg-quality=95 --concurrency=4)
+    python3 tools/v2/qa_render_v2.py exports/FGW_Mushroom_Robot_V2_REVIEW_1080x1920.mp4 qa/v2
+    python3 tools/asr_sherpa.py exports/FGW_Mushroom_Robot_V2_REVIEW_1080x1920.mp4 /tmp/asr qa/v2/final_asr.json
+
+---
+
+## V1 (kept as delivered)
 
 **Status (12 Nov 2026):** V1 review render, checked as frames and measurements. Not published. Nobody has watched it
 in real time with sound.
