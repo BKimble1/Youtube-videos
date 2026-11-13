@@ -1,0 +1,20 @@
+[
+ {
+  "t": 0.5,
+  "hf_native": 1.015,
+  "hf_512_roundtrip": 0.451,
+  "ratio": 2.25
+ },
+ {
+  "t": 10.5,
+  "hf_native": 1.131,
+  "hf_512_roundtrip": 0.47,
+  "ratio": 2.41
+ },
+ {
+  "t": 25.5,
+  "hf_native": 1.221,
+  "hf_512_roundtrip": 0.441,
+  "ratio": 2.77
+ }
+]

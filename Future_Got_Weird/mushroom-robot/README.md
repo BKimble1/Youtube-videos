@@ -1,6 +1,32 @@
-# Future Got Weird: FGW_Mushroom_Robot (V5 current)
+# Future Got Weird: FGW_Mushroom_Robot (V6 current)
 
-## V5: final animation repair, faster storytelling, publication polish (current)
+## V6: final mechanical repair, retention polish, native 1080p (current)
+
+**Status (13 Nov 2026):** V6 final render, verified native 1080×1920 at 30 fps, 850 frames. Not yet watched in real
+time. The full report is in `production/V6_REPORT.md`; the score is 8.9/10.
+
+| Deliverable | File |
+|---|---|
+| V6 final: 1080×1920, 30 fps, 28.333 s (ffprobe in `qa/v6/ffprobe_V6_FINAL.json`) | `exports/FGW_Mushroom_Robot_V6_FINAL_1080x1920.mp4` |
+| 0.25× QA copy | `qa/v6/FGW_Mushroom_Robot_V6_QA_0.25x_540x960.mp4` |
+| Tests A–C (native resolution) | `qa/v6/tests/` |
+| Geometry audit (PASS) | `qa/v6/geometry_audit.json` |
+| Source | `source/src/v6/` (composition `MushroomRobotV6`) |
+
+### Rebuild V6
+
+    cd Future_Got_Weird/mushroom-robot
+    source/node_modules/.bin/esbuild tools/v6/geom_audit.ts --bundle --platform=node --format=cjs --outfile=/tmp/ga6.cjs && node --max-old-space-size=8192 /tmp/ga6.cjs qa/v6/geometry_audit.json
+    source/node_modules/.bin/esbuild tools/v6/export_cues.ts --bundle --platform=node --format=cjs --jsx=automatic --loader:.tsx=tsx --outfile=/tmp/ec6.cjs && NODE_PATH=source/node_modules node /tmp/ec6.cjs audio/cues_v6.json
+    python3 tools/v6/make_audio_v6.py mix_v6
+    (cd source && npx remotion render src/index.ts MushroomRobotV6 ../exports/FGW_Mushroom_Robot_V6_FINAL_1080x1920.mp4 --props='{"audio":"mix_v6"}' --scale=1 --codec=h264 --crf=16 --x264-preset=slow --pixel-format=yuv420p --color-space=bt709 --audio-codec=aac --audio-bitrate=320k --concurrency=4)
+    (cd source && for C in V6TestA-walk V6TestB-gait V6TestC-views; do npx remotion render src/index.ts $C ../qa/v6/tests/$C.mp4; done)
+    python3 tools/v6/qa_render_v6.py exports/FGW_Mushroom_Robot_V6_FINAL_1080x1920.mp4 qa/v6
+    python3 tools/asr_sherpa.py exports/FGW_Mushroom_Robot_V6_FINAL_1080x1920.mp4 /tmp/asr qa/v6/final_asr.json
+
+---
+
+## V5: final animation repair, faster storytelling, publication polish (kept as delivered)
 
 **Status (12 Nov 2026):** V5 final render, not yet watched in real time. The full report is in
 `production/V5_REPORT.md`: the V4 glitch causes, the code-level fixes, tests A–D, the 24-beat timeline, defects and the

@@ -1,6 +1,6 @@
 {
  "mix": "audio/mix/FGW_Mushroom_Robot_MIX_V6.wav",
- "sha256": "10d6d86fef8ac7f201e753bfc99327f2003036c51cb128ba837879884c91affa",
+ "sha256": "2e21b2e714c9e5049ac59e6f575c426fe3e5149931a2a50af7b32017dcdbf573",
  "lufs_integrated_stereo": -14.07,
  "true_peak_dbtp": -1.6,
  "limiter_max_reduction_db": 2.09,

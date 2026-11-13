@@ -1,6 +1,6 @@
 {
  "file": "FGW_Mushroom_Robot_V6_FINAL_1080x1920.mp4",
- "size_mb": 22.19,
+ "size_mb": 22.32,
  "video": {
   "codec": "h264",
   "w": 1080,
@@ -19,12 +19,12 @@
   }
  ],
  "decode_errors": null,
- "frame_change_median": 4.93,
+ "frame_change_median": 4.92,
  "large_changes": [
   {
    "frame": 32,
    "t": 1.067,
-   "mad": 41.81,
+   "mad": 41.82,
    "planned": "CUT to S2 soft legs peel and set down"
   },
   {
@@ -36,7 +36,7 @@
   {
    "frame": 88,
    "t": 2.933,
-   "mad": 93.45,
+   "mad": 93.44,
    "planned": "CUT to S4 living mycelium"
   },
   {
@@ -66,31 +66,31 @@
   {
    "frame": 356,
    "t": 11.867,
-   "mad": 41.0,
+   "mad": 39.64,
    "planned": "CUT to S11 UV source"
   },
   {
    "frame": 387,
    "t": 12.9,
-   "mad": 59.06,
+   "mad": 55.5,
    "planned": "CUT to S12 light on the fungus"
   },
   {
    "frame": 409,
    "t": 13.633,
-   "mad": 65.94,
+   "mad": 65.93,
    "planned": "CUT to S13 the signal changes"
   },
   {
    "frame": 443,
    "t": 14.767,
-   "mad": 46.99,
+   "mad": 47.0,
    "planned": "CUT to S14 a different walk"
   },
   {
    "frame": 471,
    "t": 15.7,
-   "mad": 35.72,
+   "mad": 35.74,
    "planned": "CUT to S15 the pattern from above"
   },
   {
@@ -108,13 +108,13 @@
   {
    "frame": 558,
    "t": 18.6,
-   "mad": 30.04,
+   "mad": 30.03,
    "planned": "CUT to S18 no eyes"
   },
   {
    "frame": 582,
    "t": 19.4,
-   "mad": 48.42,
+   "mad": 48.41,
    "planned": "CUT to S19 marching in place"
   },
   {
@@ -155,8 +155,8 @@
   }
  ],
  "unplanned_large_changes": [],
- "longest_near_static_run_frames": 14,
- "longest_near_static_run_starts_s": 11.4,
+ "longest_near_static_run_frames": 5,
+ "longest_near_static_run_starts_s": 20.87,
  "loop_last_vs_first_mad": 1.9,
  "shots": 25,
  "shot_lengths_s": [
