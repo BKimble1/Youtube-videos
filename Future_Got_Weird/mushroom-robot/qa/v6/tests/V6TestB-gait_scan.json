@@ -1,0 +1,11 @@
+{
+ "file": "qa/v6/tests/V6TestB-gait.mp4",
+ "frames": 225,
+ "median_change": 0.83,
+ "max_change": 2.85,
+ "max_at_frame": 29,
+ "over_3x_median": [
+  29
+ ],
+ "single_frame_flicker": []
+}

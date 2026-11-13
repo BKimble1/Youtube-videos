@@ -1,0 +1,22 @@
+{
+ "file": "qa/v6/tests/V6TestA-walk.mp4",
+ "frames": 180,
+ "median_change": 1.15,
+ "max_change": 3.98,
+ "max_at_frame": 134,
+ "over_3x_median": [
+  102,
+  103,
+  104,
+  133,
+  134,
+  135,
+  136,
+  137,
+  165,
+  166,
+  167,
+  168
+ ],
+ "single_frame_flicker": []
+}

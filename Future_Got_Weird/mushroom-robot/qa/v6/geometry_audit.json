@@ -1,0 +1,115 @@
+{
+ "frames": 850,
+ "samplesPerFrame": 2,
+ "path": {
+  "W_TOTAL": 28.550000000000004,
+  "L_TOTAL": 85.65,
+  "quadratureResidualCm": 9.050473722692964e-14
+ },
+ "checks": {},
+ "worst": {
+  "hubBottomAboveFloor": {
+   "v": 1.2645,
+   "t": 18.567
+  },
+  "ikErrorMax": {
+   "v": 0,
+   "t": 28.317
+  },
+  "curvatureMin": {
+   "v": -0.0254,
+   "t": 11.333
+  },
+  "curvatureMax": {
+   "v": 0.5896,
+   "t": 19.233
+  },
+  "lateralMax": {
+   "v": 0.1037,
+   "t": 21.317
+  },
+  "socketBodyLocalOffsetMax": {
+   "v": 0,
+   "t": 28.317
+  },
+  "surfaceFloorClearance": {
+   "v": 0,
+   "t": 0.45
+  },
+  "legLenMin": {
+   "v": 7.2964,
+   "t": 19.217
+  },
+  "legLenMax": {
+   "v": 7.299,
+   "t": 19.65
+  },
+  "legFloorClearance": {
+   "v": 0,
+   "t": 28.317
+  },
+  "legHubClearance": {
+   "v": 0.3785,
+   "t": 18.383
+  },
+  "legLegClearance": {
+   "v": 1.8516,
+   "t": 28.317
+  },
+  "cableFloorClearance": {
+   "v": 3.5134,
+   "t": 18.567
+  },
+  "cableDomeClearance": {
+   "v": 0.8439,
+   "t": 19.967
+  },
+  "cableLegClearance": {
+   "v": 1.4672,
+   "t": 20.033
+  },
+  "legSurfaceMovePerSampleMax": {
+   "v": 0.7544,
+   "t": 13.25
+  },
+  "curvatureStepPerSampleMax": {
+   "v": 0.0781,
+   "t": 24.567
+  },
+  "stanceSlideMax": {
+   "v": 0,
+   "t": 0.017
+  },
+  "footStepPerSampleMax": {
+   "v": 0.6684,
+   "t": 13.25
+  },
+  "legDomeClearance": {
+   "v": 1.6442,
+   "t": 18.383
+  },
+  "cableLampClearance": {
+   "v": 6.2055,
+   "t": 12.483
+  },
+  "curvatureSnapMax240Hz": {
+   "v": 0.0004,
+   "t": 16.462
+  }
+ },
+ "network": {
+  "hyphae": 64,
+  "nodes": 964,
+  "electrode0ToNetworkCm": 0,
+  "electrode1ToNetworkCm": 0,
+  "routes": 147,
+  "offBranchHops": 0
+ },
+ "loop": {
+  "bodyPos": 7.71e-14,
+  "heading": 6.28,
+  "legMaxCm": 1.8e-9
+ },
+ "failures": {},
+ "pass": true
+}

@@ -1,0 +1,12 @@
+{
+ "file": "qa/v6/tests/V6TestC-views.mp4",
+ "frames": 60,
+ "median_change": 1.9,
+ "max_change": 5.81,
+ "max_at_frame": 11,
+ "over_3x_median": [
+  11,
+  12
+ ],
+ "single_frame_flicker": []
+}
