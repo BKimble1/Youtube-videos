@@ -1,0 +1,341 @@
+{
+ "file": "FGW_BIOSENTER_GUT_ROBOT_V1_REVIEW_1080x1920.mp4",
+ "size_mb": 22.73,
+ "video": {
+  "codec": "h264",
+  "w": 1080,
+  "h": 1920,
+  "fps": "30/1",
+  "pix_fmt": "yuv420p",
+  "frames_decoded": 789,
+  "duration_s": 26.3
+ },
+ "audio": [
+  {
+   "codec": "aac",
+   "sr": "48000",
+   "ch": 2,
+   "bitrate": "260212"
+  }
+ ],
+ "decode_errors": null,
+ "frame_change_median": 2.22,
+ "large_changes": [
+  {
+   "frame": 105,
+   "t": 3.5,
+   "mad": 71.77,
+   "planned": "CUT S1 -> S2: match on the head anchor, into the macro"
+  },
+  {
+   "frame": 211,
+   "t": 7.033,
+   "mad": 12.99,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 212,
+   "t": 7.067,
+   "mad": 15.37,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 213,
+   "t": 7.1,
+   "mad": 17.37,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 214,
+   "t": 7.133,
+   "mad": 18.73,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 215,
+   "t": 7.167,
+   "mad": 19.5,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 216,
+   "t": 7.2,
+   "mad": 20.19,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 217,
+   "t": 7.233,
+   "mad": 19.5,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 218,
+   "t": 7.267,
+   "mad": 16.88,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 219,
+   "t": 7.3,
+   "mad": 15.16,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 220,
+   "t": 7.333,
+   "mad": 16.63,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 221,
+   "t": 7.367,
+   "mad": 21.03,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 222,
+   "t": 7.4,
+   "mad": 20.75,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 223,
+   "t": 7.433,
+   "mad": 19.85,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 224,
+   "t": 7.467,
+   "mad": 21.18,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 225,
+   "t": 7.5,
+   "mad": 25.11,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 226,
+   "t": 7.533,
+   "mad": 26.09,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 227,
+   "t": 7.567,
+   "mad": 26.08,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "mad": 25.25,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 229,
+   "t": 7.633,
+   "mad": 22.99,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 230,
+   "t": 7.667,
+   "mad": 20.32,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 231,
+   "t": 7.7,
+   "mad": 17.63,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 232,
+   "t": 7.733,
+   "mad": 14.77,
+   "planned": "PULL-BACK (camera move) S2 -> S3: out of the macro to the whole robot"
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "mad": 12.32,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 352,
+   "t": 11.733,
+   "mad": 18.32,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 353,
+   "t": 11.767,
+   "mad": 19.32,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 354,
+   "t": 11.8,
+   "mad": 21.15,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 355,
+   "t": 11.833,
+   "mad": 23.28,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 356,
+   "t": 11.867,
+   "mad": 24.69,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 357,
+   "t": 11.9,
+   "mad": 25.71,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 358,
+   "t": 11.933,
+   "mad": 26.29,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 359,
+   "t": 11.967,
+   "mad": 25.74,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 360,
+   "t": 12.0,
+   "mad": 25.94,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 361,
+   "t": 12.033,
+   "mad": 25.24,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 362,
+   "t": 12.067,
+   "mad": 23.14,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 363,
+   "t": 12.1,
+   "mad": 21.31,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 364,
+   "t": 12.133,
+   "mad": 19.86,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 365,
+   "t": 12.167,
+   "mad": 17.55,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 366,
+   "t": 12.2,
+   "mad": 19.27,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 367,
+   "t": 12.233,
+   "mad": 18.89,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 368,
+   "t": 12.267,
+   "mad": 18.56,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 369,
+   "t": 12.3,
+   "mad": 18.7,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 370,
+   "t": 12.333,
+   "mad": 16.8,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 371,
+   "t": 12.367,
+   "mad": 14.52,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 372,
+   "t": 12.4,
+   "mad": 13.01,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 373,
+   "t": 12.433,
+   "mad": 13.1,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 374,
+   "t": 12.467,
+   "mad": 13.52,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 375,
+   "t": 12.5,
+   "mad": 12.82,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 376,
+   "t": 12.533,
+   "mad": 12.25,
+   "planned": "ZOOM-OUT S3 -> S4: the cutaway hands over to the pig diagram"
+  },
+  {
+   "frame": 505,
+   "t": 16.833,
+   "mad": 87.8,
+   "planned": "CUT S4 -> S5: the tool close-up"
+  },
+  {
+   "frame": 584,
+   "t": 19.467,
+   "mad": 105.26,
+   "planned": "CUT S5 -> S6: the lab"
+  },
+  {
+   "frame": 635,
+   "t": 21.167,
+   "mad": 141.98,
+   "planned": "CUT S6 -> S7: back in the gut"
+  }
+ ],
+ "unplanned_large_changes": [],
+ "longest_near_static_run_frames": 34,
+ "longest_near_static_run_starts_s": 15.7,
+ "loop_last_vs_first_mad": 4.42
+}

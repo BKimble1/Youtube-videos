@@ -1,0 +1,18 @@
+{
+ "zipformer": {
+  "transcript": "SCIENTISTS BUILT A ROBOT THAT CRAWLS THROUGH YOUR INTESTINES AND THIS THING HAS TINY SPIKES THAT POP OUT OF ITS BODY THEY GRIP THE SLIPPERY WALLS WHILE INFLATABLE CHAMBERS PUSH IT FORWARD ALMOST LIKE A SNAKE RESEARCHES TESTED IT INSIDE PIGS WHERE IT TRAVELED OVER SIX FEET THROUGH THEIR INTESTINES IT COULD EVEN TAKE TISSUE SAMPLES AND DELIVER LIQUID IT'S STILL EXPERIMENTAL BUT ONE DAY THE THING EXPLORING YOUR GUT MIGHT ACTUALLY BE CRAWLING THROUGH IT",
+  "wer": 0.013,
+  "diffs": [
+   [
+    "replace",
+    "researchers",
+    "researches"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "Scientists built a robot that crawls through your intestines. And this thing has tiny spikes that pop out of its body. They grip the slippery walls while inflatable chambers push it forward, almost like a snake. Researchers tested it inside pigs, where it traveled over six feet through their intestines. It could even take tissue samples and deliver liquid. It's still experimental. But one day, the thing exploring your gut might actually be crawling through it.",
+  "wer": 0.0,
+  "diffs": []
+ }
+}

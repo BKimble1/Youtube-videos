@@ -1,0 +1,52 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as every recent FGW episode: Eel Escape, Glass Climbing, Living Skin, Bone Glue, ...); confirmed with creative_list_voices on 2026-11-14"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "bznjr1Jp8RGIjjxWd5oM",
+ "prompt": "[intrigued, quick, a little excited] Scientists built a robot that CRAWLS through your intestines. [conversational, quick] And this thing has TINY SPIKES that pop out of its body. [fast paced, explaining] They grip the slippery walls while inflatable chambers push it forward, almost like a snake. [confident] Researchers tested it inside pigs, where it traveled over SIX FEET through their intestines. [quick] It could even take tissue samples and deliver liquid. [a little slower, dry] It’s still experimental. [conversational, slightly ominous] But one day, the thing exploring your gut might actually be crawling through it.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Capitals mark emphasis only (CRAWLS, TINY SPIKES, SIX FEET, as the brief asks); the bracket tags direct delivery and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 628 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_zFXV.mp3",
+   "generation_id": "zFXVEfPPWGMdSRI9FPp5",
+   "session_id": "AREqJBr7oC3kbFX7noAu",
+   "duration_s": 25.52,
+   "sha256": "746e840d243a6387bb2464ceff42b4e68f433ae738a431c4d1aa0e35d533bbd5",
+   "asr_wer": {
+    "zipformer": 0.013,
+    "whisper": 0.0
+   },
+   "zipformer_note": "the only zipformer difference is its spelling 'researches' for 'Researchers'; Whisper hears every word",
+   "chosen": true,
+   "why": "stronger emphasis on two of the three marked phrases: 'spikes' peaks +13.3 semitones over the median pitch (take 2: +7.3), and 'SIX' / 'FEET' are separated by a 0.15 s beat with 'FEET' rising +6.8 st (take 2: +4.3 st); the closing 'crawling through it' lifts +11.6 st (take 2 falls, -0.8 st) and its final 'it' is clearly audible (-15.9 dB re median word, take 2 -22.5 dB)"
+  },
+  {
+   "file": "audio/narration/takes/t2_Ur9u.mp3",
+   "generation_id": "Ur9uIrni8IY1WP8WmTvY",
+   "session_id": "n9yAcWXviFp5oGTiRgnn",
+   "duration_s": 24.8,
+   "sha256": "641d2f6b266ed9023daf182371a586906a72f61a19497ec7d4ba27c61a078bf7",
+   "asr_wer": {
+    "zipformer": 0.026,
+    "whisper": 0.0
+   },
+   "chosen": false,
+   "why_not": "the stronger 'CRAWLS' (+3.7 dB, +12.6 st) but flatter 'spikes' and 'FEET' and a falling, swallowed ending"
+  }
+ ],
+ "download_status": "DOWNLOADED 2026-11-14 from the flow's signed URLs (elevenlabsusercontent.com reachable).",
+ "master": {
+  "file": "audio/narration/FGW_BIOSENTER_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 26.30 s (the film length)",
+  "edits": "none: the take is used sample for sample (no gap shortening, stretch, pitch or gain change); speech starts at frame 0; padded with 0.94 s of silence after the last word for the closing crawl into the loop",
+  "alignment": "audio/narration/master_zipformer.json (sherpa-onnx zipformer word times; tools/align_zipformer.py)",
+  "sha256": "4a1c8a51b84fee6b29a947079cc88582e43b1b32f281089ee69dac02515bd760"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pitch and level measurements."
+}

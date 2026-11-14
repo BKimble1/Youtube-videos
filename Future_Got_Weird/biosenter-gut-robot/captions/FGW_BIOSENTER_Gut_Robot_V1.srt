@@ -1,0 +1,68 @@
+1
+00:00:00,000 --> 00:00:01,400
+Scientists built a robot
+
+2
+00:00:01,440 --> 00:00:03,480
+that CRAWLS through your intestines.
+
+3
+00:00:03,520 --> 00:00:05,225
+And this thing has tiny spikes
+
+4
+00:00:05,265 --> 00:00:06,850
+that pop out of its body.
+
+5
+00:00:06,890 --> 00:00:08,105
+They grip the slippery walls
+
+6
+00:00:08,145 --> 00:00:09,345
+while inflatable chambers
+
+7
+00:00:09,385 --> 00:00:10,300
+push it forward,
+
+8
+00:00:10,340 --> 00:00:11,720
+almost like a snake.
+
+9
+00:00:11,760 --> 00:00:13,810
+Researchers tested it inside pigs,
+
+10
+00:00:13,850 --> 00:00:14,735
+where it traveled over
+
+11
+00:00:14,775 --> 00:00:16,830
+SIX FEET through their intestines.
+
+12
+00:00:16,870 --> 00:00:18,200
+It could even take tissue samples
+
+13
+00:00:18,240 --> 00:00:19,430
+and deliver liquid.
+
+14
+00:00:19,470 --> 00:00:21,150
+It’s still experimental.
+
+15
+00:00:21,190 --> 00:00:22,090
+But one day,
+
+16
+00:00:22,130 --> 00:00:23,475
+the thing exploring your gut
+
+17
+00:00:23,515 --> 00:00:25,660
+might actually be crawling through it.
+

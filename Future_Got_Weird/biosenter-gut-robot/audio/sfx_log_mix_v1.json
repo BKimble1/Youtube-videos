@@ -1,0 +1,429 @@
+[
+ {
+  "t": 0.75,
+  "sfx": "inflate head (S1)",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.4
+ },
+ {
+  "t": 0.876,
+  "sfx": "kirigami scales pop (head, S1)",
+  "level_db": -18.0,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 1.15,
+  "sfx": "release tail (S1)",
+  "level_db": -27.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 1.4,
+  "sfx": "contract slide (S1)",
+  "level_db": -25.0,
+  "bus": "tex",
+  "dur": 0.7
+ },
+ {
+  "t": 2.1,
+  "sfx": "release head (S1)",
+  "level_db": -27.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 2.4,
+  "sfx": "inflate tail (S1)",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.35
+ },
+ {
+  "t": 2.509,
+  "sfx": "kirigami scales pop (tail, S1)",
+  "level_db": -18.0,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 2.75,
+  "sfx": "extend (S1)",
+  "level_db": -25.0,
+  "bus": "tex",
+  "dur": 1.35
+ },
+ {
+  "t": 4.2,
+  "sfx": "inflate head (S2)",
+  "level_db": -17.0,
+  "bus": "dot",
+  "dur": 1.42
+ },
+ {
+  "t": 5.366,
+  "sfx": "kirigami scales pop (head, S2)",
+  "level_db": -12,
+  "bus": "accent",
+  "dur": 0.32
+ },
+ {
+  "t": 5.72,
+  "sfx": "release tail (S2)",
+  "level_db": -23.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 6,
+  "sfx": "contract slide (S2)",
+  "level_db": -21.0,
+  "bus": "tex",
+  "dur": 1.0
+ },
+ {
+  "t": 7.1,
+  "sfx": "release head (S3)",
+  "level_db": -28.5,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 7.5,
+  "sfx": "inflate tail (S3)",
+  "level_db": -22.5,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 7.643,
+  "sfx": "kirigami scales pop (tail, S3)",
+  "level_db": -19.5,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 8.1,
+  "sfx": "extend (S3)",
+  "level_db": -26.5,
+  "bus": "tex",
+  "dur": 0.9
+ },
+ {
+  "t": 9,
+  "sfx": "inflate head (S3)",
+  "level_db": -22.5,
+  "bus": "dot",
+  "dur": 0.35
+ },
+ {
+  "t": 9.109,
+  "sfx": "kirigami scales pop (head, S3)",
+  "level_db": -19.5,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 9.35,
+  "sfx": "release tail (S3)",
+  "level_db": -28.5,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 9.6,
+  "sfx": "contract slide (S3)",
+  "level_db": -26.5,
+  "bus": "tex",
+  "dur": 0.7
+ },
+ {
+  "t": 10.3,
+  "sfx": "release head (S3)",
+  "level_db": -28.5,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 10.55,
+  "sfx": "inflate tail (S3)",
+  "level_db": -22.5,
+  "bus": "dot",
+  "dur": 0.3
+ },
+ {
+  "t": 10.642,
+  "sfx": "kirigami scales pop (tail, S3)",
+  "level_db": -19.5,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 10.85,
+  "sfx": "extend (S3)",
+  "level_db": -26.5,
+  "bus": "tex",
+  "dur": 1.05
+ },
+ {
+  "t": 11.5,
+  "sfx": "zoom-out whoosh (out of the body)",
+  "level_db": -24,
+  "bus": "tex",
+  "dur": 1.7
+ },
+ {
+  "t": 11.9,
+  "sfx": "inflate head (S3)",
+  "level_db": -32.5,
+  "bus": "dot",
+  "dur": 0.4
+ },
+ {
+  "t": 12.026,
+  "sfx": "kirigami scales pop (head, S3)",
+  "level_db": -29.5,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 13.155,
+  "sfx": "study tag appears",
+  "level_db": -30,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 13.9,
+  "sfx": "travel progress tone",
+  "level_db": -31,
+  "bus": "tex",
+  "dur": 1.34
+ },
+ {
+  "t": 14.302,
+  "sfx": "foot tick 1",
+  "level_db": -24.0,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 14.442,
+  "sfx": "foot tick 2",
+  "level_db": -23.4,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 14.561,
+  "sfx": "foot tick 3",
+  "level_db": -22.8,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 14.679,
+  "sfx": "foot tick 4",
+  "level_db": -22.2,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 14.815,
+  "sfx": "foot tick 5",
+  "level_db": -21.6,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 15.045,
+  "sfx": "foot tick 6",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.06
+ },
+ {
+  "t": 15.27,
+  "sfx": "6+ FEET impact and shimmer",
+  "level_db": -15,
+  "bus": "accent",
+  "dur": 1.2
+ },
+ {
+  "t": 16.82,
+  "sfx": "forceps out of the channel",
+  "level_db": -27,
+  "bus": "tex",
+  "dur": 0.6
+ },
+ {
+  "t": 17.02,
+  "sfx": "forceps jaws open",
+  "level_db": -24,
+  "bus": "dot",
+  "dur": 0.08
+ },
+ {
+  "t": 17.42,
+  "sfx": "forceps bite (snip)",
+  "level_db": -19,
+  "bus": "accent",
+  "dur": 0.195
+ },
+ {
+  "t": 17.46,
+  "sfx": "tiny wet tug of the sample",
+  "level_db": -29,
+  "bus": "dot",
+  "dur": 0.18
+ },
+ {
+  "t": 17.55,
+  "sfx": "forceps retract with the sample",
+  "level_db": -28,
+  "bus": "tex",
+  "dur": 0.55
+ },
+ {
+  "t": 18.12,
+  "sfx": "needle out of the channel",
+  "level_db": -29,
+  "bus": "tex",
+  "dur": 0.4
+ },
+ {
+  "t": 18.42,
+  "sfx": "needle tip ting",
+  "level_db": -31,
+  "bus": "dot",
+  "dur": 0.9
+ },
+ {
+  "t": 18.68,
+  "sfx": "dye released (soft fluid)",
+  "level_db": -25,
+  "bus": "tex",
+  "dur": 0.9
+ },
+ {
+  "t": 18.7,
+  "sfx": "dye bloop",
+  "level_db": -22,
+  "bus": "dot",
+  "dur": 0.22
+ },
+ {
+  "t": 19.53,
+  "sfx": "controller beep",
+  "level_db": -30,
+  "bus": "dot",
+  "dur": 0.3
+ },
+ {
+  "t": 19.62,
+  "sfx": "extend (lab)",
+  "level_db": -26,
+  "bus": "tex",
+  "dur": 0.88
+ },
+ {
+  "t": 20.45,
+  "sfx": "inflate head (lab)",
+  "level_db": -24,
+  "bus": "dot",
+  "dur": 0.5
+ },
+ {
+  "t": 20.76,
+  "sfx": "kirigami scales pop (lab)",
+  "level_db": -21,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 21.6,
+  "sfx": "release head (S7)",
+  "level_db": -27.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 21.9,
+  "sfx": "inflate tail (S7)",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.4
+ },
+ {
+  "t": 22.026,
+  "sfx": "kirigami scales pop (tail, S7)",
+  "level_db": -18.0,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 22.3,
+  "sfx": "extend (S7)",
+  "level_db": -25.0,
+  "bus": "tex",
+  "dur": 0.8
+ },
+ {
+  "t": 23.1,
+  "sfx": "inflate head (S7)",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.5
+ },
+ {
+  "t": 23.26,
+  "sfx": "kirigami scales pop (head, S7)",
+  "level_db": -18.0,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 23.7,
+  "sfx": "release tail (S7)",
+  "level_db": -27.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 24,
+  "sfx": "contract slide (S7)",
+  "level_db": -25.0,
+  "bus": "tex",
+  "dur": 0.8
+ },
+ {
+  "t": 24.8,
+  "sfx": "release head (S7)",
+  "level_db": -27.0,
+  "bus": "dot",
+  "dur": 0.45
+ },
+ {
+  "t": 25.1,
+  "sfx": "inflate tail (S7)",
+  "level_db": -21.0,
+  "bus": "dot",
+  "dur": 0.4
+ },
+ {
+  "t": 25.226,
+  "sfx": "kirigami scales pop (tail, S7)",
+  "level_db": -18.0,
+  "bus": "dot",
+  "dur": 0.32
+ },
+ {
+  "t": 25.5,
+  "sfx": "extend (S7)",
+  "level_db": -25.0,
+  "bus": "tex",
+  "dur": 1.55
+ }
+]

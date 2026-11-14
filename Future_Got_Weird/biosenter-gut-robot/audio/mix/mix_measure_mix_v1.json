@@ -1,0 +1,20 @@
+{
+ "name": "mix_v1",
+ "duration_s": 26.3,
+ "integrated_lufs_stereo": -14.01,
+ "true_peak_dbtp_4x": -1.6,
+ "limiter_max_gr_db": -4.22,
+ "voice_lufs_mono": -17.08,
+ "effects_lufs_mono": -35.04,
+ "ambience_lufs_mono": -39.49,
+ "music_lufs_mono": -33.47,
+ "music_under_voice_db": 16.39,
+ "effects_under_voice_db": 17.96,
+ "limiter_min_at_s_and_p1_db": [
+  16.89,
+  -1.45
+ ],
+ "loop_seam_jump": 0.005035,
+ "events": 61,
+ "sha256": "61017388b97930774b2666b5d517b39ca3ca9c9772586d7a171ffd18623523a4"
+}

@@ -1,0 +1,428 @@
+{
+ "audio": "audio/narration/takes/t1_zFXV.mp3",
+ "model": "sherpa-onnx-zipformer-en-2023-06-26",
+ "pauses": [
+  [
+   3.17,
+   3.52
+  ],
+  [
+   6.44,
+   6.89
+  ],
+  [
+   10.19,
+   10.34
+  ],
+  [
+   11.31,
+   11.76
+  ],
+  [
+   13.7,
+   13.85
+  ],
+  [
+   15.13,
+   15.28
+  ],
+  [
+   16.49,
+   16.87
+  ],
+  [
+   19.09,
+   19.47
+  ],
+  [
+   20.76,
+   21.19
+  ],
+  [
+   21.86,
+   22.13
+  ]
+ ],
+ "words": [
+  {
+   "word": "Scientists",
+   "start": 0.0,
+   "end": 0.59
+  },
+  {
+   "word": "built",
+   "start": 0.6,
+   "end": 0.83
+  },
+  {
+   "word": "a",
+   "start": 0.84,
+   "end": 0.95
+  },
+  {
+   "word": "robot",
+   "start": 0.96,
+   "end": 1.42
+  },
+  {
+   "word": "that",
+   "start": 1.44,
+   "end": 1.57
+  },
+  {
+   "word": "CRAWLS",
+   "start": 1.6,
+   "end": 2.0
+  },
+  {
+   "word": "through",
+   "start": 2.0,
+   "end": 2.2
+  },
+  {
+   "word": "your",
+   "start": 2.2,
+   "end": 2.39
+  },
+  {
+   "word": "intestines.",
+   "start": 2.4,
+   "end": 3.17
+  },
+  {
+   "word": "And",
+   "start": 3.52,
+   "end": 3.57
+  },
+  {
+   "word": "this",
+   "start": 3.56,
+   "end": 3.78
+  },
+  {
+   "word": "thing",
+   "start": 3.785,
+   "end": 4.02
+  },
+  {
+   "word": "has",
+   "start": 4.025,
+   "end": 4.19
+  },
+  {
+   "word": "tiny",
+   "start": 4.265,
+   "end": 4.78
+  },
+  {
+   "word": "spikes",
+   "start": 4.785,
+   "end": 5.26
+  },
+  {
+   "word": "that",
+   "start": 5.265,
+   "end": 5.38
+  },
+  {
+   "word": "pop",
+   "start": 5.385,
+   "end": 5.63
+  },
+  {
+   "word": "out",
+   "start": 5.665,
+   "end": 5.78
+  },
+  {
+   "word": "of",
+   "start": 5.785,
+   "end": 5.9
+  },
+  {
+   "word": "its",
+   "start": 5.905,
+   "end": 6.14
+  },
+  {
+   "word": "body.",
+   "start": 6.145,
+   "end": 6.44
+  },
+  {
+   "word": "They",
+   "start": 6.89,
+   "end": 6.94
+  },
+  {
+   "word": "grip",
+   "start": 6.93,
+   "end": 7.22
+  },
+  {
+   "word": "the",
+   "start": 7.225,
+   "end": 7.34
+  },
+  {
+   "word": "slippery",
+   "start": 7.345,
+   "end": 7.82
+  },
+  {
+   "word": "walls",
+   "start": 7.825,
+   "end": 8.14
+  },
+  {
+   "word": "while",
+   "start": 8.145,
+   "end": 8.3
+  },
+  {
+   "word": "inflatable",
+   "start": 8.305,
+   "end": 8.9
+  },
+  {
+   "word": "chambers",
+   "start": 8.905,
+   "end": 9.37
+  },
+  {
+   "word": "push",
+   "start": 9.385,
+   "end": 9.62
+  },
+  {
+   "word": "it",
+   "start": 9.625,
+   "end": 9.71
+  },
+  {
+   "word": "forward,",
+   "start": 9.825,
+   "end": 10.19
+  },
+  {
+   "word": "almost",
+   "start": 10.34,
+   "end": 10.58
+  },
+  {
+   "word": "like",
+   "start": 10.585,
+   "end": 10.74
+  },
+  {
+   "word": "a",
+   "start": 10.745,
+   "end": 10.9
+  },
+  {
+   "word": "snake.",
+   "start": 10.905,
+   "end": 11.31
+  },
+  {
+   "word": "Researchers",
+   "start": 11.76,
+   "end": 12.25
+  },
+  {
+   "word": "tested",
+   "start": 12.255,
+   "end": 12.65
+  },
+  {
+   "word": "it",
+   "start": 12.655,
+   "end": 12.81
+  },
+  {
+   "word": "inside",
+   "start": 12.815,
+   "end": 13.2
+  },
+  {
+   "word": "pigs,",
+   "start": 13.255,
+   "end": 13.7
+  },
+  {
+   "word": "where",
+   "start": 13.85,
+   "end": 13.9
+  },
+  {
+   "word": "it",
+   "start": 13.895,
+   "end": 14.05
+  },
+  {
+   "word": "traveled",
+   "start": 14.055,
+   "end": 14.45
+  },
+  {
+   "word": "over",
+   "start": 14.455,
+   "end": 14.77
+  },
+  {
+   "word": "SIX",
+   "start": 14.775,
+   "end": 15.13
+  },
+  {
+   "word": "FEET",
+   "start": 15.28,
+   "end": 15.46
+  },
+  {
+   "word": "through",
+   "start": 15.485,
+   "end": 15.64
+  },
+  {
+   "word": "their",
+   "start": 15.645,
+   "end": 15.84
+  },
+  {
+   "word": "intestines.",
+   "start": 15.845,
+   "end": 16.49
+  },
+  {
+   "word": "It",
+   "start": 16.87,
+   "end": 16.92
+  },
+  {
+   "word": "could",
+   "start": 16.91,
+   "end": 16.99
+  },
+  {
+   "word": "even",
+   "start": 17.0,
+   "end": 17.24
+  },
+  {
+   "word": "take",
+   "start": 17.24,
+   "end": 17.39
+  },
+  {
+   "word": "tissue",
+   "start": 17.4,
+   "end": 17.8
+  },
+  {
+   "word": "samples",
+   "start": 17.8,
+   "end": 18.23
+  },
+  {
+   "word": "and",
+   "start": 18.24,
+   "end": 18.31
+  },
+  {
+   "word": "deliver",
+   "start": 18.32,
+   "end": 18.71
+  },
+  {
+   "word": "liquid.",
+   "start": 18.72,
+   "end": 19.09
+  },
+  {
+   "word": "It\u2019s",
+   "start": 19.47,
+   "end": 19.67
+  },
+  {
+   "word": "still",
+   "start": 19.68,
+   "end": 19.96
+  },
+  {
+   "word": "experimental.",
+   "start": 19.96,
+   "end": 20.76
+  },
+  {
+   "word": "But",
+   "start": 21.19,
+   "end": 21.24
+  },
+  {
+   "word": "one",
+   "start": 21.23,
+   "end": 21.57
+  },
+  {
+   "word": "day,",
+   "start": 21.575,
+   "end": 21.86
+  },
+  {
+   "word": "the",
+   "start": 22.13,
+   "end": 22.18
+  },
+  {
+   "word": "thing",
+   "start": 22.17,
+   "end": 22.39
+  },
+  {
+   "word": "exploring",
+   "start": 22.395,
+   "end": 22.95
+  },
+  {
+   "word": "your",
+   "start": 22.955,
+   "end": 23.15
+  },
+  {
+   "word": "gut",
+   "start": 23.155,
+   "end": 23.51
+  },
+  {
+   "word": "might",
+   "start": 23.515,
+   "end": 23.71
+  },
+  {
+   "word": "actually",
+   "start": 23.755,
+   "end": 24.19
+  },
+  {
+   "word": "be",
+   "start": 24.195,
+   "end": 24.39
+  },
+  {
+   "word": "crawling",
+   "start": 24.395,
+   "end": 24.91
+  },
+  {
+   "word": "through",
+   "start": 24.915,
+   "end": 25.23
+  },
+  {
+   "word": "it.",
+   "start": 25.235,
+   "end": 25.36
+  }
+ ]
+}
