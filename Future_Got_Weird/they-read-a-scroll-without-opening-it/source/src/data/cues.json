@@ -1,0 +1,232 @@
+[
+{
+"start": 0.3,
+"end": 3.56,
+"text": "If you tried to unroll this, it could crumble in your hands."
+},
+{
+"start": 4.0,
+"end": 6.45,
+"text": "So researchers unrolled it inside a computer."
+},
+{
+"start": 7.62,
+"end": 9.67,
+"text": "That black lump is a book."
+},
+{
+"start": 10.8,
+"end": 14.1,
+"text": "It was buried when Mount Vesuvius erupted in the year seventy-nine."
+},
+{
+"start": 15.3,
+"end": 17.51,
+"text": "Centuries later, people tried to open it."
+},
+{
+"start": 18.61,
+"end": 22.29,
+"text": "By the time they were done, the roll was less than half as wide as it had been."
+},
+{
+"start": 23.46,
+"end": 25.95,
+"text": "And the writing they wanted was still wrapped up inside."
+},
+{
+"start": 27.42,
+"end": 29.69,
+"text": "Look at what happens when you scan what\u2019s left."
+},
+{
+"start": 30.84,
+"end": 33.02,
+"text": "The researchers took X-ray images from different"
+},
+{
+"start": 33.03,
+"end": 35.74,
+"text": "angles and used them to build a three-dimensional map."
+},
+{
+"start": 36.78,
+"end": 39.1,
+"text": "Slice through that map and you can see a spiral."
+},
+{
+"start": 40.29,
+"end": 43.76,
+"text": "That\u2019s the sheet of papyrus, wound around itself over and over."
+},
+{
+"start": 45.16,
+"end": 48.75,
+"text": "Pick one of those thin lines and try to follow it all the way around."
+},
+{
+"start": 50.11,
+"end": 51.64,
+"text": "See where two layers press together?"
+},
+{
+"start": 53.2,
+"end": 54.91,
+"text": "If you jump to the neighboring layer there,"
+},
+{
+"start": 55.11,
+"end": 57.3,
+"text": "you\u2019ve just skipped an entire turn of the page."
+},
+{
+"start": 58.81,
+"end": 61.08,
+"text": "Keep going and you could end up putting two pieces"
+},
+{
+"start": 61.08,
+"end": 63.85,
+"text": "of writing side by side that were never next to each other."
+},
+{
+"start": 65.39,
+"end": 68.1,
+"text": "So they traced the sheet through the scan,"
+},
+{
+"start": 68.43,
+"end": 71.25,
+"text": "checking and correcting the places where the layers got messy."
+},
+{
+"start": 72.53,
+"end": 74.73,
+"text": "That gave them a digital surface they could flatten."
+},
+{
+"start": 75.92,
+"end": 76.91,
+"text": "Now they had a page."
+},
+{
+"start": 78.33,
+"end": 79.73,
+"text": "It looked almost blank."
+},
+{
+"start": 81.73,
+"end": 84.45,
+"text": "The ink was carbon-based, and the heat had turned"
+},
+{
+"start": 84.45,
+"end": 86.96,
+"text": "the papyrus into a carbon-rich material too."
+},
+{
+"start": 88.14,
+"end": 90.9,
+"text": "In the scan, the two could look almost identical."
+},
+{
+"start": 92.17,
+"end": 96.0,
+"text": "So the team trained a model to pick out signs of ink in tiny patches."
+},
+{
+"start": 96.94,
+"end": 99.02,
+"text": "Each patch was smaller than a single letter."
+},
+{
+"start": 100.38,
+"end": 104.03,
+"text": "Imagine trying to find the paint on a road by looking at one pebble at a time."
+},
+{
+"start": 105.35,
+"end": 106.9,
+"text": "One patch could look like a smudge."
+},
+{
+"start": 107.96,
+"end": 111.55,
+"text": "Put the patches together and you can start to see which marks form a stroke."
+},
+{
+"start": 113.19,
+"end": 114.91,
+"text": "And here\u2019s how they checked it."
+},
+{
+"start": 116.17,
+"end": 120.57,
+"text": "On a second scroll, they already had text that an earlier model had helped reveal."
+},
+{
+"start": 121.96,
+"end": 125.23,
+"text": "A sharper scan of that scroll picked up the ink deposits directly."
+},
+{
+"start": 126.5,
+"end": 127.75,
+"text": "They lined the two images up."
+},
+{
+"start": 129.13,
+"end": 131.57,
+"text": "The same strokes were sitting in the same places."
+},
+{
+"start": 133.17,
+"end": 136.04,
+"text": "Back on the first scroll, the flattened sheet"
+},
+{
+"start": 136.04,
+"end": 138.1,
+"text": "stretched to about four and a half feet."
+},
+{
+"start": 139.39,
+"end": 142.62,
+"text": "Scholars could read across roughly twenty-two partial columns."
+},
+{
+"start": 143.71,
+"end": 145.62,
+"text": "There are gaps where the papyrus is missing."
+},
+{
+"start": 147.01,
+"end": 150.39,
+"text": "One of the surviving passages is about what people can gain through study."
+},
+{
+"start": 151.58,
+"end": 153.08,
+"text": "Here\u2019s a fragment of the translation."
+},
+{
+"start": 154.26,
+"end": 156.95,
+"text": "\u201cPossessing the same practical wisdom as they do.\u201d"
+},
+{
+"start": 159.0,
+"end": 162.52,
+"text": "Somebody put those words down by hand more than two thousand years ago."
+},
+{
+"start": 163.91,
+"end": 165.93,
+"text": "You just read a line from inside the scroll."
+},
+{
+"start": 167.38,
+"end": 168.84,
+"text": "And the page is still rolled up."
+}
+]

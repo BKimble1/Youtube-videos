@@ -1,0 +1,277 @@
+{
+ "file": "audio/narration/FGW_Scroll_narration_V1.wav",
+ "sha256": "474d09671c184d1109ed7e57b993dc14dd9d3fb2991bf577d3a226c3d7fb3b89",
+ "duration_s": 172.6333,
+ "frames_30fps": 5179,
+ "speech_s": [
+  0.3,
+  168.84
+ ],
+ "words": 436,
+ "lead_s": 0.3,
+ "gaps_s": [
+  1.0,
+  1.2,
+  1.2,
+  1.3,
+  1.8,
+  1.4,
+  1.5
+ ],
+ "tail_s": 3.6,
+ "inserted_pauses": [
+  {
+   "block": 1,
+   "after": "book.",
+   "seconds": 0.6,
+   "at_src_s": 2.28
+  },
+  {
+   "block": 1,
+   "after": "seventy-nine.",
+   "seconds": 0.6,
+   "at_src_s": 6.39
+  },
+  {
+   "block": 1,
+   "after": "it.",
+   "seconds": 0.5,
+   "at_src_s": 9.26
+  },
+  {
+   "block": 1,
+   "after": "been.",
+   "seconds": 0.6,
+   "at_src_s": 13.46
+  },
+  {
+   "block": 2,
+   "after": "left.",
+   "seconds": 0.6,
+   "at_src_s": 2.93
+  },
+  {
+   "block": 2,
+   "after": "map.",
+   "seconds": 0.6,
+   "at_src_s": 8.26
+  },
+  {
+   "block": 2,
+   "after": "spiral.",
+   "seconds": 0.7,
+   "at_src_s": 11.11
+  },
+  {
+   "block": 3,
+   "after": "around.",
+   "seconds": 0.8,
+   "at_src_s": 4.1
+  },
+  {
+   "block": 3,
+   "after": "together?",
+   "seconds": 0.9,
+   "at_src_s": 6.26
+  },
+  {
+   "block": 3,
+   "after": "page.",
+   "seconds": 1.0,
+   "at_src_s": 10.86
+  },
+  {
+   "block": 4,
+   "after": "messy.",
+   "seconds": 0.6,
+   "at_src_s": 6.71
+  },
+  {
+   "block": 4,
+   "after": "flatten.",
+   "seconds": 0.6,
+   "at_src_s": 9.5
+  },
+  {
+   "block": 4,
+   "after": "page.",
+   "seconds": 0.9,
+   "at_src_s": 11.01
+  },
+  {
+   "block": 5,
+   "after": "too.",
+   "seconds": 0.6,
+   "at_src_s": 5.34
+  },
+  {
+   "block": 5,
+   "after": "identical.",
+   "seconds": 0.7,
+   "at_src_s": 9.07
+  },
+  {
+   "block": 5,
+   "after": "patches.",
+   "seconds": 0.5,
+   "at_src_s": 13.23
+  },
+  {
+   "block": 5,
+   "after": "letter.",
+   "seconds": 0.7,
+   "at_src_s": 15.94
+  },
+  {
+   "block": 5,
+   "after": "time.",
+   "seconds": 0.8,
+   "at_src_s": 20.3
+  },
+  {
+   "block": 5,
+   "after": "smudge.",
+   "seconds": 0.6,
+   "at_src_s": 22.31
+  },
+  {
+   "block": 6,
+   "after": "it.",
+   "seconds": 0.6,
+   "at_src_s": 2.54
+  },
+  {
+   "block": 6,
+   "after": "reveal.",
+   "seconds": 0.7,
+   "at_src_s": 7.62
+  },
+  {
+   "block": 6,
+   "after": "directly.",
+   "seconds": 0.7,
+   "at_src_s": 11.27
+  },
+  {
+   "block": 6,
+   "after": "up.",
+   "seconds": 0.9,
+   "at_src_s": 13.17
+  },
+  {
+   "block": 7,
+   "after": "feet.",
+   "seconds": 0.6,
+   "at_src_s": 5.54
+  },
+  {
+   "block": 7,
+   "after": "columns.",
+   "seconds": 0.5,
+   "at_src_s": 9.42
+  },
+  {
+   "block": 7,
+   "after": "missing.",
+   "seconds": 0.7,
+   "at_src_s": 11.45
+  },
+  {
+   "block": 7,
+   "after": "study.",
+   "seconds": 0.6,
+   "at_src_s": 15.75
+  },
+  {
+   "block": 7,
+   "after": "translation.",
+   "seconds": 0.6,
+   "at_src_s": 18.05
+  },
+  {
+   "block": 7,
+   "after": "do.\u201d",
+   "seconds": 1.3,
+   "at_src_s": 21.35
+  },
+  {
+   "block": 7,
+   "after": "ago.",
+   "seconds": 0.8,
+   "at_src_s": 25.31
+  },
+  {
+   "block": 7,
+   "after": "scroll.",
+   "seconds": 0.9,
+   "at_src_s": 28.18
+  }
+ ],
+ "blocks": [
+  {
+   "block": 0,
+   "take": "audio/narration/takes/b1_t2_qhtK.mp3",
+   "generation_id": "qhtK8WN7Q5tHRn7CVQub",
+   "src_in": 0.0,
+   "src_out": 6.32,
+   "start": 0.3
+  },
+  {
+   "block": 1,
+   "take": "audio/narration/takes/b2_t4_ClVs.mp3",
+   "generation_id": "ClVs4McvhXrpVh1pWSsY",
+   "src_in": 0.0,
+   "src_out": 16.24,
+   "start": 7.62
+  },
+  {
+   "block": 2,
+   "take": "audio/narration/takes/b3_t4_9UKo.mp3",
+   "generation_id": "9UKouFEOsysmTJeOhfBm",
+   "src_in": 0.1,
+   "src_out": 14.8,
+   "start": 27.36
+  },
+  {
+   "block": 3,
+   "take": "audio/narration/takes/b4_t3_h2uR.mp3",
+   "generation_id": "h2uRmSwD8w3T3iciQcoz",
+   "src_in": 0.0,
+   "src_out": 16.16,
+   "start": 45.16
+  },
+  {
+   "block": 4,
+   "take": "audio/narration/takes/b5_t1_CyiZ.mp3",
+   "generation_id": "CyiZN5IgQuhMYyIyzStb",
+   "src_in": 0.13,
+   "src_out": 12.64,
+   "start": 65.32
+  },
+  {
+   "block": 5,
+   "take": "audio/narration/takes/b6_t4_L92a.mp3",
+   "generation_id": "L92apwwoG7MixviGY0Wh",
+   "src_in": 0.0,
+   "src_out": 26.08,
+   "start": 81.73
+  },
+  {
+   "block": 6,
+   "take": "audio/narration/takes/b7_t1_QNKd.mp3",
+   "generation_id": "QNKdI2NlRSgaTRdkT31g",
+   "src_in": 0.1,
+   "src_out": 15.76,
+   "start": 113.11
+  },
+  {
+   "block": 7,
+   "take": "audio/narration/takes/b8_t1_MW6d.mp3",
+   "generation_id": "MW6ddlACJNjTONwaOppa",
+   "src_in": 0.0,
+   "src_out": 29.84,
+   "start": 133.17
+  }
+ ],
+ "wpm_over_speech_span": 155.2
+}

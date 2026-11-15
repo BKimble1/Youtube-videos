@@ -1,0 +1,17 @@
+If you tried to unroll this, it could crumble in your hands. So researchers unrolled it inside a computer.
+
+That black lump is a book. It was buried when Mount Vesuvius erupted in the year seventy-nine. Centuries later, people tried to open it. By the time they were done, the roll was less than half as wide as it had been. And the writing they wanted was still wrapped up inside.
+
+Look at what happens when you scan what’s left. The researchers took X-ray images from different angles and used them to build a three-dimensional map. Slice through that map and you can see a spiral. That’s the sheet of papyrus, wound around itself over and over.
+
+Pick one of those thin lines and try to follow it all the way around. See where two layers press together? If you jump to the neighboring layer there, you’ve just skipped an entire turn of the page. Keep going and you could end up putting two pieces of writing side by side that were never next to each other.
+
+So they traced the sheet through the scan, checking and correcting the places where the layers got messy. That gave them a digital surface they could flatten. Now they had a page. It looked almost blank.
+
+The ink was carbon-based, and the heat had turned the papyrus into a carbon-rich material too. In the scan, the two could look almost identical. So the team trained a model to pick out signs of ink in tiny patches. Each patch was smaller than a single letter. Imagine trying to find the paint on a road by looking at one pebble at a time. One patch could look like a smudge. Put the patches together and you can start to see which marks form a stroke.
+
+And here’s how they checked it. On a second scroll, they already had text that an earlier model had helped reveal. A sharper scan of that scroll picked up the ink deposits directly. They lined the two images up. The same strokes were sitting in the same places.
+
+Back on the first scroll, the flattened sheet stretched to about four and a half feet. Scholars could read across roughly twenty-two partial columns. There are gaps where the papyrus is missing. One of the surviving passages is about what people can gain through study. Here’s a fragment of the translation. “Possessing the same practical wisdom as they do.”
+
+Somebody put those words down by hand more than two thousand years ago. You just read a line from inside the scroll. And the page is still rolled up.

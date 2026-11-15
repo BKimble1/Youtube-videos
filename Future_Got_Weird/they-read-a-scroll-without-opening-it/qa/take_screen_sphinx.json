@@ -1,0 +1,152 @@
+{
+ "b1_t1_Cfbh.mp3": {
+  "block": 1,
+  "wer": 0.421,
+  "ref_words": 19,
+  "hyp_words": 18
+ },
+ "b1_t2_qhtK.mp3": {
+  "block": 1,
+  "wer": 0.421,
+  "ref_words": 19,
+  "hyp_words": 19
+ },
+ "b2_t1_k6TC.mp3": {
+  "block": 2,
+  "wer": 0.321,
+  "ref_words": 53,
+  "hyp_words": 55
+ },
+ "b2_t2_7nwa.mp3": {
+  "block": 2,
+  "wer": 0.604,
+  "ref_words": 53,
+  "hyp_words": 71
+ },
+ "b2_t3_F7RV.mp3": {
+  "block": 2,
+  "wer": 0.208,
+  "ref_words": 53,
+  "hyp_words": 52
+ },
+ "b2_t4_ClVs.mp3": {
+  "block": 2,
+  "wer": 0.189,
+  "ref_words": 53,
+  "hyp_words": 52
+ },
+ "b3_t1_LoEg.mp3": {
+  "block": 3,
+  "wer": 0.125,
+  "ref_words": 48,
+  "hyp_words": 49
+ },
+ "b3_t2_Rzyy.mp3": {
+  "block": 3,
+  "wer": 0.562,
+  "ref_words": 48,
+  "hyp_words": 67
+ },
+ "b3_t3_C2Ie.mp3": {
+  "block": 3,
+  "wer": 0.146,
+  "ref_words": 48,
+  "hyp_words": 48
+ },
+ "b3_t4_9UKo.mp3": {
+  "block": 3,
+  "wer": 0.104,
+  "ref_words": 48,
+  "hyp_words": 49
+ },
+ "b4_t1_N8vW.mp3": {
+  "block": 4,
+  "wer": 0.183,
+  "ref_words": 60,
+  "hyp_words": 60
+ },
+ "b4_t2_CJm3.mp3": {
+  "block": 4,
+  "wer": 0.183,
+  "ref_words": 60,
+  "hyp_words": 60
+ },
+ "b4_t3_h2uR.mp3": {
+  "block": 4,
+  "wer": 0.167,
+  "ref_words": 60,
+  "hyp_words": 60
+ },
+ "b5_t1_CyiZ.mp3": {
+  "block": 5,
+  "wer": 0.25,
+  "ref_words": 36,
+  "hyp_words": 36
+ },
+ "b5_t2_wuCf.mp3": {
+  "block": 5,
+  "wer": 0.278,
+  "ref_words": 36,
+  "hyp_words": 37
+ },
+ "b6_t1_dPYh.mp3": {
+  "block": 6,
+  "wer": 0.472,
+  "ref_words": 89,
+  "hyp_words": 108
+ },
+ "b6_t2_FPrB.mp3": {
+  "block": 6,
+  "wer": 0.27,
+  "ref_words": 89,
+  "hyp_words": 89
+ },
+ "b6_t3_brly.mp3": {
+  "block": 6,
+  "wer": 0.236,
+  "ref_words": 89,
+  "hyp_words": 86
+ },
+ "b6_t4_L92a.mp3": {
+  "block": 6,
+  "wer": 0.191,
+  "ref_words": 89,
+  "hyp_words": 86
+ },
+ "b7_t1_QNKd.mp3": {
+  "block": 7,
+  "wer": 0.208,
+  "ref_words": 48,
+  "hyp_words": 48
+ },
+ "b7_t2_iRUl.mp3": {
+  "block": 7,
+  "wer": 0.25,
+  "ref_words": 48,
+  "hyp_words": 50
+ },
+ "b7_t3_8OcR.mp3": {
+  "block": 7,
+  "wer": 0.229,
+  "ref_words": 48,
+  "hyp_words": 49
+ },
+ "b7_t4_YL4L.mp3": {
+  "block": 7,
+  "wer": 0.312,
+  "ref_words": 48,
+  "hyp_words": 49
+ },
+ "b8_t1_MW6d.mp3": {
+  "block": 8,
+  "wer": 0.202,
+  "ref_words": 89,
+  "hyp_words": 86
+ },
+ "b8_t2_axyd.mp3": {
+  "block": 8,
+  "wer": 0.213,
+  "ref_words": 89,
+  "hyp_words": 84
+ }
+}
