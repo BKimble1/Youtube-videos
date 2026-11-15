@@ -45,11 +45,11 @@ export const hookView = (tau: number): View => {
 const wideView = (tau: number): View => {
   const sc = trackS(tau);
   const T = T3(sc);
-  return {target: add3(C3(sc + 0.8), mul3(Z3, -0.6)), dir: add3(mul3(Z3, 1), mul3(T, 0.36)), dist: lerp(36, 31, ss5(tau, -5.15, -2.4)), f: 1900, cy: 1060};
+  return {target: add3(C3(sc + 0.8), mul3(Z3, -0.6)), dir: add3(mul3(Z3, 1), mul3(T, 0.36)), dist: lerp(36, 31, ss5(tau, -5.15, -2.4)), f: 1900, cy: 1170};
 };
 export const tunnelView = (tau: number): View => {
   if (tau >= 0) return hookView(tau);
-  return lerpView(wideView(tau), hookView(tau), ss5(tau, -2.45, 0));
+  return lerpView(wideView(tau), hookView(tau), ss5(tau, -2.9, 0));
 };
 export const tunnelCam = (tau: number, _st?: CrawlState): Cam3 => toCam(tunnelView(tau));
 

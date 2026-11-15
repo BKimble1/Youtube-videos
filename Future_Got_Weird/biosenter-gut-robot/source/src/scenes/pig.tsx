@@ -17,36 +17,37 @@ export const toScreen = (x: number, y: number) => ({x: x * PIG_S + PIG_X, y: y *
 const TUBE = 15.5 / PIG_S; // tube width (local) -> 15.5 px on screen at zoom 1
 export const PX_PER_UNIT_Z1 = 15.5 / 5.14; // the 3D tunnel's outer diameter (5.14 units) maps to the tube width
 
-// the coiled small intestine: a serpentine of rows joined by half-turns, entered from the stomach side
-const ROWS = [246, 271, 296, 321, 346, 371, 396, 421];
-const XL = 318, XR = 692, RT = (ROWS[1] - ROWS[0]) / 2;
+// the coiled small intestine (schematic): a serpentine of vertical columns joined by half-turns, entered from the
+// stomach side. Columns (rather than rows) put a straight, downward stretch at the handover point, so the cutaway's
+// straight tunnel hands over to a straight tube and the robot never starts wrapped round a turn.
+const COLS_X = Array.from({length: 15}, (_, k) => 684 - 25 * k);
+const YT = 258, YB = 412, RT = (COLS_X[0] - COLS_X[1]) / 2;
 type Pt = {x: number; y: number};
 const PATH: Pt[] = (() => {
   const pts: Pt[] = [];
-  // entry from the stomach (upper right)
-  for (let k = 0; k <= 20; k++) {
-    const u = k / 20;
-    pts.push({x: 742 - 50 * u, y: 214 + (ROWS[0] - 214) * ss(u, 0, 1)});
+  // entry from the stomach (upper right) curving down into the first column
+  for (let k = 0; k <= 16; k++) {
+    const u = k / 16;
+    pts.push({x: 742 - (742 - COLS_X[0]) * ss(u, 0, 1), y: 210 + (YT - 210) * u});
   }
-  for (let r = 0; r < ROWS.length; r++) {
-    const leftward = r % 2 === 0;
-    const y = ROWS[r];
-    for (let k = 1; k <= 40; k++) {
-      const u = k / 40;
-      const x = leftward ? lerp(XR, XL, u) : lerp(XL, XR, u);
-      pts.push({x, y: y + 3.2 * Math.sin(u * Math.PI * 3 + r) * Math.sin(u * Math.PI)});
+  for (let c = 0; c < COLS_X.length; c++) {
+    const down = c % 2 === 0;
+    const x = COLS_X[c];
+    for (let k = 1; k <= 30; k++) {
+      const u = k / 30;
+      pts.push({x: x + 2.4 * Math.sin(u * Math.PI * 2 + c) * Math.sin(u * Math.PI), y: down ? lerp(YT, YB, u) : lerp(YB, YT, u)});
     }
-    if (r === ROWS.length - 1) break;
-    // half-turn to the next row (left turns after leftward rows, right turns after rightward rows)
-    const cx = leftward ? XL : XR, cy = y + RT;
+    if (c === COLS_X.length - 1) break;
+    // half-turn to the next column (to the left), at the bottom after a downward column, at the top after an upward one
+    const cx = x - RT, cy = down ? YB : YT;
     for (let k = 1; k <= 16; k++) {
       const a = (k / 16) * Math.PI;
-      pts.push(leftward ? {x: cx - RT * Math.sin(a), y: cy - RT * Math.cos(a)} : {x: cx + RT * Math.sin(a), y: cy - RT * Math.cos(a)});
+      pts.push(down ? {x: cx + RT * Math.cos(a), y: cy + RT * Math.sin(a)} : {x: cx + RT * Math.cos(a), y: cy - RT * Math.sin(a)});
     }
   }
   // on toward the large bowel (lower left)
   const last = pts[pts.length - 1];
-  for (let k = 1; k <= 12; k++) pts.push({x: last.x + 8 * k, y: last.y + 2.2 * k * k * 0.1});
+  for (let k = 1; k <= 12; k++) pts.push({x: last.x - 6 * k, y: last.y - 2 * k});
   return pts;
 })();
 const ARC: number[] = (() => {
@@ -66,10 +67,12 @@ const at = (l: number) => {
 };
 // P0: the leftmost point of the first left half-turn, where the tube runs straight DOWN (the cutaway's direction)
 const L_P0 = (() => {
-  let best = 0, bx = 1e9;
+  // the arc length at the middle of column 2 (a downward column)
+  let best = 0, bd = 1e9;
+  const yMid = YT + 0.3 * (YB - YT);
   for (let i = 0; i < PATH.length; i++) {
-    if (ARC[i] < 300 || ARC[i] > 520) continue;
-    if (PATH[i].x < bx) { bx = PATH[i].x; best = ARC[i]; }
+    const d = Math.abs(PATH[i].x - COLS_X[2]) + Math.abs(PATH[i].y - yMid);
+    if (d < bd && i > 0 && PATH[i].y > PATH[i - 1].y) { bd = d; best = ARC[i]; }
   }
   return best;
 })();
@@ -103,28 +106,50 @@ export const handover = (t: number) => {
 /** screen angle of the cutaway tunnel at the handover (deg) */
 export const A0 = (-heading(trackS(12.0)) * 180) / Math.PI;
 
-const Glyph: React.FC<{t: number; scale: number}> = ({t, scale}) => {
-  // a time-lapse inchworm (same body plan and colours as the 3D robot); draws along local +y
-  const st = crawl(4.3 + ((t * 2.2) % 5.4));
-  const u = (n: number) => n * PX_PER_UNIT_Z1 * scale;
-  const ext = extLen(st.e);
-  const segs: [number, number, string, number][] = [];
-  let y = 0;
-  const total = LEN.tailCap + 2 * LEN.anchor + 2 * LEN.collar + ext + LEN.headCap;
-  y = -total / 2;
-  segs.push([y, LEN.tailCap, C.cap[3], 0.85]); y += LEN.tailCap;
-  segs.push([y, LEN.anchor, C.sleeve[3], 1.02 + (R_ANCHOR_MAX - 1.02) * st.aT]); y += LEN.anchor;
-  segs.push([y, LEN.collar, C.cap[3], 1.03]); y += LEN.collar;
-  segs.push([y, ext, C.body[3], 0.98]); y += ext;
-  segs.push([y, LEN.collar, C.cap[3], 1.03]); y += LEN.collar;
-  segs.push([y, LEN.anchor, C.sleeve[3], 1.02 + (R_ANCHOR_MAX - 1.02) * st.aH]); y += LEN.anchor;
-  segs.push([y, LEN.headCap, C.cap[3], 0.85]);
+/** the robot on the route: its body is drawn ALONG the intestine path (so it bends with the tube and never leaves it),
+ *  with the same body plan and colours as the 3D robot, at the diagram's scale. A continuous inchworm (phase p), no reset. */
+const RouteRobot: React.FC<{lCentre: number; p: number}> = ({lCentre, p}) => {
+  const k = PX_PER_UNIT_Z1 / PIG_S; // robot units -> local path units
+  const e = 0.5 + 0.5 * Math.sin(2 * Math.PI * p);
+  const aT = 0.5 + 0.5 * Math.sin(2 * Math.PI * p - Math.PI / 2), aH = 0.5 + 0.5 * Math.sin(2 * Math.PI * p + Math.PI / 2);
+  const ext = extLen(e);
+  const segs: [number, string, number][] = [
+    [LEN.tailCap, C.cap[3], 0.75], [LEN.anchor, C.sleeve[3], 1.02 + (R_ANCHOR_MAX - 1.02) * aT], [LEN.collar, C.cap[3], 1.0],
+    [ext, C.body[3], 0.95], [LEN.collar, C.cap[3], 1.0], [LEN.anchor, C.sleeve[3], 1.02 + (R_ANCHOR_MAX - 1.02) * aH], [LEN.headCap, C.cap[3], 0.75],
+  ];
+  const total = segs.reduce((m, q) => m + q[0], 0);
+  let l = lCentre - (total / 2) * k;
+  const line = (l0: number, l1: number) => {
+    const pts: string[] = [];
+    for (let x = l0; x <= l1 + 1e-6; x += 0.8) { const q = at(x).p, sp = toScreen(q.x, q.y); pts.push(`${sp.x.toFixed(2)},${sp.y.toFixed(2)}`); }
+    const q = at(l1).p, sp = toScreen(q.x, q.y); pts.push(`${sp.x.toFixed(2)},${sp.y.toFixed(2)}`);
+    return `M${pts.join('L')}`;
+  };
+  const pieces = segs.map(([len, col, r]) => { const l0 = l; l += len * k; return {d: line(l0, l), col, w: 2 * r * PX_PER_UNIT_Z1}; });
+  const whole = line(lCentre - (total / 2) * k, lCentre + (total / 2) * k);
   return (
     <g>
-      {segs.map(([y0, len, col, r], k) => (
-        <rect key={k} x={-u(r)} y={u(y0)} width={u(2 * r)} height={u(len) + 0.4} rx={u(Math.min(r, len / 2) * (k === 0 || k === 6 ? 1 : 0.45))} fill={col} stroke={INK} strokeWidth={Math.max(0.6, u(0.12))} />
-      ))}
-      <rect x={-u(0.3)} y={u(-total / 2) - u(30)} width={u(0.6)} height={u(30)} fill={C.tether[2]} stroke={INK} strokeWidth={Math.max(0.5, u(0.08))} />
+      <path d={whole} fill="none" stroke={INK} strokeWidth={2 * 1.05 * PX_PER_UNIT_Z1 + 2} strokeLinecap="round" strokeLinejoin="round" />
+      {pieces.map((q, i) => <path key={`o${i}`} d={q.d} fill="none" stroke={INK} strokeWidth={q.w + 2} strokeLinecap="butt" strokeLinejoin="round" />)}
+      {pieces.map((q, i) => <path key={i} d={q.d} fill="none" stroke={q.col} strokeWidth={q.w} strokeLinecap={i === 0 || i === 6 ? 'round' : 'butt'} strokeLinejoin="round" />)}
+    </g>
+  );
+};
+/** the tether: from the robot's tail back along the route and out of the pig; slow dashes move toward the robot (it is
+ *  fed and gently pushed from outside: the pig travel was assisted, not an independent journey) */
+const Tether: React.FC<{lTail: number; t: number}> = ({lTail, t}) => {
+  const pts: string[] = [];
+  for (let x = lTail; x >= 0; x -= 2) { const q = at(x).p, sp = toScreen(q.x, q.y); pts.push(`${sp.x.toFixed(1)},${sp.y.toFixed(1)}`); }
+  // out of the stomach end, up through the body toward the head and out of the frame
+  for (const [x, y] of [[760, 190], [800, 196], [850, 214], [905, 238], [1000, 250], [1200, 250]] as [number, number][]) {
+    const sp = toScreen(x, y); pts.push(`${sp.x.toFixed(1)},${sp.y.toFixed(1)}`);
+  }
+  const d = `M${pts.join('L')}`;
+  return (
+    <g>
+      <path d={d} fill="none" stroke={INK} strokeWidth={4.2} strokeLinecap="round" strokeLinejoin="round" opacity={0.9} />
+      <path d={d} fill="none" stroke={C.tether[3]} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+      <path d={d} fill="none" stroke="#FFFFFF" strokeWidth={2.2} strokeDasharray="3 15" strokeDashoffset={(t * 26).toFixed(2)} strokeLinecap="round" opacity={0.75} />
     </g>
   );
 };
@@ -138,16 +163,16 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
   const tf = `translate(${cx.toFixed(2)},${cy.toFixed(2)}) rotate(${ang.toFixed(3)}) scale(${Z.toFixed(4)}) translate(${(-P0.x).toFixed(2)},${(-P0.y).toFixed(2)})`;
   const breathe = 1 + 0.006 * Math.sin(t * 2.4);
   // after the reveal: push in on the route while the robot travels it, pull back as "6+ FEET" lands, then drift
-  const follow = keyS(t, [[tZ1, 0], [13.3, 0], [13.85, 1], [tTr1 - 0.05, 1], [tFeet + 0.6, 0]]);
-  const drift = 1 + 0.05 * ss5(t, tFeet + 0.6, 16.9);
-  const Z2 = (1 + 0.75 * follow) * drift;
+  const follow = keyS(t, [[tZ1, 0], [13.25, 0], [14.35, 1], [tTr1 - 0.05, 1], [tFeet + 0.6, 0]]);
+  // a slow, continuous drift through the whole beat (never a static hold); the push-in stays modest so the pig is never cropped
+  const drift = 1 + 0.022 * Math.max(0, t - tZ1) + 0.05 * ss5(t, tFeet + 0.4, 16.9);
+  const Z2 = (1 + 0.18 * follow) * drift;
   const FX = lerp(540, ROUTE_C.x, follow), FY = lerp(980, ROUTE_C.y, follow);
   const tf2 = `translate(${lerp(540, 540, follow).toFixed(2)},${lerp(980, 1010, follow).toFixed(2)}) scale(${Z2.toFixed(4)}) translate(${(-FX).toFixed(2)},${(-FY).toFixed(2)})`;
   const travel = ss5(t, tTr0, tTr1);
   const lNow = L_P0 + TRAVEL * travel;
   const g = at(lNow);
   const gs = toScreen(g.p.x, g.p.y);
-  const gAng = (Math.atan2(g.t.y, g.t.x) * 180) / Math.PI - 90;
   const tubeD = `M${PATH.map((p) => {
     const q = toScreen(p.x, p.y);
     return `${q.x.toFixed(1)},${q.y.toFixed(1)}`;
@@ -158,7 +183,6 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
     trail.push(`${s.x.toFixed(1)},${s.y.toFixed(1)}`);
   }
   const ticks = Array.from({length: 6}, (_, k) => L_P0 + (TRAVEL * (k + 1)) / 6.56); // one per foot (2 m = 6.56 ft)
-  const tagA = ss(t, tPig - 0.15, tPig + 0.25);
   const feetPop = t - tFeet;
   const feetS = feetPop < 0 ? 0 : 1 + 0.28 * Math.exp(-feetPop / 0.12) * Math.cos(feetPop * 22);
   const pigA = ss(Z, 3.5, 1.4);
@@ -202,16 +226,10 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
           })}
           <circle cx={gs.x} cy={gs.y} r={30} fill={C.glow} opacity={0.16 * clamp((t - tZ1 + 0.3) / 0.4)} />
           <circle cx={gs.x} cy={gs.y} r={19} fill={C.glow} opacity={0.22 * clamp((t - tZ1 + 0.3) / 0.4)} />
-          <g transform={`translate(${gs.x.toFixed(2)},${gs.y.toFixed(2)}) rotate(${gAng.toFixed(2)})`}>
-            <Glyph t={t} scale={1} />
-          </g>
+          <Tether lTail={lNow - (bodyLen(0.5) / 2) * (PX_PER_UNIT_Z1 / PIG_S)} t={t} />
+          <RouteRobot lCentre={lNow} p={(Math.max(t, tTr0) - tTr0) * 2.2} />
         </g>
         </g>
-      </g>
-      {/* the study tag */}
-      <g opacity={tagA * pigA} transform={`translate(540,${612 - 10 * (1 - tagA)})`}>
-        <rect x={-210} y={-30} width={420} height={60} rx={30} fill="#0E1A27" stroke="#F3B3AE" strokeWidth={3} />
-        <text x={0} y={12} textAnchor="middle" fontFamily='"Nunito Variable", Nunito, sans-serif' fontWeight={800} fontSize={33} letterSpacing="0.08em" fill="#F7D3CF">PIG STUDY · MIT 2026</text>
       </g>
       {feetS > 0 && (
         <g transform={`translate(540,1480) scale(${feetS.toFixed(3)})`}>

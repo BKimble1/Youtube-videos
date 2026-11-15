@@ -34,7 +34,7 @@ def captions(W, duration):
         c['show'] = round(max(0.0, c['start'] - 0.04), 3)
     for k, c in enumerate(caps):
         nxt = caps[k + 1]['show'] if k + 1 < len(caps) else duration
-        c['hide'] = round(nxt if nxt - c['end'] < 0.9 else c['end'] + (0.18 if k + 1 == len(caps) else 0.5), 3)
+        c['hide'] = round(nxt if nxt - c['end'] < 0.9 else c['end'] + (0.12 if k + 1 == len(caps) else 0.5), 3)
     return caps
 
 

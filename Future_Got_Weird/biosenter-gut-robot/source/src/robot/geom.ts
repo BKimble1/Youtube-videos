@@ -25,7 +25,9 @@ export const layout = (e: number) => {
   return {u1, u2, u3, u4, u5, u6, u7};
 };
 const TIP_R = 0.62, CH_R = 0.3, TETHER_R = 0.34;
-const FLAP_H = 0.16, FLAP_MAX = (50 * Math.PI) / 180, ROWS = 8, COLS = 16;
+// V3: scale-like tabs of a FIXED size cut in the sleeve material (they no longer grow with the balloon), blunt-tipped,
+// lifting at most 38 degrees, progressively as the sleeve stretches
+const FLAP_H = 0.12, FLAP_MAX = (38 * Math.PI) / 180, ROWS = 8, COLS = 16, FLAP_HW = 0.085, FLAP_TIP = 0.028;
 const NPHI = 48;
 
 /** anchor balloon radius along its length (v in [0,1]) at inflation a */
@@ -58,8 +60,9 @@ export const radius = (u: number, phi: number, st: CrawlState, L: ReturnType<typ
 /** outer radius of the anchors (balloon plus flap tips) at axial position u, or 0 outside them; for the wall contact */
 export const anchorOuter = (u: number, st: CrawlState, e: number) => {
   const L = layout(e);
-  if (u >= L.u1 && u <= L.u2) return anchorR((u - L.u1) / LEN.anchor, st.aT) + flapTip(st.popT) * 0.55;
-  if (u >= L.u5 && u <= L.u6) return anchorR((u - L.u5) / LEN.anchor, st.aH) + flapTip(st.popH) * 0.55;
+  // V3: the wall rests ON the tab tips (they meet the mucosa, they do not enter it)
+  if (u >= L.u1 && u <= L.u2) return anchorR((u - L.u1) / LEN.anchor, st.aT) + flapTip(st.popT) + 0.012;
+  if (u >= L.u5 && u <= L.u6) return anchorR((u - L.u5) / LEN.anchor, st.aH) + flapTip(st.popH) + 0.012;
   return 0;
 };
 
@@ -230,7 +233,8 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
       const ub = uc + FLAP_H / 2, ua = uc - FLAP_H / 2;
       for (let k = 0; k < COLS; k++) {
         const phiC = ((k + (rI % 2) * 0.5) / COLS) * Math.PI * 2;
-        const dphi = ((Math.PI * 2) / COLS) * 0.36;
+        const dphi = FLAP_HW / radius(ub, phiC, st, L).r;
+        const dtip = FLAP_TIP / radius(ua, phiC, st, L).r;
         const at = (u: number, phi: number) => {
           const f = frame(st.sTail + u);
           const rho = add3(mul3(f.N, Math.cos(phi)), mul3(f.B, Math.sin(phi)));
@@ -238,21 +242,24 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
         };
         const bm = at(ub, phiC);
         const b1 = at(ub, phiC - dphi).p, b2 = at(ub, phiC + dphi).p;
-        const fa = at(ua, phiC).p;
+        const fa1 = at(ua, phiC - dtip).p, fa2 = at(ua, phiC + dtip).p;
         const tu = norm3(sub3(at(ub + 0.02, phiC).p, at(ub - 0.02, phiC).p));
         const nb = norm3(sub3(bm.rho, mul3(tu, dot3(bm.rho, tu))));
         const vis = dot3(nb, norm3(sub3(B.eye, bm.p)));
         if (vis < -0.3) continue;
-        const pB = [b1, b2, fa].map((q) => proj(B, q));
+        const pB = [b1, b2, fa2, fa1].map((q) => proj(B, q));
         const sc = proj(B, bm.p).s;
         const zc = depthOf(B, frame(st.sTail + uc).p);
         if (pop < 0.03) {
           if (vis < 0.05) continue;
           // flat: just the cut line, slightly open as the sleeve stretches
-          items.push({z: zc - 0.2, d: `M${P2(pB[0])}L${P2(pB[2])}L${P2(pB[1])}`, stroke: mix(C.sleeve[0], C.sleeve[1], 0.3 + 0.4 * (1 - a)), sw: clamp(sc * 0.016, 0.5, 3.2), op: 0.85, round: true});
+          items.push({z: zc - 0.2, d: `M${P2(pB[0])}L${P2(pB[3])}L${P2(pB[2])}L${P2(pB[1])}`, stroke: mix(C.sleeve[0], C.sleeve[1], 0.3 + 0.4 * (1 - a)), sw: clamp(sc * 0.016, 0.5, 3.2), op: 0.85, round: true});
           continue;
         }
-        const apex = add3(bm.p, mul3(add3(mul3(tu, -Math.cos(alpha)), mul3(nb, Math.sin(alpha))), FLAP_H));
+        const lift = add3(mul3(tu, -Math.cos(alpha)), mul3(nb, Math.sin(alpha)));
+        const cdir = norm3(sub3(b2, b1));
+        const apex = add3(bm.p, mul3(lift, FLAP_H));
+        const a1 = add3(apex, mul3(cdir, -FLAP_TIP)), a2 = add3(apex, mul3(cdir, FLAP_TIP));
         // the opening left in the sleeve
         if (vis > 0) items.push({z: zc - 0.2, d: `M${pB.map(P2).join('L')}Z`, fill: C.hole, op: clamp(pop * 1.4) * 0.92});
         // the flap: outer face (sleeve) or underside
@@ -260,11 +267,11 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
         const fnO = dot3(fn, nb) < 0 ? mul3(fn, -1) : fn;
         const ctr = mul3(add3(add3(b1, b2), apex), 1 / 3);
         const outer = dot3(fnO, sub3(B.eye, ctr)) > 0;
-        const fill = outer ? shadeAt(B, Lt, C.sleeve, ctr, fnO, {spec: 0.5, specPow: 18, amb: 0.3, tint: ['#B9FFF6', 0.12]}) : shadeAt(B, Lt, [C.flapUnder, '#11474F', '#1D6266', '#2F8282', '#55A9A3'], ctr, mul3(fnO, -1), {amb: 0.25});
-        const pf = [b1, b2, apex].map((q) => proj(B, q));
+        const fill = outer ? shadeAt(B, Lt, C.sleeve, ctr, fnO, {spec: 0.5, specPow: 18, amb: 0.3, tint: ['#B9FFF6', 0.12]}) : shadeAt(B, Lt, [C.sleeve[1], C.sleeve[1], C.sleeve[2], C.sleeve[3], C.sleeve[4]], ctr, mul3(fnO, -1), {amb: 0.35});
+        const pf = [b1, b2, a2, a1].map((q) => proj(B, q));
         // unhidden flaps draw above the balloon's outline ink (they stand in front of it); hidden ones stay depth-sorted
         const zF = occluded(ctr, 0.9) ? zc - 0.3 - 0.001 * rI : INKZ - 10 - depthOf(B, ctr) * 1e-3;
-        items.push({z: zF, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.35), sw: clamp(sc * 0.034, 0.6, 16), round: true});
+        items.push({z: zF, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.18), sw: clamp(sc * 0.022, 0.6, 10), round: true});
         items.push({z: zF - 0.0005, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.6), sw: clamp(sc * 0.006, 0.4, 2.2), round: true, op: 0.9});
       }
     }

@@ -1,6 +1,26 @@
 # Future Got Weird: The Robot That Crawls Through Your Intestines (BIOSENTER)
 
-## V2 (the current review cut)
+## V3 (the final cut)
+
+**Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V3_FINAL_1080x1920.mp4`.
+
+- **Video:** verified 1080×1920, H.264 High, 30 fps, 789 frames (26.30 s). No borders.
+- **Audio:** AAC-LC, 48 kHz.
+- **Narration:** the same recording as V1 and V2.
+
+**Report:** `production/V3_REPORT.md` has the changelog, the output verification, the science notes and the
+unresolved items. The evidence is in `qa/v3/`.
+
+**Rebuild V3:**
+
+    python3 tools/make_audio.py mix_v3
+    tools/render_resilient.sh mix_v3 exports/FGW_BIOSENTER_GUT_ROBOT_V3_FINAL_1080x1920.mp4
+    python3 tools/qa_render.py exports/FGW_BIOSENTER_GUT_ROBOT_V3_FINAL_1080x1920.mp4 qa/v3
+
+**Checks:** `tools/keepout.ts` (captions) and `tools/verify_kinematics.ts` (crawl mechanics and wall clearance). Run
+each with esbuild and node, as in the V1 report.
+
+## V2 (review cut, superseded)
 
 **Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V2_REVIEW_1080x1920.mp4`. It is not published.
 

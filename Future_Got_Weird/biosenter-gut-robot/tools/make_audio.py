@@ -123,7 +123,7 @@ for p in CJ['pops']:
     if p['scene'] == 'S3' and p['t'] > 11.5:
         L -= 10
     macro = p['scene'] == 'S2'
-    place(pop_cluster(count=22 if macro else 14, spread=0.09 if macro else 0.07, bright=1.15 if macro else 1.0, thump=0.6 if macro else 0.45),
+    place(pop_cluster(count=26 if macro else 16, spread=0.22 if macro else 0.15, bright=1.1 if macro else 1.0, thump=0.4 if macro else 0.3),
           p['t'] - 0.01, f"kirigami scales pop ({p['which']}, {p['scene']})", (-12 if macro else -18) + (0 if macro else L), 'accent' if macro else 'dot')
 
 # ---------------------------------------------------------------- transitions and the pig diagram
@@ -150,7 +150,6 @@ imp = np.sin(2 * np.pi * np.cumsum(70 * np.exp(-x / 0.08) + 42) / SR) * np.exp(-
 shim = sum(np.sin(2 * np.pi * f * x) * np.exp(-x / 0.45) / (k + 1) for k, f in enumerate([1174.7, 1760.0, 2349.3, 2637.0]))
 place(rmsn(imp) + 0.35 * rmsn(shim) * (1 - np.exp(-x / 0.01)), PG['feet'] - 0.01, '6+ FEET impact and shimmer', -15, 'accent')
 # the tag
-place(ui_tick(2400) * 0.7, PG['pig'] - 0.1, 'study tag appears', -30, 'dot')
 
 # ---------------------------------------------------------------- tools
 TL = CJ['tools']
@@ -185,7 +184,7 @@ beep = (np.sin(2 * np.pi * 1320 * x) * (x < 0.08) + np.sin(2 * np.pi * 1760 * x)
 place(beep * env_lin(len(x), 0.002, 0.02), SC['s6'] + 0.08, 'controller beep', -30, 'dot')
 place(extend(LB['extend1'] - LB['extend0']), LB['extend0'], 'extend (lab)', -26, 'tex')
 place(inflate(0.5), LB['inflate0'], 'inflate head (lab)', -24, 'dot')
-place(pop_cluster(12, 0.06, 1.05, 0.35), LB['pop'], 'kirigami scales pop (lab)', -21, 'dot')
+place(pop_cluster(14, 0.15, 1.05, 0.25), LB['pop'], 'kirigami scales lift (lab)', -21, 'dot')
 
 # ---------------------------------------------------------------- ambience by place (cut with the picture)
 def mask(spans, ramp=0.015):

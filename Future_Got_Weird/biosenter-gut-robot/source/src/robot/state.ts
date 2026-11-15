@@ -96,10 +96,9 @@ for (const [ph, t0, t1] of PHASES) {
 }
 export const POP_TIMES = CROSS;
 const popOf = (key: 'aT' | 'aH', tau: number, a: number) => {
-  const base = ss5(a, POP_ON - 0.06, POP_ON + 0.12);
-  let over = 0;
-  for (const tc of CROSS[key]) if (tau >= tc && tau - tc < 1.2) over = 0.08 * ring(tau, tc + 0.05, 5, 0.09);
-  return base * (1 + over);
+  // V3: the scales lift progressively as the sleeve stretches (kirigami buckling), with no snap and no overshoot
+  void tau; void key;
+  return ss5(a, 0.32, 0.95);
 };
 const glowAt = (tau: number) => {
   let g = 0;

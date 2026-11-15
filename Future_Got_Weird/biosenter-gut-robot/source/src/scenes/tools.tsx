@@ -45,16 +45,18 @@ const T_IN = 16.8;
 
 export const toolsState = (t: number) => {
   const bend = 0.85 + 0.15 * ss5(t, T_IN, T_IN + 0.5);
-  // clip jaws: out, open, close on the tissue, back in holding the sample
-  const fExt = ss5(t, T_IN + 0.0, tTissue - 0.08) * (1 - ss5(t, tSamples - 0.15, tSamples + 0.38));
-  const fOpen = ss(t, tIt + 0.1, tTissue - 0.12) * (1 - ss(t, tTissue - 0.02, tTissue + 0.12));
-  const bitten = ss(t, tTissue + 0.06, tTissue + 0.16);
-  // spray catheter: out, spray, settle
-  const sExt = ss5(t, tSamples + 0.35, tDeliver + 0.22);
-  const spray = ss(t, tLiquid - 0.1, tLiquid + 0.0) * (1 - ss(t, tLiquid + 0.42, tLiquid + 0.6));
-  const stain = ss(t, tLiquid - 0.02, tLiquid + 0.55);
-  return {bend, fExt, fOpen, bitten, sExt, spray, stain};
+  // biopsy: reach out of the channel (closed), open on the way, advance to touch the mucosa, close, retract with it
+  const fExt = ss5(t, T_IN, tTissue - 0.2) * (1 - ss5(t, tSamples - 0.22, tSamples + 0.3));
+  const fOpen = ss5(t, tIt + 0.12, tTissue - 0.24) * (1 - ss5(t, tTissue - 0.02, tTissue + 0.12));
+  const fContact = ss5(t, tTissue - 0.2, tTissue - 0.02) * (1 - ss5(t, tTissue + 0.14, tTissue + 0.3));
+  const bitten = ss(t, tTissue + 0.08, tTissue + 0.14); // the sample exists only once the jaws have closed on it
+  // spray catheter: out, a short burst of droplets, the stain spreads as they land
+  const sExt = ss5(t, tSamples + 0.3, tDeliver + 0.22);
+  return {bend, fExt, fOpen, fContact, bitten, sExt};
 };
+/** the spray burst: droplets are emitted over [SPRAY_T0, SPRAY_T1] and take SPRAY_FLIGHT s to reach the wall */
+const SPRAY_N = 34, SPRAY_FLIGHT = 0.26;
+const sprayT0 = () => tLiquid - 0.1, sprayT1 = () => tLiquid + 0.34;
 
 const tipOf = (fr: FrameF) => fr(S_TAIL + L.u7);
 const S_BITE = S_TAIL + L.u7 + 0.62, S_SPRAY = S_BITE + 1.05;
@@ -80,11 +82,12 @@ export const toolsCam = (t: number): Cam3 => {
   const tip = tipOf(fr).p;
   const move = ss5(t, tSamples - 0.12, tDeliver + 0.3);
   const site = lerp(S_BITE, S_SPRAY, move);
-  const tgt = add3(mul3(add3(tip, rimPt(site, 0)), 0.5), add3(mul3(T3(site), lerp(-0.05, 0.25, move)), add3(mul3(N3(site), -0.1), mul3(Z3, 0.1))));
+  // V3: framed tighter on the work (between the channel and the wall), so the instruments read immediately
+  const tgt = add3(mul3(add3(mul3(tip, 0.4), mul3(rimPt(site, 0), 0.6)), 1), add3(mul3(T3(site), lerp(0.0, 0.3, move)), add3(mul3(N3(site), -0.25), mul3(Z3, 0.1))));
   const tilt = 0.14;
   const dir = norm3(add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N3(site), -Math.sin(tilt))), mul3(T3(site), 0.1)));
   const dist = 14;
-  const zoom = keyS(t, [[T_IN, 420], [tTissue, 450], [tSamples, 450], [tDeliver + 0.2, 470], [19.5, 490]]);
+  const zoom = keyS(t, [[T_IN, 600], [tTissue, 640], [tSamples, 640], [tDeliver + 0.2, 660], [19.5, 680]]);
   return {eye: add3(tgt, mul3(dir, dist)), target: tgt, f: dist * zoom, roll: (heading(site) * 180) / Math.PI, cy: 900};
 };
 
@@ -108,42 +111,55 @@ export const ToolsShot: React.FC<{t: number}> = ({t}) => {
     return w;
   };
   const zTool = -2e5;
-  // ---- 1. the biopsy clip
-  const biteTarget = rimPt(S_BITE, -0.05);
+  // ---- 1. the biopsy instrument: cable -> steel clevis -> two hinged cup jaws (one connected assembly)
+  const JL = 0.24, JW = 0.085, CLEVIS = 0.11, GAP = 0.12;
+  const contactPt = rimPt(S_BITE, -0.05); // the villus tips
   if (S.fExt > 0.01) {
-    const P = toolPath(fr, biteTarget, S.fExt);
-    tube(P.pts, 0.075, [C.steel[2], C.steel[3], INK], zTool);
-    // jaws open in the cut plane, about the tool's axis
+    // the clevis sits JL + CLEVIS short of the contact point, plus a small approach gap that closes on contact
+    const dirIn = norm3(sub3(contactPt, tipOf(fr).p));
+    const hingeTarget = add3(contactPt, mul3(dirIn, -(JL + GAP * (1 - S.fContact))));
+    const P = toolPath(fr, add3(hingeTarget, mul3(dirIn, -CLEVIS)), S.fExt);
+    tube(P.pts, 0.07, [C.steel[2], C.steel[3], INK], zTool);
+    const hinge = add3(P.end, mul3(P.dir, CLEVIS));
+    // the clevis: a short steel collar joining the cable to the jaws
+    const c0 = proj(B, P.end), c1 = proj(B, hinge);
+    const cw = 2 * 0.085 * pxs(hinge);
+    extra.push({z: zTool - 0.004, d: `M${P2(c0)}L${P2(c1)}`, stroke: INK, sw: cw + 4.5, round: true});
+    extra.push({z: zTool - 0.005, d: `M${P2(c0)}L${P2(c1)}`, stroke: C.steel[1], sw: cw, round: true});
+    extra.push({z: zTool - 0.006, d: `M${P2(c0)}L${P2(c1)}`, stroke: C.steel[3], sw: cw * 0.3, round: true, op: 0.8});
+    // the jaws open in the cut plane, about the hinge
     const perp = norm3(cross3(P.dir, Z3));
-    const open = 0.8 * S.fOpen;
+    const open = 0.62 * S.fOpen;
     const jaw = (sgn: number) => {
       const a = sgn * open;
       const d = norm3(add3(mul3(P.dir, Math.cos(a)), mul3(perp, Math.sin(a))));
       const n = norm3(add3(mul3(P.dir, -Math.sin(a)), mul3(perp, Math.cos(a))));
-      const pts: V2[] = [];
+      const pts: V2[] = [proj(B, hinge)];
       for (let k = 0; k <= 12; k++) {
-        const th = (k / 12) * Math.PI;
-        const q = add3(add3(P.end, mul3(d, 0.15 + 0.17 * Math.sin(th))), mul3(n, sgn * 0.11 * Math.cos(th) * 0.9));
-        pts.push(proj(B, add3(q, mul3(n, sgn * 0.05))));
+        const th = (k / 12) * Math.PI; // a cup: from the hinge out to the tip and back along the jaw's inner edge
+        const along = JL * (0.5 - 0.5 * Math.cos(th));
+        const across = sgn * JW * Math.sin(th) ** 0.8;
+        pts.push(proj(B, add3(add3(hinge, mul3(d, along)), mul3(n, across))));
       }
-      extra.push({z: zTool - 0.01, d: `M${pts.map(P2).join('L')}Z`, fill: C.steel[2], stroke: INK, sw: 2.6});
-      extra.push({z: zTool - 0.011, d: `M${pts.slice(2, 8).map(P2).join('L')}`, stroke: C.steel[3], sw: 2.4, round: true, op: 0.85});
+      extra.push({z: zTool - 0.01, d: `M${pts.map(P2).join('L')}Z`, fill: C.steel[2], stroke: INK, sw: 2.4});
+      extra.push({z: zTool - 0.011, d: `M${pts.slice(3, 9).map(P2).join('L')}`, stroke: C.steel[3], sw: 2.2, round: true, op: 0.85});
     };
-    if (S.bitten > 0.01) {
-      // the sample, held between the closed jaws: a tiny piece of pink mucosa with its villus fringe
-      const c = proj(B, add3(P.end, mul3(P.dir, 0.2)));
-      const r = 0.1 * pxs(P.end) * S.bitten;
-      extra.push({z: zTool - 0.012, d: blob(c, r, 1.3), fill: C.mucosa, stroke: mix(C.sample, INK, 0.45), sw: 2});
-      extra.push({z: zTool - 0.013, d: blob({x: c.x - r * 0.15, y: c.y - r * 0.2}, r * 0.45, 0.4), fill: C.villus, op: 0.9});
-    }
     jaw(1);
     jaw(-1);
+    if (S.bitten > 0.01) {
+      // the sample: a tiny piece of mucosa held in the closed cups, peeking out of the seam
+      const c = proj(B, add3(hinge, mul3(P.dir, JL * 0.62)));
+      const r = 0.05 * pxs(hinge) * S.bitten;
+      extra.push({z: zTool - 0.012, d: blob(c, r, 1.1), fill: C.mucosa, stroke: mix(C.sample, INK, 0.45), sw: 1.8});
+      extra.push({z: zTool - 0.013, d: blob({x: c.x - r * 0.2, y: c.y - r * 0.25}, r * 0.42, 0.3), fill: C.villus, op: 0.9});
+    }
   }
   // ---- 2. the spray catheter
   const sprayTarget = rimPt(S_SPRAY, -0.62);
   const stainC = rimPt(S_SPRAY + 0.12, -0.02);
   if (S.sExt > 0.01) {
     const P = toolPath(fr, sprayTarget, S.sExt);
+    void 0;
     // a translucent catheter with the blue fluid line inside, and a steel nozzle
     const w = tube(P.pts, 0.06, ['#DCEAF2', '#FFFFFF', INK], zTool, 0.95);
     const fluidLen = Math.max(2, Math.round(P.pts.length * clamp(S.sExt * 1.2)));
@@ -151,35 +167,46 @@ export const ToolsShot: React.FC<{t: number}> = ({t}) => {
     const nz0 = proj(B, add3(P.end, mul3(P.dir, -0.06))), nz1 = proj(B, add3(P.end, mul3(P.dir, 0.05)));
     extra.push({z: zTool - 0.02, d: `M${P2(nz0)}L${P2(nz1)}`, stroke: INK, sw: w + 6, round: true});
     extra.push({z: zTool - 0.021, d: `M${P2(nz0)}L${P2(nz1)}`, stroke: C.steel[2], sw: w + 1.5, round: true});
-    // the spray: a short, narrow cone of fine droplets from the nozzle to a small patch of mucosa
-    if (S.spray > 0.01) {
-      const from = add3(P.end, mul3(P.dir, 0.06));
-      const to = stainC;
-      const ax = sub3(to, from);
-      const len = Math.hypot(ax[0], ax[1], ax[2]);
-      const u = norm3(ax), v = norm3(cross3(u, Z3));
-      for (let k = 0; k < 46; k++) {
-        const ph = (t * 2.6 + hash(k * 3.1)) % 1; // each droplet travels nozzle -> wall, repeating
-        const spread = (hash(k * 7.7) - 0.5) * 0.5 * ph;
-        const q = add3(add3(from, mul3(u, len * ph)), mul3(v, spread * len * 0.6));
-        const pp = proj(B, q);
-        const r = (1.8 + 2.4 * hash(k * 1.3)) * (pxs(q) / 300);
-        extra.push({z: zTool - 0.04, d: blob(pp, r, 0), fill: k % 3 ? C.dye : C.dyeLight, op: S.spray * (0.55 + 0.45 * (1 - ph))});
-      }
-      // a faint mist envelope
-      const e0 = proj(B, from), e1 = proj(B, add3(to, mul3(v, 0.2))), e2 = proj(B, add3(to, mul3(v, -0.2)));
-      extra.push({z: zTool - 0.035, d: `M${P2(e0)}L${P2(e1)}L${P2(e2)}Z`, fill: C.dyeLight, op: 0.16 * S.spray});
+    // the spray: a short burst of round droplets leaving the nozzle in a narrow cone, slowing, and settling on a
+    // small patch of mucosa. Each droplet has its own fixed trajectory and birth time (no looping, no flicker).
+    const from = add3(P.end, mul3(P.dir, 0.06));
+    const to = stainC;
+    const ax = sub3(to, from);
+    const len = Math.hypot(ax[0], ax[1], ax[2]);
+    const u = norm3(ax), v = norm3(cross3(u, Z3));
+    const t0 = sprayT0(), t1 = sprayT1();
+    for (let k = 0; k < SPRAY_N; k++) {
+      const born = t0 + ((t1 - t0) * (k + 0.5 * hash(k * 2.3))) / SPRAY_N;
+      const age = t - born;
+      if (age < 0 || age > SPRAY_FLIGHT + 0.1) continue;
+      const x = clamp(age / SPRAY_FLIGHT);
+      const travel = 1 - (1 - x) ** 1.6; // fast out of the nozzle, slowing toward the wall
+      const ang = (hash(k * 7.7) - 0.5) * 0.42; // narrow cone (about +-12 degrees)
+      const q = add3(add3(from, mul3(u, len * travel)), mul3(v, Math.tan(ang) * len * travel));
+      const pp = proj(B, q);
+      const r = (0.016 + 0.014 * hash(k * 1.3)) * pxs(q) * (1 - 0.35 * clamp((age - SPRAY_FLIGHT) / 0.1));
+      const op = clamp(age / 0.03) * (1 - clamp((age - SPRAY_FLIGHT) / 0.1));
+      extra.push({z: zTool - 0.04, d: blob(pp, r, 0), fill: C.dye, stroke: mix(C.dye, INK, 0.4), sw: 1, op});
+      extra.push({z: zTool - 0.041, d: blob({x: pp.x - r * 0.3, y: pp.y - r * 0.3}, r * 0.32, 0), fill: '#E4E8FF', op: op * 0.85});
+    }
+    // a faint mist only while the burst runs, close to the nozzle
+    const mist = ss(t, t0, t0 + 0.08) * (1 - ss(t, t1, t1 + 0.12));
+    if (mist > 0.01) {
+      const e0 = proj(B, from), e1 = proj(B, add3(from, add3(mul3(u, len * 0.55), mul3(v, len * 0.12)))), e2 = proj(B, add3(from, add3(mul3(u, len * 0.55), mul3(v, -len * 0.12))));
+      extra.push({z: zTool - 0.035, d: `M${P2(e0)}Q${P2(e1)} ${P2({x: (e1.x + e2.x) / 2, y: (e1.y + e2.y) / 2})}Q${P2(e2)} ${P2(e0)}Z`, fill: C.dyeLight, op: 0.12 * mist});
     }
   }
   // the stain left on the mucosa (local, on the surface: the villi turn blue)
   const stainItems: Item[] = [];
-  if (S.stain > 0.01) {
+  const landed = clamp((t - sprayT0() - SPRAY_FLIGHT) / (sprayT1() - sprayT0()));
+  const stain = ss5(landed, 0, 1);
+  if (stain > 0.01) {
     const c = proj(B, stainC);
     const sc = pxs(stainC);
     const T = proj(B, add3(stainC, T3(S_SPRAY)));
     const ang = (Math.atan2(T.y - c.y, T.x - c.x) * 180) / Math.PI;
     for (const [k, op] of [[1.0, 0.22], [0.7, 0.32], [0.42, 0.45]] as [number, number][]) {
-      stainItems.push({z: -1.5e5, d: ellipseD(c, 0.42 * sc * k * S.stain, 0.13 * sc * k * (0.5 + 0.5 * S.stain), ang), fill: k > 0.9 ? C.dyeLight : C.dye, op: op * clamp(S.stain * 1.4)});
+      stainItems.push({z: -1.5e5, d: ellipseD(c, 0.4 * sc * k * (0.35 + 0.65 * stain), 0.12 * sc * k * (0.5 + 0.5 * stain), ang), fill: k > 0.9 ? C.dyeLight : C.dye, op: op * clamp(stain * 1.6)});
     }
   }
   const sTip = S_TAIL + L.u7;
