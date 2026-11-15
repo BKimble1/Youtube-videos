@@ -39,7 +39,8 @@ export const SeqH: React.FC<{f: number}> = ({f}) => {
     const u = 1 - easeInOut(clamp((t - TM.still - 0.45) / (TM.stillEnd + 0.5 - TM.still - 0.45)));
     const fade = easeInOut(clamp((t - TM.stillEnd - 0.4) / 1.1));
     const toC = easeInOut(clamp((t - TM.stillEnd - 0.3) / 1.6));
-    const roll = {x: lerp(ROLL.x, 960, toC), y: lerp(ROLL.y, 470, toC), s: lerp(ROLL.s, 1.75, toC)};
+    const hold = clamp((t - TM.stillEnd - 1.9) / 2.5);
+    const roll = {x: lerp(ROLL.x, 960, toC), y: lerp(ROLL.y, 470, toC), s: lerp(ROLL.s, 1.75, toC) * (1 + 0.05 * hold)};
     return (
       <g>
         <OpenComp f={f} st={{u, open, split: 1, roll, crumbs: 1.3, darkFade: fade, leader: inK * (1 - fade), chips: 1, leftIn: inK, scanIn: inK}} />
@@ -63,9 +64,9 @@ export const SeqH: React.FC<{f: number}> = ({f}) => {
     [TM.back - 0.1, {x: C19, y: 0, z: 2.0}, C0],
     [TM.back + 0.25, {x: C19, y: 0, z: 2.0}, C0],
     [TM.feet + 0.1, {x: PL / 2, y: 0, z: ZF}, {x: 960, y: 430}],
-    [TM.oneOf - 0.15, {x: PL / 2, y: 0, z: ZF}, {x: 960, y: 430}],
+    [TM.oneOf - 0.15, {x: PL / 2, y: 0, z: ZF * 1.06}, {x: 960, y: 430}],
     [TM.study + 0.3, {x: C19 + 4, y: 0, z: 2.35}, CQ],
-    [TM.youJust - 0.1, {x: C19 + 4, y: 0, z: 2.35}, CQ],
+    [TM.youJust - 0.1, {x: C19 + 4, y: 10, z: 2.55}, CQ],
     [tCb, {x: CAM_P.x, y: CAM_P.y, z: CAM_P.z}, CAM_P_C],
   ]);
   const view: [number, number] = [cam.x - c.x / cam.z - 60, cam.x + (1920 - c.x) / cam.z + 60];

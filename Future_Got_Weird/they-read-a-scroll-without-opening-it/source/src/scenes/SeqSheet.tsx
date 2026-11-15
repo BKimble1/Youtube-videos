@@ -68,20 +68,21 @@ export const SeqSheet: React.FC<{f: number}> = ({f}) => {
   const cam = camAt(t, [
     [TM.see - 0.35, CAM0],
     [TM.together - 0.1, {x: B.x, y: B.y, z: 44}],
-    [TM.jump + 0.9, {x: B.x, y: B.y, z: 44}],
+    [TM.jump + 0.9, {x: B.x, y: B.y, z: 47}],
     [TM.page - 0.2, {x: 28, y: 0, z: 10.5}],
-    [tReset + 0.2, {x: 28, y: 0, z: 10.5}],
+    [tReset + 0.2, {x: 28, y: 0, z: 11.4}],
     [TM.traced + 1.4, CAM0],
-    [TM.gave + 0.05, CAM0],
+    [TM.gave + 0.05, {...CAM0, z: CAM0.z * 1.05}],
     [TM.flatten + 1.1, camFlatEnd],
-    [TM.blank - 0.5, camFlatEnd],
+    [TM.blank - 0.5, {...camFlatEnd, z: camFlatEnd.z * 1.06}],
     [TM.blank + 1.1, camBlank],
-    [TM.inkWas - 0.1, camBlank],
+    [TM.inkWas - 0.1, {...camBlank, z: camBlank.z * 1.07}],
     [TM.inkWas + 1.6, camInk],
-    [TM.each - 0.1, camInk],
+    [TM.each - 0.1, {...camInk, z: camInk.z * 1.13}],
     [TM.each + 0.9, camLetter],
-    [TM.put - 0.2, camLetter],
+    [TM.put - 0.2, {...camLetter, z: camLetter.z * 1.1}],
     [TM.put + 1.0, camInk],
+    [TM.checked, {...camInk, z: camInk.z * 1.06}],
   ]);
   const W = (s: number) => toScreen(cam, s, 0, CX, CY); // helper (unused for y)
   void W;

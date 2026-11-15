@@ -5,16 +5,16 @@ Long-form episode, 16:9. The virtual unwrapping of PHerc. 1667, with the separat
 ## V1: first complete review render (current)
 
 Not published. Nobody has watched it in real time. All checks of picture and sound are frame and measurement checks
-(see "Review" below).
+(see `production/V1_REPORT.md`).
 
 **Review file:** `exports/FGW_Scroll_V1_REVIEW_1920x1080.mp4`
 
 | Property | Value |
 |---|---|
-| Runtime | __RUNTIME__ |
+| Runtime | **2:52.63** (5,179 frames at 30 fps) |
 | Video | 1920×1080, 30 fps, H.264 High, yuv420p, BT.709, captions burned in |
 | Audio | AAC 48 kHz stereo, 320 kb/s |
-| Loudness | __LOUD__ |
+| Loudness | −14.0 LUFS integrated, −1.0 dBTP true peak |
 | Narration | Test Voice (`kk5XaSLo2XAw0sKM98zU`), eleven_v4, 436 words, 155.2 wpm over the speech span |
 
 The MP4 is Git-ignored. Checksummed 20 MB parts are in `backup/`; to restore it, run

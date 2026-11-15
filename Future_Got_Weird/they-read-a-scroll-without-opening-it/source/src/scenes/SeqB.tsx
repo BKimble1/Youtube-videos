@@ -135,11 +135,19 @@ export const SeqB: React.FC<{f: number}> = ({f}) => {
   const hy = cyR + Math.sin(ang - 0.25) * (r + 230);
   const glow = easeInOut(clamp((t - TM.writing - 0.2) / 1.0)) * 0.9;
   const letters = clamp((t - TM.writing) / 0.6);
-  const cm = (r / PXCM).toFixed(1);
+  // only the sourced widths are labelled: 4.9 cm before the first attempt, 2.0 cm after the last one
+  const at = attempts();
+  const lblA = 1 - clamp((t - at[0].a) / 0.3);
+  const lblB = clamp((t - at[2].b) / 0.3);
+  const cm = lblB > 0 ? '2.0' : '4.9';
+  const lbl = Math.max(lblA, lblB);
   const GY = BENCH + 46;
+  const dk = clamp((t - TM.centuries) / (TM.inside + 0.8 - TM.centuries));
+  const drift = 1 + 0.07 * (dk < 0.15 ? (dk * dk) / 0.3 : dk - 0.075) / 0.925; // eases in, then a steady push to the cut
   return (
     <g>
       <rect width={1920} height={1080} fill={K.sepia} />
+      <g transform={`translate(${EC.x * (1 - drift)} ${BENCH * (1 - drift)}) scale(${drift})`}>
       <ellipse cx={960} cy={430} rx={760} ry={420} fill="#F3E7CC" opacity={0.7} />
       {/* bench */}
       <rect x={0} y={BENCH} width={1920} height={1080 - BENCH} fill={K.sepiaDeep} />
@@ -163,10 +171,13 @@ export const SeqB: React.FC<{f: number}> = ({f}) => {
         <line x1={EC.x + R0} y1={GY - 8} x2={EC.x + R0} y2={GY + 8} stroke={K.sepiaInk} strokeWidth={3} opacity={0.4} />
         <line x1={EC.x - r} y1={GY} x2={EC.x + r} y2={GY} stroke={K.sepiaInk} strokeWidth={4} />
         <path d={`M${EC.x - r} ${GY} l16 -9 v18Z M${EC.x + r} ${GY} l-16 -9 v18Z`} fill={K.sepiaInk} />
+        <g opacity={lbl}>
         <rect x={EC.x - 74} y={GY + 18} width={148} height={46} rx={23} fill="#F6EDD8" stroke={K.sepiaInk} strokeWidth={2} />
         <text x={EC.x} y={GY + 51} textAnchor="middle" fontFamily={FONT_BODY} fontWeight={800} fontSize={30} fill={K.sepiaInk}>
           {cm} cm
         </text>
+        </g>
+      </g>
       </g>
       <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,250,238,0.9)" color={K.sepiaInk} />
     </g>

@@ -117,9 +117,11 @@ export const SeqG: React.FC<{f: number}> = ({f}) => {
   const marks = clamp((t - TM.lined - 0.2) / 0.3) * (1 - clamp((t - TM.same) / 0.5));
   const checks = clamp((t - TM.same - 0.1) / 0.3);
   const intro = clamp((t - t0) / 0.01);
+  const drift = 1 + 0.05 * clamp((t - t0) / (TM.back - 0.1 - t0));
   return (
     <g opacity={intro}>
       <rect width={1920} height={1080} fill="#EEF3F2" />
+      <g transform={`translate(${960 * (1 - drift)} ${520 * (1 - drift)}) scale(${drift})`}>
       <rect x={0} y={roll.y + 100 * roll.s} width={1920} height={1080} fill="#DCE6E4" opacity={1 - corner} />
       <Cradle x={roll.x} y={roll.y + 96 * roll.s} s={roll.s} w={520} />
       <RollParis4 x={roll.x} y={roll.y} s={roll.s} />
@@ -153,6 +155,7 @@ export const SeqG: React.FC<{f: number}> = ({f}) => {
           Reconstruction after Angelotti et al. 2026, Figs. 2–3 · letters are a stand-in pattern
         </text>
       )}
+      </g>
       <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" />
     </g>
   );

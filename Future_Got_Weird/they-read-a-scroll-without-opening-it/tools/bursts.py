@@ -33,5 +33,5 @@ for name, (a, b) in BEATS.items():
     n = int(round((b - a) * 30))
     cols = 8
     rows = (n + cols - 1) // cols
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a:.3f}', '-i', vid, '-frames:v', str(n), '-vf', f'scale=480:-1,drawtext=text=%{{pts\\:hms}}:x=6:y=6:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.5,tile={cols}x{rows}', '-update', '1', os.path.join(out, f'{name}.png')], stdin=subprocess.DEVNULL)
+    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', f'{a:.3f}', '-t', f'{n / 30 - 0.001:.3f}', '-i', vid, '-vf', f'scale=480:-1,setpts=PTS+{a:.3f}/TB,drawtext=text=%{{pts}}:x=6:y=6:fontsize=18:fontcolor=white:box=1:boxcolor=black@0.6,tile={cols}x{rows}', '-frames:v', '1', os.path.join(out, f'{name}.png')], stdin=subprocess.DEVNULL)
     print(name, a, b, n)
