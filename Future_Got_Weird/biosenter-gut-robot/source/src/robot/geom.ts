@@ -74,7 +74,9 @@ const ringSamples = (L: ReturnType<typeof layout>) => {
   seg(0, L.u1, 9, (x) => 1 - (1 - x) ** 1.6);
   seg(L.u1, L.u2, 30);
   seg(L.u2, L.u3, 3);
-  seg(L.u3, L.u4, Math.max(16, Math.round((L.u4 - L.u3) * 3.4)));
+  // V4: a FIXED ring count on the extender (V3 varied it with length, which re-cut the shading bands as it extended):
+  // the same material rings now simply spread apart as it lengthens
+  seg(L.u3, L.u4, 30);
   seg(L.u4, L.u5, 3);
   seg(L.u5, L.u6, 30);
   seg(L.u6, L.u7, 12, (x) => x ** 0.8);
@@ -151,6 +153,21 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
     }
     return false;
   };
+  /** V4: a segment a-b clipped to where vis() holds, the boundary found by bisection (so ink ends move continuously
+   *  instead of whole segments switching on and off) */
+  const clipSeg = (a: V3, b: V3, vis: (q: V3) => boolean): [V3, V3] | null => {
+    const va = vis(a), vb = vis(b);
+    if (va && vb) return [a, b];
+    if (!va && !vb) return null;
+    let lo = 0, hi = 1;
+    for (let it = 0; it < 10; it++) {
+      const m = (lo + hi) / 2;
+      if (vis(add3(a, mul3(sub3(b, a), m))) === va) lo = m; else hi = m;
+    }
+    const c = add3(a, mul3(sub3(b, a), (lo + hi) / 2));
+    return va ? [a, c] : [c, b];
+  };
+  const notOcc = (q: V3) => !occluded(q);
   const ringZ = (i: number) => DISC[Math.max(0, Math.min(nU - 1, i))].z;
   /** ink is drawn above every surface item; visibility comes from occluded() */
   const INKZ = -1e5;
@@ -168,12 +185,21 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
     const f0 = FV[i][j], f1 = FV[i][j1];
     return add3(P[i][j], mul3(sub3(P[i][j1], P[i][j]), f0 / (f0 - f1)));
   };
-  type Arc = {js: number[]; start: V3; end: V3; jS: number; jE: number} | 'all' | null;
+  type Arc = {js: number[]; start: V3; end: V3; jS: number; jE: number; full?: boolean} | 'all' | null;
   const arcOf = (i: number): Arc => {
     const f = FV[i];
     let jS = -1;
     for (let j = 0; j < NPHI; j++) if (f[j] <= 0 && f[(j + 1) % NPHI] > 0) { jS = j; break; }
-    if (jS < 0) return f[0] > 0 ? 'all' : null;
+    if (jS < 0) {
+      if (f[0] <= 0) return null;
+      // V4: a ring facing the camera all the way round (a collar seen at a steep angle) is a CLOSED band starting at its
+      // least-facing vertex. V3 fell back to separately stroked quads here, which flickered as a hatched patch.
+      let jm = 0;
+      for (let j = 1; j < NPHI; j++) if (f[j] < f[jm]) jm = j;
+      const js: number[] = [];
+      for (let k = 1; k < NPHI; k++) js.push((jm + k) % NPHI);
+      return {js, start: P[i][jm], end: P[i][jm], jS: jm, jE: jm, full: true};
+    }
     const js: number[] = [];
     let j = (jS + 1) % NPHI;
     while (f[j] > 0 && js.length < NPHI) { js.push(j); j = (j + 1) % NPHI; }
@@ -196,20 +222,77 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
     const spec = sec === 'ext' ? 0.55 : sec === 'tailAnchor' || sec === 'headAnchor' ? 0.35 : 0.8;
     return {pm, c: shadeAt(B, Lt, secCols(sec), pm, nm, {spec, specPow: sec === 'ext' ? 22 : 36, rim: 0.35, tint, amb: 0.2})};
   };
+  /** V4: emit one band between two ring polylines as BAND_SEG short segments, each shaded by a two-stop gradient
+   *  between its own end colours. Both polylines are resampled at the same fractions of their length, so the segment
+   *  boundaries move continuously with the geometry. (V3 shaded a whole curved arc with ONE straight linear gradient;
+   *  where the arc curves back on itself on screen, as on a collar seen from above, the sorted stops scrambled into
+   *  a flickering sawtooth.) */
+  const BAND_SEG = 12;
+  const resample = (pts: V3[], cols: string[] | null, m: number) => {
+    const cum = [0];
+    for (let k = 1; k < pts.length; k++) cum.push(cum[k - 1] + len3(sub3(pts[k], pts[k - 1])));
+    const tot = cum[cum.length - 1] || 1;
+    const P_: V3[] = [], C_: string[] = [];
+    let k = 1;
+    for (let q = 0; q <= m; q++) {
+      const d = (tot * q) / m;
+      while (k < pts.length - 1 && cum[k] < d) k++;
+      const u = clamp((d - cum[k - 1]) / ((cum[k] - cum[k - 1]) || 1));
+      P_.push(add3(pts[k - 1], mul3(sub3(pts[k], pts[k - 1]), u)));
+      if (cols) C_.push(mix(cols[k - 1], cols[k], u));
+    }
+    return {P_, C_};
+  };
+  const emitBand = (ptsA: V3[], colsA: string[], ptsB: V3[], z: number) => {
+    if (ptsA.length < 2 || ptsB.length < 2) return;
+    const a = resample(ptsA, colsA, BAND_SEG), b = resample(ptsB, null, BAND_SEG);
+    const pa = a.P_.map((q) => proj(B, q)), pb = b.P_.map((q) => proj(B, q));
+    for (let q = 0; q < BAND_SEG; q++) {
+      const g0 = {x: (pa[q].x + pb[q].x) / 2, y: (pa[q].y + pb[q].y) / 2}, g1 = {x: (pa[q + 1].x + pb[q + 1].x) / 2, y: (pa[q + 1].y + pb[q + 1].y) / 2};
+      items.push({z: z - q * 1e-7, d: `M${P2(pa[q])}L${P2(pa[q + 1])}L${P2(pb[q + 1])}L${P2(pb[q])}Z`,
+        grad: {x1: g0.x, y1: g0.y, x2: g1.x, y2: g1.y, stops: [[0, a.C_[q]], [1, a.C_[q + 1]]]}, sw: 1.0});
+    }
+  };
   for (let i = 0; i < nU - 1; i++) {
     const sec = (us[i] < L.u1 ? 'tailCap' : S[i]) as Sec;
     const A0 = ARCS[i], A1 = ARCS[i + 1];
+    // V4: when exactly one ring of the pair faces the camera (a collar curving into an anchor), shade the strip as ONE band
+    // on the facing ring's vertex indices (on both rings), never as separately stroked quads (V3's hatched collar patch)
+    const one = (A0 && A0 !== 'all' && !A0.full && A0.js.length >= 2 && !(A1 && A1 !== 'all' && A1.js.length >= 1)) ? A0
+      : (A1 && A1 !== 'all' && !A1.full && A1.js.length >= 2 && !(A0 && A0 !== 'all' && A0.js.length >= 1)) ? A1 : null;
+    if (one) {
+      const js = one.js;
+      emitBand(js.map((j) => P[i][j]), js.map((j) => colorAt(sec, i, j).c), js.map((j) => P[i + 1][j]), (ringZ(i) + ringZ(i + 1)) / 2);
+      continue;
+    }
+    if (A0 && A1 && A0 !== 'all' && A1 !== 'all' && (A0.full || A1.full)) {
+      // V4: a ring pair where either ring faces the camera all the way round: two half-bands that use the SAME vertex
+      // indices on both rings (split at ring i's two screen-extreme vertices), so the polygon can never self-intersect.
+      // Each half is shaded by a gradient across it; the farther half is drawn first.
+      const c2 = proj(B, F[i].p), t2 = proj(B, add3(F[i].p, F[i].T));
+      const ax = t2.x - c2.x, ay = t2.y - c2.y, al = Math.hypot(ax, ay) || 1;
+      let jLo = 0, jHi = 0, lo = 1e9, hi = -1e9;
+      for (let j = 0; j < NPHI; j++) {
+        const q = proj(B, P[i][j]);
+        const sd = (ax * (q.y - c2.y) - ay * (q.x - c2.x)) / al;
+        if (sd < lo) { lo = sd; jLo = j; }
+        if (sd > hi) { hi = sd; jHi = j; }
+      }
+      const half = (from: number, to: number) => {
+        const js: number[] = [];
+        for (let j = from; ; j = (j + 1) % NPHI) { js.push(j); if (j === to || js.length > NPHI) break; }
+        return js;
+      };
+      for (const js of [half(jLo, jHi), half(jHi, jLo)]) {
+        if (js.length < 2) continue;
+        const zH = js.reduce((m, j) => m + depthOf(B, mul3(add3(P[i][j], P[i + 1][j]), 0.5)), 0) / js.length;
+        emitBand(js.map((j) => P[i][j]), js.map((j) => colorAt(sec, i, j).c), js.map((j) => P[i + 1][j]), zH);
+      }
+      continue;
+    }
     if (A0 && A1 && A0 !== 'all' && A1 !== 'all' && A0.js.length >= 1 && A1.js.length >= 1) {
-      const poly: V2[] = [proj(B, A0.start), ...A0.js.map((j) => proj(B, P[i][j])), proj(B, A0.end), proj(B, A1.end), ...[...A1.js].reverse().map((j) => proj(B, P[i + 1][j])), proj(B, A1.start)];
-      const ga = proj(B, mul3(add3(A0.start, A1.start), 0.5)), gb = proj(B, mul3(add3(A0.end, A1.end), 0.5));
-      const samples = A0.js.map((j) => {
-        const {pm, c} = colorAt(sec, i, j);
-        return {p: proj(B, pm), c};
-      });
-      // the grazing colour right at the silhouette
-      const edgeS = colorAt(sec, i, A0.jS).c, edgeE = colorAt(sec, i, A0.jE).c;
-      samples.unshift({p: ga, c: edgeS}); samples.push({p: gb, c: edgeE});
-      items.push({z: (ringZ(i) + ringZ(i + 1)) / 2, d: `M${poly.map(P2).join('L')}Z`, grad: gradFrom(ga, gb, samples), sw: 1.0});
+      const cols = [colorAt(sec, i, A0.jS).c, ...A0.js.map((j) => colorAt(sec, i, j).c), colorAt(sec, i, A0.jE).c];
+      emitBand([A0.start, ...A0.js.map((j) => P[i][j]), A0.end], cols, [A1.start, ...A1.js.map((j) => P[i + 1][j]), A1.end], (ringZ(i) + ringZ(i + 1)) / 2);
       continue;
     }
     for (let j = 0; j < NPHI; j++) {
@@ -246,22 +329,25 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
         const tu = norm3(sub3(at(ub + 0.02, phiC).p, at(ub - 0.02, phiC).p));
         const nb = norm3(sub3(bm.rho, mul3(tu, dot3(bm.rho, tu))));
         const vis = dot3(nb, norm3(sub3(B.eye, bm.p)));
-        if (vis < -0.3) continue;
+        // V4: no hard culls or representation switches. The flat cut line and the lifted tab cross-fade by lift amount,
+        // and everything fades with the facing angle, so a tab never pops in, out or into a different drawing.
+        const kLift = ss(pop, 0.0, 0.14);
+        const vFlat = ss(vis, -0.02, 0.14), vTab = ss(vis, -0.4, -0.2);
+        if (vTab < 0.004 && vFlat < 0.004) continue;
         const pB = [b1, b2, fa2, fa1].map((q) => proj(B, q));
         const sc = proj(B, bm.p).s;
         const zc = depthOf(B, frame(st.sTail + uc).p);
-        if (pop < 0.03) {
-          if (vis < 0.05) continue;
+        if ((1 - kLift) * vFlat > 0.004) {
           // flat: just the cut line, slightly open as the sleeve stretches
-          items.push({z: zc - 0.2, d: `M${P2(pB[0])}L${P2(pB[3])}L${P2(pB[2])}L${P2(pB[1])}`, stroke: mix(C.sleeve[0], C.sleeve[1], 0.3 + 0.4 * (1 - a)), sw: clamp(sc * 0.016, 0.5, 3.2), op: 0.85, round: true});
-          continue;
+          items.push({z: zc - 0.2, d: `M${P2(pB[0])}L${P2(pB[3])}L${P2(pB[2])}L${P2(pB[1])}`, stroke: mix(C.sleeve[0], C.sleeve[1], 0.3 + 0.4 * (1 - a)), sw: clamp(sc * 0.016, 0.5, 3.2), op: 0.85 * (1 - kLift) * vFlat, round: true});
         }
+        if (kLift < 0.004) continue;
         const lift = add3(mul3(tu, -Math.cos(alpha)), mul3(nb, Math.sin(alpha)));
         const cdir = norm3(sub3(b2, b1));
         const apex = add3(bm.p, mul3(lift, FLAP_H));
         const a1 = add3(apex, mul3(cdir, -FLAP_TIP)), a2 = add3(apex, mul3(cdir, FLAP_TIP));
         // the opening left in the sleeve
-        if (vis > 0) items.push({z: zc - 0.2, d: `M${pB.map(P2).join('L')}Z`, fill: C.hole, op: clamp(pop * 1.4) * 0.92});
+        if (vFlat > 0.004) items.push({z: zc - 0.2, d: `M${pB.map(P2).join('L')}Z`, fill: C.hole, op: clamp(pop * 1.4) * 0.92 * vFlat});
         // the flap: outer face (sleeve) or underside
         const fn = norm3(cross3(sub3(b2, b1), sub3(apex, b1)));
         const fnO = dot3(fn, nb) < 0 ? mul3(fn, -1) : fn;
@@ -271,8 +357,8 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
         const pf = [b1, b2, a2, a1].map((q) => proj(B, q));
         // unhidden flaps draw above the balloon's outline ink (they stand in front of it); hidden ones stay depth-sorted
         const zF = occluded(ctr, 0.9) ? zc - 0.3 - 0.001 * rI : INKZ - 10 - depthOf(B, ctr) * 1e-3;
-        items.push({z: zF, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.18), sw: clamp(sc * 0.022, 0.6, 10), round: true});
-        items.push({z: zF - 0.0005, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.6), sw: clamp(sc * 0.006, 0.4, 2.2), round: true, op: 0.9});
+        items.push({z: zF, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.18), sw: clamp(sc * 0.022, 0.6, 10), round: true, op: kLift * vTab});
+        items.push({z: zF - 0.0005, d: `M${pf.map(P2).join('L')}Z`, fill, stroke: mix(fill, INK, 0.6), sw: clamp(sc * 0.006, 0.4, 2.2), round: true, op: 0.9 * kLift * vTab});
       }
     }
   };
@@ -305,8 +391,9 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
       const a = cs[i], b = cs[i + 1];
       if (!a || !b) continue;
       const m = mul3(add3(a, b), 0.5);
-      if (occluded(m)) continue;
-      items.push({z: INKZ, d: `M${P2(proj(B, a))}L${P2(proj(B, b))}`, stroke: INK, sw: ink(m), round: true});
+      const seg = clipSeg(a, b, notOcc);
+      if (!seg) continue;
+      items.push({z: INKZ, d: `M${P2(proj(B, seg[0]))}L${P2(proj(B, seg[1]))}`, stroke: INK, sw: ink(m), round: true});
     }
   };
   chain(crossA);
@@ -352,21 +439,27 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
   // seams between modules: the front arcs of the boundary rings
   const seamAt = (u: number, w = 0.6, col = INK) => {
     const f = frame(st.sTail + u);
-    const pts: V3[] = [], vis: boolean[] = [];
-    for (let j = 0; j <= NPHI; j++) {
-      const phi = (j / NPHI) * Math.PI * 2;
+    const at = (phi: number) => {
       const rho = add3(mul3(f.N, Math.cos(phi)), mul3(f.B, Math.sin(phi)));
-      const p = add3(f.p, mul3(rho, radius(u, phi, st, L).r + 0.004));
-      pts.push(p);
-      vis.push(dot3(rho, sub3(B.eye, p)) > 0);
-    }
+      return {p: add3(f.p, mul3(rho, radius(u, phi, st, L).r + 0.004)), rho};
+    };
+    // visible = on the camera-facing half of the ring AND not hidden by a nearer part of the robot
+    const visPhi = (phi: number) => { const q = at(phi); return dot3(q.rho, sub3(B.eye, q.p)) > 0 && !occluded(q.p); };
     for (let j = 0; j < NPHI; j++) {
-      if (!vis[j] || !vis[j + 1]) continue;
-      const m = mul3(add3(pts[j], pts[j + 1]), 0.5);
-      if (occluded(m)) continue;
-      items.push({z: INKZ + 1, d: `M${P2(proj(B, pts[j]))}L${P2(proj(B, pts[j + 1]))}`, stroke: col, sw: ink(m) * w, round: true});
+      const p0 = (j / NPHI) * Math.PI * 2, p1 = ((j + 1) / NPHI) * Math.PI * 2;
+      const v0 = visPhi(p0), v1 = visPhi(p1);
+      if (!v0 && !v1) continue;
+      let a0 = p0, a1 = p1;
+      if (v0 !== v1) {
+        let lo = p0, hi = p1;
+        for (let it = 0; it < 10; it++) { const m = (lo + hi) / 2; if (visPhi(m) === v0) lo = m; else hi = m; }
+        if (v0) a1 = (lo + hi) / 2; else a0 = (lo + hi) / 2;
+      }
+      const A = at(a0).p, Bp = at(a1).p, M = at((a0 + a1) / 2).p;
+      items.push({z: INKZ + 1, d: `M${P2(proj(B, A))}L${P2(proj(B, M))}L${P2(proj(B, Bp))}`, stroke: col, sw: ink(M) * w, round: true});
     }
   };
+
   for (const u of [L.u1 + 0.005, L.u2 - 0.005, L.u3, L.u4, L.u5 + 0.005, L.u6 - 0.005]) seamAt(u, 0.55);
   seamAt(L.u1 * 0.55, 0.35, mix(C.cap[1], INK, 0.3));
   // extender fibre ribs: spread as it extends

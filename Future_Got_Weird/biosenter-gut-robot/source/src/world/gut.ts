@@ -32,6 +32,21 @@ const rimTaper = (th: number) => ss(th + EXT, 0.05, 0.55) * ss(Math.PI + EXT2 - 
 const rhoAt = (s: number, th: number): V3 => add3(mul3(N3(s), Math.cos(th)), mul3(Z3, -Math.sin(th)));
 const foldH = (k: number, th: number) => FOLD_H * (0.7 + 0.5 * hash(k * 3.7)) * clamp(0.35 + 0.65 * (0.5 + 0.5 * noise1(th * 1.6 + k * 5.3, 2)) * 1.25, 0, 1) * rimTaper(th);
 
+/** the fixed wall samples owned by fold k: 25 across its crest (+-0.3, where the wobbling crest can lie) and 5 evenly
+ *  across the gap to the next fold's crest region. A pure function of k (cached). */
+const FS_CACHE = new Map<number, number[]>();
+export const foldSamples = (k: number) => {
+  let v = FS_CACHE.get(k);
+  if (v) return v;
+  const c0 = k * FOLD_P + 0.22 * (hash(k * 7.3) - 0.5), c1 = (k + 1) * FOLD_P + 0.22 * (hash((k + 1) * 7.3) - 0.5);
+  v = [];
+  for (let i = -12; i <= 12; i++) v.push(c0 + i * 0.025);
+  const a = c0 + 0.3, b = c1 - 0.3;
+  for (let i = 1; i <= 5; i++) v.push(a + ((b - a) * i) / 6);
+  FS_CACHE.set(k, v);
+  return v;
+};
+
 /** wall radius at (s, theta), and how hard the robot is pressing there (0..1) */
 export const wallR = (s: number, th: number, contact?: ContactF) => {
   let r = RL * (1 + 0.03 * noise1(s * 0.6 + th * 0.9, 1));
@@ -79,18 +94,13 @@ export type GutOpts = {
 export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: Item[]} => {
   const back: Item[] = [];
   const rims: Item[] = [];
-  // ---- s samples, adaptive to screen size
-  const ss_: number[] = [];
-  let s = o.sFrom;
-  const target = o.px ?? 9;
-  while (s < o.sTo) {
-    ss_.push(s);
-    const pp = proj(B, C3(s));
-    const z = depthOf(B, C3(s));
-    const ds = z > 0.5 ? clamp((target / Math.max(1, pp.s)) * 1.0, 0.035, 0.7) : 0.2;
-    s += ds;
+  // ---- s samples: WORLD-ANCHORED (V4). Every fold k owns a fixed set of arc lengths (dense across its crest, sparse
+  // between crests) that depends only on k, never on the camera or the shot range, so the wall is the same mesh in
+  // every frame: folds keep their shape and the shading bands never slide or re-cut as the camera moves.
+  const ss_: number[] = [], kOf: number[] = [];
+  for (let k = Math.floor(o.sFrom / FOLD_P) - 2; k <= Math.ceil(o.sTo / FOLD_P) + 1; k++) {
+    for (const sv of foldSamples(k)) if (sv >= o.sFrom && sv <= o.sTo) { ss_.push(sv); kOf.push(k); }
   }
-  ss_.push(o.sTo);
   const NTH = 64;
   EXT = o.ext ?? 0;
   EXT2 = o.ext2 ?? EXT;
@@ -125,22 +135,16 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
       back.push({z: zs / (j1 - j0 + 1), d: `M${poly.map(P2).join('L')}Z`, grad: gradFrom(ga, gb, samples), sw: 1.2});
     }
   }
-  // ---- wet glints along fold crests (the light catching mucus)
+  // ---- wet glints along fold crests (the light catching mucus). V4: every crest segment is always considered; its
+  // opacity and width are smooth functions of the specular term, so glints slide and fade continuously, never pop.
   const kA = Math.floor(o.sFrom / FOLD_P), kB = Math.ceil(o.sTo / FOLD_P);
   for (let k = kA; k <= kB; k++) {
-    let run: {p: V2; w: number; z: number}[] = [];
-    const flush = () => {
-      if (run.length > 2) {
-        const zz = run.reduce((m, q) => m + q.z, 0) / run.length;
-        const w = run.reduce((m, q) => Math.max(m, q.w), 0);
-        back.push({z: zz - 0.05, d: `M${run.map((q) => P2(q.p)).join('L')}`, stroke: rgba('#FFF1EA', 0.55), sw: w, round: true});
-      }
-      run = [];
-    };
+    const fh = foldH(k, Math.PI / 2);
+    let prev: {p: V2; w: number; z: number; a: number} | null = null;
     for (let j = 3; j <= NTH - 3; j++) {
       const th = ths[j];
       const sk = foldS(k, th) - 0.03;
-      if (sk < o.sFrom || sk > o.sTo) { flush(); continue; }
+      if (sk < o.sFrom || sk > o.sTo) { prev = null; continue; }
       const {r, press} = wallR(sk, th, o.contact);
       const p = wallPt(sk, th, r - 0.004);
       const n = norm3(sub3(C3(sk), p));
@@ -148,10 +152,14 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
       const h = norm3(add3(l, v));
       const sp = Math.max(0, dot3(n, h)) ** 30 * (1 - press) * (1 - fogAmt(B, Lt, p));
       const pp = proj(B, p);
-      if (sp > 0.22 && foldH(k, th) > 0.18) run.push({p: pp, w: clamp(pp.s * 0.035 * sp, 0.6, 9), z: depthOf(B, p)});
-      else flush();
+      const cur = {p: pp, w: clamp(pp.s * 0.035 * sp, 0, 9), z: depthOf(B, p), a: ss(sp, 0.12, 0.34) * ss(foldH(k, th), 0.12, 0.22)};
+      if (prev && (prev.a > 0.01 || cur.a > 0.01)) {
+        const aa = (prev.a + cur.a) / 2, ww = Math.max(0.6, (prev.w + cur.w) / 2);
+        back.push({z: (prev.z + cur.z) / 2 - 0.05, d: `M${P2(prev.p)}L${P2(cur.p)}`, stroke: rgba('#FFF1EA', 0.55 * aa), sw: ww, round: true});
+      }
+      prev = cur;
     }
-    flush();
+    void fh;
   }
   // ---- fine circumferential blood vessels between the folds: fixed landmarks on the wall, so an anchored segment
   // visibly stays put against them while the rest of the robot moves
@@ -162,7 +170,8 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
       const th0 = -EXT + 0.15 + (Math.PI + EXT + EXT2 - 0.3) * (0.1 + 0.35 * hash(k * 2.7 + br * 9));
       const th1 = th0 + 0.9 + 1.3 * hash(k * 3.9 + br * 4);
       const pts: V2[] = [];
-      let zs = 0, n = 0, wmax = 0;
+      let zs = 0, n = 0;
+      const wmax = proj(B, wallPt(s0, (th0 + th1) / 2, RL)).s;
       for (let q = 0; q <= 22; q++) {
         const th = th0 + ((th1 - th0) * q) / 22;
         if (th > Math.PI + EXT2 - 0.1) break;
@@ -172,7 +181,6 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
         const p = wallPt(sv, th, r - 0.006);
         const pp = proj(B, p);
         pts.push(pp); zs += depthOf(B, p); n++;
-        wmax = Math.max(wmax, pp.s);
       }
       if (pts.length < 3) continue;
       const fogged = clamp(1 - fogAmt(B, Lt, wallPt(s0, th0, RL)) * 1.2);
@@ -190,10 +198,11 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
     const n = norm3(sub3(C3(sv), p));
     const l = norm3(sub3(Lt.pos, p)), v = norm3(sub3(B.eye, p));
     const sp = Math.max(0, dot3(n, norm3(add3(l, v)))) ** 18 * (1 - press) * (1 - fogAmt(B, Lt, p));
-    if (sp < 0.3) continue;
+    const sa = ss(sp, 0.18, 0.6);
+    if (sa < 0.005) continue;
     const pp = proj(B, p);
     const rr = clamp(pp.s * 0.018 * (0.6 + hash(k * 3.3)), 0.6, 8);
-    back.push({z: depthOf(B, p) - 0.04, d: ellipse(pp, rr * 1.6, rr * 0.7, hash(k) * 180), fill: rgba('#FFF4EE', clamp(sp * 0.7, 0, 0.75))});
+    back.push({z: depthOf(B, p) - 0.04, d: ellipse(pp, rr * 1.6, rr * 0.7, hash(k) * 180), fill: rgba('#FFF4EE', 0.75 * sa)});
   }
   // ---- contact shadow of the robot on the floor
   if (o.shadow) {
@@ -218,11 +227,13 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
     const th = side === 1 ? -EXT : Math.PI + EXT2;
     const faceN = (sv: number): V3 => (side === 1 ? mul3(rhoAt(sv, th - Math.PI / 2), 1) : mul3(rhoAt(sv, th + Math.PI / 2), 1));
     // chunks along s so fog grades along the length
-    const step = Math.max(1, Math.floor(ss_.length / 24));
-    for (let i0 = 0; i0 < ss_.length - 1; i0 += step) {
-      const i1 = Math.min(ss_.length - 1, i0 + step);
+    // V4: one chunk per fold (world-anchored), so the cut-face colour boundaries never move or re-cut
+    const starts: number[] = [];
+    for (let i = 0; i < ss_.length - 1; i++) if (i === 0 || kOf[i] !== kOf[i - 1]) starts.push(i);
+    for (let si = 0; si < starts.length; si++) {
+      const i0 = starts[si], i1 = si + 1 < starts.length ? starts[si + 1] : ss_.length - 1;
       const seg = ss_.slice(i0, i1 + 1);
-      const mid = C3(seg[Math.floor(seg.length / 2)]);
+      const mid = C3((kOf[i0] + 0.5) * FOLD_P);
       for (let l = 0; l < LAYERS.length - 1; l++) {
         const inner: V2[] = [], outer: V2[] = [];
         for (const sv of seg) {
@@ -341,16 +352,15 @@ const LOOPS: Loop[] = (() => {
 
 export const loopItems = (B: Basis, Lt: Light, sFrom: number, sTo: number, dim = 1): Item[] => {
   const items: Item[] = [];
-  const lo = C3(sFrom), hi = C3(sTo);
+  void sFrom; void sTo;
   for (const L of LOOPS) {
     const m = mul3(add3(L.a, L.b), 0.5);
-    // only loops near the visible stretch
-    const along = dot3(sub3(m, lo), norm3(sub3(hi, lo)));
-    const span = Math.hypot(hi[0] - lo[0], hi[1] - lo[1]);
-    if (along < -6 || along > span + 6) continue;
+    // V4: culled only by what is actually on screen (never by the shot's s-range, which moves with the camera)
     if (depthOf(B, L.a) < 1 || depthOf(B, L.b) < 1) continue;
     const pa = proj(B, L.a), pb = proj(B, L.b);
     const ra = L.r * pa.s, rb = L.r * pb.s;
+    const rmax = Math.max(ra, rb);
+    if (Math.max(pa.x, pb.x) + rmax < -50 || Math.min(pa.x, pb.x) - rmax > 1130 || Math.max(pa.y, pb.y) + rmax < -50 || Math.min(pa.y, pb.y) - rmax > 1970) continue;
     const d = capsule(pa, pb, ra, rb);
     const ax = pb.x - pa.x, ay = pb.y - pa.y;
     const al = Math.hypot(ax, ay) || 1;
@@ -370,7 +380,9 @@ export const loopItems = (B: Basis, Lt: Light, sFrom: number, sTo: number, dim =
       const t = 0.5 - 0.5 * Math.sin(a) * -1;
       samples.push({p: {x: g0.x + (g1.x - g0.x) * t, y: g0.y + (g1.y - g0.y) * t}, c: mix(col, C.cavityDeep, 0.25 + 0.25 * L.tone)});
     }
-    items.push({z: depthOf(B, m) + L.r, d, grad: gradFrom(g0, g1, samples), sw: 0});
+    // V4: painter order by WORLD height (every camera in the film looks down on the packed loops from above), so two
+    // overlapping loops never swap which is in front as the camera moves; V3 sorted by camera depth
+    items.push({z: -m[2] * 1000 + LOOPS.indexOf(L) * 1e-3, d, grad: gradFrom(g0, g1, samples), sw: 0});
   }
   return items.sort((a, b) => b.z - a.z);
 };

@@ -1,6 +1,31 @@
 # Future Got Weird: The Robot That Crawls Through Your Intestines (BIOSENTER)
 
-## V3 (the final cut)
+## V4 (the final publish cut: continuity pass)
+
+**Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V4_FINAL_PUBLISH_1080x1920.mp4`.
+
+- **Format:** 1080×1920, H.264 High, 30 fps, 789 frames (26.30 s), AAC-LC 48 kHz.
+- **Soundtrack:** bit-identical to V3.
+
+V4 is a frame-to-frame stability repair of V3. Nothing creative changed.
+
+**Report:** `production/V4_DEFECT_REPORT.md` covers the frame-level defects, their root causes and fixes, the
+verification, and the unresolved items.
+
+**Evidence in `qa/v4/`:**
+
+- `CONTINUITY_REPORT_V3_vs_V4.md`: the automated scan of all 789 frames.
+- `before_after/`: before-and-after frame sequences.
+- `baseline_v3/` and `scan_v4_final/`: per-frame CSVs and the flagged-group crops.
+
+**Rebuild and check:**
+
+    tools/render_resilient.sh mix_v4 exports/FGW_BIOSENTER_GUT_ROBOT_V4_FINAL_PUBLISH_1080x1920.mp4   # mix_v4 = mix_v3, unchanged
+    python3 tools/temporal_qa.py exports/FGW_BIOSENTER_GUT_ROBOT_V4_FINAL_PUBLISH_1080x1920.mp4 qa/v4/scan_v4_final --crops
+    python3 tools/compare_scans.py qa/v4/baseline_v3 qa/v4/scan_v4_final V3 V4 qa/v4/CONTINUITY_REPORT_V3_vs_V4.md
+    python3 tools/before_after.py <v3.mp4> <v4.mp4> qa/v4/before_after
+
+## V3 (approved creative cut; superseded by the V4 continuity repair)
 
 **Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V3_FINAL_1080x1920.mp4`.
 

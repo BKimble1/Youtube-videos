@@ -1,0 +1,2227 @@
+{
+ "file": "FGW_BIOSENTER_GUT_ROBOT_V3_FINAL_1080x1920.mp4",
+ "frames": 789,
+ "pairs_compared": 788,
+ "cuts": [
+  105,
+  505,
+  583,
+  634
+ ],
+ "handover": [
+  352,
+  382
+ ],
+ "flagged_frames": [
+  28,
+  29,
+  30,
+  31,
+  32,
+  39,
+  47,
+  48,
+  50,
+  51,
+  53,
+  60,
+  68,
+  69,
+  77,
+  87,
+  108,
+  109,
+  110,
+  111,
+  112,
+  113,
+  114,
+  118,
+  119,
+  147,
+  162,
+  163,
+  164,
+  165,
+  166,
+  167,
+  208,
+  215,
+  216,
+  217,
+  218,
+  219,
+  220,
+  221,
+  222,
+  223,
+  224,
+  225,
+  228,
+  229,
+  246,
+  247,
+  248,
+  249,
+  275,
+  277,
+  283,
+  284,
+  285,
+  286,
+  292,
+  293,
+  294,
+  295,
+  301,
+  306,
+  312,
+  313,
+  328,
+  329,
+  330,
+  331,
+  333,
+  334,
+  345,
+  350,
+  351,
+  405,
+  458,
+  468,
+  473,
+  475,
+  507,
+  508,
+  509,
+  510,
+  511,
+  512,
+  513,
+  514,
+  525,
+  533,
+  534,
+  545,
+  548,
+  549,
+  550,
+  551,
+  574,
+  590,
+  591,
+  592,
+  593,
+  618,
+  619,
+  620,
+  621,
+  622,
+  623,
+  741,
+  748,
+  750,
+  760,
+  761,
+  769,
+  770,
+  771
+ ],
+ "flagged_groups": [
+  [
+   28,
+   32
+  ],
+  [
+   39,
+   39
+  ],
+  [
+   47,
+   53
+  ],
+  [
+   60,
+   60
+  ],
+  [
+   68,
+   69
+  ],
+  [
+   77,
+   77
+  ],
+  [
+   87,
+   87
+  ],
+  [
+   108,
+   114
+  ],
+  [
+   118,
+   119
+  ],
+  [
+   147,
+   147
+  ],
+  [
+   162,
+   167
+  ],
+  [
+   208,
+   208
+  ],
+  [
+   215,
+   225
+  ],
+  [
+   228,
+   229
+  ],
+  [
+   246,
+   249
+  ],
+  [
+   275,
+   277
+  ],
+  [
+   283,
+   286
+  ],
+  [
+   292,
+   295
+  ],
+  [
+   301,
+   301
+  ],
+  [
+   306,
+   306
+  ],
+  [
+   312,
+   313
+  ],
+  [
+   328,
+   334
+  ],
+  [
+   345,
+   345
+  ],
+  [
+   350,
+   351
+  ],
+  [
+   405,
+   405
+  ],
+  [
+   458,
+   458
+  ],
+  [
+   468,
+   468
+  ],
+  [
+   473,
+   475
+  ],
+  [
+   507,
+   514
+  ],
+  [
+   525,
+   525
+  ],
+  [
+   533,
+   534
+  ],
+  [
+   545,
+   545
+  ],
+  [
+   548,
+   551
+  ],
+  [
+   574,
+   574
+  ],
+  [
+   590,
+   593
+  ],
+  [
+   618,
+   623
+  ],
+  [
+   741,
+   741
+  ],
+  [
+   748,
+   750
+  ],
+  [
+   760,
+   761
+  ],
+  [
+   769,
+   771
+  ]
+ ],
+ "flagged_detail": [
+  {
+   "frame": 28,
+   "t": 0.933,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 28.836,
+   "fwd_bad": 20,
+   "flk_max": 22.361,
+   "flk_bad": 21,
+   "worst_fwd_at": {
+    "x": 496,
+    "y": 1232
+   },
+   "worst_flk_at": {
+    "x": 496,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 29,
+   "t": 0.967,
+   "flag": "many changed blocks",
+   "fwd_max": 19.14,
+   "fwd_bad": 16,
+   "flk_max": 12.404,
+   "flk_bad": 18,
+   "worst_fwd_at": {
+    "x": 464,
+    "y": 1264
+   },
+   "worst_flk_at": {
+    "x": 464,
+    "y": 1264
+   }
+  },
+  {
+   "frame": 30,
+   "t": 1.0,
+   "flag": "many changed blocks",
+   "fwd_max": 26.14,
+   "fwd_bad": 25,
+   "flk_max": 10.073,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 880,
+    "y": 1264
+   },
+   "worst_flk_at": {
+    "x": 816,
+    "y": 1712
+   }
+  },
+  {
+   "frame": 31,
+   "t": 1.033,
+   "flag": "many changed blocks",
+   "fwd_max": 20.726,
+   "fwd_bad": 14,
+   "flk_max": 10.487,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 688,
+    "y": 1136
+   },
+   "worst_flk_at": {
+    "x": 464,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "flag": "many changed blocks",
+   "fwd_max": 22.419,
+   "fwd_bad": 11,
+   "flk_max": 17.586,
+   "flk_bad": 7,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 1136
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 1136
+   }
+  },
+  {
+   "frame": 39,
+   "t": 1.3,
+   "flag": "many changed blocks",
+   "fwd_max": 40.788,
+   "fwd_bad": 20,
+   "flk_max": 10.269,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 464,
+    "y": 336
+   },
+   "worst_flk_at": {
+    "x": 272,
+    "y": 336
+   }
+  },
+  {
+   "frame": 47,
+   "t": 1.567,
+   "flag": "many changed blocks",
+   "fwd_max": 31.289,
+   "fwd_bad": 13,
+   "flk_max": 12.398,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 368,
+    "y": 368
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 368
+   }
+  },
+  {
+   "frame": 48,
+   "t": 1.6,
+   "flag": "many changed blocks",
+   "fwd_max": 33.192,
+   "fwd_bad": 12,
+   "flk_max": 10.568,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 528,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 304
+   }
+  },
+  {
+   "frame": 50,
+   "t": 1.667,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 51.754,
+   "fwd_bad": 13,
+   "flk_max": 48.521,
+   "flk_bad": 12,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 1168
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 1168
+   }
+  },
+  {
+   "frame": 51,
+   "t": 1.7,
+   "flag": "many changed blocks",
+   "fwd_max": 34.935,
+   "fwd_bad": 11,
+   "flk_max": 13.488,
+   "flk_bad": 2,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 304
+   }
+  },
+  {
+   "frame": 53,
+   "t": 1.767,
+   "flag": "unexplained change (pop/swap); one-frame flicker",
+   "fwd_max": 57.856,
+   "fwd_bad": 11,
+   "flk_max": 57.083,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 1200
+   }
+  },
+  {
+   "frame": 60,
+   "t": 2.0,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 59.855,
+   "fwd_bad": 8,
+   "flk_max": 12.39,
+   "flk_bad": 4,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 1232
+   },
+   "worst_flk_at": {
+    "x": 720,
+    "y": 1680
+   }
+  },
+  {
+   "frame": 68,
+   "t": 2.267,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 39.411,
+   "fwd_bad": 15,
+   "flk_max": 13.733,
+   "flk_bad": 10,
+   "worst_fwd_at": {
+    "x": 784,
+    "y": 1328
+   },
+   "worst_flk_at": {
+    "x": 528,
+    "y": 1328
+   }
+  },
+  {
+   "frame": 69,
+   "t": 2.3,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 38.233,
+   "fwd_bad": 15,
+   "flk_max": 11.224,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 784,
+    "y": 1360
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 1456
+   }
+  },
+  {
+   "frame": 77,
+   "t": 2.567,
+   "flag": "many changed blocks",
+   "fwd_max": 27.406,
+   "fwd_bad": 18,
+   "flk_max": 8.768,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 528,
+    "y": 1232
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 624
+   }
+  },
+  {
+   "frame": 87,
+   "t": 2.9,
+   "flag": "one-frame flicker",
+   "fwd_max": 51.725,
+   "fwd_bad": 13,
+   "flk_max": 22.559,
+   "flk_bad": 7,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 656
+   },
+   "worst_flk_at": {
+    "x": 368,
+    "y": 624
+   }
+  },
+  {
+   "frame": 108,
+   "t": 3.6,
+   "flag": "one-frame flicker",
+   "fwd_max": 22.176,
+   "fwd_bad": 13,
+   "flk_max": 21.493,
+   "flk_bad": 30,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1584
+   },
+   "worst_flk_at": {
+    "x": 48,
+    "y": 1744
+   }
+  },
+  {
+   "frame": 109,
+   "t": 3.633,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 25.605,
+   "fwd_bad": 15,
+   "flk_max": 16.5,
+   "flk_bad": 15,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1616
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1584
+   }
+  },
+  {
+   "frame": 110,
+   "t": 3.667,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 19.878,
+   "fwd_bad": 15,
+   "flk_max": 16.971,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 48,
+    "y": 1744
+   },
+   "worst_flk_at": {
+    "x": 48,
+    "y": 1744
+   }
+  },
+  {
+   "frame": 111,
+   "t": 3.7,
+   "flag": "many changed blocks",
+   "fwd_max": 21.118,
+   "fwd_bad": 10,
+   "flk_max": 5.746,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 400,
+    "y": 1648
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 1616
+   }
+  },
+  {
+   "frame": 112,
+   "t": 3.733,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 34.306,
+   "fwd_bad": 2,
+   "flk_max": 6.527,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 176,
+    "y": 464
+   },
+   "worst_flk_at": {
+    "x": 176,
+    "y": 464
+   }
+  },
+  {
+   "frame": 113,
+   "t": 3.767,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 17.811,
+   "fwd_bad": 8,
+   "flk_max": 16.313,
+   "flk_bad": 14,
+   "worst_fwd_at": {
+    "x": 432,
+    "y": 1712
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 1712
+   }
+  },
+  {
+   "frame": 114,
+   "t": 3.8,
+   "flag": "many changed blocks",
+   "fwd_max": 25.726,
+   "fwd_bad": 17,
+   "flk_max": 13.668,
+   "flk_bad": 11,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1584
+   },
+   "worst_flk_at": {
+    "x": 464,
+    "y": 1712
+   }
+  },
+  {
+   "frame": 118,
+   "t": 3.933,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 18.421,
+   "fwd_bad": 9,
+   "flk_max": 18.023,
+   "flk_bad": 16,
+   "worst_fwd_at": {
+    "x": 560,
+    "y": 1584
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1584
+   }
+  },
+  {
+   "frame": 119,
+   "t": 3.967,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 22.669,
+   "fwd_bad": 14,
+   "flk_max": 12.366,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1584
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1584
+   }
+  },
+  {
+   "frame": 147,
+   "t": 4.9,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 22.042,
+   "fwd_bad": 21,
+   "flk_max": 6.567,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1328
+   },
+   "worst_flk_at": {
+    "x": 528,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 162,
+   "t": 5.4,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 29.429,
+   "fwd_bad": 12,
+   "flk_max": 18.485,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 688,
+    "y": 1168
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 163,
+   "t": 5.433,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 31.623,
+   "fwd_bad": 17,
+   "flk_max": 14.875,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 720,
+    "y": 1264
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 848
+   }
+  },
+  {
+   "frame": 164,
+   "t": 5.467,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 19.818,
+   "fwd_bad": 13,
+   "flk_max": 13.376,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 880
+   },
+   "worst_flk_at": {
+    "x": 720,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 165,
+   "t": 5.5,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 36.533,
+   "fwd_bad": 22,
+   "flk_max": 20.474,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 752,
+    "y": 1008
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 880
+   }
+  },
+  {
+   "frame": 166,
+   "t": 5.533,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 19.98,
+   "fwd_bad": 10,
+   "flk_max": 8.799,
+   "flk_bad": 2,
+   "worst_fwd_at": {
+    "x": 560,
+    "y": 720
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 720
+   }
+  },
+  {
+   "frame": 167,
+   "t": 5.567,
+   "flag": "many changed blocks",
+   "fwd_max": 15.348,
+   "fwd_bad": 9,
+   "flk_max": 6.588,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 752
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 720
+   }
+  },
+  {
+   "frame": 208,
+   "t": 6.933,
+   "flag": "one-frame flicker",
+   "fwd_max": 16.207,
+   "fwd_bad": 3,
+   "flk_max": 16.13,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 624,
+    "y": 1616
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1616
+   }
+  },
+  {
+   "frame": 215,
+   "t": 7.167,
+   "flag": "one-frame flicker",
+   "fwd_max": 86.723,
+   "fwd_bad": 72,
+   "flk_max": 84.237,
+   "flk_bad": 32,
+   "worst_fwd_at": {
+    "x": 144,
+    "y": 16
+   },
+   "worst_flk_at": {
+    "x": 144,
+    "y": 16
+   }
+  },
+  {
+   "frame": 216,
+   "t": 7.2,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 90.206,
+   "fwd_bad": 117,
+   "flk_max": 39.252,
+   "flk_bad": 58,
+   "worst_fwd_at": {
+    "x": 176,
+    "y": 80
+   },
+   "worst_flk_at": {
+    "x": 176,
+    "y": 48
+   }
+  },
+  {
+   "frame": 217,
+   "t": 7.233,
+   "flag": "many changed blocks",
+   "fwd_max": 91.504,
+   "fwd_bad": 146,
+   "flk_max": 29.305,
+   "flk_bad": 103,
+   "worst_fwd_at": {
+    "x": 912,
+    "y": 1456
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 304
+   }
+  },
+  {
+   "frame": 218,
+   "t": 7.267,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 86.781,
+   "fwd_bad": 172,
+   "flk_max": 53.118,
+   "flk_bad": 98,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 1872
+   },
+   "worst_flk_at": {
+    "x": 368,
+    "y": 400
+   }
+  },
+  {
+   "frame": 219,
+   "t": 7.3,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 168.475,
+   "fwd_bad": 150,
+   "flk_max": 37.225,
+   "flk_bad": 67,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 1264
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 304
+   }
+  },
+  {
+   "frame": 220,
+   "t": 7.333,
+   "flag": "many changed blocks",
+   "fwd_max": 137.762,
+   "fwd_bad": 118,
+   "flk_max": 15.485,
+   "flk_bad": 43,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 1744
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 304
+   }
+  },
+  {
+   "frame": 221,
+   "t": 7.367,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 144.411,
+   "fwd_bad": 108,
+   "flk_max": 19.47,
+   "flk_bad": 19,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 1456
+   },
+   "worst_flk_at": {
+    "x": 528,
+    "y": 304
+   }
+  },
+  {
+   "frame": 222,
+   "t": 7.4,
+   "flag": "many changed blocks",
+   "fwd_max": 119.88,
+   "fwd_bad": 122,
+   "flk_max": 21.689,
+   "flk_bad": 25,
+   "worst_fwd_at": {
+    "x": 240,
+    "y": 16
+   },
+   "worst_flk_at": {
+    "x": 656,
+    "y": 208
+   }
+  },
+  {
+   "frame": 223,
+   "t": 7.433,
+   "flag": "many changed blocks; one-frame flicker",
+   "fwd_max": 99.344,
+   "fwd_bad": 127,
+   "flk_max": 39.059,
+   "flk_bad": 46,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 1328
+   },
+   "worst_flk_at": {
+    "x": 176,
+    "y": 208
+   }
+  },
+  {
+   "frame": 224,
+   "t": 7.467,
+   "flag": "one-frame flicker",
+   "fwd_max": 104.0,
+   "fwd_bad": 107,
+   "flk_max": 57.565,
+   "flk_bad": 34,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 432
+   },
+   "worst_flk_at": {
+    "x": 176,
+    "y": 16
+   }
+  },
+  {
+   "frame": 225,
+   "t": 7.5,
+   "flag": "many changed blocks",
+   "fwd_max": 133.084,
+   "fwd_bad": 193,
+   "flk_max": 22.9,
+   "flk_bad": 32,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 16
+   },
+   "worst_flk_at": {
+    "x": 240,
+    "y": 144
+   }
+  },
+  {
+   "frame": 228,
+   "t": 7.6,
+   "flag": "many changed blocks",
+   "fwd_max": 53.131,
+   "fwd_bad": 126,
+   "flk_max": 19.01,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 368
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 1904
+   }
+  },
+  {
+   "frame": 229,
+   "t": 7.633,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 131.514,
+   "fwd_bad": 44,
+   "flk_max": 15.593,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 16,
+    "y": 176
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 624
+   }
+  },
+  {
+   "frame": 246,
+   "t": 8.2,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 35.363,
+   "fwd_bad": 40,
+   "flk_max": 35.08,
+   "flk_bad": 46,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 784
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 784
+   }
+  },
+  {
+   "frame": 247,
+   "t": 8.233,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 57.556,
+   "fwd_bad": 55,
+   "flk_max": 21.739,
+   "flk_bad": 53,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 784
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 944
+   }
+  },
+  {
+   "frame": 248,
+   "t": 8.267,
+   "flag": "many changed blocks",
+   "fwd_max": 23.989,
+   "fwd_bad": 55,
+   "flk_max": 14.022,
+   "flk_bad": 43,
+   "worst_fwd_at": {
+    "x": 432,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 944
+   }
+  },
+  {
+   "frame": 249,
+   "t": 8.3,
+   "flag": "many changed blocks",
+   "fwd_max": 16.976,
+   "fwd_bad": 39,
+   "flk_max": 8.018,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 496,
+    "y": 1072
+   },
+   "worst_flk_at": {
+    "x": 816,
+    "y": 1872
+   }
+  },
+  {
+   "frame": 275,
+   "t": 9.167,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 23.202,
+   "fwd_bad": 4,
+   "flk_max": 9.625,
+   "flk_bad": 2,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1680
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1648
+   }
+  },
+  {
+   "frame": 277,
+   "t": 9.233,
+   "flag": "many changed blocks",
+   "fwd_max": 18.558,
+   "fwd_bad": 8,
+   "flk_max": 10.758,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 560,
+    "y": 1680
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 1712
+   }
+  },
+  {
+   "frame": 283,
+   "t": 9.433,
+   "flag": "many changed blocks",
+   "fwd_max": 27.104,
+   "fwd_bad": 14,
+   "flk_max": 16.646,
+   "flk_bad": 11,
+   "worst_fwd_at": {
+    "x": 208,
+    "y": 720
+   },
+   "worst_flk_at": {
+    "x": 240,
+    "y": 592
+   }
+  },
+  {
+   "frame": 284,
+   "t": 9.467,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 49.415,
+   "fwd_bad": 27,
+   "flk_max": 13.757,
+   "flk_bad": 17,
+   "worst_fwd_at": {
+    "x": 208,
+    "y": 688
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 624
+   }
+  },
+  {
+   "frame": 285,
+   "t": 9.5,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 38.858,
+   "fwd_bad": 28,
+   "flk_max": 19.11,
+   "flk_bad": 13,
+   "worst_fwd_at": {
+    "x": 464,
+    "y": 592
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 656
+   }
+  },
+  {
+   "frame": 286,
+   "t": 9.533,
+   "flag": "many changed blocks",
+   "fwd_max": 23.856,
+   "fwd_bad": 13,
+   "flk_max": 8.589,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 752
+   },
+   "worst_flk_at": {
+    "x": 464,
+    "y": 688
+   }
+  },
+  {
+   "frame": 292,
+   "t": 9.733,
+   "flag": "many changed blocks",
+   "fwd_max": 15.243,
+   "fwd_bad": 29,
+   "flk_max": 14.882,
+   "flk_bad": 55,
+   "worst_fwd_at": {
+    "x": 496,
+    "y": 1104
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1392
+   }
+  },
+  {
+   "frame": 293,
+   "t": 9.767,
+   "flag": "many changed blocks",
+   "fwd_max": 17.575,
+   "fwd_bad": 51,
+   "flk_max": 16.382,
+   "flk_bad": 60,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1328
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1392
+   }
+  },
+  {
+   "frame": 294,
+   "t": 9.8,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 69.626,
+   "fwd_bad": 56,
+   "flk_max": 61.581,
+   "flk_bad": 57,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 752
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 752
+   }
+  },
+  {
+   "frame": 295,
+   "t": 9.833,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 55.293,
+   "fwd_bad": 38,
+   "flk_max": 12.197,
+   "flk_bad": 37,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 752
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1296
+   }
+  },
+  {
+   "frame": 301,
+   "t": 10.033,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 44.703,
+   "fwd_bad": 7,
+   "flk_max": 8.101,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 368,
+    "y": 848
+   },
+   "worst_flk_at": {
+    "x": 752,
+    "y": 1808
+   }
+  },
+  {
+   "frame": 306,
+   "t": 10.2,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 42.002,
+   "fwd_bad": 5,
+   "flk_max": 9.654,
+   "flk_bad": 2,
+   "worst_fwd_at": {
+    "x": 400,
+    "y": 880
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 656
+   }
+  },
+  {
+   "frame": 312,
+   "t": 10.4,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 48.701,
+   "fwd_bad": 18,
+   "flk_max": 11.574,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 400,
+    "y": 880
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 656
+   }
+  },
+  {
+   "frame": 313,
+   "t": 10.433,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 49.401,
+   "fwd_bad": 16,
+   "flk_max": 10.931,
+   "flk_bad": 14,
+   "worst_fwd_at": {
+    "x": 880,
+    "y": 1520
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 1680
+   }
+  },
+  {
+   "frame": 328,
+   "t": 10.933,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 47.184,
+   "fwd_bad": 34,
+   "flk_max": 16.502,
+   "flk_bad": 44,
+   "worst_fwd_at": {
+    "x": 368,
+    "y": 784
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 329,
+   "t": 10.967,
+   "flag": "many changed blocks",
+   "fwd_max": 25.142,
+   "fwd_bad": 53,
+   "flk_max": 24.357,
+   "flk_bad": 58,
+   "worst_fwd_at": {
+    "x": 496,
+    "y": 1072
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 912
+   }
+  },
+  {
+   "frame": 330,
+   "t": 11.0,
+   "flag": "many changed blocks",
+   "fwd_max": 27.616,
+   "fwd_bad": 55,
+   "flk_max": 17.453,
+   "flk_bad": 56,
+   "worst_fwd_at": {
+    "x": 528,
+    "y": 1168
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 912
+   }
+  },
+  {
+   "frame": 331,
+   "t": 11.033,
+   "flag": "many changed blocks",
+   "fwd_max": 18.198,
+   "fwd_bad": 56,
+   "flk_max": 13.235,
+   "flk_bad": 13,
+   "worst_fwd_at": {
+    "x": 432,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 1648
+   }
+  },
+  {
+   "frame": 333,
+   "t": 11.1,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 40.889,
+   "fwd_bad": 82,
+   "flk_max": 8.269,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 48,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 720,
+    "y": 1648
+   }
+  },
+  {
+   "frame": 334,
+   "t": 11.133,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 45.869,
+   "fwd_bad": 19,
+   "flk_max": 18.395,
+   "flk_bad": 14,
+   "worst_fwd_at": {
+    "x": 624,
+    "y": 1136
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1136
+   }
+  },
+  {
+   "frame": 345,
+   "t": 11.5,
+   "flag": "many changed blocks",
+   "fwd_max": 28.749,
+   "fwd_bad": 63,
+   "flk_max": 8.765,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 240,
+    "y": 1488
+   },
+   "worst_flk_at": {
+    "x": 720,
+    "y": 1808
+   }
+  },
+  {
+   "frame": 350,
+   "t": 11.667,
+   "flag": "many changed blocks",
+   "fwd_max": 26.095,
+   "fwd_bad": 21,
+   "flk_max": 10.516,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 688,
+    "y": 1904
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 848
+   }
+  },
+  {
+   "frame": 351,
+   "t": 11.7,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 51.005,
+   "fwd_bad": 20,
+   "flk_max": 11.372,
+   "flk_bad": 9,
+   "worst_fwd_at": {
+    "x": 720,
+    "y": 1904
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 848
+   }
+  },
+  {
+   "frame": 405,
+   "t": 13.5,
+   "flag": "many changed blocks",
+   "fwd_max": 15.407,
+   "fwd_bad": 8,
+   "flk_max": 11.01,
+   "flk_bad": 13,
+   "worst_fwd_at": {
+    "x": 688,
+    "y": 1072
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 944
+   }
+  },
+  {
+   "frame": 458,
+   "t": 15.267,
+   "flag": "many changed blocks",
+   "fwd_max": 17.194,
+   "fwd_bad": 17,
+   "flk_max": 8.609,
+   "flk_bad": 4,
+   "worst_fwd_at": {
+    "x": 560,
+    "y": 1040
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 944
+   }
+  },
+  {
+   "frame": 468,
+   "t": 15.6,
+   "flag": "many changed blocks",
+   "fwd_max": 14.967,
+   "fwd_bad": 14,
+   "flk_max": 11.679,
+   "flk_bad": 15,
+   "worst_fwd_at": {
+    "x": 624,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 1072
+   }
+  },
+  {
+   "frame": 473,
+   "t": 15.767,
+   "flag": "many changed blocks",
+   "fwd_max": 14.373,
+   "fwd_bad": 13,
+   "flk_max": 12.517,
+   "flk_bad": 25,
+   "worst_fwd_at": {
+    "x": 688,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 976
+   }
+  },
+  {
+   "frame": 475,
+   "t": 15.833,
+   "flag": "many changed blocks",
+   "fwd_max": 16.731,
+   "fwd_bad": 11,
+   "flk_max": 7.815,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 720,
+    "y": 1072
+   }
+  },
+  {
+   "frame": 507,
+   "t": 16.9,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 52.424,
+   "fwd_bad": 10,
+   "flk_max": 6.981,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 176,
+    "y": 720
+   },
+   "worst_flk_at": {
+    "x": 208,
+    "y": 752
+   }
+  },
+  {
+   "frame": 508,
+   "t": 16.933,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 70.62,
+   "fwd_bad": 31,
+   "flk_max": 29.291,
+   "flk_bad": 19,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 1040
+   },
+   "worst_flk_at": {
+    "x": 208,
+    "y": 848
+   }
+  },
+  {
+   "frame": 509,
+   "t": 16.967,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 52.487,
+   "fwd_bad": 26,
+   "flk_max": 41.26,
+   "flk_bad": 18,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 240,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 510,
+   "t": 17.0,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 55.098,
+   "fwd_bad": 22,
+   "flk_max": 21.496,
+   "flk_bad": 10,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 1040
+   }
+  },
+  {
+   "frame": 511,
+   "t": 17.033,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 80.116,
+   "fwd_bad": 33,
+   "flk_max": 33.347,
+   "flk_bad": 18,
+   "worst_fwd_at": {
+    "x": 528,
+    "y": 1104
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 512,
+   "t": 17.067,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 72.496,
+   "fwd_bad": 40,
+   "flk_max": 17.949,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 688,
+    "y": 912
+   }
+  },
+  {
+   "frame": 513,
+   "t": 17.1,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 63.454,
+   "fwd_bad": 14,
+   "flk_max": 8.074,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 720,
+    "y": 848
+   },
+   "worst_flk_at": {
+    "x": 752,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 514,
+   "t": 17.133,
+   "flag": "many changed blocks",
+   "fwd_max": 31.651,
+   "fwd_bad": 9,
+   "flk_max": 5.257,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 752,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 880,
+    "y": 944
+   }
+  },
+  {
+   "frame": 525,
+   "t": 17.5,
+   "flag": "one-frame flicker",
+   "fwd_max": 26.727,
+   "fwd_bad": 8,
+   "flk_max": 16.897,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 944,
+    "y": 880
+   },
+   "worst_flk_at": {
+    "x": 944,
+    "y": 880
+   }
+  },
+  {
+   "frame": 533,
+   "t": 17.767,
+   "flag": "many changed blocks",
+   "fwd_max": 57.882,
+   "fwd_bad": 26,
+   "flk_max": 11.22,
+   "flk_bad": 5,
+   "worst_fwd_at": {
+    "x": 656,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 534,
+   "t": 17.8,
+   "flag": "unexplained change (pop/swap); one-frame flicker",
+   "fwd_max": 74.459,
+   "fwd_bad": 13,
+   "flk_max": 31.847,
+   "flk_bad": 7,
+   "worst_fwd_at": {
+    "x": 400,
+    "y": 1008
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 1008
+   }
+  },
+  {
+   "frame": 545,
+   "t": 18.167,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 165.589,
+   "fwd_bad": 40,
+   "flk_max": 15.076,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 208,
+    "y": 336
+   },
+   "worst_flk_at": {
+    "x": 208,
+    "y": 336
+   }
+  },
+  {
+   "frame": 548,
+   "t": 18.267,
+   "flag": "one-frame flicker",
+   "fwd_max": 70.346,
+   "fwd_bad": 26,
+   "flk_max": 38.166,
+   "flk_bad": 17,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 592
+   },
+   "worst_flk_at": {
+    "x": 272,
+    "y": 592
+   }
+  },
+  {
+   "frame": 549,
+   "t": 18.3,
+   "flag": "unexplained change (pop/swap); one-frame flicker",
+   "fwd_max": 162.712,
+   "fwd_bad": 24,
+   "flk_max": 37.19,
+   "flk_bad": 15,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 656
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 688
+   }
+  },
+  {
+   "frame": 550,
+   "t": 18.333,
+   "flag": "one-frame flicker",
+   "fwd_max": 74.005,
+   "fwd_bad": 38,
+   "flk_max": 46.88,
+   "flk_bad": 26,
+   "worst_fwd_at": {
+    "x": 336,
+    "y": 752
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 752
+   }
+  },
+  {
+   "frame": 551,
+   "t": 18.367,
+   "flag": "one-frame flicker",
+   "fwd_max": 87.123,
+   "fwd_bad": 43,
+   "flk_max": 67.196,
+   "flk_bad": 20,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 624
+   },
+   "worst_flk_at": {
+    "x": 400,
+    "y": 880
+   }
+  },
+  {
+   "frame": 574,
+   "t": 19.133,
+   "flag": "one-frame flicker",
+   "fwd_max": 86.395,
+   "fwd_bad": 28,
+   "flk_max": 86.297,
+   "flk_bad": 19,
+   "worst_fwd_at": {
+    "x": 848,
+    "y": 1232
+   },
+   "worst_flk_at": {
+    "x": 848,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 590,
+   "t": 19.667,
+   "flag": "many changed blocks",
+   "fwd_max": 22.075,
+   "fwd_bad": 7,
+   "flk_max": 12.576,
+   "flk_bad": 4,
+   "worst_fwd_at": {
+    "x": 400,
+    "y": 592
+   },
+   "worst_flk_at": {
+    "x": 336,
+    "y": 624
+   }
+  },
+  {
+   "frame": 591,
+   "t": 19.7,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 27.187,
+   "fwd_bad": 3,
+   "flk_max": 9.502,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 528,
+    "y": 1136
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 656
+   }
+  },
+  {
+   "frame": 592,
+   "t": 19.733,
+   "flag": "unexplained change (pop/swap); one-frame flicker",
+   "fwd_max": 50.669,
+   "fwd_bad": 6,
+   "flk_max": 49.773,
+   "flk_bad": 4,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 624
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 624
+   }
+  },
+  {
+   "frame": 593,
+   "t": 19.767,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 52.989,
+   "fwd_bad": 4,
+   "flk_max": 5.263,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 656
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1200
+   }
+  },
+  {
+   "frame": 618,
+   "t": 20.6,
+   "flag": "many changed blocks",
+   "fwd_max": 15.772,
+   "fwd_bad": 7,
+   "flk_max": 10.515,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 208,
+    "y": 464
+   },
+   "worst_flk_at": {
+    "x": 272,
+    "y": 304
+   }
+  },
+  {
+   "frame": 619,
+   "t": 20.633,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 69.454,
+   "fwd_bad": 9,
+   "flk_max": 65.324,
+   "flk_bad": 7,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 592
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 592
+   }
+  },
+  {
+   "frame": 620,
+   "t": 20.667,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 34.688,
+   "fwd_bad": 12,
+   "flk_max": 11.503,
+   "flk_bad": 7,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 624
+   },
+   "worst_flk_at": {
+    "x": 272,
+    "y": 624
+   }
+  },
+  {
+   "frame": 621,
+   "t": 20.7,
+   "flag": "many changed blocks",
+   "fwd_max": 21.825,
+   "fwd_bad": 12,
+   "flk_max": 18.33,
+   "flk_bad": 11,
+   "worst_fwd_at": {
+    "x": 720,
+    "y": 1168
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 622,
+   "t": 20.733,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 36.217,
+   "fwd_bad": 11,
+   "flk_max": 12.51,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 272,
+    "y": 624
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 1232
+   }
+  },
+  {
+   "frame": 623,
+   "t": 20.767,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 39.459,
+   "fwd_bad": 9,
+   "flk_max": 10.233,
+   "flk_bad": 3,
+   "worst_fwd_at": {
+    "x": 592,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 592,
+    "y": 1200
+   }
+  },
+  {
+   "frame": 741,
+   "t": 24.7,
+   "flag": "unexplained change (pop/swap)",
+   "fwd_max": 37.994,
+   "fwd_bad": 7,
+   "flk_max": 8.926,
+   "flk_bad": 1,
+   "worst_fwd_at": {
+    "x": 368,
+    "y": 784
+   },
+   "worst_flk_at": {
+    "x": 944,
+    "y": 1776
+   }
+  },
+  {
+   "frame": 748,
+   "t": 24.933,
+   "flag": "many changed blocks",
+   "fwd_max": 33.318,
+   "fwd_bad": 17,
+   "flk_max": 11.451,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 752,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 784,
+    "y": 1744
+   }
+  },
+  {
+   "frame": 750,
+   "t": 25.0,
+   "flag": "many changed blocks",
+   "fwd_max": 19.076,
+   "fwd_bad": 16,
+   "flk_max": 13.435,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 464,
+    "y": 1200
+   },
+   "worst_flk_at": {
+    "x": 624,
+    "y": 1296
+   }
+  },
+  {
+   "frame": 760,
+   "t": 25.333,
+   "flag": "many changed blocks",
+   "fwd_max": 27.208,
+   "fwd_bad": 14,
+   "flk_max": 14.193,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 400
+   },
+   "worst_flk_at": {
+    "x": 304,
+    "y": 400
+   }
+  },
+  {
+   "frame": 761,
+   "t": 25.367,
+   "flag": "many changed blocks",
+   "fwd_max": 28.603,
+   "fwd_bad": 16,
+   "flk_max": 11.787,
+   "flk_bad": 11,
+   "worst_fwd_at": {
+    "x": 432,
+    "y": 400
+   },
+   "worst_flk_at": {
+    "x": 752,
+    "y": 1776
+   }
+  },
+  {
+   "frame": 769,
+   "t": 25.633,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 50.427,
+   "fwd_bad": 8,
+   "flk_max": 48.388,
+   "flk_bad": 6,
+   "worst_fwd_at": {
+    "x": 560,
+    "y": 944
+   },
+   "worst_flk_at": {
+    "x": 560,
+    "y": 944
+   }
+  },
+  {
+   "frame": 770,
+   "t": 25.667,
+   "flag": "unexplained change (pop/swap); many changed blocks; one-frame flicker",
+   "fwd_max": 46.158,
+   "fwd_bad": 17,
+   "flk_max": 35.011,
+   "flk_bad": 8,
+   "worst_fwd_at": {
+    "x": 304,
+    "y": 496
+   },
+   "worst_flk_at": {
+    "x": 432,
+    "y": 976
+   }
+  },
+  {
+   "frame": 771,
+   "t": 25.7,
+   "flag": "unexplained change (pop/swap); many changed blocks",
+   "fwd_max": 35.206,
+   "fwd_bad": 10,
+   "flk_max": 7.594,
+   "flk_bad": 0,
+   "worst_fwd_at": {
+    "x": 432,
+    "y": 976
+   },
+   "worst_flk_at": {
+    "x": 816,
+    "y": 1776
+   }
+  }
+ ],
+ "loop_seam": {
+  "fwd_max": 11.97,
+  "fwd_bad": 0
+ },
+ "median_over_film": {
+  "fwd_max": 13.492,
+  "fwd_bad": 2.0,
+  "flk_max": 8.523,
+  "flk_bad": 1.0,
+  "fwd_p99": 6.827,
+  "flk_p99": 4.686
+ }
+}

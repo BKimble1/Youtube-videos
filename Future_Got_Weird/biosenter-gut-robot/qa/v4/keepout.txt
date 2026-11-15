@@ -1,0 +1,8 @@
+S1 focal worst: f0 0.0%, f1 0.0%, f2 0.0%  | whole robot worst: f0 10.0%
+S2 focal worst: f106 2.2%, f105 1.1%, f107 1.1%  | whole robot worst: f108 2.1%
+S3 focal worst: f206 0.0%, f207 0.0%, f208 0.0%  | whole robot worst: f225 7.0%
+S5 focal worst: f505 0.0%, f506 0.0%, f507 0.0%  | whole robot worst: f505 0.0%
+S6 focal worst: f583 0.0%, f584 0.0%, f585 0.0%  | whole robot worst: f583 0.0%
+S7 focal worst: f764 3.3%, f763 2.8%, f762 2.1%  | whole robot worst: f764 4.4%
+over 4%: 
+OK: captions never cover more than 4% of the focal part or 15% of the robot

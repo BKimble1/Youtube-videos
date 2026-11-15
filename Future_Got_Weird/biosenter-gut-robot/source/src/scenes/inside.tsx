@@ -71,12 +71,13 @@ export const InsideShot: React.FC<{tau: number; camOverride?: Cam3}> = ({tau, ca
   const lean = (s: number) => 0.55 * st.aH * (1 - st.e) * Math.exp(-(((s - sHA) / 0.95) ** 2)) - 0.45 * st.aT * st.e * Math.exp(-(((s - sTA) / 0.95) ** 2));
   const span = 0.5 * 1920 / cam.f * dist + 3;
   const sc = trackS(tau);
-  const center = tau < 7.5 ? Math.min(headAnchorS(st), SHA_REST) : sc;
+  // V4: the drawn stretch moves continuously (no switch at 7.5 s) and reaches well past the frame edges
+  const center = lerp(Math.min(headAnchorS(st), SHA_REST), sc, ss5(tau, 6.85, 7.9));
   const cutaway = ss5(tau, 7.75, 8.15) * (1 - ss5(tau, 10.95, 11.35));
   const robot = robotItems(B, Lt, gutFrame, st, {tetherLen: 24, inkScale: 1, cutaway});
   return (
     <GutShot B={B} Lt={Lt} robot={robot}
-      gut={{sFrom: center - span - 1, sTo: center + span + 1, contact: contactOf(st), px: tau < 7.2 ? 6 : 9, lean,
+      gut={{sFrom: center - span - 4, sTo: center + span + 4, contact: contactOf(st), lean,
         shadow: {s0: st.sTail + 0.3, s1: st.sTail + bodyLen(st.e) - 0.3, r: (s) => Math.max(1, contactOf(st)(s) || 1), op: 0.8}}} />
   );
 };

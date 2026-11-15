@@ -1,0 +1,24 @@
+frames checked: 519
+1. gripping anchor moved: 0 frame pairs (max displacement 3.6e-15 units)
+2. backward motion: 0 frame pairs
+3. body changed length with neither anchor gripping: 0 frame pairs
+4. net progress per cycle (units): 2.20, 2.20, 2.20, 2.20, 2.20
+5. crawl tau=-4: min clearance to the wall 0.140 units (u=1.30 tailAnchor)
+5. crawl tau=-2.9: min clearance to the wall 0.140 units (u=1.30 tailAnchor)
+5. crawl tau=-1: min clearance to the wall 0.212 units (u=1.55 tailAnchor)
+5. crawl tau=0.5: min clearance to the wall 0.135 units (u=1.50 tailAnchor)
+5. crawl tau=1: min clearance to the wall 0.135 units (u=1.50 tailAnchor)
+5. crawl tau=1.8: min clearance to the wall 0.117 units (u=10.80 headAnchor)
+5. crawl tau=3.2: min clearance to the wall 0.115 units (u=1.30 tailAnchor)
+5. crawl tau=5.6: min clearance to the wall 0.115 units (u=1.30 tailAnchor)
+5. crawl tau=7.7: min clearance to the wall 0.417 units (u=1.10 tailAnchor)
+5. crawl tau=8.6: min clearance to the wall 0.133 units (u=1.30 tailAnchor)
+5. crawl tau=9.2: min clearance to the wall 0.133 units (u=1.30 tailAnchor)
+5. crawl tau=9.9: min clearance to the wall 0.146 units (u=11.20 headAnchor)
+5. crawl tau=10.7: min clearance to the wall 0.384 units (u=1.65 tailAnchor)
+5. crawl tau=11.4: min clearance to the wall 0.140 units (u=1.30 tailAnchor)
+5. tool shot t=16.9: min clearance to the wall 0.113 units (u=1.35 tailAnchor)
+5. tool shot t=17.4: min clearance to the wall 0.113 units (u=1.35 tailAnchor)
+5. tool shot t=18.2: min clearance to the wall 0.113 units (u=1.35 tailAnchor)
+5. tool shot t=19: min clearance to the wall 0.113 units (u=1.35 tailAnchor)
+KINEMATICS OK
