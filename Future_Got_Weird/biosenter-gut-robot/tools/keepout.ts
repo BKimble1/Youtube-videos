@@ -10,7 +10,7 @@ import {FrameF, layout, radius} from '../source/src/robot/geom';
 import {gutFrame} from '../source/src/world/frames';
 import {tunnelCam} from '../source/src/scenes/tunnel';
 import {insideCam} from '../source/src/scenes/inside';
-import {steerFrame, toolsCam, toolsState} from '../source/src/scenes/tools';
+import {steerFrame, toolsCam, toolsState, TOOLS_ST} from '../source/src/scenes/tools';
 import {labCam, labState, LAB_FRAME} from '../source/src/scenes/lab';
 import {Cam3} from '../source/src/core/three';
 
@@ -47,7 +47,7 @@ for (let f = 0; f < FRAMES; f++) {
   if (t < SCENES.s2) { st = crawl(t); cam = tunnelCam(t, st); frame = gutFrame; part = 'head'; scene = 'S1'; }
   else if (t < SCENES.s4) { st = crawl(t); cam = insideCam(t); frame = gutFrame; part = t < 7.9 ? 'headAnchor' : 'body'; scene = t < SCENES.s3 ? 'S2' : 'S3'; }
   else if (t < SCENES.s5) continue; // the diagram: checked by eye (captions top, the pig mid-frame, "6+ FEET" low)
-  else if (t < SCENES.s6) { const s = toolsState(t); st = {sTail: 30, e: 0.62, aT: 1, aH: 0, popT: 1, popH: 0, gE: 0}; cam = toolsCam(t); frame = steerFrame(s.bend); part = 'all'; scene = 'S5'; }
+  else if (t < SCENES.s6) { const s = toolsState(t); st = TOOLS_ST; cam = toolsCam(t); frame = steerFrame(s.bend); part = 'all'; scene = 'S5'; }
   else if (t < SCENES.s7) { st = labState(t); cam = labCam(t).cam; frame = LAB_FRAME; part = 'all'; scene = 'S6'; }
   else { st = crawl(t - DUR); cam = tunnelCam(t - DUR, st); frame = gutFrame; part = 'body'; scene = 'S7'; }
   const c = CAPTIONS[i];

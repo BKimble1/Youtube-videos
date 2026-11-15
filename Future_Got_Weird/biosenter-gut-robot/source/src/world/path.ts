@@ -4,13 +4,9 @@
 // bend happens, then straight again; the tool close-up (S5) uses a later straight stretch.
 import {V3} from '../core/three';
 
-/** curvature (1/units) as a function of arc length: a smooth S-free bend toward +x, eased in and out */
-const BEND_S0 = 13.0, BEND_S1 = 21.5, BEND_K = 0.17;
-const kappa = (s: number) => {
-  if (s <= BEND_S0 || s >= BEND_S1) return 0;
-  const u = (s - BEND_S0) / (BEND_S1 - BEND_S0);
-  return BEND_K * Math.sin(Math.PI * u) ** 2 * (u < 0.62 ? 1 : 1 - 2.4 * (u - 0.62) / 0.38);
-};
+/** curvature (1/units): a gentle meander (collapsed small intestine winds); peak heading swing about 25 degrees */
+const MEANDER_A = 0.058, MEANDER_P = 26, MEANDER_S0 = -1.5;
+const kappa = (s: number) => MEANDER_A * Math.sin((2 * Math.PI * (s - MEANDER_S0)) / MEANDER_P);
 // integrate the heading numerically once (a table at 0.05 resolution from s = -80 to 120)
 const DS = 0.05, S_MIN = -80, S_MAX = 120;
 const N_T = Math.round((S_MAX - S_MIN) / DS) + 1;

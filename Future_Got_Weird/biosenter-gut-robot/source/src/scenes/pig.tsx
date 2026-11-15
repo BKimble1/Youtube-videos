@@ -4,10 +4,10 @@
 // tick per foot, and "6+ FEET" lands on "FEET". The animal-study context is explicit (the pig, and a small tag).
 import React from 'react';
 import {C, INK} from '../art/palette';
-import {clamp, lerp, ss, ss5, word} from '../lib';
+import {clamp, keyS, lerp, ss, ss5, word} from '../lib';
 import {heading} from '../world/path';
 import {trackS} from '../world/frames';
-import {crawl, extLen, LEN, R_ANCHOR_MAX} from '../robot/state';
+import {bodyLen, crawl, extLen, LEN, R_ANCHOR_MAX} from '../robot/state';
 import {CapText} from './CapText';
 import {WIDE_CY, WIDE_PX} from './inside';
 
@@ -18,7 +18,7 @@ const TUBE = 15.5 / PIG_S; // tube width (local) -> 15.5 px on screen at zoom 1
 export const PX_PER_UNIT_Z1 = 15.5 / 5.14; // the 3D tunnel's outer diameter (5.14 units) maps to the tube width
 
 // the coiled small intestine: a serpentine of rows joined by half-turns, entered from the stomach side
-const ROWS = [258, 292, 326, 360, 394];
+const ROWS = [246, 271, 296, 321, 346, 371, 396, 421];
 const XL = 318, XR = 692, RT = (ROWS[1] - ROWS[0]) / 2;
 type Pt = {x: number; y: number};
 const PATH: Pt[] = (() => {
@@ -75,7 +75,17 @@ const L_P0 = (() => {
 })();
 export const P0 = toScreen(at(L_P0).p.x, at(L_P0).p.y);
 /** the travelled stretch: "over six feet" (local path length) */
-const TRAVEL = 640;
+/** ~2 m is about 22 lengths of the ~9 cm robot: the stretch is drawn to the glyph's own scale */
+const TRAVEL = (22 * bodyLen(0.5) * PX_PER_UNIT_Z1) / PIG_S;
+/** the centre of the travelled stretch on screen (the push-in target) */
+const ROUTE_C = (() => {
+  let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+  for (let l = L_P0; l <= L_P0 + TRAVEL; l += 5) {
+    const q = toScreen(at(l).p.x, at(l).p.y);
+    x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); y1 = Math.max(y1, q.y);
+  }
+  return {x: (x0 + x1) / 2, y: (y0 + y1) / 2};
+})();
 
 // ---------------------------------------------------------------- timing
 const tZ0 = 11.55, tZ1 = 12.95; // zoom-out
@@ -126,7 +136,13 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
   const cx = lerp(540, P0.x, ss(w, 0, 1)), cy = lerp(WIDE_CY, P0.y, ss(w, 0, 1));
   const ang = A0 * (1 - ss(w, 0.15, 0.85));
   const tf = `translate(${cx.toFixed(2)},${cy.toFixed(2)}) rotate(${ang.toFixed(3)}) scale(${Z.toFixed(4)}) translate(${(-P0.x).toFixed(2)},${(-P0.y).toFixed(2)})`;
-  const breathe = (1 + 0.008 * Math.sin(t * 2.4)) * (1 + 0.07 * ss5(t, tZ1, 16.8));
+  const breathe = 1 + 0.006 * Math.sin(t * 2.4);
+  // after the reveal: push in on the route while the robot travels it, pull back as "6+ FEET" lands, then drift
+  const follow = keyS(t, [[tZ1, 0], [13.3, 0], [13.85, 1], [tTr1 - 0.05, 1], [tFeet + 0.6, 0]]);
+  const drift = 1 + 0.05 * ss5(t, tFeet + 0.6, 16.9);
+  const Z2 = (1 + 0.75 * follow) * drift;
+  const FX = lerp(540, ROUTE_C.x, follow), FY = lerp(980, ROUTE_C.y, follow);
+  const tf2 = `translate(${lerp(540, 540, follow).toFixed(2)},${lerp(980, 1010, follow).toFixed(2)}) scale(${Z2.toFixed(4)}) translate(${(-FX).toFixed(2)},${(-FY).toFixed(2)})`;
   const travel = ss5(t, tTr0, tTr1);
   const lNow = L_P0 + TRAVEL * travel;
   const g = at(lNow);
@@ -141,7 +157,7 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
     const q = at(l).p, s = toScreen(q.x, q.y);
     trail.push(`${s.x.toFixed(1)},${s.y.toFixed(1)}`);
   }
-  const ticks = Array.from({length: 6}, (_, k) => L_P0 + (TRAVEL * (k + 1)) / 6.15);
+  const ticks = Array.from({length: 6}, (_, k) => L_P0 + (TRAVEL * (k + 1)) / 6.56); // one per foot (2 m = 6.56 ft)
   const tagA = ss(t, tPig - 0.15, tPig + 0.25);
   const feetPop = t - tFeet;
   const feetS = feetPop < 0 ? 0 : 1 + 0.28 * Math.exp(-feetPop / 0.12) * Math.cos(feetPop * 22);
@@ -162,6 +178,7 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
         {Array.from({length: 33}, (_, k) => <line key={`h${k}`} x1={0} y1={k * 60} x2={1080} y2={k * 60} stroke="#22384F" strokeWidth={1.5} />)}
       </g>
       <g transform={tf}>
+        <g transform={tf2}>
         <g transform={`translate(${540},${1000}) scale(${breathe}) translate(${-540},${-1000})`}>
           <Pig a={pigA} />
           {/* the coiled small intestine */}
@@ -188,6 +205,7 @@ export const PigScene: React.FC<{t: number}> = ({t}) => {
           <g transform={`translate(${gs.x.toFixed(2)},${gs.y.toFixed(2)}) rotate(${gAng.toFixed(2)})`}>
             <Glyph t={t} scale={1} />
           </g>
+        </g>
         </g>
       </g>
       {/* the study tag */}

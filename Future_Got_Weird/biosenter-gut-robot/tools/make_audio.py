@@ -171,15 +171,12 @@ place(bite, TL['tissue'] + 0.02, 'forceps bite (snip)', -19, 'accent')
 x = tt(0.18); u = x / 0.18
 place(svf(noise(len(x)), 900 - 500 * u, 3.0) * np.sin(np.pi * u), TL['tissue'] + 0.06, 'tiny wet tug of the sample', -29, 'dot')
 place(cable(0.55, rev=True), TL['samples'] - 0.25, 'forceps retract with the sample', -28, 'tex')
-place(cable(0.4), TL['samples'] + 0.32, 'needle out of the channel', -29, 'tex')
-x = tt(0.9)
-ting = sum(np.sin(2 * np.pi * f * x) * np.exp(-x / 0.25) / (k + 1) for k, f in enumerate([5200, 7900, 10400]))
-place(ting * (1 - np.exp(-x / 0.001)), TL['deliver'] + 0.1, 'needle tip ting', -31, 'dot')
-x = tt(0.9); u = x / 0.9
-blob = A.plup(240, 0.22, 1300) if hasattr(A, 'plup') else np.zeros(1)
-fluid = lp(svf(noise(len(x)), 500 + 300 * u, 1.5), 1800) * np.sin(np.pi * u) ** 0.7
-place(fluid, TL['liquid'] - 0.04, 'dye released (soft fluid)', -25, 'tex')
-place(blob, TL['liquid'] - 0.02, 'dye bloop', -22, 'dot')
+place(cable(0.45), TL['samples'] + 0.35, 'spray catheter out of the channel', -29, 'tex')
+# the spray: a short, fine, soft hiss with a faint wet patter as the droplets land (V2: a sprayer, per the sources)
+x = tt(0.62); u = x / 0.62
+hiss = hp(lp(noise(len(x)), 9000), 2600) * np.sin(np.pi * np.clip(u * 1.15, 0, 1)) ** 0.6 * (1 - u) ** 0.4
+patter = bp(impulses(np.full(len(x), 140.0), 0.0006), 1800, 6000) * np.sin(np.pi * u)
+place(rmsn(hiss) + 0.35 * rmsn(patter), TL['liquid'] - 0.1, 'fine spray of marker fluid', -24, 'tex')
 
 # ---------------------------------------------------------------- the lab
 LB = CJ['lab']
@@ -280,6 +277,11 @@ VREF = -16.0
 v0 = v * db(-18.0 - meter.integrated_loudness(v))
 vc, comp_curve = compress(v0)
 voice = vc * db(VREF - meter.integrated_loudness(vc))
+# V2: tame the voice's few transient peaks (the plosive in "It could") with a peak limiter on the voice bus alone,
+# 3.5 dB below its own peak, so the master limiter no longer has to catch them (gain only; no edit to the words)
+vpk = 20 * np.log10(np.max(np.abs(voice)) + 1e-12)
+voice, vlim = tp_limit(voice, vpk - 3.5, look=0.002, rel=0.05)
+voice = voice * db(VREF - meter.integrated_loudness(voice))
 env_b = smooth(np.abs(voice), 8.0)
 env_h = smooth(np.abs(hp(voice, 3200, 4)), 16.0)
 k_b = np.clip(env_b / np.percentile(env_b, 90) * 1.4, 0, 1)
@@ -315,7 +317,7 @@ for nm, x in stems.items():
 tp = 20 * np.log10(np.max(np.abs(resample_poly(np.concatenate([mix[-256:], mix, mix[:256]]), 4, 1))) + 1e-12)
 vl = lufs(voice_out)
 res = {'name': NAME, 'duration_s': DUR, 'integrated_lufs_stereo': round(float(meter.integrated_loudness(mix2)), 2),
-       'true_peak_dbtp_4x': round(float(tp), 2), 'limiter_max_gr_db': round(float(20 * np.log10(glim.min())), 2),
+       'true_peak_dbtp_4x': round(float(tp), 2), 'limiter_max_gr_db': round(float(20 * np.log10(glim.min())), 2), 'voice_peak_limiter_max_gr_db': round(float(20 * np.log10(vlim.min())), 2), 'voice_peak_limiter_ms_active': round(float((vlim < 0.999).sum() / SR * 1000), 1),
        'voice_lufs_mono': vl, 'effects_lufs_mono': lufs(stems['sfx']), 'ambience_lufs_mono': lufs(stems['amb']), 'music_lufs_mono': lufs(stems['music']),
        'music_under_voice_db': round(vl - lufs(stems['music']), 2), 'effects_under_voice_db': round(vl - lufs(stems['sfx']), 2),
        'limiter_min_at_s_and_p1_db': glim_at, 'loop_seam_jump': round(float(abs(mix[0] - mix[-1])), 6), 'events': len(LOG),

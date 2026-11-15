@@ -1,6 +1,44 @@
 # Future Got Weird: The Robot That Crawls Through Your Intestines (BIOSENTER)
 
-## V1 (the current review cut)
+## V2 (the current review cut)
+
+**Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V2_REVIEW_1080x1920.mp4`. It is not published.
+
+- **Video:** true 1080×1920, 30 fps, 789 frames (26.30 s), H.264.
+- **Audio:** AAC 48 kHz, −14 LUFS.
+- **Narration:** the same recording as V1, byte-identical.
+
+**What changed:**
+
+- Physically consistent locomotion at the real proportions, with the head and tail as the kirigami anchors.
+- A chamber cutaway, a new hook and a new ending.
+- An animated pig route.
+- A biopsy clip and a fluid sprayer (per the sources).
+- A dark lab test bench.
+- Calmer captions.
+
+**Where to look:**
+
+| What | Where |
+|---|---|
+| Change log | `production/V2_CHANGELOG.md` |
+| Science verification | `production/V2_SCIENCE_VERIFICATION.md` |
+| QC report and remaining issues | `production/V2_QC_REPORT.md` |
+| QC evidence | `qa/v2/` |
+
+**Rebuild V2:** the same commands as V1 (`production/V1_REPORT.md`, "Exact commands"), with these differences:
+
+- the mix is `mix_v2`;
+- the composition is `BiosenterV2`;
+- the output is `..._V2_REVIEW_1080x1920.mp4`.
+
+    python3 tools/make_audio.py mix_v2
+    tools/render_resilient.sh mix_v2 exports/FGW_BIOSENTER_GUT_ROBOT_V2_REVIEW_1080x1920.mp4
+    python3 tools/qa_render.py exports/FGW_BIOSENTER_GUT_ROBOT_V2_REVIEW_1080x1920.mp4 qa/v2
+
+V1's source is at commit `8149cb7`.
+
+## V1 (the earlier review cut)
 
 **Deliverable:** `exports/FGW_BIOSENTER_GUT_ROBOT_V1_REVIEW_1080x1920.mp4`. It is not published.
 

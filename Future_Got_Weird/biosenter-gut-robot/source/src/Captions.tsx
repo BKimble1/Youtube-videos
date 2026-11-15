@@ -7,8 +7,9 @@ import React from 'react';
 import {Caption, CAPTIONS, clamp} from './lib';
 
 export const capY = (t: number): number => {
-  if (t >= 3.47 && t < 6.85) return 1560; // macro: the head anchor (the focal part) stays clear of the low zone
-  if (t >= 16.8 && t < 21.15) return 1560; // tools (head and tools fill the upper frame) and the lab (controller)
+  // V2: one zone per stretch, switching only on hard cuts: TOP for the gut shots, the macro and the pig; LOW for the
+  // tool close-up and the lab (where the robot's head and the controller fill the upper frame)
+  if (t >= 16.8 && t < 21.15) return 1560;
   return 300;
 };
 const hideOf = (k: number) => {

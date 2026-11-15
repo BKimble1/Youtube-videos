@@ -10,13 +10,15 @@
 // macro (S2) and the cutaway (S3) continue the opening crawl (S1) without a reset.
 import {clamp, ring, ss5} from '../lib';
 
-export const LEN = {tailCap: 0.62, anchor: 1.5, collar: 0.3, headCap: 0.72};
-export const L0 = 2.8; // extender length, contracted
-export const STROKE = 2.0; // extension stroke
+// V2: real proportions. The device is ~90 mm long and ~13 mm across (about 7:1); the head and tail ARE the expandable
+// kirigami segments, with only a short tether port behind and the flat channel face in front.
+export const LEN = {tailCap: 0.38, anchor: 1.85, collar: 0.22, headCap: 0.42};
+export const L0 = 6.2; // extender length, contracted
+export const STROKE = 2.2; // extension stroke
 export const extLen = (e: number) => L0 + STROKE * e;
 export const bodyLen = (e: number) => LEN.tailCap + 2 * LEN.anchor + 2 * LEN.collar + LEN.headCap + extLen(e);
 export const R_BODY = 1.0;
-export const R_ANCHOR_MAX = 1.98; // inflated: reaches and presses the wall (lumen radius 2.0)
+export const R_ANCHOR_MAX = 1.88; // inflated: the bristles just meet the mucosa (lumen radius 2.0); grip without distending the wall
 export const POP_ON = 0.6; // anchor inflation at which the kirigami scales buckle out
 
 type Ph = 'TA' | 'TR' | 'HA' | 'HR' | 'EX' | 'CO';
@@ -43,7 +45,7 @@ const HA_MACRO = (u: number) => {
 
 const curve = (ph: Ph, t0: number, t1: number, tau: number) => {
   const u = clamp((tau - t0) / (t1 - t0));
-  const k = ph === 'TA' || ph === 'HA' ? 1 - (1 - u) ** 2.2 : ss5(u, 0, 1);
+  const k = ss5(u, 0, 1);
   return ph === 'HA' && t0 === 4.2 ? HA_MACRO(u) : k;
 };
 
@@ -96,7 +98,7 @@ export const POP_TIMES = CROSS;
 const popOf = (key: 'aT' | 'aH', tau: number, a: number) => {
   const base = ss5(a, POP_ON - 0.06, POP_ON + 0.12);
   let over = 0;
-  for (const tc of CROSS[key]) if (tau >= tc && tau - tc < 1.2) over = 0.32 * ring(tau, tc + 0.05, 6.5, 0.11);
+  for (const tc of CROSS[key]) if (tau >= tc && tau - tc < 1.2) over = 0.08 * ring(tau, tc + 0.05, 5, 0.09);
   return base * (1 + over);
 };
 const glowAt = (tau: number) => {

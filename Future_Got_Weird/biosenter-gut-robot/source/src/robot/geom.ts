@@ -12,7 +12,7 @@
 import {add3, Basis, cross3, dot3, len3, mul3, norm3, P2, proj, sub3, V2, V3} from '../core/three';
 import {depthOf, facing, gradFrom, Item, Light, shadeAt} from '../core/render';
 import {C, INK, INK_PX} from '../art/palette';
-import {mix} from '../core/color';
+import {mix, rgba} from '../core/color';
 import {clamp, ss} from '../lib';
 import {CrawlState, extLen, LEN, R_ANCHOR_MAX} from './state';
 
@@ -24,8 +24,8 @@ export const layout = (e: number) => {
   const u1 = LEN.tailCap, u2 = u1 + LEN.anchor, u3 = u2 + LEN.collar, u4 = u3 + extLen(e), u5 = u4 + LEN.collar, u6 = u5 + LEN.anchor, u7 = u6 + LEN.headCap;
   return {u1, u2, u3, u4, u5, u6, u7};
 };
-const TIP_R = 0.44, CH_R = 0.29, TETHER_R = 0.34;
-const FLAP_H = 0.17, FLAP_MAX = (50 * Math.PI) / 180, ROWS = 6, COLS = 16;
+const TIP_R = 0.62, CH_R = 0.3, TETHER_R = 0.34;
+const FLAP_H = 0.16, FLAP_MAX = (50 * Math.PI) / 180, ROWS = 8, COLS = 16;
 const NPHI = 48;
 
 /** anchor balloon radius along its length (v in [0,1]) at inflation a */
@@ -68,13 +68,13 @@ const ringSamples = (L: ReturnType<typeof layout>) => {
   const seg = (a: number, b: number, n: number, warp?: (x: number) => number) => {
     for (let i = 0; i < n; i++) us.push(a + (b - a) * (warp ? warp(i / n) : i / n));
   };
-  seg(0, L.u1, 12, (x) => 1 - (1 - x) ** 1.6);
+  seg(0, L.u1, 9, (x) => 1 - (1 - x) ** 1.6);
   seg(L.u1, L.u2, 30);
   seg(L.u2, L.u3, 3);
-  seg(L.u3, L.u4, Math.max(10, Math.round((L.u4 - L.u3) * 3.4)));
+  seg(L.u3, L.u4, Math.max(16, Math.round((L.u4 - L.u3) * 3.4)));
   seg(L.u4, L.u5, 3);
   seg(L.u5, L.u6, 30);
-  seg(L.u6, L.u7, 18, (x) => x ** 0.8);
+  seg(L.u6, L.u7, 12, (x) => x ** 0.8);
   us.push(L.u7);
   return us;
 };
@@ -91,6 +91,8 @@ export type RobotOpts = {
   tetherDroop?: number;
   /** skip the tip face (a tool is drawn there instead) */
   tipOpen?: number;
+  /** 0..1: open a cutaway window in the extender's near side showing two of its four air chambers and the channel */
+  cutaway?: number;
 };
 
 const secCols = (sec: Sec) => (sec === 'tailAnchor' || sec === 'headAnchor' ? C.sleeve : sec === 'ext' ? C.body : C.cap);
@@ -302,6 +304,44 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
   };
   chain(crossA);
   chain(crossB);
+  // ---- the chamber cutaway: a window in the extender's skin (screen-aligned with its silhouette), showing two of the
+  // four Kevlar-reinforced chambers along its sides filling with air as it extends, and the central tool channel
+  const cw = o.cutaway ?? 0;
+  if (cw > 0.01) {
+    const rows: {c: V2; a: V2; b: V2; u: number}[] = [];
+    for (let i = 0; i < nU; i++) {
+      if (us[i] < L.u3 + 0.35 || us[i] > L.u4 - 0.35) continue;
+      const A = crossA[i], Bc = crossB[i];
+      if (!A || !Bc) continue;
+      const a = proj(B, A), b = proj(B, Bc);
+      rows.push({a, b, c: {x: (a.x + b.x) / 2, y: (a.y + b.y) / 2}, u: us[i]});
+    }
+    if (rows.length > 3) {
+      const at = (r: (typeof rows)[0], t: number): V2 => ({x: r.c.x + (r.a.x - r.c.x) * t, y: r.c.y + (r.a.y - r.c.y) * t});
+      const band = (t0: number, t1: number) => `M${rows.map((r) => P2(at(r, t0))).join('L')}L${[...rows].reverse().map((r) => P2(at(r, t1))).join('L')}Z`;
+      const zW = INKZ - 4;
+      const reveal = cw;
+      // the window opens from the centre line outward
+      const half = 0.8 * reveal;
+      items.push({z: zW, d: band(-half, half), fill: '#0A2A31', stroke: '#E8F2F2', sw: 2.4, op: 0.96});
+      // chambers: their width grows with pressure; the outer chamber of a bend is fuller
+      const kMid = KN[Math.floor((us.findIndex((u) => u >= (L.u3 + L.u4) / 2) + 0) || 0)] || 0;
+      const fill = (side: number) => clamp(0.25 + 0.75 * st.gE * (1 - side * kMid * 5), 0.15, 1);
+      for (const side of [1, -1]) {
+        const f = fill(side);
+        const w = (0.17 + 0.07 * f) * reveal;
+        const ctr = side * 0.47 * reveal;
+        items.push({z: zW - 1, d: band(ctr - w, ctr + w), fill: mix('#16525A', C.glow, f), stroke: mix('#2E8C92', '#CFFFFA', f), sw: 2, op: 0.95});
+        // the fibre reinforcement: fine rings across each chamber
+        const rings: string[] = [];
+        for (let k = 1; k < rows.length - 1; k += 2) rings.push(`M${P2(at(rows[k], ctr - w))}L${P2(at(rows[k], ctr + w))}`);
+        items.push({z: zW - 1.5, d: rings.join(''), stroke: rgba('#0A2A31', 0.45), sw: 1.4});
+      }
+      // the central channel and the tool cable inside it
+      items.push({z: zW - 2, d: band(-0.13 * reveal, 0.13 * reveal), fill: '#123138', stroke: '#5E7A80', sw: 1.4});
+      items.push({z: zW - 2.5, d: band(-0.035 * reveal, 0.035 * reveal), fill: C.steel[2]});
+    }
+  }
   // seams between modules: the front arcs of the boundary rings
   const seamAt = (u: number, w = 0.6, col = INK) => {
     const f = frame(st.sTail + u);
@@ -323,7 +363,7 @@ export const robotItems = (B: Basis, Lt: Light, frame: FrameF, st: CrawlState, o
   for (const u of [L.u1 + 0.005, L.u2 - 0.005, L.u3, L.u4, L.u5 + 0.005, L.u6 - 0.005]) seamAt(u, 0.55);
   seamAt(L.u1 * 0.55, 0.35, mix(C.cap[1], INK, 0.3));
   // extender fibre ribs: spread as it extends
-  const NR = 9;
+  const NR = 16;
   for (let k = 1; k <= NR; k++) seamAt(L.u3 + ((L.u4 - L.u3) * k) / (NR + 1), 0.32, mix(C.body[1], INK, 0.25));
   // ---- the head tip: the central channel (imaging and tools) in a flat face
   const fT = frame(st.sTail + L.u7);

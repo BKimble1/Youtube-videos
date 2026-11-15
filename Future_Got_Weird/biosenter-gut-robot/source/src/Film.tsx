@@ -9,7 +9,7 @@ import {ToolsShot} from './scenes/tools';
 import {LabShot} from './scenes/lab';
 import {add3, mul3, norm3} from './core/three';
 
-export const SCENES = {s2: 3.5, s3: 6.85, s4: 11.55, s5: 16.83, s6: 19.45, s7: 21.15};
+export const SCENES = {s2: 3.5, s3: 6.85, s4: 11.55, s5: 16.83, s6: 19.43, s7: 21.15};
 
 /** S3 -> S4: the cutaway camera pulls straight back (same target, same lens) as the diagram zooms out with it */
 const PullBack: React.FC<{t: number}> = ({t}) => {

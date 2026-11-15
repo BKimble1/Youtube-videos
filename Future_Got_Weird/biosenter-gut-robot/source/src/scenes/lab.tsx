@@ -21,7 +21,7 @@ const labFrame: FrameF = (s) => {
   const T = A;
   return {p, T, N: norm3(cross3(T, Z)), B: Z};
 };
-const TUBE_S0 = -2.2, TUBE_S1 = 12.8;
+const TUBE_S0 = -2.2, TUBE_S1 = 16.2;
 /** the tether: out of the tube's open tail end, down onto the bench, round to the controller */
 const CTRL: V3 = add3(add3(ORIGIN, mul3(A, -6.4)), [1.2, -0.4, BENCH_Z + 1.0]);
 const tetherPts: V3[] = (() => {
@@ -63,9 +63,9 @@ export const labState = (t: number) => {
 
 export const labCam = (t: number) => {
   const push = ss5(t, 19.45, 21.3);
-  const tgt = add3(add3(ORIGIN, mul3(A, 3.2 + 0.6 * push)), [0.2, 0, -0.6]);
+  const tgt = add3(add3(ORIGIN, mul3(A, 6.3 + 0.7 * push)), [0.6, 0, -0.6]);
   const dir = norm3([-0.18, 0.62, 0.78]);
-  const dist = 24 - 2.2 * push;
+  const dist = 31 - 2.6 * push;
   return {cam: {eye: add3(tgt, mul3(dir, dist)), target: tgt, f: dist * 92}, dist};
 };
 export const LAB_FRAME = (s: number) => labFrame(s);
@@ -74,7 +74,7 @@ export const LabShot: React.FC<{t: number}> = ({t}) => {
   const st = labState(t);
   const {cam, dist} = labCam(t);
   const B = basis(cam);
-  const Lt = lightFor(B, dist, {fogColor: '#C9D5DA', fog0: dist * 1.1, fogLen: dist * 2.2, d0: dist * 3, gain: 1.05});
+  const Lt = lightFor(B, dist, {fogColor: '#0E1822', fog0: dist * 1.05, fogLen: dist * 1.6, d0: dist * 2.6, gain: 1.1});
   const items: Item[] = [];
   // ---- bench: a pale cutting mat with a grid, receding into the soft lab background
   const pl = (x: number, y: number): V3 => [x, y, BENCH_Z];
@@ -90,7 +90,7 @@ export const LabShot: React.FC<{t: number}> = ({t}) => {
       const c = add3(add3(ORIGIN, mul3(A, s)), [0.35, 0.25, BENCH_Z]);
       a.push(proj(B, add3(c, mul3(N, w)))); b.push(proj(B, add3(c, mul3(N, -w))));
     }
-    return <path d={`M${[...a, ...b.reverse()].map(P2).join('L')}Z`} fill={rgba('#2A3B44', op)} />;
+    return <path d={`M${[...a, ...b.reverse()].map(P2).join('L')}Z`} fill={rgba('#03070B', op * 2.2)} />;
   };
   // ---- the clear test tube: back wall, then (after the robot) front glints
   const tubeSil = (side: number, s0 = TUBE_S0, s1 = TUBE_S1) => {
@@ -149,18 +149,19 @@ export const LabShot: React.FC<{t: number}> = ({t}) => {
     <svg width={1080} height={1920} viewBox="0 0 1080 1920" style={{position: 'absolute', inset: 0}}>
       <defs>
         <linearGradient id="labbg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#8FA3AD" />
-          <stop offset="0.35" stopColor="#B9C8CF" />
-          <stop offset="1" stopColor="#DCE4E7" />
+          <stop offset="0" stopColor="#070D14" />
+          <stop offset="0.4" stopColor="#0E1822" />
+          <stop offset="1" stopColor="#152331" />
         </linearGradient>
-        <radialGradient id="labglow" cx="38%" cy="22%" r="70%">
-          <stop offset="0" stopColor="#FFFFFF" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+        <radialGradient id="labglow" cx="52%" cy="52%" r="48%">
+          <stop offset="0" stopColor="#9FE8E2" stopOpacity="0.2" />
+          <stop offset="0.55" stopColor="#4CC3B9" stopOpacity="0.07" />
+          <stop offset="1" stopColor="#4CC3B9" stopOpacity="0" />
         </radialGradient>
       </defs>
       <rect width={1080} height={1920} fill="url(#labbg)" />
-      <path d={`M${mat.map(P2).join('L')}Z`} fill="#E3EAEC" />
-      <path d={grid.join('')} stroke="#B9C9CF" strokeWidth={1.6} fill="none" />
+      <path d={`M${mat.map(P2).join('L')}Z`} fill="#1A2733" />
+      <path d={grid.join('')} stroke="#2A4052" strokeWidth={1.6} fill="none" />
       <rect width={1080} height={1920} fill="url(#labglow)" />
       {sh(2.6, 0.08)}{sh(2.0, 0.1)}{sh(1.4, 0.12)}
       {box(CTRL, 2.0, 1.4, 1.0)}
@@ -168,15 +169,15 @@ export const LabShot: React.FC<{t: number}> = ({t}) => {
       {lines.map((pts, k) => <path key={`c${k}`} d={`M${pts.map(P2).join('L')}`} fill="none" stroke={lineCols[k]} strokeWidth={5.5} strokeLinecap="round" />)}
       <circle cx={led.x} cy={led.y} r={8} fill={mix('#1E6E73', '#9BFFF2', blink)} stroke={INK} strokeWidth={2} />
       {/* tube: back half */}
-      <path d={tubeBody} fill={rgba('#CFE9F0', 0.28)} />
-      <path d={endEllipse(TUBE_S0)} fill={rgba('#E8F6FA', 0.35)} stroke={rgba('#5E7F8C', 0.8)} strokeWidth={2.4} />
+      <path d={tubeBody} fill={rgba('#9FD8E0', 0.08)} />
+      <path d={endEllipse(TUBE_S0)} fill={rgba('#BFEFF2', 0.08)} stroke={rgba('#8FD3DA', 0.7)} strokeWidth={2.4} />
       <RenderItems items={[...robot].sort((a, b) => b.z - a.z)} />
       {/* tube: front glints and rims */}
-      <path d={`M${left.map(P2).join('L')}`} fill="none" stroke={rgba('#5E7F8C', 0.85)} strokeWidth={2.6} />
-      <path d={`M${right.map(P2).join('L')}`} fill="none" stroke={rgba('#5E7F8C', 0.85)} strokeWidth={2.6} />
+      <path d={`M${left.map(P2).join('L')}`} fill="none" stroke={rgba('#8FD3DA', 0.75)} strokeWidth={2.6} />
+      <path d={`M${right.map(P2).join('L')}`} fill="none" stroke={rgba('#8FD3DA', 0.75)} strokeWidth={2.6} />
       <path d={`M${tubeSil(0.62).map(P2).join('L')}`} fill="none" stroke={rgba('#FFFFFF', 0.55)} strokeWidth={sTube * 0.12} strokeLinecap="round" />
       <path d={`M${tubeSil(0.45).map(P2).join('L')}`} fill="none" stroke={rgba('#FFFFFF', 0.3)} strokeWidth={sTube * 0.04} strokeLinecap="round" />
-      <path d={endEllipse(TUBE_S1)} fill={rgba('#E8F6FA', 0.18)} stroke={rgba('#5E7F8C', 0.85)} strokeWidth={2.6} />
+      <path d={endEllipse(TUBE_S1)} fill={rgba('#BFEFF2', 0.06)} stroke={rgba('#8FD3DA', 0.75)} strokeWidth={2.6} />
     </svg>
   );
 };

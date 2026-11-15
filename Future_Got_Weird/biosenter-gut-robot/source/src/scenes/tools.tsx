@@ -1,10 +1,13 @@
-// S5: what else it can do. The robot holds position with its tail anchor and steers its head toward the wall (the
-// extender bends; the outer chambers glow). From the central channel: biopsy forceps reach the mucosa at the cut rim,
-// open, bite a tiny sample (a small notch is left in the villi), and retract with it; then a fine injection needle
-// reaches a neighbouring spot and releases a small, local bloom of blue marker dye into the tissue. Restrained: no
-// sprays, no tearing.
+// S5: what else it can do (V2, matched to the published description: a hollow central channel carries a camera, CLIPS
+// that take tissue biopsies, and a fluid SPRAYER). The robot holds position with its tail anchor gripping and steers
+// its head toward the wall (the extender bends; the outer chambers glow). Two clearly different actions, each with its
+// own framing:
+//   1. biopsy: the clip jaws come out of the channel, open, close on a tiny piece of mucosa, and pull back holding it
+//      (a small notch is left in the villi). Gentle: no tearing, no blood.
+//   2. fluid delivery: the camera eases along to a neighbouring spot; a spray catheter comes out of the same channel
+//      and releases a short, fine, localized spray of blue marker fluid that stains a small patch of mucosa.
 import React from 'react';
-import {add3, basis, Cam3, mul3, norm3, P2, proj, sub3, V2, V3} from '../core/three';
+import {add3, basis, Cam3, cross3, mul3, norm3, P2, proj, sub3, V2, V3} from '../core/three';
 import {Item, lightFor} from '../core/render';
 import {C3, heading, N3, T3, Z3} from '../world/path';
 import {FrameF, layout, robotItems} from '../robot/geom';
@@ -12,27 +15,27 @@ import {pose} from '../robot/state';
 import {GutShot} from './GutShot';
 import {C, INK} from '../art/palette';
 import {mix, rgba} from '../core/color';
-import {clamp, lerp, ss, ss5, word} from '../lib';
-import {contactOf} from '../world/frames';
+import {clamp, hash, keyS, lerp, ss, ss5, word} from '../lib';
+import {contactOf, gutFrame} from '../world/frames';
 
 const S_TAIL = 30.0;
-const ST = pose({sTail: S_TAIL, e: 0.62, aT: 1, popT: 1, aH: 0, popH: 0, gE: 0.0});
+export const TOOLS_ST = pose({sTail: S_TAIL, e: 0.6, aT: 1, popT: 1, aH: 0, popH: 0, gE: 0.35});
+const ST = TOOLS_ST;
 const L = layout(ST.e);
-const UB = L.u3 + 0.3; // the bend starts just into the extender
-const KAPPA = 0.075;
-const T0 = T3(S_TAIL), N0 = N3(S_TAIL), BASE = C3(S_TAIL);
+const D_MAX = 0.78; // how far the head is steered toward the +N wall (the head stays clear of it)
 
-/** the steered pose: straight to UB, then an arc toward +N (bend amount k in [0, 1]) */
-export const steerFrame = (k: number): FrameF => (s) => {
-  const u = s - S_TAIL;
-  const kap = KAPPA * k;
-  if (u <= UB || kap < 1e-5) return {p: add3(BASE, mul3(T0, u)), T: T0, N: N0, B: Z3};
-  const th = kap * (u - UB);
-  const p = add3(add3(BASE, mul3(T0, UB)), add3(mul3(T0, Math.sin(th) / kap), mul3(N0, (1 - Math.cos(th)) / kap)));
-  const T = add3(mul3(T0, Math.cos(th)), mul3(N0, Math.sin(th)));
-  const N = add3(mul3(T0, -Math.sin(th)), mul3(N0, Math.cos(th)));
-  return {p, T, N, B: Z3};
+/** the steered pose: on the gut's centreline to the mid extender, then bending toward +N (amount k in [0, 1]) */
+export const steerFrame = (k: number): FrameF => {
+  const off = (s: number) => D_MAX * k * ss(s - S_TAIL, L.u4 - 3.2, L.u7) ** 1.3;
+  const P = (s: number) => add3(C3(s), mul3(N3(s), off(s)));
+  return (s) => {
+    const p = P(s);
+    const T = norm3(sub3(P(s + 0.02), P(s - 0.02)));
+    const N = norm3(cross3(T, Z3));
+    return {p, T, N, B: Z3};
+  };
 };
+void gutFrame;
 
 // ---- timing (keyed to the words)
 const tIt = word('it', 3).start; // "It could even ..."
@@ -41,47 +44,48 @@ const tDeliver = word('deliver').start, tLiquid = word('liquid').start;
 const T_IN = 16.8;
 
 export const toolsState = (t: number) => {
-  const bend = 0.82 + 0.18 * ss5(t, T_IN, T_IN + 0.5);
-  // forceps: reach, open, bite, retract
-  const fExt = ss5(t, T_IN + 0.02, tTissue - 0.05) * (1 - ss5(t, tSamples - 0.25, tSamples + 0.3));
-  const fOpen = ss(t, tIt + 0.15, tTissue - 0.05) * (1 - ss(t, tTissue + 0.02, tTissue + 0.16));
-  const bitten = ss(t, tTissue + 0.1, tTissue + 0.2);
-  // needle: reach, enter, release
-  const nExt = ss5(t, tSamples + 0.32, tDeliver + 0.12) * 1;
-  const nIn = ss(t, tDeliver + 0.1, tLiquid - 0.02);
-  const dye = ss(t, tLiquid - 0.04, tLiquid + 0.75);
-  const stream = ss(t, tLiquid - 0.06, tLiquid + 0.05) * (1 - ss(t, tLiquid + 0.45, tLiquid + 0.75));
-  return {bend, fExt, fOpen, bitten, nExt, nIn, dye, stream};
+  const bend = 0.85 + 0.15 * ss5(t, T_IN, T_IN + 0.5);
+  // clip jaws: out, open, close on the tissue, back in holding the sample
+  const fExt = ss5(t, T_IN + 0.0, tTissue - 0.08) * (1 - ss5(t, tSamples - 0.15, tSamples + 0.38));
+  const fOpen = ss(t, tIt + 0.1, tTissue - 0.12) * (1 - ss(t, tTissue - 0.02, tTissue + 0.12));
+  const bitten = ss(t, tTissue + 0.06, tTissue + 0.16);
+  // spray catheter: out, spray, settle
+  const sExt = ss5(t, tSamples + 0.35, tDeliver + 0.22);
+  const spray = ss(t, tLiquid - 0.1, tLiquid + 0.0) * (1 - ss(t, tLiquid + 0.42, tLiquid + 0.6));
+  const stain = ss(t, tLiquid - 0.02, tLiquid + 0.55);
+  return {bend, fExt, fOpen, bitten, sExt, spray, stain};
 };
 
 const tipOf = (fr: FrameF) => fr(S_TAIL + L.u7);
-const S_BITE = S_TAIL + L.u7 + 0.55, S_INJ = S_BITE + 0.7;
+const S_BITE = S_TAIL + L.u7 + 0.62, S_SPRAY = S_BITE + 1.05;
 const rimPt = (s: number, depth: number): V3 => add3(C3(s), mul3(N3(s), 2.0 + depth));
 
-/** a point along the tool path: out of the channel along the tip's axis, curving onto the target */
+/** a point along a tool's path: out of the channel along the tip's axis, curving onto the target */
 const toolPath = (fr: FrameF, target: V3, u: number) => {
   const tp = tipOf(fr);
   const a = add3(tp.p, mul3(tp.T, 0.05));
-  const b = add3(tp.p, mul3(tp.T, 0.75));
+  const b = add3(tp.p, mul3(tp.T, 0.9));
   const c = target;
   const q = (x: number): V3 => add3(add3(mul3(a, (1 - x) ** 2), mul3(b, 2 * (1 - x) * x)), mul3(c, x * x));
   const pts: V3[] = [];
-  const n = 24;
+  const n = 28;
   for (let k = 0; k <= n; k++) pts.push(q((k / n) * u));
   const end = q(u), pre = q(Math.max(0, u - 0.02));
   return {pts, end, dir: norm3(sub3(end, pre))};
 };
 
+/** the framing: on the biopsy site, then easing along to the spray site */
 export const toolsCam = (t: number): Cam3 => {
   const fr = steerFrame(1);
   const tip = tipOf(fr).p;
-  const tgt = add3(mul3(add3(tip, rimPt(S_BITE + 0.3, 0)), 0.5), add3(mul3(T0, -0.12), add3(mul3(N0, 0.05), mul3(Z3, 0.1))));
-  const push = ss5(t, T_IN, 19.6);
-  const tilt = 0.12;
-  const dir = norm3(add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N0, -Math.sin(tilt))), mul3(T0, 0.12)));
+  const move = ss5(t, tSamples - 0.12, tDeliver + 0.3);
+  const site = lerp(S_BITE, S_SPRAY, move);
+  const tgt = add3(mul3(add3(tip, rimPt(site, 0)), 0.5), add3(mul3(T3(site), lerp(-0.05, 0.25, move)), add3(mul3(N3(site), -0.1), mul3(Z3, 0.1))));
+  const tilt = 0.14;
+  const dir = norm3(add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N3(site), -Math.sin(tilt))), mul3(T3(site), 0.1)));
   const dist = 14;
-  const at = add3(tgt, mul3(T0, 0.18 * push));
-  return {eye: add3(at, mul3(dir, dist)), target: at, f: dist * 345 * (1 + 0.06 * push), roll: (heading(S_TAIL) * 180) / Math.PI};
+  const zoom = keyS(t, [[T_IN, 420], [tTissue, 450], [tSamples, 450], [tDeliver + 0.2, 470], [19.5, 490]]);
+  return {eye: add3(tgt, mul3(dir, dist)), target: tgt, f: dist * zoom, roll: (heading(site) * 180) / Math.PI, cy: 900};
 };
 
 export const ToolsShot: React.FC<{t: number}> = ({t}) => {
@@ -91,87 +95,112 @@ export const ToolsShot: React.FC<{t: number}> = ({t}) => {
   const B = basis(cam);
   const dist = 14;
   const Lt = lightFor(B, dist, {fog0: dist * 1.02, fogLen: dist * 0.9, d0: dist * 2.4});
-  const robot = robotItems(B, Lt, fr, ST, {tetherLen: 20, tetherFrame: (s) => ({p: add3(BASE, mul3(T0, s - S_TAIL)), T: T0, N: N0, B: Z3}), tetherDroop: 0.5});
+  const robot = robotItems(B, Lt, fr, ST, {tetherLen: 20, tetherDroop: 0.4, bendGlow: 0.6});
   const extra: Item[] = [];
   const pxs = (p: V3) => proj(B, p).s;
-  const tube = (pts: V3[], r: number, col: string[], z: number) => {
+  const tube = (pts: V3[], r: number, cols: [string, string, string], z: number, op = 1) => {
     const sp = pts.map((p) => proj(B, p));
     const w = 2 * r * pxs(pts[pts.length - 1]);
     const d = `M${sp.map(P2).join('L')}`;
-    extra.push({z, d, stroke: INK, sw: w + 4.5, round: true});
-    extra.push({z: z - 0.001, d, stroke: col[1], sw: w, round: true});
-    extra.push({z: z - 0.002, d, stroke: col[3], sw: w * 0.3, round: true, op: 0.8});
+    extra.push({z, d, stroke: INK, sw: w + 4.5, round: true, op});
+    extra.push({z: z - 0.001, d, stroke: cols[0], sw: w, round: true, op});
+    extra.push({z: z - 0.002, d, stroke: cols[1], sw: w * 0.32, round: true, op: 0.85 * op});
+    return w;
   };
   const zTool = -2e5;
-  // ---- biopsy forceps
-  const biteTarget = rimPt(S_BITE, -0.04);
+  // ---- 1. the biopsy clip
+  const biteTarget = rimPt(S_BITE, -0.05);
   if (S.fExt > 0.01) {
     const P = toolPath(fr, biteTarget, S.fExt);
-    tube(P.pts, 0.07, C.steel, zTool);
-    // the cup jaws, opening about the tool axis in the cut plane
-    const side = norm3(sub3(Z3, mul3(P.dir, P.dir[2])));
-    const perp = norm3([P.dir[1] * side[2] - P.dir[2] * side[1], P.dir[2] * side[0] - P.dir[0] * side[2], P.dir[0] * side[1] - P.dir[1] * side[0]]);
-    const open = 0.75 * S.fOpen;
+    tube(P.pts, 0.075, [C.steel[2], C.steel[3], INK], zTool);
+    // jaws open in the cut plane, about the tool's axis
+    const perp = norm3(cross3(P.dir, Z3));
+    const open = 0.8 * S.fOpen;
     const jaw = (sgn: number) => {
       const a = sgn * open;
       const d = norm3(add3(mul3(P.dir, Math.cos(a)), mul3(perp, Math.sin(a))));
       const n = norm3(add3(mul3(P.dir, -Math.sin(a)), mul3(perp, Math.cos(a))));
       const pts: V2[] = [];
-      for (let k = 0; k <= 10; k++) {
-        const th = (k / 10) * Math.PI;
-        const q = add3(add3(P.end, mul3(d, 0.13 + 0.14 * Math.sin(th))), mul3(n, sgn * 0.1 * Math.cos(th) * 0.9));
-        pts.push(proj(B, add3(q, mul3(n, sgn * 0.045))));
+      for (let k = 0; k <= 12; k++) {
+        const th = (k / 12) * Math.PI;
+        const q = add3(add3(P.end, mul3(d, 0.15 + 0.17 * Math.sin(th))), mul3(n, sgn * 0.11 * Math.cos(th) * 0.9));
+        pts.push(proj(B, add3(q, mul3(n, sgn * 0.05))));
       }
-      extra.push({z: zTool - 0.01, d: `M${pts.map(P2).join('L')}Z`, fill: C.steel[2], stroke: INK, sw: 2.2});
-      const hl = pts.slice(2, 7);
-      extra.push({z: zTool - 0.011, d: `M${hl.map(P2).join('L')}`, stroke: C.steel[3], sw: 2, round: true, op: 0.8});
+      extra.push({z: zTool - 0.01, d: `M${pts.map(P2).join('L')}Z`, fill: C.steel[2], stroke: INK, sw: 2.6});
+      extra.push({z: zTool - 0.011, d: `M${pts.slice(2, 8).map(P2).join('L')}`, stroke: C.steel[3], sw: 2.4, round: true, op: 0.85});
     };
-    if (S.bitten > 0.5) {
-      // the sample, held in the closed jaws
-      const c = proj(B, add3(P.end, mul3(P.dir, 0.15)));
-      const r = 0.085 * pxs(P.end);
-      extra.push({z: zTool - 0.005, d: circle(c, r), fill: C.sample, stroke: mix(C.sample, INK, 0.5), sw: 1.6});
+    if (S.bitten > 0.01) {
+      // the sample, held between the closed jaws: a tiny piece of pink mucosa with its villus fringe
+      const c = proj(B, add3(P.end, mul3(P.dir, 0.2)));
+      const r = 0.1 * pxs(P.end) * S.bitten;
+      extra.push({z: zTool - 0.012, d: blob(c, r, 1.3), fill: C.mucosa, stroke: mix(C.sample, INK, 0.45), sw: 2});
+      extra.push({z: zTool - 0.013, d: blob({x: c.x - r * 0.15, y: c.y - r * 0.2}, r * 0.45, 0.4), fill: C.villus, op: 0.9});
     }
     jaw(1);
     jaw(-1);
   }
-  // ---- injection needle and the dye
-  const injTarget = rimPt(S_INJ, 0.05 * S.nIn);
-  if (S.nExt > 0.01) {
-    const P = toolPath(fr, injTarget, S.nExt);
-    tube(P.pts.slice(0, -3), 0.05, ['#5E6E7A', '#BFD3DD', '#E3EEF3', '#FFFFFF'], zTool);
-    // the metal needle tip
-    const tipA = P.pts[P.pts.length - 4], tipB = P.end;
-    const pa = proj(B, tipA), pb = proj(B, tipB);
-    extra.push({z: zTool - 0.02, d: `M${P2(pa)}L${P2(pb)}`, stroke: INK, sw: 6, round: true});
-    extra.push({z: zTool - 0.021, d: `M${P2(pa)}L${P2(pb)}`, stroke: C.steel[3], sw: 3, round: true});
-    if (S.stream > 0.01) {
-      const q0 = proj(B, add3(tipB, mul3(P.dir, -0.02))), q1 = proj(B, add3(tipB, mul3(P.dir, 0.16)));
-      extra.push({z: zTool - 0.03, d: `M${P2(q0)}L${P2(q1)}`, stroke: C.dye, sw: 7 * S.stream, round: true, op: 0.9});
+  // ---- 2. the spray catheter
+  const sprayTarget = rimPt(S_SPRAY, -0.62);
+  const stainC = rimPt(S_SPRAY + 0.12, -0.02);
+  if (S.sExt > 0.01) {
+    const P = toolPath(fr, sprayTarget, S.sExt);
+    // a translucent catheter with the blue fluid line inside, and a steel nozzle
+    const w = tube(P.pts, 0.06, ['#DCEAF2', '#FFFFFF', INK], zTool, 0.95);
+    const fluidLen = Math.max(2, Math.round(P.pts.length * clamp(S.sExt * 1.2)));
+    extra.push({z: zTool - 0.003, d: `M${P.pts.slice(0, fluidLen).map((p) => P2(proj(B, p))).join('L')}`, stroke: C.dye, sw: w * 0.38, round: true, op: 0.9});
+    const nz0 = proj(B, add3(P.end, mul3(P.dir, -0.06))), nz1 = proj(B, add3(P.end, mul3(P.dir, 0.05)));
+    extra.push({z: zTool - 0.02, d: `M${P2(nz0)}L${P2(nz1)}`, stroke: INK, sw: w + 6, round: true});
+    extra.push({z: zTool - 0.021, d: `M${P2(nz0)}L${P2(nz1)}`, stroke: C.steel[2], sw: w + 1.5, round: true});
+    // the spray: a short, narrow cone of fine droplets from the nozzle to a small patch of mucosa
+    if (S.spray > 0.01) {
+      const from = add3(P.end, mul3(P.dir, 0.06));
+      const to = stainC;
+      const ax = sub3(to, from);
+      const len = Math.hypot(ax[0], ax[1], ax[2]);
+      const u = norm3(ax), v = norm3(cross3(u, Z3));
+      for (let k = 0; k < 46; k++) {
+        const ph = (t * 2.6 + hash(k * 3.1)) % 1; // each droplet travels nozzle -> wall, repeating
+        const spread = (hash(k * 7.7) - 0.5) * 0.5 * ph;
+        const q = add3(add3(from, mul3(u, len * ph)), mul3(v, spread * len * 0.6));
+        const pp = proj(B, q);
+        const r = (1.8 + 2.4 * hash(k * 1.3)) * (pxs(q) / 300);
+        extra.push({z: zTool - 0.04, d: blob(pp, r, 0), fill: k % 3 ? C.dye : C.dyeLight, op: S.spray * (0.55 + 0.45 * (1 - ph))});
+      }
+      // a faint mist envelope
+      const e0 = proj(B, from), e1 = proj(B, add3(to, mul3(v, 0.2))), e2 = proj(B, add3(to, mul3(v, -0.2)));
+      extra.push({z: zTool - 0.035, d: `M${P2(e0)}L${P2(e1)}L${P2(e2)}Z`, fill: C.dyeLight, op: 0.16 * S.spray});
     }
   }
-  const dyeItems: Item[] = [];
-  if (S.dye > 0.01) {
-    const c = proj(B, rimPt(S_INJ, 0.14));
-    const s = pxs(rimPt(S_INJ, 0));
-    const T = proj(B, add3(rimPt(S_INJ, 0.14), T3(S_INJ)));
+  // the stain left on the mucosa (local, on the surface: the villi turn blue)
+  const stainItems: Item[] = [];
+  if (S.stain > 0.01) {
+    const c = proj(B, stainC);
+    const sc = pxs(stainC);
+    const T = proj(B, add3(stainC, T3(S_SPRAY)));
     const ang = (Math.atan2(T.y - c.y, T.x - c.x) * 180) / Math.PI;
-    for (const [k, op] of [[1.0, 0.25], [0.72, 0.35], [0.45, 0.5]] as [number, number][]) {
-      dyeItems.push({z: -1.5e5, d: ellipseD(c, 0.5 * s * k * S.dye, 0.21 * s * k * (0.6 + 0.4 * S.dye), ang), fill: k > 0.9 ? C.dyeLight : C.dye, op: op * clamp(S.dye * 1.5)});
+    for (const [k, op] of [[1.0, 0.22], [0.7, 0.32], [0.42, 0.45]] as [number, number][]) {
+      stainItems.push({z: -1.5e5, d: ellipseD(c, 0.42 * sc * k * S.stain, 0.13 * sc * k * (0.5 + 0.5 * S.stain), ang), fill: k > 0.9 ? C.dyeLight : C.dye, op: op * clamp(S.stain * 1.4)});
     }
   }
   const sTip = S_TAIL + L.u7;
   return (
-    <>
-      <GutShot B={B} Lt={Lt} robot={robot} extra={[...extra, ...dyeItems]}
-        gut={{sFrom: sTip - 7, sTo: sTip + 6, contact: contactOf(ST), px: 6, villiPx: 6,
-          notch: {side: 1, s: S_BITE, depth: 0.055 * S.bitten},
-          shadow: {s0: S_TAIL + 0.3, s1: S_TAIL + L.u4, r: () => 1.1, op: 0.7}}} />
-    </>
+    <GutShot B={B} Lt={Lt} robot={robot} extra={[...extra, ...stainItems]}
+      gut={{sFrom: sTip - 7, sTo: sTip + 6, contact: contactOf(ST), px: 6, villiPx: 6,
+        notch: {side: 1, s: S_BITE, depth: 0.05 * S.bitten},
+        shadow: {s0: S_TAIL + 0.3, s1: S_TAIL + L.u4, r: () => 1.1, op: 0.7}}} />
   );
 };
 
-const circle = (c: V2, r: number) => `M${(c.x - r).toFixed(2)},${c.y.toFixed(2)}a${r.toFixed(2)},${r.toFixed(2)} 0 1,0 ${(2 * r).toFixed(2)},0a${r.toFixed(2)},${r.toFixed(2)} 0 1,0 ${(-2 * r).toFixed(2)},0Z`;
+/** a soft irregular blob (wob = irregularity) */
+const blob = (c: V2, r: number, wob: number) => {
+  const pts: V2[] = [];
+  for (let k = 0; k < 18; k++) {
+    const a = (k / 18) * Math.PI * 2;
+    const rr = r * (1 + 0.12 * wob * Math.sin(a * 3 + 1) + 0.08 * wob * Math.sin(a * 5));
+    pts.push({x: c.x + rr * Math.cos(a), y: c.y + rr * Math.sin(a)});
+  }
+  return `M${pts.map(P2).join('L')}Z`;
+};
 const ellipseD = (c: V2, rx: number, ry: number, rot: number) => {
   const a = (rot * Math.PI) / 180;
   const pts: V2[] = [];
@@ -182,6 +211,6 @@ const ellipseD = (c: V2, rx: number, ry: number, rot: number) => {
   }
   return `M${pts.map(P2).join('L')}Z`;
 };
-export const _t = [lerp, rgba];
+export const _t = [rgba];
 
 export const TOOLS_T = {in: T_IN, it: tIt, tissue: tTissue, samples: tSamples, deliver: tDeliver, liquid: tLiquid};

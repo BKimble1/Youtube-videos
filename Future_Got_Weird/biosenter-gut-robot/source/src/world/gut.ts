@@ -153,6 +153,34 @@ export const gutItems = (B: Basis, Lt: Light, o: GutOpts): {back: Item[]; rims: 
     }
     flush();
   }
+  // ---- fine circumferential blood vessels between the folds: fixed landmarks on the wall, so an anchored segment
+  // visibly stays put against them while the rest of the robot moves
+  for (let k = Math.floor(o.sFrom / FOLD_P) - 1; k <= Math.ceil(o.sTo / FOLD_P); k++) {
+    const nBr = 1 + Math.floor(hash(k * 41.3) * 2);
+    for (let br = 0; br < nBr; br++) {
+      const s0 = (k + 0.42 + 0.2 * hash(k * 5.1 + br)) * FOLD_P;
+      const th0 = -EXT + 0.15 + (Math.PI + EXT + EXT2 - 0.3) * (0.1 + 0.35 * hash(k * 2.7 + br * 9));
+      const th1 = th0 + 0.9 + 1.3 * hash(k * 3.9 + br * 4);
+      const pts: V2[] = [];
+      let zs = 0, n = 0, wmax = 0;
+      for (let q = 0; q <= 22; q++) {
+        const th = th0 + ((th1 - th0) * q) / 22;
+        if (th > Math.PI + EXT2 - 0.1) break;
+        const sv = s0 + 0.09 * Math.sin(th * 4.3 + k) + 0.05 * Math.sin(th * 9.1 + br);
+        if (sv < o.sFrom || sv > o.sTo) continue;
+        const {r} = wallR(sv, th, o.contact);
+        const p = wallPt(sv, th, r - 0.006);
+        const pp = proj(B, p);
+        pts.push(pp); zs += depthOf(B, p); n++;
+        wmax = Math.max(wmax, pp.s);
+      }
+      if (pts.length < 3) continue;
+      const fogged = clamp(1 - fogAmt(B, Lt, wallPt(s0, th0, RL)) * 1.2);
+      const w = clamp(wmax * 0.018 * (1 - 0.4 * br), 0.6, 7);
+      back.push({z: zs / n - 0.035, d: `M${pts.map(P2).join('L')}`, stroke: rgba('#5A0E28', 0.5 * fogged), sw: w, round: true});
+      back.push({z: zs / n - 0.036, d: `M${pts.map(P2).join('L')}`, stroke: rgba('#B03A52', 0.35 * fogged), sw: w * 0.4, round: true});
+    }
+  }
   // ---- moist speckle highlights scattered on the wall (deterministic)
   for (let k = Math.floor(o.sFrom * 6); k < o.sTo * 6; k++) {
     const sv = k / 6 + 0.12 * hash(k * 1.7);

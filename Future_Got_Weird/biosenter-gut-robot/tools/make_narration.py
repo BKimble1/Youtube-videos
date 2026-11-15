@@ -19,9 +19,9 @@ TAIL = 0.94    # after the last word, the robot crawls into the lens and the loo
 os.chdir(ROOT)
 
 # caption chunks (phrase level): (number of words, emphasised words)
-CHUNKS = [(4, []), (5, ['crawls']), (6, ['tiny', 'spikes']), (6, []), (5, ['grip']), (3, ['inflatable']), (3, []),
-          (4, ['snake']), (5, ['pigs']), (4, []), (5, ['six', 'feet']), (6, ['tissue']), (3, ['liquid']),
-          (3, ['experimental']), (3, []), (5, ['gut']), (6, ['crawling'])]
+CHUNKS = [(4, []), (5, ['crawls']), (6, ['tiny', 'spikes']), (6, []), (5, []), (3, []), (3, []),
+          (4, []), (5, ['pigs']), (4, []), (5, ['six', 'feet']), (6, []), (3, []),
+          (3, ['experimental']), (3, []), (5, []), (6, [])]
 assert sum(c[0] for c in CHUNKS) == len(DW), (sum(c[0] for c in CHUNKS), len(DW))
 
 
@@ -34,7 +34,7 @@ def captions(W, duration):
         c['show'] = round(max(0.0, c['start'] - 0.04), 3)
     for k, c in enumerate(caps):
         nxt = caps[k + 1]['show'] if k + 1 < len(caps) else duration
-        c['hide'] = round(nxt if nxt - c['end'] < 0.9 else c['end'] + 0.5, 3)
+        c['hide'] = round(nxt if nxt - c['end'] < 0.9 else c['end'] + (0.18 if k + 1 == len(caps) else 0.5), 3)
     return caps
 
 

@@ -10,7 +10,7 @@ import {contactOf, gutFrame, trackS} from '../world/frames';
 import {bodyLen, crawl, CrawlState} from '../robot/state';
 import {layout, robotItems} from '../robot/geom';
 import {GutShot} from './GutShot';
-import {clamp, lerp, ss5} from '../lib';
+import {clamp, keyS, lerp, ss5} from '../lib';
 
 export const headAnchorS = (st: CrawlState) => {
   const L = layout(st.e);
@@ -33,21 +33,25 @@ const lerpView = (a: View, b: View, u: number): View => ({
 export const macroView = (tau: number): View => {
   const st = crawl(tau);
   // follow the anchor while it slides in, then hold on its rest position
-  const sHA = Math.min(headAnchorS(st), SHA_REST);
+  const sHA = SHA_REST; void st;
   const push = ss5(tau, 4.1, 6.9);
   const target = add3(add3(C3(sHA + 0.05), mul3(N3(sHA), 1.35)), mul3(Z3, 0.35));
   const tilt = 0.6;
-  return {target, dir: add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N3(sHA), -Math.sin(tilt))), mul3(T3(sHA), 0.1)), dist: 12, f: 12 * 470 * (1 + 0.08 * push)};
+  return {target, dir: add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N3(sHA), -Math.sin(tilt))), mul3(T3(sHA), 0.1)), dist: 12, f: 12 * 470 * (1 + 0.08 * push), cy: 1150};
 };
 /** the cutaway: slightly tilted top-down, tracking the crawl at its average speed */
 /** the cutaway sits a little low in frame so the top captions clear the tail end */
 export const WIDE_CY = 1100;
 /** the cutaway's scale (px per world unit at the target) */
-export const WIDE_PX = 148;
+export const WIDE_PX = 100;
 export const wideView = (tau: number): View => {
-  const sc = trackS(tau) + 0.2;
-  const T = T3(sc);
-  return {target: add3(C3(sc), mul3(Z3, -0.3)), dir: add3(mul3(Z3, Math.cos(0.32)), mul3(T, Math.sin(0.32))), dist: 14, f: 14 * WIDE_PX, cy: WIDE_CY};
+  // V2: a three-quarter side view. The camera follows at 60% of the crawl's speed, so the robot's net progress shows in
+  // frame, then catches up into the bend ("almost like a snake"); it squares up to top-down for the pig handover.
+  const base = trackS(7.9);
+  const sc = base + (trackS(tau) - base) * keyS(tau, [[7.9, 0.6], [10.1, 0.6], [11.3, 1.0]]) + 0.2;
+  const T = T3(sc), N = N3(sc);
+  const tilt = 0.62 * (1 - ss5(tau, 11.3, 12.1));
+  return {target: add3(C3(sc), mul3(Z3, -0.3)), dir: add3(add3(mul3(Z3, Math.cos(tilt)), mul3(N, -Math.sin(tilt))), mul3(T, 0.3)), dist: 14, f: 14 * WIDE_PX, cy: WIDE_CY};
 };
 export const insideCam = (tau: number): Cam3 => {
   if (tau < 6.85) return toCam(macroView(tau));
@@ -68,7 +72,8 @@ export const InsideShot: React.FC<{tau: number; camOverride?: Cam3}> = ({tau, ca
   const span = 0.5 * 1920 / cam.f * dist + 3;
   const sc = trackS(tau);
   const center = tau < 7.5 ? Math.min(headAnchorS(st), SHA_REST) : sc;
-  const robot = robotItems(B, Lt, gutFrame, st, {tetherLen: 24, inkScale: 1});
+  const cutaway = ss5(tau, 7.75, 8.15) * (1 - ss5(tau, 10.95, 11.35));
+  const robot = robotItems(B, Lt, gutFrame, st, {tetherLen: 24, inkScale: 1, cutaway});
   return (
     <GutShot B={B} Lt={Lt} robot={robot}
       gut={{sFrom: center - span - 1, sTo: center + span + 1, contact: contactOf(st), px: tau < 7.2 ? 6 : 9, lean,

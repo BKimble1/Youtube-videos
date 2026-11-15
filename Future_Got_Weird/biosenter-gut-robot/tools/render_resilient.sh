@@ -2,7 +2,7 @@
 # Resumable render: the composition as a JPEG frame sequence (quality 95, the same frames Remotion encodes itself), in
 # chunks that survive an interruption (a chunk whose frames all exist is skipped), then one x264 encode with the
 # channel settings (CRF 16, slow, yuv420p, BT.709) and the mix as AAC 320 kb/s.
-# usage: [COMP=BiosenterV1] tools/render_resilient.sh <mix_name> <out.mp4> [frames_dir]
+# usage: [COMP=BiosenterV2] tools/render_resilient.sh <mix_name> <out.mp4> [frames_dir]
 set -euo pipefail
 MIX=${1:?mix name, e.g. mix_v3}
 OUT=$(realpath -m "${2:?output mp4}")
@@ -10,7 +10,7 @@ EP="$(cd "$(dirname "$0")/.." && pwd)"
 FR=$(realpath -m "${3:-$EP/source/out/frames_$MIX}")
 TOTAL=$(python3 -c "import json;print(json.load(open('$EP/source/src/data/timeline.json'))['frames'])")
 CH=62
-COMP=${COMP:-BiosenterV1}
+COMP=${COMP:-BiosenterV2}
 mkdir -p "$FR"
 cd "$EP/source"
 for ((a = 0; a < TOTAL; a += CH)); do

@@ -35,7 +35,11 @@ PLANNED = [cut(S['s2'], 'CUT S1 -> S2: match on the head anchor, into the macro'
            cut(S['s5'], 'CUT S4 -> S5: the tool close-up'),
            cut(S['s6'], 'CUT S5 -> S6: the lab'),
            cut(S['s7'], 'CUT S6 -> S7: back in the gut'),
-           (CJ['pig']['feet'] - 0.05, CJ['pig']['feet'] + 0.25, '"6+ FEET" lands')] + \
+           (CJ['pig']['feet'] - 0.05, CJ['pig']['feet'] + 0.25, '"6+ FEET" lands'),
+           (2.35, S['s2'], 'PUSH-IN (camera move) S1: onto the head anchor'),
+           (17.6, 18.65, 'PAN (camera move) S5: from the biopsy site to the spray site'),
+           (13.2, 13.95, 'PUSH-IN (camera move) S4: onto the route'),
+           (15.1, 15.95, 'PULL-BACK (camera move) S4: "6+ FEET"')] + \
           [(p['t'] - 0.05, p['t'] + 0.2, f"kirigami scales pop ({p['which']}, {p['scene']})") for p in CJ['pops']]
 med = float(np.median(d))
 big = [(i + 1, round((i + 1) / fps, 3), round(float(x), 2)) for i, x in enumerate(d) if x > max(12.0, 5 * med)]

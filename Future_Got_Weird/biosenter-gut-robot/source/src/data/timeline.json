@@ -43,9 +43,7 @@
   },
   {
    "text": "They grip the slippery walls",
-   "emph": [
-    "grip"
-   ],
+   "emph": [],
    "start": 6.89,
    "end": 8.14,
    "show": 6.85,
@@ -53,9 +51,7 @@
   },
   {
    "text": "while inflatable chambers",
-   "emph": [
-    "inflatable"
-   ],
+   "emph": [],
    "start": 8.145,
    "end": 9.37,
    "show": 8.105,
@@ -71,9 +67,7 @@
   },
   {
    "text": "almost like a snake.",
-   "emph": [
-    "snake"
-   ],
+   "emph": [],
    "start": 10.34,
    "end": 11.31,
    "show": 10.3,
@@ -110,9 +104,7 @@
   },
   {
    "text": "It could even take tissue samples",
-   "emph": [
-    "tissue"
-   ],
+   "emph": [],
    "start": 16.87,
    "end": 18.23,
    "show": 16.83,
@@ -120,9 +112,7 @@
   },
   {
    "text": "and deliver liquid.",
-   "emph": [
-    "liquid"
-   ],
+   "emph": [],
    "start": 18.24,
    "end": 19.09,
    "show": 18.2,
@@ -148,9 +138,7 @@
   },
   {
    "text": "the thing exploring your gut",
-   "emph": [
-    "gut"
-   ],
+   "emph": [],
    "start": 22.13,
    "end": 23.51,
    "show": 22.09,
@@ -158,13 +146,11 @@
   },
   {
    "text": "might actually be crawling through it.",
-   "emph": [
-    "crawling"
-   ],
+   "emph": [],
    "start": 23.515,
    "end": 25.36,
    "show": 23.475,
-   "hide": 25.86
+   "hide": 25.54
   }
  ],
  "words": [
