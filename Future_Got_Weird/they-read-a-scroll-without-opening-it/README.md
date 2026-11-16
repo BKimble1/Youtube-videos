@@ -2,7 +2,36 @@
 
 Long-form episode, 16:9. The virtual unwrapping of PHerc. 1667, with the separate PHerc. Paris 4 ink check.
 
-## V2: pacing, animation and storytelling overhaul (work in progress, current)
+## V3: faster narration and retimed picture (current)
+
+Not approved. Nobody has watched it in real time. The narration was regenerated from the locked script at a faster,
+more energetic read, and the picture was rebuilt around it.
+
+**Review file:** `exports/FGW_Scroll_V3_REVIEW_1920x1080.mp4` (Git-ignored; checksummed parts in `backup/`; to restore,
+run `cat backup/FGW_Scroll_V3_REVIEW_1920x1080.mp4.part_* > exports/FGW_Scroll_V3_REVIEW_1920x1080.mp4`)
+
+| Item | File |
+|---|---|
+| Report (runtime, pace, changes, QA, concerns) | `production/V3_REPORT.md` |
+| Narration master and word timings | `audio/narration/FGW_Scroll_narration_V3.wav`, `audio/narration/FGW_Scroll_V3_words.json` |
+| Voice takes and selection | `audio/narration/takes_v3/`, `voice_provenance.json` (key `V3`) |
+| Captions | `captions/FGW_Scroll_V3.srt` |
+| Mix | `audio/mix/FGW_Scroll_V3_mix.wav`, `audio/mix/mix_measure_v3.json` |
+| Picture | Composition `ScrollV3` (`source/src/v3/`), contact sheets `SheetV3` (`source/sheet3.sh`) |
+| QA | `qa/v3/` |
+
+Rebuild V3:
+
+    VER=V3 python3 tools/align.py && VER=V3 python3 tools/make_narration.py
+    VER=V3 python3 tools/make_srt.py
+    VER=V3 python3 tools/make_audio.py
+    bash tools/render_v3.sh
+    VER=V3 python3 tools/bursts.py exports/FGW_Scroll_V3_REVIEW_1920x1080.mp4 qa/v3/bursts
+
+The shared timing data (`source/src/data/narration_words.json`, `cues.json`) now holds the V3 narration, so the V1
+and V2 compositions no longer render as delivered. Their exact sources are at commits b18def5 (V1) and 8b7de54 (V2).
+
+## V2: pacing, animation and storytelling overhaul (work in progress)
 
 Not approved. Nobody has watched it in real time. Your V2 brief arrived cut off partway through section 7. This pass
 rebuilds 0:00–1:12.5 (sections 3–6) and applies the section-2 cleanup to the rest. The fuller redesign of 1:14 onward

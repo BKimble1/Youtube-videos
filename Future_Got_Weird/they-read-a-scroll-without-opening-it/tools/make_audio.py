@@ -19,8 +19,10 @@ from scipy.signal import butter, sosfilt, resample_poly
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SR = 48000
 rng = np.random.default_rng(79)
-W = json.load(open('audio/narration/FGW_Scroll_V1_words.json'))
-narr, sr0 = sf.read('audio/narration/FGW_Scroll_narration_V1.wav')
+VER = os.environ.get('VER', 'V1')
+NV = 'V3' if VER == 'V3' else 'V1'   # V1 and V2 share the V1 narration; V3 has its own, faster read
+W = json.load(open(f'audio/narration/FGW_Scroll_{NV}_words.json'))
+narr, sr0 = sf.read(f'audio/narration/FGW_Scroll_narration_{NV}.wav')
 assert sr0 == SR
 N = len(narr)
 
@@ -144,7 +146,6 @@ back = T('Back on the first'); feet = TE('half feet.'); scholars = T('Scholars c
 oneOf = T('One of the surviving'); quote = T('“Possessing'); quoteEnd = TE('as they do.”'); somebody = T('Somebody put'); ago = TE('years ago.')
 youJust = T('You just read'); still = T('And the page is still'); stillEnd = TE('still rolled up.')
 
-VER = os.environ.get('VER', 'V1')
 if VER == 'V1':
     # A
     put('shimmer', 0.0, -12, 1.7); put('settle', 1.25, -14, 0.6); put('chime', 2.05, -20, 1.2)
@@ -173,7 +174,7 @@ if VER == 'V1':
     for i in range(3): put('chime', traced + 0.3 + i * 0.6, -22, 1.0)
     put('unroll', gave + 0.15, -12, flatten + 1.0 - gave - 0.15)
     put('settle', nowPage - 0.1, -14, 0.7)
-else:
+elif VER == 'V2':
     # V2 picture (source/src/v2): A2 macro attempt -> digital; B2 villa, eruption, surge, burial, attempts; C2 scan;
     # D2 inside the coil. Times mirror the constants in the v2 scene files.
     put('scrape', 0.55, -14, 1.4); put('flake', 1.2, -18, 0.1); put('flake', 1.7, -16, 0.1)
@@ -212,23 +213,100 @@ else:
     put('shimmer', traced + 0.9, -24, messy - traced - 1.1)
     put('whoosh', messy, -24, 1.2)
 
-# F
-put('pop', inkWas + 0.5, -20, 0.2); put('whoosh', inScan, -26, 0.7)
-for k in range(4): put('tick', trained + 0.7 + k * 0.6, -18, 0.05)
-put('pop', imagine, -22, 0.2)
-put('grain', put_ + 0.25, -16, stroke - put_ - 0.2); put('chime', stroke + 0.1, -18, 1.4)
-# G
-put('hit', checked - 0.15, -16, 0.6)
-put('pop', second + 0.4, -22, 0.2); put('pop', sharper, -22, 0.2); put('whoosh', sharper + 1.6, -24, 0.9)
-put('whoosh', lined, -22, 1.0); put('lock', lined + 1.0, -14, 2.5)
-for k in range(4): put('chime', same + 0.15 + k * 0.15, -24, 0.8)
-# H
-put('hit', back - 0.1, -18, 0.6); put('whoosh', back + 0.3, -20, feet - back)
-for k in range(22): put('tick', scholars + 0.1 + (k / 22) * (columns - scholars), -26, 0.05)
-put('whoosh', oneOf - 0.15, -22, T('through study.') - oneOf + 0.5)
-put('scratch', somebody + 0.1, -10, ago - somebody - 0.2)
-put('whoosh', youJust + 1.0, -22, 1.1)
-put('rewind', still + 0.45, -20, stillEnd + 0.5 - still - 0.45)
+if VER != 'V3':
+    # F
+    put('pop', inkWas + 0.5, -20, 0.2); put('whoosh', inScan, -26, 0.7)
+    for k in range(4): put('tick', trained + 0.7 + k * 0.6, -18, 0.05)
+    put('pop', imagine, -22, 0.2)
+    put('grain', put_ + 0.25, -16, stroke - put_ - 0.2); put('chime', stroke + 0.1, -18, 1.4)
+    # G
+    put('hit', checked - 0.15, -16, 0.6)
+    put('pop', second + 0.4, -22, 0.2); put('pop', sharper, -22, 0.2); put('whoosh', sharper + 1.6, -24, 0.9)
+    put('whoosh', lined, -22, 1.0); put('lock', lined + 1.0, -14, 2.5)
+    for k in range(4): put('chime', same + 0.15 + k * 0.15, -24, 0.8)
+    # H
+    put('hit', back - 0.1, -18, 0.6); put('whoosh', back + 0.3, -20, feet - back)
+    for k in range(22): put('tick', scholars + 0.1 + (k / 22) * (columns - scholars), -26, 0.05)
+    put('whoosh', oneOf - 0.15, -22, T('through study.') - oneOf + 0.5)
+    put('scratch', somebody + 0.1, -10, ago - somebody - 0.2)
+    put('whoosh', youJust + 1.0, -22, 1.1)
+    put('rewind', still + 0.45, -20, stillEnd + 0.5 - still - 0.45)
+
+if VER == 'V3':
+    # V3 picture (source/src/v3): every time below mirrors a constant in the v3 scene files.
+    crumble = T('crumble'); computer = TE('inside a computer.')
+    openIt = TE('tried to open it.'); byTheTime = T('By the time'); halfWide = T('less than half'); hadBeen = TE('it had been.')
+    centuries = T('Centuries later'); angles = T('different angles'); sheetOf = T('That’s the sheet'); overOver = TE('over and over.')
+    letter = TE('single letter.'); time_ = TE('at a time.'); reveal = TE('helped reveal.'); places = TE('same places.'); missing = TE('is missing.')
+    press = look + 0.35
+    # A3: the lift, the crack, the break on "crumble"; the scan pass, the digital twin, the ribbon, the page
+    put('scrape', 0.25, -14, crumble - 0.35); put('flake', 0.75, -18, 0.1); put('flake', 1.25, -16, 0.1)
+    put('crumbs', crumble + 0.02, -10, 1.5); put('hit', crumble + 0.02, -24, 0.4)
+    s0 = computer - 2.75
+    put('shimmer', s0, -12, 0.65); put('whoosh', s0 + 0.67, -16, 0.6)
+    put('shimmer', s0 + 1.22, -18, 0.55); put('settle', s0 + 1.62, -16, 0.4); put('chime', s0 + 2.0, -20, 1.0)
+    put('rewind', book - 0.15, -20, 0.5)
+    # B3
+    put('hit', T('It was buried') - 0.12, -22, 0.4)
+    put('rumble', T('It was buried') + 0.45, -8, 3.0)
+    put('whoosh', TE('year seventy-nine.') - 0.35, -8, 1.1); put('rumble', TE('year seventy-nine.') - 0.25, -10, 1.4)
+    put('settle', centuries + 0.15, -16, 0.6); put('whoosh', centuries + 0.1, -22, 0.7)
+    put('scrape', centuries + 0.7, -14, openIt - 0.35 - centuries - 0.7)
+    put('crumbs', openIt - 0.05, -12, 1.3)
+    put('whoosh', byTheTime - 0.1, -20, 0.7)
+    for a_, b_ in [(byTheTime + 0.95, halfWide + 0.3), (halfWide + 0.35, hadBeen - 0.05)]:
+        put('scrape', a_, -16, b_ - a_)
+        for k in range(4): put('flake', a_ + 0.2 + k * (b_ - a_) / 5 + 0.2, -20, 0.1)
+    put('swell', T('And the writing') - 0.1, -18, 2.0)
+    # C3
+    put('whoosh', look - 0.45, -18, 1.6); put('button', press - 0.05, -12, 0.15); put('hum', press, -22, map3d - press)
+    for k in range(5): put('tick', press + 0.4 + k * 0.5, -24, 0.05)
+    for k in range(13): put('snap', angles + 0.5 + k * 0.13 + 0.4, -22, 0.2)
+    put('swell', map3d - 0.2, -18, 1.2); put('whoosh', slice_ - 0.05, -18, 0.7); put('whoosh', slice_ + 0.5, -14, spiral - slice_ + 0.3)
+    # D3
+    put('whoosh', sheetOf - 0.25, -14, 1.0); put('unroll', sheetOf + 0.65, -18, 1.4)
+    put('whoosh', sheetOf + 2.3, -16, 0.7); put('swell', overOver - 0.2, -20, 0.9)
+    put('shimmer', T('Pick one') + 0.1, -24, TE('all the way around.') - T('Pick one'))
+    put('whoosh', see - 0.35, -20, 1.0); put('settle', T('press together?') + 0.2, -18, 0.5)
+    put('tension', jump + 0.1, -10, 2.4)
+    put('whoosh', jump + 1.3, -20, 1.2); put('unroll', skipped + 0.2, -16, T('turn of the page.') - skipped + 0.4)
+    put('settle', T('turn of the page.') + 0.1, -16, 0.5)
+    put('unroll', keep, -18, 1.0); put('settle', keep + 1.0, -18, 0.4); put('hit', T('side by side') + 0.5, -16, 0.5); put('buzz', T('side by side') + 0.6, -22, 0.4)
+    put('rewind', eachOther - 0.15, -14, traced + 0.35 - eachOther + 0.15)
+    put('whoosh', traced + 0.3, -20, 0.7)
+    for tc in [traced + 0.35, traced + 1.0 + 0.464 * (messy - 0.2 - traced - 1.0), traced + 1.0 + 0.752 * (messy - 0.2 - traced - 1.0)]:
+        put('tick', tc - 0.1, -16, 0.05); put('chime', tc + 0.1, -24, 0.6)
+    put('shimmer', traced + 1.0, -24, messy - traced - 1.2)
+    # E: flatten and open
+    put('unroll', gave + 0.15, -12, flatten + 1.0 - gave - 0.15)
+    put('settle', nowPage - 0.1, -14, 0.7)
+    # F3: the cutaway grows; heat chars the papyrus; the scan bar; the two samples; the patch sweep
+    put('whoosh', inkWas - 0.15, -20, 0.6)
+    put('swell', T('the heat had') - 0.1, -20, 1.4)
+    put('whoosh', inScan - 0.05, -22, 0.8); put('pop', inScan + 0.95, -22, 0.2); put('pop', inScan + 1.05, -22, 0.2)
+    put('whoosh', TE('almost identical.') + 0.35, -24, 0.6)
+    sw0, sw1 = trained + 0.15, each - 0.25
+    for k in range(int((sw1 - sw0) / 0.09)): put('tick', sw0 + k * 0.09, -32 + 4 * (k % 6 == 0), 0.04)
+    for k in range(4): put('tick', each + 0.35 + k * (letter - each - 0.1) / 4, -18, 0.05)
+    put('pop', imagine, -22, 0.2)
+    for k in range(3): put('tick', imagine + 0.6 + (k + 1) * (time_ - imagine - 0.6) / 3 - 0.15, -20, 0.05)
+    put('pop', onePatch, -24, 0.2)
+    put('grain', put_ + 0.25, -16, stroke - put_ - 0.2); put('chime', stroke + 0.1, -18, 1.4)
+    # G3: the earlier model's text develops; the sharper scan; line-up; the sweep check with a push-in
+    put('hit', checked - 0.15, -16, 0.6)
+    put('shimmer', second + 0.2, -24, reveal - second - 0.1)
+    put('pop', sharper, -22, 0.2); put('whoosh', sharper + 1.6, -24, 0.9)
+    put('whoosh', lined, -22, 1.0); put('lock', lined + 1.0, -16, 1.6)
+    put('shimmer', same - 0.05, -24, 1.5)
+    for k in range(4): put('chime', same + 0.15 + k * 0.35, -26, 0.8)
+    # H3: pull back, count, glide along the gaps, into column 19, the pen
+    put('hit', back - 0.1, -18, 0.6); put('whoosh', back + 0.3, -20, feet - back)
+    for k in range(22): put('tick', scholars + 0.1 + (k / 22) * (columns - scholars), -26, 0.05)
+    put('whoosh', gaps + 0.2, -24, missing - gaps + 0.3)
+    put('whoosh', oneOf - 0.15, -22, T('through study.') - oneOf + 0.4)
+    put('scratch', somebody - 0.05, -10, ago - somebody - 0.05)
+    put('whoosh', youJust + 1.0, -22, 1.1)
+    put('rewind', still + 0.45, -20, stillEnd + 0.5 - still - 0.45)
 
 # ------------------------------------------------------------------------------------------------ score
 # Light, spare pads in D major / B minor; sections follow the picture. The translation gets one held note.

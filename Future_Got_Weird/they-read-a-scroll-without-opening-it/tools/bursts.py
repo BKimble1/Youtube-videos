@@ -4,7 +4,7 @@ one-frame jumps, landmark shifts and popping masks can be seen. usage: python3 t
 import os, subprocess, sys, json
 vid, out = sys.argv[1], sys.argv[2]
 os.makedirs(out, exist_ok=True)
-W = json.load(open('audio/narration/FGW_Scroll_V1_words.json'))
+W = json.load(open('audio/narration/FGW_Scroll_V3_words.json' if os.environ.get('VER') == 'V3' else 'audio/narration/FGW_Scroll_V1_words.json'))
 import re
 nrm = lambda s: re.sub(r"[^a-z0-9' -]", '', s.lower().replace('’', "'"))
 def T(p):
@@ -53,7 +53,32 @@ BEATS_V2 = {
     '21_road_open': (100.2, 101.4),
     '22_validation_overlay': (126.4, 127.9),
 }
-BEATS = BEATS_V2 if os.environ.get('VER') == 'V2' else BEATS_V1
+BEATS_V3 = {} if os.environ.get('VER') != 'V3' else {
+    '01_attempt_break': (0.0, 2.6),
+    '02_scan_to_page': (2.8, 5.4),
+    '03_back_to_object': (T('That black lump') - 0.4, T('That black lump') + 0.5),
+    '04_match_cut_villa': (T('It was buried') - 0.3, T('It was buried') + 0.4),
+    '05_surge': (T('Centuries later') - 1.2, T('Centuries later') + 0.6),
+    '06_cut_to_lab': (T('Look at what') - 0.6, T('Look at what') + 0.1),
+    '07_into_the_slice': (T('Slice through') + 0.3, T('a spiral.') + 0.9),
+    '08_dive': (T('That’s the sheet') - 0.3, T('That’s the sheet') + 1.0),
+    '09_wrong_jump': (T('If you jump') - 0.1, T('If you jump') + 1.4),
+    '10_rewind': (T('next to each other.') - 0.1, T('So they traced') + 0.6),
+    '11_flatten': (T('That gave them'), T('could flatten.') + 1.0),
+    '12_cutaway_in': (T('The ink was') - 0.3, T('The ink was') + 0.7),
+    '13_heat': (T('the heat had') - 0.1, T('the heat had') + 1.2),
+    '14_scan_bar': (T('In the scan,') - 0.1, T('In the scan,') + 1.4),
+    '15_cutaway_out': (T('So the team trained') - 1.0, T('So the team trained') + 0.5),
+    '16_road_open': (T('Imagine trying') - 0.1, T('Imagine trying') + 0.9),
+    '17_ink_reveal': (T('Put the patches') + 0.2, T('Put the patches') + 2.6),
+    '18_cut_to_paris4': (T('And here’s how') - 0.4, T('And here’s how') + 0.3),
+    '19_overlay_push': (T('They lined'), T('They lined') + 1.3),
+    '20_cut_back_1667': (T('Back on the first') - 0.4, T('Back on the first') + 0.4),
+    '21_glide_gaps': (T('There are gaps') - 0.1, T('There are gaps') + 1.2),
+    '22_pen_follow': (T('Somebody put') - 0.6, T('Somebody put') + 0.6),
+    '23_callback': (T('You just read') + 0.8, T('You just read') + 2.2),
+}
+BEATS = BEATS_V2 if os.environ.get('VER') == 'V2' else BEATS_V3 if os.environ.get('VER') == 'V3' else BEATS_V1
 for name, (a, b) in BEATS.items():
     n = int(round((b - a) * 30))
     cols = 8

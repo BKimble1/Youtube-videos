@@ -4,7 +4,8 @@ two lines of 42 characters; a longer sentence splits at the comma nearest its mi
 neighbouring sentences in one paragraph share a cue when they fit and follow within 0.45 s."""
 import json, sys
 import os; sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); from script import TEXT, words
-W = json.load(open('audio/narration/FGW_Scroll_V1_words.json'))
+VER = os.environ.get('VER', 'V1')
+W = json.load(open(f'audio/narration/FGW_Scroll_{VER}_words.json'))
 MAXC = 42
 def greedy(ws):
     lines, cur = [], ''
@@ -59,7 +60,7 @@ for k, c in enumerate(cues):
     s = c[0]['start']; e = max(c[-1]['end'] + 0.3, s + 1.0)
     if k + 1 < len(cues): e = min(e, cues[k + 1][0]['start'] - 0.04)
     out.append(f"{k+1}\n{ts(s)} --> {ts(e)}\n" + '\n'.join(lines_of([x['word'] for x in c])) + '\n')
-open('captions/FGW_Scroll_V1.srt', 'w').write('\n'.join(out))
-json.dump([{'start': c[0]['start'], 'end': c[-1]['end'], 'text': ' '.join(x['word'] for x in c)} for c in cues], open('source/src/data/cues.json', 'w'), indent=0)
+open(f'captions/FGW_Scroll_{VER}.srt', 'w').write('\n'.join(out))
+json.dump([{'start': c[0]['start'], 'end': c[-1]['end'], 'text': ' '.join(x['word'] for x in c)} for c in cues], open('source/src/data/cues.json' if VER == 'V3' else f'source/src/data/cues_{VER.lower()}.json', 'w'), indent=0)
 assert [x['word'] for c in cues for x in c] == words(TEXT)
 print(len(cues), 'cues; max line', max(len(l) for c in cues for l in lines_of([x['word'] for x in c])), 'shortest', min(c[-1]['end'] - c[0]['start'] for c in cues))

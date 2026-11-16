@@ -14,13 +14,24 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from script import blocks, words as disp_words
 os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SR = 48000
-raw = json.load(open('audio/narration/align_blocks.json'))   # tools/align.py (PocketSphinx forced alignment)
-TAKES = [f"audio/narration/takes/{raw[str(i)]['take']}.mp3" for i in range(8)]
+VER = os.environ.get('VER', 'V1')
+raw = json.load(open('audio/narration/align_blocks.json' if VER == 'V1' else f'audio/narration/align_blocks_{VER.lower()}.json'))   # tools/align.py
+TAKES = [f"audio/narration/{'takes' if VER == 'V1' else 'takes_' + VER.lower()}/{raw[str(i)]['take']}.mp3" for i in range(8)]
 SRC_IN = {int(k): v['src_in'] for k, v in raw.items() if v['src_in'] > 0}          # trims before the clean read (see the docstring)
 LEAD = 0.30                                    # frame 0 already shows the sheet unrolling
 GAPS = [1.00, 1.20, 1.20, 1.30, 1.80, 1.40, 1.50]    # silence between blocks
 TAIL = 3.60                                    # the still-rolled scroll holds after the last word
 # extra silence after word k of block b (0-based within the block), keyed by the sentence it follows
+V3_INSERT = {
+    # the hook and the history run on the voice's own sentence breaks (no added pauses)
+    (2, 'map.', 1): 0.15, (2, 'spiral.', 1): 0.25,
+    (3, 'around.', 1): 0.30, (3, 'together?', 1): 0.40, (3, 'page.', 1): 0.40,
+    (4, 'messy.', 1): 0.25, (4, 'flatten.', 1): 0.25, (4, 'page.', 1): 0.50,
+    (5, 'too.', 1): 0.25, (5, 'identical.', 1): 0.30, (5, 'patches.', 1): 0.20, (5, 'letter.', 1): 0.30, (5, 'time.', 1): 0.30, (5, 'smudge.', 1): 0.30,
+    (6, 'it.', 1): 0.25, (6, 'reveal.', 1): 0.30, (6, 'directly.', 1): 0.30, (6, 'up.', 1): 0.35,
+    (7, 'feet.', 1): 0.25, (7, 'columns.', 1): 0.25, (7, 'missing.', 1): 0.30, (7, 'study.', 1): 0.30,
+    (7, 'translation.', 1): 0.30, (7, 'do.”', 1): 0.70, (7, 'ago.', 1): 0.40, (7, 'scroll.', 1): 0.40,
+}
 INSERT = {
     # (block, word as written, occurrence within the block): seconds of silence added after that word
     (1, 'book.', 1): 0.60, (1, 'seventy-nine.', 1): 0.60, (1, 'it.', 1): 0.50, (1, 'been.', 1): 0.60,
@@ -33,6 +44,13 @@ INSERT = {
     (7, 'feet.', 1): 0.60, (7, 'columns.', 1): 0.50, (7, 'missing.', 1): 0.70, (7, 'study.', 1): 0.60,
     (7, 'translation.', 1): 0.60, (7, 'do.”', 1): 1.30, (7, 'ago.', 1): 0.80, (7, 'scroll.', 1): 0.90,  # the translated fragment holds
 }
+
+if VER == 'V3':
+    # V3: an energetic read; no long planned pauses. Short beats only where the picture needs a landing.
+    LEAD = 0.12
+    GAPS = [0.3, 0.38, 0.42, 0.42, 0.5, 0.45, 0.5]
+    TAIL = 2.4
+    INSERT = {k: v for k, v in V3_INSERT.items()}
 
 def dec(p):
     b = subprocess.run(stdin=subprocess.DEVNULL, args=['ffmpeg', '-v', 'error', '-i', p, '-ac', '1', '-ar', str(SR), '-f', 'f32le', '-'], capture_output=True, check=True).stdout
@@ -112,14 +130,14 @@ for i, w in enumerate(allw):
     a0, b0 = int(w['start'] * 100), min(len(lv), int(max(w['end'], nxt) * 100))
     loud = [j for j in range(a0, b0) if lv[j] > -40]
     w['end'] = round(min(nxt, (loud[-1] + 1) / 100) if loud else w['end'], 3)
-NAME = 'audio/narration/FGW_Scroll_narration_V1.wav'
+NAME = f'audio/narration/FGW_Scroll_narration_{VER}.wav'
 sf.write(NAME, y, SR, subtype='PCM_24')
 sha = hashlib.sha256(open(NAME, 'rb').read()).hexdigest()
 meta = {'file': NAME, 'sha256': sha, 'duration_s': round(len(y) / SR, 4), 'frames_30fps': nfr, 'speech_s': [allw[0]['start'], allw[-1]['end']],
         'words': len(allw), 'lead_s': LEAD, 'gaps_s': GAPS, 'tail_s': TAIL, 'inserted_pauses': inserted, 'blocks': offsets}
 meta['wpm_over_speech_span'] = round(len(allw) / (allw[-1]['end'] - allw[0]['start']) * 60, 1)
-json.dump(meta, open('audio/narration/narration_V1_meta.json', 'w'), indent=1)
-json.dump(allw, open('audio/narration/FGW_Scroll_V1_words.json', 'w'), indent=0)
+json.dump(meta, open(f'audio/narration/narration_{VER}_meta.json', 'w'), indent=1)
+json.dump(allw, open(f'audio/narration/FGW_Scroll_{VER}_words.json', 'w'), indent=0)
 os.makedirs('source/src/data', exist_ok=True)
-json.dump({'fps': 30, 'frames': nfr, 'words': allw}, open('source/src/data/narration_words.json', 'w'))
+json.dump({'fps': 30, 'frames': nfr, 'words': allw}, open('source/src/data/narration_words.json' if VER == 'V3' else f'source/src/data/narration_words_{VER.lower()}.json', 'w'))
 print(json.dumps({k: v for k, v in meta.items() if k != 'blocks'}, indent=1))

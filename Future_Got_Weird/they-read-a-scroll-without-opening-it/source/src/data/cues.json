@@ -1,232 +1,232 @@
 [
 {
-"start": 0.3,
-"end": 3.56,
+"start": 0.12,
+"end": 3.15,
 "text": "If you tried to unroll this, it could crumble in your hands."
 },
 {
-"start": 4.0,
-"end": 6.45,
+"start": 3.47,
+"end": 5.75,
 "text": "So researchers unrolled it inside a computer."
 },
 {
-"start": 7.62,
-"end": 9.67,
+"start": 6.18,
+"end": 7.84,
 "text": "That black lump is a book."
 },
 {
-"start": 10.8,
-"end": 14.1,
+"start": 8.2,
+"end": 11.31,
 "text": "It was buried when Mount Vesuvius erupted in the year seventy-nine."
 },
 {
-"start": 15.3,
-"end": 17.51,
+"start": 11.77,
+"end": 13.83,
 "text": "Centuries later, people tried to open it."
 },
 {
-"start": 18.61,
-"end": 22.29,
+"start": 14.28,
+"end": 17.74,
 "text": "By the time they were done, the roll was less than half as wide as it had been."
 },
 {
-"start": 23.46,
-"end": 25.95,
+"start": 18.08,
+"end": 20.58,
 "text": "And the writing they wanted was still wrapped up inside."
 },
 {
-"start": 27.42,
-"end": 29.69,
+"start": 21.12,
+"end": 23.3,
 "text": "Look at what happens when you scan what\u2019s left."
 },
 {
-"start": 30.84,
-"end": 33.02,
+"start": 23.75,
+"end": 25.94,
 "text": "The researchers took X-ray images from different"
 },
 {
-"start": 33.03,
-"end": 35.74,
+"start": 25.94,
+"end": 28.49,
 "text": "angles and used them to build a three-dimensional map."
 },
 {
-"start": 36.78,
-"end": 39.1,
+"start": 29.1,
+"end": 31.49,
 "text": "Slice through that map and you can see a spiral."
 },
 {
-"start": 40.29,
-"end": 43.76,
+"start": 32.17,
+"end": 35.59,
 "text": "That\u2019s the sheet of papyrus, wound around itself over and over."
 },
 {
-"start": 45.16,
-"end": 48.75,
+"start": 36.18,
+"end": 39.48,
 "text": "Pick one of those thin lines and try to follow it all the way around."
 },
 {
-"start": 50.11,
-"end": 51.64,
+"start": 40.16,
+"end": 41.74,
 "text": "See where two layers press together?"
 },
 {
-"start": 53.2,
-"end": 54.91,
+"start": 42.61,
+"end": 44.27,
 "text": "If you jump to the neighboring layer there,"
 },
 {
-"start": 55.11,
-"end": 57.3,
+"start": 44.53,
+"end": 46.73,
 "text": "you\u2019ve just skipped an entire turn of the page."
 },
 {
-"start": 58.81,
-"end": 61.08,
+"start": 47.51,
+"end": 49.75,
 "text": "Keep going and you could end up putting two pieces"
 },
 {
-"start": 61.08,
-"end": 63.85,
+"start": 49.75,
+"end": 52.47,
 "text": "of writing side by side that were never next to each other."
 },
 {
-"start": 65.39,
-"end": 68.1,
+"start": 53.06,
+"end": 55.14,
 "text": "So they traced the sheet through the scan,"
 },
 {
-"start": 68.43,
-"end": 71.25,
+"start": 55.22,
+"end": 57.93,
 "text": "checking and correcting the places where the layers got messy."
 },
 {
-"start": 72.53,
-"end": 74.73,
+"start": 58.67,
+"end": 60.74,
 "text": "That gave them a digital surface they could flatten."
 },
 {
-"start": 75.92,
-"end": 76.91,
+"start": 61.41,
+"end": 62.4,
 "text": "Now they had a page."
 },
 {
-"start": 78.33,
-"end": 79.73,
+"start": 63.21,
+"end": 64.31,
 "text": "It looked almost blank."
 },
 {
-"start": 81.73,
-"end": 84.45,
+"start": 64.96,
+"end": 67.5,
 "text": "The ink was carbon-based, and the heat had turned"
 },
 {
-"start": 84.45,
-"end": 86.96,
+"start": 67.5,
+"end": 69.83,
 "text": "the papyrus into a carbon-rich material too."
 },
 {
-"start": 88.14,
-"end": 90.9,
+"start": 70.57,
+"end": 73.31,
 "text": "In the scan, the two could look almost identical."
 },
 {
-"start": 92.17,
-"end": 96.0,
+"start": 74.12,
+"end": 77.83,
 "text": "So the team trained a model to pick out signs of ink in tiny patches."
 },
 {
-"start": 96.94,
-"end": 99.02,
+"start": 78.45,
+"end": 80.53,
 "text": "Each patch was smaller than a single letter."
 },
 {
-"start": 100.38,
-"end": 104.03,
+"start": 81.37,
+"end": 84.95,
 "text": "Imagine trying to find the paint on a road by looking at one pebble at a time."
 },
 {
-"start": 105.35,
-"end": 106.9,
+"start": 85.75,
+"end": 87.22,
 "text": "One patch could look like a smudge."
 },
 {
-"start": 107.96,
-"end": 111.55,
+"start": 87.98,
+"end": 91.43,
 "text": "Put the patches together and you can start to see which marks form a stroke."
 },
 {
-"start": 113.19,
-"end": 114.91,
+"start": 92.08,
+"end": 93.34,
 "text": "And here\u2019s how they checked it."
 },
 {
-"start": 116.17,
-"end": 120.57,
+"start": 94.01,
+"end": 98.07,
 "text": "On a second scroll, they already had text that an earlier model had helped reveal."
 },
 {
-"start": 121.96,
-"end": 125.23,
+"start": 98.84,
+"end": 102.03,
 "text": "A sharper scan of that scroll picked up the ink deposits directly."
 },
 {
-"start": 126.5,
-"end": 127.75,
+"start": 102.73,
+"end": 103.93,
 "text": "They lined the two images up."
 },
 {
-"start": 129.13,
-"end": 131.57,
+"start": 104.67,
+"end": 107.01,
 "text": "The same strokes were sitting in the same places."
 },
 {
-"start": 133.17,
-"end": 136.04,
+"start": 107.63,
+"end": 109.91,
 "text": "Back on the first scroll, the flattened sheet"
 },
 {
-"start": 136.04,
-"end": 138.1,
+"start": 109.91,
+"end": 111.75,
 "text": "stretched to about four and a half feet."
 },
 {
-"start": 139.39,
-"end": 142.62,
+"start": 112.39,
+"end": 115.51,
 "text": "Scholars could read across roughly twenty-two partial columns."
 },
 {
-"start": 143.71,
-"end": 145.62,
+"start": 116.18,
+"end": 118.04,
 "text": "There are gaps where the papyrus is missing."
 },
 {
-"start": 147.01,
-"end": 150.39,
+"start": 118.92,
+"end": 122.33,
 "text": "One of the surviving passages is about what people can gain through study."
 },
 {
-"start": 151.58,
-"end": 153.08,
+"start": 123.11,
+"end": 124.58,
 "text": "Here\u2019s a fragment of the translation."
 },
 {
-"start": 154.26,
-"end": 156.95,
+"start": 125.49,
+"end": 128.19,
 "text": "\u201cPossessing the same practical wisdom as they do.\u201d"
 },
 {
-"start": 159.0,
-"end": 162.52,
+"start": 129.54,
+"end": 133.0,
 "text": "Somebody put those words down by hand more than two thousand years ago."
 },
 {
-"start": 163.91,
-"end": 165.93,
+"start": 133.86,
+"end": 135.79,
 "text": "You just read a line from inside the scroll."
 },
 {
-"start": 167.38,
-"end": 168.84,
+"start": 136.69,
+"end": 138.2,
 "text": "And the page is still rolled up."
 }
 ]

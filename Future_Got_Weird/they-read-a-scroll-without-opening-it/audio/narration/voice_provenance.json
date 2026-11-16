@@ -1,22 +1,132 @@
 {
  "provider": "ElevenLabs (authorized workspace connection, restricted connector)",
- "voice": {"name": "Test Voice", "voice_id": "kk5XaSLo2XAw0sKM98zU", "verified": "creative_list_voices search 'Test Voice' on 15 Nov 2026 returned this id ('Test Voice For Youtube.'), the voice used by every FGW episode"},
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "verified": "creative_list_voices search 'Test Voice' on 15 Nov 2026 returned this id ('Test Voice For Youtube.'), the voice used by every FGW episode"
+ },
  "model_id": "eleven_v4 (no speed parameter in this connector; pace directed with inline tags, then by planned pauses)",
  "flow_id": "nbAdKmoQXS4Gtc9ECpW8",
  "script": "production/NARRATION_LOCKED.txt (436 words, approved by Blake on 15 Nov 2026 with the 'text' change), verbatim, in eight generation blocks (tools/script.py)",
  "takes": "24 takes: 2 per block with the first tags, then 2 more for B2, B3, B4, B6 and B7 with '[relaxed documentary narration, calm and measured, speaking slowly and clearly]' (B4 and B7 tag variants). The slower tag hardly changed the voice's rate (about 175-190 wpm while speaking).",
  "selection": "By measurement only (nobody has listened): PocketSphinx free recognition vs the block text (qa/take_screen_sphinx.json), duration and pace. Rejected: b2_t2 (repeats its last sentence and adds words), b3_t2 (repeats its first sentences), b6_t1 (repeats its opening). No selected take speaks a direction tag or has a false start.",
  "selected": {
-  "B1": {"take": "b1_t2_qhtK.mp3", "generation_id": "qhtK8WN7Q5tHRn7CVQub", "tag": "[intrigued, immediate energy, natural unhurried pace, a short pause between sentences]"},
-  "B2": {"take": "b2_t4_ClVs.mp3", "generation_id": "ClVs4McvhXrpVh1pWSsY", "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"},
-  "B3": {"take": "b3_t4_9UKo.mp3", "generation_id": "9UKouFEOsysmTJeOhfBm", "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"},
-  "B4": {"take": "b4_t3_h2uR.mp3", "generation_id": "h2uRmSwD8w3T3iciQcoz", "tag": "[calm and measured, speaking slowly and clearly, a hint of suspense]"},
-  "B5": {"take": "b5_t1_CyiZ.mp3", "generation_id": "CyiZN5IgQuhMYyIyzStb", "tag": "[slow, unhurried storytelling pace, warm with a dry amused tone, a real pause after every sentence]"},
-  "B6": {"take": "b6_t4_L92a.mp3", "generation_id": "L92apwwoG7MixviGY0Wh", "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"},
-  "B7": {"take": "b7_t1_QNKd.mp3", "generation_id": "QNKdI2NlRSgaTRdkT31g", "tag": "[slow, measured, careful delivery, a real pause after every sentence]"},
-  "B8": {"take": "b8_t1_MW6d.mp3", "generation_id": "MW6ddlACJNjTONwaOppa", "tag": "[slow, unhurried storytelling pace, warm and quietly amazed, a real pause after every sentence]"}
+  "B1": {
+   "take": "b1_t2_qhtK.mp3",
+   "generation_id": "qhtK8WN7Q5tHRn7CVQub",
+   "tag": "[intrigued, immediate energy, natural unhurried pace, a short pause between sentences]"
+  },
+  "B2": {
+   "take": "b2_t4_ClVs.mp3",
+   "generation_id": "ClVs4McvhXrpVh1pWSsY",
+   "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"
+  },
+  "B3": {
+   "take": "b3_t4_9UKo.mp3",
+   "generation_id": "9UKouFEOsysmTJeOhfBm",
+   "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"
+  },
+  "B4": {
+   "take": "b4_t3_h2uR.mp3",
+   "generation_id": "h2uRmSwD8w3T3iciQcoz",
+   "tag": "[calm and measured, speaking slowly and clearly, a hint of suspense]"
+  },
+  "B5": {
+   "take": "b5_t1_CyiZ.mp3",
+   "generation_id": "CyiZN5IgQuhMYyIyzStb",
+   "tag": "[slow, unhurried storytelling pace, warm with a dry amused tone, a real pause after every sentence]"
+  },
+  "B6": {
+   "take": "b6_t4_L92a.mp3",
+   "generation_id": "L92apwwoG7MixviGY0Wh",
+   "tag": "[relaxed documentary narration, calm and measured, speaking slowly and clearly]"
+  },
+  "B7": {
+   "take": "b7_t1_QNKd.mp3",
+   "generation_id": "QNKdI2NlRSgaTRdkT31g",
+   "tag": "[slow, measured, careful delivery, a real pause after every sentence]"
+  },
+  "B8": {
+   "take": "b8_t1_MW6d.mp3",
+   "generation_id": "MW6ddlACJNjTONwaOppa",
+   "tag": "[slow, unhurried storytelling pace, warm and quietly amazed, a real pause after every sentence]"
+  }
  },
  "scribe": "ElevenLabs Scribe was run on the eight selected generations (15 Nov 2026). Its transcripts equal the block text word for word, but in this connector it aligns to the generation prompt (the unspoken tag gets near-zero durations), so it is not an independent check of the spoken words. The independent screen is PocketSphinx.",
  "word_timing": "PocketSphinx forced alignment of each take against its locked words (tools/align.py). Onsets after pauses are snapped to the waveform (tools/make_narration.py).",
- "assembly": "tools/make_narration.py: no time-stretch or pitch change; 0.30 s lead; block gaps 1.0/1.2/1.2/1.3/1.8/1.4/1.5 s; 3.6 s tail; 31 planned pauses (0.5-1.3 s) inserted at the quietest point between sentences. Result: 155.2 wpm over the speech span, 172.63 s."
+ "assembly": "tools/make_narration.py: no time-stretch or pitch change; 0.30 s lead; block gaps 1.0/1.2/1.2/1.3/1.8/1.4/1.5 s; 3.6 s tail; 31 planned pauses (0.5-1.3 s) inserted at the quietest point between sentences. Result: 155.2 wpm over the speech span, 172.63 s.",
+ "V3": {
+  "brief": "V3: faster narration (about 175-190 wpm, 20-25% faster than V1/V2), energetic and conversational, no playback-speed change",
+  "voice": {
+   "name": "Test Voice",
+   "voice_id": "kk5XaSLo2XAw0sKM98zU",
+   "verified": "creative_list_voices search 'Test Voice' on 15 Nov 2026 returned this id ('Test Voice For Youtube.'), the voice used by every FGW episode"
+  },
+  "model_id": "eleven_v4 (no speed parameter in this connector; pace directed with inline tags only)",
+  "flow_id": "hP5qjY55f00fswlWUH2h",
+  "script": "production/NARRATION_LOCKED.txt verbatim, the same eight blocks as V1 (tools/script.py), new delivery tags",
+  "takes": "16 takes, 2 per block (audio/narration/takes_v3)",
+  "selected": {
+   "B1": {
+    "take": "b1_t1_a4YP.mp3",
+    "tag": "[excited, quick and punchy, like showing a friend something unbelievable]"
+   },
+   "B2": {
+    "take": "b2_t2_RxCP.mp3",
+    "tag": "[energetic, brisk conversational storytelling, curious]"
+   },
+   "B3": {
+    "take": "b3_t1_2lDg.mp3",
+    "tag": "[energetic, brisk conversational, building curiosity]"
+   },
+   "B4": {
+    "take": "b4_t2_9rIt.mp3",
+    "tag": "[brisk and engaged, with a playful hint of suspense]"
+   },
+   "B5": {
+    "take": "b5_t1_yvch.mp3",
+    "tag": "[brisk, upbeat, with a dry amused tone at the end]"
+   },
+   "B6": {
+    "take": "b6_t1_OAbf.mp3",
+    "tag": "[energetic, clear and conversational, explaining something clever]"
+   },
+   "B7": {
+    "take": "b7_t1_Nw9B.mp3",
+    "tag": "[confident, brisk, building to a satisfying reveal]"
+   },
+   "B8": {
+    "take": "b8_t1_ydKB.mp3",
+    "tag": "[energetic and warm, genuinely amazed, quick but clear]"
+   }
+  },
+  "selection": "By measurement (PocketSphinx free recognition against the block text, forced alignment, duration and pace). The ElevenLabs Scribe transcript in this connector follows the generation prompt, so it was not used as a check.",
+  "assembly": {
+   "tool": "VER=V3 python3 tools/align.py && VER=V3 python3 tools/make_narration.py",
+   "lead_s": 0.12,
+   "block_gaps_s": [
+    0.3,
+    0.38,
+    0.42,
+    0.42,
+    0.5,
+    0.45,
+    0.5
+   ],
+   "tail_s": 2.4,
+   "inserted_pauses": "small pauses only after sentence ends (0.15-0.7 s), none in blocks 1-2; no time-stretching or speed change",
+   "output": "audio/narration/FGW_Scroll_narration_V3.wav",
+   "sha256": "e14f22c636ba8839a4dc093082ee4b902724cf365d991d19ad72a7c46eac8905"
+  },
+  "measured": {
+   "duration_s": 140.8,
+   "speech_span_s": [
+    0.12,
+    138.2
+   ],
+   "words": 436,
+   "wpm_over_speech_span": 189.5,
+   "vs_V1_V2_wpm": 155.2
+  }
+ }
 }

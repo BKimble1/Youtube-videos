@@ -1,0 +1,2238 @@
+{
+"0": {
+"take": "b1_t1_a4YP",
+"generation_id": "a4YP4EogHXTcwjx4jo0P",
+"src_in": 0.0,
+"words": [
+{
+"text": "If",
+"start": 0.0,
+"end": 0.14
+},
+{
+"text": "you",
+"start": 0.14,
+"end": 0.28
+},
+{
+"text": "tried",
+"start": 0.28,
+"end": 0.55
+},
+{
+"text": "to",
+"start": 0.55,
+"end": 0.61
+},
+{
+"text": "unroll",
+"start": 0.61,
+"end": 1.1
+},
+{
+"text": "this,",
+"start": 1.1,
+"end": 1.43
+},
+{
+"text": "it",
+"start": 1.53,
+"end": 1.62
+},
+{
+"text": "could",
+"start": 1.62,
+"end": 1.79
+},
+{
+"text": "crumble",
+"start": 1.79,
+"end": 2.28
+},
+{
+"text": "in",
+"start": 2.28,
+"end": 2.36
+},
+{
+"text": "your",
+"start": 2.36,
+"end": 2.49
+},
+{
+"text": "hands.",
+"start": 2.49,
+"end": 3.07
+},
+{
+"text": "So",
+"start": 3.32,
+"end": 3.47
+},
+{
+"text": "researchers",
+"start": 3.47,
+"end": 4.15
+},
+{
+"text": "unrolled",
+"start": 4.15,
+"end": 4.63
+},
+{
+"text": "it",
+"start": 4.63,
+"end": 4.73
+},
+{
+"text": "inside",
+"start": 4.73,
+"end": 5.04
+},
+{
+"text": "a",
+"start": 5.04,
+"end": 5.07
+},
+{
+"text": "computer.",
+"start": 5.07,
+"end": 5.76
+}
+]
+},
+"1": {
+"take": "b2_t2_RxCP",
+"generation_id": "RxCPcoKWVrcyyMPzMi0r",
+"src_in": 0.0,
+"words": [
+{
+"text": "That",
+"start": 0.0,
+"end": 0.27
+},
+{
+"text": "black",
+"start": 0.27,
+"end": 0.6
+},
+{
+"text": "lump",
+"start": 0.6,
+"end": 0.94
+},
+{
+"text": "is",
+"start": 0.94,
+"end": 1.06
+},
+{
+"text": "a",
+"start": 1.06,
+"end": 1.12
+},
+{
+"text": "book.",
+"start": 1.12,
+"end": 1.69
+},
+{
+"text": "It",
+"start": 2.01,
+"end": 2.11
+},
+{
+"text": "was",
+"start": 2.11,
+"end": 2.27
+},
+{
+"text": "buried",
+"start": 2.27,
+"end": 2.65
+},
+{
+"text": "when",
+"start": 2.65,
+"end": 2.79
+},
+{
+"text": "Mount",
+"start": 2.79,
+"end": 3.02
+},
+{
+"text": "Vesuvius",
+"start": 3.02,
+"end": 3.56
+},
+{
+"text": "erupted",
+"start": 3.56,
+"end": 3.96
+},
+{
+"text": "in",
+"start": 3.96,
+"end": 4.04
+},
+{
+"text": "the",
+"start": 4.04,
+"end": 4.11
+},
+{
+"text": "year",
+"start": 4.11,
+"end": 4.3
+},
+{
+"text": "seventy-nine.",
+"start": 4.3,
+"end": 5.17
+},
+{
+"text": "Centuries",
+"start": 5.57,
+"end": 6.11
+},
+{
+"text": "later,",
+"start": 6.11,
+"end": 6.57
+},
+{
+"text": "people",
+"start": 6.57,
+"end": 6.91
+},
+{
+"text": "tried",
+"start": 6.91,
+"end": 7.15
+},
+{
+"text": "to",
+"start": 7.15,
+"end": 7.23
+},
+{
+"text": "open",
+"start": 7.23,
+"end": 7.55
+},
+{
+"text": "it.",
+"start": 7.55,
+"end": 7.76
+},
+{
+"text": "By",
+"start": 8.07,
+"end": 8.18
+},
+{
+"text": "the",
+"start": 8.18,
+"end": 8.28
+},
+{
+"text": "time",
+"start": 8.28,
+"end": 8.5
+},
+{
+"text": "they",
+"start": 8.5,
+"end": 8.59
+},
+{
+"text": "were",
+"start": 8.59,
+"end": 8.74
+},
+{
+"text": "done,",
+"start": 8.74,
+"end": 9.12
+},
+{
+"text": "the",
+"start": 9.27,
+"end": 9.33
+},
+{
+"text": "roll",
+"start": 9.33,
+"end": 9.61
+},
+{
+"text": "was",
+"start": 9.61,
+"end": 9.76
+},
+{
+"text": "less",
+"start": 9.76,
+"end": 9.96
+},
+{
+"text": "than",
+"start": 9.96,
+"end": 10.08
+},
+{
+"text": "half",
+"start": 10.08,
+"end": 10.49
+},
+{
+"text": "as",
+"start": 10.49,
+"end": 10.63
+},
+{
+"text": "wide",
+"start": 10.63,
+"end": 10.89
+},
+{
+"text": "as",
+"start": 10.89,
+"end": 11.0
+},
+{
+"text": "it",
+"start": 11.0,
+"end": 11.08
+},
+{
+"text": "had",
+"start": 11.08,
+"end": 11.32
+},
+{
+"text": "been.",
+"start": 11.32,
+"end": 11.57
+},
+{
+"text": "And",
+"start": 11.9,
+"end": 12.0
+},
+{
+"text": "the",
+"start": 12.0,
+"end": 12.06
+},
+{
+"text": "writing",
+"start": 12.06,
+"end": 12.44
+},
+{
+"text": "they",
+"start": 12.44,
+"end": 12.54
+},
+{
+"text": "wanted",
+"start": 12.54,
+"end": 12.9
+},
+{
+"text": "was",
+"start": 12.9,
+"end": 13.07
+},
+{
+"text": "still",
+"start": 13.07,
+"end": 13.49
+},
+{
+"text": "wrapped",
+"start": 13.49,
+"end": 13.77
+},
+{
+"text": "up",
+"start": 13.77,
+"end": 13.9
+},
+{
+"text": "inside.",
+"start": 13.9,
+"end": 14.56
+}
+]
+},
+"2": {
+"take": "b3_t1_2lDg",
+"generation_id": "2lDgsp3nEwZK90wSNIpG",
+"src_in": 0.0,
+"words": [
+{
+"text": "Look",
+"start": 0.0,
+"end": 0.38
+},
+{
+"text": "at",
+"start": 0.38,
+"end": 0.46
+},
+{
+"text": "what",
+"start": 0.46,
+"end": 0.59
+},
+{
+"text": "happens",
+"start": 0.59,
+"end": 1.01
+},
+{
+"text": "when",
+"start": 1.01,
+"end": 1.11
+},
+{
+"text": "you",
+"start": 1.11,
+"end": 1.2
+},
+{
+"text": "scan",
+"start": 1.2,
+"end": 1.54
+},
+{
+"text": "what\u2019s",
+"start": 1.54,
+"end": 1.74
+},
+{
+"text": "left.",
+"start": 1.74,
+"end": 2.22
+},
+{
+"text": "The",
+"start": 2.59,
+"end": 2.69
+},
+{
+"text": "researchers",
+"start": 2.69,
+"end": 3.22
+},
+{
+"text": "took",
+"start": 3.22,
+"end": 3.42
+},
+{
+"text": "X-ray",
+"start": 3.42,
+"end": 3.94
+},
+{
+"text": "images",
+"start": 3.94,
+"end": 4.31
+},
+{
+"text": "from",
+"start": 4.31,
+"end": 4.49
+},
+{
+"text": "different",
+"start": 4.49,
+"end": 4.82
+},
+{
+"text": "angles",
+"start": 4.82,
+"end": 5.33
+},
+{
+"text": "and",
+"start": 5.33,
+"end": 5.51
+},
+{
+"text": "used",
+"start": 5.51,
+"end": 5.75
+},
+{
+"text": "them",
+"start": 5.75,
+"end": 5.89
+},
+{
+"text": "to",
+"start": 5.89,
+"end": 5.99
+},
+{
+"text": "build",
+"start": 5.99,
+"end": 6.23
+},
+{
+"text": "a",
+"start": 6.23,
+"end": 6.28
+},
+{
+"text": "three-dimensional",
+"start": 6.28,
+"end": 7.09
+},
+{
+"text": "map.",
+"start": 7.09,
+"end": 7.45
+},
+{
+"text": "Slice",
+"start": 7.83,
+"end": 8.26
+},
+{
+"text": "through",
+"start": 8.26,
+"end": 8.44
+},
+{
+"text": "that",
+"start": 8.44,
+"end": 8.62
+},
+{
+"text": "map",
+"start": 8.62,
+"end": 8.9
+},
+{
+"text": "and",
+"start": 8.9,
+"end": 9.11
+},
+{
+"text": "you",
+"start": 9.11,
+"end": 9.19
+},
+{
+"text": "can",
+"start": 9.19,
+"end": 9.34
+},
+{
+"text": "see",
+"start": 9.34,
+"end": 9.55
+},
+{
+"text": "a",
+"start": 9.55,
+"end": 9.58
+},
+{
+"text": "spiral.",
+"start": 9.58,
+"end": 10.31
+},
+{
+"text": "That\u2019s",
+"start": 10.64,
+"end": 10.94
+},
+{
+"text": "the",
+"start": 10.94,
+"end": 11.04
+},
+{
+"text": "sheet",
+"start": 11.04,
+"end": 11.25
+},
+{
+"text": "of",
+"start": 11.25,
+"end": 11.32
+},
+{
+"text": "papyrus,",
+"start": 11.32,
+"end": 12.0
+},
+{
+"text": "wound",
+"start": 12.0,
+"end": 12.41
+},
+{
+"text": "around",
+"start": 12.41,
+"end": 12.71
+},
+{
+"text": "itself",
+"start": 12.71,
+"end": 13.1
+},
+{
+"text": "over",
+"start": 13.24,
+"end": 13.62
+},
+{
+"text": "and",
+"start": 13.62,
+"end": 13.71
+},
+{
+"text": "over.",
+"start": 13.71,
+"end": 14.24
+}
+]
+},
+"3": {
+"take": "b4_t2_9rIt",
+"generation_id": "9rItDAkMgoXj2NtC8ovF",
+"src_in": 0.0,
+"words": [
+{
+"text": "Pick",
+"start": 0.0,
+"end": 0.24
+},
+{
+"text": "one",
+"start": 0.24,
+"end": 0.39
+},
+{
+"text": "of",
+"start": 0.39,
+"end": 0.46
+},
+{
+"text": "those",
+"start": 0.46,
+"end": 0.7
+},
+{
+"text": "thin",
+"start": 0.7,
+"end": 1.0
+},
+{
+"text": "lines",
+"start": 1.0,
+"end": 1.47
+},
+{
+"text": "and",
+"start": 1.47,
+"end": 1.59
+},
+{
+"text": "try",
+"start": 1.59,
+"end": 1.79
+},
+{
+"text": "to",
+"start": 1.79,
+"end": 1.86
+},
+{
+"text": "follow",
+"start": 1.86,
+"end": 2.23
+},
+{
+"text": "it",
+"start": 2.23,
+"end": 2.39
+},
+{
+"text": "all",
+"start": 2.39,
+"end": 2.65
+},
+{
+"text": "the",
+"start": 2.65,
+"end": 2.73
+},
+{
+"text": "way",
+"start": 2.73,
+"end": 2.89
+},
+{
+"text": "around.",
+"start": 2.89,
+"end": 3.35
+},
+{
+"text": "See",
+"start": 3.67,
+"end": 3.85
+},
+{
+"text": "where",
+"start": 3.85,
+"end": 4.02
+},
+{
+"text": "two",
+"start": 4.02,
+"end": 4.29
+},
+{
+"text": "layers",
+"start": 4.29,
+"end": 4.6
+},
+{
+"text": "press",
+"start": 4.6,
+"end": 4.83
+},
+{
+"text": "together?",
+"start": 4.83,
+"end": 5.33
+},
+{
+"text": "If",
+"start": 5.72,
+"end": 5.81
+},
+{
+"text": "you",
+"start": 5.81,
+"end": 5.91
+},
+{
+"text": "jump",
+"start": 5.91,
+"end": 6.18
+},
+{
+"text": "to",
+"start": 6.18,
+"end": 6.28
+},
+{
+"text": "the",
+"start": 6.28,
+"end": 6.36
+},
+{
+"text": "neighboring",
+"start": 6.36,
+"end": 6.81
+},
+{
+"text": "layer",
+"start": 6.81,
+"end": 7.1
+},
+{
+"text": "there,",
+"start": 7.1,
+"end": 7.42
+},
+{
+"text": "you\u2019ve",
+"start": 7.64,
+"end": 7.79
+},
+{
+"text": "just",
+"start": 7.79,
+"end": 8.06
+},
+{
+"text": "skipped",
+"start": 8.06,
+"end": 8.33
+},
+{
+"text": "an",
+"start": 8.33,
+"end": 8.41
+},
+{
+"text": "entire",
+"start": 8.41,
+"end": 8.99
+},
+{
+"text": "turn",
+"start": 8.99,
+"end": 9.21
+},
+{
+"text": "of",
+"start": 9.21,
+"end": 9.3
+},
+{
+"text": "the",
+"start": 9.3,
+"end": 9.38
+},
+{
+"text": "page.",
+"start": 9.38,
+"end": 9.86
+},
+{
+"text": "Keep",
+"start": 10.21,
+"end": 10.42
+},
+{
+"text": "going",
+"start": 10.42,
+"end": 10.82
+},
+{
+"text": "and",
+"start": 10.82,
+"end": 11.0
+},
+{
+"text": "you",
+"start": 11.0,
+"end": 11.08
+},
+{
+"text": "could",
+"start": 11.08,
+"end": 11.3
+},
+{
+"text": "end",
+"start": 11.3,
+"end": 11.45
+},
+{
+"text": "up",
+"start": 11.45,
+"end": 11.57
+},
+{
+"text": "putting",
+"start": 11.57,
+"end": 11.85
+},
+{
+"text": "two",
+"start": 11.85,
+"end": 12.11
+},
+{
+"text": "pieces",
+"start": 12.11,
+"end": 12.47
+},
+{
+"text": "of",
+"start": 12.47,
+"end": 12.56
+},
+{
+"text": "writing",
+"start": 12.56,
+"end": 12.87
+},
+{
+"text": "side",
+"start": 12.87,
+"end": 13.22
+},
+{
+"text": "by",
+"start": 13.22,
+"end": 13.37
+},
+{
+"text": "side",
+"start": 13.37,
+"end": 13.76
+},
+{
+"text": "that",
+"start": 13.76,
+"end": 13.88
+},
+{
+"text": "were",
+"start": 13.88,
+"end": 14.01
+},
+{
+"text": "never",
+"start": 14.01,
+"end": 14.42
+},
+{
+"text": "next",
+"start": 14.42,
+"end": 14.67
+},
+{
+"text": "to",
+"start": 14.67,
+"end": 14.8
+},
+{
+"text": "each",
+"start": 14.8,
+"end": 14.95
+},
+{
+"text": "other.",
+"start": 14.95,
+"end": 15.36
+}
+]
+},
+"4": {
+"take": "b5_t1_yvch",
+"generation_id": "yvch5UD9Ke4E14k4ERfD",
+"src_in": 0.0,
+"words": [
+{
+"text": "So",
+"start": 0.0,
+"end": 0.45
+},
+{
+"text": "they",
+"start": 0.45,
+"end": 0.6
+},
+{
+"text": "traced",
+"start": 0.6,
+"end": 0.97
+},
+{
+"text": "the",
+"start": 0.97,
+"end": 1.04
+},
+{
+"text": "sheet",
+"start": 1.04,
+"end": 1.31
+},
+{
+"text": "through",
+"start": 1.31,
+"end": 1.45
+},
+{
+"text": "the",
+"start": 1.45,
+"end": 1.53
+},
+{
+"text": "scan,",
+"start": 1.53,
+"end": 2.16
+},
+{
+"text": "checking",
+"start": 2.16,
+"end": 2.6
+},
+{
+"text": "and",
+"start": 2.6,
+"end": 2.71
+},
+{
+"text": "correcting",
+"start": 2.71,
+"end": 3.17
+},
+{
+"text": "the",
+"start": 3.17,
+"end": 3.25
+},
+{
+"text": "places",
+"start": 3.25,
+"end": 3.68
+},
+{
+"text": "where",
+"start": 3.68,
+"end": 3.8
+},
+{
+"text": "the",
+"start": 3.8,
+"end": 3.86
+},
+{
+"text": "layers",
+"start": 3.86,
+"end": 4.22
+},
+{
+"text": "got",
+"start": 4.22,
+"end": 4.4
+},
+{
+"text": "messy.",
+"start": 4.4,
+"end": 4.94
+},
+{
+"text": "That",
+"start": 5.34,
+"end": 5.5
+},
+{
+"text": "gave",
+"start": 5.5,
+"end": 5.68
+},
+{
+"text": "them",
+"start": 5.68,
+"end": 5.82
+},
+{
+"text": "a",
+"start": 5.82,
+"end": 5.85
+},
+{
+"text": "digital",
+"start": 5.85,
+"end": 6.27
+},
+{
+"text": "surface",
+"start": 6.27,
+"end": 6.71
+},
+{
+"text": "they",
+"start": 6.71,
+"end": 6.82
+},
+{
+"text": "could",
+"start": 6.82,
+"end": 6.95
+},
+{
+"text": "flatten.",
+"start": 6.95,
+"end": 7.46
+},
+{
+"text": "Now",
+"start": 7.83,
+"end": 8.04
+},
+{
+"text": "they",
+"start": 8.04,
+"end": 8.15
+},
+{
+"text": "had",
+"start": 8.15,
+"end": 8.27
+},
+{
+"text": "a",
+"start": 8.27,
+"end": 8.32
+},
+{
+"text": "page.",
+"start": 8.32,
+"end": 8.85
+},
+{
+"text": "It",
+"start": 9.13,
+"end": 9.25
+},
+{
+"text": "looked",
+"start": 9.25,
+"end": 9.49
+},
+{
+"text": "almost",
+"start": 9.49,
+"end": 9.79
+},
+{
+"text": "blank.",
+"start": 9.79,
+"end": 10.4
+}
+]
+},
+"5": {
+"take": "b6_t1_OAbf",
+"generation_id": "OAbf1DN5lGKrDurdQtQi",
+"src_in": 0.0,
+"words": [
+{
+"text": "The",
+"start": 0.0,
+"end": 0.24
+},
+{
+"text": "ink",
+"start": 0.24,
+"end": 0.47
+},
+{
+"text": "was",
+"start": 0.47,
+"end": 0.64
+},
+{
+"text": "carbon-based,",
+"start": 0.64,
+"end": 1.65
+},
+{
+"text": "and",
+"start": 1.65,
+"end": 1.78
+},
+{
+"text": "the",
+"start": 1.78,
+"end": 1.85
+},
+{
+"text": "heat",
+"start": 1.85,
+"end": 2.15
+},
+{
+"text": "had",
+"start": 2.15,
+"end": 2.33
+},
+{
+"text": "turned",
+"start": 2.33,
+"end": 2.54
+},
+{
+"text": "the",
+"start": 2.54,
+"end": 2.6
+},
+{
+"text": "papyrus",
+"start": 2.6,
+"end": 3.14
+},
+{
+"text": "into",
+"start": 3.14,
+"end": 3.37
+},
+{
+"text": "a",
+"start": 3.37,
+"end": 3.4
+},
+{
+"text": "carbon-rich",
+"start": 3.4,
+"end": 4.06
+},
+{
+"text": "material",
+"start": 4.06,
+"end": 4.53
+},
+{
+"text": "too.",
+"start": 4.53,
+"end": 4.89
+},
+{
+"text": "In",
+"start": 5.35,
+"end": 5.45
+},
+{
+"text": "the",
+"start": 5.45,
+"end": 5.52
+},
+{
+"text": "scan,",
+"start": 5.52,
+"end": 6.12
+},
+{
+"text": "the",
+"start": 6.29,
+"end": 6.36
+},
+{
+"text": "two",
+"start": 6.36,
+"end": 6.58
+},
+{
+"text": "could",
+"start": 6.58,
+"end": 6.71
+},
+{
+"text": "look",
+"start": 6.71,
+"end": 6.88
+},
+{
+"text": "almost",
+"start": 6.88,
+"end": 7.38
+},
+{
+"text": "identical.",
+"start": 7.38,
+"end": 8.19
+},
+{
+"text": "So",
+"start": 8.6,
+"end": 8.88
+},
+{
+"text": "the",
+"start": 8.88,
+"end": 9.01
+},
+{
+"text": "team",
+"start": 9.01,
+"end": 9.28
+},
+{
+"text": "trained",
+"start": 9.28,
+"end": 9.56
+},
+{
+"text": "a",
+"start": 9.56,
+"end": 9.59
+},
+{
+"text": "model",
+"start": 9.59,
+"end": 9.94
+},
+{
+"text": "to",
+"start": 9.94,
+"end": 10.05
+},
+{
+"text": "pick",
+"start": 10.05,
+"end": 10.26
+},
+{
+"text": "out",
+"start": 10.26,
+"end": 10.42
+},
+{
+"text": "signs",
+"start": 10.42,
+"end": 10.75
+},
+{
+"text": "of",
+"start": 10.75,
+"end": 10.84
+},
+{
+"text": "ink",
+"start": 10.84,
+"end": 11.19
+},
+{
+"text": "in",
+"start": 11.19,
+"end": 11.33
+},
+{
+"text": "tiny",
+"start": 11.33,
+"end": 11.75
+},
+{
+"text": "patches.",
+"start": 11.75,
+"end": 12.32
+},
+{
+"text": "Each",
+"start": 12.74,
+"end": 12.95
+},
+{
+"text": "patch",
+"start": 12.95,
+"end": 13.28
+},
+{
+"text": "was",
+"start": 13.28,
+"end": 13.42
+},
+{
+"text": "smaller",
+"start": 13.42,
+"end": 13.92
+},
+{
+"text": "than",
+"start": 13.92,
+"end": 14.05
+},
+{
+"text": "a",
+"start": 14.05,
+"end": 14.09
+},
+{
+"text": "single",
+"start": 14.09,
+"end": 14.53
+},
+{
+"text": "letter.",
+"start": 14.53,
+"end": 14.92
+},
+{
+"text": "Imagine",
+"start": 15.36,
+"end": 15.73
+},
+{
+"text": "trying",
+"start": 15.73,
+"end": 15.97
+},
+{
+"text": "to",
+"start": 15.97,
+"end": 16.04
+},
+{
+"text": "find",
+"start": 16.04,
+"end": 16.29
+},
+{
+"text": "the",
+"start": 16.29,
+"end": 16.37
+},
+{
+"text": "paint",
+"start": 16.37,
+"end": 16.65
+},
+{
+"text": "on",
+"start": 16.65,
+"end": 16.76
+},
+{
+"text": "a",
+"start": 16.76,
+"end": 16.79
+},
+{
+"text": "road",
+"start": 16.79,
+"end": 17.19
+},
+{
+"text": "by",
+"start": 17.19,
+"end": 17.3
+},
+{
+"text": "looking",
+"start": 17.3,
+"end": 17.62
+},
+{
+"text": "at",
+"start": 17.62,
+"end": 17.69
+},
+{
+"text": "one",
+"start": 17.69,
+"end": 18.08
+},
+{
+"text": "pebble",
+"start": 18.08,
+"end": 18.42
+},
+{
+"text": "at",
+"start": 18.42,
+"end": 18.49
+},
+{
+"text": "a",
+"start": 18.49,
+"end": 18.54
+},
+{
+"text": "time.",
+"start": 18.54,
+"end": 18.99
+},
+{
+"text": "One",
+"start": 19.43,
+"end": 19.65
+},
+{
+"text": "patch",
+"start": 19.65,
+"end": 19.96
+},
+{
+"text": "could",
+"start": 19.96,
+"end": 20.07
+},
+{
+"text": "look",
+"start": 20.07,
+"end": 20.23
+},
+{
+"text": "like",
+"start": 20.23,
+"end": 20.36
+},
+{
+"text": "a",
+"start": 20.36,
+"end": 20.4
+},
+{
+"text": "smudge.",
+"start": 20.4,
+"end": 20.94
+},
+{
+"text": "Put",
+"start": 21.35,
+"end": 21.48
+},
+{
+"text": "the",
+"start": 21.48,
+"end": 21.56
+},
+{
+"text": "patches",
+"start": 21.56,
+"end": 21.92
+},
+{
+"text": "together",
+"start": 21.92,
+"end": 22.45
+},
+{
+"text": "and",
+"start": 22.45,
+"end": 22.6
+},
+{
+"text": "you",
+"start": 22.6,
+"end": 22.68
+},
+{
+"text": "can",
+"start": 22.68,
+"end": 22.81
+},
+{
+"text": "start",
+"start": 22.81,
+"end": 23.07
+},
+{
+"text": "to",
+"start": 23.07,
+"end": 23.14
+},
+{
+"text": "see",
+"start": 23.14,
+"end": 23.38
+},
+{
+"text": "which",
+"start": 23.38,
+"end": 23.73
+},
+{
+"text": "marks",
+"start": 23.73,
+"end": 24.12
+},
+{
+"text": "form",
+"start": 24.12,
+"end": 24.33
+},
+{
+"text": "a",
+"start": 24.33,
+"end": 24.36
+},
+{
+"text": "stroke.",
+"start": 24.36,
+"end": 24.96
+}
+]
+},
+"6": {
+"take": "b7_t1_Nw9B",
+"generation_id": "Nw9BunvgVkGjK3WysZqS",
+"src_in": 0.0,
+"words": [
+{
+"text": "And",
+"start": 0.07,
+"end": 0.32
+},
+{
+"text": "here\u2019s",
+"start": 0.32,
+"end": 0.58
+},
+{
+"text": "how",
+"start": 0.58,
+"end": 0.7
+},
+{
+"text": "they",
+"start": 0.7,
+"end": 0.82
+},
+{
+"text": "checked",
+"start": 0.82,
+"end": 1.13
+},
+{
+"text": "it.",
+"start": 1.13,
+"end": 1.37
+},
+{
+"text": "On",
+"start": 1.71,
+"end": 1.84
+},
+{
+"text": "a",
+"start": 1.84,
+"end": 1.88
+},
+{
+"text": "second",
+"start": 1.88,
+"end": 2.27
+},
+{
+"text": "scroll,",
+"start": 2.27,
+"end": 2.67
+},
+{
+"text": "they",
+"start": 2.8,
+"end": 3.02
+},
+{
+"text": "already",
+"start": 3.02,
+"end": 3.4
+},
+{
+"text": "had",
+"start": 3.4,
+"end": 3.63
+},
+{
+"text": "text",
+"start": 3.63,
+"end": 4.0
+},
+{
+"text": "that",
+"start": 4.0,
+"end": 4.12
+},
+{
+"text": "an",
+"start": 4.12,
+"end": 4.35
+},
+{
+"text": "earlier",
+"start": 4.35,
+"end": 4.67
+},
+{
+"text": "model",
+"start": 4.67,
+"end": 5.01
+},
+{
+"text": "had",
+"start": 5.01,
+"end": 5.11
+},
+{
+"text": "helped",
+"start": 5.11,
+"end": 5.37
+},
+{
+"text": "reveal.",
+"start": 5.37,
+"end": 5.87
+},
+{
+"text": "A",
+"start": 6.28,
+"end": 6.33
+},
+{
+"text": "sharper",
+"start": 6.33,
+"end": 6.73
+},
+{
+"text": "scan",
+"start": 6.73,
+"end": 7.02
+},
+{
+"text": "of",
+"start": 7.02,
+"end": 7.1
+},
+{
+"text": "that",
+"start": 7.1,
+"end": 7.26
+},
+{
+"text": "scroll",
+"start": 7.26,
+"end": 7.61
+},
+{
+"text": "picked",
+"start": 7.61,
+"end": 7.88
+},
+{
+"text": "up",
+"start": 7.88,
+"end": 7.99
+},
+{
+"text": "the",
+"start": 7.99,
+"end": 8.17
+},
+{
+"text": "ink",
+"start": 8.17,
+"end": 8.32
+},
+{
+"text": "deposits",
+"start": 8.32,
+"end": 8.85
+},
+{
+"text": "directly.",
+"start": 8.85,
+"end": 9.55
+},
+{
+"text": "They",
+"start": 9.87,
+"end": 9.98
+},
+{
+"text": "lined",
+"start": 9.98,
+"end": 10.26
+},
+{
+"text": "the",
+"start": 10.26,
+"end": 10.32
+},
+{
+"text": "two",
+"start": 10.32,
+"end": 10.53
+},
+{
+"text": "images",
+"start": 10.53,
+"end": 10.87
+},
+{
+"text": "up.",
+"start": 10.87,
+"end": 11.07
+},
+{
+"text": "The",
+"start": 11.43,
+"end": 11.5
+},
+{
+"text": "same",
+"start": 11.5,
+"end": 11.85
+},
+{
+"text": "strokes",
+"start": 11.85,
+"end": 12.27
+},
+{
+"text": "were",
+"start": 12.27,
+"end": 12.39
+},
+{
+"text": "sitting",
+"start": 12.39,
+"end": 12.69
+},
+{
+"text": "in",
+"start": 12.69,
+"end": 12.76
+},
+{
+"text": "the",
+"start": 12.76,
+"end": 12.82
+},
+{
+"text": "same",
+"start": 12.82,
+"end": 13.2
+},
+{
+"text": "places.",
+"start": 13.2,
+"end": 13.92
+}
+]
+},
+"7": {
+"take": "b8_t1_ydKB",
+"generation_id": "ydKBjTc7thz27pcBzRIM",
+"src_in": 0.0,
+"words": [
+{
+"text": "Back",
+"start": 0.0,
+"end": 0.33
+},
+{
+"text": "on",
+"start": 0.33,
+"end": 0.43
+},
+{
+"text": "the",
+"start": 0.43,
+"end": 0.51
+},
+{
+"text": "first",
+"start": 0.51,
+"end": 0.89
+},
+{
+"text": "scroll,",
+"start": 0.89,
+"end": 1.31
+},
+{
+"text": "the",
+"start": 1.31,
+"end": 1.56
+},
+{
+"text": "flattened",
+"start": 1.56,
+"end": 2.0
+},
+{
+"text": "sheet",
+"start": 2.0,
+"end": 2.28
+},
+{
+"text": "stretched",
+"start": 2.28,
+"end": 2.65
+},
+{
+"text": "to",
+"start": 2.65,
+"end": 2.75
+},
+{
+"text": "about",
+"start": 2.75,
+"end": 3.12
+},
+{
+"text": "four",
+"start": 3.12,
+"end": 3.32
+},
+{
+"text": "and",
+"start": 3.32,
+"end": 3.41
+},
+{
+"text": "a",
+"start": 3.41,
+"end": 3.44
+},
+{
+"text": "half",
+"start": 3.44,
+"end": 3.69
+},
+{
+"text": "feet.",
+"start": 3.69,
+"end": 4.16
+},
+{
+"text": "Scholars",
+"start": 4.51,
+"end": 4.97
+},
+{
+"text": "could",
+"start": 4.97,
+"end": 5.09
+},
+{
+"text": "read",
+"start": 5.09,
+"end": 5.27
+},
+{
+"text": "across",
+"start": 5.27,
+"end": 5.61
+},
+{
+"text": "roughly",
+"start": 5.61,
+"end": 5.98
+},
+{
+"text": "twenty-two",
+"start": 5.98,
+"end": 6.67
+},
+{
+"text": "partial",
+"start": 6.67,
+"end": 7.07
+},
+{
+"text": "columns.",
+"start": 7.07,
+"end": 7.67
+},
+{
+"text": "There",
+"start": 8.05,
+"end": 8.17
+},
+{
+"text": "are",
+"start": 8.17,
+"end": 8.25
+},
+{
+"text": "gaps",
+"start": 8.25,
+"end": 8.7
+},
+{
+"text": "where",
+"start": 8.7,
+"end": 8.82
+},
+{
+"text": "the",
+"start": 8.82,
+"end": 8.9
+},
+{
+"text": "papyrus",
+"start": 8.9,
+"end": 9.38
+},
+{
+"text": "is",
+"start": 9.38,
+"end": 9.5
+},
+{
+"text": "missing.",
+"start": 9.5,
+"end": 9.99
+},
+{
+"text": "One",
+"start": 10.48,
+"end": 10.63
+},
+{
+"text": "of",
+"start": 10.63,
+"end": 10.71
+},
+{
+"text": "the",
+"start": 10.71,
+"end": 10.8
+},
+{
+"text": "surviving",
+"start": 10.8,
+"end": 11.29
+},
+{
+"text": "passages",
+"start": 11.29,
+"end": 11.93
+},
+{
+"text": "is",
+"start": 11.93,
+"end": 12.07
+},
+{
+"text": "about",
+"start": 12.07,
+"end": 12.32
+},
+{
+"text": "what",
+"start": 12.32,
+"end": 12.47
+},
+{
+"text": "people",
+"start": 12.47,
+"end": 12.76
+},
+{
+"text": "can",
+"start": 12.76,
+"end": 12.95
+},
+{
+"text": "gain",
+"start": 12.95,
+"end": 13.26
+},
+{
+"text": "through",
+"start": 13.26,
+"end": 13.44
+},
+{
+"text": "study.",
+"start": 13.44,
+"end": 13.98
+},
+{
+"text": "Here\u2019s",
+"start": 14.38,
+"end": 14.55
+},
+{
+"text": "a",
+"start": 14.55,
+"end": 14.6
+},
+{
+"text": "fragment",
+"start": 14.6,
+"end": 15.01
+},
+{
+"text": "of",
+"start": 15.01,
+"end": 15.08
+},
+{
+"text": "the",
+"start": 15.08,
+"end": 15.15
+},
+{
+"text": "translation.",
+"start": 15.15,
+"end": 15.89
+},
+{
+"text": "\u201cPossessing",
+"start": 16.41,
+"end": 16.97
+},
+{
+"text": "the",
+"start": 16.97,
+"end": 17.04
+},
+{
+"text": "same",
+"start": 17.04,
+"end": 17.5
+},
+{
+"text": "practical",
+"start": 17.5,
+"end": 18.03
+},
+{
+"text": "wisdom",
+"start": 18.03,
+"end": 18.44
+},
+{
+"text": "as",
+"start": 18.44,
+"end": 18.66
+},
+{
+"text": "they",
+"start": 18.66,
+"end": 18.88
+},
+{
+"text": "do.\u201d",
+"start": 18.88,
+"end": 19.16
+},
+{
+"text": "Somebody",
+"start": 19.79,
+"end": 20.15
+},
+{
+"text": "put",
+"start": 20.15,
+"end": 20.35
+},
+{
+"text": "those",
+"start": 20.35,
+"end": 20.55
+},
+{
+"text": "words",
+"start": 20.55,
+"end": 20.84
+},
+{
+"text": "down",
+"start": 20.84,
+"end": 21.05
+},
+{
+"text": "by",
+"start": 21.05,
+"end": 21.2
+},
+{
+"text": "hand",
+"start": 21.2,
+"end": 21.62
+},
+{
+"text": "more",
+"start": 21.62,
+"end": 21.78
+},
+{
+"text": "than",
+"start": 21.78,
+"end": 21.94
+},
+{
+"text": "two",
+"start": 21.94,
+"end": 22.26
+},
+{
+"text": "thousand",
+"start": 22.26,
+"end": 22.68
+},
+{
+"text": "years",
+"start": 22.68,
+"end": 22.96
+},
+{
+"text": "ago.",
+"start": 22.96,
+"end": 23.31
+},
+{
+"text": "You",
+"start": 23.73,
+"end": 23.84
+},
+{
+"text": "just",
+"start": 23.84,
+"end": 24.02
+},
+{
+"text": "read",
+"start": 24.02,
+"end": 24.2
+},
+{
+"text": "a",
+"start": 24.2,
+"end": 24.23
+},
+{
+"text": "line",
+"start": 24.23,
+"end": 24.59
+},
+{
+"text": "from",
+"start": 24.59,
+"end": 24.73
+},
+{
+"text": "inside",
+"start": 24.73,
+"end": 25.18
+},
+{
+"text": "the",
+"start": 25.18,
+"end": 25.24
+},
+{
+"text": "scroll.",
+"start": 25.24,
+"end": 25.76
+},
+{
+"text": "And",
+"start": 26.16,
+"end": 26.27
+},
+{
+"text": "the",
+"start": 26.27,
+"end": 26.35
+},
+{
+"text": "page",
+"start": 26.35,
+"end": 26.67
+},
+{
+"text": "is",
+"start": 26.67,
+"end": 26.77
+},
+{
+"text": "still",
+"start": 26.77,
+"end": 27.14
+},
+{
+"text": "rolled",
+"start": 27.14,
+"end": 27.4
+},
+{
+"text": "up.",
+"start": 27.4,
+"end": 27.84
+}
+]
+}
+}

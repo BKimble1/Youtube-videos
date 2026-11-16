@@ -1,0 +1,247 @@
+{
+ "file": "audio/narration/FGW_Scroll_narration_V3.wav",
+ "sha256": "e14f22c636ba8839a4dc093082ee4b902724cf365d991d19ad72a7c46eac8905",
+ "duration_s": 140.8,
+ "frames_30fps": 4224,
+ "speech_s": [
+  0.12,
+  138.2
+ ],
+ "words": 436,
+ "lead_s": 0.12,
+ "gaps_s": [
+  0.3,
+  0.38,
+  0.42,
+  0.42,
+  0.5,
+  0.45,
+  0.5
+ ],
+ "tail_s": 2.4,
+ "inserted_pauses": [
+  {
+   "block": 2,
+   "after": "map.",
+   "seconds": 0.15,
+   "at_src_s": 7.77
+  },
+  {
+   "block": 2,
+   "after": "spiral.",
+   "seconds": 0.25,
+   "at_src_s": 10.62
+  },
+  {
+   "block": 3,
+   "after": "around.",
+   "seconds": 0.3,
+   "at_src_s": 3.62
+  },
+  {
+   "block": 3,
+   "after": "together?",
+   "seconds": 0.4,
+   "at_src_s": 5.7
+  },
+  {
+   "block": 3,
+   "after": "page.",
+   "seconds": 0.4,
+   "at_src_s": 9.94
+  },
+  {
+   "block": 4,
+   "after": "messy.",
+   "seconds": 0.25,
+   "at_src_s": 5.33
+  },
+  {
+   "block": 4,
+   "after": "flatten.",
+   "seconds": 0.25,
+   "at_src_s": 7.82
+  },
+  {
+   "block": 4,
+   "after": "page.",
+   "seconds": 0.5,
+   "at_src_s": 8.93
+  },
+  {
+   "block": 5,
+   "after": "too.",
+   "seconds": 0.25,
+   "at_src_s": 5.33
+  },
+  {
+   "block": 5,
+   "after": "identical.",
+   "seconds": 0.3,
+   "at_src_s": 8.54
+  },
+  {
+   "block": 5,
+   "after": "patches.",
+   "seconds": 0.2,
+   "at_src_s": 12.66
+  },
+  {
+   "block": 5,
+   "after": "letter.",
+   "seconds": 0.3,
+   "at_src_s": 15.34
+  },
+  {
+   "block": 5,
+   "after": "time.",
+   "seconds": 0.3,
+   "at_src_s": 19.27
+  },
+  {
+   "block": 5,
+   "after": "smudge.",
+   "seconds": 0.3,
+   "at_src_s": 21.34
+  },
+  {
+   "block": 6,
+   "after": "it.",
+   "seconds": 0.25,
+   "at_src_s": 1.7
+  },
+  {
+   "block": 6,
+   "after": "reveal.",
+   "seconds": 0.3,
+   "at_src_s": 6.26
+  },
+  {
+   "block": 6,
+   "after": "directly.",
+   "seconds": 0.3,
+   "at_src_s": 9.85
+  },
+  {
+   "block": 6,
+   "after": "up.",
+   "seconds": 0.35,
+   "at_src_s": 11.38
+  },
+  {
+   "block": 7,
+   "after": "feet.",
+   "seconds": 0.25,
+   "at_src_s": 4.35
+  },
+  {
+   "block": 7,
+   "after": "columns.",
+   "seconds": 0.25,
+   "at_src_s": 8.01
+  },
+  {
+   "block": 7,
+   "after": "missing.",
+   "seconds": 0.3,
+   "at_src_s": 10.23
+  },
+  {
+   "block": 7,
+   "after": "study.",
+   "seconds": 0.3,
+   "at_src_s": 14.3
+  },
+  {
+   "block": 7,
+   "after": "translation.",
+   "seconds": 0.3,
+   "at_src_s": 16.38
+  },
+  {
+   "block": 7,
+   "after": "do.\u201d",
+   "seconds": 0.7,
+   "at_src_s": 19.74
+  },
+  {
+   "block": 7,
+   "after": "ago.",
+   "seconds": 0.4,
+   "at_src_s": 23.69
+  },
+  {
+   "block": 7,
+   "after": "scroll.",
+   "seconds": 0.4,
+   "at_src_s": 26.14
+  }
+ ],
+ "blocks": [
+  {
+   "block": 0,
+   "take": "audio/narration/takes_v3/b1_t1_a4YP.mp3",
+   "generation_id": "a4YP4EogHXTcwjx4jo0P",
+   "src_in": 0.0,
+   "src_out": 5.76,
+   "start": 0.12
+  },
+  {
+   "block": 1,
+   "take": "audio/narration/takes_v3/b2_t2_RxCP.mp3",
+   "generation_id": "RxCPcoKWVrcyyMPzMi0r",
+   "src_in": 0.0,
+   "src_out": 14.56,
+   "start": 6.18
+  },
+  {
+   "block": 2,
+   "take": "audio/narration/takes_v3/b3_t1_2lDg.mp3",
+   "generation_id": "2lDgsp3nEwZK90wSNIpG",
+   "src_in": 0.0,
+   "src_out": 14.24,
+   "start": 21.12
+  },
+  {
+   "block": 3,
+   "take": "audio/narration/takes_v3/b4_t2_9rIt.mp3",
+   "generation_id": "9rItDAkMgoXj2NtC8ovF",
+   "src_in": 0.0,
+   "src_out": 15.36,
+   "start": 36.18
+  },
+  {
+   "block": 4,
+   "take": "audio/narration/takes_v3/b5_t1_yvch.mp3",
+   "generation_id": "yvch5UD9Ke4E14k4ERfD",
+   "src_in": 0.0,
+   "src_out": 10.4,
+   "start": 53.06
+  },
+  {
+   "block": 5,
+   "take": "audio/narration/takes_v3/b6_t1_OAbf.mp3",
+   "generation_id": "OAbf1DN5lGKrDurdQtQi",
+   "src_in": 0.0,
+   "src_out": 24.96,
+   "start": 64.96
+  },
+  {
+   "block": 6,
+   "take": "audio/narration/takes_v3/b7_t1_Nw9B.mp3",
+   "generation_id": "Nw9BunvgVkGjK3WysZqS",
+   "src_in": 0.01,
+   "src_out": 13.92,
+   "start": 92.02
+  },
+  {
+   "block": 7,
+   "take": "audio/narration/takes_v3/b8_t1_ydKB.mp3",
+   "generation_id": "ydKBjTc7thz27pcBzRIM",
+   "src_in": 0.0,
+   "src_out": 27.84,
+   "start": 107.63
+  }
+ ],
+ "wpm_over_speech_span": 189.5
+}
