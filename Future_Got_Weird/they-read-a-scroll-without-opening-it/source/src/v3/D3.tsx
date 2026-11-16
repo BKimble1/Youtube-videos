@@ -5,7 +5,7 @@
 // writing; j) the mistake rewinds; k) the correct trace with corrections at each contact; l) back to the full view
 // (equal to F3's first frame).
 import React from 'react';
-import {Chip, K} from '../art/kit';
+import {K} from '../art/kit';
 import {mix} from '../lib/color';
 import {Cam, PageFace, SheetLine, World} from '../art/Sheet';
 import {FPS} from '../lib/core';
@@ -285,7 +285,6 @@ export const D3: React.FC<{f: number}> = ({f}) => {
       {void easeOut}
       {void CAM0}
       </g>
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,255,255,0.88)" />
     </g>
   );
 };

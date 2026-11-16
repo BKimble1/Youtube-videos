@@ -18,6 +18,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="StillV2" component={StillV2} width={1920} height={1080} defaultProps={{t: 0}} />
     <Still id="SheetV2" component={SheetV2} width={1920} height={1080} defaultProps={{ts: [0], cols: 4}} />
     <Composition id="ScrollV3" component={FilmV3} durationInFrames={FRAMES} fps={FPS} width={1920} height={1080} defaultProps={{captions: true}} />
+    <Composition id="ScrollV4" component={FilmV3} durationInFrames={FRAMES} fps={FPS} width={1920} height={1080} defaultProps={{captions: true}} />
     <Still id="StillV3" component={StillV3} width={1920} height={1080} defaultProps={{t: 0}} />
     <Still id="SheetV3" component={SheetV3} width={1920} height={1080} defaultProps={{ts: [0], cols: 4}} />
     <Still id="Thumb" component={Thumb} width={1920} height={1080} />

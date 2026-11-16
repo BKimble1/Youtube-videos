@@ -4,7 +4,7 @@
 // layer and it cracks and breaks. The roll turns end-on; two more attempts break the outer turns away (4.9 -> 2.0 cm);
 // the camera pushes into the core that still holds the writing.
 import React from 'react';
-import {Chip, FONT_BODY, K} from '../art/kit';
+import {Note, FONT_BODY, K} from '../art/kit';
 import {Cradle, EndView, ROLL_GEO, Roll1667} from '../art/Roll';
 import {mix} from '../lib/color';
 import {FPS} from '../lib/core';
@@ -182,7 +182,7 @@ export const B3: React.FC<{f: number}> = ({f}) => {
         <g clipPath={`url(#b2m${f})`}>
           <rect x={sweep} y={0} width={140} height={1080} fill="#FFF3DC" opacity={0.18} transform={`skewX(-20)`} />
         </g>
-        <Chip x={pose.x} y={pose.y + 150 * pose.s + 10} text="PHerc. 1667" size={30} anchor="middle" dot={K.saffron} />
+        <Note x={pose.x} y={pose.y + 150 * pose.s + 20} text="PHerc. 1667" size={26} />
       </g>
     );
   }
@@ -275,7 +275,6 @@ export const B3: React.FC<{f: number}> = ({f}) => {
             </g>
           </g>
         )}
-        {toSepia > 0 && <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,250,238,0.9)" color={K.sepiaInk} opacity={toSepia} />}
       </g>
     );
   }
@@ -327,7 +326,6 @@ export const B3: React.FC<{f: number}> = ({f}) => {
             <line x1={960 - r} y1={GY} x2={960 + r} y2={GY} stroke={K.sepiaInk} strokeWidth={4} />
             <path d={`M${960 - r} ${GY} l16 -9 v18Z M${960 + r} ${GY} l-16 -9 v18Z`} fill={K.sepiaInk} />
             <g opacity={lbl}>
-              <rect x={960 - 74} y={GY + 18} width={148} height={46} rx={23} fill="#F6EDD8" stroke={K.sepiaInk} strokeWidth={2} />
               <text x={960} y={GY + 51} textAnchor="middle" fontFamily={FONT_BODY} fontWeight={800} fontSize={30} fill={K.sepiaInk}>
                 {cm} cm
               </text>
@@ -335,7 +333,6 @@ export const B3: React.FC<{f: number}> = ({f}) => {
           </g>
         )}
       </g>
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,250,238,0.9)" color={K.sepiaInk} />
     </g>
   );
 };

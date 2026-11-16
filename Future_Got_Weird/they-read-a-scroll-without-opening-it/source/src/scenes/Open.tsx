@@ -3,7 +3,7 @@
 // and opens into a page with the real column-19 Greek. Morphing happens in screen space between two cameras: the
 // cross-section camera (camS) and the page camera (camP).
 import React from 'react';
-import {Chip, K} from '../art/kit';
+import {Note, K} from '../art/kit';
 import {Cradle, Roll1667} from '../art/Roll';
 import {Cam, PageFace, SheetLine, toScreen, World} from '../art/Sheet';
 import {clamp, easeInOut, easeOut, lerp} from '../lib/math';
@@ -110,7 +110,6 @@ export const OpenComp: React.FC<{st: OpenState; f: number}> = ({st, f}) => {
         {!st.partial && (!allFlat || st.open < 1) && (
           <path d={ribbonD(SEG[0], SEG[1], p, CAM_S, cS, camP, cP)} fill="none" stroke={K.saffron} strokeWidth={3.2} strokeLinecap="round" strokeLinejoin="round" opacity={1 - easeOut(clamp(st.open * 1.4))} />
         )}
-        {(st.chips ?? 1) > 0 && <Chip x={1890 + slide} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,255,255,0.88)" opacity={st.chips ?? 1} />}
       </g>
       {/* leader from the real end face to the scan */}
       {(st.leader ?? 1) > 0 && (
@@ -127,7 +126,7 @@ export const OpenComp: React.FC<{st: OpenState; f: number}> = ({st, f}) => {
       <g transform={`translate(${lx} 0)`}>
         <Cradle x={st.roll.x} y={st.roll.y + 64 * st.roll.s} s={st.roll.s} w={330} />
         <Roll1667 x={st.roll.x} y={st.roll.y} s={st.roll.s} crumbs={st.crumbs ?? 0} f={f} />
-        {(st.chips ?? 1) > 0 && <Chip x={st.roll.x} y={st.roll.y + 150 * st.roll.s + 10} text="PHerc. 1667" size={30} anchor="middle" dot={K.saffron} opacity={st.chips ?? 1} />}
+        {(st.chips ?? 1) > 0 && <Note x={st.roll.x} y={st.roll.y + 150 * st.roll.s + 20} text="PHerc. 1667" size={26} opacity={st.chips ?? 1} />}
       </g>
     </g>
   );

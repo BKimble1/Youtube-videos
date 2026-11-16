@@ -3,7 +3,7 @@
 // is completed and checked at every contact; the traced sheet is flattened about that same bend; the page opens
 // almost blank; the camera pushes in; the ink is found patch by patch.
 import React from 'react';
-import {Chip, K} from '../art/kit';
+import {Note, K} from '../art/kit';
 import {Cam, flatPos, PageFace, SheetLine, toScreen, World} from '../art/Sheet';
 import {FPS, T} from '../lib/core';
 import {mix} from '../lib/color';
@@ -384,8 +384,6 @@ export const F3: React.FC<{f: number}> = ({f}) => {
             <rect x={x0} y={y0} width={w} height={h} rx={10} fill="none" stroke={K.white} strokeWidth={4} />
             {lab > 0 && k > 0.95 && (
               <g opacity={lab}>
-                <Chip x={P.x0 + INK[1].x} y={P.y0 + LY[1] - 112} text="ink" size={30} anchor="middle" />
-                <Chip x={P.x0 + 160} y={P.y0 + LY[2] + 70} text="papyrus" size={30} anchor="middle" />
               </g>
             )}
             {/* the same two spots sampled from the scan: indistinguishable */}
@@ -401,7 +399,7 @@ export const F3: React.FC<{f: number}> = ({f}) => {
                       {Array.from({length: 40}, (_, j) => (
                         <rect key={j} x={cx - S / 2 + hash(j, 31) * (S - 14)} y={cy - S / 2 + hash(j, 32) * (S - 14)} width={14} height={14} fill={hash(j, 33) > 0.5 ? '#86827C' : '#928E88'} />
                       ))}
-                      <Chip x={cx} y={cy + S / 2 + 36} text={i ? 'papyrus' : 'ink'} size={28} anchor="middle" />
+                      <Note x={cx} y={cy + S / 2 + 42} text={i ? 'papyrus' : 'ink'} size={28} color="#F2F4F5" halo="rgba(10,18,26,0.55)" />
                     </g>
                   );
                 })}
@@ -465,7 +463,6 @@ export const F3: React.FC<{f: number}> = ({f}) => {
         );
       })()}
 
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,255,255,0.88)" />
     </g>
   );
 };

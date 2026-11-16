@@ -2,7 +2,7 @@
 // ~1.4 m surface with its gaps, count the columns, return to column 19 and give the translated fragment room. On the
 // last sentences the opening composition returns: the page re-rolls into the scan and the still-rolled object holds.
 import React from 'react';
-import {Chip, FONT_BODY, FONT_HEAD, K} from '../art/kit';
+import {Note, FONT_BODY, FONT_HEAD, K} from '../art/kit';
 import {Cam, HOLE_PATHS, PageFace, quoteBox, toScreen, World} from '../art/Sheet';
 import {FPS} from '../lib/core';
 import {clamp, easeInOut, easeOut, lerp} from '../lib/math';
@@ -138,10 +138,7 @@ export const H3: React.FC<{f: number}> = ({f}) => {
           <line x1={left.x} y1={yb} x2={right.x} y2={yb} stroke={K.white} strokeWidth={3} />
           <line x1={left.x} y1={yb - 12} x2={left.x} y2={yb + 12} stroke={K.white} strokeWidth={3} />
           <line x1={right.x} y1={yb - 12} x2={right.x} y2={yb + 12} stroke={K.white} strokeWidth={3} />
-          <rect x={960 - 150} y={yb + 18} width={300} height={50} rx={25} fill="rgba(255,255,255,0.92)" />
-          <text x={960} y={yb + 53} textAnchor="middle" fontFamily={FONT_BODY} fontWeight={800} fontSize={30} fill={K.ink}>
-            ≈ 1.4 m · 4½ ft
-          </text>
+          <Note x={960} y={yb + 50} text="≈ 1.4 m · 4½ ft" size={30} color="#F2F4F5" halo="rgba(10,18,26,0.5)" />
         </g>
       )}
       {Array.from({length: NCOL}, (_, k) => {
@@ -150,19 +147,7 @@ export const H3: React.FC<{f: number}> = ({f}) => {
         const p = toScreen(cam, colCenter(k + 1), -PH / 2 - 26, c.x, c.y);
         return <rect key={k} x={p.x - 9} y={p.y - 22 * easeOut(a)} width={18} height={22 * easeOut(a)} rx={6} fill={k === 18 ? K.saffron : '#E8E2D4'} opacity={a} />;
       })}
-      {/* the translated fragment */}
-      {card > 0 && (
-        <g opacity={card} transform={`translate(0 ${(1 - card) * -20})`}>
-          <rect x={360} y={44} width={1200} height={128} rx={22} fill="rgba(255,255,255,0.96)" stroke={K.saffron} strokeWidth={4} />
-          <text x={960} y={112} textAnchor="middle" fontFamily={FONT_HEAD} fontWeight={600} fontSize={46} fill={K.ink}>
-            “possessing the same practical wisdom as they do”
-          </text>
-          <text x={960} y={152} textAnchor="middle" fontFamily={FONT_BODY} fontWeight={700} fontSize={22} fill={K.inkSoft}>
-            PHerc. 1667, column 19 (translation)
-          </text>
-        </g>
-      )}
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" opacity={1 - card} />
+      {/* the translated fragment is in the captions; its source is in the closing credit (FilmV3) */}
     </g>
   );
 };

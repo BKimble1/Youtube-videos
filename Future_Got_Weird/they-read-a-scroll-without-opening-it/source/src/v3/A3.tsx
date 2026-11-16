@@ -3,7 +3,7 @@
 // then travels into the end face; the outer layers dissolve, the traced stretch holding column 19 lifts out and opens
 // with its real Greek. Then everything reverses and the scan line sweeps back to the physical lump on its cradle.
 import React from 'react';
-import {Chip, K} from '../art/kit';
+import {Note, K} from '../art/kit';
 import {Cradle, ROLL_GEO, Roll1667} from '../art/Roll';
 import {PageFace, World} from '../art/Sheet';
 import {FPS} from '../lib/core';
@@ -203,7 +203,7 @@ export const A3: React.FC<{f: number}> = ({f}) => {
       <PhysicalRoll t={t} f={f} pose={pose} macro={macro} />
       {t < T_BREAK + 1.2 && <Dust x={tipLocal.x - 90} y={tipLocal.y + 10} k={(t - T_BREAK) / 1.0} n={26} seed={3} spread={1.3} />}
       {t < T_BREAK + 1 && <Spatula tip={tipLocal} back={toolIn + toolBack} o={1} />}
-      {t > T_BACK0 && <Chip x={pose.x} y={pose.y + 150 * pose.s + 10} text="PHerc. 1667" size={30} anchor="middle" dot={K.saffron} opacity={segK(t, T_BACKS1 - 0.1, T_BACKS1 + 0.3)} />}
+      {t > T_BACK0 && <Note x={pose.x} y={pose.y + 150 * pose.s + 20} text="PHerc. 1667" size={26} opacity={segK(t, T_BACKS1 - 0.1, T_BACKS1 + 0.3)} />}
     </g>
   );
   const digital = (

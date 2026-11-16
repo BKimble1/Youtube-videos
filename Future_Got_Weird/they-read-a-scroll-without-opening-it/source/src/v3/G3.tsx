@@ -5,7 +5,7 @@
 // abstract ink strokes, identical in both panels, so the alignment itself carries the proof. No rings or ticks.
 import React from 'react';
 import {segK} from './kit3';
-import {Chip, FONT_BODY, FONT_GREEK, K} from '../art/kit';
+import {Note, FONT_BODY, FONT_GREEK, K} from '../art/kit';
 import {Cradle, RollParis4} from '../art/Roll';
 import {FPS} from '../lib/core';
 import {clamp, easeInOut, easeOut, hash, lerp, noise1} from '../lib/math';
@@ -138,7 +138,7 @@ export const G3: React.FC<{f: number}> = ({f}) => {
       <rect x={0} y={roll.y + 100 * roll.s} width={1920} height={1080} fill="#DCE6E4" opacity={1 - corner} />
       <Cradle x={roll.x} y={roll.y + 96 * roll.s} s={roll.s} w={520} />
       <RollParis4 x={roll.x} y={roll.y} s={roll.s} />
-      <Chip x={lerp(roll.x, roll.x + 170, corner)} y={lerp(roll.y + 190 * roll.s, roll.y + 6, corner)} text="PHerc. Paris 4" size={lerp(32, 26, corner)} anchor={corner > 0.5 ? 'start' : 'middle'} dot={K.teal} />
+      <Note x={lerp(roll.x, roll.x + 150, corner)} y={lerp(roll.y + 200 * roll.s, roll.y + 10, corner)} text="PHerc. Paris 4" size={lerp(28, 24, corner)} anchor={corner > 0.5 ? 'start' : 'middle'} />
       {aOn > 0 && <PanelA x={A0.x} y={A0.y + (1 - aOn) * 40} o={aOn} rev={rev} />}
       {bOn > 0 && <PanelB x={bx} y={by + (1 - bOn) * 40} o={bOn * (line > 0 ? lerp(1, 0.85, line) : 1)} flatK={flatK} ov={line} />}
       {/* the strokes land on the strokes: a brief brightening when they register */}
@@ -159,7 +159,6 @@ export const G3: React.FC<{f: number}> = ({f}) => {
       )}
       </g>
       </g>
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" />
     </g>
   );
 };

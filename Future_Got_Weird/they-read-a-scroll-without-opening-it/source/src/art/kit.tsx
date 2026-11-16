@@ -70,6 +70,24 @@ export const Chip: React.FC<{x: number; y: number; text: string; color?: string;
   );
 };
 
+/** plain, unboxed identification text (no capsule): a soft halo keeps it legible on light and dark grounds */
+export const Note: React.FC<{x: number; y: number; text: string; size?: number; anchor?: 'start' | 'middle' | 'end'; opacity?: number; color?: string; halo?: string; weight?: number}> = ({
+  x,
+  y,
+  text,
+  size = 24,
+  anchor = 'middle',
+  opacity = 1,
+  color = K.inkSoft,
+  halo = 'rgba(255,255,255,0.55)',
+  weight = 600,
+}) =>
+  opacity > 0 ? (
+    <text x={x} y={y} textAnchor={anchor} fontFamily={FONT_BODY} fontWeight={weight} fontSize={size} fill={color} stroke={halo} strokeWidth={size * 0.18} strokeLinejoin="round" paintOrder="stroke" opacity={opacity} letterSpacing={size * 0.02}>
+      {text}
+    </text>
+  ) : null;
+
 /** burned-in captions for the review cut (same line breaks as the SRT: two lines max, 42 characters) */
 export const Captions: React.FC<{f: number}> = ({f}) => {
   const t = f / FPS;
