@@ -117,7 +117,7 @@ export const honest5 = (t: number): HState => {
   // confident, furious, standing and straining; frozen when he loses; then gone (out of frame) before the loop shot
   const inX = lerp(-420, H.x, bo(t, T.seriously - 0.25, T.seriously + 0.15, 1.1));
   const closer = on(t, T.controller - 0.35, T.so + 0.1, 0.3); // the peering lean and face
-  const closerPos = ss(t, T.controller - 0.35, T.controller - 0.05); // (V4) he stays where he rolled in (no beanbag slide back)
+  const closerPos = ss(t, T.see - 0.3, T.see + 0.2); // (V5) the reposition finishes off screen (during the game shot), before the cut to the wide
   const exit = ss(t, T.mouth4 + 0.3, LOOP_CUT - 0.2);
   const x = inX + 150 * closerPos - 900 * exit;
   if (t < T.seriously - 0.3 || x < -650) return null;

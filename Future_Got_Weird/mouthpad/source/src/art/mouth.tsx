@@ -96,7 +96,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
   };
   if (!sc && o < 0.035) return closedLine(1);
   if (sc && o <= 0.004) return closedLine(1);
-  const openO = sc ? clamp((o - 0.004) / 0.022) : 1; // (V4) the slit, by now a thin line, hands over to the closed line in the same place
+  const openO = sc ? clamp((o - 0.012) / 0.02) : 1; // (V4) the slit, by now a thin line, hands over to the closed line in the same place
   const lineO = sc ? 1 - clamp((o - 0.01) / 0.022) : 0;
   const {w, h, top} = opening(m);
   const bot = top + h;
