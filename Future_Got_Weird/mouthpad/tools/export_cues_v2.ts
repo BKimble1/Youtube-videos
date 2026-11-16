@@ -4,7 +4,7 @@ import {T} from '../source/src/story';
 import {FIRES2, FIRE2, FLIGHT, ENEMIES2, REX_FIRES2, ZIPX2, game2} from '../source/src/v2/play2';
 import {SHOTS2, CUTS} from '../source/src/v2/film2';
 import {C2_START} from '../source/src/v2/device2';
-import {ASSIST_START} from '../source/src/v2/assist2';
+import {ASSIST_START, G_CUTS} from '../source/src/v2/assist2';
 import {DUR} from '../source/src/lib';
 import * as fs from 'fs';
 const strafes: {t: number; dur: number; dir: number}[] = [];
@@ -32,6 +32,7 @@ const out = {
     paintOff: CUTS.I6d, drop: FIRE2.ko + 0.6, honestOut: 31.1, loopPush: 31.42,
   },
   cuts: SHOTS2.map((s) => ({name: s.name, t: s.a})),
+  internalCuts: [...G_CUTS.slice(1), CUTS.H3, CUTS.H4b], // cuts inside a shot: the montage's four, the lips match cut, the magnifier
 };
 fs.writeFileSync(process.argv[2] ?? 'audio/cues_v2.json', JSON.stringify(out, null, 1));
 console.log('cues v2:', out.fires.length, 'fires,', strafes.length, 'strafes,', locks.length, 'locks,', out.cuts.length, 'shots');

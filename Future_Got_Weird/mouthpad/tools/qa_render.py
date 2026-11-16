@@ -26,11 +26,25 @@ res['blackdetect'] = det('blackdetect=d=0.03:pix_th=0.06')
 res['freezedetect_1s'] = det('freezedetect=n=0.001:d=1.0')
 # motion
 W, H = 270, 480
-raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-vf', f'scale={W}:{H},format=gray', '-f', 'rawvideo', '-'], capture_output=True).stdout
-fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W).astype(np.float32)
-d = np.abs(np.diff(fr, axis=0)).mean((1, 2))
+# stream the frames (low memory): keep only the step between consecutive frames, and the first and last frame
+proc = subprocess.Popen(['ffmpeg', '-v', 'error', '-i', mp4, '-vf', f'scale={W}:{H},format=gray', '-f', 'rawvideo', '-'], stdout=subprocess.PIPE)
+steps, first, prev, nfr = [], None, None, 0
+while True:
+    buf = proc.stdout.read(W * H)
+    if len(buf) < W * H: break
+    f_ = np.frombuffer(buf, np.uint8).astype(np.float32).reshape(H, W)
+    if first is None: first = f_
+    if prev is not None: steps.append(float(np.abs(f_ - prev).mean()))
+    prev = f_; nfr += 1
+proc.wait()
+d = np.array(steps)
+class _F:  # minimal stand-in for the old frame array (length, first and last frame)
+    def __len__(self): return nfr
+    def __getitem__(self, i): return first if i == 0 else prev
+fr = _F()
+
 cues = json.load(open(os.path.join(EP, os.environ.get('QA_CUES', 'audio/cues.json'))))
-cut_frames = [round(c['t'] * 30) for c in cues['cuts'][1:]]
+cut_frames = [round(c['t'] * 30) for c in cues['cuts'][1:]] + [round(x * 30) for x in cues.get('internalCuts', [])]
 static = d < 0.25
 run, best, best_at = 0, 0, 0
 for i, s in enumerate(static):

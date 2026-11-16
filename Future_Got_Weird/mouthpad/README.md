@@ -1,5 +1,37 @@
 # Future Got Weird: MouthPad (playing video games with your tongue)
 
+## V2 (current review render)
+
+Not published, and not watched or heard in real time.
+
+**Review file:** `exports/FGW_MOUTHPAD_V2_REVIEW_1080x1920.mp4`. The MP4 is Git-ignored; checksummed parts are in `backup/`.
+
+| Property | Value |
+|---|---|
+| Runtime | 31.90 s (957 frames at 30 fps) |
+| Verified (ffprobe) | H.264 High, 1080 × 1920, SAR 1:1, 9:16, 30 fps; AAC 48 kHz stereo |
+| Loudness | −14.0 LUFS integrated, −2.2 dBTP |
+| Narration | Locked script, unchanged. Re-voiced (Test Voice, `eleven_v4`) for stronger AIM / CLICK / SHUT; gaps tightened to 199.9 wpm |
+| Ending | Pushes back into the screen: the last frame is frame 0 |
+
+| Item | File |
+|---|---|
+| Report: changes from V1, inspected continuity, QA, weaknesses | `production/V2_REPORT.md` |
+| Source | `source/src/v2/` (composition `MouthPadV2`) |
+| Narration master / word times / provenance | `audio/narration/FGW_MouthPad_narration_V2.wav`, `audio/narration/v2_words.json`, `audio/narration/voice_provenance_v2.json` |
+| Mix and measurements | `audio/mix/FGW_MouthPad_MIX_V2.wav`, `audio/mix/mix_measure_mix_v2.json`, `audio/sfx_log_mix_v2.json` |
+| QA | `qa/v2/` |
+
+Rebuild V2:
+
+    python3 tools/make_narration_v2.py
+    (cd source && ./node_modules/.bin/esbuild ../tools/export_cues_v2.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --jsx=automatic --external:remotion --outfile=/tmp/ec2.cjs) && NODE_PATH=source/node_modules node /tmp/ec2.cjs audio/cues_v2.json
+    python3 tools/make_audio_v2.py mix_v2
+    COMP=MouthPadV2 tools/render.sh mix_v2 exports/FGW_MOUTHPAD_V2_REVIEW_1080x1920.mp4
+    QA_CUES=audio/cues_v2.json QA_WORDS=audio/narration/v2_words.json python3 tools/qa_render.py exports/FGW_MOUTHPAD_V2_REVIEW_1080x1920.mp4 v2
+
+V1's source is as committed at a210a6c. V2 changed shared files (timeline.json, the jaw model, the mouth and the room), so the V1 composition no longer renders identically from the current tree.
+
 ## V1 (first complete review render)
 
 Not published, and not watched or heard in real time.

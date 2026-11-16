@@ -90,7 +90,7 @@ export const honest2 = (t: number): HState => {
     pose = mixPose(pose, mag, closer);
   }
   const skeptic = on(t, T.seriously - 0.1, T.watch + 0.2, 0.12);
-  const jaw = on(t, FIRE2.watchB + 0.05, T.its + 0.1, 0.06);
+  const jaw = on(t, FIRE2.watchB + 0.05, T.its + 0.45, 0.06);
   const peer = closer;
   pose = {
     ...pose,

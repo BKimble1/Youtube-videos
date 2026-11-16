@@ -82,7 +82,7 @@
   "A5": 2.675,
   "B2": 4.42,
   "B3": 5.2,
-  "C1": 5.390000000000001,
+  "C1": 5.49,
   "C2": 5.78,
   "D1": 9.97,
   "E1": 11.59,
@@ -291,7 +291,7 @@
   },
   {
    "name": "C1 into the mouth",
-   "t": 5.390000000000001
+   "t": 5.49
   },
   {
    "name": "C2-C5 device: lift out, turn, sensor, fly into the cut-away",
@@ -365,5 +365,13 @@
    "name": "I6e/I7 winner, then back into the screen (loop)",
    "t": 30.950000000000003
   }
+ ],
+ "internalCuts": [
+  16.765,
+  17.165,
+  18.395,
+  19.245,
+  22.215,
+  23.93
  ]
 }

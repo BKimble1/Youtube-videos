@@ -24,7 +24,7 @@ const MED: Cam = {x: 560, y: 770, z: 1.18};
 const ECU_A: Cam = {x: gMouth.x, y: gMouth.y + 6, z: 12.5};
 
 export const CUTS = {
-  A4: T.can + 0.3, A5: T.with1, B2: T.watch - 0.07, B3: T.this2 + 0.44, C1: T.its + 0.16, C2: C2_START, D1: T.mouth2 + 0.17,
+  A4: T.can + 0.3, A5: T.with1, B2: T.watch - 0.07, B3: T.this2 + 0.44, C1: T.its + 0.26, C2: C2_START, D1: T.mouth2 + 0.17,
   E1: T.moves + 0.03, F1: T.aim + 0.62, F2: T.click + 0.03, G: ASSIST_START, H1: ASSIST_END, H3: T.mouth3 + 0.04, H4b: T.see + 0.2,
   I1: T.controller + 0.5, I2: T.losing, I3: T.game, I4: T.whos, I5: T.just, I5b: T.sitting2 + 0.2, I6a: T.there + 0.2, I6b: T.mouth4, I6c: T.shut,
   I6d: T.shut + 0.54, I6e: T.shut + 1.17,
@@ -108,7 +108,7 @@ const ShotHonestCU: React.FC<{t: number; frame: number; z: number; dy?: number; 
 };
 
 // ---------------------------------------------------------------- C1: in to the mouth for the lift
-const C1_CAM: CamKey[] = [{t: CUTS.C1, c: {x: gHead.x, y: gHead.y + 30, z: 3.2}}, {t: CUTS.C2, c: ECU2, ease: (t, a, b) => ss(t, a, b)}];
+const C1_CAM: CamKey[] = [{t: CUTS.C1, c: {x: gMouth.x, y: gMouth.y - 10, z: 5.2}}, {t: CUTS.C2, c: ECU2, ease: (t, a, b) => ss(t, a, b)}];
 const ShotC1: React.FC<{t: number; frame: number}> = ({t, frame}) => (
   <RoomScene t={t} frame={frame} cam={camAt(t, C1_CAM)} g={guesser2(t)} h={honest2(t)} game={game2(t)} id="c1" alwaysMouth />
 );
@@ -127,7 +127,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
   const view = {yaw: 0, pitch: -90, persp: 600};
   const pr = projector(view);
   const px = 11.5;
-  const jy = lerp(-600, 540, inA), gy = lerp(2500, 1060, inA);
+  const jy = lerp(140, 540, inA), gy = lerp(1500, 1060, inA); // both panels already in frame on the first frame
   return (
     <g>
       <rect x={0} y={0} width={1080} height={1920} fill="#1B1D33" />

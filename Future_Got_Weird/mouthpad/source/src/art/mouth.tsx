@@ -38,7 +38,7 @@ export const opening = (m: MouthState) => {
   const top = MOUTH_TOP + 4 - 3 * o;
   return {w, h, s, top, bot: top + h};
 };
-const openingPath = (m: MouthState) => {
+export const openingPath = (m: MouthState) => {
   const {w, h, s, top} = opening(m);
   const L = {x: -w, y: top + h * 0.3 - s}, R = {x: w, y: top + h * 0.3 - s};
   return `M ${L.x} ${L.y} C ${-w * 0.7} ${top - 1} ${w * 0.7} ${top - 1} ${R.x} ${R.y} C ${w * 0.95} ${top + h * 0.95} ${w * 0.45} ${top + h} 0 ${top + h} C ${-w * 0.45} ${top + h} ${-w * 0.95} ${top + h * 0.95} ${L.x} ${L.y} Z`;

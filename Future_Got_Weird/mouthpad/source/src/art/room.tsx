@@ -5,7 +5,9 @@ import React from 'react';
 import {CrewChar, CAST, Pose, reach, IDLE} from '../crew';
 import {GameScreen, GameState} from './game';
 import {OpenMouth, MouthState} from './mouth';
-import {clamp, lerp, hash} from '../lib';
+import {clamp, lerp, hash, DUR} from '../lib';
+/** decorative cycles complete a whole number of turns over the film, so the last frame flows into the first */
+const cyc = (t: number, n: number) => (t / DUR) * n;
 
 export type Cam = {x: number; y: number; z: number};
 export const camT = (c: Cam) => `translate(540 960) scale(${c.z}) translate(${-c.x} ${-c.y})`;
@@ -43,8 +45,8 @@ const Wall: React.FC<{id: string; t: number}> = ({id, t}) => (
     ))}
     <ellipse cx={SCREEN.x + SCREEN.w / 2} cy={SCREEN.y + SCREEN.h / 2} rx={620} ry={470} fill={`url(#${id}-glow)`} />
     {/* LED strip along the wall behind the desk: slow colour drift */}
-    <rect x={-1400} y={DESK_Y - 150} width={3900} height={10} rx={5} fill={`hsl(${(300 + t * 25) % 360} 90% 72%)`} opacity={0.85} />
-    <rect x={-1400} y={DESK_Y - 175} width={3900} height={60} fill={`hsl(${(300 + t * 25) % 360} 90% 72%)`} opacity={0.12} />
+    <rect x={-1400} y={DESK_Y - 150} width={3900} height={10} rx={5} fill={`hsl(${(300 + 360 * cyc(t, 2)) % 360} 90% 72%)`} opacity={0.85} />
+    <rect x={-1400} y={DESK_Y - 175} width={3900} height={60} fill={`hsl(${(300 + 360 * cyc(t, 2)) % 360} 90% 72%)`} opacity={0.12} />
     {/* shelf with a plant and a little robot figure (top right) */}
     <g transform="translate(860 250)">
       <rect x={-150} y={0} width={300} height={18} rx={6} fill="#C88B5A" stroke={INK} strokeWidth={4} />
@@ -64,7 +66,7 @@ const Wall: React.FC<{id: string; t: number}> = ({id, t}) => (
       <rect x={-120} y={-110} width={240} height={170} rx={10} fill="#2B2F5E" stroke={INK} strokeWidth={4} />
       <circle cx={0} cy={-25} r={46} fill="#FFC744" stroke={INK} strokeWidth={4} />
       <ellipse cx={0} cy={-25} rx={86} ry={18} fill="none" stroke="#EF6B55" strokeWidth={8} transform="rotate(-14 0 -25)" />
-      {[[-90, -80], [80, -88], [-70, 30], [92, 20], [30, 40]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={3 + (i % 2) * 2} fill="#FFFBF0" opacity={0.6 + 0.4 * Math.sin(t * 3 + i)} />)}
+      {[[-90, -80], [80, -88], [-70, 30], [92, 20], [30, 40]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r={3 + (i % 2) * 2} fill="#FFFBF0" opacity={0.6 + 0.4 * Math.sin(2 * Math.PI * cyc(t, 15) + i)} />)}
     </g>
   </g>
 );
@@ -113,8 +115,8 @@ const PCTower: React.FC<{t: number}> = ({t}) => (
     <rect x={18} y={18} width={194} height={384} rx={10} fill="#2E3150" stroke={INK} strokeWidth={4} />
     {[0, 1, 2].map((k) => (
       <g key={k} transform={`translate(115 ${92 + k * 118})`}>
-        <circle r={46} fill="#1B1D33" stroke={`hsl(${(k * 90 + t * 90) % 360} 90% 65%)`} strokeWidth={7} />
-        <g transform={`rotate(${(t * 720 + k * 40) % 360})`}>
+        <circle r={46} fill="#1B1D33" stroke={`hsl(${(k * 90 + 360 * cyc(t, 8)) % 360} 90% 65%)`} strokeWidth={7} />
+        <g transform={`rotate(${(360 * cyc(t, 64) + k * 40) % 360})`}>
           {[0, 1, 2, 3, 4].map((b) => <path key={b} transform={`rotate(${b * 72})`} d="M 0 -6 Q 22 -30 6 -40 Q -6 -22 0 -6 Z" fill="#55606E" />)}
         </g>
         <circle r={9} fill="#8D9AA8" stroke={INK} strokeWidth={3} />
@@ -128,7 +130,7 @@ const Gear: React.FC<{t: number}> = ({t}) => (
   <g>
     <path d={`M ${G.x - 250} ${DESK_Y + 40} L ${G.x - 230} ${DESK_Y + 8} L ${G.x - 20} ${DESK_Y + 8} L ${G.x - 4} ${DESK_Y + 40} Z`} fill="#2B2B33" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
     {Array.from({length: 3}).map((_, r) => Array.from({length: 11}).map((_, c) => (
-      <rect key={`${r}-${c}`} x={G.x - 236 + c * 19 + r * 3} y={DESK_Y + 12 + r * 9} width={14} height={6} rx={2} fill={`hsl(${(c * 30 + t * 60) % 360} 85% 65%)`} opacity={0.75} />
+      <rect key={`${r}-${c}`} x={G.x - 236 + c * 19 + r * 3} y={DESK_Y + 12 + r * 9} width={14} height={6} rx={2} fill={`hsl(${(c * 30 + 360 * cyc(t, 5)) % 360} 85% 65%)`} opacity={0.75} />
     )))}
     <g transform={`translate(${G.x + 120} ${DESK_Y + 26})`}>
       <path d="M -62 -10 Q -60 -24 -30 -24 L 30 -24 Q 60 -24 62 -10 L 70 16 Q 72 30 56 30 Q 44 30 36 16 L -36 16 Q -44 30 -56 30 Q -72 30 -70 16 Z" fill="#E9EEF2" stroke={INK} strokeWidth={5} strokeLinejoin="round" />

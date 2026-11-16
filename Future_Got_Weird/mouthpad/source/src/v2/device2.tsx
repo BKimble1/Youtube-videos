@@ -4,7 +4,7 @@
 // into place as a cut-away of his head assembles around it: the tongue rises to the roof of the mouth and touches it.
 import React from 'react';
 import {Jaw, View, projector, padPoint} from '../art/jaw3d';
-import {jawPlacement, opening} from '../art/mouth';
+import {jawPlacement, opening, openingPath} from '../art/mouth';
 import {RoomScene, G, gMouth, Cam} from '../art/room';
 import {SectionScene, SECTION_VIEW, palate} from './section2';
 import {guesser2, honest2} from './cast2';
@@ -97,7 +97,8 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
       {/* the device (drawn by the section once it has arrived) */}
       {reveal < 0.999 && (
         <g>
-          <g opacity={inLips}>
+          <defs><clipPath id="dv-lips"><path d={openingPath(M.m)} transform={`translate(540 960) scale(${ECU2.z}) translate(${-ECU2.x} ${-ECU2.y}) translate(${G.x} ${G.ground}) scale(${G.scale})`} /></clipPath></defs>
+          <g opacity={inLips} clipPath="url(#dv-lips)">
             <g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={0} /></g>
           </g>
           <g opacity={1 - inLips} >
