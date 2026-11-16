@@ -7,3 +7,4 @@ source/public/audio/*.wav
 audio/mix/stems/
 # large renders: kept as checksummed 20 MB parts in backup/ (tools/backup_parts.sh), not as single blobs
 exports/*.mp4
+exports/*.verify.json
