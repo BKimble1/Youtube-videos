@@ -154,7 +154,7 @@ export const Pad: React.FC<{x: number; y: number; r?: number; shake?: number}> =
 );
 
 export type GState = {pose: Pose; m: MouthState; life?: number; hands?: 'up' | 'behind' | 'rest'; front?: 'L' | 'R' | 'none'};
-export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number; vis?: VisShape} | null;
+export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; sweatX?: number; sweatY?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number; vis?: VisShape} | null;
 
 export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string; alwaysMouth?: boolean; front?: React.ReactNode; noPad?: boolean}> = ({t, frame, cam, g, h, game, id, alwaysMouth, front, noPad}) => {
   const ink = inkFor(G.scale, cam.z);
@@ -178,7 +178,7 @@ export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState;
           {h.pad && <Pad x={h.x + h.pad.dx} y={hy - 330 + h.pad.dy} r={h.pad.r} shake={h.pad.shake} />}
           <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h2`} ink={inkFor(H.scale, cam.z)} shadow={false} front="R" pass="frontArm" holdR={h.holdR} />
           {(h.sweat ?? 0) > 0.01 && (
-            <path d={`M ${h.x + 70} ${hHead(h.x).y - 60 + (h.sweat ?? 0) * 30} q 10 18 0 26 q -10 -8 0 -26 Z`} fill="#9EE7FF" stroke={INK} strokeWidth={4} opacity={clamp((h.sweat ?? 0) * 3) * (1 - clamp(((h.sweat ?? 0) - 0.8) * 5))} />
+            <path d={`M ${h.x + (h.sweatX ?? 70)} ${hHead(h.x).y - (h.sweatY ?? 60) + (h.sweat ?? 0) * 30} q 10 18 0 26 q -10 -8 0 -26 Z`} fill="#9EE7FF" stroke={INK} strokeWidth={4} opacity={clamp((h.sweat ?? 0) * 3) * (1 - clamp(((h.sweat ?? 0) - 0.8) * 5))} />
           )}
         </g>
       )}

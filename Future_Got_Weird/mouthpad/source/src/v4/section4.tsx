@@ -35,9 +35,10 @@ const SHELL_D = smoothPath([{x: 23.2, y: -12}, {x: 23.4, y: -3}, {x: 21.6, y: 1.
 
 /** cx, cy: screen position of the model origin; px: screen px per mm; reveal: the head and anatomy (0..1); near:
  *  opacity of the device's near half; ring: seconds since the contact flash (or < 0) */
-export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: number; cz: number; press: number; glow: number; ring: number; reveal: number; near: number; bg?: boolean; device?: boolean}> =
+export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: number; cz: number; press: number; glow: number; ring: number; reveal: number; near: number; bg?: boolean; device?: boolean | number}> =
   ({cx, cy, px, lift, cz, press, glow, ring, reveal, near, bg = true, device = true}) => {
   const tg = tongueShape(lift, cz, press);
+  const dO = typeof device === 'number' ? device : device ? 1 : 0; // (V4) the device fades in over the hand-off
   const contact = {x: cz, y: palate(cz) + 0.5};
   const w = (n: number) => ({strokeWidth: n, vectorEffect: 'non-scaling-stroke' as const});
   const padZ0 = PAD.cz - PAD.h / 2, padZ1 = PAD.cz + PAD.h / 2;
@@ -91,7 +92,7 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
         </g>
         {/* the MouthPad and the upper teeth: the 3D model from the side, its near half cut away */}
         <g clipPath={reveal > 0.98 ? 'url(#s2-cut)' : undefined}>
-          <Jaw view={SECTION_VIEW} px={px} id="s2-jaw" show={device ? {palate: 0, pad: 0, traces: 0.5 * near, teeth: 0, shell: near} : {palate: 0, pad: 0, traces: 0, shell: 0, plate: 0, pods: 0, teeth: 0}} near={near} />
+          <Jaw view={SECTION_VIEW} px={px} id="s2-jaw" show={{palate: 0, pad: 0, teeth: 0, traces: 0.5 * near * dO, shell: near * dO, plate: dO, pods: dO}} near={near} />
         </g>
         <g opacity={reveal} clipPath="url(#s2-cut)">
           <path d={smoothPath(tg, true, 0.42)} fill="#EE8E98" stroke={INK} {...w(2.4)} />
@@ -102,9 +103,11 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
           <path d="M 21 1.5 Q 30 1.6 30 6.5 Q 28.6 11.5 19.4 12 Z" fill="#E08E86" stroke={INK} {...w(1.8)} />
         </g>
         {/* the gold pad on the roof of the mouth, cut through its middle */}
-        <path d={smoothPath(padPts, false)} fill="none" stroke={INK} strokeWidth={2.1} strokeLinecap="round" />
-        <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold1} strokeWidth={1.4} strokeLinecap="round" />
-        <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold0} strokeWidth={0.5} strokeLinecap="round" />
+        <g opacity={reveal}>
+          <path d={smoothPath(padPts, false)} fill="none" stroke={INK} strokeWidth={2.1} strokeLinecap="round" />
+          <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold1} strokeWidth={1.4} strokeLinecap="round" />
+          <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold0} strokeWidth={0.5} strokeLinecap="round" />
+        </g>
         {glow > 0.01 && lift > 0.8 && <circle cx={contact.x} cy={contact.y} r={7 + 4 * press} fill="url(#s2-glow)" opacity={glow} />}
         {ringO > 0.01 && <circle cx={contact.x} cy={contact.y} r={2 + ring * 30} fill="none" stroke="#FFFFFF" {...w(5)} opacity={ringO} />}
         <g opacity={reveal}>

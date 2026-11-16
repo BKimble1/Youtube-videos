@@ -16,6 +16,7 @@ const CAPTIONS = (CAPS as {captions: Cap[]}).captions;
 
 const LOW = 1500; // lower third: the game's open ground, chin or shirt in close-ups, desk or lap in the room
 const GAP = 935; // the dark band between the mouth panel (ends 880) and the game panel (starts 990) in the split-screen demo
+const TOP = 330; // (V4) the versus round: above the action (hands, controllers, Zip and the falling controller are all low or central)
 const CHEST = 1250; // the ending: on the chest, clear of the faces, the eyes and the falling controller
 /** [first words, centre y, per-shot placements from a cut on: [cut time (s), y]] */
 const PLACE: () => [string, number, [number, number][]?][] = () => [
@@ -23,16 +24,16 @@ const PLACE: () => [string, number, [number, number][]?][] = () => [
   ["It's called", LOW], ['And that', LOW], ["It's a", LOW], ['sitting on', LOW],
   ['Move your', GAP], ['your character', GAP, [[CUTS.E1, LOW]]],
   ['Tilt', LOW], ['you AIM', LOW], ['Press', GAP], ['you CLICK', GAP], // (V4) the press demo is a split too
-  ['And people', LOW], ['to control', LOW], ['without', LOW], ['But here', LOW],
-  ['Close', LOW], ['and nobody', LOW], ['the controller', LOW],
-  ['So imagine', LOW], ['to someone', LOW], ['just sitting', LOW],
+  ['And people', TOP], ['to control', TOP], ['without', LOW], ['But here', LOW], // (V4) the montage: above the monitor, clear of the phone
+  ['Close', LOW], ['and nobody', LOW], ['the controller', TOP],
+  ['So imagine', TOP], ['to someone', TOP], ['just sitting', TOP],
   ['With their', CHEST],
 ];
 
 let cache: {cuts: number[]; spans: {i: number; a: number; b: number; y: number; per: [number, number][]}[]} | null = null;
 const build = () => {
   if (cache) return cache;
-  const cuts = [...SHOTS2.map((s) => s.a), G_CUTS[1], G_CUTS[2]].filter((s) => s > 0).map((s) => Math.round(s * FPS)).sort((p, q) => p - q);
+  const cuts = [...SHOTS2.map((s) => s.a), G_CUTS[1], G_CUTS[2]].filter((s) => s > 0).map((s) => Math.ceil(s * FPS - 1e-9)) /* (V4) a shot's first frame is the first frame at or after its start */.sort((p, q) => p - q);
   const snap = (s: number) => {
     const f = s * FPS;
     const c = cuts.find((k) => Math.abs(k - f) <= 2);

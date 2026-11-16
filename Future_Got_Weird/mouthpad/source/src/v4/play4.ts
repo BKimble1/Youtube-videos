@@ -28,7 +28,7 @@ export const ENEMIES2: EDef[] = [
   {id: 3, x: 1.8, z: 10.5, t0: 2.0, hit: FIRE2.tongue + FLIGHT},
   {id: 4, x: -2.2, z: 10, t0: T.seriously, hit: FIRE2.watchA + FLIGHT},
   {id: 5, x: 1.2, z: 11, t0: T.seriously + 0.1, hit: FIRE2.watchB + FLIGHT},
-  {id: 6, x: 0.2, z: 10.5, t0: T.tilt - 0.7, hit: FIRE2.click + FLIGHT, big: true},
+  {id: 6, x: 5.0, z: 10.5, t0: T.tilt - 0.7, hit: FIRE2.click + FLIGHT, big: true}, // (V4) where the right head-tilt lands, so the crosshair arrives on it
   {id: 7, x: -1.4, z: 10, t0: T.close, hit: FIRE2.still + FLIGHT},
   // the next round (seen at the very end and at the start of the film): goo-bot 1 again, in flight from t < 0
 ];
@@ -65,7 +65,7 @@ const zipInt = (t: number) => {
 };
 const ZEND = zipInt(MOVE_B);
 /** the head's tilt (degrees) in the aim demo: the rig's head and the game's aim both read this */
-export const headTilt = (t: number) => keys(t, [[T.tilt - 0.08, 0], [T.head + 0.04, -16], [T.you3 - 0.02, -16], [T.you3 + 0.2, 13], [T.aim + 0.45, 11], [T.press - 0.05, 0]]);
+export const headTilt = (t: number) => keys(t, [[T.tilt - 0.08, 0], [T.head + 0.04, -16], [T.you3 - 0.02, -16], [T.you3 + 0.2, 10.5], [T.aim + 0.45, 9.5], [T.press - 0.05, 0]]);
 
 // Zip's lateral position: dodges and strafes
 export const ZIPX2: [number, number][] = [
@@ -79,8 +79,13 @@ export const ZIPX2: [number, number][] = [
 ];
 const ZIPX_PRE = ZIPX2.filter(([k]) => k <= MOVE_A);
 const ZIPX_POST: [number, number][] = [[MOVE_B, ZEND], ...ZIPX2.filter(([k]) => k > MOVE_B)];
+/** the muzzle tip in game px for Zip at zipScreen with the blaster rotated to aim (degrees) */
+const muzzleAt = (zs: number, aim: number) => { const r = (aim * Math.PI) / 180; return {x: 320 + zs + 44 + Math.cos(r) * 66 + Math.sin(r) * 3, y: 352 - 64 + Math.sin(r) * 66 - Math.cos(r) * 3}; };
 const zipX = (t: number) => (t <= MOVE_A ? keys(t, ZIPX_PRE) : t <= MOVE_B ? zipInt(t) : keys(t, ZIPX_POST));
-const vel = (t: number) => (zipX(t + 0.03) - zipX(t - 0.03)) / 0.06;
+const vel = (t: number) => (zipX(t + 0.08) - zipX(t - 0.08)) / 0.16; // (V4) smoothed: lean and stride never jump
+/** (V4) the game camera follows Zip with a little lag (a moving average of his path), so his screen position is
+ *  continuous: he swings off-centre on a fast side-step and the camera catches up — never a one-frame jump */
+const camFollow = (t: number) => { let s = 0; for (let k = -6; k <= 6; k++) s += zipX(t + k * 0.025) * (7 - Math.abs(k)); return s / 49; };
 // forward run: W in the split screen, and a steady stroll
 const fwdAt = (t: number) => 0.9 * t + 0.5 * ss(t, T.so, 31);
 // head aim: the game camera yaws a little with the head, the crosshair follows the head
@@ -120,7 +125,7 @@ const freeCross = (t: number): P => ({x: 320 + Math.sin(t * 1.3) * 22 + 130 * he
 const SPLIT_HOLD: [number, number] = [T.mouth2 + 0.0, MOVE_B + 0.05];
 const raw = (t: number): GameState => {
   const hold = ss(t, SPLIT_HOLD[0], SPLIT_HOLD[0] + 0.2) * (1 - ss(t, SPLIT_HOLD[1], SPLIT_HOLD[1] + 0.35));
-  const camFree = zipX(t) + 0.9 * headAim(t);
+  const camFree = camFollow(t) + 0.9 * headAim(t);
   const camX = lerp(camFree, 0.6, hold);
   const v = vel(t);
   const enemies = t >= VS ? [] : ENEMIES2.map((e) => enemyAt(e, t)).filter((e) => e.alive > 0);
@@ -134,7 +139,10 @@ const raw = (t: number): GameState => {
       lock = Math.max(lock, ss(t, a + 0.08, a + 0.2) * (1 - ss(t, b - 0.02, b + 0.05)));
     }
   }
-  const zipScreen = clamp(v * 26, -95, 95) * (1 - hold) + (zipX(t) - camX) * 105 * hold;
+  const zipScreen = clamp((zipX(t) - lerp(camFollow(t), 0.6, hold)) * 105, -150, 150);
+  // (V4) the blaster arm points at the crosshair, so every shot leaves the muzzle toward its target
+  const piv = {x: 320 + zipScreen + 44, y: 352 - 64};
+  const aimDeg = clamp((Math.atan2(cross.y - piv.y, cross.x - piv.x) * 180) / Math.PI, -55, 12); // never swings across his own head
   const shots: Shot[] = [];
   const splats: GameState['splats'] = [];
   let recoil = 0, muzzle = 0, hitMark = 0, shake = 0;
@@ -143,7 +151,7 @@ const raw = (t: number): GameState => {
     muzzle = Math.max(muzzle, t >= f.t && t < f.t + 0.08 ? 1 - (t - f.t) / 0.08 : 0);
     const u = (t - f.t) / FLIGHT;
     const to = targetScreen(f.target, f.t + FLIGHT, zipX(f.t + FLIGHT) + 0.9 * headAim(f.t + FLIGHT));
-    if (u >= 0 && u < 1) shots.push({from: {x: 320 + zipScreen + 110, y: 285}, to, u});
+    if (u >= 0 && u < 1) shots.push({from: muzzleAt(zipScreen, aimDeg), to, u});
     const age = t - (f.t + FLIGHT);
     if (age >= 0 && age < 0.9) {
       const now = targetScreen(f.target, f.t + FLIGHT, camX);
@@ -176,7 +184,7 @@ const raw = (t: number): GameState => {
     hop: (() => { const u = (t - HOP_AT) / 0.4; return u > 0 && u < 2 ? 52 * Math.abs(Math.sin(Math.min(u, 2) * Math.PI)) * (u < 1 ? 1 : 0.45) : 0; })(),
     confetti: t >= CONFETTI_AT ? t - CONFETTI_AT : -1,
     flinch: clamp((t - (FIRE2.tag + FLIGHT)) / 0.3) * (t < FIRE2.tag + FLIGHT + 0.3 ? 1 : 0),
-    winX: 320 + clamp(v * 26, -95, 95),
+    winX: 320 + zipScreen, aim: aimDeg,
   };
 };
 

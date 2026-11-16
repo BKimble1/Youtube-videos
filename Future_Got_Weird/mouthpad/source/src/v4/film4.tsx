@@ -26,7 +26,7 @@ const MED: Cam = {x: 560, y: 770, z: 1.18};
 const ECU_A: Cam = {x: gMouth.x, y: gMouth.y + 6, z: 12.5};
 
 export const CUTS = {
-  A4: T.can + 0.08, A5: T.with1, B2: T.watch - 0.07, B3: T.this2 + 0.44, C1: T.its + 0.26, C2: C2_START, D1: T.mouth2 + 0.17,
+  A4: T.can + 0.04, A5: T.with1, B2: T.watch - 0.07, B3: T.this2 + 0.44, C1: T.its + 0.26, C2: C2_START, D1: T.mouth2 + 0.17,
   E1: MOVE_B, F1: T.aim + 0.62, G: ASSIST_START, H1: ASSIST_END, H3: T.mouth3 + 0.16, H4: T.nobody + 0.5,
   I1: T.see + 0.27, I2: T.losing, I3: T.video2, I4: T.game + 0.0, I5: T.someone - 0.05, I6: T.whos, I7: T.literally, C: T.literally + 0.3,
   D: T.there + 0.15, E: T.mouth4, L: LOOP_CUT,

@@ -1,7 +1,7 @@
 // V3 acting: the guesser (the MouthPad player) and Honest (his friend, then his opponent), as functions of film time.
 // One rig per character; every expression is a weighted blend of named states (eyes, brows, mouth shape, head), so
 // faces evolve continuously instead of switching. Honest's mouth uses the rig's continuous viseme mouth.
-import {mixPose, IDLE, Pose, VisShape} from '../crew';
+import {mixPose, IDLE, Pose, VisShape, reach} from '../crew';
 import {GState, HState, handsUp, handsBehind, honestHold, H, G} from '../art/room';
 import {MouthState} from '../art/mouth';
 import {T} from '../story';
@@ -21,8 +21,22 @@ export const guesser4 = (t: number): GState => {
   up.handR = {curl: 0.05 + 0.12 * (0.5 + 0.5 * Math.sin(t * 9 + 1.5)), spread: 1};
   // hands up for the hook; laced behind the head from the head-aim beat through the whole ending (never in front of
   // the face); up again during the loop shot (at the frame edge), matching frame 0
-  const behind = ss(t, T.moves, T.tilt - 0.05) * (1 - ss5(t, LOOP_CUT + 0.15, LOOP_CUT + 0.75));
+  // (V4) the hands go behind the head while he is off screen (the cut-away and the split screen), and come up again
+  // in the loop glide by moving the HANDS along a short outward arc with the arms solved by IK every frame (blending
+  // joint angles made the elbows hang and the hands slide past the cheeks)
+  const behind = ss(t, T.roof + 0.1, T.move - 0.1) * (1 - ss5(t, LOOP_CUT + 0.15, LOOP_CUT + 0.8));
   let pose: Pose = behind > 0 ? mixPose(up, handsBehind(), behind) : up;
+  if (behind > 0 && behind < 1) {
+    const ch = {x: G.x, y: G.ground, scale: G.scale};
+    const arc = Math.sin(Math.PI * behind);
+    const tgt = (side: -1 | 1) => ({
+      x: G.x + side * lerp(side < 0 ? 168 : 170, 44, behind) + side * 48 * arc,
+      y: G.ground - lerp(side < 0 ? 690 : 695, 650, behind) - 14 * arc,
+    });
+    const L = tgt(-1), R = tgt(1);
+    pose = {...pose, armL: reach(ch, -1, L.x, L.y, 1), armR: reach(ch, 1, R.x, R.y, 1),
+      handL: {curl: lerp(up.handL.curl, 0.7, behind), spread: lerp(1, 0.3, behind)}, handR: {curl: lerp(up.handR.curl, 0.7, behind), spread: lerp(1, 0.3, behind)}};
+  }
   // where he looks: the game (left), Honest (down-left), us; the bored half-lidded stare in the versus round
   const atUs = on(t, T.its - 0.25, T.mouthpad, 0.18) + on(t, T.mouth4 - 0.05, 30.5, 0.2);
   const atHonest = on(t, T.seriously + 0.1, T.watch, 0.15);
@@ -113,7 +127,10 @@ export const honest4 = (t: number): HState => {
   const dx = jit(1, 9 * intens), dy = jit(2, 8 * intens);
   // the controller: held at his lap while watching, up for the round, slips slowly out of his hands after the loss
   const padUp = ss(t, T.so - 0.3, T.imagine);
-  const drop = ss5(t, KO_HIT + 0.35, KO_HIT + 1.15);
+  // (V4) the controller slips (slow), then falls with gravity and lands on the floor before the cut
+  const slip = ss(t, KO_HIT + 0.35, KO_HIT + 0.7);
+  const fall = clamp((t - (KO_HIT + 0.6)) / 0.38);
+  const drop = 0.18 * slip + 0.82 * fall * fall;
   const ch = {x, y: H.ground - rise, scale: H.scale};
   let pose: Pose = honestHold(x, dx * (1 - frozen), dy * (1 - frozen));
   void ch;
@@ -141,8 +158,8 @@ export const honest4 = (t: number): HState => {
   };
   return {
     x, pose, rise, vis: face.v,
-    pad: {dx: dx * (1 - frozen), dy: dy * (1 - frozen) + (1 - padUp) * 60 + drop * 210, r: jit(4, 7 * intens) + drop * 55, shake: intens > 0.5 ? (Math.floor(t * 24) % 2) : 0},
-    sweat: clamp((t - (T.losing + 0.2)) / 1.0) * (1 - frozen),
+    pad: {dx: dx * (1 - frozen) + 30 * drop, dy: dy * (1 - frozen) + (1 - padUp) * 60 + drop * 300, r: jit(4, 7 * intens) + drop * 70, shake: intens > 0.5 ? (Math.floor(t * 24) % 2) : 0},
+    sweat: clamp((t - (T.losing + 0.2)) / 1.0) * (1 - frozen), sweatX: 96, sweatY: 112, // (V4) at the temple, clear of the eye
   };
 };
 void IDLE; void keys;

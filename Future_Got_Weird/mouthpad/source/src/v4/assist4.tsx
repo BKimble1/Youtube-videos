@@ -16,7 +16,7 @@ const INK = '#162A32';
 const P = {x: 760, ground: 1500, scale: 1.75};
 const SCR = {x: 40, y: 470, w: 600, h: 375};
 const DESK = 1240;
-const PHONE = {x: 470, y: 1040, w: 120, h: 220}; // (V4) on a stand on her table, well clear of her resting hands
+const PHONE = {x: 400, y: 1040, w: 120, h: 220}; // (V4) on a stand on her table, well clear of her resting hands
 
 // five action-matched shots: desktop close-up, her (hands resting) with the cursor following her head, the desktop
 // again (the cursor exits right), the phone (the touch point enters from the left), then her hands beside the phone
@@ -146,7 +146,7 @@ const Phone: React.FC<{t: number}> = ({t}) => {
           </g>
         )}
       </g>
-      <circle cx={dot.x} cy={dot.y} r={9} fill="#FFFFFF" stroke={INK} strokeWidth={3} opacity={0.9 * (1 - call)} />
+      <circle cx={dot.x} cy={dot.y} r={9} fill="#FFFFFF" stroke={INK} strokeWidth={3} opacity={0.9 * (1 - call) * clamp((dot.x - 8) / 14)} />
     </g>
   );
 };

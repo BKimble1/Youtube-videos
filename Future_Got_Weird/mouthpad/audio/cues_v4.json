@@ -78,7 +78,7 @@
   "called2": 5.335
  },
  "CUTS": {
-  "A4": 1.715,
+  "A4": 1.675,
   "A5": 2.675,
   "B2": 4.42,
   "B3": 5.2,
@@ -275,7 +275,7 @@
   "win": 28.315,
   "confetti": 28.355,
   "eyesToWinner": 28.78,
-  "padThud": 29.255,
+  "padThud": 29.085,
   "smug": 30.330000000000002,
   "loopCut": 30.9,
   "gameCut": 23.15
@@ -287,10 +287,10 @@
   },
   {
    "name": "A4 game: the tap fires the shot",
-   "t": 1.715
+   "t": 1.675
   },
   {
-   "name": "A5/B1 low angle: cobwebbed gamepad, Honest leans in",
+   "name": "A5/B1 low angle: hands-free player (no controller), Honest leans in",
    "t": 2.675
   },
   {

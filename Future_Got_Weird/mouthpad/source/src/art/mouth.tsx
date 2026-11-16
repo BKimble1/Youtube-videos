@@ -63,6 +63,22 @@ export const padInHead = (m: MouthState, u: number, vv: number): P => {
   return {x: J.tx + p.x * J.k, y: J.ty + p.y * J.k};
 };
 
+/** (V4) the tongue outline in head space, exactly as OpenMouth draws it (used to keep the lifting device behind it) */
+export const tonguePath = (m: MouthState) => {
+  const {w, h, top} = opening(m);
+  const bot = top + h;
+  const lift = clamp(m.tongueLift ?? 0);
+  const press = clamp(m.press ?? 0);
+  const tipRest = {x: 0, y: bot - h * 0.42};
+  const tipPad = padInHead(m, m.u ?? 0, m.v ?? 0);
+  const tip = {x: lerp(tipRest.x, tipPad.x, lift), y: lerp(tipRest.y, tipPad.y + 1.2 - press * 1.2, lift)};
+  const tw = lerp(w * 0.62, w * 0.42, lift);
+  return smoothPath([
+    {x: -tw - 6, y: bot + 6}, {x: -tw, y: lerp(bot - h * 0.25, bot - h * 0.35, lift)}, {x: lerp(-w * 0.45, tip.x - 6.5, lift), y: lerp(tipRest.y + 2, tip.y + 5, lift)},
+    {x: tip.x, y: tip.y}, {x: lerp(w * 0.45, tip.x + 6.5, lift), y: lerp(tipRest.y + 2, tip.y + 5, lift)}, {x: tw, y: lerp(bot - h * 0.25, bot - h * 0.35, lift)}, {x: tw + 6, y: bot + 6},
+  ], false);
+};
+
 export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m, id, px}) => {
   const o = clamp(m.open);
   if (o < 0.035) {

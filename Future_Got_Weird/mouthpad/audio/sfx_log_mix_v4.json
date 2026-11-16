@@ -280,7 +280,7 @@
   "gain_db": -12
  },
  {
-  "t": 29.255,
+  "t": 29.085,
   "sfx": "controller thuds on the floor",
   "gain_db": -9
  },
@@ -485,13 +485,13 @@
   "gain_db": -11
  },
  {
-  "t": 1.615,
+  "t": 1.575,
   "sfx": "cut: A4 game: the tap fires t",
   "gain_db": -21
  },
  {
   "t": 2.575,
-  "sfx": "cut: A5/B1 low angle: cobwebb",
+  "sfx": "cut: A5/B1 low angle: hands-f",
   "gain_db": -21
  },
  {

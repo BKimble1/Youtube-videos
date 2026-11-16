@@ -7,7 +7,7 @@
  "duration_s": 31.9,
  "effects": 119,
  "voice_lufs_in_mix": -17.09,
- "sfx_lufs_in_mix": -25.85,
+ "sfx_lufs_in_mix": -25.81,
  "music_lufs_in_mix": -33.13,
  "voice_over_bed_margin_db_while_speaking": {
   "min": -2.2,

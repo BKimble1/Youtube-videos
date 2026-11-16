@@ -32,6 +32,7 @@ export type GameState = {
   shake?: P; // screen shake offset (px)
   hop?: number; // Zip's victory hop (px up)
   bigWin?: boolean; // (V4) a bigger trophy that pops up with an overshoot
+  aim?: number; // (V4) blaster arm angle (degrees, 0 = pointing right); undefined = the fixed pose
   charge?: number; // 0..1 the blaster charging before the winning shot
   confetti?: number; // seconds since the K.O. pop (< 0: none)
   flinch?: number; // 0..1 Rex flinching from a tag
@@ -230,7 +231,7 @@ const Zip: React.FC<{g: GameState}> = ({g}) => {
       <line x1={14} y1={-120} x2={24} y2={-142} stroke={INK} strokeWidth={3} />
       <circle cx={25} cy={-146} r={7} fill="#FFC744" stroke={INK} strokeWidth={2.4} />
       {/* blaster arm (right) */}
-      <g transform={`translate(44 -64) rotate(${-8 - rec * 10})`}>
+      <g transform={`translate(44 -64) rotate(${g.aim !== undefined ? g.aim - g.zipLean * 9 - rec * 10 : -8 - rec * 10})`}>
         {(g.muzzle ?? 0) > 0.01 && <path transform={`translate(70 -4) scale(${0.6 + 0.8 * (g.muzzle ?? 0)})`} d="M 0 0 L 16 -14 L 12 -3 L 34 -6 L 14 4 L 26 18 L 4 8 Z" fill="#FFF3B0" stroke="#FFC744" strokeWidth={3} opacity={g.muzzle} />}
         <rect x={-8} y={-10} width={44} height={20} rx={8} fill={ZIP.body} stroke={INK} strokeWidth={2.4} />
         <rect x={18} y={-16} width={40} height={24} rx={7} fill="#2EC7D6" stroke={INK} strokeWidth={2.6} />
@@ -391,9 +392,10 @@ export const GameScreen: React.FC<{g: GameState; id: string; ext?: Ext; hud?: bo
         })}
         {g.splats.map((s1, i) => <Splat key={i} {...s1} />)}
         {g.rex && (g.confetti ?? -1) >= 0 && (() => { const p = projectG(g.camX, g.rex!.x, g.rex!.z, 1.0); return <Confetti age={g.confetti!} x={p.x + 30} y={p.y} />; })()}
+        {g.bigWin && <Trophy w={g.win ?? 0} x={g.winX ?? 320} big />}
         <Zip g={g} />
         <Crosshair g={g} />
-        <Trophy w={g.win ?? 0} x={g.winX ?? 320} big={g.bigWin} />
+        {!g.bigWin && <Trophy w={g.win ?? 0} x={g.winX ?? 320} />}
        </g>
         {hud && (
           <g transform={`translate(${22 - e.l * 0} 22)`}>

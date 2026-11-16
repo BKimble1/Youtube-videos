@@ -4,7 +4,7 @@
 // into place as a cut-away of his head assembles around it: the tongue rises to the roof of the mouth and touches it.
 import React from 'react';
 import {Jaw, View, projector, padPoint} from '../art/jaw3d';
-import {jawPlacement, opening, openingPath} from '../art/mouth';
+import {jawPlacement, opening, openingPath, tonguePath} from '../art/mouth';
 import {G, gMouth, Cam} from '../art/room';
 import {RoomScene} from './room4';
 import {SectionScene, SECTION_VIEW, palate} from './section4';
@@ -28,6 +28,18 @@ const inMouth = () => {
 const SEC0 = {fx: -26, fy: -28, px: 6.2};
 const SEC1 = {fx: 5, fy: -5, px: 15.5};
 
+/** monotone cubic through (t, v) keys (no overshoot, smooth velocity, flat at the ends) */
+const smoothKeys = (t: number, K: [number, number][]) => {
+  if (t <= K[0][0]) return K[0][1];
+  if (t >= K[K.length - 1][0]) return K[K.length - 1][1];
+  const n = K.length, d: number[] = [], m: number[] = new Array(n).fill(0);
+  for (let i = 0; i < n - 1; i++) d.push((K[i + 1][1] - K[i][1]) / (K[i + 1][0] - K[i][0]));
+  for (let i = 1; i < n - 1; i++) m[i] = d[i - 1] * d[i] <= 0 ? 0 : (2 * d[i - 1] * d[i]) / (d[i - 1] + d[i]);
+  let i = 0; while (t > K[i + 1][0]) i++;
+  const h = K[i + 1][0] - K[i][0], s = (t - K[i][0]) / h;
+  const h00 = 2 * s ** 3 - 3 * s ** 2 + 1, h10 = s ** 3 - 2 * s ** 2 + s, h01 = -2 * s ** 3 + 3 * s ** 2, h11 = s ** 3 - s ** 2;
+  return h00 * K[i][1] + h10 * h * m[i] + h01 * K[i + 1][1] + h11 * h * m[i + 1];
+};
 const mixHex = (a: string, b: string, t: number) => {
   const pa = [1, 3, 5].map((i) => parseInt(a.slice(i, i + 2), 16)), pb = [1, 3, 5].map((i) => parseInt(b.slice(i, i + 2), 16));
   return '#' + pa.map((v, i) => Math.round(lerp(v, pb[i], t)).toString(16).padStart(2, '0')).join('');
@@ -44,10 +56,13 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   const fly = ss5(t, T.its2 + 0.05, T.touchpad + 0.35);
   const push = ss(t, T.touchpad + 0.3, T.roof - 0.05); // push in on the roof of the mouth
   // ---- view
-  const yaw = keys(t, [[C2_START, M.view.yaw], [C2_START + 0.55, -32], [T.and1, 28], [T.tiny - 0.12, 18], [T.gold + 0.1, 0], [T.its2 - 0.25, 0], [T.its2 + 0.12, 38], [T.touchpad + 0.35, 90]]);
-  const pitch = keys(t, [[C2_START, M.view.pitch], [C2_START + 0.55, -56], [T.and1, -64], [T.tiny - 0.12, -70], [T.gold + 0.1, -90], [T.its2 - 0.25, -88], [T.its2 + 0.12, -40], [T.touchpad + 0.35, 0]]);
+  // (V4) one smooth turn (no 60° swing in 0.18 s, no velocity corners)
+  const yaw = smoothKeys(t, [[C2_START, M.view.yaw], [C2_START + 0.5, -24], [T.tiny - 0.12, 18], [T.gold + 0.1, 0], [T.its2 - 0.25, 0], [T.its2 + 0.12, 38], [T.touchpad + 0.35, 90]]);
+  const pitch = smoothKeys(t, [[C2_START, M.view.pitch], [C2_START + 0.5, -56], [T.tiny - 0.12, -68], [T.gold + 0.1, -90], [T.its2 - 0.25, -88], [T.its2 + 0.12, -40], [T.touchpad + 0.35, 0]]);
   const roll = keys(t, [[C2_START + 0.55, 0], [T.and1, -5], [T.tiny, 0], [T.square, 6], [T.its2 - 0.15, 0]]);
-  const persp = lerp(300, 4000, back);
+  // (V4) starts at the mouth's own perspective (no jump on the first frame); milder in the sensor close-up so the
+  // pods near the frame edge never stretch into spikes
+  const persp = lerp(lerp(lerp(M.view.persp ?? 260, 420, lift), 1000, dive), 4000, back);
   const view: View = {yaw, pitch, roll, persp};
   const pr = projector(view);
   // ---- placement (model origin on screen, px per mm)
@@ -58,7 +73,8 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   let px = lerp(M.px, prodPx, lift) * (1 + toward);
   let cx = lerp(M.x, 540 - mid.x * prodPx, lift), cy = lerp(M.y + 120 * Math.sin(lift * Math.PI), 880 - mid.y * prodPx, lift);
   px = lerp(px, sensPx, dive); cx = lerp(cx, 540 - pad.x * sensPx, dive); cy = lerp(cy, 900 - pad.y * sensPx, dive);
-  const sec = {fx: lerp(SEC0.fx, SEC1.fx, push), fy: lerp(SEC0.fy, SEC1.fy, push), px: lerp(SEC0.px, SEC1.px, push)};
+  // (V4) a slow continuing push after the touch, so the end of the shot never freezes
+  const sec = {fx: lerp(SEC0.fx, SEC1.fx, push), fy: lerp(SEC0.fy, SEC1.fy, push), px: lerp(SEC0.px, SEC1.px, push) * (1 + 0.05 * ss(t, T.roof, C5_END + 0.3))};
   const secX = 540 - sec.fx * sec.px, secY = 900 - sec.fy * sec.px;
   const midPx = 15;
   px = lerp(px, midPx, back); cx = lerp(cx, 540 - mid.x * midPx, back); cy = lerp(cy, 900 - mid.y * midPx, back);
@@ -68,7 +84,12 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   const recede = ss(t, C2_START, C2_START + 0.45);
   const reveal = ss(t, T.touchpad + 0.0, T.touchpad + 0.4);
   const near = 1 - ss(t, T.touchpad + 0.15, T.touchpad + 0.45);
-  const inLips = 1 - ss(t, C2_START, C2_START + 0.12);
+  // (V4) the device stays inside the lips and behind the tongue until it has started to come forward
+  const inLips = 1 - ss(t, C2_START + 0.14, C2_START + 0.34);
+  const fwd = ss(t, C2_START + 0.06, C2_START + 0.26);
+  // the in-mouth drawing carries a soft glow on the pad; it fades as the device leaves
+  const g0 = 0.6 * (M.m.glow ?? 0) * (1 - clamp(M.m.tongueLift ?? 0)) * (1 - ss(t, C2_START, C2_START + 0.3));
+  const hand = ss(t, T.touchpad + 0.31, T.touchpad + 0.44); // the hand-off to the section's own device (4 frames)
   // sensor: glint on "gold", touch-sensing ripple on "square"
   const glint = clamp((t - T.gold) / 0.4);
   const ripple = clamp((t - (T.square - 0.05)) / 0.6);
@@ -97,19 +118,23 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
       <rect x={0} y={0} width={1080} height={1920} fill="url(#dv-bg)" opacity={studio} />
       {/* the cut-away head assembles around the device */}
       {reveal > 0.001 && (
-        <SectionScene cx={secX} cy={secY} px={sec.px} lift={tl} cz={cz} press={0} glow={ss(t, T.roof - 0.08, T.roof + 0.05)} ring={t - (T.roof - 0.02)} reveal={reveal} near={near} bg={false} device={reveal >= 0.999} />
+        <SectionScene cx={secX} cy={secY} px={sec.px} lift={tl} cz={cz} press={0} glow={ss(t, T.roof - 0.08, T.roof + 0.05)} ring={t - (T.roof - 0.02)} reveal={reveal} near={near} bg={false} device={hand} />
       )}
       <ellipse cx={540} cy={1260} rx={340} ry={56} fill="url(#dv-sh)" opacity={studio * (1 - dive) * (1 - fly)} />
       {/* the device (drawn by the section once it has arrived) */}
-      {reveal < 0.999 && (
-        <g>
+      {hand < 0.999 && (
+        <g opacity={1 - hand}>
           <defs><clipPath id="dv-lips"><path d={openingPath(M.m)} transform={`translate(540 960) scale(${ECU2.z}) translate(${-ECU2.x} ${-ECU2.y}) translate(${G.x} ${G.ground}) scale(${G.scale})`} /></clipPath></defs>
+          <mask id="dv-tmask" maskUnits="userSpaceOnUse" x={-2000} y={-2000} width={5000} height={6000}>
+            <rect x={-2000} y={-2000} width={5000} height={6000} fill="#FFFFFF" />
+            <path d={tonguePath(M.m)} fill="#000000" opacity={1 - fwd} transform={`translate(540 960) scale(${ECU2.z}) translate(${-ECU2.x} ${-ECU2.y}) translate(${G.x} ${G.ground}) scale(${G.scale})`} />
+          </mask>
           <g opacity={inLips} clipPath="url(#dv-lips)">
-            <g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={0} /></g>
+            <g mask="url(#dv-tmask)"><g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={g0} /></g></g>
           </g>
           <g opacity={1 - inLips} >
             <g transform={`translate(${cx} ${cy}) scale(${px})`}>
-              <Jaw view={view} px={px} id="dv-jaw" show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8} />
+              <Jaw view={view} px={px} id="dv-jaw" show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={Math.max(g0, pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8)} />
             </g>
           </g>
           {/* sensing ripple across the electrodes on "square" */}

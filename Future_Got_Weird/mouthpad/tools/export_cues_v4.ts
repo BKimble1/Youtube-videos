@@ -42,7 +42,7 @@ const out = {
     lift: C2_START, sensorGlint: T.gold, sensorRipple: T.square - 0.05, flyIn: T.its2 - 0.15, aimLeft: T.head - 0.12, aimRight: T.you3 - 0.02,
     assistStart: ASSIST_START, click1: T.already + 0.25, click2: T.control + 0.05, swipe: T.phones - 0.02, answer: T.without - 0.02,
     lipsClose: T.mouth3 + 0.0, honestIn: T.seriously - 0.25, mashFrom: T.imagine - 0.25, tag: FIRE2.tag + FLIGHT, ko: FIRE2.ko, koHit: KO_HIT,
-    koPop: KO_HIT + 0.42, chargeFrom: FIRE2.ko - 0.3, hop: HOP_AT, win: WIN_AT, confetti: CONFETTI_AT, eyesToWinner: T.with2 - 0.2, padThud: KO_HIT + 1.15, smug: T.shut + 0.55,
+    koPop: KO_HIT + 0.42, chargeFrom: FIRE2.ko - 0.3, hop: HOP_AT, win: WIN_AT, confetti: CONFETTI_AT, eyesToWinner: T.with2 - 0.2, padThud: KO_HIT + 0.98, smug: T.shut + 0.55,
     loopCut: LOOP_CUT, gameCut: CUTS.H4,
   },
   cuts: SHOTS2.map((s) => ({name: s.name, t: s.a})),
