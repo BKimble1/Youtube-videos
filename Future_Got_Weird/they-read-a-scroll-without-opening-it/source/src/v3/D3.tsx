@@ -230,9 +230,13 @@ export const D3: React.FC<{f: number}> = ({f}) => {
   void P_SKIP;
   void P_A;
   const spiralDim = 1 - 0.55 * Math.max(peelS > 0.6 ? stripOpen : 0, abOpen);
+  // while the splice is explained the pair keeps moving: a slow push onto the seam, released into the rewind
+  const settle = segK(t, TI_1 - 0.3, TJ_0 + 0.15) * (1 - segK(t, TJ_0 + 0.15, TJ_0 + 0.75));
+  const sz = 1 + 0.12 * settle;
   return (
     <g>
       <rect width={1920} height={1080} fill={K.scanBg} />
+      <g transform={`translate(960 ${AB.cy}) scale(${sz}) translate(-960 ${-AB.cy})`}>
       {tilt > 0.02 ? (
         <Coil cam={cam} tilt={tilt} pulseS={pulseS} wallGlow={pulse > 0.85 ? 0 : clamp(pulse * 3)} />
       ) : (
@@ -276,11 +280,12 @@ export const D3: React.FC<{f: number}> = ({f}) => {
       <Strip id="pa" s0={SA0} s1={S_BEND} lx={lxA} cy={AB.cy} zz={AB.zz} open={abOpen} edge={K.saffron} />
       <Strip id="pb" s0={SB0} s1={SB0 + 217} lx={lxB} cy={AB.cy} zz={AB.zz} open={abOpen} edge={K.coral} />
       {join > 0.6 && abOpen > 0.5 && <path d={`M960 ${AB.cy - 150} L948 ${AB.cy - 90} L972 ${AB.cy - 30} L948 ${AB.cy + 30} L972 ${AB.cy + 90} L960 ${AB.cy + 150}`} fill="none" stroke={K.coral} strokeWidth={6} strokeLinejoin="round" opacity={clamp((join - 0.6) / 0.4) * abOpen} />}
-      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,255,255,0.88)" />
       {void camS}
       {void easeIn}
       {void easeOut}
       {void CAM0}
+      </g>
+      <Chip x={1890} y={44} text="Reconstruction" size={22} anchor="end" bg="rgba(255,255,255,0.88)" />
     </g>
   );
 };

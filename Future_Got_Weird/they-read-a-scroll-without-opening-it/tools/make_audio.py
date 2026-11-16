@@ -367,12 +367,13 @@ L, R = mono + side, mono - side
 st = np.stack([L, R], 1)
 def tp(x): return 20 * np.log10(np.max(np.abs(resample_poly(x, 4, 1, axis=0))) + 1e-12)
 # normalise to -14 LUFS, soft-limit the few voice peaks above -2 dBFS, repeat until both targets hold
-thr = 10 ** (-2.0 / 20)
+thr = 10 ** ((-2.8 if VER == 'V3' else -2.0) / 20)   # V3: extra headroom so the AAC encode stays under -1 dBTP
 for _ in range(6):
     st *= 10 ** ((-14.0 - meter.integrated_loudness(st)) / 20)
     a = np.abs(st)
     st = np.where(a > thr, np.sign(st) * (thr + (1 - thr) * np.tanh((a - thr) / (1 - thr))), st)
-if tp(st) > -1.0: st *= 10 ** ((-1.05 - tp(st)) / 20)
+CEIL = -1.6 if VER == 'V3' else -1.05
+if tp(st) > CEIL + 0.05: st *= 10 ** ((CEIL - tp(st)) / 20)
 os.makedirs('audio/mix', exist_ok=True)
 sf.write(f'audio/mix/FGW_Scroll_{VER}_mix.wav', st, SR, subtype='PCM_24')
 os.makedirs('source/public/audio', exist_ok=True)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Measured QA of a rendered export (everything here is read from the file itself).
-usage: python3 tools/qa.py <video.mp4> <out_prefix> [V1|V2]   (V2: the trimmed V2 narration master and the V2 SRT)
+usage: python3 tools/qa.py <video.mp4> <out_prefix> [V1|V2|V3]   (V2: the trimmed V2 narration master and the V2 SRT)
 - stream metadata (ffprobe), duration vs the narration master;
 - loudness (ffmpeg ebur128: integrated, LRA, true peak);
 - black / frozen picture detection (blackdetect, freezedetect), and the last second's motion;
@@ -15,6 +15,7 @@ from script import TEXT, norm
 
 vid, pre = sys.argv[1], sys.argv[2]
 VER = sys.argv[3] if len(sys.argv) > 3 else 'V1'
+NV = 'V3' if VER == 'V3' else 'V1'   # narration master: V1/V2 share V1's
 res = {'file': vid}
 pr = json.loads(subprocess.run(['ffprobe', '-v', 'error', '-show_streams', '-show_format', '-of', 'json', vid], capture_output=True, text=True).stdout)
 v = [s for s in pr['streams'] if s['codec_type'] == 'video'][0]
@@ -22,7 +23,7 @@ a = [s for s in pr['streams'] if s['codec_type'] == 'audio']
 res['video'] = {k: v.get(k) for k in ('codec_name', 'profile', 'width', 'height', 'r_frame_rate', 'pix_fmt', 'color_space', 'nb_frames', 'bit_rate')}
 res['audio'] = [{k: s.get(k) for k in ('codec_name', 'sample_rate', 'channels', 'bit_rate', 'duration')} for s in a]
 res['duration_s'] = float(pr['format']['duration'])
-meta = json.load(open(f'audio/narration/narration_V1_meta.json'))
+meta = json.load(open(f'audio/narration/narration_{NV}_meta.json'))
 res['narration_master_s'] = meta['duration_s']
 
 def ff(args):
@@ -41,8 +42,8 @@ res['frozen_segments_over_2_5s'] = re.findall(r'freeze_start: ([\d.]+)', fz)
 # audio vs narration master: speech-envelope cross-correlation
 raw = subprocess.run(stdin=subprocess.DEVNULL, args=['ffmpeg', '-v', 'error', '-i', vid, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout
 y = np.frombuffer(raw, np.float32)
-n0, sr = sf.read('audio/narration/FGW_Scroll_narration_V1.wav')
-n16 = subprocess.run(['ffmpeg', '-v', 'error', '-i', f'audio/narration/FGW_Scroll_narration_V1.wav', '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout
+n0, sr = sf.read(f'audio/narration/FGW_Scroll_narration_{NV}.wav')
+n16 = subprocess.run(['ffmpeg', '-v', 'error', '-i', f'audio/narration/FGW_Scroll_narration_{NV}.wav', '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout
 n = np.frombuffer(n16, np.float32)
 env = lambda x: np.sqrt(np.convolve(x[: len(x) // 160 * 160].reshape(-1, 160).mean(1) ** 2 + 1e-12, np.ones(5) / 5, 'same'))
 ey, en = env(y), env(n)
@@ -63,8 +64,8 @@ try:
 except Exception as ex:  # noqa
     res['asr_pocketsphinx'] = {'error': str(ex)}
 # SRT vs words
-W = json.load(open('audio/narration/FGW_Scroll_V1_words.json'))
-srt = open(f'captions/FGW_Scroll_V1.srt').read().strip().split('\n\n')
+W = json.load(open(f'audio/narration/FGW_Scroll_{NV}_words.json'))
+srt = open(f'captions/FGW_Scroll_{VER if VER == "V3" else "V1"}.srt').read().strip().split('\n\n')
 def t2s(x):
     h, mi, rest = x.split(':'); se, ms = rest.split(','); return int(h) * 3600 + int(mi) * 60 + int(se) + int(ms) / 1000
 starts = [t2s(c.split('\n')[1].split(' --> ')[0]) for c in srt]
