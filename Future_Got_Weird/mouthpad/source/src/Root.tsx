@@ -7,6 +7,7 @@ import {Film2} from './v2/film2';
 import {Film2 as Film3} from './v3/film3';
 import {FRAMES, FPS} from './lib';
 import '@fontsource-variable/fredoka';
+import './v3/fonts3';
 
 export const RemotionRoot: React.FC = () => (
   <>

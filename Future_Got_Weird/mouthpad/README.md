@@ -1,6 +1,37 @@
 # Future Got Weird: MouthPad (playing video games with your tongue)
 
-## V2 (current review render)
+## V3 (current review render)
+
+Not published, and not watched or heard in real time.
+
+**Review file:** `exports/FGW_MOUTHPAD_V3_REVIEW_1080x1920.mp4`. The MP4 is Git-ignored; checksummed parts are in `backup/`.
+
+| Property | Value |
+|---|---|
+| Runtime | 31.90 s (957 frames at 30 fps) |
+| Verified (ffprobe) | see `production/V3_REPORT.md` |
+| Narration | Locked script, unchanged; the V2 narration master, unchanged |
+| Captions | Burned in, the channel treatment (Nunito Black, white, dark stroke, key words in yellow capitals), 26 phrases timed from the measured words; SRT in `captions/FGW_MouthPad_V3.srt` |
+| Ending | The orange robot (Zip) wins; the winner keeps his hands behind his head and his mouth shut; cuts back to frame 0 |
+
+| Item | File |
+|---|---|
+| Report: changes from V2, inspection, QA, remaining issues | `production/V3_REPORT.md` |
+| Source | `source/src/v3/` (composition `MouthPadV3`); captions `source/src/v3/captions3.tsx`, `source/src/data/captions_v3.json` |
+| Mix and measurements | `audio/mix/FGW_MouthPad_MIX_V3.wav`, `audio/mix/mix_measure_mix_v3.json`, `audio/sfx_log_mix_v3.json` |
+| QA | `qa/v3/`, `qa/v3_caption_spans.txt` |
+
+Rebuild V3 (the narration is the V2 master):
+
+    python3 tools/make_captions_v3.py
+    (cd source && ./node_modules/.bin/esbuild ../tools/export_cues_v3.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --jsx=automatic --external:remotion --outfile=/tmp/ec3.cjs) && NODE_PATH=source/node_modules node /tmp/ec3.cjs audio/cues_v3.json
+    (cd source && ./node_modules/.bin/esbuild ../tools/caption_spans_v3.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --jsx=automatic --external:remotion --outfile=/tmp/cs3.cjs) && NODE_PATH=source/node_modules node /tmp/cs3.cjs qa/v3_caption_spans.json
+    python3 tools/qa_captions_v3.py
+    python3 tools/make_audio_v3.py mix_v3
+    COMP=MouthPadV3 tools/render.sh mix_v3 exports/FGW_MOUTHPAD_V3_REVIEW_1080x1920.mp4
+    QA_CUES=audio/cues_v3.json QA_WORDS=audio/narration/v2_words.json python3 tools/qa_render.py exports/FGW_MOUTHPAD_V3_REVIEW_1080x1920.mp4 v3
+
+## V2 (previous review render)
 
 Not published, and not watched or heard in real time.
 

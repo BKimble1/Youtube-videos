@@ -16,6 +16,7 @@ import {GameVertical, Reticle, DustyPad, MagnifierProp, MAG_LENS, MashCU, PaintB
 import {Jaw, padPoint, projector} from '../art/jaw3d';
 import {GameScreen} from '../art/game';
 import {T} from '../story';
+import {Captions3} from './captions3';
 import {FPS, clamp, keys, lerp, ss, ss5, eo, pulse, blip} from '../lib';
 
 const INK = '#162A32';
@@ -25,7 +26,7 @@ const ECU_A: Cam = {x: gMouth.x, y: gMouth.y + 6, z: 12.5};
 
 export const CUTS = {
   A4: T.can + 0.08, A5: T.with1, B2: T.watch - 0.07, B3: T.this2 + 0.44, C1: T.its + 0.26, C2: C2_START, D1: T.mouth2 + 0.17,
-  E1: T.moves + 0.03, F1: T.aim + 0.62, F2: T.click + 0.03, G: ASSIST_START, H1: ASSIST_END, H3: T.mouth3 + 0.16, H4: T.nobody + 0.5, H5: T.see + 0.22,
+  E1: T.moves + 0.03, F1: T.aim + 0.62, F2: T.click + 0.03, G: ASSIST_START, H1: ASSIST_END, H3: T.mouth3 + 0.16, H4: T.nobody + 0.5, H5: T.see + 0.27,
   I1: T.controller + 0.0, I2: T.losing, I3: T.video2, I4: T.game + 0.0, I5: T.someone - 0.05, I6: T.whos, I7: T.literally, I8: T.literally + 0.3, C: T.just,
   D: T.there + 0.15, E: T.mouth4, L: LOOP_CUT,
 };
@@ -124,7 +125,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
   const view = {yaw: 0, pitch: -90, persp: 600};
   const pr = projector(view);
   const px = 11.5;
-  const jy = lerp(140, 540, inA), gy = lerp(1500, 1060, inA); // both panels already in frame on the first frame
+  const jy = lerp(100, 500, inA), gy = lerp(1540, 1100, inA); // both panels already in frame on the first frame; (V3 captions) a 110 px band between them (880–990) carries the caption
   return (
     <g>
       <rect x={0} y={0} width={1080} height={1920} fill="#1B1D33" />
@@ -285,6 +286,7 @@ export const Film2: React.FC<{audio?: string | false}> = ({audio}) => {
       <svg width={1080} height={1920} viewBox="0 0 1080 1920">
         <Frame2 t={t} frame={frame} />
       </svg>
+      <Captions3 frame={frame} />
       {audio ? <Audio src={staticFile(`audio/${audio}.wav`)} /> : null}
     </AbsoluteFill>
   );
