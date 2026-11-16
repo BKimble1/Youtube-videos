@@ -86,7 +86,9 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   const near = 1 - ss(t, T.touchpad + 0.15, T.touchpad + 0.45);
   // (V4) the device stays inside the lips and behind the tongue until it has started to come forward
   const inLips = 1 - ss(t, C2_START + 0.14, C2_START + 0.34);
-  const fwd = ss(t, C2_START + 0.17, C2_START + 0.27);
+  const fwd = ss(t, C2_START + 0.19, C2_START + 0.26);
+  // the shell starts as the in-mouth drawing shows it (its back half hidden by the teeth, the lighter tint)
+  const shellK = ss(t, C2_START + 0.1, C2_START + 0.4);
   // line weights start at the in-mouth drawing's scale (it is drawn at a quarter of this px) and grow as it leaves
   const inkK = lerp(0.25, 1, ss(t, C2_START, C2_START + 0.45));
   // the in-mouth drawing carries a soft glow on the pad; it fades as the device leaves
@@ -132,11 +134,11 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
             <path d={tonguePath(M.m)} fill="#000000" opacity={1 - fwd} transform={`translate(540 960) scale(${ECU2.z}) translate(${-ECU2.x} ${-ECU2.y}) translate(${G.x} ${G.ground}) scale(${G.scale})`} />
           </mask>
           <g opacity={inLips} clipPath="url(#dv-lips)">
-            <g mask="url(#dv-tmask)"><g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px * inkK} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={g0} /></g></g>
+            <g mask="url(#dv-tmask)"><g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px * inkK} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={g0} shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} /></g></g>
           </g>
           <g opacity={1 - inLips} >
             <g transform={`translate(${cx} ${cy}) scale(${px})`}>
-              <Jaw view={view} px={px * inkK} id="dv-jaw" show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={Math.max(g0, pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8)} />
+              <Jaw view={view} px={px * inkK} id="dv-jaw" shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={Math.max(g0, pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8)} />
             </g>
           </g>
           {/* sensing ripple across the electrodes on "square" */}

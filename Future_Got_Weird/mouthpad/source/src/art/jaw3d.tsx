@@ -192,7 +192,9 @@ export const Jaw: React.FC<{
   tongueX?: number; // 0..1: draw the tongue as a see-through silhouette under the pad (view from below)
   light?: number;
   near?: number; // opacity of the half nearer the camera (0 = a clean sagittal cut-away: only the far half remains)
-}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1, near = 1}) => {
+  shellBack?: number; // (V4) opacity of the shell half behind the palate (0 = as when the teeth hide it)
+  shellOpacity?: number; // (V4) override of the shell fill opacity
+}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1, near = 1, shellBack = 1, shellOpacity}) => {
   // which lateral side is nearer the camera (sign of x for the near half)
   const nearSign = projector(view)({x: 1, y: 0, z: 0}).d < projector(view)({x: -1, y: 0, z: 0}).d ? 1 : -1;
   const nf = (x: number) => (x * nearSign > 0.01 ? near : 1);
@@ -444,8 +446,8 @@ export const Jaw: React.FC<{
       }
     }
     for (const q of tb) items.push(q);
-    const shellOp = (S.teeth > 0.5 ? 0.42 : 0.55) * S.shell;
-    if (sb.length) items.push({d: padD + 6, el: <g key="shell-back"><g opacity={shellOp}>{sb}</g><g opacity={S.shell}>{back}</g></g>});
+    const shellOp = (shellOpacity ?? (S.teeth > 0.5 ? 0.42 : 0.55)) * S.shell;
+    if (sb.length && shellBack > 0.001) items.push({d: padD + 6, el: <g key="shell-back" opacity={shellBack}><g opacity={shellOp}>{sb}</g><g opacity={S.shell}>{back}</g></g>});
     if (sf.length) items.push({d: -1e6, el: <g key="shell-front"><g opacity={shellOp}>{sf}</g><g opacity={S.shell}>{front}</g></g>});
   }
 
