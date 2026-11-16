@@ -14,14 +14,12 @@ measurement, a frame check or a contact sheet.
 
 ## Runtime and pace
 
-@@MEASURE@@
-
 | | V1/V2 | V3 |
 |---|---|---|
 | Words | 436 | 436 (same locked text) |
 | Speech span (first word to last word) | 168.54 s | 138.08 s |
 | Pace over the speech span | 155.2 wpm | **189.5 wpm (+22%)** |
-| Runtime | 2:52.63 | @@RUNTIME@@ |
+| Runtime | 2:52.63 | **2:20.80** (4,224 frames at 30 fps) |
 | First word | 0.30 s | 0.12 s |
 | Words spoken by 10 s / 15 s / 30 s | 25 / 36 / 80 | 32 / 49 / 100 |
 | Pauses over 0.8 s in the first 30 s | 7 (1.10–1.47 s) | 0 |
@@ -74,8 +72,59 @@ nothing was stretched to fit.
 
 ## QA
 
-@@QA@@
+All measured from the exported file (`qa/v3/review_qa.json`, `qa/v3/bursts/`, `qa/v3/compare/`).
+
+| Check | Result |
+|---|---|
+| Video stream (ffprobe, frames counted) | H.264 High, **1920×1080, r_frame_rate 30/1, avg 30/1, 4,224 frames**, yuv420p, BT.709 |
+| Audio stream | AAC, 48 kHz stereo, 288 kb/s, 140.80 s (same as the video) |
+| Loudness (ebur128 on the export) | −14.2 LUFS integrated, LRA 2.7 LU, true peak −1.4 dBTP |
+| Black frames | none |
+| Static holds (freezedetect at 480 px, noise 0.003, ≥ 1.0 s) | none reach 1.5 s. Six near-static stretches of 1.07–1.43 s (45.4, 65.6, 72.1, 79.2, 86.3, 137.2 s), each with a small moving element (trace head, labels fading in, patch steps, smudge inset, final settle). The first render had a 1.67 s hold on the splice cards at 50.4 s; that now has a slow push onto the seam. |
+| Audio vs narration master | 0 ms offset |
+| Captions | 46 cues. The text is identical to the locked script (all 436 words, in order). Every cue starts exactly on its first word's measured onset (0 ms), with no overlaps. The longest cue is 4.36 s; the last ends at 138.5 s. |
+| Transitions (every frame across 23 beats) | No one-frame jumps or popping masks: attempt and break, scan to page, back to the object, villa match cut, surge, cut to the lab, into the slice, dive, wrong jump, rewind, flatten, cutaway in, heat, scan bar, cutaway out, road, ink reveal, cut to Paris 4, overlay push, cut back to 1667, gap glide, pen follow, callback. |
+| First 15 s, muted, phone size (`qa/v3/phone_first15_muted.png`) | Reads without sound: crack (1 s), break (2 s), digital twin (3 s), spiral (4 s), readable page (5 s), real object (6 s), villa and eruption (8–11 s), second attempt (12–14 s). |
+| First 30 s vs V2 (`qa/v3/compare/first30_V2_vs_V3.png`) | V3 is about 6 s ahead by 0:30: the lab appears at about 20 s (V2: 26 s), and the slices are stacking by 26 s (V2: still in the lab at 28 s). |
+
+**Narration assessment.** This is by measurement only; nobody has listened. The master peaks at −1.12 dBFS with no
+clipped samples, and word loudness is even (10th–90th percentile −22.3 to −15.8 dB RMS). Recognition of the export
+with PocketSphinx gives a 34% word error rate against the script. That figure is noise from the recognizer (V1 and V2 measured 34.6% and 36.2% on the same check), and the captions and forced alignment account for every word. The ElevenLabs Scribe
+transcript was not used as a check because in this connector it follows the generation prompt.
+
+Pace by section:
+
+| Section | Pace (wpm) |
+|---|---|
+| 0–21 s | 208 |
+| 21–36 s | 191 |
+| 36–53 s | 221 |
+| 53–61 s | 211 |
+| 61–75 s | 167 |
+| 75–92 s | 213 |
+| 92–108 s | 188 |
+| 108–129 s | 170 |
+| 129–141 s | 201 |
+
+The average over the whole speech span is 189.5 wpm, and the voice is speaking about 241 words per minute while it talks, not counting pauses.
 
 ## Remaining concerns
 
-@@CONCERNS@@
+- **Nobody has listened to it or watched it in real time.** The delivery (energy, warmth, whether it sounds rushed)
+  needs a human listen before approval.
+- **Some stretches run faster than the 175–190 target.** The wrong-layer explanation (36–53 s, "Pick one…" to
+  "…entire turn of the page") is at about 221 wpm, and the opening and the patch/road passage at about 208–213 wpm. The
+  average is on target, but these are the densest ideas in the film. If they feel hard to follow, the fix is a slower
+  take for block 4 only, or small pauses after "around." and "together?". That adds about 0.5 s and keeps the wording.
+- **Loudness is −14.2 LUFS, not −14.0.** The mix was given extra headroom because the first encode measured −0.9 dBTP
+  after AAC. It now measures −1.4 dBTP.
+- **The patch sweep tints letters faintly before "Put the patches together".** The scores the model leaves behind
+  follow the real letter positions, so column 17's shape shows through a little early. This is honest to how the
+  method works, but it slightly pre-empts the reveal.
+- **Labels in the ink cutaway.** It uses "ink", "papyrus" and "≈" labels. They are plain words from the narration,
+  but the V2 brief asked for minimal on-screen text; remove them if they read as annotation.
+- **V1 and V2 no longer render as delivered.** The shared timing data (`source/src/data/narration_words.json`,
+  `cues.json`) now holds the V3 narration, so the V1 and V2 compositions no longer render as they did. Their
+  sources are at commits b18def5 (V1) and 8b7de54 (V2); V1's data is also kept as `narration_words_v1.json` /
+  `cues_v1.json`.
+- **Facts and narration are unchanged from the approved V1.** No wording was altered.
