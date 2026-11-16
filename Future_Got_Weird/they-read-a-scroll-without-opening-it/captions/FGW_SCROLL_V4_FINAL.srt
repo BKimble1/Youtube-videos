@@ -1,0 +1,217 @@
+1
+00:00:00,120 --> 00:00:03,430
+If you tried to unroll this,
+it could crumble in your hands.
+
+2
+00:00:03,470 --> 00:00:06,050
+So researchers unrolled
+it inside a computer.
+
+3
+00:00:06,180 --> 00:00:08,140
+That black lump is a book.
+
+4
+00:00:08,200 --> 00:00:11,610
+It was buried when Mount Vesuvius
+erupted in the year seventy-nine.
+
+5
+00:00:11,770 --> 00:00:14,130
+Centuries later, people tried to open it.
+
+6
+00:00:14,280 --> 00:00:18,040
+By the time they were done, the roll was
+less than half as wide as it had been.
+
+7
+00:00:18,080 --> 00:00:20,880
+And the writing they wanted
+was still wrapped up inside.
+
+8
+00:00:21,120 --> 00:00:23,600
+Look at what happens when
+you scan what’s left.
+
+9
+00:00:23,750 --> 00:00:25,900
+The researchers took X-ray
+images from different
+
+10
+00:00:25,940 --> 00:00:28,790
+angles and used them to build
+a three-dimensional map.
+
+11
+00:00:29,100 --> 00:00:31,790
+Slice through that map
+and you can see a spiral.
+
+12
+00:00:32,170 --> 00:00:35,890
+That’s the sheet of papyrus,
+wound around itself over and over.
+
+13
+00:00:36,180 --> 00:00:39,780
+Pick one of those thin lines and try
+to follow it all the way around.
+
+14
+00:00:40,160 --> 00:00:42,040
+See where two layers press together?
+
+15
+00:00:42,610 --> 00:00:44,490
+If you jump to the
+neighboring layer there,
+
+16
+00:00:44,530 --> 00:00:47,030
+you’ve just skipped
+an entire turn of the page.
+
+17
+00:00:47,510 --> 00:00:49,710
+Keep going and you could end
+up putting two pieces
+
+18
+00:00:49,750 --> 00:00:52,770
+of writing side by side that
+were never next to each other.
+
+19
+00:00:53,060 --> 00:00:55,180
+So they traced the sheet through the scan,
+
+20
+00:00:55,220 --> 00:00:58,230
+checking and correcting the places
+where the layers got messy.
+
+21
+00:00:58,670 --> 00:01:01,040
+That gave them a digital
+surface they could flatten.
+
+22
+00:01:01,410 --> 00:01:02,700
+Now they had a page.
+
+23
+00:01:03,210 --> 00:01:04,610
+It looked almost blank.
+
+24
+00:01:04,960 --> 00:01:07,460
+The ink was carbon-based,
+and the heat had turned
+
+25
+00:01:07,500 --> 00:01:10,130
+the papyrus into a carbon-rich
+material too.
+
+26
+00:01:10,570 --> 00:01:13,610
+In the scan, the two
+could look almost identical.
+
+27
+00:01:14,120 --> 00:01:18,130
+So the team trained a model to pick
+out signs of ink in tiny patches.
+
+28
+00:01:18,450 --> 00:01:20,830
+Each patch was smaller
+than a single letter.
+
+29
+00:01:21,370 --> 00:01:25,250
+Imagine trying to find the paint on
+a road by looking at one pebble at a time.
+
+30
+00:01:25,750 --> 00:01:27,520
+One patch could look like a smudge.
+
+31
+00:01:27,980 --> 00:01:31,730
+Put the patches together and you can
+start to see which marks form a stroke.
+
+32
+00:01:32,080 --> 00:01:33,640
+And here’s how they checked it.
+
+33
+00:01:34,010 --> 00:01:38,370
+On a second scroll, they already had text
+that an earlier model had helped reveal.
+
+34
+00:01:38,840 --> 00:01:42,330
+A sharper scan of that scroll
+picked up the ink deposits directly.
+
+35
+00:01:42,730 --> 00:01:44,230
+They lined the two images up.
+
+36
+00:01:44,670 --> 00:01:47,310
+The same strokes were
+sitting in the same places.
+
+37
+00:01:47,630 --> 00:01:49,870
+Back on the first scroll,
+the flattened sheet
+
+38
+00:01:49,910 --> 00:01:52,050
+stretched to about four and a half feet.
+
+39
+00:01:52,390 --> 00:01:55,810
+Scholars could read across roughly
+twenty-two partial columns.
+
+40
+00:01:56,180 --> 00:01:58,340
+There are gaps where
+the papyrus is missing.
+
+41
+00:01:58,920 --> 00:02:02,630
+One of the surviving passages is
+about what people can gain through study.
+
+42
+00:02:03,110 --> 00:02:04,880
+Here’s a fragment of the translation.
+
+43
+00:02:05,490 --> 00:02:08,490
+“Possessing the same
+practical wisdom as they do.”
+
+44
+00:02:09,540 --> 00:02:13,300
+Somebody put those words down by hand
+more than two thousand years ago.
+
+45
+00:02:13,860 --> 00:02:16,090
+You just read a line
+from inside the scroll.
+
+46
+00:02:16,690 --> 00:02:18,500
+And the page is still rolled up.

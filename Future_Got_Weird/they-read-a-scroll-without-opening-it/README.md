@@ -2,7 +2,20 @@
 
 Long-form episode, 16:9. The virtual unwrapping of PHerc. 1667, with the separate PHerc. Paris 4 ink check.
 
-## V3: faster narration and retimed picture (current)
+## V4: final publish master (current)
+
+The V3 edit with the capsule labels removed, and no other creative changes. The QC report is
+`production/V4_FINAL_QC.md`.
+
+**Master:** `exports/FGW_SCROLL_V4_FINAL_PUBLISH_1920x1080.mp4`
+- 1920×1080, 30 fps, H.264 / AAC, 2:20.80, −14.2 LUFS, captions burned in.
+- Git-ignored. To restore it, run
+  `cat backup/FGW_SCROLL_V4_FINAL_PUBLISH_1920x1080.mp4.part_* > exports/FGW_SCROLL_V4_FINAL_PUBLISH_1920x1080.mp4`.
+- Captions are also in `captions/FGW_SCROLL_V4_FINAL.srt`.
+- To render: `bash tools/render_v4.sh` (composition `ScrollV4`; `source/src/v3/` now holds the V4 picture, and the
+  V3 review picture is at the V3 commit).
+
+## V3: faster narration and retimed picture
 
 Not approved. Nobody has watched it in real time. The narration was regenerated from the locked script at a faster,
 more energetic read, and the picture was rebuilt around it.
