@@ -23,6 +23,7 @@ export type MouthState = {
   yaw?: number;
   device?: number; // 1 = the MouthPad is in the mouth (default), 0 = lifted out
   smirk?: number; // closed-mouth smirk (one corner up)
+  smoothClose?: boolean; // (V4) the open mouth fades into the closed line at the same place (no swap), teeth and tongue fade out
 };
 
 /** the mouth view used inside the lips */
@@ -81,14 +82,19 @@ export const tonguePath = (m: MouthState) => {
 
 export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m, id, px}) => {
   const o = clamp(m.open);
-  if (o < 0.035) {
+  const sc = !!m.smoothClose;
+  const closedLine = (opacity: number) => {
     // closed lips: one ink line whose curve follows the smile (and a smirk lifts one corner)
     const lw0 = Math.max(1.6, Math.min(5, px * 1.2));
     const sm = m.smile ?? 0.4, sk = m.smirk ?? 0;
-    const y0 = MOUTH_TOP + 6, w0 = 15;
-    const k = o / 0.035; // fades into the opening shape below
-    return <path d={`M ${-w0} ${y0 - 3 * sm} Q ${-2} ${y0 + 4 + 6 * sm + k * 2} ${w0} ${y0 - 3 * sm - 6 * sk}`} fill="none" stroke={INK} strokeWidth={lw0 * 1.25} vectorEffect="non-scaling-stroke" strokeLinecap="round" />;
-  }
+    const y0 = sc ? MOUTH_TOP + 2 : MOUTH_TOP + 6, w0 = sc ? 13.5 : 15; // (V4) where the closing slit actually is
+    const k = sc ? 0 : o / 0.035; // fades into the opening shape below
+    return <path d={`M ${-w0} ${y0 - 3 * sm} Q ${-2} ${y0 + 4 + 6 * sm + k * 2} ${w0} ${y0 - 3 * sm - 6 * sk}`} fill="none" stroke={INK} strokeWidth={lw0 * 1.25} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={opacity} />;
+  };
+  if (!sc && o < 0.035) return closedLine(1);
+  if (sc && o <= 0.02) return closedLine(1);
+  const openO = sc ? clamp((o - 0.02) / 0.045) : 1; // (V4) the slit fades out as the line fades in, at the same place
+  const lineO = sc ? 1 - clamp((o - 0.03) / 0.045) : 0;
   const {w, h, top} = opening(m);
   const bot = top + h;
   const J = jawPlacement(m);
@@ -114,6 +120,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
   const contact = lift > 0.85 ? {u, v: vv, press, glow: glow * clamp((lift - 0.85) / 0.15)} : null;
   return (
     <g>
+    <g opacity={openO}>
       <defs>
         <clipPath id={`${id}-op`}><path d={openingPath(m)} /></clipPath>
         <radialGradient id={`${id}-cav`} cx="50%" cy="40%" r="70%">
@@ -127,7 +134,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
       </defs>
       <g clipPath={`url(#${id}-op)`}>
         <path d={openingPath(m)} fill={`url(#${id}-cav)`} />
-        {o > 0.12 && (
+        {o > (sc ? 0.06 : 0.12) && (
           <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.06) / 0.08)}>
             <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact}
               show={(m.device ?? 1) < 1 ? {shell: m.device ?? 1, plate: m.device ?? 1, pad: m.device ?? 1, traces: m.device ?? 1, pods: m.device ?? 1} : undefined} />
@@ -142,6 +149,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
             ))}
           </g>
         )}
+        <g opacity={sc ? clamp((o - 0.04) / 0.08) : 1}>
         <path d={smoothPath(tongue, false)} fill={`url(#${id}-tg)`} stroke={INK} strokeWidth={lw * 0.7} vectorEffect="non-scaling-stroke" />
         <path d={`M ${tip.x} ${tip.y + 4} Q ${tip.x - 0.5} ${lerp(tip.y + 10, bot, 0.5)} ${tip.x * 0.4} ${bot}`} fill="none" stroke="#C9576A" strokeWidth={lw * 0.6} vectorEffect="non-scaling-stroke" opacity={0.6} />
         {contact && glow > 0 && (
@@ -150,10 +158,13 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
             <circle cx={tip.x} cy={tip.y} r={2.4 + 2.4 * press} fill="none" stroke="#FFFFFF" strokeWidth={lw * 0.8} vectorEffect="non-scaling-stroke" opacity={0.9 * contact.glow!} />
           </g>
         )}
+        </g>
       </g>
       {/* lips */}
       <path d={openingPath(m)} fill="none" stroke={LIP_DARK} strokeWidth={lw * 1.9} vectorEffect="non-scaling-stroke" opacity={0.55} />
       <path d={openingPath(m)} fill="none" stroke={INK} strokeWidth={lw} vectorEffect="non-scaling-stroke" strokeLinejoin="round" />
+    </g>
+    {lineO > 0.001 && closedLine(lineO)}
     </g>
   );
 };

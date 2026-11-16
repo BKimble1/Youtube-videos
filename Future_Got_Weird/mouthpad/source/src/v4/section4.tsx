@@ -57,8 +57,8 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
         <radialGradient id="s2-glow"><stop offset="0" stopColor="#FFF6C8" stopOpacity={1} /><stop offset="1" stopColor="#FFE08A" stopOpacity={0} /></radialGradient>
       </defs>
       {bg && <rect x={0} y={0} width={1080} height={1920} fill="url(#s2-bg)" />}
-      <g transform={`translate(${cx} ${cy}) scale(${px})`}>
-        <g opacity={reveal}>
+      <g transform={`translate(${cx} ${cy}) scale(${px})`} opacity={reveal}>
+        <g>
           <path d="M -58 20 L -60 70 L 4 70 L 2 22 Z" fill={look.skin} stroke={INK} {...w(3)} />
           <path d="M -120 46 Q -30 30 50 50 L 70 160 L -150 160 Z" fill="#FFFFFF" stroke={INK} {...w(3)} />
           {[0, 1, 2, 3].map((i) => <rect key={i} x={-150} y={58 + i * 24} width={230} height={11} fill="#FFC744" clipPath="url(#s2-shirt)" />)}
@@ -94,7 +94,7 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
         <g clipPath={reveal > 0.98 ? 'url(#s2-cut)' : undefined}>
           <Jaw view={SECTION_VIEW} px={px} id="s2-jaw" show={{palate: 0, pad: 0, teeth: 0, traces: 0.5 * near * dO, shell: near * dO, plate: dO, pods: dO}} near={near} />
         </g>
-        <g opacity={reveal} clipPath="url(#s2-cut)">
+        <g clipPath="url(#s2-cut)">
           <path d={smoothPath(tg, true, 0.42)} fill="#EE8E98" stroke={INK} {...w(2.4)} />
           {/* a soft highlight along the top of the tongue, and the tip picked out */}
           <path d={smoothPath([tg[8], tg[9], tg[10], tg[11]].map((p) => ({x: p.x + 0.2, y: p.y + 1.4})), false)} fill="none" stroke="#F8B7BD" strokeWidth={1.1} strokeLinecap="round" opacity={0.85} />
@@ -103,14 +103,14 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
           <path d="M 21 1.5 Q 30 1.6 30 6.5 Q 28.6 11.5 19.4 12 Z" fill="#E08E86" stroke={INK} {...w(1.8)} />
         </g>
         {/* the gold pad on the roof of the mouth, cut through its middle */}
-        <g opacity={reveal}>
+        <g>
           <path d={smoothPath(padPts, false)} fill="none" stroke={INK} strokeWidth={2.1} strokeLinecap="round" />
           <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold1} strokeWidth={1.4} strokeLinecap="round" />
           <path d={smoothPath(padPts, false)} fill="none" stroke={DEV.gold0} strokeWidth={0.5} strokeLinecap="round" />
         </g>
         {glow > 0.01 && lift > 0.8 && <circle cx={contact.x} cy={contact.y} r={7 + 4 * press} fill="url(#s2-glow)" opacity={glow} />}
         {ringO > 0.01 && <circle cx={contact.x} cy={contact.y} r={2 + ring * 30} fill="none" stroke="#FFFFFF" {...w(5)} opacity={ringO} />}
-        <g opacity={reveal}>
+        <g>
           <path d={CUT_D} fill="none" stroke={INK} {...w(3)} />
           <path d="M 38 -42 Q 47 -34 48 -26 Q 47 -21 39 -21" fill={look.skin} stroke={INK} {...w(3)} strokeLinejoin="round" />
         </g>

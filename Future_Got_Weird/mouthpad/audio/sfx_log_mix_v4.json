@@ -50,12 +50,12 @@
   "gain_db": -9
  },
  {
-  "t": 15.173,
+  "t": 15.16,
   "sfx": "blaster",
   "gain_db": -9
  },
  {
-  "t": 15.243,
+  "t": 15.23,
   "sfx": "splat (big)",
   "gain_db": -7
  },
@@ -576,7 +576,7 @@
  },
  {
   "t": 27.215,
-  "sfx": "cut: I7 B: opponent stands, s",
+  "sfx": "cut: I7 B: two-shot: opponent",
   "gain_db": -21
  },
  {

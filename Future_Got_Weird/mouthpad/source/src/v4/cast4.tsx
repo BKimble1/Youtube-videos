@@ -56,7 +56,8 @@ export const guesser4 = (t: number): GState => {
     // head aim: a clear tilt left on "head", then right onto the target on "you AIM", holding while it locks
     tilt: headTilt(t) + 2.5 * flick + 1.2 * sway(t, 1.1, 0.3) * (1 - bored * 0.6) * (1 - on(t, T.tilt - 0.3, T.press + 0.1, 0.2)), // (V4) the aim demo's tilt is exactly the game's aim
     lean: 0,
-    blink: t > T.so - 0.2 && t < 30.7 ? lid : undefined,
+    // (V4) eyes held open from the lips closing to the next cut (an automatic blink was cut off by the cut)
+    blink: t > T.so - 0.2 && t < 30.7 ? lid : t > T.close && t < T.see + 0.4 ? 1 : undefined,
     mouth: 'smile',
     // bob: a subtle groove to the game in the hook, settling back in the chair while bored
     bob: (t < 3.6 ? 3 * Math.abs(Math.sin(t * Math.PI * 2.0)) : 0) + 4 * bored,
@@ -76,7 +77,7 @@ export const guesser4 = (t: number): GState => {
   // the punchline: a tiny smug smile grows on "SHUT" — mouth stays shut
   const smug = ss(t, T.shut + 0.02, T.shut + 0.32) * (1 - ss(t, LOOP_CUT + 0.4, LOOP_CUT + 0.9));
   const smile = 0.35 - 0.2 * bored + 0.45 * smug;
-  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0};
+  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0, smoothClose: true};
   // the head holds still for the lift-out match and through the lips closing (only breathing remains)
   const still = 1 - on(t, T.its - 0.1, T.mouthpad + 0.1, 0.12) - 0.85 * on(t, T.but - 0.2, T.mouth3 + 0.5, 0.2);
   return {pose, m, life: clamp(still), front: 'none'};

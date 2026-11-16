@@ -29,7 +29,7 @@ const CAMS: CamKey[] = [
   // computer → phone: one continuous glide, following the cursor off the screen's right edge down to the phone
   // (V4) framed so the phone on its stand and her hand resting on the armrest are both in shot
   {t: G_CUTS[3] + 0.18, c: {x: PHONE.x + 95, y: PHONE.y + 40, z: 2.9}, ease: (t, a1, b1) => ss(t, a1, b1)}, {t: G_CUTS[4], c: {x: PHONE.x + 100, y: PHONE.y + 40, z: 3.0}},
-  {t: G_CUTS[4], c: {x: PHONE.x + 100, y: PHONE.y + 40, z: 3.0}}, {t: ASSIST_END, c: {x: 700, y: 1130, z: 2.0}, ease: (t, a1, b1) => eo(t, a1, b1)},
+  {t: G_CUTS[4], c: {x: PHONE.x + 100, y: PHONE.y + 40, z: 3.0}}, {t: ASSIST_END, c: {x: 700, y: 1130, z: 2.0}, ease: (t, a1, b1) => ss(t, a1, b1)},
 ];
 
 // cursor path on the desktop (screen-local px), driven by her head
@@ -105,7 +105,7 @@ const Phone: React.FC<{t: number}> = ({t}) => {
   const ring = ss(t, SWIPE + 0.3, SWIPE + 0.4);
   const call = eo(t, ANSWER + 0.03, ANSWER + 0.25);
   // the touch point enters from the left (continuing the cursor's exit to the right), swipes, then taps "answer"
-  const dot = {x: keys(t, [[T.and3, -40], [SWIPE - 0.04, 92], [SWIPE + 0.2, 30], [ANSWER - 0.22, 30], [ANSWER - 0.02, 82]]), y: keys(t, [[T.and3, 120], [SWIPE - 0.04, 110], [ANSWER - 0.22, 110], [ANSWER - 0.02, 178]])};
+  const dot = {x: keys(t, [[T.and3 - 0.25, -40], [SWIPE - 0.04, 92], [SWIPE + 0.2, 30], [ANSWER - 0.22, 30], [ANSWER - 0.02, 82]]), y: keys(t, [[T.and3, 120], [SWIPE - 0.04, 110], [ANSWER - 0.22, 110], [ANSWER - 0.02, 178]])};
   const W = PHONE.w, Hh = PHONE.h;
   return (
     <g transform={`translate(${PHONE.x - W / 2} ${PHONE.y - Hh / 2})`}>

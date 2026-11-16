@@ -261,7 +261,7 @@ export const SHOTS2: {name: string; a: number; b: number}[] = [
   {name: 'I4 B: winner leans back, bored', a: CUTS.I4, b: CUTS.I5},
   {name: 'I5 B: opponent furious', a: CUTS.I5, b: CUTS.I6},
   {name: 'I6 B: game, Zip tags Rex', a: CUTS.I6, b: CUTS.I7},
-  {name: 'I7 B: opponent stands, straining', a: CUTS.I7, b: CUTS.C},
+  {name: 'I7 B: two-shot: opponent up and straining, the winner relaxed', a: CUTS.I7, b: CUTS.C},
   {name: 'IC C: the decisive win', a: CUTS.C, b: CUTS.D},
   {name: 'ID D: opponent frozen, controller slips, eyes to the winner', a: CUTS.D, b: CUTS.E},
   {name: 'IE E: the winner, mouth shut, tiny smug smile on SHUT; the camera glides back into the opening composition', a: CUTS.E, b: 99},
@@ -290,7 +290,8 @@ export const Frame2: React.FC<{t: number; frame: number}> = ({t, frame}) => {
     case 'I4': return <ShotGuesserCU t={t} frame={frame} cam={gCU(t, CUTS.I4, CUTS.I5, 2.5, 2.6)} id="i4" />;
     case 'I5': return <ShotHonestCU t={t} frame={frame} z={lerp(2.3, 2.45, ss(t, CUTS.I5, CUTS.I6))} dy={70} id="i5" />;
     case 'I6': return <ShotGame t={t} zoom={2.45} id="i6" />;
-    case 'I7': return <ShotHonestCU t={t} frame={frame} z={lerp(1.9, 2.0, ss(t, CUTS.I7, CUTS.C))} dy={150} id="i7" />;
+    // (V4) a two-shot: Honest up and straining beside the winner, who has not moved
+    case 'I7': return <RoomScene t={t} frame={frame} cam={{x: lerp(540, 552, ss(t, CUTS.I7, CUTS.C)), y: 905, z: lerp(1.3, 1.36, ss(t, CUTS.I7, CUTS.C))}} g={guesser4(t)} h={honest4(t)} game={game2(t)} id="i7" alwaysMouth />;
     // (V4) a zoom punch on the K.O. hit
     case 'IC': return <ShotGame t={t} zoom={lerp(2.2, 2.32, ss(t, CUTS.C, CUTS.D)) + 0.24 * pulse(t, KO_HIT - 0.03, KO_HIT + 0.05, KO_HIT + 0.18, KO_HIT + 0.5)} hy={720} id="ic" />;
     case 'ID': return <ShotHonestCU t={t} frame={frame} z={lerp(1.62, 1.7, ss(t, CUTS.D, CUTS.E))} dy={190} id="id" />;
