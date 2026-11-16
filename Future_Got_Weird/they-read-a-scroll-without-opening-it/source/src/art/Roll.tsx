@@ -29,6 +29,22 @@ const lumpy = (x0: number, x1: number, y: number, amp: number, seed: number, n =
   return pts;
 };
 
+/** shared PHerc. 1667 silhouette (roll-local coordinates; end face toward +x) */
+export const ROLL_GEO = (() => {
+  const L = 300;
+  const R = 75;
+  const top = lumpy(-L / 2, L / 2, -R, 4.5, 3);
+  const bot = lumpy(L / 2, -L / 2, R, 3.5, 8);
+  const ex = L / 2;
+  const erx = R * 0.36;
+  let body = `M${-L / 2 + 6} ${-R + 10}`;
+  for (const [px, py] of top) body += `L${px.toFixed(1)} ${py.toFixed(1)}`;
+  body += `A${erx} ${R} 0 0 1 ${ex} ${R}`;
+  for (const [px, py] of bot) body += `L${px.toFixed(1)} ${py.toFixed(1)}`;
+  body += `Q${-L / 2 - 16} ${R - 10} ${-L / 2 - 14} 0 Q${-L / 2 - 14} ${-R + 4} ${-L / 2 + 6} ${-R + 10}Z`;
+  return {L, R, ex, erx, body};
+})();
+
 /** PHerc. 1667: length 8 cm, diameter 2 cm (4:1), lying along x, end face toward +x */
 export const Roll1667: React.FC<{x: number; y: number; s?: number; crumbs?: number; endGlow?: number; f?: number; upright?: boolean; spin?: number}> = ({
   x,
@@ -39,17 +55,7 @@ export const Roll1667: React.FC<{x: number; y: number; s?: number; crumbs?: numb
   upright = false,
   spin = 0,
 }) => {
-  const L = 300;
-  const R = 75;
-  const top = lumpy(-L / 2, L / 2, -R, 4.5, 3);
-  const bot = lumpy(L / 2, -L / 2, R, 3.5, 8);
-  const ex = L / 2; // end-face centre x
-  const erx = R * 0.36;
-  let body = `M${-L / 2 + 6} ${-R + 10}`;
-  for (const [px, py] of top) body += `L${px.toFixed(1)} ${py.toFixed(1)}`;
-  body += `A${erx} ${R} 0 0 1 ${ex} ${R}`;
-  for (const [px, py] of bot) body += `L${px.toFixed(1)} ${py.toFixed(1)}`;
-  body += `Q${-L / 2 - 16} ${R - 10} ${-L / 2 - 14} 0 Q${-L / 2 - 14} ${-R + 4} ${-L / 2 + 6} ${-R + 10}Z`;
+  const {L, R, ex, erx, body} = ROLL_GEO;
   // surface marks slide with the rotation when the roll turns on the scanner stage
   const marks = Array.from({length: 18}, (_, i) => {
     const ph = hash(i, 1) * Math.PI * 2 + spin;

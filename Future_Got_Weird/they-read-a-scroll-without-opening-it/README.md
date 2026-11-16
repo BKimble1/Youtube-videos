@@ -2,7 +2,29 @@
 
 Long-form episode, 16:9. The virtual unwrapping of PHerc. 1667, with the separate PHerc. Paris 4 ink check.
 
-## V1: first complete review render (current)
+## V2: pacing, animation and storytelling overhaul (work in progress, current)
+
+Not approved. Nobody has watched it in real time. Your V2 brief arrived cut off partway through section 7. This pass
+rebuilds 0:00–1:12.5 (sections 3–6) and applies the section-2 cleanup to the rest. The fuller redesign of 1:14 onward
+waits for the rest of the brief.
+
+**Review file:** `exports/FGW_Scroll_V2_REVIEW_1920x1080.mp4` (Git-ignored; 5 checksummed parts in `backup/`; to
+restore, run `cat backup/FGW_Scroll_V2_REVIEW_1920x1080.mp4.part_* > exports/FGW_Scroll_V2_REVIEW_1920x1080.mp4`)
+
+| Property | Value |
+|---|---|
+| Runtime | 2:52.63 (5,179 frames at 30 fps), the same narration and captions as V1 |
+| Loudness | −14.0 LUFS integrated, −1.0 dBTP true peak (`audio/mix/FGW_Scroll_V2_mix.wav`, effects re-cued) |
+| Picture | Composition `ScrollV2` (`source/src/v2/`: A2, B2, C2, D2 new; F2 and G2 cleaned copies; H as V1) |
+
+| Item | File |
+|---|---|
+| Report (scope, beat list, measurements, open questions) | `production/V2_REPORT.md` |
+| Direction as received | `production/V2_DIRECTION.md` |
+| QA (bursts, phone sheet, 1 fps sheets) | `qa/v2/` |
+| Render | `bash tools/render_v2.sh` (after `VER=V2 python3 tools/make_audio.py`) |
+
+## V1: first complete review render
 
 Not published. Nobody has watched it in real time. All checks of picture and sound are frame and measurement checks
 (see `production/V1_REPORT.md`).

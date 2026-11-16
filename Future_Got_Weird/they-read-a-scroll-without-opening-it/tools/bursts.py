@@ -12,7 +12,7 @@ def T(p):
     for i in range(len(W) - len(ps) + 1):
         if all(nrm(W[i + k]['word']) == q for k, q in enumerate(ps)): return W[i]['start']
     raise KeyError(p)
-BEATS = {
+BEATS_V1 = {
     '01_open_unroll': (0.0, 2.4),
     '02_split_to_roll': (T('That black lump') - 0.9, T('That black lump') + 0.3),
     '03_cut_to_reconstruction': (T('Centuries later') - 0.3, T('Centuries later') + 0.5),
@@ -29,6 +29,31 @@ BEATS = {
     '14_closing_callback': (T('You just read') + 0.8, T('You just read') + 2.2),
     '15_reroll': (T('And the page is still') - 0.1, T('And the page is still') + 2.2),
 }
+BEATS_V2 = {
+    '01_macro_attempt': (0.0, 2.8),
+    '02_scan_sweep': (3.5, 4.7),
+    '03_into_end_face_page': (4.5, 6.4),
+    '04_return_to_physical': (6.8, 7.9),
+    '05_match_cut_villa': (9.7, 10.4),
+    '06_surge_to_buried': (13.6, 15.6),
+    '07_break_and_turn': (17.4, 19.4),
+    '08_cut_to_lab': (26.3, 26.9),
+    '09_slices_stack': (33.0, 35.0),
+    '10_into_the_slice': (36.7, 39.3),
+    '11_dive_between_layers': (40.0, 41.5),
+    '12_coil_tilt': (43.0, 45.9),
+    '13_contact_press': (50.0, 51.8),
+    '14_wrong_jump': (53.2, 54.6),
+    '15_skipped_turn_peels': (55.4, 57.7),
+    '16_pieces_join': (58.8, 62.2),
+    '17_rewind': (63.8, 65.5),
+    '18_handoff_to_flatten': (71.4, 72.8),
+    '19_cutaway': (81.9, 83.2),
+    '20_scan_bar': (88.0, 89.3),
+    '21_road_open': (100.2, 101.4),
+    '22_validation_overlay': (126.4, 127.9),
+}
+BEATS = BEATS_V2 if os.environ.get('VER') == 'V2' else BEATS_V1
 for name, (a, b) in BEATS.items():
     n = int(round((b - a) * 30))
     cols = 8

@@ -41,7 +41,7 @@ res['frozen_segments_over_2_5s'] = re.findall(r'freeze_start: ([\d.]+)', fz)
 # audio vs narration master: speech-envelope cross-correlation
 raw = subprocess.run(stdin=subprocess.DEVNULL, args=['ffmpeg', '-v', 'error', '-i', vid, '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout
 y = np.frombuffer(raw, np.float32)
-n0, sr = sf.read(f'audio/narration/FGW_Scroll_narration_V1.wav')
+n0, sr = sf.read('audio/narration/FGW_Scroll_narration_V1.wav')
 n16 = subprocess.run(['ffmpeg', '-v', 'error', '-i', f'audio/narration/FGW_Scroll_narration_V1.wav', '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'], capture_output=True).stdout
 n = np.frombuffer(n16, np.float32)
 env = lambda x: np.sqrt(np.convolve(x[: len(x) // 160 * 160].reshape(-1, 160).mean(1) ** 2 + 1e-12, np.ones(5) / 5, 'same'))

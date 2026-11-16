@@ -144,33 +144,74 @@ back = T('Back on the first'); feet = TE('half feet.'); scholars = T('Scholars c
 oneOf = T('One of the surviving'); quote = T('“Possessing'); quoteEnd = TE('as they do.”'); somebody = T('Somebody put'); ago = TE('years ago.')
 youJust = T('You just read'); still = T('And the page is still'); stillEnd = TE('still rolled up.')
 
-# A
-put('shimmer', 0.0, -12, 1.7); put('settle', 1.25, -14, 0.6); put('chime', 2.05, -20, 1.2)
-put('crumbs', T('crumble') + 0.05, -16, 1.4)
-put('whoosh', book - 0.8, -20, 1.0)
-# B
-put('rumble', T('It was buried') - 0.1, -10, TE('year seventy-nine.') - T('It was buried') + 0.9)
-put('hit', T('Centuries later') - 0.02, -18, 0.6)
-for a, b in [(T('Centuries later') + 0.5, TE('tried to open it.') + 0.2), (T('By the time') - 0.05, T('less than half') - 0.05), (T('less than half'), TE('it had been.') - 0.1)]:
-    put('scrape', a, -16, b - a)
-    for k in range(5): put('flake', a + 0.3 + k * (b - a) / 6 + 0.4, -20, 0.1)
-put('swell', T('And the writing') - 0.1, -22, 1.6)
-# C
-put('hit', look - 0.87, -20, 0.5)
-put('button', press, -12, 0.15); put('hum', press, -22, map3d + 0.3 - press)
-for k in range(6): put('snap', researchers + 0.2 + k * ((map3d - 0.6 - researchers) / 6) + 0.05, -18, 0.25)
-put('swell', map3d - 0.4, -18, 1.2)
-put('whoosh', slice_ + 0.8, -16, spiral - slice_ + 0.2)
-put('shimmer', T('That’s the sheet'), -22, TE('over and over.') - T('That’s the sheet') + 0.3)
-# D
-put('ping', see + 0.3, -18, 1.0)
-put('tension', jump + 0.2, -10, 2.5)
-put('buzz', keep + 0.3, -22, 0.4)
-put('rewind', eachOther + 0.3, -18, 0.6)
-# E
-for i in range(3): put('chime', traced + 0.3 + i * 0.6, -22, 1.0)
-put('unroll', gave + 0.15, -12, flatten + 1.0 - gave - 0.15)
-put('settle', nowPage - 0.1, -14, 0.7)
+VER = os.environ.get('VER', 'V1')
+if VER == 'V1':
+    # A
+    put('shimmer', 0.0, -12, 1.7); put('settle', 1.25, -14, 0.6); put('chime', 2.05, -20, 1.2)
+    put('crumbs', T('crumble') + 0.05, -16, 1.4)
+    put('whoosh', book - 0.8, -20, 1.0)
+    # B
+    put('rumble', T('It was buried') - 0.1, -10, TE('year seventy-nine.') - T('It was buried') + 0.9)
+    put('hit', T('Centuries later') - 0.02, -18, 0.6)
+    for a, b in [(T('Centuries later') + 0.5, TE('tried to open it.') + 0.2), (T('By the time') - 0.05, T('less than half') - 0.05), (T('less than half'), TE('it had been.') - 0.1)]:
+        put('scrape', a, -16, b - a)
+        for k in range(5): put('flake', a + 0.3 + k * (b - a) / 6 + 0.4, -20, 0.1)
+    put('swell', T('And the writing') - 0.1, -22, 1.6)
+    # C
+    put('hit', look - 0.87, -20, 0.5)
+    put('button', press, -12, 0.15); put('hum', press, -22, map3d + 0.3 - press)
+    for k in range(6): put('snap', researchers + 0.2 + k * ((map3d - 0.6 - researchers) / 6) + 0.05, -18, 0.25)
+    put('swell', map3d - 0.4, -18, 1.2)
+    put('whoosh', slice_ + 0.8, -16, spiral - slice_ + 0.2)
+    put('shimmer', T('That’s the sheet'), -22, TE('over and over.') - T('That’s the sheet') + 0.3)
+    # D
+    put('ping', see + 0.3, -18, 1.0)
+    put('tension', jump + 0.2, -10, 2.5)
+    put('buzz', keep + 0.3, -22, 0.4)
+    put('rewind', eachOther + 0.3, -18, 0.6)
+    # E
+    for i in range(3): put('chime', traced + 0.3 + i * 0.6, -22, 1.0)
+    put('unroll', gave + 0.15, -12, flatten + 1.0 - gave - 0.15)
+    put('settle', nowPage - 0.1, -14, 0.7)
+else:
+    # V2 picture (source/src/v2): A2 macro attempt -> digital; B2 villa, eruption, surge, burial, attempts; C2 scan;
+    # D2 inside the coil. Times mirror the constants in the v2 scene files.
+    put('scrape', 0.55, -14, 1.4); put('flake', 1.2, -18, 0.1); put('flake', 1.7, -16, 0.1)
+    put('crumbs', 2.36, -10, 1.6); put('hit', 2.36, -24, 0.4)
+    put('shimmer', 3.62, -12, 0.85); put('whoosh', 4.5, -16, 0.9)
+    put('shimmer', 5.25, -18, 0.8); put('settle', 5.75, -16, 0.5); put('chime', 6.25, -20, 1.0)
+    put('rewind', 6.9, -20, 0.6); put('shimmer', 7.3, -16, 0.4)
+    put('whoosh', 8.0, -28, 1.6)
+    put('hit', 9.95, -22, 0.4)
+    put('rumble', T('It was buried') + 0.4, -8, 3.5)
+    put('whoosh', TE('year seventy-nine.') - 0.4, -8, 1.2); put('rumble', TE('year seventy-nine.') - 0.3, -10, 1.6)
+    put('settle', T('Centuries later') + 0.15, -16, 0.6); put('whoosh', T('Centuries later') + 0.2, -22, 0.8)
+    put('scrape', T('Centuries later') + 1.0, -14, TE('tried to open it.') - T('Centuries later') - 1.0)
+    put('crumbs', TE('tried to open it.') + 0.15, -12, 1.4)
+    put('whoosh', T('By the time') - 0.25, -20, 0.8)
+    for a, b in [(T('By the time') + 1.2, T('less than half') + 0.35), (T('less than half') + 0.3, TE('it had been.') - 0.05)]:
+        put('scrape', a, -16, b - a)
+        for k in range(5): put('flake', a + 0.3 + k * (b - a) / 6 + 0.4, -20, 0.1)
+    put('swell', T('And the writing') - 0.1, -18, 2.4)
+    put('whoosh', look - 0.85, -18, 2.2); put('button', press - 0.2, -12, 0.15); put('hum', press - 0.1, -22, map3d - press)
+    for k in range(5): put('tick', press + 0.5 + k * 0.6, -24, 0.05)
+    for k in range(13): put('snap', T('different angles') + 0.5 + k * 0.13 + 0.4, -22, 0.2)
+    put('swell', map3d - 0.2, -18, 1.4); put('whoosh', slice_ - 0.05, -18, 0.8); put('whoosh', slice_ + 0.6, -14, spiral - slice_ + 0.4)
+    put('whoosh', T('That’s the sheet') - 0.25, -14, 1.2); put('unroll', T('That’s the sheet') + 0.9, -18, 2.2)
+    put('whoosh', TE('over and over.') - 0.9, -16, 1.0); put('swell', TE('over and over.') - 0.2, -20, 1.0)
+    put('shimmer', T('Pick one') + 0.1, -24, TE('all the way around.') - T('Pick one'))
+    put('whoosh', see - 0.35, -20, 1.2); put('settle', T('press together?') + 0.3, -18, 0.5)
+    put('tension', jump + 0.1, -10, 2.6)
+    put('whoosh', jump + 1.3, -20, 1.6); put('unroll', skipped + 0.2, -16, T('turn of the page.') - skipped + 0.6)
+    put('settle', T('turn of the page.') + 0.1, -16, 0.5)
+    put('unroll', keep, -18, 1.2); put('settle', keep + 1.1, -18, 0.4); put('hit', T('side by side') + 0.5, -16, 0.5); put('buzz', T('side by side') + 0.6, -22, 0.4)
+    put('rewind', eachOther + 0.25, -14, traced - eachOther - 0.3)
+    put('whoosh', traced, -20, 0.8)
+    for tc in [traced + 0.35, traced + 0.9 + 0.464 * (messy - 0.2 - traced - 0.9), traced + 0.9 + 0.752 * (messy - 0.2 - traced - 0.9)]:
+        put('tick', tc - 0.1, -16, 0.05); put('chime', tc + 0.1, -24, 0.6)
+    put('shimmer', traced + 0.9, -24, messy - traced - 1.1)
+    put('whoosh', messy, -24, 1.2)
+
 # F
 put('pop', inkWas + 0.5, -20, 0.2); put('whoosh', inScan, -26, 0.7)
 for k in range(4): put('tick', trained + 0.7 + k * 0.6, -18, 0.05)
@@ -255,10 +296,10 @@ for _ in range(6):
     st = np.where(a > thr, np.sign(st) * (thr + (1 - thr) * np.tanh((a - thr) / (1 - thr))), st)
 if tp(st) > -1.0: st *= 10 ** ((-1.05 - tp(st)) / 20)
 os.makedirs('audio/mix', exist_ok=True)
-sf.write('audio/mix/FGW_Scroll_V1_mix.wav', st, SR, subtype='PCM_24')
+sf.write(f'audio/mix/FGW_Scroll_{VER}_mix.wav', st, SR, subtype='PCM_24')
 os.makedirs('source/public/audio', exist_ok=True)
-sf.write('source/public/audio/mix.wav', st, SR, subtype='PCM_24')
+sf.write(f'source/public/audio/mix_{VER.lower()}.wav', st, SR, subtype='PCM_24')
 m = {'integrated_lufs': round(meter.integrated_loudness(st), 2), 'true_peak_dbtp': round(tp(st), 2), 'duration_s': round(len(st) / SR, 4),
      'music_vs_voice_lu': -20, 'fx_vs_voice_lu': -12}
-json.dump(m, open('audio/mix/mix_measure.json', 'w'), indent=1)
+json.dump(m, open('audio/mix/mix_measure.json' if VER == 'V1' else f'audio/mix/mix_measure_{VER.lower()}.json', 'w'), indent=1)
 print(m)
