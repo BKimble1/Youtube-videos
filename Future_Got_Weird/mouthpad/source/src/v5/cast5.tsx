@@ -78,7 +78,7 @@ export const guesser5 = (t: number): GState => {
   // the punchline: a tiny smug smile grows on "SHUT" — mouth stays shut
   const smug = ss(t, T.shut + 0.02, T.shut + 0.32) * (1 - ss(t, LOOP_CUT + 0.4, LOOP_CUT + 0.9));
   const smile = 0.35 - 0.2 * bored + 0.45 * smug;
-  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0, smoothClose: true,
+  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0, smoothClose: true, clipPad: true,
     // (V4) the closed line meets the slit where it closes, then relaxes into the smile (and the reverse before the hook opens)
     settle: Math.min(t > T.close - 0.5 ? ss(t, T.mouth3 + 0.1, T.mouth3 + 0.45) : 1, 1 - ss(t, T.this + 0.02, T.this + 0.2) + (t > T.this + 1 ? 1 : 0))};
   // the head holds still for the lift-out match and through the lips closing (only breathing remains)

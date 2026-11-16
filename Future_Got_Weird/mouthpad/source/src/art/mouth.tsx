@@ -24,7 +24,8 @@ export type MouthState = {
   device?: number; // 1 = the MouthPad is in the mouth (default), 0 = lifted out
   smirk?: number; // closed-mouth smirk (one corner up)
   settle?: number; // (V4, with smoothClose) 0 = the closed line sits exactly where the slit closed, 1 = the relaxed smile line
-  smoothClose?: boolean; // (V4) the open mouth fades into the closed line at the same place (no swap), teeth and tongue fade out
+  smoothClose?: boolean;
+  clipPad?: boolean; // (V5) clip the pad's lattice to its outline // (V4) the open mouth fades into the closed line at the same place (no swap), teeth and tongue fade out
 };
 
 /** the mouth view used inside the lips */
@@ -139,7 +140,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
         <path d={openingPath(m)} fill={`url(#${id}-cav)`} />
         {o > (sc ? 0.06 : 0.12) && (
           <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.06) / 0.08)}>
-            <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact}
+            <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact} clipPad={m.clipPad}
               show={(m.device ?? 1) < 1 ? {shell: m.device ?? 1, plate: m.device ?? 1, pad: m.device ?? 1, traces: m.device ?? 1, pods: m.device ?? 1} : undefined} />
           </g>
         )}

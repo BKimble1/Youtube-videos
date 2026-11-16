@@ -99,7 +99,8 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   const ripple = clamp((t - (T.square - 0.05)) / 0.6);
   // the section: tongue rises to the roof on "roof", slides along the pad on "of your mouth"
   const tl = ss(t, T.sitting1 + 0.05, T.roof - 0.02);
-  const cz = keys(t, [[T.roof, 1.5], [T.roof + 0.28, 1.5], [T.mouth2 - 0.15, 5.0]]);
+  // (V5) the tip slides back along the pad's flat underside (not forward onto its bend behind the incisors)
+  const cz = keys(t, [[T.roof, 1.5], [T.roof + 0.28, 1.5], [T.mouth2 - 0.15, -1.5]]);
   const room = guesser5(C2_START);
   const ow = opening({...room.m});
   void ow;
@@ -134,11 +135,11 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
             <path d={tonguePath(M.m)} fill="#000000" opacity={1 - fwd} transform={`translate(540 960) scale(${ECU2.z}) translate(${-ECU2.x} ${-ECU2.y}) translate(${G.x} ${G.ground}) scale(${G.scale})`} />
           </mask>
           <g opacity={inLips} clipPath="url(#dv-lips)">
-            <g mask="url(#dv-tmask)"><g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw view={view} px={px * inkK} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={g0} shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} /></g></g>
+            <g mask="url(#dv-tmask)"><g transform={`translate(${cx} ${cy}) scale(${px})`}><Jaw clipPad view={view} px={px * inkK} id="dv-in" show={{teeth: 0, palate: 0}} padGlow={g0} shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} /></g></g>
           </g>
           <g opacity={1 - inLips} >
             <g transform={`translate(${cx} ${cy}) scale(${px})`}>
-              <Jaw view={view} px={px * inkK} id="dv-jaw" shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={Math.max(g0, pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8)} />
+              <Jaw clipPad view={view} px={px * inkK} id="dv-jaw" shellBack={shellK} shellOpacity={lerp(0.42, 0.55, shellK)} show={{teeth: 0, palate: 0, traces: 1 - fly}} near={near} padGlow={Math.max(g0, pulse(t, T.gold - 0.05, T.gold + 0.05, T.gold + 0.2, T.gold + 0.45) * 0.8)} />
             </g>
           </g>
           {/* sensing ripple across the electrodes on "square" */}

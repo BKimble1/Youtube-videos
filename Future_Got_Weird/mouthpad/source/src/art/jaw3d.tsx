@@ -194,7 +194,8 @@ export const Jaw: React.FC<{
   near?: number; // opacity of the half nearer the camera (0 = a clean sagittal cut-away: only the far half remains)
   shellBack?: number; // (V4) opacity of the shell half behind the palate (0 = as when the teeth hide it)
   shellOpacity?: number; // (V4) override of the shell fill opacity
-}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1, near = 1, shellBack = 1, shellOpacity}) => {
+  clipPad?: boolean; // (V5) clip the electrode lattice to the pad's outline (no pattern spilling past its edge)
+}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1, near = 1, shellBack = 1, shellOpacity, clipPad = false}) => {
   // which lateral side is nearer the camera (sign of x for the near half)
   const nearSign = projector(view)({x: 1, y: 0, z: 0}).d < projector(view)({x: -1, y: 0, z: 0}).d ? 1 : -1;
   const nf = (x: number) => (x * nearSign > 0.01 ? near : 1);
@@ -380,8 +381,9 @@ export const Jaw: React.FC<{
               <stop offset="1" stopColor="#FFE08A" stopOpacity={0} />
             </radialGradient>
           </defs>
+          {clipPad && <defs><clipPath id={`${id}-padclip`}><path d={poly(outline)} /></clipPath></defs>}
           <path d={poly(outline)} fill={`url(#${id}-gold)`} opacity={0.4 + 0.6 * vis} />
-          <g fill={DEV.gold0} stroke={DEV.gold2} strokeWidth={W2 * 0.6} vectorEffect="non-scaling-stroke" opacity={0.7 * vis}>{lines}</g>
+          <g fill={DEV.gold0} stroke={DEV.gold2} strokeWidth={W2 * 0.6} vectorEffect="non-scaling-stroke" opacity={0.7 * vis} clipPath={clipPad ? `url(#${id}-padclip)` : undefined}>{lines}</g>
           {padGlow > 0 && <path d={poly(outline)} fill="#FFF6C8" opacity={0.55 * padGlow} />}
           <path d={poly(outline)} fill="none" {...ink(W1)} />
           {touch}
