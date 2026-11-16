@@ -22,7 +22,7 @@ export type GameState = {
   enemies: Enemy[];
   orbs: Orb[];
   shots: Shot[];
-  splats: {x: number; y: number; s: number; age: number; seed: number}[];
+  splats: {x: number; y: number; s: number; age: number; seed: number; col?: string}[];
   keys?: {w: number; a: number; s: number; d: number} | null;
   rex?: {x: number; z: number; hit: number; fire: number; alive: number} | null;
   win?: number; // 0..1 victory flourish
@@ -30,6 +30,11 @@ export type GameState = {
   muzzle?: number; // 0..1 muzzle flash
   hitMark?: number; // 0..1 hit marker at the crosshair
   shake?: P; // screen shake offset (px)
+  hop?: number; // Zip's victory hop (px up)
+  charge?: number; // 0..1 the blaster charging before the winning shot
+  confetti?: number; // seconds since the K.O. pop (< 0: none)
+  flinch?: number; // 0..1 Rex flinching from a tag
+  winX?: number; // screen x where the trophy rises (above Zip)
 };
 export type Ext = {t: number; b: number; l: number; r: number};
 const NOEXT: Ext = {t: 0, b: 0, l: 0, r: 0};
@@ -169,17 +174,29 @@ const GooBot: React.FC<{e: Enemy; g: GameState}> = ({e, g}) => {
 const Rex: React.FC<{r: NonNullable<GameState['rex']>; g: GameState}> = ({r, g}) => {
   const p = projectG(g.camX, r.x, r.z, 0);
   const s = p.s * 0.95;
-  const fall = clamp(r.hit * 1.6);
+  // K.O.: knocked back (slides away and up a little), spins once and lands on his back
+  const k = clamp(r.hit / 0.45);
+  const fall = 1 - Math.pow(1 - k, 3);
+  const flinch = g.flinch ?? 0;
+  const kx = fall * s * 0.6 + Math.sin(flinch * Math.PI) * s * 0.12, ky = -Math.sin(k * Math.PI) * s * 0.7;
   return (
-    <g opacity={r.alive} transform={`translate(${p.x} ${p.y}) rotate(${fall * -70}) translate(${-p.x} ${-p.y})`}>
+    <g opacity={r.alive} transform={`translate(${p.x + kx} ${p.y + ky}) rotate(${fall * 270 + Math.sin(flinch * Math.PI) * 12}) scale(${1 + 0.15 * Math.sin(flinch * Math.PI)} ${1 - 0.12 * Math.sin(flinch * Math.PI)}) translate(${-p.x} ${-p.y})`}>
       <ellipse cx={p.x} cy={p.y} rx={s * 0.7} ry={s * 0.14} fill="#2B6E5E" opacity={0.3} />
       <g transform={`translate(${p.x} ${p.y - s * 0.1 * Math.abs(Math.sin(g.t * 9))})`}>
         <rect x={-s * 0.32} y={-s * 0.45} width={s * 0.18} height={s * 0.45} rx={s * 0.06} fill={REX.shade} stroke={INK} strokeWidth={2} />
         <rect x={s * 0.14} y={-s * 0.45} width={s * 0.18} height={s * 0.45} rx={s * 0.06} fill={REX.shade} stroke={INK} strokeWidth={2} />
         <rect x={-s * 0.55} y={-s * 1.55} width={s * 1.1} height={s * 1.15} rx={s * 0.45} fill={REX.body} stroke={INK} strokeWidth={2.4} />
         <rect x={-s * 0.36} y={-s * 1.32} width={s * 0.72} height={s * 0.32} rx={s * 0.16} fill={INK} />
-        <circle cx={-s * 0.14} cy={-s * 1.16} r={s * 0.07} fill="#B6FF6B" />
-        <circle cx={s * 0.14} cy={-s * 1.16} r={s * 0.07} fill="#B6FF6B" />
+        {r.hit > 0.05 || flinch > 0.3 ? (
+          <g stroke="#B6FF6B" strokeWidth={Math.max(1.5, s * 0.04)} strokeLinecap="round">
+            {[-1, 1].map((d) => <g key={d}><line x1={d * s * 0.14 - s * 0.06} y1={-s * 1.22} x2={d * s * 0.14 + s * 0.06} y2={-s * 1.1} /><line x1={d * s * 0.14 + s * 0.06} y1={-s * 1.22} x2={d * s * 0.14 - s * 0.06} y2={-s * 1.1} /></g>)}
+          </g>
+        ) : (
+          <g>
+            <circle cx={-s * 0.14} cy={-s * 1.16} r={s * 0.07} fill="#B6FF6B" />
+            <circle cx={s * 0.14} cy={-s * 1.16} r={s * 0.07} fill="#B6FF6B" />
+          </g>
+        )}
         <path d={`M ${-s * 0.42} ${-s * 1.5} L ${-s * 0.3} ${-s * 1.75} L ${-s * 0.15} ${-s * 1.52} L 0 ${-s * 1.8} L ${s * 0.15} ${-s * 1.52} L ${s * 0.3} ${-s * 1.75} L ${s * 0.42} ${-s * 1.5}`} fill={REX.light} stroke={INK} strokeWidth={2} strokeLinejoin="round" />
         <rect x={s * 0.45} y={-s * 0.95} width={s * 0.5} height={s * 0.2} rx={s * 0.08} fill="#2B2B33" stroke={INK} strokeWidth={2} />
         {r.fire > 0 && <circle cx={s * 1.0} cy={-s * 0.85} r={s * 0.16 * r.fire} fill="#FF5FA2" opacity={r.fire} />}
@@ -193,9 +210,12 @@ const Zip: React.FC<{g: GameState}> = ({g}) => {
   const bob = Math.abs(Math.sin(g.run * Math.PI)) * 7 * g.runAmt;
   const legA = Math.sin(g.run * Math.PI) * 10 * g.runAmt;
   const rec = g.recoil;
+  const hop = g.hop ?? 0;
+  const ch = g.charge ?? 0;
   return (
-    <g transform={`translate(${x} ${y - bob}) rotate(${g.zipLean * 9})`}>
-      <ellipse cx={0} cy={bob + 4} rx={52} ry={10} fill="#2B6E5E" opacity={0.3} />
+    <g transform={`translate(${x} ${y - bob - hop}) rotate(${g.zipLean * 9})`}>
+      <ellipse cx={0} cy={bob + hop + 4} rx={52 * (1 - hop / 200)} ry={10 * (1 - hop / 200)} fill="#2B6E5E" opacity={0.3} />
+      {ch > 0.01 && <circle cx={118} cy={-68} r={10 + 26 * ch + 4 * Math.sin(g.t * 60)} fill="#FFF3B0" opacity={0.35 + 0.5 * ch} />}
       {/* legs */}
       <rect x={-30} y={-26 + legA} width={20} height={30} rx={8} fill={ZIP.dark} stroke={INK} strokeWidth={2.4} />
       <rect x={10} y={-26 - legA} width={20} height={30} rx={8} fill={ZIP.dark} stroke={INK} strokeWidth={2.4} />
@@ -220,7 +240,7 @@ const Zip: React.FC<{g: GameState}> = ({g}) => {
   );
 };
 
-const Splat: React.FC<{x: number; y: number; s: number; age: number; seed: number}> = ({x, y, s, age, seed}) => {
+const Splat: React.FC<{x: number; y: number; s: number; age: number; seed: number; col?: string}> = ({x, y, s, age, seed, col = '#FF8A3D'}) => {
   if (age < 0 || age > 0.9) return null;
   const k = clamp(age / 0.08);
   const fade = 1 - clamp((age - 0.45) / 0.45);
@@ -232,12 +252,12 @@ const Splat: React.FC<{x: number; y: number; s: number; age: number; seed: numbe
   }
   return (
     <g transform={`translate(${x} ${y})`} opacity={fade}>
-      <path d={smoothPath(ps)} fill="#FF8A3D" stroke={INK} strokeWidth={2.2} />
-      <path d={smoothPath(ps.map((q) => ({x: q.x * 0.5, y: q.y * 0.5})))} fill="#FFC744" />
+      <path d={smoothPath(ps)} fill={col} stroke={INK} strokeWidth={2.2} />
+      <path d={smoothPath(ps.map((q) => ({x: q.x * 0.5, y: q.y * 0.5})))} fill={col === '#FF8A3D' ? '#FFC744' : '#B6FF6B'} />
       {Array.from({length: 7}).map((_, i) => {
         const a = hash(seed * 3 + i) * Math.PI * 2;
         const d = s * (1.1 + age * 3.2) * (0.7 + hash(seed + i * 7) * 0.6);
-        return <circle key={i} cx={Math.cos(a) * d} cy={Math.sin(a) * d * 0.8 + age * age * 60} r={s * 0.14 * (1 - age)} fill="#FF8A3D" stroke={INK} strokeWidth={1.6} />;
+        return <circle key={i} cx={Math.cos(a) * d} cy={Math.sin(a) * d * 0.8 + age * age * 60} r={s * 0.14 * (1 - age)} fill={col} stroke={INK} strokeWidth={1.6} />;
       })}
     </g>
   );
@@ -248,7 +268,7 @@ const Crosshair: React.FC<{g: GameState}> = ({g}) => {
   const r = 15 - 4 * g.lock;
   const hm = g.hitMark ?? 0;
   return (
-    <g transform={`translate(${x} ${y})`}>
+    <g transform={`translate(${x} ${y})`} opacity={1 - (g.win ?? 0)}>
       {hm > 0.01 && (
         <g stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" opacity={hm}>
           {[45, 135, 225, 315].map((a) => {
@@ -291,11 +311,27 @@ const Keys: React.FC<{k: NonNullable<GameState['keys']>}> = ({k}) => {
   );
 };
 
-const Trophy: React.FC<{w: number}> = ({w}) => {
-  if (w <= 0.001) return null;
-  const s = 0.6 + 0.4 * clamp(w * 1.4);
+const Confetti: React.FC<{age: number; x: number; y: number}> = ({age, x, y}) => {
+  if (age < 0 || age > 2.5) return null;
+  const cols = ['#FFC744', '#FF5FA2', '#1CA7A0', '#FF8A3D', '#4F7CC9', '#B6FF6B'];
   return (
-    <g transform={`translate(320 150) scale(${s})`} opacity={clamp(w * 3)}>
+    <g>
+      {Array.from({length: 26}).map((_, i) => {
+        const a = (i / 26) * Math.PI * 2 + hash(i) * 0.4;
+        const v = 140 + hash(i + 7) * 160;
+        const px = x + Math.cos(a) * v * Math.min(age, 0.6) / 0.6 * (0.6 + 0.4 * hash(i + 3));
+        const py = y + Math.sin(a) * v * 0.7 * Math.min(age, 0.6) / 0.6 + 90 * age * age;
+        return <rect key={i} x={px - 4} y={py - 7} width={8} height={14} rx={2} fill={cols[i % cols.length]} transform={`rotate(${age * 400 + i * 37} ${px} ${py})`} opacity={1 - Math.max(0, (age - 1.6) / 0.9)} />;
+      })}
+    </g>
+  );
+};
+
+const Trophy: React.FC<{w: number; x?: number}> = ({w, x = 320}) => {
+  if (w <= 0.001) return null;
+  const s = (0.6 + 0.4 * clamp(w * 1.4)) * 0.75;
+  return (
+    <g transform={`translate(${x} ${118 - 40 * clamp(w * 2)}) scale(${s})`} opacity={clamp(w * 3)}>
       {Array.from({length: 12}).map((_, i) => {
         const a = (i / 12) * Math.PI * 2 + w * 2;
         return <path key={i} d={`M 0 0 L ${Math.cos(a - 0.12) * 150} ${Math.sin(a - 0.12) * 150} L ${Math.cos(a + 0.12) * 150} ${Math.sin(a + 0.12) * 150} Z`} fill="#FFF3B0" opacity={0.45} />;
@@ -350,9 +386,10 @@ export const GameScreen: React.FC<{g: GameState; id: string; ext?: Ext; hud?: bo
           );
         })}
         {g.splats.map((s1, i) => <Splat key={i} {...s1} />)}
+        {g.rex && (g.confetti ?? -1) >= 0 && (() => { const p = projectG(g.camX, g.rex!.x, g.rex!.z, 1.0); return <Confetti age={g.confetti!} x={p.x + 30} y={p.y} />; })()}
         <Zip g={g} />
         <Crosshair g={g} />
-        <Trophy w={g.win ?? 0} />
+        <Trophy w={g.win ?? 0} x={g.winX ?? 320} />
        </g>
         {hud && (
           <g transform={`translate(${22 - e.l * 0} 22)`}>

@@ -1,0 +1,28 @@
+{
+ "integrated_lufs": -14.0,
+ "true_peak_dbtp_4x": -1.49,
+ "sample_peak_dbfs": -1.6,
+ "voice_gain_db": 6.12,
+ "voice_max_gain_reduction_db": -9.21,
+ "duration_s": 31.9,
+ "effects": 112,
+ "voice_lufs_in_mix": -17.09,
+ "sfx_lufs_in_mix": -25.85,
+ "music_lufs_in_mix": -33.13,
+ "voice_over_bed_margin_db_while_speaking": {
+  "min": -2.2,
+  "p5": 8.5,
+  "median": 16.8
+ },
+ "worst_masking_windows_s": [
+  6.25,
+  15.55,
+  5.0,
+  28.95,
+  13.95,
+  20.75
+ ],
+ "music_bpm": 120.37617554858934,
+ "music_beats": 64,
+ "loop_seam_jump": 0.0061
+}

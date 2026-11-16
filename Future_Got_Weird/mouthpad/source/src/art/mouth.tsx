@@ -35,7 +35,7 @@ export const opening = (m: MouthState) => {
   const w = 13 + 8 * o; // half width
   const h = 3 + 31 * o; // height
   const s = (m.smile ?? 0) * 4;
-  const top = MOUTH_TOP + 4 - 3 * o;
+  const top = MOUTH_TOP + 1; // the upper lip holds still; the jaw (lower lip) does the moving
   return {w, h, s, top, bot: top + h};
 };
 export const openingPath = (m: MouthState) => {
@@ -53,7 +53,7 @@ export const jawPlacement = (m: MouthState) => {
   // the incisal edge sits about a quarter of the way down the opening; as the lips close the teeth slide up behind
   // the upper lip, so a closing mouth never shows a strip of bared teeth
   const o = clamp(m.open);
-  const ty = top + lerp(-10, Math.max(4, h * 0.22), clamp((o - 0.3) / 0.4));
+  const ty = top + 7.5; // the upper teeth (and the device on them) are fixed to the head
   return {v, k: MM, tx: -inc.x * MM, ty: ty - inc.y * MM};
 };
 /** head-space position of a pad point, for effects and for the tongue tip */
@@ -112,7 +112,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
       <g clipPath={`url(#${id}-op)`}>
         <path d={openingPath(m)} fill={`url(#${id}-cav)`} />
         {o > 0.12 && (
-          <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.5) / 0.25)}>
+          <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.06) / 0.08)}>
             <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact}
               show={(m.device ?? 1) < 1 ? {shell: m.device ?? 1, plate: m.device ?? 1, pad: m.device ?? 1, traces: m.device ?? 1, pods: m.device ?? 1} : undefined} />
           </g>

@@ -2,7 +2,7 @@
 // The monitor stands at the left, the guesser sits behind the desk at the right with his keyboard and gamepad
 // untouched in front of him; Honest sits on a beanbag in front of the desk (frame-left) when he is in the scene.
 import React from 'react';
-import {CrewChar, CAST, Pose, reach, IDLE} from '../crew';
+import {CrewChar, CAST, Pose, reach, IDLE, VisShape} from '../crew';
 import {GameScreen, GameState} from './game';
 import {OpenMouth, MouthState} from './mouth';
 import {clamp, lerp, hash, DUR} from '../lib';
@@ -154,7 +154,7 @@ export const Pad: React.FC<{x: number; y: number; r?: number; shake?: number}> =
 );
 
 export type GState = {pose: Pose; m: MouthState; life?: number; hands?: 'up' | 'behind' | 'rest'; front?: 'L' | 'R' | 'none'};
-export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number} | null;
+export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number; vis?: VisShape} | null;
 
 export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string; alwaysMouth?: boolean; front?: React.ReactNode}> = ({t, frame, cam, g, h, game, id, alwaysMouth, front}) => {
   const ink = inkFor(G.scale, cam.z);
@@ -173,7 +173,7 @@ export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState;
       {h && (
         <g>
           <BeanBag x={h.x} />
-          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h`} ink={inkFor(H.scale, cam.z)} shadow={false} front="L"
+          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h`} ink={inkFor(H.scale, cam.z)} shadow={false} vis={h.vis} front="L"
             headGear={(h.paint ?? 0) > 0.01 ? <g opacity={h.paint}><path d="M 18 -362 q 10 -14 24 -4 q 12 -10 16 6 q 10 4 2 14 q 4 14 -12 10 q -6 12 -18 2 q -14 6 -14 -10 q -10 -8 2 -18 Z" fill="#FF8A3D" stroke="#162A32" strokeWidth={3} /><circle cx={34} cy={-354} r={6} fill="#FFC744" /></g> : undefined} />
           {h.pad && <Pad x={h.x + h.pad.dx} y={hy - 330 + h.pad.dy} r={h.pad.r} shake={h.pad.shake} />}
           <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h2`} ink={inkFor(H.scale, cam.z)} shadow={false} front="R" pass="frontArm" holdR={h.holdR} />

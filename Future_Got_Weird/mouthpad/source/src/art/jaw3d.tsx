@@ -469,7 +469,14 @@ export const Jaw: React.FC<{
     const c = pr({x: cp.x, y: 2, z: cp.z - 8});
     items.push({
       d: c.d - 50,
-      el: <path key="tongue" d={smoothPath(ps)} fill="#E87C86" opacity={0.62 * tongueX} stroke="#B84A57" strokeWidth={W1} vectorEffect="non-scaling-stroke" />,
+      el: (
+        <g key="tongue" opacity={tongueX}>
+          <path d={smoothPath(ps)} fill="#E87C86" opacity={0.82} stroke="#B84A57" strokeWidth={W1} vectorEffect="non-scaling-stroke" />
+          {/* the midline groove and the tip, so the tip reads as the part touching the pad */}
+          <path d={line([pr({x: cp.x, y: 2, z: cp.z - 4}), pr({x: cp.x * 0.5, y: 2, z: cp.z - 18}), pr({x: 0, y: 2, z: cp.z - 30})])} fill="none" stroke="#C25563" strokeWidth={W1} vectorEffect="non-scaling-stroke" opacity={0.6} />
+          <circle cx={pr({x: cp.x, y: 2, z: cp.z + 1})['x']} cy={pr({x: cp.x, y: 2, z: cp.z + 1})['y']} r={3.2} fill="#F7B3BA" opacity={0.85} />
+        </g>
+      ),
     });
   }
 
