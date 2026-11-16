@@ -1,6 +1,30 @@
 # Future Got Weird: MouthPad (playing video games with your tongue)
 
-## V3 (current review render)
+## V4 (final polish: `exports/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4`)
+
+Not published. The MP4 is Git-ignored; the same bytes are in `backup/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4.part_00`
+(one part = the whole file; SHA-256 in `backup/JOINED_SHA256SUMS`).
+
+| Property | Value |
+|---|---|
+| Verified (ffprobe) | H.264 High, 1080 × 1920, SAR 1:1, 9:16, 30 fps, 957 frames, 31.90 s; AAC 48 kHz stereo; −14.0 LUFS |
+| Narration | Locked script, unchanged (the V2 narration master) |
+| Captions | Channel style, 26 phrases, word-synced (0 mismatched word frames); SRT `captions/FGW_MouthPad_V4.srt` |
+| Report | `production/V4_REPORT.md` (changes, frame-by-frame inspection, unresolved issues) |
+| Source | `source/src/v4/` (composition `MouthPadV4`; V4-only switches in the shared room, mouth and game art: `noPad`, `smoothClose`, `bigWin`, `aim`) |
+| QA | `qa/v4/` (every-frame sheets, measurements, caption sync, 100% crops) |
+
+Rebuild V4:
+
+    python3 tools/make_captions_v4.py
+    (cd source && ./node_modules/.bin/esbuild ../tools/export_cues_v4.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --jsx=automatic --external:remotion --outfile=/tmp/ec4.cjs) && NODE_PATH=source/node_modules node /tmp/ec4.cjs audio/cues_v4.json
+    python3 tools/make_audio_v4.py mix_v4
+    (cd source && ./node_modules/.bin/esbuild ../tools/caption_spans_v4.ts --bundle --platform=node --format=cjs --loader:.tsx=tsx --jsx=automatic --external:remotion --outfile=/tmp/cs4.cjs) && NODE_PATH=source/node_modules node /tmp/cs4.cjs qa/v4_caption_spans.json
+    python3 tools/qa_captions_v4.py
+    COMP=MouthPadV4 tools/render.sh mix_v4 exports/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4
+    QA_CUES=audio/cues_v4.json QA_WORDS=audio/narration/v2_words.json python3 tools/qa_render.py exports/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4 v4
+
+## V3 (previous review render)
 
 Not published, and not watched or heard in real time.
 
