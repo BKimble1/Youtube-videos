@@ -27,7 +27,12 @@ export type GameState = {
   rex?: {x: number; z: number; hit: number; fire: number; alive: number} | null;
   win?: number; // 0..1 victory flourish
   wipe?: number; // 0..1 round reset wipe
+  muzzle?: number; // 0..1 muzzle flash
+  hitMark?: number; // 0..1 hit marker at the crosshair
+  shake?: P; // screen shake offset (px)
 };
+export type Ext = {t: number; b: number; l: number; r: number};
+const NOEXT: Ext = {t: 0, b: 0, l: 0, r: 0};
 
 const HZ = 148; // horizon (px)
 const F = 300; // focal length
@@ -46,18 +51,18 @@ const Ink: React.FC<{d: string; fill: string; w?: number; o?: number}> = ({d, fi
   <path d={d} fill={fill} stroke={INK} strokeWidth={w} strokeLinejoin="round" opacity={o} />
 );
 
-const Floor: React.FC<{g: GameState; id: string}> = ({g, id}) => {
+const Floor: React.FC<{g: GameState; id: string; e: Ext}> = ({g, id, e}) => {
   // perspective tiles; the vanishing point shifts with the lateral camera so strafing reads
   const lines: React.ReactNode[] = [];
   for (let k = -14; k <= 14; k++) {
     const wx = k * 1.2 - ((g.camX % 1.2) + 1.2) % 1.2;
-    const a = projectG(0, wx, 1.0), b = projectG(0, wx, 60);
+    const a = projectG(0, wx, 0.25), b = projectG(0, wx, 60);
     lines.push(<line key={`v${k}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} />);
   }
-  for (let k = 0; k < 26; k++) {
-    const z = 1.0 + ((k * 1.4 - (g.fwd % 1.4) + 1.4 * 30) % (1.4 * 26));
+  for (let k = 0; k < 30; k++) {
+    const z = 0.3 + ((k * 1.4 - (g.fwd % 1.4) + 1.4 * 30) % (1.4 * 30));
     const p = projectG(0, 0, z);
-    lines.push(<line key={`h${k}`} x1={0} y1={p.y} x2={640} y2={p.y} opacity={clamp(1 - z / 34)} />);
+    lines.push(<line key={`h${k}`} x1={-e.l} y1={p.y} x2={640 + e.r} y2={p.y} opacity={clamp(1 - z / 34)} />);
   }
   return (
     <g>
@@ -67,13 +72,13 @@ const Floor: React.FC<{g: GameState; id: string}> = ({g, id}) => {
           <stop offset="1" stopColor="#5CC4A8" />
         </linearGradient>
       </defs>
-      <rect x={0} y={HZ} width={640} height={400 - HZ} fill={`url(#${id}-fl)`} />
+      <rect x={-e.l} y={HZ} width={640 + e.l + e.r} height={400 - HZ + e.b} fill={`url(#${id}-fl)`} />
       <g stroke="#3FA58C" strokeWidth={1.6} opacity={0.55}>{lines}</g>
     </g>
   );
 };
 
-const Sky: React.FC<{g: GameState; id: string}> = ({g, id}) => {
+const Sky: React.FC<{g: GameState; id: string; e: Ext}> = ({g, id, e}) => {
   const par = -g.camX * 6;
   const isl = [
     {x: 90, y: 80, w: 120, c: '#C8B6F2'},
@@ -90,10 +95,10 @@ const Sky: React.FC<{g: GameState; id: string}> = ({g, id}) => {
           <stop offset="1" stopColor="#FFE3B3" />
         </linearGradient>
       </defs>
-      <rect x={0} y={0} width={640} height={HZ + 2} fill={`url(#${id}-sky)`} />
+      <rect x={-e.l} y={-e.t} width={640 + e.l + e.r} height={HZ + 2 + e.t} fill={`url(#${id}-sky)`} />
       <circle cx={500 + par * 0.3} cy={46} r={22} fill="#FFF6D6" />
       {isl.map((q, i) => {
-        const x = ((q.x + par * (0.5 + i * 0.1)) % 900 + 900) % 900 - 130;
+        const x = ((q.x + par * (0.5 + i * 0.1)) % 1400 + 1400) % 1400 - 380;
         return (
           <g key={i} transform={`translate(${x} ${q.y + Math.sin(g.t * 0.9 + i) * 3})`}>
             <path d={`M ${-q.w / 2} 0 Q 0 ${-q.w * 0.28} ${q.w / 2} 0 L ${q.w * 0.18} ${q.w * 0.22} Q 0 ${q.w * 0.34} ${-q.w * 0.18} ${q.w * 0.22} Z`} fill={q.c} />
@@ -101,9 +106,9 @@ const Sky: React.FC<{g: GameState; id: string}> = ({g, id}) => {
         );
       })}
       {/* far arena wall */}
-      <rect x={0} y={HZ - 16} width={640} height={18} fill="#F7A9C4" />
-      {Array.from({length: 18}).map((_, i) => {
-        const x = ((i * 48 - g.camX * 22) % 864 + 864) % 864 - 112;
+      <rect x={-e.l} y={HZ - 16} width={640 + e.l + e.r} height={18} fill="#F7A9C4" />
+      {Array.from({length: 40}).map((_, i) => {
+        const x = ((i * 48 - g.camX * 22) % 1920 + 1920) % 1920 - 640;
         return <rect key={i} x={x} y={HZ - 16} width={22} height={18} fill="#FFD27A" opacity={0.85} />;
       })}
     </g>
@@ -205,6 +210,7 @@ const Zip: React.FC<{g: GameState}> = ({g}) => {
       <circle cx={25} cy={-146} r={7} fill="#FFC744" stroke={INK} strokeWidth={2.4} />
       {/* blaster arm (right) */}
       <g transform={`translate(44 -64) rotate(${-8 - rec * 10})`}>
+        {(g.muzzle ?? 0) > 0.01 && <path transform={`translate(70 -4) scale(${0.6 + 0.8 * (g.muzzle ?? 0)})`} d="M 0 0 L 16 -14 L 12 -3 L 34 -6 L 14 4 L 26 18 L 4 8 Z" fill="#FFF3B0" stroke="#FFC744" strokeWidth={3} opacity={g.muzzle} />}
         <rect x={-8} y={-10} width={44} height={20} rx={8} fill={ZIP.body} stroke={INK} strokeWidth={2.4} />
         <rect x={18} y={-16} width={40} height={24} rx={7} fill="#2EC7D6" stroke={INK} strokeWidth={2.6} />
         <rect x={50 - rec * 6} y={-12} width={14} height={16} rx={4} fill="#FFC744" stroke={INK} strokeWidth={2.2} />
@@ -240,8 +246,17 @@ const Splat: React.FC<{x: number; y: number; s: number; age: number; seed: numbe
 const Crosshair: React.FC<{g: GameState}> = ({g}) => {
   const {x, y} = g.cross;
   const r = 15 - 4 * g.lock;
+  const hm = g.hitMark ?? 0;
   return (
     <g transform={`translate(${x} ${y})`}>
+      {hm > 0.01 && (
+        <g stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" opacity={hm}>
+          {[45, 135, 225, 315].map((a) => {
+            const c = Math.cos((a * Math.PI) / 180), sn = Math.sin((a * Math.PI) / 180), r0 = 18 + 6 * (1 - hm), r1 = 30 + 8 * (1 - hm);
+            return <line key={a} x1={c * r0} y1={sn * r0} x2={c * r1} y2={sn * r1} />;
+          })}
+        </g>
+      )}
       {g.lock > 0.01 && <circle r={26 - 8 * g.lock} fill="none" stroke="#FF5FA2" strokeWidth={3} opacity={g.lock} />}
       <g stroke={INK} strokeWidth={6} strokeLinecap="round">
         <circle r={r} fill="none" />
@@ -295,23 +310,27 @@ const Trophy: React.FC<{w: number}> = ({w}) => {
   );
 };
 
-/** the whole game screen in a 640×400 box */
-export const GameScreen: React.FC<{g: GameState; id: string}> = ({g, id}) => {
+/** the whole game screen in a 640×400 box; `ext` extends the canvas (sky above, floor below, sides) for the vertical
+ *  in-game camera; `hud` draws the hearts (and the W/A/S/D keys when shown) */
+export const GameScreen: React.FC<{g: GameState; id: string; ext?: Ext; hud?: boolean}> = ({g, id, ext = NOEXT, hud = true}) => {
   const ens = [...g.enemies].sort((a, b) => b.z - a.z);
+  const e = ext;
+  const sh = g.shake ?? {x: 0, y: 0};
   return (
     <g>
       <defs>
-        <clipPath id={`${id}-clip`}><rect x={0} y={0} width={640} height={400} /></clipPath>
+        <clipPath id={`${id}-clip`}><rect x={-e.l} y={-e.t} width={640 + e.l + e.r} height={400 + e.t + e.b} /></clipPath>
       </defs>
       <g clipPath={`url(#${id}-clip)`}>
-        <Sky g={g} id={id} />
-        <Floor g={g} id={id} />
+       <g transform={`translate(${sh.x} ${sh.y})`}>
+        <Sky g={g} id={id} e={e} />
+        <Floor g={g} id={id} e={e} />
         <Blocks g={g} />
         {g.rex && <Rex r={g.rex} g={g} />}
-        {ens.map((e) => <GooBot key={e.id} e={e} g={g} />)}
+        {ens.map((en) => <GooBot key={en.id} e={en} g={g} />)}
         {g.orbs.map((o, i) => {
           const p = projectG(g.camX, o.x, o.z, 1.0);
-          const r = Math.min(60, p.s * 0.22);
+          const r = Math.min(90, p.s * 0.22);
           return (
             <g key={i} opacity={o.a}>
               <circle cx={p.x} cy={p.y} r={r * 1.8} fill="#FF5FA2" opacity={0.25} />
@@ -320,30 +339,32 @@ export const GameScreen: React.FC<{g: GameState; id: string}> = ({g, id}) => {
             </g>
           );
         })}
-        {g.shots.map((s, i) => {
-          const x = lerp(s.from.x, s.to.x, s.u), y = lerp(s.from.y, s.to.y, s.u) - Math.sin(s.u * Math.PI) * 18;
-          const r = lerp(11, 5, s.u);
+        {g.shots.map((s1, i) => {
+          const x = lerp(s1.from.x, s1.to.x, s1.u), y = lerp(s1.from.y, s1.to.y, s1.u) - Math.sin(s1.u * Math.PI) * 18;
+          const r = lerp(11, 5, s1.u);
           return (
             <g key={i}>
-              <line x1={lerp(s.from.x, s.to.x, Math.max(0, s.u - 0.25))} y1={lerp(s.from.y, s.to.y, Math.max(0, s.u - 0.25))} x2={x} y2={y} stroke="#FFC744" strokeWidth={r} strokeLinecap="round" opacity={0.5} />
+              <line x1={lerp(s1.from.x, s1.to.x, Math.max(0, s1.u - 0.25))} y1={lerp(s1.from.y, s1.to.y, Math.max(0, s1.u - 0.25))} x2={x} y2={y} stroke="#FFC744" strokeWidth={r} strokeLinecap="round" opacity={0.5} />
               <circle cx={x} cy={y} r={r} fill="#FF8A3D" stroke={INK} strokeWidth={2} />
             </g>
           );
         })}
-        {g.splats.map((s, i) => <Splat key={i} {...s} />)}
+        {g.splats.map((s1, i) => <Splat key={i} {...s1} />)}
         <Zip g={g} />
         <Crosshair g={g} />
-        {/* health pips: a simple HUD, no text */}
-        <g transform="translate(22 22)">
-          {[0, 1, 2].map((i) => <path key={i} transform={`translate(${i * 30} 0)`} d="M 0 4 C 0 -4 12 -4 12 4 C 12 -4 24 -4 24 4 C 24 12 12 18 12 22 C 12 18 0 12 0 4 Z" fill="#FF5F6D" stroke={INK} strokeWidth={2.2} />)}
-        </g>
-        {g.keys && <Keys k={g.keys} />}
         <Trophy w={g.win ?? 0} />
-        {(g.wipe ?? 0) > 0.001 && (g.wipe ?? 0) < 0.999 && (
-          // round reset: a saffron panel sweeps across left → right (covers, then uncovers)
-          <rect x={640 * clamp(g.wipe! * 2 - 1)} y={0} width={640 * (clamp(g.wipe! * 2) - clamp(g.wipe! * 2 - 1))} height={400} fill="#FFC744" />
+       </g>
+        {hud && (
+          <g transform={`translate(${22 - e.l * 0} 22)`}>
+            {[0, 1, 2].map((i) => <path key={i} transform={`translate(${i * 30} 0)`} d="M 0 4 C 0 -4 12 -4 12 4 C 12 -4 24 -4 24 4 C 24 12 12 18 12 22 C 12 18 0 12 0 4 Z" fill="#FF5F6D" stroke={INK} strokeWidth={2.2} />)}
+          </g>
         )}
+        {hud && g.keys && <Keys k={g.keys} />}
       </g>
     </g>
   );
 };
+export const Hearts: React.FC = () => (
+  <g>{[0, 1, 2].map((i) => <path key={i} transform={`translate(${i * 30} 0)`} d="M 0 4 C 0 -4 12 -4 12 4 C 12 -4 24 -4 24 4 C 24 12 12 18 12 22 C 12 18 0 12 0 4 Z" fill="#FF5F6D" stroke={INK} strokeWidth={2.2} />)}</g>
+);
+export {Keys};

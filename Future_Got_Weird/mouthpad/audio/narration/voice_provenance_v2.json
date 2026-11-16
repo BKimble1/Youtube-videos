@@ -1,0 +1,63 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel narrator, same as V1"
+ },
+ "model_id": "eleven_v4",
+ "flow_id": "q5HzHe4Y1ND6HPpSZTLy",
+ "why_regenerated": "V1 take measured weak on three of the punch words the brief names: AIM -3.2 dB and falling pitch, SEE -2.6 dB, SHUT -5.2 dB and falling (relative to the take's mean word, tools/emphasis.py). V2 adds [emphatic] tags before TONGUE, AIM, CLICK, SEE and a [punchline, emphatic] tag before the last line. The words are unchanged.",
+ "prompt": "[excited, a little incredulous, quick] If you put THIS in your mouth, you can play video games with your [emphatic] TONGUE. [quick] Seriously. Watch this. [fast, explaining] It's called the MouthPad. And that tiny gold square? It's a touchpad sitting on the roof of your mouth. [punchy, rhythmic] Move your tongue, your character moves. Tilt your head, you [emphatic] AIM. Press your tongue up, you [emphatic] CLICK. [fast] And people are already using this thing to control computers and phones without their hands. [leaning in] But here's the craziest part. Close your mouth, and nobody can even [emphatic] SEE the controller. [dry, amused] So imagine losing a video game to someone who's literally just sitting there... [punchline, emphatic] With their mouth SHUT.",
+ "generated_once": "One run of two variations, 2 x 766.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/v2_t1_7WAT.mp3",
+   "generation_id": "7WATx9sp4rnmADM1qYyU",
+   "sha256": "99aca4515f02b293b09eee03177e73b7da09e208e42f24f72559bc114efd8052",
+   "asr": {
+    "zipformer": 0.059,
+    "whisper": 0.04
+   },
+   "chosen": false,
+   "emphasis_rel_db": {
+    "THIS": 2.5,
+    "TONGUE": 4.1,
+    "AIM": 1.4,
+    "CLICK": 1.1,
+    "SEE": -1.0,
+    "SHUT": 2.4
+   },
+   "why_not": "AIM and CLICK weaker than take 2"
+  },
+  {
+   "file": "audio/narration/takes/v2_t2_Om6V.mp3",
+   "generation_id": "Om6VPYM5PBACB7iDlyZ3",
+   "sha256": "77ef84411f382200f2ddb43f5a17ac4c8d17301111c1496063b61a6cc579322b",
+   "asr": {
+    "zipformer": 0.059,
+    "whisper": 0.04
+   },
+   "chosen": true,
+   "emphasis_rel_db": {
+    "THIS": 3.0,
+    "TONGUE": 3.8,
+    "AIM": 1.8,
+    "CLICK": 2.3,
+    "SEE": -2.1,
+    "SHUT": 2.1
+   },
+   "why": "the strongest AIM (rising, 369 Hz), CLICK and SHUT; word-perfect on whisper (only 'mouth pad'/'touch pad' spellings)"
+  }
+ ],
+ "master": {
+  "file": "audio/narration/FGW_MouthPad_narration_V2.wav",
+  "sha256": "e08ed69db2c2bd61aaff6a47e6e8db495a9edd72e3ba9f354e3e1874b7e26ade",
+  "format": "48 kHz, 24-bit, mono, 31.90 s",
+  "edits": "only silent gaps shortened (tools/make_narration_v2.py): 15 gaps cut to 0.20 s (0.24 s after 'TONGUE.'; the 0.32 s beat before 'With their mouth SHUT' kept), 1.96 s removed in total, each cut inside measured silence with a 12 ms equal-power crossfade; no word cut, stretched, re-pitched or re-levelled",
+  "pace": "101 words, speech 0.00-30.32 s, 199.9 wpm, longest gap 0.32 s",
+  "alignment": "audio/narration/v2_words.json (zipformer, measured on the edited master)",
+  "asr_on_master": "identical to the raw take on both models over the speech (a whisper '[buzzing]' and a zipformer 'i' appear only on the 1.6 s of digital silence after the last word, a known hallucination; trimmed to the speech they vanish)"
+ },
+ "listening": "Not listened to in real time (no playback here); chosen by measurement."
+}

@@ -1,0 +1,44 @@
+{
+ "zipformer": {
+  "transcript": "IF YOU PUT THIS IN YOUR MOUTH YOU CAN PLAY VITIO GAMES WITH YOUR TONGUE SERIOUSLY WATCH THIS IT'S CALLED THE MOUTH PAD AND THAT TINY GOLD SQUARE IT'S A TOUCH PAD SITTING ON THE ROOF OF YOUR MOUTH MOVE YOUR TONGUE YOUR CHARACTER MOVES TILT YOUR HEAD YOU AIM PRESS YOUR TONGUE UP YOU CLICK AND PEOPLE ARE ALREADY USING THIS THING TO CONTROL COMPUTERS AND PHONES WITHOUT THEIR HANDS BUT HERE'S THE CRAZIEST PART CLOSE YOUR MOUTH AND NOBODY CAN EVEN SEE THE CONTROLLER SO IMAGINE LOSING A VITIO GAME TO SOMEONE WHO'S LITERALLY JUST SITTING THERE WITH THEIR MOUTH SHUT",
+  "wer": 0.059,
+  "diffs": [
+   [
+    "replace",
+    "video",
+    "vitio"
+   ],
+   [
+    "replace",
+    "mouthpad",
+    "mouth pad"
+   ],
+   [
+    "replace",
+    "touchpad",
+    "touch pad"
+   ],
+   [
+    "replace",
+    "video",
+    "vitio"
+   ]
+  ]
+ },
+ "whisper": {
+  "transcript": "If you put this in your mouth, you can play video games with your tongue! Seriously, watch this. It's called the mouth pad. And that tiny gold square It's a touch pad sitting on the roof of your mouth. Move your tongue, your character moves. Tilt your head, you aim. Press your tongue up, you click! And people are already using this thing to control computers and phones without their hands. But here's the craziest part. Close your mouth and nobody can even see the controller. So, imagine losing a video game to someone who's literally just sitting there. with their mouth shut.",
+  "wer": 0.04,
+  "diffs": [
+   [
+    "replace",
+    "mouthpad",
+    "mouth pad"
+   ],
+   [
+    "replace",
+    "touchpad",
+    "touch pad"
+   ]
+  ]
+ }
+}

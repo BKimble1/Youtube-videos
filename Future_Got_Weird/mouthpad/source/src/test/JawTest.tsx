@@ -2,13 +2,13 @@ import React from 'react';
 import {AbsoluteFill} from 'remotion';
 import {Jaw, View} from '../art/jaw3d';
 
-const V: {v: View; label: string; show?: any; contact?: any; explode?: number; tongueX?: number}[] = [
-  {v: {yaw: 0, pitch: -32}, label: 'mouth (front, from below)'},
-  {v: {yaw: -28, pitch: -58}, label: 'product 3/4', show: {teeth: 0, palate: 0}},
-  {v: {yaw: 90, pitch: 0}, label: 'side'},
-  {v: {yaw: 0, pitch: -90}, label: 'from below + tongue', contact: {u: 0.3, v: -0.2, press: 0}, tongueX: 1},
-  {v: {yaw: 15, pitch: -70}, label: 'exploded', show: {teeth: 0, palate: 0}, explode: 1},
-  {v: {yaw: 0, pitch: -90}, label: 'below no teeth', show: {teeth: 0, palate: 0}},
+const V: {v: View; show?: any; contact?: any; explode?: number; tongueX?: number}[] = [
+  {v: {yaw: 0, pitch: -60}},
+  {v: {yaw: -28, pitch: -58}, show: {teeth: 0, palate: 0}},
+  {v: {yaw: 90, pitch: 0, persp: 4000}},
+  {v: {yaw: 70, pitch: -20}, show: {teeth: 0, palate: 0}},
+  {v: {yaw: 15, pitch: -70}, show: {teeth: 0, palate: 0}, explode: 1},
+  {v: {yaw: 0, pitch: -90}, contact: {u: 0.3, v: -0.2}, tongueX: 1},
 ];
 export const JawTest: React.FC = () => (
   <AbsoluteFill style={{background: '#20384A'}}>

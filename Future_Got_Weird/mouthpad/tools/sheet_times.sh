@@ -4,8 +4,8 @@ set -e
 cd "$(dirname "$0")/../source"
 OUT=$(realpath -m "$1"); TS=$2; COLS=${3:-6}; SC=${4:-0.3333}
 TMP=$(mktemp -d)
-FR=$(python3 -c "print(','.join(str(min(959, round(float(s)*30))) for s in '$TS'.split(',')))")
-node stills.mjs $TMP MouthPadV1 $FR $SC > /dev/null
+FR=$(python3 -c "print(','.join(str(min(956, round(float(s)*30))) for s in '$TS'.split(',')))")
+node stills.mjs $TMP ${COMP:-MouthPadV2} $FR $SC > /dev/null
 IFS=',' read -ra A <<< "$TS"
 for f in $TMP/*.png; do n=$(basename $f .png); idx=$((10#${n%%_*})); s=${A[$idx]}
   ffmpeg -v error -y -i $f -vf "drawtext=text='${s}s':x=8:y=8:fontsize=20:fontcolor=white:box=1:boxcolor=black@0.6" $f.l.png && mv $f.l.png $f; done

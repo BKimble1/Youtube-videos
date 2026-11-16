@@ -29,7 +29,7 @@ W, H = 270, 480
 raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', mp4, '-vf', f'scale={W}:{H},format=gray', '-f', 'rawvideo', '-'], capture_output=True).stdout
 fr = np.frombuffer(raw, np.uint8).reshape(-1, H, W).astype(np.float32)
 d = np.abs(np.diff(fr, axis=0)).mean((1, 2))
-cues = json.load(open(os.path.join(EP, 'audio/cues.json')))
+cues = json.load(open(os.path.join(EP, os.environ.get('QA_CUES', 'audio/cues.json'))))
 cut_frames = [round(c['t'] * 30) for c in cues['cuts'][1:]]
 static = d < 0.25
 run, best, best_at = 0, 0, 0
@@ -43,7 +43,7 @@ res['loop_seam'] = {'last_to_first_diff': round(float(np.abs(fr[-1] - fr[0]).mea
 # ASR on the delivered audio
 asr = os.path.join(EP, 'tools/asr_sherpa.py')
 r = subprocess.run(['python3', asr, mp4, '/tmp/asr', os.path.join(OUT, 'final_asr.json')], capture_output=True, text=True, cwd=EP,
-                   env={**os.environ, 'ASR_PAUSES': os.path.join(EP, 'audio/narration/t2_words.json')})
+                   env={**os.environ, 'ASR_PAUSES': os.path.join(EP, os.environ.get('QA_WORDS', 'audio/narration/t2_words.json'))})
 res['asr'] = {k: {'wer': vv['wer'], 'diffs': vv['diffs']} for k, vv in json.load(open(os.path.join(OUT, 'final_asr.json'))).items()}
 # sheets
 def sheet(name, frames, cols, scale=270):

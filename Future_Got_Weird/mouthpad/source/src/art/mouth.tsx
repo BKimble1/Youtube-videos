@@ -21,6 +21,8 @@ export type MouthState = {
   glow?: number; // pad glow / contact glow
   pitch?: number; // view into the mouth (default -60: from below)
   yaw?: number;
+  device?: number; // 1 = the MouthPad is in the mouth (default), 0 = lifted out
+  smirk?: number; // closed-mouth smirk (one corner up)
 };
 
 /** the mouth view used inside the lips */
@@ -48,8 +50,10 @@ export const jawPlacement = (m: MouthState) => {
   const pr = projector(v);
   const inc = pr({x: 0, y: 0, z: 20});
   const {top, h} = opening(m);
-  // the incisal edge sits about a quarter of the way down the opening
-  const ty = top + Math.max(4, h * 0.22);
+  // the incisal edge sits about a quarter of the way down the opening; as the lips close the teeth slide up behind
+  // the upper lip, so a closing mouth never shows a strip of bared teeth
+  const o = clamp(m.open);
+  const ty = top + lerp(-10, Math.max(4, h * 0.22), clamp((o - 0.3) / 0.4));
   return {v, k: MM, tx: -inc.x * MM, ty: ty - inc.y * MM};
 };
 /** head-space position of a pad point, for effects and for the tongue tip */
@@ -61,6 +65,14 @@ export const padInHead = (m: MouthState, u: number, vv: number): P => {
 
 export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m, id, px}) => {
   const o = clamp(m.open);
+  if (o < 0.035) {
+    // closed lips: one ink line whose curve follows the smile (and a smirk lifts one corner)
+    const lw0 = Math.max(1.6, Math.min(5, px * 1.2));
+    const sm = m.smile ?? 0.4, sk = m.smirk ?? 0;
+    const y0 = MOUTH_TOP + 6, w0 = 15;
+    const k = o / 0.035; // fades into the opening shape below
+    return <path d={`M ${-w0} ${y0 - 3 * sm} Q ${-2} ${y0 + 4 + 6 * sm + k * 2} ${w0} ${y0 - 3 * sm - 6 * sk}`} fill="none" stroke={INK} strokeWidth={lw0 * 1.25} vectorEffect="non-scaling-stroke" strokeLinecap="round" />;
+  }
   const {w, h, top} = opening(m);
   const bot = top + h;
   const J = jawPlacement(m);
@@ -100,8 +112,9 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
       <g clipPath={`url(#${id}-op)`}>
         <path d={openingPath(m)} fill={`url(#${id}-cav)`} />
         {o > 0.12 && (
-          <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.12) / 0.15)}>
-            <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact} />
+          <g transform={`translate(${J.tx} ${J.ty}) scale(${J.k})`} opacity={clamp((o - 0.5) / 0.25)}>
+            <Jaw view={J.v} px={px * J.k} id={`${id}-jaw`} padGlow={glow * 0.6 * (1 - lift)} contact={contact}
+              show={(m.device ?? 1) < 1 ? {shell: m.device ?? 1, plate: m.device ?? 1, pad: m.device ?? 1, traces: m.device ?? 1, pods: m.device ?? 1} : undefined} />
           </g>
         )}
         {/* lower teeth */}

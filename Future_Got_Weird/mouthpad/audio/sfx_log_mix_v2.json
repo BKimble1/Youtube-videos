@@ -1,0 +1,542 @@
+[
+ {
+  "t": 0.32,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 0.39,
+  "sfx": "splat (big)",
+  "gain_db": -7
+ },
+ {
+  "t": 1.965,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 2.035,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 3.515,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 3.585,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 5.02,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 5.09,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 5.1,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 5.17,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 15.2,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 15.27,
+  "sfx": "splat (big)",
+  "gain_db": -7
+ },
+ {
+  "t": 23.53,
+  "sfx": "blaster",
+  "gain_db": -9
+ },
+ {
+  "t": 23.6,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 29.84,
+  "sfx": "blaster",
+  "gain_db": -12
+ },
+ {
+  "t": 0,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 2.045,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 4.49,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 4.61,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 4.75,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 10.29,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 11.54,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 26.335,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 26.485,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 26.625,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 26.765,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 27.835,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 28.515,
+  "sfx": "dodge swish",
+  "gain_db": -13
+ },
+ {
+  "t": 0.067,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 1.867,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 3.367,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 5,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 13.3,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 23.4,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 29.033,
+  "sfx": "lock-on ping",
+  "gain_db": -18
+ },
+ {
+  "t": 26.415,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 26.715,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 26.555,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 26.855,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 26.695,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 26.995,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 26.835,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 27.135,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 27.735,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 28.035,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 28.415,
+  "sfx": "rex shot",
+  "gain_db": -14
+ },
+ {
+  "t": 28.715,
+  "sfx": "orb whoosh past",
+  "gain_db": -16
+ },
+ {
+  "t": 0.05,
+  "sfx": "orb whoosh past (opening dodge)",
+  "gain_db": -10
+ },
+ {
+  "t": 4.54,
+  "sfx": "orb whoosh past (weave)",
+  "gain_db": -14
+ },
+ {
+  "t": 4.68,
+  "sfx": "orb whoosh past (weave)",
+  "gain_db": -14
+ },
+ {
+  "t": 4.82,
+  "sfx": "orb whoosh past (weave)",
+  "gain_db": -14
+ },
+ {
+  "t": 0.56,
+  "sfx": "reticle flies off the screen",
+  "gain_db": -10
+ },
+ {
+  "t": 1.18,
+  "sfx": "reticle locks on the pad",
+  "gain_db": -9
+ },
+ {
+  "t": 1.26,
+  "sfx": "reticle lock (2)",
+  "gain_db": -11
+ },
+ {
+  "t": 1.655,
+  "sfx": "tongue tap (contact)",
+  "gain_db": -5
+ },
+ {
+  "t": 15.13,
+  "sfx": "tongue press: CLICK",
+  "gain_db": -4
+ },
+ {
+  "t": 9.18,
+  "sfx": "tongue touches the pad",
+  "gain_db": -10
+ },
+ {
+  "t": 3.465,
+  "sfx": "tongue click",
+  "gain_db": -11
+ },
+ {
+  "t": 4.97,
+  "sfx": "tongue click",
+  "gain_db": -11
+ },
+ {
+  "t": 5.05,
+  "sfx": "tongue click",
+  "gain_db": -11
+ },
+ {
+  "t": 5.78,
+  "sfx": "retainer lifts out",
+  "gain_db": -13
+ },
+ {
+  "t": 6.03,
+  "sfx": "product reveal shimmer",
+  "gain_db": -18
+ },
+ {
+  "t": 7.055,
+  "sfx": "sensor glint",
+  "gain_db": -11
+ },
+ {
+  "t": 7.325,
+  "sfx": "sensor ripple",
+  "gain_db": -15
+ },
+ {
+  "t": 7.78,
+  "sfx": "device flies back in",
+  "gain_db": -15
+ },
+ {
+  "t": 10.29,
+  "sfx": "key A",
+  "gain_db": -7
+ },
+ {
+  "t": 11.1,
+  "sfx": "key W",
+  "gain_db": -7
+ },
+ {
+  "t": 11.54,
+  "sfx": "key D",
+  "gain_db": -7
+ },
+ {
+  "t": 11.81,
+  "sfx": "facecam shrinks into the corner",
+  "gain_db": -15
+ },
+ {
+  "t": 22.225,
+  "sfx": "lips close",
+  "gain_db": -6
+ },
+ {
+  "t": 3.48,
+  "sfx": "Honest leans in",
+  "gain_db": -12
+ },
+ {
+  "t": 16.535,
+  "sfx": "cursor click",
+  "gain_db": -9
+ },
+ {
+  "t": 16.595,
+  "sfx": "photo opens",
+  "gain_db": -14
+ },
+ {
+  "t": 17.575,
+  "sfx": "cursor click",
+  "gain_db": -9
+ },
+ {
+  "t": 18.505,
+  "sfx": "phone swipe",
+  "gain_db": -12
+ },
+ {
+  "t": 18.685,
+  "sfx": "call rings",
+  "gain_db": -16
+ },
+ {
+  "t": 18.945,
+  "sfx": "call answered",
+  "gain_db": -11
+ },
+ {
+  "t": 24.825,
+  "sfx": "controller mashing",
+  "gain_db": -11
+ },
+ {
+  "t": 30.33,
+  "sfx": "K.O. splat (paint fills the frame, after the word)",
+  "gain_db": -4
+ },
+ {
+  "t": 30.33,
+  "sfx": "punchline impact",
+  "gain_db": -5
+ },
+ {
+  "t": 30.34,
+  "sfx": "paint slides away",
+  "gain_db": -12
+ },
+ {
+  "t": 30.44,
+  "sfx": "controller drop",
+  "gain_db": -7
+ },
+ {
+  "t": 30.97,
+  "sfx": "victory jingle",
+  "gain_db": -12
+ },
+ {
+  "t": 31.1,
+  "sfx": "Honest slumps out",
+  "gain_db": -14
+ },
+ {
+  "t": 31.42,
+  "sfx": "back into the screen (loop)",
+  "gain_db": -12
+ },
+ {
+  "t": 1.835,
+  "sfx": "cut: A4 game: the tap becomes",
+  "gain_db": -21
+ },
+ {
+  "t": 2.575,
+  "sfx": "cut: A5/B1 low angle: cobwebb",
+  "gain_db": -21
+ },
+ {
+  "t": 4.32,
+  "sfx": "cut: B2 game: weave and doubl",
+  "gain_db": -21
+ },
+ {
+  "t": 5.1,
+  "sfx": "cut: B3 Honest jaw drop",
+  "gain_db": -21
+ },
+ {
+  "t": 5.29,
+  "sfx": "cut: C1 into the mouth",
+  "gain_db": -21
+ },
+ {
+  "t": 5.68,
+  "sfx": "cut: C2-C5 device: lift out, ",
+  "gain_db": -21
+ },
+ {
+  "t": 9.87,
+  "sfx": "cut: D1 split: tongue moves \u2192",
+  "gain_db": -21
+ },
+ {
+  "t": 11.49,
+  "sfx": "cut: E1 facecam: head tilt \u2192 ",
+  "gain_db": -21
+ },
+ {
+  "t": 13.715,
+  "sfx": "cut: F1 cut-away: the press",
+  "gain_db": -21
+ },
+ {
+  "t": 15.07,
+  "sfx": "cut: F2 game: the click fires",
+  "gain_db": -21
+ },
+ {
+  "t": 15.72,
+  "sfx": "cut: G montage: computer and ",
+  "gain_db": -21
+ },
+ {
+  "t": 19.86,
+  "sfx": "cut: H twist: device in the m",
+  "gain_db": -21
+ },
+ {
+  "t": 24.57,
+  "sfx": "cut: I1 wide: the versus roun",
+  "gain_db": -21
+ },
+ {
+  "t": 25.615,
+  "sfx": "cut: I2 mashing thumbs",
+  "gain_db": -21
+ },
+ {
+  "t": 26.335,
+  "sfx": "cut: I3 game: barrage, tiny s",
+  "gain_db": -21
+ },
+ {
+  "t": 26.935,
+  "sfx": "cut: I4 guesser checks his na",
+  "gain_db": -21
+ },
+ {
+  "t": 27.735,
+  "sfx": "cut: I5 Honest stands, strain",
+  "gain_db": -21
+ },
+ {
+  "t": 28.175,
+  "sfx": "cut: I5b guesser blinks",
+  "gain_db": -21
+ },
+ {
+  "t": 28.615,
+  "sfx": "cut: I6a game: lock on Rex",
+  "gain_db": -21
+ },
+ {
+  "t": 29.2,
+  "sfx": "cut: I6b mouth shut, smiling",
+  "gain_db": -21
+ },
+ {
+  "t": 29.68,
+  "sfx": "cut: I6c game: K.O. on SHUT, ",
+  "gain_db": -21
+ },
+ {
+  "t": 30.22,
+  "sfx": "cut: I6d paint slides away: H",
+  "gain_db": -21
+ },
+ {
+  "t": 30.85,
+  "sfx": "cut: I6e/I7 winner, then back",
+  "gain_db": -21
+ }
+]

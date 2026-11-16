@@ -8,7 +8,7 @@ EP="$(cd "$(dirname "$0")/.." && pwd)"
 FR="$EP/source/out/frames"
 rm -rf "$FR"; mkdir -p "$FR"
 cd "$EP/source"
-npx remotion render src/index.ts MouthPadV1 "$FR" --sequence --image-format=jpeg --jpeg-quality=95 --props='{"audio":false}' --concurrency=4 --log=error 2>&1 | grep -v "memory\|CGroup\|meminfo\|Node:\|docker\|lower amount" || true
+npx remotion render src/index.ts "${COMP:-MouthPadV2}" "$FR" --sequence --image-format=jpeg --jpeg-quality=95 --props='{"audio":false}' --concurrency=4 --log=error 2>&1 | grep -v "memory\|CGroup\|meminfo\|Node:\|docker\|lower amount" || true
 n=$(ls "$FR"/element-*.jpeg | wc -l); echo "frames: $n"
 ffmpeg -v error -y -framerate 30 -i "$FR/element-%03d.jpeg" -i "$EP/source/public/audio/$MIX.wav" \
   -map 0:v -map 1:a -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p \

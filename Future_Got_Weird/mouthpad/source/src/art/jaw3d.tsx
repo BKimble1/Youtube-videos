@@ -155,6 +155,20 @@ const toothRing = (T: Tooth, y: number, grow: number, k = 1, N = 14): V3[] => {
   return out;
 };
 
+/** a tooth cross-section with separate width (mesiodistal) and thickness (labiolingual) scales */
+const toothRingWB = (T: Tooth, y: number, grow: number, kw: number, kb: number, N = 14): V3[] => {
+  const out: V3[] = [];
+  for (let j = 0; j < N; j++) {
+    const a = (j / N) * Math.PI * 2;
+    const ca = Math.cos(a), sa = Math.sin(a);
+    const e = 0.55;
+    const u = Math.sign(ca) * Math.pow(Math.abs(ca), e) * (T.w / 2 + grow) * kw;
+    const v = Math.sign(sa) * Math.pow(Math.abs(sa), e) * (T.b / 2 + grow) * kb;
+    out.push({x: T.c.x + T.t.x * u + T.n.x * v, y, z: T.c.z + T.t.z * u + T.n.z * v});
+  }
+  return out;
+};
+
 export const DEV = {
   resin: 'rgba(205,236,250,0.42)',
   resinEdge: 'rgba(240,252,255,0.95)',
@@ -177,7 +191,11 @@ export const Jaw: React.FC<{
   view: View; px: number; id: string; show?: JawShow; explode?: number; padGlow?: number; contact?: Contact | null;
   tongueX?: number; // 0..1: draw the tongue as a see-through silhouette under the pad (view from below)
   light?: number;
-}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1}) => {
+  near?: number; // opacity of the half nearer the camera (0 = a clean sagittal cut-away: only the far half remains)
+}> = ({view, px, id, show = {}, explode = 0, padGlow = 0, contact = null, tongueX = 0, light = 1, near = 1}) => {
+  // which lateral side is nearer the camera (sign of x for the near half)
+  const nearSign = projector(view)({x: 1, y: 0, z: 0}).d < projector(view)({x: -1, y: 0, z: 0}).d ? 1 : -1;
+  const nf = (x: number) => (x * nearSign > 0.01 ? near : 1);
   const S = {teeth: 1, palate: 1, shell: 1, plate: 1, pad: 1, traces: 1, pods: 1, ...show};
   const pr = projector(view);
   const ink = (w: number) => ({stroke: DEV.ink, strokeWidth: w, vectorEffect: 'non-scaling-stroke' as const, strokeLinejoin: 'round' as const, strokeLinecap: 'round' as const});
@@ -236,27 +254,53 @@ export const Jaw: React.FC<{
     });
   }
 
-  // ---- the palatal plate (clear resin)
+  // ---- the palatal plate (clear resin, about 1 mm thick): a shaded mesh on the palate, composited once (group
+  //      opacity) so overlapping facets never stack and its silhouette is right from every angle
   if (S.plate > 0.01) {
-    const ring: V3[] = INNER.map((q) => ({x: q.x * 1.0, y: GUM_Y - 0.4, z: q.z}));
     const hwB = halfW(-12);
-    const back: V3[] = [];
-    for (let k = 10; k >= -10; k--) {
-      const x = (k / 10) * hwB * 0.98;
-      const z = PLATE_BACK(x, hwB);
-      back.push({x, y: vault(x, z) - 1.0, z});
+    const NZ = 16, NX = 14;
+    const zf = 13.2;
+    const rows: V3[][] = [];
+    for (let j = 0; j <= NZ; j++) {
+      const row: V3[] = [];
+      for (let i = 0; i <= NX; i++) {
+        const u = (i / NX) * 2 - 1;
+        const zb = PLATE_BACK(u * hwB, hwB);
+        const z = lerp(zb, zf, j / NZ);
+        const hw = Math.min(halfW(z) + 0.3, hwB + 1) * Math.sqrt(1 - Math.pow(Math.max(0, (z - 9) / (zf - 9 + 0.01)), 2) * 0.5);
+        const x = u * hw;
+        row.push({x, y: Math.min(vault(x, z), GUM_Y + 0.4) - 1.0, z});
+      }
+      rows.push(row);
     }
-    // keep only the ring part in front of the plate's back edge
-    const front = ring.filter((q) => q.z > PLATE_BACK(q.x, hwB) - 0.5);
-    const P2 = [...front, ...back].map(pr);
+    const quads: {d: number; path: string; shade: number}[] = [];
+    for (let j = 0; j < NZ; j++) for (let i = 0; i < NX; i++) {
+      const q = [rows[j][i], rows[j][i + 1], rows[j + 1][i + 1], rows[j + 1][i]];
+      const P4 = q.map(pr);
+      const e1 = {x: q[1].x - q[0].x, y: q[1].y - q[0].y, z: q[1].z - q[0].z}, e2 = {x: q[3].x - q[0].x, y: q[3].y - q[0].y, z: q[3].z - q[0].z};
+      let n = {x: e1.y * e2.z - e1.z * e2.y, y: e1.z * e2.x - e1.x * e2.z, z: e1.x * e2.y - e1.y * e2.x};
+      const nl = Math.hypot(n.x, n.y, n.z) || 1;
+      n = {x: n.x / nl, y: n.y / nl, z: n.z / nl};
+      const f = Math.abs(facing(view, n));
+      const cx0 = (q[0].x + q[2].x) / 2;
+      if (nf(cx0) > 0.02) quads.push({d: (P4[0].d + P4[2].d) / 2, path: poly(P4), shade: f * nf(cx0) + (1 - nf(cx0)) * 0});
+    }
+    quads.sort((a1, b1) => b1.d - a1.d);
+    const ringE = [...rows.map((r) => r[0]), ...rows[NZ], ...[...rows].reverse().map((r) => r[NX]), ...[...rows[0]].reverse()].map(pr);
     const c = pr({x: 0, y: vault(0, -2) - 1, z: -2});
     items.push({
       d: c.d + 20,
       el: (
-        <g key="plate" opacity={S.plate}>
-          <path d={poly(P2)} fill={DEV.resin} />
-          <path d={poly(P2)} fill="none" stroke={DEV.resinEdge} strokeWidth={W1 * 1.6} vectorEffect="non-scaling-stroke" strokeLinejoin="round" opacity={0.9} />
-          <path d={poly(P2)} fill="none" {...ink(W2)} opacity={0.55} />
+        <g key="plate">
+          <g opacity={0.5 * S.plate}>
+            {quads.map((q, k) => {
+              const l = Math.round(205 + 45 * q.shade);
+              const col = `rgb(${Math.min(255, l - 12)},${Math.min(255, l + 18)},${Math.min(255, l + 30)})`;
+              return <path key={k} d={q.path} fill={col} stroke={col} strokeWidth={0.12} />;
+            })}
+          </g>
+          <path d={poly(hull(ringE))} fill="none" stroke={DEV.resinEdge} strokeWidth={W1 * 1.3} vectorEffect="non-scaling-stroke" strokeLinejoin="round" opacity={0.85 * S.plate * near} />
+          <path d={poly(hull(ringE))} fill="none" {...ink(W2)} opacity={0.45 * S.plate * near} />
         </g>
       ),
     });
@@ -297,11 +341,12 @@ export const Jaw: React.FC<{
       grid.push(row);
     }
     const outline = [...grid[0], ...grid.map((r) => r[N]).slice(1), ...[...grid[N]].reverse().slice(1), ...grid.map((r) => r[0]).reverse().slice(1)];
+    // a capacitive electrode pattern: a lattice of small diamonds in the gold, with a thin border trace
     const lines: React.ReactNode[] = [];
-    for (let k = 1; k < 6; k++) {
-      const j = Math.round((k / 6) * N);
-      lines.push(<path key={`gx${k}`} d={line(grid[j])} />);
-      lines.push(<path key={`gy${k}`} d={line(grid.map((r) => r[j]))} />);
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      if ((i + j) % 2) continue;
+      const m = (a1: number, b1: number) => pr(lift(padPoint(((i + a1) / N) * 2 - 1, ((j + b1) / N) * 2 - 1), 3.2));
+      lines.push(<path key={`d${i}-${j}`} d={poly([m(0.5, 0.08), m(0.92, 0.5), m(0.5, 0.92), m(0.08, 0.5)])} />);
     }
     const c = pr(padPoint(0, 0));
     const vis = clamp(fromBelow * 4 + 0.15);
@@ -334,7 +379,7 @@ export const Jaw: React.FC<{
             </radialGradient>
           </defs>
           <path d={poly(outline)} fill={`url(#${id}-gold)`} opacity={0.4 + 0.6 * vis} />
-          <g fill="none" stroke={DEV.gold3} strokeWidth={W2 * 0.8} vectorEffect="non-scaling-stroke" opacity={0.45 * vis}>{lines}</g>
+          <g fill={DEV.gold0} stroke={DEV.gold2} strokeWidth={W2 * 0.6} vectorEffect="non-scaling-stroke" opacity={0.7 * vis}>{lines}</g>
           {padGlow > 0 && <path d={poly(outline)} fill="#FFF6C8" opacity={0.55 * padGlow} />}
           <path d={poly(outline)} fill="none" {...ink(W1)} />
           {touch}
@@ -355,7 +400,7 @@ export const Jaw: React.FC<{
       items.push({
         d: (a.d + b.d) / 2,
         el: (
-          <g key={`pod${sd}`} opacity={S.pods}>
+          <g key={`pod${sd}`} opacity={S.pods * nf(sd)}>
             <path d={`M${a.x},${a.y}L${b.x},${b.y}`} stroke={DEV.ink} strokeWidth={wpx + (W1 * 2) / Math.max(px, 0.01)} strokeLinecap="round" />
             <path d={`M${a.x},${a.y}L${b.x},${b.y}`} stroke={DEV.pod1} strokeWidth={wpx} strokeLinecap="round" />
             <path d={`M${a.x},${a.y - rr * 0.25}L${b.x},${b.y - rr * 0.25}`} stroke={DEV.pod0} strokeWidth={wpx * 0.45} strokeLinecap="round" opacity={0.9} />
@@ -365,32 +410,43 @@ export const Jaw: React.FC<{
     }
   }
 
-  // ---- teeth and the resin shell over them
+  // ---- teeth (tapered crowns) and the resin shell over them. The shell cups are split into the half behind the
+  //      palate and the half in front of it; each half is composited once, so cups never stack where they overlap
   if (S.teeth > 0.01 || S.shell > 0.01) {
+    const padD = pr(padPoint(0, 0)).d;
+    const back: React.ReactNode[] = [], front: React.ReactNode[] = [], tb: {d: number; el: React.ReactNode}[] = [], sb: React.ReactNode[] = [], sf: React.ReactNode[] = [];
     for (const T of TEETH) {
-      const bot = toothRing(T, T.edge, 0, 1), top = toothRing(T, T.h + 1.4, 0, 0.92);
-      const pb = bot.map(pr), pt = top.map(pr);
-      const H = hull([...pb, ...pt]);
+      const thin = T.i < 2 ? 0.32 : T.i === 2 ? 0.55 : 0.8; // incisal edges are thin; molars are blocky
+      const edge = toothRingWB(T, T.edge, 0, 0.82, thin);
+      const mid = toothRingWB(T, T.edge + T.h * 0.42, 0, 1, 1);
+      const cerv = toothRingWB(T, T.h + 1.4, 0, 0.84, 0.92);
+      const pb = edge.map(pr);
+      const H = hull([...pb, ...mid.map(pr), ...cerv.map(pr)]);
       const cc = pr({x: T.c.x, y: (T.edge + T.h) / 2, z: T.c.z});
-      // shade: the labial face toward the viewer is brighter
       const lab = facing(view, {x: T.n.x, y: 0, z: T.n.z});
       const occ = facing(view, {x: 0, y: -1, z: 0});
       const fill = lab > 0.3 ? DEV.tooth0 : DEV.tooth1;
-      const els: React.ReactNode[] = [];
       if (S.teeth > 0.01) {
-        els.push(<path key="t" d={poly(H)} fill={fill} opacity={S.teeth} />);
-        if (occ > 0.15) els.push(<path key="o" d={poly(pb)} fill={DEV.tooth1} opacity={S.teeth * clamp((occ - 0.15) * 3) * 0.8} />);
-        els.push(<path key="ti" d={poly(H)} fill="none" {...ink(W2 * 1.1)} opacity={S.teeth} />);
+        tb.push({d: cc.d, el: (
+          <g key={`t${T.side}${T.i}`} opacity={S.teeth * nf(T.c.x)}>
+            <path d={poly(H)} fill={fill} />
+            {occ > 0.15 && <path d={poly(hull(pb))} fill={DEV.tooth1} opacity={clamp((occ - 0.15) * 3) * 0.8} />}
+            <path d={poly(H)} fill="none" {...ink(W2 * 1.1)} />
+          </g>
+        )});
       }
       if (S.shell > 0.01) {
-        const sb = toothRing(T, T.edge - 0.9, 0.9, 1).map(pr), st = toothRing(T, T.h + 2.2, 0.9, 0.95).map(pr);
-        const SH = hull([...sb, ...st]);
-        els.push(<path key="s" d={poly(SH)} fill={DEV.resin} opacity={S.shell} />);
-        els.push(<path key="se" d={poly(SH)} fill="none" stroke={DEV.resinEdge} strokeWidth={W1 * 1.2} vectorEffect="non-scaling-stroke" opacity={0.8 * S.shell} />);
-        if (S.teeth < 0.5) els.push(<path key="si" d={poly(SH)} fill="none" {...ink(W2)} opacity={0.6 * S.shell} />);
+        const SH = hull([...toothRingWB(T, T.edge - 0.9, 0.9, 0.9, Math.max(thin, 0.6)).map(pr), ...toothRingWB(T, T.edge + T.h * 0.42, 0.9, 1, 1).map(pr), ...toothRingWB(T, T.h + 2.4, 0.9, 0.9, 0.95).map(pr)]);
+        const el = <path key={`s${T.side}${T.i}`} d={poly(SH)} fill="#DDF3FB" stroke="#DDF3FB" strokeWidth={0.2} />;
+        const edgeEl = <path key={`se${T.side}${T.i}`} d={poly(SH)} fill="none" stroke={DEV.resinEdge} strokeWidth={W1 * 1.1} vectorEffect="non-scaling-stroke" opacity={0.75} />;
+        if (nf(T.c.x) < 0.02) continue;
+        if (cc.d > padD) { sb.push(el); back.push(edgeEl); } else { sf.push(<g key={`n${T.side}${T.i}`} opacity={nf(T.c.x)}>{el}</g>); front.push(<g key={`ne${T.side}${T.i}`} opacity={nf(T.c.x)}>{edgeEl}</g>); }
       }
-      items.push({d: cc.d, el: <g key={`tooth${T.side}${T.i}`}>{els}</g>});
     }
+    for (const q of tb) items.push(q);
+    const shellOp = (S.teeth > 0.5 ? 0.42 : 0.55) * S.shell;
+    if (sb.length) items.push({d: padD + 6, el: <g key="shell-back"><g opacity={shellOp}>{sb}</g><g opacity={S.shell}>{back}</g></g>});
+    if (sf.length) items.push({d: -1e6, el: <g key="shell-front"><g opacity={shellOp}>{sf}</g><g opacity={S.shell}>{front}</g></g>});
   }
 
   // ---- tongue silhouette (see-through, view from below)

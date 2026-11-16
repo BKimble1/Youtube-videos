@@ -151,33 +151,36 @@ export const Pad: React.FC<{x: number; y: number; r?: number; shake?: number}> =
   </g>
 );
 
-export type GState = {pose: Pose; m: MouthState; life?: number; hands?: 'up' | 'behind' | 'rest'};
-export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number} | null;
+export type GState = {pose: Pose; m: MouthState; life?: number; hands?: 'up' | 'behind' | 'rest'; front?: 'L' | 'R' | 'none'};
+export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number} | null;
 
-export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string}> = ({t, frame, cam, g, h, game, id}) => {
+export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string; alwaysMouth?: boolean; front?: React.ReactNode}> = ({t, frame, cam, g, h, game, id, alwaysMouth, front}) => {
   const ink = inkFor(G.scale, cam.z);
   const pxMouth = G.scale * cam.z; // screen px per rig unit at the guesser
-  const mouthNode = g.m.open > 0.02 ? <OpenMouth m={g.m} id={`${id}-mo`} px={pxMouth / 4} /> : undefined;
+  const mouthNode = alwaysMouth || g.m.open > 0.02 ? <OpenMouth m={g.m} id={`${id}-mo`} px={pxMouth / 4} /> : undefined;
+  const hy = H.ground - (h?.rise ?? 0);
   return (
     <g transform={camT(cam)}>
       <Wall id={id} t={t} />
       <Monitor g={game} id={id} />
       <Chair />
-      <CrewChar look={CAST.guesser} pose={g.pose} frame={frame} seed={3} x={G.x} y={G.ground} scale={G.scale} id={`${id}-g`} ink={ink} mouthNode={mouthNode} life={g.life ?? 1} shadow={false} />
+      <CrewChar look={CAST.guesser} pose={g.pose} frame={frame} seed={3} x={G.x} y={G.ground} scale={G.scale} id={`${id}-g`} ink={ink} mouthNode={mouthNode} life={g.life ?? 1} shadow={false} front={g.front ?? 'none'} />
       <Desk id={id} />
       <PCTower t={t} />
       <Gear t={t} />
       {h && (
         <g>
           <BeanBag x={h.x} />
-          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={H.ground} scale={H.scale} id={`${id}-h`} ink={inkFor(H.scale, cam.z)} shadow={false} front="L" />
-          {h.pad && <Pad x={h.x + h.pad.dx} y={H.ground - 330 + h.pad.dy} r={h.pad.r} shake={h.pad.shake} />}
-          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={H.ground} scale={H.scale} id={`${id}-h2`} ink={inkFor(H.scale, cam.z)} shadow={false} front="R" pass="frontArm" />
+          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h`} ink={inkFor(H.scale, cam.z)} shadow={false} front="L"
+            headGear={(h.paint ?? 0) > 0.01 ? <g opacity={h.paint}><path d="M 18 -362 q 10 -14 24 -4 q 12 -10 16 6 q 10 4 2 14 q 4 14 -12 10 q -6 12 -18 2 q -14 6 -14 -10 q -10 -8 2 -18 Z" fill="#FF8A3D" stroke="#162A32" strokeWidth={3} /><circle cx={34} cy={-354} r={6} fill="#FFC744" /></g> : undefined} />
+          {h.pad && <Pad x={h.x + h.pad.dx} y={hy - 330 + h.pad.dy} r={h.pad.r} shake={h.pad.shake} />}
+          <CrewChar look={CAST.honest} pose={h.pose} frame={frame} seed={7} x={h.x} y={hy} scale={H.scale} id={`${id}-h2`} ink={inkFor(H.scale, cam.z)} shadow={false} front="R" pass="frontArm" holdR={h.holdR} />
           {(h.sweat ?? 0) > 0.01 && (
             <path d={`M ${h.x + 70} ${hHead(h.x).y - 60 + (h.sweat ?? 0) * 30} q 10 18 0 26 q -10 -8 0 -26 Z`} fill="#9EE7FF" stroke={INK} strokeWidth={4} opacity={clamp((h.sweat ?? 0) * 3) * (1 - clamp(((h.sweat ?? 0) - 0.8) * 5))} />
           )}
         </g>
       )}
+      {front}
     </g>
   );
 };
@@ -207,3 +210,4 @@ export const honestHold = (x: number, dx = 0, dy = 0): Pose => {
 };
 export const mixPoseNum = (a: number, b: number, t: number) => lerp(a, b, t);
 export const jitter = (t: number, amp: number, seed = 0) => (hash(Math.floor(t * 24) + seed) - 0.5) * 2 * amp;
+export {handWorld as handWorldG} from '../crew';

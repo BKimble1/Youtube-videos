@@ -14,6 +14,7 @@ export const T = {
   but: W('but'), craziest: W('craziest'), part: W('part'), close: W('close'), mouth3: W('mouth', 3), nobody: W('nobody'), see: W('see'), controller: W('controller'),
   so: W('so'), imagine: W('imagine'), losing: W('losing'), game: W('game'), someone: W('someone'), literally: W('literally'), sitting2: W('sitting', 2), there: W('there'),
   with2: W('with', 2), mouth4: W('mouth', 4), shut: W('shut'),
+  can: W('can', 1), with1: W('with', 1), even: W('even'), just: W('just'), heres: W("here's"), whos: W("who's"), video2: W('video', 2), and3: W('and', 3), their2: W('their', 2), a2: W('a', 2), called2: W('called'),
 };
 
 /** shots fired in the game; each lands just after the word it answers, so no splat covers a word */
