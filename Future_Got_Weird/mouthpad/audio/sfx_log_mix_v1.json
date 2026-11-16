@@ -1,0 +1,452 @@
+[
+ {
+  "t": 3.41,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 3.49,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 5.045,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 5.125,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 15.62,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 15.7,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 22.23,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 22.31,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 23.79,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 23.87,
+  "sfx": "splat",
+  "gain_db": -9
+ },
+ {
+  "t": 31.01,
+  "sfx": "blaster",
+  "gain_db": -13
+ },
+ {
+  "t": 31.09,
+  "sfx": "splat (big)",
+  "gain_db": -4
+ },
+ {
+  "t": 0.06,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 1.99,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 4.595,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 10.83,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 12.055,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 20.72,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 22.62,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 24.515,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 25.9,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 26.3,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 27.1,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 27.9,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 28.7,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 29.45,
+  "sfx": "strafe swish",
+  "gain_db": -14
+ },
+ {
+  "t": 2.5,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 4.933,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 13.733,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 21.867,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 23.5,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 30.367,
+  "sfx": "lock-on ping",
+  "gain_db": -16
+ },
+ {
+  "t": 26,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 26.32,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 26.8,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 27.12,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 27.6,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 27.92,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 28.4,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 28.72,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 29.15,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 29.47,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 29.85,
+  "sfx": "rex shot",
+  "gain_db": -13
+ },
+ {
+  "t": 30.17,
+  "sfx": "orb whoosh past",
+  "gain_db": -15
+ },
+ {
+  "t": 0.15,
+  "sfx": "orb whoosh past (opening)",
+  "gain_db": -12
+ },
+ {
+  "t": 4.67,
+  "sfx": "orb whoosh past",
+  "gain_db": -12
+ },
+ {
+  "t": 31.31,
+  "sfx": "victory jingle",
+  "gain_db": -9
+ },
+ {
+  "t": 31.55,
+  "sfx": "round-reset wipe",
+  "gain_db": -12
+ },
+ {
+  "t": 3.36,
+  "sfx": "tongue click",
+  "gain_db": -10
+ },
+ {
+  "t": 4.995,
+  "sfx": "tongue click",
+  "gain_db": -10
+ },
+ {
+  "t": 15.48,
+  "sfx": "tongue click",
+  "gain_db": -6
+ },
+ {
+  "t": 22.18,
+  "sfx": "tongue click",
+  "gain_db": -10
+ },
+ {
+  "t": 23.74,
+  "sfx": "tongue click",
+  "gain_db": -13
+ },
+ {
+  "t": 30.99,
+  "sfx": "tongue click",
+  "gain_db": -6
+ },
+ {
+  "t": 0.89,
+  "sfx": "pad glint",
+  "gain_db": -12
+ },
+ {
+  "t": 1.46,
+  "sfx": "tongue touch blip",
+  "gain_db": -15
+ },
+ {
+  "t": 9.44,
+  "sfx": "tongue touch blip",
+  "gain_db": -15
+ },
+ {
+  "t": 10.38,
+  "sfx": "tongue touch blip",
+  "gain_db": -15
+ },
+ {
+  "t": 14.94,
+  "sfx": "tongue touch blip",
+  "gain_db": -15
+ },
+ {
+  "t": 10.83,
+  "sfx": "key tick",
+  "gain_db": -8
+ },
+ {
+  "t": 11.615,
+  "sfx": "key tick",
+  "gain_db": -8
+ },
+ {
+  "t": 12.085,
+  "sfx": "key tick",
+  "gain_db": -8
+ },
+ {
+  "t": 5.82,
+  "sfx": "match-cut shimmer",
+  "gain_db": -14
+ },
+ {
+  "t": 6.23,
+  "sfx": "explode clack",
+  "gain_db": -10
+ },
+ {
+  "t": 6.965,
+  "sfx": "reassemble clack",
+  "gain_db": -12
+ },
+ {
+  "t": 7.275,
+  "sfx": "gold glint",
+  "gain_db": -11
+ },
+ {
+  "t": 23.08,
+  "sfx": "lips close",
+  "gain_db": -8
+ },
+ {
+  "t": 3.43,
+  "sfx": "beanbag slide",
+  "gain_db": -10
+ },
+ {
+  "t": 3.91,
+  "sfx": "beanbag fwump",
+  "gain_db": -8
+ },
+ {
+  "t": 25.945,
+  "sfx": "controller mashing",
+  "gain_db": -15
+ },
+ {
+  "t": 31.64,
+  "sfx": "controller drop",
+  "gain_db": -7
+ },
+ {
+  "t": 31.45,
+  "sfx": "Honest slumps out",
+  "gain_db": -12
+ },
+ {
+  "t": 17.195,
+  "sfx": "cursor click",
+  "gain_db": -8
+ },
+ {
+  "t": 17.265,
+  "sfx": "window pop",
+  "gain_db": -14
+ },
+ {
+  "t": 18.565,
+  "sfx": "cursor click",
+  "gain_db": -8
+ },
+ {
+  "t": 19.205,
+  "sfx": "phone swipe",
+  "gain_db": -12
+ },
+ {
+  "t": 19.335,
+  "sfx": "call ring",
+  "gain_db": -16
+ },
+ {
+  "t": 19.525,
+  "sfx": "answer",
+  "gain_db": -12
+ },
+ {
+  "t": 0.56,
+  "sfx": "push into mouth",
+  "gain_db": -12
+ },
+ {
+  "t": 1.66,
+  "sfx": "pull back",
+  "gain_db": -12
+ },
+ {
+  "t": 5.45,
+  "sfx": "push in",
+  "gain_db": -12
+ },
+ {
+  "t": 8.08,
+  "sfx": "cut: section-roof",
+  "gain_db": -20
+ },
+ {
+  "t": 10.17,
+  "sfx": "cut: split-move",
+  "gain_db": -20
+ },
+ {
+  "t": 12.295,
+  "sfx": "cut: room-aim",
+  "gain_db": -20
+ },
+ {
+  "t": 14.19,
+  "sfx": "cut: section-press",
+  "gain_db": -20
+ },
+ {
+  "t": 15.47,
+  "sfx": "cut: room-click",
+  "gain_db": -20
+ },
+ {
+  "t": 16.16,
+  "sfx": "cut: assist",
+  "gain_db": -20
+ },
+ {
+  "t": 20.36,
+  "sfx": "cut: room-twist-versus",
+  "gain_db": -20
+ },
+ {
+  "t": 20.72,
+  "sfx": "push in (twist)",
+  "gain_db": -14
+ },
+ {
+  "t": 31.09,
+  "sfx": "punchline impact",
+  "gain_db": -6
+ }
+]

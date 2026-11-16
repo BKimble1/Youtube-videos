@@ -1,0 +1,60 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Eel Escape, Bone Glue, Finger and the other recent episodes); confirmed with creative_list_voices on 2026-11-16"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults; delivery directed with inline tags only",
+ "flow_id": "q5HzHe4Y1ND6HPpSZTLy",
+ "prompt": "[excited, a little incredulous, quick] If you put THIS in your mouth, you can play video games with your TONGUE. [quick] Seriously. Watch this. [fast, explaining] It's called the MouthPad. And that tiny gold square? It's a touchpad sitting on the roof of your mouth. [punchy] Move your tongue, your character moves. Tilt your head, you AIM. Press your tongue up, you CLICK. [fast] And people are already using this thing to control computers and phones without their hands. [leaning in] But here's the craziest part. Close your mouth, and nobody can even SEE the controller. [dry, amused] So imagine losing a video game to someone who's literally just sitting there... With their mouth SHUT.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt); capitals are the approved emphasis; bracket tags direct delivery and are not spoken (confirmed by ASR).",
+ "generated_once": "One run of two variations (the connector default), 2 x 690.9 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_rVzp.mp3",
+   "generation_id": "rVzpmlkORhh2SX2E5HsG",
+   "session_id": "S4x3zUZLwogxlMiGPoqD",
+   "duration_s": 31.32,
+   "sha256": "03ea71e1b8f97927f2b800be04680e238938d47a9f178a12bac5d2042ff376c0",
+   "asr": {
+    "zipformer": 0.059,
+    "whisper": 0.03
+   },
+   "chosen": false,
+   "why_not": "whisper hears a '(static)' artifact right after 'Watch this'"
+  },
+  {
+   "file": "audio/narration/takes/t2_ePVX.mp3",
+   "generation_id": "ePVXNf7JRGneC8Cqf0YI",
+   "session_id": "8qBRRaBkCbQnrZCOTaYG",
+   "duration_s": 31.16,
+   "sha256": "638f2abd9fff296792cd19dbf0ac6f09af0079deafe2d187611a56c84c9e4cfc",
+   "asr": {
+    "zipformer": 0.059,
+    "whisper": 0.02
+   },
+   "chosen": true,
+   "why": "word-perfect on whisper base.en except the compound spelling 'mouth pad'; zipformer's only differences are 'vitio' for 'video' (heard the same way in both takes) and the two compounds split ('mouth pad', 'touch pad'); no artifact; 101 words in 31.03 s"
+  }
+ ],
+ "pace": {
+  "words": 101,
+  "speech_s": [
+   0.0,
+   31.03
+  ],
+  "wpm_over_speech_span": 195.3,
+  "longest_pause_s": 0.43,
+  "note": "about 225 wpm while voiced; every pause between sentences is 0.17-0.43 s (no dead air)"
+ },
+ "master": {
+  "file": "audio/narration/FGW_MouthPad_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, 32.00 s (the film length)",
+  "edits": "none: the take is used sample for sample (no cut, stretch, pitch or gain change); only padded with silence to 32.0 s",
+  "sha256": "23056faa02c170518c405edccb95f9b5843e55f26ac71e1a57a75e9ed1ae6b34",
+  "alignment": "audio/narration/t2_words.json (sherpa-onnx zipformer token times, onsets snapped to the waveform after pauses)"
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by two ASR models, pace and pause measurements."
+}
