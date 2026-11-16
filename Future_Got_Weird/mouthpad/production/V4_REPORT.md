@@ -9,7 +9,18 @@ Nothing below claims a real-time viewing that did not happen.
 
 ## 1. Verified export (ffprobe on the delivered file)
 
-@@FFPROBE@@
+| Property | Value |
+|---|---|
+| File | `FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4`, 19,036,443 bytes |
+| SHA-256 | `aa7b4e2cbf9e99b7fc4de1d0909d18bea26f0561cfef2483d1ba9aa9fb40866e` |
+| Runtime | **31.90 s**, **957 frames** |
+| Video | H.264 High, **1080 × 1920** (encoded width × height), SAR 1:1, DAR 9:16, **30 fps** (r and avg 30/1), yuv420p, BT.709, 4.5 Mb/s |
+| Audio | AAC LC, 48 kHz, stereo, 260 kb/s |
+| Loudness | −14.0 LUFS integrated, −1.49 dBTP true peak |
+| Black frames / frozen ≥ 1 s | none / none |
+| Longest near-static stretch | 0.03 s (one frame) |
+
+The raw ffprobe output is in `qa/v4/ffprobe_final.txt`.
 
 ### The "512 × 910" report
 
@@ -126,16 +137,73 @@ Effects are original and synthesised, placed on the picture's own events, and du
 Music: the same 120 BPM bed. It loops exactly (64 beats over the film), filters down under the twist and the
 punchline, and ducks under speech.
 
-@@AUDIO@@
+Measured on the final mix (`audio/mix/mix_measure_mix_v4.json`):
+
+| Measure | Value |
+|---|---|
+| Voice | −17.1 LUFS |
+| Effects | −25.8 LUFS |
+| Music | −33.1 LUFS |
+| Voice over the bed while speaking | at least 8.6 dB in 95% of speech windows (median 16.8 dB) |
+
+The effects and music do not mask the narration: the transcription back is unchanged from the dry narration.
 
 ## 5. Final inspection performed
 
-@@INSPECTION@@
+**Three complete frame-by-frame passes, every one of the 957 frames:**
+- Each pass used numbered sheets of every frame of the actual export (`qa/v4/sheets/`).
+- Each quarter of the film was checked by an independent reviewer. They extracted suspicious frames at full resolution and ran frame-difference, pop, position-tracking and sharpness checks.
+- I verified every finding at full resolution before acting on it. False positives are noted below.
+
+| Pass | Findings |
+|---|---|
+| First | The original V2/V3 defects in the fixes table above, plus the V4 aim overshoot, blaster direction, phone-dot and caption-frame issues |
+| Second | The lip close, a cut-off blink, cut-away layers showing through, the device hand-over, crosshair drift after the hit, click timing, a repeated close-up |
+| Third (final, on the file before this one) | The tongue resting on the pad before the click, the lift-out shell tint, the mouth closing by dissolving instead of narrowing, the cursor leaving away from the phone, Honest's beanbag slide, an expression change and a rise at cuts |
+
+**Last render:** everything from the third pass was fixed and re-rendered. On the delivered file I then frame-stepped every changed window myself:
+- 171–184 (lift-out);
+- 436–457 (click);
+- 534–553 (cursor to phone);
+- 655–690 (mouth close);
+- 738–775 and 798–830 (Honest).
+
+The remaining frames are unchanged from the file that passed the third review.
+
+**Measured on the delivered file:**
+- no black or frozen frames;
+- every large frame step is either a planned cut or a multi-frame camera move;
+- the loop seam (956 → 0) is the same composition (step 5.2 against a median of 3.0; it includes the first caption appearing);
+- caption sync: 0 mismatched word frames.
+
+**Reviewer findings checked and not changed (false positives):**
+- the split-screen captions "using another font" (same font; the dark outline is invisible on the dark band);
+- the hair "cut by the bezel" (the spiky hair's left side is straight by design);
+- the battery pods "tapering" (rounded capsules cropped by the frame edge in the extreme close-up).
+
+**Not performed:** real-time playback with sound. There is no player or speaker here; it is the one check left for a person.
 
 ## 6. Unresolved issues (honest list)
 
-@@ISSUES@@
+1. **Not watched or heard in real time.** The comic timing of the ending and the effect and music levels need one human pass with sound.
+2. **The cut-away still assembles with a dissolve (8.3–8.6 s).** It now fades as one group, with the device handing over in about 4 frames, but it is a dissolve.
+3. **Short transient frames remain:**
+   - **173→174:** a faint extra blue tint on the side teeth as the lift-out begins.
+   - **176–179:** the battery pods appear from behind the tongue over about 3 frames as the device comes forward.
+   - **667:** one in-between frame where the slit hands over to the closed lip line.
+   - **551–553:** during the camera glide the music widget passes under the caption "…and PHONES" for 2–3 frames.
+   - **770–771:** Honest blinks or squints on the last frame before a cut.
+4. **Caption contrast on the striped shirt.** In the cut-away shots (8.4–10 s), yellow keywords sit on the yellow stripes; the dark outline keeps them readable.
+5. **The monitor shows the next round in the final glide.** When the monitor comes back into view, it shows the next round (needed for the seamless loop). The swap happens while the screen is off camera.
+6. **Head aim is a tilt (roll).** The rig has no yaw; this matches "Tilt your head".
+7. **Device design and claims.** The pad size and position, the traces and the batteries, plus the control-mapping claims, the per-user direction mapping and "nobody can even SEE the controller" (`production/SOURCE_NOTES.md`), still need checking against official MouthPad material before publishing.
+8. **Shorts interface.** The lowest captions sit at about y 1500. Check clearance of the Shorts title and buttons on a phone after upload.
 
 ## 7. Readiness
 
-@@READY@@
+**Technically publication-ready, pending one human check.** The export is a verified native 1080 × 1920, 30 fps H.264/AAC file, −14 LUFS, with the narration word for word, captions in sync, no gamepad near the MouthPad player, clear one-to-one controls, a readable comic ending and a seamless loop. Three complete frame passes found nothing outstanding beyond the short transients listed.
+
+Before publishing:
+- one real-time watch and listen;
+- a check of the device design and claims against official MouthPad material;
+- a check of caption clearance in the Shorts player on a phone.

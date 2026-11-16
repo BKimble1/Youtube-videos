@@ -1,0 +1,3 @@
+stream|codec_name=h264|profile=High|width=1080|height=1920|sample_aspect_ratio=1:1|display_aspect_ratio=9:16|pix_fmt=yuv420p|color_primaries=bt709|r_frame_rate=30/1|avg_frame_rate=30/1|bit_rate=4505271|nb_frames=957
+stream|codec_name=aac|profile=LC|sample_rate=48000|channels=2|r_frame_rate=0/0|avg_frame_rate=0/0|bit_rate=259729|nb_frames=1497
+format|duration=31.900000|size=19036443|bit_rate=4774029
