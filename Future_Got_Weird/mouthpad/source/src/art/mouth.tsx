@@ -23,6 +23,7 @@ export type MouthState = {
   yaw?: number;
   device?: number; // 1 = the MouthPad is in the mouth (default), 0 = lifted out
   smirk?: number; // closed-mouth smirk (one corner up)
+  settle?: number; // (V4, with smoothClose) 0 = the closed line sits exactly where the slit closed, 1 = the relaxed smile line
   smoothClose?: boolean; // (V4) the open mouth fades into the closed line at the same place (no swap), teeth and tongue fade out
 };
 
@@ -34,7 +35,7 @@ const MM = 0.58; // rig units per millimetre inside the mouth
 export const opening = (m: MouthState) => {
   const o = clamp(m.open);
   const w = 13 + 8 * o; // half width
-  const h = 3 + 31 * o; // height
+  const h = (m.smoothClose ? 3 * clamp(o / 0.12) : 3) + 31 * o; // height ((V4) narrows all the way to a line)
   const s = (m.smile ?? 0) * 4;
   const top = MOUTH_TOP + 1; // the upper lip holds still; the jaw (lower lip) does the moving
   return {w, h, s, top, bot: top + h};
@@ -87,14 +88,16 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
     // closed lips: one ink line whose curve follows the smile (and a smirk lifts one corner)
     const lw0 = Math.max(1.6, Math.min(5, px * 1.2));
     const sm = m.smile ?? 0.4, sk = m.smirk ?? 0;
-    const y0 = sc ? MOUTH_TOP + 2 : MOUTH_TOP + 6, w0 = sc ? 13.5 : 15; // (V4) where the closing slit actually is
+    const st = sc ? clamp(m.settle ?? 1) : 1; // (V4) where the closing slit actually is, relaxing into the smile
+    const y0 = MOUTH_TOP + lerp(1, 6, st), w0 = lerp(13.5, 15, st);
     const k = sc ? 0 : o / 0.035; // fades into the opening shape below
-    return <path d={`M ${-w0} ${y0 - 3 * sm} Q ${-2} ${y0 + 4 + 6 * sm + k * 2} ${w0} ${y0 - 3 * sm - 6 * sk}`} fill="none" stroke={INK} strokeWidth={lw0 * 1.25} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={opacity} />;
+    const sag = lerp(1.5 + 4 * sm, 4 + 6 * sm, st);
+    return <path d={`M ${-w0} ${y0 - 3 * sm} Q ${-2} ${y0 + sag + k * 2} ${w0} ${y0 - 3 * sm - 6 * sk}`} fill="none" stroke={INK} strokeWidth={lw0 * 1.25} vectorEffect="non-scaling-stroke" strokeLinecap="round" opacity={opacity} />;
   };
   if (!sc && o < 0.035) return closedLine(1);
-  if (sc && o <= 0.02) return closedLine(1);
-  const openO = sc ? clamp((o - 0.02) / 0.045) : 1; // (V4) the slit fades out as the line fades in, at the same place
-  const lineO = sc ? 1 - clamp((o - 0.03) / 0.045) : 0;
+  if (sc && o <= 0.004) return closedLine(1);
+  const openO = sc ? clamp((o - 0.004) / 0.022) : 1; // (V4) the slit, by now a thin line, hands over to the closed line in the same place
+  const lineO = sc ? 1 - clamp((o - 0.01) / 0.022) : 0;
   const {w, h, top} = opening(m);
   const bot = top + h;
   const J = jawPlacement(m);
@@ -149,7 +152,7 @@ export const OpenMouth: React.FC<{m: MouthState; id: string; px: number}> = ({m,
             ))}
           </g>
         )}
-        <g opacity={sc ? clamp((o - 0.04) / 0.08) : 1}>
+        <g opacity={sc ? clamp((o - 0.1) / 0.1) : 1}>
         <path d={smoothPath(tongue, false)} fill={`url(#${id}-tg)`} stroke={INK} strokeWidth={lw * 0.7} vectorEffect="non-scaling-stroke" />
         <path d={`M ${tip.x} ${tip.y + 4} Q ${tip.x - 0.5} ${lerp(tip.y + 10, bot, 0.5)} ${tip.x * 0.4} ${bot}`} fill="none" stroke="#C9576A" strokeWidth={lw * 0.6} vectorEffect="non-scaling-stroke" opacity={0.6} />
         {contact && glow > 0 && (

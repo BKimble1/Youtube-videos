@@ -35,8 +35,8 @@ const CAMS: CamKey[] = [
 // cursor path on the desktop (screen-local px), driven by her head
 const CUR: [number, [number, number]][] = [];
 const cursor = (t: number) => ({
-  x: keys(t, [[ASSIST_START, 110], [ASSIST_START + 0.1, 110], [T.already + 0.2, 470], [T.using, 470], [T.thing, 300], [T.control - 0.1, 70], [T.control + 0.12, 70], [T.computers + 0.25, 650]]),
-  y: keys(t, [[ASSIST_START, 300], [ASSIST_START + 0.1, 300], [T.already + 0.2, 92], [T.using, 92], [T.thing, 140], [T.control - 0.1, 180], [T.control + 0.12, 180], [T.computers + 0.25, 210]]),
+  x: keys(t, [[ASSIST_START, 110], [ASSIST_START + 0.1, 110], [T.already + 0.2, 470], [T.using, 470], [T.thing, 300], [T.control - 0.1, 70], [T.control + 0.12, 70], [T.computers + 0.25, 380]]), // (V4) the cursor leaves the screen downward, toward the phone below it
+  y: keys(t, [[ASSIST_START, 300], [ASSIST_START + 0.1, 300], [T.already + 0.2, 92], [T.using, 92], [T.thing, 140], [T.control - 0.1, 180], [T.control + 0.12, 180], [T.computers + 0.25, 440]]),
 });
 void CUR;
 const CLICK1 = T.already + 0.25; // opens the photo

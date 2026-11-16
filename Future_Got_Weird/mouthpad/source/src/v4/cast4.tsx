@@ -77,7 +77,9 @@ export const guesser4 = (t: number): GState => {
   // the punchline: a tiny smug smile grows on "SHUT" — mouth stays shut
   const smug = ss(t, T.shut + 0.02, T.shut + 0.32) * (1 - ss(t, LOOP_CUT + 0.4, LOOP_CUT + 0.9));
   const smile = 0.35 - 0.2 * bored + 0.45 * smug;
-  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0, smoothClose: true};
+  const m: MouthState = {open, tongueLift: lift, u, v: 0.25, press, glow: 1, smile, smirk: 0.55 * smug, device: t < C2_START_G || t > T.and2 ? 1 : 0, smoothClose: true,
+    // (V4) the closed line meets the slit where it closes, then relaxes into the smile (and the reverse before the hook opens)
+    settle: Math.min(t > T.close - 0.5 ? ss(t, T.mouth3 + 0.1, T.mouth3 + 0.45) : 1, 1 - ss(t, T.this + 0.02, T.this + 0.2) + (t > T.this + 1 ? 1 : 0))};
   // the head holds still for the lift-out match and through the lips closing (only breathing remains)
   const still = 1 - on(t, T.its - 0.1, T.mouthpad + 0.1, 0.12) - 0.85 * on(t, T.but - 0.2, T.mouth3 + 0.5, 0.2);
   return {pose, m, life: clamp(still), front: 'none'};
@@ -113,17 +115,18 @@ export const honest4 = (t: number): HState => {
   // slides in on "Seriously", stays; rolls a little closer to peer at the guesser's shut mouth; the versus round:
   // confident, furious, standing and straining; frozen when he loses; then gone (out of frame) before the loop shot
   const inX = lerp(-420, H.x, bo(t, T.seriously - 0.25, T.seriously + 0.15, 1.1));
-  const closer = on(t, T.controller - 0.35, T.so + 0.1, 0.3);
+  const closer = on(t, T.controller - 0.35, T.so + 0.1, 0.3); // the peering lean and face
+  const closerPos = ss(t, T.controller - 0.35, T.controller - 0.05); // (V4) he stays where he rolled in (no beanbag slide back)
   const exit = ss(t, T.mouth4 + 0.3, LOOP_CUT - 0.2);
-  const x = inX + 150 * closer - 900 * exit;
+  const x = inX + 150 * closerPos - 900 * exit;
   if (t < T.seriously - 0.3 || x < -650) return null;
   const confident = on(t, T.so - 0.2, T.losing + 0.1, 0.2);
-  const furious = on(t, T.losing - 0.1, KO_HIT + 0.05, 0.2);
+  const furious = on(t, T.losing + 0.04, KO_HIT + 0.05, 0.2); // (V4) turns while the controller close-up is on screen
   const frozen = ss(t, KO_HIT, KO_HIT + 0.08);
   const toWinner = ss5(t, T.with2 - 0.2, T.with2 + 0.25); // his eyes slowly travel from the screen to the winner
   const mash = on(t, T.imagine - 0.25, KO_HIT + 0.02, 0.12) * (1 - frozen);
   const intens = mash * (0.45 + 0.55 * furious + 0.4 * on(t, T.someone, KO_HIT, 0.1));
-  const rise = 120 * ss(t, T.someone + 0.1, T.whos + 0.15) * (1 - ss(t, T.mouth4 + 0.3, T.mouth4 + 0.6));
+  const rise = 120 * ss(t, T.whos, T.literally - 0.02) * (1 - ss(t, T.mouth4 + 0.3, T.mouth4 + 0.6)); // (V4) rises during the game shot, seen up in the two-shot
   const jit = (s: number, a: number) => (Math.sin(t * 61 + s) * 0.6 + Math.sin(t * 37 + s * 2) * 0.4) * a;
   const dx = jit(1, 9 * intens), dy = jit(2, 8 * intens);
   // the controller: held at his lap while watching, up for the round, slips slowly out of his hands after the loss
