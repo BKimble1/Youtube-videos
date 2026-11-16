@@ -189,7 +189,8 @@ const ShotPress: React.FC<{t: number}> = ({t}) => {
   const px = lerp(10.6, 11.4, ss(t, CUTS.F1, CUTS.G));
   const contactY = palate(cz) + 0.5;
   const fx = cz - 10, fy = contactY + 4;
-  const tl = keys(t, [[T.tongue3 - 0.05, 0], [T.up + 0.05, 0.82], [T.you4 + 0.15, 0.86], [T.click - 0.02, 1]]);
+  // (V4) the tip rises and hovers just short of the pad, then flicks up into contact on "CLICK" (the click is the contact)
+  const tl = keys(t, [[T.tongue3 - 0.05, 0], [T.up + 0.05, 0.68], [T.you4 + 0.15, 0.73], [T.click - 0.07, 0.75], [T.click - 0.01, 1]]);
   const press = pulse(t, T.click - 0.03, T.click, T.click + 0.12, T.click + 0.25);
   const P0 = {x: 50, y: 90, w: 980, h: 790};
   return (
