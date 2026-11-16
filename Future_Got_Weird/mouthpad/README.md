@@ -9,7 +9,7 @@ Not published, and not watched or heard in real time.
 | Property | Value |
 |---|---|
 | Runtime | 31.90 s (957 frames at 30 fps) |
-| Verified (ffprobe) | see `production/V3_REPORT.md` |
+| Verified (ffprobe) | H.264 High, 1080 × 1920, SAR 1:1, 9:16, 30 fps; AAC 48 kHz stereo; −14.0 LUFS; SHA-256 `443a10c2…afac2` |
 | Narration | Locked script, unchanged; the V2 narration master, unchanged |
 | Captions | Burned in, the channel treatment (Nunito Black, white, dark stroke, key words in yellow capitals), 26 phrases timed from the measured words; SRT in `captions/FGW_MouthPad_V3.srt` |
 | Ending | The orange robot (Zip) wins; the winner keeps his hands behind his head and his mouth shut; cuts back to frame 0 |
