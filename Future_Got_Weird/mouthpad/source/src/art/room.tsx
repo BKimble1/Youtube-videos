@@ -126,17 +126,17 @@ const PCTower: React.FC<{t: number}> = ({t}) => (
 );
 
 /** keyboard and gamepad: on the desk in front of the guesser, untouched (they never move) */
-const Gear: React.FC<{t: number}> = ({t}) => (
+const Gear: React.FC<{t: number; pad?: boolean}> = ({t, pad = true}) => (
   <g>
     <path d={`M ${G.x - 250} ${DESK_Y + 40} L ${G.x - 230} ${DESK_Y + 8} L ${G.x - 20} ${DESK_Y + 8} L ${G.x - 4} ${DESK_Y + 40} Z`} fill="#2B2B33" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
     {Array.from({length: 3}).map((_, r) => Array.from({length: 11}).map((_, c) => (
       <rect key={`${r}-${c}`} x={G.x - 236 + c * 19 + r * 3} y={DESK_Y + 12 + r * 9} width={14} height={6} rx={2} fill={`hsl(${(c * 30 + 360 * cyc(t, 5)) % 360} 85% 65%)`} opacity={0.75} />
     )))}
-    <g transform={`translate(${G.x + 120} ${DESK_Y + 26})`}>
+    {pad && <g transform={`translate(${G.x + 120} ${DESK_Y + 26})`}>
       <path d="M -62 -10 Q -60 -24 -30 -24 L 30 -24 Q 60 -24 62 -10 L 70 16 Q 72 30 56 30 Q 44 30 36 16 L -36 16 Q -44 30 -56 30 Q -72 30 -70 16 Z" fill="#E9EEF2" stroke={INK} strokeWidth={5} strokeLinejoin="round" />
       <circle cx={-34} cy={-6} r={7} fill="#2B2B33" />
       <circle cx={30} cy={-10} r={4} fill="#EF6B55" /><circle cx={40} cy={-2} r={4} fill="#1CA7A0" /><circle cx={22} cy={-2} r={4} fill="#FFC744" />
-    </g>
+    </g>}
   </g>
 );
 
@@ -156,7 +156,7 @@ export const Pad: React.FC<{x: number; y: number; r?: number; shake?: number}> =
 export type GState = {pose: Pose; m: MouthState; life?: number; hands?: 'up' | 'behind' | 'rest'; front?: 'L' | 'R' | 'none'};
 export type HState = {x: number; pose: Pose; mouth?: Pose['mouth']; pad?: {dx: number; dy: number; r: number; shake: number} | null; sweat?: number; lean?: number; rise?: number; holdR?: React.ReactNode; paint?: number; vis?: VisShape} | null;
 
-export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string; alwaysMouth?: boolean; front?: React.ReactNode}> = ({t, frame, cam, g, h, game, id, alwaysMouth, front}) => {
+export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState; h: HState; game: GameState; id: string; alwaysMouth?: boolean; front?: React.ReactNode; noPad?: boolean}> = ({t, frame, cam, g, h, game, id, alwaysMouth, front, noPad}) => {
   const ink = inkFor(G.scale, cam.z);
   const pxMouth = G.scale * cam.z; // screen px per rig unit at the guesser
   const mouthNode = alwaysMouth || g.m.open > 0.02 ? <OpenMouth m={g.m} id={`${id}-mo`} px={pxMouth / 4} /> : undefined;
@@ -169,7 +169,7 @@ export const RoomScene: React.FC<{t: number; frame: number; cam: Cam; g: GState;
       <CrewChar look={CAST.guesser} pose={g.pose} frame={frame} seed={3} x={G.x} y={G.ground} scale={G.scale} id={`${id}-g`} ink={ink} mouthNode={mouthNode} life={g.life ?? 1} shadow={false} front={g.front ?? 'none'} />
       <Desk id={id} />
       <PCTower t={t} />
-      <Gear t={t} />
+      <Gear t={t} pad={!noPad} />
       {h && (
         <g>
           <BeanBag x={h.x} />

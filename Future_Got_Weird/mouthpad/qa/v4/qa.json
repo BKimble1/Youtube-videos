@@ -1,0 +1,834 @@
+{
+ "video": {
+  "codec_name": "h264",
+  "profile": "High",
+  "width": 1080,
+  "height": 1920,
+  "pix_fmt": "yuv420p",
+  "r_frame_rate": "30/1",
+  "nb_frames": "957",
+  "color_space": "bt709",
+  "color_primaries": "bt709",
+  "color_transfer": "bt709"
+ },
+ "audio": {
+  "codec_name": "aac",
+  "sample_rate": "48000",
+  "channels": 2,
+  "bit_rate": "259851"
+ },
+ "duration_s": 31.9,
+ "blackdetect": [],
+ "freezedetect_1s": [],
+ "motion": {
+  "frames": 957,
+  "median_step": 2.901,
+  "longest_static_run_s": 0.33,
+  "at_s": 9.17
+ },
+ "big_frame_jumps": [
+  {
+   "frame": 11,
+   "t": 0.367,
+   "diff": 19.0,
+   "planned_cut": false
+  },
+  {
+   "frame": 12,
+   "t": 0.4,
+   "diff": 25.11,
+   "planned_cut": false
+  },
+  {
+   "frame": 13,
+   "t": 0.433,
+   "diff": 28.53,
+   "planned_cut": false
+  },
+  {
+   "frame": 14,
+   "t": 0.467,
+   "diff": 28.18,
+   "planned_cut": false
+  },
+  {
+   "frame": 15,
+   "t": 0.5,
+   "diff": 26.44,
+   "planned_cut": false
+  },
+  {
+   "frame": 16,
+   "t": 0.533,
+   "diff": 25.48,
+   "planned_cut": false
+  },
+  {
+   "frame": 17,
+   "t": 0.567,
+   "diff": 22.9,
+   "planned_cut": false
+  },
+  {
+   "frame": 18,
+   "t": 0.6,
+   "diff": 18.08,
+   "planned_cut": false
+  },
+  {
+   "frame": 21,
+   "t": 0.7,
+   "diff": 22.58,
+   "planned_cut": false
+  },
+  {
+   "frame": 22,
+   "t": 0.733,
+   "diff": 28.7,
+   "planned_cut": false
+  },
+  {
+   "frame": 23,
+   "t": 0.767,
+   "diff": 34.67,
+   "planned_cut": false
+  },
+  {
+   "frame": 24,
+   "t": 0.8,
+   "diff": 40.15,
+   "planned_cut": false
+  },
+  {
+   "frame": 25,
+   "t": 0.833,
+   "diff": 45.18,
+   "planned_cut": false
+  },
+  {
+   "frame": 26,
+   "t": 0.867,
+   "diff": 46.49,
+   "planned_cut": false
+  },
+  {
+   "frame": 27,
+   "t": 0.9,
+   "diff": 48.2,
+   "planned_cut": false
+  },
+  {
+   "frame": 28,
+   "t": 0.933,
+   "diff": 54.48,
+   "planned_cut": false
+  },
+  {
+   "frame": 29,
+   "t": 0.967,
+   "diff": 57.37,
+   "planned_cut": false
+  },
+  {
+   "frame": 30,
+   "t": 1.0,
+   "diff": 52.84,
+   "planned_cut": false
+  },
+  {
+   "frame": 31,
+   "t": 1.033,
+   "diff": 52.75,
+   "planned_cut": false
+  },
+  {
+   "frame": 32,
+   "t": 1.067,
+   "diff": 45.36,
+   "planned_cut": false
+  },
+  {
+   "frame": 33,
+   "t": 1.1,
+   "diff": 33.07,
+   "planned_cut": false
+  },
+  {
+   "frame": 34,
+   "t": 1.133,
+   "diff": 33.9,
+   "planned_cut": false
+  },
+  {
+   "frame": 35,
+   "t": 1.167,
+   "diff": 28.48,
+   "planned_cut": false
+  },
+  {
+   "frame": 52,
+   "t": 1.733,
+   "diff": 44.74,
+   "planned_cut": true
+  },
+  {
+   "frame": 81,
+   "t": 2.7,
+   "diff": 81.26,
+   "planned_cut": true
+  },
+  {
+   "frame": 117,
+   "t": 3.9,
+   "diff": 17.93,
+   "planned_cut": false
+  },
+  {
+   "frame": 133,
+   "t": 4.433,
+   "diff": 70.86,
+   "planned_cut": true
+  },
+  {
+   "frame": 156,
+   "t": 5.2,
+   "diff": 86.16,
+   "planned_cut": true
+  },
+  {
+   "frame": 165,
+   "t": 5.5,
+   "diff": 80.73,
+   "planned_cut": true
+  },
+  {
+   "frame": 166,
+   "t": 5.533,
+   "diff": 22.16,
+   "planned_cut": true
+  },
+  {
+   "frame": 167,
+   "t": 5.567,
+   "diff": 32.1,
+   "planned_cut": false
+  },
+  {
+   "frame": 168,
+   "t": 5.6,
+   "diff": 41.3,
+   "planned_cut": false
+  },
+  {
+   "frame": 169,
+   "t": 5.633,
+   "diff": 47.45,
+   "planned_cut": false
+  },
+  {
+   "frame": 170,
+   "t": 5.667,
+   "diff": 44.37,
+   "planned_cut": false
+  },
+  {
+   "frame": 171,
+   "t": 5.7,
+   "diff": 43.85,
+   "planned_cut": false
+  },
+  {
+   "frame": 172,
+   "t": 5.733,
+   "diff": 38.56,
+   "planned_cut": true
+  },
+  {
+   "frame": 173,
+   "t": 5.767,
+   "diff": 26.27,
+   "planned_cut": true
+  },
+  {
+   "frame": 177,
+   "t": 5.9,
+   "diff": 18.69,
+   "planned_cut": false
+  },
+  {
+   "frame": 178,
+   "t": 5.933,
+   "diff": 22.72,
+   "planned_cut": false
+  },
+  {
+   "frame": 179,
+   "t": 5.967,
+   "diff": 24.38,
+   "planned_cut": false
+  },
+  {
+   "frame": 180,
+   "t": 6.0,
+   "diff": 23.97,
+   "planned_cut": false
+  },
+  {
+   "frame": 181,
+   "t": 6.033,
+   "diff": 22.02,
+   "planned_cut": false
+  },
+  {
+   "frame": 182,
+   "t": 6.067,
+   "diff": 19.98,
+   "planned_cut": false
+  },
+  {
+   "frame": 183,
+   "t": 6.1,
+   "diff": 17.43,
+   "planned_cut": false
+  },
+  {
+   "frame": 237,
+   "t": 7.9,
+   "diff": 17.45,
+   "planned_cut": false
+  },
+  {
+   "frame": 260,
+   "t": 8.667,
+   "diff": 20.99,
+   "planned_cut": false
+  },
+  {
+   "frame": 261,
+   "t": 8.7,
+   "diff": 17.78,
+   "planned_cut": false
+  },
+  {
+   "frame": 300,
+   "t": 10.0,
+   "diff": 109.25,
+   "planned_cut": true
+  },
+  {
+   "frame": 301,
+   "t": 10.033,
+   "diff": 28.94,
+   "planned_cut": false
+  },
+  {
+   "frame": 302,
+   "t": 10.067,
+   "diff": 28.07,
+   "planned_cut": false
+  },
+  {
+   "frame": 303,
+   "t": 10.1,
+   "diff": 21.57,
+   "planned_cut": false
+  },
+  {
+   "frame": 359,
+   "t": 11.967,
+   "diff": 88.59,
+   "planned_cut": true
+  },
+  {
+   "frame": 415,
+   "t": 13.833,
+   "diff": 73.8,
+   "planned_cut": true
+  },
+  {
+   "frame": 475,
+   "t": 15.833,
+   "diff": 80.29,
+   "planned_cut": true
+  },
+  {
+   "frame": 503,
+   "t": 16.767,
+   "diff": 61.05,
+   "planned_cut": true
+  },
+  {
+   "frame": 515,
+   "t": 17.167,
+   "diff": 62.32,
+   "planned_cut": true
+  },
+  {
+   "frame": 547,
+   "t": 18.233,
+   "diff": 40.14,
+   "planned_cut": false
+  },
+  {
+   "frame": 548,
+   "t": 18.267,
+   "diff": 49.34,
+   "planned_cut": false
+  },
+  {
+   "frame": 549,
+   "t": 18.3,
+   "diff": 57.34,
+   "planned_cut": false
+  },
+  {
+   "frame": 550,
+   "t": 18.333,
+   "diff": 66.47,
+   "planned_cut": false
+  },
+  {
+   "frame": 551,
+   "t": 18.367,
+   "diff": 69.57,
+   "planned_cut": false
+  },
+  {
+   "frame": 552,
+   "t": 18.4,
+   "diff": 69.85,
+   "planned_cut": false
+  },
+  {
+   "frame": 553,
+   "t": 18.433,
+   "diff": 70.14,
+   "planned_cut": false
+  },
+  {
+   "frame": 554,
+   "t": 18.467,
+   "diff": 60.2,
+   "planned_cut": false
+  },
+  {
+   "frame": 555,
+   "t": 18.5,
+   "diff": 54.12,
+   "planned_cut": false
+  },
+  {
+   "frame": 556,
+   "t": 18.533,
+   "diff": 45.46,
+   "planned_cut": false
+  },
+  {
+   "frame": 557,
+   "t": 18.567,
+   "diff": 30.97,
+   "planned_cut": false
+  },
+  {
+   "frame": 578,
+   "t": 19.267,
+   "diff": 31.56,
+   "planned_cut": false
+  },
+  {
+   "frame": 579,
+   "t": 19.3,
+   "diff": 36.23,
+   "planned_cut": false
+  },
+  {
+   "frame": 580,
+   "t": 19.333,
+   "diff": 34.35,
+   "planned_cut": false
+  },
+  {
+   "frame": 581,
+   "t": 19.367,
+   "diff": 32.1,
+   "planned_cut": false
+  },
+  {
+   "frame": 582,
+   "t": 19.4,
+   "diff": 30.36,
+   "planned_cut": false
+  },
+  {
+   "frame": 583,
+   "t": 19.433,
+   "diff": 28.57,
+   "planned_cut": false
+  },
+  {
+   "frame": 584,
+   "t": 19.467,
+   "diff": 27.19,
+   "planned_cut": false
+  },
+  {
+   "frame": 585,
+   "t": 19.5,
+   "diff": 28.37,
+   "planned_cut": false
+  },
+  {
+   "frame": 586,
+   "t": 19.533,
+   "diff": 27.18,
+   "planned_cut": false
+  },
+  {
+   "frame": 587,
+   "t": 19.567,
+   "diff": 24.44,
+   "planned_cut": false
+  },
+  {
+   "frame": 588,
+   "t": 19.6,
+   "diff": 21.36,
+   "planned_cut": false
+  },
+  {
+   "frame": 589,
+   "t": 19.633,
+   "diff": 18.57,
+   "planned_cut": false
+  },
+  {
+   "frame": 599,
+   "t": 19.967,
+   "diff": 74.26,
+   "planned_cut": true
+  },
+  {
+   "frame": 675,
+   "t": 22.5,
+   "diff": 18.93,
+   "planned_cut": false
+  },
+  {
+   "frame": 676,
+   "t": 22.533,
+   "diff": 24.42,
+   "planned_cut": false
+  },
+  {
+   "frame": 677,
+   "t": 22.567,
+   "diff": 24.35,
+   "planned_cut": false
+  },
+  {
+   "frame": 678,
+   "t": 22.6,
+   "diff": 26.01,
+   "planned_cut": false
+  },
+  {
+   "frame": 679,
+   "t": 22.633,
+   "diff": 28.08,
+   "planned_cut": false
+  },
+  {
+   "frame": 680,
+   "t": 22.667,
+   "diff": 27.91,
+   "planned_cut": false
+  },
+  {
+   "frame": 681,
+   "t": 22.7,
+   "diff": 31.57,
+   "planned_cut": false
+  },
+  {
+   "frame": 682,
+   "t": 22.733,
+   "diff": 32.8,
+   "planned_cut": false
+  },
+  {
+   "frame": 683,
+   "t": 22.767,
+   "diff": 34.17,
+   "planned_cut": false
+  },
+  {
+   "frame": 684,
+   "t": 22.8,
+   "diff": 40.22,
+   "planned_cut": false
+  },
+  {
+   "frame": 685,
+   "t": 22.833,
+   "diff": 39.41,
+   "planned_cut": false
+  },
+  {
+   "frame": 686,
+   "t": 22.867,
+   "diff": 36.11,
+   "planned_cut": false
+  },
+  {
+   "frame": 687,
+   "t": 22.9,
+   "diff": 32.03,
+   "planned_cut": false
+  },
+  {
+   "frame": 688,
+   "t": 22.933,
+   "diff": 30.09,
+   "planned_cut": false
+  },
+  {
+   "frame": 689,
+   "t": 22.967,
+   "diff": 25.51,
+   "planned_cut": false
+  },
+  {
+   "frame": 690,
+   "t": 23.0,
+   "diff": 21.37,
+   "planned_cut": false
+  },
+  {
+   "frame": 695,
+   "t": 23.167,
+   "diff": 80.3,
+   "planned_cut": true
+  },
+  {
+   "frame": 720,
+   "t": 24.0,
+   "diff": 84.79,
+   "planned_cut": true
+  },
+  {
+   "frame": 772,
+   "t": 25.733,
+   "diff": 47.29,
+   "planned_cut": true
+  },
+  {
+   "frame": 783,
+   "t": 26.1,
+   "diff": 87.17,
+   "planned_cut": true
+  },
+  {
+   "frame": 794,
+   "t": 26.467,
+   "diff": 81.38,
+   "planned_cut": true
+  },
+  {
+   "frame": 802,
+   "t": 26.733,
+   "diff": 66.47,
+   "planned_cut": true
+  },
+  {
+   "frame": 812,
+   "t": 27.067,
+   "diff": 79.91,
+   "planned_cut": true
+  },
+  {
+   "frame": 820,
+   "t": 27.333,
+   "diff": 77.64,
+   "planned_cut": true
+  },
+  {
+   "frame": 829,
+   "t": 27.633,
+   "diff": 77.49,
+   "planned_cut": true
+  },
+  {
+   "frame": 860,
+   "t": 28.667,
+   "diff": 80.24,
+   "planned_cut": true
+  },
+  {
+   "frame": 879,
+   "t": 29.3,
+   "diff": 84.49,
+   "planned_cut": true
+  },
+  {
+   "frame": 932,
+   "t": 31.067,
+   "diff": 18.14,
+   "planned_cut": false
+  },
+  {
+   "frame": 933,
+   "t": 31.1,
+   "diff": 21.75,
+   "planned_cut": false
+  },
+  {
+   "frame": 934,
+   "t": 31.133,
+   "diff": 24.33,
+   "planned_cut": false
+  },
+  {
+   "frame": 935,
+   "t": 31.167,
+   "diff": 29.24,
+   "planned_cut": false
+  },
+  {
+   "frame": 936,
+   "t": 31.2,
+   "diff": 32.76,
+   "planned_cut": false
+  },
+  {
+   "frame": 937,
+   "t": 31.233,
+   "diff": 32.41,
+   "planned_cut": false
+  },
+  {
+   "frame": 938,
+   "t": 31.267,
+   "diff": 31.7,
+   "planned_cut": false
+  },
+  {
+   "frame": 939,
+   "t": 31.3,
+   "diff": 31.71,
+   "planned_cut": false
+  },
+  {
+   "frame": 940,
+   "t": 31.333,
+   "diff": 30.36,
+   "planned_cut": false
+  },
+  {
+   "frame": 941,
+   "t": 31.367,
+   "diff": 28.9,
+   "planned_cut": false
+  },
+  {
+   "frame": 942,
+   "t": 31.4,
+   "diff": 26.64,
+   "planned_cut": false
+  },
+  {
+   "frame": 943,
+   "t": 31.433,
+   "diff": 28.46,
+   "planned_cut": false
+  },
+  {
+   "frame": 944,
+   "t": 31.467,
+   "diff": 31.12,
+   "planned_cut": false
+  },
+  {
+   "frame": 945,
+   "t": 31.5,
+   "diff": 31.59,
+   "planned_cut": false
+  },
+  {
+   "frame": 946,
+   "t": 31.533,
+   "diff": 29.48,
+   "planned_cut": false
+  },
+  {
+   "frame": 947,
+   "t": 31.567,
+   "diff": 28.26,
+   "planned_cut": false
+  },
+  {
+   "frame": 948,
+   "t": 31.6,
+   "diff": 25.58,
+   "planned_cut": false
+  },
+  {
+   "frame": 949,
+   "t": 31.633,
+   "diff": 22.86,
+   "planned_cut": false
+  },
+  {
+   "frame": 950,
+   "t": 31.667,
+   "diff": 19.97,
+   "planned_cut": false
+  }
+ ],
+ "loop_seam": {
+  "last_to_first_diff": 5.46,
+  "median_frame_step": 2.901,
+  "p95_frame_step": 38.773
+ },
+ "asr": {
+  "zipformer": {
+   "wer": 0.059,
+   "diffs": [
+    [
+     "replace",
+     "video",
+     "vitio"
+    ],
+    [
+     "replace",
+     "mouthpad",
+     "mouth pad"
+    ],
+    [
+     "replace",
+     "touchpad",
+     "touch pad"
+    ],
+    [
+     "replace",
+     "video",
+     "vitio"
+    ]
+   ]
+  },
+  "whisper": {
+   "wer": 0.04,
+   "diffs": [
+    [
+     "replace",
+     "mouthpad",
+     "mouth pad"
+    ],
+    [
+     "replace",
+     "touchpad",
+     "touch pad"
+    ]
+   ]
+  }
+ }
+}

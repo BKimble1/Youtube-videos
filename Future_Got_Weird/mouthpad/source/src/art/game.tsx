@@ -31,6 +31,7 @@ export type GameState = {
   hitMark?: number; // 0..1 hit marker at the crosshair
   shake?: P; // screen shake offset (px)
   hop?: number; // Zip's victory hop (px up)
+  bigWin?: boolean; // (V4) a bigger trophy that pops up with an overshoot
   charge?: number; // 0..1 the blaster charging before the winning shot
   confetti?: number; // seconds since the K.O. pop (< 0: none)
   flinch?: number; // 0..1 Rex flinching from a tag
@@ -327,14 +328,17 @@ const Confetti: React.FC<{age: number; x: number; y: number}> = ({age, x, y}) =>
   );
 };
 
-const Trophy: React.FC<{w: number; x?: number}> = ({w, x = 320}) => {
+const Trophy: React.FC<{w: number; x?: number; big?: boolean}> = ({w, x = 320, big = false}) => {
   if (w <= 0.001) return null;
-  const s = (0.6 + 0.4 * clamp(w * 1.4)) * 0.75;
+  const k = clamp(w * 1.6);
+  const back = 1 + 2.2 * Math.pow(k - 1, 3) + 1.2 * Math.pow(k - 1, 2); // ease-out with a small overshoot
+  const s = big ? 0.98 * (0.35 + 0.65 * back) : (0.6 + 0.4 * clamp(w * 1.4)) * 0.75;
+  const R = big ? 190 : 150;
   return (
-    <g transform={`translate(${x} ${118 - 40 * clamp(w * 2)}) scale(${s})`} opacity={clamp(w * 3)}>
+    <g transform={`translate(${x} ${big ? 112 - 62 * clamp(w * 2) : 118 - 40 * clamp(w * 2)}) scale(${s})`} opacity={clamp(w * (big ? 5 : 3))}>
       {Array.from({length: 12}).map((_, i) => {
         const a = (i / 12) * Math.PI * 2 + w * 2;
-        return <path key={i} d={`M 0 0 L ${Math.cos(a - 0.12) * 150} ${Math.sin(a - 0.12) * 150} L ${Math.cos(a + 0.12) * 150} ${Math.sin(a + 0.12) * 150} Z`} fill="#FFF3B0" opacity={0.45} />;
+        return <path key={i} d={`M 0 0 L ${Math.cos(a - 0.12) * R} ${Math.sin(a - 0.12) * R} L ${Math.cos(a + 0.12) * R} ${Math.sin(a + 0.12) * R} Z`} fill="#FFF3B0" opacity={big ? 0.55 : 0.45} />;
       })}
       <path d="M -40 -50 L 40 -50 Q 40 10 0 18 Q -40 10 -40 -50 Z" fill="#FFC744" stroke={INK} strokeWidth={3.5} />
       <path d="M -40 -38 Q -66 -38 -60 -12 Q -54 6 -30 4" fill="none" stroke={INK} strokeWidth={4} />
@@ -389,7 +393,7 @@ export const GameScreen: React.FC<{g: GameState; id: string; ext?: Ext; hud?: bo
         {g.rex && (g.confetti ?? -1) >= 0 && (() => { const p = projectG(g.camX, g.rex!.x, g.rex!.z, 1.0); return <Confetti age={g.confetti!} x={p.x + 30} y={p.y} />; })()}
         <Zip g={g} />
         <Crosshair g={g} />
-        <Trophy w={g.win ?? 0} x={g.winX ?? 320} />
+        <Trophy w={g.win ?? 0} x={g.winX ?? 320} big={g.bigWin} />
        </g>
         {hud && (
           <g transform={`translate(${22 - e.l * 0} 22)`}>
