@@ -100,7 +100,7 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   // the section: tongue rises to the roof on "roof", slides along the pad on "of your mouth"
   const tl = ss(t, T.sitting1 + 0.05, T.roof - 0.02);
   // (V5) the tip slides back along the pad's flat underside (not forward onto its bend behind the incisors)
-  const cz = keys(t, [[T.roof, 1.5], [T.roof + 0.28, 1.5], [T.mouth2 - 0.15, -1.5]]);
+  const cz = keys(t, [[T.roof, -0.6], [T.roof + 0.28, -0.6], [T.mouth2 - 0.15, -3.0]]); // the whole tip under the pad's flat part
   const room = guesser5(C2_START);
   const ow = opening({...room.m});
   void ow;
@@ -123,7 +123,7 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
       <rect x={0} y={0} width={1080} height={1920} fill="url(#dv-bg)" opacity={studio} />
       {/* the cut-away head assembles around the device */}
       {reveal > 0.001 && (
-        <SectionScene cx={secX} cy={secY} px={sec.px} lift={tl} cz={cz} press={0} glow={ss(t, T.roof - 0.08, T.roof + 0.05)} ring={t - (T.roof - 0.02)} reveal={reveal} near={near} bg={false} device={hand} />
+        <SectionScene cx={secX} cy={secY} px={sec.px} lift={tl} cz={cz} press={0} glow={clamp((tl - 0.94) / 0.06)} ring={t - (T.roof - 0.02)} reveal={reveal} near={near} bg={false} device={hand} />
       )}
       <ellipse cx={540} cy={1260} rx={340} ry={56} fill="url(#dv-sh)" opacity={studio * (1 - dive) * (1 - fly)} />
       {/* the device (drawn by the section once it has arrived) */}

@@ -68,7 +68,7 @@ const ZEND = zipInt(MOVE_B);
 /** the head's tilt (degrees) in the aim demo: the rig's head and the game's aim both read this */
 /** (V5) a bigger, unmistakable tilt; the crosshair travel is unchanged (headAim divides by the same peak) */
 export const TILT_PEAK = 22.4;
-export const headTilt = (t: number) => keys(t, [[T.tilt - 0.08, 0], [T.head + 0.04, -TILT_PEAK], [T.you3 - 0.02, -TILT_PEAK], [T.you3 + 0.2, 14.7], [T.aim + 0.45, 13.3], [T.press - 0.05, 0]]);
+export const headTilt = (t: number) => keys(t, [[T.tilt - 0.08, 0], [T.head + 0.04, -TILT_PEAK], [T.you3 - 0.1, -TILT_PEAK], [T.you3 + 0.24, 14.7], [T.aim + 0.45, 13.3], [T.press - 0.05, 0]]);
 
 // Zip's lateral position: dodges and strafes
 export const ZIPX2: [number, number][] = [
@@ -122,7 +122,9 @@ const targetScreen = (target: number | 'rex', t: number, camX: number): P => {
   const p = projectG(camX, e.x, e.z, 0.9 + e.hover - 0.15);
   return {x: p.x, y: p.y};
 };
-const freeCross = (t: number): P => ({x: 320 + Math.sin(t * 1.3) * 22 + 130 * headAim(t), y: 192 + Math.sin(t * 1.7 + 1) * 10 - 20 * Math.abs(headAim(t))});
+// (V5) the crosshair's lift uses the largest aim nearby, so it does not dip as the aim swings through the centre
+const aimLift = (t: number) => Math.max(Math.abs(headAim(t)), Math.abs(headAim(t - 0.25)), Math.abs(headAim(t + 0.25)));
+const freeCross = (t: number): P => ({x: 320 + Math.sin(t * 1.3) * 22 + 130 * headAim(t), y: 192 + Math.sin(t * 1.7 + 1) * 10 - 20 * aimLift(t)});
 
 // in the split-screen move demo the game camera holds still, so Zip visibly travels left then right with the tongue
 const SPLIT_HOLD: [number, number] = [T.mouth2 + 0.0, MOVE_B + 0.05];

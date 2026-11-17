@@ -131,7 +131,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
       <g transform={`translate(0 ${jy})`}>
         <rect x={50} y={-410} width={980} height={790} rx={48} fill="#4A1622" stroke={INK} strokeWidth={6} />
         <g transform={`translate(540 -10) scale(${px})`}>
-          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u, v, glow: 1, r: 2.0}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
+          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u, v, glow: 1, r: 1.6}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
           {trail.map((q, i) => {
             const p = pr(padPoint(q.u, q.v, 0.5));
             return <circle key={i} cx={p.x} cy={p.y} r={1.6 * (1 - i / 10)} fill="#FFF6C8" opacity={0.6 * (1 - i / 10)} />;
@@ -185,12 +185,12 @@ const GamePanel: React.FC<{t: number; y: number; id: string}> = ({t, y, id}) => 
   </g>
 );
 const ShotPress: React.FC<{t: number}> = ({t}) => {
-  const cz = 1.2;
+  const cz = -0.6; // (V5) the whole tip under the pad's flat part
   const px = lerp(10.6, 11.4, ss(t, CUTS.F1, CUTS.G));
   const contactY = palate(cz) + 0.5;
   const fx = cz - 10, fy = contactY + 4;
   // (V4) the tip rises and hovers just short of the pad, then flicks up into contact on "CLICK" (the click is the contact)
-  const tl = keys(t, [[T.tongue3 - 0.05, 0], [T.up + 0.05, 0.68], [T.you4 + 0.15, 0.73], [T.click - 0.07, 0.75], [T.click - 0.01, 1]]);
+  const tl = keys(t, [[T.tongue3 - 0.05, 0], [T.up + 0.05, 0.68], [T.you4 + 0.15, 0.73], [T.click - 0.06, 0.75], [T.click + 0.0, 1]]);
   const press = pulse(t, T.click - 0.03, T.click, T.click + 0.12, T.click + 0.25);
   const P0 = {x: 50, y: 90, w: 980, h: 790};
   return (
@@ -198,7 +198,7 @@ const ShotPress: React.FC<{t: number}> = ({t}) => {
       <rect x={0} y={0} width={1080} height={1920} fill="#1B1D33" />
       <defs><clipPath id="f1-clip"><rect x={P0.x} y={P0.y} width={P0.w} height={P0.h} rx={48} /></clipPath></defs>
       <g clipPath="url(#f1-clip)">
-        <SectionScene cx={540 - fx * px} cy={P0.y + P0.h / 2 - fy * px} px={px} lift={tl} cz={cz} press={press} glow={ss(t, T.click - 0.04, T.click)} ring={t - T.click} reveal={1} near={0} />
+        <SectionScene cx={540 - fx * px} cy={P0.y + P0.h / 2 - fy * px} px={px} lift={tl} cz={cz} press={press} glow={clamp((tl - 0.94) / 0.06)} ring={t - T.click} reveal={1} near={0} />
       </g>
       <rect x={P0.x} y={P0.y} width={P0.w} height={P0.h} rx={48} fill="none" stroke={INK} strokeWidth={6} />
       <GamePanel t={t} y={1100} id="f1" />

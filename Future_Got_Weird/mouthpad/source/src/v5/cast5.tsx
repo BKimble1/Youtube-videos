@@ -51,14 +51,14 @@ export const guesser5 = (t: number): GState => {
   pose = {
     ...pose,
     // (V5) in the aim demo his eyes lead the head toward where he is aiming
-    lookX: lerp(lookX, 0.95 * headAim(t), on(t, T.tilt - 0.15, T.press, 0.12)), lookY: lerp(lookY + 0.25 * bored, -0.2, on(t, T.tilt - 0.15, T.press, 0.12)),
+    lookX: lerp(lookX, 0.95 * headAim(t + 0.15), on(t, T.tilt - 0.15, T.press, 0.12)), // the eyes lead the head by 0.15 s lookY: lerp(lookY + 0.25 * bored, -0.2, on(t, T.tilt - 0.15, T.press, 0.12)),
     brows: 0.05 + 0.5 * flick + 0.5 * pulse(t, T.its - 0.3, T.its - 0.15, T.mouthpad - 0.2, T.mouthpad) - 0.25 * on(t, T.tilt, T.aim + 0.4) + 0.4 * clamp(atHonest) - 0.1 * bored + 0.22 * pulse(t, T.shut + 0.05, T.shut + 0.2, 30.4, 30.6),
     browAsym: 0.5 * flick + 0.35 * pulse(t, T.shut + 0.05, T.shut + 0.2, 30.4, 30.6),
     // head aim: a clear tilt left on "head", then right onto the target on "you AIM", holding while it locks
     tilt: headTilt(t) + 2.5 * flick + 1.2 * sway(t, 1.1, 0.3) * (1 - bored * 0.6) * (1 - on(t, T.tilt - 0.3, T.press + 0.1, 0.2)), // (V4) the aim demo's tilt is exactly the game's aim
     lean: 0,
     // (V4) eyes held open from the lips closing to the next cut (an automatic blink was cut off by the cut)
-    blink: t > T.so - 0.2 && t < 30.7 ? lid : t > T.close && t < T.see + 0.4 ? 1 : undefined,
+    blink: t > T.so - 0.2 && t < 30.7 ? lid : t > T.close && t < T.see + 0.4 ? 1 : t > T.tilt - 0.4 && t < T.press ? 1 : undefined, // (V5) no blink during the aim
     mouth: 'smile',
     // bob: a subtle groove to the game in the hook, settling back in the chair while bored
     bob: (t < 3.6 ? 3 * Math.abs(Math.sin(t * Math.PI * 2.0)) : 0) + 4 * bored,

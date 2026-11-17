@@ -32,7 +32,7 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   const tH = nrm({x: H.x - Q.x, y: H.y - Q.y});
   const wEnd = 3.4 + (2.6 - 3.4) * k + 0.5 * press; // a fuller tip at rest, slimmer when curled up
   // the contact pose: the cap's end on the pad's underside at cz, the tip pointing up and slightly forward
-  const dirC = nrm({x: 0.22, y: -1});
+  const dirC = nrm({x: 0.04, y: -1}); // straight up: the round cap meets the flat underside squarely
   const contactY = palate(cz) + PAD_UNDER - 0.25 - 0.4 * press;
   const Tc = {x: cz - dirC.x * wEnd, y: contactY - dirC.y * wEnd};
   // the rest pose: the tip low and forward, behind the lower incisors
@@ -118,7 +118,20 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
     for (let r = 0; r < it; r++) q = q.map((p, i) => (i === 0 || i === q.length - 1 ? p : {x: (q[i - 1].x + 2 * p.x + q[i + 1].x) / 4, y: (q[i - 1].y + 2 * p.y + q[i + 1].y) / 4}));
     return q;
   };
-  const topClean = lapl(chaikin(untangle(top), 3), 160);
+  // drop points where the edge doubles back on itself without crossing (a cusp: the ink spur at the crease)
+  const noReversal = (pts: P[]): P[] => {
+    let q = pts, changed = true;
+    while (changed) {
+      changed = false;
+      for (let i = 1; i < q.length - 1; i++) {
+        const ax = q[i].x - q[i - 1].x, ay = q[i].y - q[i - 1].y, bx = q[i + 1].x - q[i].x, by = q[i + 1].y - q[i].y;
+        const la = Math.hypot(ax, ay), lb = Math.hypot(bx, by);
+        if (la < 1e-6 || lb < 1e-6 || (ax * bx + ay * by) / (la * lb) < -0.2) { q = [...q.slice(0, i), ...q.slice(i + 1)]; changed = true; break; }
+      }
+    }
+    return q;
+  };
+  const topClean = lapl(chaikin(lapl(noReversal(untangle(top)), 40), 3), 120);
   // round caps: the tip (around T) and the root (around R)
   const cap = (c: V2, tg: V2, w: number, from: number, to: number) => Array.from({length: 23}, (_, j) => {
     const a = from + ((to - from) * (j + 1)) / 24;
@@ -128,7 +141,7 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   const tipCap = cap(T, spine[n].t, wEnd, -Math.PI / 2, Math.PI / 2);
   const rootCap = cap(R, {x: -spine[0].t.x, y: -spine[0].t.y}, half(0), -Math.PI / 2, Math.PI / 2);
   const outline = [...topClean, ...tipCap, ...[...bot].reverse(), ...rootCap];
-  return {outline, top: hl.slice(Math.round(n * 0.5), n - 2)};
+  return {outline, top: hl.slice(Math.round(n * 0.64), n - 2)}; // the highlight starts above the crease
 };
 export const SECTION_VIEW = {yaw: 90, pitch: 0, persp: 4000};
 const SHELL_D = smoothPath([{x: 23.2, y: -12}, {x: 23.4, y: -3}, {x: 21.6, y: 1.2}, {x: 18.0, y: 1.4}, {x: 10, y: 0.8}, {x: -22.5, y: -1.2}, {x: -23.5, y: -9.6}, {x: -22, y: -11.2}, {x: 14.5, y: -10.6}, {x: 16, y: -13.2}], true, 0.35);
@@ -144,7 +157,7 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
   const padZ0 = PAD.cz - PAD.h / 2, padZ1 = PAD.cz + PAD.h / 2;
   const padPts: P[] = Array.from({length: 16}, (_, i) => {
     const z = lerp(padZ0, padZ1, i / 15);
-    const dent = press * 0.7 * Math.exp(-((z - cz) ** 2) / 8);
+    const dent = 0 * press; // (V5) the pad is rigid: it no longer bows on a press
     return {x: z, y: palate(z) + 0.75 - dent};
   });
   const ringO = ring >= 0 ? Math.max(0, 1 - ring / 0.35) : 0;
@@ -191,7 +204,7 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
           </g>
         </g>
         {/* the MouthPad and the upper teeth: the 3D model from the side, its near half cut away */}
-        <g clipPath={reveal > 0.98 ? 'url(#s2-cut)' : undefined}>
+        <g clipPath="url(#s2-cut)"> {/* (V5) always clipped: the device it draws only appears once it is inside the head */}
           <Jaw view={SECTION_VIEW} px={px} id="s2-jaw" show={{palate: 0, pad: 0, teeth: 0, traces: 0.5 * near * dO, shell: near * dO, plate: dO, pods: dO}} near={near} />
         </g>
         <g clipPath="url(#s2-cut)">
