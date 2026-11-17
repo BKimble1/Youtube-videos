@@ -30,7 +30,7 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   const k = sstep(lift);
   const R = {x: -27, y: 5.0}, Q = {x: -18, y: 3.4}, H = {x: -10, y: 4.6}; // hinge further back: a gentler bend
   const tH = nrm({x: H.x - Q.x, y: H.y - Q.y});
-  const wEnd = 3.4 + (2.6 - 3.4) * k + 0.5 * press; // a fuller tip at rest, slimmer when curled up
+  const wEnd = 3.4 + (2.6 - 3.4) * k + 0.15 * press; // a fuller tip at rest, slimmer when curled up
   // the contact pose: the cap's end on the pad's underside at cz, the tip pointing up and slightly forward
   const dirC = nrm({x: 0.04, y: -1}); // straight up: the round cap meets the flat underside squarely
   const contactY = palate(cz) + PAD_UNDER - 0.25 - 0.4 * press;
@@ -140,7 +140,10 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   });
   const tipCap = cap(T, spine[n].t, wEnd, -Math.PI / 2, Math.PI / 2);
   const rootCap = cap(R, {x: -spine[0].t.x, y: -spine[0].t.y}, half(0), -Math.PI / 2, Math.PI / 2);
-  const outline = [...topClean, ...tipCap, ...[...bot].reverse(), ...rootCap];
+  // a light smoothing of the whole closed outline: no notch where the tip's cap meets the underside
+  const ring = [...topClean, ...tipCap, ...[...bot].reverse(), ...rootCap];
+  let outline = ring;
+  for (let r = 0; r < 6; r++) outline = outline.map((p, i) => { const a = outline[(i - 1 + outline.length) % outline.length], b = outline[(i + 1) % outline.length]; return {x: (a.x + 2 * p.x + b.x) / 4, y: (a.y + 2 * p.y + b.y) / 4}; });
   return {outline, top: hl.slice(Math.round(n * 0.64), n - 2)}; // the highlight starts above the crease
 };
 export const SECTION_VIEW = {yaw: 90, pitch: 0, persp: 4000};

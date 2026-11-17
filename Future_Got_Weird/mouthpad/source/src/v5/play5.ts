@@ -124,7 +124,8 @@ const targetScreen = (target: number | 'rex', t: number, camX: number): P => {
 };
 // (V5) the crosshair's lift uses the largest aim nearby, so it does not dip as the aim swings through the centre
 const aimLift = (t: number) => Math.max(Math.abs(headAim(t)), Math.abs(headAim(t - 0.25)), Math.abs(headAim(t + 0.25)));
-const freeCross = (t: number): P => ({x: 320 + Math.sin(t * 1.3) * 22 + 130 * headAim(t), y: 192 + Math.sin(t * 1.7 + 1) * 10 - 20 * aimLift(t)});
+// (V5) during the aim demo the crosshair keeps its height: the head moves it sideways only
+const freeCross = (t: number): P => ({x: 320 + Math.sin(t * 1.3) * 22 * (1 - Math.min(1, aimLift(t) * 4)) + 130 * headAim(t), y: 192 - 20 * Math.min(1, aimLift(t) * 4) * 0 + Math.sin(t * 1.7 + 1) * 10 * (1 - Math.min(1, aimLift(t) * 4)) - 8 * Math.min(1, aimLift(t) * 4)});
 
 // in the split-screen move demo the game camera holds still, so Zip visibly travels left then right with the tongue
 const SPLIT_HOLD: [number, number] = [T.mouth2 + 0.0, MOVE_B + 0.05];

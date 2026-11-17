@@ -93,7 +93,7 @@ export const DeviceFlow: React.FC<{t: number; frame: number}> = ({t, frame}) => 
   const inkK = lerp(0.25, 1, ss(t, C2_START, C2_START + 0.45));
   // the in-mouth drawing carries a soft glow on the pad; it fades as the device leaves
   const g0 = 0.6 * (M.m.glow ?? 0) * (1 - clamp(M.m.tongueLift ?? 0)) * (1 - ss(t, C2_START, C2_START + 0.3));
-  const hand = ss(t, T.touchpad + 0.31, T.touchpad + 0.44); // the hand-off to the section's own device (4 frames)
+  const hand = ss(t, T.touchpad + 0.22, T.touchpad + 0.5); // (V5) the hand-off to the section's own device, over ~8 frames
   // sensor: glint on "gold", touch-sensing ripple on "square"
   const glint = clamp((t - T.gold) / 0.4);
   const ripple = clamp((t - (T.square - 0.05)) / 0.6);

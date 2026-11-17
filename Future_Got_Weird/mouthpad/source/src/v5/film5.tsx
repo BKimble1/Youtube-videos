@@ -118,7 +118,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
   // the tongue's trail on the pad, sampled behind the contact
   const trail = Array.from({length: 10}, (_, i) => {
     const tt = t - i * 0.035;
-    return {u: tongueU(tt), v: 0.05 * Math.sin(tt * 3)};
+    return {u: tongueU(tt) * 0.9, v: 0.05 * Math.sin(tt * 3)};
   });
   const view = {yaw: 0, pitch: -90, persp: 600};
   const pr = projector(view);
@@ -131,7 +131,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
       <g transform={`translate(0 ${jy})`}>
         <rect x={50} y={-410} width={980} height={790} rx={48} fill="#4A1622" stroke={INK} strokeWidth={6} />
         <g transform={`translate(540 -10) scale(${px})`}>
-          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u, v, glow: 1, r: 1.6}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
+          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u: u * 0.9, v, glow: 1, r: 1.6}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
           {trail.map((q, i) => {
             const p = pr(padPoint(q.u, q.v, 0.5));
             return <circle key={i} cx={p.x} cy={p.y} r={1.6 * (1 - i / 10)} fill="#FFF6C8" opacity={0.6 * (1 - i / 10)} />;
