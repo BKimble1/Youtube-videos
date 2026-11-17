@@ -282,31 +282,31 @@
   {
    "frame": 260,
    "t": 8.667,
-   "diff": 21.1,
+   "diff": 21.13,
    "planned_cut": false
   },
   {
    "frame": 300,
    "t": 10.0,
-   "diff": 110.04,
+   "diff": 110.19,
    "planned_cut": true
   },
   {
    "frame": 301,
    "t": 10.033,
-   "diff": 28.87,
+   "diff": 28.88,
    "planned_cut": false
   },
   {
    "frame": 302,
    "t": 10.067,
-   "diff": 28.0,
+   "diff": 28.01,
    "planned_cut": false
   },
   {
    "frame": 303,
    "t": 10.1,
-   "diff": 21.48,
+   "diff": 21.49,
    "planned_cut": false
   },
   {
@@ -324,7 +324,7 @@
   {
    "frame": 475,
    "t": 15.833,
-   "diff": 81.04,
+   "diff": 81.16,
    "planned_cut": true
   },
   {

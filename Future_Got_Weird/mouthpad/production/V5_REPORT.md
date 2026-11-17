@@ -2,8 +2,8 @@
 
 **Publish file:** `release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4`
 
-- **SHA-256:** `cc5bbbde4640c2938e15f29ce697b56d2c6143123dca91976e4230998cae4c7a`
-- **Size:** 19,075,620 bytes
+- **SHA-256:** `7b527b3839bc459879217d1332b6e6b471ab9b344c003c39f5e4f7d5ceb9b400`
+- **Size:** 19,033,288 bytes
 - **Untouched download:**
   https://github.com/BKimble1/Youtube-videos/raw/claude/mouthpad-short-v1-iskzy3/Future_Got_Weird/mouthpad/release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4
 
@@ -32,7 +32,7 @@ That script runs these steps:
 | r_frame_rate / avg_frame_rate | **30/1** / 30/1 |
 | nb_frames | 957 |
 | pix_fmt | yuv420p (BT.709) |
-| video bit rate | 4.52 Mb/s |
+| video bit rate | 4.50 Mb/s |
 | audio | **aac** (LC), 48 kHz, stereo, 260 kb/s |
 | duration | 31.900 s |
 
@@ -40,7 +40,7 @@ That script runs these steps:
 
 The gate also proves the picture is native, not enlarged. Each sampled frame is shrunk to 512 × 910 and enlarged
 back to 1080 × 1920, then compared with the original:
-- **V5:** 33.5–38.2 dB. Detail is lost in the round trip, so the picture holds more detail than 512 × 910 can.
+- **V5:** 33.4–38.2 dB. Detail is lost in the round trip, so the picture holds more detail than 512 × 910 can.
 - **Control 1:** the gate was tested against a 512 × 910 copy, which it rejects on dimensions.
 - **Control 2:** it was also tested against that copy enlarged to 1080 × 1920, which it rejects on detail
   (43.6–47.4 dB).
@@ -71,30 +71,45 @@ folder was empty), so their bytes could not be compared directly.
 
 ## 3. Exact animation changes (V4 → V5)
 
-Everything else is pixel-identical to V4. A frame-by-frame comparison of the two files found changes only in frames
-**261–299** and **367–474**.
+Everything else is unchanged from V4. A frame-by-frame comparison of the two files found visible changes only in frames
+**257–299**, **366–474** and **720–723**; the pad-lattice clip and the lip-close fix below change their frames too, but below the comparison's threshold.
 
-**Cut-away tongue (8.7–10.0 s, and the same drawing in the press demo, 13.8–15.8 s), `source/src/v5/section5.tsx`:**
-- **Redrawn profile:**
-  - The tongue body now rests lower, inside the lower teeth, so the teeth stay visible.
-  - The convex dorsum bends smoothly up into a tapering blade.
-  - The tip is **rounded**; V4's was a blocky, squared end.
-- **Contact:** the top of the tip now meets the **underside of the gold pad** exactly at the contact point (0.15 mm
-  below it). On a click it flattens slightly against the pad. In V4 the tip aimed at the palate line, so it cut into
-  the pad's drawing.
-- **Motion:** the lift is eased, so the tip slows into the contact. The root and body never move, so the outline
-  cannot pop. The point count and order are fixed, and every point interpolates between the rest and contact poses.
-- **Unchanged:**
-  - the device stays anchored to the palate, at the same position and timing as V4;
-  - teeth, lips and the cut-away;
-  - the timing (contact on "roof", and on "CLICK" in the press demo).
+**Cut-away tongue (8.6–10.0 s, and the same drawing in the press demo, 13.8–15.8 s), `source/src/v5/section5.tsx`:**
+- **Rebuilt as a spine with a thickness profile, not a blend of two outlines.** V4's tongue (and the first V5 attempt)
+  blended its outline points in straight lines between the rest and contact poses. That made a blocky square end,
+  and a flat top and square corners partway through the rise.
+- **Shape:**
+  - The body rests low on the floor of the mouth, and its back never moves, so the outline cannot pop.
+  - The blade tapers from the body.
+  - The tip is a round cap: fuller at rest, slimmer when curled.
+  - The inner side of the bend is limited by the bend's radius, cleaned of any fold and smoothed, so the crease
+    stays a soft curve with no notches or ink spurs.
+- **Natural bend toward the pad:** the blade curls in one smooth arc.
+- **Precise contact:**
+  - The tip comes up to the pad from directly below, so it cannot brush the pad's angled front on the way.
+  - It first touches on the contact frame (with the glow), and the cap's end sits exactly on the pad's flat
+    underside, so there is no gap.
+  - After contact it slides back along the flat underside (V4 slid forward onto the pad's bend).
+  - In the press demo, the partial lift now really hovers about 2 mm under the pad before the click.
+- **Pad drawing:**
+  - The electrode lattice is clipped to the pad's outline; it no longer spills past the edge.
+  - The split-screen contact disc is smaller, so it stays on the pad at both ends of the move demo.
+- **Unchanged:** the device stays anchored to the palate, at V4's position and timing; the teeth, lips and cut-away;
+  the timing (contact on "roof", click on "CLICK").
 
 **Head aim (12.0–13.9 s), `source/src/v5/play5.ts`, `source/src/v5/cast5.tsx`:**
 - **Bigger head roll:** ±16° in V4, now 22° to the left and 14.7° to the right.
 - **Same curve for head and crosshair:** the crosshair is driven by the same curve, normalised to the new peak, so
   it travels exactly as far as in V4. It still sweeps left with the head, then right onto the target, and locks.
 - **Eyes lead the aim:** his eyes look the way he is aiming.
+- **No stall at the lock:** the crosshair begins settling onto the target during the right swing (0.22 s earlier).
+  V4 stopped about 35 px short and then crept the rest of the way. The lock ring, and its sound, keep V4's timing.
 - **Unchanged:** the facecam layout, the game, the target and all the timing.
+
+**Glitches fixed from the V5 review:**
+- **24.0 s:** Honest's beanbag slid about 80 px in the first 4 frames of the wide shot, because his reposition was
+  still finishing. It now finishes off screen.
+- **22.2 s:** a faint leftover of the mouth slit on the frame where the lips meet.
 
 ## 4. Narration and audio
 

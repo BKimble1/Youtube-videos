@@ -12,7 +12,7 @@
   "avg_frame_rate": "30/1",
   "nb_frames": "957",
   "nb_read_frames": "957",
-  "bit_rate": "4498574"
+  "bit_rate": "4504475"
  },
  "audio": {
   "codec_name": "aac",
@@ -22,12 +22,12 @@
   "bit_rate": "259729"
  },
  "duration_s": 31.9,
- "size_bytes": 19009746,
+ "size_bytes": 19033288,
  "roundtrip_psnr_db": [
   36.626997,
   38.175661,
-  36.249894,
-  33.456048,
+  36.265446,
+  33.44926,
   33.491173,
   35.511622,
   37.552599,
