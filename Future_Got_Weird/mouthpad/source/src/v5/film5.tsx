@@ -131,7 +131,7 @@ const ShotSplit: React.FC<{t: number}> = ({t}) => {
       <g transform={`translate(0 ${jy})`}>
         <rect x={50} y={-410} width={980} height={790} rx={48} fill="#4A1622" stroke={INK} strokeWidth={6} />
         <g transform={`translate(540 -10) scale(${px})`}>
-          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u, v, glow: 1, r: 2.6}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
+          <Jaw clipPad view={view} px={px} id="d1-jaw" contact={{u, v, glow: 1, r: 2.0}} tongueX={1} /> {/* (V5) a smaller contact disc stays on the pad at the extremes */}
           {trail.map((q, i) => {
             const p = pr(padPoint(q.u, q.v, 0.5));
             return <circle key={i} cx={p.x} cy={p.y} r={1.6 * (1 - i / 10)} fill="#FFF6C8" opacity={0.6 * (1 - i / 10)} />;

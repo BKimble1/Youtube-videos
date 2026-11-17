@@ -37,10 +37,10 @@ const FIRES: {t: number; target: number | 'rex'}[] = [
   {t: FIRE2.click, target: 6}, {t: FIRE2.still, target: 7}, {t: FIRE2.tag, target: 'rex'}, {t: FIRE2.ko, target: 'rex'},
 ];
 export const FIRES2 = FIRES;
-const LOCKS: [number, number, number | 'rex'][] = [
+const LOCKS: [number, number, number | 'rex', number?][] = [
   [-0.1, FIRE2.open + FLIGHT, 1], [FIRE2.tap - 0.25, FIRE2.tap + FLIGHT, 2], [FIRE2.tongue - 0.3, FIRE2.tongue + FLIGHT, 3],
   [FIRE2.watchA - 0.18, FIRE2.watchA + FLIGHT, 4], [FIRE2.watchA + 0.02, FIRE2.watchB + FLIGHT, 5],
-  [T.aim - 0.05, T.and2 + 0.05, 6], // (V4) target 6: the lock holds through the splat until the cut
+  [T.aim - 0.05, T.and2 + 0.05, 6, 0.22], // (V4) target 6: the lock holds through the splat until the cut; (V5) the aim starts settling onto it 0.22 s earlier, during the swing
   [FIRE2.still - 0.3, FIRE2.still + FLIGHT, 7], [FIRE2.tag - 0.2, FIRE2.tag + FLIGHT, 'rex'], [FIRE2.ko - 0.35, FIRE2.ko + FLIGHT, 'rex'],
 ];
 const VS = T.so - 0.2;
@@ -134,8 +134,8 @@ const raw = (t: number): GameState => {
   const enemies = t >= VS ? [] : ENEMIES2.map((e) => enemyAt(e, t)).filter((e) => e.alive > 0);
   const rex = rexAt(t);
   let cross = freeCross(t), lock = 0;
-  for (const [a, b, tg] of LOCKS) {
-    const w = ss(t, a, a + 0.14) * (1 - ss(t, b, b + 0.18));
+  for (const [a, b, tg, lead = 0] of LOCKS) {
+    const w = ss(t, a - lead, a + 0.14) * (1 - ss(t, b, b + 0.18));
     if (w > 0) {
       const p = targetScreen(tg, Math.min(t, b), camX);
       cross = {x: lerp(cross.x, p.x, w), y: lerp(cross.y, p.y, w)};

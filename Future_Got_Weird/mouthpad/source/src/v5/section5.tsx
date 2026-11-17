@@ -28,9 +28,9 @@ const nrm = (v: V2) => { const l = Math.hypot(v.x, v.y) || 1; return {x: v.x / l
 const sstep = (u: number) => { const c = Math.max(0, Math.min(1, u)); return c * c * (3 - 2 * c); };
 const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; top: P[]} => { // top: a highlight line along the blade
   const k = sstep(lift);
-  const R = {x: -27, y: 5.0}, Q = {x: -16, y: 3.0}, H = {x: -6, y: 4.4};
+  const R = {x: -27, y: 5.0}, Q = {x: -18, y: 3.4}, H = {x: -10, y: 4.6}; // hinge further back: a gentler bend
   const tH = nrm({x: H.x - Q.x, y: H.y - Q.y});
-  const wEnd = 2.5 + 0.5 * press;
+  const wEnd = 3.4 + (2.6 - 3.4) * k + 0.5 * press; // a fuller tip at rest, slimmer when curled up
   // the contact pose: the cap's end on the pad's underside at cz, the tip pointing up and slightly forward
   const dirC = nrm({x: 0.22, y: -1});
   const contactY = palate(cz) + PAD_UNDER - 0.25 - 0.4 * press;
@@ -38,16 +38,16 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   // the rest pose: the tip low and forward, behind the lower incisors
   const dirR = nrm({x: 1, y: 0.18});
   const Tr = {x: 11.6, y: 5.6};
-  // the end swings along an arc about the hinge
-  const rr = Math.hypot(Tr.x - H.x, Tr.y - H.y), rc = Math.hypot(Tc.x - H.x, Tc.y - H.y);
-  const ar = Math.atan2(Tr.y - H.y, Tr.x - H.x), ac = Math.atan2(Tc.y - H.y, Tc.x - H.x);
-  const ang = ar + (ac - ar) * k, rad = rr + (rc - rr) * k;
-  const T = {x: H.x + Math.cos(ang) * rad, y: H.y + Math.sin(ang) * rad};
+  // the end travels on a curve that comes up to the pad from directly below (it cannot brush the pad's angled front
+  // on the way, and a partial lift hovers just under the contact point)
+  const Cq = {x: Tc.x + 1.2, y: Tc.y + 8.5};
+  const m1 = 1 - k;
+  const T = {x: m1 * m1 * Tr.x + 2 * m1 * k * Cq.x + k * k * Tc.x, y: m1 * m1 * Tr.y + 2 * m1 * k * Cq.y + k * k * Tc.y};
   const dir = nrm({x: dirR.x + (dirC.x - dirR.x) * k, y: dirR.y + (dirC.y - dirR.y) * k});
-  const P1 = {x: H.x + tH.x * 8, y: H.y + tH.y * 8}; // a long first handle spreads the bend over the blade
+  const P1 = {x: H.x + tH.x * 9, y: H.y + tH.y * 9}; // a long first handle spreads the bend over the blade
   const P2 = {x: T.x - dir.x * (5 + 2 * k), y: T.y - dir.y * (5 + 2 * k)};
   const spine: {p: V2; t: V2}[] = [];
-  const NB = 10, NF = 22;
+  const NB = 16, NF = 40;
   for (let i = 0; i <= NB; i++) { // root → hinge (quadratic)
     const u = i / NB, m = 1 - u;
     spine.push({p: {x: m * m * R.x + 2 * m * u * Q.x + u * u * H.x, y: m * m * R.y + 2 * m * u * Q.y + u * u * H.y},
@@ -61,7 +61,7 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
   }
   const n = spine.length - 1;
   // half-thickness: a deep body, tapering through the blade to the tip (the body's underside rests on the floor)
-  const half = (i: number) => { const s = i / n; return s < 0.4 ? 7.2 : 7.2 + (wEnd - 7.2) * Math.pow(sstep((s - 0.4) / 0.6), 1.5); };
+  const half = (i: number) => { const s = i / n; return s < 0.28 ? 7.2 : 7.2 + (wEnd - 7.2) * Math.pow(sstep((s - 0.28) / 0.72), 0.85); };
   // the inner (top) side of a bend cannot be offset further than the bend's radius, or it folds over itself:
   // limit it to 85% of the local radius of curvature (measured on the spine), smoothed along the spine
   const kap = spine.map((q, i) => {
@@ -70,8 +70,8 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
     const cross = a.t.x * b.t.y - a.t.y * b.t.x; // > 0: turning toward the "below" side; < 0: toward the top
     return cross / ds;
   });
-  const wTopRaw = spine.map((_, i) => (kap[i] < 0 ? Math.min(half(i), 0.85 / -kap[i]) : half(i)));
-  const wTop = wTopRaw.map((_, i) => { let acc = 0, ws = 0; for (let j = -2; j <= 2; j++) { const q = wTopRaw[Math.min(n, Math.max(0, i + j))]; acc += q * (3 - Math.abs(j)); ws += 3 - Math.abs(j); } return Math.min(acc / ws, half(i)); });
+  const wTopRaw = spine.map((_, i) => (kap[i] < 0 ? Math.min(half(i), 0.7 / -kap[i]) : half(i)));
+  const wTop = wTopRaw.map((_, i) => { let acc = 0, ws = 0; for (let j = -4; j <= 4; j++) { const q = wTopRaw[Math.min(n, Math.max(0, i + j))]; acc += q * (5 - Math.abs(j)); ws += 5 - Math.abs(j); } return Math.min(acc / ws, half(i)); });
   const top: P[] = [], bot: P[] = [], hl: P[] = [];
   spine.forEach((q, i) => {
     const nx = -q.t.y, ny = q.t.x; // normal pointing "below" the spine
@@ -99,10 +99,29 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
     }
     return out;
   };
-  const topClean = untangle(top);
+  // then round the inner crease: Chaikin corner cutting (keeps the end points), so no V-notch or ink spur remains
+  const chaikin = (pts: P[], it: number): P[] => {
+    let q = pts;
+    for (let r = 0; r < it; r++) {
+      const o: P[] = [q[0]];
+      for (let i = 0; i < q.length - 1; i++) {
+        const A = q[i], B = q[i + 1];
+        o.push({x: 0.75 * A.x + 0.25 * B.x, y: 0.75 * A.y + 0.25 * B.y}, {x: 0.25 * A.x + 0.75 * B.x, y: 0.25 * A.y + 0.75 * B.y});
+      }
+      o.push(q[q.length - 1]);
+      q = o;
+    }
+    return q;
+  };
+  const lapl = (pts: P[], it: number): P[] => { // neighbour averaging (end points fixed)
+    let q = pts;
+    for (let r = 0; r < it; r++) q = q.map((p, i) => (i === 0 || i === q.length - 1 ? p : {x: (q[i - 1].x + 2 * p.x + q[i + 1].x) / 4, y: (q[i - 1].y + 2 * p.y + q[i + 1].y) / 4}));
+    return q;
+  };
+  const topClean = lapl(chaikin(untangle(top), 3), 160);
   // round caps: the tip (around T) and the root (around R)
-  const cap = (c: V2, tg: V2, w: number, from: number, to: number) => Array.from({length: 7}, (_, j) => {
-    const a = from + ((to - from) * (j + 1)) / 8;
+  const cap = (c: V2, tg: V2, w: number, from: number, to: number) => Array.from({length: 23}, (_, j) => {
+    const a = from + ((to - from) * (j + 1)) / 24;
     const bx = Math.cos(a), by = Math.sin(a); // in the tangent frame: x along tg, y along the normal
     return {x: c.x + (tg.x * bx - tg.y * by) * w, y: c.y + (tg.y * bx + tg.x * by) * w};
   });
@@ -176,7 +195,7 @@ export const SectionScene: React.FC<{cx: number; cy: number; px: number; lift: n
           <Jaw view={SECTION_VIEW} px={px} id="s2-jaw" show={{palate: 0, pad: 0, teeth: 0, traces: 0.5 * near * dO, shell: near * dO, plate: dO, pods: dO}} near={near} />
         </g>
         <g clipPath="url(#s2-cut)">
-          <path d={smoothPath(tng.outline, true, 0.25)} fill="#EE8E98" stroke={INK} {...w(2.4)} />
+          <path d={'M ' + tng.outline.map((q) => `${q.x.toFixed(3)} ${q.y.toFixed(3)}`).join(' L ') + ' Z'} strokeLinejoin="round" fill="#EE8E98" stroke={INK} {...w(2.4)} />
           {/* a soft highlight along the top of the tongue, and the tip picked out */}
           {/* (V5) a soft highlight along the dorsum and blade, */}
           <path d={smoothPath(tng.top, false)} fill="none" stroke="#F8B7BD" strokeWidth={1.0} strokeLinecap="round" opacity={0.8} />
