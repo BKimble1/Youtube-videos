@@ -2,8 +2,8 @@
 
 **Publish file:** `release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4`
 
-- **SHA-256:** `a30f67a0e377a051323f1b708d12414735509aa29a02ad5d105ab6a4e9110875`
-- **Size:** 19,020,096 bytes
+- **SHA-256:** `9cb8d99d331f865f249914a21b5f08ade2ddd945b21892ec6bc48d464a040633`
+- **Size:** 19,048,017 bytes
 - **Untouched download:**
   https://github.com/BKimble1/Youtube-videos/raw/claude/mouthpad-short-v1-iskzy3/Future_Got_Weird/mouthpad/release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4
 
@@ -32,7 +32,7 @@ That script runs these steps:
 | r_frame_rate / avg_frame_rate | **30/1** / 30/1 |
 | nb_frames | 957 |
 | pix_fmt | yuv420p (BT.709) |
-| video bit rate | 4.50 Mb/s |
+| video bit rate | 4.51 Mb/s |
 | audio | **aac** (LC), 48 kHz, stereo, 260 kb/s |
 | duration | 31.900 s |
 
@@ -72,7 +72,7 @@ folder was empty), so their bytes could not be compared directly.
 ## 3. Exact animation changes (V4 → V5)
 
 Everything else is unchanged from V4. A frame-by-frame comparison of the two files found visible changes only in frames
-**165–169** (the pad lattice, now clipped), **257–299**, **362–474** and **720–723**; the lip-close fix below changes its frames too, but below the comparison's threshold.
+**257–299**, **362–474** and **720–723**. The pad-lattice clip and the lip-close fix change a few other frames too, but by less than the comparison's threshold.
 
 **Cut-away tongue (8.6–10.0 s, and the same drawing in the press demo, 13.8–15.8 s), `source/src/v5/section5.tsx`:**
 - **Rebuilt as a spine with a thickness profile, not a blend of two outlines.** V4's tongue (and the first V5 attempt)
@@ -85,12 +85,16 @@ Everything else is unchanged from V4. A frame-by-frame comparison of the two fil
   - The inner side of the bend is limited by the bend's radius, cleaned of any fold and smoothed, so the crease
     stays a soft curve with no notches or ink spurs.
 - **Natural bend toward the pad:** the blade curls in one smooth arc.
+- **Contact on the glow frame:** the glow starts from the tip's actual arrival, so contact and glow fall on the
+  same frame.
 - **Precise contact:**
   - The tip comes up to the pad from directly below, so it cannot brush the pad's angled front on the way.
   - It first touches on the contact frame (with the glow), and the cap's end sits exactly on the pad's flat
     underside, so there is no gap.
   - After contact it slides back along the flat underside (V4 slid forward onto the pad's bend).
   - In the press demo, the partial lift now really hovers about 2 mm under the pad before the click.
+  - The pad is rigid: V4's dent on a press is gone, and the tip squashes only slightly.
+  - The section's device fades in over about 8 frames (V4: 4), with no colour step.
 - **Pad drawing:**
   - The electrode lattice is clipped to the pad's outline; it no longer spills past the edge.
   - The split-screen contact disc is smaller, so it stays on the pad at both ends of the move demo.
@@ -102,6 +106,9 @@ Everything else is unchanged from V4. A frame-by-frame comparison of the two fil
 - **Same curve for head and crosshair:** the crosshair is driven by the same curve, normalised to the new peak, so
   it travels exactly as far as in V4. It still sweeps left with the head, then right onto the target, and locks.
 - **Eyes lead the aim:** his eyes look the way he is aiming.
+- **Steady crosshair height:** the head moves the crosshair sideways only, and it does not climb as the head tilts.
+- **Eyes:** they stay put until the head starts to move (no dip back to centre), and there is no blink during the aim.
+- **Speed:** the right swing is slower, so it reads as a turn, not a whip.
 - **No stall at the lock:** the crosshair begins settling onto the target during the right swing (0.22 s earlier).
   V4 stopped about 35 px short and then crept the rest of the way. The lock ring, and its sound, keep V4's timing.
 - **Unchanged:** the facecam layout, the game, the target and all the timing.

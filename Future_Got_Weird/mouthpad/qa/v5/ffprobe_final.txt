@@ -10,7 +10,7 @@ display_aspect_ratio=9:16
 pix_fmt=yuv420p
 r_frame_rate=30/1
 avg_frame_rate=30/1
-bit_rate=4501173
+bit_rate=4508183
 nb_frames=957
 [/STREAM]
 [STREAM]
@@ -26,6 +26,6 @@ nb_frames=1497
 [/STREAM]
 [FORMAT]
 duration=31.900000
-size=19020096
-bit_rate=4769930
+size=19048017
+bit_rate=4776932
 [/FORMAT]
