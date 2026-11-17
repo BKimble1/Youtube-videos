@@ -1,0 +1,731 @@
+{
+ "fps": 60,
+ "frames": 1800,
+ "duration": 30.0,
+ "take": "t1_9hVY",
+ "provisional": true,
+ "captions": [
+  {
+   "text": "This fish swims using",
+   "emph": [
+    "fish",
+    "swims"
+   ],
+   "start": 0.02,
+   "end": 1.359,
+   "show": 0,
+   "hide": 1.346
+  },
+  {
+   "text": "human heart cells.",
+   "emph": [
+    "human",
+    "heart",
+    "cells"
+   ],
+   "start": 1.396,
+   "end": 2.518,
+   "show": 1.346,
+   "hide": 2.89
+  },
+  {
+   "text": "But it doesn't actually",
+   "emph": [
+    "doesn't"
+   ],
+   "start": 2.94,
+   "end": 3.864,
+   "show": 2.89,
+   "hide": 3.848
+  },
+  {
+   "text": "have a heart.",
+   "emph": [
+    "heart"
+   ],
+   "start": 3.898,
+   "end": 4.453,
+   "show": 3.848,
+   "hide": 4.81
+  },
+  {
+   "text": "You see,",
+   "emph": [],
+   "start": 4.86,
+   "end": 5.308,
+   "show": 4.81,
+   "hide": 5.284
+  },
+  {
+   "text": "scientists grew living heart muscle",
+   "emph": [
+    "living",
+    "heart",
+    "muscle"
+   ],
+   "start": 5.334,
+   "end": 7.066,
+   "show": 5.284,
+   "hide": 7.05
+  },
+  {
+   "text": "on both sides of",
+   "emph": [
+    "both",
+    "sides"
+   ],
+   "start": 7.1,
+   "end": 7.987,
+   "show": 7.05,
+   "hide": 7.955
+  },
+  {
+   "text": "an artificial fish's tail.",
+   "emph": [
+    "artificial",
+    "tail"
+   ],
+   "start": 8.005,
+   "end": 9.31,
+   "show": 7.955,
+   "hide": 9.77
+  },
+  {
+   "text": "When one side contracts,",
+   "emph": [
+    "contracts"
+   ],
+   "start": 9.82,
+   "end": 10.926,
+   "show": 9.77,
+   "hide": 10.924
+  },
+  {
+   "text": "it pulls on the other,",
+   "emph": [
+    "pulls"
+   ],
+   "start": 10.974,
+   "end": 12.056,
+   "show": 10.924,
+   "hide": 12.038
+  },
+  {
+   "text": "triggering that side to contract.",
+   "emph": [
+    "triggering",
+    "contract"
+   ],
+   "start": 12.088,
+   "end": 13.596,
+   "show": 12.038,
+   "hide": 14.05
+  },
+  {
+   "text": "And this happens over and over again,",
+   "emph": [
+    "over",
+    "again"
+   ],
+   "start": 14.1,
+   "end": 15.829,
+   "show": 14.05,
+   "hide": 15.81
+  },
+  {
+   "text": "propelling the fish",
+   "emph": [
+    "propelling"
+   ],
+   "start": 15.86,
+   "end": 16.736,
+   "show": 15.81,
+   "hide": 16.71
+  },
+  {
+   "text": "through the water.",
+   "emph": [
+    "water"
+   ],
+   "start": 16.76,
+   "end": 17.589,
+   "show": 16.71,
+   "hide": 18.01
+  },
+  {
+   "text": "It doesn't even need a motor.",
+   "emph": [
+    "motor"
+   ],
+   "start": 18.06,
+   "end": 19.116,
+   "show": 18.01,
+   "hide": 19.61
+  },
+  {
+   "text": "And as the cells matured,",
+   "emph": [
+    "matured"
+   ],
+   "start": 19.66,
+   "end": 20.996,
+   "show": 19.61,
+   "hide": 20.991
+  },
+  {
+   "text": "the fish actually got faster.",
+   "emph": [
+    "faster"
+   ],
+   "start": 21.041,
+   "end": 22.56,
+   "show": 20.991,
+   "hide": 23.07
+  },
+  {
+   "text": "But the scientists weren't trying",
+   "emph": [
+    "weren't"
+   ],
+   "start": 23.12,
+   "end": 24.635,
+   "show": 23.07,
+   "hide": 24.617
+  },
+  {
+   "text": "to build a fish.",
+   "emph": [
+    "fish"
+   ],
+   "start": 24.667,
+   "end": 25.472,
+   "show": 24.617,
+   "hide": 25.89
+  },
+  {
+   "text": "They were figuring out",
+   "emph": [
+    "figuring"
+   ],
+   "start": 25.94,
+   "end": 27.052,
+   "show": 25.89,
+   "hide": 27.023
+  },
+  {
+   "text": "how to build a human heart.",
+   "emph": [
+    "human",
+    "heart"
+   ],
+   "start": 27.073,
+   "end": 28.466,
+   "show": 27.023,
+   "hide": 28.816
+  }
+ ],
+ "words": [
+  {
+   "word": "This",
+   "start": 0.02,
+   "end": 0.306
+  },
+  {
+   "word": "fish",
+   "start": 0.338,
+   "end": 0.623
+  },
+  {
+   "word": "swims",
+   "start": 0.655,
+   "end": 0.988
+  },
+  {
+   "word": "using",
+   "start": 1.025,
+   "end": 1.359
+  },
+  {
+   "word": "human",
+   "start": 1.396,
+   "end": 1.729
+  },
+  {
+   "word": "heart",
+   "start": 1.766,
+   "end": 2.1
+  },
+  {
+   "word": "cells.",
+   "start": 2.137,
+   "end": 2.518
+  },
+  {
+   "word": "But",
+   "start": 2.94,
+   "end": 3.094
+  },
+  {
+   "word": "it",
+   "start": 3.111,
+   "end": 3.234
+  },
+  {
+   "word": "doesn't",
+   "start": 3.248,
+   "end": 3.525
+  },
+  {
+   "word": "actually",
+   "start": 3.556,
+   "end": 3.864
+  },
+  {
+   "word": "have",
+   "start": 3.898,
+   "end": 4.083
+  },
+  {
+   "word": "a",
+   "start": 4.104,
+   "end": 4.196
+  },
+  {
+   "word": "heart.",
+   "start": 4.206,
+   "end": 4.453
+  },
+  {
+   "word": "You",
+   "start": 4.86,
+   "end": 5.054
+  },
+  {
+   "word": "see,",
+   "start": 5.075,
+   "end": 5.308
+  },
+  {
+   "word": "scientists",
+   "start": 5.334,
+   "end": 5.799
+  },
+  {
+   "word": "grew",
+   "start": 5.851,
+   "end": 6.083
+  },
+  {
+   "word": "living",
+   "start": 6.109,
+   "end": 6.419
+  },
+  {
+   "word": "heart",
+   "start": 6.454,
+   "end": 6.725
+  },
+  {
+   "word": "muscle",
+   "start": 6.755,
+   "end": 7.066
+  },
+  {
+   "word": "on",
+   "start": 7.1,
+   "end": 7.255
+  },
+  {
+   "word": "both",
+   "start": 7.272,
+   "end": 7.505
+  },
+  {
+   "word": "sides",
+   "start": 7.531,
+   "end": 7.802
+  },
+  {
+   "word": "of",
+   "start": 7.832,
+   "end": 7.987
+  },
+  {
+   "word": "an",
+   "start": 8.005,
+   "end": 8.16
+  },
+  {
+   "word": "artificial",
+   "start": 8.177,
+   "end": 8.642
+  },
+  {
+   "word": "fish's",
+   "start": 8.694,
+   "end": 9.004
+  },
+  {
+   "word": "tail.",
+   "start": 9.038,
+   "end": 9.31
+  },
+  {
+   "word": "When",
+   "start": 9.82,
+   "end": 10.035
+  },
+  {
+   "word": "one",
+   "start": 10.059,
+   "end": 10.238
+  },
+  {
+   "word": "side",
+   "start": 10.258,
+   "end": 10.473
+  },
+  {
+   "word": "contracts,",
+   "start": 10.496,
+   "end": 10.926
+  },
+  {
+   "word": "it",
+   "start": 10.974,
+   "end": 11.117
+  },
+  {
+   "word": "pulls",
+   "start": 11.133,
+   "end": 11.384
+  },
+  {
+   "word": "on",
+   "start": 11.412,
+   "end": 11.555
+  },
+  {
+   "word": "the",
+   "start": 11.571,
+   "end": 11.75
+  },
+  {
+   "word": "other,",
+   "start": 11.77,
+   "end": 12.056
+  },
+  {
+   "word": "triggering",
+   "start": 12.088,
+   "end": 12.518
+  },
+  {
+   "word": "that",
+   "start": 12.566,
+   "end": 12.78
+  },
+  {
+   "word": "side",
+   "start": 12.804,
+   "end": 13.019
+  },
+  {
+   "word": "to",
+   "start": 13.043,
+   "end": 13.186
+  },
+  {
+   "word": "contract.",
+   "start": 13.202,
+   "end": 13.596
+  },
+  {
+   "word": "And",
+   "start": 14.1,
+   "end": 14.276
+  },
+  {
+   "word": "this",
+   "start": 14.296,
+   "end": 14.507
+  },
+  {
+   "word": "happens",
+   "start": 14.53,
+   "end": 14.847
+  },
+  {
+   "word": "over",
+   "start": 14.882,
+   "end": 15.093
+  },
+  {
+   "word": "and",
+   "start": 15.117,
+   "end": 15.293
+  },
+  {
+   "word": "over",
+   "start": 15.312,
+   "end": 15.524
+  },
+  {
+   "word": "again,",
+   "start": 15.547,
+   "end": 15.829
+  },
+  {
+   "word": "propelling",
+   "start": 15.86,
+   "end": 16.282
+  },
+  {
+   "word": "the",
+   "start": 16.329,
+   "end": 16.505
+  },
+  {
+   "word": "fish",
+   "start": 16.525,
+   "end": 16.736
+  },
+  {
+   "word": "through",
+   "start": 16.76,
+   "end": 17.076
+  },
+  {
+   "word": "the",
+   "start": 17.112,
+   "end": 17.288
+  },
+  {
+   "word": "water.",
+   "start": 17.307,
+   "end": 17.589
+  },
+  {
+   "word": "It",
+   "start": 18.06,
+   "end": 18.168
+  },
+  {
+   "word": "doesn't",
+   "start": 18.18,
+   "end": 18.423
+  },
+  {
+   "word": "even",
+   "start": 18.45,
+   "end": 18.612
+  },
+  {
+   "word": "need",
+   "start": 18.63,
+   "end": 18.792
+  },
+  {
+   "word": "a",
+   "start": 18.81,
+   "end": 18.891
+  },
+  {
+   "word": "motor.",
+   "start": 18.9,
+   "end": 19.116
+  },
+  {
+   "word": "And",
+   "start": 19.66,
+   "end": 19.86
+  },
+  {
+   "word": "as",
+   "start": 19.883,
+   "end": 20.043
+  },
+  {
+   "word": "the",
+   "start": 20.061,
+   "end": 20.261
+  },
+  {
+   "word": "cells",
+   "start": 20.284,
+   "end": 20.564
+  },
+  {
+   "word": "matured,",
+   "start": 20.595,
+   "end": 20.996
+  },
+  {
+   "word": "the",
+   "start": 21.041,
+   "end": 21.241
+  },
+  {
+   "word": "fish",
+   "start": 21.264,
+   "end": 21.504
+  },
+  {
+   "word": "actually",
+   "start": 21.531,
+   "end": 21.932
+  },
+  {
+   "word": "got",
+   "start": 21.976,
+   "end": 22.177
+  },
+  {
+   "word": "faster.",
+   "start": 22.199,
+   "end": 22.56
+  },
+  {
+   "word": "But",
+   "start": 23.12,
+   "end": 23.299
+  },
+  {
+   "word": "the",
+   "start": 23.318,
+   "end": 23.497
+  },
+  {
+   "word": "scientists",
+   "start": 23.517,
+   "end": 23.945
+  },
+  {
+   "word": "weren't",
+   "start": 23.993,
+   "end": 24.314
+  },
+  {
+   "word": "trying",
+   "start": 24.35,
+   "end": 24.635
+  },
+  {
+   "word": "to",
+   "start": 24.667,
+   "end": 24.81
+  },
+  {
+   "word": "build",
+   "start": 24.826,
+   "end": 25.076
+  },
+  {
+   "word": "a",
+   "start": 25.103,
+   "end": 25.21
+  },
+  {
+   "word": "fish.",
+   "start": 25.222,
+   "end": 25.472
+  },
+  {
+   "word": "They",
+   "start": 25.94,
+   "end": 26.167
+  },
+  {
+   "word": "were",
+   "start": 26.192,
+   "end": 26.418
+  },
+  {
+   "word": "figuring",
+   "start": 26.444,
+   "end": 26.821
+  },
+  {
+   "word": "out",
+   "start": 26.863,
+   "end": 27.052
+  },
+  {
+   "word": "how",
+   "start": 27.073,
+   "end": 27.262
+  },
+  {
+   "word": "to",
+   "start": 27.283,
+   "end": 27.434
+  },
+  {
+   "word": "build",
+   "start": 27.451,
+   "end": 27.715
+  },
+  {
+   "word": "a",
+   "start": 27.745,
+   "end": 27.858
+  },
+  {
+   "word": "human",
+   "start": 27.87,
+   "end": 28.135
+  },
+  {
+   "word": "heart.",
+   "start": 28.164,
+   "end": 28.466
+  }
+ ],
+ "sentences": [
+  {
+   "text": "This fish swims using human heart cells.",
+   "start": 0.02,
+   "end": 2.518
+  },
+  {
+   "text": "But it doesn't actually have a heart.",
+   "start": 2.94,
+   "end": 4.453
+  },
+  {
+   "text": "You see, scientists grew living heart muscle on both sides of an artificial fish's tail.",
+   "start": 4.86,
+   "end": 9.31
+  },
+  {
+   "text": "When one side contracts, it pulls on the other, triggering that side to contract.",
+   "start": 9.82,
+   "end": 13.596
+  },
+  {
+   "text": "And this happens over and over again, propelling the fish through the water.",
+   "start": 14.1,
+   "end": 17.589
+  },
+  {
+   "text": "It doesn't even need a motor.",
+   "start": 18.06,
+   "end": 19.116
+  },
+  {
+   "text": "And as the cells matured, the fish actually got faster.",
+   "start": 19.66,
+   "end": 22.56
+  },
+  {
+   "text": "But the scientists weren't trying to build a fish.",
+   "start": 23.12,
+   "end": 25.472
+  },
+  {
+   "text": "They were figuring out how to build a human heart.",
+   "start": 25.94,
+   "end": 28.466
+  }
+ ]
+}
