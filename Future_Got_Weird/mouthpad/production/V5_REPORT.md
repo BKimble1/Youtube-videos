@@ -2,8 +2,8 @@
 
 **Publish file:** `release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4`
 
-- **SHA-256:** `9cb8d99d331f865f249914a21b5f08ade2ddd945b21892ec6bc48d464a040633`
-- **Size:** 19,048,017 bytes
+- **SHA-256:** `c81ae99b820341c18d044c4e21fcf736eae2125471b5d172de01880921699579`
+- **Size:** 19,047,155 bytes
 - **Untouched download:**
   https://github.com/BKimble1/Youtube-videos/raw/claude/mouthpad-short-v1-iskzy3/Future_Got_Weird/mouthpad/release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4
 
@@ -133,8 +133,68 @@ word frames.
 
 ## 5. Final frame-continuity review (of the freshly rendered file)
 
-@@REVIEW@@
+**Fully automatic checks on the delivered file:**
+- **ffprobe and the delivery gate:** all checks pass. The raw output is in `qa/v5/ffprobe_final.txt` and
+  `qa/v5/verify_export.json`.
+- **Black frames and freezes:** none, and no frozen stretch of 1 s or more. The longest near-static stretch is 0.07 s.
+- **Single-frame pops:** none in all 957 frames. A frame counts as a pop if it differs from both neighbours while the
+  neighbours match each other.
+- **Tile-level pop test (frames 251–478):** the only hits are explained and checked by eye:
+  - the striped shirt sliding past during the cut-away push-in;
+  - the recoil shake on the click shot;
+  - caption changes.
+- **V4 → V5 difference map:** only the edited windows changed (frames 257–299, 362–474 and 720–723). Everything else
+  is V4.
+- **Loop seam (956 → 0):** the same composition (step 5.2 against a median of 3.0, which includes the opening caption
+  appearing).
+- **Narration:** transcribed back from the delivered file, WER is 0.04 (whisper) and 0.059 (zipformer), spelling only,
+  identical to V4.
+- **Captions:** 0 mismatched word frames across 690 word frames.
+
+**Frame-by-frame review (every frame on numbered sheets, `qa/v5/sheets/`, plus full-resolution zooms):**
+- **Across the whole video:** three independent reviewers covered 0–239, 240–479 and 480–956 on the first V5 render.
+  - They checked mouth opening and closing, tongue contact, head aiming, hands and limbs, transitions, the gaming
+    victory and the replay transition.
+  - Real findings were fixed: a beanbag slide after the 24.0 s cut, a lip-close leftover, the hand-over pop.
+  - Findings that were V4-approved or intended (the opening tongue tap, Zip's dodge and recoil, the montage caption
+    move) were left as they were.
+- **The two edited windows (240–479):** four further rounds of independent frame-by-frame review followed, each
+  checked at full resolution, with a fix and a re-render after each round. They fixed:
+  - the blocky tongue end and the flat-topped poses;
+  - the tip touching the pad before the glow;
+  - a missing hover before the click;
+  - the post-contact slide onto the pad's bend;
+  - notches and ink spurs at the crease;
+  - a one-frame tongue snap;
+  - the pad denting;
+  - the lattice spilling past the pad;
+  - the contact disc at the pad's edge;
+  - a crosshair stall, climb and dip;
+  - the eyes drifting before the tilt.
+
+  The last round confirmed these fixed in the render before this one. Its two remaining findings, the crease V and
+  a one-frame snap at 288→289, are fixed in this file: the tongue outline now keeps a fixed number of points and
+  changes continuously. Across the whole rise and slide it never self-intersects, and no point moves more than
+  0.24 mm between neighbouring poses. I then checked those frames myself at full resolution.
+- **Not performed:** watching or listening in real time. There is no player or speaker in this environment.
 
 ## 6. Remaining issues that would prevent publishing
 
-@@BLOCKERS@@
+**Nothing technical blocks publishing.** The file is a verified native 1080 × 1920, 30 fps H.264/AAC export, with
+the approved narration and captions, and the requested refinements are in.
+
+Before publishing:
+1. **Watch and listen once in real time** on a phone. This is the one check this environment cannot do.
+2. **Check the claims and device design** against official MouthPad material:
+   - the tongue→movement, head→aim and press→click mapping;
+   - "nobody can even SEE the controller";
+   - the pad's size and position.
+3. **Check caption clearance** under the Shorts interface (title and buttons) after uploading as unlisted.
+
+**Known minor items that stay as they are (judged not to block):**
+- During the push-in at 8.5–8.7 s, the yellow keyword in "It's a TOUCHPAD" sits on a yellow shirt stripe; the dark
+  outline keeps it readable.
+- The cut-away device's hand-over is still a short dissolve (about 6 frames).
+- The montage caption jumps from the top to the bottom between phrases at about 19 s.
+- The lip-close settle frame (about 22.2 s) and the 1–2 frame caption overlap with the music widget (about 18.4 s)
+  are carried over from V4.

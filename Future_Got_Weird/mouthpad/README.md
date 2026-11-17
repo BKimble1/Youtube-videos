@@ -1,5 +1,21 @@
 # Future Got Weird: MouthPad (playing video games with your tongue)
 
+## V5 (publish file: `release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4`)
+
+| Property | Value |
+|---|---|
+| Verified (ffprobe + `tools/verify_export.py`) | H.264 High, 1080 × 1920, SAR 1:1, 9:16, 30/1 fps, 957 frames, 31.90 s; AAC 48 kHz stereo; −14.0 LUFS |
+| SHA-256 | `c81ae99b820341c18d044c4e21fcf736eae2125471b5d172de01880921699579` (`release/SHA256SUMS`) |
+| Narration / mix | Unchanged from V4 (`mix_v5.wav` is byte-identical to `mix_v4.wav`) |
+| Report | `production/V5_REPORT.md` (render command, ffprobe, root cause of "512 × 910", changes, review) |
+| Source | `source/src/v5/` (composition `MouthPadV5`) |
+
+The release MP4 is committed as a plain Git blob, so GitHub's raw download serves the exact bytes.
+
+Render (fails, and keeps no deliverable, unless the gate passes):
+
+    tools/render_final.sh MouthPadV5 mix_v5 exports/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4
+
 ## V4 (final polish: `exports/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4`)
 
 Not published. The MP4 is Git-ignored; the same bytes are in `backup/FGW_MOUTHPAD_V4_FINAL_1080x1920.mp4.part_00`
