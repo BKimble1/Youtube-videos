@@ -49,7 +49,7 @@ export const beatAt = (ph: number) => {
 };
 
 /** the left ventricle's free wall, where the close-up lands (heart-local) */
-export const LV_WALL: Pt = [66, 90];
+export const LV_WALL: Pt = [72, 80];
 export const LV_FIBRE_DEG = 13;
 export const Heart: React.FC<{id: string; style: HeartStyle; beat?: {atr: number; ven: number}; ink?: number; detail?: number; gloss?: number; micro?: number}> = ({id, style, beat = {atr: 0, ven: 0}, ink = 3, detail = 1, gloss = 1, micro = 0}) => {
   const C = PALS[style];
@@ -115,7 +115,7 @@ export const Heart: React.FC<{id: string; style: HeartStyle; beat?: {atr: number
               const r1 = h - Math.floor(h), r2 = Math.abs((h * 7.13) % 1);
               const x = LV_WALL[0] - 70 + 140 * r1, y = LV_WALL[1] - 50 + 100 * r2;
               const light = k % 3 === 0;
-              return <ellipse key={`mc${k}`} cx={f1(x)} cy={f1(y)} rx={1.5 * (1 - 0.08 * v)} ry={0.4} fill={light ? lit(C.myo, 0.35) : shade(C.myo, 0.3)} opacity={0.4} />;
+              return <ellipse key={`mc${k}`} cx={f1(x)} cy={f1(y)} rx={2.6 * (1 - 0.08 * v)} ry={0.7} fill={light ? lit(C.myo, 0.35) : shade(C.myo, 0.3)} opacity={0.4} />;
             })}
           </g>
         )}

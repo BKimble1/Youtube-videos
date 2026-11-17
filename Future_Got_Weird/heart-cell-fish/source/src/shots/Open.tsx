@@ -49,10 +49,10 @@ export const XrayTint: React.FC<{xr: number}> = ({xr}) => (xr > 0.01 ? <rect x={
 export const camSH14 = (t: number): Cam => {
   const tt = t - DUR;
   const w = ss(t, T.s14 + 0.1, DUR);
-  return lerpCam(closeCam(tt, 19, -4, 2), camSH1(tt), w);
+  return lerpCam(closeCam(tt, 14, -4, 2), camSH1(tt), w);
 };
 export const Shot14: React.FC<{t: number}> = ({t}) => {
   const tt = t - DUR;
   const B: Basis = basis(camSH14(t));
-  return <Underwater id="s14" B={B} t={tt} pose={TR1.at(tt)} swirls={TR1.swirls(tt)} look={{detail: clamp(1 - (t - T.s14) / 0.6)}} />;
+  return <Underwater id="s14" B={B} t={tt} pose={TR1.at(tt)} swirls={TR1.swirls(tt)} look={{detail: clamp(1 - (t - T.s14) / 0.6), haze: 0.06 * clamp((t - T.s14) / 0.6)}} />;
 };

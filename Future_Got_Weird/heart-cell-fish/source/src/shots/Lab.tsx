@@ -73,7 +73,7 @@ export const labCam = (t: number): Cam2 => {
   const push = ss(t, T.s13 - 0.05, W('how').start + 0.05);
   const deep = ss(t, W('how').start + 0.1, T.s14);
   if (push > 0) c = {x: lerp(c.x, HEART_FOCUS.x - 14, push), y: lerp(c.y, HEART_FOCUS.y - 40, push), z: logLerp(c.z, 5.2, push)};
-  if (deep > 0) c = {x: lerp(c.x, HEART_FOCUS.x, deep), y: lerp(c.y, HEART_FOCUS.y, deep), z: logLerp(c.z, 46, deep * deep)};
+  if (deep > 0) c = {x: lerp(c.x, HEART_FOCUS.x, deep), y: lerp(c.y, HEART_FOCUS.y, deep), z: logLerp(c.z, 64, deep * deep)};
   return c;
 };
 /** the 3D camera inside the tank that sees exactly what the lab camera sees through the front glass */

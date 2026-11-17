@@ -16,7 +16,7 @@ export const TMID = {x: 280, y: 1272};
 export const tankToLab = (x: number, y: number) => ({x: TMID.x + x * 0.1, y: TMID.y + y * 0.1});
 export const HEART_AT = {x: 1010, y: BENCH_Y - 150, s: 0.42};
 export const WINDOW = {x0: -60, x1: 330, y0: 260, y1: 760};
-export const CLOCK = {x: 760, y: 600, r: 56};
+export const CLOCK = {x: 760, y: 250, r: 56};
 
 const rr = (x0: number, y0: number, x1: number, y1: number, r: number) =>
   `M${x0 + r},${y0} H${x1 - r} Q${x1},${y0} ${x1},${y0 + r} V${y1 - r} Q${x1},${y1} ${x1 - r},${y1} H${x0 + r} Q${x0},${y1} ${x0},${y1 - r} V${y0 + r} Q${x0},${y0} ${x0 + r},${y0} Z`;

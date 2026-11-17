@@ -1,0 +1,144 @@
+{
+ "format": {
+  "width": 1080,
+  "height": 1920,
+  "fps": "60/1",
+  "frames": 1802,
+  "duration_s": 30.037,
+  "video_codec": "h264",
+  "pix_fmt": "yuv420p",
+  "color_space": "bt709",
+  "audio_codec": "aac",
+  "audio_rate": "48000",
+  "audio_channels": 2,
+  "bitrate_kbps": 7877,
+  "decode_errors": ""
+ },
+ "motion": {
+  "frames_decoded": 1802,
+  "median_step": 1.607,
+  "largest_steps": [
+   {
+    "frame": 286,
+    "t": 4.767,
+    "step": 97.29
+   },
+   {
+    "frame": 319,
+    "t": 5.317,
+    "step": 32.8
+   },
+   {
+    "frame": 320,
+    "t": 5.333,
+    "step": 32.11
+   },
+   {
+    "frame": 321,
+    "t": 5.35,
+    "step": 33.26
+   },
+   {
+    "frame": 322,
+    "t": 5.367,
+    "step": 33.02
+   },
+   {
+    "frame": 323,
+    "t": 5.383,
+    "step": 36.79
+   },
+   {
+    "frame": 324,
+    "t": 5.4,
+    "step": 36.49
+   },
+   {
+    "frame": 325,
+    "t": 5.417,
+    "step": 32.32
+   },
+   {
+    "frame": 328,
+    "t": 5.467,
+    "step": 31.32
+   },
+   {
+    "frame": 366,
+    "t": 6.1,
+    "step": 30.78
+   },
+   {
+    "frame": 367,
+    "t": 6.117,
+    "step": 32.78
+   },
+   {
+    "frame": 429,
+    "t": 7.15,
+    "step": 30.96
+   },
+   {
+    "frame": 430,
+    "t": 7.167,
+    "step": 30.18
+   },
+   {
+    "frame": 431,
+    "t": 7.183,
+    "step": 32.54
+   },
+   {
+    "frame": 432,
+    "t": 7.2,
+    "step": 30.84
+   },
+   {
+    "frame": 1173,
+    "t": 19.55,
+    "step": 43.72
+   },
+   {
+    "frame": 1619,
+    "t": 26.983,
+    "step": 35.41
+   },
+   {
+    "frame": 1620,
+    "t": 27.0,
+    "step": 38.53
+   },
+   {
+    "frame": 1621,
+    "t": 27.017,
+    "step": 30.48
+   },
+   {
+    "frame": 1710,
+    "t": 28.5,
+    "step": 44.81
+   }
+  ],
+  "longest_static_run": {
+   "frames": 75,
+   "s": 1.25,
+   "at_s": 21.817
+  }
+ },
+ "loop": {
+  "last_vs_first_step": 3.123,
+  "median_step": 1.607,
+  "ratio": 1.94
+ },
+ "speech": {
+  "asr": "WhisperX small.en on the delivered MP4 audio",
+  "transcript": "This fish swims using human heart cells, but it doesn't actually have a heart. You see, scientists grew living heart muscle on both sides of an artificial fish's tail. When one side contracts, it pulls on the other, triggering that side to contract. And this happens over and over again, propelling the fish through the water. It doesn't even need a motor. And as the cells matured, the fish actually got faster. But the scientists weren't trying to build a fish. They were figuring out how to build a human heart.",
+  "wer": 0.0,
+  "first_segment_start_s": 0.03
+ },
+ "text": {
+  "captions": 21,
+  "em_dash_in_captions": false,
+  "en_dash_in_captions": false
+ }
+}
