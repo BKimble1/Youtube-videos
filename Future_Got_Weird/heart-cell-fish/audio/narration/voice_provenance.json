@@ -1,0 +1,50 @@
+{
+ "provider": "ElevenLabs (connected restricted connector)",
+ "voice": {
+  "name": "Test Voice",
+  "voice_id": "kk5XaSLo2XAw0sKM98zU",
+  "basis": "the channel's established narrator (same id as Eel Escape, Bone Glue, Myostatin, Zombie Snail, Zombie Ant, Dead Spider and Cyborg Cockroach); confirmed with creative_list_voices on 2026-11-17"
+ },
+ "model_id": "eleven_v4",
+ "settings": "connector defaults (no stability/similarity overrides), as in every recent episode; delivery directed with inline tags only",
+ "flow_id": "K59awqH16NJ4CVpoA3Fc",
+ "prompt": "[intrigued, quick, pointing it out] This fish swims using HUMAN HEART cells. [fast paced, matter-of-fact] But it doesn't actually have a heart. [fast paced, explaining] You see, scientists grew living heart muscle on both sides of an artificial fish's tail. When one side contracts, it pulls on the other, triggering that side to contract. And this happens over and over again, propelling the fish through the water. It doesn't even need a motor. [building] And as the cells matured, the fish actually got FASTER. [a little slower, leaning in] But the scientists weren't trying to build a fish. [clear, final reveal] They were figuring out how to build a human HEART.",
+ "prompt_note": "The locked words verbatim (production/NARRATION_LOCKED.txt). Capitals mark emphasis only; bracket tags direct delivery (controlled emphasis on the opening and the final reveal) and are not spoken.",
+ "generated_once": "One run of two variations (the connector default), 2 x 667 credits. No regeneration.",
+ "takes": [
+  {
+   "file": "audio/narration/takes/t1_9hVY.mp3",
+   "generation_id": "9hVYLxv2BPbNWjPdY1FA",
+   "session_id": "GEBCiGnwJK2bG4elsPEB",
+   "duration_s": 28.64,
+   "sha256": "18b51eef1a3e0736b2ee963d22870e6eaad3dad5c7e28e6db04b4f8f1ec0f758",
+   "whisperx_wer": 0.0,
+   "chosen": true,
+   "why": "word-perfect in WhisperX; the brisker read (28.64 s against 29.20 s), with a full stop between the first two sentences as written"
+  },
+  {
+   "file": "audio/narration/takes/t2_BGu1.mp3",
+   "generation_id": "BGu1fSzoqe2z0e3uzi7B",
+   "session_id": "WpoKGeLdT2Rw83DXKncI",
+   "duration_s": 29.2,
+   "sha256": "864153b6a179907d753f9f9992782503b53d70745a5e416520c66dfa4b0e0c17",
+   "whisperx_wer": 0.0,
+   "chosen": false,
+   "why_not": "equally clean, slower, and runs the first two sentences together"
+  }
+ ],
+ "master": {
+  "file": "audio/narration/FGW_HeartFish_narration_V1.wav",
+  "format": "48 kHz, 24-bit, mono, padded to the film length (30.0333 s)",
+  "edits": "none: the take sample for sample (no gap edits, stretch, pitch or gain change)",
+  "sha256": "d0a0c4a0ad14c0171ae66541addbf37d8fbc8d0261f8ec4e51e5256697af8ad4"
+ },
+ "alignment": {
+  "tool": "WhisperX (faster-whisper small.en int8 for the transcript check; wav2vec2 forced alignment of the LOCKED words with facebook/wav2vec2-base-960h)",
+  "file": "audio/narration/whisperx.json",
+  "note": "one aligned segment per sentence (spans from the take's own pauses); WhisperX's NLTK sentence splitter is bypassed because each segment is already one sentence (tools/make_narration.py)",
+  "speech_start_s": 0.06,
+  "speech_end_s": 28.439
+ },
+ "listening": "Not listened to in real time: this environment has no audio playback. Selection by WhisperX transcripts, durations and levels."
+}
