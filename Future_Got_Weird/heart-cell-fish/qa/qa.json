@@ -11,7 +11,7 @@
   "audio_codec": "aac",
   "audio_rate": "48000",
   "audio_channels": 2,
-  "bitrate_kbps": 7877,
+  "bitrate_kbps": 7822,
   "decode_errors": ""
  },
  "motion": {
@@ -101,22 +101,22 @@
    {
     "frame": 1619,
     "t": 26.983,
-    "step": 35.41
+    "step": 35.79
    },
    {
     "frame": 1620,
     "t": 27.0,
-    "step": 38.53
+    "step": 38.91
    },
    {
     "frame": 1621,
     "t": 27.017,
-    "step": 30.48
+    "step": 30.79
    },
    {
     "frame": 1710,
     "t": 28.5,
-    "step": 44.81
+    "step": 37.5
    }
   ],
   "longest_static_run": {
@@ -126,7 +126,7 @@
   }
  },
  "loop": {
-  "last_vs_first_step": 3.123,
+  "last_vs_first_step": 3.121,
   "median_step": 1.607,
   "ratio": 1.94
  },
