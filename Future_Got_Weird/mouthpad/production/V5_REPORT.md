@@ -2,8 +2,8 @@
 
 **Publish file:** `release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4`
 
-- **SHA-256:** `7b527b3839bc459879217d1332b6e6b471ab9b344c003c39f5e4f7d5ceb9b400`
-- **Size:** 19,033,288 bytes
+- **SHA-256:** `a30f67a0e377a051323f1b708d12414735509aa29a02ad5d105ab6a4e9110875`
+- **Size:** 19,020,096 bytes
 - **Untouched download:**
   https://github.com/BKimble1/Youtube-videos/raw/claude/mouthpad-short-v1-iskzy3/Future_Got_Weird/mouthpad/release/FGW_MOUTHPAD_V5_FINAL_PUBLISH_1080x1920.mp4
 
@@ -72,7 +72,7 @@ folder was empty), so their bytes could not be compared directly.
 ## 3. Exact animation changes (V4 → V5)
 
 Everything else is unchanged from V4. A frame-by-frame comparison of the two files found visible changes only in frames
-**257–299**, **366–474** and **720–723**; the pad-lattice clip and the lip-close fix below change their frames too, but below the comparison's threshold.
+**165–169** (the pad lattice, now clipped), **257–299**, **362–474** and **720–723**; the lip-close fix below changes its frames too, but below the comparison's threshold.
 
 **Cut-away tongue (8.6–10.0 s, and the same drawing in the press demo, 13.8–15.8 s), `source/src/v5/section5.tsx`:**
 - **Rebuilt as a spine with a thickness profile, not a blend of two outlines.** V4's tongue (and the first V5 attempt)
