@@ -22,7 +22,7 @@
  "freezedetect_1s": [],
  "motion": {
   "frames": 957,
-  "median_step": 3.038,
+  "median_step": 2.991,
   "longest_static_run_s": 0.03,
   "at_s": 9.17
  },
@@ -70,6 +70,12 @@
    "planned_cut": false
   },
   {
+   "frame": 18,
+   "t": 0.6,
+   "diff": 18.04,
+   "planned_cut": false
+  },
+  {
    "frame": 21,
    "t": 0.7,
    "diff": 22.57,
@@ -96,13 +102,13 @@
   {
    "frame": 25,
    "t": 0.833,
-   "diff": 44.99,
+   "diff": 45.0,
    "planned_cut": false
   },
   {
    "frame": 26,
    "t": 0.867,
-   "diff": 46.48,
+   "diff": 46.49,
    "planned_cut": false
   },
   {
@@ -120,7 +126,7 @@
   {
    "frame": 29,
    "t": 0.967,
-   "diff": 57.37,
+   "diff": 57.36,
    "planned_cut": false
   },
   {
@@ -168,7 +174,7 @@
   {
    "frame": 81,
    "t": 2.7,
-   "diff": 82.31,
+   "diff": 82.3,
    "planned_cut": true
   },
   {
@@ -222,7 +228,7 @@
   {
    "frame": 171,
    "t": 5.7,
-   "diff": 43.85,
+   "diff": 43.84,
    "planned_cut": false
   },
   {
@@ -240,85 +246,85 @@
   {
    "frame": 177,
    "t": 5.9,
-   "diff": 18.31,
+   "diff": 18.3,
    "planned_cut": false
   },
   {
    "frame": 178,
    "t": 5.933,
-   "diff": 22.47,
+   "diff": 22.46,
    "planned_cut": false
   },
   {
    "frame": 179,
    "t": 5.967,
-   "diff": 24.05,
+   "diff": 24.03,
    "planned_cut": false
   },
   {
    "frame": 180,
    "t": 6.0,
-   "diff": 23.51,
+   "diff": 23.49,
    "planned_cut": false
   },
   {
    "frame": 181,
    "t": 6.033,
-   "diff": 21.22,
+   "diff": 21.19,
    "planned_cut": false
   },
   {
    "frame": 182,
    "t": 6.067,
-   "diff": 19.3,
+   "diff": 19.28,
    "planned_cut": false
   },
   {
    "frame": 260,
    "t": 8.667,
-   "diff": 21.13,
+   "diff": 21.1,
    "planned_cut": false
   },
   {
    "frame": 300,
    "t": 10.0,
-   "diff": 110.34,
+   "diff": 110.04,
    "planned_cut": true
   },
   {
    "frame": 301,
    "t": 10.033,
-   "diff": 28.82,
+   "diff": 28.87,
    "planned_cut": false
   },
   {
    "frame": 302,
    "t": 10.067,
-   "diff": 27.96,
+   "diff": 28.0,
    "planned_cut": false
   },
   {
    "frame": 303,
    "t": 10.1,
-   "diff": 21.44,
+   "diff": 21.48,
    "planned_cut": false
   },
   {
    "frame": 359,
    "t": 11.967,
-   "diff": 88.59,
+   "diff": 88.63,
    "planned_cut": true
   },
   {
    "frame": 415,
    "t": 13.833,
-   "diff": 74.25,
+   "diff": 74.31,
    "planned_cut": true
   },
   {
    "frame": 475,
    "t": 15.833,
-   "diff": 81.16,
+   "diff": 81.04,
    "planned_cut": true
   },
   {
@@ -534,7 +540,7 @@
   {
    "frame": 679,
    "t": 22.633,
-   "diff": 28.12,
+   "diff": 28.11,
    "planned_cut": false
   },
   {
@@ -582,7 +588,7 @@
   {
    "frame": 687,
    "t": 22.9,
-   "diff": 32.03,
+   "diff": 32.04,
    "planned_cut": false
   },
   {
@@ -612,13 +618,13 @@
   {
    "frame": 720,
    "t": 24.0,
-   "diff": 84.53,
+   "diff": 85.25,
    "planned_cut": true
   },
   {
    "frame": 772,
    "t": 25.733,
-   "diff": 47.72,
+   "diff": 47.73,
    "planned_cut": true
   },
   {
@@ -668,6 +674,12 @@
    "t": 29.3,
    "diff": 88.23,
    "planned_cut": true
+  },
+  {
+   "frame": 932,
+   "t": 31.067,
+   "diff": 18.18,
+   "planned_cut": false
   },
   {
    "frame": 933,
@@ -779,9 +791,9 @@
   }
  ],
  "loop_seam": {
-  "last_to_first_diff": 5.197,
-  "median_frame_step": 3.038,
-  "p95_frame_step": 37.406
+  "last_to_first_diff": 5.199,
+  "median_frame_step": 2.991,
+  "p95_frame_step": 37.404
  },
  "asr": {
   "zipformer": {
