@@ -5,6 +5,8 @@ import {FPS, T} from './lib';
 import {Captions} from './Captions';
 import {Shot1, Shot2, Shot14} from './shots/Open';
 import {ShotMech} from './shots/Mech';
+import {Shot3, Shot4} from './shots/Bench';
+import {ShotLab} from './shots/Lab';
 
 type ShotFC = React.FC<{t: number}>;
 const Todo: ShotFC = ({t}) => (
@@ -14,8 +16,8 @@ const Todo: ShotFC = ({t}) => (
   </svg>
 );
 const ORDER: [keyof typeof T, ShotFC][] = [
-  ['s1', Shot1], ['s2', Shot2], ['s3', Todo], ['s4', Todo], ['s5', ShotMech], ['s6', ShotMech], ['s7', ShotMech], ['s8', ShotMech],
-  ['s9', ShotMech], ['s10', ShotMech], ['s11', Todo], ['s12', Todo], ['s13', Todo], ['s14', Shot14],
+  ['s1', Shot1], ['s2', Shot2], ['s3', Shot3], ['s4', Shot4], ['s5', ShotMech], ['s6', ShotMech], ['s7', ShotMech], ['s8', ShotMech],
+  ['s9', ShotMech], ['s10', ShotMech], ['s11', ShotLab], ['s12', ShotLab], ['s13', ShotLab], ['s14', Shot14],
 ];
 export const shotAt = (t: number): [string, ShotFC] => {
   let k = 0;

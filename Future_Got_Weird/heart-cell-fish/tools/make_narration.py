@@ -18,12 +18,26 @@ from script import ROOT, SENTENCES, DW, CHUNKS, norm
 os.chdir(ROOT)
 FPS = 60
 SR = 48000
-TAIL = float(os.environ.get('FGW_TAIL', '1.4'))
+TAIL = float(os.environ.get('FGW_TAIL', '1.6'))
 TAKES = {'t1_9hVY': 'audio/narration/takes/t1_9hVY.mp3', 't2_BGu1': 'audio/narration/takes/t2_BGu1.mp3'}
 MASTER = 'audio/narration/FGW_HeartFish_narration_V1.wav'
 OUT = 'audio/narration/whisperx.json'
 
 import whisperx  # noqa: E402
+import whisperx.alignment as _wa  # noqa: E402
+
+
+class _OneSentence:
+    """Each aligned segment is already exactly one locked sentence, so the sentence splitter WhisperX would load
+    from NLTK's punkt data (not downloadable here) is replaced by one that returns the whole segment."""
+    def span_tokenize(self, text):
+        return [(0, len(text))]
+
+    def tokenize(self, text):
+        return [text]
+
+
+_wa.nltk_load = lambda *a, **k: _OneSentence()
 
 
 def wer(ref, hyp):

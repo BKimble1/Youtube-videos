@@ -14,6 +14,7 @@ import {swimTrack} from '../fish/swim';
 import {fishGeo, FishPose, MUS0, MUS1} from '../fish/model';
 import {clamp, inv, lerp, ss, ssOut, T, W} from '../lib';
 import {XrayTint} from './Open';
+import {CellsOut} from './Bench';
 
 const P0: V3 = [0, -30, 0];
 const AMP = 0.55;
@@ -72,15 +73,17 @@ export const camMech = (t: number): Cam => {
   const p = mechPose(t);
   if (t < T.s8) {
     // shot 5: out from the tissue, then up and over
-    const back = ss(t, T.s5, T.s5 + 0.85);
-    const rise = ss(t, T.s5 + 0.7, T.s6 + 0.1);
+    const back = ss(t, T.s5, T.s5 + 0.7);
+    const rise = ss(t, T.s5 + 0.55, T.s5 + 1.75);
     const pitch = lerp(3, 90, rise);
     const dist = lerp(lerp(30, 290, back), 168, rise);
     const tgt = ctr(p, lerp(0.6, 0.52, rise));
     // shots 6-7: a gentle push toward the hinge, leaning with the tail
     const push = ss(t, T.s6, T.s8);
     const lean: V3 = [0, 0, 10 * p.A];
-    const c = orbit([tgt[0] - 6 * push, tgt[1], tgt[2] + lean[2]], -4 * (1 - rise), Math.min(89.5, pitch), dist - 14 * push, 1500, upBlend(pitch, [1, 0, 0]));
+    // shot 7: in close on the stretched side (B, screen left) while it is pulled, then back out as it fires
+    const inB = ss(t, T.s7 - 0.05, tB0() - 0.1) * (1 - ss(t, tB0() + 0.25, T.s8 - 0.1));
+    const c = orbit([tgt[0] - 6 * push - 10 * inB, tgt[1], tgt[2] + lean[2] - 13 * inB], -4 * (1 - rise), Math.min(89.5, pitch), dist - 14 * push - 52 * inB, 1500, upBlend(pitch, [1, 0, 0]));
     return c;
   }
   // shot 8: follow the moving fish, then swing down to a low three-quarter view from behind and below
@@ -114,7 +117,10 @@ export const ShotMech: React.FC<{t: number}> = ({t}) => {
       look={{xray: xr, detail: clamp(1 - (t - T.s5) / 0.5)}}
       grid={1}
       under={g > 0.01 ? <rect x={0} y={0} width={1080} height={1920} fill="#0A2430" opacity={0.55 * g} /> : null}
-      over={<XrayTint xr={xr} />}
+      over={<>
+        <XrayTint xr={xr} />
+        <CellsOut t={t} />
+      </>}
     />
   );
 };

@@ -37,6 +37,8 @@ export type FishLook = {
   opacity?: number;
   /** final screen px per drawing unit (when drawn inside a zoomed 2D layer), so ink stays constant on screen */
   pxScale?: number;
+  /** draw only the body (paper front + gelatin hinge, with the floater) or only the caudal fin piece (assembly) */
+  only?: 'body' | 'tail';
 };
 
 type Region = {key: string; pts: V2[][]; z: number; front: boolean; fill: string; op: number; ink: boolean; grad?: [V2, V2, string, string]; extra?: React.ReactNode};
@@ -95,7 +97,7 @@ export const Fish: React.FC<{id: string; B: Basis; pose: FishPose; look?: FishLo
     {key: 'front', a: 0, b: HINGE0, c: PAPER, op: 1},
     {key: 'gel', a: HINGE0, b: HINGE1, c: GEL, op: 0.62},
     {key: 'tail', a: HINGE1, b: 1, c: PAPER, op: 1},
-  ];
+  ].filter((m) => !look.only || (look.only === 'tail') === (m.key === 'tail'));
   for (const side of [1, -1] as const) {
     for (const m of mats) {
       const d = side * hcT;
@@ -142,7 +144,7 @@ export const Fish: React.FC<{id: string; B: Basis; pose: FishPose; look?: FishLo
     const n = g.nA(i).map((x) => x * side) as V3;
     const pm = g.at(i, 0, d);
     const fc = facing(n, pm);
-    const base = H(mix(muscleColor(pose, act), '#F2B8B8', 0.38 * stretchOf(pose, side) * (1 - act)));
+    const base = H(mix(muscleColor(pose, act), '#F2B8B8', 0.24 * stretchOf(pose, side) * (1 - act)));
     const col = mix(shade(base, 0.38), base, bright(n));
     const front = fc > 0;
     const ss = sRange(MUS0, MUS1);
@@ -264,7 +266,7 @@ export const Fish: React.FC<{id: string; B: Basis; pose: FishPose; look?: FishLo
     const pm = g.atS(0.26, topOf(0.26) - 0.05 * L, 0);
     const edgeOn = Math.abs(facing(g.nA(SS.findIndex((s) => s >= 0.26)), pm));
     const fo = Math.min(1, Math.max(0, (edgeOn - 0.12) / 0.2));
-    if (fo > 0.01) regions.push({key: 'float', pts: [[...base, ...top]], z: proj(B, pm).z, front: true, fill: H(mix(FLOATER, XRAY, xr)), op: 0.5 * bodyOp * fo, ink: true});
+    if (fo > 0.01 && look.only !== 'tail') regions.push({key: 'float', pts: [[...base, ...top]], z: proj(B, pm).z, front: true, fill: H(mix(FLOATER, XRAY, xr)), op: 0.5 * bodyOp * fo, ink: true});
   }
 
   // ---------------------------------------------------------------- draw

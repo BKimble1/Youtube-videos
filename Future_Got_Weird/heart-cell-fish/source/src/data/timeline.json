@@ -1,9 +1,9 @@
 {
  "fps": 60,
- "frames": 1800,
- "duration": 30.0,
+ "frames": 1802,
+ "duration": 30.0333,
  "take": "t1_9hVY",
- "provisional": true,
+ "provisional": false,
  "captions": [
   {
    "text": "This fish swims using",
@@ -11,10 +11,10 @@
     "fish",
     "swims"
    ],
-   "start": 0.02,
-   "end": 1.359,
-   "show": 0,
-   "hide": 1.346
+   "start": 0.06,
+   "end": 1.209,
+   "show": 0.01,
+   "hide": 1.3
   },
   {
    "text": "human heart cells.",
@@ -23,38 +23,38 @@
     "heart",
     "cells"
    ],
-   "start": 1.396,
-   "end": 2.518,
-   "show": 1.346,
-   "hide": 2.89
+   "start": 1.35,
+   "end": 2.438,
+   "show": 1.3,
+   "hide": 2.992
   },
   {
    "text": "But it doesn't actually",
    "emph": [
     "doesn't"
    ],
-   "start": 2.94,
-   "end": 3.864,
-   "show": 2.89,
-   "hide": 3.848
+   "start": 3.042,
+   "end": 3.831,
+   "show": 2.992,
+   "hide": 3.862
   },
   {
    "text": "have a heart.",
    "emph": [
     "heart"
    ],
-   "start": 3.898,
-   "end": 4.453,
-   "show": 3.848,
+   "start": 3.912,
+   "end": 4.458,
+   "show": 3.862,
    "hide": 4.81
   },
   {
    "text": "You see,",
    "emph": [],
    "start": 4.86,
-   "end": 5.308,
+   "end": 5.142,
    "show": 4.81,
-   "hide": 5.284
+   "hide": 5.373
   },
   {
    "text": "scientists grew living heart muscle",
@@ -63,10 +63,10 @@
     "heart",
     "muscle"
    ],
-   "start": 5.334,
-   "end": 7.066,
-   "show": 5.284,
-   "hide": 7.05
+   "start": 5.423,
+   "end": 7.11,
+   "show": 5.373,
+   "hide": 7.14
   },
   {
    "text": "on both sides of",
@@ -74,10 +74,10 @@
     "both",
     "sides"
    ],
-   "start": 7.1,
-   "end": 7.987,
-   "show": 7.05,
-   "hide": 7.955
+   "start": 7.19,
+   "end": 8.034,
+   "show": 7.14,
+   "hide": 8.024
   },
   {
    "text": "an artificial fish's tail.",
@@ -85,9 +85,9 @@
     "artificial",
     "tail"
    ],
-   "start": 8.005,
-   "end": 9.31,
-   "show": 7.955,
+   "start": 8.074,
+   "end": 9.339,
+   "show": 8.024,
    "hide": 9.77
   },
   {
@@ -96,19 +96,19 @@
     "contracts"
    ],
    "start": 9.82,
-   "end": 10.926,
+   "end": 11.006,
    "show": 9.77,
-   "hide": 10.924
+   "hide": 11.117
   },
   {
    "text": "it pulls on the other,",
    "emph": [
     "pulls"
    ],
-   "start": 10.974,
-   "end": 12.056,
-   "show": 10.924,
-   "hide": 12.038
+   "start": 11.167,
+   "end": 11.991,
+   "show": 11.117,
+   "hide": 12.223
   },
   {
    "text": "triggering that side to contract.",
@@ -116,9 +116,9 @@
     "triggering",
     "contract"
    ],
-   "start": 12.088,
-   "end": 13.596,
-   "show": 12.038,
+   "start": 12.273,
+   "end": 13.639,
+   "show": 12.223,
    "hide": 14.05
   },
   {
@@ -128,89 +128,89 @@
     "again"
    ],
    "start": 14.1,
-   "end": 15.829,
+   "end": 15.97,
    "show": 14.05,
-   "hide": 15.81
+   "hide": 16.142
   },
   {
    "text": "propelling the fish",
    "emph": [
     "propelling"
    ],
-   "start": 15.86,
-   "end": 16.736,
-   "show": 15.81,
-   "hide": 16.71
+   "start": 16.192,
+   "end": 16.976,
+   "show": 16.142,
+   "hide": 16.966
   },
   {
    "text": "through the water.",
    "emph": [
     "water"
    ],
-   "start": 16.76,
-   "end": 17.589,
-   "show": 16.71,
-   "hide": 18.01
+   "start": 17.016,
+   "end": 17.619,
+   "show": 16.966,
+   "hide": 18.032
   },
   {
    "text": "It doesn't even need a motor.",
    "emph": [
     "motor"
    ],
-   "start": 18.06,
-   "end": 19.116,
-   "show": 18.01,
-   "hide": 19.61
+   "start": 18.082,
+   "end": 19.097,
+   "show": 18.032,
+   "hide": 19.611
   },
   {
    "text": "And as the cells matured,",
    "emph": [
     "matured"
    ],
-   "start": 19.66,
-   "end": 20.996,
-   "show": 19.61,
-   "hide": 20.991
+   "start": 19.661,
+   "end": 20.828,
+   "show": 19.611,
+   "hide": 21.019
   },
   {
    "text": "the fish actually got faster.",
    "emph": [
     "faster"
    ],
-   "start": 21.041,
-   "end": 22.56,
-   "show": 20.991,
-   "hide": 23.07
+   "start": 21.069,
+   "end": 22.579,
+   "show": 21.019,
+   "hide": 23.071
   },
   {
    "text": "But the scientists weren't trying",
    "emph": [
     "weren't"
    ],
-   "start": 23.12,
-   "end": 24.635,
-   "show": 23.07,
-   "hide": 24.617
+   "start": 23.121,
+   "end": 24.572,
+   "show": 23.071,
+   "hide": 24.562
   },
   {
    "text": "to build a fish.",
    "emph": [
     "fish"
    ],
-   "start": 24.667,
-   "end": 25.472,
-   "show": 24.617,
-   "hide": 25.89
+   "start": 24.612,
+   "end": 25.378,
+   "show": 24.562,
+   "hide": 25.911
   },
   {
    "text": "They were figuring out",
    "emph": [
     "figuring"
    ],
-   "start": 25.94,
-   "end": 27.052,
-   "show": 25.89,
-   "hide": 27.023
+   "start": 25.961,
+   "end": 26.847,
+   "show": 25.911,
+   "hide": 26.878
   },
   {
    "text": "how to build a human heart.",
@@ -218,514 +218,605 @@
     "human",
     "heart"
    ],
-   "start": 27.073,
-   "end": 28.466,
-   "show": 27.023,
-   "hide": 28.816
+   "start": 26.928,
+   "end": 28.439,
+   "show": 26.878,
+   "hide": 28.789
   }
  ],
  "words": [
   {
    "word": "This",
-   "start": 0.02,
-   "end": 0.306
+   "start": 0.06,
+   "end": 0.262,
+   "score": 0.847
   },
   {
    "word": "fish",
-   "start": 0.338,
-   "end": 0.623
+   "start": 0.363,
+   "end": 0.564,
+   "score": 0.909
   },
   {
    "word": "swims",
-   "start": 0.655,
-   "end": 0.988
+   "start": 0.625,
+   "end": 0.927,
+   "score": 0.824
   },
   {
    "word": "using",
-   "start": 1.025,
-   "end": 1.359
+   "start": 1.008,
+   "end": 1.209,
+   "score": 0.854
   },
   {
    "word": "human",
-   "start": 1.396,
-   "end": 1.729
+   "start": 1.35,
+   "end": 1.672,
+   "score": 0.85
   },
   {
    "word": "heart",
-   "start": 1.766,
-   "end": 2.1
+   "start": 1.773,
+   "end": 2.035,
+   "score": 0.831
   },
   {
    "word": "cells.",
-   "start": 2.137,
-   "end": 2.518
+   "start": 2.096,
+   "end": 2.438,
+   "score": 0.953
   },
   {
    "word": "But",
-   "start": 2.94,
-   "end": 3.094
+   "start": 3.042,
+   "end": 3.184,
+   "score": 0.864
   },
   {
    "word": "it",
-   "start": 3.111,
-   "end": 3.234
+   "start": 3.204,
+   "end": 3.265,
+   "score": 0.75
   },
   {
    "word": "doesn't",
-   "start": 3.248,
-   "end": 3.525
+   "start": 3.305,
+   "end": 3.507,
+   "score": 0.931
   },
   {
    "word": "actually",
-   "start": 3.556,
-   "end": 3.864
+   "start": 3.568,
+   "end": 3.831,
+   "score": 0.809
   },
   {
    "word": "have",
-   "start": 3.898,
-   "end": 4.083
+   "start": 3.912,
+   "end": 4.114,
+   "score": 0.898
   },
   {
    "word": "a",
-   "start": 4.104,
-   "end": 4.196
+   "start": 4.155,
+   "end": 4.175,
+   "score": 0.994
   },
   {
    "word": "heart.",
-   "start": 4.206,
-   "end": 4.453
+   "start": 4.216,
+   "end": 4.458,
+   "score": 0.894
   },
   {
    "word": "You",
    "start": 4.86,
-   "end": 5.054
+   "end": 4.961,
+   "score": 0.889
   },
   {
    "word": "see,",
-   "start": 5.075,
-   "end": 5.308
+   "start": 4.981,
+   "end": 5.142,
+   "score": 0.744
   },
   {
    "word": "scientists",
-   "start": 5.334,
-   "end": 5.799
+   "start": 5.423,
+   "end": 5.925,
+   "score": 0.841
   },
   {
    "word": "grew",
-   "start": 5.851,
-   "end": 6.083
+   "start": 5.985,
+   "end": 6.206,
+   "score": 0.791
   },
   {
    "word": "living",
-   "start": 6.109,
-   "end": 6.419
+   "start": 6.286,
+   "end": 6.548,
+   "score": 0.781
   },
   {
    "word": "heart",
-   "start": 6.454,
-   "end": 6.725
+   "start": 6.608,
+   "end": 6.789,
+   "score": 0.668
   },
   {
    "word": "muscle",
-   "start": 6.755,
-   "end": 7.066
+   "start": 6.829,
+   "end": 7.11,
+   "score": 0.844
   },
   {
    "word": "on",
-   "start": 7.1,
-   "end": 7.255
+   "start": 7.19,
+   "end": 7.271,
+   "score": 0.714
   },
   {
    "word": "both",
-   "start": 7.272,
-   "end": 7.505
+   "start": 7.371,
+   "end": 7.612,
+   "score": 0.784
   },
   {
    "word": "sides",
-   "start": 7.531,
-   "end": 7.802
+   "start": 7.692,
+   "end": 7.974,
+   "score": 0.715
   },
   {
    "word": "of",
-   "start": 7.832,
-   "end": 7.987
+   "start": 7.994,
+   "end": 8.034,
+   "score": 1.0
   },
   {
    "word": "an",
-   "start": 8.005,
-   "end": 8.16
+   "start": 8.074,
+   "end": 8.114,
+   "score": 0.998
   },
   {
    "word": "artificial",
-   "start": 8.177,
-   "end": 8.642
+   "start": 8.215,
+   "end": 8.657,
+   "score": 0.835
   },
   {
    "word": "fish's",
-   "start": 8.694,
-   "end": 9.004
+   "start": 8.697,
+   "end": 8.998,
+   "score": 0.85
   },
   {
    "word": "tail.",
    "start": 9.038,
-   "end": 9.31
+   "end": 9.339,
+   "score": 0.987
   },
   {
    "word": "When",
    "start": 9.82,
-   "end": 10.035
+   "end": 9.941,
+   "score": 0.922
   },
   {
    "word": "one",
-   "start": 10.059,
-   "end": 10.238
+   "start": 10.062,
+   "end": 10.162,
+   "score": 0.898
   },
   {
    "word": "side",
-   "start": 10.258,
-   "end": 10.473
+   "start": 10.202,
+   "end": 10.403,
+   "score": 0.868
   },
   {
    "word": "contracts,",
-   "start": 10.496,
-   "end": 10.926
+   "start": 10.444,
+   "end": 11.006,
+   "score": 0.887
   },
   {
    "word": "it",
-   "start": 10.974,
-   "end": 11.117
+   "start": 11.167,
+   "end": 11.227,
+   "score": 0.79
   },
   {
    "word": "pulls",
-   "start": 11.133,
-   "end": 11.384
+   "start": 11.288,
+   "end": 11.529,
+   "score": 0.876
   },
   {
    "word": "on",
-   "start": 11.412,
-   "end": 11.555
+   "start": 11.569,
+   "end": 11.629,
+   "score": 0.75
   },
   {
    "word": "the",
-   "start": 11.571,
-   "end": 11.75
+   "start": 11.67,
+   "end": 11.75,
+   "score": 0.873
   },
   {
    "word": "other,",
-   "start": 11.77,
-   "end": 12.056
+   "start": 11.81,
+   "end": 11.991,
+   "score": 0.81
   },
   {
    "word": "triggering",
-   "start": 12.088,
-   "end": 12.518
+   "start": 12.273,
+   "end": 12.654,
+   "score": 0.919
   },
   {
    "word": "that",
-   "start": 12.566,
-   "end": 12.78
+   "start": 12.695,
+   "end": 12.835,
+   "score": 0.996
   },
   {
    "word": "side",
-   "start": 12.804,
-   "end": 13.019
+   "start": 12.876,
+   "end": 13.077,
+   "score": 0.888
   },
   {
    "word": "to",
-   "start": 13.043,
-   "end": 13.186
+   "start": 13.117,
+   "end": 13.177,
+   "score": 0.75
   },
   {
    "word": "contract.",
-   "start": 13.202,
-   "end": 13.596
+   "start": 13.197,
+   "end": 13.639,
+   "score": 0.89
   },
   {
    "word": "And",
    "start": 14.1,
-   "end": 14.276
+   "end": 14.181,
+   "score": 0.951
   },
   {
    "word": "this",
-   "start": 14.296,
-   "end": 14.507
+   "start": 14.201,
+   "end": 14.322,
+   "score": 0.868
   },
   {
    "word": "happens",
-   "start": 14.53,
-   "end": 14.847
+   "start": 14.362,
+   "end": 14.663,
+   "score": 0.858
   },
   {
    "word": "over",
-   "start": 14.882,
-   "end": 15.093
+   "start": 14.885,
+   "end": 15.106,
+   "score": 0.548
   },
   {
    "word": "and",
-   "start": 15.117,
-   "end": 15.293
+   "start": 15.186,
+   "end": 15.267,
+   "score": 0.834
   },
   {
    "word": "over",
-   "start": 15.312,
-   "end": 15.524
+   "start": 15.468,
+   "end": 15.689,
+   "score": 0.702
   },
   {
    "word": "again,",
-   "start": 15.547,
-   "end": 15.829
+   "start": 15.749,
+   "end": 15.97,
+   "score": 0.875
   },
   {
    "word": "propelling",
-   "start": 15.86,
-   "end": 16.282
+   "start": 16.192,
+   "end": 16.614,
+   "score": 0.827
   },
   {
    "word": "the",
-   "start": 16.329,
-   "end": 16.505
+   "start": 16.654,
+   "end": 16.735,
+   "score": 0.833
   },
   {
    "word": "fish",
-   "start": 16.525,
-   "end": 16.736
+   "start": 16.755,
+   "end": 16.976,
+   "score": 0.804
   },
   {
    "word": "through",
-   "start": 16.76,
-   "end": 17.076
+   "start": 17.016,
+   "end": 17.217,
+   "score": 0.808
   },
   {
    "word": "the",
-   "start": 17.112,
-   "end": 17.288
+   "start": 17.237,
+   "end": 17.318,
+   "score": 0.832
   },
   {
    "word": "water.",
-   "start": 17.307,
-   "end": 17.589
+   "start": 17.358,
+   "end": 17.619,
+   "score": 0.943
   },
   {
    "word": "It",
-   "start": 18.06,
-   "end": 18.168
+   "start": 18.082,
+   "end": 18.143,
+   "score": 0.827
   },
   {
    "word": "doesn't",
-   "start": 18.18,
-   "end": 18.423
+   "start": 18.163,
+   "end": 18.366,
+   "score": 0.895
   },
   {
    "word": "even",
-   "start": 18.45,
-   "end": 18.612
+   "start": 18.407,
+   "end": 18.549,
+   "score": 0.878
   },
   {
    "word": "need",
-   "start": 18.63,
-   "end": 18.792
+   "start": 18.569,
+   "end": 18.711,
+   "score": 0.821
   },
   {
    "word": "a",
-   "start": 18.81,
-   "end": 18.891
+   "start": 18.732,
+   "end": 18.772,
+   "score": 0.493
   },
   {
    "word": "motor.",
-   "start": 18.9,
-   "end": 19.116
+   "start": 18.833,
+   "end": 19.097,
+   "score": 0.956
   },
   {
    "word": "And",
-   "start": 19.66,
-   "end": 19.86
+   "start": 19.661,
+   "end": 19.761,
+   "score": 0.84
   },
   {
    "word": "as",
-   "start": 19.883,
-   "end": 20.043
+   "start": 19.801,
+   "end": 19.902,
+   "score": 0.436
   },
   {
    "word": "the",
-   "start": 20.061,
-   "end": 20.261
+   "start": 19.942,
+   "end": 20.023,
+   "score": 0.877
   },
   {
    "word": "cells",
-   "start": 20.284,
-   "end": 20.564
+   "start": 20.063,
+   "end": 20.325,
+   "score": 0.799
   },
   {
    "word": "matured,",
-   "start": 20.595,
-   "end": 20.996
+   "start": 20.345,
+   "end": 20.828,
+   "score": 0.778
   },
   {
    "word": "the",
-   "start": 21.041,
-   "end": 21.241
+   "start": 21.069,
+   "end": 21.15,
+   "score": 0.933
   },
   {
    "word": "fish",
-   "start": 21.264,
-   "end": 21.504
+   "start": 21.21,
+   "end": 21.432,
+   "score": 0.836
   },
   {
    "word": "actually",
-   "start": 21.531,
-   "end": 21.932
+   "start": 21.553,
+   "end": 21.834,
+   "score": 0.897
   },
   {
    "word": "got",
-   "start": 21.976,
-   "end": 22.177
+   "start": 21.875,
+   "end": 22.016,
+   "score": 0.833
   },
   {
    "word": "faster.",
-   "start": 22.199,
-   "end": 22.56
+   "start": 22.136,
+   "end": 22.579,
+   "score": 0.872
   },
   {
    "word": "But",
-   "start": 23.12,
-   "end": 23.299
+   "start": 23.121,
+   "end": 23.221,
+   "score": 0.834
   },
   {
    "word": "the",
-   "start": 23.318,
-   "end": 23.497
+   "start": 23.242,
+   "end": 23.342,
+   "score": 0.835
   },
   {
    "word": "scientists",
-   "start": 23.517,
-   "end": 23.945
+   "start": 23.443,
+   "end": 24.008,
+   "score": 0.876
   },
   {
    "word": "weren't",
-   "start": 23.993,
-   "end": 24.314
+   "start": 24.068,
+   "end": 24.31,
+   "score": 0.725
   },
   {
    "word": "trying",
    "start": 24.35,
-   "end": 24.635
+   "end": 24.572,
+   "score": 0.852
   },
   {
    "word": "to",
-   "start": 24.667,
-   "end": 24.81
+   "start": 24.612,
+   "end": 24.673,
+   "score": 0.752
   },
   {
    "word": "build",
-   "start": 24.826,
-   "end": 25.076
+   "start": 24.713,
+   "end": 24.915,
+   "score": 0.745
   },
   {
    "word": "a",
-   "start": 25.103,
-   "end": 25.21
+   "start": 24.955,
+   "end": 24.975,
+   "score": 0.997
   },
   {
    "word": "fish.",
-   "start": 25.222,
-   "end": 25.472
+   "start": 25.076,
+   "end": 25.378,
+   "score": 0.904
   },
   {
    "word": "They",
-   "start": 25.94,
-   "end": 26.167
+   "start": 25.961,
+   "end": 26.061,
+   "score": 0.966
   },
   {
    "word": "were",
-   "start": 26.192,
-   "end": 26.418
+   "start": 26.082,
+   "end": 26.202,
+   "score": 0.868
   },
   {
    "word": "figuring",
-   "start": 26.444,
-   "end": 26.821
+   "start": 26.283,
+   "end": 26.646,
+   "score": 0.893
   },
   {
    "word": "out",
-   "start": 26.863,
-   "end": 27.052
+   "start": 26.726,
+   "end": 26.847,
+   "score": 0.79
   },
   {
    "word": "how",
-   "start": 27.073,
-   "end": 27.262
+   "start": 26.928,
+   "end": 27.069,
+   "score": 0.989
   },
   {
    "word": "to",
-   "start": 27.283,
-   "end": 27.434
+   "start": 27.109,
+   "end": 27.169,
+   "score": 0.768
   },
   {
    "word": "build",
-   "start": 27.451,
-   "end": 27.715
+   "start": 27.23,
+   "end": 27.472,
+   "score": 0.737
   },
   {
    "word": "a",
-   "start": 27.745,
-   "end": 27.858
+   "start": 27.532,
+   "end": 27.572,
+   "score": 0.507
   },
   {
    "word": "human",
-   "start": 27.87,
-   "end": 28.135
+   "start": 27.693,
+   "end": 28.036,
+   "score": 0.843
   },
   {
    "word": "heart.",
-   "start": 28.164,
-   "end": 28.466
+   "start": 28.157,
+   "end": 28.439,
+   "score": 0.794
   }
  ],
  "sentences": [
   {
    "text": "This fish swims using human heart cells.",
-   "start": 0.02,
-   "end": 2.518
+   "start": 0.06,
+   "end": 2.438
   },
   {
    "text": "But it doesn't actually have a heart.",
-   "start": 2.94,
-   "end": 4.453
+   "start": 3.042,
+   "end": 4.458
   },
   {
    "text": "You see, scientists grew living heart muscle on both sides of an artificial fish's tail.",
    "start": 4.86,
-   "end": 9.31
+   "end": 9.339
   },
   {
    "text": "When one side contracts, it pulls on the other, triggering that side to contract.",
    "start": 9.82,
-   "end": 13.596
+   "end": 13.639
   },
   {
    "text": "And this happens over and over again, propelling the fish through the water.",
    "start": 14.1,
-   "end": 17.589
+   "end": 17.619
   },
   {
    "text": "It doesn't even need a motor.",
-   "start": 18.06,
-   "end": 19.116
+   "start": 18.082,
+   "end": 19.097
   },
   {
    "text": "And as the cells matured, the fish actually got faster.",
-   "start": 19.66,
-   "end": 22.56
+   "start": 19.661,
+   "end": 22.579
   },
   {
    "text": "But the scientists weren't trying to build a fish.",
-   "start": 23.12,
-   "end": 25.472
+   "start": 23.121,
+   "end": 25.378
   },
   {
    "text": "They were figuring out how to build a human heart.",
-   "start": 25.94,
-   "end": 28.466
+   "start": 25.961,
+   "end": 28.439
   }
  ]
 }

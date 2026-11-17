@@ -1,4 +1,4 @@
-"""Shared synthesis helpers for the Eel Escape mixes (copied from tools/make_audio.py, V3, unchanged): filters,
+"""Shared synthesis helpers (from the Eel Escape V4 mix, tools/v4/audio_lib.py, unchanged): filters,
 loop-seamless processing, bubbles, wet slips, the poke, stretches, the water rush, pops, strokes, and the gentle voice
 compressor and circular true-peak limiter. The caller sets SR, N, DUR and rng (init()) before using them."""
 import numpy as np

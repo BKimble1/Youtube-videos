@@ -9,12 +9,14 @@ import {Heart} from '../art/heart';
 
 export const BENCH_Y = 1310;
 /** the tank: interior in lab units; the fish's world (0.1 mm units, art/water.tsx TANK) maps in at x0.1 */
-export const TANKL = {x0: 140, x1: 420, top: 1226, surf: 1243, floor: 1300, glass: 5};
+export const TANKL = {x0: 140, x1: 420, top: 1226, surf: 1239, floor: 1299, glass: 5};
+/** the tank's middle: tank world (0, 0) */
+export const TMID = {x: 280, y: 1272};
 /** tank world (0.1 mm) -> lab: the tank's world x = 0 sits at the tank's middle, world y = 0 at mid-water */
-export const tankToLab = (x: number, y: number) => ({x: (TANKL.x0 + TANKL.x1) / 2 + x * 0.1, y: (TANKL.surf + TANKL.floor) / 2 + y * 0.1});
+export const tankToLab = (x: number, y: number) => ({x: TMID.x + x * 0.1, y: TMID.y + y * 0.1});
 export const HEART_AT = {x: 1010, y: BENCH_Y - 150, s: 0.42};
 export const WINDOW = {x0: -60, x1: 330, y0: 260, y1: 760};
-export const CLOCK = {x: 720, y: 430, r: 62};
+export const CLOCK = {x: 760, y: 600, r: 56};
 
 const rr = (x0: number, y0: number, x1: number, y1: number, r: number) =>
   `M${x0 + r},${y0} H${x1 - r} Q${x1},${y0} ${x1},${y0 + r} V${y1 - r} Q${x1},${y1} ${x1 - r},${y1} H${x0 + r} Q${x0},${y1} ${x0},${y1 - r} V${y0 + r} Q${x0},${y0} ${x0 + r},${y0} Z`;
@@ -87,27 +89,12 @@ export const Bench: React.FC<{id: string; k: number}> = ({id, k}) => (
 );
 
 /** the tank's back half: the grid sheet, back glass, the water (behind the fish) */
-export const TankBack: React.FC<{id: string; k: number; t: number; day?: number}> = ({id, k, t, day = 1}) => {
-  const {x0, x1, top, surf, floor, glass} = TANKL;
-  const lines: string[] = [];
-  for (let x = x0 - 6; x <= x1 + 6; x += 5) lines.push(`M${x},${floor + 8} L${x + (x - (x0 + x1) / 2) * 0.04},${floor - 6}`);
-  const caus: string[] = [];
-  for (let i = 0; i < 18; i++) {
-    const cx = x0 + 10 + ((i * 47 + t * 9) % (x1 - x0 - 20));
-    caus.push(`M${(cx - 8).toFixed(1)},${(floor - 3).toFixed(1)} q4,${(-2 - Math.sin(t * 2 + i)).toFixed(1)} 9,0`);
-  }
-  const water = mix('#3E8E9C', '#60B3BF', day);
+export const TankBack: React.FC<{id: string; k: number}> = ({k}) => {
+  const {x0, x1, top, floor, glass} = TANKL;
   return (
     <g>
       {/* the millimetre grid sheet under the glass bottom */}
       <path d={`M${x0 - 14},${BENCH_Y - 1} H${x1 + 14} V${BENCH_Y - 4} H${x0 - 14} Z`} fill="#F1F5F4" stroke={INK} strokeWidth={1.2 * k} />
-      <path d={`M${x0},${top} H${x1} V${floor} H${x0} Z`} fill={shade(water, 0.25)} opacity={0.6} />
-      <Lin id={`${id}-wt`} d={`M${x0},${surf} H${x1} V${floor} H${x0} Z`} from={{x: 0, y: surf}} to={{x: 0, y: floor}} stops={[[0, lit(water, 0.15)], [1, shade(water, 0.18)]]} opacity={0.88} />
-      {/* the floor: the grid seen through the glass bottom, receding */}
-      <path d={`M${x0},${floor - 6} H${x1} V${floor} H${x0} Z`} fill={mix('#CFE7E6', water, 0.35)} />
-      <path d={lines.join('')} stroke="#24606B" strokeWidth={0.5 * k} opacity={0.5} />
-      <path d={caus.join('')} stroke="#F4FFFB" strokeWidth={0.7 * k} fill="none" opacity={0.5} />
-      <path d={`M${x0},${surf} H${x1}`} stroke="#E6FFFB" strokeWidth={1.4 * k} opacity={0.75} />
       <path d={`M${x0},${floor} H${x1} V${BENCH_Y - 4} H${x0} Z`} fill="#CFEFF2" opacity={0.75} />
       <path d={`M${x0 - glass},${top} V${BENCH_Y - 4} M${x1 + glass},${top} V${BENCH_Y - 4}`} stroke="#BFE4EA" strokeWidth={glass} opacity={0.7} />
     </g>

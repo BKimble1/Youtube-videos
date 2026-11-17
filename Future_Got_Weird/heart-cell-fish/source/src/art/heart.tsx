@@ -48,7 +48,10 @@ export const beatAt = (ph: number) => {
   return {atr, ven: v};
 };
 
-export const Heart: React.FC<{id: string; style: HeartStyle; beat?: {atr: number; ven: number}; ink?: number; detail?: number; gloss?: number}> = ({id, style, beat = {atr: 0, ven: 0}, ink = 3, detail = 1, gloss = 1}) => {
+/** the left ventricle's free wall, where the close-up lands (heart-local) */
+export const LV_WALL: Pt = [66, 90];
+export const LV_FIBRE_DEG = 13;
+export const Heart: React.FC<{id: string; style: HeartStyle; beat?: {atr: number; ven: number}; ink?: number; detail?: number; gloss?: number; micro?: number}> = ({id, style, beat = {atr: 0, ven: 0}, ink = 3, detail = 1, gloss = 1, micro = 0}) => {
   const C = PALS[style];
   const v = beat.ven, a = beat.atr;
   const base: Pt = [0, -46];
@@ -101,6 +104,21 @@ export const Heart: React.FC<{id: string; style: HeartStyle; beat?: {atr: number
         {/* fat along the grooves (live) */}
         {style === 'live' && <path d={open(sep)} fill="none" stroke={C.fat} strokeWidth={22} opacity={0.55} strokeLinecap="round" />}
         {style === 'live' && <path d={open(rca)} fill="none" stroke={C.fat} strokeWidth={20} opacity={0.5} strokeLinecap="round" />}
+        {micro > 0 && (
+          <g opacity={micro} transform={`translate(0 -46) scale(${f1(1 - 0.07 * v)} ${(1 - 0.1 * v).toFixed(3)}) translate(0 46) rotate(${LV_FIBRE_DEG} ${LV_WALL[0]} ${LV_WALL[1]})`}>
+            {Array.from({length: 40}, (_, k) => {
+              const y = LV_WALL[1] - 50 + k * 2.5 + 0.6 * Math.sin(k * 2.3);
+              return <path key={`mf${k}`} d={`M${LV_WALL[0] - 80},${f1(y)} C${LV_WALL[0] - 30},${f1(y + 1.2 * Math.sin(k))} ${LV_WALL[0] + 30},${f1(y - 1.2 * Math.cos(k))} ${LV_WALL[0] + 80},${f1(y)}`} fill="none" stroke={shade(C.myo, 0.4)} strokeWidth={0.35} opacity={0.6} />;
+            })}
+            {Array.from({length: 220}, (_, k) => {
+              const h = Math.sin(k * 91.7) * 43758.5;
+              const r1 = h - Math.floor(h), r2 = Math.abs((h * 7.13) % 1);
+              const x = LV_WALL[0] - 70 + 140 * r1, y = LV_WALL[1] - 50 + 100 * r2;
+              const light = k % 3 === 0;
+              return <ellipse key={`mc${k}`} cx={f1(x)} cy={f1(y)} rx={1.5 * (1 - 0.08 * v)} ry={0.4} fill={light ? lit(C.myo, 0.35) : shade(C.myo, 0.3)} opacity={0.4} />;
+            })}
+          </g>
+        )}
         <ellipse cx={-48} cy={-6} rx={44} ry={26} fill="#FFFFFF" opacity={0.18 * gl * gloss} transform="rotate(-30 -48 -6)" />
         <ellipse cx={-60} cy={-14} rx={14} ry={7} fill="#FFFFFF" opacity={0.55 * gl * gloss} transform="rotate(-30 -60 -14)" />
       </g>

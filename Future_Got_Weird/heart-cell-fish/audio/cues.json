@@ -1,0 +1,680 @@
+{
+ "DUR": 30.0333,
+ "T": {
+  "s1": 0,
+  "s2": 2.9219999999999997,
+  "s3": 4.760000000000001,
+  "s4": 6.1659999999999995,
+  "s5": 7.04,
+  "s6": 9.57,
+  "s7": 11.116999999999999,
+  "s8": 14,
+  "s9": 16.092,
+  "s10": 17.932000000000002,
+  "s11": 19.541,
+  "s12": 23.000999999999998,
+  "s13": 25.860999999999997,
+  "s14": 28.489,
+  "end": 30.0333
+ },
+ "settings": [
+  [
+   0,
+   "water"
+  ],
+  [
+   4.760000000000001,
+   "lab"
+  ],
+  [
+   6.066,
+   "micro"
+  ],
+  [
+   7.34,
+   "water"
+  ],
+  [
+   23.700999999999997,
+   "lab"
+  ],
+  [
+   26.928,
+   "heart"
+  ],
+  [
+   28.489,
+   "water"
+  ]
+ ],
+ "events": [
+  {
+   "t": 0.0767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 0.2767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 0.4767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 0.6767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 0.8767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 1.0767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 1.2767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 1.4767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 1.6767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 1.8767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.0767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.2767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.4767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.6767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.8767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 2.922,
+   "kind": "whoosh_soft",
+   "v": 0.7,
+   "note": "the orbit begins"
+  },
+  {
+   "t": 3.0767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 3.122,
+   "kind": "xray",
+   "v": 0.8,
+   "note": "the body turns to glass"
+  },
+  {
+   "t": 3.2767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 3.4767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 3.6767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 3.8767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 4.0767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 4.2767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 4.4767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 4.6767,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 4.76,
+   "kind": "cut_lab",
+   "v": 1,
+   "note": "match cut to the bench"
+  },
+  {
+   "t": 5.04,
+   "kind": "click",
+   "v": 1,
+   "note": "the tail piece docks"
+  },
+  {
+   "t": 5.08,
+   "kind": "whoosh_out",
+   "v": 0.8,
+   "note": "pull back to the scientist"
+  },
+  {
+   "t": 5.78,
+   "kind": "whoosh_in",
+   "v": 1,
+   "note": "rush in to the hinge"
+  },
+  {
+   "t": 6.2093,
+   "kind": "cellbeat",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 6.7643,
+   "kind": "cellbeat",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 7.04,
+   "kind": "whoosh_out",
+   "v": 0.8,
+   "note": "out of the tissue"
+  },
+  {
+   "t": 7.321,
+   "kind": "cellbeat",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 7.59,
+   "kind": "whoosh_soft",
+   "v": 0.7,
+   "note": "rise over the fish"
+  },
+  {
+   "t": 10.012,
+   "kind": "contract",
+   "v": 1,
+   "note": "side A contracts"
+  },
+  {
+   "t": 10.906,
+   "kind": "stretch",
+   "v": 1,
+   "note": "side B stretched by the bend"
+  },
+  {
+   "t": 11.953,
+   "kind": "trigger",
+   "v": 1,
+   "note": "the wave runs along side B"
+  },
+  {
+   "t": 12.293,
+   "kind": "contract",
+   "v": 1,
+   "note": "side B contracts"
+  },
+  {
+   "t": 14.5367,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 14.55,
+   "kind": "whoosh_soft",
+   "v": 0.8,
+   "note": "swing down behind it"
+  },
+  {
+   "t": 14.9583,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 15.275,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 15.5317,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 15.7583,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 15.965,
+   "kind": "contract_swim",
+   "v": 0.8,
+   "note": ""
+  },
+  {
+   "t": 16.1633,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 16.3567,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 16.5483,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 16.74,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 16.9333,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.125,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.3183,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.51,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.7017,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.895,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 17.982,
+   "kind": "xray",
+   "v": 0.9,
+   "note": "the glass body again"
+  },
+  {
+   "t": 18.0867,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 18.28,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 18.4717,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 18.6633,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 18.8567,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 19.0483,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 19.24,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 19.4333,
+   "kind": "contract_swim",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 19.541,
+   "kind": "cut_soft",
+   "v": 0.8,
+   "note": "the time-lapse"
+  },
+  {
+   "t": 19.8977,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 20.3977,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 20.545,
+   "kind": "night",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 20.665,
+   "kind": "pipette",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 20.746,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 20.8327,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 21.111,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 21.3877,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 21.603,
+   "kind": "night",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 21.666,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 21.723,
+   "kind": "pipette",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 21.8643,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 22.056,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 22.2493,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 22.441,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 22.6327,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 22.826,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 23.001,
+   "kind": "whoosh_out",
+   "v": 1,
+   "note": "out of the tank"
+  },
+  {
+   "t": 23.0177,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 23.211,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 23.4027,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 23.5943,
+   "kind": "stroke_tank",
+   "v": 0.7,
+   "note": ""
+  },
+  {
+   "t": 24.251,
+   "kind": "whoosh_soft",
+   "v": 0.7,
+   "note": "pan to the model"
+  },
+  {
+   "t": 25.811,
+   "kind": "whoosh_in",
+   "v": 0.8,
+   "note": "push into the model"
+  },
+  {
+   "t": 26.928,
+   "kind": "cut_heart",
+   "v": 1,
+   "note": "the living heart"
+  },
+  {
+   "t": 27.028,
+   "kind": "whoosh_in",
+   "v": 0.9,
+   "note": "into the wall"
+  },
+  {
+   "t": 27.309,
+   "kind": "heartbeat",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 28.109,
+   "kind": "heartbeat",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 28.489,
+   "kind": "match",
+   "v": 1,
+   "note": "heart wall to fish muscle"
+  },
+  {
+   "t": 28.509,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 28.589,
+   "kind": "whoosh_out",
+   "v": 0.8,
+   "note": "back out to frame 0"
+  },
+  {
+   "t": 28.709,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 28.909,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 29.109,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 29.309,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 29.509,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 29.709,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  },
+  {
+   "t": 29.909,
+   "kind": "stroke",
+   "v": 1,
+   "note": ""
+  }
+ ],
+ "words": {
+  "how": 26.928,
+  "heart4": 28.157
+ }
+}

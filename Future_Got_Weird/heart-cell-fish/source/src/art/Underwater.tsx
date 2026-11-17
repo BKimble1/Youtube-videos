@@ -5,6 +5,19 @@ import {Fish, FishLook} from '../fish/Fish';
 import {FishPose, L} from '../fish/model';
 import {Motes, Swirl, Wake, WaterBG} from './water';
 
+/** the same layers as a group (for a tank seen through glass inside another scene) */
+export const UnderwaterG: React.FC<{id: string; B: Basis; t: number; pose: FishPose; swirls?: Swirl[]; look?: FishLook}> = ({id, B, t, pose, swirls = [], look = {}}) => {
+  const zf = proj(B, pose.pos).z;
+  return (
+    <g>
+      <WaterBG id={`${id}-w`} B={B} t={t} shadow={[{p: pose.pos, len: L, yaw: pose.yaw}]} />
+      <Motes id={`${id}-mf`} B={B} t={t} zMin={zf + 20} />
+      <Wake B={B} swirls={swirls} />
+      <Fish id={`${id}-f`} B={B} pose={pose} look={{haze: 0.06, hazeColor: '#5FA9B6', ...look}} />
+      <Motes id={`${id}-mn`} B={B} t={t} zMax={zf + 20} />
+    </g>
+  );
+};
 export const Underwater: React.FC<{id: string; B: Basis; t: number; pose: FishPose; swirls?: Swirl[]; look?: FishLook; grid?: number; over?: React.ReactNode; under?: React.ReactNode}> = ({id, B, t, pose, swirls = [], look = {}, grid = 1, over, under}) => {
   const zf = proj(B, pose.pos).z;
   return (

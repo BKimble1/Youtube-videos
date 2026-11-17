@@ -1,0 +1,765 @@
+[
+ {
+  "t": 0,
+  "dur": 30.0333,
+  "sfx": "ambience: water",
+  "level_re_voice_db": -27.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 30.0333,
+  "sfx": "ambience: lab",
+  "level_re_voice_db": -33.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 30.0333,
+  "sfx": "ambience: micro",
+  "level_re_voice_db": -31.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 30.0333,
+  "sfx": "ambience: heart",
+  "level_re_voice_db": -24.0,
+  "bus": "amb"
+ },
+ {
+  "t": 0,
+  "dur": 30.0333,
+  "sfx": "music bed (pad + pluck, 12 bars, loop-seamless)",
+  "level_re_voice_db": -18.0,
+  "bus": "music"
+ },
+ {
+  "t": 0.157,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0.357,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0.557,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0.757,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 0.957,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 1.157,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 1.357,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 1.557,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 1.757,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 1.957,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.157,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.357,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.557,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.757,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 2.802,
+  "dur": 0.7,
+  "sfx": "soft camera move (the orbit begins)",
+  "level_re_voice_db": -28.098039199714865,
+  "bus": "tex"
+ },
+ {
+  "t": 2.957,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 3.122,
+  "dur": 0.7,
+  "sfx": "body turns to glass (the body turns to glass)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 3.157,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 3.357,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 3.557,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 3.757,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 3.957,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 4.157,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 4.357,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 4.557,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 4.76,
+  "dur": 0.14,
+  "sfx": "match cut (air) (match cut to the bench)",
+  "level_re_voice_db": -24.0,
+  "bus": "tex"
+ },
+ {
+  "t": 5.04,
+  "dur": 0.05,
+  "sfx": "tweezers: the tail docks (the tail piece docks)",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 5.08,
+  "dur": 0.6,
+  "sfx": "whoosh out (pull back to the scientist)",
+  "level_re_voice_db": -21.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 5.48,
+  "dur": 0.55,
+  "sfx": "whoosh in (rush in to the hinge)",
+  "level_re_voice_db": -19.0,
+  "bus": "tex"
+ },
+ {
+  "t": 6.209,
+  "dur": 0.25,
+  "sfx": "cells contract (microscope) (cellbeat)",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 6.764,
+  "dur": 0.25,
+  "sfx": "cells contract (microscope) (cellbeat)",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 7.04,
+  "dur": 0.6,
+  "sfx": "whoosh out (out of the tissue)",
+  "level_re_voice_db": -21.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 7.321,
+  "dur": 0.25,
+  "sfx": "cells contract (microscope) (cellbeat)",
+  "level_re_voice_db": -17.0,
+  "bus": "dot"
+ },
+ {
+  "t": 7.47,
+  "dur": 0.7,
+  "sfx": "soft camera move (rise over the fish)",
+  "level_re_voice_db": -28.098039199714865,
+  "bus": "tex"
+ },
+ {
+  "t": 10.012,
+  "dur": 0.4,
+  "sfx": "muscle contraction (demonstration) (side A contracts)",
+  "level_re_voice_db": -13.0,
+  "bus": "accent"
+ },
+ {
+  "t": 10.906,
+  "dur": 0.9,
+  "sfx": "side B stretched (rubbery creak) (side B stretched by the bend)",
+  "level_re_voice_db": -19.0,
+  "bus": "dot"
+ },
+ {
+  "t": 11.953,
+  "dur": 0.12,
+  "sfx": "trigger wave (bioelectric tick) (the wave runs along side B)",
+  "level_re_voice_db": -18.0,
+  "bus": "dot"
+ },
+ {
+  "t": 12.293,
+  "dur": 0.4,
+  "sfx": "muscle contraction (demonstration) (side B contracts)",
+  "level_re_voice_db": -13.0,
+  "bus": "accent"
+ },
+ {
+  "t": 14.43,
+  "dur": 0.7,
+  "sfx": "soft camera move (swing down behind it)",
+  "level_re_voice_db": -26.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 14.537,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 14.958,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 15.275,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 15.532,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 15.758,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 15.965,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -25.93820026016113,
+  "bus": "dot"
+ },
+ {
+  "t": 16.163,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 16.357,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 16.548,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 16.74,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 16.933,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.125,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.318,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.51,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.702,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.895,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 17.982,
+  "dur": 0.7,
+  "sfx": "body turns to glass (the glass body again)",
+  "level_re_voice_db": -24.915149811213503,
+  "bus": "dot"
+ },
+ {
+  "t": 18.087,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 18.28,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 18.472,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 18.663,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 18.857,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 19.048,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 19.24,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 19.433,
+  "dur": 0.22,
+  "sfx": "contraction on each stroke (contract_swim)",
+  "level_re_voice_db": -24.0,
+  "bus": "dot"
+ },
+ {
+  "t": 19.541,
+  "dur": 0.14,
+  "sfx": "cut (air) (the time-lapse)",
+  "level_re_voice_db": -28.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 19.778,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 20.278,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 20.545,
+  "dur": 0.22,
+  "sfx": "time-lapse: a night passes (night)",
+  "level_re_voice_db": -21.0,
+  "bus": "dot"
+ },
+ {
+  "t": 20.626,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 20.665,
+  "dur": 0.14,
+  "sfx": "pipette, morning medium change (pipette)",
+  "level_re_voice_db": -23.0,
+  "bus": "dot"
+ },
+ {
+  "t": 20.713,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 20.991,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 21.268,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 21.546,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 21.603,
+  "dur": 0.22,
+  "sfx": "time-lapse: a night passes (night)",
+  "level_re_voice_db": -21.0,
+  "bus": "dot"
+ },
+ {
+  "t": 21.723,
+  "dur": 0.14,
+  "sfx": "pipette, morning medium change (pipette)",
+  "level_re_voice_db": -23.0,
+  "bus": "dot"
+ },
+ {
+  "t": 21.744,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 21.936,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 22.129,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 22.321,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 22.513,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 22.706,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 22.898,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 23.001,
+  "dur": 0.6,
+  "sfx": "whoosh out (out of the tank)",
+  "level_re_voice_db": -20.0,
+  "bus": "tex"
+ },
+ {
+  "t": 23.091,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 23.283,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 23.474,
+  "dur": 0.16,
+  "sfx": "tail stroke (tank, through glass) (stroke_tank)",
+  "level_re_voice_db": -34.09803919971486,
+  "bus": "tex"
+ },
+ {
+  "t": 24.131,
+  "dur": 0.7,
+  "sfx": "soft camera move (pan to the model)",
+  "level_re_voice_db": -28.098039199714865,
+  "bus": "tex"
+ },
+ {
+  "t": 25.511,
+  "dur": 0.55,
+  "sfx": "whoosh in (push into the model)",
+  "level_re_voice_db": -20.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 26.728,
+  "dur": 0.55,
+  "sfx": "whoosh in (into the wall)",
+  "level_re_voice_db": -19.915149811213503,
+  "bus": "tex"
+ },
+ {
+  "t": 26.928,
+  "dur": 0.6,
+  "sfx": "cut to the living heart (the living heart)",
+  "level_re_voice_db": -14.0,
+  "bus": "accent"
+ },
+ {
+  "t": 27.309,
+  "dur": 0.6,
+  "sfx": "heartbeat lub-dub (heartbeat)",
+  "level_re_voice_db": -8.0,
+  "bus": "accent"
+ },
+ {
+  "t": 28.109,
+  "dur": 0.6,
+  "sfx": "heartbeat lub-dub (heartbeat)",
+  "level_re_voice_db": -8.0,
+  "bus": "accent"
+ },
+ {
+  "t": 28.389,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 28.489,
+  "dur": 0.25,
+  "sfx": "heart wall to fish muscle (heart wall to fish muscle)",
+  "level_re_voice_db": -18.0,
+  "bus": "tex"
+ },
+ {
+  "t": 28.589,
+  "dur": 0.6,
+  "sfx": "whoosh out (back out to frame 0)",
+  "level_re_voice_db": -21.93820026016113,
+  "bus": "tex"
+ },
+ {
+  "t": 28.589,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 28.789,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 28.989,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 29.189,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 29.389,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 29.589,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 29.789,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ },
+ {
+  "t": 29.99,
+  "dur": 0.2,
+  "sfx": "tail stroke (stroke)",
+  "level_re_voice_db": -27.0,
+  "bus": "tex"
+ }
+]

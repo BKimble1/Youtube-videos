@@ -49,7 +49,7 @@ export const XrayTint: React.FC<{xr: number}> = ({xr}) => (xr > 0.01 ? <rect x={
 export const camSH14 = (t: number): Cam => {
   const tt = t - DUR;
   const w = ss(t, T.s14 + 0.1, DUR);
-  return lerpCam(closeCam(tt, 34, -4, 2), camSH1(tt), w);
+  return lerpCam(closeCam(tt, 19, -4, 2), camSH1(tt), w);
 };
 export const Shot14: React.FC<{t: number}> = ({t}) => {
   const tt = t - DUR;
