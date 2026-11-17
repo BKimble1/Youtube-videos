@@ -26,7 +26,7 @@ const PAD_UNDER = 1.8; // the pad is drawn 0.75 mm under the palate, 2.1 mm thic
 type V2 = {x: number; y: number};
 const nrm = (v: V2) => { const l = Math.hypot(v.x, v.y) || 1; return {x: v.x / l, y: v.y / l}; };
 const sstep = (u: number) => { const c = Math.max(0, Math.min(1, u)); return c * c * (3 - 2 * c); };
-const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; top: P[]} => { // top: a highlight line along the blade
+export const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; top: P[]} => { // top: a highlight line along the blade
   const k = sstep(lift);
   const R = {x: -27, y: 5.0}, Q = {x: -18, y: 3.4}, H = {x: -10, y: 4.6}; // hinge further back: a gentler bend
   const tH = nrm({x: H.x - Q.x, y: H.y - Q.y});
@@ -70,7 +70,7 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
     const cross = a.t.x * b.t.y - a.t.y * b.t.x; // > 0: turning toward the "below" side; < 0: toward the top
     return cross / ds;
   });
-  const wTopRaw = spine.map((_, i) => (kap[i] < 0 ? Math.min(half(i), 0.7 / -kap[i]) : half(i)));
+  const wTopRaw = spine.map((_, i) => (kap[i] < 0 ? Math.min(half(i), 0.6 / -kap[i]) : half(i)));
   const wTop = wTopRaw.map((_, i) => { let acc = 0, ws = 0; for (let j = -4; j <= 4; j++) { const q = wTopRaw[Math.min(n, Math.max(0, i + j))]; acc += q * (5 - Math.abs(j)); ws += 5 - Math.abs(j); } return Math.min(acc / ws, half(i)); });
   const top: P[] = [], bot: P[] = [], hl: P[] = [];
   spine.forEach((q, i) => {
@@ -131,7 +131,10 @@ const tongueShape = (lift: number, cz: number, press: number): {outline: P[]; to
     }
     return q;
   };
-  const topClean = lapl(chaikin(lapl(noReversal(untangle(top)), 40), 3), 120);
+  // continuous smoothing only (a fixed number of points, so the outline cannot change shape between frames); the raw
+  // edge never folds (checked over the lift and slide range), so no point is ever removed
+  void untangle; void noReversal;
+  const topClean = lapl(chaikin(lapl(top, 60), 3), 260);
   // round caps: the tip (around T) and the root (around R)
   const cap = (c: V2, tg: V2, w: number, from: number, to: number) => Array.from({length: 23}, (_, j) => {
     const a = from + ((to - from) * (j + 1)) / 24;
