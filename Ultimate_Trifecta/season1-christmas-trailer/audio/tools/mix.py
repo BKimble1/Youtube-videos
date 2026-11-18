@@ -68,6 +68,7 @@ def main():
     ap.add_argument("--sfx-lufs", type=float, default=-21.5)
     ap.add_argument("--music-file")
     ap.add_argument("--music-offset", type=float, default=0.0)
+    ap.add_argument("--stems", help="also write FLAC stems here (music, sound design and its groups, at mix level before the bus)")
     a = ap.parse_args()
     meter = pyln.Meter(SR)
     if a.music_file:
@@ -91,6 +92,17 @@ def main():
     else:
         music = music * env_from(DUCKS, n)[:, None] * shape_env(n)[:, None]
         sfx = sfx * env_from(SFX_STOPS, n)[:, None]
+    if a.stems:
+        os.makedirs(a.stems, exist_ok=True)
+        sf.write(os.path.join(a.stems, "stem_music.flac"), music.astype(np.float32), SR, subtype="PCM_24")
+        sf.write(os.path.join(a.stems, "stem_sound_design.flac"), sfx.astype(np.float32), SR, subtype="PCM_24")
+        g = dsp.db(a.sfx_lufs - Ls)
+        for grp in ("amb", "foley", "fx", "radio", "trans"):
+            gp = os.path.join(a.sfx, f"sfx_{grp}.wav")
+            if os.path.exists(gp):
+                x = dsp.read(gp)
+                x = np.pad(x, ((0, max(0, n - len(x))), (0, 0)))[:n] * g
+                sf.write(os.path.join(a.stems, f"stem_sfx_{grp}.flac"), x.astype(np.float32), SR, subtype="PCM_24")
     mix = music + sfx
     mix = Pedalboard([HighpassFilter(22), Compressor(-14, 1.6, 20, 250), LowShelfFilter(80, 0.8), HighShelfFilter(10000, 0.6)])(mix.T.copy(), SR).T
     # loudness, then a true-peak limiter, then loudness again (the limiter only trims peaks)
