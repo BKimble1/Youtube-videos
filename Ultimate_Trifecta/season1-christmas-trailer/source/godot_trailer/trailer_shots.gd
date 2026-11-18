@@ -66,7 +66,7 @@ static func plaza_actors() -> Array:
 		],
 	}
 	var watch := {
-		"id": "watch", "role": "watch", "look": WATCH, "beam_rig": true, "beam_fwd": 0.3, "beam_energy": 12.0,
+		"id": "watch", "role": "watch", "look": WATCH, "beam_rig": true, "beam_fwd": 0.3, "beam_energy": 5.0,
 		# the beam sweeps the lawn, whips across the lens (A2's camera, 2.0 s)
 		# and lands on the hero
 		"beam_aim": [[-1.0, [13.0, 0.0, 41.0]], [1.68, [11.0, 0.0, 51.0]], [1.85, [1.0, 0.6, 38.0]], [1.95, [-1.4, 0.85, 43.4]],
