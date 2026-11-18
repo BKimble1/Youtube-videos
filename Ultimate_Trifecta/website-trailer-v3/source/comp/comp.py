@@ -90,7 +90,7 @@ class MotionBlur:
         f = self.dis.calc(self._g(a), self._g(b), None)
         f = cv2.resize(f, (self.w, self.h), interpolation=cv2.INTER_LINEAR) * 4.0
         m = np.sqrt(f[..., 0] ** 2 + f[..., 1] ** 2)
-        k = np.minimum(1.0, self.max / np.maximum(m, 1e-6))
+        k = np.minimum(1.0, float(self.max) / np.maximum(m, 1e-6)).astype(np.float32)
         return f * k[..., None]
 
     def apply(self, cur, prev, nxt, strength=1.0):
@@ -102,13 +102,18 @@ class MotionBlur:
             ff = -fb
         if fb is None:
             fb = -ff
-        acc = np.zeros(cur.shape, np.float32)
-        src = cur.astype(np.float32)
+        ff = ff.astype(np.float32)
+        fb = fb.astype(np.float32)
+        # skip the work where nothing moves (most of a frame)
+        if max(float(np.abs(ff).max()), float(np.abs(fb).max())) * self.shutter * strength < 0.5:
+            return cur
+        acc = np.zeros(cur.shape, np.uint16)
         ks = np.linspace(-0.5, 0.5, self.samples) * self.shutter * strength
         for k in ks:
+            k = float(k)
             f = ff * k if k >= 0 else fb * (-k)
-            acc += cv2.remap(src, self.xx + f[..., 0], self.yy + f[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-        return np.clip(acc / len(ks) + 0.5, 0, 255).astype(np.uint8)
+            acc += cv2.remap(cur, self.xx + f[..., 0], self.yy + f[..., 1], cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+        return ((acc + len(ks) // 2) // len(ks)).astype(np.uint8)
 
 
 def smooth(u):
