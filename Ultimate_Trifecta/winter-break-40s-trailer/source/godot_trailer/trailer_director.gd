@@ -1079,6 +1079,8 @@ func _update_camera() -> void:
 			p += Vector3(sin(kt * 61.0), cos(kt * 53.0), 0.0) * ka * 0.05
 			roll += sin(kt * 47.0) * ka * 0.8
 	cam.fov = fov
+	if shot.has("near_k"):
+		cam.near = _curve(shot["near_k"], t_out)
 	if p.distance_to(at) > 0.001:
 		var fwd := (at - p).normalized()
 		var up := Vector3.UP

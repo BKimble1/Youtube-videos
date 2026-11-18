@@ -104,6 +104,12 @@ def time_at_dist(keys, d, t_max=60.0):
     return hi
 
 
+def arrive(seg):
+    """set s0 so the route's end is reached exactly when the speed keys stop"""
+    seg["s0"] = Route(seg["pts"]).length - dist(seg["speed"], seg["speed"][-1][0])
+    return seg
+
+
 def yaw_to(a, b):
     return math.atan2(-(b[0] - a[0]), -(b[1] - a[1]))
 
@@ -179,7 +185,7 @@ def fountain_plan():
     seg_run, fx_jump, l_to, l_im = leap(X_LEAD, 19.45, T_RUN, RUN_KEYS)
     A["lead_to"], A["lead_im"] = l_to, l_im
     # under the water after the splash (the splash ducks under at +1.45)
-    l_surf = 12.35
+    l_surf = 12.9
     swim_pts = [[1.5, 25.9], [1.3, 26.8], [1.05, 27.55]]
     swim_v = 2.3
     l_climb = l_surf + Route(swim_pts).length / swim_v
@@ -380,7 +386,7 @@ def fountain_plan():
     t1 = max(tb, min(ts - 0.3, t1))
     k += [[t1, v_bend], [ts, 0.0]]
     # stage 2: away again at tau 8.75, round the far side, stop at s2 by t_stop2
-    t_go = 7.6 - t0c
+    t_go = 7.3 - t0c
     t_stop2 = A["l_down"] + 0.2 - t0c
     rem2 = s2 - s_near_end if False else None
     # recompute where the cart actually is at ts (keys so far)
@@ -396,12 +402,12 @@ def fountain_plan():
     A["cart_stop2"] = t_stop2 + t0c
     s_end = s0 + dist(k, t_stop2 + 1)
     A["cart_end"] = cr.at(s_end - s0 + s0) if False else cr.at(s_end)
-    t_click = A["l_down"] - 0.1 + 2.6 + 2.3     # the officer shot starts at l_down+2.5 (0:24.6): the click at 0:26.9
+    t_click = A["l_down"] - 0.1 + 2.3 + 2.3     # the officer shot starts at l_down+2.2 (0:24.6): the click at 0:26.9
     A["t_click"] = t_click
     cart = {"id": "cart", "index": 0, "pts": cart_pts, "t0": t0c, "s0": s0, "speed": k,
             "headlights": [[-20.0, 1.0], [t_click, 1.0], [t_click + 0.05, 0.0]],
             "beacon": [[-20.0, 1.0], [t_click, 1.0], [t_click + 0.04, 0.0]],
-            "hl_opts": {"energy": 16.0, "range": 28.0, "angle": 26.0, "tilt": 6.0, "beam_len": 11.0, "beam_radius": 2.2, "beam_glow": 0.2, "glare": 0.7}}
+            "hl_opts": {"energy": 16.0, "range": 28.0, "angle": 26.0, "tilt": 6.0, "beam_len": 11.0, "beam_radius": 2.2, "beam_glow": 0.14, "glare": 0.7}}
     officer = {
         "id": "officer", "role": "watch", "look": WATCH,
         "segs": [{"mode": "cart", "t0": -20.0, "cart": "cart"}],
@@ -454,9 +460,9 @@ def dorm_plan():
             {"mode": "hold", "t0": -9.0, "pos": [1.05, 0.0, 103.95], "yaw": 0.0},
             {"mode": "route", "t0": 2.72, "pts": [[1.05, 103.95], [0.55, 103.1], [0.3, 101.6], [-0.2, 99.0]], "speed": [[0.0, 0.6], [0.25, 1.9], [1.2, 2.6]]},
             # the return: through the door, then to the rug
-            {"mode": "route", "t0": 20.55, "pts": [[0.5, 96.5], [0.55, 101.5], [0.5, 103.4], [0.45, 104.9]], "s0": 0.0,
-             "speed": [[0.0, 6.2], [0.55, 6.2], [0.75, 2.2], [0.95, 0.0]]},
-            {"mode": "route", "t0": 23.9, "pts": [[0.45, 104.85], [0.4, 105.9], [0.35, 106.95]], "speed": [[0.0, 0.0], [0.3, 1.3], [1.1, 1.3], [1.45, 0.0]]},
+            arrive({"mode": "route", "t0": 20.55, "pts": [[0.5, 96.5], [0.55, 101.5], [0.5, 103.4], [0.45, 104.9]],
+             "speed": [[0.0, 6.2], [0.55, 6.2], [0.75, 2.2], [0.95, 0.0]]}),
+            arrive({"mode": "route", "t0": 23.9, "pts": [[0.45, 104.9], [0.4, 105.9], [0.35, 106.95]], "speed": [[0.0, 0.0], [0.3, 1.3], [1.1, 1.3], [1.45, 0.0]]}),
             {"mode": "hold", "t0": 25.35, "pos": [0.35, 0.0, 106.95], "yaw": PI},
         ],
         "fx": [
@@ -520,10 +526,10 @@ def dorm_plan():
             {"mode": "hold", "t0": -9.0, "pos": [-0.1, 0.0, 100.75], "yaw": -2.85},
             {"mode": "route", "t0": 3.25, "pts": [[-0.05, 100.95], [-0.6, 99.6], [-0.8, 96.0]], "speed": [[0.0, 0.0], [0.3, 1.8]]},
             # the return: first at the door, pulls the right leaf open and holds it
-            {"mode": "route", "t0": 19.0, "pts": [[0.6, 90.0], [1.3, 98.5], [1.75, 101.05]], "speed": [[0.0, 6.4], [0.62, 6.4], [0.95, 0.0]]},
-            {"mode": "hold", "t0": 19.95, "pos": [1.75, 0.0, 101.05], "yaw": 2.6},
-            {"mode": "route", "t0": 21.22, "pts": [[1.75, 101.05], [0.95, 102.2], [0.35, 103.6], [-0.85, 104.4]], "speed": [[0.0, 1.0], [0.2, 4.0], [0.6, 2.5], [0.85, 0.0]]},
-            {"mode": "route", "t0": 23.9, "pts": [[-0.85, 104.4], [-0.9, 105.6], [-0.85, 106.75]], "speed": [[0.0, 0.0], [0.3, 1.25], [1.2, 1.25], [1.55, 0.0]]},
+            arrive({"mode": "route", "t0": 19.0, "pts": [[0.6, 90.0], [1.2, 98.5], [1.5, 101.3]], "speed": [[0.0, 6.4], [0.62, 6.4], [0.95, 0.0]]}),
+            {"mode": "hold", "t0": 19.95, "pos": [1.5, 0.0, 101.3], "yaw": 2.6},
+            arrive({"mode": "route", "t0": 21.05, "pts": [[1.5, 101.3], [0.9, 102.3], [0.35, 103.6], [-0.6, 104.25]], "speed": [[0.0, 2.5], [0.18, 5.6], [0.5, 5.6], [0.85, 0.0]]}),
+            arrive({"mode": "route", "t0": 23.9, "pts": [[-0.6, 104.25], [-0.8, 105.6], [-0.85, 106.75]], "speed": [[0.0, 0.0], [0.3, 1.25], [1.2, 1.25], [1.55, 0.0]]}),
             {"mode": "hold", "t0": 25.45, "pos": [-0.85, 0.0, 106.75], "yaw": PI + 0.15},
         ],
         "fx": [
@@ -543,8 +549,8 @@ def dorm_plan():
             [19.9, {}],
             [20.3, {"upper_arm.L": [70, 0, 20], "forearm.L": [10, 0, 0], "head": [0, 20, 0]}],
             [20.6, {"upper_arm.L": [70, 0, 20], "forearm.L": [10, 0, 0], "upper_arm.R": [50, 0, -30], "forearm.R": [60, 0, 0], "head": [0, 35, 0]}],
-            [21.0, {"upper_arm.L": [70, 0, 20], "forearm.L": [10, 0, 0], "upper_arm.R": [40, 0, -20], "forearm.R": [90, 0, 0], "head": [0, -25, 0]}],
-            [21.3, {}],
+            [20.9, {"upper_arm.L": [70, 0, 20], "forearm.L": [10, 0, 0], "upper_arm.R": [40, 0, -20], "forearm.R": [90, 0, 0], "head": [0, -25, 0]}],
+            [21.15, {}],
             [22.0, {"spine": [-14, 0, 0], "head": [-6, 0, 0]}],
             [22.45, {"spine": [-10, 0, 0], "head": [-4, -30, 0]}],
             [23.35, {"spine": [-8, 0, 0], "head": [-4, -34, 0]}],
@@ -573,10 +579,10 @@ def dorm_plan():
     deer = {
         "id": "deer", "role": "runner", "look": DEER,
         "segs": [
-            {"mode": "hold", "t0": -9.0, "pos": [-0.5, 0.0, 99.25], "yaw": -2.75},
+            {"mode": "hold", "t0": -9.0, "pos": [-0.25, 0.0, 99.2], "yaw": -2.8},
             {"mode": "route", "t0": 3.1, "pts": [[-0.75, 99.65], [-0.9, 98.4], [-0.6, 96.0]], "speed": [[0.0, 0.0], [0.3, 1.9]]},
-            {"mode": "route", "t0": 19.7, "pts": [[-0.6, 92.0], [0.2, 99.0], [0.35, 103.3], [1.2, 105.2]], "speed": [[0.0, 6.3], [1.25, 6.3], [1.55, 2.0], [1.8, 0.0]]},
-            {"mode": "route", "t0": 23.95, "pts": [[1.2, 105.2], [1.5, 106.0], [1.55, 106.8]], "speed": [[0.0, 0.0], [0.3, 1.1], [1.0, 1.1], [1.3, 0.0]]},
+            arrive({"mode": "route", "t0": 19.7, "pts": [[-0.6, 92.0], [0.2, 99.0], [0.35, 103.3], [1.2, 105.2]], "speed": [[0.0, 6.3], [1.25, 6.3], [1.55, 2.0], [1.8, 0.0]]}),
+            arrive({"mode": "route", "t0": 23.95, "pts": [[1.2, 105.2], [1.5, 106.0], [1.55, 106.8]], "speed": [[0.0, 0.0], [0.3, 1.1], [1.0, 1.1], [1.3, 0.0]]}),
             {"mode": "hold", "t0": 25.3, "pos": [1.55, 0.0, 106.8], "yaw": PI - 0.15},
         ],
         "fx": [{"type": "turn", "t": 24.9, "dur": 0.45, "yaw": PI - 0.15, "until": 99.0}],
@@ -738,6 +744,10 @@ def build():
         {"t": t_imp + 0.6, "pos": [X_LEAD + 1.75, 0.4, 20.45], "at": [X_LEAD, 0.7, 19.45], "fov": 54.0, "ease": "out"},
     ]
     s8["kicks"] = [[t_imp, 1.4]]
+    # in the air the camera rides beside the fountain's north-east jet: a
+    # longer near plane drops that one close jet out of the lens (the lead
+    # stays 2.4 m or more away); back to normal before the camera drops low
+    s8["near_k"] = [[0.0, 0.08], [lt + 0.5, 0.08], [lt + 0.9, 1.7], [t_imp - 1.55, 1.7], [t_imp - 1.3, 0.08]]
     add("s08_leap", S8_T, 20.6, s8)
     # ---- 0:20.6-0:22 surfacing: the blue cap, the friends scrambling out ahead
     s11 = dict(fountain)
@@ -758,11 +768,11 @@ def build():
     add("s12_follow", 22.0, 24.6, s12)
     # ---- 0:24.6-0:28.5 the officer: watches them go, hand off the wheel, lights off
     s13 = dict(fountain)
-    s13["tau0"] = A["l_down"] - 0.1 + 2.6
+    s13["tau0"] = A["l_down"] - 0.1 + 2.3
     s13["arrows"] = s12["arrows"]
     s13["cam"] = [
-        {"t": 0.0, "pos": [4.4, 1.28, 39.0], "at": [-1.3, 1.2, 42.2], "fov": 28.0},
-        {"t": 3.9, "pos": [4.35, 1.28, 39.05], "at": [-1.3, 1.2, 42.2], "fov": 27.5},
+        {"t": 0.0, "pos": [4.7, 1.3, 39.3], "at": [-0.9, 1.15, 43.9], "fov": 38.0},
+        {"t": 3.9, "pos": [4.65, 1.3, 39.35], "at": [-0.9, 1.15, 43.9], "fov": 37.0},
     ]
     s13["lights"] = [{"type": "omni", "follow": {"rel": "officer", "off": [-0.2, 1.75, -1.1]}, "color": [0.8, 0.88, 1.0], "energy": 2.6, "range": 2.4},
                      {"type": "omni", "follow": {"rel": "officer", "off": [-1.2, 1.4, 0.4]}, "color": [1.0, 0.8, 0.6], "energy": 1.2, "range": 2.4}]

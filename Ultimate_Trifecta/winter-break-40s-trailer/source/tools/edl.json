@@ -72,20 +72,20 @@
  "info": {
   "lead_to": 9.197,
   "lead_im": 10.117,
-  "l_surf": 12.35,
-  "l_climb": 13.0947,
-  "l_down": 13.8247,
+  "l_surf": 12.9,
+  "l_climb": 13.6447,
+  "l_down": 14.3747,
   "deer_im": 10.1556,
   "elf_im": 10.307,
   "deer_down": 13.1903,
   "elf_down": 13.4513,
-  "cart_vmax": 9.8281,
-  "cart_stop2": 14.0247,
+  "cart_vmax": 8.3688,
+  "cart_stop2": 14.5747,
   "cart_end": [
    -1.3003,
    41.2818
   ],
-  "t_click": 18.6247,
+  "t_click": 18.8747,
   "cart_s0": -44.1445,
   "s8_speed": [
    [
