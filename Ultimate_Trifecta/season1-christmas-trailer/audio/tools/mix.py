@@ -2,8 +2,12 @@
 limiting and loudness.
 
     python3 mix.py MUSIC_DIR SFX_DIR OUT.wav [--lufs -14] [--tp -1.2]
+    python3 mix.py - SFX_DIR OUT.wav --music-file audio/music_src/Winter_Heist.mp3 --music-offset 0.16
 
 MUSIC_DIR/music_mix.wav (build_music.py), SFX_DIR/sfx_mix.wav (build_sfx.py).
+--music-file uses a finished track instead (it keeps its own dynamics: no
+section shape and no sound-design stop-downs); --music-offset trims its start
+so its beats land on the edit's 120 BPM grid.
 Writes OUT.wav (48 kHz, 24-bit, exactly 30.0 s) and OUT.json (loudness,
 true peak, the levels used).
 """
@@ -62,9 +66,17 @@ def main():
     ap.add_argument("--lufs", type=float, default=-14.0)
     ap.add_argument("--tp", type=float, default=-1.2)
     ap.add_argument("--sfx-lufs", type=float, default=-21.5)
+    ap.add_argument("--music-file")
+    ap.add_argument("--music-offset", type=float, default=0.0)
     a = ap.parse_args()
     meter = pyln.Meter(SR)
-    music = dsp.read(os.path.join(a.music, "music_mix.wav"))
+    if a.music_file:
+        import subprocess
+        raw = subprocess.run(["ffmpeg", "-v", "error", "-ss", f"{a.music_offset:.4f}", "-i", a.music_file, "-f", "f32le", "-ac", "2", "-ar", str(SR), "-"],
+                             capture_output=True, check=True).stdout
+        music = np.frombuffer(raw, np.float32).reshape(-1, 2).copy()
+    else:
+        music = dsp.read(os.path.join(a.music, "music_mix.wav"))
     sfx = dsp.read(os.path.join(a.sfx, "sfx_mix.wav"))
     n = secs(DUR)
     music = np.pad(music, ((0, max(0, n - len(music))), (0, 0)))[:n]
@@ -73,8 +85,12 @@ def main():
     Ls = meter.integrated_loudness(sfx.astype(np.float64))
     music = music * dsp.db(-16.0 - Lm)
     sfx = sfx * dsp.db(a.sfx_lufs - Ls)
-    music = music * env_from(DUCKS, n)[:, None] * shape_env(n)[:, None]
-    sfx = sfx * env_from(SFX_STOPS, n)[:, None]
+    if a.music_file:
+        # a finished track: only gentle ducks under the radio, the slow-motion splash and the shush
+        music = music * env_from([(t0, t1, d * 0.6) for t0, t1, d in DUCKS], n)[:, None]
+    else:
+        music = music * env_from(DUCKS, n)[:, None] * shape_env(n)[:, None]
+        sfx = sfx * env_from(SFX_STOPS, n)[:, None]
     mix = music + sfx
     mix = Pedalboard([HighpassFilter(22), Compressor(-14, 1.6, 20, 250), LowShelfFilter(80, 0.8), HighShelfFilter(10000, 0.6)])(mix.T.copy(), SR).T
     # loudness, then a true-peak limiter, then loudness again (the limiter only trims peaks)
@@ -87,7 +103,7 @@ def main():
     L = meter.integrated_loudness(mix.astype(np.float64))
     tp = true_peak_db(mix)
     sf.write(a.out, mix.astype(np.float32), SR, subtype="PCM_24")
-    rep = {"integrated_lufs": round(float(L), 2), "true_peak_dbtp": round(float(tp), 2), "music_in_lufs": round(float(Lm), 2), "sfx_in_lufs": round(float(Ls), 2),
+    rep = {"music": a.music_file or os.path.join(a.music, "music_mix.wav"), "music_offset_s": a.music_offset, "integrated_lufs": round(float(L), 2), "true_peak_dbtp": round(float(tp), 2), "music_in_lufs": round(float(Lm), 2), "sfx_in_lufs": round(float(Ls), 2),
            "sfx_target_lufs": a.sfx_lufs, "duration_s": DUR}
     json.dump(rep, open(os.path.splitext(a.out)[0] + ".json", "w"), indent=2)
     print(rep)
