@@ -137,4 +137,27 @@ QA_SECTION
 
 ## Known limits and open questions
 
-LIMITS_SECTION
+1. **The audio was checked by measurement, not by ear.** I can't listen to a mix. Instead
+   I checked the music and the mix with loudness curves, band balance, spectrograms and a
+   scan for clashing notes between parts, and lined every sound up against the engine's
+   event logs. Whether the hook is catchy enough, and whether the mix sits right on
+   phone speakers and on headphones, needs a human listen.
+2. **The orchestra is a General MIDI soundfont** (FluidR3_GM). It's fine for a review cut,
+   but it is the weakest link in the sound. The MIDI parts are in `audio/midi/`, so a
+   composer can re-voice them with a better orchestral library without changing the edit.
+3. **The police-radio chatter is generated sound effects.** It is garbled on purpose, with
+   no words to follow and no real call signs.
+4. **The Mobile renderer under software Vulkan** has no SSAO, screen-space reflections
+   or volumetric fog. The look comes from the game's own lighting plus the grade. With
+   a GPU, the same scene could add volumetric light shafts to the flashlight and the
+   door.
+5. **The four trailer-only staging items above** (snow, outdoor decorations, the arrow
+   path, the stronger beam) need your sign-off. They are the only places where the
+   trailer shows something the 2.2 build doesn't do in a match.
+6. **The hero's striped pajamas, nightcap and bunny slippers** are the look of the app
+   icon's runner. If that look should not appear before it's in the shop, it can be
+   swapped for any Season 1 outfit with one line in `trailer_shots.gd` and a re-render.
+7. **Sound effects credits:** generating the ElevenLabs effects used about 880 credits.
+8. **App integration has not been started**, as asked. A mobile cut would be a 1080p
+   (or 1280 × 720) H.264 or HEVC encode of this edit at about 6 to 8 Mb/s. It would play
+   once after the update, with a skip button and a persistent "seen" flag.
