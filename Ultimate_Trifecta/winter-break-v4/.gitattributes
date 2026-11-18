@@ -1,0 +1,9 @@
+# Git LFS uploads are unavailable in this environment (same rule as the FGW projects): store media as plain blobs.
+*.mp4 -filter -diff -merge -text
+*.wav -filter -diff -merge -text
+*.mp3 -filter -diff -merge -text
+*.m4a -filter -diff -merge -text
+*.flac -filter -diff -merge -text
+*.aac -filter -diff -merge -text
+*.part* -filter -diff -merge -text
+*.part* -filter -diff -merge -text
