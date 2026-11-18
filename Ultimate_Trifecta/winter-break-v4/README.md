@@ -95,6 +95,31 @@ Removed: the front-facing lineup and the separate shoe insert.
   - the snow landing
 - Audio was checked by measurement (sync peaks, loudness, score integrity, the waveform around every beat), not by ear.
 
-## Measured sync and QA
+## Measured sync and QA (on the exported MP4)
 
-See `qa/v4/report.json`.
+Full numbers are in `qa/v4/report.json`.
+
+**Format:** 990 frames, 1920×1080, 30 fps, 33.0 s.
+
+**Picture timing:**
+- Title first frame: 894 (29.800 s), in the CRF 16 master and the delivery copy.
+- Every cut lands on its EDL frame.
+- Relay click and headlights: 8.018.
+- Latch: 28.500.
+- Snow landing: 29.498.
+
+**Audio:**
+- Loudness: −14.01 LUFS integrated, −1.82 dBTP.
+- Score stem vs source: max difference 0.0, lag 0 samples.
+
+**Frame-by-frame checks:**
+
+| Check | Frames | What the frames show |
+|---|---|---|
+| Tyre B2 | 276–297 | The tyre sits on the paving with a contact shadow and crosses the seams. |
+| Tyre C3 | 492–510 | The tyres run on the paving beside the drift, with the spray trailing behind. |
+| Hand catch | 759–786 | The hands meet against the lit buildings at frame 764, Blue's hand closes on the reindeer's wrist at 767, then Blue takes the step back. |
+| Door clearance | 807–834 | The reindeer's trailing hoof crosses the threshold by frame 811 (27.03 s). The elf lets go of the leaf at 815 and follows it in, and only then does the leaf start to swing shut. |
+| Ending | 834–894 | Latch, headlight sweep across the glass, clump landing in the lower frame, eyes down, title. |
+
+**Not watched:** this pipeline cannot play audio, so the last 10 seconds were checked by measuring sync peaks, loudness and the waveform (`qa/v4/audio.png`), not by watching and listening.
