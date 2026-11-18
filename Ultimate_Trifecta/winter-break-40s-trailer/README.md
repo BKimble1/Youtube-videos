@@ -1,6 +1,6 @@
 # Ultimate Trifecta · Season 1: Winter Break: 40 s cinematic trailer (V1)
 
-**Review render:** `exports/Ultimate_Trifecta_Winter_Break_V1.mp4` (1920 × 1080, 30 fps, H.264 + AAC, 40.0 s).
+**Review render:** `exports/Ultimate_Trifecta_Winter_Break_V1.mp4` (1920 × 1080, 30 fps, H.264 17 Mb/s + AAC 320 kb/s, 40.0 s, −14 LUFS).
 
 The story: 3 a.m. at Moonbrook. Three friends in their holiday pajamas sneak out of
 Puddlesworth Hall's Christmas common room for one last plunge in Founders' Fountain.
@@ -21,6 +21,7 @@ A squeak, a look, and a hard cut to the title.
 | Generated sound effects (door latch soft and firm, wet slipper squeak) | `audio/sfx_src/generated/` |
 | Final mix and stems | `audio/mix/` |
 | QA (contact sheets, sync checks, audio analysis) | `qa/v1/` |
+| CRF 14 master (173 MB, in parts: `cat` them back together) | `backup/` |
 
 ## Rebuild
 

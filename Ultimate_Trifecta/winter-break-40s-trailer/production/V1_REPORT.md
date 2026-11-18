@@ -7,8 +7,8 @@ Review render: `exports/Ultimate_Trifecta_Winter_Break_V1.mp4`.
 | Runtime | 40.00 s (1,200 frames at 30 fps) |
 | Video | 1920 × 1080, H.264 High, yuv420p, BT.709; rendered at 60 fps and blended to 30 (180° shutter motion blur) |
 | Audio | AAC 48 kHz stereo, 320 kb/s |
-| Loudness | QA_LUFS LUFS integrated, QA_TP dBTP true peak (measured on the delivered file) |
-| Logo | first frame of the card is frame QA_LOGO_FRAME (QA_LOGO_T s); the music's accent attack starts at QA_ATTACK s |
+| Loudness | −14.0 LUFS integrated, −4.3 dBTP true peak (measured on the delivered file) |
+| Logo | first frame of the card is frame 1080 (36.000 s); the music's accent attack starts at 36.000 s |
 
 ## What I reviewed first
 
@@ -95,7 +95,21 @@ These are not in the 2.2 build as shipped:
 
 ## QA
 
-QA_SECTION
+Measured on the delivered file (`qa/v1/report.json`; contact sheet, sync-point strips and audio plot in `qa/v1/`).
+
+| Check | Result |
+|---|---|
+| Picture | 1920 × 1080, 30 fps, 1,200 frames, 40.000 s, H.264 High + AAC 320 kb/s |
+| Logo hit | first card frame **1080 = 0:36.000**; the music's accent attack starts at 36.000 s (peak 36.057 s) |
+| Score silences | 0:08.05–0:11.98 and 0:30.01–0:35.99: digital silence (−240 dB) |
+| Score restart | 11.990 s, on the first footfall (0:12.0) |
+| Score cut at the latch | last music sample 30.002 s; latch peak 30.000 s |
+| Splash | peak 20.025 s |
+| Squeak | peak 35.175 s, −16 dBFS in the SFX stem, against −65 dB RMS in the 0.4 s before it |
+| Loudness | −14.0 LUFS integrated, −4.3 dBTP |
+| Delivery encode | the 173 MB CRF 14 master re-encoded two-pass at 17 Mb/s to fit GitHub's 100 MB limit (86 MB); SSIM 0.985 against the master; logo still on frame 1080. The master is in `backup/` as parts. |
+
+**Muted pass.** Who hesitates: the lead's toe test and recoil on the rim (0:04–0:08), with the friends already set. Why they jump: the headlights climb the faces, the cart rounds the bend, the lead looks from the officer to the water and nods (0:08–0:12). Who jumps first: the lead launches through the foreground with the friends a beat behind (0:12–0:20). Where they run: the behind-runner shot with the green arrows to the lit dorm (0:22–0:24.6). The officer: the cart parked on the path, a clear run ahead of him, hand off the wheel, headlights off (0:24.6–0:28.5).
 
 ## Known limits and open questions
 

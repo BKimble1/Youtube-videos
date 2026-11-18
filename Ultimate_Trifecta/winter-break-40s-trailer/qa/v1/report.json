@@ -1,0 +1,20 @@
+{
+ "frames": 1200,
+ "fps": 30.0,
+ "logo_first_frame": 1080,
+ "logo_first_frame_time_s": 36.0,
+ "lufs_integrated": -14.01,
+ "true_peak_dbtp": -4.26,
+ "music_rms_db_0_8": -22.2,
+ "music_rms_db_8.05_11.98": -240.0,
+ "music_rms_db_30.01_35.99": -240.0,
+ "music_attack_after_35.9_s": 36.0,
+ "music_peak_after_35.9_s": 36.0566,
+ "music_restart_s": 11.9896,
+ "music_last_sound_before_latch_s": 30.0016,
+ "squeak_peak_s": 35.175,
+ "sfx_rms_db_before_squeak_34.6_35.0": -64.9,
+ "sfx_peak_db_squeak": -16.0,
+ "latch_peak_s": 30.0,
+ "splash_peak_s": 20.025
+}
