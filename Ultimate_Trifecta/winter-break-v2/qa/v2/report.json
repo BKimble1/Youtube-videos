@@ -1,0 +1,51 @@
+{
+ "frames": 990,
+ "fps": 30.0,
+ "size": [
+  1920,
+  1080
+ ],
+ "title_first_frame": 894,
+ "title_first_frame_s": 29.8,
+ "audio_dur_s": 33.003,
+ "lufs_integrated": -14.01,
+ "true_peak_dbtp": -1.89,
+ "score_stem_vs_source_max_abs_diff": 0.0,
+ "score_stem_len_s": 33.0,
+ "relay_click_peak_s_db": [
+  8.0179,
+  -12.5
+ ],
+ "latch_peak_s_db": [
+  28.5,
+  -6.8
+ ],
+ "snow_land_peak_s_db": [
+  29.7306,
+  -13.2
+ ],
+ "sfx_rms_db_before_snow_29.0_29.6": -46.9,
+ "sfx_rms_db_under_title_29.85_33": -67.6,
+ "chase_cuts_sfx_rms_before_after_db": {
+  "9.9": [
+   -31.6,
+   -33.9
+  ],
+  "12.0": [
+   -30.5,
+   -28.6
+  ],
+  "13.833": [
+   -25.3,
+   -25.0
+  ],
+  "15.4": [
+   -24.5,
+   -25.5
+  ],
+  "17.0": [
+   -24.5,
+   -23.9
+  ]
+ }
+}

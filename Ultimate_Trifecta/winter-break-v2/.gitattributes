@@ -5,3 +5,4 @@
 *.m4a -filter -diff -merge -text
 *.flac -filter -diff -merge -text
 *.aac -filter -diff -merge -text
+*.part* -filter -diff -merge -text
