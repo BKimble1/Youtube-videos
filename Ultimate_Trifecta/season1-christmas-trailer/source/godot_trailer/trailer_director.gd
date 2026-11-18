@@ -620,6 +620,8 @@ func _beam_rig(v: CharacterView, ad: Dictionary) -> void:
 		mount = Node3D.new()
 		add_child(mount)
 		_aims.append({"node": mount, "holder": holder, "keys": ad["beam_aim"]})
+	# a little past the lens, so the flashlight's own model can't shadow its beam
+	sp.position = Vector3(0, 0, -float(ad.get("beam_fwd", 0.0)))
 	mount.add_child(sp)
 	var cone := MeshInstance3D.new()
 	var cm := CylinderMesh.new()

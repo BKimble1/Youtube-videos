@@ -66,7 +66,7 @@ static func plaza_actors() -> Array:
 		],
 	}
 	var watch := {
-		"id": "watch", "role": "watch", "look": WATCH, "beam_rig": true,
+		"id": "watch", "role": "watch", "look": WATCH, "beam_rig": true, "beam_fwd": 0.3, "beam_energy": 12.0,
 		# the beam sweeps the lawn, whips across the lens (A2's camera, 2.0 s)
 		# and lands on the hero
 		"beam_aim": [[-1.0, [13.0, 0.0, 41.0]], [1.68, [11.0, 0.0, 51.0]], [1.85, [1.0, 0.6, 38.0]], [1.95, [-1.4, 0.85, 43.4]],
@@ -416,12 +416,13 @@ static func get_shot(id: String) -> Dictionary:
 					{"id": "frog", "role": "runner", "look": {"outfit": "frog", "skin": "tone3", "color": "lime"},
 						"segs": [{"mode": "route", "t0": -3.0, "pts": [[96.0, 32.0], [106.2, 32.0], [110.4, 32.0]], "s0": s0_for([[96.0, 32.0], [106.2, 32.0], [110.4, 32.0]], 3.47, SPRINT), "speed": [[0.0, SPRINT]]},
 							{"mode": "splash", "t0": 0.47, "pos": [110.4, -0.4, 32.0], "yaw": -PI * 0.5, "impact": TC.Impact.DIVE, "len": 1.5}],
-						"fx": [{"type": "dive", "t": -0.13, "dur": 0.6, "h": 0.7, "dy": -0.4}, {"type": "burst", "t": 0.47, "size": 0.8, "pos": [110.4, -0.4, 32.0]}]},
+						"fx": [{"type": "dive", "t": -0.13, "dur": 0.6, "h": 0.7, "dy": -0.4}, {"type": "burst", "t": 0.47, "size": 1.0, "pos": [110.4, -0.4, 32.0]}]},
 				],
 				"cam": [
-					{"t": 0.0, "pos": [104.4, 0.7, 36.4], "at": [108.6, 1.0, 32.0], "fov": 28.0},
-					{"t": 1.0, "pos": [105.2, 0.75, 36.8], "at": [110.4, 0.35, 32.0], "fov": 26.0},
+					{"t": 0.0, "pos": [114.8, 0.5, 35.2], "at": [108.0, 1.1, 32.0], "fov": 30.0},
+					{"t": 1.0, "pos": [114.4, 0.45, 34.9], "at": [110.4, 0.1, 32.0], "fov": 27.0},
 				],
+				"kicks": [[0.47, 0.5]],
 			}
 		"c8_hopout":
 			# 17.0-18.0: a cart skids to a stop; the Night Watch hops out and
@@ -461,9 +462,9 @@ static func get_shot(id: String) -> Dictionary:
 			return {
 				"dur": 2.0, "tau0": 0.0, "trees": [TREE], "actors": chase_actors(), "arrows": chase_arrows(),
 				"cam": [
-					{"t": 0.0, "pos": {"rel": "hero", "off": [-1.25, 0.36, -3.4]}, "at": {"rel": "hero", "off": [0.35, 1.0, 1.5]}, "fov": 44.0, "roll": 2.0},
-					{"t": 1.0, "pos": {"rel": "hero", "off": [-1.1, 0.32, -3.0]}, "at": {"rel": "hero", "off": [0.3, 1.0, 1.5]}, "fov": 44.0, "roll": -1.0},
-					{"t": 2.0, "pos": {"rel": "hero", "off": [-0.9, 0.42, -3.3]}, "at": {"rel": "hero", "off": [0.25, 1.0, 1.0]}, "fov": 46.0, "roll": 0.0},
+					{"t": 0.0, "pos": {"rel": "hero", "off": [1.25, 0.36, -3.4]}, "at": {"rel": "hero", "off": [-0.35, 1.0, 1.5]}, "fov": 44.0, "roll": -2.0},
+					{"t": 1.0, "pos": {"rel": "hero", "off": [1.1, 0.32, -3.0]}, "at": {"rel": "hero", "off": [-0.3, 1.0, 1.5]}, "fov": 44.0, "roll": 1.0},
+					{"t": 2.0, "pos": {"rel": "hero", "off": [0.9, 0.42, -3.3]}, "at": {"rel": "hero", "off": [-0.25, 1.0, 1.0]}, "fov": 46.0, "roll": 0.0},
 				],
 				"shake": 0.35,
 			}
