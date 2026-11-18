@@ -406,11 +406,12 @@ SNOW_B = (3.75, 76.2)              # that patch of snow
 B0 = [-0.3, 100.62]                # Blue, out on the porch to meet him (left hand out)
 B_PLANT = [-0.3, 100.32]           # one slipper planted forward
 B_BACK = [-0.25, 100.95]           # the backward step under the momentum
-D_CATCH = [-0.33, 99.32]           # the reindeer at the catch (his right forearm in Blue's left hand)
-EHOLD = [1.0, 101.95]              # the elf bracing the open R leaf (push plate)
+D_CATCH = [-0.95, 100.0]           # the reindeer passing Blue on his left: his left forearm in Blue's left hand
+EHOLD = [1.06, 101.99]              # the elf bracing the open R leaf (push plate)
 # backs to the doors (the L leaf stays shut; the R leaf is the way in)
 INSIDE = {"lead": [-0.15, 103.8], "deer": [-0.78, 104.18], "elf": [0.55, 103.42]}   # just inside the shut door, facing it
-R_PLATE = [-1.39, 1.08, 0.06]      # the R leaf's inner push plate (hinge-local)
+R_PLATE = [-1.39, 1.08, 0.06]
+R_EDGE = [-1.47, 0.8, 0.07]       # the R leaf's free edge, inner face (the brace grip)      # the R leaf's inner push plate (hinge-local)
 DOOR_R_HANDLE = 1.4                # m from the R hinge to the push plate / handle
 
 
@@ -460,15 +461,15 @@ def ending(actors, A):
                                                                   [TAU(T_SPRING) - t_out + 0.12, 5.2], [TAU(T_SPRING) - t_out + 0.32, 6.6], [TAU(T_SPRING) - t_out + 0.9, 7.4]]},
     ]
     # E4: the same run, now on the porch, slowing into Blue's hand
-    e4_pts = [[-0.15, 91.6], [-0.28, 95.5], [-0.33, 98.4], D_CATCH]
+    e4_pts = [[-0.15, 91.6], [-0.55, 95.5], [-0.88, 98.4], D_CATCH]
     e4 = Route(e4_pts)
     span = TAU(T_CATCH) - TAU(T_E4)
     v0 = 2 * e4.length / span - 2.2
     A["deer_e4_v0"] = v0
     # the momentum carries on into Blue's backward step
-    mom = [D_CATCH, [-0.3, 100.02]]
+    mom = [D_CATCH, [-0.92, 100.55]]
     # then led through the R leaf's opening and round to the door (L leaf) inside
-    in_pts = [[-0.3, 100.02], [0.05, 101.4], [0.45, 102.7], [0.5, 103.6], [0.2, 104.35], [-0.55, 104.3], INSIDE["deer"]]
+    in_pts = [[-0.92, 100.55], [-0.15, 101.6], [0.45, 102.7], [0.5, 103.6], [0.2, 104.35], [-0.55, 104.3], INSIDE["deer"]]
     ir = Route(in_pts)
     t_in0 = TAU(T_BACK) + 0.05
     t_in1 = TAU(T_CLEAR) + 0.55
@@ -489,6 +490,8 @@ def ending(actors, A):
         {"mode": "hold", "t0": t_in1, "pos": [INSIDE["deer"][0], 0.0, INSIDE["deer"][1]], "yaw": 0.0},
     ]
     tp_end = t_in1
+    deer["reach"] = [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "lead", "bone": "upper_arm.L", "off": [-0.15, -0.08, -0.15]},
+                      "w": [[TAU(T_CATCH) - 0.32, 0.0], [TAU(T_CATCH) - 0.04, 1.0], [TAU(T_BACK) + 0.12, 1.0], [TAU(T_BACK) + 0.4, 0.0]]}]
     deer["fx"] += [
         {"type": "dive", "t": td, "dur": 0.42, "h": 0.5},
         {"type": "yoff", "t": land, "dur": 99.0, "keys": [[land, 0.0], [land + 0.25, -0.3], [TAU(T_D3) - 0.3, -0.3], [TAU(T_D3), -0.2],
@@ -637,7 +640,7 @@ def ending(actors, A):
     lead["fx"] += [{"type": "turn", "t": t_pivot + 0.02, "dur": 0.3, "yaw": BY, "until": t_lin + 0.02},
                    {"type": "turn", "t": t_lin + 0.02, "dur": 0.4, "yaw": 0.0, "until": 999.0}]
     # the hand: Blue's left on the reindeer's right forearm
-    lead["reach"] = [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "deer", "bone": "forearm.R", "to_bone": "hand.R", "u": 0.55},
+    lead["reach"] = [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "deer", "bone": "forearm.L", "to_bone": "hand.L", "u": 0.7},
                       "w": [[TAU(T_CATCH) - 0.22, 0.0], [TAU(T_CATCH) - 0.01, 1.0], [TAU(T_CLEAR) - 0.4, 1.0], [TAU(T_CLEAR) - 0.12, 0.0]]}]
     reach = {"upper_arm.L": [78, 0, 8], "forearm.L": [8, 0, 0], "hand.L": [-10, 0, 0], "spine": [-8, 0, 0]}
     lp = [k for k in lead["pose"] if k[0] < A["lead_arrive"] - 0.6]
@@ -691,7 +694,7 @@ def ending(actors, A):
     elf["segs"] += [
         # the catch: a sidestep with the leaf as it swings wide
         arrive({"mode": "route", "t0": ta + 0.04, "pts": [ELF_DOOR, EHOLD], "speed": [[0.0, 0.0], [0.12, 2.0], [0.3, 0.0]], "yaw": -PI * 0.5}),
-        {"mode": "hold", "t0": ta + 0.34, "pos": [EHOLD[0], 0.0, EHOLD[1]], "yaw": yaw_to(EHOLD, plate_w)},
+        {"mode": "hold", "t0": ta + 0.34, "pos": [EHOLD[0], 0.0, EHOLD[1]], "yaw": yaw_to(EHOLD, [-0.45, 100.6])},
     ]
     t_ein = TAU(T_CLEAR) + 0.03
     ein = [EHOLD, [0.95, 102.8], INSIDE["elf"]]
@@ -704,12 +707,14 @@ def ending(actors, A):
     # hands: the outer pull handle for the yank, the inner push plate to brace it and to pull it home
     elf["reach"] += [
         {"arm": "R", "pole": [0.6, -1.0, 0.3], "to": {"door": "R", "local": [-1.39, 0.92, -0.12]},
-         "w": [[ta - 0.18, 0.0], [ta - 0.05, 1.0], [ta + 0.16, 1.0], [ta + 0.26, 0.0]]},
+         "w": [[ta - 0.18, 0.0], [ta - 0.05, 1.0], [ta + 0.16, 1.0], [ta + 0.24, 0.0]]},
+        {"arm": "R", "pole": [0.6, -1.0, 0.3], "to": {"door": "R", "local": R_EDGE},
+         "w": [[ta + 0.24, 0.0], [ta + 0.4, 1.0], [t_ein + 0.05, 1.0], [t_ein + 0.2, 0.0]]},
         {"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"door": "R", "local": R_PLATE},
-         "w": [[ta + 0.26, 0.0], [ta + 0.4, 1.0], [t_ein + 0.05, 1.0], [t_ein + 0.2, 0.0], [TAU_LATCH - 0.42, 0.0], [TAU_LATCH - 0.2, 1.0],
+         "w": [[TAU_LATCH - 0.42, 0.0], [TAU_LATCH - 0.2, 1.0],
                [TAU_LATCH + 0.12, 1.0], [TAU_LATCH + 0.35, 0.0]]},
     ]
-    brace = {"spine": [-10, 0, 0], "upper_arm.L": [70, 0, -10], "forearm.L": [10, 0, 0], "hand.L": [30, 0, 0]}
+    brace = {"spine": [-8, 0, 0], "upper_arm.R": [50, 0, 40], "forearm.R": [30, 0, 0], "hand.R": [20, 0, 0]}
     ep = [k for k in elf["pose"] if k[0] < ta - 0.6]
     ep += [
         [ta - 0.3, {"spine": [-6, 0, 0]}],
@@ -717,15 +722,15 @@ def ending(actors, A):
         # yanked: the leaf swings wide and the other hand catches it
         [ta + 0.12, {"upper_arm.R": [40, 0, 40], "forearm.R": [20, 0, 0], "spine": [6, 0, 0], "head": [0, 10, 0]}, "snap"],
         [ta + 0.4, dict(brace, head=[0, 30, 0], neck=[0, 8, 0])],
-        [ta + 0.8, dict(brace, head=[0, 55, 0], neck=[0, 14, 0])],
+        [ta + 0.8, dict(brace, head=[0, 12, 0], neck=[0, 4, 0])],
         # braced, watching the courtyard over the shoulder, the free arm waving him on
-        [TAU(T_SPRING) + 0.15, dict(brace, head=[4, 62, 0], neck=[0, 16, 0], **{"upper_arm.R": [20, 0, -110], "forearm.R": [0, 0, -30]})],
-        [TAU(T_SPRING) + 0.45, dict(brace, head=[4, 62, 0], neck=[0, 16, 0], **{"upper_arm.R": [60, 0, -70], "forearm.R": [80, 0, 0]})],
-        [TAU(T_SPRING) + 0.75, dict(brace, head=[4, 62, 0], neck=[0, 16, 0], **{"upper_arm.R": [20, 0, -110], "forearm.R": [0, 0, -30]})],
-        [TAU(T_E4) - 0.2, dict(brace, head=[4, 60, 0], neck=[0, 16, 0], **{"upper_arm.R": [60, 0, -70], "forearm.R": [80, 0, 0]})],
-        [TAU(T_E4) + 0.3, dict(brace, head=[4, 64, 0], neck=[0, 16, 0], **{"upper_arm.R": [20, 0, -110], "forearm.R": [0, 0, -30]})],
-        [TAU(T_CATCH) - 0.1, dict(brace, head=[2, 70, 0], neck=[0, 18, 0])],
-        [TAU(T_CLEAR) - 0.05, dict(brace, head=[0, 40, 0], neck=[0, 10, 0], spine=[-14, 0, 0])],
+        [TAU(T_SPRING) + 0.15, dict(brace, head=[4, 8, 0], neck=[0, 2, 0], **{"upper_arm.L": [20, 0, -110], "forearm.L": [0, 0, -30]})],
+        [TAU(T_SPRING) + 0.45, dict(brace, head=[4, 8, 0], neck=[0, 2, 0], **{"upper_arm.L": [60, 0, -70], "forearm.L": [80, 0, 0]})],
+        [TAU(T_SPRING) + 0.75, dict(brace, head=[4, 8, 0], neck=[0, 2, 0], **{"upper_arm.L": [20, 0, -110], "forearm.L": [0, 0, -30]})],
+        [TAU(T_E4) - 0.2, dict(brace, head=[4, 6, 0], neck=[0, 2, 0], **{"upper_arm.L": [60, 0, -70], "forearm.L": [80, 0, 0]})],
+        [TAU(T_E4) + 0.3, dict(brace, head=[4, 4, 0], neck=[0, 0, 0], **{"upper_arm.L": [20, 0, -110], "forearm.L": [0, 0, -30]})],
+        [TAU(T_CATCH) - 0.1, dict(brace, head=[2, 2, 0], neck=[0, 0, 0])],
+        [TAU(T_CLEAR) - 0.05, dict(brace, head=[0, -10, 0], neck=[0, -4, 0], spine=[-14, 0, 0])],
         # in behind him, a shove that starts the leaf swinging
         [t_ein + 0.15, {"spine": [-10, 0, 0], "upper_arm.L": [60, 0, -30], "forearm.L": [10, 0, 0]}],
         [t_ein + 0.5, {"spine": [-4, 0, 0], "head": [4, 0, 0]}],
@@ -1090,13 +1095,13 @@ D3_CAM = [{"t": 0.0, "pos": [-1.0, 0.95, 76.7], "at": [4.6, 0.8, 75.95], "fov": 
           {"t": T_SPRING - T_D3, "pos": [-1.0, 0.95, 76.7], "at": [4.3, 0.76, 76.1], "fov": 34.0},
           {"t": T_SPRING + 0.5 - T_D3, "pos": [-1.05, 0.95, 76.72], "at": [3.2, 0.66, 77.6], "fov": 36.0},
           {"t": T_E4 - T_D3, "pos": [-1.08, 0.95, 76.74], "at": [3.5, 0.6, 77.3], "fov": 35.0}]
-E4_CAM = [{"t": 0.0, "pos": [-3.2, 0.88, 99.7], "at": [-0.15, 0.85, 93.6], "fov": 38.0},
-          {"t": 0.8, "pos": [-3.2, 0.88, 99.7], "at": [-0.3, 0.88, 97.5], "fov": 36.0},
-          {"t": T_CATCH - 0.4 - T_E4, "pos": [-3.15, 0.88, 99.75], "at": [-0.3, 0.92, 99.75], "fov": 31.0},
-          {"t": T_BACK + 0.1 - T_E4, "pos": [-3.15, 0.88, 99.8], "at": [-0.25, 0.92, 100.15], "fov": 31.0},
-          {"t": 26.7 - T_E4, "pos": [-3.15, 0.88, 99.85], "at": [0.15, 0.9, 101.9], "fov": 37.0},
-          {"t": T_CLEAR - T_E4, "pos": [-3.15, 0.85, 99.9], "at": [0.45, 0.62, 103.2], "fov": 38.0},
-          {"t": T_E5 - T_E4, "pos": [-3.15, 0.85, 99.9], "at": [0.6, 0.8, 103.1], "fov": 38.0}]
+E4_CAM = [{"t": 0.0, "pos": [-2.6, 0.85, 102.2], "at": [-0.15, 0.85, 93.6], "fov": 38.0},
+          {"t": 0.8, "pos": [-2.6, 0.85, 102.2], "at": [-0.7, 0.88, 97.5], "fov": 36.0},
+          {"t": T_CATCH - 0.4 - T_E4, "pos": [-2.6, 0.85, 102.2], "at": [-0.6, 0.86, 100.1], "fov": 31.0},
+          {"t": T_BACK + 0.1 - T_E4, "pos": [-2.65, 0.85, 102.1], "at": [-0.5, 0.88, 100.6], "fov": 32.0},
+          {"t": 26.7 - T_E4, "pos": [-2.85, 0.85, 101.5], "at": [0.15, 0.9, 101.9], "fov": 37.0},
+          {"t": T_CLEAR - T_E4, "pos": [-3.0, 0.85, 101.0], "at": [0.45, 0.62, 103.2], "fov": 38.0},
+          {"t": T_E5 - T_E4, "pos": [-3.05, 0.85, 100.9], "at": [0.6, 0.8, 103.1], "fov": 38.0}]
 E3_CAM = [0.3, 0.2, 104.85]
 E3_AT = [0.66, 0.13, 103.8]
 
