@@ -125,6 +125,10 @@ staging for the trailer, not features of the game:
    waters and home, not with arrows on the ground.
 4. **The flashlight's visible beam and lens glare.** These are a stronger, aimed version of
    the Night Watch's real flashlight, so the beam reads on camera.
+5. **Close-up coins.** In the coins shot, the coin has a smoother edge and its face is
+   drawn like the game's own HUD coin icon: a darker rim, an engraved ring and a highlight.
+   The game's in-match coin is a glowing flat disc that reads well on a phone but looks
+   like a plain yellow circle when it passes the lens at 4K.
 
 If any of these should be added to the game, or toned down in the trailer, that is an easy change.
 
