@@ -247,7 +247,11 @@ static func get_shot(id: String) -> Dictionary:
 					{"id": "c2", "index": 1, "pts": [[-78.0, 60.0], [-78.0, -14.0], [78.0, -14.0]], "s0": 52.0, "speed": [[0.0, 10.0]]}],
 				"cam": [
 					{"t": 0.0, "pos": [2.6, 0.9, 20.9], "at": [0.0, 0.55, 18.4], "fov": 42.0},
-					{"t": 0.75, "pos": [5.0, 2.5, 12.6], "at": [0.0, 6.0, 22.0], "fov": 46.0},
+					# ease back on the hero's side of the near jet (it arcs over him
+					# in the frame, never across the lens), crane straight up above
+					# the jets, then out (checked: >1.5 m clear of every jet)
+					{"t": 0.5, "pos": [3.5, 1.6, 21.4], "at": [0.0, 0.6, 18.5], "fov": 42.0},
+					{"t": 1.1, "pos": [5.0, 5.5, 20.5], "at": [0.0, 3.5, 21.0], "fov": 46.0},
 					{"t": 2.0, "pos": [14.0, 15.0, -10.0], "at": [-2.0, 5.5, 30.0], "fov": 48.0, "ease": "inout"},
 					{"t": 3.75, "pos": [24.0, 22.5, -32.0], "at": [-6.0, 2.5, 44.0], "fov": 49.0},
 				],
@@ -334,6 +338,8 @@ static func get_shot(id: String) -> Dictionary:
 				"cam": [
 					{"t": 0.0, "pos": [-4.6, 0.95, 61.4], "at": [-0.6, 1.2, 66.2], "fov": 34.0},
 					{"t": 0.85, "pos": [-4.55, 0.95, 61.55], "at": [-1.4, 1.2, 65.9], "fov": 32.0, "ease": "inout"},
+					# tilt up with the leap so her head stays in frame at the apex
+					{"t": 1.22, "pos": [-4.52, 0.95, 61.65], "at": [-2.2, 1.72, 65.3], "fov": 33.5},
 					{"t": 2.0, "pos": [-4.5, 0.95, 61.7], "at": [-2.9, 0.95, 64.6], "fov": 30.0},
 				],
 				"dof": {"focus_on": [-1.6, 1.0, 65.0], "far_off": 4.0, "amount": 0.006},
