@@ -1,0 +1,10 @@
+{
+  "music": "../music_src/Winter_Heist.mp3",
+  "music_offset_s": 0.16,
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -1.5,
+  "music_in_lufs": -15.3,
+  "sfx_in_lufs": -16.49,
+  "sfx_target_lufs": -21.5,
+  "duration_s": 30.0
+}
