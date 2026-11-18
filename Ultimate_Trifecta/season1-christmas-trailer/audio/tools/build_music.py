@@ -97,13 +97,13 @@ def drums():
             place(sn, dsp.snare(0.2, seed=60 + i, vel=0.25 + 0.75 * (i / 22) ** 1.6, bright=0.6), tb(bb), 0.6)
     place(cy, dsp.reverse_crash(1.5, seed=51), tb(7.5) - 1.5, 0.55)
     # THE DROP (4.0 s) + theme A
-    place(hit, dsp.boom(3.5, f0=70, f1=30, seed=52), tb(8.0), 1.0)
+    place(hit, dsp.boom(3.5, f0=70, f1=38, seed=52), tb(8.0), 1.0)
     place(k, kick_big, tb(8.0), 1.0)
     place(cy, crash, tb(8.0), 0.8)
     groove(8.0, 3, four=True, hats16=False, taiko_ones=True, fill=True)
     # chaos (10-18 s): half-time trap feel with orchestral hits on the cuts
     place(cy, crash, tb(20.0), 0.6)
-    place(hit, dsp.boom(2.0, f0=65, f1=34, seed=53), tb(20.0), 0.7)
+    place(hit, dsp.boom(2.0, f0=65, f1=42, seed=53), tb(20.0), 0.7)
     for bar in range(4):
         b = 20.0 + bar * 4
         for bb, v in ((0, 1.0), (0.75, 0.7), (1.5, 0.85), (2.5, 0.8), (3.25, 0.6)):
@@ -128,7 +128,7 @@ def drums():
         place(sn, dsp.snare(0.18, seed=80 + i, vel=0.3 + 0.7 * (i / 24) ** 1.5, bright=0.7), tb(bb), 0.7)
     place(cy, dsp.reverse_crash(1.75, seed=55), tb(35.5) - 1.75, 0.6)
     # the chase (18-21 s): four on the floor, 16th toms, then the splash at 21.0
-    place(hit, dsp.boom(2.5, f0=68, f1=32, seed=56), tb(36.0), 0.9)
+    place(hit, dsp.boom(2.5, f0=68, f1=40, seed=56), tb(36.0), 0.9)
     place(cy, crash, tb(36.0), 0.7)
     for i in range(6):
         place(k, kick if i % 2 else kick_big, tb(36.0 + i), 0.95)
@@ -139,20 +139,20 @@ def drums():
     for i in range(12):
         place(ht, ho if i % 2 else hc, tb(36.0 + i * 0.5), 0.35)
     # splash (21.0 s): impact, then heartbeats under the slow motion
-    place(hit, dsp.boom(3.0, f0=60, f1=26, seed=57, dist=2.2), tb(42.0), 1.0)
+    place(hit, dsp.boom(3.0, f0=60, f1=38, seed=57, dist=2.2), tb(42.0), 1.0)
     place(cy, dsp.crash(3.0, seed=58), tb(42.0), 0.5)
     hb = dsp.heartbeat()
     place(k, hb, tb(42.0) + 0.25, 0.9)
     place(k, hb, tb(42.0) + 0.95, 0.75)
     place(cy, dsp.reverse_crash(1.0, seed=59), tb(44.0) - 1.0, 0.75)
     # key change (22.0 s): the biggest groove
-    place(hit, dsp.boom(3.0, f0=72, f1=30, seed=61), tb(44.0), 1.0)
+    place(hit, dsp.boom(3.0, f0=72, f1=38, seed=61), tb(44.0), 1.0)
     place(k, kick_big, tb(44.0), 1.0)
     place(cy, crash, tb(44.0), 0.85)
     groove(44.0, 2, four=True, hats16=True, taiko_ones=True, fill=True)
     place(cy, dsp.crash(2.0, seed=62), tb(48.0), 0.45)
     # climax (26.0 s): impact, crash; the arrival hit (26.5 s)
-    place(hit, dsp.boom(2.2, f0=66, f1=30, seed=63), tb(52.0), 0.95)
+    place(hit, dsp.boom(2.2, f0=66, f1=38, seed=63), tb(52.0), 0.95)
     place(k, kick_big, tb(52.0), 1.0)
     place(cy, crash, tb(52.0), 0.9)
     place(tk, taiko, tb(52.0), 1.0)
@@ -161,7 +161,7 @@ def drums():
     for i in range(8):
         place(sn, dsp.snare(0.2, seed=100 + i, vel=0.4 + i * 0.07), tb(53.0 + i * 0.125), 0.55)
     # 27.75-28.0: silence.  LOGO (28.0 s)
-    place(hit, dsp.boom(3.2, f0=74, f1=28, seed=64, dist=2.4), tb(56.0), 1.15)
+    place(hit, dsp.boom(3.2, f0=74, f1=38, seed=64, dist=2.4), tb(56.0), 1.15)
     place(k, kick_big, tb(56.0), 1.05)
     place(tk, taiko, tb(56.0), 1.1)
     place(cy, dsp.crash(4.0, seed=65), tb(56.0), 1.0)
@@ -354,7 +354,7 @@ def main(out):
     for s_name, x in proc.items():
         dsp.write(os.path.join(out, "stems", f"{s_name}.wav"), x)
     mix = sum(proc.values())
-    mix = bus(mix, [HighpassFilter(25), Compressor(-20, 2.2, 12, 180), LowShelfFilter(90, 1.5), HighShelfFilter(9000, 1.0)])
+    mix = bus(mix, [HighpassFilter(32), HighpassFilter(32), Compressor(-20, 2.2, 12, 180), LowShelfFilter(60, -2.5), PeakFilter(3200, 1.5, 0.8), HighShelfFilter(9000, 1.5)])
     L = meter.integrated_loudness(mix.astype(np.float64))
     mix = mix * dsp.db(-16.0 - L)
     dsp.write(os.path.join(out, "music_mix.wav"), mix)

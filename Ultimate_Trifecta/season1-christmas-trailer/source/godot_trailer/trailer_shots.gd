@@ -461,9 +461,9 @@ static func get_shot(id: String) -> Dictionary:
 			return {
 				"dur": 2.0, "tau0": 0.0, "trees": [TREE], "actors": chase_actors(), "arrows": chase_arrows(),
 				"cam": [
-					{"t": 0.0, "pos": {"rel": "hero", "off": [-0.35, 0.34, -3.3]}, "at": {"rel": "hero", "off": [0.1, 0.95, 0.0]}, "fov": 44.0, "roll": 2.0},
-					{"t": 1.0, "pos": {"rel": "hero", "off": [-0.15, 0.3, -2.8]}, "at": {"rel": "hero", "off": [0.05, 1.0, 0.0]}, "fov": 44.0, "roll": -1.0},
-					{"t": 2.0, "pos": {"rel": "hero", "off": [0.3, 0.42, -3.2]}, "at": {"rel": "hero", "off": [0.0, 1.0, 0.0]}, "fov": 46.0, "roll": 0.0},
+					{"t": 0.0, "pos": {"rel": "hero", "off": [-1.25, 0.36, -3.4]}, "at": {"rel": "hero", "off": [0.35, 1.0, 1.5]}, "fov": 44.0, "roll": 2.0},
+					{"t": 1.0, "pos": {"rel": "hero", "off": [-1.1, 0.32, -3.0]}, "at": {"rel": "hero", "off": [0.3, 1.0, 1.5]}, "fov": 44.0, "roll": -1.0},
+					{"t": 2.0, "pos": {"rel": "hero", "off": [-0.9, 0.42, -3.3]}, "at": {"rel": "hero", "off": [0.25, 1.0, 1.0]}, "fov": 46.0, "roll": 0.0},
 				],
 				"shake": 0.35,
 			}

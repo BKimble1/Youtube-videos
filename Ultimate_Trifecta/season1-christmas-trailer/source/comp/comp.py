@@ -108,12 +108,12 @@ class Look:
         # bloom (two scales) from the bright parts
         sw, sh = self.w // 4, self.h // 4
         small = cv2.resize(x, (sw, sh), interpolation=cv2.INTER_AREA)
-        lum = small.max(axis=2, keepdims=True)
-        bright = small * np.clip((lum - 0.62) / 0.38, 0, 1)
+        lum = (small @ np.array([0.2126, 0.7152, 0.0722], np.float32))[..., None]
+        bright = small * np.clip((lum - 0.84) / 0.16, 0, 1) ** 1.5
         b1 = cv2.GaussianBlur(bright, (0, 0), sw * 0.006)
         b2 = cv2.GaussianBlur(bright, (0, 0), sw * 0.025)
         bl = cv2.resize(b1 * 0.55 + b2 * 0.45, (self.w, self.h), interpolation=cv2.INTER_LINEAR)
-        x = x + bl * 0.42 * bloom
+        x = x + bl * 0.30 * bloom
         # tone curve via LUT
         q = np.clip(x * 255.0, 0, 255).astype(np.uint8)
         y = np.empty_like(x)

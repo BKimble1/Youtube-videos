@@ -659,9 +659,9 @@ func _beam_rig(v: CharacterView, ad: Dictionary) -> void:
 func _burst(pos: Vector3, size: float) -> void:
 	var sets := [
 		# amount, spread, vmin, vmax, scale, lifetime, dir
-		[int(260 * size), 62.0, 3.0, 6.5, 1.0, 1.3, Vector3.UP],
-		[int(120 * size), 16.0, 6.0, 9.5, 1.3, 1.5, Vector3.UP],
-		[int(90 * size), 88.0, 1.5, 3.2, 0.8, 0.9, Vector3.UP],
+		[int(520 * size), 62.0, 3.0, 6.5, 1.0, 1.3, Vector3.UP],
+		[int(220 * size), 16.0, 6.0, 9.5, 1.3, 1.5, Vector3.UP],
+		[int(180 * size), 88.0, 1.5, 3.2, 0.8, 0.9, Vector3.UP],
 	]
 	for st in sets:
 		var p := CPUParticles3D.new()
@@ -679,11 +679,12 @@ func _burst(pos: Vector3, size: float) -> void:
 		p.scale_amount_min = 0.5 * float(st[4])
 		p.scale_amount_max = 1.3 * float(st[4])
 		var sm := SphereMesh.new()
-		sm.radius = 0.045
-		sm.height = 0.09
-		sm.radial_segments = 8
-		sm.rings = 4
+		sm.radius = 0.022
+		sm.height = 0.11
+		sm.radial_segments = 12
+		sm.rings = 6
 		p.mesh = sm
+		p.particle_flag_align_y = true
 		p.material_override = _drop_mat()
 		p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		add_child(p)
@@ -699,7 +700,7 @@ func _drop_mat() -> StandardMaterial3D:
 		_drop_m = StandardMaterial3D.new()
 		_drop_m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		_drop_m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		_drop_m.albedo_color = Color(0.86, 0.94, 1.0, 0.88)
+		_drop_m.albedo_color = Color(0.82, 0.92, 1.0, 0.72)
 	return _drop_m
 
 

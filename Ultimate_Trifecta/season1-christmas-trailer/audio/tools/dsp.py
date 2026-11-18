@@ -174,7 +174,7 @@ def kick(dur=0.5, f0=150.0, f1=46.0, punch=1.0, seed=1):
     return st(x * 0.9)
 
 
-def boom(dur=3.0, f0=62.0, f1=31.0, seed=2, dist=1.8):
+def boom(dur=3.0, f0=66.0, f1=40.0, seed=2, dist=1.8):
     """Trailer impact: a sub drop, a noise thump and a long low tail."""
     n = secs(dur)
     t = np.arange(n) / SR
@@ -300,7 +300,7 @@ def bass_note(f, dur, vel=1.0, drive=1.6, cutoff=900.0):
     n = secs(dur)
     t = np.arange(n) / SR
     saw = signal.sawtooth(2 * np.pi * f * t) + 0.6 * signal.sawtooth(2 * np.pi * f * 1.004 * t + 1.0)
-    sub = np.sin(2 * np.pi * f * 0.5 * t) * 1.2
+    sub = np.sin(2 * np.pi * f * t) * 0.9
     e = np.minimum(1.0, t / 0.004) * np.exp(-t / max(dur * 0.9, 0.08))
     rel = secs(0.02)
     e[-rel:] *= np.linspace(1, 0, rel)
@@ -339,7 +339,7 @@ def whoosh(dur=0.6, f0=300.0, f1=3000.0, seed=14, peak=0.55, pan0=-0.6, pan1=0.6
     return x.astype(np.float32)
 
 
-def sub_drop(dur=1.5, f0=70.0, f1=28.0):
+def sub_drop(dur=1.5, f0=72.0, f1=38.0):
     n = secs(dur)
     t = np.arange(n) / SR
     f = f1 + (f0 - f1) * np.exp(-t / (dur * 0.3))
