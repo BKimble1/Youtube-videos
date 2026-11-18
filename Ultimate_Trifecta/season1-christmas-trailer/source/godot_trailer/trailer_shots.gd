@@ -294,7 +294,7 @@ static func get_shot(id: String) -> Dictionary:
 			# 8.50-10.00: low and alongside: Snow Day sweeps a line of coins
 			return {
 				"dur": 1.5, "tau0": 0.0, "trees": [TREE],
-				"props": [{"id": "coins", "kind": "coins", "pts": [[15.0, 22.0], [17.5, 22.0], [20.0, 22.0], [22.5, 22.0], [25.0, 22.0], [27.5, 22.0], [30.0, 22.0], [32.5, 22.0]],
+				"props": [{"id": "coins", "kind": "coins", "coin_glow": 0.3, "pts": [[15.0, 22.0], [17.5, 22.0], [20.0, 22.0], [22.5, 22.0], [25.0, 22.0], [27.5, 22.0], [30.0, 22.0], [32.5, 22.0]],
 					"take": [[0, 0.07], [1, 0.43], [2, 0.79], [3, 1.14], [4, 1.5], [5, 1.86], [6, 2.21], [7, 2.57]]}],
 				"actors": [
 					{"id": "snowday", "role": "runner", "look": SNOWDAY,

@@ -471,6 +471,15 @@ func _build_prop(pd: Dictionary) -> void:
 			add_child(hb)
 			node = hb
 		"coins":
+			if pd.has("coin_glow"):
+				# trailer close-ups: a rounder coin and less glow, so the gold
+				# shading and the raised centre read at 4K (the game's coin is
+				# built for a phone screen)
+				CoinView._mesh = _smooth_coin_mesh()
+				var cmat := ShaderMaterial.new()
+				cmat.shader = preload("res://src/dev/trailer/trailer_coin.gdshader")
+				cmat.set_shader_parameter("glow", float(pd["coin_glow"]))
+				CoinView._mat = cmat
 			var cv := CoinView.new()
 			add_child(cv)
 			var list: Array = []
@@ -478,6 +487,9 @@ func _build_prop(pd: Dictionary) -> void:
 				var c: Array = pd["pts"][i]
 				list.append({"id": i, "x": float(c[0]), "z": float(c[1])})
 			cv.setup(list)
+			if pd.has("coin_glow") and CoinView._spark_mat:
+				CoinView._spark_mat.albedo_texture = Fx.soft_texture()
+				CoinView._spark_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 			node = cv
 		_:
 			return
@@ -1181,3 +1193,33 @@ func _finish() -> void:
 		fa.close()
 	printerr("TRAILER done %s" % shot_id)
 	get_tree().quit()
+
+
+## The game's coin (a rim disc with a raised centre) with more segments, for
+## the trailer's close passes.
+static func _smooth_coin_mesh() -> ArrayMesh:
+	var out := ArrayMesh.new()
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	var v := PackedVector3Array()
+	var n := PackedVector3Array()
+	for part in [[0.34, 0.075], [0.24, 0.1]]:
+		var cm := CylinderMesh.new()
+		cm.top_radius = part[0]
+		cm.bottom_radius = part[0]
+		cm.height = part[1]
+		cm.radial_segments = 64
+		cm.rings = 1
+		var a: Array = cm.get_mesh_arrays()
+		var idx: PackedInt32Array = a[Mesh.ARRAY_INDEX]
+		var pv: PackedVector3Array = a[Mesh.ARRAY_VERTEX]
+		var pn: PackedVector3Array = a[Mesh.ARRAY_NORMAL]
+		for i in idx:
+			var p: Vector3 = pv[i]
+			var q: Vector3 = pn[i]
+			v.append(Vector3(p.x, -p.z, p.y))
+			n.append(Vector3(q.x, -q.z, q.y))
+	arrays[Mesh.ARRAY_VERTEX] = v
+	arrays[Mesh.ARRAY_NORMAL] = n
+	out.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return out
