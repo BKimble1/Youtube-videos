@@ -23,7 +23,7 @@ import logo as logo_mod  # noqa: E402
 
 # transitions at each cut (by the incoming clip's name)
 TRANS = {
-    "a3_caught": ("flash", 0.0, 6), "b1_drop": ("punch", 0.0, 8), "b2_dorm": ("whip", 1.0, 5), "b3_rift": ("whip", -1.0, 5),
+    "a3_caught": ("flash", 0.0, 6), "b1_drop": ("punch", 0.0, 8), "b2_dorm": ("whip", 1.0, 5), "b3_rift": ("whip", -1.0, 5), "b4_coins": ("whip", 1.0, 6),
     "c1_cart": ("punch", 0.0, 7), "c3_pond": ("whip", 1.0, 4), "c5_shield": ("punch", 0.0, 6), "c6_cartchase": ("whip", -1.0, 4),
     "d1_front": ("punch", 0.0, 8), "d3_splash": ("flash", 0.35, 4), "d4_home_reveal": ("punch", 0.0, 7), "d5_door": ("whip", 1.0, 5),
 }
