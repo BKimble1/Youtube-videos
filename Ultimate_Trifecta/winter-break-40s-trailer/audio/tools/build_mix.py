@@ -309,7 +309,7 @@ def cart_motor(bus):
     sig = sig * gains
     # distance tone (block-stepped one-pole)
     sig = varlp(sig[None, :], np.convolve(cuts, k, mode="same"))[0]
-    bus.add(sig.astype(np.float32), 0.0, gain_db=-3.0, pan=-0.15)
+    bus.add(sig.astype(np.float32), 0.0, gain_db=1.5, pan=-0.15)
     # restarts: the cart pulling away from the bend (tau 7.6)
     t_go = 4.10 + 7.6
     bus.add(trim(start) * 0.6, t_go - 0.05, gain_db=-14.0, pan=-0.5)
@@ -424,7 +424,7 @@ def build_sfx(shots_dir):
     whs = librosa.effects.time_stretch(wh, rate=0.45)
     whs = librosa.effects.pitch_shift(whs, sr=SR, n_steps=-5)
     to = A["s8_takeoff_T"]
-    bus.add(lp(whs, 3000), to - 0.05, gain_db=-14.0, pan=0.2)
+    bus.add(lp(whs, 3000), to - 0.05, gain_db=-24.0, pan=0.2)
     # a long held air/whoosh bed under the flight
     air = lp(hp(rng.standard_normal(int(6.2 * SR)).astype(np.float32), 200), 1200) * np.sin(np.linspace(0, math.pi, int(6.2 * SR))) ** 0.7
     bus.add(air, to + 0.1, gain_db=-34.0)

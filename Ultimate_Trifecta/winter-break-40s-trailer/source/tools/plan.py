@@ -152,7 +152,7 @@ LINE_Z = 9.6
 X_LEAD, X_DEER, X_ELF = 1.45, 0.1, -1.3      # east to west along the line
 TEST_X = 0.75                                  # where the lead tests the water (on the rim)
 RIM_Z = 15.72                                  # rim centre line on the north side
-T_RUN = 7.86                                   # the lead's first running step (tuned to the footfall at 0:12)
+T_RUN = 7.593                                   # the lead's first running step (tuned to the footfall at 0:12)
 RUN_KEYS = [[0.0, 0.0], [0.25, 3.2], [0.9, 5.0]]
 TAKEOFF_Z = 14.85
 
@@ -246,14 +246,14 @@ def fountain_plan():
             # the light: eyes and head track it (it comes from the west, their right)
             [4.2, {"head": [4, -42, 0], "neck": [0, -10, 0], "spine": [3, 0, 0]}],
             [5.5, {"head": [4, -58, 0], "neck": [0, -14, 0], "spine": [3, 0, 0]}],
-            [6.75, {"head": [4, -58, 0], "neck": [0, -14, 0]}],
+            [6.65, {"head": [4, -58, 0], "neck": [0, -14, 0]}],
             # one look at the water
-            [7.05, {"head": [-14, 4, 0], "neck": [0, 0, 0]}],
-            [7.3, {"head": [-12, 0, 0]}],
+            [6.92, {"head": [-14, 4, 0], "neck": [0, 0, 0]}],
+            [7.12, {"head": [-12, 0, 0]}],
             # a tiny nod
-            [7.42, {"head": [-22, 0, 0]}],
-            [7.56, {"head": [-4, 0, 0]}],
-            [7.86, {"head": [2, 0, 0], "spine": [-6, 0, 0]}],
+            [7.24, {"head": [-22, 0, 0]}],
+            [7.38, {"head": [-4, 0, 0]}],
+            [7.6, {"head": [2, 0, 0], "spine": [-6, 0, 0]}],
             [8.3, {}],
             # in the air: arms up and out, then tuck for the cannonball
             [l_to + 0.08, {}],
@@ -273,9 +273,9 @@ def fountain_plan():
             [3.3, {"brow_up": 0.3, "open": 0.1, "squint": 0.0}],
             [3.65, {"brow_up": 0.5, "smile": 0.0}],
             [3.95, {"brow_up": 1.0, "open": 0.7}],
-            [6.7, {"brow_up": 0.9, "open": 0.5}],
-            [7.05, {"brow_up": 0.4, "open": 0.0, "brow_angry": 0.2}],
-            [7.5, {"brow_angry": 0.8, "smile": 0.25, "squint": 0.2}],
+            [6.6, {"brow_up": 0.9, "open": 0.5}],
+            [6.92, {"brow_up": 0.4, "open": 0.0, "brow_angry": 0.2}],
+            [7.3, {"brow_angry": 0.8, "smile": 0.25, "squint": 0.2}],
             [8.2, {"brow_angry": 0.9, "smile": 0.3}],
             [l_to + 0.1, {"smile": 1.0, "open": 0.7, "squint": 0.6}],
             [l_im - 0.15, {"smile": 0.4, "open": 0.2, "squint": 1.0}],
@@ -703,18 +703,19 @@ def build():
         {"t": 0.0, "pos": [11.0, 2.2, 9.4], "at": [-0.6, 0.7, 13.0], "fov": 42.0},
         {"t": 1.0, "pos": [10.9, 2.15, 9.7], "at": [-0.4, 0.7, 13.8], "fov": 41.0},
     ]
+    s7["speed"] = [[0.0, 1.0], [0.4, 1.0], [S8_T - 12.0, 0.55]]
     add("s07_wide", 12.0, S8_T, s7)
     # ---- 0:13-0:20.6 track alongside, takeoff, the flight in slow motion, impact at 0:20
     s8 = dict(fountain)
-    tau0_8 = S8_T - FT
+    tau0_8 = tau_at(S8_T - 12.0, s7["speed"], s7["tau0"])
     # speed keys (output seconds in the shot): real time for the last strides,
     # into slow motion before the takeoff, through the flight, back up a
     # little for the impact; the last segment's rate is solved so the lead's
     # impact lands at exactly 0:20.
-    base = [[0.0, 1.0], [0.3, 0.8], [0.62, 0.55]]
+    base = [[0.0, 0.55], [0.45, 0.38]]
     t_imp = 20.0 - S8_T
     def mk(x):
-        return base + [[1.05, x], [t_imp - 0.12, x], [t_imp + 0.06, 0.5], [t_imp + 0.6, 0.7]]
+        return base + [[1.2, x], [t_imp - 0.12, x], [t_imp + 0.06, 0.5], [t_imp + 0.6, 0.7]]
     def solve():
         lo, hi = 0.03, 0.6
         for _ in range(60):

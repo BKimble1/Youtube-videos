@@ -143,7 +143,7 @@ def card(t, rng):
         rgb = rgb + band * 0.35 * (rgb.max(axis=2, keepdims=True) > 0.15)
     out = bg * (1 - a) + rgb * a
     # a hit of light on the first frames (the musical accent), decaying
-    flash = math.exp(-t * 9.0) * 0.16
+    flash = math.exp(-t * 10.0) * 0.10
     out = out + flash
     # faint snow drifting behind
     out = out + SNOW(t)
@@ -186,7 +186,7 @@ def SNOW(t):
 class Clip:
     def __init__(self, path, fps_in):
         self.cap = cv2.VideoCapture(path)
-        self.fps_in = fps_in
+        self.fps_in = round(self.cap.get(cv2.CAP_PROP_FPS)) or fps_in
         self.n = int(self.cap.get(cv2.CAP_PROP_FRAME_COUNT))
         self.idx = -1
         self.last = None
@@ -246,13 +246,13 @@ def main():
                 opened = {sid: Clip(path, a.fps_in)}
             cl = opened[sid]
             lt = t - st
-            if a.fps_in == 60:
+            if cl.fps_in >= 59:
                 k = int(round(lt * 60))
                 f0 = cl.frame(k).astype(np.float32)
                 f1 = cl.frame(k + 1).astype(np.float32)
                 f = (f0 + f1) * 0.5
             else:
-                f = cl.frame(int(round(lt * a.fps_in))).astype(np.float32)
+                f = cl.frame(int(round(lt * cl.fps_in))).astype(np.float32)
             if f.shape[1] != W:
                 f = cv2.resize(f, (W, H), interpolation=cv2.INTER_CUBIC)
             img = f / 255.0
