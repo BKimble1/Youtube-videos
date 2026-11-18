@@ -269,8 +269,9 @@ def main(edl_path, evdir, out):
     place(S["fx"], shush(0.62), 26.98, 0.65)
 
     # ---------------------------------------------------------------- transitions
-    for tcut in (5.5, 7.0, 12.0, 15.0, 24.5):
-        wh = load(["whoosh_1", "whoosh_4", "whoosh_2", "whoosh_1", "whoosh_4"][(5.5, 7.0, 12.0, 15.0, 24.5).index(tcut)])
+    cuts = (5.5, 7.0, 8.5, 12.0, 15.0, 24.5)
+    for tcut in cuts:
+        wh = load(["whoosh_1", "whoosh_4", "whoosh_3", "whoosh_2", "whoosh_1", "whoosh_4"][cuts.index(tcut)])
         place(S["trans"], norm(wh, -4), tcut - peak_t(wh), 0.55)
     # the logo (28.0): impact and a soft rising whoosh for the season line
     imp = load("impact_2")

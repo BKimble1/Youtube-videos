@@ -46,7 +46,7 @@ renders.
 |---|---|---|
 | 0.00–1.80 | `a1_push` | Low and fast down the snowy, lit quad toward Founders' Fountain and Bellweather Tower; a Christmas tree on the lawn |
 | 1.80–2.75 | `a2_flash` | The Night Watch whips the flashlight round; the beam crosses the lens on the 2.0 s hit |
-| 2.75–4.00 | `a3_caught` | Over his shoulder: the striped-pajama runner, caught in the beam, turns round (dolly zoom); stop-down |
+| 2.75–4.00 | `a3_caught` | Over his shoulder: the striped-pajama runner, caught in the beam, turns round (dolly zoom) |
 | 4.00–5.50 | `b1_drop` | THE DROP: the runner bolts; Elf Helper and Reindeer burst out of hiding; crane up over the fountain |
 | 5.50–7.00 | `b2_dorm` | Whip into the holiday dorm: the tree, then the season's outfits dancing (emotes) |
 | 7.00–8.50 | `b3_rift` | A runner grabs a Speed Sneakers hologram and dives through a rift, which snaps shut on 8.0 |
@@ -62,28 +62,27 @@ renders.
 | 18.00–20.00 | `d1_front` | The final chase: low, in front, tracking back along the green arrows; the officer's flashlight far behind |
 | 20.00–21.00 | `d2_leap` | Side tracking; the leap over the fountain rim |
 | 21.00–22.00 | `d3_splash` | The splash in slow motion, then the action speeds through the duck-under |
-| 22.00–24.50 | `d4_home_reveal` | Key change: out of the water and away; the crane reveals the arrows running to Puddlesworth Hall |
+| 22.00–24.50 | `d4_home_reveal` | Out of the water and away; the crane reveals the arrows running to Puddlesworth Hall |
 | 24.50–26.50 | `d5_door` | Low at the hall: the runner races at the lens and through the glowing front door (climax) |
 | 26.50–28.00 | `d6_shush` | The Night Watch stops on the quad, turns to us and shushes: he let him win |
-| 28.00–30.00 | `e1_logo` | The official Ultimate Trifecta title slams in over the hall in the snow; SEASON 1 · WINTER BREAK; the bell sting |
+| 28.00–30.00 | `e1_logo` | The official Ultimate Trifecta title slams in over the hall in the snow; SEASON 1 · WINTER BREAK |
 
 ## Music
 
-"Night Watch Jingle" is an original score written for this trailer (`audio/tools/score.py`).
+The music is **"Winter Heist"**, the track you supplied (`audio/music_src/Winter_Heist.mp3`,
+30.05 s, instrumental). Its file tags say it was made with Suno, so check that your Suno plan
+covers commercial use before release.
 
-- **Tempo:** 120 BPM, so one bar is exactly 2.0 s and every section lands on a bar line.
-- **Shape:**
-  - a B-minor music-box version of the hook for the cold open;
-  - the flashlight hit, a riser, and silence at 3.75 s;
-  - the drop into the hook in D major with sleigh bells, brass, strings, choir, trailer drums and bass;
-  - a B-minor action riff for the chaos, with a stop-down at 17.75 s;
-  - a driving chase ostinato, which goes under water for the slow-motion splash;
-  - a key change up to E major as the runner comes out of the water;
-  - the climax at the dorm door, a pizzicato tiptoe for the shush, and silence at 27.75 s;
-  - the E-major logo hit, then the hook replayed as a bell sting.
-- **Orchestral parts:** MIDI rendered with FluidR3_GM (MIT licence) through fluidsynth.
-- **Synthesized in numpy (`audio/tools/dsp.py`):** drums, taiko, booms, sleigh bells, bass and risers.
-- **Melody:** original. No existing carol or song is quoted.
+- **Sync:** it runs at about 120 BPM, the same grid the edit was cut to (one bar = 2.0 s).
+  Trimming its first 0.16 s puts its beats on the cuts. The build onset at 4.16 s then lands
+  on the 4.0 s drop cut, and the 21.87 s hit lands as the runner comes out of the water.
+- **Mix treatment:** the track keeps its own dynamics. It only dips slightly under the
+  opening radio, the slow-motion splash and the shush.
+
+The original score written for this trailer, "Night Watch Jingle" (`audio/tools/score.py` and
+`build_music.py`), is still in the project as an alternative. It is a B-minor music-box cold
+open, a silent beat, a D-major drop with sleigh bells, brass and choir, a chase ostinato, a key
+change to E major and a bell sting. To use it, run `mix.py` without `--music-file`.
 
 ## Sound design
 
@@ -109,9 +108,7 @@ Sources:
 
 `audio/tools/mix.py` sums music and sound design:
 
-- the music ducks under the radio, the slow-motion splash and the shush;
-- a section-gain shape gives the trailer its dynamics: a hushed open, a drop that jumps by about 6 dB, a chaos bed, a climb to the climax, and the logo as the loudest hit;
-- sound effects dip inside the three stop-downs;
+- the music dips gently under the radio, the slow-motion splash and the shush;
 - a gentle bus compressor and a look-ahead true-peak limiter set the master to -14 LUFS integrated with a true peak of -1.2 dBTP or below.
 
 ## Trailer-only staging (please confirm)
@@ -138,13 +135,12 @@ QA_SECTION
 ## Known limits and open questions
 
 1. **The audio was checked by measurement, not by ear.** I can't listen to a mix. Instead
-   I checked the music and the mix with loudness curves, band balance, spectrograms and a
-   scan for clashing notes between parts, and lined every sound up against the engine's
-   event logs. Whether the hook is catchy enough, and whether the mix sits right on
-   phone speakers and on headphones, needs a human listen.
-2. **The orchestra is a General MIDI soundfont** (FluidR3_GM). It's fine for a review cut,
-   but it is the weakest link in the sound. The MIDI parts are in `audio/midi/`, so a
-   composer can re-voice them with a better orchestral library without changing the edit.
+   I lined "Winter Heist" up by beat tracking and onset analysis, checked the mix with
+   loudness curves, and lined every sound effect up against the engine's event logs.
+   Whether the mix sits right on phone speakers and on headphones needs a human listen.
+2. **"Winter Heist" has no hard silences** before the drop (3.75 s) or the logo (27.75 s),
+   and it starts fading at about 28.6 s. The logo slam is carried by its impact sound effect.
+   If you'd like a held breath before either hit, the mix can cut a gap into the track.
 3. **The police-radio chatter is generated sound effects.** It is garbled on purpose, with
    no words to follow and no real call signs.
 4. **The Mobile renderer under software Vulkan** has no SSAO, screen-space reflections

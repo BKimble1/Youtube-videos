@@ -23,7 +23,8 @@ A 1080p proxy for quick viewing is committed as `exports/UT_SEASON1_CHRISTMAS_V1
 | In-engine trailer director (Godot, drop into the game's `game/src/dev/trailer/`) | `source/godot_trailer/` |
 | Shot render and preview scripts | `source/tools/` |
 | Compositor (cuts, transitions, grade, flare, logo reveal) | `source/comp/` |
-| Original score (MIDI stems + synthesis) | `audio/tools/score.py`, `audio/tools/build_music.py`, `audio/midi/` |
+| Music: "Winter Heist" (supplied by you) | `audio/music_src/Winter_Heist.mp3` |
+| Alternative original score (MIDI stems + synthesis; `build_music.py`, then `mix.py` without `--music-file`) | `audio/tools/score.py`, `audio/tools/build_music.py`, `audio/midi/` |
 | Sound design (placed from the engine's event logs) | `audio/tools/build_sfx.py`, `audio/sfx_src/` |
 | Final mix and stems | `audio/mix/` |
 | QA (contact sheets, transition frames, audio analysis) | `qa/v1/` |
@@ -44,9 +45,8 @@ frame on 4 CPU cores) to `shots/d1_front.mp4` plus `shots/d1_front.events.json`.
 Render every shot in `source/edl.json`, then:
 
 ```bash
-python3 audio/tools/build_music.py audio/build/music
 python3 audio/tools/build_sfx.py source/edl.json shots audio/build/sfx
-python3 audio/tools/mix.py audio/build/music audio/build/sfx audio/mix/UT_S1_TRAILER_V1_MIX.wav
+python3 audio/tools/mix.py - audio/build/sfx audio/mix/UT_S1_TRAILER_V1_MIX.wav --music-file audio/music_src/Winter_Heist.mp3 --music-offset 0.16
 python3 source/comp/comp.py --edl source/edl.json --shots shots --audio audio/mix/UT_S1_TRAILER_V1_MIX.wav --out exports/UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4
 ```
 
