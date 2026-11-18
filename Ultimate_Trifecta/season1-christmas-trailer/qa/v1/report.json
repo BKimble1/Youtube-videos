@@ -21,14 +21,14 @@
     ],
     "format": {
       "duration": "30.000000",
-      "size": "582275717",
-      "bit_rate": "155273524"
+      "size": "580785649",
+      "bit_rate": "154876173"
     }
   },
   "loudness": {
     "integrated_lufs": -14.0,
     "lra_lu": 4.5,
-    "true_peak_dbtp": -1.7
+    "true_peak_dbtp": -1.6
   },
   "black": [],
   "frozen": []

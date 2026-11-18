@@ -7,7 +7,8 @@ Review render: `exports/UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4` (restore from `ba
 | Runtime | 30.00 s (1,800 frames at 60 fps) |
 | Video | 3840 × 2160, H.264 High, yuv420p, BT.709 |
 | Audio | AAC 48 kHz stereo, 320 kb/s |
-| Loudness | MEASURED_LUFS LUFS integrated, MEASURED_TP dBTP true peak (EBU R128, measured on the delivered file) |
+| Loudness | -14.0 LUFS integrated, -1.6 dBTP true peak, 4.5 LU loudness range (EBU R128, measured on the delivered file) |
+| Proxy | `exports/UT_SEASON1_CHRISTMAS_V1_PROXY_1080p.mp4`, 1920 × 1080, 60 fps, 11 Mb/s, same audio |
 
 ## How it was made
 
@@ -134,7 +135,36 @@ If any of these should be added to the game, or toned down in the trailer, that 
 
 ## QA
 
-QA_SECTION
+Measured on the delivered review render with ffmpeg (`source/tools/qa.py`; the results
+are in `qa/v1/`):
+
+- **Format:** H.264 High, 3840 × 2160, 60 fps, 1,800 frames, 30.000 s, about 155 Mb/s.
+  AAC 48 kHz stereo, 320 kb/s.
+- **Loudness:** -14.0 LUFS integrated, 4.5 LU loudness range, -1.6 dBTP true peak.
+- **Picture:** no black stretches and no frozen stretches.
+- **Images:** `contact_sheet.jpg` (2 frames per second), `cuts_*.jpg` (a 7-frame burst at
+  each of the 21 cuts) and `audio.png` (spectrogram and level, with the cut and section marks).
+
+Every shot was also checked at native 4K before the edit, with contact sheets and full-size
+crops. That review caught and fixed:
+
+| Shot | Problem | Fix |
+|---|---|---|
+| `a3_caught` | The runner was not lit in the beam: the flashlight's own model shadowed its light | Light moved just past the lens |
+| `a3_caught`, `b1_drop` | After that fix, the face clipped to white | Beam energy lowered from 12 to 5 |
+| `b3_rift` | About 0.3 s of empty lawn after the rift closes | Whip pan out into the coins, with a whoosh |
+| `b4_coins` | Coins passing the lens read as flat yellow discs with visible facets | Trailer close-up coin (see staging item 5) |
+| `c7_dive` | The diver was seen from behind, an unreadable green shape | Camera moved in front: the face is visible all the way into the water |
+| `d1_front` | The low camera passed through a bench | Camera mirrored to the clear side of the path |
+| `d4_home_reveal` | The crane lost the runner off the bottom of the frame | Lower crane end, so he stays in the lower third with the hall above |
+
+Earlier, in blocking and the animatic, I fixed:
+- runners off frame or mistimed;
+- cameras inside walls, benches and fountain jets;
+- a cart that teleported;
+- the lens glare whiting out the frame;
+- bloom blowing out faces;
+- faceted splash drops.
 
 ## Known limits and open questions
 
@@ -151,9 +181,9 @@ QA_SECTION
    or volumetric fog. The look comes from the game's own lighting plus the grade. With
    a GPU, the same scene could add volumetric light shafts to the flashlight and the
    door.
-5. **The four trailer-only staging items above** (snow, outdoor decorations, the arrow
-   path, the stronger beam) need your sign-off. They are the only places where the
-   trailer shows something the 2.2 build doesn't do in a match.
+5. **The five trailer-only staging items above** (snow, outdoor decorations, the arrow
+   path, the stronger beam, the close-up coin) need your sign-off. They are the only
+   places where the trailer shows something the 2.2 build doesn't do in a match.
 6. **The hero's striped pajamas, nightcap and bunny slippers** are the look of the app
    icon's runner. If that look should not appear before it's in the shop, it can be
    swapped for any Season 1 outfit with one line in `trailer_shots.gd` and a re-render.
