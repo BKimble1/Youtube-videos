@@ -141,11 +141,12 @@ static func climax_actors() -> Array:
 		"segs": [{"mode": "route", "t0": t_w, "pts": w_pts, "s0": 0.0,
 			"speed": [[0.0, 7.0], [(w_len - 1.6) / 7.0, 7.0], [(w_len - 1.6) / 7.0 + 0.3, 3.0], [(w_len - 1.6) / 7.0 + 0.55, 0.0]], "rest_yaw": PI}],
 		"fx": [{"type": "tag", "t": DOOR_TAU - 0.3, "miss": true},
-			{"type": "face", "t": -9.0, "dur": DOOR_TAU + 8.7, "face": F_DETERMINED},
-			{"type": "emote", "t": DOOR_TAU + 0.55, "name": "shrug", "dur": 1.0},
-			# the payoff: he can't tag anyone in here... so he dances
-			{"type": "emote", "t": DOOR_TAU + 1.5, "name": "moon_shuffle", "dur": 3.0},
-			{"type": "face", "t": DOOR_TAU + 1.5, "dur": 3.0, "face": {"brow_angry": -0.7, "smile": 0.5}}],
+			{"type": "face", "t": -9.0, "dur": DOOR_TAU + 9.2, "face": F_DETERMINED},
+			{"type": "emote", "t": DOOR_TAU + 0.25, "name": "shrug", "dur": 0.6},
+			# the payoff, on the music's stop (27.5): he can't tag anyone in
+			# here... so he joins the party
+			{"type": "emote", "t": DOOR_TAU + 0.7, "name": "moon_shuffle", "dur": 3.0},
+			{"type": "face", "t": DOOR_TAU + 0.7, "dur": 3.0, "face": {"brow_angry": -0.7, "smile": 0.5}}],
 	}
 	return [{"cart": cart}, hero, watch, driver]
 
