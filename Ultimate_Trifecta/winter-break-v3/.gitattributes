@@ -6,3 +6,4 @@
 *.flac -filter -diff -merge -text
 *.aac -filter -diff -merge -text
 *.part* -filter -diff -merge -text
+*.part* -filter -diff -merge -text
