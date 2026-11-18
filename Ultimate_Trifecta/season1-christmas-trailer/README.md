@@ -13,6 +13,12 @@ Restore it with:
 cd backup && sha256sum -c UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4.SHA256SUMS && cat UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4.part_* > ../exports/UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4
 ```
 
+Then check the joined file against its own checksum:
+
+```bash
+cd exports && sha256sum -c ../backup/UT_SEASON1_CHRISTMAS_V1_REVIEW_4K.mp4.sha256
+```
+
 A 1080p proxy for quick viewing is committed as `exports/UT_SEASON1_CHRISTMAS_V1_PROXY_1080p.mp4`.
 
 | Item | Where |
