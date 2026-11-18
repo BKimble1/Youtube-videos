@@ -165,6 +165,10 @@ func _build_campus() -> void:
 	add_child(root)
 	var b := ClassicBuilder.new(ClassicLayout.shared())
 	b.build_visuals(root, 1)
+	# QA only: the round's collision (never drawn), so the camera check below
+	# can find a lens inside a wall, a rim or a tree
+	if bool(_opt("camhit", true)):
+		CampusBuilder.new(layout).build_collision(root)
 	water_nodes = b.water_nodes
 	_focus_mat = b.foliage_material
 	if _focus_mat:
@@ -1014,6 +1018,7 @@ func _update_actors() -> void:
 		v.apply_state(rs, 0.0, snap)
 		_face_overlay(a, v)
 		_body_overlay(a, v)
+		a["protect"] = float(rs.get("protect", 0.0))
 		a["pos"] = rs["pos"]
 		a["yaw"] = rs["yaw"]
 		# sound-sync events: segment starts and footfalls from the gait phase
@@ -1302,6 +1307,13 @@ func _process(_delta: float) -> void:
 ## Beam aims, after every pose is final for this frame: the rig sits at
 ## the flashlight's lens and points at the keyed target.
 func _on_pre_draw() -> void:
+	# V5: the Pillow Shield's body tint (the game pulses it to 0.32, which on
+	# film washes the runner out to a teal ghost) kept as a faint pulse
+	if shot_id.begins_with("z"):
+		for id in actors:
+			var ac: Dictionary = actors[id]
+			if float(ac.get("protect", 0.0)) > 0.0:
+				(ac["view"] as CharacterView).set_flash(0.07 + 0.04 * sin(tau * 16.0), Color("6fd8cc"))
 	# cart wheels: an angle from the distance travelled (deterministic), at a
 	# rate that reads as forward spin at 60 fps instead of strobing backwards
 	var wk := float(shot.get("wheel_k", 1.0))

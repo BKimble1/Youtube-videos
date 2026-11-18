@@ -354,7 +354,7 @@ static func get_shot(id: String) -> Dictionary:
 					{"id": "starry", "role": "runner", "look": STARRY, "vanish": 0.66,
 						"segs": [{"mode": "hold", "t0": -5.0, "pos": [0.2, 0.0, -1.6], "yaw": 2.7}],
 						"fx": [{"type": "spotted", "t": 0.18, "dur": 0.3},
-							{"type": "face", "t": 0.24, "dur": 0.4, "face": F_SLY}, {"type": "fade", "t": 0.38, "dur": 0.26}]},
+							{"type": "face", "t": 0.24, "dur": 0.4, "face": F_SLY}, {"type": "fade", "t": 0.42, "dur": 0.14}]},
 				],
 				"cam": [
 					{"t": 0.0, "pos": [4.7, 1.15, -2.0], "at": [1.1, 1.0, -0.1], "fov": 36.0},
@@ -456,7 +456,9 @@ static func get_shot(id: String) -> Dictionary:
 					{"id": "scout", "role": "runner", "look": SCOUT,
 						"segs": [{"mode": "route", "t0": 0.0, "pts": [[24.0, 40.0], [24.0, 60.0]], "s0": 2.6, "speed": [[0.0, 6.4]]}],
 						"fx": [{"type": "protect", "t": -2.0, "dur": 5.0}, {"type": "face", "t": 0.3, "dur": 1.0, "face": F_SLY}]},
-					{"id": "watch", "role": "watch", "look": WATCH,
+					# (his own beam dimmed: its cone lay across the Scout and read as a
+					# washed-out, see-through runner)
+					{"id": "watch", "role": "watch", "look": WATCH, "beam": 2.5, "beam_glow": 0.03,
 						"segs": [{"mode": "route", "t0": 0.0, "pts": [[24.0, 40.0], [24.0, 60.0]], "s0": 0.6, "speed": [[0.0, 6.6], [0.34, 8.0], [0.5, 1.6], [0.8, 0.6]]}],
 						"fx": [{"type": "tag", "t": 0.14, "miss": true}, {"type": "bump", "t": 0.36}, {"type": "face", "t": 0.0, "dur": 0.36, "face": F_DETERMINED},
 							{"type": "face", "t": 0.36, "dur": 0.64, "face": F_SHOCK}]},

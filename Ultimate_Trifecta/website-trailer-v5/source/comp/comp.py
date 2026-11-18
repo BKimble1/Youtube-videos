@@ -1,4 +1,4 @@
-"""Assembles the Ultimate Trifecta website trailer (V4) from the in-engine shot renders.
+"""Assembles the Ultimate Trifecta website trailer (V5) from the in-engine shot renders.
 
     python3 comp.py --edl edl.json --shots SHOT_DIR --out OUT.mp4 [--audio MIX.wav]
                     [--w 3840 --h 2160 --fps 60] [--from T --to T] [--stills DIR --still-times a,b,c]

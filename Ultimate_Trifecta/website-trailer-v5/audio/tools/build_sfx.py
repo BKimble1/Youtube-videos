@@ -1,4 +1,4 @@
-"""Sound design for the website trailer (V4), placed from the edit and the
+"""Sound design for the website trailer (V5), placed from the edit and the
 engine's own event logs.
 
     python3 build_sfx.py EDL.json SHOT_EVENTS_DIR OUT_DIR
