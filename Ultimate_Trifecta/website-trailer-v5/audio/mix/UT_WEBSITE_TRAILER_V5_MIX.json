@@ -1,0 +1,10 @@
+{
+  "music": "../build/music/music_mix.wav",
+  "music_offset_s": 0.0,
+  "integrated_lufs": -14.0,
+  "true_peak_dbtp": -1.5,
+  "music_in_lufs": -15.97,
+  "sfx_in_lufs": -19.3,
+  "sfx_target_lufs": -21.5,
+  "duration_s": 30.0
+}
