@@ -32,15 +32,17 @@ The cart route after the dive now reads as one continuous pursuit:
 1. **To the bollards.** The cart chases Blue and the elf down the spine. It stops at the bollard row north of the road; those bollards block carts on the map. The two get through to the door.
 2. **The search, 0:18–0:20.5.** The cart swings round and searches back north. Its beam rakes the bush where the reindeer hides (0:19.5–0:20.0), then clears.
 3. **The launch, 0:21.4–0:23.5.** As soon as the beam clears, the eye finds the door and the reindeer launches. North of the bush the cart U-turns, and its beam sweeps once across the empty patch the reindeer just left. The cut comes on the running stride.
-4. **The pursuit shot, 0:23.5–0:25.6.** Staged from just inside the open lobby door, looking back up the route:
-   - Blue's reaching hand is at the right edge, and the open leaf frames that side.
+4. **The pursuit shot, 0:23.5–0:25.6.** Staged from just inside the open lobby door, looking back up the route on a longer lens, so the cart reads at phone size:
+   - Blue's reaching hand is at the bottom-right edge, and the open leaf frames that side.
    - The reindeer runs down the west side of the path, through the gaps in the two bollard rows.
    - The cart comes after him down the east side of the same path, offset so he never covers its front. Its windshield and both headlights face camera.
    - The camera holds steady while the cart grows from about 40 m to about 23 m away against the bollards. Its beam advances along the paving toward the threshold.
 5. **Inside, still approaching.** The cut inside comes while the cart is still moving toward them. It stops at the bollards at about 0:26.2, out of reach.
 6. **After the latch.** Only after 0:28.500 does it turn away east along the bollard row. Its beam sweeps across the door glass and passes.
 
-The pursuit strip and a muted, phone-size contact sheet (`qa/v5/`) were checked for direction without sound. Every visible move of the cart in 0:23.5–0:27.8 is toward the camera and the friends.
+The exported MP4 was reviewed muted, as a phone-size contact sheet of 0:22–0:28.5 (`qa/v5/phone_muted_pursuit_22.0-28.5.jpg`, 480×270 tiles) and frame by frame (`qa/v5/frames_cart_pursuit_e4a_23.50-25.60.jpg`). Every visible move of the cart in 0:23.5–0:27.8 is toward the camera and the friends.
+
+The first full render failed that check: on the original 34° lens the cart was only a few pixels wide at phone size. The shot was re-rendered on a 22° lens with the camera set back into the doorway, and with headlights about twice as bright.
 
 ## 2. Urgency and weight
 
@@ -73,13 +75,15 @@ The low side angle was also replaced with a three-quarter insert on a thin dusti
 
 The cart route is offset so that tyre's track runs over Blue's footfalls. Travel is left to right, matching the dive shot that follows.
 
-**The doorway catch, 0:25.6–0:27.8, from inside the lobby, through the open door:**
+**The doorway catch, 0:25.6–0:27.8, from inside the lobby, through the open door.** The camera looks straight down the gap between Blue and the reindeer.
 1. Blue plants the outside slipper forward onto the slab.
 2. Blue's hips turn toward the lobby while the shoulders stay on the reindeer.
-3. The hands meet side by side, in the gap between the two bodies, against the outdoor light.
+3. The hands meet in that gap, clear of both bodies, against the lit paving outside (frames 800–803).
 4. Blue steps backward into the lobby with the pull, still facing out.
 5. The reindeer's recovery step brings him through the opening.
 6. The elf, holding the leaf by the hinge from inside, hauls it shut as the trailing foot clears. The latch catches at 0:28.500.
+
+The reindeer keeps his free arm tucked in and takes a wider line through the doorway. A side view along the closed leaf confirmed that no hand, sleeve or antler passes through its edge. In the first render, Blue's body hid the hands and that arm reached through the door edge for a few frames. Both were fixed before the final render.
 
 **Game-side change.** The character view used to turn the body toward its travel above 0.8 m/s, so a backward step became a turn-and-walk. A trailer-only `keep_yaw` flag (off by default) lets a scripted step back keep its facing. The game's own behaviour is unchanged. See `source/game_patch/character_view.gd`.
 
@@ -94,6 +98,33 @@ The camera holds the same interior shot after the latch:
 
 The title artwork is unchanged and the music is exactly as approved.
 
-## Measured QA (exported MP4)
+## Measured sync and QA (on the exported MP4)
 
-See `qa/v5/report.json`.
+Full numbers are in `qa/v5/report.json`.
+
+**Format:** 990 frames, 1920×1080, 30 fps, 33.0 s.
+
+**Picture timing**, identical in the CRF 16 master and the delivery copy:
+- Title first frame: 894 (29.800 s).
+- All 16 cuts land on their EDL frames.
+- Relay click and headlights: 8.018.
+- Latch: 28.500.
+- Snow landing: 29.330.
+
+**Audio:**
+- Loudness: −14.01 LUFS integrated, −1.85 dBTP.
+- The delivery copy measures −14.02 LUFS and −1.90 dBTP.
+- Score stem vs source: max difference 0.0, lag 0 samples.
+- Effects under the title: −67.8 dB, so the last musical hit plays clean.
+
+**Muted review**, with strips in `qa/v5/`:
+
+| Check | Frames | What the frames show |
+|---|---|---|
+| Cart direction | 705–768, plus the phone-size sheet | The cart's windshield and both headlights face camera. It grows against the bollards behind the reindeer, never hidden by him. The cut inside comes while it still approaches. |
+| Tyre contact | 462–510 | Blue's slipper prints the dusting and clears frame. The front tyre then rolls across that mark with its shadow under the tread and spray at the contact. |
+| Hand catch | 792–813 | The hands meet in the gap between the bodies (800–803). Blue steps back with the pull and the reindeer recovers through the opening. |
+| Door clearance | 813–834 | The trailing foot clears before the leaf swings. Nothing passes through the door edge. |
+| Ending | 834–894 | The latch, then eyes following the sweep across the glass. The clump lands, Blue looks down first, then the others, then the title. |
+
+**Sound pass:** this pipeline cannot play audio. Pace and the last musical hit were checked by measurement, not by ear: sync peaks, loudness, score integrity, and the waveform around every beat (`qa/v5/audio.png`).

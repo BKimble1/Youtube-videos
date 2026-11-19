@@ -445,10 +445,10 @@ PEEK = [5.05, 75.62]               # leaning into the west opening (D3)
 EXIT = [4.6, 75.85]                # first step clear of the foliage
 PLANT = [3.95, 76.1]               # the planted foot, on the snow at the path's edge
 SNOW_B = (3.75, 76.2)              # that patch of snow (the vacated patch)
-B_IN = [0.75, 102.9]               # Blue on the threshold of the open R leaf, facing out
-B_PL = [0.68, 102.62]              # the outside slipper planted forward onto the slab
+B_IN = [0.88, 102.9]               # Blue on the threshold of the open R leaf, facing out
+B_PL = [0.84, 102.62]              # the outside slipper planted forward onto the slab
 B_BK = [0.85, 103.85]              # the step back into the lobby with the pull (clear of his way in)
-D_C = [0.1, 102.55]                # the reindeer passing Blue's left: his left forearm in Blue's left hand, side by side
+D_C = [-0.02, 102.55]                # the reindeer passing Blue's left: his left forearm in Blue's left hand, side by side
 E_DOOR = [1.22, 103.18]            # the elf in the doorway at the hinge, a hand on the open leaf's inner face
 INSIDE = {"lead": [0.55, 103.95], "deer": [-0.75, 104.25], "elf": [1.0, 103.55]}   # just inside the shut door, facing it
 R_PLATE = [-1.39, 1.08, 0.06]
@@ -457,7 +457,7 @@ R_HINGE = [-0.4, 1.0, 0.07]        # the inner face near the hinge (the elf's ho
 CART_STOP = [1.7, 81.4]            # the bollards stop the cart (one row north of the road)
 CART_STOP_A = [1.6, 81.6]          # ... the first time, behind the two
 # the deer's run: out of the bush, west across the spine, through the bollard gaps, to the door
-RUN = [[2.6, 77.0], [1.2, 78.2], [0.0, 79.8], [-0.75, 82.0], [-0.75, 84.5], [-0.45, 88.0], [0.0, 91.8], [0.1, 97.0], D_C]
+RUN = [[2.6, 77.0], [1.2, 78.2], [0.0, 79.8], [-0.75, 82.0], [-0.75, 84.5], [-0.45, 88.0], [0.0, 91.8], [-0.25, 97.0], D_C]
 
 
 def LISTEN(head_p, head_y, head_r):
@@ -517,7 +517,7 @@ def ending(actors, A):
     deer_run = head + [[ts + 0.9, vc], [span - 0.55, vc], [span, 2.2]]
     A["deer_run"] = {"t0": t_out, "pts": run_pts, "speed": deer_run}
     # through: the grip swings him round into the opening (a recovery step), and on in
-    mom = [D_C, [0.33, 103.15], [0.3, 103.6], [-0.2, 103.95], INSIDE["deer"]]
+    mom = [D_C, [0.45, 103.12], [0.38, 103.6], [-0.2, 103.95], INSIDE["deer"]]
     mr = Route(mom)
     t_in1 = TAU(T_CLEAR) + 0.55
     mspan = t_in1 - TAU(T_CATCH)
@@ -634,8 +634,11 @@ def ending(actors, A):
                             {"bone": "hips", "pos": [0.0, 0.64, 0.18], "size": [0.17, 0.08, 0.09]},
                         ]}
     # the reindeer's left hand reaches back for Blue's (just in front of Blue's left shoulder)
-    deer["reach"] += [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "lead", "bone": "upper_arm.L", "off": [-0.17, 0.0, -0.03]},
+    deer["reach"] += [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "lead", "bone": "upper_arm.L", "off": [-0.3, -0.04, -0.04]},
                       "w": [[TAU(T_CATCH) - 0.32, 0.0], [TAU(T_CATCH) - 0.04, 1.0], [TAU(T_BACK) + 0.12, 1.0], [TAU(T_BACK) + 0.4, 0.0]]}]
+    # the free (right) arm tucked in as he squeezes past the closed leaf's edge
+    deer["reach"] += [{"arm": "R", "pole": [0.6, -1.0, -0.3], "to": {"actor": "deer", "bone": "chest", "off": [-0.1, -0.18, 0.16]},
+                      "w": [[TAU(T_CATCH) - 0.12, 0.0], [TAU(T_CATCH) + 0.04, 1.0], [TAU(T_CATCH) + 0.42, 1.0], [TAU(T_CATCH) + 0.62, 0.0]]}]
     A["deer_land"] = land
     A["tp_end"] = t_in1
 
@@ -661,7 +664,7 @@ def ending(actors, A):
         {"mode": "hold", "t0": TAU(T_BACK) + 0.58, "pos": [INSIDE["lead"][0], 0.0, INSIDE["lead"][1]], "yaw": 0.0},
     ]
     # the hand: Blue's left on the reindeer's left forearm
-    lead["reach"] += [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "deer", "bone": "forearm.L", "to_bone": "hand.L", "u": 0.7},
+    lead["reach"] += [{"arm": "L", "pole": [-0.6, -1.0, 0.3], "to": {"actor": "deer", "bone": "forearm.L", "to_bone": "hand.L", "u": 0.8},
                       "w": [[TAU(T_CATCH) - 0.22, 0.0], [TAU(T_CATCH) - 0.01, 1.0], [TAU(T_BACK) + 0.02, 1.0], [TAU(T_BACK) + 0.22, 0.0]]}]
     reach = {"upper_arm.L": [78, 0, 8], "forearm.L": [8, 0, 0], "hand.L": [-10, 0, 0], "spine": [-10, 0, 0]}
     wave_up = {"upper_arm.R": [20, 0, 112], "forearm.R": [0, 0, 20], "spine": [-4, 0, 0], "head": [6, 0, 0]}
@@ -1081,7 +1084,7 @@ def build():
     e4["tau0"] = TAU(T_E4)
     e4["lights"] = dorm_lights
     e4["cam"] = E4_CAM
-    hl(e4, 9.0, 0.6, 0.08, range=40.0)
+    hl(e4, 18.0, 1.0, 0.12, range=45.0)
     add("v5_e4_route", T_E4, T_E4B, e4)
     # ---- E4b inside, through the doorway: the hands meet against the headlights; the step back; through; the elf on the leaf
     e4b = dict(end_set)
@@ -1125,10 +1128,10 @@ D3_CAM = [{"t": 0.0, "pos": [-1.0, 0.95, 76.7], "at": [4.6, 0.8, 75.95], "fov": 
           {"t": T_SPRING + 0.35 - T_D3, "pos": [-1.05, 0.95, 76.72], "at": [2.6, 0.7, 77.5], "fov": 37.0},
           {"t": T_SPRING + 0.7 - T_D3, "pos": [-1.06, 0.95, 76.73], "at": [2.9, 0.62, 77.3], "fov": 36.5},
           {"t": T_E4 - T_D3, "pos": [-1.08, 0.95, 76.74], "at": [3.25, 0.55, 76.95], "fov": 36.0}]
-E4_CAM = [{"t": 0.0, "pos": [0.25, 1.05, 103.05], "at": [1.3, 0.92, 90.0], "fov": 34.0},
-          {"t": T_E4B - T_E4, "pos": [0.25, 1.05, 103.04], "at": [1.25, 0.9, 90.0], "fov": 34.0}]
-E4B_CAM = [{"t": 0.0, "pos": [0.6, 1.0, 106.2], "at": [0.3, 0.92, 102.5], "fov": 42.0},
-           {"t": T_E5 - T_E4B, "pos": [0.58, 1.0, 106.15], "at": [0.3, 0.92, 103.1], "fov": 43.0}]
+E4_CAM = [{"t": 0.0, "pos": [0.27, 1.05, 103.5], "at": [1.12, 0.9, 90.0], "fov": 22.0},
+          {"t": T_E4B - T_E4, "pos": [0.27, 1.05, 103.49], "at": [1.09, 0.88, 90.0], "fov": 22.0}]
+E4B_CAM = [{"t": 0.0, "pos": [0.42, 1.0, 106.1], "at": [0.42, 0.9, 102.5], "fov": 42.0},
+           {"t": T_E5 - T_E4B, "pos": [0.42, 1.0, 106.05], "at": [0.4, 0.9, 103.1], "fov": 43.0}]
 
 
 if __name__ == "__main__":

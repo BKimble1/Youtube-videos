@@ -1,0 +1,161 @@
+{
+ "frames": 990,
+ "fps": 30.0,
+ "size": [
+  1920,
+  1080
+ ],
+ "title_first_frame": 894,
+ "title_first_frame_s": 29.8,
+ "cuts_expected_vs_found_frame": [
+  [
+   "v5_a2_rim",
+   2.9,
+   87,
+   87
+  ],
+  [
+   "v5_a3_toe_test",
+   3.9,
+   117,
+   117
+  ],
+  [
+   "v5_b1_three",
+   6.0,
+   180,
+   180
+  ],
+  [
+   "v5_b1b_beam",
+   8.0,
+   240,
+   240
+  ],
+  [
+   "v5_b2_wheels",
+   9.2,
+   276,
+   276
+  ],
+  [
+   "v5_c1_round",
+   9.9,
+   297,
+   297
+  ],
+  [
+   "v5_c2_alongside",
+   12.0,
+   360,
+   360
+  ],
+  [
+   "v5_c2b_gain",
+   13.833,
+   415,
+   415
+  ],
+  [
+   "v5_c3_mark",
+   15.4,
+   462,
+   462
+  ],
+  [
+   "v5_d1_dive",
+   17.0,
+   510,
+   510
+  ],
+  [
+   "v5_d2_eye",
+   18.0,
+   540,
+   540
+  ],
+  [
+   "v5_e1a_door",
+   20.5,
+   615,
+   615
+  ],
+  [
+   "v5_d3_out",
+   21.4,
+   642,
+   642
+  ],
+  [
+   "v5_e4_route",
+   23.5,
+   705,
+   705
+  ],
+  [
+   "v5_e4b_catch",
+   25.6,
+   768,
+   768
+  ],
+  [
+   "v5_e5_inside",
+   27.8,
+   834,
+   834
+  ]
+ ],
+ "audio_dur_s": 33.003,
+ "lufs_integrated": -14.01,
+ "true_peak_dbtp": -1.85,
+ "score_stem_vs_source_max_abs_diff": 0.0,
+ "score_stem_len_s": 33.0,
+ "score_in_mix_lag_samples_at_6k": 0,
+ "relay_click_peak_s_db": [
+  8.0179,
+  -12.6
+ ],
+ "deer_footfall_peak_s_db (plant ~22.200)": [
+  21.951,
+  -24.0
+ ],
+ "branch_release_peak_s_db (spring+0.2 ~22.700)": [
+  22.7181,
+  -16.7
+ ],
+ "latch_peak_s_db": [
+  28.5,
+  -7.2
+ ],
+ "snow_land_peak_s_db (~29.333)": [
+  29.3304,
+  -14.2
+ ],
+ "sfx_rms_db_under_title_29.85_33": -67.8,
+ "chase_cuts_sfx_rms_before_after_db": {
+  "9.2": [
+   -35.0,
+   -33.7
+  ],
+  "9.9": [
+   -31.5,
+   -33.7
+  ],
+  "12.0": [
+   -29.3,
+   -27.2
+  ],
+  "13.833": [
+   -24.7,
+   -24.6
+  ],
+  "15.4": [
+   -24.5,
+   -25.8
+  ],
+  "17.0": [
+   -26.2,
+   -27.7
+  ]
+ }
+}
