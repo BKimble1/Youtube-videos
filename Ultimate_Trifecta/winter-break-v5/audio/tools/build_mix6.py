@@ -397,7 +397,7 @@ def build_sfx(shots_dir):
     # ---- the tyre tearing through the drift (C3): from the planner's clock
     c3 = [c for c in EDL["clips"] if c[0] == "v5_c3_mark"][0]
     zp = 60.45 - 1.0
-    for T in np.arange(c3[1], c3[1] + c3[2], 0.01):
+    for T in np.arange(c3[1], 17.0, 0.01):          # C3 and C3b share one clock
         p, v = cart_state(tau_of(T, "v5_c3_mark"))
         if (p[2] + 0.8) >= zp:
             n = int(0.55 * SR)

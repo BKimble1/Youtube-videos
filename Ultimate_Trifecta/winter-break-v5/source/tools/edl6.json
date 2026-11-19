@@ -59,7 +59,13 @@
   [
    "v5_c3_mark",
    15.4,
-   1.6,
+   0.9,
+   30
+  ],
+  [
+   "v5_c3b_churn",
+   16.3,
+   0.7,
    30
   ],
   [
@@ -108,21 +114,21 @@
  "logo": 29.8,
  "info": {
   "tau_dive": 15.3,
-  "deer_v": 8.0412,
+  "deer_v": 8.1499,
   "tau_door": 19.5,
-  "elf_vc": 10.2139,
+  "elf_vc": 10.217,
   "elf_arrive": 19.5,
-  "elf_v": 7.0221,
-  "lead_vc": 9.1501,
+  "elf_v": 7.0123,
+  "lead_vc": 9.158,
   "lead_arrive": 19.62,
-  "lead_v": 7.2993,
+  "lead_v": 7.2725,
   "deer_route": null,
   "lead_route": null,
   "elf_route": null,
   "start": {
    "elf": 5.1,
-   "lead": 5.23,
-   "deer": 5.47
+   "lead": 5.2,
+   "deer": 5.55
   },
   "cart_route": null,
   "cart_vmax": 9.9579,

@@ -35,6 +35,7 @@ FT = F(108)              # 3.600: the slipper on the rim, on the bass entry (tau
 T_LIGHT = F(240)         # 8.000: the musical turn; the headlights hit their faces; the relay click
 FRZ = 0.45                # V5.1: frozen in the headlights before the elf bolts (first step on the 8.7 beat)
 T_B2 = F(282)             # 9.400: the wheel insert, all three running
+T_C3B = F(489)            # 16.300: cut on the tyre reaching the dusting to the low V3 angle
 T_STEP = F(261)          # 8.700: the elf's first footfall on the pavement
 T_HANDOFF = F(415)       # 13.833: the stronger chase rhythm: the cart's gain revealed
 TAU_L = T_LIGHT - FT
@@ -162,13 +163,13 @@ def story():
             out.append([round(r * math.sin(th), 3), round(22.0 - r * math.cos(th), 3)])
         return out
     arc = {
-        "elf": [EFB] + ring(9.5, -20, -158)[0:] + [[lane["elf"] - 0.6, 33.6], [lane["elf"], 37.5]],
+        "elf": [ELF_GRAB] + ring(9.5, -20, -158)[0:] + [[lane["elf"] - 0.6, 33.6], [lane["elf"], 37.5]],
         "lead": [LEAD_P, [-0.6, 13.4]] + ring(10.3, -24, -160)[0:] + [[lane["lead"] - 0.8, 33.9], [lane["lead"], 38.0]],
-        "deer": [DFB, [1.05, 13.85]] + ring(8.8, -10, -156) + [[lane["deer"] - 0.4, 32.0], [lane["deer"], 37.0]],
+        "deer": [DEER_P, [0.9, 13.6]] + ring(8.8, -10, -156) + [[lane["deer"] - 0.4, 32.0], [lane["deer"], 37.0]],
     }
     # V5.1: caught in the light - all three frozen in the beam until the elf's first step on the musical beat (8.7)
     R = TAU_L + FRZ
-    start = {"elf": R + 0.25, "lead": R + 0.38, "deer": R + 0.62}
+    start = {"elf": TAU_E1, "lead": TAU_E1 + 0.1, "deer": TAU_E1 + 0.45}
     accel = {"elf": [[0.0, 0.0], [0.22, 3.8], [0.9, 6.4], [1.6, 7.0]],
              "lead": [[0.0, 0.0], [0.25, 3.4], [1.0, 6.2], [1.75, 6.9]],
              # the reindeer: half a stride lost in the turn, then hard after them
@@ -280,9 +281,8 @@ def story():
             # sheepish: hands rubbing the arms (cold), a shrug at the deer's mime
             [2.4, {"upper_arm.L": [30, 0, 22], "upper_arm.R": [30, 0, -22], "forearm.L": [95, 0, 0], "forearm.R": [95, 0, 0], "spine": [-4, 0, 0], "head": [-6, 0, 0]}],
             [3.55, {"upper_arm.L": [30, 0, 22], "upper_arm.R": [30, 0, -22], "forearm.L": [95, 0, 0], "forearm.R": [95, 0, 0], "spine": [-4, 0, 0], "head": [-4, 8, 4]}],
-            # laughing it off: the fist bump coming together (right fist, IK below)
-            [3.85, {"upper_arm.L": [20, 0, 10], "forearm.L": [60, 0, 0], "upper_arm.R": [60, 0, -10], "forearm.R": [60, 0, 0], "head": [-4, 0, 0], "spine": [-4, 0, 0]}],
-            [4.3, {"upper_arm.L": [20, 0, 10], "forearm.L": [50, 0, 0], "upper_arm.R": [70, 0, -10], "forearm.R": [40, 0, 0], "head": [-4, 0, 0], "spine": [-6, 0, 0]}],
+            [3.9, {"upper_arm.L": [18, 0, -26], "upper_arm.R": [18, 0, 26], "forearm.L": [60, 0, 0], "forearm.R": [60, 0, 0], "shoulder.L": [0, 0, 16], "shoulder.R": [0, 0, -16], "head": [4, 0, 10]}],
+            [4.35, {"upper_arm.L": [10, 0, -6], "upper_arm.R": [10, 0, 6], "forearm.L": [20, 0, 0], "forearm.R": [20, 0, 0], "head": [2, 0, 4]}],
             [TAU_L - 0.02, {"head": [0, 0, 0]}],
             # the glare: head back, a hand up against it, squinting
             [TAU_L + 0.14, {"head": [0, 0, 0]}],
@@ -300,7 +300,7 @@ def story():
             [12.14, {"spine": [-28, 0, 0], "chest": [-6, 0, 0], "head": [-8, 0, 0], "upper_arm.L": [40, 0, -10], "upper_arm.R": [-40, 0, 10], "forearm.L": [70, 0, 0], "forearm.R": [70, 0, 0]}, "snap"],
             [12.34, {"spine": [-30, 0, 0], "chest": [-6, 0, 0], "head": [-8, 0, 0], "upper_arm.L": [-44, 0, -10], "upper_arm.R": [44, 0, 10], "forearm.L": [70, 0, 0], "forearm.R": [70, 0, 0]}],
             [12.54, {"spine": [-30, 0, 0], "chest": [-6, 0, 0], "head": [-8, 0, 0], "upper_arm.L": [44, 0, -10], "upper_arm.R": [-44, 0, 10], "forearm.L": [70, 0, 0], "forearm.R": [70, 0, 0]}],
-            [12.74, {"spine": [-28, 0, 0], "chest": [-5, 0, 0], "head": [-6, 0, 0], "upper_arm.L": [-36, 0, -10], "upper_arm.R": [36, 0, 10]}],
+            [12.74, {"spine": [-22, 0, 0], "chest": [-3, 0, 0], "head": [2, 0, 0], "upper_arm.L": [-36, 0, -10], "upper_arm.R": [36, 0, 10]}],
             [13.4, {"spine": [-16, 0, 0]}],
             [14.6, {"spine": [-9, 0, 0]}],
         ],
@@ -311,7 +311,7 @@ def story():
             [1.12, {"brow_up": 1.0, "open": 0.9, "squint": 0.85}, "snap"],
             [1.6, {"brow_up": 0.6, "open": 0.45, "squint": 0.5}],
             [2.5, {"brow_up": 0.5, "smile": 0.4, "open": 0.1}],
-            [3.6, {"smile": 1.0, "squint": 0.55, "brow_up": 0.4, "open": 0.4}],
+            [3.6, {"smile": 0.75, "squint": 0.35, "brow_up": 0.4}],
             [TAU_L - 0.02, {"smile": 0.6, "squint": 0.3}],
             [TAU_L + 0.15, {"smile": 0.6, "squint": 0.3}],
             [TAU_L + 0.19, {"squint": 1.0, "brow_angry": 0.5, "open": 0.35, "smile": 0.0}, "snap"],
@@ -329,56 +329,45 @@ def story():
         "id": "elf", "role": "runner", "look": ELF, "towel": TOWEL, "fast_at": 5.0,
         "segs": [
             {"mode": "hold", "t0": -9.0, "pos": [ELF_P[0], 0.0, ELF_P[1]], "yaw": PI - 0.45},
-            arrive({"mode": "route", "t0": 3.45, "pts": [ELF_P, EFB], "speed": [[0.0, 0.0], [0.15, 2.4], [0.38, 2.0], [0.55, 0.0]], "rest_yaw": yaw_to(EFB, FB_C[::2])}),
-            {"mode": "hold", "t0": 4.0, "pos": [EFB[0], 0.0, EFB[1]], "yaw": yaw_to(EFB, [FB_C[0], FB_C[2]])},
+            arrive({"mode": "route", "t0": TAU_L + 0.14, "pts": [ELF_P, ELF_GRAB], "speed": [[0.0, 0.0], [0.12, 2.6], [0.26, 2.0], [0.4, 0.0]], "rest_yaw": yaw_to(ELF_GRAB, LEAD_P)}),
+            {"mode": "hold", "t0": TAU_L + 0.54, "pos": [ELF_GRAB[0], 0.0, ELF_GRAB[1]], "yaw": yaw_to(ELF_GRAB, LEAD_P)},
             {"mode": "route", "t0": start["elf"], "pts": two["elf"]["pts"], "speed": two["elf"]["keys"]},
             {"mode": "hold", "t0": A["elf_arrive"], "pos": [ELF_DOOR[0], 0.0, ELF_DOOR[1]], "yaw": PI},
         ],
         "fx": [
             {"type": "turn", "t": 1.95, "dur": 0.4, "face": [LEAD_P[0], LEAD_P[1] + 0.2], "until": 3.0},
             {"type": "emote", "name": "laugh", "t": 2.55, "dur": 1.4},
-            {"type": "turn", "t": TAU_L + 0.03, "dur": 0.12, "face": CART_P, "until": start["elf"]},
+            {"type": "turn", "t": TAU_L + 0.02, "dur": 0.12, "face": CART_P, "until": TAU_L + 0.14},
         ],
         "pose": [
             [-9.0, {}],
             [2.0, {}],
-            # the fist bump coming together (the right fist, IK below), laughing
-            [3.75, {"upper_arm.R": [60, 0, 10], "forearm.R": [60, 0, 0], "spine": [-4, 0, 0], "head": [-4, 0, 0]}],
-            [TAU_L - 0.02, {"upper_arm.R": [70, 0, 10], "forearm.R": [40, 0, 0], "spine": [-8, 0, 0], "head": [-4, 0, 0]}],
-            # the light: first to see it - the head snaps round, the body drops to go
-            [TAU_L + 0.07, {"head": [8, 0, 0], "spine": [5, 0, 0], "upper_arm.L": [40, 0, 10], "forearm.L": [60, 0, 0]}, "snap"],
-            [R - 0.1, {"head": [8, 0, 0], "spine": [5, 0, 0], "upper_arm.L": [40, 0, 10], "forearm.L": [60, 0, 0]}],
-            [R + 0.2, {"spine": [-14, 0, 0], "head": [2, 0, 0], "thigh.L": [30, 0, 0], "shin.L": [-30, 0, 0], "upper_arm.L": [-30, 0, 20]}],
-            [start["elf"] + 0.05, {"upper_arm.L": [-40, 0, 28], "forearm.L": [5, 0, 0], "spine": [-18, 0, 0], "head": [0, 20, 0]}],
+            [TAU_L - 0.02, {}],
+            [TAU_L + 0.07, {"head": [8, 0, 0], "upper_arm.L": [55, 0, 10], "forearm.L": [100, 0, 0], "spine": [5, 0, 0]}, "snap"],
+            # grabs the lead's sleeve
+            [TAU_L + 0.42, {"upper_arm.L": [70, 0, 0], "forearm.L": [10, 0, 0], "hand.L": [-20, 0, 0], "spine": [-10, 0, 0]}],
+            [start["elf"], {"upper_arm.L": [-40, 0, 28], "forearm.L": [5, 0, 0], "spine": [-16, 0, 0], "head": [0, 20, 0]}],
             [start["elf"] + 0.55, {"upper_arm.L": [-35, 0, 22], "forearm.L": [10, 0, 0], "spine": [-14, 0, 0], "head": [0, 10, 0]}],
             [start["elf"] + 0.85, {"spine": [-10, 0, 0]}],
             [start["elf"] + 2.0, {"spine": [-9, 0, 0], "forearm.L": [20, 0, 0], "forearm.R": [20, 0, 0]}],
         ],
         "face": [[-9.0, {"smile": 0.6}], [2.5, {"smile": 1.0, "squint": 0.7, "open": 0.6}], [4.0, {"smile": 0.7, "squint": 0.4}],
-                 [3.6, {"smile": 1.0, "squint": 0.5, "open": 0.5}], [TAU_L - 0.02, {"smile": 0.9, "squint": 0.4, "open": 0.4}],
-                 [TAU_L + 0.035, {"squint": 0.9, "brow_up": 0.6, "open": 0.5, "smile": 0.0}, "snap"],
-                 [R - 0.1, {"squint": 0.9, "brow_up": 0.7, "open": 0.55, "smile": 0.0}], [R + 0.1, {"brow_angry": 0.7, "open": 0.4, "squint": 0.3}], [start["elf"] + 1.0, {"brow_angry": 0.6, "open": 0.5}]],
+                 [TAU_L - 0.02, {"smile": 0.6}], [TAU_L + 0.035, {"squint": 0.9, "brow_up": 0.6, "open": 0.5, "smile": 0.0}, "snap"],
+                 [TAU_L + 0.4, {"brow_angry": 0.7, "open": 0.4, "squint": 0.3}], [start["elf"] + 1.0, {"brow_angry": 0.6, "open": 0.5}]],
     }
     # the elf's hand on Blue's sleeve: from the grab until the lanes part
-    # V5: the three fists coming together; the light stops them a hand's width short
-    elf["reach"] = [{"arm": "R", "pole": [0.6, -1.0, 0.2], "to": {"pos": [FB_C[0] - 0.07, FB_C[1], FB_C[2] - 0.01]},
-                     "w": [[3.85, 0.0], [4.25, 1.0], [TAU_L + 0.04, 1.0], [TAU_L + 0.14, 0.0]]},
-                    # ... and the elf's hand finds Blue's sleeve on the way out: Blue goes with the elf
-                    {"arm": "R", "pole": [0.6, -1.0, 0.2], "to": {"actor": "lead", "bone": "forearm.L", "to_bone": "hand.L", "u": 0.35},
-                     "w": [[R + 0.12, 0.0], [R + 0.22, 1.0], [start["elf"] + 0.32, 1.0], [start["elf"] + 0.55, 0.0]]}]
+    elf["reach"] = [{"arm": "L", "pole": [-0.6, -1.0, 0.2], "to": {"actor": "lead", "bone": "forearm.R", "to_bone": "hand.R", "u": 0.35},
+                     "w": [[TAU_L + 0.3, 0.0], [TAU_L + 0.42, 1.0], [start["elf"] + 0.4, 1.0], [start["elf"] + 0.65, 0.0]]}]
     # ---------------------------------------------------------------- the deer
     deer = {
         "id": "deer", "role": "runner", "look": DEER, "fast_at": 5.0,
         "segs": [
             {"mode": "hold", "t0": -9.0, "pos": [DEER_P[0], 0.0, DEER_P[1]], "yaw": PI + 0.5},
-            arrive({"mode": "route", "t0": 3.5, "pts": [DEER_P, DFB], "speed": [[0.0, 0.0], [0.15, 2.2], [0.38, 1.8], [0.55, 0.0]], "rest_yaw": yaw_to(DFB, [FB_C[0], FB_C[2]])}),
-            {"mode": "hold", "t0": 4.05, "pos": [DFB[0], 0.0, DFB[1]], "yaw": yaw_to(DFB, [FB_C[0], FB_C[2]])},
             {"mode": "route", "t0": start["deer"], "pts": deer_pts, "speed": deer_keys},
         ],
         "fx": [
-            {"type": "turn", "t": 1.85, "dur": 0.3, "face": [LEAD_P[0], LEAD_P[1]], "until": 3.5},
-            # late, and half a stride lost in the turn
-            {"type": "turn", "t": TAU_L + 0.32, "dur": 0.28, "face": CART_P, "until": start["deer"]},
+            {"type": "turn", "t": 1.85, "dur": 0.3, "face": [LEAD_P[0], LEAD_P[1]], "until": TAU_L + 0.05},
+            {"type": "turn", "t": TAU_L + 0.3, "dur": 0.2, "face": CART_P, "until": start["deer"]},
         ],
         "pose": [
             [-9.0, {"spine": [-6, 0, 0]}],
@@ -389,10 +378,8 @@ def story():
             [2.7, {"upper_arm.L": [70, 0, -24], "upper_arm.R": [70, 0, 24], "forearm.L": [50, 0, 0], "forearm.R": [50, 0, 0], "spine": [16, 0, 0], "head": [10, 0, 0]}],
             [3.05, {"spine": [-14, 0, 0], "head": [-10, 0, 0], "upper_arm.L": [20, 0, 10], "forearm.L": [70, 0, 0]}],
             [3.6, {"spine": [-10, 0, 0], "head": [-6, 0, 0]}],
-            # the fist bump (right fist, IK below)
-            [3.8, {"upper_arm.R": [60, 0, 10], "forearm.R": [60, 0, 0], "spine": [-6, 0, 0], "head": [-4, 0, 0]}],
-            [TAU_L - 0.02, {"upper_arm.R": [70, 0, 10], "forearm.R": [40, 0, 0], "spine": [-8, 0, 0], "head": [-2, 0, 0]}],
-            [TAU_L + 0.26, {"upper_arm.R": [70, 0, 10], "forearm.R": [40, 0, 0], "spine": [-6, 0, 0], "head": [-2, 0, 0]}],
+            [TAU_L - 0.02, {"spine": [-6, 0, 0]}],
+            [TAU_L + 0.26, {"spine": [-6, 0, 0]}],
             [TAU_L + 0.36, {"head": [12, 0, 0], "spine": [8, 0, 0], "upper_arm.L": [50, 0, 20], "upper_arm.R": [50, 0, -20], "forearm.L": [80, 0, 0], "forearm.R": [80, 0, 0]}, "snap"],
             [start["deer"] - 0.1, {"head": [6, 20, 0], "spine": [4, 0, 0], "upper_arm.L": [40, 0, 10], "upper_arm.R": [40, 0, -10]}],
             # the half stride lost: a skid on the turn, the knee buckling, arms out for balance
@@ -407,11 +394,9 @@ def story():
                  [TAU_L - 0.02, {"smile": 0.7}], [TAU_L + 0.27, {"smile": 0.7}], [TAU_L + 0.31, {"squint": 0.8, "brow_up": 1.0, "open": 0.8, "smile": 0.0}, "snap"],
                  [start["deer"] + 0.8, {"brow_up": 0.9, "open": 0.7}]],
     }
-    deer["reach"] = [{"arm": "R", "pole": [0.6, -1.0, 0.2], "to": {"pos": [FB_C[0] + 0.07, FB_C[1], FB_C[2] - 0.03]},
-                      "w": [[3.9, 0.0], [4.28, 1.0], [TAU_L + 0.28, 1.0], [TAU_L + 0.4, 0.0]]}]
     deer["fx"].append({"type": "yoff", "t": start["deer"], "dur": 0.6, "keys": [[start["deer"], 0.0], [start["deer"] + 0.18, -0.05], [start["deer"] + 0.42, 0.0]]})
-    lead["reach"] = [{"arm": "R", "pole": [0.6, -1.0, 0.2], "to": {"pos": [FB_C[0] + 0.0, FB_C[1], FB_C[2] + 0.07]},
-                      "w": [[3.95, 0.0], [4.3, 1.0], [TAU_L + 0.08, 1.0], [TAU_L + 0.2, 0.0]]}]
+    deer["reach"] = []
+    lead["reach"] = []
     A["start"] = start
     return [lead, elf, deer], A
 
@@ -1011,9 +996,8 @@ def build():
     # ---- B1 the three by the fountain; laughing it off; the fist bump coming together - CLICK
     a4 = dict(story_set)
     a4["tau0"] = 6.0 - FT
-    a4["cam"] = [{"t": 0.0, "pos": [0.7, 1.5, 10.6], "at": [0.85, 0.95, 14.45], "fov": 38.0},
-                 {"t": 1.2, "pos": [0.64, 1.47, 11.0], "at": [0.84, 0.95, 14.5], "fov": 35.0},
-                 {"t": 2.0, "pos": [0.6, 1.45, 11.2], "at": [0.83, 0.95, 14.5], "fov": 34.0}]
+    a4["cam"] = [{"t": 0.0, "pos": [-1.75, 0.95, 10.2], "at": [1.2, 1.0, 15.9], "fov": 46.0},
+                 {"t": 2.0, "pos": [-1.6, 0.93, 10.45], "at": [1.2, 1.0, 15.9], "fov": 45.0}]
     add("v5_b1_three", 6.0, T_LIGHT, a4)
     # ---- B1b cut on the light: into the beam: the elf first and away, Blue with the elf, the reindeer half a stride behind
     b1b = dict(story_set)
@@ -1049,7 +1033,7 @@ def build():
     c2b = dict(story_set)
     c2b["tau0"] = 11.45
     c2b["cam"] = [{"t": 0.0, "pos": {"rel": "lead", "off": [2.4, 0.6, -3.6], "yaw_fixed": 180.0, "base_y": 0.0}, "at": {"rel": "lead", "off": [0.2, 0.95, 2.2], "yaw_fixed": 180.0, "base_y": 0.0}, "fov": 46.0},
-                  {"t": 15.4 - T_HANDOFF, "pos": {"rel": "lead", "off": [2.2, 0.55, -3.2], "yaw_fixed": 180.0, "base_y": 0.0}, "at": {"rel": "lead", "off": [0.2, 0.95, 2.4], "yaw_fixed": 180.0, "base_y": 0.0}, "fov": 46.0}]
+                  {"t": 15.4 - T_HANDOFF, "pos": {"rel": "lead", "off": [2.2, 0.55, -3.2], "yaw_fixed": 180.0, "base_y": 0.0}, "at": {"rel": "lead", "off": [-0.45, 0.95, 2.4], "yaw_fixed": 180.0, "base_y": 0.0}, "fov": 46.0}]
     hl(c2b, 8.0, 0.55, 0.11)
     add("v5_c2b_gain", T_HANDOFF, 15.4, c2b)
     # ---- C3 three-quarter insert: Blue's slipper pushes off a print in the dusting, clears frame; the front tyre rolls across that mark
@@ -1058,7 +1042,14 @@ def build():
     c3["cam"] = [{"t": 0.0, "pos": [MARK[0] - 1.3, 0.34, MARK[1] + 1.55], "at": [MARK[0] + 0.05, 0.08, MARK[1] - 0.15], "fov": 38.0},
                  {"t": 1.6, "pos": [MARK[0] - 1.3, 0.34, MARK[1] + 1.62], "at": [MARK[0] + 0.1, 0.08, MARK[1] - 0.05], "fov": 38.0}]
     hl(c3, 6.0, 0.5, 0.06)
-    add("v5_c3_mark", 15.4, 17.0, c3)
+    add("v5_c3_mark", 15.4, T_C3B, c3)
+    # ---- C3b (as V3) low on the grass beside the dusting: the tyres churn across it left to right, spray and tread
+    c3b = dict(story_set)
+    c3b["tau0"] = C3_TAU0 + (T_C3B - 15.4)
+    c3b["cam"] = [{"t": 0.0, "pos": [MARK[0] - 1.85, 0.42, MARK[1] - 0.3], "at": [MARK[0] + 0.15, 0.0, MARK[1] + 0.05], "fov": 34.0},
+                  {"t": 17.0 - T_C3B, "pos": [MARK[0] - 1.85, 0.42, MARK[1] - 0.2], "at": [MARK[0] + 0.15, 0.0, MARK[1] + 0.3], "fov": 34.0}]
+    hl(c3b, 6.0, 0.5, 0.06)
+    add("v5_c3b_churn", T_C3B, 17.0, c3b)
     # ---- D1 side-on past the bush: the idea, the dive
     d1 = dict(story_set)
     d1["tau0"] = TAUD(17.0)
