@@ -33,6 +33,8 @@ LEAD, ELF, DEER, WATCH, TOWEL = PL.LEAD, PL.ELF, PL.DEER, PL.WATCH, PL.TOWEL
 T_CUT_OUT = F(87)        # 2.900: warm lobby -> cold courtyard, on the waltz's phrase
 FT = F(108)              # 3.600: the slipper on the rim, on the bass entry (tau 0)
 T_LIGHT = F(240)         # 8.000: the musical turn; the headlights hit their faces; the relay click
+FRZ = 0.45                # V5.1: frozen in the headlights before the elf bolts (first step on the 8.7 beat)
+T_B2 = F(282)             # 9.400: the wheel insert, all three running
 T_STEP = F(261)          # 8.700: the elf's first footfall on the pavement
 T_HANDOFF = F(415)       # 13.833: the stronger chase rhythm: the cart's gain revealed
 TAU_L = T_LIGHT - FT
@@ -164,7 +166,9 @@ def story():
         "lead": [LEAD_P, [-0.6, 13.4]] + ring(10.3, -24, -160)[0:] + [[lane["lead"] - 0.8, 33.9], [lane["lead"], 38.0]],
         "deer": [DFB, [1.05, 13.85]] + ring(8.8, -10, -156) + [[lane["deer"] - 0.4, 32.0], [lane["deer"], 37.0]],
     }
-    start = {"elf": TAU_L + 0.25, "lead": TAU_L + 0.38, "deer": TAU_L + 0.62}
+    # V5.1: caught in the light - all three frozen in the beam until the elf's first step on the musical beat (8.7)
+    R = TAU_L + FRZ
+    start = {"elf": R + 0.25, "lead": R + 0.38, "deer": R + 0.62}
     accel = {"elf": [[0.0, 0.0], [0.22, 3.8], [0.9, 6.4], [1.6, 7.0]],
              "lead": [[0.0, 0.0], [0.25, 3.4], [1.0, 6.2], [1.75, 6.9]],
              # the reindeer: half a stride lost in the turn, then hard after them
@@ -333,7 +337,7 @@ def story():
         "fx": [
             {"type": "turn", "t": 1.95, "dur": 0.4, "face": [LEAD_P[0], LEAD_P[1] + 0.2], "until": 3.0},
             {"type": "emote", "name": "laugh", "t": 2.55, "dur": 1.4},
-            {"type": "turn", "t": TAU_L + 0.03, "dur": 0.12, "face": CART_P, "until": TAU_L + 0.25},
+            {"type": "turn", "t": TAU_L + 0.03, "dur": 0.12, "face": CART_P, "until": start["elf"]},
         ],
         "pose": [
             [-9.0, {}],
@@ -343,7 +347,8 @@ def story():
             [TAU_L - 0.02, {"upper_arm.R": [70, 0, 10], "forearm.R": [40, 0, 0], "spine": [-8, 0, 0], "head": [-4, 0, 0]}],
             # the light: first to see it - the head snaps round, the body drops to go
             [TAU_L + 0.07, {"head": [8, 0, 0], "spine": [5, 0, 0], "upper_arm.L": [40, 0, 10], "forearm.L": [60, 0, 0]}, "snap"],
-            [TAU_L + 0.2, {"spine": [-14, 0, 0], "head": [2, 0, 0], "thigh.L": [30, 0, 0], "shin.L": [-30, 0, 0], "upper_arm.L": [-30, 0, 20]}],
+            [R - 0.1, {"head": [8, 0, 0], "spine": [5, 0, 0], "upper_arm.L": [40, 0, 10], "forearm.L": [60, 0, 0]}],
+            [R + 0.2, {"spine": [-14, 0, 0], "head": [2, 0, 0], "thigh.L": [30, 0, 0], "shin.L": [-30, 0, 0], "upper_arm.L": [-30, 0, 20]}],
             [start["elf"] + 0.05, {"upper_arm.L": [-40, 0, 28], "forearm.L": [5, 0, 0], "spine": [-18, 0, 0], "head": [0, 20, 0]}],
             [start["elf"] + 0.55, {"upper_arm.L": [-35, 0, 22], "forearm.L": [10, 0, 0], "spine": [-14, 0, 0], "head": [0, 10, 0]}],
             [start["elf"] + 0.85, {"spine": [-10, 0, 0]}],
@@ -352,7 +357,7 @@ def story():
         "face": [[-9.0, {"smile": 0.6}], [2.5, {"smile": 1.0, "squint": 0.7, "open": 0.6}], [4.0, {"smile": 0.7, "squint": 0.4}],
                  [3.6, {"smile": 1.0, "squint": 0.5, "open": 0.5}], [TAU_L - 0.02, {"smile": 0.9, "squint": 0.4, "open": 0.4}],
                  [TAU_L + 0.035, {"squint": 0.9, "brow_up": 0.6, "open": 0.5, "smile": 0.0}, "snap"],
-                 [TAU_L + 0.4, {"brow_angry": 0.7, "open": 0.4, "squint": 0.3}], [start["elf"] + 1.0, {"brow_angry": 0.6, "open": 0.5}]],
+                 [R - 0.1, {"squint": 0.9, "brow_up": 0.7, "open": 0.55, "smile": 0.0}], [R + 0.1, {"brow_angry": 0.7, "open": 0.4, "squint": 0.3}], [start["elf"] + 1.0, {"brow_angry": 0.6, "open": 0.5}]],
     }
     # the elf's hand on Blue's sleeve: from the grab until the lanes part
     # V5: the three fists coming together; the light stops them a hand's width short
@@ -360,7 +365,7 @@ def story():
                      "w": [[3.85, 0.0], [4.25, 1.0], [TAU_L + 0.04, 1.0], [TAU_L + 0.14, 0.0]]},
                     # ... and the elf's hand finds Blue's sleeve on the way out: Blue goes with the elf
                     {"arm": "R", "pole": [0.6, -1.0, 0.2], "to": {"actor": "lead", "bone": "forearm.L", "to_bone": "hand.L", "u": 0.35},
-                     "w": [[TAU_L + 0.12, 0.0], [TAU_L + 0.22, 1.0], [start["elf"] + 0.32, 1.0], [start["elf"] + 0.55, 0.0]]}]
+                     "w": [[R + 0.12, 0.0], [R + 0.22, 1.0], [start["elf"] + 0.32, 1.0], [start["elf"] + 0.55, 0.0]]}]
     # ---------------------------------------------------------------- the deer
     deer = {
         "id": "deer", "role": "runner", "look": DEER, "fast_at": 5.0,
@@ -1014,17 +1019,18 @@ def build():
     b1b = dict(story_set)
     b1b["tau0"] = T_LIGHT - FT
     b1b["cam"] = [{"t": 0.0, "pos": [3.7, 0.95, 10.9], "at": [0.75, 0.85, 14.5], "fov": 42.0},
-                  {"t": 1.2, "pos": [3.5, 0.95, 11.0], "at": [-0.2, 0.85, 14.4], "fov": 44.0}]
+                  {"t": 0.55, "pos": [3.68, 0.95, 10.91], "at": [0.7, 0.85, 14.5], "fov": 42.0},
+                  {"t": T_B2 - T_LIGHT, "pos": [3.5, 0.95, 11.0], "at": [-0.2, 0.85, 14.4], "fov": 44.0}]
     hl(b1b, 8.0, 0.35, 0.05)
     b1b["exposure"] = 0.86
-    add("v5_b1b_beam", T_LIGHT, 9.2, b1b)
+    add("v5_b1b_beam", T_LIGHT, T_B2, b1b)
     # ---- B2 low beside the front wheel, along the beam: the tyre starts to roll over the paving; they are already running
     b2 = dict(story_set)
-    b2["tau0"] = 9.2 - FT
+    b2["tau0"] = T_B2 - FT
     b2["cam"] = [{"t": 0.0, "pos": [-0.3, 0.3, 2.7], "at": [-0.4, 0.55, 13.0], "fov": 40.0},
                  {"t": 0.7, "pos": [-0.3, 0.3, 2.85], "at": [-0.8, 0.55, 13.0], "fov": 40.0}]
     hl(b2, 6.0, 0.5, 0.06)
-    add("v5_b2_wheels", 9.2, 9.9, b2)
+    add("v5_b2_wheels", T_B2, 9.9, b2)
     # ---- C1 wide around the fountain
     c1 = dict(story_set)
     c1["tau0"] = 9.9 - FT

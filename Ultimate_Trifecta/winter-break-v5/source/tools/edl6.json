@@ -29,13 +29,13 @@
   [
    "v5_b1b_beam",
    8.0,
-   1.2,
+   1.4,
    30
   ],
   [
    "v5_b2_wheels",
-   9.2,
-   0.7,
+   9.4,
+   0.5,
    30
   ],
   [
@@ -108,24 +108,24 @@
  "logo": 29.8,
  "info": {
   "tau_dive": 15.3,
-  "deer_v": 7.6094,
+  "deer_v": 8.0412,
   "tau_door": 19.5,
-  "elf_vc": 10.3277,
+  "elf_vc": 10.2139,
   "elf_arrive": 19.5,
-  "elf_v": 6.661,
-  "lead_vc": 9.2633,
+  "elf_v": 7.0221,
+  "lead_vc": 9.1501,
   "lead_arrive": 19.62,
-  "lead_v": 6.9164,
+  "lead_v": 7.2993,
   "deer_route": null,
   "lead_route": null,
   "elf_route": null,
   "start": {
-   "elf": 4.65,
-   "lead": 4.78,
-   "deer": 5.02
+   "elf": 5.1,
+   "lead": 5.23,
+   "deer": 5.47
   },
   "cart_route": null,
-  "cart_vmax": 9.9006,
+  "cart_vmax": 9.9579,
   "cart_xz": null,
   "t_rake": 19.65,
   "t_beam_clear": 20.15,

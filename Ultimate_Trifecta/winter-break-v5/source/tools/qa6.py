@@ -107,8 +107,8 @@ def strip(name, f0, f1, w=384, cols=8):
     cv2.imwrite(os.path.join(out, f"frames_{name}.jpg"), np.vstack(rows), [cv2.IMWRITE_JPEG_QUALITY, 88])
 
 
-strip("fistbump_lights_7.40-8.70", 222, 261, w=320, cols=10)
-strip("tyre_b2_9.20-9.90", 276, 297)
+strip("caught_in_light_7.40-9.40", 222, 282, w=320, cols=10)
+strip("tyre_b2_9.40-9.90", 282, 297)
 strip("c2b_glance_13.83-15.40", 415, 462, w=320, cols=10)
 strip("tyre_mark_c3_15.40-17.00", 462, 510, w=320, cols=10)
 strip("bush_eye_d2_19.30-20.50", 579, 615, w=320, cols=10)

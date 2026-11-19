@@ -47,11 +47,13 @@ The first full render failed that check: on the original 34° lens the cart was 
 ## 2. Urgency and weight
 
 - **Before the reveal:** laughing off the toe test, the three step in for a three-way fist bump. The light hits a hand's width before the fists meet.
-- **0:08:**
-  - The elf sees the light first. It turns within about 0.03 s and pushes off by 0:08.25.
-  - The elf's hand catches Blue's sleeve, so Blue goes with the elf (0:08.38).
-  - The reindeer reacts late and loses half a stride in the turn: a skid, a knee dip and slow first steps (0:08.62).
-- **The cart insert (0:09.2):** a low shot beside the front wheel looking down the beam. The tyre starts rolling over the paving seams while all three are already running ahead.
+- **0:08, caught in the light:**
+  - The headlights hit on 0:08.000 and all three freeze in the beam. They turn into the light, faces lit and startled, and hold, as in the earlier versions.
+  - The elf sees it first and bolts on the musical step at 0:08.7. The elf's hand catches Blue's sleeve, so Blue goes with the elf (0:08.83).
+  - The reindeer reacts late and loses half a stride in the turn: a skid, a knee dip and slow first steps (0:09.07).
+  - The shot holds to 0:09.4, so the reindeer's late start is seen.
+  - Their run is solved to reach the same marks after the fountain turn, so every later beat is unchanged.
+- **The cart insert (0:09.4):** a low shot beside the front wheel looking down the beam. The tyre starts rolling over the paving seams while all three are already running ahead.
 - **The closer chase shot:** Blue takes one quick look over the shoulder (about 0.25 s), then drops into a lower lean. The next two strides are about 16% faster, with harder arm pumps.
 - **The bush:** the eye follows the returning beam, and the moment it clears the eye goes to the lit door. A short eye-line shot of the doorway follows (Blue waving him on, the elf holding the leaf). Then the launch, timed on the musical pickup: branch at 0:21.6, plant at 0:22.2, spring at 0:22.5.
 
@@ -109,11 +111,11 @@ Full numbers are in `qa/v5/report.json`.
 - All 16 cuts land on their EDL frames.
 - Relay click and headlights: 8.018.
 - Latch: 28.500.
-- Snow landing: 29.330.
+- Snow landing: 29.331.
 
 **Audio:**
-- Loudness: −14.01 LUFS integrated, −1.85 dBTP.
-- The delivery copy measures −14.02 LUFS and −1.90 dBTP.
+- Loudness: −14.01 LUFS integrated, −1.81 dBTP.
+- The delivery copy measures −14.02 LUFS and −1.82 dBTP.
 - Score stem vs source: max difference 0.0, lag 0 samples.
 - Effects under the title: −67.8 dB, so the last musical hit plays clean.
 
@@ -122,6 +124,7 @@ Full numbers are in `qa/v5/report.json`.
 | Check | Frames | What the frames show |
 |---|---|---|
 | Cart direction | 705–768, plus the phone-size sheet | The cart's windshield and both headlights face camera. It grows against the bollards behind the reindeer, never hidden by him. The cut inside comes while it still approaches. |
+| Caught in the light | 240–282 | Lit and frozen in the beam from 8.0, the elf away at 8.7, then Blue, then the reindeer. |
 | Tyre contact | 462–510 | Blue's slipper prints the dusting and clears frame. The front tyre then rolls across that mark with its shadow under the tread and spray at the contact. |
 | Hand catch | 792–813 | The hands meet in the gap between the bodies (800–803). Blue steps back with the pull and the reindeer recovers through the opening. |
 | Door clearance | 813–834 | The trailing foot clears before the leaf swings. Nothing passes through the door edge. |
